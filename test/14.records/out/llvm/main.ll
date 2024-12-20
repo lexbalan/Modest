@@ -259,10 +259,10 @@ endif_1:
 	%20 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
 	%21 = insertvalue {%Int32,%Int32} %20, %Int32 2, 1
 	store {%Int32,%Int32} %21, {%Int32,%Int32}* %19
-; -- cons_composite_from_composite --
+; -- cons_composite_from_composite_by_adr --
 	%22 = bitcast {%Int32,%Int32}* %19 to %Point2D*
 	%23 = load %Point2D, %Point2D* %22
-; -- end cons_composite_from_composite --
+; -- end cons_composite_from_composite_by_adr --
 	%24 = alloca %Point2D
 	store %Point2D %23, %Point2D* %24
 	%25 = bitcast %Point2D* %17 to i8*
@@ -283,10 +283,10 @@ endif_2:
 	%32 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
 	%33 = insertvalue {%Int32,%Int32} %32, %Int32 2, 1
 	store {%Int32,%Int32} %33, {%Int32,%Int32}* %31
-; -- cons_composite_from_composite --
+; -- cons_composite_from_composite_by_adr --
 	%34 = bitcast {%Int32,%Int32}* %31 to {%Int32,%Int32}*
 	%35 = load {%Int32,%Int32}, {%Int32,%Int32}* %34
-; -- end cons_composite_from_composite --
+; -- end cons_composite_from_composite_by_adr --
 	%36 = alloca {%Int32,%Int32}
 	store {%Int32,%Int32} %35, {%Int32,%Int32}* %36
 	%37 = bitcast {%Int32,%Int32}* %19 to i8*
@@ -303,10 +303,10 @@ else_3:
 	br label %endif_3
 endif_3:
 	; comparison between two record (by pointer)
-; -- cons_composite_from_composite --
+; -- cons_composite_from_composite_by_adr --
 	%43 = bitcast {%Int32,%Int32}* %19 to %Point2D*
 	%44 = load %Point2D, %Point2D* %43
-; -- end cons_composite_from_composite --
+; -- end cons_composite_from_composite_by_adr --
 	%45 = alloca %Point2D
 	store %Point2D %44, %Point2D* %45
 	%46 = bitcast %Point2D* %17 to i8*
@@ -331,10 +331,10 @@ endif_4:
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)
 	%54 = alloca %Point3D, align 4
-; -- cons_composite_from_composite --
+; -- cons_composite_from_composite_by_adr --
 	%55 = bitcast %Point2D* %17 to %Point3D*
 	%56 = load %Point3D, %Point3D* %55
-; -- end cons_composite_from_composite --
+; -- end cons_composite_from_composite_by_adr --
 	store %Point3D %56, %Point3D* %54
 	; проверка того как локальная константа-массив
 	; "замораживает" свои элементы

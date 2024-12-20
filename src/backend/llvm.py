@@ -1229,37 +1229,39 @@ def cons_composite_from_composite(to_type, value, ti):
 		# не можем приводить глобально (used!)
 		return v
 
-	out("\n; -- cons_composite_from_composite --")
+	if v['is_adr']:
+		# received not value but it address (formally pointer)
+		out("\n; -- cons_composite_from_composite_by_adr --")
+		casted_ptr = llvm_cast("bitcast", v, type_pointer(to_type))
+		casted_ptr['type'] = to_type
+		casted_ptr['is_adr'] = True
+		llv = llvm_load(casted_ptr)
+		out("\n; -- end cons_composite_from_composite_by_adr --")
+		return llv
 
-	if not is_adr_or_ptr(v):
-		# если значение из которого конструируем пришло 'по значению'
-		# BY VALUE (IN REG)
+	#
+	# received value in reg
+	#
 
-		if to_type['size'] > value['type']['size']:
-			#out("\n\t; extend")
-			# выделим память под новое значение
-			nv = llvm_alloca(to_type)
-			# приводим указатель на слот к указателю на (меньшее) значение
-			xnv = llvm_cast("bitcast", nv, type_pointer(v['type']))
-			llvm_store(xnv, v)
-			nv['is_adr'] = True
-		else:
-			#out("\n\t; trunk")
-			y = llvm_alloca_store(v['type'], init_value=v)
-			nv = llvm_cast("bitcast", y, type_pointer(to_type))
-			nv['is_adr'] = True
+	out("\n; -- cons_composite_from_composite_by_value --")
+	if to_type['size'] > value['type']['size']:
+		#out("\n\t; extend")
+		# выделим память под новое значение
+		nv = llvm_alloca(to_type)
+		# приводим указатель на слот к указателю на (меньшее) значение
+		xnv = llvm_cast("bitcast", nv, type_pointer(v['type']))
+		llvm_store(xnv, v)
+		nv['is_adr'] = True
+	else:
+		#out("\n\t; trunk")
+		y = llvm_alloca_store(v['type'], init_value=v)
+		nv = llvm_cast("bitcast", y, type_pointer(to_type))
+		nv['is_adr'] = True
+	out("\n; -- end cons_composite_from_composite_by_value --")
+	return nv
 
-		out("\n; -- end cons_composite_from_composite --")
-		return nv
 
 
-	# BY POINTER (OR ADR)
-	casted_ptr = llvm_cast("bitcast", v, type_pointer(to_type))
-	casted_ptr['type'] = to_type
-	casted_ptr['is_adr'] = True
-	llv = llvm_load(casted_ptr)
-	out("\n; -- end cons_composite_from_composite --")
-	return llv
 
 
 

@@ -350,20 +350,20 @@ define internal void @f0([30 x %Char8]* noalias sret([30 x %Char8]) %0, [20 x %C
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), [20 x %Char8]* %2)
 	; truncate array
 	%5 = alloca [6 x %Char8], align 1
-; -- cons_composite_from_composite --
+; -- cons_composite_from_composite_by_adr --
 	%6 = bitcast [20 x %Char8]* %x to [6 x %Char8]*
 	%7 = load [6 x %Char8], [6 x %Char8]* %6
-; -- end cons_composite_from_composite --
+; -- end cons_composite_from_composite_by_adr --
 	store [6 x %Char8] %7, [6 x %Char8]* %5
 	%8 = getelementptr inbounds [6 x %Char8], [6 x %Char8]* %5, %Int32 0, %Int32 5
 	store %Char8 0, %Char8* %8
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), [6 x %Char8]* %5)
 	; extend array
 	%10 = alloca [30 x %Char8], align 1
-; -- cons_composite_from_composite --
+; -- cons_composite_from_composite_by_adr --
 	%11 = bitcast [20 x %Char8]* %x to [30 x %Char8]*
 	%12 = load [30 x %Char8], [30 x %Char8]* %11
-; -- end cons_composite_from_composite --
+; -- end cons_composite_from_composite_by_adr --
 	store [30 x %Char8] %12, [30 x %Char8]* %10
 	%13 = getelementptr inbounds [30 x %Char8], [30 x %Char8]* %10, %Int32 0, %Int32 6
 	store %Char8 77, %Char8* %13
@@ -584,10 +584,10 @@ endif_0:
 	%100 = insertvalue [3 x %Int32] %99, %Int32 30, 2
 	store [3 x %Int32] %100, [3 x %Int32]* %97
 	%101 = alloca [6 x %Int32], align 4
-; -- cons_composite_from_composite --
+; -- cons_composite_from_composite_by_adr --
 	%102 = bitcast [3 x %Int32]* %97 to [6 x %Int32]*
 	%103 = load [6 x %Int32], [6 x %Int32]* %102
-; -- end cons_composite_from_composite --
+; -- end cons_composite_from_composite_by_adr --
 	store [6 x %Int32] %103, [6 x %Int32]* %101
 	%104 = getelementptr inbounds [6 x %Int32], [6 x %Int32]* %101, %Int32 0, %Int32 0
 	%105 = load %Int32, %Int32* %104
@@ -650,10 +650,10 @@ endif_1:
 	; -- start vol eval --
 	%142 = zext i3 4 to %Int32
 	; -- end vol eval --
-; -- cons_composite_from_composite --
+; -- cons_composite_from_composite_by_adr --
 	%143 = bitcast [3 x %Int]* %140 to [4 x %Int32]*
 	%144 = load [4 x %Int32], [4 x %Int32]* %143
-; -- end cons_composite_from_composite --
+; -- end cons_composite_from_composite_by_adr --
 	store [4 x %Int32] %144, [4 x %Int32]* %141
 	%145 = getelementptr inbounds [4 x %Int32], [4 x %Int32]* %141, %Int32 0, %Int32 0
 	%146 = load %Int32, %Int32* %145
@@ -669,10 +669,10 @@ endif_1:
 	; -- start vol eval --
 	%154 = zext i4 10 to %Int32
 	; -- end vol eval --
-; -- cons_composite_from_composite --
+; -- cons_composite_from_composite_by_adr --
 	%155 = bitcast [3 x %Int]* %140 to [10 x %Int32]*
 	%156 = load [10 x %Int32], [10 x %Int32]* %155
-; -- end cons_composite_from_composite --
+; -- end cons_composite_from_composite_by_adr --
 	store [10 x %Int32] %156, [10 x %Int32]* @globalArray
 	%157 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 0
 	%158 = load %Int32, %Int32* %157
