@@ -1,4 +1,3 @@
-
 import type as type
 from error import info, warning, error
 
@@ -44,7 +43,6 @@ def cons_can(to, from_type, method):
 		assert(False)
 
 	return checker(to, from_type, method)
-
 
 
 # implisit cast possible only for:
@@ -103,6 +101,7 @@ def value_cons_implicit(t, v, ti=None):
 	return _do_value_cons(t, v, 'implicit', ti)
 
 
+
 def value_cons_explicit(t, v, ti):
 	assert(t['isa'] == 'type')
 	assert(v['isa'] == 'value')
@@ -138,6 +137,7 @@ def value_cons_default(v):
 	return v
 
 
+
 def value_cons_implicit_check(t, v):
 	nv = value_cons_implicit(t, v)
 	if not type.type_eq(t, nv['type']):
@@ -148,7 +148,6 @@ def value_cons_implicit_check(t, v):
 		type.type_print(v['type'])
 		print("\n")
 	return nv
-
 
 
 
