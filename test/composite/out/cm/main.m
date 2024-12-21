@@ -39,8 +39,26 @@ var animation1_points: [5]AnimationPoint = [5]AnimationPoint [
 ]
 
 
+var animation2_points: [5]AnimationPoint = [5]AnimationPoint [
+
+	{color = {red = 200, green = 0, blue = 0}, time = 3}
+	{color = {red = 0, green = 200, blue = 0}, time = 30}
+	{color = {red = 100, green = 100, blue = 0}, time = 300}
+	{color = {red = 255, green = 254, blue = 0}, time = 20}
+	{color = {red = 0, green = 0, blue = 255}, time = 3000}
+]
+
+
 public func main() -> Int32 {
+	printf("test1 (eq): ")
 	if animation0_points == animation1_points {
+		printf("eq\n")
+	} else {
+		printf("ne\n")
+	}
+
+	printf("test2 (ne): ")
+	if animation1_points == animation2_points {
 		printf("eq\n")
 	} else {
 		printf("ne\n")

@@ -187,8 +187,12 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [4 x i8] [i8 101, i8 113, i8 10, i8 0]
-@str2 = private constant [4 x i8] [i8 110, i8 101, i8 10, i8 0]
+@str1 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 49, i8 32, i8 40, i8 101, i8 113, i8 41, i8 58, i8 32, i8 0]
+@str2 = private constant [4 x i8] [i8 101, i8 113, i8 10, i8 0]
+@str3 = private constant [4 x i8] [i8 110, i8 101, i8 10, i8 0]
+@str4 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 32, i8 40, i8 110, i8 101, i8 41, i8 58, i8 32, i8 0]
+@str5 = private constant [4 x i8] [i8 101, i8 113, i8 10, i8 0]
+@str6 = private constant [4 x i8] [i8 110, i8 101, i8 10, i8 0]
 ; -- endstrings --
 
 %main_RGB24 = type {
@@ -309,20 +313,76 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 3000
 	}
 ]
+@animation2_points = internal global [5 x %AnimationPoint] [
+	%AnimationPoint {
+		%main_RGB24 {
+			%Int8 200,
+			%Int8 0,
+			%Int8 0
+		},
+		%Int32 3
+	},
+	%AnimationPoint {
+		%main_RGB24 {
+			%Int8 0,
+			%Int8 200,
+			%Int8 0
+		},
+		%Int32 30
+	},
+	%AnimationPoint {
+		%main_RGB24 {
+			%Int8 100,
+			%Int8 100,
+			%Int8 0
+		},
+		%Int32 300
+	},
+	%AnimationPoint {
+		%main_RGB24 {
+			%Int8 255,
+			%Int8 254,
+			%Int8 0
+		},
+		%Int32 20
+	},
+	%AnimationPoint {
+		%main_RGB24 {
+			%Int8 0,
+			%Int8 0,
+			%Int8 255
+		},
+		%Int32 3000
+	}
+]
 
 define %Int32 @main() {
-	%1 = bitcast [5 x %AnimationPoint]* @animation0_points to i8*
-	%2 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
-	%3 = call i1 (i8*, i8*, i64) @memeq(i8* %1, i8* %2, %Int64 40)
-	%4 = icmp ne %Bool %3, 0
-	br %Bool %4 , label %then_0, label %else_0
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
+	%2 = bitcast [5 x %AnimationPoint]* @animation0_points to i8*
+	%3 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
+	%4 = call i1 (i8*, i8*, i64) @memeq(i8* %2, i8* %3, %Int64 40)
+	%5 = icmp ne %Bool %4, 0
+	br %Bool %5 , label %then_0, label %else_0
 then_0:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*))
-	br label %endif_0
-else_0:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*))
 	br label %endif_0
+else_0:
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str3 to [0 x i8]*))
+	br label %endif_0
 endif_0:
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
+	%9 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
+	%10 = bitcast [5 x %AnimationPoint]* @animation2_points to i8*
+	%11 = call i1 (i8*, i8*, i64) @memeq(i8* %9, i8* %10, %Int64 40)
+	%12 = icmp ne %Bool %11, 0
+	br %Bool %12 , label %then_1, label %else_1
+then_1:
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str5 to [0 x i8]*))
+	br label %endif_1
+else_1:
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str6 to [0 x i8]*))
+	br label %endif_1
+endif_1:
 	ret %Int32 0
 }
 
