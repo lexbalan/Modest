@@ -44,7 +44,7 @@ def value_array_create(items, ti=None):
 	return v
 
 
-
+"""
 def value_array_create_from_string(t, v, method, ti=None):
 	#info("value_array_create_from_string", ti)
 	char_type = t['of']
@@ -57,7 +57,7 @@ def value_array_create_from_string(t, v, method, ti=None):
 	nv = value_cons_node(t, v, method, ti)
 	nv['immediate'] = True
 	nv['items'] = chars
-	return nv
+	return nv"""
 
 
 # TODO: see select_common_type!
@@ -124,11 +124,21 @@ def value_array_cons(t, v, method, ti):
 		t['volume'] = volume
 		t['size'] = t['of']['size'] * volume['asset']
 
-	if htype.type_is_string(v['type']):
-		return value_array_create_from_string(t, v, method, ti)
 
 	nv = value_cons_node(t, v, method, ti)
 	nv['immediate'] = v['immediate']
+
+	if htype.type_is_string(v['type']):
+		#info("value_array_create_from_string", ti)
+		char_type = t['of']
+		items = utf32_chars_to_utfx_chars(v['asset'], char_type, ti)
+
+		pad_rquired = t['volume']['asset'] - len(items)
+		if pad_rquired > 0:
+			items = items + [value_zero(char_type, ti)] * pad_rquired
+
+		nv['items'] = items
+		return nv
 
 	# литерал массива может быть Generic но не immediate!
 	# ниже показано почему:
