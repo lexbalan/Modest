@@ -1361,7 +1361,6 @@ bin_ops = [
 ]
 
 
-
 def do_eval_string(x):
 	info("do_eval_string??", x['ti'])
 
@@ -1455,10 +1454,6 @@ def do_eval_record(v):
 
 
 
-def do_eval_pointer(x):
-	return llvm_value_num(x['type'], x['asset'])
-
-
 
 def do_eval_func(x):
 	return llvm_value_id(get_id_str(x), x['type'])
@@ -1486,7 +1481,6 @@ def do_eval_const(x):
 		y = locals_get(localname)
 		return y
 
-
 	if not is_global_context():
 		# Аргументы функуции это константы но у них поле value == None!
 		if x['value'] != None:
@@ -1496,11 +1490,6 @@ def do_eval_const(x):
 				rv = llvm_value_id(get_id_str(x), x['type'])
 				rv['is_adr'] = True
 				return rv
-
-	#if value_is_immediate(x):  # TODO: wtf? (see begining of do_eval)
-	#	return llvm_value_immediate(x)
-		#if htype.type_is_numeric(x['type']):
-		#	return llvm_value_num(x['type'], x['asset'])
 
 	return do_eval(x['value'])
 
@@ -1518,7 +1507,7 @@ def do_eval_literal(x):
 	elif htype.type_is_array(xt): return do_eval_array(x)
 	elif htype.type_is_bool(xt): return do_eval_bool(x)
 	elif htype.type_is_free_pointer(xt): return llvm_value_num(xt, x['asset'])
-	elif htype.type_is_pointer(xt): return do_eval_pointer(x)
+	elif htype.type_is_pointer(xt): return llvm_value_num(x)
 	elif htype.type_is_char(xt): return llvm_value_num(xt, x['asset'])
 	elif htype.type_is_enum(xt): return llvm_value_num(xt, x['asset'])
 	elif htype.type_is_word(xt): return llvm_value_num(xt, x['asset'])
