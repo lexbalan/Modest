@@ -53,7 +53,7 @@ func test() {
 	var i = 0
 	while i < lengthof(yy) {
 		let y = yy[i]
-		printf("yy[%i] = %i\n", i, Int32 y)
+		printf("yy[%i] = %i\n", i, y)
 		++i
 	}
 }

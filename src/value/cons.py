@@ -41,23 +41,21 @@ def cons_can(to, from_type, method):
 	elif type.type_is_char(to): checker = char_can
 	elif type.type_is_bad(to): checker = bad_can
 	else:
-		assert(False, "Unknown type in cons_can")
+		assert(False)
 
 	return checker(to, from_type, method)
 
 
 
 # implisit cast possible only for:
-# 1. Generic -> NonGeneric
-# 2. Nil -> AnyPointer
+# 1. Generic -> NonGeneric (Nil -> AnyPointer)
 # 3. *[n]T -> *[]T
 # 4. AnyPointer -> FreePointer
 # 5. FreePointer -> AnyPointer
 
-def value_cons_implicit(t, v):
+def value_cons_implicit(t, v, ti=None):
 	assert(t['isa'] == 'type')
 	assert(v['isa'] == 'value')
-
 
 	if value_is_bad(v) or type.type_is_bad(t):
 		return value_bad(v)
@@ -90,7 +88,6 @@ def value_cons_implicit(t, v):
 			# что нужно сделать hard_cast
 			# тк в них номинативная система типов
 			return value_record_cons(t, v, 'implicit', ti=ti)
-
 
 
 	# for structural type system support
@@ -137,9 +134,7 @@ def value_cons_explicit(t, v, ti):
 def value_cons_default(v):
 	t = _select_default_type_for(v['type'])
 	if t != None:
-		nv = _do_value_cons(t, v, 'implicit', v['ti'])
-		if nv != None:
-			return nv
+		return value_cons_implicit(t, v, v['ti'])
 	return v
 
 
