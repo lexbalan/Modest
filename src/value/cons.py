@@ -18,7 +18,6 @@ from .bad import bad_can, value_bad_cons
 
 # can be implicitly constructed value with type a from type b?
 def cons_can(to, from_type, method):
-
 	if type.type_eq(to, from_type):
 		return True
 
@@ -41,25 +40,24 @@ def cons_can(to, from_type, method):
 	elif type.type_is_float(to): checker = float_can
 	elif type.type_is_char(to): checker = char_can
 	elif type.type_is_bad(to): checker = bad_can
+	else:
+		assert(False, "Unknown type in cons_can")
 
-	res = False
-	if checker != None:
-		res = checker(to, from_type, method)
-	#print(" = %d" % res)
-	return res
+	return checker(to, from_type, method)
 
 
+
+# implisit cast possible only for:
+# 1. Generic -> NonGeneric
+# 2. Nil -> AnyPointer
+# 3. *[n]T -> *[]T
+# 4. AnyPointer -> FreePointer
+# 5. FreePointer -> AnyPointer
 
 def value_cons_implicit(t, v):
 	assert(t['isa'] == 'type')
 	assert(v['isa'] == 'value')
 
-	# implisit cast possible only for:
-	# 1. Generic -> NonGeneric
-	# 2. Nil -> AnyPointer
-	# 3. *[n]T -> *[]T
-	# 4. AnyPointer -> FreePointer
-	# 5. FreePointer -> AnyPointer
 
 	if value_is_bad(v) or type.type_is_bad(t):
 		return value_bad(v)
