@@ -116,6 +116,15 @@ def array_can(to, from_type, method):
 def value_array_cons(t, v, method, ti):
 	#info("value_array_cons", ti)
 
+	if value_is_undefined(t['volume']):
+		# for case: `[]Int32 [1, 2, 3]`
+		# we try to construct array with undefined volume from array with defined volume
+		# in this case we take volume of value array
+		#info("undefined volume", t['ti'])
+		volume = v['type']['volume']
+		t['volume'] = volume
+		t['size'] = t['of']['size'] * volume['asset']
+
 	if htype.type_is_string(v['type']):
 		return value_array_create_from_string(t, v, method, ti)
 
@@ -151,10 +160,9 @@ def value_array_cons(t, v, method, ti):
 			tlen = t['volume']['asset']
 			zero_pad_len = tlen - vlen
 			if zero_pad_len > 0:
-				zero_pad = [value_zero(t['of'], None)] * zero_pad_len
+				zero_pad = [value_zero(t['of'], ti)] * zero_pad_len
 
 		nv['items'] = items + zero_pad
-
 
 	return nv
 

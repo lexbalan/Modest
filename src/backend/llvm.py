@@ -591,9 +591,6 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
 def llvm_memcmp(op, p0, p1, size):
 	_p0 = llvm_cast('bitcast', p0, foundation.typeFreePointer)
 	_p1 = llvm_cast('bitcast', p1, foundation.typeFreePointer)
-
-	out(NL_INDENT)
-	#op = "call i32 (i8*, i8*, i64) @memcmp("
 	rv = ll_reg_operation('call', foundation.typeBool)
 	out("i1 (i8*, i8*, i64) @memeq(")
 	llvm_print_type_value(_p0)

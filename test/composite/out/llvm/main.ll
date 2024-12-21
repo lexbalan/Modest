@@ -313,8 +313,7 @@ declare void @perror(%ConstCharStr* %str)
 define %Int32 @main() {
 	%1 = bitcast [5 x %AnimationPoint]* @animation0_points to i8*
 	%2 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
-	
-	%3 = call i1 (i8*, i8*, i64) @memeq(i8* %1, i8* %2, %Int64 0)
+	%3 = call i1 (i8*, i8*, i64) @memeq(i8* %1, i8* %2, %Int64 40)
 	%4 = icmp ne %Bool %3, 0
 	br %Bool %4 , label %then_0, label %else_0
 then_0:

@@ -171,21 +171,15 @@ def value_cons_implicit(t, v):
 
 
 
-
 def value_cons_explicit(t, v, ti):
 	assert(t['isa'] == 'type')
 	assert(v['isa'] == 'value')
+	assert(ti['isa'] == 'ti')
 
 	if value_is_bad(v) or type.type_is_bad(t):
 		return value_bad(v['ti'])
 
 	from_type = v['type']
-
-	# for situation like:
-	# var s = []Int32 [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-	if type.type_is_generic_array(from_type):
-		if value_is_undefined(t['volume']):
-			t['volume'] = from_type['volume']
 
 	if type.type_eq(t, from_type):
 		info("explicit cast to the same type", ti)
