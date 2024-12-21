@@ -17,6 +17,9 @@ from .bad import bad_can, value_bad_cons
 
 # can be implicitly constructed value with type a from type b?
 def cons_can(to, from_type, method):
+	assert(to['isa'] == 'type')
+	assert(from_type['isa'] == 'type')
+
 	if type.type_eq(to, from_type):
 		return True
 
@@ -131,6 +134,7 @@ def value_cons_explicit(t, v, ti):
 
 # избавляемся от generic
 def value_cons_default(v):
+	assert(v['isa'] == 'value')
 	t = _select_default_type_for(v['type'])
 	if t != None:
 		return value_cons_implicit(t, v, v['ti'])
@@ -148,7 +152,6 @@ def value_cons_implicit_check(t, v):
 		type.type_print(v['type'])
 		print("\n")
 	return nv
-
 
 
 # for value
