@@ -240,7 +240,6 @@ endif_0:
 	store %Point2D %10, %Point2D* %8
 	%11 = bitcast %Point2D* %5 to i8*
 	%12 = bitcast %Point2D* %8 to i8*
-	
 	%13 = call i1 (i8*, i8*, i64) @memeq(i8* %11, i8* %12, %Int64 8)
 	%14 = icmp ne %Bool %13, 0
 	br %Bool %14 , label %then_1, label %else_1
@@ -267,7 +266,6 @@ endif_1:
 	store %Point2D %23, %Point2D* %24
 	%25 = bitcast %Point2D* %17 to i8*
 	%26 = bitcast %Point2D* %24 to i8*
-	
 	%27 = call i1 (i8*, i8*, i64) @memeq(i8* %25, i8* %26, %Int64 8)
 	%28 = icmp ne %Bool %27, 0
 	br %Bool %28 , label %then_2, label %else_2
@@ -291,7 +289,6 @@ endif_2:
 	store {%Int32,%Int32} %35, {%Int32,%Int32}* %36
 	%37 = bitcast {%Int32,%Int32}* %19 to i8*
 	%38 = bitcast {%Int32,%Int32}* %36 to i8*
-	
 	%39 = call i1 (i8*, i8*, i64) @memeq(i8* %37, i8* %38, %Int64 8)
 	%40 = icmp ne %Bool %39, 0
 	br %Bool %40 , label %then_3, label %else_3
@@ -311,7 +308,6 @@ endif_3:
 	store %Point2D %44, %Point2D* %45
 	%46 = bitcast %Point2D* %17 to i8*
 	%47 = bitcast %Point2D* %45 to i8*
-	
 	%48 = call i1 (i8*, i8*, i64) @memeq(i8* %46, i8* %47, %Int64 8)
 	%49 = icmp ne %Bool %48, 0
 	br %Bool %49 , label %then_4, label %else_4
@@ -371,7 +367,6 @@ endif_4:
 	store {%Int32,%Int32} %68, {%Int32,%Int32}* %70
 	%71 = bitcast {%Int32,%Int32}* %69 to i8*
 	%72 = bitcast {%Int32,%Int32}* %70 to i8*
-	
 	%73 = call i1 (i8*, i8*, i64) @memeq(i8* %71, i8* %72, %Int64 8)
 	%74 = icmp ne %Bool %73, 0
 	br %Bool %74 , label %then_5, label %else_5

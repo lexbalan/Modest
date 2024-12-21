@@ -48,20 +48,11 @@ def value_array_create(items, ti=None):
 def value_array_create_from_string(t, v, method, ti=None):
 	#info("value_array_create_from_string", ti)
 	char_type = t['of']
-
 	chars = utf32_chars_to_utfx_chars(v['asset'], char_type, ti)
-	length = len(chars)
 
-	# Если длина конструируемого массива
-	# больше чем длина строки из которой его конструируют (в кодах символов):
-	# var arr_utf8: [8]Char8 = "Hi!\n"
-	if t['volume'] != None:
-		t_length = t['volume']['asset']
-		if t_length > length:
-			length = t_length
-
-	volume = value_integer_create(length)
-	t = htype.type_array(char_type, volume, ti)
+	pad_rquired = t['volume']['asset'] - len(chars)
+	if pad_rquired > 0:
+		chars = chars + [value_zero(char_type, ti)] * pad_rquired
 
 	nv = value_cons_node(t, v, method, ti)
 	nv['immediate'] = True
@@ -121,7 +112,15 @@ def value_array_cons(t, v, method, ti):
 		# we try to construct array with undefined volume from array with defined volume
 		# in this case we take volume of value array
 		#info("undefined volume", t['ti'])
-		volume = v['type']['volume']
+		volume = -1
+		if htype.type_is_array(v['type']):
+			volume = v['type']['volume']
+		elif htype.type_is_string(v['type']):
+			srtlen = v['type']['length']
+			volume = value_integer_create(srtlen)
+		else:
+			assert(False)
+
 		t['volume'] = volume
 		t['size'] = t['of']['size'] * volume['asset']
 

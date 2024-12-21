@@ -397,7 +397,6 @@ break_1:
 	%19 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 2
 	%20 = bitcast %sha256_Hash* %1 to i8*
 	%21 = bitcast %sha256_Hash* %19 to i8*
-	
 	%22 = call i1 (i8*, i8*, i64) @memeq(i8* %20, i8* %21, %Int64 32)
 	%23 = icmp ne %Bool %22, 0
 	ret %Bool %23

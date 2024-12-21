@@ -347,7 +347,6 @@ endif_0:
 	store [4 x %Int32] %14, [4 x %Int32]* %15
 	%16 = bitcast [4 x %Int32]* %7 to i8*
 	%17 = bitcast [4 x %Int32]* %15 to i8*
-	
 	%18 = call i1 (i8*, i8*, i64) @memeq(i8* %16, i8* %17, %Int64 16)
 	%19 = icmp eq %Bool %18, 0
 	br %Bool %19 , label %then_1, label %endif_1
@@ -373,7 +372,6 @@ endif_1:
 	store [4 x %Int64] %29, [4 x %Int64]* %30
 	%31 = bitcast [4 x %Int64]* %22 to i8*
 	%32 = bitcast [4 x %Int64]* %30 to i8*
-	
 	%33 = call i1 (i8*, i8*, i64) @memeq(i8* %31, i8* %32, %Int64 32)
 	%34 = icmp eq %Bool %33, 0
 	br %Bool %34 , label %then_2, label %endif_2
@@ -395,7 +393,6 @@ endif_2:
 	store [10 x %Int32] %43, [10 x %Int32]* %44
 	%45 = bitcast [10 x %Int32]* %37 to i8*
 	%46 = bitcast [10 x %Int32]* %44 to i8*
-	
 	%47 = call i1 (i8*, i8*, i64) @memeq(i8* %45, i8* %46, %Int64 40)
 	%48 = icmp eq %Bool %47, 0
 	br %Bool %48 , label %then_3, label %endif_3
