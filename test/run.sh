@@ -13,6 +13,7 @@ cd var && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 22.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 23.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd cons && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd composite && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd xor && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd named_args && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd shift && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \

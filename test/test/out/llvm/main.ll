@@ -187,53 +187,87 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [8 x i8] [i8 105, i8 110, i8 105, i8 116, i8 40, i8 41, i8 10, i8 0]
-@str2 = private constant [7 x i8] [i8 102, i8 111, i8 111, i8 40, i8 41, i8 10, i8 0]
 ; -- endstrings --
 
-%Node = type {
-	%Node*,
-	%DataHolder*
+%main_RGB24 = type {
+	%Int8,
+	%Int8,
+	%Int8
 };
 
-%DataHolder = type {
+
+@rgb0 = internal global [2 x %main_RGB24] [
+	%main_RGB24 {
+		%Int8 200,
+		%Int8 0,
+		%Int8 0
+	},
+	%main_RGB24 {
+		%Int8 200,
+		%Int8 0,
+		%Int8 0
+	}
+]
+
+%AnimationPoint = type {
+	%main_RGB24,
 	%Int32
 };
 
 
-@funcs = internal global [2 x void ()*] [
-	void ()* @init,
-	void ()* @foo
-]
-@a = internal global void ()* @init
-@b = internal global void ()* @foo
-
-%SonrState = type %Int32;
-
-define internal void @xx(%SonrState* %x) {
-	ret void
+@ap = internal global %AnimationPoint {
+	%main_RGB24 {
+		%Int8 200,
+		%Int8 0,
+		%Int8 0
+	},
+	%Int32 3000
 }
+@animation0_points = internal global [5 x %AnimationPoint] [
+	%AnimationPoint {
+		%main_RGB24 {
+			%Int8 200,
+			%Int8 0,
+			%Int8 0
+		},
+		%Int32 3000
+	},
+	%AnimationPoint {
+		%main_RGB24 {
+			%Int8 0,
+			%Int8 200,
+			%Int8 0
+		},
+		%Int32 3000
+	},
+	%AnimationPoint {
+		%main_RGB24 {
+			%Int8 100,
+			%Int8 100,
+			%Int8 0
+		},
+		%Int32 3000
+	},
+	%AnimationPoint {
+		%main_RGB24 {
+			%Int8 254,
+			%Int8 254,
+			%Int8 0
+		},
+		%Int32 3000
+	},
+	%AnimationPoint {
+		%main_RGB24 {
+			%Int8 0,
+			%Int8 0,
+			%Int8 0
+		},
+		%Int32 3000
+	}
+]
 
 define %Int32 @main() {
-	call void @init()
-	call void @foo()
-	%1 = alloca %Node, align 8
 	ret %Int32 0
-}
-
-define internal void @init() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*))
-	ret void
-}
-
-define internal void @foo() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str2 to [0 x i8]*))
-	ret void
-}
-
-define internal %Int32 @add(%Int32 %a, %Int32 %b) {
-	%1 = add %Int32 %a, %b
-	ret %Int32 %1
 }
 
 

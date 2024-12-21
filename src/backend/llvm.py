@@ -594,8 +594,8 @@ def llvm_memcmp(op, p0, p1, size):
 
 	out(NL_INDENT)
 	#op = "call i32 (i8*, i8*, i64) @memcmp("
-	op = "call i1 (i8*, i8*, i64) @memeq("
-	rv = ll_reg_operation(op, foundation.typeBool)
+	rv = ll_reg_operation('call', foundation.typeBool)
+	out("i1 (i8*, i8*, i64) @memeq(")
 	llvm_print_type_value(_p0)
 	out(", ")
 	llvm_print_type_value(_p1)

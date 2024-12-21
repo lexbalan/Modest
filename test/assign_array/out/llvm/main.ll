@@ -250,8 +250,8 @@ break_1:
 	%14 = bitcast [10 x %Int32]* @globalArray0 to i8*
 	%15 = bitcast [10 x %Int32]* @globalArray1 to i8*
 	
-	%16 = call i1 (i8*, i8*, i64) @memeq( i8* %14, i8* %15, %Int64 40)
-	%17 = icmp eq %Bool %16, 0
+	%16 = call i1 (i8*, i8*, i64) @memeq(i8* %14, i8* %15, %Int64 40)
+	%17 = icmp ne %Bool %16, 0
 	br %Bool %17 , label %then_0, label %else_0
 then_0:
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str3 to [0 x i8]*))
@@ -300,8 +300,8 @@ break_2:
 	%42 = bitcast [10 x %Int32]* %20 to i8*
 	%43 = bitcast [10 x %Int32]* %30 to i8*
 	
-	%44 = call i1 (i8*, i8*, i64) @memeq( i8* %42, i8* %43, %Int64 40)
-	%45 = icmp eq %Bool %44, 0
+	%44 = call i1 (i8*, i8*, i64) @memeq(i8* %42, i8* %43, %Int64 40)
+	%45 = icmp ne %Bool %44, 0
 	br %Bool %45 , label %then_1, label %else_1
 then_1:
 	%46 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str6 to [0 x i8]*))

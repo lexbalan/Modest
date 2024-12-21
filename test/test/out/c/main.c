@@ -7,57 +7,29 @@
 #include "main.h"
 
 
+static main_RGB24 rgb0[2] = (main_RGB24[2]){{.red = 200, .green = 0, .blue = 0}, {.red = 200, .green = 0, .blue = 0}};
 
-struct Node;
-typedef struct Node Node;
-struct DataHolder;
-typedef struct DataHolder DataHolder;
+struct AnimationPoint {
+	main_RGB24 color;
+	uint32_t time;
+};
+typedef struct AnimationPoint AnimationPoint;
+
+static AnimationPoint ap = {.color = {.red = 200, .green = 0, .blue = 0}, .time = 3000};
 
 
+static AnimationPoint animation0_points[5] = (AnimationPoint[5]){
 
-struct Node {
-	Node *next;
-	DataHolder *data;
+	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3000},
+	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 3000},
+	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 3000},
+	{.color = {.red = 254, .green = 254, .blue = 0}, .time = 3000},
+	{.color = {.red = 0, .green = 0, .blue = 0}, .time = 3000}
 };
 
-struct DataHolder {
-	int32_t data;
-};
-static void init();
-static void foo();
-
-static void *funcs[2] = (void *[2]){&init, &foo};
-static void *a = &init;
-static void *b = &foo;
-
-typedef int32_t SonrState;
-
-static void xx(SonrState *x)
-{
-}
 
 int32_t main()
 {
-	init();
-	foo();
-
-	Node n;
-
 	return 0;
-}
-
-static void init()
-{
-	printf("init()\n");
-}
-
-static void foo()
-{
-	printf("foo()\n");
-}
-
-static int32_t add(int32_t a, int32_t b)
-{
-	return a + b;
 }
 

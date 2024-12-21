@@ -241,8 +241,8 @@ endif_0:
 	%11 = bitcast %Point2D* %5 to i8*
 	%12 = bitcast %Point2D* %8 to i8*
 	
-	%13 = call i1 (i8*, i8*, i64) @memeq( i8* %11, i8* %12, %Int64 8)
-	%14 = icmp eq %Bool %13, 0
+	%13 = call i1 (i8*, i8*, i64) @memeq(i8* %11, i8* %12, %Int64 8)
+	%14 = icmp ne %Bool %13, 0
 	br %Bool %14 , label %then_1, label %else_1
 then_1:
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
@@ -268,8 +268,8 @@ endif_1:
 	%25 = bitcast %Point2D* %17 to i8*
 	%26 = bitcast %Point2D* %24 to i8*
 	
-	%27 = call i1 (i8*, i8*, i64) @memeq( i8* %25, i8* %26, %Int64 8)
-	%28 = icmp eq %Bool %27, 0
+	%27 = call i1 (i8*, i8*, i64) @memeq(i8* %25, i8* %26, %Int64 8)
+	%28 = icmp ne %Bool %27, 0
 	br %Bool %28 , label %then_2, label %else_2
 then_2:
 	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*))
@@ -292,8 +292,8 @@ endif_2:
 	%37 = bitcast {%Int32,%Int32}* %19 to i8*
 	%38 = bitcast {%Int32,%Int32}* %36 to i8*
 	
-	%39 = call i1 (i8*, i8*, i64) @memeq( i8* %37, i8* %38, %Int64 8)
-	%40 = icmp eq %Bool %39, 0
+	%39 = call i1 (i8*, i8*, i64) @memeq(i8* %37, i8* %38, %Int64 8)
+	%40 = icmp ne %Bool %39, 0
 	br %Bool %40 , label %then_3, label %else_3
 then_3:
 	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*))
@@ -312,8 +312,8 @@ endif_3:
 	%46 = bitcast %Point2D* %17 to i8*
 	%47 = bitcast %Point2D* %45 to i8*
 	
-	%48 = call i1 (i8*, i8*, i64) @memeq( i8* %46, i8* %47, %Int64 8)
-	%49 = icmp eq %Bool %48, 0
+	%48 = call i1 (i8*, i8*, i64) @memeq(i8* %46, i8* %47, %Int64 8)
+	%49 = icmp ne %Bool %48, 0
 	br %Bool %49 , label %then_4, label %else_4
 then_4:
 	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str10 to [0 x i8]*))
@@ -372,8 +372,8 @@ endif_4:
 	%71 = bitcast {%Int32,%Int32}* %69 to i8*
 	%72 = bitcast {%Int32,%Int32}* %70 to i8*
 	
-	%73 = call i1 (i8*, i8*, i64) @memeq( i8* %71, i8* %72, %Int64 8)
-	%74 = icmp eq %Bool %73, 0
+	%73 = call i1 (i8*, i8*, i64) @memeq(i8* %71, i8* %72, %Int64 8)
+	%74 = icmp ne %Bool %73, 0
 	br %Bool %74 , label %then_5, label %else_5
 then_5:
 	%75 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str14 to [0 x i8]*))

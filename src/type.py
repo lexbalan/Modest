@@ -980,7 +980,9 @@ def select_common_type(a, b):
 
 	if a['kind'] == b['kind']:
 		if type_is_generic(a) and type_is_generic(b):
-			if type_is_array(a):
+			if type_is_record(a):
+				return select_common_record_type(a, b)
+			elif type_is_array(a):
 				# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
 				if type_is_generic(a['of']):
 					return b
