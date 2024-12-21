@@ -60,12 +60,12 @@ const int8_t stopSequence[1] = _stopSequence;
 static void test()
 {
 	// тестируем работу с локальным generic массивом
-	int8_t yy[6];
-	memcpy(&yy, &(int8_t[]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16}, sizeof(int8_t[6]));
+	int32_t yy[6];
+	memcpy(&yy, &(int32_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16}, sizeof(int32_t[6]));
 	int32_t i = 0;
 	while (i < LENGTHOF(yy)) {
-		const int8_t y = yy[i];
-		printf("yy[%i] = %i\n", i, (int32_t)y);
+		const int32_t y = yy[i];
+		printf("yy[%i] = %i\n", i, y);
 		i = i + 1;
 	}
 }

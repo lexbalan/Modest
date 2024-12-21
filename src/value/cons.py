@@ -192,47 +192,10 @@ def value_cons_explicit(t, v, ti):
 
 
 
-# for value
-def select_default_type_for(x):
-	xt = x['type']
-	from trans import typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
-
-	if not type.type_is_generic(xt):
-		return None
-
-	if type.type_is_integer(xt):
-		t = typeSysInt
-		if type.type_is_unsigned(xt):
-			t = typeSysNat
-		return t
-
-	elif type.type_is_string(xt):
-		return typeSysStr
-
-	elif type.type_is_float(xt):
-		return typeSysFloat
-
-	elif type.type_is_char(xt):
-		return typeSysChar
-
-	# Generic array with non-generic items -> Array
-	# example:
-	#   var a = [Int32 1, Int32 2]  // -> [2]Int32
-	elif type.type_is_array(xt):
-		if not type.type_is_generic(xt['of']):
-			# GenericArray -> Array
-			#print("- DEFAULT CONS ARRAY")
-			item_type = xt['of']
-			length = len(x['items'])
-			volume = value_integer_create(length)
-			return type.type_array(item_type, volume, x['ti'])
-
-	return None # corresponded type not found!
-
 
 # избавляемся от generic
 def value_cons_default(v):
-	t = select_default_type_for(v)
+	t = _select_default_type_for(v['type'])
 	if t != None:
 		nv = _do_value_cons(t, v, 'implicit', v['ti'])
 		if nv != None:
@@ -242,17 +205,50 @@ def value_cons_default(v):
 
 def value_cons_implicit_check(t, v):
 	nv = value_cons_implicit(t, v)
-	#type.check(t, nv['type'], v['ti'])
-
-	res = type.type_eq(t, nv['type'])
-	if not res:
+	if not type.type_eq(t, nv['type']):
 		error("type error", v['ti'])
 		print("expected: ", end='')
 		type.type_print(t)
 		print("\nreceived: ", end='')
 		type.type_print(v['type'])
 		print("\n")
-
 	return nv
 
+
+
+
+# for value
+def _select_default_type_for(t):
+	from trans import typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
+
+	if not type.type_is_generic(t):
+		return None
+
+	if type.type_is_integer(t):
+		t = typeSysInt
+		if type.type_is_unsigned(t):
+			t = typeSysNat
+		return t
+
+	elif type.type_is_string(t):
+		return typeSysStr
+
+	elif type.type_is_float(t):
+		return typeSysFloat
+
+	elif type.type_is_char(t):
+		return typeSysChar
+
+	# Generic array with non-generic items -> Array
+	#  `[1, 2]  -> [2]Int32 [Int32 1, Int32 2]`
+	elif type.type_is_array(t):
+		item_type = t['of']
+		if type.type_is_generic(t['of']):
+			# выбираем тип для generic-элемента
+			item_type = _select_default_type_for(t['of'])
+
+		volume = t['volume']
+		return type.type_array(item_type, volume, t['ti'])
+
+	return None # corresponded type not found!
 

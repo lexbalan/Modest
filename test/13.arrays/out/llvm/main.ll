@@ -402,12 +402,12 @@ define internal void @f0([30 x %Char8]* noalias sret([30 x %Char8]) %0, [20 x %C
 
 define internal void @test() {
 	; тестируем работу с локальным generic массивом
-	%1 = alloca [6 x %Int8], align 1
-	%2 = insertvalue [6 x %Int8] zeroinitializer, %Int8 170, 0
-	%3 = insertvalue [6 x %Int8] %2, %Int8 85, 1
-	%4 = insertvalue [6 x %Int8] %3, %Int8 2, 2
-	%5 = insertvalue [6 x %Int8] %4, %Int8 22, 5
-	store [6 x %Int8] %5, [6 x %Int8]* %1
+	%1 = alloca [6 x %Int32], align 4
+	%2 = insertvalue [6 x %Int32] zeroinitializer, %Int32 170, 0
+	%3 = insertvalue [6 x %Int32] %2, %Int32 85, 1
+	%4 = insertvalue [6 x %Int32] %3, %Int32 2, 2
+	%5 = insertvalue [6 x %Int32] %4, %Int32 22, 5
+	store [6 x %Int32] %5, [6 x %Int32]* %1
 	%6 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %6
 	br label %again_1
@@ -417,14 +417,13 @@ again_1:
 	br %Bool %8 , label %body_1, label %break_1
 body_1:
 	%9 = load %Int32, %Int32* %6
-	%10 = getelementptr inbounds [6 x %Int8], [6 x %Int8]* %1, %Int32 0, %Int32 %9
-	%11 = load %Int8, %Int8* %10
+	%10 = getelementptr inbounds [6 x %Int32], [6 x %Int32]* %1, %Int32 0, %Int32 %9
+	%11 = load %Int32, %Int32* %10
 	%12 = load %Int32, %Int32* %6
-	%13 = sext %Int8 %11 to %Int32
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Int32 %12, %Int32 %13)
-	%15 = load %Int32, %Int32* %6
-	%16 = add %Int32 %15, 1
-	store %Int32 %16, %Int32* %6
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Int32 %12, %Int32 %11)
+	%14 = load %Int32, %Int32* %6
+	%15 = add %Int32 %14, 1
+	store %Int32 %15, %Int32* %6
 	br label %again_1
 break_1:
 	ret void
