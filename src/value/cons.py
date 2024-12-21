@@ -3,16 +3,16 @@ import type as type
 from error import info, warning, error
 
 from .value import value_bad, value_is_bad, value_is_undefined, value_is_immediate, value_cons_node
-from .unit import value_unit_cons, unit_can
-from .bool import value_bool_cons, bool_can
-from .word import value_word_cons, word_can
-from .char import value_char_cons, char_can
-from .integer import value_integer_cons, value_integer_create, integer_can
-from .float import value_float_cons, float_can
-from .record import value_record_cons, record_can
-from .array import value_array_cons, array_can
-from .pointer import value_pointer_cons, cons_ptr_to_str_from_string, pointer_can
-
+from .unit import unit_can, value_unit_cons
+from .bool import bool_can, value_bool_cons
+from .word import word_can, value_word_cons
+from .char import char_can, value_char_cons
+from .integer import integer_can, value_integer_cons, value_integer_create
+from .float import float_can, value_float_cons
+from .record import record_can, value_record_cons
+from .array import array_can, value_array_cons
+from .pointer import pointer_can, value_pointer_cons, cons_ptr_to_str_from_string
+from .bad import bad_can, value_bad_cons
 
 # данная локальная функция пытается привести v к t
 # возвращает None если не может привести (!)
@@ -98,6 +98,7 @@ def cons_can(to, from_type, method):
 	elif type.type_is_array(to): checker = array_can
 	elif type.type_is_float(to): checker = float_can
 	elif type.type_is_char(to): checker = char_can
+	elif type.type_is_bad(to): checker = bad_can
 
 	res = False
 	if checker != None:
@@ -162,13 +163,7 @@ def value_cons_implicit(t, v):
 				return value_pointer_cons(t, v, 'implicit', ti=ti)  # value_cons_node?
 
 
-	# END - (!) потому что в C номинальные типы, а у нас - структурные
-
-	nv = _do_value_cons(t, v, 'implicit', ti)
-	#if nv == None:
-	#	return v
-	return nv
-
+	return _do_value_cons(t, v, 'implicit', ti)
 
 
 def value_cons_explicit(t, v, ti):
@@ -193,15 +188,7 @@ def value_cons_explicit(t, v, ti):
 		print()
 		return value_bad(v['ti'])
 
-	nv = _do_value_cons(t, v, 'explicit', ti)
-	assert(nv != None)
-	return nv
-
-
-
-def _try_to_implicit_cons(t, v, ti):
-	nv = _do_value_cons(t, v, 'implicit', ti)
-	return nv if (nv != None) else v
+	return _do_value_cons(t, v, 'explicit', ti)
 
 
 
@@ -244,15 +231,13 @@ def select_default_type_for(x):
 
 
 # избавляемся от generic
-def value_cons_default(x):
-	#from_type = x['type']
-	ti = x['ti']
-
-	t = select_default_type_for(x)
+def value_cons_default(v):
+	t = select_default_type_for(v)
 	if t != None:
-		return _try_to_implicit_cons(t, x, ti)
-
-	return x
+		nv = _do_value_cons(t, v, 'implicit', v['ti'])
+		if nv != None:
+			return nv
+	return v
 
 
 def value_cons_implicit_check(t, v):
@@ -269,13 +254,5 @@ def value_cons_implicit_check(t, v):
 		print("\n")
 
 	return nv
-
-
-def value_bad_cons(t, v, method, ti):
-	return value_bad(ti)
-
-
-
-
 
 
