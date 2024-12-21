@@ -201,6 +201,7 @@ declare void @perror(%ConstCharStr* %str)
 @str12 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str13 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 ; -- endstrings --
+; Simply record for records assignation test
 
 %Point = type {
 	%Int32,
@@ -329,6 +330,39 @@ define %Int @main() {
 	%53 = load %Int32, %Int32* %52
 	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %53)
 	; error: closed arrays of closed arrays are denied
+;let dim1 = 15
+;	let dim2 = 16
+;
+;	var aa: [dim1][dim2]Int32
+;
+;	var i = 0
+;	while i < 16 {
+;		var j = 0
+;		while j < 16 {
+;			aa[i][j] = i * j
+;			j = j + 1
+;		}
+;		i = i + 1
+;	}
+;
+;	i = 0
+;	while i < 16 {
+;		var k = 0
+;		while k < 16 {
+;			printf("aa[%i][%i] = %i\n", i, k, aa[i][k])
+;			k = k + 1
+;		}
+;		i = i + 1
+;	}
+;
+;
+;	let xa = aa[3]
+;
+;	i = 0
+;	while i < dim2 {
+;		printf("xa[%i] = %i\n", i, xa[i])
+;		i = i + 1
+;	}
 	ret %Int 0
 }
 

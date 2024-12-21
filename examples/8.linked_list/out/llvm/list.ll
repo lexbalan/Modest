@@ -359,6 +359,9 @@ endif_0:
 	ret void
 }
 
+; get list node by number
+; if number is out of range returns nil
+; if number < 0 - go backward
 define %list_Node* @list_node_get(%list_List* %list, %Int32 %pos) {
 	%1 = icmp eq %list_List* %list, bitcast (i8* null to %list_List*)
 	%2 = getelementptr inbounds %list_List, %list_List* %list, %Int32 0, %Int32 2

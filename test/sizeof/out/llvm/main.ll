@@ -278,6 +278,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Mixed3
 };
 
+;var s: Mixed2
 
 @c = internal global %Char8 zeroinitializer
 @i = internal global %Int32 zeroinitializer

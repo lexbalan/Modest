@@ -309,6 +309,9 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str40 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str41 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
+;@attribute("c_no_print")
+;import "misc/minmax"
+;$pragma c_include "./minmax.h"
 
 @constantArray = constant [10 x i4] [
 	i4 1,
@@ -340,6 +343,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 	%Char8 98,
 	%Char8 99
 ]
+;var arrayOfChars = [Char8 "a", 'b', 'c']
 
 define internal void @f0([30 x %Char8]* noalias sret([30 x %Char8]) %0, [20 x %Char8] %__x) {
 	%x = alloca [20 x %Char8]

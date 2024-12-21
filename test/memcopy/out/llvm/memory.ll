@@ -111,10 +111,17 @@ break_2:
 ; -- end print imports --
 ; -- strings --
 ; -- endstrings --
+;
+;
 
+;$if (systemWidth == 64)
 
 %Word = type %Word64;
 %Nat = type %Int64;
+;$elseif (systemWidth == 32)
+;type Word Word32
+;type Nat Nat32
+;$endif
 
 
 define void @mzero(i8* %mem, %Int64 %len) {

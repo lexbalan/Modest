@@ -418,8 +418,8 @@ def llvm_print_value(x):
 	elif k == 'inline_cast': llvm_print_value_inlinecast(x)
 	elif k == 'zero': llvm_print_value_zero(x)
 	else:
-		out("<unknown_value::%s>" % c)
-		info("<llvm::unknown_value::%s>" % c, x['ti'])
+		out("<llvm::unknown_value_kind '%s'>" % k)
+		info("<llvm::unknown_value_kind '%s'>" % k, x['ti'])
 
 	return
 
@@ -1795,14 +1795,22 @@ def print_stmt_block(s):
 	locals_pop()
 
 
+
+def print_comment(x):
+	k = x['kind']
+	if k == 'line':
+		print_comment_line(x)
+	elif k == 'block':
+		print_comment_block(x)
+
+
 def print_comment_block(x):
-	#out(NL_INDENT)
-	#out("/*%s*/" % x['text'])
-	pass
+	out('\n') # * x['nl'])
+	out(";%s" % x['text'].replace('\n', '\n;'))
 
 
 def print_comment_line(x):
-	out("\n")
+	out('\n') # * x['nl'])
 	lines = x['lines']
 	i = 0
 	n = len(lines)
@@ -2346,7 +2354,13 @@ def een(defs, decl_only=False):
 	isa_prev = None
 	for x in defs:
 		isa = x['isa']
+
+		if isa == 'comment':
+			print_comment(x)
+			continue
+
 		if not 'id' in x:
+		#	print(x['isa'])
 			continue
 
 		if 'll_no_print' in x['att']:
@@ -2382,6 +2396,10 @@ def een(defs, decl_only=False):
 
 		elif isa == 'def_type':
 			print_def_type(x)
+
+		elif isa == 'comment':
+			print("AFEKLMLKFMLKMDFLKMEFLKDMLAKMLMLWMDLAMWDLMALDMAWLDMALWDAWDLKMW")
+			print_comment(x)
 
 
 # защита от повторного включения

@@ -14,8 +14,7 @@ def init():
 
 
 def newline(n=1):
-	nl_str = '\n'
-	out(nl_str * n)
+	out('\n' * n)
 
 
 def indent():

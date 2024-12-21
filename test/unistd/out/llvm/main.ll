@@ -326,6 +326,7 @@ declare %Int @system([0 x %ConstChar]* %string)
 @str8 = private constant [11 x i8] [i8 80, i8 65, i8 84, i8 72, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str9 = private constant [6 x i8] [i8 45, i8 32, i8 104, i8 105, i8 10, i8 0]
 ; -- endstrings --
+; getenv
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))

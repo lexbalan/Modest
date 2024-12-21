@@ -322,6 +322,17 @@ else_4:
 	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str11 to [0 x i8]*))
 	br label %endif_4
 endif_4:
+;
+;	var prx = &p2d2
+;	var prx2 = &prx
+;	var pry = &p2d3
+;
+;	if **prx2 == *pry {
+;		printf("**prx2 == *pry\n")
+;	} else {
+;		printf("**prx2 != *pry\n")
+;	}
+;
 	; assign record by pointer
 	%52 = insertvalue %Point2D zeroinitializer, %Int32 100, 0
 	%53 = insertvalue %Point2D %52, %Int32 200, 1

@@ -194,6 +194,14 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
+;let x0 = Int32 -1
+;	let x1 = Int64 -1
+;
+;	let y0 = Nat64 x0
+;	let y1 = Nat64 x1
+;
+;	printf("x0 = %llx\n", y0)
+;	printf("x1 = %llx\n", y1)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int8 255)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*), %Int32 255)
 	;	let c = Int32 a
