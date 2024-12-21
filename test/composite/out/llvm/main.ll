@@ -195,20 +195,20 @@ declare void @perror(%ConstCharStr* %str)
 @str6 = private constant [4 x i8] [i8 110, i8 101, i8 10, i8 0]
 ; -- endstrings --
 
-%main_RGB24 = type {
+%RGB24 = type {
 	%Int8,
 	%Int8,
 	%Int8
 };
 
 
-@rgb0 = internal global [2 x %main_RGB24] [
-	%main_RGB24 {
+@rgb0 = internal global [2 x %RGB24] [
+	%RGB24 {
 		%Int8 200,
 		%Int8 0,
 		%Int8 0
 	},
-	%main_RGB24 {
+	%RGB24 {
 		%Int8 200,
 		%Int8 0,
 		%Int8 0
@@ -216,13 +216,13 @@ declare void @perror(%ConstCharStr* %str)
 ]
 
 %AnimationPoint = type {
-	%main_RGB24,
+	%RGB24,
 	%Int32
 };
 
 
 @ap = internal global %AnimationPoint {
-	%main_RGB24 {
+	%RGB24 {
 		%Int8 200,
 		%Int8 0,
 		%Int8 0
@@ -231,7 +231,7 @@ declare void @perror(%ConstCharStr* %str)
 }
 @animation0_points = internal global [5 x %AnimationPoint] [
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 200,
 			%Int8 0,
 			%Int8 0
@@ -239,7 +239,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 3
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 0,
 			%Int8 200,
 			%Int8 0
@@ -247,7 +247,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 30
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 100,
 			%Int8 100,
 			%Int8 0
@@ -255,7 +255,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 300
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 254,
 			%Int8 254,
 			%Int8 0
@@ -263,7 +263,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 20
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 0,
 			%Int8 0,
 			%Int8 255
@@ -273,7 +273,7 @@ declare void @perror(%ConstCharStr* %str)
 ]
 @animation1_points = internal global [5 x %AnimationPoint] [
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 200,
 			%Int8 0,
 			%Int8 0
@@ -281,7 +281,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 3
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 0,
 			%Int8 200,
 			%Int8 0
@@ -289,7 +289,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 30
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 100,
 			%Int8 100,
 			%Int8 0
@@ -297,7 +297,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 300
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 254,
 			%Int8 254,
 			%Int8 0
@@ -305,7 +305,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 20
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 0,
 			%Int8 0,
 			%Int8 255
@@ -315,7 +315,7 @@ declare void @perror(%ConstCharStr* %str)
 ]
 @animation2_points = internal global [5 x %AnimationPoint] [
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 200,
 			%Int8 0,
 			%Int8 0
@@ -323,7 +323,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 3
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 0,
 			%Int8 200,
 			%Int8 0
@@ -331,7 +331,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 30
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 100,
 			%Int8 100,
 			%Int8 0
@@ -339,7 +339,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 300
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 255,
 			%Int8 254,
 			%Int8 0
@@ -347,7 +347,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 20
 	},
 	%AnimationPoint {
-		%main_RGB24 {
+		%RGB24 {
 			%Int8 0,
 			%Int8 0,
 			%Int8 255

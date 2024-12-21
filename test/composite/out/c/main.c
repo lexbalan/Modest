@@ -7,10 +7,18 @@
 #include "main.h"
 
 
-static main_RGB24 rgb0[2] = (main_RGB24[2]){{.red = 200, .green = 0, .blue = 0}, {.red = 200, .green = 0, .blue = 0}};
+
+struct RGB24 {
+	uint8_t red;
+	uint8_t green;
+	uint8_t blue;
+};
+typedef struct RGB24 RGB24;
+
+static RGB24 rgb0[2] = (RGB24[2]){{.red = 200, .green = 0, .blue = 0}, {.red = 200, .green = 0, .blue = 0}};
 
 struct AnimationPoint {
-	main_RGB24 color;
+	RGB24 color;
 	uint32_t time;
 };
 typedef struct AnimationPoint AnimationPoint;

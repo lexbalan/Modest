@@ -1,19 +1,20 @@
+// test/composite
+//
 
 include "libc/stdio"
 
 
-
-public type RGB24 record {
-	public red: Nat8
-	public green: Nat8
-	public blue: Nat8
+type RGB24 record {
+	red: Nat8
+	green: Nat8
+	blue: Nat8
 }
 
 var rgb0 = [2]RGB24 [{red=200, green=0, blue=0}, {red=200, green=0, blue=0}]
 
 type AnimationPoint record {
-	public color: RGB24
-	public time: Nat32
+	color: RGB24
+	time: Nat32
 }
 
 var ap = AnimationPoint {color={red=200, green=0, blue=0}, time=3000}
