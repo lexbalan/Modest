@@ -71,6 +71,9 @@ def value_record_cons(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti=ti)
 	nv['immediate'] = v['immediate']
 
+	# литерал записи всегда имеет тип Generic(Array)
+	# это позволяет конструировать из него разные записи
+
 	if 'items' in v:
 		# конструируем запись на основе другой generic записи
 		items = []

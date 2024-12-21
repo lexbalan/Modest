@@ -140,8 +140,8 @@ def value_array_cons(t, v, method, ti):
 		nv['items'] = items
 		return nv
 
-	# литерал массива может быть Generic но не immediate!
-	# ниже показано почему:
+	# литерал массива всегда имеет тип Generic(Array)
+	# это позволяет конструировать из него разные массивы
 	# ex:
 	#	var int100: Int = 100
 	#	var int200: Int = 200
