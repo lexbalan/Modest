@@ -100,7 +100,6 @@ def value_cons_implicit(t, v, ti=None):
 				# а напечатает просто значение
 				return value_pointer_cons(t, v, 'implicit', ti=ti)  # value_cons_node?
 
-
 	return _do_value_cons(t, v, 'implicit', ti)
 
 

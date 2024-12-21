@@ -46,6 +46,12 @@ def width_ok(to, from_type, method):
 
 def pointer_can(to, from_type, method):
 	# implicit region
+	assert(type.type_is_pointer(to))
+
+	if method == 'unsafe':
+		if type.type_is_pointer(from_type) or type.type_is_integer(from_type):
+			# UNSAFE: cons ANY pointer from ANY pointer or integer
+			return True
 
 	# String -> *[]CharX
 	if type.type_is_string(from_type):
@@ -61,11 +67,7 @@ def pointer_can(to, from_type, method):
 
 		# cons *[]X from *[n]X +
 		if type.type_is_closed_array(from_type['to']) and type.type_is_open_array(to['to']):
-			if method == 'unsafe':
-				return True  #! *[]X from *[n]Y !
-			from .cons import cons_can
-			return cons_can(to['to']['of'], from_type['to']['of'], method)
-			#return type.type_eq(from_type['to']['of'], to['to']['of'])
+			return type.type_eq(from_type['to']['of'], to['to']['of'])
 
 
 	if method == 'implicit':
