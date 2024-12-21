@@ -469,11 +469,14 @@ def type_eq_alias(a, b, opt):
 
 
 def type_eq(a, b, opt=[]):
-	# fast checking
-	#if a == b: return True
+	if id(a) == id(b):
+		return True
 
-	if a['kind'] == 'bad' or b['kind'] == 'bad': return True
-	if a['kind'] != b['kind']: return False
+	if a['kind'] == 'bad' or b['kind'] == 'bad':
+		return True
+
+	if a['kind'] != b['kind']:
+		return False
 
 	# проверять аттрибуты (volatile, const)
 	# использую для C чтобы можно было более строго проверить типы
@@ -491,21 +494,20 @@ def type_eq(a, b, opt=[]):
 	# normal checking
 	k = a['kind']
 	if k == 'int': return type_eq_integer(a, b, opt)
-	elif k == 'unit': return True
 	elif k == 'bool': return True
-	elif k == 'byte': return True
-	elif k == 'string': return True
 	elif k == 'func': return type_eq_func(a, b, opt)
 	elif k == 'record': return type_eq_record(a, b, opt)
-	elif k == 'pointer': return type_eq_pointer(a, b, opt)
 	elif k == 'array': return type_eq_array(a, b, opt)
-	elif k == 'enum': return type_eq_enum(a, b, opt)
-	elif k == 'float': return type_eq_float(a, b, opt)
+	elif k == 'pointer': return type_eq_pointer(a, b, opt)
 	elif k == 'char': return type_eq_char(a, b, opt)
 	elif k == 'word': return type_eq_word(a, b, opt)
+	elif k == 'float': return type_eq_float(a, b, opt)
+	elif k == 'enum': return type_eq_enum(a, b, opt)
+	elif k == 'string': return True
 	elif k == 'undefined': return type_eq_undefined(a, b, opt)
 	elif k == 'va_list': return b['kind'] == 'va_list'
-	assert(False)
+	elif k == 'unit': return True
+	assert(False, k)
 	return False
 
 

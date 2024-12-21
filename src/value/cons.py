@@ -14,68 +14,10 @@ from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons, cons_ptr_to_str_from_string
 from .bad import bad_can, value_bad_cons
 
-# данная локальная функция пытается привести v к t
-# возвращает None если не может привести (!)
-# не принтует ошибку (но может выдать info)
-def _do_value_cons(t, v, method, ti):
-	if value_is_bad(v) or type.type_is_bad(t):
-		return None
-
-	#if type.type_is_record(t):
-	#	info(" CONS RECORD %s" % t['kind'], ti)
-	#if type.type_is_string(v['type']):
-	#	info("+++++++ CONS %s" % t['kind'], ti)
-	#	pass
-
-	if method == 'implicit':
-		if type.type_eq(v['type'], t):
-			return v
-
-	if method == 'explicit':
-		if type.type_is_va_list(v['type']):
-			return value_cons_node(t, v, 'explicit', ti)
-
-		from trans import is_unsafe_mode
-		if is_unsafe_mode():
-			method = 'unsafe'
-
-
-	constructor = None
-	if type.type_is_integer(t): constructor = value_integer_cons
-	elif type.type_is_float(t): constructor = value_float_cons
-	elif type.type_is_array(t): constructor = value_array_cons
-	elif type.type_is_record(t): constructor = value_record_cons
-	elif type.type_is_char(t): constructor = value_char_cons
-	elif type.type_is_word(t): constructor = value_word_cons
-	elif type.type_is_bool(t): constructor = value_bool_cons
-	elif type.type_is_pointer(t): constructor = value_pointer_cons
-	elif type.type_is_unit(t): constructor = value_unit_cons
-	elif type.type_is_bad(t): constructor = value_bad_cons
-	else: assert False, "unknown type kind '%s'" % t['kind']
-
-	if constructor == None:
-		return None
-
-	nv = constructor(t, v, method, ti)
-	if nv != None:
-		if 'nl' in v:
-			nv['nl'] = v['nl']
-	else:
-		print(t['kind'])
-		type.type_print(t)
-		type.type_print(v['type'])
-
-	return nv
-
 
 
 # can be implicitly constructed value with type a from type b?
 def cons_can(to, from_type, method):
-#	print("cons_can? ", end='')
-#	type.type_print(from_type)
-#	print(" -> ", end='')
-#	type.type_print(to)
-#	print()
 
 	if type.type_eq(to, from_type):
 		return True
@@ -251,4 +193,58 @@ def _select_default_type_for(t):
 		return type.type_array(item_type, volume, t['ti'])
 
 	return None # corresponded type not found!
+
+
+# данная локальная функция пытается привести v к t
+# возвращает None если не может привести (!)
+# не принтует ошибку (но может выдать info)
+def _do_value_cons(t, v, method, ti):
+	if value_is_bad(v) or type.type_is_bad(t):
+		return None
+
+	#if type.type_is_record(t):
+	#	info(" CONS RECORD %s" % t['kind'], ti)
+	#if type.type_is_string(v['type']):
+	#	info("+++++++ CONS %s" % t['kind'], ti)
+	#	pass
+
+	if method == 'implicit':
+		if type.type_eq(v['type'], t):
+			return v
+
+	if method == 'explicit':
+		if type.type_is_va_list(v['type']):
+			return value_cons_node(t, v, 'explicit', ti)
+
+		from trans import is_unsafe_mode
+		if is_unsafe_mode():
+			method = 'unsafe'
+
+
+	constructor = None
+	if type.type_is_integer(t): constructor = value_integer_cons
+	elif type.type_is_float(t): constructor = value_float_cons
+	elif type.type_is_array(t): constructor = value_array_cons
+	elif type.type_is_record(t): constructor = value_record_cons
+	elif type.type_is_char(t): constructor = value_char_cons
+	elif type.type_is_word(t): constructor = value_word_cons
+	elif type.type_is_bool(t): constructor = value_bool_cons
+	elif type.type_is_pointer(t): constructor = value_pointer_cons
+	elif type.type_is_unit(t): constructor = value_unit_cons
+	elif type.type_is_bad(t): constructor = value_bad_cons
+	else: assert False, "unknown type kind '%s'" % t['kind']
+
+	if constructor == None:
+		return None
+
+	nv = constructor(t, v, method, ti)
+	if nv != None:
+		if 'nl' in v:
+			nv['nl'] = v['nl']
+	else:
+		print(t['kind'])
+		type.type_print(t)
+		type.type_print(v['type'])
+
+	return nv
 
