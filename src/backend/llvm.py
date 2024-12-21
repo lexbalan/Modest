@@ -603,9 +603,9 @@ def llvm_memcmp(op, p0, p1, size):
 	llvm_print_type_value(size)
 	out(")")
 
-	z = llvm_value_num(foundation.typeBool, 0)
+	zero = llvm_value_num(foundation.typeBool, 0)
 	op = 'ne' if op == 'eq' else 'eq'
-	rv2 = llvm_eval_binary('icmp %s' % op, rv, z, {'type': foundation.typeBool})
+	rv2 = llvm_eval_binary('icmp %s' % op, rv, zero, {'type': foundation.typeBool})
 
 	return rv2
 
@@ -945,8 +945,8 @@ def do_eval_not(v):
 def do_eval_neg(v):
 	#%10 = sub i32 0, %9
 	ve = do_reval(v['value'])
-	z = llvm_value_num(v['type'], 0)
-	return llvm_eval_binary('sub', z, ve, v)
+	zero = llvm_value_num(v['type'], 0)
+	return llvm_eval_binary('sub', zero, ve, v)
 
 
 
@@ -1331,8 +1331,8 @@ def do_eval_cons(x):
 	# anyNonZeroValue to Bool  ==  true  (!)
 	# (the same as in C)
 	if htype.type_is_bool(to_type):
-		z = llvm_value_num(v['type'], 0)
-		return llvm_eval_binary('icmp ne', v, z, x)
+		zero = llvm_value_num(v['type'], 0)
+		return llvm_eval_binary('icmp ne', v, zero, x)
 
 
 	if is_global_context():
@@ -1387,8 +1387,8 @@ def do_eval_array(v):
 	if n_pad > 0:
 		i = 0
 		while i < n_pad:
-			z = llvm_value_zero(v['type']['of'])
-			items.append(z)
+			zero = llvm_value_zero(v['type']['of'])
+			items.append(zero)
 			i = i + 1
 
 	# global?
@@ -1461,17 +1461,15 @@ def do_eval_func(x):
 
 
 def do_eval_var(x):
-	k = x['kind']
+	id_str = get_id_str(x)
 
 	if value_attribute_check(x, 'local'):
-		localname = get_id_str(x)
-		y = locals_get(localname)
-		y['is_adr'] = True
-		return y
+		y = locals_get(id_str)
+	else:
+		y = llvm_value_id(id_str, x['type'])
 
-	rv = llvm_value_id(get_id_str(x), x['type'])
-	rv['is_adr'] = True
-	return rv
+	y['is_adr'] = True
+	return y
 
 
 
