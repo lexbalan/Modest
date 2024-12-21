@@ -776,9 +776,7 @@ def print_type_id(t):
 
 def print_int_type_for(width):
 	# Generic int can have width (for example) 6 bit, etc.
-	w = align_bits_up(width)
-	out("i%d" % w)
-
+	out("i%d" % align_bits_up(width))
 
 
 # функция может получать только указатель на массив
@@ -814,11 +812,6 @@ def print_type(t):
 			print_int_type_for(t['width'])
 			return
 
-		#if t['id'] != None:
-		#	out('%%%s' % get_id_str(t))
-		#	return
-
-
 	if htype.type_is_func(t): print_type_func(t)
 	elif htype.type_is_record(t): print_type_record(t)
 	elif htype.type_is_pointer(t): print_type_pointer(t)
@@ -829,15 +822,10 @@ def print_type(t):
 		print_int_type_for(t['width'])
 
 	elif htype.type_is_float(t):
-		#if htype.type_is_generic(t):
-		#	out("double")
-		#else:
-		print(t['width'])
-		if t['width'] == 32:
+		if t['width'] <= 32:
 			out("float")
 		else:
 			out("double")
-		#print_type_id(t)
 
 	elif htype.type_is_char(t):
 		print_int_type_for(t['width'])
