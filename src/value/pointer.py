@@ -6,44 +6,6 @@ from .char import utf32_chars_to_utfx_chars
 
 
 
-def cons_ptr_to_str_from_string(t, v, method, ti):
-	#info("cons_ptr_to_str_from_string", ti)
-	from trans import module_strings_add
-
-	s_imm = utf32_chars_to_utfx_chars(v['asset'], t['to']['of'], ti)
-
-	# получаем список кодов чаров для строки в целевой кодировке
-	# из списка чар кодов в utf-32
-	#s_imm = method(v['asset'])
-	# массив кодов
-	# длина полученной строки может отличаться от длины оригинала в utf-32
-	# именно value_cons_node чтобы не пошел как immediate! тк *StrX это не immed
-	nv = value_cons_node(t, v, method, ti=ti)
-	nv['asset'] = s_imm
-	# 'zstring' означает что строка должна быть нуль-терминирована
-	# TODO: хотя - может это стоит переложить на бекенд? надо подумать
-	nv['att'].append('zstring')
-	module_strings_add(nv)
-	return nv
-
-
-
-def _value_pointer_cons_immediate(t, v, method, ti):
-	#info("_value_pointer_cons_immediate", ti)
-	if type.type_is_string(v['type']):
-		return cons_ptr_to_str_from_string(t, v, method, ti)
-
-	return value_cons_immediate(t, v, method, ti)
-
-
-
-def width_ok(to, from_type, method):
-	if method == 'unsafe':
-		return True
-	return from_type['width'] != to['width']
-
-
-
 def pointer_can(to, from_type, method):
 	# implicit region
 	assert(type.type_is_pointer(to))
@@ -84,16 +46,26 @@ def pointer_can(to, from_type, method):
 	if type.type_is_pointer(from_type):
 		return True  # Ptr -> Ptr
 
-	elif type.type_is_integer(from_type):
-		return width_ok(to, from_type, method)  # Int -> Ptr
-
 	return False
 
 
 
 def value_pointer_cons(t, v, method, ti):
 	if value_is_immediate(v):
-		return _value_pointer_cons_immediate(t, v, method, ti)
+		if type.type_is_string(v['type']):
+			s_imm = utf32_chars_to_utfx_chars(v['asset'], t['to']['of'], ti)
+			nv = value_cons_node(t, v, method, ti=ti)
+			nv['asset'] = s_imm
+			nv['att'].append('zstring')
+
+			# регистрируем строку в модуле
+			from trans import module_strings_add
+			module_strings_add(nv)
+
+			return nv
+
+		return value_cons_immediate(t, v, method, ti)
+
 	return value_cons_node(t, v, method, ti=ti)
 
 

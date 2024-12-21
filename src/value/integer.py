@@ -72,36 +72,32 @@ def _value_integer_cons_immediate(t, v, method, ti):
 
 
 
-def width_ok(to, from_type, method):
-	if method == 'unsafe':
-		return True
-	return from_type['width'] <= to['width']
-
-
 def integer_can(to, from_type, method):
 	if htype.type_is_generic_integer(from_type):
-		return width_ok(to, from_type, method)
+		return from_type['width'] <= to['width']
 
 	if method == 'implicit':
 		return False
 
-	# explicit or unsafe cons method
-	if htype.type_is_integer(from_type):
-		return width_ok(to, from_type, method)
-	elif htype.type_is_float(from_type):
+	if htype.type_is_float(from_type):
 		return True
-	elif htype.type_is_char(from_type):
-		return width_ok(to, from_type, method)
-	elif htype.type_is_word(from_type):
-		return width_ok(to, from_type, method)
-	elif htype.type_is_bool(from_type):
-		return width_ok(to, from_type, method)
+
+	# explicit or unsafe cons method
+	c0 = htype.type_is_integer(from_type)
+	c1 = htype.type_is_char(from_type)
+	c2 = htype.type_is_word(from_type)
+	c3 = htype.type_is_bool(from_type)
+	if c0 or c1 or c2 or c3:
+		if method == 'unsafe':
+			return True
+		return to['width'] >= from_type['width']
 
 	if method != 'unsafe':
 		return False
 
 	if htype.type_is_pointer(from_type):
-		return width_ok(to, from_type, method)
+		from main import settings
+		return to['width'] >= int(settings.get('pointer_width'))
 
 	return False
 

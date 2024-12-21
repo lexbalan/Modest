@@ -10,7 +10,7 @@ from .integer import integer_can, value_integer_cons, value_integer_create
 from .float import float_can, value_float_cons
 from .record import record_can, value_record_cons
 from .array import array_can, value_array_cons
-from .pointer import pointer_can, value_pointer_cons, cons_ptr_to_str_from_string
+from .pointer import pointer_can, value_pointer_cons
 from .bad import bad_can, value_bad_cons
 
 

@@ -18,25 +18,24 @@ def value_char_create(char_code, _type=None, ti=None):
 	return v
 
 
-def width_ok(to, from_type, method):
-	if method == 'unsafe':
-		return True
-	return from_type['width'] <= to['width']
-
 
 def char_can(to, from_type, method):
+	if method == 'unsafe':
+		return True
+
 	if type.type_is_string(from_type):
-		return from_type['length'] <= 2 and width_ok(to, from_type, method)
+		return from_type['length'] == 1 and from_type['width'] <= to['width']
 
 	if method == 'implicit':
 		return False
 
-	if type.type_is_char(from_type):
-		return width_ok(to, from_type, method)
-	elif type.type_is_integer(from_type):
-		return width_ok(to, from_type, method)
-	elif type.type_is_word(from_type):
-		return width_ok(to, from_type, method)
+	c0 = type.type_is_char(from_type)
+	c1 = type.type_is_integer(from_type)
+	c2 = type.type_is_word(from_type)
+
+	if c0 or c1 or c2:
+		return from_type['width'] <= to['width']
+
 
 	return False
 
@@ -65,11 +64,10 @@ def value_char_cons(t, v, method, ti):
 
 def utf32_chars_to_utfx_chars(str_asset, char_type, ti):
 	char_codes = utf32_str_to_utfx_char_codes(str_asset, char_type['width'])
-
+	# [char_code] -> [value_char]
 	chars = []
 	for cc in char_codes:
 		char = value_char_create(cc, char_type, ti)
 		chars.append(char)
-
 	return chars
 

@@ -13,12 +13,6 @@ def _value_word_cons_immediate(t, v, method, ti):
 
 
 
-def width_ok(to, from_type, method):
-	if method == 'unsafe':
-		return True
-	return from_type['width'] <= to['width']
-
-
 def word_can(to, from_type, method):
 	if type.type_is_generic_integer(from_type):
 		return from_type['width'] <= to['width']
@@ -32,9 +26,12 @@ def word_can(to, from_type, method):
 	c3 = type.type_is_bool(from_type)
 
 	if c0 or c1 or c2 or c3:
-		return width_ok(to, from_type, method)
+		if method == 'unsafe':
+			return True
+		return from_type['width'] <= to['width']
 
 	return False
+
 
 
 def value_word_cons(t, v, method, ti):
