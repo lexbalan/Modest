@@ -690,11 +690,8 @@ def do_type_func(t, func_id="_"):
 	params = []
 	for _param in t['params']:
 		param = do_field(_param)
-
-		if param == None:
-			continue
-
-		params.append(param)
+		if param != None:
+			params.append(param)
 
 	to = foundation.typeUnit
 	if t['to'] != None:
@@ -2921,7 +2918,7 @@ def set_att(obj, path, att):
 		else:
 			error("attribute error: field '%s' not found" % p, obj['ti'])
 			for field in obj:
-				print(field)
+				print("-- " + str(field))
 
 	elif len(path) > 1:
 		set_att(obj[path[0]], path[1:], att)

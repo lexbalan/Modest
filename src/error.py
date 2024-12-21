@@ -98,13 +98,9 @@ def common_message(mg, color, s, ti=None):
 	pre = ''
 
 	if ti != None:
-		return
-
 		if ti['isa'] != 'ti':
 			if 'ti' in ti:
 				ti = ti['ti']
-
-
 		pre = '\n%s:%d:%d:\n' % (ti['file'], ti['start_position']['line'], ti['start_position']['pos'])
 
 	print(pre + colorize(mg, color) + s)

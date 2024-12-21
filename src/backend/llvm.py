@@ -1363,9 +1363,9 @@ def do_eval_array(v):
 		items.append(iv)
 
 
+	# теперь добавим паддинг нулевыми значениями
 	fulllen = 0
 	if v['type']['volume'] != None:
-		# теперь добавим паддинг нулевыми значениями
 		if value_is_immediate(v['type']['volume']):
 			fulllen = v['type']['volume']['asset']
 	else:
@@ -1405,7 +1405,6 @@ def do_eval_array(v):
 			lliv = do_reval(item)
 			xv = insertvalue(xv, lliv, i)
 		i = i + 1
-
 
 	return xv
 

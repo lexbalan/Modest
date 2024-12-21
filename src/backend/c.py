@@ -711,13 +711,12 @@ def print_value_cons_array(x, ctx):
 
 			if htype.type_is_char(to_type['of']):
 				if htype.type_is_string(from_type['of']):
-					char_width = to_type['of']['width']
-
 					chars = []
 					for item in value['items']:
 						ch = item['asset']
 						chars.append(ch)
 
+					char_width = to_type['of']['width']
 					print_string_literal(chars, char_width)
 					return
 
