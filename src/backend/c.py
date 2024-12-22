@@ -399,7 +399,7 @@ def print_value_bin(x, ctx):
 
 	elif op == 'add':
 		if htype.type_is_array(left['type']):
-			return print_value_terminal(x, ctx)
+			return print_value_literal(x, ctx)
 
 		if htype.type_is_string(left['type']):
 			if left['type']['width'] != right['type']['width']:
@@ -625,7 +625,7 @@ def print_value_access(x, ctx):
 	#if htype.type_is_generic(left['type']):
 	#	if value_is_immediate(x):
 	if value_is_generic_immediate(left):
-		print_value_terminal(x, ['print_immediate'])
+		print_value_literal(x, ['print_immediate'])
 		return
 
 	need_wrap = precedence(left) < precedence(x)
@@ -745,6 +745,28 @@ def print_value_cons_array(x, ctx):
 
 
 
+
+
+def print_suffix(to_type, num):
+	req_bits = nbits_for_num(num)
+
+	if htype.type_is_unsigned(to_type):
+		if req_bits < CC_INT_SIZE_BITS:
+			pass #out("u")  # unsigned int
+		elif req_bits <= CC_LONG_SIZE_BITS:
+			out("U")  # unsigned long
+		else:
+			out("ULL")  # unsigned long long
+	else:
+		if req_bits < CC_INT_SIZE_BITS:
+			pass  # int
+		elif req_bits <= CC_LONG_SIZE_BITS:
+			out("L")  # long int
+		else:
+			out("LL")  # long long int
+
+
+
 def print_value_cons(x, ctx):
 	to_type = x['type']
 	value = x['value']
@@ -792,11 +814,23 @@ def print_value_cons(x, ctx):
 		# не печатаем обычный implicit_cast
 		# (это не касается того что выше ^^)
 		print_value(value)
+
+		# print postfix ('u', 'U', 'L', 'LL', etc.)
+		if value['kind'] == 'literal':
+			if htype.type_is_number(from_type) or htype.type_is_integer(from_type) or htype.type_is_word(from_type):
+				# up to 'long long'
+				if to_type['width'] <= 64:
+					print_suffix(to_type, value['asset'])
 		return
 
 
 	if value['kind'] == 'literal':
 		print_value(value)
+
+
+
+
+
 		return
 
 
@@ -1041,7 +1075,6 @@ def print_value_integer(x, ctx):
 	if 'nsigns' in x:
 		nsigns = x['nsigns']
 
-	req_bits = nbits_for_num(num)
 	# Big Number?
 	if x['type']['width'] > 64:
 		if True:
@@ -1049,7 +1082,7 @@ def print_value_integer(x, ctx):
 			high64 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
 			low64 = num & 0xFFFFFFFFFFFFFFFF
 
-			out("(((__int128)0x%X << 64) | ((__int128)0x%X))" % (high64, low64))
+			out("(((__int128)0x%XULL << 64) | ((__int128)0x%XULL))" % (high64, low64))
 			return
 
 
@@ -1059,17 +1092,6 @@ def print_value_integer(x, ctx):
 		return  #? 0xXXXXXXXXUL is normal?
 	else:
 		out(str(num))
-
-
-	#if htype.type_is_unsigned(x['type']):
-	#	if req_bits == (x['type']['width']):
-	#		out("U")
-
-	if req_bits > CC_INT_SIZE_BITS:
-		if req_bits <= CC_LONG_SIZE_BITS:
-			out("L")
-		else:
-			out("LL")
 
 
 
@@ -1085,10 +1107,11 @@ def print_value_ptr(x, ctx):
 		out("0x%08X)" % x['asset'])
 
 
-def print_value_terminal(x, ctx):
+def print_value_literal(x, ctx):
 	t = x['type']
 	if htype.type_is_number(t): print_value_integer(x, ctx)
 	elif htype.type_is_integer(t): print_value_integer(x, ctx)
+	elif htype.type_is_word(t): print_value_integer(x, ctx)
 	elif htype.type_is_float(t): print_value_float(x, ctx)
 	elif htype.type_is_string(t): print_value_string(x, ctx)
 	elif htype.type_is_record(t): print_value_record(x, ctx)
@@ -1097,8 +1120,7 @@ def print_value_terminal(x, ctx):
 	elif htype.type_is_char(t): print_value_char(x, ctx)
 	elif htype.type_is_pointer(t): print_value_ptr(x, ctx)
 	elif htype.type_is_enum(t): print_value_enum(x, ctx)
-	#elif htype.type_is_byte(t): print_value_integer(x, ctx)
-	else: error("print_value_terminal not implemented", x['ti'])
+	else: error("print_value_literal not implemented", x['ti'])
 
 
 def print_value_by_id(x, ctx=[], prefix=''):
@@ -1204,7 +1226,7 @@ def print_value(x, ctx=[], need_wrap=False):
 
 	k = x['kind']
 
-	if k == 'literal': print_value_terminal(x, ctx)
+	if k == 'literal': print_value_literal(x, ctx)
 	elif k in bin_ops: print_value_bin(x, ctx)
 	elif k in un_ops: print_value_un(x, ctx)
 	elif k == 'cons': print_value_cons(x, ctx)
