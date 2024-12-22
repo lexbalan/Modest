@@ -15,7 +15,7 @@ struct RGB24 {
 };
 typedef struct RGB24 RGB24;
 
-static RGB24 rgb0[2] = (RGB24[2]){{.red = 200U, .green = 0, .blue = 0}, {.red = 200U, .green = 0, .blue = 0}};
+static RGB24 rgb0[2] = (RGB24[2]){{.red = 200, .green = 0, .blue = 0}, {.red = 200, .green = 0, .blue = 0}};
 
 struct AnimationPoint {
 	RGB24 color;
@@ -23,35 +23,35 @@ struct AnimationPoint {
 };
 typedef struct AnimationPoint AnimationPoint;
 
-static AnimationPoint ap = {.color = {.red = 200U, .green = 0, .blue = 0}, .time = 3000};
+static AnimationPoint ap = {.color = {.red = 200, .green = 0, .blue = 0}, .time = 3000};
 
 
 static AnimationPoint animation0_points[5] = (AnimationPoint[5]){
 
-	{.color = {.red = 200U, .green = 0, .blue = 0}, .time = 3},
-	{.color = {.red = 0, .green = 200U, .blue = 0}, .time = 30},
-	{.color = {.red = 100U, .green = 100U, .blue = 0}, .time = 300},
-	{.color = {.red = 254U, .green = 254U, .blue = 0}, .time = 20},
-	{.color = {.red = 0, .green = 0, .blue = 255U}, .time = 3000}
+	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	{.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
+	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 
 static AnimationPoint animation1_points[5] = (AnimationPoint[5]){
 
-	{.color = {.red = 200U, .green = 0, .blue = 0}, .time = 3},
-	{.color = {.red = 0, .green = 200U, .blue = 0}, .time = 30},
-	{.color = {.red = 100U, .green = 100U, .blue = 0}, .time = 300},
-	{.color = {.red = 254U, .green = 254U, .blue = 0}, .time = 20},
-	{.color = {.red = 0, .green = 0, .blue = 255U}, .time = 3000}
+	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	{.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
+	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 
 
 static AnimationPoint animation2_points[5] = (AnimationPoint[5]){
 
-	{.color = {.red = 200U, .green = 0, .blue = 0}, .time = 3},
-	{.color = {.red = 0, .green = 200U, .blue = 0}, .time = 30},
-	{.color = {.red = 100U, .green = 100U, .blue = 0}, .time = 300},
-	{.color = {.red = 255U, .green = 254U, .blue = 0}, .time = 20},
-	{.color = {.red = 0, .green = 0, .blue = 255U}, .time = 3000}
+	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	{.color = {.red = 255, .green = 254, .blue = 0}, .time = 20},
+	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 
 

@@ -21,12 +21,12 @@ int main()
 	printf("hostid = %ld\n", hid);
 
 	// current control terminal
-	char cterm[128U];
+	char cterm[128];
 	ctermid((char *)&cterm);
 	printf("ctermid = %s\n", (char *)&cterm);
 
 	// current working directory
-	char cwd[128U];
+	char cwd[128];
 	getcwd((char *)&cwd, LENGTHOF(cwd));
 	printf("cwd = %s\n", (char *)&cwd);
 

@@ -18,12 +18,12 @@ static char *str = "Hello!";
 
 int main()
 {
-	int32_t x = 127U;
+	int32_t x = 127;
 	int32_t y = x + 1;
 
 	printf("y = %i\n", y);
 
-	if (y == 128U) {
+	if (y == 128) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

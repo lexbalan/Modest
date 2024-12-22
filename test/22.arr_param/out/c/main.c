@@ -37,12 +37,12 @@ int32_t main()
 		printf("test1 passed!\n");
 	}
 
-	#define __b  {0, 10, 20, 30, 40, 50, 60, 70U, 80U, 90U}
+	#define __b  {0, 10, 20, 30, 40, 50, 60, 70, 80, 90}
 
 	int32_t c[10];
 	arraysAdd(c, a, (int32_t[10])__b);
 
-	if (memcmp(&c, &(int32_t[10]){0, 11, 22, 33, 44, 55, 66U, 77U, 88U, 99U}, sizeof(int32_t[10])) == 0) {
+	if (memcmp(&c, &(int32_t[10]){0, 11, 22, 33, 44, 55, 66, 77, 88, 99}, sizeof(int32_t[10])) == 0) {
 		printf("test2 passed!\n");
 	}
 

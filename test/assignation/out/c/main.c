@@ -21,7 +21,7 @@ static Point glb_r0 = {};
 static Point glb_r1 = {.x = 20, .y = 10};
 
 static int32_t glb_a0[10] = (int32_t[10]){};
-static int32_t glb_a1[10] = (int32_t[10]){64U, 53, 42};
+static int32_t glb_a1[10] = (int32_t[10]){64, 53, 42};
 
 
 int main()
@@ -56,7 +56,7 @@ int main()
 
 	// copy integers by value
 	int32_t loc_i0 = 0;
-	int32_t loc_i1 = 123U;
+	int32_t loc_i1 = 123;
 
 	loc_i0 = loc_i1;
 
@@ -67,7 +67,7 @@ int main()
 	int32_t loc_a0[10];
 	memset(&loc_a0, 0, sizeof(int32_t[10]));
 	int32_t loc_a1[10];
-	memcpy(&loc_a1, &(int32_t[10]){42, 53, 64U}, sizeof(int32_t[10]));
+	memcpy(&loc_a1, &(int32_t[10]){42, 53, 64}, sizeof(int32_t[10]));
 
 	memcpy(&loc_a0, &loc_a1, sizeof(int32_t[10]));
 

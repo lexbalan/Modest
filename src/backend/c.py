@@ -1061,11 +1061,9 @@ def print_value_integer(x, ctx):
 		out(str(num))
 
 
-	nbits = x['type']['width']
-
-	if htype.type_is_unsigned(x['type']):
-		if req_bits >= (nbits - 1):
-			out("U")
+	#if htype.type_is_unsigned(x['type']):
+	#	if req_bits == (x['type']['width']):
+	#		out("U")
 
 	if req_bits > CC_INT_SIZE_BITS:
 		if req_bits <= CC_LONG_SIZE_BITS:

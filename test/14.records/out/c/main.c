@@ -94,7 +94,7 @@ int main()
 */
 
 	// assign record by pointer
-	*pr2 = (Point2D){.x = 100U, .y = 200U};
+	*pr2 = (Point2D){.x = 100, .y = 200};
 	*pr3 = (struct __anonymous_struct_3){};
 
 	// cons Point3D from Point2D (record extension)
@@ -112,8 +112,8 @@ int main()
 
 	const struct {int32_t x; int32_t y;} px = {.x = ax, .y = bx};
 
-	ax = 111U;
-	bx = 222U;
+	ax = 111;
+	bx = 222;
 
 	printf("px.x = %i (must be 10)\n", px.x);
 	printf("px.y = %i (must be 20)\n", px.y);

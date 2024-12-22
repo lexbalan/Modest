@@ -178,8 +178,8 @@ int main()
 
 	//let aa = [111] + [222] + [333]
 	// cons literal array from var items
-	int int100 = 100U;
-	int int200 = 200U;
+	int int100 = 100;
+	int int200 = 200;
 	int int300 = 300;
 	// immutable, non immediate value (array)
 	const int init_array[3] = {int100, int200, int300};
@@ -211,8 +211,8 @@ int main()
 
 	const int32_t y[4] = {ax, bx, cx, dx};
 
-	ax = 111U;
-	bx = 222U;
+	ax = 111;
+	bx = 222;
 	cx = 333;
 
 	printf("y[%i] = %i (must be 10)\n", 0, y[0]);

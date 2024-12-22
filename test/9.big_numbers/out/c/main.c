@@ -13,7 +13,7 @@ static unsigned __int128 big0 = (((__int128)0x123456789ABCDEF << 64) | ((__int12
 
 static uint64_t high_128(unsigned __int128 x)
 {
-	return (uint64_t)(x >> 64U);
+	return (uint64_t)(x >> 64);
 }
 
 

@@ -59,10 +59,10 @@ int main()
 	nat32_list_insert((list_List *)list0, 40);
 	nat32_list_insert((list_List *)list0, 50);
 	nat32_list_insert((list_List *)list0, 60);
-	nat32_list_insert((list_List *)list0, 70U);
-	nat32_list_insert((list_List *)list0, 80U);
-	nat32_list_insert((list_List *)list0, 90U);
-	nat32_list_insert((list_List *)list0, 100U);
+	nat32_list_insert((list_List *)list0, 70);
+	nat32_list_insert((list_List *)list0, 80);
+	nat32_list_insert((list_List *)list0, 90);
+	nat32_list_insert((list_List *)list0, 100);
 
 	// print list size
 	const uint32_t list_size = list_size_get((list_List *)list0);

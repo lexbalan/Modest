@@ -10,12 +10,12 @@
 
 int main()
 {
-	#define __x  127U
+	#define __x  127
 	#define __y  (__x + 1)
 
 	printf("y = %i\n", (int32_t)__y);
 
-	if (__y == 128U) {
+	if (__y == 128) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
