@@ -78,7 +78,7 @@ def value_cons_implicit(t, v, ti=None):
 
 		if type.type_is_generic(from_type):
 			return _do_value_cons(t, v, 'implicit', ti)
-			return value_record_cons(t, v, 'implicit', ti)
+			#return value_record_cons(t, v, 'implicit', ti)
 
 		elif not type.type_eq_record(t, from_type, opt=[], nominative=True):
 			return value_cons_node(t, v, 'implicit', ti=ti)  # value_cons_node!
@@ -137,7 +137,21 @@ def value_cons_default(v):
 	assert(v['isa'] == 'value')
 	t = _select_default_type_for(v['type'])
 	if t != None:
-		return value_cons_implicit(t, v, v['ti'])
+
+		#from main import features
+		#from error import warning_
+		#if features.get('paranoid'):
+		info("default cons", v['ti'])
+
+		nv = value_cons_implicit(t, v, v['ti'])
+
+		#if features.get('paranoid'):
+		#	print("constructed: ", end='')
+		#	type.type_print(nv['type'])
+		#	print('')
+
+		return nv
+
 	return v
 
 

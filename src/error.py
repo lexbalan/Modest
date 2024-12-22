@@ -6,6 +6,7 @@ errcnt = 0
 MAX_ERRORS = 10
 
 verbose_mode = False
+show_info = False
 
 
 ENDC = 0
@@ -17,9 +18,9 @@ BLUE = 94
 MAGENTA = 95
 CYAN = 96
 
-COLOR_NOTE = BLUE
+COLOR_NOTE = BOLD
 COLOR_INFO = CYAN
-COLOR_WARNING = MAGENTA
+COLOR_WARNING = BLUE #MAGENTA
 COLOR_ERROR = RED
 
 
@@ -114,10 +115,6 @@ def common_message(mg, color, s, ti=None):
 
 
 
-def note(s, ti=None):
-	common_message('note: ', COLOR_NOTE, s, ti)
-
-
 
 log_ind = 0
 def log_push():
@@ -134,8 +131,24 @@ def log(s):
 		print('  ' * log_ind + s)
 
 
+
+
+
+def note(s, ti=None):
+	from main import features
+	if features.get('paranoid'):
+		error(s, ti)
+		return
+	printNote(s, ti)
+
+
 def info(s, ti=None):
-	common_message('info: ', COLOR_INFO, s, ti)
+	from main import features
+	if features.get('paranoid'):
+		printWarning(s, ti)
+		return
+
+	printInfo(s, ti)
 
 
 def warning(s, ti=None):
@@ -143,7 +156,21 @@ def warning(s, ti=None):
 	if features.get('paranoid'):
 		error(s, ti)
 		return
+	printWarning(s, ti)
 
+
+
+def printNote(s, ti):
+	common_message('note: ', COLOR_NOTE, s, ti)
+
+
+def printInfo(s, ti):
+	if not show_info:
+		return
+	common_message('info: ', COLOR_INFO, s, ti)
+
+
+def printWarning(s, ti):
 	global warncnt
 	warncnt = warncnt + 1
 
