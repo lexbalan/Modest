@@ -750,20 +750,25 @@ def print_value_cons_array(x, ctx):
 def print_suffix(to_type, num):
 	req_bits = nbits_for_num(num)
 
-	if htype.type_is_unsigned(to_type):
-		if req_bits < CC_INT_SIZE_BITS:
-			pass #out("u")  # unsigned int
-		elif req_bits <= CC_LONG_SIZE_BITS:
-			out("U")  # unsigned long
-		else:
-			out("ULL")  # unsigned long long
+	# ! `not is_signed()`, because here can be Word (it nor signed, nor unsigned) !
+	if not htype.type_is_signed(to_type):
+		if req_bits >= CC_INT_SIZE_BITS:
+			out("U")
+
+	if req_bits <= CC_INT_SIZE_BITS:
+		pass  # int
+	elif req_bits <= CC_LONG_SIZE_BITS:
+		out("L")  # long int
 	else:
+		out("LL")  # long long int
+"""	else:
 		if req_bits < CC_INT_SIZE_BITS:
-			pass  # int
+			pass #out("U")  # unsigned int
 		elif req_bits <= CC_LONG_SIZE_BITS:
-			out("L")  # long int
+			out("UL")  # unsigned long
 		else:
-			out("LL")  # long long int
+			out("ULL")  # unsigned long long"""
+
 
 
 
