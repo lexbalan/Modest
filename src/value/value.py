@@ -316,8 +316,8 @@ def value_cons_immediate(t, v, method, ti):
 
 
 def value_sizeof_type(of, ti):
-	size = htype.type_get_size(of)
-	type = htype.type_number_for(size, signed=False, ti=ti)
+	type_size = htype.type_get_size(of)
+	type = htype.type_number_for(type_size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'sizeof_type',
@@ -325,14 +325,14 @@ def value_sizeof_type(of, ti):
 		'type': type,
 		'immutable': True,
 		'immediate': True,
-		'asset': size,
+		'asset': type_size,
 		'att': [],
 		'ti': ti
 	}
 
 def value_sizeof_value(of, ti):
-	size = htype.type_get_size(of['type'])
-	type = htype.type_number_for(size, signed=False, ti=ti)
+	value_size = htype.type_get_size(of['type'])
+	type = htype.type_number_for(value_size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'sizeof_value',
@@ -340,7 +340,7 @@ def value_sizeof_value(of, ti):
 		'type': type,
 		'immutable': True,
 		'immediate': True,
-		'asset': size,
+		'asset': value_size,
 		'att': [],
 		'ti': ti
 	}

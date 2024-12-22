@@ -1727,7 +1727,6 @@ def do_value(x):
 	return v
 
 
-
 #
 # Do Statement
 #
@@ -2046,8 +2045,7 @@ def do_stmt(x):
 	elif k == 'asm': s = do_stmt_asm(x)
 	else: s = hlir_stmt_bad(x)
 
-	if s == None:
-		return hlir_stmt_bad(x)
+	assert(s != None)
 
 	if 'nl' in x:
 		s['nl'] = x['nl']
@@ -2057,7 +2055,6 @@ def do_stmt(x):
 
 
 def do_stmt_block(x):
-	#global cmodule
 	context_push()
 
 	stmts = []
@@ -2069,7 +2066,6 @@ def do_stmt_block(x):
 	context_pop()
 
 	return hlir_stmt_block(stmts, ti=x['ti'], end_nl=x['end_nl'])
-
 
 
 
@@ -2133,7 +2129,6 @@ def def_type(x):
 	if ty in cmodule['anon_recs']:
 		cmodule['anon_recs'].remove(ty)
 
-
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое
 	deps = nt['deps']
@@ -2175,11 +2170,6 @@ def def_const(x):
 	if pre_exist != None:
 		error("redefinition of '%s'" % id['str'], id['ti'])
 
-	if id['str'][0].isupper():
-		error("value id must starts with small letter", id['ti'])
-		pass
-
-
 	definition = hlir_def_const(id, None, None, x['ti'])
 	definition['module'] = cmodule
 	definition['access_level'] = x['access_modifier']
@@ -2199,7 +2189,6 @@ def def_const(x):
 			init_value = value_cons_implicit_check(t, init_value)
 
 	definition['init_value'] = init_value
-
 
 
 	const_value = symbol_const(id, init_value, is_public=x['access_modifier'] == 'public')
@@ -2381,8 +2370,6 @@ def def_func(x, dostmt=True):
 
 
 def check_unuse(v):
-	#return  # Off
-
 	if v == None:
 		return
 
@@ -2424,21 +2411,6 @@ def is_nodecorate(x):
 		if a['kind'] == 'nodecorate':
 			return True
 	return False
-
-
-def do_func_value(x, export):
-	global cmodule
-	func_id = x['id']
-	func_ti = func_id['ti']
-	func_type = do_type_func(x['type'], func_id=func_id['str'])
-	fn = value_func(func_id, func_type, ti=func_ti)
-
-	if func_id['str'] != 'main':
-		if export:
-			if need_decoration(x):
-				fn['id']['prefix'] = cmodule['prefix']
-
-	return fn
 
 
 
@@ -2731,7 +2703,6 @@ def translate(abspath, nodef=False):
 
 
 
-
 def process_module(idStr, ast, nodef=False):
 	global skipp, production, prev_production
 
@@ -2818,6 +2789,7 @@ def update_func_type(idStr):
 		return fn
 
 
+
 def pre_def(ast, fdecl=False):
 	global cmodule
 
@@ -2874,7 +2846,6 @@ def pre_def(ast, fdecl=False):
 			module_append(comment)
 
 	return
-
 
 
 
@@ -2949,6 +2920,7 @@ def add_attributes(obj):
 			path = lr[0].split(".")
 			#print([path, att])
 			set_att(obj, path, att)
+
 
 
 def set_prop(obj, path, val):
