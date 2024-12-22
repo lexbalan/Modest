@@ -137,19 +137,12 @@ def value_cons_default(v):
 	assert(v['isa'] == 'value')
 	t = _select_default_type_for(v['type'])
 	if t != None:
-
-		#from main import features
-		#from error import warning_
-		#if features.get('paranoid'):
 		info("default cons", v['ti'])
-
 		nv = value_cons_implicit(t, v, v['ti'])
-
 		#if features.get('paranoid'):
 		#	print("constructed: ", end='')
 		#	type.type_print(nv['type'])
 		#	print('')
-
 		return nv
 
 	return v
