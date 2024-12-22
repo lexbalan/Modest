@@ -12,11 +12,11 @@ include "libc/ctypes64"
 //@attribute("extern")
 //var environ: *[]*Char
 @property("value.id.c", "SEEK_SET")
-public const c_SEEK_SET = 0
+public const seekSet = 0
 @property("value.id.c", "SEEK_CUR")
-public const c_SEEK_CUR = 1
+public const seekCur = 1
 @property("value.id.c", "SEEK_END")
-public const c_SEEK_END = 2
+public const seekEnd = 2
 
 @property("value.id.c", "STDIN_FILENO")
 public const c_STDIN_FILENO = 0

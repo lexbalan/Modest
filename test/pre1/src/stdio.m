@@ -31,11 +31,11 @@ public type ConstCharStr CharStr
 public const c_EOF = -1
 
 @property("value.id.c", "SEEK_SET")
-public const c_SEEK_SET = 0
+public const seekSet = 0
 @property("value.id.c", "SEEK_CUR")
-public const c_SEEK_CUR = 1
+public const seekCur = 1
 @property("value.id.c", "SEEK_END")
-public const c_SEEK_END = 2
+public const seekEnd = 2
 
 @unused_result
 public func fclose(f: *File) -> Int
