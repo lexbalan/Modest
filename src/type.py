@@ -546,7 +546,7 @@ def type_eq(a, b, opt=[]):
 	elif k == 'undefined': return type_eq_undefined(a, b, opt)
 	elif k == 'va_list': return b['kind'] == 'va_list'
 	elif k == 'unit': return True
-	assert(False, k)
+	assert(False)
 	return False
 
 
