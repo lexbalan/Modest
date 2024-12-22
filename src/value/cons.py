@@ -68,7 +68,7 @@ def value_cons_implicit(t, v, ti=None):
 	from_type = v['type']
 
 	if not cons_can(t, from_type, 'implicit'):
-		#info("cannot implicitly construct value", v['ti'])
+		info("cannot implicitly construct value", v['ti'])
 		return v
 
 	# (!) потому что в C номинальные типы, а у нас - структурные
@@ -92,10 +92,9 @@ def value_cons_implicit(t, v, ti=None):
 			# тк в них номинативная система типов
 			return value_record_cons(t, v, 'implicit', ti=ti)
 
-
 	# for structural type system support
-	if type.type_is_pointer_to_record(t):
-		if type.type_is_pointer_to_record(from_type):
+	if type.type_is_pointer_to_record(t) and type.type_is_pointer_to_record(from_type):
+		if id(from_type['to']) != id(t['to']):
 			if type.type_eq_record(from_type['to'], t['to'], opt=[]):
 				# если равны но не номенативно - для C & LLVM нужно привдение
 				# тк implicit то CM принтер не станет печатать приведение
@@ -197,12 +196,6 @@ def _select_default_type_for(t):
 def _do_value_cons(t, v, method, ti):
 	if value_is_bad(v) or type.type_is_bad(t):
 		return None
-
-	#if type.type_is_record(t):
-	#	info(" CONS RECORD %s" % t['kind'], ti)
-	#if type.type_is_string(v['type']):
-	#	info("+++++++ CONS %s" % t['kind'], ti)
-	#	pass
 
 	if method == 'implicit':
 		if type.type_eq(v['type'], t):
