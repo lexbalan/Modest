@@ -1842,8 +1842,8 @@ def do_stmt_var(x):
 	#		ctx_value_add(var_id['str'], value_bad(x['ti']))
 	#		return hlir_stmt_bad(x)
 	#
-	#	if htype.type_is_forbidden_var(t):
-	#		error("unsuitable type1", x['type']['ti'])
+		if htype.type_is_forbidden_var(t):
+			error("unsuitable type1", x['type']['ti'])
 
 	# type & init value present
 	if not htype.type_is_undefined(t) and not value_is_undefined(v):
@@ -1854,7 +1854,6 @@ def do_stmt_var(x):
 			v = value_cons_default(v)
 
 		t = v['type']
-
 
 	# check if identifier is free (in current block)
 	already = ctx_value_get_shallow(var_id['str'])
