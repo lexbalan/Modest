@@ -9,6 +9,7 @@ import type as htype
 def value_is_bad(x):
 	return x['kind'] == 'bad'
 
+
 def value_is_undefined(x):
 	return x['kind'] == 'undefined'
 
@@ -64,11 +65,6 @@ def value_attribute_check(v, a):
 	return a in v['att']
 
 
-def value_load(x):
-	return x
-
-
-
 
 def value_bad(ti):
 	return {
@@ -95,8 +91,7 @@ def value_undefined(t, ti):
 		'immediate': True,
 
 		'items': [],
-		#'fields': [],
-		'asset': 0,  # generic string also goes here  (!)
+		'asset': 0,  # string data also goes in 'asset' (!)
 
 		'att': [],
 		'nl_end': 0,
@@ -322,7 +317,7 @@ def value_cons_immediate(t, v, method, ti):
 
 def value_sizeof_type(of, ti):
 	size = htype.type_get_size(of)
-	type = htype.type_generic_int_for(size, signed=False, ti=ti)
+	type = htype.type_number_for(size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'sizeof_type',
@@ -337,7 +332,7 @@ def value_sizeof_type(of, ti):
 
 def value_sizeof_value(of, ti):
 	size = htype.type_get_size(of['type'])
-	type = htype.type_generic_int_for(size, signed=False, ti=ti)
+	type = htype.type_number_for(size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'sizeof_value',
@@ -353,7 +348,7 @@ def value_sizeof_value(of, ti):
 
 def value_alignof(of, ti):
 	align = htype.type_get_align(of)
-	type = htype.type_generic_int_for(align, signed=False, ti=ti)
+	type = htype.type_number_for(align, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'alignof',
@@ -374,7 +369,7 @@ def value_offsetof(of, field_id, ti):
 		return value_bad({'ti': ti})
 
 	offset = field['offset']
-	type = htype.type_generic_int_for(offset, signed=False, ti=ti)
+	type = htype.type_number_for(offset, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'offsetof',
@@ -391,7 +386,7 @@ def value_offsetof(of, field_id, ti):
 
 def value_lengthof(value, ti):
 	length = value['type']['volume']['asset']
-	type = htype.type_generic_int_for(length, signed=False, ti=ti)
+	type = htype.type_number_for(length, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'lengthof',

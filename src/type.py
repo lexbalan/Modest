@@ -369,7 +369,7 @@ def type_string(char_width, length, ti=None):
 
 
 
-def type_generic_int_for(num, signed=False, ti=None):
+def type_number_for(num, signed=False, ti=None):
 	required_width = align_bits_up(nbits_for_num(num))
 	t = type_number(ti)
 	alias = get_int_alias(required_width, signed)
@@ -997,7 +997,6 @@ def select_common_record_type(a, b):
 
 
 
-
 # выбирает общий тип для двух входных
 # CAN RETURN NONE!
 def select_common_type(a, b):
@@ -1107,12 +1106,5 @@ def select_common_type(a, b):
 
 	print("select_common_type(%s %s) not implenemted" % (a['kind'], b['kind']))
 	return type_bad(None)
-
-
-
-
-
-
-
 
 

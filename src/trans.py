@@ -868,7 +868,7 @@ def do_value_bin(x):
 		if htype.type_is_number(t):
 			# (для операций типа 1 + 2)
 			# Пересматриваем generic тип для нового значения
-			nv['type'] = htype.type_generic_int_for(asset, signed=asset < 0, ti=ti)
+			nv['type'] = htype.type_number_for(asset, signed=asset < 0, ti=ti)
 
 		nv['asset'] = asset
 		nv['immediate'] = True
@@ -955,7 +955,7 @@ def do_value_neg(x):
 		nv['immediate'] = True
 
 		if htype.type_is_generic(nv['type']):
-			nv['type'] = htype.type_generic_int_for(v['asset'], signed=True, ti=x['ti'])
+			nv['type'] = htype.type_number_for(v['asset'], signed=True, ti=x['ti'])
 
 	return nv
 
@@ -979,7 +979,7 @@ def do_value_pos(x):
 		nv['immediate'] = True
 
 		if htype.type_is_generic(nv['type']):
-			nv['type'] = htype.type_generic_int_for(v['asset'], signed=True, ti=x['ti'])
+			nv['type'] = htype.type_number_for(v['asset'], signed=True, ti=x['ti'])
 
 	return nv
 
@@ -1678,8 +1678,9 @@ def do_value_undefined(x):
 
 
 def do_rvalue(x):
-	v = do_value(x)
-	return value_load(v)
+	#v = do_value(x)
+	#return value_load(v)
+	return do_value(x)
 
 
 def do_value(x):
