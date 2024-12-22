@@ -799,6 +799,7 @@ def do_value_bin(x):
 
 	t = htype.select_common_type(l['type'], r['type'])
 	if htype.type_is_bad(t):
+		error("different types in operation", x['ti'])
 		return value_bad(ti)
 
 	l = value_cons_implicit(t, l)

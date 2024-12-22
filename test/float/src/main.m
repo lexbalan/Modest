@@ -32,14 +32,15 @@ func slope(a: Point2D, b: Point2D) -> Float32 {
 public func main() -> Int {
 	printf("float test\n")
 
-	printf("2/3 = %f\n", 2.0 / 3)
+	printf("2 = %d\n", Int32 2)
+	printf("2/3 = %f\n", Float64 (2.0 / 3))
 
 	let r = 10
 	let s = squareOfCircle(r)
 	printf("s = %f\n", s)
 
 	let k = 1.0 / 8
-	printf("k = %f\n", k)
+	printf("k = %f\n", Float64 k)
 
 	printf("sizeof(Float32) = %lu\n", sizeof(Float32))
 	printf("sizeof(Float64) = %lu\n", sizeof(Float64))

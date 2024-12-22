@@ -1116,10 +1116,10 @@ def select_common_type(a, b):
 				return b
 
 		if type_is_number(a):
-			if type_is_integer(b) or type_is_word(b):
+			if type_is_integer(b) or type_is_word(b) or type_is_float(b):
 				return b
 
-		if type_is_integer(a) or type_is_word(a):
+		if type_is_integer(a) or type_is_word(a) or type_is_float(a):
 			if type_is_number(b):
 				return a
 
