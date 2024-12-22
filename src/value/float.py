@@ -30,7 +30,7 @@ def _value_float_cons_immediate(t, v, method, ti):
 
 def float_can(to, from_type, method):
 	if type.type_is_generic(from_type):
-		return type.type_is_integer(from_type) or type.type_is_float(from_type)
+		return type.type_is_integer(from_type) or type.type_is_float(from_type) or type.type_is_number(from_type)
 
 	if method == 'implicit':
 		return False

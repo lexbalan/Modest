@@ -783,7 +783,7 @@ def print_value_cons(x, ctx):
 
 
 	if htype.type_is_float(to_type):
-		if htype.type_is_integer(from_type):
+		if htype.type_is_integer(from_type) or htype.type_is_number(from_type):
 			print_cast(to_type, value, ctx)
 			return
 
@@ -805,7 +805,7 @@ def print_value_cons(x, ctx):
 	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
 	# required: (uint64_t)((uint32)int32_value)
 	if htype.type_is_integer(to_type):
-		if htype.type_is_integer(from_type):
+		if htype.type_is_integer(from_type) or htype.type_is_number(from_type):
 			if htype.type_is_signed(from_type) and htype.type_is_unsigned(to_type):
 				if from_type['size'] < to_type['size']:
 					out("((")
@@ -1089,7 +1089,8 @@ def print_value_ptr(x, ctx):
 
 def print_value_terminal(x, ctx):
 	t = x['type']
-	if htype.type_is_integer(t): print_value_integer(x, ctx)
+	if htype.type_is_number(t): print_value_integer(x, ctx)
+	elif htype.type_is_integer(t): print_value_integer(x, ctx)
 	elif htype.type_is_float(t): print_value_float(x, ctx)
 	elif htype.type_is_string(t): print_value_string(x, ctx)
 	elif htype.type_is_record(t): print_value_record(x, ctx)

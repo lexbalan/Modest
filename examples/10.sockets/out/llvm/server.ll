@@ -272,7 +272,7 @@ endif_1:
 	%9 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x %Char8]* %1)
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%10 = zext i11 1024 to %Int32
+	%10 = zext %Int16 1024 to %Int32
 	; -- end vol eval --
 	; -- zero fill rest of array
 	%11 = mul %Int32 %10, 1

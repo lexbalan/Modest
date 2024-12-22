@@ -11,7 +11,7 @@ def pointer_can(to, from_type, method):
 	assert(type.type_is_pointer(to))
 
 	if method == 'unsafe':
-		if type.type_is_pointer(from_type) or type.type_is_integer(from_type):
+		if type.type_is_pointer(from_type) or type.type_is_integer(from_type) or type.type_is_number(from_type):
 			# UNSAFE: cons ANY pointer from ANY pointer or integer
 			return True
 

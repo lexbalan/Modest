@@ -604,12 +604,18 @@ def do_type_array(t):
 		return htype.type_array(of, volume, ti=t['ti'])
 
 	if not value_is_undefined(volume):
-		if not htype.type_is_integer(volume['type']):
-			error("required value with integer type", t['size']['ti'])
+		if not (htype.type_is_integer(volume['type']) or htype.type_is_number(volume['type'])):
+			error("required value with number or integer type", t['size']['ti'])
 
 		if not value_is_immediate(volume):
 			info("VLA", t['ti'])
-			volume = None
+			#mass
+			print(volume['left']['immediate'])
+			print(volume['left']['kind'])
+			print(volume['left']['method'])
+			print(volume['left']['value']['immediate'])
+			print(volume['right']['immediate'])
+			#volume = None
 			if is_local_context():
 				global cfunc
 				cfunc['att'].append('stacksave')
@@ -736,7 +742,7 @@ def do_value_shift(x):
 #	if not htype.type_is_word(l['type']):
 #		error("expected word value", x['left'])
 
-	if not htype.type_is_naturel(r['type']):
+	if not htype.type_is_natural(r['type']):
 		error("expected natural value", x['right'])
 
 	if value_is_immediate(l) and value_is_immediate(r):
@@ -1236,7 +1242,7 @@ def do_value_index(x):
 	if value_is_bad(index):
 		return value_bad(x['ti'])
 
-	if not htype.type_is_integer(index['type']):
+	if not (htype.type_is_integer(index['type']) or htype.type_is_number(index['type'])):
 		error("expected integer value", x['index'])
 		return value_bad(x['ti'])
 
@@ -2192,6 +2198,8 @@ def def_const(x):
 			init_value = value_cons_implicit_check(t, init_value)
 
 	definition['init_value'] = init_value
+
+
 
 	const_value = symbol_const(id, init_value, is_public=x['access_modifier'] == 'public')
 	const_value['definition'] = definition

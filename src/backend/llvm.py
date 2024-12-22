@@ -805,7 +805,7 @@ def print_type(t):
 
 		# иногда сюда залетают дженерики например в to левое:
 		# let p = 0x12345678 to *Nat32
-		if htype.type_is_generic_integer(t):
+		if htype.type_is_generic_integer(t):# or htype.type_is_number(t):
 			print_int_type_for(t['width'])
 			return
 
@@ -1133,8 +1133,8 @@ def do_eval_access_module(x):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-	if htype.type_is_integer(a) or htype.type_is_char(a) or htype.type_is_bool(a) or htype.type_is_word(a):
-		if htype.type_is_integer(b) or htype.type_is_char(b) or htype.type_is_bool(b) or htype.type_is_word(b):
+	if htype.type_is_number(a) or htype.type_is_integer(a) or htype.type_is_char(a) or htype.type_is_bool(a) or htype.type_is_word(a):
+		if htype.type_is_number(b) or htype.type_is_integer(b) or htype.type_is_char(b) or htype.type_is_bool(b) or htype.type_is_word(b):
 			signed = htype.type_is_signed(b)
 
 			# Это плохо тк не работает в некоторых особых ситуациях
@@ -1482,7 +1482,8 @@ def do_eval_bool(x):
 
 def do_eval_literal(x):
 	xt = x['type']
-	if htype.type_is_integer(xt): return llvm_value_num(xt, x['asset'])
+	if htype.type_is_number(xt): return llvm_value_num(xt, x['asset'])
+	elif htype.type_is_integer(xt): return llvm_value_num(xt, x['asset'])
 	elif htype.type_is_float(xt): return llvm_value_num(xt, x['asset'])
 	elif htype.type_is_string(xt): return do_eval_string(x)
 	elif htype.type_is_record(xt): return do_eval_record(x)

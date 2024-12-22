@@ -71,7 +71,7 @@ func test_generic_integer() -> Bool {
 	var d: Char16 = Char16 one
 	var e: Char32 = Char32 one
 
-	var k: Bool = Bool one
+	var k: Bool = one != 0
 
 	return true
 }

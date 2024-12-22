@@ -225,7 +225,7 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%2 = zext i4 10 to %Int32
+	%2 = zext %Int8 10 to %Int32
 	; -- end vol eval --
 	%3 = load [10 x %Int32], [10 x %Int32]* @globalArray0
 	store [10 x %Int32] %3, [10 x %Int32]* @globalArray1
@@ -275,7 +275,7 @@ endif_0:
 	store [10 x %Int32] zeroinitializer, [10 x %Int32]* %30
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%31 = zext i4 10 to %Int32
+	%31 = zext %Int8 10 to %Int32
 	; -- end vol eval --
 	%32 = load [10 x %Int32], [10 x %Int32]* %20
 	store [10 x %Int32] %32, [10 x %Int32]* %30

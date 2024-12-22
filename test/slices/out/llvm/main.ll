@@ -248,7 +248,7 @@ define %Int @main() {
 	%10 = insertvalue [10 x %Int32] %9, %Int32 8, 8
 	%11 = insertvalue [10 x %Int32] %10, %Int32 9, 9
 	store [10 x %Int32] %11, [10 x %Int32]* %2
-	%12 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %2, %Int32 0, i1 1
+	%12 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int8 1
 	%13 = bitcast %Int32* %12 to [1 x %Int32]*
 	%14 = load [1 x %Int32], [1 x %Int32]* %13
 	%15 = alloca [1 x %Int32]
@@ -275,7 +275,7 @@ break_1:
 	;
 	; by ptr
 	;
-	%27 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %2, %Int32 0, i3 5
+	%27 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int8 5
 ;
 	%28 = bitcast %Int32* %27 to [3 x %Int32]*
 	%29 = load [3 x %Int32], [3 x %Int32]* %28
@@ -306,10 +306,10 @@ break_2:
 	%44 = load [3 x %Int32], [3 x %Int32]* %30
 	store [3 x %Int32] %44, [3 x %Int32]* %43
 	; -- STMT ASSIGN ARRAY --
-	%45 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %2, %Int32 0, i2 2
+	%45 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int8 2
 	%46 = bitcast %Int32* %45 to [4 x %Int32]*
 	; -- start vol eval --
-	%47 = zext i3 4 to %Int32
+	%47 = zext %Int8 4 to %Int32
 	; -- end vol eval --
 	%48 = insertvalue [4 x %Int32] zeroinitializer, %Int32 10, 0
 	%49 = insertvalue [4 x %Int32] %48, %Int32 20, 1
@@ -347,10 +347,10 @@ break_3:
 	%72 = insertvalue [10 x %Int32] %71, %Int32 100, 9
 	store [10 x %Int32] %72, [10 x %Int32]* %62
 	; -- STMT ASSIGN ARRAY --
-	%73 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %62, %Int32 0, i2 2
+	%73 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %62, %Int32 0, %Int8 2
 	%74 = bitcast %Int32* %73 to [3 x %Int32]*
 	; -- start vol eval --
-	%75 = zext i2 3 to %Int32
+	%75 = zext %Int8 3 to %Int32
 	; -- end vol eval --
 	; -- zero fill rest of array
 	%76 = mul %Int32 %75, 4
@@ -376,7 +376,7 @@ body_4:
 break_4:
 	%88 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str10 to [0 x i8]*))
 	%89 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str11 to [0 x i8]*))
-	%90 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %62, %Int32 0, i2 2
+	%90 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %62, %Int32 0, %Int8 2
 	%91 = bitcast %Int32* %90 to [6 x %Int32]*
 	%92 = bitcast [6 x %Int32]* %91 to [0 x %Int32]*
 	call void @array_print([0 x %Int32]* %92, %Int32 6)
@@ -461,10 +461,10 @@ break_4:
 	store [10 x %Int32] %149, [10 x %Int32]* %140
 	; test with let
 	; -- STMT ASSIGN ARRAY --
-	%150 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %140, %Int32 0, i2 3
+	%150 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %140, %Int32 0, %Int8 3
 	%151 = bitcast %Int32* %150 to [5 x %Int32]*
 	; -- start vol eval --
-	%152 = zext i3 5 to %Int32
+	%152 = zext %Int8 5 to %Int32
 	; -- end vol eval --
 	%153 = insertvalue [5 x %Int32] zeroinitializer, %Int32 11, 0
 	%154 = insertvalue [5 x %Int32] %153, %Int32 22, 1

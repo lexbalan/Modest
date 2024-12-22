@@ -71,7 +71,7 @@ func test_generic_integer() -> Bool {
 	var d: Char16 = Char16 one  // explicit cast GenericInteger value to Char16
 	var e: Char32 = Char32 one  // explicit cast GenericInteger value to Char32
 
-	var k: Bool = Bool one  // explicit cast GenericInteger value to Bool
+	var k: Bool = one != 0  // explicit cast GenericInteger value to Bool
 
 	return true
 }

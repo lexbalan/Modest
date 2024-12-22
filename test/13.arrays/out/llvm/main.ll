@@ -313,17 +313,17 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ;import "misc/minmax"
 ;$pragma c_include "./minmax.h"
 
-@constantArray = constant [10 x i4] [
-	i4 1,
-	i4 2,
-	i4 3,
-	i4 4,
-	i4 5,
-	i4 6,
-	i4 7,
-	i4 8,
-	i4 9,
-	i4 10
+@constantArray = constant [10 x %Int8] [
+	%Int8 1,
+	%Int8 2,
+	%Int8 3,
+	%Int8 4,
+	%Int8 5,
+	%Int8 6,
+	%Int8 7,
+	%Int8 8,
+	%Int8 9,
+	%Int8 10
 ]
 
 @globalArray = internal global [10 x %Int32] [
@@ -396,8 +396,8 @@ define internal void @f0([30 x %Char8]* noalias sret([30 x %Char8]) %0, [20 x %C
 	%Int8 85,
 	%Int8 2
 ]
-@stopSequence = constant [1 x i5] [
-	i5 22
+@stopSequence = constant [1 x %Int8] [
+	%Int8 22
 ]
 
 define internal void @test() {
@@ -649,7 +649,7 @@ endif_1:
 	%141 = alloca [4 x %Int32], align 4
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%142 = zext i3 4 to %Int32
+	%142 = zext %Int8 4 to %Int32
 	; -- end vol eval --
 ; -- cons_composite_from_composite_by_adr --
 	%143 = bitcast [3 x %Int]* %140 to [4 x %Int32]*
@@ -668,7 +668,7 @@ endif_1:
 	; check local literal array assignation to global array
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%154 = zext i4 10 to %Int32
+	%154 = zext %Int8 10 to %Int32
 	; -- end vol eval --
 ; -- cons_composite_from_composite_by_adr --
 	%155 = bitcast [3 x %Int]* %140 to [10 x %Int32]*
@@ -686,7 +686,7 @@ endif_1:
 	%165 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str33 to [0 x i8]*), %Int32 2, %Int32 %164)
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%166 = zext i4 10 to %Int32
+	%166 = zext %Int8 10 to %Int32
 	; -- end vol eval --
 	; -- zero fill rest of array
 	%167 = mul %Int32 %166, 4
@@ -752,7 +752,7 @@ endif_2:
 	%210 = insertvalue [5 x %Char8] %209, %Char8 33, 4
 	%211 = alloca [5 x %Char8]
 	store [5 x %Char8] %210, [5 x %Char8]* %211
-	%212 = getelementptr inbounds [5 x %Char8], [5 x %Char8]* %211, %Int32 0, i2 2
+	%212 = getelementptr inbounds [5 x %Char8], [5 x %Char8]* %211, %Int32 0, %Int8 2
 	%213 = bitcast %Char8* %212 to [2 x %Char8]*
 	%214 = insertvalue [2 x %Char8] zeroinitializer, %Char8 72, 0
 	%215 = insertvalue [2 x %Char8] %214, %Char8 105, 1

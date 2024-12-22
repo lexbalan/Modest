@@ -12,7 +12,7 @@ from .record import record_can, value_record_cons
 from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons
 from .bad import bad_can, value_bad_cons
-
+from .number import number_can, value_number_cons
 
 
 # can be implicitly constructed value with type a from type b?
@@ -32,7 +32,8 @@ def cons_can(to, from_type, method):
 			method = 'unsafe'
 
 	checker = None
-	if type.type_is_integer(to): checker = integer_can
+	if type.type_is_number(to): checker = number_can
+	elif type.type_is_integer(to): checker = integer_can
 	elif type.type_is_unit(to): checker = unit_can
 	elif type.type_is_bool(to): checker = bool_can
 	elif type.type_is_word(to): checker = word_can
@@ -43,6 +44,7 @@ def cons_can(to, from_type, method):
 	elif type.type_is_char(to): checker = char_can
 	elif type.type_is_bad(to): checker = bad_can
 	else:
+		info(to['kind'], to['ti'])
 		assert(False)
 
 	return checker(to, from_type, method)
@@ -160,7 +162,7 @@ def _select_default_type_for(t):
 	if not type.type_is_generic(t):
 		return None
 
-	if type.type_is_integer(t):
+	if type.type_is_number(t) or type.type_is_integer(t):
 		t = typeSysInt
 		if type.type_is_unsigned(t):
 			t = typeSysNat
@@ -216,7 +218,8 @@ def _do_value_cons(t, v, method, ti):
 
 
 	constructor = None
-	if type.type_is_integer(t): constructor = value_integer_cons
+	if type.type_is_number(t): constructor = value_number_cons
+	elif type.type_is_integer(t): constructor = value_integer_cons
 	elif type.type_is_float(t): constructor = value_float_cons
 	elif type.type_is_array(t): constructor = value_array_cons
 	elif type.type_is_record(t): constructor = value_record_cons

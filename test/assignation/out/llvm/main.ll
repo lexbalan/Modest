@@ -256,7 +256,7 @@ define %Int @main() {
 	; copy arrays by value
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%5 = zext i4 10 to %Int32
+	%5 = zext %Int8 10 to %Int32
 	; -- end vol eval --
 	%6 = load [10 x %Int32], [10 x %Int32]* @glb_a1
 	store [10 x %Int32] %6, [10 x %Int32]* @glb_a0
@@ -300,7 +300,7 @@ define %Int @main() {
 	store [10 x %Int32] %32, [10 x %Int32]* %29
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%33 = zext i4 10 to %Int32
+	%33 = zext %Int8 10 to %Int32
 	; -- end vol eval --
 	%34 = load [10 x %Int32], [10 x %Int32]* %29
 	store [10 x %Int32] %34, [10 x %Int32]* %28

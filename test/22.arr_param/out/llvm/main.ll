@@ -266,17 +266,17 @@ then_0:
 	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	%17 = insertvalue [10 x i7] zeroinitializer, i7 10, 1
-	%18 = insertvalue [10 x i7] %17, i7 20, 2
-	%19 = insertvalue [10 x i7] %18, i7 30, 3
-	%20 = insertvalue [10 x i7] %19, i7 40, 4
-	%21 = insertvalue [10 x i7] %20, i7 50, 5
-	%22 = insertvalue [10 x i7] %21, i7 60, 6
-	%23 = insertvalue [10 x i7] %22, i7 70, 7
-	%24 = insertvalue [10 x i7] %23, i7 80, 8
-	%25 = insertvalue [10 x i7] %24, i7 90, 9
-	%26 = alloca [10 x i7]
-	store [10 x i7] %25, [10 x i7]* %26
+	%17 = insertvalue [10 x %Int8] zeroinitializer, %Int8 10, 1
+	%18 = insertvalue [10 x %Int8] %17, %Int8 20, 2
+	%19 = insertvalue [10 x %Int8] %18, %Int8 30, 3
+	%20 = insertvalue [10 x %Int8] %19, %Int8 40, 4
+	%21 = insertvalue [10 x %Int8] %20, %Int8 50, 5
+	%22 = insertvalue [10 x %Int8] %21, %Int8 60, 6
+	%23 = insertvalue [10 x %Int8] %22, %Int8 70, 7
+	%24 = insertvalue [10 x %Int8] %23, %Int8 80, 8
+	%25 = insertvalue [10 x %Int8] %24, %Int8 90, 9
+	%26 = alloca [10 x %Int8]
+	store [10 x %Int8] %25, [10 x %Int8]* %26
 	%27 = load [10 x %Int32], [10 x %Int32]* %1
 	%28 = insertvalue [10 x %Int32] zeroinitializer, %Int32 10, 1
 	%29 = insertvalue [10 x %Int32] %28, %Int32 20, 2

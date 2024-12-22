@@ -253,7 +253,7 @@ define internal void @contextInit(%Context* %ctx) {
 	; -- STMT ASSIGN ARRAY --
 	%1 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
 	; -- start vol eval --
-	%2 = zext i4 8 to %Int32
+	%2 = zext %Int8 8 to %Int32
 	; -- end vol eval --
 	%3 = insertvalue [8 x %Word32] zeroinitializer, %Word32 1779033703, 0
 	%4 = insertvalue [8 x %Word32] %3, %Word32 3144134277, 1

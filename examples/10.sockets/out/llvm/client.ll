@@ -350,7 +350,7 @@ then_0:
 endif_0:
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%9 = zext i11 1024 to %Int32
+	%9 = zext %Int16 1024 to %Int32
 	; -- end vol eval --
 	; -- zero fill rest of array
 	%10 = mul %Int32 %9, 1

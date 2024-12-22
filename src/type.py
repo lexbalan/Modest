@@ -5,7 +5,7 @@ import settings
 from hlir.field import hlir_field
 
 from hlir.id import hlir_id
-from util import get_item_by_id, nbits_for_num, nbytes_for_bits
+from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up
 
 
 ######################################################################
@@ -30,7 +30,7 @@ PTR_OPS = CONS_OP + EQ_OPS + ('deref',)
 ARR_OPS = CONS_OP + EQ_OPS + ('add', 'index')
 REC_OPS = CONS_OP + EQ_OPS + ('access',)
 STR_OPS = CONS_OP + EQ_OPS + ('add',)
-
+NUM_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
 
 def type_bad(x):
 	ti = None
@@ -45,7 +45,7 @@ def type_bad(x):
 		'size': 0,
 		'align': 1,
 		'ast_type': x,
-		'ops': [],
+		'ops': (),
 		'att': [],
 		'deps': [],
 		'ti': ti
@@ -60,7 +60,31 @@ def type_undefined(ti):
 		'width': 0,
 		'size': 0,
 		'align': 1,
-		'ops': [],
+		'ops': (),
+		'att': [],
+		'deps': [],
+		'ti': ti
+	}
+
+
+def type_number(ti):
+	return {
+		'isa': 'type',
+		'kind': 'number',
+		'generic': True,
+		'width': 0,
+		'size': 0,
+		'align': 1,
+
+		'id': {
+			'isa': 'id',
+			'str': None,
+			'c': None,
+			'llvm': None,
+			'ti': None
+		},
+
+		'ops': NUM_OPS,
 		'att': [],
 		'deps': [],
 		'ti': ti
@@ -85,7 +109,7 @@ def type_by_width(width, ti=None):
 			'ti': None
 		},
 
-		'ops': [],
+		'ops': (),
 		'att': [],
 		'deps': [],
 		'ti': ti
@@ -137,13 +161,8 @@ def type_word(width, ti=None):
 
 
 
-def type_integer(width, signed=True, ti=None):
-	t = type_by_width(width, ti=ti)
 
-	aka = None
-	calias = None
-	llvm_alias = None
-
+def get_int_alias(width, signed):
 	if signed:
 		aka = 'Int%d' % width
 
@@ -168,12 +187,24 @@ def type_integer(width, signed=True, ti=None):
 			llvm_alias = '%%Int%d' % width
 		else:
 			llvm_alias = 'i%d' % width
+	return {'c': calias, 'llvm': llvm_alias, 'cm': aka}
+
+
+
+def type_integer(width, signed=True, ti=None):
+	t = type_by_width(width, ti=ti)
+
+	aka = None
+	calias = None
+	llvm_alias = None
+
 
 	t['kind'] = 'int'
 	t['signed'] = signed
-	t['id']['str'] = aka
-	t['id']['llvm'] = llvm_alias
-	t['id']['c'] = calias
+	alias = get_int_alias(width, signed)
+	t['id']['str'] = alias['cm']
+	t['id']['llvm'] = alias['llvm']
+	t['id']['c'] = alias['c']
 	t['ops'] = INT_OPS
 	return t
 
@@ -345,8 +376,15 @@ def type_string(char_width, length, ti=None):
 
 
 def type_generic_int_for(num, signed=None, ti=None):
-	required_width = nbits_for_num(num)
-	t = type_integer(width=required_width, ti=ti)
+	required_width = align_bits_up(nbits_for_num(num))
+	t = type_number(ti)
+	alias = get_int_alias(required_width, signed)
+	t['id']['str'] = alias['cm']
+	t['id']['llvm'] = alias['llvm']
+	t['id']['c'] = alias['c']
+	t['signed'] = signed
+	t['width'] = required_width
+	t['size'] = nbytes_for_bits(required_width) #required_width // 8
 	t['ops'] = t['ops'] + WORD_OPS
 	t['generic'] = True
 	t['signed'] = signed # #signed can be None!
@@ -495,6 +533,7 @@ def type_eq(a, b, opt=[]):
 	k = a['kind']
 	if k == 'int': return type_eq_integer(a, b, opt)
 	elif k == 'bool': return True
+	elif k == 'number': return True
 	elif k == 'func': return type_eq_func(a, b, opt)
 	elif k == 'record': return type_eq_record(a, b, opt)
 	elif k == 'array': return type_eq_array(a, b, opt)
@@ -537,6 +576,22 @@ def type_is_bool(t):
 	return t['kind'] == 'bool'
 
 
+def type_is_string(t):
+	return t['kind'] == 'string'
+
+
+def type_is_number(t):
+	return t['kind'] == 'number'
+
+
+def type_is_record(t):
+	return t['kind'] == 'record'
+
+
+def type_is_array(t):
+	return t['kind'] == 'array'
+
+
 def type_is_word(t):
 	return t['kind'] == 'word'
 
@@ -544,8 +599,8 @@ def type_is_word(t):
 def type_is_integer(t):
 	return t['kind'] == 'int'
 
-def type_is_naturel(t):
-	return type_is_integer(t) and not type_is_signed(t)
+def type_is_natural(t):
+	return (type_is_integer(t) or type_is_number(t)) and not type_is_signed(t)
 
 def type_is_float(t):
 	return t['kind'] == 'float'
@@ -566,18 +621,6 @@ def type_is_func(t):
 
 def type_is_enum(t):
 	return t['kind'] == 'enum'
-
-
-def type_is_record(t):
-	return t['kind'] == 'record'
-
-
-def type_is_array(t):
-	return t['kind'] == 'array'
-
-
-def type_is_string(t):
-	return t['kind'] == 'string'
 
 
 
@@ -616,7 +659,7 @@ def type_is_generic_char(t):
 
 
 def type_is_generic_integer(t):
-	return type_is_generic(t) and type_is_integer(t)
+	return type_is_number(t)
 
 
 def type_is_generic_record(t):
@@ -1071,6 +1114,14 @@ def select_common_type(a, b):
 		if type_is_float(b):
 			if type_is_integer(a):
 				return b
+
+		if type_is_number(a):
+			if type_is_integer(b) or type_is_word(b):
+				return b
+
+		if type_is_integer(a) or type_is_word(a):
+			if type_is_number(b):
+				return a
 
 	print("select_common_type(%s %s) not implenemted" % (a['kind'], b['kind']))
 	return type_bad(None)

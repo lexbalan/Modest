@@ -569,7 +569,8 @@ def print_value_string2(x, ctx):
 
 def print_value_terminal(x, ctx):
 	t = x['type']
-	if htype.type_is_integer(t): print_value_integer(x, ctx)
+	if htype.type_is_number(t): print_value_integer(x, ctx)
+	elif htype.type_is_integer(t): print_value_integer(x, ctx)
 	elif htype.type_is_float(t): print_value_float(x, ctx)
 	elif htype.type_is_string(t): print_value_string2(x, ctx)
 	elif htype.type_is_record(t): print_value_record(x, ctx)

@@ -313,7 +313,7 @@ break_1:
 }
 
 define internal void @fill_array([0 x %Int32]* %array, %Int32 %len) {
-	%1 = sub i10 0, 1000
+	%1 = sub %Int16 0, 1000
 	%2 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %2
 	br label %again_1

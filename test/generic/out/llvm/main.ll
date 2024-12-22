@@ -317,11 +317,11 @@ define internal %Bool @test_generic_char() {
 define internal %Bool @test_generic_array() {
 	; Any array expression have GenericArray type
 	; this array expression (GenericArray of four GenericInteger items)
-	%1 = insertvalue [4 x i2] zeroinitializer, i2 1, 1
-	%2 = insertvalue [4 x i2] %1, i2 2, 2
-	%3 = insertvalue [4 x i2] %2, i2 3, 3
-	%4 = alloca [4 x i2]
-	store [4 x i2] %3, [4 x i2]* %4
+	%1 = insertvalue [4 x %Int8] zeroinitializer, %Int8 1, 1
+	%2 = insertvalue [4 x %Int8] %1, %Int8 2, 2
+	%3 = insertvalue [4 x %Int8] %2, %Int8 3, 3
+	%4 = alloca [4 x %Int8]
+	store [4 x %Int8] %3, [4 x %Int8]* %4
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str12 to [0 x i8]*))
@@ -334,7 +334,7 @@ endif_0:
 	%7 = alloca [4 x %Int32], align 4
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%8 = zext i3 4 to %Int32
+	%8 = zext %Int8 4 to %Int32
 	; -- end vol eval --
 	%9 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
 	%10 = insertvalue [4 x %Int32] %9, %Int32 2, 2
@@ -359,7 +359,7 @@ endif_1:
 	%22 = alloca [4 x %Int64], align 8
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%23 = zext i3 4 to %Int32
+	%23 = zext %Int8 4 to %Int32
 	; -- end vol eval --
 	%24 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
 	%25 = insertvalue [4 x %Int64] %24, %Int64 2, 2
@@ -421,8 +421,8 @@ define internal %Bool @test_generic_record() {
 	; Any record expression have GenericRecord type
 	; this record expression have type:
 	; Generic(record {x: GenericInteger, y: GenericInteger})
-	%1 = insertvalue {i4,i5} zeroinitializer, i4 10, 0
-	%2 = insertvalue {i4,i5} %1, i5 20, 1
+	%1 = insertvalue {%Int8,%Int8} zeroinitializer, %Int8 10, 0
+	%2 = insertvalue {%Int8,%Int8} %1, %Int8 20, 1
 	; value with GenericRecord type
 	; can be implicit casted to Record with same fields.
 	; implicit cast Generic(record {x: GenericInteger, y: GenericInteger})

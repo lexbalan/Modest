@@ -83,7 +83,7 @@ static bool test_generic_integer()
 	uint16_t d = (uint16_t)__one;
 	uint32_t e = (uint32_t)__one;
 
-	bool k = (bool)__one;
+	bool k = __one != 0;
 
 	return true;
 
