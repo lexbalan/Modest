@@ -9,7 +9,7 @@
 
 
 struct Context {
-	uint8_t data[64];
+	uint8_t data[64U];
 	uint32_t datalen;
 	uint64_t bitlen;
 	uint32_t state[8];
@@ -98,13 +98,13 @@ static void contextInit(Context *ctx)
 	0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, \
 	0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2 \
 }
-const int32_t k[64] = _k;
+const int32_t k[64U] = _k;
 
 
 static void transform(Context *ctx, uint8_t *data)
 {
-	uint32_t m[64];
-	memset(&m, 0, sizeof(uint32_t[64]));
+	uint32_t m[64U];
+	memset(&m, 0, sizeof(uint32_t[64U]));
 
 	uint32_t i = 0;
 	uint32_t j = 0;
@@ -117,7 +117,7 @@ static void transform(Context *ctx, uint8_t *data)
 		i = i + 1;
 	}
 
-	while (i < 64) {
+	while (i < 64U) {
 		m[i] = (uint32_t)((uint32_t)sig1(m[i - 2]) + (uint32_t)m[i - 7] + (uint32_t)sig0(m[i - 15]) + (uint32_t)m[i - 16]);
 		i = i + 1;
 	}
@@ -126,7 +126,7 @@ static void transform(Context *ctx, uint8_t *data)
 	memcpy(&x, &ctx->state, sizeof(uint32_t[8]));
 
 	i = 0;
-	while (i < 64) {
+	while (i < 64U) {
 		const uint32_t t1 = (uint32_t)x[7] + (uint32_t)ep1(x[4]) + (uint32_t)ch(x[4], x[5], x[6]) + k[i] + (uint32_t)m[i];
 		const uint32_t t2 = (uint32_t)ep0(x[0]) + (uint32_t)maj(x[0], x[1], x[2]);
 
@@ -156,7 +156,7 @@ static void update(Context *ctx, uint8_t *msg, uint32_t msgLen)
 	while (i < msgLen) {
 		ctx->data[ctx->datalen] = msg[i];
 		ctx->datalen = ctx->datalen + 1;
-		if (ctx->datalen == 64) {
+		if (ctx->datalen == 64U) {
 			transform((Context *)ctx, (uint8_t *)&ctx->data);
 			ctx->bitlen = ctx->bitlen + 512;
 			ctx->datalen = 0;
@@ -172,7 +172,7 @@ static void final(Context *ctx, uint8_t *outHash)
 
 	// Pad whatever data is left in the buffer.
 
-	uint32_t n = 64;
+	uint32_t n = 64U;
 	if (ctx->datalen < 56) {
 		n = 56;
 	}

@@ -9,7 +9,7 @@
 
 //
 
-#define systemWidth  64
+#define systemWidth  64U
 //$if (systemWidth == 64)
 typedef uint64_t Word;
 typedef uint64_t Nat;

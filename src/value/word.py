@@ -14,7 +14,7 @@ def _value_word_cons_immediate(t, v, method, ti):
 
 
 def word_can(to, from_type, method):
-	if type.type_is_generic_integer(from_type):
+	if type.type_is_number(from_type):
 		return from_type['width'] <= to['width']
 
 	if method == 'implicit':

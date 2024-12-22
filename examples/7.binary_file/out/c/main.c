@@ -11,7 +11,7 @@
 #define filename  "file.bin"
 // chunk of data for read/write operations in file
 struct Chunk {
-	char id[100];
+	char id[100U];
 	char data[1024];
 };
 typedef struct Chunk Chunk;

@@ -604,9 +604,6 @@ def do_type_array(t):
 		return htype.type_array(of, volume, ti=t['ti'])
 
 	if not value_is_undefined(volume):
-		if not (htype.type_is_integer(volume['type']) or htype.type_is_number(volume['type'])):
-			error("required value with number or integer type", t['size']['ti'])
-
 		if not value_is_immediate(volume):
 			info("VLA", t['ti'])
 			#mass
@@ -621,6 +618,12 @@ def do_type_array(t):
 				cfunc['att'].append('stacksave')
 			else:
 				error("non local VLA", t['size'])
+
+		#if not (htype.type_is_integer(volume['type']) or htype.type_is_number(volume['type'])):
+		if htype.type_is_signed(volume['type']):
+			error("required value with number or integer type", t['size']['ti'])
+
+
 
 	# closed arrays of closed arrays are denied NOW
 	if htype.type_is_closed_array(of):
@@ -742,7 +745,7 @@ def do_value_shift(x):
 #	if not htype.type_is_word(l['type']):
 #		error("expected word value", x['left'])
 
-	if not htype.type_is_natural(r['type']):
+	if htype.type_is_signed(r['type']):
 		error("expected natural value", x['right'])
 
 	if value_is_immediate(l) and value_is_immediate(r):
@@ -862,13 +865,10 @@ def do_value_bin(x):
 			asset = ops[op](l['asset'], r['asset'])
 
 
-		if htype.type_is_generic_integer(t):
+		if htype.type_is_number(t):
 			# (для операций типа 1 + 2)
 			# Пересматриваем generic тип для нового значения
-			signed = None
-			if asset < 0:
-				signed = True
-			nv['type'] = htype.type_generic_int_for(asset, signed=signed, ti=ti)
+			nv['type'] = htype.type_generic_int_for(asset, signed=asset < 0, ti=ti)
 
 		nv['asset'] = asset
 		nv['immediate'] = True

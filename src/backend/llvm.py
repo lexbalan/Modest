@@ -805,7 +805,7 @@ def print_type(t):
 
 		# иногда сюда залетают дженерики например в to левое:
 		# let p = 0x12345678 to *Nat32
-		if htype.type_is_generic_integer(t):# or htype.type_is_number(t):
+		if htype.type_is_number(t):
 			print_int_type_for(t['width'])
 			return
 

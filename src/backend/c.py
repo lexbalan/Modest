@@ -303,7 +303,7 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 			out("volatile ")
 
 	# hotfix for let generic value problem (let x = 1)
-	if htype.type_is_generic_integer(t):
+	if htype.type_is_number(t):
 		# если пришел generic - подберем подходящий тип
 		# ex: let x = 1; func(x)
 		t = foundation.type_select_int(t['width'])

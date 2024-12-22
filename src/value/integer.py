@@ -9,10 +9,7 @@ from .value import value_terminal, value_is_immediate, value_cons_node, value_co
 
 def value_integer_create(num, typ=None, ti=None):
 	if typ == None:
-		signed = None
-		if num < 0:
-			signed = True
-		typ = htype.type_generic_int_for(num, signed=signed, ti=ti)
+		typ = htype.type_generic_int_for(num, signed=num < 0, ti=ti)
 	else:
 		nbits = nbits_for_num(num)
 
@@ -73,7 +70,7 @@ def _value_integer_cons_immediate(t, v, method, ti):
 
 
 def integer_can(to, from_type, method):
-	if htype.type_is_generic_integer(from_type):
+	if htype.type_is_number(from_type):
 		return from_type['width'] <= to['width']
 
 	if method == 'implicit':

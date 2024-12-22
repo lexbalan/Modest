@@ -83,7 +83,7 @@ def type_number(ti):
 			'llvm': None,
 			'ti': None
 		},
-
+		'signed': False,
 		'ops': NUM_OPS,
 		'att': [],
 		'deps': [],
@@ -193,15 +193,9 @@ def get_int_alias(width, signed):
 
 def type_integer(width, signed=True, ti=None):
 	t = type_by_width(width, ti=ti)
-
-	aka = None
-	calias = None
-	llvm_alias = None
-
-
+	alias = get_int_alias(width, signed)
 	t['kind'] = 'int'
 	t['signed'] = signed
-	alias = get_int_alias(width, signed)
 	t['id']['str'] = alias['cm']
 	t['id']['llvm'] = alias['llvm']
 	t['id']['c'] = alias['c']
@@ -375,7 +369,7 @@ def type_string(char_width, length, ti=None):
 
 
 
-def type_generic_int_for(num, signed=None, ti=None):
+def type_generic_int_for(num, signed=False, ti=None):
 	required_width = align_bits_up(nbits_for_num(num))
 	t = type_number(ti)
 	alias = get_int_alias(required_width, signed)
@@ -387,7 +381,7 @@ def type_generic_int_for(num, signed=None, ti=None):
 	t['size'] = nbytes_for_bits(required_width) #required_width // 8
 	t['ops'] = t['ops'] + WORD_OPS
 	t['generic'] = True
-	t['signed'] = signed # #signed can be None!
+	t['signed'] = signed
 	return t
 
 
@@ -566,8 +560,6 @@ def type_is_incomplete(t):
 	return 'incomplete' in t['att']
 
 
-
-
 def type_is_unit(t):
 	return t['kind'] == 'unit'
 
@@ -599,8 +591,6 @@ def type_is_word(t):
 def type_is_integer(t):
 	return t['kind'] == 'int'
 
-def type_is_natural(t):
-	return (type_is_integer(t) or type_is_number(t)) and not type_is_signed(t)
 
 def type_is_float(t):
 	return t['kind'] == 'float'
@@ -653,26 +643,25 @@ def type_is_va_list(t):
 	return t['kind'] == 'va_list'
 
 
+def type_is_generic(t):
+	return t['generic']
+
 
 def type_is_generic_char(t):
-	return type_is_generic(t) and type_is_char(t)
-
-
-def type_is_generic_integer(t):
-	return type_is_number(t)
+	return type_is_char(t) and type_is_generic(t)
 
 
 def type_is_generic_record(t):
-	return type_is_generic(t) and type_is_record(t)
+	return type_is_record(t) and type_is_generic(t)
 
 
 def type_is_generic_array(t):
-	return type_is_generic(t) and type_is_array(t)
+	return type_is_array(t) and type_is_generic(t)
 
 
 def type_is_generic_array_of_char(t):
 	if type_is_generic_array(t):
-		if t['of'] != None: # in case of empty array field #of == None
+		if t['of'] != None: # in case of empty array field #of can be None
 			return type_is_char(t['of'])
 
 	return False
@@ -730,23 +719,16 @@ def type_is_pointer_to_array_of_char(t):
 
 
 
-def type_is_generic(t):
-	return t['generic']
-
-
-
-# #signed can be None (!)
 def type_is_signed(t):
-	if 'signed' in t:
-		return t['signed'] == True
-	return False
+	if not 'signed' in t:
+		return False
+	return t['signed']
 
 
-# #signed can be None (!)
 def type_is_unsigned(t):
-	if 'signed' in t:
-		return t['signed'] == False
-	return False
+	if not'signed' in t:
+		return False
+	return not t['signed']
 
 
 

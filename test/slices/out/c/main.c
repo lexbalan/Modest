@@ -73,7 +73,7 @@ int main()
 	printf("--------------------------------------------\n");
 
 	int32_t s[10];
-	memcpy(&s, &(int32_t[10]){10, 20, 30, 40, 50, 60, 70, 80, 90, 100}, sizeof(int32_t[10]));
+	memcpy(&s, &(int32_t[10]){10, 20, 30, 40, 50, 60, 70U, 80U, 90U, 100U}, sizeof(int32_t[10]));
 
 	memset(&s[2], 0, sizeof(int32_t[5 - 2]));
 
@@ -94,7 +94,7 @@ int main()
 
 	printf("--------------------------------------------\n");
 
-	p[0] = 123;
+	p[0] = 123U;
 
 	array_print(p, (__bb - __aa));
 
@@ -146,10 +146,10 @@ int main()
 	printf("--------------------------------------------\n");
 
 	int32_t dst2[10];
-	memcpy(&dst2, &(int32_t[10]){0, 10, 20, 30, 40, 50, 60, 70, 80, 90}, sizeof(int32_t[10]));
+	memcpy(&dst2, &(int32_t[10]){0, 10, 20, 30, 40, 50, 60, 70U, 80U, 90U}, sizeof(int32_t[10]));
 
-	uint8_t axx = 111;
-	uint8_t bxx = 222;
+	uint8_t axx = 111U;
+	uint8_t bxx = 222U;
 
 	// test with var
 	int32_t i2 = 3;
