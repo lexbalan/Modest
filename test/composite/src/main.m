@@ -48,6 +48,10 @@ var animation2_points = []AnimationPoint [
 ]
 
 
+func xy(x: record {x: Int32, y: Int32}) -> Unit {
+
+}
+
 //var arrr = [
 //	[1, 2, 3]
 //	[4, 5, 6]
@@ -56,6 +60,9 @@ var animation2_points = []AnimationPoint [
 
 
 public func main() -> Int32 {
+
+	xy({x=10, y=20})
+
 	printf("test1 (eq): ")
 	if animation0_points == animation1_points {
 		printf("eq\n")

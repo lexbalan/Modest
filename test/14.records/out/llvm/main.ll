@@ -359,22 +359,25 @@ endif_4:
 	%64 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str12 to [0 x i8]*), %Int32 %63)
 	%65 = extractvalue {%Int32,%Int32} %62, 1
 	%66 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str13 to [0 x i8]*), %Int32 %65)
-	%67 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
-	%68 = insertvalue {%Int32,%Int32} %67, %Int32 20, 1
-	%69 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %62, {%Int32,%Int32}* %69
-	%70 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %68, {%Int32,%Int32}* %70
-	%71 = bitcast {%Int32,%Int32}* %69 to i8*
-	%72 = bitcast {%Int32,%Int32}* %70 to i8*
-	%73 = call i1 (i8*, i8*, i64) @memeq(i8* %71, i8* %72, %Int64 8)
-	%74 = icmp ne %Bool %73, 0
-	br %Bool %74 , label %then_5, label %else_5
+; -- cons_composite_from_composite_by_value --
+	%67 = alloca {%Int32,%Int32}
+	store {%Int32,%Int32} %62, {%Int32,%Int32}* %67
+	%68 = bitcast {%Int32,%Int32}* %67 to {%Int32,%Int32}*
+; -- end cons_composite_from_composite_by_value --
+	%69 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
+	%70 = insertvalue {%Int32,%Int32} %69, %Int32 20, 1
+	%71 = alloca {%Int32,%Int32}
+	store {%Int32,%Int32} %70, {%Int32,%Int32}* %71
+	%72 = bitcast {%Int32,%Int32}* %68 to i8*
+	%73 = bitcast {%Int32,%Int32}* %71 to i8*
+	%74 = call i1 (i8*, i8*, i64) @memeq(i8* %72, i8* %73, %Int64 8)
+	%75 = icmp ne %Bool %74, 0
+	br %Bool %75 , label %then_5, label %else_5
 then_5:
-	%75 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str14 to [0 x i8]*))
+	%76 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str14 to [0 x i8]*))
 	br label %endif_5
 else_5:
-	%76 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str15 to [0 x i8]*))
+	%77 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str15 to [0 x i8]*))
 	br label %endif_5
 endif_5:
 	ret %Int 0

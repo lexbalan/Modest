@@ -355,37 +355,44 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 3000
 	}
 ]
+
+define internal void @xy({%Int32,%Int32} %x) {
+	ret void
+}
+
 ;var arrr = [
 ;	[1, 2, 3]
 ;	[4, 5, 6]
 ;	[7, 8, 9]
 ;]
-
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
-	%2 = bitcast [5 x %AnimationPoint]* @animation0_points to i8*
-	%3 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
-	%4 = call i1 (i8*, i8*, i64) @memeq(i8* %2, i8* %3, %Int64 40)
-	%5 = icmp ne %Bool %4, 0
-	br %Bool %5 , label %then_0, label %else_0
+	%1 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
+	%2 = insertvalue {%Int32,%Int32} %1, %Int32 20, 1
+	call void @xy({%Int32,%Int32} %2)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
+	%4 = bitcast [5 x %AnimationPoint]* @animation0_points to i8*
+	%5 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
+	%6 = call i1 (i8*, i8*, i64) @memeq(i8* %4, i8* %5, %Int64 40)
+	%7 = icmp ne %Bool %6, 0
+	br %Bool %7 , label %then_0, label %else_0
 then_0:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str3 to [0 x i8]*))
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str3 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
-	%9 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
-	%10 = bitcast [5 x %AnimationPoint]* @animation2_points to i8*
-	%11 = call i1 (i8*, i8*, i64) @memeq(i8* %9, i8* %10, %Int64 40)
-	%12 = icmp ne %Bool %11, 0
-	br %Bool %12 , label %then_1, label %else_1
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
+	%11 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
+	%12 = bitcast [5 x %AnimationPoint]* @animation2_points to i8*
+	%13 = call i1 (i8*, i8*, i64) @memeq(i8* %11, i8* %12, %Int64 40)
+	%14 = icmp ne %Bool %13, 0
+	br %Bool %14 , label %then_1, label %else_1
 then_1:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str5 to [0 x i8]*))
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str5 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str6 to [0 x i8]*))
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str6 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 	ret %Int32 0

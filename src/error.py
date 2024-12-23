@@ -6,7 +6,7 @@ errcnt = 0
 MAX_ERRORS = 10
 
 verbose_mode = False
-show_info = False
+show_info = True
 
 
 ENDC = 0

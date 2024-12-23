@@ -61,7 +61,7 @@ def value_cons_implicit(t, v, ti=None):
 	assert(v['isa'] == 'value')
 
 	if value_is_bad(v) or type.type_is_bad(t):
-		return value_bad(v)
+		return value_bad(v['ti'])
 
 	ti = v['ti']
 
@@ -75,15 +75,7 @@ def value_cons_implicit(t, v, ti=None):
 
 	# for structural type system support
 	if type.type_is_record(t) and type.type_is_record(from_type):
-
-		if type.type_is_generic(from_type):
-			return _do_value_cons(t, v, 'implicit', ti)
-			#return value_record_cons(t, v, 'implicit', ti)
-
-		elif not type.type_eq_record(t, from_type, opt=[], nominative=True):
-			return value_cons_node(t, v, 'implicit', ti=ti)  # value_cons_node!
-
-		elif t != from_type:
+		if id(t) != id(from_type):
 			# суть в том что если типы все же разные
 			# (пусть и структурно идентичные)
 			# нам нужно сгенерировать implicit_cons
@@ -94,12 +86,12 @@ def value_cons_implicit(t, v, ti=None):
 
 	# for structural type system support
 	if type.type_is_pointer_to_record(t) and type.type_is_pointer_to_record(from_type):
-		if id(from_type['to']) != id(t['to']):
-			if type.type_eq_record(from_type['to'], t['to'], opt=[]):
-				# если равны но не номенативно - для C & LLVM нужно привдение
-				# тк implicit то CM принтер не станет печатать приведение
-				# а напечатает просто значение
-				return value_pointer_cons(t, v, 'implicit', ti=ti)  # value_cons_node?
+		if id(t['to']) != id(from_type['to']):
+			#if type.type_eq_record(from_type['to'], t['to'], opt=[]):
+			# если равны но не номенативно - для C & LLVM нужно привдение
+			# тк implicit то CM принтер не станет печатать приведение
+			# а напечатает просто значение
+			return value_pointer_cons(t, v, 'implicit', ti=ti)  # value_cons_node?
 
 	return _do_value_cons(t, v, 'implicit', ti)
 
@@ -137,7 +129,7 @@ def value_cons_default(v):
 	assert(v['isa'] == 'value')
 	t = _select_default_type_for(v['type'])
 	if t != None:
-		info("default cons", v['ti'])
+		#info("default cons", v['ti'])
 		nv = value_cons_implicit(t, v, v['ti'])
 		#if features.get('paranoid'):
 		#	print("constructed: ", end='')

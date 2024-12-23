@@ -21,31 +21,23 @@ var ap: AnimationPoint = AnimationPoint {color = {red = 200, green = 0, blue = 0
 
 var animation0_points: [5]AnimationPoint = [5]AnimationPoint [
 
-	{color = {red = 200, green = 0, blue = 0}, time = 3}
-	{color = {red = 0, green = 200, blue = 0}, time = 30}
-	{color = {red = 100, green = 100, blue = 0}, time = 300}
-	{color = {red = 254, green = 254, blue = 0}, time = 20}
-	{color = {red = 0, green = 0, blue = 255}, time = 3000}
+	{color = {red = 200, green = 0, blue = 0}, time = 3}, {color = {red = 0, green = 200, blue = 0}, time = 30}, {color = {red = 100, green = 100, blue = 0}, time = 300}, {color = {red = 254, green = 254, blue = 0}, time = 20}, {color = {red = 0, green = 0, blue = 255}, time = 3000}
 ]
 
 var animation1_points: [5]AnimationPoint = [5]AnimationPoint [
 
-	{color = {red = 200, green = 0, blue = 0}, time = 3}
-	{color = {red = 0, green = 200, blue = 0}, time = 30}
-	{color = {red = 100, green = 100, blue = 0}, time = 300}
-	{color = {red = 254, green = 254, blue = 0}, time = 20}
-	{color = {red = 0, green = 0, blue = 255}, time = 3000}
+	{color = {red = 200, green = 0, blue = 0}, time = 3}, {color = {red = 0, green = 200, blue = 0}, time = 30}, {color = {red = 100, green = 100, blue = 0}, time = 300}, {color = {red = 254, green = 254, blue = 0}, time = 20}, {color = {red = 0, green = 0, blue = 255}, time = 3000}
 ]
-
 
 var animation2_points: [5]AnimationPoint = [5]AnimationPoint [
 
-	{color = {red = 200, green = 0, blue = 0}, time = 3}
-	{color = {red = 0, green = 200, blue = 0}, time = 30}
-	{color = {red = 100, green = 100, blue = 0}, time = 300}
-	{color = {red = 255, green = 254, blue = 0}, time = 20}
-	{color = {red = 0, green = 0, blue = 255}, time = 3000}
+	{color = {red = 200, green = 0, blue = 0}, time = 3}, {color = {red = 0, green = 200, blue = 0}, time = 30}, {color = {red = 100, green = 100, blue = 0}, time = 300}, {color = {red = 255, green = 254, blue = 0}, time = 20}, {color = {red = 0, green = 0, blue = 255}, time = 3000}
 ]
+
+
+func xy(x: record {x: Int32, y: Int32}) -> Unit {
+
+}
 //var arrr = [
 //	[1, 2, 3]
 //	[4, 5, 6]
@@ -54,6 +46,9 @@ var animation2_points: [5]AnimationPoint = [5]AnimationPoint [
 
 
 public func main() -> Int32 {
+
+	xy({x = 10, y = 20})
+
 	printf("test1 (eq): ")
 	if animation0_points == animation1_points {
 		printf("eq\n")
