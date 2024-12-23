@@ -154,8 +154,7 @@ def _select_default_type_for(t):
 	if not type.type_is_generic(t):
 		return None
 
-
-	if type.type_is_number(t) or type.type_is_integer(t):
+	if type.type_is_number(t):
 		t = typeSysInt
 		if type.type_is_unsigned(t):
 			t = typeSysNat
@@ -197,6 +196,7 @@ def value_cons(t, v, method, ti):
 			return v
 
 	if method == 'explicit':
+		# Construction from __VA_List is an exceptional case
 		if type.type_is_va_list(v['type']):
 			return value_cons_node(t, v, 'explicit', ti)
 
@@ -217,7 +217,8 @@ def value_cons(t, v, method, ti):
 	elif type.type_is_pointer(t): constructor = value_pointer_cons
 	elif type.type_is_unit(t): constructor = value_unit_cons
 	elif type.type_is_bad(t): constructor = value_bad_cons
-	else: assert False, "unknown type kind '%s'" % t['kind']
+	else:
+		assert False, "unknown type kind '%s'" % t['kind']
 
 	if constructor == None:
 		return None

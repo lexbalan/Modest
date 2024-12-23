@@ -602,13 +602,6 @@ def do_type_array(t):
 	if not value_is_undefined(volume):
 		if not value_is_immediate(volume):
 			info("VLA", t['ti'])
-			#mass
-			print(volume['left']['immediate'])
-			print(volume['left']['kind'])
-			print(volume['left']['method'])
-			print(volume['left']['value']['immediate'])
-			print(volume['right']['immediate'])
-			#volume = None
 			if is_local_context():
 				global cfunc
 				cfunc['att'].append('stacksave')
@@ -618,8 +611,6 @@ def do_type_array(t):
 		#if not (htype.type_is_integer(volume['type']) or htype.type_is_number(volume['type'])):
 		if htype.type_is_signed(volume['type']):
 			error("required value with number or integer type", t['size']['ti'])
-
-
 
 	# closed arrays of closed arrays are denied NOW
 	if htype.type_is_closed_array(of):
