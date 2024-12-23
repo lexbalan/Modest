@@ -1518,8 +1518,10 @@ def do_value_string(x):
 def do_value_array(x):
 	items = []
 	for item in x['items']:
+		# skip comments
 		if item['isa'] == 'ast_comment':
 			continue
+
 		item_value = do_rvalue(item)
 		item_value['nl'] = item['nl']
 		items.append(item_value)
@@ -1535,6 +1537,7 @@ def do_value_record(x):
 	#info("do_value_record", x['ti'])
 	initializers = []
 	for item in x['items']:
+		# skip comments
 		if item['isa'] == 'ast_comment':
 			continue
 
