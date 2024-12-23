@@ -1032,8 +1032,8 @@ def sort_args(params, args):
 		while i < len(vec1):
 			item = vec1[i]
 			if item != None:
-				if item['id'] != None:
-					if item['id']['str'] == param_id_str:
+				if item['key'] != None:
+					if item['key']['str'] == param_id_str:
 						k = i
 						break
 			i = i + 1
@@ -1151,10 +1151,10 @@ def do_value_call(x):
 		a = sorted_args[i]
 
 		# check param name (if assigned)
-		if a['id'] != None:
-			tasrget_param_id_str = a['id']['str']
+		if a['key'] != None:
+			tasrget_param_id_str = a['key']['str']
 			if tasrget_param_id_str != param_id_str:
-				error("bad parameter id", a['id']['ti'])
+				error("bad parameter id", a['key']['ti'])
 
 		arg = do_rvalue(a['value'])
 
@@ -1165,8 +1165,8 @@ def do_value_call(x):
 			if not value_is_immediate(arg):
 				imm_args = False
 
-			if a['id'] != None:
-				args.append(hlir_initializer(a['id'], arg))
+			if a['key'] != None:
+				args.append(hlir_initializer(a['key'], arg))
 			else:
 				args.append(arg)
 
@@ -1521,7 +1521,7 @@ def do_value_array(x):
 		# skip comments
 		#if item['isa'] == 'ast_comment':
 		#	continue
-		if item['isa'] == 'ast_item':
+		if item['isa'] == 'ast_kv':
 			item_value = do_rvalue(item['value'])
 			item_value['nl'] = item['nl']
 			items.append(item_value)
@@ -1541,14 +1541,15 @@ def do_value_record(x):
 		if item['isa'] == 'ast_comment':
 			continue
 
-		item_value = do_rvalue(item['value'])
-		p = hlir_initializer(
-			item['id'],
-			item_value,
-			ti=item['ti'],
-			nl=item['nl']
-		)
-		initializers.append(p)
+		if item['isa'] == 'ast_kv':
+			item_value = do_rvalue(item['value'])
+			p = hlir_initializer(
+				item['key'],
+				item_value,
+				ti=item['ti'],
+				nl=item['nl']
+			)
+			initializers.append(p)
 
 	v = value_record_create(initializers, ti=x['ti'])
 	v['nl_end'] = x['nl_end']

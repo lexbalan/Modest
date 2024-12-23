@@ -723,6 +723,7 @@ class Parser:
 
 
 	def expr_value_11(self):
+		# CALL
 		v = self.expr_value_term()
 		while True:
 			ti = self.ti()
@@ -749,8 +750,8 @@ class Parser:
 						arg_value = self.expr_value()
 
 					arg = {
-						'isa': 'ast_item',
-						'id': arg_id,
+						'isa': 'ast_kv',
+						'key': arg_id,
 						'value': arg_value,
 						'nl': nl_cnt,
 						'ti': arg_ti
@@ -842,8 +843,8 @@ class Parser:
 				self.need_sep(separators=[','], stoppers=[']'])
 
 			item = {
-				'isa': 'ast_item',
-				'id': item_id,
+				'isa': 'ast_kv',
+				'key': item_id,
 				'value': item_value,
 				'nl': nl_cnt,
 				'ti': item_value['ti']
@@ -893,8 +894,8 @@ class Parser:
 				self.need_sep(separators=[',', '\n'], stoppers=['}'])
 
 			item = {
-				'isa': 'ast_item',
-				'id': item_id,
+				'isa': 'ast_kv',
+				'key': item_id,
 				'value': item_value,
 				'nl': nl_cnt,
 				'ti': item_ti
