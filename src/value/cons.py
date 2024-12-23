@@ -91,9 +91,22 @@ def value_cons_implicit(t, v, ti=None):
 			# если равны но не номенативно - для C & LLVM нужно привдение
 			# тк implicit то CM принтер не станет печатать приведение
 			# а напечатает просто значение
-			return value_pointer_cons(t, v, 'implicit', ti=ti)  # value_cons_node?
+			return value_pointer_cons(t, v, 'implicit', ti=ti)
 
-	return _do_value_cons(t, v, 'implicit', ti)
+	return value_cons(t, v, 'implicit', ti)
+
+
+
+def value_cons_implicit_check(t, v):
+	nv = value_cons_implicit(t, v)
+	if not type.type_eq(t, nv['type']):
+		error("type error", v['ti'])
+		print("expected: ", end='')
+		type.type_print(t)
+		print("\nreceived: ", end='')
+		type.type_print(v['type'])
+		print("\n")
+	return nv
 
 
 
@@ -119,8 +132,7 @@ def value_cons_explicit(t, v, ti):
 		print()
 		return value_bad(v['ti'])
 
-	return _do_value_cons(t, v, 'explicit', ti)
-
+	return value_cons(t, v, 'explicit', ti)
 
 
 
@@ -141,16 +153,6 @@ def value_cons_default(v):
 
 
 
-def value_cons_implicit_check(t, v):
-	nv = value_cons_implicit(t, v)
-	if not type.type_eq(t, nv['type']):
-		error("type error", v['ti'])
-		print("expected: ", end='')
-		type.type_print(t)
-		print("\nreceived: ", end='')
-		type.type_print(v['type'])
-		print("\n")
-	return nv
 
 
 # for value
@@ -192,7 +194,7 @@ def _select_default_type_for(t):
 # данная локальная функция пытается привести v к t
 # возвращает None если не может привести (!)
 # не принтует ошибку (но может выдать info)
-def _do_value_cons(t, v, method, ti):
+def value_cons(t, v, method, ti):
 	if value_is_bad(v) or type.type_is_bad(t):
 		return None
 
