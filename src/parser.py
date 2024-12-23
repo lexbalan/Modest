@@ -813,10 +813,10 @@ class Parser:
 
 
 	def parse_value_array(self, ti):
+		array_ti = self.ti()
 		items = []
-
 		nl_cnt = 0
-		ti = self.ti()
+		item_id = 0
 		self.need("[")
 		while not self.match("]"):
 			#self.skip_tokens([' ', '\t', '\n'])
@@ -836,29 +836,35 @@ class Parser:
 			if self.match("]"):
 				break
 
-			field_value = self.expr_value()
-			field_value['nl'] = nl_cnt
-			#field_value['comments'] = comments
+			item_value = self.expr_value()
 
 			if not self.look("\n"):
 				self.need_sep(separators=[','], stoppers=[']'])
 
-			items.append(field_value)
+			item = {
+				'isa': 'ast_item',
+				'id': item_id,
+				'value': item_value,
+				'nl': nl_cnt,
+				'ti': item_value['ti']
+			}
+			items.append(item)
+
+			item_id += 1
 
 		return {
 			'isa': 'ast_value',
 			'kind': 'array',
 			'items': items,
 			'nl_end': nl_cnt,
-			'ti': ti
+			'ti': array_ti
 		}
 
 
 	def parse_value_record(self, ti):
+		record_ti = self.ti()
 		items = []
-
 		nl_cnt = 0
-		ti = self.ti()
 		self.need("{")
 		while not self.match("}"):
 			#self.skip_tokens([' ', '\t', '\n'])
@@ -879,16 +885,17 @@ class Parser:
 				break
 
 			item_ti = self.ti()
-			field_id = self.identifier()
+			item_id = self.identifier()
 			self.need("=")
-			field_value = self.expr_value()
+			item_value = self.expr_value()
+
 			if not self.look("\n"):
 				self.need_sep(separators=[',', '\n'], stoppers=['}'])
 
 			item = {
 				'isa': 'ast_item',
-				'id': field_id,
-				'value': field_value,
+				'id': item_id,
+				'value': item_value,
 				'nl': nl_cnt,
 				'ti': item_ti
 			}
@@ -899,7 +906,7 @@ class Parser:
 			'kind': 'record',
 			'items': items,
 			'nl_end': nl_cnt,
-			'ti': ti
+			'ti': record_ti
 		}
 
 
@@ -913,19 +920,19 @@ class Parser:
 				if sym == '\\':
 
 					# nexsym
-					i = i + 1
+					i += 1
 					sym = s[i]
 
 					if sym == '\\':
 						new_s = new_s + '\\'
-						i = i + 1
+						i += 1
 						continue
 
 					elif sym == '"':
 						# eat "\""
 						new_s = new_s + sym
 						str_len = str_len + 1
-						i = i + 1
+						i += 1
 						continue
 
 					# '\xCODE' ?
@@ -947,7 +954,7 @@ class Parser:
 							if not sym.isdigit():
 								break
 							cod = cod + sym
-							i = i + 1
+							i += 1
 
 						i = i - 1
 						code = int(cod, 10) & 0xFF
@@ -955,13 +962,13 @@ class Parser:
 					# case \xXX | \uXXXXXXXX
 					elif is_hex or is_unicode:
 						cod = ""
-						i = i + 1 # skip 'x' | 'u' prefix
+						i += 1 # skip 'x' | 'u' prefix
 						while i < len(s):
 							sym = s[i]
 							if not isxdigit(sym):
 								break
 							cod = cod + sym
-							i = i + 1
+							i += 1
 							if is_hex:
 								if len(cod) == 2:
 									break
@@ -990,7 +997,7 @@ class Parser:
 
 				str_len = str_len + 1
 				new_s = new_s + sym
-				i = i + 1
+				i += 1
 
 			string = ''.join(new_s)
 

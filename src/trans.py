@@ -1519,12 +1519,12 @@ def do_value_array(x):
 	items = []
 	for item in x['items']:
 		# skip comments
-		if item['isa'] == 'ast_comment':
-			continue
-
-		item_value = do_rvalue(item)
-		item_value['nl'] = item['nl']
-		items.append(item_value)
+		#if item['isa'] == 'ast_comment':
+		#	continue
+		if item['isa'] == 'ast_item':
+			item_value = do_rvalue(item['value'])
+			item_value['nl'] = item['nl']
+			items.append(item_value)
 
 	v = value_array_create(items, ti=x['ti'])
 	v['nl_end'] = x['nl_end']
@@ -1989,6 +1989,14 @@ def do_stmt_comment_block(x):
 
 
 def do_stmt_asm(x):
+	# asm реализован как вызов функции:
+	# __asm(
+	#	"add %0, %1, %2",       // asm text
+	#	[["=r", sum]],          // outputs
+	#	[["r", a], ["r", b]],   // inputs
+	#	["cc"]                  // clobbers
+	# )
+	#
 	xargs = x['args']
 
 	asm_text = do_rvalue(xargs[0]['value'])
@@ -1999,23 +2007,23 @@ def do_stmt_asm(x):
 
 	outputs = []
 	for x in xoutputs['items']:
-		items = x['items']
-		spec = do_rvalue(items[0])
-		val = do_rvalue(items[1])
+		items = x['value']['items']
+		spec = do_rvalue(items[0]['value'])
+		val = do_rvalue(items[1]['value'])
 		pair = (spec, val)
 		outputs.append(pair)
 
 	inputs = []
 	for x in xinputs['items']:
-		items = x['items']
-		spec = do_rvalue(items[0])
-		val = do_rvalue(items[1])
+		items = x['value']['items']
+		spec = do_rvalue(items[0]['value'])
+		val = do_rvalue(items[1]['value'])
 		pair = (spec, val)
 		inputs.append(pair)
 
 	clobbers = []
 	for x in xclobbers['items']:
-		spec = do_rvalue(x)
+		spec = do_rvalue(x['value'])
 		clobbers.append(spec)
 
 	return hlir_stmt_asm(asm_text, outputs, inputs, clobbers, x['ti'])
