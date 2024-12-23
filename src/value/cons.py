@@ -1,6 +1,5 @@
-import type as type
+import type as htype
 from error import info, warning, error
-
 from .value import value_bad, value_is_bad, value_is_undefined, value_is_immediate, value_cons_node
 from .unit import unit_can, value_unit_cons
 from .bool import bool_can, value_bool_cons
@@ -15,16 +14,17 @@ from .bad import bad_can, value_bad_cons
 from .number import number_can, value_number_cons
 
 
+
 # can be implicitly constructed value with type a from type b?
 def cons_can(to, from_type, method):
 	assert(to['isa'] == 'type')
 	assert(from_type['isa'] == 'type')
 
-	if type.type_eq(to, from_type):
+	if htype.type_eq(to, from_type):
 		return True
 
 	if method == 'explicit':
-		if type.type_is_va_list(from_type):
+		if htype.type_is_va_list(from_type):
 			return True
 
 		from trans import is_unsafe_mode
@@ -32,17 +32,17 @@ def cons_can(to, from_type, method):
 			method = 'unsafe'
 
 	checker = None
-	if type.type_is_number(to): checker = number_can
-	elif type.type_is_integer(to): checker = integer_can
-	elif type.type_is_unit(to): checker = unit_can
-	elif type.type_is_bool(to): checker = bool_can
-	elif type.type_is_word(to): checker = word_can
-	elif type.type_is_record(to): checker = record_can
-	elif type.type_is_pointer(to): checker = pointer_can
-	elif type.type_is_array(to): checker = array_can
-	elif type.type_is_float(to): checker = float_can
-	elif type.type_is_char(to): checker = char_can
-	elif type.type_is_bad(to): checker = bad_can
+	if htype.type_is_number(to): checker = number_can
+	elif htype.type_is_integer(to): checker = integer_can
+	elif htype.type_is_unit(to): checker = unit_can
+	elif htype.type_is_bool(to): checker = bool_can
+	elif htype.type_is_word(to): checker = word_can
+	elif htype.type_is_record(to): checker = record_can
+	elif htype.type_is_pointer(to): checker = pointer_can
+	elif htype.type_is_array(to): checker = array_can
+	elif htype.type_is_float(to): checker = float_can
+	elif htype.type_is_char(to): checker = char_can
+	elif htype.type_is_bad(to): checker = bad_can
 	else:
 		info(to['kind'], to['ti'])
 		assert(False)
@@ -60,7 +60,7 @@ def value_cons_implicit(t, v, ti=None):
 	assert(t['isa'] == 'type')
 	assert(v['isa'] == 'value')
 
-	if value_is_bad(v) or type.type_is_bad(t):
+	if value_is_bad(v) or htype.type_is_bad(t):
 		return value_bad(v['ti'])
 
 	ti = v['ti']
@@ -74,14 +74,14 @@ def value_cons_implicit(t, v, ti=None):
 	# (!) потому что в C номинальные типы, а у нас - структурные
 
 	# for structural type system support
-	if type.type_is_record(t) and type.type_is_record(from_type):
+	if htype.type_is_record(t) and htype.type_is_record(from_type):
 		if id(t) != id(from_type):
 			# Если структуры разные (номинативно!) то генерим cons операцию
 			# для C и LLVM это важно (их не волнует то что структура может быть одинакова)
 			return value_record_cons(t, v, 'implicit', ti=ti)
 
 	# for structural type system support
-	if type.type_is_pointer_to_record(t) and type.type_is_pointer_to_record(from_type):
+	if htype.type_is_pointer_to_record(t) and htype.type_is_pointer_to_record(from_type):
 		if id(t['to']) != id(from_type['to']):
 			# Если это указатели на разные структуры (номинативно!) то генерим cons операцию
 			# для C и LLVM это важно (их не волнует то что структура может быть одинакова)
@@ -93,12 +93,12 @@ def value_cons_implicit(t, v, ti=None):
 
 def value_cons_implicit_check(t, v):
 	nv = value_cons_implicit(t, v)
-	if not type.type_eq(t, nv['type']):
+	if not htype.type_eq(t, nv['type']):
 		error("type error", v['ti'])
 		print("expected: ", end='')
-		type.type_print(t)
+		htype.type_print(t)
 		print("\nreceived: ", end='')
-		type.type_print(v['type'])
+		htype.type_print(v['type'])
 		print("\n")
 	return nv
 
@@ -109,20 +109,20 @@ def value_cons_explicit(t, v, ti):
 	assert(v['isa'] == 'value')
 	assert(ti['isa'] == 'ti')
 
-	if value_is_bad(v) or type.type_is_bad(t):
+	if value_is_bad(v) or htype.type_is_bad(t):
 		return value_bad(v['ti'])
 
 	from_type = v['type']
 
-	if type.type_eq(t, from_type):
+	if htype.type_eq(t, from_type):
 		info("explicit cast to the same type", ti)
 		return v
 
 	if not cons_can(t, from_type, 'explicit'):
 		error("cannot construct value", ti)
-		type.type_print(t)
+		htype.type_print(t)
 		print(" from ", end='')
-		type.type_print(from_type)
+		htype.type_print(from_type)
 		print()
 		return value_bad(v['ti'])
 
@@ -139,7 +139,7 @@ def value_cons_default(v):
 		nv = value_cons_implicit(t, v, v['ti'])
 		#if features.get('paranoid'):
 		#	print("constructed: ", end='')
-		#	type.type_print(nv['type'])
+		#	htype.type_print(nv['type'])
 		#	print('')
 		return nv
 
@@ -151,36 +151,37 @@ def value_cons_default(v):
 def _select_default_type_for(t):
 	from trans import typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
-	if not type.type_is_generic(t):
+	if not htype.type_is_generic(t):
 		return None
 
-	if type.type_is_number(t):
+	if htype.type_is_number(t):
 		t = typeSysInt
-		if type.type_is_unsigned(t):
+		if htype.type_is_unsigned(t):
 			t = typeSysNat
 		return t
 
-	elif type.type_is_string(t):
+	elif htype.type_is_string(t):
 		return typeSysStr
 
-	elif type.type_is_float(t):
+	elif htype.type_is_float(t):
 		return typeSysFloat
 
-	elif type.type_is_char(t):
+	elif htype.type_is_char(t):
 		return typeSysChar
 
-	# Generic array with non-generic items -> Array
-	#  `[1, 2]  -> [2]Int32 [Int32 1, Int32 2]`
-	elif type.type_is_array(t):
+	elif htype.type_is_array(t):
 		item_type = t['of']
-		if type.type_is_generic(t['of']):
+		if htype.type_is_generic(t['of']):
 			# выбираем тип для generic-элемента
+			# [1, 2]  -> [2]Int32 [Int32 1, Int32 2]
 			item_type = _select_default_type_for(t['of'])
 
 		volume = t['volume']
-		return type.type_array(item_type, volume, t['ti'])
+		return htype.type_array(item_type, volume, t['ti'])
 
-	return None # corresponded type not found!
+
+	# corresponded type not found!
+	return None
 
 
 
@@ -188,16 +189,16 @@ def _select_default_type_for(t):
 # возвращает None если не может привести (!)
 # не принтует ошибку (но может выдать info)
 def value_cons(t, v, method, ti):
-	if value_is_bad(v) or type.type_is_bad(t):
+	if value_is_bad(v) or htype.type_is_bad(t):
 		return None
 
 	if method == 'implicit':
-		if type.type_eq(v['type'], t):
+		if htype.type_eq(v['type'], t):
 			return v
 
 	if method == 'explicit':
 		# Construction from __VA_List is an exceptional case
-		if type.type_is_va_list(v['type']):
+		if htype.type_is_va_list(v['type']):
 			return value_cons_node(t, v, 'explicit', ti)
 
 		from trans import is_unsafe_mode
@@ -206,17 +207,17 @@ def value_cons(t, v, method, ti):
 
 
 	constructor = None
-	if type.type_is_number(t): constructor = value_number_cons
-	elif type.type_is_integer(t): constructor = value_integer_cons
-	elif type.type_is_float(t): constructor = value_float_cons
-	elif type.type_is_array(t): constructor = value_array_cons
-	elif type.type_is_record(t): constructor = value_record_cons
-	elif type.type_is_char(t): constructor = value_char_cons
-	elif type.type_is_word(t): constructor = value_word_cons
-	elif type.type_is_bool(t): constructor = value_bool_cons
-	elif type.type_is_pointer(t): constructor = value_pointer_cons
-	elif type.type_is_unit(t): constructor = value_unit_cons
-	elif type.type_is_bad(t): constructor = value_bad_cons
+	if htype.type_is_number(t): constructor = value_number_cons
+	elif htype.type_is_integer(t): constructor = value_integer_cons
+	elif htype.type_is_float(t): constructor = value_float_cons
+	elif htype.type_is_array(t): constructor = value_array_cons
+	elif htype.type_is_record(t): constructor = value_record_cons
+	elif htype.type_is_char(t): constructor = value_char_cons
+	elif htype.type_is_word(t): constructor = value_word_cons
+	elif htype.type_is_bool(t): constructor = value_bool_cons
+	elif htype.type_is_pointer(t): constructor = value_pointer_cons
+	elif htype.type_is_unit(t): constructor = value_unit_cons
+	elif htype.type_is_bad(t): constructor = value_bad_cons
 	else:
 		assert False, "unknown type kind '%s'" % t['kind']
 
@@ -229,8 +230,9 @@ def value_cons(t, v, method, ti):
 			nv['nl'] = v['nl']
 	else:
 		print(t['kind'])
-		type.type_print(t)
-		type.type_print(v['type'])
+		htype.type_print(t)
+		htype.type_print(v['type'])
 
 	return nv
+
 
