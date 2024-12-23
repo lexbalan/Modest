@@ -185,7 +185,7 @@ declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports --
-declare %Word32 @crc32_doHash([0 x %Word8]* %buf, %Int32 %len)
+declare %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 67, i8 82, i8 67, i8 51, i8 50, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
@@ -211,7 +211,7 @@ declare %Word32 @crc32_doHash([0 x %Word8]* %buf, %Int32 %len)
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
 	%2 = bitcast [9 x %Word8]* @data to [0 x %Word8]*
-	%3 = call %Word32 @crc32_doHash([0 x %Word8]* %2, %Int32 9)
+	%3 = call %Word32 @crc32_run([0 x %Word8]* %2, %Int32 9)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Word32 %3)
 	%5 = icmp eq %Word32 %3, 3421780262
 	br %Bool %5 , label %then_0, label %else_0

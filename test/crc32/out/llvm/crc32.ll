@@ -125,7 +125,7 @@ break_2:
 ;   одинарных, двойных, пакетных и всех нечетных ошибок
 ;
 
-define %Word32 @crc32_doHash([0 x %Word8]* %buf, %Int32 %len) {
+define %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len) {
 	%1 = alloca [256 x %Word32], align 4
 	%2 = alloca %Word32, align 4
 	;

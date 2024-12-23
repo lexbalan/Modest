@@ -17,7 +17,7 @@ $pragma unsafe
   MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
    одинарных, двойных, пакетных и всех нечетных ошибок
 */
-public func doHash(buf: *[]Word8, len: Nat32) -> Word32 {
+public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 	let tableSize = 256
 	var crc_table: [tableSize]Word32
 	var crc: Word32

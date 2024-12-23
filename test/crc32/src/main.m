@@ -17,7 +17,7 @@ var data = []Word8 datastring
 public func main() -> Int {
 	printf("CRC32 test\n")
 
-	let crc = crc32.doHash(&data, lengthof(data))
+	let crc = crc32.run(&data, lengthof(data))
 
 	printf("crc32.doHash(\"%s\") = %08X\n", *Str8 datastring, crc)
 
