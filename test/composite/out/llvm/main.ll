@@ -355,6 +355,11 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 3000
 	}
 ]
+;var arrr = [
+;	[1, 2, 3]
+;	[4, 5, 6]
+;	[7, 8, 9]
+;]
 
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))

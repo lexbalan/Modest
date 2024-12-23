@@ -53,6 +53,11 @@ static AnimationPoint animation2_points[5] = (AnimationPoint[5]){
 	{.color = {.red = 255, .green = 254, .blue = 0}, .time = 20},
 	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
+//var arrr = [
+//	[1, 2, 3]
+//	[4, 5, 6]
+//	[7, 8, 9]
+//]
 
 
 int32_t main()
