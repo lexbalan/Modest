@@ -130,7 +130,6 @@ def value_cons_explicit(t, v, ti):
 
 
 
-# избавляемся от generic
 def value_cons_default(v):
 	assert(v['isa'] == 'value')
 	t = _select_default_type_for(v['type'])
@@ -147,7 +146,6 @@ def value_cons_default(v):
 
 
 
-# for value
 def _select_default_type_for(t):
 	from trans import typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
