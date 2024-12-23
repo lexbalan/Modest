@@ -121,7 +121,6 @@ def value_zero(t, ti):
 
 
 
-
 def value_var(id, type, ti):
 	return {
 		'isa': 'value',
@@ -224,8 +223,6 @@ def value_index_array(array, type, index, ti):
 	}
 
 
-
-
 def value_slice_array(left, type, index_from, index_to, ti):
 	return {
 		'isa': 'value',
@@ -292,7 +289,6 @@ def value_cons_node(type, value, method, ti):
 	return nv
 
 
-
 # cons immediate такой же cons
 # но поскольку у него value immediate, мы можем его asset
 # привести и взять себе; Таким образом мы идем как литерал нода
@@ -314,7 +310,6 @@ def value_cons_immediate(t, v, method, ti):
 	return nv
 
 
-
 def value_sizeof_type(of, ti):
 	type_size = htype.type_get_size(of)
 	type = htype.type_number_for(type_size, signed=False, ti=ti)
@@ -329,6 +324,7 @@ def value_sizeof_type(of, ti):
 		'att': [],
 		'ti': ti
 	}
+
 
 def value_sizeof_value(of, ti):
 	value_size = htype.type_get_size(of['type'])
@@ -415,6 +411,7 @@ def value_va_start(va_list, last_param, ti):
 		'ti': ti
 	}
 
+
 def value_va_arg(va_list, type, ti):
 	return {
 		'isa': 'value',
@@ -427,6 +424,7 @@ def value_va_arg(va_list, type, ti):
 		'att': [],
 		'ti': ti
 	}
+
 
 def value_va_end(va_list, ti):
 	from foundation import typeUnit
@@ -477,7 +475,6 @@ def value_scalar_eq(l, r, op, ti):
 	return nv
 
 
-
 # op = 'eq' | 'ne
 def value_eq(l, r, op, ti):
 	assert(l['isa'] == 'value')
@@ -496,7 +493,6 @@ def value_eq(l, r, op, ti):
 
 
 
-
 def value_print(x, msg="value_print:"):
 	assert(x['isa'] == 'value')
 
@@ -510,7 +506,6 @@ def value_print(x, msg="value_print:"):
 	print("kind: " + str(x['kind']))
 	print("type: ", end=""); htype.type_print(x['type']); print()
 	print("att: " + str(x['att']))
-
 
 	if 'immediate' in x:
 		print('immediate = ' + str(x['immediate']))
