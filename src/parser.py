@@ -1130,7 +1130,8 @@ class Parser:
 			'kind': 'if',
 			'cond': c,
 			'then': t,
-			'else': e
+			'else': e,
+			'nl': 0
 		}
 
 
@@ -1195,6 +1196,7 @@ class Parser:
 				'init_value': init_value,
 				'access_modifier': 'public',
 				'attributes': [],
+				'nl': 1,
 				'ti': id['ti']
 			}
 			stmts.append(stmt_var)
@@ -1361,6 +1363,7 @@ class Parser:
 			'isa': 'ast_stmt',
 			'kind': 'block',
 			'stmts': stmts,
+			'nl': 0,
 			'end_nl': nl_cnt,
 			'ti': ti
 		}
@@ -1446,6 +1449,7 @@ class Parser:
 				'access_modifier': access_modifier,
 				'attributes': [],
 				'comments_and_attributes': obj['comments_and_attributes'],
+				'nl': 1,
 				'ti': id['ti']
 			}
 			fields.append(field)

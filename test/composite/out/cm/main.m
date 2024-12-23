@@ -21,17 +21,29 @@ var ap: AnimationPoint = AnimationPoint {color = {red = 200, green = 0, blue = 0
 
 var animation0_points: [5]AnimationPoint = [5]AnimationPoint [
 
-	{color = {red = 200, green = 0, blue = 0}, time = 3}, {color = {red = 0, green = 200, blue = 0}, time = 30}, {color = {red = 100, green = 100, blue = 0}, time = 300}, {color = {red = 254, green = 254, blue = 0}, time = 20}, {color = {red = 0, green = 0, blue = 255}, time = 3000}
+	{color = {red = 200, green = 0, blue = 0}, time = 3}
+	{color = {red = 0, green = 200, blue = 0}, time = 30}
+	{color = {red = 100, green = 100, blue = 0}, time = 300}
+	{color = {red = 254, green = 254, blue = 0}, time = 20}
+	{color = {red = 0, green = 0, blue = 255}, time = 3000}
 ]
 
 var animation1_points: [5]AnimationPoint = [5]AnimationPoint [
 
-	{color = {red = 200, green = 0, blue = 0}, time = 3}, {color = {red = 0, green = 200, blue = 0}, time = 30}, {color = {red = 100, green = 100, blue = 0}, time = 300}, {color = {red = 254, green = 254, blue = 0}, time = 20}, {color = {red = 0, green = 0, blue = 255}, time = 3000}
+	{color = {red = 200, green = 0, blue = 0}, time = 3}
+	{color = {red = 0, green = 200, blue = 0}, time = 30}
+	{color = {red = 100, green = 100, blue = 0}, time = 300}
+	{color = {red = 254, green = 254, blue = 0}, time = 20}
+	{color = {red = 0, green = 0, blue = 255}, time = 3000}
 ]
 
 var animation2_points: [5]AnimationPoint = [5]AnimationPoint [
 
-	{color = {red = 200, green = 0, blue = 0}, time = 3}, {color = {red = 0, green = 200, blue = 0}, time = 30}, {color = {red = 100, green = 100, blue = 0}, time = 300}, {color = {red = 255, green = 254, blue = 0}, time = 20}, {color = {red = 0, green = 0, blue = 255}, time = 3000}
+	{color = {red = 200, green = 0, blue = 0}, time = 3}
+	{color = {red = 0, green = 200, blue = 0}, time = 30}
+	{color = {red = 100, green = 100, blue = 0}, time = 300}
+	{color = {red = 255, green = 254, blue = 0}, time = 20}
+	{color = {red = 0, green = 0, blue = 255}, time = 3000}
 ]
 
 

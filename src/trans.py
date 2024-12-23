@@ -536,11 +536,7 @@ def do_field(x):
 
 	t = do_type(x['type'])
 	f = hlir_field(id, t, ti=x['ti'])
-
-	nl = 1
-	if 'nl' in x:
-		nl = x['nl']
-	f['nl'] = nl
+	f['nl'] = x['nl']
 
 	f['access_level'] = x['access_modifier']
 
@@ -2047,8 +2043,9 @@ def do_stmt(x):
 
 	assert(s != None)
 
-	if 'nl' in x:
-		s['nl'] = x['nl']
+	if not 'nl' in x:
+		print(x['kind'])
+	s['nl'] = x['nl']
 
 	return s
 

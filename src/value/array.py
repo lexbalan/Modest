@@ -38,7 +38,6 @@ def value_array_create(items, ti=None):
 
 	# неявно приводим все элементы к этому типу
 	casted_items = implicit_cast_list(items, items_type)
-
 	v = _value_array_create(casted_items, items_type, length, True, ti)
 	v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
 	return v
@@ -160,6 +159,7 @@ def value_array_cons(t, v, method, ti):
 		for item in v['items']:
 			from .cons import value_cons_implicit_check
 			casted_item = value_cons_implicit_check(t['of'], item)
+			casted_item['nl'] = item['nl']
 			items.append(casted_item)
 
 		zero_pad = []
@@ -245,6 +245,7 @@ def implicit_cast_list(items, to_type):
 		casted_item = value_cons_implicit(to_type, item)
 		if 'nl_end' in item:
 			casted_item['nl_end'] = item['nl_end']
+		casted_item['nl'] = item['nl']
 		casted_items.append(casted_item)
 	return casted_items
 

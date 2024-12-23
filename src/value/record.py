@@ -86,8 +86,8 @@ def value_record_cons(t, v, method, ti):
 			else:
 				# Если инициализатора для поля нет, создадим zero-инициализатор
 				vv = value_zero(field['type'], ti)
-			initializer = hlir_initializer(field['id'], vv, ti=ti, nl=0)
-			items.append(initializer)
+			ni = hlir_initializer(field['id'], vv, ti=ti, nl=0)
+			items.append(ni)
 
 		nv['items'] = items
 

@@ -877,10 +877,7 @@ def print_array_values(values, ctx):
 	while i < n:
 		a = values[i]
 
-		nl = 0
-		if 'nl' in a:
-			nl = a['nl']
-
+		nl = a['nl']
 		if nl > 0:
 			newline(n=nl)
 			indent()
@@ -985,10 +982,7 @@ def print_value_record(v, ctx):
 		field_id_str = get_id_str(item)
 		ini = get_item_by_id(v['items'], field_id_str)
 
-		nl = 0
-		if 'nl' in ini:
-			nl = ini['nl']
-
+		nl = ini['nl']
 		if nl > 0:
 			newline(n=nl)
 			indent()

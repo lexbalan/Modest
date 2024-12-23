@@ -20,7 +20,8 @@ int main()
 {
 	printf("memcopy test\n");
 
-	Object o1;Object o2;
+	Object o1;
+	Object o2;
 
 	o1 = (Object){
 		.firstname = "John",
