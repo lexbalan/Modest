@@ -822,18 +822,16 @@ class Parser:
 			#self.skip_tokens([' ', '\t', '\n'])
 			nl_cnt = self.skip_blanks()
 
-			while True:
-				if self.token_class_is('comment-block'):
-					x = self.parse_comment_block()
-				elif self.token_class_is('comment-line'):
-					x = self.parse_comment_line()
-				else:
-					break
-
-				# append comment to array 'items' list
+			if self.token_class_is('comment-block'):
+				x = self.parse_comment_block()
+				x['nl'] = nl_cnt
 				items.append(x)
-
-			nl_cnt = nl_cnt + self.skip_blanks()
+				continue
+			elif self.token_class_is('comment-line'):
+				x = self.parse_comment_line()
+				x['nl'] = nl_cnt
+				items.append(x)
+				continue
 
 			if self.match("]"):
 				break

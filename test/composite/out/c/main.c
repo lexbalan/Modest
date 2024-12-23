@@ -29,7 +29,6 @@ static AnimationPoint ap = {.color = {.red = 200, .green = 0, .blue = 0}, .time 
 
 
 static AnimationPoint animation0_points[5] = (AnimationPoint[5]){
-
 	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
 	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
 	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
@@ -38,7 +37,6 @@ static AnimationPoint animation0_points[5] = (AnimationPoint[5]){
 };
 
 static AnimationPoint animation1_points[5] = (AnimationPoint[5]){
-
 	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
 	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
 	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
@@ -47,7 +45,6 @@ static AnimationPoint animation1_points[5] = (AnimationPoint[5]){
 };
 
 static AnimationPoint animation2_points[5] = (AnimationPoint[5]){
-
 	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
 	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
 	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
