@@ -50,12 +50,12 @@ def cons_can(to, from_type, method):
 	return checker(to, from_type, method)
 
 
+
 # implisit cast possible only for:
 # 1. Generic -> NonGeneric (Nil -> AnyPointer)
 # 3. *[n]T -> *[]T
 # 4. AnyPointer -> FreePointer
 # 5. FreePointer -> AnyPointer
-
 def value_cons_implicit(t, v, ti=None):
 	assert(t['isa'] == 'type')
 	assert(v['isa'] == 'value')
@@ -76,21 +76,15 @@ def value_cons_implicit(t, v, ti=None):
 	# for structural type system support
 	if type.type_is_record(t) and type.type_is_record(from_type):
 		if id(t) != id(from_type):
-			# суть в том что если типы все же разные
-			# (пусть и структурно идентичные)
-			# нам нужно сгенерировать implicit_cons
-			# по которому C и LLVM принтер будет знать
-			# что нужно сделать hard_cast
-			# тк в них номинативная система типов
+			# Если структуры разные (номинативно!) то генерим cons операцию
+			# для C и LLVM это важно (их не волнует то что структура может быть одинакова)
 			return value_record_cons(t, v, 'implicit', ti=ti)
 
 	# for structural type system support
 	if type.type_is_pointer_to_record(t) and type.type_is_pointer_to_record(from_type):
 		if id(t['to']) != id(from_type['to']):
-			#if type.type_eq_record(from_type['to'], t['to'], opt=[]):
-			# если равны но не номенативно - для C & LLVM нужно привдение
-			# тк implicit то CM принтер не станет печатать приведение
-			# а напечатает просто значение
+			# Если это указатели на разные структуры (номинативно!) то генерим cons операцию
+			# для C и LLVM это важно (их не волнует то что структура может быть одинакова)
 			return value_pointer_cons(t, v, 'implicit', ti=ti)
 
 	return value_cons(t, v, 'implicit', ti)
@@ -153,14 +147,13 @@ def value_cons_default(v):
 
 
 
-
-
 # for value
 def _select_default_type_for(t):
 	from trans import typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
 	if not type.type_is_generic(t):
 		return None
+
 
 	if type.type_is_number(t) or type.type_is_integer(t):
 		t = typeSysInt
@@ -189,6 +182,7 @@ def _select_default_type_for(t):
 		return type.type_array(item_type, volume, t['ti'])
 
 	return None # corresponded type not found!
+
 
 
 # данная локальная функция пытается привести v к t
