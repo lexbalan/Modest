@@ -162,29 +162,28 @@ def print_type_id(t):
 
 
 def print_array_volume(t):
+	if htype.type_is_open_array(t['of']):
+		out("[]")
+		return
+
+	dims = []
+	tt = t
+	while htype.type_is_array(tt):
+		if 'asset' in t['volume']:
+			dims.append(t['volume'])
+		tt = tt['of']
+
+
 	out("[")
-
-	# многомерные массивы в C не существуют, поэтому печатаем один массив
-	# размер которого будет произведением всех измерений
-	if htype.type_is_closed_array(t['of']):
-
-		# if it is array of arrays, print volume as:
-		# [n * m * ...]
-		t2 = t
-		while True:
-			print_value(t2['volume'])
-			if not htype.type_is_closed_array(t2['of']):
-				break
-			t2 = t2['of']
-			out(" * ")
-
-	else:
-		if t['volume'] != None:
-			print_value(t['volume'])
-		else:
-			out("0")
-
+	i = 0
+	while i < len(dims):
+		if i > 0:
+			out("*")
+		print_value(dims[i])
+		i += 1
 	out("]")
+	return
+
 
 
 
@@ -198,29 +197,6 @@ def _print_type_pointer_to(to, as_const, space_after):
 
 
 
-
-def print_type_array(t):
-	dims = []
-	tt = t
-	while htype.type_is_array(tt):
-		if 'asset' in t['volume']:
-			dims.append(t['volume'])
-		tt = tt['of']
-
-	print_type(tt)
-
-	out("[")
-	i = 0
-	while i < len(dims):
-		if i > 0:
-			out("*")
-		print_value(dims[i])
-		i += 1
-	out("]")
-	#print_array_type(t)
-
-
-
 def print_type_pointer(t, space_after, as_const=False):
 	# array was printed as *, we dont need to place another *
 	if htype.type_is_array(t['to']):
@@ -228,6 +204,23 @@ def print_type_pointer(t, space_after, as_const=False):
 		return
 
 	_print_type_pointer_to(t['to'], as_const=as_const, space_after=space_after)
+
+
+
+# id_str - опциональный аргумент позволяющий засунуть
+# id объекта между типом эмемета и размером массива: <element_type> <id_str>[<dimension>]
+# Это надо тк переменные-массивы и typedef в C используют странный синтаксис
+# (у типов функций похожая херня кстати)
+def print_type_array(t, id_str=None, as_const=False):
+	array_root_type = t
+	while array_root_type['kind'] == 'array':
+		array_root_type = array_root_type['of']
+
+	print_type(array_root_type, as_const=as_const)
+	if id_str:
+		out(' ')
+		out(id_str)
+	print_array_volume(t)
 
 
 
@@ -1788,19 +1781,9 @@ def print_variable_pointer(t, id_str, as_const):
 	out("%s" % id_str)
 
 
-def print_array_type(t, id_str=None):
-	array_root_type = t
-	while array_root_type['kind'] == 'array':
-		array_root_type = array_root_type['of']
-
-	print_type(array_root_type, space_after=True)
-	if id_str:
-		out(id_str)
-	print_array_volume(t)
-
 
 def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
-	print_array_type(t, id_str=id_str)
+	print_type_array(t, id_str=id_str, as_const=as_const)
 
 
 

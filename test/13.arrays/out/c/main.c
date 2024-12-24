@@ -13,7 +13,7 @@
 
 
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-int8_t constantArray[10] = _constantArray;
+const int8_t constantArray[10] = _constantArray;
 
 static int32_t globalArray[10] = _constantArray;
 
@@ -52,9 +52,9 @@ static void f0(char __sret[30], char __x[20])
 
 
 #define _startSequence  {0xAA, 0x55, 0x02}
-int8_t startSequence[3] = _startSequence;
+const int8_t startSequence[3] = _startSequence;
 #define _stopSequence  {0x16}
-int8_t stopSequence[1] = _stopSequence;
+const int8_t stopSequence[1] = _stopSequence;
 
 
 static void test()
@@ -182,7 +182,7 @@ int main()
 	int int200 = 200;
 	int int300 = 300;
 	// immutable, non immediate value (array)
-	int init_array[3] = {int100, int200, int300};
+	const int init_array[3] = {int100, int200, int300};
 
 	// check local literal array assignation to local array
 	int32_t e[4];
@@ -209,7 +209,7 @@ int main()
 	int32_t cx = 30;
 	const int32_t dx = 40;
 
-	int32_t y[4] = {ax, bx, cx, dx};
+	const int32_t y[4] = {ax, bx, cx, dx};
 
 	ax = 111;
 	bx = 222;

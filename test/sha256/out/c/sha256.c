@@ -71,7 +71,7 @@ static inline uint32_t sig1(uint32_t x)
 	0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, \
 	0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 \
 }
-int32_t initalState[8] = _initalState;
+const int32_t initalState[8] = _initalState;
 
 
 static void contextInit(Context *ctx)
@@ -98,7 +98,7 @@ static void contextInit(Context *ctx)
 	0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, \
 	0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2 \
 }
-int32_t k[64] = _k;
+const int32_t k[64] = _k;
 
 
 static void transform(Context *ctx, uint8_t *data)

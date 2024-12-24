@@ -57,7 +57,7 @@ static void xy(struct __anonymous_struct_3 x)
 {
 }
 
-static int32_t arrr[3 * 3] = (int32_t[3*3]){
+static int32_t arrr[3*3] = (int32_t[3*3]){
 	1, 2, 3,
 	4, 5, 6,
 	7, 8, 9

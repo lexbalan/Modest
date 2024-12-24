@@ -43,7 +43,7 @@ static SHA256_TestCase test1 = {
 	}
 };
 
-static SHA256_TestCase *tests[2] = (SHA256_TestCase *[2]){&test0, &test1};
+static SHA256_TestCase * tests[2] = (SHA256_TestCase *[2]){&test0, &test1};
 
 
 
