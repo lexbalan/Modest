@@ -199,7 +199,7 @@ def _print_type_pointer_to(to, as_const, space_after):
 
 
 
-def print_type_array(t, as_pointer, space_after=False, unk_voume=False):
+def print_type_array(t):
 	dims = []
 	tt = t
 	while htype.type_is_array(tt):
@@ -207,7 +207,7 @@ def print_type_array(t, as_pointer, space_after=False, unk_voume=False):
 			dims.append(t['volume'])
 		tt = tt['of']
 
-	print_type(tt, space_after=space_after)
+	print_type(tt)
 
 	out("[")
 	i = 0
@@ -217,7 +217,7 @@ def print_type_array(t, as_pointer, space_after=False, unk_voume=False):
 		print_value(dims[i])
 		i += 1
 	out("]")
-
+	#print_array_type(t)
 
 
 
@@ -328,7 +328,7 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 		return
 
 	elif htype.type_is_array(t):
-		print_type_array(t, as_pointer=array_as_ptr, space_after=space_after)
+		print_type_array(t)
 
 	elif htype.type_is_enum(t):
 		print_type_enum(t)
@@ -1788,23 +1788,19 @@ def print_variable_pointer(t, id_str, as_const):
 	out("%s" % id_str)
 
 
-
-def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
-	# get array item type (array_root_type)
+def print_array_type(t, id_str=None):
 	array_root_type = t
 	while array_root_type['kind'] == 'array':
 		array_root_type = array_root_type['of']
 
-	print_type(array_root_type, space_after=True, as_const=as_const)
-	out(id_str)
+	print_type(array_root_type, space_after=True)
+	if id_str:
+		out(id_str)
 	print_array_volume(t)
 
-	"""# print arrays dimensions
-	array_type = t
-	while htype.type_is_array(array_root_type):
-		out("/*^^*/")
-		print_array_volume(array_root_type)
-		array_type = array_type['of']"""
+
+def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
+	print_array_type(t, id_str=id_str)
 
 
 
@@ -2231,12 +2227,7 @@ def print_value_as_ptr(x):
 		if x['kind'] in ['literal', 'add']:
 			out("(")
 			if htype.type_is_array(t):
-				"""if not htype.type_is_vla(t):
-					htype.type_print(t)
-
-					print_type_array(t, as_pointer=False)
-				else:"""
-				print_type_array(t, as_pointer=False, unk_voume=True)
+				print_type_array(t)
 
 			else:
 				print_type(t, array_as_ptr=False)
@@ -2248,7 +2239,7 @@ def print_value_as_ptr(x):
 			# instead of:
 			#  &(uint32_t[len]){1, 2, 3, 4, 5}
 			out("(")
-			print_type_array(t, as_pointer=False, unk_voume=True)
+			print_type_array(t)
 			out(")")
 			print_value(x['value'])
 			return
