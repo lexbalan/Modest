@@ -32,6 +32,8 @@ REC_OPS = CONS_OP + EQ_OPS + ('access',)
 STR_OPS = CONS_OP + EQ_OPS + ('add',)
 NUM_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
 
+
+
 def type_bad(x):
 	ti = None
 	if x != None:
@@ -160,8 +162,6 @@ def type_word(width, ti=None):
 	return t
 
 
-
-
 def get_int_alias(width, signed):
 	if signed:
 		aka = 'Int%d' % width
@@ -232,12 +232,14 @@ def type_char(width, ti=None):
 	return t
 
 
+
 def type_pointer(to, ti=None):
 	t = type_by_width(int(settings.get('pointer_width')), ti=ti)
 	t['kind'] = 'pointer'
 	t['to'] = to
 	t['ops'] = PTR_OPS
 	return t
+
 
 
 # size - always hlir_value (!)
@@ -289,6 +291,7 @@ def type_enum(ti=None):
 	}
 
 
+
 from util import align_to
 def type_record(fields, ti=None):
 
@@ -331,6 +334,8 @@ def type_record(fields, ti=None):
 	}
 
 
+
+
 def type_func(params, to, va_args, ti=None):
 	return {
 		'isa': 'type',
@@ -347,6 +352,7 @@ def type_func(params, to, va_args, ti=None):
 		'deps': [],
 		'ti': ti
 	}
+
 
 
 def type_string(char_width, length, ti=None):
@@ -436,13 +442,6 @@ def type_eq_array(a, b, opt):
 
 
 
-def get_type_root_id(t):
-	if 'id' in t:
-		return t['id']['str']
-	return None
-
-
-
 def type_eq_func(a, b, opt):
 	if not type_eq(a['to'], b['to'], opt): return False
 	return type_eq_fields(a['params'], b['params'], opt)
@@ -467,23 +466,12 @@ def type_eq_fields(a, b, opt):
 	return True
 
 
-def type_eq_record(a, b, opt, nominative=False):
-	if nominative:
-		a_root_id = get_type_root_id(a)
-		b_root_id = get_type_root_id(b)
-
-		if a_root_id != None and b_root_id != None:
-			if a_root_id != b_root_id:
-				return False
-
-		elif a_root_id != None or b_root_id != None:
-			return False
-
+def type_eq_record(a, b, opt):
 	if len(a['fields']) != len(b['fields']): return False
 	return type_eq_fields(a['fields'], b['fields'], opt)
 
 
-def type_eq_enum(a, b, opt, nominative=False):
+def type_eq_enum(a, b, opt):
 	return id(a) == id(b)
 
 
@@ -795,14 +783,6 @@ def type_get_align(t):
 	return t['align']
 
 
-def array_root_item_type(t):
-	assert(type_is_array(t))
-	of = t['of']
-	while type_is_array(of):
-		of = of['of']
-	return of
-
-
 
 def print_list_by(lst, method):
 	i = 0
@@ -820,17 +800,6 @@ def type_id(t):
 	if 'id' in t:
 		return t['id']['str']
 	return None
-
-
-# возвращает корневой тип
-# например Int32 --> Int --> MyInt
-# type#id = MyInt
-# root#id = Int32
-def type_root_id(t):
-	if 'id' in t:
-		return t['id']['str']
-	return None
-
 
 
 
@@ -912,19 +881,9 @@ def type_print(t, print_aka=True):
 	k = t['kind']
 
 	if print_aka:
-		_id = type_id(t)
+		pass
+		#print(" (%s is alias of %s)" % (id1, id2), end='')
 
-		if _id != None:
-			print(_id, end='')
-
-			_root_id = type_root_id(t)
-			if _root_id != None:
-				if _root_id != _id:
-					print(" (%s is alias of %s)" % (_id, _root_id), end='')
-
-			if t['generic']:
-				print(")", end='')
-			return
 
 	if type_is_record(t):
 		type_print_record(t, print_aka)

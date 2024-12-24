@@ -794,9 +794,8 @@ def print_type(t):
 		# он типа делает, но потом к переменной с таким типом
 		# хрен обратишься... дерьмо
 		if htype.type_is_record(t):
-			root_id = htype.get_type_root_id(t)
-			if root_id != None:
-				out("%" + root_id['str'])
+			if 'id' in t:
+				out("%" + t['id']['str'])
 				return
 
 		res = print_type_id(t)
