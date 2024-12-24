@@ -241,7 +241,6 @@ def type_pointer(to, ti=None):
 	return t
 
 
-
 # size - always hlir_value (!)
 def type_array(of, volume, ti=None):
 	item_size = 0
