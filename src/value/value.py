@@ -311,7 +311,7 @@ def value_cons_immediate(t, v, method, ti):
 
 
 def value_sizeof_type(of, ti):
-	type_size = htype.type_get_size(of)
+	type_size = of['size']
 	type = htype.type_number_for(type_size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
@@ -327,7 +327,7 @@ def value_sizeof_type(of, ti):
 
 
 def value_sizeof_value(of, ti):
-	value_size = htype.type_get_size(of['type'])
+	value_size = of['type']['size']
 	type = htype.type_number_for(value_size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
@@ -343,7 +343,7 @@ def value_sizeof_value(of, ti):
 
 
 def value_alignof(of, ti):
-	align = htype.type_get_align(of)
+	align = of['align']
 	type = htype.type_number_for(align, signed=False, ti=ti)
 	return {
 		'isa': 'value',

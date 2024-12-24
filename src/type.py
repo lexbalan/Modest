@@ -246,8 +246,8 @@ def type_array(of, volume, ti=None):
 	item_size = 0
 	item_align = 0
 	if of != None:
-		item_size = type_get_size(of)
-		item_align = type_get_align(of)
+		item_size = of['size']
+		item_align = of['align']
 
 	array_size = 0
 	if volume != None:
@@ -302,8 +302,8 @@ def type_record(fields, ti=None):
 		field['field_no'] = field_no
 		field_no = field_no + 1
 
-		field_size = type_get_size(field['type'])
-		field_align = type_get_align(field['type'])
+		field_size = field['type']['size']
+		field_align = field['type']['align']
 
 		# смещение поля должно быть выровнено
 		# по требуемому для него шагу выравнивания
@@ -486,7 +486,6 @@ def type_eq_alias(a, b, opt):
 	return type_eq(a['of'], b['of'], opt)
 
 
-
 def type_eq(a, b, opt=[]):
 	if id(a) == id(b):
 		return True
@@ -616,14 +615,12 @@ def type_is_vla(t):
 	return not value_is_immediate(t['volume'])
 
 
-
 def type_is_composite(t):
 	return t['kind'] in ['array', 'record']
 
 
 def type_is_pointer(t):
 	return t['kind'] == 'pointer'
-
 
 
 def type_is_va_list(t):
@@ -698,7 +695,6 @@ def type_is_pointer_to_array(t):
 	return False
 
 
-
 def type_is_pointer_to_array_of_char(t):
 	if type_is_pointer(t):
 		return type_is_array_of_char(t['to'])
@@ -743,43 +739,13 @@ def type_is_forbidden_var(t, zero_array_forbidden=True):
 
 		return type_is_forbidden_var(t['of'])
 
-
 	return False
-
-
-
-
-# TODO!
-def type_attribute_add(t, a):
-	t['att'].append(a)
 
 
 
 # ищем поле с таким id в типе record
 def record_field_get(t, id):
 	return get_item_by_id(t['fields'], id)
-
-
-# копирование типов следует использовать только в случае
-# необходимости изменения его аттрибутов.
-def type_copy(t):
-	nt = copy.copy(t)
-	# именно так!	иначе добавим в att t тк это ссылка на лист!
-	# (!) создаем новый массив аттрибутов,
-	# чтобы не испортить оригинальный (!)
-	nt['att'] = []
-	nt['att'].extend(t['att'])
-	return nt
-
-
-
-def type_get_size(t):
-	assert(not type_is_vla(t))  #TODO: временная защита от VLA
-	return t['size']
-
-
-def type_get_align(t):
-	return t['align']
 
 
 
