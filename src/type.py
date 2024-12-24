@@ -16,7 +16,7 @@ from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up
 CONS_OP = ('cons',)
 EQ_OPS = ('eq', 'ne')
 RELATIONAL_OPS = ('lt', 'gt', 'le', 'ge')
-ARITHMETICAL_OPS = ('add', 'sub', 'mul', 'div', 'rem', 'negative')
+ARITHMETICAL_OPS = ('add', 'sub', 'mul', 'div', 'rem', 'neg', 'pos')
 LOGICAL_OPS = ('or', 'xor', 'and', 'not')
 
 UNIT_OPS = CONS_OP

@@ -645,11 +645,11 @@ class Parser:
 		elif self.match("+"):
 			v = self.expr_value_11()
 			ti['end'] = v['ti']
-			return {'isa': 'ast_value', 'kind': 'positive', 'value': v, 'ti': ti}
+			return {'isa': 'ast_value', 'kind': 'pos', 'value': v, 'ti': ti}
 		elif self.match("-"):
 			v = self.expr_value_11()
 			ti['end'] = v['ti']
-			return {'isa': 'ast_value', 'kind': 'negative', 'value': v, 'ti': ti}
+			return {'isa': 'ast_value', 'kind': 'neg', 'value': v, 'ti': ti}
 		elif self.match("unsafe"):
 			v = self.expr_value()
 			ti['end'] = v['ti']

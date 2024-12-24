@@ -1534,7 +1534,7 @@ def do_eval(x):
 	elif k == 'cons': y = do_eval_cons(x)
 	elif k == 'ref': y = do_eval_ref(x)
 	elif k == 'not': y = do_eval_not(x)
-	elif k == 'negative': y = do_eval_neg(x)
+	elif k == 'neg': y = do_eval_neg(x)
 	elif k == 'deref': y = do_eval_deref(x)
 	elif k == 'const': y = do_eval_const(x)
 	elif k == 'func': y = do_eval_func(x)

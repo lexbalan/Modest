@@ -935,7 +935,7 @@ def do_value_neg(x):
 	else:
 		vtype['signed'] = True
 
-	nv = value_un('negative', v, vtype, ti=x['ti'])
+	nv = value_un('neg', v, vtype, ti=x['ti'])
 
 	if value_is_immediate(v):
 		nv['asset'] = -v['asset']
@@ -959,7 +959,7 @@ def do_value_pos(x):
 	if not htype.type_is_signed(vtype):
 		error("expected value with signed type", v)
 
-	nv = value_un('positive', v, vtype, ti=x['ti'])
+	nv = value_un('pos', v, vtype, ti=x['ti'])
 
 	if value_is_immediate(v):
 		nv['asset'] = +v['asset']
@@ -1694,8 +1694,8 @@ def do_value(x):
 	elif k == 'index': v = do_value_index(x)
 	elif k == 'slice': v = do_value_slice(x)
 	elif k == 'access': v = do_value_access(x)
-	elif k == 'negative': v = do_value_neg(x)
-	elif k == 'positive': v = do_value_pos(x)
+	elif k == 'neg': v = do_value_neg(x)
+	elif k == 'pos': v = do_value_pos(x)
 	elif k == 'shl': v = do_value_shift(x)
 	elif k == 'shr': v = do_value_shift(x)
 	elif k == 'unsafe': v = do_value_unsafe(x)
