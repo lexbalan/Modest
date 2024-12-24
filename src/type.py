@@ -794,14 +794,6 @@ def print_list_by(lst, method):
 
 
 
-
-def type_id(t):
-	if 'id' in t:
-		return t['id']['str']
-	return None
-
-
-
 def type_print_record(t, print_aka=True):
 	if type_is_generic_record(t):
 		print("Record{...}", end='')
