@@ -6,9 +6,6 @@ from symtab import Symtab
 
 typeUnit = None
 typeBool = None
-typeChar8 = None
-typeChar16 = None
-typeChar32 = None
 typeWord8 = None
 typeWord16 = None
 typeWord32 = None
@@ -33,22 +30,23 @@ typeFloat64 = None
 typeDecimal32 = None
 typeDecimal64 = None
 typeDecimal128 = None
+typeChar8 = None
+typeChar16 = None
+typeChar32 = None
 typeStr8 = None
 typeStr16 = None
 typeStr32 = None
 typeFreePointer = None
 typeNil = None
 type__VA_List = None
-#typeSizeof = None
-
 
 
 
 foundation_source_info = {
 	'isa': 'source_info',
 	'id': 'foundation',
-	'path': '_',
-	'dir': '_',
+	'path': '',
+	'dir': '',
 	'name': 'foundation',
 }
 
@@ -56,24 +54,24 @@ foundation = {
 	'isa': 'module',
 	'id': "foudation",
 	'source_info': foundation_source_info,
-	'imports': [],  #
-	'strings': [],  # (used in LLVM backend)
+	'imports': [],
+	'strings': [],
 	'context': None,
 	'options': [],
 	'att': [],
-	'text': []
+	'defs': []
 }
 
 
 def init():
 	global typeUnit
 	global typeBool
-	global typeChar8, typeChar16, typeChar32
 	global typeWord8, typeWord16, typeWord32, typeWord64, typeWord128, typeWord256
 	global typeInt8, typeInt16, typeInt32, typeInt64, typeInt128, typeInt256
 	global typeNat8, typeNat16, typeNat32, typeNat64, typeNat128, typeNat256
 	global typeFloat16, typeFloat32, typeFloat64
 	global typeDecimal32, typeDecimal64, typeDecimal128
+	global typeChar8, typeChar16, typeChar32
 	global typeStr8, typeStr16, typeStr32
 	global typeFreePointer
 	global typeNil
@@ -88,7 +86,6 @@ def init():
 	typeUnit = type_unit()
 	typeBool = type_bool()
 
-	#
 	typeWord8 = type_word(width=8)
 	typeWord16 = type_word(width=16)
 	typeWord32 = type_word(width=32)
@@ -96,7 +93,6 @@ def init():
 	typeWord128 = type_word(width=128)
 	typeWord256 = type_word(width=256)
 
-	#
 	typeInt8 = type_integer(width=8)
 	typeInt16 = type_integer(width=16)
 	typeInt32 = type_integer(width=32)
@@ -104,7 +100,6 @@ def init():
 	typeInt128 = type_integer(width=128)
 	typeInt256 = type_integer(width=256)
 
-	#
 	typeNat8 = type_integer(width=8, signed=False)
 	typeNat16 = type_integer(width=16, signed=False)
 	typeNat32 = type_integer(width=32, signed=False)
@@ -112,11 +107,9 @@ def init():
 	typeNat128 = type_integer(width=128, signed=False)
 	typeNat256 = type_integer(width=256, signed=False)
 
-	#
 	typeFloat32 = type_float(width=32)
 	typeFloat64 = type_float(width=64)
 
-	#
 	typeChar8 = type_char(width=8)
 	typeChar16 = type_char(width=16)
 	typeChar32 = type_char(width=32)
@@ -138,7 +131,6 @@ def init():
 	typeStr16['id'] = {'str': 'Str16'}
 	typeStr32 = type_array(typeChar32, undefinedVolume, ti=None)
 	typeStr32['id'] = {'str': 'Str32'}
-
 
 	type__VA_List = {
 		'isa': 'type',
@@ -195,14 +187,5 @@ def type_select_nat(sz):
 	elif sz <= 256: t = typeNat256
 	assert(t != None)
 	return t
-
-
-def type_select_integer(sz, is_signed):
-	if is_signed:
-		if sz < 128: return type_select_int(sz + 1)
-		else: return type_select_int(sz)
-	return type_select_nat(sz)
-
-
 
 
