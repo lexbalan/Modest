@@ -5,7 +5,7 @@
 from error import info, error, fatal
 from .common import *
 import type as htype
-from type import type_print
+from type import select_common_type, type_print
 from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array
 from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_by_id, align_to
@@ -198,19 +198,26 @@ def _print_type_pointer_to(to, as_const, space_after):
 
 
 
+
 def print_type_array(t, as_pointer, space_after=False, unk_voume=False):
-	if as_pointer:
-		_print_type_pointer_to(t['of'], as_const='const' in t['att'], space_after=space_after)
-		return
+	dims = []
+	tt = t
+	while htype.type_is_array(tt):
+		if 'asset' in t['volume']:
+			dims.append(t['volume'])
+		tt = tt['of']
 
-	#assert(t['volume'] != None)
-	print_type(t['of'], space_after=space_after)
+	print_type(tt, space_after=space_after)
 
-	if unk_voume:
-		out("[]")
-		return
+	out("[")
+	i = 0
+	while i < len(dims):
+		if i > 0:
+			out("*")
+		print_value(dims[i])
+		i += 1
+	out("]")
 
-	print_array_volume(t)
 
 
 
@@ -1746,12 +1753,23 @@ def print_def_type(x):
 
 		return
 
-	out("typedef ")
-	print_type(x['original_type'])
-	out(" ")
-	out(id_str)
-	out(";")
-
+	if not htype.type_is_array(x['original_type']):
+		out("typedef ")
+		print_type(x['original_type'])
+		out(" ")
+		out(id_str)
+		out(";")
+	else:
+		# блядь в си все через одно место, это просто пиздец какой то
+		# Это временное решение, тк массив может быть сложнее....
+		out("typedef ")
+		print_type(x['original_type']['of'])
+		out(" ")
+		out(id_str)
+		out("[")
+		out("%d" % x['original_type']['volume']['asset'])
+		out("]")
+		out(";")
 
 
 
@@ -2239,54 +2257,28 @@ def print_value_as_ptr(x):
 
 
 
-from type import select_common_type
-
 def memcopy_assign(left, right):
-	"""# Assign array by memcopy
-	to_copy = 0
-	zero_rest = 0
-	l_size = left['type']['size']
-	r_size = right['type']['size']
-	if l_size > r_size:
-		zero_rest = l_size - r_size
-		to_copy = r_size
-	else:
-		to_copy = l_size"""
-
 	rv = get_root_value(right)
 	if value_is_zero(rv):
-		return memzero_sizeof(left)
+		memzero_sizeof(left)
+		return
 
 	out("memcpy(")
 	print_value_as_ptr(left)
 	out(", ")
 	print_value_as_ptr(right)
-	out(", sizeof(")
-	common_type = select_common_type(left['type'], right['type'])
-	print_type(common_type, array_as_ptr=False)
-	out("))")
+	out(", sizeof ")
+	print_value(left)
+	out(")")
 
-	"""if zero_rest > 0:
-		nl_indent()
-		memzero_off(left, to_copy, zero_rest)"""
-
-
-
-"""
-def memzero_off(left, offset, sz):
-	out("memset((((void *)")
-	print_value_as_ptr(left)
-	out(") + %i)" % offset)
-	out(", 0, %d);" % sz)
-"""
 
 
 def memzero_sizeof(left):
 	out("memset(")
 	print_value_as_ptr(left)
-	out(", 0, sizeof(")
-	print_type(left['type'], array_as_ptr=False)
-	out("))")
+	out(", 0, sizeof ")
+	print_value(left)
+	out(")")
 
 
 def memcmp_eq(left, right, op='eq'):

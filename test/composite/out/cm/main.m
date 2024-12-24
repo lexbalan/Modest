@@ -47,11 +47,12 @@ var animation2_points: [5]AnimationPoint = [5]AnimationPoint [
 func xy(x: record {x: Int32, y: Int32}) -> Unit {
 
 }
-//var arrr = [
-//	[1, 2, 3]
-//	[4, 5, 6]
-//	[7, 8, 9]
-//]
+
+var arrr: [3][3]Int32 = [
+	[1, 2, 3]
+	[4, 5, 6]
+	[7, 8, 9]
+]
 
 
 public func main() -> Int32 {
@@ -71,6 +72,17 @@ public func main() -> Int32 {
 	} else {
 		printf("ne\n")
 	}
+
+	var i: Int32 = 0
+	while i < 3 {
+		var j: Int32 = 0
+		while j < 3 {
+			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
+			j = j + 1
+		}
+		i = i + 1
+	}
+
 	return 0
 }
 

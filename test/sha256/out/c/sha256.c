@@ -76,7 +76,7 @@ const int32_t initalState[8] = _initalState;
 
 static void contextInit(Context *ctx)
 {
-	memcpy(&ctx->state, &initalState, sizeof(uint32_t[8]));
+	memcpy(&ctx->state, &initalState, sizeof ctx->state);
 }
 
 
@@ -104,7 +104,7 @@ const int32_t k[64] = _k;
 static void transform(Context *ctx, uint8_t *data)
 {
 	uint32_t m[64];
-	memset(&m, 0, sizeof(uint32_t[64]));
+	memset(&m, 0, sizeof m);
 
 	uint32_t i = 0;
 	uint32_t j = 0;
@@ -123,7 +123,7 @@ static void transform(Context *ctx, uint8_t *data)
 	}
 
 	uint32_t x[8];
-	memcpy(&x, &ctx->state, sizeof(uint32_t[8]));
+	memcpy(&x, &ctx->state, sizeof x);
 
 	i = 0;
 	while (i < 64) {

@@ -56,11 +56,12 @@ static AnimationPoint animation2_points[5] = (AnimationPoint[5]){
 static void xy(struct __anonymous_struct_3 x)
 {
 }
-//var arrr = [
-//	[1, 2, 3]
-//	[4, 5, 6]
-//	[7, 8, 9]
-//]
+
+static int32_t arrr[3 * 3] = (int32_t[3*3]){
+	1, 2, 3,
+	4, 5, 6,
+	7, 8, 9
+};
 
 
 int32_t main()
@@ -81,6 +82,17 @@ int32_t main()
 	} else {
 		printf("ne\n");
 	}
+
+	int32_t i = 0;
+	while (i < 3) {
+		int32_t j = 0;
+		while (j < 3) {
+			printf("arrr[%d][%d] = %d\n", i, j, arrr[i * 3 + j]);
+			j = j + 1;
+		}
+		i = i + 1;
+	}
+
 	return 0;
 }
 

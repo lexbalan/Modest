@@ -193,6 +193,7 @@ declare void @perror(%ConstCharStr* %str)
 @str4 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 32, i8 40, i8 110, i8 101, i8 41, i8 58, i8 32, i8 0]
 @str5 = private constant [4 x i8] [i8 101, i8 113, i8 10, i8 0]
 @str6 = private constant [4 x i8] [i8 110, i8 101, i8 10, i8 0]
+@str7 = private constant [19 x i8] [i8 97, i8 114, i8 114, i8 114, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 %RGB24 = type {
@@ -360,11 +361,25 @@ define internal void @xy({%Int32,%Int32} %x) {
 	ret void
 }
 
-;var arrr = [
-;	[1, 2, 3]
-;	[4, 5, 6]
-;	[7, 8, 9]
-;]
+
+@arrr = internal global [3 x [3 x %Int32]] [
+	[3 x %Int32] [
+		%Int32 1,
+		%Int32 2,
+		%Int32 3
+	],
+	[3 x %Int32] [
+		%Int32 4,
+		%Int32 5,
+		%Int32 6
+	],
+	[3 x %Int32] [
+		%Int32 7,
+		%Int32 8,
+		%Int32 9
+	]
+]
+
 define %Int32 @main() {
 	%1 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
 	%2 = insertvalue {%Int32,%Int32} %1, %Int32 20, 1
@@ -395,6 +410,40 @@ else_1:
 	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str6 to [0 x i8]*))
 	br label %endif_1
 endif_1:
+	%17 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %17
+	br label %again_1
+again_1:
+	%18 = load %Int32, %Int32* %17
+	%19 = icmp slt %Int32 %18, 3
+	br %Bool %19 , label %body_1, label %break_1
+body_1:
+	%20 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %20
+	br label %again_2
+again_2:
+	%21 = load %Int32, %Int32* %20
+	%22 = icmp slt %Int32 %21, 3
+	br %Bool %22 , label %body_2, label %break_2
+body_2:
+	%23 = load %Int32, %Int32* %17
+	%24 = load %Int32, %Int32* %20
+	%25 = load %Int32, %Int32* %17
+	%26 = getelementptr inbounds [3 x [3 x %Int32]], [3 x [3 x %Int32]]* @arrr, %Int32 0, %Int32 %25
+	%27 = load %Int32, %Int32* %20
+	%28 = getelementptr inbounds [3 x %Int32], [3 x %Int32]* %26, %Int32 0, %Int32 %27
+	%29 = load %Int32, %Int32* %28
+	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), %Int32 %23, %Int32 %24, %Int32 %29)
+	%31 = load %Int32, %Int32* %20
+	%32 = add %Int32 %31, 1
+	store %Int32 %32, %Int32* %20
+	br label %again_2
+break_2:
+	%33 = load %Int32, %Int32* %17
+	%34 = add %Int32 %33, 1
+	store %Int32 %34, %Int32* %17
+	br label %again_1
+break_1:
 	ret %Int32 0
 }
 

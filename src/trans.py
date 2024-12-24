@@ -613,9 +613,9 @@ def do_type_array(t):
 			error("required value with number or integer type", t['size']['ti'])
 
 	# closed arrays of closed arrays are denied NOW
-	if htype.type_is_closed_array(of):
-		error("closed arrays of closed arrays are denied", t['ti'])
-		return htype.type_bad(t)
+#	if htype.type_is_closed_array(of):
+#		error("closed arrays of closed arrays are denied", t['ti'])
+#		return htype.type_bad(t)
 
 	return htype.type_array(of, volume, ti=t['ti'])
 
