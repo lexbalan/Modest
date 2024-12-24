@@ -220,6 +220,7 @@ def print_type_array(t, id_str=None, as_const=False):
 	if id_str:
 		out(' ')
 		out(id_str)
+
 	print_array_volume(t)
 
 
