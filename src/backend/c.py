@@ -160,6 +160,12 @@ def print_type_id(t):
 	print_id(t)
 
 
+def print_array_root(t):
+	array_root_type = t
+	while array_root_type['kind'] == 'array':
+		array_root_type = array_root_type['of']
+	print_type(array_root_type)
+
 
 def print_array_volume(t):
 	if htype.type_is_open_array(t['of']):
@@ -211,18 +217,9 @@ def print_type_pointer(t, space_after, as_const=False):
 # id объекта между типом эмемета и размером массива: <element_type> <id_str>[<dimension>]
 # Это надо тк переменные-массивы и typedef в C используют странный синтаксис
 # (у типов функций похожая херня кстати)
-def print_type_array(t, id_str=None, as_const=False):
-	array_root_type = t
-	while array_root_type['kind'] == 'array':
-		array_root_type = array_root_type['of']
-
-	print_type(array_root_type, as_const=as_const)
-	if id_str:
-		out(' ')
-		out(id_str)
-
+def print_type_array(t):
+	print_array_root(t)
 	print_array_volume(t)
-
 
 
 def print_type_record(t, tag=""):
@@ -1767,11 +1764,6 @@ def print_def_type(x):
 
 
 
-
-
-
-
-
 def print_variable_regular(t, id_str, as_const):
 	print_type(t, space_after=True, as_const=as_const)
 	out("%s" % id_str)
@@ -1782,9 +1774,12 @@ def print_variable_pointer(t, id_str, as_const):
 	out("%s" % id_str)
 
 
-
-def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
-	print_type_array(t, id_str=id_str, as_const=as_const)
+def print_variable_array(t, id_str, as_const=False):
+	if as_const:
+		out("const ")
+	print_array_root(t)
+	out(' ' + id_str)
+	print_array_volume(t)
 
 
 
