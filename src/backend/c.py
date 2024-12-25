@@ -1508,25 +1508,22 @@ def print_stmt_value(x):
 
 
 def print_stmt(x):
+	nl_indent(x['nl'])
 	k = x['kind']
-
-	if k == 'block':
-		print_stmt_block(x)
-	else:
-		nl_indent(x['nl'])
-		if k == 'value': print_stmt_value(x)
-		elif k == 'assign': print_stmt_assign(x)
-		elif k == 'return': print_stmt_return(x)
-		elif k == 'if': print_stmt_if(x, need_else_branch=False)
-		elif k == 'while': print_stmt_while(x)
-		elif k == 'var': print_stmt_var(x)
-		elif k == 'let': print_stmt_let(x)
-		elif k == 'break': out('break;')
-		elif k == 'again': out('continue;')
-		elif k == 'comment-line': print_comment_line(x)
-		elif k == 'comment-block': print_comment_block(x)
-		elif k == 'asm': print_stmt_asm(x)
-		else: out("<stmt %s>" % str(x))
+	if k == 'block': print_stmt_block(x)
+	elif k == 'value': print_stmt_value(x)
+	elif k == 'assign': print_stmt_assign(x)
+	elif k == 'return': print_stmt_return(x)
+	elif k == 'if': print_stmt_if(x, need_else_branch=False)
+	elif k == 'while': print_stmt_while(x)
+	elif k == 'var': print_stmt_var(x)
+	elif k == 'let': print_stmt_let(x)
+	elif k == 'break': out('break;')
+	elif k == 'again': out('continue;')
+	elif k == 'comment-line': print_comment_line(x)
+	elif k == 'comment-block': print_comment_block(x)
+	elif k == 'asm': print_stmt_asm(x)
+	else: out("<stmt %s>" % str(x))
 
 
 
