@@ -1764,53 +1764,27 @@ def print_def_type(x):
 
 
 
-def print_variable_regular(t, id_str, as_const):
-	print_type(t, space_after=True, as_const=as_const)
-	out("%s" % id_str)
-
-
-def print_variable_pointer(t, id_str, as_const):
-	print_type(t, space_after=True, as_const=as_const)
-	out("%s" % id_str)
-
-
-def print_variable_array(t, id_str, as_const=False):
-	if as_const:
-		out("const ")
-	print_array_root(t)
-	out(' ' + id_str)
-	print_array_volume(t)
-
-
-
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_variable(id_str, typ, as_const=False, init_value=None, prefix=''):
-	assert (typ != None)
+def print_variable(id_str, t, as_const=False, init_value=None, prefix=''):
+	assert (t != None)
 
 	id_str = prefix + id_str
 
-
-	if htype.type_is_pointer(typ):
-		print_variable_pointer(typ, id_str, as_const)
-
-	elif htype.type_is_array(typ):
-		print_variable_array(typ, id_str, as_const=as_const)
+	if htype.type_is_array(t):
+		if as_const:
+			out("const ")
+		print_array_root(t)
+		out(' ' + id_str)
+		print_array_volume(t)
 
 	else:
-		print_variable_regular(typ, id_str, as_const)
-
+		print_type(t, space_after=True, as_const=as_const)
+		out("%s" % id_str)
 
 	if init_value != None:
 		out(" = ")
 		print_value(init_value)
-
-
-
-def print_decl_var(x):
-	print_def_var(x, isdecl=True)
-
-
 
 
 
@@ -2058,7 +2032,7 @@ def print_header(module, outname):
 			print_decl_func(x)
 		elif isa == 'def_var':
 			print_deps(x['deps'])
-			print_decl_var(x)
+			print_def_var(x)
 		elif isa in ['def_type', 'decl_type']:
 			print_deps(x['deps'])
 			print_def_type(x)
@@ -2139,7 +2113,7 @@ def print_cfile(module, _outname):
 			print_deps(x['deps'])
 			print_def_var(x)
 		elif isa == 'decl_var':
-			print_decl_var(x)
+			print_def_var(x, isdecl=True)
 		elif isa == 'def_func':
 			#newline()
 			print_deps(x['deps'])
