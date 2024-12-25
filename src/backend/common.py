@@ -21,7 +21,7 @@ def indentation(symbol):
 	return symbol * indent_level
 
 
-def nl_indentation(symbol):
+def nl_indentation(n, symbol='\t'):
 	global indent_level
 	return "\n" + symbol * indent_level
 

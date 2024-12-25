@@ -246,7 +246,7 @@ def print_type_record(t, tag=""):
 
 		if 'comments' in field:
 			for comment in field['comments']:
-				#newline(n=comment['nl'])
+				newline(comment['nl'])
 				print_comment(comment)
 
 
@@ -1530,10 +1530,21 @@ def print_stmt(x):
 	elif k == 'while': print_stmt_while(x)
 	elif k == 'var': print_stmt_var(x)
 	elif k == 'let': print_stmt_let(x)
-	elif k == 'break': nl_indent(x['nl']); out('break;')
-	elif k == 'again': nl_indent(x['nl']); out('continue;')
-	elif k == 'comment-line': print_comment_line(x)
-	elif k == 'comment-block': print_comment_block(x)
+	elif k == 'break':
+		nl_indent(x['nl'])
+		out('break;')
+	elif k == 'again':
+		nl_indent(x['nl'])
+		out('continue;')
+	elif k == 'comment-line':
+		out('\n' * x['nl'])
+		# doing indent itself!
+		print_comment_line(x)
+	elif k == 'comment-block':
+		out('\n' * x['nl'])
+		# doing indent itself!
+		print_comment_block(x)
+
 	elif k == 'asm': print_stmt_asm(x)
 	else: out("<stmt %s>" % str(x))
 
@@ -1634,7 +1645,6 @@ def print_decl_func(x):
 
 def print_def_func(x):
 	global declared
-	newline(n=x['nl'])
 
 	func = x['value']
 
@@ -1864,12 +1874,11 @@ def print_comment(x):
 
 
 def print_comment_block(x):
-	nl_indent(x['nl'])
+	indent()
 	out("/*%s*/" % x['text'])
 
 
 def print_comment_line(x):
-	newline(x['nl'])
 	lines = x['lines']
 	i = 0
 	n = len(lines)
@@ -2022,6 +2031,7 @@ def print_header(module, outname):
 
 		if isa in ['def_func']:
 			if 'inline' in x['att']:
+				newline(1)
 				print_def_func(x)
 				continue
 			newline(1)
@@ -2062,6 +2072,7 @@ def print_cfile(module, _outname):
 	if len(module['defs']) > 0:
 		first = module['defs'][0]
 		if first['isa'] == 'comment':
+			newline(first['nl'])
 			print_comment(first)
 			module['defs'] = module['defs'][1:]
 		else:
@@ -2118,10 +2129,11 @@ def print_cfile(module, _outname):
 			newline(n=x['nl'])
 			print_def_var(x, isdecl=True)
 		elif isa == 'def_func':
-			#newline()
 			print_deps(x['deps'])
+			newline(n=x['nl'])
 			print_def_func(x)
 		elif isa == 'comment':
+			newline(x['nl'])
 			print_comment(x)
 		elif isa == 'directive':
 			print_directive(x)
