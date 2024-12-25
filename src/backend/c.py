@@ -246,7 +246,7 @@ def print_type_record(t, tag=""):
 
 		if 'comments' in field:
 			for comment in field['comments']:
-				newline(comment['nl'])
+				nl_indent(comment['nl'])
 				print_comment(comment)
 
 
@@ -1255,7 +1255,6 @@ def print_value(x, ctx=[], need_wrap=False):
 
 
 def print_stmt_if(x, need_else_branch):
-	nl_indent(x['nl'])
 	out("if ("); print_value(x['cond']); out(")")
 
 	if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
@@ -1286,7 +1285,6 @@ def print_stmt_if(x, need_else_branch):
 
 
 def print_stmt_while(x):
-	nl_indent(x['nl'])
 	out("while ("); print_value(x['cond']); out(")")
 
 	if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
@@ -1299,8 +1297,6 @@ def print_stmt_while(x):
 
 
 def print_stmt_return(x):
-	nl_indent(x['nl'])
-
 	global cfunc
 
 	if isSretFunc(cfunc['type']):
@@ -1331,7 +1327,6 @@ def print_stmt_var(x):
 	#			if init_value['kind'] != 'call':
 	#				return
 
-	nl_indent(x['nl'])
 	print_variable(get_id_str(var_value), var_value['type'])
 
 	v = var_value
@@ -1400,7 +1395,6 @@ def print_stmt_let(x):
 	#		if iv['kind'] != 'call':
 	#			return
 
-	nl_indent(x['nl'])
 
 	# print generic constant as C macro
 	if value_is_generic_immediate(v):
@@ -1441,7 +1435,6 @@ def print_asm_pair(pair):
 
 
 def print_stmt_asm(x):
-	nl_indent(x['nl'])
 	out('__asm__ volatile (')
 	indent_up()
 	nl_indent(1)
@@ -1507,46 +1500,33 @@ def do_assign(left, right):
 
 
 def print_stmt_assign(x):
-	nl_indent(x['nl'])
 	do_assign(x['left'], x['right'])
 
 
 def print_stmt_value(x):
-	nl_indent(x['nl'])
 	print_value(x['value']); out(";")
 
 
 def print_stmt(x):
 	k = x['kind']
 
-	#nl = x['nl']
-	#newline(n=nl)
-
-	if k == 'block': print_stmt_block(x)
-	elif k == 'value': print_stmt_value(x)
-	elif k == 'assign': print_stmt_assign(x)
-	elif k == 'return': print_stmt_return(x)
-	elif k == 'if': print_stmt_if(x, need_else_branch=False)
-	elif k == 'while': print_stmt_while(x)
-	elif k == 'var': print_stmt_var(x)
-	elif k == 'let': print_stmt_let(x)
-	elif k == 'break':
+	if k == 'block':
+		print_stmt_block(x)
+	else:
 		nl_indent(x['nl'])
-		out('break;')
-	elif k == 'again':
-		nl_indent(x['nl'])
-		out('continue;')
-	elif k == 'comment-line':
-		out('\n' * x['nl'])
-		# doing indent itself!
-		print_comment_line(x)
-	elif k == 'comment-block':
-		out('\n' * x['nl'])
-		# doing indent itself!
-		print_comment_block(x)
-
-	elif k == 'asm': print_stmt_asm(x)
-	else: out("<stmt %s>" % str(x))
+		if k == 'value': print_stmt_value(x)
+		elif k == 'assign': print_stmt_assign(x)
+		elif k == 'return': print_stmt_return(x)
+		elif k == 'if': print_stmt_if(x, need_else_branch=False)
+		elif k == 'while': print_stmt_while(x)
+		elif k == 'var': print_stmt_var(x)
+		elif k == 'let': print_stmt_let(x)
+		elif k == 'break': out('break;')
+		elif k == 'again': out('continue;')
+		elif k == 'comment-line': print_comment_line(x)
+		elif k == 'comment-block': print_comment_block(x)
+		elif k == 'asm': print_stmt_asm(x)
+		else: out("<stmt %s>" % str(x))
 
 
 
@@ -1874,7 +1854,6 @@ def print_comment(x):
 
 
 def print_comment_block(x):
-	indent()
 	out("/*%s*/" % x['text'])
 
 
@@ -1884,11 +1863,11 @@ def print_comment_line(x):
 	n = len(lines)
 	while i < n:
 		line = lines[i]
-		indent()
 		out("//%s" % line['str'])
 		i = i + 1
 		if i < n:
 			newline()
+			indent()
 
 
 
@@ -2072,7 +2051,7 @@ def print_cfile(module, _outname):
 	if len(module['defs']) > 0:
 		first = module['defs'][0]
 		if first['isa'] == 'comment':
-			newline(first['nl'])
+			nl_indent(first['nl'])
 			print_comment(first)
 			module['defs'] = module['defs'][1:]
 		else:
@@ -2133,7 +2112,7 @@ def print_cfile(module, _outname):
 			newline(n=x['nl'])
 			print_def_func(x)
 		elif isa == 'comment':
-			newline(x['nl'])
+			nl_indent(x['nl'])
 			print_comment(x)
 		elif isa == 'directive':
 			print_directive(x)
