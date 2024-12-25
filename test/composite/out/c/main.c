@@ -17,7 +17,10 @@ struct RGB24 {
 };
 typedef struct RGB24 RGB24;
 
-static RGB24 rgb0[2] = (RGB24[2]){{.red = 200, .green = 0, .blue = 0}, {.red = 200, .green = 0, .blue = 0}};
+static RGB24 rgb0[2] = (RGB24[2]){
+	{.red = 200, .green = 0, .blue = 0},
+	{.red = 200, .green = 0, .blue = 0}
+};
 
 struct AnimationPoint {
 	RGB24 color;
@@ -62,6 +65,8 @@ static int32_t arrr[3*3] = (int32_t[3*3]){
 	4, 5, 6,
 	7, 8, 9
 };
+
+static int32_t * arry[3*3];
 
 
 int32_t main()

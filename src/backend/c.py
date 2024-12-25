@@ -202,7 +202,6 @@ def _print_type_pointer_to(to, as_const, space_after):
 			out(" ")
 
 
-
 def print_type_pointer(t, space_after, as_const=False):
 	# array was printed as *, we dont need to place another *
 	if htype.type_is_array(t['to']):
@@ -473,9 +472,9 @@ def print_value_un(v, ctx):
 
 
 def ptr2func(ftype):
-	print_type(ftype['to']);
-	out(" (*) ")
-	print_paramlist(ftype)
+	print_func_return_type(ftype)
+	out("(*)")
+	print_func_paramlist(ftype)
 
 
 def print_value_call(v, ctx, arrayResult=None):
@@ -1564,8 +1563,21 @@ def print_stmt_block(s):
 
 
 
+# Функция возвращает массив по значению?
+def isSretFunc(ftype):
+	return htype.type_is_closed_array(ftype['to'])
 
-def print_paramlist(ftype):
+
+def print_func_return_type(ftype):
+	if not isSretFunc(ftype):
+		print_type(ftype['to'])
+		return
+
+	out("void")
+	return
+
+
+def print_func_paramlist(ftype):
 	params = ftype['params']
 	extra_args = ftype['extra_args']
 
@@ -1593,23 +1605,12 @@ def print_paramlist(ftype):
 	return
 
 
-
-# Функция возвращает массив по значению?
-def isSretFunc(ftype):
-	return htype.type_is_closed_array(ftype['to'])
-
-
 def print_func_signature(id_str, ftype, atts):
-	to = ftype['to']
-
-	sret = isSretFunc(ftype)
-	if sret:
-		out("void ")
-	else:
-		print_type(to, space_after=True)
-
-	out("%s" % id_str)
-	print_paramlist(ftype)
+	print_func_return_type(ftype)
+	if not htype.type_is_pointer(ftype['to']):
+		out(' ')
+	out(id_str)
+	print_func_paramlist(ftype)
 
 
 
@@ -1650,7 +1651,6 @@ def print_def_func(x):
 		out("inline ")
 
 	ftype = func['type']
-	extra_args = ftype['extra_args']
 
 	# если функция уже была определена, то обертки над ее типами
 	# уже были напечатаны (если они были), и их нельзя печатать еще раз

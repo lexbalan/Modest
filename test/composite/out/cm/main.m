@@ -9,7 +9,10 @@ type RGB24 record {
 	blue: Nat8
 }
 
-var rgb0: [2]RGB24 = [2]RGB24 [{red = 200, green = 0, blue = 0}, {red = 200, green = 0, blue = 0}]
+var rgb0: [2]RGB24 = [2]RGB24 [
+	{red = 200, green = 0, blue = 0}
+	{red = 200, green = 0, blue = 0}
+]
 
 type AnimationPoint record {
 	color: RGB24
@@ -53,6 +56,8 @@ var arrr: [3][3]Int32 = [
 	[4, 5, 6]
 	[7, 8, 9]
 ]
+
+var arry: [3][3]*[3]Int32
 
 
 public func main() -> Int32 {

@@ -39,7 +39,7 @@ void fsm_run(fsm_FSM *fsm)
 		}
 
 		if (state->entry != NULL) {
-			((void (*) (fsm_FSM *x))state->entry)(fsm);
+			((void(*)(fsm_FSM *x))state->entry)(fsm);
 		}
 
 		fsm->state = nexstate;
@@ -49,7 +49,7 @@ void fsm_run(fsm_FSM *fsm)
 		fsm_StateDesc *const state = &fsm->states[fsm->state];
 
 		if (state->loop != NULL) {
-			((void (*) (fsm_FSM *x))state->loop)(fsm);
+			((void(*)(fsm_FSM *x))state->loop)(fsm);
 		}
 
 	} else if (fsm->substate == fsm_substateLeaving) {
@@ -60,7 +60,7 @@ void fsm_run(fsm_FSM *fsm)
 		}
 
 		if (state->exit != NULL) {
-			((void (*) (fsm_FSM *x))state->exit)(fsm);
+			((void(*)(fsm_FSM *x))state->exit)(fsm);
 		}
 
 		fsm->substate = fsm_substateEntering;
