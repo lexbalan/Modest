@@ -55,17 +55,18 @@ func xy(x: record {x: Int32, y: Int32}) -> Unit {
 
 }
 
+
 var arrr: [3][3]Int32 = [
 	[1, 2, 3]
 	[4, 5, 6]
 	[7, 8, 9]
 ]
 
-var arry: [3][3]*[3]Int32
+var x: *() -> Unit
+var arry: [3][3]*() -> Unit
 
 
 public func main() -> Int32 {
-
 	xy({x=10, y=20})
 
 	printf("test1 (eq): ")

@@ -1720,7 +1720,7 @@ def print_decl_type(x):
 
 def print_def_type(x):
 	global declared
-	newline(n=x['nl'])
+	#newline(n=x['nl'])
 
 	id_str = get_id_str(x['type'])
 	orig_type = x['original_type']
@@ -1789,8 +1789,6 @@ def print_variable(id_str, t, as_const=False, init_value=None, prefix=''):
 
 
 def print_def_var(x, isdecl=False):
-	newline(n=x['nl'])
-
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
 
@@ -1819,8 +1817,6 @@ def print_def_var(x, isdecl=False):
 
 
 def print_def_const(x):
-	newline(n=x['nl'])
-
 	global nl_str
 	const_value = x['value']
 	init_value = x['init_value']
@@ -2028,16 +2024,19 @@ def print_header(module, outname):
 			if 'inline' in x['att']:
 				print_def_func(x)
 				continue
-			newline(n=x['nl'])
+			newline(1)
 			print_decl_func(x)
 		elif isa == 'def_var':
 			print_deps(x['deps'])
+			newline(1)
 			print_def_var(x)
 		elif isa in ['def_type', 'decl_type']:
 			print_deps(x['deps'])
+			newline(1)
 			print_def_type(x)
 		elif isa == 'def_const':
 			print_deps(x['deps'])
+			newline(1)
 			print_def_const(x)
 
 	newline()
@@ -2105,14 +2104,18 @@ def print_cfile(module, _outname):
 		isa = x['isa']
 		if isa == 'def_const' and is_private(x):
 			print_deps(x['deps'])
+			newline(n=x['nl'])
 			print_def_const(x)
 		elif isa == 'def_type' and is_private(x):
 			print_deps(x['deps'])
+			newline(n=x['nl'])
 			print_def_type(x)
 		elif isa == 'def_var':
 			print_deps(x['deps'])
+			newline(n=x['nl'])
 			print_def_var(x)
 		elif isa == 'decl_var':
+			newline(n=x['nl'])
 			print_def_var(x, isdecl=True)
 		elif isa == 'def_func':
 			#newline()

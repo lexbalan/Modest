@@ -379,7 +379,8 @@ define internal void @xy({%Int32,%Int32} %x) {
 		%Int32 9
 	]
 ]
-@arry = internal global [3 x [3 x [3 x %Int32]*]] zeroinitializer
+@x = internal global void ()* zeroinitializer
+@arry = internal global [3 x [3 x void ()*]] zeroinitializer
 
 define %Int32 @main() {
 	%1 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0

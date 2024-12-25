@@ -60,18 +60,19 @@ static void xy(struct __anonymous_struct_3 x)
 {
 }
 
+
 static int32_t arrr[3*3] = (int32_t[3*3]){
 	1, 2, 3,
 	4, 5, 6,
 	7, 8, 9
 };
 
-static int32_t * arry[3*3];
+static void *x;
+static void * arry[3*3];
 
 
 int32_t main()
 {
-
 	xy((struct __anonymous_struct_3){.x = 10, .y = 20});
 
 	printf("test1 (eq): ");

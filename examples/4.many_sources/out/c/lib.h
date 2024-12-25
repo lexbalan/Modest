@@ -8,8 +8,6 @@
 #include <stdio.h>
 
 
-
-
 void lib_foo();
 
 #endif /* LIB_H */
