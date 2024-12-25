@@ -1535,18 +1535,13 @@ def print_statements(stmts):
 
 def print_stmt_block(s):
 	out("{")
-
 	indent_up()
-
 	print_statements(s['stmts'])
-
 	indent_down()
-
 	endnl = s['end_nl']
 	newline(n=endnl)
 	if endnl:
 		indent()
-
 	out("}")
 
 
