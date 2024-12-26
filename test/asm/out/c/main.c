@@ -58,8 +58,8 @@ int main()
 	int64_t a = 10;
 	int64_t b = 20;
 
-	const int64_t sum = sum64(a, b);
-	const int64_t sub = sub64(a, b);
+	int64_t sum = sum64(a, b);
+	int64_t sub = sub64(a, b);
 
 	printf("sum(%lld, %lld) = %lld\n", a, b, sum);
 	printf("sub(%lld, %lld) = %lld\n", a, b, sub);

@@ -49,10 +49,10 @@ static float min(float a, float b)
 // Pythagorean theorem
 static float distance(Point a, Point b)
 {
-	const float dx = max(a.x, b.x) - min(a.x, b.x);
-	const float dy = max(a.y, b.y) - min(a.y, b.y);
-	const double dx2 = pow(dx, (double)(2));
-	const double dy2 = pow(dy, (double)(2));
+	float dx = max(a.x, b.x) - min(a.x, b.x);
+	float dy = max(a.y, b.y) - min(a.y, b.y);
+	double dx2 = pow(dx, (double)(2));
+	double dy2 = pow(dy, (double)(2));
 	return sqrt(dx2 + dy2);
 }
 
@@ -78,7 +78,7 @@ static void ptr_example()
 int main()
 {
 	// by value
-	const float len = lineLength(line);
+	float len = lineLength(line);
 	printf("line length = %f\n", len);
 
 	ptr_example();

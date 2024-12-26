@@ -289,61 +289,42 @@ def type_get_aka(t):
 	return None
 
 
-def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
-	k = t['kind']
 
-	if not htype.type_is_pointer(t):
-		if as_const:
-			out("const ")
-
-		if 'volatile' in t['att']:
-			out("volatile ")
-
-	# hotfix for let generic value problem (let x = 1)
+def str_type(t, space_after=False, array_as_ptr=True, as_const=False):
 	if htype.type_is_number(t):
 		# если пришел generic - подберем подходящий тип
-		# ex: let x = 1; func(x)
+		# ex: let x = 1
 		t = foundation.type_select_int(t['width'])
-
 
 	aka = type_get_aka(t)
 	if aka != None:
-		out(aka)
+		return aka
 
-	elif htype.type_is_record(t):
+	if htype.type_is_record(t):
 		print_type_record(t)
+		return None
 
 	elif htype.type_is_pointer(t):
 		print_type_pointer(t, space_after, as_const)
-		return
+		return None
 
 	elif htype.type_is_array(t):
 		print_type_array(t)
-
-	elif htype.type_is_enum(t):
-		print_type_enum(t)
+		return None
 
 	elif htype.type_is_func(t):
-		out("void")
+		return 'void'
 
-	elif htype.type_is_char(t):
-		if t['width'] <= 8:
-			out("char")
-		elif t['width'] <= 16:
-			out("int16_t")
-		elif t['width'] <= 32:
-			out("int32_t")
+	return '<type:%s>' % t['type']
 
-	elif k == 'undefined':
-		out("void")
 
-	elif k == 'bad':
-		out("<bad_type>")
+def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
+	s = str_type(t, space_after, array_as_ptr, as_const)
+	if s != None:
+		if space_after:
+			s += ' '
+		out(s)
 
-	else: out("<type:" + str(t) + ">")
-
-	if space_after:
-		out(" ")
 
 
 

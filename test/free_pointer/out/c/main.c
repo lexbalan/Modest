@@ -34,7 +34,7 @@ int32_t main()
 	int64_t *const px = (int64_t *)freePointer;
 
 	// And will use it...
-	const int64_t x = *px;
+	int64_t x = *px;
 
 	// for pointer mechanics checking
 	printf("x = 0x%llX\n", x);

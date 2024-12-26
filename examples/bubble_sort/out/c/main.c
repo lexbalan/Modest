@@ -21,8 +21,8 @@ static void bubble_sort32(int32_t *array, int32_t len)
 		need_to_sort = false;
 		int32_t i = 0;
 		while (i < len - 1) {
-			const int32_t i0 = array[i];
-			const int32_t i1 = array[i + 1];
+			int32_t i0 = array[i];
+			int32_t i1 = array[i + 1];
 
 			if (i0 > i1) {
 				// swap
@@ -78,7 +78,7 @@ static void fill_array(int32_t *array, int32_t len)
 	int32_t i = 0;
 	while (i < len) {
 		printf("[%i] ", i);
-		const int32_t x = get_number(__min, __max);
+		int32_t x = get_number(__min, __max);
 		array[i] = x;
 		i = i + 1;
 	}

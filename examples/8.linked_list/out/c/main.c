@@ -65,7 +65,7 @@ int main()
 	nat32_list_insert(list0, 100);
 
 	// print list size
-	const uint32_t list_size = list_size_get(list0);
+	uint32_t list_size = list_size_get(list0);
 	printf("linked list size: %u\n", list_size);
 
 	// print list forward

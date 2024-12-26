@@ -10,7 +10,7 @@
 
 void delay_us(uint64_t us)
 {
-	const clock_t start_time = clock();
+	clock_t start_time = clock();
 	while (clock() < start_time + us) {
 		// just waiting
 	}

@@ -24,7 +24,7 @@ int main()
 
 	#define __x0  ((__a - __b) * __c)
 
-	const int32_t x1 = named_args_test(__a, __b, __c);
+	int32_t x1 = named_args_test(__a, __b, __c);
 
 	if (__x0 == x1) {
 		printf("test passed\n");

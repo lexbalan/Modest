@@ -73,7 +73,7 @@ int main()
 {
 	printf("test cast operation\n");
 
-	const uint64_t start_adr = (uint64_t)&c;
+	uint64_t start_adr = (uint64_t)&c;
 	printf("off(c) = %llu\n", (uint64_t)&c - start_adr);
 	printf("off(i) = %llu\n", (uint64_t)&i - start_adr);
 	printf("off(f) = %llu\n", (uint64_t)&f - start_adr);

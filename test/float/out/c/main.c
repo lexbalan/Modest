@@ -26,8 +26,8 @@ typedef struct Point2D Point2D;
 
 static float slope(Point2D a, Point2D b)
 {
-	const int dx = abs(a.x - b.x);
-	const int dy = abs(a.y - b.y);
+	int dx = abs(a.x - b.x);
+	int dy = abs(a.y - b.y);
 	printf("dx = %d\n", dx);
 	printf("dy = %d\n", dy);
 	return (float)dy / (float)dx;
@@ -42,7 +42,7 @@ int main()
 	printf("2/3 = %f\n", (double)(2.0 / (double)(3)));
 
 	#define __r  10
-	const double s = squareOfCircle((double)__r);
+	double s = squareOfCircle((double)__r);
 	printf("s = %f\n", s);
 
 	#define __k  (1.0 / (double)(8))
@@ -52,7 +52,7 @@ int main()
 	printf("sizeof(Float64) = %lu\n", sizeof(double));
 
 	// printf %f ожидает получить double а не float!
-	const float sl = slope((Point2D){.x = 10, .y = 20}, (Point2D){.x = 30, .y = 50});
+	float sl = slope((Point2D){.x = 10, .y = 20}, (Point2D){.x = 30, .y = 50});
 	printf("slope = %f\n", (double)sl);
 
 	return 0;

@@ -141,7 +141,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 	if (pos >= 0) {
 		// go forward
 		node = list->head;
-		const uint32_t n = (uint32_t)pos;
+		uint32_t n = (uint32_t)pos;
 
 		if (n > list->size) {
 			return NULL;
@@ -155,7 +155,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 	} else {
 		// go backward
 		node = list->tail;
-		const uint32_t n = (uint32_t)-pos - 1;
+		uint32_t n = (uint32_t)-pos - 1;
 
 		if (n > list->size) {
 			return NULL;

@@ -24,7 +24,7 @@ typedef uint64_t Nat;
 
 void mzero(void *mem, uint64_t len)
 {
-	const Nat z = (Nat)mem % memoryAlignment;
+	Nat z = (Nat)mem % memoryAlignment;
 
 	uint8_t *const memptr = (uint8_t *)mem;
 
@@ -39,7 +39,7 @@ void mzero(void *mem, uint64_t len)
 
 	// word operation
 
-	const uint64_t len_words = (len - z) / sizeof(Word);
+	uint64_t len_words = (len - z) / sizeof(Word);
 	Word *const dst_word = (Word *)&memptr[i];
 
 	i = 0;
@@ -50,7 +50,7 @@ void mzero(void *mem, uint64_t len)
 
 	// byte operation
 
-	const uint64_t len_bytes = (len - z) % sizeof(Word);
+	uint64_t len_bytes = (len - z) % sizeof(Word);
 	uint8_t *const dst_byte1 = (uint8_t *)&dst_word[i];
 
 	i = 0;
@@ -63,7 +63,7 @@ void mzero(void *mem, uint64_t len)
 
 void mcopy(void *dst, void *src, uint64_t len)
 {
-	const uint64_t len_words = len / sizeof(Word);
+	uint64_t len_words = len / sizeof(Word);
 	Word *const src_w = (Word *)src;
 	Word *const dst_w = (Word *)dst;
 
@@ -73,7 +73,7 @@ void mcopy(void *dst, void *src, uint64_t len)
 		i = i + 1;
 	}
 
-	const uint64_t len_bytes = len % sizeof(Word);
+	uint64_t len_bytes = len % sizeof(Word);
 	uint8_t *const src_b = (uint8_t *)&src_w[i];
 	uint8_t *const dst_b = (uint8_t *)&dst_w[i];
 
@@ -87,7 +87,7 @@ void mcopy(void *dst, void *src, uint64_t len)
 
 bool meq(void *mem0, void *mem1, uint64_t len)
 {
-	const uint64_t len_words = len / sizeof(Word);
+	uint64_t len_words = len / sizeof(Word);
 	Word *const mem0_w = (Word *)mem0;
 	Word *const mem1_w = (Word *)mem1;
 
@@ -99,7 +99,7 @@ bool meq(void *mem0, void *mem1, uint64_t len)
 		i = i + 1;
 	}
 
-	const uint64_t len_bytes = len % sizeof(Word);
+	uint64_t len_bytes = len % sizeof(Word);
 	uint8_t *const mem0_b = (uint8_t *)&mem0_w[i];
 	uint8_t *const mem1_b = (uint8_t *)&mem1_w[i];
 

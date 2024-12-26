@@ -14,10 +14,10 @@ int main()
 {
 	printf("unistd test\n");
 
-	const pid_t pid = getpid();
+	pid_t pid = getpid();
 	printf("pid = %d\n", pid);
 
-	const long hid = gethostid();
+	long hid = gethostid();
 	printf("hostid = %ld\n", hid);
 
 	// current control terminal

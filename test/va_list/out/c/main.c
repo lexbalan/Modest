@@ -22,7 +22,7 @@ static ssize_t my_printf(char *format, ...)
 
 	#define __strMaxLen  (127 + 1)
 	char buf[__strMaxLen];
-	const int n = vsnprintf((char *)&buf, __strMaxLen, format, va2);
+	int n = vsnprintf((char *)&buf, __strMaxLen, format, va2);
 
 	va_end(va2);
 
@@ -37,11 +37,11 @@ int main()
 	int32_t k = 10;
 	my_printf("My Printf Test %d\n", k);
 
-	const char c = '$';
+	char c = '$';
 	char *const s = "Hi!";
-	const int32_t i = (int32_t)-1;
-	const uint32_t n = 123;
-	const uint32_t x = 0x1234567F;
+	int32_t i = (int32_t)-1;
+	uint32_t n = 123;
+	uint32_t x = 0x1234567F;
 
 	my_printf("\x0\x0\n");
 	my_printf("c = '%c'\n", c);

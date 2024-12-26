@@ -51,7 +51,7 @@ static bool doTest(SHA256_TestCase *test)
 {
 	uint8_t test_hash[sha256_hashSize];
 	uint8_t *const msg = (uint8_t *)(char *)&test->input_data;
-	const uint32_t msg_len = test->input_data_len;
+	uint32_t msg_len = test->input_data_len;
 	sha256_hash(msg, msg_len, (uint8_t *)&test_hash);
 
 	printf("'%s'", (char *)&test->input_data);
@@ -76,7 +76,7 @@ int main()
 	int32_t i = 0;
 	while (i < (int)LENGTHOF(tests)) {
 		SHA256_TestCase *const test = tests[i];
-		const bool test_result = doTest(test);
+		bool test_result = doTest(test);
 
 		char *res = "failed";
 		if (test_result) {
