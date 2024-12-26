@@ -492,8 +492,6 @@ def init_builtin_values():
 	compiler = value_record_create(compiler_initializers)
 	root_symtab.value_add('__compiler', compiler)
 
-
-
 	#
 	# __target
 	#
@@ -521,7 +519,6 @@ def init_builtin_values():
 	]
 	target = value_record_create(target_initializers)
 	root_symtab.value_add('__target', target)
-
 
 
 
@@ -674,8 +671,7 @@ def do_type_enum(t):
 		item_val['id'] = id
 		global cmodule
 		module_value_add_public(cmodule, id['str'], item_val)
-
-		i = i + 1
+		i += 1
 
 	return enum_type
 
@@ -750,7 +746,6 @@ def do_value_shift(x):
 		return value_bad(x['ti'])
 
 	return value_bin(op, l, r, type_result, ti=x['ti'])
-
 
 
 def do_value_bin(x):
@@ -1027,7 +1022,7 @@ def sort_args(params, args):
 					if item['key']['str'] == param_id_str:
 						k = i
 						break
-			i = i + 1
+			i += 1
 
 		j = 0
 		if k >= 0:
@@ -1161,7 +1156,7 @@ def do_value_call(x):
 			else:
 				args.append(arg)
 
-		i = i + 1
+		i += 1
 
 	#
 	# extra args
@@ -1186,7 +1181,7 @@ def do_value_call(x):
 
 			extra_args.append(argval)
 
-		i = i + 1
+		i += 1
 
 
 	if 'id' in fn:
@@ -2333,7 +2328,7 @@ def def_func(x, dostmt=True):
 		param_value['att'].append('local')
 		param_value['att'].append('param')
 		ctx_value_add(param_id['str'], param_value)
-		i = i + 1
+		i += 1
 
 	# for C backend, for #include <stdarg.h>
 	if fn['type']['extra_args']:
@@ -2980,10 +2975,10 @@ def get_cspecs(s):
 	while i < len(s):
 		c = s[i]
 		if c == '%':
-			i = i + 1
+			i += 1
 			c = s[i]
 			specs.append(c)
-		i = i + 1
+		i += 1
 	return specs
 
 
@@ -3000,7 +2995,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 		arg_type = arg['type']
 
 		if value_is_bad(arg):
-			i = i + 1
+			i += 1
 			continue
 
 		spec = specs[i]
@@ -3008,7 +3003,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 		if expected_pointers:
 			if not htype.type_is_pointer(arg_type):
 				warning("expected pointer", arg)
-				i = i + 1
+				i += 1
 				continue
 
 			arg_type = arg_type['to']
@@ -3048,7 +3043,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 			if not htype.type_is_pointer(arg_type):
 				warning("expected pointer value", arg)
 
-		i = i + 1
+		i += 1
 	return
 
 

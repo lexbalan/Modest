@@ -67,7 +67,7 @@ static int32_t arrr[3*3] = (int32_t[3*3]){
 	7, 8, 9
 };
 
-static void *x;
+static void (*x)();
 static void * arry[3*3];
 
 

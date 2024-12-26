@@ -701,6 +701,11 @@ def type_is_pointer_to_array_of_char(t):
 	return False
 
 
+def type_is_pointer_to_func(t):
+	if type_is_pointer(t):
+		return type_is_func(t['to'])
+	return False
+
 
 def type_is_signed(t):
 	if not 'signed' in t:

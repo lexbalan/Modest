@@ -16,9 +16,9 @@ typedef struct fsm_FSM fsm_FSM;
 typedef void * fsm_Handler;
 struct fsm_StateDesc {
 	char name[fsm_nameMaxLength];
-	fsm_Handler entry;
-	fsm_Handler loop;
-	fsm_Handler exit;
+	void (*entry)(fsm_FSM *x);
+	void (*loop)(fsm_FSM *x);
+	void (*exit)(fsm_FSM *x);
 };
 typedef struct fsm_StateDesc fsm_StateDesc;
 #define fsm_substateEntering  0

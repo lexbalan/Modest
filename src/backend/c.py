@@ -1745,6 +1745,7 @@ def print_def_type(x):
 		out(";")
 
 
+# Указатель, массив и функция образуют пиздецовый заговор
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
@@ -1753,7 +1754,12 @@ def print_variable(id_str, t, as_const=False, init_value=None, prefix=''):
 
 	id_str = prefix + id_str
 
-	if htype.type_is_array(t):
+	if htype.type_is_pointer_to_func(t):
+		print_func_return_type(t['to'])
+		out(" (*%s)" % id_str)
+		print_func_paramlist(t['to'])
+
+	elif htype.type_is_array(t):
 		if as_const:
 			out("const ")
 		print_array_root(t)
