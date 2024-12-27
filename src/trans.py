@@ -901,7 +901,11 @@ def do_value_not(x):
 		error("unsuitable type", v)
 		return value_bad(x['ti'])
 
-	nv = value_un('not', v, vtype, ti=x['ti'])
+	op = 'not'
+	if htype.type_is_bool(vtype):
+		op = 'logic_not'
+
+	nv = value_un(op, v, vtype, ti=x['ti'])
 
 	if value_is_immediate(v):
 		# because: ~(1) = -1 (not 0) !

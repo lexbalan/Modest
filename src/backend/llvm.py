@@ -919,11 +919,14 @@ def do_eval_ref(v):
 	return nv
 
 
-def do_eval_not(v):
+def do_eval_not(v, xor_msk):
 	#%10 = xor i32 %9, -1
+	# or
+	#%10 = xor i32 %9, 1
 	ve = do_reval(v['value'])
-	minus_one = llvm_value_num(v['type'], -1)
+	minus_one = llvm_value_num(v['type'], xor_msk)
 	return llvm_eval_binary('xor', ve, minus_one, v)
+
 
 
 def do_eval_neg(v):
@@ -1533,7 +1536,8 @@ def do_eval(x):
 	elif k in bin_ops: y = do_eval_bin(x)
 	elif k == 'cons': y = do_eval_cons(x)
 	elif k == 'ref': y = do_eval_ref(x)
-	elif k == 'not': y = do_eval_not(x)
+	elif k == 'not': y = do_eval_not(x, xor_msk=-1)
+	elif k == 'logic_not': y = do_eval_not(x, xor_msk=1)
 	elif k == 'neg': y = do_eval_neg(x)
 	elif k == 'deref': y = do_eval_deref(x)
 	elif k == 'const': y = do_eval_const(x)
