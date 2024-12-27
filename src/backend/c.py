@@ -519,10 +519,6 @@ def print_value_un(v, ctx):
 	p0 = precedence(v)
 	pv = precedence(value)
 
-	if op == 'not':
-		if htype.type_eq(value['type'], foundation.typeBool):
-			op = 'logic_not'
-
 #	if v['kind'] == 'ref':
 #		if htype.type_is_array(value['type']):
 #			# to prevent:
