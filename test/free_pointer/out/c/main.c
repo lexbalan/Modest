@@ -31,7 +31,7 @@ int32_t main()
 	printf("c = 0x%llX\n", c);
 
 	// Let's create new pointer to *Int64 from freePointer
-	int64_t *const px = (int64_t *)freePointer;
+	int64_t *px = (int64_t *)freePointer;
 
 	// And will use it...
 	int64_t x = *px;

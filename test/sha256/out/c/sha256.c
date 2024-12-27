@@ -71,7 +71,7 @@ static inline uint32_t sig1(uint32_t x)
 	0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, \
 	0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 \
 }
-const int32_t initalState[8] = _initalState;
+uint32_t initalState[8] = _initalState;
 
 
 static void contextInit(Context *ctx)
@@ -98,10 +98,10 @@ static void contextInit(Context *ctx)
 	0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, \
 	0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2 \
 }
-const int32_t k[64] = _k;
+uint32_t k[64] = _k;
 
 
-static void transform(Context *ctx, uint8_t *data)
+static void transform(Context *ctx, uint8_t(*data)[])
 {
 	uint32_t m[64];
 	memset(&m, 0, sizeof m);
@@ -110,7 +110,7 @@ static void transform(Context *ctx, uint8_t *data)
 	uint32_t j = 0;
 
 	while (i < 16) {
-		uint32_t x = (uint32_t)data[j + 0] << 24 | (uint32_t)data[j + 1] << 16 | (uint32_t)data[j + 2] << 8 | (uint32_t)data[j + 3] << 0;
+		uint32_t x = (uint32_t)(*data)[j + 0] << 24 | (uint32_t)(*data)[j + 1] << 16 | (uint32_t)(*data)[j + 2] << 8 | (uint32_t)(*data)[j + 3] << 0;
 
 		m[i] = x;
 		j = j + 4;
@@ -150,14 +150,14 @@ static void transform(Context *ctx, uint8_t *data)
 }
 
 
-static void update(Context *ctx, uint8_t *msg, uint32_t msgLen)
+static void update(Context *ctx, uint8_t(*msg)[], uint32_t msgLen)
 {
 	uint32_t i = 0;
 	while (i < msgLen) {
-		ctx->data[ctx->datalen] = msg[i];
+		ctx->data[ctx->datalen] = (*msg)[i];
 		ctx->datalen = ctx->datalen + 1;
 		if (ctx->datalen == 64) {
-			transform(ctx, (uint8_t *)&ctx->data);
+			transform(ctx, &ctx->data);
 			ctx->bitlen = ctx->bitlen + 512;
 			ctx->datalen = 0;
 		}
@@ -166,7 +166,7 @@ static void update(Context *ctx, uint8_t *msg, uint32_t msgLen)
 }
 
 
-static void final(Context *ctx, uint8_t *outHash)
+static void final(Context *ctx, Hash *outHash)
 {
 	uint32_t i = ctx->datalen;
 
@@ -185,8 +185,8 @@ static void final(Context *ctx, uint8_t *outHash)
 	//ctx.data[i:n-i] = []
 
 	if (ctx->datalen >= 56) {
-		transform(ctx, (uint8_t *)&ctx->data);
-		memset((uint8_t *)&ctx->data, 0, 56);
+		transform(ctx, &ctx->data);
+		memset(&ctx->data, 0, 56);
 		//ctx.data[0:56] = []
 	}
 
@@ -202,7 +202,7 @@ static void final(Context *ctx, uint8_t *outHash)
 	ctx->data[57] = (uint8_t)((uint64_t)ctx->bitlen >> 48);
 	ctx->data[56] = (uint8_t)((uint64_t)ctx->bitlen >> 56);
 
-	transform(ctx, (uint8_t *)&ctx->data);
+	transform(ctx, &ctx->data);
 
 	// Since this implementation uses little endian byte ordering
 	// and SHA uses big endian, reverse all the bytes
@@ -211,20 +211,20 @@ static void final(Context *ctx, uint8_t *outHash)
 	i = 0;
 	while (i < 4) {
 		uint32_t sh = 24 - i * 8;
-		outHash[i + 0] = (uint8_t)(ctx->state[0] >> sh);
-		outHash[i + 4] = (uint8_t)(ctx->state[1] >> sh);
-		outHash[i + 8] = (uint8_t)(ctx->state[2] >> sh);
-		outHash[i + 12] = (uint8_t)(ctx->state[3] >> sh);
-		outHash[i + 16] = (uint8_t)(ctx->state[4] >> sh);
-		outHash[i + 20] = (uint8_t)(ctx->state[5] >> sh);
-		outHash[i + 24] = (uint8_t)(ctx->state[6] >> sh);
-		outHash[i + 28] = (uint8_t)(ctx->state[7] >> sh);
+		(*outHash)[i + 0] = (uint8_t)(ctx->state[0] >> sh);
+		(*outHash)[i + 4] = (uint8_t)(ctx->state[1] >> sh);
+		(*outHash)[i + 8] = (uint8_t)(ctx->state[2] >> sh);
+		(*outHash)[i + 12] = (uint8_t)(ctx->state[3] >> sh);
+		(*outHash)[i + 16] = (uint8_t)(ctx->state[4] >> sh);
+		(*outHash)[i + 20] = (uint8_t)(ctx->state[5] >> sh);
+		(*outHash)[i + 24] = (uint8_t)(ctx->state[6] >> sh);
+		(*outHash)[i + 28] = (uint8_t)(ctx->state[7] >> sh);
 		i = i + 1;
 	}
 }
 
 
-void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash)
+void sha256_hash(uint8_t(*msg)[], uint32_t msgLen, Hash *outHash)
 {
 	Context ctx = (Context){};
 	contextInit(&ctx);

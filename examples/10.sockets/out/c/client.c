@@ -19,8 +19,8 @@ static bool send_file(FILE *fp, int sockfd)
 {
 	char data[bufSize];
 
-	while (fgets((char *)&data, bufSize, fp) != NULL) {
-		if (send(sockfd, (char *)&data, (size_t)sizeof(char[bufSize]), 0) == -1) {
+	while (fgets(&data, bufSize, fp) != NULL) {
+		if (send(sockfd, &data, (size_t)sizeof(char[bufSize]), 0) == -1) {
 			return false;
 		}
 		memset(&data, 0, sizeof data);
@@ -48,7 +48,7 @@ int main()
 		}
 	};
 
-	struct sockaddr *const sockaddr = (struct sockaddr *)(void *)&server_addr;
+	struct sockaddr *sockaddr = (struct sockaddr *)(void *)&server_addr;
 	int e = connect(sockfd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Connecting");
@@ -57,7 +57,7 @@ int main()
 
 	printf("[+] Connected to server\n");
 
-	FILE *const fp = fopen(filename, "r");
+	FILE *fp = fopen(filename, "r");
 	if (fp == NULL) {
 		perror("[-] Error in reading file");
 		exit(1);

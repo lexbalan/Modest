@@ -76,10 +76,15 @@ def indent():
 	ind(INDENT_SYMBOL)
 
 
-def nl_indent(nl=1):
-	newline(nl)
+def str_nl_indent(nl=1):
+	s = nl_str * nl
 	if nl > 0:
-		indent()
+		s += indentation(INDENT_SYMBOL)
+	return s
+
+
+def nl_indent(nl=1):
+	out(str_nl_indent(nl))
 
 
 def is_local_context():
@@ -140,6 +145,9 @@ def precedence(x):
 
 
 def get_id_str(x):
+	if not 'id' in x:
+		return None
+
 	if 'c' in x['id']:
 		return x['id']['c']
 
@@ -156,112 +164,52 @@ def print_id(x, prefix=''):
 
 
 
-def print_type_id(t):
-	print_id(t)
 
 
-def print_array_root(t):
-	array_root_type = t
-	while array_root_type['kind'] == 'array':
-		array_root_type = array_root_type['of']
-	print_type(array_root_type)
-
-
-def print_array_volume(t):
-	if htype.type_is_open_array(t['of']):
-		out("[]")
-		return
-
-	dims = []
-	tt = t
-	while htype.type_is_array(tt):
-		if 'asset' in t['volume']:
-			dims.append(t['volume'])
-		tt = tt['of']
-
-
-	out("[")
-	i = 0
-	while i < len(dims):
-		if i > 0:
-			out("*")
-		print_value(dims[i])
-		i += 1
-	out("]")
-	return
-
-
-
-
-def _print_type_pointer_to(to, as_const, space_after):
-	print_type(to, space_after=True)
-	out("*")
-	if as_const:
-		out("const")
-		if space_after:
-			out(" ")
-
-
-def print_type_pointer(t, space_after, as_const=False):
-	# array was printed as *, we dont need to place another *
-	if htype.type_is_array(t['to']):
-		_print_type_pointer_to(t['to']['of'], as_const=as_const, space_after=space_after)
-		return
-
-	_print_type_pointer_to(t['to'], as_const=as_const, space_after=space_after)
-
-
-
-# id_str - опциональный аргумент позволяющий засунуть
-# id объекта между типом эмемета и размером массива: <element_type> <id_str>[<dimension>]
-# Это надо тк переменные-массивы и typedef в C используют странный синтаксис
-# (у типов функций похожая херня кстати)
-def print_type_array(t):
-	print_array_root(t)
-	print_array_volume(t)
-
-
-def print_type_record(t, tag=""):
-	out("struct")
+def strTypeRecord(t, tag=""):
+	s = "struct"
 
 	if 'packed' in t['att']:
-		out(" __attribute__((packed))")
+		s += " __attribute__((packed))"
 
 	if tag != "":
-		out(" %s" % tag)
+		s += (" %s" % tag)
 
 	if styleguide['LINE_BREAK_BEFORE_STRUCT_BRACE']:
-		newline()
+		s += nl_str
 	else:
-		out(" ")
+		s += " "
 
-	out("{")
+	s += "{"
 	indent_up()
 
 	prev_nl = 1
 	for field in t['fields']:
 
 		if prev_nl == 0:
-			out(" ")
+			s += " "
 
 		if 'comments' in field:
 			for comment in field['comments']:
-				nl_indent(comment['nl'])
-				print_comment(comment)
+				#s += str_nl_indent(comment['nl'])
+				#print_comment(comment)
+				pass
 
-
-		nl_indent(field['nl'])
+		s += str_nl_indent(field['nl'])
 		prev_nl = field['nl']
 
-		print_variable(get_id_str(field), field['type'])
-		out(";")
+		s+= strType(field['type'], core='', label=get_id_str(field))
+		#print_variable(get_id_str(field), field['type'])
+		s += ";"
 
 	indent_down()
-	nl_indent(t['end_nl'])
-	out("}")
+	s += str_nl_indent(field['nl'])
+	s += "}"
+	return s
 
 
-def print_type_enum(t):
+
+"""def print_type_enum(t):
 	out("enum {")
 	indent_up()
 	items = t['items']
@@ -274,14 +222,14 @@ def print_type_enum(t):
 		i = i + 1
 	indent_down()
 	nl_indent()
-	out("}")
+	out("}")"""
 
 
 def type_get_aka(t):
 	if 'id' in t:
 		if 'c' in t['id']:
 			return t['id']['c']
-		return get_id_str(t)
+		return None #get_id_str(t)
 
 	if 'c_anon_id' in t:
 		return 'struct ' + t['c_anon_id']
@@ -290,40 +238,178 @@ def type_get_aka(t):
 
 
 
-def str_type(t, space_after=False, array_as_ptr=True, as_const=False):
-	if htype.type_is_number(t):
-		# если пришел generic - подберем подходящий тип
-		# ex: let x = 1
-		t = foundation.type_select_int(t['width'])
+def isTypeSimple(t):
+	#return not t['kind'] in ['array', 'pointer', 'func']
+	return type_get_aka(t) != None
 
-	aka = type_get_aka(t)
-	if aka != None:
-		return aka
 
-	if htype.type_is_record(t):
-		print_type_record(t)
-		return None
+def prespace(s):
+	if s == '':
+		return ''
+	return ' ' + s
 
+
+def strTypeArray(t, label='', core=''):
+	dim = ''
+
+	t0 = t
+
+	# handle array of array .. case
+	i = 0
+	while True:
+		if t['volume']:
+			if i > 0:
+				dim += ' * '
+			if 'id' in t['volume']:
+				dim += get_id_str(t['volume'])
+			elif value_is_undefined(t['volume']):
+				pass
+			elif 'asset' in  t['volume']:
+				dim += str(t['volume']['asset'])
+			else:
+				dim += '<' + t['volume']['kind'] + '>'
+
+		if not htype.type_is_array(t['of']):
+			break
+		t = t['of']
+		i += 1
+
+	# now dim like '10' or '20 * 30'
+
+	dim = '[' + dim + ']'
+	if htype.type_is_pointer(t['of']):
+		of = t['of']
+		if htype.type_is_array(of['to']) or htype.type_is_func(of['to']):
+			core = '*' + core + label + dim
+			return strType(of, core=core)
+
+		elif isTypeSimple(of['to']):
+			left = strType(of)
+			return left + core + label + dim
+
+	#elif isTypeSimple(t['of']):
+	left = strType(t['of'])
+	label = prespace(label)
+	return left + core + label + dim
+
+	return '<bad_array_of:%s>' % t0['of']['kind']
+
+
+
+def strFuncParamlist(params, va_arg):
+	s = '('
+	i = 0
+	while i < len(params):
+		param = params[i]
+		if i > 0:
+			s += ', '
+
+		pstr = get_id_str(param)
+		if pstr == None:
+			pstr = ''
+
+		ptype = param['type']
+
+		# HACK
+		# В C параметр не может быть функцией, а у нас - может
+		# но реализован как указатель на функцию
+		if htype.type_is_array(ptype):
+			ptype = htype.type_pointer(ptype)
+			pstr = '_' + pstr
+
+		s += strType(ptype, label=pstr)
+		i += 1
+
+	if va_arg:
+		if i > 0:
+			s += ', '
+		s += '...'
+
+	s += ')'
+	return s
+
+
+def strTypeFunc(t, label='', core=''):
+	fparams = t['params']
+	fto = t['to']
+	if htype.type_is_array(t['to']):
+		# (!) HACK (!)
+		# C не умеет возвращать массивы по значению,
+		# поэтому если возвращаем массив вернем void
+		# а сам массив пойдет через указатель __sret
+		# который функция получит своим самым последним параметром
+		# (sret = structure return)
+		sret_param = {
+			'type': htype.type_pointer(t['to']),
+			'id': {'isa': 'id', 'id': '__sret', 'c': '__sret'}
+		}
+
+		fparams = t['params'] + [sret_param]
+		fto = foundation.typeUnit
+
+
+	params = strFuncParamlist(fparams, t['extra_args'])
+
+	if isTypeSimple(fto):
+		left = strType(fto)
+		label = prespace(label)
+		return left + core + label + params
+
+	elif htype.type_is_pointer(fto):
+		if htype.type_is_pointer(fto['to']) or htype.type_is_array(fto['to']) or htype.type_is_func(fto['to']):
+			core= '*' + core + label + params
+			return strType(fto, core=core)
+
+		elif isTypeSimple(fto['to']):
+			left = strType(fto)
+			return left + core + label + params
+
+	return '<func?>'
+
+
+def strTypePointer(t, label, core=''):
+	c = '*'
+	while htype.type_is_pointer(t['to']):
+		t = t['to']
+		c += '*'
+
+	if not isTypeSimple(t['to']):
+		core = c + core + label
+		return strType(t['to'], core=core)
+
+	return strType(t['to']) + ' ' + c + label
+
+
+
+def strType(t, core='', label=''):
+	if core != '':
+		core = '(' + core + ')'
+
+	if isTypeSimple(t):
+		return type_get_aka(t) + core + prespace(label)
 	elif htype.type_is_pointer(t):
-		print_type_pointer(t, space_after, as_const)
-		return None
-
+		return strTypePointer(t, label, core)
 	elif htype.type_is_array(t):
-		print_type_array(t)
-		return None
-
+		return strTypeArray(t, label, core)
 	elif htype.type_is_func(t):
-		return 'void'
+		return strTypeFunc(t, label, core)
+	elif htype.type_is_record(t):
+		return strTypeRecord(t) + prespace(label)
 
-	return '<type:%s>' % t['type']
+	return '<type:%s>' % t['kind']
 
 
-def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
-	s = str_type(t, space_after, array_as_ptr, as_const)
-	if s != None:
-		if space_after:
-			s += ' '
-		out(s)
+def print_type(t, label=''):
+	tstr = strType(t, core='', label=label)
+	out(tstr)
+
+
+def print_type_array(t):
+	out(strTypeArray(t))
+
+
+def print_type_record(t, tag=''):
+	out(strTypeRecord(t, tag=tag))
 
 
 
@@ -437,14 +523,14 @@ def print_value_un(v, ctx):
 		if htype.type_eq(value['type'], foundation.typeBool):
 			op = 'logic_not'
 
-	if v['kind'] == 'ref':
-		if htype.type_is_array(value['type']):
-			# to prevent:
-			# "warning: incompatible pointer types passing 'uint8_t (*)[10]' to
-			# parameter of type 'uint8_t *'"
-			out("(")
-			print_type(v['type'])
-			out(")")
+#	if v['kind'] == 'ref':
+#		if htype.type_is_array(value['type']):
+#			# to prevent:
+#			# "warning: incompatible pointer types passing 'uint8_t (*)[10]' to
+#			# parameter of type 'uint8_t *'"
+#			out("(")
+#			print_type(v['type'])
+#			out(")")
 
 	out(un_ops[op])
 	print_value(value, need_wrap=pv<p0)
@@ -532,9 +618,12 @@ def print_value_index(x, ctx):
 	array = x['array']
 
 	if htype.type_is_pointer(array['type']):
+		# index trough pointer to array (requires dereference)
 		ptr2array = array
 		need_wrap = precedence(ptr2array) < precedence(x)
+		out("(*")
 		print_value(ptr2array, ctx=['do_unwrap'], need_wrap=need_wrap)
+		out(")")
 		out("["); print_value(x['index']); out("]")
 		return
 
@@ -625,7 +714,7 @@ def print_cast_hard(t, v, ctx=[]):
 	# hard cast is possible only in function body
 	assert(is_local_context())
 	out("*(")
-	print_type(t, space_after=True)
+	print_type(t)
 	out("*)&")
 	need_wrap = precedence(v) < precedence({'kind': 'cons'})
 	print_value(v, ctx=ctx, need_wrap=need_wrap)
@@ -633,8 +722,8 @@ def print_cast_hard(t, v, ctx=[]):
 
 
 def print_cast(t, v, ctx=[]):
-	array_as_ptr = not 'array_as_array' in ctx
-	out("("); print_type(t, array_as_ptr=array_as_ptr); out(")")
+	#array_as_ptr = not 'array_as_array' in ctx
+	out("("); print_type(t); out(")")
 
 	need_wrap = precedence(v) < precedence({'kind': 'cons'})
 	if v['kind'] in ['literal', 'add']:
@@ -739,13 +828,7 @@ def print_suffix(to_type, num):
 		out("L")  # long int
 	else:
 		out("LL")  # long long int
-"""	else:
-		if req_bits < CC_INT_SIZE_BITS:
-			pass #out("U")  # unsigned int
-		elif req_bits <= CC_LONG_SIZE_BITS:
-			out("UL")  # unsigned long
-		else:
-			out("ULL")  # unsigned long long"""
+
 
 
 
@@ -1135,19 +1218,19 @@ def print_value_sizeof_value(x, ctx):
 
 def print_value_sizeof_type(x, ctx):
 	out("sizeof(")
-	print_type(x['of'], array_as_ptr=False)
+	print_type(x['of'])
 	out(")")
 
 
 def print_value_alignof(x, ctx):
 	out("__alignof(")
-	print_type(x['of'], array_as_ptr=False)
+	print_type(x['of'])
 	out(")")
 
 
 def print_value_offsetof(x, ctx):
 	out("__offsetof(")
-	print_type(x['of'], array_as_ptr=False)
+	print_type(x['of'])
 	out(", ")
 	out(x['field']['str'])
 	out(")")
@@ -1284,7 +1367,7 @@ def print_stmt_return(x):
 		out("memcpy(__sret, ")
 		print_value_as_ptr(x['value'])
 		out(", sizeof(")
-		print_type(x['value']['type'], array_as_ptr=False)
+		print_type(x['value']['type'])
 		out("));")
 		return
 
@@ -1558,7 +1641,7 @@ def print_func_paramlist(ftype):
 
 		paramId = get_id_str(param)
 		if htype.type_is_closed_array(param['type']):
-			paramId = '__' + paramId
+			paramId = '_' + paramId
 		print_variable(paramId, param['type'])
 		i = i + 1
 
@@ -1569,12 +1652,9 @@ def print_func_paramlist(ftype):
 	return
 
 
-def print_func_signature(id_str, ftype, atts):
-	print_func_return_type(ftype)
-	if not htype.type_is_pointer(ftype['to']):
-		out(' ')
-	out(id_str)
-	print_func_paramlist(ftype)
+def print_func_signature(id_str, ftype):
+	print_type(ftype, label=id_str)
+
 
 
 
@@ -1589,7 +1669,8 @@ def print_decl_func(x):
 		out("inline ")
 
 	ftype = x['value']['type']
-	print_func_signature(get_id_str(x['value']), ftype, x['value']['att'])
+	id_str = get_id_str(x['value'])
+	print_func_signature(id_str, ftype)
 	out(";")
 
 
@@ -1618,7 +1699,7 @@ def print_def_func(x):
 	# если функция уже была определена, то обертки над ее типами
 	# уже были напечатаны (если они были), и их нельзя печатать еще раз
 	#print_wrappers = not 'declared' in func['att']
-	print_func_signature(get_id_str(func), ftype, func['att'])
+	print_func_signature(get_id_str(func), ftype)
 
 	if x['stmt'] == None:
 		out(";")
@@ -1644,9 +1725,9 @@ def print_def_func(x):
 
 			nl_indent(1)
 
-			out("memcpy(%s, %s" % (paramId, '__' + paramId))
+			out("memcpy(%s, %s" % (paramId, '_' + paramId))
 			out(", sizeof(")
-			print_type(param['type'], array_as_ptr=False)
+			print_type(param['type'])
 			out("));")
 
 
@@ -1674,7 +1755,6 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-	#newline(n=x['nl'])
 	id_str = get_id_str(x['type'])
 	out("struct %s;" % id_str)
 	if not NO_TYPEDEF_STRUCTS:
@@ -1683,78 +1763,30 @@ def print_decl_type(x):
 
 def print_def_type(x):
 	global declared
-	#newline(n=x['nl'])
 
 	id_str = get_id_str(x['type'])
-	orig_type = x['original_type']
+	otype = x['original_type']
 
-
-#	if NO_TYPEDEF_STRUCTS:
-#		if htype.type_is_record(orig_type):
-#			print_type_record(orig_type, tag=id_str)
-#			out(";")
-#			return
-
-
-	is_defined_array = htype.type_is_closed_array(orig_type)
-
-	if htype.type_is_record(x['original_type']):
-		print_type_record(x['original_type'], tag=id_str)
+	if htype.type_is_record(otype):
+		print_type_record(otype, tag=id_str)
 		out(";")
-
 		if not id_str in declared:
 			out("\ntypedef struct %s %s;" % (id_str, id_str))
-
 		return
 
-	if not htype.type_is_array(x['original_type']):
-		out("typedef ")
-		print_type(x['original_type'])
-		out(" ")
-		out(id_str)
-		out(";")
-	else:
-		# блядь в си все через одно место, это просто пиздец какой то
-		# Это временное решение, тк массив может быть сложнее....
-		out("typedef ")
-		print_type(x['original_type']['of'])
-		out(" ")
-		out(id_str)
-		out("[")
-		out("%d" % x['original_type']['volume']['asset'])
-		out("]")
-		out(";")
+	out("typedef ")
+	print_type(otype, label=id_str)
+	out(";")
+
 
 
 # Указатель, массив и функция образуют пиздецовый заговор
-
-# из за того что с C типы записваются через жопу
-# приходится печатать типы ptr, arr & func вместе с именем поля
 def print_variable(id_str, t, as_const=False, init_value=None, prefix=''):
 	assert (t != None)
-
-	id_str = prefix + id_str
-
-	if htype.type_is_pointer_to_func(t):
-		print_func_return_type(t['to'])
-		out(" (*%s)" % id_str)
-		print_func_paramlist(t['to'])
-
-	elif htype.type_is_array(t):
-		if as_const:
-			out("const ")
-		print_array_root(t)
-		out(' ' + id_str)
-		print_array_volume(t)
-
-	else:
-		print_type(t, space_after=True, as_const=as_const)
-		out("%s" % id_str)
-
+	print_type(t, label=(prefix + id_str))
 	if init_value != None:
 		out(" = ")
 		print_value(init_value)
-
 
 
 def print_def_var(x, isdecl=False):
@@ -1864,14 +1896,6 @@ def cdirectives(module):
 			if obj['kind'] == 'c_include':
 				print_include(obj)
 
-	"""
-	for inc in module['included_modules']:
-		for obj in inc['defs']:
-			if obj['isa'] == 'directive':
-				if obj['kind'] == 'c_include':
-					print_include(obj)
-	"""
-
 
 
 def print_cdecl_type(x):
@@ -1892,8 +1916,7 @@ def print_cdecl_func(x):
 	if x['access_level'] == 'private':
 		out("static ")
 
-	sym = x['symbol']
-	print_func_signature(get_id_str(sym), sym['type'], sym['att'])
+	print_func_signature(get_id_str(sym), x['symbol']['type'])
 	out(";")
 
 
@@ -2156,7 +2179,7 @@ def print_value_as_ptr(x):
 				print_type_array(t)
 
 			else:
-				print_type(t, array_as_ptr=False)
+				print_type(t)
 			out(")")
 
 		elif cons_vla_from_literal_array(x):
@@ -2205,7 +2228,7 @@ def memcmp_eq(left, right, op='eq'):
 	print_value_as_ptr(right)
 	out(", sizeof(")
 	common_type = select_common_type(left['type'], right['type'])
-	print_type(common_type, array_as_ptr=False)
+	print_type(common_type)
 	out(")")
 	if op == 'eq':
 		out(') == 0')

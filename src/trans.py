@@ -2130,6 +2130,7 @@ def def_type(x):
 	type_update(nt, ty)
 	nt['deps'] = deps
 	nt['id'] = id # need for  @property("type.id.c", "int")
+	nt['id']['c'] = id['str']   # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	nt['definition'] = definition
 	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
 	nt['ti_def'] = id['ti']
@@ -2140,8 +2141,8 @@ def def_type(x):
 	if not ('do_not_include' in cmodule['att']):
 		# В случае когда не печатаем typedef явно (!)
 		# Убираем алиасы которые висели на оригинальном типе
-		if 'c' in nt['id']:
-			nt.pop('c')
+#		if 'c' in nt['id']:
+#			nt.pop('c')
 		if 'llvm_alias' in nt['id']:
 			nt.pop('llvm_alias')
 

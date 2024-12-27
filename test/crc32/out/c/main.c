@@ -20,9 +20,9 @@ int main()
 {
 	printf("CRC32 test\n");
 
-	uint32_t crc = crc32_run((uint8_t *)&data, LENGTHOF(data));
+	uint32_t crc = crc32_run(&data, LENGTHOF(data));
 
-	printf("crc32.doHash(\"%s\") = %08X\n", (char *)datastring, crc);
+	printf("crc32.doHash(\"%s\") = %08X\n", (char(*)[])datastring, crc);
 
 	if (crc == expected_hash) {
 		printf("test passed\n");

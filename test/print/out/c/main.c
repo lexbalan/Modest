@@ -13,7 +13,7 @@ int main()
 	console_print("test console print\n");
 
 	uint32_t c = U'🐀';
-	char *const s = "Hi!";
+	char(*s)[] = "Hi!";
 	int32_t i = (int32_t)-1;
 	uint32_t n = 123;
 	uint32_t x = 0x1234567F;

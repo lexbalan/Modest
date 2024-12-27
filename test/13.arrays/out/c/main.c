@@ -13,7 +13,7 @@
 
 
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-const int8_t constantArray[10] = _constantArray;
+uint8_t constantArray[10] = _constantArray;
 
 static int32_t globalArray[10] = _constantArray;
 
@@ -21,20 +21,20 @@ static char arrayFromString[3] = "abc";
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
 
-static void f0(char __sret[30], char __x[20])
+static void f0(char(*_x)[20], char(*__sret)[30])
 {
 	char x[20];
-	memcpy(x, __x, sizeof(char[20]));
+	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
 	memcpy(&local_copy_of_x, &x, sizeof local_copy_of_x);
-	printf("f0(\"%s\")\n", (char *)&local_copy_of_x);
+	printf("f0(\"%s\")\n", &local_copy_of_x);
 
 	// truncate array
 	char mic[6];
 	memcpy(&mic, &x, sizeof mic);
 	mic[5] = '\x0';
 
-	printf("f0 mic = \"%s\"\n", (char *)&mic);
+	printf("f0 mic = \"%s\"\n", &mic);
 
 	// extend array
 	char res[30];
@@ -52,9 +52,9 @@ static void f0(char __sret[30], char __x[20])
 
 
 #define _startSequence  {0xAA, 0x55, 0x02}
-const int8_t startSequence[3] = _startSequence;
+uint8_t startSequence[3] = _startSequence;
 #define _stopSequence  {0x16}
-const int8_t stopSequence[1] = _stopSequence;
+uint8_t stopSequence[1] = _stopSequence;
 
 
 static void test()
@@ -77,7 +77,7 @@ int main()
 
 	char em[30];
 	f0(em, "Hello World!");
-	printf("em = %s\n", (char *)&em);
+	printf("em = %s\n", &em);
 
 	int32_t i = 0;
 	while (i < 10) {
@@ -100,24 +100,24 @@ int main()
 
 	printf("------------------------------------\n");
 
-	int32_t *globalArrayPtr;
-	globalArrayPtr = (int32_t *)&globalArray;
+	int32_t(*globalArrayPtr)[];
+	globalArrayPtr = &globalArray;
 
 	i = 0;
 	while (i < 3) {
-		int32_t a = globalArrayPtr[i];
+		int32_t a = (*globalArrayPtr)[i];
 		printf("globalArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
 
 	printf("------------------------------------\n");
 
-	int32_t *localArrayPtr;
-	localArrayPtr = (int32_t *)&localArray;
+	int32_t(*localArrayPtr)[];
+	localArrayPtr = &localArray;
 
 	i = 0;
 	while (i < 3) {
-		int32_t a = localArrayPtr[i];
+		int32_t a = (*localArrayPtr)[i];
 		printf("localArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
@@ -161,8 +161,8 @@ int main()
 
 
 	// check equality between two arrays (by pointer)
-	int32_t *const pa = (int32_t *)&a;
-	int32_t *const pb = (int32_t *)&b;
+	int32_t(*pa)[3] = &a;
+	int32_t(*pb)[3] = &b;
 
 	if (memcmp(pa, pb, sizeof(int32_t[3])) == 0) {
 		printf("*pa == *pb\n");
@@ -182,7 +182,7 @@ int main()
 	int int200 = 200;
 	int int300 = 300;
 	// immutable, non immediate value (array)
-	const int init_array[3] = {int100, int200, int300};
+	int init_array[3] = {int100, int200, int300};
 
 	// check local literal array assignation to local array
 	int32_t e[4];
@@ -209,7 +209,7 @@ int main()
 	int32_t cx = 30;
 	int32_t dx = 40;
 
-	const int32_t y[4] = {ax, bx, cx, dx};
+	int32_t y[4] = {ax, bx, cx, dx};
 
 	ax = 111;
 	bx = 222;
@@ -230,7 +230,7 @@ int main()
 	char sa[5];
 	memcpy(&sa, &"LoHi!", sizeof sa);
 
-	if (memcmp(&sa[2], &"Hi", sizeof(char[4 - 2])) == 0) {
+	if (memcmp(&sa[2], &"Hi", sizeof(char[2])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

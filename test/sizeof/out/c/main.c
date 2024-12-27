@@ -78,7 +78,7 @@ int main()
 	printf("off(i) = %llu\n", (uint64_t)&i - start_adr);
 	printf("off(f) = %llu\n", (uint64_t)&f - start_adr);
 	printf("off(i2) = %llu\n", (uint64_t)&i2 - start_adr);
-	printf("off(p) = %llu\n", (uint64_t)(Point *)&p - start_adr);
+	printf("off(p) = %llu\n", (uint64_t)&p - start_adr);
 	printf("off(g) = %llu\n", (uint64_t)&g - start_adr);
 
 	// дженерики в с явно не приводятся, но нектороые нужно!
@@ -133,8 +133,8 @@ int main()
 	printf("alignof(Char32) = %llu\n", (uint64_t)__alignof(uint32_t));
 
 	// pointer size (for example pointer to []Char8)
-	printf("sizeof(*Str8) = %llu\n", (uint64_t)sizeof(char *));
-	printf("alignof(*Str8) = %llu\n", (uint64_t)__alignof(char *));
+	printf("sizeof(*Str8) = %llu\n", (uint64_t)sizeof(char(*)[]));
+	printf("alignof(*Str8) = %llu\n", (uint64_t)__alignof(char(*)[]));
 
 	// array size
 	printf("sizeof([10]Int32) = %llu\n", (uint64_t)sizeof(int32_t[10]));

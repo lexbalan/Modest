@@ -72,8 +72,8 @@ int main()
 	}
 
 	// comparison between two record (by pointer)
-	Point2D *const pr2 = &p2d2;
-	struct __anonymous_struct_3 *const pr3 = &p2d3;
+	Point2D *pr2 = &p2d2;
+	struct __anonymous_struct_3 *pr3 = &p2d3;
 
 	if (memcmp(pr2, pr3, sizeof(Point2D)) == 0) {
 		printf("*pr2 == *pr3\n");
@@ -101,7 +101,7 @@ int main()
 	// (it is possible if dst record contained all fields from src record
 	// and their types are equal)  ((EXPERIMENTAL))
 	Point3D p3d;
-	p3d = *(Point3D *)&p2d2;
+	p3d = *(Point3D*)&p2d2;
 
 
 	// проверка того как локальная константа-массив
@@ -110,7 +110,7 @@ int main()
 	int32_t ax = 10;
 	int32_t bx = 20;
 
-	struct {int32_t x; int32_t y;}px = {.x = ax, .y = bx};
+	struct {int32_t x; int32_t y;} px = {.x = ax, .y = bx};
 
 	ax = 111;
 	bx = 222;

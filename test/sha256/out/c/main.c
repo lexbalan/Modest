@@ -15,7 +15,8 @@ struct SHA256_TestCase {
 	char input_data[inputDataLength];
 	uint32_t input_data_len;
 
-	uint8_t expected_result[sha256_hashSize];
+	Hash expected_result;
+
 };
 typedef struct SHA256_TestCase SHA256_TestCase;
 
@@ -43,18 +44,18 @@ static SHA256_TestCase test1 = {
 	}
 };
 
-static SHA256_TestCase * tests[2] = (SHA256_TestCase *[2]){&test0, &test1};
+static SHA256_TestCase *tests[2] = (SHA256_TestCase *[2]){&test0, &test1};
 
 
 
 static bool doTest(SHA256_TestCase *test)
 {
-	uint8_t test_hash[sha256_hashSize];
-	uint8_t *const msg = (uint8_t *)(char *)&test->input_data;
+	Hash test_hash;
+	uint8_t(*msg)[] = (uint8_t(*)[])&test->input_data;
 	uint32_t msg_len = test->input_data_len;
-	sha256_hash(msg, msg_len, (uint8_t *)&test_hash);
+	sha256_hash(msg, msg_len, &test_hash);
 
-	printf("'%s'", (char *)&test->input_data);
+	printf("'%s'", &test->input_data);
 	printf(" -> ");
 
 	int32_t i = 0;
@@ -65,7 +66,7 @@ static bool doTest(SHA256_TestCase *test)
 
 	printf("\n");
 
-	return memcmp(&test_hash, &test->expected_result, sizeof(sha256_Hash)) == 0;
+	return memcmp(&test_hash, &test->expected_result, sizeof(Hash)) == 0;
 }
 
 
@@ -75,10 +76,10 @@ int main()
 
 	int32_t i = 0;
 	while (i < (int)LENGTHOF(tests)) {
-		SHA256_TestCase *const test = tests[i];
+		SHA256_TestCase *test = tests[i];
 		bool test_result = doTest(test);
 
-		char *res = "failed";
+		char(*res)[] = "failed";
 		if (test_result) {
 			res = "passed";
 		}

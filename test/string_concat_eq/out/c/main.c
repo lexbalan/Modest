@@ -20,7 +20,7 @@
 
 int main()
 {
-	printf("%s\n", (char *)greeting);
+	printf("%s\n", (char(*)[])greeting);
 
 	if (true) {
 		printf("test ok.\n");

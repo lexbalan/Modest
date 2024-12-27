@@ -15,7 +15,7 @@
 
 int main()
 {
-	printf("%s\n", (char *)hello_world);
+	printf("%s\n", (char(*)[])hello_world);
 	return 0;
 }
 

@@ -11,7 +11,7 @@
 #define int32Const  ((int32_t)genericIntConst)
 
 #define genericStringConst  "Hello!"
-#define string8Const  (char *)genericStringConst
+#define string8Const  (char(*)[])genericStringConst
 #define string16Const  u"Hello!"
 #define string32Const  U"Hello!"
 
@@ -28,10 +28,10 @@ typedef struct Point Point;
 	{.x = 1, .y = 1}, \
 	{.x = 2, .y = 2} \
 }
-const struct {int8_t x; int8_t y;} ps[3] = _ps;
+struct {uint8_t x; uint8_t y;} ps[3] = _ps;
 
 #define _points  _ps
-const Point points[3] = _points;
+Point points[3] = _points;
 // есть проблема - в C глобальные переменные с модификатором const
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение

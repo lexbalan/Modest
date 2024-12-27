@@ -78,19 +78,19 @@ static Type3 c = {.x = 3};
 static void test_by_value()
 {
 	f0_val(a);
-	f1_val(*(Type2 *)&a);
-	f2_val(*(Type3 *)&a);
-	f3_val(*(struct __anonymous_struct_3 *)&a);
+	f1_val(*(Type2*)&a);
+	f2_val(*(Type3*)&a);
+	f3_val(*(struct __anonymous_struct_3*)&a);
 
-	f0_val(*(Type1 *)&b);
+	f0_val(*(Type1*)&b);
 	f1_val(b);
-	f2_val(*(Type3 *)&b);
-	f3_val(*(struct __anonymous_struct_3 *)&b);
+	f2_val(*(Type3*)&b);
+	f3_val(*(struct __anonymous_struct_3*)&b);
 
-	f0_val(*(Type1 *)&c);
-	f1_val(*(Type2 *)&c);
+	f0_val(*(Type1*)&c);
+	f1_val(*(Type2*)&c);
 	f2_val(c);
-	f3_val(*(struct __anonymous_struct_3 *)&c);
+	f3_val(*(struct __anonymous_struct_3*)&c);
 }
 
 

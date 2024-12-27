@@ -28,7 +28,6 @@ cd builtin_constants && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make
 cd sha256 && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
 cd string && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd asm && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd slices && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd crc32 && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd float && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd free_pointer && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
@@ -40,3 +39,4 @@ cd sizeof && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && 
 cd memcopy && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
 #cd queue && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
 #cd 24.* && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+#cd slices && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
