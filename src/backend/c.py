@@ -365,6 +365,9 @@ def strTypeFunc(t, label='', core=''):
 
 
 def strTypePointer(t, label, core=''):
+	if isSimSim(t):
+		t = htype.type_pointer(t['to']['of'])
+
 	c = '*'
 	while htype.type_is_pointer(t['to']):
 		t = t['to']
@@ -387,9 +390,6 @@ def strType(t, core='', label=''):
 	if isTypeSimple(t):
 		return type_get_aka(t) + core + prespace(label)
 	elif htype.type_is_pointer(t):
-		if isSimSim(t):
-			t = htype.type_pointer(t['to']['of'])
-			return strTypePointer(t, label, core)
 		return strTypePointer(t, label, core)
 	elif htype.type_is_array(t):
 		return strTypeArray(t, label, core)
