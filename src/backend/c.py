@@ -425,14 +425,8 @@ def print_type(t, label=''):
 	tstr = strType(t, core='', label=label)
 	out(tstr)
 
-
-def print_type_array(t):
-	out(strTypeArray(t))
-
-
 def print_type_record(t, tag=''):
 	out(strTypeRecord(t, tag=tag))
-
 
 
 
@@ -2191,7 +2185,7 @@ def print_value_as_ptr(x):
 		if x['kind'] in ['literal', 'add']:
 			out("(")
 			if htype.type_is_array(t):
-				print_type_array(t)
+				print_type(t)
 
 			else:
 				print_type(t)
@@ -2203,7 +2197,7 @@ def print_value_as_ptr(x):
 			# instead of:
 			#  &(uint32_t[len]){1, 2, 3, 4, 5}
 			out("(")
-			print_type_array(t)
+			print_type(t)
 			out(")")
 			print_value(x['value'])
 			return
