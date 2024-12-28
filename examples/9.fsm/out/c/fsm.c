@@ -13,26 +13,26 @@
 // Короче, проблема зависимостей тяжело зависла в воздухе
 
 
-char *fsm_state_no_name(FSM *fsm, uint32_t state_no)
+char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no)
 {
 	return &fsm->states[state_no].name[0];
 }
 
 
-void fsm_switch(FSM *fsm, uint32_t state)
+void fsm_switch(fsm_FSM *fsm, uint32_t state)
 {
 	fsm->nexstate = state;
 	fsm->substate = fsm_substateLeaving;
 }
 
 
-void fsm_run(FSM *fsm)
+void fsm_run(fsm_FSM *fsm)
 {
 	printf("fsm::run()\n");
 
 	if (fsm->substate == fsm_substateEntering) {
 		uint32_t nexstate = fsm->nexstate;
-		StateDesc *state = &fsm->states[nexstate];
+		fsm_StateDesc *state = &fsm->states[nexstate];
 
 		if (verbose) {
 			printf("enter %s\n", &state->name[0]);
@@ -46,14 +46,14 @@ void fsm_run(FSM *fsm)
 		fsm->substate = fsm_substateLoop;
 
 	} else if (fsm->substate == fsm_substateLoop) {
-		StateDesc *state = &fsm->states[fsm->state];
+		fsm_StateDesc *state = &fsm->states[fsm->state];
 
 		if (state->loop != NULL) {
 			state->loop(fsm);
 		}
 
 	} else if (fsm->substate == fsm_substateLeaving) {
-		StateDesc *state = &fsm->states[fsm->state];
+		fsm_StateDesc *state = &fsm->states[fsm->state];
 
 		if (verbose) {
 			printf("exit %s\n", &state->name[0]);

@@ -199,7 +199,6 @@ def strTypeRecord(t, tag=""):
 		prev_nl = field['nl']
 
 		s+= strType(field['type'], core='', label=get_id_str(field))
-		#print_variable(get_id_str(field), field['type'])
 		s += ";"
 
 	indent_down()
@@ -229,7 +228,7 @@ def type_get_aka(t):
 	if 'id' in t:
 		if 'c' in t['id']:
 			return t['id']['c']
-		return None #get_id_str(t)
+		return get_id_str(t)
 
 	if 'c_anon_id' in t:
 		return 'struct ' + t['c_anon_id']
@@ -237,10 +236,6 @@ def type_get_aka(t):
 	return None
 
 
-
-def isTypeSimple(t):
-	#return not t['kind'] in ['array', 'pointer', 'func']
-	return type_get_aka(t) != None
 
 
 def prespace(s):
@@ -290,7 +285,6 @@ def strTypeArray(t, label='', core=''):
 		elif isTypeSimple(of['to']):
 			return strType(of) + core + label + dim
 
-	#elif isTypeSimple(t['of']):
 	left = strType(t['of'])
 
 	if not htype.type_is_pointer(t['of']):
@@ -383,6 +377,20 @@ def strTypePointer(t, label, core=''):
 	return strType(tx) + ' ' + c + core + label
 
 
+def strTypeSimple(t, core='', label=''):
+	aka = type_get_aka(t)
+	if aka == None:
+		if t['kind'] == 'int':
+			s = 'int%d_t' % t['width']
+			if not t['signed']:
+				s = 'u' + s
+			aka = s
+		else:
+			print("unk = " + t['kind'])
+			print("generic = " + t['generic'])
+
+	return aka + core + prespace(label)
+
 
 def isSimSim(t):
 	if htype.type_is_array(t['to']):
@@ -390,9 +398,16 @@ def isSimSim(t):
 			return isTypeSimple(t['to']['of'])
 
 
+def isTypeSimple(t):
+	if type_get_aka(t) != None:
+		return True
+	return not t['kind'] in ['array', 'pointer', 'func', 'record']
+	#return type_get_aka(t) != None
+
+
 def strType(t, core='', label=''):
 	if isTypeSimple(t):
-		return type_get_aka(t) + core + prespace(label)
+		return strTypeSimple(t, core, label)
 	elif htype.type_is_pointer(t):
 		return strTypePointer(t, label, core)
 	elif htype.type_is_array(t):

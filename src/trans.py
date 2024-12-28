@@ -2134,7 +2134,7 @@ def def_type(x):
 	type_update(nt, ty)
 	nt['deps'] = deps
 	nt['id'] = id # need for  @property("type.id.c", "int")
-	nt['id']['c'] = id['str']   # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#	nt['id']['c'] = id['str']   # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	nt['definition'] = definition
 	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
 	nt['ti_def'] = id['ti']

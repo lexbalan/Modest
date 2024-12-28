@@ -15,7 +15,7 @@ struct SHA256_TestCase {
 	char input_data[inputDataLength];
 	uint32_t input_data_len;
 
-	Hash expected_result;
+	sha256_Hash expected_result;
 
 };
 typedef struct SHA256_TestCase SHA256_TestCase;
@@ -50,7 +50,7 @@ static SHA256_TestCase *tests[2] = (SHA256_TestCase *[2]){&test0, &test1};
 
 static bool doTest(SHA256_TestCase *test)
 {
-	Hash test_hash;
+	sha256_Hash test_hash;
 	uint8_t *msg = (uint8_t *)&test->input_data[0];
 	uint32_t msg_len = test->input_data_len;
 	sha256_hash(msg, msg_len, &test_hash[0]);
@@ -66,7 +66,7 @@ static bool doTest(SHA256_TestCase *test)
 
 	printf("\n");
 
-	return memcmp(&test_hash, &test->expected_result, sizeof(Hash)) == 0;
+	return memcmp(&test_hash, &test->expected_result, sizeof(sha256_Hash)) == 0;
 }
 
 

@@ -10,35 +10,35 @@
 #include <stdio.h>
 
 
-struct Node;
-typedef struct Node Node;
+struct list_Node;
+typedef struct list_Node list_Node;
 
 
-struct Node {
-	Node *next;
-	Node *prev;
+struct list_Node {
+	list_Node *next;
+	list_Node *prev;
 	void *data;
 };
-struct List {
-	Node *head;
-	Node *tail;
+struct list_List {
+	list_Node *head;
+	list_Node *tail;
 	uint32_t size;
 };
-typedef struct List List;
-List *list_create();
-uint32_t list_size_get(List *list);
-Node *list_first_node_get(List *list);
-Node *list_last_node_get(List *list);
-Node *list_node_first(List *list, Node *new_node);
-Node *list_node_create();
-Node *list_node_next_get(Node *node);
-Node *list_node_prev_get(Node *node);
-void *list_node_data_get(Node *node);
-void list_node_insert_right(Node *left, Node *new_right);
-Node *list_node_get(List *list, int32_t pos);
-Node *list_node_insert(List *list, int32_t pos, Node *new_node);
-Node *list_node_append(List *list, Node *new_node);
-Node *list_insert(List *list, int32_t pos, void *data);
-Node *list_append(List *list, void *data);
+typedef struct list_List list_List;
+list_List *list_create();
+uint32_t list_size_get(list_List *list);
+list_Node *list_first_node_get(list_List *list);
+list_Node *list_last_node_get(list_List *list);
+list_Node *list_node_first(list_List *list, list_Node *new_node);
+list_Node *list_node_create();
+list_Node *list_node_next_get(list_Node *node);
+list_Node *list_node_prev_get(list_Node *node);
+void *list_node_data_get(list_Node *node);
+void list_node_insert_right(list_Node *left, list_Node *new_right);
+list_Node *list_node_get(list_List *list, int32_t pos);
+list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node);
+list_Node *list_node_append(list_List *list, list_Node *new_node);
+list_Node *list_insert(list_List *list, int32_t pos, void *data);
+list_Node *list_append(list_List *list, void *data);
 
 #endif /* LIST_H */
