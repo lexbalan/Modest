@@ -345,7 +345,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ]
 ;var arrayOfChars = [Char8 "a", 'b', 'c']
 
-define internal void @f0([30 x %Char8]* noalias sret([30 x %Char8]) %0, [20 x %Char8] %__x) {
+define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%x = alloca [20 x %Char8]
 	store [20 x %Char8] %__x, [20 x %Char8]* %x
 	%2 = alloca [20 x %Char8], align 1

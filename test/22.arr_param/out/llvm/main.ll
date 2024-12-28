@@ -194,7 +194,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 ; returns array by value
 
-define internal void @getarr10([10 x %Int32]* noalias sret([10 x %Int32]) %0) {
+define internal void @getarr10([10 x %Int32]* %0) {
 	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%3 = insertvalue [10 x %Int32] %2, %Int32 2, 2
 	%4 = insertvalue [10 x %Int32] %3, %Int32 3, 3
@@ -209,7 +209,7 @@ define internal void @getarr10([10 x %Int32]* noalias sret([10 x %Int32]) %0) {
 }
 
 ; receive & returns array by value
-define internal void @arraysAdd([10 x %Int32]* noalias sret([10 x %Int32]) %0, [10 x %Int32] %__a, [10 x %Int32] %__b) {
+define internal void @arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %Int32] %__b) {
 	%a = alloca [10 x %Int32]
 	store [10 x %Int32] %__a, [10 x %Int32]* %a
 	%b = alloca [10 x %Int32]

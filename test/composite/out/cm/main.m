@@ -3,6 +3,33 @@
 include "libc/stdio"
 
 
+var a0: [5]Int32
+var a1: [5]*Int32
+var a2: [5]**Int32
+var a3: [5]*() -> Unit
+var a4: [5][10]Int
+var a5: [5]*[10]Int
+var a6: [2][5]*[10]Int
+var a7: [2][5]*[10]*Int
+var a8: [2][5]*[10]*(a: Int) -> Int
+
+var f0: *() -> Unit
+var f1: *(x: Int32) -> Int32
+var f2: *(a: Int32, b: Int32) -> Int32
+var f3: *() -> *Int32
+var f4: *(x: Int32) -> [10]Int32
+var f5: *(a: [32]Int32) -> [32]Int32
+var f6: *(a: *[32]Int32) -> *[32]Int32
+var f7: *(f: *() -> Unit) -> Unit
+var f8: *(f: *() -> Unit) -> *() -> Unit
+
+var p0: *Int32
+var p1: **Int32
+var p2: *[5]Int32
+var p3: **[5]Int32
+// <--
+
+
 type RGB24 record {
 	red: Nat8
 	green: Nat8
@@ -58,7 +85,7 @@ var arrr: [3][3]Int32 = [
 	[7, 8, 9]
 ]
 
-var f0: *() -> Unit
+
 var arry: [3][3]*() -> Unit
 
 

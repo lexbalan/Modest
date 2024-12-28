@@ -352,26 +352,28 @@ def strTypeFunc(t, label='', core=''):
 
 	params = strFuncParamlist(fparams, t['extra_args'])
 
-	if isTypeSimple(fto):
-		left = strType(fto)
-		label = prespace(label)
-		return left + core + label + params
+	if not isTypeSimple(fto):
+		if htype.type_is_pointer(fto):
 
-	elif htype.type_is_pointer(fto):
-		if htype.type_is_pointer(fto['to']):
-			core = '*' + core + label + params
-			core = wrap(core)
-			return strType(fto, core=core)
+			if htype.type_is_pointer(fto['to']):
+				core = wrap('*' + core + label + params)
+				return strType(fto, core=core)
 
-		elif htype.type_is_array(fto['to']) or htype.type_is_func(fto['to']):
-			core = core + label + params
-			return strType(fto, core=core)
+			elif htype.type_is_array(fto['to']) or htype.type_is_func(fto['to']):
+				core = core + label + params
+				return strType(fto, core=core)
 
-		elif isTypeSimple(fto['to']):
-			left = strType(fto)
-			return left + core + label + params
+			elif isTypeSimple(fto['to']):
+				left = strType(fto)
+				return left + core + label + params
 
-	return '<func?>'
+		else:
+			return "<f?>"
+
+	left = strType(fto)
+	label = prespace(label)
+	return left + core + label + params
+
 
 
 def strTypePointer(t, label, core=''):
@@ -381,8 +383,7 @@ def strTypePointer(t, label, core=''):
 		c += '*'
 
 	if not isTypeSimple(t['to']):
-		core = c + core + label
-		core = wrap(core)
+		core = wrap(c + core + label)
 		return strType(t['to'], core=core)
 
 	return strType(t['to']) + ' ' + c + core + label

@@ -214,11 +214,16 @@ declare void @perror(%ConstCharStr* %str)
 @f1 = internal global %Int32 (%Int32)* zeroinitializer
 @f2 = internal global %Int32 (%Int32, %Int32)* zeroinitializer
 @f3 = internal global %Int32* ()* zeroinitializer
-@f4 = internal global void ([10 x %Int32]* noalias sret([10 x %Int32]), %Int32)* zeroinitializer
-@f5 = internal global void ([32 x %Int32]* noalias sret([32 x %Int32]), [32 x %Int32])* zeroinitializer
+@f4 = internal global void ([10 x %Int32]*, %Int32)* zeroinitializer
+@f5 = internal global void ([32 x %Int32]*, [32 x %Int32])* zeroinitializer
 @f6 = internal global [32 x %Int32]* ([32 x %Int32]*)* zeroinitializer
 @f7 = internal global void (void ()*)* zeroinitializer
 @f8 = internal global void ()* (void ()*)* zeroinitializer
+@p0 = internal global %Int32* zeroinitializer
+@p1 = internal global %Int32** zeroinitializer
+@p2 = internal global [5 x %Int32]* zeroinitializer
+@p3 = internal global [5 x %Int32]** zeroinitializer
+; <--
 
 %RGB24 = type {
 	%Int8,

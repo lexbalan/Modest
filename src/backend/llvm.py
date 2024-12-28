@@ -1915,14 +1915,16 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 		# %struct.Sre* noalias sret(%struct.Sre) align 1 %0
 		print_type(to)
 
-		if with_attributes:
+		"""if with_attributes:
 			out("* noalias sret(")
 		else:
 			out("*")
 
 		if with_attributes:
 			print_type(to)
-			out(")")
+			out(")")"""
+
+		out("*")
 
 		if not only_types:
 			out(" %0")
