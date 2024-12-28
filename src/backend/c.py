@@ -349,7 +349,6 @@ def strTypeFunc(t, label='', core=''):
 		fparams = t['params'] + [sret_param]
 		fto = foundation.typeUnit
 
-
 	params = strFuncParamlist(fparams, t['extra_args'])
 
 	if not isTypeSimple(fto):
