@@ -365,19 +365,22 @@ def strTypeFunc(t, label='', core=''):
 
 
 def strTypePointer(t, label, core=''):
-	if isSimSim(t):
-		t = htype.type_pointer(t['to']['of'])
+	tx = t
 
 	c = ''
-	while htype.type_is_pointer(t):
-		t = t['to']
+	while htype.type_is_pointer(tx):
+		tx = tx['to']
 		c += '*'
 
-	if not isTypeSimple(t):
-		core = '(' + c + core + label + ')'
-		return strType(t, core=core)
+	if isSimSim(t):
+		tx = tx['of']
 
-	return strType(t) + ' ' + c + core + label
+	if not isTypeSimple(tx):
+		core = '(' + c + core + label + ')'
+		return strType(tx, core=core)
+
+	return strType(tx) + ' ' + c + core + label
+
 
 
 def isSimSim(t):
