@@ -19,6 +19,7 @@ static int *a5[5];
 static int *a6[2 * 5];
 static int *(*a7[2 * 5])[10];
 static int(*(*a8[2 * 5])[10])(int a);
+static int(*(*(*a9[5])[10])[2])(int a);
 
 static void(*f0)();
 static int32_t(*f1)(int32_t x);

@@ -13,6 +13,7 @@ var a5: [5]*[10]Int
 var a6: [2][5]*[10]Int
 var a7: [2][5]*[10]*Int
 var a8: [2][5]*[10]*(a: Int) -> Int
+var a9: [5]*[10]*[2]*(a: Int) -> Int
 
 var f0: *() -> Unit
 var f1: *(x: Int32) -> Int32
