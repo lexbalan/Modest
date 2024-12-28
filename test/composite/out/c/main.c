@@ -95,6 +95,19 @@ static void(*hiarr[10])(char *x) = (void(*[10])(char *x)){
 	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
 };
 
+struct Wrap {
+	void(*fhi)(char *x);
+	int32_t(*fop)(int32_t a, int32_t b);
+};
+typedef struct Wrap Wrap;
+
+static Wrap wrap0 = {
+	.fhi = &hi,
+	.fop = &add
+};
+
+static Wrap *awrap[2] = (Wrap *[2]){&wrap0, &wrap0};
+
 int32_t main()
 {
 	xy((struct __anonymous_struct_3){.x = 10, .y = 20});
@@ -133,6 +146,8 @@ int32_t main()
 		hiarr[i]("LOL");
 		i = i + 1;
 	}
+
+	awrap[0]->fhi("World");
 
 	return 0;
 }

@@ -293,14 +293,9 @@ def strTypeArray(t, label='', core=''):
 	#elif isTypeSimple(t['of']):
 	left = strType(t['of'])
 
-	# OKFIX!
 	if not htype.type_is_pointer(t['of']):
 		label = prespace(label)
-
 	return left + core + label + dim
-
-	return '<bad_array_of:%s>' % t0['of']['kind']
-
 
 
 def strFuncParamlist(params, va_arg):
@@ -412,7 +407,6 @@ def strType(t, core='', label=''):
 		if isSimSim(t):
 			t = htype.type_pointer(t['to']['of'])
 			return strTypePointer(t, label, core)
-
 		return strTypePointer(t, label, core)
 	elif htype.type_is_array(t):
 		return strTypeArray(t, label, core)
@@ -422,6 +416,7 @@ def strType(t, core='', label=''):
 		return strTypeRecord(t) + prespace(label)
 
 	return '<type:%s>' % t['kind']
+
 
 
 def print_type(t, label=''):

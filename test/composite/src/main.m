@@ -87,6 +87,18 @@ var hiarr: [10]*(x: *Str8) -> Unit = [
 	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
 ]
 
+type Wrap record {
+	fhi: *(x: *Str8) -> Unit
+	fop: *(a: Int32, b: Int32) -> Int32
+}
+
+var wrap0 = Wrap {
+	fhi=&hi
+	fop=&add
+}
+
+var awrap = [&wrap0, &wrap0]
+
 public func main() -> Int32 {
 	xy({x=10, y=20})
 
@@ -124,6 +136,8 @@ public func main() -> Int32 {
 		hiarr[i]("LOL")
 		++i
 	}
+
+	awrap[0].fhi("World")
 
 	return 0
 }

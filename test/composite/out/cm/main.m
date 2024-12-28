@@ -75,6 +75,25 @@ var farr: [2]*(a: Int32, b: Int32) -> Int32 = [
 	&add, &sub
 ]
 
+func hi(x: *Str8) -> Unit {
+	printf("Hi %s!\n", x)
+}
+
+var hiarr: [10]*(x: *Str8) -> Unit = [
+	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
+]
+
+type Wrap record {
+	fhi: *(x: *Str8) -> Unit
+	fop: *(a: Int32, b: Int32) -> Int32
+}
+
+var wrap0: Wrap = Wrap {
+	fhi = &hi
+	fop = &add
+}
+
+var awrap: [2]*Wrap = [&wrap0, &wrap0]
 
 public func main() -> Int32 {
 	xy({x = 10, y = 20})
@@ -107,6 +126,14 @@ public func main() -> Int32 {
 	printf("farr[0](5, 7) = %d\n", _add)
 	let _sub = farr[1](5, 7)
 	printf("farr[1](5, 7) = %d\n", _sub)
+
+	i = 0
+	while i < 10 {
+		hiarr[i]("LOL")
+		i = i + 1
+	}
+
+	awrap[0].fhi("World")
 
 	return 0
 }
