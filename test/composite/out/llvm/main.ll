@@ -201,6 +201,25 @@ declare void @perror(%ConstCharStr* %str)
 @str12 = private constant [6 x i8] [i8 87, i8 111, i8 114, i8 108, i8 100, i8 0]
 ; -- endstrings --
 
+@a0 = internal global [5 x %Int32] zeroinitializer
+@a1 = internal global [5 x %Int32*] zeroinitializer
+@a2 = internal global [5 x %Int32**] zeroinitializer
+@a3 = internal global [5 x void ()*] zeroinitializer
+@a4 = internal global [5 x [10 x %Int]] zeroinitializer
+@a5 = internal global [5 x [10 x %Int]*] zeroinitializer
+@a6 = internal global [2 x [5 x [10 x %Int]*]] zeroinitializer
+@a7 = internal global [2 x [5 x [10 x %Int*]*]] zeroinitializer
+@a8 = internal global [2 x [5 x [10 x %Int (%Int)*]*]] zeroinitializer
+@f0 = internal global void ()* zeroinitializer
+@f1 = internal global %Int32 (%Int32)* zeroinitializer
+@f2 = internal global %Int32 (%Int32, %Int32)* zeroinitializer
+@f3 = internal global %Int32* ()* zeroinitializer
+@f4 = internal global void ([10 x %Int32]* noalias sret([10 x %Int32]), %Int32)* zeroinitializer
+@f5 = internal global void ([32 x %Int32]* noalias sret([32 x %Int32]), [32 x %Int32])* zeroinitializer
+@f6 = internal global [32 x %Int32]* ([32 x %Int32]*)* zeroinitializer
+@f7 = internal global void (void ()*)* zeroinitializer
+@f8 = internal global void ()* (void ()*)* zeroinitializer
+
 %RGB24 = type {
 	%Int8,
 	%Int8,
@@ -384,7 +403,6 @@ define internal void @xy({%Int32,%Int32} %x) {
 		%Int32 9
 	]
 ]
-@f0 = internal global void ()* zeroinitializer
 @arry = internal global [3 x [3 x void ()*]] zeroinitializer
 
 define internal %Int32 @add(%Int32 %a, %Int32 %b) {

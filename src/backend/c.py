@@ -358,13 +358,12 @@ def strTypeFunc(t, label='', core=''):
 		return left + core + label + params
 
 	elif htype.type_is_pointer(fto):
-		if htype.type_is_pointer(fto['to']) or htype.type_is_func(fto['to']):
+		if htype.type_is_pointer(fto['to']):
 			core = '*' + core + label + params
 			core = wrap(core)
 			return strType(fto, core=core)
 
-		elif htype.type_is_array(fto['to']):
-			#if isSimSim(fto):
+		elif htype.type_is_array(fto['to']) or htype.type_is_func(fto['to']):
 			core = core + label + params
 			return strType(fto, core=core)
 

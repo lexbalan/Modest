@@ -10,6 +10,33 @@
 struct __anonymous_struct_3 {int32_t x; int32_t y;};
 
 
+static int32_t a0[5];
+static int32_t *a1[5];
+static int32_t **a2[5];
+static void(*a3[5])();
+static int a4[5 * 10];
+static int *a5[5];
+static int *a6[2 * 5];
+static int *(*a7[2 * 5])[10];
+static int(*(*a8[2 * 5])[10])(int a);
+
+static void(*f0)();
+static int32_t(*f1)(int32_t x);
+static int32_t(*f2)(int32_t a, int32_t b);
+static int32_t *(*f3)();
+static void(*f4)(int32_t x, int32_t *__sret);
+static void(*f5)(int32_t *_a, int32_t *__sret);
+static int32_t *(*f6)(int32_t *a);
+static void(*f7)(void(*f)());
+static void(*(*f8)(void(*f)()))();
+
+static int32_t *p0;
+static int32_t **p1;
+static int32_t *p2;
+static int32_t(**p3)[5];
+// <--
+
+
 struct RGB24 {
 	uint8_t red;
 	uint8_t green;
@@ -67,7 +94,7 @@ static int32_t arrr[3 * 3] = (int32_t[3 * 3]){
 	7, 8, 9
 };
 
-static void(*f0)();
+
 static void(*arry[3 * 3])();
 
 
