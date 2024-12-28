@@ -50,7 +50,14 @@ type AnimationPoint record {
 	time: Nat32
 }
 
-var ap = AnimationPoint {color = {red = 200, green = 0, blue = 0}, time = 3000}
+var ap = AnimationPoint {
+	color = {
+		red = 200
+		green = 0
+		blue = 0
+	}
+	time = 3000
+}
 
 
 var animation0_points = []AnimationPoint [

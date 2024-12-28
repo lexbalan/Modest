@@ -59,7 +59,14 @@ struct AnimationPoint {
 };
 typedef struct AnimationPoint AnimationPoint;
 
-static AnimationPoint ap = {.color = {.red = 200, .green = 0, .blue = 0}, .time = 3000};
+static AnimationPoint ap = {
+	.color = {
+		.red = 200,
+		.green = 0,
+		.blue = 0
+	},
+	.time = 3000
+};
 
 
 static AnimationPoint animation0_points[5] = (AnimationPoint[5]){
