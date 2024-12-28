@@ -354,21 +354,9 @@ def strTypeFunc(t, label='', core=''):
 
 	if not isTypeSimple(fto):
 		if htype.type_is_pointer(fto):
-
-			if htype.type_is_pointer(fto['to']):
-				core = wrap('*' + core + label + params)
-				return strType(fto, core=core)
-
-			elif htype.type_is_array(fto['to']) or htype.type_is_func(fto['to']):
+			if htype.type_is_pointer(fto['to']) or htype.type_is_array(fto['to']) or htype.type_is_func(fto['to']):
 				core = core + label + params
 				return strType(fto, core=core)
-
-			elif isTypeSimple(fto['to']):
-				left = strType(fto)
-				return left + core + label + params
-
-		else:
-			return "<f?>"
 
 	left = strType(fto)
 	label = prespace(label)

@@ -29,6 +29,9 @@ static void(*f5)(int32_t *_a, int32_t *__sret);
 static int32_t *(*f6)(int32_t *a);
 static void(*f7)(void(*f)());
 static void(*(*f8)(void(*f)()))();
+static void(**(*f9)(void(*f)()))();
+static void(**(*f10)(void(**f)()))();
+static void(**(*f11)(int32_t *(**f)(int32_t a, int32_t *b)))();
 
 static int32_t *p0;
 static int32_t **p1;

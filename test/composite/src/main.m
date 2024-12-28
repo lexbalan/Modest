@@ -23,6 +23,9 @@ var f5: *(a: [32]Int32) -> [32]Int32
 var f6: *(a: *[32]Int32) -> *[32]Int32
 var f7: *(f: *()->Unit) -> Unit
 var f8: *(f: *()->Unit) -> *()->Unit
+var f9: *(f: *()->Unit) -> **()->Unit
+var f10: *(f: **()->Unit) -> **()->Unit
+var f11: *(f: **(a: Int32, b: *Int32)->*[10]Int32) -> **()->Unit
 
 var p0: *Int32
 var p1: **Int32
