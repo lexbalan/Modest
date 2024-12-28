@@ -371,7 +371,7 @@ def strTypePointer(t, label, core=''):
 		c += '*'
 
 	if not isTypeSimple(t['to']):
-		core = wrap(c + core + label)
+		core = '(' + c + core + label + ')'
 		return strType(t['to'], core=core)
 
 	return strType(t['to']) + ' ' + c + core + label
@@ -381,11 +381,6 @@ def isSimSim(t):
 	if htype.type_is_array(t['to']):
 		if not 'alias' in t['to']['att']:
 			return isTypeSimple(t['to']['of'])
-
-def wrap(s):
-	if s != '':
-		s = '(' + s + ')'
-	return s
 
 
 def strType(t, core='', label=''):
