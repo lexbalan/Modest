@@ -298,6 +298,7 @@ def strTypeArray(t, label='', core=''):
 	return left + core + label + dim
 
 
+
 def strFuncParamlist(params, va_arg):
 	s = '('
 	i = 0
@@ -306,18 +307,18 @@ def strFuncParamlist(params, va_arg):
 		if i > 0:
 			s += ', '
 
+		ptype = param['type']
+
 		pstr = get_id_str(param)
 		if pstr == None:
 			pstr = ''
-
-		ptype = param['type']
-
-		# HACK
-		# В C параметр не может быть функцией, а у нас - может
-		# но реализован как указатель на функцию
-		if htype.type_is_array(ptype):
-			ptype = htype.type_pointer(ptype)
-			pstr = '_' + pstr
+		else:
+			# HACK
+			# В C параметр не может быть функцией, а у нас - может
+			# но реализован как указатель на функцию
+			if htype.type_is_array(ptype):
+				ptype = htype.type_pointer(ptype)
+				pstr = '_' + pstr
 
 		s += strType(ptype, label=pstr)
 		i += 1
