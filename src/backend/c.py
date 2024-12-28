@@ -559,33 +559,22 @@ def print_value_un(v, ctx):
 					# take pointer to first array item, not pointer to array
 					out("[0]")
 
-
+"""
 def ptr2func(ftype):
 	print_func_return_type(ftype)
 	out("(*)")
 	print_func_paramlist(ftype)
 
-
+"""
 def print_value_call(v, ctx, arrayResult=None):
 	left = v['func']
+
+	print_value(left)
+
 	ftype = left['type']
-
 	if htype.type_is_pointer(ftype):
-		# Вызов функции через указатель
-		# поскольку у нас указатели на функции это *void
-		# при вызове приводим левое к указателю на функцию
 		ftype = ftype['to']
-		out("((")
-		ptr2func(ftype)
-		out(")")
-		print_value(left)
-		out(")")
-
-	else:
-		print_value(left)
-
 	params = ftype['params']
-
 	args = v['args']
 	n = len(args)
 
