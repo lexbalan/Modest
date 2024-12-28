@@ -6,7 +6,7 @@ from error import info, error, fatal
 from .common import *
 import type as htype
 from type import select_common_type, type_print
-from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array
+from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array, value_is_literal
 from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_by_id, align_to
 from main import settings
@@ -281,6 +281,7 @@ def strTypeArray(t, label='', core=''):
 		of = t['of']
 		if htype.type_is_array(of['to']) or htype.type_is_func(of['to']):
 			core = '*' + core + label + dim
+			core = wrap(core)
 			return strType(of, core=core)
 
 		elif isTypeSimple(of['to']):
@@ -356,8 +357,14 @@ def strTypeFunc(t, label='', core=''):
 		return left + core + label + params
 
 	elif htype.type_is_pointer(fto):
-		if htype.type_is_pointer(fto['to']) or htype.type_is_array(fto['to']) or htype.type_is_func(fto['to']):
-			core= '*' + core + label + params
+		if htype.type_is_pointer(fto['to']) or htype.type_is_func(fto['to']):
+			core = '*' + core + label + params
+			core = wrap(core)
+			return strType(fto, core=core)
+
+		elif htype.type_is_array(fto['to']):
+			#if isSimSim(fto):
+			core = core + label + params
 			return strType(fto, core=core)
 
 		elif isTypeSimple(fto['to']):
@@ -375,19 +382,31 @@ def strTypePointer(t, label, core=''):
 
 	if not isTypeSimple(t['to']):
 		core = c + core + label
+		core = wrap(core)
 		return strType(t['to'], core=core)
 
-	return strType(t['to']) + ' ' + c + label
+	return strType(t['to']) + ' ' + c + core + label
 
+
+def isSimSim(t):
+	if htype.type_is_array(t['to']):
+		if not 'alias' in t['to']['att']:
+			return isTypeSimple(t['to']['of'])
+
+def wrap(s):
+	if s != '':
+		s = '(' + s + ')'
+	return s
 
 
 def strType(t, core='', label=''):
-	if core != '':
-		core = '(' + core + ')'
-
 	if isTypeSimple(t):
 		return type_get_aka(t) + core + prespace(label)
 	elif htype.type_is_pointer(t):
+		if isSimSim(t):
+			t = htype.type_pointer(t['to']['of'])
+			return strTypePointer(t, label, core)
+
 		return strTypePointer(t, label, core)
 	elif htype.type_is_array(t):
 		return strTypeArray(t, label, core)
@@ -521,17 +540,24 @@ def print_value_un(v, ctx):
 
 #	if v['kind'] == 'ref':
 #		if htype.type_is_array(value['type']):
-#			# to prevent:
-#			# "warning: incompatible pointer types passing 'uint8_t (*)[10]' to
-#			# parameter of type 'uint8_t *'"
-#			out("(")
-#			print_type(v['type'])
-#			out(")")
+#			if value['kind'] != 'slice':
+#				if isSimSim(v['type']):
+#					# to prevent:
+#					# "warning: incompatible pointer types passing 'uint8_t (*)[10]' to
+#					# parameter of type 'uint8_t *'"
+#					out("(")
+#					print_type(v['type'])
+#					out(")")
 
 	out(un_ops[op])
 	print_value(value, need_wrap=pv<p0)
 
-
+	if v['kind'] == 'ref':
+		if htype.type_is_array(value['type']):
+			if value['kind'] != 'slice':
+				if isSimSim(v['type']):
+					# take pointer to first array item, not pointer to array
+					out("[0]")
 
 
 def ptr2func(ftype):
@@ -617,9 +643,15 @@ def print_value_index(x, ctx):
 		# index trough pointer to array (requires dereference)
 		ptr2array = array
 		need_wrap = precedence(ptr2array) < precedence(x)
-		out("(*")
+
+		if not isSimSim(array['type']):
+			out("(*")
+
 		print_value(ptr2array, ctx=['do_unwrap'], need_wrap=need_wrap)
-		out(")")
+
+		if not isSimSim(array['type']):
+			out(")")
+
 		out("["); print_value(x['index']); out("]")
 		return
 

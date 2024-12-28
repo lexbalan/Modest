@@ -31,7 +31,7 @@ struct FSM {
 	uint32_t substate;
 	StateDesc states[fsm_maxStates];
 };
-char(*(*fsm_state_no_name(FSM *fsm, uint32_t state_no)))[];
+char *fsm_state_no_name(FSM *fsm, uint32_t state_no);
 void fsm_switch(FSM *fsm, uint32_t state);
 void fsm_run(FSM *fsm);
 

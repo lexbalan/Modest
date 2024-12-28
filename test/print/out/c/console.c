@@ -51,7 +51,7 @@ void console_putchar_utf16(uint16_t c)
 	cc[0] = c;
 	cc[1] = 0;
 	uint32_t char32;
-	uint8_t n = utf_utf16_to_utf32(&cc, &char32);
+	uint8_t n = utf_utf16_to_utf32(&cc[0], &char32);
 	console_putchar_utf32(char32);
 }
 
@@ -59,7 +59,7 @@ void console_putchar_utf16(uint16_t c)
 void console_putchar_utf32(uint32_t c)
 {
 	char decoded_buf[4];
-	int32_t n = (int32_t)utf_utf32_to_utf8(c, &decoded_buf);
+	int32_t n = (int32_t)utf_utf32_to_utf8(c, &decoded_buf[0]);
 
 	int32_t i = 0;
 	while (i < n) {
@@ -78,11 +78,11 @@ public func puts(s: *Str8) -> Unit {
 }
 */
 
-void console_puts8(char(*s)[])
+void console_puts8(char *s)
 {
 	int32_t i = 0;
 	while (true) {
-		char c = (*s)[i];
+		char c = s[i];
 		if (c == 0) {
 			break;
 		}
@@ -92,20 +92,20 @@ void console_puts8(char(*s)[])
 }
 
 
-void console_puts16(uint16_t(*s)[])
+void console_puts16(uint16_t *s)
 {
 	int32_t i = 0;
 	while (true) {
 		// нельзя просто так взять и вызвать putchar_utf16
 		// тк в строке может быть суррогатная пара UTF_16 символов
 
-		uint16_t cc16 = (*s)[i];
+		uint16_t cc16 = s[i];
 		if (cc16 == 0) {
 			break;
 		}
 
 		uint32_t char32;
-		uint8_t n = utf_utf16_to_utf32((uint16_t(*)[])&(*s)[i], &char32);
+		uint8_t n = utf_utf16_to_utf32((uint16_t *)&s[i], &char32);
 		if (n == 0) {
 			break;
 		}
@@ -117,11 +117,11 @@ void console_puts16(uint16_t(*s)[])
 }
 
 
-void console_puts32(uint32_t(*s)[])
+void console_puts32(uint32_t *s)
 {
 	int32_t i = 0;
 	while (true) {
-		uint32_t c = (*s)[i];
+		uint32_t c = s[i];
 		if (c == 0) {
 			break;
 		}
@@ -129,47 +129,47 @@ void console_puts32(uint32_t(*s)[])
 		i = i + 1;
 	}
 }
-int32_t console_vfprint(int fd, char(*form)[], va_list va);
+int32_t console_vfprint(int fd, char *form, va_list va);
 
 
 
 
 
-void console_print(char(*form)[], ...)
+void console_print(char *form, ...)
 {
 	va_list va;
 	va_start(va, form);
 	console_vfprint(STDOUT_FILENO, form, va);
 	va_end(va);
 }
-int32_t console_vsprint(char(*buf)[], char(*form)[], va_list va);
+int32_t console_vsprint(char *buf, char *form, va_list va);
 
 
 
 
 
-int32_t console_vfprint(int fd, char(*form)[], va_list va)
+int32_t console_vfprint(int fd, char *form, va_list va)
 {
 	char strbuf[256];
-	int32_t n = console_vsprint(&strbuf, form, va);
+	int32_t n = console_vsprint(&strbuf[0], form, va);
 	strbuf[n] = '\x0';
-	write(fd, &strbuf, ((size_t)(uint32_t)n));
+	write(fd, &strbuf[0], ((size_t)(uint32_t)n));
 	return n;
 }
-static int32_t sprint_dec_int32(char(*buf)[], int32_t x);
-static int32_t sprint_dec_n32(char(*buf)[], uint32_t x);
-static int32_t sprint_hex_nat32(char(*buf)[], uint32_t x);
+static int32_t sprint_dec_int32(char *buf, int32_t x);
+static int32_t sprint_dec_n32(char *buf, uint32_t x);
+static int32_t sprint_hex_nat32(char *buf, uint32_t x);
 
 
 
 
-int32_t console_vsprint(char(*buf)[], char(*form)[], va_list va)
+int32_t console_vsprint(char *buf, char *form, va_list va)
 {
 	int32_t i = 0;
 	int32_t j = 0;
 
 	while (true) {
-		char c = (*form)[i];
+		char c = form[i];
 
 		if (c == '\x0') {
 			break;
@@ -179,16 +179,16 @@ int32_t console_vsprint(char(*buf)[], char(*form)[], va_list va)
 
 			if (c == '}') {
 				i = i + 1;
-				c = (*form)[i];
+				c = form[i];
 				if (c == '}') {
-					(*buf)[j] = c;
+					buf[j] = c;
 					j = j + 1;
 					i = i + 1;
 				}
 				continue;
 			}
 
-			(*buf)[j] = c;
+			buf[j] = c;
 			j = j + 1;
 			i = i + 1;
 			continue;
@@ -197,10 +197,10 @@ int32_t console_vsprint(char(*buf)[], char(*form)[], va_list va)
 		// c == '{'
 
 		i = i + 1;
-		c = (*form)[i];
+		c = form[i];
 
 		if (c == '{') {
-			(*buf)[j] = '{';
+			buf[j] = '{';
 			j = j + 1;
 			i = i + 1;
 			continue;
@@ -208,7 +208,7 @@ int32_t console_vsprint(char(*buf)[], char(*form)[], va_list va)
 
 		i = i + 2;
 
-		char(*sptr)[] = &(*buf)[j];
+		char *sptr = &buf[j];
 
 		if ((c == 'i') || (c == 'd')) {
 			//
@@ -239,7 +239,7 @@ int32_t console_vsprint(char(*buf)[], char(*form)[], va_list va)
 			//
 			// %s pointer to string
 			//
-			char(*s)[] = va_arg(va, char(*)[]);
+			char *s = va_arg(va, char *);
 			strcpy(sptr, s);
 			j = j + (int32_t)strlen(s);
 
@@ -248,7 +248,7 @@ int32_t console_vsprint(char(*buf)[], char(*form)[], va_list va)
 			// %c for char
 			//
 			uint32_t c = va_arg(va, uint32_t);
-			int32_t n = (int32_t)utf_utf32_to_utf8(c, (char(*)[4])sptr);
+			int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)sptr);
 			j = j + n;
 		}
 	}
@@ -273,7 +273,7 @@ static char n_to_hex_sym(uint8_t n)
 }
 
 
-static int32_t sprint_hex_nat32(char(*buf)[], uint32_t x)
+static int32_t sprint_hex_nat32(char *buf, uint32_t x)
 {
 	char tmpbuf[8];
 	uint32_t d = x;
@@ -295,17 +295,17 @@ static int32_t sprint_hex_nat32(char(*buf)[], uint32_t x)
 	int32_t j = 0;
 	while (i > 0) {
 		i = i - 1;
-		(*buf)[j] = tmpbuf[i];
+		buf[j] = tmpbuf[i];
 		j = j + 1;
 	}
 
-	(*buf)[j] = '\x0';
+	buf[j] = '\x0';
 
 	return j;
 }
 
 
-static int32_t sprint_dec_int32(char(*buf)[], int32_t x)
+static int32_t sprint_dec_int32(char *buf, int32_t x)
 {
 	char tmpbuf[11];
 	int32_t d = x;
@@ -330,23 +330,23 @@ static int32_t sprint_dec_int32(char(*buf)[], int32_t x)
 	int32_t j = 0;
 
 	if (neg) {
-		(*buf)[0] = '-';
+		buf[0] = '-';
 		j = j + 1;
 	}
 
 	while (i > 0) {
 		i = i - 1;
-		(*buf)[j] = tmpbuf[i];
+		buf[j] = tmpbuf[i];
 		j = j + 1;
 	}
 
-	(*buf)[j] = '\x0';
+	buf[j] = '\x0';
 
 	return j;
 }
 
 
-static int32_t sprint_dec_n32(char(*buf)[], uint32_t x)
+static int32_t sprint_dec_n32(char *buf, uint32_t x)
 {
 	char tmpbuf[11];
 	uint32_t d = x;
@@ -366,11 +366,11 @@ static int32_t sprint_dec_n32(char(*buf)[], uint32_t x)
 	int32_t j = 0;
 	while (i > 0) {
 		i = i - 1;
-		(*buf)[j] = tmpbuf[i];
+		buf[j] = tmpbuf[i];
 		j = j + 1;
 	}
 
-	(*buf)[j] = '\x0';
+	buf[j] = '\x0';
 
 	return j;
 }

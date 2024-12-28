@@ -13,9 +13,9 @@
 // Короче, проблема зависимостей тяжело зависла в воздухе
 
 
-char(*(*fsm_state_no_name(FSM *fsm, uint32_t state_no)))[]
+char *fsm_state_no_name(FSM *fsm, uint32_t state_no)
 {
-	return &fsm->states[state_no].name;
+	return &fsm->states[state_no].name[0];
 }
 
 
@@ -35,7 +35,7 @@ void fsm_run(FSM *fsm)
 		StateDesc *state = &fsm->states[nexstate];
 
 		if (verbose) {
-			printf("enter %s\n", &state->name);
+			printf("enter %s\n", &state->name[0]);
 		}
 
 		if (state->entry != NULL) {
@@ -56,7 +56,7 @@ void fsm_run(FSM *fsm)
 		StateDesc *state = &fsm->states[fsm->state];
 
 		if (verbose) {
-			printf("exit %s\n", &state->name);
+			printf("exit %s\n", &state->name[0]);
 		}
 
 		if (state->exit != NULL) {

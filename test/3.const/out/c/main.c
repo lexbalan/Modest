@@ -11,7 +11,7 @@
 #define int32Const  ((int32_t)genericIntConst)
 
 #define genericStringConst  "Hello!"
-#define string8Const  (char(*)[])genericStringConst
+#define string8Const  (char *)genericStringConst
 #define string16Const  u"Hello!"
 #define string32Const  U"Hello!"
 

@@ -14,6 +14,10 @@ def value_is_undefined(x):
 	return x['kind'] == 'undefined'
 
 
+def value_is_literal(x):
+	return x['kind'] == 'literal'
+
+
 def value_is_immediate(x):
 	return x['immediate']
 

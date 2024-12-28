@@ -15,9 +15,9 @@ static char string8[6] = str8_example;
 static uint16_t string16[8] = u"String-Ω";
 static uint32_t string32[12] = U"String-Ω 🐀🎉🦄";
 // variables with type Pointer to Array of Chars
-static char(*ptr_to_string8)[] = str8_example;
-static uint16_t(*ptr_to_string16)[] = u"String-Ω";
-static uint32_t(*ptr_to_string32)[] = U"String-Ω 🐀🎉🦄";
+static char *ptr_to_string8 = str8_example;
+static uint16_t *ptr_to_string16 = u"String-Ω";
+static uint32_t *ptr_to_string32 = U"String-Ω 🐀🎉🦄";
 
 
 int main()
@@ -30,11 +30,11 @@ int main()
 
 	printf("\n\n");
 
-	console_puts8(&string8);
+	console_puts8(&string8[0]);
 	printf("\n");
-	console_puts16(&string16);
+	console_puts16(&string16[0]);
 	printf("\n");
-	console_puts32(&string32);
+	console_puts32(&string32[0]);
 
 	printf("\n\n");
 

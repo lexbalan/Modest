@@ -21,20 +21,20 @@ static char arrayFromString[3] = "abc";
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
 
-static void f0(char(*_x)[20], char(*__sret)[30])
+static void f0(char *_x, char *__sret)
 {
 	char x[20];
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
 	memcpy(&local_copy_of_x, &x, sizeof local_copy_of_x);
-	printf("f0(\"%s\")\n", &local_copy_of_x);
+	printf("f0(\"%s\")\n", &local_copy_of_x[0]);
 
 	// truncate array
 	char mic[6];
 	memcpy(&mic, &x, sizeof mic);
 	mic[5] = '\x0';
 
-	printf("f0 mic = \"%s\"\n", &mic);
+	printf("f0 mic = \"%s\"\n", &mic[0]);
 
 	// extend array
 	char res[30];
@@ -77,7 +77,7 @@ int main()
 
 	char em[30];
 	f0(em, "Hello World!");
-	printf("em = %s\n", &em);
+	printf("em = %s\n", &em[0]);
 
 	int32_t i = 0;
 	while (i < 10) {
@@ -100,24 +100,24 @@ int main()
 
 	printf("------------------------------------\n");
 
-	int32_t(*globalArrayPtr)[];
-	globalArrayPtr = &globalArray;
+	int32_t *globalArrayPtr;
+	globalArrayPtr = &globalArray[0];
 
 	i = 0;
 	while (i < 3) {
-		int32_t a = (*globalArrayPtr)[i];
+		int32_t a = globalArrayPtr[i];
 		printf("globalArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
 
 	printf("------------------------------------\n");
 
-	int32_t(*localArrayPtr)[];
-	localArrayPtr = &localArray;
+	int32_t *localArrayPtr;
+	localArrayPtr = &localArray[0];
 
 	i = 0;
 	while (i < 3) {
-		int32_t a = (*localArrayPtr)[i];
+		int32_t a = localArrayPtr[i];
 		printf("localArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
@@ -161,8 +161,8 @@ int main()
 
 
 	// check equality between two arrays (by pointer)
-	int32_t(*pa)[3] = &a;
-	int32_t(*pb)[3] = &b;
+	int32_t *pa = &a[0];
+	int32_t *pb = &b[0];
 
 	if (memcmp(pa, pb, sizeof(int32_t[3])) == 0) {
 		printf("*pa == *pb\n");

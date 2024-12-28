@@ -26,13 +26,13 @@ static bool write_file(int sockfd)
 	}
 
 	while (true) {
-		ssize_t n = recv(sockfd, &buffer, bufSize, 0);
+		ssize_t n = recv(sockfd, &buffer[0], bufSize, 0);
 
 		if (n <= 0) {
 			break;
 		}
 
-		fprintf(fp, "%s", &buffer);
+		fprintf(fp, "%s", &buffer[0]);
 		memset(&buffer, 0, sizeof buffer);
 	}
 
