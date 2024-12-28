@@ -210,6 +210,7 @@ declare void @perror(%ConstCharStr* %str)
 @a6 = internal global [2 x [5 x [10 x %Int]*]] zeroinitializer
 @a7 = internal global [2 x [5 x [10 x %Int*]*]] zeroinitializer
 @a8 = internal global [2 x [5 x [10 x %Int (%Int)*]*]] zeroinitializer
+@a9 = internal global [5 x [10 x [2 x %Int (%Int)*]*]*] zeroinitializer
 @f0 = internal global void ()* zeroinitializer
 @f1 = internal global %Int32 (%Int32)* zeroinitializer
 @f2 = internal global %Int32 (%Int32, %Int32)* zeroinitializer
@@ -219,6 +220,9 @@ declare void @perror(%ConstCharStr* %str)
 @f6 = internal global [32 x %Int32]* ([32 x %Int32]*)* zeroinitializer
 @f7 = internal global void (void ()*)* zeroinitializer
 @f8 = internal global void ()* (void ()*)* zeroinitializer
+@f9 = internal global void ()** (void ()*)* zeroinitializer
+@f10 = internal global void ()** (void ()**)* zeroinitializer
+@f11 = internal global void ()** ([10 x %Int32]* (%Int32, %Int32*)**)* zeroinitializer
 @p0 = internal global %Int32* zeroinitializer
 @p1 = internal global %Int32** zeroinitializer
 @p2 = internal global [5 x %Int32]* zeroinitializer

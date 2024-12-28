@@ -359,7 +359,8 @@ def strTypeFunc(t, label='', core=''):
 				return strType(fto, core=core)
 
 	left = strType(fto)
-	label = prespace(label)
+	if not htype.type_is_pointer(fto):
+		label = prespace(label)
 	return left + core + label + params
 
 

@@ -12,6 +12,7 @@ var a5: [5]*[10]Int
 var a6: [2][5]*[10]Int
 var a7: [2][5]*[10]*Int
 var a8: [2][5]*[10]*(a: Int) -> Int
+var a9: [5]*[10]*[2]*(a: Int) -> Int
 
 var f0: *() -> Unit
 var f1: *(x: Int32) -> Int32
@@ -22,6 +23,9 @@ var f5: *(a: [32]Int32) -> [32]Int32
 var f6: *(a: *[32]Int32) -> *[32]Int32
 var f7: *(f: *() -> Unit) -> Unit
 var f8: *(f: *() -> Unit) -> *() -> Unit
+var f9: *(f: *() -> Unit) -> **() -> Unit
+var f10: *(f: **() -> Unit) -> **() -> Unit
+var f11: *(f: **(a: Int32, b: *Int32) -> *[10]Int32) -> **() -> Unit
 
 var p0: *Int32
 var p1: **Int32
