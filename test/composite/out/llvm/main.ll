@@ -194,6 +194,8 @@ declare void @perror(%ConstCharStr* %str)
 @str5 = private constant [4 x i8] [i8 101, i8 113, i8 10, i8 0]
 @str6 = private constant [4 x i8] [i8 110, i8 101, i8 10, i8 0]
 @str7 = private constant [19 x i8] [i8 97, i8 114, i8 114, i8 114, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str8 = private constant [20 x i8] [i8 102, i8 97, i8 114, i8 114, i8 91, i8 48, i8 93, i8 40, i8 53, i8 44, i8 32, i8 55, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str9 = private constant [20 x i8] [i8 102, i8 97, i8 114, i8 114, i8 91, i8 49, i8 93, i8 40, i8 53, i8 44, i8 32, i8 55, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 %RGB24 = type {
@@ -379,8 +381,24 @@ define internal void @xy({%Int32,%Int32} %x) {
 		%Int32 9
 	]
 ]
-@x = internal global void ()* zeroinitializer
+@f0 = internal global void ()* zeroinitializer
 @arry = internal global [3 x [3 x void ()*]] zeroinitializer
+
+define internal %Int32 @add(%Int32 %a, %Int32 %b) {
+	%1 = add %Int32 %a, %b
+	ret %Int32 %1
+}
+
+define internal %Int32 @sub(%Int32 %a, %Int32 %b) {
+	%1 = sub %Int32 %a, %b
+	ret %Int32 %1
+}
+
+
+@farr = internal global [2 x %Int32 (%Int32, %Int32)*] [
+	%Int32 (%Int32, %Int32)* @add,
+	%Int32 (%Int32, %Int32)* @sub
+]
 
 define %Int32 @main() {
 	%1 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
@@ -446,6 +464,14 @@ break_2:
 	store %Int32 %34, %Int32* %17
 	br label %again_1
 break_1:
+	%35 = getelementptr inbounds [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0, %Int32 0
+	%36 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %35
+	%37 = call %Int32 %36(%Int32 5, %Int32 7)
+	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str8 to [0 x i8]*), %Int32 %37)
+	%39 = getelementptr inbounds [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0, %Int32 1
+	%40 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %39
+	%41 = call %Int32 %40(%Int32 5, %Int32 7)
+	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str9 to [0 x i8]*), %Int32 %41)
 	ret %Int32 0
 }
 

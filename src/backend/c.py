@@ -279,18 +279,24 @@ def strTypeArray(t, label='', core=''):
 	dim = '[' + dim + ']'
 	if htype.type_is_pointer(t['of']):
 		of = t['of']
-		if htype.type_is_array(of['to']) or htype.type_is_func(of['to']):
-			core = '*' + core + label + dim
-			core = wrap(core)
+		if htype.type_is_array(of['to']):
+			core = core + label + dim
 			return strType(of, core=core)
 
+		elif htype.type_is_func(of['to']):
+			core = core + label + dim
+			return strType(t['of'], core=core)
+
 		elif isTypeSimple(of['to']):
-			left = strType(of)
-			return left + core + label + dim
+			return strType(of) + core + label + dim
 
 	#elif isTypeSimple(t['of']):
 	left = strType(t['of'])
-	label = prespace(label)
+
+	# OKFIX!
+	if not htype.type_is_pointer(t['of']):
+		label = prespace(label)
+
 	return left + core + label + dim
 
 	return '<bad_array_of:%s>' % t0['of']['kind']
@@ -559,13 +565,8 @@ def print_value_un(v, ctx):
 					# take pointer to first array item, not pointer to array
 					out("[0]")
 
-"""
-def ptr2func(ftype):
-	print_func_return_type(ftype)
-	out("(*)")
-	print_func_paramlist(ftype)
 
-"""
+
 def print_value_call(v, ctx, arrayResult=None):
 	left = v['func']
 

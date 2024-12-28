@@ -67,9 +67,33 @@ static int32_t arrr[3 * 3] = (int32_t[3 * 3]){
 	7, 8, 9
 };
 
-static void(*x)();
-static void(*(*arry[3 * 3]))();
+static void(*f0)();
+static void(*arry[3 * 3])();
 
+
+static int32_t add(int32_t a, int32_t b)
+{
+	return a + b;
+}
+
+static int32_t sub(int32_t a, int32_t b)
+{
+	return a - b;
+}
+
+
+static int32_t(*farr[2])(int32_t a, int32_t b) = (int32_t(*[2])(int32_t a, int32_t b)){
+	&add, &sub
+};
+
+static void hi(char *x)
+{
+	printf("Hi %s!\n", x);
+}
+
+static void(*hiarr[10])(char *x) = (void(*[10])(char *x)){
+	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
+};
 
 int32_t main()
 {
@@ -96,6 +120,17 @@ int32_t main()
 			printf("arrr[%d][%d] = %d\n", i, j, arrr[i * 3 + j]);
 			j = j + 1;
 		}
+		i = i + 1;
+	}
+
+	int32_t _add = farr[0](5, 7);
+	printf("farr[0](5, 7) = %d\n", _add);
+	int32_t _sub = farr[1](5, 7);
+	printf("farr[1](5, 7) = %d\n", _sub);
+
+	i = 0;
+	while (i < 10) {
+		hiarr[i]("LOL");
 		i = i + 1;
 	}
 

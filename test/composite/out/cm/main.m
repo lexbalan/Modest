@@ -58,8 +58,22 @@ var arrr: [3][3]Int32 = [
 	[7, 8, 9]
 ]
 
-var x: *() -> Unit
+var f0: *() -> Unit
 var arry: [3][3]*() -> Unit
+
+
+func add(a: Int32, b: Int32) -> Int32 {
+	return a + b
+}
+
+func sub(a: Int32, b: Int32) -> Int32 {
+	return a - b
+}
+
+
+var farr: [2]*(a: Int32, b: Int32) -> Int32 = [
+	&add, &sub
+]
 
 
 public func main() -> Int32 {
@@ -88,6 +102,11 @@ public func main() -> Int32 {
 		}
 		i = i + 1
 	}
+
+	let _add = farr[0](5, 7)
+	printf("farr[0](5, 7) = %d\n", _add)
+	let _sub = farr[1](5, 7)
+	printf("farr[1](5, 7) = %d\n", _sub)
 
 	return 0
 }

@@ -62,9 +62,30 @@ var arrr: [3][3]Int32 = [
 	[7, 8, 9]
 ]
 
-var x: *() -> Unit
+var f0: *() -> Unit
 var arry: [3][3]*() -> Unit
 
+
+func add(a: Int32, b: Int32) -> Int32 {
+	return a + b
+}
+
+func sub(a: Int32, b: Int32) -> Int32 {
+	return a - b
+}
+
+
+var farr: [2]*(a: Int32, b: Int32) -> Int32 = [
+	&add, &sub
+]
+
+func hi(x: *Str8) -> Unit {
+	printf("Hi %s!\n", x)
+}
+
+var hiarr: [10]*(x: *Str8) -> Unit = [
+	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
+]
 
 public func main() -> Int32 {
 	xy({x=10, y=20})
@@ -90,6 +111,17 @@ public func main() -> Int32 {
 			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
 			++j
 		}
+		++i
+	}
+
+	let _add = farr[0](5, 7)
+	printf("farr[0](5, 7) = %d\n", _add)
+	let _sub = farr[1](5, 7)
+	printf("farr[1](5, 7) = %d\n", _sub)
+
+	i = 0
+	while i < 10 {
+		hiarr[i]("LOL")
 		++i
 	}
 
