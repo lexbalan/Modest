@@ -21,24 +21,104 @@ static int *(*a7[2 * 5])[10];
 static int(*(*a8[2 * 5])[10])(int a);
 static int(*(*(*a9[5])[10])[2])(int a);
 
-static void(*f0)();
-static int32_t(*f1)(int32_t x);
-static int32_t(*f2)(int32_t a, int32_t b);
-static int32_t *(*f3)();
-static void(*f4)(int32_t x, int32_t *__sret);
-static void(*f5)(int32_t *_a, int32_t *__sret);
-static int32_t *(*f6)(int32_t *a);
-static void(*f7)(void(*f)());
-static void(*(*f8)(void(*f)()))();
-static void(**(*f9)(void(*f)()))();
-static void(**(*f10)(void(**f)()))();
-static void(**(*f11)(int32_t *(**f)(int32_t a, int32_t *b)))();
+
+static void f0()
+{
+	return;
+}
+
+static int32_t f1(int32_t x)
+{
+	return x;
+}
+
+static int32_t f2(int32_t a, int32_t b)
+{
+	return a + b;
+}
+
+static int32_t *f3()
+{
+	return NULL;
+}
+
+static void f4(int32_t x, int32_t *sret_)
+{
+	memcpy(sret_, &(int32_t[10]){1, 2, 3}, sizeof(int32_t[10]));
+}
+
+static void f5(int32_t *_a, int32_t *sret_)
+{
+	int32_t a[32];
+	memcpy(a, _a, sizeof(int32_t[32]));
+	memcpy(sret_, &a, sizeof(int32_t[32]));
+}
+
+static int32_t *f6(int32_t *a)
+{
+	return NULL;
+}
+
+static void f7(void(*f)())
+{
+	return;
+}
+
+static void(*f8(void(*f)()))()
+{
+	return &f0;
+}
+
+static void(**f9(void(*f)()))()
+{
+	return NULL;
+}
+
+static void(**f10(void(**f)()))()
+{
+	return f;
+}
+
+static void(**f11(int32_t *(**f)(int32_t a, int32_t *b)))()
+{
+	return NULL;
+}
+
+static void(**f12(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))()
+{
+	return NULL;
+}
+
+static void(**f13(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))()
+{
+	return NULL;
+}
+
+static void(*pf0)() = &f0;
+static int32_t(*pf1)(int32_t x) = &f1;
+static int32_t(*pf2)(int32_t a, int32_t b) = &f2;
+static int32_t *(*pf3)() = &f3;
+static void(*pf4)(int32_t x, int32_t *sret_) = &f4;
+static void(*pf5)(int32_t *_a, int32_t *sret_) = &f5;
+static int32_t *(*pf6)(int32_t *a) = &f6;
+static void(*pf7)(void(*f)()) = &f7;
+static void(*(*pf8)(void(*f)()))() = &f8;
+static void(**(*pf9)(void(*f)()))() = &f9;
+static void(**(*pf10)(void(**f)()))() = &f10;
+static void(**(*pf11)(int32_t *(**f)(int32_t a, int32_t *b)))() = &f11;
+static void(**(*pf12)(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))() = &f12;
+static void(**(*pf13)(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() = &f13;
+
 
 static int32_t *p0;
 static int32_t **p1;
 static int32_t *p2;
 static int32_t(**p3)[5];
 // <--
+
+
+
+
 
 
 struct RGB24 {

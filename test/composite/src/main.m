@@ -15,23 +15,87 @@ var a7: [2][5]*[10]*Int
 var a8: [2][5]*[10]*(a: Int) -> Int
 var a9: [5]*[10]*[2]*(a: Int) -> Int
 
-var f0: *() -> Unit
-var f1: *(x: Int32) -> Int32
-var f2: *(a: Int32, b: Int32) -> Int32
-var f3: *() -> *Int32
-var f4: *(x: Int32) -> [10]Int32
-var f5: *(a: [32]Int32) -> [32]Int32
-var f6: *(a: *[32]Int32) -> *[32]Int32
-var f7: *(f: *()->Unit) -> Unit
-var f8: *(f: *()->Unit) -> *()->Unit
-var f9: *(f: *()->Unit) -> **()->Unit
-var f10: *(f: **()->Unit) -> **()->Unit
-var f11: *(f: **(a: Int32, b: *Int32)->*[10]Int32) -> **()->Unit
+
+func f0() -> Unit {
+	return
+}
+
+func f1(x: Int32) -> Int32 {
+	return x
+}
+
+func f2(a: Int32, b: Int32) -> Int32 {
+	return a + b
+}
+
+func f3() -> *Int32 {
+	return nil
+}
+
+func f4(x: Int32) -> [10]Int32 {
+	return [10]Int32 [1,2,3]
+}
+
+func f5(a: [32]Int32) -> [32]Int32 {
+	return a
+}
+
+func f6(a: *[32]Int32) -> *[32]Int32 {
+	return nil
+}
+
+func f7(f: *()->Unit) -> Unit {
+	return
+}
+
+func f8(f: *()->Unit) -> *()->Unit {
+	return &f0
+}
+
+func f9(f: *()->Unit) -> **()->Unit {
+	return nil
+}
+
+func f10(f: **()->Unit) -> **()->Unit {
+	return f
+}
+
+func f11(f: **(a: Int32, b: *Int32)->*[10]Int32) -> **()->Unit {
+	return nil
+}
+
+func f12(f: **(a: *[32]Int32, b: **[64]Int32)->*[10]Int32) -> **()->Unit {
+	return nil
+}
+
+func f13(f: **(a: *[32]*Int32, b: **[64]*Int32)->*[10]Int32) -> **()->Unit {
+	return nil
+}
+
+var pf0: *() -> Unit = &f0
+var pf1: *(x: Int32) -> Int32 = &f1
+var pf2: *(a: Int32, b: Int32) -> Int32 = &f2
+var pf3: *() -> *Int32 = &f3
+var pf4: *(x: Int32) -> [10]Int32 = &f4
+var pf5: *(a: [32]Int32) -> [32]Int32 = &f5
+var pf6: *(a: *[32]Int32) -> *[32]Int32 = &f6
+var pf7: *(f: *()->Unit) -> Unit = &f7
+var pf8: *(f: *()->Unit) -> *()->Unit = &f8
+var pf9: *(f: *()->Unit) -> **()->Unit = &f9
+var pf10: *(f: **()->Unit) -> **()->Unit = &f10
+var pf11: *(f: **(a: Int32, b: *Int32)->*[10]Int32) -> **()->Unit = &f11
+var pf12: *(f: **(a: *[32]Int32, b: **[64]Int32)->*[10]Int32) -> **()->Unit = &f12
+var pf13: *(f: **(a: *[32]*Int32, b: **[64]*Int32)->*[10]Int32) -> **()->Unit = &f13
+
 
 var p0: *Int32
 var p1: **Int32
 var p2: *[5]Int32
 var p3: **[5]Int32  // <--
+
+
+
+
 
 
 type RGB24 record {

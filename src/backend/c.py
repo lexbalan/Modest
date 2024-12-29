@@ -308,8 +308,8 @@ def strFuncParamlist(params, va_arg):
 			pstr = ''
 		else:
 			# HACK
-			# В C параметр не может быть функцией, а у нас - может
-			# но реализован как указатель на функцию
+			# В C параметр не может быть массивом, а у нас - может
+			# но реализован как указатель на массив
 			if htype.type_is_array(ptype):
 				ptype = htype.type_pointer(ptype)
 				pstr = '_' + pstr
@@ -333,12 +333,12 @@ def strTypeFunc(t, label='', core=''):
 		# (!) HACK (!)
 		# C не умеет возвращать массивы по значению,
 		# поэтому если возвращаем массив вернем void
-		# а сам массив пойдет через указатель __sret
+		# а сам массив пойдет через указатель sret_
 		# который функция получит своим самым последним параметром
 		# (sret = structure return)
 		sret_param = {
 			'type': htype.type_pointer(t['to']),
-			'id': {'isa': 'id', 'id': '__sret', 'c': '__sret'}
+			'id': {'isa': 'id', 'id': 'sret_', 'c': 'sret_'}
 		}
 
 		fparams = t['params'] + [sret_param]
@@ -1373,7 +1373,7 @@ def print_stmt_return(x):
 	global cfunc
 
 	if isSretFunc(cfunc['type']):
-		out("memcpy(__sret, ")
+		out("memcpy(sret_, ")
 		print_value_as_ptr(x['value'])
 		out(", sizeof(")
 		print_type(x['value']['type'])
@@ -1640,7 +1640,7 @@ def print_func_paramlist(ftype):
 	out("(")
 
 	if isSretFunc(ftype):
-		print_variable("__sret", ftype['to'])
+		print_variable("sret_", ftype['to'])
 		if len(params) > 0:
 			out(", ")
 
