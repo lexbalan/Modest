@@ -4,18 +4,6 @@
 include "libc/stdio"
 
 
-var a0: [5]Int32
-var a1: [5]*Int32
-var a2: [5]**Int32
-var a3: [5]*()->Unit
-var a4: [5][10]Int
-var a5: [5]*[10]Int
-var a6: [2][5]*[10]Int
-var a7: [2][5]*[10]*Int
-var a8: [2][5]*[10]*(a: Int) -> Int
-var a9: [5]*[10]*[2]*(a: Int) -> Int
-
-
 func f0() -> Unit {
 	return
 }
@@ -86,6 +74,26 @@ var pf10: *(f: **()->Unit) -> **()->Unit = &f10
 var pf11: *(f: **(a: Int32, b: *Int32)->*[10]Int32) -> **()->Unit = &f11
 var pf12: *(f: **(a: *[32]Int32, b: **[64]Int32)->*[10]Int32) -> **()->Unit = &f12
 var pf13: *(f: **(a: *[32]*Int32, b: **[64]*Int32)->*[10]Int32) -> **()->Unit = &f13
+
+
+
+
+var a0: [5]Int32 = [0, 1, 2, 3, 4]
+var a1: [5]*Int32 = [&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]]
+var a2: [5]**Int32 = [&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]]
+var a3: [5]*()->Unit = [5]*()->Unit [&f0]
+var a4: [2][5]Int = [[0,1,2,3,4], [5,6,7,8,9]]
+//var a5: [2]*[5]Int = [&a4[0], &a4[1]]
+var a6: [2][5]*Int = [
+	[&a4[0][0], &a4[0][1], &a4[0][2], &a4[0][3], &a4[0][4]]
+	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
+]
+
+var a7: [2][5]*[10]*Int
+var a8: [2][5]*[10]*(a: Int) -> Int
+var a9: [5]*[10]*[2]*(a: Int) -> Int
+
+
 
 
 var p0: *Int32

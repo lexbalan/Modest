@@ -10,18 +10,6 @@
 struct __anonymous_struct_3 {int32_t x; int32_t y;};
 
 
-static int32_t a0[5];
-static int32_t *a1[5];
-static int32_t **a2[5];
-static void(*a3[5])();
-static int a4[5 * 10];
-static int *a5[5];
-static int *a6[2 * 5];
-static int *(*a7[2 * 5])[10];
-static int(*(*a8[2 * 5])[10])(int a);
-static int(*(*(*a9[5])[10])[2])(int a);
-
-
 static void f0()
 {
 	return;
@@ -108,6 +96,26 @@ static void(**(*pf10)(void(**f)()))() = &f10;
 static void(**(*pf11)(int32_t *(**f)(int32_t a, int32_t *b)))() = &f11;
 static void(**(*pf12)(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))() = &f12;
 static void(**(*pf13)(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() = &f13;
+
+
+
+
+static int32_t a0[5] = (int32_t[5]){0, 1, 2, 3, 4};
+static int32_t *a1[5] = (int32_t *[5]){&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]};
+static int32_t **a2[5] = (int32_t **[5]){&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]};
+static void(*a3[5])() = (void(*[5])()){&f0};
+static int a4[2 * 5] = (int[2 * 5]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+//var a5: [2]*[5]Int = [&a4[0], &a4[1]]
+static int *a6[2 * 5] = (int *[2 * 5]){
+	&a4[0 * 5 + 0], &a4[0 * 5 + 1], &a4[0 * 5 + 2], &a4[0 * 5 + 3], &a4[0 * 5 + 4],
+	&a4[1 * 5 + 0], &a4[1 * 5 + 1], &a4[1 * 5 + 2], &a4[1 * 5 + 3], &a4[1 * 5 + 4]
+};
+
+static int *(*a7[2 * 5])[10];
+static int(*(*a8[2 * 5])[10])(int a);
+static int(*(*(*a9[5])[10])[2])(int a);
+
+
 
 
 static int32_t *p0;
