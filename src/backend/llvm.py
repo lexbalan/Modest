@@ -4,9 +4,10 @@ from .common import *
 from error import info, warning, error, fatal
 import type as htype
 from type import type_print
-from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_terminal, value_is_zero, value_is_param
+from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_is_zero, value_is_param
 from type import type_pointer
 from util import align_bits_up
+from pprint import pprint
 import settings
 
 import foundation
@@ -222,6 +223,16 @@ def llvm_value_inline_cast(type, value):
 	}
 
 
+def llvm_value_inline_getelementptr(result_type, value, indexes):
+	return {
+		'isa': 'll_value',
+		'kind': 'inline_getelemantptr',
+		'type': result_type,
+		'value': value,
+		'indexes': indexes,
+		'is_adr': False
+	}
+
 
 
 def llvm_print_type_value(x, noundef=False):
@@ -385,13 +396,24 @@ def llvm_print_value_num(x):
 
 
 
-
-
-def llvm_print_value_inlinecast(x):
+def llvm_print_value_inline_cast(x):
 	v = x['value']
 	t = x['type']
 	opcode = select_cast_operator(v['type'], t)
 	llvm_inline_cast(opcode, t, v)
+
+
+
+"ptr getelementptr (i8, ptr @a0, i64 4)"
+"%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 0)"
+def llvm_print_value_inline_getelemantptr(x):
+	out("getelementptr (")
+	print_type(x['type'])
+	out(", ")
+	llvm_print_type_value(x['value'])
+	out(", ")
+	print_list_with(x['indexes'][1:], llvm_print_type_value)
+	out(")")
 
 
 
@@ -415,7 +437,8 @@ def llvm_print_value(x):
 	elif k == 'str': llvm_print_value_str(x)
 	elif k == 'array': llvm_print_value_array(x)
 	elif k == 'record': llvm_print_value_record(x)
-	elif k == 'inline_cast': llvm_print_value_inlinecast(x)
+	elif k == 'inline_cast': llvm_print_value_inline_cast(x)
+	elif k == 'inline_getelemantptr': llvm_print_value_inline_getelemantptr(x)
 	elif k == 'zero': llvm_print_value_zero(x)
 	else:
 		out("<llvm::unknown_value_kind '%s'>" % k)
@@ -453,10 +476,13 @@ def llvm_deref(x):
 
 
 # индекс не может быть i64 (!) (а только i32)
-# t - тип самой записи или массива (без указателя)
 def llvm_getelementptr(v, object_type, indexes, result_type):
 	# Есть такой прикол в том что индекс (i) структуры
 	# не может быть i64 (!) (а только i32)
+
+	if is_global_context():
+		return llvm_value_inline_getelementptr(result_type, v, indexes)
+
 	rv = ll_reg_operation('getelementptr inbounds', result_type)
 	rv['is_adr'] = True
 	print_type(object_type)
@@ -908,12 +934,6 @@ def do_eval_deref(x):
 
 def do_eval_ref(v):
 	ve = do_eval(v['value'])
-
-	if is_global_context():
-		if v['value']['kind'] == 'var':
-			if 'global' in v['value']['att']:
-				return llvm_value_id(get_id_str(v['value']), v['type'])
-
 	nv = copy.copy(ve)
 	nv['is_adr'] = False
 	return nv
@@ -1017,6 +1037,7 @@ def is_closed_array_param(value):
 	return False
 
 
+
 def do_eval_index(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
@@ -1024,6 +1045,9 @@ def do_eval_index(v):
 	left = do_eval(v['array'])
 	index = do_reval(v['index'])
 	result_type = v['type']
+
+
+	#mass
 
 
 	if htype.type_is_pointer(left['type']):
@@ -1036,14 +1060,15 @@ def do_eval_index(v):
 
 	# Left is an array
 
-	if not is_closed_array_param(v['array']):
-		if not left['is_adr']:
-			# Left is an array placed in 'reg' as value
-			if not value_is_immediate(v['index']):
-				error("expected immediate index value", v['ti'])
-				return llvm_value_zero(v['ti'])
+	if not is_global_context():
+		if not is_closed_array_param(v['array']):
+			if not left['is_adr']:
+				# Left is an array placed in 'reg' as value
+				if not value_is_immediate(v['index']):
+					error("expected immediate index value", v['ti'])
+					return llvm_value_zero(v['ti'])
 
-			return extractvalue(left, result_type, index['asset'])
+				return extractvalue(left, result_type, index['asset'])
 
 	# Left is a pointer to array in 'reg'
 	return llvm_getelementptr(left, left['type'], (llvm_value_num_zero, index), result_type)
@@ -1267,8 +1292,6 @@ def do_eval_cons(x):
 	from_type = value['type']
 	to_type = x['type']
 
-	#print(to_type['kind'])
-
 	# skipping cast to the same type
 	if id(value['type']) == id(to_type):
 		return do_reval(value)
@@ -1361,22 +1384,6 @@ def do_eval_array(v):
 		iv = do_reval(item)
 		items.append(iv)
 
-
-	# теперь добавим паддинг нулевыми значениями
-	fulllen = 0
-	if v['type']['volume'] != None:
-		if value_is_immediate(v['type']['volume']):
-			fulllen = v['type']['volume']['asset']
-	else:
-		fulllen = len(v['items'])
-
-	n_pad = fulllen - len(items)
-	if n_pad > 0:
-		i = 0
-		while i < n_pad:
-			zero = llvm_value_zero(v['type']['of'])
-			items.append(zero)
-			i = i + 1
 
 	# global?
 	# глобальный массив распечатает print_value как литерал
@@ -1492,7 +1499,7 @@ def do_eval_literal(x):
 	elif htype.type_is_array(xt): return do_eval_array(x)
 	elif htype.type_is_bool(xt): return do_eval_bool(x)
 	elif htype.type_is_free_pointer(xt): return llvm_value_num(xt, x['asset'])
-	elif htype.type_is_pointer(xt): return llvm_value_num(x)
+	elif htype.type_is_pointer(xt): return do_eval_pointer(x)
 	elif htype.type_is_char(xt): return llvm_value_num(xt, x['asset'])
 	elif htype.type_is_enum(xt): return llvm_value_num(xt, x['asset'])
 	elif htype.type_is_word(xt): return llvm_value_num(xt, x['asset'])
@@ -1501,6 +1508,13 @@ def do_eval_literal(x):
 		value_print(x)
 		exit(1)
 	return
+
+
+
+
+
+def do_eval_pointer(x):
+	return llvm_value_num(x['type'], x['asset'])
 
 
 def do_eval_va_start(x):
@@ -1528,6 +1542,7 @@ def do_eval_va_copy(x):
 def do_eval(x):
 	assert(x != None)
 	assert(x['isa'] == 'value')
+
 
 	y = None
 
@@ -1559,7 +1574,6 @@ def do_eval(x):
 
 	if y == None:
 		error("llvm do_eval cannot eval (%s) value" % k, x['ti'])
-		#print("htype.type_is_string() = %d" % htype.type_is_string(x['type']))
 		value_print(x)
 		type_print(x['type'])
 		1 / 0
@@ -2353,7 +2367,6 @@ def een(defs, decl_only=False):
 			continue
 
 		printed.append(uid)
-		#print(uid)
 
 		if isa_prev != isa:
 			out("\n")
@@ -2405,7 +2418,6 @@ def print_included(m):
 def print_imports(m):
 	for imp_id in m['imports']:
 		imp = m['imports'][imp_id]
-		#print(">>>> %s" % imp['id'])
 		print_included(imp)
 		print_imports(imp)
 

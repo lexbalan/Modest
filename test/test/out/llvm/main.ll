@@ -189,81 +189,18 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 ; -- endstrings --
 
-%main_RGB24 = type {
-	%Int8,
-	%Int8,
-	%Int8
-};
-
-
-@rgb0 = internal global [2 x %main_RGB24] [
-	%main_RGB24 {
-		%Int8 200,
-		%Int8 0,
-		%Int8 0
-	},
-	%main_RGB24 {
-		%Int8 200,
-		%Int8 0,
-		%Int8 0
-	}
-]
-
-%AnimationPoint = type {
-	%main_RGB24,
-	%Int32
-};
-
-
-@ap = internal global %AnimationPoint {
-	%main_RGB24 {
-		%Int8 200,
-		%Int8 0,
-		%Int8 0
-	},
-	%Int32 3000
+define internal void @f0() {
+	ret void
+	ret void
 }
-@animation0_points = internal global [5 x %AnimationPoint] [
-	%AnimationPoint {
-		%main_RGB24 {
-			%Int8 200,
-			%Int8 0,
-			%Int8 0
-		},
-		%Int32 3000
-	},
-	%AnimationPoint {
-		%main_RGB24 {
-			%Int8 0,
-			%Int8 200,
-			%Int8 0
-		},
-		%Int32 3000
-	},
-	%AnimationPoint {
-		%main_RGB24 {
-			%Int8 100,
-			%Int8 100,
-			%Int8 0
-		},
-		%Int32 3000
-	},
-	%AnimationPoint {
-		%main_RGB24 {
-			%Int8 254,
-			%Int8 254,
-			%Int8 0
-		},
-		%Int32 3000
-	},
-	%AnimationPoint {
-		%main_RGB24 {
-			%Int8 0,
-			%Int8 0,
-			%Int8 0
-		},
-		%Int32 3000
-	}
+
+
+@a3 = internal global [5 x void ()*] [
+	void ()* @f0,
+	void ()* null,
+	void ()* null,
+	void ()* null,
+	void ()* null
 ]
 
 define %Int32 @main() {

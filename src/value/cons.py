@@ -1,6 +1,6 @@
 import type as htype
 from error import info, warning, error
-from .value import value_bad, value_is_bad, value_cons_node
+from .value import value_bad, value_is_bad, value_cons_node, value_print
 from .unit import unit_can, value_unit_cons
 from .bool import bool_can, value_bool_cons
 from .word import word_can, value_word_cons

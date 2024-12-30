@@ -885,6 +885,9 @@ def type_print(t, print_aka=True):
 	elif type_is_undefined(t):
 		print('undefined', end='')
 
+	elif type_is_unit(t):
+		print('Unit', end='')
+
 	else:
 		print("<type:%s>" % k, end='')
 

@@ -551,7 +551,7 @@ def print_value_un(v, ctx):
 
 	if v['kind'] == 'ref':
 		if htype.type_is_array(value['type']):
-			if value['kind'] != 'slice':
+			if not value['kind'] in ['index', 'slice']:
 				if isSimSim(v['type']):
 					# take pointer to first array item, not pointer to array
 					out("[0]")

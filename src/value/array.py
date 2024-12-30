@@ -39,6 +39,7 @@ def value_array_create(items, ti=None):
 	# неявно приводим все элементы к этому типу
 	casted_items = implicit_cast_list(items, items_type)
 	v = _value_array_create(casted_items, items_type, length, True, ti)
+
 	v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
 	return v
 
@@ -56,7 +57,8 @@ def value_array_create_from_string(t, v, method, ti=None):
 	nv = value_cons_node(t, v, method, ti)
 	nv['immediate'] = True
 	nv['items'] = chars
-	return nv"""
+	return nv
+"""
 
 
 # TODO: see select_common_type!
@@ -134,7 +136,7 @@ def value_array_cons(t, v, method, ti):
 
 		pad_rquired = t['volume']['asset'] - len(items)
 		if pad_rquired > 0:
-			items = items + [value_zero(char_type, ti)] * pad_rquired
+			items = items + [value_zero(char_type, v['ti'])] * pad_rquired
 
 		nv['items'] = items
 		return nv
@@ -169,7 +171,7 @@ def value_array_cons(t, v, method, ti):
 			tlen = t['volume']['asset']
 			zero_pad_len = tlen - vlen
 			if zero_pad_len > 0:
-				zero_pad = [value_zero(t['of'], ti)] * zero_pad_len
+				zero_pad = [value_zero(t['of'], v['ti'])] * zero_pad_len
 
 		nv['items'] = items + zero_pad
 

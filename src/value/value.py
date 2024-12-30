@@ -121,6 +121,8 @@ def value_zero(t, ti):
 	else:
 		nv['asset'] = 0
 
+	# LETIT: for debugging!
+	nv['att'].append('zero')
 	return nv
 
 

@@ -877,13 +877,16 @@ def do_value_ref(x):
 	vt = htype.type_pointer(vtype, ti=ti)
 	nv = value_un('ref', v, vt, ti=ti)
 
-	if htype.type_is_func(vtype):
+	if is_global_value(v):
+	#if htype.type_is_func(vtype):
 		nv['immediate'] = True
-		# TODO:
 		# не можно поставить 0 тк иначе значение будет трактоваться как zero
 		# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
-		# временно заткнул единицей, но вообще нужно будет обдумать
+		# поэтому временно заткнул единицей, но вообще нужно будет обдумать
 		nv['asset'] = 1
+		nv['att'].append('ptr_to_glb_val')
+
+	nv['att'].append('ref')
 
 	return nv
 
@@ -1714,6 +1717,7 @@ def do_value(x):
 
 	assert(v != None)
 	v['ti'] = x['ti']
+
 	return v
 
 
@@ -2145,8 +2149,8 @@ def def_type(x):
 	if not ('do_not_include' in cmodule['att']):
 		# В случае когда не печатаем typedef явно (!)
 		# Убираем алиасы которые висели на оригинальном типе
-#		if 'c' in nt['id']:
-#			nt.pop('c')
+		#if 'c' in nt['id']:
+		#	nt.pop('c')
 		if 'llvm_alias' in nt['id']:
 			nt.pop('llvm_alias')
 

@@ -200,34 +200,187 @@ declare void @perror(%ConstCharStr* %str)
 @str11 = private constant [4 x i8] [i8 76, i8 79, i8 76, i8 0]
 @str12 = private constant [6 x i8] [i8 87, i8 111, i8 114, i8 108, i8 100, i8 0]
 ; -- endstrings --
+; Test for composite types
+; Pointers
 
-@a0 = internal global [5 x %Int32] zeroinitializer
-@a1 = internal global [5 x %Int32*] zeroinitializer
-@a2 = internal global [5 x %Int32**] zeroinitializer
-@a3 = internal global [5 x void ()*] zeroinitializer
-@a4 = internal global [5 x [10 x %Int]] zeroinitializer
-@a5 = internal global [5 x [10 x %Int]*] zeroinitializer
-@a6 = internal global [2 x [5 x [10 x %Int]*]] zeroinitializer
-@a7 = internal global [2 x [5 x [10 x %Int*]*]] zeroinitializer
-@a8 = internal global [2 x [5 x [10 x %Int (%Int)*]*]] zeroinitializer
-@a9 = internal global [5 x [10 x [2 x %Int (%Int)*]*]*] zeroinitializer
-@f0 = internal global void ()* zeroinitializer
-@f1 = internal global %Int32 (%Int32)* zeroinitializer
-@f2 = internal global %Int32 (%Int32, %Int32)* zeroinitializer
-@f3 = internal global %Int32* ()* zeroinitializer
-@f4 = internal global void ([10 x %Int32]*, %Int32)* zeroinitializer
-@f5 = internal global void ([32 x %Int32]*, [32 x %Int32])* zeroinitializer
-@f6 = internal global [32 x %Int32]* ([32 x %Int32]*)* zeroinitializer
-@f7 = internal global void (void ()*)* zeroinitializer
-@f8 = internal global void ()* (void ()*)* zeroinitializer
-@f9 = internal global void ()** (void ()*)* zeroinitializer
-@f10 = internal global void ()** (void ()**)* zeroinitializer
-@f11 = internal global void ()** ([10 x %Int32]* (%Int32, %Int32*)**)* zeroinitializer
 @p0 = internal global %Int32* zeroinitializer
 @p1 = internal global %Int32** zeroinitializer
-@p2 = internal global [5 x %Int32]* zeroinitializer
-@p3 = internal global [5 x %Int32]** zeroinitializer
-; <--
+; Functions
+
+define internal void @f0() {
+	ret void
+	ret void
+}
+
+define internal %Int32 @f1(%Int32 %x) {
+	ret %Int32 %x
+}
+
+define internal %Int32 @f2(%Int32 %a, %Int32 %b) {
+	%1 = add %Int32 %a, %b
+	ret %Int32 %1
+}
+
+define internal %Int32* @f3() {
+	ret %Int32* bitcast (i8* null to %Int32*)
+}
+
+define internal void @f4([10 x %Int32]* %0, %Int32 %x) {
+	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 0
+	%3 = insertvalue [10 x %Int32] %2, %Int32 2, 1
+	%4 = insertvalue [10 x %Int32] %3, %Int32 3, 2
+	store [10 x %Int32] %4, [10 x %Int32]* %0
+	ret void
+}
+
+define internal void @f5([32 x %Int32]* %0, [32 x %Int32] %__a) {
+	%a = alloca [32 x %Int32]
+	store [32 x %Int32] %__a, [32 x %Int32]* %a
+	%2 = load [32 x %Int32], [32 x %Int32]* %a
+	store [32 x %Int32] %2, [32 x %Int32]* %0
+	ret void
+}
+
+define internal [32 x %Int32]* @f6([32 x %Int32]* %a) {
+	ret [32 x %Int32]* bitcast (i8* null to [32 x %Int32]*)
+}
+
+define internal void @f7(void ()* %f) {
+	ret void
+	ret void
+}
+
+define internal void ()* @f8(void ()* %f) {
+	ret void ()* @f0
+}
+
+define internal void ()** @f9(void ()* %f) {
+	ret void ()** bitcast (i8* null to void ()**)
+}
+
+define internal void ()** @f10(void ()** %f) {
+	ret void ()** %f
+}
+
+define internal void ()** @f11([10 x %Int32]* (%Int32, %Int32*)** %f) {
+	ret void ()** bitcast (i8* null to void ()**)
+}
+
+define internal void ()** @f12([10 x %Int32]* ([32 x %Int32]*, [64 x %Int32]**)** %f) {
+	ret void ()** bitcast (i8* null to void ()**)
+}
+
+define internal void ()** @f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**)** %f) {
+	ret void ()** bitcast (i8* null to void ()**)
+}
+
+; Pointers to function
+
+@pf0 = internal global void ()* @f0
+@pf1 = internal global %Int32 (%Int32)* @f1
+@pf2 = internal global %Int32 (%Int32, %Int32)* @f2
+@pf3 = internal global %Int32* ()* @f3
+@pf4 = internal global void ([10 x %Int32]*, %Int32)* @f4
+@pf5 = internal global void ([32 x %Int32]*, [32 x %Int32])* @f5
+@pf6 = internal global [32 x %Int32]* ([32 x %Int32]*)* @f6
+@pf7 = internal global void (void ()*)* @f7
+@pf8 = internal global void ()* (void ()*)* @f8
+@pf9 = internal global void ()** (void ()*)* @f9
+@pf10 = internal global void ()** (void ()**)* @f10
+@pf11 = internal global void ()** ([10 x %Int32]* (%Int32, %Int32*)**)* @f11
+@pf12 = internal global void ()** ([10 x %Int32]* ([32 x %Int32]*, [64 x %Int32]**)**)* @f12
+@pf13 = internal global void ()** ([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**)**)* @f13
+; Arrays
+@a0 = internal global [5 x %Int32] [
+	%Int32 0,
+	%Int32 1,
+	%Int32 2,
+	%Int32 3,
+	%Int32 4
+]
+@a1 = internal global [5 x %Int32*] [
+	%Int32* getelementptr (%Int32*, [5 x %Int32]* @a0, %Int32 0),
+	%Int32* getelementptr (%Int32*, [5 x %Int32]* @a0, %Int32 1),
+	%Int32* getelementptr (%Int32*, [5 x %Int32]* @a0, %Int32 2),
+	%Int32* getelementptr (%Int32*, [5 x %Int32]* @a0, %Int32 3),
+	%Int32* getelementptr (%Int32*, [5 x %Int32]* @a0, %Int32 4)
+]
+@a2 = internal global [5 x %Int32**] [
+	%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 0),
+	%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 1),
+	%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 2),
+	%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 3),
+	%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 4)
+]
+@a3 = internal global [5 x void ()*] [
+	void ()* @f0,
+	void ()* null,
+	void ()* null,
+	void ()* null,
+	void ()* null
+]
+@a4 = internal global [2 x [5 x %Int]] [
+	[5 x %Int] [
+		%Int 0,
+		%Int 1,
+		%Int 2,
+		%Int 3,
+		%Int 4
+	],
+	[5 x %Int] [
+		%Int 5,
+		%Int 6,
+		%Int 7,
+		%Int 8,
+		%Int 9
+	]
+]
+@a5 = internal global [2 x [5 x %Int]*] [
+	[5 x %Int]* getelementptr ([5 x %Int]*, [2 x [5 x %Int]]* @a4, %Int32 0),
+	[5 x %Int]* getelementptr ([5 x %Int]*, [2 x [5 x %Int]]* @a4, %Int32 1)
+]
+; Проблема в том что мой getelementptr не умеет в цепь-молнию
+; а здесь без нее никак... придется взяться за это и сделать наконец
+;var a6: [2][5]*Int = [
+;	[&a4[0][0], &a4[0][1], &a4[0][2], &a4[0][3], &a4[0][4]]
+;	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
+;]
+@a7 = internal global [2 x [5 x [5 x %Int]*]] [
+	[5 x [5 x %Int]*] [
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0
+	],
+	[5 x [5 x %Int]*] [
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0
+	]
+]
+@a8 = internal global [2 x [5 x [2 x [5 x [5 x %Int]*]]*]] [
+	[5 x [2 x [5 x [5 x %Int]*]]*] [
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7
+	],
+	[5 x [2 x [5 x [5 x %Int]*]]*] [
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7
+	]
+]
+@a9 = internal global [5 x [10 x [2 x %Int (%Int)*]*]*] zeroinitializer
+; 
+@p2 = internal global [5 x %Int32]* @a0
+@p3 = internal global [5 x %Int32]** @p2
 
 %RGB24 = type {
 	%Int8,

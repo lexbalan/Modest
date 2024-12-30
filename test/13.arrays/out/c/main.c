@@ -21,7 +21,7 @@ static char arrayFromString[3] = "abc";
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
 
-static void f0(char *_x, char *__sret)
+static void f0(char *_x, char *sret_)
 {
 	char x[20];
 	memcpy(x, _x, sizeof(char[20]));
@@ -47,7 +47,7 @@ static void f0(char *_x, char *__sret)
 	res[11] = 't';
 	res[12] = '!';
 	res[13] = '\x0';
-	memcpy(__sret, &res, sizeof(char[30]));
+	memcpy(sret_, &res, sizeof(char[30]));
 }
 
 
