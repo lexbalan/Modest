@@ -707,6 +707,16 @@ def type_is_pointer_to_func(t):
 	return False
 
 
+def type_is_pointer_to_open_array(t):
+	if type_is_pointer(t):
+		return type_is_open_array(t['to'])
+	return False
+
+def type_is_pointer_to_closed_array(t):
+	if type_is_pointer(t):
+		return type_is_closed_array(t['to'])
+	return False
+
 def type_is_signed(t):
 	if not 'signed' in t:
 		return False

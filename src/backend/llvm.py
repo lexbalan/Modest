@@ -223,10 +223,11 @@ def llvm_value_inline_cast(type, value):
 	}
 
 
-def llvm_value_inline_getelementptr(result_type, value, indexes):
+def llvm_value_inline_gep(result_type, value, indexes, object_type):
 	return {
 		'isa': 'll_value',
 		'kind': 'inline_getelemantptr',
+		'object_type': object_type,
 		'type': result_type,
 		'value': value,
 		'indexes': indexes,
@@ -414,11 +415,11 @@ def llvm_print_value_inline_cast(x):
 "%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 0)"
 def llvm_print_value_inline_getelemantptr(x):
 	out("getelementptr (")
-	print_type(x['type'])
+	print_type(x['object_type'])
 	out(", ")
 	llvm_print_type_value(x['value'])
 	out(", ")
-	print_list_with(x['indexes'][1:], llvm_print_type_value)
+	print_list_with(x['indexes'], llvm_print_type_value)
 	out(")")
 
 
@@ -482,14 +483,15 @@ def llvm_deref(x):
 
 
 # индекс не может быть i64 (!) (а только i32)
-def llvm_getelementptr(v, object_type, indexes, result_type):
+def llvm_gep(v, object_type, indexes, result_type):
 	# Есть такой прикол в том что индекс (i) структуры
 	# не может быть i64 (!) (а только i32)
 
 	if is_global_context():
-		return llvm_value_inline_getelementptr(result_type, v, indexes)
+		return llvm_value_inline_gep(result_type, v, indexes, object_type)
 
-	rv = ll_reg_operation('getelementptr inbounds', result_type)
+	#rv = ll_reg_operation('getelementptr inbounds', result_type)
+	rv = ll_reg_operation('getelementptr', result_type)
 	rv['is_adr'] = True
 	print_type(object_type)
 	out(", ")
@@ -702,7 +704,7 @@ def llvm_dold(x):
 # возвращает value:address для поля этой структуры
 def llvm_eval_access_ptr(x, rec_type, field_no, result_type):
 	field_index = llvm_value_num(foundation.typeInt32, field_no)
-	return llvm_getelementptr(x, rec_type, (llvm_value_num_zero, field_index), result_type)
+	return llvm_gep(x, rec_type, (llvm_value_num_zero, field_index), result_type)
 
 
 def llvm_eval_access(rec, field_no, result_type):
@@ -1044,37 +1046,69 @@ def is_closed_array_param(value):
 
 
 
+def get_indexes(v):
+	index = v['index']
+	if v['array']['kind'] == 'index':
+		return (index, ) + get_indexes(v['array'])
+
+	return (index)
+
+
 def do_eval_index(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
 
-	left = do_eval(v['array'])
-	index = do_reval(v['index'])
 	result_type = v['type']
 
+	"""
+		# Left is an array
+		if not is_global_context():
+			if not is_closed_array_param(v['array']):
+				if not left['is_adr']:
+					# Left is an array placed in 'reg' as value
+					if not value_is_immediate(v['index']):
+						error("expected immediate index value", v['ti'])
+						return llvm_value_zero(v['ti'])
+
+					return extractvalue(left, result_type, index['asset'])
+	"""
+
+	"""
+		if htype.type_is_pointer(left['type']):
+			# Left is a pointer in 'reg' to pointer to array
+			# (access to array via pointer)
+			ptr2arr = llvm_load(left)
+			array_type = ptr2arr['type']['to']
+			indexes = (llvm_value_num_zero, index)
+			return llvm_gep(ptr2arr, array_type, indexes, result_type)
+
+	"""
+
+	indexes = []
+	vx = v
+	while True:
+		i = do_reval(vx['index'])
+		indexes.append(i)
+		if vx['array']['kind'] != 'index':
+			break
+		vx = vx['array']
+
+	indexes.reverse()
+
+	left = do_eval(vx['array'])
 
 	if htype.type_is_pointer(left['type']):
-		# Left is a pointer in 'reg' to pointer to array
-		# (access to array via pointer)
-		ptr2arr = llvm_load(left)
-		array_type = ptr2arr['type']['to']
-		return llvm_getelementptr(ptr2arr, array_type, (llvm_value_num_zero, index), result_type)
+		# если это указатель на массив - загрузим его (сам указатель, не массив!)
+		left = llvm_load(left)
 
+	#type_print(vx['array']['type'])
+	#if htype.type_is_pointer(left['type']):
+	#	indexes = [llvm_value_num_zero] + indexes
 
-	# Left is an array
+	#if htype.type_is_pointer_to_array(vx['array']['type']):
+	indexes = [llvm_value_num_zero] + indexes
 
-	if not is_global_context():
-		if not is_closed_array_param(v['array']):
-			if not left['is_adr']:
-				# Left is an array placed in 'reg' as value
-				if not value_is_immediate(v['index']):
-					error("expected immediate index value", v['ti'])
-					return llvm_value_zero(v['ti'])
-
-				return extractvalue(left, result_type, index['asset'])
-
-	# Left is a pointer to array in 'reg'
-	return llvm_getelementptr(left, left['type'], (llvm_value_num_zero, index), result_type)
+	return llvm_gep(left, left['type'], indexes, result_type)
 
 
 
@@ -1088,7 +1122,7 @@ def do_eval_slice(v):
 		array_type = pointer['type']['to']
 		index = do_reval(v['index_from'])
 		result_type = v['type']
-		ptr_to_item = llvm_getelementptr(pointer, array_type, (llvm_value_num_zero, index), array_type['of'])
+		ptr_to_item = llvm_gep(pointer, array_type, (llvm_value_num_zero, index), array_type['of'])
 		out("\n;")
 
 		pnv = llvm_cast("bitcast", ptr_to_item, type_pointer(v['type']))
@@ -1109,7 +1143,7 @@ def do_eval_slice(v):
 
 		return extractvalue(array, result_type, index['asset'])
 
-	ptr_to_item = llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), array_type['of'])
+	ptr_to_item = llvm_gep(array, array_type, (llvm_value_num_zero, index), array_type['of'])
 	pnv = llvm_cast("bitcast", ptr_to_item, type_pointer(v['type']))
 	pnv['is_adr'] = True
 	return pnv
