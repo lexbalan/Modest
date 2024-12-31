@@ -2,13 +2,16 @@
 include "libc/stdio"
 
 
-func f0() -> Unit {
-	return
-}
-
-var a3: [5]*()->Unit = [5]*()->Unit [&f0]
+var a0: [5]Int32 = [0, 1, 2, 3, 4]
+var a1: [5]Int32 = [5, 6, 7, 8, 9]
+var a2: [2][5]Int32 = [
+	[0, 1, 2, 3, 4]
+	[5, 6, 7, 8, 9]
+]
 
 public func main() -> Int32 {
+	let x = a2[1][2]
+	printf("x = %d\n", x)
 
 	return 0
 }

@@ -219,7 +219,7 @@ def value_index_array(array, type, index, ti):
 	return {
 		'isa': 'value',
 		'kind': 'index',
-		'array': array,
+		'left': array,
 		'index': index,
 		'type': type,
 		'immediate': False,

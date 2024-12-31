@@ -1084,30 +1084,28 @@ def do_eval_index(v):
 
 	"""
 
+
 	indexes = []
-	vx = v
-	while True:
-		i = do_reval(vx['index'])
-		indexes.append(i)
-		if vx['array']['kind'] != 'index':
-			break
-		vx = vx['array']
+	while v['kind'] == 'index':
+		print("-INDEX")
+		out("\n; -- INDEX --")
+		index = do_reval(v['index'])
+		indexes.append(index)
+		v = v['left']
 
+
+	out("\n; -- ASS --")
+	left = do_eval(v)
+	return ass(left, indexes)
+
+
+
+
+
+def ass(left, indexes):
 	indexes.reverse()
-
-	left = do_eval(vx['array'])
-
-	if htype.type_is_pointer(left['type']):
-		# если это указатель на массив - загрузим его (сам указатель, не массив!)
-		left = llvm_load(left)
-
-	#type_print(vx['array']['type'])
-	#if htype.type_is_pointer(left['type']):
-	#	indexes = [llvm_value_num_zero] + indexes
-
-	#if htype.type_is_pointer_to_array(vx['array']['type']):
+	result_type = left['type']
 	indexes = [llvm_value_num_zero] + indexes
-
 	return llvm_gep(left, left['type'], indexes, result_type)
 
 

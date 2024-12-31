@@ -187,23 +187,47 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+@str1 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
-define internal void @f0() {
-	ret void
-	ret void
-}
-
-
-@a3 = internal global [5 x void ()*] [
-	void ()* @f0,
-	void ()* null,
-	void ()* null,
-	void ()* null,
-	void ()* null
+@a0 = internal global [5 x %Int32] [
+	%Int32 0,
+	%Int32 1,
+	%Int32 2,
+	%Int32 3,
+	%Int32 4
+]
+@a1 = internal global [5 x %Int32] [
+	%Int32 5,
+	%Int32 6,
+	%Int32 7,
+	%Int32 8,
+	%Int32 9
+]
+@a2 = internal global [2 x [5 x %Int32]] [
+	[5 x %Int32] [
+		%Int32 0,
+		%Int32 1,
+		%Int32 2,
+		%Int32 3,
+		%Int32 4
+	],
+	[5 x %Int32] [
+		%Int32 5,
+		%Int32 6,
+		%Int32 7,
+		%Int32 8,
+		%Int32 9
+	]
 ]
 
 define %Int32 @main() {
+; -- INDEX --
+; -- INDEX --
+; -- ASS --
+	%1 = getelementptr [2 x [5 x %Int32]], [2 x [5 x %Int32]]* @a2, %Int32 0, %Int32 1, %Int32 2
+	%2 = load %Int32, %Int32* %1
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Int32 %2)
 	ret %Int32 0
 }
 
