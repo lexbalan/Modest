@@ -23,7 +23,7 @@ static int32_t a2[2 * 2 * 5] = (int32_t[2 * 2 * 5]){
 
 int32_t main()
 {
-	int32_t x = a2[1 * 2 * 5 + 1 * 5 + 2];
+	int32_t x = a2[0 * 2 * 5 + 1 * 5 + 2];
 	printf("x = %d\n", x);
 
 	return 0;

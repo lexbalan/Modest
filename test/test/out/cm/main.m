@@ -19,7 +19,7 @@ var a2: [2][2][5]Int32 = [
 ]
 
 public func main() -> Int32 {
-	let x = a2[1][1][2]
+	let x = a2[0][1][2]
 	printf("x = %d\n", x)
 
 	return 0

@@ -240,7 +240,7 @@ declare void @perror(%ConstCharStr* %str)
 ]
 
 define %Int32 @main() {
-	%1 = getelementptr [2 x [2 x [5 x %Int32]]], [2 x [2 x [5 x %Int32]]]* @a2, %Int32 0, %Int32 1, %Int32 1, %Int32 2
+	%1 = getelementptr [2 x [2 x [5 x %Int32]]], [2 x [2 x [5 x %Int32]]]* @a2, %Int32 0, %Int32 0, %Int32 1, %Int32 2
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Int32 %2)
 	ret %Int32 0
