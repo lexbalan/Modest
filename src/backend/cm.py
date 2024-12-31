@@ -270,7 +270,7 @@ def print_value_call(v, ctx):
 
 
 def print_value_index(v, ctx):
-	array = v['array']
+	array = v['left']
 	need_wrap = precedence(array) < precedence({'kind': 'index'})
 	print_value(array, need_wrap=need_wrap)
 	out("["); print_value(v['index']); out("]")

@@ -618,7 +618,7 @@ def print_value_slice(x, ctx):
 
 
 def print_value_index(x, ctx):
-	array = x['array']
+	array = x['left']
 
 	if htype.type_is_pointer(array['type']):
 		# index trough pointer to array (requires dereference)
@@ -640,7 +640,7 @@ def print_value_index(x, ctx):
 
 	xx = x
 	while xx['kind'] == 'index':
-		a = xx['array']
+		a = xx['left']
 		indexes.append(xx['index'])
 		xx = a
 

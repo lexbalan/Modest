@@ -3,38 +3,25 @@
 include "libc/stdio"
 
 
-type Node record {
-	next: *Node
-	data: *DataHolder
-}
+var a0: [5]Int32 = [0, 1, 2, 3, 4]
+var a1: [5]Int32 = [5, 6, 7, 8, 9]
 
-type DataHolder record {
-	data: Int32
-}
-var funcs: [2]*() -> Unit = [&init, &foo]
-var a: *() -> Unit = &init
-var b: *(a: Int32, b: Int32) -> Int32 = &add
+var a2: [2][2][5]Int32 = [
+	[
+		[0, 1, 2, 3, 4]
+		[5, 6, 7, 8, 9]
+	]
 
+	[
+		[10, 11, 12, 13, 14]
+		[15, 16, 17, 18, 19]
+	]
+]
 
-type SonrState Int32
-func xx(x: *SonrState) -> Unit {
-
-}
 public func main() -> Int32 {
-	init()
-	foo()
-
-	var n: Node
+	let x = a2[1][1][2]
+	printf("x = %d\n", x)
 
 	return 0
-}
-func init() -> Unit {
-	printf("init()\n")
-}
-func foo() -> Unit {
-	printf("foo()\n")
-}
-func add(a: Int32, b: Int32) -> Int32 {
-	return a + b
 }
 

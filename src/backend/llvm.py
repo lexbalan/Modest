@@ -1088,13 +1088,11 @@ def do_eval_index(v):
 	indexes = []
 	while v['kind'] == 'index':
 		print("-INDEX")
-		out("\n; -- INDEX --")
 		index = do_reval(v['index'])
 		indexes.append(index)
 		v = v['left']
 
 
-	out("\n; -- ASS --")
 	left = do_eval(v)
 	return ass(left, indexes)
 
