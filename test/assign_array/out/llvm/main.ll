@@ -208,18 +208,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 8,
 	%Int32 9
 ]
-@globalArray1 = internal global [10 x %Int32] [
-	%Int32 0,
-	%Int32 0,
-	%Int32 0,
-	%Int32 0,
-	%Int32 0,
-	%Int32 0,
-	%Int32 0,
-	%Int32 0,
-	%Int32 0,
-	%Int32 0
-]
+@globalArray1 = internal global [10 x %Int32] zeroinitializer
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))

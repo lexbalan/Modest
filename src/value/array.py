@@ -133,11 +133,6 @@ def value_array_cons(t, v, method, ti):
 		#info("value_array_create_from_string", ti)
 		char_type = t['of']
 		items = utf32_chars_to_utfx_chars(v['asset'], char_type, ti)
-
-		pad_rquired = t['volume']['asset'] - len(items)
-		if pad_rquired > 0:
-			items = items + [value_zero(char_type, v['ti'])] * pad_rquired
-
 		nv['items'] = items
 		return nv
 
@@ -163,17 +158,7 @@ def value_array_cons(t, v, method, ti):
 			casted_item = value_cons_implicit_check(t['of'], item)
 			casted_item['nl'] = item['nl']
 			items.append(casted_item)
-
-		zero_pad = []
-		if value_is_immediate(t['volume']):
-			# add Zero Pad (if need)
-			vlen = len(items)
-			tlen = t['volume']['asset']
-			zero_pad_len = tlen - vlen
-			if zero_pad_len > 0:
-				zero_pad = [value_zero(t['of'], v['ti'])] * zero_pad_len
-
-		nv['items'] = items + zero_pad
+		nv['items'] = items
 
 	return nv
 

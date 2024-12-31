@@ -4,7 +4,7 @@ from .common import *
 from error import info, warning, error, fatal
 import type as htype
 from type import type_print
-from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_is_zero, value_is_param
+from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_is_zero, value_is_param, value_zero
 from type import type_pointer
 from util import align_bits_up
 from pprint import pprint
@@ -329,13 +329,19 @@ def llvm_print_value_array(x):
 	out("[\n")
 	indent_up()
 	n = len(items)
+	nn = (x['type']['volume']['asset'])
 	i = 0
-	while i < n:
-		item = items[i]
+	while i < nn:
+		item = None
+		if i < n:
+			item = items[i]
+		else:
+			item = do_eval(value_zero(x['type']['of'], None))
 		if i > 0: out(",\n")
 		indent()
 		llvm_print_type_value(item)
 		i = i + 1
+
 	indent_down()
 	out("\n"); indent(); out("]")
 
@@ -1047,9 +1053,6 @@ def do_eval_index(v):
 	result_type = v['type']
 
 
-	#mass
-
-
 	if htype.type_is_pointer(left['type']):
 		# Left is a pointer in 'reg' to pointer to array
 		# (access to array via pointer)
@@ -1399,14 +1402,13 @@ def do_eval_array(v):
 	#%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
 	xv = llvm_value_array([], v['type'])
 
-	# нет смысла засовывать в 'массив по значению' нулевые элементы
-	# тк он порождается из zeroinitializer и zero filled by default
-
 	# набиваем массив
 	items = []
 	i = 0
 	while i < len(v['items']):
 		item = v['items'][i]
+		# нет смысла засовывать в 'массив по значению' нулевые элементы
+		# тк он порождается из zeroinitializer и zero filled by default
 		if not value_is_zero(item):
 			lliv = do_reval(item)
 			xv = insertvalue(xv, lliv, i)

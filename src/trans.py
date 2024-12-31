@@ -1253,10 +1253,12 @@ def do_value_index(x):
 					error("array index out of bounds", x['index'])
 					return value_bad(x['ti'])
 
-				item = left['items'][index_imm]
+				if index_imm < len(left['items']):
+					item = left['items'][index_imm]
+				else:
+					item = value_zero(array_typ['of'], x['ti'])
 
 				nv['immval'] = item
-				#nv['items'] = item['items']
 				nv['immediate'] = item['immediate']
 
 	return nv
