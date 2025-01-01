@@ -17,6 +17,9 @@ var a2: [2][2][5]Int32 = [
 	]
 ]
 
+var a3: [2]*[5]Int32 = [&a0, &a1]
+
+
 public func main() -> Int32 {
 	let x = a2[0][1][2]
 	printf("x = %d\n", x)

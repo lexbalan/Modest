@@ -238,6 +238,10 @@ declare void @perror(%ConstCharStr* %str)
 		]
 	]
 ]
+@a3 = internal global [2 x [5 x %Int32]*] [
+	[5 x %Int32]* @a0,
+	[5 x %Int32]* @a1
+]
 
 define %Int32 @main() {
 	%1 = getelementptr [2 x [2 x [5 x %Int32]]], [2 x [2 x [5 x %Int32]]]* @a2, %Int32 0, %Int32 0, %Int32 1, %Int32 2
