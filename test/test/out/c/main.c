@@ -115,6 +115,25 @@ static Struct s = {.x = &lines[0]};
 static void test_records()
 {
 
+	printf("line.a.x = %d\n", line.a.x);
+	printf("line.a.y = %d\n", line.a.y);
+
+	printf("line.b.x = %d\n", line.b.x);
+	printf("line.b.y = %d\n", line.b.y);
+
+	printf("pLines[0].a.x = %d\n", pLines[0]->a.x);
+	printf("pLines[0].a.y = %d\n", pLines[0]->a.y);
+
+	printf("pLines[0].b.x = %d\n", pLines[0]->b.x);
+	printf("pLines[0].b.y = %d\n", pLines[0]->b.y);
+
+	printf("s.x.a.x = %d\n", s.x->a.x);
+	printf("s.x.a.y = %d\n", s.x->a.y);
+
+	printf("s.x.b.x = %d\n", s.x->b.x);
+	printf("s.x.b.y = %d\n", s.x->b.y);
+
+
 	Struct x = s;
 
 	printf("x.x.a.x = %d\n", x.x->a.x);
@@ -122,24 +141,6 @@ static void test_records()
 
 	printf("x.x.b.x = %d\n", x.x->b.x);
 	printf("x.x.b.y = %d\n", x.x->b.y);
-
-	//	printf("line.a.x = %d\n", line.a.x)
-	//	printf("line.a.y = %d\n", line.a.y)
-	//
-	//	printf("line.b.x = %d\n", line.b.x)
-	//	printf("line.b.y = %d\n", line.b.y)
-
-	//	printf("pLines[0].a.x = %d\n", pLines[0].a.x)
-	//	printf("pLines[0].a.y = %d\n", pLines[0].a.y)
-	//
-	//	printf("pLines[0].b.x = %d\n", pLines[0].b.x)
-	//	printf("pLines[0].b.y = %d\n", pLines[0].b.y)
-
-	//	printf("s.x.a.x = %d\n", s.x.a.x)
-	//	printf("s.x.a.y = %d\n", s.x.a.y)
-	//
-	//	printf("s.x.b.x = %d\n", s.x.b.x)
-	//	printf("s.x.b.y = %d\n", s.x.b.y)
 }
 
 
