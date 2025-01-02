@@ -319,7 +319,7 @@ define internal void @on_exit(%fsm_FSM* %x) {
 ; State Beacon
 ;
 define internal void @beacon_entry(%fsm_FSM* %x) {
-	%1 = getelementptr %Int32, %fsm_FSM* %x, %Int32 1
+	%1 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 1
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Str8* @fsm_state_no_name(%fsm_FSM* %x, %Int32 %2)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %3)
@@ -345,7 +345,7 @@ endif_0:
 }
 
 define internal void @beacon_exit(%fsm_FSM* %x) {
-	%1 = getelementptr %Int32, %fsm_FSM* %x, %Int32 2
+	%1 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 2
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Str8* @fsm_state_no_name(%fsm_FSM* %x, %Int32 %2)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %3)

@@ -261,10 +261,10 @@ define %Int @main() {
 	; copy records by value
 	%16 = load %Point, %Point* @glb_r1
 	store %Point %16, %Point* @glb_r0
-	%17 = getelementptr %Int32, %Point* @glb_r0, %Int32 0
+	%17 = getelementptr %Point, %Point* @glb_r0, %Int32 0, %Int32 0
 	%18 = load %Int32, %Int32* %17
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), %Int32 %18)
-	%20 = getelementptr %Int32, %Point* @glb_r0, %Int32 1
+	%20 = getelementptr %Point, %Point* @glb_r0, %Int32 0, %Int32 1
 	%21 = load %Int32, %Int32* %20
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Int32 %21)
 	; -----------------------------------
@@ -312,10 +312,10 @@ define %Int @main() {
 	store %Point %47, %Point* %45
 	%48 = load %Point, %Point* %45
 	store %Point %48, %Point* %44
-	%49 = getelementptr %Int32, %Point* %44, %Int32 0
+	%49 = getelementptr %Point, %Point* %44, %Int32 0, %Int32 0
 	%50 = load %Int32, %Int32* %49
 	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %50)
-	%52 = getelementptr %Int32, %Point* %44, %Int32 1
+	%52 = getelementptr %Point, %Point* %44, %Int32 0, %Int32 1
 	%53 = load %Int32, %Int32* %52
 	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %53)
 	; error: closed arrays of closed arrays are denied

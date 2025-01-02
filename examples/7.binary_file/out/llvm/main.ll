@@ -236,10 +236,10 @@ endif_0:
 	%6 = alloca %Chunk, align 1
 	; pointers casting requires -funsafe translator option
 	; (see Makefile)
-	%7 = getelementptr [100 x %Char], %Chunk* %6, %Int32 0
+	%7 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 0
 	%8 = bitcast [100 x %Char]* %7 to [0 x %Char]*
 	%9 = call [0 x %Char]* @strcpy([0 x %Char]* %8, [0 x %Char]* bitcast ([3 x i8]* @str5 to [0 x i8]*))
-	%10 = getelementptr [1024 x %Char], %Chunk* %6, %Int32 1
+	%10 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 1
 	%11 = bitcast [1024 x %Char]* %10 to [0 x %Char]*
 	%12 = call [0 x %Char]* @strcpy([0 x %Char]* %11, [0 x %Char]* bitcast ([5 x i8]* @str6 to [0 x i8]*))
 	; write chunk to file
@@ -263,9 +263,9 @@ endif_0:
 	%7 = bitcast %Chunk* %6 to i8*
 	%8 = call %SizeT @fread(i8* %7, %SizeT 1124, %SizeT 1, %File* %2)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	%10 = getelementptr [100 x %Char], %Chunk* %6, %Int32 0
+	%10 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 0
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), [100 x %Char]* %10)
-	%12 = getelementptr [1024 x %Char], %Chunk* %6, %Int32 1
+	%12 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 1
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str12 to [0 x i8]*), [1024 x %Char]* %12)
 	%14 = call %Int @fclose(%File* %2)
 	ret void

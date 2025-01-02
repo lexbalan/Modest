@@ -368,12 +368,12 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %out
 
 define internal %Bool @doTest(%SHA256_TestCase* %test) {
 	%1 = alloca %sha256_Hash, align 1
-	%2 = getelementptr [32 x %Char8], %SHA256_TestCase* %test, %Int32 0
+	%2 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 0
 	%3 = bitcast [32 x %Char8]* %2 to [0 x %Word8]*
-	%4 = getelementptr %Int32, %SHA256_TestCase* %test, %Int32 1
+	%4 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 1
 	%5 = load %Int32, %Int32* %4
 	call void @sha256_hash([0 x %Word8]* %3, %Int32 %5, %sha256_Hash* %1)
-	%6 = getelementptr [32 x %Char8], %SHA256_TestCase* %test, %Int32 0
+	%6 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 0
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x %Char8]* %6)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
 	%9 = alloca %Int32, align 4
@@ -394,7 +394,7 @@ body_1:
 	br label %again_1
 break_1:
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-	%19 = getelementptr %sha256_Hash, %SHA256_TestCase* %test, %Int32 2
+	%19 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 2
 	%20 = bitcast %sha256_Hash* %1 to i8*
 	%21 = bitcast %sha256_Hash* %19 to i8*
 	%22 = call i1 (i8*, i8*, i64) @memeq(i8* %20, i8* %21, %Int64 32)

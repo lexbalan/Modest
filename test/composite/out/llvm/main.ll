@@ -706,7 +706,7 @@ body_3:
 break_3:
 	%49 = getelementptr %Wrap*, [2 x %Wrap*]* @awrap, %Int32 0
 	%50 = load %Wrap*, %Wrap** %49
-	%51 = getelementptr void (%Str8*)*, %Wrap* %50, %Int32 0
+	%51 = getelementptr %Wrap, %Wrap* %50, %Int32 0, %Int32 0
 	%52 = load void (%Str8*)*, void (%Str8*)** %51
 	call void %52(%Str8* bitcast ([6 x i8]* @str12 to [0 x i8]*))
 	;let y = awrap[0]

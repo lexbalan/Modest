@@ -423,20 +423,22 @@ define internal %Bool @test_generic_record() {
 	; Generic(record {x: GenericInteger, y: GenericInteger})
 	%1 = insertvalue {%Int8,%Int8} zeroinitializer, %Int8 10, 0
 	%2 = insertvalue {%Int8,%Int8} %1, %Int8 20, 1
+	%3 = alloca {%Int8,%Int8}
+	store {%Int8,%Int8} %2, {%Int8,%Int8}* %3
 	; value with GenericRecord type
 	; can be implicit casted to Record with same fields.
 	; implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32}
-	%3 = alloca %Point2D, align 4
-	%4 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
-	%5 = insertvalue %Point2D %4, %Int32 20, 1
-	store %Point2D %5, %Point2D* %3
+	%4 = alloca %Point2D, align 4
+	%5 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
+	%6 = insertvalue %Point2D %5, %Int32 20, 1
+	store %Point2D %6, %Point2D* %4
 	; explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32, z: Int32}
-	%6 = alloca %Point3D, align 4
-	%7 = insertvalue %Point3D zeroinitializer, %Int32 10, 0
-	%8 = insertvalue %Point3D %7, %Int32 20, 1
-	store %Point3D %8, %Point3D* %6
+	%7 = alloca %Point3D, align 4
+	%8 = insertvalue %Point3D zeroinitializer, %Int32 10, 0
+	%9 = insertvalue %Point3D %8, %Int32 20, 1
+	store %Point3D %9, %Point3D* %7
 	ret %Bool 1
 }
 

@@ -224,11 +224,11 @@ define %Int @main() {
 	%15 = bitcast %Object* %3 to i8*
 	%16 = bitcast %Object* %2 to i8*
 	call void @mcopy(i8* %15, i8* %16, %Int64 68)
-	%17 = getelementptr [32 x %Char8], %Object* %3, %Int32 0
+	%17 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 0
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), [32 x %Char8]* %17)
-	%19 = getelementptr [32 x %Char8], %Object* %3, %Int32 1
+	%19 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 1
 	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str4 to [0 x i8]*), [32 x %Char8]* %19)
-	%21 = getelementptr %Int32, %Object* %3, %Int32 2
+	%21 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 2
 	%22 = load %Int32, %Int32* %21
 	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Int32 %22)
 	ret %Int 0

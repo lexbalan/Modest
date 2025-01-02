@@ -501,6 +501,17 @@ def llvm_gep(v, object_type, indexes, result_type, et):
 	return rv
 
 
+# возвращает значение поля из 'структуры по значению'
+def llvm_extractvalue(x, result_type, indexes):
+	# %x = extractvalue %Point %p, 0
+	# %y = extractvalue %Point %p, 1
+	rv = ll_reg_operation('extractvalue', result_type)
+	llvm_print_type_value(x)
+	out(", ")
+	print_list_with(indexes, llvm_print_value)
+	return rv
+
+
 
 def llvm_cast(kind, value, to_type):
 	rv = ll_reg_operation(kind, to_type)
@@ -698,6 +709,7 @@ def llvm_dold(x):
 
 
 
+"""
 # получает укзаатель на структуру x
 # его тип
 # носер поля (просто число)
@@ -705,8 +717,9 @@ def llvm_dold(x):
 def llvm_eval_access_ptr(x, rec_type, field_no, result_type):
 	field_index = llvm_value_num(foundation.typeInt32, field_no)
 	return llvm_gep(x, rec_type, (field_index,), result_type, result_type)
+"""
 
-
+"""
 def llvm_eval_access(rec, field_no, result_type):
 	rt = rec['type']
 	# если это структура высичленная на ходу, у нее есть поле 'items'
@@ -728,7 +741,7 @@ def llvm_eval_access(rec, field_no, result_type):
 		rt = rt['to']
 
 	return llvm_eval_access_ptr(rec, rt, field_no, result_type)
-
+"""
 
 
 
@@ -1136,10 +1149,16 @@ def getET2(et):
 
 
 
+
+
 # GEP !элемент массива на который указываешь!
 def ass2(left, indexes):
 	result_type = left['type']
 	et = getET2(left['type'])
+
+	if not (left['is_adr'] or htype.type_is_pointer(result_type)):
+		return llvm_extractvalue(left, result_type, indexes[1:])
+
 	#indexes = [llvm_value_num_zero] + indexes
 	return llvm_gep(left, left['type'], indexes, result_type, et)
 
@@ -1164,10 +1183,15 @@ def do_eval_access(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
 
+	#mass
+	#if not htype.type_is_pointer(v['type']):
+	#if not left['is_adr']:
+	#	print("-- OOPS!")
+		#return extractvalue(array, result_type, index['asset'])
+
+
 	left, fields = access(v)
-
 	notype = foundation.typeInt32
-
 	indexes = [llvm_value_zero(notype)]
 	for f in fields:
 		fno = llvm_value_num(notype, f['field_no'])
@@ -1176,7 +1200,6 @@ def do_eval_access(v):
 
 
 	"""
-	mass
 	if htype.type_is_pointer(v['value']['type']):
 		ptr = do_reval(v['value'])
 		rt = ptr['type']['to']
@@ -1189,14 +1212,14 @@ def do_eval_access(v):
 	pos = v['field']['field_no']
 	return llvm_eval_access(rec, pos, result_type)"""
 
-
+"""
 def do_eval_access_ptr(v):
 	ptr = do_reval(v['pointer'])
 	rt = ptr['type']['to']
 	pos = v['field']['field_no']
 	result_type = v['type']
 	return llvm_eval_access_ptr(ptr, rt, pos, result_type)
-
+"""
 
 
 def do_eval_access_module(x):
@@ -1826,7 +1849,7 @@ def print_stmt_let(x):
 	# для let-массивов выделяем память (alloca)
 	# поскольку их могут индексировать переменной
 	# а массив-значение в "регистре" невозможно индексировать переменной
-	if htype.type_is_closed_array(val['type']):
+	if htype.type_is_closed_array(val['type']) or htype.type_is_record(val['type']):
 		v = llvm_alloca_store(val['type'], id_str=None, init_value=v)
 
 	locals_add(id_str, v)

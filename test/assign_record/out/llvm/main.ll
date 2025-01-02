@@ -217,10 +217,10 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
 	%2 = load %Point, %Point* @globalPoint0
 	store %Point %2, %Point* @globalPoint1
-	%3 = getelementptr %Int32, %Point* @globalPoint1, %Int32 0
+	%3 = getelementptr %Point, %Point* @globalPoint1, %Int32 0, %Int32 0
 	%4 = load %Int32, %Int32* %3
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), %Int32 %4)
-	%6 = getelementptr %Int32, %Point* @globalPoint1, %Int32 1
+	%6 = getelementptr %Point, %Point* @globalPoint1, %Int32 0, %Int32 1
 	%7 = load %Int32, %Int32* %6
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), %Int32 %7)
 	%9 = bitcast %Point* @globalPoint0 to i8*
@@ -244,10 +244,10 @@ endif_0:
 	store %Point zeroinitializer, %Point* %18
 	%19 = load %Point, %Point* %15
 	store %Point %19, %Point* %18
-	%20 = getelementptr %Int32, %Point* %18, %Int32 0
+	%20 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 0
 	%21 = load %Int32, %Int32* %20
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str6 to [0 x i8]*), %Int32 %21)
-	%23 = getelementptr %Int32, %Point* %18, %Int32 1
+	%23 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 1
 	%24 = load %Int32, %Int32* %23
 	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), %Int32 %24)
 	%26 = bitcast %Point* %15 to i8*

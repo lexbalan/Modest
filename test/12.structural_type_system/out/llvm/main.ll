@@ -235,28 +235,28 @@ define internal void @f3_val({%Int32} %x) {
 }
 
 define internal void @f0_ptr(%Type1* %x) {
-	%1 = getelementptr %Int32, %Type1* %x, %Int32 0
+	%1 = getelementptr %Type1, %Type1* %x, %Int32 0, %Int32 0
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), %Int32 %2)
 	ret void
 }
 
 define internal void @f1_ptr(%Type2* %x) {
-	%1 = getelementptr %Int32, %Type2* %x, %Int32 0
+	%1 = getelementptr %Type2, %Type2* %x, %Int32 0, %Int32 0
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), %Int32 %2)
 	ret void
 }
 
 define internal void @f2_ptr(%Type3* %x) {
-	%1 = getelementptr %Int32, %Type3* %x, %Int32 0
+	%1 = getelementptr %Type3, %Type3* %x, %Int32 0, %Int32 0
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), %Int32 %2)
 	ret void
 }
 
 define internal void @f3_ptr({%Int32}* %x) {
-	%1 = getelementptr %Int32, {%Int32}* %x, %Int32 0
+	%1 = getelementptr {%Int32}, {%Int32}* %x, %Int32 0, %Int32 0
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), %Int32 %2)
 	ret void

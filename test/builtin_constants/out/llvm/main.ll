@@ -203,14 +203,16 @@ define %Int @main() {
 	; __compiler
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*), %Str8* bitcast ([3 x i8]* @str2 to [0 x i8]*))
 	%2 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 7, 1
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str3 to [0 x i8]*), %Int32 0)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Int32 7)
+	%3 = alloca {%Int32,%Int32}
+	store {%Int32,%Int32} %2, {%Int32,%Int32}* %3
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str3 to [0 x i8]*), %Int32 0)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Int32 7)
 	; __target
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*), %Str* bitcast ([8 x i8]* @str6 to [0 x i8]*))
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str7 to [0 x i8]*), %Int32 64)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str8 to [0 x i8]*), %Int32 8)
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str9 to [0 x i8]*), %Int32 32)
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str10 to [0 x i8]*), %Int32 64)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*), %Str* bitcast ([8 x i8]* @str6 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str7 to [0 x i8]*), %Int32 64)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str8 to [0 x i8]*), %Int32 8)
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str9 to [0 x i8]*), %Int32 32)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str10 to [0 x i8]*), %Int32 64)
 	ret %Int 0
 }
 

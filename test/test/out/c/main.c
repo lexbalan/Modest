@@ -115,6 +115,13 @@ static Struct s = {.x = &lines[0]};
 static void test_records()
 {
 
+	Struct x = s;
+
+	printf("x.x.a.x = %d\n", x.x->a.x);
+	printf("x.x.a.y = %d\n", x.x->a.y);
+
+	printf("x.x.b.x = %d\n", x.x->b.x);
+	printf("x.x.b.y = %d\n", x.x->b.y);
 
 	//	printf("line.a.x = %d\n", line.a.x)
 	//	printf("line.a.y = %d\n", line.a.y)

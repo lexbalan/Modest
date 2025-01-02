@@ -362,13 +362,13 @@ define internal void @ptr_example() {
 	%1 = call i8* @malloc(%SizeT 16)
 	%2 = bitcast i8* %1 to %Point*
 	; access by pointer
-	%3 = getelementptr %Float, %Point* %2, %Int32 0
+	%3 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
 	store %Float 10.0000000000000000, %Float* %3
-	%4 = getelementptr %Float, %Point* %2, %Int32 1
+	%4 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1
 	store %Float 20.0000000000000000, %Float* %4
-	%5 = getelementptr %Float, %Point* %2, %Int32 0
+	%5 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
 	%6 = load %Float, %Float* %5
-	%7 = getelementptr %Float, %Point* %2, %Int32 1
+	%7 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1
 	%8 = load %Float, %Float* %7
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Float %6, %Float %8)
 	ret void
