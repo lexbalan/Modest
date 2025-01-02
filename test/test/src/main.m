@@ -14,12 +14,10 @@ var a0: [2][2][5]Int32 = [
 	]
 ]
 
-
 var a1: [5]Int32 = [0, 1, 2, 3, 4]
 var a2: [5]Int32 = [5, 6, 7, 8, 9]
-
 var a3: [2]*[5]Int32 = [&a1, &a2]
-
+var a4: [2]*[2]*[5]Int32 = [&a3, &a3]
 
 public func main() -> Int32 {
 	var i, j, k: Int32
@@ -53,6 +51,21 @@ public func main() -> Int32 {
 
 	printf("x = %d\n", a0[0][1][2])
 	printf("x = %d\n", a3[1][4])
+
+
+	i = 0
+	while i < 2 {
+		j = 0
+		while j < 2 {
+			k = 0
+			while k < 5 {
+				printf("a3[%d][%d][%d] = %d\n", i, j, k, a4[i][j][k])
+				++k
+			}
+			++j
+		}
+		++i
+	}
 
 	return 0
 }

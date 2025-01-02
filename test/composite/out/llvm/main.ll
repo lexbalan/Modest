@@ -299,18 +299,18 @@ define internal void ()** @f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**
 	%Int32 4
 ]
 @a1 = internal global [5 x %Int32*] [
-	%Int32* getelementptr (%Int32*, [5 x %Int32]* @a0, %Int32 0),
-	%Int32* getelementptr (%Int32*, [5 x %Int32]* @a0, %Int32 1),
-	%Int32* getelementptr (%Int32*, [5 x %Int32]* @a0, %Int32 2),
-	%Int32* getelementptr (%Int32*, [5 x %Int32]* @a0, %Int32 3),
-	%Int32* getelementptr (%Int32*, [5 x %Int32]* @a0, %Int32 4)
+	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @a0, %Int32 0),
+	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @a0, %Int32 1),
+	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @a0, %Int32 2),
+	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @a0, %Int32 3),
+	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @a0, %Int32 4)
 ]
 @a2 = internal global [5 x %Int32**] [
-	%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 0),
-	%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 1),
-	%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 2),
-	%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 3),
-	%Int32** getelementptr (%Int32**, [5 x %Int32*]* @a1, %Int32 4)
+	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @a1, %Int32 0),
+	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @a1, %Int32 1),
+	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @a1, %Int32 2),
+	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @a1, %Int32 3),
+	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @a1, %Int32 4)
 ]
 @a3 = internal global [5 x void ()*] [
 	void ()* @f0,
@@ -336,8 +336,8 @@ define internal void ()** @f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**
 	]
 ]
 @a5 = internal global [2 x [5 x %Int]*] [
-	[5 x %Int]* getelementptr ([5 x %Int]*, [2 x [5 x %Int]]* @a4, %Int32 0),
-	[5 x %Int]* getelementptr ([5 x %Int]*, [2 x [5 x %Int]]* @a4, %Int32 1)
+	[5 x %Int]* getelementptr ([2 x [5 x %Int]], [2 x [5 x %Int]]* @a4, %Int32 0),
+	[5 x %Int]* getelementptr ([2 x [5 x %Int]], [2 x [5 x %Int]]* @a4, %Int32 1)
 ]
 ; Проблема в том что мой getelementptr не умеет в цепь-молнию
 ; а здесь без нее никак... придется взяться за это и сделать наконец
@@ -665,52 +665,44 @@ again_2:
 body_2:
 	%23 = load %Int32, %Int32* %17
 	%24 = load %Int32, %Int32* %20
-	%25 = load %Int32, %Int32* %17
-	%26 = getelementptr inbounds [3 x [3 x %Int32]], [3 x [3 x %Int32]]* @arrr, %Int32 0, %Int32 %25
-	%27 = load %Int32, %Int32* %20
-	%28 = getelementptr inbounds [3 x %Int32], [3 x %Int32]* %26, %Int32 0, %Int32 %27
-	%29 = load %Int32, %Int32* %28
-	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str8 to [0 x i8]*), %Int32 %23, %Int32 %24, %Int32 %29)
-	%31 = load %Int32, %Int32* %20
-	%32 = add %Int32 %31, 1
-	store %Int32 %32, %Int32* %20
+	%25 = load %Int32, %Int32* %20
+	%26 = load %Int32, %Int32* %17
+	%27 = getelementptr [3 x %Int32], [3 x [3 x %Int32]]* @arrr, %Int32 %26, %Int32 %25
+	%28 = load %Int32, %Int32* %27
+	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str8 to [0 x i8]*), %Int32 %23, %Int32 %24, %Int32 %28)
+	%30 = load %Int32, %Int32* %20
+	%31 = add %Int32 %30, 1
+	store %Int32 %31, %Int32* %20
 	br label %again_2
 break_2:
-	%33 = load %Int32, %Int32* %17
-	%34 = add %Int32 %33, 1
-	store %Int32 %34, %Int32* %17
+	%32 = load %Int32, %Int32* %17
+	%33 = add %Int32 %32, 1
+	store %Int32 %33, %Int32* %17
 	br label %again_1
 break_1:
-	%35 = getelementptr inbounds [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0, %Int32 0
-	%36 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %35
-	%37 = call %Int32 %36(%Int32 5, %Int32 7)
-	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str9 to [0 x i8]*), %Int32 %37)
-	%39 = getelementptr inbounds [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0, %Int32 1
-	%40 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %39
-	%41 = call %Int32 %40(%Int32 5, %Int32 7)
-	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str10 to [0 x i8]*), %Int32 %41)
+	%34 = getelementptr %Int32 (%Int32, %Int32)*, [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0
+	%35 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %34
+	%36 = call %Int32 %35(%Int32 5, %Int32 7)
+	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str9 to [0 x i8]*), %Int32 %36)
+	%38 = getelementptr %Int32 (%Int32, %Int32)*, [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 1
+	%39 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %38
+	%40 = call %Int32 %39(%Int32 5, %Int32 7)
+	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str10 to [0 x i8]*), %Int32 %40)
 	store %Int32 0, %Int32* %17
 	br label %again_3
 again_3:
-	%43 = load %Int32, %Int32* %17
-	%44 = icmp slt %Int32 %43, 10
-	br %Bool %44 , label %body_3, label %break_3
+	%42 = load %Int32, %Int32* %17
+	%43 = icmp slt %Int32 %42, 10
+	br %Bool %43 , label %body_3, label %break_3
 body_3:
-	%45 = load %Int32, %Int32* %17
-	%46 = getelementptr inbounds [10 x void (%Str8*)*], [10 x void (%Str8*)*]* @hiarr, %Int32 0, %Int32 %45
-	%47 = load void (%Str8*)*, void (%Str8*)** %46
-	call void %47(%Str8* bitcast ([4 x i8]* @str11 to [0 x i8]*))
-	%48 = load %Int32, %Int32* %17
-	%49 = add %Int32 %48, 1
-	store %Int32 %49, %Int32* %17
+	%44 = load %Int32, %Int32* %17
+	%45 = getelementptr void (%Str8*)*, [10 x void (%Str8*)*]* @hiarr, %Int32 %44
+	%46 = load void (%Str8*)*, void (%Str8*)** %45
+	call void %46(%Str8* bitcast ([4 x i8]* @str11 to [0 x i8]*))
+	%47 = load %Int32, %Int32* %17
+	%48 = add %Int32 %47, 1
+	store %Int32 %48, %Int32* %17
 	br label %again_3
 break_3:
-	%50 = getelementptr inbounds [2 x %Wrap*], [2 x %Wrap*]* @awrap, %Int32 0, %Int32 0
-	%51 = load %Wrap*, %Wrap** %50
-	%52 = getelementptr inbounds %Wrap, %Wrap* %51, %Int32 0, %Int32 0
-	%53 = load void (%Str8*)*, void (%Str8*)** %52
-	call void %53(%Str8* bitcast ([6 x i8]* @str12 to [0 x i8]*))
-	ret %Int32 0
-}
-
-
+	%49 = getelementptr %Wrap*, [2 x %Wrap*]* @awrap, %Int32 0
+	%50 = load %Wrap*, %Wrap** %49
