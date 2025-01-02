@@ -355,32 +355,42 @@ declare double @minmax_max_float64(double %a, double %b)
 ; Pythagorean theorem
 
 define internal %Float @distance(%Point %a, %Point %b) {
-	%1 = extractvalue %Point %a, 0
-	%2 = extractvalue %Point %b, 0
-	%3 = call double @minmax_max_float64(double %1, double %2)
-	%4 = extractvalue %Point %a, 0
-	%5 = extractvalue %Point %b, 0
-	%6 = call double @minmax_min_float64(double %4, double %5)
-	%7 = fsub double %3, %6
-	%8 = extractvalue %Point %a, 1
-	%9 = extractvalue %Point %b, 1
-	%10 = call double @minmax_max_float64(double %8, double %9)
-	%11 = extractvalue %Point %a, 1
-	%12 = extractvalue %Point %b, 1
-	%13 = call double @minmax_min_float64(double %11, double %12)
-	%14 = fsub double %10, %13
-	%15 = call %Double @pow(double %7, %Double 2.0000000000000000)
-	%16 = call %Double @pow(double %14, %Double 2.0000000000000000)
-	%17 = fadd %Double %15, %16
-	%18 = call %Double @sqrt(%Double %17)
-	ret %Double %18
+	%1 = getelementptr %Point, %Point %a, %Int32 0
+	%2 = load double, double* %1
+	%3 = getelementptr %Point, %Point %b, %Int32 0
+	%4 = load double, double* %3
+	%5 = call double @minmax_max_float64(double %2, double %4)
+	%6 = getelementptr %Point, %Point %a, %Int32 0
+	%7 = load double, double* %6
+	%8 = getelementptr %Point, %Point %b, %Int32 0
+	%9 = load double, double* %8
+	%10 = call double @minmax_min_float64(double %7, double %9)
+	%11 = fsub double %5, %10
+	%12 = getelementptr %Point, %Point %a, %Int32 1
+	%13 = load double, double* %12
+	%14 = getelementptr %Point, %Point %b, %Int32 1
+	%15 = load double, double* %14
+	%16 = call double @minmax_max_float64(double %13, double %15)
+	%17 = getelementptr %Point, %Point %a, %Int32 1
+	%18 = load double, double* %17
+	%19 = getelementptr %Point, %Point %b, %Int32 1
+	%20 = load double, double* %19
+	%21 = call double @minmax_min_float64(double %18, double %20)
+	%22 = fsub double %16, %21
+	%23 = call %Double @pow(double %11, %Double 2.0000000000000000)
+	%24 = call %Double @pow(double %22, %Double 2.0000000000000000)
+	%25 = fadd %Double %23, %24
+	%26 = call %Double @sqrt(%Double %25)
+	ret %Double %26
 }
 
 define internal %Float @lineLength(%Line %line) {
-	%1 = extractvalue %Line %line, 0
-	%2 = extractvalue %Line %line, 1
-	%3 = call %Float @distance(%Point %1, %Point %2)
-	ret %Float %3
+	%1 = getelementptr %Line, %Line %line, %Int32 0
+	%2 = load %Point, %Point* %1
+	%3 = getelementptr %Line, %Line %line, %Int32 1
+	%4 = load %Point, %Point* %3
+	%5 = call %Float @distance(%Point %2, %Point %4)
+	ret %Float %5
 }
 
 define %Int @main() {

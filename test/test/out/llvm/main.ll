@@ -192,6 +192,10 @@ declare void @perror(%ConstCharStr* %str)
 @str3 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str4 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str5 = private constant [21 x i8] [i8 97, i8 51, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str6 = private constant [15 x i8] [i8 108, i8 105, i8 110, i8 101, i8 46, i8 97, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str7 = private constant [15 x i8] [i8 108, i8 105, i8 110, i8 101, i8 46, i8 97, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str8 = private constant [15 x i8] [i8 108, i8 105, i8 110, i8 101, i8 46, i8 98, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str9 = private constant [15 x i8] [i8 108, i8 105, i8 110, i8 101, i8 46, i8 98, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 @a0 = internal global [2 x [2 x [5 x %Int32]]] [
@@ -251,7 +255,7 @@ declare void @perror(%ConstCharStr* %str)
 	[2 x [5 x %Int32]*]* @a3
 ]
 
-define %Int32 @main() {
+define internal void @test_arrays() {
 	%1 = alloca %Int32, align 4
 	%2 = alloca %Int32, align 4
 	%3 = alloca %Int32, align 4
@@ -393,6 +397,51 @@ break_7:
 	store %Int32 %74, %Int32* %1
 	br label %again_6
 break_6:
+	ret void
+}
+
+
+%Point = type {
+	%Int32,
+	%Int32
+};
+
+%Line = type {
+	%Point,
+	%Point
+};
+
+
+@line = internal global %Line {
+	%Point {
+		%Int32 10,
+		%Int32 11
+	},
+	%Point {
+		%Int32 12,
+		%Int32 13
+	}
+}
+
+define internal void @test_records() {
+	%1 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 0, %Int32 0
+	%2 = load %Int32, %Int32* %1
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), %Int32 %2)
+	%4 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 0, %Int32 1
+	%5 = load %Int32, %Int32* %4
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Int32 %5)
+	%7 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 1, %Int32 0
+	%8 = load %Int32, %Int32* %7
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str8 to [0 x i8]*), %Int32 %8)
+	%10 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 1, %Int32 1
+	%11 = load %Int32, %Int32* %10
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str9 to [0 x i8]*), %Int32 %11)
+	ret void
+}
+
+define %Int32 @main() {
+	call void @test_arrays()
+	call void @test_records()
 	ret %Int32 0
 }
 

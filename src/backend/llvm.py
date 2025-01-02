@@ -1128,6 +1128,20 @@ def do_eval_slice(v):
 
 
 
+def getET2(et):
+	while htype.type_is_pointer(et):
+		et = et['to']
+	#et = et['of']
+	return et
+
+
+
+# GEP !элемент массива на который указываешь!
+def ass2(left, indexes):
+	result_type = left['type']
+	et = getET2(left['type'])
+	#indexes = [llvm_value_num_zero] + indexes
+	return llvm_gep(left, left['type'], indexes, result_type, et)
 
 
 def access(x):
@@ -1139,7 +1153,7 @@ def access(x):
 		return (ll, (i,))
 
 	if x['value']['kind'] == 'access':
-		y, i2 = index(x['value'])
+		y, i2 = access(x['value'])
 		return (y, i2 + (i,))
 
 	return do_eval(x['value']), (i,)
@@ -1150,6 +1164,19 @@ def do_eval_access(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
 
+	left, fields = access(v)
+
+	notype = foundation.typeInt32
+
+	indexes = [llvm_value_zero(notype)]
+	for f in fields:
+		fno = llvm_value_num(notype, f['field_no'])
+		indexes.append(fno)
+	return ass2(left, indexes)
+
+
+	"""
+	mass
 	if htype.type_is_pointer(v['value']['type']):
 		ptr = do_reval(v['value'])
 		rt = ptr['type']['to']
@@ -1160,7 +1187,7 @@ def do_eval_access(v):
 	result_type = v['type']
 	rec = do_eval(v['value'])
 	pos = v['field']['field_no']
-	return llvm_eval_access(rec, pos, result_type)
+	return llvm_eval_access(rec, pos, result_type)"""
 
 
 def do_eval_access_ptr(v):

@@ -19,7 +19,7 @@ var a2: [5]Int32 = [5, 6, 7, 8, 9]
 var a3: [2]*[5]Int32 = [&a1, &a2]
 var a4: [2]*[2]*[5]Int32 = [&a3, &a3]
 
-public func main() -> Int32 {
+func test_arrays() -> Unit {
 	var i, j, k: Int32
 
 	//printf("x = %d ", a0[i][j])
@@ -66,6 +66,36 @@ public func main() -> Int32 {
 		}
 		++i
 	}
+}
 
+
+type Point record {
+	x: Int32
+	y: Int32
+}
+
+type Line record {
+	a: Point
+	b: Point
+}
+
+var line: Line = {
+	a={x=10, y=11}
+	b={x=12, y=13}
+}
+
+
+func test_records() -> Unit {
+	printf("line.a.x = %d\n", line.a.x)
+	printf("line.a.y = %d\n", line.a.y)
+
+	printf("line.b.x = %d\n", line.b.x)
+	printf("line.b.y = %d\n", line.b.y)
+}
+
+
+public func main() -> Int32 {
+	test_arrays()
+	test_records()
 	return 0
 }
