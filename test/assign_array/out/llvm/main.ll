@@ -227,7 +227,7 @@ again_1:
 	br %Bool %6 , label %body_1, label %break_1
 body_1:
 	%7 = load %Int32, %Int32* %4
-	%8 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* @globalArray1, %Int32 0, %Int32 %7
+	%8 = getelementptr %Int32, [10 x %Int32]* @globalArray1, %Int32 %7
 	%9 = load %Int32, %Int32* %8
 	%10 = load %Int32, %Int32* %4
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), %Int32 %10, %Int32 %9)
@@ -276,7 +276,7 @@ again_2:
 	br %Bool %34 , label %body_2, label %break_2
 body_2:
 	%35 = load %Int32, %Int32* %4
-	%36 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %30, %Int32 0, %Int32 %35
+	%36 = getelementptr %Int32, [10 x %Int32]* %30, %Int32 %35
 	%37 = load %Int32, %Int32* %36
 	%38 = load %Int32, %Int32* %4
 	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 %38, %Int32 %37)

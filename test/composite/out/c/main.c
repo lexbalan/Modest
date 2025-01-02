@@ -272,7 +272,9 @@ int32_t main()
 		i = i + 1;
 	}
 
-	//	awrap[0].fhi("World")
+	awrap[0]->fhi("World");
+	//let y = awrap[0]
+	//y.fhi("World")
 
 	return 0;
 }

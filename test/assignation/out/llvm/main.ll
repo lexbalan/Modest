@@ -249,22 +249,22 @@ define %Int @main() {
 	; -- end vol eval --
 	%6 = load [10 x %Int32], [10 x %Int32]* @glb_a1
 	store [10 x %Int32] %6, [10 x %Int32]* @glb_a0
-	%7 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 0
+	%7 = getelementptr %Int32, [10 x %Int32]* @glb_a0, %Int32 0
 	%8 = load %Int32, %Int32* %7
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Int32 %8)
-	%10 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 1
+	%10 = getelementptr %Int32, [10 x %Int32]* @glb_a0, %Int32 1
 	%11 = load %Int32, %Int32* %10
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), %Int32 %11)
-	%13 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 2
+	%13 = getelementptr %Int32, [10 x %Int32]* @glb_a0, %Int32 2
 	%14 = load %Int32, %Int32* %13
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Int32 %14)
 	; copy records by value
 	%16 = load %Point, %Point* @glb_r1
 	store %Point %16, %Point* @glb_r0
-	%17 = getelementptr inbounds %Point, %Point* @glb_r0, %Int32 0, %Int32 0
+	%17 = getelementptr %Int32, %Point* @glb_r0, %Int32 0
 	%18 = load %Int32, %Int32* %17
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), %Int32 %18)
-	%20 = getelementptr inbounds %Point, %Point* @glb_r0, %Int32 0, %Int32 1
+	%20 = getelementptr %Int32, %Point* @glb_r0, %Int32 1
 	%21 = load %Int32, %Int32* %20
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Int32 %21)
 	; -----------------------------------
@@ -293,13 +293,13 @@ define %Int @main() {
 	; -- end vol eval --
 	%34 = load [10 x %Int32], [10 x %Int32]* %29
 	store [10 x %Int32] %34, [10 x %Int32]* %28
-	%35 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 0
+	%35 = getelementptr %Int32, [10 x %Int32]* %28, %Int32 0
 	%36 = load %Int32, %Int32* %35
 	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), %Int32 %36)
-	%38 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 1
+	%38 = getelementptr %Int32, [10 x %Int32]* %28, %Int32 1
 	%39 = load %Int32, %Int32* %38
 	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), %Int32 %39)
-	%41 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 2
+	%41 = getelementptr %Int32, [10 x %Int32]* %28, %Int32 2
 	%42 = load %Int32, %Int32* %41
 	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), %Int32 %42)
 	; copy records by value
@@ -312,10 +312,10 @@ define %Int @main() {
 	store %Point %47, %Point* %45
 	%48 = load %Point, %Point* %45
 	store %Point %48, %Point* %44
-	%49 = getelementptr inbounds %Point, %Point* %44, %Int32 0, %Int32 0
+	%49 = getelementptr %Int32, %Point* %44, %Int32 0
 	%50 = load %Int32, %Int32* %49
 	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %50)
-	%52 = getelementptr inbounds %Point, %Point* %44, %Int32 0, %Int32 1
+	%52 = getelementptr %Int32, %Point* %44, %Int32 1
 	%53 = load %Int32, %Int32* %52
 	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %53)
 	; error: closed arrays of closed arrays are denied

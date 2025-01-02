@@ -172,7 +172,7 @@ endif_0:
 	br label %again_2
 break_2:
 	%21 = load %Int32, %Int32* %3
-	%22 = getelementptr inbounds [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int32 %21
+	%22 = getelementptr %Word32, [256 x %Word32]* %1, %Int32 %21
 	%23 = load %Word32, %Word32* %2
 	store %Word32 %23, %Word32* %22
 	%24 = load %Int32, %Int32* %3
@@ -192,14 +192,14 @@ again_3:
 	br %Bool %27 , label %body_3, label %break_3
 body_3:
 	%28 = load %Int32, %Int32* %3
-	%29 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %28
+	%29 = getelementptr %Word8, [0 x %Word8]* %buf, %Int32 %28
 	%30 = load %Word8, %Word8* %29
 	%31 = zext %Word8 %30 to %Word32
 	%32 = load %Word32, %Word32* %2
 	%33 = xor %Word32 %32, %31
 	%34 = and %Word32 %33, 255
 	%35 = trunc %Word32 %34 to %Int8
-	%36 = getelementptr inbounds [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int8 %35
+	%36 = getelementptr %Word32, [256 x %Word32]* %1, %Int8 %35
 	%37 = load %Word32, %Word32* %2
 	%38 = lshr %Word32 %37, 8
 	%39 = load %Word32, %Word32* %36

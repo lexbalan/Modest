@@ -320,9 +320,9 @@ define void @console_putchar_utf8(%Char8 %c) {
 
 define void @console_putchar_utf16(%Char16 %c) {
 	%1 = alloca [2 x %Char16], align 2
-	%2 = getelementptr inbounds [2 x %Char16], [2 x %Char16]* %1, %Int32 0, %Int32 0
+	%2 = getelementptr %Char16, [2 x %Char16]* %1, %Int32 0
 	store %Char16 %c, %Char16* %2
-	%3 = getelementptr inbounds [2 x %Char16], [2 x %Char16]* %1, %Int32 0, %Int32 1
+	%3 = getelementptr %Char16, [2 x %Char16]* %1, %Int32 1
 	store %Char16 0, %Char16* %3
 	%4 = alloca %Char32, align 4
 	%5 = bitcast [2 x %Char16]* %1 to [0 x %Char16]*
@@ -345,7 +345,7 @@ again_1:
 	br %Bool %6 , label %body_1, label %break_1
 body_1:
 	%7 = load %Int32, %Int32* %4
-	%8 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %1, %Int32 0, %Int32 %7
+	%8 = getelementptr %Char8, [4 x %Char8]* %1, %Int32 %7
 	%9 = load %Char8, %Char8* %8
 	call void @console_putchar_utf8(%Char8 %9)
 	%10 = load %Int32, %Int32* %4
@@ -373,7 +373,7 @@ again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%2 = load %Int32, %Int32* %1
-	%3 = getelementptr inbounds %Str8, %Str8* %s, %Int32 0, %Int32 %2
+	%3 = getelementptr %Char8, %Str8* %s, %Int32 %2
 	%4 = load %Char8, %Char8* %3
 	%5 = icmp eq %Char8 %4, 0
 	br %Bool %5 , label %then_0, label %endif_0
@@ -400,7 +400,7 @@ body_1:
 	; нельзя просто так взять и вызвать putchar_utf16
 	; тк в строке может быть суррогатная пара UTF_16 символов
 	%2 = load %Int32, %Int32* %1
-	%3 = getelementptr inbounds %Str16, %Str16* %s, %Int32 0, %Int32 %2
+	%3 = getelementptr %Char16, %Str16* %s, %Int32 %2
 	%4 = load %Char16, %Char16* %3
 	%5 = icmp eq %Char16 %4, 0
 	br %Bool %5 , label %then_0, label %endif_0
@@ -410,7 +410,7 @@ then_0:
 endif_0:
 	%7 = alloca %Char32, align 4
 	%8 = load %Int32, %Int32* %1
-	%9 = getelementptr inbounds %Str16, %Str16* %s, %Int32 0, %Int32 %8
+	%9 = getelementptr %Char16, %Str16* %s, %Int32 %8
 	%10 = bitcast %Char16* %9 to [0 x %Char16]*
 	%11 = call %Int8 @utf_utf16_to_utf32([0 x %Char16]* %10, %Char32* %7)
 	%12 = icmp eq %Int8 %11, 0
@@ -438,7 +438,7 @@ again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%2 = load %Int32, %Int32* %1
-	%3 = getelementptr inbounds %Str32, %Str32* %s, %Int32 0, %Int32 %2
+	%3 = getelementptr %Char32, %Str32* %s, %Int32 %2
 	%4 = load %Char32, %Char32* %3
 	%5 = icmp eq %Char32 %4, 0
 	br %Bool %5 , label %then_0, label %endif_0
@@ -473,7 +473,7 @@ define %Int32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va) {
 	%3 = bitcast [256 x %Char8]* %2 to [0 x %Char8]*
 	%4 = load i8*, i8** %1
 	%5 = call %Int32 @console_vsprint([0 x %Char8]* %3, %Str8* %form, i8* %4)
-	%6 = getelementptr inbounds [256 x %Char8], [256 x %Char8]* %2, %Int32 0, %Int32 %5
+	%6 = getelementptr %Char8, [256 x %Char8]* %2, %Int32 %5
 	store %Char8 0, %Char8* %6
 	%7 = bitcast [256 x %Char8]* %2 to i8*
 	%8 = zext %Int32 %5 to %SizeT
@@ -494,7 +494,7 @@ again_1:
 body_1:
 	%4 = alloca %Char8, align 1
 	%5 = load %Int32, %Int32* %2
-	%6 = getelementptr inbounds %Str8, %Str8* %form, %Int32 0, %Int32 %5
+	%6 = getelementptr %Char8, %Str8* %form, %Int32 %5
 	%7 = load %Char8, %Char8* %6
 	store %Char8 %7, %Char8* %4
 	%8 = load %Char8, %Char8* %4
@@ -516,7 +516,7 @@ then_2:
 	%16 = add %Int32 %15, 1
 	store %Int32 %16, %Int32* %2
 	%17 = load %Int32, %Int32* %2
-	%18 = getelementptr inbounds %Str8, %Str8* %form, %Int32 0, %Int32 %17
+	%18 = getelementptr %Char8, %Str8* %form, %Int32 %17
 	%19 = load %Char8, %Char8* %18
 	store %Char8 %19, %Char8* %4
 	%20 = load %Char8, %Char8* %4
@@ -524,7 +524,7 @@ then_2:
 	br %Bool %21 , label %then_3, label %endif_3
 then_3:
 	%22 = load %Int32, %Int32* %3
-	%23 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %22
+	%23 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %22
 	%24 = load %Char8, %Char8* %4
 	store %Char8 %24, %Char8* %23
 	%25 = load %Int32, %Int32* %3
@@ -539,7 +539,7 @@ endif_3:
 	br label %endif_2
 endif_2:
 	%30 = load %Int32, %Int32* %3
-	%31 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %30
+	%31 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %30
 	%32 = load %Char8, %Char8* %4
 	store %Char8 %32, %Char8* %31
 	%33 = load %Int32, %Int32* %3
@@ -556,7 +556,7 @@ endif_1:
 	%39 = add %Int32 %38, 1
 	store %Int32 %39, %Int32* %2
 	%40 = load %Int32, %Int32* %2
-	%41 = getelementptr inbounds %Str8, %Str8* %form, %Int32 0, %Int32 %40
+	%41 = getelementptr %Char8, %Str8* %form, %Int32 %40
 	%42 = load %Char8, %Char8* %41
 	store %Char8 %42, %Char8* %4
 	%43 = load %Char8, %Char8* %4
@@ -564,7 +564,7 @@ endif_1:
 	br %Bool %44 , label %then_4, label %endif_4
 then_4:
 	%45 = load %Int32, %Int32* %3
-	%46 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %45
+	%46 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %45
 	store %Char8 123, %Char8* %46
 	%47 = load %Int32, %Int32* %3
 	%48 = add %Int32 %47, 1
@@ -579,7 +579,7 @@ endif_4:
 	%53 = add %Int32 %52, 2
 	store %Int32 %53, %Int32* %2
 	%54 = load %Int32, %Int32* %3
-	%55 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %54
+	%55 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %54
 ;
 	%56 = bitcast %Char8* %55 to [0 x %Char8]*
 	%57 = load %Char8, %Char8* %4
@@ -713,7 +713,7 @@ body_1:
 	%7 = udiv %Int32 %6, 16
 	store %Int32 %7, %Int32* %2
 	%8 = load %Int32, %Int32* %3
-	%9 = getelementptr inbounds [8 x %Char8], [8 x %Char8]* %1, %Int32 0, %Int32 %8
+	%9 = getelementptr %Char8, [8 x %Char8]* %1, %Int32 %8
 	%10 = trunc %Int32 %5 to %Int8
 	%11 = call %Char8 @n_to_hex_sym(%Int8 %10)
 	store %Char8 %11, %Char8* %9
@@ -742,9 +742,9 @@ body_2:
 	%21 = sub %Int32 %20, 1
 	store %Int32 %21, %Int32* %3
 	%22 = load %Int32, %Int32* %17
-	%23 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %22
+	%23 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %22
 	%24 = load %Int32, %Int32* %3
-	%25 = getelementptr inbounds [8 x %Char8], [8 x %Char8]* %1, %Int32 0, %Int32 %24
+	%25 = getelementptr %Char8, [8 x %Char8]* %1, %Int32 %24
 	%26 = load %Char8, %Char8* %25
 	store %Char8 %26, %Char8* %23
 	%27 = load %Int32, %Int32* %17
@@ -753,7 +753,7 @@ body_2:
 	br label %again_2
 break_2:
 	%29 = load %Int32, %Int32* %17
-	%30 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %29
+	%30 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %29
 	store %Char8 0, %Char8* %30
 	%31 = load %Int32, %Int32* %17
 	ret %Int32 %31
@@ -784,7 +784,7 @@ body_1:
 	%11 = sdiv %Int32 %10, 10
 	store %Int32 %11, %Int32* %2
 	%12 = load %Int32, %Int32* %7
-	%13 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %12
+	%13 = getelementptr %Char8, [11 x %Char8]* %1, %Int32 %12
 	%14 = trunc %Int32 %9 to %Int8
 	%15 = call %Char8 @n_to_dec_sym(%Int8 %14)
 	store %Char8 %15, %Char8* %13
@@ -804,7 +804,7 @@ break_1:
 	store %Int32 0, %Int32* %21
 	br %Bool %4 , label %then_2, label %endif_2
 then_2:
-	%22 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 0
+	%22 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 0
 	store %Char8 45, %Char8* %22
 	%23 = load %Int32, %Int32* %21
 	%24 = add %Int32 %23, 1
@@ -821,9 +821,9 @@ body_2:
 	%28 = sub %Int32 %27, 1
 	store %Int32 %28, %Int32* %7
 	%29 = load %Int32, %Int32* %21
-	%30 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %29
+	%30 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %29
 	%31 = load %Int32, %Int32* %7
-	%32 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %31
+	%32 = getelementptr %Char8, [11 x %Char8]* %1, %Int32 %31
 	%33 = load %Char8, %Char8* %32
 	store %Char8 %33, %Char8* %30
 	%34 = load %Int32, %Int32* %21
@@ -832,7 +832,7 @@ body_2:
 	br label %again_2
 break_2:
 	%36 = load %Int32, %Int32* %21
-	%37 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %36
+	%37 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %36
 	store %Char8 0, %Char8* %37
 	%38 = load %Int32, %Int32* %21
 	ret %Int32 %38
@@ -854,7 +854,7 @@ body_1:
 	%7 = udiv %Int32 %6, 10
 	store %Int32 %7, %Int32* %2
 	%8 = load %Int32, %Int32* %3
-	%9 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %8
+	%9 = getelementptr %Char8, [11 x %Char8]* %1, %Int32 %8
 	%10 = trunc %Int32 %5 to %Int8
 	%11 = call %Char8 @n_to_dec_sym(%Int8 %10)
 	store %Char8 %11, %Char8* %9
@@ -882,9 +882,9 @@ body_2:
 	%21 = sub %Int32 %20, 1
 	store %Int32 %21, %Int32* %3
 	%22 = load %Int32, %Int32* %17
-	%23 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %22
+	%23 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %22
 	%24 = load %Int32, %Int32* %3
-	%25 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %24
+	%25 = getelementptr %Char8, [11 x %Char8]* %1, %Int32 %24
 	%26 = load %Char8, %Char8* %25
 	store %Char8 %26, %Char8* %23
 	%27 = load %Int32, %Int32* %17
@@ -893,7 +893,7 @@ body_2:
 	br label %again_2
 break_2:
 	%29 = load %Int32, %Int32* %17
-	%30 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %29
+	%30 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %29
 	store %Char8 0, %Char8* %30
 	%31 = load %Int32, %Int32* %17
 	ret %Int32 %31

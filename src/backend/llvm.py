@@ -1102,7 +1102,7 @@ def do_eval_slice(v):
 		array_type = pointer['type']['to']
 		index = do_reval(v['index_from'])
 		result_type = v['type']
-		ptr_to_item = llvm_gep(pointer, array_type, (llvm_value_num_zero, index), array_type['of'])
+		ptr_to_item = llvm_gep(pointer, array_type, (index,), array_type['of'], array_type['of'])
 		out("\n;")
 
 		pnv = llvm_cast("bitcast", ptr_to_item, type_pointer(v['type']))
@@ -1123,7 +1123,7 @@ def do_eval_slice(v):
 
 		return extractvalue(array, result_type, index['asset'])
 
-	ptr_to_item = llvm_gep(array, array_type, (llvm_value_num_zero, index), array_type['of'])
+	ptr_to_item = llvm_gep(array, array_type, (index,), array_type['of'], array_type['of'])
 	pnv = llvm_cast("bitcast", ptr_to_item, type_pointer(v['type']))
 	pnv['is_adr'] = True
 	return pnv
