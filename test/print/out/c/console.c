@@ -208,10 +208,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 
 		i = i + 2;
 
-		// ++
 		char *sptr = &buf[j];
-
-		// ??
 
 		if ((c == 'i') || (c == 'd')) {
 			//

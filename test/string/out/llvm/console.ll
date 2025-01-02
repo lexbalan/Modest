@@ -578,12 +578,10 @@ endif_4:
 	%52 = load %Int32, %Int32* %2
 	%53 = add %Int32 %52, 2
 	store %Int32 %53, %Int32* %2
-	; ++
 	%54 = load %Int32, %Int32* %3
 	%55 = getelementptr %Char8, [0 x %Char8]* %buf, %Int32 %54
 ;
 	%56 = bitcast %Char8* %55 to [0 x %Char8]*
-	; ??
 	%57 = load %Char8, %Char8* %4
 	%58 = icmp eq %Char8 %57, 105
 	%59 = load %Char8, %Char8* %4
