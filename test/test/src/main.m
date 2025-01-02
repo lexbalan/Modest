@@ -51,8 +51,8 @@ public func main() -> Int32 {
 //		++i
 //	}
 
-	printf("x = %d\n", a0[0][1][2])
-	//printf("x = %d\n", a3[0][1])
+	//printf("x = %d\n", a0[0][1][2])
+	printf("x = %d\n", a3[0][1])
 
 	return 0
 }

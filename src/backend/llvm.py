@@ -1052,8 +1052,15 @@ def index(x):
 	i = x['index']
 
 	if x['left']['kind'] == 'index':
-
 		y, i2 = index(x['left'])
+
+		if htype.type_is_pointer(x['left']['type']):
+			print("-LOAD")
+			z = ass(y, i2)
+			z = llvm_load(z)
+			print("-- aaa")
+			return (z, (i,))
+
 		return (y, i2 + (i,))
 
 	return do_eval(x['left']), (i,)
@@ -1066,11 +1073,9 @@ def do_eval_index(v):
 
 	left, indexes = index(v)
 
-	indexess = []
-	for i in indexes:
-		indexess.append(do_eval(i))
 
-	return ass(left, indexess)
+
+	return ass(left, indexes)
 
 
 
@@ -1087,12 +1092,16 @@ def getET(et):
 def ass(left, indexes):
 	#indexes.reverse()
 
+	indexess = []
+	for i in indexes:
+		indexess.append(do_eval(i))
+
 	et = getET(left['type'])
 
 	result_type = left['type']
 
 	#indexes = [llvm_value_num_zero] + indexes
-	return llvm_gep(left, left['type'], indexes, result_type, et)
+	return llvm_gep(left, left['type'], indexess, result_type, et)
 
 
 

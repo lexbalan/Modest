@@ -272,10 +272,12 @@ define %Int32 @main() {
 	;		}
 	;		++i
 	;	}
-	%4 = getelementptr [2 x [5 x %Int32]], [2 x [2 x [5 x %Int32]]]* @a0, %Int32 0, %Int32 1, %Int32 2
-	%5 = load %Int32, %Int32* %4
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Int32 %5)
-	;printf("x = %d\n", a3[0][1])
+	;printf("x = %d\n", a0[0][1][2])
+	%4 = getelementptr [5 x %Int32]*, [2 x [5 x %Int32]*]* @a3, %Int32 0
+	%5 = load [2 x [5 x %Int32]*], [2 x [5 x %Int32]*]* %4
+	%6 = getelementptr [5 x %Int32]*, [2 x [5 x %Int32]*] %5, %Int32 1
+	%7 = load %Int32, %Int32* %6
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Int32 %7)
 	ret %Int32 0
 }
 
