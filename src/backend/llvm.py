@@ -1129,9 +1129,27 @@ def do_eval_slice(v):
 
 
 
+"""
+def access(x):
+	i = x['field']
+
+	# разфменовываем указатель на массив по умолчанию сами
+	if htype.type_is_pointer(x['left']['type']):
+		ll = do_reval(x['left'])
+		return (ll, (i,))
+
+	if x['left']['kind'] == 'access':
+		y, i2 = index(x['left'])
+		return (y, i2 + (i,))
+
+	return do_eval(x['left']), (i,)
+
+"""
+
+
 def do_eval_access(v):
-	if htype.type_is_pointer(v['record']['type']):
-		ptr = do_reval(v['record'])
+	if htype.type_is_pointer(v['value']['type']):
+		ptr = do_reval(v['value'])
 		rt = ptr['type']['to']
 		pos = v['field']['field_no']
 		result_type = v['type']
@@ -1141,7 +1159,7 @@ def do_eval_access(v):
 		return do_eval(v['immval'])
 
 	result_type = v['type']
-	rec = do_eval(v['record'])
+	rec = do_eval(v['value'])
 	pos = v['field']['field_no']
 	return llvm_eval_access(rec, pos, result_type)
 

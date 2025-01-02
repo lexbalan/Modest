@@ -259,11 +259,11 @@ def value_access_module(type, left, right, value, ti):
 	}
 
 
-def value_access_record(type, record, field, ti):
+def value_access_record(type, value, field, ti):
 	return {
 		'isa': 'value',
 		'kind': 'access',
-		'record': record,
+		'value': value,
 		'field': field,
 		'type': type,
 		'immediate': False,

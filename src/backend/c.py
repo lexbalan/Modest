@@ -688,7 +688,7 @@ def print_value_index(x, ctx):
 
 
 def print_value_access(x, ctx):
-	left = x['record']
+	left = x['value']
 
 	if htype.type_is_pointer(left['type']):
 		need_wrap = precedence(left) < precedence(x)

@@ -289,7 +289,7 @@ def print_value_slice(x, ctx):
 
 
 def print_value_access(v, ctx):
-	left = v['record']
+	left = v['value']
 	need_wrap = precedence(left) < precedence({'kind': 'access'})
 	print_value(left, need_wrap=need_wrap)
 	out(".")
