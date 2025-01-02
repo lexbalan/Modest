@@ -1050,10 +1050,13 @@ def is_closed_array_param(value):
 
 def index(x):
 	i = x['index']
+
 	if x['left']['kind'] == 'index':
+
 		y, i2 = index(x['left'])
 		return (y, i2 + (i,))
-	return x['left'], (i,)
+
+	return do_eval(x['left']), (i,)
 
 
 
@@ -1067,7 +1070,6 @@ def do_eval_index(v):
 	for i in indexes:
 		indexess.append(do_eval(i))
 
-	left = do_eval(left)
 	return ass(left, indexess)
 
 
