@@ -483,7 +483,7 @@ def llvm_deref(x):
 
 
 # индекс не может быть i64 (!) (а только i32)
-def llvm_gep(v, object_type, indexes, result_type):
+def llvm_gep(v, object_type, indexes, result_type, et):
 	# Есть такой прикол в том что индекс (i) структуры
 	# не может быть i64 (!) (а только i32)
 
@@ -493,7 +493,7 @@ def llvm_gep(v, object_type, indexes, result_type):
 	#rv = ll_reg_operation('getelementptr inbounds', result_type)
 	rv = ll_reg_operation('getelementptr', result_type)
 	rv['is_adr'] = True
-	print_type(object_type)
+	print_type(et)
 	out(", ")
 	llvm_print_type_value(v)
 	out(", ")
@@ -1046,72 +1046,51 @@ def is_closed_array_param(value):
 
 
 
-def get_indexes(v):
-	index = v['index']
-	if v['array']['kind'] == 'index':
-		return (index, ) + get_indexes(v['array'])
 
-	return (index)
+
+def index(x):
+	i = x['index']
+	if x['left']['kind'] == 'index':
+		y, i2 = index(x['left'])
+		return (y, i2 + (i,))
+	return x['left'], (i,)
+
 
 
 def do_eval_index(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
 
-	result_type = v['type']
+	left, indexes = index(v)
 
-	"""
-		# Left is an array
-		if not is_global_context():
-			if not is_closed_array_param(v['array']):
-				if not left['is_adr']:
-					# Left is an array placed in 'reg' as value
-					if not value_is_immediate(v['index']):
-						error("expected immediate index value", v['ti'])
-						return llvm_value_zero(v['ti'])
+	indexess = []
+	for i in indexes:
+		indexess.append(do_eval(i))
 
-					return extractvalue(left, result_type, index['asset'])
-	"""
-
-	"""
-		if htype.type_is_pointer(left['type']):
-			# Left is a pointer in 'reg' to pointer to array
-			# (access to array via pointer)
-			ptr2arr = llvm_load(left)
-			array_type = ptr2arr['type']['to']
-			indexes = (llvm_value_num_zero, index)
-			return llvm_gep(ptr2arr, array_type, indexes, result_type)
-
-	"""
-
-	left = None
-
-	indexes = []
-	while True:
-		print("-INDEX")
-		index = do_reval(v['index'])
-		indexes.append(index)
-		v = v['left']
-		if v['kind'] != 'index':
-			break
-
-
-
-	if left == None:
-		left = do_eval(v)
-	#left = ass(left, indexes)
-
-	return ass(left, indexes)
+	left = do_eval(left)
+	return ass(left, indexess)
 
 
 
 
+def getET(et):
+	while htype.type_is_pointer(et):
+		et = et['to']
+	et = et['of']
+	return et
 
+
+
+# GEP !элемент массива на который указываешь!
 def ass(left, indexes):
-	indexes.reverse()
+	#indexes.reverse()
+
+	et = getET(left['type'])
+
 	result_type = left['type']
-	indexes = [llvm_value_num_zero] + indexes
-	return llvm_gep(left, left['type'], indexes, result_type)
+
+	#indexes = [llvm_value_num_zero] + indexes
+	return llvm_gep(left, left['type'], indexes, result_type, et)
 
 
 

@@ -26,8 +26,11 @@ static int32_t *a3[2] = (int32_t *[2]){&a0[0], &a1[0]};
 
 int32_t main()
 {
-	int32_t x = a2[0 * 2 * 5 + 1 * 5 + 2];
-	printf("x = %d\n", x);
+	//let x = a2[0][1][2]
+	//printf("x = %d\n", x)
+
+	int32_t y = a3[0][2];
+	printf("y = %d\n", y);
 
 	return 0;
 }

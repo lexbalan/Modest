@@ -190,21 +190,7 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
-@a0 = internal global [5 x %Int32] [
-	%Int32 0,
-	%Int32 1,
-	%Int32 2,
-	%Int32 3,
-	%Int32 4
-]
-@a1 = internal global [5 x %Int32] [
-	%Int32 5,
-	%Int32 6,
-	%Int32 7,
-	%Int32 8,
-	%Int32 9
-]
-@a2 = internal global [2 x [2 x [5 x %Int32]]] [
+@a0 = internal global [2 x [2 x [5 x %Int32]]] [
 	[2 x [5 x %Int32]] [
 		[5 x %Int32] [
 			%Int32 0,
@@ -238,15 +224,58 @@ declare void @perror(%ConstCharStr* %str)
 		]
 	]
 ]
+@a1 = internal global [5 x %Int32] [
+	%Int32 0,
+	%Int32 1,
+	%Int32 2,
+	%Int32 3,
+	%Int32 4
+]
+@a2 = internal global [5 x %Int32] [
+	%Int32 5,
+	%Int32 6,
+	%Int32 7,
+	%Int32 8,
+	%Int32 9
+]
 @a3 = internal global [2 x [5 x %Int32]*] [
-	[5 x %Int32]* @a0,
-	[5 x %Int32]* @a1
+	[5 x %Int32]* @a1,
+	[5 x %Int32]* @a2
 ]
 
 define %Int32 @main() {
-	%1 = getelementptr [2 x [2 x [5 x %Int32]]], [2 x [2 x [5 x %Int32]]]* @a2, %Int32 0, %Int32 0, %Int32 1, %Int32 2
-	%2 = load %Int32, %Int32* %1
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Int32 %2)
+	%1 = alloca %Int32, align 4
+	%2 = alloca %Int32, align 4
+	%3 = alloca %Int32, align 4
+	;printf("x = %d ", a0[i][j])
+	;	i = 0
+	;	while i < 2 {
+	;		j = 0
+	;		while j < 2 {
+	;			k = 0
+	;			while k < 5 {
+	;				printf("a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k])
+	;				++k
+	;			}
+	;			++j
+	;		}
+	;		++i
+	;	}
+	;
+	;
+	;	i = 0
+	;	while i < 2 {
+	;		j = 0
+	;		while j < 5 {
+	;			printf("a3[%d][%d] = %d\n", i, j, a3[i][j])
+	;			++j
+	;		}
+	;		++i
+	;	}
+	%4 = getelementptr [5 x %Int32]*, [2 x [5 x %Int32]*]* @a3, %Int32 0, %Int32 1
+	%5 = load %Int32, %Int32* %4
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Int32 %5)
+	;printf("x = %d\n", a0[0][1][2])
 	ret %Int32 0
 }
 
