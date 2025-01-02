@@ -7,7 +7,6 @@ var a0: [2][2][5]Int32 = [
 		[0, 1, 2, 3, 4]
 		[5, 6, 7, 8, 9]
 	]
-
 	[
 		[10, 11, 12, 13, 14]
 		[15, 16, 17, 18, 19]
@@ -21,8 +20,6 @@ var a4: [2]*[2]*[5]Int32 = [&a3, &a3]
 
 func test_arrays() -> Unit {
 	var i, j, k: Int32
-
-	//printf("x = %d ", a0[i][j])
 
 	i = 0
 	while i < 2 {
@@ -48,11 +45,8 @@ func test_arrays() -> Unit {
 		}
 		++i
 	}
-
-	printf("x = %d\n", a0[0][1][2])
-	printf("x = %d\n", a3[1][4])
-
-
+//
+//
 	i = 0
 	while i < 2 {
 		j = 0
@@ -84,18 +78,57 @@ var line: Line = {
 	b={x=12, y=13}
 }
 
+var lines = [
+	Line {
+		a={x=1, y=2}
+		b={x=3, y=4}
+	}
+	Line {
+		a={x=5, y=6}
+		b={x=7, y=8}
+	}
+	Line {
+		a={x=9, y=10}
+		b={x=11, y=12}
+	}
+]
+
+var pLines = [&lines[0], &lines[1], &lines[2]]
+
+type Struct record {
+	x: *Line
+}
+
+var s: Struct = {x=&lines[0]}
+
 
 func test_records() -> Unit {
-	printf("line.a.x = %d\n", line.a.x)
-	printf("line.a.y = %d\n", line.a.y)
 
-	printf("line.b.x = %d\n", line.b.x)
-	printf("line.b.y = %d\n", line.b.y)
+
+//	printf("line.a.x = %d\n", line.a.x)
+//	printf("line.a.y = %d\n", line.a.y)
+//
+//	printf("line.b.x = %d\n", line.b.x)
+//	printf("line.b.y = %d\n", line.b.y)
+
+//	printf("pLines[0].a.x = %d\n", pLines[0].a.x)
+//	printf("pLines[0].a.y = %d\n", pLines[0].a.y)
+//
+//	printf("pLines[0].b.x = %d\n", pLines[0].b.x)
+//	printf("pLines[0].b.y = %d\n", pLines[0].b.y)
+
+//	printf("s.x.a.x = %d\n", s.x.a.x)
+//	printf("s.x.a.y = %d\n", s.x.a.y)
+//
+//	printf("s.x.b.x = %d\n", s.x.b.x)
+//	printf("s.x.b.y = %d\n", s.x.b.y)
+
 }
 
 
 public func main() -> Int32 {
-	test_arrays()
+	//test_arrays()
 	test_records()
 	return 0
 }
+

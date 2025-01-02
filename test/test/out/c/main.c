@@ -13,7 +13,6 @@ static int32_t a0[2 * 2 * 5] = (int32_t[2 * 2 * 5]){
 	0, 1, 2, 3, 4,
 	5, 6, 7, 8, 9,
 
-
 	10, 11, 12, 13, 14,
 	15, 16, 17, 18, 19
 };
@@ -23,13 +22,11 @@ static int32_t a2[5] = (int32_t[5]){5, 6, 7, 8, 9};
 static int32_t *a3[2] = (int32_t *[2]){&a1[0], &a2[0]};
 static int32_t *(*a4[2])[2] = (int32_t *(*[2])[2]){&a3, &a3};
 
-int32_t main()
+static void test_arrays()
 {
 	int32_t i;
 	int32_t j;
 	int32_t k;
-
-	//printf("x = %d ", a0[i][j])
 
 	i = 0;
 	while (i < 2) {
@@ -55,11 +52,8 @@ int32_t main()
 		}
 		i = i + 1;
 	}
-
-	printf("x = %d\n", a0[0 * 2 * 5 + 1 * 5 + 2]);
-	printf("x = %d\n", a3[1][4]);
-
-
+	//
+	//
 	i = 0;
 	while (i < 2) {
 		j = 0;
@@ -73,7 +67,79 @@ int32_t main()
 		}
 		i = i + 1;
 	}
+}
 
+
+struct Point {
+	int32_t x;
+	int32_t y;
+};
+typedef struct Point Point;
+
+struct Line {
+	Point a;
+	Point b;
+};
+typedef struct Line Line;
+
+static Line line = {
+	.a = {.x = 10, .y = 11},
+	.b = {.x = 12, .y = 13}
+};
+
+static Line lines[3] = (Line[3]){
+	{
+		.a = {.x = 1, .y = 2},
+		.b = {.x = 3, .y = 4}
+	},
+	{
+		.a = {.x = 5, .y = 6},
+		.b = {.x = 7, .y = 8}
+	},
+	{
+		.a = {.x = 9, .y = 10},
+		.b = {.x = 11, .y = 12}
+	}
+};
+
+static Line *pLines[3] = (Line *[3]){&lines[0], &lines[1], &lines[2]};
+
+struct Struct {
+	Line *x;
+};
+typedef struct Struct Struct;
+
+static Struct s = {.x = &lines[0]};
+
+
+static void test_records()
+{
+
+
+	//	printf("line.a.x = %d\n", line.a.x)
+	//	printf("line.a.y = %d\n", line.a.y)
+	//
+	//	printf("line.b.x = %d\n", line.b.x)
+	//	printf("line.b.y = %d\n", line.b.y)
+
+	//	printf("pLines[0].a.x = %d\n", pLines[0].a.x)
+	//	printf("pLines[0].a.y = %d\n", pLines[0].a.y)
+	//
+	//	printf("pLines[0].b.x = %d\n", pLines[0].b.x)
+	//	printf("pLines[0].b.y = %d\n", pLines[0].b.y)
+
+	//	printf("s.x.a.x = %d\n", s.x.a.x)
+	//	printf("s.x.a.y = %d\n", s.x.a.y)
+	//
+	//	printf("s.x.b.x = %d\n", s.x.b.x)
+	//	printf("s.x.b.y = %d\n", s.x.b.y)
+}
+
+
+int32_t main()
+{
+	//test_arrays()
+	test_records();
 	return 0;
 }
 
