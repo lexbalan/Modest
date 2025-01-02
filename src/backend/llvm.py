@@ -1053,7 +1053,6 @@ def index(x):
 
 	# разфменовываем указатель на массив по умолчанию сами
 	if htype.type_is_pointer(x['left']['type']):
-		#print("-LOAD")
 		ll = do_reval(x['left'])
 		return (ll, (i,))
 
@@ -1070,7 +1069,6 @@ def do_eval_index(v):
 		return do_eval(v['immval'])
 
 	left, indexes = index(v)
-
 	return ass(left, indexes)
 
 
