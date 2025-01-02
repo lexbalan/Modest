@@ -146,7 +146,7 @@ static void test_records()
 
 int32_t main()
 {
-	//test_arrays()
+	test_arrays();
 	test_records();
 	return 0;
 }

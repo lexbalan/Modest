@@ -137,7 +137,7 @@ func test_records() -> Unit {
 
 
 public func main() -> Int32 {
-	//test_arrays()
+	test_arrays()
 	test_records()
 	return 0
 }

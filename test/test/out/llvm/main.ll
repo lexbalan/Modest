@@ -552,7 +552,7 @@ define internal void @test_records() {
 }
 
 define %Int32 @main() {
-	;test_arrays()
+	call void @test_arrays()
 	call void @test_records()
 	ret %Int32 0
 }
