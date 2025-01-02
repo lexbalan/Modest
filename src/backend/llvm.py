@@ -709,41 +709,6 @@ def llvm_dold(x):
 
 
 
-"""
-# получает укзаатель на структуру x
-# его тип
-# носер поля (просто число)
-# возвращает value:address для поля этой структуры
-def llvm_eval_access_ptr(x, rec_type, field_no, result_type):
-	field_index = llvm_value_num(foundation.typeInt32, field_no)
-	return llvm_gep(x, rec_type, (field_index,), result_type, result_type)
-"""
-
-"""
-def llvm_eval_access(rec, field_no, result_type):
-	rt = rec['type']
-	# если это структура высичленная на ходу, у нее есть поле 'items'
-	# там лежат записи вида {'id': ..., 'value': ...}
-	# поле value ссылается при этом на уже вычисленное значение поля
-	# ex: let p = {x=0, y=0};	p.x	// <--
-	if 'items' in rec:
-		return rec['items'][field_no]['value']
-
-	# если сама запись находится в регистре: (let rec = get_rec())
-	if not rec['is_adr']:
-		return extractvalue(rec, result_type, field_no)
-
-	# если работаем через 'переменую-указатель'
-	# сперва нужно загрузить ее в регистр тем самым получим 'указатель'
-	if htype.type_is_pointer(rt):
-		# pointer to record needs additional load
-		rec = llvm_dold(rec)  # загружаем указатель в регистр
-		rt = rt['to']
-
-	return llvm_eval_access_ptr(rec, rt, field_no, result_type)
-"""
-
-
 
 def print_list_with(lst, method):
 	i = 0
@@ -1149,6 +1114,8 @@ def getET2(et):
 
 
 
+def by_value(x):
+	return not (x['is_adr'] or htype.type_is_pointer(x['type']))
 
 
 # GEP !элемент массива на который указываешь!
@@ -1156,10 +1123,12 @@ def ass2(left, indexes):
 	result_type = left['type']
 	et = getET2(left['type'])
 
-	if not (left['is_adr'] or htype.type_is_pointer(result_type)):
-		return llvm_extractvalue(left, result_type, indexes[1:])
+	if by_value(left):
+		return llvm_extractvalue(left, result_type, indexes)
 
-	#indexes = [llvm_value_num_zero] + indexes
+	# когда обращаемся к структуре через указатель
+	# первый индекс GEP должен быть 0
+	indexes = [llvm_value_num_zero] + indexes
 	return llvm_gep(left, left['type'], indexes, result_type, et)
 
 
@@ -1183,43 +1152,15 @@ def do_eval_access(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
 
-	#mass
-	#if not htype.type_is_pointer(v['type']):
-	#if not left['is_adr']:
-	#	print("-- OOPS!")
-		#return extractvalue(array, result_type, index['asset'])
-
-
 	left, fields = access(v)
 	notype = foundation.typeInt32
-	indexes = [llvm_value_zero(notype)]
+	indexes = []
+
 	for f in fields:
 		fno = llvm_value_num(notype, f['field_no'])
 		indexes.append(fno)
 	return ass2(left, indexes)
 
-
-	"""
-	if htype.type_is_pointer(v['value']['type']):
-		ptr = do_reval(v['value'])
-		rt = ptr['type']['to']
-		pos = v['field']['field_no']
-		result_type = v['type']
-		return llvm_eval_access_ptr(ptr, rt, pos, result_type)
-
-	result_type = v['type']
-	rec = do_eval(v['value'])
-	pos = v['field']['field_no']
-	return llvm_eval_access(rec, pos, result_type)"""
-
-"""
-def do_eval_access_ptr(v):
-	ptr = do_reval(v['pointer'])
-	rt = ptr['type']['to']
-	pos = v['field']['field_no']
-	result_type = v['type']
-	return llvm_eval_access_ptr(ptr, rt, pos, result_type)
-"""
 
 
 def do_eval_access_module(x):
@@ -1528,10 +1469,8 @@ def do_eval_record(v):
 
 
 
-
 def do_eval_func(x):
 	return llvm_value_id(get_id_str(x), x['type'])
-
 
 
 def do_eval_var(x):
@@ -1592,8 +1531,6 @@ def do_eval_literal(x):
 
 
 
-
-
 def do_eval_pointer(x):
 	return llvm_value_num(x['type'], x['asset'])
 
@@ -1623,7 +1560,6 @@ def do_eval_va_copy(x):
 def do_eval(x):
 	assert(x != None)
 	assert(x['isa'] == 'value')
-
 
 	y = None
 
