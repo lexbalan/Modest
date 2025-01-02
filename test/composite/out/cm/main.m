@@ -242,7 +242,7 @@ public func main() -> Int32 {
 		i = i + 1
 	}
 
-	awrap[0].fhi("World")
+	//	awrap[0].fhi("World")
 
 	return 0
 }

@@ -704,7 +704,7 @@ def llvm_dold(x):
 # возвращает value:address для поля этой структуры
 def llvm_eval_access_ptr(x, rec_type, field_no, result_type):
 	field_index = llvm_value_num(foundation.typeInt32, field_no)
-	return llvm_gep(x, rec_type, (llvm_value_num_zero, field_index), result_type)
+	return llvm_gep(x, rec_type, (field_index,), result_type, result_type)
 
 
 def llvm_eval_access(rec, field_no, result_type):
@@ -1085,17 +1085,8 @@ def getET(et):
 
 # GEP !элемент массива на который указываешь!
 def ass(left, indexes):
-	#indexes.reverse()
-
-	#indexess = indexes
-	#indexess = []
-	#for i in indexes:
-	#	indexess.append(do_eval(i))
-
-	et = getET(left['type'])
-
 	result_type = left['type']
-
+	et = getET(left['type'])
 	#indexes = [llvm_value_num_zero] + indexes
 	return llvm_gep(left, left['type'], indexes, result_type, et)
 
