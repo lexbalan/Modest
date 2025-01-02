@@ -187,7 +187,10 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str1 = private constant [21 x i8] [i8 97, i8 51, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [17 x i8] [i8 97, i8 51, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str4 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 @a0 = internal global [2 x [2 x [5 x %Int32]]] [
@@ -248,36 +251,94 @@ define %Int32 @main() {
 	%2 = alloca %Int32, align 4
 	%3 = alloca %Int32, align 4
 	;printf("x = %d ", a0[i][j])
-	;	i = 0
-	;	while i < 2 {
-	;		j = 0
-	;		while j < 2 {
-	;			k = 0
-	;			while k < 5 {
-	;				printf("a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k])
-	;				++k
-	;			}
-	;			++j
-	;		}
-	;		++i
-	;	}
+	store %Int32 0, %Int32* %1
+	br label %again_1
+again_1:
+	%4 = load %Int32, %Int32* %1
+	%5 = icmp slt %Int32 %4, 2
+	br %Bool %5 , label %body_1, label %break_1
+body_1:
+	store %Int32 0, %Int32* %2
+	br label %again_2
+again_2:
+	%6 = load %Int32, %Int32* %2
+	%7 = icmp slt %Int32 %6, 2
+	br %Bool %7 , label %body_2, label %break_2
+body_2:
+	store %Int32 0, %Int32* %3
+	br label %again_3
+again_3:
+	%8 = load %Int32, %Int32* %3
+	%9 = icmp slt %Int32 %8, 5
+	br %Bool %9 , label %body_3, label %break_3
+body_3:
+	%10 = load %Int32, %Int32* %1
+	%11 = load %Int32, %Int32* %2
+	%12 = load %Int32, %Int32* %3
+	%13 = load %Int32, %Int32* %3
+	%14 = load %Int32, %Int32* %2
+	%15 = load %Int32, %Int32* %1
+	%16 = getelementptr [2 x [5 x %Int32]], [2 x [2 x [5 x %Int32]]]* @a0, %Int32 %15, %Int32 %14, %Int32 %13
+	%17 = load %Int32, %Int32* %16
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*), %Int32 %10, %Int32 %11, %Int32 %12, %Int32 %17)
+	%19 = load %Int32, %Int32* %3
+	%20 = add %Int32 %19, 1
+	store %Int32 %20, %Int32* %3
+	br label %again_3
+break_3:
+	%21 = load %Int32, %Int32* %2
+	%22 = add %Int32 %21, 1
+	store %Int32 %22, %Int32* %2
+	br label %again_2
+break_2:
+	%23 = load %Int32, %Int32* %1
+	%24 = add %Int32 %23, 1
+	store %Int32 %24, %Int32* %1
+	br label %again_1
+break_1:
 	;
 	;
-	;	i = 0
-	;	while i < 2 {
-	;		j = 0
-	;		while j < 5 {
-	;			printf("a3[%d][%d] = %d\n", i, j, a3[i][j])
-	;			++j
-	;		}
-	;		++i
-	;	}
-	;printf("x = %d\n", a0[0][1][2])
-	%4 = getelementptr [5 x %Int32]*, [2 x [5 x %Int32]*]* @a3, %Int32 0
-	%5 = load [2 x [5 x %Int32]*], [2 x [5 x %Int32]*]* %4
-	%6 = getelementptr [5 x %Int32]*, [2 x [5 x %Int32]*] %5, %Int32 1
-	%7 = load %Int32, %Int32* %6
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Int32 %7)
+	store %Int32 0, %Int32* %1
+	br label %again_4
+again_4:
+	%25 = load %Int32, %Int32* %1
+	%26 = icmp slt %Int32 %25, 2
+	br %Bool %26 , label %body_4, label %break_4
+body_4:
+	store %Int32 0, %Int32* %2
+	br label %again_5
+again_5:
+	%27 = load %Int32, %Int32* %2
+	%28 = icmp slt %Int32 %27, 5
+	br %Bool %28 , label %body_5, label %break_5
+body_5:
+	%29 = load %Int32, %Int32* %1
+	%30 = load %Int32, %Int32* %2
+	%31 = load %Int32, %Int32* %2
+	%32 = load %Int32, %Int32* %1
+	%33 = getelementptr [5 x %Int32]*, [2 x [5 x %Int32]*]* @a3, %Int32 %32
+	%34 = load [5 x %Int32]*, [5 x %Int32]** %33
+	%35 = getelementptr %Int32, [5 x %Int32]* %34, %Int32 %31
+	%36 = load %Int32, %Int32* %35
+	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*), %Int32 %29, %Int32 %30, %Int32 %36)
+	%38 = load %Int32, %Int32* %2
+	%39 = add %Int32 %38, 1
+	store %Int32 %39, %Int32* %2
+	br label %again_5
+break_5:
+	%40 = load %Int32, %Int32* %1
+	%41 = add %Int32 %40, 1
+	store %Int32 %41, %Int32* %1
+	br label %again_4
+break_4:
+	%42 = getelementptr [2 x [5 x %Int32]], [2 x [2 x [5 x %Int32]]]* @a0, %Int32 0, %Int32 1, %Int32 2
+	%43 = load %Int32, %Int32* %42
+	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*), %Int32 %43)
+	%45 = getelementptr [5 x %Int32]*, [2 x [5 x %Int32]*]* @a3, %Int32 1
+	%46 = load [5 x %Int32]*, [5 x %Int32]** %45
+	%47 = getelementptr %Int32, [5 x %Int32]* %46, %Int32 4
+	%48 = load %Int32, %Int32* %47
+	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int32 %48)
 	ret %Int32 0
 }
 

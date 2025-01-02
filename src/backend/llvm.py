@@ -1049,18 +1049,20 @@ def is_closed_array_param(value):
 
 
 def index(x):
-	i = x['index']
+	i = do_reval(x['index'])
+
+	if htype.type_is_pointer(x['left']['type']):
+		print("-LOAD")
+		ll = do_reval(x['left'])
+		return (ll, (i,))
+		"""ll = do_eval(x['left'])
+		z = ass(ll, i)
+		z = llvm_load(z)
+		print("-- aaa")
+		return (z, (i,))"""
 
 	if x['left']['kind'] == 'index':
 		y, i2 = index(x['left'])
-
-		if htype.type_is_pointer(x['left']['type']):
-			print("-LOAD")
-			z = ass(y, i2)
-			z = llvm_load(z)
-			print("-- aaa")
-			return (z, (i,))
-
 		return (y, i2 + (i,))
 
 	return do_eval(x['left']), (i,)
@@ -1072,8 +1074,6 @@ def do_eval_index(v):
 		return do_eval(v['immval'])
 
 	left, indexes = index(v)
-
-
 
 	return ass(left, indexes)
 
@@ -1092,9 +1092,10 @@ def getET(et):
 def ass(left, indexes):
 	#indexes.reverse()
 
-	indexess = []
-	for i in indexes:
-		indexess.append(do_eval(i))
+	indexess = indexes
+	#indexess = []
+	#for i in indexes:
+	#	indexess.append(do_eval(i))
 
 	et = getET(left['type'])
 
