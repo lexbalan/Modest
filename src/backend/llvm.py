@@ -1051,6 +1051,7 @@ def is_closed_array_param(value):
 def index(x):
 	i = do_reval(x['index'])
 
+	# разфменовываем указатель на массив по умолчанию сами
 	if htype.type_is_pointer(x['left']['type']):
 		#print("-LOAD")
 		ll = do_reval(x['left'])
