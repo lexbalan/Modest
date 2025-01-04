@@ -77,14 +77,7 @@ def type_number(ti):
 		'width': 0,
 		'size': 0,
 		'align': 1,
-
-		'id': {
-			'isa': 'id',
-			'str': None,
-			'c': None,
-			'llvm': None,
-			'ti': None
-		},
+		'id': hlir_id(None, None),
 		'signed': False,
 		'ops': NUM_OPS,
 		'att': [],
@@ -102,15 +95,7 @@ def type_by_width(width, ti=None):
 		'width': width,
 		'size': size,
 		'align': size,
-
-		'id': {
-			'isa': 'id',
-			'str': None,
-			'c': None,
-			'llvm': None,
-			'ti': None
-		},
-
+		'id': hlir_id(None, None),
 		'ops': (),
 		'att': [],
 		'deps': [],
@@ -121,9 +106,9 @@ def type_by_width(width, ti=None):
 def type_unit():
 	t = type_by_width(0, ti=None)
 	t['kind'] = 'unit'
-	t['id']['str'] = 'Unit'
-	t['id']['c'] = 'void'
-	t['id']['llvm'] = 'void'
+	t['id'].str = 'Unit'
+	t['id'].c = 'void'
+	t['id'].llvm = 'void'
 	t['ops'] = UNIT_OPS
 	return t
 
@@ -131,9 +116,9 @@ def type_unit():
 def type_bool():
 	t = type_by_width(1, ti=None)
 	t['kind'] = 'bool'
-	t['id']['str'] = 'Bool'
-	t['id']['c'] = 'bool'
-	t['id']['llvm'] = '%Bool'
+	t['id'].str = 'Bool'
+	t['id'].c = 'bool'
+	t['id'].llvm = '%Bool'
 	t['ops'] = BOOL_OPS
 	return t
 
@@ -155,9 +140,9 @@ def type_word(width, ti=None):
 		llvm_alias = 'i%d' % width
 
 	t['kind'] = 'word'
-	t['id']['str'] = 'Word%d' % width
-	t['id']['llvm'] = llvm_alias
-	t['id']['c'] = calias
+	t['id'].str = 'Word%d' % width
+	t['id'].llvm = llvm_alias
+	t['id'].c = calias
 	t['ops'] = WORD_OPS
 	return t
 
@@ -196,9 +181,9 @@ def type_integer(width, signed=True, ti=None):
 	alias = get_int_alias(width, signed)
 	t['kind'] = 'int'
 	t['signed'] = signed
-	t['id']['str'] = alias['cm']
-	t['id']['llvm'] = alias['llvm']
-	t['id']['c'] = alias['c']
+	t['id'].str = alias['cm']
+	t['id'].llvm = alias['llvm']
+	t['id'].c = alias['c']
 	t['ops'] = INT_OPS
 	return t
 
@@ -211,9 +196,9 @@ def type_float(width, ti=None):
 		calias = 'double'
 
 	t['kind'] = 'float'
-	t['id']['str'] = 'Float%d' % width
-	t['id']['c'] = calias
-	t['id']['llvm'] = calias
+	t['id'].str = 'Float%d' % width
+	t['id'].c = calias
+	t['id'].llvm = calias
 	t['ops'] = FLOAT_OPS
 	return t
 
@@ -225,9 +210,9 @@ def type_char(width, ti=None):
 
 	t = type_by_width(width, ti=ti)
 	t['kind'] = 'char'
-	t['id']['str'] = 'Char%d' % width
-	t['id']['c'] = calias
-	t['id']['llvm'] = '%%Char%d' % width
+	t['id'].str = 'Char%d' % width
+	t['id'].c = calias
+	t['id'].llvm = '%%Char%d' % width
 	t['ops'] = CHAR_OPS
 	return t
 
@@ -378,9 +363,9 @@ def type_number_for(num, signed=False, ti=None):
 	required_width = align_bits_up(nbits_for_num(num))
 	t = type_number(ti)
 	alias = get_int_alias(required_width, signed)
-	t['id']['str'] = alias['cm']
-	t['id']['llvm'] = alias['llvm']
-	t['id']['c'] = alias['c']
+	t['id'].str = alias['cm']
+	t['id'].llvm = alias['llvm']
+	t['id'].c = alias['c']
 	t['signed'] = signed
 	t['width'] = required_width
 	t['size'] = nbytes_for_bits(required_width) #required_width // 8
@@ -451,8 +436,8 @@ def type_eq_fields(a, b, opt):
 	if len(a) != len(b): return False
 	for ax, bx in zip(a, b):
 
-		#if ax['id']['str'] != None and bx['id']['str'] != None:
-		if ax['id']['str'] != bx['id']['str']:
+		#if ax['id'].str != None and bx['id'].str != None:
+		if ax['id'].str != bx['id'].str:
 			return False
 
 		# простейшая защита от бесконечной рекурсии
@@ -781,7 +766,7 @@ def type_print_record(t, print_aka=True):
 		return
 
 #			for f in t['fields']:
-#				print("\t%s: " % f['id']['str'], end='')
+#				print("\t%s: " % f['id'].str, end='')
 #				type_print(f['type'])
 #				print()
 #			print("}")
@@ -827,7 +812,7 @@ def type_print_array(t, print_aka=True):
 
 
 def field_print(f):
-	print("%s: " % f['id']['str'], end='')
+	print("%s: " % f['id'].str, end='')
 	type_print(f['type'])
 
 
@@ -864,7 +849,7 @@ def type_print(t, print_aka=True):
 		print("Bool", end='')
 
 	elif type_is_char(t):
-		print(t['id']['str'], end='')
+		print(t['id'].str, end='')
 
 	elif type_is_enum(t):
 		if t['id'] != None:
@@ -881,13 +866,13 @@ def type_print(t, print_aka=True):
 		type_print_func(t, print_aka)
 
 	elif type_is_word(t):
-		print(t['id']['str'], end='')
+		print(t['id'].str, end='')
 
 	elif type_is_integer(t):
-		print(t['id']['str'], end='')
+		print(t['id'].str, end='')
 
 	elif type_is_float(t):
-		print(t['id']['str'], end='')
+		print(t['id'].str, end='')
 
 	elif type_is_string(t):
 		print("String", end='')
@@ -917,12 +902,12 @@ def select_common_record_type(a, b):
 
 	fields = []
 	for fieldA, fieldB in zip(a['fields'], b['fields']):
-		if fieldA['id']['str'] != fieldB['id']['str']:
+		if fieldA['id'].str != fieldB['id'].str:
 			return None
 
 		fieldId = fieldA['id']
 		fieldType = select_common_type(fieldA['type'], fieldB['type'])
-		newField = hlir_field(fieldId, fieldType, ti=fieldId['ti'])
+		newField = hlir_field(fieldId, fieldType, ti=fieldId.ti)
 		fields.append(newField)
 
 	newRecord = type_record(fields, ti=a['ti'])

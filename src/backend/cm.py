@@ -29,10 +29,10 @@ def nl_indent(nl=1):
 
 def get_id_str(x):
 	id_str = ""
-	if not 'cm' in x:
-		id_str = x['id']['str']
-	else:
-		id_str = x['id']['cm']
+	if x['id'].cm:
+		id_str = x['id'].cm
+
+	id_str = x['id'].str
 	return id_str
 
 
@@ -183,9 +183,9 @@ def print_type_func(t, extra_args=False):
 
 def get_type_id(t):
 	if 'id' in t:
-		if 'cm' in t['id']:
-			return t['cm']
-		return t['id']['str']
+		if t['id'].cm:
+			return t.cm
+		return t['id'].str
 
 	return None
 
@@ -260,8 +260,10 @@ def print_value_call(v, ctx):
 		if arg['isa'] == 'value':
 			# just paramter value
 			print_value(arg)
-		else: #if arg['isa'] == 'initializer':
+		elif arg['isa'] == 'initializer':
 			# named parameter
+			#print(arg['isa'])
+			print(arg['id'].str)
 			out("%s = " % get_id_str(arg))
 			print_value(arg['value'])
 

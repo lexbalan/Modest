@@ -528,8 +528,8 @@ def init_builtin_values():
 # offset - real offset (address inside container struct)
 def do_field(x):
 	id = x['id']
-	if id['str'][0].isupper():
-		error("field id must starts with small letter", id['ti'])
+	if id.str[0].isupper():
+		error("field id must starts with small letter", id.ti)
 
 	t = do_type(x['type'])
 	f = hlir_field(id, t, ti=x['ti'])
@@ -547,12 +547,12 @@ def do_field(x):
 
 def do_type_id(t):
 	id = t['ids'][0]
-	id_str = id['str']
+	id_str = id.str
 
 	tx = None
 	if len(t['ids']) > 1:
 		ns_id = id_str
-		id_str = t['ids'][1]['str']
+		id_str = t['ids'][1].str
 		#print(">>>>>>>>>>>>>>>>>>>>>> GET TYPE %s FROM: %s" % (id_str, ns_id))
 		global cmodule
 		if ns_id in cmodule['imports']:
@@ -627,7 +627,7 @@ def do_type_record(x):
 		f = do_field(field)
 
 		# redefinition?
-		field_id_str = f['id']['str']
+		field_id_str = f['id'].str
 		field_already_exist = get_item_by_id(fields, field_id_str)
 		if field_already_exist != None:
 			error("redefinition of '%s' field" % field_id_str, field['ti'])
@@ -670,7 +670,7 @@ def do_type_enum(t):
 
 		item_val['id'] = id
 		global cmodule
-		module_value_add_public(cmodule, id['str'], item_val)
+		module_value_add_public(cmodule, id.str, item_val)
 		i += 1
 
 	return enum_type
@@ -1011,7 +1011,7 @@ def sort_args(params, args):
 	# получаем направляющий вектор
 	vec0=[]
 	for param in params:
-		vec0.append(param['id']['str'])
+		vec0.append(param['id'].str)
 
 	# получаем вектор идентификаторов (или None)
 	vec1=[]
@@ -1087,12 +1087,12 @@ def do_value_va_copy(x):
 
 
 def do_value___defined_type(x):
-	t = ctx_type_get(x['type']['id']['str'])
+	t = ctx_type_get(x['type']['id'].str)
 	return t != None
 
 
 def do_value___defined_value(x):
-	v = ctx_value_get(x['value']['id']['str'])
+	v = ctx_value_get(x['value']['id'].str)
 	return v != None
 
 
@@ -1140,7 +1140,7 @@ def do_value_call(x):
 	i = 0
 	while i < npars:
 		param = params[i]
-		param_id_str = param['id']['str']
+		param_id_str = param['id'].str
 		a = sorted_args[i]
 
 		# check param name (if assigned)
@@ -1159,7 +1159,8 @@ def do_value_call(x):
 				imm_args = False
 
 			if a['key'] != None:
-				args.append(hlir_initializer(a['key'], arg))
+				id = hlir_id(a['key']['str'], ti=a['ti'])
+				args.append(hlir_initializer(id, arg))
 			else:
 				args.append(arg)
 
@@ -1192,7 +1193,7 @@ def do_value_call(x):
 
 
 	if 'id' in fn:
-		func_id_str = fn['id']['str']
+		func_id_str = fn['id'].str
 		if func_id_str in ['print', 'scanf', 'print']:
 			expected_pointers = func_id_str == 'scanf'
 			first_arg = x['args'][0]['value']
@@ -1367,7 +1368,7 @@ def submodule_access(x):
 	global cmodule
 
 	mname = x['left']['str']
-	iname = x['right']['str']
+	iname = x['right'].str
 	ti = x['ti']
 
 	submodule = cmodule['imports'][mname]
@@ -1416,11 +1417,11 @@ def do_value_access(x):
 		error("expected record or pointer to record", x)
 		return value_bad(x['ti'])
 
-	field = htype.record_field_get(record_type, field_id['str'])
+	field = htype.record_field_get(record_type, field_id.str)
 
 	# if field not found
 	if field == None:
-		error("undefined field '%s'" % field_id['str'], x)
+		error("undefined field '%s'" % field_id.str, x)
 		return value_bad(x['ti'])
 
 	# PROBLEM: у анонимных структур нет поля 'definition'
@@ -1449,7 +1450,7 @@ def do_value_access(x):
 
 		# access to immediate object
 		if value_is_immediate(left):
-			initializer = get_item_by_id(left['items'], field_id['str'])
+			initializer = get_item_by_id(left['items'], field_id.str)
 
 			# (!) #asset of immediate index & access contains VALUE (!)
 			nv['immediate'] = True
@@ -1486,7 +1487,7 @@ def do_value_id(x):
 	global cdef
 	if htype.type_is_incomplete(v['type']):
 		cdef['deps'].append(v)
-		v = update_func_type(v['id']['str'])
+		v = update_func_type(v['id'].str)
 		if v == None:
 			error("call undefined func", x['ti'])
 			return value_bad(x['ti'])
@@ -1539,6 +1540,7 @@ def do_value_record(x):
 		if item['isa'] == 'ast_kv':
 			item_value = do_rvalue(item['value'])
 			p = hlir_initializer(
+				#hlir_id(item['key']['str']),
 				item['key'],
 				item_value,
 				ti=item['ti'],
@@ -1822,7 +1824,7 @@ def do_stmt_var(x):
 	# error: no type, no init valuetu = type_is_undefined(t)
 	if tu == True and vu == True:
 		# type & value undefined
-		ctx_value_add(var_id['str'], value_bad(x['ti']))
+		ctx_value_add(var_id.str, value_bad(x['ti']))
 		return hlir_stmt_bad(x)
 
 	if tu == True and vu == False:
@@ -1834,7 +1836,7 @@ def do_stmt_var(x):
 
 	#if not htype.type_is_undefined(t):
 	#	if htype.type_is_bad(t):
-	#		ctx_value_add(var_id['str'], value_bad(x['ti']))
+	#		ctx_value_add(var_id.str, value_bad(x['ti']))
 	#		return hlir_stmt_bad(x)
 	#
 		if htype.type_is_forbidden_var(t):
@@ -1851,13 +1853,13 @@ def do_stmt_var(x):
 		t = v['type']
 
 	# check if identifier is free (in current block)
-	already = ctx_value_get_shallow(var_id['str'])
+	already = ctx_value_get_shallow(var_id.str)
 	if already != None:
-		error("local id redefinition", x['id']['ti'])
-		info("firstly defined here", already['id']['ti'])
+		error("local id redefinition", x['id'].ti)
+		info("firstly defined here", already['id'].ti)
 		return hlir_stmt_bad(x)
 
-	var_value = add_local_var(var_id, t, var_id['ti'])
+	var_value = add_local_var(var_id, t, var_id.ti)
 	return hlir_stmt_def_var(var_id, var_value, v, ti=x['ti'])
 
 
@@ -1865,7 +1867,7 @@ def do_stmt_var(x):
 def add_local_var(id, typ, ti):
 	var_value = value_var(id, typ, ti)
 	var_value['att'].extend(['local'])
-	ctx_value_add(id['str'], var_value)
+	ctx_value_add(id.str, var_value)
 	return var_value
 
 
@@ -1874,22 +1876,22 @@ def do_stmt_let(x):
 	id = x['id']
 
 	# check if identifier is free (in current block)
-	already = ctx_value_get_shallow(id['str'])
+	already = ctx_value_get_shallow(id.str)
 	if already != None:
-		error("redefinition of '%s'" % id['str'], id['ti'])
+		error("redefinition of '%s'" % id.str, id.ti)
 		return hlir_stmt_bad(x)
 
-	if id['str'][0].isupper():
-		error("value id must starts with small letter", id['ti'])
+	if id.str[0].isupper():
+		error("value id must starts with small letter", id.ti)
 		pass
 
 	v = do_rvalue(x['value'])
 
 	if value_is_bad(v):
-		ctx_value_add(id['str'], value_bad(x['ti']))
+		ctx_value_add(id.str, value_bad(x['ti']))
 		return hlir_stmt_bad(x)
 
-	const_value = value_const(id, v['type'], value=v, ti=x['id']['ti'])
+	const_value = value_const(id, v['type'], value=v, ti=x['id'].ti)
 	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
 	# на константу. ---Пока это необходимо для 'wrapped_array' (!)---
 	const_value['att'].extend(v['att'])
@@ -1903,9 +1905,9 @@ def do_stmt_let(x):
 		if htype.type_is_generic(v['type']):
 			# generic immediate в C печатается как #define
 			# и его надо манглить иначе возникает куча проблем
-			const_value['id']['c'] = '__' + const_value['id']['str']
+			const_value['id'].c = '__' + const_value['id'].str
 
-	ctx_value_add(id['str'], const_value)
+	ctx_value_add(id.str, const_value)
 
 	return hlir_stmt_def_const(id, const_value, v, ti=x['ti'])
 
@@ -2075,7 +2077,7 @@ def do_stmt_block(x):
 
 
 def symbol_const(id, init_value, is_public=False):
-	const_value = value_const(id, init_value['type'], init_value, id['ti'])
+	const_value = value_const(id, init_value['type'], init_value, id.ti)
 	const_value['att'].extend(init_value['att'])
 
 	# Now let can be immediate!
@@ -2084,8 +2086,8 @@ def symbol_const(id, init_value, is_public=False):
 		cp_immediate(const_value, init_value)
 
 	global cmodule
-	cmodule_value_add(id['str'], const_value, is_public=is_public)
-	#module_value_add_public(cmodule, id['str'], const_value)
+	cmodule_value_add(id.str, const_value, is_public=is_public)
+	#module_value_add_public(cmodule, id.str, const_value)
 	return const_value
 
 
@@ -2108,9 +2110,9 @@ def def_type(x):
 	global cdef
 
 	id = x['id']
-	log("def_type: %s" % id['str'])
+	log("def_type: %s" % id.str)
 
-	nt = ctx_type_get(id['str'])
+	nt = ctx_type_get(id.str)
 
 	if not htype.type_is_undefined(nt):
 		error("type redefinition", x['ti'])
@@ -2140,21 +2142,23 @@ def def_type(x):
 	type_update(nt, ty)
 	nt['deps'] = deps
 	nt['id'] = id # need for  @property("type.id.c", "int")
-#	nt['id']['c'] = id['str']   # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#	nt['id'].c = id.str   # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	nt['definition'] = definition
 	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
-	nt['ti_def'] = id['ti']
+	nt['ti_def'] = id.ti
 
 	if need_decoration(x):
-		nt['id']['prefix'] = cmodule['prefix']
+		nt['id'].need_decoration = True
+	#	nt['id'].prefix = cmodule['prefix']
 
 	if not ('do_not_include' in cmodule['att']):
 		# В случае когда не печатаем typedef явно (!)
 		# Убираем алиасы которые висели на оригинальном типе
 		#if 'c' in nt['id']:
 		#	nt.pop('c')
-		if 'llvm_alias' in nt['id']:
-			nt.pop('llvm_alias')
+		#if 'llvm_alias' in nt['id']:
+		#	nt.pop('llvm_alias')
+		pass
 
 	if htype.type_is_record(ty):
 		cmodule['records'].append(nt)
@@ -2169,12 +2173,12 @@ def def_const(x):
 	global cmodule
 	id = x['id']
 
-	log("def_const: %s" % id['str'])
+	log("def_const: %s" % id.str)
 
 	# check if identifier is free
-	pre_exist = ctx_value_get_shallow(id['str'])
+	pre_exist = ctx_value_get_shallow(id.str)
 	if pre_exist != None:
-		error("redefinition of '%s'" % id['str'], id['ti'])
+		error("redefinition of '%s'" % id.str, id.ti)
 
 	definition = hlir_def_const(id, None, None, x['ti'])
 	definition['module'] = cmodule
@@ -2186,7 +2190,7 @@ def def_const(x):
 
 
 	if value_is_bad(init_value):
-		module_value_add_public(cmodule, id['str'], init_value)
+		module_value_add_public(cmodule, id.str, init_value)
 		return hlir_def_const(id, init_value, init_value, x['ti'])
 
 	t = do_type(x['type'])
@@ -2201,7 +2205,8 @@ def def_const(x):
 	const_value['definition'] = definition
 
 	if need_decoration(x):
-		const_value['id']['prefix'] = cmodule['prefix']
+		const_value['id'].need_decoration = True
+	#	const_value['id'].prefix = cmodule['prefix']
 
 	definition['value'] = const_value
 
@@ -2214,12 +2219,12 @@ def def_var(x):
 	global cdef
 
 	id = x['id']
-	log("def_var %s" % id['str'])
+	log("def_var %s" % id.str)
 
 	# already defined? (check identifier)
-	already = ctx_value_get(id['str'])
+	already = ctx_value_get(id.str)
 	if already != None:
-		error("redefinition of '%s'" % id['str'], id['ti'])
+		error("redefinition of '%s'" % id.str, id.ti)
 
 
 	definition = hlir_def_var(id, None, None, x['ti'])
@@ -2237,7 +2242,7 @@ def def_var(x):
 	# error: no type, no init valuetu = type_is_undefined(t)
 	if tu == True and vu == True:
 		# ERROR: type & value undefined
-		ctx_value_add(id['str'], value_bad(x['ti']))
+		ctx_value_add(id.str, value_bad(x['ti']))
 		return hlir_stmt_bad(x)
 
 	elif tu == True and vu == False:
@@ -2276,8 +2281,8 @@ def def_var(x):
 
 	init_value = v
 
-	var_value = value_var(id, t, id['ti'])
-	cmodule_value_add(id['str'], var_value, is_public=x['access_modifier'] == 'public')
+	var_value = value_var(id, t, id.ti)
+	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 
 	definition['var_value'] = var_value
 	definition['init_value'] = init_value
@@ -2293,11 +2298,11 @@ def def_func(x, dostmt=True):
 	global cmodule
 
 	func_id = x['id']
-	log('def_func: %s' % func_id['str'])
+	log('def_func: %s' % func_id.str)
 
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
-	fn = ctx_value_get(func_id['str'])
+	fn = ctx_value_get(func_id.str)
 
 	definition = hlir_def_func(func_id, fn, None, x['ti'])
 	definition['module'] = cmodule
@@ -2315,9 +2320,10 @@ def def_func(x, dostmt=True):
 	if htype.type_is_bad(fn['type']):
 		return None
 
-	if x['id']['str'] != 'main':
+	if x['id'].str != 'main':
 		if need_decoration(x):
-			fn['id']['prefix'] = cmodule['prefix']
+			fn['id'].need_decoration = True
+			#fn['id'].prefix = cmodule['prefix']
 
 	if x['stmt'] == None:
 		return definition
@@ -2333,12 +2339,13 @@ def def_func(x, dostmt=True):
 	while i < len(params):
 		param = params[i]
 		param_type = param['type']
-		param_id = param['id']
+		#param_id = param['id']
+		param_id = hlir_id(param['id'].str, ti=param['ti'])
 
 		param_value = value_const(param_id, param_type, None, param['ti'])
 		param_value['att'].append('local')
 		param_value['att'].append('param')
-		ctx_value_add(param_id['str'], param_value)
+		ctx_value_add(param_id.str, param_value)
 		i += 1
 
 	# for C backend, for #include <stdarg.h>
@@ -2385,7 +2392,7 @@ def check_unuse(v):
 	if v['usecnt'] > 0:
 		return
 
-	id_str = v['id']['str']
+	id_str = v['id'].str
 	info("value '%s' defined but not used" % id_str, v['ti'])
 
 
@@ -2785,7 +2792,7 @@ def update_func_type(idStr):
 			continue
 		if x['kind'] != 'func':
 			continue
-		if x['id']['str'] != idStr:
+		if x['id'].str != idStr:
 			continue
 
 		fn = ctx_value_get(idStr)
@@ -2808,11 +2815,11 @@ def pre_def(ast, fdecl=False):
 		if isa == 'ast_definition':
 			is_public = x['access_modifier'] == 'public'
 			id = x['id']
-			ti = id['ti']
+			ti = id.ti
 
 			if kind == 'type':
 				t = htype.type_undefined(x['ti'])
-				cmodule_type_add(id['str'], t, is_public=is_public)
+				cmodule_type_add(id.str, t, is_public=is_public)
 
 			elif kind == 'func':
 				# Create incomplete function value
@@ -2824,7 +2831,7 @@ def pre_def(ast, fdecl=False):
 				#t = htype.type_undefined(x['ti'])
 				v = value_func(x['id'], t, x['ti'])
 				# And bound it with the id
-				cmodule_value_add(id['str'], v, is_public=is_public)
+				cmodule_value_add(id.str, v, is_public=is_public)
 
 
 	# 3. Далее идем по всем элементам с самого начала и определяем их.
@@ -2932,7 +2939,10 @@ def add_attributes(obj):
 def set_prop(obj, path, val):
 	if len(path) == 1:
 		f = path[0]
-		obj[f] = val
+		if isinstance(obj, dict):
+			obj[f] = val
+		else:
+			setattr(obj, f, val)
 
 	elif len(path) > 1:
 		if path[0] in obj:

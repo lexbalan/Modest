@@ -126,12 +126,15 @@ def init():
 	from value.value import value_undefined
 	undefinedVolume = value_undefined(typeSysNat, ti=None)
 	typeStr8 = type_array(typeChar8, undefinedVolume, ti=None)
-	typeStr8['id'] = {'str': 'Str8'}
+	typeStr8['id'] = hlir_id('Str8', ti=None)
 	typeStr16 = type_array(typeChar16, undefinedVolume, ti=None)
-	typeStr16['id'] = {'str': 'Str16'}
+	typeStr16['id'] = hlir_id('Str16', ti=None)
 	typeStr32 = type_array(typeChar32, undefinedVolume, ti=None)
-	typeStr32['id'] = {'str': 'Str32'}
+	typeStr32['id'] = hlir_id('Str32', ti=None)
 
+	va_list_id = hlir_id('va_list', ti=None)
+	va_list_id.c = 'va_list'
+	va_list_id.llvm = 'i8*'
 	type__VA_List = {
 		'isa': 'type',
 		'kind': 'va_list',
@@ -140,13 +143,7 @@ def init():
 		'size': 0,
 		'align': 1,
 		'width': 0,
-		'id': {
-			'isa': 'id',
-			'str': 'va_list',
-			'c':'va_list',
-			'llvm':'i8*',
-			'ti': None
-		},
+		'id': va_list_id,
 		'att': [],
 		'ops': [],
 		'ti': None

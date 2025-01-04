@@ -56,7 +56,7 @@ def record_can(to, from_type, method):
 	# check if all fields in from_type present in t
 	# and their types are equal (!)
 	for field in from_type['fields']:
-		field2 = record_field_get(to, field['id']['str'])
+		field2 = record_field_get(to, field['id'].str)
 		if field2 == None:
 			return False  # if no field with that name
 		if not type.type_eq(field['type'], field2['type']):
@@ -78,7 +78,7 @@ def value_record_cons(t, v, method, ti):
 		# конструируем запись на основе другой generic записи
 		items = []
 		for field in t['fields']:
-			initializer = get_item_by_id(v['items'], field['id']['str'])
+			initializer = get_item_by_id(v['items'], field['id'].str)
 			vv = None
 			if initializer:
 				from .cons import value_cons_implicit_check

@@ -367,7 +367,7 @@ def value_alignof(of, ti):
 def value_offsetof(of, field_id, ti):
 	field = htype.record_field_get(of, field_id['str'])
 	if field == None:
-		error("undefined field '%s'" % field_id['str'], field_id['ti'])
+		error("undefined field '%s'" % field_id['str'], field_id.ti)
 		return value_bad({'ti': ti})
 
 	offset = field['offset']

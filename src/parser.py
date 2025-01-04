@@ -770,7 +770,7 @@ class Parser:
 			elif self.match("."):
 				field_id = self.identifier()
 				ti['start'] = v['ti']
-				ti['end'] = field_id['ti']
+				ti['end'] = field_id.ti
 
 				v = {
 					'isa': 'ast_value',
@@ -1026,7 +1026,7 @@ class Parser:
 			id = self.identifier()
 
 			# __va_arg hack
-			if id['str'] == '__va_arg':
+			if id.str == '__va_arg':
 				self.match("(")
 				v = self.expr_value()
 				self.match(",")
@@ -1045,7 +1045,7 @@ class Parser:
 			return {
 				'isa': 'ast_value',
 				'kind': 'id',
-				'str': id['str'],
+				'str': id.str,
 				'ti': ti
 			}
 
@@ -1200,7 +1200,7 @@ class Parser:
 				'access_modifier': 'public',
 				'attributes': [],
 				'nl': 1,
-				'ti': id['ti']
+				'ti': id.ti
 			}
 			stmts.append(stmt_var)
 		return stmts
@@ -1453,7 +1453,7 @@ class Parser:
 				'attributes': [],
 				'comments_and_attributes': obj['comments_and_attributes'],
 				'nl': 1,
-				'ti': id['ti']
+				'ti': id.ti
 			}
 			fields.append(field)
 

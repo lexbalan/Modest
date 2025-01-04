@@ -109,30 +109,36 @@ def ll_reg_operation(op, type, reg=None):
 
 def type_get_aka(t):
 	if 'id' in t:
-		if 'llvm' in t['id']:
-			return t['id']['llvm']
+		if t['id'].llvm:
+			return t['id'].llvm
 
-		id_str = t['id']['str']
-		if 'prefix' in t['id']:
-			#id_str = t['definition']['module']['prefix'] + '_' + id_str
+		id_str = t['id'].str
 
-			prefix = t['definition']['module']['prefix']
-			if prefix != None:
-				id_str = prefix + '_' + id_str
+		if id_str != None:
+			#if t['id'].str != 'main':
+			if t['id'].need_decoration:
+				#id_str = t['definition']['module']['prefix'] + '_' + id_str
 
-		return '%' + id_str
+				if 'definition' in t:
+					prefix = t['definition']['module']['prefix']
+					if prefix != None:
+						id_str = prefix + '_' + id_str
+
+			return '%' + id_str
 	return None
 
 
 def get_id_str(x):
-	if 'llvm' in x['id']:
+	if x['id'].llvm:
 		return '"%s"' % x['id']['llvm']
 
-	id_str = x['id']['str']
-	if 'prefix' in x['id']:
-		prefix = x['definition']['module']['prefix']
-		if prefix != None:
-			id_str = prefix + '_' + id_str
+	id_str = x['id'].str
+	#if x['id'].str != 'main':
+	if x['id'].need_decoration:
+		if 'definition' in x:
+			prefix = x['definition']['module']['prefix']
+			if prefix != None:
+				id_str = prefix + '_' + id_str
 
 	return id_str
 
@@ -807,7 +813,7 @@ def print_type(t):
 		# хрен обратишься... дерьмо
 		if htype.type_is_record(t):
 			if 'id' in t:
-				out("%" + t['id']['str'])
+				out("%" + t['id'].str)
 				return
 
 		res = print_type_id(t)
@@ -2116,7 +2122,7 @@ def print_def_func(x):
 		if htype.type_is_closed_array(ptype):
 			paramId = get_id_str(param)
 
-			reg = '__' + param['id']['str']
+			reg = '__' + param['id'].str
 			loadedParam = llvm_value_reg(reg, ptype)
 
 
@@ -2378,7 +2384,7 @@ def een(defs, decl_only=False):
 
 		# Тупейшая Защита от повторного определения
 		# (А они происходят тк импорты и инклуюды сложно сплетены и повтор.)
-		uid = x['module']['id'] + '.' + x['id']['str']
+		uid = x['module']['id'] + '.' + x['id'].str
 
 		if uid in printed:
 			continue

@@ -3,6 +3,7 @@
 
 
 from error import info, error, fatal
+from hlir.id import hlir_id
 from .common import *
 import type as htype
 from type import select_common_type, type_print
@@ -148,14 +149,16 @@ def get_id_str(x):
 	if not 'id' in x:
 		return None
 
-	if 'c' in x['id']:
-		return x['id']['c']
+	if x['id'].c != None:
+		return x['id'].c
 
-	id_str = x['id']['str']
-	if 'prefix' in x['id']:
-		prefix = x['definition']['module']['prefix']
-		if prefix != None:
-			id_str = prefix + '_' + id_str
+	id_str = x['id'].str
+	#if x['id'].str != 'main':
+	if x['id'].need_decoration:
+		if 'definition' in x:
+			prefix = x['definition']['module']['prefix']
+			if prefix != None:
+				id_str = prefix + '_' + id_str
 	return id_str
 
 
@@ -226,8 +229,8 @@ def strTypeRecord(t, tag=""):
 
 def type_get_aka(t):
 	if 'id' in t:
-		if 'c' in t['id']:
-			return t['id']['c']
+		if t['id'].c != None:
+			return t['id'].c
 		return get_id_str(t)
 
 	if 'c_anon_id' in t:
@@ -338,7 +341,7 @@ def strTypeFunc(t, label='', core=''):
 		# (sret = structure return)
 		sret_param = {
 			'type': htype.type_pointer(t['to']),
-			'id': {'isa': 'id', 'id': 'sret_', 'c': 'sret_'}
+			'id': hlir_id('sret_', ti=None)
 		}
 
 		fparams = t['params'] + [sret_param]
@@ -713,7 +716,7 @@ def print_value_access(x, ctx):
 
 def print_value_access_module(v, ctx):
 	left = v['left']
-	#out("%s.%s" % (left['id'], v['right']['str']))
+	#out("%s.%s" % (left['id'], v['right'].str))
 
 	id_str = get_id_str(v['right'])
 	out("%s" % (id_str))
@@ -1193,8 +1196,8 @@ def print_value_literal(x, ctx):
 
 
 def print_value_by_id(x, ctx=[], prefix=''):
-	if 'c' in x:
-		out(x['c'])
+	if x['id'].c != None:
+		out(x['id'].c)
 	else:
 		print_id(x, prefix)
 
@@ -1754,8 +1757,8 @@ def print_def_func(x):
 	func_undef_list = []
 	out("\n}")
 
-	if not func['id']['str'] in declared:
-		declared.append(func['id']['str'])
+	if not func['id'].str in declared:
+		declared.append(func['id'].str)
 
 	cfunc = None
 

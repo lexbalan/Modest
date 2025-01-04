@@ -66,6 +66,9 @@ def hlir_def_func(_id, value_func, stmt, ti):
 
 
 def hlir_initializer(id, value, ti=None, nl=0):
+	if isinstance(id, dict):
+		print(id)
+		1/0
 	return {
 		'isa': 'initializer',
 		'id': id,
