@@ -4,7 +4,7 @@ from error import info, warning, error, fatal
 import settings
 from hlir.field import hlir_field
 
-from hlir.id import hlir_id
+from hlir.id import Id
 from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up
 
 
@@ -77,7 +77,7 @@ def type_number(ti):
 		'width': 0,
 		'size': 0,
 		'align': 1,
-		'id': hlir_id(None, None),
+		'id': Id(None, None),
 		'signed': False,
 		'ops': NUM_OPS,
 		'att': [],
@@ -95,7 +95,7 @@ def type_by_width(width, ti=None):
 		'width': width,
 		'size': size,
 		'align': size,
-		'id': hlir_id(None, None),
+		'id': Id(None, None),
 		'ops': (),
 		'att': [],
 		'deps': [],

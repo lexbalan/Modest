@@ -12,7 +12,3 @@ class Id():
 		self.cm = None
 
 
-
-def hlir_id(id_str, ti=None):
-	return Id(id_str, ti)
-

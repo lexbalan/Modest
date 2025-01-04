@@ -4,7 +4,7 @@
 
 import os
 from error import error, warning, info
-from hlir.id import hlir_id
+from hlir.id import Id
 from util import utf32cc_to_utf8_str
 
 
@@ -134,7 +134,7 @@ class Parser:
 			error("expected identifier", ti)
 			return None
 		s = self.gettok()
-		return hlir_id(s, ti=ti)
+		return Id(s, ti=ti) ####
 
 
 	def need_sep(self, separators=['\n', ';'], stoppers=['}'], eat=True):

@@ -10,6 +10,7 @@ from util import get_item_by_id
 from main import settings
 import type as htype
 from hlir.hlir import hlir_initializer
+from hlir.id import Id
 
 import foundation
 
@@ -479,15 +480,15 @@ def init_builtin_values():
 	compilerVersionMinor = value_integer_create(7, typ=foundation.typeNat32)
 
 	compiler_version_initializers = [
-		hlir_initializer(hlir_id('major'), compilerVersionMajor),
-		hlir_initializer(hlir_id('minor'), compilerVersionMinor)
+		hlir_initializer(Id('major'), compilerVersionMajor),
+		hlir_initializer(Id('minor'), compilerVersionMinor)
 	]
 	compilerVersion = value_record_create(compiler_version_initializers)
 
 	# '__compiler' record
 	compiler_initializers = [
-		hlir_initializer(hlir_id('name'), compilerName),
-		hlir_initializer(hlir_id('version'), compilerVersion),
+		hlir_initializer(Id('name'), compilerName),
+		hlir_initializer(Id('version'), compilerVersion),
 	]
 	compiler = value_record_create(compiler_initializers)
 	root_symtab.value_add('__compiler', compiler)
@@ -511,11 +512,11 @@ def init_builtin_values():
 
 	# '__target' record
 	target_initializers = [
-		hlir_initializer(hlir_id('name'), __targetName),
-		hlir_initializer(hlir_id('charWidth'), __targetCharWidth),
-		hlir_initializer(hlir_id('intWidth'), __targetIntWidth),
-		hlir_initializer(hlir_id('floatWidth'), __targetFloatWidth),
-		hlir_initializer(hlir_id('pointerWidth'), __targetPointerWidth),
+		hlir_initializer(Id('name'), __targetName),
+		hlir_initializer(Id('charWidth'), __targetCharWidth),
+		hlir_initializer(Id('intWidth'), __targetIntWidth),
+		hlir_initializer(Id('floatWidth'), __targetFloatWidth),
+		hlir_initializer(Id('pointerWidth'), __targetPointerWidth),
 	]
 	target = value_record_create(target_initializers)
 	root_symtab.value_add('__target', target)
@@ -1159,7 +1160,7 @@ def do_value_call(x):
 				imm_args = False
 
 			if a['key'] != None:
-				id = hlir_id(a['key']['str'], ti=a['ti'])
+				id = Id(a['key']['str'], ti=a['ti'])
 				args.append(hlir_initializer(id, arg))
 			else:
 				args.append(arg)
@@ -1540,7 +1541,7 @@ def do_value_record(x):
 		if item['isa'] == 'ast_kv':
 			item_value = do_rvalue(item['value'])
 			p = hlir_initializer(
-				#hlir_id(item['key']['str']),
+				#Id(item['key']['str']),
 				item['key'],
 				item_value,
 				ti=item['ti'],
@@ -2340,7 +2341,7 @@ def def_func(x, dostmt=True):
 		param = params[i]
 		param_type = param['type']
 		#param_id = param['id']
-		param_id = hlir_id(param['id'].str, ti=param['ti'])
+		param_id = Id(param['id'].str, ti=param['ti'])
 
 		param_value = value_const(param_id, param_type, None, param['ti'])
 		param_value['att'].append('local')

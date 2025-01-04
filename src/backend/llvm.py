@@ -1885,9 +1885,9 @@ def print_stmt_asm(x):
 		fields = []
 		for o in outs:
 			field_type = o['type']
-			from hlir.id import hlir_id
+			from hlir.id import Id
 			from hlir.field import hlir_field
-			field_id = hlir_id('<noname>')
+			field_id = Id('<noname>')
 			f = hlir_field(field_id, field_type, ti=x['ti'])
 			fields.append(f)
 

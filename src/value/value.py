@@ -1,6 +1,6 @@
 import copy
 from error import info, warning, error
-from hlir.id import hlir_id
+from hlir.id import Id
 from hlir.hlir import *
 from util import get_item_by_id
 import type as htype
@@ -74,7 +74,7 @@ def value_bad(ti):
 	return {
 		'isa': 'value',
 		'kind': 'bad',
-		'id': hlir_id('_', ti=ti),
+		'id': Id('_', ti=ti),
 		'type': htype.type_bad({'ti': ti}),
 		'immutable': False,
 		'immediate': False,

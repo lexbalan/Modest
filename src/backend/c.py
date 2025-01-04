@@ -3,7 +3,7 @@
 
 
 from error import info, error, fatal
-from hlir.id import hlir_id
+from hlir.id import Id
 from .common import *
 import type as htype
 from type import select_common_type, type_print
@@ -341,7 +341,7 @@ def strTypeFunc(t, label='', core=''):
 		# (sret = structure return)
 		sret_param = {
 			'type': htype.type_pointer(t['to']),
-			'id': hlir_id('sret_', ti=None)
+			'id': Id('sret_', ti=None)
 		}
 
 		fparams = t['params'] + [sret_param]
