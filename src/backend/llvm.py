@@ -129,6 +129,10 @@ def type_get_aka(t):
 
 
 def get_id_str(x):
+
+	if isinstance(x['id'], dict):
+		info("??", x['id']['ti'])
+
 	if x['id'].llvm:
 		return '"%s"' % x['id']['llvm']
 
@@ -2054,7 +2058,8 @@ def print_decl_func(x):
 	out("\ndeclare ")
 	print_linkage(x)
 	fn = x['value']
-	print_func_signature(fn['type'], get_id_str(fn))
+	str = get_id_str(fn)
+	print_func_signature(fn['type'], str)
 
 
 
@@ -2381,6 +2386,12 @@ def een(defs, decl_only=False):
 			continue
 		if 'no_print' in x['att']:
 			continue
+
+		try:
+			x['id'].str
+		except:
+			print(x['isa'])
+			#print(x['kind'])
 
 		# Тупейшая Защита от повторного определения
 		# (А они происходят тк импорты и инклуюды сложно сплетены и повтор.)

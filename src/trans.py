@@ -528,7 +528,7 @@ def init_builtin_values():
 # pos - position no
 # offset - real offset (address inside container struct)
 def do_field(x):
-	id = x['id']
+	id = Id(x['id']['str'], x['id']['ti'])
 	if id.str[0].isupper():
 		error("field id must starts with small letter", id.ti)
 
@@ -548,12 +548,12 @@ def do_field(x):
 
 def do_type_id(t):
 	id = t['ids'][0]
-	id_str = id.str
+	id_str = id['str']
 
 	tx = None
 	if len(t['ids']) > 1:
 		ns_id = id_str
-		id_str = t['ids'][1].str
+		id_str = t['ids'][1]['str']
 		#print(">>>>>>>>>>>>>>>>>>>>>> GET TYPE %s FROM: %s" % (id_str, ns_id))
 		global cmodule
 		if ns_id in cmodule['imports']:
@@ -1369,7 +1369,7 @@ def submodule_access(x):
 	global cmodule
 
 	mname = x['left']['str']
-	iname = x['right'].str
+	iname = x['right']['str']
 	ti = x['ti']
 
 	submodule = cmodule['imports'][mname]
@@ -1404,7 +1404,7 @@ def do_value_access(x):
 	if value_is_bad(left):
 		return value_bad(x['ti'])
 
-	field_id = x['right']
+	field_id = Id(x['right']['str'], x['right']['ti'])
 
 	# доступ через переменную-указатель
 	via_pointer = htype.type_is_pointer(left['type'])
@@ -1541,8 +1541,8 @@ def do_value_record(x):
 		if item['isa'] == 'ast_kv':
 			item_value = do_rvalue(item['value'])
 			p = hlir_initializer(
-				#Id(item['key']['str']),
-				item['key'],
+				Id(item['key']['str'], item['key']['str']),
+				#item['key'],
 				item_value,
 				ti=item['ti'],
 				nl=item['nl']
@@ -1814,8 +1814,7 @@ def do_stmt_break(x):
 
 
 def do_stmt_var(x):
-	var_id = x['id']
-
+	var_id = Id(x['id']['str'], x['id']['ti'])
 	t = do_type(x['type'])
 	v = do_rvalue(x['init_value'])
 
@@ -1874,7 +1873,7 @@ def add_local_var(id, typ, ti):
 
 
 def do_stmt_let(x):
-	id = x['id']
+	id = Id(x['id']['str'], x['id']['ti'])
 
 	# check if identifier is free (in current block)
 	already = ctx_value_get_shallow(id.str)
@@ -1892,7 +1891,7 @@ def do_stmt_let(x):
 		ctx_value_add(id.str, value_bad(x['ti']))
 		return hlir_stmt_bad(x)
 
-	const_value = value_const(id, v['type'], value=v, ti=x['id'].ti)
+	const_value = value_const(id, v['type'], value=v, ti=x['id']['ti'])
 	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
 	# на константу. ---Пока это необходимо для 'wrapped_array' (!)---
 	const_value['att'].extend(v['att'])
@@ -2110,7 +2109,7 @@ def def_type(x):
 	global cmodule
 	global cdef
 
-	id = x['id']
+	id = Id(x['id']['str'], x['id']['ti'])
 	log("def_type: %s" % id.str)
 
 	nt = ctx_type_get(id.str)
@@ -2142,7 +2141,7 @@ def def_type(x):
 	deps = nt['deps']
 	type_update(nt, ty)
 	nt['deps'] = deps
-	nt['id'] = id # need for  @property("type.id.c", "int")
+	nt['id'] = id
 #	nt['id'].c = id.str   # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	nt['definition'] = definition
 	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
@@ -2172,7 +2171,7 @@ def def_type(x):
 def def_const(x):
 	global cdef
 	global cmodule
-	id = x['id']
+	id = Id(x['id']['str'], x['id']['ti'])
 
 	log("def_const: %s" % id.str)
 
@@ -2219,7 +2218,7 @@ def def_const(x):
 def def_var(x):
 	global cdef
 
-	id = x['id']
+	id = Id(x['id']['str'], x['id']['ti'])
 	log("def_var %s" % id.str)
 
 	# already defined? (check identifier)
@@ -2298,7 +2297,8 @@ def def_func(x, dostmt=True):
 	global cfunc
 	global cmodule
 
-	func_id = x['id']
+	func_id = Id(x['id']['str'], x['id']['ti'])
+
 	log('def_func: %s' % func_id.str)
 
 	# значение функции уже существует, (возможно - undefined)
@@ -2321,7 +2321,7 @@ def def_func(x, dostmt=True):
 	if htype.type_is_bad(fn['type']):
 		return None
 
-	if x['id'].str != 'main':
+	if func_id.str != 'main':
 		if need_decoration(x):
 			fn['id'].need_decoration = True
 			#fn['id'].prefix = cmodule['prefix']
@@ -2793,7 +2793,7 @@ def update_func_type(idStr):
 			continue
 		if x['kind'] != 'func':
 			continue
-		if x['id'].str != idStr:
+		if x['id']['str'] != idStr:
 			continue
 
 		fn = ctx_value_get(idStr)
@@ -2816,11 +2816,11 @@ def pre_def(ast, fdecl=False):
 		if isa == 'ast_definition':
 			is_public = x['access_modifier'] == 'public'
 			id = x['id']
-			ti = id.ti
+			ti = id['ti']
 
 			if kind == 'type':
 				t = htype.type_undefined(x['ti'])
-				cmodule_type_add(id.str, t, is_public=is_public)
+				cmodule_type_add(id['str'], t, is_public=is_public)
 
 			elif kind == 'func':
 				# Create incomplete function value
@@ -2830,9 +2830,10 @@ def pre_def(ast, fdecl=False):
 				t = htype.type_func([], f_to, False, x['ti'])
 				t['att'].append('incomplete')
 				#t = htype.type_undefined(x['ti'])
-				v = value_func(x['id'], t, x['ti'])
+				fid = Id(x['id']['str'], x['ti'])
+				v = value_func(fid, t, x['ti'])
 				# And bound it with the id
-				cmodule_value_add(id.str, v, is_public=is_public)
+				cmodule_value_add(id['str'], v, is_public=is_public)
 
 
 	# 3. Далее идем по всем элементам с самого начала и определяем их.
