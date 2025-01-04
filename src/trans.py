@@ -480,15 +480,15 @@ def init_builtin_values():
 	compilerVersionMinor = value_integer_create(7, typ=foundation.typeNat32)
 
 	compiler_version_initializers = [
-		hlir_initializer(Id('major'), compilerVersionMajor),
-		hlir_initializer(Id('minor'), compilerVersionMinor)
+		hlir_initializer(Id().fromStr('major'), compilerVersionMajor),
+		hlir_initializer(Id().fromStr('minor'), compilerVersionMinor)
 	]
 	compilerVersion = value_record_create(compiler_version_initializers)
 
 	# '__compiler' record
 	compiler_initializers = [
-		hlir_initializer(Id('name'), compilerName),
-		hlir_initializer(Id('version'), compilerVersion),
+		hlir_initializer(Id().fromStr('name'), compilerName),
+		hlir_initializer(Id().fromStr('version'), compilerVersion),
 	]
 	compiler = value_record_create(compiler_initializers)
 	root_symtab.value_add('__compiler', compiler)
@@ -512,11 +512,11 @@ def init_builtin_values():
 
 	# '__target' record
 	target_initializers = [
-		hlir_initializer(Id('name'), __targetName),
-		hlir_initializer(Id('charWidth'), __targetCharWidth),
-		hlir_initializer(Id('intWidth'), __targetIntWidth),
-		hlir_initializer(Id('floatWidth'), __targetFloatWidth),
-		hlir_initializer(Id('pointerWidth'), __targetPointerWidth),
+		hlir_initializer(Id().fromStr('name'), __targetName),
+		hlir_initializer(Id().fromStr('charWidth'), __targetCharWidth),
+		hlir_initializer(Id().fromStr('intWidth'), __targetIntWidth),
+		hlir_initializer(Id().fromStr('floatWidth'), __targetFloatWidth),
+		hlir_initializer(Id().fromStr('pointerWidth'), __targetPointerWidth),
 	]
 	target = value_record_create(target_initializers)
 	root_symtab.value_add('__target', target)
@@ -528,7 +528,7 @@ def init_builtin_values():
 # pos - position no
 # offset - real offset (address inside container struct)
 def do_field(x):
-	id = Id(x['id']['str'], x['id']['ti'])
+	id = Id(x['id'])
 	if id.str[0].isupper():
 		error("field id must starts with small letter", id.ti)
 
@@ -1160,7 +1160,7 @@ def do_value_call(x):
 				imm_args = False
 
 			if a['key'] != None:
-				id = Id(a['key']['str'], ti=a['ti'])
+				id = Id(a['key'])
 				args.append(hlir_initializer(id, arg))
 			else:
 				args.append(arg)
@@ -1404,7 +1404,7 @@ def do_value_access(x):
 	if value_is_bad(left):
 		return value_bad(x['ti'])
 
-	field_id = Id(x['right']['str'], x['right']['ti'])
+	field_id = Id(x['right'])
 
 	# доступ через переменную-указатель
 	via_pointer = htype.type_is_pointer(left['type'])
@@ -1541,7 +1541,7 @@ def do_value_record(x):
 		if item['isa'] == 'ast_kv':
 			item_value = do_rvalue(item['value'])
 			p = hlir_initializer(
-				Id(item['key']['str'], item['key']['str']),
+				Id(item['key']),
 				#item['key'],
 				item_value,
 				ti=item['ti'],
@@ -1814,7 +1814,7 @@ def do_stmt_break(x):
 
 
 def do_stmt_var(x):
-	var_id = Id(x['id']['str'], x['id']['ti'])
+	var_id = Id(x['id'])
 	t = do_type(x['type'])
 	v = do_rvalue(x['init_value'])
 
@@ -1873,7 +1873,7 @@ def add_local_var(id, typ, ti):
 
 
 def do_stmt_let(x):
-	id = Id(x['id']['str'], x['id']['ti'])
+	id = Id(x['id'])
 
 	# check if identifier is free (in current block)
 	already = ctx_value_get_shallow(id.str)
@@ -2109,7 +2109,7 @@ def def_type(x):
 	global cmodule
 	global cdef
 
-	id = Id(x['id']['str'], x['id']['ti'])
+	id = Id(x['id'])
 	log("def_type: %s" % id.str)
 
 	nt = ctx_type_get(id.str)
@@ -2171,7 +2171,7 @@ def def_type(x):
 def def_const(x):
 	global cdef
 	global cmodule
-	id = Id(x['id']['str'], x['id']['ti'])
+	id = Id(x['id'])
 
 	log("def_const: %s" % id.str)
 
@@ -2218,7 +2218,7 @@ def def_const(x):
 def def_var(x):
 	global cdef
 
-	id = Id(x['id']['str'], x['id']['ti'])
+	id = Id(x['id'])
 	log("def_var %s" % id.str)
 
 	# already defined? (check identifier)
@@ -2297,7 +2297,7 @@ def def_func(x, dostmt=True):
 	global cfunc
 	global cmodule
 
-	func_id = Id(x['id']['str'], x['id']['ti'])
+	func_id = Id(x['id'])
 
 	log('def_func: %s' % func_id.str)
 
@@ -2340,8 +2340,7 @@ def def_func(x, dostmt=True):
 	while i < len(params):
 		param = params[i]
 		param_type = param['type']
-		#param_id = param['id']
-		param_id = Id(param['id'].str, ti=param['ti'])
+		param_id = param['id']
 
 		param_value = value_const(param_id, param_type, None, param['ti'])
 		param_value['att'].append('local')
@@ -2830,7 +2829,7 @@ def pre_def(ast, fdecl=False):
 				t = htype.type_func([], f_to, False, x['ti'])
 				t['att'].append('incomplete')
 				#t = htype.type_undefined(x['ti'])
-				fid = Id(x['id']['str'], x['ti'])
+				fid = Id(x['id'])
 				v = value_func(fid, t, x['ti'])
 				# And bound it with the id
 				cmodule_value_add(id['str'], v, is_public=is_public)

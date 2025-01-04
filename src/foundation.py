@@ -127,13 +127,13 @@ def init():
 	from value.value import value_undefined
 	undefinedVolume = value_undefined(typeSysNat, ti=None)
 	typeStr8 = type_array(typeChar8, undefinedVolume, ti=None)
-	typeStr8['id'] = Id('Str8', ti=None)
+	typeStr8['id'] = Id().fromStr('Str8')
 	typeStr16 = type_array(typeChar16, undefinedVolume, ti=None)
-	typeStr16['id'] = Id('Str16', ti=None)
+	typeStr16['id'] = Id().fromStr('Str16')
 	typeStr32 = type_array(typeChar32, undefinedVolume, ti=None)
-	typeStr32['id'] = Id('Str32', ti=None)
+	typeStr32['id'] = Id().fromStr('Str32')
 
-	va_list_id = Id('va_list', ti=None)
+	va_list_id = Id().fromStr('va_list')
 	va_list_id.c = 'va_list'
 	va_list_id.llvm = 'i8*'
 	type__VA_List = {

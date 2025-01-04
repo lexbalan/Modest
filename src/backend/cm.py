@@ -262,8 +262,6 @@ def print_value_call(v, ctx):
 			print_value(arg)
 		elif arg['isa'] == 'initializer':
 			# named parameter
-			#print(arg['isa'])
-			print(arg['id'].str)
 			out("%s = " % get_id_str(arg))
 			print_value(arg['value'])
 

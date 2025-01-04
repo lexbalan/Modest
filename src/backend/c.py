@@ -341,7 +341,7 @@ def strTypeFunc(t, label='', core=''):
 		# (sret = structure return)
 		sret_param = {
 			'type': htype.type_pointer(t['to']),
-			'id': Id('sret_', ti=None)
+			'id': Id().fromStr('sret_')
 		}
 
 		fparams = t['params'] + [sret_param]
