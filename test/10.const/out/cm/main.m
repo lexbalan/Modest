@@ -6,5 +6,4 @@ include "libc/stdio"
 include "libc/math"
 @c_include "./minmax.h"
 include "misc/minmax"
-// Pythagorean theorem
 

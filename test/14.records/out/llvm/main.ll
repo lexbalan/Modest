@@ -216,7 +216,7 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
-	; check value_record_eq for immediate values
+	;{'str': ' check value_record_eq for immediate values'}
 	%2 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 7, 1
 	%3 = alloca {%Int32,%Int32}
 	store {%Int32,%Int32} %2, {%Int32,%Int32}* %3
@@ -228,7 +228,7 @@ else_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str3 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	; compare two Point2D records
+	;{'str': ' compare two Point2D records'}
 	%6 = alloca %Point2D, align 4
 	%7 = insertvalue %Point2D zeroinitializer, %Int32 1, 0
 	%8 = insertvalue %Point2D %7, %Int32 2, 1
@@ -249,7 +249,7 @@ else_1:
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
 	br label %endif_1
 endif_1:
-	; compare Point2D with anonymous record
+	;{'str': ' compare Point2D with anonymous record'}
 	%18 = alloca %Point2D, align 4
 	%19 = load %Point2D, %Point2D* %6
 	store %Point2D %19, %Point2D* %18
@@ -275,7 +275,7 @@ else_2:
 	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
 	br label %endif_2
 endif_2:
-	; comparison between two anonymous record
+	;{'str': ' comparison between two anonymous record'}
 	%32 = alloca {%Int32,%Int32}, align 4
 	%33 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
 	%34 = insertvalue {%Int32,%Int32} %33, %Int32 2, 1
@@ -298,7 +298,7 @@ else_3:
 	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str9 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-	; comparison between two record (by pointer)
+	;{'str': ' comparison between two record (by pointer)'}
 ; -- cons_composite_from_composite_by_adr --
 	%44 = bitcast {%Int32,%Int32}* %20 to %Point2D*
 	%45 = load %Point2D, %Point2D* %44
@@ -317,33 +317,177 @@ else_4:
 	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str11 to [0 x i8]*))
 	br label %endif_4
 endif_4:
-;
-;	var prx = &p2d2
-;	var prx2 = &prx
-;	var pry = &p2d3
-;
-;	if **prx2 == *pry {
-;		printf("**prx2 == *pry\n")
-;	} else {
-;		printf("**prx2 != *pry\n")
-;	}
-;
-	; assign record by pointer
+	;
+
+	;	
+	;v
+	;a
+	;r
+	; 
+	;p
+	;r
+	;x
+	; 
+	;=
+	; 
+	;&
+	;p
+	;2
+	;d
+	;2
+	;
+
+	;	
+	;v
+	;a
+	;r
+	; 
+	;p
+	;r
+	;x
+	;2
+	; 
+	;=
+	; 
+	;&
+	;p
+	;r
+	;x
+	;
+
+	;	
+	;v
+	;a
+	;r
+	; 
+	;p
+	;r
+	;y
+	; 
+	;=
+	; 
+	;&
+	;p
+	;2
+	;d
+	;3
+	;
+
+	;
+
+	;	
+	;i
+	;f
+	; 
+	;*
+	;*
+	;p
+	;r
+	;x
+	;2
+	; 
+	;=
+	;=
+	; 
+	;*
+	;p
+	;r
+	;y
+	; 
+	;{
+	;
+
+	;	
+	;	
+	;p
+	;r
+	;i
+	;n
+	;t
+	;f
+	;(
+	;"
+	;*
+	;*
+	;p
+	;r
+	;x
+	;2
+	; 
+	;=
+	;=
+	; 
+	;*
+	;p
+	;r
+	;y
+	;\
+	;n
+	;"
+	;)
+	;
+
+	;	
+	;}
+	; 
+	;e
+	;l
+	;s
+	;e
+	; 
+	;{
+	;
+
+	;	
+	;	
+	;p
+	;r
+	;i
+	;n
+	;t
+	;f
+	;(
+	;"
+	;*
+	;*
+	;p
+	;r
+	;x
+	;2
+	; 
+	;!
+	;=
+	; 
+	;*
+	;p
+	;r
+	;y
+	;\
+	;n
+	;"
+	;)
+	;
+
+	;	
+	;}
+	;
+
+	;{'str': ' assign record by pointer'}
 	%53 = insertvalue %Point2D zeroinitializer, %Int32 100, 0
 	%54 = insertvalue %Point2D %53, %Int32 200, 1
 	store %Point2D %54, %Point2D* %18
 	store {%Int32,%Int32} zeroinitializer, {%Int32,%Int32}* %20
-	; cons Point3D from Point2D (record extension)
-	; (it is possible if dst record contained all fields from src record
-	; and their types are equal)  ((EXPERIMENTAL))
+	;{'str': ' cons Point3D from Point2D (record extension)'}
+	;{'str': ' (it is possible if dst record contained all fields from src record'}
+	;{'str': ' and their types are equal)  ((EXPERIMENTAL))'}
 	%55 = alloca %Point3D, align 4
 ; -- cons_composite_from_composite_by_adr --
 	%56 = bitcast %Point2D* %18 to %Point3D*
 	%57 = load %Point3D, %Point3D* %56
 ; -- end cons_composite_from_composite_by_adr --
 	store %Point3D %57, %Point3D* %55
-	; проверка того как локальная константа-массив
-	; "замораживает" свои элементы
+	;{'str': ' проверка того как локальная константа-массив'}
+	;{'str': ' "замораживает" свои элементы'}
 	%58 = alloca %Int32, align 4
 	store %Int32 10, %Int32* %58
 	%59 = alloca %Int32, align 4

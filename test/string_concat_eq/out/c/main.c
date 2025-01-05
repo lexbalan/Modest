@@ -12,7 +12,7 @@
 #define party_corn  U"🎉"
 
 #define greeting  (hello " " world)
-//+ " " + party_corn
+
 
 
 #define test  "test"

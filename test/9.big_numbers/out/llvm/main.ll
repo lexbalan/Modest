@@ -252,7 +252,7 @@ define %Int @main() {
 	%38 = bitcast %Int128 %37 to %Word128
 	%39 = call %Word64 @low_128(%Word128 %38)
 	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Word64 %36, %Word64 %39)
-	; signed big int test
+	;{'str': ' signed big int test'}
 	%41 = sub %Int8 0, 1
 	%42 = alloca %Int128, align 16
 	store %Int128 -1, %Int128* %42

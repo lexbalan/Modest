@@ -17,19 +17,19 @@ int main()
 	bool b;
 
 	x = 1;
-	//b = Bool x
+	//{'str': 'b = Bool x'}
 	b = x != 0;
 	printf("x = %u\n", (uint32_t)x);
 	printf("x to Bool = %u\n", (uint32_t)b);
 
 	x = 2;
-	//b = Bool x
+	//{'str': 'b = Bool x'}
 	b = x != 0;
 	printf("x = %u\n", (uint32_t)x);
 	printf("x to Bool = %u\n", (uint32_t)b);
 
 	x = 3;
-	//b = Bool x
+	//{'str': 'b = Bool x'}
 	b = x != 0;
 	printf("x = %u\n", (uint32_t)x);
 	printf("x to Bool = %u\n", (uint32_t)b);

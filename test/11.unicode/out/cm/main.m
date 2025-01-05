@@ -10,5 +10,4 @@ include "libc/stdio"
 @c_include "stdio.h"
 @c_include "string.h"
 include "lightfood/console"
-// include test (!)
 

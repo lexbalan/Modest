@@ -194,9 +194,9 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %NewInt32, align 4
 	store %NewInt32 0, %NewInt32* %2
-	;type NewInt16 Int16
-	;var newInt16: NewInt16
-	;newInt16 = NewInt16 0
+	;{'str': 'type NewInt16 Int16'}
+	;{'str': 'var newInt16: NewInt16'}
+	;{'str': 'newInt16 = NewInt16 0'}
 	ret %Int 0
 }
 

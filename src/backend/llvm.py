@@ -10,6 +10,7 @@ from util import align_bits_up
 from pprint import pprint
 import settings
 
+from hlir.stmt import *
 from hlir.hlir import *
 
 import foundation
@@ -132,16 +133,18 @@ def type_get_aka(t):
 
 def get_id_str(x):
 
-	if isinstance(x, Initializer):
-		return x.id.str
-	#	info("??", x['id']['ti'])
+	id = None
+	if isinstance(x, dict):
+		id = x['id']
+	else:
+		id = x.id
 
-	if x['id'].llvm:
-		return '"%s"' % x['id']['llvm']
+	if id.llvm:
+		return '"%s"' % id['llvm']
 
-	id_str = x['id'].str
-	#if x['id'].str != 'main':
-	if x['id'].need_decoration:
+	id_str = id.str
+	#if id.str != 'main':
+	if id.need_decoration:
 		if 'definition' in x:
 			prefix = x['definition'].module['prefix']
 			if prefix != None:
@@ -1620,10 +1623,10 @@ def do_eval(x):
 #
 
 def print_stmt_assign(x):
-	if htype.type_is_array(x['right']['type']):
-		return do_assign_arrays(x['left'], x['right'])
-	l = do_eval(x['left'])
-	r = do_reval(x['right'])
+	if htype.type_is_array(x.right['type']):
+		return do_assign_arrays(x.left, x.right)
+	l = do_eval(x.left)
+	r = do_reval(x.right)
 	llvm_store(l, r)
 
 
@@ -1654,26 +1657,26 @@ def print_stmt_if(x):
 	global fctx
 	if_id = fctx['if_no']
 	fctx['if_no'] = fctx['if_no'] + 1
-	cv = do_reval(x['cond'])
+	cv = do_reval(x.cond)
 
 	then_label = 'then_%d' % if_id
 	else_label = 'else_%d' % if_id
 	endif_label = 'endif_%d' % if_id
 
-	if x['else'] == None:
+	if x.els == None:
 		else_label = endif_label
 
 	llvm_br(cv, then_label, else_label)
 
 	# then block
 	llvm_label(then_label)
-	print_stmt(x['then'])
+	print_stmt(x.then)
 	llvm_jump(endif_label)
 
 	# else block
-	if x['else'] != None:
+	if x.els != None:
 		llvm_label(else_label)
-		print_stmt(x['else'])
+		print_stmt(x.els)
 		llvm_jump(endif_label)
 
 	# endif label
@@ -1693,10 +1696,10 @@ def print_stmt_while(x):
 
 	llvm_jump(again_label)
 	llvm_label(again_label)
-	cv = do_reval(x['cond'])
+	cv = do_reval(x.cond)
 	llvm_br(cv, body_label, break_label)
 	llvm_label(body_label)
-	print_stmt(x['stmt'])
+	print_stmt(x.stmt)
 	llvm_jump(again_label)
 	llvm_label(break_label)
 	fctx['cur_while_id'] = old_while_id
@@ -1722,8 +1725,8 @@ def print_stmt_return(x):
 	if fctx['stackptr'] != None:
 		stackrestore(fctx['stackptr'])
 
-	if x['value'] != None:
-		v = do_reval(x['value'])
+	if x.value != None:
+		v = do_reval(x.value)
 		if not need_sret(fctx['func']['type']):
 			lo("ret ")
 			llvm_print_type_value(v)
@@ -1742,7 +1745,7 @@ def print_stmt_return(x):
 
 
 def print_stmt_var(x):
-	var = x['var_value']
+	var = x.var_value
 	t = var['type']
 	id_str = get_id_str(var)
 
@@ -1772,7 +1775,7 @@ def print_stmt_var(x):
 
 	locals_add(id_str, val)
 
-	init_value = x['init_value']
+	init_value = x.init_value
 	if not value_is_undefined(init_value):
 		iv = do_reval(init_value)
 		llvm_store(val, iv)
@@ -1783,7 +1786,7 @@ def print_stmt_var(x):
 
 def print_stmt_let(x):
 	id_str = get_id_str(x)
-	val = x['init_value']
+	val = x.init_value
 
 	if htype.type_is_string(val['type']):
 		return None
@@ -1809,7 +1812,7 @@ def print_stmt_let(x):
 def print_stmt_block(s):
 	locals_push()
 
-	for stmt in s['stmts']:
+	for stmt in s.stmts:
 		print_stmt(stmt)
 
 	locals_pop()
@@ -1817,6 +1820,9 @@ def print_stmt_block(s):
 
 
 def print_comment(x):
+	#if isinstance(x, dict):
+	return
+
 	k = x['kind']
 	if k == 'line':
 		print_comment_line(x)
@@ -1826,19 +1832,20 @@ def print_comment(x):
 
 def print_comment_block(x):
 	out('\n') # * x['nl'])
-	out(";%s" % x['text'].replace('\n', '\n;'))
+	out(";%s" % x.text.replace('\n', '\n;'))
 
 
 def print_comment_line(x):
 	out('\n') # * x['nl'])
-	lines = x['lines']
+
+	lines = x.lines
 	i = 0
 	n = len(lines)
 	while i < n:
 		line = lines[i]
 		#if need_indent:
 		indent()
-		out(";%s" % line['str'])
+		out(";%s" % line)
 		i = i + 1
 		if i < n:
 			out("\n")
@@ -1849,7 +1856,7 @@ def print_comment_line(x):
 """
 "store i64 %13, i64* %7, align 8"
 def print_stmt_asm(x):
-	asm_text = x['text']['asset']
+	asm_text = x.text['asset']
 	asm_text = asm_text.replace("%", "$")
 
 	specs = [] # list of spec & clobber strings
@@ -1857,24 +1864,24 @@ def print_stmt_asm(x):
 
 	lo('')
 	reg = '00'  # '00' - bad reg
-	if len(x['outputs']) > 0:
+	if len(x.outputs) > 0:
 		# у нас есть output значит будет возврат значения
 		reg = reg_get()
 		out("%%%s = " % (reg))
 
-		for pair in x['outputs']:
+		for pair in x.outputs:
 			specs.append(pair[0]['asset'])
 			arg = do_eval(pair[1])
 			outs.append(arg)
 
 	args = []
-	if len(x['inputs']) > 0:
-		for pair in x['inputs']:
+	if len(x.inputs) > 0:
+		for pair in x.inputs:
 			specs.append(pair[0]['asset'])
 			arg = do_eval(pair[1])
 			args.append(arg)
 
-	for clobber in x['clobbers']:
+	for clobber in x.clobbers:
 		specs.append("~{%s}" % clobber['asset'])
 
 	out('call ')
@@ -1896,7 +1903,7 @@ def print_stmt_asm(x):
 			from hlir.id import Id
 			from hlir.field import hlir_field
 			field_id = Id().fromStr('<noname>')
-			f = hlir_field(field_id, field_type, ti=x['ti'])
+			f = hlir_field(field_id, field_type, ti=x.ti)
 			fields.append(f)
 
 		rt = htype.type_record(fields)
@@ -1927,22 +1934,20 @@ def print_stmt_asm(x):
 
 
 def print_stmt(x):
-	assert(x['isa'] == 'stmt')
-
-	k = x['kind']
-	if k == 'block': print_stmt_block(x)
-	elif k == 'value': do_eval(x['value'])
-	elif k == 'assign': print_stmt_assign(x)
-	elif k == 'return': print_stmt_return(x)
-	elif k == 'if': print_stmt_if(x)
-	elif k == 'while': print_stmt_while(x)
-	elif k == 'var': print_stmt_var(x)
-	elif k == 'let': print_stmt_let(x)
-	elif k == 'break': print_stmt_break(x)
-	elif k == 'again': print_stmt_again(x)
-	elif k == 'comment-line': print_comment_line(x)
-	elif k == 'comment-block': print_comment_block(x)
-	elif k == 'asm': print_stmt_asm(x)
+	assert(isinstance(x, Stmt))
+	if isinstance(x, StmtBlock): print_stmt_block(x)
+	elif isinstance(x, StmtValue): do_eval(x.value)
+	elif isinstance(x, StmtAssign): print_stmt_assign(x)
+	elif isinstance(x, StmtReturn): print_stmt_return(x)
+	elif isinstance(x, StmtIf): print_stmt_if(x)
+	elif isinstance(x, StmtWhile): print_stmt_while(x)
+	elif isinstance(x, StmtDefVar): print_stmt_var(x)
+	elif isinstance(x, StmtDefConst): print_stmt_let(x)
+	elif isinstance(x, StmtBreak): print_stmt_break(x)
+	elif isinstance(x, StmtAgain): print_stmt_again(x)
+	elif isinstance(x, StmtCommentLine): print_comment_line(x)
+	elif isinstance(x, StmtCommentBlock): print_comment_block(x)
+	elif isinstance(x, StmtAsm): print_stmt_asm(x)
 	else: lo("<stmt %s>" % str(x))
 
 
@@ -2186,7 +2191,7 @@ def print_def_func(x):
 	print_stmt_block(x.stmt)
 
 	if htype.type_eq(ftype['to'], foundation.typeUnit):
-		print_stmt_return({'value': None})
+		print_stmt_return(StmtReturn(None))
 
 	indent_down()
 	lo("}\n")

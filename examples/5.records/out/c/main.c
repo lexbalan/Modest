@@ -46,7 +46,7 @@ static float min(float a, float b)
 	}
 	return b;
 }
-// Pythagorean theorem
+
 static float distance(Point a, Point b)
 {
 	float dx = max(a.x, b.x) - min(a.x, b.x);
@@ -67,7 +67,7 @@ static void ptr_example()
 {
 	Point *ptr_p = (Point *)malloc(sizeof(Point));
 
-	// access by pointer
+	//{'str': ' access by pointer'}
 	ptr_p->x = (float)(10);
 	ptr_p->y = (float)(20);
 
@@ -77,7 +77,7 @@ static void ptr_example()
 
 int main()
 {
-	// by value
+	//{'str': ' by value'}
 	float len = lineLength(line);
 	printf("line length = %f\n", len);
 

@@ -178,7 +178,7 @@ again_1:
 	%4 = icmp ult %ClockT %2, %3
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	; just waiting
+	;{'str': ' just waiting'}
 	br label %again_1
 break_1:
 	ret void

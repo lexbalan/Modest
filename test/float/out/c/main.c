@@ -51,7 +51,7 @@ int main()
 	printf("sizeof(Float32) = %lu\n", sizeof(float));
 	printf("sizeof(Float64) = %lu\n", sizeof(double));
 
-	// printf %f ожидает получить double а не float!
+	//{'str': ' printf %f ожидает получить double а не float!'}
 	float sl = slope((Point2D){.x = 10, .y = 20}, (Point2D){.x = 30, .y = 50});
 	printf("slope = %f\n", (double)sl);
 

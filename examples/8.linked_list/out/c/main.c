@@ -6,15 +6,15 @@
 
 #include "main.h"
 
-// wrap around linked list for list.List Nat32
+
 static void nat32_list_insert(list_List *list, uint32_t x)
 {
-	// alloc memory for Nat32 value
+	//{'str': ' alloc memory for Nat32 value'}
 	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
 	list_append(list, p_nat32);
 }
-// show list conent from first item to last
+
 static void list_print_forward(list_List *list)
 {
 	printf("list_print_forward:\n");
@@ -25,7 +25,7 @@ static void list_print_forward(list_List *list)
 		pn = list_node_next_get(pn);
 	}
 }
-// show list conent from last item to first
+
 static void list_print_backward(list_List *list)
 {
 	printf("list_print_backward:\n");
@@ -44,14 +44,14 @@ int main()
 
 	list_List *list0 = list_create();
 
-	//list0.size  // access to private field of record
+	//{'str': 'list0.size  // access to private field of record'}
 
 	if (list0 == NULL) {
 		printf("error: cannot create list");
 		return 1;
 	}
 
-	// add some Nat32 values to list
+	//{'str': ' add some Nat32 values to list'}
 	nat32_list_insert(list0, 0);
 	nat32_list_insert(list0, 10);
 	nat32_list_insert(list0, 20);
@@ -64,20 +64,20 @@ int main()
 	nat32_list_insert(list0, 90);
 	nat32_list_insert(list0, 100);
 
-	// print list size
+	//{'str': ' print list size'}
 	uint32_t list_size = list_size_get(list0);
 	printf("linked list size: %u\n", list_size);
 
-	// print list forward
+	//{'str': ' print list forward'}
 	list_print_forward(list0);
 
-	// print list backward
+	//{'str': ' print list backward'}
 	list_print_backward(list0);
 
 
 	printf("\nlist.node_get(list, n) test\n");
 
-	// test list.node_get
+	//{'str': ' test list.node_get'}
 	int32_t i = 0;
 	while (i >= -12) {
 		list_Node *node = list_node_get(list0, i);

@@ -4,6 +4,4 @@ include "libc/ctypes64"
 include "libc/string"
 @c_include "stdio.h"
 include "libc/stdio"
-// FIXIT: not worked LLVM result (!)
-// chunk of data for read/write operations in file
 

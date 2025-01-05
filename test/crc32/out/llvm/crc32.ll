@@ -114,9 +114,9 @@ break_2:
 define %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len) {
 	%1 = alloca [256 x %Word32], align 4
 	%2 = alloca %Word32, align 4
-	;
-	; create table before
-	;
+	;{'str': ''}
+	;{'str': ' create table before'}
+	;{'str': ''}
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
 	br label %again_1
@@ -166,9 +166,9 @@ break_2:
 	store %Int32 %25, %Int32* %3
 	br label %again_1
 break_1:
-	;
-	; calculate CRC32
-	;
+	;{'str': ''}
+	;{'str': ' calculate CRC32'}
+	;{'str': ''}
 	store %Word32 4294967295, %Word32* %2
 	store %Int32 0, %Int32* %3
 	br label %again_3

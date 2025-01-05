@@ -32,12 +32,9 @@ struct {uint8_t x; uint8_t y;} ps[3] = _ps;
 
 #define _points  _ps
 Point points[3] = _points;
-// есть проблема - в C глобальные переменные с модификатором const
-// не могут быть так инициализированы, поскольку points является приведением
-// непонятно существует ли хорошее решение
-//@property("c_prefix", "const")
+
 static Point points2[3] = _points;
-// define function main
+
 int main()
 {
 	printf("test const\n");
@@ -45,7 +42,7 @@ int main()
 	printf("genericIntConst = %d\n", (int32_t)genericIntConst);
 	printf("int32Const = %d\n", int32Const);
 
-	//	printf("genericStringConst = %s\n", genericStringConst)
+	//{'str': '\tprintf("genericStringConst = %s\\n", genericStringConst)'}
 	printf("string8Const = %s\n", string8Const);
 
 	return 0;

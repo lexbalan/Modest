@@ -57,6 +57,7 @@ def is_local_context():
 from value.value import *
 from value.cons import value_cons_implicit, value_cons_implicit_check, value_cons_explicit, value_cons_default
 
+
 from symtab import Symtab
 from util import nbits_for_num, nbytes_for_bits
 
@@ -1739,24 +1740,24 @@ def do_stmt_if(x):
 	cond = do_rvalue(x['cond'])
 
 	if value_is_bad(cond):
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	if not htype.type_is_bool(cond['type']):
 		error("expected bool value", cond)
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	_then = do_stmt(x['then'])
 
-	if hlir_stmt_is_bad(_then):
-		return hlir_stmt_bad(x)
+	if isinstance(_then, StmtBad):
+		return StmtBad(x)
 
 	_else = None
 	if x['else'] != None:
 		_else = do_stmt(x['else'])
-		if hlir_stmt_is_bad(_else):
-			return hlir_stmt_bad(x['else'])
+		if isinstance(_else, StmtBad):
+			return StmtBad(x['else'])
 
-	return hlir_stmt_if(cond, _then, _else, ti=x['ti'])
+	return StmtIf(cond, _then, _else, ti=x['ti'])
 
 
 
@@ -1764,18 +1765,18 @@ def do_stmt_while(x):
 	cond = do_rvalue(x['cond'])
 
 	if value_is_bad(cond):
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	if not htype.type_is_bool(cond['type']):
 		error("expected bool value", cond)
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	block = do_stmt(x['stmt'])
 
-	if hlir_stmt_is_bad(block):
-		return hlir_stmt_bad(x)
+	if isinstance(block, StmtBad):
+		return StmtBad(x)
 
-	return hlir_stmt_while(cond, block, ti=x['ti'])
+	return StmtWhile(cond, block, ti=x['ti'])
 
 
 
@@ -1794,7 +1795,7 @@ def do_stmt_return(x):
 			error("unexpected return value", x['value']['ti'])
 		else:
 			error("expected return value", x['ti'])
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	# (!) in return statement retval can be None (!)
 	retval = None
@@ -1803,7 +1804,7 @@ def do_stmt_return(x):
 		if not value_is_bad(rv):
 			retval = value_cons_implicit_check(func_ret_type, rv)
 
-	return hlir_stmt_return(retval, ti=x['ti'])
+	return StmtReturn(retval, ti=x['ti'])
 
 
 def do_stmt_type(x):
@@ -1811,11 +1812,11 @@ def do_stmt_type(x):
 
 
 def do_stmt_again(x):
-	return hlir_stmt_again(x['ti'])
+	return StmtAgain(x['ti'])
 
 
 def do_stmt_break(x):
-	return hlir_stmt_break(x['ti'])
+	return StmtBreak(x['ti'])
 
 
 def do_stmt_var(x):
@@ -1830,7 +1831,7 @@ def do_stmt_var(x):
 	if tu == True and vu == True:
 		# type & value undefined
 		ctx_value_add(var_id.str, value_bad(x['ti']))
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	if tu == True and vu == False:
 		# type undef, value ok
@@ -1842,7 +1843,7 @@ def do_stmt_var(x):
 	#if not htype.type_is_undefined(t):
 	#	if htype.type_is_bad(t):
 	#		ctx_value_add(var_id.str, value_bad(x['ti']))
-	#		return hlir_stmt_bad(x)
+	#		return StmtBad(x)
 	#
 		if htype.type_is_forbidden_var(t):
 			error("unsuitable type1", x['type']['ti'])
@@ -1862,10 +1863,10 @@ def do_stmt_var(x):
 	if already != None:
 		error("local id redefinition", x['id'].ti)
 		info("firstly defined here", already['id'].ti)
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	var_value = add_local_var(var_id, t, var_id.ti)
-	return hlir_stmt_def_var(var_id, var_value, v, ti=x['ti'])
+	return StmtDefVar(var_id, var_value, v, ti=x['ti'])
 
 
 
@@ -1884,7 +1885,7 @@ def do_stmt_let(x):
 	already = ctx_value_get_shallow(id.str)
 	if already != None:
 		error("redefinition of '%s'" % id.str, id.ti)
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	if id.str[0].isupper():
 		error("value id must starts with small letter", id.ti)
@@ -1894,7 +1895,7 @@ def do_stmt_let(x):
 
 	if value_is_bad(v):
 		ctx_value_add(id.str, value_bad(x['ti']))
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	const_value = value_const(id, v['type'], value=v, ti=x['id']['ti'])
 	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
@@ -1914,7 +1915,7 @@ def do_stmt_let(x):
 
 	ctx_value_add(id.str, const_value)
 
-	return hlir_stmt_def_const(id, const_value, v, ti=x['ti'])
+	return StmtDefConst(id, const_value, v, ti=x['ti'])
 
 
 
@@ -1923,18 +1924,18 @@ def do_stmt_assign(x):
 	r = do_rvalue(x['right'])
 
 	if value_is_bad(l) or value_is_bad(r):
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	if not value_is_lvalue(l):
 		error("expected lvalue", l)
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	if value_is_immutable(l):
 		error("expected mutable value", l)
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	r = value_cons_implicit_check(l['type'], r)
-	return hlir_stmt_assign(l, r, ti=x['ti'])
+	return StmtAssign(l, r, ti=x['ti'])
 
 
 
@@ -1942,19 +1943,19 @@ def do_stmt_incdec(x, op='add'):
 	v = do_value(x['value'])
 
 	if value_is_bad(v):
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	if value_is_immutable(v):
 		error("expected mutable value", v)
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	if not htype.type_is_integer(v['type']):
 		error("expected integer value", v)
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	one = value_integer_create(1, typ=v['type'], ti=x['ti'])
 	nv = value_bin(op, v, one, v['type'], ti=x['ti'])
-	return hlir_stmt_assign(v, nv, ti=x['ti'])
+	return StmtAssign(v, nv, ti=x['ti'])
 
 
 
@@ -1962,34 +1963,24 @@ def do_stmt_value(x):
 	v = do_rvalue(x['value'])
 
 	if value_is_bad(v):
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	if not htype.type_is_unit(v['type']):
 		if not 'dispensable' in v['type']['att']:
 			warning("unused result of %s expression" % x['value']['kind'], v['ti'])
 
-	return hlir_stmt_value(v, ti=x['ti'])
+	return StmtValue(v, ti=x['ti'])
 
 
 
 def do_stmt_comment_line(x):
-	return {
-		'isa': 'stmt',
-		'kind': 'comment-line',
-		'lines': x['lines'],
-		'nl': x['nl'],
-		'ti': x['ti']
-	}
+	return StmtCommentLine(x['lines'], ti=x['ti'], nl=x['nl'])
+
 
 
 def do_stmt_comment_block(x):
-	return {
-		'isa': 'stmt',
-		'kind': 'comment-block',
-		'text': x['text'],
-		'nl': x['nl'],
-		'ti': x['ti']
-	}
+	return StmtCommentLine(x['text'], ti=x['ti'], nl=x['nl'])
+
 
 
 def do_stmt_asm(x):
@@ -2030,7 +2021,7 @@ def do_stmt_asm(x):
 		spec = do_rvalue(x['value'])
 		clobbers.append(spec)
 
-	return hlir_stmt_asm(asm_text, outputs, inputs, clobbers, x['ti'])
+	return StmtAsm(asm_text, outputs, inputs, clobbers, x['ti'])
 
 
 
@@ -2054,13 +2045,13 @@ def do_stmt(x):
 	elif k == 'comment-line': s = do_stmt_comment_line(x)
 	elif k == 'comment-block': s = do_stmt_comment_block(x)
 	elif k == 'asm': s = do_stmt_asm(x)
-	else: s = hlir_stmt_bad(x)
+	else: s = StmtBad(x)
 
 	assert(s != None)
 
 	if not 'nl' in x:
 		print(x['kind'])
-	s['nl'] = x['nl']
+	s.nl = x['nl']
 
 	return s
 
@@ -2072,12 +2063,12 @@ def do_stmt_block(x):
 	stmts = []
 	for stmt in x['stmts']:
 		s = do_stmt(stmt)
-		if not hlir_stmt_is_bad(s):
+		if not isinstance(s, StmtBad):
 			stmts.append(s)
 
 	context_pop()
 
-	return hlir_stmt_block(stmts, ti=x['ti'], end_nl=x['end_nl'])
+	return StmtBlock(stmts, ti=x['ti'], end_nl=x['end_nl'])
 
 
 
@@ -2198,7 +2189,7 @@ def def_const(x):
 
 	if value_is_bad(init_value):
 		module_value_add_public(cmodule, id.str, init_value)
-		return hlir_def_const(id, init_value, init_value, x['ti'])
+		return DefConst(id, init_value, init_value, x['ti'])
 
 	t = do_type(x['type'])
 	if not htype.type_is_undefined(t):
@@ -2251,7 +2242,7 @@ def def_var(x):
 	if tu == True and vu == True:
 		# ERROR: type & value undefined
 		ctx_value_add(id.str, value_bad(x['ti']))
-		return hlir_stmt_bad(x)
+		return StmtBad(x)
 
 	elif tu == True and vu == False:
 		# type undef, value ok
@@ -2375,10 +2366,11 @@ def def_func(x, dostmt=True):
 
 			# check if return present
 			if not htype.type_is_unit(fn['type']['to']):
-				stmts = stmt['stmts']
+				stmts = stmt.stmts
 				if len(stmts) == 0:
 					warning("expected return operator at end", stmt['ti'])
-				elif stmts[-1]['kind'] != 'return':
+				#elif stmts[-1]['kind'] != 'return':
+				elif not isinstance(stmts[-1], StmtReturn):
 					warning("expected return operator at end", stmt['ti'])
 
 	definition.stmt = stmt
@@ -2408,8 +2400,9 @@ def check_unuse(v):
 
 # check block for unused vars
 def check_block(block):
-	for stmt in block['stmts']:
-		check_stmt(stmt)
+	for stmt in block.stmts:
+	#	check_stmt(stmt)
+		pass
 
 
 
@@ -2444,7 +2437,9 @@ def do_comment(x):
 	return None
 
 
+#glb
 def comm_line(x):
+	#return StmtCommentLine(x['lines'], ti=x['ti'], nl=1)
 	return {
 		'isa': 'comment',
 		'kind': 'line',
@@ -2454,8 +2449,9 @@ def comm_line(x):
 		'ti': x['ti']
 	}
 
-
+#glb
 def comm_block(x):
+	#return StmtCommentBlock(x['text'], ti=x['ti'], nl=1)
 	return {
 		'isa': 'comment',
 		'kind': 'block',

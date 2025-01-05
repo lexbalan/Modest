@@ -49,7 +49,7 @@ struct Mixed4 {
 	Mixed3 s2;
 };
 typedef struct Mixed4 Mixed4;
-//var s: Mixed2
+
 static char c;
 static int32_t i;
 static double f;
@@ -81,18 +81,18 @@ int main()
 	printf("off(p) = %llu\n", (uint64_t)&p[0] - start_adr);
 	printf("off(g) = %llu\n", (uint64_t)&g - start_adr);
 
-	// дженерики в с явно не приводятся, но нектороые нужно!
-	//	printf("offsetof(x.c) = %llu\n", Nat64 offsetof(X.c))
-	//	printf("offsetof(x.i) = %llu\n", Nat64 offsetof(X.i))
-	//	printf("offsetof(x.f) = %llu\n", Nat64 offsetof(X.f))
-	//	printf("offsetof(x.i2) = %llu\n", Nat64 offsetof(X.i2))
-	//	printf("offsetof(x.p) = %llu\n", Nat64 offsetof(X.p))
-	//	printf("offsetof(x.g) = %llu\n", Nat64 offsetof(X.g))
+	//{'str': ' дженерики в с явно не приводятся, но нектороые нужно!'}
+	//{'str': '\tprintf("offsetof(x.c) = %llu\\n", Nat64 offsetof(X.c))'}
+	//{'str': '\tprintf("offsetof(x.i) = %llu\\n", Nat64 offsetof(X.i))'}
+	//{'str': '\tprintf("offsetof(x.f) = %llu\\n", Nat64 offsetof(X.f))'}
+	//{'str': '\tprintf("offsetof(x.i2) = %llu\\n", Nat64 offsetof(X.i2))'}
+	//{'str': '\tprintf("offsetof(x.p) = %llu\\n", Nat64 offsetof(X.p))'}
+	//{'str': '\tprintf("offsetof(x.g) = %llu\\n", Nat64 offsetof(X.g))'}
 
 
-	// sizeof(void) in C  == 1
-	// sizeof(Unit) in CM == 0
-	// TODO: here is a broblem
+	//{'str': ' sizeof(void) in C  == 1'}
+	//{'str': ' sizeof(Unit) in CM == 0'}
+	//{'str': ' TODO: here is a broblem'}
 	printf("sizeof(Unit) = %llu\n", (uint64_t)sizeof(void));
 	printf("alignof(Unit) = %llu\n", (uint64_t)__alignof(void));
 
@@ -109,8 +109,8 @@ int main()
 	printf("alignof(Nat64) = %llu\n", (uint64_t)__alignof(uint64_t));
 	printf("sizeof(Nat128) = %llu\n", (uint64_t)sizeof(unsigned __int128));
 	printf("alignof(Nat128) = %llu\n", (uint64_t)__alignof(unsigned __int128));
-	// type Nat256 not implemented
-	//printf("sizeof(Nat256) = %llu\n", Nat64 sizeof(Nat256))
+	//{'str': ' type Nat256 not implemented'}
+	//{'str': 'printf("sizeof(Nat256) = %llu\\n", Nat64 sizeof(Nat256))'}
 
 	printf("sizeof(Int8) = %llu\n", (uint64_t)sizeof(int8_t));
 	printf("alignof(Int8) = %llu\n", (uint64_t)__alignof(int8_t));
@@ -122,8 +122,8 @@ int main()
 	printf("alignof(Int64) = %llu\n", (uint64_t)__alignof(int64_t));
 	printf("sizeof(Int128) = %llu\n", (uint64_t)sizeof(__int128));
 	printf("alignof(Int128) = %llu\n", (uint64_t)__alignof(__int128));
-	// type Int256 not implemented
-	//printf("sizeof(Int256) = %llu\n", Nat64 sizeof(Int256))
+	//{'str': ' type Int256 not implemented'}
+	//{'str': 'printf("sizeof(Int256) = %llu\\n", Nat64 sizeof(Int256))'}
 
 	printf("sizeof(Char8) = %llu\n", (uint64_t)sizeof(char));
 	printf("alignof(Char8) = %llu\n", (uint64_t)__alignof(char));
@@ -132,23 +132,23 @@ int main()
 	printf("sizeof(Char32) = %llu\n", (uint64_t)sizeof(uint32_t));
 	printf("alignof(Char32) = %llu\n", (uint64_t)__alignof(uint32_t));
 
-	// pointer size (for example pointer to []Char8)
+	//{'str': ' pointer size (for example pointer to []Char8)'}
 	printf("sizeof(*Str8) = %llu\n", (uint64_t)sizeof(char *));
 	printf("alignof(*Str8) = %llu\n", (uint64_t)__alignof(char *));
 
-	// array size
+	//{'str': ' array size'}
 	printf("sizeof([10]Int32) = %llu\n", (uint64_t)sizeof(int32_t[10]));
 	printf("alignof([10]Int32) = %llu\n", (uint64_t)__alignof(int32_t[10]));
 
 	printf("> alignof([3]Point) = %llu\n", (uint64_t)__alignof(Point[3]));
 
 
-	// record size
+	//{'str': ' record size'}
 	printf("sizeof(Point) = %llu\n", (uint64_t)sizeof(Point));
 	printf("alignof(Point) = %llu\n", (uint64_t)__alignof(Point));
 
-	//	printf("offsetof(Point.x) = %llu\n", Nat64 offsetof(Point.x))
-	//	printf("offsetof(Point.y) = %llu\n", Nat64 offsetof(Point.y))
+	//{'str': '\tprintf("offsetof(Point.x) = %llu\\n", Nat64 offsetof(Point.x))'}
+	//{'str': '\tprintf("offsetof(Point.y) = %llu\\n", Nat64 offsetof(Point.y))'}
 
 
 	printf("sizeof(Mixed1) = %llu\n", (uint64_t)sizeof(Mixed1));
@@ -158,11 +158,11 @@ int main()
 	printf("alignof(Mixed2) = %llu\n", (uint64_t)__alignof(Mixed2));
 
 
-	//	printf("offsetof(Mixed2.i) = %llu\n", Nat64 offsetof(Mixed2.i))
-	//	printf("offsetof(Mixed2.c) = %llu\n", Nat64 offsetof(Mixed2.c))
-	//	printf("offsetof(Mixed2.f) = %llu\n", Nat64 offsetof(Mixed2.f))
-	//	printf("offsetof(Mixed2.c2) = %llu\n", Nat64 offsetof(Mixed2.c2))
-	//	printf("offsetof(Mixed2.m) = %llu\n", Nat64 offsetof(Mixed2.m))
+	//{'str': '\tprintf("offsetof(Mixed2.i) = %llu\\n", Nat64 offsetof(Mixed2.i))'}
+	//{'str': '\tprintf("offsetof(Mixed2.c) = %llu\\n", Nat64 offsetof(Mixed2.c))'}
+	//{'str': '\tprintf("offsetof(Mixed2.f) = %llu\\n", Nat64 offsetof(Mixed2.f))'}
+	//{'str': '\tprintf("offsetof(Mixed2.c2) = %llu\\n", Nat64 offsetof(Mixed2.c2))'}
+	//{'str': '\tprintf("offsetof(Mixed2.m) = %llu\\n", Nat64 offsetof(Mixed2.m))'}
 
 
 	printf("sizeof(Mixed3) = %llu\n", (uint64_t)sizeof(Mixed3));
@@ -171,14 +171,14 @@ int main()
 	printf("sizeof(Mixed4) = %llu\n", (uint64_t)sizeof(Mixed4));
 	printf("alignof(Mixed4) = %llu\n", (uint64_t)__alignof(Mixed4));
 
-	//	printf("offsetof(Mixed4.s) = %llu\n", Nat64 offsetof(Mixed4.s))
-	//	printf("offsetof(Mixed4.c) = %llu\n", Nat64 offsetof(Mixed4.c))
-	//	printf("offsetof(Mixed4.i) = %llu\n", Nat64 offsetof(Mixed4.i))
-	//	printf("offsetof(Mixed4.f) = %llu\n", Nat64 offsetof(Mixed4.f))
-	//	printf("offsetof(Mixed4.c2) = %llu\n", Nat64 offsetof(Mixed4.c2))
-	//	printf("offsetof(Mixed4.i2) = %llu\n", Nat64 offsetof(Mixed4.i2))
-	//	printf("offsetof(Mixed4.p) = %llu\n", Nat64 offsetof(Mixed4.p))
-	//	printf("offsetof(Mixed4.s2) = %llu\n", Nat64 offsetof(Mixed4.s2))
+	//{'str': '\tprintf("offsetof(Mixed4.s) = %llu\\n", Nat64 offsetof(Mixed4.s))'}
+	//{'str': '\tprintf("offsetof(Mixed4.c) = %llu\\n", Nat64 offsetof(Mixed4.c))'}
+	//{'str': '\tprintf("offsetof(Mixed4.i) = %llu\\n", Nat64 offsetof(Mixed4.i))'}
+	//{'str': '\tprintf("offsetof(Mixed4.f) = %llu\\n", Nat64 offsetof(Mixed4.f))'}
+	//{'str': '\tprintf("offsetof(Mixed4.c2) = %llu\\n", Nat64 offsetof(Mixed4.c2))'}
+	//{'str': '\tprintf("offsetof(Mixed4.i2) = %llu\\n", Nat64 offsetof(Mixed4.i2))'}
+	//{'str': '\tprintf("offsetof(Mixed4.p) = %llu\\n", Nat64 offsetof(Mixed4.p))'}
+	//{'str': '\tprintf("offsetof(Mixed4.s2) = %llu\\n", Nat64 offsetof(Mixed4.s2))'}
 
 	return 0;
 }

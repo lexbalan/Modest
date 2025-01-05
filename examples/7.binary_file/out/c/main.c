@@ -6,10 +6,10 @@
 
 #include "main.h"
 
-// FIXIT: not worked LLVM result (!)
+
 
 #define filename  "file.bin"
-// chunk of data for read/write operations in file
+
 struct Chunk {
 	char id[100];
 	char data[1024];
@@ -30,12 +30,12 @@ static void write_example()
 
 	Chunk chunk;
 
-	// pointers casting requires -funsafe translator option
-	// (see Makefile)
+	//{'str': ' pointers casting requires -funsafe translator option'}
+	//{'str': ' (see Makefile)'}
 	strcpy(&chunk.id[0], "id");
 	strcpy(&chunk.data[0], "data");
 
-	// write chunk to file
+	//{'str': ' write chunk to file'}
 	fwrite(&chunk, sizeof(Chunk), 1, fp);
 
 	fclose(fp);

@@ -73,6 +73,9 @@ def print_id(x):
 
 
 def print_comment(x):
+	#if isinstance(x, dict):
+	return
+
 	k = x['kind']
 	if k == 'line':
 		print_comment_line(x)
@@ -82,18 +85,18 @@ def print_comment(x):
 
 def print_comment_block(x):
 	nl_indent(x['nl'])
-	out("/*%s*/" % x['text'])
+	out("/*%s*/" % x.text)
 
 
 def print_comment_line(x):
 	newline(x['nl'])
-	lines = x['lines']
+	lines = x.lines
 	i = 0
 	n = len(lines)
 	while i < n:
 		line = lines[i]
 		indent()
-		out("//%s" % line['str'])
+		out("//%s" % line)
 		i = i + 1
 		if i < n:
 			newline()
@@ -804,7 +807,7 @@ def print_stmt_block(s):
 
 	indent_up()
 
-	for stmt in s['stmts']:
+	for stmt in s.stmts:
 		print_stmt(stmt)
 
 	indent_down()

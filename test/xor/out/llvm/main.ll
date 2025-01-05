@@ -283,11 +283,11 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*))
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
 	call void @print_bytes([0 x %Word8]* bitcast ([13 x %Char8]* @test_msg to [0 x %Word8]*), %Int32 12)
-	; encrypt test data
+	;{'str': ' encrypt test data'}
 	call void @xor_encrypter([0 x %Word8]* bitcast ([13 x %Char8]* @test_msg to [0 x %Word8]*), %Int32 12, [0 x %Word8]* bitcast ([4 x %Char8]* @test_key to [0 x %Word8]*), %Int32 3)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str5 to [0 x i8]*))
 	call void @print_bytes([0 x %Word8]* bitcast ([13 x %Char8]* @test_msg to [0 x %Word8]*), %Int32 12)
-	; decrypt test data
+	;{'str': ' decrypt test data'}
 	call void @xor_encrypter([0 x %Word8]* bitcast ([13 x %Char8]* @test_msg to [0 x %Word8]*), %Int32 12, [0 x %Word8]* bitcast ([4 x %Char8]* @test_key to [0 x %Word8]*), %Int32 3)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
 	call void @print_bytes([0 x %Word8]* bitcast ([13 x %Char8]* @test_msg to [0 x %Word8]*), %Int32 12)

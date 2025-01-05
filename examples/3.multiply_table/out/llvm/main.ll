@@ -193,8 +193,8 @@ declare void @perror(%ConstCharStr* %str)
 define internal void @mtab(%Int32 %n) {
 	%1 = alloca %Int32, align 4
 	store %Int32 1, %Int32* %1
-	; or
-	;var m = 1   // by default integer var get system int type (-mint option)
+	;{'str': ' or'}
+	;{'str': 'var m = 1   // by default integer var get system int type (-mint option)'}
 	br label %again_1
 again_1:
 	%2 = load %Int32, %Int32* %1

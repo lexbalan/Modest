@@ -8,5 +8,4 @@ include "libc/time"
 include "libc/unistd"
 @c_include "stdlib.h"
 include "libc/stdlib"
-// getenv
 

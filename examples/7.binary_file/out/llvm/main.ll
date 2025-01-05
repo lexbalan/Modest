@@ -229,15 +229,15 @@ then_0:
 	br label %endif_0
 endif_0:
 	%6 = alloca %Chunk, align 1
-	; pointers casting requires -funsafe translator option
-	; (see Makefile)
+	;{'str': ' pointers casting requires -funsafe translator option'}
+	;{'str': ' (see Makefile)'}
 	%7 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 0
 	%8 = bitcast [100 x %Char]* %7 to [0 x %Char]*
 	%9 = call [0 x %Char]* @strcpy([0 x %Char]* %8, [0 x %Char]* bitcast ([3 x i8]* @str5 to [0 x i8]*))
 	%10 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 1
 	%11 = bitcast [1024 x %Char]* %10 to [0 x %Char]*
 	%12 = call [0 x %Char]* @strcpy([0 x %Char]* %11, [0 x %Char]* bitcast ([5 x i8]* @str6 to [0 x i8]*))
-	; write chunk to file
+	;{'str': ' write chunk to file'}
 	%13 = bitcast %Chunk* %6 to i8*
 	%14 = call %SizeT @fwrite(i8* %13, %SizeT 1124, %SizeT 1, %File* %2)
 	%15 = call %Int @fclose(%File* %2)

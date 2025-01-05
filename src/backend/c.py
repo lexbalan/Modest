@@ -5,6 +5,7 @@
 from error import info, error, fatal
 from hlir.id import Id
 from hlir.hlir import *
+from hlir.stmt import *
 from .common import *
 import type as htype
 from type import select_common_type, type_print
@@ -147,15 +148,22 @@ def precedence(x):
 
 
 def get_id_str(x):
-	if not 'id' in x:
-		return None
 
-	if x['id'].c != None:
-		return x['id'].c
+	id = None
+	if isinstance(x, dict):
+		id = x['id']
+	else:
+		id = x.id
 
-	id_str = x['id'].str
-	#if x['id'].str != 'main':
-	if x['id'].need_decoration:
+	#if not 'id' in x:
+	#	return None
+
+	if id.c != None:
+		return id.c
+
+	id_str = id.str
+	#if id.str != 'main':
+	if id.need_decoration:
 		if 'definition' in x:
 			prefix = x['definition'].module['prefix']
 			if prefix != None:
@@ -1333,23 +1341,23 @@ def print_value(x, ctx=[], need_wrap=False):
 
 
 def print_stmt_if(x, need_else_branch):
-	out("if ("); print_value(x['cond']); out(")")
+	out("if ("); print_value(x.cond); out(")")
 
 	if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
 		nl_indent()
 	else:
 		out(" ")
 
-	print_stmt_block(x['then'])
+	print_stmt_block(x.then)
 
-	e = x['else']
+	e = x.els
 	if e != None:
 		if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
 			nl_indent()
 		else:
 			out(" ")
 
-		if e['kind'] == 'if':
+		if isinstance(e, StmtIf):
 			out("else ")
 			print_stmt_if(e, need_else_branch=True)
 		else:
@@ -1363,14 +1371,14 @@ def print_stmt_if(x, need_else_branch):
 
 
 def print_stmt_while(x):
-	out("while ("); print_value(x['cond']); out(")")
+	out("while ("); print_value(x.cond); out(")")
 
 	if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
 		nl_indent()
 	else:
 		out(" ")
 
-	print_stmt_block(x['stmt'])
+	print_stmt_block(x.stmt)
 
 
 
@@ -1379,25 +1387,25 @@ def print_stmt_return(x):
 
 	if isSretFunc(cfunc['type']):
 		out("memcpy(sret_, ")
-		print_value_as_ptr(x['value'])
+		print_value_as_ptr(x.value)
 		out(", sizeof(")
-		print_type(x['value']['type'])
+		print_type(x.value['type'])
 		out("));")
 		return
 
 	out("return")
 
-	if x['value'] != None:
+	if x.value != None:
 		out(" ")
-		print_value(x['value'])
+		print_value(x.value)
 
 	out(";")
 
 
 
 def print_stmt_var(x):
-	var_value = x['var_value']
-	init_value = x['init_value']
+	var_value = x.var_value
+	init_value = x.init_value
 
 	#if DONT_PRINT_UNUSED:
 	#	if init_value != None:
@@ -1464,9 +1472,9 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 
 
 def print_stmt_let(x):
-	id = x['id']
-	v = x['value']
-	iv = x['init_value']
+	id = x.id
+	v = x.value
+	iv = x.init_value
 
 	#if DONT_PRINT_UNUSED:
 	#	if v['usecnt'] == 0:
@@ -1516,10 +1524,10 @@ def print_stmt_asm(x):
 	out('__asm__ volatile (')
 	indent_up()
 	nl_indent(1)
-	print_value_string(x['text'], [])
+	print_value_string(x.text, [])
 
 	# print 'out' pairs
-	args1 = x['outputs']
+	args1 = x.outputs
 	if len(args1) > 0:
 		nl_indent(1)
 		out(': ')
@@ -1528,7 +1536,7 @@ def print_stmt_asm(x):
 		out(':')
 
 	# print 'in' pairs
-	args2 = x['inputs']
+	args2 = x.inputs
 	if len(args2) > 0:
 		nl_indent(1)
 		out(': ')
@@ -1537,10 +1545,10 @@ def print_stmt_asm(x):
 		out(':')
 
 	# print clobber list
-	if len(x['clobbers']) > 0:
+	if len(x.clobbers) > 0:
 		nl_indent(1)
 		out(': ')
-		print_list_by(x['clobbers'], print_value)
+		print_list_by(x.clobbers, print_value)
 
 
 	indent_down()
@@ -1578,16 +1586,35 @@ def do_assign(left, right):
 
 
 def print_stmt_assign(x):
-	do_assign(x['left'], x['right'])
+	do_assign(x.left, x.right)
 
 
 def print_stmt_value(x):
-	print_value(x['value']); out(";")
+	print_value(x.value); out(";")
 
 
 def print_stmt(x):
-	nl_indent(x['nl'])
-	k = x['kind']
+	assert(isinstance(x, Stmt))
+	nl_indent(x.nl)
+	if isinstance(x, StmtBlock): print_stmt_block(x)
+	elif isinstance(x, StmtValue): print_stmt_value(x)
+	elif isinstance(x, StmtAssign): print_stmt_assign(x)
+	elif isinstance(x, StmtReturn): print_stmt_return(x)
+	elif isinstance(x, StmtIf): print_stmt_if(x, need_else_branch=False)
+	elif isinstance(x, StmtWhile): print_stmt_while(x)
+	elif isinstance(x, StmtDefVar): print_stmt_var(x)
+	elif isinstance(x, StmtDefConst): print_stmt_let(x)
+	elif isinstance(x, StmtBreak): print_stmt_break(x)
+	elif isinstance(x, StmtAgain): print_stmt_again(x)
+	elif isinstance(x, StmtCommentLine): print_comment_line(x)
+	elif isinstance(x, StmtCommentBlock): print_comment_block(x)
+	elif isinstance(x, StmtAsm): print_stmt_asm(x)
+	else: lo("<stmt %s>" % str(x))
+
+"""
+def print_stmt(x):
+	nl_indent(x.nl)
+
 	if k == 'block': print_stmt_block(x)
 	elif k == 'value': print_stmt_value(x)
 	elif k == 'assign': print_stmt_assign(x)
@@ -1596,14 +1623,19 @@ def print_stmt(x):
 	elif k == 'while': print_stmt_while(x)
 	elif k == 'var': print_stmt_var(x)
 	elif k == 'let': print_stmt_let(x)
-	elif k == 'break': out('break;')
-	elif k == 'again': out('continue;')
+	elif k == 'break': print_stmt_break(x)
+	elif k == 'again': print_stmt_again(x)
 	elif k == 'comment-line': print_comment_line(x)
 	elif k == 'comment-block': print_comment_block(x)
 	elif k == 'asm': print_stmt_asm(x)
 	else: out("<stmt %s>" % str(x))
+"""
 
+def print_stmt_break(x):
+	out('break;')
 
+def print_stmt_again(x):
+	out('continue;')
 
 def print_statements(stmts):
 	for stmt in stmts:
@@ -1614,9 +1646,9 @@ def print_statements(stmts):
 def print_stmt_block(s):
 	out("{")
 	indent_up()
-	print_statements(s['stmts'])
+	print_statements(s.stmts)
 	indent_down()
-	endnl = s['end_nl']
+	endnl = s.end_nl
 	newline(n=endnl)
 	if endnl:
 		indent()
@@ -1745,7 +1777,7 @@ def print_def_func(x):
 			out("));")
 
 
-	stmts = x.stmt['stmts']
+	stmts = x.stmt.stmts
 	print_statements(stmts)
 
 	indent_down()
@@ -1873,22 +1905,23 @@ def print_insert(x):
 
 
 def print_comment(x):
+	return
 	k = x['kind']
 	if k == 'line': print_comment_line(x)
 	elif k == 'block': print_comment_block(x)
 
 
 def print_comment_block(x):
-	out("/*%s*/" % x['text'])
+	out("/*%s*/" % x.text)
 
 
 def print_comment_line(x):
-	lines = x['lines']
+	lines = x.lines
 	i = 0
 	n = len(lines)
 	while i < n:
 		line = lines[i]
-		out("//%s" % line['str'])
+		out("//%s" % line)
 		i = i + 1
 		if i < n:
 			newline()

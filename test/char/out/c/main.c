@@ -25,9 +25,9 @@ int main()
 	ch16 = u'Я';
 	ch32 = U'🐀';
 
-	//printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
-	//printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
-	//printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
+	//{'str': 'printf("ch08 = 0x%x (%c)\\n", Nat32 ch08, ch08)'}
+	//{'str': 'printf("ch16 = 0x%x (%c)\\n", Nat32 ch16, ch16)'}
+	//{'str': 'printf("ch32 = 0x%x (%c)\\n", Nat32 ch32, ch32)'}
 
 	return 0;
 }

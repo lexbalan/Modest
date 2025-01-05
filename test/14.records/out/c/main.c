@@ -32,7 +32,7 @@ int main()
 {
 	printf("records test\n");
 
-	// check value_record_eq for immediate values
+	//{'str': ' check value_record_eq for immediate values'}
 	#define __ver  {.major = 0, .minor = 7}
 	if (true) {
 		printf("version 0.7\n");
@@ -40,7 +40,7 @@ int main()
 		printf("version not 0.7\n");
 	}
 
-	// compare two Point2D records
+	//{'str': ' compare two Point2D records'}
 	Point2D p2d0 = (Point2D){.x = 1, .y = 2};
 	Point2D p2d1 = (Point2D){.x = 10, .y = 20};
 
@@ -51,7 +51,7 @@ int main()
 	}
 
 
-	// compare Point2D with anonymous record
+	//{'str': ' compare Point2D with anonymous record'}
 	Point2D p2d2 = p2d0;
 	struct __anonymous_struct_3 p2d3 = (struct __anonymous_struct_3)xx;
 
@@ -62,7 +62,7 @@ int main()
 	}
 
 
-	// comparison between two anonymous record
+	//{'str': ' comparison between two anonymous record'}
 	struct __anonymous_struct_4 p2d4 = (struct __anonymous_struct_4){.x = 1, .y = 2};
 
 	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_3)) == 0) {
@@ -71,7 +71,7 @@ int main()
 		printf("p2d3 != p2d4\n");
 	}
 
-	// comparison between two record (by pointer)
+	//{'str': ' comparison between two record (by pointer)'}
 	Point2D *pr2 = &p2d2;
 	struct __anonymous_struct_3 *pr3 = &p2d3;
 
@@ -81,31 +81,175 @@ int main()
 		printf("*pr2 != *pr3\n");
 	}
 
-	/*
-	var prx = &p2d2
-	var prx2 = &prx
-	var pry = &p2d3
+	//
 
-	if **prx2 == *pry {
-		printf("**prx2 == *pry\n")
-	} else {
-		printf("**prx2 != *pry\n")
-	}
-*/
+	//
+	//v
+	//a
+	//r
+	//
+	//p
+	//r
+	//x
+	//
+	//=
+	//
+	//&
+	//p
+	//2
+	//d
+	//2
+	//
 
-	// assign record by pointer
+	//
+	//v
+	//a
+	//r
+	//
+	//p
+	//r
+	//x
+	//2
+	//
+	//=
+	//
+	//&
+	//p
+	//r
+	//x
+	//
+
+	//
+	//v
+	//a
+	//r
+	//
+	//p
+	//r
+	//y
+	//
+	//=
+	//
+	//&
+	//p
+	//2
+	//d
+	//3
+	//
+
+	//
+
+	//
+	//i
+	//f
+	//
+	//*
+	//*
+	//p
+	//r
+	//x
+	//2
+	//
+	//=
+	//=
+	//
+	//*
+	//p
+	//r
+	//y
+	//
+	//{
+	//
+
+	//
+	//
+	//p
+	//r
+	//i
+	//n
+	//t
+	//f
+	//(
+	//"
+	//*
+	//*
+	//p
+	//r
+	//x
+	//2
+	//
+	//=
+	//=
+	//
+	//*
+	//p
+	//r
+	//y
+	//\
+	//n
+	//"
+	//)
+	//
+
+	//
+	//}
+	//
+	//e
+	//l
+	//s
+	//e
+	//
+	//{
+	//
+
+	//
+	//
+	//p
+	//r
+	//i
+	//n
+	//t
+	//f
+	//(
+	//"
+	//*
+	//*
+	//p
+	//r
+	//x
+	//2
+	//
+	//!
+	//=
+	//
+	//*
+	//p
+	//r
+	//y
+	//\
+	//n
+	//"
+	//)
+	//
+
+	//
+	//}
+	//
+
+
+	//{'str': ' assign record by pointer'}
 	*pr2 = (Point2D){.x = 100, .y = 200};
 	*pr3 = (struct __anonymous_struct_3){};
 
-	// cons Point3D from Point2D (record extension)
-	// (it is possible if dst record contained all fields from src record
-	// and their types are equal)  ((EXPERIMENTAL))
+	//{'str': ' cons Point3D from Point2D (record extension)'}
+	//{'str': ' (it is possible if dst record contained all fields from src record'}
+	//{'str': ' and their types are equal)  ((EXPERIMENTAL))'}
 	Point3D p3d;
 	p3d = *(Point3D*)&p2d2;
 
 
-	// проверка того как локальная константа-массив
-	// "замораживает" свои элементы
+	//{'str': ' проверка того как локальная константа-массив'}
+	//{'str': ' "замораживает" свои элементы'}
 
 	int32_t ax = 10;
 	int32_t bx = 20;

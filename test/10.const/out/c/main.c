@@ -58,7 +58,7 @@ struct WrappedArray {
 typedef struct WrappedArray WrappedArray;
 
 #define wa  {}
-// Pythagorean theorem
+
 static float distance(Point a, Point b)
 {
 	double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
@@ -85,14 +85,14 @@ int main()
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);
 
-	//	let y = wa.x
+	//{'str': '\tlet y = wa.x'}
 
-	//	var i = 0
-	//	while i < 10 {
-	//		let x = wa.array[i]
-	//		printf("x[%d]=%d\n", i, x)
-	//		++i
-	//	}
+	//{'str': '\tvar i = 0'}
+	//{'str': '\twhile i < 10 {'}
+	//{'str': '\t\tlet x = wa.array[i]'}
+	//{'str': '\t\tprintf("x[%d]=%d\\n", i, x)'}
+	//{'str': '\t\t++i'}
+	//{'str': '\t}'}
 
 	return 0;
 }

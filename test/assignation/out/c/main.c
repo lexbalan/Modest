@@ -6,7 +6,7 @@
 
 #include "main.h"
 
-// Simply record for records assignation test
+
 struct Point {
 	int32_t x;
 	int32_t y;
@@ -28,15 +28,15 @@ int main()
 {
 	printf("test assignation\n");
 
-	// -----------------------------------
-	// Global
+	//{'str': ' -----------------------------------'}
+	//{'str': ' Global'}
 
-	// copy integers by value
+	//{'str': ' copy integers by value'}
 	glb_i0 = glb_i1;
 	printf("glb_i0 = %i\n", glb_i0);
 
 
-	// copy arrays by value
+	//{'str': ' copy arrays by value'}
 	memcpy(&glb_a0, &glb_a1, sizeof glb_a0);
 
 	printf("glb_a0[0] = %i\n", glb_a0[0]);
@@ -44,17 +44,17 @@ int main()
 	printf("glb_a0[2] = %i\n", glb_a0[2]);
 
 
-	// copy records by value
+	//{'str': ' copy records by value'}
 	glb_r0 = glb_r1;
 
 	printf("glb_r0.x = %i\n", glb_r0.x);
 	printf("glb_r0.y = %i\n", glb_r0.y);
 
 
-	// -----------------------------------
-	// Local
+	//{'str': ' -----------------------------------'}
+	//{'str': ' Local'}
 
-	// copy integers by value
+	//{'str': ' copy integers by value'}
 	int32_t loc_i0 = 0;
 	int32_t loc_i1 = 123;
 
@@ -62,8 +62,8 @@ int main()
 
 	printf("loc_i0 = %i\n", loc_i0);
 
-	// copy arrays by value
-	// C backend will be use memcpy()
+	//{'str': ' copy arrays by value'}
+	//{'str': ' C backend will be use memcpy()'}
 	int32_t loc_a0[10];
 	memset(&loc_a0, 0, sizeof loc_a0);
 	int32_t loc_a1[10];
@@ -76,8 +76,8 @@ int main()
 	printf("loc_a0[2] = %i\n", loc_a0[2]);
 
 
-	// copy records by value
-	// C backend will be use memcpy()
+	//{'str': ' copy records by value'}
+	//{'str': ' C backend will be use memcpy()'}
 	Point loc_r0 = (Point){};
 	Point loc_r1 = (Point){.x = 10, .y = 20};
 
@@ -87,40 +87,431 @@ int main()
 	printf("loc_r0.y = %i\n", loc_r0.y);
 
 
-	// error: closed arrays of closed arrays are denied
-	/*let dim1 = 15
-	let dim2 = 16
+	//{'str': ' error: closed arrays of closed arrays are denied'}
+	//l
+	//e
+	//t
+	//
+	//d
+	//i
+	//m
+	//1
+	//
+	//=
+	//
+	//1
+	//5
+	//
 
-	var aa: [dim1][dim2]Int32
+	//
+	//l
+	//e
+	//t
+	//
+	//d
+	//i
+	//m
+	//2
+	//
+	//=
+	//
+	//1
+	//6
+	//
 
-	var i = 0
-	while i < 16 {
-		var j = 0
-		while j < 16 {
-			aa[i][j] = i * j
-			j = j + 1
-		}
-		i = i + 1
-	}
+	//
 
-	i = 0
-	while i < 16 {
-		var k = 0
-		while k < 16 {
-			printf("aa[%i][%i] = %i\n", i, k, aa[i][k])
-			k = k + 1
-		}
-		i = i + 1
-	}
+	//
+	//v
+	//a
+	//r
+	//
+	//a
+	//a
+	//:
+	//
+	//[
+	//d
+	//i
+	//m
+	//1
+	//]
+	//[
+	//d
+	//i
+	//m
+	//2
+	//]
+	//I
+	//n
+	//t
+	//3
+	//2
+	//
 
+	//
 
-	let xa = aa[3]
+	//
+	//v
+	//a
+	//r
+	//
+	//i
+	//
+	//=
+	//
+	//0
+	//
 
-	i = 0
-	while i < dim2 {
-		printf("xa[%i] = %i\n", i, xa[i])
-		i = i + 1
-	}*/
+	//
+	//w
+	//h
+	//i
+	//l
+	//e
+	//
+	//i
+	//
+	//<
+	//
+	//1
+	//6
+	//
+	//{
+	//
+
+	//
+	//
+	//v
+	//a
+	//r
+	//
+	//j
+	//
+	//=
+	//
+	//0
+	//
+
+	//
+	//
+	//w
+	//h
+	//i
+	//l
+	//e
+	//
+	//j
+	//
+	//<
+	//
+	//1
+	//6
+	//
+	//{
+	//
+
+	//
+	//
+	//
+	//a
+	//a
+	//[
+	//i
+	//]
+	//[
+	//j
+	//]
+	//
+	//=
+	//
+	//i
+	//
+	//*
+	//
+	//j
+	//
+
+	//
+	//
+	//
+	//j
+	//
+	//=
+	//
+	//j
+	//
+	//+
+	//
+	//1
+	//
+
+	//
+	//
+	//}
+	//
+
+	//
+	//
+	//i
+	//
+	//=
+	//
+	//i
+	//
+	//+
+	//
+	//1
+	//
+
+	//
+	//}
+	//
+
+	//
+
+	//
+	//i
+	//
+	//=
+	//
+	//0
+	//
+
+	//
+	//w
+	//h
+	//i
+	//l
+	//e
+	//
+	//i
+	//
+	//<
+	//
+	//1
+	//6
+	//
+	//{
+	//
+
+	//
+	//
+	//v
+	//a
+	//r
+	//
+	//k
+	//
+	//=
+	//
+	//0
+	//
+
+	//
+	//
+	//w
+	//h
+	//i
+	//l
+	//e
+	//
+	//k
+	//
+	//<
+	//
+	//1
+	//6
+	//
+	//{
+	//
+
+	//
+	//
+	//
+	//p
+	//r
+	//i
+	//n
+	//t
+	//f
+	//(
+	//"
+	//a
+	//a
+	//[
+	//%
+	//i
+	//]
+	//[
+	//%
+	//i
+	//]
+	//
+	//=
+	//
+	//%
+	//i
+	//\
+	//n
+	//"
+	//,
+	//
+	//i
+	//,
+	//
+	//k
+	//,
+	//
+	//a
+	//a
+	//[
+	//i
+	//]
+	//[
+	//k
+	//]
+	//)
+	//
+
+	//
+	//
+	//
+	//k
+	//
+	//=
+	//
+	//k
+	//
+	//+
+	//
+	//1
+	//
+
+	//
+	//
+	//}
+	//
+
+	//
+	//
+	//i
+	//
+	//=
+	//
+	//i
+	//
+	//+
+	//
+	//1
+	//
+
+	//
+	//}
+	//
+
+	//
+
+	//
+
+	//
+	//l
+	//e
+	//t
+	//
+	//x
+	//a
+	//
+	//=
+	//
+	//a
+	//a
+	//[
+	//3
+	//]
+	//
+
+	//
+
+	//
+	//i
+	//
+	//=
+	//
+	//0
+	//
+
+	//
+	//w
+	//h
+	//i
+	//l
+	//e
+	//
+	//i
+	//
+	//<
+	//
+	//d
+	//i
+	//m
+	//2
+	//
+	//{
+	//
+
+	//
+	//
+	//p
+	//r
+	//i
+	//n
+	//t
+	//f
+	//(
+	//"
+	//x
+	//a
+	//[
+	//%
+	//i
+	//]
+	//
+	//=
+	//
+	//%
+	//i
+	//\
+	//n
+	//"
+	//,
+	//
+	//i
+	//,
+	//
+	//x
+	//a
+	//[
+	//i
+	//]
+	//)
+	//
+
+	//
+	//
+	//i
+	//
+	//=
+	//
+	//i
+	//
+	//+
+	//
+	//1
+	//
+
+	//
+	//}
 
 
 	return 0;

@@ -332,12 +332,12 @@ define %Int @main() {
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %PIDT %2)
 	%4 = call %Long @gethostid()
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*), %Long %4)
-	; current control terminal
+	;{'str': ' current control terminal'}
 	%6 = alloca [128 x %Char8], align 1
 	%7 = bitcast [128 x %Char8]* %6 to [0 x %Char]*
 	%8 = call [0 x %Char]* @ctermid([0 x %Char]* %7)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*), [128 x %Char8]* %6)
-	; current working directory
+	;{'str': ' current working directory'}
 	%10 = alloca [128 x %Char8], align 1
 	%11 = bitcast [128 x %Char8]* %10 to [0 x %Char]*
 	%12 = call [0 x %Char]* @getcwd([0 x %Char]* %11, %SizeT 128)

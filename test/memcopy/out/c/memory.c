@@ -1,5 +1,5 @@
 
-//
+
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -7,16 +7,13 @@
 
 #include "memory.h"
 
-//
+
 
 #define systemWidth  64
-//$if (systemWidth == 64)
+
 typedef uint64_t Word;
 typedef uint64_t Nat;
-//$elseif (systemWidth == 32)
-//type Word Word32
-//type Nat Nat32
-//$endif
+
 
 
 #define memoryAlignment  (systemWidth / 8)
@@ -30,14 +27,14 @@ void mzero(void *mem, uint64_t len)
 
 	uint8_t *dst_byte0 = memptr;
 
-	// align the pointer
+	//{'str': ' align the pointer'}
 	uint64_t i = 0;
 	while (i < z) {
 		dst_byte0[i] = 0;
 		i = i + 1;
 	}
 
-	// word operation
+	//{'str': ' word operation'}
 
 	uint64_t len_words = (len - z) / sizeof(Word);
 	Word *dst_word = (Word *)&memptr[i];
@@ -48,7 +45,7 @@ void mzero(void *mem, uint64_t len)
 		i = i + 1;
 	}
 
-	// byte operation
+	//{'str': ' byte operation'}
 
 	uint64_t len_bytes = (len - z) % sizeof(Word);
 	uint8_t *dst_byte1 = (uint8_t *)&dst_word[i];

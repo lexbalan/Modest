@@ -126,9 +126,7 @@ void list_node_insert_right(list_Node *left, list_Node *new_right)
 	new_right->next = old_right;
 	new_right->prev = left;
 }
-// get list node by number
-// if number is out of range returns nil
-// if number < 0 - go backward
+
 list_Node *list_node_get(list_List *list, int32_t pos)
 {
 	if ((list == NULL) || (list->size == 0)) {
@@ -139,7 +137,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 	list_Node *node;
 
 	if (pos >= 0) {
-		// go forward
+		//{'str': ' go forward'}
 		node = list->head;
 		uint32_t n = (uint32_t)pos;
 
@@ -153,7 +151,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 			i = i + 1;
 		}
 	} else {
-		// go backward
+		//{'str': ' go backward'}
 		node = list->tail;
 		uint32_t n = (uint32_t)-pos - 1;
 

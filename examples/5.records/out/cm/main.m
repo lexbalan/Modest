@@ -6,5 +6,4 @@ include "libc/math"
 include "libc/stdlib"
 @c_include "stdio.h"
 include "libc/stdio"
-// Pythagorean theorem
 

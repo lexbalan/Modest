@@ -223,7 +223,7 @@ else_0:
 	%9 = icmp uge %Int32 %3, 56320
 	br %Bool %9 , label %then_1, label %else_1
 then_1:
-	;error("Illegal code sequence")
+	;{'str': 'error("Illegal code sequence")'}
 	br label %endif_1
 else_1:
 	%10 = alloca %Word32, align 4
@@ -239,7 +239,7 @@ else_1:
 	%19 = or %Bool %17, %18
 	br %Bool %19 , label %then_2, label %else_2
 then_2:
-	;error("Illegal code sequence")
+	;{'str': 'error("Illegal code sequence")'}
 	br label %endif_2
 else_2:
 	%20 = bitcast %Int32 %16 to %Word32

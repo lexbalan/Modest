@@ -33,7 +33,7 @@ int main()
 		printf("globalPoint test failed\n");
 	}
 
-	// local
+	//{'str': ' local'}
 
 	Point localPoint0 = (Point){.x = 10, .y = 20};
 	Point localPoint1 = (Point){};

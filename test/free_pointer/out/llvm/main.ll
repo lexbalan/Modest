@@ -194,30 +194,30 @@ define %Int32 @main() {
 	%1 = alloca %Bool, align 1
 	%2 = alloca %Int32, align 4
 	%3 = alloca %Int64, align 8
-	;
+	;{'str': ''}
 	%4 = alloca i8*, align 8
-	; free pointer can points to value of any type
+	;{'str': ' free pointer can points to value of any type'}
 	%5 = bitcast %Bool* %1 to i8*
 	store i8* %5, i8** %4
 	%6 = bitcast %Int32* %2 to i8*
 	store i8* %6, i8** %4
 	%7 = bitcast %Int64* %3 to i8*
 	store i8* %7, i8** %4
-	; you can't do dereference operation with Free pointer
-	; (because runtime doesn't have any idea about value type it pointee),
-	; but you can construct another (non Free) pointer from it
-	; and use it as usualy
+	;{'str': " you can't do dereference operation with Free pointer"}
+	;{'str': " (because runtime doesn't have any idea about value type it pointee),"}
+	;{'str': ' but you can construct another (non Free) pointer from it'}
+	;{'str': ' and use it as usualy'}
 	%8 = load i8*, i8** %4
 	%9 = bitcast i8* %8 to %Int64*
 	store %Int64 81985529216486895, %Int64* %9
 	%10 = load %Int64, %Int64* %3
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), %Int64 %10)
-	; Let's create new pointer to *Int64 from freePointer
+	;{'str': " Let's create new pointer to *Int64 from freePointer"}
 	%12 = load i8*, i8** %4
 	%13 = bitcast i8* %12 to %Int64*
-	; And will use it...
+	;{'str': ' And will use it...'}
 	%14 = load %Int64, %Int64* %13
-	; for pointer mechanics checking
+	;{'str': ' for pointer mechanics checking'}
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), %Int64 %14)
 	ret %Int32 0
 }

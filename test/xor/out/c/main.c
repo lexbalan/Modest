@@ -24,8 +24,7 @@ static void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t 
 		i = i + 1;
 	}
 }
-//xor_encrypt = xor_encrypter
-//xor_decrypt = xor_encrypter
+
 
 #define msg_length  12
 #define key_length  3
@@ -55,13 +54,13 @@ int main()
 	printf("before encrypt test_msg: \n");
 	print_bytes(tmsg, msg_length);
 
-	// encrypt test data
+	//{'str': ' encrypt test data'}
 	xor_encrypter(tmsg, msg_length, tkey, key_length);
 
 	printf("after encrypt test_msg: \n");
 	print_bytes(tmsg, msg_length);
 
-	// decrypt test data
+	//{'str': ' decrypt test data'}
 	xor_encrypter(tmsg, msg_length, tkey, key_length);
 
 	printf("after decrypt test_msg: \n");

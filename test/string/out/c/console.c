@@ -7,11 +7,11 @@
 
 #include "console.h"
 
-//$pragma do_not_include
-// for Int
-// for write()
-// for putchar()
-// for strlen, strcpy
+
+
+
+
+
 void console_putchar_utf8(char c);
 
 
@@ -68,15 +68,8 @@ void console_putchar_utf32(uint32_t c)
 		i = i + 1;
 	}
 }
-//
-// puts
-//
-/*
-// проблема тк puts уже определен в include ^^
-public func puts(s: *Str8) -> Unit {
-	puts8(s)
-}
-*/
+
+
 
 void console_puts8(char *s)
 {
@@ -96,8 +89,8 @@ void console_puts16(uint16_t *s)
 {
 	int32_t i = 0;
 	while (true) {
-		// нельзя просто так взять и вызвать putchar_utf16
-		// тк в строке может быть суррогатная пара UTF_16 символов
+		//{'str': ' нельзя просто так взять и вызвать putchar_utf16'}
+		//{'str': ' тк в строке может быть суррогатная пара UTF_16 символов'}
 
 		uint16_t cc16 = s[i];
 		if (cc16 == 0) {
@@ -194,7 +187,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			continue;
 		}
 
-		// c == '{'
+		//{'str': " c == '{'"}
 
 		i = i + 1;
 		c = form[i];
@@ -211,42 +204,42 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 		char *sptr = &buf[j];
 
 		if ((c == 'i') || (c == 'd')) {
-			//
-			// %i & %d for signed integer (Int)
-			//
+			//{'str': ''}
+			//{'str': ' %i & %d for signed integer (Int)'}
+			//{'str': ''}
 			int32_t x = va_arg(va, int32_t);
 			int32_t n = sprint_dec_int32(sptr, x);
 			j = j + n;
 
 		} else if (c == 'n') {
-			//
-			// %n for unsigned integer (Nat)
-			//
+			//{'str': ''}
+			//{'str': ' %n for unsigned integer (Nat)'}
+			//{'str': ''}
 			uint32_t x = va_arg(va, uint32_t);
 			int32_t n = sprint_dec_n32(sptr, x);
 			j = j + n;
 
 		} else if ((c == 'x') || (c == 'p')) {
-			//
-			// %x for unsigned integer (Nat)
-			// %p for pointers
-			//
+			//{'str': ''}
+			//{'str': ' %x for unsigned integer (Nat)'}
+			//{'str': ' %p for pointers'}
+			//{'str': ''}
 			uint32_t x = va_arg(va, uint32_t);
 			int32_t n = sprint_hex_nat32(sptr, x);
 			j = j + n;
 
 		} else if (c == 's') {
-			//
-			// %s pointer to string
-			//
+			//{'str': ''}
+			//{'str': ' %s pointer to string'}
+			//{'str': ''}
 			char *s = va_arg(va, char *);
 			strcpy(sptr, s);
 			j = j + (int32_t)strlen(s);
 
 		} else if (c == 'c') {
-			//
-			// %c for char
-			//
+			//{'str': ''}
+			//{'str': ' %c for char'}
+			//{'str': ''}
 			uint32_t c = va_arg(va, uint32_t);
 			int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)sptr);
 			j = j + n;
@@ -291,7 +284,7 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x)
 		}
 	}
 
-	// mirroring into buffer
+	//{'str': ' mirroring into buffer'}
 	int32_t j = 0;
 	while (i > 0) {
 		i = i - 1;

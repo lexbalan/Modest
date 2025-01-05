@@ -24,21 +24,21 @@ static int32_t sum(int32_t a, int32_t b)
 {
 	return a + b;
 }
-// define function main
+
 static void func0();
 
 int main()
 {
 	printf("test func\n");
 
-	// call declared & defined functions
+	//{'str': ' call declared & defined functions'}
 	func0();
 	func1();
 
-	// call function with two arguments
+	//{'str': ' call function with two arguments'}
 	print_ab(10, 20);
 
-	// call function with two arguments and return value
+	//{'str': ' call function with two arguments and return value'}
 	int32_t arg_a = 1;
 	int32_t arg_b = 2;
 	int32_t sum_result = sum(arg_a, arg_b);
@@ -46,7 +46,7 @@ int main()
 
 
 	int32_t(*fptr)(int32_t a, int32_t b) = &sum;
-	// call function with two arguments and return value
+	//{'str': ' call function with two arguments and return value'}
 	int32_t arg_a2 = 1;
 	int32_t arg_b2 = 2;
 	int32_t fptr_result = fptr(arg_a2, arg_b2);

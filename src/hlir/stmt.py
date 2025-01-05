@@ -1,140 +1,108 @@
 ######################################################################
-#							HLIR STMT							   #
+#                             HLIR STMT                              #
 ######################################################################
 
 
-
-def hlir_stmt_bad(x):
-	return {
-		'isa': 'stmt',
-		'kind': 'bad',
-		'ast_stmt': x,
-		'att': [],
-		'ti': x['ti']
-	}
+class Stmt():
+	def __init__(self, ti, nl=1):
+		self.ti = ti
+		self.att = []
+		self.nl = nl
+		self.end_nl = 1
 
 
-def hlir_stmt_block(stmts, ti=None, end_nl=1):
-	return {
-		'isa': 'stmt',
-		'kind': 'block',
-		'stmts': stmts,
+class StmtBad(Stmt):
+	def __init__(self, ti, nl=1):
+		super().__init__(ti)
+
+
+class StmtBlock(Stmt):
+	def __init__(self, stmts, ti, end_nl=1):
+		super().__init__(ti)
 		# количество пустых строк перед закрывающей скобкой блока
-		'end_nl': end_nl,
-		'att': [],
-		'nl': 0,
-		'ti': ti
-	}
+		self.end_nl=end_nl
+		self.stmts = stmts
 
 
-def hlir_stmt_def_var(id, var_value, init_value=None, ti=None):
-	return {
-		'isa': 'stmt',
-		'kind': 'var',
-		'id': id,
-		'var_value': var_value,
-		'init_value': init_value,
-		'att': [],
-		'nl': 0,
-		'ti': ti
-	}
+class StmtDefVar(Stmt):
+	def __init__(self, id, var_value, init_value=None, ti=None):
+		super().__init__(ti)
+		self.id = id
+		self.var_value = var_value
+		self.init_value = init_value
 
 
-def hlir_stmt_def_const(id, new_value, init_value, ti=None):
-	return {
-		'isa': 'stmt',
-		'kind': 'let',
-		'id': id,
-		'init_value': init_value,
-		'value': new_value,
-		'att': [],
-		'nl': 0,
-		'ti': ti
-	}
+class StmtDefConst(Stmt):
+	def __init__(self, id, new_value, init_value=None, ti=None):
+		super().__init__(ti)
+		self.id = id
+		self.value = new_value
+		self.init_value = init_value
 
 
-def hlir_stmt_value(value, ti=None):
-	return {
-		'isa': 'stmt',
-		'kind': 'value',
-		'value': value,
-		'att': [],
-		'nl': 0,
-		'ti': ti
-	}
+class StmtValue(Stmt):
+	def __init__(self, value, ti=None):
+		super().__init__(ti)
+		self.value = value
 
 
-def hlir_stmt_assign(left, right, ti=None):
-	return {
-		'isa': 'stmt',
-		'kind': 'assign',
-		'left': left,
-		'right': right,
-		'att': [],
-		'nl': 0,
-		'ti': ti
-	}
+class StmtAssign(Stmt):
+	def __init__(self, left, right, ti=None):
+		super().__init__(ti)
+		self.left = left
+		self.right = right
 
 
-def hlir_stmt_if(cond, then, els=None, ti=None):
-	return {
-		'isa': 'stmt',
-		'kind': 'if',
-		'cond': cond,
-		'then': then,
-		'else': els,
-		'att': [],
-		'nl': 0,
-		'ti': ti
-	}
+class StmtIf(Stmt):
+	def __init__(self, cond, then, els=None, ti=None):
+		super().__init__(ti)
+		self.cond = cond
+		self.then = then
+		self.els = els
 
 
-def hlir_stmt_while(cond, stmt, ti=None):
-	return {
-		'isa': 'stmt',
-		'kind': 'while',
-		'cond': cond,
-		'stmt': stmt,
-		'att': [],
-		'nl': 0,
-		'ti': ti
-	}
+class StmtWhile(Stmt):
+	def __init__(self, cond, stmt, ti=None):
+		super().__init__(ti)
+		self.cond = cond
+		self.stmt = stmt
 
 
-def hlir_stmt_again(ti=None):
-	return {'isa': 'stmt', 'kind': 'again', 'att': [], 'nl': 0, 'ti': ti}
+class StmtAgain(Stmt):
+	def __init__(self, ti=None):
+		super().__init__(ti)
 
 
-def hlir_stmt_break(ti=None):
-	return {'isa': 'stmt', 'kind': 'break', 'att': [], 'nl': 0, 'ti': ti}
+class StmtBreak(Stmt):
+	def __init__(self, ti=None):
+		super().__init__(ti)
 
 
-def hlir_stmt_return(value=None, ti=None):
-	return {
-		'isa': 'stmt',
-		'kind': 'return',
-		'value': value,
-		'att': [],
-		'nl': 0,
-		'ti': ti
-	}
+class StmtReturn(Stmt):
+	def __init__(self, value=None, ti=None):
+		super().__init__(ti)
+		self.value = value
 
 
-def hlir_stmt_asm(text, outputs, inputs, clobbers, ti=None):
-	return {
-		'isa': 'stmt',
-		'kind': 'asm',
-		'text': text,
-		'outputs': outputs,
-		'inputs': inputs,
-		'clobbers': clobbers,
-		'att': [],
-		'nl': 0,
-		'ti': ti
-	}
+class StmtAsm(Stmt):
+	def __init__(self, text, outputs, inputs, clobbers, ti=None):
+		super().__init__(ti)
+		self.text = text
+		self.outputs = outputs
+		self.inputs = inputs
+		self.clobbers = clobbers
 
 
+class StmtCommentLine(Stmt):
+	def __init__(self, lines, ti=None, nl=0):
+		super().__init__(ti, nl=nl)
+		self.lines = lines
 
-def hlir_stmt_is_bad(x):
-	return x['kind'] == 'bad'
+
+class StmtCommentBlock(Stmt):
+	def __init__(self, text, ti=None, nl=0):
+		super().__init__(ti, nl=nl)
+		self.text = text
+
+
 

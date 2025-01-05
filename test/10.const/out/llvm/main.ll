@@ -401,13 +401,13 @@ define %Int @main() {
 	%22 = call %Float @lineLength(%Line %21)
 	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), %Float %4)
 	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %11)
-	;	let y = wa.x
-	;	var i = 0
-	;	while i < 10 {
-	;		let x = wa.array[i]
-	;		printf("x[%d]=%d\n", i, x)
-	;		++i
-	;	}
+	;{'str': '\tlet y = wa.x'}
+	;{'str': '\tvar i = 0'}
+	;{'str': '\twhile i < 10 {'}
+	;{'str': '\t\tlet x = wa.array[i]'}
+	;{'str': '\t\tprintf("x[%d]=%d\\n", i, x)'}
+	;{'str': '\t\t++i'}
+	;{'str': '\t}'}
 	ret %Int 0
 }
 

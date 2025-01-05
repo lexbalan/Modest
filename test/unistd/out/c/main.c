@@ -7,7 +7,7 @@
 #include "main.h"
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
-// getenv
+
 
 
 int main()
@@ -20,12 +20,12 @@ int main()
 	long hid = gethostid();
 	printf("hostid = %ld\n", hid);
 
-	// current control terminal
+	//{'str': ' current control terminal'}
 	char cterm[128];
 	ctermid(&cterm[0]);
 	printf("ctermid = %s\n", &cterm[0]);
 
-	// current working directory
+	//{'str': ' current working directory'}
 	char cwd[128];
 	getcwd(&cwd[0], LENGTHOF(cwd));
 	printf("cwd = %s\n", &cwd[0]);
