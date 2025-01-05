@@ -19,8 +19,8 @@ def value_record_create(initializers=[], ti=None):
 	# (для того чтобы сконструировать тип записи)
 	fields = []
 	for initializer in initializers:
-		field_id = initializer['id']
-		init_value = initializer['value']
+		field_id = initializer.id
+		init_value = initializer.value
 		field_type = init_value['type']
 		field_ti = init_value['ti']
 
@@ -82,11 +82,11 @@ def value_record_cons(t, v, method, ti):
 			vv = None
 			if initializer:
 				from .cons import value_cons_implicit_check
-				vv = value_cons_implicit_check(field['type'], initializer['value'])
+				vv = value_cons_implicit_check(field['type'], initializer.value)
 			else:
 				# Если инициализатора для поля нет, создадим zero-инициализатор
 				vv = value_zero(field['type'], ti)
-			ni = hlir_initializer(field['id'], vv, ti=ti, nl=0)
+			ni = Initializer(field['id'], vv, ti=ti, nl=0)
 			items.append(ni)
 
 		nv['items'] = items
@@ -103,7 +103,7 @@ def value_record_eq(l, r, op, ti):
 		eq_result = True
 
 		for lx, rx in zip(l['items'], r['items']):
-			if not value_eq(lx['value'], rx['value'], op, ti):
+			if not value_eq(lx.value, rx.value, op, ti):
 				eq_result = False
 				break
 

@@ -132,8 +132,9 @@ def type_get_aka(t):
 
 def get_id_str(x):
 
-	if isinstance(x['id'], dict):
-		info("??", x['id']['ti'])
+	if isinstance(x, Initializer):
+		return x.id.str
+	#	info("??", x['id']['ti'])
 
 	if x['id'].llvm:
 		return '"%s"' % x['id']['llvm']
@@ -961,8 +962,9 @@ def do_eval_call(v):
 	args = []
 	for a in v['args']:
 		arg = None
-		if a['isa'] == 'initializer':
-			arg = do_reval(a['value'])
+		#if a['isa'] == 'initializer':
+		if isinstance(a, Initializer):
+			arg = do_reval(a.value)
 		else:
 			arg = do_reval(a)
 
@@ -1460,8 +1462,8 @@ def do_eval_record(v):
 	if is_global_context():
 		items = []
 		for initializer in v['items']:
-			iv = do_reval(initializer['value'])
-			items.append({'id': initializer['id'], 'value': iv})
+			iv = do_reval(initializer.value)
+			items.append({'id': initializer.id, 'value': iv})
 		return llvm_value_record(items, rec_type)
 
 	# local context
@@ -1472,8 +1474,8 @@ def do_eval_record(v):
 	for initializer in v['items']:
 		# нет смысла засовывать в структуру по значению нулевые элементы
 		# тк она порождается из zeroinitializer и по умолчанию заполнена нулями
-		if not value_is_zero(initializer['value']):
-			iv = do_reval(initializer['value'])
+		if not value_is_zero(initializer.value):
+			iv = do_reval(initializer.value)
 			field = htype.record_field_get(rec_type, get_id_str(initializer))
 			xv = insertvalue(xv, iv, field['field_no'])
 

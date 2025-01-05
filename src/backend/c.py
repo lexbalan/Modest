@@ -584,8 +584,9 @@ def print_value_call(v, ctx, arrayResult=None):
 	i = 0
 	while i < n:
 		a = None
-		if args[i]['isa'] == 'initializer':
-			a = args[i]['value']
+		#if args[i]['isa'] == 'initializer':
+		if isinstance(args[i], Initializer):
+			a = args[i].value
 		else:
 			a = args[i]
 
@@ -1056,7 +1057,7 @@ def print_value_record(v, ctx):
 		field_id_str = get_id_str(item)
 		ini = get_item_by_id(v['items'], field_id_str)
 
-		nl = ini['nl']
+		nl = ini.nl
 		if nl > 0:
 			newline(n=nl)
 			indent()
@@ -1072,7 +1073,7 @@ def print_value_record(v, ctx):
 		# .arr = (uint8_t [3]){1, 2, 3}  // not worked
 		# .arr = {1, 2, 3}  // worked
 		# вот такая вот херня
-		print_value(ini['value'], ctx + ['no-literal-array-cast'])
+		print_value(ini.value, ctx + ['no-literal-array-cast'])
 		if i < (nitems - 1):
 			out(",")
 

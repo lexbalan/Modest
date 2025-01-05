@@ -486,15 +486,15 @@ def init_builtin_values():
 	compilerVersionMinor = value_integer_create(7, typ=foundation.typeNat32)
 
 	compiler_version_initializers = [
-		hlir_initializer(Id().fromStr('major'), compilerVersionMajor),
-		hlir_initializer(Id().fromStr('minor'), compilerVersionMinor)
+		Initializer(Id().fromStr('major'), compilerVersionMajor),
+		Initializer(Id().fromStr('minor'), compilerVersionMinor)
 	]
 	compilerVersion = value_record_create(compiler_version_initializers)
 
 	# '__compiler' record
 	compiler_initializers = [
-		hlir_initializer(Id().fromStr('name'), compilerName),
-		hlir_initializer(Id().fromStr('version'), compilerVersion),
+		Initializer(Id().fromStr('name'), compilerName),
+		Initializer(Id().fromStr('version'), compilerVersion),
 	]
 	compiler = value_record_create(compiler_initializers)
 	root_symtab.value_add('__compiler', compiler)
@@ -518,11 +518,11 @@ def init_builtin_values():
 
 	# '__target' record
 	target_initializers = [
-		hlir_initializer(Id().fromStr('name'), __targetName),
-		hlir_initializer(Id().fromStr('charWidth'), __targetCharWidth),
-		hlir_initializer(Id().fromStr('intWidth'), __targetIntWidth),
-		hlir_initializer(Id().fromStr('floatWidth'), __targetFloatWidth),
-		hlir_initializer(Id().fromStr('pointerWidth'), __targetPointerWidth),
+		Initializer(Id().fromStr('name'), __targetName),
+		Initializer(Id().fromStr('charWidth'), __targetCharWidth),
+		Initializer(Id().fromStr('intWidth'), __targetIntWidth),
+		Initializer(Id().fromStr('floatWidth'), __targetFloatWidth),
+		Initializer(Id().fromStr('pointerWidth'), __targetPointerWidth),
 	]
 	target = value_record_create(target_initializers)
 	root_symtab.value_add('__target', target)
@@ -1166,7 +1166,7 @@ def do_value_call(x):
 
 			if a['key'] != None:
 				id = Id(a['key'])
-				args.append(hlir_initializer(id, arg))
+				args.append(Initializer(id, arg))
 			else:
 				args.append(arg)
 
@@ -1460,8 +1460,8 @@ def do_value_access(x):
 
 			# (!) #asset of immediate index & access contains VALUE (!)
 			nv['immediate'] = True
-			nv['immval'] = initializer['value']
-			cp_immediate(nv, initializer['value'])
+			nv['immval'] = initializer.value
+			cp_immediate(nv, initializer.value)
 
 	return nv
 
@@ -1545,7 +1545,7 @@ def do_value_record(x):
 
 		if item['isa'] == 'ast_kv':
 			item_value = do_rvalue(item['value'])
-			p = hlir_initializer(
+			p = Initializer(
 				Id(item['key']),
 				#item['key'],
 				item_value,

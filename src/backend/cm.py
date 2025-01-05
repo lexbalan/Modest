@@ -260,10 +260,11 @@ def print_value_call(v, ctx):
 		if arg['isa'] == 'value':
 			# just paramter value
 			print_value(arg)
-		elif arg['isa'] == 'initializer':
+		#elif arg['isa'] == 'initializer':
+		elif isinstance(arg, Initializer):
 			# named parameter
 			out("%s = " % get_id_str(arg))
-			print_value(arg['value'])
+			print_value(arg.value)
 
 		i = i + 1
 	out(")")
@@ -458,7 +459,7 @@ def print_value_record(v, ctx):
 
 		ini = get_item_by_id(v['items'], field_str)
 
-		nl = ini['nl']
+		nl = ini.nl
 		if nl > 0:
 			newline(nl)
 			indent()
@@ -467,7 +468,7 @@ def print_value_record(v, ctx):
 				out(" ")
 
 		out("%s = " % field_str)
-		print_value(ini['value'], ctx)
+		print_value(ini.value, ctx)
 
 		if nl == 0:
 			if i < (nitems - 1):

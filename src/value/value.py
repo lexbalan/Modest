@@ -52,8 +52,8 @@ def value_is_zero(x):
 		return True
 
 	if htype.type_is_record(x['type']):
-		for item in x['items']:
-			if not value_is_zero(item['value']):
+		for initializer in x['items']:
+			if not value_is_zero(initializer.value):
 				return False
 		return True
 
