@@ -888,17 +888,18 @@ def print_directive(x):
 
 
 def print_def(x):
-	isa = x['isa']
+	if isinstance(x, dict):
+		isa = x['isa']
 
-	if isa != 'comment':
-		newline(n=x['nl'])
+		if isa != 'comment':
+			newline(n=x['nl'])
 
-	if isa == 'def_var': print_def_var(x)
-	elif isa == 'def_const': print_def_const(x)
-	elif isa == 'def_func': print_def_func(x)
-	elif isa == 'def_type': print_def_type(x)
-	elif isa == 'directive': print_directive(x)
-	elif isa == 'comment': print_comment(x)
+		if isa == 'def_var': print_def_var(x)
+		elif isa == 'def_const': print_def_const(x)
+		elif isa == 'def_func': print_def_func(x)
+		elif isa == 'def_type': print_def_type(x)
+		elif isa == 'directive': print_directive(x)
+		elif isa == 'comment': print_comment(x)
 
 
 def run(module, outname, options):

@@ -312,10 +312,6 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 @str11 = private constant [2 x i8] [i8 10, i8 0]
 @str12 = private constant [2 x i8] [i8 10, i8 0]
 ; -- endstrings --
-; constants with type String(Generic)
-
-; variables with type Array of Chars
-
 @string8 = internal global [6 x %Char8] [
 	%Char8 83,
 	%Char8 116,
@@ -348,11 +344,9 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char32 127881,
 	%Char32 129412
 ]
-; variables with type Pointer to Array of Chars
 @ptr_to_string8 = internal global [0 x %Char8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
 @ptr_to_string16 = internal global [0 x %Char16]* bitcast ([9 x i16]* @str2 to [0 x i16]*)
 @ptr_to_string32 = internal global [0 x %Char32]* bitcast ([13 x i32]* @str3 to [0 x i32]*)
-
 define %Int @main() {
 	call void @console_putchar_utf8(%Char8 65)
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))

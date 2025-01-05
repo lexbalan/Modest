@@ -194,8 +194,6 @@ declare %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len)
 @str4 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-
-
 @data = internal global [9 x %Word8] [
 	%Word8 49,
 	%Word8 50,
@@ -207,7 +205,6 @@ declare %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len)
 	%Word8 56,
 	%Word8 57
 ]
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
 	%2 = call %Word32 @crc32_run([0 x %Word8]* bitcast ([9 x %Word8]* @data to [0 x %Word8]*), %Int32 9)

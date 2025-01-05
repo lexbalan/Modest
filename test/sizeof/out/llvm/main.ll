@@ -240,7 +240,6 @@ declare void @perror(%ConstCharStr* %str)
 @str51 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 77, i8 105, i8 120, i8 101, i8 100, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 117, i8 10, i8 0]
 @str52 = private constant [24 x i8] [i8 97, i8 108, i8 105, i8 103, i8 110, i8 111, i8 102, i8 40, i8 77, i8 105, i8 120, i8 101, i8 100, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 117, i8 10, i8 0]
 ; -- endstrings --
-
 %Point = type {
 	%Int32,
 	%Int32
@@ -278,15 +277,12 @@ declare void @perror(%ConstCharStr* %str)
 	%Mixed3
 };
 
-;var s: Mixed2
-
 @c = internal global %Char8 zeroinitializer
 @i = internal global %Int32 zeroinitializer
 @f = internal global double zeroinitializer
 @i2 = internal global %Int16 zeroinitializer
 @p = internal global [3 x %Point] zeroinitializer
 @g = internal global %Bool zeroinitializer
-
 %X = type {
 	%Char8,
 	%Int32,
@@ -296,9 +292,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Bool
 };
 
-
 @x = internal global %X zeroinitializer
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), %Int64 0)

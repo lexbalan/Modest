@@ -309,10 +309,6 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str40 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str41 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-;@attribute("c_no_print")
-;import "misc/minmax"
-;$pragma c_include "./minmax.h"
-
 @constantArray = constant [10 x %Int8] [
 	%Int8 1,
 	%Int8 2,
@@ -325,7 +321,6 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 	%Int8 9,
 	%Int8 10
 ]
-
 @globalArray = internal global [10 x %Int32] [
 	%Int32 1,
 	%Int32 2,
@@ -343,8 +338,6 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 	%Char8 98,
 	%Char8 99
 ]
-;var arrayOfChars = [Char8 "a", 'b', 'c']
-
 define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%x = alloca [20 x %Char8]
 	store [20 x %Char8] %__x, [20 x %Char8]* %x
@@ -390,7 +383,6 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	ret void
 }
 
-
 @startSequence = constant [3 x %Int8] [
 	%Int8 170,
 	%Int8 85,
@@ -399,7 +391,6 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 @stopSequence = constant [1 x %Int8] [
 	%Int8 22
 ]
-
 define internal void @test() {
 	; тестируем работу с локальным generic массивом
 	%1 = alloca [6 x %Int32], align 4

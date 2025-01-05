@@ -206,7 +206,6 @@ declare void @perror(%ConstCharStr* %str)
 @str2 = private constant [14 x i8] [i8 110, i8 111, i8 100, i8 101, i8 95, i8 103, i8 101, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 @str3 = private constant [17 x i8] [i8 110, i8 111, i8 100, i8 101, i8 95, i8 105, i8 110, i8 115, i8 101, i8 114, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 ; -- endstrings --
-
 %list_Node = type {
 	%list_Node*,
 	%list_Node*,
@@ -218,7 +217,6 @@ declare void @perror(%ConstCharStr* %str)
 	%list_Node*,
 	%Int32
 };
-
 
 define %list_List* @list_create() {
 	%1 = call i8* @malloc(%SizeT 24)
@@ -359,9 +357,6 @@ endif_0:
 	ret void
 }
 
-; get list node by number
-; if number is out of range returns nil
-; if number < 0 - go backward
 define %list_Node* @list_node_get(%list_List* %list, %Int32 %pos) {
 	%1 = icmp eq %list_List* %list, bitcast (i8* null to %list_List*)
 	%2 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2

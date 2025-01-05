@@ -196,7 +196,6 @@ declare void @perror(%ConstCharStr* %str)
 @str7 = private constant [14 x i8] [i8 102, i8 50, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str8 = private constant [14 x i8] [i8 102, i8 51, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
-
 %Type1 = type {
 	%Int32
 };
@@ -208,7 +207,6 @@ declare void @perror(%ConstCharStr* %str)
 %Type3 = type {
 	%Int32
 };
-
 
 define internal void @f0_val(%Type1 %x) {
 	%1 = extractvalue %Type1 %x, 0
@@ -262,7 +260,6 @@ define internal void @f3_ptr({%Int32}* %x) {
 	ret void
 }
 
-
 @a = internal global %Type1 {
 	%Int32 1
 }
@@ -272,7 +269,6 @@ define internal void @f3_ptr({%Int32}* %x) {
 @c = internal global %Type3 {
 	%Int32 3
 }
-
 define internal void @test_by_value() {
 	%1 = load %Type1, %Type1* @a
 	call void @f0_val(%Type1 %1)

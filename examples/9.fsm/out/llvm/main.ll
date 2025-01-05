@@ -243,19 +243,7 @@ declare void @fsm_run(%fsm_FSM* %fsm)
 @str4 = private constant [13 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
 @str5 = private constant [19 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 120, i8 105, i8 116, i8 32, i8 116, i8 111, i8 32, i8 37, i8 115, i8 10, i8 0]
 ; -- endstrings --
-; This is flashlight final state machine example
-; (just for compiler test and language demonstration)
-;@attribute("c_no_print")
-;import "lightfood/main"
-;@attribute("c_no_print")
-;$pragma c_include "./ff_main.h"
-
-
 @cnt = internal global %Int8 zeroinitializer
-;
-; State Off
-;
-
 define internal void @off_entry(%fsm_FSM* %x) {
 	;printf("off_entry\n")
 	ret void
@@ -284,9 +272,6 @@ define internal void @off_exit(%fsm_FSM* %x) {
 	ret void
 }
 
-;
-; State On
-;
 define internal void @on_entry(%fsm_FSM* %x) {
 	;printf("on_entry\n")
 	ret void
@@ -315,9 +300,6 @@ define internal void @on_exit(%fsm_FSM* %x) {
 	ret void
 }
 
-;
-; State Beacon
-;
 define internal void @beacon_entry(%fsm_FSM* %x) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 1
 	%2 = load %Int32, %Int32* %1
@@ -351,7 +333,6 @@ define internal void @beacon_exit(%fsm_FSM* %x) {
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %3)
 	ret void
 }
-
 
 @fsm = internal global %fsm_FSM {
 	[8 x %Char8] [
@@ -428,7 +409,6 @@ define internal void @beacon_exit(%fsm_FSM* %x) {
 		%fsm_StateDesc zeroinitializer
 	]
 }
-
 define %Int @main() {
 	br label %again_1
 again_1:

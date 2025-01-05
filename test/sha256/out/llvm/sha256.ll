@@ -153,8 +153,6 @@ declare [0 x %Char]* @strerror(%Int %error)
 ; -- end print imports --
 ; -- strings --
 ; -- endstrings --
-
-
 %sha256_Hash = type [32 x %Word8];
 %Context = type {
 	[64 x %Word8],
@@ -162,7 +160,6 @@ declare [0 x %Char]* @strerror(%Int %error)
 	%Int64,
 	[8 x %Word32]
 };
-
 
 define internal %Word32 @rotleft(%Word32 %a, %Int32 %b) {
 	%1 = bitcast %Int32 %b to %Word32
@@ -237,7 +234,6 @@ define internal %Word32 @sig1(%Word32 %x) {
 	ret %Word32 %5
 }
 
-
 @initalState = constant [8 x %Int32] [
 	%Int32 1779033703,
 	%Int32 3144134277,
@@ -248,7 +244,6 @@ define internal %Word32 @sig1(%Word32 %x) {
 	%Int32 528734635,
 	%Int32 1541459225
 ]
-
 define internal void @contextInit(%Context* %ctx) {
 	; -- STMT ASSIGN ARRAY --
 	%1 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
@@ -266,7 +261,6 @@ define internal void @contextInit(%Context* %ctx) {
 	store [8 x %Word32] %10, [8 x %Word32]* %1
 	ret void
 }
-
 
 @k = constant [64 x %Int32] [
 	%Int32 1116352408,
@@ -334,7 +328,6 @@ define internal void @contextInit(%Context* %ctx) {
 	%Int32 3204031479,
 	%Int32 3329325298
 ]
-
 define internal void @transform(%Context* %ctx, [0 x %Word8]* %data) {
 	%1 = alloca [64 x %Word32], align 4
 	store [64 x %Word32] zeroinitializer, [64 x %Word32]* %1

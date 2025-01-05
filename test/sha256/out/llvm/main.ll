@@ -210,14 +210,11 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %out
 @str7 = private constant [7 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 0]
 @str8 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 105, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
 ; -- endstrings --
-
-
 %SHA256_TestCase = type {
 	[32 x %Char8],
 	%Int32,
 	%sha256_Hash
 };
-
 
 @test0 = internal global %SHA256_TestCase {
 	[32 x %Char8] [
@@ -365,7 +362,6 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %out
 	%SHA256_TestCase* @test0,
 	%SHA256_TestCase* @test1
 ]
-
 define internal %Bool @doTest(%SHA256_TestCase* %test) {
 	%1 = alloca %sha256_Hash, align 1
 	%2 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 0

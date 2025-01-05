@@ -191,10 +191,6 @@ declare void @perror(%ConstCharStr* %str)
 @str2 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str3 = private constant [9 x i8] [i8 101, i8 120, i8 105, i8 116, i8 32, i8 37, i8 115, i8 10, i8 0]
 ; -- endstrings --
-
-; Вынужден добавлять export тк иначе не идет в хедер к структуре
-; Короче, проблема зависимостей тяжело зависла в воздухе
-
 %fsm_Handler = type void (%fsm_FSM*)*;
 %fsm_StateDesc = type {
 	[8 x %Char8],
@@ -203,8 +199,6 @@ declare void @perror(%ConstCharStr* %str)
 	%fsm_Handler
 };
 
-
-
 %fsm_FSM = type {
 	[8 x %Char8],
 	%Int32,
@@ -212,7 +206,6 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32,
 	[16 x %fsm_StateDesc]
 };
-
 
 define %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Int32 %state_no) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4

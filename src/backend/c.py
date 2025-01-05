@@ -4,6 +4,7 @@
 
 from error import info, error, fatal
 from hlir.id import Id
+from hlir.hlir import *
 from .common import *
 import type as htype
 from type import select_common_type, type_print
@@ -156,7 +157,7 @@ def get_id_str(x):
 	#if x['id'].str != 'main':
 	if x['id'].need_decoration:
 		if 'definition' in x:
-			prefix = x['definition']['module']['prefix']
+			prefix = x['definition'].module['prefix']
 			if prefix != None:
 				id_str = prefix + '_' + id_str
 	return id_str
@@ -1671,17 +1672,17 @@ def print_func_signature(id_str, ftype):
 
 
 def print_decl_func(x):
-	if 'gnu_att' in x:
-		out('__attribute__((%s))\n' % x['gnu_att'])
+	#if 'gnu_att' in x:
+	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if x['access_level'] == 'private':
+	if x.access_level == 'private':
 		out("static ")
 
-	if 'inline' in x['att']:
+	if 'inline' in x.att:
 		out("inline ")
 
-	ftype = x['value']['type']
-	id_str = get_id_str(x['value'])
+	ftype = x.value['type']
+	id_str = get_id_str(x.value)
 	print_func_signature(id_str, ftype)
 	out(";")
 
@@ -1692,18 +1693,18 @@ def print_decl_func(x):
 def print_def_func(x):
 	global declared
 
-	func = x['value']
+	func = x.value
 
 	global cfunc
 	cfunc = func
 
-	if 'gnu_att' in x:
-		out('__attribute__((%s))\n' % x['gnu_att'])
+	#if 'gnu_att' in x:
+	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if x['access_level'] == 'private':
+	if x.access_level == 'private':
 		out("static ")
 
-	if 'inline' in x['att']:
+	if 'inline' in x.att:
 		out("inline ")
 
 	ftype = func['type']
@@ -1713,7 +1714,7 @@ def print_def_func(x):
 	#print_wrappers = not 'declared' in func['att']
 	print_func_signature(get_id_str(func), ftype)
 
-	if x['stmt'] == None:
+	if x.stmt == None:
 		out(";")
 		return
 
@@ -1743,7 +1744,7 @@ def print_def_func(x):
 			out("));")
 
 
-	stmts = x['stmt']['stmts']
+	stmts = x.stmt['stmts']
 	print_statements(stmts)
 
 	indent_down()
@@ -1767,7 +1768,7 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-	id_str = get_id_str(x['type'])
+	id_str = get_id_str(x.type)
 	out("struct %s;" % id_str)
 	if not NO_TYPEDEF_STRUCTS:
 		out("\ntypedef struct %s %s;" % (id_str, id_str))
@@ -1776,8 +1777,8 @@ def print_decl_type(x):
 def print_def_type(x):
 	global declared
 
-	id_str = get_id_str(x['type'])
-	otype = x['original_type']
+	id_str = get_id_str(x.type)
+	otype = x.original_type
 
 	if htype.type_is_record(otype):
 		print_type_record(otype, tag=id_str)
@@ -1802,11 +1803,11 @@ def print_variable(id_str, t, as_const=False, init_value=None, prefix=''):
 
 
 def print_def_var(x, isdecl=False):
-	if 'gnu_att' in x:
-		out('__attribute__((%s))\n' % x['gnu_att'])
+	#if 'gnu_att' in x:
+	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
 	#id = x['id']
-	var = x['var_value']
+	var = x.var_value
 	if USE_STATIC_VARIABLES:
 		if not 'global' in var['att']:
 			if not 'extern' in var['att']:
@@ -1817,9 +1818,9 @@ def print_def_var(x, isdecl=False):
 	if 'volatile' in var['att']:
 		out("volatile ")
 
-	print_variable(get_id_str(x['var_value']), var['type'])
+	print_variable(get_id_str(x.var_value), var['type'])
 
-	init_value = x['init_value']
+	init_value = x.init_value
 
 	if not value_is_undefined(init_value):
 		out(" = ")
@@ -1831,9 +1832,9 @@ def print_def_var(x, isdecl=False):
 
 def print_def_const(x):
 	global nl_str
-	const_value = x['value']
-	init_value = x['init_value']
-	id = x['id']
+	const_value = x.value
+	init_value = x.init_value
+	id = x.id
 	id_str = get_id_str(const_value)
 
 	# глобальные константы-массивы печатаем особенно
@@ -1904,28 +1905,29 @@ def cdirectives(module):
 #					print_include(obj)
 
 	for obj in module['defs']:
-		if obj['isa'] == 'directive':
-			if obj['kind'] == 'c_include':
-				print_include(obj)
+		if isinstance(obj, dict):
+			if obj['isa'] == 'directive':
+				if obj['kind'] == 'c_include':
+					print_include(obj)
 
 
 
 def print_cdecl_type(x):
-	newline(n=x['nl'])
+	newline(n=x.nl)
 
-	id_str = get_id_str(x['type'])
+	id_str = get_id_str(x.type)
 	out("struct %s;" % id_str)
 	if not NO_TYPEDEF_STRUCTS:
 		out("\ntypedef struct %s %s;" % (id_str, id_str))
 
 
 def print_cdecl_func(x):
-	newline(n=x['nl'])
+	newline(n=x.nl)
 
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if x['access_level'] == 'private':
+	if x.access_level == 'private':
 		out("static ")
 
 	print_func_signature(get_id_str(sym), x['symbol']['type'])
@@ -1948,8 +1950,11 @@ def print_directive(x):
 
 
 def is_private(x):
-	if 'access_level' in x:
-		return x['access_level'] == 'private'
+	if isinstance(x, dict):
+		if 'access_level' in x:
+			return x['access_level'] == 'private'
+	else:
+		return x.access_level == 'private'
 	return False
 
 
@@ -1994,13 +1999,14 @@ def print_header(module, outname):
 
 	# print directives (only for header)
 	for obj in module['defs']:
-		if obj['isa'] == 'directive':
-			if obj['kind'] == 'c_include':
-				print_include(obj)
-			elif obj['kind'] == 'import':
-				if not 'do_not_include' in obj['import_module']['att']:
-					x = os.path.basename(obj['str'])
-					include(x + '.h', local=True)
+		if isinstance(obj, dict):
+			if obj['isa'] == 'directive':
+				if obj['kind'] == 'c_include':
+					print_include(obj)
+				elif obj['kind'] == 'import':
+					if not 'do_not_include' in obj['import_module']['att']:
+						x = os.path.basename(obj['str'])
+						include(x + '.h', local=True)
 
 
 	newline()
@@ -2012,33 +2018,37 @@ def print_header(module, outname):
 
 
 	for x in module['defs']:
-		if 'c_no_print' in x['att']:
+
+		if isinstance(x, dict):
 			continue
-		if 'no_print' in x['att']:
+
+		if 'c_no_print' in x.att:
+			continue
+		if 'no_print' in x.att:
 			continue
 
 		if is_private(x):
 			continue
 
-		isa = x['isa']
+		#isa = x['isa']
 
-		if isa in ['def_func']:
-			if 'inline' in x['att']:
+		if isinstance(x, DefFunc):
+			if 'inline' in x.att:
 				newline(1)
 				print_def_func(x)
 				continue
 			newline(1)
 			print_decl_func(x)
-		elif isa == 'def_var':
-			print_deps(x['deps'])
+		elif isinstance(x, DefVar):
+			print_deps(x.deps)
 			newline(1)
 			print_def_var(x)
-		elif isa in ['def_type', 'decl_type']:
-			print_deps(x['deps'])
+		elif isinstance(x, DefType):
+			print_deps(x.deps)
 			newline(1)
 			print_def_type(x)
-		elif isa == 'def_const':
-			print_deps(x['deps'])
+		elif isinstance(x, DefConst):
+			print_deps(x.deps)
 			newline(1)
 			print_def_const(x)
 
@@ -2064,12 +2074,13 @@ def print_cfile(module, _outname):
 	# before all print first comment (header) if present
 	if len(module['defs']) > 0:
 		first = module['defs'][0]
-		if first['isa'] == 'comment':
-			nl_indent(first['nl'])
-			print_comment(first)
-			module['defs'] = module['defs'][1:]
-		else:
-			out("// %s" % outname)
+		if isinstance(first, dict):
+			if first['isa'] == 'comment':
+				nl_indent(first['nl'])
+				print_comment(first)
+				module['defs'] = module['defs'][1:]
+			else:
+				out("// %s" % outname)
 		newline()
 
 	guardsymbol = ''
@@ -2100,36 +2111,41 @@ def print_cfile(module, _outname):
 
 	# types & constants
 	for x in module['defs']:
-		if 'c_no_print' in x['att']:
-			continue
-		if 'no_print' in x['att']:
+		if isinstance(x, dict):
+			isa = x['isa']
+			if isa == 'comment':
+				nl_indent(x['nl'])
+				print_comment(x)
+			elif isa == 'directive':
+				print_directive(x)
 			continue
 
-		isa = x['isa']
-		if isa == 'def_const' and is_private(x):
-			print_deps(x['deps'])
-			newline(n=x['nl'])
+
+		if 'c_no_print' in x.att:
+			continue
+		if 'no_print' in x.att:
+			continue
+
+
+		if isinstance(x, DefConst) and is_private(x):
+			print_deps(x.deps)
+			newline(n=x.nl)
 			print_def_const(x)
-		elif isa == 'def_type' and is_private(x):
-			print_deps(x['deps'])
-			newline(n=x['nl'])
+		elif isinstance(x, DefType) and is_private(x):
+			print_deps(x.deps)
+			newline(n=x.nl)
 			print_def_type(x)
-		elif isa == 'def_var':
-			print_deps(x['deps'])
-			newline(n=x['nl'])
+		elif isinstance(x, DefVar):
+			print_deps(x.deps)
+			newline(n=x.nl)
 			print_def_var(x)
-		elif isa == 'decl_var':
-			newline(n=x['nl'])
-			print_def_var(x, isdecl=True)
-		elif isa == 'def_func':
-			print_deps(x['deps'])
-			newline(n=x['nl'])
+		#elif isinstance(x, DeclVar):
+		#	newline(n=x.nl)
+		#	print_def_var(x, isdecl=True)
+		elif isinstance(x, DefFunc):
+			print_deps(x.deps)
+			newline(n=x.nl)
 			print_def_func(x)
-		elif isa == 'comment':
-			nl_indent(x['nl'])
-			print_comment(x)
-		elif isa == 'directive':
-			print_directive(x)
 
 	newline()
 	newline()

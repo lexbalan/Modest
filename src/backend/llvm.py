@@ -10,6 +10,8 @@ from util import align_bits_up
 from pprint import pprint
 import settings
 
+from hlir.hlir import *
+
 import foundation
 
 LLVM_TARGET_TRIPLE = ""
@@ -120,7 +122,7 @@ def type_get_aka(t):
 				#id_str = t['definition']['module']['prefix'] + '_' + id_str
 
 				if 'definition' in t:
-					prefix = t['definition']['module']['prefix']
+					prefix = t['definition'].module['prefix']
 					if prefix != None:
 						id_str = prefix + '_' + id_str
 
@@ -140,7 +142,7 @@ def get_id_str(x):
 	#if x['id'].str != 'main':
 	if x['id'].need_decoration:
 		if 'definition' in x:
-			prefix = x['definition']['module']['prefix']
+			prefix = x['definition'].module['prefix']
 			if prefix != None:
 				id_str = prefix + '_' + id_str
 
@@ -2034,9 +2036,13 @@ def print_func_signature(ftype, idStr):
 
 
 
+
 def is_private(x):
-	if 'access_level' in x:
-		return x['access_level'] == 'private'
+	if isinstance(x, dict):
+		if 'access_level' in x:
+			return x['access_level'] == 'private'
+	else:
+		return x.access_level == 'private'
 	return False
 
 
@@ -2057,17 +2063,17 @@ def print_linkage(x):
 def print_decl_func(x):
 	out("\ndeclare ")
 	print_linkage(x)
-	fn = x['value']
+	fn = x.value
 	str = get_id_str(fn)
 	print_func_signature(fn['type'], str)
 
 
 
 def print_def_func(x):
-	fn = x['value']
+	fn = x.value
 	ftype = fn['type']
 
-	if x['stmt'] == None:
+	if x.stmt == None:
 		return print_decl_func(x)
 
 	fctx = {
@@ -2175,7 +2181,7 @@ def print_def_func(x):
 		stacksave(stackptr)
 		fctx['stackptr'] = stackptr
 
-	print_stmt_block(x['stmt'])
+	print_stmt_block(x.stmt)
 
 	if htype.type_eq(ftype['to'], foundation.typeUnit):
 		print_stmt_return({'value': None})
@@ -2192,8 +2198,8 @@ def print_def_func(x):
 
 
 def print_def_type(x):
-	xtype = x['original_type']
-	out("\n%%%s = type " % get_id_str(x['type']))
+	xtype = x.original_type
+	out("\n%%%s = type " % get_id_str(x.type))
 	if htype.type_is_record(xtype):
 		# не печатаем имя а печатаем саму структуру
 		# тк LLVM дает ошибку на запись вида
@@ -2208,22 +2214,22 @@ def print_def_type(x):
 
 
 def print_def_var(x, as_extern=False):
-	is_extern = 'extern' in x['att'] or as_extern
-	is_static = 'static' in x['att']
+	is_extern = 'extern' in x.att or as_extern
+	is_static = 'static' in x.att
 
 	#mods = ['global', 'constant']
 	mod = 'global'
 
-	var = x['var_value']
+	var = x.var_value
 	out("\n@%s = " % get_id_str(var))
 	print_linkage(x)
 	out(mod + ' ')
 	print_type(var['type'])
 
 	if not is_extern:
-		if not value_is_undefined(x['init_value']):
+		if not value_is_undefined(x.init_value):
 			out(" ")
-			llvm_print_value(do_eval(x['init_value']))
+			llvm_print_value(do_eval(x.init_value))
 		else:
 			out(" zeroinitializer")
 	return
@@ -2231,14 +2237,14 @@ def print_def_var(x, as_extern=False):
 
 
 def print_def_const(x, as_extern=False):
-	init_value = x['init_value']
+	init_value = x.init_value
 
 	#if htype.type_is_composite(const_value['type']):
 	# В LLVM мы не печатаем константы, но массивы - вынуждены
 	# тк доступ к ним может идти в рантайме по индексу;
 	# НО! В константной записи может быть массив! (хз как быть пока)
 	if htype.type_is_array(init_value['type']):
-		out("\n@%s = constant " % get_id_str(x['value']))
+		out("\n@%s = constant " % get_id_str(x.value))
 		llvm_print_type_value(do_eval(init_value))
 
 	return
@@ -2372,57 +2378,52 @@ printed = []
 def een(defs, decl_only=False):
 	isa_prev = None
 	for x in defs:
-		isa = x['isa']
+		#isa = x['isa']
 
-		if isa == 'comment':
-			print_comment(x)
-			continue
+#		if isa == 'comment':
+#			print_comment(x)
+#			continue
 
-		if not 'id' in x:
+		#if not 'id' in x:
 		#	print(x['isa'])
+
+		if isinstance(x, dict):
 			continue
 
-		if 'll_no_print' in x['att']:
+		if 'll_no_print' in x.att:
 			continue
-		if 'no_print' in x['att']:
+		if 'no_print' in x.att:
 			continue
-
-		try:
-			x['id'].str
-		except:
-			print(x['isa'])
-			#print(x['kind'])
 
 		# Тупейшая Защита от повторного определения
 		# (А они происходят тк импорты и инклуюды сложно сплетены и повтор.)
-		uid = x['module']['id'] + '.' + x['id'].str
+		uid = x.module['id'] + '.' + x.id.str
 
 		if uid in printed:
 			continue
 
 		printed.append(uid)
 
-		if isa_prev != isa:
-			out("\n")
-			isa_prev = isa
+#		if isa_prev != isa:
+#			out("\n")
+#			isa_prev = isa
 
-		if isa == 'def_var':
+		if isinstance(x, DefVar):
 			print_def_var(x, as_extern=decl_only)
 
-		elif isa == 'def_const':
+		elif isinstance(x, DefConst):
 			print_def_const(x, as_extern=decl_only)
 
-		elif isa == 'def_func':
+		elif isinstance(x, DefFunc):
 			if not decl_only:
 				print_def_func(x)
 			else:
 				print_decl_func(x)
 
-		elif isa == 'def_type':
+		elif isinstance(x, DefType):
 			print_def_type(x)
 
 		elif isa == 'comment':
-			print("AFEKLMLKFMLKMDFLKMEFLKDMLAKMLMLWMDLAMWDLMALDMAWLDMALWDAWDLKMW")
 			print_comment(x)
 
 
@@ -2441,9 +2442,9 @@ def print_included(m):
 				if is_private(d):
 					continue
 
-				if d['isa'] == 'def_type':
+				if isinstance(d, DefType):
 					print_def_type(d)
-				elif d['isa'] == 'def_func':
+				elif isinstance(d, DefFunc):
 					print_decl_func(d)
 				#elif d['isa'] == 'def_const':
 				#	print_decl_const(x)
@@ -2459,9 +2460,9 @@ def print_imports(m):
 			if is_private(d):
 				continue
 
-			if d['isa'] == 'def_type':
+			if isinstance(d, DefType):
 				print_def_type(d)
-			elif d['isa'] == 'def_func':
+			elif isinstance(d, DefFunc):
 				print_decl_func(d)
 
 		#een(imp['defs'], decl_only=True)

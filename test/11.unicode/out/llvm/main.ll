@@ -305,8 +305,6 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 @str5 = private constant [2 x i8] [i8 10, i8 0]
 @str6 = private constant [2 x i8] [i8 10, i8 0]
 ; -- endstrings --
-; include test (!)
-
 @ratSymbolUTF8 = constant [4 x %Int8] [
 	%Int8 240,
 	%Int8 159,
@@ -335,7 +333,6 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char8 144,
 	%Char8 128
 ]
-
 @arr_utf8 = internal global [8 x %Char8] [
 	%Char8 72,
 	%Char8 105,
@@ -367,7 +364,6 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char32 10,
 	%Char32 0
 ]
-
 define %Int @main() {
 	%1 = alloca %Str8*, align 8
 	store %Str8* bitcast ([28 x i8]* @str1 to [0 x i8]*), %Str8** %1

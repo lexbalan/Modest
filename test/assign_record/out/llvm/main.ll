@@ -197,12 +197,10 @@ declare void @perror(%ConstCharStr* %str)
 @str8 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str9 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-
 %Point = type {
 	%Int32,
 	%Int32
 };
-
 
 @globalPoint0 = internal global %Point {
 	%Int32 10,
@@ -212,7 +210,6 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 0,
 	%Int32 0
 }
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
 	%2 = load %Point, %Point* @globalPoint0

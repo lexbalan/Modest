@@ -244,8 +244,6 @@ declare %list_Node* @list_append(%list_List* %list, i8* %data)
 @str13 = private constant [15 x i8] [i8 108, i8 105, i8 115, i8 116, i8 40, i8 37, i8 105, i8 41, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str14 = private constant [43 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 ; -- endstrings --
-; wrap around linked list for list.List Nat32
-
 define internal void @nat32_list_insert(%list_List* %list, %Int32 %x) {
 	; alloc memory for Nat32 value
 	%1 = call i8* @malloc(%SizeT 4)
@@ -256,7 +254,6 @@ define internal void @nat32_list_insert(%list_List* %list, %Int32 %x) {
 	ret void
 }
 
-; show list conent from first item to last
 define internal void @list_print_forward(%list_List* %list) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %list_Node*, align 8
@@ -281,7 +278,6 @@ break_1:
 	ret void
 }
 
-; show list conent from last item to first
 define internal void @list_print_backward(%list_List* %list) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*))
 	%2 = alloca %list_Node*, align 8

@@ -203,7 +203,6 @@ declare void @perror(%ConstCharStr* %str)
 @str14 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str15 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-
 %Point2D = type {
 	%Int32,
 	%Int32
@@ -214,8 +213,6 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32,
 	%Int32
 };
-
-
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))

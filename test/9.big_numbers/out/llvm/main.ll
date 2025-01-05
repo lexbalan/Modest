@@ -194,9 +194,7 @@ declare void @perror(%ConstCharStr* %str)
 @str5 = private constant [22 x i8] [i8 98, i8 105, i8 103, i8 95, i8 115, i8 117, i8 109, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
 @str6 = private constant [13 x i8] [i8 115, i8 105, i8 103, i8 49, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 ; -- endstrings --
-
 @big0 = internal global %Int128 1512366075204170947332355369683137040
-
 define internal %Word64 @high_128(%Word128 %x) {
 	%1 = lshr %Word128 %x, 64
 	%2 = trunc %Word128 %1 to %Word64

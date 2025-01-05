@@ -285,7 +285,6 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [15 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 40, i8 37, i8 102, i8 44, i8 32, i8 37, i8 102, i8 41, i8 10, i8 0]
 @str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 32, i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 ; -- endstrings --
-
 %Point = type {
 	%Float,
 	%Float
@@ -295,7 +294,6 @@ declare void @perror(%ConstCharStr* %str)
 	%Point,
 	%Point
 };
-
 
 @line = internal global %Line {
 	%Point {
@@ -307,7 +305,6 @@ declare void @perror(%ConstCharStr* %str)
 		%Float 1.0000000000000000
 	}
 }
-
 define internal %Float @max(%Float %a, %Float %b) {
 	%1 = fcmp ogt %Float %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
@@ -328,7 +325,6 @@ endif_0:
 	ret %Float %b
 }
 
-; Pythagorean theorem
 define internal %Float @distance(%Point %a, %Point %b) {
 	%1 = extractvalue %Point %a, 0
 	%2 = extractvalue %Point %b, 0

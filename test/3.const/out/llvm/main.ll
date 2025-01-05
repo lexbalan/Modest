@@ -195,13 +195,10 @@ declare void @perror(%ConstCharStr* %str)
 @str6 = private constant [17 x i8] [i8 105, i8 110, i8 116, i8 51, i8 50, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str7 = private constant [19 x i8] [i8 115, i8 116, i8 114, i8 105, i8 110, i8 103, i8 56, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 ; -- endstrings --
-
-
 %Point = type {
 	%Int32,
 	%Int32
 };
-
 
 @ps = constant [3 x {
 	%Int8,
@@ -243,11 +240,6 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 2
 	}
 ]
-; есть проблема - в C глобальные переменные с модификатором const
-; не могут быть так инициализированы, поскольку points является приведением
-; непонятно существует ли хорошее решение
-;@property("c_prefix", "const")
-
 @points2 = internal global [3 x %Point] [
 	%Point {
 		%Int32 0,
@@ -262,8 +254,6 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 2
 	}
 ]
-; define function main
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 42)

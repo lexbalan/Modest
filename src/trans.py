@@ -9,7 +9,7 @@ from parser import Parser
 from util import get_item_by_id
 from main import settings
 import type as htype
-from hlir.hlir import hlir_initializer
+from hlir.hlir import *
 from hlir.id import Id
 
 import foundation
@@ -37,7 +37,10 @@ parser = Parser()
 def is_local_entity(x):
 	global cmodule
 	if 'definition' in x:
-		return x['definition']['module'] == cmodule
+		if isinstance(x, dict):
+			return x['definition'].module == cmodule
+		else:
+			return x.definition['module'] == cmodule
 	return True
 
 
@@ -275,7 +278,10 @@ def module_append(definition, to_export=False):
 	global cmodule
 
 	cmodule['defs'].append(definition)
-	definition['module'] = cmodule
+	if isinstance(definition, dict):
+		definition['module'] = cmodule
+	else:
+		definition.module = cmodule
 
 
 
@@ -575,10 +581,9 @@ def do_type_id(t):
 	# если дело происходит в определении типа и пришел undefined тип
 	#htype.type_is_incomplete
 	if htype.type_is_undefined(tx):
-		if cdef['isa'] != 'def_type':
-			#print(cdef['isa'])
+		if not isinstance(cdef, DefType):
 			error("forward references to non-struct type", t['ti'])
-		cdef['deps'].append(tx)
+		cdef.deps.append(tx)
 
 	return tx
 
@@ -1487,7 +1492,7 @@ def do_value_id(x):
 
 	global cdef
 	if htype.type_is_incomplete(v['type']):
-		cdef['deps'].append(v)
+		cdef.deps.append(v)
 		v = update_func_type(v['id'].str)
 		if v == None:
 			error("call undefined func", x['ti'])
@@ -2118,10 +2123,11 @@ def def_type(x):
 		error("type redefinition", x['ti'])
 		return None
 
-	definition = hlir_def_type(id, nt, None, x['ti'])
-	definition['module'] = cmodule
-	definition['access_level'] = x['access_modifier']
-	definition['nl'] = x['nl']
+	#definition = hlir_def_type(id, nt, None, x['ti'])
+	definition = DefType(id, nt, None, x['ti'])
+	definition.module = cmodule
+	definition.access_level = x['access_modifier']
+	definition.nl = x['nl']
 	cdef = definition
 
 	ty = do_type(x['type'])
@@ -2129,7 +2135,7 @@ def def_type(x):
 	if htype.type_is_bad(ty):
 		return None
 
-	definition['original_type'] = ty
+	definition.original_type = ty
 
 	# поскольку этот тип здесь связывается с идентификатором
 	# он уже не анонимный
@@ -2180,10 +2186,11 @@ def def_const(x):
 	if pre_exist != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
-	definition = hlir_def_const(id, None, None, x['ti'])
-	definition['module'] = cmodule
-	definition['access_level'] = x['access_modifier']
-	definition['nl'] = x['nl']
+	#definition = hlir_def_const(id, None, None, x['ti'])
+	definition = DefConst(id, None, None, x['ti'])
+	definition.module = cmodule
+	definition.access_level = x['access_modifier']
+	definition.nl = x['nl']
 	cdef = definition
 
 	init_value = do_value_immediate(x['value'], allow_ptr_to_str=True)
@@ -2198,7 +2205,7 @@ def def_const(x):
 		if not htype.type_is_bad(t):
 			init_value = value_cons_implicit_check(t, init_value)
 
-	definition['init_value'] = init_value
+	definition.init_value = init_value
 
 
 	const_value = symbol_const(id, init_value, is_public=x['access_modifier'] == 'public')
@@ -2208,7 +2215,7 @@ def def_const(x):
 		const_value['id'].need_decoration = True
 	#	const_value['id'].prefix = cmodule['prefix']
 
-	definition['value'] = const_value
+	definition.value = const_value
 
 	cdef = None
 	return definition
@@ -2227,10 +2234,11 @@ def def_var(x):
 		error("redefinition of '%s'" % id.str, id.ti)
 
 
-	definition = hlir_def_var(id, None, None, x['ti'])
-	definition['module'] = cmodule
-	definition['access_level'] = x['access_modifier']
-	definition['nl'] = x['nl']
+	#definition = hlir_def_var(id, None, None, x['ti'])
+	definition = DefVar(id, None, None, x['ti'])
+	definition.module = cmodule
+	definition.access_level = x['access_modifier']
+	definition.nl = x['nl']
 	cdef = definition
 
 	t = do_type(x['type'])
@@ -2284,8 +2292,8 @@ def def_var(x):
 	var_value = value_var(id, t, id.ti)
 	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 
-	definition['var_value'] = var_value
-	definition['init_value'] = init_value
+	definition.var_value = var_value
+	definition.init_value = init_value
 	var_value['definition'] = definition
 	cdef = None
 	return definition
@@ -2305,10 +2313,11 @@ def def_func(x, dostmt=True):
 	# тк мы ранее сделали проход
 	fn = ctx_value_get(func_id.str)
 
-	definition = hlir_def_func(func_id, fn, None, x['ti'])
-	definition['module'] = cmodule
-	definition['access_level'] = x['access_modifier']
-	definition['nl'] = x['nl']
+	#definition = hlir_def_func(func_id, fn, None, x['ti'])
+	definition = DefFunc(func_id, fn, None, x['ti'])
+	definition.module = cmodule
+	definition.access_level = x['access_modifier']
+	definition.nl = x['nl']
 	cdef = definition
 
 	fn['definition'] = definition
@@ -2372,7 +2381,7 @@ def def_func(x, dostmt=True):
 				elif stmts[-1]['kind'] != 'return':
 					warning("expected return operator at end", stmt['ti'])
 
-	definition['stmt'] = stmt
+	definition.stmt = stmt
 
 	context_pop()  # remove params context
 	cfunc = prev_cfunc
@@ -2553,9 +2562,10 @@ def do_import(x):
 			# копируем все c_include из импортированного модуля себе
 			# это костыль, но пока так
 			for private_def in m['defs']:
-				if private_def['isa'] == 'directive':
-					if private_def['kind'] == 'c_include':
-						module_append(private_def)
+				if isinstance(private_def, dict):
+					if private_def['isa'] == 'directive':
+						if private_def['kind'] == 'c_include':
+							module_append(private_def)
 
 		cmodule['included_modules'].append(m)
 
@@ -2904,22 +2914,6 @@ def import_abspath(s, ext='.hm'):
 
 
 
-def set_att(obj, path, att):
-	if len(path) == 1:
-		p = path[0]
-		if p in obj:
-			obj[p]['att'].append(att)
-		else:
-			error("attribute error: field '%s' not found" % p, obj['ti'])
-			for field in obj:
-				print("-- " + str(field))
-
-	elif len(path) > 1:
-		set_att(obj[path[0]], path[1:], att)
-
-	else:
-		assert(False)
-
 
 # directive '@attribute'
 def add_attributes(obj):
@@ -2928,12 +2922,36 @@ def add_attributes(obj):
 		lr = att.split(":")
 		if len(lr) == 1:
 			att = lr[0]
-			obj['att'].append(att)
+			if isinstance(obj, dict):
+				obj['att'].append(att)
+			else:
+				obj.att.append(att)
 		elif len(lr) > 1:
-			att = lr[1]
-			path = lr[0].split(".")
-			#print([path, att])
-			set_att(obj, path, att)
+			set_att(obj, lr[0].split('.'), lr[1])
+
+
+
+def set_att(obj, path, att):
+	if len(path) == 1:
+		if isinstance(obj, dict):
+			obj[path[0]]['att'].append(att)
+		else:
+			x = getattr(obj, path[0])
+			if isinstance(x, dict):
+				x['att'].append(att)
+			else:
+				x.att.append(att)
+
+	elif len(path) > 1:
+		f = path[0]
+		if isinstance(obj, dict):
+			set_att(obj[f], path[1:], att)
+		else:
+			o = getattr(obj, f)
+			set_att(o, path[1:], att)
+	else:
+		assert(False)
+
 
 
 
@@ -2946,13 +2964,18 @@ def set_prop(obj, path, val):
 			setattr(obj, f, val)
 
 	elif len(path) > 1:
-		if path[0] in obj:
-			set_prop(obj[path[0]], path[1:], val)
+		if isinstance(obj, dict):
+			if path[0] in obj:
+				set_prop(obj[path[0]], path[1:], val)
+			else:
+				error("property error: field '%s' not found" % path[0], obj['ti'])
 		else:
-			error("property error: field '%s' not found" % path[0], obj['ti'])
+			a = getattr(obj, path[0])
+			set_prop(a, path[1:], val)
 
 	else:
 		assert(False)
+
 
 
 # directive '@property'
