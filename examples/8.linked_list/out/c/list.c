@@ -137,7 +137,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 	list_Node *node;
 
 	if (pos >= 0) {
-		//{'str': ' go forward'}
+		// go forward
 		node = list->head;
 		uint32_t n = (uint32_t)pos;
 
@@ -151,7 +151,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 			i = i + 1;
 		}
 	} else {
-		//{'str': ' go backward'}
+		// go backward
 		node = list->tail;
 		uint32_t n = (uint32_t)-pos - 1;
 

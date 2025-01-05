@@ -25,7 +25,7 @@ static void bubble_sort32(int32_t *array, int32_t len)
 			int32_t i1 = array[i + 1];
 
 			if (i0 > i1) {
-				//{'str': ' swap'}
+				// swap
 				array[i] = i1;
 				array[i + 1] = i0;
 				need_to_sort = true;
@@ -42,7 +42,7 @@ static void print_array(int32_t *array, int32_t len);
 
 int32_t main()
 {
-	//{'str': 'fill_array(&array, lengthof(array))'}
+	//fill_array(&array, lengthof(array))
 
 	printf("array before:\n");
 	print_array(&array[0], LENGTHOF(array));

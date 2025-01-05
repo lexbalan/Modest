@@ -16,9 +16,9 @@ int main()
 	NewInt32 newInt32;
 	newInt32 = 0;
 
-	//{'str': 'type NewInt16 Int16'}
-	//{'str': 'var newInt16: NewInt16'}
-	//{'str': 'newInt16 = NewInt16 0'}
+	//type NewInt16 Int16
+	//var newInt16: NewInt16
+	//newInt16 = NewInt16 0
 
 	return 0;
 }

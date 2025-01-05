@@ -61,7 +61,7 @@ from value.cons import value_cons_implicit, value_cons_implicit_check, value_con
 from symtab import Symtab
 from util import nbits_for_num, nbytes_for_bits
 
-from hlir.field import hlir_field
+from hlir.field import Field
 from hlir.stmt import *
 from hlir.hlir import *
 
@@ -540,11 +540,9 @@ def do_field(x):
 		error("field id must starts with small letter", id.ti)
 
 	t = do_type(x['type'])
-	f = hlir_field(id, t, ti=x['ti'])
-	f['nl'] = x['nl']
-
-	f['access_level'] = x['access_modifier']
-
+	f = Field(id, t, ti=x['ti'])
+	f.nl = x['nl']
+	f.access_level = x['access_modifier']
 	add_spices(f, ast_atts=x['attributes'])
 	return f
 
@@ -634,14 +632,14 @@ def do_type_record(x):
 		f = do_field(field)
 
 		# redefinition?
-		field_id_str = f['id'].str
+		field_id_str = f.id.str
 		field_already_exist = get_item_by_id(fields, field_id_str)
 		if field_already_exist != None:
-			error("redefinition of '%s' field" % field_id_str, field['ti'])
+			error("redefinition of '%s' field" % field_id_str, field.ti)
 			continue
 
 		if 'comments' in field:
-			f.update({'comments': field['comments']})
+			f.comments = field['comments']
 
 		fields.append(f)
 
@@ -690,6 +688,9 @@ def do_type_func(t, func_id="_"):
 	for _param in t['params']:
 		param = do_field(_param)
 		if param != None:
+			if isinstance(param, dict):
+				print("DICT!")
+				1/0
 			params.append(param)
 
 	to = foundation.typeUnit
@@ -1018,7 +1019,7 @@ def sort_args(params, args):
 	# получаем направляющий вектор
 	vec0=[]
 	for param in params:
-		vec0.append(param['id'].str)
+		vec0.append(param.id.str)
 
 	# получаем вектор идентификаторов (или None)
 	vec1=[]
@@ -1147,7 +1148,7 @@ def do_value_call(x):
 	i = 0
 	while i < npars:
 		param = params[i]
-		param_id_str = param['id'].str
+		param_id_str = param.id.str
 		a = sorted_args[i]
 
 		# check param name (if assigned)
@@ -1160,7 +1161,7 @@ def do_value_call(x):
 
 
 		if not value_is_bad(arg):
-			arg = value_cons_implicit_check(param['type'], arg)
+			arg = value_cons_implicit_check(param.type, arg)
 
 			if not value_is_immediate(arg):
 				imm_args = False
@@ -1439,19 +1440,19 @@ def do_value_access(x):
 #			error("access to private field", x['ti'])
 
 
-	if htype.type_is_bad(field['type']):
-		return value_bad(x['ti'])
+	if htype.type_is_bad(field.type):
+		return value_bad(x.ti)
 
 
 	# Check access permissions
 
 	# не у всех типов есть 'definition' (его нет у анонимных записей например)
 	if not is_local_entity(record_type):
-		if field['access_level'] == 'private':
+		if field.access_level == 'private':
 			error("access to private field of record", x['right']['ti'])
 
 
-	nv = value_access_record(field['type'], left, field, ti=x['ti'])
+	nv = value_access_record(field.type, left, field, ti=x['ti'])
 	if not via_pointer:
 		nv['immutable'] = left['immutable']
 
@@ -1977,9 +1978,8 @@ def do_stmt_comment_line(x):
 	return StmtCommentLine(x['lines'], ti=x['ti'], nl=x['nl'])
 
 
-
 def do_stmt_comment_block(x):
-	return StmtCommentLine(x['text'], ti=x['ti'], nl=x['nl'])
+	return StmtCommentBlock(x['text'], ti=x['ti'], nl=x['nl'])
 
 
 
@@ -2339,10 +2339,10 @@ def def_func(x, dostmt=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		param_type = param['type']
-		param_id = param['id']
+		param_type = param.type
+		param_id = param.id
 
-		param_value = value_const(param_id, param_type, None, param['ti'])
+		param_value = value_const(param_id, param_type, None, param.ti)
 		param_value['att'].append('local')
 		param_value['att'].append('param')
 		ctx_value_add(param_id.str, param_value)
@@ -2354,8 +2354,8 @@ def def_func(x, dostmt=True):
 			cmodule['att'].append('use_va_arg')
 
 	# check unuse
-	for param in params:
-		check_unuse(param)
+	#for param in params:
+	#	check_unuse(param)
 
 	stmt = None
 
@@ -2407,6 +2407,7 @@ def check_block(block):
 
 
 def check_stmt(stmt):
+	return
 	k = stmt['kind']
 	if k == 'let':
 		check_unuse(stmt['init_value'])

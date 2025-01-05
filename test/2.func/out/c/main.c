@@ -31,14 +31,14 @@ int main()
 {
 	printf("test func\n");
 
-	//{'str': ' call declared & defined functions'}
+	// call declared & defined functions
 	func0();
 	func1();
 
-	//{'str': ' call function with two arguments'}
+	// call function with two arguments
 	print_ab(10, 20);
 
-	//{'str': ' call function with two arguments and return value'}
+	// call function with two arguments and return value
 	int32_t arg_a = 1;
 	int32_t arg_b = 2;
 	int32_t sum_result = sum(arg_a, arg_b);
@@ -46,7 +46,7 @@ int main()
 
 
 	int32_t(*fptr)(int32_t a, int32_t b) = &sum;
-	//{'str': ' call function with two arguments and return value'}
+	// call function with two arguments and return value
 	int32_t arg_a2 = 1;
 	int32_t arg_b2 = 2;
 	int32_t fptr_result = fptr(arg_a2, arg_b2);

@@ -27,14 +27,14 @@ static void f0(char *_x, char *sret_)
 	memcpy(&local_copy_of_x, &x, sizeof local_copy_of_x);
 	printf("f0(\"%s\")\n", &local_copy_of_x[0]);
 
-	//{'str': ' truncate array'}
+	// truncate array
 	char mic[6];
 	memcpy(&mic, &x, sizeof mic);
 	mic[5] = '\x0';
 
 	printf("f0 mic = \"%s\"\n", &mic[0]);
 
-	//{'str': ' extend array'}
+	// extend array
 	char res[30];
 	memcpy(&res, &x, sizeof res);
 	res[6] = 'M';
@@ -57,7 +57,7 @@ uint8_t stopSequence[1] = _stopSequence;
 
 static void test()
 {
-	//{'str': ' тестируем работу с локальным generic массивом'}
+	// тестируем работу с локальным generic массивом
 	int32_t yy[6];
 	memcpy(&yy, &(int32_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16}, sizeof yy);
 	int32_t i = 0;
@@ -71,7 +71,7 @@ static void test()
 
 int main()
 {
-	//{'str': ' generic array [4]Char8 will be implicit casted to [10]Char8'}
+	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	char em[30];
 	f0(em, "Hello World!");
@@ -120,32 +120,32 @@ int main()
 		i = i + 1;
 	}
 
-	//{'str': ' assign array to array 1'}
-	//{'str': ' (with equal types)'}
+	// assign array to array 1
+	// (with equal types)
 	int32_t a[3];
 	memcpy(&a, &(int32_t[3]){1, 2, 3}, sizeof a);
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
 
-	//{'str': ' create (and initialize) new variable b'}
-	//{'str': ' (with type [3]Int32)'}
-	//{'str': ' this variable are copy of array a'}
+	// create (and initialize) new variable b
+	// (with type [3]Int32)
+	// this variable are copy of array a
 	int32_t b[3];
 	memcpy(&b, &a, sizeof b);
 	printf("b[0] = %i\n", b[0]);
 	printf("b[1] = %i\n", b[1]);
 	printf("b[2] = %i\n", b[2]);
 
-	//{'str': ' check equality between two arrays (by value)'}
+	// check equality between two arrays (by value)
 	if (memcmp(&a, &b, sizeof(int32_t[3])) == 0) {
 		printf("a == b\n");
 	} else {
 		printf("a != b\n");
 	}
 
-	//{'str': ' assign array to array 2'}
-	//{'str': ' (with array extending)'}
+	// assign array to array 2
+	// (with array extending)
 	int32_t c[3];
 	memcpy(&c, &(int32_t[3]){10, 20, 30}, sizeof c);
 	int32_t d[6];
@@ -158,7 +158,7 @@ int main()
 	printf("d[5] = %i\n", d[5]);
 
 
-	//{'str': ' check equality between two arrays (by pointer)'}
+	// check equality between two arrays (by pointer)
 	int32_t *pa = &a[0];
 	int32_t *pb = &b[0];
 
@@ -169,27 +169,27 @@ int main()
 	}
 
 
-	//{'str': ''}
-	//{'str': ' Check assination local literal array'}
-	//{'str': ''}
+	//
+	// Check assination local literal array
+	//
 
 
-	//{'str': 'let aa = [111] + [222] + [333]'}
-	//{'str': ' cons literal array from var items'}
+	//let aa = [111] + [222] + [333]
+	// cons literal array from var items
 	int int100 = 100;
 	int int200 = 200;
 	int int300 = 300;
-	//{'str': ' immutable, non immediate value (array)'}
+	// immutable, non immediate value (array)
 	int init_array[3] = {int100, int200, int300};
 
-	//{'str': ' check local literal array assignation to local array'}
+	// check local literal array assignation to local array
 	int32_t e[4];
 	memcpy(&e, &init_array, sizeof e);
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
-	//{'str': ' check local literal array assignation to global array'}
+	// check local literal array assignation to global array
 	memcpy(&globalArray, &init_array, sizeof globalArray);
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
@@ -199,8 +199,8 @@ int main()
 	memset(&globalArray, 0, sizeof globalArray);
 
 
-	//{'str': ' проверка того как локальная константа-массив'}
-	//{'str': ' "замораживает" свои элементы'}
+	// проверка того как локальная константа-массив
+	// "замораживает" свои элементы
 
 	int32_t ax = 10;
 	int32_t bx = 20;

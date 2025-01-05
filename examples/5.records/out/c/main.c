@@ -67,7 +67,7 @@ static void ptr_example()
 {
 	Point *ptr_p = (Point *)malloc(sizeof(Point));
 
-	//{'str': ' access by pointer'}
+	// access by pointer
 	ptr_p->x = (float)(10);
 	ptr_p->y = (float)(20);
 
@@ -77,7 +77,7 @@ static void ptr_example()
 
 int main()
 {
-	//{'str': ' by value'}
+	// by value
 	float len = lineLength(line);
 	printf("line length = %f\n", len);
 

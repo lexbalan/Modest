@@ -27,14 +27,14 @@ void mzero(void *mem, uint64_t len)
 
 	uint8_t *dst_byte0 = memptr;
 
-	//{'str': ' align the pointer'}
+	// align the pointer
 	uint64_t i = 0;
 	while (i < z) {
 		dst_byte0[i] = 0;
 		i = i + 1;
 	}
 
-	//{'str': ' word operation'}
+	// word operation
 
 	uint64_t len_words = (len - z) / sizeof(Word);
 	Word *dst_word = (Word *)&memptr[i];
@@ -45,7 +45,7 @@ void mzero(void *mem, uint64_t len)
 		i = i + 1;
 	}
 
-	//{'str': ' byte operation'}
+	// byte operation
 
 	uint64_t len_bytes = (len - z) % sizeof(Word);
 	uint8_t *dst_byte1 = (uint8_t *)&dst_word[i];

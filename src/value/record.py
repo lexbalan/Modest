@@ -2,7 +2,7 @@
 from error import info, warning, error
 import type as type
 from hlir.hlir import *
-from hlir.field import hlir_field
+from hlir.field import Field
 from type import type_print, record_field_get
 from util import get_item_by_id
 from .value import value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate, value_bin, value_eq
@@ -30,7 +30,7 @@ def value_record_create(initializers=[], ti=None):
 			is_immediate = False
 
 		# создаем поле для типа generic record
-		field = hlir_field(field_id, field_type, ti=field_ti)
+		field = Field(field_id, field_type, ti=field_ti)
 		fields.append(field)
 
 	record_type = type.type_record(fields, ti)
@@ -56,10 +56,10 @@ def record_can(to, from_type, method):
 	# check if all fields in from_type present in t
 	# and their types are equal (!)
 	for field in from_type['fields']:
-		field2 = record_field_get(to, field['id'].str)
+		field2 = record_field_get(to, field.id.str)
 		if field2 == None:
 			return False  # if no field with that name
-		if not type.type_eq(field['type'], field2['type']):
+		if not type.type_eq(field.type, field2.type):
 			return False  # if field type not equal
 
 	return True # Record to Record
@@ -78,15 +78,15 @@ def value_record_cons(t, v, method, ti):
 		# конструируем запись на основе другой generic записи
 		items = []
 		for field in t['fields']:
-			initializer = get_item_by_id(v['items'], field['id'].str)
+			initializer = get_item_by_id(v['items'], field.id.str)
 			vv = None
 			if initializer:
 				from .cons import value_cons_implicit_check
-				vv = value_cons_implicit_check(field['type'], initializer.value)
+				vv = value_cons_implicit_check(field.type, initializer.value)
 			else:
 				# Если инициализатора для поля нет, создадим zero-инициализатор
-				vv = value_zero(field['type'], ti)
-			ni = Initializer(field['id'], vv, ti=ti, nl=0)
+				vv = value_zero(field.type, ti)
+			ni = Initializer(field.id, vv, ti=ti, nl=0)
 			items.append(ni)
 
 		nv['items'] = items

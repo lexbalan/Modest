@@ -2,7 +2,7 @@
 import copy
 from error import info, warning, error, fatal
 import settings
-from hlir.field import hlir_field
+from hlir.field import Field
 
 from hlir.id import Id
 from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up
@@ -284,16 +284,16 @@ def type_record(fields, ti=None):
 	record_align = 1
 
 	for field in fields:
-		field['field_no'] = field_no
+		field.field_no = field_no
 		field_no = field_no + 1
 
-		field_size = field['type']['size']
-		field_align = field['type']['align']
+		field_size = field.type['size']
+		field_align = field.type['align']
 
 		# смещение поля должно быть выровнено
 		# по требуемому для него шагу выравнивания
 		offset = align_to(offset, field_align)
-		field['offset'] = offset
+		field.offset = offset
 		offset = offset + field_size
 
 		# выравнивание структуры - макс выравнивание в ней
@@ -437,16 +437,16 @@ def type_eq_fields(a, b, opt):
 	for ax, bx in zip(a, b):
 
 		#if ax['id'].str != None and bx['id'].str != None:
-		if ax['id'].str != bx['id'].str:
+		if ax.id.str != bx.id.str:
 			return False
 
 		# простейшая защита от бесконечной рекурсии
 		# для случая когда запись содержит указатель на саму себя
 		# (сравниваем типы полей по указателю)
-		if ax['type'] == bx['type']:
+		if id(ax.type) == id(bx.type):
 			return True
 
-		if not type_eq(ax['type'], bx['type'], opt): return False
+		if not type_eq(ax.type, bx.type, opt): return False
 	return True
 
 
@@ -902,12 +902,12 @@ def select_common_record_type(a, b):
 
 	fields = []
 	for fieldA, fieldB in zip(a['fields'], b['fields']):
-		if fieldA['id'].str != fieldB['id'].str:
+		if fieldA.id.str != fieldB.id.str:
 			return None
 
-		fieldId = fieldA['id']
-		fieldType = select_common_type(fieldA['type'], fieldB['type'])
-		newField = hlir_field(fieldId, fieldType, ti=fieldId.ti)
+		fieldId = fieldA.id
+		fieldType = select_common_type(fieldA.type, fieldB.type)
+		newField = Field(fieldId, fieldType, ti=fieldId.ti)
 		fields.append(newField)
 
 	newRecord = type_record(fields, ti=a['ti'])

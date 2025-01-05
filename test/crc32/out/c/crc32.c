@@ -14,9 +14,9 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 	uint32_t crc_table[__tableSize];
 	uint32_t crc;
 
-	//{'str': ''}
-	//{'str': ' create table before'}
-	//{'str': ''}
+	//
+	// create table before
+	//
 
 	uint32_t i = 0;
 	while (i < __tableSize) {
@@ -35,9 +35,9 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 		i = i + 1;
 	}
 
-	//{'str': ''}
-	//{'str': ' calculate CRC32'}
-	//{'str': ''}
+	//
+	// calculate CRC32
+	//
 
 	crc = 0xFFFFFFFFU;
 

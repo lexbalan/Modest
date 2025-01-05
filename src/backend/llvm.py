@@ -755,7 +755,7 @@ def print_type_record(t):
 		if is_global_context():
 			out(NL_INDENT)
 
-		print_type(field['type'])
+		print_type(field.type)
 
 		i = i + 1
 
@@ -1174,7 +1174,7 @@ def do_eval_access(v):
 	indexes = []
 
 	for f in fields:
-		fno = llvm_value_num(notype, f['field_no'])
+		fno = llvm_value_num(notype, f.field_no)
 		indexes.append(fno)
 	return ass2(left, indexes)
 
@@ -1480,7 +1480,7 @@ def do_eval_record(v):
 		if not value_is_zero(initializer.value):
 			iv = do_reval(initializer.value)
 			field = htype.record_field_get(rec_type, get_id_str(initializer))
-			xv = insertvalue(xv, iv, field['field_no'])
+			xv = insertvalue(xv, iv, field.field_no)
 
 	return xv
 
@@ -1901,9 +1901,9 @@ def print_stmt_asm(x):
 		for o in outs:
 			field_type = o['type']
 			from hlir.id import Id
-			from hlir.field import hlir_field
-			field_id = Id().fromStr('<noname>')
-			f = hlir_field(field_id, field_type, ti=x.ti)
+			from hlir.field import Field
+			id = Id().fromStr('<noname>')
+			f = Field(id, field_type, ti=x.ti)
 			fields.append(f)
 
 		rt = htype.type_record(fields)
@@ -1999,12 +1999,12 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		isarr = htype.type_is_closed_array(param['type'])
+		isarr = htype.type_is_closed_array(param.type)
 
 		if i > 0:
 			out(", ")
 
-		print_type(param['type'])
+		print_type(param.type)
 
 		if not only_types:
 			if isarr:
@@ -2116,13 +2116,13 @@ def print_def_func(x):
 	for param in params:
 		param_id = get_id_str(param)
 
-		if htype.type_is_va_list(param['type']):
+		if htype.type_is_va_list(param.type):
 			# see: p216
 			continue
 
-		localObject = llvm_value_reg(param_id, param['type'])
+		localObject = llvm_value_reg(param_id, param.type)
 
-		if htype.type_is_closed_array(param['type']):
+		if htype.type_is_closed_array(param.type):
 			localObject['is_adr'] = True
 
 		locals_add(param_id, localObject)
@@ -2136,11 +2136,11 @@ def print_def_func(x):
 
 	# for any array parameter print local holder value
 	for param in params:
-		ptype = param['type']
+		ptype = param.type
 		if htype.type_is_closed_array(ptype):
 			paramId = get_id_str(param)
 
-			reg = '__' + param['id'].str
+			reg = '__' + param.id.str
 			loadedParam = llvm_value_reg(reg, ptype)
 
 
@@ -2153,7 +2153,7 @@ def print_def_func(x):
 
 	if len(params) > 0:
 		last_param = params[-1]
-		if htype.type_is_va_list(last_param['type']):
+		if htype.type_is_va_list(last_param.type):
 			# :p216
 			# В LLVM va_arg принимает параметром указатель на укзаатель на __VA_List!
 			# Но тк мы получаем просто указатель на va_list,
@@ -2167,7 +2167,7 @@ def print_def_func(x):
 			va_list_param_id = get_id_str(param)
 
 			lo("store ")
-			print_type(last_param['type'])
+			print_type(last_param.type)
 			out(" %%%s" % va_list_param_id)
 			out(", ")
 			llvm_print_type_value(va_list_srorage)
@@ -2312,7 +2312,7 @@ def print_string_ascii(strid, string):
 	for c in string['asset']:
 		ss = ss + chr(c['asset'])
 
-	slen = len(bytes(ss, 'utf-8')) #+ 1 # +1 (zero)
+	slen = len(bytes(ss, 'utf-8'))  #+ 1 # +1 (zero)
 
 	if 'zstring' in string['att']:
 		slen = slen + 1

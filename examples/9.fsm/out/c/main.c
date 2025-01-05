@@ -22,7 +22,7 @@ static uint8_t cnt;
 static void off_entry(fsm_FSM *x)
 {
 	(void)x;
-	//{'str': 'printf("off_entry\\n")'}
+	//printf("off_entry\n")
 }
 
 
@@ -41,14 +41,14 @@ static void off_loop(fsm_FSM *x)
 static void off_exit(fsm_FSM *x)
 {
 	(void)x;
-	//{'str': 'printf("off_exit\\n")'}
+	//printf("off_exit\n")
 }
 
 
 static void on_entry(fsm_FSM *x)
 {
 	(void)x;
-	//{'str': 'printf("on_entry\\n")'}
+	//printf("on_entry\n")
 }
 
 
@@ -67,7 +67,7 @@ static void on_loop(fsm_FSM *x)
 static void on_exit(fsm_FSM *x)
 {
 	(void)x;
-	//{'str': 'printf("on_exit\\n")'}
+	//printf("on_exit\n")
 }
 
 

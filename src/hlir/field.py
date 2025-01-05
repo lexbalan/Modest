@@ -1,15 +1,15 @@
 
 
-def hlir_field(id, type, ti=None):
-	return {
-		'isa': 'field',
-		'id': id,
-		'type': type,
-		'field_no': 0,
-		'offset': 0,
-		'access_level': 'private',
-		'att': [],
-		'nl': 0,
-		'ti': ti
-	}
+class Field():
+	def __init__(self, id, type, ti=None):
+		self.id = id
+		self.type = type
+		self.field_no = 0
+		self.offset = 0
+		self.access_level = 'private'
+		self.att = []
+		self.nl = 0
+		self.ti = ti
+		self.comments = None
+
 

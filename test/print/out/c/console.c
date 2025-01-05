@@ -41,7 +41,7 @@ void console_putchar32(uint32_t c)
 
 void console_putchar_utf8(char c)
 {
-	putchar((int)(int32_t)c);
+	putchar((int32_t)c);
 }
 
 
@@ -89,8 +89,8 @@ void console_puts16(uint16_t *s)
 {
 	int32_t i = 0;
 	while (true) {
-		//{'str': ' нельзя просто так взять и вызвать putchar_utf16'}
-		//{'str': ' тк в строке может быть суррогатная пара UTF_16 символов'}
+		// нельзя просто так взять и вызвать putchar_utf16
+		// тк в строке может быть суррогатная пара UTF_16 символов
 
 		uint16_t cc16 = s[i];
 		if (cc16 == 0) {
@@ -187,7 +187,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			continue;
 		}
 
-		//{'str': " c == '{'"}
+		// c == '{'
 
 		i = i + 1;
 		c = form[i];
@@ -204,42 +204,42 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 		char *sptr = &buf[j];
 
 		if ((c == 'i') || (c == 'd')) {
-			//{'str': ''}
-			//{'str': ' %i & %d for signed integer (Int)'}
-			//{'str': ''}
+			//
+			// %i & %d for signed integer (Int)
+			//
 			int32_t x = va_arg(va, int32_t);
 			int32_t n = sprint_dec_int32(sptr, x);
 			j = j + n;
 
 		} else if (c == 'n') {
-			//{'str': ''}
-			//{'str': ' %n for unsigned integer (Nat)'}
-			//{'str': ''}
+			//
+			// %n for unsigned integer (Nat)
+			//
 			uint32_t x = va_arg(va, uint32_t);
 			int32_t n = sprint_dec_n32(sptr, x);
 			j = j + n;
 
 		} else if ((c == 'x') || (c == 'p')) {
-			//{'str': ''}
-			//{'str': ' %x for unsigned integer (Nat)'}
-			//{'str': ' %p for pointers'}
-			//{'str': ''}
+			//
+			// %x for unsigned integer (Nat)
+			// %p for pointers
+			//
 			uint32_t x = va_arg(va, uint32_t);
 			int32_t n = sprint_hex_nat32(sptr, x);
 			j = j + n;
 
 		} else if (c == 's') {
-			//{'str': ''}
-			//{'str': ' %s pointer to string'}
-			//{'str': ''}
+			//
+			// %s pointer to string
+			//
 			char *s = va_arg(va, char *);
 			strcpy(sptr, s);
 			j = j + (int32_t)strlen(s);
 
 		} else if (c == 'c') {
-			//{'str': ''}
-			//{'str': ' %c for char'}
-			//{'str': ''}
+			//
+			// %c for char
+			//
 			uint32_t c = va_arg(va, uint32_t);
 			int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)sptr);
 			j = j + n;
@@ -284,7 +284,7 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x)
 		}
 	}
 
-	//{'str': ' mirroring into buffer'}
+	// mirroring into buffer
 	int32_t j = 0;
 	while (i > 0) {
 		i = i - 1;

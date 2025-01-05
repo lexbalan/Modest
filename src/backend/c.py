@@ -5,6 +5,7 @@
 from error import info, error, fatal
 from hlir.id import Id
 from hlir.hlir import *
+from hlir.field import *
 from hlir.stmt import *
 from .common import *
 import type as htype
@@ -201,20 +202,20 @@ def strTypeRecord(t, tag=""):
 		if prev_nl == 0:
 			s += " "
 
-		if 'comments' in field:
-			for comment in field['comments']:
+		if field.comments:
+			for comment in field.comments:
 				#s += str_nl_indent(comment['nl'])
 				#print_comment(comment)
 				pass
 
-		s += str_nl_indent(field['nl'])
-		prev_nl = field['nl']
+		s += str_nl_indent(field.nl)
+		prev_nl = field.nl
 
-		s+= strType(field['type'], core='', label=get_id_str(field))
+		s+= strType(field.type, core='', label=get_id_str(field))
 		s += ";"
 
 	indent_down()
-	s += str_nl_indent(field['nl'])
+	s += str_nl_indent(field.nl)
 	s += "}"
 	return s
 
@@ -313,7 +314,10 @@ def strFuncParamlist(params, va_arg):
 		if i > 0:
 			s += ', '
 
-		ptype = param['type']
+		if isinstance(param, dict):
+			info("HERE", param['ti'])
+
+		ptype = param.type
 
 		pstr = get_id_str(param)
 		if pstr == None:
@@ -348,10 +352,7 @@ def strTypeFunc(t, label='', core=''):
 		# а сам массив пойдет через указатель sret_
 		# который функция получит своим самым последним параметром
 		# (sret = structure return)
-		sret_param = {
-			'type': htype.type_pointer(t['to']),
-			'id': Id().fromStr('sret_')
-		}
+		sret_param = Field(Id().fromStr('sret_'), htype.type_pointer(t['to']))
 
 		fparams = t['params'] + [sret_param]
 		fto = foundation.typeUnit
@@ -1686,9 +1687,9 @@ def print_func_paramlist(ftype):
 		if i > 0: out(", ")
 
 		paramId = get_id_str(param)
-		if htype.type_is_closed_array(param['type']):
+		if htype.type_is_closed_array(param.type):
 			paramId = '_' + paramId
-		print_variable(paramId, param['type'])
+		print_variable(paramId, param.type)
 		i = i + 1
 
 	if extra_args:
@@ -1762,18 +1763,18 @@ def print_def_func(x):
 
 	# for any array parameter print local holder value
 	for param in ftype['params']:
-		if htype.type_is_closed_array(param['type']):
+		if htype.type_is_closed_array(param.type):
 			nl_indent(1)
 
 			paramId = get_id_str(param)
-			print_variable(paramId, param['type'])
+			print_variable(paramId, param.type)
 			out(";")
 
 			nl_indent(1)
 
 			out("memcpy(%s, %s" % (paramId, '_' + paramId))
 			out(", sizeof(")
-			print_type(param['type'])
+			print_type(param.type)
 			out("));")
 
 
@@ -1921,7 +1922,7 @@ def print_comment_line(x):
 	n = len(lines)
 	while i < n:
 		line = lines[i]
-		out("//%s" % line)
+		out("//%s" % line['str'])
 		i = i + 1
 		if i < n:
 			newline()

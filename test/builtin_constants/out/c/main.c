@@ -11,13 +11,13 @@
 int main()
 {
 
-	//{'str': ' __compiler'}
+	// __compiler
 	printf("__compiler.name = %s\n", (char *)"m2");
 	#define __ver  {.major = 0, .minor = 7}
 	printf("__compiler.version.major = %u\n", 0);
 	printf("__compiler.version.minor = %u\n", 7);
 
-	//{'str': ' __target'}
+	// __target
 	printf("__target.name = %s\n", (char *)"Default");
 	printf("__target.pointerWidth = %u\n", 64);
 	printf("__target.charWidth = %u\n", 8);

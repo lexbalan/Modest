@@ -30,12 +30,12 @@ static void write_example()
 
 	Chunk chunk;
 
-	//{'str': ' pointers casting requires -funsafe translator option'}
-	//{'str': ' (see Makefile)'}
+	// pointers casting requires -funsafe translator option
+	// (see Makefile)
 	strcpy(&chunk.id[0], "id");
 	strcpy(&chunk.data[0], "data");
 
-	//{'str': ' write chunk to file'}
+	// write chunk to file
 	fwrite(&chunk, sizeof(Chunk), 1, fp);
 
 	fclose(fp);

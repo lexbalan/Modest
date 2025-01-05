@@ -138,8 +138,8 @@ def print_type_record(t):
 			out(", ")
 
 		# print comments
-		if 'comments' in field:
-			for comment in field['comments']:
+		if field.comments:
+			for comment in field.comments:
 				print_comment(comment)
 
 		nl_indent(field['nl'])

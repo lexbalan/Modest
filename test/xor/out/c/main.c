@@ -54,13 +54,13 @@ int main()
 	printf("before encrypt test_msg: \n");
 	print_bytes(tmsg, msg_length);
 
-	//{'str': ' encrypt test data'}
+	// encrypt test data
 	xor_encrypter(tmsg, msg_length, tkey, key_length);
 
 	printf("after encrypt test_msg: \n");
 	print_bytes(tmsg, msg_length);
 
-	//{'str': ' decrypt test data'}
+	// decrypt test data
 	xor_encrypter(tmsg, msg_length, tkey, key_length);
 
 	printf("after decrypt test_msg: \n");

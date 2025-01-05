@@ -44,7 +44,7 @@ int main()
 	printf("big_sum = 0x%llX%llX\n", high_128((unsigned __int128)big_sum), low_128((unsigned __int128)big_sum));
 
 
-	//{'str': ' signed big int test'}
+	// signed big int test
 	#define __sig0  (-1)
 
 	__int128 sig1 = __sig0;

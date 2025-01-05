@@ -1,5 +1,6 @@
 
 from hlir.hlir import Initializer
+from hlir.field import Field
 
 def align_to(x, y):
 	assert(y != 0)
@@ -43,7 +44,7 @@ def get_index_of_item_with_id(_list, id):
 	while i < len(_list):
 		item = _list[i]
 		if item != None:
-			if isinstance(item, Initializer):
+			if isinstance(item, Initializer) or isinstance(item, Field):
 				if item.id.str == id:
 					return i
 				i = i + 1

@@ -268,8 +268,8 @@ int32_t main()
 	}
 
 	awrap[0]->fhi("World");
-	//{'str': 'let y = awrap[0]'}
-	//{'str': 'y.fhi("World")'}
+	//let y = awrap[0]
+	//y.fhi("World")
 
 	return 0;
 }

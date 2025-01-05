@@ -9,7 +9,7 @@
 
 static void nat32_list_insert(list_List *list, uint32_t x)
 {
-	//{'str': ' alloc memory for Nat32 value'}
+	// alloc memory for Nat32 value
 	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
 	list_append(list, p_nat32);
@@ -44,14 +44,14 @@ int main()
 
 	list_List *list0 = list_create();
 
-	//{'str': 'list0.size  // access to private field of record'}
+	//list0.size  // access to private field of record
 
 	if (list0 == NULL) {
 		printf("error: cannot create list");
 		return 1;
 	}
 
-	//{'str': ' add some Nat32 values to list'}
+	// add some Nat32 values to list
 	nat32_list_insert(list0, 0);
 	nat32_list_insert(list0, 10);
 	nat32_list_insert(list0, 20);
@@ -64,20 +64,20 @@ int main()
 	nat32_list_insert(list0, 90);
 	nat32_list_insert(list0, 100);
 
-	//{'str': ' print list size'}
+	// print list size
 	uint32_t list_size = list_size_get(list0);
 	printf("linked list size: %u\n", list_size);
 
-	//{'str': ' print list forward'}
+	// print list forward
 	list_print_forward(list0);
 
-	//{'str': ' print list backward'}
+	// print list backward
 	list_print_backward(list0);
 
 
 	printf("\nlist.node_get(list, n) test\n");
 
-	//{'str': ' test list.node_get'}
+	// test list.node_get
 	int32_t i = 0;
 	while (i >= -12) {
 		list_Node *node = list_node_get(list0, i);

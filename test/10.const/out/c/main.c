@@ -85,14 +85,14 @@ int main()
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);
 
-	//{'str': '\tlet y = wa.x'}
+	//	let y = wa.x
 
-	//{'str': '\tvar i = 0'}
-	//{'str': '\twhile i < 10 {'}
-	//{'str': '\t\tlet x = wa.array[i]'}
-	//{'str': '\t\tprintf("x[%d]=%d\\n", i, x)'}
-	//{'str': '\t\t++i'}
-	//{'str': '\t}'}
+	//	var i = 0
+	//	while i < 10 {
+	//		let x = wa.array[i]
+	//		printf("x[%d]=%d\n", i, x)
+	//		++i
+	//	}
 
 	return 0;
 }

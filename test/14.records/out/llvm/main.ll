@@ -317,161 +317,17 @@ else_4:
 	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str11 to [0 x i8]*))
 	br label %endif_4
 endif_4:
-	;
-
-	;	
-	;v
-	;a
-	;r
-	; 
-	;p
-	;r
-	;x
-	; 
-	;=
-	; 
-	;&
-	;p
-	;2
-	;d
-	;2
-	;
-
-	;	
-	;v
-	;a
-	;r
-	; 
-	;p
-	;r
-	;x
-	;2
-	; 
-	;=
-	; 
-	;&
-	;p
-	;r
-	;x
-	;
-
-	;	
-	;v
-	;a
-	;r
-	; 
-	;p
-	;r
-	;y
-	; 
-	;=
-	; 
-	;&
-	;p
-	;2
-	;d
-	;3
-	;
-
-	;
-
-	;	
-	;i
-	;f
-	; 
-	;*
-	;*
-	;p
-	;r
-	;x
-	;2
-	; 
-	;=
-	;=
-	; 
-	;*
-	;p
-	;r
-	;y
-	; 
-	;{
-	;
-
-	;	
-	;	
-	;p
-	;r
-	;i
-	;n
-	;t
-	;f
-	;(
-	;"
-	;*
-	;*
-	;p
-	;r
-	;x
-	;2
-	; 
-	;=
-	;=
-	; 
-	;*
-	;p
-	;r
-	;y
-	;\
-	;n
-	;"
-	;)
-	;
-
-	;	
-	;}
-	; 
-	;e
-	;l
-	;s
-	;e
-	; 
-	;{
-	;
-
-	;	
-	;	
-	;p
-	;r
-	;i
-	;n
-	;t
-	;f
-	;(
-	;"
-	;*
-	;*
-	;p
-	;r
-	;x
-	;2
-	; 
-	;!
-	;=
-	; 
-	;*
-	;p
-	;r
-	;y
-	;\
-	;n
-	;"
-	;)
-	;
-
-	;	
-	;}
-	;
-
+;
+;	var prx = &p2d2
+;	var prx2 = &prx
+;	var pry = &p2d3
+;
+;	if **prx2 == *pry {
+;		printf("**prx2 == *pry\n")
+;	} else {
+;		printf("**prx2 != *pry\n")
+;	}
+;
 	;{'str': ' assign record by pointer'}
 	%53 = insertvalue %Point2D zeroinitializer, %Int32 100, 0
 	%54 = insertvalue %Point2D %53, %Int32 200, 1
