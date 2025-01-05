@@ -1,6 +1,7 @@
 
 import type as htype
 from error import info
+from hlir import *
 from .common import *
 from value.value import value_is_undefined, value_is_zero, value_is_immediate, value_attribute_check, value_print
 from util import get_item_by_id
@@ -29,10 +30,17 @@ def nl_indent(nl=1):
 
 def get_id_str(x):
 	id_str = ""
-	if x['id'].cm:
-		id_str = x['id'].cm
 
-	id_str = x['id'].str
+	id = None
+	if isinstance(x, dict):
+		id = x['id']
+	else:
+		id = x.id
+
+	if id.cm:
+		id_str = id.cm
+
+	id_str = id.str
 	return id_str
 
 
@@ -68,7 +76,7 @@ def precedence(x):
 
 
 
-def print_id(x):
+def print_id_for(x):
 	out(get_id_str(x))
 
 
@@ -84,19 +92,19 @@ def print_comment(x):
 
 
 def print_comment_block(x):
-	nl_indent(x['nl'])
+	nl_indent(x.nl)
 	out("/*%s*/" % x.text)
 
 
 def print_comment_line(x):
-	newline(x['nl'])
+	newline(x.nl)
 	lines = x.lines
 	i = 0
 	n = len(lines)
 	while i < n:
 		line = lines[i]
 		indent()
-		out("//%s" % line)
+		out("//%s" % line['str'])
 		i = i + 1
 		if i < n:
 			newline()
@@ -123,9 +131,9 @@ def print_type_pointer(t):
 
 
 def print_field(x):
-	print_id(x)
+	print_id_for(x)
 	out(": ")
-	print_type(x['type'])
+	print_type(x.type)
 
 
 def print_type_record(t):
@@ -142,10 +150,10 @@ def print_type_record(t):
 			for comment in field.comments:
 				print_comment(comment)
 
-		nl_indent(field['nl'])
-		prev_nl = field['nl']
+		nl_indent(field.nl)
+		prev_nl = field.nl
 
-		if field['access_level'] == 'public':
+		if field.access_level == 'public':
 			out("public ")
 		print_field(field)
 
@@ -161,7 +169,7 @@ def print_type_enum(t):
 	while i < len(items):
 		item = items[i]
 		out(NL_INDENT)
-		print_id(item)
+		print_id_for(item)
 		i = i + 1
 	out("\n}")
 
@@ -260,14 +268,14 @@ def print_value_call(v, ctx):
 		arg = args[i]
 		if i > 0: out(", ")
 
-		if arg['isa'] == 'value':
-			# just paramter value
-			print_value(arg)
-		#elif arg['isa'] == 'initializer':
-		elif isinstance(arg, Initializer):
+
+		if isinstance(arg, Initializer):
 			# named parameter
 			out("%s = " % get_id_str(arg))
 			print_value(arg.value)
+		else:
+			print_value(arg)
+
 
 		i = i + 1
 	out(")")
@@ -297,7 +305,7 @@ def print_value_access(v, ctx):
 	need_wrap = precedence(left) < precedence({'kind': 'access'})
 	print_value(left, need_wrap=need_wrap)
 	out(".")
-	print_id(v['field'])
+	print_id_for(v['field'])
 
 
 def print_value_access_module(v, ctx):
@@ -548,11 +556,11 @@ def print_value_zero(x, ctx):
 
 
 def print_value_enum(x, ctx):
-	print_id(x)
+	print_id_for(x)
 
 
 def print_value_by_id(x, ctx):
-	print_id(x)
+	print_id_for(x)
 
 
 
@@ -672,12 +680,12 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
 def print_stmt_if(x):
 	out("if ")
-	print_value(x['cond'])
-	print_stmt_block(x['then'])
+	print_value(x.cond)
+	print_stmt_block(x.then)
 
-	e = x['else']
+	e = x.els
 	if e != None:
-		if e['kind'] == 'if':
+		if isinstance(e, StmtIf):
 			out(" else ")
 			print_stmt_if(e)
 		else:
@@ -687,47 +695,48 @@ def print_stmt_if(x):
 
 def print_stmt_while(x):
 	out("while ")
-	print_value(x['cond'])
-	print_stmt_block(x['stmt'])
+	print_value(x.cond)
+	print_stmt_block(x.stmt)
 
 
 def print_stmt_return(x):
 	out("return")
-	if x['value'] != None:
+	rv = x.value
+	if rv != None:
 		out(" ")
-		print_value(x['value'])
+		print_value(rv)
 
 
 def print_stmt_var(x):
-	init_value = x['init_value']
-	out('var ')
-
-	print_field(x['var_value'])
-
-	if not value_is_undefined(init_value):
+	out("var ")
+	print_id_for(x.var_value)
+	out(": ")
+	print_type(x.var_value['type'])
+	iv = x.init_value
+	if not value_is_undefined(iv):
 		out(" = ")
-		print_value(init_value)
+		print_value(iv)
 
 
 def print_stmt_let(x):
 	out("let ")
-	print_id(x)
+	print_id_for(x)
 	out(" = ")
-	print_value(x['init_value'], print_just_id=False)
+	print_value(x.init_value, print_just_id=False)
 
 
 def print_stmt_assign(x):
-	print_value(x['left'])
+	print_value(x.left)
 	out(" = ")
-	print_value(x['right'])
+	print_value(x.right)
 
-	if htype.type_is_array(x['right']['type']):
-		if value_is_zero(x['right']):
-			out("  // right size = %d" % x['right']['type']['size'])
+	if htype.type_is_array(x.right['type']):
+		if value_is_zero(x.right):
+			out("  // right size = %d" % x.right['type']['size'])
 
 
 def print_stmt_value(x):
-	print_value(x['value'])
+	print_value(x.value)
 
 
 def print_stmt_break(x):
@@ -757,22 +766,22 @@ def print_asm_pairs(args):
 
 def print_stmt_asm(x):
 	out('__asm(')
-	print_strx(x['text'])
+	print_strx(x.text)
 
 	# print 'out' pairs
-	if len(x['outputs']) > 0:
+	if len(x.outputs) > 0:
 		out(', ')
-		print_asm_pairs(x['outputs'])
+		print_asm_pairs(x.outputs)
 
 	# print 'in' pairs
-	if len(x['inputs']) > 0:
+	if len(x.inputs) > 0:
 		out(', ')
-		print_asm_pairs(x['inputs'])
+		print_asm_pairs(x.inputs)
 
 	# print clobber list
-	if len(x['clobbers']) > 0:
+	if len(x.clobbers) > 0:
 		out(', [')
-		print_list_by(x['clobbers'], print_value)
+		print_list_by(x.clobbers, print_value)
 		out(']')
 
 	out(")")
@@ -780,25 +789,25 @@ def print_stmt_asm(x):
 
 
 def print_stmt(x):
-	k = x['kind']
 
-	if not k in ['block', 'comment-line', 'comment-block']:
-		nl_indent(x['nl'])
+	if not (isinstance(x, StmtBlock) or isinstance(x, StmtCommentLine) or isinstance(x, StmtCommentBlock)):
+	#if not k in ['block', 'comment-line', 'comment-block']:
+		nl_indent(x.nl)
 
-	if k == 'block': print_stmt_block(x)
-	elif k == 'value': print_stmt_value(x)
-	elif k == 'assign': print_stmt_assign(x)
-	elif k == 'return': print_stmt_return(x)
-	elif k == 'if': print_stmt_if(x)
-	elif k == 'while': print_stmt_while(x)
-	elif k == 'var': print_stmt_var(x)
-	elif k == 'let': print_stmt_let(x)
-	elif k == 'break': print_stmt_break(x)
-	elif k == 'again': print_stmt_again(x)
-	elif k == 'comment-line': print_comment_line(x)
-	elif k == 'comment-block': print_comment_block(x)
-	elif k == 'asm': print_stmt_asm(x)
-	else: out("<stmt %s>" % str(x))
+	if isinstance(x, StmtBlock): print_stmt_block(x)
+	elif isinstance(x, StmtValue): print_stmt_value(x)
+	elif isinstance(x, StmtAssign): print_stmt_assign(x)
+	elif isinstance(x, StmtReturn): print_stmt_return(x)
+	elif isinstance(x, StmtIf): print_stmt_if(x)
+	elif isinstance(x, StmtWhile): print_stmt_while(x)
+	elif isinstance(x, StmtDefVar): print_stmt_var(x)
+	elif isinstance(x, StmtDefConst): print_stmt_let(x)
+	elif isinstance(x, StmtBreak): print_stmt_break(x)
+	elif isinstance(x, StmtAgain): print_stmt_again(x)
+	elif isinstance(x, StmtCommentLine): print_comment_line(x)
+	elif isinstance(x, StmtCommentBlock): print_comment_block(x)
+	elif isinstance(x, StmtAsm): print_stmt_asm(x)
+	else: lo("<stmt %s>" % str(x))
 
 
 
@@ -812,7 +821,7 @@ def print_stmt_block(s):
 
 	indent_down()
 
-	endnl = s['end_nl']
+	endnl = s.end_nl
 	newline(endnl)
 	if endnl:
 		indent()
@@ -824,59 +833,54 @@ def print_stmt_block(s):
 def print_decl_func(x):
 	func = x['value']
 	out('func ')
-	print_id(func)
+	print_id_for(func)
 	print_type(func['type'])
 """
 
 def print_def_func(x):
-	if x['stmt'] == None:
+	if x.stmt == None:
 		return
-	func = x['value']
+	func = x.value
 	ft = func['type']
-	if x['access_level'] == 'public':
+	if x.access_level == 'public':
 		out("public ")
 	out('func ')
-	print_id(func)
+	print_id_for(func)
 	print_type_func(ft, extra_args=ft['extra_args'])
-	print_stmt_block(x['stmt'])
+	print_stmt_block(x.stmt)
 
 
 def print_decl_type(x):
-	if x['access_level'] == 'public':
+	if x.access_level == 'public':
 		out("public ")
 	out("type ")
-	out(get_type_id(x['type']))
+	out(get_type_id(x.type))
 
 
 
 def print_def_type(x):
-	if x['access_level'] == 'public':
+	if x.access_level == 'public':
 		out("public ")
 	out("type ")
-	print_id(x)
+	print_id_for(x)
 	out(" ")
-	print_type(x['original_type'])
+	print_type(x.original_type)
 
 
 def print_def_var(x):
-	if x['access_level'] == 'public':
+	if x.access_level == 'public':
 		out("public ")
-	out("var ")
-	var = x['var_value']
-	print_field(var)
-	iv = x['init_value']
-	if not value_is_undefined(iv):
-		out(" = ")
-		print_value(iv)
+	print_stmt_var(x)
+
 
 
 def print_def_const(x):
-	if x['access_level'] == 'public':
+	if x.access_level == 'public':
 		out("public ")
 	out("const ")
-	print_id(x['value'])
+	print_id_for(x.value)
 	out(" = ")
-	print_value(x['init_value'], ctx=['oneline'], print_just_id=False)
+	print_value(x.init_value, ctx=['oneline'], print_just_id=False)
 
 
 def print_import(x):
@@ -894,16 +898,20 @@ def print_directive(x):
 def print_def(x):
 	if isinstance(x, dict):
 		isa = x['isa']
+		if isa == 'directive':
+			newline(n=1)
+			print_directive(x)
+		elif isa == 'comment':
+			print_comment(x)
+		return
 
-		if isa != 'comment':
-			newline(n=x['nl'])
+	#if isa != 'comment':
+	newline(n=x.nl)
 
-		if isa == 'def_var': print_def_var(x)
-		elif isa == 'def_const': print_def_const(x)
-		elif isa == 'def_func': print_def_func(x)
-		elif isa == 'def_type': print_def_type(x)
-		elif isa == 'directive': print_directive(x)
-		elif isa == 'comment': print_comment(x)
+	if isinstance(x, DefVar): print_def_var(x)
+	elif isinstance(x, DefConst): print_def_const(x)
+	elif isinstance(x, DefFunc): print_def_func(x)
+	elif isinstance(x, DefType): print_def_type(x)
 
 
 def run(module, outname, options):
