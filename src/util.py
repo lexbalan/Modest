@@ -1,6 +1,6 @@
 
-from hlir.hlir import Initializer
-from hlir.field import Field
+from hlir import *
+
 
 def align_to(x, y):
 	assert(y != 0)

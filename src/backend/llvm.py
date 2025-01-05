@@ -2,6 +2,7 @@
 import copy
 from .common import *
 from error import info, warning, error, fatal
+from hlir import *
 import type as htype
 from type import type_print
 from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_is_zero, value_is_param, value_zero
@@ -9,9 +10,6 @@ from type import type_pointer
 from util import align_bits_up
 from pprint import pprint
 import settings
-
-from hlir.stmt import *
-from hlir.hlir import *
 
 import foundation
 
@@ -1900,8 +1898,6 @@ def print_stmt_asm(x):
 		fields = []
 		for o in outs:
 			field_type = o['type']
-			from hlir.id import Id
-			from hlir.field import Field
 			id = Id().fromStr('<noname>')
 			f = Field(id, field_type, ti=x.ti)
 			fields.append(f)

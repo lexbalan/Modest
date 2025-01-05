@@ -1,7 +1,6 @@
 
 from type import *
-from hlir.id import Id
-from hlir.hlir import *
+from hlir import *
 
 from symtab import Symtab
 

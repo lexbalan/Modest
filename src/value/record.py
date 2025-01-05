@@ -1,8 +1,7 @@
 
 from error import info, warning, error
 import type as type
-from hlir.hlir import *
-from hlir.field import Field
+from hlir import *
 from type import type_print, record_field_get
 from util import get_item_by_id
 from .value import value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate, value_bin, value_eq

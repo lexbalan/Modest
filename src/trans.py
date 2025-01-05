@@ -9,8 +9,7 @@ from parser import Parser
 from util import get_item_by_id
 from main import settings
 import type as htype
-from hlir.hlir import *
-from hlir.id import Id
+from hlir import *
 
 import foundation
 
@@ -61,9 +60,6 @@ from value.cons import value_cons_implicit, value_cons_implicit_check, value_con
 from symtab import Symtab
 from util import nbits_for_num, nbytes_for_bits
 
-from hlir.field import Field
-from hlir.stmt import *
-from hlir.hlir import *
 
 
 

@@ -2,12 +2,9 @@
 # но индексируешь переменной (в цикле например)
 
 
-from error import info, error, fatal
-from hlir.id import Id
-from hlir.hlir import *
-from hlir.field import *
-from hlir.stmt import *
 from .common import *
+from error import info, error, fatal
+from hlir import *
 import type as htype
 from type import select_common_type, type_print
 from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array, value_is_literal

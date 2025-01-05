@@ -1,7 +1,6 @@
 import copy
 from error import info, warning, error
-from hlir.id import Id
-from hlir.hlir import *
+from hlir import *
 from util import get_item_by_id
 import type as htype
 
