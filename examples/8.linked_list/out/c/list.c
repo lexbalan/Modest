@@ -10,7 +10,7 @@
 
 list_List *list_create()
 {
-	list_List *list = (list_List *)malloc(sizeof(list_List));
+	list_List *list = (list_List *)malloc(sizeof(uint8_t));
 
 	if (list == NULL) {
 		return NULL;
@@ -70,7 +70,7 @@ list_Node *list_node_first(list_List *list, list_Node *new_node)
 
 list_Node *list_node_create()
 {
-	list_Node *node = (list_Node *)malloc(sizeof(list_Node));
+	list_Node *node = (list_Node *)malloc(sizeof(uint8_t));
 
 	if (node == NULL) {
 		return NULL;

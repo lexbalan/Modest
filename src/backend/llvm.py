@@ -144,8 +144,15 @@ def get_id_str(x):
 	id_str = id.str
 	#if id.str != 'main':
 	if id.need_decoration:
-		if 'definition' in x:
-			prefix = x['definition'].module['prefix']
+		definition = None
+		if isinstance(x, dict):
+			if 'definition' in x:
+				definition = x['definition']
+		else:
+			definition = x.definition
+
+		if definition != None:
+			prefix = definition.module['prefix']
 			if prefix != None:
 				id_str = prefix + '_' + id_str
 
@@ -612,7 +619,7 @@ def llvm_memzero(dst, size, volatile=False):
 # грубо привести тип integer value к ширине width
 def trim(int_value, width):
 	assert(int_value['isa'] == 'll_value')
-	if int_value.type['width'] != width:
+	if int_value['type']['width'] != width:
 		return docast(int_value, foundation.typeNat32)
 	return int_value
 
@@ -775,6 +782,9 @@ def print_type_array(t):
 		array_size = t['volume']
 		if array_size != None:
 			sz = array_size.asset
+			if sz == None:  #?!
+				sz = 0
+
 
 	out("[")
 	out("%d x " % sz)
@@ -923,7 +933,7 @@ def do_eval_bin(x):
 		# LLVM requires the same type for left & right arguments of shift operator
 		# cast right to left
 		if not htype.type_is_generic(r['type']):
-			r = docast(r, l.type)
+			r = docast(r, l['type'])
 
 	llvm_opcode = get_bin_opcode(op, x.left.type)
 	return llvm_eval_binary(llvm_opcode, l, r, x)
@@ -946,7 +956,7 @@ def do_eval_not(v, xor_msk):
 	#%10 = xor i32 %9, -1
 	# or
 	#%10 = xor i32 %9, 1
-	ve = do_reval(v['value'])
+	ve = do_reval(v.value)
 	minus_one = llvm_value_num(v.type, xor_msk)
 	return llvm_eval_binary('xor', ve, minus_one, v)
 
@@ -954,7 +964,7 @@ def do_eval_not(v, xor_msk):
 
 def do_eval_neg(v):
 	#%10 = sub i32 0, %9
-	ve = do_reval(v['value'])
+	ve = do_reval(v.value)
 	zero = llvm_value_num(v.type, 0)
 	return llvm_eval_binary('sub', zero, ve, v)
 
@@ -1154,7 +1164,7 @@ def access(x):
 		y, i2 = access(x.value)
 		return (y, i2 + (i,))
 
-	return do_eval(x['value']), (i,)
+	return do_eval(x.value), (i,)
 
 
 
@@ -1174,7 +1184,7 @@ def do_eval_access(v):
 
 
 def do_eval_access_module(x):
-	return do_eval(x['value'])
+	return do_eval(x.value)
 
 
 'trunc .. to'
@@ -1504,19 +1514,19 @@ def do_eval_const(x):
 
 	if not is_global_context():
 		# Аргументы функуции это константы но у них поле value == None!
-		if x['value'] != None:
+		if x.value != None:
 			# константные массивы (даже дженерик)
 			# печатаются и их можео индексировать
-			if htype.type_is_array(x['value']['type']):
-				rv = llvm_value_id(get_id_str(x), x['type'])
+			if htype.type_is_array(x.value.type):
+				rv = llvm_value_id(get_id_str(x), x.type)
 				rv['is_adr'] = True
 				return rv
 
-	return do_eval(x['value'])
+	return do_eval(x.value)
 
 
 def do_eval_bool(x):
-	return llvm_value_num(x['type'], 1 if x.asset else 0)
+	return llvm_value_num(x.type, 1 if x.asset else 0)
 
 
 def do_eval_literal(x):
@@ -1546,24 +1556,23 @@ def do_eval_pointer(x):
 
 
 def do_eval_va_start(x):
-	va_list = do_eval(x['va_list'])
+	va_list = do_eval(x.va_list)
 	return llvm_va_start(va_list)
 
 
 def do_eval_va_arg(x):
-	va_list = do_eval(x['va_list'])
-	typ = x['type']
-	return llvm_va_arg(va_list, typ)
+	va_list = do_eval(x.va_list)
+	return llvm_va_arg(va_list, x.type)
 
 
 def do_eval_va_end(x):
-	va_list = do_eval(x['va_list'])
+	va_list = do_eval(x.va_list)
 	return llvm_va_end(va_list)
 
 
 def do_eval_va_copy(x):
-	dst = do_eval(x['dst'])
-	src = do_eval(x['src'])
+	dst = do_eval(x.dst)
+	src = do_eval(x.src)
 	return llvm_va_copy(dst, src)
 
 
@@ -1638,14 +1647,14 @@ def do_assign_arrays(l, r):
 	dst = do_eval(l)
 
 	out("\n\t; -- start vol eval --")
-	volume = do_eval(r['type']['volume'])
+	volume = do_eval(r.type['volume'])
 	volume = trim(volume, 32)
 	out("\n\t; -- end vol eval --")
 
 	if value_is_zero(r):
 		out("\n\t; -- zero fill rest of array")
 		# size = volume * item_size
-		item_sz = l['type']['of']['size']
+		item_sz = l.type['of']['size']
 		item_size = llvm_value_num(foundation.typeNat32, item_sz)
 		size = llvm_eval_binary('mul', volume, item_size)
 		llvm_memzero(dst, size, volatile=False)

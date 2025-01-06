@@ -260,8 +260,8 @@ again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%5 = bitcast [1024 x %Char8]* %1 to i8*
-	%6 = call %SSizeT @recv(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
-	%7 = icmp sle %SSizeT %6, 0
+	%6 = call %SSizeT @recv(%Int %sockfd, i8* %5, %SizeT 1024, %Int sext (%Int8 0 to %Int))
+	%7 = icmp sle %SSizeT %6, sext (%Int8 0 to %SSizeT)
 	br %Bool %7 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
@@ -282,8 +282,8 @@ break_1:
 }
 
 define %Int @main() {
-	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)
-	%2 = icmp slt %Int %1, 0
+	%1 = call %Int @socket(%Int 2, %Int 1, %Int sext (%Int8 0 to %Int))
+	%2 = icmp slt %Int %1, sext (%Int8 0 to %Int)
 	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*))
@@ -292,53 +292,55 @@ then_0:
 endif_0:
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str6 to [0 x i8]*))
 	%4 = alloca %Struct_sockaddr_in, align 4
-	%5 = insertvalue %Struct_sockaddr_in zeroinitializer, %Int8 2, 1
-	%6 = insertvalue %Struct_sockaddr_in %5, %UnsignedShort 8080, 2
-	%7 = call %InAddrT @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str7 to [0 x i8]*))
-	%8 = insertvalue %Struct_in_addr zeroinitializer, %InAddrT %7, 0
-	%9 = insertvalue %Struct_sockaddr_in %6, %Struct_in_addr %8, 3
-	store %Struct_sockaddr_in %9, %Struct_sockaddr_in* %4
-	%10 = bitcast %Struct_sockaddr_in* %4 to i8*
-	%11 = bitcast i8* %10 to %Struct_sockaddr*
-	%12 = alloca %Int, align 4
-	%13 = call %Int @bind(%Int %1, %Struct_sockaddr* %11, %SocklenT 16)
-	store %Int %13, %Int* %12
-	%14 = load %Int, %Int* %12
-	%15 = icmp slt %Int %14, 0
-	br %Bool %15 , label %then_1, label %endif_1
+	%5 = insertvalue %Struct_sockaddr_in zeroinitializer, %Int8 0, 0
+	%6 = insertvalue %Struct_sockaddr_in %5, %Int8 2, 1
+	%7 = insertvalue %Struct_sockaddr_in %6, %UnsignedShort 8080, 2
+	%8 = call %InAddrT @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str7 to [0 x i8]*))
+	%9 = insertvalue %Struct_in_addr zeroinitializer, %InAddrT %8, 0
+	%10 = insertvalue %Struct_sockaddr_in %7, %Struct_in_addr %9, 3
+	%11 = insertvalue %Struct_sockaddr_in %10, [8 x %Int8] zeroinitializer, 4
+	store %Struct_sockaddr_in %11, %Struct_sockaddr_in* %4
+	%12 = bitcast %Struct_sockaddr_in* %4 to i8*
+	%13 = bitcast i8* %12 to %Struct_sockaddr*
+	%14 = alloca %Int, align 4
+	%15 = call %Int @bind(%Int %1, %Struct_sockaddr* %13, %SocklenT 16)
+	store %Int %15, %Int* %14
+	%16 = load %Int, %Int* %14
+	%17 = icmp slt %Int %16, sext (%Int8 0 to %Int)
+	br %Bool %17 , label %then_1, label %endif_1
 then_1:
 	call void @perror(%ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*))
 	call void @exit(%Int 1)
 	br label %endif_1
 endif_1:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str9 to [0 x i8]*))
-	%17 = call %Int @listen(%Int %1, %Int 10)
-	store %Int %17, %Int* %12
-	%18 = load %Int, %Int* %12
-	%19 = icmp ne %Int %18, 0
-	br %Bool %19 , label %then_2, label %endif_2
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str9 to [0 x i8]*))
+	%19 = call %Int @listen(%Int %1, %Int 10)
+	store %Int %19, %Int* %14
+	%20 = load %Int, %Int* %14
+	%21 = icmp ne %Int %20, sext (%Int8 0 to %Int)
+	br %Bool %21 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*))
 	call void @exit(%Int 1)
 	br label %endif_2
 endif_2:
-	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str11 to [0 x i8]*))
-	%21 = alloca %SocklenT, align 4
-	store %SocklenT 16, %SocklenT* %21
-	%22 = alloca %Struct_sockaddr_in, align 4
-	%23 = bitcast %Struct_sockaddr_in* %22 to i8*
-	%24 = bitcast i8* %23 to %Struct_sockaddr*
-	%25 = call %Int @accept(%Int %1, %Struct_sockaddr* %24, %SocklenT* %21)
-	%26 = call %Bool @write_file(%Int %25)
-	br %Bool %26 , label %then_3, label %else_3
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str11 to [0 x i8]*))
+	%23 = alloca %SocklenT, align 4
+	store %SocklenT 16, %SocklenT* %23
+	%24 = alloca %Struct_sockaddr_in, align 4
+	%25 = bitcast %Struct_sockaddr_in* %24 to i8*
+	%26 = bitcast i8* %25 to %Struct_sockaddr*
+	%27 = call %Int @accept(%Int %1, %Struct_sockaddr* %26, %SocklenT* %23)
+	%28 = call %Bool @write_file(%Int %27)
+	br %Bool %28 , label %then_3, label %else_3
 then_3:
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str12 to [0 x i8]*))
+	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str12 to [0 x i8]*))
 	br label %endif_3
 else_3:
 	call void @perror(%ConstCharStr* bitcast ([22 x i8]* @str13 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-	ret %Int 0
+	ret %Int sext (%Int8 0 to %Int)
 }
 
 

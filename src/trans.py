@@ -1281,7 +1281,7 @@ def do_value_slice(x):
 	if value_is_bad(left) or value_is_bad(index_from):
 		return value_bad(x['ti'])
 
-	left_type = left['type']
+	left_type = left.type
 	via_pointer = htype.type_is_pointer(left_type)
 	array_type = left_type
 	if via_pointer:
@@ -1488,7 +1488,7 @@ def do_value_id(x):
 	global cdef
 	if htype.type_is_incomplete(v.type):
 		cdef.deps.append(v)
-		v = update_func_type(v['id'].str)
+		v = update_func_type(v.id.str)
 		if v == None:
 			error("call undefined func", x['ti'])
 			return value_bad(x['ti'])

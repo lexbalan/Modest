@@ -227,7 +227,10 @@ then_0:
 	ret %list_List* bitcast (i8* null to %list_List*)
 	br label %endif_0
 endif_0:
-	store %list_List zeroinitializer, %list_List* %2
+	%5 = insertvalue %list_List zeroinitializer, %list_Node* null, 0
+	%6 = insertvalue %list_List %5, %list_Node* null, 1
+	%7 = insertvalue %list_List %6, %Int32 0, 2
+	store %list_List %7, %list_List* %2
 	ret %list_List* %2
 }
 
@@ -235,7 +238,7 @@ define %Int32 @list_size_get(%list_List* %list) {
 	%1 = icmp eq %list_List* %list, bitcast (i8* null to %list_List*)
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret %Int32 0
+	ret %Int32 zext (%Int8 0 to %Int32)
 	br label %endif_0
 endif_0:
 	%3 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
@@ -297,7 +300,10 @@ then_0:
 	ret %list_Node* bitcast (i8* null to %list_Node*)
 	br label %endif_0
 endif_0:
-	store %list_Node zeroinitializer, %list_Node* %2
+	%5 = insertvalue %list_Node zeroinitializer, %list_Node* null, 0
+	%6 = insertvalue %list_Node %5, %list_Node* null, 1
+	%7 = insertvalue %list_Node %6, i8* null, 2
+	store %list_Node %7, %list_Node* %2
 	ret %list_Node* %2
 }
 
@@ -361,7 +367,7 @@ define %list_Node* @list_node_get(%list_List* %list, %Int32 %pos) {
 	%1 = icmp eq %list_List* %list, bitcast (i8* null to %list_List*)
 	%2 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
 	%3 = load %Int32, %Int32* %2
-	%4 = icmp eq %Int32 %3, 0
+	%4 = icmp eq %Int32 %3, zext (%Int8 0 to %Int32)
 	%5 = or %Bool %1, %4
 	br %Bool %5 , label %then_0, label %endif_0
 then_0:
@@ -370,7 +376,7 @@ then_0:
 endif_0:
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str2 to [0 x i8]*), %Int32 %pos)
 	%8 = alloca %list_Node*, align 8
-	%9 = icmp sge %Int32 %pos, 0
+	%9 = icmp sge %Int32 %pos, sext (%Int8 0 to %Int32)
 	br %Bool %9 , label %then_1, label %else_1
 then_1:
 	;{'str': ' go forward'}
@@ -387,7 +393,7 @@ then_2:
 	br label %endif_2
 endif_2:
 	%17 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %17
+	store %Int32 zext (%Int8 0 to %Int32), %Int32* %17
 	br label %again_1
 again_1:
 	%18 = load %Int32, %Int32* %17
@@ -421,7 +427,7 @@ then_3:
 	br label %endif_3
 endif_3:
 	%34 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %34
+	store %Int32 zext (%Int8 0 to %Int32), %Int32* %34
 	br label %again_2
 again_2:
 	%35 = load %Int32, %Int32* %34

@@ -314,7 +314,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	;{'str': ' add some Nat32 values to list'}
-	call void @nat32_list_insert(%list_List* %2, %Int32 0)
+	call void @nat32_list_insert(%list_List* %2, %Int32 zext (%Int8 0 to %Int32))
 	call void @nat32_list_insert(%list_List* %2, %Int32 10)
 	call void @nat32_list_insert(%list_List* %2, %Int32 20)
 	call void @nat32_list_insert(%list_List* %2, %Int32 30)
@@ -335,7 +335,7 @@ endif_0:
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str8 to [0 x i8]*))
 	;{'str': ' test list.node_get'}
 	%9 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %9
+	store %Int32 sext (%Int8 0 to %Int32), %Int32* %9
 	br label %again_1
 again_1:
 	%10 = load %Int32, %Int32* %9
@@ -366,7 +366,7 @@ endif_1:
 	br label %again_1
 break_1:
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @str11 to [0 x i8]*))
-	store %Int32 0, %Int32* %9
+	store %Int32 sext (%Int8 0 to %Int32), %Int32* %9
 	br label %again_2
 again_2:
 	%28 = load %Int32, %Int32* %9
@@ -403,7 +403,7 @@ break_2:
 	%48 = bitcast %Int32* %47 to i8*
 	%49 = call %list_Node* @list_insert(%list_List* %2, %Int32 4, i8* %48)
 	call void @list_print_forward(%list_List* %2)
-	ret %Int 0
+	ret %Int sext (%Int8 0 to %Int)
 }
 
 

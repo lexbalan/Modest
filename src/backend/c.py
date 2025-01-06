@@ -482,19 +482,26 @@ def print_value_bin(x, ctx):
 		elif htype.type_is_string(left.type):
 			return print_value_bool_lit(x, ctx)
 
+	lk = ''
+	if hasattr(left, 'op'):
+		lk = left.op
+
+	rk = ''
+	if hasattr(right, 'op'):
+		rk = right.op
 
 	if op in ['shl', 'shr']:
 		need_wrap_left = precedence(left) < 10
 		need_wrap_right = precedence(right) < 10
 	elif op == 'logic_or':
-		if left['kind'] != 'logic_or':
+		if lk != 'logic_or':
 			need_wrap_left = precedence(left) < 10
-		if right['kind'] != 'logic_or':
+		if rk != 'logic_or':
 			need_wrap_right = precedence(right) < 10
 	elif op == 'logic_and':
-		if left['kind'] != 'logic_and':
+		if lk != 'logic_and':
 			need_wrap_left = precedence(left) < 10
-		if right['kind'] != 'logic_and':
+		if rk != 'logic_and':
 			need_wrap_right = precedence(right) < 10
 
 	elif op == 'add':
@@ -1246,21 +1253,21 @@ def print_value_sizeof_value(x, ctx):
 
 def print_value_sizeof_type(x, ctx):
 	out("sizeof(")
-	print_type(x['of'])
+	print_type(x.of)
 	out(")")
 
 
 def print_value_alignof(x, ctx):
 	out("__alignof(")
-	print_type(x['of'])
+	print_type(x.of)
 	out(")")
 
 
 def print_value_offsetof(x, ctx):
 	out("__offsetof(")
-	print_type(x['of'])
+	print_type(x.of)
 	out(", ")
-	out(x['field']['str'])
+	out(x.field.str)
 	out(")")
 
 
@@ -1280,31 +1287,31 @@ def print_value_lengthof(x, ctx):
 
 def print_value_va_start(x, ctx):
 	out("va_start(")
-	print_value(x['va_list'])
+	print_value(x.va_list)
 	out(", ")
-	print_value(x['last_param'])
+	print_value(x.last_param)
 	out(")")
 
 
 def print_value_va_arg(x, ctx):
 	out("va_arg(")
-	print_value(x['va_list'])
+	print_value(x.va_list)
 	out(", ")
-	print_type(x['type'])
+	print_type(x.type)
 	out(")")
 
 
 def print_value_va_end(x, ctx):
 	out("va_end(")
-	print_value(x['va_list'])
+	print_value(x.va_list)
 	out(")")
 
 
 def print_value_va_copy(x, ctx):
 	out("va_copy(")
-	print_value(x['dst'])
+	print_value(x.dst)
 	out(", ")
-	print_value(x['src'])
+	print_value(x.src)
 	out(")")
 
 
@@ -1335,7 +1342,9 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif isinstance(x, ValueVaStart): print_value_va_start(x, ctx)
 	elif isinstance(x, ValueVaEnd): print_value_va_end(x, ctx)
 	elif isinstance(x, ValueVaCopy): print_value_va_copy(x, ctx)
-	elif isinstance(x, ValueUndefined): out("/*undefined*/")
+	elif isinstance(x, ValueUndefined):
+		out("/*undefined*/")
+		1/0
 		#print_value_literal(mass, ctx)
 	else:
 		print(x)
@@ -1468,7 +1477,12 @@ def print_stmt_var(x):
 			# array assignation by non-immediate value
 			out(";")
 			nl_indent(1)
-			memcopy_assign(var_value, init_value)
+
+			if value_is_undefined(init_value):
+				memzero_sizeof(var_value)
+			else:
+				memcopy_assign(var_value, init_value)
+
 			out(";")
 			return
 
@@ -2033,18 +2047,28 @@ def print_deps(deps):
 
 	# печатаем декларации для типов от которых зависит этот тип
 	for dep in deps:
-		if not 'id' in dep:
-			error("undefined", dep['ti'])
-			return
+
+		if isinstance(dep, dict):
+			if dep['id'] == None:
+				error("undefined", dep['ti'])
+				return
+		else:
+			if dep.id == None:
+				error("undefined", dep.ti)
+				return
 
 		out("\n")
 		id_str = get_id_str(dep)
 		if not id_str in declared:
 			declared.append(id_str)
-			if dep['isa'] == 'type':
+
+			if isinstance(dep, Value):
+				print_decl_func(dep.definition)
+			else:
+				# Type
 				print_decl_type(dep['definition'])
-			elif dep['isa'] == 'value':
-				print_decl_func(dep['definition'])
+
+
 
 	out("\n")
 

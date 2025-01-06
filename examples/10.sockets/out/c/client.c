@@ -18,9 +18,10 @@
 static bool send_file(FILE *fp, int sockfd)
 {
 	char data[bufSize];
+	memset(&data, 0, sizeof data);
 
 	while (fgets(&data[0], bufSize, fp) != NULL) {
-		if (send(sockfd, &data[0], (size_t)sizeof(char[bufSize]), 0) == -1) {
+		if (send(sockfd, &data[0], (size_t)sizeof(uint16_t), 0) == -1) {
 			return false;
 		}
 		memset(&data, 0, sizeof data);
@@ -49,7 +50,7 @@ int main()
 	};
 
 	struct sockaddr *sockaddr = (struct sockaddr *)(void *)&server_addr;
-	int e = connect(sockfd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
+	int e = connect(sockfd, sockaddr, (socklen_t)sizeof(uint8_t));
 	if (e < 0) {
 		perror("[-] Error in Connecting");
 		exit(1);

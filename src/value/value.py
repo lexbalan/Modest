@@ -93,7 +93,7 @@ class Value():
 class ValueBad(Value):
 	def __init__(self, ti=None):
 		super().__init__(type=htype.type_bad({'ti': ti}), ti=ti)
-		self.id = Id('_', ti=ti)
+		self.id = Id().fromStr('_')
 		
 
 class ValueUndefined(Value):
@@ -136,10 +136,11 @@ class ValueConst(Value):
 	def __init__(self, id, type, value, ti=None):
 		super().__init__(type=type, ti=ti)
 		self.id = id
+		self.value = value
 		self.immutable = True
 		self.usecnt = 0
 		self.definition = None
-	
+
 
 class ValueFunc(Value):
 	def __init__(self, id, type, ti=None):
@@ -229,7 +230,7 @@ class ValueCons(Value):
 
 
 class ValueSizeofType(Value):
-	def __init__(self, type, ti=None):
+	def __init__(self, of, ti=None):
 		size = of['size']
 		type = htype.type_number_for(size, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)

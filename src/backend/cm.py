@@ -594,57 +594,57 @@ def print_value_literal(x, ctx):
 
 def print_value_sizeof_value(x, ctx):
 	out("sizeof ")
-	print_value(x['of'])
+	print_value(x.of)
 
 def print_value_sizeof_type(x, ctx):
 	out("sizeof(")
-	print_type(x['of'])
+	print_type(x.of)
 	out(")")
 
 
 def print_value_alignof(x, ctx):
 	out("alignof(")
-	print_type(x['of'])
+	print_type(x.of)
 	out(")")
 
 def print_value_lengthof(x, ctx):
 	out("lengthof(")
-	print_value(x['value'])
+	print_value(x.value)
 	out(")")
 
 def print_value_offsetof(x, ctx):
 	out("offsetof(")
-	print_type(x['of'])
-	out('.%s' % x['field']['str'])
+	print_type(x.of)
+	out('.%s' % x.field.str)
 	out(")")
 
 def print_value_va_start(x, ctx):
 	out("__va_start(")
-	print_value(x['va_list'])
+	print_value(x.va_list)
 	out(", ")
-	print_value(x['last_param'])
+	print_value(x.last_param)
 	out(")")
 
 
 def print_value_va_arg(x, ctx):
 	out("__va_arg(")
-	print_value(x['va_list'])
+	print_value(x.va_list)
 	out(", ")
-	print_type(x['type'])
+	print_type(x.type)
 	out(")")
 
 
 def print_value_va_end(x, ctx):
 	out("__va_end(")
-	print_value(x['va_list'])
+	print_value(x.va_list)
 	out(")")
 
 
 def print_value_va_copy(x, ctx):
 	out("__va_copy(")
-	print_value(x['dst'])
+	print_value(x.dst)
 	out(", ")
-	print_value(x['src'])
+	print_value(x.src)
 	out(")")
 
 
@@ -663,7 +663,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif isinstance(x, ValueIndexArray): print_value_index(x, ctx)
 	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
 	elif isinstance(x, ValueAccessModule): print_value_access_module(x, ctx)
-	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
+	elif isinstance(x, ValueSliceArray): print_value_slice(x, ctx)
 	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
 	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
 	elif isinstance(x, ValueAlignof): print_value_alignof(x, ctx)
