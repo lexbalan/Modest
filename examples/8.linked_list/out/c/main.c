@@ -10,7 +10,7 @@
 static void nat32_list_insert(list_List *list, uint32_t x)
 {
 	// alloc memory for Nat32 value
-	uint32_t *p_nat32 = (uint32_t *)(malloc(sizeof(uint32_t)));
+	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
 	list_append(list, p_nat32);
 }
@@ -20,7 +20,7 @@ static void list_print_forward(list_List *list)
 	printf("list_print_forward:\n");
 	list_Node *pn = list_first_node_get(list);
 	while (pn != NULL) {
-		uint32_t *x = (uint32_t *)(list_node_data_get(pn));
+		uint32_t *x = (uint32_t *)list_node_data_get(pn);
 		printf("v = %u\n", *x);
 		pn = list_node_next_get(pn);
 	}
@@ -31,7 +31,7 @@ static void list_print_backward(list_List *list)
 	printf("list_print_backward:\n");
 	list_Node *pn = list_last_node_get(list);
 	while (pn != NULL) {
-		uint32_t *x = (uint32_t *)(list_node_data_get(pn));
+		uint32_t *x = (uint32_t *)list_node_data_get(pn);
 		printf("v = %u\n", *x);
 		pn = list_node_prev_get(pn);
 	}
@@ -88,7 +88,7 @@ int main()
 			continue;
 		}
 
-		uint32_t *px = (uint32_t *)(list_node_data_get(node));
+		uint32_t *px = (uint32_t *)list_node_data_get(node);
 		printf("list(%i) = %i\n", i, *px);
 		i = i - 1;
 	}
@@ -105,7 +105,7 @@ int main()
 			continue;
 		}
 
-		uint32_t *px = (uint32_t *)(list_node_data_get(node));
+		uint32_t *px = (uint32_t *)list_node_data_get(node);
 		printf("list(%i) = %i\n", i, *px);
 		i = i + 1;
 	}
@@ -113,7 +113,7 @@ int main()
 	printf("-----------------------------------------\n");
 
 
-	uint32_t *p_nat32 = (uint32_t *)(malloc(sizeof(uint32_t)));
+	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = 1234;
 	list_insert(list0, 4, p_nat32);
 

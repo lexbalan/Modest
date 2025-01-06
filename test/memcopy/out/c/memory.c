@@ -37,7 +37,7 @@ void mzero(void *mem, uint64_t len)
 	// word operation
 
 	uint64_t len_words = (len - z) / sizeof(Word);
-	Word *dst_word = (Word *)(&memptr[i]);
+	Word *dst_word = (Word *)&memptr[i];
 
 	i = 0;
 	while (i < len_words) {
@@ -48,7 +48,7 @@ void mzero(void *mem, uint64_t len)
 	// byte operation
 
 	uint64_t len_bytes = (len - z) % sizeof(Word);
-	uint8_t *dst_byte1 = (uint8_t *)(&dst_word[i]);
+	uint8_t *dst_byte1 = (uint8_t *)&dst_word[i];
 
 	i = 0;
 	while (i < len_bytes) {
@@ -71,8 +71,8 @@ void mcopy(void *dst, void *src, uint64_t len)
 	}
 
 	uint64_t len_bytes = len % sizeof(Word);
-	uint8_t *src_b = (uint8_t *)(&src_w[i]);
-	uint8_t *dst_b = (uint8_t *)(&dst_w[i]);
+	uint8_t *src_b = (uint8_t *)&src_w[i];
+	uint8_t *dst_b = (uint8_t *)&dst_w[i];
 
 	i = 0;
 	while (i < len_bytes) {
@@ -97,8 +97,8 @@ bool meq(void *mem0, void *mem1, uint64_t len)
 	}
 
 	uint64_t len_bytes = len % sizeof(Word);
-	uint8_t *mem0_b = (uint8_t *)(&mem0_w[i]);
-	uint8_t *mem1_b = (uint8_t *)(&mem1_w[i]);
+	uint8_t *mem0_b = (uint8_t *)&mem0_w[i];
+	uint8_t *mem1_b = (uint8_t *)&mem1_w[i];
 
 	i = 0;
 	while (i < len_bytes) {

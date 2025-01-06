@@ -10,7 +10,7 @@
 
 list_List *list_create()
 {
-	list_List *list = (list_List *)(malloc(sizeof(list_List)));
+	list_List *list = (list_List *)malloc(sizeof(list_List));
 
 	if (list == NULL) {
 		return NULL;
@@ -70,7 +70,7 @@ list_Node *list_node_first(list_List *list, list_Node *new_node)
 
 list_Node *list_node_create()
 {
-	list_Node *node = (list_Node *)(malloc(sizeof(list_Node)));
+	list_Node *node = (list_Node *)malloc(sizeof(list_Node));
 
 	if (node == NULL) {
 		return NULL;
@@ -153,7 +153,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 	} else {
 		// go backward
 		node = list->tail;
-		uint32_t n = (uint32_t)(-pos) - 1;
+		uint32_t n = (uint32_t)-pos - 1;
 
 		if (n > list->size) {
 			return NULL;

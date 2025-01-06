@@ -44,7 +44,7 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 
 	i = 0;
 	while (i < len) {
-		uint32_t y = (crc ^ (uint32_t)(buf[i])) & 0xFF;
+		uint32_t y = (crc ^ (uint32_t)buf[i]) & 0xFF;
 		uint8_t yy = (uint8_t)y;
 		crc = crc_table[yy] ^ crc >> 8;
 		i = i + 1;

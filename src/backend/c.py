@@ -112,7 +112,7 @@ def init():
 	CC_LONG_LONG_SIZE_BITS = 64
 
 
-
+CONS_PRECEDENCE = 10
 aprecedence = [
 	['logic_or'], #0
 	['logic_and'], #1
@@ -142,7 +142,8 @@ def precedence(x):
 				break
 			i = i + 1
 	else:
-		if isinstance(x, ValueSizeofValue): i = 10
+		if isinstance(x, ValueCons): i = 10
+		elif isinstance(x, ValueSizeofValue): i = 10
 		elif isinstance(x, ValueCall): i = 11
 		elif isinstance(x, ValueIndexArray): i = 11
 		elif isinstance(x, ValueAccessRecord): i = 11
@@ -751,13 +752,14 @@ def print_ValueAccessModule(v, ctx):
 	out("%s" % (id_str))
 
 
+
 def print_cast_hard(t, v, ctx=[]):
 	# hard cast is possible only in function body
 	assert(is_local_context())
 	out("*(")
 	print_type(t)
 	out("*)&")
-	need_wrap = precedence({'kind': 'cons'}) > precedence(v)
+	need_wrap = precedence(v) < CONS_PRECEDENCE
 	print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
@@ -766,7 +768,7 @@ def print_cast(t, v, ctx=[]):
 	#array_as_ptr = not 'array_as_array' in ctx
 	out("("); print_type(t); out(")")
 
-	need_wrap = precedence({'kind': 'cons'}) > precedence(v)
+	need_wrap = precedence(v) < CONS_PRECEDENCE
 
 	# add for arrays add (!)
 	if isinstance(v, ValueLiteral) or (isinstance(v, ValueBin) and v.op == 'add'):
