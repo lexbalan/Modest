@@ -757,7 +757,7 @@ def print_cast_hard(t, v, ctx=[]):
 	out("*(")
 	print_type(t)
 	out("*)&")
-	need_wrap = precedence(v) < precedence({'kind': 'cons'})
+	need_wrap = precedence({'kind': 'cons'}) > precedence(v)
 	print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
@@ -766,14 +766,12 @@ def print_cast(t, v, ctx=[]):
 	#array_as_ptr = not 'array_as_array' in ctx
 	out("("); print_type(t); out(")")
 
-	lxx = precedence(v)
-	rxx = precedence({'kind': 'cons'})
-	need_wrap = precedence(v) < precedence({'kind': 'cons'})
+	need_wrap = precedence({'kind': 'cons'}) > precedence(v)
+
+	# add for arrays add (!)
 	if isinstance(v, ValueLiteral) or (isinstance(v, ValueBin) and v.op == 'add'):
-	#if v['kind'] in ['literal', 'add']:
 		need_wrap = not htype.type_is_composite(v.type)
 
-	#out("/*%d;%d*/" % (lxx, rxx))
 	print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
