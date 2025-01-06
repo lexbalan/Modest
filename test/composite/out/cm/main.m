@@ -73,11 +73,11 @@ var pf11: *(f: **(a: Int32, b: *Int32) -> *[10]Int32) -> **() -> Unit = &f11
 var pf12: *(f: **(a: *[32]Int32, b: **[64]Int32) -> *[10]Int32) -> **() -> Unit = &f12
 var pf13: *(f: **(a: *[32]*Int32, b: **[64]*Int32) -> *[10]Int32) -> **() -> Unit = &f13
 var a0: [5]Int32 = [0, 1, 2, 3, 4]
-var a1: [5]*Int32 = [&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]]
-var a2: [5]**Int32 = [&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]]
+var a1: [5]*Int32 = [&(a0[0]), &(a0[1]), &(a0[2]), &(a0[3]), &(a0[4])]
+var a2: [5]**Int32 = [&(a1[0]), &(a1[1]), &(a1[2]), &(a1[3]), &(a1[4])]
 var a3: [5]*() -> Unit = [5]*() -> Unit [&f0]
 var a4: [2][5]Int = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
-var a5: [2]*[5]Int = [&a4[0], &a4[1]]
+var a5: [2]*[5]Int = [&(a4[0]), &(a4[1])]
 var a7: [2][5]*[5]Int = [
 	[&a0, &a0, &a0, &a0, &a0]
 	[&a0, &a0, &a0, &a0, &a0]
@@ -213,7 +213,7 @@ public func main() -> Int32 {
 	while i < 3 {
 		var j: Int32 = 0
 		while j < 3 {
-			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
+			printf("arrr[%d][%d] = %d\n", i, j, (arrr[i])[j])
 			j = j + 1
 		}
 		i = i + 1
@@ -230,7 +230,7 @@ public func main() -> Int32 {
 		i = i + 1
 	}
 
-	awrap[0].fhi("World")
+	(awrap[0]).fhi("World")
 	//let y = awrap[0]
 	//y.fhi("World")
 

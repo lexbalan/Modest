@@ -26,8 +26,8 @@ func write_example() -> Unit {
 
 	// pointers casting requires -funsafe translator option
 	// (see Makefile)
-	strcpy(&chunk.id, *[]Char "id")
-	strcpy(&chunk.data, *[]Char "data")
+	strcpy(&(chunk.id), *[]Char "id")
+	strcpy(&(chunk.data), *[]Char "data")
 
 	// write chunk to file
 	fwrite(&chunk, sizeof(Chunk), 1, fp)
@@ -50,8 +50,8 @@ func read_example() -> Unit {
 	fread(&chunk, sizeof(Chunk), 1, fp)
 
 	printf("file \"%s\" contains:\n", filename)
-	printf("chunk.id: \"%s\"\n", &chunk.id)
-	printf("chunk.data: \"%s\"\n", &chunk.data)
+	printf("chunk.id: \"%s\"\n", &(chunk.id))
+	printf("chunk.data: \"%s\"\n", &(chunk.data))
 
 	fclose(fp)
 }

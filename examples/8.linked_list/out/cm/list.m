@@ -152,7 +152,7 @@ public func node_get(list: *List, pos: Int32) -> *Node {
 	} else {
 		// go backward
 		node = list.tail
-		let n = Nat32 -pos - 1
+		let n = Nat32 (-pos) - 1
 
 		if n > list.size {
 			return nil

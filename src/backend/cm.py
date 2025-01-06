@@ -57,23 +57,28 @@ aprecedence = [
 	['add', 'sub'], #8
 	['mul', 'div', 'rem'], #9
 	['pos', 'neg', 'not', 'cons', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
-	['call', 'index', 'access', 'access_module', 'slice'], #11
+	['call', 'index', 'access', 'access_module'], #11
 	['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
 precedenceMax = len(aprecedence) - 1
 
-# приоритет операции  
+
+# приоритет операции
 def precedence(x):
-	return 0 #TODO !!!!!!!!!!!!!!!!!!!!!!!
-
-	k = x['kind']
-
 	i = 0
-	while i < precedenceMax + 1:
-		if k in aprecedence[i]:
-			break
-		i = i + 1
+	if isinstance(x, ValueBin) or isinstance(x, ValueUn):
+		k = x.op
+		while i < precedenceMax + 1:
+			if k in aprecedence[i]:
+				break
+			i = i + 1
+	else:
+		if isinstance(x, ValueSizeofValue): i = 10
+		elif isinstance(x, ValueCall): i = 11
+		elif isinstance(x, ValueIndexArray): i = 11
+		elif isinstance(x, ValueAccessRecord): i = 11
+		else: i = 12
 
 	return i
 
@@ -318,7 +323,7 @@ def print_ValueAccessModule(v, ctx):
 
 
 def print_cast(t, v, ctx=[]):
-	need_wrap = precedence(v) < precedence({'kind': 'cons'})
+	need_wrap = precedence({'kind': 'cons'}) > precedence(v)
 	print_type(t)
 	out(" ")
 	print_value(v, ctx=ctx, need_wrap=need_wrap)

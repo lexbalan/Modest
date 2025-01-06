@@ -29,8 +29,8 @@ public func main() -> Int {
 
 	mcopy(&o2, &o1, len)
 
-	printf("firstname = '%s'\n", &o2.firstname)
-	printf("lastname = '%s'\n", &o2.lastname)
+	printf("firstname = '%s'\n", &(o2.firstname))
+	printf("lastname = '%s'\n", &(o2.lastname))
 	printf("age = %d\n", o2.age)
 
 	return 0

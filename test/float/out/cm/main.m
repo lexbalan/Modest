@@ -35,7 +35,7 @@ public func main() -> Int {
 	printf("float test\n")
 
 	printf("2 = %d\n", Int32 2)
-	printf("2/3 = %f\n", Float64 2.0 / 3)
+	printf("2/3 = %f\n", Float64 (2.0 / 3))
 
 	let r = 10
 	let s = squareOfCircle(r)
