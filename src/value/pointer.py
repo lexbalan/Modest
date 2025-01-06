@@ -1,7 +1,7 @@
 
 from error import info, warning, error
 import type as type
-from .value import value_cons_node, value_is_immediate, value_cons_immediate
+from .value import ValueCons, value_is_immediate, value_cons_immediate
 from .char import utf32_chars_to_utfx_chars
 
 
@@ -54,7 +54,7 @@ def value_pointer_cons(t, v, method, ti):
 	if value_is_immediate(v):
 		if type.type_is_string(v.type):
 			s_imm = utf32_chars_to_utfx_chars(v.asset, t['to']['of'], ti)
-			nv = value_cons_node(t, v, method, ti=ti)
+			nv = ValueCons(t, v, method, ti=ti)
 			nv.asset = s_imm
 			nv.att.append('zstring')
 
@@ -66,6 +66,6 @@ def value_pointer_cons(t, v, method, ti):
 
 		return value_cons_immediate(t, v, method, ti)
 
-	return value_cons_node(t, v, method, ti=ti)
+	return ValueCons(t, v, method, ti=ti)
 
 

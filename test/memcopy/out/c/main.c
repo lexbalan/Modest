@@ -29,7 +29,7 @@ int main()
 		.age = 30
 	};
 
-	#define __len  sizeof(Object)
+	#define __len  (sizeof(Object))
 	printf("LEN = %u\n", (uint32_t)__len);
 
 	mcopy(&o2, &o1, __len);

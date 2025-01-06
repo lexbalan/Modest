@@ -248,7 +248,7 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 define internal %Bool @write_file(%Int %sockfd) {
 	%1 = alloca [1024 x %Char8], align 1
 	%2 = call %File* @fopen(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-	%3 = icmp eq %File* %2, bitcast (i8* null to %File*)
+	%3 = icmp eq %File* %2, null
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([27 x i8]* @str3 to [0 x i8]*))
@@ -260,8 +260,8 @@ again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%5 = bitcast [1024 x %Char8]* %1 to i8*
-	%6 = call %SSizeT @recv(%Int %sockfd, i8* %5, %SizeT 1024, %Int sext (%Int8 0 to %Int))
-	%7 = icmp sle %SSizeT %6, sext (%Int8 0 to %SSizeT)
+	%6 = call %SSizeT @recv(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
+	%7 = icmp sle %SSizeT %6, 0
 	br %Bool %7 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
@@ -282,8 +282,8 @@ break_1:
 }
 
 define %Int @main() {
-	%1 = call %Int @socket(%Int 2, %Int 1, %Int sext (%Int8 0 to %Int))
-	%2 = icmp slt %Int %1, sext (%Int8 0 to %Int)
+	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)
+	%2 = icmp slt %Int %1, 0
 	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*))
@@ -306,7 +306,7 @@ endif_0:
 	%15 = call %Int @bind(%Int %1, %Struct_sockaddr* %13, %SocklenT 16)
 	store %Int %15, %Int* %14
 	%16 = load %Int, %Int* %14
-	%17 = icmp slt %Int %16, sext (%Int8 0 to %Int)
+	%17 = icmp slt %Int %16, 0
 	br %Bool %17 , label %then_1, label %endif_1
 then_1:
 	call void @perror(%ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*))
@@ -317,7 +317,7 @@ endif_1:
 	%19 = call %Int @listen(%Int %1, %Int 10)
 	store %Int %19, %Int* %14
 	%20 = load %Int, %Int* %14
-	%21 = icmp ne %Int %20, sext (%Int8 0 to %Int)
+	%21 = icmp ne %Int %20, 0
 	br %Bool %21 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*))
@@ -340,7 +340,7 @@ else_3:
 	call void @perror(%ConstCharStr* bitcast ([22 x i8]* @str13 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-	ret %Int sext (%Int8 0 to %Int)
+	ret %Int 0
 }
 
 

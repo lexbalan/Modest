@@ -6,7 +6,7 @@ from error import info, warning, error, fatal
 from hlir import *
 import type as htype
 from type import type_print
-from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_is_zero, value_zero
+from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_is_zero, ValueZero
 from type import type_pointer
 from util import align_bits_up
 from pprint import pprint
@@ -359,7 +359,7 @@ def llvm_print_value_array(x):
 		if i < n:
 			item = items[i]
 		else:
-			item = do_eval(value_zero(x['type']['of'], None))
+			item = do_eval(ValueZero(x['type']['of'], None))
 		if i > 0: out(",\n")
 		indent()
 		llvm_print_type_value(item)
@@ -426,8 +426,18 @@ def llvm_print_value_num(x):
 
 
 def llvm_print_value_inline_cast(x):
-	v = x['value']
 	t = x['type']
+	v = x['value']
+
+	if v['kind'] in ['num']:
+		print("----")
+		#print_type(t)
+		if htype.type_is_pointer(t):
+			out("null")
+		else:
+			out("%d" % v['asset'])
+		return
+
 	opcode = select_cast_operator(v['type'], t)
 	llvm_inline_cast(opcode, t, v)
 
@@ -446,7 +456,7 @@ def llvm_print_value_inline_getelemantptr(x):
 
 
 
-def llvm_print_value_zero(x):
+def llvm_print_ValueZero(x):
 	if htype.type_is_composite(x['type']):
 		out("zeroinitializer")
 	elif htype.type_is_pointer(x['type']):
@@ -468,7 +478,7 @@ def llvm_print_value(x):
 	elif k == 'record': llvm_print_value_record(x)
 	elif k == 'inline_cast': llvm_print_value_inline_cast(x)
 	elif k == 'inline_getelemantptr': llvm_print_value_inline_getelemantptr(x)
-	elif k == 'zero': llvm_print_value_zero(x)
+	elif k == 'zero': llvm_print_ValueZero(x)
 	else:
 		out("<llvm::unknown_value_kind '%s'>" % k)
 		info("<llvm::unknown_value_kind '%s'>" % k, x['ti'])
@@ -1093,10 +1103,10 @@ def do_eval_slice(v):
 		return do_eval(v.immval)
 
 	varray = v.left
-	if htype.type_is_pointer(varray['type']):
+	if htype.type_is_pointer(varray.type):
 		pointer = do_reval(varray)
 		array_type = pointer['type']['to']
-		index = do_reval(v['index_from'])
+		index = do_reval(v.index_from)
 		result_type = v.type
 		ptr_to_item = llvm_gep(pointer, array_type, (index,), array_type['of'], array_type['of'])
 		out("\n;")
@@ -1109,7 +1119,7 @@ def do_eval_slice(v):
 	array = do_eval(varray)
 	array_type = array['type']
 	result_type = v.type
-	index = do_reval(v['index_from'])
+	index = do_reval(v.index_from)
 
 	# если сам массив находится в регистре: (let rec = get_rec())
 	if not array['is_adr']:
@@ -1368,6 +1378,9 @@ def do_eval_cons(x):
 				char_pow = string_of['width']
 				return llvm_value_str(x.strid, x.asset, x.type, isz='zstring' in x.att)
 
+	if htype.type_is_char(to_type):
+		if htype.type_is_string(value.type):
+			return do_eval_literal(x)
 
 	# cast any type to Unit type
 	if htype.type_is_unit(to_type):
@@ -1378,6 +1391,11 @@ def do_eval_cons(x):
 		# оно дает доступ к следующему элементу списка
 		rv = do_eval(value)
 		return llvm_va_arg(rv, to_type)
+
+	"""if isinstance(value, ValueLiteral):
+		if htype.type_is_string(value.type):
+			value_print(x)
+			1/0"""
 
 	v = do_reval(value)
 
@@ -1415,7 +1433,8 @@ bin_ops = [
 
 
 def do_eval_string(x):
-	info("do_eval_string??", x['ti'])
+	info("do_eval_string??", x.ti)
+	1/0
 
 
 

@@ -335,11 +335,11 @@ define internal %Bool @send_file(%File* %fp, %Int %sockfd) {
 again_1:
 	%2 = bitcast [1024 x %Char8]* %1 to %CharStr*
 	%3 = call %CharStr* @fgets(%CharStr* %2, %Int 1024, %File* %fp)
-	%4 = icmp ne %CharStr* %3, bitcast (i8* null to %CharStr*)
+	%4 = icmp ne %CharStr* %3, null
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
 	%5 = bitcast [1024 x %Char8]* %1 to i8*
-	%6 = call %SSizeT @send(%Int %sockfd, i8* %5, %SizeT 1024, %Int sext (%Int8 0 to %Int))
+	%6 = call %SSizeT @send(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
 	%7 = icmp eq %SSizeT %6, -1
 	br %Bool %7 , label %then_0, label %endif_0
 then_0:
@@ -360,8 +360,8 @@ break_1:
 }
 
 define %Int @main() {
-	%1 = call %Int @socket(%Int 2, %Int 1, %Int sext (%Int8 0 to %Int))
-	%2 = icmp slt %Int %1, sext (%Int8 0 to %Int)
+	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)
+	%2 = icmp slt %Int %1, 0
 	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))
@@ -384,7 +384,7 @@ endif_0:
 	%15 = call %Int @connect(%Int %1, %Struct_sockaddr* %13, %SocklenT 16)
 	store %Int %15, %Int* %14
 	%16 = load %Int, %Int* %14
-	%17 = icmp slt %Int %16, sext (%Int8 0 to %Int)
+	%17 = icmp slt %Int %16, 0
 	br %Bool %17 , label %then_1, label %endif_1
 then_1:
 	call void @perror(%ConstCharStr* bitcast ([24 x i8]* @str4 to [0 x i8]*))
@@ -393,7 +393,7 @@ then_1:
 endif_1:
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
 	%19 = call %File* @fopen(%ConstCharStr* bitcast ([9 x i8]* @str6 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-	%20 = icmp eq %File* %19, bitcast (i8* null to %File*)
+	%20 = icmp eq %File* %19, null
 	br %Bool %20 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([26 x i8]* @str8 to [0 x i8]*))
@@ -411,7 +411,7 @@ else_3:
 endif_3:
 	%23 = call %Int @close(%Int %1)
 	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
-	ret %Int sext (%Int8 0 to %Int)
+	ret %Int 0
 }
 
 

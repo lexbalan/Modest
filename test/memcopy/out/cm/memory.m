@@ -24,8 +24,8 @@ public func mzero(mem: Ptr, len: Nat64) -> Unit {
 
 	// word operation
 
-	let len_words = (len - z) / sizeof(Word)
-	let dst_word = *[]Word &memptr[i]
+	let len_words = len - z / sizeof(Word)
+	let dst_word = *[/*U*/]Word &memptr[i]
 
 	i = 0
 	while i < len_words {
@@ -35,8 +35,8 @@ public func mzero(mem: Ptr, len: Nat64) -> Unit {
 
 	// byte operation
 
-	let len_bytes = (len - z) % sizeof(Word)
-	let dst_byte1 = *[]Word8 &dst_word[i]
+	let len_bytes = len - z % sizeof(Word)
+	let dst_byte1 = *[/*U*/]Word8 &dst_word[i]
 
 	i = 0
 	while i < len_bytes {
@@ -58,8 +58,8 @@ public func mcopy(dst: Ptr, src: Ptr, len: Nat64) -> Unit {
 	}
 
 	let len_bytes = len % sizeof(Word)
-	let src_b = *[]Word8 &src_w[i]
-	let dst_b = *[]Word8 &dst_w[i]
+	let src_b = *[/*U*/]Word8 &src_w[i]
+	let dst_b = *[/*U*/]Word8 &dst_w[i]
 
 	i = 0
 	while i < len_bytes {
@@ -83,8 +83,8 @@ public func meq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 	}
 
 	let len_bytes = len % sizeof(Word)
-	let mem0_b = *[]Word8 &mem0_w[i]
-	let mem1_b = *[]Word8 &mem1_w[i]
+	let mem0_b = *[/*U*/]Word8 &mem0_w[i]
+	let mem1_b = *[/*U*/]Word8 &mem1_w[i]
 
 	i = 0
 	while i < len_bytes {

@@ -5,7 +5,7 @@ from type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
-from .value import value_bad, value_terminal, value_is_undefined, value_is_immediate, value_cons_node, value_zero, value_bin, value_eq, value_print
+from .value import ValueBad, ValueLiteral, value_is_undefined, value_is_immediate, ValueCons, ValueZero, ValueBin, value_eq, value_print
 
 
 # TODO: переделай здесь все - тут все плохо...
@@ -34,7 +34,7 @@ def value_array_create(items, ti=None):
 		items_type = select_common_type(items_type, item.type)
 		if htype.type_is_bad(items_type):
 			error("value with unsuitable type", item['ti'])
-			return value_bad({'ti': ti})
+			return ValueBad({'ti': ti})
 
 	# неявно приводим все элементы к этому типу
 	casted_items = implicit_cast_list(items, items_type)
@@ -52,9 +52,9 @@ def value_array_create_from_string(t, v, method, ti=None):
 
 	pad_rquired = t['volume'].asset - len(chars)
 	if pad_rquired > 0:
-		chars = chars + [value_zero(char_type, ti)] * pad_rquired
+		chars = chars + [ValueZero(char_type, ti)] * pad_rquired
 
-	nv = value_cons_node(t, v, method, ti)
+	nv = ValueCons(t, v, method, ti)
 	nv.immediate = True
 	nv.items = chars
 	return nv
@@ -126,7 +126,7 @@ def value_array_cons(t, v, method, ti):
 		t['size'] = t['of']['size'] * volume.asset
 
 
-	nv = value_cons_node(t, v, method, ti)
+	nv = ValueCons(t, v, method, ti)
 	nv.immediate = v.immediate
 	
 	if v.immediate:
@@ -175,7 +175,7 @@ def _value_array_create(items, item_type, length, is_generic, ti):
 	array_volume = value_integer_create(length)
 	array_type = htype.type_array(item_type, volume=array_volume, ti=ti)
 	array_type['generic'] = is_generic
-	nv = value_terminal(array_type, ti)
+	nv = ValueLiteral(array_type, ti)
 	nv.items = items
 	return nv
 
@@ -186,7 +186,7 @@ def value_array_add(l, r, ti):
 	items = l.items + r.items
 	length = len(items)
 	str_array_volume = value_integer_create(length)
-	item_type = select_common_type(l['type']['of'], r['type']['of'])
+	item_type = select_common_type(l.type['of'], r.type['of'])
 
 	# неявно приводим все элементы к общему типу
 	items = implicit_cast_list(items, item_type)
@@ -195,7 +195,7 @@ def value_array_add(l, r, ti):
 	type_result = htype.type_array(item_type, volume=str_array_volume, ti=ti)
 	type_result['generic'] = True  # FIXIT!
 
-	nv = value_bin('add', l, r, type_result, ti=ti)
+	nv = ValueBin('add', l, r, type_result, ti=ti)
 	nv.items = items
 	nv.immediate = True
 	return nv
@@ -205,12 +205,12 @@ def value_array_add(l, r, ti):
 # FIXIT: it is generic arrays EQ!
 def value_array_eq(l, r, op, ti):
 	from foundation import typeBool
-	nv = value_bin(op, l, r, typeBool, ti=ti)
+	nv = ValueBin(op, l, r, typeBool, ti=ti)
 
 	if value_is_immediate(l) and value_is_immediate(r):
 		eq_result = True
-		lvolume = l['type']['volume']
-		rvolume = r['type']['volume']
+		lvolume = l.type['volume']
+		rvolume = r.type['volume']
 		if value_is_immediate(lvolume) and value_is_immediate(rvolume):
 			if lvolume.asset != rvolume.asset:
 				eq_result = False

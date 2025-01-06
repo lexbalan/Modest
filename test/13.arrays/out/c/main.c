@@ -184,6 +184,7 @@ int main()
 
 	// check local literal array assignation to local array
 	int32_t e[4];
+	memset(&e, 0, sizeof e);
 	memcpy(&e, &init_array, sizeof e);
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);

@@ -8,7 +8,7 @@ from hlir import *
 from value.value import *
 import type as htype
 from type import select_common_type, type_print
-from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array, value_is_literal
+from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, ValueIndexArray, value_is_literal
 from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_by_id, align_to
 from main import settings
@@ -458,7 +458,7 @@ bin_ops = {
 }
 
 
-def print_value_bin(x, ctx):
+def print_ValueBin(x, ctx):
 	op = x.op
 	left = x.left
 	right = x.right
@@ -509,7 +509,7 @@ def print_value_bin(x, ctx):
 			return print_value_literal(x, ctx)
 
 		if htype.type_is_string(left.type):
-			if left.type['width'] != right['type']['width']:
+			if left.type['width'] != right.type['width']:
 				# для случаев вроде "Hello" + U"World!"
 				# (печатаем сам литерал, тк C иначе не умеет)
 				# (U"Hello World!")
@@ -555,7 +555,7 @@ un_ops = {
 }
 
 
-def print_value_un(v, ctx):
+def print_ValueUn(v, ctx):
 	op = v.op
 	value = v.value
 
@@ -585,7 +585,7 @@ def print_value_un(v, ctx):
 
 
 
-def print_value_call(v, ctx, arrayResult=None):
+def print_ValueCall(v, ctx, arrayResult=None):
 	left = v.func
 
 	print_value(left)
@@ -640,7 +640,7 @@ def print_value_call(v, ctx, arrayResult=None):
 def print_value_slice(x, ctx):
 	#out("/* slice */")
 	varray = x.left
-	y = value_index_array(varray, x.type, x.index_from, ti=None)
+	y = ValueIndexArray(varray, x.type, x.index_from, ti=None)
 	print_value_index(y, ctx)
 
 
@@ -739,7 +739,7 @@ def print_value_access(x, ctx):
 
 
 
-def print_value_access_module(v, ctx):
+def print_ValueAccessModule(v, ctx):
 	left = v.left
 	#out("%s.%s" % (left['id'], v['right'].str))
 
@@ -1070,7 +1070,7 @@ def print_value_record(v, ctx):
 	nitems = len(v.items)
 	i = 0
 
-	# for situation when firat item is value_zero
+	# for situation when firat item is ValueZero
 	# without it, forst value will be printed with space before it.
 	item_printed = False
 
@@ -1167,7 +1167,7 @@ def print_value_integer(x, ctx):
 	num = x.asset
 
 	nsigns = 0
-	if x.nsigns:
+	if hasattr(x, 'nsigns'):
 		nsigns = x.nsigns
 
 	# Big Number?
@@ -1227,10 +1227,10 @@ def print_value_by_id(x, ctx=[], prefix=''):
 
 
 # & let
-def print_value_const(x, ctx):
+def print_ValueConst(x, ctx):
 	prefix=''
 
-	if htype.type_is_array(x['type']):
+	if htype.type_is_array(x.type):
 		if is_global_context():
 			prefix = '_'
 
@@ -1238,32 +1238,32 @@ def print_value_const(x, ctx):
 	return
 
 
-def print_value_func(x, ctx):
+def print_ValueFunc(x, ctx):
 	return print_value_by_id(x, ctx, prefix='')
 
 
-def print_value_var(x, ctx):
+def print_ValueVar(x, ctx):
 	return print_value_by_id(x, ctx, prefix='')
 
 
-def print_value_sizeof_value(x, ctx):
+def print_ValueSizeofValue(x, ctx):
 	out("sizeof ")
 	print_value(x['of'])
 
 
-def print_value_sizeof_type(x, ctx):
+def print_ValueSizeofType(x, ctx):
 	out("sizeof(")
 	print_type(x.of)
 	out(")")
 
 
-def print_value_alignof(x, ctx):
+def print_ValueAlignof(x, ctx):
 	out("__alignof(")
 	print_type(x.of)
 	out(")")
 
 
-def print_value_offsetof(x, ctx):
+def print_ValueOffsetof(x, ctx):
 	out("__offsetof(")
 	print_type(x.of)
 	out(", ")
@@ -1271,7 +1271,7 @@ def print_value_offsetof(x, ctx):
 	out(")")
 
 
-def print_value_lengthof(x, ctx):
+def print_ValueLengthof(x, ctx):
 	v = x.value
 	if not (isinstance(v, ValueVar) or isinstance(v, ValueConst)):
 		print_value(v.type['volume'], need_wrap=True)
@@ -1285,7 +1285,7 @@ def print_value_lengthof(x, ctx):
 
 
 
-def print_value_va_start(x, ctx):
+def print_ValueVaStart(x, ctx):
 	out("va_start(")
 	print_value(x.va_list)
 	out(", ")
@@ -1293,7 +1293,7 @@ def print_value_va_start(x, ctx):
 	out(")")
 
 
-def print_value_va_arg(x, ctx):
+def print_ValueVaArg(x, ctx):
 	out("va_arg(")
 	print_value(x.va_list)
 	out(", ")
@@ -1301,13 +1301,13 @@ def print_value_va_arg(x, ctx):
 	out(")")
 
 
-def print_value_va_end(x, ctx):
+def print_ValueVaEnd(x, ctx):
 	out("va_end(")
 	print_value(x.va_list)
 	out(")")
 
 
-def print_value_va_copy(x, ctx):
+def print_ValueVaCopy(x, ctx):
 	out("va_copy(")
 	print_value(x.dst)
 	out(", ")
@@ -1322,26 +1322,26 @@ def print_value(x, ctx=[], need_wrap=False):
 	#k = x['kind']
 	
 	if isinstance(x, ValueLiteral): print_value_literal(x, ctx)
-	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
-	elif isinstance(x, ValueUn): print_value_un(x, ctx)
+	elif isinstance(x, ValueBin): print_ValueBin(x, ctx)
+	elif isinstance(x, ValueUn): print_ValueUn(x, ctx)
 	elif isinstance(x, ValueCons): print_value_cons(x, ctx)
 	elif isinstance(x, ValueFunc): print_value_by_id(x, ctx)
 	elif isinstance(x, ValueVar): print_value_by_id(x, ctx)
-	elif isinstance(x, ValueConst): print_value_by_id(x, ctx)
-	elif isinstance(x, ValueCall): print_value_call(x, ctx)
+	elif isinstance(x, ValueConst): print_ValueConst(x, ctx)
+	elif isinstance(x, ValueCall): print_ValueCall(x, ctx)
 	elif isinstance(x, ValueIndexArray): print_value_index(x, ctx)
 	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
-	elif isinstance(x, ValueAccessModule): print_value_access_module(x, ctx)
+	elif isinstance(x, ValueAccessModule): print_ValueAccessModule(x, ctx)
 	elif isinstance(x, ValueSliceArray): print_value_slice(x, ctx)
-	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
-	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
-	elif isinstance(x, ValueAlignof): print_value_alignof(x, ctx)
-	elif isinstance(x, ValueOffsetof): print_value_offsetof(x, ctx)
-	elif isinstance(x, ValueLengthof): print_value_lengthof(x, ctx)
-	elif isinstance(x, ValueVaArg): print_value_va_arg(x, ctx)
-	elif isinstance(x, ValueVaStart): print_value_va_start(x, ctx)
-	elif isinstance(x, ValueVaEnd): print_value_va_end(x, ctx)
-	elif isinstance(x, ValueVaCopy): print_value_va_copy(x, ctx)
+	elif isinstance(x, ValueSizeofValue): print_ValueSizeofValue(x, ctx)
+	elif isinstance(x, ValueSizeofType): print_ValueSizeofType(x, ctx)
+	elif isinstance(x, ValueAlignof): print_ValueAlignof(x, ctx)
+	elif isinstance(x, ValueOffsetof): print_ValueOffsetof(x, ctx)
+	elif isinstance(x, ValueLengthof): print_ValueLengthof(x, ctx)
+	elif isinstance(x, ValueVaArg): print_ValueVaArg(x, ctx)
+	elif isinstance(x, ValueVaStart): print_ValueVaStart(x, ctx)
+	elif isinstance(x, ValueVaEnd): print_ValueVaEnd(x, ctx)
+	elif isinstance(x, ValueVaCopy): print_ValueVaCopy(x, ctx)
 	elif isinstance(x, ValueUndefined):
 		out("/*undefined*/")
 		1/0
@@ -1352,26 +1352,26 @@ def print_value(x, ctx=[], need_wrap=False):
 
 	"""
 	if k == 'literal': print_value_literal(x, ctx)
-	elif k in bin_ops: print_value_bin(x, ctx)
-	elif k in un_ops: print_value_un(x, ctx)
+	elif k in bin_ops: print_ValueBin(x, ctx)
+	elif k in un_ops: print_ValueUn(x, ctx)
 	elif k == 'cons': print_value_cons(x, ctx)
-	elif k == 'const': print_value_const(x, ctx)
-	elif k == 'func': print_value_func(x, ctx)
-	elif k == 'var': print_value_var(x, ctx)
-	elif k == 'call': print_value_call(x, ctx)
+	elif k == 'const': print_ValueConst(x, ctx)
+	elif k == 'func': print_ValueFunc(x, ctx)
+	elif k == 'var': print_ValueVar(x, ctx)
+	elif k == 'call': print_ValueCall(x, ctx)
 	elif k == 'index': print_value_index(x, ctx)
 	elif k == 'slice': print_value_slice(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
-	elif k == 'access_module': print_value_access_module(x, ctx)
-	elif k == 'sizeof_value': print_value_sizeof_value(x, ctx)
-	elif k == 'sizeof_type': print_value_sizeof_type(x, ctx)
-	elif k == 'alignof': print_value_alignof(x, ctx)
-	elif k == 'offsetof': y = print_value_offsetof(x, ctx)
-	elif k == 'lengthof': y = print_value_lengthof(x, ctx)
-	elif k == 'va_start': y = print_value_va_start(x, ctx)
-	elif k == 'va_arg': y = print_value_va_arg(x, ctx)
-	elif k == 'va_end': y = print_value_va_end(x, ctx)
-	elif k == 'va_copy': y = print_value_va_copy(x, ctx)
+	elif k == 'access_module': print_ValueAccessModule(x, ctx)
+	elif k == 'sizeof_value': print_ValueSizeofValue(x, ctx)
+	elif k == 'sizeof_type': print_ValueSizeofType(x, ctx)
+	elif k == 'alignof': print_ValueAlignof(x, ctx)
+	elif k == 'offsetof': y = print_ValueOffsetof(x, ctx)
+	elif k == 'lengthof': y = print_ValueLengthof(x, ctx)
+	elif k == 'va_start': y = print_ValueVaStart(x, ctx)
+	elif k == 'va_arg': y = print_ValueVaArg(x, ctx)
+	elif k == 'va_end': y = print_ValueVaEnd(x, ctx)
+	elif k == 'va_copy': y = print_ValueVaCopy(x, ctx)
 	else:
 		out("<%s>" % 'k')
 		info("HERE<%s>" % 'k', x)
@@ -1542,7 +1542,7 @@ def print_stmt_let(x):
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
 	if htype.type_is_array(iv.type):
-		runtimeLiteral = iv['kind'] == 'literal' and not value_is_immediate(iv)
+		runtimeLiteral = isinstance(iv, ValueLiteral) and not value_is_immediate(iv)
 		if not runtimeLiteral:
 			print_variable(get_id_str(x), v.type)
 			out(";")
@@ -1611,7 +1611,7 @@ def assign_array(left, right):
 	# (для того чтобы в C вернуть массив из функции
 	# его нужно 'обернуть' в структуру)
 	if isinstance(right, ValueCall):
-		print_value_call(right, [], arrayResult=left)
+		print_ValueCall(right, [], arrayResult=left)
 		return
 	
 	memcopy_assign(left, right)

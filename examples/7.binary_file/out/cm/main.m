@@ -26,8 +26,8 @@ func write_example() -> Unit {
 
 	// pointers casting requires -funsafe translator option
 	// (see Makefile)
-	strcpy(&chunk.id, *[]Char "id")
-	strcpy(&chunk.data, *[]Char "data")
+	strcpy(&chunk.id, *[/*U*/]Char "id")
+	strcpy(&chunk.data, *[/*U*/]Char "data")
 
 	// write chunk to file
 	fwrite(&chunk, sizeof(Chunk), 1, fp)

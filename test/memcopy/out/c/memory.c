@@ -36,7 +36,7 @@ void mzero(void *mem, uint64_t len)
 
 	// word operation
 
-	uint64_t len_words = (len - z) / sizeof(Word);
+	uint64_t len_words = len - z / sizeof(Word);
 	Word *dst_word = (Word *)&memptr[i];
 
 	i = 0;
@@ -47,7 +47,7 @@ void mzero(void *mem, uint64_t len)
 
 	// byte operation
 
-	uint64_t len_bytes = (len - z) % sizeof(Word);
+	uint64_t len_bytes = len - z % sizeof(Word);
 	uint8_t *dst_byte1 = (uint8_t *)&dst_word[i];
 
 	i = 0;

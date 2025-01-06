@@ -12,6 +12,7 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 {
 	#define __tableSize  256
 	uint32_t crc_table[__tableSize];
+	memset(&crc_table, 0, sizeof crc_table);
 	uint32_t crc;
 
 	//

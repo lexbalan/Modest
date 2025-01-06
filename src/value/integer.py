@@ -3,7 +3,7 @@ from error import info, warning, error
 from util import nbits_for_num
 import type as htype
 from type import type_print
-from .value import value_terminal, value_is_immediate, value_cons_node, value_cons_immediate
+from .value import ValueLiteral, value_is_immediate, ValueCons, value_cons_immediate
 
 
 
@@ -16,9 +16,9 @@ def value_integer_create(num, typ=None, ti=None):
 		if nbits > typ['width']:
 			from error import error
 			error("value size not corresponded type size", ti)
-			return value_bad(ti)
+			return ValueBad(ti)
 
-	v = value_terminal(typ, ti)
+	v = ValueLiteral(typ, ti)
 	v.asset = num
 	v.nsigns = 0
 	v.immediate = True
@@ -113,12 +113,12 @@ def value_integer_cons(t, v, method, ti):
 				return None
 
 		if method != 'implicit':
-			nv = value_cons_node(t, v, method, ti=ti)
+			nv = ValueCons(t, v, method, ti=ti)
 			nv.asset = int(v.asset)  # here can be float
 			nv.immediate = True
 			return nv
 		return _value_integer_cons_immediate(t, v, method, ti)
 
-	return value_cons_node(t, v, method, ti=ti)
+	return ValueCons(t, v, method, ti=ti)
 
 

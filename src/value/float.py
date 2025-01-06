@@ -4,7 +4,7 @@ import decimal
 from error import info, warning, error
 import type as type
 from type import type_float
-from .value import value_is_immediate, value_terminal, value_cons_node, value_cons_immediate
+from .value import value_is_immediate, ValueLiteral, ValueCons, value_cons_immediate
 
 
 
@@ -13,7 +13,7 @@ def value_float_create(num, ti=None):
 	flt_width = int(settings.get('float_width'))
 	typ = type_float(width=flt_width, ti=ti)
 	typ['generic'] = True
-	v = value_terminal(typ, ti)
+	v = ValueLiteral(typ, ti)
 	v.asset = num
 	v.immediate = True
 	return v
@@ -47,6 +47,6 @@ def float_can(to, from_type, method):
 def value_float_cons(t, v, method, ti):
 	if value_is_immediate(v):
 		return _value_float_cons_immediate(t, v, method, ti)
-	return value_cons_node(t, v, method, ti=ti)
+	return ValueCons(t, v, method, ti=ti)
 
 

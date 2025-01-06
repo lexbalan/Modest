@@ -1,7 +1,7 @@
 import type as htype
 from error import info, warning, error
-from .value import Value, value_bad, value_is_bad, value_cons_node, value_print
-from .unit import unit_can, value_unit_cons
+from .value import Value, ValueBad, value_is_bad, ValueCons, value_print
+from .unit import unit_can, ValueUnit_cons
 from .bool import bool_can, value_bool_cons
 from .word import word_can, value_word_cons
 from .char import char_can, value_char_cons
@@ -10,7 +10,7 @@ from .float import float_can, value_float_cons
 from .record import record_can, value_record_cons
 from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons
-from .bad import bad_can, value_bad_cons
+from .bad import bad_can, ValueBad_cons
 from .number import number_can, value_number_cons
 
 
@@ -61,7 +61,7 @@ def value_cons_implicit(t, v, ti=None):
 	assert(isinstance(v, Value))
 
 	if value_is_bad(v) or htype.type_is_bad(t):
-		return value_bad(v.ti)
+		return ValueBad(v.ti)
 
 	ti = v.ti
 
@@ -110,7 +110,7 @@ def value_cons_explicit(t, v, ti):
 	assert(ti['isa'] == 'ti')
 
 	if value_is_bad(v) or htype.type_is_bad(t):
-		return value_bad(v.ti)
+		return ValueBad(v.ti)
 
 	from_type = v.type
 
@@ -124,7 +124,7 @@ def value_cons_explicit(t, v, ti):
 		print(" from ", end='')
 		htype.type_print(from_type)
 		print()
-		return value_bad(v.ti)
+		return ValueBad(v.ti)
 
 	return value_cons(t, v, 'explicit', ti)
 
@@ -197,7 +197,7 @@ def value_cons(t, v, method, ti):
 	if method == 'explicit':
 		# Construction from __VA_List is an exceptional case
 		if htype.type_is_va_list(v.type):
-			return value_cons_node(t, v, 'explicit', ti)
+			return ValueCons(t, v, 'explicit', ti)
 
 		from trans import is_unsafe_mode
 		if is_unsafe_mode():
@@ -214,8 +214,8 @@ def value_cons(t, v, method, ti):
 	elif htype.type_is_word(t): constructor = value_word_cons
 	elif htype.type_is_bool(t): constructor = value_bool_cons
 	elif htype.type_is_pointer(t): constructor = value_pointer_cons
-	elif htype.type_is_unit(t): constructor = value_unit_cons
-	elif htype.type_is_bad(t): constructor = value_bad_cons
+	elif htype.type_is_unit(t): constructor = ValueUnit_cons
+	elif htype.type_is_bad(t): constructor = ValueBad_cons
 	else:
 		assert False, "unknown type kind '%s'" % t['kind']
 

@@ -60,7 +60,7 @@ int main()
 	};
 
 	struct sockaddr *sockaddr = (struct sockaddr *)(void *)&server_addr;
-	int e = bind(sockfd, sockaddr, (socklen_t)sizeof(uint8_t));
+	int e = bind(sockfd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Binding");
 		exit(1);
@@ -76,7 +76,7 @@ int main()
 
 	printf("[+] Listening...\n");
 
-	socklen_t addr_size = (socklen_t)sizeof(uint8_t);
+	socklen_t addr_size = (socklen_t)sizeof(struct sockaddr_in);
 	struct sockaddr_in new_addr;
 	struct sockaddr *sa = (struct sockaddr *)(void *)&new_addr;
 	int new_sock = accept(sockfd, sa, &addr_size);

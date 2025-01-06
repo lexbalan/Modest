@@ -2,7 +2,7 @@
 from error import info, warning, error
 import type as type
 from util import nbits_for_num
-from .value import value_terminal, value_cons_node, value_cons_immediate
+from .value import ValueLiteral, ValueCons, value_cons_immediate
 from unicode import utf32_str_to_utfx_char_codes
 
 
@@ -13,7 +13,7 @@ def value_char_create(char_code, _type=None, ti=None):
 		_type = type.type_char(char_width, ti=ti)
 		_type['generic'] = True
 
-	v = value_terminal(_type, ti)
+	v = ValueLiteral(_type, ti)
 	v.asset = char_code
 	return v
 
@@ -59,7 +59,7 @@ def value_char_cons(t, v, method, ti):
 	if value_is_immediate(v):
 		return value_cons_immediate(t, v, method, ti)
 
-	return value_cons_node(t, v, method, ti=ti)
+	return ValueCons(t, v, method, ti=ti)
 
 
 

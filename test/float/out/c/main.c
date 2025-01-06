@@ -39,7 +39,7 @@ int main()
 	printf("float test\n");
 
 	printf("2 = %d\n", 2);
-	printf("2/3 = %f\n", (double)(2.0 / (double)(3)));
+	printf("2/3 = %f\n", (double)2.0 / (double)(3));
 
 	#define __r  10
 	double s = squareOfCircle((double)__r);

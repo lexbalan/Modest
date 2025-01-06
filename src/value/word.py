@@ -2,7 +2,7 @@
 from error import info, warning, error
 import type as type
 from value.value import value_is_immediate
-from .value import value_cons_node, value_cons_immediate
+from .value import ValueCons, value_cons_immediate
 
 
 def _value_word_cons_immediate(t, v, method, ti):
@@ -38,5 +38,5 @@ def word_can(to, from_type, method):
 def value_word_cons(t, v, method, ti):
 	if value_is_immediate(v):
 		return _value_word_cons_immediate(t, v, method, ti)
-	return value_cons_node(t, v, method, ti=ti)
+	return ValueCons(t, v, method, ti=ti)
 

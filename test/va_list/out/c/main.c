@@ -21,6 +21,7 @@ static ssize_t my_printf(char *format, ...)
 
 	#define __strMaxLen  (127 + 1)
 	char buf[__strMaxLen];
+	memset(&buf, 0, sizeof buf);
 	int n = vsnprintf(&buf[0], __strMaxLen, format, va2);
 
 	va_end(va2);

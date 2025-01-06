@@ -11,9 +11,9 @@ const str32_example = str16_example + " 🐀🎉🦄"
 var string8: [6]Char8 = str8_example
 var string16: [8]Char16 = str16_example
 var string32: [12]Char32 = str32_example
-var ptr_to_string8: *[]Char8 = str8_example
-var ptr_to_string16: *[]Char16 = str16_example
-var ptr_to_string32: *[]Char32 = str32_example
+var ptr_to_string8: *[/*U*/]Char8 = str8_example
+var ptr_to_string16: *[/*U*/]Char16 = str16_example
+var ptr_to_string32: *[/*U*/]Char32 = str32_example
 
 
 public func main() -> Int {

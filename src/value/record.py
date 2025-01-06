@@ -4,7 +4,7 @@ import type as type
 from hlir import *
 from type import type_print, record_field_get
 from util import get_item_by_id
-from .value import value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate, value_bin, value_eq
+from .value import ValueLiteral, ValueCons, ValueZero, value_is_immediate, value_print, value_cons_immediate, ValueBin, value_eq
 
 
 # получает на вход список инициализаторов
@@ -35,7 +35,7 @@ def value_record_create(initializers=[], ti=None):
 	record_type = type.type_record(fields, ti)
 	record_type['generic'] = True
 
-	v = value_terminal(record_type, ti)
+	v = ValueLiteral(record_type, ti)
 	v.items = initializers
 	v.immediate = is_immediate
 	return v
@@ -67,7 +67,7 @@ def record_can(to, from_type, method):
 
 def value_record_cons(t, v, method, ti):
 	#info("value_record_cons", ti)
-	nv = value_cons_node(t, v, method, ti=ti)
+	nv = ValueCons(t, v, method, ti=ti)
 	nv.immediate = v.immediate
 
 	# литерал записи всегда имеет тип Generic(Array)
@@ -84,7 +84,7 @@ def value_record_cons(t, v, method, ti):
 				vv = value_cons_implicit_check(field.type, initializer.value)
 			else:
 				# Если инициализатора для поля нет, создадим zero-инициализатор
-				vv = value_zero(field.type, ti)
+				vv = ValueZero(field.type, ti)
 			ni = Initializer(field.id, vv, ti=ti, nl=0)
 			items.append(ni)
 
@@ -97,7 +97,7 @@ def value_record_cons(t, v, method, ti):
 def value_record_eq(l, r, op, ti):
 	#info("value_record_eq()", ti)
 	from foundation import typeBool
-	nv = value_bin(op, l, r, typeBool, ti=ti)
+	nv = ValueBin(op, l, r, typeBool, ti=ti)
 	if value_is_immediate(l) and value_is_immediate(r):
 		eq_result = True
 

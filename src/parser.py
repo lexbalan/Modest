@@ -400,7 +400,7 @@ class Parser:
 		elif self.match("["):
 			y = {'isa': 'ast_type', 'kind': 'array', 'size': None, 'ti': ti}
 			if self.match("]"):
-				y['size'] = self.expr_value_undefined(ti)
+				y['size'] = self.expr_ValueUndefined(ti)
 			else:
 				y['size'] = self.expr_value()
 				self.need("]")
@@ -430,7 +430,7 @@ class Parser:
 	# Parse Value
 	#
 
-	def expr_value_undefined(self, ti):
+	def expr_ValueUndefined(self, ti):
 		return {
 			'isa': 'ast_value',
 			'kind': 'undefined',
@@ -1187,7 +1187,7 @@ class Parser:
 			init_value = self.expr_value()
 
 		if init_value == None:
-			init_value = self.expr_value_undefined(ti)
+			init_value = self.expr_ValueUndefined(ti)
 
 		stmts = []
 		for id in ids:

@@ -208,7 +208,7 @@ else_0:
 endif_0:
 	%6 = load %Str8*, %Str8** %5
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), %Str8* %6)
-	ret %Int sext (%Int8 0 to %Int)
+	ret %Int 0
 }
 
 

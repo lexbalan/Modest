@@ -1,12 +1,12 @@
 
 from error import error
-from .value import value_cons_node
+from .value import ValueCons
 
 
 def bad_can(to, from_type, method):
 	return True
 
 
-def value_bad_cons(t, v, method, ti):
-	return value_bad(ti)
+def ValueBad_cons(t, v, method, ti):
+	return ValueBad(ti)
 

@@ -10,7 +10,7 @@
 static void nat32_list_insert(list_List *list, uint32_t x)
 {
 	// alloc memory for Nat32 value
-	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint8_t));
+	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
 	list_append(list, p_nat32);
 }
@@ -113,7 +113,7 @@ int main()
 	printf("-----------------------------------------\n");
 
 
-	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint8_t));
+	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = 1234;
 	list_insert(list0, 4, p_nat32);
 
