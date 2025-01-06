@@ -48,10 +48,6 @@ def value_is_zero(x):
 		return False
 
 	if htype.type_is_array(x.type):
-		if x.items == None:
-			print("SADAMW:DAW:<DLA<W:LD<AW:LD")
-			value_print(x)
-			1/ 0
 		for item in x.items:
 			if not value_is_zero(item):
 				return False
