@@ -620,7 +620,7 @@ else_1:
 	br label %endif_1
 endif_1:
 	%17 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %17
+	store %Int32 sext (%Int8 0 to %Int32), %Int32* %17
 	br label %again_1
 again_1:
 	%18 = load %Int32, %Int32* %17
@@ -628,7 +628,7 @@ again_1:
 	br %Bool %19 , label %body_1, label %break_1
 body_1:
 	%20 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %20
+	store %Int32 sext (%Int8 0 to %Int32), %Int32* %20
 	br label %again_2
 again_2:
 	%21 = load %Int32, %Int32* %20
@@ -652,7 +652,7 @@ break_2:
 	store %Int32 %33, %Int32* %17
 	br label %again_1
 break_1:
-	%34 = getelementptr %Int32 (%Int32, %Int32)*, [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0
+	%34 = getelementptr %Int32 (%Int32, %Int32)*, [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 sext (%Int8 0 to %Int32)
 	%35 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %34
 	%36 = call %Int32 %35(%Int32 5, %Int32 7)
 	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str9 to [0 x i8]*), %Int32 %36)
@@ -660,7 +660,7 @@ break_1:
 	%39 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %38
 	%40 = call %Int32 %39(%Int32 5, %Int32 7)
 	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str10 to [0 x i8]*), %Int32 %40)
-	store %Int32 0, %Int32* %17
+	store %Int32 sext (%Int8 0 to %Int32), %Int32* %17
 	br label %again_3
 again_3:
 	%42 = load %Int32, %Int32* %17
@@ -676,14 +676,14 @@ body_3:
 	store %Int32 %48, %Int32* %17
 	br label %again_3
 break_3:
-	%49 = getelementptr %Wrap*, [2 x %Wrap*]* @awrap, %Int32 0
+	%49 = getelementptr %Wrap*, [2 x %Wrap*]* @awrap, %Int32 sext (%Int8 0 to %Int32)
 	%50 = load %Wrap*, %Wrap** %49
 	%51 = getelementptr %Wrap, %Wrap* %50, %Int32 0, %Int32 0
 	%52 = load void (%Str8*)*, void (%Str8*)** %51
 	call void %52(%Str8* bitcast ([6 x i8]* @str12 to [0 x i8]*))
 	;{'str': 'let y = awrap[0]'}
 	;{'str': 'y.fhi("World")'}
-	ret %Int32 0
+	ret %Int32 sext (%Int8 0 to %Int32)
 }
 
 

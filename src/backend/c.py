@@ -5,6 +5,7 @@
 from .common import *
 from error import info, error, fatal
 from hlir import *
+from value.value import *
 import type as htype
 from type import select_common_type, type_print
 from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array, value_is_literal
@@ -133,6 +134,8 @@ precedenceMax = len(aprecedence) - 1
 
 # приоритет операции
 def precedence(x):
+	return 0  # TODO!
+
 	k = x['kind']
 
 	i = 0
@@ -162,8 +165,15 @@ def get_id_str(x):
 	id_str = id.str
 	#if id.str != 'main':
 	if id.need_decoration:
-		if 'definition' in x:
-			prefix = x['definition'].module['prefix']
+		
+		defin = None
+		if isinstance(x, dict):
+			defin = x['definition']
+		else:
+			defin = x.definition
+		
+		if defin:
+			prefix = defin.module['prefix']
 			if prefix != None:
 				id_str = prefix + '_' + id_str
 	return id_str
@@ -221,7 +231,7 @@ def strTypeRecord(t, tag=""):
 """def print_type_enum(t):
 	out("enum {")
 	indent_up()
-	items = t['items']
+	items = t.items
 	i = 0
 	while i < len(items):
 		if i > 0: out(',')
@@ -265,12 +275,12 @@ def strTypeArray(t, label='', core=''):
 		if t['volume']:
 			if i > 0:
 				dim += ' * '
-			if 'id' in t['volume']:
+			if t['volume'].id:
 				dim += get_id_str(t['volume'])
 			elif value_is_undefined(t['volume']):
 				pass
-			elif 'asset' in  t['volume']:
-				dim += str(t['volume']['asset'])
+			elif t['volume'].asset:
+				dim += str(t['volume'].asset)
 			else:
 				dim += '<' + t['volume']['kind'] + '>'
 
@@ -449,9 +459,9 @@ bin_ops = {
 
 
 def print_value_bin(x, ctx):
-	op = x['kind']
-	left = x['left']
-	right = x['right']
+	op = x.op
+	left = x.left
+	right = x.right
 
 	# получаем приоритеты операции и операндов
 	p0 = precedence(x)
@@ -465,11 +475,11 @@ def print_value_bin(x, ctx):
 	# чтобы он не ругался, завернем такие выражения в скобки
 
 	if op in ['eq', 'ne']:
-		if htype.type_is_record(left['type']):
+		if htype.type_is_record(left.type):
 			return print_value_eq_record(x, ctx)
-		elif htype.type_is_array(left['type']):
+		elif htype.type_is_array(left.type):
 			return print_value_eq_array(x, ctx)
-		elif htype.type_is_string(left['type']):
+		elif htype.type_is_string(left.type):
 			return print_value_bool_lit(x, ctx)
 
 
@@ -488,11 +498,11 @@ def print_value_bin(x, ctx):
 			need_wrap_right = precedence(right) < 10
 
 	elif op == 'add':
-		if htype.type_is_array(left['type']):
+		if htype.type_is_array(left.type):
 			return print_value_literal(x, ctx)
 
-		if htype.type_is_string(left['type']):
-			if left['type']['width'] != right['type']['width']:
+		if htype.type_is_string(left.type):
+			if left.type['width'] != right['type']['width']:
 				# для случаев вроде "Hello" + U"World!"
 				# (печатаем сам литерал, тк C иначе не умеет)
 				# (U"Hello World!")
@@ -519,9 +529,9 @@ def print_value_eq_array(x, ctx):
 
 
 def print_value_eq_composite(x, ctx):
-	op = x['kind']
-	left = x['left']
-	right = x['right']
+	op = x.op
+	left = x.left
+	right = x.right
 
 	if value_is_immediate(x):
 		return print_value_bool_lit(x, ctx)
@@ -539,45 +549,45 @@ un_ops = {
 
 
 def print_value_un(v, ctx):
-	op = v['kind']
-	value = v['value']
+	op = v.op
+	value = v.value
 
 	p0 = precedence(v)
 	pv = precedence(value)
 
 #	if v['kind'] == 'ref':
-#		if htype.type_is_array(value['type']):
+#		if htype.type_is_array(value.type):
 #			if value['kind'] != 'slice':
-#				if isSimSim(v['type']):
+#				if isSimSim(v.type):
 #					# to prevent:
 #					# "warning: incompatible pointer types passing 'uint8_t (*)[10]' to
 #					# parameter of type 'uint8_t *'"
 #					out("(")
-#					print_type(v['type'])
+#					print_type(v.type)
 #					out(")")
 
 	out(un_ops[op])
 	print_value(value, need_wrap=pv<p0)
 
-	if v['kind'] == 'ref':
-		if htype.type_is_array(value['type']):
-			if not value['kind'] in ['index', 'slice']:
-				if isSimSim(v['type']):
+	if op == 'ref':
+		if htype.type_is_array(value.type):
+			if not (isinstance(value, ValueIndexArray) or isinstance(value, ValueSliceArray)):
+				if isSimSim(v.type):
 					# take pointer to first array item, not pointer to array
 					out("[0]")
 
 
 
 def print_value_call(v, ctx, arrayResult=None):
-	left = v['func']
+	left = v.func
 
 	print_value(left)
 
-	ftype = left['type']
+	ftype = left.type
 	if htype.type_is_pointer(ftype):
 		ftype = ftype['to']
 	params = ftype['params']
-	args = v['args']
+	args = v.args
 	n = len(args)
 
 	out("(")
@@ -622,41 +632,41 @@ def print_value_call(v, ctx, arrayResult=None):
 
 def print_value_slice(x, ctx):
 	#out("/* slice */")
-	varray = x['left']
-	y = value_index_array(varray, x['type'], x['index_from'], ti=None)
+	varray = x.left
+	y = value_index_array(varray, x.type, x.index_from, ti=None)
 	print_value_index(y, ctx)
 
 
 
 def print_value_index(x, ctx):
-	array = x['left']
+	array = x.left
 
-	if htype.type_is_pointer(array['type']):
+	if htype.type_is_pointer(array.type):
 		# index trough pointer to array (requires dereference)
 		ptr2array = array
 		need_wrap = precedence(ptr2array) < precedence(x)
 
-		if not isSimSim(array['type']):
+		if not isSimSim(array.type):
 			out("(*")
 
 		print_value(ptr2array, ctx=['do_unwrap'], need_wrap=need_wrap)
 
-		if not isSimSim(array['type']):
+		if not isSimSim(array.type):
 			out(")")
 
-		out("["); print_value(x['index']); out("]")
+		out("["); print_value(x.index); out("]")
 		return
 
 	indexes = []
 
 	xx = x
-	while xx['kind'] == 'index':
-		a = xx['left']
-		indexes.append(xx['index'])
+	while isinstance(xx, ValueIndexArray): #['kind'] == 'index':
+		a = xx.left
+		indexes.append(xx.index)
 		xx = a
 
 	dims = []
-	yy = xx['type']
+	yy = xx.type
 	while htype.type_is_closed_array(yy):
 		dims.append(yy['volume'])
 		yy = yy['of']
@@ -699,17 +709,17 @@ def print_value_index(x, ctx):
 
 
 def print_value_access(x, ctx):
-	left = x['value']
+	left = x.value
 
-	if htype.type_is_pointer(left['type']):
+	if htype.type_is_pointer(left.type):
 		need_wrap = precedence(left) < precedence(x)
 		print_value(left, need_wrap=need_wrap)
 		out("->")
-		print_id(x['field'])
+		print_id(x.field)
 		return
 
 	# если имеем дело c дженерик записью (глоб константа)
-	#if htype.type_is_generic(left['type']):
+	#if htype.type_is_generic(left.type):
 	#	if value_is_immediate(x):
 	if value_is_generic_immediate(left):
 		print_value_literal(x, ['print_immediate'])
@@ -718,15 +728,15 @@ def print_value_access(x, ctx):
 	need_wrap = precedence(left) < precedence(x)
 	print_value(left, need_wrap=need_wrap)
 	out('.')
-	print_id(x['field'])
+	print_id(x.field)
 
 
 
 def print_value_access_module(v, ctx):
-	left = v['left']
+	left = v.left
 	#out("%s.%s" % (left['id'], v['right'].str))
 
-	id_str = get_id_str(v['right'])
+	id_str = get_id_str(v.right)
 	out("%s" % (id_str))
 
 
@@ -746,8 +756,9 @@ def print_cast(t, v, ctx=[]):
 	out("("); print_type(t); out(")")
 
 	need_wrap = precedence(v) < precedence({'kind': 'cons'})
-	if v['kind'] in ['literal', 'add']:
-		need_wrap = not htype.type_is_composite(v['type'])
+	if isinstance(v, ValueLiteral) or (isinstance(v, ValueBin) and v.op == 'add'):
+	#if v['kind'] in ['literal', 'add']:
+		need_wrap = not htype.type_is_composite(v.type)
 
 	print_value(v, ctx=ctx, need_wrap=need_wrap)
 
@@ -756,9 +767,9 @@ def print_cast(t, v, ctx=[]):
 
 
 def print_value_cons_record(x, ctx):
-	to_type = x['type']
-	value = x['value']
-	from_type = value['type']
+	to_type = x.type
+	value = x.value
+	from_type = value.type
 
 	if htype.type_is_generic_record(from_type):
 		if is_local_context():
@@ -778,9 +789,9 @@ def print_value_cons_record(x, ctx):
 
 
 def print_value_cons_array(x, ctx):
-	to_type = x['type']
-	value = x['value']
-	from_type = value['type']
+	to_type = x.type
+	value = x.value
+	from_type = value.type
 
 	# Local:
 	# В C мы не можем просто напечатать {0, 1, 2, 3} и получить массив
@@ -792,15 +803,18 @@ def print_value_cons_array(x, ctx):
 	if htype.type_is_generic_array(from_type):
 		# если это литеральная (и не глобальная) константа-массив
 		# то мы должны ее привести к требуемому типу
-		is_const = value['kind'] in ['const', 'literal', 'add']
-		if is_const and not 'kostil' in value['att']:
+		#is_const = value['kind'] in ['const', 'literal', 'add']
+		
+		is_const = isinstance(value, ValueLiteral) or isinstance(value, ValueConst) or (isinstance(value, ValueBin) and value.op == 'add')
+		
+		if is_const and not 'kostil' in value.att:
 			ctx=['array_as_array']
 
 			if htype.type_is_char(to_type['of']):
 				if htype.type_is_string(from_type['of']):
 					chars = []
-					for item in value['items']:
-						ch = item['asset']
+					for item in value.items:
+						ch = item.asset
 						chars.append(ch)
 
 					char_width = to_type['of']['width']
@@ -819,12 +833,12 @@ def print_value_cons_array(x, ctx):
 			if to_type['of']['width'] == from_type['width']:
 				print_value(value, ctx=ctx)
 			else:
-				print_string_literal(value['asset'], to_type['of']['width'])
+				print_string_literal(value.asset, to_type['of']['width'])
 			return
 
 	# for:
 	#    var x: [10]Word8 = "0123456789"
-	if htype.type_is_string(value['type']):
+	if htype.type_is_string(value.type):
 		print_value(value, ctx=ctx)
 		return
 
@@ -854,9 +868,9 @@ def print_suffix(to_type, num):
 
 
 def print_value_cons(x, ctx):
-	to_type = x['type']
-	value = x['value']
-	from_type = value['type']
+	to_type = x.type
+	value = x.value
+	from_type = value.type
 
 	if htype.type_is_array(to_type):
 		return print_value_cons_array(x, ctx)
@@ -870,7 +884,7 @@ def print_value_cons(x, ctx):
 			# let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 			# let string8Const = *Str8 genericStringConst  // <-
 			if to_type['to']['of']['width'] != from_type['width']:
-				print_string_literal(value['asset'], to_type['to']['of']['width'])
+				print_string_literal(value.asset, to_type['to']['of']['width'])
 				return
 
 		if htype.type_is_char(to_type):
@@ -896,26 +910,22 @@ def print_value_cons(x, ctx):
 			return
 
 
-	if x['method'] == 'implicit':
+	if x.method == 'implicit':
 		# не печатаем обычный implicit_cast
 		# (это не касается того что выше ^^)
 		print_value(value)
 
 		# print postfix ('u', 'U', 'L', 'LL', etc.)
-		if value['kind'] == 'literal':
+		if isinstance(value, ValueLiteral):
 			if htype.type_is_number(from_type) or htype.type_is_integer(from_type) or htype.type_is_word(from_type):
 				# up to 'long long'
 				if to_type['width'] <= 64:
-					print_suffix(to_type, value['asset'])
+					print_suffix(to_type, value.asset)
 		return
 
 
-	if value['kind'] == 'literal':
+	if isinstance(value, ValueLiteral):
 		print_value(value)
-
-
-
-
 
 		return
 
@@ -958,7 +968,7 @@ def print_array_values(values, ctx):
 	while i < n:
 		a = values[i]
 
-		nl = a['nl']
+		nl = a.nl
 		if nl > 0:
 			newline(n=nl)
 			indent()
@@ -966,8 +976,8 @@ def print_array_values(values, ctx):
 			if i > 0:
 				out(" ")
 
-		if htype.type_is_closed_array(a['type']):
-			print_array_values(a['items'], ctx)
+		if htype.type_is_closed_array(a.type):
+			print_array_values(a.items, ctx)
 		else:
 			print_value(a, ctx)
 
@@ -988,11 +998,11 @@ def print_array_values(values, ctx):
 
 
 def print_value_string(x, ctx):
-	print_string_literal(x['asset'], x['type']['width'])
+	print_string_literal(x.asset, x.type['width'])
 
 
 def print_value_char(x, ctx):
-	print_char_literal(x['asset'], x['type']['width'])
+	print_char_literal(x.asset, x.type['width'])
 
 
 
@@ -1010,19 +1020,19 @@ def print_char_literal(cc, width):
 
 
 def print_value_array(v, ctx):
-	if htype.type_is_array_of_char(v['type']):
-		char_type = v['type']['of']
+	if htype.type_is_array_of_char(v.type):
+		char_type = v.type['of']
 		char_width = char_type['width']
 
 		# массивы чаров в конце которых только один терминальный ноль
 		# печатаем в виде строковых литералов C
-		values = v['items']
+		values = v.items
 		n = len(values)
 		if n > 0:
 			utf32_codes = []
 			i = 0
 			while i < n:
-				cc = values[i]['asset']
+				cc = values[i].asset
 				utf32_codes.append(cc)
 				if cc == 0:
 					if is_zero_tail(values, i, n):
@@ -1034,13 +1044,12 @@ def print_value_array(v, ctx):
 
 	out("{")
 	indent_up()
-	print_array_values(v['items'], ctx)
+	print_array_values(v.items, ctx)
 	indent_down()
 
-	if 'nl_end' in v:
-		if v['nl_end'] > 0:
-			newline(n=v['nl_end'])
-			indent()
+	if v.nl_end:
+		newline(n=v.nl_end)
+		indent()
 
 	out("}")
 
@@ -1051,7 +1060,7 @@ def print_value_record(v, ctx):
 	out("{")
 	indent_up()
 
-	nitems = len(v['items'])
+	nitems = len(v.items)
 	i = 0
 
 	# for situation when firat item is value_zero
@@ -1059,9 +1068,9 @@ def print_value_record(v, ctx):
 	item_printed = False
 
 	while i < nitems:
-		item = v['type']['fields'][i]
+		item = v.type['fields'][i]
 		field_id_str = get_id_str(item)
-		ini = get_item_by_id(v['items'], field_id_str)
+		ini = get_item_by_id(v.items, field_id_str)
 
 		nl = ini.nl
 		if nl > 0:
@@ -1088,10 +1097,9 @@ def print_value_record(v, ctx):
 
 	indent_down()
 
-	if 'nl_end' in v:
-		if v['nl_end'] > 0:
-			newline(n=v['nl_end'])
-			indent()
+	if v.nl_end:
+		newline(n=v.nl_end)
+		indent()
 
 	out("}")
 
@@ -1137,7 +1145,7 @@ def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 
 
 def print_value_bool_lit(x, ctx):
-	if x['asset']:
+	if x.asset:
 		out(BOOL_TRUE_LITERAL)
 	else:
 		out(BOOL_FALSE_LITERAL)
@@ -1149,14 +1157,14 @@ def print_value_enum(x, ctx):
 
 
 def print_value_integer(x, ctx):
-	num = x['asset']
+	num = x.asset
 
 	nsigns = 0
-	if 'nsigns' in x:
-		nsigns = x['nsigns']
+	if x.nsigns:
+		nsigns = x.nsigns
 
 	# Big Number?
-	if x['type']['width'] > 64:
+	if x.type['width'] > 64:
 		if True:
 			# print Big Numbers
 			high64 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
@@ -1176,19 +1184,19 @@ def print_value_integer(x, ctx):
 
 
 def print_value_float(x, ctx):
-	out('{0:f}'.format(x['asset']))
+	out('{0:f}'.format(x.asset))
 
 
 def print_value_ptr(x, ctx):
-	if x['asset'] == 0:
+	if x.asset == 0:
 		out("NULL")
 	else:
 		out("(("); print_type(x['type']); out(")")
-		out("0x%08X)" % x['asset'])
+		out("0x%08X)" % x.asset)
 
 
 def print_value_literal(x, ctx):
-	t = x['type']
+	t = x.type
 	if htype.type_is_number(t): print_value_integer(x, ctx)
 	elif htype.type_is_integer(t): print_value_integer(x, ctx)
 	elif htype.type_is_word(t): print_value_integer(x, ctx)
@@ -1200,12 +1208,12 @@ def print_value_literal(x, ctx):
 	elif htype.type_is_char(t): print_value_char(x, ctx)
 	elif htype.type_is_pointer(t): print_value_ptr(x, ctx)
 	elif htype.type_is_enum(t): print_value_enum(x, ctx)
-	else: error("print_value_literal not implemented", x['ti'])
+	else: error("print_value_literal not implemented", x.ti)
 
 
 def print_value_by_id(x, ctx=[], prefix=''):
-	if x['id'].c != None:
-		out(x['id'].c)
+	if x.id.c != None:
+		out(x.id.c)
 	else:
 		print_id(x, prefix)
 
@@ -1257,9 +1265,9 @@ def print_value_offsetof(x, ctx):
 
 
 def print_value_lengthof(x, ctx):
-	v = x['value']
-	if not v['kind'] in ['var', 'let']:
-		print_value(v['type']['volume'], need_wrap=True)
+	v = x.value
+	if not (isinstance(v, ValueVar) or isinstance(v, ValueConst)):
+		print_value(v.type['volume'], need_wrap=True)
 		return
 
 	# sizeof(array) / sizeof(array[0])
@@ -1304,8 +1312,36 @@ def print_value(x, ctx=[], need_wrap=False):
 	if need_wrap:
 		out("(")
 
-	k = x['kind']
+	#k = x['kind']
+	
+	if isinstance(x, ValueLiteral): print_value_literal(x, ctx)
+	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
+	elif isinstance(x, ValueUn): print_value_un(x, ctx)
+	elif isinstance(x, ValueCons): print_value_cons(x, ctx)
+	elif isinstance(x, ValueFunc): print_value_by_id(x, ctx)
+	elif isinstance(x, ValueVar): print_value_by_id(x, ctx)
+	elif isinstance(x, ValueConst): print_value_by_id(x, ctx)
+	elif isinstance(x, ValueCall): print_value_call(x, ctx)
+	elif isinstance(x, ValueIndexArray): print_value_index(x, ctx)
+	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
+	elif isinstance(x, ValueAccessModule): print_value_access_module(x, ctx)
+	elif isinstance(x, ValueSliceArray): print_value_slice(x, ctx)
+	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
+	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
+	elif isinstance(x, ValueAlignof): print_value_alignof(x, ctx)
+	elif isinstance(x, ValueOffsetof): print_value_offsetof(x, ctx)
+	elif isinstance(x, ValueLengthof): print_value_lengthof(x, ctx)
+	elif isinstance(x, ValueVaArg): print_value_va_arg(x, ctx)
+	elif isinstance(x, ValueVaStart): print_value_va_start(x, ctx)
+	elif isinstance(x, ValueVaEnd): print_value_va_end(x, ctx)
+	elif isinstance(x, ValueVaCopy): print_value_va_copy(x, ctx)
+	elif isinstance(x, ValueUndefined): out("/*undefined*/")
+		#print_value_literal(mass, ctx)
+	else:
+		print(x)
+		out("<%s>" % 'k')
 
+	"""
 	if k == 'literal': print_value_literal(x, ctx)
 	elif k in bin_ops: print_value_bin(x, ctx)
 	elif k in un_ops: print_value_un(x, ctx)
@@ -1328,10 +1364,10 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif k == 'va_end': y = print_value_va_end(x, ctx)
 	elif k == 'va_copy': y = print_value_va_copy(x, ctx)
 	else:
-		out("<%s>" % k)
-		info("HERE<%s>" % k, x)
-		fatal("unknown opcode '%s'" % k)
-		exit(-1)
+		out("<%s>" % 'k')
+		info("HERE<%s>" % 'k', x)
+		fatal("unknown opcode '%s'" % 'k')
+		exit(-1)"""
 
 	if need_wrap:
 		out(")")
@@ -1383,11 +1419,11 @@ def print_stmt_while(x):
 def print_stmt_return(x):
 	global cfunc
 
-	if isSretFunc(cfunc['type']):
+	if isSretFunc(cfunc.type):
 		out("memcpy(sret_, ")
 		print_value_as_ptr(x.value)
 		out(", sizeof(")
-		print_type(x.value['type'])
+		print_type(x.value.type)
 		out("));")
 		return
 
@@ -1411,15 +1447,15 @@ def print_stmt_var(x):
 	#			if init_value['kind'] != 'call':
 	#				return
 
-	print_variable(get_id_str(var_value), var_value['type'])
+	print_variable(get_id_str(var_value), var_value.type)
 
 	v = var_value
 	iv = init_value
 	# если инициализирующее значение - это
 	# литерал массива включающий в себя переменные
 	# то печатаем это иначе (w/ memcpy)
-	if htype.type_is_array(iv['type']):
-		runtimeLiteral = iv['kind'] == 'literal' and not value_is_immediate(iv)
+	if htype.type_is_array(iv.type):
+		runtimeLiteral = isinstance(iv, ValueLiteral) and not value_is_immediate(iv)
 		if not runtimeLiteral:
 			out(";")
 			nl_indent()
@@ -1427,7 +1463,7 @@ def print_stmt_var(x):
 			return
 
 
-	if htype.type_is_array(var_value['type']):
+	if htype.type_is_array(var_value.type):
 		if not value_is_immediate(init_value):
 			# array assignation by non-immediate value
 			out(";")
@@ -1454,14 +1490,14 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	need_wrap = False
 
 	# Не берем в скобки литералы, композитные значения и строки
-	literal = value['kind'] == 'literal'
-	is_comp = htype.type_is_composite(value['type'])
+	is_literal = isinstance(value, ValueLiteral)
+	is_comp = htype.type_is_composite(value.type)
 
 	is_str = False
-	if value['kind'] == 'cons':
-		is_str = htype.type_is_string(value['value']['type'])
+	if isinstance(value, ValueCons):
+		is_str = htype.type_is_string(value.value.type)
 
-	if not (literal or is_comp or is_str):
+	if not (is_literal or is_comp or is_str):
 		need_wrap = precedence(value) < precedenceMax
 
 	nl_str = " \\\n"
@@ -1491,10 +1527,10 @@ def print_stmt_let(x):
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
-	if htype.type_is_array(iv['type']):
+	if htype.type_is_array(iv.type):
 		runtimeLiteral = iv['kind'] == 'literal' and not value_is_immediate(iv)
 		if not runtimeLiteral:
-			print_variable(get_id_str(x), v['type'])
+			print_variable(get_id_str(x), v.type)
 			out(";")
 			nl_indent()
 			do_assign(v, iv)
@@ -1502,7 +1538,7 @@ def print_stmt_let(x):
 
 	# Локальные константы (втч. композитные) печатаем как переменные
 	# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
-	print_variable(get_id_str(x), v['type'], as_const=True)
+	print_variable(get_id_str(x), v.type, as_const=True)
 	out(" = ")
 	print_value(iv)
 	out(";")
@@ -1560,10 +1596,10 @@ def assign_array(left, right):
 	# если справа 'обернутое' значение
 	# (для того чтобы в C вернуть массив из функции
 	# его нужно 'обернуть' в структуру)
-	if right['kind'] == 'call':
+	if isinstance(right, ValueCall):
 		print_value_call(right, [], arrayResult=left)
 		return
-
+	
 	memcopy_assign(left, right)
 	return
 
@@ -1571,7 +1607,7 @@ def assign_array(left, right):
 def do_assign(left, right):
 	#out("/*%s*/" % right['kind'])
 
-	if htype.type_is_array(right['type']):
+	if htype.type_is_array(right.type):
 		assign_array(left, right)
 
 	else:
@@ -1712,7 +1748,7 @@ def print_decl_func(x):
 	if 'inline' in x.att:
 		out("inline ")
 
-	ftype = x.value['type']
+	ftype = x.value.type
 	id_str = get_id_str(x.value)
 	print_func_signature(id_str, ftype)
 	out(";")
@@ -1738,7 +1774,7 @@ def print_def_func(x):
 	if 'inline' in x.att:
 		out("inline ")
 
-	ftype = func['type']
+	ftype = func.type
 
 	# если функция уже была определена, то обертки над ее типами
 	# уже были напечатаны (если они были), и их нельзя печатать еще раз
@@ -1789,8 +1825,8 @@ def print_def_func(x):
 	func_undef_list = []
 	out("\n}")
 
-	if not func['id'].str in declared:
-		declared.append(func['id'].str)
+	if not func.id.str in declared:
+		declared.append(func.id.str)
 
 	cfunc = None
 
@@ -1840,16 +1876,16 @@ def print_def_var(x, isdecl=False):
 	#id = x['id']
 	var = x.var_value
 	if USE_STATIC_VARIABLES:
-		if not 'global' in var['att']:
-			if not 'extern' in var['att']:
+		if not 'global' in var.att:
+			if not 'extern' in var.att:
 				out("static ")
 
-	if 'extern' in var['att']:
+	if 'extern' in var.att:
 		out("extern ")
-	if 'volatile' in var['att']:
+	if 'volatile' in var.att:
 		out("volatile ")
 
-	print_variable(get_id_str(x.var_value), var['type'])
+	print_variable(get_id_str(x.var_value), var.type)
 
 	init_value = x.init_value
 
@@ -1873,12 +1909,12 @@ def print_def_const(x):
 	# затем создаем одноименную переменную (инициализируем ее макроопределением).
 	# обычно будем использовать сам макрос,
 	# но в случае индексирования переменной - будем обращаться к переменной
-	if htype.type_is_array(const_value['type']):
+	if htype.type_is_array(const_value.type):
 		print_macro_definition(id_str, init_value, val_ctx=[], prefix='_')
 		newline()
-		print_variable(id_str, const_value['type'], as_const=True)
+		print_variable(id_str, const_value.type, as_const=True)
 		out(" = _%s;" % id_str)
-		const_value['att'].append('kostil')
+		const_value.att.append('kostil')
 		return
 
 	print_macro_definition(id_str, init_value, val_ctx=[])
@@ -2202,21 +2238,23 @@ def run(module, _outname, options):
 # (если только это не cons который приводит generic_composite,
 # тк такой cons нужно печатать)
 def get_root_value(x):
-	if x['kind'] == 'cons':
+	if isinstance(x, ValueCons):
 		# конструирование complex_immediate печатаем
 		# for: (uint32_t[3]){1, 2, 3}
 		# for: (Point){.x=1, .y=2}
-		if value_is_immediate(x['value']):
+		if value_is_immediate(x.value):
 			return x
-		return get_root_value(x['value'])
+		return get_root_value(x.value)
 	return x
 
 
 
 def cons_vla_from_literal_array(x):
-	if x['kind'] == 'cons':
-		if htype.type_is_vla(x['type']):
-			return x['value']['kind'] in ['literal', 'add']
+	if isinstance(x, ValueCons):
+		if htype.type_is_vla(x.type):
+			#return x['value']['kind'] in ['literal', 'add']
+			if isinstance(x, ValueBin):
+				return x.op in ['literal', 'add']
 	return False
 
 
@@ -2225,19 +2263,19 @@ def print_value_as_ptr(x):
 	yy = x
 	x = get_root_value(x)
 
-	if x['kind'] == 'deref':
-		x = x['value']
-		print_value(x)
+
+	if isinstance(x, ValueUn) and x.op == 'deref':
+		print_value(x.value)
 	else:
 		out("&")
 
-		t = yy['type']
+		t = yy.type
 		# КОСТЫЛЬ!
-		if x['kind'] in ['literal', 'add']:
+		
+		if isinstance(x, ValueBin) and x.op in ['literal', 'add']:
 			out("(")
 			if htype.type_is_array(t):
 				print_type(t)
-
 			else:
 				print_type(t)
 			out(")")
@@ -2250,7 +2288,7 @@ def print_value_as_ptr(x):
 			out("(")
 			print_type(t)
 			out(")")
-			print_value(x['value'])
+			print_value(x.value)
 			return
 
 		print_value(x)
@@ -2287,7 +2325,7 @@ def memcmp_eq(left, right, op='eq'):
 	out(', ')
 	print_value_as_ptr(right)
 	out(", sizeof(")
-	common_type = select_common_type(left['type'], right['type'])
+	common_type = select_common_type(left.type, right.type)
 	print_type(common_type)
 	out(")")
 	if op == 'eq':

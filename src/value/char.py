@@ -14,7 +14,7 @@ def value_char_create(char_code, _type=None, ti=None):
 		_type['generic'] = True
 
 	v = value_terminal(_type, ti)
-	v['asset'] = char_code
+	v.asset = char_code
 	return v
 
 
@@ -47,12 +47,12 @@ def value_char_cons(t, v, method, ti):
 
 	# String -> Char
 	# ex: var c: Char8 = "A"
-	if type.type_is_string(v['type']):
-		#if v['type']['length'] == 1:
-		cc = ord(v['asset'][0])
+	if type.type_is_string(v.type):
+		#if v.type['length'] == 1:
+		cc = ord(v.asset[0])
 		nv = value_cons_immediate(t, v, method, ti)
-		nv['immediate'] = True
-		nv['asset'] = cc
+		nv.immediate = True
+		nv.asset = cc
 		return nv
 
 

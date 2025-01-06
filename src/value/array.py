@@ -17,7 +17,7 @@ def value_array_create(items, ti=None):
 	if length == 0:
 		item_type = foundation.typeUnit  # not Null, becase it fail
 		v = _value_array_create([], item_type, 0, True, ti)
-		v['immediate'] = True  #!
+		v.immediate = True  #!
 		return v
 
 	# Проверяем - immediate ли этот массив?
@@ -29,9 +29,9 @@ def value_array_create(items, ti=None):
 			is_immediate = False
 
 	# Получаем наиболее подходящий общий тип элементов массива
-	items_type = items[0]['type']
+	items_type = items[0].type
 	for item in items:
-		items_type = select_common_type(items_type, item['type'])
+		items_type = select_common_type(items_type, item.type)
 		if htype.type_is_bad(items_type):
 			error("value with unsuitable type", item['ti'])
 			return value_bad({'ti': ti})
@@ -40,7 +40,7 @@ def value_array_create(items, ti=None):
 	casted_items = implicit_cast_list(items, items_type)
 	v = _value_array_create(casted_items, items_type, length, True, ti)
 
-	v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
+	v.immediate = is_immediate  #TODO: need to implement 'immediate' flag
 	return v
 
 
@@ -48,15 +48,15 @@ def value_array_create(items, ti=None):
 def value_array_create_from_string(t, v, method, ti=None):
 	#info("value_array_create_from_string", ti)
 	char_type = t['of']
-	chars = utf32_chars_to_utfx_chars(v['asset'], char_type, ti)
+	chars = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
 
-	pad_rquired = t['volume']['asset'] - len(chars)
+	pad_rquired = t['volume'].asset - len(chars)
 	if pad_rquired > 0:
 		chars = chars + [value_zero(char_type, ti)] * pad_rquired
 
 	nv = value_cons_node(t, v, method, ti)
-	nv['immediate'] = True
-	nv['items'] = chars
+	nv.immediate = True
+	nv.items = chars
 	return nv
 """
 
@@ -92,8 +92,8 @@ def array_can(to, from_type, method):
 			return True
 
 		# Check array length
-		n_from = from_type['volume']['asset']
-		n_to = to['volume']['asset']
+		n_from = from_type['volume'].asset
+		n_to = to['volume'].asset
 
 		# (нельзя неявно построить меньший массив из большего)
 		return n_from <= n_to
@@ -114,26 +114,29 @@ def value_array_cons(t, v, method, ti):
 		# in this case we take volume of value array
 		#info("undefined volume", t['ti'])
 		volume = -1
-		if htype.type_is_array(v['type']):
-			volume = v['type']['volume']
-		elif htype.type_is_string(v['type']):
-			srtlen = v['type']['length']
+		if htype.type_is_array(v.type):
+			volume = v.type['volume']
+		elif htype.type_is_string(v.type):
+			srtlen = v.type['length']
 			volume = value_integer_create(srtlen)
 		else:
 			assert(False)
 
 		t['volume'] = volume
-		t['size'] = t['of']['size'] * volume['asset']
+		t['size'] = t['of']['size'] * volume.asset
 
 
 	nv = value_cons_node(t, v, method, ti)
-	nv['immediate'] = v['immediate']
+	nv.immediate = v.immediate
+	
+	if v.immediate:
+		nv.items = 1
 
-	if htype.type_is_string(v['type']):
+	if htype.type_is_string(v.type):
 		#info("value_array_create_from_string", ti)
 		char_type = t['of']
-		items = utf32_chars_to_utfx_chars(v['asset'], char_type, ti)
-		nv['items'] = items
+		items = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
+		nv.items = items
 		return nv
 
 	# литерал массива всегда имеет тип Generic(Array)
@@ -150,15 +153,19 @@ def value_array_cons(t, v, method, ti):
 	#	var a = [100]Int init_array
 	#
 
-	if 'items' in v:
+	if v.items != None:
 		items = []
 
-		for item in v['items']:
+		for item in v.items:
 			from .cons import value_cons_implicit_check
 			casted_item = value_cons_implicit_check(t['of'], item)
-			casted_item['nl'] = item['nl']
+			casted_item.nl = item.nl
 			items.append(casted_item)
-		nv['items'] = items
+		nv.items = items
+		
+	if nv.items == 1:
+		print("WLKDMLMDKWALKDWMALDMW!")
+		1/0
 
 	return nv
 
@@ -169,14 +176,14 @@ def _value_array_create(items, item_type, length, is_generic, ti):
 	array_type = htype.type_array(item_type, volume=array_volume, ti=ti)
 	array_type['generic'] = is_generic
 	nv = value_terminal(array_type, ti)
-	nv['items'] = items
+	nv.items = items
 	return nv
 
 
 
 # Складывает два массива (оба - immediate!)
 def value_array_add(l, r, ti):
-	items = l['items'] + r['items']
+	items = l.items + r.items
 	length = len(items)
 	str_array_volume = value_integer_create(length)
 	item_type = select_common_type(l['type']['of'], r['type']['of'])
@@ -189,8 +196,8 @@ def value_array_add(l, r, ti):
 	type_result['generic'] = True  # FIXIT!
 
 	nv = value_bin('add', l, r, type_result, ti=ti)
-	nv['items'] = items
-	nv['immediate'] = True
+	nv.items = items
+	nv.immediate = True
 	return nv
 
 
@@ -205,12 +212,12 @@ def value_array_eq(l, r, op, ti):
 		lvolume = l['type']['volume']
 		rvolume = r['type']['volume']
 		if value_is_immediate(lvolume) and value_is_immediate(rvolume):
-			if lvolume['asset'] != rvolume['asset']:
+			if lvolume.asset != rvolume.asset:
 				eq_result = False
 		else:
 			fatal("dynamic immediate array volume not implemented", ti)
 
-		for lx, rx in zip(l['items'], r['items']):
+		for lx, rx in zip(l.items, r.items):
 			if not value_eq(lx, rx, op, ti):
 				eq_result = False
 				break
@@ -218,8 +225,8 @@ def value_array_eq(l, r, op, ti):
 		if op == 'ne':
 			eq_result = not eq_result
 
-		nv['asset'] = int(eq_result)
-		nv['immediate'] = True
+		nv.asset = int(eq_result)
+		nv.immediate = True
 
 	return nv
 
@@ -230,9 +237,8 @@ def implicit_cast_list(items, to_type):
 	from .cons import value_cons_implicit
 	for item in items:
 		casted_item = value_cons_implicit(to_type, item)
-		if 'nl_end' in item:
-			casted_item['nl_end'] = item['nl_end']
-		casted_item['nl'] = item['nl']
+		casted_item.nl = item.nl
+		casted_item.nl_end = item.nl_end
 		casted_items.append(casted_item)
 	return casted_items
 

@@ -1,6 +1,6 @@
 import type as htype
 from error import info, warning, error
-from .value import value_bad, value_is_bad, value_cons_node, value_print
+from .value import Value, value_bad, value_is_bad, value_cons_node, value_print
 from .unit import unit_can, value_unit_cons
 from .bool import bool_can, value_bool_cons
 from .word import word_can, value_word_cons
@@ -58,17 +58,17 @@ def cons_can(to, from_type, method):
 # 5. FreePointer -> AnyPointer
 def value_cons_implicit(t, v, ti=None):
 	assert(t['isa'] == 'type')
-	assert(v['isa'] == 'value')
+	assert(isinstance(v, Value))
 
 	if value_is_bad(v) or htype.type_is_bad(t):
-		return value_bad(v['ti'])
+		return value_bad(v.ti)
 
-	ti = v['ti']
+	ti = v.ti
 
-	from_type = v['type']
+	from_type = v.type
 
 	if not cons_can(t, from_type, 'implicit'):
-		info("cannot implicitly construct value", v['ti'])
+		info("cannot implicitly construct value", v.ti)
 		return v
 
 	# (!) потому что в C номинальные типы, а у нас - структурные
@@ -93,12 +93,12 @@ def value_cons_implicit(t, v, ti=None):
 
 def value_cons_implicit_check(t, v):
 	nv = value_cons_implicit(t, v)
-	if not htype.type_eq(t, nv['type']):
-		error("type error", v['ti'])
+	if not htype.type_eq(t, nv.type):
+		error("type error", v.ti)
 		print("expected: ", end='')
 		htype.type_print(t)
 		print("\nreceived: ", end='')
-		htype.type_print(v['type'])
+		htype.type_print(v.type)
 		print("\n")
 	return nv
 
@@ -106,13 +106,13 @@ def value_cons_implicit_check(t, v):
 
 def value_cons_explicit(t, v, ti):
 	assert(t['isa'] == 'type')
-	assert(v['isa'] == 'value')
+	assert(isinstance(v, Value))
 	assert(ti['isa'] == 'ti')
 
 	if value_is_bad(v) or htype.type_is_bad(t):
-		return value_bad(v['ti'])
+		return value_bad(v.ti)
 
-	from_type = v['type']
+	from_type = v.type
 
 	if htype.type_eq(t, from_type):
 		info("explicit cast to the same type", ti)
@@ -124,21 +124,21 @@ def value_cons_explicit(t, v, ti):
 		print(" from ", end='')
 		htype.type_print(from_type)
 		print()
-		return value_bad(v['ti'])
+		return value_bad(v.ti)
 
 	return value_cons(t, v, 'explicit', ti)
 
 
 
 def value_cons_default(v):
-	assert(v['isa'] == 'value')
-	t = _select_default_type_for(v['type'])
+	assert(isinstance(v, Value))
+	t = _select_default_type_for(v.type)
 	if t != None:
-		#info("default cons", v['ti'])
-		nv = value_cons_implicit(t, v, v['ti'])
+		#info("default cons", v.ti)
+		nv = value_cons_implicit(t, v, v.ti)
 		#if features.get('paranoid'):
 		#	print("constructed: ", end='')
-		#	htype.type_print(nv['type'])
+		#	htype.type_print(nv.type)
 		#	print('')
 		return nv
 
@@ -191,12 +191,12 @@ def value_cons(t, v, method, ti):
 		return None
 
 	if method == 'implicit':
-		if htype.type_eq(v['type'], t):
+		if htype.type_eq(v.type, t):
 			return v
 
 	if method == 'explicit':
 		# Construction from __VA_List is an exceptional case
-		if htype.type_is_va_list(v['type']):
+		if htype.type_is_va_list(v.type):
 			return value_cons_node(t, v, 'explicit', ti)
 
 		from trans import is_unsafe_mode
@@ -224,12 +224,11 @@ def value_cons(t, v, method, ti):
 
 	nv = constructor(t, v, method, ti)
 	if nv != None:
-		if 'nl' in v:
-			nv['nl'] = v['nl']
+		nv.nl = v.nl
 	else:
 		print(t['kind'])
 		htype.type_print(t)
-		htype.type_print(v['type'])
+		htype.type_print(v.type)
 
 	return nv
 

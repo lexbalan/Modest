@@ -2,6 +2,7 @@
 import type as htype
 from error import info
 from hlir import *
+from value.value import *
 from .common import *
 from value.value import value_is_undefined, value_is_zero, value_is_immediate, value_attribute_check, value_print
 from util import get_item_by_id
@@ -62,8 +63,10 @@ aprecedence = [
 
 precedenceMax = len(aprecedence) - 1
 
-# приоритет операции
+# приоритет операции  
 def precedence(x):
+	return 0 #TODO !!!!!!!!!!!!!!!!!!!!!!!
+
 	k = x['kind']
 
 	i = 0
@@ -164,7 +167,7 @@ def print_type_record(t):
 
 def print_type_enum(t):
 	out("enum {")
-	items = t['items']
+	items = t.items
 	i = 0
 	while i < len(items):
 		item = items[i]
@@ -231,9 +234,9 @@ bin_ops = {
 }
 
 def print_value_bin(x, ctx):
-	op = x['kind']
-	left = x['left']
-	right = x['right']
+	op = x.op
+	left = x.left
+	right = x.right
 
 	need_wrap_left = precedence(left) < precedence(x)
 	need_wrap_right = precedence(right) < precedence(x)
@@ -252,17 +255,17 @@ un_ops = {
 
 
 def print_value_un(v, ctx):
-	op = v['kind']
-	value = v['value']
+	op = v.op
+	value = v.value
 	need_wrap = precedence(value) < precedence({'kind': op})
 	out(un_ops[op]); print_value(value, need_wrap=need_wrap)
 
 
 def print_value_call(v, ctx):
-	print_value(v['func'])
+	print_value(v.func)
 	out("(")
 	i = 0
-	args = v['args']
+	args = v.args
 	n = len(args)
 	while i < n:
 		arg = args[i]
@@ -282,35 +285,35 @@ def print_value_call(v, ctx):
 
 
 def print_value_index(v, ctx):
-	array = v['left']
+	array = v.left
 	need_wrap = precedence(array) < precedence({'kind': 'index'})
 	print_value(array, need_wrap=need_wrap)
-	out("["); print_value(v['index']); out("]")
+	out("["); print_value(v.index); out("]")
 
 
 def print_value_slice(x, ctx):
-	left = x['left']
+	left = x.left
 	need_wrap = precedence(left) < precedence({'kind': 'index'})
 	print_value(left, need_wrap=need_wrap)
 	out("[")
-	print_value(x['index_from'])
+	print_value(x.index_from)
 	out(":")
-	if x['index_to'] != None:
-		print_value(x['index_to'])
+	if x.index_to:
+		print_value(x.index_to)
 	out("]")
 
 
 def print_value_access(v, ctx):
-	left = v['value']
+	left = v.value
 	need_wrap = precedence(left) < precedence({'kind': 'access'})
 	print_value(left, need_wrap=need_wrap)
 	out(".")
-	print_id_for(v['field'])
+	print_id_for(v.field)
 
 
 def print_value_access_module(v, ctx):
-	left = v['left']
-	id_str = get_id_str(v['right'])
+	left = v.left
+	id_str = get_id_str(v.right)
 	out("%s.%s" % (left['id'], id_str))
 
 
@@ -322,27 +325,27 @@ def print_cast(t, v, ctx=[]):
 
 
 def print_value_cons(v, ctx):
-	value = v['value']
-	from_type = value['type']
-	to_type = v['type']
+	value = v.value
+	from_type = value.type
+	to_type = v.type
 
-	if v['method'] == 'implicit':
+	if v.method == 'implicit':
 		print_value(value)
 		return
 
 	# NO need cast ptr to *void
 	if htype.type_is_pointer(from_type):
 		if htype.type_is_free_pointer(to_type):
-			print_value(v['value'])
+			print_value(v.value)
 			return
 
 	# NO need cast *void to ptr
 	if htype.type_is_free_pointer(from_type):
 		if htype.type_is_pointer(to_type):
-			print_value(v['value'])
+			print_value(v.value)
 			return
 
-	print_cast(v['type'], v['value'], ctx)
+	print_cast(v.type, v.value, ctx)
 
 
 
@@ -362,14 +365,14 @@ def is_zero_tail(values, i, n):
 def print_value_array(v, ctx):
 
 	#?
-	if htype.type_is_array_of_char(v['type']):
+	if htype.type_is_array_of_char(v.type):
 		print_value_str(v, ctx=[])
 		return
 
 	out("[")
 	indent_up()
 
-	values = v['items']
+	values = v.items
 	i = 0
 	n = len(values)
 	while i < n:
@@ -379,7 +382,7 @@ def print_value_array(v, ctx):
 			if is_zero_tail(values, i, n):
 				break
 
-		nl = a['nl']
+		nl = a.nl
 		if nl > 0:
 			newline(nl)
 			indent()
@@ -394,8 +397,8 @@ def print_value_array(v, ctx):
 
 	indent_down()
 
-	if v['nl_end'] > 0:
-		newline(v['nl_end'])
+	if v.nl_end > 0:
+		newline(v.nl_end)
 		indent()
 
 	out("]")
@@ -426,12 +429,12 @@ def code_to_char(cc):
 
 # print Array of Char literal
 def print_value_str(x, ctx):
-	asset = x['asset']
+	asset = x.asset
 
 	char_codes = []
 	i = 0
-	while i < len(x['asset']):
-		cc = x['asset'][i]['asset']
+	while i < len(x.asset):
+		cc = x.asset[i].asset
 		char_codes.append(cc)
 		i = i + 1
 	print_str_literal(char_codes)
@@ -440,7 +443,7 @@ def print_value_str(x, ctx):
 # print value with type String
 def print_strx(string):
 	char_codes = []
-	for c in string['asset']:
+	for c in string.asset:
 		cc = ord(c)
 		char_codes.append(cc)
 	print_str_literal(char_codes)
@@ -462,13 +465,13 @@ def print_value_record(v, ctx):
 
 	indent_up()
 
-	nitems = len(v['items'])
+	nitems = len(v.items)
 	i = 0
 	while i < nitems:
-		item = v['type']['fields'][i]
+		item = v.type['fields'][i]
 		field_str = get_id_str(item)
 
-		ini = get_item_by_id(v['items'], field_str)
+		ini = get_item_by_id(v.items, field_str)
 
 		nl = ini.nl
 		if nl > 0:
@@ -489,8 +492,8 @@ def print_value_record(v, ctx):
 
 	indent_down()
 
-	if v['nl_end'] > 0:
-		newline(v['nl_end'])
+	if v.nl_end > 0:
+		newline(v.nl_end)
 		indent()
 
 	out("}")
@@ -498,7 +501,7 @@ def print_value_record(v, ctx):
 
 # print Bool literal
 def print_value_bool_create(x, ctx):
-	if x['asset']:
+	if x.asset:
 		out('true')
 	else:
 		out('false')
@@ -506,7 +509,7 @@ def print_value_bool_create(x, ctx):
 
 # print Char literal
 def print_value_char_create(x, ctx):
-	num = x['asset']
+	num = x.asset
 	if num >= 0x20:
 		out("\"%s\"" % chr(num))
 	else:
@@ -515,11 +518,11 @@ def print_value_char_create(x, ctx):
 
 # print Int literal
 def print_value_integer(x, ctx):
-	num = x['asset']
+	num = x.asset
 
 	nsigns = 0
-	if 'nsigns' in x:
-		nsigns = x['nsigns']
+	if x.nsigns:
+		nsigns = x.nsigns
 
 	spec = 'd'
 	pre = ''
@@ -534,22 +537,22 @@ def print_value_integer(x, ctx):
 
 # print Float literal
 def print_value_float(x, ctx):
-	out('{0:f}'.format(x['asset']))
+	out('{0:f}'.format(x.asset))
 
 
 
 # print Pointer literal
 def print_value_ptr(x, ctx):
-	if x['asset'] == 0:
+	if x.asset == 0:
 		out("nil")
 	else:
 		print_type(x['type'])
-		out(" 0x%08X" % x['asset'])
+		out(" 0x%08X" % x.asset)
 
 
 # print Zero literal
 def print_value_zero(x, ctx):
-	t = x['type']
+	t = x.type
 	if htype.type_is_array(t): out("[]")
 	elif htype.type_is_record(t): out("{}")
 	else: out("0")
@@ -567,14 +570,14 @@ def print_value_by_id(x, ctx):
 # Сделал отдельный метод печати строк и есть отдельный для печати
 def print_value_string2(x, ctx):
 	char_codes = []
-	for char in x['asset']:
+	for char in x.asset:
 		cc = ord(char)
 		char_codes.append(cc)
 	print_str_literal(char_codes)
 
 
-def print_value_terminal(x, ctx):
-	t = x['type']
+def print_value_literal(x, ctx):
+	t = x.type
 	if htype.type_is_number(t): print_value_integer(x, ctx)
 	elif htype.type_is_integer(t): print_value_integer(x, ctx)
 	elif htype.type_is_float(t): print_value_float(x, ctx)
@@ -649,29 +652,28 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	if need_wrap:
 		out("(")
 
-	k = x['kind']
-
-	if k == 'literal': print_value_terminal(x, ctx)
-	elif k in bin_ops: print_value_bin(x, ctx)
-	elif k in un_ops: print_value_un(x, ctx)
-	elif k in ['const', 'func', 'var']: print_value_by_id(x, ctx)
-	elif k == 'cons': print_value_cons(x, ctx)
-	elif k == 'call': print_value_call(x, ctx)
-	elif k == 'index': print_value_index(x, ctx)
-	elif k == 'access': print_value_access(x, ctx)
-	elif k == 'access_module': print_value_access_module(x, ctx)
-	elif k == 'slice': print_value_slice(x, ctx)
-	elif k == 'sizeof_value': print_value_sizeof_value(x, ctx)
-	elif k == 'sizeof_type': print_value_sizeof_type(x, ctx)
-	elif k == 'alignof': print_value_alignof(x, ctx)
-	elif k == 'offsetof': print_value_offsetof(x, ctx)
-	elif k == 'lengthof': print_value_lengthof(x, ctx)
-	elif k == 'va_arg': print_value_va_arg(x, ctx)
-	elif k == 'va_start': print_value_va_start(x, ctx)
-	elif k == 'va_end': print_value_va_end(x, ctx)
-	elif k == 'va_copy': print_value_va_copy(x, ctx)
-	elif k == 'undefined': pass
-	else: out("<%s>" % k)
+	if isinstance(x, ValueLiteral): print_value_literal(x, ctx)
+	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
+	elif isinstance(x, ValueUn): print_value_un(x, ctx)
+	elif isinstance(x, ValueConst): print_value_by_id(x, ctx)
+	elif isinstance(x, ValueFunc): print_value_by_id(x, ctx)
+	elif isinstance(x, ValueVar): print_value_by_id(x, ctx)
+	elif isinstance(x, ValueCons): print_value_cons(x, ctx)
+	elif isinstance(x, ValueCall): print_value_call(x, ctx)
+	elif isinstance(x, ValueIndexArray): print_value_index(x, ctx)
+	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
+	elif isinstance(x, ValueAccessModule): print_value_access_module(x, ctx)
+	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
+	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
+	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
+	elif isinstance(x, ValueAlignof): print_value_alignof(x, ctx)
+	elif isinstance(x, ValueOffsetof): print_value_offsetof(x, ctx)
+	elif isinstance(x, ValueLengthof): print_value_lengthof(x, ctx)
+	elif isinstance(x, ValueVaArg): print_value_va_arg(x, ctx)
+	elif isinstance(x, ValueVaStart): print_value_va_start(x, ctx)
+	elif isinstance(x, ValueVaEnd): print_value_va_end(x, ctx)
+	elif isinstance(x, ValueVaCopy): print_value_va_copy(x, ctx)
+	else: out("<%s>" % 'k')
 
 	if need_wrap:
 		out(")")
@@ -711,7 +713,7 @@ def print_stmt_var(x):
 	out("var ")
 	print_id_for(x.var_value)
 	out(": ")
-	print_type(x.var_value['type'])
+	print_type(x.var_value.type)
 	iv = x.init_value
 	if not value_is_undefined(iv):
 		out(" = ")
@@ -730,9 +732,9 @@ def print_stmt_assign(x):
 	out(" = ")
 	print_value(x.right)
 
-	if htype.type_is_array(x.right['type']):
+	if htype.type_is_array(x.right.type):
 		if value_is_zero(x.right):
-			out("  // right size = %d" % x.right['type']['size'])
+			out("  // right size = %d" % x.right.type['size'])
 
 
 def print_stmt_value(x):
@@ -841,7 +843,7 @@ def print_def_func(x):
 	if x.stmt == None:
 		return
 	func = x.value
-	ft = func['type']
+	ft = func.type
 	if x.access_level == 'public':
 		out("public ")
 	out('func ')

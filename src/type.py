@@ -4,7 +4,7 @@ from error import info, warning, error, fatal
 import settings
 from hlir import Id, Field
 from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up
-
+from value.value import value_print
 
 ######################################################################
 #                            HLIR TYPE                               #
@@ -236,7 +236,10 @@ def type_array(of, volume, ti=None):
 	if volume != None:
 		from value.value import value_is_immediate
 		if value_is_immediate(volume):
-			array_size = item_size * volume['asset']
+			try:
+				array_size = item_size * volume.asset
+			except:
+				value_print(volume)
 
 	return {
 		'isa': 'type',
@@ -414,7 +417,7 @@ def type_eq_array(a, b, opt):
 	from value.value import value_is_immediate
 
 	if value_is_immediate(a['volume']) and value_is_immediate(b['volume']):
-		if a['volume']['asset'] != b['volume']['asset']:
+		if a['volume'].asset != b['volume'].asset:
 			return False
 
 	if a['of'] == None or b['of'] == None:
@@ -732,7 +735,7 @@ def type_is_forbidden_var(t, zero_array_forbidden=True):
 		from value.value import value_is_immediate
 		if zero_array_forbidden or not is_unsafe_mode():
 			if value_is_immediate(t['volume']):
-				if t['volume']['asset'] == 0:
+				if t['volume'].asset == 0:
 					return True
 
 		return type_is_forbidden_var(t['of'])
@@ -801,7 +804,7 @@ def type_print_array(t, print_aka=True):
 		if type_is_vla(t):
 			print("<VAR>", end='')
 		else:
-			sz = array_size['asset']
+			sz = array_size.asset
 			print("%d" % sz, end='')
 
 	print("]", end='')

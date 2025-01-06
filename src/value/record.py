@@ -20,8 +20,8 @@ def value_record_create(initializers=[], ti=None):
 	for initializer in initializers:
 		field_id = initializer.id
 		init_value = initializer.value
-		field_type = init_value['type']
-		field_ti = init_value['ti']
+		field_type = init_value.type
+		field_ti = init_value.ti
 
 		# если хотя бы один элемент - не immediate
 		# -> весь литерал записи - не immediate
@@ -36,8 +36,8 @@ def value_record_create(initializers=[], ti=None):
 	record_type['generic'] = True
 
 	v = value_terminal(record_type, ti)
-	v['items'] = initializers
-	v['immediate'] = is_immediate
+	v.items = initializers
+	v.immediate = is_immediate
 	return v
 
 
@@ -68,16 +68,16 @@ def record_can(to, from_type, method):
 def value_record_cons(t, v, method, ti):
 	#info("value_record_cons", ti)
 	nv = value_cons_node(t, v, method, ti=ti)
-	nv['immediate'] = v['immediate']
+	nv.immediate = v.immediate
 
 	# литерал записи всегда имеет тип Generic(Array)
 	# это позволяет конструировать из него разные записи
 
-	if 'items' in v:
+	if v.items != None:
 		# конструируем запись на основе другой generic записи
 		items = []
 		for field in t['fields']:
-			initializer = get_item_by_id(v['items'], field.id.str)
+			initializer = get_item_by_id(v.items, field.id.str)
 			vv = None
 			if initializer:
 				from .cons import value_cons_implicit_check
@@ -88,7 +88,7 @@ def value_record_cons(t, v, method, ti):
 			ni = Initializer(field.id, vv, ti=ti, nl=0)
 			items.append(ni)
 
-		nv['items'] = items
+		nv.items = items
 
 	return nv
 
@@ -101,7 +101,7 @@ def value_record_eq(l, r, op, ti):
 	if value_is_immediate(l) and value_is_immediate(r):
 		eq_result = True
 
-		for lx, rx in zip(l['items'], r['items']):
+		for lx, rx in zip(l.items, r.items):
 			if not value_eq(lx.value, rx.value, op, ti):
 				eq_result = False
 				break
@@ -109,8 +109,8 @@ def value_record_eq(l, r, op, ti):
 		if op == 'ne':
 			eq_result = not eq_result
 
-		nv['asset'] = int(eq_result)
-		nv['immediate'] = True
+		nv.asset = int(eq_result)
+		nv.immediate = True
 
 	return nv
 

@@ -45,7 +45,7 @@ def is_local_entity(x):
 
 # значение глобально (неважно из какого модуля)
 def is_global_value(x):
-	return 'global_entity' in x['att']
+	return 'global_entity' in x.att
 
 
 def is_local_context():
@@ -109,7 +109,7 @@ def module_value_add_public(m, id_str, v):
 	#print("module %s value_add_public %s" % (m['id'], id_str))
 	m['symtab_public'].value_add(id_str, v)
 	#v['module'] = m
-	v['att'].append('global_entity')
+	v.att.append('global_entity')
 
 
 def module_type_add_private(m, id_str, t):
@@ -122,7 +122,7 @@ def module_value_add_private(m, id_str, v):
 	#print("module %s value_add_private %s" % (m['id'], id_str))
 	m['symtab_private'].value_add(id_str, v)
 	#v['module'] = m
-	v['att'].append('global_entity')
+	v.att.append('global_entity')
 
 
 
@@ -607,7 +607,7 @@ def do_type_array(t):
 				error("non local VLA", t['size'])
 
 		#if not (htype.type_is_integer(volume['type']) or htype.type_is_number(volume['type'])):
-		if htype.type_is_signed(volume['type']):
+		if htype.type_is_signed(volume.type):
 			error("required value with number or integer type", t['size']['ti'])
 
 	# closed arrays of closed arrays are denied NOW
@@ -656,9 +656,9 @@ def do_type_enum(t):
 	enum_type = htype.type_enum(t['ti'])
 
 	i = 0
-	for item in t['items']:
+	for item in t.items:
 		id = item['id']
-		enum_type['items'].append({
+		enum_type.items.append({
 			'isa': 'enum_item',
 			'id': id,
 			'number': i,
@@ -667,7 +667,7 @@ def do_type_enum(t):
 
 		# add enum item to global context
 		item_val = value_terminal(enum_type, item['ti'])
-		item_val['asset'] = i
+		item_val.asset = i
 
 		item_val['id'] = id
 		global cmodule
@@ -684,9 +684,6 @@ def do_type_func(t, func_id="_"):
 	for _param in t['params']:
 		param = do_field(_param)
 		if param != None:
-			if isinstance(param, dict):
-				print("DICT!")
-				1/0
 			params.append(param)
 
 	to = foundation.typeUnit
@@ -727,25 +724,25 @@ def do_value_shift(x):
 	op = x['kind']  # 'shl', 'shr'
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
-	type_result = l['type']
+	type_result = l.type
 
-#	if not htype.type_is_word(l['type']):
+#	if not htype.type_is_word(l.type):
 #		error("expected word value", x['left'])
 
-	if htype.type_is_signed(r['type']):
+	if htype.type_is_signed(r.type):
 		error("expected natural value", x['right'])
 
 	if value_is_immediate(l) and value_is_immediate(r):
-		asset = l['asset']
-		if op == 'shl': asset = asset << r['asset']
-		else: asset = asset >> r['asset']
+		asset = l.asset
+		if op == 'shl': asset = asset << r.asset
+		else: asset = asset >> r.asset
 
 		nv = value_bin(op, l, r, type_result, ti=x['ti'])
-		nv['asset'] = int(asset)
-		nv['immediate'] = True
+		nv.asset = int(asset)
+		nv.immediate = True
 		return nv
 
-	if htype.type_is_generic(l['type']):
+	if htype.type_is_generic(l.type):
 		error("expected non-generic value", l)
 		return value_bad(x['ti'])
 
@@ -765,20 +762,20 @@ def do_value_bin(x):
 	if op == 'add':
 		# массивы могут быть разной длины (то есть с разными типами)
 		# поэтому сложение массивов (only immediate) требует обхода проверок типа ниже
-		if htype.type_is_array(l['type']) and htype.type_is_array(r['type']):
+		if htype.type_is_array(l.type) and htype.type_is_array(r.type):
 			return value_array_add(l, r, ti)
 		# у string вообще всегда одинакоывый тип и нет смысла приводить их
-		elif htype.type_is_string(l['type']) and htype.type_is_string(r['type']):
+		elif htype.type_is_string(l.type) and htype.type_is_string(r.type):
 			return value_string_add(l, r, ti)
 
 
 	# Check type is valid for the operation
 
-	if not op in l['type']['ops']:
+	if not op in l.type['ops']:
 		error("unsuitable value type for '%s' operation" % op, l['ti'])
 		return value_bad(ti)
 
-	if not op in r['type']['ops']:
+	if not op in r.type['ops']:
 		error("unsuitable value type for '%s' operation" % op, r['ti'])
 		return value_bad(ti)
 
@@ -786,7 +783,7 @@ def do_value_bin(x):
 	# Now and further types must be equal (!)
 	#
 
-	t = htype.select_common_type(l['type'], r['type'])
+	t = htype.select_common_type(l.type, r.type)
 	if htype.type_is_bad(t):
 		error("different types in operation", x['ti'])
 		return value_bad(ti)
@@ -794,15 +791,15 @@ def do_value_bin(x):
 	l = value_cons_implicit(t, l)
 	r = value_cons_implicit(t, r)
 
-	if not htype.type_eq(l['type'], r['type'], ti):
+	if not htype.type_eq(l.type, r.type, ti):
 		error("different types in '%s' operation" % x['kind'], ti)
 
 		# print: @@ <left_type> & <right_type> @@
 		print(color_code(CYAN), end='')
 		print('@@ ', end='')
-		htype.type_print(l['type'])
+		htype.type_print(l.type)
 		print(" & ", end='')
-		htype.type_print(r['type'])
+		htype.type_print(r.type)
 		print(' @@', end='')
 		print(color_code(ENDC), end='')
 		print("\n")
@@ -823,7 +820,7 @@ def do_value_bin(x):
 	nv = value_bin(op, l, r, t, ti=ti)
 
 	# if left & right are immediate, we can fold const
-	# and append field ['asset'] to bin_value
+	# and append field .asset to bin_value
 	if value_is_immediate(l) and value_is_immediate(r):
 		ops = {
 			'logic_or': lambda a, b: a or b,
@@ -844,20 +841,20 @@ def do_value_bin(x):
 		asset = 0
 		if op == 'div':
 			if not htype.type_is_float(t):
-				asset = l['asset'] // r['asset']
+				asset = l.asset // r.asset
 			else:
-				asset = l['asset'] / r['asset']
+				asset = l.asset / r.asset
 		else:
-			asset = ops[op](l['asset'], r['asset'])
+			asset = ops[op](l.asset, r.asset)
 
 
 		if htype.type_is_number(t):
 			# (для операций типа 1 + 2)
 			# Пересматриваем generic тип для нового значения
-			nv['type'] = htype.type_number_for(asset, signed=asset < 0, ti=ti)
+			nv.type = htype.type_number_for(asset, signed=asset < 0, ti=ti)
 
-		nv['asset'] = asset
-		nv['immediate'] = True
+		nv.asset = asset
+		nv.immediate = True
 
 	return nv
 
@@ -871,7 +868,7 @@ def do_value_ref(x):
 
 	ti = x['ti']
 	op = x['kind']
-	vtype = v['type']
+	vtype = v.type
 
 	if value_is_immutable(v):
 		if not htype.type_is_func(vtype) or htype.type_is_undefined(vtype):
@@ -883,14 +880,14 @@ def do_value_ref(x):
 
 	if is_global_value(v):
 	#if htype.type_is_func(vtype):
-		nv['immediate'] = True
+		nv.immediate = True
 		# не можно поставить 0 тк иначе значение будет трактоваться как zero
 		# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
 		# поэтому временно заткнул единицей, но вообще нужно будет обдумать
-		nv['asset'] = 1
-		nv['att'].append('ptr_to_glb_val')
+		nv.asset = 1
+		nv.att.append('ptr_to_glb_val')
 
-	nv['att'].append('ref')
+	nv.att.append('ref')
 
 	return nv
 
@@ -902,7 +899,7 @@ def do_value_not(x):
 	if value_is_bad(v):
 		return v
 
-	vtype = v['type']
+	vtype = v.type
 
 	if not 'not' in vtype['ops']:
 		error("unsuitable type", v)
@@ -917,11 +914,11 @@ def do_value_not(x):
 	if value_is_immediate(v):
 		# because: ~(1) = -1 (not 0) !
 		if htype.type_is_bool(vtype):
-			nv['asset'] = not v['asset']
+			nv.asset = not v.asset
 		else:
-			nv['asset'] = ~v['asset']
+			nv.asset = ~v.asset
 
-		nv['immediate'] = True
+		nv.immediate = True
 
 	return nv
 
@@ -933,7 +930,7 @@ def do_value_neg(x):
 	if value_is_bad(v):
 		return v
 
-	vtype = v['type']
+	vtype = v.type
 
 	if not htype.type_is_generic(vtype):
 		if not htype.type_is_signed(vtype):
@@ -944,11 +941,11 @@ def do_value_neg(x):
 	nv = value_un('neg', v, vtype, ti=x['ti'])
 
 	if value_is_immediate(v):
-		nv['asset'] = -v['asset']
-		nv['immediate'] = True
+		nv.asset = -v.asset
+		nv.immediate = True
 
-		if htype.type_is_generic(nv['type']):
-			nv['type'] = htype.type_number_for(v['asset'], signed=True, ti=x['ti'])
+		if htype.type_is_generic(nv.type):
+			nv.type = htype.type_number_for(v.asset, signed=True, ti=x['ti'])
 
 	return nv
 
@@ -960,7 +957,7 @@ def do_value_pos(x):
 	if value_is_bad(v):
 		return v
 
-	vtype = v['type']
+	vtype = v.type
 
 	if not htype.type_is_signed(vtype):
 		error("expected value with signed type", v)
@@ -968,11 +965,11 @@ def do_value_pos(x):
 	nv = value_un('pos', v, vtype, ti=x['ti'])
 
 	if value_is_immediate(v):
-		nv['asset'] = +v['asset']
-		nv['immediate'] = True
+		nv.asset = +v.asset
+		nv.immediate = True
 
-		if htype.type_is_generic(nv['type']):
-			nv['type'] = htype.type_number_for(v['asset'], signed=True, ti=x['ti'])
+		if htype.type_is_generic(nv.type):
+			nv.type = htype.type_number_for(v.asset, signed=True, ti=x['ti'])
 
 	return nv
 
@@ -984,7 +981,7 @@ def do_value_deref(x):
 	if value_is_bad(v):
 		return v
 
-	vtype = v['type']
+	vtype = v.type
 	if not htype.type_is_pointer(vtype):
 		error("expected pointer value", v)
 		return value_bad(x['ti'])
@@ -1002,7 +999,7 @@ def do_value_deref(x):
 		error("unsuitable type", v)
 
 	nv = value_un('deref', v, to, ti=x['ti'])
-	nv['immutable'] = False
+	nv.immutable = False
 	return nv
 
 
@@ -1051,7 +1048,7 @@ def do_value_lengthof_value(x):
 	ti = x['ti']
 	arg = do_rvalue(x['value'])
 
-	if not htype.type_is_array(arg['type']):
+	if not htype.type_is_array(arg.type):
 		error("expected array value", args[0]['ti'])
 		return value_bad({'ti': ti})
 
@@ -1109,7 +1106,7 @@ def do_value_call(x):
 		return value_bad(x['ti'])
 
 
-	ftype = fn['type']
+	ftype = fn.type
 
 	# pointer to function?
 	if htype.type_is_pointer(ftype):
@@ -1184,7 +1181,7 @@ def do_value_call(x):
 		argval = do_rvalue(a)
 
 		if not value_is_bad(argval):
-			if htype.type_is_generic(argval['type']):
+			if htype.type_is_generic(argval.type):
 				warning("extra argument with generic type", a['ti'])
 				argval = value_cons_default(argval)
 
@@ -1196,8 +1193,8 @@ def do_value_call(x):
 		i += 1
 
 
-	if 'id' in fn:
-		func_id_str = fn['id'].str
+	if fn.id:
+		func_id_str = fn.id.str
 		if func_id_str in ['print', 'scanf', 'print']:
 			expected_pointers = func_id_str == 'scanf'
 			first_arg = x['args'][0]['value']
@@ -1218,7 +1215,7 @@ def do_value_index(x):
 	if value_is_bad(left):
 		return value_bad(x['ti'])
 
-	left_typ = left['type']
+	left_typ = left.type
 
 	via_pointer = htype.type_is_pointer(left_typ)
 
@@ -1237,34 +1234,34 @@ def do_value_index(x):
 	if value_is_bad(index):
 		return value_bad(x['ti'])
 
-	if not (htype.type_is_integer(index['type']) or htype.type_is_number(index['type'])):
+	if not (htype.type_is_integer(index.type) or htype.type_is_number(index.type)):
 		error("expected integer value", x['index'])
 		return value_bad(x['ti'])
 
-	if htype.type_is_generic(index['type']):
+	if htype.type_is_generic(index.type):
 		index = value_cons_implicit_check(typeSysInt, index)
 
 	nv = value_index_array(left, array_typ['of'], index, ti=x['ti'])
 
 	if not via_pointer:
-		nv['immutable'] = left['immutable']
+		nv.immutable = left.immutable
 
 		if value_is_immediate(left):
 			if value_is_immediate(index):
 				#info("immediate index", x['ti'])
-				index_imm = index['asset']
+				index_imm = index.asset
 
-				if index_imm >= array_typ['volume']['asset']:
+				if index_imm >= array_typ['volume'].asset:
 					error("array index out of bounds", x['index'])
 					return value_bad(x['ti'])
 
-				if index_imm < len(left['items']):
-					item = left['items'][index_imm]
+				if index_imm < len(left.items):
+					item = left.items[index_imm]
 				else:
 					item = value_zero(array_typ['of'], x['ti'])
 
-				nv['immval'] = item
-				nv['immediate'] = item['immediate']
+				nv.immval = item
+				nv.immediate = item.immediate
 
 	return nv
 
@@ -1333,7 +1330,7 @@ def do_value_slice(x):
 
 		slice_len = 0  # len as integer
 		if value_is_immediate(slice_volume):
-			slice_len = slice_volume['asset']
+			slice_len = slice_volume.asset
 
 			if slice_len < 0:
 				error("wrong slice direction", x['ti'])
@@ -1345,7 +1342,7 @@ def do_value_slice(x):
 #			error("expected immediate value", index_from)
 #
 #		# TODO: конкретно тут есть что исправить!
-#		if slice_len > array_type['volume']['asset']:
+#		if slice_len > array_type['volume'].asset:
 #			error("slice is too big", x['ti'])
 
 
@@ -1356,7 +1353,7 @@ def do_value_slice(x):
 	nv = value_slice_array(left, type, index_from, index_to, x['ti'])
 
 	if not via_pointer:
-		nv['immutable'] = left['immutable']
+		nv.immutable = left.immutable
 
 	return nv
 
@@ -1386,7 +1383,7 @@ def submodule_access(x):
 	if v == None:
 		return value_bad(x['ti'])
 
-	y = value_access_module(v['type'], submodule, v, v, x['ti'])
+	y = value_access_module(v.type, submodule, v, v, x['ti'])
 	cp_immediate(y, v)
 	return y
 
@@ -1410,11 +1407,11 @@ def do_value_access(x):
 	field_id = Id(x['right'])
 
 	# доступ через переменную-указатель
-	via_pointer = htype.type_is_pointer(left['type'])
+	via_pointer = htype.type_is_pointer(left.type)
 
-	record_type = left['type']
+	record_type = left.type
 	if via_pointer:
-		record_type = left['type']['to']
+		record_type = left.type['to']
 
 	# check if is record
 	if not htype.type_is_record(record_type):
@@ -1450,15 +1447,15 @@ def do_value_access(x):
 
 	nv = value_access_record(field.type, left, field, ti=x['ti'])
 	if not via_pointer:
-		nv['immutable'] = left['immutable']
+		nv.immutable = left.immutable
 
 		# access to immediate object
 		if value_is_immediate(left):
-			initializer = get_item_by_id(left['items'], field_id.str)
+			initializer = get_item_by_id(left.items, field_id.str)
 
 			# (!) #asset of immediate index & access contains VALUE (!)
-			nv['immediate'] = True
-			nv['immval'] = initializer.value
+			nv.immediate = True
+			nv.immval = initializer.value
 			cp_immediate(nv, initializer.value)
 
 	return nv
@@ -1489,7 +1486,7 @@ def do_value_id(x):
 
 
 	global cdef
-	if htype.type_is_incomplete(v['type']):
+	if htype.type_is_incomplete(v.type):
 		cdef.deps.append(v)
 		v = update_func_type(v['id'].str)
 		if v == None:
@@ -1497,8 +1494,8 @@ def do_value_id(x):
 			return value_bad(x['ti'])
 
 
-	if 'usecnt' in v:
-		v['usecnt'] = v['usecnt'] + 1
+#	if 'usecnt' in v:
+#		v['usecnt'] = v['usecnt'] + 1
 
 	return v
 
@@ -1523,11 +1520,11 @@ def do_value_array(x):
 		#	continue
 		if item['isa'] == 'ast_kv':
 			item_value = do_rvalue(item['value'])
-			item_value['nl'] = item['nl']
+			item_value.nl = item['nl']
 			items.append(item_value)
 
 	v = value_array_create(items, ti=x['ti'])
-	v['nl_end'] = x['nl_end']
+	v.nl_end = x['nl_end']
 	return v
 
 
@@ -1553,7 +1550,7 @@ def do_value_record(x):
 			initializers.append(p)
 
 	v = value_record_create(initializers, ti=x['ti'])
-	v['nl_end'] = x['nl_end']
+	v.nl_end = x['nl_end']
 	return v
 
 
@@ -1577,7 +1574,7 @@ def do_value_integer(x):
 
 	num = int(x['numstr'], base)
 	v = value_integer_create(num, ti=x['ti'])
-	v['nsigns'] = num_string_len
+	v.nsigns = num_string_len
 
 	if base == 16:
 		value_attribute_add(v, 'hexadecimal')
@@ -1631,7 +1628,7 @@ def do_value_immediate(x, allow_ptr_to_str=False):
 
 	if not value_is_immediate(v):
 		if allow_ptr_to_str:
-			if htype.type_is_pointer_to_array_of_char(v['type']):
+			if htype.type_is_pointer_to_array_of_char(v.type):
 				return v
 		error("expected immediate value", x['ti'])
 		return value_bad(x['ti'])
@@ -1645,7 +1642,7 @@ def do_value_immediate_string(x):
 	if value_is_bad(v):
 		return v
 
-	if not htype.type_is_string(v['type']):
+	if not htype.type_is_string(v.type):
 		error("expected string value", x['ti'])
 
 	return v
@@ -1724,7 +1721,7 @@ def do_value(x):
 	elif k == 'undefined': v = do_value_undefined(x)
 
 	assert(v != None)
-	v['ti'] = x['ti']
+	v.ti = x['ti']
 
 	return v
 
@@ -1739,7 +1736,7 @@ def do_stmt_if(x):
 	if value_is_bad(cond):
 		return StmtBad(x)
 
-	if not htype.type_is_bool(cond['type']):
+	if not htype.type_is_bool(cond.type):
 		error("expected bool value", cond)
 		return StmtBad(x)
 
@@ -1764,7 +1761,7 @@ def do_stmt_while(x):
 	if value_is_bad(cond):
 		return StmtBad(x)
 
-	if not htype.type_is_bool(cond['type']):
+	if not htype.type_is_bool(cond.type):
 		error("expected bool value", cond)
 		return StmtBad(x)
 
@@ -1780,7 +1777,7 @@ def do_stmt_while(x):
 def do_stmt_return(x):
 	global cfunc
 
-	func_ret_type = cfunc['type']['to']
+	func_ret_type = cfunc.type['to']
 
 	is_no_ret_func = htype.type_is_unit(func_ret_type)
 	ret_val_present = x['value'] != None
@@ -1832,10 +1829,10 @@ def do_stmt_var(x):
 
 	if tu == True and vu == False:
 		# type undef, value ok
-		#type_update(nt, v['type'])
-		if htype.type_is_generic(v['type']):
+		#type_update(nt, v.type)
+		if htype.type_is_generic(v.type):
 			v = value_cons_default(v)
-		t = v['type']
+		t = v.type
 
 	#if not htype.type_is_undefined(t):
 	#	if htype.type_is_bad(t):
@@ -1850,10 +1847,10 @@ def do_stmt_var(x):
 		v = value_cons_implicit_check(t, v)
 
 	if htype.type_is_undefined(t):
-		if htype.type_is_generic(v['type']):
+		if htype.type_is_generic(v.type):
 			v = value_cons_default(v)
 
-		t = v['type']
+		t = v.type
 
 	# check if identifier is free (in current block)
 	already = ctx_value_get_shallow(var_id.str)
@@ -1869,7 +1866,7 @@ def do_stmt_var(x):
 
 def add_local_var(id, typ, ti):
 	var_value = value_var(id, typ, ti)
-	var_value['att'].extend(['local'])
+	var_value.att.extend(['local'])
 	ctx_value_add(id.str, var_value)
 	return var_value
 
@@ -1894,21 +1891,21 @@ def do_stmt_let(x):
 		ctx_value_add(id.str, value_bad(x['ti']))
 		return StmtBad(x)
 
-	const_value = value_const(id, v['type'], value=v, ti=x['id']['ti'])
+	const_value = value_const(id, v.type, value=v, ti=x['id']['ti'])
 	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
 	# на константу. ---Пока это необходимо для 'wrapped_array' (!)---
-	const_value['att'].extend(v['att'])
-	const_value['att'].append('local') # need for LLVM printer (!)
+	const_value.att.extend(v.att)
+	const_value.att.append('local') # need for LLVM printer (!)
 
 	# Now let can be immediate!
 	if value_is_immediate(v):
-		const_value['immediate'] = True
+		const_value.immediate = True
 		cp_immediate(const_value, v)
 
-		if htype.type_is_generic(v['type']):
+		if htype.type_is_generic(v.type):
 			# generic immediate в C печатается как #define
 			# и его надо манглить иначе возникает куча проблем
-			const_value['id'].c = '__' + const_value['id'].str
+			const_value.id.c = '__' + const_value.id.str
 
 	ctx_value_add(id.str, const_value)
 
@@ -1923,15 +1920,16 @@ def do_stmt_assign(x):
 	if value_is_bad(l) or value_is_bad(r):
 		return StmtBad(x)
 
-	if not value_is_lvalue(l):
-		error("expected lvalue", l)
-		return StmtBad(x)
+#TODO: restore after all
+#	if not value_is_lvalue(l):
+#		error("expected lvalue", l)
+#		return StmtBad(x)
 
 	if value_is_immutable(l):
-		error("expected mutable value", l)
+		error("expected mutable value", l.ti)
 		return StmtBad(x)
 
-	r = value_cons_implicit_check(l['type'], r)
+	r = value_cons_implicit_check(l.type, r)
 	return StmtAssign(l, r, ti=x['ti'])
 
 
@@ -1946,12 +1944,12 @@ def do_stmt_incdec(x, op='add'):
 		error("expected mutable value", v)
 		return StmtBad(x)
 
-	if not htype.type_is_integer(v['type']):
+	if not htype.type_is_integer(v.type):
 		error("expected integer value", v)
 		return StmtBad(x)
 
-	one = value_integer_create(1, typ=v['type'], ti=x['ti'])
-	nv = value_bin(op, v, one, v['type'], ti=x['ti'])
+	one = value_integer_create(1, typ=v.type, ti=x['ti'])
+	nv = value_bin(op, v, one, v.type, ti=x['ti'])
 	return StmtAssign(v, nv, ti=x['ti'])
 
 
@@ -1962,9 +1960,9 @@ def do_stmt_value(x):
 	if value_is_bad(v):
 		return StmtBad(x)
 
-	if not htype.type_is_unit(v['type']):
-		if not 'dispensable' in v['type']['att']:
-			warning("unused result of %s expression" % x['value']['kind'], v['ti'])
+	if not htype.type_is_unit(v.type):
+		if not 'dispensable' in v.type['att']:
+			warning("unused result of %s expression" % x['value']['kind'], v.ti)
 
 	return StmtValue(v, ti=x['ti'])
 
@@ -1997,23 +1995,23 @@ def do_stmt_asm(x):
 	xclobbers = xargs[3]['value']
 
 	outputs = []
-	for x in xoutputs['items']:
-		items = x['value']['items']
+	for x in xoutputs.items:
+		items = x['value'].items
 		spec = do_rvalue(items[0]['value'])
 		val = do_rvalue(items[1]['value'])
 		pair = (spec, val)
 		outputs.append(pair)
 
 	inputs = []
-	for x in xinputs['items']:
-		items = x['value']['items']
+	for x in xinputs.items:
+		items = x['value'].items
 		spec = do_rvalue(items[0]['value'])
 		val = do_rvalue(items[1]['value'])
 		pair = (spec, val)
 		inputs.append(pair)
 
 	clobbers = []
-	for x in xclobbers['items']:
+	for x in xclobbers.items:
 		spec = do_rvalue(x['value'])
 		clobbers.append(spec)
 
@@ -2069,12 +2067,12 @@ def do_stmt_block(x):
 
 
 def symbol_const(id, init_value, is_public=False):
-	const_value = value_const(id, init_value['type'], init_value, id.ti)
-	const_value['att'].extend(init_value['att'])
+	const_value = value_const(id, init_value.type, init_value, id.ti)
+	const_value.att.extend(init_value.att)
 
 	# Now let can be immediate!
 	if value_is_immediate(init_value):
-		const_value['immediate'] = True
+		const_value.immediate = True
 		cp_immediate(const_value, init_value)
 
 	global cmodule
@@ -2194,12 +2192,13 @@ def def_const(x):
 
 	definition.init_value = init_value
 
+	
 
 	const_value = symbol_const(id, init_value, is_public=x['access_modifier'] == 'public')
-	const_value['definition'] = definition
+	const_value.definition = definition
 
 	if need_decoration(x):
-		const_value['id'].need_decoration = True
+		const_value.id.need_decoration = True
 	#	const_value['id'].prefix = cmodule['prefix']
 
 	definition.value = const_value
@@ -2243,9 +2242,9 @@ def def_var(x):
 	elif tu == True and vu == False:
 		# type undef, value ok
 
-		#type_update(nt, v['type'])
+		#type_update(nt, v.type)
 		v = value_cons_default(v)
-		t = v['type']
+		t = v.type
 
 	elif tu == False and vu == False:
 		# type ok, value ok
@@ -2254,10 +2253,10 @@ def def_var(x):
 		# var arrayFromString: var s: []Char8 = "abc"
 		if htype.type_is_open_array(t):
 			length = 0
-			if htype.type_is_string(v['type']):
-				length = len(v['asset'])
-			elif htype.type_is_array(v['type']):
-				length = v['type']['volume']['asset']
+			if htype.type_is_string(v.type):
+				length = len(v.asset)
+			elif htype.type_is_array(v.type):
+				length = v.type['volume'].asset
 			else:
 				#info("???????", x['ti'])
 				pass
@@ -2271,7 +2270,7 @@ def def_var(x):
 	elif tu == False and vu == True:
 		# type ok, value undef
 		# пропишем тип для v, тк там сейчас type_undefined
-		v['type'] = t
+		v.type = t
 
 
 	init_value = v
@@ -2281,7 +2280,7 @@ def def_var(x):
 
 	definition.var_value = var_value
 	definition.init_value = init_value
-	var_value['definition'] = definition
+	var_value.definition = definition
 	cdef = None
 	return definition
 
@@ -2307,19 +2306,19 @@ def def_func(x, dostmt=True):
 	definition.nl = x['nl']
 	cdef = definition
 
-	fn['definition'] = definition
+	fn.definition = definition
 
-	if htype.type_is_incomplete(fn['type']):
-		fn['type'] = do_type_func(x['type'])
-		if htype.type_is_incomplete(fn['type']):
+	if htype.type_is_incomplete(fn.type):
+		fn.type = do_type_func(x['type'])
+		if htype.type_is_incomplete(fn.type):
 			return None
 
-	if htype.type_is_bad(fn['type']):
+	if htype.type_is_bad(fn.type):
 		return None
 
 	if func_id.str != 'main':
 		if need_decoration(x):
-			fn['id'].need_decoration = True
+			fn.id.need_decoration = True
 			#fn['id'].prefix = cmodule['prefix']
 
 	if x['stmt'] == None:
@@ -2330,7 +2329,7 @@ def def_func(x, dostmt=True):
 	prev_cfunc = cfunc
 	cfunc = fn
 
-	params = fn['type']['params']
+	params = fn.type['params']
 
 	i = 0
 	while i < len(params):
@@ -2339,13 +2338,13 @@ def def_func(x, dostmt=True):
 		param_id = param.id
 
 		param_value = value_const(param_id, param_type, None, param.ti)
-		param_value['att'].append('local')
-		param_value['att'].append('param')
+		param_value.att.append('local')
+		param_value.att.append('param')
 		ctx_value_add(param_id.str, param_value)
 		i += 1
 
 	# for C backend, for #include <stdarg.h>
-	if fn['type']['extra_args']:
+	if fn.type['extra_args']:
 		if not 'use_va_arg' in cmodule['att']:
 			cmodule['att'].append('use_va_arg')
 
@@ -2361,7 +2360,7 @@ def def_func(x, dostmt=True):
 			check_block(stmt)
 
 			# check if return present
-			if not htype.type_is_unit(fn['type']['to']):
+			if not htype.type_is_unit(fn.type['to']):
 				stmts = stmt.stmts
 				if len(stmts) == 0:
 					warning("expected return operator at end", stmt['ti'])
@@ -2390,7 +2389,7 @@ def check_unuse(v):
 		return
 
 	id_str = v['id'].str
-	info("value '%s' defined but not used" % id_str, v['ti'])
+	info("value '%s' defined but not used" % id_str, v.ti)
 
 
 
@@ -2504,7 +2503,7 @@ def do_import(x):
 		return None
 
 	# Literal string to python string
-	impline = import_expr['asset']
+	impline = import_expr.asset
 	abspath = import_abspath(impline, ext='.m')
 
 	log('do_import("%s")' % impline)
@@ -2603,7 +2602,7 @@ def do_directive(x):
 			error("expected bool value", c)
 			return None
 
-		cond = c['asset'] != 0
+		cond = c.asset != 0
 
 		production = cond
 		if cond:
@@ -2621,7 +2620,7 @@ def do_directive(x):
 			error("expected bool value", c)
 			return None
 
-		cond = c['asset'] != 0
+		cond = c.asset != 0
 
 		if cond and not skipp:
 			production = True
@@ -2640,7 +2639,7 @@ def do_directive(x):
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 
-		msg = v['asset']
+		msg = v.asset
 		info(msg, x['ti'])
 
 	elif kind == 'warning':
@@ -2649,7 +2648,7 @@ def do_directive(x):
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 
-		msg = v['asset']
+		msg = v.asset
 		warning(msg, x['ti'])
 
 	elif kind == 'error':
@@ -2658,7 +2657,7 @@ def do_directive(x):
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 
-		msg = v['asset']
+		msg = v.asset
 		error(msg, x['ti'])
 		exit(-1)
 
@@ -2666,7 +2665,7 @@ def do_directive(x):
 		v = do_value_immediate_string(args[0])
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
-		id_str = v['asset']
+		id_str = v.asset
 		cmodule['symtab_public'].value_undef(id_str)
 		cmodule['symtab_public'].type_undef(id_str)
 
@@ -2801,7 +2800,7 @@ def update_func_type(idStr):
 		fn = ctx_value_get(idStr)
 
 		ftype = do_type_func(x['type'])
-		type_update(fn['type'], ftype)
+		type_update(fn.type, ftype)
 		return fn
 
 
@@ -3087,13 +3086,13 @@ def extra_args_check(specs, extra_args, expected_pointers):
 
 
 def cp_immediate(to, _from):
-	if 'asset' in _from:
-		to['asset'] = _from['asset']
-	if 'items' in _from:
-		to['items'] = _from['items']
+	if _from.asset != None:
+		to.asset = _from.asset
+	if _from.items != None:
+		to.items = _from.items
 
-	to['immediate'] = _from['immediate']
-	to['immutable'] = _from['immutable']
+	to.immediate = _from.immediate
+	to.immutable = _from.immutable
 	return
 
 

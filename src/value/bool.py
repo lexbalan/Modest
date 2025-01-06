@@ -9,7 +9,7 @@ import foundation
 
 def value_bool_create(val, ti=None):
 	v = value_terminal(foundation.typeBool, ti)
-	v['asset'] = val
+	v.asset = val
 	return v
 
 

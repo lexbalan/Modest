@@ -14,16 +14,16 @@ def value_float_create(num, ti=None):
 	typ = type_float(width=flt_width, ti=ti)
 	typ['generic'] = True
 	v = value_terminal(typ, ti)
-	v['asset'] = num
-	v['immediate'] = True
+	v.asset = num
+	v.immediate = True
 	return v
 
 
 def _value_float_cons_immediate(t, v, method, ti):
 	#info("_value_float_cons_immediate", ti)
 	nv = value_cons_immediate(t, v, method, ti)
-	nv['asset'] = decimal.Decimal(nv['asset'])
-	nv['immediate'] = True
+	nv.asset = decimal.Decimal(nv.asset)
+	nv.immediate = True
 	return nv
 
 

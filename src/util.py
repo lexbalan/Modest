@@ -132,7 +132,7 @@ def utfx_chars_to_utf32_chars(utf32_codes, char_width):
 def utf32_chars_to_string(chars):
 	ccodes = []
 	for char in chars:
-		cc = char['asset']
+		cc = char.asset
 		ccodes.append(chr(cc))
 	return ''.join(ccodes)
 """

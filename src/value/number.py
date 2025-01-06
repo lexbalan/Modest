@@ -8,11 +8,11 @@ def number_can(to, from_type, method):
 
 
 def value_number_cons(t, v, method, ti):
-	from_type = v['type']
+	from_type = v.type
 	if number_can(t, from_type, method):
 		nv = value_cons_node(t, v, method, ti=ti)
-		nv['immediate'] = v['immediate']
-		nv['asset'] = v['asset']
+		nv.immediate = v.immediate
+		nv.asset = v.asset
 		return nv
 
 	return None

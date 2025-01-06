@@ -15,17 +15,17 @@ def value_string_create(string, ti=None):
 
 	string_type = type_string(max_char_width, len(string), ti)
 	nv = value_terminal(string_type, ti)
-	nv['asset'] = string
-	nv['immediate'] = True
+	nv.asset = string
+	nv.immediate = True
 	return nv
 
 
 def value_string_add(l, r, ti):
-	asset = l['asset'] + r['asset']
+	asset = l.asset + r.asset
 	max_char_width = max(l['type']['width'], r['type']['width'])
 	type_result = type_string(max_char_width, len(asset), ti)
 	nv = value_bin('add', l, r, type_result, ti=ti)
-	nv['asset'] = asset
-	nv['immediate'] = True
+	nv.asset = asset
+	nv.immediate = True
 	return nv
 

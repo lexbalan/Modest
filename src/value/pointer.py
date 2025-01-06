@@ -52,11 +52,11 @@ def pointer_can(to, from_type, method):
 
 def value_pointer_cons(t, v, method, ti):
 	if value_is_immediate(v):
-		if type.type_is_string(v['type']):
-			s_imm = utf32_chars_to_utfx_chars(v['asset'], t['to']['of'], ti)
+		if type.type_is_string(v.type):
+			s_imm = utf32_chars_to_utfx_chars(v.asset, t['to']['of'], ti)
 			nv = value_cons_node(t, v, method, ti=ti)
-			nv['asset'] = s_imm
-			nv['att'].append('zstring')
+			nv.asset = s_imm
+			nv.att.append('zstring')
 
 			# регистрируем строку в модуле
 			from trans import module_strings_add

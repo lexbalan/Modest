@@ -6,7 +6,7 @@ from .value import value_cons_node, value_cons_immediate
 
 
 def _value_word_cons_immediate(t, v, method, ti):
-	if v['type']['width'] > t['width']:
+	if v.type['width'] > t['width']:
 		error("word overflow", ti)
 
 	return value_cons_immediate(t, v, method, ti)

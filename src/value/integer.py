@@ -19,9 +19,9 @@ def value_integer_create(num, typ=None, ti=None):
 			return value_bad(ti)
 
 	v = value_terminal(typ, ti)
-	v['asset'] = num
-	v['nsigns'] = 0
-	v['immediate'] = True
+	v.asset = num
+	v.nsigns = 0
+	v.immediate = True
 	return v
 
 
@@ -60,7 +60,7 @@ def _check_width(from_type, t, method, ti):
 def _value_integer_cons_immediate(t, v, method, ti):
 	#info("value_cons_int_immediate", ti)
 	width = t['width']
-	need_width = nbits_for_num(v['asset'])
+	need_width = nbits_for_num(v.asset)
 
 	if need_width > width:
 		error("integer overflow", ti)
@@ -103,19 +103,19 @@ def integer_can(to, from_type, method):
 
 
 def value_integer_cons(t, v, method, ti):
-	_check_width(v['type'], t, method, ti)
+	_check_width(v.type, t, method, ti)
 
 	if value_is_immediate(v):
-		_check_width(v['type'], t, method, ti)
+		_check_width(v.type, t, method, ti)
 
 		if not t['signed']:
-			if v['asset'] < 0:
+			if v.asset < 0:
 				return None
 
 		if method != 'implicit':
 			nv = value_cons_node(t, v, method, ti=ti)
-			nv['asset'] = int(v['asset'])  # here can be float
-			nv['immediate'] = True
+			nv.asset = int(v.asset)  # here can be float
+			nv.immediate = True
 			return nv
 		return _value_integer_cons_immediate(t, v, method, ti)
 
