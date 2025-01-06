@@ -4,7 +4,7 @@ import decimal
 from error import info, warning, error
 import type as type
 from type import type_float
-from .value import value_is_immediate, ValueLiteral, ValueCons, value_cons_immediate
+from .value import ValueLiteral, ValueCons, value_cons_immediate
 
 
 
@@ -45,7 +45,7 @@ def float_can(to, from_type, method):
 
 
 def value_float_cons(t, v, method, ti):
-	if value_is_immediate(v):
+	if v.isImmediate():
 		return _value_float_cons_immediate(t, v, method, ti)
 	return ValueCons(t, v, method, ti=ti)
 

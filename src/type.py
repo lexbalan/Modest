@@ -2,9 +2,9 @@
 import copy
 from error import info, warning, error, fatal
 import settings
-from hlir.hlir import Id, Field
+from hlir.hlir import Id, Field, Value
 from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up
-from value.value import value_print
+#from value.value import value_print
 
 ######################################################################
 #                            HLIR TYPE                               #
@@ -234,12 +234,11 @@ def type_array(of, volume, ti=None):
 
 	array_size = 0
 	if volume != None:
-		from value.value import value_is_immediate
-		if value_is_immediate(volume):
+		if volume.isImmediate():
 			try:
 				array_size = item_size * volume.asset
 			except:
-				value_print(volume)
+				Value.print(volume)
 
 	return {
 		'isa': 'type',
@@ -406,17 +405,14 @@ def type_eq_pointer(a, b, opt):
 
 
 def type_eq_array(a, b, opt):
-	from value.value import value_is_undefined
-
-	if value_is_undefined(a['volume']) or value_is_undefined(b['volume']):
-		if value_is_undefined(a['volume']) and value_is_undefined(b['volume']):
+	if Value.isUndefined(a['volume']) or Value.isUndefined(b['volume']):
+		if Value.isUndefined(a['volume']) and Value.isUndefined(b['volume']):
 			return type_eq(a['of'], b['of'], opt)
 		return False
 
 	# a['volume'] & b['volume'] defined
-	from value.value import value_is_immediate
 
-	if value_is_immediate(a['volume']) and value_is_immediate(b['volume']):
+	if a['volume'].isImmediate() and b['volume'].isImmediate():
 		if a['volume'].asset != b['volume'].asset:
 			return False
 
@@ -591,14 +587,10 @@ def type_is_vla(t):
 	if t['kind'] != 'array':
 		return False
 
-	from value.value import value_is_undefined
-
-	if value_is_undefined(t['volume']):
+	if Value.isUndefined(t['volume']):
 		return False
 
-	from value.value import value_is_immediate
-
-	return not value_is_immediate(t['volume'])
+	return not t['volume'].isImmediate()
 
 
 def type_is_composite(t):
@@ -645,9 +637,8 @@ def type_is_closed_array(t):
 
 
 def type_is_open_array(t):
-	from value.value import value_is_undefined
 	if type_is_array(t):
-		return value_is_undefined(t['volume'])
+		return Value.isUndefined(t['volume'])
 	return False
 
 
@@ -732,9 +723,8 @@ def type_is_forbidden_var(t, zero_array_forbidden=True):
 
 		# [0]Int
 		from trans import is_unsafe_mode
-		from value.value import value_is_immediate
 		if zero_array_forbidden or not is_unsafe_mode():
-			if value_is_immediate(t['volume']):
+			if t['volume'].isImmediate():
 				if t['volume'].asset == 0:
 					return True
 
@@ -798,9 +788,7 @@ def type_print_array(t, print_aka=True):
 	print("[", end='')
 	array_size = t['volume']
 
-	from value.value import value_is_undefined
-
-	if not value_is_undefined(array_size):
+	if not Value.isUndefined(array_size):
 		if type_is_vla(t):
 			print("<VAR>", end='')
 		else:

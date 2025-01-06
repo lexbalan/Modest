@@ -8,7 +8,7 @@ from hlir.hlir import *
 from value.value import *
 import type as htype
 from type import select_common_type, type_print
-from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, ValueIndexArray, value_is_literal
+from value.value import value_attribute_check, ValueIndexArray
 from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_by_id, align_to
 from main import settings
@@ -110,6 +110,12 @@ def init():
 	CC_INT_SIZE_BITS = 32
 	CC_LONG_SIZE_BITS = 32
 	CC_LONG_LONG_SIZE_BITS = 64
+
+
+def value_is_generic_immediate(x):
+	return x.isImmediate() and htype.type_is_generic(x.type)
+
+
 
 
 CONS_PRECEDENCE = 10
@@ -282,7 +288,7 @@ def strTypeArray(t, label='', core=''):
 				dim += ' * '
 			if t['volume'].id:
 				dim += get_id_str(t['volume'])
-			elif value_is_undefined(t['volume']):
+			elif Value.isUndefined(t['volume']):
 				pass
 			elif t['volume'].asset:
 				dim += str(t['volume'].asset)
@@ -545,7 +551,7 @@ def print_value_eq_composite(x, ctx):
 	left = x.left
 	right = x.right
 
-	if value_is_immediate(x):
+	if x.isImmediate():
 		return print_value_bool_lit(x, ctx)
 
 	memcmp_eq(left, right, op=op)
@@ -732,7 +738,7 @@ def print_value_access(x, ctx):
 
 	# если имеем дело c дженерик записью (глоб константа)
 	#if htype.type_is_generic(left.type):
-	#	if value_is_immediate(x):
+	#	if x.isImmediate():
 	if value_is_generic_immediate(left):
 		print_value_literal(x, ['print_immediate'])
 		return
@@ -976,7 +982,7 @@ def is_zero_tail(values, i, n):
 	# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
 	while i < n:
 		v = values[i]
-		if not value_is_zero(v):
+		if not v.isZero():
 			return False
 		i = i + 1
 	return True
@@ -1007,7 +1013,7 @@ def print_array_values(values, ctx):
 		# если это значание - zero, проверим все остальные справа
 		# и если они тоже zero - их можно не печатать (zero tail)
 		# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
-		if value_is_zero(a):
+		if a.isZero():
 			if is_zero_tail(values, i, n):
 				return
 
@@ -1477,7 +1483,7 @@ def print_stmt_var(x):
 	# литерал массива включающий в себя переменные
 	# то печатаем это иначе (w/ memcpy)
 	if htype.type_is_array(iv.type):
-		runtimeLiteral = isinstance(iv, ValueLiteral) and not value_is_immediate(iv)
+		runtimeLiteral = isinstance(iv, ValueLiteral) and not iv.isImmediate()
 		if not runtimeLiteral:
 			out(";")
 			nl_indent()
@@ -1486,12 +1492,12 @@ def print_stmt_var(x):
 
 
 	if htype.type_is_array(var_value.type):
-		if not value_is_immediate(init_value):
+		if not init_value.isImmediate():
 			# array assignation by non-immediate value
 			out(";")
 			nl_indent(1)
 
-			if value_is_undefined(init_value):
+			if Value.isUndefined(init_value):
 				memzero_sizeof(var_value)
 			else:
 				memcopy_assign(var_value, init_value)
@@ -1499,7 +1505,7 @@ def print_stmt_var(x):
 			out(";")
 			return
 
-	if not value_is_undefined(init_value):
+	if not Value.isUndefined(init_value):
 		out(" = ")
 		print_value(init_value)
 
@@ -1555,7 +1561,7 @@ def print_stmt_let(x):
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
 	if htype.type_is_array(iv.type):
-		runtimeLiteral = isinstance(iv, ValueLiteral) and not value_is_immediate(iv)
+		runtimeLiteral = isinstance(iv, ValueLiteral) and not iv.isImmediate()
 		if not runtimeLiteral:
 			print_variable(get_id_str(x), v.type)
 			out(";")
@@ -1916,7 +1922,7 @@ def print_def_var(x, isdecl=False):
 
 	init_value = x.init_value
 
-	if not value_is_undefined(init_value):
+	if not Value.isUndefined(init_value):
 		out(" = ")
 		print_value(init_value, ctx=['no-literal-array-cast'])
 
@@ -2279,7 +2285,7 @@ def get_root_value(x):
 		# конструирование complex_immediate печатаем
 		# for: (uint32_t[3]){1, 2, 3}
 		# for: (Point){.x=1, .y=2}
-		if value_is_immediate(x.value):
+		if x.value.isImmediate():
 			return x
 		return get_root_value(x.value)
 	return x
@@ -2334,7 +2340,7 @@ def print_value_as_ptr(x):
 
 def memcopy_assign(left, right):
 	rv = get_root_value(right)
-	if value_is_zero(rv):
+	if rv.isZero():
 		memzero_sizeof(left)
 		return
 

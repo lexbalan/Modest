@@ -4,7 +4,7 @@ import type as type
 from hlir.hlir import *
 from type import type_print, record_field_get
 from util import get_item_by_id
-from .value import ValueLiteral, ValueCons, ValueZero, value_is_immediate, value_print, value_cons_immediate, ValueBin, value_eq
+from .value import ValueLiteral, ValueCons, ValueZero, value_cons_immediate, ValueBin
 
 
 # получает на вход список инициализаторов
@@ -25,7 +25,7 @@ def value_record_create(initializers=[], ti=None):
 
 		# если хотя бы один элемент - не immediate
 		# -> весь литерал записи - не immediate
-		if not value_is_immediate(init_value):
+		if not init_value.isImmediate():
 			is_immediate = False
 
 		# создаем поле для типа generic record
@@ -98,11 +98,11 @@ def value_record_eq(l, r, op, ti):
 	#info("value_record_eq()", ti)
 	from foundation import typeBool
 	nv = ValueBin(op, l, r, typeBool, ti=ti)
-	if value_is_immediate(l) and value_is_immediate(r):
+	if l.isImmediate() and r.isImmediate():
 		eq_result = True
 
 		for lx, rx in zip(l.items, r.items):
-			if not value_eq(lx.value, rx.value, op, ti):
+			if not Value.eq(lx.value, rx.value, op, ti):
 				eq_result = False
 				break
 

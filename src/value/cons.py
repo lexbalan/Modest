@@ -1,6 +1,6 @@
 import type as htype
 from error import info, warning, error
-from .value import Value, ValueBad, value_is_bad, ValueCons, value_print
+from .value import Value, ValueBad, ValueCons
 from .unit import unit_can, ValueUnit_cons
 from .bool import bool_can, value_bool_cons
 from .word import word_can, value_word_cons
@@ -60,7 +60,7 @@ def value_cons_implicit(t, v, ti=None):
 	assert(t['isa'] == 'type')
 	assert(isinstance(v, Value))
 
-	if value_is_bad(v) or htype.type_is_bad(t):
+	if Value.isBad(v) or htype.type_is_bad(t):
 		return ValueBad(v.ti)
 
 	ti = v.ti
@@ -109,7 +109,7 @@ def value_cons_explicit(t, v, ti):
 	assert(isinstance(v, Value))
 	assert(ti['isa'] == 'ti')
 
-	if value_is_bad(v) or htype.type_is_bad(t):
+	if Value.isBad(v) or htype.type_is_bad(t):
 		return ValueBad(v.ti)
 
 	from_type = v.type
@@ -187,7 +187,7 @@ def _select_default_type_for(t):
 # возвращает None если не может привести (!)
 # не принтует ошибку (но может выдать info)
 def value_cons(t, v, method, ti):
-	if value_is_bad(v) or htype.type_is_bad(t):
+	if Value.isBad(v) or htype.type_is_bad(t):
 		return None
 
 	if method == 'implicit':

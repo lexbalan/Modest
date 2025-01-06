@@ -6,7 +6,7 @@ from error import info, warning, error, fatal
 from hlir.hlir import *
 import type as htype
 from type import type_print
-from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_is_zero, ValueZero
+from value.value import value_attribute_check, ValueZero
 from type import type_pointer
 from util import align_bits_up
 from pprint import pprint
@@ -892,7 +892,7 @@ def do_reval(x):
 
 def do_eval_bin(x):
 
-	if value_is_immediate(x):
+	if x.isImmediate():
 		return do_eval_literal(x)
 
 	op = x.op
@@ -1073,7 +1073,7 @@ def index(x):
 
 
 def do_eval_index(v):
-	if value_is_immediate(v):
+	if v.isImmediate():
 		return do_eval(v.immval)
 
 	left, indexes = index(v)
@@ -1099,7 +1099,7 @@ def ass(left, indexes):
 
 
 def do_eval_slice(v):
-	if value_is_immediate(v):
+	if v.isImmediate():
 		return do_eval(v.immval)
 
 	varray = v.left
@@ -1123,7 +1123,7 @@ def do_eval_slice(v):
 
 	# если сам массив находится в регистре: (let rec = get_rec())
 	if not array['is_adr']:
-		if not value_is_immediate(v['index']):
+		if not v['index'].isImmediate():
 			error("expected immediate index value", v.ti)
 			return llvm_value_zero(v.ti)
 
@@ -1179,7 +1179,7 @@ def access(x):
 
 
 def do_eval_access(v):
-	if value_is_immediate(v):
+	if v.isImmediate():
 		return do_eval(v.immval)
 
 	left, fields = access(v)
@@ -1319,7 +1319,7 @@ def eval_cons_record(x):
 	from_type = value.type
 	to_type = x.type
 
-	#if value_is_immediate(x):
+	#if x.isImmediate():
 	if x.items != None:
 		return do_eval_literal(x)
 
@@ -1331,7 +1331,7 @@ def eval_cons_record(x):
 
 
 def eval_cons_array(x):
-	if value_is_immediate(x):
+	if x.isImmediate():
 		if htype.type_is_vla(x.type):
 			return do_eval_literal(x.value)
 		return do_eval_literal(x)
@@ -1363,7 +1363,7 @@ def do_eval_cons(x):
 		return eval_cons_record(x)
 
 
-	if value_is_immediate(value):
+	if value.isImmediate():
 		# В случае Nat32 &x у нас занчение immediate но нет asset тк это поздний imm
 		if x.asset:
 			if not htype.type_is_pointer(to_type):
@@ -1410,7 +1410,7 @@ def do_eval_cons(x):
 		return v
 
 	# Приводим immediate значение прямо по месту
-	if value_is_immediate(value):
+	if value.isImmediate():
 		return llvm_value_inline_cast(to_type, v)
 
 	return docast(v, to_type)
@@ -1468,7 +1468,7 @@ def do_eval_array(v):
 		item = v.items[i]
 		# нет смысла засовывать в 'массив по значению' нулевые элементы
 		# тк он порождается из zeroinitializer и zero filled by default
-		if not value_is_zero(item):
+		if not item.isZero():
 			lliv = do_reval(item)
 			xv = insertvalue(xv, lliv, i)
 		i = i + 1
@@ -1499,7 +1499,7 @@ def do_eval_record(v):
 	for initializer in v.items:
 		# нет смысла засовывать в структуру по значению нулевые элементы
 		# тк она порождается из zeroinitializer и по умолчанию заполнена нулями
-		if not value_is_zero(initializer.value):
+		if not initializer.value.isZero():
 			iv = do_reval(initializer.value)
 			field = htype.record_field_get(rec_type, get_id_str(initializer))
 			xv = insertvalue(xv, iv, field.field_no)
@@ -1564,7 +1564,7 @@ def do_eval_literal(x):
 	elif htype.type_is_word(xt): return llvm_value_num(xt, x.asset)
 	else:
 		error("do_eval_literal: unknown literal", x['ti'])
-		value_print(x)
+		Value.print(x)
 		exit(1)
 	return
 
@@ -1639,7 +1639,7 @@ def do_eval(x):
 	if y == None:
 		error("llvm do_eval cannot eval (%s) value" % 'k', x.ti)
 		print(x)
-		value_print(x)
+		Value.print(x)
 		type_print(x.type)
 		1 / 0
 		return llvm_value_zero(x.type)
@@ -1670,7 +1670,7 @@ def do_assign_arrays(l, r):
 	volume = trim(volume, 32)
 	out("\n\t; -- end vol eval --")
 
-	if value_is_zero(r):
+	if r.isZero():
 		out("\n\t; -- zero fill rest of array")
 		# size = volume * item_size
 		item_sz = l.type['of']['size']
@@ -1784,7 +1784,7 @@ def print_stmt_var(x):
 	is_vla = False
 	sz = None
 	if htype.type_is_array(t):
-		if not value_is_immediate(t['volume']):
+		if not t['volume'].isImmediate():
 			sz = do_reval(t['volume'])
 			t = t['of']
 
@@ -1807,7 +1807,7 @@ def print_stmt_var(x):
 	locals_add(id_str, val)
 
 	init_value = x.init_value
-	if not value_is_undefined(init_value):
+	if not Value.isUndefined(init_value):
 		iv = do_reval(init_value)
 		llvm_store(val, iv)
 
@@ -2263,7 +2263,7 @@ def print_def_var(x, as_extern=False):
 	print_type(var.type)
 
 	if not is_extern:
-		if not value_is_undefined(x.init_value):
+		if not Value.isUndefined(x.init_value):
 			out(" ")
 			llvm_print_value(do_eval(x.init_value))
 		else:

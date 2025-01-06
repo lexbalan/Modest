@@ -3,7 +3,7 @@ from error import info, warning, error
 from util import nbits_for_num
 import type as htype
 from type import type_print
-from .value import ValueLiteral, value_is_immediate, ValueCons, value_cons_immediate
+from .value import ValueLiteral, ValueCons, value_cons_immediate
 
 
 
@@ -105,7 +105,7 @@ def integer_can(to, from_type, method):
 def value_integer_cons(t, v, method, ti):
 	_check_width(v.type, t, method, ti)
 
-	if value_is_immediate(v):
+	if v.isImmediate():
 		_check_width(v.type, t, method, ti)
 
 		if not t['signed']:

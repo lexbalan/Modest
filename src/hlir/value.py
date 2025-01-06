@@ -17,6 +17,116 @@ class Value():
 		self.nl_end = 0  # ??
 
 
+	def isImmediate(self):
+		return self.immediate
+
+	def isImmutable(self):
+		return self.immutable
+
+
+	@staticmethod
+	def isBad(x):
+		return isinstance(x, ValueBad)
+
+
+	@staticmethod
+	def isUndefined(x):
+		return isinstance(x, ValueUndefined)
+
+
+
+	# op = 'eq' | 'ne
+	@staticmethod
+	def eq(l, r, op, ti):
+		assert(isinstance(l, Value))
+		assert(isinstance(r, Value))
+		assert(op in ['eq', 'ne'])
+
+		from type import type_is_array, type_is_record
+
+		if type_is_array(l.type):
+			from value.array import value_array_eq
+			return value_array_eq(l, r, op, ti)
+		elif type_is_record(l.type):
+			from value.record import value_record_eq
+			return value_record_eq(l, r, op, ti)
+
+		# scalar
+
+		from foundation import typeBool
+		nv = ValueBin(op, l, r, typeBool, ti=ti)
+
+		if l.isImmediate() and r.isImmediate():
+			eq_result = False
+			if op == 'eq':
+				eq_result = l.asset == r.asset
+			else:
+				eq_result = l.asset != r.asset
+
+			nv.asset = int(eq_result)
+			nv.immediate = True
+
+		return nv
+
+
+
+	# Only for immediate value (!)
+	def isZero(self):
+		if not self.isImmediate():
+			return False
+
+		from type import type_is_array, type_is_record
+
+		if type_is_array(self.type):
+			for item in self.items:
+				if not item.isZero():
+					return False
+			return True
+
+		if type_is_record(self.type):
+			for initializer in self.items:
+				if not initializer.value.isZero():
+					return False
+			return True
+
+		return self.asset == 0
+
+
+	@staticmethod
+	def print(x, msg="value_print:"):
+		assert(isinstance(x, Value))
+
+		# can be 'ti_def', but no 'ti'!
+		#if 'ti' in x:
+		info(msg, x.ti)
+		#if 'def_ti' in x:
+		#	info(msg, x['def_ti'])
+
+		#print("isa: " + str(x['isa']))
+		print("kind: " + str(x.__class__.__name__))
+		print("type: ", end=""); htype.type_print(x.type); print()
+		print("att: " + str(x.att))
+
+		print('immediate = ' + str(x.immediate))
+		print('immutable = ' + str(x.immutable))
+
+		if x.immediate:
+			if x.items != None:
+				print("items_len = %d" % len(x.items))
+				print("items[0] = ")
+				print(x.items[0])
+
+		"""print("additional fields:")
+
+		for prop in x:
+			if not prop in ['isa', 'kind', 'type', 'att', 'ti', 'immediate', 'immutable']:
+				print(" - %s" % prop)"""
+
+		print()
+
+
+
+
 
 class ValueBad(Value):
 	def __init__(self, ti=None):
@@ -198,7 +308,8 @@ class ValueAlignof(Value):
 
 class ValueOffsetof(Value):
 	def __init__(self, record, field_id, ti=None):
-		field = htype.record_field_get(of, field_id['str'])
+		from type import record_field_get
+		field = record_field_get(of, field_id['str'])
 		if field == None:
 			error("undefined field '%s'" % field_id['str'], field_id.ti)
 			return ValueBad({'ti': ti})

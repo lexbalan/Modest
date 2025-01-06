@@ -1,7 +1,7 @@
 
 from error import info, warning, error
 import type as type
-from .value import ValueCons, value_is_immediate, value_cons_immediate
+from .value import ValueCons, value_cons_immediate
 from .char import utf32_chars_to_utfx_chars
 
 
@@ -51,7 +51,7 @@ def pointer_can(to, from_type, method):
 
 
 def value_pointer_cons(t, v, method, ti):
-	if value_is_immediate(v):
+	if v.isImmediate():
 		if type.type_is_string(v.type):
 			s_imm = utf32_chars_to_utfx_chars(v.asset, t['to']['of'], ti)
 			nv = ValueCons(t, v, method, ti=ti)

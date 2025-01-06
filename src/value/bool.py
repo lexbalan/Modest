@@ -1,7 +1,6 @@
 
 from error import info, warning, error
 import type as type
-from value.value import value_is_immediate
 from .value import ValueLiteral, ValueCons, value_cons_immediate
 
 import foundation

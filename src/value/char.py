@@ -43,8 +43,6 @@ def char_can(to, from_type, method):
 
 
 def value_char_cons(t, v, method, ti):
-	from value.value import value_is_immediate
-
 	# String -> Char
 	# ex: var c: Char8 = "A"
 	if type.type_is_string(v.type):
@@ -56,7 +54,7 @@ def value_char_cons(t, v, method, ti):
 		return nv
 
 
-	if value_is_immediate(v):
+	if v.isImmediate():
 		return value_cons_immediate(t, v, method, ti)
 
 	return ValueCons(t, v, method, ti=ti)

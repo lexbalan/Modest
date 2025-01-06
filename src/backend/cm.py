@@ -4,7 +4,7 @@ from error import info
 from hlir.hlir import *
 from value.value import *
 from .common import *
-from value.value import value_is_undefined, value_is_zero, value_is_immediate, value_attribute_check, value_print
+from value.value import value_attribute_check
 from util import get_item_by_id
 
 
@@ -125,7 +125,7 @@ def print_type_integer(t):
 
 def print_type_array(t):
 	out("[")
-	if not value_is_undefined(t['volume']):
+	if not Value.isUndefined(t['volume']):
 		print_value(t['volume'])
 	out("]")
 	print_type(t['of'])
@@ -360,7 +360,7 @@ def is_zero_tail(values, i, n):
 	# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
 	while i < n:
 		v = values[i]
-		if not value_is_zero(v):
+		if not v.isZero():
 			return False
 		i = i + 1
 	return True
@@ -383,7 +383,7 @@ def print_value_array(v, ctx):
 	while i < n:
 		a = values[i]
 
-		if value_is_zero(a):
+		if a.isZero():
 			if is_zero_tail(values, i, n):
 				break
 
@@ -721,7 +721,7 @@ def print_stmt_var(x):
 	out(": ")
 	print_type(x.var_value.type)
 	iv = x.init_value
-	if not value_is_undefined(iv):
+	if not Value.isUndefined(iv):
 		out(" = ")
 		print_value(iv)
 
@@ -739,7 +739,7 @@ def print_stmt_assign(x):
 	print_value(x.right)
 
 	if htype.type_is_array(x.right.type):
-		if value_is_zero(x.right):
+		if x.right.isZero():
 			out("  // right size = %d" % x.right.type['size'])
 
 

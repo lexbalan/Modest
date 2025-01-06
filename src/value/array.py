@@ -5,7 +5,7 @@ from type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
-from .value import ValueBad, ValueLiteral, value_is_undefined, value_is_immediate, ValueCons, ValueZero, ValueBin, value_eq, value_print
+from .value import Value, ValueBad, ValueLiteral, ValueCons, ValueZero, ValueBin
 
 
 # TODO: переделай здесь все - тут все плохо...
@@ -25,7 +25,7 @@ def value_array_create(items, ti=None):
 	# -> весь массив - не immediate
 	is_immediate = True
 	for item in items:
-		if not value_is_immediate(item):
+		if not item.isImmediate():
 			is_immediate = False
 
 	# Получаем наиболее подходящий общий тип элементов массива
@@ -85,10 +85,10 @@ def array_can(to, from_type, method):
 
 	if htype.type_is_generic(from_type):
 		# GenericArray -> Array
-		if value_is_undefined(to['volume']):
+		if Value.isUndefined(to['volume']):
 			return True
 
-		if not value_is_immediate(to['volume']):
+		if not to['volume'].isImmediate():
 			return True
 
 		# Check array length
@@ -108,7 +108,7 @@ def array_can(to, from_type, method):
 def value_array_cons(t, v, method, ti):
 	#info("value_array_cons", ti)
 
-	if value_is_undefined(t['volume']):
+	if Value.isUndefined(t['volume']):
 		# for case: `[]Int32 [1, 2, 3]`
 		# we try to construct array with undefined volume from array with defined volume
 		# in this case we take volume of value array
@@ -207,18 +207,18 @@ def value_array_eq(l, r, op, ti):
 	from foundation import typeBool
 	nv = ValueBin(op, l, r, typeBool, ti=ti)
 
-	if value_is_immediate(l) and value_is_immediate(r):
+	if l.isImmediate() and r.isImmediate():
 		eq_result = True
 		lvolume = l.type['volume']
 		rvolume = r.type['volume']
-		if value_is_immediate(lvolume) and value_is_immediate(rvolume):
+		if lvolume.isImmediate() and rvolume.isImmediate():
 			if lvolume.asset != rvolume.asset:
 				eq_result = False
 		else:
 			fatal("dynamic immediate array volume not implemented", ti)
 
 		for lx, rx in zip(l.items, r.items):
-			if not value_eq(lx, rx, op, ti):
+			if not Value.eq(lx, rx, op, ti):
 				eq_result = False
 				break
 
