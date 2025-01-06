@@ -51,6 +51,7 @@ static SHA256_TestCase *tests[2] = (SHA256_TestCase *[2]){&test0, &test1};
 static bool doTest(SHA256_TestCase *test)
 {
 	sha256_Hash test_hash;
+	memcpy(&test_hash, &/*undefined*/, sizeof test_hash);
 	uint8_t *msg = (uint8_t *)&test->input_data[0];
 	uint32_t msg_len = test->input_data_len;
 	sha256_hash(msg, msg_len, &test_hash[0]);

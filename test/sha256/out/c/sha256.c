@@ -20,13 +20,13 @@ typedef struct Context Context;
 
 static inline uint32_t rotleft(uint32_t a, uint32_t b)
 {
-	return a << b | a >> (32 - b);
+	return (a) << (b) | (a) >> (32 - b);
 }
 
 
 static inline uint32_t rotright(uint32_t a, uint32_t b)
 {
-	return a >> b | a << (32 - b);
+	return (a) >> (b) | (a) << (32 - b);
 }
 
 
@@ -56,13 +56,13 @@ static inline uint32_t ep1(uint32_t x)
 
 static inline uint32_t sig0(uint32_t x)
 {
-	return rotright(x, 7) ^ rotright(x, 18) ^ x >> 3;
+	return rotright(x, 7) ^ rotright(x, 18) ^ (x) >> (3);
 }
 
 
 static inline uint32_t sig1(uint32_t x)
 {
-	return rotright(x, 17) ^ rotright(x, 19) ^ x >> 10;
+	return rotright(x, 17) ^ rotright(x, 19) ^ (x) >> (10);
 }
 
 
@@ -110,7 +110,7 @@ static void transform(Context *ctx, uint8_t *data)
 	uint32_t j = 0;
 
 	while (i < 16) {
-		uint32_t x = (uint32_t)data[j + 0] << 24 | (uint32_t)data[j + 1] << 16 | (uint32_t)data[j + 2] << 8 | (uint32_t)data[j + 3] << 0;
+		uint32_t x = ((uint32_t)data[j + 0]) << (24) | ((uint32_t)data[j + 1]) << (16) | ((uint32_t)data[j + 2]) << (8) | ((uint32_t)data[j + 3]) << (0);
 
 		m[i] = x;
 		j = j + 4;
@@ -181,7 +181,7 @@ static void final(Context *ctx, uint8_t *outHash)
 
 	i = i + 1;
 
-	memset(&ctx->data[i], 0, (size_t)(n - i));
+	memset(&ctx->data[i], 0, (size_t)n - i);
 	//ctx.data[i:n-i] = []
 
 	if (ctx->datalen >= 56) {
@@ -193,14 +193,14 @@ static void final(Context *ctx, uint8_t *outHash)
 	// Append to the padding the total message's length in bits and transform.
 	ctx->bitlen = ctx->bitlen + (uint64_t)ctx->datalen * 8;
 
-	ctx->data[63] = (uint8_t)((uint64_t)ctx->bitlen >> 0);
-	ctx->data[62] = (uint8_t)((uint64_t)ctx->bitlen >> 8);
-	ctx->data[61] = (uint8_t)((uint64_t)ctx->bitlen >> 16);
-	ctx->data[60] = (uint8_t)((uint64_t)ctx->bitlen >> 24);
-	ctx->data[59] = (uint8_t)((uint64_t)ctx->bitlen >> 32);
-	ctx->data[58] = (uint8_t)((uint64_t)ctx->bitlen >> 40);
-	ctx->data[57] = (uint8_t)((uint64_t)ctx->bitlen >> 48);
-	ctx->data[56] = (uint8_t)((uint64_t)ctx->bitlen >> 56);
+	ctx->data[63] = (uint8_t)((uint64_t)ctx->bitlen) >> (0);
+	ctx->data[62] = (uint8_t)((uint64_t)ctx->bitlen) >> (8);
+	ctx->data[61] = (uint8_t)((uint64_t)ctx->bitlen) >> (16);
+	ctx->data[60] = (uint8_t)((uint64_t)ctx->bitlen) >> (24);
+	ctx->data[59] = (uint8_t)((uint64_t)ctx->bitlen) >> (32);
+	ctx->data[58] = (uint8_t)((uint64_t)ctx->bitlen) >> (40);
+	ctx->data[57] = (uint8_t)((uint64_t)ctx->bitlen) >> (48);
+	ctx->data[56] = (uint8_t)((uint64_t)ctx->bitlen) >> (56);
 
 	transform(ctx, &ctx->data[0]);
 
@@ -211,14 +211,14 @@ static void final(Context *ctx, uint8_t *outHash)
 	i = 0;
 	while (i < 4) {
 		uint32_t sh = 24 - i * 8;
-		outHash[i + 0] = (uint8_t)(ctx->state[0] >> sh);
-		outHash[i + 4] = (uint8_t)(ctx->state[1] >> sh);
-		outHash[i + 8] = (uint8_t)(ctx->state[2] >> sh);
-		outHash[i + 12] = (uint8_t)(ctx->state[3] >> sh);
-		outHash[i + 16] = (uint8_t)(ctx->state[4] >> sh);
-		outHash[i + 20] = (uint8_t)(ctx->state[5] >> sh);
-		outHash[i + 24] = (uint8_t)(ctx->state[6] >> sh);
-		outHash[i + 28] = (uint8_t)(ctx->state[7] >> sh);
+		outHash[i + 0] = (uint8_t)(ctx->state[0]) >> (sh);
+		outHash[i + 4] = (uint8_t)(ctx->state[1]) >> (sh);
+		outHash[i + 8] = (uint8_t)(ctx->state[2]) >> (sh);
+		outHash[i + 12] = (uint8_t)(ctx->state[3]) >> (sh);
+		outHash[i + 16] = (uint8_t)(ctx->state[4]) >> (sh);
+		outHash[i + 20] = (uint8_t)(ctx->state[5]) >> (sh);
+		outHash[i + 24] = (uint8_t)(ctx->state[6]) >> (sh);
+		outHash[i + 28] = (uint8_t)(ctx->state[7]) >> (sh);
 		i = i + 1;
 	}
 }
