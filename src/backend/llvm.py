@@ -2444,19 +2444,19 @@ def een(defs, decl_only=False):
 #			out("\n")
 #			isa_prev = isa
 
-		if isinstance(x, DefVar):
+		if isinstance(x, StmtDefVar):
 			print_def_var(x, as_extern=decl_only)
 
-		elif isinstance(x, DefConst):
+		elif isinstance(x, StmtDefConst):
 			print_def_const(x, as_extern=decl_only)
 
-		elif isinstance(x, DefFunc):
+		elif isinstance(x, StmtDefFunc):
 			if not decl_only:
 				print_def_func(x)
 			else:
 				print_decl_func(x)
 
-		elif isinstance(x, DefType):
+		elif isinstance(x, StmtDefType):
 			print_def_type(x)
 
 		elif isa == 'comment':
@@ -2478,9 +2478,9 @@ def print_included(m):
 				if is_private(d):
 					continue
 
-				if isinstance(d, DefType):
+				if isinstance(d, StmtDefType):
 					print_def_type(d)
-				elif isinstance(d, DefFunc):
+				elif isinstance(d, StmtDefFunc):
 					print_decl_func(d)
 				#elif d['isa'] == 'def_const':
 				#	print_decl_const(x)
@@ -2496,9 +2496,9 @@ def print_imports(m):
 			if is_private(d):
 				continue
 
-			if isinstance(d, DefType):
+			if isinstance(d, StmtDefType):
 				print_def_type(d)
-			elif isinstance(d, DefFunc):
+			elif isinstance(d, StmtDefFunc):
 				print_decl_func(d)
 
 		#een(imp['defs'], decl_only=True)

@@ -575,7 +575,7 @@ def do_type_id(t):
 	# если дело происходит в определении типа и пришел undefined тип
 	#htype.type_is_incomplete
 	if htype.type_is_undefined(tx):
-		if not isinstance(cdef, DefType):
+		if not isinstance(cdef, StmtDefType):
 			error("forward references to non-struct type", t['ti'])
 		cdef.deps.append(tx)
 
@@ -2108,7 +2108,7 @@ def def_type(x):
 		return None
 
 	#definition = hlir_def_type(id, nt, None, x['ti'])
-	definition = DefType(id, nt, None, x['ti'])
+	definition = StmtDefType(id, nt, None, x['ti'])
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
@@ -2171,7 +2171,7 @@ def def_const(x):
 		error("redefinition of '%s'" % id.str, id.ti)
 
 	#definition = hlir_def_const(id, None, None, x['ti'])
-	definition = DefConst(id, None, None, x['ti'])
+	definition = StmtDefConst(id, None, None, x['ti'])
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
@@ -2220,7 +2220,7 @@ def def_var(x):
 
 
 	#definition = hlir_def_var(id, None, None, x['ti'])
-	definition = DefVar(id, None, None, x['ti'])
+	definition = StmtDefVar(id, None, None, x['ti'])
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
@@ -2299,7 +2299,7 @@ def def_func(x, dostmt=True):
 	fn = ctx_value_get(func_id.str)
 
 	#definition = hlir_def_func(func_id, fn, None, x['ti'])
-	definition = DefFunc(func_id, fn, None, x['ti'])
+	definition = StmtDefFunc(func_id, fn, None, x['ti'])
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']

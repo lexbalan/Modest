@@ -916,10 +916,10 @@ def print_def(x):
 	#if isa != 'comment':
 	newline(n=x.nl)
 
-	if isinstance(x, DefVar): print_def_var(x)
-	elif isinstance(x, DefConst): print_def_const(x)
-	elif isinstance(x, DefFunc): print_def_func(x)
-	elif isinstance(x, DefType): print_def_type(x)
+	if isinstance(x, StmtDefVar): print_def_var(x)
+	elif isinstance(x, StmtDefConst): print_def_const(x)
+	elif isinstance(x, StmtDefFunc): print_def_func(x)
+	elif isinstance(x, StmtDefType): print_def_type(x)
 
 
 def run(module, outname, options):

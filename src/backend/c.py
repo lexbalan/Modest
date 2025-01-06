@@ -2137,22 +2137,22 @@ def print_header(module, outname):
 
 		#isa = x['isa']
 
-		if isinstance(x, DefFunc):
+		if isinstance(x, StmtDefFunc):
 			if 'inline' in x.att:
 				newline(1)
 				print_def_func(x)
 				continue
 			newline(1)
 			print_decl_func(x)
-		elif isinstance(x, DefVar):
+		elif isinstance(x, StmtDefVar):
 			print_deps(x.deps)
 			newline(1)
 			print_def_var(x)
-		elif isinstance(x, DefType):
+		elif isinstance(x, StmtDefType):
 			print_deps(x.deps)
 			newline(1)
 			print_def_type(x)
-		elif isinstance(x, DefConst):
+		elif isinstance(x, StmtDefConst):
 			print_deps(x.deps)
 			newline(1)
 			print_def_const(x)
@@ -2232,22 +2232,22 @@ def print_cfile(module, _outname):
 			continue
 
 
-		if isinstance(x, DefConst) and is_private(x):
+		if isinstance(x, StmtDefConst) and is_private(x):
 			print_deps(x.deps)
 			newline(n=x.nl)
 			print_def_const(x)
-		elif isinstance(x, DefType) and is_private(x):
+		elif isinstance(x, StmtDefType) and is_private(x):
 			print_deps(x.deps)
 			newline(n=x.nl)
 			print_def_type(x)
-		elif isinstance(x, DefVar):
+		elif isinstance(x, StmtDefVar):
 			print_deps(x.deps)
 			newline(n=x.nl)
 			print_def_var(x)
 		#elif isinstance(x, DeclVar):
 		#	newline(n=x.nl)
 		#	print_def_var(x, isdecl=True)
-		elif isinstance(x, DefFunc):
+		elif isinstance(x, StmtDefFunc):
 			print_deps(x.deps)
 			newline(n=x.nl)
 			print_def_func(x)
