@@ -56,7 +56,7 @@ def value_pointer_cons(t, v, method, ti):
 			s_imm = utf32_chars_to_utfx_chars(v.asset, t['to']['of'], ti)
 			nv = ValueCons(t, v, method, ti=ti)
 			nv.asset = s_imm
-			nv.att.append('zstring')
+			nv.addAttribute('zstring')
 
 			# регистрируем строку в модуле
 			from trans import module_strings_add

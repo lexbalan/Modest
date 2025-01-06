@@ -17,15 +17,6 @@ def value_is_lvalue(x):
 
 
 
-def value_attribute_add(v, a):
-	v.att.append(a)
-
-
-def value_attribute_check(v, a):
-	return a in v.att
-
-
-
 # cons immediate такой же cons
 # но поскольку у него value immediate, мы можем его asset
 # привести и взять себе; Таким образом мы идем как литерал нода
@@ -37,8 +28,8 @@ def value_cons_immediate(t, v, method, ti):
 	nv.asset = v.asset
 	nv.immediate = True
 
-	if 'hexadecimal' in v.att:
-		nv.att.append('hexadecimal')
+	if v.hasAttribute('hexadecimal'):
+		nv.addAttribute('hexadecimal')
 
 	nv.nl_end = v.nl_end
 

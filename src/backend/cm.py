@@ -4,7 +4,6 @@ from error import info
 from hlir.hlir import *
 from value.value import *
 from .common import *
-from value.value import value_attribute_check
 from util import get_item_by_id
 
 
@@ -531,7 +530,7 @@ def print_value_integer(x, ctx):
 
 	spec = 'd'
 	pre = ''
-	if value_attribute_check(x, 'hexadecimal'):
+	if x.hasAttribute('hexadecimal'):
 		spec = 'X'
 		pre = '0x'
 

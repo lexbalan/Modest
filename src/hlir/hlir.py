@@ -1,11 +1,15 @@
 
+from .entity import Entity
+
 from .stmt import *
 from .value import *
 
-class Id():
+
+class Id(Entity):
 	def __init__(self, x=None):
+		super().__init__(None)
 		self.str = None
-		self.ti = None
+		#self.ti = None
 
 		if x != None:
 			self.str = x['str']
@@ -24,8 +28,9 @@ class Id():
 
 
 
-class Field():
+class Field(Entity):
 	def __init__(self, id, type, ti=None):
+		super().__init__(ti)
 		self.id = id
 		self.type = type
 		self.field_no = 0
@@ -38,8 +43,9 @@ class Field():
 
 
 
-class Initializer():
+class Initializer(Entity):
 	def __init__(self, id, value, ti=None, nl=0):
+		super().__init__(ti)
 		self.id = id
 		self.value = value
 		self.ti = ti

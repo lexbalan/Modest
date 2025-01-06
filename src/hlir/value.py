@@ -2,17 +2,18 @@
 #                             HLIR VALUE                              #
 #######################################################################
 
+from .entity import Entity
 
-class Value():
+
+class Value(Entity):
 	def __init__(self, type, ti=None):
+		super().__init__(ti)
 		self.type = type
 		self.id = None
 		self.immutable = False  #TODO: True
 		self.immediate = False  #TODO: True
 		self.items = None  #!
 		self.asset = None  #!
-		self.att = []
-		self.ti = ti
 		self.nl = 0
 		self.nl_end = 0  # ??
 
@@ -159,7 +160,7 @@ class ValueZero(Value):
 		else:
 			self.asset = 0
 
-		self.att.append('zero')
+		self.addAttribute('zero')
 
 
 #TODO: onl value as arg (undefined if not init_value, but type from it)

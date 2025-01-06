@@ -2,11 +2,12 @@
 #                             HLIR STMT                               #
 #######################################################################
 
+from .entity import Entity
 
-class Stmt():
+class Stmt(Entity):
 	def __init__(self, ti, nl=1):
+		super().__init__(ti)
 		self.deps = []
-		self.ti = ti
 		self.att = []
 		self.nl = nl
 		self.end_nl = 1

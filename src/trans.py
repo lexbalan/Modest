@@ -45,7 +45,7 @@ def is_local_entity(x):
 
 # значение глобально (неважно из какого модуля)
 def is_global_value(x):
-	return 'global_entity' in x.att
+	return x.hasAttribute('global_entity')
 
 
 def is_local_context():
@@ -109,7 +109,7 @@ def module_value_add_public(m, id_str, v):
 	#print("module %s value_add_public %s" % (m['id'], id_str))
 	m['symtab_public'].value_add(id_str, v)
 	#v['module'] = m
-	v.att.append('global_entity')
+	v.addAttribute('global_entity')
 
 
 def module_type_add_private(m, id_str, t):
@@ -122,7 +122,7 @@ def module_value_add_private(m, id_str, v):
 	#print("module %s value_add_private %s" % (m['id'], id_str))
 	m['symtab_private'].value_add(id_str, v)
 	#v['module'] = m
-	v.att.append('global_entity')
+	v.addAttribute('global_entity')
 
 
 
@@ -884,9 +884,9 @@ def do_value_ref(x):
 		# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
 		# поэтому временно заткнул единицей, но вообще нужно будет обдумать
 		nv.asset = 1
-		nv.att.append('ptr_to_glb_val')
+		nv.addAttribute('ptr_to_glb_val')
 
-	nv.att.append('ref')
+	nv.addAttribute('ref')
 
 	return nv
 
@@ -1474,7 +1474,7 @@ def do_value_id(x):
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально (wrong!)
 		v = ValueBad(x['ti'])
-		value_attribute_add(v, 'unknown')
+		v.addAttribute('unknown')
 		ctx_value_add(id_str, v)
 		return v
 
@@ -1571,7 +1571,7 @@ def do_value_integer(x):
 	v.nsigns = num_string_len
 
 	if base == 16:
-		value_attribute_add(v, 'hexadecimal')
+		v.addAttribute('hexadecimal')
 
 	return v
 
@@ -1860,7 +1860,7 @@ def do_stmt_var(x):
 
 def add_local_var(id, typ, ti):
 	var_value = ValueVar(id, typ, ti)
-	var_value.att.extend(['local'])
+	var_value.addAttribute('local')
 	ctx_value_add(id.str, var_value)
 	return var_value
 
@@ -1889,7 +1889,7 @@ def do_stmt_let(x):
 	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
 	# на константу. ---Пока это необходимо для 'wrapped_array' (!)---
 	const_value.att.extend(v.att)
-	const_value.att.append('local') # need for LLVM printer (!)
+	const_value.addAttribute('local') # need for LLVM printer (!)
 
 	# Now let can be immediate!
 	if v.isImmediate():
@@ -2332,8 +2332,8 @@ def def_func(x, dostmt=True):
 		param_id = param.id
 
 		param_value = ValueConst(param_id, param_type, None, param.ti)
-		param_value.att.append('local')
-		param_value.att.append('param')
+		param_value.addAttribute('local')
+		param_value.addAttribute('param')
 		ctx_value_add(param_id.str, param_value)
 		i += 1
 
@@ -2911,7 +2911,7 @@ def add_attributes(obj):
 			if isinstance(obj, dict):
 				obj['att'].append(att)
 			else:
-				obj.att.append(att)
+				obj.addAttribute(att)
 		elif len(lr) > 1:
 			set_att(obj, lr[0].split('.'), lr[1])
 
@@ -2926,7 +2926,7 @@ def set_att(obj, path, att):
 			if isinstance(x, dict):
 				x['att'].append(att)
 			else:
-				x.att.append(att)
+				x.addAttribute(att)
 
 	elif len(path) > 1:
 		f = path[0]

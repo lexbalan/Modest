@@ -6,7 +6,7 @@ from error import info, warning, error, fatal
 from hlir.hlir import *
 import type as htype
 from type import type_print
-from value.value import value_attribute_check, ValueZero
+from value.value import ValueZero
 from type import type_pointer
 from util import align_bits_up
 from pprint import pprint
@@ -1515,7 +1515,7 @@ def do_eval_func(x):
 def do_eval_var(x):
 	id_str = get_id_str(x)
 
-	if value_attribute_check(x, 'local'):
+	if x.hasAttribute('local'):
 		y = locals_get(id_str)
 	else:
 		y = llvm_value_id(id_str, x.type)
@@ -1526,7 +1526,7 @@ def do_eval_var(x):
 
 
 def do_eval_const(x):
-	if value_attribute_check(x, 'local'):
+	if x.hasAttribute('local'):
 		localname = get_id_str(x)
 		y = locals_get(localname)
 		return y
@@ -2209,7 +2209,7 @@ def print_def_func(x):
 
 	# VLA требует чтобы стек был сохранен в начале работы функции
 	# и восстановлен перед возвратом из нее (see: print_stmt_return)
-	if 'stacksave' in fn.att:
+	if fn.hasAttribute('stacksave'):
 		#; stack save
 		# %3 = alloca i8*, align 8 ; stack save
 		# %7 = call i8* @llvm.stacksave()
@@ -2250,8 +2250,8 @@ def print_def_type(x):
 
 
 def print_def_var(x, as_extern=False):
-	is_extern = 'extern' in x.att or as_extern
-	is_static = 'static' in x.att
+	is_extern = x.hasAttribute('extern') or as_extern
+	is_static = x.hasAttribute('static')
 
 	#mods = ['global', 'constant']
 	mod = 'global'
@@ -2343,7 +2343,7 @@ def print_string_ascii(strid, string):
 
 	slen = len(bytes(ss, 'utf-8'))  #+ 1 # +1 (zero)
 
-	if 'zstring' in string.att:
+	if string.hasAttribute('zstring'):
 		slen = slen + 1
 
 	ss = ss.replace("\a", "\\07")
@@ -2364,7 +2364,7 @@ def print_string_ascii(strid, string):
 def print_string_as_array(strid, string, char_width):
 	slen = len(string.asset)
 
-	if 'zstring' in string.att:
+	if string.hasAttribute('zstring'):
 		slen = slen + 1
 
 	lo("@%s = private constant [%d x i%d] [" % (strid, slen, char_width))
@@ -2377,7 +2377,7 @@ def print_string_as_array(strid, string, char_width):
 		out(" %d" % char_code)
 		i = i + 1
 
-	if 'zstring' in string.att:
+	if string.hasAttribute('zstring'):
 		if slen > 1:
 			out(", ")
 		print_int_type_for(char_width)
@@ -2426,9 +2426,9 @@ def een(defs, decl_only=False):
 		if isinstance(x, dict):
 			continue
 
-		if 'll_no_print' in x.att:
+		if x.hasAttribute('ll_no_print'):
 			continue
-		if 'no_print' in x.att:
+		if x.hasAttribute('no_print'):
 			continue
 
 		# Тупейшая Защита от повторного определения

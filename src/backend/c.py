@@ -8,7 +8,7 @@ from hlir.hlir import *
 from value.value import *
 import type as htype
 from type import select_common_type, type_print
-from value.value import value_attribute_check, ValueIndexArray
+from value.value import ValueIndexArray
 from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_by_id, align_to
 from main import settings
@@ -827,7 +827,7 @@ def print_value_cons_array(x, ctx):
 		
 		is_const = isinstance(value, ValueLiteral) or isinstance(value, ValueConst) or (isinstance(value, ValueBin) and value.op == 'add')
 		
-		if is_const and not 'kostil' in value.att:
+		if is_const and not value.hasAttribute('kostil'):
 			ctx=['array_as_array']
 
 			if htype.type_is_char(to_type['of']):
@@ -1200,7 +1200,7 @@ def print_value_integer(x, ctx):
 			return
 
 
-	if value_attribute_check(x, 'hexadecimal'):
+	if x.hasAttribute('hexadecimal'):
 		fmt = "0x%%0%dX" % nsigns
 		out(fmt % num)
 		return  #? 0xXXXXXXXXUL is normal?
@@ -1778,7 +1778,7 @@ def print_decl_func(x):
 	if x.access_level == 'private':
 		out("static ")
 
-	if 'inline' in x.att:
+	if x.hasAttribute('inline'):
 		out("inline ")
 
 	ftype = x.value.type
@@ -1804,7 +1804,7 @@ def print_def_func(x):
 	if x.access_level == 'private':
 		out("static ")
 
-	if 'inline' in x.att:
+	if x.hasAttribute('inline'):
 		out("inline ")
 
 	ftype = func.type
@@ -1909,13 +1909,13 @@ def print_def_var(x, isdecl=False):
 	#id = x['id']
 	var = x.var_value
 	if USE_STATIC_VARIABLES:
-		if not 'global' in var.att:
-			if not 'extern' in var.att:
+		if not var.hasAttribute('global'):
+			if not var.hasAttribute('extern'):
 				out("static ")
 
-	if 'extern' in var.att:
+	if var.hasAttribute('extern'):
 		out("extern ")
-	if 'volatile' in var.att:
+	if var.hasAttribute('volatile'):
 		out("volatile ")
 
 	print_variable(get_id_str(x.var_value), var.type)
@@ -1947,7 +1947,7 @@ def print_def_const(x):
 		newline()
 		print_variable(id_str, const_value.type, as_const=True)
 		out(" = _%s;" % id_str)
-		const_value.att.append('kostil')
+		const_value.addAttribute('kostil')
 		return
 
 	print_macro_definition(id_str, init_value, val_ctx=[])
@@ -2133,9 +2133,9 @@ def print_header(module, outname):
 		if isinstance(x, dict):
 			continue
 
-		if 'c_no_print' in x.att:
+		if x.hasAttribute('c_no_print'):
 			continue
-		if 'no_print' in x.att:
+		if x.hasAttribute('no_print'):
 			continue
 
 		if is_private(x):
@@ -2144,7 +2144,7 @@ def print_header(module, outname):
 		#isa = x['isa']
 
 		if isinstance(x, StmtDefFunc):
-			if 'inline' in x.att:
+			if x.hasAttribute('inline'):
 				newline(1)
 				print_def_func(x)
 				continue
@@ -2232,9 +2232,9 @@ def print_cfile(module, _outname):
 			continue
 
 
-		if 'c_no_print' in x.att:
+		if x.hasAttribute('c_no_print'):
 			continue
-		if 'no_print' in x.att:
+		if x.hasAttribute('no_print'):
 			continue
 
 
