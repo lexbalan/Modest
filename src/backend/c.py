@@ -940,7 +940,6 @@ def print_value_cons(x, ctx):
 
 	if isinstance(value, ValueLiteral):
 		print_value(value)
-
 		return
 
 
@@ -959,6 +958,13 @@ def print_value_cons(x, ctx):
 					print_cast(nat_same_sz, value, ctx)
 					out(")")
 					return
+
+
+	# for: (uint32_t *)(void *)&i;
+	# remove (void *)
+	if isinstance(value, ValueCons):
+		if htype.type_is_free_pointer(value.type):
+			value = value.value
 
 	print_cast(to_type, value, ctx)
 

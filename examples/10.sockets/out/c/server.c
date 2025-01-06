@@ -59,7 +59,7 @@ int main()
 		}
 	};
 
-	struct sockaddr *sockaddr = (struct sockaddr *)(void *)&server_addr;
+	struct sockaddr *sockaddr = (struct sockaddr *)&server_addr;
 	int e = bind(sockfd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Binding");
@@ -78,7 +78,7 @@ int main()
 
 	socklen_t addr_size = (socklen_t)sizeof(struct sockaddr_in);
 	struct sockaddr_in new_addr;
-	struct sockaddr *sa = (struct sockaddr *)(void *)&new_addr;
+	struct sockaddr *sa = (struct sockaddr *)&new_addr;
 	int new_sock = accept(sockfd, sa, &addr_size);
 
 	bool suc = write_file(new_sock);
