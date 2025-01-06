@@ -65,7 +65,7 @@ static float lineLength(Line line)
 
 static void ptr_example()
 {
-	Point *ptr_p = (Point *)malloc(sizeof(Point));
+	Point *ptr_p = (Point *)(malloc(sizeof(Point)));
 
 	// access by pointer
 	ptr_p->x = (float)(10);

@@ -13,13 +13,13 @@ static unsigned __int128 big0 = (((__int128)0x123456789ABCDEFULL << 64) | ((__in
 
 static uint64_t high_128(unsigned __int128 x)
 {
-	return (uint64_t)(x) >> (64);
+	return (uint64_t)(x >> 64);
 }
 
 
 static uint64_t low_128(unsigned __int128 x)
 {
-	return (uint64_t)x & 0xFFFFFFFFFFFFFFFF;
+	return (uint64_t)(x & 0xFFFFFFFFFFFFFFFF);
 }
 
 

@@ -73,13 +73,13 @@ int main()
 {
 	printf("test cast operation\n");
 
-	uint64_t start_adr = (uint64_t)&c;
-	printf("off(c) = %llu\n", (uint64_t)&c - start_adr);
-	printf("off(i) = %llu\n", (uint64_t)&i - start_adr);
-	printf("off(f) = %llu\n", (uint64_t)&f - start_adr);
-	printf("off(i2) = %llu\n", (uint64_t)&i2 - start_adr);
-	printf("off(p) = %llu\n", (uint64_t)&p[0] - start_adr);
-	printf("off(g) = %llu\n", (uint64_t)&g - start_adr);
+	uint64_t start_adr = (uint64_t)(&c);
+	printf("off(c) = %llu\n", (uint64_t)(&c) - start_adr);
+	printf("off(i) = %llu\n", (uint64_t)(&i) - start_adr);
+	printf("off(f) = %llu\n", (uint64_t)(&f) - start_adr);
+	printf("off(i2) = %llu\n", (uint64_t)(&i2) - start_adr);
+	printf("off(p) = %llu\n", (uint64_t)(&p[0]) - start_adr);
+	printf("off(g) = %llu\n", (uint64_t)(&g) - start_adr);
 
 	// дженерики в с явно не приводятся, но нектороые нужно!
 	//	printf("offsetof(x.c) = %llu\n", Nat64 offsetof(X.c))

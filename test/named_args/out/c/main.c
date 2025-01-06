@@ -10,7 +10,7 @@
 
 static int32_t named_args_test(int32_t a, int32_t b, int32_t c)
 {
-	return a - b * c;
+	return (a - b) * c;
 }
 
 
@@ -22,7 +22,7 @@ int main()
 	#define __b  15
 	#define __c  3
 
-	#define __x0  (__a - __b * __c)
+	#define __x0  ((__a - __b) * __c)
 
 	int32_t x1 = named_args_test(__a, __b, __c);
 

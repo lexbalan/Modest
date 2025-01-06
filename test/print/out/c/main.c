@@ -14,7 +14,7 @@ int main()
 
 	uint32_t c = U'🐀';
 	char *s = "Hi!";
-	int32_t i = (int32_t)-1;
+	int32_t i = (int32_t)(-1);
 	uint32_t n = 123;
 	uint32_t x = 0x1234567F;
 

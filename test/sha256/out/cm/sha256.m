@@ -90,7 +90,7 @@ const k = [
 ]
 
 
-func transform(ctx: *Context, data: *[/*U*/]Word8) -> Unit {
+func transform(ctx: *Context, data: *[]Word8) -> Unit {
 	var m: [64]Word32 = [64]Word32 []
 
 	var i: Nat32 = Nat32 0
@@ -136,7 +136,7 @@ func transform(ctx: *Context, data: *[/*U*/]Word8) -> Unit {
 }
 
 
-func update(ctx: *Context, msg: *[/*U*/]Word8, msgLen: Nat32) -> Unit {
+func update(ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
 	var i: Nat32 = Nat32 0
 	while i < msgLen {
 		ctx.data[ctx.datalen] = msg[i]
@@ -208,7 +208,7 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 }
 
 
-public func hash(msg: *[/*U*/]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
+public func hash(msg: *[]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
 	var ctx: Context = Context {}
 	contextInit(&ctx)
 	update(&ctx, msg, msgLen)

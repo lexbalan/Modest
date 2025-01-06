@@ -61,7 +61,7 @@ void console_putchar_utf32(uint32_t c)
 {
 	char decoded_buf[4];
 	memset(&decoded_buf, 0, sizeof decoded_buf);
-	int32_t n = (int32_t)utf_utf32_to_utf8(c, &decoded_buf[0]);
+	int32_t n = (int32_t)(utf_utf32_to_utf8(c, &decoded_buf[0]));
 
 	int32_t i = 0;
 	while (i < n) {
@@ -100,7 +100,7 @@ void console_puts16(uint16_t *s)
 		}
 
 		uint32_t char32;
-		uint8_t n = utf_utf16_to_utf32((uint16_t *)&s[i], &char32);
+		uint8_t n = utf_utf16_to_utf32((uint16_t *)(&s[i]), &char32);
 		if (n == 0) {
 			break;
 		}
@@ -237,14 +237,14 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			//
 			char *s = va_arg(va, char *);
 			strcpy(sptr, s);
-			j = j + (int32_t)strlen(s);
+			j = j + (int32_t)(strlen(s));
 
 		} else if (c == 'c') {
 			//
 			// %c for char
 			//
 			uint32_t c = va_arg(va, uint32_t);
-			int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)sptr);
+			int32_t n = (int32_t)(utf_utf32_to_utf8(c, (char *)sptr));
 			j = j + n;
 		}
 	}

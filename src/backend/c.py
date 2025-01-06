@@ -134,15 +134,19 @@ precedenceMax = len(aprecedence) - 1
 
 # приоритет операции
 def precedence(x):
-	return 0  # TODO!
-
-	k = x['kind']
-
 	i = 0
-	while i < precedenceMax + 1:
-		if k in aprecedence[i]:
-			break
-		i = i + 1
+	if isinstance(x, ValueBin) or isinstance(x, ValueUn):
+		k = x.op
+		while i < precedenceMax + 1:
+			if k in aprecedence[i]:
+				break
+			i = i + 1
+	else:
+		if isinstance(x, ValueSizeofValue): i = 10
+		elif isinstance(x, ValueCall): i = 11
+		elif isinstance(x, ValueIndexArray): i = 11
+		elif isinstance(x, ValueAccessRecord): i = 11
+		else: i = 12
 
 	return i
 
@@ -762,11 +766,14 @@ def print_cast(t, v, ctx=[]):
 	#array_as_ptr = not 'array_as_array' in ctx
 	out("("); print_type(t); out(")")
 
+	lxx = precedence(v)
+	rxx = precedence({'kind': 'cons'})
 	need_wrap = precedence(v) < precedence({'kind': 'cons'})
 	if isinstance(v, ValueLiteral) or (isinstance(v, ValueBin) and v.op == 'add'):
 	#if v['kind'] in ['literal', 'add']:
 		need_wrap = not htype.type_is_composite(v.type)
 
+	#out("/*%d;%d*/" % (lxx, rxx))
 	print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 

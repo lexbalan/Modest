@@ -79,7 +79,7 @@ public func main() -> Int {
 
 	printf("------------------------------------\n")
 
-	var globalArrayPtr: *[/*U*/]Int32
+	var globalArrayPtr: *[]Int32
 	globalArrayPtr = &globalArray
 
 	i = 0
@@ -91,7 +91,7 @@ public func main() -> Int {
 
 	printf("------------------------------------\n")
 
-	var localArrayPtr: *[/*U*/]Int32
+	var localArrayPtr: *[]Int32
 	localArrayPtr = &localArray
 
 	i = 0

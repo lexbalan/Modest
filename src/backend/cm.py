@@ -120,7 +120,7 @@ def print_type_integer(t):
 
 def print_type_array(t):
 	out("[")
-	if t['volume'] != None:
+	if not value_is_undefined(t['volume']):
 		print_value(t['volume'])
 	out("]")
 	print_type(t['of'])

@@ -24,10 +24,10 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 		crc = (uint32_t)i;
 		uint32_t j = 0;
 		while (j < 8) {
-			if (crc & 1 != 0) {
-				crc = (crc) >> (1) ^ 0xEDB88320U;
+			if ((crc & 1) != 0) {
+				crc = crc >> 1 ^ 0xEDB88320U;
 			} else {
-				crc = (crc) >> (1);
+				crc = crc >> 1;
 			}
 
 			j = j + 1;
@@ -44,9 +44,9 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 
 	i = 0;
 	while (i < len) {
-		uint32_t y = crc ^ (uint32_t)buf[i] & 0xFF;
+		uint32_t y = (crc ^ (uint32_t)(buf[i])) & 0xFF;
 		uint8_t yy = (uint8_t)y;
-		crc = crc_table[yy] ^ (crc) >> (8);
+		crc = crc_table[yy] ^ crc >> 8;
 		i = i + 1;
 	}
 
