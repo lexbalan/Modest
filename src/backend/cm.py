@@ -1,7 +1,7 @@
 
 import type as htype
 from error import info
-from hlir import *
+from hlir.hlir import *
 from value.value import *
 from .common import *
 from value.value import value_is_undefined, value_is_zero, value_is_immediate, value_attribute_check, value_print
@@ -803,7 +803,7 @@ def print_stmt(x):
 		nl_indent(x.nl)
 
 	if isinstance(x, StmtBlock): print_stmt_block(x)
-	elif isinstance(x, StmtValue): print_stmt_value(x)
+	elif isinstance(x, StmtValueExpression): print_stmt_value(x)
 	elif isinstance(x, StmtAssign): print_stmt_assign(x)
 	elif isinstance(x, StmtReturn): print_stmt_return(x)
 	elif isinstance(x, StmtIf): print_stmt_if(x)

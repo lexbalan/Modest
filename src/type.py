@@ -2,7 +2,7 @@
 import copy
 from error import info, warning, error, fatal
 import settings
-from hlir import Id, Field
+from hlir.hlir import Id, Field
 from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up
 from value.value import value_print
 

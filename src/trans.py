@@ -9,7 +9,7 @@ from parser import Parser
 from util import get_item_by_id
 from main import settings
 import type as htype
-from hlir import *
+from hlir.hlir import *
 
 import foundation
 
@@ -1963,7 +1963,7 @@ def do_stmt_value(x):
 		if not 'dispensable' in v.type['att']:
 			warning("unused result of %s expression" % x['value']['kind'], v.ti)
 
-	return StmtValue(v, ti=x['ti'])
+	return StmtValueExpression(v, ti=x['ti'])
 
 
 

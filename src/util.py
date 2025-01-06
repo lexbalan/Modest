@@ -1,5 +1,5 @@
 
-from hlir import *
+from hlir.hlir import Initializer, Field
 
 
 def align_to(x, y):

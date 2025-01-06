@@ -4,7 +4,7 @@
 
 import os
 from error import error, warning, info
-from hlir import Id
+from hlir.hlir import Id
 from util import utf32cc_to_utf8_str
 
 

@@ -3,7 +3,7 @@ import copy
 from .common import *
 from value.value import *
 from error import info, warning, error, fatal
-from hlir import *
+from hlir.hlir import *
 import type as htype
 from type import type_print
 from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_is_zero, ValueZero
@@ -1965,7 +1965,7 @@ def print_stmt_asm(x):
 def print_stmt(x):
 	assert(isinstance(x, Stmt))
 	if isinstance(x, StmtBlock): print_stmt_block(x)
-	elif isinstance(x, StmtValue): do_eval(x.value)
+	elif isinstance(x, StmtValueExpression): do_eval(x.value)
 	elif isinstance(x, StmtAssign): print_stmt_assign(x)
 	elif isinstance(x, StmtReturn): print_stmt_return(x)
 	elif isinstance(x, StmtIf): print_stmt_if(x)

@@ -4,7 +4,7 @@
 
 from .common import *
 from error import info, error, fatal
-from hlir import *
+from hlir.hlir import *
 from value.value import *
 import type as htype
 from type import select_common_type, type_print
@@ -1658,7 +1658,7 @@ def print_stmt(x):
 	assert(isinstance(x, Stmt))
 	nl_indent(x.nl)
 	if isinstance(x, StmtBlock): print_stmt_block(x)
-	elif isinstance(x, StmtValue): print_stmt_value(x)
+	elif isinstance(x, StmtValueExpression): print_stmt_value(x)
 	elif isinstance(x, StmtAssign): print_stmt_assign(x)
 	elif isinstance(x, StmtReturn): print_stmt_return(x)
 	elif isinstance(x, StmtIf): print_stmt_if(x, need_else_branch=False)
