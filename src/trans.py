@@ -2067,7 +2067,6 @@ def def_type(x):
 		error("type redefinition", x['ti'])
 		return None
 
-	#definition = hlir_def_type(id, nt, None, x['ti'])
 	definition = StmtDefType(id, nt, None, x['ti'])
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
@@ -2099,7 +2098,6 @@ def def_type(x):
 
 	if need_decoration(x):
 		nt['id'].need_decoration = True
-	#	nt['id'].prefix = cmodule['prefix']
 
 	if not ('do_not_include' in cmodule['att']):
 		# В случае когда не печатаем typedef явно (!)
@@ -2130,7 +2128,6 @@ def def_const(x):
 	if pre_exist != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
-	#definition = hlir_def_const(id, None, None, x['ti'])
 	definition = StmtDefConst(id, None, None, x['ti'])
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
@@ -2158,7 +2155,6 @@ def def_const(x):
 
 	if need_decoration(x):
 		const_value.id.need_decoration = True
-	#	const_value['id'].prefix = cmodule['prefix']
 
 	definition.value = const_value
 
@@ -2178,8 +2174,6 @@ def def_var(x):
 	if already != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
-
-	#definition = hlir_def_var(id, None, None, x['ti'])
 	definition = StmtDefVar(id, None, None, x['ti'])
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
@@ -2217,12 +2211,10 @@ def def_var(x):
 			elif htype.type_is_array(v.type):
 				length = v.type['volume'].asset
 			else:
-				#info("???????", x['ti'])
 				pass
 
 			volume = value_integer_create(length)
 			t = htype.type_array(t['of'], volume, x['ti'])
-		#
 
 		v = value_cons_implicit_check(t, v)
 
@@ -2230,7 +2222,6 @@ def def_var(x):
 		# type ok, value undef
 		# пропишем тип для v, тк там сейчас type_undefined
 		v.type = t
-
 
 	init_value = v
 
@@ -2251,14 +2242,12 @@ def def_func(x, dostmt=True):
 	global cmodule
 
 	func_id = Id(x['id'])
-
 	log('def_func: %s' % func_id.str)
 
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
 	fn = ctx_value_get(func_id.str)
 
-	#definition = hlir_def_func(func_id, fn, None, x['ti'])
 	definition = StmtDefFunc(func_id, fn, None, x['ti'])
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
@@ -2278,7 +2267,6 @@ def def_func(x, dostmt=True):
 	if func_id.str != 'main':
 		if need_decoration(x):
 			fn.id.need_decoration = True
-			#fn['id'].prefix = cmodule['prefix']
 
 	if x['stmt'] == None:
 		return definition
@@ -2383,8 +2371,6 @@ def is_nodecorate(x):
 	return False
 
 
-
-
 # пропускать остальные ветви (elseif & else) условной директивы
 # тк основная ветвь была выполнена
 skipp = False
@@ -2394,8 +2380,6 @@ def do_attribute(x):
 	global skipp, prev_skipp, production, prev_production
 	kind = x['kind']
 	args = x['args']
-
-	#info("do_attribute('%s')" % kind, x['ti'])
 
 	if kind == 'attribute':
 		attribute_add(args[0]['str'])
@@ -2407,9 +2391,7 @@ def do_attribute(x):
 	elif kind == 'extern':
 		attribute_add('extern')
 	elif kind == 'packed':
-		attribute_add('type:packed')
-		# так делать вообще-то нельзя, но пока делаю так
-		attribute_add('original_type:packed')
+		attribute_add('packed')
 	elif kind == 'unused_result':
 		attribute_add("value.type.to:dispensable")
 	else:
@@ -2448,11 +2430,7 @@ def do_import(x):
 		m = translate(abspath, nodef=not x['include'])
 		modules[abspath] = m
 
-		#if 'as' in x:
-		#	m['id'] = x['as']['str'] # todo
 		m['id'] = impline.split("/")[-1]
-
-		#print("IMP_ID = " + impline)
 
 		if m == None:
 			fatal("cannot import module")
@@ -2460,7 +2438,6 @@ def do_import(x):
 		if 'c_no_print' in m['att']:
 			for xx in m['defs']:
 				xx['att'].append('c_no_print')
-
 
 	if not x['include']:
 		m_id = '<$>'
@@ -2509,9 +2486,7 @@ def do_directive(x):
 			feature_add(args[0])
 		elif s0 == 'unsafe':
 			feature_add('unsafe')
-		#elif s0 == 'noprefix':
-		#	feature_add('noprefix')
-			pass
+
 	return None
 
 
@@ -2594,8 +2569,6 @@ def do_directive(x):
 		cmodule['symtab_public'].type_undef(id_str)
 
 	el"""
-
-
 
 
 def translate(abspath, nodef=False):
