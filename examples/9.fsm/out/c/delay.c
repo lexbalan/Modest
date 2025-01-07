@@ -1,10 +1,13 @@
-// ./out/c/delay.c
+
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
 #include "delay.h"
+
+#include <time.h>
+
 
 
 

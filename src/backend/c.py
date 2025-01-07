@@ -1954,7 +1954,7 @@ def print_def_const(x):
 
 
 def print_include(x):
-	include(x['c_name'], local=x['local'])
+	include(x.c_name, local=x.is_local)
 
 
 def include(string, local=True):
@@ -1995,22 +1995,6 @@ def print_comment_line(x):
 
 
 
-def cdirectives(module):
-#	for im in module['imports']:
-#		imported_module = module['imports'][im]
-#
-#		for obj in imported_module['defs']:
-#			if obj['isa'] == 'directive':
-#				if obj['kind'] == 'c_include':
-#					print_include(obj)
-
-	for obj in module['defs']:
-		if isinstance(obj, dict):
-			if obj['isa'] == 'directive':
-				if obj['kind'] == 'c_include':
-					print_include(obj)
-
-
 
 def print_cdecl_type(x):
 	newline(n=x.nl)
@@ -2034,8 +2018,19 @@ def print_cdecl_func(x):
 	out(";")
 
 
+
+
 def print_directive(x):
-	k = x['kind']
+	if isinstance(x, StmtDirectiveImport):
+		if not 'do_not_include' in x.import_module['att']:
+			s = os.path.basename(x.impline)
+			include(s + '.h', local=True)
+
+	if isinstance(x, StmtDirectiveCInclude):
+		include(x.c_name, local=x.is_local)
+		return
+
+	"""k = x['kind']
 	#if k == 'import': print_include(x)
 	if k == 'insert':
 		newline(n=x['nl'])
@@ -2045,7 +2040,7 @@ def print_directive(x):
 		print_cdecl_func(x)
 	elif k == 'cdecl_type':
 		newline(n=x['nl'])
-		print_cdecl_type(x)
+		print_cdecl_type(x)"""
 
 
 
@@ -2102,19 +2097,15 @@ def print_header(module, outname):
 	include("stdint.h", local=False)
 	include("stdbool.h", local=False)
 	#include("string.h", local=False)
-	cdirectives(module)
+
+	for x in module['defs']:
+		if isinstance(x, StmtDirective):
+			print_directive(x)
 
 	# print directives (only for header)
 	for obj in module['defs']:
-		if isinstance(obj, dict):
-			if obj['isa'] == 'directive':
-				if obj['kind'] == 'c_include':
-					print_include(obj)
-				elif obj['kind'] == 'import':
-					if not 'do_not_include' in obj['import_module']['att']:
-						x = os.path.basename(obj['str'])
-						include(x + '.h', local=True)
-
+		if isinstance(obj, StmtDirective):
+			print_directive(obj)
 
 	newline()
 
@@ -2218,15 +2209,6 @@ def print_cfile(module, _outname):
 
 	# types & constants
 	for x in module['defs']:
-		if isinstance(x, dict):
-			isa = x['isa']
-			if isa == 'comment':
-				#nl_indent(x['nl'])
-				print_comment(x)
-			elif isa == 'directive':
-				print_directive(x)
-			continue
-
 
 		if x.hasAttribute('c_no_print'):
 			continue
@@ -2251,6 +2233,9 @@ def print_cfile(module, _outname):
 			print_def_func(x)
 		elif isinstance(x, StmtComment):
 			print_comment(x)
+		elif isinstance(x, StmtDirective):
+			print_directive(x)
+
 
 	newline()
 	newline()

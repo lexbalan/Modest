@@ -292,24 +292,6 @@ def context_pop():
 
 
 
-
-# used in metadirs
-def c_include(s):
-	#global cmodule
-	local = s[0:2] == './'
-	inc = {
-		'isa': 'directive',
-		'kind': 'c_include',
-		'c_name': s,
-		'local': local,
-		'att': [],
-		'nl': 1,
-		'ti': None
-	}
-	#module_append(inc)
-	return inc
-
-
 properties = {}
 
 
@@ -1713,8 +1695,8 @@ def do_value(x):
 	elif k == '__va_end': v = do_ValueVaEnd(x)
 	elif k == '__defined_type': v = do_value___defined_type(x)
 	elif k == '__defined_value': v = do_value___defined_value(x)
-	elif k == 'bad': v = do_ValueBad(x['ti'])
 	elif k == 'undefined': v = do_ValueUndefined(x)
+	elif k == 'bad': v = do_ValueBad(x['ti'])
 
 	assert(v != None)
 	v.ti = x['ti']
@@ -2524,16 +2506,14 @@ def do_import(x):
 
 			# копируем все c_include из импортированного модуля себе
 			# это костыль, но пока так
-			for private_def in m['defs']:
-				if isinstance(private_def, dict):
-					if private_def['isa'] == 'directive':
-						if private_def['kind'] == 'c_include':
-							module_append(private_def)
+			for d in m['defs']:
+				if isinstance(d, StmtDirectiveCInclude):
+					module_append(d)
 
 		cmodule['included_modules'].append(m)
 
-	y = import_directive(impline, x['ti'], include=x['include'])
-	y['import_module'] = m
+	y = StmtDirectiveImport(impline, x['ti'], include=x['include'])
+	y.import_module = m
 	return y
 
 
@@ -2549,7 +2529,7 @@ def do_directive(x):
 		elif s0 == 'module_nodecorate':
 			cmodule['att'].append('module_nodecorate')
 		elif s0 == 'c_include':
-			return c_include(args[1])
+			return StmtDirectiveCInclude(args[1])
 		elif s0 == 'c_no_print':
 			cmodule['att'].append('c_no_print')
 		elif s0 == 'feature':
@@ -2642,19 +2622,6 @@ def do_directive(x):
 
 	el"""
 
-
-def import_directive(impline, ti, include=False):
-	imp = {
-		'isa': 'directive',
-		'kind': 'import',
-		'include': include,
-		'str': impline,
-		'import_module': None,
-		'att': [],
-		'nl': 1,
-		'ti': ti,
-	}
-	return imp
 
 
 

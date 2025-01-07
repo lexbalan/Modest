@@ -1,4 +1,4 @@
-// ./out/c/main.c
+
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,6 +8,9 @@
 
 /* anonymous records */
 struct __anonymous_struct_3 {int32_t x; int32_t y;};
+#include <stdio.h>
+
+
 
 // Test for composite types
 

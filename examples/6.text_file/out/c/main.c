@@ -1,10 +1,23 @@
-// ./out/c/main.c
+
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
 #include "main.h"
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <string.h>
+
+#include <time.h>
+
+#include <unistd.h>
+
+#include <math.h>
+
 
 
 //include "libc/ctypes64"

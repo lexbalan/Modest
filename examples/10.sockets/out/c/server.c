@@ -1,10 +1,20 @@
-// ./out/c/server.c
+
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
 #include "server.h"
+
+
+#include <stdio.h>
+
+
+#include <stdlib.h>
+
+
+#include <arpa/inet.h>
+
 
 
 

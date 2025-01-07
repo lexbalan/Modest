@@ -1,4 +1,4 @@
-// ./out/c/main.c
+
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -6,7 +6,20 @@
 
 #include "main.h"
 
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))// getenv
+#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
+
+#include <stdio.h>
+
+
+#include <time.h>
+
+
+#include <unistd.h>
+
+
+#include <stdlib.h>
+
+// getenv
 
 
 int main()

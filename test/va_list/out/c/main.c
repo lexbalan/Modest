@@ -1,4 +1,4 @@
-// ./out/c/main.c
+
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -6,6 +6,13 @@
 #include <stdarg.h>
 
 #include "main.h"
+
+
+#include <stdio.h>
+
+
+#include <unistd.h>
+
 
 
 //include "lightfood/print"

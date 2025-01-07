@@ -1,4 +1,4 @@
-// ./out/c/main.c
+
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -9,6 +9,10 @@
 /* anonymous records */
 struct __anonymous_struct_3 {int32_t x;};
 struct __anonymous_struct_4 {int32_t x;};
+
+#include <stdio.h>
+
+
 
 
 struct Type1 {

@@ -1,4 +1,4 @@
-// ./out/c/main.c
+
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -9,6 +9,10 @@
 /* anonymous records */
 struct __anonymous_struct_3 {uint32_t x; uint32_t y;};
 struct __anonymous_struct_4 {uint32_t x; uint32_t y;};
+
+#include <stdio.h>
+
+
 
 struct Point2D {
 	uint32_t x;

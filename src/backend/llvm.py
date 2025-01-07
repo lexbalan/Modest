@@ -2421,6 +2421,9 @@ def een(defs, decl_only=False):
 			print_comment(x)
 			continue
 
+		if isinstance(x, StmtDirective):
+			continue
+
 
 		if x.hasAttribute('ll_no_print'):
 			continue

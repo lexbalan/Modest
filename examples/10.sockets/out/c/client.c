@@ -1,10 +1,23 @@
-// ./out/c/client.c
+
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
 #include "client.h"
+
+
+#include <stdio.h>
+
+
+#include <stdlib.h>
+
+
+#include <unistd.h>
+
+
+#include <arpa/inet.h>
+
 
 
 

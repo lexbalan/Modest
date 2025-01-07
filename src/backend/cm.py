@@ -884,35 +884,28 @@ def print_def_const(x):
 
 
 def print_import(x):
-	if not x['include']:
-		out("import \"%s\"" % x['str'])
+	if not x.include:
+		out("import \"%s\"" % x.impline)
 	else:
-		out("include \"%s\"" % x['str'])
+		out("include \"%s\"" % x.impline)
 
 
 def print_directive(x):
-	if x['kind'] == 'import': print_import(x)
-	elif x['kind'] == 'c_include': out("@c_include \"%s\"" % x['c_name'])
+	if isinstance(x, StmtDirectiveImport):
+		print_import(x)
+	elif isinstance(x, StmtDirectiveCInclude):
+		out("@c_include \"%s\"" % x.c_name)
 
 
-def print_def(x):
-	if isinstance(x, dict):
-		isa = x['isa']
-		if isa == 'directive':
-			newline(n=1)
-			print_directive(x)
-		elif isa == 'comment':
-			print_comment(x)
-		return
-
-	#if isa != 'comment':
+def printTopLevelStmt(x):
 	newline(n=x.nl)
-
 	if isinstance(x, StmtDefVar): print_def_var(x)
 	elif isinstance(x, StmtDefConst): print_def_const(x)
 	elif isinstance(x, StmtDefFunc): print_def_func(x)
 	elif isinstance(x, StmtDefType): print_def_type(x)
 	elif isinstance(x, StmtComment): print_comment(x)
+	elif isinstance(x, StmtDirective): print_directive(x)
+
 
 def run(module, outname, options):
 	from main import features
@@ -921,7 +914,7 @@ def run(module, outname, options):
 	output_open(outname + '.m')
 
 	for x in module['defs']:
-		print_def(x)
+		printTopLevelStmt(x)
 
 	out("\n\n")
 	output_close()
