@@ -815,9 +815,7 @@ def print_stmt_asm(x):
 
 
 def print_stmt(x):
-	if not isinstance(x, StmtBlock):
-		nl_indent(x.nl)
-
+	nl_indent(x.nl)
 	if isinstance(x, StmtBlock): print_stmt_block(x)
 	elif isinstance(x, StmtValueExpression): print_stmt_value(x)
 	elif isinstance(x, StmtAssign): print_stmt_assign(x)
