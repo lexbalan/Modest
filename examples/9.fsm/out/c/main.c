@@ -7,8 +7,14 @@
 #include "main.h"
 
 
+// This is flashlight final state machine example
+// (just for compiler test and language demonstration)
 
+//@attribute("c_no_print")
+//import "lightfood/main"
+//@attribute("c_no_print")
 
+//$pragma c_include "./ff_main.h"
 
 
 #define flashlightStateOff  0
@@ -18,6 +24,10 @@
 
 static uint8_t cnt;
 
+
+//
+// State Off
+//
 
 static void off_entry(fsm_FSM *x)
 {
@@ -45,6 +55,10 @@ static void off_exit(fsm_FSM *x)
 }
 
 
+//
+// State On
+//
+
 static void on_entry(fsm_FSM *x)
 {
 	(void)x;
@@ -70,6 +84,10 @@ static void on_exit(fsm_FSM *x)
 	//printf("on_exit\n")
 }
 
+
+//
+// State Beacon
+//
 
 static void beacon_entry(fsm_FSM *x)
 {

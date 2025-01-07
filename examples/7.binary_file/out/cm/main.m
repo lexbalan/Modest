@@ -5,7 +5,19 @@ include "libc/string"
 @c_include "stdio.h"
 include "libc/stdio"
 
+
+
+
+
+// FIXIT: not worked LLVM result (!)
+
 const filename = *Str8 "file.bin"
+
+
+
+
+
+// chunk of data for read/write operations in file
 type Chunk record {
 	id: [100]Char
 	data: [1024]Char

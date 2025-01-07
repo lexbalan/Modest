@@ -59,6 +59,8 @@ typedef struct WrappedArray WrappedArray;
 
 #define wa  {}
 
+
+// Pythagorean theorem
 static float distance(Point a, Point b)
 {
 	double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);

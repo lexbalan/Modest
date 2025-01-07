@@ -201,6 +201,9 @@ declare void @perror(%ConstCharStr* %str)
 @str12 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str13 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 ; -- endstrings --
+
+
+; Simply record for records assignation test
 %Point = type {
 	%Int32,
 	%Int32
@@ -231,14 +234,18 @@ declare void @perror(%ConstCharStr* %str)
 ]
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
-	;{'str': ' -----------------------------------'}
-	;{'str': ' Global'}
-	;{'str': ' copy integers by value'}
+
+	; -----------------------------------
+	; Global
+
+	; copy integers by value
 	%2 = load %Int32, %Int32* @glb_i1
 	store %Int32 %2, %Int32* @glb_i0
 	%3 = load %Int32, %Int32* @glb_i0
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), %Int32 %3)
-	;{'str': ' copy arrays by value'}
+
+
+	; copy arrays by value
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
 	%5 = zext %Int8 10 to %Int32
@@ -254,7 +261,9 @@ define %Int @main() {
 	%13 = getelementptr %Int32, [10 x %Int32]* @glb_a0, %Int32 2
 	%14 = load %Int32, %Int32* %13
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Int32 %14)
-	;{'str': ' copy records by value'}
+
+
+	; copy records by value
 	%16 = load %Point, %Point* @glb_r1
 	store %Point %16, %Point* @glb_r0
 	%17 = getelementptr %Point, %Point* @glb_r0, %Int32 0, %Int32 0
@@ -263,9 +272,12 @@ define %Int @main() {
 	%20 = getelementptr %Point, %Point* @glb_r0, %Int32 0, %Int32 1
 	%21 = load %Int32, %Int32* %20
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Int32 %21)
-	;{'str': ' -----------------------------------'}
-	;{'str': ' Local'}
-	;{'str': ' copy integers by value'}
+
+
+	; -----------------------------------
+	; Local
+
+	; copy integers by value
 	%23 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %23
 	%24 = alloca %Int32, align 4
@@ -274,8 +286,9 @@ define %Int @main() {
 	store %Int32 %25, %Int32* %23
 	%26 = load %Int32, %Int32* %23
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), %Int32 %26)
-	;{'str': ' copy arrays by value'}
-	;{'str': ' C backend will be use memcpy()'}
+
+	; copy arrays by value
+	; C backend will be use memcpy()
 	%28 = alloca [10 x %Int32], align 4
 	store [10 x %Int32] zeroinitializer, [10 x %Int32]* %28
 	%29 = alloca [10 x %Int32], align 4
@@ -298,8 +311,10 @@ define %Int @main() {
 	%41 = getelementptr %Int32, [10 x %Int32]* %28, %Int32 2
 	%42 = load %Int32, %Int32* %41
 	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), %Int32 %42)
-	;{'str': ' copy records by value'}
-	;{'str': ' C backend will be use memcpy()'}
+
+
+	; copy records by value
+	; C backend will be use memcpy()
 	%44 = alloca %Point, align 4
 	%45 = insertvalue %Point zeroinitializer, %Int32 0, 0
 	%46 = insertvalue %Point %45, %Int32 0, 1
@@ -316,7 +331,9 @@ define %Int @main() {
 	%54 = getelementptr %Point, %Point* %44, %Int32 0, %Int32 1
 	%55 = load %Int32, %Int32* %54
 	%56 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %55)
-	;{'str': ' error: closed arrays of closed arrays are denied'}
+
+
+	; error: closed arrays of closed arrays are denied
 ;let dim1 = 15
 ;	let dim2 = 16
 ;

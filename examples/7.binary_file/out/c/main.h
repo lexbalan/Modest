@@ -10,6 +10,23 @@
 #include <stdio.h>
 
 
+
+
+// FIXIT: not worked LLVM result (!)
+
+
+
+
+// chunk of data for read/write operations in file
+
+
+
+
+
+
+
+
+
 int main();
 
 #endif /* MAIN_H */

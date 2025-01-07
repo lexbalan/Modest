@@ -49,10 +49,17 @@ const lines = [line0, line1, line2, line3]
 
 
 type WrappedArray record {
+	//array: [10]Int32
 	x: Int32
 }
 
 const wa = WrappedArray {}
+
+
+
+
+
+// Pythagorean theorem
 func distance(a: Point, b: Point) -> Float {
 	let dx = max_float64(a.x, b.x) - min_float64(a.x, b.x)
 	let dy = max_float64(a.y, b.y) - min_float64(a.y, b.y)

@@ -250,7 +250,7 @@ body_2:
 	%14 = icmp sgt %Int32 %9, %13
 	br %Bool %14 , label %then_0, label %endif_0
 then_0:
-	;{'str': ' swap'}
+	; swap
 	%15 = load %Int32, %Int32* %3
 	%16 = getelementptr %Int32, [0 x %Int32]* %array, %Int32 %15
 	store %Int32 %13, %Int32* %16
@@ -273,7 +273,7 @@ break_1:
 }
 
 define %Int32 @main() {
-	;{'str': 'fill_array(&array, lengthof(array))'}
+	;fill_array(&array, lengthof(array))
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
 	call void @print_array([0 x %Int32]* bitcast ([21 x %Int32]* @array to [0 x %Int32]*), %Int32 21)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))

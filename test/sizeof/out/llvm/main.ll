@@ -277,6 +277,9 @@ declare void @perror(%ConstCharStr* %str)
 	%Mixed3
 };
 
+
+
+;var s: Mixed2
 @c = internal global %Char8 zeroinitializer
 @i = internal global %Int32 zeroinitializer
 @f = internal global double zeroinitializer
@@ -301,16 +304,19 @@ define %Int @main() {
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Int64 0)
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), %Int64 0)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Int64 0)
-	;{'str': ' дженерики в с явно не приводятся, но нектороые нужно!'}
-	;{'str': '\tprintf("offsetof(x.c) = %llu\\n", Nat64 offsetof(X.c))'}
-	;{'str': '\tprintf("offsetof(x.i) = %llu\\n", Nat64 offsetof(X.i))'}
-	;{'str': '\tprintf("offsetof(x.f) = %llu\\n", Nat64 offsetof(X.f))'}
-	;{'str': '\tprintf("offsetof(x.i2) = %llu\\n", Nat64 offsetof(X.i2))'}
-	;{'str': '\tprintf("offsetof(x.p) = %llu\\n", Nat64 offsetof(X.p))'}
-	;{'str': '\tprintf("offsetof(x.g) = %llu\\n", Nat64 offsetof(X.g))'}
-	;{'str': ' sizeof(void) in C  == 1'}
-	;{'str': ' sizeof(Unit) in CM == 0'}
-	;{'str': ' TODO: here is a broblem'}
+
+	; дженерики в с явно не приводятся, но нектороые нужно!
+	;	printf("offsetof(x.c) = %llu\n", Nat64 offsetof(X.c))
+	;	printf("offsetof(x.i) = %llu\n", Nat64 offsetof(X.i))
+	;	printf("offsetof(x.f) = %llu\n", Nat64 offsetof(X.f))
+	;	printf("offsetof(x.i2) = %llu\n", Nat64 offsetof(X.i2))
+	;	printf("offsetof(x.p) = %llu\n", Nat64 offsetof(X.p))
+	;	printf("offsetof(x.g) = %llu\n", Nat64 offsetof(X.g))
+
+
+	; sizeof(void) in C  == 1
+	; sizeof(Unit) in CM == 0
+	; TODO: here is a broblem
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*), %Int64 1)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str9 to [0 x i8]*), %Int64 1)
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*), %Int64 1)
@@ -325,8 +331,8 @@ define %Int @main() {
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str19 to [0 x i8]*), %Int64 8)
 	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str20 to [0 x i8]*), %Int64 16)
 	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str21 to [0 x i8]*), %Int64 16)
-	;{'str': ' type Nat256 not implemented'}
-	;{'str': 'printf("sizeof(Nat256) = %llu\\n", Nat64 sizeof(Nat256))'}
+	; type Nat256 not implemented
+	;printf("sizeof(Nat256) = %llu\n", Nat64 sizeof(Nat256))
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str22 to [0 x i8]*), %Int64 1)
 	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str23 to [0 x i8]*), %Int64 1)
 	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str24 to [0 x i8]*), %Int64 2)
@@ -337,47 +343,55 @@ define %Int @main() {
 	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str29 to [0 x i8]*), %Int64 8)
 	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str30 to [0 x i8]*), %Int64 16)
 	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str31 to [0 x i8]*), %Int64 16)
-	;{'str': ' type Int256 not implemented'}
-	;{'str': 'printf("sizeof(Int256) = %llu\\n", Nat64 sizeof(Int256))'}
+	; type Int256 not implemented
+	;printf("sizeof(Int256) = %llu\n", Nat64 sizeof(Int256))
 	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str32 to [0 x i8]*), %Int64 1)
 	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str33 to [0 x i8]*), %Int64 1)
 	%34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str34 to [0 x i8]*), %Int64 2)
 	%35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str35 to [0 x i8]*), %Int64 2)
 	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str36 to [0 x i8]*), %Int64 4)
 	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str37 to [0 x i8]*), %Int64 4)
-	;{'str': ' pointer size (for example pointer to []Char8)'}
+
+	; pointer size (for example pointer to []Char8)
 	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str38 to [0 x i8]*), %Int64 8)
 	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str39 to [0 x i8]*), %Int64 8)
-	;{'str': ' array size'}
+
+	; array size
 	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str40 to [0 x i8]*), %Int64 40)
 	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str41 to [0 x i8]*), %Int64 4)
 	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str42 to [0 x i8]*), %Int64 4)
-	;{'str': ' record size'}
+
+
+	; record size
 	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str43 to [0 x i8]*), %Int64 8)
 	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str44 to [0 x i8]*), %Int64 4)
-	;{'str': '\tprintf("offsetof(Point.x) = %llu\\n", Nat64 offsetof(Point.x))'}
-	;{'str': '\tprintf("offsetof(Point.y) = %llu\\n", Nat64 offsetof(Point.y))'}
+
+	;	printf("offsetof(Point.x) = %llu\n", Nat64 offsetof(Point.x))
+	;	printf("offsetof(Point.y) = %llu\n", Nat64 offsetof(Point.y))
 	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str45 to [0 x i8]*), %Int64 16)
 	%46 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str46 to [0 x i8]*), %Int64 8)
 	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str47 to [0 x i8]*), %Int64 40)
 	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str48 to [0 x i8]*), %Int64 8)
-	;{'str': '\tprintf("offsetof(Mixed2.i) = %llu\\n", Nat64 offsetof(Mixed2.i))'}
-	;{'str': '\tprintf("offsetof(Mixed2.c) = %llu\\n", Nat64 offsetof(Mixed2.c))'}
-	;{'str': '\tprintf("offsetof(Mixed2.f) = %llu\\n", Nat64 offsetof(Mixed2.f))'}
-	;{'str': '\tprintf("offsetof(Mixed2.c2) = %llu\\n", Nat64 offsetof(Mixed2.c2))'}
-	;{'str': '\tprintf("offsetof(Mixed2.m) = %llu\\n", Nat64 offsetof(Mixed2.m))'}
+
+
+	;	printf("offsetof(Mixed2.i) = %llu\n", Nat64 offsetof(Mixed2.i))
+	;	printf("offsetof(Mixed2.c) = %llu\n", Nat64 offsetof(Mixed2.c))
+	;	printf("offsetof(Mixed2.f) = %llu\n", Nat64 offsetof(Mixed2.f))
+	;	printf("offsetof(Mixed2.c2) = %llu\n", Nat64 offsetof(Mixed2.c2))
+	;	printf("offsetof(Mixed2.m) = %llu\n", Nat64 offsetof(Mixed2.m))
 	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str49 to [0 x i8]*), %Int64 32)
 	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str50 to [0 x i8]*), %Int64 8)
 	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str51 to [0 x i8]*), %Int64 128)
 	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str52 to [0 x i8]*), %Int64 8)
-	;{'str': '\tprintf("offsetof(Mixed4.s) = %llu\\n", Nat64 offsetof(Mixed4.s))'}
-	;{'str': '\tprintf("offsetof(Mixed4.c) = %llu\\n", Nat64 offsetof(Mixed4.c))'}
-	;{'str': '\tprintf("offsetof(Mixed4.i) = %llu\\n", Nat64 offsetof(Mixed4.i))'}
-	;{'str': '\tprintf("offsetof(Mixed4.f) = %llu\\n", Nat64 offsetof(Mixed4.f))'}
-	;{'str': '\tprintf("offsetof(Mixed4.c2) = %llu\\n", Nat64 offsetof(Mixed4.c2))'}
-	;{'str': '\tprintf("offsetof(Mixed4.i2) = %llu\\n", Nat64 offsetof(Mixed4.i2))'}
-	;{'str': '\tprintf("offsetof(Mixed4.p) = %llu\\n", Nat64 offsetof(Mixed4.p))'}
-	;{'str': '\tprintf("offsetof(Mixed4.s2) = %llu\\n", Nat64 offsetof(Mixed4.s2))'}
+
+	;	printf("offsetof(Mixed4.s) = %llu\n", Nat64 offsetof(Mixed4.s))
+	;	printf("offsetof(Mixed4.c) = %llu\n", Nat64 offsetof(Mixed4.c))
+	;	printf("offsetof(Mixed4.i) = %llu\n", Nat64 offsetof(Mixed4.i))
+	;	printf("offsetof(Mixed4.f) = %llu\n", Nat64 offsetof(Mixed4.f))
+	;	printf("offsetof(Mixed4.c2) = %llu\n", Nat64 offsetof(Mixed4.c2))
+	;	printf("offsetof(Mixed4.i2) = %llu\n", Nat64 offsetof(Mixed4.i2))
+	;	printf("offsetof(Mixed4.p) = %llu\n", Nat64 offsetof(Mixed4.p))
+	;	printf("offsetof(Mixed4.s2) = %llu\n", Nat64 offsetof(Mixed4.s2))
 	ret %Int 0
 }
 

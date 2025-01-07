@@ -330,7 +330,8 @@ define %Int @main() {
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str7 to [0 x i8]*), double 0.1250000000000000)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str8 to [0 x i8]*), %Int32 4)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str9 to [0 x i8]*), %Int32 8)
-	;{'str': ' printf %f ожидает получить double а не float!'}
+
+	; printf %f ожидает получить double а не float!
 	%9 = insertvalue %Point2D zeroinitializer, %Int 10, 0
 	%10 = insertvalue %Point2D %9, %Int 20, 1
 	%11 = insertvalue %Point2D zeroinitializer, %Int 30, 0

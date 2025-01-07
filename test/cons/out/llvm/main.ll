@@ -193,6 +193,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
+
 ;let x0 = Int32 -1
 ;	let x1 = Int64 -1
 ;
@@ -203,12 +204,14 @@ define %Int @main() {
 ;	printf("x1 = %llx\n", y1)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int8 255)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*), %Int32 255)
-	;{'str': '\tlet c = Int32 a'}
-	;{'str': '\tlet d = Int32 Int8 -1'}
-	;{'str': '\tlet e = Int32 Int8 255'}
-	;{'str': '\tprintf("c = %i\\n", c)'}
-	;{'str': '\tprintf("d = %i\\n", d)'}
-	;{'str': '\tprintf("e = %i\\n", e)'}
+
+	;	let c = Int32 a
+	;	let d = Int32 Int8 -1
+	;	let e = Int32 Int8 255
+
+	;	printf("c = %i\n", c)
+	;	printf("d = %i\n", d)
+	;	printf("e = %i\n", e)
 	ret %Int 0
 }
 

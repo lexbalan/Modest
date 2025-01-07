@@ -13,7 +13,7 @@ all: LLVM
 
 CM:
 	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.m
-
+	mcc -o $(CMPREFIX)/crc32 -mbackend=cm -funsafe ${MODEST_LIB}/misc/crc32.m
 
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m

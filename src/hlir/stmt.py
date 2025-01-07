@@ -14,9 +14,27 @@ class Stmt(Entity):
 
 
 
+
 class StmtBad(Stmt):
 	def __init__(self, ti, nl=1):
 		super().__init__(ti)
+
+
+class StmtComment(Stmt):
+	def __init__(self, ti, nl):
+		super().__init__(ti=ti, nl=nl)
+
+
+class StmtCommentLine(StmtComment):
+	def __init__(self, lines, ti, nl=0):
+		super().__init__(ti, nl)
+		self.lines = lines
+
+
+class StmtCommentBlock(StmtComment):
+	def __init__(self, text, ti, nl=0):
+		super().__init__(ti, nl)
+		self.text = text
 
 
 class StmtDef(Stmt):
@@ -116,16 +134,6 @@ class StmtAsm(Stmt):
 		self.clobbers = clobbers
 
 
-class StmtCommentLine(Stmt):
-	def __init__(self, lines, ti=None, nl=0):
-		super().__init__(ti, nl=nl)
-		self.lines = lines
-
-
-class StmtCommentBlock(Stmt):
-	def __init__(self, text, ti=None, nl=0):
-		super().__init__(ti, nl=nl)
-		self.text = text
 
 
 

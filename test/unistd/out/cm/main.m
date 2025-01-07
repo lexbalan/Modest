@@ -7,7 +7,7 @@ include "libc/time"
 @c_include "unistd.h"
 include "libc/unistd"
 @c_include "stdlib.h"
-include "libc/stdlib"
+include "libc/stdlib"// getenv
 
 
 public func main() -> Int {

@@ -232,7 +232,8 @@ else_0:
 	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	;{'str': ' local'}
+
+	; local
 	%15 = alloca %Point, align 4
 	%16 = insertvalue %Point zeroinitializer, %Int32 10, 0
 	%17 = insertvalue %Point %16, %Int32 20, 1

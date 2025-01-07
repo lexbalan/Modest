@@ -13,6 +13,24 @@
 #include "console.h"
 
 
+
+
+// constants with type String(Generic)
+
+
+
+
+// variables with type Array of Chars
+
+
+
+
+// variables with type Pointer to Array of Chars
+
+
+
+
+
 int main();
 
 #endif /* MAIN_H */

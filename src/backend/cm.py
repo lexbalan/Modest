@@ -88,33 +88,28 @@ def print_id_for(x):
 
 
 def print_comment(x):
-	#if isinstance(x, dict):
-	return
-
-	k = x['kind']
-	if k == 'line':
+	nl_indent(x.nl)
+	if isinstance(x, StmtCommentLine):
 		print_comment_line(x)
-	elif k == 'block':
+	elif isinstance(x, StmtCommentBlock):
 		print_comment_block(x)
 
 
 def print_comment_block(x):
-	nl_indent(x.nl)
 	out("/*%s*/" % x.text)
 
 
 def print_comment_line(x):
-	newline(x.nl)
 	lines = x.lines
 	i = 0
 	n = len(lines)
 	while i < n:
 		line = lines[i]
-		indent()
 		out("//%s" % line['str'])
 		i = i + 1
 		if i < n:
 			newline()
+			indent()
 
 
 
@@ -797,8 +792,7 @@ def print_stmt_asm(x):
 
 def print_stmt(x):
 
-	if not (isinstance(x, StmtBlock) or isinstance(x, StmtCommentLine) or isinstance(x, StmtCommentBlock)):
-	#if not k in ['block', 'comment-line', 'comment-block']:
+	if not (isinstance(x, StmtBlock) or isinstance(x, StmtComment)):
 		nl_indent(x.nl)
 
 	if isinstance(x, StmtBlock): print_stmt_block(x)
@@ -811,8 +805,7 @@ def print_stmt(x):
 	elif isinstance(x, StmtDefConst): print_stmt_let(x)
 	elif isinstance(x, StmtBreak): print_stmt_break(x)
 	elif isinstance(x, StmtAgain): print_stmt_again(x)
-	elif isinstance(x, StmtCommentLine): print_comment_line(x)
-	elif isinstance(x, StmtCommentBlock): print_comment_block(x)
+	elif isinstance(x, StmtComment): print_comment(x)
 	elif isinstance(x, StmtAsm): print_stmt_asm(x)
 	else: lo("<stmt %s>" % str(x))
 
@@ -919,7 +912,7 @@ def print_def(x):
 	elif isinstance(x, StmtDefConst): print_def_const(x)
 	elif isinstance(x, StmtDefFunc): print_def_func(x)
 	elif isinstance(x, StmtDefType): print_def_type(x)
-
+	elif isinstance(x, StmtComment): print_comment(x)
 
 def run(module, outname, options):
 	from main import features

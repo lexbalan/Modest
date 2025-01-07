@@ -240,6 +240,12 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 2
 	}
 ]
+
+
+; есть проблема - в C глобальные переменные с модификатором const
+; не могут быть так инициализированы, поскольку points является приведением
+; непонятно существует ли хорошее решение
+;@property("c_prefix", "const")
 @points2 = internal global [3 x %Point] [
 	%Point {
 		%Int32 0,
@@ -254,11 +260,15 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 2
 	}
 ]
+
+
+; define function main
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 42)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), %Int32 42)
-	;{'str': '\tprintf("genericStringConst = %s\\n", genericStringConst)'}
+
+	;	printf("genericStringConst = %s\n", genericStringConst)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*))
 	ret %Int 0
 }

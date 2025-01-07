@@ -106,17 +106,111 @@ break_2:
 ; MODULE: crc32
 
 ; -- print includes --
+; from included ctypes64
+%Str = type %Str8;
+%Char = type %Char8;
+%ConstChar = type %Char;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
+%IntPtrT = type %Int64;
+%PtrDiffT = type i8*;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
+; from included stdio
+%File = type %Int8;
+%FposT = type %Int8;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
+declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %fname)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%File* %f)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
+declare %File* @tmpfile()
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
+declare %CharStr* @gets(%CharStr* %str)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
+declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+@str1 = private constant [24 x i8] [i8 67, i8 82, i8 67, i8 91, i8 37, i8 48, i8 50, i8 88, i8 93, i8 32, i8 61, i8 32, i8 37, i8 48, i8 56, i8 120, i8 44, i8 32, i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
 ; -- endstrings --
+
+;include "libc/ctypes64"
+;include "libc/stdio"
+
+;
+;  Name  : CRC-32
+;  Poly  : 0x04C11DB7    xxor32 + xxor26 + xxor23 + xxor22 + xxor16 + xxor12 + xxor11
+;                       + xxor10 + xxor8 + xxor7 + xxor5 + xxor4 + xxor2 + x + 1
+;  Init  : 0xFFFFFFFF
+;  Revert: true
+;  XorOut: 0xFFFFFFFF
+;  Check : 0xCBF43926 ("123456789")
+;  MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
+;   одинарных, двойных, пакетных и всех нечетных ошибок
+;
 define %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len) {
 	%1 = alloca [256 x %Word32], align 4
 	%2 = alloca %Word32, align 4
-	;{'str': ''}
-	;{'str': ' create table before'}
-	;{'str': ''}
+
+	;
+	; create table before
+	;
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
 	br label %again_1
@@ -166,9 +260,10 @@ break_2:
 	store %Int32 %25, %Int32* %3
 	br label %again_1
 break_1:
-	;{'str': ''}
-	;{'str': ' calculate CRC32'}
-	;{'str': ''}
+
+	;
+	; calculate CRC32
+	;
 	store %Word32 4294967295, %Word32* %2
 	store %Int32 0, %Int32* %3
 	br label %again_3
@@ -177,6 +272,7 @@ again_3:
 	%27 = icmp ult %Int32 %26, %len
 	br %Bool %27 , label %body_3, label %break_3
 body_3:
+	; --???1
 	%28 = load %Int32, %Int32* %3
 	%29 = getelementptr %Word8, [0 x %Word8]* %buf, %Int32 %28
 	%30 = load %Word8, %Word8* %29
@@ -184,21 +280,24 @@ body_3:
 	%32 = load %Word32, %Word32* %2
 	%33 = xor %Word32 %32, %31
 	%34 = and %Word32 %33, 255
-	%35 = trunc %Word32 %34 to %Int8
-	%36 = getelementptr %Word32, [256 x %Word32]* %1, %Int8 %35
-	%37 = load %Word32, %Word32* %2
-	%38 = lshr %Word32 %37, 8
-	%39 = load %Word32, %Word32* %36
-	%40 = xor %Word32 %39, %38
-	store %Word32 %40, %Word32* %2
-	%41 = load %Int32, %Int32* %3
-	%42 = add %Int32 %41, 1
-	store %Int32 %42, %Int32* %3
+	%35 = load %Int32, %Int32* %3
+	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str1 to [0 x i8]*), %Int32 %35, %Word32 %31, %Word32 %34)
+	; --???2
+	%37 = trunc %Word32 %34 to %Int8
+	%38 = getelementptr %Word32, [256 x %Word32]* %1, %Int8 %37
+	%39 = load %Word32, %Word32* %2
+	%40 = lshr %Word32 %39, 8
+	%41 = load %Word32, %Word32* %38
+	%42 = xor %Word32 %41, %40
+	store %Word32 %42, %Word32* %2
+	%43 = load %Int32, %Int32* %3
+	%44 = add %Int32 %43, 1
+	store %Int32 %44, %Int32* %3
 	br label %again_3
 break_3:
-	%43 = load %Word32, %Word32* %2
-	%44 = xor %Word32 %43, 4294967295
-	ret %Word32 %44
+	%45 = load %Word32, %Word32* %2
+	%46 = xor %Word32 %45, 4294967295
+	ret %Word32 %46
 }
 
 

@@ -25,6 +25,8 @@ static void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t 
 	}
 }
 
+//xor_encrypt = xor_encrypter
+//xor_decrypt = xor_encrypter
 
 #define msg_length  12
 #define key_length  3

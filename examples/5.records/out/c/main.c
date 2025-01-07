@@ -47,6 +47,8 @@ static float min(float a, float b)
 	return b;
 }
 
+
+// Pythagorean theorem
 static float distance(Point a, Point b)
 {
 	float dx = max(a.x, b.x) - min(a.x, b.x);

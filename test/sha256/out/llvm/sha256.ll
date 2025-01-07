@@ -592,7 +592,8 @@ define internal void @final(%Context* %ctx, %sha256_Hash* %outHash) {
 	%2 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%3 = load %Int32, %Int32* %2
 	store %Int32 %3, %Int32* %1
-	;{'str': ' Pad whatever data is left in the buffer.'}
+
+	; Pad whatever data is left in the buffer.
 	%4 = alloca %Int32, align 4
 	store %Int32 64, %Int32* %4
 	%5 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
@@ -619,7 +620,7 @@ endif_0:
 	%19 = sub %Int32 %17, %18
 	%20 = zext %Int32 %19 to %SizeT
 	%21 = call i8* @memset(i8* %16, %Int 0, %SizeT %20)
-	;{'str': 'ctx.data[i:n-i] = []'}
+	;ctx.data[i:n-i] = []
 	%22 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%23 = load %Int32, %Int32* %22
 	%24 = icmp uge %Int32 %23, 56
@@ -631,10 +632,11 @@ then_1:
 	%27 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%28 = bitcast [64 x %Word8]* %27 to i8*
 	%29 = call i8* @memset(i8* %28, %Int 0, %SizeT 56)
-	;{'str': 'ctx.data[0:56] = []'}
+	;ctx.data[0:56] = []
 	br label %endif_1
 endif_1:
-	;{'str': " Append to the padding the total message's length in bits and transform."}
+
+	; Append to the padding the total message's length in bits and transform.
 	%30 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%31 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%32 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
@@ -711,9 +713,10 @@ endif_1:
 	%94 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%95 = bitcast [64 x %Word8]* %94 to [0 x %Word8]*
 	call void @transform(%Context* %ctx, [0 x %Word8]* %95)
-	;{'str': ' Since this implementation uses little endian byte ordering'}
-	;{'str': ' and SHA uses big endian, reverse all the bytes'}
-	;{'str': ' when copying the final state to the output hash.'}
+
+	; Since this implementation uses little endian byte ordering
+	; and SHA uses big endian, reverse all the bytes
+	; when copying the final state to the output hash.
 	store %Int32 0, %Int32* %1
 	br label %again_1
 again_1:

@@ -1851,24 +1851,18 @@ def print_stmt_block(s):
 
 
 def print_comment(x):
-	#if isinstance(x, dict):
-	return
-
-	k = x['kind']
-	if k == 'line':
+	out("\n" * x.nl)
+	if isinstance(x, StmtCommentLine):
 		print_comment_line(x)
-	elif k == 'block':
+	elif isinstance(x, StmtCommentBlock):
 		print_comment_block(x)
 
 
 def print_comment_block(x):
-	out('\n') # * x['nl'])
 	out(";%s" % x.text.replace('\n', '\n;'))
 
 
 def print_comment_line(x):
-	out('\n') # * x['nl'])
-
 	lines = x.lines
 	i = 0
 	n = len(lines)
@@ -1876,7 +1870,7 @@ def print_comment_line(x):
 		line = lines[i]
 		#if need_indent:
 		indent()
-		out(";%s" % line)
+		out(";%s" % line['str'])
 		i = i + 1
 		if i < n:
 			out("\n")
@@ -1974,8 +1968,7 @@ def print_stmt(x):
 	elif isinstance(x, StmtDefConst): print_stmt_let(x)
 	elif isinstance(x, StmtBreak): print_stmt_break(x)
 	elif isinstance(x, StmtAgain): print_stmt_again(x)
-	elif isinstance(x, StmtCommentLine): print_comment_line(x)
-	elif isinstance(x, StmtCommentBlock): print_comment_block(x)
+	elif isinstance(x, StmtComment): print_comment(x)
 	elif isinstance(x, StmtAsm): print_stmt_asm(x)
 	else: lo("<stmt %s>" % str(x))
 
@@ -2074,10 +2067,7 @@ def print_func_signature(ftype, idStr):
 
 
 def is_private(x):
-	if isinstance(x, dict):
-		if 'access_level' in x:
-			return x['access_level'] == 'private'
-	else:
+	if isinstance(x, StmtDef):
 		return x.access_level == 'private'
 	return False
 
@@ -2425,6 +2415,12 @@ def een(defs, decl_only=False):
 
 		if isinstance(x, dict):
 			continue
+
+
+		if isinstance(x, StmtComment):
+			print_comment(x)
+			continue
+
 
 		if x.hasAttribute('ll_no_print'):
 			continue

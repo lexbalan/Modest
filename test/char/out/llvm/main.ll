@@ -197,9 +197,10 @@ define %Int @main() {
 	store %Char8 115, %Char8* %2
 	store %Char16 1071, %Char16* %3
 	store %Char32 128000, %Char32* %4
-	;{'str': 'printf("ch08 = 0x%x (%c)\\n", Nat32 ch08, ch08)'}
-	;{'str': 'printf("ch16 = 0x%x (%c)\\n", Nat32 ch16, ch16)'}
-	;{'str': 'printf("ch32 = 0x%x (%c)\\n", Nat32 ch32, ch32)'}
+
+	;printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
+	;printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
+	;printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
 	ret %Int 0
 }
 

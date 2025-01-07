@@ -7,6 +7,8 @@
 #include "main.h"
 
 
+//include "libc/ctypes64"
+//include "libc/stdio"
 
 
 #define filename  "file.txt"

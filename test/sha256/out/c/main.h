@@ -10,6 +10,25 @@
 #include "./sha256.h"
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main();
 
 #endif /* MAIN_H */

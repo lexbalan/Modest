@@ -8,6 +8,22 @@
 #include <stdio.h>
 
 
+
+
+// Simply record for records assignation test
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main();
 
 #endif /* MAIN_H */

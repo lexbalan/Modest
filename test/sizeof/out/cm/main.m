@@ -40,6 +40,12 @@ type Mixed4 record {
 	p: [3]Point
 	s2: Mixed3
 }
+
+
+
+
+
+//var s: Mixed2
 var c: Char8
 var i: Int32
 var f: Float64

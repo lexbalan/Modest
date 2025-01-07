@@ -291,6 +291,8 @@ declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; -- end print imports --
 ; -- strings --
 ; -- endstrings --
+
+;$pragma do_not_include; for Int; for write(); for putchar(); for strlen, strcpy
 define void @console_putchar8(%Char8 %c) {
 	call void @console_putchar_utf8(%Char8 %c)
 	ret void
@@ -350,6 +352,19 @@ break_1:
 	ret void
 }
 
+
+
+;
+; puts
+;
+
+
+;
+;// проблема тк puts уже определен в include ^^
+;public func puts(s: *Str8) -> Unit {
+;	puts8(s)
+;}
+;
 define void @console_puts8(%Str8* %s) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
@@ -382,8 +397,8 @@ define void @console_puts16(%Str16* %s) {
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	;{'str': ' нельзя просто так взять и вызвать putchar_utf16'}
-	;{'str': ' тк в строке может быть суррогатная пара UTF_16 символов'}
+	; нельзя просто так взять и вызвать putchar_utf16
+	; тк в строке может быть суррогатная пара UTF_16 символов
 	%2 = load %Int32, %Int32* %1
 	%3 = getelementptr %Char16, %Str16* %s, %Int32 %2
 	%4 = load %Char16, %Char16* %3
@@ -536,7 +551,8 @@ endif_2:
 	br label %again_1
 	br label %endif_1
 endif_1:
-	;{'str': " c == '{'"}
+
+	; c == '{'
 	%38 = load %Int32, %Int32* %2
 	%39 = add %Int32 %38, 1
 	store %Int32 %39, %Int32* %2
@@ -574,9 +590,9 @@ endif_4:
 	%61 = or %Bool %58, %60
 	br %Bool %61 , label %then_5, label %else_5
 then_5:
-	;{'str': ''}
-	;{'str': ' %i & %d for signed integer (Int)'}
-	;{'str': ''}
+	;
+	; %i & %d for signed integer (Int)
+	;
 	%62 = va_arg i8** %1, %Int32
 	%63 = call %Int32 @sprint_dec_int32([0 x %Char8]* %56, %Int32 %62)
 	%64 = load %Int32, %Int32* %3
@@ -588,9 +604,9 @@ else_5:
 	%67 = icmp eq %Char8 %66, 110
 	br %Bool %67 , label %then_6, label %else_6
 then_6:
-	;{'str': ''}
-	;{'str': ' %n for unsigned integer (Nat)'}
-	;{'str': ''}
+	;
+	; %n for unsigned integer (Nat)
+	;
 	%68 = va_arg i8** %1, %Int32
 	%69 = call %Int32 @sprint_dec_n32([0 x %Char8]* %56, %Int32 %68)
 	%70 = load %Int32, %Int32* %3
@@ -605,10 +621,10 @@ else_6:
 	%76 = or %Bool %73, %75
 	br %Bool %76 , label %then_7, label %else_7
 then_7:
-	;{'str': ''}
-	;{'str': ' %x for unsigned integer (Nat)'}
-	;{'str': ' %p for pointers'}
-	;{'str': ''}
+	;
+	; %x for unsigned integer (Nat)
+	; %p for pointers
+	;
 	%77 = va_arg i8** %1, %Int32
 	%78 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %56, %Int32 %77)
 	%79 = load %Int32, %Int32* %3
@@ -620,9 +636,9 @@ else_7:
 	%82 = icmp eq %Char8 %81, 115
 	br %Bool %82 , label %then_8, label %else_8
 then_8:
-	;{'str': ''}
-	;{'str': ' %s pointer to string'}
-	;{'str': ''}
+	;
+	; %s pointer to string
+	;
 	%83 = va_arg i8** %1, %Str8*
 	%84 = call [0 x %Char]* @strcpy([0 x %Char8]* %56, %Str8* %83)
 	%85 = call %SizeT @strlen(%Str8* %83)
@@ -636,9 +652,9 @@ else_8:
 	%90 = icmp eq %Char8 %89, 99
 	br %Bool %90 , label %then_9, label %endif_9
 then_9:
-	;{'str': ''}
-	;{'str': ' %c for char'}
-	;{'str': ''}
+	;
+	; %c for char
+	;
 	%91 = va_arg i8** %1, %Char32
 	%92 = bitcast [0 x %Char8]* %56 to [4 x %Char8]*
 	%93 = call %Int8 @utf_utf32_to_utf8(%Char32 %91, [4 x %Char8]* %92)
@@ -714,7 +730,8 @@ then_0:
 endif_0:
 	br label %again_1
 break_1:
-	;{'str': ' mirroring into buffer'}
+
+	; mirroring into buffer
 	%17 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %17
 	br label %again_2

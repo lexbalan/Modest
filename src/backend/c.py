@@ -1673,8 +1673,7 @@ def print_stmt(x):
 	elif isinstance(x, StmtDefConst): print_stmt_let(x)
 	elif isinstance(x, StmtBreak): print_stmt_break(x)
 	elif isinstance(x, StmtAgain): print_stmt_again(x)
-	elif isinstance(x, StmtCommentLine): print_comment_line(x)
-	elif isinstance(x, StmtCommentBlock): print_comment_block(x)
+	elif isinstance(x, StmtComment): print_comment(x)
 	elif isinstance(x, StmtAsm): print_stmt_asm(x)
 	else: lo("<stmt %s>" % str(x))
 
@@ -1972,10 +1971,10 @@ def print_insert(x):
 
 
 def print_comment(x):
-	return
-	k = x['kind']
-	if k == 'line': print_comment_line(x)
-	elif k == 'block': print_comment_block(x)
+	if isinstance(x, StmtCommentLine):
+		print_comment_line(x)
+	elif isinstance(x, StmtCommentBlock):
+		print_comment_block(x)
 
 
 def print_comment_block(x):
@@ -2051,10 +2050,7 @@ def print_directive(x):
 
 
 def is_private(x):
-	if isinstance(x, dict):
-		if 'access_level' in x:
-			return x['access_level'] == 'private'
-	else:
+	if isinstance(x, StmtDef):
 		return x.access_level == 'private'
 	return False
 
@@ -2133,6 +2129,12 @@ def print_header(module, outname):
 		if isinstance(x, dict):
 			continue
 
+		newline(x.nl)
+
+		if isinstance(x, StmtComment):
+			print_comment(x)
+			continue
+
 		if x.hasAttribute('c_no_print'):
 			continue
 		if x.hasAttribute('no_print'):
@@ -2145,22 +2147,17 @@ def print_header(module, outname):
 
 		if isinstance(x, StmtDefFunc):
 			if x.hasAttribute('inline'):
-				newline(1)
 				print_def_func(x)
 				continue
-			newline(1)
 			print_decl_func(x)
 		elif isinstance(x, StmtDefVar):
 			print_deps(x.deps)
-			newline(1)
 			print_def_var(x)
 		elif isinstance(x, StmtDefType):
 			print_deps(x.deps)
-			newline(1)
 			print_def_type(x)
 		elif isinstance(x, StmtDefConst):
 			print_deps(x.deps)
-			newline(1)
 			print_def_const(x)
 
 	newline()
@@ -2187,7 +2184,6 @@ def print_cfile(module, _outname):
 		first = module['defs'][0]
 		if isinstance(first, dict):
 			if first['isa'] == 'comment':
-				nl_indent(first['nl'])
 				print_comment(first)
 				module['defs'] = module['defs'][1:]
 			else:
@@ -2225,7 +2221,7 @@ def print_cfile(module, _outname):
 		if isinstance(x, dict):
 			isa = x['isa']
 			if isa == 'comment':
-				nl_indent(x['nl'])
+				#nl_indent(x['nl'])
 				print_comment(x)
 			elif isa == 'directive':
 				print_directive(x)
@@ -2237,26 +2233,24 @@ def print_cfile(module, _outname):
 		if x.hasAttribute('no_print'):
 			continue
 
+		newline(x.nl)
 
 		if isinstance(x, StmtDefConst) and is_private(x):
 			print_deps(x.deps)
-			newline(n=x.nl)
 			print_def_const(x)
 		elif isinstance(x, StmtDefType) and is_private(x):
 			print_deps(x.deps)
-			newline(n=x.nl)
 			print_def_type(x)
 		elif isinstance(x, StmtDefVar):
 			print_deps(x.deps)
-			newline(n=x.nl)
 			print_def_var(x)
 		#elif isinstance(x, DeclVar):
-		#	newline(n=x.nl)
 		#	print_def_var(x, isdecl=True)
 		elif isinstance(x, StmtDefFunc):
 			print_deps(x.deps)
-			newline(n=x.nl)
 			print_def_func(x)
+		elif isinstance(x, StmtComment):
+			print_comment(x)
 
 	newline()
 	newline()

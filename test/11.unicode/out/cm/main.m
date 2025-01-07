@@ -12,6 +12,10 @@ include "libc/stdio"
 include "lightfood/console"
 
 
+
+// include test (!)
+
+
 const ratSymbolUTF8 = [0xF0, 0x9F, 0x90, 0x80]
 const ratSymbolUTF16 = [0xD83D, 0xDC00]
 const ratSymbolUTF32 = 0x0001F400

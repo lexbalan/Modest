@@ -17,6 +17,12 @@ func print_ab(a: Int32, b: Int32) -> Unit {
 func sum(a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
+
+
+
+
+
+// define function main
 public func main() -> Int {
 	printf("test func\n")
 

@@ -42,6 +42,12 @@ func min(a: Float, b: Float) -> Float {
 	}
 	return b
 }
+
+
+
+
+
+// Pythagorean theorem
 func distance(a: Point, b: Point) -> Float {
 	let dx = max(a.x, b.x) - min(a.x, b.x)
 	let dy = max(a.y, b.y) - min(a.y, b.y)

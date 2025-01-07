@@ -55,6 +55,7 @@ func doTest(test: *SHA256_TestCase) -> Bool {
 	var test_hash: sha256.Hash
 	let msg = unsafe *[]Word8 &test.input_data
 	let msg_len = test.input_data_len
+
 	sha256.hash(msg, msg_len, &test_hash)
 
 	printf("'%s'", &test.input_data)

@@ -8,6 +8,11 @@
 include "libc/libc"
 
 
+
+//include "libc/ctypes64"
+//include "libc/stdio"
+
+
 const filename = *Str8 "file.txt"
 
 

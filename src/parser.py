@@ -1601,13 +1601,13 @@ class Parser:
 	def parse_comment_line(self):
 		ti = self.ti()
 		x = self.gettok()
-		return {'isa': 'ast_comment', 'kind': 'line', 'lines': x, 'ti': ti}
+		return {'isa': 'ast_comment', 'kind': 'comment-line', 'lines': x, 'ti': ti}
 
 
 	def parse_comment_block(self):
 		ti = self.ti()
 		x = self.gettok()
-		return {'isa': 'ast_comment', 'kind': 'block', 'text': x, 'ti': ti}
+		return {'isa': 'ast_comment', 'kind': 'comment-block', 'text': x, 'ti': ti}
 
 
 

@@ -213,6 +213,12 @@ declare void @perror(%ConstCharStr* %str)
 @str12 = private constant [18 x i8] [i8 99, i8 104, i8 117, i8 110, i8 107, i8 46, i8 100, i8 97, i8 116, i8 97, i8 58, i8 32, i8 34, i8 37, i8 115, i8 34, i8 10, i8 0]
 @str13 = private constant [21 x i8] [i8 98, i8 105, i8 110, i8 97, i8 114, i8 121, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 ; -- endstrings --
+
+
+; FIXIT: not worked LLVM result (!)
+
+
+; chunk of data for read/write operations in file
 %Chunk = type {
 	[100 x %Char],
 	[1024 x %Char]
@@ -229,15 +235,17 @@ then_0:
 	br label %endif_0
 endif_0:
 	%6 = alloca %Chunk, align 1
-	;{'str': ' pointers casting requires -funsafe translator option'}
-	;{'str': ' (see Makefile)'}
+
+	; pointers casting requires -funsafe translator option
+	; (see Makefile)
 	%7 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 0
 	%8 = bitcast [100 x %Char]* %7 to [0 x %Char]*
 	%9 = call [0 x %Char]* @strcpy([0 x %Char]* %8, [0 x %Char]* bitcast ([3 x i8]* @str5 to [0 x i8]*))
 	%10 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 1
 	%11 = bitcast [1024 x %Char]* %10 to [0 x %Char]*
 	%12 = call [0 x %Char]* @strcpy([0 x %Char]* %11, [0 x %Char]* bitcast ([5 x i8]* @str6 to [0 x i8]*))
-	;{'str': ' write chunk to file'}
+
+	; write chunk to file
 	%13 = bitcast %Chunk* %6 to i8*
 	%14 = call %SizeT @fwrite(i8* %13, %SizeT 1124, %SizeT 1, %File* %2)
 	%15 = call %Int @fclose(%File* %2)

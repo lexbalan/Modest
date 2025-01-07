@@ -1,12 +1,13 @@
-// crc32.m
 
-$pragma do_not_include
-$pragma unsafe
-
+@c_include "stdio.h"
 include "libc/stdio"
+
+
 
 //include "libc/ctypes64"
 //include "libc/stdio"
+
+
 
 /*
   Name  : CRC-32
@@ -28,39 +29,39 @@ public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 	// create table before
 	//
 
-	var i = Nat32 0
+	var i: Nat32 = Nat32 0
 	while i < tableSize {
 		crc = Word32 i
-		var j = Nat32 0
+		var j: Nat32 = Nat32 0
 		while j < 8 {
 			if (crc and 1) != 0 {
-				crc = (crc >> 1) xor 0xEDB88320
+				crc = crc >> 1 xor 0xEDB88320
 			} else {
 				crc = crc >> 1
 			}
 
-			++j
+			j = j + 1
 		}
 		crc_table[i] = crc
-		++i
-    }
+		i = i + 1
+	}
 
 	//
 	// calculate CRC32
 	//
 
-    crc = 0xFFFFFFFF
+	crc = 0xFFFFFFFF
 
 	i = 0
 	while i < len {
 		// --???1
-		let x = Word32 buf[i]
+		let x = Word32 (buf[i])
 		let y = (crc xor x) and 0xFF
 		printf("CRC[%02X] = %08x, %08x\n", i, x, y)
 		// --???2
-		let yy = unsafe Nat8 y
-		crc = crc_table[yy] xor (crc >> 8)
-		++i
+		let yy = Nat8 y
+		crc = crc_table[yy] xor crc >> 8
+		i = i + 1
 	}
 
 	return crc xor 0xFFFFFFFF

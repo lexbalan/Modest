@@ -634,7 +634,9 @@ def do_type_record(x):
 			continue
 
 		if 'comments' in field:
-			f.comments = field['comments']
+			f.comments = []
+			for comment in field['comments']:
+				f.comments.append(do_stmt_comment(comment))
 
 		fields.append(f)
 
@@ -1962,6 +1964,14 @@ def do_stmt_value(x):
 
 
 
+def do_stmt_comment(x):
+	if x['kind'] == 'comment-line':
+		return do_stmt_comment_line(x)
+	elif x['kind'] == 'comment-block':
+		return do_stmt_comment_block(x)
+	return None
+
+
 def do_stmt_comment_line(x):
 	return StmtCommentLine(x['lines'], ti=x['ti'], nl=x['nl'])
 
@@ -2419,39 +2429,6 @@ def is_nodecorate(x):
 
 
 
-def do_comment(x):
-	if x['kind'] == 'line':
-		return comm_line(x)
-	elif x['kind'] == 'block':
-		return comm_block(x)
-	return None
-
-
-#glb
-def comm_line(x):
-	#return StmtCommentLine(x['lines'], ti=x['ti'], nl=1)
-	return {
-		'isa': 'comment',
-		'kind': 'line',
-		'lines': x['lines'],
-		'nl': 1,
-		'att': [],
-		'ti': x['ti']
-	}
-
-#glb
-def comm_block(x):
-	#return StmtCommentBlock(x['text'], ti=x['ti'], nl=1)
-	return {
-		'isa': 'comment',
-		'kind': 'block',
-		'text': x['text'],
-		'nl': 1,
-		'att': [],
-		'ti': x['ti']
-	}
-
-
 
 # пропускать остальные ветви (elseif & else) условной директивы
 # тк основная ветвь была выполнена
@@ -2852,7 +2829,7 @@ def pre_def(ast, fdecl=False):
 				add_spices(y, ast_atts=x['attributes'])
 				module_append(y, to_export=x['access_modifier'] == 'public')
 		elif isa == 'ast_comment':
-			comment = do_comment(x)
+			comment = do_stmt_comment(x)
 			module_append(comment)
 
 	return

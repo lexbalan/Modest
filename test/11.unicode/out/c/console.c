@@ -8,30 +8,27 @@
 #include "console.h"
 
 
-
+//$pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
 
 
 
 void console_putchar_utf8(char c);
-
-
-
 void console_putchar8(char c)
 {
 	console_putchar_utf8(c);
 }
+
+
+
 void console_putchar_utf16(uint16_t c);
-
-
-
 void console_putchar16(uint16_t c)
 {
 	console_putchar_utf16(c);
 }
+
+
+
 void console_putchar_utf32(uint32_t c);
-
-
-
 void console_putchar32(uint32_t c)
 {
 	console_putchar_utf32(c);
@@ -72,6 +69,17 @@ void console_putchar_utf32(uint32_t c)
 }
 
 
+//
+// puts
+//
+
+
+/*
+// проблема тк puts уже определен в include ^^
+public func puts(s: *Str8) -> Unit {
+	puts8(s)
+}
+*/
 
 void console_puts8(char *s)
 {
@@ -124,12 +132,12 @@ void console_puts32(uint32_t *s)
 		i = i + 1;
 	}
 }
+
+
+
+
+
 int32_t console_vfprint(int fd, char *form, va_list va);
-
-
-
-
-
 void console_print(char *form, ...)
 {
 	va_list va;
@@ -137,12 +145,12 @@ void console_print(char *form, ...)
 	console_vfprint(STDOUT_FILENO, form, va);
 	va_end(va);
 }
+
+
+
+
+
 int32_t console_vsprint(char *buf, char *form, va_list va);
-
-
-
-
-
 int32_t console_vfprint(int fd, char *form, va_list va)
 {
 	char strbuf[256];
@@ -152,13 +160,13 @@ int32_t console_vfprint(int fd, char *form, va_list va)
 	write(fd, &strbuf[0], ((size_t)(uint32_t)n));
 	return n;
 }
+
+
+
+
 static int32_t sprint_dec_int32(char *buf, int32_t x);
 static int32_t sprint_dec_n32(char *buf, uint32_t x);
 static int32_t sprint_hex_nat32(char *buf, uint32_t x);
-
-
-
-
 int32_t console_vsprint(char *buf, char *form, va_list va)
 {
 	int32_t i = 0;

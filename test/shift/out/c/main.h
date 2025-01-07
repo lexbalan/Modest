@@ -8,6 +8,11 @@
 #include <stdio.h>
 
 
+
+
+// left must be Word
+// right must be Nat
+
 int main();
 
 #endif /* MAIN_H */

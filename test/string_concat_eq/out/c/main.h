@@ -8,6 +8,17 @@
 #include <stdio.h>
 
 
+
+
+
+
+
+//+ " " + party_corn
+
+
+
+
+
 int main();
 
 #endif /* MAIN_H */

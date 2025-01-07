@@ -54,6 +54,7 @@ static bool doTest(SHA256_TestCase *test)
 	memset(&test_hash, 0, sizeof test_hash);
 	uint8_t *msg = (uint8_t *)&test->input_data[0];
 	uint32_t msg_len = test->input_data_len;
+
 	sha256_hash(msg, msg_len, &test_hash[0]);
 
 	printf("'%s'", &test->input_data[0]);

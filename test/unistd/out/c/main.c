@@ -6,8 +6,7 @@
 
 #include "main.h"
 
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
-
+#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))// getenv
 
 
 int main()

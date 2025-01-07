@@ -133,6 +133,7 @@ class ValueBad(Value):
 	def __init__(self, ti=None):
 		from type import type_bad
 		super().__init__(type=type_bad({'ti': ti}), ti=ti)
+		from .hlir import Id
 		self.id = Id().fromStr('_')
 
 

@@ -111,13 +111,23 @@ break_2:
 ; -- end print imports --
 ; -- strings --
 ; -- endstrings --
+
+;;
+
+
+;$if (systemWidth == 64)
 %Word = type %Word64;
 %Nat = type %Int64;
+;$elseif (systemWidth == 32)
+;type Word Word32
+;type Nat Nat32
+;$endif
 define void @mzero(i8* %mem, %Int64 %len) {
 	%1 = ptrtoint i8* %mem to %Nat
 	%2 = urem %Nat %1, 8
 	%3 = bitcast i8* %mem to [0 x %Word8]*
-	;{'str': ' align the pointer'}
+
+	; align the pointer
 	%4 = alloca %Int64, align 8
 	store %Int64 0, %Int64* %4
 	br label %again_1
@@ -134,7 +144,8 @@ body_1:
 	store %Int64 %10, %Int64* %4
 	br label %again_1
 break_1:
-	;{'str': ' word operation'}
+
+	; word operation
 	%11 = sub %Int64 %len, %2
 	%12 = udiv %Int64 %11, 8
 	%13 = load %Int64, %Int64* %4
@@ -155,7 +166,8 @@ body_2:
 	store %Int64 %21, %Int64* %4
 	br label %again_2
 break_2:
-	;{'str': ' byte operation'}
+
+	; byte operation
 	%22 = sub %Int64 %len, %2
 	%23 = urem %Int64 %22, 8
 	%24 = load %Int64, %Int64* %4

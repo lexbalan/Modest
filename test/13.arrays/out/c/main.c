@@ -8,6 +8,9 @@
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
+//@attribute("c_no_print")
+//import "misc/minmax"
+//$pragma c_include "./minmax.h"
 
 
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
@@ -17,6 +20,8 @@ static int32_t globalArray[10] = _constantArray;
 
 static char arrayFromString[3] = "abc";
 
+
+//var arrayOfChars = [Char8 "a", 'b', 'c']
 
 
 static void f0(char *_x, char *sret_)
