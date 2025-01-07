@@ -680,6 +680,59 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
 
 
+def print_stmt_type(x):
+	out("type ")
+	print_id_for(x)
+	out(" ")
+	print_type(x.original_type)
+
+
+def print_stmt_const(x, operator='const'):
+	out("%s " % operator)
+	print_id_for(x)
+	out(" = ")
+	print_value(x.init_value, print_just_id=False)
+
+
+def print_stmt_var(x):
+	out("var ")
+	print_id_for(x.var_value)
+	out(": ")
+	print_type(x.var_value.type)
+	iv = x.init_value
+	if not Value.isUndefined(iv):
+		out(" = ")
+		print_value(iv)
+
+
+def print_stmt_func(x):
+	if x.stmt == None:
+		return
+	func = x.value
+	ft = func.type
+	out('func ')
+	print_id_for(func)
+	print_type_func(ft, extra_args=ft['extra_args'])
+	print_stmt_block(x.stmt)
+
+
+def print_stmt_block(s):
+	out(" {")
+
+	indent_up()
+
+	for stmt in s.stmts:
+		print_stmt(stmt)
+
+	indent_down()
+
+	endnl = s.end_nl
+	newline(endnl)
+	if endnl:
+		indent()
+	out("}")
+
+
 def print_stmt_if(x):
 	out("if ")
 	print_value(x.cond)
@@ -707,24 +760,6 @@ def print_stmt_return(x):
 	if rv != None:
 		out(" ")
 		print_value(rv)
-
-
-def print_stmt_var(x):
-	out("var ")
-	print_id_for(x.var_value)
-	out(": ")
-	print_type(x.var_value.type)
-	iv = x.init_value
-	if not Value.isUndefined(iv):
-		out(" = ")
-		print_value(iv)
-
-
-def print_stmt_let(x):
-	out("let ")
-	print_id_for(x)
-	out(" = ")
-	print_value(x.init_value, print_just_id=False)
 
 
 def print_stmt_assign(x):
@@ -802,30 +837,13 @@ def print_stmt(x):
 	elif isinstance(x, StmtIf): print_stmt_if(x)
 	elif isinstance(x, StmtWhile): print_stmt_while(x)
 	elif isinstance(x, StmtDefVar): print_stmt_var(x)
-	elif isinstance(x, StmtDefConst): print_stmt_let(x)
+	elif isinstance(x, StmtDefConst): print_stmt_const(x, operator='let')
 	elif isinstance(x, StmtBreak): print_stmt_break(x)
 	elif isinstance(x, StmtAgain): print_stmt_again(x)
 	elif isinstance(x, StmtComment): print_comment(x)
 	elif isinstance(x, StmtAsm): print_stmt_asm(x)
 	else: lo("<stmt %s>" % str(x))
 
-
-
-def print_stmt_block(s):
-	out(" {")
-
-	indent_up()
-
-	for stmt in s.stmts:
-		print_stmt(stmt)
-
-	indent_down()
-
-	endnl = s.end_nl
-	newline(endnl)
-	if endnl:
-		indent()
-	out("}")
 
 
 
@@ -837,17 +855,6 @@ def print_decl_func(x):
 	print_type(func['type'])
 """
 
-def print_def_func(x):
-	if x.stmt == None:
-		return
-	func = x.value
-	ft = func.type
-	if x.access_level == 'public':
-		out("public ")
-	out('func ')
-	print_id_for(func)
-	print_type_func(ft, extra_args=ft['extra_args'])
-	print_stmt_block(x.stmt)
 
 
 def print_decl_type(x):
@@ -858,29 +865,7 @@ def print_decl_type(x):
 
 
 
-def print_def_type(x):
-	if x.access_level == 'public':
-		out("public ")
-	out("type ")
-	print_id_for(x)
-	out(" ")
-	print_type(x.original_type)
 
-
-def print_def_var(x):
-	if x.access_level == 'public':
-		out("public ")
-	print_stmt_var(x)
-
-
-
-def print_def_const(x):
-	if x.access_level == 'public':
-		out("public ")
-	out("const ")
-	print_id_for(x.value)
-	out(" = ")
-	print_value(x.init_value, ctx=['oneline'], print_just_id=False)
 
 
 def print_import(x):
@@ -899,10 +884,15 @@ def print_directive(x):
 
 def printTopLevelStmt(x):
 	newline(n=x.nl)
-	if isinstance(x, StmtDefVar): print_def_var(x)
-	elif isinstance(x, StmtDefConst): print_def_const(x)
-	elif isinstance(x, StmtDefFunc): print_def_func(x)
-	elif isinstance(x, StmtDefType): print_def_type(x)
+
+	if isinstance(x, StmtDef):
+		if x.access_level == 'public':
+			out("public ")
+
+	if isinstance(x, StmtDefVar): print_stmt_var(x)
+	elif isinstance(x, StmtDefConst): print_stmt_const(x)
+	elif isinstance(x, StmtDefFunc): print_stmt_func(x)
+	elif isinstance(x, StmtDefType): print_stmt_type(x)
 	elif isinstance(x, StmtComment): print_comment(x)
 	elif isinstance(x, StmtDirective): print_directive(x)
 
