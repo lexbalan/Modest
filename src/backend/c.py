@@ -2109,7 +2109,6 @@ def print_cfile(module, _outname):
 	output_open(outname)
 
 	if 'c_no_print' in module['att']:
-		print("--------MODULE CNOPRINT")
 		output_close()
 		return
 
