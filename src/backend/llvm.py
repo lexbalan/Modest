@@ -1298,12 +1298,12 @@ def cons_composite_from_composite(to_type, value, ti):
 		# выделим память под новое значение
 		nv = llvm_alloca(to_type)
 		# приводим указатель на слот к указателю на (меньшее) значение
-		xnv = llvm_cast("bitcast", nv, type_pointer(v.type))
+		xnv = llvm_cast("bitcast", nv, type_pointer(v['type']))
 		llvm_store(xnv, v)
 		nv['is_adr'] = True
 	else:
 		#out("\n\t; trunk")
-		y = llvm_alloca_store(v.type, init_value=v)
+		y = llvm_alloca_store(v['type'], init_value=v)
 		nv = llvm_cast("bitcast", y, type_pointer(to_type))
 		nv['is_adr'] = True
 	out("\n; -- end cons_composite_from_composite_by_value --")
@@ -1319,7 +1319,6 @@ def eval_cons_record(x):
 	from_type = value.type
 	to_type = x.type
 
-	#if x.isImmediate():
 	if x.items != None:
 		return do_eval_literal(x)
 
@@ -1355,13 +1354,11 @@ def do_eval_cons(x):
 			if id(to_type['to']) == id(from_type['to']):
 				return do_reval(value)
 
-
 	if htype.type_is_array(to_type):
 		return eval_cons_array(x)
 
 	if htype.type_is_record(to_type):
 		return eval_cons_record(x)
-
 
 	if value.isImmediate():
 		# В случае Nat32 &x у нас занчение immediate но нет asset тк это поздний imm
@@ -1369,7 +1366,6 @@ def do_eval_cons(x):
 			if not htype.type_is_pointer(to_type):
 				#info("???", x['ti'])
 				return do_eval_literal(x)
-
 
 	if htype.type_is_pointer(to_type):
 		if htype.type_is_array_of_char(to_type['to']):
@@ -1391,11 +1387,6 @@ def do_eval_cons(x):
 		# оно дает доступ к следующему элементу списка
 		rv = do_eval(value)
 		return llvm_va_arg(rv, to_type)
-
-	"""if isinstance(value, ValueLiteral):
-		if htype.type_is_string(value.type):
-			value_print(x)
-			1/0"""
 
 	v = do_reval(value)
 
@@ -1437,7 +1428,6 @@ def do_eval_string(x):
 	1/0
 
 
-
 def do_eval_array(v):
 	# сперва вычисляем все элементы массива в регистры
 	# (кроме констант, они едут до последнего)
@@ -1445,7 +1435,6 @@ def do_eval_array(v):
 	for item in v.items:
 		iv = do_reval(item)
 		items.append(iv)
-
 
 	# global?
 	# глобальный массив распечатает print_value как литерал
@@ -1553,7 +1542,6 @@ def do_eval_literal(x):
 	if htype.type_is_number(xt): return llvm_value_num(xt, x.asset)
 	elif htype.type_is_integer(xt): return llvm_value_num(xt, x.asset)
 	elif htype.type_is_float(xt): return llvm_value_num(xt, x.asset)
-	elif htype.type_is_string(xt): return do_eval_string(x)
 	elif htype.type_is_record(xt): return do_eval_record(x)
 	elif htype.type_is_array(xt): return do_eval_array(x)
 	elif htype.type_is_bool(xt): return do_eval_bool(x)
@@ -1562,12 +1550,11 @@ def do_eval_literal(x):
 	elif htype.type_is_char(xt): return llvm_value_num(xt, x.asset)
 	elif htype.type_is_enum(xt): return llvm_value_num(xt, x.asset)
 	elif htype.type_is_word(xt): return llvm_value_num(xt, x.asset)
+	elif htype.type_is_string(xt): return do_eval_string(x)
 	else:
 		error("do_eval_literal: unknown literal", x['ti'])
 		Value.print(x)
 		exit(1)
-	return
-
 
 
 def do_eval_pointer(x):
@@ -1596,8 +1583,8 @@ def do_eval_va_copy(x):
 
 
 def do_eval_un(x):
-	k = x.op
 	y = None
+	k = x.op
 	if k == 'ref': y = do_eval_ref(x)
 	elif k == 'not': y = do_eval_not(x, xor_msk=-1)
 	elif k == 'logic_not': y = do_eval_not(x, xor_msk=1)
@@ -1605,12 +1592,11 @@ def do_eval_un(x):
 	elif k == 'deref': y = do_eval_deref(x)
 	return y
 
+
 def do_eval(x):
-	assert(x != None)
 	assert(isinstance(x, Value))
 
 	y = None
-
 	if isinstance(x, ValueLiteral): y = do_eval_literal(x)
 	elif isinstance(x, ValueBin): y = do_eval_bin(x)
 	elif isinstance(x, ValueCons): y = do_eval_cons(x)
