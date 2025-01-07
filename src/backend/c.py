@@ -332,9 +332,6 @@ def strFuncParamlist(params, va_arg):
 		if i > 0:
 			s += ', '
 
-		if isinstance(param, dict):
-			info("HERE", param['ti'])
-
 		ptype = param.type
 
 		pstr = get_id_str(param)
@@ -2119,13 +2116,10 @@ def print_cfile(module, _outname):
 	# before all print first comment (header) if present
 	if len(module['defs']) > 0:
 		first = module['defs'][0]
-		if isinstance(first, dict):
-			if first['isa'] == 'comment':
-				print_comment(first)
-				module['defs'] = module['defs'][1:]
-			else:
-				out("// %s" % outname)
-		newline()
+		if isinstance(first, StmtComment):
+			print_comment(first)
+			module['defs'] = module['defs'][1:]
+			newline()
 
 	guardsymbol = ''
 
