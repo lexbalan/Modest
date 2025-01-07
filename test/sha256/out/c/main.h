@@ -6,8 +6,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "./sha256.h"
-#include <stdio.h>
-#include "./sha256.h"
 
 
 

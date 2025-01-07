@@ -2085,28 +2085,14 @@ def print_header(module, outname):
 			print_directive(x)
 
 	# print directives (only for header)
-	for obj in module['defs']:
-		if isinstance(obj, StmtDirective):
-			print_directive(obj)
+	#for obj in module['defs']:
+	#	if isinstance(obj, StmtDirective):
+	#		print_directive(obj)
 
 	newline()
 
-#	out("\n/* forward type declaration */")
-#	for rec in module['records']:
-#		rec_id = get_id_str(rec)
-#		out("\ntypedef struct %s %s; //" % (rec_id, rec_id))
-
-
 	for x in module['defs']:
-
-		if isinstance(x, dict):
-			continue
-
 		newline(x.nl)
-
-		if isinstance(x, StmtComment):
-			print_comment(x)
-			continue
 
 		if x.hasAttribute('c_no_print'):
 			continue
@@ -2115,8 +2101,6 @@ def print_header(module, outname):
 
 		if is_private(x):
 			continue
-
-		#isa = x['isa']
 
 		if isinstance(x, StmtDefFunc):
 			if x.hasAttribute('inline'):
@@ -2132,6 +2116,8 @@ def print_header(module, outname):
 		elif isinstance(x, StmtDefConst):
 			print_deps(x.deps)
 			print_def_const(x)
+		elif isinstance(x, StmtComment):
+			print_comment(x)
 
 	newline()
 	newline()

@@ -798,17 +798,14 @@ def print_stmt_asm(x):
 	out('__asm(')
 	print_strx(x.text)
 
-	# print 'out' pairs
 	if len(x.outputs) > 0:
 		out(', ')
 		print_asm_pairs(x.outputs)
 
-	# print 'in' pairs
 	if len(x.inputs) > 0:
 		out(', ')
 		print_asm_pairs(x.inputs)
 
-	# print clobber list
 	if len(x.clobbers) > 0:
 		out(', [')
 		print_list_by(x.clobbers, print_value)

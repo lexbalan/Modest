@@ -7,9 +7,6 @@
 #include <stdio.h>
 #include <math.h>
 #include "./minmax.h"
-#include <stdio.h>
-#include <math.h>
-#include "./minmax.h"
 
 
 

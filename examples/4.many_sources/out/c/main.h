@@ -6,8 +6,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "lib.h"
-#include <stdio.h>
-#include "lib.h"
 
 
 
