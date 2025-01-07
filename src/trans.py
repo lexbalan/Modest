@@ -870,8 +870,6 @@ def do_value_ref(x):
 		nv.asset = 1
 		nv.addAttribute('ptr_to_glb_val')
 
-	nv.addAttribute('ref')
-
 	return nv
 
 
