@@ -136,8 +136,6 @@ class StmtAsm(Stmt):
 
 
 
-
-
 class StmtDirective(Stmt):
 	def __init__(self, ti):
 		super().__init__(ti)
