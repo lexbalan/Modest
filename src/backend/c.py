@@ -1677,42 +1677,24 @@ def print_stmt(x):
 	elif isinstance(x, StmtAsm): print_stmt_asm(x)
 	else: lo("<stmt %s>" % str(x))
 
-"""
-def print_stmt(x):
-	nl_indent(x.nl)
-
-	if k == 'block': print_stmt_block(x)
-	elif k == 'value': print_stmt_value(x)
-	elif k == 'assign': print_stmt_assign(x)
-	elif k == 'return': print_stmt_return(x)
-	elif k == 'if': print_stmt_if(x, need_else_branch=False)
-	elif k == 'while': print_stmt_while(x)
-	elif k == 'var': print_stmt_var(x)
-	elif k == 'let': print_stmt_let(x)
-	elif k == 'break': print_stmt_break(x)
-	elif k == 'again': print_stmt_again(x)
-	elif k == 'comment-line': print_comment_line(x)
-	elif k == 'comment-block': print_comment_block(x)
-	elif k == 'asm': print_stmt_asm(x)
-	else: out("<stmt %s>" % str(x))
-"""
 
 def print_stmt_break(x):
 	out('break;')
 
+
 def print_stmt_again(x):
 	out('continue;')
 
-def print_statements(stmts):
+
+def print_stmts(stmts):
 	for stmt in stmts:
 		print_stmt(stmt)
-
 
 
 def print_stmt_block(s):
 	out("{")
 	indent_up()
-	print_statements(s.stmts)
+	print_stmts(s.stmts)
 	indent_down()
 	endnl = s.end_nl
 	newline(n=endnl)
@@ -1844,7 +1826,7 @@ def print_def_func(x):
 
 
 	stmts = x.stmt.stmts
-	print_statements(stmts)
+	print_stmts(stmts)
 
 	indent_down()
 
