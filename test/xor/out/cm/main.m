@@ -20,8 +20,6 @@ func xor_encrypter(buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -
 	}
 }
 
-
-
 //xor_encrypt = xor_encrypter
 //xor_decrypt = xor_encrypter
 

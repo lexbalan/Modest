@@ -5,8 +5,6 @@ include "libc/stdio"
 
 const verbose = true
 
-
-
 // Вынужден добавлять export тк иначе не идет в хедер к структуре
 // Короче, проблема зависимостей тяжело зависла в воздухе
 public const nameMaxLength = 8

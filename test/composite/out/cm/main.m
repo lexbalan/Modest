@@ -2,18 +2,11 @@
 @c_include "stdio.h"
 include "libc/stdio"
 
-
-
 // Test for composite types
-
-
 
 // Pointers
 var p0: *Int32
 var p1: **Int32
-
-
-
 
 
 // Functions
@@ -74,9 +67,6 @@ func f13(f: **(a: *[32]*Int32, b: **[64]*Int32) -> *[10]Int32) -> **() -> Unit {
 }
 
 
-
-
-
 // Pointers to function
 var pf0: *() -> Unit = &f0
 var pf1: *(x: Int32) -> Int32 = &f1
@@ -94,9 +84,6 @@ var pf12: *(f: **(a: *[32]Int32, b: **[64]Int32) -> *[10]Int32) -> **() -> Unit 
 var pf13: *(f: **(a: *[32]*Int32, b: **[64]*Int32) -> *[10]Int32) -> **() -> Unit = &f13
 
 
-
-
-
 // Arrays
 var a0: [5]Int32 = [0, 1, 2, 3, 4]
 var a1: [5]*Int32 = [&(a0[0]), &(a0[1]), &(a0[2]), &(a0[3]), &(a0[4])]
@@ -104,7 +91,6 @@ var a2: [5]**Int32 = [&(a1[0]), &(a1[1]), &(a1[2]), &(a1[3]), &(a1[4])]
 var a3: [5]*() -> Unit = [5]*() -> Unit [&f0]
 var a4: [2][5]Int = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
 var a5: [2]*[5]Int = [&(a4[0]), &(a4[1])]
-
 // Проблема в том что мой getelementptr не умеет в цепь-молнию
 // а здесь без нее никак... придется взяться за это и сделать наконец
 //var a6: [2][5]*Int = [
@@ -120,9 +106,6 @@ var a8: [2][5]*[2][5]*[5]Int = [
 	[&a7, &a7, &a7, &a7, &a7]
 ]
 var a9: [5]*[10]*[2]*(a: Int) -> Int
-
-
-
 
 
 //

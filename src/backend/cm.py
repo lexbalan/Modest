@@ -87,19 +87,18 @@ def print_id_for(x):
 	out(get_id_str(x))
 
 
-def print_comment(x):
-	nl_indent(x.nl)
+def print_stmt_comment(x):
 	if isinstance(x, StmtCommentLine):
-		print_comment_line(x)
+		print_stmt_comment_line(x)
 	elif isinstance(x, StmtCommentBlock):
-		print_comment_block(x)
+		print_stmt_comment_block(x)
 
 
-def print_comment_block(x):
+def print_stmt_comment_block(x):
 	out("/*%s*/" % x.text)
 
 
-def print_comment_line(x):
+def print_stmt_comment_line(x):
 	lines = x.lines
 	i = 0
 	n = len(lines)
@@ -150,7 +149,8 @@ def print_type_record(t):
 		# print comments
 		if field.comments:
 			for comment in field.comments:
-				print_comment(comment)
+				nl_indent(comment.nl)
+				print_stmt_comment(comment)
 
 		nl_indent(field.nl)
 		prev_nl = field.nl
@@ -718,18 +718,11 @@ def print_stmt_func(x):
 
 def print_stmt_block(s):
 	out(" {")
-
 	indent_up()
-
 	for stmt in s.stmts:
 		print_stmt(stmt)
-
 	indent_down()
-
-	endnl = s.end_nl
-	newline(endnl)
-	if endnl:
-		indent()
+	nl_indent(s.end_nl)
 	out("}")
 
 
@@ -766,10 +759,6 @@ def print_stmt_assign(x):
 	print_value(x.left)
 	out(" = ")
 	print_value(x.right)
-
-	if htype.type_is_array(x.right.type):
-		if x.right.isZero():
-			out("  // right size = %d" % x.right.type['size'])
 
 
 def print_stmt_value(x):
@@ -826,8 +815,7 @@ def print_stmt_asm(x):
 
 
 def print_stmt(x):
-
-	if not (isinstance(x, StmtBlock) or isinstance(x, StmtComment)):
+	if not isinstance(x, StmtBlock):
 		nl_indent(x.nl)
 
 	if isinstance(x, StmtBlock): print_stmt_block(x)
@@ -840,31 +828,9 @@ def print_stmt(x):
 	elif isinstance(x, StmtDefConst): print_stmt_const(x, operator='let')
 	elif isinstance(x, StmtBreak): print_stmt_break(x)
 	elif isinstance(x, StmtAgain): print_stmt_again(x)
-	elif isinstance(x, StmtComment): print_comment(x)
+	elif isinstance(x, StmtComment): print_stmt_comment(x)
 	elif isinstance(x, StmtAsm): print_stmt_asm(x)
 	else: lo("<stmt %s>" % str(x))
-
-
-
-
-"""
-def print_decl_func(x):
-	func = x['value']
-	out('func ')
-	print_id_for(func)
-	print_type(func['type'])
-"""
-
-
-
-def print_decl_type(x):
-	if x.access_level == 'public':
-		out("public ")
-	out("type ")
-	out(get_type_id(x.type))
-
-
-
 
 
 
@@ -875,11 +841,13 @@ def print_import(x):
 		out("include \"%s\"" % x.impline)
 
 
+
 def print_directive(x):
 	if isinstance(x, StmtDirectiveImport):
 		print_import(x)
 	elif isinstance(x, StmtDirectiveCInclude):
 		out("@c_include \"%s\"" % x.c_name)
+
 
 
 def printTopLevelStmt(x):
@@ -893,19 +861,15 @@ def printTopLevelStmt(x):
 	elif isinstance(x, StmtDefConst): print_stmt_const(x)
 	elif isinstance(x, StmtDefFunc): print_stmt_func(x)
 	elif isinstance(x, StmtDefType): print_stmt_type(x)
-	elif isinstance(x, StmtComment): print_comment(x)
+	elif isinstance(x, StmtComment): print_stmt_comment(x)
 	elif isinstance(x, StmtDirective): print_directive(x)
 
 
+
 def run(module, outname, options):
-	from main import features
-	#is_header = features.get('header')
-
 	output_open(outname + '.m')
-
 	for x in module['defs']:
 		printTopLevelStmt(x)
-
 	out("\n\n")
 	output_close()
 

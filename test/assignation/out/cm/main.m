@@ -4,9 +4,6 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-
-
-
 // Simply record for records assignation test
 type Point record {
 	x: Int32

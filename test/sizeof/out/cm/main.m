@@ -42,9 +42,6 @@ type Mixed4 record {
 }
 
 
-
-
-
 //var s: Mixed2
 var c: Char8
 var i: Int32

@@ -5,8 +5,6 @@ include "libc/stdio"
 @c_include "math.h"
 include "libc/math"
 
-
-
 //@attribute("c_no_print")
 //import "misc/minmax"
 //$pragma c_include "./minmax.h"
@@ -17,9 +15,6 @@ const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
 var globalArray: [10]Int32 = constantArray
 
 var arrayFromString: [3]Char8 = "abc"
-
-
-
 
 
 //var arrayOfChars = [Char8 "a", 'b', 'c']
@@ -185,7 +180,7 @@ public func main() -> Int {
 	printf("globalArray[%i] = %i\n", Int32 2, globalArray[2])
 
 
-	globalArray = []  // right size = 40
+	globalArray = []
 
 
 	// проверка того как локальная константа-массив

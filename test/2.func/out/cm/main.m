@@ -19,9 +19,6 @@ func sum(a: Int32, b: Int32) -> Int32 {
 }
 
 
-
-
-
 // define function main
 public func main() -> Int {
 	printf("test func\n")

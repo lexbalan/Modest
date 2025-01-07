@@ -32,7 +32,7 @@ func write_file(sockfd: Int) -> Bool {
 		}
 
 		fprintf(fp, "%s", &buffer)
-		buffer = []  // right size = 1024
+		buffer = []
 	}
 
 	return true

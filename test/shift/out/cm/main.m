@@ -4,9 +4,6 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-
-
-
 // left must be Word
 // right must be Nat
 

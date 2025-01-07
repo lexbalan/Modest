@@ -6,18 +6,12 @@ import "lightfood/delay"
 import "fsm"
 @c_include "./delay.h"
 
-
-
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
-
-
 
 //@attribute("c_no_print")
 //import "lightfood/main"
 //@attribute("c_no_print")
-
-
 
 //$pragma c_include "./ff_main.h"
 
@@ -28,9 +22,6 @@ const flashlightStateBeacon = 2
 
 
 var cnt: Nat8
-
-
-
 
 
 //
@@ -60,9 +51,6 @@ func off_exit(x: *FSM) -> Unit {
 }
 
 
-
-
-
 //
 // State On
 //
@@ -88,9 +76,6 @@ func on_exit(x: *FSM) -> Unit {
 	Unit x
 	//printf("on_exit\n")
 }
-
-
-
 
 
 //

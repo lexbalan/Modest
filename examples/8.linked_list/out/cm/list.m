@@ -129,9 +129,6 @@ public func node_insert_right(left: *Node, new_right: *Node) -> Unit {
 }
 
 
-
-
-
 // get list node by number
 // if number is out of range returns nil
 // if number < 0 - go backward

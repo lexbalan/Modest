@@ -24,7 +24,7 @@ func send_file(fp: *File, sockfd: Int) -> Bool {
 		if send(sockfd, &data, SizeT sizeof([bufSize]Char8), 0) == -1 {
 			return false
 		}
-		data = []  // right size = 1024
+		data = []
 	}
 
 	return true
