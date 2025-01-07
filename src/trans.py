@@ -862,7 +862,6 @@ def do_value_ref(x):
 	nv = ValueUn('ref', v, vt, ti=ti)
 
 	if is_global_value(v):
-	#if htype.type_is_func(vtype):
 		nv.immediate = True
 		# не можно поставить 0 тк иначе значение будет трактоваться как zero
 		# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
@@ -1287,20 +1286,6 @@ def do_value_slice(x):
 			'right': x['index_from'],
 			'ti': ti
 		}
-		"""un = {
-			'isa': 'ast_value',
-			'kind': 'number',
-			'numstr': '1',
-			'att': [],
-			'ti': ti
-		}
-		le = {
-			'isa': 'ast_value',
-			'kind': 'add',
-			'left': de,
-			'right': un,
-			'ti': ti
-		}"""
 
 		slice_volume = do_value(de)
 
@@ -1311,16 +1296,6 @@ def do_value_slice(x):
 			if slice_len < 0:
 				error("wrong slice direction", x['ti'])
 				return ValueBad(x['ti'])
-
-
-#	if htype.type_is_closed_array(array_type):
-#		if slice_volume == None:
-#			error("expected immediate value", index_from)
-#
-#		# TODO: конкретно тут есть что исправить!
-#		if slice_len > array_type['volume'].asset:
-#			error("slice is too big", x['ti'])
-
 
 	if slice_volume == None:
 		slice_volume = ValueUndefined(typeSysNat, x['ti'])
