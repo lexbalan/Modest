@@ -2012,18 +2012,6 @@ def print_directive(x):
 		include(x.c_name, local=x.is_local)
 		return
 
-	"""k = x['kind']
-	#if k == 'import': print_include(x)
-	if k == 'insert':
-		newline(n=x['nl'])
-		print_insert(x)
-	elif k == 'cdecl_func':
-		newline(n=x['nl'])
-		print_cdecl_func(x)
-	elif k == 'cdecl_type':
-		newline(n=x['nl'])
-		print_cdecl_type(x)"""
-
 
 
 def is_private(x):
@@ -2039,8 +2027,8 @@ def print_deps(deps):
 
 	# печатаем декларации для типов от которых зависит этот тип
 	for dep in deps:
-
 		if isinstance(dep, dict):
+			# for Type
 			if dep['id'] == None:
 				error("undefined", dep['ti'])
 				return
@@ -2060,8 +2048,6 @@ def print_deps(deps):
 				# Type
 				print_decl_type(dep['definition'])
 
-
-
 	out("\n")
 
 
@@ -2078,28 +2064,20 @@ def print_header(module, outname):
 	newline()
 	include("stdint.h", local=False)
 	include("stdbool.h", local=False)
-	#include("string.h", local=False)
 
 	for x in module['defs']:
 		if isinstance(x, StmtDirective):
 			print_directive(x)
-
-	# print directives (only for header)
-	#for obj in module['defs']:
-	#	if isinstance(obj, StmtDirective):
-	#		print_directive(obj)
 
 	newline()
 
 	for x in module['defs']:
 		newline(x.nl)
 
-		if x.hasAttribute('c_no_print'):
-			continue
-		if x.hasAttribute('no_print'):
+		if is_private(x):
 			continue
 
-		if is_private(x):
+		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
 		if isinstance(x, StmtDefFunc):
@@ -2166,7 +2144,6 @@ def print_cfile(module, _outname):
 		newline()
 		out("#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))")
 
-
 	if len(module['anon_recs']) > 0:
 		out("\n/* anonymous records */")
 		for anon_rec in module['anon_recs']:
@@ -2175,12 +2152,8 @@ def print_cfile(module, _outname):
 			out(";")
 
 
-	# types & constants
 	for x in module['defs']:
-
-		if x.hasAttribute('c_no_print'):
-			continue
-		if x.hasAttribute('no_print'):
+		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
 		newline(x.nl)
@@ -2194,8 +2167,6 @@ def print_cfile(module, _outname):
 		elif isinstance(x, StmtDefVar):
 			print_deps(x.deps)
 			print_def_var(x)
-		#elif isinstance(x, DeclVar):
-		#	print_def_var(x, isdecl=True)
 		elif isinstance(x, StmtDefFunc):
 			print_deps(x.deps)
 			print_def_func(x)
@@ -2203,7 +2174,6 @@ def print_cfile(module, _outname):
 			print_comment(x)
 		elif isinstance(x, StmtDirective):
 			print_directive(x)
-
 
 	newline()
 	newline()
