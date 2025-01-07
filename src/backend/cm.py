@@ -204,6 +204,7 @@ def get_type_id(t):
 
 
 def print_type(t):
+	#assert(isinstance(t, Type))
 	k = t['kind']
 
 	# Если тип связан с идентификатором - распечатаем его
@@ -567,7 +568,7 @@ def print_value_by_id(x, ctx):
 
 
 # Сделал отдельный метод печати строк и есть отдельный для печати
-def print_value_string2(x, ctx):
+def print_value_string(x, ctx):
 	char_codes = []
 	for char in x.asset:
 		cc = ord(char)
@@ -580,7 +581,7 @@ def print_value_literal(x, ctx):
 	if htype.type_is_number(t): print_value_integer(x, ctx)
 	elif htype.type_is_integer(t): print_value_integer(x, ctx)
 	elif htype.type_is_float(t): print_value_float(x, ctx)
-	elif htype.type_is_string(t): print_value_string2(x, ctx)
+	elif htype.type_is_string(t): print_value_string(x, ctx)
 	elif htype.type_is_record(t): print_value_record(x, ctx)
 	elif htype.type_is_array(t): print_value_array(x, ctx)
 	elif htype.type_is_pointer(t): print_value_ptr(x, ctx)
@@ -594,6 +595,7 @@ def print_value_literal(x, ctx):
 def print_ValueSizeofValue(x, ctx):
 	out("sizeof ")
 	print_value(x.of)
+
 
 def print_ValueSizeofType(x, ctx):
 	out("sizeof(")
@@ -648,6 +650,8 @@ def print_ValueVaCopy(x, ctx):
 
 
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
+	assert(isinstance(x, Value))
+
 	if need_wrap:
 		out("(")
 
@@ -815,6 +819,7 @@ def print_stmt_asm(x):
 
 
 def print_stmt(x):
+	assert(isinstance(x, Stmt))
 	nl_indent(x.nl)
 	if isinstance(x, StmtBlock): print_stmt_block(x)
 	elif isinstance(x, StmtValueExpression): print_stmt_value(x)
@@ -849,6 +854,8 @@ def print_directive(x):
 
 
 def printTopLevelStmt(x):
+	assert(isinstance(x, Stmt))
+
 	newline(n=x.nl)
 
 	if isinstance(x, StmtDef):
