@@ -127,7 +127,7 @@ class Value(Entity):
 
 class ValueBad(Value):
 	def __init__(self, ti=None):
-		from type import type_bad
+		from .type import TypeBad
 		super().__init__(type=TypeBad(ti), ti=ti)
 		from .hlir import Id
 		self.id = Id().fromStr('_')
