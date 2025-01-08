@@ -8,21 +8,36 @@ from .entity import Entity
 class Value(Entity):
 	def __init__(self, type, ti=None):
 		super().__init__(ti)
-		self.type = type
 		self.id = None
-		self.immutable = True
+		self.type = type
+
 		self.immediate = False
+
+		#
+		self.is_lvalue = False
+
+		# immutable anyway flag
+		self.immutable = False
+
+		# (!) items can be not only in #immediate value (!)
 		self.items = None
 		self.asset = None
+
 		self.nl = 0
 		self.nl_end = 0  # ??
 
+
+	def isLvalue(self):
+		return self.is_lvalue
 
 	def isImmediate(self):
 		return self.immediate
 
 	def isImmutable(self):
-		return self.immutable
+		# ONLY lvalue CAN be an immutable value,
+		# BUT if immutable flag is set, it is immutable value anyway
+		return (not self.isLvalue()) or self.immutable
+
 
 
 	@staticmethod
@@ -163,7 +178,7 @@ class ValueVar(Value):
 		self.init_value = init_value
 		self.usecnt = 0
 		self.definition = None  # *StmtDefVar
-		self.immutable = False
+		self.is_lvalue = True
 
 
 class ValueConst(Value):
@@ -214,22 +229,22 @@ class ValueCall(Value):
 
 
 #TODO: get type from array element type
-class ValueIndexArray(Value):
+class ValueIndex(Value):
 	def __init__(self, left, type, index, ti=None):
 		super().__init__(type=type, ti=ti)
 		self.left = left
 		self.index = index
-		self.immutable = False
+		self.is_lvalue = True
 
 
 #TODO: get type from array type
-class ValueSliceArray(Value):
+class ValueSlice(Value):
 	def __init__(self, left, type, index_from, index_to, ti=None):
 		super().__init__(type=type, ti=ti)
 		self.left = left
 		self.index_from = index_from
 		self.index_to = index_to
-		self.immutable = False
+		self.is_lvalue = True
 
 
 class ValueAccessModule(Value):
@@ -245,7 +260,7 @@ class ValueAccessRecord(Value):
 		super().__init__(type=type, ti=ti)
 		self.value = value
 		self.field = field
-		self.immutable = False
+		self.is_lvalue = True
 
 
 class ValueCons(Value):

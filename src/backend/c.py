@@ -8,7 +8,7 @@ from hlir.hlir import *
 from value.value import *
 import type as htype
 from type import select_common_type, type_print
-from hlir.value import ValueIndexArray
+from hlir.value import ValueIndex
 from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_by_id, align_to
 from main import settings
@@ -150,7 +150,7 @@ def precedence(x):
 		if isinstance(x, ValueCons): i = 10
 		elif isinstance(x, ValueSizeofValue): i = 10
 		elif isinstance(x, ValueCall): i = 11
-		elif isinstance(x, ValueIndexArray): i = 11
+		elif isinstance(x, ValueIndex): i = 11
 		elif isinstance(x, ValueAccessRecord): i = 11
 		else: i = 12
 
@@ -566,7 +566,7 @@ def print_value_un(v, ctx):
 
 	if op == 'ref':
 		if value.type.is_array():
-			if not (isinstance(value, ValueIndexArray) or isinstance(value, ValueSliceArray)):
+			if not (isinstance(value, ValueIndex) or isinstance(value, ValueSlice)):
 				if is_sim_sim(v.type):
 					# take pointer to first array item, not pointer to array
 					out("[0]")
@@ -628,7 +628,7 @@ def print_value_call(v, ctx, arrayResult=None):
 def print_value_slice(x, ctx):
 	#out("/* slice */")
 	varray = x.left
-	y = ValueIndexArray(varray, x.type, x.index_from, ti=None)
+	y = ValueIndex(varray, x.type, x.index_from, ti=None)
 	print_value_index(y, ctx)
 
 
@@ -655,7 +655,7 @@ def print_value_index(x, ctx):
 	indexes = []
 
 	xx = x
-	while isinstance(xx, ValueIndexArray): #['kind'] == 'index':
+	while isinstance(xx, ValueIndex): #['kind'] == 'index':
 		a = xx.left
 		indexes.append(xx.index)
 		xx = a
@@ -1325,10 +1325,10 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif isinstance(x, ValueVar): print_value_by_id(x, ctx)
 	elif isinstance(x, ValueConst): print_value_const(x, ctx)
 	elif isinstance(x, ValueCall): print_value_call(x, ctx)
-	elif isinstance(x, ValueIndexArray): print_value_index(x, ctx)
+	elif isinstance(x, ValueIndex): print_value_index(x, ctx)
 	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
 	elif isinstance(x, ValueAccessModule): print_value_access_module(x, ctx)
-	elif isinstance(x, ValueSliceArray): print_value_slice(x, ctx)
+	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
 	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
 	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
 	elif isinstance(x, ValueAlignof): print_value_alignof(x, ctx)

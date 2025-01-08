@@ -68,7 +68,7 @@ def precedence(x):
 	else:
 		if isinstance(x, ValueSizeofValue): i = 10
 		elif isinstance(x, ValueCall): i = 11
-		elif isinstance(x, ValueIndexArray): i = 11
+		elif isinstance(x, ValueIndex): i = 11
 		elif isinstance(x, ValueAccessRecord): i = 11
 		else: i = 12
 
@@ -655,10 +655,10 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif isinstance(x, ValueVar): print_value_by_id(x, ctx)
 	elif isinstance(x, ValueCons): print_value_cons(x, ctx)
 	elif isinstance(x, ValueCall): print_ValueCall(x, ctx)
-	elif isinstance(x, ValueIndexArray): print_value_index(x, ctx)
+	elif isinstance(x, ValueIndex): print_value_index(x, ctx)
 	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
 	elif isinstance(x, ValueAccessModule): print_value_access_module(x, ctx)
-	elif isinstance(x, ValueSliceArray): print_value_slice(x, ctx)
+	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
 	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
 	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
 	elif isinstance(x, ValueAlignof): print_value_alignof(x, ctx)

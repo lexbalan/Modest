@@ -583,15 +583,15 @@ def do_type_array(t):
 				global cfunc
 				cfunc['att'].append('stacksave')
 			else:
-				error("non local VLA", t.size)
+				error("non local VLA", t.size.ti)
 
 		#if not (Type.is_integer(volume['type']) or volume.type.is_number()):
 		if volume.type.is_signed():
-			error("required value with number or integer type", t.size['ti'])
+			error("required value with number or integer type", t.size.ti)
 
 	# closed arrays of closed arrays are denied NOW
 #	if of.is_closed_array():
-#		error("closed arrays of closed arrays are denied", t['ti'])
+#		error("closed arrays of closed arrays are denied", t.ti)
 #		return TypeBad(t)
 
 	return TypeArray(of, volume, ti=t['ti'])
@@ -724,7 +724,7 @@ def do_value_shift(x):
 		return nv
 
 	if l.type.is_generic():
-		error("expected non-generic value", l)
+		error("expected non-generic value", l.ti)
 		return ValueBad(x['ti'])
 
 	return ValueBin(op, l, r, type_result, ti=x['ti'])
@@ -753,11 +753,11 @@ def do_value_bin(x):
 	# Check type is valid for the operation
 
 	if not op in l.type.ops:
-		error("unsuitable value type for '%s' operation" % op, l['ti'])
+		error("unsuitable value type for '%s' operation" % op, l.ti)
 		return ValueBad(ti)
 
 	if not op in r.type.ops:
-		error("unsuitable value type for '%s' operation" % op, r['ti'])
+		error("unsuitable value type for '%s' operation" % op, r.ti)
 		return ValueBad(ti)
 
 	#
@@ -853,7 +853,7 @@ def do_value_ref(x):
 
 	if v.isImmutable():
 		if not vtype.is_func() or vtype.is_undefined():
-			error("expected mutable value or function", v)
+			error("expected mutable value or function", v.ti)
 			return ValueBad(x['ti'])
 
 	vt = TypePointer(vtype, ti=ti)
@@ -880,7 +880,7 @@ def do_value_not(x):
 	vtype = v.type
 
 	if not 'not' in vtype.ops:
-		error("unsuitable type", v)
+		error("unsuitable type", v.ti)
 		return ValueBad(x['ti'])
 
 	op = 'not'
@@ -912,7 +912,7 @@ def do_value_neg(x):
 
 	if not vtype.is_generic():
 		if not vtype.is_signed():
-			error("expected value with signed type", v)
+			error("expected value with signed type", v.ti)
 	else:
 		vtype.signed = True
 
@@ -938,7 +938,7 @@ def do_value_pos(x):
 	vtype = v.type
 
 	if not vtype.is_signed():
-		error("expected value with signed type", v)
+		error("expected value with signed type", v.ti)
 
 	nv = ValueUn('pos', v, vtype, ti=x['ti'])
 
@@ -961,7 +961,7 @@ def do_value_deref(x):
 
 	vtype = v.type
 	if not vtype.is_pointer():
-		error("expected pointer value", v)
+		error("expected pointer value", v.ti)
 		return ValueBad(x['ti'])
 
 	to = vtype.to
@@ -974,10 +974,10 @@ def do_value_deref(x):
 	is_free_ptr = to.is_free_pointer()
 	is_open_array_ptr =  to.is_open_array()
 	if is_func_ptr or is_free_ptr or is_open_array_ptr:
-		error("unsuitable type", v)
+		error("unsuitable type", v.ti)
 
 	nv = ValueUn('deref', v, to, ti=x['ti'])
-	nv.immutable = False
+	nv.is_lvalue = True
 	return nv
 
 
@@ -1080,7 +1080,7 @@ def do_value_call(x):
 	fn = do_rvalue(x['left'])
 
 	if Value.isBad(fn):
-		#error("undefined value 2", fn)
+		#error("undefined value", fn.ti)
 		return ValueBad(x['ti'])
 
 
@@ -1203,7 +1203,7 @@ def do_value_index(x):
 
 
 	if not array_typ.is_array():
-		error("expected array or pointer to array", left)
+		error("expected array or pointer to array", left.ti)
 		return ValueBad(x['ti'])
 
 
@@ -1219,7 +1219,7 @@ def do_value_index(x):
 	if index.type.is_generic():
 		index = value_cons_implicit_check(typeSysInt, index)
 
-	nv = ValueIndexArray(left, array_typ.of, index, ti=x['ti'])
+	nv = ValueIndex(left, array_typ.of, index, ti=x['ti'])
 
 	if not via_pointer:
 		nv.immutable = left.immutable
@@ -1266,7 +1266,7 @@ def do_value_slice(x):
 		array_type = left_type.to
 
 	if not array_type.is_array():
-		error("expected array or pointer to array", left)
+		error("expected array or pointer to array", left.ti)
 		return ValueBad(x['ti'])
 
 
@@ -1299,7 +1299,7 @@ def do_value_slice(x):
 		slice_volume = ValueUndefined(typeSysNat, x['ti'])
 
 	type = TypeArray(array_type.of, slice_volume, x['ti'])
-	nv = ValueSliceArray(left, type, index_from, index_to, x['ti'])
+	nv = ValueSlice(left, type, index_from, index_to, x['ti'])
 
 	if not via_pointer:
 		nv.immutable = left.immutable
@@ -1371,7 +1371,7 @@ def do_value_access(x):
 
 	# if field not found
 	if field == None:
-		error("undefined field '%s'" % field_id.str, x)
+		error("undefined field '%s'" % field_id.str, x['ti'])
 		return ValueBad(x['ti'])
 
 	# PROBLEM: у анонимных структур нет поля 'definition'
@@ -1425,7 +1425,7 @@ def do_value_id(x):
 	v = ctx_value_get(id_str)
 
 	if v == None:
-		error("undefined value '%s'" % id_str, x)
+		error("undefined value '%s'" % id_str, x['ti'])
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально (wrong!)
 		v = ValueBad(x['ti'])
@@ -1686,7 +1686,7 @@ def do_stmt_if(x):
 		return StmtBad(x)
 
 	if not cond.type.is_bool():
-		error("expected bool value", cond)
+		error("expected bool value", cond.ti)
 		return StmtBad(x)
 
 	_then = do_stmt(x['then'])
@@ -1711,7 +1711,7 @@ def do_stmt_while(x):
 		return StmtBad(x)
 
 	if not cond.type.is_bool():
-		error("expected bool value", cond)
+		error("expected bool value", cond.ti)
 		return StmtBad(x)
 
 	block = do_stmt(x['stmt'])
@@ -1869,10 +1869,9 @@ def do_stmt_assign(x):
 	if Value.isBad(l) or Value.isBad(r):
 		return StmtBad(x)
 
-#TODO: restore after all
-#	if not value_is_lvalue(l):
-#		error("expected lvalue", l)
-#		return StmtBad(x)
+	if not l.isLvalue():
+		error("expected lvalue", l.ti)
+		return StmtBad(x)
 
 	if l.isImmutable():
 		error("expected mutable value", l.ti)
@@ -1890,11 +1889,11 @@ def do_stmt_incdec(x, op='add'):
 		return StmtBad(x)
 
 	if v.isImmutable():
-		error("expected mutable value", v)
+		error("expected mutable value", v.ti)
 		return StmtBad(x)
 
 	if not v.type.is_integer():
-		error("expected integer value", v)
+		error("expected value with integer type", v.ti)
 		return StmtBad(x)
 
 	one = value_integer_create(1, typ=v.type, ti=x['ti'])
@@ -2413,7 +2412,7 @@ def do_import(x):
 	log('do_import("%s")' % impline)
 
 	if abspath == None:
-		error("module %s not found" % impline, import_expr)
+		error("module %s not found" % impline, import_expr.ti)
 		return None
 
 	m = None
@@ -2494,7 +2493,7 @@ def do_directive(x):
 			return None
 
 		if not Type. is_bool(c['type']):
-			error("expected bool value", c)
+			error("expected bool value", c.ti)
 			return None
 
 		cond = c.asset != 0
@@ -2512,7 +2511,7 @@ def do_directive(x):
 			return None
 
 		if not Type. is_bool(c['type']):
-			error("expected bool value", c)
+			error("expected bool value", c.ti)
 			return None
 
 		cond = c.asset != 0
