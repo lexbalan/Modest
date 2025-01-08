@@ -32,7 +32,7 @@ def value_record_create(initializers=[], ti=None):
 		field = Field(field_id, field_type, ti=field_ti)
 		fields.append(field)
 
-	record_type = type.type_record(fields, ti)
+	record_type = TypeRecord(fields, ti)
 	record_type.generic = True
 
 	v = ValueLiteral(record_type, ti)

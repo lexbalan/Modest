@@ -12,7 +12,7 @@ from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons
 from .bad import bad_can, ValueBad_cons
 from .number import number_can, value_number_cons
-from hlir.type import Type
+from hlir.type import Type, TypeArray
 
 
 # can be implicitly constructed value with type a from type b?
@@ -175,7 +175,7 @@ def _select_default_type_for(t):
 			# [1, 2]  -> [2]Int32 [Int32 1, Int32 2]
 			item_type = _select_default_type_for(t.of)
 
-		return htype.type_array(item_type, t.volume, t.ti)
+		return TypeArray(item_type, t.volume, t.ti)
 
 
 	# corresponded type not found!

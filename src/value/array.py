@@ -6,7 +6,7 @@ from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
 from .value import Value, ValueBad, ValueLiteral, ValueCons, ValueZero, ValueBin
-
+from hlir.type import TypeArray
 
 # TODO: переделай здесь все - тут все плохо...
 # получает на вход список элементов
@@ -170,7 +170,7 @@ def value_array_cons(t, v, method, ti):
 
 def _value_array_create(items, item_type, length, is_generic, ti):
 	array_volume = value_integer_create(length)
-	array_type = htype.type_array(item_type, volume=array_volume, ti=ti)
+	array_type = TypeArray(item_type, volume=array_volume, ti=ti)
 	array_type.generic = is_generic
 	nv = ValueLiteral(array_type, ti)
 	nv.items = items
@@ -189,7 +189,7 @@ def value_array_add(l, r, ti):
 	items = implicit_cast_list(items, item_type)
 
 	assert(item_type != None)
-	type_result = htype.type_array(item_type, volume=str_array_volume, ti=ti)
+	type_result = TypeArray(item_type, volume=str_array_volume, ti=ti)
 	type_result.generic = True  # FIXIT!
 
 	nv = ValueBin('add', l, r, type_result, ti=ti)

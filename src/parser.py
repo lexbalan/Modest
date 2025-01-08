@@ -163,7 +163,7 @@ class Parser:
 	#
 
 
-	def expr_type_undefined(self, ti):
+	def expr_TypeUndefined(self, ti):
 		return {
 			'isa': 'ast_type',
 			'kind': 'undefined',
@@ -1102,7 +1102,7 @@ class Parser:
 		if self.match(":"):
 			t = self.expr_type()
 		#else:
-		#	t = self.expr_type_undefined(ti)
+		#	t = self.expr_TypeUndefined(ti)
 
 		if self.is_assign_operator():
 			v = self.expr_value()
@@ -1181,7 +1181,7 @@ class Parser:
 		if self.match(":"):
 			t = self.expr_type()
 		else:
-			t = self.expr_type_undefined(ti)
+			t = self.expr_TypeUndefined(ti)
 
 		if self.is_assign_operator():
 			init_value = self.expr_value()
@@ -1546,7 +1546,7 @@ class Parser:
 		if self.match(":"):
 			t = self.expr_type()
 		else:
-			t = self.expr_type_undefined(ti)
+			t = self.expr_TypeUndefined(ti)
 
 		if self.is_assign_operator():
 			v = self.expr_value()

@@ -3,7 +3,7 @@ import settings
 import decimal
 from error import info, warning, error
 import type as type
-from type import type_float
+from type import TypeFloat
 from .value import ValueLiteral, ValueCons, value_cons_immediate
 
 
@@ -11,7 +11,7 @@ from .value import ValueLiteral, ValueCons, value_cons_immediate
 def value_float_create(num, ti=None):
 	#info("value_float_create", ti)
 	flt_width = int(settings.get('float_width'))
-	typ = type_float(width=flt_width, ti=ti)
+	typ = TypeFloat(width=flt_width, ti=ti)
 	typ.generic = True
 	v = ValueLiteral(typ, ti)
 	v.asset = num

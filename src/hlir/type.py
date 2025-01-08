@@ -45,8 +45,11 @@ class Type(Entity):
 		self.ti = None
 		pass
 
+
 	def supports(self, operation):
 		return operation in self.ops
+
+
 
 
 

@@ -8,346 +8,23 @@ from hlir.type import *
 
 
 
-def type_bad(x):
-	ti = None
-	if x != None:
-		if 'ti' in x:
-			ti = x['ti']
-	return TypeBad(ti)
-
-
-
-def type_undefined(ti):
-	return TypeUndefined(ti)
-
-def type_number(ti):
-	return TypeNumber(ti)
-	"""return {
-		'isa': 'type',
-		'kind': 'number',
-		'generic': True,
-		'width': 0,
-		'size': 0,
-		'align': 1,
-		'id': Id(),
-		'signed': False,
-		'ops': NUM_OPS,
-		'att': [],
-		'deps': [],
-		'ti': ti
-	}"""
-
-
-"""
-#???
-def type_by_width(width, ti=None):
-	size = nbytes_for_bits(width)
-	return {
-		'isa': 'type',
-		'kind': 'kind',
-		'generic': False,
-		'width': width,
-		'size': size,
-		'align': size,
-		'id': Id(),
-		'ops': (),
-		'att': [],
-		'deps': [],
-		'ti': ti
-	}
-"""
-
-def type_unit():
-	return TypeUnit()
-	"""t = type_by_width(0, ti=None)
-	t['kind'] = 'unit'
-	t['id'].str = 'Unit'
-	t['id'].c = 'void'
-	t['id'].llvm = 'void'
-	t['ops'] = UNIT_OPS
-	return t"""
-
-
-def type_bool():
-	return TypeBool()
-	"""t = type_by_width(1, ti=None)
-	t['kind'] = 'bool'
-	t['id'].str = 'Bool'
-	t['id'].c = 'bool'
-	t['id'].llvm = '%Bool'
-	t['ops'] = BOOL_OPS
-	return t"""
-
-
-def type_word(width, ti=None):
-	return TypeWord(width=width, ti=ti)
-
-	"""t = type_by_width(width, ti=ti)
-
-	calias = None
-	llvm_alias = None
-
-	if width == 128:
-		calias = 'unsigned __int128'
-	else:
-		calias = 'uint%d_t' % width
-
-	if width in [8, 16, 32, 64, 128]:
-		llvm_alias = '%%Word%d' % width
-	else:
-		llvm_alias = 'i%d' % width
-
-	t['kind'] = 'word'
-	t['id'].str = 'Word%d' % width
-	t['id'].llvm = llvm_alias
-	t['id'].c = calias
-	t['ops'] = WORD_OPS
-	return t"""
-
-
-
-
-
-def type_integer(width, signed=True, ti=None):
-	return TypeInt(width, signed=signed, ti=ti)
-	"""t = type_by_width(width, ti=ti)
-	alias = get_int_alias(width, signed)
-	t['kind'] = 'int'
-	t.signed = signed
-	t['id'].str = alias['cm']
-	t['id'].llvm = alias['llvm']
-	t['id'].c = alias['c']
-	t['ops'] = INT_OPS
-	return t"""
-
-
-def type_float(width, ti=None):
-	return TypeFloat(width, ti)
-
-	"""t = type_by_width(width, ti=ti)
-
-	calias = 'float'
-	if width > 32:
-		calias = 'double'
-
-	t['kind'] = 'float'
-	t['id'].str = 'Float%d' % width
-	t['id'].c = calias
-	t['id'].llvm = calias
-	t['ops'] = FLOAT_OPS
-	return t"""
-
-
-def type_char(width, ti=None):
-	return TypeChar(width, ti)
-
-	"""calias = 'char'
-	if width > 8:
-		calias = 'uint%d_t' % width
-
-	t = type_by_width(width, ti=ti)
-	t['kind'] = 'char'
-	t['id'].str = 'Char%d' % width
-	t['id'].c = calias
-	t['id'].llvm = '%%Char%d' % width
-	t['ops'] = CHAR_OPS
-	return t"""
-
-
-
-def type_pointer(to, ti=None):
-	return TypePointer(to, ti=ti)
-	"""t = type_by_width(int(settings.get('pointer_width')), ti=ti)
-	t['kind'] = 'pointer'
-	t['to'] = to
-	t['ops'] = PTR_OPS
-	return t"""
-
-
-# size - always hlir_value (!)
-def type_array(of, volume, ti=None):
-	return TypeArray(of, volume, ti=ti)
-	"""item_size = 0
-	item_align = 0
-	if of != None:
-		item_size = of.size
-		item_align = of.align
-
-	array_size = 0
-	if volume != None:
-		if volume.isImmediate():
-			try:
-				array_size = item_size * volume.asset
-			except:
-				Value.print(volume)
-
-	return {
-		'isa': 'type',
-		'kind': 'array',
-		'generic': False,
-		'width': 0, #'width': array_size * 8,
-		'size': array_size,
-		'align': item_align,
-		'of': of,
-		'volume': volume,
-		'ops': ARR_OPS,
-		'att': [],
-		'deps': [],
-		'ti': ti
-	}"""
-
-
-
-def type_enum(ti=None):
-	1/0
-	"""enum_width = 32
-	enum_size = nbytes_for_bits(enum_width)
-	return {
-		'isa': 'type',
-		'kind': 'enum',
-		'generic': False,
-		'width': enum_width,
-		'size': enum_size,
-		'align': enum_size,
-		'items': [],
-		'ops': ENUM_OPS,
-		'att': [],
-		'deps': [],
-		'ti': ti
-	}"""
-
-
-
-from util import align_to
-def type_record(fields, ti=None):
-	return TypeRecord(fields, ti=ti)
-	"""field_no = 0
-	offset = 0
-	record_align = 1
-
-	for field in fields:
-		field.field_no = field_no
-		field_no = field_no + 1
-
-		field_size = field.type.size
-		field_align = field.type.align
-
-		# смещение поля должно быть выровнено
-		# по требуемому для него шагу выравнивания
-		offset = align_to(offset, field_align)
-		field.offset = offset
-		offset = offset + field_size
-
-		# выравнивание структуры - макс выравнивание в ней
-		record_align = max(record_align, field_align)
-
-	# Afterall we need to align record_size to record_align (!)
-	record_size = align_to(offset, record_align)
-
-	return {
-		'isa': 'type',
-		'kind': 'record',
-		'generic': False,
-		'width': record_size * 8,
-		'size': record_size,
-		'align': record_align,
-		'fields': fields,
-		'ops': REC_OPS,
-		'end_nl': 0,
-		'att': [],
-		'deps': [],
-		'ti': ti
-	}"""
-
-
-
-
-def type_func(params, to, va_args, ti=None):
-	return TypeFunc(params, to, va_args, ti=ti)
-	"""return {
-		'isa': 'type',
-		'kind': 'func',
-		'generic': False,
-		'width': 0,
-		'size': 0,
-		'align': 1,
-		'params': params,
-		'to': to,
-		'extra_args': va_args,
-		'ops': [],
-		'att': [],
-		'deps': [],
-		'ti': ti
-	}"""
-
-
-
-def type_string(char_width, length, ti=None):
-	return TypeString(char_width, length, ti=ti)
-	"""width = char_width
-	size = nbytes_for_bits(width)
-	return {
-		'isa': 'type',
-		'kind': 'string',
-		'generic': True,  # 'string' is always generic!
-		'width': width,
-		'size': size,
-		'align': size,
-		'char_width': char_width,
-		'length': length,
-		'ops': STR_OPS,
-		'att': [],
-		'deps': [],
-		'ti': ti
-	}"""
-
-
-def type_va_list():
-	return TypeVaList()
-
-
 def type_number_for(num, signed=False, ti=None):
 	required_width = align_bits_up(nbits_for_num(num))
 	return TypeNumber(width=required_width, signed=signed, ti=ti)
-	1/0
 
-	t = type_number(ti)
-	alias = get_int_alias(required_width, signed)
-	t['id'].str = alias['cm']
-	t['id'].llvm = alias['llvm']
-	t['id'].c = alias['c']
-	t.signed = signed
-	t.width = required_width
-	t.size = nbytes_for_bits(required_width) #required_width // 8
-	t['ops'] = t['ops'] + WORD_OPS
-	t.generic = True
-	t.signed = signed
-	return t
 
 
 
 def type_eq_integer(a, b, opt):
-	if a.width != b.width:
-		return False
-
-	if a.signed != b.signed:
-		return False
-
-	return True
+	return (a.width == b.width) and (a.signed == b.signed)
 
 
 def type_eq_char(a, b, opt):
-	if a.width != b.width:
-		return False
-
-	return True
+	return a.width == b.width
 
 
 def type_eq_word(a, b, opt):
-	if a.width != b.width:
-		return False
-
-	return True
+	return a.width == b.width
 
 
 def type_eq_pointer(a, b, opt):
@@ -366,39 +43,39 @@ def type_eq_array(a, b, opt):
 		if a.volume.asset != b.volume.asset:
 			return False
 
-	if a.of == None or b.of == None:
-		return a.of == None and b.of == None
+	if a.of == None and b.of == None:
+		return True
 
 	return type_eq(a.of, b.of, opt)
 
 
-
 def type_eq_func(a, b, opt):
-	if not type_eq(a.to, b.to, opt): return False
+	if not type_eq(a.to, b.to, opt):
+		return False
 	return type_eq_fields(a.params, b.params, opt)
 
 
-
 def type_eq_fields(a, b, opt):
-	if len(a) != len(b): return False
-	for ax, bx in zip(a, b):
+	if len(a) != len(b):
+		return False
 
-		#if ax.id.str != None and bx.id.str != None:
+	for ax, bx in zip(a, b):
 		if ax.id.str != bx.id.str:
 			return False
 
-		# простейшая защита от бесконечной рекурсии
-		# для случая когда запись содержит указатель на саму себя
-		# (сравниваем типы полей по указателю)
+		# (infinity recursion protection)
 		if id(ax.type) == id(bx.type):
 			return True
 
-		if not type_eq(ax.type, bx.type, opt): return False
+		if not type_eq(ax.type, bx.type, opt):
+			return False
+
 	return True
 
 
 def type_eq_record(a, b, opt):
-	if len(a.fields) != len(b.fields): return False
+	if len(a.fields) != len(b.fields):
+		return False
 	return type_eq_fields(a.fields, b.fields, opt)
 
 
@@ -413,7 +90,6 @@ def type_eq_float(a, b, opt):
 # TODO: REMOVE IT!
 def type_eq_undefined(a, b, opt):
 	return id(a) == id(b)
-
 
 
 def type_eq(a, b, opt=[]):
@@ -457,6 +133,7 @@ def type_eq(a, b, opt=[]):
 	#elif k == 'enum': return type_eq_enum(a, b, opt)
 	assert(False)
 	return False
+
 
 
 def type_is_bad(t):
@@ -646,6 +323,10 @@ def type_is_signed(t):
 
 def type_is_unsigned(t):
 	return t.signed == False
+
+
+
+
 
 
 
@@ -840,7 +521,7 @@ def select_common_record_type(a, b):
 		newField = Field(fieldId, fieldType, ti=fieldId.ti)
 		fields.append(newField)
 
-	newRecord = type_record(fields, ti=a.ti)
+	newRecord =TypeRecord(fields, ti=a.ti)
 	newRecord.generic = True
 	return newRecord
 
@@ -888,7 +569,7 @@ def select_common_type(a, b):
 				return a
 
 		else:
-			return type_bad(None)
+			return TypeBad(None)
 
 
 	if a.__class__.__name__ != b.__class__.__name__:
@@ -954,6 +635,6 @@ def select_common_type(a, b):
 				return a
 
 	print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))
-	return type_bad(None)
+	return TypeBad(None)
 
 

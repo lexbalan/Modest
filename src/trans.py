@@ -440,7 +440,7 @@ def init():
 	typeSysFloat = foundation.typeFloat64
 
 	undefinedVolume = ValueUndefined(typeSysNat, ti=None)
-	typeSysStr = htype.type_pointer(htype.type_array(typeSysChar, undefinedVolume))
+	typeSysStr = TypePointer(TypeArray(typeSysChar, undefinedVolume))
 
 	init_builtin_values()
 
@@ -543,7 +543,7 @@ def do_type_id(t):
 			tx = module_type_get_public(submodule, id_str)
 		else:
 			error("unknown namespace '%s'" % ns_id, t['ti'])
-			tx = htype.type_bad(t)
+			tx = TypeBad(t['ti'])
 			return tx
 
 	else:
@@ -552,7 +552,7 @@ def do_type_id(t):
 	# tmp
 	if tx == None:
 		error("undefined type", t['ti'])
-		tx = htype.type_undefined(t['ti'])
+		tx = htype.TypeUndefined(t['ti'])
 
 	# если дело происходит в определении типа и пришел undefined тип
 	#htype.type_is_incomplete
@@ -567,7 +567,7 @@ def do_type_id(t):
 
 def do_type_pointer(t):
 	to = do_type(t['to'])
-	return htype.type_pointer(to, ti=t['ti'])
+	return TypePointer(to, ti=t['ti'])
 
 
 def do_type_array(t):
@@ -576,7 +576,7 @@ def do_type_array(t):
 	volume = do_value(t['size'])
 
 	if Value.isBad(volume):
-		return htype.type_array(of, volume, ti=t['ti'])
+		return TypeArray(of, volume, ti=t['ti'])
 
 	if not Value.isUndefined(volume):
 		if not volume.isImmediate():
@@ -594,9 +594,9 @@ def do_type_array(t):
 	# closed arrays of closed arrays are denied NOW
 #	if htype.type_is_closed_array(of):
 #		error("closed arrays of closed arrays are denied", t['ti'])
-#		return htype.type_bad(t)
+#		return TypeBad(t)
 
-	return htype.type_array(of, volume, ti=t['ti'])
+	return TypeArray(of, volume, ti=t['ti'])
 
 
 
@@ -623,7 +623,7 @@ def do_type_record(x):
 		fields.append(f)
 
 	anon_rec_cnt = anon_rec_cnt + 1
-	rec = htype.type_record(fields, ti=x['ti'])
+	rec = TypeRecord(fields, ti=x['ti'])
 	rec.end_nl = x['end_nl']
 	# add anon record (before)
 
@@ -673,12 +673,12 @@ def do_type_func(t, func_id="_"):
 	if t['to'] != None:
 		to = do_type(t['to'])
 
-	return htype.type_func(params, to, t['arghack'], ti=t['ti'])
+	return TypeFunc(params, to, t['arghack'], ti=t['ti'])
 
 
 
-def do_type_undefined(x):
-	return htype.type_undefined(x['ti'])
+def do_TypeUndefined(x):
+	return htype.TypeUndefined(x['ti'])
 
 
 def do_type(x):
@@ -693,7 +693,7 @@ def do_type(x):
 	elif k == 'array': t = do_type_array(x)
 	elif k == 'record': t = do_type_record(x)
 	elif k == 'enum': t = do_type_enum(x)
-	elif k == 'undefined': t = do_type_undefined(x)
+	elif k == 'undefined': t = do_TypeUndefined(x)
 	else: t = bad_type(x['ti'])
 
 	t.ti = x['ti']
@@ -858,7 +858,7 @@ def do_value_ref(x):
 			error("expected mutable value or function", v)
 			return ValueBad(x['ti'])
 
-	vt = htype.type_pointer(vtype, ti=ti)
+	vt = TypePointer(vtype, ti=ti)
 	nv = ValueUn('ref', v, vt, ti=ti)
 
 	if is_global_value(v):
@@ -1300,7 +1300,7 @@ def do_value_slice(x):
 	if slice_volume == None:
 		slice_volume = ValueUndefined(typeSysNat, x['ti'])
 
-	type = htype.type_array(array_type.of, slice_volume, x['ti'])
+	type = TypeArray(array_type.of, slice_volume, x['ti'])
 	nv = ValueSliceArray(left, type, index_from, index_to, x['ti'])
 
 	if not via_pointer:
@@ -1621,7 +1621,7 @@ def do_ValueBad(x):
 
 
 def do_ValueUndefined(x):
-	t = htype.type_undefined(x['ti'])
+	t = htype.TypeUndefined(x['ti'])
 	return ValueUndefined(t, x['ti'])
 
 
@@ -2219,13 +2219,13 @@ def def_var(x):
 				pass
 
 			volume = value_integer_create(length)
-			t = htype.type_array(t.of, volume, x['ti'])
+			t = TypeArray(t.of, volume, x['ti'])
 
 		v = value_cons_implicit_check(t, v)
 
 	elif tu == False and vu == True:
 		# type ok, value undef
-		# пропишем тип для v, тк там сейчас type_undefined
+		# пропишем тип для v, тк там сейчас TypeUndefined
 		v.type = t
 
 	init_value = v
@@ -2709,17 +2709,17 @@ def pre_def(ast, fdecl=False):
 			ti = id['ti']
 
 			if kind == 'type':
-				t = htype.type_undefined(x['ti'])
+				t = htype.TypeUndefined(x['ti'])
 				cmodule_type_add(id['str'], t, is_public=is_public)
 
 			elif kind == 'func':
 				# Create incomplete function value
 
 				#type_func incomplete!
-				f_to = htype.type_undefined(x['ti'])
-				t = htype.type_func([], f_to, False, x['ti'])
+				f_to = htype.TypeUndefined(x['ti'])
+				t = TypeFunc([], f_to, False, x['ti'])
 				t.att.append('incomplete')
-				#t = htype.type_undefined(x['ti'])
+				#t = htype.TypeUndefined(x['ti'])
 				fid = Id(x['id'])
 				v = ValueFunc(fid, t, x['ti'])
 				# And bound it with the id

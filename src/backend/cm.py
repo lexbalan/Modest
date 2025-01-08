@@ -112,7 +112,7 @@ def print_stmt_comment_line(x):
 
 
 
-def print_type_integer(t):
+def print_TypeInt(t):
 	out(get_type_id(t))
 
 
@@ -214,7 +214,7 @@ def print_type(t):
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
-	if htype.type_is_integer(t): print_type_integer(t)
+	if htype.type_is_integer(t): print_TypeInt(t)
 	elif htype.type_is_func(t): print_type_func(t)
 	elif htype.type_is_array(t): print_type_array(t)
 	elif htype.type_is_record(t): print_type_record(t)

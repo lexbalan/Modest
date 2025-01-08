@@ -334,7 +334,7 @@ def strFuncParamlist(params, va_arg):
 			# В C параметр не может быть массивом, а у нас - может
 			# но реализован как указатель на массив
 			if htype.type_is_array(ptype):
-				ptype = htype.type_pointer(ptype)
+				ptype = TypePointer(ptype)
 				pstr = '_' + pstr
 
 		s += str_type(ptype, label=pstr)
@@ -359,7 +359,7 @@ def str_type_func(t, label='', core=''):
 		# а сам массив пойдет через указатель sret_
 		# который функция получит своим самым последним параметром
 		# (sret = structure return)
-		sret_param = Field(Id().fromStr('sret_'), htype.type_pointer(t.to))
+		sret_param = Field(Id().fromStr('sret_'), TypePointer(t.to))
 
 		fparams = t.params + [sret_param]
 		fto = foundation.typeUnit

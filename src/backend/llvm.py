@@ -7,7 +7,6 @@ from hlir.hlir import *
 import type as htype
 from type import type_print
 from value.value import ValueZero
-from type import type_pointer
 from util import align_bits_up
 from pprint import pprint
 import settings
@@ -1112,7 +1111,7 @@ def do_eval_slice(v):
 		ptr_to_item = llvm_gep(pointer, array_type, (index,), array_type.of, array_type.of)
 		out("\n;")
 
-		pnv = llvm_cast("bitcast", ptr_to_item, type_pointer(v.type))
+		pnv = llvm_cast("bitcast", ptr_to_item, TypePointer(v.type))
 		pnv['is_adr'] = True
 		return pnv
 
@@ -1131,7 +1130,7 @@ def do_eval_slice(v):
 		return extractvalue(array, result_type, index.asset)
 
 	ptr_to_item = llvm_gep(array, array_type, (index,), array_type.of, array_type.of)
-	pnv = llvm_cast("bitcast", ptr_to_item, type_pointer(v.type))
+	pnv = llvm_cast("bitcast", ptr_to_item, TypePointer(v.type))
 	pnv['is_adr'] = True
 	return pnv
 
@@ -1282,7 +1281,7 @@ def cons_composite_from_composite(to_type, value, ti):
 	if v['is_adr']:
 		# received not value but it address (formally pointer)
 		out("\n; -- cons_composite_from_composite_by_adr --")
-		casted_ptr = llvm_cast("bitcast", v, type_pointer(to_type))
+		casted_ptr = llvm_cast("bitcast", v, TypePointer(to_type))
 		casted_ptr['type'] = to_type
 		casted_ptr['is_adr'] = True
 		llv = llvm_load(casted_ptr)
@@ -1299,13 +1298,13 @@ def cons_composite_from_composite(to_type, value, ti):
 		# выделим память под новое значение
 		nv = llvm_alloca(to_type)
 		# приводим указатель на слот к указателю на (меньшее) значение
-		xnv = llvm_cast("bitcast", nv, type_pointer(v['type']))
+		xnv = llvm_cast("bitcast", nv, TypePointer(v['type']))
 		llvm_store(xnv, v)
 		nv['is_adr'] = True
 	else:
 		#out("\n\t; trunk")
 		y = llvm_alloca_store(v['type'], init_value=v)
-		nv = llvm_cast("bitcast", y, type_pointer(to_type))
+		nv = llvm_cast("bitcast", y, TypePointer(to_type))
 		nv['is_adr'] = True
 	out("\n; -- end cons_composite_from_composite_by_value --")
 	return nv
@@ -1349,10 +1348,16 @@ def do_eval_cons(x):
 	if id(value.type) == id(to_type):
 		return do_reval(value)
 
+	if htype.type_eq(to_type, from_type):
+		if not htype.type_is_record(value.type):
+			return do_reval(value)
+
 	if htype.type_is_pointer(to_type):
 		if htype.type_is_pointer(from_type):
 			# skipping cast pointer to pointer of the same type
 			if id(to_type.to) == id(from_type.to):
+				return do_reval(value)
+			if htype.type_eq(to_type.to, from_type.to):
 				return do_reval(value)
 
 	if htype.type_is_array(to_type):
@@ -1753,7 +1758,7 @@ def print_stmt_return(x):
 
 		# return via sret
 		to = fctx['func'].type.to
-		p2retval = llvm_value_reg("0", type_pointer(to))
+		p2retval = llvm_value_reg("0", TypePointer(to))
 		llvm_store(p2retval, v)
 
 	lo("ret void")
@@ -1786,8 +1791,8 @@ def print_stmt_var(x):
 		# ex:  %8 = alloca i32, i32 %7, align 4
 		#      %9 = bitcast i32* %8 to [0 x i32]*
 		# и дальше уже будем работать с ним как с *[0 x i32] (%9)
-		from_type = type_pointer(var.type.of)
-		to_type = type_pointer(var.type)
+		from_type = TypePointer(var.type.of)
+		to_type = TypePointer(var.type)
 		left = llvm_2cast('bitcast', from_type, to_type, left)
 		val = left
 
@@ -1916,7 +1921,7 @@ def print_stmt_asm(x):
 			f = Field(id, field_type, ti=x.ti)
 			fields.append(f)
 
-		rt = htype.type_record(fields)
+		rt = TypeRecord(fields)
 		rv = llvm_value_reg(reg, rt)
 		print_type(rt)
 

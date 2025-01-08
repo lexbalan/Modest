@@ -83,56 +83,56 @@ def init():
 	root_context = Symtab()
 	foundation['context'] = root_context
 
-	typeUnit = type_unit()
-	typeBool = type_bool()
+	typeUnit = TypeUnit()
+	typeBool = TypeBool()
 
-	typeWord8 = type_word(width=8)
-	typeWord16 = type_word(width=16)
-	typeWord32 = type_word(width=32)
-	typeWord64 = type_word(width=64)
-	typeWord128 = type_word(width=128)
-	typeWord256 = type_word(width=256)
+	typeWord8 = TypeWord(width=8)
+	typeWord16 = TypeWord(width=16)
+	typeWord32 = TypeWord(width=32)
+	typeWord64 = TypeWord(width=64)
+	typeWord128 = TypeWord(width=128)
+	typeWord256 = TypeWord(width=256)
 
-	typeInt8 = type_integer(width=8)
-	typeInt16 = type_integer(width=16)
-	typeInt32 = type_integer(width=32)
-	typeInt64 = type_integer(width=64)
-	typeInt128 = type_integer(width=128)
-	typeInt256 = type_integer(width=256)
+	typeInt8 = TypeInt(width=8)
+	typeInt16 = TypeInt(width=16)
+	typeInt32 = TypeInt(width=32)
+	typeInt64 = TypeInt(width=64)
+	typeInt128 = TypeInt(width=128)
+	typeInt256 = TypeInt(width=256)
 
-	typeNat8 = type_integer(width=8, signed=False)
-	typeNat16 = type_integer(width=16, signed=False)
-	typeNat32 = type_integer(width=32, signed=False)
-	typeNat64 = type_integer(width=64, signed=False)
-	typeNat128 = type_integer(width=128, signed=False)
-	typeNat256 = type_integer(width=256, signed=False)
+	typeNat8 = TypeInt(width=8, signed=False)
+	typeNat16 = TypeInt(width=16, signed=False)
+	typeNat32 = TypeInt(width=32, signed=False)
+	typeNat64 = TypeInt(width=64, signed=False)
+	typeNat128 = TypeInt(width=128, signed=False)
+	typeNat256 = TypeInt(width=256, signed=False)
 
-	typeFloat32 = type_float(width=32)
-	typeFloat64 = type_float(width=64)
+	typeFloat32 = TypeFloat(width=32)
+	typeFloat64 = TypeFloat(width=64)
 
-	typeChar8 = type_char(width=8)
-	typeChar16 = type_char(width=16)
-	typeChar32 = type_char(width=32)
+	typeChar8 = TypeChar(width=8)
+	typeChar16 = TypeChar(width=16)
+	typeChar32 = TypeChar(width=32)
 
 	# type Nil = Generic(*Unit)
-	typeNil = type_pointer(to=typeUnit)
+	typeNil = TypePointer(to=typeUnit)
 	typeNil.generic = True
 
 	# type FreePointer = *Unit
-	typeFreePointer = type_pointer(to=typeUnit)
+	typeFreePointer = TypePointer(to=typeUnit)
 	# не нужно делать decl тк нет собственного имени у этого типа
 
 	typeSysNat = typeNat64
 	from value.value import ValueUndefined
 	undefinedVolume = ValueUndefined(typeSysNat, ti=None)
-	typeStr8 = type_array(typeChar8, undefinedVolume, ti=None)
+	typeStr8 = TypeArray(typeChar8, undefinedVolume, ti=None)
 	typeStr8.id = Id().fromStr('Str8')
-	typeStr16 = type_array(typeChar16, undefinedVolume, ti=None)
+	typeStr16 = TypeArray(typeChar16, undefinedVolume, ti=None)
 	typeStr16.id = Id().fromStr('Str16')
-	typeStr32 = type_array(typeChar32, undefinedVolume, ti=None)
+	typeStr32 = TypeArray(typeChar32, undefinedVolume, ti=None)
 	typeStr32.id = Id().fromStr('Str32')
 
-	type__VA_List = type_va_list()
+	type__VA_List = TypeVaList()
 
 
 
