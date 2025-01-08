@@ -29,19 +29,12 @@ def nl_indent(nl=1):
 
 
 def get_id_str(x):
-	id_str = ""
-
-	id = None
-	if isinstance(x, dict):
-		id = x['id']
-	else:
-		id = x.id
+	id = x.id
 
 	if id.cm:
 		id_str = id.cm
 
-	id_str = id.str
-	return id_str
+	return id.str
 
 
 aprecedence = [

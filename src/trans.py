@@ -38,10 +38,7 @@ parser = Parser()
 def is_local_entity(x):
 	global cmodule
 	if hasattr(x, 'definition'):
-		if isinstance(x, dict):
-			return x['definition'].module == cmodule
-		else:
-			return x.definition.module == cmodule
+		return x.definition.module == cmodule
 	return True
 
 
@@ -277,10 +274,7 @@ def module_append(definition, to_export=False):
 	global cmodule
 
 	cmodule['defs'].append(definition)
-	if isinstance(definition, dict):
-		definition['module'] = cmodule
-	else:
-		definition.module = cmodule
+	definition.module = cmodule
 
 
 
@@ -2801,10 +2795,7 @@ def add_attributes(obj):
 		lr = att.split(":")
 		if len(lr) == 1:
 			att = lr[0]
-			if isinstance(obj, dict):
-				obj['att'].append(att)
-			else:
-				obj.addAttribute(att)
+			obj.addAttribute(att)
 		elif len(lr) > 1:
 			set_att(obj, lr[0].split('.'), lr[1])
 
@@ -2812,22 +2803,13 @@ def add_attributes(obj):
 
 def set_att(obj, path, att):
 	if len(path) == 1:
-		if isinstance(obj, dict):
-			obj[path[0]]['att'].append(att)
-		else:
-			x = getattr(obj, path[0])
-			if isinstance(x, dict):
-				x['att'].append(att)
-			else:
-				x.addAttribute(att)
+		x = getattr(obj, path[0])
+		x.addAttribute(att)
 
 	elif len(path) > 1:
 		f = path[0]
-		if isinstance(obj, dict):
-			set_att(obj[f], path[1:], att)
-		else:
-			o = getattr(obj, f)
-			set_att(o, path[1:], att)
+		o = getattr(obj, f)
+		set_att(o, path[1:], att)
 	else:
 		assert(False)
 
@@ -2837,20 +2819,11 @@ def set_att(obj, path, att):
 def set_prop(obj, path, val):
 	if len(path) == 1:
 		f = path[0]
-		if isinstance(obj, dict):
-			obj[f] = val
-		else:
-			setattr(obj, f, val)
+		setattr(obj, f, val)
 
 	elif len(path) > 1:
-		if isinstance(obj, dict):
-			if path[0] in obj:
-				set_prop(obj[path[0]], path[1:], val)
-			else:
-				error("property error: field '%s' not found" % path[0], obj['ti'])
-		else:
-			a = getattr(obj, path[0])
-			set_prop(a, path[1:], val)
+		a = getattr(obj, path[0])
+		set_prop(a, path[1:], val)
 
 	else:
 		assert(False)

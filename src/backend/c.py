@@ -159,32 +159,22 @@ def precedence(x):
 
 
 def get_id_str(x):
-
-	id = None
-	if isinstance(x, dict):
-		id = x['id']
-	else:
-		id = x.id
+	id = x.id
 
 	if id.c != None:
 		return id.c
 
 	id_str = id.str
 	if id.need_decoration:
-		defin = None
-		if isinstance(x, dict):
-			defin = x['definition']
-		else:
-			defin = x.definition
-		
-		if defin:
-			prefix = defin.module['prefix']
+		if x.definition:
+			prefix = x.definition.module['prefix']
 			if prefix != None:
 				id_str = prefix + '_' + id_str
+
 	return id_str
 
 
-def print_id(x, prefix=''):
+def print_id_for(x, prefix=''):
 	out(prefix + get_id_str(x))
 
 
@@ -240,7 +230,7 @@ def str_type_record(t, tag=""):
 		if i > 0: out(',')
 		item = items[i]
 		nl_indent()
-		print_id(item)
+		print_id_for(item)
 		i = i + 1
 	indent_down()
 	nl_indent()
@@ -720,7 +710,7 @@ def print_value_access(x, ctx):
 		need_wrap = precedence(left) < precedence(x)
 		print_value(left, need_wrap=need_wrap)
 		out("->")
-		print_id(x.field)
+		print_id_for(x.field)
 		return
 
 	# если имеем дело c дженерик записью (глоб константа)
@@ -733,7 +723,7 @@ def print_value_access(x, ctx):
 	need_wrap = precedence(left) < precedence(x)
 	print_value(left, need_wrap=need_wrap)
 	out('.')
-	print_id(x.field)
+	print_id_for(x.field)
 
 
 
@@ -1165,7 +1155,7 @@ def print_value_bool_lit(x, ctx):
 
 
 def print_value_enum(x, ctx):
-	print_id(x)
+	print_id_for(x)
 
 
 
@@ -1228,7 +1218,7 @@ def print_value_by_id(x, ctx=[], prefix=''):
 	if x.id.c != None:
 		out(x.id.c)
 	else:
-		print_id(x, prefix)
+		print_id_for(x, prefix)
 
 
 
@@ -2014,15 +2004,9 @@ def print_deps(deps):
 
 	# печатаем декларации для типов от которых зависит этот тип
 	for dep in deps:
-		if isinstance(dep, dict):
-			# for Type
-			if dep['id'] == None:
-				error("undefined", dep['ti'])
-				return
-		else:
-			if dep.id == None:
-				error("undefined", dep.ti)
-				return
+		if dep.id == None:
+			error("undefined", dep.ti)
+			return
 
 		out("\n")
 		id_str = get_id_str(dep)

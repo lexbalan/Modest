@@ -130,29 +130,17 @@ def type_get_aka(t):
 	return None
 
 
-def get_id_str(x):
 
-	id = None
-	if isinstance(x, dict):
-		id = x['id']
-	else:
-		id = x.id
+def get_id_str(x):
+	id = x.id
 
 	if id.llvm:
 		return '"%s"' % id['llvm']
 
 	id_str = id.str
-	#if id.str != 'main':
 	if id.need_decoration:
-		definition = None
-		if isinstance(x, dict):
-			if hasattr(x, 'definition'):
-				definition = x.definition
-		else:
-			definition = x.definition
-
-		if definition != None:
-			prefix = definition.module['prefix']
+		if x.definition != None:
+			prefix = x.definition.module['prefix']
 			if prefix != None:
 				id_str = prefix + '_' + id_str
 
@@ -2397,18 +2385,6 @@ printed = []
 def een(defs, decl_only=False):
 	isa_prev = None
 	for x in defs:
-		#isa = x['isa']
-
-#		if isa == 'comment':
-#			print_comment(x)
-#			continue
-
-		#if not 'id' in x:
-		#	print(x['isa'])
-
-		if isinstance(x, dict):
-			continue
-
 
 		if isinstance(x, StmtComment):
 			print_comment(x)
@@ -2416,7 +2392,6 @@ def een(defs, decl_only=False):
 
 		if isinstance(x, StmtDirective):
 			continue
-
 
 		if x.hasAttribute('ll_no_print'):
 			continue
