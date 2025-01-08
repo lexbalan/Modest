@@ -22,7 +22,7 @@ LLVM_TARGET_DATALAYOUT = ""
 # когда первым параметром идет указатель на возвращаемое значение (ABI)
 RET_SIZE_MAX = 16
 def need_sret(func_type):
-	return htype.type_is_closed_array(func_type.to)
+	return Type.is_closed_array(func_type.to)
 	#return func_type.to.size > RET_SIZE_MAX
 
 
@@ -405,7 +405,7 @@ def llvm_print_value_str(x):
 def llvm_print_value_num(x):
 	num = x['asset']
 
-	if htype.type_is_pointer(x['type']):
+	if Type.is_pointer(x['type']):
 		if num == 0:
 			out("null")
 		else:
@@ -414,7 +414,7 @@ def llvm_print_value_num(x):
 		return
 
 	# integer, float, bool, char
-	if htype.type_is_float(x['type']):
+	if Type.is_float(x['type']):
 		# короче суть такая - число сперва нужно причесать
 		# так, чтобы оно могло быть четко представлено в LLVM float/double
 		# наче LLVM не примет его и сгенерирует ошибку
@@ -433,7 +433,7 @@ def llvm_print_value_inline_cast(x):
 	if v['kind'] in ['num']:
 		print("----")
 		#print_type(t)
-		if htype.type_is_pointer(t):
+		if Type.is_pointer(t):
 			out("null")
 		else:
 			out("%d" % v['asset'])
@@ -458,9 +458,9 @@ def llvm_print_value_inline_getelemantptr(x):
 
 
 def llvm_print_ValueZero(x):
-	if htype.type_is_composite(x['type']):
+	if Type.is_composite(x['type']):
 		out("zeroinitializer")
-	elif htype.type_is_pointer(x['type']):
+	elif Type.is_pointer(x['type']):
 		out("null")
 	else:
 		out("0")
@@ -789,7 +789,7 @@ def print_type_record(t):
 
 def print_type_array(t):
 	sz = 0
-	if not htype.type_is_vla(t):
+	if not Type.is_vla(t):
 		array_size = t.volume
 		if array_size != None:
 			sz = array_size.asset
@@ -805,7 +805,7 @@ def print_type_array(t):
 
 
 def print_type_pointer(t):
-	if htype.type_is_free_pointer(t):
+	if Type.is_free_pointer(t):
 		out("i8*")
 	else:
 		print_type(t.to); out("*")
@@ -842,7 +842,7 @@ def print_type(t):
 		# тупой LLVM не умеет делать алиасы структур
 		# он типа делает, но потом к переменной с таким типом
 		# хрен обратишься... дерьмо
-		if htype.type_is_record(t):
+		if Type.is_record(t):
 			if hasattr(t, 'id'):
 				out("%" + t['id'].str)
 				return
@@ -853,32 +853,32 @@ def print_type(t):
 
 		# иногда сюда залетают дженерики например в to левое:
 		# let p = 0x12345678 to *Nat32
-		if htype.type_is_number(t):
+		if Type.is_number(t):
 			print_int_type_for(t.width)
 			return
 
-	if htype.type_is_func(t): print_type_func(t)
-	elif htype.type_is_record(t): print_type_record(t)
-	elif htype.type_is_pointer(t): print_type_pointer(t)
-	elif htype.type_is_array(t): print_type_array(t)
-	#elif htype.type_is_enum(t): print_type_enum(t)
+	if Type.is_func(t): print_type_func(t)
+	elif Type.is_record(t): print_type_record(t)
+	elif Type.is_pointer(t): print_type_pointer(t)
+	elif Type.is_array(t): print_type_array(t)
+	#elif Type.is_enum(t): print_type_enum(t)
 
-	elif htype.type_is_integer(t):
+	elif Type.is_integer(t):
 		print_int_type_for(t.width)
 
-	elif htype.type_is_float(t):
+	elif Type.is_float(t):
 		if t.width <= 32:
 			out("float")
 		else:
 			out("double")
 
-	elif htype.type_is_char(t):
+	elif Type.is_char(t):
 		print_int_type_for(t.width)
 
-	elif htype.type_is_undefined(t):
+	elif Type.is_undefined(t):
 		out('opaque')
 
-	elif htype.type_is_va_list(t):
+	elif Type.is_va_list(t):
 		out("i8*")
 
 	else:
@@ -901,7 +901,7 @@ def do_eval_bin(x):
 	l = do_eval(x.left)
 	r = do_eval(x.right)
 
-	if htype.type_is_composite(x.left.type):
+	if Type.is_composite(x.left.type):
 		if op in ['eq', 'ne']:
 			# Composite objects comparison
 			# (eq/ne between composite types)
@@ -942,7 +942,7 @@ def do_eval_bin(x):
 	if op in ['shl', 'shr']:
 		# LLVM requires the same type for left & right arguments of shift operator
 		# cast right to left
-		if not htype.type_is_generic(r['type']):
+		if not r['type'].is_generic():
 			r = docast(r, l['type'])
 
 	llvm_opcode = get_bin_opcode(op, x.left.type)
@@ -1008,12 +1008,12 @@ def do_eval_call(v):
 	# eval func
 	f = do_eval(func)
 
-	if htype.type_is_pointer(ftype):
+	if Type.is_pointer(ftype):
 		# pointer to array needs additional load
 		f = llvm_dold(f)
 		ftype = ftype.to
 
-	to_unit = htype.type_eq(ftype.to, foundation.typeUnit)
+	to_unit = Type.eq(ftype.to, foundation.typeUnit)
 
 
 	# do call
@@ -1027,9 +1027,9 @@ def do_eval_call(v):
 	if ftype.extra_args:
 		print_type_func(ftype)
 	else:
-		if htype.type_is_unit(ftype.to):
+		if Type.is_unit(ftype.to):
 			out("void")
-		elif htype.type_is_array(ftype.to):
+		elif Type.is_array(ftype.to):
 			out("void")
 		else:
 			print_type(ftype.to)
@@ -1060,7 +1060,7 @@ def index(x):
 	i = do_reval(x.index)
 
 	# разфменовываем указатель на массив по умолчанию сами
-	if htype.type_is_pointer(x.left.type):
+	if Type.is_pointer(x.left.type):
 		ll = do_reval(x.left)
 		return (ll, (i,))
 
@@ -1082,7 +1082,7 @@ def do_eval_index(v):
 
 
 def getET(et):
-	while htype.type_is_pointer(et):
+	while Type.is_pointer(et):
 		et = et.to
 	et = et.of
 	return et
@@ -1103,7 +1103,7 @@ def do_eval_slice(v):
 		return do_eval(v.immval)
 
 	varray = v.left
-	if htype.type_is_pointer(varray.type):
+	if Type.is_pointer(varray.type):
 		pointer = do_reval(varray)
 		array_type = pointer['type'].to
 		index = do_reval(v.index_from)
@@ -1137,7 +1137,7 @@ def do_eval_slice(v):
 
 
 def getET2(et):
-	while htype.type_is_pointer(et):
+	while Type.is_pointer(et):
 		et = et.to
 	#et = et.of
 	return et
@@ -1145,7 +1145,7 @@ def getET2(et):
 
 
 def by_value(x):
-	return not (x['is_adr'] or htype.type_is_pointer(x['type']))
+	return not (x['is_adr'] or Type.is_pointer(x['type']))
 
 
 # GEP !элемент массива на который указываешь!
@@ -1166,7 +1166,7 @@ def access(x):
 	i = x.field
 
 	# разфменовываем указатель на массив по умолчанию сами
-	if htype.type_is_pointer(x.value.type):
+	if Type.is_pointer(x.value.type):
 		ll = do_reval(x.value)
 		return (ll, (i,))
 
@@ -1213,9 +1213,9 @@ def do_eval_access_module(x):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-	if htype.type_is_number(a) or htype.type_is_integer(a) or htype.type_is_char(a) or htype.type_is_bool(a) or htype.type_is_word(a):
-		if htype.type_is_number(b) or htype.type_is_integer(b) or htype.type_is_char(b) or htype.type_is_bool(b) or htype.type_is_word(b):
-			signed = htype.type_is_signed(b)
+	if Type.is_number(a) or Type.is_integer(a) or Type.is_char(a) or Type.is_bool(a) or Type.is_word(a):
+		if Type.is_number(b) or Type.is_integer(b) or Type.is_char(b) or Type.is_bool(b) or Type.is_word(b):
+			signed = Type.is_signed(b)
 
 			# Это плохо тк не работает в некоторых особых ситуациях
 			# например для  i17 to i32 вернет bitcast что неверно!
@@ -1235,25 +1235,25 @@ def select_cast_operator(a, b):
 			else:
 				return 'bitcast'
 
-		elif htype.type_is_pointer(b):
+		elif Type.is_pointer(b):
 			return 'inttoptr'
 
-		elif htype.type_is_float(b):
-			return 'sitofp' if htype.type_is_signed(a) else 'uitofp'
+		elif Type.is_float(b):
+			return 'sitofp' if Type.is_signed(a) else 'uitofp'
 
-	elif htype.type_is_pointer(a):
-		if htype.type_is_pointer(b):
+	elif Type.is_pointer(a):
+		if Type.is_pointer(b):
 			return 'bitcast'
-		elif htype.type_is_integer(b):
+		elif Type.is_integer(b):
 			return 'ptrtoint'
 
-	elif htype.type_is_float(a):
+	elif Type.is_float(a):
 		# Float -> Integer
-		if htype.type_is_integer(b):
-			return 'fptosi' if htype.type_is_signed(b) else 'fptoui'
+		if Type.is_integer(b):
+			return 'fptosi' if Type.is_signed(b) else 'fptoui'
 
 		# Float -> Float
-		elif htype.type_is_float(b):
+		elif Type.is_float(b):
 			if a.width < b.width:
 				return 'fpext'
 			elif a.width > b.width:
@@ -1267,7 +1267,7 @@ def select_cast_operator(a, b):
 
 def is_adr_or_ptr(x):
 	assert(x['isa'] == 'll_value')
-	return x['is_adr'] or htype.type_is_pointer(x['type'])
+	return x['is_adr'] or Type.is_pointer(x['type'])
 
 
 def cons_composite_from_composite(to_type, value, ti):
@@ -1331,7 +1331,7 @@ def eval_cons_record(x):
 
 def eval_cons_array(x):
 	if x.isImmediate():
-		if htype.type_is_vla(x.type):
+		if Type.is_vla(x.type):
 			return do_eval_literal(x.value)
 		return do_eval_literal(x)
 
@@ -1348,47 +1348,47 @@ def do_eval_cons(x):
 	if id(value.type) == id(to_type):
 		return do_reval(value)
 
-	if htype.type_eq(to_type, from_type):
-		if not htype.type_is_record(value.type):
+	if Type.eq(to_type, from_type):
+		if not Type.is_record(value.type):
 			return do_reval(value)
 
-	if htype.type_is_pointer(to_type):
-		if htype.type_is_pointer(from_type):
+	if Type.is_pointer(to_type):
+		if Type.is_pointer(from_type):
 			# skipping cast pointer to pointer of the same type
 			if id(to_type.to) == id(from_type.to):
 				return do_reval(value)
-			if htype.type_eq(to_type.to, from_type.to):
+			if Type.eq(to_type.to, from_type.to):
 				return do_reval(value)
 
-	if htype.type_is_array(to_type):
+	if Type.is_array(to_type):
 		return eval_cons_array(x)
 
-	if htype.type_is_record(to_type):
+	if Type.is_record(to_type):
 		return eval_cons_record(x)
 
 	if value.isImmediate():
 		# В случае Nat32 &x у нас занчение immediate но нет asset тк это поздний imm
 		if x.asset:
-			if not htype.type_is_pointer(to_type):
+			if not Type.is_pointer(to_type):
 				#info("???", x['ti'])
 				return do_eval_literal(x)
 
-	if htype.type_is_pointer(to_type):
-		if htype.type_is_array_of_char(to_type.to):
-			if htype.type_is_string(from_type):
+	if Type.is_pointer(to_type):
+		if Type.is_array_of_char(to_type.to):
+			if from_type.is_string():
 				string_of = to_type.to.of
 				char_pow = string_of.width
 				return llvm_value_str(x.strid, x.asset, x.type, isz='zstring' in x.att)
 
-	if htype.type_is_char(to_type):
-		if htype.type_is_string(value.type):
+	if Type.is_char(to_type):
+		if Type.is_string(value.type):
 			return do_eval_literal(x)
 
 	# cast any type to Unit type
-	if htype.type_is_unit(to_type):
+	if Type.is_unit(to_type):
 		return llvm_value_zero(to_type)
 
-	if htype.type_is_va_list(from_type):
+	if Type.is_va_list(from_type):
 		# приведение объекта типа va_list в CM особенное
 		# оно дает доступ к следующему элементу списка
 		rv = do_eval(value)
@@ -1398,7 +1398,7 @@ def do_eval_cons(x):
 
 	# anyNonZeroValue to Bool  ==  true  (!)
 	# (the same as in C)
-	if htype.type_is_bool(to_type):
+	if Type.is_bool(to_type):
 		zero = llvm_value_num(v.type, 0)
 		return llvm_eval_binary('icmp ne', v, zero, x)
 
@@ -1531,7 +1531,7 @@ def do_eval_const(x):
 		if x.value != None:
 			# константные массивы (даже дженерик)
 			# печатаются и их можео индексировать
-			if htype.type_is_array(x.value.type):
+			if Type.is_array(x.value.type):
 				rv = llvm_value_id(get_id_str(x), x.type)
 				rv['is_adr'] = True
 				return rv
@@ -1545,18 +1545,18 @@ def do_eval_bool(x):
 
 def do_eval_literal(x):
 	xt = x.type
-	if htype.type_is_number(xt): return llvm_value_num(xt, x.asset)
-	elif htype.type_is_integer(xt): return llvm_value_num(xt, x.asset)
-	elif htype.type_is_float(xt): return llvm_value_num(xt, x.asset)
-	elif htype.type_is_record(xt): return do_eval_record(x)
-	elif htype.type_is_array(xt): return do_eval_array(x)
-	elif htype.type_is_bool(xt): return do_eval_bool(x)
-	elif htype.type_is_free_pointer(xt): return llvm_value_num(xt, x.asset)
-	elif htype.type_is_pointer(xt): return do_eval_pointer(x)
-	elif htype.type_is_char(xt): return llvm_value_num(xt, x.asset)
-	elif htype.type_is_word(xt): return llvm_value_num(xt, x.asset)
-	elif htype.type_is_string(xt): return do_eval_string(x)
-	#elif htype.type_is_enum(xt): return llvm_value_num(xt, x.asset)
+	if Type.is_number(xt): return llvm_value_num(xt, x.asset)
+	elif Type.is_integer(xt): return llvm_value_num(xt, x.asset)
+	elif Type.is_float(xt): return llvm_value_num(xt, x.asset)
+	elif Type.is_record(xt): return do_eval_record(x)
+	elif Type.is_array(xt): return do_eval_array(x)
+	elif Type.is_bool(xt): return do_eval_bool(x)
+	elif Type.is_free_pointer(xt): return llvm_value_num(xt, x.asset)
+	elif Type.is_pointer(xt): return do_eval_pointer(x)
+	elif Type.is_char(xt): return llvm_value_num(xt, x.asset)
+	elif Type.is_word(xt): return llvm_value_num(xt, x.asset)
+	elif Type.is_string(xt): return do_eval_string(x)
+	#elif Type.is_enum(xt): return llvm_value_num(xt, x.asset)
 	else:
 		error("do_eval_literal: unknown literal", x['ti'])
 		Value.print(x)
@@ -1646,7 +1646,7 @@ def do_eval(x):
 #
 
 def print_stmt_assign(x):
-	if htype.type_is_array(x.right.type):
+	if Type.is_array(x.right.type):
 		return do_assign_arrays(x.left, x.right)
 	l = do_eval(x.left)
 	r = do_reval(x.right)
@@ -1775,7 +1775,7 @@ def print_stmt_var(x):
 	# only for VLA
 	is_vla = False
 	sz = None
-	if htype.type_is_array(t):
+	if Type.is_array(t):
 		if not t.volume.isImmediate():
 			sz = do_reval(t.volume)
 			t = t.of
@@ -1784,7 +1784,7 @@ def print_stmt_var(x):
 
 	# VLA fix
 	left = val
-	if htype.type_is_vla(var.type):
+	if Type.is_vla(var.type):
 		# поскольку VLA реализуется через alloca
 		# и поэтому имеет тип <vla_item_type>*,
 		# нам просто нужно пределать его в указатель на массив
@@ -1811,7 +1811,7 @@ def print_stmt_let(x):
 	id_str = get_id_str(x)
 	val = x.init_value
 
-	if htype.type_is_string(val.type):
+	if Type.is_string(val.type):
 		return None
 
 	if isinstance(val, ValueCall):
@@ -1825,7 +1825,7 @@ def print_stmt_let(x):
 	# для let-массивов выделяем память (alloca)
 	# поскольку их могут индексировать переменной
 	# а массив-значение в "регистре" невозможно индексировать переменной
-	if htype.type_is_closed_array(val.type) or htype.type_is_record(val.type):
+	if Type.is_closed_array(val.type) or Type.is_record(val.type):
 		v = llvm_alloca_store(val.type, id_str=None, init_value=v)
 
 	locals_add(id_str, v)
@@ -1969,7 +1969,7 @@ def print_stmt(x):
 
 def print_func_params(ftype, only_types=False, with_attributes=True):
 	# here can be a pointer to function
-	if htype.type_is_pointer(ftype):
+	if Type.is_pointer(ftype):
 		ftype = ftype.to
 
 	params = ftype.params
@@ -2013,7 +2013,7 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		isarr = htype.type_is_closed_array(param.type)
+		isarr = Type.is_closed_array(param.type)
 
 		if i > 0:
 			out(", ")
@@ -2035,7 +2035,7 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 
 
 def print_type_func(t):
-	if htype.type_is_unit(t.to) or need_sret(t):
+	if Type.is_unit(t.to) or need_sret(t):
 		out("void")
 	else:
 		print_type(t.to)
@@ -2046,7 +2046,7 @@ def print_type_func(t):
 
 
 def print_func_signature(ftype, idStr):
-	if htype.type_is_unit(ftype.to) or need_sret(ftype):
+	if Type.is_unit(ftype.to) or need_sret(ftype):
 		out("void")
 	else:
 		print_type(ftype.to)
@@ -2127,13 +2127,13 @@ def print_def_func(x):
 	for param in params:
 		param_id = get_id_str(param)
 
-		if htype.type_is_va_list(param.type):
+		if Type.is_va_list(param.type):
 			# see: p216
 			continue
 
 		localObject = llvm_value_reg(param_id, param.type)
 
-		if htype.type_is_closed_array(param.type):
+		if Type.is_closed_array(param.type):
 			localObject['is_adr'] = True
 
 		locals_add(param_id, localObject)
@@ -2148,7 +2148,7 @@ def print_def_func(x):
 	# for any array parameter print local holder value
 	for param in params:
 		ptype = param.type
-		if htype.type_is_closed_array(ptype):
+		if Type.is_closed_array(ptype):
 			paramId = get_id_str(param)
 
 			reg = '__' + param.id.str
@@ -2164,7 +2164,7 @@ def print_def_func(x):
 
 	if len(params) > 0:
 		last_param = params[-1]
-		if htype.type_is_va_list(last_param.type):
+		if Type.is_va_list(last_param.type):
 			# :p216
 			# В LLVM va_arg принимает параметром указатель на укзаатель на __VA_List!
 			# Но тк мы получаем просто указатель на va_list,
@@ -2201,7 +2201,7 @@ def print_def_func(x):
 
 	print_stmt_block(x.stmt)
 
-	if htype.type_eq(ftype.to, foundation.typeUnit):
+	if Type.eq(ftype.to, foundation.typeUnit):
 		print_stmt_return(StmtReturn(None))
 
 	indent_down()
@@ -2218,7 +2218,7 @@ def print_def_func(x):
 def print_def_type(x):
 	xtype = x.original_type
 	out("\n%%%s = type " % get_id_str(x.type))
-	if htype.type_is_record(xtype):
+	if Type.is_record(xtype):
 		# не печатаем имя а печатаем саму структуру
 		# тк LLVM дает ошибку на запись вида
 		# %Struct1 = type %Struct2; Error, wtf?
@@ -2226,7 +2226,7 @@ def print_def_type(x):
 	else:
 		print_type(xtype)
 	out(";")
-	if htype.type_is_record(xtype):
+	if Type.is_record(xtype):
 		out("\n")
 
 
@@ -2257,11 +2257,11 @@ def print_def_var(x, as_extern=False):
 def print_def_const(x, as_extern=False):
 	init_value = x.init_value
 
-	#if htype.type_is_composite(const_value.type):
+	#if Type.is_composite(const_value.type):
 	# В LLVM мы не печатаем константы, но массивы - вынуждены
 	# тк доступ к ним может идти в рантайме по индексу;
 	# НО! В константной записи может быть массив! (хз как быть пока)
-	if htype.type_is_array(init_value.type):
+	if Type.is_array(init_value.type):
 		out("\n@%s = constant " % get_id_str(x.value))
 		llvm_print_type_value(do_eval(init_value))
 
@@ -2594,19 +2594,19 @@ REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
 def get_bin_opcode(op, t):
 	# ["icmp slt", "icmp ult", x]
 	def select_bin_opcode_su(sop, uop, t):
-		if htype.type_is_unsigned(t):
+		if Type.is_unsigned(t):
 			return uop
 		return sop
 
 	# ["sdiv", "udiv", "fdiv", x]
 	def select_bin_opcode_f(op, fop, t):
-		if htype.type_is_float(t):
+		if Type.is_float(t):
 			return fop
 		return op
 
 	# ["sdiv", "udiv", "fdiv", x]
 	def select_bin_opcode_suf(sop, uop, fop, t):
-		if htype.type_is_float(t):
+		if Type.is_float(t):
 			return fop
 		return select_bin_opcode_su(sop, uop, t)
 
@@ -2622,7 +2622,7 @@ def get_bin_opcode(op, t):
 	elif op in ['lt', 'gt', 'le', 'ge']:
 		opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
 	elif op == 'shr':
-		opcode = 'ashr' if htype.type_is_signed(t) else 'lshr'
+		opcode = 'ashr' if Type.is_signed(t) else 'lshr'
 	elif op == 'logic_or':
 		opcode = 'or'
 	elif op == 'logic_and':

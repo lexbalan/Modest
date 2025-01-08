@@ -13,6 +13,8 @@ from hlir.hlir import *
 
 import foundation
 
+#from hlir.type import Type
+
 #from value.value import value_eq
 from value.bool import value_bool_create
 from value.integer import value_integer_create
@@ -555,8 +557,8 @@ def do_type_id(t):
 		tx = htype.TypeUndefined(t['ti'])
 
 	# если дело происходит в определении типа и пришел undefined тип
-	#htype.type_is_incomplete
-	if htype.type_is_undefined(tx):
+	#Type.is_incomplete
+	if tx.is_undefined():
 		if not isinstance(cdef, StmtDefType):
 			error("forward references to non-struct type", t['ti'])
 		cdef.deps.append(tx)
@@ -587,12 +589,12 @@ def do_type_array(t):
 			else:
 				error("non local VLA", t.size)
 
-		#if not (htype.type_is_integer(volume['type']) or htype.type_is_number(volume['type'])):
-		if htype.type_is_signed(volume.type):
+		#if not (Type.is_integer(volume['type']) or volume.type.is_number()):
+		if volume.type.is_signed():
 			error("required value with number or integer type", t.size['ti'])
 
 	# closed arrays of closed arrays are denied NOW
-#	if htype.type_is_closed_array(of):
+#	if of.is_closed_array():
 #		error("closed arrays of closed arrays are denied", t['ti'])
 #		return TypeBad(t)
 
@@ -709,10 +711,10 @@ def do_value_shift(x):
 	r = do_rvalue(x['right'])
 	type_result = l.type
 
-#	if not htype.type_is_word(l.type):
+#	if not l.type.is_word():
 #		error("expected word value", x['left'])
 
-	if htype.type_is_signed(r.type):
+	if r.type.is_signed():
 		error("expected natural value", x['right'])
 
 	if l.isImmediate() and r.isImmediate():
@@ -725,7 +727,7 @@ def do_value_shift(x):
 		nv.immediate = True
 		return nv
 
-	if htype.type_is_generic(l.type):
+	if l.type.is_generic():
 		error("expected non-generic value", l)
 		return ValueBad(x['ti'])
 
@@ -745,10 +747,10 @@ def do_ValueBin(x):
 	if op == 'add':
 		# массивы могут быть разной длины (то есть с разными типами)
 		# поэтому сложение массивов (only immediate) требует обхода проверок типа ниже
-		if htype.type_is_array(l.type) and htype.type_is_array(r.type):
+		if l.type.is_array() and r.type.is_array():
 			return value_array_add(l, r, ti)
 		# у string вообще всегда одинакоывый тип и нет смысла приводить их
-		elif htype.type_is_string(l.type) and htype.type_is_string(r.type):
+		elif l.type.is_string() and r.type.is_string():
 			return value_string_add(l, r, ti)
 
 
@@ -767,14 +769,14 @@ def do_ValueBin(x):
 	#
 
 	t = htype.select_common_type(l.type, r.type)
-	if htype.type_is_bad(t):
+	if t.is_bad():
 		error("different types in operation", x['ti'])
 		return ValueBad(ti)
 
 	l = value_cons_implicit(t, l)
 	r = value_cons_implicit(t, r)
 
-	if not htype.type_eq(l.type, r.type, ti):
+	if not Type.eq(l.type, r.type, ti):
 		error("different types in '%s' operation" % x['kind'], ti)
 
 		# print: @@ <left_type> & <right_type> @@
@@ -793,7 +795,7 @@ def do_ValueBin(x):
 	if op in ['eq', 'ne']:
 		return Value.eq(l, r, op, ti)
 
-	if htype.type_eq(t, foundation.typeBool):
+	if Type.eq(t, foundation.typeBool):
 		if op == 'or': op = 'logic_or'
 		elif op == 'and': op = 'logic_and'
 
@@ -823,7 +825,7 @@ def do_ValueBin(x):
 
 		asset = 0
 		if op == 'div':
-			if not htype.type_is_float(t):
+			if not t.is_float():
 				asset = l.asset // r.asset
 			else:
 				asset = l.asset / r.asset
@@ -831,7 +833,7 @@ def do_ValueBin(x):
 			asset = ops[op](l.asset, r.asset)
 
 
-		if htype.type_is_number(t):
+		if t.is_number():
 			# (для операций типа 1 + 2)
 			# Пересматриваем generic тип для нового значения
 			nv.type = htype.type_number_for(asset, signed=asset < 0, ti=ti)
@@ -854,7 +856,7 @@ def do_value_ref(x):
 	vtype = v.type
 
 	if v.isImmutable():
-		if not htype.type_is_func(vtype) or htype.type_is_undefined(vtype):
+		if not vtype.is_func() or vtype.is_undefined():
 			error("expected mutable value or function", v)
 			return ValueBad(x['ti'])
 
@@ -886,14 +888,14 @@ def do_value_not(x):
 		return ValueBad(x['ti'])
 
 	op = 'not'
-	if htype.type_is_bool(vtype):
+	if vtype.is_bool():
 		op = 'logic_not'
 
 	nv = ValueUn(op, v, vtype, ti=x['ti'])
 
 	if v.isImmediate():
 		# because: ~(1) = -1 (not 0) !
-		if htype.type_is_bool(vtype):
+		if vtype.is_bool():
 			nv.asset = not v.asset
 		else:
 			nv.asset = ~v.asset
@@ -912,8 +914,8 @@ def do_value_neg(x):
 
 	vtype = v.type
 
-	if not htype.type_is_generic(vtype):
-		if not htype.type_is_signed(vtype):
+	if not vtype.is_generic():
+		if not vtype.is_signed():
 			error("expected value with signed type", v)
 	else:
 		vtype.signed = True
@@ -924,7 +926,7 @@ def do_value_neg(x):
 		nv.asset = -v.asset
 		nv.immediate = True
 
-		if htype.type_is_generic(nv.type):
+		if nv.type.is_generic():
 			nv.type = htype.type_number_for(v.asset, signed=True, ti=x['ti'])
 
 	return nv
@@ -939,7 +941,7 @@ def do_value_pos(x):
 
 	vtype = v.type
 
-	if not htype.type_is_signed(vtype):
+	if not vtype.is_signed():
 		error("expected value with signed type", v)
 
 	nv = ValueUn('pos', v, vtype, ti=x['ti'])
@@ -948,7 +950,7 @@ def do_value_pos(x):
 		nv.asset = +v.asset
 		nv.immediate = True
 
-		if htype.type_is_generic(nv.type):
+		if nv.type.is_generic():
 			nv.type = htype.type_number_for(v.asset, signed=True, ti=x['ti'])
 
 	return nv
@@ -962,7 +964,7 @@ def do_value_deref(x):
 		return v
 
 	vtype = v.type
-	if not htype.type_is_pointer(vtype):
+	if not vtype.is_pointer():
 		error("expected pointer value", v)
 		return ValueBad(x['ti'])
 
@@ -972,9 +974,9 @@ def do_value_deref(x):
 	#   - pointer to Unit
 	#   - pointer to function
 	#   - pointer to open array
-	is_func_ptr = htype.type_is_func(to)
-	is_free_ptr = htype.type_is_free_pointer(to)
-	is_open_array_ptr =  htype.type_is_open_array(to)
+	is_func_ptr = to.is_func()
+	is_free_ptr = to.is_free_pointer()
+	is_open_array_ptr =  to.is_open_array()
 	if is_func_ptr or is_free_ptr or is_open_array_ptr:
 		error("unsuitable type", v)
 
@@ -1028,7 +1030,7 @@ def do_ValueLengthof_value(x):
 	ti = x['ti']
 	arg = do_rvalue(x['value'])
 
-	if not htype.type_is_array(arg.type):
+	if not arg.type.is_array():
 		error("expected array value", args[0]['ti'])
 		return ValueBad({'ti': ti})
 
@@ -1089,10 +1091,10 @@ def do_ValueCall(x):
 	ftype = fn.type
 
 	# pointer to function?
-	if htype.type_is_pointer(ftype):
+	if ftype.is_pointer():
 		ftype = ftype.to
 
-	if not htype.type_is_func(ftype):
+	if not ftype.is_func():
 		error("expected function or pointer to function", x)
 
 	params = ftype.params
@@ -1161,7 +1163,7 @@ def do_ValueCall(x):
 		argval = do_rvalue(a)
 
 		if not Value.isBad(argval):
-			if htype.type_is_generic(argval.type):
+			if argval.type.is_generic():
 				warning("extra argument with generic type", a['ti'])
 				argval = value_cons_default(argval)
 
@@ -1197,14 +1199,14 @@ def do_value_index(x):
 
 	left_typ = left.type
 
-	via_pointer = htype.type_is_pointer(left_typ)
+	via_pointer = left_typ.is_pointer()
 
 	array_typ = left_typ
 	if via_pointer:
 		array_typ = left_typ.to
 
 
-	if not htype.type_is_array(array_typ):
+	if not array_typ.is_array():
 		error("expected array or pointer to array", left)
 		return ValueBad(x['ti'])
 
@@ -1214,11 +1216,11 @@ def do_value_index(x):
 	if Value.isBad(index):
 		return ValueBad(x['ti'])
 
-	if not (htype.type_is_integer(index.type) or htype.type_is_number(index.type)):
+	if not (index.type.is_integer() or index.type.is_number()):
 		error("expected integer value", x['index'])
 		return ValueBad(x['ti'])
 
-	if htype.type_is_generic(index.type):
+	if index.type.is_generic():
 		index = value_cons_implicit_check(typeSysInt, index)
 
 	nv = ValueIndexArray(left, array_typ.of, index, ti=x['ti'])
@@ -1262,12 +1264,12 @@ def do_value_slice(x):
 		return ValueBad(x['ti'])
 
 	left_type = left.type
-	via_pointer = htype.type_is_pointer(left_type)
+	via_pointer = left_type.is_pointer()
 	array_type = left_type
 	if via_pointer:
 		array_type = left_type.to
 
-	if not htype.type_is_array(array_type):
+	if not array_type.is_array():
 		error("expected array or pointer to array", left)
 		return ValueBad(x['ti'])
 
@@ -1358,14 +1360,14 @@ def do_value_access(x):
 	field_id = Id(x['right'])
 
 	# доступ через переменную-указатель
-	via_pointer = htype.type_is_pointer(left.type)
+	via_pointer = left.type.is_pointer()
 
 	record_type = left.type
 	if via_pointer:
 		record_type = left.type.to
 
 	# check if is record
-	if not htype.type_is_record(record_type):
+	if not record_type.is_record():
 		error("expected record or pointer to record", x)
 		return ValueBad(x['ti'])
 
@@ -1384,7 +1386,7 @@ def do_value_access(x):
 #			error("access to private field", x['ti'])
 
 
-	if htype.type_is_bad(field.type):
+	if field.type.is_bad():
 		return ValueBad(x.ti)
 
 
@@ -1416,7 +1418,7 @@ def do_value_access(x):
 def do_value_cons(x):
 	v = do_rvalue(x['value'])
 	t = do_type(x['type'])
-	if Value.isBad(v) or htype.type_is_bad(t):
+	if Value.isBad(v) or t.is_bad():
 		return ValueBad(x['ti'])
 	return value_cons_explicit(t, v, x['ti'])
 
@@ -1437,7 +1439,7 @@ def do_value_id(x):
 
 
 	global cdef
-	if htype.type_is_incomplete(v.type):
+	if v.type.is_incomplete():
 		cdef.deps.append(v)
 		v = update_func_type(v.id.str)
 		if v == None:
@@ -1579,7 +1581,7 @@ def do_value_immediate(x, allow_ptr_to_str=False):
 
 	if not v.isImmediate():
 		if allow_ptr_to_str:
-			if htype.type_is_pointer_to_array_of_char(v.type):
+			if v.type.is_pointer_to_array_of_char():
 				return v
 		error("expected immediate value", x['ti'])
 		return ValueBad(x['ti'])
@@ -1593,7 +1595,7 @@ def do_value_immediate_string(x):
 	if Value.isBad(v):
 		return v
 
-	if not htype.type_is_string(v.type):
+	if not v.type.is_string():
 		error("expected string value", x['ti'])
 
 	return v
@@ -1687,7 +1689,7 @@ def do_stmt_if(x):
 	if Value.isBad(cond):
 		return StmtBad(x)
 
-	if not htype.type_is_bool(cond.type):
+	if not cond.type.is_bool():
 		error("expected bool value", cond)
 		return StmtBad(x)
 
@@ -1712,7 +1714,7 @@ def do_stmt_while(x):
 	if Value.isBad(cond):
 		return StmtBad(x)
 
-	if not htype.type_is_bool(cond.type):
+	if not cond.type.is_bool():
 		error("expected bool value", cond)
 		return StmtBad(x)
 
@@ -1730,7 +1732,7 @@ def do_stmt_return(x):
 
 	func_ret_type = cfunc.type.to
 
-	is_no_ret_func = htype.type_is_unit(func_ret_type)
+	is_no_ret_func = func_ret_type.is_unit()
 	ret_val_present = x['value'] != None
 
 	# если забыли вернуть значение
@@ -1769,7 +1771,7 @@ def do_stmt_var(x):
 	t = do_type(x['type'])
 	v = do_rvalue(x['init_value'])
 
-	tu = htype.type_is_undefined(t)
+	tu = t.is_undefined()
 	vu = Value.isUndefined(v)
 
 	# error: no type, no init valuetu = type_is_undefined(t)
@@ -1781,24 +1783,24 @@ def do_stmt_var(x):
 	if tu == True and vu == False:
 		# type undef, value ok
 		#type_update(nt, v.type)
-		if htype.type_is_generic(v.type):
+		if v.type.is_generic():
 			v = value_cons_default(v)
 		t = v.type
 
-	#if not htype.type_is_undefined(t):
-	#	if htype.type_is_bad(t):
+	#if not t.is_undefined():
+	#	if t.is_bad():
 	#		ctx_value_add(var_id.str, ValueBad(x['ti']))
 	#		return StmtBad(x)
 	#
-		if htype.type_is_forbidden_var(t):
+		if t.is_forbidden_var():
 			error("unsuitable type1", x['type']['ti'])
 
 	# type & init value present
-	if not htype.type_is_undefined(t) and not Value.isUndefined(v):
+	if not t.is_undefined() and not Value.isUndefined(v):
 		v = value_cons_implicit_check(t, v)
 
-	if htype.type_is_undefined(t):
-		if htype.type_is_generic(v.type):
+	if t.is_undefined():
+		if v.type.is_generic():
 			v = value_cons_default(v)
 
 		t = v.type
@@ -1853,7 +1855,7 @@ def do_stmt_let(x):
 		const_value.immediate = True
 		cp_immediate(const_value, v)
 
-		if htype.type_is_generic(v.type):
+		if v.type.is_generic():
 			# generic immediate в C печатается как #define
 			# и его надо манглить иначе возникает куча проблем
 			const_value.id.c = '__' + const_value.id.str
@@ -1895,7 +1897,7 @@ def do_stmt_incdec(x, op='add'):
 		error("expected mutable value", v)
 		return StmtBad(x)
 
-	if not htype.type_is_integer(v.type):
+	if not v.type.is_integer():
 		error("expected integer value", v)
 		return StmtBad(x)
 
@@ -1911,7 +1913,7 @@ def do_stmt_value(x):
 	if Value.isBad(v):
 		return StmtBad(x)
 
-	if not htype.type_is_unit(v.type):
+	if not v.type.is_unit():
 		if not 'dispensable' in v.type.att:
 			warning("unused result of %s expression" % x['value']['kind'], v.ti)
 
@@ -2065,7 +2067,7 @@ def def_type(x):
 
 	nt = ctx_type_get(id.str)
 
-	if not htype.type_is_undefined(nt):
+	if not nt.is_undefined():
 		error("type redefinition", x['ti'])
 		return None
 
@@ -2077,7 +2079,7 @@ def def_type(x):
 
 	ty = do_type(x['type'])
 
-	if htype.type_is_bad(ty):
+	if ty.is_bad():
 		return None
 
 	definition.original_type = ty
@@ -2113,7 +2115,7 @@ def def_type(x):
 		#	nt.pop('llvm_alias')
 		pass
 
-	if htype.type_is_record(ty):
+	if ty.is_record():
 		cmodule['records'].append(nt)
 
 	cdef = None
@@ -2147,8 +2149,8 @@ def def_const(x):
 		return DefConst(id, init_value, init_value, x['ti'])
 
 	t = do_type(x['type'])
-	if not htype.type_is_undefined(t):
-		if not htype.type_is_bad(t):
+	if not t.is_undefined():
+		if not t.is_bad():
 			init_value = value_cons_implicit_check(t, init_value)
 
 	definition.init_value = init_value
@@ -2188,7 +2190,7 @@ def def_var(x):
 	t = do_type(x['type'])
 	v = do_rvalue(x['init_value'])
 
-	tu = htype.type_is_undefined(t)
+	tu = t.is_undefined()
 	vu = Value.isUndefined(v)
 
 	# error: no type, no init valuetu = type_is_undefined(t)
@@ -2209,11 +2211,11 @@ def def_var(x):
 
 		# only for case:
 		# var arrayFromString: var s: []Char8 = "abc"
-		if htype.type_is_open_array(t):
+		if t.is_open_array():
 			length = 0
-			if htype.type_is_string(v.type):
+			if v.type.is_string():
 				length = len(v.asset)
-			elif htype.type_is_array(v.type):
+			elif v.type.is_array():
 				length = v.type.volume.asset
 			else:
 				pass
@@ -2261,12 +2263,12 @@ def def_func(x, dostmt=True):
 
 	fn.definition = definition
 
-	if htype.type_is_incomplete(fn.type):
+	if fn.type.is_incomplete():
 		fn.type = do_type_func(x['type'])
-		if htype.type_is_incomplete(fn.type):
+		if fn.type.is_incomplete():
 			return None
 
-	if htype.type_is_bad(fn.type):
+	if fn.type.is_bad():
 		return None
 
 	if func_id.str != 'main':
@@ -2312,7 +2314,7 @@ def def_func(x, dostmt=True):
 			check_block(stmt)
 
 			# check if return present
-			if not htype.type_is_unit(fn.type.to):
+			if not fn.type.to.is_unit():
 				stmts = stmt.stmts
 				if len(stmts) == 0:
 					warning("expected return operator at end", stmt['ti'])
@@ -2502,7 +2504,7 @@ def do_directive(x):
 		if Value.isBad(c):
 			return None
 
-		if not htype.type_is_bool(c['type']):
+		if not Type. is_bool(c['type']):
 			error("expected bool value", c)
 			return None
 
@@ -2520,7 +2522,7 @@ def do_directive(x):
 		if Value.isBad(c):
 			return None
 
-		if not htype.type_is_bool(c['type']):
+		if not Type. is_bool(c['type']):
 			error("expected bool value", c)
 			return None
 
@@ -2927,7 +2929,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 		spec = specs[i]
 
 		if expected_pointers:
-			if not htype.type_is_pointer(arg_type):
+			if not arg_type.is_pointer():
 				warning("expected pointer", arg.ti)
 				i += 1
 				continue
@@ -2936,37 +2938,37 @@ def extra_args_check(specs, extra_args, expected_pointers):
 
 
 		if spec in ['i', 'd']:
-			if htype.type_is_integer(arg_type):
-				if not htype.type_is_signed(arg_type):
+			if arg_type.is_integer():
+				if not arg_type.is_signed():
 					warning("expected signed integer value", arg.ti)
 			else:
 				warning("expected integer value2", arg.ti)
 
 		elif spec == 'x':
-			if not htype.type_is_integer(arg_type):
+			if not arg_type.is_integer():
 				warning("expected integer value3", arg.ti)
 
 		elif spec == 'u':
-			if htype.type_is_integer(arg_type):
-				if htype.type_is_signed(arg_type):
+			if arg_type.is_integer():
+				if arg_type.is_signed():
 					warning("expected unsigned integer value", arg.ti)
 			else:
 				warning("expected integer value4", arg.ti)
 
 		elif spec == 's':
-			if not htype.type_is_pointer_to_array_of_char(arg_type):
+			if not arg_type.is_pointer_to_array_of_char():
 				warning("expected pointer to string", arg.ti)
 
 		elif spec == 'f':
-			if not htype.type_is_float(arg_type):
+			if not arg_type.is_float():
 				warning("expected float value", arg.ti)
 
 		elif spec == 'c':
-			if not htype.type_is_char(arg_type):
+			if not arg_type.is_char():
 				warning("expected char value", arg.ti)
 
 		elif spec == 'p':
-			if not htype.type_is_pointer(arg_type):
+			if not arg_type.is_pointer():
 				warning("expected pointer value", arg.ti)
 
 		i += 1

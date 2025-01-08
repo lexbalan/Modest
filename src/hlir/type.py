@@ -6,6 +6,7 @@ import settings
 from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up, align_to
 
 from .entity import Entity
+from hlir.value import Value
 
 CONS_OP = ('cons',)
 EQ_OPS = ('eq', 'ne')
@@ -48,6 +49,351 @@ class Type(Entity):
 
 	def supports(self, operation):
 		return operation in self.ops
+
+
+	def is_bad(self):
+		return isinstance(self, TypeBad)
+
+
+	def is_undefined(self):
+		return isinstance(self, TypeUndefined)
+
+
+	def is_defined(self):
+		return not is_undefined(self)
+
+
+	def is_incomplete(self):
+		return 'incomplete' in self.att
+
+
+	def is_unit(self):
+		return isinstance(self, TypeUnit)
+
+
+	def is_bool(self):
+		return isinstance(self, TypeBool)
+
+
+	def is_string(self):
+		return isinstance(self, TypeString)
+
+
+	def is_number(self):
+		return isinstance(self, TypeNumber)
+
+
+	def is_record(self):
+		return isinstance(self, TypeRecord)
+
+
+	def is_array(self):
+		return isinstance(self, TypeArray)
+
+
+	def is_word(self):
+		return isinstance(self, TypeWord)
+
+
+	def is_integer(self):
+		return isinstance(self, TypeInt)
+
+
+	def is_float(self):
+		return isinstance(self, TypeFloat)
+
+
+	def is_char(self):
+		return isinstance(self, TypeChar)
+
+
+	# numeric type supports arithmetical operations
+	def is_numeric(self):
+		return isinstance(self, TypeInt) or isinstance(self, TypeNumber) or isinstance(self, TypeFloat)
+
+
+	def is_func(self):
+		return isinstance(self, TypeFunc)
+
+
+
+
+	# VLA - variable langth array
+	def is_vla(self):
+
+		if not self.is_array():
+			return False
+
+		if Value.isUndefined(self.volume):
+			return False
+
+		return not self.volume.isImmediate()
+
+
+	def is_composite(self):
+		return self.is_array() or self.is_record()
+
+
+	def is_pointer(self):
+		return isinstance(self, TypePointer)
+
+
+	def is_va_list(self):
+		return isinstance(self, TypeVaList)
+
+
+	def is_generic(self):
+		return self.generic
+
+
+	def is_generic_char(self):
+		return self.is_char() and self.is_generic()
+
+
+	def is_generic_record(self):
+		return self.is_record() and self.is_generic()
+
+
+	def is_generic_array(self):
+		return self.is_array() and self.is_generic()
+
+
+	def is_generic_array_of_char(self):
+		if self.is_generic_array():
+			if t.of != None: # in case of empty array field #of can be None
+				return self.of.is_char()
+
+		return False
+
+
+
+	def is_closed_array(self):
+		if self.is_array():
+			return self.volume != None
+		return False
+
+
+	def is_open_array(self):
+		if self.is_array():
+			return Value.isUndefined(self.volume)
+		return False
+
+
+	def is_array_of_char(self):
+		if self.is_array():
+			return self.of.is_char()
+		return False
+
+
+	def is_generic_pointer(self):
+		if self.is_generic():
+			return self.is_pointer()
+		return False
+
+
+	def is_free_pointer(self):
+		if self.is_pointer():
+			return self.to.is_unit()
+		return False
+
+
+	def is_pointer_to_record(self):
+		if self.is_pointer():
+			return self.to.is_record()
+		return False
+
+
+	def is_pointer_to_array(self):
+		if self.is_pointer():
+			return self.to.is_array()
+		return False
+
+
+	def is_pointer_to_array_of_char(self):
+		if self.is_pointer():
+			return self.to.is_array_of_char()
+		return False
+
+
+	def is_pointer_to_func(self):
+		if self.is_pointer():
+			return self.to.is_func()
+		return False
+
+
+	def is_pointer_to_open_array(self):
+		if self.is_pointer():
+			return self.to.is_open_array()
+		return False
+
+
+	def is_pointer_to_closed_array(self):
+		if self.is_pointer():
+			return self.to.is_closed_array()
+		return False
+
+
+	def is_signed(self):
+		return self.signed == True
+
+
+	def is_unsigned(self):
+		return self.signed == False
+
+
+
+	@staticmethod
+	def eq_integer(a, b, opt):
+		return (a.width == b.width) and (a.signed == b.signed)
+
+	@staticmethod
+	def eq_char(a, b, opt):
+		return a.width == b.width
+
+	@staticmethod
+	def eq_word(a, b, opt):
+		return a.width == b.width
+
+	@staticmethod
+	def eq_pointer(a, b, opt):
+		return Type.eq(a.to, b.to, opt)
+
+	@staticmethod
+	def eq_array(a, b, opt):
+		if Value.isUndefined(a.volume) or Value.isUndefined(b.volume):
+			if Value.isUndefined(a.volume) and Value.isUndefined(b.volume):
+				return Type.eq(a.of, b.of, opt)
+			return False
+
+		# a.volume & b.volume defined
+
+		if a.volume.isImmediate() and b.volume.isImmediate():
+			if a.volume.asset != b.volume.asset:
+				return False
+
+		if a.of == None and b.of == None:
+			return True
+
+		return Type.eq(a.of, b.of, opt)
+
+	@staticmethod
+	def eq_func(a, b, opt):
+		if not Type.eq(a.to, b.to, opt):
+			return False
+		return Type.eq_fields(a.params, b.params, opt)
+
+	@staticmethod
+	def eq_fields(a, b, opt):
+		if len(a) != len(b):
+			return False
+
+		for ax, bx in zip(a, b):
+			if ax.id.str != bx.id.str:
+				return False
+
+			# (infinity recursion protection)
+			if id(ax.type) == id(bx.type):
+				return True
+
+			if not Type.eq(ax.type, bx.type, opt):
+				return False
+
+		return True
+
+	@staticmethod
+	def eq_record(a, b, opt):
+		if len(a.fields) != len(b.fields):
+			return False
+		return Type.eq_fields(a.fields, b.fields, opt)
+
+	@staticmethod
+	def eq_enum(a, b, opt):
+		return id(a) == id(b)
+
+	@staticmethod
+	def eq_float(a, b, opt):
+		return a.width == b.width
+
+
+	# TODO: REMOVE IT!
+	@staticmethod
+	def eq_undefined(a, b, opt):
+		return id(a) == id(b)
+
+
+	@staticmethod
+	def eq(a, b, opt=[]):
+		if id(a) == id(b):
+			return True
+
+		if a.is_bad() or b.is_bad():
+			return True
+
+		if a.__class__.__name__ != b.__class__.__name__:
+			return False
+
+		# проверять аттрибуты (volatile, const)
+		# использую для C чтобы можно было более строго проверить типы
+		# напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
+		if 'att_checking' in opt:
+			if a.att != b.att:
+				return False
+
+		# дженерик и не дженерик типы не равны
+		# это важно для конструирования записей из джененрков
+		# (в противном случае конструирование будет скипнуто тк они типа уже равны)
+		if a.is_generic() != b.is_generic():
+			return False
+
+		# normal checking
+		if isinstance(a, TypeInt): return Type.eq_integer(a, b, opt)
+		elif isinstance(a, TypeBool): return True
+		elif isinstance(a, TypeNumber): return True
+		elif isinstance(a, TypeFunc): return Type.eq_func(a, b, opt)
+		elif isinstance(a, TypeRecord): return Type.eq_record(a, b, opt)
+		elif isinstance(a, TypeArray): return Type.eq_array(a, b, opt)
+		elif isinstance(a, TypePointer): return Type.eq_pointer(a, b, opt)
+		elif isinstance(a, TypeChar): return Type.eq_char(a, b, opt)
+		elif isinstance(a, TypeWord): return Type.eq_word(a, b, opt)
+		elif isinstance(a, TypeFloat): return Type.eq_float(a, b, opt)
+		elif isinstance(a, TypeString): return True
+		elif isinstance(a, TypeUnit): return True
+		elif isinstance(a, TypeUndeifned): return Type.eq_undefined(a, b, opt)
+		elif isinstance(a, TypeVaList): return True
+		#elif k == 'enum': return eq_enum(a, b, opt)
+		assert(False)
+		return False
+
+
+
+	# cannot create variable with type
+	def is_forbidden_var(self, zero_array_forbidden=True):
+		t = self
+		if t.is_undefined() or t.is_unit() or t.is_func():
+			return True
+
+		if t.is_array():
+			# [_]<Forbidden>
+			if t.of.is_forbidden_var():
+				return True
+
+			# []Int
+			if t.is_open_array():
+				return True
+
+			# [0]Int
+			from trans import is_unsafe_mode
+			if zero_array_forbidden or not is_unsafe_mode():
+				if t.volume.isImmediate():
+					if t.volume.asset == 0:
+						return True
+
+			return t.of.is_forbidden_var()
+
+		return False
+
+
+
 
 
 

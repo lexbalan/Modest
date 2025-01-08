@@ -125,7 +125,7 @@ def print_type_array(t):
 
 
 def print_type_pointer(t):
-	if htype.type_is_free_pointer(t):
+	if Type.is_free_pointer(t):
 		out("Ptr")
 	else:
 		out("*"); print_type(t.to)
@@ -214,12 +214,12 @@ def print_type(t):
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
-	if htype.type_is_integer(t): print_TypeInt(t)
-	elif htype.type_is_func(t): print_type_func(t)
-	elif htype.type_is_array(t): print_type_array(t)
-	elif htype.type_is_record(t): print_type_record(t)
-	elif htype.type_is_pointer(t): print_type_pointer(t)
-	#elif htype.type_is_enum(t): print_type_enum(t)
+	if Type.is_integer(t): print_TypeInt(t)
+	elif Type.is_func(t): print_type_func(t)
+	elif Type.is_array(t): print_type_array(t)
+	elif Type.is_record(t): print_type_record(t)
+	elif Type.is_pointer(t): print_type_pointer(t)
+	#elif Type.is_enum(t): print_type_enum(t)
 	elif k == 'undefined': pass
 	else: out("<type:" + str(t) + ">")
 
@@ -333,14 +333,14 @@ def print_value_cons(v, ctx):
 		return
 
 	# NO need cast ptr to *void
-	if htype.type_is_pointer(from_type):
-		if htype.type_is_free_pointer(to_type):
+	if Type.is_pointer(from_type):
+		if Type.is_free_pointer(to_type):
 			print_value(v.value)
 			return
 
 	# NO need cast *void to ptr
-	if htype.type_is_free_pointer(from_type):
-		if htype.type_is_pointer(to_type):
+	if Type.is_free_pointer(from_type):
+		if Type.is_pointer(to_type):
 			print_value(v.value)
 			return
 
@@ -364,7 +364,7 @@ def is_zero_tail(values, i, n):
 def print_value_array(v, ctx):
 
 	#?
-	if htype.type_is_array_of_char(v.type):
+	if Type.is_array_of_char(v.type):
 		print_value_str(v, ctx=[])
 		return
 
@@ -552,8 +552,8 @@ def print_value_ptr(x, ctx):
 # print Zero literal
 def print_ValueZero(x, ctx):
 	t = x.type
-	if htype.type_is_array(t): out("[]")
-	elif htype.type_is_record(t): out("{}")
+	if Type.is_array(t): out("[]")
+	elif Type.is_record(t): out("{}")
 	else: out("0")
 
 
@@ -577,17 +577,17 @@ def print_value_string(x, ctx):
 
 def print_value_literal(x, ctx):
 	t = x.type
-	if htype.type_is_number(t): print_value_integer(x, ctx)
-	elif htype.type_is_integer(t): print_value_integer(x, ctx)
-	elif htype.type_is_float(t): print_value_float(x, ctx)
-	elif htype.type_is_string(t): print_value_string(x, ctx)
-	elif htype.type_is_record(t): print_value_record(x, ctx)
-	elif htype.type_is_array(t): print_value_array(x, ctx)
-	elif htype.type_is_pointer(t): print_value_ptr(x, ctx)
-	elif htype.type_is_bool(t): print_value_bool_create(x, ctx)
-	elif htype.type_is_char(t): print_value_char_create(x, ctx)
-	elif htype.type_is_enum(t): print_value_integer(x, ctx)
-	#elif htype.type_is_byte(t): print_value_integer(x, ctx)
+	if Type.is_number(t): print_value_integer(x, ctx)
+	elif Type.is_integer(t): print_value_integer(x, ctx)
+	elif Type.is_float(t): print_value_float(x, ctx)
+	elif Type.is_string(t): print_value_string(x, ctx)
+	elif Type.is_record(t): print_value_record(x, ctx)
+	elif Type.is_array(t): print_value_array(x, ctx)
+	elif Type.is_pointer(t): print_value_ptr(x, ctx)
+	elif Type.is_bool(t): print_value_bool_create(x, ctx)
+	elif Type.is_char(t): print_value_char_create(x, ctx)
+	elif Type.is_enum(t): print_value_integer(x, ctx)
+	#elif Type.is_byte(t): print_value_integer(x, ctx)
 	return
 
 

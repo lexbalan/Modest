@@ -6,7 +6,7 @@ from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
 from .value import Value, ValueBad, ValueLiteral, ValueCons, ValueZero, ValueBin
-from hlir.type import TypeArray
+from hlir.type import Type, TypeArray
 
 # TODO: переделай здесь все - тут все плохо...
 # получает на вход список элементов
@@ -32,7 +32,7 @@ def value_array_create(items, ti=None):
 	items_type = items[0].type
 	for item in items:
 		items_type = select_common_type(items_type, item.type)
-		if htype.type_is_bad(items_type):
+		if items_type.is_bad():
 			error("value with unsuitable type", item['ti'])
 			return ValueBad({'ti': ti})
 
@@ -65,10 +65,10 @@ def value_array_create_from_string(t, v, method, ti=None):
 def array_can(to, from_type, method, ti):
 
 	# String -> []CharX
-	if htype.type_is_string(from_type):
-		return htype.type_is_char(to.of) or htype.type_is_word(to.of)
+	if from_type.is_string():
+		return to.of.is_char() or to.of.is_word()
 
-	if not htype.type_is_array(from_type):
+	if not from_type.is_array():
 		return False
 
 
@@ -81,10 +81,10 @@ def array_can(to, from_type, method, ti):
 	if ct == None:
 		return False
 
-	if not htype.type_eq(to.of, ct):
+	if not Type.eq(to.of, ct):
 		return False
 
-	if htype.type_is_generic(from_type):
+	if from_type.is_generic():
 		# GenericArray -> Array
 		if Value.isUndefined(to.volume):
 			return True
@@ -115,9 +115,9 @@ def value_array_cons(t, v, method, ti):
 		# in this case we take volume of value array
 		#info("undefined volume", t['ti'])
 		volume = -1
-		if htype.type_is_array(v.type):
+		if Type.is_array(v.type):
 			volume = v.type.volume
-		elif htype.type_is_string(v.type):
+		elif Type.is_string(v.type):
 			srtlen = v.type.length
 			volume = value_integer_create(srtlen)
 		else:
@@ -133,7 +133,7 @@ def value_array_cons(t, v, method, ti):
 	if v.immediate:
 		nv.items = 1
 
-	if htype.type_is_string(v.type):
+	if Type.is_string(v.type):
 		#info("value_array_create_from_string", ti)
 		char_type = t.of
 		items = utf32_chars_to_utfx_chars(v.asset, char_type, ti)

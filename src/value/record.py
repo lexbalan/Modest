@@ -43,10 +43,10 @@ def value_record_create(initializers=[], ti=None):
 
 
 def record_can(to, from_type, method, ti):
-	if not type.type_is_record(from_type):
+	if not from_type.is_record():
 		return False
 
-	if type.type_is_generic(from_type):
+	if from_type.is_generic():
 		return True
 
 	if method == 'implicit':
@@ -58,7 +58,7 @@ def record_can(to, from_type, method, ti):
 		field2 = record_field_get(to, field.id.str)
 		if field2 == None:
 			return False  # if no field with that name
-		if not type.type_eq(field.type, field2.type):
+		if not Type.eq(field.type, field2.type):
 			return False  # if field type not equal
 
 	return True # Record to Record

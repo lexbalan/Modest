@@ -1,7 +1,7 @@
 
 from error import error
 from .value import ValueCons
-from type import type_is_number
+#from type import type_is_number
 
 def number_can(to, from_type, method, ti):
 	return type_is_number(from_type)

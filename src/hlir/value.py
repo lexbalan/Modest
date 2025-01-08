@@ -3,7 +3,7 @@
 #######################################################################
 
 from .entity import Entity
-from .type import Type
+
 
 class Value(Entity):
 	def __init__(self, type, ti=None):
@@ -43,12 +43,10 @@ class Value(Entity):
 		assert(isinstance(r, Value))
 		assert(op in ['eq', 'ne'])
 
-		from type import type_is_array, type_is_record
-
-		if type_is_array(l.type):
+		if l.type.is_array():
 			from value.array import value_array_eq
 			return value_array_eq(l, r, op, ti)
-		elif type_is_record(l.type):
+		elif l.type.is_record():
 			from value.record import value_record_eq
 			return value_record_eq(l, r, op, ti)
 
@@ -76,15 +74,13 @@ class Value(Entity):
 		if not self.isImmediate():
 			return False
 
-		from type import type_is_array, type_is_record
-
-		if type_is_array(self.type):
+		if self.type.is_array():
 			for item in self.items:
 				if not item.isZero():
 					return False
 			return True
 
-		if type_is_record(self.type):
+		if self.type.is_record():
 			for initializer in self.items:
 				if not initializer.value.isZero():
 					return False
@@ -155,8 +151,7 @@ class ValueLiteral(Value):
 class ValueZero(Value):
 	def __init__(self, type, ti=None):
 		super().__init__(type=type, ti=ti)
-		from type import type_is_composite
-		if type_is_composite(type):
+		if type.is_composite():
 			self.items = []
 		else:
 			self.asset = 0
@@ -262,6 +257,7 @@ class ValueAccessRecord(Value):
 class ValueCons(Value):
 	def __init__(self, type, value, method, ti=None):
 		assert(method in ['implicit', 'explicit', 'unsafe'])
+		from .type import Type
 		assert(isinstance(type, Type))
 		#assert(value['isa'] == 'value')
 		super().__init__(type=type, ti=ti)

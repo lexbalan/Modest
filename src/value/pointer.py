@@ -1,41 +1,41 @@
 
 from error import info, warning, error
 import type as type
+from hlir.type import Type
 from .value import ValueCons, value_cons_immediate
 from .char import utf32_chars_to_utfx_chars
 
 
-
 def pointer_can(to, from_type, method, ti):
 	# implicit region
-	assert(type.type_is_pointer(to))
+	assert(to.is_pointer())
 
 	if method == 'unsafe':
-		if type.type_is_pointer(from_type) or type.type_is_integer(from_type) or type.type_is_number(from_type):
+		if from_type.is_pointer() or from_type.is_integer() or from_type.is_number():
 			# UNSAFE: cons ANY pointer from ANY pointer or integer
 			return True
 
 	# String -> *[]CharX
-	if type.type_is_string(from_type):
-		return type.type_is_pointer_to_array_of_char(to)
+	if from_type.is_string():
+		return to.is_pointer_to_array_of_char()
 
-	if type.type_is_pointer(from_type):
+	if from_type.is_pointer():
 		# implicit cons pointer from another pointer
-		if type.type_is_generic(from_type):
+		if from_type.is_generic():
 			return True  # cons *X from Nil
 
-		if type.type_is_free_pointer(to):
+		if to.is_free_pointer():
 			return True  # cons FreePointer from *X
 
 		# cons *[]X from *[n]X +
-		if type.type_is_closed_array(from_type.to) and type.type_is_open_array(to.to):
-			return type.type_eq(from_type.to.of, to.to.of)
+		if from_type.to.is_closed_array() and to.to.is_open_array():
+			return Type.eq(from_type.to.of, to.to.of)
 
 
 	if method == 'implicit':
 		return False
 
-	if type.type_is_free_pointer(from_type):
+	if from_type.is_free_pointer():
 		return True  # cons *X from FreePointer
 
 	if method == 'explicit':
@@ -43,7 +43,7 @@ def pointer_can(to, from_type, method, ti):
 
 	# unsafe region
 
-	if type.type_is_pointer(from_type):
+	if from_type.is_pointer():
 		return True  # Ptr -> Ptr
 
 	return False
@@ -52,7 +52,7 @@ def pointer_can(to, from_type, method, ti):
 
 def value_pointer_cons(t, v, method, ti):
 	if v.isImmediate():
-		if type.type_is_string(v.type):
+		if v.type.is_string():
 			s_imm = utf32_chars_to_utfx_chars(v.asset, t.to.of, ti)
 			nv = ValueCons(t, v, method, ti=ti)
 			nv.asset = s_imm

@@ -13,17 +13,17 @@ def _value_word_cons_immediate(t, v, method, ti):
 
 
 def word_can(to, from_type, method, ti):
-	if type.type_is_number(from_type):
+	if from_type.is_number():
 		return from_type.width <= to.width
 
 	if method == 'implicit':
 		return False
 
-	c = type.type_is_number(from_type)
-	c0 = type.type_is_word(from_type)
-	c1 = type.type_is_integer(from_type)
-	c2 = type.type_is_char(from_type)
-	c3 = type.type_is_bool(from_type)
+	c = from_type.is_number()
+	c0 = from_type.is_word()
+	c1 = from_type.is_integer()
+	c2 = from_type.is_char()
+	c3 = from_type.is_bool()
 
 	if c or c0 or c1 or c2 or c3:
 		if method == 'unsafe':

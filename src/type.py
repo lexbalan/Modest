@@ -15,348 +15,6 @@ def type_number_for(num, signed=False, ti=None):
 
 
 
-def type_eq_integer(a, b, opt):
-	return (a.width == b.width) and (a.signed == b.signed)
-
-
-def type_eq_char(a, b, opt):
-	return a.width == b.width
-
-
-def type_eq_word(a, b, opt):
-	return a.width == b.width
-
-
-def type_eq_pointer(a, b, opt):
-	return type_eq(a.to, b.to, opt)
-
-
-def type_eq_array(a, b, opt):
-	if Value.isUndefined(a.volume) or Value.isUndefined(b.volume):
-		if Value.isUndefined(a.volume) and Value.isUndefined(b.volume):
-			return type_eq(a.of, b.of, opt)
-		return False
-
-	# a.volume & b.volume defined
-
-	if a.volume.isImmediate() and b.volume.isImmediate():
-		if a.volume.asset != b.volume.asset:
-			return False
-
-	if a.of == None and b.of == None:
-		return True
-
-	return type_eq(a.of, b.of, opt)
-
-
-def type_eq_func(a, b, opt):
-	if not type_eq(a.to, b.to, opt):
-		return False
-	return type_eq_fields(a.params, b.params, opt)
-
-
-def type_eq_fields(a, b, opt):
-	if len(a) != len(b):
-		return False
-
-	for ax, bx in zip(a, b):
-		if ax.id.str != bx.id.str:
-			return False
-
-		# (infinity recursion protection)
-		if id(ax.type) == id(bx.type):
-			return True
-
-		if not type_eq(ax.type, bx.type, opt):
-			return False
-
-	return True
-
-
-def type_eq_record(a, b, opt):
-	if len(a.fields) != len(b.fields):
-		return False
-	return type_eq_fields(a.fields, b.fields, opt)
-
-
-def type_eq_enum(a, b, opt):
-	return id(a) == id(b)
-
-
-def type_eq_float(a, b, opt):
-	return a.width == b.width
-
-
-# TODO: REMOVE IT!
-def type_eq_undefined(a, b, opt):
-	return id(a) == id(b)
-
-
-def type_eq(a, b, opt=[]):
-	if id(a) == id(b):
-		return True
-
-	if type_is_bad(a) or type_is_bad(b):
-		return True
-
-	if a.__class__.__name__ != b.__class__.__name__:
-		return False
-
-	# проверять аттрибуты (volatile, const)
-	# использую для C чтобы можно было более строго проверить типы
-	# напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
-	if 'att_checking' in opt:
-		if a.att != b.att:
-			return False
-
-	# дженерик и не дженерик типы не равны
-	# это важно для конструирования записей из джененрков
-	# (в противном случае конструирование будет скипнуто тк они типа уже равны)
-	if type_is_generic(a) != type_is_generic(b):
-		return False
-
-	# normal checking
-	if isinstance(a, TypeInt): return type_eq_integer(a, b, opt)
-	elif isinstance(a, TypeBool): return True
-	elif isinstance(a, TypeNumber): return True
-	elif isinstance(a, TypeFunc): return type_eq_func(a, b, opt)
-	elif isinstance(a, TypeRecord): return type_eq_record(a, b, opt)
-	elif isinstance(a, TypeArray): return type_eq_array(a, b, opt)
-	elif isinstance(a, TypePointer): return type_eq_pointer(a, b, opt)
-	elif isinstance(a, TypeChar): return type_eq_char(a, b, opt)
-	elif isinstance(a, TypeWord): return type_eq_word(a, b, opt)
-	elif isinstance(a, TypeFloat): return type_eq_float(a, b, opt)
-	elif isinstance(a, TypeString): return True
-	elif isinstance(a, TypeUnit): return True
-	elif isinstance(a, TypeUndeifned): return type_eq_undefined(a, b, opt)
-	elif isinstance(a, TypeVaList): return True
-	#elif k == 'enum': return type_eq_enum(a, b, opt)
-	assert(False)
-	return False
-
-
-
-def type_is_bad(t):
-	return isinstance(t, TypeBad)
-
-
-def type_is_undefined(t):
-	return isinstance(t, TypeUndefined)
-
-
-def type_is_defined(t):
-	return not type_is_undefined(t)
-
-
-def type_is_incomplete(t):
-	return 'incomplete' in t.att
-
-
-def type_is_unit(t):
-	return isinstance(t, TypeUnit)
-
-
-def type_is_bool(t):
-	return isinstance(t, TypeBool)
-
-
-def type_is_string(t):
-	return isinstance(t, TypeString)
-
-
-def type_is_number(t):
-	return isinstance(t, TypeNumber)
-
-
-def type_is_record(t):
-	return isinstance(t, TypeRecord)
-
-
-def type_is_array(t):
-	return isinstance(t, TypeArray)
-
-
-def type_is_word(t):
-	return isinstance(t, TypeWord)
-
-
-def type_is_integer(t):
-	return isinstance(t, TypeInt)
-
-
-def type_is_float(t):
-	return isinstance(t, TypeFloat)
-
-
-def type_is_char(t):
-	return isinstance(t, TypeChar)
-
-
-# numeric type supports arithmetical operations
-def type_is_numeric(t):
-	return isinstance(t, TypeInt) or isinstance(t, TypeNumber) or isinstance(t, TypeFloat)
-
-
-def type_is_func(t):
-	return isinstance(t, TypeFunc)
-
-
-
-
-# VLA - variable langth array
-def type_is_vla(t):
-	if not type_is_array(t):
-		return False
-
-	if Value.isUndefined(t.volume):
-		return False
-
-	return not t.volume.isImmediate()
-
-
-def type_is_composite(t):
-	return type_is_array(t) or type_is_record(t)
-
-
-def type_is_pointer(t):
-	return isinstance(t, TypePointer)
-
-
-def type_is_va_list(t):
-	return isinstance(t, TypeVaList)
-
-
-def type_is_generic(t):
-	return t.generic
-
-
-def type_is_generic_char(t):
-	return type_is_char(t) and type_is_generic(t)
-
-
-def type_is_generic_record(t):
-	return type_is_record(t) and type_is_generic(t)
-
-
-def type_is_generic_array(t):
-	return type_is_array(t) and type_is_generic(t)
-
-
-def type_is_generic_array_of_char(t):
-	if type_is_generic_array(t):
-		if t.of != None: # in case of empty array field #of can be None
-			return type_is_char(t.of)
-
-	return False
-
-
-
-def type_is_closed_array(t):
-	if type_is_array(t):
-		return t.volume != None
-	return False
-
-
-def type_is_open_array(t):
-	if type_is_array(t):
-		return Value.isUndefined(t.volume)
-	return False
-
-
-def type_is_array_of_char(t):
-	if type_is_array(t):
-		return type_is_char(t.of)
-	return False
-
-
-def type_is_generic_pointer(t):
-	if type_is_generic(t):
-		return type_is_pointer(t)
-	return False
-
-
-def type_is_free_pointer(t):
-	if type_is_pointer(t):
-		return type_is_unit(t.to)
-	return False
-
-
-def type_is_pointer_to_record(t):
-	if type_is_pointer(t):
-		return type_is_record(t.to)
-	return False
-
-
-def type_is_pointer_to_array(t):
-	if type_is_pointer(t):
-		return type_is_array(t.to)
-	return False
-
-
-def type_is_pointer_to_array_of_char(t):
-	if type_is_pointer(t):
-		return type_is_array_of_char(t.to)
-	return False
-
-
-def type_is_pointer_to_func(t):
-	if type_is_pointer(t):
-		return type_is_func(t.to)
-	return False
-
-
-def type_is_pointer_to_open_array(t):
-	if type_is_pointer(t):
-		return type_is_open_array(t.to)
-	return False
-
-
-def type_is_pointer_to_closed_array(t):
-	if type_is_pointer(t):
-		return type_is_closed_array(t.to)
-	return False
-
-
-def type_is_signed(t):
-	return t.signed == True
-
-
-def type_is_unsigned(t):
-	return t.signed == False
-
-
-
-
-
-
-
-# cannot create variable with type
-def type_is_forbidden_var(t, zero_array_forbidden=True):
-	if type_is_undefined(t) or type_is_unit(t) or type_is_func(t):
-		return True
-
-	if type_is_array(t):
-		# [_]<Forbidden>
-		if type_is_forbidden_var(t.of):
-			return True
-
-		# []Int
-		if type_is_open_array(t):
-			return True
-
-		# [0]Int
-		from trans import is_unsafe_mode
-		if zero_array_forbidden or not is_unsafe_mode():
-			if t.volume.isImmediate():
-				if t.volume.asset == 0:
-					return True
-
-		return type_is_forbidden_var(t.of)
-
-	return False
-
-
-
 # ищем поле с таким id в типе record
 def record_field_get(t, id):
 	return get_item_by_id(t.fields, id)
@@ -375,7 +33,7 @@ def print_list_by(lst, method):
 
 
 def type_print_record(t, print_aka=True):
-	if type_is_generic_record(t):
+	if t.is_generic_record():
 		print("Record{...}", end='')
 		return
 
@@ -412,7 +70,7 @@ def type_print_array(t, print_aka=True):
 	array_size = t.volume
 
 	if not Value.isUndefined(array_size):
-		if type_is_vla(t):
+		if t.is_vla():
 			print("<VAR>", end='')
 		else:
 			sz = array_size.asset
@@ -453,45 +111,45 @@ def type_print(t, print_aka=True):
 		#print(" (%s is alias of %s)" % (id1, id2), end='')
 
 
-	if type_is_record(t):
+	if t.is_record():
 		type_print_record(t, print_aka)
 
-	elif type_is_bool(t):
+	elif t.is_bool():
 		print("Bool", end='')
 
-	elif type_is_char(t):
+	elif t.is_char():
 		print(t.id.str, end='')
 
-#	elif type_is_enum(t):
+#	elif t.is_enum():
 #		if t.id != None:
 #			print(t.id, end='')
 #		print("enum_%s" % str(id(t)), end='')
 
-	elif type_is_pointer(t):
+	elif tis_pointer():
 		print("*", end=''); type_print(t.to)
 
-	elif type_is_array(t):
+	elif t.is_array():
 		type_print_array(t, print_aka)
 
-	elif type_is_func(t):
+	elif t.is_func():
 		type_print_func(t, print_aka)
 
-	elif type_is_word(t):
+	elif t.is_word():
 		print(t.id.str, end='')
 
-	elif type_is_integer(t):
+	elif t.is_integer():
 		print(t.id.str, end='')
 
-	elif type_is_float(t):
+	elif t.is_float():
 		print(t.id.str, end='')
 
-	elif type_is_string(t):
+	elif t.is_string():
 		print("String", end='')
 
-	elif type_is_undefined(t):
+	elif t.is_undefined():
 		print('undefined', end='')
 
-	elif type_is_unit(t):
+	elif t.is_unit():
 		print('Unit', end='')
 
 	else:
@@ -531,18 +189,18 @@ def select_common_record_type(a, b):
 # CAN RETURN NONE!
 def select_common_type(a, b):
 
-	if type_eq(a, b):
+	if Type.eq(a, b):
 		return a
 
 	if a.__class__.__name__ == b.__class__.__name__:
-		if type_is_generic(a) and type_is_generic(b):
-			if type_is_record(a):
+		if a.is_generic() and b.is_generic():
+			if a.is_record():
 				return select_common_record_type(a, b)
-			elif type_is_array(a):
+			elif a.is_array():
 				# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
-				if type_is_generic(a.of):
+				if a.of.is_generic():
 					return b
-				if type_is_generic(b.of):
+				if b.of.is_generic():
 					return a
 
 				# not implemented!
@@ -554,18 +212,18 @@ def select_common_type(a, b):
 				else:
 					return b
 
-		elif type_is_generic(a) or type_is_generic(b):
-			if type_is_string(a):
-				if type_is_string(b):
+		elif a.is_generic() or b.is_generic():
+			if a.is_string():
+				if b.is_string():
 					if a.char_width > b.char_width:
 						return a
 					else:
 						return b
 
-			if type_is_generic(a):
+			if a.is_generic():
 				return b
 
-			if type_is_generic(b):
+			if b.is_generic():
 				return a
 
 		else:
@@ -577,61 +235,61 @@ def select_common_type(a, b):
 		# но есть и исключения
 
 		# c == "A"
-		if type_is_char(a):
-			if type_is_string(b):
+		if a.is_char():
+			if b.is_string():
 				return a
 
 		# "A" == c
-		if type_is_char(b):
-			if type_is_string(a):
+		if b.is_char():
+			if a.is_string():
 				return b
 
 
-		if type_is_word(a):
-			if type_is_integer(b) and b.generic:
+		if a.is_word():
+			if b.is_integer() and b.generic:
 				return a
 
 
-		if type_is_word(b):
-			if type_is_integer(a) and a.generic:
+		if b.is_word():
+			if a.is_integer() and a.generic:
 				return b
 
 		# array && string | string && array
-		if type_is_array(a):
-			if type_is_string(b):
+		if a.is_array():
+			if b.is_string():
 				return a
 
-		if type_is_array(b):
-			if type_is_string(a):
+		if b.is_array():
+			if a.is_string():
 				return b
 
 
-		if type_is_unit(a):
+		if a.is_unit():
 			return b
 
-		if type_is_unit(b):
+		if b.is_unit():
 			return a
 
-		if type_is_bad(a):
+		if a.is_bad():
 			return b
 
-		if type_is_bad(b):
+		if b.is_bad():
 			return a
 
-		if type_is_float(a):
-			if type_is_integer(b):
+		if a.is_float():
+			if b.is_integer():
 				return a
 
-		if type_is_float(b):
-			if type_is_integer(a):
+		if b.is_float():
+			if a.is_integer():
 				return b
 
-		if type_is_number(a):
-			if type_is_integer(b) or type_is_word(b) or type_is_float(b):
+		if a.is_number():
+			if b.is_integer() or b.is_word() or b.is_float():
 				return b
 
-		if type_is_integer(a) or type_is_word(a) or type_is_float(a):
-			if type_is_number(b):
+		if a.is_integer() or a.is_word() or a.is_float():
+			if b.is_number():
 				return a
 
 	print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))
