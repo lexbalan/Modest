@@ -6,7 +6,7 @@ from error import info, warning, error, fatal
 from hlir.hlir import *
 import type as htype
 from type import type_print
-from value.value import ValueZero
+from hlir.value import ValueZero
 from util import align_bits_up
 from pprint import pprint
 import settings
@@ -1052,7 +1052,7 @@ def index(x):
 		ll = do_reval(x.left)
 		return (ll, (i,))
 
-	if isinstance(x.left, ValueIndexArray):
+	if isinstance(x.left, ValueIndex):
 		y, i2 = index(x.left)
 		return (y, i2 + (i,))
 
@@ -1600,10 +1600,10 @@ def do_eval(x):
 	elif isinstance(x, ValueFunc): y = do_eval_func(x)
 	elif isinstance(x, ValueVar): y = do_eval_var(x)
 	elif isinstance(x, ValueCall): y = do_eval_call(x)
-	elif isinstance(x, ValueIndexArray): y = do_eval_index(x)
+	elif isinstance(x, ValueIndex): y = do_eval_index(x)
 	elif isinstance(x, ValueAccessRecord): y = do_eval_access(x)
 	elif isinstance(x, ValueAccessModule): y = do_eval_access_module(x)
-	elif isinstance(x, ValueSliceArray): y = do_eval_slice(x)
+	elif isinstance(x, ValueSlice): y = do_eval_slice(x)
 	elif isinstance(x, ValueZero): y = do_eval_literal(x)
 	elif isinstance(x, ValueSizeofValue): y = do_eval_literal(x)
 	elif isinstance(x, ValueSizeofType): y = do_eval_literal(x)

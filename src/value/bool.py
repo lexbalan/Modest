@@ -1,7 +1,7 @@
 
 from error import info, warning, error
 import type as type
-from .value import ValueLiteral, ValueCons, value_cons_immediate
+from hlir.value import ValueLiteral, ValueCons
 
 import foundation
 

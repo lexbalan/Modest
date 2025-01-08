@@ -4,7 +4,7 @@ import decimal
 from error import info, warning, error
 import type as type
 from type import TypeFloat
-from .value import ValueLiteral, ValueCons, value_cons_immediate
+from hlir.value import ValueLiteral, ValueCons
 
 
 
@@ -21,6 +21,7 @@ def value_float_create(num, ti=None):
 
 def _value_float_cons_immediate(t, v, method, ti):
 	#info("_value_float_cons_immediate", ti)
+	from .cons import value_cons_immediate
 	nv = value_cons_immediate(t, v, method, ti)
 	nv.asset = decimal.Decimal(nv.asset)
 	nv.immediate = True

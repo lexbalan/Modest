@@ -4,7 +4,7 @@ import type as type
 from hlir.hlir import *
 from type import type_print, record_field_get
 from util import get_item_by_id
-from .value import ValueLiteral, ValueCons, ValueZero, value_cons_immediate, ValueBin
+from hlir.value import ValueLiteral, ValueCons, ValueZero, ValueBin
 
 
 # получает на вход список инициализаторов

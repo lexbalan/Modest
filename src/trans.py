@@ -1,6 +1,8 @@
 
 import os
 
+import copy
+
 from error import *
 
 from lexer import CmLexer
@@ -581,15 +583,15 @@ def do_type_array(t):
 				global cfunc
 				cfunc['att'].append('stacksave')
 			else:
-				error("non local VLA", t.size)
+				error("non local VLA", t.size.ti)
 
 		#if not (Type.is_integer(volume['type']) or volume.type.is_number()):
 		if volume.type.is_signed():
-			error("required value with number or integer type", t.size['ti'])
+			error("required value with number or integer type", t.size.ti)
 
 	# closed arrays of closed arrays are denied NOW
 #	if of.is_closed_array():
-#		error("closed arrays of closed arrays are denied", t['ti'])
+#		error("closed arrays of closed arrays are denied", t.ti)
 #		return TypeBad(t)
 
 	return TypeArray(of, volume, ti=t['ti'])
@@ -722,13 +724,13 @@ def do_value_shift(x):
 		return nv
 
 	if l.type.is_generic():
-		error("expected non-generic value", l)
+		error("expected non-generic value", l.ti)
 		return ValueBad(x['ti'])
 
 	return ValueBin(op, l, r, type_result, ti=x['ti'])
 
 
-def do_ValueBin(x):
+def do_value_bin(x):
 	op = x['kind']
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
@@ -751,11 +753,11 @@ def do_ValueBin(x):
 	# Check type is valid for the operation
 
 	if not op in l.type.ops:
-		error("unsuitable value type for '%s' operation" % op, l['ti'])
+		error("unsuitable value type for '%s' operation" % op, l.ti)
 		return ValueBad(ti)
 
 	if not op in r.type.ops:
-		error("unsuitable value type for '%s' operation" % op, r['ti'])
+		error("unsuitable value type for '%s' operation" % op, r.ti)
 		return ValueBad(ti)
 
 	#
@@ -851,7 +853,7 @@ def do_value_ref(x):
 
 	if v.isImmutable():
 		if not vtype.is_func() or vtype.is_undefined():
-			error("expected mutable value or function", v)
+			error("expected mutable value or function", v.ti)
 			return ValueBad(x['ti'])
 
 	vt = TypePointer(vtype, ti=ti)
@@ -878,7 +880,7 @@ def do_value_not(x):
 	vtype = v.type
 
 	if not 'not' in vtype.ops:
-		error("unsuitable type", v)
+		error("unsuitable type", v.ti)
 		return ValueBad(x['ti'])
 
 	op = 'not'
@@ -910,7 +912,7 @@ def do_value_neg(x):
 
 	if not vtype.is_generic():
 		if not vtype.is_signed():
-			error("expected value with signed type", v)
+			error("expected value with signed type", v.ti)
 	else:
 		vtype.signed = True
 
@@ -936,7 +938,7 @@ def do_value_pos(x):
 	vtype = v.type
 
 	if not vtype.is_signed():
-		error("expected value with signed type", v)
+		error("expected value with signed type", v.ti)
 
 	nv = ValueUn('pos', v, vtype, ti=x['ti'])
 
@@ -959,7 +961,7 @@ def do_value_deref(x):
 
 	vtype = v.type
 	if not vtype.is_pointer():
-		error("expected pointer value", v)
+		error("expected pointer value", v.ti)
 		return ValueBad(x['ti'])
 
 	to = vtype.to
@@ -972,10 +974,10 @@ def do_value_deref(x):
 	is_free_ptr = to.is_free_pointer()
 	is_open_array_ptr =  to.is_open_array()
 	if is_func_ptr or is_free_ptr or is_open_array_ptr:
-		error("unsuitable type", v)
+		error("unsuitable type", v.ti)
 
 	nv = ValueUn('deref', v, to, ti=x['ti'])
-	nv.immutable = False
+	nv.is_lvalue = True
 	return nv
 
 
@@ -1020,7 +1022,7 @@ def sort_args(params, args):
 
 
 
-def do_ValueLengthof_value(x):
+def do_value_lengthof_value(x):
 	ti = x['ti']
 	arg = do_rvalue(x['value'])
 
@@ -1035,7 +1037,7 @@ def do_ValueLengthof_value(x):
 	return ValueLengthof(arg, ti)
 
 
-def do_ValueVaStart(x):#args, ti):
+def do_value_va_start(x):#args, ti):
 	args = x['values']
 	ti = x['ti']
 	va_list = do_value(args[0])
@@ -1043,19 +1045,19 @@ def do_ValueVaStart(x):#args, ti):
 	return ValueVaStart(va_list, last_param, ti)
 
 
-def do_ValueVaArg(x):
+def do_value_va_arg(x):
 	va_list = do_value(x['va_list'])
 	type = do_type(x['type'])
 	return ValueVaArg(va_list, type, x['ti'])
 
 
-def do_ValueVaEnd(x):
+def do_value_va_end(x):
 	ti = x['ti']
 	va_list = do_value(x['value'])
 	return ValueVaEnd(va_list, ti)
 
 
-def do_ValueVaCopy(x):
+def do_value_va_copy(x):
 	args = x['values']
 	ti = x['ti']
 	va_list0 = do_value(args[0])
@@ -1074,11 +1076,11 @@ def do_value___defined_value(x):
 
 
 
-def do_ValueCall(x):
+def do_value_call(x):
 	fn = do_rvalue(x['left'])
 
 	if Value.isBad(fn):
-		#error("undefined value 2", fn)
+		#error("undefined value", fn.ti)
 		return ValueBad(x['ti'])
 
 
@@ -1201,7 +1203,7 @@ def do_value_index(x):
 
 
 	if not array_typ.is_array():
-		error("expected array or pointer to array", left)
+		error("expected array or pointer to array", left.ti)
 		return ValueBad(x['ti'])
 
 
@@ -1217,7 +1219,7 @@ def do_value_index(x):
 	if index.type.is_generic():
 		index = value_cons_implicit_check(typeSysInt, index)
 
-	nv = ValueIndexArray(left, array_typ.of, index, ti=x['ti'])
+	nv = ValueIndex(left, array_typ.of, index, ti=x['ti'])
 
 	if not via_pointer:
 		nv.immutable = left.immutable
@@ -1264,7 +1266,7 @@ def do_value_slice(x):
 		array_type = left_type.to
 
 	if not array_type.is_array():
-		error("expected array or pointer to array", left)
+		error("expected array or pointer to array", left.ti)
 		return ValueBad(x['ti'])
 
 
@@ -1297,7 +1299,7 @@ def do_value_slice(x):
 		slice_volume = ValueUndefined(typeSysNat, x['ti'])
 
 	type = TypeArray(array_type.of, slice_volume, x['ti'])
-	nv = ValueSliceArray(left, type, index_from, index_to, x['ti'])
+	nv = ValueSlice(left, type, index_from, index_to, x['ti'])
 
 	if not via_pointer:
 		nv.immutable = left.immutable
@@ -1369,7 +1371,7 @@ def do_value_access(x):
 
 	# if field not found
 	if field == None:
-		error("undefined field '%s'" % field_id.str, x)
+		error("undefined field '%s'" % field_id.str, x['ti'])
 		return ValueBad(x['ti'])
 
 	# PROBLEM: у анонимных структур нет поля 'definition'
@@ -1423,7 +1425,7 @@ def do_value_id(x):
 	v = ctx_value_get(id_str)
 
 	if v == None:
-		error("undefined value '%s'" % id_str, x)
+		error("undefined value '%s'" % id_str, x['ti'])
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально (wrong!)
 		v = ValueBad(x['ti'])
@@ -1537,23 +1539,23 @@ def do_value_float(x):
 	return fv
 
 
-def do_ValueSizeofType(x):
+def do_value_sizeof_type(x):
 	t = do_type(x['type'])
 	return ValueSizeofType(t, ti=x['ti'])
 
 
-def do_ValueSizeofValue(x):
+def do_value_sizeof_value(x):
 	v = do_value(x['value'])
 	return ValueSizeofValue(v, ti=x['ti'])
 
 
 
-def do_ValueAlignof(x):
+def do_value_alignof(x):
 	of = do_type(x['type'])
 	return ValueAlignof(of, ti=x['ti'])
 
 
-def do_ValueOffsetof(x):
+def do_value_offsetof(x):
 	of = do_type(x['type'])
 	field_id = x['field']
 	return ValueOffsetof(of, field_id, ti=x['ti'])
@@ -1595,8 +1597,8 @@ def do_value_immediate_string(x):
 	return v
 
 
-def do_ValueUnsafe(x):
-	#info("do_ValueUnsafe", ti)
+def do_value_unsafe(x):
+	#info("do_value_unsafe", ti)
 	ti = x['ti']
 	from main import features
 	if not features.get('unsafe'):
@@ -1612,11 +1614,11 @@ def do_ValueUnsafe(x):
 	return rv
 
 
-def do_ValueBad(x):
+def do_value_bad(x):
 	return ValueBad(x['ti'])
 
 
-def do_ValueUndefined(x):
+def do_value_undefined(x):
 	t = htype.TypeUndefined(x['ti'])
 	return ValueUndefined(t, x['ti'])
 
@@ -1640,8 +1642,8 @@ def do_value(x):
 	elif k == 'record': v = do_value_record(x)
 	elif k == 'array': v = do_value_array(x)
 	elif k == 'cons': v = do_value_cons(x)
-	elif k == 'call': v = do_ValueCall(x)
-	elif k in bin_ops: v = do_ValueBin(x)
+	elif k == 'call': v = do_value_call(x)
+	elif k in bin_ops: v = do_value_bin(x)
 	elif k == 'ref': v = do_value_ref(x)
 	elif k == 'not': v = do_value_not(x)
 	elif k == 'deref': v = do_value_deref(x)
@@ -1652,20 +1654,20 @@ def do_value(x):
 	elif k == 'pos': v = do_value_pos(x)
 	elif k == 'shl': v = do_value_shift(x)
 	elif k == 'shr': v = do_value_shift(x)
-	elif k == 'unsafe': v = do_ValueUnsafe(x)
-	elif k == 'sizeof_value': v = do_ValueSizeofValue(x)
-	elif k == 'sizeof_type': v = do_ValueSizeofType(x)
-	elif k == 'alignof': v = do_ValueAlignof(x)
-	elif k == 'offsetof': v = do_ValueOffsetof(x)
-	elif k == 'lengthof_value': v = do_ValueLengthof_value(x)
-	elif k == '__va_arg': v = do_ValueVaArg(x)
-	elif k == '__va_start': v = do_ValueVaStart(x)
-	elif k == '__va_copy': v = do_ValueVaCopy(x)
-	elif k == '__va_end': v = do_ValueVaEnd(x)
+	elif k == 'unsafe': v = do_value_unsafe(x)
+	elif k == 'sizeof_value': v = do_value_sizeof_value(x)
+	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
+	elif k == 'alignof': v = do_value_alignof(x)
+	elif k == 'offsetof': v = do_value_offsetof(x)
+	elif k == 'lengthof_value': v = do_value_lengthof_value(x)
+	elif k == '__va_arg': v = do_value_va_arg(x)
+	elif k == '__va_start': v = do_value_va_start(x)
+	elif k == '__va_copy': v = do_value_va_copy(x)
+	elif k == '__va_end': v = do_value_va_end(x)
 	elif k == '__defined_type': v = do_value___defined_type(x)
 	elif k == '__defined_value': v = do_value___defined_value(x)
-	elif k == 'undefined': v = do_ValueUndefined(x)
-	elif k == 'bad': v = do_ValueBad(x['ti'])
+	elif k == 'undefined': v = do_value_undefined(x)
+	elif k == 'bad': v = do_value_bad(x['ti'])
 
 	assert(v != None)
 	v.ti = x['ti']
@@ -1684,7 +1686,7 @@ def do_stmt_if(x):
 		return StmtBad(x)
 
 	if not cond.type.is_bool():
-		error("expected bool value", cond)
+		error("expected bool value", cond.ti)
 		return StmtBad(x)
 
 	_then = do_stmt(x['then'])
@@ -1709,7 +1711,7 @@ def do_stmt_while(x):
 		return StmtBad(x)
 
 	if not cond.type.is_bool():
-		error("expected bool value", cond)
+		error("expected bool value", cond.ti)
 		return StmtBad(x)
 
 	block = do_stmt(x['stmt'])
@@ -1838,7 +1840,7 @@ def do_stmt_let(x):
 		ctx_value_add(id.str, ValueBad(x['ti']))
 		return StmtBad(x)
 
-	const_value = ValueConst(id, v.type, value=v, ti=x['id']['ti'])
+	const_value = ValueConst(id, value=v, ti=x['id']['ti'])
 	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
 	# на константу. ---Пока это необходимо для 'wrapped_array' (!)---
 	const_value.att.extend(v.att)
@@ -1867,10 +1869,9 @@ def do_stmt_assign(x):
 	if Value.isBad(l) or Value.isBad(r):
 		return StmtBad(x)
 
-#TODO: restore after all
-#	if not value_is_lvalue(l):
-#		error("expected lvalue", l)
-#		return StmtBad(x)
+	if not l.isLvalue():
+		error("expected lvalue", l.ti)
+		return StmtBad(x)
 
 	if l.isImmutable():
 		error("expected mutable value", l.ti)
@@ -1888,11 +1889,11 @@ def do_stmt_incdec(x, op='add'):
 		return StmtBad(x)
 
 	if v.isImmutable():
-		error("expected mutable value", v)
+		error("expected mutable value", v.ti)
 		return StmtBad(x)
 
 	if not v.type.is_integer():
-		error("expected integer value", v)
+		error("expected value with integer type", v.ti)
 		return StmtBad(x)
 
 	one = value_integer_create(1, typ=v.type, ti=x['ti'])
@@ -2022,7 +2023,7 @@ def do_stmt_block(x):
 
 
 def symbol_const(id, init_value, is_public=False):
-	const_value = ValueConst(id, init_value.type, init_value, id.ti)
+	const_value = ValueConst(id, init_value, id.ti)
 	const_value.att.extend(init_value.att)
 
 	# Now let can be immediate!
@@ -2278,13 +2279,10 @@ def def_func(x, dostmt=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		param_type = param.type
-		param_id = param.id
-
-		param_value = ValueConst(param_id, param_type, None, param.ti)
+		param_value = ValueConst(param.id, ValueUndefined(param.type), param.ti)
 		param_value.addAttribute('local')
 		param_value.addAttribute('param')
-		ctx_value_add(param_id.str, param_value)
+		ctx_value_add(param.id.str, param_value)
 		i += 1
 
 	# for C backend, for #include <stdarg.h>
@@ -2414,7 +2412,7 @@ def do_import(x):
 	log('do_import("%s")' % impline)
 
 	if abspath == None:
-		error("module %s not found" % impline, import_expr)
+		error("module %s not found" % impline, import_expr.ti)
 		return None
 
 	m = None
@@ -2495,7 +2493,7 @@ def do_directive(x):
 			return None
 
 		if not Type. is_bool(c['type']):
-			error("expected bool value", c)
+			error("expected bool value", c.ti)
 			return None
 
 		cond = c.asset != 0
@@ -2513,7 +2511,7 @@ def do_directive(x):
 			return None
 
 		if not Type. is_bool(c['type']):
-			error("expected bool value", c)
+			error("expected bool value", c.ti)
 			return None
 
 		cond = c.asset != 0

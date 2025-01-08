@@ -2,7 +2,7 @@
 from error import info, warning, error
 import type as type
 from hlir.type import Type
-from .value import ValueCons, value_cons_immediate
+from hlir.value import ValueCons
 from .char import utf32_chars_to_utfx_chars
 
 
@@ -63,7 +63,7 @@ def value_pointer_cons(t, v, method, ti):
 			module_strings_add(nv)
 
 			return nv
-
+		from .cons import value_cons_immediate
 		return value_cons_immediate(t, v, method, ti)
 
 	return ValueCons(t, v, method, ti=ti)

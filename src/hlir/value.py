@@ -8,21 +8,36 @@ from .entity import Entity
 class Value(Entity):
 	def __init__(self, type, ti=None):
 		super().__init__(ti)
-		self.type = type
 		self.id = None
-		self.immutable = False  #TODO: True
-		self.immediate = False  #TODO: True
-		self.items = None  #!
-		self.asset = None  #!
+		self.type = type
+
+		self.immediate = False
+
+		#
+		self.is_lvalue = False
+
+		# immutable anyway flag
+		self.immutable = False
+
+		# (!) items can be not only in #immediate value (!)
+		self.items = None
+		self.asset = None
+
 		self.nl = 0
 		self.nl_end = 0  # ??
 
+
+	def isLvalue(self):
+		return self.is_lvalue
 
 	def isImmediate(self):
 		return self.immediate
 
 	def isImmutable(self):
-		return self.immutable
+		# ONLY lvalue CAN be an immutable value,
+		# BUT if immutable flag is set, it is immutable value anyway
+		return (not self.isLvalue()) or self.immutable
+
 
 
 	@staticmethod
@@ -127,7 +142,7 @@ class Value(Entity):
 
 class ValueBad(Value):
 	def __init__(self, ti=None):
-		from type import type_bad
+		from .type import TypeBad
 		super().__init__(type=TypeBad(ti), ti=ti)
 		from .hlir import Id
 		self.id = Id().fromStr('_')
@@ -136,10 +151,6 @@ class ValueBad(Value):
 class ValueUndefined(Value):
 	def __init__(self, type, ti=None):
 		super().__init__(type=type, ti=ti)
-#		self.asset = 0 #!
-#		self.items = [] #!
-		self.immutable = True # ??
-		self.immediate = False # ??
 
 
 class ValueLiteral(Value):
@@ -155,7 +166,7 @@ class ValueZero(Value):
 			self.items = []
 		else:
 			self.asset = 0
-
+		self.immediate = True
 		self.addAttribute('zero')
 
 
@@ -166,26 +177,26 @@ class ValueVar(Value):
 		self.id = id
 		self.init_value = init_value
 		self.usecnt = 0
-		self.definition = None
+		self.definition = None  # *StmtDefVar
+		self.is_lvalue = True
 
 
 class ValueConst(Value):
-	def __init__(self, id, type, value, ti=None):
+	def __init__(self, id, value, ti=None):
+		type = value.type
 		super().__init__(type=type, ti=ti)
 		self.id = id
 		self.value = value
-		self.immutable = True
 		self.usecnt = 0
-		self.definition = None
+		self.definition = None  # *StmtDefConst
 
 
 class ValueFunc(Value):
 	def __init__(self, id, type, ti=None):
 		super().__init__(type=type, ti=ti)
 		self.id = id
-		self.immutable = True
 		self.usecnt = 0
-		self.definition = None
+		self.definition = None  # *StmtDefFunc
 
 
 #TODO: maybe without op?
@@ -195,7 +206,6 @@ class ValueUn(Value):
 		super().__init__(type=type, ti=ti)
 		self.op = op
 		self.value = value
-		self.immutable = True
 
 
 #TODO: maybe without op?
@@ -206,7 +216,6 @@ class ValueBin(Value):
 		self.op = op
 		self.left = left
 		self.right = right
-		self.immutable = True
 
 
 
@@ -216,27 +225,26 @@ class ValueCall(Value):
 		super().__init__(type=type, ti=ti)
 		self.func = func
 		self.args = args
-		self.immutable = True
 
 
 
 #TODO: get type from array element type
-class ValueIndexArray(Value):
+class ValueIndex(Value):
 	def __init__(self, left, type, index, ti=None):
 		super().__init__(type=type, ti=ti)
 		self.left = left
 		self.index = index
-		#self.immutable = True
+		self.is_lvalue = True
 
 
 #TODO: get type from array type
-class ValueSliceArray(Value):
+class ValueSlice(Value):
 	def __init__(self, left, type, index_from, index_to, ti=None):
 		super().__init__(type=type, ti=ti)
 		self.left = left
 		self.index_from = index_from
 		self.index_to = index_to
-		#self.immutable = True
+		self.is_lvalue = True
 
 
 class ValueAccessModule(Value):
@@ -252,6 +260,7 @@ class ValueAccessRecord(Value):
 		super().__init__(type=type, ti=ti)
 		self.value = value
 		self.field = field
+		self.is_lvalue = True
 
 
 class ValueCons(Value):
@@ -259,11 +268,10 @@ class ValueCons(Value):
 		assert(method in ['implicit', 'explicit', 'unsafe'])
 		from .type import Type
 		assert(isinstance(type, Type))
-		#assert(value['isa'] == 'value')
+		assert(isinstance(value, Value))
 		super().__init__(type=type, ti=ti)
 		self.value = value
 		self.method = method
-		self.immutable = True
 		self.nl_end = value.nl_end
 
 
@@ -274,9 +282,8 @@ class ValueSizeofType(Value):
 		type = type_number_for(size, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.of = of
-		self.asset = size
-		self.immutable = True
 		self.immediate = True
+		self.asset = size
 
 
 class ValueSizeofValue(Value):
@@ -286,9 +293,8 @@ class ValueSizeofValue(Value):
 		type = type_number_for(value_size, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.of = value
-		self.asset = value_size
-		self.immutable = True
 		self.immediate = True
+		self.asset = value_size
 
 
 
@@ -299,9 +305,8 @@ class ValueAlignof(Value):
 		type = type_number_for(align, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.of = of
-		self.asset = align
-		self.immutable = True
 		self.immediate = True
+		self.asset = align
 
 
 class ValueOffsetof(Value):
@@ -317,9 +322,8 @@ class ValueOffsetof(Value):
 		type = type_number_for(offset, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.field = field_id
-		self.asset = offset
-		self.immutable = True
 		self.immediate = True
+		self.asset = offset
 
 
 class ValueLengthof(Value):
@@ -329,9 +333,8 @@ class ValueLengthof(Value):
 		type = type_number_for(length, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.value = value
-		self.asset = length
-		self.immutable = True
 		self.immediate = True
+		self.asset = length
 
 
 class ValueVaStart(Value):
@@ -340,16 +343,12 @@ class ValueVaStart(Value):
 		super().__init__(type=typeUnit, ti=ti)
 		self.va_list = vaList
 		self.last_param = lastParam
-		self.immutable = True
-		self.immediate = True
 
 
 class ValueVaArg(Value):
 	def __init__(self, vaList, type, ti=None):
 		super().__init__(type=type, ti=ti)
 		self.va_list = vaList
-		self.immutable = True
-		self.immediate = False
 
 
 class ValueVaEnd(Value):
@@ -357,9 +356,6 @@ class ValueVaEnd(Value):
 		from foundation import typeUnit
 		super().__init__(type=typeUnit, ti=ti)
 		self.va_list = vaList
-		self.immutable = True
-		self.immediate = True
-
 
 
 class ValueVaCopy(Value):
@@ -368,7 +364,5 @@ class ValueVaCopy(Value):
 		super().__init__(type=typeUnit, ti=ti)
 		self.dst = dst
 		self.src = src
-		self.immutable = True
-		self.immediate = True
 
 

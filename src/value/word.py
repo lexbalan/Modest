@@ -1,13 +1,15 @@
 
 from error import info, warning, error
 import type as type
-from .value import ValueCons, value_cons_immediate
+from hlir.value import ValueCons
+
 
 
 def _value_word_cons_immediate(t, v, method, ti):
 	if v.type.width > t.width:
 		error("word overflow", ti)
 
+	from .cons import value_cons_immediate
 	return value_cons_immediate(t, v, method, ti)
 
 

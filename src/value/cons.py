@@ -1,6 +1,6 @@
 import type as htype
 from error import info, warning, error
-from .value import Value, ValueBad, ValueCons
+from hlir.value import Value, ValueBad, ValueCons
 from .unit import unit_can, ValueUnit_cons
 from .bool import bool_can, value_bool_cons
 from .word import word_can, value_word_cons
@@ -232,4 +232,24 @@ def value_cons(t, v, method, ti):
 
 	return nv
 
+
+
+
+# cons immediate такой же cons
+# но поскольку у него value immediate, мы можем его asset
+# привести и взять себе; Таким образом мы идем как литерал нода
+# и в то же время как cons нода
+def value_cons_immediate(t, v, method, ti):
+	assert(method in ['implicit', 'explicit', 'unsafe'])
+	nv = ValueCons(t, v, method, ti)
+
+	nv.asset = v.asset
+	nv.immediate = True
+
+	if v.hasAttribute('hexadecimal'):
+		nv.addAttribute('hexadecimal')
+
+	nv.nl_end = v.nl_end
+
+	return nv
 

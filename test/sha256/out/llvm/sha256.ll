@@ -817,11 +817,7 @@ break_1:
 
 define void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %outHash) {
 	%1 = alloca %Context, align 128
-	%2 = insertvalue %Context zeroinitializer, [64 x %Word8] zeroinitializer, 0
-	%3 = insertvalue %Context %2, %Int32 0, 1
-	%4 = insertvalue %Context %3, %Int64 0, 2
-	%5 = insertvalue %Context %4, [8 x %Word32] zeroinitializer, 3
-	store %Context %5, %Context* %1
+	store %Context zeroinitializer, %Context* %1
 	call void @contextInit(%Context* %1)
 	call void @update(%Context* %1, [0 x %Word8]* %msg, %Int32 %msgLen)
 	call void @final(%Context* %1, %sha256_Hash* %outHash)

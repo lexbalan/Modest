@@ -239,27 +239,25 @@ endif_0:
 	%17 = insertvalue %Point %16, %Int32 20, 1
 	store %Point %17, %Point* %15
 	%18 = alloca %Point, align 8
-	%19 = insertvalue %Point zeroinitializer, %Int32 0, 0
-	%20 = insertvalue %Point %19, %Int32 0, 1
-	store %Point %20, %Point* %18
-	%21 = load %Point, %Point* %15
-	store %Point %21, %Point* %18
-	%22 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 0
-	%23 = load %Int32, %Int32* %22
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str6 to [0 x i8]*), %Int32 %23)
-	%25 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 1
-	%26 = load %Int32, %Int32* %25
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), %Int32 %26)
-	%28 = bitcast %Point* %15 to i8*
-	%29 = bitcast %Point* %18 to i8*
-	%30 = call i1 (i8*, i8*, i64) @memeq(i8* %28, i8* %29, %Int64 8)
-	%31 = icmp ne %Bool %30, 0
-	br %Bool %31 , label %then_1, label %else_1
+	store %Point zeroinitializer, %Point* %18
+	%19 = load %Point, %Point* %15
+	store %Point %19, %Point* %18
+	%20 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 0
+	%21 = load %Int32, %Int32* %20
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str6 to [0 x i8]*), %Int32 %21)
+	%23 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 1
+	%24 = load %Int32, %Int32* %23
+	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), %Int32 %24)
+	%26 = bitcast %Point* %15 to i8*
+	%27 = bitcast %Point* %18 to i8*
+	%28 = call i1 (i8*, i8*, i64) @memeq(i8* %26, i8* %27, %Int64 8)
+	%29 = icmp ne %Bool %28, 0
+	br %Bool %29 , label %then_1, label %else_1
 then_1:
-	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str8 to [0 x i8]*))
+	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str8 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str9 to [0 x i8]*))
+	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str9 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 	ret %Int 0
