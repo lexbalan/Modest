@@ -453,8 +453,7 @@ define internal %Bool @test_generic_record() {
 	%7 = alloca %Point3D, align 16
 	%8 = insertvalue %Point3D zeroinitializer, %Int32 10, 0
 	%9 = insertvalue %Point3D %8, %Int32 20, 1
-	%10 = insertvalue %Point3D %9, %Int32 0, 2
-	store %Point3D %10, %Point3D* %7
+	store %Point3D %9, %Point3D* %7
 	ret %Bool 1
 }
 

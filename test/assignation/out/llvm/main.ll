@@ -316,21 +316,19 @@ define %Int @main() {
 	; copy records by value
 	; C backend will be use memcpy()
 	%44 = alloca %Point, align 8
-	%45 = insertvalue %Point zeroinitializer, %Int32 0, 0
-	%46 = insertvalue %Point %45, %Int32 0, 1
-	store %Point %46, %Point* %44
-	%47 = alloca %Point, align 8
-	%48 = insertvalue %Point zeroinitializer, %Int32 10, 0
-	%49 = insertvalue %Point %48, %Int32 20, 1
-	store %Point %49, %Point* %47
-	%50 = load %Point, %Point* %47
-	store %Point %50, %Point* %44
-	%51 = getelementptr %Point, %Point* %44, %Int32 0, %Int32 0
-	%52 = load %Int32, %Int32* %51
-	%53 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %52)
-	%54 = getelementptr %Point, %Point* %44, %Int32 0, %Int32 1
-	%55 = load %Int32, %Int32* %54
-	%56 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %55)
+	store %Point zeroinitializer, %Point* %44
+	%45 = alloca %Point, align 8
+	%46 = insertvalue %Point zeroinitializer, %Int32 10, 0
+	%47 = insertvalue %Point %46, %Int32 20, 1
+	store %Point %47, %Point* %45
+	%48 = load %Point, %Point* %45
+	store %Point %48, %Point* %44
+	%49 = getelementptr %Point, %Point* %44, %Int32 0, %Int32 0
+	%50 = load %Int32, %Int32* %49
+	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %50)
+	%52 = getelementptr %Point, %Point* %44, %Int32 0, %Int32 1
+	%53 = load %Int32, %Int32* %52
+	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %53)
 
 
 	; error: closed arrays of closed arrays are denied

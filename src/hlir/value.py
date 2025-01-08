@@ -11,9 +11,9 @@ class Value(Entity):
 		self.type = type
 		self.id = None
 		self.immutable = True
-		self.immediate = False  #TODO: True
-		self.items = None  #!
-		self.asset = None  #!
+		self.immediate = False
+		self.items = None
+		self.asset = None
 		self.nl = 0
 		self.nl_end = 0  # ??
 
@@ -136,9 +136,6 @@ class ValueBad(Value):
 class ValueUndefined(Value):
 	def __init__(self, type, ti=None):
 		super().__init__(type=type, ti=ti)
-#		self.asset = 0 #!
-#		self.items = [] #!
-		self.immediate = False # ??
 
 
 class ValueLiteral(Value):
@@ -154,7 +151,7 @@ class ValueZero(Value):
 			self.items = []
 		else:
 			self.asset = 0
-
+		self.immediate = True
 		self.addAttribute('zero')
 
 
@@ -256,7 +253,7 @@ class ValueCons(Value):
 		assert(method in ['implicit', 'explicit', 'unsafe'])
 		from .type import Type
 		assert(isinstance(type, Type))
-		#assert(value['isa'] == 'value')
+		assert(isinstance(value, Value))
 		super().__init__(type=type, ti=ti)
 		self.value = value
 		self.method = method
@@ -270,8 +267,8 @@ class ValueSizeofType(Value):
 		type = type_number_for(size, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.of = of
-		self.asset = size
 		self.immediate = True
+		self.asset = size
 
 
 class ValueSizeofValue(Value):
@@ -281,8 +278,8 @@ class ValueSizeofValue(Value):
 		type = type_number_for(value_size, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.of = value
-		self.asset = value_size
 		self.immediate = True
+		self.asset = value_size
 
 
 
@@ -293,8 +290,8 @@ class ValueAlignof(Value):
 		type = type_number_for(align, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.of = of
-		self.asset = align
 		self.immediate = True
+		self.asset = align
 
 
 class ValueOffsetof(Value):
@@ -310,8 +307,8 @@ class ValueOffsetof(Value):
 		type = type_number_for(offset, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.field = field_id
-		self.asset = offset
 		self.immediate = True
+		self.asset = offset
 
 
 class ValueLengthof(Value):
@@ -321,8 +318,8 @@ class ValueLengthof(Value):
 		type = type_number_for(length, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.value = value
-		self.asset = length
 		self.immediate = True
+		self.asset = length
 
 
 class ValueVaStart(Value):
@@ -331,14 +328,12 @@ class ValueVaStart(Value):
 		super().__init__(type=typeUnit, ti=ti)
 		self.va_list = vaList
 		self.last_param = lastParam
-		self.immediate = True
 
 
 class ValueVaArg(Value):
 	def __init__(self, vaList, type, ti=None):
 		super().__init__(type=type, ti=ti)
 		self.va_list = vaList
-		self.immediate = False
 
 
 class ValueVaEnd(Value):
@@ -346,8 +341,6 @@ class ValueVaEnd(Value):
 		from foundation import typeUnit
 		super().__init__(type=typeUnit, ti=ti)
 		self.va_list = vaList
-		self.immediate = True
-
 
 
 class ValueVaCopy(Value):
@@ -356,6 +349,5 @@ class ValueVaCopy(Value):
 		super().__init__(type=typeUnit, ti=ti)
 		self.dst = dst
 		self.src = src
-		self.immediate = True
 
 

@@ -227,10 +227,7 @@ then_0:
 	ret %list_List* null
 	br label %endif_0
 endif_0:
-	%5 = insertvalue %list_List zeroinitializer, %list_Node* null, 0
-	%6 = insertvalue %list_List %5, %list_Node* null, 1
-	%7 = insertvalue %list_List %6, %Int32 0, 2
-	store %list_List %7, %list_List* %2
+	store %list_List zeroinitializer, %list_List* %2
 	ret %list_List* %2
 }
 
@@ -300,10 +297,7 @@ then_0:
 	ret %list_Node* null
 	br label %endif_0
 endif_0:
-	%5 = insertvalue %list_Node zeroinitializer, %list_Node* null, 0
-	%6 = insertvalue %list_Node %5, %list_Node* null, 1
-	%7 = insertvalue %list_Node %6, i8* null, 2
-	store %list_Node %7, %list_Node* %2
+	store %list_Node zeroinitializer, %list_Node* %2
 	ret %list_Node* %2
 }
 
