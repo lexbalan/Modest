@@ -419,7 +419,7 @@ def llvm_print_value_inline_cast(x):
 	v = x['value']
 
 	if v['kind'] in ['num']:
-		print("----")
+#		print("----")
 		#print_type(t)
 		if Type.is_pointer(t):
 			out("null")
