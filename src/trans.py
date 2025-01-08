@@ -730,7 +730,7 @@ def do_value_shift(x):
 	return ValueBin(op, l, r, type_result, ti=x['ti'])
 
 
-def do_ValueBin(x):
+def do_value_bin(x):
 	op = x['kind']
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
@@ -1022,7 +1022,7 @@ def sort_args(params, args):
 
 
 
-def do_ValueLengthof_value(x):
+def do_value_lengthof_value(x):
 	ti = x['ti']
 	arg = do_rvalue(x['value'])
 
@@ -1037,7 +1037,7 @@ def do_ValueLengthof_value(x):
 	return ValueLengthof(arg, ti)
 
 
-def do_ValueVaStart(x):#args, ti):
+def do_value_va_start(x):#args, ti):
 	args = x['values']
 	ti = x['ti']
 	va_list = do_value(args[0])
@@ -1045,19 +1045,19 @@ def do_ValueVaStart(x):#args, ti):
 	return ValueVaStart(va_list, last_param, ti)
 
 
-def do_ValueVaArg(x):
+def do_value_va_arg(x):
 	va_list = do_value(x['va_list'])
 	type = do_type(x['type'])
 	return ValueVaArg(va_list, type, x['ti'])
 
 
-def do_ValueVaEnd(x):
+def do_value_va_end(x):
 	ti = x['ti']
 	va_list = do_value(x['value'])
 	return ValueVaEnd(va_list, ti)
 
 
-def do_ValueVaCopy(x):
+def do_value_va_copy(x):
 	args = x['values']
 	ti = x['ti']
 	va_list0 = do_value(args[0])
@@ -1076,7 +1076,7 @@ def do_value___defined_value(x):
 
 
 
-def do_ValueCall(x):
+def do_value_call(x):
 	fn = do_rvalue(x['left'])
 
 	if Value.isBad(fn):
@@ -1539,23 +1539,23 @@ def do_value_float(x):
 	return fv
 
 
-def do_ValueSizeofType(x):
+def do_value_sizeof_type(x):
 	t = do_type(x['type'])
 	return ValueSizeofType(t, ti=x['ti'])
 
 
-def do_ValueSizeofValue(x):
+def do_value_sizeof_value(x):
 	v = do_value(x['value'])
 	return ValueSizeofValue(v, ti=x['ti'])
 
 
 
-def do_ValueAlignof(x):
+def do_value_alignof(x):
 	of = do_type(x['type'])
 	return ValueAlignof(of, ti=x['ti'])
 
 
-def do_ValueOffsetof(x):
+def do_value_offsetof(x):
 	of = do_type(x['type'])
 	field_id = x['field']
 	return ValueOffsetof(of, field_id, ti=x['ti'])
@@ -1597,8 +1597,8 @@ def do_value_immediate_string(x):
 	return v
 
 
-def do_ValueUnsafe(x):
-	#info("do_ValueUnsafe", ti)
+def do_value_unsafe(x):
+	#info("do_value_unsafe", ti)
 	ti = x['ti']
 	from main import features
 	if not features.get('unsafe'):
@@ -1614,11 +1614,11 @@ def do_ValueUnsafe(x):
 	return rv
 
 
-def do_ValueBad(x):
+def do_value_bad(x):
 	return ValueBad(x['ti'])
 
 
-def do_ValueUndefined(x):
+def do_value_undefined(x):
 	t = htype.TypeUndefined(x['ti'])
 	return ValueUndefined(t, x['ti'])
 
@@ -1642,8 +1642,8 @@ def do_value(x):
 	elif k == 'record': v = do_value_record(x)
 	elif k == 'array': v = do_value_array(x)
 	elif k == 'cons': v = do_value_cons(x)
-	elif k == 'call': v = do_ValueCall(x)
-	elif k in bin_ops: v = do_ValueBin(x)
+	elif k == 'call': v = do_value_call(x)
+	elif k in bin_ops: v = do_value_bin(x)
 	elif k == 'ref': v = do_value_ref(x)
 	elif k == 'not': v = do_value_not(x)
 	elif k == 'deref': v = do_value_deref(x)
@@ -1654,20 +1654,20 @@ def do_value(x):
 	elif k == 'pos': v = do_value_pos(x)
 	elif k == 'shl': v = do_value_shift(x)
 	elif k == 'shr': v = do_value_shift(x)
-	elif k == 'unsafe': v = do_ValueUnsafe(x)
-	elif k == 'sizeof_value': v = do_ValueSizeofValue(x)
-	elif k == 'sizeof_type': v = do_ValueSizeofType(x)
-	elif k == 'alignof': v = do_ValueAlignof(x)
-	elif k == 'offsetof': v = do_ValueOffsetof(x)
-	elif k == 'lengthof_value': v = do_ValueLengthof_value(x)
-	elif k == '__va_arg': v = do_ValueVaArg(x)
-	elif k == '__va_start': v = do_ValueVaStart(x)
-	elif k == '__va_copy': v = do_ValueVaCopy(x)
-	elif k == '__va_end': v = do_ValueVaEnd(x)
+	elif k == 'unsafe': v = do_value_unsafe(x)
+	elif k == 'sizeof_value': v = do_value_sizeof_value(x)
+	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
+	elif k == 'alignof': v = do_value_alignof(x)
+	elif k == 'offsetof': v = do_value_offsetof(x)
+	elif k == 'lengthof_value': v = do_value_lengthof_value(x)
+	elif k == '__va_arg': v = do_value_va_arg(x)
+	elif k == '__va_start': v = do_value_va_start(x)
+	elif k == '__va_copy': v = do_value_va_copy(x)
+	elif k == '__va_end': v = do_value_va_end(x)
 	elif k == '__defined_type': v = do_value___defined_type(x)
 	elif k == '__defined_value': v = do_value___defined_value(x)
-	elif k == 'undefined': v = do_ValueUndefined(x)
-	elif k == 'bad': v = do_ValueBad(x['ti'])
+	elif k == 'undefined': v = do_value_undefined(x)
+	elif k == 'bad': v = do_value_bad(x['ti'])
 
 	assert(v != None)
 	v.ti = x['ti']
