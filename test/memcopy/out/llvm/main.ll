@@ -205,8 +205,8 @@ declare %Bool @meq(i8* %mem0, i8* %mem1, %Int64 %len)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca %Object, align 4
-	%3 = alloca %Object, align 4
+	%2 = alloca %Object, align 128
+	%3 = alloca %Object, align 128
 	%4 = insertvalue [32 x %Char8] zeroinitializer, %Char8 74, 0
 	%5 = insertvalue [32 x %Char8] %4, %Char8 111, 1
 	%6 = insertvalue [32 x %Char8] %5, %Char8 104, 2
@@ -218,10 +218,10 @@ define %Int @main() {
 	%12 = insertvalue %Object %8, [32 x %Char8] %11, 1
 	%13 = insertvalue %Object %12, %Int32 30, 2
 	store %Object %13, %Object* %2
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 68)
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 128)
 	%15 = bitcast %Object* %3 to i8*
 	%16 = bitcast %Object* %2 to i8*
-	call void @mcopy(i8* %15, i8* %16, %Int64 68)
+	call void @mcopy(i8* %15, i8* %16, %Int64 128)
 	%17 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 0
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), [32 x %Char8]* %17)
 	%19 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 1

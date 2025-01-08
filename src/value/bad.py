@@ -3,7 +3,7 @@ from error import error
 from .value import ValueCons
 
 
-def bad_can(to, from_type, method):
+def bad_can(to, from_type, method, ti):
 	return True
 
 

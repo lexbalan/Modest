@@ -231,11 +231,11 @@ else_0:
 endif_0:
 
 	; compare two Point2D records
-	%6 = alloca %Point2D, align 4
+	%6 = alloca %Point2D, align 8
 	%7 = insertvalue %Point2D zeroinitializer, %Int32 1, 0
 	%8 = insertvalue %Point2D %7, %Int32 2, 1
 	store %Point2D %8, %Point2D* %6
-	%9 = alloca %Point2D, align 4
+	%9 = alloca %Point2D, align 8
 	%10 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
 	%11 = insertvalue %Point2D %10, %Int32 20, 1
 	store %Point2D %11, %Point2D* %9
@@ -254,10 +254,10 @@ endif_1:
 
 
 	; compare Point2D with anonymous record
-	%18 = alloca %Point2D, align 4
+	%18 = alloca %Point2D, align 8
 	%19 = load %Point2D, %Point2D* %6
 	store %Point2D %19, %Point2D* %18
-	%20 = alloca {%Int32,%Int32}, align 4
+	%20 = alloca {%Int32,%Int32}, align 8
 	%21 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
 	%22 = insertvalue {%Int32,%Int32} %21, %Int32 2, 1
 	store {%Int32,%Int32} %22, {%Int32,%Int32}* %20
@@ -282,7 +282,7 @@ endif_2:
 
 
 	; comparison between two anonymous record
-	%32 = alloca {%Int32,%Int32}, align 4
+	%32 = alloca {%Int32,%Int32}, align 8
 	%33 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
 	%34 = insertvalue {%Int32,%Int32} %33, %Int32 2, 1
 	store {%Int32,%Int32} %34, {%Int32,%Int32}* %32
@@ -348,7 +348,7 @@ endif_4:
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)  ((EXPERIMENTAL))
-	%57 = alloca %Point3D, align 4
+	%57 = alloca %Point3D, align 16
 ; -- cons_composite_from_composite_by_adr --
 	%58 = bitcast %Point2D* %18 to %Point3D*
 	%59 = load %Point3D, %Point3D* %58

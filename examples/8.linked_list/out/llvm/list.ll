@@ -219,7 +219,7 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 define %list_List* @list_create() {
-	%1 = call i8* @malloc(%SizeT 24)
+	%1 = call i8* @malloc(%SizeT 32)
 	%2 = bitcast i8* %1 to %list_List*
 	%3 = icmp eq %list_List* %2, null
 	br %Bool %3 , label %then_0, label %endif_0
@@ -292,7 +292,7 @@ endif_0:
 }
 
 define %list_Node* @list_node_create() {
-	%1 = call i8* @malloc(%SizeT 24)
+	%1 = call i8* @malloc(%SizeT 32)
 	%2 = bitcast i8* %1 to %list_Node*
 	%3 = icmp eq %list_Node* %2, null
 	br %Bool %3 , label %then_0, label %endif_0

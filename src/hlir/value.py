@@ -3,7 +3,7 @@
 #######################################################################
 
 from .entity import Entity
-
+from .type import Type
 
 class Value(Entity):
 	def __init__(self, type, ti=None):
@@ -262,7 +262,7 @@ class ValueAccessRecord(Value):
 class ValueCons(Value):
 	def __init__(self, type, value, method, ti=None):
 		assert(method in ['implicit', 'explicit', 'unsafe'])
-		assert(type['isa'] == 'type')
+		assert(isinstance(type, Type))
 		#assert(value['isa'] == 'value')
 		super().__init__(type=type, ti=ti)
 		self.value = value
@@ -273,7 +273,7 @@ class ValueCons(Value):
 
 class ValueSizeofType(Value):
 	def __init__(self, of, ti=None):
-		size = of['size']
+		size = of.size
 		from type import type_number_for
 		type = type_number_for(size, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
@@ -285,7 +285,7 @@ class ValueSizeofType(Value):
 
 class ValueSizeofValue(Value):
 	def __init__(self, value, ti=None):
-		value_size = value.type['size']
+		value_size = value.type.size
 		from type import type_number_for
 		type = type_number_for(value_size, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
@@ -298,7 +298,7 @@ class ValueSizeofValue(Value):
 
 class ValueAlignof(Value):
 	def __init__(self, of, ti=None):
-		align = of['align']
+		align = of.align
 		from type import type_number_for
 		type = type_number_for(align, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
@@ -328,7 +328,7 @@ class ValueOffsetof(Value):
 
 class ValueLengthof(Value):
 	def __init__(self, value, ti=None):
-		length = value.type['volume'].asset
+		length = value.type.volume.asset
 		from type import type_number_for
 		type = type_number_for(length, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)

@@ -217,7 +217,7 @@ define internal void @arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %In
 	store [10 x %Int32] %__a, [10 x %Int32]* %a
 	%b = alloca [10 x %Int32]
 	store [10 x %Int32] %__b, [10 x %Int32]* %b
-	%2 = alloca [10 x %Int32], align 4
+	%2 = alloca [10 x %Int32], align 1
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
 	br label %again_1
@@ -269,17 +269,17 @@ then_0:
 	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	%17 = insertvalue [10 x %Int8] zeroinitializer, %Int8 10, 1
-	%18 = insertvalue [10 x %Int8] %17, %Int8 20, 2
-	%19 = insertvalue [10 x %Int8] %18, %Int8 30, 3
-	%20 = insertvalue [10 x %Int8] %19, %Int8 40, 4
-	%21 = insertvalue [10 x %Int8] %20, %Int8 50, 5
-	%22 = insertvalue [10 x %Int8] %21, %Int8 60, 6
-	%23 = insertvalue [10 x %Int8] %22, %Int8 70, 7
-	%24 = insertvalue [10 x %Int8] %23, %Int8 80, 8
-	%25 = insertvalue [10 x %Int8] %24, %Int8 90, 9
-	%26 = alloca [10 x %Int8]
-	store [10 x %Int8] %25, [10 x %Int8]* %26
+	%17 = insertvalue [10 x i8] zeroinitializer, i8 10, 1
+	%18 = insertvalue [10 x i8] %17, i8 20, 2
+	%19 = insertvalue [10 x i8] %18, i8 30, 3
+	%20 = insertvalue [10 x i8] %19, i8 40, 4
+	%21 = insertvalue [10 x i8] %20, i8 50, 5
+	%22 = insertvalue [10 x i8] %21, i8 60, 6
+	%23 = insertvalue [10 x i8] %22, i8 70, 7
+	%24 = insertvalue [10 x i8] %23, i8 80, 8
+	%25 = insertvalue [10 x i8] %24, i8 90, 9
+	%26 = alloca [10 x i8]
+	store [10 x i8] %25, [10 x i8]* %26
 	%27 = load [10 x %Int32], [10 x %Int32]* %1
 	%28 = insertvalue [10 x %Int32] zeroinitializer, %Int32 10, 1
 	%29 = insertvalue [10 x %Int32] %28, %Int32 20, 2

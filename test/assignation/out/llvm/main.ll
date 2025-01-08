@@ -248,7 +248,7 @@ define %Int @main() {
 	; copy arrays by value
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%5 = zext %Int8 10 to %Int32
+	%5 = zext i8 10 to %Int32
 	; -- end vol eval --
 	%6 = load [10 x %Int32], [10 x %Int32]* @glb_a1
 	store [10 x %Int32] %6, [10 x %Int32]* @glb_a0
@@ -289,16 +289,16 @@ define %Int @main() {
 
 	; copy arrays by value
 	; C backend will be use memcpy()
-	%28 = alloca [10 x %Int32], align 4
+	%28 = alloca [10 x %Int32], align 1
 	store [10 x %Int32] zeroinitializer, [10 x %Int32]* %28
-	%29 = alloca [10 x %Int32], align 4
+	%29 = alloca [10 x %Int32], align 1
 	%30 = insertvalue [10 x %Int32] zeroinitializer, %Int32 42, 0
 	%31 = insertvalue [10 x %Int32] %30, %Int32 53, 1
 	%32 = insertvalue [10 x %Int32] %31, %Int32 64, 2
 	store [10 x %Int32] %32, [10 x %Int32]* %29
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%33 = zext %Int8 10 to %Int32
+	%33 = zext i8 10 to %Int32
 	; -- end vol eval --
 	%34 = load [10 x %Int32], [10 x %Int32]* %29
 	store [10 x %Int32] %34, [10 x %Int32]* %28
@@ -315,11 +315,11 @@ define %Int @main() {
 
 	; copy records by value
 	; C backend will be use memcpy()
-	%44 = alloca %Point, align 4
+	%44 = alloca %Point, align 8
 	%45 = insertvalue %Point zeroinitializer, %Int32 0, 0
 	%46 = insertvalue %Point %45, %Int32 0, 1
 	store %Point %46, %Point* %44
-	%47 = alloca %Point, align 4
+	%47 = alloca %Point, align 8
 	%48 = insertvalue %Point zeroinitializer, %Int32 10, 0
 	%49 = insertvalue %Point %48, %Int32 20, 1
 	store %Point %49, %Point* %47

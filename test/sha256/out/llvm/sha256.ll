@@ -234,21 +234,21 @@ define internal %Word32 @sig1(%Word32 %x) {
 	ret %Word32 %5
 }
 
-@initalState = constant [8 x %Int32] [
-	%Int32 1779033703,
-	%Int32 3144134277,
-	%Int32 1013904242,
-	%Int32 2773480762,
-	%Int32 1359893119,
-	%Int32 2600822924,
-	%Int32 528734635,
-	%Int32 1541459225
+@initalState = constant [8 x i32] [
+	i32 1779033703,
+	i32 3144134277,
+	i32 1013904242,
+	i32 2773480762,
+	i32 1359893119,
+	i32 2600822924,
+	i32 528734635,
+	i32 1541459225
 ]
 define internal void @contextInit(%Context* %ctx) {
 	; -- STMT ASSIGN ARRAY --
 	%1 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	; -- start vol eval --
-	%2 = zext %Int8 8 to %Int32
+	%2 = zext i8 8 to %Int32
 	; -- end vol eval --
 	%3 = insertvalue [8 x %Word32] zeroinitializer, %Word32 1779033703, 0
 	%4 = insertvalue [8 x %Word32] %3, %Word32 3144134277, 1
@@ -262,74 +262,74 @@ define internal void @contextInit(%Context* %ctx) {
 	ret void
 }
 
-@k = constant [64 x %Int32] [
-	%Int32 1116352408,
-	%Int32 1899447441,
-	%Int32 3049323471,
-	%Int32 3921009573,
-	%Int32 961987163,
-	%Int32 1508970993,
-	%Int32 2453635748,
-	%Int32 2870763221,
-	%Int32 3624381080,
-	%Int32 310598401,
-	%Int32 607225278,
-	%Int32 1426881987,
-	%Int32 1925078388,
-	%Int32 2162078206,
-	%Int32 2614888103,
-	%Int32 3248222580,
-	%Int32 3835390401,
-	%Int32 4022224774,
-	%Int32 264347078,
-	%Int32 604807628,
-	%Int32 770255983,
-	%Int32 1249150122,
-	%Int32 1555081692,
-	%Int32 1996064986,
-	%Int32 2554220882,
-	%Int32 2821834349,
-	%Int32 2952996808,
-	%Int32 3210313671,
-	%Int32 3336571891,
-	%Int32 3584528711,
-	%Int32 113926993,
-	%Int32 338241895,
-	%Int32 666307205,
-	%Int32 773529912,
-	%Int32 1294757372,
-	%Int32 1396182291,
-	%Int32 1695183700,
-	%Int32 1986661051,
-	%Int32 2177026350,
-	%Int32 2456956037,
-	%Int32 2730485921,
-	%Int32 2820302411,
-	%Int32 3259730800,
-	%Int32 3345764771,
-	%Int32 3516065817,
-	%Int32 3600352804,
-	%Int32 4094571909,
-	%Int32 275423344,
-	%Int32 430227734,
-	%Int32 506948616,
-	%Int32 659060556,
-	%Int32 883997877,
-	%Int32 958139571,
-	%Int32 1322822218,
-	%Int32 1537002063,
-	%Int32 1747873779,
-	%Int32 1955562222,
-	%Int32 2024104815,
-	%Int32 2227730452,
-	%Int32 2361852424,
-	%Int32 2428436474,
-	%Int32 2756734187,
-	%Int32 3204031479,
-	%Int32 3329325298
+@k = constant [64 x i32] [
+	i32 1116352408,
+	i32 1899447441,
+	i32 3049323471,
+	i32 3921009573,
+	i32 961987163,
+	i32 1508970993,
+	i32 2453635748,
+	i32 2870763221,
+	i32 3624381080,
+	i32 310598401,
+	i32 607225278,
+	i32 1426881987,
+	i32 1925078388,
+	i32 2162078206,
+	i32 2614888103,
+	i32 3248222580,
+	i32 3835390401,
+	i32 4022224774,
+	i32 264347078,
+	i32 604807628,
+	i32 770255983,
+	i32 1249150122,
+	i32 1555081692,
+	i32 1996064986,
+	i32 2554220882,
+	i32 2821834349,
+	i32 2952996808,
+	i32 3210313671,
+	i32 3336571891,
+	i32 3584528711,
+	i32 113926993,
+	i32 338241895,
+	i32 666307205,
+	i32 773529912,
+	i32 1294757372,
+	i32 1396182291,
+	i32 1695183700,
+	i32 1986661051,
+	i32 2177026350,
+	i32 2456956037,
+	i32 2730485921,
+	i32 2820302411,
+	i32 3259730800,
+	i32 3345764771,
+	i32 3516065817,
+	i32 3600352804,
+	i32 4094571909,
+	i32 275423344,
+	i32 430227734,
+	i32 506948616,
+	i32 659060556,
+	i32 883997877,
+	i32 958139571,
+	i32 1322822218,
+	i32 1537002063,
+	i32 1747873779,
+	i32 1955562222,
+	i32 2024104815,
+	i32 2227730452,
+	i32 2361852424,
+	i32 2428436474,
+	i32 2756734187,
+	i32 3204031479,
+	i32 3329325298
 ]
 define internal void @transform(%Context* %ctx, [0 x %Word8]* %data) {
-	%1 = alloca [64 x %Word32], align 4
+	%1 = alloca [64 x %Word32], align 1
 	store [64 x %Word32] zeroinitializer, [64 x %Word32]* %1
 	%2 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %2
@@ -419,7 +419,7 @@ body_2:
 	store %Int32 %70, %Int32* %2
 	br label %again_2
 break_2:
-	%71 = alloca [8 x %Word32], align 4
+	%71 = alloca [8 x %Word32], align 1
 	%72 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%73 = load [8 x %Word32], [8 x %Word32]* %72
 	store [8 x %Word32] %73, [8 x %Word32]* %71
@@ -448,9 +448,9 @@ body_3:
 	%91 = bitcast %Word32 %90 to %Int32
 	%92 = add %Int32 %83, %91
 	%93 = load %Int32, %Int32* %2
-	%94 = getelementptr %Int32, [64 x %Int32]* @k, %Int32 %93
-	%95 = load %Int32, %Int32* %94
-	%96 = bitcast %Int32 %95 to %Int32
+	%94 = getelementptr i32, [64 x i32]* @k, %Int32 %93
+	%95 = load i32, i32* %94
+	%96 = bitcast i32 %95 to %Int32
 	%97 = add %Int32 %92, %96
 	%98 = load %Int32, %Int32* %2
 	%99 = getelementptr %Word32, [64 x %Word32]* %1, %Int32 %98
@@ -816,7 +816,7 @@ break_1:
 }
 
 define void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %outHash) {
-	%1 = alloca %Context, align 8
+	%1 = alloca %Context, align 128
 	%2 = insertvalue %Context zeroinitializer, [64 x %Word8] zeroinitializer, 0
 	%3 = insertvalue %Context %2, %Int32 0, 1
 	%4 = insertvalue %Context %3, %Int64 0, 2

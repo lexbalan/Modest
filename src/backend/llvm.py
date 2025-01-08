@@ -23,8 +23,8 @@ LLVM_TARGET_DATALAYOUT = ""
 # когда первым параметром идет указатель на возвращаемое значение (ABI)
 RET_SIZE_MAX = 16
 def need_sret(func_type):
-	return htype.type_is_closed_array(func_type['to'])
-	#return func_type['to']['size'] > RET_SIZE_MAX
+	return htype.type_is_closed_array(func_type.to)
+	#return func_type.to.size > RET_SIZE_MAX
 
 
 INDENT_SYMBOL = "\t"
@@ -110,23 +110,24 @@ def ll_reg_operation(op, type, reg=None):
 
 
 def type_get_aka(t):
-	if 'id' in t:
-		if t['id'].llvm:
-			return t['id'].llvm
+	if not hasattr(t, 'id'):
+		return None
+	if t.id.llvm:
+		return t.id.llvm
 
-		id_str = t['id'].str
+	id_str = t.id.str
 
-		if id_str != None:
-			#if t['id'].str != 'main':
-			if t['id'].need_decoration:
-				#id_str = t['definition']['module']['prefix'] + '_' + id_str
+	if id_str != None:
+		#if t.id.str != 'main':
+		if t.id.need_decoration:
+			#id_str = t['definition']['module']['prefix'] + '_' + id_str
 
-				if 'definition' in t:
-					prefix = t['definition'].module['prefix']
-					if prefix != None:
-						id_str = prefix + '_' + id_str
+			if hasattr(t, 'definition'):
+				prefix = t.definition.module['prefix']
+				if prefix != None:
+					id_str = prefix + '_' + id_str
 
-			return '%' + id_str
+		return '%' + id_str
 	return None
 
 
@@ -146,8 +147,8 @@ def get_id_str(x):
 	if id.need_decoration:
 		definition = None
 		if isinstance(x, dict):
-			if 'definition' in x:
-				definition = x['definition']
+			if hasattr(x, 'definition'):
+				definition = x.definition
 		else:
 			definition = x.definition
 
@@ -332,7 +333,7 @@ def llvm_va_copy(dst, src):
 
 
 def llvm_inline_cast(op, to_type, val):
-	assert(to_type['isa'] == 'type')
+	assert(isinstance(to_type, Type))
 	assert(val['isa'] == 'll_value')
 	out("%s (" % op)
 	llvm_print_type_value(val)
@@ -352,14 +353,15 @@ def llvm_print_value_array(x):
 	out("[\n")
 	indent_up()
 	n = len(items)
-	nn = (x['type']['volume'].asset)
+
+	nn = (x['type'].volume.asset)
 	i = 0
 	while i < nn:
 		item = None
 		if i < n:
 			item = items[i]
 		else:
-			item = do_eval(ValueZero(x['type']['of'], None))
+			item = do_eval(ValueZero(x['type'].of, None))
 		if i > 0: out(",\n")
 		indent()
 		llvm_print_type_value(item)
@@ -393,8 +395,8 @@ def llvm_print_value_record(x):
 
 
 def llvm_print_value_str(x):
-	string_of = x['type']['to']['of']
-	char_width = string_of['width']
+	string_of = x['type'].to.of
+	char_width = string_of.width
 	str_len = x['len']
 
 	out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (str_len, char_width, x['id'], char_width))
@@ -417,7 +419,7 @@ def llvm_print_value_num(x):
 		# короче суть такая - число сперва нужно причесать
 		# так, чтобы оно могло быть четко представлено в LLVM float/double
 		# наче LLVM не примет его и сгенерирует ошибку
-		packed_float = _float_value_pack(num, x['type']['width'])
+		packed_float = _float_value_pack(num, x['type'].width)
 		return out("%.16f" % packed_float)
 
 	out(str(num))
@@ -629,7 +631,7 @@ def llvm_memzero(dst, size, volatile=False):
 # грубо привести тип integer value к ширине width
 def trim(int_value, width):
 	assert(int_value['isa'] == 'll_value')
-	if int_value['type']['width'] != width:
+	if int_value['type'].width != width:
 		return docast(int_value, foundation.typeNat32)
 	return int_value
 
@@ -702,7 +704,7 @@ def llvm_label(label):
 
 def llvm_alloca(typ, id_str=None, size=None, alignment=0):
 	# ;%8 = alloca i32, i64 %6, align 4;
-	assert(typ['isa'] == 'type')
+	assert(isinstance(typ, Type))
 
 	llv = ll_reg_operation('alloca', typ, reg=id_str)
 	llv['is_adr'] = True
@@ -754,17 +756,17 @@ def print_list_with(lst, method):
 
 
 def print_type_enum(t):
-	out('i%d' % t['width'])
+	out('i%d' % t.width)
 
 
 def print_type_record(t):
-	packed = 'packed' in t['att']
+	packed = 'packed' in t.att
 
 	if packed:
 		out("<")
 
 	out("{")
-	fields = t['fields']
+	fields = t.fields
 	i = 0
 	while i < len(fields):
 		field = fields[i]
@@ -789,7 +791,7 @@ def print_type_record(t):
 def print_type_array(t):
 	sz = 0
 	if not htype.type_is_vla(t):
-		array_size = t['volume']
+		array_size = t.volume
 		if array_size != None:
 			sz = array_size.asset
 			if sz == None:  #?!
@@ -798,7 +800,7 @@ def print_type_array(t):
 
 	out("[")
 	out("%d x " % sz)
-	print_type(t['of'])
+	print_type(t.of)
 	out("]")
 
 
@@ -807,7 +809,7 @@ def print_type_pointer(t):
 	if htype.type_is_free_pointer(t):
 		out("i8*")
 	else:
-		print_type(t['to']); out("*")
+		print_type(t.to); out("*")
 
 
 
@@ -829,9 +831,8 @@ def print_int_type_for(width):
 # если же в CM она получает массив то тут и в СИ она получает
 # указатель на него, и потом копирует его во внутренний массив
 def print_type(t):
-	assert(t['isa'] == 'type')
+	assert(isinstance(t, Type))
 	print_aka=True
-	k = t['kind']
 
 	id_str = type_get_aka(t)
 	if id_str != None:
@@ -843,7 +844,7 @@ def print_type(t):
 		# он типа делает, но потом к переменной с таким типом
 		# хрен обратишься... дерьмо
 		if htype.type_is_record(t):
-			if 'id' in t:
+			if hasattr(t, 'id'):
 				out("%" + t['id'].str)
 				return
 
@@ -854,26 +855,26 @@ def print_type(t):
 		# иногда сюда залетают дженерики например в to левое:
 		# let p = 0x12345678 to *Nat32
 		if htype.type_is_number(t):
-			print_int_type_for(t['width'])
+			print_int_type_for(t.width)
 			return
 
 	if htype.type_is_func(t): print_type_func(t)
 	elif htype.type_is_record(t): print_type_record(t)
 	elif htype.type_is_pointer(t): print_type_pointer(t)
 	elif htype.type_is_array(t): print_type_array(t)
-	elif htype.type_is_enum(t): print_type_enum(t)
+	#elif htype.type_is_enum(t): print_type_enum(t)
 
 	elif htype.type_is_integer(t):
-		print_int_type_for(t['width'])
+		print_int_type_for(t.width)
 
 	elif htype.type_is_float(t):
-		if t['width'] <= 32:
+		if t.width <= 32:
 			out("float")
 		else:
 			out("double")
 
 	elif htype.type_is_char(t):
-		print_int_type_for(t['width'])
+		print_int_type_for(t.width)
 
 	elif htype.type_is_undefined(t):
 		out('opaque')
@@ -882,7 +883,7 @@ def print_type(t):
 		out("i8*")
 
 	else:
-		out("<type:%s>" % k)
+		out("<type:%s>" % str(t))
 
 
 
@@ -929,7 +930,7 @@ def do_eval_bin(x):
 					r = llvm_alloca_store(r['type'], id_str=None, init_value=r)
 
 			# Теперь сравниваем значения по указателям и длине (memcmp)
-			sz = llvm_value_num(foundation.typeInt64, l['type']['size'])
+			sz = llvm_value_num(foundation.typeInt64, l['type'].size)
 			return llvm_memcmp(op, l, r, sz)
 
 		return None
@@ -1003,7 +1004,7 @@ def do_eval_call(v):
 	sret_retval = False
 	if sret:
 		out("; alloca memory for return value")
-		sret_retval = llvm_alloca(ftype['to'])
+		sret_retval = llvm_alloca(ftype.to)
 
 	# eval func
 	f = do_eval(func)
@@ -1011,28 +1012,28 @@ def do_eval_call(v):
 	if htype.type_is_pointer(ftype):
 		# pointer to array needs additional load
 		f = llvm_dold(f)
-		ftype = ftype['to']
+		ftype = ftype.to
 
-	to_unit = htype.type_eq(ftype['to'], foundation.typeUnit)
+	to_unit = htype.type_eq(ftype.to, foundation.typeUnit)
 
 
 	# do call
 	rv = None
 	if to_unit or sret:
 		lo("call ")
-		rv = llvm_value_zero(ftype['to'])
+		rv = llvm_value_zero(ftype.to)
 	else:
-		rv = ll_reg_operation('call', ftype['to'])
+		rv = ll_reg_operation('call', ftype.to)
 
-	if ftype['extra_args']:
+	if ftype.extra_args:
 		print_type_func(ftype)
 	else:
-		if htype.type_is_unit(ftype['to']):
+		if htype.type_is_unit(ftype.to):
 			out("void")
-		elif htype.type_is_array(ftype['to']):
+		elif htype.type_is_array(ftype.to):
 			out("void")
 		else:
-			print_type(ftype['to'])
+			print_type(ftype.to)
 
 	out(" ")
 	llvm_print_value(f)
@@ -1083,8 +1084,8 @@ def do_eval_index(v):
 
 def getET(et):
 	while htype.type_is_pointer(et):
-		et = et['to']
-	et = et['of']
+		et = et.to
+	et = et.of
 	return et
 
 
@@ -1105,10 +1106,10 @@ def do_eval_slice(v):
 	varray = v.left
 	if htype.type_is_pointer(varray.type):
 		pointer = do_reval(varray)
-		array_type = pointer['type']['to']
+		array_type = pointer['type'].to
 		index = do_reval(v.index_from)
 		result_type = v.type
-		ptr_to_item = llvm_gep(pointer, array_type, (index,), array_type['of'], array_type['of'])
+		ptr_to_item = llvm_gep(pointer, array_type, (index,), array_type.of, array_type.of)
 		out("\n;")
 
 		pnv = llvm_cast("bitcast", ptr_to_item, type_pointer(v.type))
@@ -1129,7 +1130,7 @@ def do_eval_slice(v):
 
 		return extractvalue(array, result_type, index.asset)
 
-	ptr_to_item = llvm_gep(array, array_type, (index,), array_type['of'], array_type['of'])
+	ptr_to_item = llvm_gep(array, array_type, (index,), array_type.of, array_type.of)
 	pnv = llvm_cast("bitcast", ptr_to_item, type_pointer(v.type))
 	pnv['is_adr'] = True
 	return pnv
@@ -1138,8 +1139,8 @@ def do_eval_slice(v):
 
 def getET2(et):
 	while htype.type_is_pointer(et):
-		et = et['to']
-	#et = et['of']
+		et = et.to
+	#et = et.of
 	return et
 
 
@@ -1220,11 +1221,11 @@ def select_cast_operator(a, b):
 			# Это плохо тк не работает в некоторых особых ситуациях
 			# например для  i17 to i32 вернет bitcast что неверно!
 			# но пока не убираю тк непонятно чем аукнется еще
-			#aw = align_bits_up(a['width'])
-			#bw = align_bits_up(b['width'])
+			#aw = align_bits_up(a.width)
+			#bw = align_bits_up(b.width)
 
-			aw = a['width']
-			bw = b['width']
+			aw = a.width
+			bw = b.width
 
 			if aw < bw:
 				return 'sext' if signed else 'zext'
@@ -1254,9 +1255,9 @@ def select_cast_operator(a, b):
 
 		# Float -> Float
 		elif htype.type_is_float(b):
-			if a['width'] < b['width']:
+			if a.width < b.width:
 				return 'fpext'
-			elif a['width'] > b['width']:
+			elif a.width > b.width:
 				return 'fptrunc'
 			else:
 				return 'bitcast'
@@ -1293,7 +1294,7 @@ def cons_composite_from_composite(to_type, value, ti):
 	#
 
 	out("\n; -- cons_composite_from_composite_by_value --")
-	if to_type['size'] > value.type['size']:
+	if to_type.size > value.type.size:
 		#out("\n\t; extend")
 		# выделим память под новое значение
 		nv = llvm_alloca(to_type)
@@ -1351,7 +1352,7 @@ def do_eval_cons(x):
 	if htype.type_is_pointer(to_type):
 		if htype.type_is_pointer(from_type):
 			# skipping cast pointer to pointer of the same type
-			if id(to_type['to']) == id(from_type['to']):
+			if id(to_type.to) == id(from_type.to):
 				return do_reval(value)
 
 	if htype.type_is_array(to_type):
@@ -1368,10 +1369,10 @@ def do_eval_cons(x):
 				return do_eval_literal(x)
 
 	if htype.type_is_pointer(to_type):
-		if htype.type_is_array_of_char(to_type['to']):
+		if htype.type_is_array_of_char(to_type.to):
 			if htype.type_is_string(from_type):
-				string_of = to_type['to']['of']
-				char_pow = string_of['width']
+				string_of = to_type.to.of
+				char_pow = string_of.width
 				return llvm_value_str(x.strid, x.asset, x.type, isz='zstring' in x.att)
 
 	if htype.type_is_char(to_type):
@@ -1548,9 +1549,9 @@ def do_eval_literal(x):
 	elif htype.type_is_free_pointer(xt): return llvm_value_num(xt, x.asset)
 	elif htype.type_is_pointer(xt): return do_eval_pointer(x)
 	elif htype.type_is_char(xt): return llvm_value_num(xt, x.asset)
-	elif htype.type_is_enum(xt): return llvm_value_num(xt, x.asset)
 	elif htype.type_is_word(xt): return llvm_value_num(xt, x.asset)
 	elif htype.type_is_string(xt): return do_eval_string(x)
+	#elif htype.type_is_enum(xt): return llvm_value_num(xt, x.asset)
 	else:
 		error("do_eval_literal: unknown literal", x['ti'])
 		Value.print(x)
@@ -1652,14 +1653,14 @@ def do_assign_arrays(l, r):
 	dst = do_eval(l)
 
 	out("\n\t; -- start vol eval --")
-	volume = do_eval(r.type['volume'])
+	volume = do_eval(r.type.volume)
 	volume = trim(volume, 32)
 	out("\n\t; -- end vol eval --")
 
 	if r.isZero():
 		out("\n\t; -- zero fill rest of array")
 		# size = volume * item_size
-		item_sz = l.type['of']['size']
+		item_sz = l.type.of.size
 		item_size = llvm_value_num(foundation.typeNat32, item_sz)
 		size = llvm_eval_binary('mul', volume, item_size)
 		llvm_memzero(dst, size, volatile=False)
@@ -1751,7 +1752,7 @@ def print_stmt_return(x):
 			return None
 
 		# return via sret
-		to = fctx['func'].type['to']
+		to = fctx['func'].type.to
 		p2retval = llvm_value_reg("0", type_pointer(to))
 		llvm_store(p2retval, v)
 
@@ -1770,11 +1771,11 @@ def print_stmt_var(x):
 	is_vla = False
 	sz = None
 	if htype.type_is_array(t):
-		if not t['volume'].isImmediate():
-			sz = do_reval(t['volume'])
-			t = t['of']
+		if not t.volume.isImmediate():
+			sz = do_reval(t.volume)
+			t = t.of
 
-	val = llvm_alloca(t, size=sz, alignment=t['align'])
+	val = llvm_alloca(t, size=sz, alignment=t.align)
 
 	# VLA fix
 	left = val
@@ -1785,7 +1786,7 @@ def print_stmt_var(x):
 		# ex:  %8 = alloca i32, i32 %7, align 4
 		#      %9 = bitcast i32* %8 to [0 x i32]*
 		# и дальше уже будем работать с ним как с *[0 x i32] (%9)
-		from_type = type_pointer(var.type['of'])
+		from_type = type_pointer(var.type.of)
 		to_type = type_pointer(var.type)
 		left = llvm_2cast('bitcast', from_type, to_type, left)
 		val = left
@@ -1964,10 +1965,10 @@ def print_stmt(x):
 def print_func_params(ftype, only_types=False, with_attributes=True):
 	# here can be a pointer to function
 	if htype.type_is_pointer(ftype):
-		ftype = ftype['to']
+		ftype = ftype.to
 
-	params = ftype['params']
-	to = ftype['to']
+	params = ftype.params
+	to = ftype.to
 
 	if need_sret(ftype):
 		# %struct.Sre* noalias sret(%struct.Sre) align 1 %0
@@ -2023,16 +2024,16 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 		i = i + 1
 
 
-	if ftype['extra_args']:
+	if ftype.extra_args:
 		out(", ...")
 
 
 
 def print_type_func(t):
-	if htype.type_is_unit(t['to']) or need_sret(t):
+	if htype.type_is_unit(t.to) or need_sret(t):
 		out("void")
 	else:
-		print_type(t['to'])
+		print_type(t.to)
 
 	out(" (")
 	print_func_params(t, only_types=True)
@@ -2040,10 +2041,10 @@ def print_type_func(t):
 
 
 def print_func_signature(ftype, idStr):
-	if htype.type_is_unit(ftype['to']) or need_sret(ftype):
+	if htype.type_is_unit(ftype.to) or need_sret(ftype):
 		out("void")
 	else:
-		print_type(ftype['to'])
+		print_type(ftype.to)
 
 	out(" @%s(" % idStr)
 	print_func_params(ftype)
@@ -2117,7 +2118,7 @@ def print_def_func(x):
 	# Добавляем параметры в локальную таблицу
 	#
 
-	params = ftype['params']
+	params = ftype.params
 	for param in params:
 		param_id = get_id_str(param)
 
@@ -2195,7 +2196,7 @@ def print_def_func(x):
 
 	print_stmt_block(x.stmt)
 
-	if htype.type_eq(ftype['to'], foundation.typeUnit):
+	if htype.type_eq(ftype.to, foundation.typeUnit):
 		print_stmt_return(StmtReturn(None))
 
 	indent_down()
@@ -2376,7 +2377,7 @@ def print_strings(strings):
 			strno = strno + 1
 			strid = 'str%d' % strno
 
-		char_width = string.type['to']['of']['width']
+		char_width = string.type.to.of.width
 
 		string.strid = strid
 

@@ -35,11 +35,11 @@ parser = Parser()
 # сущность из текущего модуля
 def is_local_entity(x):
 	global cmodule
-	if 'definition' in x:
+	if hasattr(x, 'definition'):
 		if isinstance(x, dict):
 			return x['definition'].module == cmodule
 		else:
-			return x.definition['module'] == cmodule
+			return x.definition.module == cmodule
 	return True
 
 
@@ -103,7 +103,7 @@ def module_type_add_public(m, id_str, t):
 	#print("module %s type_add_public %s" % (m['id'], id_str))
 	m['symtab_public'].type_add(id_str, t)
 	#t['module'] = m
-	t['att'].append('global_entity')
+	t.att.append('global_entity')
 
 def module_value_add_public(m, id_str, v):
 	#print("module %s value_add_public %s" % (m['id'], id_str))
@@ -116,7 +116,7 @@ def module_type_add_private(m, id_str, t):
 	#print("module %s type_add_private %s" % (m['id'], id_str))
 	m['symtab_private'].type_add(id_str, t)
 	#t['module'] = m
-	t['att'].append('global_entity')
+	t.att.append('global_entity')
 
 def module_value_add_private(m, id_str, v):
 	#print("module %s value_add_private %s" % (m['id'], id_str))
@@ -585,11 +585,11 @@ def do_type_array(t):
 				global cfunc
 				cfunc['att'].append('stacksave')
 			else:
-				error("non local VLA", t['size'])
+				error("non local VLA", t.size)
 
 		#if not (htype.type_is_integer(volume['type']) or htype.type_is_number(volume['type'])):
 		if htype.type_is_signed(volume.type):
-			error("required value with number or integer type", t['size']['ti'])
+			error("required value with number or integer type", t.size['ti'])
 
 	# closed arrays of closed arrays are denied NOW
 #	if htype.type_is_closed_array(of):
@@ -624,11 +624,11 @@ def do_type_record(x):
 
 	anon_rec_cnt = anon_rec_cnt + 1
 	rec = htype.type_record(fields, ti=x['ti'])
-	rec['end_nl'] = x['end_nl']
+	rec.end_nl = x['end_nl']
 	# add anon record (before)
 
 	anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
-	rec['c_anon_id'] = anon_tag
+	rec.c_anon_id = anon_tag
 
 	#rec['att'].append('anonymous_record') # remove this!
 	cmodule['anon_recs'].append(rec)
@@ -696,7 +696,7 @@ def do_type(x):
 	elif k == 'undefined': t = do_type_undefined(x)
 	else: t = bad_type(x['ti'])
 
-	t['ti'] = x['ti']
+	t.ti = x['ti']
 
 	return t
 
@@ -754,11 +754,11 @@ def do_ValueBin(x):
 
 	# Check type is valid for the operation
 
-	if not op in l.type['ops']:
+	if not op in l.type.ops:
 		error("unsuitable value type for '%s' operation" % op, l['ti'])
 		return ValueBad(ti)
 
-	if not op in r.type['ops']:
+	if not op in r.type.ops:
 		error("unsuitable value type for '%s' operation" % op, r['ti'])
 		return ValueBad(ti)
 
@@ -881,7 +881,7 @@ def do_value_not(x):
 
 	vtype = v.type
 
-	if not 'not' in vtype['ops']:
+	if not 'not' in vtype.ops:
 		error("unsuitable type", v)
 		return ValueBad(x['ti'])
 
@@ -916,7 +916,7 @@ def do_value_neg(x):
 		if not htype.type_is_signed(vtype):
 			error("expected value with signed type", v)
 	else:
-		vtype['signed'] = True
+		vtype.signed = True
 
 	nv = ValueUn('neg', v, vtype, ti=x['ti'])
 
@@ -966,7 +966,7 @@ def do_value_deref(x):
 		error("expected pointer value", v)
 		return ValueBad(x['ti'])
 
-	to = vtype['to']
+	to = vtype.to
 
 	# you can't deref:
 	#   - pointer to Unit
@@ -1090,12 +1090,12 @@ def do_ValueCall(x):
 
 	# pointer to function?
 	if htype.type_is_pointer(ftype):
-		ftype = ftype['to']
+		ftype = ftype.to
 
 	if not htype.type_is_func(ftype):
 		error("expected function or pointer to function", x)
 
-	params = ftype['params']
+	params = ftype.params
 	args = x['args']
 
 	npars = len(params)
@@ -1106,7 +1106,7 @@ def do_ValueCall(x):
 		return ValueBad(x['ti'])
 
 	if nargs > npars:
-		if not ftype['extra_args']:
+		if not ftype.extra_args:
 			error("too many args", x)
 			return ValueBad(x['ti'])
 
@@ -1184,7 +1184,7 @@ def do_ValueCall(x):
 			else:
 				error("expected literal string argument", first_arg['ti'])
 
-	rv = ValueCall(fn, ftype['to'], args + extra_args, ti=x['ti'])
+	rv = ValueCall(fn, ftype.to, args + extra_args, ti=x['ti'])
 	return rv
 
 
@@ -1201,7 +1201,7 @@ def do_value_index(x):
 
 	array_typ = left_typ
 	if via_pointer:
-		array_typ = left_typ['to']
+		array_typ = left_typ.to
 
 
 	if not htype.type_is_array(array_typ):
@@ -1221,7 +1221,7 @@ def do_value_index(x):
 	if htype.type_is_generic(index.type):
 		index = value_cons_implicit_check(typeSysInt, index)
 
-	nv = ValueIndexArray(left, array_typ['of'], index, ti=x['ti'])
+	nv = ValueIndexArray(left, array_typ.of, index, ti=x['ti'])
 
 	if not via_pointer:
 		nv.immutable = left.immutable
@@ -1231,14 +1231,14 @@ def do_value_index(x):
 				#info("immediate index", x['ti'])
 				index_imm = index.asset
 
-				if index_imm >= array_typ['volume'].asset:
+				if index_imm >= array_typ.volume.asset:
 					error("array index out of bounds", x['index'])
 					return ValueBad(x['ti'])
 
 				if index_imm < len(left.items):
 					item = left.items[index_imm]
 				else:
-					item = ValueZero(array_typ['of'], x['ti'])
+					item = ValueZero(array_typ.of, x['ti'])
 
 				nv.immval = item
 				nv.immediate = item.immediate
@@ -1265,7 +1265,7 @@ def do_value_slice(x):
 	via_pointer = htype.type_is_pointer(left_type)
 	array_type = left_type
 	if via_pointer:
-		array_type = left_type['to']
+		array_type = left_type.to
 
 	if not htype.type_is_array(array_type):
 		error("expected array or pointer to array", left)
@@ -1300,7 +1300,7 @@ def do_value_slice(x):
 	if slice_volume == None:
 		slice_volume = ValueUndefined(typeSysNat, x['ti'])
 
-	type = htype.type_array(array_type['of'], slice_volume, x['ti'])
+	type = htype.type_array(array_type.of, slice_volume, x['ti'])
 	nv = ValueSliceArray(left, type, index_from, index_to, x['ti'])
 
 	if not via_pointer:
@@ -1362,7 +1362,7 @@ def do_value_access(x):
 
 	record_type = left.type
 	if via_pointer:
-		record_type = left.type['to']
+		record_type = left.type.to
 
 	# check if is record
 	if not htype.type_is_record(record_type):
@@ -1728,7 +1728,7 @@ def do_stmt_while(x):
 def do_stmt_return(x):
 	global cfunc
 
-	func_ret_type = cfunc.type['to']
+	func_ret_type = cfunc.type.to
 
 	is_no_ret_func = htype.type_is_unit(func_ret_type)
 	ret_val_present = x['value'] != None
@@ -1912,7 +1912,7 @@ def do_stmt_value(x):
 		return StmtBad(x)
 
 	if not htype.type_is_unit(v.type):
-		if not 'dispensable' in v.type['att']:
+		if not 'dispensable' in v.type.att:
 			warning("unused result of %s expression" % x['value']['kind'], v.ti)
 
 	return StmtValueExpression(v, ti=x['ti'])
@@ -2049,9 +2049,11 @@ def need_decoration(x):
 
 
 def type_update(dst, src):
-	dst.clear()
-	dst.update(src)
-	dst['att'] = copy.copy(src['att'])
+	#  ТУТ ХЗ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	dst.__dict__.clear()
+	dst.__dict__.update(src.__dict__)
+	dst.att = copy.copy(src.att)
+	dst.__class__ = src.__class__
 
 
 def def_type(x):
@@ -2087,17 +2089,20 @@ def def_type(x):
 
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое
-	deps = nt['deps']
+	deps = nt.deps
 	type_update(nt, ty)
-	nt['deps'] = deps
-	nt['id'] = id
+	nt.deps = deps
+	nt.id = id
 #	nt['id'].c = id.str   # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-	nt['definition'] = definition
-	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
-	nt['ti_def'] = id.ti
+	nt.definition = definition
+	nt.module = cmodule  # добавляем заново тк очистили его выше!
+	nt.ti_def = id.ti
+
+	#print("TY = " + str(ty))
+	#print("NT = " + str(nt))
 
 	if need_decoration(x):
-		nt['id'].need_decoration = True
+		nt.id.need_decoration = True
 
 	if not ('do_not_include' in cmodule['att']):
 		# В случае когда не печатаем typedef явно (!)
@@ -2209,12 +2214,12 @@ def def_var(x):
 			if htype.type_is_string(v.type):
 				length = len(v.asset)
 			elif htype.type_is_array(v.type):
-				length = v.type['volume'].asset
+				length = v.type.volume.asset
 			else:
 				pass
 
 			volume = value_integer_create(length)
-			t = htype.type_array(t['of'], volume, x['ti'])
+			t = htype.type_array(t.of, volume, x['ti'])
 
 		v = value_cons_implicit_check(t, v)
 
@@ -2276,7 +2281,7 @@ def def_func(x, dostmt=True):
 	prev_cfunc = cfunc
 	cfunc = fn
 
-	params = fn.type['params']
+	params = fn.type.params
 
 	i = 0
 	while i < len(params):
@@ -2291,7 +2296,7 @@ def def_func(x, dostmt=True):
 		i += 1
 
 	# for C backend, for #include <stdarg.h>
-	if fn.type['extra_args']:
+	if fn.type.extra_args:
 		if not 'use_va_arg' in cmodule['att']:
 			cmodule['att'].append('use_va_arg')
 
@@ -2307,7 +2312,7 @@ def def_func(x, dostmt=True):
 			check_block(stmt)
 
 			# check if return present
-			if not htype.type_is_unit(fn.type['to']):
+			if not htype.type_is_unit(fn.type.to):
 				stmts = stmt.stmts
 				if len(stmts) == 0:
 					warning("expected return operator at end", stmt['ti'])
@@ -2713,7 +2718,7 @@ def pre_def(ast, fdecl=False):
 				#type_func incomplete!
 				f_to = htype.type_undefined(x['ti'])
 				t = htype.type_func([], f_to, False, x['ti'])
-				t['att'].append('incomplete')
+				t.att.append('incomplete')
 				#t = htype.type_undefined(x['ti'])
 				fid = Id(x['id'])
 				v = ValueFunc(fid, t, x['ti'])
@@ -2927,7 +2932,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 				i += 1
 				continue
 
-			arg_type = arg_type['to']
+			arg_type = arg_type.to
 
 
 		if spec in ['i', 'd']:

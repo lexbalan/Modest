@@ -116,7 +116,7 @@ def init():
 
 	# type Nil = Generic(*Unit)
 	typeNil = type_pointer(to=typeUnit)
-	typeNil['generic'] = True
+	typeNil.generic = True
 
 	# type FreePointer = *Unit
 	typeFreePointer = type_pointer(to=typeUnit)
@@ -126,28 +126,15 @@ def init():
 	from value.value import ValueUndefined
 	undefinedVolume = ValueUndefined(typeSysNat, ti=None)
 	typeStr8 = type_array(typeChar8, undefinedVolume, ti=None)
-	typeStr8['id'] = Id().fromStr('Str8')
+	typeStr8.id = Id().fromStr('Str8')
 	typeStr16 = type_array(typeChar16, undefinedVolume, ti=None)
-	typeStr16['id'] = Id().fromStr('Str16')
+	typeStr16.id = Id().fromStr('Str16')
 	typeStr32 = type_array(typeChar32, undefinedVolume, ti=None)
-	typeStr32['id'] = Id().fromStr('Str32')
+	typeStr32.id = Id().fromStr('Str32')
 
-	va_list_id = Id().fromStr('va_list')
-	va_list_id.c = 'va_list'
-	va_list_id.llvm = 'i8*'
-	type__VA_List = {
-		'isa': 'type',
-		'kind': 'va_list',
-		'generic': False,
-		'width': 0,
-		'size': 0,
-		'align': 1,
-		'width': 0,
-		'id': va_list_id,
-		'att': [],
-		'ops': [],
-		'ti': None
-	}
+	type__VA_List = type_va_list()
+
+
 
 	return foundation
 

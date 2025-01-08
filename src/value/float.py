@@ -12,7 +12,7 @@ def value_float_create(num, ti=None):
 	#info("value_float_create", ti)
 	flt_width = int(settings.get('float_width'))
 	typ = type_float(width=flt_width, ti=ti)
-	typ['generic'] = True
+	typ.generic = True
 	v = ValueLiteral(typ, ti)
 	v.asset = num
 	v.immediate = True
@@ -28,7 +28,7 @@ def _value_float_cons_immediate(t, v, method, ti):
 
 
 
-def float_can(to, from_type, method):
+def float_can(to, from_type, method, ti):
 	if type.type_is_generic(from_type):
 		return type.type_is_integer(from_type) or type.type_is_float(from_type) or type.type_is_number(from_type)
 

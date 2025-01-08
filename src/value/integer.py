@@ -13,7 +13,7 @@ def value_integer_create(num, typ=None, ti=None):
 	else:
 		nbits = nbits_for_num(num)
 
-		if nbits > typ['width']:
+		if nbits > typ.width:
 			from error import error
 			error("value size not corresponded type size", ti)
 			return ValueBad(ti)
@@ -35,7 +35,7 @@ def _check_width(from_type, t, method, ti):
 	if htype.type_is_float(from_type):
 		return True
 
-	if from_type['width'] > t['width']:
+	if from_type.width > t.width:
 		#info("%s" % method, ti)
 		if method != 'unsafe':
 			error("value cons with potential data loss", ti)
@@ -59,7 +59,7 @@ def _check_width(from_type, t, method, ti):
 
 def _value_integer_cons_immediate(t, v, method, ti):
 	#info("value_cons_int_immediate", ti)
-	width = t['width']
+	width = t.width
 	need_width = nbits_for_num(v.asset)
 
 	if need_width > width:
@@ -69,9 +69,9 @@ def _value_integer_cons_immediate(t, v, method, ti):
 
 
 
-def integer_can(to, from_type, method):
+def integer_can(to, from_type, method, ti):
 	if htype.type_is_number(from_type):
-		return from_type['width'] <= to['width']
+		return from_type.width <= to.width
 
 	if method == 'implicit':
 		return False
@@ -88,14 +88,14 @@ def integer_can(to, from_type, method):
 	if c or c0 or c1 or c2 or c3:
 		if method == 'unsafe':
 			return True
-		return to['width'] >= from_type['width']
+		return to.width >= from_type.width
 
 	if method != 'unsafe':
 		return False
 
 	if htype.type_is_pointer(from_type):
 		from main import settings
-		return to['width'] >= int(settings.get('pointer_width'))
+		return to.width >= int(settings.get('pointer_width'))
 
 	return False
 
@@ -108,7 +108,7 @@ def value_integer_cons(t, v, method, ti):
 	if v.isImmediate():
 		_check_width(v.type, t, method, ti)
 
-		if not t['signed']:
+		if not t.signed:
 			if v.asset < 0:
 				return None
 

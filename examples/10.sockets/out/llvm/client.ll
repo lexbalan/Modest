@@ -348,7 +348,7 @@ then_0:
 endif_0:
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%9 = zext %Int16 1024 to %Int32
+	%9 = zext i16 1024 to %Int32
 	; -- end vol eval --
 	; -- zero fill rest of array
 	%10 = mul %Int32 %9, 1
@@ -369,7 +369,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*))
-	%4 = alloca %Struct_sockaddr_in, align 4
+	%4 = alloca %Struct_sockaddr_in, align 16
 	%5 = insertvalue %Struct_sockaddr_in zeroinitializer, %Int8 0, 0
 	%6 = insertvalue %Struct_sockaddr_in %5, %Int8 2, 1
 	%7 = insertvalue %Struct_sockaddr_in %6, %UnsignedShort 8080, 2

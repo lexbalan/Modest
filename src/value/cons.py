@@ -12,13 +12,13 @@ from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons
 from .bad import bad_can, ValueBad_cons
 from .number import number_can, value_number_cons
-
+from hlir.type import Type
 
 
 # can be implicitly constructed value with type a from type b?
-def cons_can(to, from_type, method):
-	assert(to['isa'] == 'type')
-	assert(from_type['isa'] == 'type')
+def cons_can(to, from_type, method, ti):
+	assert(isinstance(to, Type))
+	assert(isinstance(from_type, Type))
 
 	if htype.type_eq(to, from_type):
 		return True
@@ -44,10 +44,11 @@ def cons_can(to, from_type, method):
 	elif htype.type_is_char(to): checker = char_can
 	elif htype.type_is_bad(to): checker = bad_can
 	else:
-		info(to['kind'], to['ti'])
+		print (htype.type_is_pointer(to))
+		info(str(to), to.ti)
 		assert(False)
 
-	return checker(to, from_type, method)
+	return checker(to, from_type, method, ti)
 
 
 
@@ -57,7 +58,7 @@ def cons_can(to, from_type, method):
 # 4. AnyPointer -> FreePointer
 # 5. FreePointer -> AnyPointer
 def value_cons_implicit(t, v, ti=None):
-	assert(t['isa'] == 'type')
+	assert(isinstance(t, Type))
 	assert(isinstance(v, Value))
 
 	if Value.isBad(v) or htype.type_is_bad(t):
@@ -67,7 +68,7 @@ def value_cons_implicit(t, v, ti=None):
 
 	from_type = v.type
 
-	if not cons_can(t, from_type, 'implicit'):
+	if not cons_can(t, from_type, 'implicit', ti):
 		info("cannot implicitly construct value", v.ti)
 		return v
 
@@ -82,7 +83,7 @@ def value_cons_implicit(t, v, ti=None):
 
 	# for structural type system support
 	if htype.type_is_pointer_to_record(t) and htype.type_is_pointer_to_record(from_type):
-		if id(t['to']) != id(from_type['to']):
+		if id(t.to) != id(from_type.to):
 			# Если это указатели на разные структуры (номинативно!) то генерим cons операцию
 			# для C и LLVM это важно (их не волнует то что структура может быть одинакова)
 			return value_pointer_cons(t, v, 'implicit', ti=ti)
@@ -105,7 +106,7 @@ def value_cons_implicit_check(t, v):
 
 
 def value_cons_explicit(t, v, ti):
-	assert(t['isa'] == 'type')
+	assert(isinstance(t, Type))
 	assert(isinstance(v, Value))
 	assert(ti['isa'] == 'ti')
 
@@ -118,7 +119,7 @@ def value_cons_explicit(t, v, ti):
 		info("explicit cast to the same type", ti)
 		return v
 
-	if not cons_can(t, from_type, 'explicit'):
+	if not cons_can(t, from_type, 'explicit', ti):
 		error("cannot construct value", ti)
 		htype.type_print(t)
 		print(" from ", end='')
@@ -168,14 +169,13 @@ def _select_default_type_for(t):
 		return typeSysChar
 
 	elif htype.type_is_array(t):
-		item_type = t['of']
-		if htype.type_is_generic(t['of']):
+		item_type = t.of
+		if htype.type_is_generic(t.of):
 			# выбираем тип для generic-элемента
 			# [1, 2]  -> [2]Int32 [Int32 1, Int32 2]
-			item_type = _select_default_type_for(t['of'])
+			item_type = _select_default_type_for(t.of)
 
-		volume = t['volume']
-		return htype.type_array(item_type, volume, t['ti'])
+		return htype.type_array(item_type, t.volume, t.ti)
 
 
 	# corresponded type not found!

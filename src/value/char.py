@@ -11,7 +11,7 @@ def value_char_create(char_code, _type=None, ti=None):
 		# if type not specified, set type as GenericChar
 		char_width = nbits_for_num(char_code)
 		_type = type.type_char(char_width, ti=ti)
-		_type['generic'] = True
+		_type.generic = True
 
 	v = ValueLiteral(_type, ti)
 	v.asset = char_code
@@ -19,12 +19,12 @@ def value_char_create(char_code, _type=None, ti=None):
 
 
 
-def char_can(to, from_type, method):
+def char_can(to, from_type, method, ti):
 	if method == 'unsafe':
 		return True
 
 	if type.type_is_string(from_type):
-		return from_type['length'] == 1 and from_type['width'] <= to['width']
+		return from_type.length == 1 and from_type.width <= to.width
 
 	if method == 'implicit':
 		return False
@@ -35,7 +35,7 @@ def char_can(to, from_type, method):
 	c2 = type.type_is_word(from_type)
 
 	if c or c0 or c1 or c2:
-		return from_type['width'] <= to['width']
+		return from_type.width <= to.width
 
 
 	return False
@@ -62,7 +62,7 @@ def value_char_cons(t, v, method, ti):
 
 
 def utf32_chars_to_utfx_chars(str_asset, char_type, ti):
-	char_codes = utf32_str_to_utfx_char_codes(str_asset, char_type['width'])
+	char_codes = utf32_str_to_utfx_char_codes(str_asset, char_type.width)
 	# [char_code] -> [value_char]
 	chars = []
 	for cc in char_codes:

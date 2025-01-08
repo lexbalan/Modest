@@ -326,11 +326,11 @@ define internal %Bool @test_generic_char() {
 define internal %Bool @test_generic_array() {
 	; Any array expression have GenericArray type
 	; this array expression (GenericArray of four GenericInteger items)
-	%1 = insertvalue [4 x %Int8] zeroinitializer, %Int8 1, 1
-	%2 = insertvalue [4 x %Int8] %1, %Int8 2, 2
-	%3 = insertvalue [4 x %Int8] %2, %Int8 3, 3
-	%4 = alloca [4 x %Int8]
-	store [4 x %Int8] %3, [4 x %Int8]* %4
+	%1 = insertvalue [4 x i8] zeroinitializer, i8 1, 1
+	%2 = insertvalue [4 x i8] %1, i8 2, 2
+	%3 = insertvalue [4 x i8] %2, i8 3, 3
+	%4 = alloca [4 x i8]
+	store [4 x i8] %3, [4 x i8]* %4
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str12 to [0 x i8]*))
@@ -342,10 +342,10 @@ endif_0:
 	; can be implicit casted to Array with compatible type and same size
 
 	; implicit cast Generic([4]GenericInteger) value to [4]Int32
-	%7 = alloca [4 x %Int32], align 4
+	%7 = alloca [4 x %Int32], align 1
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%8 = zext %Int8 4 to %Int32
+	%8 = zext i8 4 to %Int32
 	; -- end vol eval --
 	%9 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
 	%10 = insertvalue [4 x %Int32] %9, %Int32 2, 2
@@ -368,10 +368,10 @@ then_1:
 endif_1:
 
 	; implicit cast Generic([4]GenericInteger) value to [4]Nat64
-	%22 = alloca [4 x %Int64], align 8
+	%22 = alloca [4 x %Int64], align 1
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%23 = zext %Int8 4 to %Int32
+	%23 = zext i8 4 to %Int32
 	; -- end vol eval --
 	%24 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
 	%25 = insertvalue [4 x %Int64] %24, %Int64 2, 2
@@ -394,7 +394,7 @@ then_2:
 endif_2:
 
 	; explicit cast Generic([4]GenericInteger) value to [10]Int32
-	%37 = alloca [10 x %Int32], align 4
+	%37 = alloca [10 x %Int32], align 1
 	%38 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%39 = insertvalue [10 x %Int32] %38, %Int32 2, 2
 	%40 = insertvalue [10 x %Int32] %39, %Int32 3, 3
@@ -432,17 +432,17 @@ define internal %Bool @test_generic_record() {
 	; Any record expression have GenericRecord type
 	; this record expression have type:
 	; Generic(record {x: GenericInteger, y: GenericInteger})
-	%1 = insertvalue {%Int8,%Int8} zeroinitializer, %Int8 10, 0
-	%2 = insertvalue {%Int8,%Int8} %1, %Int8 20, 1
-	%3 = alloca {%Int8,%Int8}
-	store {%Int8,%Int8} %2, {%Int8,%Int8}* %3
+	%1 = insertvalue {i8,i8} zeroinitializer, i8 10, 0
+	%2 = insertvalue {i8,i8} %1, i8 20, 1
+	%3 = alloca {i8,i8}
+	store {i8,i8} %2, {i8,i8}* %3
 
 	; value with GenericRecord type
 	; can be implicit casted to Record with same fields.
 
 	; implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32}
-	%4 = alloca %Point2D, align 4
+	%4 = alloca %Point2D, align 8
 	%5 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
 	%6 = insertvalue %Point2D %5, %Int32 20, 1
 	store %Point2D %6, %Point2D* %4
@@ -450,7 +450,7 @@ define internal %Bool @test_generic_record() {
 
 	; explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32, z: Int32}
-	%7 = alloca %Point3D, align 4
+	%7 = alloca %Point3D, align 16
 	%8 = insertvalue %Point3D zeroinitializer, %Int32 10, 0
 	%9 = insertvalue %Point3D %8, %Int32 20, 1
 	%10 = insertvalue %Point3D %9, %Int32 0, 2

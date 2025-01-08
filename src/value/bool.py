@@ -13,7 +13,7 @@ def value_bool_create(val, ti=None):
 	return v
 
 
-def bool_can(to, from_type, method):
+def bool_can(to, from_type, method, ti):
 	return False
 
 

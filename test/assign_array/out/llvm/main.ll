@@ -212,7 +212,7 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%2 = zext %Int8 10 to %Int32
+	%2 = zext i8 10 to %Int32
 	; -- end vol eval --
 	%3 = load [10 x %Int32], [10 x %Int32]* @globalArray0
 	store [10 x %Int32] %3, [10 x %Int32]* @globalArray1
@@ -249,7 +249,7 @@ endif_0:
 
 
 	; local
-	%20 = alloca [10 x %Int32], align 4
+	%20 = alloca [10 x %Int32], align 1
 	%21 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%22 = insertvalue [10 x %Int32] %21, %Int32 2, 2
 	%23 = insertvalue [10 x %Int32] %22, %Int32 3, 3
@@ -260,11 +260,11 @@ endif_0:
 	%28 = insertvalue [10 x %Int32] %27, %Int32 8, 8
 	%29 = insertvalue [10 x %Int32] %28, %Int32 9, 9
 	store [10 x %Int32] %29, [10 x %Int32]* %20
-	%30 = alloca [10 x %Int32], align 4
+	%30 = alloca [10 x %Int32], align 1
 	store [10 x %Int32] zeroinitializer, [10 x %Int32]* %30
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%31 = zext %Int8 10 to %Int32
+	%31 = zext i8 10 to %Int32
 	; -- end vol eval --
 	%32 = load [10 x %Int32], [10 x %Int32]* %20
 	store [10 x %Int32] %32, [10 x %Int32]* %30

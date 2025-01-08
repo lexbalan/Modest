@@ -6,7 +6,7 @@ from .char import utf32_chars_to_utfx_chars
 
 
 
-def pointer_can(to, from_type, method):
+def pointer_can(to, from_type, method, ti):
 	# implicit region
 	assert(type.type_is_pointer(to))
 
@@ -28,8 +28,8 @@ def pointer_can(to, from_type, method):
 			return True  # cons FreePointer from *X
 
 		# cons *[]X from *[n]X +
-		if type.type_is_closed_array(from_type['to']) and type.type_is_open_array(to['to']):
-			return type.type_eq(from_type['to']['of'], to['to']['of'])
+		if type.type_is_closed_array(from_type.to) and type.type_is_open_array(to.to):
+			return type.type_eq(from_type.to.of, to.to.of)
 
 
 	if method == 'implicit':
@@ -53,7 +53,7 @@ def pointer_can(to, from_type, method):
 def value_pointer_cons(t, v, method, ti):
 	if v.isImmediate():
 		if type.type_is_string(v.type):
-			s_imm = utf32_chars_to_utfx_chars(v.asset, t['to']['of'], ti)
+			s_imm = utf32_chars_to_utfx_chars(v.asset, t.to.of, ti)
 			nv = ValueCons(t, v, method, ti=ti)
 			nv.asset = s_imm
 			nv.addAttribute('zstring')

@@ -255,7 +255,7 @@ define %Int @main() {
 
 
 	; signed big int test
-	%41 = sub %Int8 0, 1
+	%41 = sub i8 0, 1
 	%42 = alloca %Int128, align 16
 	store %Int128 -1, %Int128* %42
 	%43 = load %Int128, %Int128* %42

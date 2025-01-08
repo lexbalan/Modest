@@ -201,29 +201,29 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 @ps = constant [3 x {
-	%Int8,
-	%Int8
+	i8,
+	i8
 }] [
 	{
-	%Int8,
-	%Int8
+	i8,
+	i8
 } {
-		%Int8 0,
-		%Int8 0
+		i8 0,
+		i8 0
 	},
 	{
-	%Int8,
-	%Int8
+	i8,
+	i8
 } {
-		%Int8 1,
-		%Int8 1
+		i8 1,
+		i8 1
 	},
 	{
-	%Int8,
-	%Int8
+	i8,
+	i8
 } {
-		%Int8 2,
-		%Int8 2
+		i8 2,
+		i8 2
 	}
 ]
 @points = constant [3 x %Point] [

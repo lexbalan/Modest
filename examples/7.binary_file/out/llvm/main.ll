@@ -234,7 +234,7 @@ then_0:
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = alloca %Chunk, align 1
+	%6 = alloca %Chunk, align 2048
 
 	; pointers casting requires -funsafe translator option
 	; (see Makefile)
@@ -247,7 +247,7 @@ endif_0:
 
 	; write chunk to file
 	%13 = bitcast %Chunk* %6 to i8*
-	%14 = call %SizeT @fwrite(i8* %13, %SizeT 1124, %SizeT 1, %File* %2)
+	%14 = call %SizeT @fwrite(i8* %13, %SizeT 2048, %SizeT 1, %File* %2)
 	%15 = call %Int @fclose(%File* %2)
 	ret void
 }
@@ -262,9 +262,9 @@ then_0:
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = alloca %Chunk, align 1
+	%6 = alloca %Chunk, align 2048
 	%7 = bitcast %Chunk* %6 to i8*
-	%8 = call %SizeT @fread(i8* %7, %SizeT 1124, %SizeT 1, %File* %2)
+	%8 = call %SizeT @fread(i8* %7, %SizeT 2048, %SizeT 1, %File* %2)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	%10 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 0
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), [100 x %Char]* %10)

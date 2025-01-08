@@ -358,20 +358,20 @@ define %Int @main() {
 
 	; array size
 	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str40 to [0 x i8]*), %Int64 40)
-	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str41 to [0 x i8]*), %Int64 4)
-	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str42 to [0 x i8]*), %Int64 4)
+	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str41 to [0 x i8]*), %Int64 1)
+	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str42 to [0 x i8]*), %Int64 1)
 
 
 	; record size
 	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str43 to [0 x i8]*), %Int64 8)
-	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str44 to [0 x i8]*), %Int64 4)
+	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str44 to [0 x i8]*), %Int64 8)
 
 	;	printf("offsetof(Point.x) = %llu\n", Nat64 offsetof(Point.x))
 	;	printf("offsetof(Point.y) = %llu\n", Nat64 offsetof(Point.y))
 	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str45 to [0 x i8]*), %Int64 16)
-	%46 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str46 to [0 x i8]*), %Int64 8)
-	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str47 to [0 x i8]*), %Int64 40)
-	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str48 to [0 x i8]*), %Int64 8)
+	%46 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str46 to [0 x i8]*), %Int64 16)
+	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str47 to [0 x i8]*), %Int64 64)
+	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str48 to [0 x i8]*), %Int64 64)
 
 
 	;	printf("offsetof(Mixed2.i) = %llu\n", Nat64 offsetof(Mixed2.i))
@@ -380,9 +380,9 @@ define %Int @main() {
 	;	printf("offsetof(Mixed2.c2) = %llu\n", Nat64 offsetof(Mixed2.c2))
 	;	printf("offsetof(Mixed2.m) = %llu\n", Nat64 offsetof(Mixed2.m))
 	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str49 to [0 x i8]*), %Int64 32)
-	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str50 to [0 x i8]*), %Int64 8)
-	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str51 to [0 x i8]*), %Int64 128)
-	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str52 to [0 x i8]*), %Int64 8)
+	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str50 to [0 x i8]*), %Int64 32)
+	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str51 to [0 x i8]*), %Int64 256)
+	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str52 to [0 x i8]*), %Int64 256)
 
 	;	printf("offsetof(Mixed4.s) = %llu\n", Nat64 offsetof(Mixed4.s))
 	;	printf("offsetof(Mixed4.c) = %llu\n", Nat64 offsetof(Mixed4.c))

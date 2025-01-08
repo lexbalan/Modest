@@ -283,13 +283,13 @@ declare double @minmax_max_float64(double %a, double %b)
 @str1 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 48, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 @str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 49, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 ; -- endstrings --
-@carr = constant [6 x %Int8] [
-	%Int8 0,
-	%Int8 10,
-	%Int8 15,
-	%Int8 20,
-	%Int8 25,
-	%Int8 30
+@carr = constant [6 x i8] [
+	i8 0,
+	i8 10,
+	i8 15,
+	i8 20,
+	i8 25,
+	i8 30
 ]
 %Point = type {
 	double,

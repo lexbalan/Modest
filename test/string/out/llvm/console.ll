@@ -315,7 +315,7 @@ define void @console_putchar_utf8(%Char8 %c) {
 }
 
 define void @console_putchar_utf16(%Char16 %c) {
-	%1 = alloca [2 x %Char16], align 2
+	%1 = alloca [2 x %Char16], align 1
 	%2 = getelementptr %Char16, [2 x %Char16]* %1, %Int32 0
 	store %Char16 %c, %Char16* %2
 	%3 = getelementptr %Char16, [2 x %Char16]* %1, %Int32 1

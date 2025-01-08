@@ -118,17 +118,17 @@ def print_type_integer(t):
 
 def print_type_array(t):
 	out("[")
-	if not Value.isUndefined(t['volume']):
-		print_value(t['volume'])
+	if not Value.isUndefined(t.volume):
+		print_value(t.volume)
 	out("]")
-	print_type(t['of'])
+	print_type(t.of)
 
 
 def print_type_pointer(t):
 	if htype.type_is_free_pointer(t):
 		out("Ptr")
 	else:
-		out("*"); print_type(t['to'])
+		out("*"); print_type(t.to)
 
 
 def print_field(x):
@@ -142,7 +142,7 @@ def print_type_record(t):
 	indent_up()
 
 	prev_nl = 1
-	for field in t['fields']:
+	for field in t.fields:
 		if prev_nl == 0:
 			out(", ")
 
@@ -160,7 +160,7 @@ def print_type_record(t):
 		print_field(field)
 
 	indent_down()
-	nl_indent(t['end_nl'])
+	nl_indent(t.end_nl)
 	out("}")
 
 
@@ -178,7 +178,7 @@ def print_type_enum(t):
 
 def print_type_func(t, extra_args=False):
 	out('(')
-	fields = t['params']
+	fields = t.params
 	i = 0
 	n = len(fields)
 	while i < n:
@@ -191,21 +191,20 @@ def print_type_func(t, extra_args=False):
 		out(", ...")
 
 	out(') -> ')
-	print_type(t['to'])
+	print_type(t.to)
 
 
 def get_type_id(t):
-	if 'id' in t:
-		if t['id'].cm:
+	if hasattr(t, 'id'):
+		if t.id.cm:
 			return t.cm
-		return t['id'].str
+		return t.id.str
 
 	return None
 
 
 def print_type(t):
-	#assert(isinstance(t, Type))
-	k = t['kind']
+	assert(isinstance(t, Type))
 
 	# Если тип связан с идентификатором - распечатаем его
 	id_str = get_type_id(t)
@@ -219,8 +218,8 @@ def print_type(t):
 	elif htype.type_is_func(t): print_type_func(t)
 	elif htype.type_is_array(t): print_type_array(t)
 	elif htype.type_is_record(t): print_type_record(t)
-	elif htype.type_is_enum(t): print_type_enum(t)
 	elif htype.type_is_pointer(t): print_type_pointer(t)
+	#elif htype.type_is_enum(t): print_type_enum(t)
 	elif k == 'undefined': pass
 	else: out("<type:" + str(t) + ">")
 
@@ -468,7 +467,7 @@ def print_value_record(v, ctx):
 	nitems = len(v.items)
 	i = 0
 	while i < nitems:
-		item = v.type['fields'][i]
+		item = v.type.fields[i]
 		field_str = get_id_str(item)
 
 		ini = get_item_by_id(v.items, field_str)
@@ -716,7 +715,7 @@ def print_stmt_func(x):
 	ft = func.type
 	out('func ')
 	print_id_for(func)
-	print_type_func(ft, extra_args=ft['extra_args'])
+	print_type_func(ft, extra_args=ft.extra_args)
 	print_stmt_block(x.stmt)
 
 

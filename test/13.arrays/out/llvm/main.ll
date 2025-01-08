@@ -313,17 +313,17 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ;@attribute("c_no_print")
 ;import "misc/minmax"
 ;$pragma c_include "./minmax.h"
-@constantArray = constant [10 x %Int8] [
-	%Int8 1,
-	%Int8 2,
-	%Int8 3,
-	%Int8 4,
-	%Int8 5,
-	%Int8 6,
-	%Int8 7,
-	%Int8 8,
-	%Int8 9,
-	%Int8 10
+@constantArray = constant [10 x i8] [
+	i8 1,
+	i8 2,
+	i8 3,
+	i8 4,
+	i8 5,
+	i8 6,
+	i8 7,
+	i8 8,
+	i8 9,
+	i8 10
 ]
 @globalArray = internal global [10 x %Int32] [
 	%Int32 1,
@@ -392,17 +392,17 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	ret void
 }
 
-@startSequence = constant [3 x %Int8] [
-	%Int8 170,
-	%Int8 85,
-	%Int8 2
+@startSequence = constant [3 x i8] [
+	i8 170,
+	i8 85,
+	i8 2
 ]
-@stopSequence = constant [1 x %Int8] [
-	%Int8 22
+@stopSequence = constant [1 x i8] [
+	i8 22
 ]
 define internal void @test() {
 	; тестируем работу с локальным generic массивом
-	%1 = alloca [6 x %Int32], align 4
+	%1 = alloca [6 x %Int32], align 1
 	%2 = insertvalue [6 x %Int32] zeroinitializer, %Int32 170, 0
 	%3 = insertvalue [6 x %Int32] %2, %Int32 85, 1
 	%4 = insertvalue [6 x %Int32] %3, %Int32 2, 2
@@ -468,7 +468,7 @@ body_1:
 	br label %again_1
 break_1:
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str6 to [0 x i8]*))
-	%28 = alloca [3 x %Int32], align 4
+	%28 = alloca [3 x %Int32], align 1
 	%29 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
 	%30 = insertvalue [3 x %Int32] %29, %Int32 5, 1
 	%31 = insertvalue [3 x %Int32] %30, %Int32 6, 2
@@ -536,7 +536,7 @@ break_4:
 
 	; assign array to array 1
 	; (with equal types)
-	%66 = alloca [3 x %Int32], align 4
+	%66 = alloca [3 x %Int32], align 1
 	%67 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
 	%68 = insertvalue [3 x %Int32] %67, %Int32 2, 1
 	%69 = insertvalue [3 x %Int32] %68, %Int32 3, 2
@@ -554,7 +554,7 @@ break_4:
 	; create (and initialize) new variable b
 	; (with type [3]Int32)
 	; this variable are copy of array a
-	%79 = alloca [3 x %Int32], align 4
+	%79 = alloca [3 x %Int32], align 1
 	%80 = load [3 x %Int32], [3 x %Int32]* %66
 	store [3 x %Int32] %80, [3 x %Int32]* %79
 	%81 = getelementptr %Int32, [3 x %Int32]* %79, %Int32 0
@@ -583,12 +583,12 @@ endif_0:
 
 	; assign array to array 2
 	; (with array extending)
-	%96 = alloca [3 x %Int32], align 4
+	%96 = alloca [3 x %Int32], align 1
 	%97 = insertvalue [3 x %Int32] zeroinitializer, %Int32 10, 0
 	%98 = insertvalue [3 x %Int32] %97, %Int32 20, 1
 	%99 = insertvalue [3 x %Int32] %98, %Int32 30, 2
 	store [3 x %Int32] %99, [3 x %Int32]* %96
-	%100 = alloca [6 x %Int32], align 4
+	%100 = alloca [6 x %Int32], align 1
 ; -- cons_composite_from_composite_by_adr --
 	%101 = bitcast [3 x %Int32]* %96 to [6 x %Int32]*
 	%102 = load [6 x %Int32], [6 x %Int32]* %101
@@ -656,10 +656,10 @@ endif_1:
 	store [3 x %Int] %138, [3 x %Int]* %139
 
 	; check local literal array assignation to local array
-	%140 = alloca [4 x %Int32], align 4
+	%140 = alloca [4 x %Int32], align 1
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%141 = zext %Int8 4 to %Int32
+	%141 = zext i8 4 to %Int32
 	; -- end vol eval --
 ; -- cons_composite_from_composite_by_adr --
 	%142 = bitcast [3 x %Int]* %139 to [4 x %Int32]*
@@ -679,7 +679,7 @@ endif_1:
 	; check local literal array assignation to global array
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%153 = zext %Int8 10 to %Int32
+	%153 = zext i8 10 to %Int32
 	; -- end vol eval --
 ; -- cons_composite_from_composite_by_adr --
 	%154 = bitcast [3 x %Int]* %139 to [10 x %Int32]*
@@ -697,7 +697,7 @@ endif_1:
 	%164 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str33 to [0 x i8]*), %Int32 2, %Int32 %163)
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%165 = zext %Int8 10 to %Int32
+	%165 = zext i8 10 to %Int32
 	; -- end vol eval --
 	; -- zero fill rest of array
 	%166 = mul %Int32 %165, 4
@@ -765,7 +765,7 @@ endif_2:
 	%209 = insertvalue [5 x %Char8] %208, %Char8 33, 4
 	%210 = alloca [5 x %Char8]
 	store [5 x %Char8] %209, [5 x %Char8]* %210
-	%211 = getelementptr %Char8, [5 x %Char8]* %210, %Int8 2
+	%211 = getelementptr %Char8, [5 x %Char8]* %210, i8 2
 	%212 = bitcast %Char8* %211 to [2 x %Char8]*
 	%213 = insertvalue [2 x %Char8] zeroinitializer, %Char8 72, 0
 	%214 = insertvalue [2 x %Char8] %213, %Char8 105, 1

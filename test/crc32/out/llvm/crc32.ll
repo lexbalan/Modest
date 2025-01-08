@@ -205,7 +205,7 @@ declare void @perror(%ConstCharStr* %str)
 ;   одинарных, двойных, пакетных и всех нечетных ошибок
 ;
 define %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len) {
-	%1 = alloca [256 x %Word32], align 4
+	%1 = alloca [256 x %Word32], align 1
 	%2 = alloca %Word32, align 4
 
 	;

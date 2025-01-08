@@ -47,10 +47,10 @@ def value_array_create(items, ti=None):
 """
 def value_array_create_from_string(t, v, method, ti=None):
 	#info("value_array_create_from_string", ti)
-	char_type = t['of']
+	char_type = t.of
 	chars = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
 
-	pad_rquired = t['volume'].asset - len(chars)
+	pad_rquired = t.volume.asset - len(chars)
 	if pad_rquired > 0:
 		chars = chars + [ValueZero(char_type, ti)] * pad_rquired
 
@@ -62,38 +62,39 @@ def value_array_create_from_string(t, v, method, ti=None):
 
 
 # TODO: see select_common_type!
-def array_can(to, from_type, method):
+def array_can(to, from_type, method, ti):
 
 	# String -> []CharX
 	if htype.type_is_string(from_type):
-		return htype.type_is_char(to['of']) or htype.type_is_word(to['of'])
+		return htype.type_is_char(to.of) or htype.type_is_word(to.of)
 
 	if not htype.type_is_array(from_type):
 		return False
+
 
 	# Check item type
 	# проверяем может ли тип элемента из v
 	# быть приведен к типу элемента t
 	# (это обязательное требование к типу v)
-	ct = select_common_type(to['of'], from_type['of'])
+	ct = select_common_type(to.of, from_type.of)
 
 	if ct == None:
 		return False
 
-	if not htype.type_eq(to['of'], ct):
+	if not htype.type_eq(to.of, ct):
 		return False
 
 	if htype.type_is_generic(from_type):
 		# GenericArray -> Array
-		if Value.isUndefined(to['volume']):
+		if Value.isUndefined(to.volume):
 			return True
 
-		if not to['volume'].isImmediate():
+		if not to.volume.isImmediate():
 			return True
 
 		# Check array length
-		n_from = from_type['volume'].asset
-		n_to = to['volume'].asset
+		n_from = from_type.volume.asset
+		n_to = to.volume.asset
 
 		# (нельзя неявно построить меньший массив из большего)
 		return n_from <= n_to
@@ -108,22 +109,22 @@ def array_can(to, from_type, method):
 def value_array_cons(t, v, method, ti):
 	#info("value_array_cons", ti)
 
-	if Value.isUndefined(t['volume']):
+	if Value.isUndefined(t.volume):
 		# for case: `[]Int32 [1, 2, 3]`
 		# we try to construct array with undefined volume from array with defined volume
 		# in this case we take volume of value array
 		#info("undefined volume", t['ti'])
 		volume = -1
 		if htype.type_is_array(v.type):
-			volume = v.type['volume']
+			volume = v.type.volume
 		elif htype.type_is_string(v.type):
-			srtlen = v.type['length']
+			srtlen = v.type.length
 			volume = value_integer_create(srtlen)
 		else:
 			assert(False)
 
-		t['volume'] = volume
-		t['size'] = t['of']['size'] * volume.asset
+		t.volume = volume
+		t.size = t.of.size * volume.asset
 
 
 	nv = ValueCons(t, v, method, ti)
@@ -134,7 +135,7 @@ def value_array_cons(t, v, method, ti):
 
 	if htype.type_is_string(v.type):
 		#info("value_array_create_from_string", ti)
-		char_type = t['of']
+		char_type = t.of
 		items = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
 		nv.items = items
 		return nv
@@ -158,14 +159,10 @@ def value_array_cons(t, v, method, ti):
 
 		for item in v.items:
 			from .cons import value_cons_implicit_check
-			casted_item = value_cons_implicit_check(t['of'], item)
+			casted_item = value_cons_implicit_check(t.of, item)
 			casted_item.nl = item.nl
 			items.append(casted_item)
 		nv.items = items
-		
-	if nv.items == 1:
-		print("WLKDMLMDKWALKDWMALDMW!")
-		1/0
 
 	return nv
 
@@ -174,7 +171,7 @@ def value_array_cons(t, v, method, ti):
 def _value_array_create(items, item_type, length, is_generic, ti):
 	array_volume = value_integer_create(length)
 	array_type = htype.type_array(item_type, volume=array_volume, ti=ti)
-	array_type['generic'] = is_generic
+	array_type.generic = is_generic
 	nv = ValueLiteral(array_type, ti)
 	nv.items = items
 	return nv
@@ -186,14 +183,14 @@ def value_array_add(l, r, ti):
 	items = l.items + r.items
 	length = len(items)
 	str_array_volume = value_integer_create(length)
-	item_type = select_common_type(l.type['of'], r.type['of'])
+	item_type = select_common_type(l.type.of, r.type.of)
 
 	# неявно приводим все элементы к общему типу
 	items = implicit_cast_list(items, item_type)
 
 	assert(item_type != None)
 	type_result = htype.type_array(item_type, volume=str_array_volume, ti=ti)
-	type_result['generic'] = True  # FIXIT!
+	type_result.generic = True  # FIXIT!
 
 	nv = ValueBin('add', l, r, type_result, ti=ti)
 	nv.items = items
@@ -209,8 +206,8 @@ def value_array_eq(l, r, op, ti):
 
 	if l.isImmediate() and r.isImmediate():
 		eq_result = True
-		lvolume = l.type['volume']
-		rvolume = r.type['volume']
+		lvolume = l.type.volume
+		rvolume = r.type.volume
 		if lvolume.isImmediate() and rvolume.isImmediate():
 			if lvolume.asset != rvolume.asset:
 				eq_result = False

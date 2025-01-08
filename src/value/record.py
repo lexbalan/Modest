@@ -33,7 +33,7 @@ def value_record_create(initializers=[], ti=None):
 		fields.append(field)
 
 	record_type = type.type_record(fields, ti)
-	record_type['generic'] = True
+	record_type.generic = True
 
 	v = ValueLiteral(record_type, ti)
 	v.items = initializers
@@ -42,7 +42,7 @@ def value_record_create(initializers=[], ti=None):
 
 
 
-def record_can(to, from_type, method):
+def record_can(to, from_type, method, ti):
 	if not type.type_is_record(from_type):
 		return False
 
@@ -54,7 +54,7 @@ def record_can(to, from_type, method):
 
 	# check if all fields in from_type present in t
 	# and their types are equal (!)
-	for field in from_type['fields']:
+	for field in from_type.fields:
 		field2 = record_field_get(to, field.id.str)
 		if field2 == None:
 			return False  # if no field with that name
@@ -76,7 +76,7 @@ def value_record_cons(t, v, method, ti):
 	if v.items != None:
 		# конструируем запись на основе другой generic записи
 		items = []
-		for field in t['fields']:
+		for field in t.fields:
 			initializer = get_item_by_id(v.items, field.id.str)
 			vv = None
 			if initializer:

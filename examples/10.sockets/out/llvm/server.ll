@@ -270,7 +270,7 @@ endif_1:
 	%9 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x %Char8]* %1)
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%10 = zext %Int16 1024 to %Int32
+	%10 = zext i16 1024 to %Int32
 	; -- end vol eval --
 	; -- zero fill rest of array
 	%11 = mul %Int32 %10, 1
@@ -291,7 +291,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str6 to [0 x i8]*))
-	%4 = alloca %Struct_sockaddr_in, align 4
+	%4 = alloca %Struct_sockaddr_in, align 16
 	%5 = insertvalue %Struct_sockaddr_in zeroinitializer, %Int8 0, 0
 	%6 = insertvalue %Struct_sockaddr_in %5, %Int8 2, 1
 	%7 = insertvalue %Struct_sockaddr_in %6, %UnsignedShort 8080, 2
@@ -327,7 +327,7 @@ endif_2:
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str11 to [0 x i8]*))
 	%23 = alloca %SocklenT, align 4
 	store %SocklenT 16, %SocklenT* %23
-	%24 = alloca %Struct_sockaddr_in, align 4
+	%24 = alloca %Struct_sockaddr_in, align 16
 	%25 = bitcast %Struct_sockaddr_in* %24 to i8*
 	%26 = bitcast i8* %25 to %Struct_sockaddr*
 	%27 = call %Int @accept(%Int %1, %Struct_sockaddr* %26, %SocklenT* %23)

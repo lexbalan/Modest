@@ -234,11 +234,11 @@ else_0:
 endif_0:
 
 	; local
-	%15 = alloca %Point, align 4
+	%15 = alloca %Point, align 8
 	%16 = insertvalue %Point zeroinitializer, %Int32 10, 0
 	%17 = insertvalue %Point %16, %Int32 20, 1
 	store %Point %17, %Point* %15
-	%18 = alloca %Point, align 4
+	%18 = alloca %Point, align 8
 	%19 = insertvalue %Point zeroinitializer, %Int32 0, 0
 	%20 = insertvalue %Point %19, %Int32 0, 1
 	store %Point %20, %Point* %18
