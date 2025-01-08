@@ -1914,7 +1914,7 @@ def do_stmt_value(x):
 		return StmtBad(x)
 
 	if not v.type.is_unit():
-		if not 'dispensable' in v.type.att:
+		if not v.type.hasAttribute('dispensable'):
 			warning("unused result of %s expression" % x['value']['kind'], v.ti)
 
 	return StmtValueExpression(v, ti=x['ti'])
@@ -2095,13 +2095,9 @@ def def_type(x):
 	type_update(nt, ty)
 	nt.deps = deps
 	nt.id = id
-#	nt['id'].c = id.str   # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	nt.definition = definition
 	nt.module = cmodule  # добавляем заново тк очистили его выше!
 	nt.ti_def = id.ti
-
-	#print("TY = " + str(ty))
-	#print("NT = " + str(nt))
 
 	if need_decoration(x):
 		nt.id.need_decoration = True

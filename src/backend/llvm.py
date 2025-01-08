@@ -759,7 +759,7 @@ def print_type_enum(t):
 
 
 def print_type_record(t):
-	packed = 'packed' in t.att
+	packed = t.hasAttribute('packed')
 
 	if packed:
 		out("<")
@@ -1378,7 +1378,8 @@ def do_eval_cons(x):
 			if from_type.is_string():
 				string_of = to_type.to.of
 				char_pow = string_of.width
-				return llvm_value_str(x.strid, x.asset, x.type, isz='zstring' in x.att)
+				iszstr = x.hasAttribute('zstring')
+				return llvm_value_str(x.strid, x.asset, x.type, isz=iszstr)
 
 	if Type.is_char(to_type):
 		if Type.is_string(value.type):

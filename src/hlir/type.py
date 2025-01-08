@@ -64,7 +64,7 @@ class Type(Entity):
 
 
 	def is_incomplete(self):
-		return 'incomplete' in self.att
+		return self.hasAttribute('incomplete')
 
 
 	def is_unit(self):

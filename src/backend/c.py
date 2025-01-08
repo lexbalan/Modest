@@ -192,7 +192,7 @@ def print_id(x, prefix=''):
 def str_type_record(t, tag=""):
 	s = "struct"
 
-	if 'packed' in t.att:
+	if t.hasAttribute('packed'):
 		s += " __attribute__((packed))"
 
 	if tag != "":

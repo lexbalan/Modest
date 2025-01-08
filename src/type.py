@@ -97,9 +97,9 @@ def type_print_func(t, print_aka=True):
 def type_print(t, print_aka=True):
 	assert isinstance(t, Type)
 
-	if 'volatile' in t.att:
+	if t.hasAttribute('volatile'):
 		print("volatile_", end='')
-	if 'const' in t.att:
+	if t.hasAttribute('const'):
 		print("const_", end='')
 
 	if t.generic:
