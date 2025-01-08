@@ -1840,7 +1840,7 @@ def do_stmt_let(x):
 		ctx_value_add(id.str, ValueBad(x['ti']))
 		return StmtBad(x)
 
-	const_value = ValueConst(id, v.type, value=v, ti=x['id']['ti'])
+	const_value = ValueConst(id, value=v, ti=x['id']['ti'])
 	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
 	# на константу. ---Пока это необходимо для 'wrapped_array' (!)---
 	const_value.att.extend(v.att)
@@ -2024,7 +2024,7 @@ def do_stmt_block(x):
 
 
 def symbol_const(id, init_value, is_public=False):
-	const_value = ValueConst(id, init_value.type, init_value, id.ti)
+	const_value = ValueConst(id, init_value, id.ti)
 	const_value.att.extend(init_value.att)
 
 	# Now let can be immediate!
@@ -2280,13 +2280,10 @@ def def_func(x, dostmt=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		param_type = param.type
-		param_id = param.id
-
-		param_value = ValueConst(param_id, param_type, None, param.ti)
+		param_value = ValueConst(param.id, ValueUndefined(param.type), param.ti)
 		param_value.addAttribute('local')
 		param_value.addAttribute('param')
-		ctx_value_add(param_id.str, param_value)
+		ctx_value_add(param.id.str, param_value)
 		i += 1
 
 	# for C backend, for #include <stdarg.h>

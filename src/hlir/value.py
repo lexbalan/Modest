@@ -166,17 +166,18 @@ class ValueVar(Value):
 		self.id = id
 		self.init_value = init_value
 		self.usecnt = 0
-		self.definition = None
+		self.definition = None  # *StmtDefVar
 
 
 class ValueConst(Value):
-	def __init__(self, id, type, value, ti=None):
+	def __init__(self, id, value, ti=None):
+		type = value.type
 		super().__init__(type=type, ti=ti)
 		self.id = id
 		self.value = value
 		self.immutable = True
 		self.usecnt = 0
-		self.definition = None
+		self.definition = None  # *StmtDefConst
 
 
 class ValueFunc(Value):
@@ -185,7 +186,7 @@ class ValueFunc(Value):
 		self.id = id
 		self.immutable = True
 		self.usecnt = 0
-		self.definition = None
+		self.definition = None  # *StmtDefFunc
 
 
 #TODO: maybe without op?
