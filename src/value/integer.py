@@ -3,7 +3,7 @@ from error import info, warning, error
 from util import nbits_for_num
 import type as htype
 from type import type_print
-from .value import ValueLiteral, ValueCons, value_cons_immediate
+from hlir.value import ValueLiteral, ValueCons
 from hlir.type import Type
 
 
@@ -65,6 +65,7 @@ def _value_integer_cons_immediate(t, v, method, ti):
 	if need_width > width:
 		error("integer overflow", ti)
 
+	from .cons import value_cons_immediate
 	return value_cons_immediate(t, v, method, ti)
 
 

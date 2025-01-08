@@ -5,7 +5,7 @@ from type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
-from .value import Value, ValueBad, ValueLiteral, ValueCons, ValueZero, ValueBin
+from hlir.value import Value, ValueBad, ValueLiteral, ValueCons, ValueZero, ValueBin
 from hlir.type import Type, TypeArray
 
 # TODO: переделай здесь все - тут все плохо...

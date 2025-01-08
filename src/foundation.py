@@ -123,7 +123,7 @@ def init():
 	# не нужно делать decl тк нет собственного имени у этого типа
 
 	typeSysNat = typeNat64
-	from value.value import ValueUndefined
+	from hlir.value import ValueUndefined
 	undefinedVolume = ValueUndefined(typeSysNat, ti=None)
 	typeStr8 = TypeArray(typeChar8, undefinedVolume, ti=None)
 	typeStr8.id = Id().fromStr('Str8')

@@ -1,6 +1,8 @@
 
 import os
 
+import copy
+
 from error import *
 
 from lexer import CmLexer

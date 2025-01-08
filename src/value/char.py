@@ -2,7 +2,7 @@
 from error import info, warning, error
 import type as type
 from util import nbits_for_num
-from .value import ValueLiteral, ValueCons, value_cons_immediate
+from hlir.value import ValueLiteral, ValueCons
 from unicode import utf32_str_to_utfx_char_codes
 
 
@@ -43,6 +43,7 @@ def char_can(to, from_type, method, ti):
 
 
 def value_char_cons(t, v, method, ti):
+	from .cons import value_cons_immediate
 	# String -> Char
 	# ex: var c: Char8 = "A"
 	if v.type.is_string():
