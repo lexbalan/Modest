@@ -192,7 +192,7 @@ def value_array_add(l, r, ti):
 	type_result = TypeArray(item_type, volume=str_array_volume, ti=ti)
 	type_result.generic = True  # FIXIT!
 
-	nv = ValueBin('add', l, r, type_result, ti=ti)
+	nv = ValueBin(type_result, 'add', l, r, ti=ti)
 	nv.items = items
 	nv.immediate = True
 	return nv
@@ -202,7 +202,7 @@ def value_array_add(l, r, ti):
 # FIXIT: it is generic arrays EQ!
 def value_array_eq(l, r, op, ti):
 	from foundation import typeBool
-	nv = ValueBin(op, l, r, typeBool, ti=ti)
+	nv = ValueBin(typeBool, op, l, r, ti=ti)
 
 	if l.isImmediate() and r.isImmediate():
 		eq_result = True

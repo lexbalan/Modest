@@ -622,7 +622,7 @@ def print_value_call(v, ctx, arrayResult=None):
 
 
 def print_value_slice(x, ctx):
-	y = ValueIndex(x.left, x.type, x.index_from, ti=None)
+	y = ValueIndex(x.type, x.left, x.index_from, ti=None)
 	print_value_index(y, ctx)
 
 

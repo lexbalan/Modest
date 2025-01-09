@@ -68,7 +68,7 @@ class Value(Entity):
 		# scalar
 
 		from foundation import typeBool
-		nv = ValueBin(op, l, r, typeBool, ti=ti)
+		nv = ValueBin(typeBool, op, l, r, ti=ti)
 
 		if l.isImmediate() and r.isImmediate():
 			eq_result = False
@@ -178,10 +178,10 @@ class ValueZero(Value):
 
 #TODO: onl value as arg (undefined if not init_value, but type from it)
 class ValueVar(Value):
-	def __init__(self, id, type, init_value, ti=None):
+	def __init__(self, type, id, init_value, ti=None):
 		from .type import Type
-		assert(isinstance(id, Id))
 		assert(isinstance(type, Type))
+		assert(isinstance(id, Id))
 		assert(isinstance(init_value, Value))
 		super().__init__(type=type, ti=ti)
 		self.id = id
@@ -192,10 +192,11 @@ class ValueVar(Value):
 
 
 class ValueConst(Value):
-	def __init__(self, id, value, ti=None):
+	def __init__(self, type, id, value, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
 		assert(isinstance(id, Id))
 		assert(isinstance(value, Value))
-		type = value.type
 		super().__init__(type=type, ti=ti)
 		self.id = id
 		self.value = value
@@ -204,10 +205,10 @@ class ValueConst(Value):
 
 
 class ValueFunc(Value):
-	def __init__(self, id, type, ti=None):
+	def __init__(self, type, id, ti=None):
 		from .type import Type
-		assert(isinstance(id, Id))
 		assert(isinstance(type, Type))
+		assert(isinstance(id, Id))
 		super().__init__(type=type, ti=ti)
 		self.id = id
 		self.usecnt = 0
@@ -217,7 +218,7 @@ class ValueFunc(Value):
 #TODO: maybe without op?
 #TODO: value, type -> only value
 class ValueUn(Value):
-	def __init__(self, op, value, type, ti=None):
+	def __init__(self, type, op, value, ti=None):
 		from .type import Type
 		assert(isinstance(type, Type))
 		assert(isinstance(value, Value))
@@ -229,7 +230,7 @@ class ValueUn(Value):
 #TODO: maybe without op?
 #TODO: value, type -> only value
 class ValueBin(Value):
-	def __init__(self, op, left, right, type, ti=None):
+	def __init__(self, type, op, left, right, ti=None):
 		from .type import Type
 		assert(isinstance(type, Type))
 		assert(isinstance(left, Value))
@@ -243,7 +244,7 @@ class ValueBin(Value):
 
 #TODO: get type from value ret type
 class ValueCall(Value):
-	def __init__(self, func, type, args, ti=None):
+	def __init__(self, type, func, args, ti=None):
 		from .type import Type
 		assert(isinstance(type, Type))
 		assert(isinstance(func, Value))
@@ -255,7 +256,7 @@ class ValueCall(Value):
 
 #TODO: get type from array element type
 class ValueIndex(Value):
-	def __init__(self, left, type, index, ti=None):
+	def __init__(self, type, left, index, ti=None):
 		from .type import Type
 		assert(isinstance(type, Type))
 		assert(isinstance(left, Value))
@@ -267,7 +268,7 @@ class ValueIndex(Value):
 
 #TODO: get type from array type
 class ValueSlice(Value):
-	def __init__(self, left, type, index_from, index_to, ti=None):
+	def __init__(self, type, left, index_from, index_to, ti=None):
 		from .type import Type
 		assert(isinstance(type, Type))
 		assert(isinstance(left, Value))
@@ -283,9 +284,9 @@ class ValueSlice(Value):
 class ValueAccessModule(Value):
 	def __init__(self, type, left, right, value, ti=None):
 		from .type import Type
+		assert(isinstance(type, Type))
 		#assert(isinstance(left, Id))
 		#assert(isinstance(right, Id))
-		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.left = left
 		self.right = right
@@ -387,7 +388,7 @@ class ValueVaStart(Value):
 
 
 class ValueVaArg(Value):
-	def __init__(self, vaList, type, ti=None):
+	def __init__(self, type, vaList, ti=None):
 		super().__init__(type=type, ti=ti)
 		self.va_list = vaList
 

@@ -718,7 +718,7 @@ def do_value_shift(x):
 		if op == 'shl': asset = asset << r.asset
 		else: asset = asset >> r.asset
 
-		nv = ValueBin(op, l, r, type_result, ti=x['ti'])
+		nv = ValueBin(type_result, op, l, r, ti=x['ti'])
 		nv.asset = int(asset)
 		nv.immediate = True
 		return nv
@@ -727,7 +727,7 @@ def do_value_shift(x):
 		error("expected non-generic value", l.ti)
 		return ValueBad(x['ti'])
 
-	return ValueBin(op, l, r, type_result, ti=x['ti'])
+	return ValueBin(type_result, op, l, r, ti=x['ti'])
 
 
 def do_value_bin(x):
@@ -798,7 +798,7 @@ def do_value_bin(x):
 	if op in (htype.EQ_OPS + htype.RELATIONAL_OPS):
 		t = foundation.typeBool
 
-	nv = ValueBin(op, l, r, t, ti=ti)
+	nv = ValueBin(t, op, l, r, ti=ti)
 
 	# if left & right are immediate, we can fold const
 	# and append field .asset to bin_value
@@ -857,7 +857,7 @@ def do_value_ref(x):
 			return ValueBad(x['ti'])
 
 	vt = TypePointer(vtype, ti=ti)
-	nv = ValueUn('ref', v, vt, ti=ti)
+	nv = ValueUn(vt, 'ref', v, ti=ti)
 
 	if is_global_value(v):
 		nv.immediate = True
@@ -887,7 +887,7 @@ def do_value_not(x):
 	if vtype.is_bool():
 		op = 'logic_not'
 
-	nv = ValueUn(op, v, vtype, ti=x['ti'])
+	nv = ValueUn(vtype, op, v, ti=x['ti'])
 
 	if v.isImmediate():
 		# because: ~(1) = -1 (not 0) !
@@ -916,7 +916,7 @@ def do_value_neg(x):
 	else:
 		vtype.signed = True
 
-	nv = ValueUn('neg', v, vtype, ti=x['ti'])
+	nv = ValueUn(vtype, 'neg', v, ti=x['ti'])
 
 	if v.isImmediate():
 		nv.asset = -v.asset
@@ -940,7 +940,7 @@ def do_value_pos(x):
 	if not vtype.is_signed():
 		error("expected value with signed type", v.ti)
 
-	nv = ValueUn('pos', v, vtype, ti=x['ti'])
+	nv = ValueUn(vtype, 'pos', v, ti=x['ti'])
 
 	if v.isImmediate():
 		nv.asset = +v.asset
@@ -976,7 +976,7 @@ def do_value_deref(x):
 	if is_func_ptr or is_free_ptr or is_open_array_ptr:
 		error("unsuitable type", v.ti)
 
-	nv = ValueUn('deref', v, to, ti=x['ti'])
+	nv = ValueUn(to, 'deref', v, ti=x['ti'])
 	nv.is_lvalue = True
 	return nv
 
@@ -1048,7 +1048,7 @@ def do_value_va_start(x):#args, ti):
 def do_value_va_arg(x):
 	va_list = do_value(x['va_list'])
 	type = do_type(x['type'])
-	return ValueVaArg(va_list, type, x['ti'])
+	return ValueVaArg(type, va_list, x['ti'])
 
 
 def do_value_va_end(x):
@@ -1182,7 +1182,7 @@ def do_value_call(x):
 			else:
 				error("expected literal string argument", first_arg['ti'])
 
-	rv = ValueCall(fn, ftype.to, args + extra_args, ti=x['ti'])
+	rv = ValueCall(ftype.to, fn, args + extra_args, ti=x['ti'])
 	return rv
 
 
@@ -1219,7 +1219,7 @@ def do_value_index(x):
 	if index.type.is_generic():
 		index = value_cons_implicit_check(typeSysInt, index)
 
-	nv = ValueIndex(left, array_typ.of, index, ti=x['ti'])
+	nv = ValueIndex(array_typ.of, left, index, ti=x['ti'])
 
 	if not via_pointer:
 		nv.immutable = left.immutable
@@ -1302,7 +1302,7 @@ def do_value_slice(x):
 		index_to = ValueUndefined(typeSysInt)
 
 	type = TypeArray(array_type.of, slice_volume, x['ti'])
-	nv = ValueSlice(left, type, index_from, index_to, x['ti'])
+	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
 
 	if not via_pointer:
 		nv.immutable = left.immutable
@@ -1818,7 +1818,7 @@ def do_stmt_var(x):
 
 def add_local_var(id, typ, ti):
 	iv = ValueUndefined(typ)
-	var_value = ValueVar(id, typ, iv, ti)
+	var_value = ValueVar(typ, id, iv, ti)
 	var_value.addAttribute('local')
 	ctx_value_add(id.str, var_value)
 	return var_value
@@ -1844,7 +1844,7 @@ def do_stmt_let(x):
 		ctx_value_add(id.str, ValueBad(x['ti']))
 		return StmtBad(x)
 
-	const_value = ValueConst(id, value=v, ti=x['id']['ti'])
+	const_value = ValueConst(v.type, id, value=v, ti=x['id']['ti'])
 	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
 	# на константу. ---Пока это необходимо для 'wrapped_array' (!)---
 	const_value.att.extend(v.att)
@@ -1901,7 +1901,7 @@ def do_stmt_incdec(x, op='add'):
 		return StmtBad(x)
 
 	one = value_integer_create(1, typ=v.type, ti=x['ti'])
-	nv = ValueBin(op, v, one, v.type, ti=x['ti'])
+	nv = ValueBin(v.type, op, v, one, ti=x['ti'])
 	return StmtAssign(v, nv, ti=x['ti'])
 
 
@@ -2027,7 +2027,7 @@ def do_stmt_block(x):
 
 
 def symbol_const(id, init_value, is_public=False):
-	const_value = ValueConst(id, init_value, id.ti)
+	const_value = ValueConst(init_value.type, id, init_value, id.ti)
 	const_value.att.extend(init_value.att)
 
 	# Now let can be immediate!
@@ -2227,7 +2227,7 @@ def def_var(x):
 
 	init_value = v
 
-	var_value = ValueVar(id, t, init_value, id.ti)
+	var_value = ValueVar(t, id, init_value, id.ti)
 	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 
 	definition.var_value = var_value
@@ -2283,7 +2283,7 @@ def def_func(x, dostmt=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		param_value = ValueConst(param.id, ValueUndefined(param.type), param.ti)
+		param_value = ValueConst(param.type, param.id, ValueUndefined(param.type), param.ti)
 		param_value.addAttribute('local')
 		param_value.addAttribute('param')
 		ctx_value_add(param.id.str, param_value)
@@ -2715,7 +2715,7 @@ def pre_def(ast, fdecl=False):
 				t.att.append('incomplete')
 				#t = htype.TypeUndefined(x['ti'])
 				fid = Id(x['id'])
-				v = ValueFunc(fid, t, x['ti'])
+				v = ValueFunc(t, fid, x['ti'])
 				# And bound it with the id
 				cmodule_value_add(id['str'], v, is_public=is_public)
 

@@ -97,7 +97,7 @@ def value_record_cons(t, v, method, ti):
 def value_record_eq(l, r, op, ti):
 	#info("value_record_eq()", ti)
 	from foundation import typeBool
-	nv = ValueBin(op, l, r, typeBool, ti=ti)
+	nv = ValueBin(typeBool, op, l, r, ti=ti)
 	if l.isImmediate() and r.isImmediate():
 		eq_result = True
 
