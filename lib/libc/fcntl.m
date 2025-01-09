@@ -3,6 +3,7 @@
 $pragma module_nodecorate
 
 include "libc/ctypes"
+include "libc/stat"
 
 // open-only flags
 @property("value.id.c", "O_RDONLY")
