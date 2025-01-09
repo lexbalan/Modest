@@ -629,6 +629,7 @@ def print_value_slice(x, ctx):
 	print_value_index(y, ctx)
 
 
+
 def print_value_index(x, ctx):
 	left = x.left
 
@@ -646,6 +647,7 @@ def print_value_index(x, ctx):
 	out("[")
 	print_value(x.index)
 	out("]")
+
 
 
 def print_value_access(x, ctx):
@@ -670,11 +672,7 @@ def print_value_access(x, ctx):
 
 
 def print_value_access_module(v, ctx):
-	left = v.left
-	#out("%s.%s" % (left['id'], v['right'].str))
-
-	id_str = get_id_str(v.right)
-	out("%s" % (id_str))
+	out(get_id_str(v.right))
 
 
 
