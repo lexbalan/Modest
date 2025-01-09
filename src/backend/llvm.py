@@ -1156,15 +1156,15 @@ def access(x):
 	i = x.field
 
 	# разфменовываем указатель на массив по умолчанию сами
-	if Type.is_pointer(x.value.type):
-		ll = do_reval(x.value)
+	if Type.is_pointer(x.left.type):
+		ll = do_reval(x.left)
 		return (ll, (i,))
 
-	if isinstance(x.value, ValueAccessRecord):
-		y, i2 = access(x.value)
+	if isinstance(x.left, ValueAccessRecord):
+		y, i2 = access(x.left)
 		return (y, i2 + (i,))
 
-	return do_eval(x.value), (i,)
+	return do_eval(x.left), (i,)
 
 
 

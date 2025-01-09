@@ -3,7 +3,7 @@
 #######################################################################
 
 from .entity import Entity
-
+from .misc import Id, Field
 
 class Value(Entity):
 	def __init__(self, type, ti=None):
@@ -150,17 +150,23 @@ class ValueBad(Value):
 
 class ValueUndefined(Value):
 	def __init__(self, type, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 
 
 class ValueLiteral(Value):
 	def __init__(self, type, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.nsigns=0
 
 
 class ValueZero(Value):
 	def __init__(self, type, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		if type.is_composite():
 			self.items = []
@@ -172,7 +178,11 @@ class ValueZero(Value):
 
 #TODO: onl value as arg (undefined if not init_value, but type from it)
 class ValueVar(Value):
-	def __init__(self, id, type, init_value=None, ti=None):
+	def __init__(self, id, type, init_value, ti=None):
+		from .type import Type
+		assert(isinstance(id, Id))
+		assert(isinstance(type, Type))
+		assert(isinstance(init_value, Value))
 		super().__init__(type=type, ti=ti)
 		self.id = id
 		self.init_value = init_value
@@ -183,6 +193,8 @@ class ValueVar(Value):
 
 class ValueConst(Value):
 	def __init__(self, id, value, ti=None):
+		assert(isinstance(id, Id))
+		assert(isinstance(value, Value))
 		type = value.type
 		super().__init__(type=type, ti=ti)
 		self.id = id
@@ -193,6 +205,9 @@ class ValueConst(Value):
 
 class ValueFunc(Value):
 	def __init__(self, id, type, ti=None):
+		from .type import Type
+		assert(isinstance(id, Id))
+		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.id = id
 		self.usecnt = 0
@@ -203,6 +218,9 @@ class ValueFunc(Value):
 #TODO: value, type -> only value
 class ValueUn(Value):
 	def __init__(self, op, value, type, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(value, Value))
 		super().__init__(type=type, ti=ti)
 		self.op = op
 		self.value = value
@@ -212,6 +230,10 @@ class ValueUn(Value):
 #TODO: value, type -> only value
 class ValueBin(Value):
 	def __init__(self, op, left, right, type, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(left, Value))
+		assert(isinstance(right, Value))
 		super().__init__(type=type, ti=ti)
 		self.op = op
 		self.left = left
@@ -222,6 +244,9 @@ class ValueBin(Value):
 #TODO: get type from value ret type
 class ValueCall(Value):
 	def __init__(self, func, type, args, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(func, Value))
 		super().__init__(type=type, ti=ti)
 		self.func = func
 		self.args = args
@@ -231,6 +256,9 @@ class ValueCall(Value):
 #TODO: get type from array element type
 class ValueIndex(Value):
 	def __init__(self, left, type, index, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(left, Value))
 		super().__init__(type=type, ti=ti)
 		self.left = left
 		self.index = index
@@ -240,6 +268,11 @@ class ValueIndex(Value):
 #TODO: get type from array type
 class ValueSlice(Value):
 	def __init__(self, left, type, index_from, index_to, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(left, Value))
+		assert(isinstance(index_from, Value))
+		assert(isinstance(index_to, Value))
 		super().__init__(type=type, ti=ti)
 		self.left = left
 		self.index_from = index_from
@@ -249,6 +282,10 @@ class ValueSlice(Value):
 
 class ValueAccessModule(Value):
 	def __init__(self, type, left, right, value, ti=None):
+		from .type import Type
+		#assert(isinstance(left, Id))
+		#assert(isinstance(right, Id))
+		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.left = left
 		self.right = right
@@ -256,19 +293,23 @@ class ValueAccessModule(Value):
 
 
 class ValueAccessRecord(Value):
-	def __init__(self, type, value, field, ti=None):
+	def __init__(self, type, left, field, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(left, Value))
+		assert(isinstance(field, Field))
 		super().__init__(type=type, ti=ti)
-		self.value = value
+		self.left = left
 		self.field = field
 		self.is_lvalue = True
 
 
 class ValueCons(Value):
 	def __init__(self, type, value, method, ti=None):
-		assert(method in ['implicit', 'explicit', 'unsafe'])
 		from .type import Type
 		assert(isinstance(type, Type))
 		assert(isinstance(value, Value))
+		assert(method in ['implicit', 'explicit', 'unsafe'])
 		super().__init__(type=type, ti=ti)
 		self.value = value
 		self.method = method

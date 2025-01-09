@@ -622,8 +622,7 @@ def print_value_call(v, ctx, arrayResult=None):
 
 
 def print_value_slice(x, ctx):
-	varray = x.left
-	y = ValueIndex(varray, x.type, x.index_from, ti=None)
+	y = ValueIndex(x.left, x.type, x.index_from, ti=None)
 	print_value_index(y, ctx)
 
 
@@ -649,7 +648,7 @@ def print_value_index(x, ctx):
 
 
 def print_value_access(x, ctx):
-	left = x.value
+	left = x.left
 
 	# если имеем дело c константной записью (глоб константа)
 	# и результат операции доступа - константа которая уже тут

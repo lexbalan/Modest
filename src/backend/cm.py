@@ -1,9 +1,8 @@
 
 import type as htype
 from error import info
-from hlir.hlir import *
-from value.value import *
 from .common import *
+from hlir.hlir import *
 from util import get_item_by_id
 
 
@@ -290,13 +289,13 @@ def print_value_slice(x, ctx):
 	out("[")
 	print_value(x.index_from)
 	out(":")
-	if x.index_to:
+	if not isinstance(x.index_to, ValueUndefined):
 		print_value(x.index_to)
 	out("]")
 
 
 def print_value_access(v, ctx):
-	left = v.value
+	left = v.left
 	need_wrap = precedence(left) < precedence({'kind': 'access'})
 	print_value(left, need_wrap=need_wrap)
 	out(".")

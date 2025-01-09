@@ -1298,6 +1298,9 @@ def do_value_slice(x):
 	if slice_volume == None:
 		slice_volume = ValueUndefined(typeSysNat, x['ti'])
 
+	if index_to == None:
+		index_to = ValueUndefined(typeSysInt)
+
 	type = TypeArray(array_type.of, slice_volume, x['ti'])
 	nv = ValueSlice(left, type, index_from, index_to, x['ti'])
 
@@ -1814,7 +1817,8 @@ def do_stmt_var(x):
 
 
 def add_local_var(id, typ, ti):
-	var_value = ValueVar(id, typ, ti)
+	iv = ValueUndefined(typ)
+	var_value = ValueVar(id, typ, iv, ti)
 	var_value.addAttribute('local')
 	ctx_value_add(id.str, var_value)
 	return var_value
@@ -2223,7 +2227,7 @@ def def_var(x):
 
 	init_value = v
 
-	var_value = ValueVar(id, t, id.ti)
+	var_value = ValueVar(id, t, init_value, id.ti)
 	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 
 	definition.var_value = var_value
