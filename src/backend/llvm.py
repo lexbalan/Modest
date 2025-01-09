@@ -1070,9 +1070,8 @@ def do_eval_index(v):
 
 
 def getET(et):
-	while Type.is_pointer(et):
-		et = et.to
-	et = et.of
+	if Type.is_pointer(et):
+		return et.to
 	return et
 
 
@@ -1081,7 +1080,7 @@ def getET(et):
 def ass(left, indexes):
 	result_type = left['type']
 	et = getET(left['type'])
-	#indexes = [llvm_value_num_zero] + indexes
+	indexes = (llvm_value_num_zero,) + indexes
 	return llvm_gep(left, left['type'], indexes, result_type, et)
 
 
@@ -1096,7 +1095,9 @@ def do_eval_slice(v):
 		array_type = pointer['type'].to
 		index = do_reval(v.index_from)
 		result_type = v.type
-		ptr_to_item = llvm_gep(pointer, array_type, (index,), array_type.of, array_type.of)
+		indexes = (llvm_value_num_zero, index)
+		et = getET(varray.type)
+		ptr_to_item = llvm_gep(pointer, array_type, indexes, array_type.of, et)
 		out("\n;")
 
 		pnv = llvm_cast("bitcast", ptr_to_item, TypePointer(v.type))
@@ -1117,7 +1118,9 @@ def do_eval_slice(v):
 
 		return extractvalue(array, result_type, index.asset)
 
-	ptr_to_item = llvm_gep(array, array_type, (index,), array_type.of, array_type.of)
+	indexes = (llvm_value_num_zero, index)
+	et = getET(varray.type)
+	ptr_to_item = llvm_gep(array, array_type, indexes, array_type.of, et)
 	pnv = llvm_cast("bitcast", ptr_to_item, TypePointer(v.type))
 	pnv['is_adr'] = True
 	return pnv
@@ -1336,17 +1339,17 @@ def do_eval_cons(x):
 	if id(value.type) == id(to_type):
 		return do_reval(value)
 
-	if Type.eq(to_type, from_type):
-		if not Type.is_record(value.type):
-			return do_reval(value)
+#	if Type.eq(to_type, from_type):
+#		if not Type.is_record(value.type):
+#			return do_reval(value)
 
 	if Type.is_pointer(to_type):
 		if Type.is_pointer(from_type):
 			# skipping cast pointer to pointer of the same type
 			if id(to_type.to) == id(from_type.to):
 				return do_reval(value)
-			if Type.eq(to_type.to, from_type.to):
-				return do_reval(value)
+			#if Type.eq(to_type.to, from_type.to):
+			#	return do_reval(value)
 
 	if Type.is_array(to_type):
 		return eval_cons_array(x)

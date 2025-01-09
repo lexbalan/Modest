@@ -252,13 +252,13 @@ define %Int @main() {
 	; -- end vol eval --
 	%6 = load [10 x %Int32], [10 x %Int32]* @glb_a1
 	store [10 x %Int32] %6, [10 x %Int32]* @glb_a0
-	%7 = getelementptr %Int32, [10 x %Int32]* @glb_a0, %Int32 0
+	%7 = getelementptr [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 0
 	%8 = load %Int32, %Int32* %7
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Int32 %8)
-	%10 = getelementptr %Int32, [10 x %Int32]* @glb_a0, %Int32 1
+	%10 = getelementptr [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 1
 	%11 = load %Int32, %Int32* %10
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), %Int32 %11)
-	%13 = getelementptr %Int32, [10 x %Int32]* @glb_a0, %Int32 2
+	%13 = getelementptr [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 2
 	%14 = load %Int32, %Int32* %13
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Int32 %14)
 
@@ -302,13 +302,13 @@ define %Int @main() {
 	; -- end vol eval --
 	%34 = load [10 x %Int32], [10 x %Int32]* %29
 	store [10 x %Int32] %34, [10 x %Int32]* %28
-	%35 = getelementptr %Int32, [10 x %Int32]* %28, %Int32 0
+	%35 = getelementptr [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 0
 	%36 = load %Int32, %Int32* %35
 	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), %Int32 %36)
-	%38 = getelementptr %Int32, [10 x %Int32]* %28, %Int32 1
+	%38 = getelementptr [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 1
 	%39 = load %Int32, %Int32* %38
 	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), %Int32 %39)
-	%41 = getelementptr %Int32, [10 x %Int32]* %28, %Int32 2
+	%41 = getelementptr [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 2
 	%42 = load %Int32, %Int32* %41
 	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), %Int32 %42)
 

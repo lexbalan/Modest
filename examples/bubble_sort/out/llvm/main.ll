@@ -241,22 +241,22 @@ again_2:
 	br %Bool %6 , label %body_2, label %break_2
 body_2:
 	%7 = load %Int32, %Int32* %3
-	%8 = getelementptr %Int32, [0 x %Int32]* %array, %Int32 %7
+	%8 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %7
 	%9 = load %Int32, %Int32* %8
 	%10 = load %Int32, %Int32* %3
 	%11 = add %Int32 %10, 1
-	%12 = getelementptr %Int32, [0 x %Int32]* %array, %Int32 %11
+	%12 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %11
 	%13 = load %Int32, %Int32* %12
 	%14 = icmp sgt %Int32 %9, %13
 	br %Bool %14 , label %then_0, label %endif_0
 then_0:
 	; swap
 	%15 = load %Int32, %Int32* %3
-	%16 = getelementptr %Int32, [0 x %Int32]* %array, %Int32 %15
+	%16 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %15
 	store %Int32 %13, %Int32* %16
 	%17 = load %Int32, %Int32* %3
 	%18 = add %Int32 %17, 1
-	%19 = getelementptr %Int32, [0 x %Int32]* %array, %Int32 %18
+	%19 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %18
 	store %Int32 %9, %Int32* %19
 	store %Bool 1, %Bool* %1
 	br label %break_2
@@ -296,7 +296,7 @@ again_1:
 body_1:
 	%5 = load %Int32, %Int32* %2
 	%6 = load %Int32, %Int32* %2
-	%7 = getelementptr %Int32, [0 x %Int32]* %array, %Int32 %6
+	%7 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %6
 	%8 = load %Int32, %Int32* %7
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str6 to [0 x i8]*), %Int32 %5, %Int32 %8)
 	%10 = load %Int32, %Int32* %2
@@ -321,7 +321,7 @@ body_1:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), %Int32 %5)
 	%7 = call %Int32 @get_number(%Int32 -1000, %Int32 1000)
 	%8 = load %Int32, %Int32* %2
-	%9 = getelementptr %Int32, [0 x %Int32]* %array, %Int32 %8
+	%9 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %8
 	store %Int32 %7, %Int32* %9
 	%10 = load %Int32, %Int32* %2
 	%11 = add %Int32 %10, 1

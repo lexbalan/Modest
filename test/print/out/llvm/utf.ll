@@ -118,7 +118,7 @@ define %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {
 	%2 = icmp ule %Int32 %1, 127
 	br %Bool %2 , label %then_0, label %else_0
 then_0:
-	%3 = getelementptr %Char8, [4 x %Char8]* %buf, %Int32 0
+	%3 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 0
 	%4 = trunc %Int32 %1 to %Char8
 	store %Char8 %4, %Char8* %3
 	ret %Int8 1
@@ -132,11 +132,11 @@ then_1:
 	%9 = and %Word32 %8, 31
 	%10 = lshr %Word32 %7, 0
 	%11 = and %Word32 %10, 63
-	%12 = getelementptr %Char8, [4 x %Char8]* %buf, %Int32 0
+	%12 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 0
 	%13 = or %Word32 192, %9
 	%14 = trunc %Word32 %13 to %Char8
 	store %Char8 %14, %Char8* %12
-	%15 = getelementptr %Char8, [4 x %Char8]* %buf, %Int32 1
+	%15 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 1
 	%16 = or %Word32 128, %11
 	%17 = trunc %Word32 %16 to %Char8
 	store %Char8 %17, %Char8* %15
@@ -153,15 +153,15 @@ then_2:
 	%24 = and %Word32 %23, 63
 	%25 = lshr %Word32 %20, 0
 	%26 = and %Word32 %25, 63
-	%27 = getelementptr %Char8, [4 x %Char8]* %buf, %Int32 0
+	%27 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 0
 	%28 = or %Word32 224, %22
 	%29 = trunc %Word32 %28 to %Char8
 	store %Char8 %29, %Char8* %27
-	%30 = getelementptr %Char8, [4 x %Char8]* %buf, %Int32 1
+	%30 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 1
 	%31 = or %Word32 128, %24
 	%32 = trunc %Word32 %31 to %Char8
 	store %Char8 %32, %Char8* %30
-	%33 = getelementptr %Char8, [4 x %Char8]* %buf, %Int32 2
+	%33 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 2
 	%34 = or %Word32 128, %26
 	%35 = trunc %Word32 %34 to %Char8
 	store %Char8 %35, %Char8* %33
@@ -180,19 +180,19 @@ then_3:
 	%44 = and %Word32 %43, 63
 	%45 = lshr %Word32 %38, 0
 	%46 = and %Word32 %45, 63
-	%47 = getelementptr %Char8, [4 x %Char8]* %buf, %Int32 0
+	%47 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 0
 	%48 = or %Word32 240, %40
 	%49 = trunc %Word32 %48 to %Char8
 	store %Char8 %49, %Char8* %47
-	%50 = getelementptr %Char8, [4 x %Char8]* %buf, %Int32 1
+	%50 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 1
 	%51 = or %Word32 128, %42
 	%52 = trunc %Word32 %51 to %Char8
 	store %Char8 %52, %Char8* %50
-	%53 = getelementptr %Char8, [4 x %Char8]* %buf, %Int32 2
+	%53 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 2
 	%54 = or %Word32 128, %44
 	%55 = trunc %Word32 %54 to %Char8
 	store %Char8 %55, %Char8* %53
-	%56 = getelementptr %Char8, [4 x %Char8]* %buf, %Int32 3
+	%56 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 3
 	%57 = or %Word32 128, %46
 	%58 = trunc %Word32 %57 to %Char8
 	store %Char8 %58, %Char8* %56
@@ -212,7 +212,7 @@ endif_0:
 
 ; returns n-symbols from input stream
 define %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result) {
-	%1 = getelementptr %Char16, [0 x %Char16]* %c, %Int32 0
+	%1 = getelementptr [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 0
 	%2 = load %Char16, %Char16* %1
 	%3 = zext %Char16 %2 to %Int32
 	%4 = icmp ult %Int32 %3, 55296
@@ -236,7 +236,7 @@ else_1:
 	%12 = and %Word32 %11, 1023
 	%13 = shl %Word32 %12, 10
 	store %Word32 %13, %Word32* %10
-	%14 = getelementptr %Char16, [0 x %Char16]* %c, %Int32 1
+	%14 = getelementptr [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 1
 	%15 = load %Char16, %Char16* %14
 	%16 = zext %Char16 %15 to %Int32
 	%17 = icmp ult %Int32 %16, 56320

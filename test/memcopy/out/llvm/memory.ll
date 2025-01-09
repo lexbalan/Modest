@@ -137,7 +137,7 @@ again_1:
 	br %Bool %6 , label %body_1, label %break_1
 body_1:
 	%7 = load %Int64, %Int64* %4
-	%8 = getelementptr %Word8, [0 x %Word8]* %3, %Int64 %7
+	%8 = getelementptr [0 x %Word8], [0 x %Word8]* %3, %Int32 0, %Int64 %7
 	store %Word8 0, %Word8* %8
 	%9 = load %Int64, %Int64* %4
 	%10 = add %Int64 %9, 1
@@ -149,7 +149,7 @@ break_1:
 	%11 = sub %Int64 %len, %2
 	%12 = udiv %Int64 %11, 8
 	%13 = load %Int64, %Int64* %4
-	%14 = getelementptr %Word8, [0 x %Word8]* %3, %Int64 %13
+	%14 = getelementptr [0 x %Word8], [0 x %Word8]* %3, %Int32 0, %Int64 %13
 	%15 = bitcast %Word8* %14 to [0 x %Word]*
 	store %Int64 0, %Int64* %4
 	br label %again_2
@@ -159,7 +159,7 @@ again_2:
 	br %Bool %17 , label %body_2, label %break_2
 body_2:
 	%18 = load %Int64, %Int64* %4
-	%19 = getelementptr %Word, [0 x %Word]* %15, %Int64 %18
+	%19 = getelementptr [0 x %Word], [0 x %Word]* %15, %Int32 0, %Int64 %18
 	store %Word 0, %Word* %19
 	%20 = load %Int64, %Int64* %4
 	%21 = add %Int64 %20, 1
@@ -171,7 +171,7 @@ break_2:
 	%22 = sub %Int64 %len, %2
 	%23 = urem %Int64 %22, 8
 	%24 = load %Int64, %Int64* %4
-	%25 = getelementptr %Word, [0 x %Word]* %15, %Int64 %24
+	%25 = getelementptr [0 x %Word], [0 x %Word]* %15, %Int32 0, %Int64 %24
 	%26 = bitcast %Word* %25 to [0 x %Word8]*
 	store %Int64 0, %Int64* %4
 	br label %again_3
@@ -181,7 +181,7 @@ again_3:
 	br %Bool %28 , label %body_3, label %break_3
 body_3:
 	%29 = load %Int64, %Int64* %4
-	%30 = getelementptr %Word8, [0 x %Word8]* %26, %Int64 %29
+	%30 = getelementptr [0 x %Word8], [0 x %Word8]* %26, %Int32 0, %Int64 %29
 	store %Word8 0, %Word8* %30
 	%31 = load %Int64, %Int64* %4
 	%32 = add %Int64 %31, 1
@@ -204,9 +204,9 @@ again_1:
 	br %Bool %6 , label %body_1, label %break_1
 body_1:
 	%7 = load %Int64, %Int64* %4
-	%8 = getelementptr %Word, [0 x %Word]* %3, %Int64 %7
+	%8 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int64 %7
 	%9 = load %Int64, %Int64* %4
-	%10 = getelementptr %Word, [0 x %Word]* %2, %Int64 %9
+	%10 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Int64 %9
 	%11 = load %Word, %Word* %10
 	store %Word %11, %Word* %8
 	%12 = load %Int64, %Int64* %4
@@ -216,10 +216,10 @@ body_1:
 break_1:
 	%14 = urem %Int64 %len, 8
 	%15 = load %Int64, %Int64* %4
-	%16 = getelementptr %Word, [0 x %Word]* %2, %Int64 %15
+	%16 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Int64 %15
 	%17 = bitcast %Word* %16 to [0 x %Word8]*
 	%18 = load %Int64, %Int64* %4
-	%19 = getelementptr %Word, [0 x %Word]* %3, %Int64 %18
+	%19 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int64 %18
 	%20 = bitcast %Word* %19 to [0 x %Word8]*
 	store %Int64 0, %Int64* %4
 	br label %again_2
@@ -229,9 +229,9 @@ again_2:
 	br %Bool %22 , label %body_2, label %break_2
 body_2:
 	%23 = load %Int64, %Int64* %4
-	%24 = getelementptr %Word8, [0 x %Word8]* %20, %Int64 %23
+	%24 = getelementptr [0 x %Word8], [0 x %Word8]* %20, %Int32 0, %Int64 %23
 	%25 = load %Int64, %Int64* %4
-	%26 = getelementptr %Word8, [0 x %Word8]* %17, %Int64 %25
+	%26 = getelementptr [0 x %Word8], [0 x %Word8]* %17, %Int32 0, %Int64 %25
 	%27 = load %Word8, %Word8* %26
 	store %Word8 %27, %Word8* %24
 	%28 = load %Int64, %Int64* %4
@@ -255,9 +255,9 @@ again_1:
 	br %Bool %6 , label %body_1, label %break_1
 body_1:
 	%7 = load %Int64, %Int64* %4
-	%8 = getelementptr %Word, [0 x %Word]* %2, %Int64 %7
+	%8 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Int64 %7
 	%9 = load %Int64, %Int64* %4
-	%10 = getelementptr %Word, [0 x %Word]* %3, %Int64 %9
+	%10 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int64 %9
 	%11 = load %Word, %Word* %8
 	%12 = load %Word, %Word* %10
 	%13 = icmp ne %Word %11, %12
@@ -273,10 +273,10 @@ endif_0:
 break_1:
 	%17 = urem %Int64 %len, 8
 	%18 = load %Int64, %Int64* %4
-	%19 = getelementptr %Word, [0 x %Word]* %2, %Int64 %18
+	%19 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Int64 %18
 	%20 = bitcast %Word* %19 to [0 x %Word8]*
 	%21 = load %Int64, %Int64* %4
-	%22 = getelementptr %Word, [0 x %Word]* %3, %Int64 %21
+	%22 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int64 %21
 	%23 = bitcast %Word* %22 to [0 x %Word8]*
 	store %Int64 0, %Int64* %4
 	br label %again_2
@@ -286,9 +286,9 @@ again_2:
 	br %Bool %25 , label %body_2, label %break_2
 body_2:
 	%26 = load %Int64, %Int64* %4
-	%27 = getelementptr %Word8, [0 x %Word8]* %20, %Int64 %26
+	%27 = getelementptr [0 x %Word8], [0 x %Word8]* %20, %Int32 0, %Int64 %26
 	%28 = load %Int64, %Int64* %4
-	%29 = getelementptr %Word8, [0 x %Word8]* %23, %Int64 %28
+	%29 = getelementptr [0 x %Word8], [0 x %Word8]* %23, %Int32 0, %Int64 %28
 	%30 = load %Word8, %Word8* %27
 	%31 = load %Word8, %Word8* %29
 	%32 = icmp ne %Word8 %30, %31

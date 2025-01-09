@@ -252,7 +252,7 @@ endif_0:
 	br label %again_2
 break_2:
 	%21 = load %Int32, %Int32* %3
-	%22 = getelementptr %Word32, [256 x %Word32]* %1, %Int32 %21
+	%22 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int32 %21
 	%23 = load %Word32, %Word32* %2
 	store %Word32 %23, %Word32* %22
 	%24 = load %Int32, %Int32* %3
@@ -274,7 +274,7 @@ again_3:
 body_3:
 	; --???1
 	%28 = load %Int32, %Int32* %3
-	%29 = getelementptr %Word8, [0 x %Word8]* %buf, %Int32 %28
+	%29 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %28
 	%30 = load %Word8, %Word8* %29
 	%31 = zext %Word8 %30 to %Word32
 	%32 = load %Word32, %Word32* %2
@@ -284,7 +284,7 @@ body_3:
 	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str1 to [0 x i8]*), %Int32 %35, %Word32 %31, %Word32 %34)
 	; --???2
 	%37 = trunc %Word32 %34 to %Int8
-	%38 = getelementptr %Word32, [256 x %Word32]* %1, %Int8 %37
+	%38 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int8 %37
 	%39 = load %Word32, %Word32* %2
 	%40 = lshr %Word32 %39, 8
 	%41 = load %Word32, %Word32* %38

@@ -212,7 +212,7 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Int32 %state_no) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
-	%2 = getelementptr %fsm_StateDesc, [16 x %fsm_StateDesc]* %1, %Int32 %state_no
+	%2 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %1, %Int32 0, %Int32 %state_no
 	%3 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %2, %Int32 0, %Int32 0
 	%4 = bitcast [8 x %Char8]* %3 to %Str8*
 	ret %Str8* %4
@@ -236,7 +236,7 @@ then_0:
 	%5 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 2
 	%6 = load %Int32, %Int32* %5
 	%7 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
-	%8 = getelementptr %fsm_StateDesc, [16 x %fsm_StateDesc]* %7, %Int32 %6
+	%8 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %7, %Int32 0, %Int32 %6
 	br %Bool 1 , label %then_1, label %endif_1
 then_1:
 	%9 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %8, %Int32 0, %Int32 0
@@ -267,7 +267,7 @@ then_3:
 	%21 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
 	%22 = load %Int32, %Int32* %21
 	%23 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
-	%24 = getelementptr %fsm_StateDesc, [16 x %fsm_StateDesc]* %23, %Int32 %22
+	%24 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %23, %Int32 0, %Int32 %22
 	%25 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %24, %Int32 0, %Int32 2
 	%26 = load %fsm_Handler, %fsm_Handler* %25
 	%27 = icmp ne %fsm_Handler %26, null
@@ -288,7 +288,7 @@ then_5:
 	%33 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
 	%34 = load %Int32, %Int32* %33
 	%35 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
-	%36 = getelementptr %fsm_StateDesc, [16 x %fsm_StateDesc]* %35, %Int32 %34
+	%36 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %35, %Int32 0, %Int32 %34
 	br %Bool 1 , label %then_6, label %endif_6
 then_6:
 	%37 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %36, %Int32 0, %Int32 0

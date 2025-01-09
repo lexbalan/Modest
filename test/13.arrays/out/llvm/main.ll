@@ -360,7 +360,7 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%7 = load [6 x %Char8], [6 x %Char8]* %6
 ; -- end cons_composite_from_composite_by_adr --
 	store [6 x %Char8] %7, [6 x %Char8]* %5
-	%8 = getelementptr %Char8, [6 x %Char8]* %5, %Int32 5
+	%8 = getelementptr [6 x %Char8], [6 x %Char8]* %5, %Int32 0, %Int32 5
 	store %Char8 0, %Char8* %8
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), [6 x %Char8]* %5)
 
@@ -371,21 +371,21 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%12 = load [30 x %Char8], [30 x %Char8]* %11
 ; -- end cons_composite_from_composite_by_adr --
 	store [30 x %Char8] %12, [30 x %Char8]* %10
-	%13 = getelementptr %Char8, [30 x %Char8]* %10, %Int32 6
+	%13 = getelementptr [30 x %Char8], [30 x %Char8]* %10, %Int32 0, %Int32 6
 	store %Char8 77, %Char8* %13
-	%14 = getelementptr %Char8, [30 x %Char8]* %10, %Int32 7
+	%14 = getelementptr [30 x %Char8], [30 x %Char8]* %10, %Int32 0, %Int32 7
 	store %Char8 111, %Char8* %14
-	%15 = getelementptr %Char8, [30 x %Char8]* %10, %Int32 8
+	%15 = getelementptr [30 x %Char8], [30 x %Char8]* %10, %Int32 0, %Int32 8
 	store %Char8 100, %Char8* %15
-	%16 = getelementptr %Char8, [30 x %Char8]* %10, %Int32 9
+	%16 = getelementptr [30 x %Char8], [30 x %Char8]* %10, %Int32 0, %Int32 9
 	store %Char8 101, %Char8* %16
-	%17 = getelementptr %Char8, [30 x %Char8]* %10, %Int32 10
+	%17 = getelementptr [30 x %Char8], [30 x %Char8]* %10, %Int32 0, %Int32 10
 	store %Char8 115, %Char8* %17
-	%18 = getelementptr %Char8, [30 x %Char8]* %10, %Int32 11
+	%18 = getelementptr [30 x %Char8], [30 x %Char8]* %10, %Int32 0, %Int32 11
 	store %Char8 116, %Char8* %18
-	%19 = getelementptr %Char8, [30 x %Char8]* %10, %Int32 12
+	%19 = getelementptr [30 x %Char8], [30 x %Char8]* %10, %Int32 0, %Int32 12
 	store %Char8 33, %Char8* %19
-	%20 = getelementptr %Char8, [30 x %Char8]* %10, %Int32 13
+	%20 = getelementptr [30 x %Char8], [30 x %Char8]* %10, %Int32 0, %Int32 13
 	store %Char8 0, %Char8* %20
 	%21 = load [30 x %Char8], [30 x %Char8]* %10
 	store [30 x %Char8] %21, [30 x %Char8]* %0
@@ -417,7 +417,7 @@ again_1:
 	br %Bool %8 , label %body_1, label %break_1
 body_1:
 	%9 = load %Int32, %Int32* %6
-	%10 = getelementptr %Int32, [6 x %Int32]* %1, %Int32 %9
+	%10 = getelementptr [6 x %Int32], [6 x %Int32]* %1, %Int32 0, %Int32 %9
 	%11 = load %Int32, %Int32* %10
 	%12 = load %Int32, %Int32* %6
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Int32 %12, %Int32 %11)
@@ -458,7 +458,7 @@ again_1:
 	br %Bool %19 , label %body_1, label %break_1
 body_1:
 	%20 = load %Int32, %Int32* %17
-	%21 = getelementptr %Int32, [10 x %Int32]* @globalArray, %Int32 %20
+	%21 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 %20
 	%22 = load %Int32, %Int32* %21
 	%23 = load %Int32, %Int32* %17
 	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 %23, %Int32 %22)
@@ -481,7 +481,7 @@ again_2:
 	br %Bool %33 , label %body_2, label %break_2
 body_2:
 	%34 = load %Int32, %Int32* %17
-	%35 = getelementptr %Int32, [3 x %Int32]* %28, %Int32 %34
+	%35 = getelementptr [3 x %Int32], [3 x %Int32]* %28, %Int32 0, %Int32 %34
 	%36 = load %Int32, %Int32* %35
 	%37 = load %Int32, %Int32* %17
 	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str7 to [0 x i8]*), %Int32 %37, %Int32 %36)
@@ -502,7 +502,7 @@ again_3:
 body_3:
 	%45 = load %Int32, %Int32* %17
 	%46 = load [0 x %Int32]*, [0 x %Int32]** %42
-	%47 = getelementptr %Int32, [0 x %Int32]* %46, %Int32 %45
+	%47 = getelementptr [0 x %Int32], [0 x %Int32]* %46, %Int32 0, %Int32 %45
 	%48 = load %Int32, %Int32* %47
 	%49 = load %Int32, %Int32* %17
 	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str9 to [0 x i8]*), %Int32 %49, %Int32 %48)
@@ -524,7 +524,7 @@ again_4:
 body_4:
 	%58 = load %Int32, %Int32* %17
 	%59 = load [0 x %Int32]*, [0 x %Int32]** %54
-	%60 = getelementptr %Int32, [0 x %Int32]* %59, %Int32 %58
+	%60 = getelementptr [0 x %Int32], [0 x %Int32]* %59, %Int32 0, %Int32 %58
 	%61 = load %Int32, %Int32* %60
 	%62 = load %Int32, %Int32* %17
 	%63 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str11 to [0 x i8]*), %Int32 %62, %Int32 %61)
@@ -541,13 +541,13 @@ break_4:
 	%68 = insertvalue [3 x %Int32] %67, %Int32 2, 1
 	%69 = insertvalue [3 x %Int32] %68, %Int32 3, 2
 	store [3 x %Int32] %69, [3 x %Int32]* %66
-	%70 = getelementptr %Int32, [3 x %Int32]* %66, %Int32 0
+	%70 = getelementptr [3 x %Int32], [3 x %Int32]* %66, %Int32 0, %Int32 0
 	%71 = load %Int32, %Int32* %70
 	%72 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str12 to [0 x i8]*), %Int32 %71)
-	%73 = getelementptr %Int32, [3 x %Int32]* %66, %Int32 1
+	%73 = getelementptr [3 x %Int32], [3 x %Int32]* %66, %Int32 0, %Int32 1
 	%74 = load %Int32, %Int32* %73
 	%75 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str13 to [0 x i8]*), %Int32 %74)
-	%76 = getelementptr %Int32, [3 x %Int32]* %66, %Int32 2
+	%76 = getelementptr [3 x %Int32], [3 x %Int32]* %66, %Int32 0, %Int32 2
 	%77 = load %Int32, %Int32* %76
 	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str14 to [0 x i8]*), %Int32 %77)
 
@@ -557,13 +557,13 @@ break_4:
 	%79 = alloca [3 x %Int32], align 1
 	%80 = load [3 x %Int32], [3 x %Int32]* %66
 	store [3 x %Int32] %80, [3 x %Int32]* %79
-	%81 = getelementptr %Int32, [3 x %Int32]* %79, %Int32 0
+	%81 = getelementptr [3 x %Int32], [3 x %Int32]* %79, %Int32 0, %Int32 0
 	%82 = load %Int32, %Int32* %81
 	%83 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str15 to [0 x i8]*), %Int32 %82)
-	%84 = getelementptr %Int32, [3 x %Int32]* %79, %Int32 1
+	%84 = getelementptr [3 x %Int32], [3 x %Int32]* %79, %Int32 0, %Int32 1
 	%85 = load %Int32, %Int32* %84
 	%86 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str16 to [0 x i8]*), %Int32 %85)
-	%87 = getelementptr %Int32, [3 x %Int32]* %79, %Int32 2
+	%87 = getelementptr [3 x %Int32], [3 x %Int32]* %79, %Int32 0, %Int32 2
 	%88 = load %Int32, %Int32* %87
 	%89 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str17 to [0 x i8]*), %Int32 %88)
 
@@ -594,22 +594,22 @@ endif_0:
 	%102 = load [6 x %Int32], [6 x %Int32]* %101
 ; -- end cons_composite_from_composite_by_adr --
 	store [6 x %Int32] %102, [6 x %Int32]* %100
-	%103 = getelementptr %Int32, [6 x %Int32]* %100, %Int32 0
+	%103 = getelementptr [6 x %Int32], [6 x %Int32]* %100, %Int32 0, %Int32 0
 	%104 = load %Int32, %Int32* %103
 	%105 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str20 to [0 x i8]*), %Int32 %104)
-	%106 = getelementptr %Int32, [6 x %Int32]* %100, %Int32 1
+	%106 = getelementptr [6 x %Int32], [6 x %Int32]* %100, %Int32 0, %Int32 1
 	%107 = load %Int32, %Int32* %106
 	%108 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str21 to [0 x i8]*), %Int32 %107)
-	%109 = getelementptr %Int32, [6 x %Int32]* %100, %Int32 2
+	%109 = getelementptr [6 x %Int32], [6 x %Int32]* %100, %Int32 0, %Int32 2
 	%110 = load %Int32, %Int32* %109
 	%111 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str22 to [0 x i8]*), %Int32 %110)
-	%112 = getelementptr %Int32, [6 x %Int32]* %100, %Int32 3
+	%112 = getelementptr [6 x %Int32], [6 x %Int32]* %100, %Int32 0, %Int32 3
 	%113 = load %Int32, %Int32* %112
 	%114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str23 to [0 x i8]*), %Int32 %113)
-	%115 = getelementptr %Int32, [6 x %Int32]* %100, %Int32 4
+	%115 = getelementptr [6 x %Int32], [6 x %Int32]* %100, %Int32 0, %Int32 4
 	%116 = load %Int32, %Int32* %115
 	%117 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str24 to [0 x i8]*), %Int32 %116)
-	%118 = getelementptr %Int32, [6 x %Int32]* %100, %Int32 5
+	%118 = getelementptr [6 x %Int32], [6 x %Int32]* %100, %Int32 0, %Int32 5
 	%119 = load %Int32, %Int32* %118
 	%120 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str25 to [0 x i8]*), %Int32 %119)
 
@@ -666,13 +666,13 @@ endif_1:
 	%143 = load [4 x %Int32], [4 x %Int32]* %142
 ; -- end cons_composite_from_composite_by_adr --
 	store [4 x %Int32] %143, [4 x %Int32]* %140
-	%144 = getelementptr %Int32, [4 x %Int32]* %140, %Int32 0
+	%144 = getelementptr [4 x %Int32], [4 x %Int32]* %140, %Int32 0, %Int32 0
 	%145 = load %Int32, %Int32* %144
 	%146 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str28 to [0 x i8]*), %Int32 %145)
-	%147 = getelementptr %Int32, [4 x %Int32]* %140, %Int32 1
+	%147 = getelementptr [4 x %Int32], [4 x %Int32]* %140, %Int32 0, %Int32 1
 	%148 = load %Int32, %Int32* %147
 	%149 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str29 to [0 x i8]*), %Int32 %148)
-	%150 = getelementptr %Int32, [4 x %Int32]* %140, %Int32 2
+	%150 = getelementptr [4 x %Int32], [4 x %Int32]* %140, %Int32 0, %Int32 2
 	%151 = load %Int32, %Int32* %150
 	%152 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str30 to [0 x i8]*), %Int32 %151)
 
@@ -686,13 +686,13 @@ endif_1:
 	%155 = load [10 x %Int32], [10 x %Int32]* %154
 ; -- end cons_composite_from_composite_by_adr --
 	store [10 x %Int32] %155, [10 x %Int32]* @globalArray
-	%156 = getelementptr %Int32, [10 x %Int32]* @globalArray, %Int32 0
+	%156 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 0
 	%157 = load %Int32, %Int32* %156
 	%158 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str31 to [0 x i8]*), %Int32 0, %Int32 %157)
-	%159 = getelementptr %Int32, [10 x %Int32]* @globalArray, %Int32 1
+	%159 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 1
 	%160 = load %Int32, %Int32* %159
 	%161 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str32 to [0 x i8]*), %Int32 1, %Int32 %160)
-	%162 = getelementptr %Int32, [10 x %Int32]* @globalArray, %Int32 2
+	%162 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 2
 	%163 = load %Int32, %Int32* %162
 	%164 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str33 to [0 x i8]*), %Int32 2, %Int32 %163)
 	; -- STMT ASSIGN ARRAY --
@@ -728,16 +728,16 @@ endif_1:
 	store %Int32 111, %Int32* %168
 	store %Int32 222, %Int32* %169
 	store %Int32 333, %Int32* %170
-	%182 = getelementptr %Int32, [4 x %Int32]* %181, %Int32 0
+	%182 = getelementptr [4 x %Int32], [4 x %Int32]* %181, %Int32 0, %Int32 0
 	%183 = load %Int32, %Int32* %182
 	%184 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str34 to [0 x i8]*), %Int32 0, %Int32 %183)
-	%185 = getelementptr %Int32, [4 x %Int32]* %181, %Int32 1
+	%185 = getelementptr [4 x %Int32], [4 x %Int32]* %181, %Int32 0, %Int32 1
 	%186 = load %Int32, %Int32* %185
 	%187 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str35 to [0 x i8]*), %Int32 1, %Int32 %186)
-	%188 = getelementptr %Int32, [4 x %Int32]* %181, %Int32 2
+	%188 = getelementptr [4 x %Int32], [4 x %Int32]* %181, %Int32 0, %Int32 2
 	%189 = load %Int32, %Int32* %188
 	%190 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str36 to [0 x i8]*), %Int32 2, %Int32 %189)
-	%191 = getelementptr %Int32, [4 x %Int32]* %181, %Int32 3
+	%191 = getelementptr [4 x %Int32], [4 x %Int32]* %181, %Int32 0, %Int32 3
 	%192 = load %Int32, %Int32* %191
 	%193 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str37 to [0 x i8]*), %Int32 3, %Int32 %192)
 	%194 = insertvalue [4 x %Int32] zeroinitializer, %Int32 10, 0
@@ -765,7 +765,7 @@ endif_2:
 	%209 = insertvalue [5 x %Char8] %208, %Char8 33, 4
 	%210 = alloca [5 x %Char8]
 	store [5 x %Char8] %209, [5 x %Char8]* %210
-	%211 = getelementptr %Char8, [5 x %Char8]* %210, i8 2
+	%211 = getelementptr [5 x %Char8], [5 x %Char8]* %210, %Int32 0, i8 2
 	%212 = bitcast %Char8* %211 to [2 x %Char8]*
 	%213 = insertvalue [2 x %Char8] zeroinitializer, %Char8 72, 0
 	%214 = insertvalue [2 x %Char8] %213, %Char8 105, 1

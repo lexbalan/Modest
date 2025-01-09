@@ -227,11 +227,11 @@ again_1:
 	br %Bool %5 , label %body_1, label %break_1
 body_1:
 	%6 = load %Int32, %Int32* %3
-	%7 = getelementptr %Int32, [10 x %Int32]* %2, %Int32 %6
+	%7 = getelementptr [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int32 %6
 	%8 = load %Int32, %Int32* %3
-	%9 = getelementptr %Int32, [10 x %Int32]* %a, %Int32 %8
+	%9 = getelementptr [10 x %Int32], [10 x %Int32]* %a, %Int32 0, %Int32 %8
 	%10 = load %Int32, %Int32* %3
-	%11 = getelementptr %Int32, [10 x %Int32]* %b, %Int32 %10
+	%11 = getelementptr [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Int32 %10
 	%12 = load %Int32, %Int32* %9
 	%13 = load %Int32, %Int32* %11
 	%14 = add %Int32 %12, %13
@@ -346,7 +346,7 @@ again_1:
 body_1:
 	%74 = load %Int32, %Int32* %71
 	%75 = load %Int32, %Int32* %71
-	%76 = getelementptr %Int32, [10 x %Int32]* %55, %Int32 %75
+	%76 = getelementptr [10 x %Int32], [10 x %Int32]* %55, %Int32 0, %Int32 %75
 	%77 = load %Int32, %Int32* %76
 	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*), %Int32 %74, %Int32 %77)
 	%79 = load %Int32, %Int32* %71

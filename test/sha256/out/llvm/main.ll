@@ -381,7 +381,7 @@ again_1:
 	br %Bool %11 , label %body_1, label %break_1
 body_1:
 	%12 = load %Int32, %Int32* %9
-	%13 = getelementptr %Word8, %sha256_Hash* %1, %Int32 %12
+	%13 = getelementptr %sha256_Hash, %sha256_Hash* %1, %Int32 0, %Int32 %12
 	%14 = load %Word8, %Word8* %13
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), %Word8 %14)
 	%16 = load %Int32, %Int32* %9
@@ -409,7 +409,7 @@ again_1:
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
 	%5 = load %Int32, %Int32* %2
-	%6 = getelementptr %SHA256_TestCase*, [2 x %SHA256_TestCase*]* @tests, %Int32 %5
+	%6 = getelementptr [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @tests, %Int32 0, %Int32 %5
 	%7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
 	%8 = call %Bool @doTest(%SHA256_TestCase* %7)
 	%9 = alloca %Str8*, align 8
