@@ -1089,14 +1089,14 @@ def do_eval_slice(v):
 	if v.isImmediate():
 		return do_eval(v.immval)
 
-	varray = v.left
-	if Type.is_pointer(varray.type):
-		pointer = do_reval(varray)
+	left = v.left
+	if Type.is_pointer(left.type):
+		pointer = do_reval(left)
 		array_type = pointer['type'].to
 		index = do_reval(v.index_from)
 		result_type = v.type
 		indexes = (llvm_value_num_zero, index)
-		et = getET(varray.type)
+		et = getET(left.type)
 		ptr_to_item = llvm_gep(pointer, array_type, indexes, array_type.of, et)
 		out("\n;")
 
@@ -1105,7 +1105,7 @@ def do_eval_slice(v):
 		return pnv
 
 
-	array = do_eval(varray)
+	array = do_eval(left)
 	array_type = array['type']
 	result_type = v.type
 	index = do_reval(v.index_from)
@@ -1119,7 +1119,7 @@ def do_eval_slice(v):
 		return extractvalue(array, result_type, index.asset)
 
 	indexes = (llvm_value_num_zero, index)
-	et = getET(varray.type)
+	et = getET(left.type)
 	ptr_to_item = llvm_gep(array, array_type, indexes, array_type.of, et)
 	pnv = llvm_cast("bitcast", ptr_to_item, TypePointer(v.type))
 	pnv['is_adr'] = True
@@ -1130,7 +1130,6 @@ def do_eval_slice(v):
 def getET2(et):
 	while Type.is_pointer(et):
 		et = et.to
-	#et = et.of
 	return et
 
 

@@ -207,7 +207,6 @@ declare void @perror(%ConstCharStr* %str)
 @str18 = private constant [14 x i8] [i8 120, i8 46, i8 120, i8 46, i8 98, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str19 = private constant [14 x i8] [i8 120, i8 46, i8 120, i8 46, i8 98, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
-
 @a0 = internal global [2 x [2 x [5 x %Int32]]] [
 	[2 x [5 x %Int32]] [
 		[5 x %Int32] [
@@ -264,7 +263,128 @@ declare void @perror(%ConstCharStr* %str)
 	[2 x [5 x %Int32]*]* @a3,
 	[2 x [5 x %Int32]*]* @a3
 ]
-
+@a10 = internal global [10 x [10 x %Int32]] [
+	[10 x %Int32] [
+		%Int32 1,
+		%Int32 2,
+		%Int32 3,
+		%Int32 4,
+		%Int32 5,
+		%Int32 6,
+		%Int32 7,
+		%Int32 8,
+		%Int32 9,
+		%Int32 10
+	],
+	[10 x %Int32] [
+		%Int32 11,
+		%Int32 12,
+		%Int32 13,
+		%Int32 14,
+		%Int32 15,
+		%Int32 16,
+		%Int32 17,
+		%Int32 18,
+		%Int32 19,
+		%Int32 20
+	],
+	[10 x %Int32] [
+		%Int32 21,
+		%Int32 22,
+		%Int32 23,
+		%Int32 24,
+		%Int32 25,
+		%Int32 26,
+		%Int32 27,
+		%Int32 28,
+		%Int32 29,
+		%Int32 30
+	],
+	[10 x %Int32] [
+		%Int32 31,
+		%Int32 32,
+		%Int32 33,
+		%Int32 34,
+		%Int32 35,
+		%Int32 36,
+		%Int32 37,
+		%Int32 38,
+		%Int32 39,
+		%Int32 40
+	],
+	[10 x %Int32] [
+		%Int32 41,
+		%Int32 42,
+		%Int32 43,
+		%Int32 44,
+		%Int32 45,
+		%Int32 46,
+		%Int32 47,
+		%Int32 48,
+		%Int32 49,
+		%Int32 50
+	],
+	[10 x %Int32] [
+		%Int32 51,
+		%Int32 52,
+		%Int32 53,
+		%Int32 54,
+		%Int32 55,
+		%Int32 56,
+		%Int32 57,
+		%Int32 58,
+		%Int32 59,
+		%Int32 60
+	],
+	[10 x %Int32] [
+		%Int32 61,
+		%Int32 62,
+		%Int32 63,
+		%Int32 64,
+		%Int32 65,
+		%Int32 66,
+		%Int32 67,
+		%Int32 68,
+		%Int32 69,
+		%Int32 70
+	],
+	[10 x %Int32] [
+		%Int32 71,
+		%Int32 72,
+		%Int32 73,
+		%Int32 74,
+		%Int32 75,
+		%Int32 76,
+		%Int32 77,
+		%Int32 78,
+		%Int32 79,
+		%Int32 80
+	],
+	[10 x %Int32] [
+		%Int32 81,
+		%Int32 82,
+		%Int32 83,
+		%Int32 84,
+		%Int32 85,
+		%Int32 86,
+		%Int32 87,
+		%Int32 88,
+		%Int32 89,
+		%Int32 90
+	],
+	[10 x %Int32] [
+		%Int32 91,
+		%Int32 92,
+		%Int32 93,
+		%Int32 94,
+		%Int32 95,
+		%Int32 96,
+		%Int32 97,
+		%Int32 98,
+		%Int32 99,
+		%Int32 100
+	]
+]
 define internal void @test_arrays() {
 	%1 = alloca %Int32, align 4
 	%2 = alloca %Int32, align 4
@@ -296,7 +416,7 @@ body_3:
 	%13 = load %Int32, %Int32* %3
 	%14 = load %Int32, %Int32* %2
 	%15 = load %Int32, %Int32* %1
-	%16 = getelementptr [2 x [5 x %Int32]], [2 x [2 x [5 x %Int32]]]* @a0, %Int32 %15, %Int32 %14, %Int32 %13
+	%16 = getelementptr [2 x [2 x [5 x %Int32]]], [2 x [2 x [5 x %Int32]]]* @a0, %Int32 0, %Int32 %15, %Int32 %14, %Int32 %13
 	%17 = load %Int32, %Int32* %16
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*), %Int32 %10, %Int32 %11, %Int32 %12, %Int32 %17)
 	%19 = load %Int32, %Int32* %3
@@ -334,9 +454,9 @@ body_5:
 	%30 = load %Int32, %Int32* %2
 	%31 = load %Int32, %Int32* %2
 	%32 = load %Int32, %Int32* %1
-	%33 = getelementptr [5 x %Int32]*, [2 x [5 x %Int32]*]* @a3, %Int32 %32
+	%33 = getelementptr [2 x [5 x %Int32]*], [2 x [5 x %Int32]*]* @a3, %Int32 0, %Int32 %32
 	%34 = load [5 x %Int32]*, [5 x %Int32]** %33
-	%35 = getelementptr %Int32, [5 x %Int32]* %34, %Int32 %31
+	%35 = getelementptr [5 x %Int32], [5 x %Int32]* %34, %Int32 0, %Int32 %31
 	%36 = load %Int32, %Int32* %35
 	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*), %Int32 %29, %Int32 %30, %Int32 %36)
 	%38 = load %Int32, %Int32* %2
@@ -378,11 +498,11 @@ body_8:
 	%51 = load %Int32, %Int32* %3
 	%52 = load %Int32, %Int32* %2
 	%53 = load %Int32, %Int32* %1
-	%54 = getelementptr [2 x [5 x %Int32]*]*, [2 x [2 x [5 x %Int32]*]*]* @a4, %Int32 %53
+	%54 = getelementptr [2 x [2 x [5 x %Int32]*]*], [2 x [2 x [5 x %Int32]*]*]* @a4, %Int32 0, %Int32 %53
 	%55 = load [2 x [5 x %Int32]*]*, [2 x [5 x %Int32]*]** %54
-	%56 = getelementptr [5 x %Int32]*, [2 x [5 x %Int32]*]* %55, %Int32 %52
+	%56 = getelementptr [2 x [5 x %Int32]*], [2 x [5 x %Int32]*]* %55, %Int32 0, %Int32 %52
 	%57 = load [5 x %Int32]*, [5 x %Int32]** %56
-	%58 = getelementptr %Int32, [5 x %Int32]* %57, %Int32 %51
+	%58 = getelementptr [5 x %Int32], [5 x %Int32]* %57, %Int32 0, %Int32 %51
 	%59 = load %Int32, %Int32* %58
 	%60 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), %Int32 %48, %Int32 %49, %Int32 %50, %Int32 %59)
 	%61 = load %Int32, %Int32* %3
@@ -403,7 +523,6 @@ break_6:
 	ret void
 }
 
-
 %Point = type {
 	%Int32,
 	%Int32
@@ -413,7 +532,6 @@ break_6:
 	%Point,
 	%Point
 };
-
 
 @line = internal global %Line {
 	%Point {
@@ -458,20 +576,17 @@ break_6:
 	}
 ]
 @pLines = internal global [3 x %Line*] [
-	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0),
-	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 1),
-	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 2)
+	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 0),
+	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 1),
+	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 2)
 ]
-
 %Struct = type {
 	%Line*
 };
 
-
 @s = internal global %Struct {
-	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0)
+	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 0)
 }
-
 define internal void @test_records() {
 	%1 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 0, %Int32 0
 	%2 = load %Int32, %Int32* %1
@@ -485,22 +600,22 @@ define internal void @test_records() {
 	%10 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 1, %Int32 1
 	%11 = load %Int32, %Int32* %10
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Int32 %11)
-	%13 = getelementptr %Line*, [3 x %Line*]* @pLines, %Int32 0
+	%13 = getelementptr [3 x %Line*], [3 x %Line*]* @pLines, %Int32 0, %Int32 0
 	%14 = load %Line*, %Line** %13
 	%15 = getelementptr %Line, %Line* %14, %Int32 0, %Int32 0, %Int32 0
 	%16 = load %Int32, %Int32* %15
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str8 to [0 x i8]*), %Int32 %16)
-	%18 = getelementptr %Line*, [3 x %Line*]* @pLines, %Int32 0
+	%18 = getelementptr [3 x %Line*], [3 x %Line*]* @pLines, %Int32 0, %Int32 0
 	%19 = load %Line*, %Line** %18
 	%20 = getelementptr %Line, %Line* %19, %Int32 0, %Int32 0, %Int32 1
 	%21 = load %Int32, %Int32* %20
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str9 to [0 x i8]*), %Int32 %21)
-	%23 = getelementptr %Line*, [3 x %Line*]* @pLines, %Int32 0
+	%23 = getelementptr [3 x %Line*], [3 x %Line*]* @pLines, %Int32 0, %Int32 0
 	%24 = load %Line*, %Line** %23
 	%25 = getelementptr %Line, %Line* %24, %Int32 0, %Int32 1, %Int32 0
 	%26 = load %Int32, %Int32* %25
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str10 to [0 x i8]*), %Int32 %26)
-	%28 = getelementptr %Line*, [3 x %Line*]* @pLines, %Int32 0
+	%28 = getelementptr [3 x %Line*], [3 x %Line*]* @pLines, %Int32 0, %Int32 0
 	%29 = load %Line*, %Line** %28
 	%30 = getelementptr %Line, %Line* %29, %Int32 0, %Int32 1, %Int32 1
 	%31 = load %Int32, %Int32* %30

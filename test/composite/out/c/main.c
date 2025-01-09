@@ -114,19 +114,19 @@ static int32_t a0[5] = (int32_t[5]){0, 1, 2, 3, 4};
 static int32_t *a1[5] = (int32_t *[5]){&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]};
 static int32_t **a2[5] = (int32_t **[5]){&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]};
 static void(*a3[5])() = (void(*[5])()){&f0};
-static int a4[2 * 5] = (int[2 * 5]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-static int *a5[2] = (int *[2]){&a4[0 * 5], &a4[1 * 5]};
+static int a4[2][5] = (int[2][5]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+static int *a5[2] = (int *[2]){&a4[0], &a4[1]};
 // Проблема в том что мой getelementptr не умеет в цепь-молнию
 // а здесь без нее никак... придется взяться за это и сделать наконец
 //var a6: [2][5]*Int = [
 //	[&a4[0][0], &a4[0][1], &a4[0][2], &a4[0][3], &a4[0][4]]
 //	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
 //]
-static int *a7[2 * 5] = (int *[2 * 5]){
+static int *a7[2][5] = (int *[2][5]){
 	&a0[0], &a0[0], &a0[0], &a0[0], &a0[0],
 	&a0[0], &a0[0], &a0[0], &a0[0], &a0[0]
 };
-static int *(*a8[2 * 5])[2 * 5] = (int *(*[2 * 5])[2 * 5]){
+static int *(*a8[2][5])[2][5] = (int *(*[2][5])[2][5]){
 	&a7, &a7, &a7, &a7, &a7,
 	&a7, &a7, &a7, &a7, &a7
 };
@@ -198,14 +198,14 @@ static void xy(struct __anonymous_struct_3 x)
 }
 
 
-static int32_t arrr[3 * 3] = (int32_t[3 * 3]){
+static int32_t arrr[3][3] = (int32_t[3][3]){
 	1, 2, 3,
 	4, 5, 6,
 	7, 8, 9
 };
 
 
-static void(*arry[3 * 3])();
+static void(*arry[3][3])();
 
 
 static int32_t add(int32_t a, int32_t b)
@@ -267,7 +267,7 @@ int32_t main()
 	while (i < 3) {
 		int32_t j = 0;
 		while (j < 3) {
-			printf("arrr[%d][%d] = %d\n", i, j, arrr[i * 3 + j]);
+			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j]);
 			j = j + 1;
 		}
 		i = i + 1;

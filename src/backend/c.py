@@ -258,51 +258,48 @@ def prespace(s):
 
 
 def str_type_array(t, label='', core=''):
-	dim = ''
 
 	t0 = t
 
 	# handle array of array .. case
+	dims = ''
 	i = 0
 	while True:
+		dims += '['
 		if t.volume:
-			if i > 0:
-				dim += ' * '
 			if t.volume.id:
-				dim += get_id_str(t.volume)
+				dims += get_id_str(t.volume)
 			elif Value.isUndefined(t.volume):
 				pass
 			elif t.volume.asset:
-				dim += str(t.volume.asset)
+				dims += str(t.volume.asset)
 			else:
-				dim += '<' + t.volume['kind'] + '>'
+				dims += '<' + t.volume['kind'] + '>'
 
+		dims += ']'
 		if not t.of.is_array():
 			break
 		t = t.of
 		i += 1
 
-	# now dim like '10' or '20 * 30'
-
-	dim = '[' + dim + ']'
 	if t.of.is_pointer():
 		of = t.of
 		if of.to.is_array():
-			core = core + label + dim
+			core = core + label + dims
 			return str_type(of, core=core)
 
 		elif of.to.is_func():
-			core = core + label + dim
+			core = core + label + dims
 			return str_type(t.of, core=core)
 
 		elif is_type_simple(of.to):
-			return str_type(of) + core + label + dim
+			return str_type(of) + core + label + dims
 
 	left = str_type(t.of)
 
 	if not t.of.is_pointer():
 		label = prespace(label)
-	return left + core + label + dim
+	return left + core + label + dims
 
 
 
@@ -632,88 +629,30 @@ def print_value_slice(x, ctx):
 	print_value_index(y, ctx)
 
 
-
 def print_value_index(x, ctx):
-	array = x.left
+	left = x.left
 
-	if array.type.is_pointer():
-		# index trough pointer to array (requires dereference)
-		ptr2array = array
-		need_wrap = precedence(ptr2array) < precedence(x)
-
-		if not is_sim_sim(array.type):
+	if left.type.is_pointer():
+		if not is_sim_sim(left.type):
 			out("(*")
 
-		print_value(ptr2array, ctx=['do_unwrap'], need_wrap=need_wrap)
+	need_wrap = precedence(left) < precedence(x)
+	print_value(left, ctx=ctx, need_wrap=need_wrap)
 
-		if not is_sim_sim(array.type):
+	if left.type.is_pointer():
+		if not is_sim_sim(left.type):
 			out(")")
 
-		out("["); print_value(x.index); out("]")
-		return
-
-	indexes = []
-
-	xx = x
-	while isinstance(xx, ValueIndex): #['kind'] == 'index':
-		a = xx.left
-		indexes.append(xx.index)
-		xx = a
-
-	dims = []
-	yy = xx.type
-	while yy.is_closed_array():
-		dims.append(yy.volume)
-		yy = yy.of
-
-	# поскольку индексация идет в обратном порядке,
-	# приведем список к прямому порядку (так как индексация записывается)
-	indexes.reverse()
-
-	need_wrap = precedence(xx) < precedence(x)
-
-	ctx=['do_unwrap']
-
-	#out("/*? %s ?*/" % xx['kind'])
-	print_value(xx, ctx=ctx, need_wrap=need_wrap)
-
 	out("[")
-
-	# Окончательный индекс равен сумме произведений индексов
-	# на произведение всех размерностей справа
-
-	i = 0
-	n = len(indexes)
-	while i < n:
-		index = indexes[i]
-		print_value(index)
-
-		j = i + 1
-		while j < len(dims):
-			out(" * ")
-			print_value(dims[j])
-			j = j + 1
-
-		if i < (n - 1):
-			out(" + ")
-
-		i = i + 1
-
+	print_value(x.index)
 	out("]")
-
 
 
 def print_value_access(x, ctx):
 	left = x.value
 
-	if left.type.is_pointer():
-		need_wrap = precedence(left) < precedence(x)
-		print_value(left, need_wrap=need_wrap)
-		out("->")
-		print_id_for(x.field)
-		return
-
-	# если имеем дело c дженерик записью (глоб константа)
+	# если имеем дело c константной записью (глоб константа)
+	# и результат операции доступа - константа которая уже тут
 	#if left.type.is_generic():
 	#	if x.isImmediate():
 	if value_is_generic_immediate(left):
@@ -722,7 +661,10 @@ def print_value_access(x, ctx):
 
 	need_wrap = precedence(left) < precedence(x)
 	print_value(left, need_wrap=need_wrap)
-	out('.')
+	if left.type.is_pointer():
+		out('->')
+	else:
+		out('.')
 	print_id_for(x.field)
 
 
