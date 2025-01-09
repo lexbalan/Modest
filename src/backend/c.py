@@ -592,7 +592,6 @@ def print_value_call(v, ctx, arrayResult=None):
 	i = 0
 	while i < n:
 		a = None
-		#if args[i]['isa'] == 'initializer':
 		if isinstance(args[i], Initializer):
 			a = args[i].value
 		else:
@@ -623,7 +622,6 @@ def print_value_call(v, ctx, arrayResult=None):
 
 
 def print_value_slice(x, ctx):
-	#out("/* slice */")
 	varray = x.left
 	y = ValueIndex(varray, x.type, x.index_from, ti=None)
 	print_value_index(y, ctx)
