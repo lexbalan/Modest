@@ -79,6 +79,12 @@ class Parser:
 		return t
 
 
+	#skip_tokens_class(['nl'])
+	def skip_tokens_class(self, classes):
+		while self.ctok_class() in classes:
+			self.skip()
+
+
 	def skip_tokens(self, tokens):
 		while self.ctok() in tokens:
 			self.skip()
@@ -139,7 +145,6 @@ class Parser:
 
 	def need_sep(self, separators=['\n', ';'], stoppers=['}'], eat=True):
 		# random space after
-		self.skip_tokens([' ', '\t'])
 
 		if self.ctok() in separators:
 			if eat:
@@ -179,7 +184,7 @@ class Parser:
 		spaceline_cnt = 0
 
 		while True:
-			#self.skip_tokens([' ', '\t', '\n'])
+			#self.skip_tokens_class(['nl'])
 
 			comments = []
 			attributes = []
@@ -390,7 +395,7 @@ class Parser:
 			self.need("{")
 			items = []
 			while not self.match("}"):
-				self.skip_tokens([' ', '\t', '\n'])
+				self.skip_tokens_class(['nl'])
 				ti = self.ti()
 				id = self.identifier()
 				self.need_sep(separators=['\n', ','])
@@ -731,7 +736,7 @@ class Parser:
 				args = []
 				while not self.match(")"):
 					arg = None
-					self.skip_tokens([' ', '\t', '\n'])
+					self.skip_tokens_class(['nl'])
 
 					arg_ti = self.ti()
 					arg_value = self.expr_value()
@@ -739,7 +744,7 @@ class Parser:
 					arg_id = None
 					if self.match("="):
 						if arg_value['kind'] != 'id':
-							error("expected identifier", a['ti'])
+							error("expected identifier", arg_value['ti'])
 
 						#if not 'id' in arg_value:
 							#print("isa = " + arg_value['isa'])
@@ -820,7 +825,7 @@ class Parser:
 		item_id = 0
 		self.need("[")
 		while not self.match("]"):
-			#self.skip_tokens([' ', '\t', '\n'])
+			#self.skip_tokens_class(['nl'])
 			nl_cnt = self.skip_blanks()
 
 			if self.token_class_is('comment-block'):
@@ -868,7 +873,7 @@ class Parser:
 		nl_cnt = 0
 		self.need("{")
 		while not self.match("}"):
-			#self.skip_tokens([' ', '\t', '\n'])
+			#self.skip_tokens_class(['nl'])
 			nl_cnt = self.skip_blanks()
 
 			if self.token_class_is('comment-block'):
@@ -1005,7 +1010,7 @@ class Parser:
 			return {
 				'isa': 'ast_value',
 				'kind': 'string',
-				'len': str_len,  # длина строки в символах (не в байтах!)
+				'len': str_len,  # in Characters (!)
 				'str': string,
 				'ti': ti
 			}
@@ -1314,11 +1319,14 @@ class Parser:
 	def skip_blanks(self):
 		nl_cnt = 0
 		while True:
-			if self.look(" ") or self.look("\t"):
-				self.skip()
-				continue
+			#if ctok_class == 'nl':
+			#if self.look(" ") or self.look("\t"):
+			#	self.skip()
+			#	continue
 
-			elif self.look('\n'):
+			#el
+
+			if self.look('\n'):
 				self.skip()
 				nl_cnt = nl_cnt + 1
 				continue
@@ -1335,7 +1343,7 @@ class Parser:
 		self.need("{")
 		stmts = []
 		while True:
-			#self.skip_tokens([' ', '\t', '\n'])
+			#self.skip_tokens_class(['nl'])
 
 			nl_cnt = self.skip_blanks()
 
@@ -1427,7 +1435,7 @@ class Parser:
 			})
 
 			if self.match(','):
-				self.skip_tokens(["\n"])
+				self.skip_tokens_class(['nl'])
 				continue
 
 			break
@@ -1617,7 +1625,7 @@ class Parser:
 		args = []
 		while not self.match(")"):
 			arg = None
-			self.skip_tokens([' ', '\t', '\n'])
+			self.skip_tokens_class(['nl'])
 			arg_ti = self.ti()
 			arg_value = self.expr_value()
 			args.append(arg_value)

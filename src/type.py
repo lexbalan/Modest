@@ -264,6 +264,16 @@ def select_common_type(a, b):
 				return b
 
 
+		# array && string | string && array
+		if a.is_pointer():
+			if b.is_string():
+				return a
+
+		if b.is_pointer():
+			if a.is_string():
+				return b
+
+
 		if a.is_unit():
 			return b
 

@@ -202,8 +202,25 @@ declare %Int @system([0 x %ConstChar]* %string)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 111, i8 99, i8 97, i8 116, i8 101, i8 32, i8 109, i8 101, i8 109, i8 111, i8 114, i8 121, i8 10, i8 0]
-@str2 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 111, i8 99, i8 97, i8 116, i8 101, i8 32, i8 109, i8 101, i8 109, i8 111, i8 114, i8 121, i8 10, i8 0]
+@str1 = private constant [2 x i8] [i8 65, i8 0]
+@str2 = private constant [2 x i8] [i8 66, i8 0]
+@str3 = private constant [2 x i8] [i8 69, i8 0]
+@str4 = private constant [2 x i8] [i8 67, i8 0]
+@str5 = private constant [2 x i8] [i8 68, i8 0]
+@str6 = private constant [2 x i8] [i8 70, i8 0]
+@str7 = private constant [2 x i8] [i8 73, i8 0]
+@str8 = private constant [2 x i8] [i8 74, i8 0]
+@str9 = private constant [1 x i8] [i8 0]
+@str10 = private constant [2 x i8] [i8 43, i8 0]
+@str11 = private constant [3 x i8] [i8 45, i8 43, i8 0]
+@str12 = private constant [3 x i8] [i8 10, i8 124, i8 0]
+@str13 = private constant [3 x i8] [i8 37, i8 115, i8 0]
+@str14 = private constant [2 x i8] [i8 32, i8 0]
+@str15 = private constant [2 x i8] [i8 124, i8 0]
+@str16 = private constant [2 x i8] [i8 10, i8 0]
+@str17 = private constant [2 x i8] [i8 10, i8 0]
+@str18 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 111, i8 99, i8 97, i8 116, i8 101, i8 32, i8 109, i8 101, i8 109, i8 111, i8 114, i8 121, i8 10, i8 0]
+@str19 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 111, i8 99, i8 97, i8 116, i8 101, i8 32, i8 109, i8 101, i8 109, i8 111, i8 114, i8 121, i8 10, i8 0]
 ; -- endstrings --
 %DataPtr = type %Int32*;
 %Node = type {
@@ -218,14 +235,107 @@ define internal %Node* @create() {
 	ret %Node* %2
 }
 
+
+
+; [col, row]
+@table = internal global [3 x [3 x %Str8*]] [
+	[3 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str1 to [0 x i8]*),
+		%Str8* bitcast ([2 x i8]* @str2 to [0 x i8]*),
+		%Str8* bitcast ([2 x i8]* @str3 to [0 x i8]*)
+	],
+	[3 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*),
+		%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*),
+		%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*)
+	],
+	[3 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str7 to [0 x i8]*),
+		%Str8* bitcast ([2 x i8]* @str8 to [0 x i8]*),
+		%Str8* bitcast ([1 x i8]* @str9 to [0 x i8]*)
+	]
+]
+define internal void @tableSepPrint(%Int32 %m) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
+	%2 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %2
+	br label %again_1
+again_1:
+	%3 = load %Int32, %Int32* %2
+	%4 = icmp slt %Int32 %3, %m
+	br %Bool %4 , label %body_1, label %break_1
+body_1:
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str11 to [0 x i8]*))
+	%6 = load %Int32, %Int32* %2
+	%7 = add %Int32 %6, 1
+	store %Int32 %7, %Int32* %2
+	br label %again_1
+break_1:
+	ret void
+}
+
+define internal void @tablePrint([0 x %Str8*]* %table, %Int32 %n, %Int32 %m) {
+	%1 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %1
+	br label %again_1
+again_1:
+	%2 = load %Int32, %Int32* %1
+	%3 = icmp slt %Int32 %2, %n
+	br %Bool %3 , label %body_1, label %break_1
+body_1:
+	call void @tableSepPrint(%Int32 %m)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str12 to [0 x i8]*))
+	%5 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %5
+	br label %again_2
+again_2:
+	%6 = load %Int32, %Int32* %5
+	%7 = icmp slt %Int32 %6, %m
+	br %Bool %7 , label %body_2, label %break_2
+body_2:
+	%8 = load %Int32, %Int32* %1
+	%9 = mul %Int32 %8, %n
+	%10 = load %Int32, %Int32* %5
+	%11 = add %Int32 %9, %10
+	%12 = getelementptr [0 x %Str8*], [0 x %Str8*]* %table, %Int32 0, %Int32 %11
+	%13 = load %Str8*, %Str8** %12
+	%14 = getelementptr %Str8, %Str8* %13, %Int32 0, %Int32 0
+	%15 = load %Char8, %Char8* %14
+	%16 = icmp ne %Char8 %15, 0
+	br %Bool %16 , label %then_0, label %else_0
+then_0:
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str13 to [0 x i8]*), %Str8* %13)
+	br label %endif_0
+else_0:
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str14 to [0 x i8]*))
+	br label %endif_0
+endif_0:
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str15 to [0 x i8]*))
+	%20 = load %Int32, %Int32* %5
+	%21 = add %Int32 %20, 1
+	store %Int32 %21, %Int32* %5
+	br label %again_2
+break_2:
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str16 to [0 x i8]*))
+	%23 = load %Int32, %Int32* %1
+	%24 = add %Int32 %23, 1
+	store %Int32 %24, %Int32* %1
+	br label %again_1
+break_1:
+	call void @tableSepPrint(%Int32 %m)
+	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str17 to [0 x i8]*))
+	ret void
+}
+
 define %Int32 @main() {
+	call void @tablePrint([0 x %Str8*]* bitcast ([3 x [3 x %Str8*]]* @table to [0 x %Str8*]*), %Int32 3, %Int32 3)
 	%1 = call %Node* @create()
 	%2 = alloca %Int16*, align 8
 	store %Int16* bitcast (%DataPtr null to %Int16*), %Int16** %2
 	%3 = icmp eq %Node* %1, null
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str1 to [0 x i8]*))
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str18 to [0 x i8]*))
 	ret %Int32 -1
 	br label %endif_0
 endif_0:
@@ -239,7 +349,7 @@ endif_0:
 	%12 = icmp eq i8* %11, null
 	br %Bool %12 , label %then_1, label %endif_1
 then_1:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str2 to [0 x i8]*))
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str19 to [0 x i8]*))
 	ret %Int32 -1
 	br label %endif_1
 endif_1:

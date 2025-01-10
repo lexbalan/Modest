@@ -13,8 +13,8 @@
 
 
 
-//@property("type.generic", True)
-typedef void *DataPtr;
+
+typedef int32_t *DataPtr;
 
 
 struct Node;
@@ -34,9 +34,20 @@ static Node *create()
 }
 
 
+static char *table[2][2] = (char *[2][2]){
+	"A", "B",
+	"C", "D"
+};
+
+static void tablePrint(char *(*table)[][], int32_t n, int32_t m)
+{
+}
+
 int32_t main()
 {
 	Node *n = create();
+
+	int16_t *e = NULL;
 
 	if (n == NULL) {
 		printf("error: cannot allocate memory\n");
@@ -49,7 +60,6 @@ int32_t main()
 		printf("error: cannot allocate memory\n");
 		return -1;
 	}
-
 
 	return 0;
 }

@@ -160,6 +160,7 @@ class CmLexer(Lexer):
 	# Rule returns False in case if it wasnt triggered
 	# And Product/None in case if it was triggered
 
+	# пробелы и табы не попадают в аутпут
 	def doBlank(self):
 		c = self.peep()
 		if c == ' ' or c == '\t':
@@ -293,9 +294,10 @@ class CmLexer(Lexer):
 
 			s.append(c)
 
+		ss = ''.join(s)
 		# добавляем " чтобы match в парсере не путал "+" с оператором + (!)
 		# поскольку match не учитывает класс
-		return ('str', ''.join(s))
+		return ('str', ss)
 
 
 	def doTag(self):
