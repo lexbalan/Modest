@@ -125,7 +125,7 @@ def type_print(t, print_aka=True):
 #			print(t.id, end='')
 #		print("enum_%s" % str(id(t)), end='')
 
-	elif tis_pointer():
+	elif t.is_pointer():
 		print("*", end=''); type_print(t.to)
 
 	elif t.is_array():

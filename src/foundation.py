@@ -120,6 +120,7 @@ def init():
 
 	# type FreePointer = *Unit
 	typeFreePointer = TypePointer(to=typeUnit)
+	typeFreePointer.generic = True
 	# не нужно делать decl тк нет собственного имени у этого типа
 
 	typeSysNat = typeNat64

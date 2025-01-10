@@ -300,8 +300,8 @@ def property_add(id, value):
 	properties[id] = value
 
 
-def output_id(id):
-	property_add()
+#def output_id(id):
+#	property_add()
 
 
 
@@ -1508,7 +1508,7 @@ def do_value_record(x):
 
 
 def do_value_number(x):
-	if '.' in x['numstr']:
+	if '.' in x['str']:
 		return do_value_float(x)
 
 	return do_value_integer(x)
@@ -1516,15 +1516,15 @@ def do_value_number(x):
 
 
 def do_value_integer(x):
-	num_string_len = len(x['numstr'])
+	num_string_len = len(x['str'])
 	base = 10
 	if num_string_len > 2:
-		if x['numstr'][0] == '0':
-			if x['numstr'][1] == 'x':
+		if x['str'][0] == '0':
+			if x['str'][1] == 'x':
 				num_string_len = num_string_len - 2
 				base = 16
 
-	num = int(x['numstr'], base)
+	num = int(x['str'], base)
 	v = value_integer_create(num, ti=x['ti'])
 	v.nsigns = num_string_len
 
@@ -1537,7 +1537,7 @@ def do_value_integer(x):
 
 def do_value_float(x):
 	# in compile time floats stores as decimal (!)
-	fval = decimal.Decimal(x['numstr'])
+	fval = decimal.Decimal(x['str'])
 	fv = value_float_create(fval, ti=x['ti'])
 	return fv
 
@@ -1825,7 +1825,7 @@ def add_local_var(id, typ, ti):
 
 
 
-def do_stmt_let(x):
+def do_stmt_const(x):
 	id = Id(x['id'])
 
 	# check if identifier is free (in current block)
@@ -1840,11 +1840,21 @@ def do_stmt_let(x):
 
 	v = do_rvalue(x['value'])
 
+	#if v.isBad():
+
+	type = None
+	if x['type'] != None:
+		type = do_type(x['type'])
+		v = value_cons_implicit_check(type, v)
+	else:
+		type = v.type
+
+
 	if Value.isBad(v):
 		ctx_value_add(id.str, ValueBad(x['ti']))
 		return StmtBad(x)
 
-	const_value = ValueConst(v.type, id, value=v, ti=x['id']['ti'])
+	const_value = ValueConst(type, id, value=v, ti=x['id']['ti'])
 	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
 	# на константу. ---Пока это необходимо для 'wrapped_array' (!)---
 	const_value.att.extend(v.att)
@@ -1985,7 +1995,7 @@ def do_stmt(x):
 	k = x['kind']
 	if k == 'value': s = do_stmt_value(x)
 	elif k == 'assign': s = do_stmt_assign(x)
-	elif k == 'let': s = do_stmt_let(x)
+	elif k == 'let': s = do_stmt_const(x)
 	elif k == 'var': s = do_stmt_var(x)
 	elif k == 'block': s = do_stmt_block(x)
 	elif k == 'if': s = do_stmt_if(x)
@@ -2382,8 +2392,41 @@ def do_attribute(x):
 
 	if kind == 'attribute':
 		attribute_add(args[0]['str'])
+
 	elif kind == 'property':
-		property_add(args[0]['str'], args[1]['str'])
+		k = args[1]['kind']
+
+		if args[0]['kind'] != 'string':
+			error("expected String literal", args[0]['ti'])
+			return
+
+		if not k in ['string', 'number', 'id']:
+			error("expected String, Number or Id literal in property value", args[1]['ti'])
+			return
+
+		# propertp can be:
+		# @property("type.uuu", true)
+		# @property("type.vvv", false)
+		# @property("type.xxx", 123)
+		# @property("type.yyy", "abc")
+		# @property("type.zzz", nil)
+
+		value = args[1]['str']
+		if k == 'string':
+			pass
+		elif k == 'id':
+			value = args[1]['str']
+			if value == 'true':
+				value = True
+			elif value == 'false':
+				value = False
+			elif value == 'nil':
+				value = None
+		elif k == 'number':
+			value = eval(value)
+
+		property_add(args[0]['str'], value)
+
 	elif kind == 'inline':
 		attribute_add('static')
 		attribute_add('inline')

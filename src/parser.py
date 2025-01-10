@@ -1055,7 +1055,7 @@ class Parser:
 			return {
 				'isa': 'ast_value',
 				'kind': 'number',
-				'numstr': numstr,
+				'str': numstr,
 				'att': [],
 				'ti': ti
 			}

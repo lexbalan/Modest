@@ -6,8 +6,8 @@
 #include "main.h"
 
 /* anonymous records */
-struct __anonymous_struct_3 {uint32_t x; uint32_t y;};
-struct __anonymous_struct_4 {uint32_t x; uint32_t y;};
+struct __anonymous_struct_6 {uint32_t x; uint32_t y;};
+struct __anonymous_struct_7 {uint32_t x; uint32_t y;};
 
 #include <stdio.h>
 
@@ -29,6 +29,83 @@ typedef struct Point3D Point3D;
 
 #define xx  {.x = 1, .y = 2}
 #define yy  {.x = 1, .y = 2}
+
+
+
+
+struct Point {
+	int32_t x;
+	int32_t y;
+};
+typedef struct Point Point;
+
+struct Line {
+	Point a;
+	Point b;
+};
+typedef struct Line Line;
+
+static Line line = {
+	.a = {.x = 10, .y = 11},
+	.b = {.x = 12, .y = 13}
+};
+
+static Line lines[3] = (Line[3]){
+	{
+		.a = {.x = 1, .y = 2},
+		.b = {.x = 3, .y = 4}
+	},
+	{
+		.a = {.x = 5, .y = 6},
+		.b = {.x = 7, .y = 8}
+	},
+	{
+		.a = {.x = 9, .y = 10},
+		.b = {.x = 11, .y = 12}
+	}
+};
+
+static Line *pLines[3] = (Line *[3]){&lines[0], &lines[1], &lines[2]};
+
+struct Struct {
+	Line *x;
+};
+typedef struct Struct Struct;
+
+static Struct s = {.x = &lines[0]};
+
+
+static void test_records()
+{
+	printf("line.a.x = %d\n", line.a.x);
+	printf("line.a.y = %d\n", line.a.y);
+
+	printf("line.b.x = %d\n", line.b.x);
+	printf("line.b.y = %d\n", line.b.y);
+
+	printf("pLines[0].a.x = %d\n", pLines[0]->a.x);
+	printf("pLines[0].a.y = %d\n", pLines[0]->a.y);
+
+	printf("pLines[0].b.x = %d\n", pLines[0]->b.x);
+	printf("pLines[0].b.y = %d\n", pLines[0]->b.y);
+
+	printf("s.x.a.x = %d\n", s.x->a.x);
+	printf("s.x.a.y = %d\n", s.x->a.y);
+
+	printf("s.x.b.x = %d\n", s.x->b.x);
+	printf("s.x.b.y = %d\n", s.x->b.y);
+
+
+	Struct x = s;
+
+	printf("x.x.a.x = %d\n", x.x->a.x);
+	printf("x.x.a.y = %d\n", x.x->a.y);
+
+	printf("x.x.b.x = %d\n", x.x->b.x);
+	printf("x.x.b.y = %d\n", x.x->b.y);
+}
+
+
 
 
 int main()
@@ -56,7 +133,7 @@ int main()
 
 	// compare Point2D with anonymous record
 	Point2D p2d2 = p2d0;
-	struct __anonymous_struct_3 p2d3 = (struct __anonymous_struct_3)xx;
+	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6)xx;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(Point2D)) == 0) {
 		printf("p2d2 == p2d3\n");
@@ -66,9 +143,9 @@ int main()
 
 
 	// comparison between two anonymous record
-	struct __anonymous_struct_4 p2d4 = (struct __anonymous_struct_4){.x = 1, .y = 2};
+	struct __anonymous_struct_7 p2d4 = (struct __anonymous_struct_7){.x = 1, .y = 2};
 
-	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_3)) == 0) {
+	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_6)) == 0) {
 		printf("p2d3 == p2d4\n");
 	} else {
 		printf("p2d3 != p2d4\n");
@@ -76,7 +153,7 @@ int main()
 
 	// comparison between two record (by pointer)
 	Point2D *pr2 = &p2d2;
-	struct __anonymous_struct_3 *pr3 = &p2d3;
+	struct __anonymous_struct_6 *pr3 = &p2d3;
 
 	if (memcmp(pr2, pr3, sizeof(Point2D)) == 0) {
 		printf("*pr2 == *pr3\n");
@@ -98,7 +175,7 @@ int main()
 
 	// assign record by pointer
 	*pr2 = (Point2D){.x = 100, .y = 200};
-	*pr3 = (struct __anonymous_struct_3){};
+	*pr3 = (struct __anonymous_struct_6){};
 
 	// cons Point3D from Point2D (record extension)
 	// (it is possible if dst record contained all fields from src record
@@ -127,6 +204,7 @@ int main()
 		printf("test failed\n");
 	}
 
+	test_records();
 
 	return 0;
 
