@@ -5,6 +5,8 @@ include "libc/string"
 
 
 // [row, col]
+const nRows = 5
+const nCols = 4
 var table: [5][4]*Str8 = [
 	["#", "Header0", "Header1", "Header2"]
 	["0", "Alef",  "Betha", "Emma"]
@@ -12,6 +14,15 @@ var table: [5][4]*Str8 = [
 	["2", "Ink",   "Julia", "Keyword"]
 	["3", "Ultra", "Video", "Word"]
 ]
+
+
+
+func max(a: Nat32, b: Nat32) -> Nat32 {
+	if b > a {
+		return b
+	}
+	return a
+}
 
 
 func tableSepPrint(sz: *[]Nat32, m: Int32) {
@@ -26,14 +37,6 @@ func tableSepPrint(sz: *[]Nat32, m: Int32) {
 		printf("+")
 		++i
 	}
-}
-
-
-func max(a: Nat32, b: Nat32) -> Nat32 {
-	if b > a {
-		return b
-	}
-	return a
 }
 
 
@@ -64,7 +67,6 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32, headline: Bool) {
 
 	i = 0
 	while i < n {
-
 		// pirint `+----+` separator
 		if i < 2 or not headline {
 			tableSepPrint(&sz, m)
@@ -102,7 +104,7 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32, headline: Bool) {
 
 public func main() -> Int32 {
 	//
-	tablePrint(unsafe *[]*Str8 &table, 5, 4, headline=true)
+	tablePrint(unsafe *[]*Str8 &table, nRows, nCols, headline=true)
 
 	return 0
 }

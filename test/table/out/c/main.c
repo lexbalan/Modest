@@ -16,7 +16,11 @@
 
 
 
+
+
 // [row, col]
+#define nRows  5
+#define nCols  4
 static char *table[5][4] = (char *[5][4]){
 	"#", "Header0", "Header1", "Header2",
 	"0", "Alef", "Betha", "Emma",
@@ -24,6 +28,16 @@ static char *table[5][4] = (char *[5][4]){
 	"2", "Ink", "Julia", "Keyword",
 	"3", "Ultra", "Video", "Word"
 };
+
+
+
+static uint32_t max(uint32_t a, uint32_t b)
+{
+	if (b > a) {
+		return b;
+	}
+	return a;
+}
 
 
 static void tableSepPrint(uint32_t *sz, int32_t m)
@@ -39,15 +53,6 @@ static void tableSepPrint(uint32_t *sz, int32_t m)
 		printf("+");
 		i = i + 1;
 	}
-}
-
-
-static uint32_t max(uint32_t a, uint32_t b)
-{
-	if (b > a) {
-		return b;
-	}
-	return a;
 }
 
 
@@ -120,7 +125,7 @@ static void tablePrint(char *(*table)[], int32_t n, int32_t m, bool headline)
 int32_t main()
 {
 	//
-	tablePrint((char *(*)[])&table, 5, 4, true);
+	tablePrint((char *(*)[])&table, nRows, nCols, true);
 
 	return 0;
 }

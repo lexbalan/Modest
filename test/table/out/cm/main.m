@@ -7,12 +7,27 @@ include "libc/stdlib"
 include "libc/string"
 
 
+
+
 // [row, col]
-var table: [3][3]*Str8 = [
-	["Alef", "Betha", "Emma"]
-	["Clock", "Depth", "Free"]
-	["Ink", "Julia", "Keyword"]
+const nRows = 5
+const nCols = 4
+var table: [5][4]*Str8 = [
+	["#", "Header0", "Header1", "Header2"]
+	["0", "Alef", "Betha", "Emma"]
+	["1", "Clock", "Depth", "Free"]
+	["2", "Ink", "Julia", "Keyword"]
+	["3", "Ultra", "Video", "Word"]
 ]
+
+
+
+func max(a: Nat32, b: Nat32) -> Nat32 {
+	if b > a {
+		return b
+	}
+	return a
+}
 
 
 func tableSepPrint(sz: *[]Nat32, m: Int32) -> Unit {
@@ -30,15 +45,7 @@ func tableSepPrint(sz: *[]Nat32, m: Int32) -> Unit {
 }
 
 
-func max(a: Nat32, b: Nat32) -> Nat32 {
-	if b > a {
-		return b
-	}
-	return a
-}
-
-
-func tablePrint(table: *[]*Str8, n: Int32, m: Int32) -> Unit {
+func tablePrint(table: *[]*Str8, n: Int32, m: Int32, headline: Bool) -> Unit {
 	var i: Int32
 	var j: Int32
 	var sz: [m]Nat32 = []
@@ -48,7 +55,8 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32) -> Unit {
 	while i < n {
 		j = 0
 		while j < m {
-			let slen = Nat32 (strlen(table[i * n + j]))
+			let index = i * (n - 1) + j
+			let slen = Nat32 (strlen(table[index]))
 			sz[j] = max(slen, sz[j])
 			j = j + 1
 		}
@@ -65,13 +73,19 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32) -> Unit {
 
 	i = 0
 	while i < n {
-		if i < 2 {
+
+		// pirint `+----+` separator
+		if i < 2 or notheadline {
 			tableSepPrint(&sz, m)
+			printf("\n|")
+		} else {
+			printf("|")
 		}
-		printf("\n|")
+
 		j = 0
 		while j < m {
-			let s = table[i * n + j]
+			let index = i * (n - 1) + j
+			let s = table[index]
 			var len: Nat32 = Nat32 (strlen(s))
 			if s[0] != "\x0" {
 				len = len + 1
@@ -97,7 +111,7 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32) -> Unit {
 
 public func main() -> Int32 {
 	//
-	tablePrint(*[]*Str8 (&table), 3, 3)
+	tablePrint(*[]*Str8 (&table), nRows, nCols, headline = true)
 
 	return 0
 }
