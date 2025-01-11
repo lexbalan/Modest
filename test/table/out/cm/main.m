@@ -65,7 +65,9 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32) -> Unit {
 
 	i = 0
 	while i < n {
-		tableSepPrint(&sz, m)
+		if i < 2 {
+			tableSepPrint(&sz, m)
+		}
 		printf("\n|")
 		j = 0
 		while j < m {

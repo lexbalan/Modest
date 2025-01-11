@@ -17,10 +17,12 @@
 
 
 // [row, col]
-static char *table[3][3] = (char *[3][3]){
-	"Alef", "Betha", "Emma",
-	"Clock", "Depth", "Free",
-	"Ink", "Julia", "Keyword"
+static char *table[5][4] = (char *[5][4]){
+	"#", "Header0", "Header1", "Header2",
+	"0", "Alef", "Betha", "Emma",
+	"1", "Clock", "Depth", "Free",
+	"2", "Ink", "Julia", "Keyword",
+	"3", "Ultra", "Video", "Word"
 };
 
 
@@ -49,7 +51,7 @@ static uint32_t max(uint32_t a, uint32_t b)
 }
 
 
-static void tablePrint(char *(*table)[], int32_t n, int32_t m)
+static void tablePrint(char *(*table)[], int32_t n, int32_t m, bool headline)
 {
 	int32_t i;
 	int32_t j;
@@ -61,7 +63,8 @@ static void tablePrint(char *(*table)[], int32_t n, int32_t m)
 	while (i < n) {
 		j = 0;
 		while (j < m) {
-			uint32_t slen = (uint32_t)strlen((*table)[i * n + j]);
+			int32_t index = i * (n - 1) + j;
+			uint32_t slen = (uint32_t)strlen((*table)[index]);
 			sz[j] = max(slen, sz[j]);
 			j = j + 1;
 		}
@@ -78,11 +81,19 @@ static void tablePrint(char *(*table)[], int32_t n, int32_t m)
 
 	i = 0;
 	while (i < n) {
-		tableSepPrint(&sz[0], m);
-		printf("\n|");
+
+		// pirint `+----+` separator
+		if ((i < 2) || !headline) {
+			tableSepPrint(&sz[0], m);
+			printf("\n|");
+		} else {
+			printf("|");
+		}
+
 		j = 0;
 		while (j < m) {
-			char *s = (*table)[i * n + j];
+			int32_t index = i * (n - 1) + j;
+			char *s = (*table)[index];
 			uint32_t len = (uint32_t)strlen(s);
 			if (s[0] != '\x0') {
 				len = len + 1;
@@ -109,7 +120,7 @@ static void tablePrint(char *(*table)[], int32_t n, int32_t m)
 int32_t main()
 {
 	//
-	tablePrint((char *(*)[])&table, 3, 3);
+	tablePrint((char *(*)[])&table, 5, 4, true);
 
 	return 0;
 }

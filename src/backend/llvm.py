@@ -580,6 +580,31 @@ def llvm_store(dst, src):
 	return dst
 
 
+def do_assign_arrays(dst, src):
+	out("\n\t; -- ASSIGN ARRAY --")
+
+	out("\n\t; -- start vol eval --")
+	volume = do_eval(src['type'].volume)
+	volume = trim(volume, 32)
+	out("\n\t; -- end vol eval --")
+
+	if src['items'] == []:
+		out("\n\t; -- zero fill rest of array")
+
+		# `size = volume * item_size`
+		item_sz = src['type'].of.size
+		item_size = llvm_value_num(foundation.typeNat32, item_sz)
+		size = llvm_eval_binary('mul', volume, item_size)
+
+		llvm_memzero(dst, size, volatile=False)
+		return
+
+	src = do_reval(r)
+	llvm_store(dst, src)
+
+
+
+
 
 # получает два указателя, и размер
 def llvm_memcpy_immsize(dst, src, size, volatile=False):
@@ -1644,30 +1669,6 @@ def print_stmt_assign(x):
 	l = do_eval(x.left)
 	r = do_reval(x.right)
 	llvm_store(l, r)
-
-
-
-def do_assign_arrays(dst, src):
-	out("\n\t; -- STMT ASSIGN ARRAY --")
-
-	out("\n\t; -- start vol eval --")
-	volume = do_eval(src['type'].volume)
-	volume = trim(volume, 32)
-	out("\n\t; -- end vol eval --")
-
-	if src['items'] == []:
-		out("\n\t; -- zero fill rest of array")
-
-		# `size = volume * item_size`
-		item_sz = src['type'].of.size
-		item_size = llvm_value_num(foundation.typeNat32, item_sz)
-		size = llvm_eval_binary('mul', volume, item_size)
-
-		llvm_memzero(dst, size, volatile=False)
-		return
-
-	src = do_reval(r)
-	llvm_store(dst, src)
 
 
 

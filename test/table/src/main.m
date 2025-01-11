@@ -5,10 +5,12 @@ include "libc/string"
 
 
 // [row, col]
-var table: [3][3]*Str8 = [
-	["Alef", "Betha", "Emma"]
-	["Clock", "Depth", "Free"]
-	["Ink", "Julia", "Keyword"]
+var table: [5][4]*Str8 = [
+	["#", "Header0", "Header1", "Header2"]
+	["0", "Alef",  "Betha", "Emma"]
+	["1", "Clock", "Depth", "Free"]
+	["2", "Ink",   "Julia", "Keyword"]
+	["3", "Ultra", "Video", "Word"]
 ]
 
 
@@ -35,7 +37,7 @@ func max(a: Nat32, b: Nat32) -> Nat32 {
 }
 
 
-func tablePrint(table: *[]*Str8, n: Int32, m: Int32) {
+func tablePrint(table: *[]*Str8, n: Int32, m: Int32, headline: Bool) {
 	var i, j: Int32
 	var sz: [m]Nat32 = []
 
@@ -44,7 +46,8 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32) {
 	while i < n {
 		j = 0
 		while j < m {
-			let slen = unsafe Nat32 strlen(table[i*n + j])
+			let index = i * (n-1) + j
+			let slen = unsafe Nat32 strlen(table[index])
 			sz[j] = max(slen, sz[j])
 			++j
 		}
@@ -61,11 +64,19 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32) {
 
 	i = 0
 	while i < n {
-		tableSepPrint(&sz, m)
-		printf("\n|")
+
+		// pirint `+----+` separator
+		if i < 2 or not headline {
+			tableSepPrint(&sz, m)
+			printf("\n|")
+		} else {
+			printf("|")
+		}
+
 		j = 0
 		while j < m {
-			let s = table[i*n + j]
+			let index = i * (n-1) + j
+			let s = table[index]
 			var len = unsafe Nat32 strlen(s)
 			if s[0] != "\0" {
 				len = len + 1
@@ -91,7 +102,7 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32) {
 
 public func main() -> Int32 {
 	//
-	tablePrint(unsafe *[]*Str8 &table, 3, 3)
+	tablePrint(unsafe *[]*Str8 &table, 5, 4, headline=true)
 
 	return 0
 }
