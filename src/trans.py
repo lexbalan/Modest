@@ -578,16 +578,16 @@ def do_type_array(t):
 
 	if not Value.isUndefined(volume):
 		if not volume.isImmediate():
-			info("VLA", t['ti'])
+			#info("VLA", t['ti'])
 			if is_local_context():
 				global cfunc
-				cfunc['att'].append('stacksave')
+				cfunc.addAttribute('stacksave')
 			else:
 				error("non local VLA", t.size.ti)
 
 		#if not (Type.is_integer(volume['type']) or volume.type.is_number()):
-		if volume.type.is_signed():
-			error("required value with number or integer type", t.size.ti)
+		#if volume.type.is_signed():
+		#	error("required value with Number or Integer type", volume.ti)
 
 	# closed arrays of closed arrays are denied NOW
 #	if of.is_closed_array():

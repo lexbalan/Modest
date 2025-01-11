@@ -16,33 +16,7 @@
 
 
 
-
-typedef int32_t *DataPtr;
-
-
-struct Node;
-typedef struct Node Node;
-
-struct Node {
-	Node *next;
-	Node *prev;
-	DataPtr data;
-};
-
-
-static Node *create()
-{
-	Node *n = malloc(sizeof(Node));
-	return n;
-}
-
-
-struct TableCell {
-	char *text;
-};
-typedef struct TableCell TableCell;
-
-// [col, row]
+// [row, col]
 static char *table[3][3] = (char *[3][3]){
 	"Alef", "Betha", "Emma",
 	"Clock", "Depth", "Free",
@@ -73,6 +47,7 @@ static uint32_t max(uint32_t a, uint32_t b)
 	}
 	return a;
 }
+
 
 static void tablePrint(char *(*table)[], int32_t n, int32_t m)
 {
@@ -130,26 +105,11 @@ static void tablePrint(char *(*table)[], int32_t n, int32_t m)
 	printf("\n");
 }
 
+
 int32_t main()
 {
-
+	//
 	tablePrint((char *(*)[])&table, 3, 3);
-
-	Node *n = create();
-
-	int16_t *e = NULL;
-
-	if (n == NULL) {
-		printf("error: cannot allocate memory\n");
-		return -1;
-	}
-
-	n->data = malloc(sizeof(int32_t[10][10]));
-
-	if (n->data == NULL) {
-		printf("error: cannot allocate memory\n");
-		return -1;
-	}
 
 	return 0;
 }

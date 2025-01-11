@@ -4,27 +4,7 @@ include "libc/stdlib"
 include "libc/string"
 
 
-@property("type.generic", true)
-type DataPtr *Int32
-
-type Node record {
-	next: *Node
-	prev: *Node
-	data: DataPtr
-}
-
-
-func create() -> *Node {
-	let n: *Node = malloc(sizeof(Node))
-	return n
-}
-
-
-type TableCell record {
-	text: *Str8
-}
-
-// [col, row]
+// [row, col]
 var table: [3][3]*Str8 = [
 	["Alef", "Betha", "Emma"]
 	["Clock", "Depth", "Free"]
@@ -53,6 +33,7 @@ func max(a: Nat32, b: Nat32) -> Nat32 {
 	}
 	return a
 }
+
 
 func tablePrint(table: *[]*Str8, n: Int32, m: Int32) {
 	var i, j: Int32
@@ -107,25 +88,10 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32) {
 	printf("\n")
 }
 
+
 public func main() -> Int32 {
-
+	//
 	tablePrint(unsafe *[]*Str8 &table, 3, 3)
-
-	let n: *Node = create()
-
-	var e: *Int16 = DataPtr nil
-
-	if n == nil {
-		printf("error: cannot allocate memory\n")
-		return -1
-	}
-
-	n.data = malloc(sizeof([10][10]Int32))
-
-	if n.data == nil {
-		printf("error: cannot allocate memory\n")
-		return -1
-	}
 
 	return 0
 }

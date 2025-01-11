@@ -569,6 +569,10 @@ def llvm_load(x):
 def llvm_store(dst, src):
 	assert(dst['isa'] == 'll_value')
 	assert(src['isa'] == 'll_value')
+
+	if Type.is_array(src['type']):
+		return do_assign_arrays(dst, src)
+
 	lo("store ")
 	llvm_print_type_value(src)
 	out(", ")
@@ -1637,28 +1641,28 @@ def do_eval(x):
 #
 
 def print_stmt_assign(x):
-	if Type.is_array(x.right.type):
-		return do_assign_arrays(x.left, x.right)
 	l = do_eval(x.left)
 	r = do_reval(x.right)
 	llvm_store(l, r)
 
 
-def do_assign_arrays(l, r):
+
+def do_assign_arrays(dst, src):
 	out("\n\t; -- STMT ASSIGN ARRAY --")
-	dst = do_eval(l)
 
 	out("\n\t; -- start vol eval --")
-	volume = do_eval(r.type.volume)
+	volume = do_eval(src['type'].volume)
 	volume = trim(volume, 32)
 	out("\n\t; -- end vol eval --")
 
-	if r.isZero():
+	if src['items'] == []:
 		out("\n\t; -- zero fill rest of array")
-		# size = volume * item_size
-		item_sz = l.type.of.size
+
+		# `size = volume * item_size`
+		item_sz = src['type'].of.size
 		item_size = llvm_value_num(foundation.typeNat32, item_sz)
 		size = llvm_eval_binary('mul', volume, item_size)
+
 		llvm_memzero(dst, size, volatile=False)
 		return
 
@@ -1792,7 +1796,7 @@ def print_stmt_var(x):
 	init_value = x.init_value
 	if not Value.isUndefined(init_value):
 		iv = do_reval(init_value)
-		llvm_store(val, iv)
+		llvm_store(left, iv)
 
 	return None
 
