@@ -610,8 +610,6 @@ def do_assign_arrays(dst, src):
 
 
 
-
-
 # получает два указателя, и размер
 def llvm_memcpy_immsize(dst, src, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
@@ -677,9 +675,7 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
 
 	# offset pointer
 	dst2 = llvm_cast("ptrtoint", dst, foundation.typeInt64)
-
 	ll_dst_plus_off = llvm_eval_binary('add', dst2, ll_off)
-
 	dst3 = llvm_cast("inttoptr", ll_dst_plus_off, foundation.typeFreePointer)
 
 	# do memzero
@@ -703,7 +699,7 @@ def llvm_memcmp(op, p0, p1, size):
 
 	zero = llvm_value_num(foundation.typeBool, 0)
 	op = 'ne' if op == 'eq' else 'eq'
-	
+
 	vvv = ValueUndefined(foundation.typeBool)
 	rv2 = llvm_eval_binary('icmp %s' % op, rv, zero, vvv)
 
@@ -744,7 +740,6 @@ def llvm_alloca(typ, id_str=None, size=None, alignment=0):
 
 
 
-
 def llvm_alloca_store(typ, id_str=None, init_value=None):
 	nv = llvm_alloca(typ, id_str=id_str)
 	if init_value != None:
@@ -767,14 +762,12 @@ def llvm_dold(x):
 
 
 
-
 def print_list_with(lst, method):
 	i = 0
 	while i < len(lst):
 		if i > 0: out(", ")
 		method(lst[i])
 		i = i + 1
-
 
 
 def print_type_enum(t):
@@ -814,11 +807,9 @@ def print_type_array(t):
 	sz = 0
 	if not Type.is_vla(t):
 		array_size = t.volume
-		if array_size != None:
-			sz = array_size.asset
-			if sz == None:  #?!
-				sz = 0
-
+		if not Type.is_undefined(array_size.type):
+			if array_size.isImmediate():
+				sz = array_size.asset
 
 	out("[")
 	out("%d x " % sz)

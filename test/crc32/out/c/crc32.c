@@ -59,11 +59,11 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 
 	i = 0;
 	while (i < len) {
-		// --???1
+		// 1
 		uint32_t x = (uint32_t)buf[i];
 		uint32_t y = (crc ^ x) & 0xFF;
 		printf("CRC[%02X] = %08x, %08x\n", i, x, y);
-		// --???2
+		// 2
 		uint8_t yy = (uint8_t)y;
 		crc = crc_table[yy] ^ crc >> 8;
 		i = i + 1;

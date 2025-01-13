@@ -576,6 +576,9 @@ def do_type_array(t):
 	if Value.isBad(volume):
 		return TypeArray(of, volume, ti=t['ti'])
 
+	#if Value.isUndefined(volume):
+	#	info("UNDEF", volume.ti)
+
 	if not Value.isUndefined(volume):
 		if not volume.isImmediate():
 			#info("VLA", t['ti'])
@@ -593,6 +596,8 @@ def do_type_array(t):
 #	if of.is_closed_array():
 #		error("closed arrays of closed arrays are denied", t.ti)
 #		return TypeBad(t)
+
+	assert(volume != None)
 
 	return TypeArray(of, volume, ti=t['ti'])
 
