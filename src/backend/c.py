@@ -215,7 +215,7 @@ def str_type_record(t, tag=""):
 		s += ";"
 
 	indent_down()
-	s += str_nl_indent(field.nl)
+	s += str_nl_indent(1)
 	s += "}"
 	return s
 
@@ -258,7 +258,6 @@ def prespace(s):
 
 
 def str_type_array(t, label='', core=''):
-
 	t0 = t
 
 	# handle array of array .. case
@@ -270,6 +269,11 @@ def str_type_array(t, label='', core=''):
 			if t.volume.id:
 				dims += get_id_str(t.volume)
 			elif Value.isUndefined(t.volume):
+				# В Си не можем печатать такое a[][], или такое a[][10], etc.
+				# А печатаем просто a[] (пропускаем все после пустых скобок)
+				while t.of.is_array():
+					t = t.of
+
 				pass
 			elif t.volume.asset:
 				dims += str(t.volume.asset)

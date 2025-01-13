@@ -1311,8 +1311,6 @@ def do_value_slice(x):
 
 
 
-
-
 def is_submodule_name(id_str):
 	return id_str in cmodule['imports']
 
@@ -1333,6 +1331,7 @@ def submodule_access(x):
 			error("access to module private item", ti)
 
 	if v == None:
+		error("module '%s' does not have value '%s'" % (mname, iname), x['ti'])
 		return ValueBad(x['ti'])
 
 	y = ValueAccessModule(v.type, submodule, v, v, x['ti'])
@@ -1344,8 +1343,13 @@ def submodule_access(x):
 def do_value_access(x):
 	# access to submodule?
 	if x['left']['kind'] == 'id':
-		if is_submodule_name(x['left']['str']):
-			return submodule_access(x)
+		# если нет значения с таким именем, тогда возможно это модуль
+		# (смотрим сперва значения, чтобы они имели приоритет
+		# над одноименными модулями)
+		v = ctx_value_get(x['left']['str'])
+		if v == None:
+			if is_submodule_name(x['left']['str']):
+				return submodule_access(x)
 
 	#
 	# access to object
@@ -1444,7 +1448,6 @@ def do_value_id(x):
 		if v == None:
 			error("call undefined func", x['ti'])
 			return ValueBad(x['ti'])
-
 
 #	if 'usecnt' in v:
 #		v['usecnt'] = v['usecnt'] + 1
@@ -2129,6 +2132,8 @@ def def_type(x):
 
 
 def def_const(x):
+	#return do_stmt_const(x)
+
 	global cdef
 	global cmodule
 	id = Id(x['id'])

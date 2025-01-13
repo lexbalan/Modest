@@ -268,7 +268,7 @@ then_1:
 	br label %endif_1
 endif_1:
 	%9 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x %Char8]* %1)
-	; -- STMT ASSIGN ARRAY --
+	; -- ASSIGN ARRAY --
 	; -- start vol eval --
 	%10 = zext i16 1024 to %Int32
 	; -- end vol eval --

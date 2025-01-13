@@ -124,7 +124,7 @@ static void beacon_exit(fsm_FSM *x)
 
 
 
-static fsm_FSM fsm = {
+static fsm_FSM fsm0 = {
 	.name = "Flash",
 	.state = 0,
 	.nexstate = 0,
@@ -159,7 +159,7 @@ int main()
 {
 
 	while (true) {
-		fsm_run(&fsm);
+		fsm_run(&fsm0);
 		delay_ms(500);
 	}
 

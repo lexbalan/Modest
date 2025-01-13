@@ -2,8 +2,10 @@
 #                             HLIR VALUE                              #
 #######################################################################
 
+from error import info
 from .entity import Entity
 from .misc import Id, Field
+
 
 class Value(Entity):
 	def __init__(self, type, ti=None):
@@ -116,7 +118,9 @@ class Value(Entity):
 
 		#print("isa: " + str(x['isa']))
 		print("kind: " + str(x.__class__.__name__))
-		print("type: ", end=""); htype.type_print(x.type); print()
+		print("type: ", end="");
+		from type import type_print
+		type_print(x.type); print()
 		print("att: " + str(x.att))
 
 		print('immediate = ' + str(x.immediate))

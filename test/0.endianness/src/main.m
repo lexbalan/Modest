@@ -3,7 +3,6 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-@feature("unsafe")
 
 public func main() -> Int {
 	var check: Word16 = 0x0001

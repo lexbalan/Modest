@@ -22,7 +22,6 @@ struct SHA256_TestCase {
 	uint32_t input_data_len;
 
 	sha256_Hash expected_result;
-
 };
 typedef struct SHA256_TestCase SHA256_TestCase;
 

@@ -16,8 +16,6 @@
 
 
 
-
-
 // [row, col]
 #define nRows  5
 #define nCols  4
@@ -56,12 +54,14 @@ static void tableSepPrint(uint32_t *sz, int32_t m)
 }
 
 
-static void tablePrint(char *(*table)[], int32_t n, int32_t m, bool headline)
+static void tablePrint(char *(*tablex)[], int32_t n, int32_t m, bool headline)
 {
 	int32_t i;
 	int32_t j;
 	uint32_t sz[m];
 	memset(&sz, 0, sizeof sz);
+
+	char *(*table)[] = (char *(*)[])tablex;
 
 	// calculate max length of col
 	i = 0;
@@ -86,7 +86,6 @@ static void tablePrint(char *(*table)[], int32_t n, int32_t m, bool headline)
 
 	i = 0;
 	while (i < n) {
-
 		// pirint `+----+` separator
 		if ((i < 2) || !headline) {
 			tableSepPrint(&sz[0], m);
@@ -125,7 +124,7 @@ static void tablePrint(char *(*table)[], int32_t n, int32_t m, bool headline)
 int32_t main()
 {
 	//
-	tablePrint((char *(*)[])&table, nRows, nCols, true);
+	tablePrint(&table, nRows, nCols, true);
 
 	return 0;
 }

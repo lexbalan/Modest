@@ -346,7 +346,7 @@ then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	; -- STMT ASSIGN ARRAY --
+	; -- ASSIGN ARRAY --
 	; -- start vol eval --
 	%9 = zext i16 1024 to %Int32
 	; -- end vol eval --

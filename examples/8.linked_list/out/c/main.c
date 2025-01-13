@@ -17,20 +17,20 @@
 
 
 // wrap around linked list for list.List Nat32
-static void nat32_list_insert(list_List *list, uint32_t x)
+static void nat32_list_insert(list_List *lst, uint32_t x)
 {
 	// alloc memory for Nat32 value
 	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
-	list_append(list, p_nat32);
+	list_append(lst, p_nat32);
 }
 
 
 // show list conent from first item to last
-static void list_print_forward(list_List *list)
+static void list_print_forward(list_List *lst)
 {
 	printf("list_print_forward:\n");
-	list_Node *pn = list_first_node_get(list);
+	list_Node *pn = list_first_node_get(lst);
 	while (pn != NULL) {
 		uint32_t *x = (uint32_t *)list_node_data_get(pn);
 		printf("v = %u\n", *x);
@@ -40,10 +40,10 @@ static void list_print_forward(list_List *list)
 
 
 // show list conent from last item to first
-static void list_print_backward(list_List *list)
+static void list_print_backward(list_List *lst)
 {
 	printf("list_print_backward:\n");
-	list_Node *pn = list_last_node_get(list);
+	list_Node *pn = list_last_node_get(lst);
 	while (pn != NULL) {
 		uint32_t *x = (uint32_t *)list_node_data_get(pn);
 		printf("v = %u\n", *x);

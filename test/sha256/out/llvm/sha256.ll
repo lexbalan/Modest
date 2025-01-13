@@ -245,20 +245,20 @@ define internal %Word32 @sig1(%Word32 %x) {
 	i32 1541459225
 ]
 define internal void @contextInit(%Context* %ctx) {
-	; -- STMT ASSIGN ARRAY --
 	%1 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%2 = insertvalue [8 x %Word32] zeroinitializer, %Word32 1779033703, 0
+	%3 = insertvalue [8 x %Word32] %2, %Word32 3144134277, 1
+	%4 = insertvalue [8 x %Word32] %3, %Word32 1013904242, 2
+	%5 = insertvalue [8 x %Word32] %4, %Word32 2773480762, 3
+	%6 = insertvalue [8 x %Word32] %5, %Word32 1359893119, 4
+	%7 = insertvalue [8 x %Word32] %6, %Word32 2600822924, 5
+	%8 = insertvalue [8 x %Word32] %7, %Word32 528734635, 6
+	%9 = insertvalue [8 x %Word32] %8, %Word32 1541459225, 7
+	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%2 = zext i8 8 to %Int32
+	%10 = zext i8 8 to %Int32
 	; -- end vol eval --
-	%3 = insertvalue [8 x %Word32] zeroinitializer, %Word32 1779033703, 0
-	%4 = insertvalue [8 x %Word32] %3, %Word32 3144134277, 1
-	%5 = insertvalue [8 x %Word32] %4, %Word32 1013904242, 2
-	%6 = insertvalue [8 x %Word32] %5, %Word32 2773480762, 3
-	%7 = insertvalue [8 x %Word32] %6, %Word32 1359893119, 4
-	%8 = insertvalue [8 x %Word32] %7, %Word32 2600822924, 5
-	%9 = insertvalue [8 x %Word32] %8, %Word32 528734635, 6
-	%10 = insertvalue [8 x %Word32] %9, %Word32 1541459225, 7
-	store [8 x %Word32] %10, [8 x %Word32]* %1
+	store [8 x %Word32] %9, [8 x %Word32]* %1
 	ret void
 }
 
@@ -330,211 +330,222 @@ define internal void @contextInit(%Context* %ctx) {
 ]
 define internal void @transform(%Context* %ctx, [0 x %Word8]* %data) {
 	%1 = alloca [64 x %Word32], align 1
-	store [64 x %Word32] zeroinitializer, [64 x %Word32]* %1
-	%2 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %2
-	%3 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %3
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	%2 = zext i8 64 to %Int32
+	; -- end vol eval --
+	; -- zero fill rest of array
+	%3 = mul %Int32 %2, 4
+	%4 = bitcast [64 x %Word32]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %4, i8 0, %Int32 %3, i1 0)
+	%5 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %5
+	%6 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %6
 	br label %again_1
 again_1:
-	%4 = load %Int32, %Int32* %2
-	%5 = icmp ult %Int32 %4, 16
-	br %Bool %5 , label %body_1, label %break_1
+	%7 = load %Int32, %Int32* %5
+	%8 = icmp ult %Int32 %7, 16
+	br %Bool %8 , label %body_1, label %break_1
 body_1:
-	%6 = load %Int32, %Int32* %3
-	%7 = add %Int32 %6, 0
-	%8 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %7
-	%9 = load %Word8, %Word8* %8
-	%10 = zext %Word8 %9 to %Word32
-	%11 = shl %Word32 %10, 24
-	%12 = load %Int32, %Int32* %3
-	%13 = add %Int32 %12, 1
-	%14 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %13
-	%15 = load %Word8, %Word8* %14
-	%16 = zext %Word8 %15 to %Word32
-	%17 = shl %Word32 %16, 16
-	%18 = load %Int32, %Int32* %3
-	%19 = add %Int32 %18, 2
-	%20 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %19
-	%21 = load %Word8, %Word8* %20
-	%22 = zext %Word8 %21 to %Word32
-	%23 = shl %Word32 %22, 8
-	%24 = load %Int32, %Int32* %3
-	%25 = add %Int32 %24, 3
-	%26 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %25
-	%27 = load %Word8, %Word8* %26
-	%28 = zext %Word8 %27 to %Word32
-	%29 = shl %Word32 %28, 0
-	%30 = or %Word32 %23, %29
-	%31 = or %Word32 %17, %30
-	%32 = or %Word32 %11, %31
-	%33 = load %Int32, %Int32* %2
-	%34 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %33
-	store %Word32 %32, %Word32* %34
-	%35 = load %Int32, %Int32* %3
-	%36 = add %Int32 %35, 4
-	store %Int32 %36, %Int32* %3
-	%37 = load %Int32, %Int32* %2
-	%38 = add %Int32 %37, 1
-	store %Int32 %38, %Int32* %2
+	%9 = load %Int32, %Int32* %6
+	%10 = add %Int32 %9, 0
+	%11 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %10
+	%12 = load %Word8, %Word8* %11
+	%13 = zext %Word8 %12 to %Word32
+	%14 = shl %Word32 %13, 24
+	%15 = load %Int32, %Int32* %6
+	%16 = add %Int32 %15, 1
+	%17 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %16
+	%18 = load %Word8, %Word8* %17
+	%19 = zext %Word8 %18 to %Word32
+	%20 = shl %Word32 %19, 16
+	%21 = load %Int32, %Int32* %6
+	%22 = add %Int32 %21, 2
+	%23 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %22
+	%24 = load %Word8, %Word8* %23
+	%25 = zext %Word8 %24 to %Word32
+	%26 = shl %Word32 %25, 8
+	%27 = load %Int32, %Int32* %6
+	%28 = add %Int32 %27, 3
+	%29 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %28
+	%30 = load %Word8, %Word8* %29
+	%31 = zext %Word8 %30 to %Word32
+	%32 = shl %Word32 %31, 0
+	%33 = or %Word32 %26, %32
+	%34 = or %Word32 %20, %33
+	%35 = or %Word32 %14, %34
+	%36 = load %Int32, %Int32* %5
+	%37 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %36
+	store %Word32 %35, %Word32* %37
+	%38 = load %Int32, %Int32* %6
+	%39 = add %Int32 %38, 4
+	store %Int32 %39, %Int32* %6
+	%40 = load %Int32, %Int32* %5
+	%41 = add %Int32 %40, 1
+	store %Int32 %41, %Int32* %5
 	br label %again_1
 break_1:
 	br label %again_2
 again_2:
-	%39 = load %Int32, %Int32* %2
-	%40 = icmp ult %Int32 %39, 64
-	br %Bool %40 , label %body_2, label %break_2
+	%42 = load %Int32, %Int32* %5
+	%43 = icmp ult %Int32 %42, 64
+	br %Bool %43 , label %body_2, label %break_2
 body_2:
-	%41 = load %Int32, %Int32* %2
-	%42 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %41
-	%43 = load %Int32, %Int32* %2
-	%44 = sub %Int32 %43, 2
+	%44 = load %Int32, %Int32* %5
 	%45 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %44
-	%46 = load %Word32, %Word32* %45
-	%47 = call %Word32 @sig1(%Word32 %46)
-	%48 = bitcast %Word32 %47 to %Int32
-	%49 = load %Int32, %Int32* %2
-	%50 = sub %Int32 %49, 7
-	%51 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %50
-	%52 = load %Word32, %Word32* %51
-	%53 = bitcast %Word32 %52 to %Int32
-	%54 = add %Int32 %48, %53
-	%55 = load %Int32, %Int32* %2
-	%56 = sub %Int32 %55, 15
-	%57 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %56
-	%58 = load %Word32, %Word32* %57
-	%59 = call %Word32 @sig0(%Word32 %58)
-	%60 = bitcast %Word32 %59 to %Int32
-	%61 = add %Int32 %54, %60
-	%62 = load %Int32, %Int32* %2
-	%63 = sub %Int32 %62, 16
-	%64 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %63
-	%65 = load %Word32, %Word32* %64
-	%66 = bitcast %Word32 %65 to %Int32
-	%67 = add %Int32 %61, %66
-	%68 = bitcast %Int32 %67 to %Word32
-	store %Word32 %68, %Word32* %42
-	%69 = load %Int32, %Int32* %2
-	%70 = add %Int32 %69, 1
-	store %Int32 %70, %Int32* %2
+	%46 = load %Int32, %Int32* %5
+	%47 = sub %Int32 %46, 2
+	%48 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %47
+	%49 = load %Word32, %Word32* %48
+	%50 = call %Word32 @sig1(%Word32 %49)
+	%51 = bitcast %Word32 %50 to %Int32
+	%52 = load %Int32, %Int32* %5
+	%53 = sub %Int32 %52, 7
+	%54 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %53
+	%55 = load %Word32, %Word32* %54
+	%56 = bitcast %Word32 %55 to %Int32
+	%57 = add %Int32 %51, %56
+	%58 = load %Int32, %Int32* %5
+	%59 = sub %Int32 %58, 15
+	%60 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %59
+	%61 = load %Word32, %Word32* %60
+	%62 = call %Word32 @sig0(%Word32 %61)
+	%63 = bitcast %Word32 %62 to %Int32
+	%64 = add %Int32 %57, %63
+	%65 = load %Int32, %Int32* %5
+	%66 = sub %Int32 %65, 16
+	%67 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %66
+	%68 = load %Word32, %Word32* %67
+	%69 = bitcast %Word32 %68 to %Int32
+	%70 = add %Int32 %64, %69
+	%71 = bitcast %Int32 %70 to %Word32
+	store %Word32 %71, %Word32* %45
+	%72 = load %Int32, %Int32* %5
+	%73 = add %Int32 %72, 1
+	store %Int32 %73, %Int32* %5
 	br label %again_2
 break_2:
-	%71 = alloca [8 x %Word32], align 1
-	%72 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%73 = load [8 x %Word32], [8 x %Word32]* %72
-	store [8 x %Word32] %73, [8 x %Word32]* %71
-	store %Int32 0, %Int32* %2
+	%74 = alloca [8 x %Word32], align 1
+	%75 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%76 = load [8 x %Word32], [8 x %Word32]* %75
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	%77 = zext i8 8 to %Int32
+	; -- end vol eval --
+	store [8 x %Word32] %76, [8 x %Word32]* %74
+	store %Int32 0, %Int32* %5
 	br label %again_3
 again_3:
-	%74 = load %Int32, %Int32* %2
-	%75 = icmp ult %Int32 %74, 64
-	br %Bool %75 , label %body_3, label %break_3
+	%78 = load %Int32, %Int32* %5
+	%79 = icmp ult %Int32 %78, 64
+	br %Bool %79 , label %body_3, label %break_3
 body_3:
-	%76 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 7
-	%77 = load %Word32, %Word32* %76
-	%78 = bitcast %Word32 %77 to %Int32
-	%79 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 4
-	%80 = load %Word32, %Word32* %79
-	%81 = call %Word32 @ep1(%Word32 %80)
+	%80 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 7
+	%81 = load %Word32, %Word32* %80
 	%82 = bitcast %Word32 %81 to %Int32
-	%83 = add %Int32 %78, %82
-	%84 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 4
-	%85 = load %Word32, %Word32* %84
-	%86 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 5
-	%87 = load %Word32, %Word32* %86
-	%88 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 6
+	%83 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 4
+	%84 = load %Word32, %Word32* %83
+	%85 = call %Word32 @ep1(%Word32 %84)
+	%86 = bitcast %Word32 %85 to %Int32
+	%87 = add %Int32 %82, %86
+	%88 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 4
 	%89 = load %Word32, %Word32* %88
-	%90 = call %Word32 @ch(%Word32 %85, %Word32 %87, %Word32 %89)
-	%91 = bitcast %Word32 %90 to %Int32
-	%92 = add %Int32 %83, %91
-	%93 = load %Int32, %Int32* %2
-	%94 = getelementptr [64 x i32], [64 x i32]* @k, %Int32 0, %Int32 %93
-	%95 = load i32, i32* %94
-	%96 = bitcast i32 %95 to %Int32
-	%97 = add %Int32 %92, %96
-	%98 = load %Int32, %Int32* %2
-	%99 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %98
-	%100 = load %Word32, %Word32* %99
-	%101 = bitcast %Word32 %100 to %Int32
-	%102 = add %Int32 %97, %101
-	%103 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 0
+	%90 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 5
+	%91 = load %Word32, %Word32* %90
+	%92 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 6
+	%93 = load %Word32, %Word32* %92
+	%94 = call %Word32 @ch(%Word32 %89, %Word32 %91, %Word32 %93)
+	%95 = bitcast %Word32 %94 to %Int32
+	%96 = add %Int32 %87, %95
+	%97 = load %Int32, %Int32* %5
+	%98 = getelementptr [64 x i32], [64 x i32]* @k, %Int32 0, %Int32 %97
+	%99 = load i32, i32* %98
+	%100 = bitcast i32 %99 to %Int32
+	%101 = add %Int32 %96, %100
+	%102 = load %Int32, %Int32* %5
+	%103 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %102
 	%104 = load %Word32, %Word32* %103
-	%105 = call %Word32 @ep0(%Word32 %104)
-	%106 = bitcast %Word32 %105 to %Int32
-	%107 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 0
+	%105 = bitcast %Word32 %104 to %Int32
+	%106 = add %Int32 %101, %105
+	%107 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 0
 	%108 = load %Word32, %Word32* %107
-	%109 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 1
-	%110 = load %Word32, %Word32* %109
-	%111 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 2
+	%109 = call %Word32 @ep0(%Word32 %108)
+	%110 = bitcast %Word32 %109 to %Int32
+	%111 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 0
 	%112 = load %Word32, %Word32* %111
-	%113 = call %Word32 @maj(%Word32 %108, %Word32 %110, %Word32 %112)
-	%114 = bitcast %Word32 %113 to %Int32
-	%115 = add %Int32 %106, %114
-	%116 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 7
-	%117 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 6
-	%118 = load %Word32, %Word32* %117
-	store %Word32 %118, %Word32* %116
-	%119 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 6
-	%120 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 5
-	%121 = load %Word32, %Word32* %120
-	store %Word32 %121, %Word32* %119
-	%122 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 5
-	%123 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 4
-	%124 = load %Word32, %Word32* %123
-	store %Word32 %124, %Word32* %122
-	%125 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 4
-	%126 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 3
-	%127 = load %Word32, %Word32* %126
-	%128 = bitcast %Word32 %127 to %Int32
-	%129 = add %Int32 %128, %102
-	%130 = bitcast %Int32 %129 to %Word32
-	store %Word32 %130, %Word32* %125
-	%131 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 3
-	%132 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 2
-	%133 = load %Word32, %Word32* %132
-	store %Word32 %133, %Word32* %131
-	%134 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 2
-	%135 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 1
-	%136 = load %Word32, %Word32* %135
-	store %Word32 %136, %Word32* %134
-	%137 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 1
-	%138 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 0
-	%139 = load %Word32, %Word32* %138
-	store %Word32 %139, %Word32* %137
-	%140 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 0
-	%141 = add %Int32 %102, %115
-	%142 = bitcast %Int32 %141 to %Word32
-	store %Word32 %142, %Word32* %140
-	%143 = load %Int32, %Int32* %2
-	%144 = add %Int32 %143, 1
-	store %Int32 %144, %Int32* %2
+	%113 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 1
+	%114 = load %Word32, %Word32* %113
+	%115 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 2
+	%116 = load %Word32, %Word32* %115
+	%117 = call %Word32 @maj(%Word32 %112, %Word32 %114, %Word32 %116)
+	%118 = bitcast %Word32 %117 to %Int32
+	%119 = add %Int32 %110, %118
+	%120 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 7
+	%121 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 6
+	%122 = load %Word32, %Word32* %121
+	store %Word32 %122, %Word32* %120
+	%123 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 6
+	%124 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 5
+	%125 = load %Word32, %Word32* %124
+	store %Word32 %125, %Word32* %123
+	%126 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 5
+	%127 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 4
+	%128 = load %Word32, %Word32* %127
+	store %Word32 %128, %Word32* %126
+	%129 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 4
+	%130 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 3
+	%131 = load %Word32, %Word32* %130
+	%132 = bitcast %Word32 %131 to %Int32
+	%133 = add %Int32 %132, %106
+	%134 = bitcast %Int32 %133 to %Word32
+	store %Word32 %134, %Word32* %129
+	%135 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 3
+	%136 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 2
+	%137 = load %Word32, %Word32* %136
+	store %Word32 %137, %Word32* %135
+	%138 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 2
+	%139 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 1
+	%140 = load %Word32, %Word32* %139
+	store %Word32 %140, %Word32* %138
+	%141 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 1
+	%142 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 0
+	%143 = load %Word32, %Word32* %142
+	store %Word32 %143, %Word32* %141
+	%144 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 0
+	%145 = add %Int32 %106, %119
+	%146 = bitcast %Int32 %145 to %Word32
+	store %Word32 %146, %Word32* %144
+	%147 = load %Int32, %Int32* %5
+	%148 = add %Int32 %147, 1
+	store %Int32 %148, %Int32* %5
 	br label %again_3
 break_3:
-	store %Int32 0, %Int32* %2
+	store %Int32 0, %Int32* %5
 	br label %again_4
 again_4:
-	%145 = load %Int32, %Int32* %2
-	%146 = icmp ult %Int32 %145, 8
-	br %Bool %146 , label %body_4, label %break_4
+	%149 = load %Int32, %Int32* %5
+	%150 = icmp ult %Int32 %149, 8
+	br %Bool %150 , label %body_4, label %break_4
 body_4:
-	%147 = load %Int32, %Int32* %2
-	%148 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%149 = getelementptr [8 x %Word32], [8 x %Word32]* %148, %Int32 0, %Int32 %147
-	%150 = load %Int32, %Int32* %2
-	%151 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%152 = getelementptr [8 x %Word32], [8 x %Word32]* %151, %Int32 0, %Int32 %150
-	%153 = load %Word32, %Word32* %152
-	%154 = bitcast %Word32 %153 to %Int32
-	%155 = load %Int32, %Int32* %2
-	%156 = getelementptr [8 x %Word32], [8 x %Word32]* %71, %Int32 0, %Int32 %155
+	%151 = load %Int32, %Int32* %5
+	%152 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%153 = getelementptr [8 x %Word32], [8 x %Word32]* %152, %Int32 0, %Int32 %151
+	%154 = load %Int32, %Int32* %5
+	%155 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%156 = getelementptr [8 x %Word32], [8 x %Word32]* %155, %Int32 0, %Int32 %154
 	%157 = load %Word32, %Word32* %156
 	%158 = bitcast %Word32 %157 to %Int32
-	%159 = add %Int32 %154, %158
-	%160 = bitcast %Int32 %159 to %Word32
-	store %Word32 %160, %Word32* %149
-	%161 = load %Int32, %Int32* %2
-	%162 = add %Int32 %161, 1
-	store %Int32 %162, %Int32* %2
+	%159 = load %Int32, %Int32* %5
+	%160 = getelementptr [8 x %Word32], [8 x %Word32]* %74, %Int32 0, %Int32 %159
+	%161 = load %Word32, %Word32* %160
+	%162 = bitcast %Word32 %161 to %Int32
+	%163 = add %Int32 %158, %162
+	%164 = bitcast %Int32 %163 to %Word32
+	store %Word32 %164, %Word32* %153
+	%165 = load %Int32, %Int32* %5
+	%166 = add %Int32 %165, 1
+	store %Int32 %166, %Int32* %5
 	br label %again_4
 break_4:
 	ret void

@@ -247,23 +247,23 @@ declare %list_Node* @list_append(%list_List* %list, i8* %data)
 
 
 ; wrap around linked list for list.List Nat32
-define internal void @nat32_list_insert(%list_List* %list, %Int32 %x) {
+define internal void @nat32_list_insert(%list_List* %lst, %Int32 %x) {
 	; alloc memory for Nat32 value
 	%1 = call i8* @malloc(%SizeT 4)
 	%2 = bitcast i8* %1 to %Int32*
 	store %Int32 %x, %Int32* %2
 	%3 = bitcast %Int32* %2 to i8*
-	%4 = call %list_Node* @list_append(%list_List* %list, i8* %3)
+	%4 = call %list_Node* @list_append(%list_List* %lst, i8* %3)
 	ret void
 }
 
 
 
 ; show list conent from first item to last
-define internal void @list_print_forward(%list_List* %list) {
+define internal void @list_print_forward(%list_List* %lst) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %list_Node*, align 8
-	%3 = call %list_Node* @list_first_node_get(%list_List* %list)
+	%3 = call %list_Node* @list_first_node_get(%list_List* %lst)
 	store %list_Node* %3, %list_Node** %2
 	br label %again_1
 again_1:
@@ -287,10 +287,10 @@ break_1:
 
 
 ; show list conent from last item to first
-define internal void @list_print_backward(%list_List* %list) {
+define internal void @list_print_backward(%list_List* %lst) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*))
 	%2 = alloca %list_Node*, align 8
-	%3 = call %list_Node* @list_last_node_get(%list_List* %list)
+	%3 = call %list_Node* @list_last_node_get(%list_List* %lst)
 	store %list_Node* %3, %list_Node** %2
 	br label %again_1
 again_1:

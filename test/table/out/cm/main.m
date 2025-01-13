@@ -7,8 +7,6 @@ include "libc/stdlib"
 include "libc/string"
 
 
-
-
 // [row, col]
 const nRows = 5
 const nCols = 4
@@ -45,10 +43,12 @@ func tableSepPrint(sz: *[]Nat32, m: Int32) -> Unit {
 }
 
 
-func tablePrint(table: *[]*Str8, n: Int32, m: Int32, headline: Bool) -> Unit {
+func tablePrint(tablex: *[][]*Str8, n: Int32, m: Int32, headline: Bool) -> Unit {
 	var i: Int32
 	var j: Int32
 	var sz: [m]Nat32 = []
+
+	var table: *[]*Str8 = *[]*Str8 tablex
 
 	// calculate max length of col
 	i = 0
@@ -73,7 +73,6 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32, headline: Bool) -> Unit {
 
 	i = 0
 	while i < n {
-
 		// pirint `+----+` separator
 		if i < 2 or notheadline {
 			tableSepPrint(&sz, m)
@@ -111,7 +110,7 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32, headline: Bool) -> Unit {
 
 public func main() -> Int32 {
 	//
-	tablePrint(*[]*Str8 (&table), nRows, nCols, headline = true)
+	tablePrint(&table, nRows, nCols, headline = true)
 
 	return 0
 }

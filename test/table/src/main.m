@@ -40,9 +40,11 @@ func tableSepPrint(sz: *[]Nat32, m: Int32) {
 }
 
 
-func tablePrint(table: *[]*Str8, n: Int32, m: Int32, headline: Bool) {
+func tablePrint(tablex: *[][]*Str8, n: Int32, m: Int32, headline: Bool) {
 	var i, j: Int32
 	var sz: [m]Nat32 = []
+
+	var table = unsafe *[]*Str8 tablex
 
 	// calculate max length of col
 	i = 0
@@ -104,7 +106,7 @@ func tablePrint(table: *[]*Str8, n: Int32, m: Int32, headline: Bool) {
 
 public func main() -> Int32 {
 	//
-	tablePrint(unsafe *[]*Str8 &table, nRows, nCols, headline=true)
+	tablePrint(&table, nRows, nCols, headline=true)
 
 	return 0
 }

@@ -8,18 +8,18 @@ import "list"
 
 
 // wrap around linked list for list.List Nat32
-func nat32_list_insert(list: *List, x: Nat32) -> Unit {
+func nat32_list_insert(lst: *List, x: Nat32) -> Unit {
 	// alloc memory for Nat32 value
 	let p_nat32 = malloc(sizeof(Nat32))
 	*p_nat32 = x
-	list.append(list, p_nat32)
+	list.append(lst, p_nat32)
 }
 
 
 // show list conent from first item to last
-func list_print_forward(list: *List) -> Unit {
+func list_print_forward(lst: *List) -> Unit {
 	printf("list_print_forward:\n")
-	var pn: *Node = list.first_node_get(list)
+	var pn: *Node = list.first_node_get(lst)
 	while pn != nil {
 		let x = list.node_data_get(pn)
 		printf("v = %u\n", *x)
@@ -29,9 +29,9 @@ func list_print_forward(list: *List) -> Unit {
 
 
 // show list conent from last item to first
-func list_print_backward(list: *List) -> Unit {
+func list_print_backward(lst: *List) -> Unit {
 	printf("list_print_backward:\n")
-	var pn: *Node = list.last_node_get(list)
+	var pn: *Node = list.last_node_get(lst)
 	while pn != nil {
 		let x = list.node_data_get(pn)
 		printf("v = %u\n", *x)

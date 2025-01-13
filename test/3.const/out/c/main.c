@@ -31,7 +31,8 @@ typedef struct Point Point;
 	{.x = 1, .y = 1}, \
 	{.x = 2, .y = 2} \
 }
-struct {uint8_t x; uint8_t y;} ps[3] = _ps;
+struct {uint8_t x; uint8_t y;
+} ps[3] = _ps;
 
 #define _points  _ps
 Point points[3] = _points;

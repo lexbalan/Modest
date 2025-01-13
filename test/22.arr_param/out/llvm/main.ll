@@ -205,6 +205,10 @@ define internal void @getarr10([10 x %Int32]* %0) {
 	%8 = insertvalue [10 x %Int32] %7, %Int32 7, 7
 	%9 = insertvalue [10 x %Int32] %8, %Int32 8, 8
 	%10 = insertvalue [10 x %Int32] %9, %Int32 9, 9
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	%11 = zext i8 10 to %Int32
+	; -- end vol eval --
 	store [10 x %Int32] %10, [10 x %Int32]* %0
 	ret void
 }
@@ -214,35 +218,47 @@ define internal void @getarr10([10 x %Int32]* %0) {
 ; receive & returns array by value
 define internal void @arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %Int32] %__b) {
 	%a = alloca [10 x %Int32]
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	%2 = zext i8 10 to %Int32
+	; -- end vol eval --
 	store [10 x %Int32] %__a, [10 x %Int32]* %a
 	%b = alloca [10 x %Int32]
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	%3 = zext i8 10 to %Int32
+	; -- end vol eval --
 	store [10 x %Int32] %__b, [10 x %Int32]* %b
-	%2 = alloca [10 x %Int32], align 1
-	%3 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %3
+	%4 = alloca [10 x %Int32], align 1
+	%5 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %5
 	br label %again_1
 again_1:
-	%4 = load %Int32, %Int32* %3
-	%5 = icmp slt %Int32 %4, 10
-	br %Bool %5 , label %body_1, label %break_1
+	%6 = load %Int32, %Int32* %5
+	%7 = icmp slt %Int32 %6, 10
+	br %Bool %7 , label %body_1, label %break_1
 body_1:
-	%6 = load %Int32, %Int32* %3
-	%7 = getelementptr [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int32 %6
-	%8 = load %Int32, %Int32* %3
-	%9 = getelementptr [10 x %Int32], [10 x %Int32]* %a, %Int32 0, %Int32 %8
-	%10 = load %Int32, %Int32* %3
-	%11 = getelementptr [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Int32 %10
-	%12 = load %Int32, %Int32* %9
-	%13 = load %Int32, %Int32* %11
-	%14 = add %Int32 %12, %13
-	store %Int32 %14, %Int32* %7
-	%15 = load %Int32, %Int32* %3
-	%16 = add %Int32 %15, 1
-	store %Int32 %16, %Int32* %3
+	%8 = load %Int32, %Int32* %5
+	%9 = getelementptr [10 x %Int32], [10 x %Int32]* %4, %Int32 0, %Int32 %8
+	%10 = load %Int32, %Int32* %5
+	%11 = getelementptr [10 x %Int32], [10 x %Int32]* %a, %Int32 0, %Int32 %10
+	%12 = load %Int32, %Int32* %5
+	%13 = getelementptr [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Int32 %12
+	%14 = load %Int32, %Int32* %11
+	%15 = load %Int32, %Int32* %13
+	%16 = add %Int32 %14, %15
+	store %Int32 %16, %Int32* %9
+	%17 = load %Int32, %Int32* %5
+	%18 = add %Int32 %17, 1
+	store %Int32 %18, %Int32* %5
 	br label %again_1
 break_1:
-	%17 = load [10 x %Int32], [10 x %Int32]* %2
-	store [10 x %Int32] %17, [10 x %Int32]* %0
+	%19 = load [10 x %Int32], [10 x %Int32]* %4
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	%20 = zext i8 10 to %Int32
+	; -- end vol eval --
+	store [10 x %Int32] %19, [10 x %Int32]* %0
 	ret void
 }
 
@@ -259,99 +275,115 @@ define %Int32 @main() {; alloca memory for return value
 	%9 = insertvalue [10 x %Int32] %8, %Int32 8, 8
 	%10 = insertvalue [10 x %Int32] %9, %Int32 9, 9
 	%11 = alloca [10 x %Int32]
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	%12 = zext i8 10 to %Int32
+	; -- end vol eval --
 	store [10 x %Int32] %10, [10 x %Int32]* %11
-	%12 = bitcast [10 x %Int32]* %1 to i8*
-	%13 = bitcast [10 x %Int32]* %11 to i8*
-	%14 = call i1 (i8*, i8*, i64) @memeq(i8* %12, i8* %13, %Int64 40)
-	%15 = icmp ne %Bool %14, 0
-	br %Bool %15 , label %then_0, label %endif_0
+	%13 = bitcast [10 x %Int32]* %1 to i8*
+	%14 = bitcast [10 x %Int32]* %11 to i8*
+	%15 = call i1 (i8*, i8*, i64) @memeq(i8* %13, i8* %14, %Int64 40)
+	%16 = icmp ne %Bool %15, 0
+	br %Bool %16 , label %then_0, label %endif_0
 then_0:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	%17 = insertvalue [10 x i8] zeroinitializer, i8 10, 1
-	%18 = insertvalue [10 x i8] %17, i8 20, 2
-	%19 = insertvalue [10 x i8] %18, i8 30, 3
-	%20 = insertvalue [10 x i8] %19, i8 40, 4
-	%21 = insertvalue [10 x i8] %20, i8 50, 5
-	%22 = insertvalue [10 x i8] %21, i8 60, 6
-	%23 = insertvalue [10 x i8] %22, i8 70, 7
-	%24 = insertvalue [10 x i8] %23, i8 80, 8
-	%25 = insertvalue [10 x i8] %24, i8 90, 9
-	%26 = alloca [10 x i8]
-	store [10 x i8] %25, [10 x i8]* %26
-	%27 = load [10 x %Int32], [10 x %Int32]* %1
-	%28 = insertvalue [10 x %Int32] zeroinitializer, %Int32 10, 1
-	%29 = insertvalue [10 x %Int32] %28, %Int32 20, 2
-	%30 = insertvalue [10 x %Int32] %29, %Int32 30, 3
-	%31 = insertvalue [10 x %Int32] %30, %Int32 40, 4
-	%32 = insertvalue [10 x %Int32] %31, %Int32 50, 5
-	%33 = insertvalue [10 x %Int32] %32, %Int32 60, 6
-	%34 = insertvalue [10 x %Int32] %33, %Int32 70, 7
-	%35 = insertvalue [10 x %Int32] %34, %Int32 80, 8
-	%36 = insertvalue [10 x %Int32] %35, %Int32 90, 9; alloca memory for return value
-	%37 = alloca [10 x %Int32]
-	call void @arraysAdd([10 x %Int32]* %37, [10 x %Int32] %27, [10 x %Int32] %36)
-	%38 = insertvalue [10 x %Int32] zeroinitializer, %Int32 11, 1
-	%39 = insertvalue [10 x %Int32] %38, %Int32 22, 2
-	%40 = insertvalue [10 x %Int32] %39, %Int32 33, 3
-	%41 = insertvalue [10 x %Int32] %40, %Int32 44, 4
-	%42 = insertvalue [10 x %Int32] %41, %Int32 55, 5
-	%43 = insertvalue [10 x %Int32] %42, %Int32 66, 6
-	%44 = insertvalue [10 x %Int32] %43, %Int32 77, 7
-	%45 = insertvalue [10 x %Int32] %44, %Int32 88, 8
-	%46 = insertvalue [10 x %Int32] %45, %Int32 99, 9
-	%47 = alloca [10 x %Int32]
-	store [10 x %Int32] %46, [10 x %Int32]* %47
-	%48 = bitcast [10 x %Int32]* %37 to i8*
-	%49 = bitcast [10 x %Int32]* %47 to i8*
-	%50 = call i1 (i8*, i8*, i64) @memeq(i8* %48, i8* %49, %Int64 40)
-	%51 = icmp ne %Bool %50, 0
-	br %Bool %51 , label %then_1, label %endif_1
+	%18 = insertvalue [10 x i8] zeroinitializer, i8 10, 1
+	%19 = insertvalue [10 x i8] %18, i8 20, 2
+	%20 = insertvalue [10 x i8] %19, i8 30, 3
+	%21 = insertvalue [10 x i8] %20, i8 40, 4
+	%22 = insertvalue [10 x i8] %21, i8 50, 5
+	%23 = insertvalue [10 x i8] %22, i8 60, 6
+	%24 = insertvalue [10 x i8] %23, i8 70, 7
+	%25 = insertvalue [10 x i8] %24, i8 80, 8
+	%26 = insertvalue [10 x i8] %25, i8 90, 9
+	%27 = alloca [10 x i8]
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	%28 = zext i8 10 to %Int32
+	; -- end vol eval --
+	store [10 x i8] %26, [10 x i8]* %27
+	%29 = load [10 x %Int32], [10 x %Int32]* %1
+	%30 = insertvalue [10 x %Int32] zeroinitializer, %Int32 10, 1
+	%31 = insertvalue [10 x %Int32] %30, %Int32 20, 2
+	%32 = insertvalue [10 x %Int32] %31, %Int32 30, 3
+	%33 = insertvalue [10 x %Int32] %32, %Int32 40, 4
+	%34 = insertvalue [10 x %Int32] %33, %Int32 50, 5
+	%35 = insertvalue [10 x %Int32] %34, %Int32 60, 6
+	%36 = insertvalue [10 x %Int32] %35, %Int32 70, 7
+	%37 = insertvalue [10 x %Int32] %36, %Int32 80, 8
+	%38 = insertvalue [10 x %Int32] %37, %Int32 90, 9; alloca memory for return value
+	%39 = alloca [10 x %Int32]
+	call void @arraysAdd([10 x %Int32]* %39, [10 x %Int32] %29, [10 x %Int32] %38)
+	%40 = insertvalue [10 x %Int32] zeroinitializer, %Int32 11, 1
+	%41 = insertvalue [10 x %Int32] %40, %Int32 22, 2
+	%42 = insertvalue [10 x %Int32] %41, %Int32 33, 3
+	%43 = insertvalue [10 x %Int32] %42, %Int32 44, 4
+	%44 = insertvalue [10 x %Int32] %43, %Int32 55, 5
+	%45 = insertvalue [10 x %Int32] %44, %Int32 66, 6
+	%46 = insertvalue [10 x %Int32] %45, %Int32 77, 7
+	%47 = insertvalue [10 x %Int32] %46, %Int32 88, 8
+	%48 = insertvalue [10 x %Int32] %47, %Int32 99, 9
+	%49 = alloca [10 x %Int32]
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	%50 = zext i8 10 to %Int32
+	; -- end vol eval --
+	store [10 x %Int32] %48, [10 x %Int32]* %49
+	%51 = bitcast [10 x %Int32]* %39 to i8*
+	%52 = bitcast [10 x %Int32]* %49 to i8*
+	%53 = call i1 (i8*, i8*, i64) @memeq(i8* %51, i8* %52, %Int64 40)
+	%54 = icmp ne %Bool %53, 0
+	br %Bool %54 , label %then_1, label %endif_1
 then_1:
-	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*))
+	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*))
 	br label %endif_1
 endif_1:
-	%53 = load [10 x %Int32], [10 x %Int32]* %1
-	%54 = load [10 x %Int32], [10 x %Int32]* %1; alloca memory for return value
-	%55 = alloca [10 x %Int32]
-	call void @arraysAdd([10 x %Int32]* %55, [10 x %Int32] %53, [10 x %Int32] %54)
-	%56 = insertvalue [10 x %Int32] zeroinitializer, %Int32 2, 1
-	%57 = insertvalue [10 x %Int32] %56, %Int32 4, 2
-	%58 = insertvalue [10 x %Int32] %57, %Int32 6, 3
-	%59 = insertvalue [10 x %Int32] %58, %Int32 8, 4
-	%60 = insertvalue [10 x %Int32] %59, %Int32 10, 5
-	%61 = insertvalue [10 x %Int32] %60, %Int32 12, 6
-	%62 = insertvalue [10 x %Int32] %61, %Int32 14, 7
-	%63 = insertvalue [10 x %Int32] %62, %Int32 16, 8
-	%64 = insertvalue [10 x %Int32] %63, %Int32 18, 9
-	%65 = alloca [10 x %Int32]
-	store [10 x %Int32] %64, [10 x %Int32]* %65
-	%66 = bitcast [10 x %Int32]* %55 to i8*
-	%67 = bitcast [10 x %Int32]* %65 to i8*
-	%68 = call i1 (i8*, i8*, i64) @memeq(i8* %66, i8* %67, %Int64 40)
-	%69 = icmp ne %Bool %68, 0
-	br %Bool %69 , label %then_2, label %endif_2
+	%56 = load [10 x %Int32], [10 x %Int32]* %1
+	%57 = load [10 x %Int32], [10 x %Int32]* %1; alloca memory for return value
+	%58 = alloca [10 x %Int32]
+	call void @arraysAdd([10 x %Int32]* %58, [10 x %Int32] %56, [10 x %Int32] %57)
+	%59 = insertvalue [10 x %Int32] zeroinitializer, %Int32 2, 1
+	%60 = insertvalue [10 x %Int32] %59, %Int32 4, 2
+	%61 = insertvalue [10 x %Int32] %60, %Int32 6, 3
+	%62 = insertvalue [10 x %Int32] %61, %Int32 8, 4
+	%63 = insertvalue [10 x %Int32] %62, %Int32 10, 5
+	%64 = insertvalue [10 x %Int32] %63, %Int32 12, 6
+	%65 = insertvalue [10 x %Int32] %64, %Int32 14, 7
+	%66 = insertvalue [10 x %Int32] %65, %Int32 16, 8
+	%67 = insertvalue [10 x %Int32] %66, %Int32 18, 9
+	%68 = alloca [10 x %Int32]
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	%69 = zext i8 10 to %Int32
+	; -- end vol eval --
+	store [10 x %Int32] %67, [10 x %Int32]* %68
+	%70 = bitcast [10 x %Int32]* %58 to i8*
+	%71 = bitcast [10 x %Int32]* %68 to i8*
+	%72 = call i1 (i8*, i8*, i64) @memeq(i8* %70, i8* %71, %Int64 40)
+	%73 = icmp ne %Bool %72, 0
+	br %Bool %73 , label %then_2, label %endif_2
 then_2:
-	%70 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str3 to [0 x i8]*))
+	%74 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str3 to [0 x i8]*))
 	br label %endif_2
 endif_2:
-	%71 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %71
+	%75 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %75
 	br label %again_1
 again_1:
-	%72 = load %Int32, %Int32* %71
-	%73 = icmp slt %Int32 %72, 10
-	br %Bool %73 , label %body_1, label %break_1
+	%76 = load %Int32, %Int32* %75
+	%77 = icmp slt %Int32 %76, 10
+	br %Bool %77 , label %body_1, label %break_1
 body_1:
-	%74 = load %Int32, %Int32* %71
-	%75 = load %Int32, %Int32* %71
-	%76 = getelementptr [10 x %Int32], [10 x %Int32]* %55, %Int32 0, %Int32 %75
-	%77 = load %Int32, %Int32* %76
-	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*), %Int32 %74, %Int32 %77)
-	%79 = load %Int32, %Int32* %71
-	%80 = add %Int32 %79, 1
-	store %Int32 %80, %Int32* %71
+	%78 = load %Int32, %Int32* %75
+	%79 = load %Int32, %Int32* %75
+	%80 = getelementptr [10 x %Int32], [10 x %Int32]* %58, %Int32 0, %Int32 %79
+	%81 = load %Int32, %Int32* %80
+	%82 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*), %Int32 %78, %Int32 %81)
+	%83 = load %Int32, %Int32* %75
+	%84 = add %Int32 %83, 1
+	store %Int32 %84, %Int32* %75
 	br label %again_1
 break_1:
 	ret %Int32 0

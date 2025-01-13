@@ -106,7 +106,7 @@ func beacon_exit(x: *FSM) -> Unit {
 
 
 
-var fsm: FSM = {
+var fsm0: FSM = {
 	name = "Flash"
 	state = 0
 	nexstate = 0
@@ -140,7 +140,7 @@ var fsm: FSM = {
 public func main() -> Int {
 
 	while true {
-		fsm.run(&fsm)
+		fsm.run(&fsm0)
 		delay.ms(500)
 	}
 

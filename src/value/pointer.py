@@ -4,6 +4,16 @@ import type as type
 from hlir.type import Type
 from hlir.value import ValueCons
 from .char import utf32_chars_to_utfx_chars
+#from .array import array_can
+
+
+def array_can2(a, b):
+	if a.is_array() and b.is_array():
+		if a.is_open_array() and b.is_closed_array():
+			return array_can2(a.of, b.of)
+	elif not (a.is_array() or b.is_array()):
+		return Type.eq(a, b)
+	return False
 
 
 def pointer_can(to, from_type, method, ti):
@@ -28,8 +38,12 @@ def pointer_can(to, from_type, method, ti):
 			return True  # cons FreePointer from *X
 
 		# cons *[]X from *[n]X +
-		if from_type.to.is_closed_array() and to.to.is_open_array():
-			return Type.eq(from_type.to.of, to.to.of)
+		if to.to.is_open_array() and from_type.to.is_closed_array():
+			return array_can2(to.to, from_type.to)
+			"""to = to.to
+			from_type = from_type.to
+			while from_type.to.is_closed_array() and to.to.is_open_array():
+			return Type.eq(from_type.to.of, to.to.of)"""
 
 
 	if method == 'implicit':

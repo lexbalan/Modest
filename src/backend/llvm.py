@@ -571,13 +571,18 @@ def llvm_store(dst, src):
 	assert(src['isa'] == 'll_value')
 
 	if Type.is_array(src['type']):
-		return do_assign_arrays(dst, src)
+		do_assign_arrays(dst, src)
+		return
 
+	llvm_store_simple(dst, src)
+
+
+def llvm_store_simple(dst, src):
 	lo("store ")
 	llvm_print_type_value(src)
 	out(", ")
 	llvm_print_type_value(dst)
-	return dst
+
 
 
 def do_assign_arrays(dst, src):
@@ -588,19 +593,20 @@ def do_assign_arrays(dst, src):
 	volume = trim(volume, 32)
 	out("\n\t; -- end vol eval --")
 
-	if src['items'] == []:
-		out("\n\t; -- zero fill rest of array")
+	if 'items' in src:
+		if src['items'] == []:
+			out("\n\t; -- zero fill rest of array")
 
-		# `size = volume * item_size`
-		item_sz = src['type'].of.size
-		item_size = llvm_value_num(foundation.typeNat32, item_sz)
-		size = llvm_eval_binary('mul', volume, item_size)
+			# `size = volume * item_size`
+			item_sz = src['type'].of.size
+			item_size = llvm_value_num(foundation.typeNat32, item_sz)
+			size = llvm_eval_binary('mul', volume, item_size)
 
-		llvm_memzero(dst, size, volatile=False)
-		return
+			llvm_memzero(dst, size, volatile=False)
+			return
 
-	src = do_reval(r)
-	llvm_store(dst, src)
+	#r = do_reval(src)
+	llvm_store_simple(dst, src)
 
 
 
@@ -742,7 +748,7 @@ def llvm_alloca(typ, id_str=None, size=None, alignment=0):
 def llvm_alloca_store(typ, id_str=None, init_value=None):
 	nv = llvm_alloca(typ, id_str=id_str)
 	if init_value != None:
-		return llvm_store(nv, init_value)
+		llvm_store(nv, init_value)
 	return nv
 
 
@@ -944,9 +950,12 @@ def do_eval_bin(x):
 			if not r['is_adr']:
 				if r['kind'] == 'reg':
 					r = llvm_alloca_store(r['type'], id_str=None, init_value=r)
+					if r == None:
+						1/0
 
 			# Теперь сравниваем значения по указателям и длине (memcmp)
 			sz = llvm_value_num(foundation.typeInt64, l['type'].size)
+
 			return llvm_memcmp(op, l, r, sz)
 
 		return None
@@ -2695,7 +2704,8 @@ def stackrestore(sptr):
 
 def stacksave(sptr):
 	r = ll_reg_operation("call i8* @llvm.stacksave()", type=sptr['type'])
-	return llvm_store(sptr, r)
+	llvm_store(sptr, r)
+	return sptr
 
 
 

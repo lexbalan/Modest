@@ -358,7 +358,7 @@ define internal void @beacon_exit(%fsm_FSM* %x) {
 	ret void
 }
 
-@fsm = internal global %fsm_FSM {
+@fsm0 = internal global %fsm_FSM {
 	[8 x %Char8] [
 		%Char8 70,
 		%Char8 108,
@@ -438,7 +438,7 @@ define %Int @main() {
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	call void @fsm_run(%fsm_FSM* @fsm)
+	call void @fsm_run(%fsm_FSM* @fsm0)
 	call void @delay_ms(%Int64 500)
 	br label %again_1
 break_1:
