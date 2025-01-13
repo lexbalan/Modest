@@ -15,8 +15,6 @@ from hlir.hlir import *
 
 import foundation
 
-#from hlir.type import Type
-
 #from value.value import value_eq
 from value.bool import value_bool_create
 from value.integer import value_integer_create
@@ -83,7 +81,6 @@ cmodule = None  # Current module
 cfunc = None	# current function
 context = None  # current context (symtab)
 cdef = None
-
 
 
 

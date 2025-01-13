@@ -100,16 +100,12 @@ static void test_records()
 
 	Struct x = s;
 
+	printf("x.x.a.x = %d\n", x.x->a.x);
+	printf("x.x.a.y = %d\n", x.x->a.y);
 
-	// TODO: NOT WORKED!
-	//	printf("x.x.a.x = %d\n", x.x.a.x)
-	//	printf("x.x.a.y = %d\n", x.x.a.y)
-	//
-	//	printf("x.x.b.x = %d\n", x.x.b.x)
-	//	printf("x.x.b.y = %d\n", x.x.b.y)
+	printf("x.x.b.x = %d\n", x.x->b.x);
+	printf("x.x.b.y = %d\n", x.x->b.y);
 }
-
-
 
 
 int main()
