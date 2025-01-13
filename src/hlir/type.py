@@ -185,6 +185,12 @@ class Type(Entity):
 		return False
 
 
+	def is_array_of_array(self):
+		if self.is_array():
+			return self.of.is_array()
+		return False
+
+
 	def is_generic_pointer(self):
 		if self.is_generic():
 			return self.is_pointer()

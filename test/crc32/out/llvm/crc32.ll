@@ -272,7 +272,7 @@ again_3:
 	%27 = icmp ult %Int32 %26, %len
 	br %Bool %27 , label %body_3, label %break_3
 body_3:
-	; --???1
+	; 1
 	%28 = load %Int32, %Int32* %3
 	%29 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %28
 	%30 = load %Word8, %Word8* %29
@@ -282,7 +282,7 @@ body_3:
 	%34 = and %Word32 %33, 255
 	%35 = load %Int32, %Int32* %3
 	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str1 to [0 x i8]*), %Int32 %35, %Word32 %31, %Word32 %34)
-	; --???2
+	; 2
 	%37 = trunc %Word32 %34 to %Int8
 	%38 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int8 %37
 	%39 = load %Word32, %Word32* %2
