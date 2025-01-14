@@ -214,7 +214,8 @@ declare [0 x %Char]* @strerror(%Int %error)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [13 x i8] [i8 102, i8 111, i8 111, i8 40, i8 37, i8 100, i8 44, i8 32, i8 37, i8 100, i8 41, i8 10, i8 0]
+@str1 = private constant [15 x i8] [i8 112, i8 97, i8 91, i8 48, i8 93, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str2 = private constant [13 x i8] [i8 102, i8 111, i8 111, i8 40, i8 37, i8 100, i8 44, i8 32, i8 37, i8 100, i8 41, i8 10, i8 0]
 ; -- endstrings --
 
 ;@property("type.generic", true)
@@ -231,14 +232,21 @@ declare [0 x %Char]* @strerror(%Int %error)
 	]
 ]
 define internal void @p([0 x [0 x %Int32]]* %pa) {
+	%1 = bitcast [0 x [0 x %Int32]]* %pa to [2 x [3 x %Int32]]*
+	%2 = getelementptr [0 x [0 x %Int32]], [0 x [0 x %Int32]]* %pa, %Int32 0, %Int32 0, %Int32 0
+	%3 = load %Int32, %Int32* %2
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Int32 %3)
 	ret void
 }
 
 define internal void @foo(%Int32 %x, %Int32 %y) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), %Int32 %x, %Int32 %y)
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), %Int32 %x, %Int32 %y)
 	ret void
 }
 
+
+
+;$pragma insert "// text insertion"
 define %Int32 @main() {
 	%1 = alloca [0 x [0 x %Int32]]*, align 8
 	store [0 x [0 x %Int32]]* bitcast ([2 x [3 x %Int32]]* @a to [0 x [0 x %Int32]]*), [0 x [0 x %Int32]]** %1
