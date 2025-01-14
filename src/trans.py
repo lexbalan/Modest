@@ -512,7 +512,8 @@ def do_field(x):
 		error("field id must starts with small letter", id.ti)
 
 	t = do_type(x['type'])
-	f = Field(id, t, ti=x['ti'])
+	iv = do_value(x['init_value'])
+	f = Field(id, t, init_value=iv, ti=x['ti'])
 	f.nl = x['nl']
 	f.access_level = x['access_modifier']
 	add_spices(f, ast_atts=x['attributes'])
@@ -2535,6 +2536,9 @@ def do_directive(x):
 			feature_add(args[0])
 		elif s0 == 'unsafe':
 			feature_add('unsafe')
+		elif s0 == 'insert':
+			print("-INSERT " + args[1])
+			return StmtDirectiveInsert(args[1], x['ti'])
 
 	return None
 
@@ -2793,6 +2797,9 @@ def pre_def(ast, fdecl=False):
 		elif isa == 'ast_comment':
 			comment = do_stmt_comment(x)
 			module_append(comment)
+
+		elif isa == 'ast_directive':
+			y = do_directive(x)
 
 	return
 

@@ -157,4 +157,10 @@ class StmtDirectiveCInclude(StmtDirective):
 		self.is_local = s[0:2] == './'
 
 
+# insert random text into output
+class StmtDirectiveInsert(StmtDirective):
+	def __init__(self, text, ti):
+		super().__init__(ti)
+		self.text = text
+
 

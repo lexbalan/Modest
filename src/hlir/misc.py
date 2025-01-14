@@ -25,10 +25,11 @@ class Id(Entity):
 
 
 class Field(Entity):
-	def __init__(self, id, type, ti=None):
+	def __init__(self, id, type, init_value=None, ti=None):
 		super().__init__(ti)
 		self.id = id
 		self.type = type
+		self.init_value = init_value
 		self.field_no = 0
 		self.offset = 0
 		self.access_level = 'private'

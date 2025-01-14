@@ -214,6 +214,7 @@ declare [0 x %Char]* @strerror(%Int %error)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+@str1 = private constant [13 x i8] [i8 102, i8 111, i8 111, i8 40, i8 37, i8 100, i8 44, i8 32, i8 37, i8 100, i8 41, i8 10, i8 0]
 ; -- endstrings --
 
 ;@property("type.generic", true)
@@ -233,10 +234,16 @@ define internal void @p([0 x [0 x %Int32]]* %pa) {
 	ret void
 }
 
+define internal void @foo(%Int32 %x, %Int32 %y) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), %Int32 %x, %Int32 %y)
+	ret void
+}
+
 define %Int32 @main() {
 	%1 = alloca [0 x [0 x %Int32]]*, align 8
 	store [0 x [0 x %Int32]]* bitcast ([2 x [3 x %Int32]]* @a to [0 x [0 x %Int32]]*), [0 x [0 x %Int32]]** %1
 	call void @p([0 x [0 x %Int32]]* bitcast ([2 x [3 x %Int32]]* @a to [0 x [0 x %Int32]]*))
+	call void @foo(%Int32 1, %Int32 2)
 	ret %Int32 0
 }
 

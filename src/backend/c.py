@@ -551,16 +551,11 @@ def print_value_un(v, ctx):
 	p0 = precedence(v)
 	pv = precedence(value)
 
-#	if v['kind'] == 'ref':
-#		if value.type.is_array():
-#			if value['kind'] != 'slice':
-#				if is_sim_sim(v.type):
-#					# to prevent:
-#					# "warning: incompatible pointer types passing 'uint8_t (*)[10]' to
-#					# parameter of type 'uint8_t *'"
-#					out("(")
-#					print_type(v.type)
-#					out(")")
+	if op == 'ref':
+		# Если берем указатель на массив массивов, то приводим его к void *
+		# Т.к. в C нет указателя на массив массивов
+		if value.type.is_array_of_array():
+			out("(void *)")
 
 	out(un_ops[op])
 	print_value(value, need_wrap=pv<p0)
