@@ -952,7 +952,7 @@ def print_literal_char(cc, width):
 
 
 
-def print_literal_array(type, items):
+def print_literal_array(type, items, nl_end=1):
 	if type.is_array_of_char():
 		char_type = type.of
 		char_width = char_type.width
@@ -978,14 +978,14 @@ def print_literal_array(type, items):
 	indent_up()
 	print_array_values(items, [])
 	indent_down()
-	newline(n=1)
+	newline(n=nl_end)
 	indent()
 	out("}")
 
 
 
 
-def print_literal_record(type, items):
+def print_literal_record(type, items, nl_end=1):
 	out("{")
 	indent_up()
 
@@ -1026,7 +1026,7 @@ def print_literal_record(type, items):
 
 	indent_down()
 
-	newline(n=1)
+	newline(n=nl_end)
 	indent()
 
 	out("}")
@@ -1085,12 +1085,6 @@ def print_value_enum(x, ctx):
 
 
 def print_literal_integer(num, nsigns=0, is_big=False, is_hex=False):
-	#num = x.asset
-
-	#nsigns = 0
-	#if hasattr(x, 'nsigns'):
-	#	nsigns = x.nsigns
-
 	# Big Number?
 	if is_big:
 		if True:
@@ -1126,12 +1120,15 @@ def print_literal_pointer(type, num):
 def print_value_literal(x, ctx):
 	t = x.type
 	if t.is_integer() or t.is_number() or t.is_word():
-		print_literal_integer(x.asset, is_big=x.type.width > 64, is_hex=x.hasAttribute('hexadecimal'))
+		nsigns = 0
+		if hasattr(x, 'nsigns'):
+			nsigns = x.nsigns
+		print_literal_integer(x.asset, nsigns=nsigns, is_big=x.type.width > 64, is_hex=x.hasAttribute('hexadecimal'))
 
 	elif t.is_float(): print_literal_float(x.asset)
 	elif t.is_string(): print_literal_string(x.asset, char_width=x.type.width)
-	elif t.is_record(): print_literal_record(x.type, x.items)
-	elif t.is_array(): print_literal_array(x.type, x.items)
+	elif t.is_record(): print_literal_record(x.type, x.items, nl_end=x.nl_end)
+	elif t.is_array(): print_literal_array(x.type, x.items, nl_end=x.nl_end)
 	elif t.is_bool(): print_literal_bool(x.asset)
 	elif t.is_char(): print_literal_char(x.asset, x.type.width)
 	elif t.is_pointer(): print_literal_pointer(x.type, x.asset)
@@ -1148,7 +1145,6 @@ def print_value_by_id(x, ctx=[], prefix=''):
 
 
 
-# & let
 def print_value_const(x, ctx):
 	prefix=''
 
@@ -1599,7 +1595,7 @@ def print_stmt_block(s):
 	indent_up()
 	print_stmts(s.stmts)
 	indent_down()
-	endnl = s.end_nl
+	endnl = s.nl_end
 	newline(n=endnl)
 	if endnl:
 		indent()

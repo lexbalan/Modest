@@ -26,7 +26,9 @@ class Value(Entity):
 		self.asset = None
 
 		self.nl = 0
-		self.nl_end = 0  # ??
+		# Нужен для возможного переноса строки
+		# перед закрытием скобки композитного литерала
+		self.nl_end = 0
 
 
 	def isLvalue(self):

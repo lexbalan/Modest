@@ -140,8 +140,7 @@ static bool test_generic_array()
 {
 	// Any array expression have GenericArray type
 	// this array expression (GenericArray of four GenericInteger items)
-	#define __a  {0, 1, 2, 3 \
-	}
+	#define __a  {0, 1, 2, 3	}
 
 	if (false) {
 		printf("error: a != [0, 1, 2, 3]\n");
@@ -156,8 +155,7 @@ static bool test_generic_array()
 	memset(&b, 0, sizeof b);
 	memcpy(&b, &(int32_t[4])__a, sizeof b);
 
-	if (memcmp(&b, &(int32_t[4]){0, 1, 2, 3
-	}, sizeof(int32_t[4])) != 0) {
+	if (memcmp(&b, &(int32_t[4]){0, 1, 2, 3	}, sizeof(int32_t[4])) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -167,8 +165,7 @@ static bool test_generic_array()
 	memset(&c, 0, sizeof c);
 	memcpy(&c, &(int64_t[4])__a, sizeof c);
 
-	if (memcmp(&c, &(int64_t[4]){0, 1, 2, 3
-	}, sizeof(int64_t[4])) != 0) {
+	if (memcmp(&c, &(int64_t[4]){0, 1, 2, 3	}, sizeof(int64_t[4])) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -177,8 +174,7 @@ static bool test_generic_array()
 	int32_t d[10];
 	memcpy(&d, &(int32_t[10])__a, sizeof d);
 
-	if (memcmp(&d, &(int32_t[10]){0, 1, 2, 3, 0
-	}, sizeof(int32_t[10])) != 0) {
+	if (memcmp(&d, &(int32_t[10]){0, 1, 2, 3, 0	}, sizeof(int32_t[10])) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
 		return false;
 	}
@@ -209,8 +205,7 @@ static bool test_generic_record()
 	// Any record expression have GenericRecord type
 	// this record expression have type:
 	// Generic(record {x: GenericInteger, y: GenericInteger})
-	#define __p  {.x = 10, .y = 20 \
-	}
+	#define __p  {.x = 10, .y = 20	}
 
 	// value with GenericRecord type
 	// can be implicit casted to Record with same fields.

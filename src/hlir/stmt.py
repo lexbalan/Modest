@@ -10,7 +10,7 @@ class Stmt(Entity):
 		self.deps = []
 		self.att = []
 		self.nl = nl
-		self.end_nl = 1
+		self.nl_end = 1
 
 
 
@@ -75,10 +75,12 @@ class StmtDefFunc(StmtDef):
 
 
 class StmtBlock(Stmt):
-	def __init__(self, stmts, ti, end_nl=1):
+	# nl_end нужен для отступов при лесенке if-else-if
+	# там пустая строка в конце блока влияет на читаемость
+	def __init__(self, stmts, ti, nl_end):
 		super().__init__(ti)
 		# количество пустых строк перед закрывающей скобкой блока
-		self.end_nl=end_nl
+		self.nl_end=nl_end
 		self.stmts = stmts
 
 

@@ -27,12 +27,9 @@ typedef struct Point Point;
 
 
 #define _ps  { \
-	{.x = 0, .y = 0 \
-	}, \
-	{.x = 1, .y = 1 \
-	}, \
-	{.x = 2, .y = 2 \
-	} \
+	{.x = 0, .y = 0	}, \
+	{.x = 1, .y = 1	}, \
+	{.x = 2, .y = 2	} \
 }
 struct {uint8_t x; uint8_t y;
 } ps[3] = _ps;

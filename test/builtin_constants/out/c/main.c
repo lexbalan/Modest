@@ -16,8 +16,7 @@ int main()
 
 	// __compiler
 	printf("__compiler.name = %s\n", (char *)"m2");
-	#define __ver  {.major = 0, .minor = 7 \
-	}
+	#define __ver  {.major = 0, .minor = 7	}
 	printf("__compiler.version.major = %u\n", 0);
 	printf("__compiler.version.minor = %u\n", 7);
 

@@ -152,7 +152,7 @@ def print_type_record(t):
 		print_field(field)
 
 	indent_down()
-	nl_indent(t.end_nl)
+	nl_indent(t.nl_end)
 	out("}")
 
 
@@ -717,7 +717,7 @@ def print_stmt_block(s):
 	for stmt in s.stmts:
 		print_stmt(stmt)
 	indent_down()
-	nl_indent(s.end_nl)
+	nl_indent(s.nl_end)
 	out("}")
 
 

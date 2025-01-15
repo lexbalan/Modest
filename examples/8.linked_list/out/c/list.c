@@ -27,8 +27,7 @@ list_List *list_create()
 		return NULL;
 	}
 
-	*list = (list_List){
-	};
+	*list = (list_List){	};
 
 	return list;
 }
@@ -88,8 +87,7 @@ list_Node *list_node_create()
 		return NULL;
 	}
 
-	*node = (list_Node){
-	};
+	*node = (list_Node){	};
 
 	return node;
 }

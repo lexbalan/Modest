@@ -10,8 +10,7 @@
 
 
 
-#define _arr  {1, 2 \
-}
+#define _arr  {1, 2}
 int32_t arr[2] = _arr;
 
 static int32_t arr0[2] = _arr;

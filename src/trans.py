@@ -629,7 +629,7 @@ def do_type_record(x):
 
 	anon_rec_cnt = anon_rec_cnt + 1
 	rec = TypeRecord(fields, ti=x['ti'])
-	rec.end_nl = x['end_nl']
+	rec.nl_end = x['nl_end']
 	# add anon record (before)
 
 	anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
@@ -2042,7 +2042,7 @@ def do_stmt_block(x):
 
 	context_pop()
 
-	return StmtBlock(stmts, ti=x['ti'], end_nl=x['end_nl'])
+	return StmtBlock(stmts, ti=x['ti'], nl_end=x['nl_end'])
 
 
 

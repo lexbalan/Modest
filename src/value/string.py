@@ -14,10 +14,10 @@ def value_string_create(string, ti=None):
 		max_char_width = max(max_char_width, n)
 
 	string_type = TypeString(max_char_width, len(string), ti)
-	nv = ValueLiteral(string_type, ti)
-	nv.asset = string
-	nv.immediate = True
-	return nv
+	v = ValueLiteral(string_type, ti)
+	v.asset = string
+	v.immediate = True
+	return v
 
 
 def value_string_add(l, r, ti):

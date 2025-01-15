@@ -13,7 +13,7 @@
 
 int main()
 {
-	uint16_t check = 0x1;
+	uint16_t check = 0x0001;
 	bool is_le = *(uint8_t *)&check == 1;
 
 	char *kind;

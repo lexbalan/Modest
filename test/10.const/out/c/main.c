@@ -17,8 +17,7 @@
 
 
 
-#define _carr  {0, 10, 15, 20, 25, 30 \
-}
+#define _carr  {0, 10, 15, 20, 25, 30}
 uint8_t carr[6] = _carr;
 
 
@@ -35,10 +34,8 @@ struct Line {
 typedef struct Line Line;
 
 #define zero  0
-#define pointZero  {.x = zero, .y = zero \
-}
-#define pointOne  {.x = 1.0, .y = 1.0 \
-}
+#define pointZero  {.x = zero, .y = zero}
+#define pointOne  {.x = 1.0, .y = 1.0}
 
 #define line0  { \
 	.a = pointZero, \
@@ -46,10 +43,8 @@ typedef struct Line Line;
 }
 
 #define line1  { \
-	.a = {.x = 10, .y = 20 \
-	}, \
-	.b = {.x = 30, .y = 40 \
-	} \
+	.a = {.x = 10, .y = 20	}, \
+	.b = {.x = 30, .y = 40	} \
 }
 
 #define line2  { \
@@ -58,14 +53,11 @@ typedef struct Line Line;
 }
 
 #define line3  { \
-	.a = {.x = 10, .y = 20 \
-	}, \
-	.b = {.x = 30, .y = 40 \
-	} \
+	.a = {.x = 10, .y = 20	}, \
+	.b = {.x = 30, .y = 40	} \
 }
 
-#define _lines  {line0, line1, line2, line3 \
-}
+#define _lines  {line0, line1, line2, line3}
 Line lines[4] = _lines;
 
 
@@ -74,8 +66,7 @@ struct WrappedArray {
 };
 typedef struct WrappedArray WrappedArray;
 
-#define wa  { \
-}
+#define wa  {}
 
 
 // Pythagorean theorem

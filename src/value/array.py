@@ -172,9 +172,9 @@ def _value_array_create(items, item_type, length, is_generic, ti):
 	array_volume = value_integer_create(length)
 	array_type = TypeArray(item_type, volume=array_volume, ti=ti)
 	array_type.generic = is_generic
-	nv = ValueLiteral(array_type, ti)
-	nv.items = items
-	return nv
+	v = ValueLiteral(array_type, ti)
+	v.items = items
+	return v
 
 
 
