@@ -1358,6 +1358,10 @@ def eval_cons_array(x):
 
 
 
+def do_eval_cons_pointer_to_array(type, value):
+	from_type = value.type
+
+
 def do_eval_cons(x):
 	value = x.value
 	from_type = value.type
@@ -1367,10 +1371,6 @@ def do_eval_cons(x):
 	if id(value.type) == id(to_type):
 		return do_reval(value)
 
-#	if Type.eq(to_type, from_type):
-#		if not Type.is_record(value.type):
-#			return do_reval(value)
-
 	if Type.is_pointer(to_type):
 		if Type.is_pointer(from_type):
 			# skipping cast pointer to pointer of the same type
@@ -1378,6 +1378,11 @@ def do_eval_cons(x):
 				return do_reval(value)
 			#if Type.eq(to_type.to, from_type.to):
 			#	return do_reval(value)
+			if to_type.to.is_array_of_array():
+				if from_type.to.is_array_of_array():
+					# Конструирование указателя на массив массивов
+					# из указателя на массив массивов
+					out("\n; -- ARRAY OF ARRAY CONS --")
 
 	if Type.is_array(to_type):
 		return eval_cons_array(x)
