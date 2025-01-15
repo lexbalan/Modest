@@ -1384,8 +1384,7 @@ def do_eval_cons(x):
 			# skipping cast pointer to pointer of the same type
 			if id(type.to) == id(from_type.to):
 				return do_reval(value)
-			#if Type.eq(type.to, from_type.to):
-			#	return do_reval(value)
+
 			if type.to.is_array_of_array():
 				if from_type.to.is_array_of_array():
 					# Конструирование указателя на массив массивов
