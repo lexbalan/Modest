@@ -14,7 +14,7 @@ func p(pa: *[][]Int32) {
 	var a = 2
 	var b = 3
 	let pg = *[a][b]Int32 pa
-	printf("pa[0][0] = %i\n", pa[1][0])
+	printf("pa[0][0] = %i\n", pg[1][0])
 }
 
 

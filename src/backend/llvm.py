@@ -1071,8 +1071,6 @@ def do_eval_call(v):
 
 
 
-
-
 def index(x):
 	i = do_reval(x.index)
 
@@ -1110,6 +1108,15 @@ def ass(left, indexes):
 	result_type = left['type']
 	et = getET(left['type'])
 	indexes = (llvm_value_num_zero,) + indexes
+
+#	# ACCESS TO VLA, SPECIAL WAY
+#	if left['type'].to.is_vla():
+#		#mass
+#		out("\n; -- INDEX VLA --")
+#		index = llvm_value_zero(foundation.typeInt32)
+#		llvm_eval_binary(llvm_opcode, l, r, x)
+#		info("VLA", left['proto'].ti)
+
 	return llvm_gep(left, left['type'], indexes, result_type, et)
 
 
@@ -1691,6 +1698,7 @@ def do_eval(x):
 		1 / 0
 		return llvm_value_zero(x.type)
 
+	y['proto'] = x
 	y['type'] = x.type
 
 	return y

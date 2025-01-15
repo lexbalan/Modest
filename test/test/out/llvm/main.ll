@@ -219,18 +219,7 @@ declare [0 x %Char]* @strerror(%Int %error)
 ; -- endstrings --
 
 ;@property("type.generic", true)
-@a = internal global [2 x [3 x %Int32]] [
-	[3 x %Int32] [
-		%Int32 1,
-		%Int32 2,
-		%Int32 3
-	],
-	[3 x %Int32] [
-		%Int32 4,
-		%Int32 5,
-		%Int32 6
-	]
-]
+@a = internal global [2 x [3 x %Int32]] zeroinitializer
 define internal void @p([0 x [0 x %Int32]]* %pa) {
 	%1 = alloca i8*
 	%2 = call i8* @llvm.stacksave() 
@@ -243,7 +232,8 @@ define internal void @p([0 x [0 x %Int32]]* %pa) {
 	%6 = load %Int32, %Int32* %4; -- DIM --
 ; -- CONS PTR TO ARRAY --
 	%7 = bitcast [0 x [0 x %Int32]]* %pa to [0 x [0 x %Int32]]*
-	%8 = getelementptr [0 x [0 x %Int32]], [0 x [0 x %Int32]]* %pa, %Int32 0, %Int32 1, %Int32 0
+; -- INDEX VLA --
+	%8 = getelementptr [0 x [0 x %Int32]], [0 x [0 x %Int32]]* %7, %Int32 0, %Int32 1, %Int32 0
 	%9 = load %Int32, %Int32* %8
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Int32 %9)
 	%11 = load i8*, i8** %1
