@@ -1358,8 +1358,38 @@ def eval_cons_array(x):
 
 
 
-def do_eval_cons_pointer_to_array(type, value):
+def do_eval_cons_pointer_to_array(x):
+	value = x.value
 	from_type = value.type
+	type = x.type
+
+	dims = []
+	xt = type.to
+	while xt.is_array():
+		volume = xt.volume
+		if isinstance(volume, ValueVar):
+			dim = do_reval(volume)
+			volume.dim = dim
+			out("; -- DIM --")
+			dims.append(dim)
+			#print("_VAR!")
+		xt = xt.of
+
+	# Конструирование указателя на массив массивов
+	# из указателя на массив массивов
+	out("\n; -- CONS PTR TO ARRAY --")
+
+	v = do_reval(value)
+
+#	if is_global_context():
+#		return v
+#
+#	# Приводим immediate значение прямо по месту
+#	if value.isImmediate():
+#		return llvm_value_inline_cast(type, v)
+
+	return docast(v, type)
+
 
 
 def do_eval_cons(x):
@@ -1385,11 +1415,10 @@ def do_eval_cons(x):
 			if id(type.to) == id(from_type.to):
 				return do_reval(value)
 
-			if type.to.is_array_of_array():
-				if from_type.to.is_array_of_array():
-					# Конструирование указателя на массив массивов
-					# из указателя на массив массивов
-					out("\n; -- ARRAY OF ARRAY CONS --")
+			if type.to.is_array():
+				if from_type.to.is_array():
+					return do_eval_cons_pointer_to_array(x)
+
 
 		elif from_type.is_string():
 			# *Str8 "A"

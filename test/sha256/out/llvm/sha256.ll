@@ -578,6 +578,7 @@ body_1:
 	%17 = icmp eq %Int32 %16, 64
 	br %Bool %17 , label %then_0, label %endif_0
 then_0:
+; -- CONS PTR TO ARRAY --
 	%18 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%19 = bitcast [64 x %Word8]* %18 to [0 x %Word8]*
 	call void @transform(%Context* %ctx, [0 x %Word8]* %19)
@@ -637,6 +638,7 @@ endif_0:
 	%24 = icmp uge %Int32 %23, 56
 	br %Bool %24 , label %then_1, label %endif_1
 then_1:
+; -- CONS PTR TO ARRAY --
 	%25 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%26 = bitcast [64 x %Word8]* %25 to [0 x %Word8]*
 	call void @transform(%Context* %ctx, [0 x %Word8]* %26)
@@ -721,6 +723,7 @@ endif_1:
 	%92 = lshr %Word64 %91, 56
 	%93 = trunc %Word64 %92 to %Word8
 	store %Word8 %93, %Word8* %88
+; -- CONS PTR TO ARRAY --
 	%94 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%95 = bitcast [64 x %Word8]* %94 to [0 x %Word8]*
 	call void @transform(%Context* %ctx, [0 x %Word8]* %95)

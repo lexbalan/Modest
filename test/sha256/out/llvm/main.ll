@@ -364,6 +364,7 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %out
 ]
 define internal %Bool @doTest(%SHA256_TestCase* %test) {
 	%1 = alloca %sha256_Hash, align 1
+; -- CONS PTR TO ARRAY --
 	%2 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 0
 	%3 = bitcast [32 x %Char8]* %2 to [0 x %Word8]*
 	%4 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 1

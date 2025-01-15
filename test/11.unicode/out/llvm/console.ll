@@ -321,6 +321,7 @@ define void @console_putchar_utf16(%Char16 %c) {
 	%3 = getelementptr [2 x %Char16], [2 x %Char16]* %1, %Int32 0, %Int32 1
 	store %Char16 0, %Char16* %3
 	%4 = alloca %Char32, align 4
+; -- CONS PTR TO ARRAY --
 	%5 = bitcast [2 x %Char16]* %1 to [0 x %Char16]*
 	%6 = call %Int8 @utf_utf16_to_utf32([0 x %Char16]* %5, %Char32* %4)
 	%7 = load %Char32, %Char32* %4
@@ -470,6 +471,7 @@ define %Int32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va) {
 	%1 = alloca i8*
 	store i8* %va, i8** %1
 	%2 = alloca [256 x %Char8], align 1
+; -- CONS PTR TO ARRAY --
 	%3 = bitcast [256 x %Char8]* %2 to [0 x %Char8]*
 	%4 = load i8*, i8** %1
 	%5 = call %Int32 @console_vsprint([0 x %Char8]* %3, %Str8* %form, i8* %4)
@@ -594,6 +596,7 @@ then_5:
 	; %i & %d for signed integer (Int)
 	;
 	%62 = va_arg i8** %1, %Int32
+; -- CONS PTR TO ARRAY --
 	%63 = bitcast [0 x %Char8]* %56 to [0 x %Char8]*
 	%64 = call %Int32 @sprint_dec_int32([0 x %Char8]* %63, %Int32 %62)
 	%65 = load %Int32, %Int32* %3
@@ -609,6 +612,7 @@ then_6:
 	; %n for unsigned integer (Nat)
 	;
 	%69 = va_arg i8** %1, %Int32
+; -- CONS PTR TO ARRAY --
 	%70 = bitcast [0 x %Char8]* %56 to [0 x %Char8]*
 	%71 = call %Int32 @sprint_dec_n32([0 x %Char8]* %70, %Int32 %69)
 	%72 = load %Int32, %Int32* %3
@@ -628,6 +632,7 @@ then_7:
 	; %p for pointers
 	;
 	%79 = va_arg i8** %1, %Int32
+; -- CONS PTR TO ARRAY --
 	%80 = bitcast [0 x %Char8]* %56 to [0 x %Char8]*
 	%81 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %80, %Int32 %79)
 	%82 = load %Int32, %Int32* %3
@@ -643,6 +648,7 @@ then_8:
 	; %s pointer to string
 	;
 	%86 = va_arg i8** %1, %Str8*
+; -- CONS PTR TO ARRAY --
 	%87 = bitcast [0 x %Char8]* %56 to [0 x %Char]*
 	%88 = call [0 x %Char]* @strcpy([0 x %Char]* %87, %Str8* %86)
 	%89 = call %SizeT @strlen(%Str8* %86)
@@ -660,6 +666,7 @@ then_9:
 	; %c for char
 	;
 	%95 = va_arg i8** %1, %Char32
+; -- CONS PTR TO ARRAY --
 	%96 = bitcast [0 x %Char8]* %56 to [4 x %Char8]*
 	%97 = call %Int8 @utf_utf32_to_utf8(%Char32 %95, [4 x %Char8]* %96)
 	%98 = sext %Int8 %97 to %Int32

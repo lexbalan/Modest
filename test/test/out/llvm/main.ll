@@ -232,10 +232,22 @@ declare [0 x %Char]* @strerror(%Int %error)
 	]
 ]
 define internal void @p([0 x [0 x %Int32]]* %pa) {
-	%1 = bitcast [0 x [0 x %Int32]]* %pa to [2 x [3 x %Int32]]*
-	%2 = getelementptr [0 x [0 x %Int32]], [0 x [0 x %Int32]]* %pa, %Int32 0, %Int32 0, %Int32 0
-	%3 = load %Int32, %Int32* %2
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Int32 %3)
+	%1 = alloca i8*
+	%2 = call i8* @llvm.stacksave() 
+	store i8* %2, i8** %1
+	%3 = alloca %Int32, align 4
+	store %Int32 2, %Int32* %3
+	%4 = alloca %Int32, align 4
+	store %Int32 3, %Int32* %4
+	%5 = load %Int32, %Int32* %3; -- DIM --
+	%6 = load %Int32, %Int32* %4; -- DIM --
+; -- CONS PTR TO ARRAY --
+	%7 = bitcast [0 x [0 x %Int32]]* %pa to [0 x [0 x %Int32]]*
+	%8 = getelementptr [0 x [0 x %Int32]], [0 x [0 x %Int32]]* %pa, %Int32 0, %Int32 1, %Int32 0
+	%9 = load %Int32, %Int32* %8
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Int32 %9)
+	%11 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %11)
 	ret void
 }
 
@@ -249,8 +261,12 @@ define internal void @foo(%Int32 %x, %Int32 %y) {
 ;$pragma insert "// text insertion"
 define %Int32 @main() {
 	%1 = alloca [0 x [0 x %Int32]]*, align 8
-	store [0 x [0 x %Int32]]* bitcast ([2 x [3 x %Int32]]* @a to [0 x [0 x %Int32]]*), [0 x [0 x %Int32]]** %1
-	call void @p([0 x [0 x %Int32]]* bitcast ([2 x [3 x %Int32]]* @a to [0 x [0 x %Int32]]*))
+; -- CONS PTR TO ARRAY --
+	%2 = bitcast [2 x [3 x %Int32]]* @a to [0 x [0 x %Int32]]*
+	store [0 x [0 x %Int32]]* %2, [0 x [0 x %Int32]]** %1
+; -- CONS PTR TO ARRAY --
+	%3 = bitcast [2 x [3 x %Int32]]* @a to [0 x [0 x %Int32]]*
+	call void @p([0 x [0 x %Int32]]* %3)
 	call void @foo(%Int32 1, %Int32 2)
 	ret %Int32 0
 }

@@ -297,6 +297,7 @@ define internal %SSizeT @my_printf(%Str8* %format, ...) {
 	%5 = bitcast i8** %2 to i8*
 	call void @llvm.va_start(i8* %5)
 	%6 = alloca [128 x %Char8], align 1
+; -- CONS PTR TO ARRAY --
 	%7 = bitcast [128 x %Char8]* %6 to %CharStr*
 	%8 = load i8*, i8** %2
 	%9 = call %Int @vsnprintf(%CharStr* %7, %SizeT 128, %Str8* %format, i8* %8)

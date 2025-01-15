@@ -335,12 +335,14 @@ define %Int @main() {
 
 	; current control terminal
 	%6 = alloca [128 x %Char8], align 1
+; -- CONS PTR TO ARRAY --
 	%7 = bitcast [128 x %Char8]* %6 to [0 x %Char]*
 	%8 = call [0 x %Char]* @ctermid([0 x %Char]* %7)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*), [128 x %Char8]* %6)
 
 	; current working directory
 	%10 = alloca [128 x %Char8], align 1
+; -- CONS PTR TO ARRAY --
 	%11 = bitcast [128 x %Char8]* %10 to [0 x %Char]*
 	%12 = call [0 x %Char]* @getcwd([0 x %Char]* %11, %SizeT 128)
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), [128 x %Char8]* %10)

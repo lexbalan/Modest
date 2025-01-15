@@ -342,6 +342,7 @@ define internal void @tablePrint([0 x [0 x %Str8*]]* %tablex, %Int32 %n, %Int32 
 	%8 = bitcast [0 x %Int32]* %6 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %8, i8 0, %Int32 %7, i1 0)
 	%9 = alloca [0 x %Str8*]*, align 8
+; -- CONS PTR TO ARRAY --
 	%10 = bitcast [0 x [0 x %Str8*]]* %tablex to [0 x %Str8*]*
 	store [0 x %Str8*]* %10, [0 x %Str8*]** %9
 
@@ -422,6 +423,7 @@ body_4:
 	%50 = or %Bool %48, %49
 	br %Bool %50 , label %then_0, label %else_0
 then_0:
+; -- CONS PTR TO ARRAY --
 	%51 = bitcast [0 x %Int32]* %6 to [0 x %Int32]*
 	call void @tableSepPrint([0 x %Int32]* %51, %Int32 %m)
 	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str24 to [0 x i8]*))
@@ -491,6 +493,7 @@ break_5:
 	store %Int32 %89, %Int32* %3
 	br label %again_4
 break_4:
+; -- CONS PTR TO ARRAY --
 	%90 = bitcast [0 x %Int32]* %6 to [0 x %Int32]*
 	call void @tableSepPrint([0 x %Int32]* %90, %Int32 %m)
 	%91 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str30 to [0 x i8]*))
@@ -501,8 +504,9 @@ break_4:
 
 define %Int32 @main() {
 	;
-; -- ARRAY OF ARRAY CONS --
-	call void @tablePrint([0 x [0 x %Str8*]]* bitcast ([5 x [4 x %Str8*]]* @table to [0 x [0 x %Str8*]]*), %Int32 5, %Int32 4, %Bool 1)
+; -- CONS PTR TO ARRAY --
+	%1 = bitcast [5 x [4 x %Str8*]]* @table to [0 x [0 x %Str8*]]*
+	call void @tablePrint([0 x [0 x %Str8*]]* %1, %Int32 5, %Int32 4, %Bool 1)
 	ret %Int32 0
 }
 

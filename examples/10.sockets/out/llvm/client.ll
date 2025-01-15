@@ -333,6 +333,7 @@ define internal %Bool @send_file(%File* %fp, %Int %sockfd) {
 	%1 = alloca [1024 x %Char8], align 1
 	br label %again_1
 again_1:
+; -- CONS PTR TO ARRAY --
 	%2 = bitcast [1024 x %Char8]* %1 to %CharStr*
 	%3 = call %CharStr* @fgets(%CharStr* %2, %Int 1024, %File* %fp)
 	%4 = icmp ne %CharStr* %3, null
