@@ -42,8 +42,8 @@ static void write_example()
 
 	// pointers casting requires -funsafe translator option
 	// (see Makefile)
-	strcpy(&chunk.id[0], "id");
-	strcpy(&chunk.data[0], "data");
+	strcpy(&chunk.id, "id");
+	strcpy(&chunk.data, "data");
 
 	// write chunk to file
 	fwrite(&chunk, sizeof(Chunk), 1, fp);
@@ -67,8 +67,8 @@ static void read_example()
 	fread(&chunk, sizeof(Chunk), 1, fp);
 
 	printf("file \"%s\" contains:\n", filename);
-	printf("chunk.id: \"%s\"\n", &chunk.id[0]);
-	printf("chunk.data: \"%s\"\n", &chunk.data[0]);
+	printf("chunk.id: \"%s\"\n", &chunk.id);
+	printf("chunk.data: \"%s\"\n", &chunk.data);
 
 	fclose(fp);
 }

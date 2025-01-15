@@ -17,8 +17,10 @@ struct Point {
 };
 typedef struct Point Point;
 
-static Point globalPoint0 = {.x = 10, .y = 20};
-static Point globalPoint1 = {};
+static Point globalPoint0 = {.x = 10, .y = 20
+};
+static Point globalPoint1 = {
+};
 
 
 int main()
@@ -38,8 +40,10 @@ int main()
 
 	// local
 
-	Point localPoint0 = (Point){.x = 10, .y = 20};
-	Point localPoint1 = (Point){};
+	Point localPoint0 = (Point){.x = 10, .y = 20
+	};
+	Point localPoint1 = (Point){
+	};
 
 	localPoint1 = localPoint0;
 

@@ -53,8 +53,8 @@ int main()
 {
 	printf("test xor encrypting\n");
 
-	uint8_t *tmsg = (uint8_t *)&test_msg[0];
-	uint8_t *tkey = (uint8_t *)&test_key[0];
+	uint8_t *tmsg = (uint8_t *)&test_msg;
+	uint8_t *tkey = (uint8_t *)&test_key;
 
 	printf("before encrypt test_msg: \n");
 	print_bytes(tmsg, msg_length);

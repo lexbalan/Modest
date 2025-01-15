@@ -83,7 +83,7 @@ int main()
 	printf("off(i) = %llu\n", (uint64_t)&i - start_adr);
 	printf("off(f) = %llu\n", (uint64_t)&f - start_adr);
 	printf("off(i2) = %llu\n", (uint64_t)&i2 - start_adr);
-	printf("off(p) = %llu\n", (uint64_t)&p[0] - start_adr);
+	printf("off(p) = %llu\n", (uint64_t)&p - start_adr);
 	printf("off(g) = %llu\n", (uint64_t)&g - start_adr);
 
 	// дженерики в с явно не приводятся, но нектороые нужно!

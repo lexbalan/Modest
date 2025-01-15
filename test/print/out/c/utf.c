@@ -10,11 +10,11 @@ uint8_t utf_utf32_to_utf8(uint32_t c, char *buf)
 {
 	uint32_t x = (uint32_t)c;
 
-	if (x <= 0x0000007F) {
+	if (x <= 0x7F) {
 		buf[0] = (char)x;
 		return 1;
 
-	} else if (x <= 0x000007FF) {
+	} else if (x <= 0x7FF) {
 		uint32_t y = (uint32_t)x;
 		uint32_t c0 = y >> 6 & 0x1F;
 		uint32_t c1 = y >> 0 & 0x3F;
@@ -22,9 +22,9 @@ uint8_t utf_utf32_to_utf8(uint32_t c, char *buf)
 		buf[1] = (char)(0x80 | c1);
 		return 2;
 
-	} else if (x <= 0x0000FFFF) {
+	} else if (x <= 0xFFFF) {
 		uint32_t y = (uint32_t)x;
-		uint32_t c0 = y >> 12 & 0x0F;
+		uint32_t c0 = y >> 12 & 0xF;
 		uint32_t c1 = y >> 6 & 0x3F;
 		uint32_t c2 = y >> 0 & 0x3F;
 		buf[0] = (char)(0xE0 | c0);
@@ -32,9 +32,9 @@ uint8_t utf_utf32_to_utf8(uint32_t c, char *buf)
 		buf[2] = (char)(0x80 | c2);
 		return 3;
 
-	} else if (x <= 0x0010FFFF) {
+	} else if (x <= 0x10FFFF) {
 		uint32_t y = (uint32_t)x;
-		uint32_t c0 = y >> 18 & 0x07;
+		uint32_t c0 = y >> 18 & 0x7;
 		uint32_t c1 = y >> 12 & 0x3F;
 		uint32_t c2 = y >> 6 & 0x3F;
 		uint32_t c3 = y >> 0 & 0x3F;

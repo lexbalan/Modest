@@ -469,7 +469,7 @@ def print_value_bin(x, ctx):
 		elif left.type.is_array():
 			return print_value_eq_array(x, ctx)
 		elif left.type.is_string():
-			return print_value_bool_lit(x, ctx)
+			return print_literal_bool(x.asset)
 
 	lk = ''
 	if hasattr(left, 'op'):
@@ -502,7 +502,8 @@ def print_value_bin(x, ctx):
 				# для случаев вроде "Hello" + U"World!"
 				# (печатаем сам литерал, тк C иначе не умеет)
 				# (U"Hello World!")
-				print_value_string(x, ctx)
+				#print_value_string(x, ctx)
+				print_literal_string(x.asset, char_width=x.type.width)
 				return
 
 			print_value(left, need_wrap=need_wrap_left)
@@ -530,7 +531,7 @@ def print_value_eq_composite(x, ctx):
 	right = x.right
 
 	if x.isImmediate():
-		return print_value_bool_lit(x, ctx)
+		return print_literal_bool(x.asset)
 
 	memcmp_eq(left, right, op=op)
 	return
@@ -560,12 +561,12 @@ def print_value_un(v, ctx):
 	out(un_ops[op])
 	print_value(value, need_wrap=pv<p0)
 
-	if op == 'ref':
-		if value.type.is_array():
-			if not (isinstance(value, ValueIndex) or isinstance(value, ValueSlice)):
-				if is_sim_sim(v.type):
-					# take pointer to first array item, not pointer to array
-					out("[0]")
+#	if op == 'ref':
+#		if value.type.is_array():
+#			if not (isinstance(value, ValueIndex) or isinstance(value, ValueSlice)):
+#				if is_sim_sim(v.type):
+#					# take pointer to first array item, not pointer to array
+#					out("[0]")
 
 
 
@@ -751,7 +752,7 @@ def print_value_cons_array(x, ctx):
 						chars.append(ch)
 
 					char_width = to_type.of.width
-					print_string_literal(chars, char_width)
+					print_literal_string(chars, char_width=char_width)
 					return
 
 			print_cast(to_type, value, ctx=ctx)
@@ -766,7 +767,7 @@ def print_value_cons_array(x, ctx):
 			if to_type.of.width == from_type.width:
 				print_value(value, ctx=ctx)
 			else:
-				print_string_literal(value.asset, to_type.of.width)
+				print_literal_string(value.asset, char_width=to_type.of.width)
 			return
 
 	# for:
@@ -801,46 +802,49 @@ def print_suffix(to_type, num):
 
 
 def print_value_cons(x, ctx):
-	to_type = x.type
+	type = x.type
 	value = x.value
 	from_type = value.type
 
-	if to_type.is_array():
+	if type.is_array():
 		return print_value_cons_array(x, ctx)
 
-	if to_type.is_record():
+	elif type.is_record():
 		return print_value_cons_record(x, ctx)
 
-	if from_type.is_string():
+	elif type.is_pointer():
+		if from_type.is_string():
 		# cast <string literal> to <pointer to array of chars>:
-		if to_type.is_pointer():
 			# let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 			# let string8Const = *Str8 genericStringConst  // <-
-			if to_type.to.of.width != from_type.width:
-				print_string_literal(value.asset, to_type.to.of.width)
+			if type.to.of.width != from_type.width:
+				print_literal_string(value.asset, char_width=type.to.of.width)
 				return
 
-		if to_type.is_char():
-			print_value_char(x, ctx)
-			return
+		# в у нас типы структурные, в си - номинальные
+		# поэтому даже если структуры одинаковы, но имена разные
+		# их нужно приводить
+		# *RecordA -> *RecordB
+		if type.to.is_record():
+			if from_type.is_pointer_to_record():
+				# НО если это реально один и тот же тип, то приведение не нужно!
+				if id(from_type) != id(type):
+					print_cast(type, value, ctx)
+					return
 
 
-	# в у нас типы структурные, в си - номинальные
-	# поэтому даже если структуры одинаковы, но имена разные
-	# их нужно приводить
-	# *RecordA -> *RecordB
-	if from_type.is_pointer_to_record():
-		if to_type.is_pointer_to_record():
-			# НО если это реально один и тот же тип, то приведение не нужно!
-			if id(from_type) != id(to_type):
-				print_cast(to_type, value, ctx)
-				return
-
-
-	if to_type.is_float():
+	elif type.is_float():
 		if from_type.is_integer() or from_type.is_number():
-			print_cast(to_type, value, ctx)
+			print_cast(type, value, ctx)
 			return
+
+	elif type.is_char():
+		if from_type.is_string():
+			#print_value_char(x, ctx)
+			print_literal_char(x.asset, x.type.width)
+			return
+
+
 
 
 	if x.method == 'implicit':
@@ -852,8 +856,8 @@ def print_value_cons(x, ctx):
 		if isinstance(value, ValueLiteral):
 			if from_type.is_number() or from_type.is_integer() or from_type.is_word():
 				# up to 'long long'
-				if to_type.width <= 64:
-					print_suffix(to_type, value.asset)
+				if type.width <= 64:
+					print_suffix(type, value.asset)
 		return
 
 
@@ -866,12 +870,12 @@ def print_value_cons(x, ctx):
 	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
 	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
 	# required: (uint64_t)((uint32)int32_value)
-	if to_type.is_integer():
+	if type.is_integer():
 		if from_type.is_integer() or from_type.is_number():
-			if from_type.is_signed() and to_type.is_unsigned():
-				if from_type.size < to_type.size:
+			if from_type.is_signed() and type.is_unsigned():
+				if from_type.size < type.size:
 					out("((")
-					print_type(to_type)
+					print_type(type)
 					out(")")
 					nat_same_sz = foundation.type_select_nat(from_type.width)
 					print_cast(nat_same_sz, value, ctx)
@@ -885,7 +889,7 @@ def print_value_cons(x, ctx):
 		if value.type.is_free_pointer():
 			value = value.value
 
-	print_cast(to_type, value, ctx)
+	print_cast(type, value, ctx)
 
 
 
@@ -935,46 +939,35 @@ def print_array_values(values, ctx):
 
 
 
-
-def print_value_string(x, ctx):
-	print_string_literal(x.asset, x.type.width)
-
-
-def print_value_char(x, ctx):
-	print_char_literal(x.asset, x.type.width)
-
-
-
-def print_string_literal(chars, width):
+def print_literal_string(chars, char_width):
 	utf32_codes = []
 	for ch in chars:
 		cc = ord(ch)
 		utf32_codes.append(cc)
-	print_utf32codes_as_string(utf32_codes, width)
+	print_utf32codes_as_string(utf32_codes, char_width)
 
 
-def print_char_literal(cc, width):
+def print_literal_char(cc, width):
 	print_utf32codes_as_string([cc], width, quote="'")
 
 
 
-def print_value_array(v, ctx):
-	if v.type.is_array_of_char():
-		char_type = v.type.of
+def print_literal_array(type, items):
+	if type.is_array_of_char():
+		char_type = type.of
 		char_width = char_type.width
 
 		# массивы чаров в конце которых только один терминальный ноль
 		# печатаем в виде строковых литералов C
-		values = v.items
-		n = len(values)
+		n = len(items)
 		if n > 0:
 			utf32_codes = []
 			i = 0
 			while i < n:
-				cc = values[i].asset
+				cc = items[i].asset
 				utf32_codes.append(cc)
 				if cc == 0:
-					if is_zero_tail(values, i, n):
+					if is_zero_tail(items, i, n):
 						break
 
 				i = i + 1
@@ -983,23 +976,20 @@ def print_value_array(v, ctx):
 
 	out("{")
 	indent_up()
-	print_array_values(v.items, ctx)
+	print_array_values(items, [])
 	indent_down()
-
-	if v.nl_end:
-		newline(n=v.nl_end)
-		indent()
-
+	newline(n=1)
+	indent()
 	out("}")
 
 
 
 
-def print_value_record(v, ctx):
+def print_literal_record(type, items):
 	out("{")
 	indent_up()
 
-	nitems = len(v.items)
+	nitems = len(items)
 	i = 0
 
 	# for situation when firat item is ValueZero
@@ -1007,9 +997,9 @@ def print_value_record(v, ctx):
 	item_printed = False
 
 	while i < nitems:
-		item = v.type.fields[i]
+		item = type.fields[i]
 		field_id_str = get_id_str(item)
-		ini = get_item_by_id(v.items, field_id_str)
+		ini = get_item_by_id(items, field_id_str)
 
 		nl = ini.nl
 		if nl > 0:
@@ -1027,7 +1017,7 @@ def print_value_record(v, ctx):
 		# .arr = (uint8_t [3]){1, 2, 3}  // not worked
 		# .arr = {1, 2, 3}  // worked
 		# вот такая вот херня
-		print_value(ini.value, ctx + ['no-literal-array-cast'])
+		print_value(ini.value, ['no-literal-array-cast'])
 		if i < (nitems - 1):
 			out(",")
 
@@ -1036,9 +1026,8 @@ def print_value_record(v, ctx):
 
 	indent_down()
 
-	if v.nl_end:
-		newline(n=v.nl_end)
-		indent()
+	newline(n=1)
+	indent()
 
 	out("}")
 
@@ -1083,8 +1072,8 @@ def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 
 
 
-def print_value_bool_lit(x, ctx):
-	if x.asset:
+def print_literal_bool(num):
+	if num:
 		out(BOOL_TRUE_LITERAL)
 	else:
 		out(BOOL_FALSE_LITERAL)
@@ -1095,15 +1084,15 @@ def print_value_enum(x, ctx):
 
 
 
-def print_value_integer(x, ctx):
-	num = x.asset
+def print_literal_integer(num, nsigns=0, is_big=False, is_hex=False):
+	#num = x.asset
 
-	nsigns = 0
-	if hasattr(x, 'nsigns'):
-		nsigns = x.nsigns
+	#nsigns = 0
+	#if hasattr(x, 'nsigns'):
+	#	nsigns = x.nsigns
 
 	# Big Number?
-	if x.type.width > 64:
+	if is_big:
 		if True:
 			# print Big Numbers
 			high64 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
@@ -1113,7 +1102,7 @@ def print_value_integer(x, ctx):
 			return
 
 
-	if x.hasAttribute('hexadecimal'):
+	if is_hex:
 		fmt = "0x%%0%dX" % nsigns
 		out(fmt % num)
 		return  #? 0xXXXXXXXXUL is normal?
@@ -1122,32 +1111,33 @@ def print_value_integer(x, ctx):
 
 
 
-def print_value_float(x, ctx):
-	out('{0:f}'.format(x.asset))
+def print_literal_float(num):
+	out('{0:f}'.format(num))
 
 
-def print_value_ptr(x, ctx):
-	if x.asset == 0:
+def print_literal_pointer(type, num):
+	if num == 0:
 		out("NULL")
 	else:
-		out("(("); print_type(x['type']); out(")")
-		out("0x%08X)" % x.asset)
+		out("(("); print_type(type); out(")")
+		out("0x%08X)" % num)
 
 
 def print_value_literal(x, ctx):
 	t = x.type
-	if t.is_number(): print_value_integer(x, ctx)
-	elif t.is_integer(): print_value_integer(x, ctx)
-	elif t.is_word(): print_value_integer(x, ctx)
-	elif t.is_float(): print_value_float(x, ctx)
-	elif t.is_string(): print_value_string(x, ctx)
-	elif t.is_record(): print_value_record(x, ctx)
-	elif t.is_array(): print_value_array(x, ctx)
-	elif t.is_bool(): print_value_bool_lit(x, ctx)
-	elif t.is_char(): print_value_char(x, ctx)
-	elif t.is_pointer(): print_value_ptr(x, ctx)
-	#elif t.is_enum(): print_value_enum(x, ctx)
-	else: error("print_value_literal not implemented", x.ti)
+	if t.is_integer() or t.is_number() or t.is_word():
+		print_literal_integer(x.asset, is_big=x.type.width > 64, is_hex=x.hasAttribute('hexadecimal'))
+
+	elif t.is_float(): print_literal_float(x.asset)
+	elif t.is_string(): print_literal_string(x.asset, char_width=x.type.width)
+	elif t.is_record(): print_literal_record(x.type, x.items)
+	elif t.is_array(): print_literal_array(x.type, x.items)
+	elif t.is_bool(): print_literal_bool(x.asset)
+	elif t.is_char(): print_literal_char(x.asset, x.type.width)
+	elif t.is_pointer(): print_literal_pointer(x.type, x.asset)
+	else:
+		error("print_value_literal not implemented", x.ti)
+
 
 
 def print_value_by_id(x, ctx=[], prefix=''):
@@ -1504,7 +1494,7 @@ def print_stmt_asm(x):
 	out('__asm__ volatile (')
 	indent_up()
 	nl_indent(1)
-	print_value_string(x.text, [])
+	print_literal_string(x.text.asset, char_width=x.text.type.width)
 
 	# print 'out' pairs
 	args1 = x.outputs

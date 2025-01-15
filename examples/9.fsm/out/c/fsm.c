@@ -33,7 +33,7 @@
 
 char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no)
 {
-	return &fsm->states[state_no].name[0];
+	return &fsm->states[state_no].name;
 }
 
 
@@ -53,7 +53,7 @@ void fsm_run(fsm_FSM *fsm)
 		fsm_StateDesc *state = &fsm->states[nexstate];
 
 		if (verbose) {
-			printf("enter %s\n", &state->name[0]);
+			printf("enter %s\n", &state->name);
 		}
 
 		if (state->entry != NULL) {
@@ -74,7 +74,7 @@ void fsm_run(fsm_FSM *fsm)
 		fsm_StateDesc *state = &fsm->states[fsm->state];
 
 		if (verbose) {
-			printf("exit %s\n", &state->name[0]);
+			printf("exit %s\n", &state->name);
 		}
 
 		if (state->exit != NULL) {

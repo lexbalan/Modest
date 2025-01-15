@@ -88,7 +88,7 @@ static void tablePrint(char *(*tablex)[], int32_t n, int32_t m, bool headline)
 	while (i < n) {
 		// pirint `+----+` separator
 		if ((i < 2) || !headline) {
-			tableSepPrint(&sz[0], m);
+			tableSepPrint(&sz, m);
 			printf("\n|");
 		} else {
 			printf("|");
@@ -116,7 +116,7 @@ static void tablePrint(char *(*tablex)[], int32_t n, int32_t m, bool headline)
 		printf("\n");
 		i = i + 1;
 	}
-	tableSepPrint(&sz[0], m);
+	tableSepPrint(&sz, m);
 	printf("\n");
 }
 

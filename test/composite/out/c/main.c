@@ -42,7 +42,8 @@ static int32_t *f3()
 
 static void f4(int32_t x, int32_t *sret_)
 {
-	memcpy(sret_, &(int32_t[10]){1, 2, 3}, sizeof(int32_t[10]));
+	memcpy(sret_, &(int32_t[10]){1, 2, 3
+	}, sizeof(int32_t[10]));
 }
 
 static void f5(int32_t *_a, int32_t *sret_)
@@ -111,12 +112,18 @@ static void(**(*pf13)(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() 
 
 
 // Arrays
-static int32_t a0[5] = (int32_t[5]){0, 1, 2, 3, 4};
-static int32_t *a1[5] = (int32_t *[5]){&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]};
-static int32_t **a2[5] = (int32_t **[5]){&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]};
-static void(*a3[5])() = (void(*[5])()){&f0};
-static int a4[2][5] = (int[2][5]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-static int *a5[2] = (int *[2]){&a4[0], &a4[1]};
+static int32_t a0[5] = (int32_t[5]){0, 1, 2, 3, 4
+};
+static int32_t *a1[5] = (int32_t *[5]){&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]
+};
+static int32_t **a2[5] = (int32_t **[5]){&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]
+};
+static void(*a3[5])() = (void(*[5])()){&f0
+};
+static int a4[2][5] = (int[2][5]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+};
+static int *a5[2] = (int *[2]){&a4[0], &a4[1]
+};
 // Проблема в том что мой getelementptr не умеет в цепь-молнию
 // а здесь без нее никак... придется взяться за это и сделать наконец
 //var a6: [2][5]*Int = [
@@ -124,8 +131,8 @@ static int *a5[2] = (int *[2]){&a4[0], &a4[1]};
 //	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
 //]
 static int *a7[2][5] = (int *[2][5]){
-	&a0[0], &a0[0], &a0[0], &a0[0], &a0[0],
-	&a0[0], &a0[0], &a0[0], &a0[0], &a0[0]
+	&a0, &a0, &a0, &a0, &a0,
+	&a0, &a0, &a0, &a0, &a0
 };
 static int *(*a8[2][5])[2][5] = (int *(*[2][5])[2][5]){
 	(void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7,
@@ -135,7 +142,7 @@ static int(*(*(*a9[5])[10])[2])(int a);
 
 
 //
-static int32_t *p2 = &a0[0];
+static int32_t *p2 = &a0;
 static int32_t(**p3)[5] = &p2;
 
 
@@ -149,8 +156,10 @@ struct RGB24 {
 typedef struct RGB24 RGB24;
 
 static RGB24 rgb0[2] = (RGB24[2]){
-	{.red = 200, .green = 0, .blue = 0},
-	{.red = 200, .green = 0, .blue = 0}
+	{.red = 200, .green = 0, .blue = 0
+	},
+	{.red = 200, .green = 0, .blue = 0
+	}
 };
 
 struct AnimationPoint {
@@ -170,27 +179,57 @@ static AnimationPoint ap = {
 
 
 static AnimationPoint animation0_points[5] = (AnimationPoint[5]){
-	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
-	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
-	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
-	{.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
-	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
+	{.color = {.red = 200, .green = 0, .blue = 0
+		}, .time = 3
+	},
+	{.color = {.red = 0, .green = 200, .blue = 0
+		}, .time = 30
+	},
+	{.color = {.red = 100, .green = 100, .blue = 0
+		}, .time = 300
+	},
+	{.color = {.red = 254, .green = 254, .blue = 0
+		}, .time = 20
+	},
+	{.color = {.red = 0, .green = 0, .blue = 255
+		}, .time = 3000
+	}
 };
 
 static AnimationPoint animation1_points[5] = (AnimationPoint[5]){
-	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
-	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
-	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
-	{.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
-	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
+	{.color = {.red = 200, .green = 0, .blue = 0
+		}, .time = 3
+	},
+	{.color = {.red = 0, .green = 200, .blue = 0
+		}, .time = 30
+	},
+	{.color = {.red = 100, .green = 100, .blue = 0
+		}, .time = 300
+	},
+	{.color = {.red = 254, .green = 254, .blue = 0
+		}, .time = 20
+	},
+	{.color = {.red = 0, .green = 0, .blue = 255
+		}, .time = 3000
+	}
 };
 
 static AnimationPoint animation2_points[5] = (AnimationPoint[5]){
-	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
-	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
-	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
-	{.color = {.red = 255, .green = 254, .blue = 0}, .time = 20},
-	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
+	{.color = {.red = 200, .green = 0, .blue = 0
+		}, .time = 3
+	},
+	{.color = {.red = 0, .green = 200, .blue = 0
+		}, .time = 30
+	},
+	{.color = {.red = 100, .green = 100, .blue = 0
+		}, .time = 300
+	},
+	{.color = {.red = 255, .green = 254, .blue = 0
+		}, .time = 20
+	},
+	{.color = {.red = 0, .green = 0, .blue = 255
+		}, .time = 3000
+	}
 };
 
 
@@ -244,11 +283,13 @@ static Wrap wrap0 = {
 	.fop = &add
 };
 
-static Wrap *awrap[2] = (Wrap *[2]){&wrap0, &wrap0};
+static Wrap *awrap[2] = (Wrap *[2]){&wrap0, &wrap0
+};
 
 int32_t main()
 {
-	xy((struct __anonymous_struct_3){.x = 10, .y = 20});
+	xy((struct __anonymous_struct_3){.x = 10, .y = 20
+	});
 
 	printf("test1 (eq): ");
 	if (memcmp(&animation0_points, &animation1_points, sizeof(AnimationPoint[5])) == 0) {

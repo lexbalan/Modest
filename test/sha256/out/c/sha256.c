@@ -93,10 +93,10 @@ static void contextInit(Context *ctx)
 	0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5, \
 	0xD807AA98, 0x12835B01, 0x243185BE, 0x550C7DC3, \
 	0x72BE5D74, 0x80DEB1FE, 0x9BDC06A7, 0xC19BF174, \
-	0xE49B69C1, 0xEFBE4786, 0x0FC19DC6, 0x240CA1CC, \
+	0xE49B69C1, 0xEFBE4786, 0xFC19DC6, 0x240CA1CC, \
 	0x2DE92C6F, 0x4A7484AA, 0x5CB0A9DC, 0x76F988DA, \
 	0x983E5152, 0xA831C66D, 0xB00327C8, 0xBF597FC7, \
-	0xC6E00BF3, 0xD5A79147, 0x06CA6351, 0x14292967, \
+	0xC6E00BF3, 0xD5A79147, 0x6CA6351, 0x14292967, \
 	0x27B70A85, 0x2E1B2138, 0x4D2C6DFC, 0x53380D13, \
 	0x650A7354, 0x766A0ABB, 0x81C2C92E, 0x92722C85, \
 	0xA2BFE8A1, 0xA81A664B, 0xC24B8B70, 0xC76C51A3, \
@@ -165,7 +165,7 @@ static void update(Context *ctx, uint8_t *msg, uint32_t msgLen)
 		ctx->data[ctx->datalen] = msg[i];
 		ctx->datalen = ctx->datalen + 1;
 		if (ctx->datalen == 64) {
-			transform(ctx, &ctx->data[0]);
+			transform(ctx, &ctx->data);
 			ctx->bitlen = ctx->bitlen + 512;
 			ctx->datalen = 0;
 		}
@@ -193,8 +193,8 @@ static void final(Context *ctx, uint8_t *outHash)
 	//ctx.data[i:n-i] = []
 
 	if (ctx->datalen >= 56) {
-		transform(ctx, &ctx->data[0]);
-		memset(&ctx->data[0], 0, 56);
+		transform(ctx, &ctx->data);
+		memset(&ctx->data, 0, 56);
 		//ctx.data[0:56] = []
 	}
 
@@ -210,7 +210,7 @@ static void final(Context *ctx, uint8_t *outHash)
 	ctx->data[57] = (uint8_t)((uint64_t)ctx->bitlen >> 48);
 	ctx->data[56] = (uint8_t)((uint64_t)ctx->bitlen >> 56);
 
-	transform(ctx, &ctx->data[0]);
+	transform(ctx, &ctx->data);
 
 	// Since this implementation uses little endian byte ordering
 	// and SHA uses big endian, reverse all the bytes
@@ -234,7 +234,8 @@ static void final(Context *ctx, uint8_t *outHash)
 
 void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash)
 {
-	Context ctx = (Context){};
+	Context ctx = (Context){
+	};
 	contextInit(&ctx);
 	update(&ctx, msg, msgLen);
 	final(&ctx, outHash);

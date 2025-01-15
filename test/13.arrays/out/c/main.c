@@ -19,7 +19,8 @@
 //$pragma c_include "./minmax.h"
 
 
-#define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+#define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 \
+}
 uint8_t constantArray[10] = _constantArray;
 
 static int32_t globalArray[10] = _constantArray;
@@ -36,14 +37,14 @@ static void f0(char *_x, char *sret_)
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
 	memcpy(&local_copy_of_x, &x, sizeof local_copy_of_x);
-	printf("f0(\"%s\")\n", &local_copy_of_x[0]);
+	printf("f0(\"%s\")\n", &local_copy_of_x);
 
 	// truncate array
 	char mic[6];
 	memcpy(&mic, &x, sizeof mic);
 	mic[5] = '\x0';
 
-	printf("f0 mic = \"%s\"\n", &mic[0]);
+	printf("f0 mic = \"%s\"\n", &mic);
 
 	// extend array
 	char res[30];
@@ -60,9 +61,11 @@ static void f0(char *_x, char *sret_)
 }
 
 
-#define _startSequence  {0xAA, 0x55, 0x02}
+#define _startSequence  {0xAA, 0x55, 0x2 \
+}
 uint8_t startSequence[3] = _startSequence;
-#define _stopSequence  {0x16}
+#define _stopSequence  {0x16 \
+}
 uint8_t stopSequence[1] = _stopSequence;
 
 
@@ -70,7 +73,8 @@ static void test()
 {
 	// тестируем работу с локальным generic массивом
 	int32_t yy[6];
-	memcpy(&yy, &(int32_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16}, sizeof yy);
+	memcpy(&yy, &(int32_t[6]){0xAA, 0x55, 0x2, 0x0, 0x0, 0x16
+	}, sizeof yy);
 	int32_t i = 0;
 	while (i < LENGTHOF(yy)) {
 		int32_t y = yy[i];
@@ -94,10 +98,14 @@ static int32_t a0[2][2][5] = (int32_t[2][2][5]){
 	15, 16, 17, 18, 19
 };
 
-static int32_t a1[5] = (int32_t[5]){0, 1, 2, 3, 4};
-static int32_t a2[5] = (int32_t[5]){5, 6, 7, 8, 9};
-static int32_t *a3[2] = (int32_t *[2]){&a1[0], &a2[0]};
-static int32_t *(*a4[2])[2] = (int32_t *(*[2])[2]){&a3, &a3};
+static int32_t a1[5] = (int32_t[5]){0, 1, 2, 3, 4
+};
+static int32_t a2[5] = (int32_t[5]){5, 6, 7, 8, 9
+};
+static int32_t *a3[2] = (int32_t *[2]){&a1, &a2
+};
+static int32_t *(*a4[2])[2] = (int32_t *(*[2])[2]){&a3, &a3
+};
 static int32_t *(*(*p0)[2])[2] = &a4;
 
 
@@ -206,7 +214,7 @@ int main()
 
 	char em[30];
 	f0(em, "Hello World!");
-	printf("em = %s\n", &em[0]);
+	printf("em = %s\n", &em);
 
 	int32_t i = 0;
 	while (i < 10) {
@@ -218,7 +226,8 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t localArray[3];
-	memcpy(&localArray, &(int32_t[3]){4, 5, 6}, sizeof localArray);
+	memcpy(&localArray, &(int32_t[3]){4, 5, 6
+	}, sizeof localArray);
 
 	i = 0;
 	while (i < 3) {
@@ -230,7 +239,7 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t *globalArrayPtr;
-	globalArrayPtr = &globalArray[0];
+	globalArrayPtr = &globalArray;
 
 	i = 0;
 	while (i < 3) {
@@ -242,7 +251,7 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t *localArrayPtr;
-	localArrayPtr = &localArray[0];
+	localArrayPtr = &localArray;
 
 	i = 0;
 	while (i < 3) {
@@ -254,7 +263,8 @@ int main()
 	// assign array to array 1
 	// (with equal types)
 	int32_t a[3];
-	memcpy(&a, &(int32_t[3]){1, 2, 3}, sizeof a);
+	memcpy(&a, &(int32_t[3]){1, 2, 3
+	}, sizeof a);
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -278,7 +288,8 @@ int main()
 	// assign array to array 2
 	// (with array extending)
 	int32_t c[3];
-	memcpy(&c, &(int32_t[3]){10, 20, 30}, sizeof c);
+	memcpy(&c, &(int32_t[3]){10, 20, 30
+	}, sizeof c);
 	int32_t d[6];
 	memcpy(&d, &c, sizeof d);
 	printf("d[0] = %i\n", d[0]);
@@ -290,8 +301,8 @@ int main()
 
 
 	// check equality between two arrays (by pointer)
-	int32_t *pa = &a[0];
-	int32_t *pb = &b[0];
+	int32_t *pa = &a;
+	int32_t *pb = &b;
 
 	if (memcmp(pa, pb, sizeof(int32_t[3])) == 0) {
 		printf("*pa == *pb\n");
@@ -311,7 +322,8 @@ int main()
 	int int200 = 200;
 	int int300 = 300;
 	// immutable, non immediate value (array)
-	int init_array[3] = {int100, int200, int300};
+	int init_array[3] = {int100, int200, int300
+	};
 
 	// check local literal array assignation to local array
 	int32_t e[4];
@@ -339,7 +351,8 @@ int main()
 	int32_t cx = 30;
 	int32_t dx = 40;
 
-	int32_t y[4] = {ax, bx, cx, dx};
+	int32_t y[4] = {ax, bx, cx, dx
+	};
 
 	ax = 111;
 	bx = 222;
@@ -350,7 +363,8 @@ int main()
 	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
 	printf("y[%i] = %i (must be 40)\n", 3, y[3]);
 
-	if (memcmp(&y, &(int32_t[4]){10, 20, 30, 40}, sizeof(int32_t[4])) == 0) {
+	if (memcmp(&y, &(int32_t[4]){10, 20, 30, 40
+	}, sizeof(int32_t[4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
