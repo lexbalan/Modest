@@ -501,6 +501,7 @@ break_4:
 
 define %Int32 @main() {
 	;
+; -- ARRAY OF ARRAY CONS --
 	call void @tablePrint([0 x [0 x %Str8*]]* bitcast ([5 x [4 x %Str8*]]* @table to [0 x [0 x %Str8*]]*), %Int32 5, %Int32 4, %Bool 1)
 	ret %Int32 0
 }

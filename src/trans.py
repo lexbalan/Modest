@@ -512,7 +512,11 @@ def do_field(x):
 		error("field id must starts with small letter", id.ti)
 
 	t = do_type(x['type'])
-	iv = do_value(x['init_value'])
+
+	iv = None
+	if x['init_value'] != None:
+		iv = do_value(x['init_value'])
+
 	f = Field(id, t, init_value=iv, ti=x['ti'])
 	f.nl = x['nl']
 	f.access_level = x['access_modifier']

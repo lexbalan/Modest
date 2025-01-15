@@ -1457,6 +1457,7 @@ class Parser:
 				'isa': 'field',
 				'id': id,
 				'type': t,
+				'init_value': None,
 				'access_modifier': access_modifier,
 				'attributes': [],
 				'comments_and_attributes': obj['comments_and_attributes'],
