@@ -1422,10 +1422,10 @@ def do_eval_cons(x):
 
 
 	if value.isImmediate():
-		# В случае Nat32 &x у нас занчение immediate но нет asset тк это поздний imm
 		if x.asset:
+			# В случае Nat32 &x у нас занчение immediate
+			# но нет asset тк это поздний imm
 			if not type.is_pointer():
-				#info("???", x['ti'])
 				return do_eval_literal(x)
 
 	v = do_reval(value)
