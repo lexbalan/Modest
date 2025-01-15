@@ -1245,8 +1245,8 @@ def do_value_index(x):
 				else:
 					item = ValueZero(array_typ.of, x['ti'])
 
-				nv.immval = item
-				nv.immediate = item.immediate
+				nv.immediate = True
+				cp_immediate(nv, item)
 
 	return nv
 
@@ -1418,7 +1418,6 @@ def do_value_access(x):
 
 			# (!) #asset of immediate index & access contains VALUE (!)
 			nv.immediate = True
-			nv.immval = initializer.value
 			cp_immediate(nv, initializer.value)
 
 	return nv

@@ -1089,11 +1089,11 @@ def index(x):
 
 
 
-def do_eval_index(v):
-	if v.isImmediate():
-		return do_eval(v.immval)
+def do_eval_index(x):
+	if x.isImmediate():
+		return do_eval_literal(x)
 
-	left, indexes = index(v)
+	left, indexes = index(x)
 	return ass(left, indexes)
 
 
@@ -1114,43 +1114,43 @@ def ass(left, indexes):
 
 
 
-def do_eval_slice(v):
-	if v.isImmediate():
-		return do_eval(v.immval)
+def do_eval_slice(x):
+	if x.isImmediate():
+		return do_eval_literal(x)
 
-	left = v.left
+	left = x.left
 	if left.type.is_pointer():
 		pointer = do_reval(left)
 		array_type = pointer['type'].to
-		index = do_reval(v.index_from)
-		result_type = v.type
+		index = do_reval(x.index_from)
+		result_type = x.type
 		indexes = (llvm_value_num_zero, index)
 		et = getET(left.type)
 		ptr_to_item = llvm_gep(pointer, array_type, indexes, array_type.of, et)
 		out("\n;")
 
-		pnv = llvm_cast("bitcast", ptr_to_item, TypePointer(v.type))
+		pnv = llvm_cast("bitcast", ptr_to_item, TypePointer(x.type))
 		pnv['is_adr'] = True
 		return pnv
 
 
 	array = do_eval(left)
 	array_type = array['type']
-	result_type = v.type
-	index = do_reval(v.index_from)
+	result_type = x.type
+	index = do_reval(x.index_from)
 
 	# если сам массив находится в регистре: (let rec = get_rec())
 	if not array['is_adr']:
 		if not v['index'].isImmediate():
-			error("expected immediate index value", v.ti)
-			return llvm_value_zero(v.ti)
+			error("expected immediate index value", x.ti)
+			return llvm_value_zero(x.ti)
 
 		return extractvalue(array, result_type, index.asset)
 
 	indexes = (llvm_value_num_zero, index)
 	et = getET(left.type)
 	ptr_to_item = llvm_gep(array, array_type, indexes, array_type.of, et)
-	pnv = llvm_cast("bitcast", ptr_to_item, TypePointer(v.type))
+	pnv = llvm_cast("bitcast", ptr_to_item, TypePointer(x.type))
 	pnv['is_adr'] = True
 	return pnv
 
@@ -1197,11 +1197,11 @@ def access(x):
 
 
 
-def do_eval_access(v):
-	if v.isImmediate():
-		return do_eval(v.immval)
+def do_eval_access(x):
+	if x.isImmediate():
+		return do_eval_literal(x)
 
-	left, fields = access(v)
+	left, fields = access(x)
 	notype = foundation.typeInt32
 	indexes = []
 
