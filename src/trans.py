@@ -2037,7 +2037,7 @@ def need_decoration(x):
 
 
 def type_update(dst, src):
-	#  ТУТ ХЗ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	# За каким то **** это работает... Ура.
 	dst.__dict__.clear()
 	dst.__dict__.update(src.__dict__)
 	dst.att = copy.copy(src.att)
@@ -2106,35 +2106,26 @@ def def_type(x):
 
 
 
-
 def def_const(x):
-	global cdef
+	#global cdef
 	global cmodule
-
-	id = Id(x['id'])
-
-	definition = StmtDefConst(id, None, None, x['ti'])
-	definition.module = cmodule
-	definition.access_level = x['access_modifier']
-	definition.nl = x['nl']
-	cdef = definition
 
 	const_value = do_const(x)
 
-	definition.value = const_value
-	definition.init_value = const_value.init_value
-
 	is_public = x['access_modifier'] == 'public'
 	cmodule_value_add(const_value.id.str, const_value, is_public=is_public)
+
+	definition = StmtDefConst(const_value.id, const_value, const_value.init_value, x['ti'])
+	definition.module = cmodule
+	definition.access_level = x['access_modifier']
+	definition.nl = x['nl']
+
 	const_value.definition = definition
 
 	if need_decoration(x):
 		const_value.id.need_decoration = True
 
-	cdef = None
 	return definition
-
-
 
 
 
