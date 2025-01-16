@@ -1834,56 +1834,6 @@ def add_local_var(id, typ, ti):
 
 
 
-def do_stmt_const(x):
-	id = Id(x['id'])
-
-	# check if identifier is free (in current block)
-	already = ctx_value_get_shallow(id.str)
-	if already != None:
-		error("redefinition of '%s'" % id.str, id.ti)
-		return StmtBad(x)
-
-	if id.str[0].isupper():
-		error("value id must starts with small letter", id.ti)
-		pass
-
-	v = do_rvalue(x['init_value'])
-
-	#if v.isBad():
-
-	type = None
-
-	type = do_type(x['type'])
-	if not type.is_undefined():
-		v = value_cons_implicit_check(type, v)
-	else:
-		type = v.type
-
-
-	if Value.isBad(v):
-		ctx_value_add(id.str, ValueBad(x['ti']))
-		return StmtBad(x)
-
-	const_value = ValueConst(type, id, value=v, ti=x['id']['ti'])
-	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
-	# на константу. ---Пока это необходимо для 'wrapped_array' (!)---
-	const_value.att.extend(v.att)
-	const_value.addAttribute('local') # need for LLVM printer (!)
-
-	# Now let can be immediate!
-	if v.isImmediate():
-		const_value.immediate = True
-		cp_immediate(const_value, v)
-
-		if v.type.is_generic():
-			# generic immediate в C печатается как #define
-			# и его надо манглить иначе возникает куча проблем
-			const_value.id.c = '__' + const_value.id.str
-
-	ctx_value_add(id.str, const_value)
-
-	return StmtDefConst(id, const_value, v, ti=x['ti'])
-
 
 
 def do_stmt_assign(x):
@@ -2138,6 +2088,8 @@ def def_type(x):
 
 
 
+
+
 def def_const(x):
 	#return do_stmt_const(x)
 
@@ -2184,6 +2136,47 @@ def def_const(x):
 
 	cdef = None
 	return definition
+
+
+
+
+def do_const(x):
+	id = Id(x['id'])
+	type = do_type(x['type'])
+	init_value = do_rvalue(x['init_value'])
+
+	#if init_value.isBad():
+	#	# check if identifier is free (in current block)
+	#	already = ctx_value_get_shallow(id.str)
+	#	if already != None:
+	#		error("redefinition of '%s'" % id.str, id.ti)
+	#		return StmtBad(x)
+
+	if not type.is_undefined():
+		init_value = value_cons_implicit_check(type, init_value)
+	else:
+		type = init_value.type
+
+	const_value = ValueConst(type, id, value=init_value, ti=id.ti)
+
+	if init_value.isImmediate():
+		const_value.immediate = True
+		cp_immediate(const_value, init_value)
+
+	return const_value
+
+
+def do_stmt_const(x):
+	v = do_const(x)
+
+	if v.value.type.is_generic():
+		# generic immediate в C печатается как #define
+		# и его надо манглить иначе возникает куча проблем
+		v.id.c = '__' + v.id.str
+
+	v.addAttribute('local') # need for LLVM printer (!)
+	ctx_value_add(v.id.str, v)
+	return StmtDefConst(v.id, v, v.value, ti=x['ti'])
 
 
 

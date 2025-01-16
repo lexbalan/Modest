@@ -235,43 +235,54 @@ define internal void @print2DArray([0 x [0 x %Int32]]* %pa, %Int32 %m, %Int32 %n
 	%1 = alloca i8*
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
+	;let pg = *[m][n]Int32 pa
+	%3 = alloca [0 x [0 x %Int32]]
+	; -- ASSIGN ARRAY --
+	; -- start vol eval --
+	; -- end vol eval --
+	; -- zero fill rest of array
+	%4 = mul %Int32 %m, 0
+	%5 = bitcast [0 x [0 x %Int32]]* %3 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %5, i8 0, %Int32 %4, i1 0)
 ; -- CONS PTR TO ARRAY --
-	%3 = bitcast [0 x [0 x %Int32]]* %pa to [0 x [0 x %Int32]]*
-	%4 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %4
-	br label %again_1
-again_1:
-	%5 = load %Int32, %Int32* %4
-	%6 = icmp slt %Int32 %5, %m
-	br %Bool %6 , label %body_1, label %break_1
-body_1:
+	%6 = bitcast [0 x [0 x %Int32]]* %pa to [0 x [0 x %Int32]]*
 	%7 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %7
+	br label %again_1
+again_1:
+	%8 = load %Int32, %Int32* %7
+	%9 = icmp slt %Int32 %8, %m
+	br %Bool %9 , label %body_1, label %break_1
+body_1:
+	%10 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %10
 	br label %again_2
 again_2:
-	%8 = load %Int32, %Int32* %7
-	%9 = icmp slt %Int32 %8, %n
-	br %Bool %9 , label %body_2, label %break_2
+	%11 = load %Int32, %Int32* %10
+	%12 = icmp slt %Int32 %11, %n
+	br %Bool %12 , label %body_2, label %break_2
 body_2:
-	%10 = load %Int32, %Int32* %4
-	%11 = load %Int32, %Int32* %7
-	%12 = load %Int32, %Int32* %7
-	%13 = load %Int32, %Int32* %4
-	%14 = getelementptr [0 x [0 x %Int32]], [0 x [0 x %Int32]]* %3, %Int32 0, %Int32 %13, %Int32 %12
-	%15 = load %Int32, %Int32* %14
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*), %Int32 %10, %Int32 %11, %Int32 %15)
-	%17 = load %Int32, %Int32* %7
-	%18 = add %Int32 %17, 1
-	store %Int32 %18, %Int32* %7
+	%13 = load %Int32, %Int32* %7
+	%14 = load %Int32, %Int32* %10
+	%15 = load %Int32, %Int32* %10
+	%16 = load %Int32, %Int32* %7
+; -- CONS PTR TO ARRAY --
+	%17 = bitcast [0 x [0 x %Int32]]* %pa to [0 x [0 x %Int32]]*
+	%18 = getelementptr [0 x [0 x %Int32]], [0 x [0 x %Int32]]* %17, %Int32 0, %Int32 %16, %Int32 %15
+	%19 = load %Int32, %Int32* %18
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*), %Int32 %13, %Int32 %14, %Int32 %19)
+	%21 = load %Int32, %Int32* %10
+	%22 = add %Int32 %21, 1
+	store %Int32 %22, %Int32* %10
 	br label %again_2
 break_2:
-	%19 = load %Int32, %Int32* %4
-	%20 = add %Int32 %19, 1
-	store %Int32 %20, %Int32* %4
+	%23 = load %Int32, %Int32* %7
+	%24 = add %Int32 %23, 1
+	store %Int32 %24, %Int32* %7
 	br label %again_1
 break_1:
-	%21 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %21)
+	%25 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %25)
 	ret void
 }
 
