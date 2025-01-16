@@ -28,6 +28,7 @@ static void print2DArray(int32_t(*pa)[], int32_t m, int32_t n)
 	//let pg = *[m][n]Int32 pa
 	int32_t gg[m][n];
 	memset(&gg, 0, sizeof gg);
+
 	int32_t(*pg)[m][n] = (int32_t(*)[m][n])pa;
 	int32_t i = 0;
 	while (i < m) {

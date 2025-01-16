@@ -2004,7 +2004,7 @@ def do_stmt(x):
 	k = x['kind']
 	if k == 'value': s = do_stmt_value(x)
 	elif k == 'assign': s = do_stmt_assign(x)
-	elif k == 'let': s = do_stmt_const(x)
+	elif k == 'const': s = do_stmt_const(x)
 	elif k == 'var': s = do_stmt_var(x)
 	elif k == 'block': s = do_stmt_block(x)
 	elif k == 'if': s = do_stmt_if(x)

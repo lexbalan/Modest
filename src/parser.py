@@ -334,13 +334,12 @@ class Parser:
 		fields = []
 		while not self.match(")"):
 			#f = self.parse_field()
-			f = self.stmt_var()
-			if f == None:
-				if self.match("..."):
-					arghack = True
+			if self.is_identifier():
+				f = self.stmt_var()
+				fields.append(f)
+			elif self.match("..."):
+				arghack = True
 			self.match(",")
-			if f != None:
-				fields.extend(f)
 
 		if self.match("->"):
 			t = self.expr_type()
@@ -1098,7 +1097,9 @@ class Parser:
 	# Parse Statement
 	#
 
-	def stmt_let(self):
+
+	def parse_stmt_xvar(self):
+
 		ti = self.ti()
 		id = self.identifier()
 
@@ -1116,12 +1117,30 @@ class Parser:
 
 		return {
 			'isa': 'ast_stmt',
-			'kind': 'let',
+			'kind': 'const',
 			'id': id,
 			'type': t,
 			'init_value': init_value,
+
+			'access_modifier': 'public',
+			'attributes': [],
+			'nl': 1,
 			'ti': ti
 		}
+
+
+	def stmt_let(self):
+		x = self.parse_stmt_xvar()
+		x['isa'] = 'ast_stmt'
+		x['kind'] = 'const'
+		return x
+
+
+	def stmt_var(self):
+		x = self.parse_stmt_xvar()
+		x['isa'] = 'ast_stmt'
+		x['kind'] = 'var'
+		return x
 
 
 	def stmt_if(self):
@@ -1170,61 +1189,12 @@ class Parser:
 		}
 
 
-	def stmt_var(self):
-		ti = self.ti()
-
-		if not self.is_identifier():
-			return None
-
-		ids = []
-		while True:
-			id = self.identifier()
-			ids.append(id)
-			if not self.match(','):
-				break
-
-		t = None
-		init_value = None
-		if self.match(":"):
-			t = self.expr_type()
-		else:
-			t = self.expr_TypeUndefined(ti)
-
-		init_value = None
-		if self.is_assign_operator():
-			init_value = self.expr_value()
-		else:
-			init_value = self.expr_ValueUndefined(ti)
-
-		stmts = []
-		for id in ids:
-			stmt_var = {
-				'isa': 'ast_stmt',
-				'kind': 'var',
-				'id': id,
-				'type': t,
-				'init_value': init_value,
-				'access_modifier': 'public',
-				'attributes': [],
-				'nl': 1,
-				'ti': id['ti']
-			}
-			stmts.append(stmt_var)
-		return stmts
-
-
 	def stmt_again(self):
-		return {
-			'isa': 'ast_stmt',
-			'kind': 'again'
-		}
+		return {'isa': 'ast_stmt', 'kind': 'again'}
 
 
 	def stmt_break(self):
-		return {
-			'isa': 'ast_stmt',
-			'kind': 'break'
-		}
+		return {'isa': 'ast_stmt', 'kind': 'break'}
 
 
 	def stmt_inc(self):
@@ -1573,10 +1543,10 @@ class Parser:
 
 
 	def parse_def_var(self):
-		vars = self.stmt_var()
-		for var in vars:
-			var['isa'] = 'ast_definition'
-		return vars
+		var = self.stmt_var()
+		#for var in vars:
+		var['isa'] = 'ast_definition'
+		return var
 
 
 	def parse_def_type(self):
