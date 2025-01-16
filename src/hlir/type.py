@@ -133,6 +133,9 @@ class Type(Entity):
 	def is_composite(self):
 		return self.is_array() or self.is_record()
 
+	def is_nil(self):
+		return False
+		#return isinstance(self, TypeNil)
 
 	def is_pointer(self):
 		return isinstance(self, TypePointer)

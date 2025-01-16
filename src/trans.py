@@ -1847,7 +1847,7 @@ def do_stmt_const(x):
 		error("value id must starts with small letter", id.ti)
 		pass
 
-	v = do_rvalue(x['value'])
+	v = do_rvalue(x['init_value'])
 
 	#if v.isBad():
 

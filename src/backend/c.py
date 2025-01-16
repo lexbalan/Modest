@@ -832,6 +832,14 @@ def print_value_cons(x, ctx):
 					print_cast(type, value, ctx)
 					return
 
+		if from_type.is_pointer():
+			if from_type.to.is_array():
+				if type.to.is_array():
+					pass
+					#out("\n// -- DIM --\n")
+					#return do_eval_cons_pointer_to_array(x)
+
+
 
 	elif type.is_float():
 		if from_type.is_integer() or from_type.is_number():

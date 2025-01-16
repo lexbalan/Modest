@@ -71,7 +71,7 @@ def type_print_array(t, print_aka=True):
 
 	if not Value.isUndefined(array_size):
 		if t.is_vla():
-			print("<VAR>", end='')
+			print("%s" % array_size.id.str, end='')
 		else:
 			sz = array_size.asset
 			print("%d" % sz, end='')
@@ -117,6 +117,9 @@ def type_print(t, print_aka=True):
 	elif t.is_bool():
 		print("Bool", end='')
 
+	elif t.is_number():
+		print("Number", end='')
+
 	elif t.is_char():
 		print(t.id.str, end='')
 
@@ -124,6 +127,9 @@ def type_print(t, print_aka=True):
 #		if t.id != None:
 #			print(t.id, end='')
 #		print("enum_%s" % str(id(t)), end='')
+
+	elif t.is_nil():
+		print("Nil")
 
 	elif t.is_pointer():
 		print("*", end=''); type_print(t.to)
@@ -153,7 +159,7 @@ def type_print(t, print_aka=True):
 		print('Unit', end='')
 
 	else:
-		print("<type:%s>" % k, end='')
+		print("<type:%s>" % str(t), end='')
 
 	if t.generic:
 		print(")", end='')

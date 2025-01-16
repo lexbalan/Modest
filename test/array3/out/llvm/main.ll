@@ -214,84 +214,196 @@ declare [0 x %Char]* @strerror(%Int %error)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [17 x i8] [i8 112, i8 97, i8 91, i8 37, i8 105, i8 93, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str2 = private constant [13 x i8] [i8 102, i8 111, i8 111, i8 40, i8 37, i8 100, i8 44, i8 32, i8 37, i8 100, i8 41, i8 10, i8 0]
+@str1 = private constant [8 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 58, i8 10, i8 0]
+@str2 = private constant [21 x i8] [i8 112, i8 97, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [20 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
-
-;@property("type.generic", true)
-@a = internal global [2 x [3 x %Int32]] [
-	[3 x %Int32] [
-		%Int32 1,
-		%Int32 2,
-		%Int32 3
+@a = internal global [3 x [3 x [3 x %Int32]]] [
+	[3 x [3 x %Int32]] [
+		[3 x %Int32] [
+			%Int32 1,
+			%Int32 2,
+			%Int32 3
+		],
+		[3 x %Int32] [
+			%Int32 4,
+			%Int32 5,
+			%Int32 6
+		],
+		[3 x %Int32] [
+			%Int32 7,
+			%Int32 8,
+			%Int32 9
+		]
 	],
-	[3 x %Int32] [
-		%Int32 4,
-		%Int32 5,
-		%Int32 6
+	[3 x [3 x %Int32]] [
+		[3 x %Int32] [
+			%Int32 11,
+			%Int32 12,
+			%Int32 13
+		],
+		[3 x %Int32] [
+			%Int32 14,
+			%Int32 15,
+			%Int32 16
+		],
+		[3 x %Int32] [
+			%Int32 17,
+			%Int32 18,
+			%Int32 19
+		]
+	],
+	[3 x [3 x %Int32]] [
+		[3 x %Int32] [
+			%Int32 21,
+			%Int32 22,
+			%Int32 23
+		],
+		[3 x %Int32] [
+			%Int32 24,
+			%Int32 25,
+			%Int32 26
+		],
+		[3 x %Int32] [
+			%Int32 27,
+			%Int32 28,
+			%Int32 29
+		]
 	]
 ]
-define internal void @print2DArray([0 x [0 x %Int32]]* %pa, %Int32 %m, %Int32 %n) {
-	%1 = alloca i8*
-	%2 = call i8* @llvm.stacksave() 
-	store i8* %2, i8** %1
-; -- CONS PTR TO ARRAY --
-	%3 = bitcast [0 x [0 x %Int32]]* %pa to [0 x [0 x %Int32]]*
-	%4 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %4
+
+;
+;func test() {
+;	printf("test:\n")
+;
+;	var i = 0
+;	while i < m {
+;		var j = 0
+;		while j < n {
+;			var k = 0
+;			while k < p {
+;				let pa = unsafe *[]Int32 &a
+;				//let v = a[i][j][k]
+;				// не умножаем на sizeof(Int32), тк здесь все идет в sizeof(Int32)
+;				let pk = 1  // здесь за единицу принят sizeof(Int32)
+;				let pj = m * pk
+;				let pi = n * pj
+;				let v = pa[i*pi + j*pj + k*pk]
+;				printf("a[%d][%d][%d] = %d\n", i, j, k, v)
+;				++k
+;			}
+;			++j
+;		}
+;		++i
+;	}
+;}
+define internal void @test2([0 x [0 x [0 x %Int32]]]* %pa, %Int32 %m, %Int32 %n, %Int32 %p) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*))
+	%2 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %2
 	br label %again_1
 again_1:
-	%5 = load %Int32, %Int32* %4
-	%6 = icmp slt %Int32 %5, %m
-	br %Bool %6 , label %body_1, label %break_1
+	%3 = load %Int32, %Int32* %2
+	%4 = icmp slt %Int32 %3, %m
+	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	%7 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %7
+	%5 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %5
 	br label %again_2
 again_2:
-	%8 = load %Int32, %Int32* %7
-	%9 = icmp slt %Int32 %8, %n
-	br %Bool %9 , label %body_2, label %break_2
+	%6 = load %Int32, %Int32* %5
+	%7 = icmp slt %Int32 %6, %n
+	br %Bool %7 , label %body_2, label %break_2
 body_2:
-	%10 = load %Int32, %Int32* %4
-	%11 = load %Int32, %Int32* %7
-	%12 = load %Int32, %Int32* %7
-	%13 = load %Int32, %Int32* %4
-	%14 = getelementptr [0 x [0 x %Int32]], [0 x [0 x %Int32]]* %3, %Int32 0, %Int32 %13, %Int32 %12
+	%8 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %8
+	br label %again_3
+again_3:
+	%9 = load %Int32, %Int32* %8
+	%10 = icmp slt %Int32 %9, %p
+	br %Bool %10 , label %body_3, label %break_3
+body_3:
+	%11 = load %Int32, %Int32* %8
+	%12 = load %Int32, %Int32* %5
+	%13 = load %Int32, %Int32* %2
+	%14 = getelementptr [0 x [0 x [0 x %Int32]]], [0 x [0 x [0 x %Int32]]]* %pa, %Int32 0, %Int32 %13, %Int32 %12, %Int32 %11
 	%15 = load %Int32, %Int32* %14
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*), %Int32 %10, %Int32 %11, %Int32 %15)
-	%17 = load %Int32, %Int32* %7
-	%18 = add %Int32 %17, 1
-	store %Int32 %18, %Int32* %7
+	%16 = load %Int32, %Int32* %2
+	%17 = load %Int32, %Int32* %5
+	%18 = load %Int32, %Int32* %8
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), %Int32 %16, %Int32 %17, %Int32 %18, %Int32 %15)
+	%20 = load %Int32, %Int32* %8
+	%21 = add %Int32 %20, 1
+	store %Int32 %21, %Int32* %8
+	br label %again_3
+break_3:
+	%22 = load %Int32, %Int32* %5
+	%23 = add %Int32 %22, 1
+	store %Int32 %23, %Int32* %5
 	br label %again_2
 break_2:
-	%19 = load %Int32, %Int32* %4
-	%20 = add %Int32 %19, 1
-	store %Int32 %20, %Int32* %4
+	%24 = load %Int32, %Int32* %2
+	%25 = add %Int32 %24, 1
+	store %Int32 %25, %Int32* %2
 	br label %again_1
 break_1:
-	%21 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %21)
 	ret void
 }
 
-define internal void @foo(%Int32 %x, %Int32 %y) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), %Int32 %x, %Int32 %y)
-	ret void
-}
-
-
-
-;$pragma insert "// text insertion"
 define %Int32 @main() {
-	%1 = alloca [0 x [0 x %Int32]]*, align 8
+	%1 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %1
+	br label %again_1
+again_1:
+	%2 = load %Int32, %Int32* %1
+	%3 = icmp slt %Int32 %2, 3
+	br %Bool %3 , label %body_1, label %break_1
+body_1:
+	%4 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %4
+	br label %again_2
+again_2:
+	%5 = load %Int32, %Int32* %4
+	%6 = icmp slt %Int32 %5, 3
+	br %Bool %6 , label %body_2, label %break_2
+body_2:
+	%7 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %7
+	br label %again_3
+again_3:
+	%8 = load %Int32, %Int32* %7
+	%9 = icmp slt %Int32 %8, 3
+	br %Bool %9 , label %body_3, label %break_3
+body_3:
+	%10 = load %Int32, %Int32* %7
+	%11 = load %Int32, %Int32* %4
+	%12 = load %Int32, %Int32* %1
+	%13 = getelementptr [3 x [3 x [3 x %Int32]]], [3 x [3 x [3 x %Int32]]]* @a, %Int32 0, %Int32 %12, %Int32 %11, %Int32 %10
+	%14 = load %Int32, %Int32* %13
+	%15 = load %Int32, %Int32* %1
+	%16 = load %Int32, %Int32* %4
+	%17 = load %Int32, %Int32* %7
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str3 to [0 x i8]*), %Int32 %15, %Int32 %16, %Int32 %17, %Int32 %14)
+	%19 = load %Int32, %Int32* %7
+	%20 = add %Int32 %19, 1
+	store %Int32 %20, %Int32* %7
+	br label %again_3
+break_3:
+	%21 = load %Int32, %Int32* %4
+	%22 = add %Int32 %21, 1
+	store %Int32 %22, %Int32* %4
+	br label %again_2
+break_2:
+	%23 = load %Int32, %Int32* %1
+	%24 = add %Int32 %23, 1
+	store %Int32 %24, %Int32* %1
+	br label %again_1
+break_1:
+
+	;test()
 ; -- CONS PTR TO ARRAY --
-	%2 = bitcast [2 x [3 x %Int32]]* @a to [0 x [0 x %Int32]]*
-	store [0 x [0 x %Int32]]* %2, [0 x [0 x %Int32]]** %1
-; -- CONS PTR TO ARRAY --
-	%3 = bitcast [2 x [3 x %Int32]]* @a to [0 x [0 x %Int32]]*
-	call void @print2DArray([0 x [0 x %Int32]]* %3, %Int32 2, %Int32 3)
-	call void @foo(%Int32 1, %Int32 2)
+	%25 = bitcast [3 x [3 x [3 x %Int32]]]* @a to [0 x [0 x [0 x %Int32]]]*
+	call void @test2([0 x [0 x [0 x %Int32]]]* %25, %Int32 3, %Int32 3, %Int32 3)
 	ret %Int32 0
 }
 

@@ -1103,21 +1103,23 @@ class Parser:
 		id = self.identifier()
 
 		t = None
-		v = None
 		if self.match(":"):
 			t = self.expr_type()
-		#else:
-		#	t = self.expr_TypeUndefined(ti)
+		else:
+			t = self.expr_TypeUndefined(ti)
 
+		init_value = None
 		if self.is_assign_operator():
-			v = self.expr_value()
+			init_value = self.expr_value()
+		else:
+			init_value = self.expr_ValueUndefined(ti)
 
 		return {
 			'isa': 'ast_stmt',
 			'kind': 'let',
 			'id': id,
 			'type': t,
-			'value': v,
+			'init_value': init_value,
 			'ti': ti
 		}
 
@@ -1188,10 +1190,10 @@ class Parser:
 		else:
 			t = self.expr_TypeUndefined(ti)
 
+		init_value = None
 		if self.is_assign_operator():
 			init_value = self.expr_value()
-
-		if init_value == None:
+		else:
 			init_value = self.expr_ValueUndefined(ti)
 
 		stmts = []
