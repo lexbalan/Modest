@@ -41,7 +41,8 @@ func tableSepPrint(sz: *[]Nat32, m: Int32) {
 
 
 func tablePrint(tablex: *[][]*Str8, n: Int32, m: Int32, headline: Bool) {
-	var i, j: Int32
+	var i: Int32
+	var j: Int32
 	var sz: [m]Nat32 = []
 
 	var table = unsafe *[]*Str8 tablex

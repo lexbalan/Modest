@@ -15,7 +15,8 @@ type Object record {
 public func main() -> Int {
 	printf("memcopy test\n")
 
-	var o1, o2: Object
+	var o1: Object
+	var o2: Object
 
 	o1 = {
 		firstname = "John"

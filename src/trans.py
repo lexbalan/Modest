@@ -1852,8 +1852,9 @@ def do_stmt_const(x):
 	#if v.isBad():
 
 	type = None
-	if x['type'] != None:
-		type = do_type(x['type'])
+
+	type = do_type(x['type'])
+	if not type.is_undefined():
 		v = value_cons_implicit_check(type, v)
 	else:
 		type = v.type
@@ -2157,7 +2158,7 @@ def def_const(x):
 	definition.nl = x['nl']
 	cdef = definition
 
-	init_value = do_value_immediate(x['value'], allow_ptr_to_str=True)
+	init_value = do_value_immediate(x['init_value'], allow_ptr_to_str=True)
 
 
 	if Value.isBad(init_value):

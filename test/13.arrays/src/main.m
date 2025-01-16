@@ -97,7 +97,9 @@ var a10: [10][10]Int32 = [
 
 
 func test_arrays() -> Unit {
-	var i, j, k: Int32
+	var i: Int32
+	var j: Int32
+	var k: Int32
 
 	i = 0
 	while i < 10 {

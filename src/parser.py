@@ -1097,38 +1097,6 @@ class Parser:
 	# Parse Statement
 	#
 
-
-	def parse_stmt_xvar(self):
-
-		ti = self.ti()
-		id = self.identifier()
-
-		t = None
-		if self.match(":"):
-			t = self.expr_type()
-		else:
-			t = self.expr_TypeUndefined(ti)
-
-		init_value = None
-		if self.is_assign_operator():
-			init_value = self.expr_value()
-		else:
-			init_value = self.expr_ValueUndefined(ti)
-
-		return {
-			'isa': 'ast_stmt',
-			'kind': 'const',
-			'id': id,
-			'type': t,
-			'init_value': init_value,
-
-			'access_modifier': 'public',
-			'attributes': [],
-			'nl': 1,
-			'ti': ti
-		}
-
-
 	def stmt_let(self):
 		x = self.parse_stmt_xvar()
 		x['isa'] = 'ast_stmt'
@@ -1518,35 +1486,48 @@ class Parser:
 		}
 
 
-	def parse_def_const(self):
+	def parse_stmt_xvar(self):
 		ti = self.ti()
 		id = self.identifier()
 
 		t = None
-		v = None
 		if self.match(":"):
 			t = self.expr_type()
 		else:
 			t = self.expr_TypeUndefined(ti)
 
+		init_value = None
 		if self.is_assign_operator():
-			v = self.expr_value()
+			init_value = self.expr_value()
+		else:
+			init_value = self.expr_ValueUndefined(ti)
 
 		return {
-			'isa': 'ast_definition',
+			'isa': 'ast_stmt',
 			'kind': 'const',
 			'id': id,
 			'type': t,
-			'value': v,
+			'init_value': init_value,
+
+			'access_modifier': 'public',
+			'attributes': [],
+			'nl': 1,
 			'ti': ti
 		}
 
 
+	def parse_def_const(self):
+		x = self.parse_stmt_xvar()
+		x['isa'] = 'ast_definition'
+		x['kind'] = 'const'
+		return x
+
+
 	def parse_def_var(self):
-		var = self.stmt_var()
-		#for var in vars:
-		var['isa'] = 'ast_definition'
-		return var
+		x = self.parse_stmt_xvar()
+		x['isa'] = 'ast_definition'
+		x['kind'] = 'var'
+		return x
 
 
 	def parse_def_type(self):
