@@ -1590,15 +1590,15 @@ def do_eval_const(x):
 
 	if not is_global_context():
 		# Аргументы функуции это константы но у них поле value == None!
-		if x.value != None:
+		if x.init_value != None:
 			# константные массивы (даже дженерик)
 			# печатаются и их можео индексировать
-			if x.value.type.is_array():
+			if x.init_value.type.is_array():
 				rv = llvm_value_id(get_id_str(x), x.type)
 				rv['is_adr'] = True
 				return rv
 
-	return do_eval(x.value)
+	return do_eval(x.init_value)
 
 
 def do_eval_bool(x):

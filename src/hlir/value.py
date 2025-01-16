@@ -198,14 +198,14 @@ class ValueVar(Value):
 
 
 class ValueConst(Value):
-	def __init__(self, type, id, value, ti=None):
+	def __init__(self, type, id, init_value, ti=None):
 		from .type import Type
 		assert(isinstance(type, Type))
 		assert(isinstance(id, Id))
-		assert(isinstance(value, Value))
+		assert(isinstance(init_value, Value))
 		super().__init__(type=type, ti=ti)
 		self.id = id
-		self.value = value
+		self.init_value = init_value
 		self.usecnt = 0
 		self.definition = None  # *StmtDefConst
 

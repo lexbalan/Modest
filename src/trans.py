@@ -1691,6 +1691,73 @@ def do_value(x):
 # Do Statement
 #
 
+
+def do_stmt_const(x):
+	v = do_const(x)
+
+	if v.init_value.type.is_generic():
+		# generic immediate в C печатается как #define
+		# и его надо манглить иначе возникает куча проблем
+		v.id.c = '__' + v.id.str
+
+	v.addAttribute('local') # need for LLVM printer (!)
+	ctx_value_add(v.id.str, v)
+	return StmtDefConst(v.id, v, v.init_value, ti=x['ti'])
+
+
+
+def do_stmt_var(x):
+	var_id = Id(x['id'])
+	t = do_type(x['type'])
+	v = do_rvalue(x['init_value'])
+
+	tu = t.is_undefined()
+	vu = Value.isUndefined(v)
+
+	# error: no type, no init valuetu = type_is_undefined(t)
+	if tu == True and vu == True:
+		# type & value undefined
+		ctx_value_add(var_id.str, ValueBad(x['ti']))
+		return StmtBad(x)
+
+	if tu == True and vu == False:
+		# type undef, value ok
+		#type_update(nt, v.type)
+		if v.type.is_generic():
+			v = value_cons_default(v)
+		t = v.type
+
+	#if not t.is_undefined():
+	#	if t.is_bad():
+	#		ctx_value_add(var_id.str, ValueBad(x['ti']))
+	#		return StmtBad(x)
+	#
+		if t.is_forbidden_var():
+			error("unsuitable type1", x['type']['ti'])
+
+	# type & init value present
+	if not t.is_undefined() and not Value.isUndefined(v):
+		v = value_cons_implicit_check(t, v)
+
+	if t.is_undefined():
+		if v.type.is_generic():
+			v = value_cons_default(v)
+
+		t = v.type
+
+	# check if identifier is free (in current block)
+	already = ctx_value_get_shallow(var_id.str)
+	if already != None:
+		error("local id redefinition", x['id'].ti)
+		info("firstly defined here", already['id'].ti)
+		return StmtBad(x)
+
+	var_value = add_local_var(var_id, t, var_id.ti)
+	return StmtDefVar(var_id, var_value, v, ti=x['ti'])
+
+
+
+
 def do_stmt_if(x):
 	cond = do_rvalue(x['cond'])
 
@@ -1772,56 +1839,6 @@ def do_stmt_again(x):
 
 def do_stmt_break(x):
 	return StmtBreak(x['ti'])
-
-
-def do_stmt_var(x):
-	var_id = Id(x['id'])
-	t = do_type(x['type'])
-	v = do_rvalue(x['init_value'])
-
-	tu = t.is_undefined()
-	vu = Value.isUndefined(v)
-
-	# error: no type, no init valuetu = type_is_undefined(t)
-	if tu == True and vu == True:
-		# type & value undefined
-		ctx_value_add(var_id.str, ValueBad(x['ti']))
-		return StmtBad(x)
-
-	if tu == True and vu == False:
-		# type undef, value ok
-		#type_update(nt, v.type)
-		if v.type.is_generic():
-			v = value_cons_default(v)
-		t = v.type
-
-	#if not t.is_undefined():
-	#	if t.is_bad():
-	#		ctx_value_add(var_id.str, ValueBad(x['ti']))
-	#		return StmtBad(x)
-	#
-		if t.is_forbidden_var():
-			error("unsuitable type1", x['type']['ti'])
-
-	# type & init value present
-	if not t.is_undefined() and not Value.isUndefined(v):
-		v = value_cons_implicit_check(t, v)
-
-	if t.is_undefined():
-		if v.type.is_generic():
-			v = value_cons_default(v)
-
-		t = v.type
-
-	# check if identifier is free (in current block)
-	already = ctx_value_get_shallow(var_id.str)
-	if already != None:
-		error("local id redefinition", x['id'].ti)
-		info("firstly defined here", already['id'].ti)
-		return StmtBad(x)
-
-	var_value = add_local_var(var_id, t, var_id.ti)
-	return StmtDefVar(var_id, var_value, v, ti=x['ti'])
 
 
 
@@ -1996,7 +2013,7 @@ def do_stmt_block(x):
 
 
 
-def symbol_const(id, init_value, is_public=False):
+"""def symbol_const(id, init_value, is_public=False):
 	const_value = ValueConst(init_value.type, id, init_value, id.ti)
 	const_value.att.extend(init_value.att)
 
@@ -2008,7 +2025,7 @@ def symbol_const(id, init_value, is_public=False):
 	global cmodule
 	cmodule_value_add(id.str, const_value, is_public=is_public)
 	#module_value_add_public(cmodule, id.str, const_value)
-	return const_value
+	return const_value"""
 
 
 
@@ -2091,18 +2108,10 @@ def def_type(x):
 
 
 def def_const(x):
-	#return do_stmt_const(x)
-
 	global cdef
 	global cmodule
+
 	id = Id(x['id'])
-
-	log("def_const: %s" % id.str)
-
-	# check if identifier is free
-	pre_exist = ctx_value_get_shallow(id.str)
-	if pre_exist != None:
-		error("redefinition of '%s'" % id.str, id.ti)
 
 	definition = StmtDefConst(id, None, None, x['ti'])
 	definition.module = cmodule
@@ -2110,29 +2119,17 @@ def def_const(x):
 	definition.nl = x['nl']
 	cdef = definition
 
-	init_value = do_value_immediate(x['init_value'], allow_ptr_to_str=True)
+	const_value = do_const(x)
 
+	definition.value = const_value
+	definition.init_value = const_value.init_value
 
-	if Value.isBad(init_value):
-		module_value_add_public(cmodule, id.str, init_value)
-		return DefConst(id, init_value, init_value, x['ti'])
-
-	t = do_type(x['type'])
-	if not t.is_undefined():
-		if not t.is_bad():
-			init_value = value_cons_implicit_check(t, init_value)
-
-	definition.init_value = init_value
-
-	
-
-	const_value = symbol_const(id, init_value, is_public=x['access_modifier'] == 'public')
+	is_public = x['access_modifier'] == 'public'
+	cmodule_value_add(const_value.id.str, const_value, is_public=is_public)
 	const_value.definition = definition
 
 	if need_decoration(x):
 		const_value.id.need_decoration = True
-
-	definition.value = const_value
 
 	cdef = None
 	return definition
@@ -2140,8 +2137,26 @@ def def_const(x):
 
 
 
+
+#	if Value.isBad(init_value):
+#		module_value_add_public(cmodule, id.str, init_value)
+#		return DefConst(id, init_value, init_value, x['ti'])
+
+#	t = do_type(x['type'])
+#	if not t.is_undefined():
+#		if not t.is_bad():
+#			init_value = value_cons_implicit_check(t, init_value)
+
 def do_const(x):
 	id = Id(x['id'])
+
+	log("do_const: %s" % id.str)
+
+	# check if identifier is free
+	pre_exist = ctx_value_get_shallow(id.str)
+	if pre_exist != None:
+		error("redefinition of '%s'" % id.str, id.ti)
+
 	type = do_type(x['type'])
 	init_value = do_rvalue(x['init_value'])
 
@@ -2157,26 +2172,13 @@ def do_const(x):
 	else:
 		type = init_value.type
 
-	const_value = ValueConst(type, id, value=init_value, ti=id.ti)
+	const_value = ValueConst(type, id, init_value=init_value, ti=id.ti)
 
 	if init_value.isImmediate():
 		const_value.immediate = True
 		cp_immediate(const_value, init_value)
 
 	return const_value
-
-
-def do_stmt_const(x):
-	v = do_const(x)
-
-	if v.value.type.is_generic():
-		# generic immediate в C печатается как #define
-		# и его надо манглить иначе возникает куча проблем
-		v.id.c = '__' + v.id.str
-
-	v.addAttribute('local') # need for LLVM printer (!)
-	ctx_value_add(v.id.str, v)
-	return StmtDefConst(v.id, v, v.value, ti=x['ti'])
 
 
 
@@ -2298,7 +2300,7 @@ def def_func(x, dostmt=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		param_value = ValueConst(param.type, param.id, ValueUndefined(param.type), param.ti)
+		param_value = ValueConst(param.type, param.id, init_value=ValueUndefined(param.type), ti=param.ti)
 		param_value.addAttribute('local')
 		param_value.addAttribute('param')
 		ctx_value_add(param.id.str, param_value)
