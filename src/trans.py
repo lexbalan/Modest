@@ -2317,10 +2317,10 @@ def def_func(x, dostmt=True):
 			if not fn.type.to.is_unit():
 				stmts = stmt.stmts
 				if len(stmts) == 0:
-					warning("expected return operator at end", stmt['ti'])
+					warning("expected return operator at end", stmt.ti)
 				#elif stmts[-1]['kind'] != 'return':
 				elif not isinstance(stmts[-1], StmtReturn):
-					warning("expected return operator at end", stmt['ti'])
+					warning("expected return operator at end", stmt.ti)
 
 	definition.stmt = stmt
 
