@@ -552,7 +552,6 @@ def do_type_id(t):
 	# tmp
 #	if tx == None:
 #		error("undefined type", t['ti'])
-#		tx = htype.TypeUndefined(t['ti'])
 
 	# если дело происходит в определении типа и пришел undefined тип
 	if tx.is_undefined():
@@ -2232,7 +2231,7 @@ def def_var(x):
 
 	elif tu == False and vu == True:
 		# type ok, value undef
-		# пропишем тип для v, тк там сейчас TypeUndefined
+		# пропишем тип для v
 		v.type = t
 
 	init_value = v
