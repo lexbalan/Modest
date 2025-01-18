@@ -1445,6 +1445,7 @@ def do_eval_cons(x):
 	from_type = value.type
 	type = x.type
 
+
 	# skipping cast to the same type
 	if id(value.type) == id(type):
 		return do_reval(value)
@@ -1702,6 +1703,22 @@ def do_eval_un(x):
 	return y
 
 
+def do_eval_sizeof_value(x):
+	t = x.of.type
+
+	if t.is_vla():
+		# size = VLA_volume * sizeof(VLA_rootType)
+		rs = t.get_array_root().size
+		rootSize = llvm_value_num(foundation.typeInt32, rs)
+		nelem = t.arraySizeInRootElements
+		size = llvm_eval_binary('mul', nelem, rootSize)
+		return size
+
+	return llvm_value_num(foundation.typeInt32, t.size)
+
+
+
+
 def do_eval(x):
 	assert(isinstance(x, Value))
 
@@ -1719,7 +1736,7 @@ def do_eval(x):
 	elif isinstance(x, ValueAccessModule): y = do_eval_access_module(x)
 	elif isinstance(x, ValueSlice): y = do_eval_slice(x)
 	elif isinstance(x, ValueZero): y = do_eval_literal(x)
-	elif isinstance(x, ValueSizeofValue): y = do_eval_literal(x)
+	elif isinstance(x, ValueSizeofValue): y = do_eval_sizeof_value(x)
 	elif isinstance(x, ValueSizeofType): y = do_eval_literal(x)
 	elif isinstance(x, ValueLengthof): y = do_eval_literal(x)
 	elif isinstance(x, ValueAlignof): y = do_eval_literal(x)

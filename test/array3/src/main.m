@@ -57,13 +57,18 @@ var a: [m][n][p]Int32 = [
 
 func test2(pa: *[][][]Int32, m: Int32, n: Int32, p: Int32) {
 	printf("test2:\n")
+
+	let a = *[m][n][p]Int32 pa
+	var x = sizeof(*a)
+	printf("sizeof(a2) = %d\n", x)
+
 	var i = 0
 	while i < m {
 		var j = 0
 		while j < n {
 			var k = 0
 			while k < p {
-				let v = (*[m][n][p]Int32 pa)[i][j][k]
+				let v = a[i][j][k]
 				printf("pa[%d][%d][%d] = %d\n", i, j, k, v)
 				++k
 			}
@@ -75,6 +80,9 @@ func test2(pa: *[][][]Int32, m: Int32, n: Int32, p: Int32) {
 
 
 public func main() -> Int32 {
+
+	printf("sizeof(a) = %d\n", unsafe Int32 sizeof(a))
+
 	var i = 0
 	while i < m {
 		var j = 0

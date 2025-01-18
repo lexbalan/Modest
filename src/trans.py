@@ -1555,7 +1555,10 @@ def do_value_sizeof_type(x):
 
 def do_value_sizeof_value(x):
 	v = do_value(x['value'])
-	return ValueSizeofValue(v, ti=x['ti'])
+	nv = ValueSizeofValue(v, ti=x['ti'])
+	if v.type.is_vla():
+		nv.immediate = False
+	return nv
 
 
 

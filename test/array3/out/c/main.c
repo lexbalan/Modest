@@ -68,13 +68,17 @@ static int32_t a[m][n][p] = (int32_t[m][n][p]){
 static void test2(int32_t(*pa)[], int32_t m, int32_t n, int32_t p)
 {
 	printf("test2:\n");
+
+	int32_t(*a)[m][n][p] = (int32_t(*)[m][n][p])pa;
+	printf("sizeof(a2) = %d\n", (int32_t)sizeof a);
+
 	int32_t i = 0;
 	while (i < m) {
 		int32_t j = 0;
 		while (j < n) {
 			int32_t k = 0;
 			while (k < p) {
-				int32_t v = (*pa)[i][j][k];
+				int32_t v = (*a)[i][j][k];
 				printf("pa[%d][%d][%d] = %d\n", i, j, k, v);
 				k = k + 1;
 			}
@@ -87,6 +91,9 @@ static void test2(int32_t(*pa)[], int32_t m, int32_t n, int32_t p)
 
 int32_t main()
 {
+
+	printf("sizeof(a) = %d\n", (int32_t)sizeof a);
+
 	int32_t i = 0;
 	while (i < m) {
 		int32_t j = 0;
