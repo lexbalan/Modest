@@ -205,100 +205,99 @@ declare void @perror(%ConstCharStr* %str)
 ;   одинарных, двойных, пакетных и всех нечетных ошибок
 ;
 define %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len) {
-	%1 = mul i16 256, 1  ; calc VLA item size
-	%2 = alloca [256 x %Word32], align 1
-	%3 = alloca %Word32, align 4
+	%1 = alloca [256 x %Word32], align 1
+	%2 = alloca %Word32, align 4
 
 	;
 	; create table before
 	;
-	%4 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %4
+	%3 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %3
 	br label %again_1
 again_1:
-	%5 = load %Int32, %Int32* %4
-	%6 = icmp ult %Int32 %5, 256
-	br %Bool %6 , label %body_1, label %break_1
+	%4 = load %Int32, %Int32* %3
+	%5 = icmp ult %Int32 %4, 256
+	br %Bool %5 , label %body_1, label %break_1
 body_1:
-	%7 = load %Int32, %Int32* %4
-	%8 = bitcast %Int32 %7 to %Word32
-	store %Word32 %8, %Word32* %3
-	%9 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %9
+	%6 = load %Int32, %Int32* %3
+	%7 = bitcast %Int32 %6 to %Word32
+	store %Word32 %7, %Word32* %2
+	%8 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %8
 	br label %again_2
 again_2:
-	%10 = load %Int32, %Int32* %9
-	%11 = icmp ult %Int32 %10, 8
-	br %Bool %11 , label %body_2, label %break_2
+	%9 = load %Int32, %Int32* %8
+	%10 = icmp ult %Int32 %9, 8
+	br %Bool %10 , label %body_2, label %break_2
 body_2:
-	%12 = load %Word32, %Word32* %3
-	%13 = and %Word32 %12, 1
-	%14 = icmp ne %Word32 %13, 0
-	br %Bool %14 , label %then_0, label %else_0
+	%11 = load %Word32, %Word32* %2
+	%12 = and %Word32 %11, 1
+	%13 = icmp ne %Word32 %12, 0
+	br %Bool %13 , label %then_0, label %else_0
 then_0:
-	%15 = load %Word32, %Word32* %3
-	%16 = lshr %Word32 %15, 1
-	%17 = xor %Word32 %16, 3988292384
-	store %Word32 %17, %Word32* %3
+	%14 = load %Word32, %Word32* %2
+	%15 = lshr %Word32 %14, 1
+	%16 = xor %Word32 %15, 3988292384
+	store %Word32 %16, %Word32* %2
 	br label %endif_0
 else_0:
-	%18 = load %Word32, %Word32* %3
-	%19 = lshr %Word32 %18, 1
-	store %Word32 %19, %Word32* %3
+	%17 = load %Word32, %Word32* %2
+	%18 = lshr %Word32 %17, 1
+	store %Word32 %18, %Word32* %2
 	br label %endif_0
 endif_0:
-	%20 = load %Int32, %Int32* %9
-	%21 = add %Int32 %20, 1
-	store %Int32 %21, %Int32* %9
+	%19 = load %Int32, %Int32* %8
+	%20 = add %Int32 %19, 1
+	store %Int32 %20, %Int32* %8
 	br label %again_2
 break_2:
-	%22 = load %Int32, %Int32* %4
-	%23 = getelementptr [256 x %Word32], [256 x %Word32]* %2, %Int32 0, %Int32 %22
-	%24 = load %Word32, %Word32* %3
-	store %Word32 %24, %Word32* %23
-	%25 = load %Int32, %Int32* %4
-	%26 = add %Int32 %25, 1
-	store %Int32 %26, %Int32* %4
+	%21 = load %Int32, %Int32* %3
+	%22 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int32 %21
+	%23 = load %Word32, %Word32* %2
+	store %Word32 %23, %Word32* %22
+	%24 = load %Int32, %Int32* %3
+	%25 = add %Int32 %24, 1
+	store %Int32 %25, %Int32* %3
 	br label %again_1
 break_1:
 
 	;
 	; calculate CRC32
 	;
-	store %Word32 4294967295, %Word32* %3
-	store %Int32 0, %Int32* %4
+	store %Word32 4294967295, %Word32* %2
+	store %Int32 0, %Int32* %3
 	br label %again_3
 again_3:
-	%27 = load %Int32, %Int32* %4
-	%28 = icmp ult %Int32 %27, %len
-	br %Bool %28 , label %body_3, label %break_3
+	%26 = load %Int32, %Int32* %3
+	%27 = icmp ult %Int32 %26, %len
+	br %Bool %27 , label %body_3, label %break_3
 body_3:
 	; 1
-	%29 = load %Int32, %Int32* %4
-	%30 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %29
-	%31 = load %Word8, %Word8* %30
-	%32 = zext %Word8 %31 to %Word32
-	%33 = load %Word32, %Word32* %3
-	%34 = xor %Word32 %33, %32
-	%35 = and %Word32 %34, 255
-	%36 = load %Int32, %Int32* %4
-	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str1 to [0 x i8]*), %Int32 %36, %Word32 %32, %Word32 %35)
+	%28 = load %Int32, %Int32* %3
+	%29 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %28
+	%30 = load %Word8, %Word8* %29
+	%31 = zext %Word8 %30 to %Word32
+	%32 = load %Word32, %Word32* %2
+	%33 = xor %Word32 %32, %31
+	%34 = and %Word32 %33, 255
+	%35 = load %Int32, %Int32* %3
+	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str1 to [0 x i8]*), %Int32 %35, %Word32 %31, %Word32 %34)
 	; 2
-	%38 = trunc %Word32 %35 to %Int8
-	%39 = getelementptr [256 x %Word32], [256 x %Word32]* %2, %Int32 0, %Int8 %38
-	%40 = load %Word32, %Word32* %3
-	%41 = lshr %Word32 %40, 8
-	%42 = load %Word32, %Word32* %39
-	%43 = xor %Word32 %42, %41
-	store %Word32 %43, %Word32* %3
-	%44 = load %Int32, %Int32* %4
-	%45 = add %Int32 %44, 1
-	store %Int32 %45, %Int32* %4
+	%37 = trunc %Word32 %34 to %Int8
+	%38 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int8 %37
+	%39 = load %Word32, %Word32* %2
+	%40 = lshr %Word32 %39, 8
+	%41 = load %Word32, %Word32* %38
+	%42 = xor %Word32 %41, %40
+	store %Word32 %42, %Word32* %2
+	%43 = load %Int32, %Int32* %3
+	%44 = add %Int32 %43, 1
+	store %Int32 %44, %Int32* %3
 	br label %again_3
 break_3:
-	%46 = load %Word32, %Word32* %3
-	%47 = xor %Word32 %46, 4294967295
-	ret %Word32 %47
+	%45 = load %Word32, %Word32* %2
+	%46 = xor %Word32 %45, 4294967295
+	ret %Word32 %46
 }
 
 

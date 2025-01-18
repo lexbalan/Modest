@@ -16,7 +16,6 @@ var table: [5][4]*Str8 = [
 ]
 
 
-
 func max(a: Nat32, b: Nat32) -> Nat32 {
 	if b > a {
 		return b
@@ -39,16 +38,18 @@ func tableSepPrint(sz: *[]Nat32, m: Int32) {
 	}
 }
 
-
+// we cannot receive VLA by value,
+// but we can to receive pointer to open array
+// and after construct pointer to closed array with required dimensions
 func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) {
 	var i: Int32
 	var j: Int32
 
-	// Таблица размеров колонок
+	// array of size of columns (in characters)
 	var sz: [n]Nat32 = []
 
-	// Получаем указатель на конкретный массив
-	var table = unsafe *[m][n]*Str8 tablex
+	// construct pointer to closed array
+	let table = *[m][n]*Str8 tablex
 
 	// calculate max length (in chars) of column
 	i = 0

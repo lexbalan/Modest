@@ -330,31 +330,30 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 @str11 = private constant [34 x i8] [i8 91, i8 43, i8 93, i8 32, i8 68, i8 105, i8 115, i8 99, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 101, i8 100, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 116, i8 104, i8 101, i8 32, i8 115, i8 101, i8 114, i8 118, i8 101, i8 114, i8 10, i8 0]
 ; -- endstrings --
 define internal %Bool @send_file(%File* %fp, %Int %sockfd) {
-	%1 = mul i16 1024, 1  ; calc VLA item size
-	%2 = alloca [1024 x %Char8], align 1
+	%1 = alloca [1024 x %Char8], align 1
 	br label %again_1
 again_1:
-	%3 = bitcast [1024 x %Char8]* %2 to %CharStr*
-	%4 = call %CharStr* @fgets(%CharStr* %3, %Int 1024, %File* %fp)
-	%5 = icmp ne %CharStr* %4, null
-	br %Bool %5 , label %body_1, label %break_1
+	%2 = bitcast [1024 x %Char8]* %1 to %CharStr*
+	%3 = call %CharStr* @fgets(%CharStr* %2, %Int 1024, %File* %fp)
+	%4 = icmp ne %CharStr* %3, null
+	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	%6 = bitcast [1024 x %Char8]* %2 to i8*
-	%7 = call %SSizeT @send(%Int %sockfd, i8* %6, %SizeT 1024, %Int 0)
-	%8 = icmp eq %SSizeT %7, -1
-	br %Bool %8 , label %then_0, label %endif_0
+	%5 = bitcast [1024 x %Char8]* %1 to i8*
+	%6 = call %SSizeT @send(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
+	%7 = icmp eq %SSizeT %6, -1
+	br %Bool %7 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%10 = zext i16 1024 to %Int32
+	%9 = zext i16 1024 to %Int32
 	; -- end vol eval --
 	; -- zero fill rest of array
-	%11 = mul %Int32 %10, 1
-	%12 = bitcast [1024 x %Char8]* %2 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, %Int32 %11, i1 0)
+	%10 = mul %Int32 %9, 1
+	%11 = bitcast [1024 x %Char8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %11, i8 0, %Int32 %10, i1 0)
 	br label %again_1
 break_1:
 	ret %Bool 1

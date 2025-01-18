@@ -246,6 +246,13 @@ class Type(Entity):
 		return self.signed == False
 
 
+	# returns root type of any array
+	# ex: *[n][m][10]Int32  -> Int32
+	def get_array_root(self):
+		if self.is_array():
+			return self.of.get_array_root()
+		return self
+
 
 	@staticmethod
 	def eq_integer(a, b, opt):

@@ -229,37 +229,36 @@ define internal void @arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %In
 	%3 = zext i8 10 to %Int32
 	; -- end vol eval --
 	store [10 x %Int32] %__b, [10 x %Int32]* %b
-	%4 = mul i8 10, 1  ; calc VLA item size
-	%5 = alloca [10 x %Int32], align 1
-	%6 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %6
+	%4 = alloca [10 x %Int32], align 1
+	%5 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %5
 	br label %again_1
 again_1:
-	%7 = load %Int32, %Int32* %6
-	%8 = icmp slt %Int32 %7, 10
-	br %Bool %8 , label %body_1, label %break_1
+	%6 = load %Int32, %Int32* %5
+	%7 = icmp slt %Int32 %6, 10
+	br %Bool %7 , label %body_1, label %break_1
 body_1:
-	%9 = load %Int32, %Int32* %6
-	%10 = getelementptr [10 x %Int32], [10 x %Int32]* %5, %Int32 0, %Int32 %9
-	%11 = load %Int32, %Int32* %6
-	%12 = getelementptr [10 x %Int32], [10 x %Int32]* %a, %Int32 0, %Int32 %11
-	%13 = load %Int32, %Int32* %6
-	%14 = getelementptr [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Int32 %13
-	%15 = load %Int32, %Int32* %12
-	%16 = load %Int32, %Int32* %14
-	%17 = add %Int32 %15, %16
-	store %Int32 %17, %Int32* %10
-	%18 = load %Int32, %Int32* %6
-	%19 = add %Int32 %18, 1
-	store %Int32 %19, %Int32* %6
+	%8 = load %Int32, %Int32* %5
+	%9 = getelementptr [10 x %Int32], [10 x %Int32]* %4, %Int32 0, %Int32 %8
+	%10 = load %Int32, %Int32* %5
+	%11 = getelementptr [10 x %Int32], [10 x %Int32]* %a, %Int32 0, %Int32 %10
+	%12 = load %Int32, %Int32* %5
+	%13 = getelementptr [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Int32 %12
+	%14 = load %Int32, %Int32* %11
+	%15 = load %Int32, %Int32* %13
+	%16 = add %Int32 %14, %15
+	store %Int32 %16, %Int32* %9
+	%17 = load %Int32, %Int32* %5
+	%18 = add %Int32 %17, 1
+	store %Int32 %18, %Int32* %5
 	br label %again_1
 break_1:
-	%20 = load [10 x %Int32], [10 x %Int32]* %5
+	%19 = load [10 x %Int32], [10 x %Int32]* %4
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%21 = zext i8 10 to %Int32
+	%20 = zext i8 10 to %Int32
 	; -- end vol eval --
-	store [10 x %Int32] %20, [10 x %Int32]* %0
+	store [10 x %Int32] %19, [10 x %Int32]* %0
 	ret void
 }
 

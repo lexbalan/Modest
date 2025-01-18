@@ -42,16 +42,18 @@ func tableSepPrint(sz: *[]Nat32, m: Int32) -> Unit {
 	}
 }
 
-
+// we cannot receive VLA by value,
+// but we can to receive pointer to open array
+// and after construct pointer to closed array with required dimensions
 func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) -> Unit {
 	var i: Int32
 	var j: Int32
 
-	// Таблица размеров колонок
+	// array of size of columns (in characters)
 	var sz: [n]Nat32 = []
 
-	// Получаем указатель на конкретный массив
-	var table: *[m][n]*Str8 = *[m][n]*Str8 tablex
+	// construct pointer to closed array
+	let table = *[m][n]*Str8 tablex
 
 	// calculate max length (in chars) of column
 	i = 0

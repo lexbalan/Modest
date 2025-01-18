@@ -53,17 +53,19 @@ static void tableSepPrint(uint32_t *sz, int32_t m)
 	}
 }
 
-
+// we cannot receive VLA by value,
+// but we can to receive pointer to open array
+// and after construct pointer to closed array with required dimensions
 static void tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
 {
 	int32_t i;
 	int32_t j;
 
-	// Таблица размеров колонок
+	// array of size of columns (in characters)
 	uint32_t sz[n];
 	memset(&sz, 0, sizeof sz);
 
-	// Получаем указатель на конкретный массив
+	// construct pointer to closed array
 	char *(*table)[m][n] = (char *(*)[m][n])tablex;
 
 	// calculate max length (in chars) of column

@@ -1123,8 +1123,8 @@ def ass(left, indexes):
 			index = indexes[i]
 			off = llvm_eval_binary('mul', index, step)
 			offset = llvm_eval_binary('add', offset, off)
-			i += 1
 			lt = lt.of
+			i += 1
 
 		rootType = lt
 		ep = llvm_gep(left, left['type'], [offset], result_type, rootType)
@@ -1846,43 +1846,23 @@ def print_stmt_var(x):
 	t = var.type
 	id_str = get_id_str(var)
 
+	sz = None
 
 	# VLA VLA VLA
 	# Calculate size of VLA value in runtime (!)
 	tx = t
 	while tx.is_pointer():
 		tx = tx.to
-	if tx.is_closed_array():
-		calcArraySizeInRootElements(tx)
+	if tx.is_vla():
+		sz = calcArraySizeInRootElements(tx)
+		t = t.get_array_root()
 	# VLA VLA VLA
 
-
-	# TODO: убери тк выше уже вычияляется объем VLA!
 	# only for VLA
-	is_vla = False
-	sz = None
-	if t.is_array():
-		if not t.volume.isImmediate():
-			sz = do_reval(t.volume)
-			t = t.of
+	#if t.is_vla():
 
-	val = llvm_alloca(t, size=sz, alignment=t.align)
-
-	# VLA fix
-	left = val
-	if var.type.is_vla():
-		# поскольку VLA реализуется через alloca
-		# и поэтому имеет тип <vla_item_type>*,
-		# нам просто нужно пределать его в указатель на массив
-		# ex:  %8 = alloca i32, i32 %7, align 4
-		#      %9 = bitcast i32* %8 to [0 x i32]*
-		# и дальше уже будем работать с ним как с *[0 x i32] (%9)
-		from_type = TypePointer(var.type.of)
-		to_type = TypePointer(var.type)
-		left = llvm_2cast('bitcast', from_type, to_type, left)
-		val = left
-
-	locals_add(id_str, val)
+	left = llvm_alloca(t, size=sz, alignment=t.align)
+	locals_add(id_str, left)
 
 	init_value = x.init_value
 	if not Value.isUndefined(init_value):
