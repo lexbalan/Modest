@@ -1118,6 +1118,9 @@ def ass(left, indexes):
 		i = 0
 		offset = llvm_value_zero(foundation.typeInt32)
 		while lt.is_array():
+			#if not hasattr(lt, 'itemSizeInRootElements'):
+			#	info("????", lt.ti)
+
 			step = lt.itemSizeInRootElements
 			index = indexes[i]
 			off = llvm_eval_binary('mul', index, step)
@@ -1876,20 +1879,20 @@ def print_stmt_var(x):
 
 def print_stmt_const(x):
 	id_str = get_id_str(x)
-	val = x.init_value
+	iv = x.init_value
 
-	if val.type.is_string():
+	if iv.type.is_string():
 		return None
 
-	if isinstance(val, ValueCall):
-		if need_sret(val.func.type):
-			v = do_eval_call(val)
+	if isinstance(iv, ValueCall):
+		if need_sret(iv.func.type):
+			v = do_eval_call(iv)
 			locals_add(id_str, v)
 			return None
 
-	v = do_reval(val)
+	v = do_reval(iv)
+	t = x.value.type
 
-	t = val.type
 	# VLA VLA VLA
 	# Calculate size of VLA value in runtime (!)
 	tx = t
