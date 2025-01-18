@@ -42,6 +42,7 @@ class StmtDef(Stmt):
 	def __init__(self, id, ti=None):
 		super().__init__(ti)
 		self.id = id
+		self.access_level = 'private'
 
 
 class StmtDefType(StmtDef):
