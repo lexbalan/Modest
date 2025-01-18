@@ -81,8 +81,8 @@ static void tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
 
 	i = 0;
 	while (i < n) {
-		// добавляем 1 пробел слева и один справа
-		// для красивого отступа
+		// добавляем по пробелу слева и справа
+		// (для красивого отступа)
 		sz[i] = sz[i] + 2;
 		i = i + 1;
 	}
@@ -125,9 +125,7 @@ static void tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
 
 int32_t main()
 {
-	//
 	tablePrint((void *)&table, nRows, nCols, true);
-
 	return 0;
 }
 

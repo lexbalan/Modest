@@ -1201,11 +1201,15 @@ def do_value_index(x):
 	if via_pointer:
 		array_typ = left_typ.to
 
-
 	if not array_typ.is_array():
 		error("expected array or pointer to array", left.ti)
 		return ValueBad(x['ti'])
 
+	# Can index *[]AnyNonArrayType
+	# Can't index *[][]AnyType
+	if array_typ.is_open_array_of_open_array():
+		error("cannot index open array of open array", x['ti'])
+		return ValueBad(x['ti'])
 
 	index = do_rvalue(x['index'])
 

@@ -415,8 +415,8 @@ again_3:
 	%43 = icmp slt %Int32 %42, %n
 	br %Bool %43 , label %body_3, label %break_3
 body_3:
-	; добавляем 1 пробел слева и один справа
-	; для красивого отступа
+	; добавляем по пробелу слева и справа
+	; (для красивого отступа)
 	%44 = load %Int32, %Int32* %3
 ; -- INDEX VLA --
 	%45 = mul %Int32 %44, 1
@@ -533,7 +533,6 @@ break_4:
 }
 
 define %Int32 @main() {
-	;
 	call void @tablePrint([0 x [0 x %Str8*]]* bitcast ([5 x [4 x %Str8*]]* @table to [0 x [0 x %Str8*]]*), %Int32 5, %Int32 4, %Bool 1)
 	ret %Int32 0
 }

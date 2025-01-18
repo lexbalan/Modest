@@ -63,7 +63,7 @@ func test2(pa: *[][][]Int32, m: Int32, n: Int32, p: Int32) {
 		while j < n {
 			var k = 0
 			while k < p {
-				let v = pa[i][j][k]
+				let v = (*[m][n][p]Int32 pa)[i][j][k]
 				printf("pa[%d][%d][%d] = %d\n", i, j, k, v)
 				++k
 			}

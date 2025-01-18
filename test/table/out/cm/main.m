@@ -68,8 +68,8 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) -> Unit 
 
 	i = 0
 	while i < n {
-		// добавляем 1 пробел слева и один справа
-		// для красивого отступа
+		// добавляем по пробелу слева и справа
+		// (для красивого отступа)
 		sz[i] = sz[i] + 2
 		i = i + 1
 	}
@@ -111,9 +111,7 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) -> Unit 
 
 
 public func main() -> Int32 {
-	//
 	tablePrint(&table, nRows, nCols, headline = true)
-
 	return 0
 }
 
