@@ -56,14 +56,10 @@ class Type(Entity):
 		return isinstance(self, TypeBad)
 
 
-	def is_incompleted(self):
-		return self.incomplete
-
-
 	# TypeFunc бывает incomplete
 	# то есть все что известно - что это функция,
 	# а больше никакой конкретики
-	def is_incomplete(self):
+	def is_incompleted(self):
 		return self.incomplete
 
 

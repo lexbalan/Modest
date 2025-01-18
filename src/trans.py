@@ -1441,7 +1441,7 @@ def do_value_id(x):
 
 
 	global cdef
-	if v.type.is_incomplete():
+	if v.type.is_incompleted():
 		cdef.deps.append(v)
 		v = update_func_type(v.id.str)
 		if v == None:
@@ -2267,9 +2267,9 @@ def def_func(x, dostmt=True):
 
 	fn.definition = definition
 
-	if fn.type.is_incomplete():
+	if fn.type.is_incompleted():
 		fn.type = do_type_func(x['type'])
-		if fn.type.is_incomplete():
+		if fn.type.is_incompleted():
 			return None
 
 	if fn.type.is_bad():
