@@ -12,7 +12,7 @@ var a: [2][3]Int32 = [
 
 func print2DArray(pa: *[][]Int32, m: Int32, n: Int32) {
 	//let pg = *[m][n]Int32 pa
-	let gg: [m][n]Int32 = []
+	//let gg: [m][n]Int32 = []
 
 	let pg: *[m][n]Int32 = *[m][n]Int32 pa
 	var i = 0

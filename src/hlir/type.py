@@ -168,7 +168,7 @@ class Type(Entity):
 
 	def is_closed_array(self):
 		if self.is_array():
-			return self.volume != None
+			return not Value.isUndefined(self.volume)
 		return False
 
 

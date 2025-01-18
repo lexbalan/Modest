@@ -43,20 +43,22 @@ func tableSepPrint(sz: *[]Nat32, m: Int32) -> Unit {
 }
 
 
-func tablePrint(tablex: *[][]*Str8, n: Int32, m: Int32, headline: Bool) -> Unit {
+func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) -> Unit {
 	var i: Int32
 	var j: Int32
-	var sz: [m]Nat32 = []
 
-	var table: *[]*Str8 = *[]*Str8 tablex
+	// Таблица размеров колонок
+	var sz: [n]Nat32 = []
 
-	// calculate max length of col
+	// Получаем указатель на конкретный массив
+	var table: *[m][n]*Str8 = *[m][n]*Str8 tablex
+
+	// calculate max length (in chars) of column
 	i = 0
-	while i < n {
+	while i < m {
 		j = 0
-		while j < m {
-			let index = i * (n - 1) + j
-			let slen = Nat32 (strlen(table[index]))
+		while j < n {
+			let slen = Nat32 (strlen((table[i])[j]))
 			sz[j] = max(slen, sz[j])
 			j = j + 1
 		}
@@ -64,7 +66,7 @@ func tablePrint(tablex: *[][]*Str8, n: Int32, m: Int32, headline: Bool) -> Unit 
 	}
 
 	i = 0
-	while i < m {
+	while i < n {
 		// добавляем 1 пробел слева и один справа
 		// для красивого отступа
 		sz[i] = sz[i] + 2
@@ -72,19 +74,18 @@ func tablePrint(tablex: *[][]*Str8, n: Int32, m: Int32, headline: Bool) -> Unit 
 	}
 
 	i = 0
-	while i < n {
+	while i < m {
 		// pirint `+----+` separator
 		if i < 2 or notheadline {
-			tableSepPrint(&sz, m)
-			printf("\n|")
-		} else {
-			printf("|")
+			tableSepPrint(&sz, n)
+			printf("\n")
 		}
 
+		printf("|")
+
 		j = 0
-		while j < m {
-			let index = i * (n - 1) + j
-			let s = table[index]
+		while j < n {
+			let s = (table[i])[j]
 			var len: Nat32 = Nat32 (strlen(s))
 			if s[0] != "\x0" {
 				len = len + 1
@@ -103,7 +104,7 @@ func tablePrint(tablex: *[][]*Str8, n: Int32, m: Int32, headline: Bool) -> Unit 
 		printf("\n")
 		i = i + 1
 	}
-	tableSepPrint(&sz, m)
+	tableSepPrint(&sz, n)
 	printf("\n")
 }
 

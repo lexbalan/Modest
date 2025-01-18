@@ -296,17 +296,17 @@ define internal %SSizeT @my_printf(%Str8* %format, ...) {
 	call void @llvm.va_copy(i8* %3, i8* %4)
 	%5 = bitcast i8** %2 to i8*
 	call void @llvm.va_start(i8* %5)
-	%6 = alloca [128 x %Char8], align 1
-; -- CONS PTR TO ARRAY --
-	%7 = bitcast [128 x %Char8]* %6 to %CharStr*
-	%8 = load i8*, i8** %2
-	%9 = call %Int @vsnprintf(%CharStr* %7, %SizeT 128, %Str8* %format, i8* %8)
-	%10 = bitcast i8** %2 to i8*
-	call void @llvm.va_end(i8* %10)
-	%11 = bitcast [128 x %Char8]* %6 to i8*
-	%12 = zext %Int %9 to %SizeT
-	%13 = call %SSizeT @write(%Int 1, i8* %11, %SizeT %12)
-	ret %SSizeT %13
+	%6 = mul i8 128, 1  ; calc VLA item size
+	%7 = alloca [128 x %Char8], align 1
+	%8 = bitcast [128 x %Char8]* %7 to %CharStr*
+	%9 = load i8*, i8** %2
+	%10 = call %Int @vsnprintf(%CharStr* %8, %SizeT 128, %Str8* %format, i8* %9)
+	%11 = bitcast i8** %2 to i8*
+	call void @llvm.va_end(i8* %11)
+	%12 = bitcast [128 x %Char8]* %7 to i8*
+	%13 = zext %Int %10 to %SizeT
+	%14 = call %SSizeT @write(%Int 1, i8* %12, %SizeT %13)
+	ret %SSizeT %14
 }
 
 define %Int @main() {

@@ -401,9 +401,7 @@ break_2:
 break_1:
 
 	;test()
-; -- CONS PTR TO ARRAY --
-	%25 = bitcast [3 x [3 x [3 x %Int32]]]* @a to [0 x [0 x [0 x %Int32]]]*
-	call void @test2([0 x [0 x [0 x %Int32]]]* %25, %Int32 3, %Int32 3, %Int32 3)
+	call void @test2([0 x [0 x [0 x %Int32]]]* bitcast ([3 x [3 x [3 x %Int32]]]* @a to [0 x [0 x [0 x %Int32]]]*), %Int32 3, %Int32 3, %Int32 3)
 	ret %Int32 0
 }
 

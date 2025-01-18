@@ -246,10 +246,11 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 @str13 = private constant [22 x i8] [i8 91, i8 45, i8 93, i8 32, i8 67, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0]
 ; -- endstrings --
 define internal %Bool @write_file(%Int %sockfd) {
-	%1 = alloca [1024 x %Char8], align 1
-	%2 = call %File* @fopen(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-	%3 = icmp eq %File* %2, null
-	br %Bool %3 , label %then_0, label %endif_0
+	%1 = mul i16 1024, 1  ; calc VLA item size
+	%2 = alloca [1024 x %Char8], align 1
+	%3 = call %File* @fopen(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+	%4 = icmp eq %File* %3, null
+	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([27 x i8]* @str3 to [0 x i8]*))
 	ret %Bool 0
@@ -259,23 +260,23 @@ endif_0:
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%5 = bitcast [1024 x %Char8]* %1 to i8*
-	%6 = call %SSizeT @recv(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
-	%7 = icmp sle %SSizeT %6, 0
-	br %Bool %7 , label %then_1, label %endif_1
+	%6 = bitcast [1024 x %Char8]* %2 to i8*
+	%7 = call %SSizeT @recv(%Int %sockfd, i8* %6, %SizeT 1024, %Int 0)
+	%8 = icmp sle %SSizeT %7, 0
+	br %Bool %8 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
 	br label %endif_1
 endif_1:
-	%9 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x %Char8]* %1)
+	%10 = call %Int (%File*, %Str*, ...) @fprintf(%File* %3, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x %Char8]* %2)
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%10 = zext i16 1024 to %Int32
+	%11 = zext i16 1024 to %Int32
 	; -- end vol eval --
 	; -- zero fill rest of array
-	%11 = mul %Int32 %10, 1
-	%12 = bitcast [1024 x %Char8]* %1 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, %Int32 %11, i1 0)
+	%12 = mul %Int32 %11, 1
+	%13 = bitcast [1024 x %Char8]* %2 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %13, i8 0, %Int32 %12, i1 0)
 	br label %again_1
 break_1:
 	ret %Bool 1

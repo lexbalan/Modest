@@ -211,7 +211,6 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 define %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Int32 %state_no) {
-; -- CONS PTR TO ARRAY --
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
 	%2 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %1, %Int32 0, %Int32 %state_no
 	%3 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %2, %Int32 0, %Int32 0

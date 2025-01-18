@@ -1301,7 +1301,7 @@ def do_value_slice(x):
 	if index_to == None:
 		index_to = ValueUndefined(typeSysInt)
 
-	type = TypeArray(array_type.of, slice_volume, x['ti'])
+	type = TypeArray(array_type.of, slice_volume, generic=False, ti=x['ti'])
 	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
 
 	if not via_pointer:
@@ -2225,7 +2225,7 @@ def def_var(x):
 				pass
 
 			volume = value_integer_create(length)
-			t = TypeArray(t.of, volume, x['ti'])
+			t = TypeArray(t.of, volume, ti=x['ti'])
 
 		v = value_cons_implicit_check(t, v)
 
@@ -2786,7 +2786,6 @@ def pre_def(ast, fdecl=False):
 			y = do_directive(x)
 
 	return
-
 
 
 

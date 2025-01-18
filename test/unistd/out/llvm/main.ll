@@ -334,28 +334,28 @@ define %Int @main() {
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*), %Long %4)
 
 	; current control terminal
-	%6 = alloca [128 x %Char8], align 1
-; -- CONS PTR TO ARRAY --
-	%7 = bitcast [128 x %Char8]* %6 to [0 x %Char]*
-	%8 = call [0 x %Char]* @ctermid([0 x %Char]* %7)
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*), [128 x %Char8]* %6)
+	%6 = mul i8 128, 1  ; calc VLA item size
+	%7 = alloca [128 x %Char8], align 1
+	%8 = bitcast [128 x %Char8]* %7 to [0 x %Char]*
+	%9 = call [0 x %Char]* @ctermid([0 x %Char]* %8)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*), [128 x %Char8]* %7)
 
 	; current working directory
-	%10 = alloca [128 x %Char8], align 1
-; -- CONS PTR TO ARRAY --
-	%11 = bitcast [128 x %Char8]* %10 to [0 x %Char]*
-	%12 = call [0 x %Char]* @getcwd([0 x %Char]* %11, %SizeT 128)
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), [128 x %Char8]* %10)
-	%14 = call [0 x %Char]* @ttyname(%Int 0)
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), [0 x %Char]* %14)
-	%16 = call %Str* @getenv(%Str* bitcast ([5 x i8]* @str7 to [0 x i8]*))
-	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str8 to [0 x i8]*), %Str* %16)
+	%11 = mul i8 128, 1  ; calc VLA item size
+	%12 = alloca [128 x %Char8], align 1
+	%13 = bitcast [128 x %Char8]* %12 to [0 x %Char]*
+	%14 = call [0 x %Char]* @getcwd([0 x %Char]* %13, %SizeT 128)
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), [128 x %Char8]* %12)
+	%16 = call [0 x %Char]* @ttyname(%Int 0)
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), [0 x %Char]* %16)
+	%18 = call %Str* @getenv(%Str* bitcast ([5 x i8]* @str7 to [0 x i8]*))
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str8 to [0 x i8]*), %Str* %18)
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str9 to [0 x i8]*))
-	%19 = call %UnsignedInt @sleep(%UnsignedInt 1)
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str9 to [0 x i8]*))
+	%21 = call %UnsignedInt @sleep(%UnsignedInt 1)
 	br label %again_1
 break_1:
 	ret %Int 0

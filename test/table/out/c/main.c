@@ -54,22 +54,24 @@ static void tableSepPrint(uint32_t *sz, int32_t m)
 }
 
 
-static void tablePrint(char *(*tablex)[], int32_t n, int32_t m, bool headline)
+static void tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
 {
 	int32_t i;
 	int32_t j;
-	uint32_t sz[m];
+
+	// Таблица размеров колонок
+	uint32_t sz[n];
 	memset(&sz, 0, sizeof sz);
 
-	char *(*table)[] = (char *(*)[])tablex;
+	// Получаем указатель на конкретный массив
+	char *(*table)[m][n] = (char *(*)[m][n])tablex;
 
-	// calculate max length of col
+	// calculate max length (in chars) of column
 	i = 0;
-	while (i < n) {
+	while (i < m) {
 		j = 0;
-		while (j < m) {
-			int32_t index = i * (n - 1) + j;
-			uint32_t slen = (uint32_t)strlen((*table)[index]);
+		while (j < n) {
+			uint32_t slen = (uint32_t)strlen((*table)[i][j]);
 			sz[j] = max(slen, sz[j]);
 			j = j + 1;
 		}
@@ -77,7 +79,7 @@ static void tablePrint(char *(*tablex)[], int32_t n, int32_t m, bool headline)
 	}
 
 	i = 0;
-	while (i < m) {
+	while (i < n) {
 		// добавляем 1 пробел слева и один справа
 		// для красивого отступа
 		sz[i] = sz[i] + 2;
@@ -85,19 +87,18 @@ static void tablePrint(char *(*tablex)[], int32_t n, int32_t m, bool headline)
 	}
 
 	i = 0;
-	while (i < n) {
+	while (i < m) {
 		// pirint `+----+` separator
 		if ((i < 2) || !headline) {
-			tableSepPrint(&sz, m);
-			printf("\n|");
-		} else {
-			printf("|");
+			tableSepPrint(&sz, n);
+			printf("\n");
 		}
 
+		printf("|");
+
 		j = 0;
-		while (j < m) {
-			int32_t index = i * (n - 1) + j;
-			char *s = (*table)[index];
+		while (j < n) {
+			char *s = (*table)[i][j];
 			uint32_t len = (uint32_t)strlen(s);
 			if (s[0] != '\x0') {
 				len = len + 1;
@@ -116,7 +117,7 @@ static void tablePrint(char *(*tablex)[], int32_t n, int32_t m, bool headline)
 		printf("\n");
 		i = i + 1;
 	}
-	tableSepPrint(&sz, m);
+	tableSepPrint(&sz, n);
 	printf("\n");
 }
 

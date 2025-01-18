@@ -761,7 +761,6 @@ def llvm_dold(x):
 	return x
 
 
-
 def print_list_with(lst, method):
 	i = 0
 	while i < len(lst):
@@ -1107,16 +1106,32 @@ def getET(et):
 def ass(left, indexes):
 	result_type = left['type']
 	et = getET(left['type'])
+
+	# ACCESS TO VLA, SPECIAL WAY
+	lt = left['type']
+	if lt.is_pointer():
+		lt = lt.to
+
+	#info("index VLA", lt.ti)
+	if lt.is_vla():
+		out("\n; -- INDEX VLA --")
+		#mass
+		i = 0
+		offset = llvm_value_zero(foundation.typeInt32)
+		while lt.is_array():
+			step = lt.itemSizeInRootElements
+			index = indexes[i]
+			off = llvm_eval_binary('mul', index, step)
+			offset = llvm_eval_binary('add', offset, off)
+			i += 1
+			lt = lt.of
+
+		rootType = lt
+		ep = llvm_gep(left, left['type'], [offset], result_type, rootType)
+		out("\n; -- END INDEX VLA --")
+		return ep
+
 	indexes = (llvm_value_num_zero,) + indexes
-
-#	# ACCESS TO VLA, SPECIAL WAY
-#	if left['type'].to.is_vla():
-#		#mass
-#		out("\n; -- INDEX VLA --")
-#		index = llvm_value_zero(foundation.typeInt32)
-#		llvm_eval_binary(llvm_opcode, l, r, x)
-#		info("VLA", left['proto'].ti)
-
 	return llvm_gep(left, left['type'], indexes, result_type, et)
 
 
@@ -1150,7 +1165,7 @@ def do_eval_slice(x):
 	if not array['is_adr']:
 		if not v['index'].isImmediate():
 			error("expected immediate index value", x.ti)
-			return llvm_value_zero(x.ti)
+			return llvm_value_zero(x.type)
 
 		return extractvalue(array, result_type, index.asset)
 
@@ -1365,22 +1380,42 @@ def eval_cons_array(x):
 
 
 
+# Рекурсивно вычисляем itemSizeInRootElements & arraySizeInRootElements
+# для каждого типа массива (в цепочке [m][n]...)
+def calcArraySizeInRootElements(t):
+	#info("calculate VLA step", t.ti)
+	# размер его элемента в количестве корневых элементов
+	itemSize = None
+	if t.of.is_array():
+		itemSize = calcArraySizeInRootElements(t.of)
+	else:
+		itemSize = llvm_value_num(foundation.typeInt32, 1)
+
+	# сохраним itemSize в типе массива;
+	# (он по сути является его step для его индекса)
+	# при индексации VLA будем умножать индекс i на его itemSize (step)
+	# так получим смещение i-того элемента
+	# (!)
+	t.itemSizeInRootElements = itemSize
+
+	# Get array size
+	# размер этого массива = его объем * объем его элемента
+	volume = do_reval(t.volume)
+	arrSize = llvm_eval_binary('mul', volume, itemSize)
+	out("  ; calc VLA item size")
+	# (!)
+	t.arraySizeInRootElements = arrSize
+	return arrSize
+
+
 def do_eval_cons_pointer_to_array(x):
 	value = x.value
 	from_type = value.type
 	type = x.type
 
-	dims = []
-	xt = type.to
-	while xt.is_array():
-		volume = xt.volume
-		if isinstance(volume, ValueVar):
-			dim = do_reval(volume)
-			volume.dim = dim
-			out("; -- DIM --")
-			dims.append(dim)
-			#print("_VAR!")
-		xt = xt.of
+	# Calculate size of VLA value in runtime (!)
+	if type.to.is_closed_array():
+		calcArraySizeInRootElements(type.to)
 
 	# Конструирование указателя на массив массивов
 	# из указателя на массив массивов
@@ -1422,7 +1457,7 @@ def do_eval_cons(x):
 			if id(type.to) == id(from_type.to):
 				return do_reval(value)
 
-			if type.to.is_array():
+			if type.to.is_closed_array():
 				if from_type.to.is_array():
 					return do_eval_cons_pointer_to_array(x)
 
@@ -1811,6 +1846,18 @@ def print_stmt_var(x):
 	t = var.type
 	id_str = get_id_str(var)
 
+
+	# VLA VLA VLA
+	# Calculate size of VLA value in runtime (!)
+	tx = t
+	while tx.is_pointer():
+		tx = tx.to
+	if tx.is_closed_array():
+		calcArraySizeInRootElements(tx)
+	# VLA VLA VLA
+
+
+	# TODO: убери тк выше уже вычияляется объем VLA!
 	# only for VLA
 	is_vla = False
 	sz = None
@@ -1860,6 +1907,20 @@ def print_stmt_let(x):
 			return None
 
 	v = do_reval(val)
+
+
+
+	# VLA VLA VLA
+	# Calculate size of VLA value in runtime (!)
+	t = x.value.type
+	while t.is_pointer():
+		t = t.to
+	if t.is_closed_array():
+		calcArraySizeInRootElements(t)
+
+	# VLA VLA VLA
+
+
 
 	# для let-массивов выделяем память (alloca)
 	# поскольку их могут индексировать переменной

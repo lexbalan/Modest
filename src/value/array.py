@@ -16,7 +16,7 @@ def value_array_create(items, ti=None):
 	length = len(items)
 	if length == 0:
 		item_type = foundation.typeUnit  # not Null, becase it fail
-		v = _value_array_create([], item_type, 0, True, ti)
+		v = _value_array_create([], item_type, 0, is_generic=True, ti=ti)
 		v.immediate = True  #!
 		return v
 
@@ -38,7 +38,7 @@ def value_array_create(items, ti=None):
 
 	# неявно приводим все элементы к этому типу
 	casted_items = implicit_cast_list(items, items_type)
-	v = _value_array_create(casted_items, items_type, length, True, ti)
+	v = _value_array_create(casted_items, items_type, length, is_generic=True, ti=ti)
 
 	v.immediate = is_immediate  #TODO: need to implement 'immediate' flag
 	return v
@@ -168,7 +168,7 @@ def value_array_cons(t, v, method, ti):
 
 
 
-def _value_array_create(items, item_type, length, is_generic, ti):
+def _value_array_create(items, item_type, length, is_generic=False, ti=None):
 	array_volume = value_integer_create(length)
 	array_type = TypeArray(item_type, volume=array_volume, ti=ti)
 	array_type.generic = is_generic

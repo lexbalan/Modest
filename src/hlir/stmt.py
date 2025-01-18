@@ -60,9 +60,9 @@ class StmtDefVar(StmtDef):
 
 
 class StmtDefConst(StmtDef):
-	def __init__(self, id, new_value, init_value=None, ti=None):
+	def __init__(self, id, const_value, init_value=None, ti=None):
 		super().__init__(id, ti)
-		self.value = new_value
+		self.value = const_value
 		self.init_value = init_value
 
 
