@@ -2747,7 +2747,7 @@ def pre_def(ast, fdecl=False):
 			id = x['id']
 			ti = id['ti']
 
-			t = Type(x['ti'])  # Create incomplete type
+			t = Type(x['ti'])  # Incomplete type (!)
 
 			if kind == 'type':
 				cmodule_type_add(id['str'], t, is_public=is_public)
