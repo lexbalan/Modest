@@ -550,12 +550,11 @@ def do_type_id(t):
 		tx = ctx_type_get(id_str)
 
 	# tmp
-	if tx == None:
-		error("undefined type", t['ti'])
-		tx = htype.TypeUndefined(t['ti'])
+#	if tx == None:
+#		error("undefined type", t['ti'])
+#		tx = htype.TypeUndefined(t['ti'])
 
 	# если дело происходит в определении типа и пришел undefined тип
-	#Type.is_incomplete
 	if tx.is_undefined():
 		if not isinstance(cdef, StmtDefType):
 			error("forward references to non-struct type", t['ti'])
@@ -1626,7 +1625,7 @@ def do_value_bad(x):
 
 
 def do_value_undefined(x):
-	t = htype.TypeUndefined(x['ti'])
+	t = htype.TypeBad(x['ti'])
 	return ValueUndefined(t, x['ti'])
 
 
@@ -2750,14 +2749,12 @@ def pre_def(ast, fdecl=False):
 			ti = id['ti']
 
 			if kind == 'type':
-				t = htype.TypeUndefined(x['ti'])
+				t = Type(x['ti'])
 				cmodule_type_add(id['str'], t, is_public=is_public)
 
 			elif kind == 'func':
-				# Create incomplete function value
-
-				#type_func incomplete!
-				f_to = htype.TypeUndefined(x['ti'])
+				# Create function value with incomplete type
+				f_to = Type(x['ti'])
 				ftype = TypeFunc([], f_to, False, x['ti'])
 				ftype.incomplete = True
 				v = ValueFunc(ftype, Id(x['id']), x['ti'])
