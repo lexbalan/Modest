@@ -2747,17 +2747,14 @@ def pre_def(ast, fdecl=False):
 			id = x['id']
 			ti = id['ti']
 
+			t = Type(x['ti'])  # Create incomplete type
+
 			if kind == 'type':
-				t = Type(x['ti'])
 				cmodule_type_add(id['str'], t, is_public=is_public)
 
 			elif kind == 'func':
 				# Create function value with incomplete type
-				f_to = Type(x['ti'])
-				ftype = TypeFunc([], f_to, False, x['ti'])
-				ftype.incomplete = True
-				v = ValueFunc(ftype, Id(x['id']), x['ti'])
-				# And bound it with the id
+				v = ValueFunc(t, Id(x['id']), x['ti'])
 				cmodule_value_add(id['str'], v, is_public=is_public)
 
 
