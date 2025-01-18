@@ -44,8 +44,7 @@ class Type(Entity):
 		self.deps = []
 		self.signed = None  # Not defined for all types (!)
 		self.ti = None
-		self.incomplete = False
-		self.undef = True
+		self.incomplete = True
 		pass
 
 
@@ -57,8 +56,8 @@ class Type(Entity):
 		return isinstance(self, TypeBad)
 
 
-	def is_undefined(self):
-		return self.undef
+	def is_incompleted(self):
+		return self.incomplete
 
 
 	# TypeFunc бывает incomplete
@@ -327,7 +326,7 @@ class Type(Entity):
 
 	# TODO: REMOVE IT!
 	@staticmethod
-	def eq_undefined(a, b, opt):
+	def eq_incompleteined(a, b, opt):
 		return id(a) == id(b)
 
 
@@ -368,7 +367,7 @@ class Type(Entity):
 		elif isinstance(a, TypeFloat): return Type.eq_float(a, b, opt)
 		elif isinstance(a, TypeString): return True
 		elif isinstance(a, TypeUnit): return True
-		elif isinstance(a, TypeUndeifned): return Type.eq_undefined(a, b, opt)
+		elif isinstance(a, TypeUndeifned): return Type.eq_incompleteined(a, b, opt)
 		elif isinstance(a, TypeVaList): return True
 		#elif k == 'enum': return eq_enum(a, b, opt)
 		assert(False)
@@ -379,7 +378,7 @@ class Type(Entity):
 	# cannot create variable with type
 	def is_forbidden_var(self, zero_array_forbidden=True):
 		t = self
-		if t.is_undefined() or t.is_unit() or t.is_func():
+		if t.is_incompleted() or t.is_unit() or t.is_func():
 			return True
 
 		if t.is_array():
@@ -411,7 +410,7 @@ class Type(Entity):
 
 class TypeBad(Type):
 	def __init__(self, ti=None):
-		self.undef = False
+		self.incomplete = False
 		super().__init__(ti=ti)
 
 
@@ -423,7 +422,7 @@ class TypeUndefined(Type):
 class TypeNumber(Type):
 	def __init__(self, width=0, signed=False, ti=None):
 		super().__init__(generic=True, width=width, ops=NUM_OPS, ti=ti)
-		self.undef = False
+		self.incomplete = False
 		from .misc import Id
 		self.id = Id(None)
 		self.signed=signed
@@ -435,7 +434,7 @@ class TypeString(Type):
 		width = char_width
 		size = nbytes_for_bits(width)
 		super().__init__(width=width, generic=True, ops=STR_OPS, ti=ti)
-		self.undef = False
+		self.incomplete = False
 		self.size=size
 		self.char_width=char_width
 		self.length=length
@@ -447,7 +446,7 @@ class TypeUnit(Type):
 	def __init__(self, ti=None):
 		super().__init__(ops=UNIT_OPS, ti=ti)
 		from .misc import Id
-		self.undef = False
+		self.incomplete = False
 		self.id = Id().fromStr('Unit')
 		self.id.c = 'void'
 		self.id.llvm = 'void'
@@ -458,7 +457,7 @@ class TypeBool(Type):
 	def __init__(self, ti=None):
 		super().__init__(width=1, ops=BOOL_OPS, ti=ti)
 		from .misc import Id
-		self.undef = False
+		self.incomplete = False
 		self.id = Id().fromStr('Bool')
 		self.id.c = 'bool'
 		self.id.llvm = '%Bool'
@@ -468,7 +467,7 @@ class TypeBool(Type):
 class TypeWord(Type):
 	def __init__(self, width, ti=None):
 		super().__init__(width=width, ops=WORD_OPS, ti=ti)
-		self.undef = False
+		self.incomplete = False
 
 		calias = None
 		llvm_alias = None
@@ -493,7 +492,7 @@ class TypeWord(Type):
 class TypeInt(Type):
 	def __init__(self, width, signed=True, ti=None):
 		super().__init__(width=width, ops=INT_OPS, ti=ti)
-		self.undef = False
+		self.incomplete = False
 
 		alias = get_int_alias(width, signed)
 
@@ -508,7 +507,7 @@ class TypeInt(Type):
 class TypeFloat(Type):
 	def __init__(self, width, ti=None):
 		super().__init__(width=width, ops=FLOAT_OPS, ti=ti)
-		self.undef = False
+		self.incomplete = False
 
 		calias = 'float'
 		if width > 32:
@@ -526,7 +525,7 @@ class TypeFloat(Type):
 class TypeChar(Type):
 	def __init__(self, width, ti=None):
 		super().__init__(width=width, ops=CHAR_OPS, ti=ti)
-		self.undef = False
+		self.incomplete = False
 
 		alias = get_int_alias(width, signed=False)
 
@@ -544,7 +543,7 @@ class TypePointer(Type):
 	def __init__(self, to, generic=False, ti=None):
 		w = int(settings.get('pointer_width'))
 		super().__init__(width=w, generic=generic, ops=PTR_OPS, ti=ti)
-		self.undef = False
+		self.incomplete = False
 		self.to = to
 
 
@@ -562,7 +561,7 @@ class TypeArray(Type):
 				array_size = item_size * volume.asset
 
 		super().__init__(generic=generic, ops=ARR_OPS, ti=ti)
-		self.undef = False
+		self.incomplete = False
 		self.size=array_size
 		self.of = of
 		self.volume = volume
@@ -596,7 +595,7 @@ class TypeRecord(Type):
 		record_size = align_to(offset, record_align)
 
 		super().__init__(generic=generic, width=(record_size * 8), ops=REC_OPS, ti=ti)
-		self.undef = False
+		self.incomplete = False
 		self.fields = fields
 
 
@@ -604,7 +603,7 @@ class TypeFunc(Type):
 	def __init__(self, params, to, va_args, ti=None):
 		w = int(settings.get('pointer_width'))
 		super().__init__(width=w, ops=PTR_OPS, ti=ti)
-		self.undef = False
+		self.incomplete = False
 		self.params = params
 		self.to = to
 		self.extra_args = va_args
@@ -614,7 +613,7 @@ class TypeVaList(Type):
 	def __init__(self):
 		super().__init__(width=0, ti=None)
 		from .misc import Id
-		self.undef = False
+		self.incomplete = False
 		self.id = Id().fromStr('va_list')
 		self.id.c = 'va_list'
 		self.id.llvm = 'i8*'

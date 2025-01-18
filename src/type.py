@@ -152,7 +152,7 @@ def type_print(t, print_aka=True):
 	elif t.is_string():
 		print("String", end='')
 
-	elif t.is_undefined():
+	elif t.is_incompleted():
 		print('undefined', end='')
 
 	elif t.is_unit():

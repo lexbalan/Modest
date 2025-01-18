@@ -807,7 +807,7 @@ def print_type_array(t):
 	sz = 0
 	if not t.is_vla():
 		array_size = t.volume
-		if not array_size.type.is_undefined():
+		if not array_size.type.is_incompleted():
 			if array_size.isImmediate():
 				sz = array_size.asset
 
@@ -889,7 +889,7 @@ def print_type(t):
 	elif t.is_char():
 		print_int_type_for(t.width)
 
-	elif t.is_undefined():
+	elif t.is_incompleted():
 		out('opaque')
 
 	elif t.is_va_list():

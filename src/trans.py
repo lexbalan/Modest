@@ -554,7 +554,7 @@ def do_type_id(t):
 #		error("undefined type", t['ti'])
 
 	# если дело происходит в определении типа и пришел undefined тип
-	if tx.is_undefined():
+	if tx.is_incompleted():
 		if not isinstance(cdef, StmtDefType):
 			error("forward references to non-struct type", t['ti'])
 		cdef.deps.append(tx)
@@ -852,7 +852,7 @@ def do_value_ref(x):
 	vtype = v.type
 
 	if v.isImmutable():
-		if not vtype.is_func() or vtype.is_undefined():
+		if not vtype.is_func() or vtype.is_incompleted():
 			error("expected mutable value or function", v.ti)
 			return ValueBad(x['ti'])
 
@@ -1710,7 +1710,7 @@ def do_stmt_var(x):
 	tu = t == None
 	vu = Value.isUndefined(v)
 
-	# error: no type, no init valuetu = type_is_undefined(t)
+	# error: no type, no init valuetu = type_is_incompleted(t)
 	if tu == True and vu == True:
 		# type & value undefined
 		ctx_value_add(var_id.str, ValueBad(x['ti']))
@@ -1723,7 +1723,7 @@ def do_stmt_var(x):
 			v = value_cons_default(v)
 		t = v.type
 
-	#if not t.is_undefined():
+	#if not t.is_incompleted():
 	#	if t.is_bad():
 	#		ctx_value_add(var_id.str, ValueBad(x['ti']))
 	#		return StmtBad(x)
@@ -2049,7 +2049,7 @@ def def_type(x):
 
 	nt = ctx_type_get(id.str)
 
-	if not nt.is_undefined():
+	if not nt.is_incompleted():
 		error("type redefinition", x['ti'])
 		return None
 
@@ -2130,7 +2130,7 @@ def def_const(x):
 #		return DefConst(id, init_value, init_value, x['ti'])
 
 #	t = do_type(x['type'])
-#	if not t.is_undefined():
+#	if not t.is_incompleted():
 #		if not t.is_bad():
 #			init_value = value_cons_implicit_check(t, init_value)
 
@@ -2197,7 +2197,7 @@ def def_var(x):
 	tu = t == None
 	vu = Value.isUndefined(v)
 
-	# error: no type, no init valuetu = type_is_undefined(t)
+	# error: no type, no init valuetu = type_is_incompleted(t)
 	if tu == True and vu == True:
 		# ERROR: type & value undefined
 		ctx_value_add(id.str, ValueBad(x['ti']))
