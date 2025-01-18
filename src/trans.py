@@ -1207,8 +1207,8 @@ def do_value_index(x):
 
 	# Can index *[]AnyNonArrayType
 	# Can't index *[][]AnyType
-	if array_typ.is_open_array_of_open_array():
-		error("cannot index open array of open array", x['ti'])
+	if array_typ.is_array_of_open_array():
+		error("cannot index array of open array", x['ti'])
 		return ValueBad(x['ti'])
 
 	index = do_rvalue(x['index'])

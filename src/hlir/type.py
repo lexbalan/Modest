@@ -189,9 +189,9 @@ class Type(Entity):
 			return self.of.is_array()
 		return False
 
-	# [][]Int32, [][][]Int64, etc..
-	def is_open_array_of_open_array(self):
-		if not self.is_open_array():
+	# [10][]Int32, [][]Int32, [][][]Int64, etc..
+	def is_array_of_open_array(self):
+		if not self.is_array():
 			return False
 		return self.of.is_open_array()
 
