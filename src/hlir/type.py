@@ -44,6 +44,7 @@ class Type(Entity):
 		self.deps = []
 		self.signed = None  # Not defined for all types (!)
 		self.ti = None
+		self.incomplete = False
 		pass
 
 
@@ -59,12 +60,11 @@ class Type(Entity):
 		return isinstance(self, TypeUndefined)
 
 
-	def is_defined(self):
-		return not is_undefined(self)
-
-
+	# TypeFunc бывает incomplete
+	# то есть все что известно - что это функция,
+	# а больше никакой конкретики
 	def is_incomplete(self):
-		return self.hasAttribute('incomplete')
+		return self.incomplete
 
 
 	def is_unit(self):

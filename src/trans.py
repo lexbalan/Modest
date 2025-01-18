@@ -682,10 +682,6 @@ def do_type_func(t, func_id="_"):
 
 
 
-def do_TypeUndefined(x):
-	return htype.TypeUndefined(x['ti'])
-
-
 def do_type(x):
 	for a in x['attributes']:
 		do_attribute(a)
@@ -698,7 +694,6 @@ def do_type(x):
 	elif k == 'array': t = do_type_array(x)
 	elif k == 'record': t = do_type_record(x)
 	elif k == 'enum': t = do_type_enum(x)
-	elif k == 'undefined': t = do_TypeUndefined(x)
 	else: t = bad_type(x['ti'])
 
 	t.ti = x['ti']
@@ -1708,10 +1703,13 @@ def do_stmt_const(x):
 
 def do_stmt_var(x):
 	var_id = Id(x['id'])
-	t = do_type(x['type'])
+	t = None
+	if x['type'] != None:
+		t = do_type(x['type'])
+
 	v = do_rvalue(x['init_value'])
 
-	tu = t.is_undefined()
+	tu = t == None
 	vu = Value.isUndefined(v)
 
 	# error: no type, no init valuetu = type_is_undefined(t)
@@ -1736,10 +1734,10 @@ def do_stmt_var(x):
 			error("unsuitable type1", x['type']['ti'])
 
 	# type & init value present
-	if not t.is_undefined() and not Value.isUndefined(v):
+	if t != None and not Value.isUndefined(v):
 		v = value_cons_implicit_check(t, v)
 
-	if t.is_undefined():
+	if t == None:
 		if v.type.is_generic():
 			v = value_cons_default(v)
 
@@ -2148,7 +2146,10 @@ def do_const(x):
 	if pre_exist != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
-	type = do_type(x['type'])
+	type = None
+	if x['type'] != None:
+		type = do_type(x['type'])
+
 	init_value = do_rvalue(x['init_value'])
 
 	#if init_value.isBad():
@@ -2158,7 +2159,7 @@ def do_const(x):
 	#		error("redefinition of '%s'" % id.str, id.ti)
 	#		return StmtBad(x)
 
-	if not type.is_undefined():
+	if type != None:
 		init_value = value_cons_implicit_check(type, init_value)
 	else:
 		type = init_value.type
@@ -2190,10 +2191,12 @@ def def_var(x):
 	definition.nl = x['nl']
 	cdef = definition
 
-	t = do_type(x['type'])
+	t = None
+	if x['type'] != None:
+		t = do_type(x['type'])
 	v = do_rvalue(x['init_value'])
 
-	tu = t.is_undefined()
+	tu = t == None
 	vu = Value.isUndefined(v)
 
 	# error: no type, no init valuetu = type_is_undefined(t)
@@ -2755,11 +2758,9 @@ def pre_def(ast, fdecl=False):
 
 				#type_func incomplete!
 				f_to = htype.TypeUndefined(x['ti'])
-				t = TypeFunc([], f_to, False, x['ti'])
-				t.att.append('incomplete')
-				#t = htype.TypeUndefined(x['ti'])
-				fid = Id(x['id'])
-				v = ValueFunc(t, fid, x['ti'])
+				ftype = TypeFunc([], f_to, False, x['ti'])
+				ftype.incomplete = True
+				v = ValueFunc(ftype, Id(x['id']), x['ti'])
 				# And bound it with the id
 				cmodule_value_add(id['str'], v, is_public=is_public)
 

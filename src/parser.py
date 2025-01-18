@@ -168,15 +168,6 @@ class Parser:
 	#
 
 
-	def expr_TypeUndefined(self, ti):
-		return {
-			'isa': 'ast_type',
-			'kind': 'undefined',
-			'attributes': [],
-			'ti': ti
-		}
-
-
 	def expr_type_record(self, ti):
 		self.need("{")
 		fields = []
@@ -1494,7 +1485,7 @@ class Parser:
 		if self.match(":"):
 			t = self.expr_type()
 		else:
-			t = self.expr_TypeUndefined(ti)
+			t = None
 
 		init_value = None
 		if self.is_assign_operator():
