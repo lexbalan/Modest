@@ -1445,7 +1445,7 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	nl_str = "\n"
 
 
-def print_stmt_let(x):
+def print_stmt_const(x):
 	id = x.id
 	v = x.value
 	iv = x.init_value
@@ -1454,7 +1454,6 @@ def print_stmt_let(x):
 	#	if v['usecnt'] == 0:
 	#		if iv['kind'] != 'call':
 	#			return
-
 
 	# print generic constant as C macro
 	if value_is_generic_immediate(v):
@@ -1577,7 +1576,7 @@ def print_stmt(x):
 	elif isinstance(x, StmtIf): print_stmt_if(x, need_else_branch=False)
 	elif isinstance(x, StmtWhile): print_stmt_while(x)
 	elif isinstance(x, StmtDefVar): print_stmt_var(x)
-	elif isinstance(x, StmtDefConst): print_stmt_let(x)
+	elif isinstance(x, StmtDefConst): print_stmt_const(x)
 	elif isinstance(x, StmtBreak): print_stmt_break(x)
 	elif isinstance(x, StmtAgain): print_stmt_again(x)
 	elif isinstance(x, StmtComment): print_comment(x)

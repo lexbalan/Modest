@@ -1874,7 +1874,7 @@ def print_stmt_var(x):
 
 
 
-def print_stmt_let(x):
+def print_stmt_const(x):
 	id_str = get_id_str(x)
 	val = x.init_value
 
@@ -2035,7 +2035,7 @@ def print_stmt(x):
 	elif isinstance(x, StmtIf): print_stmt_if(x)
 	elif isinstance(x, StmtWhile): print_stmt_while(x)
 	elif isinstance(x, StmtDefVar): print_stmt_var(x)
-	elif isinstance(x, StmtDefConst): print_stmt_let(x)
+	elif isinstance(x, StmtDefConst): print_stmt_const(x)
 	elif isinstance(x, StmtBreak): print_stmt_break(x)
 	elif isinstance(x, StmtAgain): print_stmt_again(x)
 	elif isinstance(x, StmtComment): print_comment(x)
