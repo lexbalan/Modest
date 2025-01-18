@@ -329,16 +329,15 @@ define internal %Bool @test_generic_array() {
 	%1 = insertvalue [4 x i8] zeroinitializer, i8 1, 1
 	%2 = insertvalue [4 x i8] %1, i8 2, 2
 	%3 = insertvalue [4 x i8] %2, i8 3, 3
-	%4 = mul i8 4, 1  ; calc VLA item size
-	%5 = alloca [4 x i8]
+	%4 = alloca [4 x i8]
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%6 = zext i8 4 to %Int32
+	%5 = zext i8 4 to %Int32
 	; -- end vol eval --
-	store [4 x i8] %3, [4 x i8]* %5
+	store [4 x i8] %3, [4 x i8]* %4
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str12 to [0 x i8]*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str12 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
@@ -347,91 +346,91 @@ endif_0:
 	; can be implicit casted to Array with compatible type and same size
 
 	; implicit cast Generic([4]GenericInteger) value to [4]Int32
-	%9 = alloca [4 x %Int32], align 1
-	%10 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
-	%11 = insertvalue [4 x %Int32] %10, %Int32 2, 2
-	%12 = insertvalue [4 x %Int32] %11, %Int32 3, 3
+	%8 = alloca [4 x %Int32], align 1
+	%9 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
+	%10 = insertvalue [4 x %Int32] %9, %Int32 2, 2
+	%11 = insertvalue [4 x %Int32] %10, %Int32 3, 3
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%13 = zext i8 4 to %Int32
+	%12 = zext i8 4 to %Int32
 	; -- end vol eval --
-	store [4 x %Int32] %12, [4 x %Int32]* %9
-	%14 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
-	%15 = insertvalue [4 x %Int32] %14, %Int32 2, 2
-	%16 = insertvalue [4 x %Int32] %15, %Int32 3, 3
-	%17 = alloca [4 x %Int32]
+	store [4 x %Int32] %11, [4 x %Int32]* %8
+	%13 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
+	%14 = insertvalue [4 x %Int32] %13, %Int32 2, 2
+	%15 = insertvalue [4 x %Int32] %14, %Int32 3, 3
+	%16 = alloca [4 x %Int32]
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%18 = zext i8 4 to %Int32
+	%17 = zext i8 4 to %Int32
 	; -- end vol eval --
-	store [4 x %Int32] %16, [4 x %Int32]* %17
-	%19 = bitcast [4 x %Int32]* %9 to i8*
-	%20 = bitcast [4 x %Int32]* %17 to i8*
-	%21 = call i1 (i8*, i8*, i64) @memeq(i8* %19, i8* %20, %Int64 16)
-	%22 = icmp eq %Bool %21, 0
-	br %Bool %22 , label %then_1, label %endif_1
+	store [4 x %Int32] %15, [4 x %Int32]* %16
+	%18 = bitcast [4 x %Int32]* %8 to i8*
+	%19 = bitcast [4 x %Int32]* %16 to i8*
+	%20 = call i1 (i8*, i8*, i64) @memeq(i8* %18, i8* %19, %Int64 16)
+	%21 = icmp eq %Bool %20, 0
+	br %Bool %21 , label %then_1, label %endif_1
 then_1:
-	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str13 to [0 x i8]*))
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str13 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:
 
 	; implicit cast Generic([4]GenericInteger) value to [4]Nat64
-	%25 = alloca [4 x %Int64], align 1
-	%26 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
-	%27 = insertvalue [4 x %Int64] %26, %Int64 2, 2
-	%28 = insertvalue [4 x %Int64] %27, %Int64 3, 3
+	%24 = alloca [4 x %Int64], align 1
+	%25 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
+	%26 = insertvalue [4 x %Int64] %25, %Int64 2, 2
+	%27 = insertvalue [4 x %Int64] %26, %Int64 3, 3
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%29 = zext i8 4 to %Int32
+	%28 = zext i8 4 to %Int32
 	; -- end vol eval --
-	store [4 x %Int64] %28, [4 x %Int64]* %25
-	%30 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
-	%31 = insertvalue [4 x %Int64] %30, %Int64 2, 2
-	%32 = insertvalue [4 x %Int64] %31, %Int64 3, 3
-	%33 = alloca [4 x %Int64]
+	store [4 x %Int64] %27, [4 x %Int64]* %24
+	%29 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
+	%30 = insertvalue [4 x %Int64] %29, %Int64 2, 2
+	%31 = insertvalue [4 x %Int64] %30, %Int64 3, 3
+	%32 = alloca [4 x %Int64]
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%34 = zext i8 4 to %Int32
+	%33 = zext i8 4 to %Int32
 	; -- end vol eval --
-	store [4 x %Int64] %32, [4 x %Int64]* %33
-	%35 = bitcast [4 x %Int64]* %25 to i8*
-	%36 = bitcast [4 x %Int64]* %33 to i8*
-	%37 = call i1 (i8*, i8*, i64) @memeq(i8* %35, i8* %36, %Int64 32)
-	%38 = icmp eq %Bool %37, 0
-	br %Bool %38 , label %then_2, label %endif_2
+	store [4 x %Int64] %31, [4 x %Int64]* %32
+	%34 = bitcast [4 x %Int64]* %24 to i8*
+	%35 = bitcast [4 x %Int64]* %32 to i8*
+	%36 = call i1 (i8*, i8*, i64) @memeq(i8* %34, i8* %35, %Int64 32)
+	%37 = icmp eq %Bool %36, 0
+	br %Bool %37 , label %then_2, label %endif_2
 then_2:
-	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str14 to [0 x i8]*))
+	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str14 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_2
 endif_2:
 
 	; explicit cast Generic([4]GenericInteger) value to [10]Int32
-	%41 = alloca [10 x %Int32], align 1
-	%42 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
-	%43 = insertvalue [10 x %Int32] %42, %Int32 2, 2
-	%44 = insertvalue [10 x %Int32] %43, %Int32 3, 3
+	%40 = alloca [10 x %Int32], align 1
+	%41 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
+	%42 = insertvalue [10 x %Int32] %41, %Int32 2, 2
+	%43 = insertvalue [10 x %Int32] %42, %Int32 3, 3
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%45 = zext i8 10 to %Int32
+	%44 = zext i8 10 to %Int32
 	; -- end vol eval --
-	store [10 x %Int32] %44, [10 x %Int32]* %41
-	%46 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
-	%47 = insertvalue [10 x %Int32] %46, %Int32 2, 2
-	%48 = insertvalue [10 x %Int32] %47, %Int32 3, 3
-	%49 = alloca [10 x %Int32]
+	store [10 x %Int32] %43, [10 x %Int32]* %40
+	%45 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
+	%46 = insertvalue [10 x %Int32] %45, %Int32 2, 2
+	%47 = insertvalue [10 x %Int32] %46, %Int32 3, 3
+	%48 = alloca [10 x %Int32]
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%50 = zext i8 10 to %Int32
+	%49 = zext i8 10 to %Int32
 	; -- end vol eval --
-	store [10 x %Int32] %48, [10 x %Int32]* %49
-	%51 = bitcast [10 x %Int32]* %41 to i8*
-	%52 = bitcast [10 x %Int32]* %49 to i8*
-	%53 = call i1 (i8*, i8*, i64) @memeq(i8* %51, i8* %52, %Int64 40)
-	%54 = icmp eq %Bool %53, 0
-	br %Bool %54 , label %then_3, label %endif_3
+	store [10 x %Int32] %47, [10 x %Int32]* %48
+	%50 = bitcast [10 x %Int32]* %40 to i8*
+	%51 = bitcast [10 x %Int32]* %48 to i8*
+	%52 = call i1 (i8*, i8*, i64) @memeq(i8* %50, i8* %51, %Int64 40)
+	%53 = icmp eq %Bool %52, 0
+	br %Bool %53 , label %then_3, label %endif_3
 then_3:
-	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str15 to [0 x i8]*))
+	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str15 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_3
 endif_3:

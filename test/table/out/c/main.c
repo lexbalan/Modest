@@ -28,7 +28,6 @@ static char *table[5][4] = (char *[5][4]){
 };
 
 
-
 static uint32_t max(uint32_t a, uint32_t b)
 {
 	if (b > a) {

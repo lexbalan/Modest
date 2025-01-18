@@ -1105,8 +1105,8 @@ def getET(et):
 # GEP !элемент массива на который указываешь!
 def ass(left, indexes):
 	result_type = left['type']
-	et = getET(left['type'])
 
+	# VLA VLA VLA
 	# ACCESS TO VLA, SPECIAL WAY
 	lt = left['type']
 	if lt.is_pointer():
@@ -1115,7 +1115,6 @@ def ass(left, indexes):
 	#info("index VLA", lt.ti)
 	if lt.is_vla():
 		out("\n; -- INDEX VLA --")
-		#mass
 		i = 0
 		offset = llvm_value_zero(foundation.typeInt32)
 		while lt.is_array():
@@ -1130,7 +1129,11 @@ def ass(left, indexes):
 		ep = llvm_gep(left, left['type'], [offset], result_type, rootType)
 		out("\n; -- END INDEX VLA --")
 		return ep
+	# VLA VLA VLA
 
+	# classic access through pointer
+
+	et = getET(left['type'])
 	indexes = (llvm_value_num_zero,) + indexes
 	return llvm_gep(left, left['type'], indexes, result_type, et)
 
@@ -1858,8 +1861,6 @@ def print_stmt_var(x):
 		t = t.get_array_root()
 	# VLA VLA VLA
 
-	# only for VLA
-	#if t.is_vla():
 
 	left = llvm_alloca(t, size=sz, alignment=t.align)
 	locals_add(id_str, left)
@@ -1888,25 +1889,22 @@ def print_stmt_let(x):
 
 	v = do_reval(val)
 
-
-
+	t = val.type
 	# VLA VLA VLA
 	# Calculate size of VLA value in runtime (!)
-	t = x.value.type
-	while t.is_pointer():
-		t = t.to
-	if t.is_closed_array():
-		calcArraySizeInRootElements(t)
-
+	tx = t
+	while tx.is_pointer():
+		tx = tx.to
+	if tx.is_vla():
+		sz = calcArraySizeInRootElements(tx)
+		t = t.get_array_root()
 	# VLA VLA VLA
-
-
 
 	# для let-массивов выделяем память (alloca)
 	# поскольку их могут индексировать переменной
 	# а массив-значение в "регистре" невозможно индексировать переменной
-	if Type.is_closed_array(val.type) or Type.is_record(val.type):
-		v = llvm_alloca_store(val.type, id_str=None, init_value=v)
+	if Type.is_closed_array(t) or Type.is_record(t):
+		v = llvm_alloca_store(t, id_str=None, init_value=v)
 
 	locals_add(id_str, v)
 	return None

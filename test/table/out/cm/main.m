@@ -19,7 +19,6 @@ var table: [5][4]*Str8 = [
 ]
 
 
-
 func max(a: Nat32, b: Nat32) -> Nat32 {
 	if b > a {
 		return b
