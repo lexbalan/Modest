@@ -305,7 +305,7 @@ def print_value_access(v, ctx):
 def print_value_access_module(v, ctx):
 	left = v.left
 	id_str = get_id_str(v.right)
-	out("%s.%s" % (left['id'], id_str))
+	out("%s.%s" % (left.id, id_str))
 
 
 def print_cast(t, v, ctx=[]):
@@ -861,7 +861,7 @@ def printTopLevelStmt(x):
 
 def run(module, outname, options):
 	output_open(outname + '.m')
-	for x in module['defs']:
+	for x in module.defs:
 		printTopLevelStmt(x)
 	out("\n\n")
 	output_close()

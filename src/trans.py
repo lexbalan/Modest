@@ -93,32 +93,32 @@ def is_unsafe_mode():
 # тепреь вызывается только из конструктора строки (value)
 def module_strings_add(v):
 	global cmodule
-	cmodule['strings'].append(v)
+	cmodule.strings.append(v)
 
 
 
 def module_type_add_public(m, id_str, t):
 	#print("module %s type_add_public %s" % (m['id'], id_str))
-	m['symtab_public'].type_add(id_str, t)
+	m.symtab_public.type_add(id_str, t)
 	#t['module'] = m
 	t.att.append('global_entity')
 
 def module_value_add_public(m, id_str, v):
 	#print("module %s value_add_public %s" % (m['id'], id_str))
-	m['symtab_public'].value_add(id_str, v)
+	m.symtab_public.value_add(id_str, v)
 	#v['module'] = m
 	v.addAttribute('global_entity')
 
 
 def module_type_add_private(m, id_str, t):
 	#print("module %s type_add_private %s" % (m['id'], id_str))
-	m['symtab_private'].type_add(id_str, t)
+	m.symtab_private.type_add(id_str, t)
 	#t['module'] = m
 	t.att.append('global_entity')
 
 def module_value_add_private(m, id_str, v):
 	#print("module %s value_add_private %s" % (m['id'], id_str))
-	m['symtab_private'].value_add(id_str, v)
+	m.symtab_private.value_add(id_str, v)
 	#v['module'] = m
 	v.addAttribute('global_entity')
 
@@ -129,21 +129,21 @@ def module_value_add_private(m, id_str, v):
 
 # search type in module
 def module_type_get_public(m, id_str):
-	return m['symtab_public'].type_get(id_str)
+	return m.symtab_public.type_get(id_str)
 
 # search value in module
 def module_value_get_public(m, id_str):
-	return m['symtab_public'].value_get(id_str)
+	return m.symtab_public.value_get(id_str)
 
 # private
 
 # search type in module
 def module_type_get_private(m, id_str):
-	return m['symtab_private'].type_get(id_str)
+	return m.symtab_private.type_get(id_str)
 
 # search value in module
 def module_value_get_private(m, id_str):
-	return m['symtab_private'].value_get(id_str)
+	return m.symtab_private.value_get(id_str)
 
 
 
@@ -180,20 +180,20 @@ def cmodule_type_add(id_str, t, is_public=False):
 def module_type_get(m, id_str, only_public=False):
 	#print("module_type_get: " + id_str)
 
-	t = m['symtab_public'].type_get(id_str)
+	t = m.symtab_public.type_get(id_str)
 	if t != None:
 		return t
 
 	if only_public:
 		return None
 
-	t = m['symtab_private'].type_get(id_str)
+	t = m.symtab_private.type_get(id_str)
 	if t != None:
 		return t
 
 	#
-	for included_module in m['included_modules']:
-		t = included_module['symtab_public'].type_get(id_str)
+	for included_module in m.included_modules:
+		t = included_module.symtab_public.type_get(id_str)
 		if t != None:
 			return t
 
@@ -204,20 +204,20 @@ def module_type_get(m, id_str, only_public=False):
 def module_value_get(m, id_str, only_public=False):
 	#print("module_value_get: " + id_str)
 
-	v = m['symtab_public'].value_get(id_str)
+	v = m.symtab_public.value_get(id_str)
 	if v != None:
 		return v
 
 	if only_public:
 		return None
 
-	v = m['symtab_private'].value_get(id_str)
+	v = m.symtab_private.value_get(id_str)
 	if v != None:
 		return v
 
 	#
-	for included_module in m['included_modules']:
-		v = included_module['symtab_public'].value_get(id_str)
+	for included_module in m.included_modules:
+		v = included_module.symtab_public.value_get(id_str)
 		if v != None:
 			return v
 
@@ -262,7 +262,7 @@ def ctx_value_get(id_str):
 # искать ТОЛЬКО внутри текущего контекста (блока)
 def ctx_value_get_shallow(id_str):
 	global cmodule
-	return cmodule['symtab_public'].value_get(id_str, recursive=False)
+	return cmodule.symtab_public.value_get(id_str, recursive=False)
 
 
 
@@ -272,7 +272,7 @@ def module_append(definition, to_export=False):
 
 	global cmodule
 
-	cmodule['defs'].append(definition)
+	cmodule.defs.append(definition)
 	definition.module = cmodule
 
 
@@ -538,8 +538,8 @@ def do_type_id(t):
 		id_str = t['ids'][1]['str']
 		#print(">>>>>>>>>>>>>>>>>>>>>> GET TYPE %s FROM: %s" % (id_str, ns_id))
 		global cmodule
-		if ns_id in cmodule['imports']:
-			submodule = cmodule['imports'][ns_id]
+		if ns_id in cmodule.imports:
+			submodule = cmodule.imports[ns_id]
 			tx = module_type_get_public(submodule, id_str)
 		else:
 			error("unknown namespace '%s'" % ns_id, t['ti'])
@@ -634,7 +634,7 @@ def do_type_record(x):
 	rec.c_anon_id = anon_tag
 
 	#rec['att'].append('anonymous_record') # remove this!
-	cmodule['anon_recs'].append(rec)
+	cmodule.anon_recs.append(rec)
 	return rec
 
 
@@ -1031,8 +1031,8 @@ def do_value_lengthof_value(x):
 		return ValueBad({'ti': ti})
 
 	# for C backend, because C cannot do lengthof(x)
-	if not 'use_lengthof' in cmodule['att']:
-		cmodule['att'].append('use_lengthof')
+	if not 'use_lengthof' in cmodule.att:
+		cmodule.att.append('use_lengthof')
 
 	return ValueLengthof(arg, ti)
 
@@ -1316,7 +1316,7 @@ def do_value_slice(x):
 
 
 def is_submodule_name(id_str):
-	return id_str in cmodule['imports']
+	return id_str in cmodule.imports
 
 
 def submodule_access(x):
@@ -1326,7 +1326,7 @@ def submodule_access(x):
 	iname = x['right']['str']
 	ti = x['ti']
 
-	submodule = cmodule['imports'][mname]
+	submodule = cmodule.imports[mname]
 
 	v = module_value_get_public(submodule, iname)
 	if v == None:
@@ -2044,7 +2044,7 @@ def do_stmt_block(x):
 # нужно добавлять префикс к сущности
 # наличие поля prefix дает принтеру знать что нужно декорировать имя
 def need_decoration(x):
-	return not is_nodecorate(x) and not ('module_nodecorate' in cmodule['att']) and not x['access_modifier'] == 'private'
+	return not is_nodecorate(x) and not ('module_nodecorate' in cmodule.att) and not x['access_modifier'] == 'private'
 
 
 
@@ -2084,8 +2084,8 @@ def def_type(x):
 
 	# поскольку этот тип здесь связывается с идентификатором
 	# он уже не анонимный
-	if ty in cmodule['anon_recs']:
-		cmodule['anon_recs'].remove(ty)
+	if ty in cmodule.anon_recs:
+		cmodule.anon_recs.remove(ty)
 
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое
@@ -2100,7 +2100,7 @@ def def_type(x):
 	if need_decoration(x):
 		nt.id.need_decoration = True
 
-	if not ('do_not_include' in cmodule['att']):
+	if not ('do_not_include' in cmodule.att):
 		# В случае когда не печатаем typedef явно (!)
 		# Убираем алиасы которые висели на оригинальном типе
 		#if 'c' in nt['id']:
@@ -2110,7 +2110,7 @@ def def_type(x):
 		pass
 
 	if ty.is_record():
-		cmodule['records'].append(nt)
+		cmodule.records.append(nt)
 
 	cdef = None
 	return definition
@@ -2316,8 +2316,8 @@ def def_func(x, dostmt=True):
 
 	# for C backend, for #include <stdarg.h>
 	if fn.type.extra_args:
-		if not 'use_va_arg' in cmodule['att']:
-			cmodule['att'].append('use_va_arg')
+		if not 'use_va_arg' in cmodule.att:
+			cmodule.att.append('use_va_arg')
 
 	# check unuse
 	#for param in params:
@@ -2487,13 +2487,13 @@ def do_import(x):
 		m = translate(abspath, nodef=not x['include'])
 		modules[abspath] = m
 
-		m['id'] = impline.split("/")[-1]
+		mid = impline.split("/")[-1]
 
 		if m == None:
 			fatal("cannot import module")
 
-		if 'c_no_print' in m['att']:
-			for xx in m['defs']:
+		if 'c_no_print' in m.att:
+			for xx in m.defs:
 				xx['att'].append('c_no_print')
 
 	if not x['include']:
@@ -2501,23 +2501,23 @@ def do_import(x):
 		if x['as'] != None:
 			m_id = x['as']['str']
 		else:
-			m_id = m['id']
-		cmodule['imports'][m_id] = m
+			m_id = m.id
+		cmodule.imports[m_id] = m
 	else:
 		# INCLUDE
 		# забираем публичные символы
 		# и забираем все определения (исключая дубликаты!)
 		if x['access_modifier']:
 			# public include
-			cmodule['symtab_public'].extend(m['symtab_public'])
+			cmodule.symtab_public.extend(m.symtab_public)
 
 			# копируем все c_include из импортированного модуля себе
 			# это костыль, но пока так
-			for d in m['defs']:
+			for d in m.defs:
 				if isinstance(d, StmtDirectiveCInclude):
 					module_append(d)
 
-		cmodule['included_modules'].append(m)
+		cmodule.included_modules.append(m)
 
 	y = StmtDirectiveImport(impline, x['ti'], include=x['include'])
 	y.import_module = m
@@ -2532,13 +2532,13 @@ def do_directive(x):
 		args = x['args']
 		s0 = args[0]
 		if s0 == 'do_not_include':
-			cmodule['att'].append('do_not_include')
+			cmodule.att.append('do_not_include')
 		elif s0 == 'module_nodecorate':
-			cmodule['att'].append('module_nodecorate')
+			cmodule.att.append('module_nodecorate')
 		elif s0 == 'c_include':
 			return StmtDirectiveCInclude(args[1])
 		elif s0 == 'c_no_print':
-			cmodule['att'].append('c_no_print')
+			cmodule.att.append('c_no_print')
 		elif s0 == 'feature':
 			feature_add(args[0])
 		elif s0 == 'unsafe':
@@ -2625,8 +2625,8 @@ def do_directive(x):
 		if Value.isBad(v):
 			fatal("unsuitable value", x['ti'])
 		id_str = v.asset
-		cmodule['symtab_public'].ValueUndef(id_str)
-		cmodule['symtab_public'].type_undef(id_str)
+		cmodule.symtab_public.ValueUndef(id_str)
+		cmodule.symtab_public.type_undef(id_str)
 
 	el"""
 
@@ -2651,8 +2651,8 @@ def translate(abspath, nodef=False):
 	if ast != None:
 		idStr = abspath.split('/')[-1][:-2]
 		m = process_module(idStr, ast, nodef=nodef)
-		m['prefix'] = m['id']
-		m['source_abspath'] = abspath
+		m.prefix = m.id
+		m.source_abspath = abspath
 
 	env_current_file_dir = prev_env_current_file_dir
 
@@ -2680,29 +2680,7 @@ def process_module(idStr, ast, nodef=False):
 	prev_context = context
 	context = symtab_public
 
-	cmodule = {
-		'isa': 'module',
-		
-		'ast': ast,
-
-		# defined after
-		'id': idStr,
-		'prefix': None,
-
-		'strings': [],    # for LLVM backend
-		'records': [],    # for C backend
-		'anon_recs': [],  # anonymous records for C backend
-
-		'imports': {},    # '<import_id>' => {'isa': 'module'}
-		'included_modules': [],
-
-		'symtab_public': symtab_public,
-		'symtab_private': symtab_private,
-
-		'defs': [],
-
-		'att': []
- 	}
+	cmodule = Module(idStr, ast, symtab_public, symtab_private)
 
 	# 0. do imports & directives
 	for x in ast:
@@ -2732,7 +2710,7 @@ def process_module(idStr, ast, nodef=False):
 def update_func_type(idStr):
 	#print("update_func_type(%s)" % idStr)
 
-	for x in cmodule['ast']:
+	for x in cmodule.ast:
 		y = None
 		if x['isa'] != 'ast_definition':
 			continue

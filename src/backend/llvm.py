@@ -122,7 +122,7 @@ def type_get_aka(t):
 			#id_str = t['definition']['module']['prefix'] + '_' + id_str
 
 			if hasattr(t, 'definition'):
-				prefix = t.definition.module['prefix']
+				prefix = t.definition.module.prefix
 				if prefix != None:
 					id_str = prefix + '_' + id_str
 
@@ -140,7 +140,7 @@ def get_id_str(x):
 	id_str = id.str
 	if id.need_decoration:
 		if x.definition != None:
-			prefix = x.definition.module['prefix']
+			prefix = x.definition.module.prefix
 			if prefix != None:
 				id_str = prefix + '_' + id_str
 
@@ -2521,7 +2521,7 @@ def een(defs, decl_only=False):
 
 		# Тупейшая Защита от повторного определения
 		# (А они происходят тк импорты и инклуюды сложно сплетены и повтор.)
-		uid = x.module['id'] + '.' + x.id.str
+		uid = x.module.id + '.' + x.id.str
 
 		if uid in printed:
 			continue
@@ -2554,15 +2554,15 @@ def een(defs, decl_only=False):
 # защита от повторного включения
 already_in = []
 def print_included(m):
-	for inc in m['included_modules']:
+	for inc in m.included_modules:
 		# защита от повторного включения
-		if inc['id'] not in already_in:
-			already_in.append(inc['id'])
+		if inc.id not in already_in:
+			already_in.append(inc.id)
 			print_included(inc)
 
-			out("\n; from included %s" % inc['id'])
+			out("\n; from included %s" % inc.id)
 
-			for d in inc['defs']:
+			for d in inc.defs:
 				if is_private(d):
 					continue
 
@@ -2575,12 +2575,12 @@ def print_included(m):
 
 
 def print_imports(m):
-	for imp_id in m['imports']:
-		imp = m['imports'][imp_id]
+	for imp_id in m.imports:
+		imp = m.imports[imp_id]
 		print_included(imp)
 		print_imports(imp)
 
-		for d in imp['defs']:
+		for d in imp.defs:
 			if is_private(d):
 				continue
 
@@ -2589,7 +2589,7 @@ def print_imports(m):
 			elif isinstance(d, StmtDefFunc):
 				print_decl_func(d)
 
-		#een(imp['defs'], decl_only=True)
+		#een(imp.defs, decl_only=True)
 
 
 separatorLine = "\n; " + '-' * 77
@@ -2600,7 +2600,7 @@ def print_module(m):
 	#if m['source_info']['path'] in printed_modules:
 	#	return
 
-	out("; MODULE: %s\n" % m['id'])
+	out("; MODULE: %s\n" % m.id)
 
 	out("\n; -- print includes --")
 	print_included(m)
@@ -2617,12 +2617,12 @@ def print_module(m):
 		out(separatorLine)
 		out("\n; declarations from: %s" % (imported_module_id))
 		out(separatorLine)
-		een(imp['defs'])
+		een(imp.defs)
 		out("\n\n")"""
 
-	print_strings(m['strings'])
+	print_strings(m.strings)
 
-	een(m['defs'])
+	een(m.defs)
 
 	out("\n\n")
 	return
@@ -2664,7 +2664,7 @@ def run(module, outname, options):
 	lo("%Str32 = type [0 x %Char32]")
 	lo("%__VA_List = type i8*")
 
-	if 'use_va_arg' in module['att']:
+	if 'use_va_arg' in module.att:
 		lo("declare void @llvm.va_start(i8*)")
 		lo("declare void @llvm.va_copy(i8*, i8*)")
 		lo("declare void @llvm.va_end(i8*)")

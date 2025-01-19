@@ -167,7 +167,7 @@ def get_id_str(x):
 	id_str = id.str
 	if id.need_decoration:
 		if x.definition:
-			prefix = x.definition.module['prefix']
+			prefix = x.definition.module.prefix
 			if prefix != None:
 				id_str = prefix + '_' + id_str
 
@@ -1873,7 +1873,7 @@ def print_cdecl_func(x):
 
 def print_directive(x):
 	if isinstance(x, StmtDirectiveImport):
-		if not 'do_not_include' in x.import_module['att']:
+		if not 'do_not_include' in x.import_module.att:
 			s = os.path.basename(x.impline)
 			include(s + '.h', local=True)
 
@@ -1927,13 +1927,13 @@ def print_header(module, outname):
 	include("stdint.h", local=False)
 	include("stdbool.h", local=False)
 
-	for x in module['defs']:
+	for x in module.defs:
 		if isinstance(x, StmtDirective):
 			print_directive(x)
 
 	newline()
 
-	for x in module['defs']:
+	for x in module.defs:
 		newline(x.nl)
 
 		if is_private(x):
@@ -1973,16 +1973,16 @@ def print_cfile(module, _outname):
 
 	output_open(outname)
 
-	if 'c_no_print' in module['att']:
+	if 'c_no_print' in module.att:
 		output_close()
 		return
 
 	# before all print first comment (header) if present
-	if len(module['defs']) > 0:
-		first = module['defs'][0]
+	if len(module.defs) > 0:
+		first = module.defs[0]
 		if isinstance(first, StmtComment):
 			print_comment(first)
-			module['defs'] = module['defs'][1:]
+			module.defs = module.defs[1:]
 			newline()
 
 	guardsymbol = ''
@@ -1992,25 +1992,25 @@ def print_cfile(module, _outname):
 	include("stdbool.h", local=False)
 	include("string.h", local=False)
 
-	if 'use_va_arg' in module['att']:
+	if 'use_va_arg' in module.att:
 		include("stdarg.h", local=False)
 
 	newline()
-	include("%s.h" % module['id'])
+	include("%s.h" % module.id)
 
-	if 'use_lengthof' in module['att']:
+	if 'use_lengthof' in module.att:
 		newline()
 		out("#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))")
 
-	if len(module['anon_recs']) > 0:
+	if len(module.anon_recs) > 0:
 		out("\n/* anonymous records */")
-		for anon_rec in module['anon_recs']:
+		for anon_rec in module.anon_recs:
 			nl_indent()
 			print_type_record(anon_rec, tag=anon_rec.c_anon_id)
 			out(";")
 
 
-	for x in module['defs']:
+	for x in module.defs:
 		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
