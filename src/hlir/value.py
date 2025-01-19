@@ -324,7 +324,7 @@ class ValueCons(Value):
 
 class ValueSizeofType(Value):
 	def __init__(self, of, ti=None):
-		size = of.size
+		value_size = of.size
 		from type import type_number_for
 
 		type = None
@@ -339,7 +339,7 @@ class ValueSizeofType(Value):
 		super().__init__(type=type, ti=ti)
 		self.of = of
 		self.immediate = True
-		self.asset = size
+		self.asset = value_size
 
 
 class ValueSizeofValue(Value):
