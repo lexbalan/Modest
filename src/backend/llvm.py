@@ -1121,7 +1121,7 @@ def ass(left, indexes):
 			#if not hasattr(lt, 'itemSizeInRootElements'):
 			#	info("????", lt.ti)
 
-			step = lt.itemSizeInRootElements
+			step = lt.of.sizze
 			index = indexes[i]
 			off = llvm_eval_binary('mul', index, step)
 			offset = llvm_eval_binary('add', offset, off)
@@ -1395,32 +1395,29 @@ def calcArraySizeInRootElements(t):
 	#info("calculate VLA step", t.ti)
 	# размер его элемента в количестве корневых элементов
 
-	itemSize = None
+	sizze = None
 
-	if t.of.is_array():
+	if t.is_array():
 		calcArraySizeInRootElements(t.of)
-		itemSize = t.of.arraySizeInRootElements
+		# Get array size
+		# размер этого
+		# массива = его объем * объем его элемента
+		if t.is_closed_array():
+			volume = do_reval(t.volume)
+			sizze = llvm_eval_binary('mul', volume, t.of.sizze)
+			out("  ; calc VLA item size")
+		else:
+			# Если это open_array
+			sizze = llvm_value_num(foundation.typeInt32, 1)
+
 	else:
 		# Если встретили указатель - перешагиваем и идем дальше
-		if t.of.is_pointer():
-			calcArraySizeInRootElements(t.of.to)
-		itemSize = llvm_value_num(foundation.typeInt32, 1)
+		if t.is_pointer():
+			calcArraySizeInRootElements(t.to)
+		sizze = llvm_value_num(foundation.typeInt32, 1)
 
-	# сохраним itemSize в типе массива;
-	# (он по сути является его step для его индекса)
-	# при индексации VLA будем умножать индекс i на его itemSize (step)
-	# так получим смещение i-того элемента
-	# (!)
-	t.itemSizeInRootElements = itemSize
-
-	# Get array size
-	# размер этого массива = его объем * объем его элемента
-	volume = do_reval(t.volume)
-	arrSize = llvm_eval_binary('mul', volume, itemSize)
-	out("  ; calc VLA item size")
-	# (!)
-	t.arraySizeInRootElements = arrSize
-	return arrSize
+	t.sizze = sizze
+	return
 
 
 def do_eval_cons_pointer_to_array(x):
@@ -1720,8 +1717,7 @@ def do_eval_sizeof_value(x):
 		# size = VLA_volume * sizeof(VLA_rootType)
 		rs = t.get_array_root().size
 		rootSize = llvm_value_num(foundation.typeInt32, rs)
-		nelem = t.arraySizeInRootElements
-		size = llvm_eval_binary('mul', nelem, rootSize)
+		size = llvm_eval_binary('mul', t.sizze, rootSize)
 		return size
 
 	return llvm_value_num(foundation.typeInt32, t.size)
@@ -1888,7 +1884,7 @@ def print_stmt_var(x):
 		tx = tx.to
 	if tx.contains_vla():
 		calcArraySizeInRootElements(tx)
-		sz = tx.arraySizeInRootElements
+		sz = tx.sizze
 		t = t.get_array_root()
 	# VLA VLA VLA
 
@@ -1928,7 +1924,7 @@ def print_stmt_const(x):
 		tx = tx.to
 	if tx.contains_vla():
 		calcArraySizeInRootElements(tx)
-		sz = tx.arraySizeInRootElements
+		sz = tx.sizze
 		t = t.get_array_root()
 	# VLA VLA VLA
 

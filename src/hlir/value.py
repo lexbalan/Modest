@@ -44,14 +44,13 @@ class Value(Entity):
 
 
 
-	@staticmethod
-	def isBad(x):
-		return isinstance(x, ValueBad)
+	def isBad(self):
+		return isinstance(self, ValueBad)
 
 
-	@staticmethod
-	def isUndefined(x):
-		return isinstance(x, ValueUndefined)
+	#@staticmethod
+	def isUndefined(self):
+		return isinstance(self, ValueUndefined)
 
 
 
