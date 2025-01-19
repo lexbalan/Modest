@@ -1145,14 +1145,6 @@ def print_value_literal(x, ctx):
 
 
 
-def print_value_by_id(x, ctx=[], prefix=''):
-	if x.id.c != None:
-		out(x.id.c)
-	else:
-		print_id_for(x, prefix)
-
-
-
 def print_value_const(x, ctx):
 	prefix=''
 
@@ -1160,16 +1152,16 @@ def print_value_const(x, ctx):
 		if is_global_context():
 			prefix = '_'
 
-	print_value_by_id(x, ctx, prefix)
+	print_id_for(x, prefix)
 	return
 
 
-def print_ValueFunc(x, ctx):
-	return print_value_by_id(x, ctx, prefix='')
+def print_value_func(x, ctx):
+	return print_id_for(x)
 
 
-def print_ValueVar(x, ctx):
-	return print_value_by_id(x, ctx, prefix='')
+def print_value_var(x, ctx):
+	return print_id_for(x)
 
 
 def print_value_sizeof_value(x, ctx):
@@ -1251,8 +1243,8 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
 	elif isinstance(x, ValueUn): print_value_un(x, ctx)
 	elif isinstance(x, ValueCons): print_value_cons(x, ctx)
-	elif isinstance(x, ValueFunc): print_value_by_id(x, ctx)
-	elif isinstance(x, ValueVar): print_value_by_id(x, ctx)
+	elif isinstance(x, ValueFunc): print_value_func(x, ctx)
+	elif isinstance(x, ValueVar): print_value_var(x, ctx)
 	elif isinstance(x, ValueConst): print_value_const(x, ctx)
 	elif isinstance(x, ValueCall): print_value_call(x, ctx)
 	elif isinstance(x, ValueIndex): print_value_index(x, ctx)
@@ -1271,38 +1263,9 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif isinstance(x, ValueUndefined):
 		out("/*undefined*/")
 		1/0
-		#print_value_literal(mass, ctx)
 	else:
 		print(x)
 		out("<%s>" % 'k')
-
-	"""
-	if k == 'literal': print_value_literal(x, ctx)
-	elif k in bin_ops: print_value_bin(x, ctx)
-	elif k in un_ops: print_value_un(x, ctx)
-	elif k == 'cons': print_value_cons(x, ctx)
-	elif k == 'const': print_value_const(x, ctx)
-	elif k == 'func': print_ValueFunc(x, ctx)
-	elif k == 'var': print_ValueVar(x, ctx)
-	elif k == 'call': print_value_call(x, ctx)
-	elif k == 'index': print_value_index(x, ctx)
-	elif k == 'slice': print_value_slice(x, ctx)
-	elif k == 'access': print_value_access(x, ctx)
-	elif k == 'access_module': print_value_access_module(x, ctx)
-	elif k == 'sizeof_value': print_value_sizeof_value(x, ctx)
-	elif k == 'sizeof_type': print_value_sizeof_type(x, ctx)
-	elif k == 'alignof': print_value_alignof(x, ctx)
-	elif k == 'offsetof': y = print_value_offsetof(x, ctx)
-	elif k == 'lengthof': y = print_value_lengthof(x, ctx)
-	elif k == 'va_start': y = print_value_va_start(x, ctx)
-	elif k == 'va_arg': y = print_value_va_arg(x, ctx)
-	elif k == 'va_end': y = print_value_va_end(x, ctx)
-	elif k == 'va_copy': y = print_value_va_copy(x, ctx)
-	else:
-		out("<%s>" % 'k')
-		info("HERE<%s>" % 'k', x)
-		fatal("unknown opcode '%s'" % 'k')
-		exit(-1)"""
 
 	if need_wrap:
 		out(")")
