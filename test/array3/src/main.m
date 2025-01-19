@@ -27,6 +27,26 @@ var a: [m][n][p]Int32 = [
 	]
 ]
 
+var b: [m][n]*[p]Int32 = [
+	[
+		&a[0][0]
+		&a[0][1]
+		&a[0][2]
+	]
+
+	[
+		&a[1][0]
+		&a[1][1]
+		&a[1][2]
+	]
+
+	[
+		&a[2][0]
+		&a[2][1]
+		&a[2][2]
+	]
+]
+
 //
 //func test() {
 //	printf("test:\n")
@@ -55,13 +75,40 @@ var a: [m][n][p]Int32 = [
 
 
 
+
+
+
 func test2(pa: *[][][]Int32, m: Int32, n: Int32, p: Int32) {
 	printf("test2:\n")
 
 	let pa2 = *[m][n][p]Int32 pa
 
 	printf("sizeof(pa2) = %d\n", Int32 sizeof(pa2))
-	printf("sizeof(*pa2) = %d\n", Int32 sizeof(*pa2))
+	printf("sizeof(*pa2) = %d\n", sizeof(*pa2))
+
+	var i = 0
+	while i < m {
+		var j = 0
+		while j < n {
+			var k = 0
+			while k < p {
+				let v = pa2[i][j][k]
+				printf("pa2[%d][%d][%d] = %d\n", i, j, k, v)
+				++k
+			}
+			++j
+		}
+		++i
+	}
+}
+
+func test3(pa: *[][]*[]Int32, m: Int32, n: Int32, p: Int32) {
+	printf("test3:\n")
+
+	let pa2 = *[m][n]*[p]Int32 pa
+
+	printf("sizeof(pa2) = %d\n", Int32 sizeof(pa2))
+	printf("sizeof(*pa2) = %d\n", sizeof(*pa2))
 
 	var i = 0
 	while i < m {
@@ -81,7 +128,6 @@ func test2(pa: *[][][]Int32, m: Int32, n: Int32, p: Int32) {
 
 
 public func main() -> Int32 {
-
 	printf("sizeof(a) = %d\n", unsafe Int32 sizeof(a))
 
 	var i = 0
@@ -102,6 +148,7 @@ public func main() -> Int32 {
 	//test()
 
 	test2(&a, m, n, p)
+	test3(&b, m, n, p)
 
 	return 0
 }

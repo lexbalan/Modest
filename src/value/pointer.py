@@ -8,12 +8,12 @@ from .char import utf32_chars_to_utfx_chars
 
 
 def array_can2(a, b):
-	if a.is_array() and b.is_array():
-		if a.is_open_array() and b.is_closed_array():
-			return array_can2(a.of, b.of)
-	elif not (a.is_array() or b.is_array()):
-		return Type.eq(a, b)
-	return False
+	if a.is_open_array() and b.is_closed_array():
+		return array_can2(a.of, b.of)
+	elif a.is_pointer() and b.is_pointer():
+		return array_can2(a.to, b.to)
+
+	return Type.eq(a, b)
 
 
 def pointer_can(to, from_type, method, ti):

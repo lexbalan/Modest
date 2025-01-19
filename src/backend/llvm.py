@@ -1388,13 +1388,22 @@ def eval_cons_array(x):
 
 # Рекурсивно вычисляем itemSizeInRootElements & arraySizeInRootElements
 # для каждого типа массива (в цепочке [m][n]...)
+# Если встречаем в цепи указатель, перешагиваем и идем дальше
+# тк надо обработать все типы-массивы в цепочке
+# Ex: *[m]*[n]*[p]Int32
 def calcArraySizeInRootElements(t):
 	#info("calculate VLA step", t.ti)
 	# размер его элемента в количестве корневых элементов
+
 	itemSize = None
+
 	if t.of.is_array():
-		itemSize = calcArraySizeInRootElements(t.of)
+		calcArraySizeInRootElements(t.of)
+		itemSize = t.of.arraySizeInRootElements
 	else:
+		# Если встретили указатель - перешагиваем и идем дальше
+		if t.of.is_pointer():
+			calcArraySizeInRootElements(t.of.to)
 		itemSize = llvm_value_num(foundation.typeInt32, 1)
 
 	# сохраним itemSize в типе массива;
@@ -1420,6 +1429,7 @@ def do_eval_cons_pointer_to_array(x):
 	type = x.type
 
 	# Calculate size of VLA value in runtime (!)
+	# TODO! Тут неверное условие if
 	if type.to.is_closed_array():
 		calcArraySizeInRootElements(type.to)
 
@@ -1876,8 +1886,9 @@ def print_stmt_var(x):
 	tx = t
 	while tx.is_pointer():
 		tx = tx.to
-	if tx.is_vla():
-		sz = calcArraySizeInRootElements(tx)
+	if tx.contains_vla():
+		calcArraySizeInRootElements(tx)
+		sz = tx.arraySizeInRootElements
 		t = t.get_array_root()
 	# VLA VLA VLA
 
@@ -1915,8 +1926,9 @@ def print_stmt_const(x):
 	tx = t
 	while tx.is_pointer():
 		tx = tx.to
-	if tx.is_vla():
-		sz = calcArraySizeInRootElements(tx)
+	if tx.contains_vla():
+		calcArraySizeInRootElements(tx)
+		sz = tx.arraySizeInRootElements
 		t = t.get_array_root()
 	# VLA VLA VLA
 

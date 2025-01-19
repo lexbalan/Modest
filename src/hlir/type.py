@@ -114,16 +114,25 @@ class Type(Entity):
 
 
 
-	# VLA - variable langth array
+	# (this) type is VLA - variable langth array
+	# [n]Int32 -> True, [][n]Int32 -> False
 	def is_vla(self):
-
 		if not self.is_array():
 			return False
-
 		if Value.isUndefined(self.volume):
 			return False
-
 		return not self.volume.isImmediate()
+
+
+	# *[10]*[3]*[n] -> True
+	def contains_vla(self):
+		if self.is_vla():
+			return True
+		elif self.is_array():
+			return self.of.contains_vla()
+		elif self.is_pointer():
+			return self.to.contains_vla()
+		return False
 
 
 	def is_composite(self):
