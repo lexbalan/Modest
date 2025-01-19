@@ -1550,7 +1550,10 @@ def do_value_float(x):
 
 def do_value_sizeof_type(x):
 	t = do_type(x['type'])
-	return ValueSizeofType(t, ti=x['ti'])
+	nv = ValueSizeofType(t, ti=x['ti'])
+	if t.is_vla():
+		nv.immediate = False
+	return nv
 
 
 def do_value_sizeof_value(x):

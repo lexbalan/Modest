@@ -326,7 +326,16 @@ class ValueSizeofType(Value):
 	def __init__(self, of, ti=None):
 		size = of.size
 		from type import type_number_for
-		type = type_number_for(size, signed=False, ti=ti)
+
+		type = None
+		if of.is_vla():
+			# is a VLA
+			from trans import typeSysInt
+			type = typeSysInt
+		else:
+			from type import type_number_for
+			type = type_number_for(value_size, signed=False, ti=ti)
+
 		super().__init__(type=type, ti=ti)
 		self.of = of
 		self.immediate = True

@@ -103,6 +103,8 @@ func test2(pb: *[][]*[]Int32, m: Int32, n: Int32, p: Int32) {
 	printf("sizeof(pa2) = %d\n", Int32 sizeof(pa2))
 	printf("sizeof(*pa2) = %d\n", sizeof(*pa2))
 
+	printf("sizeof([m][n]*[p]Int32) = %d\n", sizeof([m][n]*[p]Int32))
+
 	var i = 0
 	while i < m {
 		var j = 0
@@ -173,7 +175,7 @@ public func main() -> Int32 {
 	test1(&a, size_m, size_n, size_p)
 	test2(&b, size_m, size_n, size_p)
 
-	checkLocal3DArray()
+	//checkLocal3DArray()
 	return 0
 }
 

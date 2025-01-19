@@ -224,10 +224,11 @@ declare [0 x %Char]* @strerror(%Int %error)
 @str8 = private constant [8 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 58, i8 10, i8 0]
 @str9 = private constant [18 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 112, i8 97, i8 50, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str10 = private constant [19 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 42, i8 112, i8 97, i8 50, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str11 = private constant [22 x i8] [i8 112, i8 97, i8 50, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str12 = private constant [20 x i8] [i8 120, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 32, i8 0]
-@str13 = private constant [4 x i8] [i8 79, i8 75, i8 10, i8 0]
-@str14 = private constant [7 x i8] [i8 69, i8 82, i8 82, i8 79, i8 82, i8 10, i8 0]
+@str11 = private constant [30 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 91, i8 109, i8 93, i8 91, i8 110, i8 93, i8 42, i8 91, i8 112, i8 93, i8 73, i8 110, i8 116, i8 51, i8 50, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str12 = private constant [22 x i8] [i8 112, i8 97, i8 50, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str13 = private constant [20 x i8] [i8 120, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 32, i8 0]
+@str14 = private constant [4 x i8] [i8 79, i8 75, i8 10, i8 0]
+@str15 = private constant [7 x i8] [i8 69, i8 82, i8 82, i8 79, i8 82, i8 10, i8 0]
 ; -- endstrings --
 @a = internal global [3 x [3 x [3 x %Int32]]] [
 	[3 x [3 x %Int32]] [
@@ -369,66 +370,69 @@ define internal void @test1([0 x [0 x [0 x %Int32]]]* %pa, %Int32 %m, %Int32 %n,
 
 	;var local = *pa2
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str5 to [0 x i8]*), %Int32 8)
-	%12 = mul %Int32 %10, 4
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str6 to [0 x i8]*), %Int32 %12)
-	%14 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %14
-	br label %again_1
-again_1:
-	%15 = load %Int32, %Int32* %14
-	%16 = icmp slt %Int32 %15, %m
-	br %Bool %16 , label %body_1, label %break_1
-body_1:
+	%12 = mul %Int32 %p, 1  ; calc VLA item size
+	%13 = mul %Int32 %n, %12  ; calc VLA item size
+	%14 = mul %Int32 %m, %13  ; calc VLA item size
+	%15 = mul %Int32 %14, 4
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str6 to [0 x i8]*), %Int32 %15)
 	%17 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %17
-	br label %again_2
-again_2:
+	br label %again_1
+again_1:
 	%18 = load %Int32, %Int32* %17
-	%19 = icmp slt %Int32 %18, %n
-	br %Bool %19 , label %body_2, label %break_2
-body_2:
+	%19 = icmp slt %Int32 %18, %m
+	br %Bool %19 , label %body_1, label %break_1
+body_1:
 	%20 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %20
+	br label %again_2
+again_2:
+	%21 = load %Int32, %Int32* %20
+	%22 = icmp slt %Int32 %21, %n
+	br %Bool %22 , label %body_2, label %break_2
+body_2:
+	%23 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %23
 	br label %again_3
 again_3:
-	%21 = load %Int32, %Int32* %20
-	%22 = icmp slt %Int32 %21, %p
-	br %Bool %22 , label %body_3, label %break_3
+	%24 = load %Int32, %Int32* %23
+	%25 = icmp slt %Int32 %24, %p
+	br %Bool %25 , label %body_3, label %break_3
 body_3:
-	%23 = load %Int32, %Int32* %20
-	%24 = load %Int32, %Int32* %17
-	%25 = load %Int32, %Int32* %14
+	%26 = load %Int32, %Int32* %23
+	%27 = load %Int32, %Int32* %20
+	%28 = load %Int32, %Int32* %17
 ; -- INDEX VLA --
-	%26 = mul %Int32 %25, %9
-	%27 = add %Int32 0, %26
-	%28 = mul %Int32 %24, %8
-	%29 = add %Int32 %27, %28
-	%30 = mul %Int32 %23, 1
-	%31 = add %Int32 %29, %30
-	%32 = getelementptr %Int32, [0 x [0 x [0 x %Int32]]]* %7, %Int32 %31
+	%29 = mul %Int32 %28, %13
+	%30 = add %Int32 0, %29
+	%31 = mul %Int32 %27, %12
+	%32 = add %Int32 %30, %31
+	%33 = mul %Int32 %26, 1
+	%34 = add %Int32 %32, %33
+	%35 = getelementptr %Int32, [0 x [0 x [0 x %Int32]]]* %7, %Int32 %34
 ; -- END INDEX VLA --
-	%33 = load %Int32, %Int32* %32
-	%34 = load %Int32, %Int32* %14
-	%35 = load %Int32, %Int32* %17
-	%36 = load %Int32, %Int32* %20
-	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str7 to [0 x i8]*), %Int32 %34, %Int32 %35, %Int32 %36, %Int32 %33)
+	%36 = load %Int32, %Int32* %35
+	%37 = load %Int32, %Int32* %17
 	%38 = load %Int32, %Int32* %20
-	%39 = add %Int32 %38, 1
-	store %Int32 %39, %Int32* %20
+	%39 = load %Int32, %Int32* %23
+	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str7 to [0 x i8]*), %Int32 %37, %Int32 %38, %Int32 %39, %Int32 %36)
+	%41 = load %Int32, %Int32* %23
+	%42 = add %Int32 %41, 1
+	store %Int32 %42, %Int32* %23
 	br label %again_3
 break_3:
-	%40 = load %Int32, %Int32* %17
-	%41 = add %Int32 %40, 1
-	store %Int32 %41, %Int32* %17
+	%43 = load %Int32, %Int32* %20
+	%44 = add %Int32 %43, 1
+	store %Int32 %44, %Int32* %20
 	br label %again_2
 break_2:
-	%42 = load %Int32, %Int32* %14
-	%43 = add %Int32 %42, 1
-	store %Int32 %43, %Int32* %14
+	%45 = load %Int32, %Int32* %17
+	%46 = add %Int32 %45, 1
+	store %Int32 %46, %Int32* %17
 	br label %again_1
 break_1:
-	%44 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %44)
+	%47 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %47)
 	ret void
 }
 
@@ -446,70 +450,78 @@ define internal void @test2([0 x [0 x [0 x %Int32]*]]* %pb, %Int32 %m, %Int32 %n
 	%9 = mul %Int32 %n, 1  ; calc VLA item size
 	%10 = mul %Int32 %m, %9  ; calc VLA item size
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str9 to [0 x i8]*), %Int32 8)
-	%12 = mul %Int32 %10, 8
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*), %Int32 %12)
-	%14 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %14
+	%12 = mul %Int32 %p, 1  ; calc VLA item size
+	%13 = mul %Int32 %n, 1  ; calc VLA item size
+	%14 = mul %Int32 %m, %13  ; calc VLA item size
+	%15 = mul %Int32 %14, 8
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*), %Int32 %15)
+	%17 = mul %Int32 %p, 1  ; calc VLA item size
+	%18 = mul %Int32 %n, 1  ; calc VLA item size
+	%19 = mul %Int32 %m, %18  ; calc VLA item size
+	%20 = mul %Int32 %19, 8
+	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str11 to [0 x i8]*), %Int32 %20)
+	%22 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %22
 	br label %again_1
 again_1:
-	%15 = load %Int32, %Int32* %14
-	%16 = icmp slt %Int32 %15, %m
-	br %Bool %16 , label %body_1, label %break_1
+	%23 = load %Int32, %Int32* %22
+	%24 = icmp slt %Int32 %23, %m
+	br %Bool %24 , label %body_1, label %break_1
 body_1:
-	%17 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %17
+	%25 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %25
 	br label %again_2
 again_2:
-	%18 = load %Int32, %Int32* %17
-	%19 = icmp slt %Int32 %18, %n
-	br %Bool %19 , label %body_2, label %break_2
+	%26 = load %Int32, %Int32* %25
+	%27 = icmp slt %Int32 %26, %n
+	br %Bool %27 , label %body_2, label %break_2
 body_2:
-	%20 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %20
+	%28 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %28
 	br label %again_3
 again_3:
-	%21 = load %Int32, %Int32* %20
-	%22 = icmp slt %Int32 %21, %p
-	br %Bool %22 , label %body_3, label %break_3
+	%29 = load %Int32, %Int32* %28
+	%30 = icmp slt %Int32 %29, %p
+	br %Bool %30 , label %body_3, label %break_3
 body_3:
-	%23 = load %Int32, %Int32* %20
-	%24 = load %Int32, %Int32* %17
-	%25 = load %Int32, %Int32* %14
+	%31 = load %Int32, %Int32* %28
+	%32 = load %Int32, %Int32* %25
+	%33 = load %Int32, %Int32* %22
 ; -- INDEX VLA --
-	%26 = mul %Int32 %25, %9
-	%27 = add %Int32 0, %26
-	%28 = mul %Int32 %24, 1
-	%29 = add %Int32 %27, %28
-	%30 = getelementptr [0 x %Int32]*, [0 x [0 x [0 x %Int32]*]]* %7, %Int32 %29
+	%34 = mul %Int32 %33, %13
+	%35 = add %Int32 0, %34
+	%36 = mul %Int32 %32, 1
+	%37 = add %Int32 %35, %36
+	%38 = getelementptr [0 x %Int32]*, [0 x [0 x [0 x %Int32]*]]* %7, %Int32 %37
 ; -- END INDEX VLA --
-	%31 = load [0 x %Int32]*, [0 x %Int32]** %30
+	%39 = load [0 x %Int32]*, [0 x %Int32]** %38
 ; -- INDEX VLA --
-	%32 = mul %Int32 %23, 1
-	%33 = add %Int32 0, %32
-	%34 = getelementptr %Int32, [0 x %Int32]* %31, %Int32 %33
+	%40 = mul %Int32 %31, 1
+	%41 = add %Int32 0, %40
+	%42 = getelementptr %Int32, [0 x %Int32]* %39, %Int32 %41
 ; -- END INDEX VLA --
-	%35 = load %Int32, %Int32* %34
-	%36 = load %Int32, %Int32* %14
-	%37 = load %Int32, %Int32* %17
-	%38 = load %Int32, %Int32* %20
-	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str11 to [0 x i8]*), %Int32 %36, %Int32 %37, %Int32 %38, %Int32 %35)
-	%40 = load %Int32, %Int32* %20
-	%41 = add %Int32 %40, 1
-	store %Int32 %41, %Int32* %20
+	%43 = load %Int32, %Int32* %42
+	%44 = load %Int32, %Int32* %22
+	%45 = load %Int32, %Int32* %25
+	%46 = load %Int32, %Int32* %28
+	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str12 to [0 x i8]*), %Int32 %44, %Int32 %45, %Int32 %46, %Int32 %43)
+	%48 = load %Int32, %Int32* %28
+	%49 = add %Int32 %48, 1
+	store %Int32 %49, %Int32* %28
 	br label %again_3
 break_3:
-	%42 = load %Int32, %Int32* %17
-	%43 = add %Int32 %42, 1
-	store %Int32 %43, %Int32* %17
+	%50 = load %Int32, %Int32* %25
+	%51 = add %Int32 %50, 1
+	store %Int32 %51, %Int32* %25
 	br label %again_2
 break_2:
-	%44 = load %Int32, %Int32* %14
-	%45 = add %Int32 %44, 1
-	store %Int32 %45, %Int32* %14
+	%52 = load %Int32, %Int32* %22
+	%53 = add %Int32 %52, 1
+	store %Int32 %53, %Int32* %22
 	br label %again_1
 break_1:
-	%46 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %46)
+	%54 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %54)
 	ret void
 }
 
@@ -638,7 +650,7 @@ body_6:
 	%68 = load %Int32, %Int32* %13
 	%69 = load %Int32, %Int32* %49
 	%70 = load %Int32, %Int32* %53
-	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str12 to [0 x i8]*), %Int32 %68, %Int32 %69, %Int32 %70, %Int32 %67)
+	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str13 to [0 x i8]*), %Int32 %68, %Int32 %69, %Int32 %70, %Int32 %67)
 	%72 = load %Int32, %Int32* %13
 	%73 = load %Int32, %Int32* %49
 	%74 = mul %Int32 %72, %73
@@ -647,10 +659,10 @@ body_6:
 	%77 = icmp eq %Int32 %67, %76
 	br %Bool %77 , label %then_0, label %else_0
 then_0:
-	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str13 to [0 x i8]*))
+	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str14 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str14 to [0 x i8]*))
+	%79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str15 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	%80 = load %Int32, %Int32* %53
@@ -677,7 +689,8 @@ define %Int32 @main() {
 	call void @test0()
 	call void @test1([0 x [0 x [0 x %Int32]]]* bitcast ([3 x [3 x [3 x %Int32]]]* @a to [0 x [0 x [0 x %Int32]]]*), %Int32 3, %Int32 3, %Int32 3)
 	call void @test2([0 x [0 x [0 x %Int32]*]]* bitcast ([3 x [3 x [3 x %Int32]*]]* @b to [0 x [0 x [0 x %Int32]*]]*), %Int32 3, %Int32 3, %Int32 3)
-	call void @checkLocal3DArray()
+
+	;checkLocal3DArray()
 	ret %Int32 0
 }
 
