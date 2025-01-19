@@ -120,10 +120,60 @@ func test2(pb: *[][]*[]Int32, m: Int32, n: Int32, p: Int32) {
 }
 
 
+
+func checkLocal3DArray() {
+	var a = Int32 10
+	var b = Int32 10
+	var c = Int32 10
+
+	// create VLA
+	var x: [a][b][c]Int32
+
+	// Write
+	var i = 0
+	while i < a {
+		var j = 0
+		while j < b {
+			var k = 0
+			while k < c {
+				x[i][j][k] = i*j*k
+				++k
+			}
+			++j
+		}
+		++i
+	}
+
+	// Read
+	i = 0
+	while i < a {
+		var j = 0
+		while j < b {
+			var k = 0
+			while k < c {
+				let v = x[i][j][k]
+				printf("x[%d][%d][%d] = %d ", i, j, k, v)
+
+				if v == i*j*k {
+					printf("OK\n")
+				} else {
+					printf("ERROR\n")
+				}
+
+				++k
+			}
+			++j
+		}
+		++i
+	}
+}
+
 public func main() -> Int32 {
 	test0()
 	test1(&a, size_m, size_n, size_p)
 	test2(&b, size_m, size_n, size_p)
+
+	checkLocal3DArray()
 	return 0
 }
 

@@ -76,7 +76,7 @@ static void test0()
 }
 
 
-static void test1(int32_t *pa, int32_t m, int32_t n, int32_t p)
+static void test1(int32_t(*pa)[], int32_t m, int32_t n, int32_t p)
 {
 	printf("test1:\n");
 
@@ -104,7 +104,7 @@ static void test1(int32_t *pa, int32_t m, int32_t n, int32_t p)
 }
 
 
-static void test2(int32_t * *pb, int32_t m, int32_t n, int32_t p)
+static void test2(int32_t *(*pb)[], int32_t m, int32_t n, int32_t p)
 {
 	printf("test2:\n");
 
@@ -130,11 +130,63 @@ static void test2(int32_t * *pb, int32_t m, int32_t n, int32_t p)
 }
 
 
+
+static void checkLocal3DArray()
+{
+	int32_t a = 10;
+	int32_t b = 10;
+	int32_t c = 10;
+
+	// create VLA
+	int32_t x[a][b][c];
+	memset(&x, 0, sizeof x);
+
+	// Write
+	int32_t i = 0;
+	while (i < a) {
+		int32_t j = 0;
+		while (j < b) {
+			int32_t k = 0;
+			while (k < c) {
+				x[i][j][k] = i * j * k;
+				k = k + 1;
+			}
+			j = j + 1;
+		}
+		i = i + 1;
+	}
+
+	// Read
+	i = 0;
+	while (i < a) {
+		int32_t j = 0;
+		while (j < b) {
+			int32_t k = 0;
+			while (k < c) {
+				int32_t v = x[i][j][k];
+				printf("x[%d][%d][%d] = %d ", i, j, k, v);
+
+				if (v == i * j * k) {
+					printf("OK\n");
+				} else {
+					printf("ERROR\n");
+				}
+
+				k = k + 1;
+			}
+			j = j + 1;
+		}
+		i = i + 1;
+	}
+}
+
 int32_t main()
 {
 	test0();
 	test1((void *)&a, size_m, size_n, size_p);
 	test2((void *)&b, size_m, size_n, size_p);
+
+	checkLocal3DArray();
 	return 0;
 }
 

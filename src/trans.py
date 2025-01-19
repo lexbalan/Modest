@@ -1693,6 +1693,7 @@ def do_value(x):
 
 
 def do_stmt_const(x):
+	global cfunc
 	v = do_const(x)
 
 	if v.init_value.type.is_generic():
@@ -1702,11 +1703,15 @@ def do_stmt_const(x):
 
 	v.addAttribute('local') # need for LLVM printer (!)
 	ctx_value_add(v.id.str, v)
-	return StmtDefConst(v.id, v, v.init_value, ti=x['ti'])
+	definition = StmtDefConst(v.id, v, v.init_value, ti=x['ti'])
+	definition.parent = cfunc
+	v.definition = definition
+	return definition
 
 
 
 def do_stmt_var(x):
+	global cfunc
 	var_id = Id(x['id'])
 	t = None
 	if x['type'] != None:
@@ -1756,8 +1761,9 @@ def do_stmt_var(x):
 		return StmtBad(x)
 
 	var_value = add_local_var(var_id, t, var_id.ti)
-	return StmtDefVar(var_id, var_value, v, ti=x['ti'])
-
+	definition = StmtDefVar(var_id, var_value, v, ti=x['ti'])
+	definition.parent = cfunc
+	return definition
 
 
 
@@ -2061,7 +2067,7 @@ def def_type(x):
 		return None
 
 	definition = StmtDefType(id, nt, None, x['ti'])
-	definition.module = cmodule
+	definition.parent = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
 	cdef = definition
@@ -2119,7 +2125,7 @@ def def_const(x):
 	cmodule_value_add(const_value.id.str, const_value, is_public=is_public)
 
 	definition = StmtDefConst(const_value.id, const_value, const_value.init_value, x['ti'])
-	definition.module = cmodule
+	definition.parent = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
 
@@ -2191,7 +2197,7 @@ def def_var(x):
 		error("redefinition of '%s'" % id.str, id.ti)
 
 	definition = StmtDefVar(id, None, None, x['ti'])
-	definition.module = cmodule
+	definition.parent = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
 	cdef = definition
@@ -2267,7 +2273,7 @@ def def_func(x, dostmt=True):
 	fn = ctx_value_get(func_id.str)
 
 	definition = StmtDefFunc(func_id, fn, None, x['ti'])
-	definition.module = cmodule
+	definition.parent = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
 	cdef = definition

@@ -225,6 +225,9 @@ declare [0 x %Char]* @strerror(%Int %error)
 @str9 = private constant [18 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 112, i8 97, i8 50, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str10 = private constant [19 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 42, i8 112, i8 97, i8 50, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str11 = private constant [22 x i8] [i8 112, i8 97, i8 50, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str12 = private constant [20 x i8] [i8 120, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 32, i8 0]
+@str13 = private constant [4 x i8] [i8 79, i8 75, i8 10, i8 0]
+@str14 = private constant [7 x i8] [i8 69, i8 82, i8 82, i8 79, i8 82, i8 10, i8 0]
 ; -- endstrings --
 @a = internal global [3 x [3 x [3 x %Int32]]] [
 	[3 x [3 x %Int32]] [
@@ -510,10 +513,171 @@ break_1:
 	ret void
 }
 
+define internal void @checkLocal3DArray() {
+	%1 = alloca i8*
+	%2 = call i8* @llvm.stacksave() 
+	store i8* %2, i8** %1
+	%3 = alloca %Int32, align 4
+	store %Int32 10, %Int32* %3
+	%4 = alloca %Int32, align 4
+	store %Int32 10, %Int32* %4
+	%5 = alloca %Int32, align 4
+	store %Int32 10, %Int32* %5
+
+	; create VLA
+	%6 = load %Int32, %Int32* %5
+	%7 = mul %Int32 %6, 1  ; calc VLA item size
+	%8 = load %Int32, %Int32* %4
+	%9 = mul %Int32 %8, %7  ; calc VLA item size
+	%10 = load %Int32, %Int32* %3
+	%11 = mul %Int32 %10, %9  ; calc VLA item size
+	%12 = alloca %Int32, %Int32 %11, align 4
+
+	; Write
+	%13 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %13
+	br label %again_1
+again_1:
+	%14 = load %Int32, %Int32* %13
+	%15 = load %Int32, %Int32* %3
+	%16 = icmp slt %Int32 %14, %15
+	br %Bool %16 , label %body_1, label %break_1
+body_1:
+	%17 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %17
+	br label %again_2
+again_2:
+	%18 = load %Int32, %Int32* %17
+	%19 = load %Int32, %Int32* %4
+	%20 = icmp slt %Int32 %18, %19
+	br %Bool %20 , label %body_2, label %break_2
+body_2:
+	%21 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %21
+	br label %again_3
+again_3:
+	%22 = load %Int32, %Int32* %21
+	%23 = load %Int32, %Int32* %5
+	%24 = icmp slt %Int32 %22, %23
+	br %Bool %24 , label %body_3, label %break_3
+body_3:
+	%25 = load %Int32, %Int32* %21
+	%26 = load %Int32, %Int32* %17
+	%27 = load %Int32, %Int32* %13
+; -- INDEX VLA --
+	%28 = mul %Int32 %27, %9
+	%29 = add %Int32 0, %28
+	%30 = mul %Int32 %26, %7
+	%31 = add %Int32 %29, %30
+	%32 = mul %Int32 %25, 1
+	%33 = add %Int32 %31, %32
+	%34 = getelementptr %Int32, [0 x [0 x [0 x %Int32]]]* %12, %Int32 %33
+; -- END INDEX VLA --
+	%35 = load %Int32, %Int32* %13
+	%36 = load %Int32, %Int32* %17
+	%37 = mul %Int32 %35, %36
+	%38 = load %Int32, %Int32* %21
+	%39 = mul %Int32 %37, %38
+	store %Int32 %39, %Int32* %34
+	%40 = load %Int32, %Int32* %21
+	%41 = add %Int32 %40, 1
+	store %Int32 %41, %Int32* %21
+	br label %again_3
+break_3:
+	%42 = load %Int32, %Int32* %17
+	%43 = add %Int32 %42, 1
+	store %Int32 %43, %Int32* %17
+	br label %again_2
+break_2:
+	%44 = load %Int32, %Int32* %13
+	%45 = add %Int32 %44, 1
+	store %Int32 %45, %Int32* %13
+	br label %again_1
+break_1:
+
+	; Read
+	store %Int32 0, %Int32* %13
+	br label %again_4
+again_4:
+	%46 = load %Int32, %Int32* %13
+	%47 = load %Int32, %Int32* %3
+	%48 = icmp slt %Int32 %46, %47
+	br %Bool %48 , label %body_4, label %break_4
+body_4:
+	%49 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %49
+	br label %again_5
+again_5:
+	%50 = load %Int32, %Int32* %49
+	%51 = load %Int32, %Int32* %4
+	%52 = icmp slt %Int32 %50, %51
+	br %Bool %52 , label %body_5, label %break_5
+body_5:
+	%53 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %53
+	br label %again_6
+again_6:
+	%54 = load %Int32, %Int32* %53
+	%55 = load %Int32, %Int32* %5
+	%56 = icmp slt %Int32 %54, %55
+	br %Bool %56 , label %body_6, label %break_6
+body_6:
+	%57 = load %Int32, %Int32* %53
+	%58 = load %Int32, %Int32* %49
+	%59 = load %Int32, %Int32* %13
+; -- INDEX VLA --
+	%60 = mul %Int32 %59, %9
+	%61 = add %Int32 0, %60
+	%62 = mul %Int32 %58, %7
+	%63 = add %Int32 %61, %62
+	%64 = mul %Int32 %57, 1
+	%65 = add %Int32 %63, %64
+	%66 = getelementptr %Int32, [0 x [0 x [0 x %Int32]]]* %12, %Int32 %65
+; -- END INDEX VLA --
+	%67 = load %Int32, %Int32* %66
+	%68 = load %Int32, %Int32* %13
+	%69 = load %Int32, %Int32* %49
+	%70 = load %Int32, %Int32* %53
+	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str12 to [0 x i8]*), %Int32 %68, %Int32 %69, %Int32 %70, %Int32 %67)
+	%72 = load %Int32, %Int32* %13
+	%73 = load %Int32, %Int32* %49
+	%74 = mul %Int32 %72, %73
+	%75 = load %Int32, %Int32* %53
+	%76 = mul %Int32 %74, %75
+	%77 = icmp eq %Int32 %67, %76
+	br %Bool %77 , label %then_0, label %else_0
+then_0:
+	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str13 to [0 x i8]*))
+	br label %endif_0
+else_0:
+	%79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str14 to [0 x i8]*))
+	br label %endif_0
+endif_0:
+	%80 = load %Int32, %Int32* %53
+	%81 = add %Int32 %80, 1
+	store %Int32 %81, %Int32* %53
+	br label %again_6
+break_6:
+	%82 = load %Int32, %Int32* %49
+	%83 = add %Int32 %82, 1
+	store %Int32 %83, %Int32* %49
+	br label %again_5
+break_5:
+	%84 = load %Int32, %Int32* %13
+	%85 = add %Int32 %84, 1
+	store %Int32 %85, %Int32* %13
+	br label %again_4
+break_4:
+	%86 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %86)
+	ret void
+}
+
 define %Int32 @main() {
 	call void @test0()
 	call void @test1([0 x [0 x [0 x %Int32]]]* bitcast ([3 x [3 x [3 x %Int32]]]* @a to [0 x [0 x [0 x %Int32]]]*), %Int32 3, %Int32 3, %Int32 3)
 	call void @test2([0 x [0 x [0 x %Int32]*]]* bitcast ([3 x [3 x [3 x %Int32]*]]* @b to [0 x [0 x [0 x %Int32]*]]*), %Int32 3, %Int32 3, %Int32 3)
+	call void @checkLocal3DArray()
 	ret %Int32 0
 }
 
