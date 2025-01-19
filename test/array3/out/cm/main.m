@@ -31,54 +31,30 @@ var a: [m][n][p]Int32 = [
 	]
 ]
 
-//
-//func test() {
-//	printf("test:\n")
-//
-//	var i = 0
-//	while i < m {
-//		var j = 0
-//		while j < n {
-//			var k = 0
-//			while k < p {
-//				let pa = unsafe *[]Int32 &a
-//				//let v = a[i][j][k]
-//				// не умножаем на sizeof(Int32), тк здесь все идет в sizeof(Int32)
-//				let pk = 1  // здесь за единицу принят sizeof(Int32)
-//				let pj = m * pk
-//				let pi = n * pj
-//				let v = pa[i*pi + j*pj + k*pk]
-//				printf("a[%d][%d][%d] = %d\n", i, j, k, v)
-//				++k
-//			}
-//			++j
-//		}
-//		++i
-//	}
-//}
+var b: [m][n]*[p]Int32 = [
+	[
+		&((a[0])[0])
+		&((a[0])[1])
+		&((a[0])[2])
+	]
+
+	[
+		&((a[1])[0])
+		&((a[1])[1])
+		&((a[1])[2])
+	]
+
+	[
+		&((a[2])[0])
+		&((a[2])[1])
+		&((a[2])[2])
+	]
+]
 
 
-
-func test2(pa: *[][][]Int32, m: Int32, n: Int32, p: Int32) -> Unit {
-	printf("test2:\n")
-	var i: Int32 = 0
-	while i < m {
-		var j: Int32 = 0
-		while j < n {
-			var k: Int32 = 0
-			while k < p {
-				let v = ((*[m][n][p]Int32 pa[i])[j])[k]
-				printf("pa[%d][%d][%d] = %d\n", i, j, k, v)
-				k = k + 1
-			}
-			j = j + 1
-		}
-		i = i + 1
-	}
-}
-
-
-public func main() -> Int32 {
+func test0() -> Unit {
+	printf("test0:\n")
+	printf("sizeof(a) = %d\n", Int32 (sizeof a))
 	var i: Int32 = 0
 	while i < m {
 		var j: Int32 = 0
@@ -93,11 +69,65 @@ public func main() -> Int32 {
 		}
 		i = i + 1
 	}
+}
 
-	//test()
 
-	test2(&a, m, n, p)
+func test1(pa: *[][][]Int32, m: Int32, n: Int32, p: Int32) -> Unit {
+	printf("test1:\n")
 
+	let pa2 = *[m][n][p]Int32 pa
+
+	var local: [m][n][p]Int32 = *pa2
+
+	printf("sizeof(pa2) = %d\n", Int32 (sizeof pa2))
+	printf("sizeof(*pa2) = %d\n", sizeof *pa2)
+
+	var i: Int32 = 0
+	while i < m {
+		var j: Int32 = 0
+		while j < n {
+			var k: Int32 = 0
+			while k < p {
+				let v = ((pa2[i])[j])[k]
+				printf("pa2[%d][%d][%d] = %d\n", i, j, k, v)
+				k = k + 1
+			}
+			j = j + 1
+		}
+		i = i + 1
+	}
+}
+
+
+func test2(pa: *[][]*[]Int32, m: Int32, n: Int32, p: Int32) -> Unit {
+	printf("test2:\n")
+
+	let pa2 = *[m][n]*[p]Int32 pa
+
+	printf("sizeof(pa2) = %d\n", Int32 (sizeof pa2))
+	printf("sizeof(*pa2) = %d\n", sizeof *pa2)
+
+	var i: Int32 = 0
+	while i < m {
+		var j: Int32 = 0
+		while j < n {
+			var k: Int32 = 0
+			while k < p {
+				let v = ((pa2[i])[j])[k]
+				printf("pa2[%d][%d][%d] = %d\n", i, j, k, v)
+				k = k + 1
+			}
+			j = j + 1
+		}
+		i = i + 1
+	}
+}
+
+
+public func main() -> Int32 {
+	test0()
+	test1(&a, m, n, p)
+	test2(&b, m, n, p)
 	return 0
 }
 

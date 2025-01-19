@@ -1881,9 +1881,9 @@ def print_stmt_var(x):
 	# Calculate size of VLA value in runtime (!)
 	if t.contains_vla():
 		handleVLA(t)
+		sz = t.runtimeSizeInRoots
 	if t.is_vla():
 		t = t.get_array_root()
-		sz = t.runtimeSizeInRoots
 	# VLA VLA VLA
 
 
@@ -1919,8 +1919,8 @@ def print_stmt_const(x):
 	# Calculate size of VLA value in runtime (!)
 	if t.contains_vla():
 		handleVLA(t)
-	if t.is_vla():
 		sz = t.runtimeSizeInRoots
+	if t.is_vla():
 		t = t.get_array_root()
 	# VLA VLA VLA
 
