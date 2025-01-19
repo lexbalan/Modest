@@ -1393,8 +1393,8 @@ def eval_cons_array(x):
 # Ex: *[m]*[n]*[p]Int32
 def handleVLA(t):
 	#info("calculate VLA step", t.ti)
-	# размер его элемента в количестве корневых элементов
 
+	# type size (in VLA chain) in root-items
 	runtimeSizeInRoots = None
 
 	if t.is_array():
