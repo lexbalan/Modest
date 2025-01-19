@@ -328,8 +328,6 @@ define internal void @foo(%Int32 %x, %Int32 %y) {
 
 ;$pragma insert "// text insertion"
 define %Int32 @main() {
-	%1 = alloca [0 x [0 x [0 x %Int32]]]*, align 8
-	store [0 x [0 x [0 x %Int32]]]* bitcast ([2 x [2 x [3 x %Int32]]]* @a to [0 x [0 x [0 x %Int32]]]*), [0 x [0 x [0 x %Int32]]]** %1
 	call void @print3DArray([0 x [0 x [0 x %Int32]]]* bitcast ([2 x [2 x [3 x %Int32]]]* @a to [0 x [0 x [0 x %Int32]]]*), %Int32 2, %Int32 2, %Int32 3)
 	call void @foo(%Int32 1, %Int32 2)
 	ret %Int32 0

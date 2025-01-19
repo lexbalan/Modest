@@ -1121,7 +1121,7 @@ def ass(left, indexes):
 			#if not hasattr(lt, 'itemSizeInRootElements'):
 			#	info("????", lt.ti)
 
-			step = lt.of.sizze
+			step = lt.of.runtime_size
 			index = indexes[i]
 			off = llvm_eval_binary('mul', index, step)
 			offset = llvm_eval_binary('add', offset, off)
@@ -1395,7 +1395,7 @@ def calcArraySizeInRootElements(t):
 	#info("calculate VLA step", t.ti)
 	# размер его элемента в количестве корневых элементов
 
-	sizze = None
+	runtime_size = None
 
 	if t.is_array():
 		calcArraySizeInRootElements(t.of)
@@ -1404,19 +1404,19 @@ def calcArraySizeInRootElements(t):
 		# массива = его объем * объем его элемента
 		if t.is_closed_array():
 			volume = do_reval(t.volume)
-			sizze = llvm_eval_binary('mul', volume, t.of.sizze)
+			runtime_size = llvm_eval_binary('mul', volume, t.of.runtime_size)
 			out("  ; calc VLA item size")
 		else:
 			# Если это open_array
-			sizze = llvm_value_num(foundation.typeInt32, 1)
+			runtime_size = llvm_value_num(foundation.typeInt32, 1)
 
 	else:
 		# Если встретили указатель - перешагиваем и идем дальше
 		if t.is_pointer():
 			calcArraySizeInRootElements(t.to)
-		sizze = llvm_value_num(foundation.typeInt32, 1)
+		runtime_size = llvm_value_num(foundation.typeInt32, 1)
 
-	t.sizze = sizze
+	t.runtime_size = runtime_size
 	return
 
 
@@ -1717,7 +1717,7 @@ def do_eval_sizeof_value(x):
 		# size = VLA_volume * sizeof(VLA_rootType)
 		rs = t.get_array_root().size
 		rootSize = llvm_value_num(foundation.typeInt32, rs)
-		size = llvm_eval_binary('mul', t.sizze, rootSize)
+		size = llvm_eval_binary('mul', t.runtime_size, rootSize)
 		return size
 
 	return llvm_value_num(foundation.typeInt32, t.size)
@@ -1879,12 +1879,9 @@ def print_stmt_var(x):
 
 	# VLA VLA VLA
 	# Calculate size of VLA value in runtime (!)
-	tx = t
-	while tx.is_pointer():
-		tx = tx.to
-	if tx.contains_vla():
-		calcArraySizeInRootElements(tx)
-		sz = tx.sizze
+	if t.contains_vla():
+		calcArraySizeInRootElements(t)
+		sz = t.runtime_size
 		t = t.get_array_root()
 	# VLA VLA VLA
 
@@ -1919,12 +1916,9 @@ def print_stmt_const(x):
 
 	# VLA VLA VLA
 	# Calculate size of VLA value in runtime (!)
-	tx = t
-	while tx.is_pointer():
-		tx = tx.to
-	if tx.contains_vla():
-		calcArraySizeInRootElements(tx)
-		sz = tx.sizze
+	if t.contains_vla():
+		calcArraySizeInRootElements(t)
+		sz = t.runtime_size
 		t = t.get_array_root()
 	# VLA VLA VLA
 
