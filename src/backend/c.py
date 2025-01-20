@@ -1336,7 +1336,7 @@ def print_stmt_return(x):
 
 
 def print_stmt_var(x):
-	var_value = x.var_value
+	var_value = x.value
 	init_value = x.init_value
 
 	#if DONT_PRINT_UNUSED:
@@ -1757,7 +1757,7 @@ def print_def_var(x, isdecl=False):
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
 	#id = x['id']
-	var = x.var_value
+	var = x.value
 	if USE_STATIC_VARIABLES:
 		if not var.hasAttribute('global'):
 			if not var.hasAttribute('extern'):
@@ -1768,7 +1768,7 @@ def print_def_var(x, isdecl=False):
 	if var.hasAttribute('volatile'):
 		out("volatile ")
 
-	print_variable(get_id_str(x.var_value), var.type)
+	print_variable(get_id_str(x.value), var.type)
 
 	init_value = x.init_value
 

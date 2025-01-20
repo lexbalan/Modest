@@ -691,9 +691,9 @@ def print_stmt_const(x, operator='const'):
 
 def print_stmt_var(x):
 	out("var ")
-	print_id_for(x.var_value)
+	print_id_for(x.value)
 	out(": ")
-	print_type(x.var_value.type)
+	print_type(x.value.type)
 	iv = x.init_value
 	if not Value.isUndefined(iv):
 		out(" = ")

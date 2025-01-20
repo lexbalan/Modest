@@ -549,9 +549,10 @@ def do_type_id(t):
 	else:
 		tx = ctx_type_get(id_str)
 
-	# tmp
-#	if tx == None:
-#		error("undefined type", t['ti'])
+
+	if tx == None:
+		error("undefined type", t['ti'])
+		return TypeBad(t['ti'])
 
 	# если дело происходит в определении типа и пришел undefined тип
 	if tx.is_incompleted():
@@ -2255,7 +2256,7 @@ def def_var(x):
 	var_value = ValueVar(t, id, init_value, id.ti)
 	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 
-	definition.var_value = var_value
+	definition.value = var_value
 	definition.init_value = init_value
 	var_value.definition = definition
 	cdef = None

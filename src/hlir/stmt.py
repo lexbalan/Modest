@@ -55,7 +55,7 @@ class StmtDefType(StmtDef):
 class StmtDefVar(StmtDef):
 	def __init__(self, id, var_value, init_value=None, ti=None):
 		super().__init__(id, ti)
-		self.var_value = var_value
+		self.value = var_value
 		self.init_value = init_value
 
 
