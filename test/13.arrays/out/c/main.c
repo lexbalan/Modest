@@ -205,7 +205,7 @@ int main()
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	char em[30];
-	f0(em, "Hello World!");
+	f0("Hello World!", &em);
 	printf("em = %s\n", &em);
 
 	int32_t i = 0;

@@ -570,7 +570,7 @@ def print_value_un(v, ctx):
 
 
 
-def print_value_call(v, ctx, arrayResult=None):
+def print_value_call(v, ctx, sret=None):
 	left = v.func
 
 	print_value(left)
@@ -583,11 +583,6 @@ def print_value_call(v, ctx, arrayResult=None):
 	n = len(args)
 
 	out("(")
-
-	if arrayResult != None:
-		print_value(arrayResult)
-		if n > 0:
-			out(", ")
 
 	i = 0
 	while i < n:
@@ -616,6 +611,11 @@ def print_value_call(v, ctx, arrayResult=None):
 		i = i + 1
 		if i < n:
 			out(", ")
+
+	if sret != None:
+		if i > 0:
+			out(", ")
+		print_value_as_ptr(sret)
 
 	out(")")
 
@@ -1499,7 +1499,7 @@ def assign_array(left, right):
 	# (для того чтобы в C вернуть массив из функции
 	# его нужно 'обернуть' в структуру)
 	if isinstance(right, ValueCall):
-		print_value_call(right, [], arrayResult=left)
+		print_value_call(right, [], sret=left)
 		return
 	
 	memcopy_assign(left, right)
@@ -1625,8 +1625,9 @@ def print_decl_func(x):
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if x.access_level == 'private':
-		out("static ")
+	if not x.hasAttribute('extern'):
+		if x.access_level == 'private':
+			out("static ")
 
 	if x.hasAttribute('inline'):
 		out("inline ")
@@ -1651,8 +1652,9 @@ def print_def_func(x):
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if x.access_level == 'private':
-		out("static ")
+	if not x.hasAttribute('extern'):
+		if x.access_level == 'private':
+			out("static ")
 
 	if x.hasAttribute('inline'):
 		out("inline ")
