@@ -106,7 +106,7 @@ func test_arrays() -> Unit {
 	while i < 10 {
 		j = 0
 		while j < 10 {
-			(a10[i])[j] = (a10[i])[j] * 2
+			a10[i][j] = a10[i][j] * 2
 			j = j + 1
 		}
 		i = i + 1
@@ -116,7 +116,7 @@ func test_arrays() -> Unit {
 	while i < 10 {
 		j = 0
 		while j < 10 {
-			printf("a10[%d][%d] = %d\n", i, j, (a10[i])[j])
+			printf("a10[%d][%d] = %d\n", i, j, a10[i][j])
 			j = j + 1
 		}
 		i = i + 1
@@ -128,7 +128,7 @@ func test_arrays() -> Unit {
 		while j < 2 {
 			k = 0
 			while k < 5 {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, ((a0[i])[j])[k])
+				printf("a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k])
 				k = k + 1
 			}
 			j = j + 1
@@ -141,7 +141,7 @@ func test_arrays() -> Unit {
 	while i < 2 {
 		j = 0
 		while j < 5 {
-			printf("a3[%d][%d] = %d\n", i, j, (a3[i])[j])
+			printf("a3[%d][%d] = %d\n", i, j, a3[i][j])
 			j = j + 1
 		}
 		i = i + 1
@@ -154,7 +154,7 @@ func test_arrays() -> Unit {
 		while j < 2 {
 			k = 0
 			while k < 5 {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, ((a4[i])[j])[k])
+				printf("a3[%d][%d][%d] = %d\n", i, j, k, a4[i][j][k])
 				k = k + 1
 			}
 			j = j + 1
@@ -168,7 +168,7 @@ func test_arrays() -> Unit {
 		while j < 2 {
 			k = 0
 			while k < 5 {
-				printf("p0[%d][%d][%d] = %d\n", i, j, k, ((p0[i])[j])[k])
+				printf("p0[%d][%d][%d] = %d\n", i, j, k, p0[i][j][k])
 				k = k + 1
 			}
 			j = j + 1

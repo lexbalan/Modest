@@ -33,7 +33,7 @@ public func main() -> Int {
 
 	let c = Char8 "$"
 	let s = *Str8 "Hi!"
-	let i = Int32 (-1)
+	let i = Int32 -1
 	let n = Nat32 123
 	let x = Nat32 0x1234567F
 

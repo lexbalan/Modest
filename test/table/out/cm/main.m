@@ -59,7 +59,7 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) -> Unit 
 	while i < m {
 		j = 0
 		while j < n {
-			let slen = Nat32 (strlen((table[i])[j]))
+			let slen = Nat32 strlen(table[i][j])
 			sz[j] = max(slen, sz[j])
 			j = j + 1
 		}
@@ -86,8 +86,8 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) -> Unit 
 
 		j = 0
 		while j < n {
-			let s = (table[i])[j]
-			var len: Nat32 = Nat32 (strlen(s))
+			let s = table[i][j]
+			var len: Nat32 = Nat32 strlen(s)
 			if s[0] != "\x0" {
 				len = len + 1
 				printf(" %s", s)

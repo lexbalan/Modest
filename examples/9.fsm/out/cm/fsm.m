@@ -36,7 +36,7 @@ public type FSM record {
 
 
 public func state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
-	return &(((fsm.states)[state_no]).name)
+	return &(fsm.states[state_no].name)
 }
 
 
@@ -51,7 +51,7 @@ public func run(fsm: *FSM) -> Unit {
 
 	if fsm.substate == substateEntering {
 		let nexstate = fsm.nexstate
-		let state = &((fsm.states)[nexstate])
+		let state = &(fsm.states[nexstate])
 
 		if verbose {
 			printf("enter %s\n", &(state.name))
@@ -65,14 +65,14 @@ public func run(fsm: *FSM) -> Unit {
 		fsm.substate = substateLoop
 
 	} else if fsm.substate == substateLoop {
-		let state = &((fsm.states)[fsm.state])
+		let state = &(fsm.states[fsm.state])
 
 		if state.loop != nil {
 			state.loop(fsm)
 		}
 
 	} else if fsm.substate == substateLeaving {
-		let state = &((fsm.states)[fsm.state])
+		let state = &(fsm.states[fsm.state])
 
 		if verbose {
 			printf("exit %s\n", &(state.name))

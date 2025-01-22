@@ -4,7 +4,7 @@ from error import info
 from .common import *
 from hlir.hlir import *
 from util import get_item_by_id
-
+import foundation
 
 INDENT_SYMBOL = "\t"
 
@@ -228,13 +228,9 @@ def print_value_bin(x, ctx):
 	op = x.op
 	left = x.left
 	right = x.right
-
-	need_wrap_left = precedence(left) < precedence(x)
-	need_wrap_right = precedence(right) < precedence(x)
-
-	print_value(left, need_wrap=need_wrap_left)
+	print_value(left, parent_expr=x)
 	out(' %s ' % bin_ops[op])
-	print_value(right, need_wrap=need_wrap_right)
+	print_value(right, parent_expr=x)
 
 
 
@@ -246,31 +242,24 @@ un_ops = {
 
 
 def print_value_ref(x, ctx):
-	value = x.value
 	out('&')
-	need_wrap = precedence(value) < precedence(x)
-	print_value(value, need_wrap=need_wrap)
+	print_value(x.value, parent_expr=x)
 
 
 def print_value_deref(x, ctx):
-	value = x.value
 	out('*')
-	need_wrap = precedence(value) < precedence(x)
-	print_value(value, need_wrap=need_wrap)
+	print_value(x.value, parent_expr=x)
 
 
-def print_value_un(v, ctx):
-	op = v.op
-	value = v.value
-	need_wrap = precedence(value) < precedence({'kind': op})
-	out(un_ops[op]); print_value(value, need_wrap=need_wrap)
+def print_value_un(x, ctx):
+	out(un_ops[x.op]); print_value(x.value, parent_expr=x)
 
 
-def print_ValueCall(v, ctx):
-	print_value(v.func)
+def print_ValueCall(x, ctx):
+	print_value(x.func)
 	out("(")
 	i = 0
-	args = v.args
+	args = x.args
 	n = len(args)
 	while i < n:
 		arg = args[i]
@@ -289,17 +278,14 @@ def print_ValueCall(v, ctx):
 	out(")")
 
 
-def print_value_index(v, ctx):
-	array = v.left
-	need_wrap = precedence(array) < precedence({'kind': 'index'})
-	print_value(array, need_wrap=need_wrap)
-	out("["); print_value(v.index); out("]")
+def print_value_index(x, ctx):
+	print_value(x.left, parent_expr=x)
+	out("["); print_value(x.index); out("]")
 
 
 def print_value_slice(x, ctx):
 	left = x.left
-	need_wrap = precedence(left) < precedence({'kind': 'index'})
-	print_value(left, need_wrap=need_wrap)
+	print_value(left, parent_expr=x)
 	out("[")
 	print_value(x.index_from)
 	out(":")
@@ -308,49 +294,46 @@ def print_value_slice(x, ctx):
 	out("]")
 
 
-def print_value_access(v, ctx):
-	left = v.left
-	need_wrap = precedence(left) < precedence({'kind': 'access'})
-	print_value(left, need_wrap=need_wrap)
+def print_value_access(x, ctx):
+	print_value(x.left, parent_expr=x)
 	out(".")
-	print_id_for(v.field)
+	print_id_for(x.field)
 
 
-def print_value_access_module(v, ctx):
-	left = v.left
-	id_str = get_id_str(v.right)
+def print_value_access_module(x, ctx):
+	left = x.left
+	id_str = get_id_str(x.right)
 	out("%s.%s" % (left.id, id_str))
 
 
 def print_cast(t, v, ctx=[]):
-	need_wrap = precedence({'kind': 'cons'}) > precedence(v)
 	print_type(t)
 	out(" ")
-	print_value(v, ctx=ctx, need_wrap=need_wrap)
+	print_value(v, ctx=ctx)
 
 
-def print_value_cons(v, ctx):
-	value = v.value
+def print_value_cons(x, ctx):
+	value = x.value
 	from_type = value.type
-	to_type = v.type
+	to_type = x.type
 
-	if v.method == 'implicit':
+	if x.method == 'implicit':
 		print_value(value)
 		return
 
 	# NO need cast ptr to *void
 	if Type.is_pointer(from_type):
 		if Type.is_free_pointer(to_type):
-			print_value(v.value)
+			print_value(value)
 			return
 
 	# NO need cast *void to ptr
 	if Type.is_free_pointer(from_type):
 		if Type.is_pointer(to_type):
-			print_value(v.value)
+			print_value(value)
 			return
 
-	print_cast(v.type, v.value, ctx)
+	print_cast(to_type, value, ctx)
 
 
 
@@ -654,7 +637,12 @@ def print_value_va_copy(x, ctx):
 	out(")")
 
 
-def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
+def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
+
+	need_wrap = False
+	if parent_expr != None:
+		need_wrap = precedence(x) < precedence(parent_expr)
+
 	assert(isinstance(x, Value))
 
 	if need_wrap:

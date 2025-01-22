@@ -51,7 +51,7 @@ public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 	i = 0
 	while i < len {
 		// 1
-		let x = Word32 (buf[i])
+		let x = Word32 buf[i]
 		let y = (crc xor x) and 0xFF
 		printf("CRC[%02X] = %08x, %08x\n", i, x, y)
 		// 2

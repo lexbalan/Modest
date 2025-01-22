@@ -235,7 +235,7 @@ public func main() -> Int32 {
 	while i < 3 {
 		var j: Int32 = 0
 		while j < 3 {
-			printf("arrr[%d][%d] = %d\n", i, j, (arrr[i])[j])
+			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
 			j = j + 1
 		}
 		i = i + 1
@@ -252,7 +252,7 @@ public func main() -> Int32 {
 		i = i + 1
 	}
 
-	(awrap[0]).fhi("World")
+	awrap[0].fhi("World")
 	//let y = awrap[0]
 	//y.fhi("World")
 
