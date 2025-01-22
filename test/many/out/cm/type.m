@@ -1,0 +1,5 @@
+
+public type Type record {
+
+}
+

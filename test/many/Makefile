@@ -1,0 +1,33 @@
+
+INDIR=./src
+OUTDIR=./out
+
+# output dir prefix
+CMPREFIX=$(OUTDIR)/cm
+CPREFIX=$(OUTDIR)/c
+LLVMPREFIX = $(OUTDIR)/llvm
+
+
+all: LLVM
+
+
+CM:
+	mcc -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.m
+	mcc -o $(CMPREFIX)/type -funsafe -mbackend=cm $(INDIR)/type.m
+	mcc -o $(CMPREFIX)/value -funsafe -mbackend=cm $(INDIR)/value.m
+
+
+LLVM:
+	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.m
+	clang $(LLVMPREFIX)/main.ll
+
+
+C:
+	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
+	mcc -o $(CPREFIX)/type -mbackend=c -funsafe $(INDIR)/type.m
+	mcc -o $(CPREFIX)/value -mbackend=c -funsafe $(INDIR)/value.m
+	CC $(CPREFIX)/main.c
+
+
+clean:
+	rm *.o
