@@ -43,11 +43,11 @@ int main()
 
 	printf("\n\n");
 
-	console_puts8(&string8);
+	console_puts8((char *)&string8);
 	printf("\n");
-	console_puts16(&string16);
+	console_puts16((uint16_t *)&string16);
 	printf("\n");
-	console_puts32(&string32);
+	console_puts32((uint32_t *)&string32);
 
 	printf("\n\n");
 

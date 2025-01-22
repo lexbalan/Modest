@@ -857,8 +857,7 @@ def do_value_ref(x):
 			error("expected mutable value or function", v.ti)
 			return ValueBad(x['ti'])
 
-	vt = TypePointer(vtype, ti=ti)
-	nv = ValueUn(vt, 'ref', v, ti=ti)
+	nv = ValueRef(v, ti=ti)
 
 	if is_global_value(v):
 		nv.immediate = True
@@ -2011,18 +2010,22 @@ def do_stmt(x):
 
 
 
-def do_stmt_block(x):
+def do_stmt_block(x, parent=None):
 	context_push()
+
+	block = StmtBlock([], ti=x['ti'], nl_end=x['nl_end'])
+	block.parent = parent
 
 	stmts = []
 	for stmt in x['stmts']:
 		s = do_stmt(stmt)
 		if not isinstance(s, StmtBad):
-			stmts.append(s)
+			s.parent = block
+			block.stmts.append(s)
 
 	context_pop()
 
-	return StmtBlock(stmts, ti=x['ti'], nl_end=x['nl_end'])
+	return block
 
 
 
@@ -2328,7 +2331,7 @@ def def_func(x, dostmt=True):
 
 	if dostmt:
 		if x['stmt'] != None:
-			stmt = do_stmt_block(x['stmt'])
+			stmt = do_stmt_block(x['stmt'], parent=fn)
 			check_block(stmt)
 
 			# check if return present
@@ -2551,86 +2554,6 @@ def do_directive(x):
 	return None
 
 
-	"""if kind == 'if':
-		prev_production = production
-		c = do_value_immediate(args[0])
-
-		if Value.isBad(c):
-			return None
-
-		if not Type. is_bool(c['type']):
-			error("expected bool value", c.ti)
-			return None
-
-		cond = c.asset != 0
-
-		production = cond
-		if cond:
-			prev_skipp = skipp
-			skipp = True  # skip another branches
-
-	elif kind == 'elseif':
-		production = False
-		c = do_value_immediate(args[0])
-
-		if Value.isBad(c):
-			return None
-
-		if not Type. is_bool(c['type']):
-			error("expected bool value", c.ti)
-			return None
-
-		cond = c.asset != 0
-
-		if cond and not skipp:
-			production = True
-			skipp = True  # skip another branches
-
-	elif kind == 'else':
-		production = not skipp
-
-	elif kind == 'endif':
-		skipp = prev_skipp  # do not skip branches (for new if)
-		production = prev_production
-
-	elif kind == 'info':
-		v = do_value_immediate_string(args[0])
-
-		if Value.isBad(v):
-			fatal("unsuitable value", x['ti'])
-
-		msg = v.asset
-		info(msg, x['ti'])
-
-	elif kind == 'warning':
-		v = do_value_immediate_string(args[0])
-
-		if Value.isBad(v):
-			fatal("unsuitable value", x['ti'])
-
-		msg = v.asset
-		warning(msg, x['ti'])
-
-	elif kind == 'error':
-		v = do_value_immediate_string(args[0])
-
-		if Value.isBad(v):
-			fatal("unsuitable value", x['ti'])
-
-		msg = v.asset
-		error(msg, x['ti'])
-		exit(-1)
-
-	elif kind == 'undef':
-		v = do_value_immediate_string(args[0])
-		if Value.isBad(v):
-			fatal("unsuitable value", x['ti'])
-		id_str = v.asset
-		cmodule.symtab_public.ValueUndef(id_str)
-		cmodule.symtab_public.type_undef(id_str)
-
-	el"""
-
 
 def translate(abspath, nodef=False):
 	log(">>>> TRANSLATE(\"%s\")" % abspath)
@@ -2696,8 +2619,9 @@ def process_module(idStr, ast, nodef=False):
 		if y != None:
 			module_append(y)
 
+	pre_def(ast)
 
-	pre_def(ast, fdecl=nodef)  # process in normal mode
+	def_def(ast)
 
 	m = cmodule
 
@@ -2728,7 +2652,7 @@ def update_func_type(idStr):
 
 
 
-def pre_def(ast, fdecl=False):
+def pre_def(ast):
 	global cmodule
 
 	# 1. Проходим по всем типам, создаем их undefined "прототипы".
@@ -2742,17 +2666,18 @@ def pre_def(ast, fdecl=False):
 			id = x['id']
 			ti = id['ti']
 
-			t = Type(x['ti'])  # Incomplete type (!)
-
 			if kind == 'type':
+				t = Type(x['ti'])  # Incomplete type (!)
 				cmodule_type_add(id['str'], t, is_public=is_public)
 
 			elif kind == 'func':
 				# Create function value with incomplete type
+				t = Type(x['ti'])  # Incomplete type (!)
 				v = ValueFunc(t, Id(x['id']), x['ti'])
 				cmodule_value_add(id['str'], v, is_public=is_public)
 
 
+def def_def(ast):
 	# 3. Далее идем по всем элементам с самого начала и определяем их.
 	#   - Если элемент использует undefined - заносим его в список зависимостей эл-та
 	for x in ast:
@@ -2993,3 +2918,83 @@ def cp_immediate(to, _from):
 	return
 
 
+
+"""if kind == 'if':
+	prev_production = production
+	c = do_value_immediate(args[0])
+
+	if Value.isBad(c):
+		return None
+
+	if not Type. is_bool(c['type']):
+		error("expected bool value", c.ti)
+		return None
+
+	cond = c.asset != 0
+
+	production = cond
+	if cond:
+		prev_skipp = skipp
+		skipp = True  # skip another branches
+
+elif kind == 'elseif':
+	production = False
+	c = do_value_immediate(args[0])
+
+	if Value.isBad(c):
+		return None
+
+	if not Type. is_bool(c['type']):
+		error("expected bool value", c.ti)
+		return None
+
+	cond = c.asset != 0
+
+	if cond and not skipp:
+		production = True
+		skipp = True  # skip another branches
+
+elif kind == 'else':
+	production = not skipp
+
+elif kind == 'endif':
+	skipp = prev_skipp  # do not skip branches (for new if)
+	production = prev_production
+
+elif kind == 'info':
+	v = do_value_immediate_string(args[0])
+
+	if Value.isBad(v):
+		fatal("unsuitable value", x['ti'])
+
+	msg = v.asset
+	info(msg, x['ti'])
+
+elif kind == 'warning':
+	v = do_value_immediate_string(args[0])
+
+	if Value.isBad(v):
+		fatal("unsuitable value", x['ti'])
+
+	msg = v.asset
+	warning(msg, x['ti'])
+
+elif kind == 'error':
+	v = do_value_immediate_string(args[0])
+
+	if Value.isBad(v):
+		fatal("unsuitable value", x['ti'])
+
+	msg = v.asset
+	error(msg, x['ti'])
+	exit(-1)
+
+elif kind == 'undef':
+	v = do_value_immediate_string(args[0])
+	if Value.isBad(v):
+		fatal("unsuitable value", x['ti'])
+	id_str = v.asset
+	cmodule.symtab_public.ValueUndef(id_str)
+	cmodule.symtab_public.type_undef(id_str)
+
+el"""

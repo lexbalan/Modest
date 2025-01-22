@@ -230,7 +230,7 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t *globalArrayPtr;
-	globalArrayPtr = &globalArray;
+	globalArrayPtr = (int32_t *)&globalArray;
 
 	i = 0;
 	while (i < 3) {
@@ -242,7 +242,7 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t *localArrayPtr;
-	localArrayPtr = &localArray;
+	localArrayPtr = (int32_t *)&localArray;
 
 	i = 0;
 	while (i < 3) {

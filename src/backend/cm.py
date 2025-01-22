@@ -245,6 +245,13 @@ un_ops = {
 }
 
 
+def print_value_ref(x, ctx):
+	value = x.value
+	out('&')
+	need_wrap = precedence(value) < precedence({'kind': 'ref'})
+	print_value(value, need_wrap=need_wrap)
+
+
 def print_value_un(v, ctx):
 	op = v.op
 	value = v.value
@@ -649,6 +656,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	if isinstance(x, ValueLiteral): print_value_literal(x, ctx)
 	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
 	elif isinstance(x, ValueUn): print_value_un(x, ctx)
+	elif isinstance(x, ValueRef): print_value_ref(x, ctx)
 	elif isinstance(x, ValueConst): print_value_by_id(x, ctx)
 	elif isinstance(x, ValueFunc): print_value_by_id(x, ctx)
 	elif isinstance(x, ValueVar): print_value_by_id(x, ctx)

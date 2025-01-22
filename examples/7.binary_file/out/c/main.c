@@ -42,8 +42,8 @@ static void write_example()
 
 	// pointers casting requires -funsafe translator option
 	// (see Makefile)
-	strcpy(&chunk.id, "id");
-	strcpy(&chunk.data, "data");
+	strcpy((char *)&chunk.id, "id");
+	strcpy((char *)&chunk.data, "data");
 
 	// write chunk to file
 	fwrite(&chunk, sizeof(Chunk), 1, fp);

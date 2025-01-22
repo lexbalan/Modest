@@ -30,11 +30,11 @@ static ssize_t my_printf(char *format, ...)
 	#define __strMaxLen  (127 + 1)
 	char buf[__strMaxLen];
 	memset(&buf, 0, sizeof buf);
-	int n = vsnprintf(&buf, __strMaxLen, format, va2);
+	int n = vsnprintf((char *)&buf, __strMaxLen, format, va2);
 
 	va_end(va2);
 
-	return write(STDOUT_FILENO, &buf, ((size_t)(uint32_t)n));
+	return write(STDOUT_FILENO, (char *)&buf, ((size_t)(uint32_t)n));
 
 #undef __strMaxLen
 }

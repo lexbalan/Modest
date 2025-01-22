@@ -63,7 +63,7 @@ void console_putchar_utf16(uint16_t c)
 	cc[0] = c;
 	cc[1] = 0;
 	uint32_t char32;
-	uint8_t n = utf_utf16_to_utf32(&cc, &char32);
+	uint8_t n = utf_utf16_to_utf32((uint16_t *)&cc, &char32);
 	console_putchar_utf32(char32);
 }
 
@@ -169,9 +169,9 @@ int32_t console_vfprint(int fd, char *form, va_list va)
 {
 	char strbuf[256];
 	memset(&strbuf, 0, sizeof strbuf);
-	int32_t n = console_vsprint(&strbuf, form, va);
+	int32_t n = console_vsprint((char *)&strbuf, form, va);
 	strbuf[n] = '\x0';
-	write(fd, &strbuf, ((size_t)(uint32_t)n));
+	write(fd, (char *)&strbuf, ((size_t)(uint32_t)n));
 	return n;
 }
 

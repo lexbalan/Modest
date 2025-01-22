@@ -33,7 +33,7 @@
 
 char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no)
 {
-	return &fsm->states[state_no].name;
+	return (char *)&fsm->states[state_no].name;
 }
 
 

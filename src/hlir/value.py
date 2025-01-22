@@ -221,7 +221,6 @@ class ValueFunc(Value):
 
 
 #TODO: maybe without op?
-#TODO: value, type -> only value
 class ValueUn(Value):
 	def __init__(self, type, op, value, ti=None):
 		from .type import Type
@@ -233,7 +232,6 @@ class ValueUn(Value):
 
 
 #TODO: maybe without op?
-#TODO: value, type -> only value
 class ValueBin(Value):
 	def __init__(self, type, op, left, right, ti=None):
 		from .type import Type
@@ -246,6 +244,14 @@ class ValueBin(Value):
 		self.right = right
 
 
+class ValueRef(Value):
+	def __init__(self, value, ti=None):
+		assert(isinstance(value, Value))
+
+		from .type import TypePointer
+		type = TypePointer(value.type, ti=ti)
+		super().__init__(type=type, ti=ti)
+		self.value = value
 
 #TODO: get type from value ret type
 class ValueCall(Value):

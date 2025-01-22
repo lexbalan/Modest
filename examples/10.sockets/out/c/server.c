@@ -36,7 +36,7 @@ static bool write_file(int sockfd)
 	}
 
 	while (true) {
-		ssize_t n = recv(sockfd, &buffer, bufSize, 0);
+		ssize_t n = recv(sockfd, (char *)&buffer, bufSize, 0);
 
 		if (n <= 0) {
 			break;

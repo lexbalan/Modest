@@ -34,13 +34,13 @@ int main()
 	// current control terminal
 	char cterm[128];
 	memset(&cterm, 0, sizeof cterm);
-	ctermid(&cterm);
+	ctermid((char *)&cterm);
 	printf("ctermid = %s\n", &cterm);
 
 	// current working directory
 	char cwd[128];
 	memset(&cwd, 0, sizeof cwd);
-	getcwd(&cwd, LENGTHOF(cwd));
+	getcwd((char *)&cwd, LENGTHOF(cwd));
 	printf("cwd = %s\n", &cwd);
 
 	char *tty = ttyname(0);

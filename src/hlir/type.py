@@ -138,6 +138,9 @@ class Type(Entity):
 	def is_composite(self):
 		return self.is_array() or self.is_record()
 
+	def is_simple(self):
+		return not self.is_composite()
+
 	def is_nil(self):
 		return False
 		#return isinstance(self, TypeNil)

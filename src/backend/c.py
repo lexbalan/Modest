@@ -149,6 +149,7 @@ def precedence(x):
 	else:
 		if isinstance(x, ValueCons): i = 10
 		elif isinstance(x, ValueSizeofValue): i = 10
+		elif isinstance(x, ValueRef): i = 10
 		elif isinstance(x, ValueCall): i = 11
 		elif isinstance(x, ValueIndex): i = 11
 		elif isinstance(x, ValueAccessRecord): i = 11
@@ -569,6 +570,13 @@ def print_value_un(v, ctx):
 #					out("[0]")
 
 
+def print_value_ref(x, ctx):
+	value = x.value
+	out('&')
+	need_wrap = precedence(value) < precedence(x)
+	print_value(value, need_wrap=need_wrap)
+
+
 
 def print_value_call(v, ctx, sret=None):
 	left = v.func
@@ -848,14 +856,21 @@ def print_value_cons(x, ctx):
 
 	elif type.is_char():
 		if from_type.is_string():
-			#print_value_char(x, ctx)
 			print_literal_char(x.asset, x.type.width)
 			return
 
 
-
-
 	if x.method == 'implicit':
+
+		if isinstance(value, ValueRef):
+			# Приводим явно указатель на массив к указателю на его элемент
+			# В случае когда происходит неявное приведение;
+			if value.value.type.is_array():
+				if value.value.type.of.is_simple():
+					out("(")
+					print_type(value.value.type.of)
+					out(" *)")
+
 		# не печатаем обычный implicit_cast
 		# (это не касается того что выше ^^)
 		print_value(value)
@@ -1242,6 +1257,7 @@ def print_value(x, ctx=[], need_wrap=False):
 	if isinstance(x, ValueLiteral): print_value_literal(x, ctx)
 	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
 	elif isinstance(x, ValueUn): print_value_un(x, ctx)
+	elif isinstance(x, ValueRef): print_value_ref(x, ctx)
 	elif isinstance(x, ValueCons): print_value_cons(x, ctx)
 	elif isinstance(x, ValueFunc): print_value_func(x, ctx)
 	elif isinstance(x, ValueVar): print_value_var(x, ctx)
