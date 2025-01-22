@@ -553,11 +553,7 @@ def print_value_un(v, ctx):
 	p0 = precedence(v)
 	pv = precedence(value)
 
-	if op == 'ref':
-		# Если берем указатель на массив массивов, то приводим его к void *
-		# Т.к. в C нет указателя на массив массивов
-		if value.type.is_array_of_array():
-			out("(void *)")
+
 
 	out(un_ops[op])
 	print_value(value, need_wrap=pv<p0)
@@ -572,10 +568,22 @@ def print_value_un(v, ctx):
 
 def print_value_ref(x, ctx):
 	value = x.value
+
+	# Если берем указатель на массив массивов, то приводим его к void *
+	# Т.к. в C нет указателя на массив массивов
+	if value.type.is_array_of_array():
+		out("(void *)")
+
 	out('&')
 	need_wrap = precedence(value) < precedence(x)
 	print_value(value, need_wrap=need_wrap)
 
+
+def print_value_deref(x, ctx):
+	value = x.value
+	out('*')
+	need_wrap = precedence(value) < precedence(x)
+	print_value(value, need_wrap=need_wrap)
 
 
 def print_value_call(v, ctx, sret=None):
@@ -1258,6 +1266,7 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
 	elif isinstance(x, ValueUn): print_value_un(x, ctx)
 	elif isinstance(x, ValueRef): print_value_ref(x, ctx)
+	elif isinstance(x, ValueDeref): print_value_deref(x, ctx)
 	elif isinstance(x, ValueCons): print_value_cons(x, ctx)
 	elif isinstance(x, ValueFunc): print_value_func(x, ctx)
 	elif isinstance(x, ValueVar): print_value_var(x, ctx)

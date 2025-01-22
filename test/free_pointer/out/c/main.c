@@ -29,7 +29,7 @@ int32_t main()
 	// (because runtime doesn't have any idea about value type it pointee),
 	// but you can construct another (non Free) pointer from it
 	// and use it as usualy
-	*(int64_t *)freePointer = 0x123456789ABCDEFLL;
+	*((int64_t *)freePointer) = 0x123456789ABCDEFLL;
 
 	printf("c = 0x%llX\n", c);
 

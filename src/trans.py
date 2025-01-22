@@ -841,36 +841,6 @@ def do_value_bin(x):
 	return nv
 
 
-
-def do_value_ref(x):
-	v = do_value(x['value'])
-
-	if Value.isBad(v):
-		return v
-
-	ti = x['ti']
-	op = x['kind']
-	vtype = v.type
-
-	if v.isImmutable():
-		if not vtype.is_func() or vtype.is_incompleted():
-			error("expected mutable value or function", v.ti)
-			return ValueBad(x['ti'])
-
-	nv = ValueRef(v, ti=ti)
-
-	if is_global_value(v):
-		nv.immediate = True
-		# не можно поставить 0 тк иначе значение будет трактоваться как zero
-		# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
-		# поэтому временно заткнул единицей, но вообще нужно будет обдумать
-		nv.asset = 1
-		nv.addAttribute('ptr_to_glb_val')
-
-	return nv
-
-
-
 def do_value_not(x):
 	v = do_rvalue(x['value'])
 
@@ -952,6 +922,33 @@ def do_value_pos(x):
 	return nv
 
 
+def do_value_ref(x):
+	v = do_value(x['value'])
+
+	if Value.isBad(v):
+		return v
+
+	ti = x['ti']
+	op = x['kind']
+	vtype = v.type
+
+	if v.isImmutable():
+		if not vtype.is_func() or vtype.is_incompleted():
+			error("expected mutable value or function", v.ti)
+			return ValueBad(x['ti'])
+
+	nv = ValueRef(v, ti=ti)
+
+	if is_global_value(v):
+		nv.immediate = True
+		# не можно поставить 0 тк иначе значение будет трактоваться как zero
+		# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
+		# поэтому временно заткнул единицей, но вообще нужно будет обдумать
+		nv.asset = 1
+		nv.addAttribute('ptr_to_glb_val')
+
+	return nv
+
 
 def do_value_deref(x):
 	v = do_rvalue(x['value'])
@@ -964,21 +961,18 @@ def do_value_deref(x):
 		error("expected pointer value", v.ti)
 		return ValueBad(x['ti'])
 
-	to = vtype.to
-
 	# you can't deref:
 	#   - pointer to Unit
 	#   - pointer to function
 	#   - pointer to open array
+	to = vtype.to
 	is_func_ptr = to.is_func()
 	is_free_ptr = to.is_free_pointer()
 	is_open_array_ptr =  to.is_open_array()
 	if is_func_ptr or is_free_ptr or is_open_array_ptr:
 		error("unsuitable type", v.ti)
 
-	nv = ValueUn(to, 'deref', v, ti=x['ti'])
-	nv.is_lvalue = True
-	return nv
+	return ValueDeref(v, ti=x['ti'])
 
 
 

@@ -125,7 +125,7 @@ static void tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
 
 int32_t main()
 {
-	tablePrint(&table, nRows, nCols, true);
+	tablePrint((void *)&table, nRows, nCols, true);
 	return 0;
 }
 

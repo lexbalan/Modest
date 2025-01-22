@@ -1702,11 +1702,9 @@ def do_eval_va_copy(x):
 def do_eval_un(x):
 	y = None
 	k = x.op
-	#if k == 'ref': y = do_eval_ref(x)
 	if k == 'not': y = do_eval_not(x, xor_msk=-1)
 	elif k == 'logic_not': y = do_eval_not(x, xor_msk=1)
 	elif k == 'neg': y = do_eval_neg(x)
-	elif k == 'deref': y = do_eval_deref(x)
 	return y
 
 
@@ -1741,6 +1739,7 @@ def do_eval(x):
 	elif isinstance(x, ValueCons): y = do_eval_cons(x)
 	elif isinstance(x, ValueUn): y = do_eval_un(x)
 	elif isinstance(x, ValueRef): y = do_eval_ref(x)
+	elif isinstance(x, ValueDeref): y = do_eval_deref(x)
 	elif isinstance(x, ValueConst): y = do_eval_const(x)
 	elif isinstance(x, ValueFunc): y = do_eval_func(x)
 	elif isinstance(x, ValueVar): y = do_eval_var(x)

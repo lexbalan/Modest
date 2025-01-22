@@ -253,6 +253,15 @@ class ValueRef(Value):
 		super().__init__(type=type, ti=ti)
 		self.value = value
 
+
+class ValueDeref(Value):
+	def __init__(self, value, ti=None):
+		assert(isinstance(value, Value))
+		super().__init__(type=value.type.to, ti=ti)
+		self.value = value
+		self.is_lvalue = True
+
+
 #TODO: get type from value ret type
 class ValueCall(Value):
 	def __init__(self, type, func, args, ti=None):
