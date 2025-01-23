@@ -181,6 +181,18 @@ class ValueZero(Value):
 		self.addAttribute('zero')
 
 
+class ValueCons(Value):
+	def __init__(self, type, value, method, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(value, Value))
+		assert(method in ['implicit', 'explicit', 'unsafe'])
+		super().__init__(type=type, ti=ti)
+		self.value = value
+		self.method = method
+		self.nl_end = value.nl_end
+
+
 #TODO: onl value as arg (undefined if not init_value, but type from it)
 class ValueVar(Value):
 	def __init__(self, type, id, init_value, ti=None):
@@ -244,7 +256,6 @@ class ValueBin(Value):
 		self.right = right
 
 
-
 class ValueShl(Value):
 	def __init__(self, left, right, ti=None):
 		assert(isinstance(left, Value))
@@ -263,24 +274,6 @@ class ValueShr(Value):
 		self.right = right
 
 
-class ValueRef(Value):
-	def __init__(self, value, ti=None):
-		assert(isinstance(value, Value))
-
-		from .type import TypePointer
-		type = TypePointer(value.type, ti=ti)
-		super().__init__(type=type, ti=ti)
-		self.value = value
-
-
-class ValueDeref(Value):
-	def __init__(self, value, ti=None):
-		assert(isinstance(value, Value))
-		super().__init__(type=value.type.to, ti=ti)
-		self.value = value
-		self.is_lvalue = True
-
-
 #TODO: get type from value ret type
 class ValueCall(Value):
 	def __init__(self, type, func, args, ti=None):
@@ -291,6 +284,29 @@ class ValueCall(Value):
 		self.func = func
 		self.args = args
 
+
+class ValueAccessModule(Value):
+	def __init__(self, type, left, right, value, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		#assert(isinstance(left, Id))
+		#assert(isinstance(right, Id))
+		super().__init__(type=type, ti=ti)
+		self.left = left
+		self.right = right
+		self.value = value
+
+
+class ValueAccessRecord(Value):
+	def __init__(self, type, left, field, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(left, Value))
+		assert(isinstance(field, Field))
+		super().__init__(type=type, ti=ti)
+		self.left = left
+		self.field = field
+		self.is_lvalue = True
 
 
 #TODO: get type from array element type
@@ -320,40 +336,22 @@ class ValueSlice(Value):
 		self.is_lvalue = True
 
 
-class ValueAccessModule(Value):
-	def __init__(self, type, left, right, value, ti=None):
-		from .type import Type
-		assert(isinstance(type, Type))
-		#assert(isinstance(left, Id))
-		#assert(isinstance(right, Id))
-		super().__init__(type=type, ti=ti)
-		self.left = left
-		self.right = right
-		self.value = value
-
-
-class ValueAccessRecord(Value):
-	def __init__(self, type, left, field, ti=None):
-		from .type import Type
-		assert(isinstance(type, Type))
-		assert(isinstance(left, Value))
-		assert(isinstance(field, Field))
-		super().__init__(type=type, ti=ti)
-		self.left = left
-		self.field = field
-		self.is_lvalue = True
-
-
-class ValueCons(Value):
-	def __init__(self, type, value, method, ti=None):
-		from .type import Type
-		assert(isinstance(type, Type))
+class ValueRef(Value):
+	def __init__(self, value, ti=None):
 		assert(isinstance(value, Value))
-		assert(method in ['implicit', 'explicit', 'unsafe'])
+
+		from .type import TypePointer
+		type = TypePointer(value.type, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.value = value
-		self.method = method
-		self.nl_end = value.nl_end
+
+
+class ValueDeref(Value):
+	def __init__(self, value, ti=None):
+		assert(isinstance(value, Value))
+		super().__init__(type=value.type.to, ti=ti)
+		self.value = value
+		self.is_lvalue = True
 
 
 class ValueSizeofType(Value):
