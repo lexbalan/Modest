@@ -65,7 +65,7 @@ list_Node *list_last_node_get(list_List *list)
 
 list_Node *list_node_first(list_List *list, list_Node *new_node)
 {
-	if ((list == NULL) || (new_node == NULL)) {
+	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
 
@@ -144,7 +144,7 @@ void list_node_insert_right(list_Node *left, list_Node *new_right)
 // if number < 0 - go backward
 list_Node *list_node_get(list_List *list, int32_t pos)
 {
-	if ((list == NULL) || (list->size == 0)) {
+	if (list == NULL || list->size == 0) {
 		return NULL;
 	}
 
@@ -187,7 +187,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 
 list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node)
 {
-	if ((list == NULL) || (new_node == NULL)) {
+	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
 
@@ -216,7 +216,7 @@ list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node)
 
 list_Node *list_node_append(list_List *list, list_Node *new_node)
 {
-	if ((list == NULL) || (new_node == NULL)) {
+	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
 

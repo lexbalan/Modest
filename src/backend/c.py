@@ -507,14 +507,14 @@ def print_value_bin(x, ctx):
 				print_literal_string(x.asset, char_width=x.type.width)
 				return
 
-			print_value(left, need_wrap=need_wrap_left)
+			print_value(left, parent_expr=x)
 			out(' ')
-			print_value(right, need_wrap=need_wrap_right)
+			print_value(right, parent_expr=x)
 			return
 
-	print_value(left, need_wrap=need_wrap_left)
+	print_value(left, parent_expr=x)
 	out(' %s ' % bin_ops[op])
-	print_value(right, need_wrap=need_wrap_right)
+	print_value(right, parent_expr=x)
 
 
 
@@ -546,17 +546,9 @@ un_ops = {
 }
 
 
-def print_value_un(v, ctx):
-	op = v.op
-	value = v.value
-
-	p0 = precedence(v)
-	pv = precedence(value)
-
-
-
-	out(un_ops[op])
-	print_value(value, need_wrap=pv<p0)
+def print_value_un(x, ctx):
+	out(un_ops[x.op])
+	print_value(x.value, parent_expr=x)
 
 #	if op == 'ref':
 #		if value.type.is_array():
@@ -567,23 +559,18 @@ def print_value_un(v, ctx):
 
 
 def print_value_ref(x, ctx):
-	value = x.value
-
 	# Если берем указатель на массив массивов, то приводим его к void *
 	# Т.к. в C нет указателя на массив массивов
-	if value.type.is_array_of_array():
+	if x.value.type.is_array_of_array():
 		out("(void *)")
 
 	out('&')
-	need_wrap = precedence(value) < precedence(x)
-	print_value(value, need_wrap=need_wrap)
+	print_value(x.value, parent_expr=x)
 
 
 def print_value_deref(x, ctx):
-	value = x.value
 	out('*')
-	need_wrap = precedence(value) < precedence(x)
-	print_value(value, need_wrap=need_wrap)
+	print_value(x.value, parent_expr=x)
 
 
 def print_value_call(v, ctx, sret=None):
@@ -650,8 +637,7 @@ def print_value_index(x, ctx):
 		if not is_sim_sim(left.type):
 			out("(*")
 
-	need_wrap = precedence(left) < precedence(x)
-	print_value(left, ctx=ctx, need_wrap=need_wrap)
+	print_value(left, ctx=ctx, parent_expr=x)
 
 	if left.type.is_pointer():
 		if not is_sim_sim(left.type):
@@ -674,8 +660,7 @@ def print_value_access(x, ctx):
 		print_value_literal(x, ['print_immediate'])
 		return
 
-	need_wrap = precedence(left) < precedence(x)
-	print_value(left, need_wrap=need_wrap)
+	print_value(left, parent_expr=x)
 	if left.type.is_pointer():
 		out('->')
 	else:
@@ -696,8 +681,11 @@ def print_cast_hard(t, v, ctx=[]):
 	print_type(t)
 	out("*)&")
 	need_wrap = precedence(v) < CONS_PRECEDENCE
-	print_value(v, ctx=ctx, need_wrap=need_wrap)
-
+	if need_wrap:
+		out("(")
+	print_value(v, ctx=ctx)
+	if need_wrap:
+		out(")")
 
 
 def print_cast(t, v, ctx=[]):
@@ -710,8 +698,11 @@ def print_cast(t, v, ctx=[]):
 	if isinstance(v, ValueLiteral) or (isinstance(v, ValueBin) and v.op == 'add'):
 		need_wrap = not v.type.is_composite()
 
-	print_value(v, ctx=ctx, need_wrap=need_wrap)
-
+	if need_wrap:
+		out("(")
+	print_value(v, ctx=ctx)
+	if need_wrap:
+		out(")")
 
 
 
@@ -1215,7 +1206,9 @@ def print_value_offsetof(x, ctx):
 def print_value_lengthof(x, ctx):
 	v = x.value
 	if not (isinstance(v, ValueVar) or isinstance(v, ValueConst)):
-		print_value(v.type.volume, need_wrap=True)
+		out("(")
+		print_value(v.type.volume)
+		out(")")
 		return
 
 	# sizeof(array) / sizeof(array[0])
@@ -1256,11 +1249,13 @@ def print_value_va_copy(x, ctx):
 	out(")")
 
 
-def print_value(x, ctx=[], need_wrap=False):
+def print_value(x, ctx=[], parent_expr=None):
+	need_wrap = False
+	if parent_expr != None:
+		need_wrap = precedence(x) < precedence(parent_expr)
+
 	if need_wrap:
 		out("(")
-
-	#k = x['kind']
 	
 	if isinstance(x, ValueLiteral): print_value_literal(x, ctx)
 	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
@@ -1298,7 +1293,9 @@ def print_value(x, ctx=[], need_wrap=False):
 
 
 def print_stmt_if(x, need_else_branch):
-	out("if ("); print_value(x.cond); out(")")
+	out("if (")
+	print_value(x.cond)
+	out(")")
 
 	if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
 		nl_indent()
@@ -1326,9 +1323,10 @@ def print_stmt_if(x, need_else_branch):
 			print_stmt_block(e)
 
 
-
 def print_stmt_while(x):
-	out("while ("); print_value(x.cond); out(")")
+	out("while (")
+	print_value(x.cond)
+	out(")")
 
 	if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
 		nl_indent()
@@ -1429,7 +1427,11 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 		need_wrap = precedence(value) < precedenceMax
 
 	nl_str = " \\\n"
-	print_value(value, need_wrap=need_wrap)
+	if need_wrap:
+		out("(")
+	print_value(value)
+	if need_wrap:
+		out(")")
 	nl_str = "\n"
 
 

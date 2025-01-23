@@ -228,7 +228,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 
 		char *sptr = &buf[j];
 
-		if ((c == 'i') || (c == 'd')) {
+		if (c == 'i' || c == 'd') {
 			//
 			// %i & %d for signed integer (Int)
 			//
@@ -244,7 +244,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			int32_t n = sprint_dec_n32(sptr, x);
 			j = j + n;
 
-		} else if ((c == 'x') || (c == 'p')) {
+		} else if (c == 'x' || c == 'p') {
 			//
 			// %x for unsigned integer (Nat)
 			// %p for pointers
