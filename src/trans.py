@@ -708,18 +708,23 @@ def do_value_shift(x):
 	r = do_rvalue(x['right'])
 	type_result = l.type
 
-#	if not l.type.is_word():
-#		error("expected word value", x['left'])
+	if not l.type.is_word():
+		error("expected word value", x['left'])
 
 	if r.type.is_signed():
 		error("expected natural value", x['right'])
 
+	if op == 'shl':
+		nv = ValueShl(l, r, ti=x['ti'])
+	else:
+		nv = ValueShr(l, r, ti=x['ti'])
+
 	if l.isImmediate() and r.isImmediate():
 		asset = l.asset
-		if op == 'shl': asset = asset << r.asset
-		else: asset = asset >> r.asset
-
-		nv = ValueBin(type_result, op, l, r, ti=x['ti'])
+		if op == 'shl':
+			asset = asset << r.asset
+		else:
+			asset = asset >> r.asset
 		nv.asset = int(asset)
 		nv.immediate = True
 		return nv
@@ -728,11 +733,7 @@ def do_value_shift(x):
 		error("expected non-generic value", l.ti)
 		return ValueBad(x['ti'])
 
-	if op == 'shl':
-		return ValueShl(l, r, ti=x['ti'])
-	else:
-		return ValueShr(l, r, ti=x['ti'])
-	#return ValueBin(type_result, op, l, r, ti=x['ti'])
+	return nv
 
 
 def do_value_bin(x):
