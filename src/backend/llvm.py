@@ -965,6 +965,33 @@ def do_eval_bin(x):
 	return llvm_eval_binary(llvm_opcode, l, r, x)
 
 
+def do_eval_shl(x):
+	if x.isImmediate():
+		return do_eval_literal(x)
+
+	# Composite objects comparison (see below)
+	# requires not value, just ADR of value (!)
+	l = do_reval(x.left)
+	r = do_reval(x.right)
+	r = docast(r, l['type'])
+
+	return llvm_eval_binary('shl', l, r, x)
+
+
+def do_eval_shr(x):
+	if x.isImmediate():
+		return do_eval_literal(x)
+
+	# Composite objects comparison (see below)
+	# requires not value, just ADR of value (!)
+	l = do_reval(x.left)
+	r = do_reval(x.right)
+	r = docast(r, l['type'])
+
+	opcode = 'ashr' if Type.is_signed(l['type']) else 'lshr'
+	return llvm_eval_binary(opcode, l, r, x)
+
+
 
 def do_eval_deref(x):
 	ptr_val = do_reval(x.value)
@@ -1736,6 +1763,8 @@ def do_eval(x):
 	y = None
 	if isinstance(x, ValueLiteral): y = do_eval_literal(x)
 	elif isinstance(x, ValueBin): y = do_eval_bin(x)
+	elif isinstance(x, ValueShl): y = do_eval_shl(x)
+	elif isinstance(x, ValueShr): y = do_eval_shr(x)
 	elif isinstance(x, ValueCons): y = do_eval_cons(x)
 	elif isinstance(x, ValueUn): y = do_eval_un(x)
 	elif isinstance(x, ValueRef): y = do_eval_ref(x)
@@ -2717,8 +2746,8 @@ def get_bin_opcode(op, t):
 		opcode = select_bin_opcode_suf('s' + op, 'u' + op, 'f' + op, t)
 	elif op in ['lt', 'gt', 'le', 'ge']:
 		opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
-	elif op == 'shr':
-		opcode = 'ashr' if Type.is_signed(t) else 'lshr'
+	#elif op == 'shr':
+	#	opcode = 'ashr' if Type.is_signed(t) else 'lshr'
 	elif op == 'logic_or':
 		opcode = 'or'
 	elif op == 'logic_and':

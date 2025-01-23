@@ -153,6 +153,8 @@ def precedence(x):
 		elif isinstance(x, ValueCall): i = 11
 		elif isinstance(x, ValueIndex): i = 11
 		elif isinstance(x, ValueAccessRecord): i = 11
+		elif isinstance(x, ValueShl): i = 7
+		elif isinstance(x, ValueShr): i = 7
 		else: i = 12
 
 	return i
@@ -480,21 +482,23 @@ def print_value_bin(x, ctx):
 	if hasattr(right, 'op'):
 		rk = right.op
 
-	if op in ['shl', 'shr']:
-		need_wrap_left = precedence(left) < 10
-		need_wrap_right = precedence(right) < 10
-	elif op == 'logic_or':
-		if lk != 'logic_or':
-			need_wrap_left = precedence(left) < 10
-		if rk != 'logic_or':
-			need_wrap_right = precedence(right) < 10
-	elif op == 'logic_and':
-		if lk != 'logic_and':
-			need_wrap_left = precedence(left) < 10
-		if rk != 'logic_and':
-			need_wrap_right = precedence(right) < 10
+#	if op in ['shl', 'shr']:
+#		need_wrap_left = precedence(left) < 10
+#		need_wrap_right = precedence(right) < 10
+#	elif op == 'logic_or':
+#		if lk != 'logic_or':
+#			need_wrap_left = precedence(left) < 10
+#		if rk != 'logic_or':
+#			need_wrap_right = precedence(right) < 10
+#	elif op == 'logic_and':
+#		if lk != 'logic_and':
+#			need_wrap_left = precedence(left) < 10
+#		if rk != 'logic_and':
+#			need_wrap_right = precedence(right) < 10
+#
+#	el
 
-	elif op == 'add':
+	if op == 'add':
 		if left.type.is_array():
 			return print_value_literal(x, ctx)
 
@@ -516,6 +520,23 @@ def print_value_bin(x, ctx):
 	out(' %s ' % bin_ops[op])
 	print_value(right, parent_expr=x)
 
+
+def print_value_shl(x, ctx):
+	print_value(x.left, parent_expr=x)
+	out(' << ')
+	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar]
+	if need_wrap_right: out("(")
+	print_value(x.right, parent_expr=x)
+	if need_wrap_right: out(")")
+
+
+def print_value_shr(x, ctx):
+	print_value(x.left, parent_expr=x)
+	out(' >> ')
+	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar]
+	if need_wrap_right: out("(")
+	print_value(x.right, parent_expr=x)
+	if need_wrap_right: out(")")
 
 
 def print_value_eq_record(x, ctx):
@@ -1259,6 +1280,8 @@ def print_value(x, ctx=[], parent_expr=None):
 	
 	if isinstance(x, ValueLiteral): print_value_literal(x, ctx)
 	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
+	elif isinstance(x, ValueShl): print_value_shl(x, ctx)
+	elif isinstance(x, ValueShr): print_value_shr(x, ctx)
 	elif isinstance(x, ValueUn): print_value_un(x, ctx)
 	elif isinstance(x, ValueRef): print_value_ref(x, ctx)
 	elif isinstance(x, ValueDeref): print_value_deref(x, ctx)

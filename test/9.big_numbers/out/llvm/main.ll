@@ -196,9 +196,10 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 @big0 = internal global %Int128 1512366075204170947332355369683137040
 define internal %Word64 @high_128(%Word128 %x) {
-	%1 = lshr %Word128 %x, 64
-	%2 = trunc %Word128 %1 to %Word64
-	ret %Word64 %2
+	%1 = zext i8 64 to %Word128
+	%2 = lshr %Word128 %x, %1
+	%3 = trunc %Word128 %2 to %Word64
+	ret %Word64 %3
 }
 
 define internal %Word64 @low_128(%Word128 %x) {

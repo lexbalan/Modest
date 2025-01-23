@@ -244,6 +244,25 @@ class ValueBin(Value):
 		self.right = right
 
 
+
+class ValueShl(Value):
+	def __init__(self, left, right, ti=None):
+		assert(isinstance(left, Value))
+		assert(isinstance(right, Value))
+		super().__init__(type=left.type, ti=ti)
+		self.left = left
+		self.right = right
+
+
+class ValueShr(Value):
+	def __init__(self, left, right, ti=None):
+		assert(isinstance(left, Value))
+		assert(isinstance(right, Value))
+		super().__init__(type=left.type, ti=ti)
+		self.left = left
+		self.right = right
+
+
 class ValueRef(Value):
 	def __init__(self, value, ti=None):
 		assert(isinstance(value, Value))

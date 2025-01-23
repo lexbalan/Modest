@@ -728,7 +728,11 @@ def do_value_shift(x):
 		error("expected non-generic value", l.ti)
 		return ValueBad(x['ti'])
 
-	return ValueBin(type_result, op, l, r, ti=x['ti'])
+	if op == 'shl':
+		return ValueShl(l, r, ti=x['ti'])
+	else:
+		return ValueShr(l, r, ti=x['ti'])
+	#return ValueBin(type_result, op, l, r, ti=x['ti'])
 
 
 def do_value_bin(x):
