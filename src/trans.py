@@ -701,7 +701,6 @@ def do_type(x):
 
 
 
-
 def do_value_shift(x):
 	op = x['kind']  # 'shl', 'shr'
 	l = do_rvalue(x['left'])
