@@ -297,11 +297,6 @@ def property_add(id, value):
 	properties[id] = value
 
 
-#def output_id(id):
-#	property_add()
-
-
-
 
 attributes = []
 
@@ -441,7 +436,6 @@ def init():
 
 
 
-
 def init_builtin_values():
 	# Set taget depended Int & Nat types
 	# (used in index, extra agrs & generic numeric var definitions)
@@ -545,7 +539,6 @@ def do_type_id(t):
 			error("unknown namespace '%s'" % ns_id, t['ti'])
 			tx = TypeBad(t['ti'])
 			return tx
-
 	else:
 		tx = ctx_type_get(id_str)
 
@@ -577,9 +570,6 @@ def do_type_array(t):
 	if Value.isBad(volume):
 		return TypeArray(of, volume, ti=t['ti'])
 
-	#if Value.isUndefined(volume):
-	#	info("UNDEF", volume.ti)
-
 	if not Value.isUndefined(volume):
 		if not volume.isImmediate():
 			#info("VLA", t['ti'])
@@ -601,7 +591,6 @@ def do_type_array(t):
 	assert(volume != None)
 
 	return TypeArray(of, volume, ti=t['ti'])
-
 
 
 anon_rec_cnt = 0
@@ -633,8 +622,6 @@ def do_type_record(x):
 
 	anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
 	rec.c_anon_id = anon_tag
-
-	#rec['att'].append('anonymous_record') # remove this!
 	cmodule.anon_recs.append(rec)
 	return rec
 
@@ -702,7 +689,7 @@ def do_type(x):
 
 
 def do_value_shift(x):
-	op = x['kind']  # 'shl', 'shr'
+	op = x['kind']  # 'shl' | 'shr'
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
 	type_result = l.type
@@ -754,7 +741,6 @@ def do_value_bin(x):
 		elif l.type.is_string() and r.type.is_string():
 			return value_string_add(l, r, ti)
 
-
 	# Check type is valid for the operation
 
 	if not op in l.type.ops:
@@ -779,7 +765,6 @@ def do_value_bin(x):
 
 	if not Type.eq(l.type, r.type, ti):
 		error("different types in '%s' operation" % x['kind'], ti)
-
 		# print: @@ <left_type> & <right_type> @@
 		print(color_code(CYAN), end='')
 		print('@@ ', end='')
@@ -789,9 +774,7 @@ def do_value_bin(x):
 		print(' @@', end='')
 		print(color_code(ENDC), end='')
 		print("\n")
-
 		return ValueBad(ti)
-
 
 	if op in ['eq', 'ne']:
 		return Value.eq(l, r, op, ti)
@@ -832,7 +815,6 @@ def do_value_bin(x):
 				asset = l.asset / r.asset
 		else:
 			asset = ops[op](l.asset, r.asset)
-
 
 		if t.is_number():
 			# (для операций типа 1 + 2)
@@ -2747,7 +2729,6 @@ def import_abspath(s, ext='.hm'):
 
 
 
-
 # directive '@attribute'
 def add_attributes(obj):
 	atts = attributes_get()
@@ -2772,7 +2753,6 @@ def set_att(obj, path, att):
 		set_att(o, path[1:], att)
 	else:
 		assert(False)
-
 
 
 
