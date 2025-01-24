@@ -358,7 +358,7 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %out
 		%Word8 105
 	]
 }
-@tests = internal global [2 x %SHA256_TestCase*] [
+@tests = constant [2 x %SHA256_TestCase*] [
 	%SHA256_TestCase* @test0,
 	%SHA256_TestCase* @test1
 ]

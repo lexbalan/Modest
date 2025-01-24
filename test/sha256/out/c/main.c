@@ -26,7 +26,6 @@ struct SHA256_TestCase {
 typedef struct SHA256_TestCase SHA256_TestCase;
 
 
-
 static SHA256_TestCase test0 = {
 	.input_data = "abc",
 	.input_data_len = 3,
@@ -49,8 +48,9 @@ static SHA256_TestCase test1 = {
 	}
 };
 
-static SHA256_TestCase *tests[2] = (SHA256_TestCase *[2]){&test0, &test1};
 
+#define _tests  {&test0, &test1}
+SHA256_TestCase *tests[2] = _tests;
 
 
 static bool doTest(SHA256_TestCase *test)

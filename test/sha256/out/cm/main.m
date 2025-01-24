@@ -16,7 +16,6 @@ type SHA256_TestCase record {
 }
 
 
-
 var test0: SHA256_TestCase = SHA256_TestCase {
 	input_data = "abc"
 	input_data_len = 3
@@ -39,8 +38,8 @@ var test1: SHA256_TestCase = SHA256_TestCase {
 	]
 }
 
-var tests: [2]*SHA256_TestCase = [&test0, &test1]
 
+const tests = [&test0, &test1]
 
 
 func doTest(test: *SHA256_TestCase) -> Bool {
