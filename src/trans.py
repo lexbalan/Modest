@@ -1836,7 +1836,7 @@ def do_stmt_break(x):
 
 def add_local_var(id, typ, ti):
 	iv = ValueUndefined(typ)
-	var_value = ValueVar(typ, id, iv, ti)
+	var_value = ValueVar(typ, id, init_value=iv, ti=ti)
 	var_value.addAttribute('local')
 	ctx_value_add(id.str, var_value)
 	return var_value
@@ -2236,7 +2236,7 @@ def def_var(x):
 
 	init_value = v
 
-	var_value = ValueVar(t, id, init_value, id.ti)
+	var_value = ValueVar(t, id, init_value=init_value, ti=id.ti)
 	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 
 	definition.value = var_value
@@ -2630,6 +2630,41 @@ def update_func_type(idStr):
 		type_update(fn.type, ftype)
 		return fn
 
+
+
+def pre_imp(ast):
+	global cmodule
+
+	# 1. Проходим по всем типам, создаем их undefined "прототипы".
+	# 2. Проходим по всем функциям, создаем их undefined "прототипы".
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			is_public = x['access_modifier'] == 'public'
+			id = Id(x['id'])
+			ti = id.ti
+
+			if kind == 'type':
+				t = Type(x['ti'])  # Incomplete type (!)
+				cmodule_type_add(id.str, t, is_public=is_public)
+
+			elif kind == 'func':
+				# Create function value with incomplete type
+				t = Type(x['ti'])  # Incomplete type (!)
+				v = ValueFunc(t, id, x['ti'])
+				cmodule_value_add(id.str, v, is_public=is_public)
+
+			elif kind == 'const':
+				t = Type(x['ti'])  # Incomplete type (!)
+				v = ValueConst(t, id, init_value=None, ti=x['ti'])
+				cmodule_value_add(id.str, v, is_public=is_public)
+
+			elif kind == 'var':
+				t = Type(x['ti'])  # Incomplete type (!)
+				v = ValueVar(t, id, init_value=None, ti=x['ti'])
+				cmodule_value_add(id.str, v, is_public=is_public)
 
 
 def pre_def(ast):
