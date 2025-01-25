@@ -215,9 +215,17 @@ declare [0 x %Char]* @strerror(%Int %error)
 %type_Type = type {
 };
 
+%type_TypeArray = type {
+};
+
+declare void @type_init()
 %type_Type = type {
 };
 
+%type_TypeArray = type {
+};
+
+declare void @type_init()
 %value_Value = type {
 	%type_Type*
 };
@@ -228,6 +236,7 @@ declare [0 x %Char]* @strerror(%Int %error)
 define %Int32 @main() {
 	%1 = alloca %type_Type*, align 8
 	%2 = alloca %value_Value*, align 8
+	call void @type_init()
 	ret %Int32 0
 }
 

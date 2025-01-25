@@ -1427,7 +1427,7 @@ def do_value_id(x):
 	global cdef
 	if v.type.is_incompleted():
 		cdef.deps.append(v)
-		v = update_func_type(v.id.str)
+		v = update_incompleted_value(cmodule.ast, v.id.str)
 		if v == None:
 			error("call undefined func", x['ti'])
 			return ValueBad(x['ti'])
@@ -2612,10 +2612,10 @@ def process_module(idStr, ast, nodef=False):
 
 
 
-def update_func_type(idStr):
-	#print("update_func_type(%s)" % idStr)
+def update_incompleted_value(ast, idStr):
+	print("update_incompleted_value(%s)" % idStr)
 
-	for x in cmodule.ast:
+	for x in ast:
 		y = None
 		if x['isa'] != 'ast_definition':
 			continue

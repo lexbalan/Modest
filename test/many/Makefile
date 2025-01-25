@@ -26,7 +26,7 @@ C:
 	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
 	mcc -o $(CPREFIX)/type -mbackend=c -funsafe $(INDIR)/type.m
 	mcc -o $(CPREFIX)/value -mbackend=c -funsafe $(INDIR)/value.m
-	CC $(CPREFIX)/main.c
+	CC $(CPREFIX)/main.c $(CPREFIX)/type.c $(CPREFIX)/value.c
 
 
 clean:

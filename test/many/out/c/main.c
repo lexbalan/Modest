@@ -24,6 +24,8 @@ int32_t main()
 	type_Type *t;
 	value_Value *v;
 
+	type_init();
+
 	return 0;
 }
 
