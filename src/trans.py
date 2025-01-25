@@ -1429,7 +1429,7 @@ def do_value_id(x):
 		cdef.deps.append(v)
 		v = update_incompleted_value(cmodule.ast, v.id.str)
 		if v == None:
-			error("call undefined func", x['ti'])
+			error("use of incomplete value", x['ti'])
 			return ValueBad(x['ti'])
 
 #	if 'usecnt' in v:
