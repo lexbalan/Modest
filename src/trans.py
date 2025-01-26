@@ -522,26 +522,12 @@ def do_field(x):
 # Do Type
 #
 
+
 def do_type_id(t):
-	id = t['ids'][0]
+	id = t['id']
 	id_str = id['str']
 
-	tx = None
-	if len(t['ids']) > 1:
-		ns_id = id_str
-		id_str = t['ids'][1]['str']
-		#print(">>>>>>>>>>>>>>>>>>>>>> GET TYPE %s FROM: %s" % (id_str, ns_id))
-		global cmodule
-		if ns_id in cmodule.imports:
-			submodule = cmodule.imports[ns_id]
-			tx = module_type_get_public(submodule, id_str)
-		else:
-			error("unknown namespace '%s'" % ns_id, t['ti'])
-			tx = TypeBad(t['ti'])
-			return tx
-	else:
-		tx = ctx_type_get(id_str)
-
+	tx = ctx_type_get(id_str)
 
 	if tx == None:
 		error("undefined type", t['ti'])
@@ -554,6 +540,22 @@ def do_type_id(t):
 		cdef.deps.append(tx)
 
 	return tx
+
+
+
+def do_type_access(x):
+	ns_id = x['left']['str']
+	id_str = x['right']['str']
+	#print("GET TYPE %s FROM: %s" % (id_str, ns_id))
+	global cmodule
+	t = None
+	if ns_id in cmodule.imports:
+		submodule = cmodule.imports[ns_id]
+		t = module_type_get_public(submodule, id_str)
+	else:
+		error("unknown namespace '%s'" % ns_id, x['ti'])
+		t = TypeBad(x['ti'])
+	return t
 
 
 
@@ -675,6 +677,7 @@ def do_type(x):
 	t = None
 	k = x['kind']
 	if k == 'id': t = do_type_id(x)
+	elif k == 'access': t = do_type_access(x)
 	elif k == 'func': t = do_type_func(x)
 	elif k == 'pointer': t = do_type_pointer(x)
 	elif k == 'array': t = do_type_array(x)
@@ -1427,7 +1430,7 @@ def do_value_id(x):
 	global cdef
 	if v.type.is_incompleted():
 		cdef.deps.append(v)
-		v = update_incompleted_value(cmodule.ast, v.id.str)
+		v = value_update_incompleted_type(cmodule.ast, v.id.str)
 		if v == None:
 			error("use of incomplete value", x['ti'])
 			return ValueBad(x['ti'])
@@ -2612,8 +2615,8 @@ def process_module(idStr, ast, nodef=False):
 
 
 
-def update_incompleted_value(ast, idStr):
-	print("update_incompleted_value(%s)" % idStr)
+def value_update_incompleted_type(ast, idStr):
+	print("value_update_incompleted_type(%s)" % idStr)
 
 	for x in ast:
 		y = None

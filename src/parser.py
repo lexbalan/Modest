@@ -403,23 +403,31 @@ class Parser:
 			t = y
 
 		elif self.ctok_class() == 'id':
-			id = self.identifier()
-			ids = [id]
-
-			while self.match('.'):
+			if isUpperIdentifierToken(self.ctok()):
 				id = self.identifier()
-				ids.append(id)
+				t = {
+					'isa': 'ast_type',
+					'kind': 'id',
+					'id': id,
+					'ti': ti
+				}
 
-			t = {
-				'isa': 'ast_type',
-				'kind': 'id',
-				'ids': ids,
-				'ti': ti
-			}
+			else:
+				left = self.identifier()
+				self.need(".")
+				right = self.identifier()
+
+				t = {
+					'isa': 'ast_type',
+					'kind': 'access',
+					'left': left,
+					'right': right,
+					'ti': ti
+				}
+
 
 		t['attributes'] = attributes
 		return t
-
 
 	#
 	# Parse Value
