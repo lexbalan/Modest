@@ -3,7 +3,7 @@
 
 type NewInt32 Int32
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("test typedef\n")
 
 	var newInt32: NewInt32

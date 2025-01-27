@@ -6,7 +6,7 @@
 //$pragma c_include "./print.h"
 
 
-func my_printf(format: *Str8, ...) -> SSizeT {
+func my_printf(format: *Str8, ...) -> ctypes64.SSizeT {
 	var va: va_list
 	var va2: va_list
 
@@ -20,11 +20,11 @@ func my_printf(format: *Str8, ...) -> SSizeT {
 
 	__va_end(va2)
 
-	return write(c_STDOUT_FILENO, &buf, SizeT n)
+	return write(c_STDOUT_FILENO, &buf, ctypes64.SizeT n)
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	var k: Int32 = 10
 	my_printf("My Printf Test %d\n", k)
 

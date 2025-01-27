@@ -5,7 +5,7 @@
 // left must be Word
 // right must be Nat
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("test shift\n")
 
 	var c: Word32

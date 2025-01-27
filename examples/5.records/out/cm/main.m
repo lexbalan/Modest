@@ -5,8 +5,8 @@
 
 
 type Point record {
-	x: Float
-	y: Float
+	x: ctypes64.Float
+	y: ctypes64.Float
 }
 
 type Line record {
@@ -23,7 +23,7 @@ var line: Line = {
 
 
 
-func max(a: Float, b: Float) -> Float {
+func max(a: ctypes64.Float, b: ctypes64.Float) -> ctypes64.Float {
 	if a > b {
 		return a
 	}
@@ -32,7 +32,7 @@ func max(a: Float, b: Float) -> Float {
 
 
 
-func min(a: Float, b: Float) -> Float {
+func min(a: ctypes64.Float, b: ctypes64.Float) -> ctypes64.Float {
 	if a < b {
 		return a
 	}
@@ -41,7 +41,7 @@ func min(a: Float, b: Float) -> Float {
 
 
 // Pythagorean theorem
-func distance(a: Point, b: Point) -> Float {
+func distance(a: Point, b: Point) -> ctypes64.Float {
 	let dx = max(a.x, b.x) - min(a.x, b.x)
 	let dy = max(a.y, b.y) - min(a.y, b.y)
 	let dx2 = pow(dx, 2)
@@ -50,7 +50,7 @@ func distance(a: Point, b: Point) -> Float {
 }
 
 
-func lineLength(line: Line) -> Float {
+func lineLength(line: Line) -> ctypes64.Float {
 	return distance(line.a, line.b)
 }
 
@@ -66,7 +66,7 @@ func ptr_example() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	// by value
 	let len = lineLength(line)
 	printf("line length = %f\n", len)

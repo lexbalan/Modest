@@ -89,7 +89,7 @@ func test_by_pointer() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	test_by_value()
 	test_by_pointer()
 	return 0

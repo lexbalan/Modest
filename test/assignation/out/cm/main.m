@@ -19,7 +19,7 @@ var glb_a0: [10]Int32 = []
 var glb_a1: [10]Int32 = [64, 53, 42]
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("test assignation\n")
 
 	// -----------------------------------

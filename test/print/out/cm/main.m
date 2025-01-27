@@ -2,7 +2,7 @@
 import "lightfood/console" as console
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	console.print("test console print\n")
 
 	let c = Char32 "🐀"

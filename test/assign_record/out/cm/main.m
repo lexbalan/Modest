@@ -11,7 +11,7 @@ var globalPoint0: Point = {x = 10, y = 20}
 var globalPoint1: Point = {}
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("test assign_array\n")
 
 	globalPoint1 = globalPoint0

@@ -2,7 +2,7 @@
 @c_include "stdio.h"
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("generic types test\n")
 
 	let t1 = test_generic_integer()

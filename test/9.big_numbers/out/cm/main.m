@@ -15,7 +15,7 @@ func low_128(x: Word128) -> Word64 {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 
 	let big1 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 

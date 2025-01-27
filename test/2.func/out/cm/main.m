@@ -18,7 +18,7 @@ func sum(a: Int32, b: Int32) -> Int32 {
 
 
 // define function main
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("test func\n")
 
 	// call declared & defined functions

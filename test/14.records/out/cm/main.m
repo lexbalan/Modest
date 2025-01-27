@@ -88,7 +88,7 @@ func test_records() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("records test\n")
 
 	// check value_record_eq for immediate values

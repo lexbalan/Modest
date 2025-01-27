@@ -2,7 +2,7 @@
 @c_include "stdio.h"
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("if statement example\n")
 
 	var a: Int32

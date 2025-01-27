@@ -2,7 +2,7 @@
 @c_include "stdio.h"
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	let x = 127
 	let y = x + 1
 

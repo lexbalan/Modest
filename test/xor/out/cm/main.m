@@ -38,7 +38,7 @@ func print_bytes(buf: *[]Word8, len: Nat32) -> Unit {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("test xor encrypting\n")
 
 	let tmsg = *[]Word8 &test_msg

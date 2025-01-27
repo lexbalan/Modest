@@ -3,7 +3,7 @@
 
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("bool check\nm")
 
 	var x: Nat8

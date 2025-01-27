@@ -5,7 +5,7 @@
 @c_include "stdlib.h"// getenv
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("unistd test\n")
 
 	let pid = getpid()

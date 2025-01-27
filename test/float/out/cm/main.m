@@ -13,8 +13,8 @@ func squareOfCircle(radius: Float64) -> Float64 {
 
 
 type Point2D record {
-	x: Int
-	y: Int
+	x: ctypes64.Int
+	y: ctypes64.Int
 }
 
 
@@ -27,7 +27,7 @@ func slope(a: Point2D, b: Point2D) -> Float32 {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("float test\n")
 
 	printf("2 = %d\n", Int32 2)

@@ -10,8 +10,8 @@ const filename = *Str8 "file.bin"
 
 // chunk of data for read/write operations in file
 type Chunk record {
-	id: [100]Char
-	data: [1024]Char
+	id: [100]ctypes64.Char
+	data: [1024]ctypes64.Char
 }
 
 
@@ -29,8 +29,8 @@ func write_example() -> Unit {
 
 	// pointers casting requires -funsafe translator option
 	// (see Makefile)
-	strcpy(&(chunk.id), *[]Char "id")
-	strcpy(&(chunk.data), *[]Char "data")
+	strcpy(&(chunk.id), *[]ctypes64.Char "id")
+	strcpy(&(chunk.data), *[]ctypes64.Char "data")
 
 	// write chunk to file
 	fwrite(&chunk, sizeof(Chunk), 1, fp)
@@ -60,7 +60,7 @@ func read_example() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("binary file example\n")
 	write_example()
 	read_example()

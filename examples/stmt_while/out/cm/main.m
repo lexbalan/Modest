@@ -2,7 +2,7 @@
 @c_include "stdio.h"
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("while statement test\n")
 
 	var a: Int32 = 0

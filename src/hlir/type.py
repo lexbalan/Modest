@@ -31,6 +31,7 @@ NUM_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
 
 class Type(Entity):
 	def __init__(self, generic=False, width=0, ops=[], ti=None):
+		super().__init__(ti)
 		size = nbytes_for_bits(width)
 		align = 1
 		if size > 0:

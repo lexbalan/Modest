@@ -59,7 +59,7 @@ type X record {
 
 var x: X
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("test cast operation\n")
 
 	let start_adr = Nat64 &c

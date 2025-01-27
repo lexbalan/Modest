@@ -11,7 +11,7 @@ const greeting = hello + " " + world//+ " " + party_corn
 const test = "test"
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("%s\n", *Str8 greeting)
 
 	if test == "test" {

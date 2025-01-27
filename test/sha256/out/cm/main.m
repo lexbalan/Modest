@@ -10,7 +10,7 @@ type SHA256_TestCase record {
 	input_data: [inputDataLength]Char8
 	input_data_len: Nat32
 
-	expected_result: Hash
+	expected_result: sha256.Hash
 }
 
 
@@ -41,7 +41,7 @@ const tests = [&test0, &test1]
 
 
 func doTest(test: *SHA256_TestCase) -> Bool {
-	var test_hash: Hash
+	var test_hash: sha256.Hash
 	let msg = *[]Word8 &(test.input_data)
 	let msg_len = test.input_data_len
 
@@ -62,11 +62,11 @@ func doTest(test: *SHA256_TestCase) -> Bool {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("test SHA256\n")
 
 	var i: Int32 = 0
-	while i < Int lengthof(tests) {
+	while i < ctypes64.Int lengthof(tests) {
 		let test = tests[i]
 		let test_result = doTest(test)
 

@@ -178,7 +178,7 @@ func test_arrays() -> Unit {
 
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	var em: [30]Char8 = f0("Hello World!")
@@ -278,9 +278,9 @@ public func main() -> Int {
 
 	//let aa = [111] + [222] + [333]
 	// cons literal array from var items
-	var int100: Int = 100
-	var int200: Int = 200
-	var int300: Int = 300
+	var int100: ctypes64.Int = 100
+	var int200: ctypes64.Int = 200
+	var int300: ctypes64.Int = 300
 	// immutable, non immediate value (array)
 	let init_array = [int100, int200, int300]
 

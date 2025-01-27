@@ -163,7 +163,7 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 
 	i = i + 1
 
-	memset(&(ctx.data[i]), 0, SizeT n - i)
+	memset(&(ctx.data[i]), 0, ctypes64.SizeT n - i)
 	//ctx.data[i:n-i] = []
 
 	if ctx.datalen >= 56 {

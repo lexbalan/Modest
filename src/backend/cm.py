@@ -209,7 +209,8 @@ def print_type(t):
 	# Если тип связан с идентификатором - распечатаем его
 	id_str = get_type_id(t)
 	if id_str != None:
-		out(id_str)
+		print_id_for(t)
+		#out(id_str)
 		return
 
 	# Если у типа нет связанного идентификатора

@@ -27,7 +27,7 @@ func sumsub64(a: Int64, b: Int64) -> Unit {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("inline asm test\n")
 
 	var a: Int64 = 10

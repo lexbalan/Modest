@@ -52,7 +52,7 @@ func read_example() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("text_file example\n")
 	write_example()
 	read_example()

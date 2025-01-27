@@ -2,7 +2,7 @@
 @c_include "stdio.h"
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	var check: Word16 = 0x0001
 	let is_le = **Word8 &check == 1
 

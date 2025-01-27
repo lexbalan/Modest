@@ -10,7 +10,7 @@ type Object record {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("memcopy test\n")
 
 	var o1: Object

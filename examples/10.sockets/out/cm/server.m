@@ -11,7 +11,7 @@ const port = 8080
 const bufSize = 1024
 
 
-func write_file(sockfd: Int) -> Bool {
+func write_file(sockfd: ctypes64.Int) -> Bool {
 	var buffer: [bufSize]Char8
 
 	let fp = fopen(filename, "w")
@@ -35,7 +35,7 @@ func write_file(sockfd: Int) -> Bool {
 }
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	let sockfd = socket(af_INET, c_SOCK_STREAM, 0)
 	if sockfd < 0 {
 		perror("[-] Error in socket")
@@ -44,16 +44,16 @@ public func main() -> Int {
 
 	printf("[+] Server socket created\n")
 
-	var server_addr: Struct_sockaddr_in = Struct_sockaddr_in {
+	var server_addr: socket.Struct_sockaddr_in = socket.Struct_sockaddr_in {
 		sin_family = af_INET
 		sin_port = port
-		sin_addr = Struct_in_addr {
+		sin_addr = socket.Struct_in_addr {
 			s_addr = inet_addr(ipAddress)
 		}
 	}
 
 	let sockaddr = &server_addr
-	var e: Int = bind(sockfd, sockaddr, SocklenT sizeof(Struct_sockaddr_in))
+	var e: ctypes64.Int = bind(sockfd, sockaddr, socket.SocklenT sizeof(socket.Struct_sockaddr_in))
 	if e < 0 {
 		perror("[-] Error in Binding")
 		exit(1)
@@ -69,8 +69,8 @@ public func main() -> Int {
 
 	printf("[+] Listening...\n")
 
-	var addr_size: SocklenT = SocklenT sizeof(Struct_sockaddr_in)
-	var new_addr: Struct_sockaddr_in
+	var addr_size: socket.SocklenT = socket.SocklenT sizeof(socket.Struct_sockaddr_in)
+	var new_addr: socket.Struct_sockaddr_in
 	let sa = &new_addr
 	let new_sock = accept(sockfd, sa, &addr_size)
 

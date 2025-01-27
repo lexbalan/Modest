@@ -33,7 +33,7 @@ var points2: [3]Point = points
 
 
 // define function main
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	printf("test const\n")
 
 	printf("genericIntConst = %d\n", Int32 genericIntConst)

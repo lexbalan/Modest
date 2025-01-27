@@ -29,7 +29,7 @@ var arr_utf16: [9]Char16 = "Hello Ω!\n"
 var arr_utf32: [8]Char32 = "Hello!\n"
 
 
-public func main() -> Int {
+public func main() -> ctypes64.Int {
 	var str8: *Str8 = string8Const
 	var str16: *Str16 = string16Const
 	var str32: *Str32 = string32Const
