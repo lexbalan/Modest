@@ -1,6 +1,6 @@
 
 @c_include "stdio.h"
-
+import "lightfood/memory" as mem
 
 
 type Object record {

@@ -170,7 +170,7 @@ def get_id_str(x):
 	id_str = id.str
 	if id.need_decoration:
 		if x.definition:
-			prefix = x.definition.module.prefix
+			prefix = x.definition.getModule().prefix
 			if prefix != None:
 				id_str = prefix + '_' + id_str
 

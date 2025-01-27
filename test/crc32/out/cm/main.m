@@ -1,7 +1,7 @@
 
 @c_include "stdio.h"
 @c_include "./crc32.h"
-
+import "misc/crc32" as crc32
 
 
 const datastring = "123456789"

@@ -1,7 +1,7 @@
 
 @c_include "stdio.h"
-
-
+import "lightfood/delay" as delay
+import "fsm" as fsm
 @c_include "./delay.h"
 
 // This is flashlight final state machine example

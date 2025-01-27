@@ -1,5 +1,5 @@
 
-
+import "lightfood/console" as console
 
 
 public func main() -> Int {

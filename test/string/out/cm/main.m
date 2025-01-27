@@ -2,7 +2,7 @@
 @c_include "./utf.h"
 @c_include "./console.h"
 @c_include "stdio.h"
-
+import "lightfood/console" as console
 
 
 // constants with type String(Generic)

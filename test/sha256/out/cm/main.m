@@ -1,6 +1,6 @@
 
 @c_include "stdio.h"
-
+import "misc/sha256" as sha256
 @c_include "./sha256.h"
 
 const inputDataLength = 32

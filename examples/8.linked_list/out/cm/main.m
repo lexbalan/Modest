@@ -1,7 +1,7 @@
 
 @c_include "stdlib.h"
 @c_include "stdio.h"
-
+import "list" as list
 
 
 // wrap around linked list for list.List Nat32

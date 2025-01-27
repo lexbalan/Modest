@@ -38,7 +38,7 @@ parser = Parser()
 def is_local_entity(x):
 	global cmodule
 	if hasattr(x, 'definition'):
-		return x.definition.module == cmodule
+		return x.definition.parent == cmodule
 	return True
 
 
@@ -273,7 +273,7 @@ def module_append(definition, to_export=False):
 	global cmodule
 
 	cmodule.defs.append(definition)
-	definition.module = cmodule
+	definition.parent = cmodule
 
 
 
@@ -550,8 +550,8 @@ def do_type_access(x):
 	global cmodule
 	t = None
 	if ns_id in cmodule.imports:
-		submodule = cmodule.imports[ns_id]
-		t = module_type_get_public(submodule, id_str)
+		imp = cmodule.imports[ns_id]
+		t = module_type_get_public(imp.module, id_str)
 	else:
 		error("unknown namespace '%s'" % ns_id, x['ti'])
 		t = TypeBad(x['ti'])
@@ -1298,7 +1298,7 @@ def do_value_slice(x):
 
 
 
-def is_submodule_name(id_str):
+def is_import_name(id_str):
 	return id_str in cmodule.imports
 
 
@@ -1309,7 +1309,8 @@ def submodule_access(x):
 	iname = x['right']['str']
 	ti = x['ti']
 
-	submodule = cmodule.imports[mname]
+	imp = cmodule.imports[mname]
+	submodule = imp.module
 
 	v = module_value_get_public(submodule, iname)
 	if v == None:
@@ -1318,6 +1319,9 @@ def submodule_access(x):
 			error("access to module private item", ti)
 
 	if v == None:
+		print(submodule.id)
+		#submodule.symtab_public.show_table()
+		#submodule.symtab_private.show_table()
 		error("module '%s' does not have value '%s'" % (mname, iname), x['ti'])
 		return ValueBad(x['ti'])
 
@@ -1335,7 +1339,7 @@ def do_value_access(x):
 		# над одноименными модулями)
 		v = ctx_value_get(x['left']['str'])
 		if v == None:
-			if is_submodule_name(x['left']['str']):
+			if is_import_name(x['left']['str']):
 				return submodule_access(x)
 
 	#
@@ -2081,7 +2085,7 @@ def def_type(x):
 	nt.deps = deps
 	nt.id = id
 	nt.definition = definition
-	nt.module = cmodule  # добавляем заново тк очистили его выше!
+	nt.parent = cmodule  # добавляем заново тк очистили его выше!
 	nt.ti_def = id.ti
 
 	if need_decoration(x):
@@ -2492,9 +2496,7 @@ def do_import(x):
 			for xx in m.defs:
 				xx['att'].append('c_no_print')
 
-	if not x['include']:
-		cmodule.imports[_as] = m
-	else:
+	if x['include']:
 		# INCLUDE
 		# забираем публичные символы
 		# и забираем все определения (исключая дубликаты!)
@@ -2512,6 +2514,7 @@ def do_import(x):
 		return
 
 	y = StmtImport(impline, _as, module=m, ti=x['ti'], include=x['include'])
+	cmodule.imports[_as] = y
 	return y
 
 
@@ -2621,7 +2624,7 @@ def process_module(idStr, ast, nodef=False):
 
 
 def value_update_incompleted_type(ast, idStr):
-	print("value_update_incompleted_type(%s)" % idStr)
+	#print("value_update_incompleted_type(%s)" % idStr)
 
 	for x in ast:
 		y = None

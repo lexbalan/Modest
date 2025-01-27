@@ -122,7 +122,7 @@ def type_get_aka(t):
 			#id_str = t['definition']['module']['prefix'] + '_' + id_str
 
 			if hasattr(t, 'definition'):
-				prefix = t.definition.module.prefix
+				prefix = t.definition.getModule().prefix
 				if prefix != None:
 					id_str = prefix + '_' + id_str
 
@@ -140,7 +140,7 @@ def get_id_str(x):
 	id_str = id.str
 	if id.need_decoration:
 		if x.definition != None:
-			prefix = x.definition.module.prefix
+			prefix = x.definition.getModule().prefix
 			if prefix != None:
 				id_str = prefix + '_' + id_str
 
@@ -2550,7 +2550,7 @@ def een(defs, decl_only=False):
 		if hasattr(x, 'id'):
 			# Тупейшая Защита от повторного определения
 			# (А они происходят тк импорты и инклуюды сложно сплетены и повтор.)
-			uid = x.module.id + '.' + x.id.str
+			uid = x.parent.id + '.' + x.id.str
 			#uid = x.module.id + '.' + x.module.id
 
 			if uid in printed:
@@ -2583,7 +2583,12 @@ def een(defs, decl_only=False):
 
 # защита от повторного включения
 already_in = []
+
 def print_included(m):
+
+	if isinstance(m, StmtImport):
+		m = m.module
+
 	for inc in m.included_modules:
 		# защита от повторного включения
 		if inc.id not in already_in:
@@ -2605,12 +2610,15 @@ def print_included(m):
 
 
 def print_imports(m):
+	if isinstance(m, StmtImport):
+		m = m.module
+
 	for imp_id in m.imports:
 		imp = m.imports[imp_id]
 		print_included(imp)
 		print_imports(imp)
 
-		for d in imp.defs:
+		for d in imp.module.defs:
 			if is_private(d):
 				continue
 
