@@ -285,18 +285,6 @@ class ValueCall(Value):
 		self.args = args
 
 
-class ValueAccessModule(Value):
-	def __init__(self, type, left, right, value, ti=None):
-		from .type import Type
-		assert(isinstance(type, Type))
-		#assert(isinstance(left, Id))
-		#assert(isinstance(right, Id))
-		super().__init__(type=type, ti=ti)
-		self.left = left
-		self.right = right
-		self.value = value
-
-
 class ValueAccessRecord(Value):
 	def __init__(self, type, left, field, ti=None):
 		from .type import Type

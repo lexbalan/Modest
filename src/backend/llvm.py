@@ -1267,8 +1267,6 @@ def do_eval_access(x):
 
 
 
-def do_eval_access_module(x):
-	return do_eval(x.value)
 
 
 'trunc .. to'
@@ -1775,7 +1773,6 @@ def do_eval(x):
 	elif isinstance(x, ValueCall): y = do_eval_call(x)
 	elif isinstance(x, ValueIndex): y = do_eval_index(x)
 	elif isinstance(x, ValueAccessRecord): y = do_eval_access(x)
-	elif isinstance(x, ValueAccessModule): y = do_eval_access_module(x)
 	elif isinstance(x, ValueSlice): y = do_eval_slice(x)
 	elif isinstance(x, ValueZero): y = do_eval_literal(x)
 	elif isinstance(x, ValueSizeofValue): y = do_eval_sizeof_value(x)

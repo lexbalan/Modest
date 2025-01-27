@@ -18,6 +18,8 @@ import copy
 
 INDENT_SYMBOL = "\t"
 
+cmodule = None
+
 
 NO_TYPEDEF_STRUCTS = False
 
@@ -178,7 +180,13 @@ def get_id_str(x):
 
 
 def print_id_for(x, prefix=''):
-	out(prefix + get_id_str(x))
+#	xm = x.getModule()
+#	if xm != None:
+#		if xm != cmodule:
+#			out("%s_" % xm.id)
+
+	#out(x.id.str)
+	out(get_id_str(x))
 
 
 
@@ -690,10 +698,6 @@ def print_value_access(x, ctx):
 
 
 
-def print_value_access_module(v, ctx):
-	out(get_id_str(v.right))
-
-
 
 def print_cast_hard(t, v, ctx=[]):
 	# hard cast is possible only in function body
@@ -1185,7 +1189,7 @@ def print_value_const(x, ctx):
 
 	if x.type.is_array():
 		if is_global_context():
-			prefix = '_'
+			out('_')
 
 	print_id_for(x, prefix)
 	return
@@ -1292,7 +1296,6 @@ def print_value(x, ctx=[], parent_expr=None):
 	elif isinstance(x, ValueCall): print_value_call(x, ctx)
 	elif isinstance(x, ValueIndex): print_value_index(x, ctx)
 	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
-	elif isinstance(x, ValueAccessModule): print_value_access_module(x, ctx)
 	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
 	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
 	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
@@ -2093,6 +2096,9 @@ def print_cfile(module, _outname):
 
 
 def run(module, _outname, options):
+	global cmodule
+	cmodule = module
+
 	hpath = _outname
 	if 'include_dir' in options:
 		inc_dir = options['include_dir']

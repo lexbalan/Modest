@@ -1319,15 +1319,10 @@ def submodule_access(x):
 			error("access to module private item", ti)
 
 	if v == None:
-		print(submodule.id)
-		#submodule.symtab_public.show_table()
-		#submodule.symtab_private.show_table()
 		error("module '%s' does not have value '%s'" % (mname, iname), x['ti'])
 		return ValueBad(x['ti'])
 
-	y = ValueAccessModule(v.type, submodule, v, v, x['ti'])
-	cp_immediate(y, v)
-	return y
+	return v
 
 
 
@@ -2484,7 +2479,7 @@ def do_import(x):
 		m = modules[abspath]
 
 	if m == None:
-		m = translate(abspath, nodef=not x['include'])
+		m = translate(abspath, nodef=not x['include'], is_include=x['include'])
 		modules[abspath] = m
 
 		mid = impline.split("/")[-1]
@@ -2546,7 +2541,7 @@ def do_directive(x):
 
 
 
-def translate(abspath, nodef=False):
+def translate(abspath, nodef=False, is_include=False):
 	log(">>>> TRANSLATE(\"%s\")" % abspath)
 	log_push()
 	assert(abspath != None)
@@ -2565,7 +2560,7 @@ def translate(abspath, nodef=False):
 	m = None
 	if ast != None:
 		idStr = abspath.split('/')[-1][:-2]
-		m = process_module(idStr, ast, nodef=nodef)
+		m = process_module(idStr, ast, nodef=nodef, is_include=is_include)
 		m.prefix = m.id
 		m.source_abspath = abspath
 
@@ -2577,7 +2572,7 @@ def translate(abspath, nodef=False):
 
 
 
-def process_module(idStr, ast, nodef=False):
+def process_module(idStr, ast, nodef=False, is_include=False):
 	global skipp, production, prev_production
 
 	global properties
@@ -2610,9 +2605,10 @@ def process_module(idStr, ast, nodef=False):
 		if y != None:
 			module_append(y)
 
-	pre_def(ast)
 
-	def_def(ast)
+	pre_def(ast, is_include=is_include)
+
+	def_def(ast, is_include=is_include)
 
 	m = cmodule
 
@@ -2663,26 +2659,30 @@ def pre_imp(ast):
 
 			if kind == 'type':
 				t = Type(x['ti'])  # Incomplete type (!)
+				t.parent = cmodule
 				cmodule_type_add(id.str, t, is_public=is_public)
 
 			elif kind == 'func':
 				# Create function value with incomplete type
 				t = Type(x['ti'])  # Incomplete type (!)
 				v = ValueFunc(t, id, x['ti'])
+				v.parent = cmodule
 				cmodule_value_add(id.str, v, is_public=is_public)
 
 			elif kind == 'const':
 				t = Type(x['ti'])  # Incomplete type (!)
 				v = ValueConst(t, id, init_value=None, ti=x['ti'])
+				v.parent = cmodule
 				cmodule_value_add(id.str, v, is_public=is_public)
 
 			elif kind == 'var':
 				t = Type(x['ti'])  # Incomplete type (!)
 				v = ValueVar(t, id, init_value=None, ti=x['ti'])
+				v.parent = cmodule
 				cmodule_value_add(id.str, v, is_public=is_public)
 
 
-def pre_def(ast):
+def pre_def(ast, is_include=False):
 	global cmodule
 
 	# 1. Проходим по всем типам, создаем их undefined "прототипы".
@@ -2698,16 +2698,20 @@ def pre_def(ast):
 
 			if kind == 'type':
 				t = Type(x['ti'])  # Incomplete type (!)
+				if not is_include:
+					t.parent = cmodule
 				cmodule_type_add(id['str'], t, is_public=is_public)
 
 			elif kind == 'func':
 				# Create function value with incomplete type
 				t = Type(x['ti'])  # Incomplete type (!)
 				v = ValueFunc(t, Id(x['id']), x['ti'])
+				if not is_include:
+					v.parent = cmodule
 				cmodule_value_add(id['str'], v, is_public=is_public)
 
 
-def def_def(ast):
+def def_def(ast, is_include=False):
 	# 3. Далее идем по всем элементам с самого начала и определяем их.
 	#   - Если элемент использует undefined - заносим его в список зависимостей эл-та
 	for x in ast:
@@ -2727,6 +2731,8 @@ def def_def(ast):
 
 			if y != None:
 				add_spices(y, ast_atts=x['attributes'])
+				if not is_include:
+					y.parent = cmodule
 				module_append(y, to_export=x['access_modifier'] == 'public')
 		elif isa == 'ast_comment':
 			comment = do_stmt_comment(x)

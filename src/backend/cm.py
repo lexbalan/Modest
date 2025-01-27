@@ -76,8 +76,14 @@ def precedence(x):
 	return i
 
 
+cmodule = None
+
 
 def print_id_for(x):
+	xm = x.getModule()
+	if xm != None:
+		if xm != cmodule:
+			out("%s." % xm.id)
 	out(get_id_str(x))
 
 
@@ -674,7 +680,6 @@ def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
 	elif isinstance(x, ValueCall): print_ValueCall(x, ctx)
 	elif isinstance(x, ValueIndex): print_value_index(x, ctx)
 	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
-	elif isinstance(x, ValueAccessModule): print_value_access_module(x, ctx)
 	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
 	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
 	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
@@ -879,6 +884,8 @@ def printTopLevelStmt(x):
 
 
 def run(module, outname, options):
+	global cmodule
+	cmodule = module
 	output_open(outname + '.m')
 	for x in module.defs:
 		printTopLevelStmt(x)
