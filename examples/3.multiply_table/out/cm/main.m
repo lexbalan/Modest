@@ -1,7 +1,5 @@
 
-include "libc/ctypes64"
 @c_include "stdio.h"
-include "libc/stdio"
 
 
 func mtab(n: Nat32) -> Unit {

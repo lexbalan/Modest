@@ -1,7 +1,5 @@
 
-include "libc/ctypes64"
 @c_include "stdio.h"
-include "libc/stdio"
 
 
 func sum64(a: Int64, b: Int64) -> Int64 {

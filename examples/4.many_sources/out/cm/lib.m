@@ -1,6 +1,5 @@
 
 @c_include "stdio.h"
-include "libc/stdio"
 
 
 public func foo() -> Unit {

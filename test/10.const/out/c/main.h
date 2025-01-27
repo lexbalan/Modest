@@ -41,10 +41,6 @@
 
 
 
-
-
-
-
 // Pythagorean theorem
 
 

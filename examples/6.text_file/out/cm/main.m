@@ -5,7 +5,6 @@
 @c_include "time.h"
 @c_include "unistd.h"
 @c_include "math.h"
-include "libc/libc"
 
 //include "libc/ctypes64"
 //include "libc/stdio"

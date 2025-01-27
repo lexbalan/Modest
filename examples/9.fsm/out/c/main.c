@@ -5,12 +5,9 @@
 
 #include "main.h"
 
-
 #include <stdio.h>
 
 
-
-#include "fsm.h"
 
 #include "./delay.h"
 

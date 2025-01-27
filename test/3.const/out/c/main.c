@@ -5,9 +5,7 @@
 
 #include "main.h"
 
-
 #include <stdio.h>
-
 
 
 #define genericIntConst  42

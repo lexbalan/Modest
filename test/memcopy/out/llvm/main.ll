@@ -183,12 +183,11 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; from included memory
-declare void @mzero(i8* %mem, %Int64 %len)
-declare void @mcopy(i8* %dst, i8* %src, %Int64 %len)
-declare %Bool @meq(i8* %mem0, i8* %mem1, %Int64 %len)
 ; -- end print includes --
 ; -- print imports --
+declare void @zero(i8* %mem, %Int64 %len)
+declare void @copy(i8* %dst, i8* %src, %Int64 %len)
+declare %Bool @eq(i8* %mem0, i8* %mem1, %Int64 %len)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [14 x i8] [i8 109, i8 101, i8 109, i8 99, i8 111, i8 112, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
@@ -221,7 +220,7 @@ define %Int @main() {
 	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 128)
 	%15 = bitcast %Object* %3 to i8*
 	%16 = bitcast %Object* %2 to i8*
-	call void @mcopy(i8* %15, i8* %16, %Int64 128)
+	call void @copy(i8* %15, i8* %16, %Int64 128)
 	%17 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 0
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), [32 x %Char8]* %17)
 	%19 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 1

@@ -1,6 +1,5 @@
 
 @c_include "stdio.h"
-include "libc/stdio"
 
 //include "libc/ctypes64"
 //include "libc/stdio"

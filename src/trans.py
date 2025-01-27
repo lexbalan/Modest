@@ -2456,6 +2456,15 @@ def do_import(x):
 
 	# Literal string to python string
 	impline = import_expr.asset
+
+	_as = None
+	if x['as'] != None:
+		_as = x['as']['str']
+	else:
+		_as = impline.split("/")[-1]
+
+	#info("AS %s" % _as, x['ti'])
+
 	abspath = import_abspath(impline, ext='.m')
 
 	log('do_import("%s")' % impline)
@@ -2484,12 +2493,7 @@ def do_import(x):
 				xx['att'].append('c_no_print')
 
 	if not x['include']:
-		m_id = '<$>'
-		if x['as'] != None:
-			m_id = x['as']['str']
-		else:
-			m_id = m.id
-		cmodule.imports[m_id] = m
+		cmodule.imports[_as] = m
 	else:
 		# INCLUDE
 		# забираем публичные символы
@@ -2505,9 +2509,9 @@ def do_import(x):
 					module_append(d)
 
 		cmodule.included_modules.append(m)
+		return
 
-	y = StmtDirectiveImport(impline, x['ti'], include=x['include'])
-	y.import_module = m
+	y = StmtImport(impline, _as, module=m, ti=x['ti'], include=x['include'])
 	return y
 
 
@@ -2519,6 +2523,7 @@ def do_directive(x):
 		args = x['args']
 		s0 = args[0]
 		if s0 == 'do_not_include':
+			#print("ADD do_not_include to %s" % cmodule.id)
 			cmodule.att.append('do_not_include')
 		elif s0 == 'module_nodecorate':
 			cmodule.att.append('module_nodecorate')
@@ -2643,6 +2648,10 @@ def pre_imp(ast):
 	for x in ast:
 		isa = x['isa']
 		kind = x['kind']
+
+
+		if isa == 'ast_directive':
+			y = do_directive(x)
 
 		if isa == 'ast_definition':
 			is_public = x['access_modifier'] == 'public'

@@ -5,14 +5,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "fsm.h"
 #include "./delay.h"
 
 
 
+#include "delay.h"
 
-
-
+#include "fsm.h"
 
 
 

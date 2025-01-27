@@ -1,10 +1,7 @@
 
 @c_include "stdio.h"
-include "libc/stdio"
 @c_include "stdlib.h"
-include "libc/stdlib"
 @c_include "string.h"
-include "libc/string"
 
 
 // [row, col]

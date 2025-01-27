@@ -846,15 +846,15 @@ def print_stmt(x):
 def print_import(x):
 	if not x.include:
 		out("import \"%s\"" % x.impline)
+		if x.name != None:
+			out(" as %s" % x.name)
 	else:
 		out("include \"%s\"" % x.impline)
 
 
 
 def print_directive(x):
-	if isinstance(x, StmtDirectiveImport):
-		print_import(x)
-	elif isinstance(x, StmtDirectiveCInclude):
+	if isinstance(x, StmtDirectiveCInclude):
 		out("@c_include \"%s\"" % x.c_name)
 
 
@@ -873,6 +873,7 @@ def printTopLevelStmt(x):
 	elif isinstance(x, StmtDefFunc): print_stmt_func(x)
 	elif isinstance(x, StmtDefType): print_stmt_type(x)
 	elif isinstance(x, StmtComment): print_stmt_comment(x)
+	elif isinstance(x, StmtImport): print_import(x)
 	elif isinstance(x, StmtDirective): print_directive(x)
 
 

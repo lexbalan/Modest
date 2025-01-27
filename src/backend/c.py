@@ -1856,8 +1856,8 @@ def print_def_const(x):
 	return
 
 
-def print_include(x):
-	include(x.c_name, local=x.is_local)
+#def print_include(x):
+#	include(x.c_name, local=x.is_local)
 
 
 def include(string, local=True):
@@ -1924,10 +1924,6 @@ def print_cdecl_func(x):
 
 
 def print_directive(x):
-	if isinstance(x, StmtDirectiveImport):
-		if not 'do_not_include' in x.import_module.att:
-			s = os.path.basename(x.impline)
-			include(s + '.h', local=True)
 
 	if isinstance(x, StmtDirectiveCInclude):
 		include(x.c_name, local=x.is_local)
@@ -1994,7 +1990,12 @@ def print_header(module, outname):
 		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
-		if isinstance(x, StmtDefFunc):
+		if isinstance(x, StmtImport):
+			if not 'do_not_include' in x.module.att:
+				s = os.path.basename(x.impline)
+				include(s + '.h', local=True)
+
+		elif isinstance(x, StmtDefFunc):
 			if x.hasAttribute('inline'):
 				print_def_func(x)
 				continue

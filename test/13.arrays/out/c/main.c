@@ -6,12 +6,9 @@
 #include "main.h"
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
-
 #include <stdio.h>
 
-
 #include <math.h>
-
 
 
 //@attribute("c_no_print")

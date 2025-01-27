@@ -1,7 +1,5 @@
 
-include "libc/ctypes64"
 @c_include "stdio.h"
-include "libc/stdio"
 
 
 var big0: Nat128 = 0x0123456789ABCDEFFEDCBA9876543210

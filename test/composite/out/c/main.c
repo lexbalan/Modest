@@ -11,7 +11,6 @@ struct __anonymous_struct_3 {int32_t x; int32_t y;
 #include <stdio.h>
 
 
-
 // Test for composite types
 
 // Pointers

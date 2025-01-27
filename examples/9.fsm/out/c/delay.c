@@ -9,7 +9,6 @@
 
 
 
-
 void delay_us(uint64_t us)
 {
 	clock_t start_time = clock();

@@ -1,7 +1,5 @@
 
-include "libc/ctypes64"
 @c_include "stdio.h"
-include "libc/stdio"
 
 const genericIntConst = 42
 const int32Const = Int32 genericIntConst

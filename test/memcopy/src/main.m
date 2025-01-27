@@ -2,7 +2,8 @@
 
 include "libc/ctypes64"
 include "libc/stdio"
-include "lightfood/memory"
+
+import "lightfood/memory" as mem
 
 
 type Object record {
@@ -27,7 +28,7 @@ public func main() -> Int {
 	let len = sizeof(Object)
 	printf("LEN = %u\n", Nat32 len)
 
-	mcopy(&o2, &o1, len)
+	mem.copy(&o2, &o1, len)
 
 	printf("firstname = '%s'\n", &o2.firstname)
 	printf("lastname = '%s'\n", &o2.lastname)

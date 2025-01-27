@@ -10,9 +10,7 @@ struct __anonymous_struct_6 {uint32_t x; uint32_t y;
 };
 struct __anonymous_struct_7 {uint32_t x; uint32_t y;
 };
-
 #include <stdio.h>
-
 
 
 struct Point2D {

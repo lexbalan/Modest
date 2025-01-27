@@ -38,6 +38,16 @@ class StmtCommentBlock(StmtComment):
 
 
 
+class StmtImport(Stmt):
+	def __init__(self, impline, name, module, ti, include=False):
+		super().__init__(ti)
+		self.impline = impline
+		self.include = include
+		self.module = module
+		self.name = name
+
+
+
 class StmtDef(Stmt):
 	def __init__(self, id, ti=None):
 		super().__init__(ti)
@@ -143,13 +153,6 @@ class StmtDirective(Stmt):
 	def __init__(self, ti):
 		super().__init__(ti)
 
-
-class StmtDirectiveImport(StmtDirective):
-	def __init__(self, impline, ti, include=False):
-		super().__init__(ti)
-		self.impline = impline
-		self.include = include
-		self.import_module = None
 
 
 class StmtDirectiveCInclude(StmtDirective):

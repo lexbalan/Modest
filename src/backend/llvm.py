@@ -2547,14 +2547,16 @@ def een(defs, decl_only=False):
 		if x.hasAttribute('no_print'):
 			continue
 
-		# Тупейшая Защита от повторного определения
-		# (А они происходят тк импорты и инклуюды сложно сплетены и повтор.)
-		uid = x.module.id + '.' + x.id.str
+		if hasattr(x, 'id'):
+			# Тупейшая Защита от повторного определения
+			# (А они происходят тк импорты и инклуюды сложно сплетены и повтор.)
+			uid = x.module.id + '.' + x.id.str
+			#uid = x.module.id + '.' + x.module.id
 
-		if uid in printed:
-			continue
+			if uid in printed:
+				continue
 
-		printed.append(uid)
+			printed.append(uid)
 
 #		if isa_prev != isa:
 #			out("\n")
@@ -2575,7 +2577,7 @@ def een(defs, decl_only=False):
 		elif isinstance(x, StmtDefType):
 			print_def_type(x)
 
-		elif isa == 'comment':
+		elif isinstance(x, StmtComment):
 			print_comment(x)
 
 

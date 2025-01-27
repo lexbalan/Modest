@@ -9,7 +9,6 @@
 
 
 
-
 // returns array by value
 static void getarr10(int32_t *sret_)
 {

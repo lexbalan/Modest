@@ -9,9 +9,7 @@
 
 #include "./console.h"
 
-
 #include <stdio.h>
-
 
 #include "./utf.h"
 
@@ -22,8 +20,6 @@
 #include <stdio.h>
 
 #include <string.h>
-
-#include "console.h"
 
 
 // include test (!)

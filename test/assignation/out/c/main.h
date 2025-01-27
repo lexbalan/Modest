@@ -10,8 +10,6 @@
 
 
 
-
-
 // Simply record for records assignation test
 
 

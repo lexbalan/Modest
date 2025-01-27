@@ -1,7 +1,5 @@
 
-include "libc/ctypes64"
 @c_include "stdio.h"
-include "libc/stdio"
 
 var array: [21]Int32 = [
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4

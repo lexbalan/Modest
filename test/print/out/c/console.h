@@ -16,10 +16,7 @@
 
 
 
-
-
-
-
+#include "utf.h"
 
 
 //$pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy

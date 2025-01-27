@@ -5,9 +5,7 @@
 
 #include "main.h"
 
-
 #include <stdio.h>
-
 
 
 typedef int32_t NewInt32;
