@@ -407,7 +407,7 @@ class Parser:
 				id = self.identifier()
 				t = {
 					'isa': 'ast_type',
-					'kind': 'id',
+					'kind': 'name',
 					'id': id,
 					'ti': ti
 				}
@@ -419,9 +419,9 @@ class Parser:
 
 				t = {
 					'isa': 'ast_type',
-					'kind': 'access',
-					'left': left,
-					'right': right,
+					'kind': 'name',
+					'module': left,
+					'id': right,
 					'ti': ti
 				}
 

@@ -522,55 +522,48 @@ def do_field(x):
 # Do Type
 #
 
-
-def do_type_id(t):
-	id = t['id']
+def do_type_name(x):
+	global cmodule
+	id = x['id']
 	id_str = id['str']
 
-	tx = ctx_type_get(id_str)
-
-	if tx == None:
-		error("undefined type", t['ti'])
-		return TypeBad(t['ti'])
-
-	# если дело происходит в определении типа и пришел undefined тип
-	if tx.is_incompleted():
-		if not isinstance(cdef, StmtDefType):
-			error("forward references to non-struct type", t['ti'])
-		cdef.deps.append(tx)
-
-	return tx
-
-
-
-def do_type_access(x):
-	ns_id = x['left']['str']
-	id_str = x['right']['str']
-	#print("GET TYPE %s FROM: %s" % (id_str, ns_id))
-	global cmodule
 	t = None
-	if ns_id in cmodule.imports:
-		imp = cmodule.imports[ns_id]
+	if 'module' in x:
+		m_id = x['module']['str']
+		imp = cmodule.imports[m_id]
+		if imp == None:
+			error("unknown module", x['module']['ti'])
+			return TypeBad(t['ti'])
 		t = module_type_get_public(imp.module, id_str)
 	else:
-		error("unknown namespace '%s'" % ns_id, x['ti'])
-		t = TypeBad(x['ti'])
+		t = module_type_get(cmodule, id_str)
+
+	if t == None:
+		error("undefined type", x['ti'])
+		return TypeBad(x['ti'])
+
+	# если дело происходит в определении типа и пришел undefined тип
+	if t.is_incompleted():
+		if not isinstance(cdef, StmtDefType):
+			error("forward references to non-struct type", x['ti'])
+		cdef.deps.append(t)
+
 	return t
 
 
 
-def do_type_pointer(t):
-	to = do_type(t['to'])
-	return TypePointer(to, ti=t['ti'])
+def do_type_pointer(x):
+	to = do_type(x['to'])
+	return TypePointer(to, ti=x['ti'])
 
 
-def do_type_array(t):
-	of = do_type(t['of'])
+def do_type_array(x):
+	of = do_type(x['of'])
 
-	volume = do_value(t['size'])
+	volume = do_value(x['size'])
 
 	if Value.isBad(volume):
-		return TypeArray(of, volume, ti=t['ti'])
+		return TypeArray(of, volume, ti=x['ti'])
 
 	if not Value.isUndefined(volume):
 		if not volume.isImmediate():
@@ -592,7 +585,7 @@ def do_type_array(t):
 
 	assert(volume != None)
 
-	return TypeArray(of, volume, ti=t['ti'])
+	return TypeArray(of, volume, ti=x['ti'])
 
 
 anon_rec_cnt = 0
@@ -628,11 +621,11 @@ def do_type_record(x):
 	return rec
 
 
-def do_type_enum(t):
-	enum_type = htype.type_enum(t['ti'])
+def do_type_enum(x):
+	enum_type = htype.type_enum(x['ti'])
 
 	i = 0
-	for item in t.items:
+	for item in x.items:
 		id = item['id']
 		enum_type.items.append({
 			'isa': 'enum_item',
@@ -654,19 +647,19 @@ def do_type_enum(t):
 
 
 
-def do_type_func(t, func_id="_"):
+def do_type_func(x, func_id="_"):
 	# check params
 	params = []
-	for _param in t['params']:
+	for _param in x['params']:
 		param = do_field(_param)
 		if param != None:
 			params.append(param)
 
 	to = foundation.typeUnit
-	if t['to'] != None:
-		to = do_type(t['to'])
+	if x['to'] != None:
+		to = do_type(x['to'])
 
-	return TypeFunc(params, to, t['arghack'], ti=t['ti'])
+	return TypeFunc(params, to, x['arghack'], ti=x['ti'])
 
 
 
@@ -676,8 +669,7 @@ def do_type(x):
 
 	t = None
 	k = x['kind']
-	if k == 'id': t = do_type_id(x)
-	elif k == 'access': t = do_type_access(x)
+	if k == 'name': t = do_type_name(x)
 	elif k == 'func': t = do_type_func(x)
 	elif k == 'pointer': t = do_type_pointer(x)
 	elif k == 'array': t = do_type_array(x)
