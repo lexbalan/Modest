@@ -425,7 +425,6 @@ class Parser:
 					'ti': ti
 				}
 
-
 		t['attributes'] = attributes
 		return t
 
@@ -1014,8 +1013,6 @@ class Parser:
 			}
 
 
-
-
 	def expr_value_term(self):
 		ti = self.ti()
 
@@ -1043,7 +1040,6 @@ class Parser:
 					'ti': ti
 				}
 
-			#return id
 
 			return {
 				'isa': 'ast_value',
@@ -1317,6 +1313,7 @@ class Parser:
 			'nl_end': nl_cnt,
 			'ti': ti
 		}
+
 
 	def parse_access_modifier(self):
 		if self.match('public'):
