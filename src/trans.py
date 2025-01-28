@@ -2597,9 +2597,10 @@ def process_module(idStr, ast, nodef=False, is_include=False):
 		if y != None:
 			module_append(y)
 
-
+	#if is_import:
+	#	pre_imp(ast)
+	#else:
 	pre_def(ast, is_include=is_include)
-
 	def_def(ast, is_include=is_include)
 
 	m = cmodule
@@ -2640,10 +2641,6 @@ def pre_imp(ast):
 		isa = x['isa']
 		kind = x['kind']
 
-
-		if isa == 'ast_directive':
-			y = do_directive(x)
-
 		if isa == 'ast_definition':
 			is_public = x['access_modifier'] == 'public'
 			id = Id(x['id'])
@@ -2651,6 +2648,7 @@ def pre_imp(ast):
 
 			if kind == 'type':
 				t = Type(x['ti'])  # Incomplete type (!)
+				t.id = id
 				t.parent = cmodule
 				cmodule_type_add(id.str, t, is_public=is_public)
 
@@ -2663,13 +2661,15 @@ def pre_imp(ast):
 
 			elif kind == 'const':
 				t = Type(x['ti'])  # Incomplete type (!)
-				v = ValueConst(t, id, init_value=None, ti=x['ti'])
+				iv = ValueUndefined(ti=x['ti'])
+				v = ValueConst(t, id, init_value=iv, ti=x['ti'])
 				v.parent = cmodule
 				cmodule_value_add(id.str, v, is_public=is_public)
 
 			elif kind == 'var':
 				t = Type(x['ti'])  # Incomplete type (!)
-				v = ValueVar(t, id, init_value=None, ti=x['ti'])
+				iv = ValueUndefined(ti=x['ti'])
+				v = ValueVar(t, id, init_value=iv, ti=x['ti'])
 				v.parent = cmodule
 				cmodule_value_add(id.str, v, is_public=is_public)
 
