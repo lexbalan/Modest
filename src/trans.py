@@ -1310,6 +1310,9 @@ def submodule_access(x):
 		if v != None:
 			error("access to module private item", ti)
 
+	if v.type.is_incompleted():
+		v = value_update_incompleted_type(submodule, iname)
+
 	if v == None:
 		error("module '%s' does not have value '%s'" % (mname, iname), x['ti'])
 		return ValueBad(x['ti'])
@@ -1420,11 +1423,13 @@ def do_value_id(x):
 
 	global cdef
 	if v.type.is_incompleted():
-		cdef.deps.append(v)
-		v = value_update_incompleted_type(cmodule.ast, v.id.str)
+		v = value_update_incompleted_type(cmodule, v.id.str)
+
 		if v == None:
 			error("use of incomplete value", x['ti'])
 			return ValueBad(x['ti'])
+
+		cdef.deps.append(v)
 
 #	if 'usecnt' in v:
 #		v['usecnt'] = v['usecnt'] + 1
@@ -2471,7 +2476,7 @@ def do_import(x):
 		m = modules[abspath]
 
 	if m == None:
-		m = translate(abspath, nodef=not x['include'], is_include=x['include'])
+		m = translate(abspath, is_import=False, nodef=not x['include'], is_include=x['include'])
 		modules[abspath] = m
 
 		mid = impline.split("/")[-1]
@@ -2533,7 +2538,7 @@ def do_directive(x):
 
 
 
-def translate(abspath, nodef=False, is_include=False):
+def translate(abspath, nodef=False, is_import=False, is_include=False):
 	log(">>>> TRANSLATE(\"%s\")" % abspath)
 	log_push()
 	assert(abspath != None)
@@ -2552,7 +2557,7 @@ def translate(abspath, nodef=False, is_include=False):
 	m = None
 	if ast != None:
 		idStr = abspath.split('/')[-1][:-2]
-		m = process_module(idStr, ast, nodef=nodef, is_include=is_include)
+		m = process_module(idStr, ast, nodef=nodef, is_import=is_import, is_include=is_include)
 		m.prefix = m.id
 		m.source_abspath = abspath
 
@@ -2564,7 +2569,7 @@ def translate(abspath, nodef=False, is_include=False):
 
 
 
-def process_module(idStr, ast, nodef=False, is_include=False):
+def process_module(idStr, ast, nodef=False, is_import=False, is_include=False):
 	global skipp, production, prev_production
 
 	global properties
@@ -2597,11 +2602,11 @@ def process_module(idStr, ast, nodef=False, is_include=False):
 		if y != None:
 			module_append(y)
 
-	#if is_import:
-	#	pre_imp(ast)
-	#else:
-	pre_def(ast, is_include=is_include)
-	def_def(ast, is_include=is_include)
+	if is_import:
+		pre_imp(ast)
+	else:
+		pre_def(ast, is_include=is_include)
+		def_def(ast, is_include=is_include)
 
 	m = cmodule
 
@@ -2612,23 +2617,20 @@ def process_module(idStr, ast, nodef=False, is_include=False):
 
 
 
-def value_update_incompleted_type(ast, idStr):
-	#print("value_update_incompleted_type(%s)" % idStr)
+def value_update_incompleted_type(module, idStr):
+	print("value_update_incompleted_type('%s', '%s')" % (module.id, idStr))
 
-	for x in ast:
-		y = None
+	for x in module.ast:
 		if x['isa'] != 'ast_definition':
 			continue
-		if x['kind'] != 'func':
-			continue
+
 		if x['id']['str'] != idStr:
 			continue
 
-		fn = ctx_value_get(idStr)
-
-		ftype = do_type_func(x['type'])
-		type_update(fn.type, ftype)
-		return fn
+		v = ctx_value_get(idStr)
+		t = do_type(x['type'])
+		type_update(v.type, t)
+		return v
 
 
 

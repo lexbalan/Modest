@@ -154,8 +154,10 @@ class ValueBad(Value):
 
 
 class ValueUndefined(Value):
-	def __init__(self, type, ti=None):
+	def __init__(self, type=None, ti=None):
 		from .type import Type
+		if type==None:
+			type = Type(ti)
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 
