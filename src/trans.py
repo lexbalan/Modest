@@ -1311,7 +1311,7 @@ def submodule_access(x):
 			error("access to module private item", ti)
 
 	if v.type.is_incompleted():
-		v = value_update_incompleted_type(submodule, iname)
+		v = value_update_incompleted_type(submodule, v, iname)
 
 	if v == None:
 		error("module '%s' does not have value '%s'" % (mname, iname), x['ti'])
@@ -1423,7 +1423,7 @@ def do_value_id(x):
 
 	global cdef
 	if v.type.is_incompleted():
-		v = value_update_incompleted_type(cmodule, v.id.str)
+		v = value_update_incompleted_type(cmodule, v, v.id.str)
 
 		if v == None:
 			error("use of incomplete value", x['ti'])
@@ -2476,7 +2476,9 @@ def do_import(x):
 		m = modules[abspath]
 
 	if m == None:
-		m = translate(abspath, is_import=False, nodef=not x['include'], is_include=x['include'])
+		is_import = False
+		#is_import = not x['include']
+		m = translate(abspath, is_import=is_import, is_include=x['include'])
 		modules[abspath] = m
 
 		mid = impline.split("/")[-1]
@@ -2538,7 +2540,7 @@ def do_directive(x):
 
 
 
-def translate(abspath, nodef=False, is_import=False, is_include=False):
+def translate(abspath, is_import=False, is_include=False):
 	log(">>>> TRANSLATE(\"%s\")" % abspath)
 	log_push()
 	assert(abspath != None)
@@ -2557,7 +2559,7 @@ def translate(abspath, nodef=False, is_import=False, is_include=False):
 	m = None
 	if ast != None:
 		idStr = abspath.split('/')[-1][:-2]
-		m = process_module(idStr, ast, nodef=nodef, is_import=is_import, is_include=is_include)
+		m = process_module(idStr, ast, is_import=is_import, is_include=is_include)
 		m.prefix = m.id
 		m.source_abspath = abspath
 
@@ -2569,7 +2571,7 @@ def translate(abspath, nodef=False, is_import=False, is_include=False):
 
 
 
-def process_module(idStr, ast, nodef=False, is_import=False, is_include=False):
+def process_module(idStr, ast, is_import=False, is_include=False):
 	global skipp, production, prev_production
 
 	global properties
@@ -2617,7 +2619,7 @@ def process_module(idStr, ast, nodef=False, is_import=False, is_include=False):
 
 
 
-def value_update_incompleted_type(module, idStr):
+def value_update_incompleted_type(module, v, idStr):
 	print("value_update_incompleted_type('%s', '%s')" % (module.id, idStr))
 
 	for x in module.ast:
@@ -2627,7 +2629,7 @@ def value_update_incompleted_type(module, idStr):
 		if x['id']['str'] != idStr:
 			continue
 
-		v = ctx_value_get(idStr)
+		#v = ctx_value_get(idStr)
 		t = do_type(x['type'])
 		type_update(v.type, t)
 		return v

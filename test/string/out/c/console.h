@@ -68,7 +68,7 @@ void console_print(char *form, ...);
 
 
 
-int32_t console_vfprint(int fd, char *form, va_list va);
+int32_t console_vfprint(int32_t fd, char *form, va_list va);
 
 
 

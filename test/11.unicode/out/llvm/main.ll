@@ -183,6 +183,8 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
+; -- end print includes --
+; -- print imports --
 ; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
@@ -281,7 +283,8 @@ declare %SizeT @strlen([0 x %ConstChar]* %s)
 declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
-; from included console
+declare %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
+declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 declare void @console_putchar8(%Char8 %c)
 declare void @console_putchar16(%Char16 %c)
 declare void @console_putchar32(%Char32 %c)
@@ -292,10 +295,8 @@ declare void @console_puts8(%Str8* %s)
 declare void @console_puts16(%Str16* %s)
 declare void @console_puts32(%Str32* %s)
 declare void @console_print(%Str8* %form, ...)
-declare %Int32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va)
+declare %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, i8* %va)
 declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
-; -- end print includes --
-; -- print imports --
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [28 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 45, i8 206, i8 169, i8 32, i8 240, i8 159, i8 144, i8 128, i8 240, i8 159, i8 142, i8 137, i8 240, i8 159, i8 166, i8 132, i8 0]
@@ -366,7 +367,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char32 10,
 	%Char32 0
 ]
-define %Int @main() {
+define %Int32 @main() {
 	%1 = alloca %Str8*, align 8
 	store %Str8* bitcast ([28 x i8]* @str1 to [0 x i8]*), %Str8** %1
 	%2 = alloca %Str16*, align 8
@@ -382,7 +383,7 @@ define %Int @main() {
 	%6 = load %Str32*, %Str32** %3
 	call void @console_puts32(%Str32* %6)
 	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
-	ret %Int 0
+	ret %Int32 0
 }
 
 

@@ -295,7 +295,7 @@ declare void @console_puts8(%Str8* %s)
 declare void @console_puts16(%Str16* %s)
 declare void @console_puts32(%Str32* %s)
 declare void @console_print(%Str8* %form, ...)
-declare %Int32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va)
+declare %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, i8* %va)
 declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 ; -- end print imports --
 ; -- strings --

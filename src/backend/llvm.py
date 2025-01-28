@@ -13,6 +13,8 @@ import settings
 
 import foundation
 
+cmodule = None
+
 LLVM_TARGET_TRIPLE = ""
 LLVM_TARGET_DATALAYOUT = ""
 
@@ -138,6 +140,14 @@ def get_id_str(x):
 		return '"%s"' % id['llvm']
 
 	id_str = id.str
+
+	# если это сущность из другого модуля
+	# добавим к ней префикс ее модуля
+#	xmodule = x.getModule()
+#	if xmodule != None:
+#		if xmodule != cmodule:
+#			return "%s_%s" % (xmodule.id, id_str)
+
 	if id.need_decoration:
 		if x.definition != None:
 			prefix = x.definition.getModule().prefix
@@ -2665,6 +2675,8 @@ def print_module(m):
 
 
 def run(module, outname, options):
+	global cmodule
+	cmodule = module
 	outname = outname + '.ll'
 	output_open(outname)
 

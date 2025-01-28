@@ -11,15 +11,6 @@
 
 #include <stdio.h>
 
-#include "./utf.h"
-
-#include "./console.h"
-
-#include <unistd.h>
-
-#include <stdio.h>
-
-#include <string.h>
 
 
 // include test (!)
@@ -48,7 +39,7 @@ static uint16_t arr_utf16[9] = u"Hello Ω!\n";
 static uint32_t arr_utf32[8] = U"Hello!\n";
 
 
-int main()
+int32_t main()
 {
 	char *str8 = string8Const;
 	uint16_t *str16 = string16Const;

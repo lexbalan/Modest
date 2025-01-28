@@ -147,7 +147,7 @@ void console_puts32(uint32_t *s)
 
 
 
-int32_t console_vfprint(int fd, char *form, va_list va);
+int32_t console_vfprint(int32_t fd, char *form, va_list va);
 void console_print(char *form, ...)
 {
 	va_list va;
@@ -161,7 +161,7 @@ void console_print(char *form, ...)
 
 
 int32_t console_vsprint(char *buf, char *form, va_list va);
-int32_t console_vfprint(int fd, char *form, va_list va)
+int32_t console_vfprint(int32_t fd, char *form, va_list va)
 {
 	char strbuf[256];
 	memset(&strbuf, 0, sizeof strbuf);

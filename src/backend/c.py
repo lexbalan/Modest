@@ -170,6 +170,12 @@ def get_id_str(x):
 		return id.c
 
 	id_str = id.str
+
+#	xmodule = x.getModule()
+#	if xmodule != None:
+#		if xmodule != cmodule:
+#			return "%s_%s" % (xmodule.id, id_str)
+
 	if id.need_decoration:
 		if x.definition:
 			prefix = x.definition.getModule().prefix

@@ -460,13 +460,13 @@ define void @console_print(%Str8* %form, ...) {
 	%2 = bitcast i8** %1 to i8*
 	call void @llvm.va_start(i8* %2)
 	%3 = load i8*, i8** %1
-	%4 = call %Int32 @console_vfprint(%Int 1, %Str8* %form, i8* %3)
+	%4 = call %Int32 @console_vfprint(%Int32 1, %Str8* %form, i8* %3)
 	%5 = bitcast i8** %1 to i8*
 	call void @llvm.va_end(i8* %5)
 	ret void
 }
 
-define %Int32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va) {
+define %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, i8* %va) {
 	%1 = alloca i8*
 	store i8* %va, i8** %1
 	%2 = alloca [256 x %Char8], align 1
@@ -477,7 +477,7 @@ define %Int32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va) {
 	store %Char8 0, %Char8* %6
 	%7 = bitcast [256 x %Char8]* %2 to i8*
 	%8 = zext %Int32 %5 to %SizeT
-	%9 = call %SSizeT @write(%Int %fd, i8* %7, %SizeT %8)
+	%9 = call %SSizeT @write(%Int32 %fd, i8* %7, %SizeT %8)
 	ret %Int32 %5
 }
 
