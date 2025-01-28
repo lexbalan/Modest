@@ -436,10 +436,6 @@ class TypeBad(Type):
 		super().__init__(ti=ti)
 
 
-class TypeUndefined(Type):
-	def __init__(self, ti=None):
-		super().__init__(ti=ti)
-
 
 class TypeNumber(Type):
 	def __init__(self, width=0, signed=False, ti=None):
