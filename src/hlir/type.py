@@ -425,16 +425,10 @@ class Type(Entity):
 
 
 
-
-
-
-
-
 class TypeBad(Type):
 	def __init__(self, ti=None):
 		self.incomplete = False
 		super().__init__(ti=ti)
-
 
 
 class TypeNumber(Type):
@@ -459,7 +453,6 @@ class TypeString(Type):
 		pass
 
 
-
 class TypeUnit(Type):
 	def __init__(self, ti=None):
 		super().__init__(ops=UNIT_OPS, ti=ti)
@@ -470,7 +463,6 @@ class TypeUnit(Type):
 		self.id.llvm = 'void'
 
 
-
 class TypeBool(Type):
 	def __init__(self, ti=None):
 		super().__init__(width=1, ops=BOOL_OPS, ti=ti)
@@ -479,7 +471,6 @@ class TypeBool(Type):
 		self.id = Id().fromStr('Bool')
 		self.id.c = 'bool'
 		self.id.llvm = '%Bool'
-
 
 
 class TypeWord(Type):
@@ -504,7 +495,6 @@ class TypeWord(Type):
 		self.id = Id().fromStr('Word%d' % width)
 		self.id.c = calias
 		self.id.llvm = llvm_alias
-
 
 
 class TypeInt(Type):
@@ -539,7 +529,6 @@ class TypeFloat(Type):
 		self.id.llvm = calias
 
 
-
 class TypeChar(Type):
 	def __init__(self, width, ti=None):
 		super().__init__(width=width, ops=CHAR_OPS, ti=ti)
@@ -554,7 +543,6 @@ class TypeChar(Type):
 		else:
 			self.id.c = 'uint%d_t' % width
 		self.id.llvm = '%%Char%d' % width
-
 
 
 class TypePointer(Type):
@@ -584,7 +572,6 @@ class TypeArray(Type):
 		self.of = of
 		self.volume = volume
 		self.size = array_size
-
 
 
 class TypeRecord(Type):
@@ -637,7 +624,6 @@ class TypeVaList(Type):
 		self.id.llvm = 'i8*'
 
 
-
 def get_int_alias(width, signed):
 	if signed:
 		aka = 'Int%d' % width
@@ -664,3 +650,5 @@ def get_int_alias(width, signed):
 		else:
 			llvm_alias = 'i%d' % width
 	return {'c': calias, 'llvm': llvm_alias, 'cm': aka}
+
+
