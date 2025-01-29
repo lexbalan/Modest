@@ -2026,8 +2026,11 @@ def do_stmt_block(x, parent=None):
 
 # нужно добавлять префикс к сущности
 # наличие поля prefix дает принтеру знать что нужно декорировать имя
-def need_decoration(x):
-	return not is_nodecorate(x) and not ('module_nodecorate' in cmodule.att) and not x['access_modifier'] == 'private'
+def dont_need_decoration(x):
+	c0 =is_nodecorate(x)
+	c1 ='module_nodecorate' in cmodule.att
+	c2 =x['access_modifier'] == 'private'
+	return c0 or c1 or c2
 
 
 
@@ -2080,7 +2083,7 @@ def def_type(x):
 	nt.parent = cmodule  # добавляем заново тк очистили его выше!
 	nt.ti_def = id.ti
 
-	if need_decoration(x):
+	if not dont_need_decoration(x):
 		nt.id.need_decoration = True
 
 	if not ('do_not_include' in cmodule.att):
@@ -2117,7 +2120,7 @@ def def_const(x):
 
 	const_value.definition = definition
 
-	if need_decoration(x):
+	if not dont_need_decoration(x):
 		const_value.id.need_decoration = True
 
 	return definition
@@ -2275,7 +2278,7 @@ def def_func(x, dostmt=True):
 		return None
 
 	if func_id.str != 'main':
-		if need_decoration(x):
+		if not dont_need_decoration(x):
 			fn.id.need_decoration = True
 
 	if x['stmt'] == None:
