@@ -636,26 +636,32 @@ class Parser:
 			v = self.expr_value_10()
 			ti['end'] = v['ti']
 			return {'isa': 'ast_value', 'kind': 'deref', 'value': v, 'ti': ti}
+
 		elif self.match("&"):
 			v = self.expr_value_11()
 			ti['end'] = v['ti']
 			return {'isa': 'ast_value', 'kind': 'ref', 'value': v, 'ti': ti}
+
 		elif self.match("not"):
 			v = self.expr_value_11()
 			ti['end'] = v['ti']
 			return {'isa': 'ast_value', 'kind': 'not', 'value': v, 'ti': ti}
+
 		elif self.match("+"):
 			v = self.expr_value_11()
 			ti['end'] = v['ti']
 			return {'isa': 'ast_value', 'kind': 'pos', 'value': v, 'ti': ti}
+
 		elif self.match("-"):
 			v = self.expr_value_11()
 			ti['end'] = v['ti']
 			return {'isa': 'ast_value', 'kind': 'neg', 'value': v, 'ti': ti}
+
 		elif self.match("unsafe"):
 			v = self.expr_value()
 			ti['end'] = v['ti']
 			return {'isa': 'ast_value', 'kind': 'unsafe', 'value': v, 'ti': ti}
+
 		elif self.match("sizeof"):
 			self.match("(")
 			rv = None
@@ -667,11 +673,13 @@ class Parser:
 				rv = {'isa': 'ast_value', 'kind': 'sizeof_value', 'value': v, 'ti': ti}
 			self.need(")")
 			return rv
+
 		elif self.match("alignof"):
 			self.match("(")
 			t = self.expr_type()
 			self.need(")")
 			return {'isa': 'ast_value', 'kind': 'alignof', 'type': t, 'ti': ti}
+
 		elif self.match("offsetof"):
 			self.match("(")
 			t = self.expr_type()
@@ -679,12 +687,14 @@ class Parser:
 			f = self.identifier()
 			self.need(")")
 			return {'isa': 'ast_value', 'kind': 'offsetof', 'type': t, 'field': f, 'ti': ti}
+
 		elif self.match("lengthof"):
 			self.match("(")
 			v = self.expr_value()
 			rv = {'isa': 'ast_value', 'kind': 'lengthof_value', 'value': v, 'ti': ti}
 			self.need(")")
 			return rv
+
 		elif self.match("__va_start"):
 			self.match("(")
 			v0 = self.expr_value()
@@ -693,6 +703,7 @@ class Parser:
 			rv = {'isa': 'ast_value', 'kind': '__va_start', 'values': [v0, v1], 'ti': ti}
 			self.need(")")
 			return rv
+
 		elif self.match("__va_copy"):
 			self.match("(")
 			v0 = self.expr_value()
@@ -701,6 +712,7 @@ class Parser:
 			rv = {'isa': 'ast_value', 'kind': '__va_copy', 'values': [v0, v1], 'ti': ti}
 			self.need(")")
 			return rv
+
 		elif self.match("__va_end"):
 			self.match("(")
 			v = self.expr_value()
@@ -708,15 +720,39 @@ class Parser:
 			self.need(")")
 			return rv
 
+		elif self.match("__va_arg"):
+			self.match("(")
+			v = self.expr_value()
+			self.match(",")
+			t = self.expr_type()
+			self.match(")")
+			return {
+				'isa': 'ast_value',
+				'kind': '__va_arg',
+				'va_list': v,
+				'type': t,
+				'ti': ti
+			}
+
 		elif self.match("__defined"):
 			self.match("(")
 			rv = None
 			if self.is_type_expr():
 				t = self.expr_type()
-				rv = {'isa': 'ast_value', 'kind': '__defined_type', 'type': t, 'ti': ti}
+				rv = {
+					'isa': 'ast_value',
+					'kind': '__defined_type',
+					'type': t,
+					'ti': ti
+				}
 			else:
 				v = self.expr_value()
-				rv = {'isa': 'ast_value', 'kind': '__defined_value', 'value': v, 'ti': ti}
+				rv = {
+					'isa': 'ast_value',
+					'kind': '__defined_value',
+					'value': v,
+					'ti': ti
+				}
 			self.need(")")
 			return rv
 		else:
@@ -1024,30 +1060,12 @@ class Parser:
 
 		elif self.ctok_class() == 'id':
 			id = self.identifier()
-
-			# __va_arg hack
-			if id['str'] == '__va_arg':
-				self.match("(")
-				v = self.expr_value()
-				self.match(",")
-				t = self.expr_type()
-				self.match(")")
-				return {
-					'isa': 'ast_value',
-					'kind': '__va_arg',
-					'va_list': v,
-					'type': t,
-					'ti': ti
-				}
-
-
 			return {
 				'isa': 'ast_value',
 				'kind': 'id',
 				'str': id['str'],
-				'ti': ti
+				'ti': id['ti']
 			}
-
 
 		elif self.ctok_class() == 'num':
 			numstr = self.gettok()
@@ -1225,10 +1243,7 @@ class Parser:
 			s = self.stmt_dec()
 		elif self.look('__asm'):
 			s = self.stmt_asm()
-		elif self.look('__va_arg'):
-			s = self.stmt_va_arg()
 		else:
-
 			# comment?
 			cl = self.ctok_class()
 			if cl == 'comment-line':

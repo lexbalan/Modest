@@ -2620,7 +2620,7 @@ def process_module(idStr, ast, is_import=False, is_include=False):
 
 
 def value_update_incompleted_type(module, v, idStr):
-	print("value_update_incompleted_type('%s', '%s')" % (module.id, idStr))
+	#print("value_update_incompleted_type('%s', '%s')" % (module.id, idStr))
 
 	for x in module.ast:
 		if x['isa'] != 'ast_definition':
