@@ -2027,9 +2027,9 @@ def do_stmt_block(x, parent=None):
 # нужно добавлять префикс к сущности
 # наличие поля prefix дает принтеру знать что нужно декорировать имя
 def dont_need_decoration(x):
-	c0 =is_nodecorate(x)
-	c1 ='module_nodecorate' in cmodule.att
-	c2 =x['access_modifier'] == 'private'
+	c0 = x['access_modifier'] == 'private'
+	c1 = is_nodecorate(x)
+	c2 = 'module_nodecorate' in cmodule.att
 	return c0 or c1 or c2
 
 
