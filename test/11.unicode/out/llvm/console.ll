@@ -289,6 +289,8 @@ declare [0 x %ctypes64_Char]* @strerror(%ctypes64_Int %error)
 ; -- 1
 ; ?? utf ??
 ; from import
+declare %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
+declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; end from import
 ; -- end print imports 'console' --
 ; -- strings --

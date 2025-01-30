@@ -20,7 +20,7 @@ func my_printf(format: *Str8, ...) -> ctypes64.SSizeT {
 
 	__va_end(va2)
 
-	return write(c_STDOUT_FILENO, &buf, ctypes64.SizeT n)
+	return write(unistd.c_STDOUT_FILENO, &buf, ctypes64.SizeT n)
 }
 
 

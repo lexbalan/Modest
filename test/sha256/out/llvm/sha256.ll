@@ -107,50 +107,51 @@ break_2:
 
 ; -- print includes --
 ; from included ctypes64
-%Str = type %Str8;
-%Char = type %Char8;
-%ConstChar = type %Char;
-%SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
-%Short = type %Int16;
-%UnsignedShort = type %Int16;
-%Int = type %Int32;
-%UnsignedInt = type %Int32;
-%LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
-%Long = type %Int64;
-%UnsignedLong = type %Int64;
-%LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
-%LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
-%SizeT = type %UnsignedLongInt;
-%SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
-%PtrDiffT = type i8*;
-%OffT = type %Int64;
-%USecondsT = type %Int32;
-%PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%ctypes64_Str = type %Str8;
+%ctypes64_Char = type %Char8;
+%ctypes64_ConstChar = type %ctypes64_Char;
+%ctypes64_SignedChar = type %Int8;
+%ctypes64_UnsignedChar = type %Int8;
+%ctypes64_Short = type %Int16;
+%ctypes64_UnsignedShort = type %Int16;
+%ctypes64_Int = type %Int32;
+%ctypes64_UnsignedInt = type %Int32;
+%ctypes64_LongInt = type %Int64;
+%ctypes64_UnsignedLongInt = type %Int64;
+%ctypes64_Long = type %Int64;
+%ctypes64_UnsignedLong = type %Int64;
+%ctypes64_LongLong = type %Int64;
+%ctypes64_UnsignedLongLong = type %Int64;
+%ctypes64_LongLongInt = type %Int64;
+%ctypes64_UnsignedLongLongInt = type %Int64;
+%ctypes64_Float = type double;
+%ctypes64_Double = type double;
+%ctypes64_LongDouble = type double;
+%ctypes64_SizeT = type %ctypes64_UnsignedLongInt;
+%ctypes64_SSizeT = type %ctypes64_LongInt;
+%ctypes64_IntPtrT = type %Int64;
+%ctypes64_PtrDiffT = type i8*;
+%ctypes64_OffT = type %Int64;
+%ctypes64_USecondsT = type %Int32;
+%ctypes64_PIDT = type %Int32;
+%ctypes64_UIDT = type %Int32;
+%ctypes64_GIDT = type %Int32;
 ; from included string
-declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
-declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
-declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
-declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
-declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
-declare %SizeT @strlen([0 x %ConstChar]* %s)
-declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare [0 x %Char]* @strerror(%Int %error)
+declare i8* @memset(i8* %mem, %ctypes64_Int %c, %ctypes64_SizeT %n)
+declare i8* @memcpy(i8* %dst, i8* %src, %ctypes64_SizeT %len)
+declare i8* @memmove(i8* %dst, i8* %src, %ctypes64_SizeT %n)
+declare %ctypes64_Int @memcmp(i8* %p0, i8* %p1, %ctypes64_SizeT %num)
+declare %ctypes64_Int @strncmp([0 x %ctypes64_ConstChar]* %s1, [0 x %ctypes64_ConstChar]* %s2, %ctypes64_SizeT %n)
+declare %ctypes64_Int @strcmp([0 x %ctypes64_ConstChar]* %s1, [0 x %ctypes64_ConstChar]* %s2)
+declare [0 x %ctypes64_Char]* @strcpy([0 x %ctypes64_Char]* %dst, [0 x %ctypes64_ConstChar]* %src)
+declare %ctypes64_SizeT @strlen([0 x %ctypes64_ConstChar]* %s)
+declare [0 x %ctypes64_Char]* @strcat([0 x %ctypes64_Char]* %s1, [0 x %ctypes64_ConstChar]* %s2)
+declare [0 x %ctypes64_Char]* @strncat([0 x %ctypes64_Char]* %s1, [0 x %ctypes64_ConstChar]* %s2, %ctypes64_SizeT %n)
+declare [0 x %ctypes64_Char]* @strerror(%ctypes64_Int %error)
 ; -- end print includes --
-; -- print imports --
-; -- end print imports --
+; -- print imports 'sha256' --
+; -- 0
+; -- end print imports 'sha256' --
 ; -- strings --
 ; -- endstrings --
 %sha256_Hash = type [32 x %Word8];
@@ -635,8 +636,8 @@ endif_0:
 	%17 = load %Int32, %Int32* %4
 	%18 = load %Int32, %Int32* %1
 	%19 = sub %Int32 %17, %18
-	%20 = zext %Int32 %19 to %SizeT
-	%21 = call i8* @memset(i8* %16, %Int 0, %SizeT %20)
+	%20 = zext %Int32 %19 to %ctypes64_SizeT
+	%21 = call i8* @memset(i8* %16, %ctypes64_Int 0, %ctypes64_SizeT %20)
 	;ctx.data[i:n-i] = []
 	%22 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%23 = load %Int32, %Int32* %22
@@ -648,7 +649,7 @@ then_1:
 	call void @transform(%Context* %ctx, [0 x %Word8]* %26)
 	%27 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%28 = bitcast [64 x %Word8]* %27 to i8*
-	%29 = call i8* @memset(i8* %28, %Int 0, %SizeT 56)
+	%29 = call i8* @memset(i8* %28, %ctypes64_Int 0, %ctypes64_SizeT 56)
 	;ctx.data[0:56] = []
 	br label %endif_1
 endif_1:

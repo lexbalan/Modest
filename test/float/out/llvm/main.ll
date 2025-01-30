@@ -107,180 +107,181 @@ break_2:
 
 ; -- print includes --
 ; from included ctypes64
-%Str = type %Str8;
-%Char = type %Char8;
-%ConstChar = type %Char;
-%SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
-%Short = type %Int16;
-%UnsignedShort = type %Int16;
-%Int = type %Int32;
-%UnsignedInt = type %Int32;
-%LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
-%Long = type %Int64;
-%UnsignedLong = type %Int64;
-%LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
-%LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
-%SizeT = type %UnsignedLongInt;
-%SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
-%PtrDiffT = type i8*;
-%OffT = type %Int64;
-%USecondsT = type %Int32;
-%PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%ctypes64_Str = type %Str8;
+%ctypes64_Char = type %Char8;
+%ctypes64_ConstChar = type %ctypes64_Char;
+%ctypes64_SignedChar = type %Int8;
+%ctypes64_UnsignedChar = type %Int8;
+%ctypes64_Short = type %Int16;
+%ctypes64_UnsignedShort = type %Int16;
+%ctypes64_Int = type %Int32;
+%ctypes64_UnsignedInt = type %Int32;
+%ctypes64_LongInt = type %Int64;
+%ctypes64_UnsignedLongInt = type %Int64;
+%ctypes64_Long = type %Int64;
+%ctypes64_UnsignedLong = type %Int64;
+%ctypes64_LongLong = type %Int64;
+%ctypes64_UnsignedLongLong = type %Int64;
+%ctypes64_LongLongInt = type %Int64;
+%ctypes64_UnsignedLongLongInt = type %Int64;
+%ctypes64_Float = type double;
+%ctypes64_Double = type double;
+%ctypes64_LongDouble = type double;
+%ctypes64_SizeT = type %ctypes64_UnsignedLongInt;
+%ctypes64_SSizeT = type %ctypes64_LongInt;
+%ctypes64_IntPtrT = type %Int64;
+%ctypes64_PtrDiffT = type i8*;
+%ctypes64_OffT = type %Int64;
+%ctypes64_USecondsT = type %Int32;
+%ctypes64_PIDT = type %Int32;
+%ctypes64_UIDT = type %Int32;
+%ctypes64_GIDT = type %Int32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
-%CharStr = type %Str;
-%ConstCharStr = type %CharStr;
-declare %Int @fclose(%File* %f)
-declare %Int @feof(%File* %f)
-declare %Int @ferror(%File* %f)
-declare %Int @fflush(%File* %f)
-declare %Int @fgetpos(%File* %f, %FposT* %pos)
-declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
-declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
-declare %Int @fsetpos(%File* %f, %FposT* %pos)
-declare %LongInt @ftell(%File* %f)
-declare %Int @remove(%ConstCharStr* %fname)
-declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
-declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buf)
-declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
-declare %File* @tmpfile()
-declare %CharStr* @tmpnam(%CharStr* %str)
-declare %Int @printf(%ConstCharStr* %s, ...)
-declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%File* %f, %Str* %format, ...)
-declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
-declare %Int @fgetc(%File* %f)
-declare %Int @fputc(%Int %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
-declare %Int @fputs(%ConstCharStr* %str, %File* %f)
-declare %Int @getc(%File* %f)
-declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
-declare %Int @putc(%Int %char, %File* %f)
-declare %Int @putchar(%Int %char)
-declare %Int @puts(%ConstCharStr* %str)
-declare %Int @ungetc(%Int %char, %File* %f)
-declare void @perror(%ConstCharStr* %str)
+%stdio_File = type %Int8;
+%stdio_FposT = type %Int8;
+%stdio_CharStr = type %ctypes64_Str;
+%stdio_ConstCharStr = type %stdio_CharStr;
+declare %ctypes64_Int @fclose(%stdio_File* %f)
+declare %ctypes64_Int @feof(%stdio_File* %f)
+declare %ctypes64_Int @ferror(%stdio_File* %f)
+declare %ctypes64_Int @fflush(%stdio_File* %f)
+declare %ctypes64_Int @fgetpos(%stdio_File* %f, %stdio_FposT* %pos)
+declare %stdio_File* @fopen(%stdio_ConstCharStr* %fname, %stdio_ConstCharStr* %mode)
+declare %ctypes64_SizeT @fread(i8* %buf, %ctypes64_SizeT %size, %ctypes64_SizeT %count, %stdio_File* %f)
+declare %ctypes64_SizeT @fwrite(i8* %buf, %ctypes64_SizeT %size, %ctypes64_SizeT %count, %stdio_File* %f)
+declare %stdio_File* @freopen(%stdio_ConstCharStr* %fname, %stdio_ConstCharStr* %mode, %stdio_File* %f)
+declare %ctypes64_Int @fseek(%stdio_File* %f, %ctypes64_LongInt %offset, %ctypes64_Int %whence)
+declare %ctypes64_Int @fsetpos(%stdio_File* %f, %stdio_FposT* %pos)
+declare %ctypes64_LongInt @ftell(%stdio_File* %f)
+declare %ctypes64_Int @remove(%stdio_ConstCharStr* %fname)
+declare %ctypes64_Int @rename(%stdio_ConstCharStr* %old_filename, %stdio_ConstCharStr* %new_filename)
+declare void @rewind(%stdio_File* %f)
+declare void @setbuf(%stdio_File* %f, %stdio_CharStr* %buf)
+declare %ctypes64_Int @setvbuf(%stdio_File* %f, %stdio_CharStr* %buf, %ctypes64_Int %mode, %ctypes64_SizeT %size)
+declare %stdio_File* @tmpfile()
+declare %stdio_CharStr* @tmpnam(%stdio_CharStr* %str)
+declare %ctypes64_Int @printf(%stdio_ConstCharStr* %s, ...)
+declare %ctypes64_Int @scanf(%stdio_ConstCharStr* %s, ...)
+declare %ctypes64_Int @fprintf(%stdio_File* %f, %ctypes64_Str* %format, ...)
+declare %ctypes64_Int @fscanf(%stdio_File* %f, %stdio_ConstCharStr* %format, ...)
+declare %ctypes64_Int @sscanf(%stdio_ConstCharStr* %buf, %stdio_ConstCharStr* %format, ...)
+declare %ctypes64_Int @sprintf(%stdio_CharStr* %buf, %stdio_ConstCharStr* %format, ...)
+declare %ctypes64_Int @vfprintf(%stdio_File* %f, %stdio_ConstCharStr* %format, i8* %args)
+declare %ctypes64_Int @vprintf(%stdio_ConstCharStr* %format, i8* %args)
+declare %ctypes64_Int @vsprintf(%stdio_CharStr* %str, %stdio_ConstCharStr* %format, i8* %args)
+declare %ctypes64_Int @vsnprintf(%stdio_CharStr* %str, %ctypes64_SizeT %n, %stdio_ConstCharStr* %format, i8* %args)
+declare %ctypes64_Int @__vsnprintf_chk(%stdio_CharStr* %dest, %ctypes64_SizeT %len, %ctypes64_Int %flags, %ctypes64_SizeT %dstlen, %stdio_ConstCharStr* %format, i8* %arg)
+declare %ctypes64_Int @fgetc(%stdio_File* %f)
+declare %ctypes64_Int @fputc(%ctypes64_Int %char, %stdio_File* %f)
+declare %stdio_CharStr* @fgets(%stdio_CharStr* %str, %ctypes64_Int %n, %stdio_File* %f)
+declare %ctypes64_Int @fputs(%stdio_ConstCharStr* %str, %stdio_File* %f)
+declare %ctypes64_Int @getc(%stdio_File* %f)
+declare %ctypes64_Int @getchar()
+declare %stdio_CharStr* @gets(%stdio_CharStr* %str)
+declare %ctypes64_Int @putc(%ctypes64_Int %char, %stdio_File* %f)
+declare %ctypes64_Int @putchar(%ctypes64_Int %char)
+declare %ctypes64_Int @puts(%stdio_ConstCharStr* %str)
+declare %ctypes64_Int @ungetc(%ctypes64_Int %char, %stdio_File* %f)
+declare void @perror(%stdio_ConstCharStr* %str)
 ; from included stdlib
 declare void @abort()
-declare %Int @abs(%Int %x)
-declare %Int @atexit(void ()* %x)
-declare %Double @atof([0 x %ConstChar]* %nptr)
-declare %Int @atoi([0 x %ConstChar]* %nptr)
-declare %LongInt @atol([0 x %ConstChar]* %nptr)
-declare i8* @calloc(%SizeT %num, %SizeT %size)
-declare void @exit(%Int %x)
+declare %ctypes64_Int @abs(%ctypes64_Int %x)
+declare %ctypes64_Int @atexit(void ()* %x)
+declare %ctypes64_Double @atof([0 x %ctypes64_ConstChar]* %nptr)
+declare %ctypes64_Int @atoi([0 x %ctypes64_ConstChar]* %nptr)
+declare %ctypes64_LongInt @atol([0 x %ctypes64_ConstChar]* %nptr)
+declare i8* @calloc(%ctypes64_SizeT %num, %ctypes64_SizeT %size)
+declare void @exit(%ctypes64_Int %x)
 declare void @free(i8* %ptr)
-declare %Str* @getenv(%Str* %name)
-declare %LongInt @labs(%LongInt %x)
-declare %Str* @secure_getenv(%Str* %name)
-declare i8* @malloc(%SizeT %size)
-declare %Int @system([0 x %ConstChar]* %string)
+declare %ctypes64_Str* @getenv(%ctypes64_Str* %name)
+declare %ctypes64_LongInt @labs(%ctypes64_LongInt %x)
+declare %ctypes64_Str* @secure_getenv(%ctypes64_Str* %name)
+declare i8* @malloc(%ctypes64_SizeT %size)
+declare %ctypes64_Int @system([0 x %ctypes64_ConstChar]* %string)
 ; from included math
-declare %Double @acos(%Double %x)
-declare %Double @asin(%Double %x)
-declare %Double @atan(%Double %x)
-declare %Double @atan2(%Double %a, %Double %b)
-declare %Double @cos(%Double %x)
-declare %Double @sin(%Double %x)
-declare %Double @tan(%Double %x)
-declare %Double @cosh(%Double %x)
-declare %Double @sinh(%Double %x)
-declare %Double @tanh(%Double %x)
-declare %Double @exp(%Double %x)
-declare %Double @frexp(%Double %a, %Int* %i)
-declare %Double @ldexp(%Double %a, %Int %i)
-declare %Double @log(%Double %x)
-declare %Double @log10(%Double %x)
-declare %Double @modf(%Double %a, %Double* %b)
-declare %Double @pow(%Double %a, %Double %b)
-declare %Double @sqrt(%Double %x)
-declare %Double @ceil(%Double %x)
-declare %Double @fabs(%Double %x)
-declare %Double @floor(%Double %x)
-declare %Double @fmod(%Double %a, %Double %b)
-declare %LongDouble @acosl(%LongDouble %x)
-declare %LongDouble @asinl(%LongDouble %x)
-declare %LongDouble @atanl(%LongDouble %x)
-declare %LongDouble @atan2l(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @cosl(%LongDouble %x)
-declare %LongDouble @sinl(%LongDouble %x)
-declare %LongDouble @tanl(%LongDouble %x)
-declare %LongDouble @acoshl(%LongDouble %x)
-declare %LongDouble @asinhl(%LongDouble %x)
-declare %LongDouble @atanhl(%LongDouble %x)
-declare %LongDouble @coshl(%LongDouble %x)
-declare %LongDouble @sinhl(%LongDouble %x)
-declare %LongDouble @tanhl(%LongDouble %x)
-declare %LongDouble @expl(%LongDouble %x)
-declare %LongDouble @exp2l(%LongDouble %x)
-declare %LongDouble @expm1l(%LongDouble %x)
-declare %LongDouble @frexpl(%LongDouble %a, %Int* %i)
-declare %Int @ilogbl(%LongDouble %x)
-declare %LongDouble @ldexpl(%LongDouble %a, %Int %i)
-declare %LongDouble @logl(%LongDouble %x)
-declare %LongDouble @log10l(%LongDouble %x)
-declare %LongDouble @log1pl(%LongDouble %x)
-declare %LongDouble @log2l(%LongDouble %x)
-declare %LongDouble @logbl(%LongDouble %x)
-declare %LongDouble @modfl(%LongDouble %a, %LongDouble* %b)
-declare %LongDouble @scalbnl(%LongDouble %a, %Int %i)
-declare %LongDouble @scalblnl(%LongDouble %a, %LongInt %i)
-declare %LongDouble @cbrtl(%LongDouble %x)
-declare %LongDouble @fabsl(%LongDouble %x)
-declare %LongDouble @hypotl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @powl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @sqrtl(%LongDouble %x)
-declare %LongDouble @erfl(%LongDouble %x)
-declare %LongDouble @erfcl(%LongDouble %x)
-declare %LongDouble @lgammal(%LongDouble %x)
-declare %LongDouble @tgammal(%LongDouble %x)
-declare %LongDouble @ceill(%LongDouble %x)
-declare %LongDouble @floorl(%LongDouble %x)
-declare %LongDouble @nearbyintl(%LongDouble %x)
-declare %LongDouble @rintl(%LongDouble %x)
-declare %LongInt @lrintl(%LongDouble %x)
-declare %LongLongInt @llrintl(%LongDouble %x)
-declare %LongDouble @roundl(%LongDouble %x)
-declare %LongInt @lroundl(%LongDouble %x)
-declare %LongLongInt @llroundl(%LongDouble %x)
-declare %LongDouble @truncl(%LongDouble %x)
-declare %LongDouble @fmodl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @remainderl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @remquol(%LongDouble %a, %LongDouble %b, %Int* %i)
-declare %LongDouble @copysignl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @nanl(%ConstChar* %x)
-declare %LongDouble @nextafterl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @nexttowardl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @fdiml(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
+declare %ctypes64_Double @acos(%ctypes64_Double %x)
+declare %ctypes64_Double @asin(%ctypes64_Double %x)
+declare %ctypes64_Double @atan(%ctypes64_Double %x)
+declare %ctypes64_Double @atan2(%ctypes64_Double %a, %ctypes64_Double %b)
+declare %ctypes64_Double @cos(%ctypes64_Double %x)
+declare %ctypes64_Double @sin(%ctypes64_Double %x)
+declare %ctypes64_Double @tan(%ctypes64_Double %x)
+declare %ctypes64_Double @cosh(%ctypes64_Double %x)
+declare %ctypes64_Double @sinh(%ctypes64_Double %x)
+declare %ctypes64_Double @tanh(%ctypes64_Double %x)
+declare %ctypes64_Double @exp(%ctypes64_Double %x)
+declare %ctypes64_Double @frexp(%ctypes64_Double %a, %ctypes64_Int* %i)
+declare %ctypes64_Double @ldexp(%ctypes64_Double %a, %ctypes64_Int %i)
+declare %ctypes64_Double @log(%ctypes64_Double %x)
+declare %ctypes64_Double @log10(%ctypes64_Double %x)
+declare %ctypes64_Double @modf(%ctypes64_Double %a, %ctypes64_Double* %b)
+declare %ctypes64_Double @pow(%ctypes64_Double %a, %ctypes64_Double %b)
+declare %ctypes64_Double @sqrt(%ctypes64_Double %x)
+declare %ctypes64_Double @ceil(%ctypes64_Double %x)
+declare %ctypes64_Double @fabs(%ctypes64_Double %x)
+declare %ctypes64_Double @floor(%ctypes64_Double %x)
+declare %ctypes64_Double @fmod(%ctypes64_Double %a, %ctypes64_Double %b)
+declare %ctypes64_LongDouble @acosl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @asinl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @atanl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @atan2l(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @cosl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @sinl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @tanl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @acoshl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @asinhl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @atanhl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @coshl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @sinhl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @tanhl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @expl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @exp2l(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @expm1l(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @frexpl(%ctypes64_LongDouble %a, %ctypes64_Int* %i)
+declare %ctypes64_Int @ilogbl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @ldexpl(%ctypes64_LongDouble %a, %ctypes64_Int %i)
+declare %ctypes64_LongDouble @logl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @log10l(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @log1pl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @log2l(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @logbl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @modfl(%ctypes64_LongDouble %a, %ctypes64_LongDouble* %b)
+declare %ctypes64_LongDouble @scalbnl(%ctypes64_LongDouble %a, %ctypes64_Int %i)
+declare %ctypes64_LongDouble @scalblnl(%ctypes64_LongDouble %a, %ctypes64_LongInt %i)
+declare %ctypes64_LongDouble @cbrtl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @fabsl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @hypotl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @powl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @sqrtl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @erfl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @erfcl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @lgammal(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @tgammal(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @ceill(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @floorl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @nearbyintl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @rintl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongInt @lrintl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongLongInt @llrintl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @roundl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongInt @lroundl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongLongInt @llroundl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @truncl(%ctypes64_LongDouble %x)
+declare %ctypes64_LongDouble @fmodl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @remainderl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @remquol(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b, %ctypes64_Int* %i)
+declare %ctypes64_LongDouble @copysignl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @nanl(%ctypes64_ConstChar* %x)
+declare %ctypes64_LongDouble @nextafterl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @nexttowardl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @fdiml(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @fmaxl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @fminl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
+declare %ctypes64_LongDouble @fmal(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b, %ctypes64_LongDouble %c)
 ; -- end print includes --
-; -- print imports --
-; -- end print imports --
+; -- print imports 'main' --
+; -- 0
+; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [9 x i8] [i8 100, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str2 = private constant [9 x i8] [i8 100, i8 121, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
@@ -294,52 +295,52 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str10 = private constant [12 x i8] [i8 115, i8 108, i8 111, i8 112, i8 101, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 ; -- endstrings --
 define internal double @squareOfCircle(double %radius) {
-	%1 = call %Double @pow(double %radius, %Double 2.0000000000000000)
-	%2 = fmul %Double %1, 3.1415926535897931
-	ret %Double %2
+	%1 = call %ctypes64_Double @pow(double %radius, %ctypes64_Double 2.0000000000000000)
+	%2 = fmul %ctypes64_Double %1, 3.1415926535897931
+	ret %ctypes64_Double %2
 }
 
 %Point2D = type {
-	%Int,
-	%Int
+	%ctypes64_Int,
+	%ctypes64_Int
 };
 
 define internal float @slope(%Point2D %a, %Point2D %b) {
 	%1 = extractvalue %Point2D %a, 0
 	%2 = extractvalue %Point2D %b, 0
-	%3 = sub %Int %1, %2
-	%4 = call %Int @abs(%Int %3)
+	%3 = sub %ctypes64_Int %1, %2
+	%4 = call %ctypes64_Int @abs(%ctypes64_Int %3)
 	%5 = extractvalue %Point2D %a, 1
 	%6 = extractvalue %Point2D %b, 1
-	%7 = sub %Int %5, %6
-	%8 = call %Int @abs(%Int %7)
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*), %Int %4)
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), %Int %8)
-	%11 = sitofp %Int %8 to float
-	%12 = sitofp %Int %4 to float
+	%7 = sub %ctypes64_Int %5, %6
+	%8 = call %ctypes64_Int @abs(%ctypes64_Int %7)
+	%9 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ctypes64_Int %4)
+	%10 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), %ctypes64_Int %8)
+	%11 = sitofp %ctypes64_Int %8 to float
+	%12 = sitofp %ctypes64_Int %4 to float
 	%13 = fdiv float %11, %12
 	ret float %13
 }
 
-define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*))
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int32 2)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), double 0.6666666666666666)
+define %ctypes64_Int @main() {
+	%1 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*))
+	%2 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int32 2)
+	%3 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), double 0.6666666666666666)
 	%4 = call double @squareOfCircle(double 10.0000000000000000)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), double %4)
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str7 to [0 x i8]*), double 0.1250000000000000)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str8 to [0 x i8]*), %Int32 4)
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str9 to [0 x i8]*), %Int32 8)
+	%5 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), double %4)
+	%6 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([8 x i8]* @str7 to [0 x i8]*), double 0.1250000000000000)
+	%7 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([23 x i8]* @str8 to [0 x i8]*), %Int32 4)
+	%8 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([23 x i8]* @str9 to [0 x i8]*), %Int32 8)
 
 	; printf %f ожидает получить double а не float!
-	%9 = insertvalue %Point2D zeroinitializer, %Int 10, 0
-	%10 = insertvalue %Point2D %9, %Int 20, 1
-	%11 = insertvalue %Point2D zeroinitializer, %Int 30, 0
-	%12 = insertvalue %Point2D %11, %Int 50, 1
+	%9 = insertvalue %Point2D zeroinitializer, %ctypes64_Int 10, 0
+	%10 = insertvalue %Point2D %9, %ctypes64_Int 20, 1
+	%11 = insertvalue %Point2D zeroinitializer, %ctypes64_Int 30, 0
+	%12 = insertvalue %Point2D %11, %ctypes64_Int 50, 1
 	%13 = call float @slope(%Point2D %10, %Point2D %12)
 	%14 = fpext float %13 to double
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str10 to [0 x i8]*), double %14)
-	ret %Int 0
+	%15 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([12 x i8]* @str10 to [0 x i8]*), double %14)
+	ret %ctypes64_Int 0
 }
 
 

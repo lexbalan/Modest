@@ -107,75 +107,76 @@ break_2:
 
 ; -- print includes --
 ; from included ctypes64
-%Str = type %Str8;
-%Char = type %Char8;
-%ConstChar = type %Char;
-%SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
-%Short = type %Int16;
-%UnsignedShort = type %Int16;
-%Int = type %Int32;
-%UnsignedInt = type %Int32;
-%LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
-%Long = type %Int64;
-%UnsignedLong = type %Int64;
-%LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
-%LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
-%SizeT = type %UnsignedLongInt;
-%SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
-%PtrDiffT = type i8*;
-%OffT = type %Int64;
-%USecondsT = type %Int32;
-%PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%ctypes64_Str = type %Str8;
+%ctypes64_Char = type %Char8;
+%ctypes64_ConstChar = type %ctypes64_Char;
+%ctypes64_SignedChar = type %Int8;
+%ctypes64_UnsignedChar = type %Int8;
+%ctypes64_Short = type %Int16;
+%ctypes64_UnsignedShort = type %Int16;
+%ctypes64_Int = type %Int32;
+%ctypes64_UnsignedInt = type %Int32;
+%ctypes64_LongInt = type %Int64;
+%ctypes64_UnsignedLongInt = type %Int64;
+%ctypes64_Long = type %Int64;
+%ctypes64_UnsignedLong = type %Int64;
+%ctypes64_LongLong = type %Int64;
+%ctypes64_UnsignedLongLong = type %Int64;
+%ctypes64_LongLongInt = type %Int64;
+%ctypes64_UnsignedLongLongInt = type %Int64;
+%ctypes64_Float = type double;
+%ctypes64_Double = type double;
+%ctypes64_LongDouble = type double;
+%ctypes64_SizeT = type %ctypes64_UnsignedLongInt;
+%ctypes64_SSizeT = type %ctypes64_LongInt;
+%ctypes64_IntPtrT = type %Int64;
+%ctypes64_PtrDiffT = type i8*;
+%ctypes64_OffT = type %Int64;
+%ctypes64_USecondsT = type %Int32;
+%ctypes64_PIDT = type %Int32;
+%ctypes64_UIDT = type %Int32;
+%ctypes64_GIDT = type %Int32;
 ; from included time
-%TimeT = type %Int32;
-%ClockT = type %UnsignedLong;
-%StructTM = type {
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%LongInt,
-	%ConstChar*
+%time_TimeT = type %Int32;
+%time_ClockT = type %ctypes64_UnsignedLong;
+%time_StructTM = type {
+	%ctypes64_Int,
+	%ctypes64_Int,
+	%ctypes64_Int,
+	%ctypes64_Int,
+	%ctypes64_Int,
+	%ctypes64_Int,
+	%ctypes64_Int,
+	%ctypes64_Int,
+	%ctypes64_Int,
+	%ctypes64_LongInt,
+	%ctypes64_ConstChar*
 };
 
-declare %ClockT @clock()
-declare %Double @difftime(%TimeT %end, %TimeT %beginning)
-declare %TimeT @mktime(%StructTM* %timeptr)
-declare %TimeT @time(%TimeT* %timer)
-declare %Char* @asctime(%StructTM* %timeptr)
-declare %Char* @ctime(%TimeT* %timer)
-declare %StructTM* @gmtime(%TimeT* %timer)
-declare %StructTM* @localtime(%TimeT* %timer)
-declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
-declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
-declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
+declare %time_ClockT @clock()
+declare %ctypes64_Double @difftime(%time_TimeT %end, %time_TimeT %beginning)
+declare %time_TimeT @mktime(%time_StructTM* %timeptr)
+declare %time_TimeT @time(%time_TimeT* %timer)
+declare %ctypes64_Char* @asctime(%time_StructTM* %timeptr)
+declare %ctypes64_Char* @ctime(%time_TimeT* %timer)
+declare %time_StructTM* @gmtime(%time_TimeT* %timer)
+declare %time_StructTM* @localtime(%time_TimeT* %timer)
+declare %ctypes64_SizeT @strftime(%ctypes64_Char* %ptr, %ctypes64_SizeT %maxsize, %ctypes64_ConstChar* %format, %time_StructTM* %timeptr)
+declare %time_StructTM* @localtime_s(%time_TimeT* %timer, %time_StructTM* %tmptr)
+declare %time_StructTM* @localtime_r(%time_TimeT* %timer, %time_StructTM* %tmptr)
 ; -- end print includes --
-; -- print imports --
-; -- end print imports --
+; -- print imports 'delay' --
+; -- 0
+; -- end print imports 'delay' --
 ; -- strings --
 ; -- endstrings --
 define void @delay_us(%Int64 %us) {
-	%1 = call %ClockT @clock()
+	%1 = call %time_ClockT @clock()
 	br label %again_1
 again_1:
-	%2 = call %ClockT @clock()
-	%3 = add %ClockT %1, %us
-	%4 = icmp ult %ClockT %2, %3
+	%2 = call %time_ClockT @clock()
+	%3 = add %time_ClockT %1, %us
+	%4 = icmp ult %time_ClockT %2, %3
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
 	; just waiting

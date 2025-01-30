@@ -34,7 +34,7 @@ int main()
 	#define __len  sizeof(Object)
 	printf("LEN = %u\n", (uint32_t)__len);
 
-	copy(&o2, &o1, __len);
+	memory_copy(&o2, &o1, __len);
 
 	printf("firstname = '%s'\n", &o2.firstname);
 	printf("lastname = '%s'\n", &o2.lastname);

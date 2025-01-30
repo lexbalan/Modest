@@ -107,8 +107,9 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports --
-; -- end print imports --
+; -- print imports 'utf' --
+; -- 0
+; -- end print imports 'utf' --
 ; -- strings --
 ; -- endstrings --
 

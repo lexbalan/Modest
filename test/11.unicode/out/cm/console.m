@@ -120,7 +120,7 @@ public func puts32(s: *Str32) -> Unit {
 public func print(form: *Str8, ...) -> Unit {
 	var va: va_list
 	__va_start(va, form)
-	vfprint(c_STDOUT_FILENO, form, va)
+	vfprint(unistd.c_STDOUT_FILENO, form, va)
 	__va_end(va)
 }
 

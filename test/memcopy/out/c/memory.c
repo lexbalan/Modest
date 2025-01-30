@@ -22,7 +22,7 @@ typedef uint64_t Nat;
 #define memoryAlignment  (systemWidth / 8)
 
 
-void zero(void *mem, uint64_t len)
+void memory_zero(void *mem, uint64_t len)
 {
 	Nat z = (Nat)mem % memoryAlignment;
 
@@ -61,7 +61,7 @@ void zero(void *mem, uint64_t len)
 }
 
 
-void copy(void *dst, void *src, uint64_t len)
+void memory_copy(void *dst, void *src, uint64_t len)
 {
 	uint64_t len_words = len / sizeof(Word);
 	Word *src_w = (Word *)src;
@@ -85,7 +85,7 @@ void copy(void *dst, void *src, uint64_t len)
 }
 
 
-bool eq(void *mem0, void *mem1, uint64_t len)
+bool memory_eq(void *mem0, void *mem1, uint64_t len)
 {
 	uint64_t len_words = len / sizeof(Word);
 	Word *mem0_w = (Word *)mem0;

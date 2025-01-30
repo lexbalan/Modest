@@ -287,8 +287,22 @@ declare [0 x %ctypes64_Char]* @strncat([0 x %ctypes64_Char]* %s1, [0 x %ctypes64
 declare [0 x %ctypes64_Char]* @strerror(%ctypes64_Int %error)
 ; ?? utf ??
 ; from import
+declare %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
+declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; end from import
 ; from import
+declare void @console_putchar8(%Char8 %c)
+declare void @console_putchar16(%Char16 %c)
+declare void @console_putchar32(%Char32 %c)
+declare void @console_putchar_utf8(%Char8 %c)
+declare void @console_putchar_utf16(%Char16 %c)
+declare void @console_putchar_utf32(%Char32 %c)
+declare void @console_puts8(%Str8* %s)
+declare void @console_puts16(%Str16* %s)
+declare void @console_puts32(%Str32* %s)
+declare void @console_print(%Str8* %form, ...)
+declare %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, i8* %va)
+declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 ; end from import
 ; -- end print imports 'main' --
 ; -- strings --

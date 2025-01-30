@@ -107,8 +107,9 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports --
-; -- end print imports --
+; -- print imports 'minmax' --
+; -- 0
+; -- end print imports 'minmax' --
 ; -- strings --
 ; -- endstrings --
 define %Int32 @minmax_min_int32(%Int32 %a, %Int32 %b) {

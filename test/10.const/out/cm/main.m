@@ -2,6 +2,7 @@
 @c_include "stdio.h"
 @c_include "math.h"
 @c_include "./minmax.h"
+import "misc/minmax" as minmax
 
 
 const carr = [0, 10, 15] + [20, 25, 30]
@@ -54,8 +55,8 @@ const wa = WrappedArray {}
 
 // Pythagorean theorem
 func distance(a: Point, b: Point) -> ctypes64.Float {
-	let dx = max_float64(a.x, b.x) - min_float64(a.x, b.x)
-	let dy = max_float64(a.y, b.y) - min_float64(a.y, b.y)
+	let dx = minmax.max_float64(a.x, b.x) - minmax.min_float64(a.x, b.x)
+	let dy = minmax.max_float64(a.y, b.y) - minmax.min_float64(a.y, b.y)
 	let dx2 = pow(dx, 2)
 	let dy2 = pow(dy, 2)
 	return sqrt(dx2 + dy2)

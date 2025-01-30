@@ -108,7 +108,7 @@ var fsm0: fsm.FSM = {
 	name = "Flash"
 	state = 0
 	nexstate = 0
-	substate = substateEntering
+	substate = fsm.substateEntering
 	states = [
 		fsm.StateDesc {
 			name = "Off"

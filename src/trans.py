@@ -15,7 +15,6 @@ from hlir.hlir import *
 
 import foundation
 
-#from value.value import value_eq
 from value.bool import value_bool_create
 from value.integer import value_integer_create
 from value.float import value_float_create
@@ -2107,68 +2106,6 @@ def def_type(x):
 
 
 
-def def_type2(x, module):
-	#global cmodule
-	global cdef
-
-	id = Id(x['id'])
-	log("def_type: %s" % id.str)
-
-	nt = ctx_type_get(id.str)
-
-	if not nt.is_incompleted():
-		error("type redefinition", x['ti'])
-		return None
-
-	definition = StmtDefType(id, nt, None, x['ti'])
-	definition.parent = module
-	definition.access_level = x['access_modifier']
-	definition.nl = x['nl']
-	old_cdef = cdef
-	cdef = definition
-
-	ty = do_type(x['type'])
-
-	if ty.is_bad():
-		return None
-
-	definition.original_type = ty
-
-	# поскольку этот тип здесь связывается с идентификатором
-	# он уже не анонимный
-	if ty in module.anon_recs:
-		module.anon_recs.remove(ty)
-
-	# Замещаем внутренности undefined типа на тип справа
-	# НО! имя даем новое
-	deps = nt.deps
-	type_update(nt, ty)
-	nt.deps = deps
-	nt.id = id
-	nt.definition = definition
-	nt.parent = module  # добавляем заново тк очистили его выше!
-	nt.ti_def = id.ti
-
-	if not dont_need_decoration(x):
-		nt.id.need_decoration = True
-
-	if not ('do_not_include' in module.att):
-		# В случае когда не печатаем typedef явно (!)
-		# Убираем алиасы которые висели на оригинальном типе
-		#if 'c' in nt['id']:
-		#	nt.pop('c')
-		#if 'llvm_alias' in nt['id']:
-		#	nt.pop('llvm_alias')
-		pass
-
-	if ty.is_record():
-		module.records.append(nt)
-
-	cdef = old_cdef
-	return definition
-
-
-
 def def_const(x):
 	#global cdef
 	global cmodule
@@ -2183,6 +2120,7 @@ def def_const(x):
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
 
+	const_value.parent = cmodule
 	const_value.definition = definition
 
 	if not dont_need_decoration(x):
@@ -2306,8 +2244,10 @@ def def_var(x):
 	var_value = ValueVar(t, id, init_value=init_value, ti=id.ti)
 	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 
+
 	definition.value = var_value
 	definition.init_value = init_value
+	var_value.parent = cmodule
 	var_value.definition = definition
 	cdef = None
 	return definition
@@ -2545,7 +2485,7 @@ def do_import(x):
 
 	if m == None:
 		is_import = False
-		is_import = not x['include']
+		#is_import = not x['include']
 		m = translate(abspath, is_import=is_import, is_include=x['include'])
 		modules[abspath] = m
 

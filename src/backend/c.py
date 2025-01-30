@@ -172,19 +172,20 @@ def get_id_str(x):
 	id_str = id.str
 
 	xmodule = x.getModule()
+
+#	if xmodule == None:
+#		print(x)
+#		print(x.parent)
+#		print(x.__dict__)
+#		info("????", x.ti)
+
 	if id.need_decoration or xmodule != None and xmodule != cmodule:
 		return "%s_%s" % (xmodule.id, id_str)
-
-#		if x.definition:
-#			prefix = x.definition.getModule().prefix
-#			if prefix != None:
-#				id_str = prefix + '_' + id_str
 
 	return id_str
 
 
-def print_id_for(x, prefix=''):
-	#out(x.id.str)
+def print_id_for(x):
 	out(get_id_str(x))
 
 
@@ -246,17 +247,6 @@ def str_type_record(t, tag=""):
 	nl_indent()
 	out("}")"""
 
-
-def type_get_aka(t):
-	if hasattr(t, 'id'):
-		if t.id.c != None:
-			return t.id.c
-		return get_id_str(t)
-
-	if hasattr(t, 'c_anon_id'):
-		return 'struct ' + t.c_anon_id
-
-	return None
 
 
 
@@ -396,6 +386,20 @@ def str_type_pointer(t, label, core=''):
 		return str_type(tx, core=core)
 
 	return str_type(tx) + ' ' + c + core + label
+
+
+
+def type_get_aka(t):
+	if hasattr(t, 'id'):
+		if t.id.c != None:
+			return t.id.c
+		return get_id_str(t)
+
+	if hasattr(t, 'c_anon_id'):
+		return 'struct ' + t.c_anon_id
+
+	return None
+
 
 
 def str_type_simple(t, core='', label=''):
@@ -1184,14 +1188,11 @@ def print_value_literal(x, ctx):
 
 
 def print_value_const(x, ctx):
-	prefix=''
+	if x.type.is_array() and is_global_context():
+		out('_')
 
-	if x.type.is_array():
-		if is_global_context():
-			out('_')
+	print_id_for(x)
 
-	print_id_for(x, prefix)
-	return
 
 
 def print_value_func(x, ctx):

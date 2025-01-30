@@ -51,7 +51,7 @@ func doTest(test: *SHA256_TestCase) -> Bool {
 	printf(" -> ")
 
 	var i: Int32 = 0
-	while i < hashSize {
+	while i < sha256.hashSize {
 		printf("%02X", test_hash[i])
 		i = i + 1
 	}

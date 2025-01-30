@@ -107,8 +107,9 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports --
-; -- end print imports --
+; -- print imports 'memory' --
+; -- 0
+; -- end print imports 'memory' --
 ; -- strings --
 ; -- endstrings --
 
@@ -122,7 +123,7 @@ break_2:
 ;type Word Word32
 ;type Nat Nat32
 ;$endif
-define void @zero(i8* %mem, %Int64 %len) {
+define void @memory_zero(i8* %mem, %Int64 %len) {
 	%1 = ptrtoint i8* %mem to %Nat
 	%2 = urem %Nat %1, 8
 	%3 = bitcast i8* %mem to [0 x %Word8]*
@@ -191,7 +192,7 @@ break_3:
 	ret void
 }
 
-define void @copy(i8* %dst, i8* %src, %Int64 %len) {
+define void @memory_copy(i8* %dst, i8* %src, %Int64 %len) {
 	%1 = udiv %Int64 %len, 8
 	%2 = bitcast i8* %src to [0 x %Word]*
 	%3 = bitcast i8* %dst to [0 x %Word]*
@@ -242,7 +243,7 @@ break_2:
 	ret void
 }
 
-define %Bool @eq(i8* %mem0, i8* %mem1, %Int64 %len) {
+define %Bool @memory_eq(i8* %mem0, i8* %mem1, %Int64 %len) {
 	%1 = udiv %Int64 %len, 8
 	%2 = bitcast i8* %mem0 to [0 x %Word]*
 	%3 = bitcast i8* %mem1 to [0 x %Word]*

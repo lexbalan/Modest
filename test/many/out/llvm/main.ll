@@ -217,16 +217,26 @@ declare [0 x %ctypes64_Char]* @strerror(%ctypes64_Int %error)
 ; -- 2
 ; ?? xtype ??
 ; from import
+%type_Type = type {
+};
+
+%type_TypeArray = type {
+};
+
+declare void @type_init()
 ; end from import
 ; ?? value ??
 ; from import
+%value_Value = type {
+};
+
 ; end from import
 ; -- end print imports 'main' --
 ; -- strings --
 ; -- endstrings --
 define %Int32 @main() {
-	%1 = alloca {}*, align 8
-	%2 = alloca {}*, align 8
+	%1 = alloca %type_Type*, align 8
+	%2 = alloca %value_Value*, align 8
 	call void @type_init()
 	ret %Int32 0
 }

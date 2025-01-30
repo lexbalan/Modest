@@ -27,7 +27,7 @@ func send_file(fp: *stdio.File, sockfd: ctypes64.Int) -> Bool {
 
 
 public func main() -> ctypes64.Int {
-	let sockfd = socket(af_INET, c_SOCK_STREAM, 0)
+	let sockfd = socket(socket.af_INET, socket.c_SOCK_STREAM, 0)
 	if sockfd < 0 {
 		perror("[-] Error in socket")
 		exit(1)
@@ -36,7 +36,7 @@ public func main() -> ctypes64.Int {
 	printf("[+] Server socket created\n")
 
 	var server_addr: socket.Struct_sockaddr_in = socket.Struct_sockaddr_in {
-		sin_family = af_INET
+		sin_family = socket.af_INET
 		sin_port = port
 		sin_addr = {
 			s_addr = inet_addr(ipAddress)

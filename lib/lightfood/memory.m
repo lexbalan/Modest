@@ -2,7 +2,6 @@
 
 //
 $pragma unsafe
-$pragma module_nodecorate
 //
 
 const systemWidth = 64

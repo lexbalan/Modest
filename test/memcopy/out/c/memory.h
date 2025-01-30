@@ -24,12 +24,12 @@
 
 
 
-void zero(void *mem, uint64_t len);
+void memory_zero(void *mem, uint64_t len);
 
 
-void copy(void *dst, void *src, uint64_t len);
+void memory_copy(void *dst, void *src, uint64_t len);
 
 
-bool eq(void *mem0, void *mem1, uint64_t len);
+bool memory_eq(void *mem0, void *mem1, uint64_t len);
 
 #endif /* MEMORY_H */

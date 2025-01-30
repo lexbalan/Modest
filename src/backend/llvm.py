@@ -110,35 +110,6 @@ def ll_reg_operation(op, type, reg=None):
 	return llvm_value_reg(reg, type)
 
 
-def type_get_aka(t):
-	if not hasattr(t, 'id'):
-		return None
-
-	if t.id.llvm:
-		return t.id.llvm
-
-	#if not hasattr(x, 'id'):
-	#	return False
-	if not t.is_generic():
-		s = get_id_str(t)
-		return '%' + s
-
-	id_str = t.id.str
-	return id_str
-
-	if id_str != None:
-		#if t.id.str != 'main':
-		if t.id.need_decoration:
-			#id_str = t['definition']['module']['prefix'] + '_' + id_str
-
-			if hasattr(t, 'definition'):
-				prefix = t.definition.getModule().prefix
-				if prefix != None:
-					id_str = prefix + '_' + id_str
-
-		return '%' + id_str
-	return None
-
 
 
 def get_id_str(x):
@@ -158,18 +129,11 @@ def get_id_str(x):
 	# добавим к ней префикс ее модуля
 	xmodule = x.getModule()
 	if id.need_decoration or xmodule != None and xmodule != cmodule:
-		if xmodule == None:
-			print(x)
-			print(x.__dict__)
+#		if xmodule == None:
+#			print(x)
+#			print(x.__dict__)
+#			info("????", x.ti)
 		id_str = "%s_%s" % (xmodule.id, id_str)
-	#else:
-	#	id_str = "$" + id_str
-
-#	if id.need_decoration:
-#		if x.definition != None:
-#			prefix = x.definition.getModule().prefix
-#			if prefix != None:
-#				id_str = prefix + '_' + id_str
 
 	return id_str
 
@@ -852,13 +816,28 @@ def print_type_pointer(t):
 
 
 
+
+def type_get_aka(t):
+	if not hasattr(t, 'id'):
+		return None
+
+	if t.id.llvm:
+		return t.id.llvm
+
+	if not t.is_generic():
+		s = get_id_str(t)
+		return '%' + s
+
+	return t.id.str
+
+
+
 def print_type_id(x):
 	t_id = type_get_aka(x)
 	if t_id == None:
 		return False
 	out(t_id)
 	return True
-
 
 
 def print_int_type_for(width):
@@ -2666,10 +2645,11 @@ def print_module(m):
 
 	out("; MODULE: %s\n" % m.id)
 
-	out("\n; -- print lldeps --")
-	for d in cmodule.lldeps:
-		out("; -- %s" % get_id_str(d))
-	out("\n; -- end print lldeps --")
+#	out("\n; -- print lldeps --")
+#	for d in cmodule.lldeps:
+#		out("; -- %s" % get_id_str(d))
+#	out("\n; -- end print lldeps --")
+
 	out("\n; -- print includes --")
 	print_included(m)
 	out("\n; -- end print includes --")
