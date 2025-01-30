@@ -1,7 +1,7 @@
 
-import "type"
+//import "type"
 
 public type Value record {
-	type: *type.Type
+	//type: *type.Type
 }
 

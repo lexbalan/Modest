@@ -103,133 +103,19 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: minmax
+; MODULE: value
 
+; -- print lldeps --
+; -- end print lldeps --
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'minmax' --
+; -- print imports 'value' --
 ; -- 0
-; -- end print imports 'minmax' --
+; -- end print imports 'value' --
 ; -- strings --
 ; -- endstrings --
-define %Int32 @minmax_min_int32(%Int32 %a, %Int32 %b) {
-	%1 = icmp slt %Int32 %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret %Int32 %a
-	br label %endif_0
-endif_0:
-	ret %Int32 %b
-}
-
-define %Int32 @minmax_max_int32(%Int32 %a, %Int32 %b) {
-	%1 = icmp sgt %Int32 %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret %Int32 %a
-	br label %endif_0
-endif_0:
-	ret %Int32 %b
-}
-
-define %Int64 @minmax_min_int64(%Int64 %a, %Int64 %b) {
-	%1 = icmp slt %Int64 %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret %Int64 %a
-	br label %endif_0
-endif_0:
-	ret %Int64 %b
-}
-
-define %Int64 @minmax_max_int64(%Int64 %a, %Int64 %b) {
-	%1 = icmp sgt %Int64 %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret %Int64 %a
-	br label %endif_0
-endif_0:
-	ret %Int64 %b
-}
-
-define %Int32 @minmax_min_nat32(%Int32 %a, %Int32 %b) {
-	%1 = icmp ult %Int32 %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret %Int32 %a
-	br label %endif_0
-endif_0:
-	ret %Int32 %b
-}
-
-define %Int32 @minmax_max_nat32(%Int32 %a, %Int32 %b) {
-	%1 = icmp ugt %Int32 %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret %Int32 %a
-	br label %endif_0
-endif_0:
-	ret %Int32 %b
-}
-
-define %Int64 @minmax_min_nat64(%Int64 %a, %Int64 %b) {
-	%1 = icmp ult %Int64 %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret %Int64 %a
-	br label %endif_0
-endif_0:
-	ret %Int64 %b
-}
-
-define %Int64 @minmax_max_nat64(%Int64 %a, %Int64 %b) {
-	%1 = icmp ugt %Int64 %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret %Int64 %a
-	br label %endif_0
-endif_0:
-	ret %Int64 %b
-}
-
-define float @minmax_min_float32(float %a, float %b) {
-	%1 = fcmp olt float %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret float %a
-	br label %endif_0
-endif_0:
-	ret float %b
-}
-
-define float @minmax_max_float32(float %a, float %b) {
-	%1 = fcmp ogt float %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret float %a
-	br label %endif_0
-endif_0:
-	ret float %b
-}
-
-define double @minmax_min_float64(double %a, double %b) {
-	%1 = fcmp olt double %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret double %a
-	br label %endif_0
-endif_0:
-	ret double %b
-}
-
-define double @minmax_max_float64(double %a, double %b) {
-	%1 = fcmp ogt double %a, %b
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret double %a
-	br label %endif_0
-endif_0:
-	ret double %b
-}
+;import "type"
+%value_Value = type {
+};
 
 

@@ -535,6 +535,9 @@ def do_type_name(x):
 			error("unknown module", x['module']['ti'])
 			return TypeBad(t['ti'])
 		t = module_type_get_public(imp.module, id_str)
+
+		if t.is_incompleted():
+			t = type_update_incompleted(imp.module, t, id_str)
 	else:
 		t = module_type_get(cmodule, id_str)
 
@@ -542,7 +545,8 @@ def do_type_name(x):
 		error("undefined type", x['ti'])
 		return TypeBad(x['ti'])
 
-	# если дело происходит в определении типа и пришел undefined тип
+
+	# если дело происходит не в определении типа и пришел undefined тип
 	if t.is_incompleted():
 		if not isinstance(cdef, StmtDefType):
 			error("forward references to non-struct type", x['ti'])
@@ -2103,6 +2107,67 @@ def def_type(x):
 
 
 
+def def_type2(x, module):
+	#global cmodule
+	global cdef
+
+	id = Id(x['id'])
+	log("def_type: %s" % id.str)
+
+	nt = ctx_type_get(id.str)
+
+	if not nt.is_incompleted():
+		error("type redefinition", x['ti'])
+		return None
+
+	definition = StmtDefType(id, nt, None, x['ti'])
+	definition.parent = module
+	definition.access_level = x['access_modifier']
+	definition.nl = x['nl']
+	old_cdef = cdef
+	cdef = definition
+
+	ty = do_type(x['type'])
+
+	if ty.is_bad():
+		return None
+
+	definition.original_type = ty
+
+	# поскольку этот тип здесь связывается с идентификатором
+	# он уже не анонимный
+	if ty in module.anon_recs:
+		module.anon_recs.remove(ty)
+
+	# Замещаем внутренности undefined типа на тип справа
+	# НО! имя даем новое
+	deps = nt.deps
+	type_update(nt, ty)
+	nt.deps = deps
+	nt.id = id
+	nt.definition = definition
+	nt.parent = module  # добавляем заново тк очистили его выше!
+	nt.ti_def = id.ti
+
+	if not dont_need_decoration(x):
+		nt.id.need_decoration = True
+
+	if not ('do_not_include' in module.att):
+		# В случае когда не печатаем typedef явно (!)
+		# Убираем алиасы которые висели на оригинальном типе
+		#if 'c' in nt['id']:
+		#	nt.pop('c')
+		#if 'llvm_alias' in nt['id']:
+		#	nt.pop('llvm_alias')
+		pass
+
+	if ty.is_record():
+		module.records.append(nt)
+
+	cdef = old_cdef
+	return definition
+
+
 
 def def_const(x):
 	#global cdef
@@ -2480,7 +2545,7 @@ def do_import(x):
 
 	if m == None:
 		is_import = False
-		#is_import = not x['include']
+		is_import = not x['include']
 		m = translate(abspath, is_import=is_import, is_include=x['include'])
 		modules[abspath] = m
 
@@ -2622,6 +2687,27 @@ def process_module(idStr, ast, is_import=False, is_include=False):
 
 
 
+def type_update_incompleted(module, t, idStr):
+	print("type_update_incompleted('%s', '%s')" % (module.id, idStr))
+
+	for x in module.ast:
+		if x['isa'] != 'ast_definition':
+			continue
+
+		if x['id']['str'] != idStr:
+			continue
+
+		#v = ctx_value_get(idStr)
+		print("- UPDATED!")
+		tx = do_type(x['type'])
+		type_update(t, tx)
+
+		#cmodule.lldeps.append(t)
+		return tx
+
+	return t
+
+
 def value_update_incompleted_type(module, v, idStr):
 	#print("value_update_incompleted_type('%s', '%s')" % (module.id, idStr))
 
@@ -2635,6 +2721,8 @@ def value_update_incompleted_type(module, v, idStr):
 		#v = ctx_value_get(idStr)
 		t = do_type(x['type'])
 		type_update(v.type, t)
+
+		#cmodule.lldeps.append(v)
 		return v
 
 

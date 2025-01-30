@@ -171,26 +171,19 @@ def get_id_str(x):
 
 	id_str = id.str
 
-#	xmodule = x.getModule()
-#	if xmodule != None:
-#		if xmodule != cmodule:
-#			return "%s_%s" % (xmodule.id, id_str)
+	xmodule = x.getModule()
+	if id.need_decoration or xmodule != None and xmodule != cmodule:
+		return "%s_%s" % (xmodule.id, id_str)
 
-	if id.need_decoration:
-		if x.definition:
-			prefix = x.definition.getModule().prefix
-			if prefix != None:
-				id_str = prefix + '_' + id_str
+#		if x.definition:
+#			prefix = x.definition.getModule().prefix
+#			if prefix != None:
+#				id_str = prefix + '_' + id_str
 
 	return id_str
 
 
 def print_id_for(x, prefix=''):
-#	xm = x.getModule()
-#	if xm != None:
-#		if xm != cmodule:
-#			out("%s_" % xm.id)
-
 	#out(x.id.str)
 	out(get_id_str(x))
 

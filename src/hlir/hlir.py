@@ -18,5 +18,6 @@ class Module:
 		self.symtab_public = symtab_public
 		self.symtab_private = symtab_private
 		self.source_abspath = None
+		self.lldeps = []
 		self.defs = []
 		self.att = []

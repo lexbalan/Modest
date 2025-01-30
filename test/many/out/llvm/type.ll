@@ -103,8 +103,10 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: main
+; MODULE: type
 
+; -- print lldeps --
+; -- end print lldeps --
 ; -- print includes --
 ; from included ctypes64
 %ctypes64_Str = type %Str8;
@@ -184,32 +186,24 @@ declare %ctypes64_Int @puts(%stdio_ConstCharStr* %str)
 declare %ctypes64_Int @ungetc(%ctypes64_Int %char, %stdio_File* %f)
 declare void @perror(%stdio_ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports 'main' --
+; -- print imports 'type' --
 ; -- 0
-; -- end print imports 'main' --
+; -- end print imports 'type' --
 ; -- strings --
-@str1 = private constant [7 x i8] [i8 108, i8 105, i8 116, i8 116, i8 108, i8 101, i8 0]
-@str2 = private constant [4 x i8] [i8 98, i8 105, i8 103, i8 0]
-@str3 = private constant [11 x i8] [i8 37, i8 115, i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 10, i8 0]
+@str1 = private constant [13 x i8] [i8 116, i8 121, i8 112, i8 101, i8 46, i8 105, i8 110, i8 105, i8 116, i8 40, i8 41, i8 10, i8 0]
 ; -- endstrings --
-define %ctypes64_Int @main() {
-	%1 = alloca %Word16, align 2
-	store %Word16 1, %Word16* %1
-	%2 = bitcast %Word16* %1 to %Word8*
-	%3 = load %Word8, %Word8* %2
-	%4 = icmp eq %Word8 %3, 1
-	%5 = alloca %Str8*, align 8
-	br %Bool %4 , label %then_0, label %else_0
-then_0:
-	store %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*), %Str8** %5
-	br label %endif_0
-else_0:
-	store %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8** %5
-	br label %endif_0
-endif_0:
-	%6 = load %Str8*, %Str8** %5
-	%7 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), %Str8* %6)
-	ret %ctypes64_Int 0
+
+;import "value"
+%type_Type = type {
+};
+
+%type_TypeArray = type {
+};
+
+define void @type_init() {
+	%1 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
+	;printf("value.xxx = %d\n", value.xxx)
+	ret void
 }
 
 

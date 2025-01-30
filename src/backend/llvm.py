@@ -113,10 +113,18 @@ def ll_reg_operation(op, type, reg=None):
 def type_get_aka(t):
 	if not hasattr(t, 'id'):
 		return None
+
 	if t.id.llvm:
 		return t.id.llvm
 
+	#if not hasattr(x, 'id'):
+	#	return False
+	if not t.is_generic():
+		s = get_id_str(t)
+		return '%' + s
+
 	id_str = t.id.str
+	return id_str
 
 	if id_str != None:
 		#if t.id.str != 'main':
@@ -141,18 +149,27 @@ def get_id_str(x):
 
 	id_str = id.str
 
+#	if id_str == None:
+#		print("id_str == None")
+#		print(x)
+#		print(x.__dict__)
+
 	# если это сущность из другого модуля
 	# добавим к ней префикс ее модуля
-#	xmodule = x.getModule()
-#	if xmodule != None:
-#		if xmodule != cmodule:
-#			return "%s_%s" % (xmodule.id, id_str)
+	xmodule = x.getModule()
+	if id.need_decoration or xmodule != None and xmodule != cmodule:
+		if xmodule == None:
+			print(x)
+			print(x.__dict__)
+		id_str = "%s_%s" % (xmodule.id, id_str)
+	#else:
+	#	id_str = "$" + id_str
 
-	if id.need_decoration:
-		if x.definition != None:
-			prefix = x.definition.getModule().prefix
-			if prefix != None:
-				id_str = prefix + '_' + id_str
+#	if id.need_decoration:
+#		if x.definition != None:
+#			prefix = x.definition.getModule().prefix
+#			if prefix != None:
+#				id_str = prefix + '_' + id_str
 
 	return id_str
 
@@ -835,8 +852,8 @@ def print_type_pointer(t):
 
 
 
-def print_type_id(t):
-	t_id = type_get_aka(t)
+def print_type_id(x):
+	t_id = type_get_aka(x)
 	if t_id == None:
 		return False
 	out(t_id)
@@ -2616,14 +2633,14 @@ def print_included(m):
 				#	print_decl_const(x)
 
 
-def print_imports(m):
-	if isinstance(m, StmtImport):
-		m = m.module
-
-	for imp_id in m.imports:
-		imp = m.imports[imp_id]
+def print_imports(imports):
+	for imp_id in imports:
+		out("\n; ?? %s ??" % imp_id)
+		imp = imports[imp_id]
 		print_included(imp)
-		print_imports(imp)
+		print_imports(imp.module.imports)
+
+		out("\n; from import")
 
 		for d in imp.module.defs:
 			if is_private(d):
@@ -2633,6 +2650,8 @@ def print_imports(m):
 				print_def_type(d)
 			elif isinstance(d, StmtDefFunc):
 				print_decl_func(d)
+
+		out("\n; end from import")
 
 		#een(imp.defs, decl_only=True)
 
@@ -2647,13 +2666,18 @@ def print_module(m):
 
 	out("; MODULE: %s\n" % m.id)
 
+	out("\n; -- print lldeps --")
+	for d in cmodule.lldeps:
+		out("; -- %s" % get_id_str(d))
+	out("\n; -- end print lldeps --")
 	out("\n; -- print includes --")
 	print_included(m)
 	out("\n; -- end print includes --")
 
-	out("\n; -- print imports --")
-	print_imports(m)
-	out("\n; -- end print imports --")
+	out("\n; -- print imports '%s' --" % m.id)
+	out("\n; -- %d" % len(m.imports))
+	print_imports(m.imports)
+	out("\n; -- end print imports '%s' --" % m.id)
 
 	# печатаем декларации
 	# из экспортируемой части импортированных модулей

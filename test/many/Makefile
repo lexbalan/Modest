@@ -19,7 +19,9 @@ CM:
 
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.m
-	clang $(LLVMPREFIX)/main.ll
+	mcc -o $(LLVMPREFIX)/type -mbackend=llvm -funsafe $(INDIR)/type.m
+	mcc -o $(LLVMPREFIX)/value -mbackend=llvm -funsafe $(INDIR)/value.m
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/type.ll $(LLVMPREFIX)/value.ll
 
 
 C:
