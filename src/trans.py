@@ -2027,15 +2027,6 @@ def do_stmt_block(x, parent=None):
 
 
 
-# нужно добавлять префикс к сущности
-# наличие поля prefix дает принтеру знать что нужно декорировать имя
-def dont_need_decoration(x):
-	c0 = x['access_modifier'] == 'private'
-	c1 = is_nodecorate(x)
-	c2 = 'module_nodecorate' in cmodule.att
-	return c0 or c1 or c2
-
-
 
 def type_update(dst, src):
 	# За каким то **** это работает... Ура.
@@ -2087,8 +2078,6 @@ def def_type(x):
 	nt.parent = cmodule  # добавляем заново тк очистили его выше!
 	nt.ti_def = id.ti
 
-	if not dont_need_decoration(x):
-		nt.id.need_decoration = True
 
 	if not ('do_not_include' in cmodule.att):
 		# В случае когда не печатаем typedef явно (!)
@@ -2124,9 +2113,6 @@ def def_const(x):
 
 	const_value.parent = cmodule
 	const_value.definition = definition
-
-	if not dont_need_decoration(x):
-		const_value.id.need_decoration = True
 
 	return definition
 
@@ -2534,7 +2520,7 @@ def do_directive(x):
 			#print("ADD do_not_include to %s" % cmodule.id)
 			cmodule.att.append('do_not_include')
 		elif s0 == 'module_nodecorate':
-			cmodule.att.append('module_nodecorate')
+			cmodule.att.append('nodecorate')
 		elif s0 == 'c_include':
 			return StmtDirectiveCInclude(args[1])
 		elif s0 == 'c_no_print':

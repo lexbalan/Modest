@@ -5,13 +5,12 @@ from .entity import Entity
 class Id(Entity):
 	def __init__(self, x=None):
 		super().__init__(None)
+
 		self.str = None
 
 		if x != None:
 			self.str = x['str']
 			self.ti = x['ti']
-
-		self.need_decoration = False
 
 		self.c = None
 		self.llvm = None
