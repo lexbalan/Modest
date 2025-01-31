@@ -107,90 +107,90 @@ break_2:
 
 ; -- print includes --
 ; from included ctypes64
-%ctypes64_Str = type %Str8;
-%ctypes64_Char = type %Char8;
-%ctypes64_ConstChar = type %ctypes64_Char;
-%ctypes64_SignedChar = type %Int8;
-%ctypes64_UnsignedChar = type %Int8;
-%ctypes64_Short = type %Int16;
-%ctypes64_UnsignedShort = type %Int16;
-%ctypes64_Int = type %Int32;
-%ctypes64_UnsignedInt = type %Int32;
-%ctypes64_LongInt = type %Int64;
-%ctypes64_UnsignedLongInt = type %Int64;
-%ctypes64_Long = type %Int64;
-%ctypes64_UnsignedLong = type %Int64;
-%ctypes64_LongLong = type %Int64;
-%ctypes64_UnsignedLongLong = type %Int64;
-%ctypes64_LongLongInt = type %Int64;
-%ctypes64_UnsignedLongLongInt = type %Int64;
-%ctypes64_Float = type double;
-%ctypes64_Double = type double;
-%ctypes64_LongDouble = type double;
-%ctypes64_SizeT = type %ctypes64_UnsignedLongInt;
-%ctypes64_SSizeT = type %ctypes64_LongInt;
-%ctypes64_IntPtrT = type %Int64;
-%ctypes64_PtrDiffT = type i8*;
-%ctypes64_OffT = type %Int64;
-%ctypes64_USecondsT = type %Int32;
-%ctypes64_PIDT = type %Int32;
-%ctypes64_UIDT = type %Int32;
-%ctypes64_GIDT = type %Int32;
+%Str = type %Str8;
+%Char = type %Char8;
+%ConstChar = type %Char;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
+%IntPtrT = type %Int64;
+%PtrDiffT = type i8*;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%stdio_File = type %Int8;
-%stdio_FposT = type %Int8;
-%stdio_CharStr = type %ctypes64_Str;
-%stdio_ConstCharStr = type %stdio_CharStr;
-declare %ctypes64_Int @fclose(%stdio_File* %f)
-declare %ctypes64_Int @feof(%stdio_File* %f)
-declare %ctypes64_Int @ferror(%stdio_File* %f)
-declare %ctypes64_Int @fflush(%stdio_File* %f)
-declare %ctypes64_Int @fgetpos(%stdio_File* %f, %stdio_FposT* %pos)
-declare %stdio_File* @fopen(%stdio_ConstCharStr* %fname, %stdio_ConstCharStr* %mode)
-declare %ctypes64_SizeT @fread(i8* %buf, %ctypes64_SizeT %size, %ctypes64_SizeT %count, %stdio_File* %f)
-declare %ctypes64_SizeT @fwrite(i8* %buf, %ctypes64_SizeT %size, %ctypes64_SizeT %count, %stdio_File* %f)
-declare %stdio_File* @freopen(%stdio_ConstCharStr* %fname, %stdio_ConstCharStr* %mode, %stdio_File* %f)
-declare %ctypes64_Int @fseek(%stdio_File* %f, %ctypes64_LongInt %offset, %ctypes64_Int %whence)
-declare %ctypes64_Int @fsetpos(%stdio_File* %f, %stdio_FposT* %pos)
-declare %ctypes64_LongInt @ftell(%stdio_File* %f)
-declare %ctypes64_Int @remove(%stdio_ConstCharStr* %fname)
-declare %ctypes64_Int @rename(%stdio_ConstCharStr* %old_filename, %stdio_ConstCharStr* %new_filename)
-declare void @rewind(%stdio_File* %f)
-declare void @setbuf(%stdio_File* %f, %stdio_CharStr* %buf)
-declare %ctypes64_Int @setvbuf(%stdio_File* %f, %stdio_CharStr* %buf, %ctypes64_Int %mode, %ctypes64_SizeT %size)
-declare %stdio_File* @tmpfile()
-declare %stdio_CharStr* @tmpnam(%stdio_CharStr* %str)
-declare %ctypes64_Int @printf(%stdio_ConstCharStr* %s, ...)
-declare %ctypes64_Int @scanf(%stdio_ConstCharStr* %s, ...)
-declare %ctypes64_Int @fprintf(%stdio_File* %f, %ctypes64_Str* %format, ...)
-declare %ctypes64_Int @fscanf(%stdio_File* %f, %stdio_ConstCharStr* %format, ...)
-declare %ctypes64_Int @sscanf(%stdio_ConstCharStr* %buf, %stdio_ConstCharStr* %format, ...)
-declare %ctypes64_Int @sprintf(%stdio_CharStr* %buf, %stdio_ConstCharStr* %format, ...)
-declare %ctypes64_Int @vfprintf(%stdio_File* %f, %stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @vprintf(%stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @vsprintf(%stdio_CharStr* %str, %stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @vsnprintf(%stdio_CharStr* %str, %ctypes64_SizeT %n, %stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @__vsnprintf_chk(%stdio_CharStr* %dest, %ctypes64_SizeT %len, %ctypes64_Int %flags, %ctypes64_SizeT %dstlen, %stdio_ConstCharStr* %format, i8* %arg)
-declare %ctypes64_Int @fgetc(%stdio_File* %f)
-declare %ctypes64_Int @fputc(%ctypes64_Int %char, %stdio_File* %f)
-declare %stdio_CharStr* @fgets(%stdio_CharStr* %str, %ctypes64_Int %n, %stdio_File* %f)
-declare %ctypes64_Int @fputs(%stdio_ConstCharStr* %str, %stdio_File* %f)
-declare %ctypes64_Int @getc(%stdio_File* %f)
-declare %ctypes64_Int @getchar()
-declare %stdio_CharStr* @gets(%stdio_CharStr* %str)
-declare %ctypes64_Int @putc(%ctypes64_Int %char, %stdio_File* %f)
-declare %ctypes64_Int @putchar(%ctypes64_Int %char)
-declare %ctypes64_Int @puts(%stdio_ConstCharStr* %str)
-declare %ctypes64_Int @ungetc(%ctypes64_Int %char, %stdio_File* %f)
-declare void @perror(%stdio_ConstCharStr* %str)
+%File = type %Int8;
+%FposT = type %Int8;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
+declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %fname)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%File* %f)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
+declare %File* @tmpfile()
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
+declare %CharStr* @gets(%CharStr* %str)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
+declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 1
 ; ?? mem ??
 ; from import
-declare void @memory_zero(i8* %mem, %Int64 %len)
-declare void @memory_copy(i8* %dst, i8* %src, %Int64 %len)
-declare %Bool @memory_eq(i8* %mem0, i8* %mem1, %Int64 %len)
+declare void @zero(i8* %mem, %Int64 %len)
+declare void @copy(i8* %dst, i8* %src, %Int64 %len)
+declare %Bool @eq(i8* %mem0, i8* %mem1, %Int64 %len)
 ; end from import
 ; -- end print imports 'main' --
 ; -- strings --
@@ -206,8 +206,8 @@ declare %Bool @memory_eq(i8* %mem0, i8* %mem1, %Int64 %len)
 	%Int32
 };
 
-define %ctypes64_Int @main() {
-	%1 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+define %Int @main() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Object, align 128
 	%3 = alloca %Object, align 128
 	%4 = insertvalue [32 x %Char8] zeroinitializer, %Char8 74, 0
@@ -221,18 +221,18 @@ define %ctypes64_Int @main() {
 	%12 = insertvalue %Object %8, [32 x %Char8] %11, 1
 	%13 = insertvalue %Object %12, %Int32 30, 2
 	store %Object %13, %Object* %2
-	%14 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 128)
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 128)
 	%15 = bitcast %Object* %3 to i8*
 	%16 = bitcast %Object* %2 to i8*
-	call void @memory_copy(i8* %15, i8* %16, %Int64 128)
+	call void @copy(i8* %15, i8* %16, %Int64 128)
 	%17 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 0
-	%18 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), [32 x %Char8]* %17)
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), [32 x %Char8]* %17)
 	%19 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 1
-	%20 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([17 x i8]* @str4 to [0 x i8]*), [32 x %Char8]* %19)
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str4 to [0 x i8]*), [32 x %Char8]* %19)
 	%21 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 2
 	%22 = load %Int32, %Int32* %21
-	%23 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Int32 %22)
-	ret %ctypes64_Int 0
+	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Int32 %22)
+	ret %Int 0
 }
 
 

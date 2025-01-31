@@ -114,7 +114,6 @@ class Type(Entity):
 
 
 
-
 	# (this) type is VLA - variable langth array
 	# [n]Int32 -> True, [][n]Int32 -> False
 	def is_vla(self):
@@ -140,7 +139,7 @@ class Type(Entity):
 		return self.is_array() or self.is_record()
 
 	def is_simple(self):
-		return not self.is_composite()
+		return not (self.is_composite() or self.is_func() or self.is_pointer())
 
 	def is_nil(self):
 		return False

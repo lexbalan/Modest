@@ -114,7 +114,7 @@ break_2:
 ; -- endstrings --
 
 ; декодирует символ UTF-32 в последовательность UTF-8
-define %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {
+define %Int8 @utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {
 	%1 = bitcast %Char32 %c to %Int32
 	%2 = icmp ule %Int32 %1, 127
 	br %Bool %2 , label %then_0, label %else_0
@@ -221,7 +221,7 @@ endif_0:
 
 
 ; returns n-symbols from input stream
-define %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result) {
+define %Int8 @utf16_to_utf32([0 x %Char16]* %c, %Char32* %result) {
 	%1 = getelementptr [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 0
 	%2 = load %Char16, %Char16* %1
 	%3 = zext %Char16 %2 to %Int32

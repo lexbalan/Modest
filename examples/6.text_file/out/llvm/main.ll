@@ -107,303 +107,303 @@ break_2:
 
 ; -- print includes --
 ; from included ctypes64
-%ctypes64_Str = type %Str8;
-%ctypes64_Char = type %Char8;
-%ctypes64_ConstChar = type %ctypes64_Char;
-%ctypes64_SignedChar = type %Int8;
-%ctypes64_UnsignedChar = type %Int8;
-%ctypes64_Short = type %Int16;
-%ctypes64_UnsignedShort = type %Int16;
-%ctypes64_Int = type %Int32;
-%ctypes64_UnsignedInt = type %Int32;
-%ctypes64_LongInt = type %Int64;
-%ctypes64_UnsignedLongInt = type %Int64;
-%ctypes64_Long = type %Int64;
-%ctypes64_UnsignedLong = type %Int64;
-%ctypes64_LongLong = type %Int64;
-%ctypes64_UnsignedLongLong = type %Int64;
-%ctypes64_LongLongInt = type %Int64;
-%ctypes64_UnsignedLongLongInt = type %Int64;
-%ctypes64_Float = type double;
-%ctypes64_Double = type double;
-%ctypes64_LongDouble = type double;
-%ctypes64_SizeT = type %ctypes64_UnsignedLongInt;
-%ctypes64_SSizeT = type %ctypes64_LongInt;
-%ctypes64_IntPtrT = type %Int64;
-%ctypes64_PtrDiffT = type i8*;
-%ctypes64_OffT = type %Int64;
-%ctypes64_USecondsT = type %Int32;
-%ctypes64_PIDT = type %Int32;
-%ctypes64_UIDT = type %Int32;
-%ctypes64_GIDT = type %Int32;
+%Str = type %Str8;
+%Char = type %Char8;
+%ConstChar = type %Char;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
+%IntPtrT = type %Int64;
+%PtrDiffT = type i8*;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%stdio_File = type %Int8;
-%stdio_FposT = type %Int8;
-%stdio_CharStr = type %ctypes64_Str;
-%stdio_ConstCharStr = type %stdio_CharStr;
-declare %ctypes64_Int @fclose(%stdio_File* %f)
-declare %ctypes64_Int @feof(%stdio_File* %f)
-declare %ctypes64_Int @ferror(%stdio_File* %f)
-declare %ctypes64_Int @fflush(%stdio_File* %f)
-declare %ctypes64_Int @fgetpos(%stdio_File* %f, %stdio_FposT* %pos)
-declare %stdio_File* @fopen(%stdio_ConstCharStr* %fname, %stdio_ConstCharStr* %mode)
-declare %ctypes64_SizeT @fread(i8* %buf, %ctypes64_SizeT %size, %ctypes64_SizeT %count, %stdio_File* %f)
-declare %ctypes64_SizeT @fwrite(i8* %buf, %ctypes64_SizeT %size, %ctypes64_SizeT %count, %stdio_File* %f)
-declare %stdio_File* @freopen(%stdio_ConstCharStr* %fname, %stdio_ConstCharStr* %mode, %stdio_File* %f)
-declare %ctypes64_Int @fseek(%stdio_File* %f, %ctypes64_LongInt %offset, %ctypes64_Int %whence)
-declare %ctypes64_Int @fsetpos(%stdio_File* %f, %stdio_FposT* %pos)
-declare %ctypes64_LongInt @ftell(%stdio_File* %f)
-declare %ctypes64_Int @remove(%stdio_ConstCharStr* %fname)
-declare %ctypes64_Int @rename(%stdio_ConstCharStr* %old_filename, %stdio_ConstCharStr* %new_filename)
-declare void @rewind(%stdio_File* %f)
-declare void @setbuf(%stdio_File* %f, %stdio_CharStr* %buf)
-declare %ctypes64_Int @setvbuf(%stdio_File* %f, %stdio_CharStr* %buf, %ctypes64_Int %mode, %ctypes64_SizeT %size)
-declare %stdio_File* @tmpfile()
-declare %stdio_CharStr* @tmpnam(%stdio_CharStr* %str)
-declare %ctypes64_Int @printf(%stdio_ConstCharStr* %s, ...)
-declare %ctypes64_Int @scanf(%stdio_ConstCharStr* %s, ...)
-declare %ctypes64_Int @fprintf(%stdio_File* %f, %ctypes64_Str* %format, ...)
-declare %ctypes64_Int @fscanf(%stdio_File* %f, %stdio_ConstCharStr* %format, ...)
-declare %ctypes64_Int @sscanf(%stdio_ConstCharStr* %buf, %stdio_ConstCharStr* %format, ...)
-declare %ctypes64_Int @sprintf(%stdio_CharStr* %buf, %stdio_ConstCharStr* %format, ...)
-declare %ctypes64_Int @vfprintf(%stdio_File* %f, %stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @vprintf(%stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @vsprintf(%stdio_CharStr* %str, %stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @vsnprintf(%stdio_CharStr* %str, %ctypes64_SizeT %n, %stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @__vsnprintf_chk(%stdio_CharStr* %dest, %ctypes64_SizeT %len, %ctypes64_Int %flags, %ctypes64_SizeT %dstlen, %stdio_ConstCharStr* %format, i8* %arg)
-declare %ctypes64_Int @fgetc(%stdio_File* %f)
-declare %ctypes64_Int @fputc(%ctypes64_Int %char, %stdio_File* %f)
-declare %stdio_CharStr* @fgets(%stdio_CharStr* %str, %ctypes64_Int %n, %stdio_File* %f)
-declare %ctypes64_Int @fputs(%stdio_ConstCharStr* %str, %stdio_File* %f)
-declare %ctypes64_Int @getc(%stdio_File* %f)
-declare %ctypes64_Int @getchar()
-declare %stdio_CharStr* @gets(%stdio_CharStr* %str)
-declare %ctypes64_Int @putc(%ctypes64_Int %char, %stdio_File* %f)
-declare %ctypes64_Int @putchar(%ctypes64_Int %char)
-declare %ctypes64_Int @puts(%stdio_ConstCharStr* %str)
-declare %ctypes64_Int @ungetc(%ctypes64_Int %char, %stdio_File* %f)
-declare void @perror(%stdio_ConstCharStr* %str)
+%File = type %Int8;
+%FposT = type %Int8;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
+declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %fname)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%File* %f)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
+declare %File* @tmpfile()
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
+declare %CharStr* @gets(%CharStr* %str)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
+declare void @perror(%ConstCharStr* %str)
 ; from included stdlib
 declare void @abort()
-declare %ctypes64_Int @abs(%ctypes64_Int %x)
-declare %ctypes64_Int @atexit(void ()* %x)
-declare %ctypes64_Double @atof([0 x %ctypes64_ConstChar]* %nptr)
-declare %ctypes64_Int @atoi([0 x %ctypes64_ConstChar]* %nptr)
-declare %ctypes64_LongInt @atol([0 x %ctypes64_ConstChar]* %nptr)
-declare i8* @calloc(%ctypes64_SizeT %num, %ctypes64_SizeT %size)
-declare void @exit(%ctypes64_Int %x)
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
+declare i8* @calloc(%SizeT %num, %SizeT %size)
+declare void @exit(%Int %x)
 declare void @free(i8* %ptr)
-declare %ctypes64_Str* @getenv(%ctypes64_Str* %name)
-declare %ctypes64_LongInt @labs(%ctypes64_LongInt %x)
-declare %ctypes64_Str* @secure_getenv(%ctypes64_Str* %name)
-declare i8* @malloc(%ctypes64_SizeT %size)
-declare %ctypes64_Int @system([0 x %ctypes64_ConstChar]* %string)
+declare %Str* @getenv(%Str* %name)
+declare %LongInt @labs(%LongInt %x)
+declare %Str* @secure_getenv(%Str* %name)
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
 ; from included string
-declare i8* @memset(i8* %mem, %ctypes64_Int %c, %ctypes64_SizeT %n)
-declare i8* @memcpy(i8* %dst, i8* %src, %ctypes64_SizeT %len)
-declare i8* @memmove(i8* %dst, i8* %src, %ctypes64_SizeT %n)
-declare %ctypes64_Int @memcmp(i8* %p0, i8* %p1, %ctypes64_SizeT %num)
-declare %ctypes64_Int @strncmp([0 x %ctypes64_ConstChar]* %s1, [0 x %ctypes64_ConstChar]* %s2, %ctypes64_SizeT %n)
-declare %ctypes64_Int @strcmp([0 x %ctypes64_ConstChar]* %s1, [0 x %ctypes64_ConstChar]* %s2)
-declare [0 x %ctypes64_Char]* @strcpy([0 x %ctypes64_Char]* %dst, [0 x %ctypes64_ConstChar]* %src)
-declare %ctypes64_SizeT @strlen([0 x %ctypes64_ConstChar]* %s)
-declare [0 x %ctypes64_Char]* @strcat([0 x %ctypes64_Char]* %s1, [0 x %ctypes64_ConstChar]* %s2)
-declare [0 x %ctypes64_Char]* @strncat([0 x %ctypes64_Char]* %s1, [0 x %ctypes64_ConstChar]* %s2, %ctypes64_SizeT %n)
-declare [0 x %ctypes64_Char]* @strerror(%ctypes64_Int %error)
+declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
+declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
+declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
+declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
+declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
+declare %SizeT @strlen([0 x %ConstChar]* %s)
+declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare [0 x %Char]* @strerror(%Int %error)
 ; from included time
-%time_TimeT = type %Int32;
-%time_ClockT = type %ctypes64_UnsignedLong;
-%time_StructTM = type {
-	%ctypes64_Int,
-	%ctypes64_Int,
-	%ctypes64_Int,
-	%ctypes64_Int,
-	%ctypes64_Int,
-	%ctypes64_Int,
-	%ctypes64_Int,
-	%ctypes64_Int,
-	%ctypes64_Int,
-	%ctypes64_LongInt,
-	%ctypes64_ConstChar*
+%TimeT = type %Int32;
+%ClockT = type %UnsignedLong;
+%StructTM = type {
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%LongInt,
+	%ConstChar*
 };
 
-declare %time_ClockT @clock()
-declare %ctypes64_Double @difftime(%time_TimeT %end, %time_TimeT %beginning)
-declare %time_TimeT @mktime(%time_StructTM* %timeptr)
-declare %time_TimeT @time(%time_TimeT* %timer)
-declare %ctypes64_Char* @asctime(%time_StructTM* %timeptr)
-declare %ctypes64_Char* @ctime(%time_TimeT* %timer)
-declare %time_StructTM* @gmtime(%time_TimeT* %timer)
-declare %time_StructTM* @localtime(%time_TimeT* %timer)
-declare %ctypes64_SizeT @strftime(%ctypes64_Char* %ptr, %ctypes64_SizeT %maxsize, %ctypes64_ConstChar* %format, %time_StructTM* %timeptr)
-declare %time_StructTM* @localtime_s(%time_TimeT* %timer, %time_StructTM* %tmptr)
-declare %time_StructTM* @localtime_r(%time_TimeT* %timer, %time_StructTM* %tmptr)
+declare %ClockT @clock()
+declare %Double @difftime(%TimeT %end, %TimeT %beginning)
+declare %TimeT @mktime(%StructTM* %timeptr)
+declare %TimeT @time(%TimeT* %timer)
+declare %Char* @asctime(%StructTM* %timeptr)
+declare %Char* @ctime(%TimeT* %timer)
+declare %StructTM* @gmtime(%TimeT* %timer)
+declare %StructTM* @localtime(%TimeT* %timer)
+declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
+declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
+declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
 ; from included unistd
-declare %ctypes64_Int @access([0 x %ctypes64_ConstChar]* %path, %ctypes64_Int %amode)
-declare %ctypes64_UnsignedInt @alarm(%ctypes64_UnsignedInt %seconds)
-declare %ctypes64_Int @brk(i8* %end_data_segment)
-declare %ctypes64_Int @chdir([0 x %ctypes64_ConstChar]* %path)
-declare %ctypes64_Int @chroot([0 x %ctypes64_ConstChar]* %path)
-declare %ctypes64_Int @chown([0 x %ctypes64_ConstChar]* %pathname, %ctypes64_UIDT %owner, %ctypes64_GIDT %group)
-declare %ctypes64_Int @close(%ctypes64_Int %fildes)
-declare %ctypes64_SizeT @confstr(%ctypes64_Int %name, [0 x %ctypes64_Char]* %buf, %ctypes64_SizeT %len)
-declare [0 x %ctypes64_Char]* @crypt([0 x %ctypes64_ConstChar]* %key, [0 x %ctypes64_ConstChar]* %salt)
-declare [0 x %ctypes64_Char]* @ctermid([0 x %ctypes64_Char]* %s)
-declare [0 x %ctypes64_Char]* @cuserid([0 x %ctypes64_Char]* %s)
-declare %ctypes64_Int @dup(%ctypes64_Int %fildes)
-declare %ctypes64_Int @dup2(%ctypes64_Int %fildes, %ctypes64_Int %fildes2)
-declare void @encrypt([64 x %ctypes64_Char]* %block, %ctypes64_Int %edflag)
-declare %ctypes64_Int @execl([0 x %ctypes64_ConstChar]* %path, [0 x %ctypes64_ConstChar]* %arg0, ...)
-declare %ctypes64_Int @execle([0 x %ctypes64_ConstChar]* %path, [0 x %ctypes64_ConstChar]* %arg0, ...)
-declare %ctypes64_Int @execlp([0 x %ctypes64_ConstChar]* %file, [0 x %ctypes64_ConstChar]* %arg0, ...)
-declare %ctypes64_Int @execv([0 x %ctypes64_ConstChar]* %path, [0 x %ctypes64_ConstChar]* %argv)
-declare %ctypes64_Int @execve([0 x %ctypes64_ConstChar]* %path, [0 x %ctypes64_ConstChar]* %argv, [0 x %ctypes64_ConstChar]* %envp)
-declare %ctypes64_Int @execvp([0 x %ctypes64_ConstChar]* %file, [0 x %ctypes64_ConstChar]* %argv)
-declare void @_exit(%ctypes64_Int %status)
-declare %ctypes64_Int @fchown(%ctypes64_Int %fildes, %ctypes64_UIDT %owner, %ctypes64_GIDT %group)
-declare %ctypes64_Int @fchdir(%ctypes64_Int %fildes)
-declare %ctypes64_Int @fdatasync(%ctypes64_Int %fildes)
-declare %ctypes64_PIDT @fork()
-declare %ctypes64_LongInt @fpathconf(%ctypes64_Int %fildes, %ctypes64_Int %name)
-declare %ctypes64_Int @fsync(%ctypes64_Int %fildes)
-declare %ctypes64_Int @ftruncate(%ctypes64_Int %fildes, %ctypes64_OffT %length)
-declare [0 x %ctypes64_Char]* @getcwd([0 x %ctypes64_Char]* %buf, %ctypes64_SizeT %size)
-declare %ctypes64_Int @getdtablesize()
-declare %ctypes64_GIDT @getegid()
-declare %ctypes64_UIDT @geteuid()
-declare %ctypes64_GIDT @getgid()
-declare %ctypes64_Int @getgroups(%ctypes64_Int %gidsetsize, [0 x %ctypes64_GIDT]* %grouplist)
-declare %ctypes64_Long @gethostid()
-declare [0 x %ctypes64_Char]* @getlogin()
-declare %ctypes64_Int @getlogin_r([0 x %ctypes64_Char]* %name, %ctypes64_SizeT %namesize)
-declare %ctypes64_Int @getopt(%ctypes64_Int %argc, [0 x %ctypes64_ConstChar]* %argv, [0 x %ctypes64_ConstChar]* %optstring)
-declare %ctypes64_Int @getpagesize()
-declare [0 x %ctypes64_Char]* @getpass([0 x %ctypes64_ConstChar]* %prompt)
-declare %ctypes64_PIDT @getpgid(%ctypes64_PIDT %pid)
-declare %ctypes64_PIDT @getpgrp()
-declare %ctypes64_PIDT @getpid()
-declare %ctypes64_PIDT @getppid()
-declare %ctypes64_PIDT @getsid(%ctypes64_PIDT %pid)
-declare %ctypes64_UIDT @getuid()
-declare [0 x %ctypes64_Char]* @getwd([0 x %ctypes64_Char]* %path_name)
-declare %ctypes64_Int @isatty(%ctypes64_Int %fildes)
-declare %ctypes64_Int @lchown([0 x %ctypes64_ConstChar]* %path, %ctypes64_UIDT %owner, %ctypes64_GIDT %group)
-declare %ctypes64_Int @link([0 x %ctypes64_ConstChar]* %path1, [0 x %ctypes64_ConstChar]* %path2)
-declare %ctypes64_Int @lockf(%ctypes64_Int %fildes, %ctypes64_Int %function, %ctypes64_OffT %size)
-declare %ctypes64_OffT @lseek(%ctypes64_Int %fildes, %ctypes64_OffT %offset, %ctypes64_Int %whence)
-declare %ctypes64_Int @nice(%ctypes64_Int %incr)
-declare %ctypes64_LongInt @pathconf([0 x %ctypes64_ConstChar]* %path, %ctypes64_Int %name)
-declare %ctypes64_Int @pause()
-declare %ctypes64_Int @pipe([2 x %ctypes64_Int]* %fildes)
-declare %ctypes64_SSizeT @pread(%ctypes64_Int %fildes, i8* %buf, %ctypes64_SizeT %nbyte, %ctypes64_OffT %offset)
-declare %ctypes64_Int @pthread_atfork(void ()* %prepare, void ()* %parent, void ()* %child)
-declare %ctypes64_SSizeT @pwrite(%ctypes64_Int %fildes, i8* %buf, %ctypes64_SizeT %nbyte, %ctypes64_OffT %offset)
-declare %ctypes64_SSizeT @read(%ctypes64_Int %fildes, i8* %buf, %ctypes64_SizeT %nbyte)
-declare %ctypes64_Int @readlink([0 x %ctypes64_ConstChar]* %path, [0 x %ctypes64_Char]* %buf, %ctypes64_SizeT %bufsize)
-declare %ctypes64_Int @rmdir([0 x %ctypes64_ConstChar]* %path)
-declare i8* @sbrk(%ctypes64_IntPtrT %incr)
-declare %ctypes64_Int @setgid(%ctypes64_GIDT %gid)
-declare %ctypes64_Int @setpgid(%ctypes64_PIDT %pid, %ctypes64_PIDT %pgid)
-declare %ctypes64_PIDT @setpgrp()
-declare %ctypes64_Int @setregid(%ctypes64_GIDT %rgid, %ctypes64_GIDT %egid)
-declare %ctypes64_Int @setreuid(%ctypes64_UIDT %ruid, %ctypes64_UIDT %euid)
-declare %ctypes64_PIDT @setsid()
-declare %ctypes64_Int @setuid(%ctypes64_UIDT %uid)
-declare %ctypes64_UnsignedInt @sleep(%ctypes64_UnsignedInt %seconds)
-declare void @swab(i8* %src, i8* %dst, %ctypes64_SSizeT %nbytes)
-declare %ctypes64_Int @symlink([0 x %ctypes64_ConstChar]* %path1, [0 x %ctypes64_ConstChar]* %path2)
+declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
+declare %UnsignedInt @alarm(%UnsignedInt %seconds)
+declare %Int @brk(i8* %end_data_segment)
+declare %Int @chdir([0 x %ConstChar]* %path)
+declare %Int @chroot([0 x %ConstChar]* %path)
+declare %Int @chown([0 x %ConstChar]* %pathname, %UIDT %owner, %GIDT %group)
+declare %Int @close(%Int %fildes)
+declare %SizeT @confstr(%Int %name, [0 x %Char]* %buf, %SizeT %len)
+declare [0 x %Char]* @crypt([0 x %ConstChar]* %key, [0 x %ConstChar]* %salt)
+declare [0 x %Char]* @ctermid([0 x %Char]* %s)
+declare [0 x %Char]* @cuserid([0 x %Char]* %s)
+declare %Int @dup(%Int %fildes)
+declare %Int @dup2(%Int %fildes, %Int %fildes2)
+declare void @encrypt([64 x %Char]* %block, %Int %edflag)
+declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
+declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
+declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
+declare void @_exit(%Int %status)
+declare %Int @fchown(%Int %fildes, %UIDT %owner, %GIDT %group)
+declare %Int @fchdir(%Int %fildes)
+declare %Int @fdatasync(%Int %fildes)
+declare %PIDT @fork()
+declare %LongInt @fpathconf(%Int %fildes, %Int %name)
+declare %Int @fsync(%Int %fildes)
+declare %Int @ftruncate(%Int %fildes, %OffT %length)
+declare [0 x %Char]* @getcwd([0 x %Char]* %buf, %SizeT %size)
+declare %Int @getdtablesize()
+declare %GIDT @getegid()
+declare %UIDT @geteuid()
+declare %GIDT @getgid()
+declare %Int @getgroups(%Int %gidsetsize, [0 x %GIDT]* %grouplist)
+declare %Long @gethostid()
+declare [0 x %Char]* @getlogin()
+declare %Int @getlogin_r([0 x %Char]* %name, %SizeT %namesize)
+declare %Int @getopt(%Int %argc, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %optstring)
+declare %Int @getpagesize()
+declare [0 x %Char]* @getpass([0 x %ConstChar]* %prompt)
+declare %PIDT @getpgid(%PIDT %pid)
+declare %PIDT @getpgrp()
+declare %PIDT @getpid()
+declare %PIDT @getppid()
+declare %PIDT @getsid(%PIDT %pid)
+declare %UIDT @getuid()
+declare [0 x %Char]* @getwd([0 x %Char]* %path_name)
+declare %Int @isatty(%Int %fildes)
+declare %Int @lchown([0 x %ConstChar]* %path, %UIDT %owner, %GIDT %group)
+declare %Int @link([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
+declare %Int @lockf(%Int %fildes, %Int %function, %OffT %size)
+declare %OffT @lseek(%Int %fildes, %OffT %offset, %Int %whence)
+declare %Int @nice(%Int %incr)
+declare %LongInt @pathconf([0 x %ConstChar]* %path, %Int %name)
+declare %Int @pause()
+declare %Int @pipe([2 x %Int]* %fildes)
+declare %SSizeT @pread(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
+declare %Int @pthread_atfork(void ()* %prepare, void ()* %parent, void ()* %child)
+declare %SSizeT @pwrite(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
+declare %SSizeT @read(%Int %fildes, i8* %buf, %SizeT %nbyte)
+declare %Int @readlink([0 x %ConstChar]* %path, [0 x %Char]* %buf, %SizeT %bufsize)
+declare %Int @rmdir([0 x %ConstChar]* %path)
+declare i8* @sbrk(%IntPtrT %incr)
+declare %Int @setgid(%GIDT %gid)
+declare %Int @setpgid(%PIDT %pid, %PIDT %pgid)
+declare %PIDT @setpgrp()
+declare %Int @setregid(%GIDT %rgid, %GIDT %egid)
+declare %Int @setreuid(%UIDT %ruid, %UIDT %euid)
+declare %PIDT @setsid()
+declare %Int @setuid(%UIDT %uid)
+declare %UnsignedInt @sleep(%UnsignedInt %seconds)
+declare void @swab(i8* %src, i8* %dst, %SSizeT %nbytes)
+declare %Int @symlink([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
 declare void @sync()
-declare %ctypes64_LongInt @sysconf(%ctypes64_Int %name)
-declare %ctypes64_PIDT @tcgetpgrp(%ctypes64_Int %fildes)
-declare %ctypes64_Int @tcsetpgrp(%ctypes64_Int %fildes, %ctypes64_PIDT %pgid_id)
-declare %ctypes64_Int @truncate([0 x %ctypes64_ConstChar]* %path, %ctypes64_OffT %length)
-declare [0 x %ctypes64_Char]* @ttyname(%ctypes64_Int %fildes)
-declare %ctypes64_Int @ttyname_r(%ctypes64_Int %fildes, [0 x %ctypes64_Char]* %name, %ctypes64_SizeT %namesize)
-declare %ctypes64_USecondsT @ualarm(%ctypes64_USecondsT %useconds, %ctypes64_USecondsT %interval)
-declare %ctypes64_Int @unlink([0 x %ctypes64_ConstChar]* %path)
-declare %ctypes64_Int @usleep(%ctypes64_USecondsT %useconds)
-declare %ctypes64_PIDT @vfork()
-declare %ctypes64_SSizeT @write(%ctypes64_Int %fildes, i8* %buf, %ctypes64_SizeT %nbyte)
+declare %LongInt @sysconf(%Int %name)
+declare %PIDT @tcgetpgrp(%Int %fildes)
+declare %Int @tcsetpgrp(%Int %fildes, %PIDT %pgid_id)
+declare %Int @truncate([0 x %ConstChar]* %path, %OffT %length)
+declare [0 x %Char]* @ttyname(%Int %fildes)
+declare %Int @ttyname_r(%Int %fildes, [0 x %Char]* %name, %SizeT %namesize)
+declare %USecondsT @ualarm(%USecondsT %useconds, %USecondsT %interval)
+declare %Int @unlink([0 x %ConstChar]* %path)
+declare %Int @usleep(%USecondsT %useconds)
+declare %PIDT @vfork()
+declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; from included math
-declare %ctypes64_Double @acos(%ctypes64_Double %x)
-declare %ctypes64_Double @asin(%ctypes64_Double %x)
-declare %ctypes64_Double @atan(%ctypes64_Double %x)
-declare %ctypes64_Double @atan2(%ctypes64_Double %a, %ctypes64_Double %b)
-declare %ctypes64_Double @cos(%ctypes64_Double %x)
-declare %ctypes64_Double @sin(%ctypes64_Double %x)
-declare %ctypes64_Double @tan(%ctypes64_Double %x)
-declare %ctypes64_Double @cosh(%ctypes64_Double %x)
-declare %ctypes64_Double @sinh(%ctypes64_Double %x)
-declare %ctypes64_Double @tanh(%ctypes64_Double %x)
-declare %ctypes64_Double @exp(%ctypes64_Double %x)
-declare %ctypes64_Double @frexp(%ctypes64_Double %a, %ctypes64_Int* %i)
-declare %ctypes64_Double @ldexp(%ctypes64_Double %a, %ctypes64_Int %i)
-declare %ctypes64_Double @log(%ctypes64_Double %x)
-declare %ctypes64_Double @log10(%ctypes64_Double %x)
-declare %ctypes64_Double @modf(%ctypes64_Double %a, %ctypes64_Double* %b)
-declare %ctypes64_Double @pow(%ctypes64_Double %a, %ctypes64_Double %b)
-declare %ctypes64_Double @sqrt(%ctypes64_Double %x)
-declare %ctypes64_Double @ceil(%ctypes64_Double %x)
-declare %ctypes64_Double @fabs(%ctypes64_Double %x)
-declare %ctypes64_Double @floor(%ctypes64_Double %x)
-declare %ctypes64_Double @fmod(%ctypes64_Double %a, %ctypes64_Double %b)
-declare %ctypes64_LongDouble @acosl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @asinl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @atanl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @atan2l(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @cosl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @sinl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @tanl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @acoshl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @asinhl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @atanhl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @coshl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @sinhl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @tanhl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @expl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @exp2l(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @expm1l(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @frexpl(%ctypes64_LongDouble %a, %ctypes64_Int* %i)
-declare %ctypes64_Int @ilogbl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @ldexpl(%ctypes64_LongDouble %a, %ctypes64_Int %i)
-declare %ctypes64_LongDouble @logl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @log10l(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @log1pl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @log2l(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @logbl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @modfl(%ctypes64_LongDouble %a, %ctypes64_LongDouble* %b)
-declare %ctypes64_LongDouble @scalbnl(%ctypes64_LongDouble %a, %ctypes64_Int %i)
-declare %ctypes64_LongDouble @scalblnl(%ctypes64_LongDouble %a, %ctypes64_LongInt %i)
-declare %ctypes64_LongDouble @cbrtl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @fabsl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @hypotl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @powl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @sqrtl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @erfl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @erfcl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @lgammal(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @tgammal(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @ceill(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @floorl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @nearbyintl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @rintl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongInt @lrintl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongLongInt @llrintl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @roundl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongInt @lroundl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongLongInt @llroundl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @truncl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @fmodl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @remainderl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @remquol(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b, %ctypes64_Int* %i)
-declare %ctypes64_LongDouble @copysignl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @nanl(%ctypes64_ConstChar* %x)
-declare %ctypes64_LongDouble @nextafterl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @nexttowardl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @fdiml(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @fmaxl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @fminl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @fmal(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b, %ctypes64_LongDouble %c)
+declare %Double @acos(%Double %x)
+declare %Double @asin(%Double %x)
+declare %Double @atan(%Double %x)
+declare %Double @atan2(%Double %a, %Double %b)
+declare %Double @cos(%Double %x)
+declare %Double @sin(%Double %x)
+declare %Double @tan(%Double %x)
+declare %Double @cosh(%Double %x)
+declare %Double @sinh(%Double %x)
+declare %Double @tanh(%Double %x)
+declare %Double @exp(%Double %x)
+declare %Double @frexp(%Double %a, %Int* %i)
+declare %Double @ldexp(%Double %a, %Int %i)
+declare %Double @log(%Double %x)
+declare %Double @log10(%Double %x)
+declare %Double @modf(%Double %a, %Double* %b)
+declare %Double @pow(%Double %a, %Double %b)
+declare %Double @sqrt(%Double %x)
+declare %Double @ceil(%Double %x)
+declare %Double @fabs(%Double %x)
+declare %Double @floor(%Double %x)
+declare %Double @fmod(%Double %a, %Double %b)
+declare %LongDouble @acosl(%LongDouble %x)
+declare %LongDouble @asinl(%LongDouble %x)
+declare %LongDouble @atanl(%LongDouble %x)
+declare %LongDouble @atan2l(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @cosl(%LongDouble %x)
+declare %LongDouble @sinl(%LongDouble %x)
+declare %LongDouble @tanl(%LongDouble %x)
+declare %LongDouble @acoshl(%LongDouble %x)
+declare %LongDouble @asinhl(%LongDouble %x)
+declare %LongDouble @atanhl(%LongDouble %x)
+declare %LongDouble @coshl(%LongDouble %x)
+declare %LongDouble @sinhl(%LongDouble %x)
+declare %LongDouble @tanhl(%LongDouble %x)
+declare %LongDouble @expl(%LongDouble %x)
+declare %LongDouble @exp2l(%LongDouble %x)
+declare %LongDouble @expm1l(%LongDouble %x)
+declare %LongDouble @frexpl(%LongDouble %a, %Int* %i)
+declare %Int @ilogbl(%LongDouble %x)
+declare %LongDouble @ldexpl(%LongDouble %a, %Int %i)
+declare %LongDouble @logl(%LongDouble %x)
+declare %LongDouble @log10l(%LongDouble %x)
+declare %LongDouble @log1pl(%LongDouble %x)
+declare %LongDouble @log2l(%LongDouble %x)
+declare %LongDouble @logbl(%LongDouble %x)
+declare %LongDouble @modfl(%LongDouble %a, %LongDouble* %b)
+declare %LongDouble @scalbnl(%LongDouble %a, %Int %i)
+declare %LongDouble @scalblnl(%LongDouble %a, %LongInt %i)
+declare %LongDouble @cbrtl(%LongDouble %x)
+declare %LongDouble @fabsl(%LongDouble %x)
+declare %LongDouble @hypotl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @powl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @sqrtl(%LongDouble %x)
+declare %LongDouble @erfl(%LongDouble %x)
+declare %LongDouble @erfcl(%LongDouble %x)
+declare %LongDouble @lgammal(%LongDouble %x)
+declare %LongDouble @tgammal(%LongDouble %x)
+declare %LongDouble @ceill(%LongDouble %x)
+declare %LongDouble @floorl(%LongDouble %x)
+declare %LongDouble @nearbyintl(%LongDouble %x)
+declare %LongDouble @rintl(%LongDouble %x)
+declare %LongInt @lrintl(%LongDouble %x)
+declare %LongLongInt @llrintl(%LongDouble %x)
+declare %LongDouble @roundl(%LongDouble %x)
+declare %LongInt @lroundl(%LongDouble %x)
+declare %LongLongInt @llroundl(%LongDouble %x)
+declare %LongDouble @truncl(%LongDouble %x)
+declare %LongDouble @fmodl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @remainderl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @remquol(%LongDouble %a, %LongDouble %b, %Int* %i)
+declare %LongDouble @copysignl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @nanl(%ConstChar* %x)
+declare %LongDouble @nextafterl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @nexttowardl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fdiml(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; from included libc
 ; -- end print includes --
 ; -- print imports 'main' --
@@ -425,54 +425,54 @@ declare %ctypes64_LongDouble @fmal(%ctypes64_LongDouble %a, %ctypes64_LongDouble
 ;include "libc/ctypes64"
 ;include "libc/stdio"
 define internal void @write_example() {
-	%1 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
-	%2 = call %stdio_File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %stdio_ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
-	%3 = icmp eq %stdio_File* %2, null
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
+	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
+	%3 = icmp eq %File* %2, null
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
-	%4 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = call %ctypes64_Int (%stdio_File*, %ctypes64_Str*, ...) @fprintf(%stdio_File* %2, %ctypes64_Str* bitcast ([12 x i8]* @str5 to [0 x i8]*))
-	%7 = call %ctypes64_Int @fclose(%stdio_File* %2)
+	%6 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([12 x i8]* @str5 to [0 x i8]*))
+	%7 = call %Int @fclose(%File* %2)
 	ret void
 }
 
 define internal void @read_example() {
-	%1 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
-	%2 = call %stdio_File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %stdio_ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-	%3 = icmp eq %stdio_File* %2, null
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
+	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+	%3 = icmp eq %File* %2, null
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
-	%4 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([29 x i8]* @str8 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str8 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([21 x i8]* @str9 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str9 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%7 = call %ctypes64_Int @fgetc(%stdio_File* %2)
-	%8 = icmp eq %ctypes64_Int %7, -1
+	%7 = call %Int @fgetc(%File* %2)
+	%8 = icmp eq %Int %7, -1
 	br %Bool %8 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
 	br label %endif_1
 endif_1:
-	%10 = call %ctypes64_Int @putchar(%ctypes64_Int %7)
+	%10 = call %Int @putchar(%Int %7)
 	br label %again_1
 break_1:
-	%11 = call %ctypes64_Int @fclose(%stdio_File* %2)
+	%11 = call %Int @fclose(%File* %2)
 	ret void
 }
 
-define %ctypes64_Int @main() {
-	%1 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*))
+define %Int @main() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*))
 	call void @write_example()
 	call void @read_example()
-	ret %ctypes64_Int 0
+	ret %Int 0
 }
 
 

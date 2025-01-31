@@ -107,162 +107,162 @@ break_2:
 
 ; -- print includes --
 ; from included ctypes64
-%ctypes64_Str = type %Str8;
-%ctypes64_Char = type %Char8;
-%ctypes64_ConstChar = type %ctypes64_Char;
-%ctypes64_SignedChar = type %Int8;
-%ctypes64_UnsignedChar = type %Int8;
-%ctypes64_Short = type %Int16;
-%ctypes64_UnsignedShort = type %Int16;
-%ctypes64_Int = type %Int32;
-%ctypes64_UnsignedInt = type %Int32;
-%ctypes64_LongInt = type %Int64;
-%ctypes64_UnsignedLongInt = type %Int64;
-%ctypes64_Long = type %Int64;
-%ctypes64_UnsignedLong = type %Int64;
-%ctypes64_LongLong = type %Int64;
-%ctypes64_UnsignedLongLong = type %Int64;
-%ctypes64_LongLongInt = type %Int64;
-%ctypes64_UnsignedLongLongInt = type %Int64;
-%ctypes64_Float = type double;
-%ctypes64_Double = type double;
-%ctypes64_LongDouble = type double;
-%ctypes64_SizeT = type %ctypes64_UnsignedLongInt;
-%ctypes64_SSizeT = type %ctypes64_LongInt;
-%ctypes64_IntPtrT = type %Int64;
-%ctypes64_PtrDiffT = type i8*;
-%ctypes64_OffT = type %Int64;
-%ctypes64_USecondsT = type %Int32;
-%ctypes64_PIDT = type %Int32;
-%ctypes64_UIDT = type %Int32;
-%ctypes64_GIDT = type %Int32;
+%Str = type %Str8;
+%Char = type %Char8;
+%ConstChar = type %Char;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
+%IntPtrT = type %Int64;
+%PtrDiffT = type i8*;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%stdio_File = type %Int8;
-%stdio_FposT = type %Int8;
-%stdio_CharStr = type %ctypes64_Str;
-%stdio_ConstCharStr = type %stdio_CharStr;
-declare %ctypes64_Int @fclose(%stdio_File* %f)
-declare %ctypes64_Int @feof(%stdio_File* %f)
-declare %ctypes64_Int @ferror(%stdio_File* %f)
-declare %ctypes64_Int @fflush(%stdio_File* %f)
-declare %ctypes64_Int @fgetpos(%stdio_File* %f, %stdio_FposT* %pos)
-declare %stdio_File* @fopen(%stdio_ConstCharStr* %fname, %stdio_ConstCharStr* %mode)
-declare %ctypes64_SizeT @fread(i8* %buf, %ctypes64_SizeT %size, %ctypes64_SizeT %count, %stdio_File* %f)
-declare %ctypes64_SizeT @fwrite(i8* %buf, %ctypes64_SizeT %size, %ctypes64_SizeT %count, %stdio_File* %f)
-declare %stdio_File* @freopen(%stdio_ConstCharStr* %fname, %stdio_ConstCharStr* %mode, %stdio_File* %f)
-declare %ctypes64_Int @fseek(%stdio_File* %f, %ctypes64_LongInt %offset, %ctypes64_Int %whence)
-declare %ctypes64_Int @fsetpos(%stdio_File* %f, %stdio_FposT* %pos)
-declare %ctypes64_LongInt @ftell(%stdio_File* %f)
-declare %ctypes64_Int @remove(%stdio_ConstCharStr* %fname)
-declare %ctypes64_Int @rename(%stdio_ConstCharStr* %old_filename, %stdio_ConstCharStr* %new_filename)
-declare void @rewind(%stdio_File* %f)
-declare void @setbuf(%stdio_File* %f, %stdio_CharStr* %buf)
-declare %ctypes64_Int @setvbuf(%stdio_File* %f, %stdio_CharStr* %buf, %ctypes64_Int %mode, %ctypes64_SizeT %size)
-declare %stdio_File* @tmpfile()
-declare %stdio_CharStr* @tmpnam(%stdio_CharStr* %str)
-declare %ctypes64_Int @printf(%stdio_ConstCharStr* %s, ...)
-declare %ctypes64_Int @scanf(%stdio_ConstCharStr* %s, ...)
-declare %ctypes64_Int @fprintf(%stdio_File* %f, %ctypes64_Str* %format, ...)
-declare %ctypes64_Int @fscanf(%stdio_File* %f, %stdio_ConstCharStr* %format, ...)
-declare %ctypes64_Int @sscanf(%stdio_ConstCharStr* %buf, %stdio_ConstCharStr* %format, ...)
-declare %ctypes64_Int @sprintf(%stdio_CharStr* %buf, %stdio_ConstCharStr* %format, ...)
-declare %ctypes64_Int @vfprintf(%stdio_File* %f, %stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @vprintf(%stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @vsprintf(%stdio_CharStr* %str, %stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @vsnprintf(%stdio_CharStr* %str, %ctypes64_SizeT %n, %stdio_ConstCharStr* %format, i8* %args)
-declare %ctypes64_Int @__vsnprintf_chk(%stdio_CharStr* %dest, %ctypes64_SizeT %len, %ctypes64_Int %flags, %ctypes64_SizeT %dstlen, %stdio_ConstCharStr* %format, i8* %arg)
-declare %ctypes64_Int @fgetc(%stdio_File* %f)
-declare %ctypes64_Int @fputc(%ctypes64_Int %char, %stdio_File* %f)
-declare %stdio_CharStr* @fgets(%stdio_CharStr* %str, %ctypes64_Int %n, %stdio_File* %f)
-declare %ctypes64_Int @fputs(%stdio_ConstCharStr* %str, %stdio_File* %f)
-declare %ctypes64_Int @getc(%stdio_File* %f)
-declare %ctypes64_Int @getchar()
-declare %stdio_CharStr* @gets(%stdio_CharStr* %str)
-declare %ctypes64_Int @putc(%ctypes64_Int %char, %stdio_File* %f)
-declare %ctypes64_Int @putchar(%ctypes64_Int %char)
-declare %ctypes64_Int @puts(%stdio_ConstCharStr* %str)
-declare %ctypes64_Int @ungetc(%ctypes64_Int %char, %stdio_File* %f)
-declare void @perror(%stdio_ConstCharStr* %str)
+%File = type %Int8;
+%FposT = type %Int8;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
+declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %fname)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%File* %f)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
+declare %File* @tmpfile()
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
+declare %CharStr* @gets(%CharStr* %str)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
+declare void @perror(%ConstCharStr* %str)
 ; from included math
-declare %ctypes64_Double @acos(%ctypes64_Double %x)
-declare %ctypes64_Double @asin(%ctypes64_Double %x)
-declare %ctypes64_Double @atan(%ctypes64_Double %x)
-declare %ctypes64_Double @atan2(%ctypes64_Double %a, %ctypes64_Double %b)
-declare %ctypes64_Double @cos(%ctypes64_Double %x)
-declare %ctypes64_Double @sin(%ctypes64_Double %x)
-declare %ctypes64_Double @tan(%ctypes64_Double %x)
-declare %ctypes64_Double @cosh(%ctypes64_Double %x)
-declare %ctypes64_Double @sinh(%ctypes64_Double %x)
-declare %ctypes64_Double @tanh(%ctypes64_Double %x)
-declare %ctypes64_Double @exp(%ctypes64_Double %x)
-declare %ctypes64_Double @frexp(%ctypes64_Double %a, %ctypes64_Int* %i)
-declare %ctypes64_Double @ldexp(%ctypes64_Double %a, %ctypes64_Int %i)
-declare %ctypes64_Double @log(%ctypes64_Double %x)
-declare %ctypes64_Double @log10(%ctypes64_Double %x)
-declare %ctypes64_Double @modf(%ctypes64_Double %a, %ctypes64_Double* %b)
-declare %ctypes64_Double @pow(%ctypes64_Double %a, %ctypes64_Double %b)
-declare %ctypes64_Double @sqrt(%ctypes64_Double %x)
-declare %ctypes64_Double @ceil(%ctypes64_Double %x)
-declare %ctypes64_Double @fabs(%ctypes64_Double %x)
-declare %ctypes64_Double @floor(%ctypes64_Double %x)
-declare %ctypes64_Double @fmod(%ctypes64_Double %a, %ctypes64_Double %b)
-declare %ctypes64_LongDouble @acosl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @asinl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @atanl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @atan2l(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @cosl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @sinl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @tanl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @acoshl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @asinhl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @atanhl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @coshl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @sinhl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @tanhl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @expl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @exp2l(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @expm1l(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @frexpl(%ctypes64_LongDouble %a, %ctypes64_Int* %i)
-declare %ctypes64_Int @ilogbl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @ldexpl(%ctypes64_LongDouble %a, %ctypes64_Int %i)
-declare %ctypes64_LongDouble @logl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @log10l(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @log1pl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @log2l(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @logbl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @modfl(%ctypes64_LongDouble %a, %ctypes64_LongDouble* %b)
-declare %ctypes64_LongDouble @scalbnl(%ctypes64_LongDouble %a, %ctypes64_Int %i)
-declare %ctypes64_LongDouble @scalblnl(%ctypes64_LongDouble %a, %ctypes64_LongInt %i)
-declare %ctypes64_LongDouble @cbrtl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @fabsl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @hypotl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @powl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @sqrtl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @erfl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @erfcl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @lgammal(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @tgammal(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @ceill(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @floorl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @nearbyintl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @rintl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongInt @lrintl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongLongInt @llrintl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @roundl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongInt @lroundl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongLongInt @llroundl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @truncl(%ctypes64_LongDouble %x)
-declare %ctypes64_LongDouble @fmodl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @remainderl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @remquol(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b, %ctypes64_Int* %i)
-declare %ctypes64_LongDouble @copysignl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @nanl(%ctypes64_ConstChar* %x)
-declare %ctypes64_LongDouble @nextafterl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @nexttowardl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @fdiml(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @fmaxl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @fminl(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b)
-declare %ctypes64_LongDouble @fmal(%ctypes64_LongDouble %a, %ctypes64_LongDouble %b, %ctypes64_LongDouble %c)
+declare %Double @acos(%Double %x)
+declare %Double @asin(%Double %x)
+declare %Double @atan(%Double %x)
+declare %Double @atan2(%Double %a, %Double %b)
+declare %Double @cos(%Double %x)
+declare %Double @sin(%Double %x)
+declare %Double @tan(%Double %x)
+declare %Double @cosh(%Double %x)
+declare %Double @sinh(%Double %x)
+declare %Double @tanh(%Double %x)
+declare %Double @exp(%Double %x)
+declare %Double @frexp(%Double %a, %Int* %i)
+declare %Double @ldexp(%Double %a, %Int %i)
+declare %Double @log(%Double %x)
+declare %Double @log10(%Double %x)
+declare %Double @modf(%Double %a, %Double* %b)
+declare %Double @pow(%Double %a, %Double %b)
+declare %Double @sqrt(%Double %x)
+declare %Double @ceil(%Double %x)
+declare %Double @fabs(%Double %x)
+declare %Double @floor(%Double %x)
+declare %Double @fmod(%Double %a, %Double %b)
+declare %LongDouble @acosl(%LongDouble %x)
+declare %LongDouble @asinl(%LongDouble %x)
+declare %LongDouble @atanl(%LongDouble %x)
+declare %LongDouble @atan2l(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @cosl(%LongDouble %x)
+declare %LongDouble @sinl(%LongDouble %x)
+declare %LongDouble @tanl(%LongDouble %x)
+declare %LongDouble @acoshl(%LongDouble %x)
+declare %LongDouble @asinhl(%LongDouble %x)
+declare %LongDouble @atanhl(%LongDouble %x)
+declare %LongDouble @coshl(%LongDouble %x)
+declare %LongDouble @sinhl(%LongDouble %x)
+declare %LongDouble @tanhl(%LongDouble %x)
+declare %LongDouble @expl(%LongDouble %x)
+declare %LongDouble @exp2l(%LongDouble %x)
+declare %LongDouble @expm1l(%LongDouble %x)
+declare %LongDouble @frexpl(%LongDouble %a, %Int* %i)
+declare %Int @ilogbl(%LongDouble %x)
+declare %LongDouble @ldexpl(%LongDouble %a, %Int %i)
+declare %LongDouble @logl(%LongDouble %x)
+declare %LongDouble @log10l(%LongDouble %x)
+declare %LongDouble @log1pl(%LongDouble %x)
+declare %LongDouble @log2l(%LongDouble %x)
+declare %LongDouble @logbl(%LongDouble %x)
+declare %LongDouble @modfl(%LongDouble %a, %LongDouble* %b)
+declare %LongDouble @scalbnl(%LongDouble %a, %Int %i)
+declare %LongDouble @scalblnl(%LongDouble %a, %LongInt %i)
+declare %LongDouble @cbrtl(%LongDouble %x)
+declare %LongDouble @fabsl(%LongDouble %x)
+declare %LongDouble @hypotl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @powl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @sqrtl(%LongDouble %x)
+declare %LongDouble @erfl(%LongDouble %x)
+declare %LongDouble @erfcl(%LongDouble %x)
+declare %LongDouble @lgammal(%LongDouble %x)
+declare %LongDouble @tgammal(%LongDouble %x)
+declare %LongDouble @ceill(%LongDouble %x)
+declare %LongDouble @floorl(%LongDouble %x)
+declare %LongDouble @nearbyintl(%LongDouble %x)
+declare %LongDouble @rintl(%LongDouble %x)
+declare %LongInt @lrintl(%LongDouble %x)
+declare %LongLongInt @llrintl(%LongDouble %x)
+declare %LongDouble @roundl(%LongDouble %x)
+declare %LongInt @lroundl(%LongDouble %x)
+declare %LongLongInt @llroundl(%LongDouble %x)
+declare %LongDouble @truncl(%LongDouble %x)
+declare %LongDouble @fmodl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @remainderl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @remquol(%LongDouble %a, %LongDouble %b, %Int* %i)
+declare %LongDouble @copysignl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @nanl(%ConstChar* %x)
+declare %LongDouble @nextafterl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @nexttowardl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fdiml(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 0
@@ -365,7 +365,7 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%5 = zext i8 20 to %Int32
 	; -- end vol eval --
 	store [20 x %Char8] %4, [20 x %Char8]* %3
-	%6 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), [20 x %Char8]* %3)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), [20 x %Char8]* %3)
 
 	; truncate array
 	%7 = alloca [6 x %Char8], align 1
@@ -380,7 +380,7 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	store [6 x %Char8] %9, [6 x %Char8]* %7
 	%11 = getelementptr [6 x %Char8], [6 x %Char8]* %7, %Int32 0, %Int32 5
 	store %Char8 0, %Char8* %11
-	%12 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), [6 x %Char8]* %7)
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), [6 x %Char8]* %7)
 
 	; extend array
 	%13 = alloca [30 x %Char8], align 1
@@ -450,7 +450,7 @@ body_1:
 	%11 = getelementptr [6 x %Int32], [6 x %Int32]* %1, %Int32 0, %Int32 %10
 	%12 = load %Int32, %Int32* %11
 	%13 = load %Int32, %Int32* %7
-	%14 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Int32 %13, %Int32 %12)
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Int32 %13, %Int32 %12)
 	%15 = load %Int32, %Int32* %7
 	%16 = add %Int32 %15, 1
 	store %Int32 %16, %Int32* %7
@@ -695,7 +695,7 @@ body_4:
 	%27 = load %Int32, %Int32* %1
 	%28 = getelementptr [10 x [10 x %Int32]], [10 x [10 x %Int32]]* @a10, %Int32 0, %Int32 %27, %Int32 %26
 	%29 = load %Int32, %Int32* %28
-	%30 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([18 x i8]* @str4 to [0 x i8]*), %Int32 %24, %Int32 %25, %Int32 %29)
+	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str4 to [0 x i8]*), %Int32 %24, %Int32 %25, %Int32 %29)
 	%31 = load %Int32, %Int32* %2
 	%32 = add %Int32 %31, 1
 	store %Int32 %32, %Int32* %2
@@ -735,7 +735,7 @@ body_7:
 	%46 = load %Int32, %Int32* %1
 	%47 = getelementptr [2 x [2 x [5 x %Int32]]], [2 x [2 x [5 x %Int32]]]* @a0, %Int32 0, %Int32 %46, %Int32 %45, %Int32 %44
 	%48 = load %Int32, %Int32* %47
-	%49 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([21 x i8]* @str5 to [0 x i8]*), %Int32 %41, %Int32 %42, %Int32 %43, %Int32 %48)
+	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str5 to [0 x i8]*), %Int32 %41, %Int32 %42, %Int32 %43, %Int32 %48)
 	%50 = load %Int32, %Int32* %3
 	%51 = add %Int32 %50, 1
 	store %Int32 %51, %Int32* %3
@@ -775,7 +775,7 @@ body_9:
 	%65 = load [5 x %Int32]*, [5 x %Int32]** %64
 	%66 = getelementptr [5 x %Int32], [5 x %Int32]* %65, %Int32 0, %Int32 %62
 	%67 = load %Int32, %Int32* %66
-	%68 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), %Int32 %60, %Int32 %61, %Int32 %67)
+	%68 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), %Int32 %60, %Int32 %61, %Int32 %67)
 	%69 = load %Int32, %Int32* %2
 	%70 = add %Int32 %69, 1
 	store %Int32 %70, %Int32* %2
@@ -821,7 +821,7 @@ body_12:
 	%88 = load [5 x %Int32]*, [5 x %Int32]** %87
 	%89 = getelementptr [5 x %Int32], [5 x %Int32]* %88, %Int32 0, %Int32 %82
 	%90 = load %Int32, %Int32* %89
-	%91 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([21 x i8]* @str7 to [0 x i8]*), %Int32 %79, %Int32 %80, %Int32 %81, %Int32 %90)
+	%91 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str7 to [0 x i8]*), %Int32 %79, %Int32 %80, %Int32 %81, %Int32 %90)
 	%92 = load %Int32, %Int32* %3
 	%93 = add %Int32 %92, 1
 	store %Int32 %93, %Int32* %3
@@ -871,7 +871,7 @@ body_15:
 	%114 = load [5 x %Int32]*, [5 x %Int32]** %113
 	%115 = getelementptr [5 x %Int32], [5 x %Int32]* %114, %Int32 0, %Int32 %107
 	%116 = load %Int32, %Int32* %115
-	%117 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*), %Int32 %104, %Int32 %105, %Int32 %106, %Int32 %116)
+	%117 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*), %Int32 %104, %Int32 %105, %Int32 %106, %Int32 %116)
 	%118 = load %Int32, %Int32* %3
 	%119 = add %Int32 %118, 1
 	store %Int32 %119, %Int32* %3
@@ -890,7 +890,7 @@ break_13:
 	ret void
 }
 
-define %ctypes64_Int @main() {
+define %Int @main() {
 	; generic array [4]Char8 will be implicit casted to [10]Char8
 	%1 = alloca [30 x %Char8], align 1
 	%2 = insertvalue [20 x %Char8] zeroinitializer, %Char8 72, 0
@@ -913,7 +913,7 @@ define %ctypes64_Int @main() {
 	%16 = zext i8 30 to %Int32
 	; -- end vol eval --
 	store [30 x %Char8] %15, [30 x %Char8]* %1
-	%17 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([9 x i8]* @str9 to [0 x i8]*), [30 x %Char8]* %1)
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str9 to [0 x i8]*), [30 x %Char8]* %1)
 	%18 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %18
 	br label %again_1
@@ -926,13 +926,13 @@ body_1:
 	%22 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 %21
 	%23 = load %Int32, %Int32* %22
 	%24 = load %Int32, %Int32* %18
-	%25 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([22 x i8]* @str10 to [0 x i8]*), %Int32 %24, %Int32 %23)
+	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str10 to [0 x i8]*), %Int32 %24, %Int32 %23)
 	%26 = load %Int32, %Int32* %18
 	%27 = add %Int32 %26, 1
 	store %Int32 %27, %Int32* %18
 	br label %again_1
 break_1:
-	%28 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([38 x i8]* @str11 to [0 x i8]*))
+	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str11 to [0 x i8]*))
 	%29 = alloca [3 x %Int32], align 1
 	%30 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
 	%31 = insertvalue [3 x %Int32] %30, %Int32 5, 1
@@ -953,13 +953,13 @@ body_2:
 	%37 = getelementptr [3 x %Int32], [3 x %Int32]* %29, %Int32 0, %Int32 %36
 	%38 = load %Int32, %Int32* %37
 	%39 = load %Int32, %Int32* %18
-	%40 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([21 x i8]* @str12 to [0 x i8]*), %Int32 %39, %Int32 %38)
+	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str12 to [0 x i8]*), %Int32 %39, %Int32 %38)
 	%41 = load %Int32, %Int32* %18
 	%42 = add %Int32 %41, 1
 	store %Int32 %42, %Int32* %18
 	br label %again_2
 break_2:
-	%43 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([38 x i8]* @str13 to [0 x i8]*))
+	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str13 to [0 x i8]*))
 	%44 = alloca [0 x %Int32]*, align 8
 	store [0 x %Int32]* bitcast ([10 x %Int32]* @globalArray to [0 x %Int32]*), [0 x %Int32]** %44
 	store %Int32 0, %Int32* %18
@@ -974,13 +974,13 @@ body_3:
 	%49 = getelementptr [0 x %Int32], [0 x %Int32]* %48, %Int32 0, %Int32 %47
 	%50 = load %Int32, %Int32* %49
 	%51 = load %Int32, %Int32* %18
-	%52 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([25 x i8]* @str14 to [0 x i8]*), %Int32 %51, %Int32 %50)
+	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str14 to [0 x i8]*), %Int32 %51, %Int32 %50)
 	%53 = load %Int32, %Int32* %18
 	%54 = add %Int32 %53, 1
 	store %Int32 %54, %Int32* %18
 	br label %again_3
 break_3:
-	%55 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([38 x i8]* @str15 to [0 x i8]*))
+	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str15 to [0 x i8]*))
 	%56 = alloca [0 x %Int32]*, align 8
 	%57 = bitcast [3 x %Int32]* %29 to [0 x %Int32]*
 	store [0 x %Int32]* %57, [0 x %Int32]** %56
@@ -996,7 +996,7 @@ body_4:
 	%62 = getelementptr [0 x %Int32], [0 x %Int32]* %61, %Int32 0, %Int32 %60
 	%63 = load %Int32, %Int32* %62
 	%64 = load %Int32, %Int32* %18
-	%65 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([24 x i8]* @str16 to [0 x i8]*), %Int32 %64, %Int32 %63)
+	%65 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str16 to [0 x i8]*), %Int32 %64, %Int32 %63)
 	%66 = load %Int32, %Int32* %18
 	%67 = add %Int32 %66, 1
 	store %Int32 %67, %Int32* %18
@@ -1016,13 +1016,13 @@ break_4:
 	store [3 x %Int32] %71, [3 x %Int32]* %68
 	%73 = getelementptr [3 x %Int32], [3 x %Int32]* %68, %Int32 0, %Int32 0
 	%74 = load %Int32, %Int32* %73
-	%75 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str17 to [0 x i8]*), %Int32 %74)
+	%75 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str17 to [0 x i8]*), %Int32 %74)
 	%76 = getelementptr [3 x %Int32], [3 x %Int32]* %68, %Int32 0, %Int32 1
 	%77 = load %Int32, %Int32* %76
-	%78 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str18 to [0 x i8]*), %Int32 %77)
+	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str18 to [0 x i8]*), %Int32 %77)
 	%79 = getelementptr [3 x %Int32], [3 x %Int32]* %68, %Int32 0, %Int32 2
 	%80 = load %Int32, %Int32* %79
-	%81 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str19 to [0 x i8]*), %Int32 %80)
+	%81 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str19 to [0 x i8]*), %Int32 %80)
 
 	; create (and initialize) new variable b
 	; (with type [3]Int32)
@@ -1036,13 +1036,13 @@ break_4:
 	store [3 x %Int32] %83, [3 x %Int32]* %82
 	%85 = getelementptr [3 x %Int32], [3 x %Int32]* %82, %Int32 0, %Int32 0
 	%86 = load %Int32, %Int32* %85
-	%87 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str20 to [0 x i8]*), %Int32 %86)
+	%87 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str20 to [0 x i8]*), %Int32 %86)
 	%88 = getelementptr [3 x %Int32], [3 x %Int32]* %82, %Int32 0, %Int32 1
 	%89 = load %Int32, %Int32* %88
-	%90 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str21 to [0 x i8]*), %Int32 %89)
+	%90 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str21 to [0 x i8]*), %Int32 %89)
 	%91 = getelementptr [3 x %Int32], [3 x %Int32]* %82, %Int32 0, %Int32 2
 	%92 = load %Int32, %Int32* %91
-	%93 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str22 to [0 x i8]*), %Int32 %92)
+	%93 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str22 to [0 x i8]*), %Int32 %92)
 
 	; check equality between two arrays (by value)
 	%94 = bitcast [3 x %Int32]* %68 to i8*
@@ -1051,10 +1051,10 @@ break_4:
 	%97 = icmp ne %Bool %96, 0
 	br %Bool %97 , label %then_0, label %else_0
 then_0:
-	%98 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([8 x i8]* @str23 to [0 x i8]*))
+	%98 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str23 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%99 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([8 x i8]* @str24 to [0 x i8]*))
+	%99 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str24 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 
@@ -1081,22 +1081,22 @@ endif_0:
 	store [6 x %Int32] %107, [6 x %Int32]* %105
 	%109 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 0
 	%110 = load %Int32, %Int32* %109
-	%111 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str25 to [0 x i8]*), %Int32 %110)
+	%111 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str25 to [0 x i8]*), %Int32 %110)
 	%112 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 1
 	%113 = load %Int32, %Int32* %112
-	%114 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str26 to [0 x i8]*), %Int32 %113)
+	%114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str26 to [0 x i8]*), %Int32 %113)
 	%115 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 2
 	%116 = load %Int32, %Int32* %115
-	%117 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str27 to [0 x i8]*), %Int32 %116)
+	%117 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str27 to [0 x i8]*), %Int32 %116)
 	%118 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 3
 	%119 = load %Int32, %Int32* %118
-	%120 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str28 to [0 x i8]*), %Int32 %119)
+	%120 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str28 to [0 x i8]*), %Int32 %119)
 	%121 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 4
 	%122 = load %Int32, %Int32* %121
-	%123 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str29 to [0 x i8]*), %Int32 %122)
+	%123 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str29 to [0 x i8]*), %Int32 %122)
 	%124 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 5
 	%125 = load %Int32, %Int32* %124
-	%126 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str30 to [0 x i8]*), %Int32 %125)
+	%126 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str30 to [0 x i8]*), %Int32 %125)
 
 
 	; check equality between two arrays (by pointer)
@@ -1106,10 +1106,10 @@ endif_0:
 	%130 = icmp ne %Bool %129, 0
 	br %Bool %130 , label %then_1, label %else_1
 then_1:
-	%131 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([12 x i8]* @str31 to [0 x i8]*))
+	%131 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str31 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%132 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([12 x i8]* @str32 to [0 x i8]*))
+	%132 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str32 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 
@@ -1121,33 +1121,33 @@ endif_1:
 
 	;let aa = [111] + [222] + [333]
 	; cons literal array from var items
-	%133 = alloca %ctypes64_Int, align 4
-	store %ctypes64_Int 100, %ctypes64_Int* %133
-	%134 = alloca %ctypes64_Int, align 4
-	store %ctypes64_Int 200, %ctypes64_Int* %134
-	%135 = alloca %ctypes64_Int, align 4
-	store %ctypes64_Int 300, %ctypes64_Int* %135
+	%133 = alloca %Int, align 4
+	store %Int 100, %Int* %133
+	%134 = alloca %Int, align 4
+	store %Int 200, %Int* %134
+	%135 = alloca %Int, align 4
+	store %Int 300, %Int* %135
 	; immutable, non immediate value (array)
-	%136 = load %ctypes64_Int, %ctypes64_Int* %133
-	%137 = load %ctypes64_Int, %ctypes64_Int* %134
-	%138 = load %ctypes64_Int, %ctypes64_Int* %135
-	%139 = load %ctypes64_Int, %ctypes64_Int* %133
-	%140 = insertvalue [3 x %ctypes64_Int] zeroinitializer, %ctypes64_Int %139, 0
-	%141 = load %ctypes64_Int, %ctypes64_Int* %134
-	%142 = insertvalue [3 x %ctypes64_Int] %140, %ctypes64_Int %141, 1
-	%143 = load %ctypes64_Int, %ctypes64_Int* %135
-	%144 = insertvalue [3 x %ctypes64_Int] %142, %ctypes64_Int %143, 2
-	%145 = alloca [3 x %ctypes64_Int]
+	%136 = load %Int, %Int* %133
+	%137 = load %Int, %Int* %134
+	%138 = load %Int, %Int* %135
+	%139 = load %Int, %Int* %133
+	%140 = insertvalue [3 x %Int] zeroinitializer, %Int %139, 0
+	%141 = load %Int, %Int* %134
+	%142 = insertvalue [3 x %Int] %140, %Int %141, 1
+	%143 = load %Int, %Int* %135
+	%144 = insertvalue [3 x %Int] %142, %Int %143, 2
+	%145 = alloca [3 x %Int]
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
 	%146 = zext i8 3 to %Int32
 	; -- end vol eval --
-	store [3 x %ctypes64_Int] %144, [3 x %ctypes64_Int]* %145
+	store [3 x %Int] %144, [3 x %Int]* %145
 
 	; check local literal array assignation to local array
 	%147 = alloca [4 x %Int32], align 1
 ; -- cons_composite_from_composite_by_adr --
-	%148 = bitcast [3 x %ctypes64_Int]* %145 to [4 x %Int32]*
+	%148 = bitcast [3 x %Int]* %145 to [4 x %Int32]*
 	%149 = load [4 x %Int32], [4 x %Int32]* %148
 ; -- end cons_composite_from_composite_by_adr --
 	; -- ASSIGN ARRAY --
@@ -1157,17 +1157,17 @@ endif_1:
 	store [4 x %Int32] %149, [4 x %Int32]* %147
 	%151 = getelementptr [4 x %Int32], [4 x %Int32]* %147, %Int32 0, %Int32 0
 	%152 = load %Int32, %Int32* %151
-	%153 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str33 to [0 x i8]*), %Int32 %152)
+	%153 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str33 to [0 x i8]*), %Int32 %152)
 	%154 = getelementptr [4 x %Int32], [4 x %Int32]* %147, %Int32 0, %Int32 1
 	%155 = load %Int32, %Int32* %154
-	%156 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str34 to [0 x i8]*), %Int32 %155)
+	%156 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str34 to [0 x i8]*), %Int32 %155)
 	%157 = getelementptr [4 x %Int32], [4 x %Int32]* %147, %Int32 0, %Int32 2
 	%158 = load %Int32, %Int32* %157
-	%159 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([11 x i8]* @str35 to [0 x i8]*), %Int32 %158)
+	%159 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str35 to [0 x i8]*), %Int32 %158)
 
 	; check local literal array assignation to global array
 ; -- cons_composite_from_composite_by_adr --
-	%160 = bitcast [3 x %ctypes64_Int]* %145 to [10 x %Int32]*
+	%160 = bitcast [3 x %Int]* %145 to [10 x %Int32]*
 	%161 = load [10 x %Int32], [10 x %Int32]* %160
 ; -- end cons_composite_from_composite_by_adr --
 	; -- ASSIGN ARRAY --
@@ -1177,13 +1177,13 @@ endif_1:
 	store [10 x %Int32] %161, [10 x %Int32]* @globalArray
 	%163 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 0
 	%164 = load %Int32, %Int32* %163
-	%165 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([22 x i8]* @str36 to [0 x i8]*), %Int32 0, %Int32 %164)
+	%165 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str36 to [0 x i8]*), %Int32 0, %Int32 %164)
 	%166 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 1
 	%167 = load %Int32, %Int32* %166
-	%168 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([22 x i8]* @str37 to [0 x i8]*), %Int32 1, %Int32 %167)
+	%168 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str37 to [0 x i8]*), %Int32 1, %Int32 %167)
 	%169 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 2
 	%170 = load %Int32, %Int32* %169
-	%171 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([22 x i8]* @str38 to [0 x i8]*), %Int32 2, %Int32 %170)
+	%171 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str38 to [0 x i8]*), %Int32 2, %Int32 %170)
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
 	%172 = zext i8 10 to %Int32
@@ -1223,16 +1223,16 @@ endif_1:
 	store %Int32 333, %Int32* %177
 	%190 = getelementptr [4 x %Int32], [4 x %Int32]* %188, %Int32 0, %Int32 0
 	%191 = load %Int32, %Int32* %190
-	%192 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([25 x i8]* @str39 to [0 x i8]*), %Int32 0, %Int32 %191)
+	%192 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str39 to [0 x i8]*), %Int32 0, %Int32 %191)
 	%193 = getelementptr [4 x %Int32], [4 x %Int32]* %188, %Int32 0, %Int32 1
 	%194 = load %Int32, %Int32* %193
-	%195 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([25 x i8]* @str40 to [0 x i8]*), %Int32 1, %Int32 %194)
+	%195 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str40 to [0 x i8]*), %Int32 1, %Int32 %194)
 	%196 = getelementptr [4 x %Int32], [4 x %Int32]* %188, %Int32 0, %Int32 2
 	%197 = load %Int32, %Int32* %196
-	%198 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([25 x i8]* @str41 to [0 x i8]*), %Int32 2, %Int32 %197)
+	%198 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str41 to [0 x i8]*), %Int32 2, %Int32 %197)
 	%199 = getelementptr [4 x %Int32], [4 x %Int32]* %188, %Int32 0, %Int32 3
 	%200 = load %Int32, %Int32* %199
-	%201 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([25 x i8]* @str42 to [0 x i8]*), %Int32 3, %Int32 %200)
+	%201 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str42 to [0 x i8]*), %Int32 3, %Int32 %200)
 	%202 = insertvalue [4 x %Int32] zeroinitializer, %Int32 10, 0
 	%203 = insertvalue [4 x %Int32] %202, %Int32 20, 1
 	%204 = insertvalue [4 x %Int32] %203, %Int32 30, 2
@@ -1249,10 +1249,10 @@ endif_1:
 	%211 = icmp ne %Bool %210, 0
 	br %Bool %211 , label %then_2, label %else_2
 then_2:
-	%212 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([13 x i8]* @str43 to [0 x i8]*))
+	%212 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str43 to [0 x i8]*))
 	br label %endif_2
 else_2:
-	%213 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([13 x i8]* @str44 to [0 x i8]*))
+	%213 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str44 to [0 x i8]*))
 	br label %endif_2
 endif_2:
 	%214 = insertvalue [5 x %Char8] zeroinitializer, %Char8 76, 0
@@ -1282,14 +1282,14 @@ endif_2:
 	%230 = icmp ne %Bool %229, 0
 	br %Bool %230 , label %then_3, label %else_3
 then_3:
-	%231 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([13 x i8]* @str45 to [0 x i8]*))
+	%231 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str45 to [0 x i8]*))
 	br label %endif_3
 else_3:
-	%232 = call %ctypes64_Int (%stdio_ConstCharStr*, ...) @printf(%stdio_ConstCharStr* bitcast ([13 x i8]* @str46 to [0 x i8]*))
+	%232 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str46 to [0 x i8]*))
 	br label %endif_3
 endif_3:
 	call void @test_arrays()
-	ret %ctypes64_Int 0
+	ret %Int 0
 }
 
 

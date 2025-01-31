@@ -111,31 +111,34 @@ def ll_reg_operation(op, type, reg=None):
 
 
 
-
 def get_id_str(x):
 	id = x.id
 
-	if id.llvm:
-		return '"%s"' % id['llvm']
-
-	id_str = id.str
-
-#	if id_str == None:
-#		print("id_str == None")
-#		print(x)
-#		print(x.__dict__)
+	if x.id.llvm:
+		return x.id.llvm
 
 	# если это сущность из другого модуля
 	# добавим к ней префикс ее модуля
 	xmodule = x.getModule()
 	if id.need_decoration or xmodule != None and xmodule != cmodule:
-#		if xmodule == None:
-#			print(x)
-#			print(x.__dict__)
-#			info("????", x.ti)
-		id_str = "%s_%s" % (xmodule.id, id_str)
+		id_str = "%s_%s" % (xmodule.id, id.str)
 
-	return id_str
+	return id.str
+
+
+def type_get_aka(t):
+	if not hasattr(t, 'id'):
+		return None
+
+	id = t.id
+
+	if id.llvm:
+		return id.llvm
+
+	if not t.is_generic():
+		return '%' + get_id_str(t)
+
+	return id.str
 
 
 
@@ -816,30 +819,6 @@ def print_type_pointer(t):
 
 
 
-
-def type_get_aka(t):
-	if not hasattr(t, 'id'):
-		return None
-
-	if t.id.llvm:
-		return t.id.llvm
-
-	if not t.is_generic():
-		s = get_id_str(t)
-		return '%' + s
-
-	return t.id.str
-
-
-
-def print_type_id(x):
-	t_id = type_get_aka(x)
-	if t_id == None:
-		return False
-	out(t_id)
-	return True
-
-
 def print_int_type_for(width):
 	# Generic int can have width (for example) 6 bit, etc.
 	out("i%d" % align_bits_up(width))
@@ -866,8 +845,9 @@ def print_type(t):
 				out("%" + t['id'].str)
 				return
 
-		res = print_type_id(t)
-		if res:
+		t_id = type_get_aka(t)
+		if t_id != None:
+			out(t_id)
 			return
 
 		# иногда сюда залетают дженерики например в to левое:

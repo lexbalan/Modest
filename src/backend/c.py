@@ -164,25 +164,37 @@ def precedence(x):
 
 
 def get_id_str(x):
+	if not hasattr(x, 'id'):
+		return None
+
 	id = x.id
 
 	if id.c != None:
 		return id.c
 
-	id_str = id.str
-
 	xmodule = x.getModule()
-
-#	if xmodule == None:
-#		print(x)
-#		print(x.parent)
-#		print(x.__dict__)
-#		info("????", x.ti)
-
 	if id.need_decoration or xmodule != None and xmodule != cmodule:
-		return "%s_%s" % (xmodule.id, id_str)
+		return "%s_%s" % (xmodule.id, id.str)
 
-	return id_str
+	return id.str
+
+
+def type_get_aka(t):
+	s = get_id_str(t)
+	if s != None:
+		return s
+
+	if t.is_numeric():
+		s = 'int%d_t' % t.width
+		if not t.signed:
+			s = 'u' + s
+		return s
+
+	if hasattr(t, 'c_anon_id'):
+		return 'struct ' + t.c_anon_id
+
+	return None
+
 
 
 def print_id_for(x):
@@ -190,7 +202,7 @@ def print_id_for(x):
 
 
 
-def str_type_record(t, tag=""):
+def str_type_record(t, tag=''):
 	s = "struct"
 
 	if t.hasAttribute('packed'):
@@ -296,7 +308,7 @@ def str_type_array(t, label='', core=''):
 			core = core + label + dims
 			return str_type(t.of, core=core)
 
-		elif is_type_simple(of.to):
+		elif is_type_named(of.to):
 			return str_type(of) + core + label + dims
 
 	left = str_type(t.of)
@@ -357,7 +369,7 @@ def str_type_func(t, label='', core=''):
 
 	params = strFuncParamlist(fparams, t.extra_args)
 
-	if not is_type_simple(fto):
+	if not is_type_named(fto):
 		if fto.is_pointer():
 			if fto.to.is_pointer() or fto.to.is_array() or fto.to.is_func():
 				core = core + label + params
@@ -381,7 +393,7 @@ def str_type_pointer(t, label, core=''):
 	if is_sim_sim(t):
 		tx = tx.of
 
-	if not is_type_simple(tx):
+	if not is_type_named(tx):
 		core = '(' + c + core + label + ')'
 		return str_type(tx, core=core)
 
@@ -389,66 +401,40 @@ def str_type_pointer(t, label, core=''):
 
 
 
-def type_get_aka(t):
-	if hasattr(t, 'id'):
-		if t.id.c != None:
-			return t.id.c
-		return get_id_str(t)
-
-	if hasattr(t, 'c_anon_id'):
-		return 'struct ' + t.c_anon_id
-
-	return None
-
-
-
-def str_type_simple(t, core='', label=''):
-	aka = type_get_aka(t)
-	if aka == None:
-		if t.is_numeric():
-			s = 'int%d_t' % t.width
-			if not t.signed:
-				s = 'u' + s
-			aka = s
-		else:
-			print("unk = " + str(t))
-			print("generic = " + t.generic)
-
-	return aka + core + prespace(label)
-
-
 def is_sim_sim(t):
-	if t.to.is_array():
+	if t.is_pointer_to_array():
 		if not t.to.hasAttribute('alias'):
-			return is_type_simple(t.to.of)
+			return is_type_named(t.to.of)
 
 
-def is_type_simple(t):
-	if type_get_aka(t) != None:
-		return True
-	return not t.__class__ in [TypeArray, TypePointer, TypeFunc, TypeRecord]
+def is_type_named(t):
+	return type_get_aka(t) != None
 
 
+
+# label - used for variable/field definition form of type expr (variable id)
 def str_type(t, core='', label=''):
-	if is_type_simple(t):
-		return str_type_simple(t, core, label)
+	aka = type_get_aka(t)
+	if aka != None:
+		return aka + core + prespace(label)
+
+	if t.is_func():
+		return str_type_func(t, label, core)
 	elif t.is_pointer():
 		return str_type_pointer(t, label, core)
 	elif t.is_array():
 		return str_type_array(t, label, core)
-	elif t.is_func():
-		return str_type_func(t, label, core)
 	elif t.is_record():
 		return str_type_record(t) + prespace(label)
-	return '<type:%s>' % t['kind']
+	return '<type:%s>' % str(t)
 
 
 
 def print_type(t, label=''):
-	tstr = str_type(t, core='', label=label)
-	out(tstr)
+	out(str_type(t, core='', label=label))
 
-def print_type_record(t, tag=''):
+
+def print_type_record(t, tag):
 	out(str_type_record(t, tag=tag))
 
 
