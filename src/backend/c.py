@@ -172,7 +172,7 @@ def get_id_str(x):
 	if id.c != None:
 		return id.c
 
-	if not 'nodecorate' in x.att:
+	if not x.hasAttribute('nodecorate'):
 		xmodule = x.getModule()
 		if xmodule != None:
 			if not 'module_nodecorate' in xmodule.att:

@@ -30,8 +30,8 @@ def nl_indent(nl=1):
 def get_id_str(x):
 	id = x.id
 
-	if id.cm:
-		id_str = id.cm
+	if id.cm != None:
+		return id.cm
 
 	return id.str
 
