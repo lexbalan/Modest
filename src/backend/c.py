@@ -1916,7 +1916,6 @@ def print_cdecl_func(x):
 
 
 def print_directive(x):
-
 	if isinstance(x, StmtDirectiveCInclude):
 		include(x.c_name, local=x.is_local)
 		return
@@ -1972,6 +1971,13 @@ def print_header(module, outname):
 			print_directive(x)
 
 	newline()
+
+
+	# print C `#include ""` directive for included modules
+	for inc in module.included_modules:
+		if not 'do_not_include' in inc.att:
+			include(inc.id + '.h', local=True)
+
 
 	for x in module.defs:
 		newline(x.nl)
