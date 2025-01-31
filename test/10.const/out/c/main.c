@@ -14,60 +14,60 @@
 
 
 
-#define _carr  {0, 10, 15, 20, 25, 30}
-uint8_t carr[6] = _carr;
+#define _main_carr  {0, 10, 15, 20, 25, 30}
+uint8_t main_carr[6] = _main_carr;
 
 
-struct Point {
+struct main_Point {
 	double x;
 	double y;
 };
-typedef struct Point Point;
+typedef struct main_Point main_Point;
 
-struct Line {
-	Point a;
-	Point b;
+struct main_Line {
+	main_Point a;
+	main_Point b;
 };
-typedef struct Line Line;
+typedef struct main_Line main_Line;
 
-#define zero  0
-#define pointZero  {.x = zero, .y = zero}
-#define pointOne  {.x = 1.0, .y = 1.0}
+#define main_zero  0
+#define main_pointZero  {.x = main_zero, .y = main_zero}
+#define main_pointOne  {.x = 1.0, .y = 1.0}
 
-#define line0  { \
-	.a = pointZero, \
-	.b = pointOne \
+#define main_line0  { \
+	.a = main_pointZero, \
+	.b = main_pointOne \
 }
 
-#define line1  { \
+#define main_line1  { \
 	.a = {.x = 10, .y = 20	}, \
 	.b = {.x = 30, .y = 40	} \
 }
 
-#define line2  { \
-	.a = pointZero, \
-	.b = pointOne \
+#define main_line2  { \
+	.a = main_pointZero, \
+	.b = main_pointOne \
 }
 
-#define line3  { \
+#define main_line3  { \
 	.a = {.x = 10, .y = 20	}, \
 	.b = {.x = 30, .y = 40	} \
 }
 
-#define _lines  {line0, line1, line2, line3}
-Line lines[4] = _lines;
+#define _main_lines  {main_line0, main_line1, main_line2, main_line3}
+main_Line main_lines[4] = _main_lines;
 
 
-struct WrappedArray {
+struct main_WrappedArray {
 	int32_t x;
 };
-typedef struct WrappedArray WrappedArray;
+typedef struct main_WrappedArray main_WrappedArray;
 
-#define wa  {}
+#define main_wa  {}
 
 
 // Pythagorean theorem
-static float distance(Point a, Point b)
+static float main_distance(main_Point a, main_Point b)
 {
 	double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
 	double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
@@ -77,18 +77,18 @@ static float distance(Point a, Point b)
 }
 
 
-static float lineLength(Line line)
+static float main_lineLength(main_Line line)
 {
-	return distance(line.a, line.b);
+	return main_distance(line.a, line.b);
 }
 
 
 int main()
 {
-	float lines_0_len = lineLength(lines[0]);
-	float lines_1_len = lineLength(lines[1]);
-	float lines_2_len = lineLength(lines[2]);
-	float lines_3_len = lineLength(lines[3]);
+	float lines_0_len = main_lineLength(main_lines[0]);
+	float lines_1_len = main_lineLength(main_lines[1]);
+	float lines_2_len = main_lineLength(main_lines[2]);
+	float lines_3_len = main_lineLength(main_lines[3]);
 
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);

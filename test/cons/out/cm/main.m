@@ -3,7 +3,7 @@
 
 
 public func main() -> ctypes64.Int {
-	printf("test cons operation\n")
+	stdio.printf("test cons operation\n")
 
 	/*let x0 = Int32 -1
 	let x1 = Int64 -1
@@ -17,8 +17,8 @@ public func main() -> ctypes64.Int {
 
 	let a = Nat8 0xFF
 	let b = Nat32 a
-	printf("a = %u\n", a)
-	printf("b = %u\n", b)
+	stdio.printf("a = %u\n", a)
+	stdio.printf("b = %u\n", b)
 
 	//	let c = Int32 a
 	//	let d = Int32 Int8 -1

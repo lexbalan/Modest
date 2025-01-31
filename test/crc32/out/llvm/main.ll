@@ -188,7 +188,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 1
 ; ?? crc32 ??
 ; from import
-declare %Word32 @run([0 x %Word8]* %buf, %Int32 %len)
+declare %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len)
 ; end from import
 ; -- end print imports 'main' --
 ; -- strings --
@@ -198,7 +198,7 @@ declare %Word32 @run([0 x %Word8]* %buf, %Int32 %len)
 @str4 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-@data = internal global [9 x %Word8] [
+@main_data = internal global [9 x %Word8] [
 	%Word8 49,
 	%Word8 50,
 	%Word8 51,
@@ -211,7 +211,7 @@ declare %Word32 @run([0 x %Word8]* %buf, %Int32 %len)
 ]
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-	%2 = call %Word32 @run([0 x %Word8]* bitcast ([9 x %Word8]* @data to [0 x %Word8]*), %Int32 9)
+	%2 = call %Word32 @crc32_run([0 x %Word8]* bitcast ([9 x %Word8]* @main_data to [0 x %Word8]*), %Int32 9)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Word32 %2)
 	%4 = icmp eq %Word32 %2, 3421780262
 	br %Bool %4 , label %then_0, label %else_0

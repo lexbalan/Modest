@@ -4,7 +4,7 @@
 type NewInt32 Int32
 
 public func main() -> ctypes64.Int {
-	printf("test typedef\n")
+	stdio.printf("test typedef\n")
 
 	var newInt32: NewInt32
 	newInt32 = NewInt32 0

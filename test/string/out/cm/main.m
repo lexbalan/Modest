@@ -23,27 +23,27 @@ var ptr_to_string32: *[]Char32 = str32_example
 
 public func main() -> ctypes64.Int {
 	console.putchar_utf8("A")
-	printf("\n")
+	stdio.printf("\n")
 	console.putchar_utf16("Ω")
-	printf("\n")
+	stdio.printf("\n")
 	console.putchar_utf32("🦄")
 
-	printf("\n\n")
+	stdio.printf("\n\n")
 
 	console.puts8(&string8)
-	printf("\n")
+	stdio.printf("\n")
 	console.puts16(&string16)
-	printf("\n")
+	stdio.printf("\n")
 	console.puts32(&string32)
 
-	printf("\n\n")
+	stdio.printf("\n\n")
 
 	console.puts8(ptr_to_string8)
-	printf("\n")
+	stdio.printf("\n")
 	console.puts16(ptr_to_string16)
-	printf("\n")
+	stdio.printf("\n")
 	console.puts32(ptr_to_string32)
-	printf("\n")
+	stdio.printf("\n")
 
 	return 0
 }

@@ -220,155 +220,155 @@ declare void @perror(%ConstCharStr* %str)
 @str30 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str31 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-%Point2D = type {
+%main_Point2D = type {
 	%Int32,
 	%Int32
 };
 
-%Point3D = type {
+%main_Point3D = type {
 	%Int32,
 	%Int32,
 	%Int32
 };
 
-%Point = type {
+%main_Point = type {
 	%Int32,
 	%Int32
 };
 
-%Line = type {
-	%Point,
-	%Point
+%main_Line = type {
+	%main_Point,
+	%main_Point
 };
 
-@line = internal global %Line {
-	%Point {
+@main_line = internal global %main_Line {
+	%main_Point {
 		%Int32 10,
 		%Int32 11
 	},
-	%Point {
+	%main_Point {
 		%Int32 12,
 		%Int32 13
 	}
 }
-@lines = internal global [3 x %Line] [
-	%Line {
-		%Point {
+@main_lines = internal global [3 x %main_Line] [
+	%main_Line {
+		%main_Point {
 			%Int32 1,
 			%Int32 2
 		},
-		%Point {
+		%main_Point {
 			%Int32 3,
 			%Int32 4
 		}
 	},
-	%Line {
-		%Point {
+	%main_Line {
+		%main_Point {
 			%Int32 5,
 			%Int32 6
 		},
-		%Point {
+		%main_Point {
 			%Int32 7,
 			%Int32 8
 		}
 	},
-	%Line {
-		%Point {
+	%main_Line {
+		%main_Point {
 			%Int32 9,
 			%Int32 10
 		},
-		%Point {
+		%main_Point {
 			%Int32 11,
 			%Int32 12
 		}
 	}
 ]
-@pLines = internal global [3 x %Line*] [
-	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 0),
-	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 1),
-	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 2)
+@main_pLines = internal global [3 x %main_Line*] [
+	%main_Line* getelementptr ([3 x %main_Line], [3 x %main_Line]* @main_lines, %Int32 0, %Int32 0),
+	%main_Line* getelementptr ([3 x %main_Line], [3 x %main_Line]* @main_lines, %Int32 0, %Int32 1),
+	%main_Line* getelementptr ([3 x %main_Line], [3 x %main_Line]* @main_lines, %Int32 0, %Int32 2)
 ]
-%Struct = type {
-	%Line*
+%main_Struct = type {
+	%main_Line*
 };
 
-@s = internal global %Struct {
-	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 0)
+@main_s = internal global %main_Struct {
+	%main_Line* getelementptr ([3 x %main_Line], [3 x %main_Line]* @main_lines, %Int32 0, %Int32 0)
 }
-define internal void @test_records() {
-	%1 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 0, %Int32 0
+define internal void @main_test_records() {
+	%1 = getelementptr %main_Line, %main_Line* @main_line, %Int32 0, %Int32 0, %Int32 0
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Int32 %2)
-	%4 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 0, %Int32 1
+	%4 = getelementptr %main_Line, %main_Line* @main_line, %Int32 0, %Int32 0, %Int32 1
 	%5 = load %Int32, %Int32* %4
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), %Int32 %5)
-	%7 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 1, %Int32 0
+	%7 = getelementptr %main_Line, %main_Line* @main_line, %Int32 0, %Int32 1, %Int32 0
 	%8 = load %Int32, %Int32* %7
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str3 to [0 x i8]*), %Int32 %8)
-	%10 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 1, %Int32 1
+	%10 = getelementptr %main_Line, %main_Line* @main_line, %Int32 0, %Int32 1, %Int32 1
 	%11 = load %Int32, %Int32* %10
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str4 to [0 x i8]*), %Int32 %11)
-	%13 = getelementptr [3 x %Line*], [3 x %Line*]* @pLines, %Int32 0, %Int32 0
-	%14 = load %Line*, %Line** %13
-	%15 = getelementptr %Line, %Line* %14, %Int32 0, %Int32 0, %Int32 0
+	%13 = getelementptr [3 x %main_Line*], [3 x %main_Line*]* @main_pLines, %Int32 0, %Int32 0
+	%14 = load %main_Line*, %main_Line** %13
+	%15 = getelementptr %main_Line, %main_Line* %14, %Int32 0, %Int32 0, %Int32 0
 	%16 = load %Int32, %Int32* %15
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*), %Int32 %16)
-	%18 = getelementptr [3 x %Line*], [3 x %Line*]* @pLines, %Int32 0, %Int32 0
-	%19 = load %Line*, %Line** %18
-	%20 = getelementptr %Line, %Line* %19, %Int32 0, %Int32 0, %Int32 1
+	%18 = getelementptr [3 x %main_Line*], [3 x %main_Line*]* @main_pLines, %Int32 0, %Int32 0
+	%19 = load %main_Line*, %main_Line** %18
+	%20 = getelementptr %main_Line, %main_Line* %19, %Int32 0, %Int32 0, %Int32 1
 	%21 = load %Int32, %Int32* %20
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str6 to [0 x i8]*), %Int32 %21)
-	%23 = getelementptr [3 x %Line*], [3 x %Line*]* @pLines, %Int32 0, %Int32 0
-	%24 = load %Line*, %Line** %23
-	%25 = getelementptr %Line, %Line* %24, %Int32 0, %Int32 1, %Int32 0
+	%23 = getelementptr [3 x %main_Line*], [3 x %main_Line*]* @main_pLines, %Int32 0, %Int32 0
+	%24 = load %main_Line*, %main_Line** %23
+	%25 = getelementptr %main_Line, %main_Line* %24, %Int32 0, %Int32 1, %Int32 0
 	%26 = load %Int32, %Int32* %25
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), %Int32 %26)
-	%28 = getelementptr [3 x %Line*], [3 x %Line*]* @pLines, %Int32 0, %Int32 0
-	%29 = load %Line*, %Line** %28
-	%30 = getelementptr %Line, %Line* %29, %Int32 0, %Int32 1, %Int32 1
+	%28 = getelementptr [3 x %main_Line*], [3 x %main_Line*]* @main_pLines, %Int32 0, %Int32 0
+	%29 = load %main_Line*, %main_Line** %28
+	%30 = getelementptr %main_Line, %main_Line* %29, %Int32 0, %Int32 1, %Int32 1
 	%31 = load %Int32, %Int32* %30
 	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str8 to [0 x i8]*), %Int32 %31)
-	%33 = getelementptr %Struct, %Struct* @s, %Int32 0, %Int32 0
-	%34 = load %Line*, %Line** %33
-	%35 = getelementptr %Line, %Line* %34, %Int32 0, %Int32 0, %Int32 0
+	%33 = getelementptr %main_Struct, %main_Struct* @main_s, %Int32 0, %Int32 0
+	%34 = load %main_Line*, %main_Line** %33
+	%35 = getelementptr %main_Line, %main_Line* %34, %Int32 0, %Int32 0, %Int32 0
 	%36 = load %Int32, %Int32* %35
 	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str9 to [0 x i8]*), %Int32 %36)
-	%38 = getelementptr %Struct, %Struct* @s, %Int32 0, %Int32 0
-	%39 = load %Line*, %Line** %38
-	%40 = getelementptr %Line, %Line* %39, %Int32 0, %Int32 0, %Int32 1
+	%38 = getelementptr %main_Struct, %main_Struct* @main_s, %Int32 0, %Int32 0
+	%39 = load %main_Line*, %main_Line** %38
+	%40 = getelementptr %main_Line, %main_Line* %39, %Int32 0, %Int32 0, %Int32 1
 	%41 = load %Int32, %Int32* %40
 	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str10 to [0 x i8]*), %Int32 %41)
-	%43 = getelementptr %Struct, %Struct* @s, %Int32 0, %Int32 0
-	%44 = load %Line*, %Line** %43
-	%45 = getelementptr %Line, %Line* %44, %Int32 0, %Int32 1, %Int32 0
+	%43 = getelementptr %main_Struct, %main_Struct* @main_s, %Int32 0, %Int32 0
+	%44 = load %main_Line*, %main_Line** %43
+	%45 = getelementptr %main_Line, %main_Line* %44, %Int32 0, %Int32 1, %Int32 0
 	%46 = load %Int32, %Int32* %45
 	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str11 to [0 x i8]*), %Int32 %46)
-	%48 = getelementptr %Struct, %Struct* @s, %Int32 0, %Int32 0
-	%49 = load %Line*, %Line** %48
-	%50 = getelementptr %Line, %Line* %49, %Int32 0, %Int32 1, %Int32 1
+	%48 = getelementptr %main_Struct, %main_Struct* @main_s, %Int32 0, %Int32 0
+	%49 = load %main_Line*, %main_Line** %48
+	%50 = getelementptr %main_Line, %main_Line* %49, %Int32 0, %Int32 1, %Int32 1
 	%51 = load %Int32, %Int32* %50
 	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str12 to [0 x i8]*), %Int32 %51)
-	%53 = load %Struct, %Struct* @s
-	%54 = alloca %Struct
-	store %Struct %53, %Struct* %54
-	%55 = getelementptr %Struct, %Struct* %54, %Int32 0, %Int32 0
-	%56 = load %Line*, %Line** %55
-	%57 = getelementptr %Line, %Line* %56, %Int32 0, %Int32 0, %Int32 0
+	%53 = load %main_Struct, %main_Struct* @main_s
+	%54 = alloca %main_Struct
+	store %main_Struct %53, %main_Struct* %54
+	%55 = getelementptr %main_Struct, %main_Struct* %54, %Int32 0, %Int32 0
+	%56 = load %main_Line*, %main_Line** %55
+	%57 = getelementptr %main_Line, %main_Line* %56, %Int32 0, %Int32 0, %Int32 0
 	%58 = load %Int32, %Int32* %57
 	%59 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str13 to [0 x i8]*), %Int32 %58)
-	%60 = getelementptr %Struct, %Struct* %54, %Int32 0, %Int32 0
-	%61 = load %Line*, %Line** %60
-	%62 = getelementptr %Line, %Line* %61, %Int32 0, %Int32 0, %Int32 1
+	%60 = getelementptr %main_Struct, %main_Struct* %54, %Int32 0, %Int32 0
+	%61 = load %main_Line*, %main_Line** %60
+	%62 = getelementptr %main_Line, %main_Line* %61, %Int32 0, %Int32 0, %Int32 1
 	%63 = load %Int32, %Int32* %62
 	%64 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str14 to [0 x i8]*), %Int32 %63)
-	%65 = getelementptr %Struct, %Struct* %54, %Int32 0, %Int32 0
-	%66 = load %Line*, %Line** %65
-	%67 = getelementptr %Line, %Line* %66, %Int32 0, %Int32 1, %Int32 0
+	%65 = getelementptr %main_Struct, %main_Struct* %54, %Int32 0, %Int32 0
+	%66 = load %main_Line*, %main_Line** %65
+	%67 = getelementptr %main_Line, %main_Line* %66, %Int32 0, %Int32 1, %Int32 0
 	%68 = load %Int32, %Int32* %67
 	%69 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str15 to [0 x i8]*), %Int32 %68)
-	%70 = getelementptr %Struct, %Struct* %54, %Int32 0, %Int32 0
-	%71 = load %Line*, %Line** %70
-	%72 = getelementptr %Line, %Line* %71, %Int32 0, %Int32 1, %Int32 1
+	%70 = getelementptr %main_Struct, %main_Struct* %54, %Int32 0, %Int32 0
+	%71 = load %main_Line*, %main_Line** %70
+	%72 = getelementptr %main_Line, %main_Line* %71, %Int32 0, %Int32 1, %Int32 1
 	%73 = load %Int32, %Int32* %72
 	%74 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str16 to [0 x i8]*), %Int32 %73)
 	ret void
@@ -391,16 +391,16 @@ else_0:
 endif_0:
 
 	; compare two Point2D records
-	%6 = alloca %Point2D, align 8
-	%7 = insertvalue %Point2D zeroinitializer, %Int32 1, 0
-	%8 = insertvalue %Point2D %7, %Int32 2, 1
-	store %Point2D %8, %Point2D* %6
-	%9 = alloca %Point2D, align 8
-	%10 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
-	%11 = insertvalue %Point2D %10, %Int32 20, 1
-	store %Point2D %11, %Point2D* %9
-	%12 = bitcast %Point2D* %6 to i8*
-	%13 = bitcast %Point2D* %9 to i8*
+	%6 = alloca %main_Point2D, align 8
+	%7 = insertvalue %main_Point2D zeroinitializer, %Int32 1, 0
+	%8 = insertvalue %main_Point2D %7, %Int32 2, 1
+	store %main_Point2D %8, %main_Point2D* %6
+	%9 = alloca %main_Point2D, align 8
+	%10 = insertvalue %main_Point2D zeroinitializer, %Int32 10, 0
+	%11 = insertvalue %main_Point2D %10, %Int32 20, 1
+	store %main_Point2D %11, %main_Point2D* %9
+	%12 = bitcast %main_Point2D* %6 to i8*
+	%13 = bitcast %main_Point2D* %9 to i8*
 	%14 = call i1 (i8*, i8*, i64) @memeq(i8* %12, i8* %13, %Int64 8)
 	%15 = icmp ne %Bool %14, 0
 	br %Bool %15 , label %then_1, label %else_1
@@ -414,21 +414,21 @@ endif_1:
 
 
 	; compare Point2D with anonymous record
-	%18 = alloca %Point2D, align 8
-	%19 = load %Point2D, %Point2D* %6
-	store %Point2D %19, %Point2D* %18
+	%18 = alloca %main_Point2D, align 8
+	%19 = load %main_Point2D, %main_Point2D* %6
+	store %main_Point2D %19, %main_Point2D* %18
 	%20 = alloca {%Int32,%Int32}, align 8
 	%21 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
 	%22 = insertvalue {%Int32,%Int32} %21, %Int32 2, 1
 	store {%Int32,%Int32} %22, {%Int32,%Int32}* %20
 ; -- cons_composite_from_composite_by_adr --
-	%23 = bitcast {%Int32,%Int32}* %20 to %Point2D*
-	%24 = load %Point2D, %Point2D* %23
+	%23 = bitcast {%Int32,%Int32}* %20 to %main_Point2D*
+	%24 = load %main_Point2D, %main_Point2D* %23
 ; -- end cons_composite_from_composite_by_adr --
-	%25 = alloca %Point2D
-	store %Point2D %24, %Point2D* %25
-	%26 = bitcast %Point2D* %18 to i8*
-	%27 = bitcast %Point2D* %25 to i8*
+	%25 = alloca %main_Point2D
+	store %main_Point2D %24, %main_Point2D* %25
+	%26 = bitcast %main_Point2D* %18 to i8*
+	%27 = bitcast %main_Point2D* %25 to i8*
 	%28 = call i1 (i8*, i8*, i64) @memeq(i8* %26, i8* %27, %Int64 8)
 	%29 = icmp ne %Bool %28, 0
 	br %Bool %29 , label %then_2, label %else_2
@@ -467,13 +467,13 @@ endif_3:
 
 	; comparison between two record (by pointer)
 ; -- cons_composite_from_composite_by_adr --
-	%44 = bitcast {%Int32,%Int32}* %20 to %Point2D*
-	%45 = load %Point2D, %Point2D* %44
+	%44 = bitcast {%Int32,%Int32}* %20 to %main_Point2D*
+	%45 = load %main_Point2D, %main_Point2D* %44
 ; -- end cons_composite_from_composite_by_adr --
-	%46 = alloca %Point2D
-	store %Point2D %45, %Point2D* %46
-	%47 = bitcast %Point2D* %18 to i8*
-	%48 = bitcast %Point2D* %46 to i8*
+	%46 = alloca %main_Point2D
+	store %main_Point2D %45, %main_Point2D* %46
+	%47 = bitcast %main_Point2D* %18 to i8*
+	%48 = bitcast %main_Point2D* %46 to i8*
 	%49 = call i1 (i8*, i8*, i64) @memeq(i8* %47, i8* %48, %Int64 8)
 	%50 = icmp ne %Bool %49, 0
 	br %Bool %50 , label %then_4, label %else_4
@@ -498,20 +498,20 @@ endif_4:
 ;
 
 	; assign record by pointer
-	%53 = insertvalue %Point2D zeroinitializer, %Int32 100, 0
-	%54 = insertvalue %Point2D %53, %Int32 200, 1
-	store %Point2D %54, %Point2D* %18
+	%53 = insertvalue %main_Point2D zeroinitializer, %Int32 100, 0
+	%54 = insertvalue %main_Point2D %53, %Int32 200, 1
+	store %main_Point2D %54, %main_Point2D* %18
 	store {%Int32,%Int32} zeroinitializer, {%Int32,%Int32}* %20
 
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)  ((EXPERIMENTAL))
-	%55 = alloca %Point3D, align 16
+	%55 = alloca %main_Point3D, align 16
 ; -- cons_composite_from_composite_by_adr --
-	%56 = bitcast %Point2D* %18 to %Point3D*
-	%57 = load %Point3D, %Point3D* %56
+	%56 = bitcast %main_Point2D* %18 to %main_Point3D*
+	%57 = load %main_Point3D, %main_Point3D* %56
 ; -- end cons_composite_from_composite_by_adr --
-	store %Point3D %57, %Point3D* %55
+	store %main_Point3D %57, %main_Point3D* %55
 
 
 	; проверка того как локальная константа-массив
@@ -556,7 +556,7 @@ else_5:
 	%82 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str31 to [0 x i8]*))
 	br label %endif_5
 endif_5:
-	call void @test_records()
+	call void @main_test_records()
 	ret %Int 0
 }
 

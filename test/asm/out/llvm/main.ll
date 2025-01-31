@@ -194,7 +194,7 @@ declare void @perror(%ConstCharStr* %str)
 @str4 = private constant [24 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 @str5 = private constant [24 x i8] [i8 115, i8 117, i8 98, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define internal %Int64 @sum64(%Int64 %a, %Int64 %b) {
+define internal %Int64 @main_sum64(%Int64 %a, %Int64 %b) {
 	%1 = alloca %Int64, align 8
 	%2 = call %Int64 asm sideeffect "add $0, $1, $2", "=r,r,r,~{cc}" (%Int64 %a, %Int64 %b)
 	store %Int64 %2, %Int64* %1
@@ -202,7 +202,7 @@ define internal %Int64 @sum64(%Int64 %a, %Int64 %b) {
 	ret %Int64 %3
 }
 
-define internal %Int64 @sub64(%Int64 %a, %Int64 %b) {
+define internal %Int64 @main_sub64(%Int64 %a, %Int64 %b) {
 	%1 = alloca %Int64, align 8
 	%2 = call %Int64 asm sideeffect "sub $0, $1, $2", "=r,r,r,~{cc}" (%Int64 %a, %Int64 %b)
 	store %Int64 %2, %Int64* %1
@@ -210,7 +210,7 @@ define internal %Int64 @sub64(%Int64 %a, %Int64 %b) {
 	ret %Int64 %3
 }
 
-define internal void @sumsub64(%Int64 %a, %Int64 %b) {
+define internal void @main_sumsub64(%Int64 %a, %Int64 %b) {
 	%1 = alloca %Int64, align 8
 	%2 = alloca %Int64, align 8
 	%3 = call {%Int64,%Int64} asm sideeffect "add $0, $2, $3\0Asub $1, $2, $3\0A", "=&r,=&r,r,r,~{cc}" (%Int64 %a, %Int64 %b)
@@ -233,10 +233,10 @@ define %Int @main() {
 	store %Int64 20, %Int64* %3
 	%4 = load %Int64, %Int64* %2
 	%5 = load %Int64, %Int64* %3
-	%6 = call %Int64 @sum64(%Int64 %4, %Int64 %5)
+	%6 = call %Int64 @main_sum64(%Int64 %4, %Int64 %5)
 	%7 = load %Int64, %Int64* %2
 	%8 = load %Int64, %Int64* %3
-	%9 = call %Int64 @sub64(%Int64 %7, %Int64 %8)
+	%9 = call %Int64 @main_sub64(%Int64 %7, %Int64 %8)
 	%10 = load %Int64, %Int64* %2
 	%11 = load %Int64, %Int64* %3
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str4 to [0 x i8]*), %Int64 %10, %Int64 %11, %Int64 %6)
@@ -245,7 +245,7 @@ define %Int @main() {
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str5 to [0 x i8]*), %Int64 %13, %Int64 %14, %Int64 %9)
 	%16 = load %Int64, %Int64* %2
 	%17 = load %Int64, %Int64* %3
-	call void @sumsub64(%Int64 %16, %Int64 %17)
+	call void @main_sumsub64(%Int64 %16, %Int64 %17)
 	ret %Int 0
 }
 

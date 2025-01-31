@@ -57,9 +57,9 @@ const wa = WrappedArray {}
 func distance(a: Point, b: Point) -> ctypes64.Float {
 	let dx = minmax.max_float64(a.x, b.x) - minmax.min_float64(a.x, b.x)
 	let dy = minmax.max_float64(a.y, b.y) - minmax.min_float64(a.y, b.y)
-	let dx2 = pow(dx, 2)
-	let dy2 = pow(dy, 2)
-	return sqrt(dx2 + dy2)
+	let dx2 = math.pow(dx, 2)
+	let dy2 = math.pow(dy, 2)
+	return math.sqrt(dx2 + dy2)
 }
 
 
@@ -74,8 +74,8 @@ public func main() -> ctypes64.Int {
 	let lines_2_len = lineLength(lines[2])
 	let lines_3_len = lineLength(lines[3])
 
-	printf("lines_0_len = %f\n", lines_0_len)
-	printf("lines_1_len = %f\n", lines_1_len)
+	stdio.printf("lines_0_len = %f\n", lines_0_len)
+	stdio.printf("lines_1_len = %f\n", lines_1_len)
 
 	//	let y = wa.x
 

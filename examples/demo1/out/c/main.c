@@ -9,15 +9,15 @@
 
 
 
-#define minNumber  0
-#define maxNumber  10
+#define main_minNumber  0
+#define main_maxNumber  10
 
 
 
-static int32_t get_number(int32_t min, int32_t max);
+static int32_t main_get_number(int32_t min, int32_t max);
 int32_t main()
 {
-	int32_t number = get_number(minNumber, maxNumber);
+	int32_t number = main_get_number(main_minNumber, main_maxNumber);
 
 	int32_t n = 5;
 
@@ -33,7 +33,7 @@ int32_t main()
 }
 
 
-static int32_t get_number(int32_t min, int32_t max)
+static int32_t main_get_number(int32_t min, int32_t max)
 {
 	int32_t number;
 	number = 0;

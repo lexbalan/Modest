@@ -10,21 +10,21 @@
 
 
 // Simply record for records assignation test
-struct Point {
+struct main_Point {
 	int32_t x;
 	int32_t y;
 };
-typedef struct Point Point;
+typedef struct main_Point main_Point;
 
 
-static int32_t glb_i0 = 0;
-static int32_t glb_i1 = 321;
+static int32_t main_glb_i0 = 0;
+static int32_t main_glb_i1 = 321;
 
-static Point glb_r0 = {};
-static Point glb_r1 = {.x = 20, .y = 10};
+static main_Point main_glb_r0 = {};
+static main_Point main_glb_r1 = {.x = 20, .y = 10};
 
-static int32_t glb_a0[10] = (int32_t[10]){};
-static int32_t glb_a1[10] = (int32_t[10]){64, 53, 42};
+static int32_t main_glb_a0[10] = (int32_t[10]){};
+static int32_t main_glb_a1[10] = (int32_t[10]){64, 53, 42};
 
 
 int main()
@@ -35,23 +35,23 @@ int main()
 	// Global
 
 	// copy integers by value
-	glb_i0 = glb_i1;
-	printf("glb_i0 = %i\n", glb_i0);
+	main_glb_i0 = main_glb_i1;
+	printf("glb_i0 = %i\n", main_glb_i0);
 
 
 	// copy arrays by value
-	memcpy(&glb_a0, &glb_a1, sizeof glb_a0);
+	memcpy(&main_glb_a0, &main_glb_a1, sizeof main_glb_a0);
 
-	printf("glb_a0[0] = %i\n", glb_a0[0]);
-	printf("glb_a0[1] = %i\n", glb_a0[1]);
-	printf("glb_a0[2] = %i\n", glb_a0[2]);
+	printf("glb_a0[0] = %i\n", main_glb_a0[0]);
+	printf("glb_a0[1] = %i\n", main_glb_a0[1]);
+	printf("glb_a0[2] = %i\n", main_glb_a0[2]);
 
 
 	// copy records by value
-	glb_r0 = glb_r1;
+	main_glb_r0 = main_glb_r1;
 
-	printf("glb_r0.x = %i\n", glb_r0.x);
-	printf("glb_r0.y = %i\n", glb_r0.y);
+	printf("glb_r0.x = %i\n", main_glb_r0.x);
+	printf("glb_r0.y = %i\n", main_glb_r0.y);
 
 
 	// -----------------------------------
@@ -81,8 +81,8 @@ int main()
 
 	// copy records by value
 	// C backend will be use memcpy()
-	Point loc_r0 = (Point){	};
-	Point loc_r1 = (Point){.x = 10, .y = 20	};
+	main_Point loc_r0 = (main_Point){	};
+	main_Point loc_r1 = (main_Point){.x = 10, .y = 20	};
 
 	loc_r0 = loc_r1;
 

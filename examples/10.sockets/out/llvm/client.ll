@@ -330,7 +330,7 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 @str10 = private constant [26 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 115, i8 101, i8 110, i8 100, i8 117, i8 110, i8 103, i8 32, i8 100, i8 97, i8 116, i8 97, i8 0]
 @str11 = private constant [34 x i8] [i8 91, i8 43, i8 93, i8 32, i8 68, i8 105, i8 115, i8 99, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 101, i8 100, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 116, i8 104, i8 101, i8 32, i8 115, i8 101, i8 114, i8 118, i8 101, i8 114, i8 10, i8 0]
 ; -- endstrings --
-define internal %Bool @send_file(%File* %fp, %Int %sockfd) {
+define internal %Bool @client_send_file(%File* %fp, %Int %sockfd) {
 	%1 = alloca [1024 x %Char8], align 1
 	br label %again_1
 again_1:
@@ -399,7 +399,7 @@ then_2:
 	call void @exit(%Int 1)
 	br label %endif_2
 endif_2:
-	%19 = call %Bool @send_file(%File* %17, %Int %1)
+	%19 = call %Bool @client_send_file(%File* %17, %Int %1)
 	br %Bool %19 , label %then_3, label %else_3
 then_3:
 	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str9 to [0 x i8]*))

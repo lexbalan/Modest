@@ -26,7 +26,7 @@ public func putchar32(c: Char32) -> Unit {
 
 
 public func putchar_utf8(c: Char8) -> Unit {
-	putchar(Int32 c)
+	stdio.putchar(Int32 c)
 }
 
 
@@ -131,7 +131,7 @@ public func vfprint(fd: Int32, form: *Str8, va: va_list) -> Int32 {
 	var strbuf: [256]Char8
 	let n = vsprint(&strbuf, form, va)
 	strbuf[n] = "\x0"
-	write(fd, &strbuf, ctypes64.SizeT n)
+	unistd.write(fd, &strbuf, ctypes64.SizeT n)
 	return n
 }
 
@@ -213,8 +213,8 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			// %s pointer to string
 			//
 			let s = __va_arg(va, *Str8)
-			strcpy(sptr, s)
-			j = j + Int32 strlen(s)
+			string.strcpy(sptr, s)
+			j = j + Int32 string.strlen(s)
 
 		} else if c == "c" {
 			//

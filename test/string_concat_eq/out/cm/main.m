@@ -12,12 +12,12 @@ const test = "test"
 
 
 public func main() -> ctypes64.Int {
-	printf("%s\n", *Str8 greeting)
+	stdio.printf("%s\n", *Str8 greeting)
 
 	if test == "test" {
-		printf("test ok.\n")
+		stdio.printf("test ok.\n")
 	} else {
-		printf("test failed.\n")
+		stdio.printf("test failed.\n")
 	}
 
 	return 0

@@ -3,41 +3,41 @@
 
 
 public func main() -> ctypes64.Int {
-	printf("generic types test\n")
+	stdio.printf("generic types test\n")
 
 	let t1 = test_generic_integer()
 	if t1 {
-		printf("test_generic_integer passed\n")
+		stdio.printf("test_generic_integer passed\n")
 	} else {
-		printf("test_generic_integer failed\n")
+		stdio.printf("test_generic_integer failed\n")
 	}
 
 	let t2 = test_generic_float()
 	if t2 {
-		printf("test_generic_float passed\n")
+		stdio.printf("test_generic_float passed\n")
 	} else {
-		printf("test_generic_float failed\n")
+		stdio.printf("test_generic_float failed\n")
 	}
 
 	let t3 = test_generic_char()
 	if t3 {
-		printf("test_generic_char passed\n")
+		stdio.printf("test_generic_char passed\n")
 	} else {
-		printf("test_generic_char failed\n")
+		stdio.printf("test_generic_char failed\n")
 	}
 
 	let t4 = test_generic_array()
 	if t4 {
-		printf("test_generic_array passed\n")
+		stdio.printf("test_generic_array passed\n")
 	} else {
-		printf("test_generic_array failed\n")
+		stdio.printf("test_generic_array failed\n")
 	}
 
 	let t5 = test_generic_record()
 	if t5 {
-		printf("test_generic_record passed\n")
+		stdio.printf("test_generic_record passed\n")
 	} else {
-		printf("test_generic_integer failed\n")
+		stdio.printf("test_generic_integer failed\n")
 	}
 
 	return 0
@@ -116,7 +116,7 @@ func test_generic_array() -> Bool {
 	let a = [0, 1, 2, 3]
 
 	if a != [0, 1, 2, 3] {
-		printf("error: a != [0, 1, 2, 3]\n")
+		stdio.printf("error: a != [0, 1, 2, 3]\n")
 		return false
 	}
 
@@ -128,7 +128,7 @@ func test_generic_array() -> Bool {
 	b = a
 
 	if b != [0, 1, 2, 3] {
-		printf("b != [0, 1, 2, 3]\n")
+		stdio.printf("b != [0, 1, 2, 3]\n")
 		return false
 	}
 
@@ -137,7 +137,7 @@ func test_generic_array() -> Bool {
 	c = a
 
 	if c != [0, 1, 2, 3] {
-		printf("c != [0, 1, 2, 3]\n")
+		stdio.printf("c != [0, 1, 2, 3]\n")
 		return false
 	}
 
@@ -145,7 +145,7 @@ func test_generic_array() -> Bool {
 	var d: [10]Int32 = [10]Int32 a
 
 	if d != [0, 1, 2, 3] {
-		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n")
+		stdio.printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n")
 		return false
 	}
 

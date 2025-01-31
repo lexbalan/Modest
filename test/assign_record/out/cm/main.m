@@ -12,17 +12,17 @@ var globalPoint1: Point = {}
 
 
 public func main() -> ctypes64.Int {
-	printf("test assign_array\n")
+	stdio.printf("test assign_array\n")
 
 	globalPoint1 = globalPoint0
 
-	printf("globalPoint1.x = %d\n", globalPoint1.x)
-	printf("globalPoint1.x = %d\n", globalPoint1.y)
+	stdio.printf("globalPoint1.x = %d\n", globalPoint1.x)
+	stdio.printf("globalPoint1.x = %d\n", globalPoint1.y)
 
 	if globalPoint0 == globalPoint1 {
-		printf("globalPoint test passed\n")
+		stdio.printf("globalPoint test passed\n")
 	} else {
-		printf("globalPoint test failed\n")
+		stdio.printf("globalPoint test failed\n")
 	}
 
 	// local
@@ -32,13 +32,13 @@ public func main() -> ctypes64.Int {
 
 	localPoint1 = localPoint0
 
-	printf("localPoint1.x = %d\n", localPoint1.x)
-	printf("localPoint1.x = %d\n", localPoint1.y)
+	stdio.printf("localPoint1.x = %d\n", localPoint1.x)
+	stdio.printf("localPoint1.x = %d\n", localPoint1.y)
 
 	if localPoint0 == localPoint1 {
-		printf("localPoint test passed\n")
+		stdio.printf("localPoint test passed\n")
 	} else {
-		printf("localPoint test failed\n")
+		stdio.printf("localPoint test failed\n")
 	}
 
 	return 0

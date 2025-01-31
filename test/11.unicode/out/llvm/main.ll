@@ -287,22 +287,22 @@ declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n
 declare [0 x %Char]* @strerror(%Int %error)
 ; ?? utf ??
 ; from import
-declare %Int8 @utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
-declare %Int8 @utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
+declare %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
+declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; end from import
 ; from import
-declare void @putchar8(%Char8 %c)
-declare void @putchar16(%Char16 %c)
-declare void @putchar32(%Char32 %c)
-declare void @putchar_utf8(%Char8 %c)
-declare void @putchar_utf16(%Char16 %c)
-declare void @putchar_utf32(%Char32 %c)
-declare void @puts8(%Str8* %s)
-declare void @puts16(%Str16* %s)
-declare void @puts32(%Str32* %s)
-declare void @print(%Str8* %form, ...)
-declare %Int32 @vfprint(%Int32 %fd, %Str8* %form, i8* %va)
-declare %Int32 @vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
+declare void @console_putchar8(%Char8 %c)
+declare void @console_putchar16(%Char16 %c)
+declare void @console_putchar32(%Char32 %c)
+declare void @console_putchar_utf8(%Char8 %c)
+declare void @console_putchar_utf16(%Char16 %c)
+declare void @console_putchar_utf32(%Char32 %c)
+declare void @console_puts8(%Str8* %s)
+declare void @console_puts16(%Str16* %s)
+declare void @console_puts32(%Str32* %s)
+declare void @console_print(%Str8* %form, ...)
+declare %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, i8* %va)
+declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 ; end from import
 ; -- end print imports 'main' --
 ; -- strings --
@@ -315,35 +315,35 @@ declare %Int32 @vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 ; -- endstrings --
 
 ; include test (!)
-@ratSymbolUTF8 = constant [4 x i8] [
+@main_ratSymbolUTF8 = constant [4 x i8] [
 	i8 240,
 	i8 159,
 	i8 144,
 	i8 128
 ]
-@ratSymbolUTF16 = constant [2 x i16] [
+@main_ratSymbolUTF16 = constant [2 x i16] [
 	i16 55357,
 	i16 56320
 ]
-@arr_partycorn = constant [4 x %Char8] [
+@main_arr_partycorn = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 142,
 	%Char8 137
 ]
-@arr_unicorn = constant [4 x %Char8] [
+@main_arr_unicorn = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 166,
 	%Char8 132
 ]
-@arr_rat = constant [4 x %Char8] [
+@main_arr_rat = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 144,
 	%Char8 128
 ]
-@arr_utf8 = internal global [8 x %Char8] [
+@main_arr_utf8 = internal global [8 x %Char8] [
 	%Char8 72,
 	%Char8 105,
 	%Char8 33,
@@ -353,7 +353,7 @@ declare %Int32 @vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char8 0,
 	%Char8 0
 ]
-@arr_utf16 = internal global [9 x %Char16] [
+@main_arr_utf16 = internal global [9 x %Char16] [
 	%Char16 72,
 	%Char16 101,
 	%Char16 108,
@@ -364,7 +364,7 @@ declare %Int32 @vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char16 33,
 	%Char16 10
 ]
-@arr_utf32 = internal global [8 x %Char32] [
+@main_arr_utf32 = internal global [8 x %Char32] [
 	%Char32 72,
 	%Char32 101,
 	%Char32 108,
@@ -382,14 +382,14 @@ define %Int32 @main() {
 	%3 = alloca %Str32*, align 8
 	store %Str32* bitcast ([18 x i32]* @str3 to [0 x i32]*), %Str32** %3
 	%4 = load %Str8*, %Str8** %1
-	call void @puts8(%Str8* %4)
-	call void @puts8(%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	call void @console_puts8(%Str8* %4)
+	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*))
 	%5 = load %Str16*, %Str16** %2
-	call void @puts16(%Str16* %5)
-	call void @puts8(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+	call void @console_puts16(%Str16* %5)
+	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
 	%6 = load %Str32*, %Str32** %3
-	call void @puts32(%Str32* %6)
-	call void @puts8(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
+	call void @console_puts32(%Str32* %6)
+	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
 	ret %Int32 0
 }
 

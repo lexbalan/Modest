@@ -14,9 +14,9 @@
 
 
 // [row, col]
-#define nRows  5
-#define nCols  4
-static char *table[5][4] = (char *[5][4]){
+#define main_nRows  5
+#define main_nCols  4
+static char *main_table[5][4] = (char *[5][4]){
 	"#", "Header0", "Header1", "Header2",
 	"0", "Alef", "Betha", "Emma",
 	"1", "Clock", "Depth", "Free",
@@ -25,7 +25,7 @@ static char *table[5][4] = (char *[5][4]){
 };
 
 
-static uint32_t max(uint32_t a, uint32_t b)
+static uint32_t main_max(uint32_t a, uint32_t b)
 {
 	if (b > a) {
 		return b;
@@ -34,7 +34,7 @@ static uint32_t max(uint32_t a, uint32_t b)
 }
 
 
-static void tableSepPrint(uint32_t *sz, int32_t m)
+static void main_tableSepPrint(uint32_t *sz, int32_t m)
 {
 	printf("+");
 	int32_t i = 0;
@@ -52,7 +52,7 @@ static void tableSepPrint(uint32_t *sz, int32_t m)
 // we cannot receive VLA by value,
 // but we can to receive pointer to open array
 // and after construct pointer to closed array with required dimensions
-static void tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
+static void main_tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
 {
 	int32_t i;
 	int32_t j;
@@ -70,7 +70,7 @@ static void tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
 		j = 0;
 		while (j < n) {
 			uint32_t slen = (uint32_t)strlen((*table)[i][j]);
-			sz[j] = max(slen, sz[j]);
+			sz[j] = main_max(slen, sz[j]);
 			j = j + 1;
 		}
 		i = i + 1;
@@ -88,7 +88,7 @@ static void tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
 	while (i < m) {
 		// pirint `+----+` separator
 		if (i < 2 || !headline) {
-			tableSepPrint((uint32_t *)&sz, n);
+			main_tableSepPrint((uint32_t *)&sz, n);
 			printf("\n");
 		}
 
@@ -115,14 +115,14 @@ static void tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
 		printf("\n");
 		i = i + 1;
 	}
-	tableSepPrint((uint32_t *)&sz, n);
+	main_tableSepPrint((uint32_t *)&sz, n);
 	printf("\n");
 }
 
 
 int32_t main()
 {
-	tablePrint((void *)&table, nRows, nCols, true);
+	main_tablePrint((void *)&main_table, main_nRows, main_nCols, true);
 	return 0;
 }
 

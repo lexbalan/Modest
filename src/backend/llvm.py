@@ -117,11 +117,12 @@ def get_id_str(x):
 	if x.id.llvm:
 		return x.id.llvm
 
-	# если это сущность из другого модуля
-	# добавим к ней префикс ее модуля
-	xmodule = x.getModule()
-	if id.need_decoration or xmodule != None and xmodule != cmodule:
-		id_str = "%s_%s" % (xmodule.id, id.str)
+	if not 'nodecorate' in x.att:
+		xmodule = x.getModule()
+		if xmodule != None:
+			if not 'module_nodecorate' in xmodule.att:
+				return "%s_%s" % (xmodule.id, id.str)
+
 
 	return id.str
 

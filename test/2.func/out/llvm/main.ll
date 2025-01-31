@@ -195,17 +195,17 @@ declare void @perror(%ConstCharStr* %str)
 @str5 = private constant [20 x i8] [i8 102, i8 112, i8 116, i8 114, i8 40, i8 37, i8 105, i8 44, i8 32, i8 37, i8 105, i8 41, i8 32, i8 61, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str6 = private constant [18 x i8] [i8 102, i8 117, i8 110, i8 99, i8 48, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define internal void @func1() {
+define internal void @main_func1() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
 	ret void
 }
 
-define internal void @print_ab(%Int32 %a, %Int32 %b) {
+define internal void @main_print_ab(%Int32 %a, %Int32 %b) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), %Int32 %a, %Int32 %b)
 	ret void
 }
 
-define internal %Int32 @sum(%Int32 %a, %Int32 %b) {
+define internal %Int32 @main_sum(%Int32 %a, %Int32 %b) {
 	%1 = add %Int32 %a, %b
 	ret %Int32 %1
 }
@@ -217,17 +217,17 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*))
 
 	; call declared & defined functions
-	call void @func0()
-	call void @func1()
+	call void @main_func0()
+	call void @main_func1()
 
 	; call function with two arguments
-	call void @print_ab(%Int32 10, %Int32 20)
+	call void @main_print_ab(%Int32 10, %Int32 20)
 
 	; call function with two arguments and return value
-	%2 = call %Int32 @sum(%Int32 1, %Int32 2)
+	%2 = call %Int32 @main_sum(%Int32 1, %Int32 2)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), %Int32 1, %Int32 2, %Int32 %2)
 	%4 = alloca %Int32 (%Int32, %Int32)*, align 8
-	store %Int32 (%Int32, %Int32)* @sum, %Int32 (%Int32, %Int32)** %4
+	store %Int32 (%Int32, %Int32)* @main_sum, %Int32 (%Int32, %Int32)** %4
 	; call function with two arguments and return value
 	%5 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %4
 	%6 = call %Int32 %5(%Int32 1, %Int32 2)
@@ -235,7 +235,7 @@ define %Int @main() {
 	ret %Int 0
 }
 
-define internal void @func0() {
+define internal void @main_func0() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
 	ret void
 }

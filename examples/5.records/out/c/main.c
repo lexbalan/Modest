@@ -13,20 +13,20 @@
 
 
 
-struct Point {
+struct main_Point {
 	float x;
 	float y;
 };
-typedef struct Point Point;
+typedef struct main_Point main_Point;
 
-struct Line {
-	Point a;
-	Point b;
+struct main_Line {
+	main_Point a;
+	main_Point b;
 };
-typedef struct Line Line;
+typedef struct main_Line main_Line;
 
 
-static Line line = {
+static main_Line main_line = {
 	.a = {.x = 0, .y = 0	},
 	.b = {.x = 1.0, .y = 1.0	}
 };
@@ -34,7 +34,7 @@ static Line line = {
 
 
 
-static float max(float a, float b)
+static float main_max(float a, float b)
 {
 	if (a > b) {
 		return a;
@@ -44,7 +44,7 @@ static float max(float a, float b)
 
 
 
-static float min(float a, float b)
+static float main_min(float a, float b)
 {
 	if (a < b) {
 		return a;
@@ -54,25 +54,25 @@ static float min(float a, float b)
 
 
 // Pythagorean theorem
-static float distance(Point a, Point b)
+static float main_distance(main_Point a, main_Point b)
 {
-	float dx = max(a.x, b.x) - min(a.x, b.x);
-	float dy = max(a.y, b.y) - min(a.y, b.y);
+	float dx = main_max(a.x, b.x) - main_min(a.x, b.x);
+	float dy = main_max(a.y, b.y) - main_min(a.y, b.y);
 	double dx2 = pow(dx, (double)(2));
 	double dy2 = pow(dy, (double)(2));
 	return sqrt(dx2 + dy2);
 }
 
 
-static float lineLength(Line line)
+static float main_lineLength(main_Line line)
 {
-	return distance(line.a, line.b);
+	return main_distance(line.a, line.b);
 }
 
 
-static void ptr_example()
+static void main_ptr_example()
 {
-	Point *ptr_p = (Point *)malloc(sizeof(Point));
+	main_Point *ptr_p = (main_Point *)malloc(sizeof(main_Point));
 
 	// access by pointer
 	ptr_p->x = (float)(10);
@@ -85,10 +85,10 @@ static void ptr_example()
 int main()
 {
 	// by value
-	float len = lineLength(line);
+	float len = main_lineLength(main_line);
 	printf("line length = %f\n", len);
 
-	ptr_example();
+	main_ptr_example();
 
 	return 0;
 }

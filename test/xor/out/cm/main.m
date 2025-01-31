@@ -31,32 +31,32 @@ var test_key: [key_length + 1]Char8 = "abc"
 func print_bytes(buf: *[]Word8, len: Nat32) -> Unit {
 	var i: Nat32 = Nat32 0
 	while i < len {
-		printf("0x%02X ", buf[i])
+		stdio.printf("0x%02X ", buf[i])
 		i = i + 1
 	}
-	printf("\n")
+	stdio.printf("\n")
 }
 
 
 public func main() -> ctypes64.Int {
-	printf("test xor encrypting\n")
+	stdio.printf("test xor encrypting\n")
 
 	let tmsg = *[]Word8 &test_msg
 	let tkey = *[]Word8 &test_key
 
-	printf("before encrypt test_msg: \n")
+	stdio.printf("before encrypt test_msg: \n")
 	print_bytes(tmsg, msg_length)
 
 	// encrypt test data
 	xor_encrypter(tmsg, msg_length, tkey, key_length)
 
-	printf("after encrypt test_msg: \n")
+	stdio.printf("after encrypt test_msg: \n")
 	print_bytes(tmsg, msg_length)
 
 	// decrypt test data
 	xor_encrypter(tmsg, msg_length, tkey, key_length)
 
-	printf("after decrypt test_msg: \n")
+	stdio.printf("after decrypt test_msg: \n")
 	print_bytes(tmsg, msg_length)
 
 	return 0

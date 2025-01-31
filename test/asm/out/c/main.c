@@ -9,7 +9,7 @@
 
 
 
-static int64_t sum64(int64_t a, int64_t b)
+static int64_t main_sum64(int64_t a, int64_t b)
 {
 	int64_t sum;
 	__asm__ volatile (
@@ -22,7 +22,7 @@ static int64_t sum64(int64_t a, int64_t b)
 }
 
 
-static int64_t sub64(int64_t a, int64_t b)
+static int64_t main_sub64(int64_t a, int64_t b)
 {
 	int64_t sub;
 	__asm__ volatile (
@@ -35,7 +35,7 @@ static int64_t sub64(int64_t a, int64_t b)
 }
 
 
-static void sumsub64(int64_t a, int64_t b)
+static void main_sumsub64(int64_t a, int64_t b)
 {
 	int64_t sum;
 	int64_t sub;
@@ -59,13 +59,13 @@ int main()
 	int64_t a = 10;
 	int64_t b = 20;
 
-	int64_t sum = sum64(a, b);
-	int64_t sub = sub64(a, b);
+	int64_t sum = main_sum64(a, b);
+	int64_t sub = main_sub64(a, b);
 
 	printf("sum(%lld, %lld) = %lld\n", a, b, sum);
 	printf("sub(%lld, %lld) = %lld\n", a, b, sub);
 
-	sumsub64(a, b);
+	main_sumsub64(a, b);
 
 	return 0;
 }

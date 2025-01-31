@@ -2059,6 +2059,7 @@ def def_type(x):
 		return None
 
 	definition = StmtDefType(id, nt, None, x['ti'])
+	definition.module = cmodule
 	definition.parent = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
@@ -2117,6 +2118,7 @@ def def_const(x):
 
 	definition = StmtDefConst(const_value.id, const_value, const_value.init_value, x['ti'])
 	definition.parent = cmodule
+	definition.module = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
 
@@ -2189,6 +2191,7 @@ def def_var(x):
 		error("redefinition of '%s'" % id.str, id.ti)
 
 	definition = StmtDefVar(id, None, None, x['ti'])
+	definition.module = cmodule
 	definition.parent = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
@@ -2268,6 +2271,7 @@ def def_func(x, dostmt=True):
 
 	definition = StmtDefFunc(func_id, fn, None, x['ti'])
 	definition.parent = cmodule
+	definition.module = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
 	cdef = definition
@@ -2282,9 +2286,8 @@ def def_func(x, dostmt=True):
 	if fn.type.is_bad():
 		return None
 
-	if func_id.str != 'main':
-		if not dont_need_decoration(x):
-			fn.id.need_decoration = True
+	if func_id.str == 'main':
+		fn.att.append('nodecorate')
 
 	if x['stmt'] == None:
 		return definition

@@ -13,7 +13,7 @@ public func main() -> ctypes64.Int {
 		kind = "big"
 	}
 
-	printf("%s-endian\n", kind)
+	stdio.printf("%s-endian\n", kind)
 
 	return 0
 }

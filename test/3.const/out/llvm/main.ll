@@ -196,12 +196,12 @@ declare void @perror(%ConstCharStr* %str)
 @str6 = private constant [17 x i8] [i8 105, i8 110, i8 116, i8 51, i8 50, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str7 = private constant [19 x i8] [i8 115, i8 116, i8 114, i8 105, i8 110, i8 103, i8 56, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 ; -- endstrings --
-%Point = type {
+%main_Point = type {
 	%Int32,
 	%Int32
 };
 
-@ps = constant [3 x {
+@main_ps = constant [3 x {
 	i8,
 	i8
 }] [
@@ -227,16 +227,16 @@ declare void @perror(%ConstCharStr* %str)
 		i8 2
 	}
 ]
-@points = constant [3 x %Point] [
-	%Point {
+@main_points = constant [3 x %main_Point] [
+	%main_Point {
 		%Int32 0,
 		%Int32 0
 	},
-	%Point {
+	%main_Point {
 		%Int32 1,
 		%Int32 1
 	},
-	%Point {
+	%main_Point {
 		%Int32 2,
 		%Int32 2
 	}
@@ -247,16 +247,16 @@ declare void @perror(%ConstCharStr* %str)
 ; не могут быть так инициализированы, поскольку points является приведением
 ; непонятно существует ли хорошее решение
 ;@property("c_prefix", "const")
-@points2 = internal global [3 x %Point] [
-	%Point {
+@main_points2 = internal global [3 x %main_Point] [
+	%main_Point {
 		%Int32 0,
 		%Int32 0
 	},
-	%Point {
+	%main_Point {
 		%Int32 1,
 		%Int32 1
 	},
-	%Point {
+	%main_Point {
 		%Int32 2,
 		%Int32 2
 	}

@@ -14,46 +14,46 @@ const filename = *Str8 "file.txt"
 
 
 func write_example() -> Unit {
-	printf("run write_example\n")
+	stdio.printf("run write_example\n")
 
-	let fp = fopen(filename, "w")
+	let fp = stdio.fopen(filename, "w")
 
 	if fp == nil {
-		printf("error: cannot create file '%s'", filename)
+		stdio.printf("error: cannot create file '%s'", filename)
 		return
 	}
 
-	fprintf(fp, "some text.\n")
+	stdio.fprintf(fp, "some text.\n")
 
-	fclose(fp)
+	stdio.fclose(fp)
 }
 
 
 func read_example() -> Unit {
-	printf("run read_example\n")
+	stdio.printf("run read_example\n")
 
-	let fp = fopen(filename, "r")
+	let fp = stdio.fopen(filename, "r")
 
 	if fp == nil {
-		printf("error: cannot open file '%s'", filename)
+		stdio.printf("error: cannot open file '%s'", filename)
 		return
 	}
 
-	printf("file '%s' contains: ", filename)
+	stdio.printf("file '%s' contains: ", filename)
 	while true {
-		let ch = fgetc(fp)
+		let ch = stdio.fgetc(fp)
 		if ch == stdio.c_EOF {
 			break
 		}
-		putchar(ch)
+		stdio.putchar(ch)
 	}
 
-	fclose(fp)
+	stdio.fclose(fp)
 }
 
 
 public func main() -> ctypes64.Int {
-	printf("text_file example\n")
+	stdio.printf("text_file example\n")
 	write_example()
 	read_example()
 	return 0

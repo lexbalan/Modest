@@ -188,7 +188,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 1
 ; ?? lib ??
 ; from import
-declare void @foo()
+declare void @lib_foo()
 ; end from import
 ; -- end print imports 'main' --
 ; -- strings --
@@ -196,7 +196,7 @@ declare void @foo()
 ; -- endstrings --
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
-	call void @foo()
+	call void @lib_foo()
 	ret %Int 0
 }
 

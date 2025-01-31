@@ -25,15 +25,15 @@ func max(a: Nat32, b: Nat32) -> Nat32 {
 
 
 func tableSepPrint(sz: *[]Nat32, m: Int32) -> Unit {
-	printf("+")
+	stdio.printf("+")
 	var i: Int32 = 0
 	while i < m {
 		var j: Nat32 = Nat32 0
 		while j < sz[i] {
-			printf("-")
+			stdio.printf("-")
 			j = j + 1
 		}
-		printf("+")
+		stdio.printf("+")
 		i = i + 1
 	}
 }
@@ -56,7 +56,7 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) -> Unit 
 	while i < m {
 		j = 0
 		while j < n {
-			let slen = Nat32 strlen(table[i][j])
+			let slen = Nat32 string.strlen(table[i][j])
 			sz[j] = max(slen, sz[j])
 			j = j + 1
 		}
@@ -76,34 +76,34 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) -> Unit 
 		// pirint `+----+` separator
 		if i < 2 or notheadline {
 			tableSepPrint(&sz, n)
-			printf("\n")
+			stdio.printf("\n")
 		}
 
-		printf("|")
+		stdio.printf("|")
 
 		j = 0
 		while j < n {
 			let s = table[i][j]
-			var len: Nat32 = Nat32 strlen(s)
+			var len: Nat32 = Nat32 string.strlen(s)
 			if s[0] != "\x0" {
 				len = len + 1
-				printf(" %s", s)
+				stdio.printf(" %s", s)
 			}
 
 			var k: Nat32 = Nat32 0
 			while k < sz[j] - len {
-				printf(" ")
+				stdio.printf(" ")
 				k = k + 1
 			}
 
-			printf("|")
+			stdio.printf("|")
 			j = j + 1
 		}
-		printf("\n")
+		stdio.printf("\n")
 		i = i + 1
 	}
 	tableSepPrint(&sz, n)
-	printf("\n")
+	stdio.printf("\n")
 }
 
 

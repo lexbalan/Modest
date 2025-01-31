@@ -14,20 +14,20 @@ const bufSize = 1024
 func write_file(sockfd: ctypes64.Int) -> Bool {
 	var buffer: [bufSize]Char8
 
-	let fp = fopen(filename, "w")
+	let fp = stdio.fopen(filename, "w")
 	if fp == nil {
-		perror("[-] Error in creating file")
+		stdio.perror("[-] Error in creating file")
 		return false
 	}
 
 	while true {
-		let n = recv(sockfd, &buffer, bufSize, 0)
+		let n = socket.recv(sockfd, &buffer, bufSize, 0)
 
 		if n <= 0 {
 			break
 		}
 
-		fprintf(fp, "%s", &buffer)
+		stdio.fprintf(fp, "%s", &buffer)
 		buffer = []
 	}
 
@@ -36,49 +36,49 @@ func write_file(sockfd: ctypes64.Int) -> Bool {
 
 
 public func main() -> ctypes64.Int {
-	let sockfd = socket(socket.af_INET, socket.c_SOCK_STREAM, 0)
+	let sockfd = socket.socket(socket.af_INET, socket.c_SOCK_STREAM, 0)
 	if sockfd < 0 {
-		perror("[-] Error in socket")
-		exit(1)
+		stdio.perror("[-] Error in socket")
+		stdlib.exit(1)
 	}
 
-	printf("[+] Server socket created\n")
+	stdio.printf("[+] Server socket created\n")
 
 	var server_addr: socket.Struct_sockaddr_in = socket.Struct_sockaddr_in {
 		sin_family = socket.af_INET
 		sin_port = port
 		sin_addr = socket.Struct_in_addr {
-			s_addr = inet_addr(ipAddress)
+			s_addr = socket.inet_addr(ipAddress)
 		}
 	}
 
 	let sockaddr = &server_addr
-	var e: ctypes64.Int = bind(sockfd, sockaddr, socket.SocklenT sizeof(socket.Struct_sockaddr_in))
+	var e: ctypes64.Int = socket.bind(sockfd, sockaddr, socket.SocklenT sizeof(socket.Struct_sockaddr_in))
 	if e < 0 {
-		perror("[-] Error in Binding")
-		exit(1)
+		stdio.perror("[-] Error in Binding")
+		stdlib.exit(1)
 	}
 
-	printf("[+] Binding Successfull\n")
+	stdio.printf("[+] Binding Successfull\n")
 
-	e = listen(sockfd, 10)
+	e = socket.listen(sockfd, 10)
 	if e != 0 {
-		perror("[-] Error in Binding")
-		exit(1)
+		stdio.perror("[-] Error in Binding")
+		stdlib.exit(1)
 	}
 
-	printf("[+] Listening...\n")
+	stdio.printf("[+] Listening...\n")
 
 	var addr_size: socket.SocklenT = socket.SocklenT sizeof(socket.Struct_sockaddr_in)
 	var new_addr: socket.Struct_sockaddr_in
 	let sa = &new_addr
-	let new_sock = accept(sockfd, sa, &addr_size)
+	let new_sock = socket.accept(sockfd, sa, &addr_size)
 
 	let suc = write_file(new_sock)
 	if suc {
-		printf("[+] Data written in the text file")
+		stdio.printf("[+] Data written in the text file")
 	} else {
-		perror("[-] Cannot write file")
+		stdio.perror("[-] Cannot write file")
 	}
 
 	return 0

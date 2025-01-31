@@ -15,20 +15,20 @@
 
 
 
-#define filename  "file.txt"
+#define client_filename  "file.txt"
 
-#define ipAddress  "127.0.0.1"
-#define port  8080
-#define bufSize  1024
+#define client_ipAddress  "127.0.0.1"
+#define client_port  8080
+#define client_bufSize  1024
 
 
-static bool send_file(FILE *fp, int sockfd)
+static bool client_send_file(FILE *fp, int sockfd)
 {
-	char data[bufSize];
+	char data[client_bufSize];
 	memset(&data, 0, sizeof data);
 
-	while (fgets((char *)&data, bufSize, fp) != NULL) {
-		if (send(sockfd, (char *)&data, (size_t)sizeof(char[bufSize]), 0) == -1) {
+	while (fgets((char *)&data, client_bufSize, fp) != NULL) {
+		if (send(sockfd, (char *)&data, (size_t)sizeof(char[client_bufSize]), 0) == -1) {
 			return false;
 		}
 		memset(&data, 0, sizeof data);
@@ -50,9 +50,9 @@ int main()
 
 	struct sockaddr_in server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
-		.sin_port = port,
+		.sin_port = client_port,
 		.sin_addr = {
-			.s_addr = inet_addr(ipAddress)
+			.s_addr = inet_addr(client_ipAddress)
 		}
 	};
 
@@ -65,13 +65,13 @@ int main()
 
 	printf("[+] Connected to server\n");
 
-	FILE *fp = fopen(filename, "r");
+	FILE *fp = fopen(client_filename, "r");
 	if (fp == NULL) {
 		perror("[-] Error in reading file");
 		exit(1);
 	}
 
-	bool suc = send_file(fp, sockfd);
+	bool suc = client_send_file(fp, sockfd);
 	if (suc) {
 		printf("[+] File data send successfully\n");
 	} else {

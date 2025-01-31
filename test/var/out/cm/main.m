@@ -12,12 +12,12 @@ public func main() -> ctypes64.Int {
 	var x: Int32 = 127
 	var y: Int32 = x + 1
 
-	printf("y = %i\n", y)
+	stdio.printf("y = %i\n", y)
 
 	if y == 128 {
-		printf("test passed\n")
+		stdio.printf("test passed\n")
 	} else {
-		printf("test failed\n")
+		stdio.printf("test failed\n")
 	}
 
 	return 0

@@ -28,11 +28,11 @@ public func main() -> ctypes64.Int {
 
 	var big_sum: Nat128 = big1 + big2 + Nat128 a
 
-	printf("big0 = 0x%llX%llX\n", high_128(Word128 big0), low_128(Word128 big0))
-	printf("big1 = 0x%llX%llX\n", high_128(Word128 big1), low_128(Word128 big1))
-	printf("big2 = 0x%llX%llX\n", high_128(Word128 big2), low_128(Word128 big2))
-	printf("big3 = 0x%llX%llX\n", high_128(Word128 big3), low_128(Word128 big3))
-	printf("big_sum = 0x%llX%llX\n", high_128(Word128 big_sum), low_128(Word128 big_sum))
+	stdio.printf("big0 = 0x%llX%llX\n", high_128(Word128 big0), low_128(Word128 big0))
+	stdio.printf("big1 = 0x%llX%llX\n", high_128(Word128 big1), low_128(Word128 big1))
+	stdio.printf("big2 = 0x%llX%llX\n", high_128(Word128 big2), low_128(Word128 big2))
+	stdio.printf("big3 = 0x%llX%llX\n", high_128(Word128 big3), low_128(Word128 big3))
+	stdio.printf("big_sum = 0x%llX%llX\n", high_128(Word128 big_sum), low_128(Word128 big_sum))
 
 
 	// signed big int test
@@ -42,7 +42,7 @@ public func main() -> ctypes64.Int {
 
 	sig1 = sig1 + 1
 
-	printf("sig1 = %lld\n", Nat64 sig1)
+	stdio.printf("sig1 = %lld\n", Nat64 sig1)
 
 	return 0
 }

@@ -195,15 +195,15 @@ declare void @perror(%ConstCharStr* %str)
 @str5 = private constant [22 x i8] [i8 98, i8 105, i8 103, i8 95, i8 115, i8 117, i8 109, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
 @str6 = private constant [13 x i8] [i8 115, i8 105, i8 103, i8 49, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 ; -- endstrings --
-@big0 = internal global %Int128 1512366075204170947332355369683137040
-define internal %Word64 @high_128(%Word128 %x) {
+@main_big0 = internal global %Int128 1512366075204170947332355369683137040
+define internal %Word64 @main_high_128(%Word128 %x) {
 	%1 = zext i8 64 to %Word128
 	%2 = lshr %Word128 %x, %1
 	%3 = trunc %Word128 %2 to %Word64
 	ret %Word64 %3
 }
 
-define internal %Word64 @low_128(%Word128 %x) {
+define internal %Word64 @main_low_128(%Word128 %x) {
 	%1 = and %Word128 %x, 18446744073709551615
 	%2 = trunc %Word128 %1 to %Word64
 	ret %Word64 %2
@@ -223,36 +223,36 @@ define %Int @main() {
 	%8 = zext %Int32 %7 to %Int128
 	%9 = add %Int128 %6, %8
 	store %Int128 %9, %Int128* %4
-	%10 = load %Int128, %Int128* @big0
+	%10 = load %Int128, %Int128* @main_big0
 	%11 = bitcast %Int128 %10 to %Word128
-	%12 = call %Word64 @high_128(%Word128 %11)
-	%13 = load %Int128, %Int128* @big0
+	%12 = call %Word64 @main_high_128(%Word128 %11)
+	%13 = load %Int128, %Int128* @main_big0
 	%14 = bitcast %Int128 %13 to %Word128
-	%15 = call %Word64 @low_128(%Word128 %14)
+	%15 = call %Word64 @main_low_128(%Word128 %14)
 	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*), %Word64 %12, %Word64 %15)
-	%17 = call %Word64 @high_128(%Word128 340282366920938463463374607431768211455)
-	%18 = call %Word64 @low_128(%Word128 340282366920938463463374607431768211455)
+	%17 = call %Word64 @main_high_128(%Word128 340282366920938463463374607431768211455)
+	%18 = call %Word64 @main_low_128(%Word128 340282366920938463463374607431768211455)
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*), %Word64 %17, %Word64 %18)
 	%20 = load %Int128, %Int128* %1
 	%21 = bitcast %Int128 %20 to %Word128
-	%22 = call %Word64 @high_128(%Word128 %21)
+	%22 = call %Word64 @main_high_128(%Word128 %21)
 	%23 = load %Int128, %Int128* %1
 	%24 = bitcast %Int128 %23 to %Word128
-	%25 = call %Word64 @low_128(%Word128 %24)
+	%25 = call %Word64 @main_low_128(%Word128 %24)
 	%26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str3 to [0 x i8]*), %Word64 %22, %Word64 %25)
 	%27 = load %Int128, %Int128* %2
 	%28 = bitcast %Int128 %27 to %Word128
-	%29 = call %Word64 @high_128(%Word128 %28)
+	%29 = call %Word64 @main_high_128(%Word128 %28)
 	%30 = load %Int128, %Int128* %2
 	%31 = bitcast %Int128 %30 to %Word128
-	%32 = call %Word64 @low_128(%Word128 %31)
+	%32 = call %Word64 @main_low_128(%Word128 %31)
 	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), %Word64 %29, %Word64 %32)
 	%34 = load %Int128, %Int128* %4
 	%35 = bitcast %Int128 %34 to %Word128
-	%36 = call %Word64 @high_128(%Word128 %35)
+	%36 = call %Word64 @main_high_128(%Word128 %35)
 	%37 = load %Int128, %Int128* %4
 	%38 = bitcast %Int128 %37 to %Word128
-	%39 = call %Word64 @low_128(%Word128 %38)
+	%39 = call %Word64 @main_low_128(%Word128 %38)
 	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Word64 %36, %Word64 %39)
 
 

@@ -205,23 +205,23 @@ declare void @perror(%ConstCharStr* %str)
 
 
 ; Simply record for records assignation test
-%Point = type {
+%main_Point = type {
 	%Int32,
 	%Int32
 };
 
-@glb_i0 = internal global %Int32 0
-@glb_i1 = internal global %Int32 321
-@glb_r0 = internal global %Point {
+@main_glb_i0 = internal global %Int32 0
+@main_glb_i1 = internal global %Int32 321
+@main_glb_r0 = internal global %main_Point {
 	%Int32 0,
 	%Int32 0
 }
-@glb_r1 = internal global %Point {
+@main_glb_r1 = internal global %main_Point {
 	%Int32 20,
 	%Int32 10
 }
-@glb_a0 = internal global [10 x %Int32] zeroinitializer
-@glb_a1 = internal global [10 x %Int32] [
+@main_glb_a0 = internal global [10 x %Int32] zeroinitializer
+@main_glb_a1 = internal global [10 x %Int32] [
 	%Int32 64,
 	%Int32 53,
 	%Int32 42,
@@ -240,37 +240,37 @@ define %Int @main() {
 	; Global
 
 	; copy integers by value
-	%2 = load %Int32, %Int32* @glb_i1
-	store %Int32 %2, %Int32* @glb_i0
-	%3 = load %Int32, %Int32* @glb_i0
+	%2 = load %Int32, %Int32* @main_glb_i1
+	store %Int32 %2, %Int32* @main_glb_i0
+	%3 = load %Int32, %Int32* @main_glb_i0
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), %Int32 %3)
 
 
 	; copy arrays by value
-	%5 = load [10 x %Int32], [10 x %Int32]* @glb_a1
+	%5 = load [10 x %Int32], [10 x %Int32]* @main_glb_a1
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
 	%6 = zext i8 10 to %Int32
 	; -- end vol eval --
-	store [10 x %Int32] %5, [10 x %Int32]* @glb_a0
-	%7 = getelementptr [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 0
+	store [10 x %Int32] %5, [10 x %Int32]* @main_glb_a0
+	%7 = getelementptr [10 x %Int32], [10 x %Int32]* @main_glb_a0, %Int32 0, %Int32 0
 	%8 = load %Int32, %Int32* %7
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Int32 %8)
-	%10 = getelementptr [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 1
+	%10 = getelementptr [10 x %Int32], [10 x %Int32]* @main_glb_a0, %Int32 0, %Int32 1
 	%11 = load %Int32, %Int32* %10
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), %Int32 %11)
-	%13 = getelementptr [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 2
+	%13 = getelementptr [10 x %Int32], [10 x %Int32]* @main_glb_a0, %Int32 0, %Int32 2
 	%14 = load %Int32, %Int32* %13
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Int32 %14)
 
 
 	; copy records by value
-	%16 = load %Point, %Point* @glb_r1
-	store %Point %16, %Point* @glb_r0
-	%17 = getelementptr %Point, %Point* @glb_r0, %Int32 0, %Int32 0
+	%16 = load %main_Point, %main_Point* @main_glb_r1
+	store %main_Point %16, %main_Point* @main_glb_r0
+	%17 = getelementptr %main_Point, %main_Point* @main_glb_r0, %Int32 0, %Int32 0
 	%18 = load %Int32, %Int32* %17
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), %Int32 %18)
-	%20 = getelementptr %Point, %Point* @glb_r0, %Int32 0, %Int32 1
+	%20 = getelementptr %main_Point, %main_Point* @main_glb_r0, %Int32 0, %Int32 1
 	%21 = load %Int32, %Int32* %20
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Int32 %21)
 
@@ -327,18 +327,18 @@ define %Int @main() {
 
 	; copy records by value
 	; C backend will be use memcpy()
-	%48 = alloca %Point, align 8
-	store %Point zeroinitializer, %Point* %48
-	%49 = alloca %Point, align 8
-	%50 = insertvalue %Point zeroinitializer, %Int32 10, 0
-	%51 = insertvalue %Point %50, %Int32 20, 1
-	store %Point %51, %Point* %49
-	%52 = load %Point, %Point* %49
-	store %Point %52, %Point* %48
-	%53 = getelementptr %Point, %Point* %48, %Int32 0, %Int32 0
+	%48 = alloca %main_Point, align 8
+	store %main_Point zeroinitializer, %main_Point* %48
+	%49 = alloca %main_Point, align 8
+	%50 = insertvalue %main_Point zeroinitializer, %Int32 10, 0
+	%51 = insertvalue %main_Point %50, %Int32 20, 1
+	store %main_Point %51, %main_Point* %49
+	%52 = load %main_Point, %main_Point* %49
+	store %main_Point %52, %main_Point* %48
+	%53 = getelementptr %main_Point, %main_Point* %48, %Int32 0, %Int32 0
 	%54 = load %Int32, %Int32* %53
 	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %54)
-	%56 = getelementptr %Point, %Point* %48, %Int32 0, %Int32 1
+	%56 = getelementptr %main_Point, %main_Point* %48, %Int32 0, %Int32 1
 	%57 = load %Int32, %Int32* %56
 	%58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %57)
 

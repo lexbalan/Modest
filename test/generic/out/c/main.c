@@ -10,44 +10,44 @@
 
 
 
-static bool test_generic_integer();
-static bool test_generic_float();
-static bool test_generic_char();
-static bool test_generic_array();
-static bool test_generic_record();
+static bool main_test_generic_integer();
+static bool main_test_generic_float();
+static bool main_test_generic_char();
+static bool main_test_generic_array();
+static bool main_test_generic_record();
 int main()
 {
 	printf("generic types test\n");
 
-	bool t1 = test_generic_integer();
+	bool t1 = main_test_generic_integer();
 	if (t1) {
 		printf("test_generic_integer passed\n");
 	} else {
 		printf("test_generic_integer failed\n");
 	}
 
-	bool t2 = test_generic_float();
+	bool t2 = main_test_generic_float();
 	if (t2) {
 		printf("test_generic_float passed\n");
 	} else {
 		printf("test_generic_float failed\n");
 	}
 
-	bool t3 = test_generic_char();
+	bool t3 = main_test_generic_char();
 	if (t3) {
 		printf("test_generic_char passed\n");
 	} else {
 		printf("test_generic_char failed\n");
 	}
 
-	bool t4 = test_generic_array();
+	bool t4 = main_test_generic_array();
 	if (t4) {
 		printf("test_generic_array passed\n");
 	} else {
 		printf("test_generic_array failed\n");
 	}
 
-	bool t5 = test_generic_record();
+	bool t5 = main_test_generic_record();
 	if (t5) {
 		printf("test_generic_record passed\n");
 	} else {
@@ -58,7 +58,7 @@ int main()
 }
 
 
-static bool test_generic_integer()
+static bool main_test_generic_integer()
 {
 	// Any integer literal have GenericInteger type
 	#define __one  1
@@ -93,7 +93,7 @@ static bool test_generic_integer()
 }
 
 
-static bool test_generic_float()
+static bool main_test_generic_float()
 {
 	// Any float literal have GenericFloat type
 	#define __pi  3.141592653589793238462643383279502884
@@ -113,7 +113,7 @@ static bool test_generic_float()
 }
 
 
-static bool test_generic_char()
+static bool main_test_generic_char()
 {
 	// Any char value expression have GenericChar type
 	// (you can pick GenericChar value by index of GenericString value)
@@ -134,7 +134,7 @@ static bool test_generic_char()
 }
 
 
-static bool test_generic_array()
+static bool main_test_generic_array()
 {
 	// Any array expression have GenericArray type
 	// this array expression (GenericArray of four GenericInteger items)
@@ -184,21 +184,21 @@ static bool test_generic_array()
 
 
 
-struct Point2D {
+struct main_Point2D {
 	int32_t x;
 	int32_t y;
 };
-typedef struct Point2D Point2D;
+typedef struct main_Point2D main_Point2D;
 
-struct Point3D {
+struct main_Point3D {
 	int32_t x;
 	int32_t y;
 	int32_t z;
 };
-typedef struct Point3D Point3D;
+typedef struct main_Point3D main_Point3D;
 
 
-static bool test_generic_record()
+static bool main_test_generic_record()
 {
 	// Any record expression have GenericRecord type
 	// this record expression have type:
@@ -210,14 +210,14 @@ static bool test_generic_record()
 
 	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32}
-	Point2D point_2d;
-	point_2d = (Point2D)__p;
+	main_Point2D point_2d;
+	point_2d = (main_Point2D)__p;
 
 
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32, z: Int32}
-	Point3D point_3d;
-	point_3d = (Point3D)__p;
+	main_Point3D point_3d;
+	point_3d = (main_Point3D)__p;
 
 	return true;
 

@@ -33,7 +33,7 @@ func off_entry(x: *fsm.FSM) -> Unit {
 
 
 func off_loop(x: *fsm.FSM) -> Unit {
-	printf("off_loop\n")
+	stdio.printf("off_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
@@ -60,7 +60,7 @@ func on_entry(x: *fsm.FSM) -> Unit {
 
 
 func on_loop(x: *fsm.FSM) -> Unit {
-	printf("on_loop\n")
+	stdio.printf("on_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
@@ -82,12 +82,12 @@ func on_exit(x: *fsm.FSM) -> Unit {
 
 func beacon_entry(x: *fsm.FSM) -> Unit {
 	let from_name = fsm.state_no_name(x, x.state)
-	printf("beacon_entry from %s\n", from_name)
+	stdio.printf("beacon_entry from %s\n", from_name)
 }
 
 
 func beacon_loop(x: *fsm.FSM) -> Unit {
-	printf("beacon_loop\n")
+	stdio.printf("beacon_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
@@ -99,7 +99,7 @@ func beacon_loop(x: *fsm.FSM) -> Unit {
 
 func beacon_exit(x: *fsm.FSM) -> Unit {
 	let to_name = fsm.state_no_name(x, x.nexstate)
-	printf("beacon_exit to %s\n", to_name)
+	stdio.printf("beacon_exit to %s\n", to_name)
 }
 
 

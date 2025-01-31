@@ -205,7 +205,7 @@ declare void @perror(%ConstCharStr* %str)
 ;  MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
 ;   одинарных, двойных, пакетных и всех нечетных ошибок
 ;
-define %Word32 @run([0 x %Word8]* %buf, %Int32 %len) {
+define %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len) {
 	%1 = alloca [256 x %Word32], align 1
 	%2 = alloca %Word32, align 4
 

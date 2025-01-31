@@ -11,7 +11,7 @@ type Object record {
 
 
 public func main() -> ctypes64.Int {
-	printf("memcopy test\n")
+	stdio.printf("memcopy test\n")
 
 	var o1: Object
 	var o2: Object
@@ -23,13 +23,13 @@ public func main() -> ctypes64.Int {
 	}
 
 	let len = sizeof(Object)
-	printf("LEN = %u\n", Nat32 len)
+	stdio.printf("LEN = %u\n", Nat32 len)
 
 	memory.copy(&o2, &o1, len)
 
-	printf("firstname = '%s'\n", &(o2.firstname))
-	printf("lastname = '%s'\n", &(o2.lastname))
-	printf("age = %d\n", o2.age)
+	stdio.printf("firstname = '%s'\n", &(o2.firstname))
+	stdio.printf("lastname = '%s'\n", &(o2.lastname))
+	stdio.printf("age = %d\n", o2.age)
 
 	return 0
 }

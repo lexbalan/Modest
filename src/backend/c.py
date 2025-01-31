@@ -172,11 +172,14 @@ def get_id_str(x):
 	if id.c != None:
 		return id.c
 
-	xmodule = x.getModule()
-	if id.need_decoration or xmodule != None and xmodule != cmodule:
-		return "%s_%s" % (xmodule.id, id.str)
+	if not 'nodecorate' in x.att:
+		xmodule = x.getModule()
+		if xmodule != None:
+			if not 'module_nodecorate' in xmodule.att:
+				return "%s_%s" % (xmodule.id, id.str)
 
 	return id.str
+
 
 
 def type_get_aka(t):

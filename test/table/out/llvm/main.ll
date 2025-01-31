@@ -249,7 +249,7 @@ declare [0 x %Char]* @strerror(%Int %error)
 
 
 ; [row, col]
-@table = internal global [5 x [4 x %Str8*]] [
+@main_table = internal global [5 x [4 x %Str8*]] [
 	[4 x %Str8*] [
 		%Str8* bitcast ([2 x i8]* @str1 to [0 x i8]*),
 		%Str8* bitcast ([8 x i8]* @str2 to [0 x i8]*),
@@ -281,7 +281,7 @@ declare [0 x %Char]* @strerror(%Int %error)
 		%Str8* bitcast ([5 x i8]* @str20 to [0 x i8]*)
 	]
 ]
-define internal %Int32 @max(%Int32 %a, %Int32 %b) {
+define internal %Int32 @main_max(%Int32 %a, %Int32 %b) {
 	%1 = icmp ugt %Int32 %b, %a
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -291,7 +291,7 @@ endif_0:
 	ret %Int32 %a
 }
 
-define internal void @tableSepPrint([0 x %Int32]* %sz, %Int32 %m) {
+define internal void @main_tableSepPrint([0 x %Int32]* %sz, %Int32 %m) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str21 to [0 x i8]*))
 	%2 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %2
@@ -331,7 +331,7 @@ break_1:
 ; we cannot receive VLA by value,
 ; but we can to receive pointer to open array
 ; and after construct pointer to closed array with required dimensions
-define internal void @tablePrint([0 x [0 x %Str8*]]* %tablex, %Int32 %m, %Int32 %n, %Bool %headline) {
+define internal void @main_tablePrint([0 x [0 x %Str8*]]* %tablex, %Int32 %m, %Int32 %n, %Bool %headline) {
 	%1 = alloca i8*
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
@@ -397,7 +397,7 @@ body_2:
 	%35 = getelementptr %Int32, [0 x %Int32]* %6, %Int32 %34
 ; -- END INDEX VLA --
 	%36 = load %Int32, %Int32* %35
-	%37 = call %Int32 @max(%Int32 %27, %Int32 %36)
+	%37 = call %Int32 @main_max(%Int32 %27, %Int32 %36)
 	store %Int32 %37, %Int32* %31
 	%38 = load %Int32, %Int32* %4
 	%39 = add %Int32 %38, 1
@@ -453,7 +453,7 @@ body_4:
 	br %Bool %61 , label %then_0, label %endif_0
 then_0:
 	%62 = bitcast [0 x %Int32]* %6 to [0 x %Int32]*
-	call void @tableSepPrint([0 x %Int32]* %62, %Int32 %n)
+	call void @main_tableSepPrint([0 x %Int32]* %62, %Int32 %n)
 	%63 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str24 to [0 x i8]*))
 	br label %endif_0
 endif_0:
@@ -526,7 +526,7 @@ break_5:
 	br label %again_4
 break_4:
 	%103 = bitcast [0 x %Int32]* %6 to [0 x %Int32]*
-	call void @tableSepPrint([0 x %Int32]* %103, %Int32 %n)
+	call void @main_tableSepPrint([0 x %Int32]* %103, %Int32 %n)
 	%104 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str30 to [0 x i8]*))
 	%105 = load i8*, i8** %1
 	call void @llvm.stackrestore(i8* %105)
@@ -534,7 +534,7 @@ break_4:
 }
 
 define %Int32 @main() {
-	call void @tablePrint([0 x [0 x %Str8*]]* bitcast ([5 x [4 x %Str8*]]* @table to [0 x [0 x %Str8*]]*), %Int32 5, %Int32 4, %Bool 1)
+	call void @main_tablePrint([0 x [0 x %Str8*]]* bitcast ([5 x [4 x %Str8*]]* @main_table to [0 x [0 x %Str8*]]*), %Int32 5, %Int32 4, %Bool 1)
 	ret %Int32 0
 }
 

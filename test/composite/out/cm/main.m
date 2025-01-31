@@ -194,7 +194,7 @@ var farr: [2]*(a: Int32, b: Int32) -> Int32 = [
 ]
 
 func hi(x: *Str8) -> Unit {
-	printf("Hi %s!\n", x)
+	stdio.printf("Hi %s!\n", x)
 }
 
 var hiarr: [10]*(x: *Str8) -> Unit = [
@@ -216,34 +216,34 @@ var awrap: [2]*Wrap = [&wrap0, &wrap0]
 public func main() -> Int32 {
 	xy({x = 10, y = 20})
 
-	printf("test1 (eq): ")
+	stdio.printf("test1 (eq): ")
 	if animation0_points == animation1_points {
-		printf("eq\n")
+		stdio.printf("eq\n")
 	} else {
-		printf("ne\n")
+		stdio.printf("ne\n")
 	}
 
-	printf("test2 (ne): ")
+	stdio.printf("test2 (ne): ")
 	if animation1_points == animation2_points {
-		printf("eq\n")
+		stdio.printf("eq\n")
 	} else {
-		printf("ne\n")
+		stdio.printf("ne\n")
 	}
 
 	var i: Int32 = 0
 	while i < 3 {
 		var j: Int32 = 0
 		while j < 3 {
-			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
+			stdio.printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
 			j = j + 1
 		}
 		i = i + 1
 	}
 
 	let _add = farr[0](5, 7)
-	printf("farr[0](5, 7) = %d\n", _add)
+	stdio.printf("farr[0](5, 7) = %d\n", _add)
 	let _sub = farr[1](5, 7)
-	printf("farr[1](5, 7) = %d\n", _sub)
+	stdio.printf("farr[1](5, 7) = %d\n", _sub)
 
 	i = 0
 	while i < 10 {

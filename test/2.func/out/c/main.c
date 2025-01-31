@@ -9,19 +9,19 @@
 
 
 
-static void func1()
+static void main_func1()
 {
 	printf("func1 was called\n");
 }
 
 
-static void print_ab(int32_t a, int32_t b)
+static void main_print_ab(int32_t a, int32_t b)
 {
 	printf("print_ab(a=%i, b=%i)\n", a, b);
 }
 
 
-static int32_t sum(int32_t a, int32_t b)
+static int32_t main_sum(int32_t a, int32_t b)
 {
 	return a + b;
 }
@@ -29,26 +29,26 @@ static int32_t sum(int32_t a, int32_t b)
 
 // define function main
 
-static void func0();
+static void main_func0();
 int main()
 {
 	printf("test func\n");
 
 	// call declared & defined functions
-	func0();
-	func1();
+	main_func0();
+	main_func1();
 
 	// call function with two arguments
-	print_ab(10, 20);
+	main_print_ab(10, 20);
 
 	// call function with two arguments and return value
 	int32_t arg_a = 1;
 	int32_t arg_b = 2;
-	int32_t sum_result = sum(arg_a, arg_b);
+	int32_t sum_result = main_sum(arg_a, arg_b);
 	printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result);
 
 
-	int32_t(*fptr)(int32_t a, int32_t b) = &sum;
+	int32_t(*fptr)(int32_t a, int32_t b) = &main_sum;
 	// call function with two arguments and return value
 	int32_t arg_a2 = 1;
 	int32_t arg_b2 = 2;
@@ -59,7 +59,7 @@ int main()
 }
 
 
-static void func0()
+static void main_func0()
 {
 	printf("func0 was called\n");
 }

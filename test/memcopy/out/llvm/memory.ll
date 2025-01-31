@@ -117,15 +117,15 @@ break_2:
 
 
 ;$if (systemWidth == 64)
-%Word = type %Word64;
-%Nat = type %Int64;
+%memory_Word = type %Word64;
+%memory_Nat = type %Int64;
 ;$elseif (systemWidth == 32)
 ;type Word Word32
 ;type Nat Nat32
 ;$endif
-define void @zero(i8* %mem, %Int64 %len) {
-	%1 = ptrtoint i8* %mem to %Nat
-	%2 = urem %Nat %1, 8
+define void @memory_zero(i8* %mem, %Int64 %len) {
+	%1 = ptrtoint i8* %mem to %memory_Nat
+	%2 = urem %memory_Nat %1, 8
 	%3 = bitcast i8* %mem to [0 x %Word8]*
 
 	; align the pointer
@@ -151,7 +151,7 @@ break_1:
 	%12 = udiv %Int64 %11, 8
 	%13 = load %Int64, %Int64* %4
 	%14 = getelementptr [0 x %Word8], [0 x %Word8]* %3, %Int32 0, %Int64 %13
-	%15 = bitcast %Word8* %14 to [0 x %Word]*
+	%15 = bitcast %Word8* %14 to [0 x %memory_Word]*
 	store %Int64 0, %Int64* %4
 	br label %again_2
 again_2:
@@ -160,8 +160,8 @@ again_2:
 	br %Bool %17 , label %body_2, label %break_2
 body_2:
 	%18 = load %Int64, %Int64* %4
-	%19 = getelementptr [0 x %Word], [0 x %Word]* %15, %Int32 0, %Int64 %18
-	store %Word 0, %Word* %19
+	%19 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %15, %Int32 0, %Int64 %18
+	store %memory_Word 0, %memory_Word* %19
 	%20 = load %Int64, %Int64* %4
 	%21 = add %Int64 %20, 1
 	store %Int64 %21, %Int64* %4
@@ -172,8 +172,8 @@ break_2:
 	%22 = sub %Int64 %len, %2
 	%23 = urem %Int64 %22, 8
 	%24 = load %Int64, %Int64* %4
-	%25 = getelementptr [0 x %Word], [0 x %Word]* %15, %Int32 0, %Int64 %24
-	%26 = bitcast %Word* %25 to [0 x %Word8]*
+	%25 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %15, %Int32 0, %Int64 %24
+	%26 = bitcast %memory_Word* %25 to [0 x %Word8]*
 	store %Int64 0, %Int64* %4
 	br label %again_3
 again_3:
@@ -192,10 +192,10 @@ break_3:
 	ret void
 }
 
-define void @copy(i8* %dst, i8* %src, %Int64 %len) {
+define void @memory_copy(i8* %dst, i8* %src, %Int64 %len) {
 	%1 = udiv %Int64 %len, 8
-	%2 = bitcast i8* %src to [0 x %Word]*
-	%3 = bitcast i8* %dst to [0 x %Word]*
+	%2 = bitcast i8* %src to [0 x %memory_Word]*
+	%3 = bitcast i8* %dst to [0 x %memory_Word]*
 	%4 = alloca %Int64, align 8
 	store %Int64 0, %Int64* %4
 	br label %again_1
@@ -205,11 +205,11 @@ again_1:
 	br %Bool %6 , label %body_1, label %break_1
 body_1:
 	%7 = load %Int64, %Int64* %4
-	%8 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int64 %7
+	%8 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %3, %Int32 0, %Int64 %7
 	%9 = load %Int64, %Int64* %4
-	%10 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Int64 %9
-	%11 = load %Word, %Word* %10
-	store %Word %11, %Word* %8
+	%10 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %2, %Int32 0, %Int64 %9
+	%11 = load %memory_Word, %memory_Word* %10
+	store %memory_Word %11, %memory_Word* %8
 	%12 = load %Int64, %Int64* %4
 	%13 = add %Int64 %12, 1
 	store %Int64 %13, %Int64* %4
@@ -217,11 +217,11 @@ body_1:
 break_1:
 	%14 = urem %Int64 %len, 8
 	%15 = load %Int64, %Int64* %4
-	%16 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Int64 %15
-	%17 = bitcast %Word* %16 to [0 x %Word8]*
+	%16 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %2, %Int32 0, %Int64 %15
+	%17 = bitcast %memory_Word* %16 to [0 x %Word8]*
 	%18 = load %Int64, %Int64* %4
-	%19 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int64 %18
-	%20 = bitcast %Word* %19 to [0 x %Word8]*
+	%19 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %3, %Int32 0, %Int64 %18
+	%20 = bitcast %memory_Word* %19 to [0 x %Word8]*
 	store %Int64 0, %Int64* %4
 	br label %again_2
 again_2:
@@ -243,10 +243,10 @@ break_2:
 	ret void
 }
 
-define %Bool @eq(i8* %mem0, i8* %mem1, %Int64 %len) {
+define %Bool @memory_eq(i8* %mem0, i8* %mem1, %Int64 %len) {
 	%1 = udiv %Int64 %len, 8
-	%2 = bitcast i8* %mem0 to [0 x %Word]*
-	%3 = bitcast i8* %mem1 to [0 x %Word]*
+	%2 = bitcast i8* %mem0 to [0 x %memory_Word]*
+	%3 = bitcast i8* %mem1 to [0 x %memory_Word]*
 	%4 = alloca %Int64, align 8
 	store %Int64 0, %Int64* %4
 	br label %again_1
@@ -256,12 +256,12 @@ again_1:
 	br %Bool %6 , label %body_1, label %break_1
 body_1:
 	%7 = load %Int64, %Int64* %4
-	%8 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Int64 %7
+	%8 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %2, %Int32 0, %Int64 %7
 	%9 = load %Int64, %Int64* %4
-	%10 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int64 %9
-	%11 = load %Word, %Word* %8
-	%12 = load %Word, %Word* %10
-	%13 = icmp ne %Word %11, %12
+	%10 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %3, %Int32 0, %Int64 %9
+	%11 = load %memory_Word, %memory_Word* %8
+	%12 = load %memory_Word, %memory_Word* %10
+	%13 = icmp ne %memory_Word %11, %12
 	br %Bool %13 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
@@ -274,11 +274,11 @@ endif_0:
 break_1:
 	%17 = urem %Int64 %len, 8
 	%18 = load %Int64, %Int64* %4
-	%19 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Int64 %18
-	%20 = bitcast %Word* %19 to [0 x %Word8]*
+	%19 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %2, %Int32 0, %Int64 %18
+	%20 = bitcast %memory_Word* %19 to [0 x %Word8]*
 	%21 = load %Int64, %Int64* %4
-	%22 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int64 %21
-	%23 = bitcast %Word* %22 to [0 x %Word8]*
+	%22 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %3, %Int32 0, %Int64 %21
+	%23 = bitcast %memory_Word* %22 to [0 x %Word8]*
 	store %Int64 0, %Int64* %4
 	br label %again_2
 again_2:

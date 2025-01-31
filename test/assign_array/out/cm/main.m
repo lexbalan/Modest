@@ -7,7 +7,7 @@ var globalArray1: [10]Int32 = []
 
 
 public func main() -> ctypes64.Int {
-	printf("test assign_array\n")
+	stdio.printf("test assign_array\n")
 
 	globalArray1 = globalArray0
 
@@ -16,14 +16,14 @@ public func main() -> ctypes64.Int {
 	i = 0
 	while i < 10 {
 		let v = globalArray1[i]
-		printf("globalArray1[%d] = %d\n", i, v)
+		stdio.printf("globalArray1[%d] = %d\n", i, v)
 		i = i + 1
 	}
 
 	if globalArray0 == globalArray1 {
-		printf("globalArray test passed\n")
+		stdio.printf("globalArray test passed\n")
 	} else {
-		printf("globalArray test failed\n")
+		stdio.printf("globalArray test failed\n")
 	}
 
 
@@ -38,14 +38,14 @@ public func main() -> ctypes64.Int {
 	i = 0
 	while i < 10 {
 		let v = localArray1[i]
-		printf("localArray1[%d] = %d\n", i, v)
+		stdio.printf("localArray1[%d] = %d\n", i, v)
 		i = i + 1
 	}
 
 	if localArray0 == localArray1 {
-		printf("localArray test passed\n")
+		stdio.printf("localArray test passed\n")
 	} else {
-		printf("localArray test failed\n")
+		stdio.printf("localArray test failed\n")
 	}
 
 	return 0

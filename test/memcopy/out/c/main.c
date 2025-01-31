@@ -10,28 +10,28 @@
 
 
 
-struct Object {
+struct main_Object {
 	char firstname[32];
 	char lastname[32];
 	int32_t age;
 };
-typedef struct Object Object;
+typedef struct main_Object main_Object;
 
 
 int main()
 {
 	printf("memcopy test\n");
 
-	Object o1;
-	Object o2;
+	main_Object o1;
+	main_Object o2;
 
-	o1 = (Object){
+	o1 = (main_Object){
 		.firstname = "John",
 		.lastname = "Doe",
 		.age = 30
 	};
 
-	#define __len  sizeof(Object)
+	#define __len  sizeof(main_Object)
 	printf("LEN = %u\n", (uint32_t)__len);
 
 	memory_copy(&o2, &o1, __len);

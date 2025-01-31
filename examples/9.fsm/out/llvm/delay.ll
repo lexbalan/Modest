@@ -170,7 +170,7 @@ declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
 ; -- end print imports 'delay' --
 ; -- strings --
 ; -- endstrings --
-define void @us(%Int64 %us) {
+define void @delay_us(%Int64 %us) {
 	%1 = call %ClockT @clock()
 	br label %again_1
 again_1:
@@ -185,15 +185,15 @@ break_1:
 	ret void
 }
 
-define void @ms(%Int64 %ms) {
+define void @delay_ms(%Int64 %ms) {
 	%1 = mul %Int64 %ms, 1000
-	call void @us(%Int64 %1)
+	call void @delay_us(%Int64 %1)
 	ret void
 }
 
-define void @sec(%Int64 %s) {
+define void @delay_sec(%Int64 %s) {
 	%1 = mul %Int64 %s, 1000000
-	call void @us(%Int64 %1)
+	call void @delay_us(%Int64 %1)
 	ret void
 }
 

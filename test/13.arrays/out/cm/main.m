@@ -19,13 +19,13 @@ var arrayFromString: [3]Char8 = "abc"
 
 func f0(x: [20]Char8) -> [30]Char8 {
 	var local_copy_of_x: [20]Char8 = x
-	printf("f0(\"%s\")\n", &local_copy_of_x)
+	stdio.printf("f0(\"%s\")\n", &local_copy_of_x)
 
 	// truncate array
 	var mic: [6]Char8 = [6]Char8 x
 	mic[5] = "\x0"
 
-	printf("f0 mic = \"%s\"\n", &mic)
+	stdio.printf("f0 mic = \"%s\"\n", &mic)
 
 	// extend array
 	var res: [30]Char8 = [30]Char8 x
@@ -51,7 +51,7 @@ func test() -> Unit {
 	var i: Int32 = 0
 	while i < lengthof(yy) {
 		let y = yy[i]
-		printf("yy[%i] = %i\n", i, y)
+		stdio.printf("yy[%i] = %i\n", i, y)
 		i = i + 1
 	}
 }
@@ -113,7 +113,7 @@ func test_arrays() -> Unit {
 	while i < 10 {
 		j = 0
 		while j < 10 {
-			printf("a10[%d][%d] = %d\n", i, j, a10[i][j])
+			stdio.printf("a10[%d][%d] = %d\n", i, j, a10[i][j])
 			j = j + 1
 		}
 		i = i + 1
@@ -125,7 +125,7 @@ func test_arrays() -> Unit {
 		while j < 2 {
 			k = 0
 			while k < 5 {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k])
+				stdio.printf("a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k])
 				k = k + 1
 			}
 			j = j + 1
@@ -138,7 +138,7 @@ func test_arrays() -> Unit {
 	while i < 2 {
 		j = 0
 		while j < 5 {
-			printf("a3[%d][%d] = %d\n", i, j, a3[i][j])
+			stdio.printf("a3[%d][%d] = %d\n", i, j, a3[i][j])
 			j = j + 1
 		}
 		i = i + 1
@@ -151,7 +151,7 @@ func test_arrays() -> Unit {
 		while j < 2 {
 			k = 0
 			while k < 5 {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, a4[i][j][k])
+				stdio.printf("a3[%d][%d][%d] = %d\n", i, j, k, a4[i][j][k])
 				k = k + 1
 			}
 			j = j + 1
@@ -165,7 +165,7 @@ func test_arrays() -> Unit {
 		while j < 2 {
 			k = 0
 			while k < 5 {
-				printf("p0[%d][%d][%d] = %d\n", i, j, k, p0[i][j][k])
+				stdio.printf("p0[%d][%d][%d] = %d\n", i, j, k, p0[i][j][k])
 				k = k + 1
 			}
 			j = j + 1
@@ -182,27 +182,27 @@ public func main() -> ctypes64.Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	var em: [30]Char8 = f0("Hello World!")
-	printf("em = %s\n", &em)
+	stdio.printf("em = %s\n", &em)
 
 	var i: Int32 = 0
 	while i < 10 {
 		let a = globalArray[i]
-		printf("globalArray[%i] = %i\n", i, a)
+		stdio.printf("globalArray[%i] = %i\n", i, a)
 		i = i + 1
 	}
 
-	printf("------------------------------------\n")
+	stdio.printf("------------------------------------\n")
 
 	var localArray: [3]Int32 = [4, 5, 6]
 
 	i = 0
 	while i < 3 {
 		let a = localArray[i]
-		printf("localArray[%i] = %i\n", i, a)
+		stdio.printf("localArray[%i] = %i\n", i, a)
 		i = i + 1
 	}
 
-	printf("------------------------------------\n")
+	stdio.printf("------------------------------------\n")
 
 	var globalArrayPtr: *[]Int32
 	globalArrayPtr = &globalArray
@@ -210,11 +210,11 @@ public func main() -> ctypes64.Int {
 	i = 0
 	while i < 3 {
 		let a = globalArrayPtr[i]
-		printf("globalArrayPtr[%i] = %i\n", i, a)
+		stdio.printf("globalArrayPtr[%i] = %i\n", i, a)
 		i = i + 1
 	}
 
-	printf("------------------------------------\n")
+	stdio.printf("------------------------------------\n")
 
 	var localArrayPtr: *[]Int32
 	localArrayPtr = &localArray
@@ -222,42 +222,42 @@ public func main() -> ctypes64.Int {
 	i = 0
 	while i < 3 {
 		let a = localArrayPtr[i]
-		printf("localArrayPtr[%i] = %i\n", i, a)
+		stdio.printf("localArrayPtr[%i] = %i\n", i, a)
 		i = i + 1
 	}
 
 	// assign array to array 1
 	// (with equal types)
 	var a: [3]Int32 = [1, 2, 3]
-	printf("a[0] = %i\n", a[0])
-	printf("a[1] = %i\n", a[1])
-	printf("a[2] = %i\n", a[2])
+	stdio.printf("a[0] = %i\n", a[0])
+	stdio.printf("a[1] = %i\n", a[1])
+	stdio.printf("a[2] = %i\n", a[2])
 
 	// create (and initialize) new variable b
 	// (with type [3]Int32)
 	// this variable are copy of array a
 	var b: [3]Int32 = a
-	printf("b[0] = %i\n", b[0])
-	printf("b[1] = %i\n", b[1])
-	printf("b[2] = %i\n", b[2])
+	stdio.printf("b[0] = %i\n", b[0])
+	stdio.printf("b[1] = %i\n", b[1])
+	stdio.printf("b[2] = %i\n", b[2])
 
 	// check equality between two arrays (by value)
 	if a == b {
-		printf("a == b\n")
+		stdio.printf("a == b\n")
 	} else {
-		printf("a != b\n")
+		stdio.printf("a != b\n")
 	}
 
 	// assign array to array 2
 	// (with array extending)
 	var c: [3]Int32 = [10, 20, 30]
 	var d: [6]Int32 = [6]Int32 c
-	printf("d[0] = %i\n", d[0])
-	printf("d[1] = %i\n", d[1])
-	printf("d[2] = %i\n", d[2])
-	printf("d[3] = %i\n", d[3])
-	printf("d[4] = %i\n", d[4])
-	printf("d[5] = %i\n", d[5])
+	stdio.printf("d[0] = %i\n", d[0])
+	stdio.printf("d[1] = %i\n", d[1])
+	stdio.printf("d[2] = %i\n", d[2])
+	stdio.printf("d[3] = %i\n", d[3])
+	stdio.printf("d[4] = %i\n", d[4])
+	stdio.printf("d[5] = %i\n", d[5])
 
 
 	// check equality between two arrays (by pointer)
@@ -265,9 +265,9 @@ public func main() -> ctypes64.Int {
 	let pb = &b
 
 	if *pa == *pb {
-		printf("*pa == *pb\n")
+		stdio.printf("*pa == *pb\n")
 	} else {
-		printf("*pa != *pb\n")
+		stdio.printf("*pa != *pb\n")
 	}
 
 
@@ -287,15 +287,15 @@ public func main() -> ctypes64.Int {
 	// check local literal array assignation to local array
 	var e: [4]Int32
 	e = init_array
-	printf("e[0] = %i\n", e[0])
-	printf("e[1] = %i\n", e[1])
-	printf("e[2] = %i\n", e[2])
+	stdio.printf("e[0] = %i\n", e[0])
+	stdio.printf("e[1] = %i\n", e[1])
+	stdio.printf("e[2] = %i\n", e[2])
 
 	// check local literal array assignation to global array
 	globalArray = init_array
-	printf("globalArray[%i] = %i\n", Int32 0, globalArray[0])
-	printf("globalArray[%i] = %i\n", Int32 1, globalArray[1])
-	printf("globalArray[%i] = %i\n", Int32 2, globalArray[2])
+	stdio.printf("globalArray[%i] = %i\n", Int32 0, globalArray[0])
+	stdio.printf("globalArray[%i] = %i\n", Int32 1, globalArray[1])
+	stdio.printf("globalArray[%i] = %i\n", Int32 2, globalArray[2])
 
 
 	globalArray = []
@@ -315,24 +315,24 @@ public func main() -> ctypes64.Int {
 	bx = 222
 	cx = 333
 
-	printf("y[%i] = %i (must be 10)\n", Int32 0, y[0])
-	printf("y[%i] = %i (must be 20)\n", Int32 1, y[1])
-	printf("y[%i] = %i (must be 30)\n", Int32 2, y[2])
-	printf("y[%i] = %i (must be 40)\n", Int32 3, y[3])
+	stdio.printf("y[%i] = %i (must be 10)\n", Int32 0, y[0])
+	stdio.printf("y[%i] = %i (must be 20)\n", Int32 1, y[1])
+	stdio.printf("y[%i] = %i (must be 30)\n", Int32 2, y[2])
+	stdio.printf("y[%i] = %i (must be 40)\n", Int32 3, y[3])
 
 	if y == [10, 20, 30, 40] {
-		printf("test passed\n")
+		stdio.printf("test passed\n")
 	} else {
-		printf("test failed\n")
+		stdio.printf("test failed\n")
 	}
 
 
 	let sa = [5]Char8 ["L", "o", "H", "i", "!"]
 
 	if sa[2:4] == "Hi" {
-		printf("test passed\n")
+		stdio.printf("test passed\n")
 	} else {
-		printf("test failed\n")
+		stdio.printf("test failed\n")
 	}
 
 	test_arrays()

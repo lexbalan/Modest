@@ -287,22 +287,22 @@ declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n
 declare [0 x %Char]* @strerror(%Int %error)
 ; ?? utf ??
 ; from import
-declare %Int8 @utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
-declare %Int8 @utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
+declare %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
+declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; end from import
 ; from import
-declare void @putchar8(%Char8 %c)
-declare void @putchar16(%Char16 %c)
-declare void @putchar32(%Char32 %c)
-declare void @putchar_utf8(%Char8 %c)
-declare void @putchar_utf16(%Char16 %c)
-declare void @putchar_utf32(%Char32 %c)
-declare void @puts8(%Str8* %s)
-declare void @puts16(%Str16* %s)
-declare void @puts32(%Str32* %s)
-declare void @print(%Str8* %form, ...)
-declare %Int32 @vfprint(%Int32 %fd, %Str8* %form, i8* %va)
-declare %Int32 @vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
+declare void @console_putchar8(%Char8 %c)
+declare void @console_putchar16(%Char16 %c)
+declare void @console_putchar32(%Char32 %c)
+declare void @console_putchar_utf8(%Char8 %c)
+declare void @console_putchar_utf16(%Char16 %c)
+declare void @console_putchar_utf32(%Char32 %c)
+declare void @console_puts8(%Str8* %s)
+declare void @console_puts16(%Str16* %s)
+declare void @console_puts32(%Str32* %s)
+declare void @console_print(%Str8* %form, ...)
+declare %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, i8* %va)
+declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 ; end from import
 ; -- end print imports 'main' --
 ; -- strings --
@@ -321,18 +321,18 @@ declare %Int32 @vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 @str13 = private constant [11 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0]
 ; -- endstrings --
 define %Int @main() {
-	call void (%Str8*, ...) @print(%Str8* bitcast ([20 x i8]* @str1 to [0 x i8]*))
-	call void (%Str8*, ...) @print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*))
-	call void (%Str8*, ...) @print(%Str8* bitcast ([3 x i8]* @str4 to [0 x i8]*))
-	call void (%Str8*, ...) @print(%Str8* bitcast ([6 x i8]* @str5 to [0 x i8]*))
-	call void (%Str8*, ...) @print(%Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*))
-	call void (%Str8*, ...) @print(%Str8* bitcast ([64 x i8]* @str7 to [0 x i8]*))
-	call void (%Str8*, ...) @print(%Str8* bitcast ([7 x i8]* @str8 to [0 x i8]*))
-	call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str9 to [0 x i8]*), %Char32 128000)
-	call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
-	call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str11 to [0 x i8]*), %Int32 -1)
-	call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str12 to [0 x i8]*), %Int32 123)
-	call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str13 to [0 x i8]*), %Int32 305419903)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([20 x i8]* @str1 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str4 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([6 x i8]* @str5 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([64 x i8]* @str7 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str8 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str9 to [0 x i8]*), %Char32 128000)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str11 to [0 x i8]*), %Int32 -1)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str12 to [0 x i8]*), %Int32 123)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str13 to [0 x i8]*), %Int32 305419903)
 	ret %Int 0
 }
 

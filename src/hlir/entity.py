@@ -14,9 +14,8 @@ class Entity():
 
 	# возвращает модуль в котором сущность определена (или None)
 	def getModule(self):
-		from .hlir import Module
-		if self.parent != None:
-			if isinstance(self.parent, Module):
-				return self.parent
-			return self.parent.getModule()
+		if hasattr(self, 'definition'):
+			definition = self.definition
+			if hasattr(definition, 'module'):
+				return self.definition.module
 		return None
