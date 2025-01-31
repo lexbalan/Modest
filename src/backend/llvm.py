@@ -114,7 +114,7 @@ def ll_reg_operation(op, type, reg=None):
 def get_id_str(x):
 	id = x.id
 
-	if x.id.llvm:
+	if x.id.llvm != None:
 		return x.id.llvm
 
 	if not x.hasAttribute('nodecorate'):
