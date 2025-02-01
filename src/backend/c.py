@@ -264,6 +264,8 @@ def str_type_record(t, tag=''):
 
 
 
+def is_type_named(t):
+	return type_get_aka(t) != None
 
 
 def prespace(s):
@@ -408,10 +410,6 @@ def is_sim_sim(t):
 	if t.is_pointer_to_array():
 		if not t.to.hasAttribute('alias'):
 			return is_type_named(t.to.of)
-
-
-def is_type_named(t):
-	return type_get_aka(t) != None
 
 
 

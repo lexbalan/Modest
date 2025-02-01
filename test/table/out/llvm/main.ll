@@ -281,16 +281,6 @@ declare [0 x %Char]* @strerror(%Int %error)
 		%Str8* bitcast ([5 x i8]* @str20 to [0 x i8]*)
 	]
 ]
-define internal %Int32 @main_max(%Int32 %a, %Int32 %b) {
-	%1 = icmp ugt %Int32 %b, %a
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	ret %Int32 %b
-	br label %endif_0
-endif_0:
-	ret %Int32 %a
-}
-
 define internal void @main_tableSepPrint([0 x %Int32]* %sz, %Int32 %m) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str21 to [0 x i8]*))
 	%2 = alloca %Int32, align 4
@@ -390,15 +380,19 @@ body_2:
 	%30 = add %Int32 0, %29
 	%31 = getelementptr %Int32, [0 x %Int32]* %6, %Int32 %30
 ; -- END INDEX VLA --
-	%32 = load %Int32, %Int32* %4
+	%32 = load %Int32, %Int32* %31
+	%33 = icmp ugt %Int32 %27, %32
+	br %Bool %33 , label %then_0, label %endif_0
+then_0:
+	%34 = load %Int32, %Int32* %4
 ; -- INDEX VLA --
-	%33 = mul %Int32 %32, 1
-	%34 = add %Int32 0, %33
-	%35 = getelementptr %Int32, [0 x %Int32]* %6, %Int32 %34
+	%35 = mul %Int32 %34, 1
+	%36 = add %Int32 0, %35
+	%37 = getelementptr %Int32, [0 x %Int32]* %6, %Int32 %36
 ; -- END INDEX VLA --
-	%36 = load %Int32, %Int32* %35
-	%37 = call %Int32 @main_max(%Int32 %27, %Int32 %36)
-	store %Int32 %37, %Int32* %31
+	store %Int32 %27, %Int32* %37
+	br label %endif_0
+endif_0:
 	%38 = load %Int32, %Int32* %4
 	%39 = add %Int32 %38, 1
 	store %Int32 %39, %Int32* %4
@@ -450,13 +444,13 @@ body_4:
 	%59 = icmp slt %Int32 %58, 2
 	%60 = xor %Bool %headline, 1
 	%61 = or %Bool %59, %60
-	br %Bool %61 , label %then_0, label %endif_0
-then_0:
+	br %Bool %61 , label %then_1, label %endif_1
+then_1:
 	%62 = bitcast [0 x %Int32]* %6 to [0 x %Int32]*
 	call void @main_tableSepPrint([0 x %Int32]* %62, %Int32 %n)
 	%63 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str24 to [0 x i8]*))
-	br label %endif_0
-endif_0:
+	br label %endif_1
+endif_1:
 	%64 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str25 to [0 x i8]*))
 	store %Int32 0, %Int32* %4
 	br label %again_5
@@ -482,14 +476,14 @@ body_5:
 	%78 = getelementptr %Str8, %Str8* %74, %Int32 0, %Int32 0
 	%79 = load %Char8, %Char8* %78
 	%80 = icmp ne %Char8 %79, 0
-	br %Bool %80 , label %then_1, label %endif_1
-then_1:
+	br %Bool %80 , label %then_2, label %endif_2
+then_2:
 	%81 = load %Int32, %Int32* %75
 	%82 = add %Int32 %81, 1
 	store %Int32 %82, %Int32* %75
 	%83 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str26 to [0 x i8]*), %Str8* %74)
-	br label %endif_1
-endif_1:
+	br label %endif_2
+endif_2:
 	%84 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %84
 	br label %again_6

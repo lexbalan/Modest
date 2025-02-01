@@ -16,14 +16,6 @@ var table: [5][4]*Str8 = [
 ]
 
 
-func max(a: Nat32, b: Nat32) -> Nat32 {
-	if b > a {
-		return b
-	}
-	return a
-}
-
-
 func tableSepPrint(sz: *[]Nat32, m: Int32) -> Unit {
 	stdio.printf("+")
 	var i: Int32 = 0
@@ -57,7 +49,9 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) -> Unit 
 		j = 0
 		while j < n {
 			let slen = Nat32 string.strlen(table[i][j])
-			sz[j] = max(slen, sz[j])
+			if slen > sz[j] {
+				sz[j] = slen
+			}
 			j = j + 1
 		}
 		i = i + 1

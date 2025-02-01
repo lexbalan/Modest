@@ -25,15 +25,6 @@ static char *main_table[5][4] = (char *[5][4]){
 };
 
 
-static uint32_t main_max(uint32_t a, uint32_t b)
-{
-	if (b > a) {
-		return b;
-	}
-	return a;
-}
-
-
 static void main_tableSepPrint(uint32_t *sz, int32_t m)
 {
 	printf("+");
@@ -70,7 +61,9 @@ static void main_tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headli
 		j = 0;
 		while (j < n) {
 			uint32_t slen = (uint32_t)strlen((*table)[i][j]);
-			sz[j] = main_max(slen, sz[j]);
+			if (slen > sz[j]) {
+				sz[j] = slen;
+			}
 			j = j + 1;
 		}
 		i = i + 1;
