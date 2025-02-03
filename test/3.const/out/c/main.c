@@ -2,11 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
 #include "main.h"
-
 #include <stdio.h>
-
 
 #define main_genericIntConst  42
 #define main_int32Const  ((int32_t)main_genericIntConst)

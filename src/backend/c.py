@@ -1846,16 +1846,13 @@ def print_def_const(x):
 	return
 
 
-#def print_include(x):
-#	include(x.c_name, local=x.is_local)
-
 
 def include(string, local=True):
 	if local:
 		include_text = "#include \"%s\"" % string
 	else:
 		include_text = "#include <%s>" % string
-	out(include_text + '\n')
+	out(include_text)
 
 
 
@@ -1888,7 +1885,6 @@ def print_comment_line(x):
 
 
 
-
 def print_cdecl_type(x):
 	newline(n=x.nl)
 
@@ -1912,12 +1908,10 @@ def print_cdecl_func(x):
 
 
 
-
 def print_directive(x):
 	if isinstance(x, StmtDirectiveCInclude):
 		include(x.c_name, local=x.is_local)
 		return
-
 
 
 def is_private(x):
@@ -1962,10 +1956,13 @@ def print_header(module, outname):
 	out("#define %s\n" % guardsymbol)
 	newline()
 	include("stdint.h", local=False)
+	newline()
 	include("stdbool.h", local=False)
+	newline()
 
 	for x in module.defs:
 		if isinstance(x, StmtDirective):
+			newline()
 			print_directive(x)
 
 	newline()
@@ -1974,6 +1971,7 @@ def print_header(module, outname):
 	# print C `#include ""` directive for included modules
 	for inc in module.included_modules:
 		if not 'do_not_include' in inc.att:
+			newline()
 			include(inc.id + '.h', local=True)
 
 
@@ -2038,10 +2036,13 @@ def print_cfile(module, _outname):
 
 	newline()
 	include("stdint.h", local=False)
+	newline()
 	include("stdbool.h", local=False)
+	newline()
 	include("string.h", local=False)
 
 	if 'use_va_arg' in module.att:
+		newline()
 		include("stdarg.h", local=False)
 
 	newline()

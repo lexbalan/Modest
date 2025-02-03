@@ -2,11 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
 #include "main.h"
-
 #include <stdio.h>
-
 
 
 static int32_t main_globalArray0[10] = (int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};

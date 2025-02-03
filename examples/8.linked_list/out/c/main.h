@@ -4,14 +4,13 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 
 
 
-
 #include "list.h"
-
 
 
 // wrap around linked list for list.List Nat32

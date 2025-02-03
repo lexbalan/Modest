@@ -2,11 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
 #include "delay.h"
-
 #include <time.h>
-
 
 
 void delay_us(uint64_t us)

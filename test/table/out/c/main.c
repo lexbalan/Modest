@@ -2,27 +2,36 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
 #include "main.h"
-
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
 
 
-
 // [row, col]
-#define main_nRows  5
-#define main_nCols  4
-static char *main_table[5][4] = (char *[5][4]){
+#define main_nRows0  5
+#define main_nCols0  3
+static char *main_table0[5][3] = (char *[5][3]){
+	"#", "Header0", "Header1",
+	"0", "Alef", "Betha",
+	"1", "Clock", "Depth",
+	"2", "Ink", "Julia",
+	"3", "Ultra", "Video"
+};
+
+
+#define main_nRows1  5
+#define main_nCols1  4
+static char *main_table1[5][4] = (char *[5][4]){
 	"#", "Header0", "Header1", "Header2",
 	"0", "Alef", "Betha", "Emma",
 	"1", "Clock", "Depth", "Free",
 	"2", "Ink", "Julia", "Keyword",
 	"3", "Ultra", "Video", "Word"
 };
+
+
+
 
 
 static void main_tableSepPrint(uint32_t *sz, int32_t m)
@@ -115,7 +124,8 @@ static void main_tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headli
 
 int32_t main()
 {
-	main_tablePrint((void *)&main_table, main_nRows, main_nCols, true);
+	main_tablePrint((void *)&main_table0, main_nRows0, main_nCols0, true);
+	main_tablePrint((void *)&main_table1, main_nRows1, main_nCols1, true);
 	return 0;
 }
 

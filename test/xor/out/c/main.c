@@ -2,11 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
 #include "main.h"
-
 #include <stdio.h>
-
 
 
 static void main_xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen)

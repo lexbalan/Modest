@@ -5,15 +5,29 @@ include "libc/string"
 
 
 // [row, col]
-const nRows = 5
-const nCols = 4
-var table: [5][4]*Str8 = [
+const nRows0 = 5
+const nCols0 = 3
+var table0: [5][3]*Str8 = [
+	["#", "Header0", "Header1"]
+	["0", "Alef",  "Betha"]
+	["1", "Clock", "Depth"]
+	["2", "Ink",   "Julia"]
+	["3", "Ultra", "Video"]
+]
+
+
+const nRows1 = 5
+const nCols1 = 4
+var table1: [5][4]*Str8 = [
 	["#", "Header0", "Header1", "Header2"]
 	["0", "Alef",  "Betha", "Emma"]
 	["1", "Clock", "Depth", "Free"]
 	["2", "Ink",   "Julia", "Keyword"]
 	["3", "Ultra", "Video", "Word"]
 ]
+
+
+
 
 
 func tableSepPrint(sz: *[]Nat32, m: Int32) {
@@ -102,7 +116,8 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) {
 
 
 public func main() -> Int32 {
-	tablePrint(&table, nRows, nCols, headline=true)
+	tablePrint(&table0, nRows0, nCols0, headline=true)
+	tablePrint(&table1, nRows1, nCols1, headline=true)
 	return 0
 }
 

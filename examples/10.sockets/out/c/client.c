@@ -2,17 +2,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
 #include "client.h"
-
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <unistd.h>
-
 #include <arpa/inet.h>
-
 
 
 #define client_filename  "file.txt"

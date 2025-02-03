@@ -2,11 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
 #include "crc32.h"
-
 #include <stdio.h>
-
 
 //include "libc/ctypes64"
 //include "libc/stdio"

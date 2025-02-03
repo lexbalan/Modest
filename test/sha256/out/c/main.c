@@ -2,15 +2,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
 #include "main.h"
-
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 #include <stdio.h>
 
-
 #include "./sha256.h"
-
 
 #define main_inputDataLength  32
 
