@@ -1217,11 +1217,11 @@ def print_value_offsetof(x, ctx):
 
 def print_value_lengthof(x, ctx):
 	v = x.value
-	if not (isinstance(v, ValueVar) or isinstance(v, ValueConst)):
-		out("(")
-		print_value(v.type.volume)
-		out(")")
-		return
+#	if not (isinstance(v, ValueVar) or isinstance(v, ValueConst)):
+#		out("(")
+#		print_value(v.type.volume)
+#		out(")")
+#		return
 
 	# sizeof(array) / sizeof(array[0])
 	out("LENGTHOF(")
@@ -2047,10 +2047,12 @@ def print_cfile(module, _outname):
 
 	newline()
 	include("%s.h" % module.id)
+	newline()
 
 	if 'use_lengthof' in module.att:
 		newline()
 		out("#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))")
+		newline()
 
 	if len(module.anon_recs) > 0:
 		out("\n/* anonymous records */")

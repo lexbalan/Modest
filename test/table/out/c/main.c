@@ -3,20 +3,21 @@
 #include <stdbool.h>
 #include <string.h>
 #include "main.h"
+
+#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 
 // [row, col]
-#define main_nRows0  5
+#define main_nRows0  3
 #define main_nCols0  3
-static char *main_table0[5][3] = (char *[5][3]){
+static char *main_table0[3][3] = (char *[3][3]){
 	"#", "Header0", "Header1",
 	"0", "Alef", "Betha",
-	"1", "Clock", "Depth",
-	"2", "Ink", "Julia",
-	"3", "Ultra", "Video"
+	"1", "Clock", "Depth"
 };
 
 
@@ -29,9 +30,6 @@ static char *main_table1[5][4] = (char *[5][4]){
 	"2", "Ink", "Julia", "Keyword",
 	"3", "Ultra", "Video", "Word"
 };
-
-
-
 
 
 static void main_tableSepPrint(uint32_t *sz, int32_t m)
@@ -124,8 +122,8 @@ static void main_tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headli
 
 int32_t main()
 {
-	main_tablePrint((void *)&main_table0, main_nRows0, main_nCols0, true);
-	main_tablePrint((void *)&main_table1, main_nRows1, main_nCols1, true);
+	main_tablePrint((void *)&main_table0, LENGTHOF(main_table0), LENGTHOF(main_table0[0]), true);
+	main_tablePrint((void *)&main_table1, LENGTHOF(main_table1), LENGTHOF(main_table1[0]), true);
 	return 0;
 }
 

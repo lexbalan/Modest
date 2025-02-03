@@ -5,14 +5,12 @@
 
 
 // [row, col]
-const nRows0 = 5
+const nRows0 = 3
 const nCols0 = 3
-var table0: [5][3]*Str8 = [
+var table0: [3][3]*Str8 = [
 	["#", "Header0", "Header1"]
 	["0", "Alef", "Betha"]
 	["1", "Clock", "Depth"]
-	["2", "Ink", "Julia"]
-	["3", "Ultra", "Video"]
 ]
 
 
@@ -25,9 +23,6 @@ var table1: [5][4]*Str8 = [
 	["2", "Ink", "Julia", "Keyword"]
 	["3", "Ultra", "Video", "Word"]
 ]
-
-
-
 
 
 func tableSepPrint(sz: *[]Nat32, m: Int32) -> Unit {
@@ -116,8 +111,8 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) -> Unit 
 
 
 public func main() -> Int32 {
-	tablePrint(&table0, nRows0, nCols0, headline = true)
-	tablePrint(&table1, nRows1, nCols1, headline = true)
+	tablePrint(&table0, lengthof(table0), lengthof(table0[0]), headline = true)
+	tablePrint(&table1, lengthof(table1), lengthof(table1[0]), headline = true)
 	return 0
 }
 

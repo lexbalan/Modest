@@ -27,9 +27,6 @@
 
 
 
-
-
-
 // we cannot receive VLA by value,
 // but we can to receive pointer to open array
 // and after construct pointer to closed array with required dimensions

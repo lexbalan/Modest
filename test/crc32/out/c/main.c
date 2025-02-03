@@ -3,7 +3,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include "main.h"
+
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
+
 #include <stdio.h>
 #include "./crc32.h"
 

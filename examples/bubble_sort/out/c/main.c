@@ -3,7 +3,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include "main.h"
+
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
+
 #include <stdio.h>
 
 static int32_t main_array[21] = (int32_t[21]){

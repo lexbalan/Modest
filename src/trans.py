@@ -1005,7 +1005,7 @@ def do_value_lengthof_value(x):
 	arg = do_rvalue(x['value'])
 
 	if not arg.type.is_array():
-		error("expected array value", args[0]['ti'])
+		error("expected value with array type", x['value'])
 		return ValueBad({'ti': ti})
 
 	# for C backend, because C cannot do lengthof(x)

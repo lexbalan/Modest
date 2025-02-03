@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "utf.h"
+
 uint8_t utf_utf32_to_utf8(uint32_t c, char *buf)
 {
 	uint32_t x = (uint32_t)c;
