@@ -1015,7 +1015,7 @@ def do_value_lengthof_value(x):
 	return ValueLengthof(arg, ti)
 
 
-def do_value_va_start(x):#args, ti):
+def do_value_va_start(x):
 	args = x['values']
 	ti = x['ti']
 	va_list = do_value(args[0])

@@ -1216,16 +1216,8 @@ def print_value_offsetof(x, ctx):
 
 
 def print_value_lengthof(x, ctx):
-	v = x.value
-#	if not (isinstance(v, ValueVar) or isinstance(v, ValueConst)):
-#		out("(")
-#		print_value(v.type.volume)
-#		out(")")
-#		return
-
-	# sizeof(array) / sizeof(array[0])
 	out("LENGTHOF(")
-	print_value(v)
+	print_value(x.value)
 	out(")")
 	return
 
