@@ -6,20 +6,7 @@
 
 #include <stdio.h>
 
-//include "libc/ctypes64"
-//include "libc/stdio"
 
-/*
-  Name  : CRC-32
-  Poly  : 0x04C11DB7    xxor32 + xxor26 + xxor23 + xxor22 + xxor16 + xxor12 + xxor11
-                       + xxor10 + xxor8 + xxor7 + xxor5 + xxor4 + xxor2 + x + 1
-  Init  : 0xFFFFFFFF
-  Revert: true
-  XorOut: 0xFFFFFFFF
-  Check : 0xCBF43926 ("123456789")
-  MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
-   одинарных, двойных, пакетных и всех нечетных ошибок
-*/
 uint32_t crc32_run(uint8_t *buf, uint32_t len)
 {
 	#define __tableSize  256
@@ -59,7 +46,6 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 		// 1
 		uint32_t x = (uint32_t)buf[i];
 		uint32_t y = (crc ^ x) & 0xFF;
-		printf("CRC[%02X] = %08x, %08x\n", i, x, y);
 		// 2
 		uint8_t yy = (uint8_t)y;
 		crc = crc_table[yy] ^ crc >> 8;

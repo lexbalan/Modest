@@ -1266,26 +1266,27 @@ endif_2:
 	%220 = zext i8 5 to %Int32
 	; -- end vol eval --
 	store [5 x %Char8] %218, [5 x %Char8]* %219
-	%221 = getelementptr [5 x %Char8], [5 x %Char8]* %219, %Int32 0, i8 2
-	%222 = bitcast %Char8* %221 to [2 x %Char8]*
-	%223 = insertvalue [2 x %Char8] zeroinitializer, %Char8 72, 0
-	%224 = insertvalue [2 x %Char8] %223, %Char8 105, 1
-	%225 = alloca [2 x %Char8]
+	%221 = zext i8 2 to %Int32
+	%222 = getelementptr [5 x %Char8], [5 x %Char8]* %219, %Int32 0, %Int32 %221
+	%223 = bitcast %Char8* %222 to [2 x %Char8]*
+	%224 = insertvalue [2 x %Char8] zeroinitializer, %Char8 72, 0
+	%225 = insertvalue [2 x %Char8] %224, %Char8 105, 1
+	%226 = alloca [2 x %Char8]
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
-	%226 = zext i8 2 to %Int32
+	%227 = zext i8 2 to %Int32
 	; -- end vol eval --
-	store [2 x %Char8] %224, [2 x %Char8]* %225
-	%227 = bitcast [2 x %Char8]* %222 to i8*
-	%228 = bitcast [2 x %Char8]* %225 to i8*
-	%229 = call i1 (i8*, i8*, i64) @memeq(i8* %227, i8* %228, %Int64 2)
-	%230 = icmp ne %Bool %229, 0
-	br %Bool %230 , label %then_3, label %else_3
+	store [2 x %Char8] %225, [2 x %Char8]* %226
+	%228 = bitcast [2 x %Char8]* %223 to i8*
+	%229 = bitcast [2 x %Char8]* %226 to i8*
+	%230 = call i1 (i8*, i8*, i64) @memeq(i8* %228, i8* %229, %Int64 2)
+	%231 = icmp ne %Bool %230, 0
+	br %Bool %231 , label %then_3, label %else_3
 then_3:
-	%231 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str45 to [0 x i8]*))
+	%232 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str45 to [0 x i8]*))
 	br label %endif_3
 else_3:
-	%232 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str46 to [0 x i8]*))
+	%233 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str46 to [0 x i8]*))
 	br label %endif_3
 endif_3:
 	call void @main_test_arrays()

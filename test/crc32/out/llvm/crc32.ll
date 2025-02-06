@@ -188,23 +188,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 0
 ; -- end print imports 'crc32' --
 ; -- strings --
-@str1 = private constant [24 x i8] [i8 67, i8 82, i8 67, i8 91, i8 37, i8 48, i8 50, i8 88, i8 93, i8 32, i8 61, i8 32, i8 37, i8 48, i8 56, i8 120, i8 44, i8 32, i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
 ; -- endstrings --
-
-;include "libc/ctypes64"
-;include "libc/stdio"
-
-;
-;  Name  : CRC-32
-;  Poly  : 0x04C11DB7    xxor32 + xxor26 + xxor23 + xxor22 + xxor16 + xxor12 + xxor11
-;                       + xxor10 + xxor8 + xxor7 + xxor5 + xxor4 + xxor2 + x + 1
-;  Init  : 0xFFFFFFFF
-;  Revert: true
-;  XorOut: 0xFFFFFFFF
-;  Check : 0xCBF43926 ("123456789")
-;  MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
-;   одинарных, двойных, пакетных и всех нечетных ошибок
-;
 define %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len) {
 	%1 = alloca [256 x %Word32], align 1
 	%2 = alloca %Word32, align 4
@@ -255,12 +239,13 @@ endif_0:
 	br label %again_2
 break_2:
 	%23 = load %Int32, %Int32* %3
-	%24 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int32 %23
-	%25 = load %Word32, %Word32* %2
-	store %Word32 %25, %Word32* %24
-	%26 = load %Int32, %Int32* %3
-	%27 = add %Int32 %26, 1
-	store %Int32 %27, %Int32* %3
+	%24 = bitcast %Int32 %23 to %Int32
+	%25 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int32 %24
+	%26 = load %Word32, %Word32* %2
+	store %Word32 %26, %Word32* %25
+	%27 = load %Int32, %Int32* %3
+	%28 = add %Int32 %27, 1
+	store %Int32 %28, %Int32* %3
 	br label %again_1
 break_1:
 
@@ -271,37 +256,37 @@ break_1:
 	store %Int32 0, %Int32* %3
 	br label %again_3
 again_3:
-	%28 = load %Int32, %Int32* %3
-	%29 = icmp ult %Int32 %28, %len
-	br %Bool %29 , label %body_3, label %break_3
+	%29 = load %Int32, %Int32* %3
+	%30 = icmp ult %Int32 %29, %len
+	br %Bool %30 , label %body_3, label %break_3
 body_3:
 	; 1
-	%30 = load %Int32, %Int32* %3
-	%31 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %30
-	%32 = load %Word8, %Word8* %31
-	%33 = zext %Word8 %32 to %Word32
-	%34 = load %Word32, %Word32* %2
-	%35 = xor %Word32 %34, %33
-	%36 = and %Word32 %35, 255
-	%37 = load %Int32, %Int32* %3
-	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str1 to [0 x i8]*), %Int32 %37, %Word32 %33, %Word32 %36)
+	%31 = load %Int32, %Int32* %3
+	%32 = bitcast %Int32 %31 to %Int32
+	%33 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %32
+	%34 = load %Word8, %Word8* %33
+	%35 = zext %Word8 %34 to %Word32
+	%36 = load %Word32, %Word32* %2
+	%37 = xor %Word32 %36, %35
+	%38 = and %Word32 %37, 255
 	; 2
-	%39 = trunc %Word32 %36 to %Int8
-	%40 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int8 %39
-	%41 = load %Word32, %Word32* %2
-	%42 = zext i8 8 to %Word32
-	%43 = lshr %Word32 %41, %42
-	%44 = load %Word32, %Word32* %40
-	%45 = xor %Word32 %44, %43
-	store %Word32 %45, %Word32* %2
-	%46 = load %Int32, %Int32* %3
-	%47 = add %Int32 %46, 1
-	store %Int32 %47, %Int32* %3
+	%39 = trunc %Word32 %38 to %Int8
+	%40 = zext %Int8 %39 to %Int32
+	%41 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int32 %40
+	%42 = load %Word32, %Word32* %2
+	%43 = zext i8 8 to %Word32
+	%44 = lshr %Word32 %42, %43
+	%45 = load %Word32, %Word32* %41
+	%46 = xor %Word32 %45, %44
+	store %Word32 %46, %Word32* %2
+	%47 = load %Int32, %Int32* %3
+	%48 = add %Int32 %47, 1
+	store %Int32 %48, %Int32* %3
 	br label %again_3
 break_3:
-	%48 = load %Word32, %Word32* %2
-	%49 = xor %Word32 %48, 4294967295
-	ret %Word32 %49
+	%49 = load %Word32, %Word32* %2
+	%50 = xor %Word32 %49, 4294967295
+	ret %Word32 %50
 }
 
 

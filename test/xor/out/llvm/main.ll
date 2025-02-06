@@ -207,31 +207,34 @@ again_1:
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
 	%5 = load %Int32, %Int32* %1
-	%6 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %5
-	%7 = load %Int32, %Int32* %1
-	%8 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %7
-	%9 = load %Int32, %Int32* %2
-	%10 = getelementptr [0 x %Word8], [0 x %Word8]* %key, %Int32 0, %Int32 %9
-	%11 = load %Word8, %Word8* %8
-	%12 = load %Word8, %Word8* %10
-	%13 = xor %Word8 %11, %12
-	store %Word8 %13, %Word8* %6
-	%14 = sub %Int32 %keylen, 1
-	%15 = load %Int32, %Int32* %2
-	%16 = icmp ult %Int32 %15, %14
-	br %Bool %16 , label %then_0, label %else_0
+	%6 = bitcast %Int32 %5 to %Int32
+	%7 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %6
+	%8 = load %Int32, %Int32* %1
+	%9 = bitcast %Int32 %8 to %Int32
+	%10 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %9
+	%11 = load %Int32, %Int32* %2
+	%12 = bitcast %Int32 %11 to %Int32
+	%13 = getelementptr [0 x %Word8], [0 x %Word8]* %key, %Int32 0, %Int32 %12
+	%14 = load %Word8, %Word8* %10
+	%15 = load %Word8, %Word8* %13
+	%16 = xor %Word8 %14, %15
+	store %Word8 %16, %Word8* %7
+	%17 = sub %Int32 %keylen, 1
+	%18 = load %Int32, %Int32* %2
+	%19 = icmp ult %Int32 %18, %17
+	br %Bool %19 , label %then_0, label %else_0
 then_0:
-	%17 = load %Int32, %Int32* %2
-	%18 = add %Int32 %17, 1
-	store %Int32 %18, %Int32* %2
+	%20 = load %Int32, %Int32* %2
+	%21 = add %Int32 %20, 1
+	store %Int32 %21, %Int32* %2
 	br label %endif_0
 else_0:
 	store %Int32 0, %Int32* %2
 	br label %endif_0
 endif_0:
-	%19 = load %Int32, %Int32* %1
-	%20 = add %Int32 %19, 1
-	store %Int32 %20, %Int32* %1
+	%22 = load %Int32, %Int32* %1
+	%23 = add %Int32 %22, 1
+	store %Int32 %23, %Int32* %1
 	br label %again_1
 break_1:
 	ret void
@@ -271,15 +274,16 @@ again_1:
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
 	%4 = load %Int32, %Int32* %1
-	%5 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %4
-	%6 = load %Word8, %Word8* %5
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Word8 %6)
-	%8 = load %Int32, %Int32* %1
-	%9 = add %Int32 %8, 1
-	store %Int32 %9, %Int32* %1
+	%5 = bitcast %Int32 %4 to %Int32
+	%6 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %5
+	%7 = load %Word8, %Word8* %6
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Word8 %7)
+	%9 = load %Int32, %Int32* %1
+	%10 = add %Int32 %9, 1
+	store %Int32 %10, %Int32* %1
 	br label %again_1
 break_1:
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
 	ret void
 }
 

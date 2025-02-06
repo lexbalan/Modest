@@ -1,20 +1,7 @@
 
 @c_include "stdio.h"
 
-//include "libc/ctypes64"
-//include "libc/stdio"
 
-/*
-  Name  : CRC-32
-  Poly  : 0x04C11DB7    xxor32 + xxor26 + xxor23 + xxor22 + xxor16 + xxor12 + xxor11
-                       + xxor10 + xxor8 + xxor7 + xxor5 + xxor4 + xxor2 + x + 1
-  Init  : 0xFFFFFFFF
-  Revert: true
-  XorOut: 0xFFFFFFFF
-  Check : 0xCBF43926 ("123456789")
-  MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
-   одинарных, двойных, пакетных и всех нечетных ошибок
-*/
 public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 	let tableSize = 256
 	var crc_table: [tableSize]Word32
@@ -52,7 +39,6 @@ public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 		// 1
 		let x = Word32 buf[i]
 		let y = (crc xor x) and 0xFF
-		stdio.printf("CRC[%02X] = %08x, %08x\n", i, x, y)
 		// 2
 		let yy = Nat8 y
 		crc = crc_table[yy] xor crc >> 8

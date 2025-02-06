@@ -502,8 +502,18 @@ def llvm_gep(v, object_type, indexes, result_type, et):
 	# Есть такой прикол в том что индекс (i) структуры
 	# не может быть i64 (!) (а только i32)
 
+	# Индексы должны быть 32-бита,
+	# если меньше (например 8) - GEP возвращает херь
+	# поэтому приводим все к 32-битам
+	indexes32 = []
+	for index in indexes:
+		if not Type.eq(index['type'], foundation.typeInt32):
+		#if index['type'].size != 32: #foundation.typeFreePointer.size:
+			index = docast(index, foundation.typeNat32)
+		indexes32.append(index)
+
 	if is_global_context():
-		return llvm_value_inline_gep(result_type, v, indexes, object_type)
+		return llvm_value_inline_gep(result_type, v, indexes32, object_type)
 
 	#rv = ll_reg_operation('getelementptr inbounds', result_type)
 	rv = ll_reg_operation('getelementptr', result_type)
@@ -512,7 +522,7 @@ def llvm_gep(v, object_type, indexes, result_type, et):
 	out(", ")
 	llvm_print_type_value(v)
 	out(", ")
-	print_list_with(indexes, llvm_print_type_value)
+	print_list_with(indexes32, llvm_print_type_value)
 	return rv
 
 

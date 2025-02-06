@@ -1,13 +1,3 @@
-// crc32.m
-
-$pragma do_not_include
-$pragma unsafe
-
-include "libc/stdio"
-
-//include "libc/ctypes64"
-//include "libc/stdio"
-
 /*
   Name  : CRC-32
   Poly  : 0x04C11DB7    xxor32 + xxor26 + xxor23 + xxor22 + xxor16 + xxor12 + xxor11
@@ -19,6 +9,13 @@ include "libc/stdio"
   MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
    одинарных, двойных, пакетных и всех нечетных ошибок
 */
+
+$pragma do_not_include
+$pragma unsafe
+
+include "libc/stdio"
+
+
 public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 	let tableSize = 256
 	var crc_table: [tableSize]Word32
@@ -56,7 +53,6 @@ public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 		// 1
 		let x = Word32 buf[i]
 		let y = (crc xor x) and 0xFF
-		printf("CRC[%02X] = %08x, %08x\n", i, x, y)
 		// 2
 		let yy = unsafe Nat8 y
 		crc = crc_table[yy] xor (crc >> 8)
@@ -65,4 +61,5 @@ public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 
 	return crc xor 0xFFFFFFFF
 }
+
 
