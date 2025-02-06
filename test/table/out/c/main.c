@@ -32,6 +32,9 @@ static char *main_table1[5][4] = (char *[5][4]){
 };
 
 
+// печатает строку отделяющую записи таблицы
+// получает указатель на массив с размерами колонок
+// и количество элементов в ней
 static void main_tableSepPrint(uint32_t *sz, int32_t m)
 {
 	printf("+");
@@ -48,7 +51,7 @@ static void main_tableSepPrint(uint32_t *sz, int32_t m)
 }
 
 // we cannot receive VLA by value,
-// but we can to receive pointer to open array
+// but we can receive pointer to open array
 // and after construct pointer to closed array with required dimensions
 static void main_tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
 {

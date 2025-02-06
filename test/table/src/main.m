@@ -25,6 +25,9 @@ var table1: [5][4]*Str8 = [
 ]
 
 
+// печатает строку отделяющую записи таблицы
+// получает указатель на массив с размерами колонок
+// и количество элементов в ней
 func tableSepPrint(sz: *[]Nat32, m: Int32) {
 	printf("+")
 	var i = 0
@@ -40,7 +43,7 @@ func tableSepPrint(sz: *[]Nat32, m: Int32) {
 }
 
 // we cannot receive VLA by value,
-// but we can to receive pointer to open array
+// but we can receive pointer to open array
 // and after construct pointer to closed array with required dimensions
 func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) {
 	var i: Int32

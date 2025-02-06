@@ -307,6 +307,11 @@ declare [0 x %Char]* @strerror(%Int %error)
 		%Str8* bitcast ([5 x i8]* @str29 to [0 x i8]*)
 	]
 ]
+
+
+; печатает строку отделяющую записи таблицы
+; получает указатель на массив с размерами колонок
+; и количество элементов в ней
 define internal void @main_tableSepPrint([0 x %Int32]* %sz, %Int32 %m) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str30 to [0 x i8]*))
 	%2 = alloca %Int32, align 4
@@ -345,7 +350,7 @@ break_1:
 
 
 ; we cannot receive VLA by value,
-; but we can to receive pointer to open array
+; but we can receive pointer to open array
 ; and after construct pointer to closed array with required dimensions
 define internal void @main_tablePrint([0 x [0 x %Str8*]]* %tablex, %Int32 %m, %Int32 %n, %Bool %headline) {
 	%1 = alloca i8*
