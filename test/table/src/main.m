@@ -5,17 +5,12 @@ include "libc/string"
 
 
 // [row, col]
-const nRows0 = 3
-const nCols0 = 3
 var table0: [3][3]*Str8 = [
 	["#", "Header0", "Header1"]
 	["0", "Alef",  "Betha"]
 	["1", "Clock", "Depth"]
 ]
 
-
-const nRows1 = 5
-const nCols1 = 4
 var table1: [5][4]*Str8 = [
 	["#", "Header0", "Header1", "Header2"]
 	["0", "Alef",  "Betha", "Emma"]

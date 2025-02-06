@@ -12,17 +12,12 @@
 
 
 // [row, col]
-#define main_nRows0  3
-#define main_nCols0  3
 static char *main_table0[3][3] = (char *[3][3]){
 	"#", "Header0", "Header1",
 	"0", "Alef", "Betha",
 	"1", "Clock", "Depth"
 };
 
-
-#define main_nRows1  5
-#define main_nCols1  4
 static char *main_table1[5][4] = (char *[5][4]){
 	"#", "Header0", "Header1", "Header2",
 	"0", "Alef", "Betha", "Emma",
