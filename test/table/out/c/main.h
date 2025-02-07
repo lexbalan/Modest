@@ -14,20 +14,21 @@
 
 
 
-// [row, col]
 
 
+
+
+
+
+// we cannot receive VLA by value,
+// but we can receive pointer to open array
+// and after construct pointer to closed array with required dimensions
 
 
 
 // печатает строку отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
-
-
-// we cannot receive VLA by value,
-// but we can receive pointer to open array
-// and after construct pointer to closed array with required dimensions
 
 
 

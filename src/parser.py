@@ -327,7 +327,10 @@ class Parser:
 			#f = self.parse_field()
 			if self.is_identifier():
 				f = self.stmt_var()
-				fields.append(f)
+				if isinstance(f, list):
+					fields.extend(f)
+				else:
+					fields.append(f)
 			elif self.match("..."):
 				arghack = True
 			self.match(",")
@@ -1111,17 +1114,15 @@ class Parser:
 	#
 
 	def stmt_let(self):
-		x = self.parse_stmt_xvar()
+		x = self.parse_stmt_xvar()[0]
 		x['isa'] = 'ast_stmt'
 		x['kind'] = 'const'
 		return x
 
 
 	def stmt_var(self):
-		x = self.parse_stmt_xvar()
-		x['isa'] = 'ast_stmt'
-		x['kind'] = 'var'
-		return x
+		xx = self.parse_stmt_xvar()
+		return xx
 
 
 	def stmt_if(self):
@@ -1501,6 +1502,11 @@ class Parser:
 		ti = self.ti()
 		id = self.identifier()
 
+		ids = [id]
+		while self.match(","):
+			id = self.identifier()
+			ids.append(id)
+
 		t = None
 		if self.match(":"):
 			t = self.expr_type()
@@ -1513,32 +1519,37 @@ class Parser:
 		else:
 			init_value = self.expr_ValueUndefined(ti)
 
-		return {
-			'isa': 'ast_stmt',
-			'kind': 'const',
-			'id': id,
-			'type': t,
-			'init_value': init_value,
+		res = []
+		for id in ids:
+			xx = {
+				'isa': 'ast_stmt',
+				'kind': 'var',
+				'id': id,
+				'type': t,
+				'init_value': init_value,
 
-			'access_modifier': 'public',
-			'attributes': [],
-			'nl': 1,
-			'ti': ti
-		}
+				'access_modifier': 'public',
+				'attributes': [],
+				'nl': 1,
+				'ti': ti
+			}
+			res.append(xx)
+
+		return res
 
 
 	def parse_def_const(self):
-		x = self.parse_stmt_xvar()
+		x = self.parse_stmt_xvar()[0]
 		x['isa'] = 'ast_definition'
 		x['kind'] = 'const'
 		return x
 
 
 	def parse_def_var(self):
-		x = self.parse_stmt_xvar()
-		x['isa'] = 'ast_definition'
-		x['kind'] = 'var'
-		return x
+		xx = self.parse_stmt_xvar()
+		for x in xx:
+			x['isa'] = 'ast_definition'
+		return xx
 
 
 	def parse_def_type(self):
