@@ -5,13 +5,13 @@
 
 
 
-var table0: [3][3]*Str8 = [
+var table0: [3][3]*[]Char8 = [
 	["#", "Header0", "Header1"]
 	["0", "Alef", "Betha"]
 	["1", "Clock", "Depth"]
 ]
 
-var table1: [5][4]*Str8 = [
+var table1: [5][4]*[]Char8 = [
 	["#", "Header0", "Header1", "Header2"]
 	["0", "Alef", "Betha", "Emma"]
 	["1", "Clock", "Depth", "Free"]

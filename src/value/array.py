@@ -8,6 +8,13 @@ from .integer import value_integer_create
 from hlir.value import Value, ValueBad, ValueLiteral, ValueCons, ValueZero, ValueBin
 from hlir.type import Type, TypeArray
 
+
+"""
+type_print(t)
+	print(" ", end='')
+	print(t.size)
+"""
+
 # TODO: переделай здесь все - тут все плохо...
 # получает на вход список элементов
 # конструирует и возвращает GenericArray value

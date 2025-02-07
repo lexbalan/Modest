@@ -721,7 +721,6 @@ def print_cast(t, v, ctx=[]):
 
 
 
-
 def print_value_cons_record(x, ctx):
 	to_type = x.type
 	value = x.value
@@ -738,6 +737,11 @@ def print_value_cons_record(x, ctx):
 	# RecordA -> RecordB
 	#if to_type.is_record():
 	if from_type.is_record():
+		if to_type.uid == from_type.uid:
+			# это реально одна и та же структура (просто возм ее копия)
+			# и приведение не требуется
+			print_value(value, ctx=ctx)
+			return
 		# C cannot cast struct to struct (!)
 		print_cast_hard(to_type, value)
 		return
@@ -821,8 +825,6 @@ def print_suffix(to_type, num):
 
 
 
-
-
 def print_value_cons(x, ctx):
 	type = x.type
 	value = x.value
@@ -860,7 +862,6 @@ def print_value_cons(x, ctx):
 					pass
 					#out("\n// -- DIM --\n")
 					#return do_eval_cons_pointer_to_array(x)
-
 
 
 	elif type.is_float():
@@ -1764,7 +1765,7 @@ def print_def_type(x):
 	id_str = get_id_str(x.type)
 	otype = x.original_type
 
-	if otype.is_record():
+	if otype.is_record() and otype.is_anonymous():
 		print_type_record(otype, tag=id_str)
 		out(";")
 		if not id_str in declared:

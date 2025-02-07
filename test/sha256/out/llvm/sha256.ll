@@ -871,9 +871,12 @@ break_1:
 define void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %outHash) {
 	%1 = alloca %sha256_Context, align 128
 	store %sha256_Context zeroinitializer, %sha256_Context* %1
-	call void @sha256_contextInit(%sha256_Context* %1)
-	call void @sha256_update(%sha256_Context* %1, [0 x %Word8]* %msg, %Int32 %msgLen)
-	call void @sha256_final(%sha256_Context* %1, %sha256_Hash* %outHash)
+	%2 = bitcast %sha256_Context* %1 to %sha256_Context*
+	call void @sha256_contextInit(%sha256_Context* %2)
+	%3 = bitcast %sha256_Context* %1 to %sha256_Context*
+	call void @sha256_update(%sha256_Context* %3, [0 x %Word8]* %msg, %Int32 %msgLen)
+	%4 = bitcast %sha256_Context* %1 to %sha256_Context*
+	call void @sha256_final(%sha256_Context* %4, %sha256_Hash* %outHash)
 	ret void
 }
 

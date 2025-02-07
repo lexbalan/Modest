@@ -2,6 +2,7 @@
 #                            HLIR TYPE                               #
 ######################################################################
 
+import copy
 import settings
 from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up, align_to
 
@@ -273,6 +274,10 @@ class Type(Entity):
 		return self
 
 
+	def is_anonymous(self):
+		return not hasattr(self, "id")
+
+
 	@staticmethod
 	def eq_integer(a, b, opt):
 		return (a.width == b.width) and (a.signed == b.signed)
@@ -394,6 +399,20 @@ class Type(Entity):
 		#elif k == 'enum': return eq_enum(a, b, opt)
 		assert(False)
 		return False
+
+
+	@staticmethod
+	def copy(x):
+		# copy type
+		return copy.copy(x)
+
+	@staticmethod
+	def update(dst, src):
+		# За каким то **** это работает... Ура.
+		dst.__dict__.clear()
+		dst.__dict__.update(src.__dict__)
+		dst.att = copy.copy(src.att)
+		dst.__class__ = src.__class__
 
 
 

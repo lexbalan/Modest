@@ -5,7 +5,7 @@
 #include "main.h"
 
 /* anonymous records */
-struct __anonymous_struct_3 {int32_t x; int32_t y;
+struct __anonymous_struct_2 {int32_t x; int32_t y;
 };
 #include <stdio.h>
 
@@ -191,7 +191,7 @@ static main_AnimationPoint main_animation2_points[5] = (main_AnimationPoint[5]){
 };
 
 
-static void main_xy(struct __anonymous_struct_3 x)
+static void main_xy(struct __anonymous_struct_2 x)
 {
 }
 
@@ -245,7 +245,7 @@ static main_Wrap *main_awrap[2] = (main_Wrap *[2]){&main_wrap0, &main_wrap0};
 
 int32_t main()
 {
-	main_xy((struct __anonymous_struct_3){.x = 10, .y = 20	});
+	main_xy((struct __anonymous_struct_2){.x = 10, .y = 20	});
 
 	printf("test1 (eq): ");
 	if (memcmp(&main_animation0_points, &main_animation1_points, sizeof(main_AnimationPoint[5])) == 0) {

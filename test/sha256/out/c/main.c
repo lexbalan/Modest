@@ -45,7 +45,7 @@ static main_SHA256_TestCase main_test1 = {
 };
 
 
-#define _main_tests  {&main_test0, &main_test1}
+#define _main_tests  {&main_test0, (main_SHA256_TestCase *)&main_test1}
 main_SHA256_TestCase *main_tests[2] = _main_tests;
 
 
@@ -80,7 +80,7 @@ int main()
 	int32_t i = 0;
 	while (i < (int)LENGTHOF(main_tests)) {
 		main_SHA256_TestCase *test = main_tests[i];
-		bool test_result = main_doTest(test);
+		bool test_result = main_doTest((main_SHA256_TestCase *)test);
 
 		char *res = "failed";
 		if (test_result) {

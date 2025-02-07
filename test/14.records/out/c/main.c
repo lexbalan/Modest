@@ -5,9 +5,9 @@
 #include "main.h"
 
 /* anonymous records */
-struct __anonymous_struct_6 {uint32_t x; uint32_t y;
+struct __anonymous_struct_5 {uint32_t x; uint32_t y;
 };
-struct __anonymous_struct_7 {uint32_t x; uint32_t y;
+struct __anonymous_struct_6 {uint32_t x; uint32_t y;
 };
 #include <stdio.h>
 
@@ -129,7 +129,7 @@ int main()
 
 	// compare Point2D with anonymous record
 	main_Point2D p2d2 = p2d0;
-	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6)main_xx;
+	struct __anonymous_struct_5 p2d3 = (struct __anonymous_struct_5)main_xx;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(main_Point2D)) == 0) {
 		printf("p2d2 == p2d3\n");
@@ -139,9 +139,9 @@ int main()
 
 
 	// comparison between two anonymous record
-	struct __anonymous_struct_7 p2d4 = (struct __anonymous_struct_7){.x = 1, .y = 2	};
+	struct __anonymous_struct_6 p2d4 = (struct __anonymous_struct_6){.x = 1, .y = 2	};
 
-	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_6)) == 0) {
+	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_5)) == 0) {
 		printf("p2d3 == p2d4\n");
 	} else {
 		printf("p2d3 != p2d4\n");
@@ -149,7 +149,7 @@ int main()
 
 	// comparison between two record (by pointer)
 	main_Point2D *pr2 = &p2d2;
-	struct __anonymous_struct_6 *pr3 = &p2d3;
+	struct __anonymous_struct_5 *pr3 = &p2d3;
 
 	if (memcmp(&*pr2, &*pr3, sizeof(main_Point2D)) == 0) {
 		printf("*pr2 == *pr3\n");
@@ -171,7 +171,7 @@ int main()
 
 	// assign record by pointer
 	*pr2 = (main_Point2D){.x = 100, .y = 200	};
-	*pr3 = (struct __anonymous_struct_6){	};
+	*pr3 = (struct __anonymous_struct_5){	};
 
 	// cons Point3D from Point2D (record extension)
 	// (it is possible if dst record contained all fields from src record

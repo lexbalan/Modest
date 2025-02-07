@@ -231,8 +231,8 @@ static void sha256_final(sha256_Context *ctx, uint8_t *outHash)
 void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash)
 {
 	sha256_Context ctx = (sha256_Context){	};
-	sha256_contextInit(&ctx);
-	sha256_update(&ctx, msg, msgLen);
-	sha256_final(&ctx, outHash);
+	sha256_contextInit((sha256_Context *)&ctx);
+	sha256_update((sha256_Context *)&ctx, msg, msgLen);
+	sha256_final((sha256_Context *)&ctx, outHash);
 }
 

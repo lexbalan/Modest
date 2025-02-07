@@ -590,11 +590,15 @@ def do_type_array(x):
 
 	return TypeArray(of, volume, ti=x['ti'])
 
-
-anon_rec_cnt = 0
+# Нужен для анонимных структур
+# и чтобы отличать копии типа структура от реально другой структуры (C)
+rec_uid = 0
 def do_type_record(x):
-	global anon_rec_cnt
+	global rec_uid
 	fields = []
+
+	uid = rec_uid
+	rec_uid = rec_uid + 1
 
 	for field in x['fields']:
 		f = do_field(field)
@@ -613,13 +617,14 @@ def do_type_record(x):
 
 		fields.append(f)
 
-	anon_rec_cnt = anon_rec_cnt + 1
 	rec = TypeRecord(fields, ti=x['ti'])
 	rec.nl_end = x['nl_end']
-	# add anon record (before)
+	rec.uid = uid
 
-	anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
+	# add anon record (before)
+	anon_tag = '__anonymous_struct_%d' % uid
 	rec.c_anon_id = anon_tag
+
 	cmodule.anon_recs.append(rec)
 	return rec
 
@@ -1715,10 +1720,10 @@ def do_stmt_var(x):
 
 	if tu == True and vu == False:
 		# type undef, value ok
-		#type_update(nt, v.type)
+		#Type.update(nt, v.type)
 		if v.type.is_generic():
 			v = value_cons_default(v)
-		t = v.type
+		t = Type.copy(v.type)
 
 	#if not t.is_incompleted():
 	#	if t.is_bad():
@@ -1736,7 +1741,7 @@ def do_stmt_var(x):
 		if v.type.is_generic():
 			v = value_cons_default(v)
 
-		t = v.type
+		t = Type.copy(v.type)
 
 	# check if identifier is free (in current block)
 	already = ctx_value_get_shallow(var_id.str)
@@ -2027,15 +2032,6 @@ def do_stmt_block(x, parent=None):
 
 
 
-
-def type_update(dst, src):
-	# За каким то **** это работает... Ура.
-	dst.__dict__.clear()
-	dst.__dict__.update(src.__dict__)
-	dst.att = copy.copy(src.att)
-	dst.__class__ = src.__class__
-
-
 def def_type(x):
 	global cmodule
 	global cdef
@@ -2071,7 +2067,7 @@ def def_type(x):
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое
 	deps = nt.deps
-	type_update(nt, ty)
+	Type.update(nt, ty)
 	nt.deps = deps
 	nt.id = id
 	nt.definition = definition
@@ -2200,26 +2196,25 @@ def def_var(x):
 	elif tu == True and vu == False:
 		# type undef, value ok
 
-		#type_update(nt, v.type)
+		#Type.update(nt, v.type)
 		v = value_cons_default(v)
-		t = v.type
+		t = Type.copy(v.type)
 
 	elif tu == False and vu == False:
 		# type ok, value ok
 
-		# only for case:
-		# var arrayFromString: var s: []Char8 = "abc"
 		if t.is_open_array():
-			length = 0
 			if v.type.is_string():
+				# for case:
+				# var arrayFromString: []Char8 = "abc"
 				length = len(v.asset)
+				volume = value_integer_create(length)
+				t = TypeArray(t.of, volume, ti=x['ti'])
 			elif v.type.is_array():
-				length = v.type.volume.asset
-			else:
-				pass
-
-			volume = value_integer_create(length)
-			t = TypeArray(t.of, volume, ti=x['ti'])
+				# for case:
+				# var a: []*Str8 = ["Ab", "aB", "AAb"]
+				v = value_cons_default(v)
+				t = Type.copy(v.type)
 
 		v = value_cons_implicit_check(t, v)
 
@@ -2629,7 +2624,7 @@ def type_update_incompleted(module, t, idStr):
 		#v = ctx_value_get(idStr)
 		print("- UPDATED!")
 		tx = do_type(x['type'])
-		type_update(t, tx)
+		Type.update(t, tx)
 
 		#cmodule.lldeps.append(t)
 		return tx
@@ -2649,7 +2644,7 @@ def value_update_incompleted_type(module, v, idStr):
 
 		#v = ctx_value_get(idStr)
 		t = do_type(x['type'])
-		type_update(v.type, t)
+		Type.update(v.type, t)
 
 		#cmodule.lldeps.append(v)
 		return v
