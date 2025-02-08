@@ -7,8 +7,8 @@
 public type Table record {
 	public header: *[]*Str8
 	public data: *[][]*Str8
-	public rows: Nat32
-	public cols: Nat32
+	public nRows: Nat32
+	public nCols: Nat32
 	public separate: Bool
 }
 
@@ -20,19 +20,21 @@ public func print(table: *Table) -> Unit {
 	var i: Nat32
 	var j: Nat32
 
-	let rows = table.rows
-	let cols = table.cols
+	let nRows = table.nRows
+	let nCols = table.nCols
 	// construct pointer to closed VLA array
-	let table_data = *[rows][cols]*Str8 table.data
+	let table_data = *[nRows][nCols]*Str8 table.data
 
 	// array of size of columns (in characters)
-	var sz: [cols]Nat32 = []
+	var sz: [nCols]Nat32 = []
 
+	//
 	// calculate max length (in chars) of column
+	//
 
 	if table.header != nil {
 		i = 0
-		while i < cols {
+		while i < nCols {
 			let str = table.header[i]
 			let len = Nat32 string.strlen(str)
 			if len > sz[i] {
@@ -43,9 +45,9 @@ public func print(table: *Table) -> Unit {
 	}
 
 	i = 0
-	while i < table.rows {
+	while i < table.nRows {
 		j = 0
-		while j < table.cols {
+		while j < table.nCols {
 			let str = table_data[i][j]
 			let len = Nat32 string.strlen(str)
 			if len > sz[j] {
@@ -57,42 +59,45 @@ public func print(table: *Table) -> Unit {
 	}
 
 	i = 0
-	while i < table.cols {
+	while i < table.nCols {
 		// добавляем по пробелу слева и справа
 		// (для красивого отступа)
 		sz[i] = sz[i] + 2
 		i = i + 1
 	}
 
+	//
+	// print table
+	//
+
 	// top border
-	printSep(&sz, table.cols)
+	printSep(&sz, table.nCols)
 
 	if table.header != nil {
-		printRow(table.header, &sz, table.cols)
-		printSep(&sz, table.cols)
+		printRow(table.header, &sz, table.nCols)
+		printSep(&sz, table.nCols)
 	}
 
 	i = 0
-	while i < table.rows {
-		printRow(&(table_data[i]), &sz, table.cols)
+	while i < table.nRows {
+		printRow(&(table_data[i]), &sz, table.nCols)
 		i = i + 1
 
-		// print `+--+--+` separator line
-		if table.separate and i < table.rows {
-			printSep(&sz, table.cols)
+		if table.separate and i < table.nRows {
+			printSep(&sz, table.nCols)
 		}
 	}
 
 	// bottom border
-	printSep(&sz, table.cols)
+	printSep(&sz, table.nCols)
 }
 
 
-func printRow(raw_row: *[]*Str8, sz: *[]Nat32, ncols: Nat32) -> Unit {
-	let row = *[ncols]*Str8 raw_row
+func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nnCols: Nat32) -> Unit {
+	let row = *[nnCols]*Str8 raw_row
 
 	var j: Nat32 = Nat32 0
-	while j < ncols {
+	while j < nnCols {
 		stdio.printf("|")
 		let s = row[j]
 		var len: Nat32 = Nat32 string.strlen(s)

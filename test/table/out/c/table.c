@@ -17,26 +17,28 @@
 // and after construct pointer to closed array with required dimensions
 
 static void table_printSep(uint32_t *sz, uint32_t m);
-static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t ncols);
+static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nnCols);
 void table_print(table_Table *table)
 {
 	uint32_t i;
 	uint32_t j;
 
-	uint32_t rows = table->rows;
-	uint32_t cols = table->cols;
+	uint32_t nRows = table->nRows;
+	uint32_t nCols = table->nCols;
 	// construct pointer to closed VLA array
-	char *(*table_data)[rows][cols] = (char *(*)[rows][cols])table->data;
+	char *(*table_data)[nRows][nCols] = (char *(*)[nRows][nCols])table->data;
 
 	// array of size of columns (in characters)
-	uint32_t sz[cols];
+	uint32_t sz[nCols];
 	memset(&sz, 0, sizeof sz);
 
+	//
 	// calculate max length (in chars) of column
+	//
 
 	if (table->header != NULL) {
 		i = 0;
-		while (i < cols) {
+		while (i < nCols) {
 			char *str = (*table->header)[i];
 			uint32_t len = (uint32_t)strlen(str);
 			if (len > sz[i]) {
@@ -47,9 +49,9 @@ void table_print(table_Table *table)
 	}
 
 	i = 0;
-	while (i < table->rows) {
+	while (i < table->nRows) {
 		j = 0;
-		while (j < table->cols) {
+		while (j < table->nCols) {
 			char *str = (*table_data)[i][j];
 			uint32_t len = (uint32_t)strlen(str);
 			if (len > sz[j]) {
@@ -61,43 +63,46 @@ void table_print(table_Table *table)
 	}
 
 	i = 0;
-	while (i < table->cols) {
+	while (i < table->nCols) {
 		// добавляем по пробелу слева и справа
 		// (для красивого отступа)
 		sz[i] = sz[i] + 2;
 		i = i + 1;
 	}
 
+	//
+	// print table
+	//
+
 	// top border
-	table_printSep((uint32_t *)&sz, table->cols);
+	table_printSep((uint32_t *)&sz, table->nCols);
 
 	if (table->header != NULL) {
-		table_printRow(table->header, (uint32_t *)&sz, table->cols);
-		table_printSep((uint32_t *)&sz, table->cols);
+		table_printRow(table->header, (uint32_t *)&sz, table->nCols);
+		table_printSep((uint32_t *)&sz, table->nCols);
 	}
 
 	i = 0;
-	while (i < table->rows) {
-		table_printRow(&(*table_data)[i], (uint32_t *)&sz, table->cols);
+	while (i < table->nRows) {
+		table_printRow(&(*table_data)[i], (uint32_t *)&sz, table->nCols);
 		i = i + 1;
 
-		// print `+--+--+` separator line
-		if (table->separate && i < table->rows) {
-			table_printSep((uint32_t *)&sz, table->cols);
+		if (table->separate && i < table->nRows) {
+			table_printSep((uint32_t *)&sz, table->nCols);
 		}
 	}
 
 	// bottom border
-	table_printSep((uint32_t *)&sz, table->cols);
+	table_printSep((uint32_t *)&sz, table->nCols);
 }
 
 
-static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t ncols)
+static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nnCols)
 {
-	char *(*row)[ncols] = (char *(*)[ncols])raw_row;
+	char *(*row)[nnCols] = (char *(*)[nnCols])raw_row;
 
 	uint32_t j = 0;
-	while (j < ncols) {
+	while (j < nnCols) {
 		printf("|");
 		char *s = (*row)[j];
 		uint32_t len = (uint32_t)strlen(s);

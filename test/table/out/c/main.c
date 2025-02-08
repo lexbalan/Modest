@@ -38,35 +38,34 @@ static char *main_table_data1[4][4] = (char *[4][4]){
 static table_Table main_table00 = {
 	.header = NULL,
 	.data = (void *)&main_table_data0,
-	.rows = LENGTHOF(main_table_data0),
-	.cols = LENGTHOF(main_table_data0[0]),
+	.nRows = LENGTHOF(main_table_data0),
+	.nCols = LENGTHOF(main_table_data0[0]),
 	.separate = false
 };
 
 static table_Table main_table01 = {
 	.header = &main_table_header0,
 	.data = (void *)&main_table_data0,
-	.rows = LENGTHOF(main_table_data0),
-	.cols = LENGTHOF(main_table_data0[0]),
+	.nRows = LENGTHOF(main_table_data0),
+	.nCols = LENGTHOF(main_table_data0[0]),
 	.separate = false
 };
 
 static table_Table main_table02 = {
 	.header = NULL,
 	.data = (void *)&main_table_data0,
-	.rows = LENGTHOF(main_table_data0),
-	.cols = LENGTHOF(main_table_data0[0]),
+	.nRows = LENGTHOF(main_table_data0),
+	.nCols = LENGTHOF(main_table_data0[0]),
 	.separate = true
 };
 
 static table_Table main_table03 = {
 	.header = &main_table_header0,
 	.data = (void *)&main_table_data0,
-	.rows = LENGTHOF(main_table_data0),
-	.cols = LENGTHOF(main_table_data0[0]),
+	.nRows = LENGTHOF(main_table_data0),
+	.nCols = LENGTHOF(main_table_data0[0]),
 	.separate = true
 };
-
 
 
 int32_t main()

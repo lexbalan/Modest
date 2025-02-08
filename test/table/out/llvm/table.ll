@@ -267,7 +267,9 @@ define void @table_print(%table_Table* %table) {
 	%19 = bitcast %Int32* %17 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %19, i8 0, %Int32 %18, i1 0)
 
+	;
 	; calculate max length (in chars) of column
+	;
 	%20 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
 	%21 = load [0 x %Str8*]*, [0 x %Str8*]** %20
 	%22 = icmp ne [0 x %Str8*]* %21, null
@@ -405,6 +407,10 @@ body_4:
 	br label %again_4
 break_4:
 
+	;
+	; print table
+	;
+
 	; top border
 	%93 = bitcast [0 x %Int32]* %17 to [0 x %Int32]*
 	%94 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
@@ -450,8 +456,6 @@ body_5:
 	%119 = load %Int32, %Int32* %3
 	%120 = add %Int32 %119, 1
 	store %Int32 %120, %Int32* %3
-
-	; print `+--+--+` separator line
 	%121 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 4
 	%122 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
 	%123 = load %Int32, %Int32* %3
@@ -480,20 +484,20 @@ break_5:
 	ret void
 }
 
-define internal void @table_printRow([0 x %Str8*]* %raw_row, [0 x %Int32]* %sz, %Int32 %ncols) {
+define internal void @table_printRow([0 x %Str8*]* %raw_row, [0 x %Int32]* %sz, %Int32 %nnCols) {
 	%1 = alloca i8*
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
-	%3 = mul %Int32 %ncols, 1  ; calc VLA item size
+	%3 = mul %Int32 %nnCols, 1  ; calc VLA item size
 ; -- CONS PTR TO ARRAY --
 	%4 = bitcast [0 x %Str8*]* %raw_row to [0 x %Str8*]*
-	%5 = mul %Int32 %ncols, 1  ; calc VLA item size
+	%5 = mul %Int32 %nnCols, 1  ; calc VLA item size
 	%6 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %6
 	br label %again_1
 again_1:
 	%7 = load %Int32, %Int32* %6
-	%8 = icmp ult %Int32 %7, %ncols
+	%8 = icmp ult %Int32 %7, %nnCols
 	br %Bool %8 , label %body_1, label %break_1
 body_1:
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str1 to [0 x i8]*))

@@ -17,8 +17,8 @@
 struct table_Table {
 	char *(*header)[];
 	char *(*data)[];
-	uint32_t rows;
-	uint32_t cols;
+	uint32_t nRows;
+	uint32_t nCols;
 	bool separate;
 };
 typedef struct table_Table table_Table;

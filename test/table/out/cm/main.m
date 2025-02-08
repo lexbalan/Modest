@@ -31,35 +31,34 @@ var table_data1: [4][4]*[]Char8 = [
 var table00: table.Table = table.Table {
 	header = nil
 	data = &table_data0
-	rows = lengthof(table_data0)
-	cols = lengthof(table_data0[0])
+	nRows = lengthof(table_data0)
+	nCols = lengthof(table_data0[0])
 	separate = false
 }
 
 var table01: table.Table = table.Table {
 	header = &table_header0
 	data = &table_data0
-	rows = lengthof(table_data0)
-	cols = lengthof(table_data0[0])
+	nRows = lengthof(table_data0)
+	nCols = lengthof(table_data0[0])
 	separate = false
 }
 
 var table02: table.Table = table.Table {
 	header = nil
 	data = &table_data0
-	rows = lengthof(table_data0)
-	cols = lengthof(table_data0[0])
+	nRows = lengthof(table_data0)
+	nCols = lengthof(table_data0[0])
 	separate = true
 }
 
 var table03: table.Table = table.Table {
 	header = &table_header0
 	data = &table_data0
-	rows = lengthof(table_data0)
-	cols = lengthof(table_data0[0])
+	nRows = lengthof(table_data0)
+	nCols = lengthof(table_data0[0])
 	separate = true
 }
-
 
 
 public func main() -> Int32 {
