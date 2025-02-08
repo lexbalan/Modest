@@ -23,8 +23,8 @@ var table1: [][]*Str8 = [
 // we cannot receive VLA by value,
 // but we can receive pointer to open array
 // and after construct pointer to closed array with required dimensions
-func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) {
-	var i, j: Int32
+func tablePrint(tablex: *[][]*Str8, m: Nat32, n: Nat32, headline: Bool) {
+	var i, j: Nat32
 
 	// construct pointer to closed array
 	let table = *[m][n]*Str8 tablex
@@ -57,7 +57,7 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) {
 
 	i = 0
 	while i < m {
-		// pirint `+--+--+` separator
+		// pirint `+--+--+` separator line
 		if i < 2 or not headline {
 			printTableSep(&sz, n)
 			printf("\n")
@@ -91,8 +91,8 @@ func tablePrint(tablex: *[][]*Str8, m: Int32, n: Int32, headline: Bool) {
 // печатает строку отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
-func printTableSep(sz: *[]Nat32, m: Int32) {
-	var i = 0
+func printTableSep(sz: *[]Nat32, m: Nat32) {
+	var i = Nat32 0
 	while i < m {
 		printf("+")
 		var j = Nat32 0
@@ -110,7 +110,7 @@ public func main() -> Int32 {
 	printf("sizeof(table0) = %d\n", Nat32 sizeof(table0))
 	printf("sizeof(table1) = %d\n", Nat32 sizeof(table1))
 
-	tablePrint(&table0, lengthof(table0), lengthof(table0[0]), headline=true)
+	tablePrint(&table0, lengthof(table0), lengthof(table0[0]), headline=false)
 	tablePrint(&table1, lengthof(table1), lengthof(table1[0]), headline=true)
 
 	return 0

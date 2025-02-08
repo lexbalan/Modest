@@ -31,11 +31,11 @@ static char *main_table1[5][4] = (char *[5][4]){
 // but we can receive pointer to open array
 // and after construct pointer to closed array with required dimensions
 
-static void main_printTableSep(uint32_t *sz, int32_t m);
-static void main_tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headline)
+static void main_printTableSep(uint32_t *sz, uint32_t m);
+static void main_tablePrint(char *(*tablex)[], uint32_t m, uint32_t n, bool headline)
 {
-	int32_t i;
-	int32_t j;
+	uint32_t i;
+	uint32_t j;
 
 	// construct pointer to closed array
 	char *(*table)[m][n] = (char *(*)[m][n])tablex;
@@ -69,7 +69,7 @@ static void main_tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headli
 
 	i = 0;
 	while (i < m) {
-		// pirint `+--+--+` separator
+		// pirint `+--+--+` separator line
 		if (i < 2 || !headline) {
 			main_printTableSep((uint32_t *)&sz, n);
 			printf("\n");
@@ -103,9 +103,9 @@ static void main_tablePrint(char *(*tablex)[], int32_t m, int32_t n, bool headli
 // печатает строку отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
-static void main_printTableSep(uint32_t *sz, int32_t m)
+static void main_printTableSep(uint32_t *sz, uint32_t m)
 {
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i < m) {
 		printf("+");
 		uint32_t j = 0;
@@ -124,7 +124,7 @@ int32_t main()
 	printf("sizeof(table0) = %d\n", (uint32_t)sizeof main_table0);
 	printf("sizeof(table1) = %d\n", (uint32_t)sizeof main_table1);
 
-	main_tablePrint((void *)&main_table0, LENGTHOF(main_table0), LENGTHOF(main_table0[0]), true);
+	main_tablePrint((void *)&main_table0, LENGTHOF(main_table0), LENGTHOF(main_table0[0]), false);
 	main_tablePrint((void *)&main_table1, LENGTHOF(main_table1), LENGTHOF(main_table1[0]), true);
 
 	return 0;

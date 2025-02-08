@@ -341,14 +341,14 @@ define internal void @main_tablePrint([0 x [0 x %Str8*]]* %tablex, %Int32 %m, %I
 	br label %again_1
 again_1:
 	%14 = load %Int32, %Int32* %3
-	%15 = icmp slt %Int32 %14, %m
+	%15 = icmp ult %Int32 %14, %m
 	br %Bool %15 , label %body_1, label %break_1
 body_1:
 	store %Int32 0, %Int32* %4
 	br label %again_2
 again_2:
 	%16 = load %Int32, %Int32* %4
-	%17 = icmp slt %Int32 %16, %n
+	%17 = icmp ult %Int32 %16, %n
 	br %Bool %17 , label %body_2, label %break_2
 body_2:
 	%18 = load %Int32, %Int32* %4
@@ -396,7 +396,7 @@ break_1:
 	br label %again_3
 again_3:
 	%42 = load %Int32, %Int32* %3
-	%43 = icmp slt %Int32 %42, %n
+	%43 = icmp ult %Int32 %42, %n
 	br %Bool %43 , label %body_3, label %break_3
 body_3:
 	; добавляем по пробелу слева и справа
@@ -425,12 +425,12 @@ break_3:
 	br label %again_4
 again_4:
 	%56 = load %Int32, %Int32* %3
-	%57 = icmp slt %Int32 %56, %m
+	%57 = icmp ult %Int32 %56, %m
 	br %Bool %57 , label %body_4, label %break_4
 body_4:
-	; pirint `+--+--+` separator
+	; pirint `+--+--+` separator line
 	%58 = load %Int32, %Int32* %3
-	%59 = icmp slt %Int32 %58, 2
+	%59 = icmp ult %Int32 %58, 2
 	%60 = xor %Bool %headline, 1
 	%61 = or %Bool %59, %60
 	br %Bool %61 , label %then_1, label %endif_1
@@ -444,7 +444,7 @@ endif_1:
 	br label %again_5
 again_5:
 	%64 = load %Int32, %Int32* %4
-	%65 = icmp slt %Int32 %64, %n
+	%65 = icmp ult %Int32 %64, %n
 	br %Bool %65 , label %body_5, label %break_5
 body_5:
 	%66 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str31 to [0 x i8]*))
@@ -526,7 +526,7 @@ define internal void @main_printTableSep([0 x %Int32]* %sz, %Int32 %m) {
 	br label %again_1
 again_1:
 	%2 = load %Int32, %Int32* %1
-	%3 = icmp slt %Int32 %2, %m
+	%3 = icmp ult %Int32 %2, %m
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str36 to [0 x i8]*))
@@ -535,31 +535,32 @@ body_1:
 	br label %again_2
 again_2:
 	%6 = load %Int32, %Int32* %1
-	%7 = getelementptr [0 x %Int32], [0 x %Int32]* %sz, %Int32 0, %Int32 %6
-	%8 = load %Int32, %Int32* %5
-	%9 = load %Int32, %Int32* %7
-	%10 = icmp ult %Int32 %8, %9
-	br %Bool %10 , label %body_2, label %break_2
+	%7 = bitcast %Int32 %6 to %Int32
+	%8 = getelementptr [0 x %Int32], [0 x %Int32]* %sz, %Int32 0, %Int32 %7
+	%9 = load %Int32, %Int32* %5
+	%10 = load %Int32, %Int32* %8
+	%11 = icmp ult %Int32 %9, %10
+	br %Bool %11 , label %body_2, label %break_2
 body_2:
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str37 to [0 x i8]*))
-	%12 = load %Int32, %Int32* %5
-	%13 = add %Int32 %12, 1
-	store %Int32 %13, %Int32* %5
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str37 to [0 x i8]*))
+	%13 = load %Int32, %Int32* %5
+	%14 = add %Int32 %13, 1
+	store %Int32 %14, %Int32* %5
 	br label %again_2
 break_2:
-	%14 = load %Int32, %Int32* %1
-	%15 = add %Int32 %14, 1
-	store %Int32 %15, %Int32* %1
+	%15 = load %Int32, %Int32* %1
+	%16 = add %Int32 %15, 1
+	store %Int32 %16, %Int32* %1
 	br label %again_1
 break_1:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str38 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str38 to [0 x i8]*))
 	ret void
 }
 
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str39 to [0 x i8]*), %Int32 72)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str40 to [0 x i8]*), %Int32 160)
-	call void @main_tablePrint([0 x [0 x %Str8*]]* bitcast ([3 x [3 x [0 x %Char8]*]]* @main_table0 to [0 x [0 x %Str8*]]*), %Int32 3, %Int32 3, %Bool 1)
+	call void @main_tablePrint([0 x [0 x %Str8*]]* bitcast ([3 x [3 x [0 x %Char8]*]]* @main_table0 to [0 x [0 x %Str8*]]*), %Int32 3, %Int32 3, %Bool 0)
 	call void @main_tablePrint([0 x [0 x %Str8*]]* bitcast ([5 x [4 x [0 x %Char8]*]]* @main_table1 to [0 x [0 x %Str8*]]*), %Int32 5, %Int32 4, %Bool 1)
 	ret %Int32 0
 }
