@@ -1138,9 +1138,9 @@ def ass(left, indexes):
 	#info("index VLA", lt.ti)
 	if lt.is_vla():
 		out("\n; -- INDEX VLA --")
-		i = 0
 		offset = llvm_value_zero(foundation.typeInt32)
-		while lt.is_array():
+		i = 0
+		while i < len(indexes): #lt.is_array():
 			#if not hasattr(lt, 'itemSizeInRootElements'):
 			#	info("????", lt.ti)
 

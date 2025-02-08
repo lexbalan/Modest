@@ -1154,7 +1154,7 @@ def do_value_call(x):
 		i += 1
 
 
-	if fn.id:
+	"""if fn.id:
 		func_id_str = fn.id.str
 		if func_id_str in ['print', 'scanf', 'print']:
 			expected_pointers = func_id_str == 'scanf'
@@ -1163,7 +1163,7 @@ def do_value_call(x):
 				specs = get_cspecs(first_arg['str'])
 				extra_args_check(specs, extra_args, expected_pointers)
 			else:
-				error("expected literal string argument", first_arg['ti'])
+				error("expected literal string argument", first_arg['ti'])"""
 
 	rv = ValueCall(ftype.to, fn, args + extra_args, ti=x['ti'])
 	return rv
