@@ -271,6 +271,7 @@ class Parser:
 				return self.is_type_expr()
 
 			elif token == '(':
+				self.skip_tokens_class(['nl'])
 				#print("ok")
 				# is ` ( <#type_expr#> ) ` ?
 				if self.is_type_expr():
@@ -321,6 +322,7 @@ class Parser:
 	def expr_type_func(self):
 		ti = self.ti()
 		self.skip()  # "("
+		self.skip_tokens_class(['nl'])
 		arghack = False
 		fields = []
 		while not self.match(")"):
@@ -334,6 +336,7 @@ class Parser:
 			elif self.match("..."):
 				arghack = True
 			self.match(",")
+			self.skip_tokens_class(['nl'])
 
 		if self.match("->"):
 			t = self.expr_type()

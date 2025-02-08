@@ -11,14 +11,23 @@
 #include <string.h>
 
 
+struct main_Table {
+	char *(*data)[];
+	uint32_t rows;
+	uint32_t cols;
+	bool headline;
+	bool separate;
+};
+typedef struct main_Table main_Table;
 
-static char *main_table0[3][3] = (char *[3][3]){
+
+static char *main_table_data0[3][3] = (char *[3][3]){
 	"#", "Header0", "Header1",
 	"0", "Alef", "Betha",
 	"1", "Clock", "Depth"
 };
 
-static char *main_table1[5][4] = (char *[5][4]){
+static char *main_table_data1[5][4] = (char *[5][4]){
 	"#", "Header0", "Header1", "Header2",
 	"0", "Alef", "Betha", "Emma",
 	"1", "Clock", "Depth", "Free",
@@ -26,30 +35,63 @@ static char *main_table1[5][4] = (char *[5][4]){
 	"3", "Ultra", "Video", "Word"
 };
 
+static main_Table main_table00 = {
+	.data = (void *)&main_table_data0,
+	.rows = LENGTHOF(main_table_data0),
+	.cols = LENGTHOF(main_table_data0[0]),
+	.headline = false,
+	.separate = false
+};
+
+static main_Table main_table01 = {
+	.data = (void *)&main_table_data0,
+	.rows = LENGTHOF(main_table_data0),
+	.cols = LENGTHOF(main_table_data0[0]),
+	.headline = true,
+	.separate = false
+};
+
+static main_Table main_table02 = {
+	.data = (void *)&main_table_data0,
+	.rows = LENGTHOF(main_table_data0),
+	.cols = LENGTHOF(main_table_data0[0]),
+	.headline = false,
+	.separate = true
+};
+
+static main_Table main_table03 = {
+	.data = (void *)&main_table_data0,
+	.rows = LENGTHOF(main_table_data0),
+	.cols = LENGTHOF(main_table_data0[0]),
+	.headline = true,
+	.separate = true
+};
 
 // we cannot receive VLA by value,
 // but we can receive pointer to open array
 // and after construct pointer to closed array with required dimensions
 
 static void main_printTableSep(uint32_t *sz, uint32_t m);
-static void main_tablePrint(char *(*tablex)[], uint32_t m, uint32_t n, bool headline)
+static void main_tablePrint(main_Table *table)
 {
 	uint32_t i;
 	uint32_t j;
 
-	// construct pointer to closed array
-	char *(*table)[m][n] = (char *(*)[m][n])tablex;
+	uint32_t rows = table->rows;
+	uint32_t cols = table->cols;
+	// construct pointer to closed VLA array
+	char *(*table_data)[rows][cols] = (char *(*)[rows][cols])table->data;
 
 	// array of size of columns (in characters)
-	uint32_t sz[n];
+	uint32_t sz[cols];
 	memset(&sz, 0, sizeof sz);
 
 	// calculate max length (in chars) of column
 	i = 0;
-	while (i < m) {
+	while (i < table->rows) {
 		j = 0;
-		while (j < n) {
-			char *str = (*table)[i][j];
+		while (j < table->cols) {
+			char *str = (*table_data)[i][j];
 			uint32_t len = (uint32_t)strlen(str);
 			if (len > sz[j]) {
 				sz[j] = len;
@@ -60,25 +102,22 @@ static void main_tablePrint(char *(*tablex)[], uint32_t m, uint32_t n, bool head
 	}
 
 	i = 0;
-	while (i < n) {
+	while (i < table->cols) {
 		// добавляем по пробелу слева и справа
 		// (для красивого отступа)
 		sz[i] = sz[i] + 2;
 		i = i + 1;
 	}
 
-	i = 0;
-	while (i < m) {
-		// pirint `+--+--+` separator line
-		if (i < 2 || !headline) {
-			main_printTableSep((uint32_t *)&sz, n);
-			printf("\n");
-		}
+	// begin border
+	main_printTableSep((uint32_t *)&sz, table->cols);
 
+	i = 0;
+	while (i < table->rows) {
 		j = 0;
-		while (j < n) {
+		while (j < table->cols) {
 			printf("|");
-			char *s = (*table)[i][j];
+			char *s = (*table_data)[i][j];
 			uint32_t len = (uint32_t)strlen(s);
 			if (s[0] != '\x0') {
 				len = len + 1;
@@ -94,9 +133,15 @@ static void main_tablePrint(char *(*tablex)[], uint32_t m, uint32_t n, bool head
 		}
 		printf("|\n");
 		i = i + 1;
+
+		// print `+--+--+` separator line
+		if (table->separate && i < table->rows || table->headline && i <= 1) {
+			main_printTableSep((uint32_t *)&sz, table->cols);
+		}
 	}
-	main_printTableSep((uint32_t *)&sz, n);
-	printf("\n");
+
+	// end border
+	main_printTableSep((uint32_t *)&sz, table->cols);
 }
 
 
@@ -115,17 +160,23 @@ static void main_printTableSep(uint32_t *sz, uint32_t m)
 		}
 		i = i + 1;
 	}
-	printf("+");
+	printf("+\n");
 }
 
 
 int32_t main()
 {
-	printf("sizeof(table0) = %d\n", (uint32_t)sizeof main_table0);
-	printf("sizeof(table1) = %d\n", (uint32_t)sizeof main_table1);
+	//printf("sizeof(table0) = %d\n", Nat32 sizeof(table0))
+	//printf("sizeof(table1) = %d\n", Nat32 sizeof(table1))
 
-	main_tablePrint((void *)&main_table0, LENGTHOF(main_table0), LENGTHOF(main_table0[0]), false);
-	main_tablePrint((void *)&main_table1, LENGTHOF(main_table1), LENGTHOF(main_table1[0]), true);
+	main_tablePrint((main_Table *)&main_table00);
+	printf("\n");
+	main_tablePrint((main_Table *)&main_table01);
+	printf("\n");
+	main_tablePrint((main_Table *)&main_table02);
+	printf("\n");
+	main_tablePrint((main_Table *)&main_table03);
+	printf("\n");
 
 	return 0;
 }

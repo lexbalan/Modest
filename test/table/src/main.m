@@ -4,14 +4,22 @@ include "libc/stdlib"
 include "libc/string"
 
 
+type Table record {
+	data: *[][]*Str8
+	rows: Nat32
+	cols: Nat32
+	headline: Bool
+	separate: Bool
+}
 
-var table0: [][]*Str8 = [
+
+var table_data0: [][]*Str8 = [
 	["#", "Header0", "Header1"]
 	["0", "Alef",    "Betha"]
 	["1", "Clock",   "Depth"]
 ]
 
-var table1: [][]*Str8 = [
+var table_data1: [][]*Str8 = [
 	["#", "Header0", "Header1", "Header2"]
 	["0", "Alef",    "Betha",   "Emma"]
 	["1", "Clock",   "Depth",   "Free"]
@@ -19,25 +27,58 @@ var table1: [][]*Str8 = [
 	["3", "Ultra",   "Video",   "Word"]
 ]
 
+var table00 = Table {
+	data = &table_data0
+	rows = lengthof(table_data0)
+	cols = lengthof(table_data0[0])
+	headline = false
+	separate = false
+}
+
+var table01 = Table {
+	data = &table_data0
+	rows = lengthof(table_data0)
+	cols = lengthof(table_data0[0])
+	headline = true
+	separate = false
+}
+
+var table02 = Table {
+	data = &table_data0
+	rows = lengthof(table_data0)
+	cols = lengthof(table_data0[0])
+	headline = false
+	separate = true
+}
+
+var table03 = Table {
+	data = &table_data0
+	rows = lengthof(table_data0)
+	cols = lengthof(table_data0[0])
+	headline = true
+	separate = true
+}
 
 // we cannot receive VLA by value,
 // but we can receive pointer to open array
 // and after construct pointer to closed array with required dimensions
-func tablePrint(tablex: *[][]*Str8, m: Nat32, n: Nat32, headline: Bool) {
+func tablePrint(table: *Table) {
 	var i, j: Nat32
 
-	// construct pointer to closed array
-	let table = *[m][n]*Str8 tablex
+	let rows = table.rows
+	let cols = table.cols
+	// construct pointer to closed VLA array
+	let table_data = *[rows][cols]*Str8 table.data
 
 	// array of size of columns (in characters)
-	var sz: [n]Nat32 = []
+	var sz: [cols]Nat32 = []
 
 	// calculate max length (in chars) of column
 	i = 0
-	while i < m {
+	while i < table.rows {
 		j = 0
-		while j < n {
-			let str = table[i][j]
+		while j < table.cols {
+			let str = table_data[i][j]
 			let len = unsafe Nat32 strlen(str)
 			if len > sz[j] {
 				sz[j] = len
@@ -48,25 +89,22 @@ func tablePrint(tablex: *[][]*Str8, m: Nat32, n: Nat32, headline: Bool) {
 	}
 
 	i = 0
-	while i < n {
+	while i < table.cols {
 		// добавляем по пробелу слева и справа
 		// (для красивого отступа)
 		sz[i] = sz[i] + 2
 		++i
 	}
 
-	i = 0
-	while i < m {
-		// pirint `+--+--+` separator line
-		if i < 2 or not headline {
-			printTableSep(&sz, n)
-			printf("\n")
-		}
+	// begin border
+	printTableSep(&sz, table.cols)
 
+	i = 0
+	while i < table.rows {
 		j = 0
-		while j < n {
+		while j < table.cols {
 			printf("|")
-			let s = table[i][j]
+			let s = table_data[i][j]
 			var len = unsafe Nat32 strlen(s)
 			if s[0] != "\0" {
 				len = len + 1
@@ -82,9 +120,15 @@ func tablePrint(tablex: *[][]*Str8, m: Nat32, n: Nat32, headline: Bool) {
 		}
 		printf("|\n")
 		++i
+
+		// print `+--+--+` separator line
+		if (table.separate and i < table.rows) or (table.headline and i <= 1) {
+			printTableSep(&sz, table.cols)
+		}
 	}
-	printTableSep(&sz, n)
-	printf("\n")
+
+	// end border
+	printTableSep(&sz, table.cols)
 }
 
 
@@ -102,16 +146,22 @@ func printTableSep(sz: *[]Nat32, m: Nat32) {
 		}
 		++i
 	}
-	printf("+")
+	printf("+\n")
 }
 
 
 public func main() -> Int32 {
-	printf("sizeof(table0) = %d\n", Nat32 sizeof(table0))
-	printf("sizeof(table1) = %d\n", Nat32 sizeof(table1))
+	//printf("sizeof(table0) = %d\n", Nat32 sizeof(table0))
+	//printf("sizeof(table1) = %d\n", Nat32 sizeof(table1))
 
-	tablePrint(&table0, lengthof(table0), lengthof(table0[0]), headline=false)
-	tablePrint(&table1, lengthof(table1), lengthof(table1[0]), headline=true)
+	tablePrint(&table00)
+	printf("\n")
+	tablePrint(&table01)
+	printf("\n")
+	tablePrint(&table02)
+	printf("\n")
+	tablePrint(&table03)
+	printf("\n")
 
 	return 0
 }
