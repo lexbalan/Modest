@@ -72,10 +72,13 @@ int32_t main()
 {
 	table_print((table_Table *)&main_table00);
 	printf("\n");
+
 	table_print((table_Table *)&main_table01);
 	printf("\n");
+
 	table_print((table_Table *)&main_table02);
 	printf("\n");
+
 	table_print((table_Table *)&main_table03);
 	printf("\n");
 

@@ -65,10 +65,13 @@ var table03 = table.Table {
 public func main() -> Int32 {
 	table.print(&table00)
 	printf("\n")
+
 	table.print(&table01)
 	printf("\n")
+
 	table.print(&table02)
 	printf("\n")
+
 	table.print(&table03)
 	printf("\n")
 
