@@ -70,9 +70,6 @@ static table_Table main_table03 = {
 
 int32_t main()
 {
-	//printf("sizeof(table0) = %d\n", Nat32 sizeof(table0))
-	//printf("sizeof(table1) = %d\n", Nat32 sizeof(table1))
-
 	table_print((table_Table *)&main_table00);
 	printf("\n");
 	table_print((table_Table *)&main_table01);

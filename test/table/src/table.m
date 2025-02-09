@@ -45,8 +45,7 @@ public func print(table: *Table) {
 	while i < table.nRows {
 		j = 0
 		while j < table.nCols {
-			let str = data[i][j]
-			let len = unsafe Nat32 strlen(str)
+			let len = unsafe Nat32 strlen(data[i][j])
 			if len > sz[j] {
 				sz[j] = len
 			}
@@ -80,7 +79,7 @@ public func print(table: *Table) {
 		printRow(&data[i], &sz, table.nCols)
 		++i
 
-		if (table.separate and i < table.nRows) {
+		if table.separate and i < table.nRows {
 			separator(&sz, table.nCols)
 		}
 	}

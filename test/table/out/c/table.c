@@ -50,8 +50,7 @@ void table_print(table_Table *table)
 	while (i < table->nRows) {
 		j = 0;
 		while (j < table->nCols) {
-			char *str = (*data)[i][j];
-			uint32_t len = (uint32_t)strlen(str);
+			uint32_t len = (uint32_t)strlen((*data)[i][j]);
 			if (len > sz[j]) {
 				sz[j] = len;
 			}

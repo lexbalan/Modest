@@ -347,8 +347,6 @@ declare void @table_print(%table_Table* %table)
 	%Bool 1
 }
 define %Int32 @main() {
-	;printf("sizeof(table0) = %d\n", Nat32 sizeof(table0))
-	;printf("sizeof(table1) = %d\n", Nat32 sizeof(table1))
 	call void @table_print(%table_Table* bitcast (%table_Table* @main_table00 to %table_Table*))
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str33 to [0 x i8]*))
 	call void @table_print(%table_Table* bitcast (%table_Table* @main_table01 to %table_Table*))

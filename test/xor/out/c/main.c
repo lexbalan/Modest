@@ -30,8 +30,8 @@ static void main_xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint
 #define main_msg_length  12
 #define main_key_length  3
 
-static char main_test_msg[13] = "Hello World!";
-static char main_test_key[4] = "abc";
+static char main_test_msg[main_msg_length + 1] = "Hello World!";
+static char main_test_key[main_key_length + 1] = "abc";
 
 
 static void main_print_bytes(uint8_t *buf, uint32_t len)

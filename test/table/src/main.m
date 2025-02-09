@@ -63,9 +63,6 @@ var table03 = table.Table {
 
 
 public func main() -> Int32 {
-	//printf("sizeof(table0) = %d\n", Nat32 sizeof(table0))
-	//printf("sizeof(table1) = %d\n", Nat32 sizeof(table1))
-
 	table.print(&table00)
 	printf("\n")
 	table.print(&table01)

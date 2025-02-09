@@ -46,8 +46,7 @@ public func print(table: *Table) -> Unit {
 	while i < table.nRows {
 		j = 0
 		while j < table.nCols {
-			let str = data[i][j]
-			let len = Nat32 string.strlen(str)
+			let len = Nat32 string.strlen(data[i][j])
 			if len > sz[j] {
 				sz[j] = len
 			}
