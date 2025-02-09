@@ -37,8 +37,7 @@ void table_print(table_Table *table)
 	if (table->header != NULL) {
 		i = 0;
 		while (i < table->nCols) {
-			char *str = (*table->header)[i];
-			uint32_t len = (uint32_t)strlen(str);
+			uint32_t len = (uint32_t)strlen((*table->header)[i]);
 			if (len > sz[i]) {
 				sz[i] = len;
 			}

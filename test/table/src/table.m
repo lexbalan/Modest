@@ -32,8 +32,7 @@ public func print(table: *Table) {
 	if table.header != nil {
 		i = 0
 		while i < table.nCols {
-			let str = table.header[i]
-			let len = unsafe Nat32 strlen(str)
+			let len = unsafe Nat32 strlen(table.header[i])
 			if len > sz[i] {
 				sz[i] = len
 			}
