@@ -19,13 +19,11 @@ public type Table record {
 public func print(table: *Table) {
 	var i, j: Nat32
 
-	let nRows = table.nRows
-	let nCols = table.nCols
 	// construct pointer to closed VLA array
-	let table_data = *[nRows][nCols]*Str8 table.data
+	let data = *[table.nRows][table.nCols]*Str8 table.data
 
 	// array of size of columns (in characters)
-	var sz: [nCols]Nat32 = []
+	var sz: [table.nCols]Nat32 = []
 
 	//
 	// calculate max length (in chars) of column
@@ -33,7 +31,7 @@ public func print(table: *Table) {
 
 	if table.header != nil {
 		i = 0
-		while i < nCols {
+		while i < table.nCols {
 			let str = table.header[i]
 			let len = unsafe Nat32 strlen(str)
 			if len > sz[i] {
@@ -47,7 +45,7 @@ public func print(table: *Table) {
 	while i < table.nRows {
 		j = 0
 		while j < table.nCols {
-			let str = table_data[i][j]
+			let str = data[i][j]
 			let len = unsafe Nat32 strlen(str)
 			if len > sz[j] {
 				sz[j] = len
@@ -79,7 +77,7 @@ public func print(table: *Table) {
 
 	i = 0
 	while i < table.nRows {
-		printRow(&table_data[i], &sz, table.nCols)
+		printRow(&data[i], &sz, table.nCols)
 		++i
 
 		if (table.separate and i < table.nRows) {
@@ -92,11 +90,11 @@ public func print(table: *Table) {
 }
 
 
-func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nnCols: Nat32) {
-	let row = unsafe *[nnCols]*Str8 raw_row
+func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) {
+	let row = unsafe *[nCols]*Str8 raw_row
 
 	var j = Nat32 0
-	while j < nnCols {
+	while j < nCols {
 		printf("|")
 		let s = row[j]
 		var len = unsafe Nat32 strlen(s)

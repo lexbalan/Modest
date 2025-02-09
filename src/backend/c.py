@@ -72,12 +72,16 @@ nl_str = "\n"
 cfunc = None
 
 
+def newline_str(n):
+	return nl_str * n
+
 def newline(n=1):
-	out(nl_str * n)
+	out(newline_str(n))
+
 
 
 def indent():
-	ind(INDENT_SYMBOL)
+	out(indent_str(INDENT_SYMBOL))
 
 
 def str_nl_indent(nl=1):
@@ -200,11 +204,6 @@ def type_get_aka(t):
 
 
 
-def print_id_for(x):
-	out(get_id_str(x))
-
-
-
 def str_type_record(t, tag=''):
 	s = "struct"
 
@@ -256,7 +255,7 @@ def str_type_record(t, tag=''):
 		if i > 0: out(',')
 		item = items[i]
 		nl_indent()
-		print_id_for(item)
+		get_id_str(item)
 		i = i + 1
 	indent_down()
 	nl_indent()
@@ -283,19 +282,13 @@ def str_type_array(t, label='', core=''):
 	while True:
 		dims += '['
 		if t.volume:
-			if t.volume.id:
-				dims += get_id_str(t.volume)
-			elif Value.isUndefined(t.volume):
+			if Value.isUndefined(t.volume):
 				# В Си не можем печатать такое a[][], или такое a[][10], etc.
 				# А печатаем просто a[] (пропускаем все после пустых скобок)
 				while t.of.is_array():
 					t = t.of
-
-				pass
-			elif t.volume.asset:
-				dims += str(t.volume.asset)
 			else:
-				dims += '<' + t.volume['kind'] + '>'
+				dims += str_value(t.volume)
 
 		dims += ']'
 		if not t.of.is_array():
@@ -448,7 +441,8 @@ bin_ops = {
 }
 
 
-def print_value_bin(x, ctx):
+def str_value_bin(x, ctx):
+	sstr = ''
 	op = x.op
 	left = x.left
 	right = x.right
@@ -466,11 +460,11 @@ def print_value_bin(x, ctx):
 
 	if op in ['eq', 'ne']:
 		if left.type.is_record():
-			return print_value_eq_record(x, ctx)
+			return str_value_eq_record(x, ctx)
 		elif left.type.is_array():
-			return print_value_eq_array(x, ctx)
+			return str_value_eq_array(x, ctx)
 		elif left.type.is_string():
-			return print_literal_bool(x.asset)
+			return str_literal_bool(x.asset)
 
 	lk = ''
 	if hasattr(left, 'op'):
@@ -494,68 +488,73 @@ def print_value_bin(x, ctx):
 #		if rk != 'logic_and':
 #			need_wrap_right = precedence(right) < 10
 #
-#	el
 
 	if op == 'add':
 		if left.type.is_array():
-			return print_value_literal(x, ctx)
+			return str_value_literal(x, ctx)
 
 		if left.type.is_string():
 			if left.type.width != right.type.width:
 				# для случаев вроде "Hello" + U"World!"
 				# (печатаем сам литерал, тк C иначе не умеет)
 				# (U"Hello World!")
-				#print_value_string(x, ctx)
-				print_literal_string(x.asset, char_width=x.type.width)
-				return
+				#str_value_string(x, ctx)
+				return str_literal_string(x.asset, char_width=x.type.width)
 
-			print_value(left, parent_expr=x)
-			out(' ')
-			print_value(right, parent_expr=x)
-			return
+			sstr += str_value(left, parent_expr=x)
+			sstr += ' '
+			sstr += str_value(right, parent_expr=x)
+			return sstr
 
-	print_value(left, parent_expr=x)
-	out(' %s ' % bin_ops[op])
-	print_value(right, parent_expr=x)
+	sstr += str_value(left, parent_expr=x)
+	sstr += ' %s ' % bin_ops[op]
+	sstr += str_value(right, parent_expr=x)
+	return sstr
 
 
-def print_value_shl(x, ctx):
-	print_value(x.left, parent_expr=x)
-	out(' << ')
+def str_value_shl(x, ctx):
+	sstr = ''
+	sstr += str_value(x.left, parent_expr=x)
+	sstr += ' << '
 	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar]
-	if need_wrap_right: out("(")
-	print_value(x.right, parent_expr=x)
-	if need_wrap_right: out(")")
+	if need_wrap_right:
+		sstr += "("
+	sstr += str_value(x.right, parent_expr=x)
+	if need_wrap_right:
+		sstr += ")"
+	return sstr
 
 
-def print_value_shr(x, ctx):
-	print_value(x.left, parent_expr=x)
-	out(' >> ')
+def str_value_shr(x, ctx):
+	sstr = ''
+	sstr += str_value(x.left, parent_expr=x)
+	sstr += (' >> ')
 	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar]
-	if need_wrap_right: out("(")
-	print_value(x.right, parent_expr=x)
-	if need_wrap_right: out(")")
+	if need_wrap_right:
+		sstr += ("(")
+	sstr += str_value(x.right, parent_expr=x)
+	if need_wrap_right:
+		sstr += (")")
+	return sstr
 
 
-def print_value_eq_record(x, ctx):
-	return print_value_eq_composite(x, ctx)
+def str_value_eq_record(x, ctx):
+	return str_value_eq_composite(x, ctx)
 
 
-def print_value_eq_array(x, ctx):
-	return print_value_eq_composite(x, ctx)
+def str_value_eq_array(x, ctx):
+	return str_value_eq_composite(x, ctx)
 
 
-def print_value_eq_composite(x, ctx):
+def str_value_eq_composite(x, ctx):
 	op = x.op
 	left = x.left
 	right = x.right
 
 	if x.isImmediate():
-		return print_literal_bool(x.asset)
+		return str_literal_bool(x.asset)
 
-	memcmp_eq(left, right, op=op)
-	return
-
+	return memcmp_eq_str(left, right, op=op)
 
 
 un_ops = {
@@ -565,37 +564,37 @@ un_ops = {
 }
 
 
-def print_value_un(x, ctx):
-	out(un_ops[x.op])
-	print_value(x.value, parent_expr=x)
-
-#	if op == 'ref':
-#		if value.type.is_array():
-#			if not (isinstance(value, ValueIndex) or isinstance(value, ValueSlice)):
-#				if is_sim_sim(v.type):
-#					# take pointer to first array item, not pointer to array
-#					out("[0]")
+def str_value_un(x, ctx):
+	sstr = ''
+	sstr += (un_ops[x.op])
+	sstr += str_value(x.value, parent_expr=x)
+	return sstr
 
 
-def print_value_ref(x, ctx):
+def str_value_ref(x, ctx):
+	sstr = ''
 	# Если берем указатель на массив массивов, то приводим его к void *
 	# Т.к. в C нет указателя на массив массивов
 	if x.value.type.is_array_of_array():
-		out("(void *)")
+		sstr += ("(void *)")
 
-	out('&')
-	print_value(x.value, parent_expr=x)
-
-
-def print_value_deref(x, ctx):
-	out('*')
-	print_value(x.value, parent_expr=x)
+	sstr += ('&')
+	sstr += str_value(x.value, parent_expr=x)
+	return sstr
 
 
-def print_value_call(v, ctx, sret=None):
+def str_value_deref(x, ctx):
+	sstr = ''
+	sstr += ('*')
+	sstr += str_value(x.value, parent_expr=x)
+	return sstr
+
+
+def str_value_call(v, ctx, sret=None):
+	sstr = ''
 	left = v.func
 
-	print_value(left)
+	sstr += str_value(left)
 
 	ftype = left.type
 	if ftype.is_pointer():
@@ -604,7 +603,7 @@ def print_value_call(v, ctx, sret=None):
 	args = v.args
 	n = len(args)
 
-	out("(")
+	sstr += ("(")
 
 	i = 0
 	while i < n:
@@ -623,52 +622,56 @@ def print_value_call(v, ctx, sret=None):
 			pt = p['type']
 
 			if not Type.eq(pt, a['type'], opt=['att_checking']):
-				print_cast(pt, a)
+				sstr += print_cast(pt, a)
 			else:
-				print_value(a, ctx=ctx)
+				sstr += str_value(a, ctx=ctx)
 
 		except:
-			print_value(a, ctx=ctx)
+			sstr += str_value(a, ctx=ctx)
 
 		i = i + 1
 		if i < n:
-			out(", ")
+			sstr += (", ")
 
 	if sret != None:
 		if i > 0:
-			out(", ")
-		print_value_as_ptr(sret)
+			sstr += (", ")
+		sstr += str_value_as_ptr(sret)
 
-	out(")")
+	sstr += (")")
+	return sstr
 
 
 
-def print_value_slice(x, ctx):
+def str_value_slice(x, ctx):
 	y = ValueIndex(x.type, x.left, x.index_from, ti=None)
-	print_value_index(y, ctx)
+	return str_value_index(y, ctx)
 
 
 
-def print_value_index(x, ctx):
+def str_value_index(x, ctx):
+	sstr = ''
 	left = x.left
 
 	if left.type.is_pointer():
 		if not is_sim_sim(left.type):
-			out("(*")
+			sstr += "(*"
 
-	print_value(left, ctx=ctx, parent_expr=x)
+	sstr += str_value(left, ctx=ctx, parent_expr=x)
 
 	if left.type.is_pointer():
 		if not is_sim_sim(left.type):
-			out(")")
+			sstr += (")")
 
-	out("[")
-	print_value(x.index)
-	out("]")
+	sstr += "["
+	sstr += str_value(x.index)
+	sstr += "]"
+	return sstr
 
 
 
-def print_value_access(x, ctx):
+def str_value_access(x, ctx):
+	sstr = ''
 	left = x.left
 
 	# если имеем дело c константной записью (глоб константа)
@@ -676,15 +679,15 @@ def print_value_access(x, ctx):
 	#if left.type.is_generic():
 	#	if x.isImmediate():
 	if value_is_generic_immediate(left):
-		print_value_literal(x, ['print_immediate'])
-		return
+		return str_value_literal(x, ['print_immediate'])
 
-	print_value(left, parent_expr=x)
+	sstr += str_value(left, parent_expr=x)
 	if left.type.is_pointer():
-		out('->')
+		sstr += ('->')
 	else:
-		out('.')
-	print_id_for(x.field)
+		sstr += ('.')
+	sstr += get_id_str(x.field)
+	return sstr
 
 
 
@@ -692,20 +695,24 @@ def print_value_access(x, ctx):
 def print_cast_hard(t, v, ctx=[]):
 	# hard cast is possible only in function body
 	assert(is_local_context())
-	out("*(")
-	print_type(t)
-	out("*)&")
+	sstr = ''
+	sstr += "*("
+	sstr += str_type(t)
+	sstr += "*)&"
 	need_wrap = precedence(v) < CONS_PRECEDENCE
 	if need_wrap:
-		out("(")
-	print_value(v, ctx=ctx)
+		sstr += "("
+	sstr += str_value(v, ctx=ctx)
 	if need_wrap:
-		out(")")
+		sstr += ")"
+	return sstr
 
 
 def print_cast(t, v, ctx=[]):
 	#array_as_ptr = not 'array_as_array' in ctx
-	out("("); print_type(t); out(")")
+	sstr = "("
+	sstr += str_type(t)
+	sstr += ")"
 
 	need_wrap = precedence(v) < CONS_PRECEDENCE
 
@@ -714,25 +721,26 @@ def print_cast(t, v, ctx=[]):
 		need_wrap = not v.type.is_composite()
 
 	if need_wrap:
-		out("(")
-	print_value(v, ctx=ctx)
+		sstr += ("(")
+	sstr += str_value(v, ctx=ctx)
 	if need_wrap:
-		out(")")
+		sstr += (")")
+
+	return sstr
 
 
 
-def print_value_cons_record(x, ctx):
+def str_value_cons_record(x, ctx):
+	sstr = ''
 	to_type = x.type
 	value = x.value
 	from_type = value.type
 
 	if from_type.is_generic_record():
 		if is_local_context():
-			print_cast(to_type, value)
+			return print_cast(to_type, value)
 		else:
-			print_value(value, ctx=ctx)
-		return
-
+			return str_value(value, ctx=ctx)
 
 	# RecordA -> RecordB
 	#if to_type.is_record():
@@ -740,15 +748,14 @@ def print_value_cons_record(x, ctx):
 		if to_type.uid == from_type.uid:
 			# это реально одна и та же структура (просто возм ее копия)
 			# и приведение не требуется
-			print_value(value, ctx=ctx)
-			return
+			return str_value(value, ctx=ctx)
 		# C cannot cast struct to struct (!)
-		print_cast_hard(to_type, value)
-		return
+		return print_cast_hard(to_type, value)
 
 
 
-def print_value_cons_array(x, ctx):
+def str_value_cons_array(x, ctx):
+	sstr = ''
 	to_type = x.type
 	value = x.value
 	from_type = value.type
@@ -778,63 +785,63 @@ def print_value_cons_array(x, ctx):
 						chars.append(ch)
 
 					char_width = to_type.of.width
-					print_literal_string(chars, char_width=char_width)
-					return
+					return str_literal_string(chars, char_width=char_width)
 
-			print_cast(to_type, value, ctx=ctx)
+			return print_cast(to_type, value, ctx=ctx)
 		else:
-			print_value(value, ctx=ctx)
-		return
+			return str_value(value, ctx=ctx)
+		return '<??>'
 
 
 	if from_type.is_string():
 		if to_type.of.is_char():
 			# cast <string literal> to <array of chars>:
 			if to_type.of.width == from_type.width:
-				print_value(value, ctx=ctx)
+				return str_value(value, ctx=ctx)
 			else:
-				print_literal_string(value.asset, char_width=to_type.of.width)
-			return
+				return str_literal_string(value.asset, char_width=to_type.of.width)
+			return '<???>'
 
 	# for:
 	#    var x: [10]Word8 = "0123456789"
 	if value.type.is_string():
-		print_value(value, ctx=ctx)
-		return
+		return str_value(value, ctx=ctx)
 
 	return print_cast(to_type, value, ctx)
 
 
 
 
-
 def print_suffix(to_type, num):
+	sstr = ''
 	req_bits = nbits_for_num(num)
 
 	# ! `not is_signed()`, because here can be Word (it nor signed, nor unsigned) !
 	if not to_type.is_signed():
 		if req_bits >= CC_INT_SIZE_BITS:
-			out("U")
+			sstr += ("U")
 
 	if req_bits <= CC_INT_SIZE_BITS:
 		pass  # int
 	elif req_bits <= CC_LONG_SIZE_BITS:
-		out("L")  # long int
+		sstr += ("L")  # long int
 	else:
-		out("LL")  # long long int
+		sstr += ("LL")  # long long int
+	return sstr
 
 
 
-def print_value_cons(x, ctx):
+def str_value_cons(x, ctx):
+	sstr = ''
 	type = x.type
 	value = x.value
 	from_type = value.type
 
 	if type.is_array():
-		return print_value_cons_array(x, ctx)
+		return str_value_cons_array(x, ctx)
 
 	elif type.is_record():
-		return print_value_cons_record(x, ctx)
+		return str_value_cons_record(x, ctx)
 
 	elif type.is_pointer():
 		if from_type.is_string():
@@ -842,8 +849,7 @@ def print_value_cons(x, ctx):
 			# let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 			# let string8Const = *Str8 genericStringConst  // <-
 			if type.to.of.width != from_type.width:
-				print_literal_string(value.asset, char_width=type.to.of.width)
-				return
+				return str_literal_string(value.asset, char_width=type.to.of.width)
 
 		# в у нас типы структурные, в си - номинальные
 		# поэтому даже если структуры одинаковы, но имена разные
@@ -853,26 +859,23 @@ def print_value_cons(x, ctx):
 			if from_type.is_pointer_to_record():
 				# НО если это реально один и тот же тип, то приведение не нужно!
 				if id(from_type) != id(type):
-					print_cast(type, value, ctx)
-					return
+					return print_cast(type, value, ctx)
 
 		if from_type.is_pointer():
 			if from_type.to.is_array():
 				if type.to.is_array():
 					pass
-					#out("\n// -- DIM --\n")
+					#sstr += ("\n// -- DIM --\n")
 					#return do_eval_cons_pointer_to_array(x)
 
 
 	elif type.is_float():
 		if from_type.is_integer() or from_type.is_number():
-			print_cast(type, value, ctx)
-			return
+			return print_cast(type, value, ctx)
 
 	elif type.is_char():
 		if from_type.is_string():
-			print_literal_char(x.asset, x.type.width)
-			return
+			return str_literal_char(x.asset, x.type.width)
 
 
 	if x.method == 'implicit':
@@ -882,26 +885,26 @@ def print_value_cons(x, ctx):
 			# В случае когда происходит неявное приведение;
 			if value.value.type.is_array():
 				if value.value.type.of.is_simple():
-					out("(")
-					print_type(value.value.type.of)
-					out(" *)")
+					sstr += ("(")
+					sstr += str_type(value.value.type.of)
+					sstr += (" *)")
 
 		# не печатаем обычный implicit_cast
 		# (это не касается того что выше ^^)
-		print_value(value)
+		sstr += str_value(value)
 
 		# print postfix ('u', 'U', 'L', 'LL', etc.)
 		if isinstance(value, ValueLiteral):
 			if from_type.is_number() or from_type.is_integer() or from_type.is_word():
 				# up to 'long long'
 				if type.width <= 64:
-					print_suffix(type, value.asset)
-		return
+					sstr += print_suffix(type, value.asset)
+		return sstr
 
 
 	if isinstance(value, ValueLiteral):
-		print_value(value)
-		return
+		sstr += str_value(value)
+		return sstr
 
 
 	# (!) WARNING (!)
@@ -912,13 +915,13 @@ def print_value_cons(x, ctx):
 		if from_type.is_integer() or from_type.is_number():
 			if from_type.is_signed() and type.is_unsigned():
 				if from_type.size < type.size:
-					out("((")
-					print_type(type)
-					out(")")
+					sstr += ("((")
+					sstr += str_type(type)
+					sstr += (")")
 					nat_same_sz = foundation.type_select_nat(from_type.width)
-					print_cast(nat_same_sz, value, ctx)
-					out(")")
-					return
+					sstr += print_cast(nat_same_sz, value, ctx)
+					sstr += (")")
+					return sstr
 
 
 	# for: (uint32_t *)(void *)&i;
@@ -927,7 +930,7 @@ def print_value_cons(x, ctx):
 		if value.type.is_free_pointer():
 			value = value.value
 
-	print_cast(type, value, ctx)
+	return print_cast(type, value, ctx)
 
 
 
@@ -944,6 +947,7 @@ def is_zero_tail(values, i, n):
 
 
 def print_array_values(values, ctx):
+	sstr = ''
 	i = 0
 	n = len(values)
 	while i < n:
@@ -951,46 +955,48 @@ def print_array_values(values, ctx):
 
 		nl = a.nl
 		if nl > 0:
-			newline(n=nl)
-			indent()
+			sstr += newline_str(n=nl)
+			sstr += indent_str(INDENT_SYMBOL)
 		else:
 			if i > 0:
-				out(" ")
+				sstr += " "
 
 		if a.type.is_closed_array():
-			print_array_values(a.items, ctx)
+			sstr += print_array_values(a.items, ctx)
 		else:
-			print_value(a, ctx)
+			sstr += str_value(a, ctx)
 
 		i = i + 1
-
 
 		# если это значание - zero, проверим все остальные справа
 		# и если они тоже zero - их можно не печатать (zero tail)
 		# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
 		if a.isZero():
 			if is_zero_tail(values, i, n):
-				return
+				return sstr
 
 		if i < n:
-			out(',')
+			sstr += (',')
+
+	return sstr
 
 
 
-def print_literal_string(chars, char_width):
+def str_literal_string(chars, char_width):
 	utf32_codes = []
 	for ch in chars:
 		cc = ord(ch)
 		utf32_codes.append(cc)
-	print_utf32codes_as_string(utf32_codes, char_width)
+	return print_utf32codes_as_string(utf32_codes, char_width)
 
 
-def print_literal_char(cc, width):
-	print_utf32codes_as_string([cc], width, quote="'")
+def str_literal_char(cc, width):
+	return print_utf32codes_as_string([cc], width, quote="'")
 
 
 
-def print_literal_array(type, items, nl_end=1):
+def str_literal_array(type, items, nl_end=1):
+	sstr = ''
 	if type.is_array_of_char():
 		char_type = type.of
 		char_width = char_type.width
@@ -1009,22 +1015,22 @@ def print_literal_array(type, items, nl_end=1):
 						break
 
 				i = i + 1
-			print_utf32codes_as_string(utf32_codes, width=char_width)
-			return
+			return print_utf32codes_as_string(utf32_codes, width=char_width)
 
-	out("{")
+	sstr += "{"
 	indent_up()
-	print_array_values(items, [])
+	sstr += print_array_values(items, [])
 	indent_down()
-	newline(n=nl_end)
-	indent()
-	out("}")
+	sstr += newline_str(n=nl_end)
+	sstr += indent_str(INDENT_SYMBOL)
+	sstr += "}"
+	return sstr
 
 
 
 
-def print_literal_record(type, items, nl_end=1):
-	out("{")
+def str_literal_record(type, items, nl_end=1):
+	sstr = "{"
 	indent_up()
 
 	nitems = len(items)
@@ -1041,13 +1047,13 @@ def print_literal_record(type, items, nl_end=1):
 
 		nl = ini.nl
 		if nl > 0:
-			newline(n=nl)
-			indent()
+			sstr += newline_str(n=nl)
+			sstr += indent_str(INDENT_SYMBOL)
 		else:
 			if item_printed:
-				out(" ")
+				sstr += " "
 
-		out(".%s = " % field_id_str)
+		sstr += ".%s = " % field_id_str
 
 		# 'no-literal-array-cast' - когда прописываем инициализаторы
 		# литерал массива не нужно приводить к типу массива
@@ -1055,23 +1061,22 @@ def print_literal_record(type, items, nl_end=1):
 		# .arr = (uint8_t [3]){1, 2, 3}  // not worked
 		# .arr = {1, 2, 3}  // worked
 		# вот такая вот херня
-		print_value(ini.value, ['no-literal-array-cast'])
+		sstr += str_value(ini.value, ['no-literal-array-cast'])
 		if i < (nitems - 1):
-			out(",")
+			sstr += ","
 
 		item_printed = True
 		i = i + 1
 
 	indent_down()
 
-	newline(n=nl_end)
-	indent()
-
-	out("}")
+	sstr += newline_str(n=nl_end)
+	sstr += indent_str(INDENT_SYMBOL)
+	sstr += ("}")
 
 	#if cast_req:
 	#	out(")")
-	return
+	return sstr
 
 
 
@@ -1098,31 +1103,34 @@ def code_to_char(cc):
 
 
 def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
+	sstr = ''
 	prefix = ""
 	if width <= 8: prefix = ""
 	elif width <= 16: prefix = "u"
 	elif width <= 32: prefix = "U"
-	out(prefix)
-	out(quote)
+	sstr += (prefix)
+	sstr += (quote)
 	for cc in utf32_codes:
-		out(code_to_char(cc))
-	out(quote)
+		sstr += (code_to_char(cc))
+	sstr += (quote)
+	return sstr
 
 
 
-def print_literal_bool(num):
+def str_literal_bool(num):
 	if num:
-		out(BOOL_TRUE_LITERAL)
+		return BOOL_TRUE_LITERAL
 	else:
-		out(BOOL_FALSE_LITERAL)
+		return BOOL_FALSE_LITERAL
 
 
-def print_value_enum(x, ctx):
-	print_id_for(x)
+def str_value_enum(x, ctx):
+	return get_id_str(x)
 
 
 
-def print_literal_integer(num, nsigns=0, is_big=False, is_hex=False):
+def str_literal_integer(num, nsigns=0, is_big=False, is_hex=False):
+	sstr = ''
 	# Big Number?
 	if is_big:
 		if True:
@@ -1130,172 +1138,236 @@ def print_literal_integer(num, nsigns=0, is_big=False, is_hex=False):
 			high64 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
 			low64 = num & 0xFFFFFFFFFFFFFFFF
 
-			out("(((__int128)0x%XULL << 64) | ((__int128)0x%XULL))" % (high64, low64))
-			return
+			sstr += "(((__int128)0x%XULL << 64) | ((__int128)0x%XULL))" % (high64, low64)
+			return sstr
 
 
 	if is_hex:
 		fmt = "0x%%0%dX" % nsigns
-		out(fmt % num)
-		return  #? 0xXXXXXXXXUL is normal?
+		sstr += (fmt % num)
+		return sstr
 	else:
-		out(str(num))
+		sstr += (str(num))
+
+	return sstr
 
 
 
-def print_literal_float(num):
-	out('{0:f}'.format(num))
+def str_literal_float(num):
+	return '{0:f}'.format(num)
 
 
-def print_literal_pointer(type, num):
+def str_literal_pointer(type, num):
+	sstr = ''
 	if num == 0:
-		out("NULL")
+		sstr += "NULL"
 	else:
-		out("(("); print_type(type); out(")")
-		out("0x%08X)" % num)
+		sstr += "(("
+		sstr += str_type(type)
+		sstr += ")"
+		sstr += "0x%08X)" % num
+	return sstr
 
 
-def print_value_literal(x, ctx):
+def str_value_literal(x, ctx):
+	sstr = ''
 	t = x.type
 	if t.is_integer() or t.is_number() or t.is_word():
 		nsigns = 0
 		if hasattr(x, 'nsigns'):
 			nsigns = x.nsigns
-		print_literal_integer(x.asset, nsigns=nsigns, is_big=x.type.width > 64, is_hex=x.hasAttribute('hexadecimal'))
+		sstr += str_literal_integer(x.asset, nsigns=nsigns, is_big=x.type.width > 64, is_hex=x.hasAttribute('hexadecimal'))
 
-	elif t.is_float(): print_literal_float(x.asset)
-	elif t.is_string(): print_literal_string(x.asset, char_width=x.type.width)
-	elif t.is_record(): print_literal_record(x.type, x.items, nl_end=x.nl_end)
-	elif t.is_array(): print_literal_array(x.type, x.items, nl_end=x.nl_end)
-	elif t.is_bool(): print_literal_bool(x.asset)
-	elif t.is_char(): print_literal_char(x.asset, x.type.width)
-	elif t.is_pointer(): print_literal_pointer(x.type, x.asset)
+	elif t.is_float():
+		sstr += str_literal_float(x.asset)
+	elif t.is_string():
+		sstr += str_literal_string(x.asset, char_width=x.type.width)
+	elif t.is_record():
+		sstr += str_literal_record(x.type, x.items, nl_end=x.nl_end)
+	elif t.is_array():
+		sstr += str_literal_array(x.type, x.items, nl_end=x.nl_end)
+	elif t.is_bool():
+		sstr += str_literal_bool(x.asset)
+	elif t.is_char():
+		sstr += str_literal_char(x.asset, x.type.width)
+	elif t.is_pointer():
+		sstr += str_literal_pointer(x.type, x.asset)
 	else:
-		error("print_value_literal not implemented", x.ti)
+		error("str_value_literal not implemented", x.ti)
+
+	return sstr
 
 
 
-def print_value_const(x, ctx):
+def str_value_const(x, ctx):
+	sstr = ''
+
 	if x.type.is_array() and is_global_context():
-		out('_')
+		sstr += ('_')
 
-	print_id_for(x)
-
-
-
-def print_value_func(x, ctx):
-	return print_id_for(x)
-
-
-def print_value_var(x, ctx):
-	return print_id_for(x)
-
-
-def print_value_sizeof_value(x, ctx):
-	out("sizeof ")
-	print_value(x.of)
-
-
-def print_value_sizeof_type(x, ctx):
-	out("sizeof(")
-	print_type(x.of)
-	out(")")
-
-
-def print_value_alignof(x, ctx):
-	out("__alignof(")
-	print_type(x.of)
-	out(")")
-
-
-def print_value_offsetof(x, ctx):
-	out("__offsetof(")
-	print_type(x.of)
-	out(", ")
-	out(x.field.str)
-	out(")")
-
-
-def print_value_lengthof(x, ctx):
-	out("LENGTHOF(")
-	print_value(x.value)
-	out(")")
-	return
+	sstr += get_id_str(x)
+	return sstr
 
 
 
-def print_value_va_start(x, ctx):
-	out("va_start(")
-	print_value(x.va_list)
-	out(", ")
-	print_value(x.last_param)
-	out(")")
+def str_value_func(x, ctx):
+	return get_id_str(x)
 
 
-def print_value_va_arg(x, ctx):
-	out("va_arg(")
-	print_value(x.va_list)
-	out(", ")
-	print_type(x.type)
-	out(")")
+def str_value_var(x, ctx):
+	y = get_id_str(x)
+	if y == None:
+		print(":" + str(x))
+	return y
 
 
-def print_value_va_end(x, ctx):
-	out("va_end(")
-	print_value(x.va_list)
-	out(")")
+def str_value_sizeof_value(x, ctx):
+	sstr = "sizeof "
+	sstr += str_value(x.of)
+	return sstr
 
 
-def print_value_va_copy(x, ctx):
-	out("va_copy(")
-	print_value(x.dst)
-	out(", ")
-	print_value(x.src)
-	out(")")
+def str_value_sizeof_type(x, ctx):
+	sstr = "sizeof("
+	sstr += str_type(x.of)
+	sstr += ")"
+	return sstr
 
 
-def print_value(x, ctx=[], parent_expr=None):
+def str_value_alignof(x, ctx):
+	sstr = "__alignof("
+	sstr += str_type(x.of)
+	sstr += ")"
+	return sstr
+
+
+def str_value_offsetof(x, ctx):
+	sstr = "__offsetof("
+	sstr += str_type(x.of)
+	sstr += ", "
+	sstr += x.field.str
+	sstr += ")"
+
+
+def str_value_lengthof(x, ctx):
+	sstr = "LENGTHOF("
+	sstr += str_value(x.value)
+	sstr += ")"
+	return sstr
+
+
+
+def str_value_va_start(x, ctx):
+	sstr = "va_start("
+	sstr += str_value(x.va_list)
+	sstr += ", "
+	sstr += str_value(x.last_param)
+	sstr += ")"
+	return sstr
+
+
+def str_value_va_arg(x, ctx):
+	sstr = "va_arg("
+	sstr += str_value(x.va_list)
+	sstr += ", "
+	sstr += str_type(x.type)
+	sstr += ")"
+	return sstr
+
+
+def str_value_va_end(x, ctx):
+	sstr = "va_end("
+	sstr += str_value(x.va_list)
+	sstr += ")"
+	return sstr
+
+
+def str_value_va_copy(x, ctx):
+	sstr = "va_copy("
+	sstr += str_value(x.dst)
+	sstr += ", "
+	sstr += str_value(x.src)
+	sstr += ")"
+	return sstr
+
+
+def str_value(x, ctx=[], parent_expr=None):
+	sstr = ''
 	need_wrap = False
 	if parent_expr != None:
 		need_wrap = precedence(x) < precedence(parent_expr)
 
 	if need_wrap:
-		out("(")
+		sstr += "("
 	
-	if isinstance(x, ValueLiteral): print_value_literal(x, ctx)
-	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
-	elif isinstance(x, ValueShl): print_value_shl(x, ctx)
-	elif isinstance(x, ValueShr): print_value_shr(x, ctx)
-	elif isinstance(x, ValueUn): print_value_un(x, ctx)
-	elif isinstance(x, ValueRef): print_value_ref(x, ctx)
-	elif isinstance(x, ValueDeref): print_value_deref(x, ctx)
-	elif isinstance(x, ValueCons): print_value_cons(x, ctx)
-	elif isinstance(x, ValueFunc): print_value_func(x, ctx)
-	elif isinstance(x, ValueVar): print_value_var(x, ctx)
-	elif isinstance(x, ValueConst): print_value_const(x, ctx)
-	elif isinstance(x, ValueCall): print_value_call(x, ctx)
-	elif isinstance(x, ValueIndex): print_value_index(x, ctx)
-	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
-	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
-	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
-	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
-	elif isinstance(x, ValueAlignof): print_value_alignof(x, ctx)
-	elif isinstance(x, ValueOffsetof): print_value_offsetof(x, ctx)
-	elif isinstance(x, ValueLengthof): print_value_lengthof(x, ctx)
-	elif isinstance(x, ValueVaArg): print_value_va_arg(x, ctx)
-	elif isinstance(x, ValueVaStart): print_value_va_start(x, ctx)
-	elif isinstance(x, ValueVaEnd): print_value_va_end(x, ctx)
-	elif isinstance(x, ValueVaCopy): print_value_va_copy(x, ctx)
+	if isinstance(x, ValueLiteral):
+		sstr += str_value_literal(x, ctx)
+	elif isinstance(x, ValueBin):
+		sstr += str_value_bin(x, ctx)
+	elif isinstance(x, ValueShl):
+		sstr += str_value_shl(x, ctx)
+	elif isinstance(x, ValueShr):
+		sstr += str_value_shr(x, ctx)
+	elif isinstance(x, ValueUn):
+		sstr += str_value_un(x, ctx)
+	elif isinstance(x, ValueRef):
+		sstr += str_value_ref(x, ctx)
+	elif isinstance(x, ValueDeref):
+		sstr += str_value_deref(x, ctx)
+	elif isinstance(x, ValueCons):
+		sstr += str_value_cons(x, ctx)
+	elif isinstance(x, ValueFunc):
+		sstr += str_value_func(x, ctx)
+	elif isinstance(x, ValueVar):
+		sstr += str_value_var(x, ctx)
+	elif isinstance(x, ValueConst):
+		sstr += str_value_const(x, ctx)
+	elif isinstance(x, ValueCall):
+		sstr += str_value_call(x, ctx)
+	elif isinstance(x, ValueIndex):
+		sstr += str_value_index(x, ctx)
+	elif isinstance(x, ValueAccessRecord):
+		sstr += str_value_access(x, ctx)
+	elif isinstance(x, ValueSlice):
+		sstr += str_value_slice(x, ctx)
+	elif isinstance(x, ValueSizeofValue):
+		sstr += str_value_sizeof_value(x, ctx)
+	elif isinstance(x, ValueSizeofType):
+		sstr += str_value_sizeof_type(x, ctx)
+	elif isinstance(x, ValueAlignof):
+		sstr += str_value_alignof(x, ctx)
+	elif isinstance(x, ValueOffsetof):
+		sstr += str_value_offsetof(x, ctx)
+	elif isinstance(x, ValueLengthof):
+		sstr += str_value_lengthof(x, ctx)
+	elif isinstance(x, ValueVaArg):
+		sstr += str_value_va_arg(x, ctx)
+	elif isinstance(x, ValueVaStart):
+		sstr += str_value_va_start(x, ctx)
+	elif isinstance(x, ValueVaEnd):
+		sstr += str_value_va_end(x, ctx)
+	elif isinstance(x, ValueVaCopy):
+		sstr += str_value_va_copy(x, ctx)
 	elif isinstance(x, ValueUndefined):
-		out("/*undefined*/")
+		sstr += "/*<ValueUndefined>*/"
 		1/0
 	else:
 		print(x)
-		out("<%s>" % 'k')
+		sstr += "<%s>" % 'k'
 
 	if need_wrap:
-		out(")")
+		sstr += ")"
 
+	return sstr
+
+
+def print_value(x, ctx=[], parent_expr=None):
+	out(str_value(x, ctx=ctx, parent_expr=parent_expr))
+
+
+#
+# Stmt
+#
 
 
 def print_stmt_if(x, need_else_branch):
@@ -1348,7 +1420,7 @@ def print_stmt_return(x):
 
 	if isSretFunc(cfunc.type):
 		out("memcpy(sret_, ")
-		print_value_as_ptr(x.value)
+		out(str_value_as_ptr(x.value))
 		out(", sizeof(")
 		print_type(x.value.type)
 		out("));")
@@ -1493,7 +1565,7 @@ def print_stmt_asm(x):
 	out('__asm__ volatile (')
 	indent_up()
 	nl_indent(1)
-	print_literal_string(x.text.asset, char_width=x.text.type.width)
+	out(str_literal_string(x.text.asset, char_width=x.text.type.width))
 
 	# print 'out' pairs
 	args1 = x.outputs
@@ -1532,7 +1604,7 @@ def assign_array(left, right):
 	# (для того чтобы в C вернуть массив из функции
 	# его нужно 'обернуть' в структуру)
 	if isinstance(right, ValueCall):
-		print_value_call(right, [], sret=left)
+		out(str_value_call(right, [], sret=left))
 		return
 	
 	memcopy_assign(left, right)
@@ -2125,39 +2197,40 @@ def cons_vla_from_literal_array(x):
 
 
 # получает значение, печатает указатель на его корень (корневое значение)
-def print_value_as_ptr(x):
+def str_value_as_ptr(x):
+	sstr = ''
 	yy = x
 	x = get_root_value(x)
 
-
 	if isinstance(x, ValueUn) and x.op == 'deref':
-		print_value(x.value)
+		sstr += str_value(x.value)
 	else:
-		out("&")
+		sstr += "&"
 
 		t = yy.type
 		# КОСТЫЛЬ!
 		
 		if isinstance(x, ValueBin) and x.op in ['literal', 'add']:
-			out("(")
+			sstr += "("
 			if t.is_array():
-				print_type(t)
+				sstr += str_type(t)
 			else:
-				print_type(t)
-			out(")")
+				sstr += str_type(t)
+			sstr += ")"
 
 		elif cons_vla_from_literal_array(x):
 			# we need to print:
 			#  &(uint32_t[]){1, 2, 3, 4, 5}
 			# instead of:
 			#  &(uint32_t[len]){1, 2, 3, 4, 5}
-			out("(")
-			print_type(t)
-			out(")")
-			print_value(x.value)
-			return
+			sstr += "("
+			sstr += str_type(t)
+			sstr += ")"
+			sstr += str_value(x.value)
+			return sstr
 
-		print_value(x)
+		sstr += str_value(x)
+		return sstr
 
 
 
@@ -2168,9 +2241,9 @@ def memcopy_assign(left, right):
 		return
 
 	out("memcpy(")
-	print_value_as_ptr(left)
+	out(str_value_as_ptr(left))
 	out(", ")
-	print_value_as_ptr(right)
+	out(str_value_as_ptr(right))
 	out(", sizeof ")
 	print_value(left)
 	out(")")
@@ -2179,24 +2252,28 @@ def memcopy_assign(left, right):
 
 def memzero_sizeof(left):
 	out("memset(")
-	print_value_as_ptr(left)
+	out(str_value_as_ptr(left))
 	out(", 0, sizeof ")
 	print_value(left)
 	out(")")
 
 
 def memcmp_eq(left, right, op='eq'):
-	out('memcmp(')
-	print_value_as_ptr(left)
-	out(', ')
-	print_value_as_ptr(right)
-	out(", sizeof(")
+	return memcmp_eq_str(left, right, op=op)
+
+def memcmp_eq_str(left, right, op='eq'):
+	sstr = 'memcmp('
+	sstr += str_value_as_ptr(left)
+	sstr += ', '
+	sstr += str_value_as_ptr(right)
+	sstr += ", sizeof("
 	common_type = select_common_type(left.type, right.type)
-	print_type(common_type)
-	out(")")
+	sstr += str_type(common_type)
+	sstr += ")"
 	if op == 'eq':
-		out(') == 0')
+		sstr += ') == 0'
 	else:
-		out(') != 0')
+		sstr += ') != 0'
+	return sstr
 
 

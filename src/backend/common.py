@@ -16,6 +16,11 @@ def indent_down():
 	indent_level = indent_level - 1
 
 
+def indent_str(symbol):
+	global indent_level
+	return symbol * indent_level
+
+
 def indentation(symbol):
 	global indent_level
 	return symbol * indent_level

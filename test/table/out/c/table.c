@@ -17,19 +17,17 @@
 // and after construct pointer to closed array with required dimensions
 
 static void table_printSep(uint32_t *sz, uint32_t m);
-static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nnCols);
+static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols);
 void table_print(table_Table *table)
 {
 	uint32_t i;
 	uint32_t j;
 
-	uint32_t nRows = table->nRows;
-	uint32_t nCols = table->nCols;
 	// construct pointer to closed VLA array
-	char *(*table_data)[nRows][nCols] = (char *(*)[nRows][nCols])table->data;
+	char *(*table_data)[table->nRows][table->nCols] = (char *(*)[table->nRows][table->nCols])table->data;
 
 	// array of size of columns (in characters)
-	uint32_t sz[nCols];
+	uint32_t sz[table->nCols];
 	memset(&sz, 0, sizeof sz);
 
 	//
@@ -38,7 +36,7 @@ void table_print(table_Table *table)
 
 	if (table->header != NULL) {
 		i = 0;
-		while (i < nCols) {
+		while (i < table->nCols) {
 			char *str = (*table->header)[i];
 			uint32_t len = (uint32_t)strlen(str);
 			if (len > sz[i]) {
@@ -97,12 +95,12 @@ void table_print(table_Table *table)
 }
 
 
-static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nnCols)
+static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols)
 {
-	char *(*row)[nnCols] = (char *(*)[nnCols])raw_row;
+	char *(*row)[nCols] = (char *(*)[nCols])raw_row;
 
 	uint32_t j = 0;
-	while (j < nnCols) {
+	while (j < nCols) {
 		printf("|");
 		char *s = (*row)[j];
 		uint32_t len = (uint32_t)strlen(s);

@@ -242,76 +242,86 @@ define void @table_print(%table_Table* %table) {
 	store i8* %2, i8** %1
 	%3 = alloca %Int32, align 4
 	%4 = alloca %Int32, align 4
-	%5 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
-	%6 = load %Int32, %Int32* %5
-	%7 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%8 = load %Int32, %Int32* %7
+
 	; construct pointer to closed VLA array
-	%9 = mul %Int32 %8, 1  ; calc VLA item size
-	%10 = mul %Int32 %6, %9  ; calc VLA item size
+	%5 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%6 = load %Int32, %Int32* %5
+	%7 = mul %Int32 %6, 1  ; calc VLA item size
+	%8 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
+	%9 = load %Int32, %Int32* %8
+	%10 = mul %Int32 %9, %7  ; calc VLA item size
 ; -- CONS PTR TO ARRAY --
 	%11 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 1
 	%12 = load [0 x [0 x %Str8*]]*, [0 x [0 x %Str8*]]** %11
 	%13 = bitcast [0 x [0 x %Str8*]]* %12 to [0 x [0 x %Str8*]]*
-	%14 = mul %Int32 %8, 1  ; calc VLA item size
-	%15 = mul %Int32 %6, %14  ; calc VLA item size
+	%14 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%15 = load %Int32, %Int32* %14
+	%16 = mul %Int32 %15, 1  ; calc VLA item size
+	%17 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
+	%18 = load %Int32, %Int32* %17
+	%19 = mul %Int32 %18, %16  ; calc VLA item size
 
 	; array of size of columns (in characters)
-	%16 = mul %Int32 %8, 1  ; calc VLA item size
-	%17 = alloca %Int32, %Int32 %16, align 4
+	%20 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%21 = load %Int32, %Int32* %20
+	%22 = mul %Int32 %21, 1  ; calc VLA item size
+	%23 = alloca %Int32, %Int32 %22, align 4
 	; -- ASSIGN ARRAY --
 	; -- start vol eval --
+	%24 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	; -- end vol eval --
 	; -- zero fill rest of array
-	%18 = mul %Int32 %8, 4
-	%19 = bitcast %Int32* %17 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %19, i8 0, %Int32 %18, i1 0)
+	%25 = mul %Int32 %24, 4
+	%26 = bitcast %Int32* %23 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %26, i8 0, %Int32 %25, i1 0)
 
 	;
 	; calculate max length (in chars) of column
 	;
-	%20 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
-	%21 = load [0 x %Str8*]*, [0 x %Str8*]** %20
-	%22 = icmp ne [0 x %Str8*]* %21, null
-	br %Bool %22 , label %then_0, label %endif_0
+	%27 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
+	%28 = load [0 x %Str8*]*, [0 x %Str8*]** %27
+	%29 = icmp ne [0 x %Str8*]* %28, null
+	br %Bool %29 , label %then_0, label %endif_0
 then_0:
 	store %Int32 0, %Int32* %3
 	br label %again_1
 again_1:
-	%23 = load %Int32, %Int32* %3
-	%24 = icmp ult %Int32 %23, %8
-	br %Bool %24 , label %body_1, label %break_1
+	%30 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%31 = load %Int32, %Int32* %3
+	%32 = load %Int32, %Int32* %30
+	%33 = icmp ult %Int32 %31, %32
+	br %Bool %33 , label %body_1, label %break_1
 body_1:
-	%25 = load %Int32, %Int32* %3
-	%26 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
-	%27 = load [0 x %Str8*]*, [0 x %Str8*]** %26
-	%28 = bitcast %Int32 %25 to %Int32
-	%29 = getelementptr [0 x %Str8*], [0 x %Str8*]* %27, %Int32 0, %Int32 %28
-	%30 = load %Str8*, %Str8** %29
-	%31 = call %SizeT @strlen(%Str8* %30)
-	%32 = trunc %SizeT %31 to %Int32
-	%33 = load %Int32, %Int32* %3
+	%34 = load %Int32, %Int32* %3
+	%35 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
+	%36 = load [0 x %Str8*]*, [0 x %Str8*]** %35
+	%37 = bitcast %Int32 %34 to %Int32
+	%38 = getelementptr [0 x %Str8*], [0 x %Str8*]* %36, %Int32 0, %Int32 %37
+	%39 = load %Str8*, %Str8** %38
+	%40 = call %SizeT @strlen(%Str8* %39)
+	%41 = trunc %SizeT %40 to %Int32
+	%42 = load %Int32, %Int32* %3
 ; -- INDEX VLA --
-	%34 = mul %Int32 %33, 1
-	%35 = add %Int32 0, %34
-	%36 = getelementptr %Int32, [0 x %Int32]* %17, %Int32 %35
+	%43 = mul %Int32 %42, 1
+	%44 = add %Int32 0, %43
+	%45 = getelementptr %Int32, [0 x %Int32]* %23, %Int32 %44
 ; -- END INDEX VLA --
-	%37 = load %Int32, %Int32* %36
-	%38 = icmp ugt %Int32 %32, %37
-	br %Bool %38 , label %then_1, label %endif_1
+	%46 = load %Int32, %Int32* %45
+	%47 = icmp ugt %Int32 %41, %46
+	br %Bool %47 , label %then_1, label %endif_1
 then_1:
-	%39 = load %Int32, %Int32* %3
+	%48 = load %Int32, %Int32* %3
 ; -- INDEX VLA --
-	%40 = mul %Int32 %39, 1
-	%41 = add %Int32 0, %40
-	%42 = getelementptr %Int32, [0 x %Int32]* %17, %Int32 %41
+	%49 = mul %Int32 %48, 1
+	%50 = add %Int32 0, %49
+	%51 = getelementptr %Int32, [0 x %Int32]* %23, %Int32 %50
 ; -- END INDEX VLA --
-	store %Int32 %32, %Int32* %42
+	store %Int32 %41, %Int32* %51
 	br label %endif_1
 endif_1:
-	%43 = load %Int32, %Int32* %3
-	%44 = add %Int32 %43, 1
-	store %Int32 %44, %Int32* %3
+	%52 = load %Int32, %Int32* %3
+	%53 = add %Int32 %52, 1
+	store %Int32 %53, %Int32* %3
 	br label %again_1
 break_1:
 	br label %endif_0
@@ -319,91 +329,91 @@ endif_0:
 	store %Int32 0, %Int32* %3
 	br label %again_2
 again_2:
-	%45 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
-	%46 = load %Int32, %Int32* %3
-	%47 = load %Int32, %Int32* %45
-	%48 = icmp ult %Int32 %46, %47
-	br %Bool %48 , label %body_2, label %break_2
+	%54 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
+	%55 = load %Int32, %Int32* %3
+	%56 = load %Int32, %Int32* %54
+	%57 = icmp ult %Int32 %55, %56
+	br %Bool %57 , label %body_2, label %break_2
 body_2:
 	store %Int32 0, %Int32* %4
 	br label %again_3
 again_3:
-	%49 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%50 = load %Int32, %Int32* %4
-	%51 = load %Int32, %Int32* %49
-	%52 = icmp ult %Int32 %50, %51
-	br %Bool %52 , label %body_3, label %break_3
+	%58 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%59 = load %Int32, %Int32* %4
+	%60 = load %Int32, %Int32* %58
+	%61 = icmp ult %Int32 %59, %60
+	br %Bool %61 , label %body_3, label %break_3
 body_3:
-	%53 = load %Int32, %Int32* %4
-	%54 = load %Int32, %Int32* %3
+	%62 = load %Int32, %Int32* %4
+	%63 = load %Int32, %Int32* %3
 ; -- INDEX VLA --
-	%55 = mul %Int32 %54, %14
-	%56 = add %Int32 0, %55
-	%57 = mul %Int32 %53, 1
-	%58 = add %Int32 %56, %57
-	%59 = getelementptr %Str8*, [0 x [0 x %Str8*]]* %13, %Int32 %58
-; -- END INDEX VLA --
-	%60 = load %Str8*, %Str8** %59
-	%61 = call %SizeT @strlen(%Str8* %60)
-	%62 = trunc %SizeT %61 to %Int32
-	%63 = load %Int32, %Int32* %4
-; -- INDEX VLA --
-	%64 = mul %Int32 %63, 1
+	%64 = mul %Int32 %63, %16
 	%65 = add %Int32 0, %64
-	%66 = getelementptr %Int32, [0 x %Int32]* %17, %Int32 %65
+	%66 = mul %Int32 %62, 1
+	%67 = add %Int32 %65, %66
+	%68 = getelementptr %Str8*, [0 x [0 x %Str8*]]* %13, %Int32 %67
 ; -- END INDEX VLA --
-	%67 = load %Int32, %Int32* %66
-	%68 = icmp ugt %Int32 %62, %67
-	br %Bool %68 , label %then_2, label %endif_2
-then_2:
-	%69 = load %Int32, %Int32* %4
+	%69 = load %Str8*, %Str8** %68
+	%70 = call %SizeT @strlen(%Str8* %69)
+	%71 = trunc %SizeT %70 to %Int32
+	%72 = load %Int32, %Int32* %4
 ; -- INDEX VLA --
-	%70 = mul %Int32 %69, 1
-	%71 = add %Int32 0, %70
-	%72 = getelementptr %Int32, [0 x %Int32]* %17, %Int32 %71
+	%73 = mul %Int32 %72, 1
+	%74 = add %Int32 0, %73
+	%75 = getelementptr %Int32, [0 x %Int32]* %23, %Int32 %74
 ; -- END INDEX VLA --
-	store %Int32 %62, %Int32* %72
+	%76 = load %Int32, %Int32* %75
+	%77 = icmp ugt %Int32 %71, %76
+	br %Bool %77 , label %then_2, label %endif_2
+then_2:
+	%78 = load %Int32, %Int32* %4
+; -- INDEX VLA --
+	%79 = mul %Int32 %78, 1
+	%80 = add %Int32 0, %79
+	%81 = getelementptr %Int32, [0 x %Int32]* %23, %Int32 %80
+; -- END INDEX VLA --
+	store %Int32 %71, %Int32* %81
 	br label %endif_2
 endif_2:
-	%73 = load %Int32, %Int32* %4
-	%74 = add %Int32 %73, 1
-	store %Int32 %74, %Int32* %4
+	%82 = load %Int32, %Int32* %4
+	%83 = add %Int32 %82, 1
+	store %Int32 %83, %Int32* %4
 	br label %again_3
 break_3:
-	%75 = load %Int32, %Int32* %3
-	%76 = add %Int32 %75, 1
-	store %Int32 %76, %Int32* %3
+	%84 = load %Int32, %Int32* %3
+	%85 = add %Int32 %84, 1
+	store %Int32 %85, %Int32* %3
 	br label %again_2
 break_2:
 	store %Int32 0, %Int32* %3
 	br label %again_4
 again_4:
-	%77 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%78 = load %Int32, %Int32* %3
-	%79 = load %Int32, %Int32* %77
-	%80 = icmp ult %Int32 %78, %79
-	br %Bool %80 , label %body_4, label %break_4
+	%86 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%87 = load %Int32, %Int32* %3
+	%88 = load %Int32, %Int32* %86
+	%89 = icmp ult %Int32 %87, %88
+	br %Bool %89 , label %body_4, label %break_4
 body_4:
 	; добавляем по пробелу слева и справа
 	; (для красивого отступа)
-	%81 = load %Int32, %Int32* %3
+	%90 = load %Int32, %Int32* %3
 ; -- INDEX VLA --
-	%82 = mul %Int32 %81, 1
-	%83 = add %Int32 0, %82
-	%84 = getelementptr %Int32, [0 x %Int32]* %17, %Int32 %83
+	%91 = mul %Int32 %90, 1
+	%92 = add %Int32 0, %91
+	%93 = getelementptr %Int32, [0 x %Int32]* %23, %Int32 %92
 ; -- END INDEX VLA --
-	%85 = load %Int32, %Int32* %3
+	%94 = load %Int32, %Int32* %3
 ; -- INDEX VLA --
-	%86 = mul %Int32 %85, 1
-	%87 = add %Int32 0, %86
-	%88 = getelementptr %Int32, [0 x %Int32]* %17, %Int32 %87
+	%95 = mul %Int32 %94, 1
+	%96 = add %Int32 0, %95
+	%97 = getelementptr %Int32, [0 x %Int32]* %23, %Int32 %96
 ; -- END INDEX VLA --
-	%89 = load %Int32, %Int32* %88
-	%90 = add %Int32 %89, 2
-	store %Int32 %90, %Int32* %84
-	%91 = load %Int32, %Int32* %3
-	%92 = add %Int32 %91, 1
-	store %Int32 %92, %Int32* %3
+	%98 = load %Int32, %Int32* %97
+	%99 = add %Int32 %98, 2
+	store %Int32 %99, %Int32* %93
+	%100 = load %Int32, %Int32* %3
+	%101 = add %Int32 %100, 1
+	store %Int32 %101, %Int32* %3
 	br label %again_4
 break_4:
 
@@ -412,92 +422,92 @@ break_4:
 	;
 
 	; top border
-	%93 = bitcast [0 x %Int32]* %17 to [0 x %Int32]*
-	%94 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%95 = load %Int32, %Int32* %94
-	call void @table_printSep([0 x %Int32]* %93, %Int32 %95)
-	%96 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
-	%97 = load [0 x %Str8*]*, [0 x %Str8*]** %96
-	%98 = icmp ne [0 x %Str8*]* %97, null
-	br %Bool %98 , label %then_3, label %endif_3
+	%102 = bitcast [0 x %Int32]* %23 to [0 x %Int32]*
+	%103 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%104 = load %Int32, %Int32* %103
+	call void @table_printSep([0 x %Int32]* %102, %Int32 %104)
+	%105 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
+	%106 = load [0 x %Str8*]*, [0 x %Str8*]** %105
+	%107 = icmp ne [0 x %Str8*]* %106, null
+	br %Bool %107 , label %then_3, label %endif_3
 then_3:
-	%99 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
-	%100 = load [0 x %Str8*]*, [0 x %Str8*]** %99
-	%101 = bitcast [0 x %Int32]* %17 to [0 x %Int32]*
-	%102 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%103 = load %Int32, %Int32* %102
-	call void @table_printRow([0 x %Str8*]* %100, [0 x %Int32]* %101, %Int32 %103)
-	%104 = bitcast [0 x %Int32]* %17 to [0 x %Int32]*
-	%105 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%106 = load %Int32, %Int32* %105
-	call void @table_printSep([0 x %Int32]* %104, %Int32 %106)
+	%108 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
+	%109 = load [0 x %Str8*]*, [0 x %Str8*]** %108
+	%110 = bitcast [0 x %Int32]* %23 to [0 x %Int32]*
+	%111 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%112 = load %Int32, %Int32* %111
+	call void @table_printRow([0 x %Str8*]* %109, [0 x %Int32]* %110, %Int32 %112)
+	%113 = bitcast [0 x %Int32]* %23 to [0 x %Int32]*
+	%114 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%115 = load %Int32, %Int32* %114
+	call void @table_printSep([0 x %Int32]* %113, %Int32 %115)
 	br label %endif_3
 endif_3:
 	store %Int32 0, %Int32* %3
 	br label %again_5
 again_5:
-	%107 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
-	%108 = load %Int32, %Int32* %3
-	%109 = load %Int32, %Int32* %107
-	%110 = icmp ult %Int32 %108, %109
-	br %Bool %110 , label %body_5, label %break_5
+	%116 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
+	%117 = load %Int32, %Int32* %3
+	%118 = load %Int32, %Int32* %116
+	%119 = icmp ult %Int32 %117, %118
+	br %Bool %119 , label %body_5, label %break_5
 body_5:
-	%111 = load %Int32, %Int32* %3
+	%120 = load %Int32, %Int32* %3
 ; -- INDEX VLA --
-	%112 = mul %Int32 %111, %14
-	%113 = add %Int32 0, %112
-	%114 = getelementptr [0 x %Str8*], [0 x [0 x %Str8*]]* %13, %Int32 %113
+	%121 = mul %Int32 %120, %16
+	%122 = add %Int32 0, %121
+	%123 = getelementptr [0 x %Str8*], [0 x [0 x %Str8*]]* %13, %Int32 %122
 ; -- END INDEX VLA --
-	%115 = bitcast [0 x %Str8*]* %114 to [0 x %Str8*]*
-	%116 = bitcast [0 x %Int32]* %17 to [0 x %Int32]*
-	%117 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%118 = load %Int32, %Int32* %117
-	call void @table_printRow([0 x %Str8*]* %115, [0 x %Int32]* %116, %Int32 %118)
-	%119 = load %Int32, %Int32* %3
-	%120 = add %Int32 %119, 1
-	store %Int32 %120, %Int32* %3
-	%121 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 4
-	%122 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
-	%123 = load %Int32, %Int32* %3
-	%124 = load %Int32, %Int32* %122
-	%125 = icmp ult %Int32 %123, %124
-	%126 = load %Bool, %Bool* %121
-	%127 = and %Bool %126, %125
-	br %Bool %127 , label %then_4, label %endif_4
+	%124 = bitcast [0 x %Str8*]* %123 to [0 x %Str8*]*
+	%125 = bitcast [0 x %Int32]* %23 to [0 x %Int32]*
+	%126 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%127 = load %Int32, %Int32* %126
+	call void @table_printRow([0 x %Str8*]* %124, [0 x %Int32]* %125, %Int32 %127)
+	%128 = load %Int32, %Int32* %3
+	%129 = add %Int32 %128, 1
+	store %Int32 %129, %Int32* %3
+	%130 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 4
+	%131 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
+	%132 = load %Int32, %Int32* %3
+	%133 = load %Int32, %Int32* %131
+	%134 = icmp ult %Int32 %132, %133
+	%135 = load %Bool, %Bool* %130
+	%136 = and %Bool %135, %134
+	br %Bool %136 , label %then_4, label %endif_4
 then_4:
-	%128 = bitcast [0 x %Int32]* %17 to [0 x %Int32]*
-	%129 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%130 = load %Int32, %Int32* %129
-	call void @table_printSep([0 x %Int32]* %128, %Int32 %130)
+	%137 = bitcast [0 x %Int32]* %23 to [0 x %Int32]*
+	%138 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%139 = load %Int32, %Int32* %138
+	call void @table_printSep([0 x %Int32]* %137, %Int32 %139)
 	br label %endif_4
 endif_4:
 	br label %again_5
 break_5:
 
 	; bottom border
-	%131 = bitcast [0 x %Int32]* %17 to [0 x %Int32]*
-	%132 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%133 = load %Int32, %Int32* %132
-	call void @table_printSep([0 x %Int32]* %131, %Int32 %133)
-	%134 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %134)
+	%140 = bitcast [0 x %Int32]* %23 to [0 x %Int32]*
+	%141 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%142 = load %Int32, %Int32* %141
+	call void @table_printSep([0 x %Int32]* %140, %Int32 %142)
+	%143 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %143)
 	ret void
 }
 
-define internal void @table_printRow([0 x %Str8*]* %raw_row, [0 x %Int32]* %sz, %Int32 %nnCols) {
+define internal void @table_printRow([0 x %Str8*]* %raw_row, [0 x %Int32]* %sz, %Int32 %nCols) {
 	%1 = alloca i8*
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
-	%3 = mul %Int32 %nnCols, 1  ; calc VLA item size
+	%3 = mul %Int32 %nCols, 1  ; calc VLA item size
 ; -- CONS PTR TO ARRAY --
 	%4 = bitcast [0 x %Str8*]* %raw_row to [0 x %Str8*]*
-	%5 = mul %Int32 %nnCols, 1  ; calc VLA item size
+	%5 = mul %Int32 %nCols, 1  ; calc VLA item size
 	%6 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %6
 	br label %again_1
 again_1:
 	%7 = load %Int32, %Int32* %6
-	%8 = icmp ult %Int32 %7, %nnCols
+	%8 = icmp ult %Int32 %7, %nCols
 	br %Bool %8 , label %body_1, label %break_1
 body_1:
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str1 to [0 x i8]*))
