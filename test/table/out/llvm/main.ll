@@ -263,6 +263,7 @@ declare void @table_print(%table_Table* %table)
 @str34 = private constant [2 x i8] [i8 10, i8 0]
 @str35 = private constant [2 x i8] [i8 10, i8 0]
 @str36 = private constant [2 x i8] [i8 10, i8 0]
+@str37 = private constant [2 x i8] [i8 10, i8 0]
 ; -- endstrings --
 @main_table_header0 = internal global [3 x [0 x %Char8]*] [
 	[0 x %Char8]* bitcast ([2 x i8]* @str1 to [0 x i8]*),
@@ -346,6 +347,13 @@ declare void @table_print(%table_Table* %table)
 	%Int32 3,
 	%Bool 1
 }
+@main_table10 = internal global %table_Table {
+	[0 x %Str8*]* @main_table_header1,
+	[0 x [0 x %Str8*]]* @main_table_data1,
+	%Int32 4,
+	%Int32 4,
+	%Bool 1
+}
 define %Int32 @main() {
 	call void @table_print(%table_Table* bitcast (%table_Table* @main_table00 to %table_Table*))
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str33 to [0 x i8]*))
@@ -355,6 +363,8 @@ define %Int32 @main() {
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str35 to [0 x i8]*))
 	call void @table_print(%table_Table* bitcast (%table_Table* @main_table03 to %table_Table*))
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str36 to [0 x i8]*))
+	call void @table_print(%table_Table* bitcast (%table_Table* @main_table10 to %table_Table*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str37 to [0 x i8]*))
 	ret %Int32 0
 }
 

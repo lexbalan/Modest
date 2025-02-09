@@ -61,6 +61,14 @@ var table03 = table.Table {
 	separate = true
 }
 
+var table10 = table.Table {
+	header = &table_header1
+	data = &table_data1
+	nRows = lengthof(table_data1)
+	nCols = lengthof(table_data1[0])
+	separate = true
+}
+
 
 public func main() -> Int32 {
 	table.print(&table00)
@@ -73,6 +81,9 @@ public func main() -> Int32 {
 	printf("\n")
 
 	table.print(&table03)
+	printf("\n")
+
+	table.print(&table10)
 	printf("\n")
 
 	return 0

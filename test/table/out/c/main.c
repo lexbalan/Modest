@@ -67,6 +67,14 @@ static table_Table main_table03 = {
 	.separate = true
 };
 
+static table_Table main_table10 = {
+	.header = &main_table_header1,
+	.data = (void *)&main_table_data1,
+	.nRows = LENGTHOF(main_table_data1),
+	.nCols = LENGTHOF(main_table_data1[0]),
+	.separate = true
+};
+
 
 int32_t main()
 {
@@ -80,6 +88,9 @@ int32_t main()
 	printf("\n");
 
 	table_print((table_Table *)&main_table03);
+	printf("\n");
+
+	table_print((table_Table *)&main_table10);
 	printf("\n");
 
 	return 0;
