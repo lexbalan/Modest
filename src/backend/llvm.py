@@ -593,7 +593,7 @@ def do_assign_arrays(dst, src):
 	out("\n\t; -- ASSIGN ARRAY --")
 
 	out("\n\t; -- start vol eval --")
-	volume = do_eval(src['type'].volume)
+	volume = do_reval(src['type'].volume)
 	volume = trim(volume, 32)
 	out("\n\t; -- end vol eval --")
 

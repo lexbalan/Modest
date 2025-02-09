@@ -16,7 +16,7 @@
 // but we can receive pointer to open array
 // and after construct pointer to closed array with required dimensions
 
-static void table_printSep(uint32_t *sz, uint32_t m);
+static void table_separator(uint32_t *sz, uint32_t n);
 static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols);
 void table_print(table_Table *table)
 {
@@ -24,7 +24,7 @@ void table_print(table_Table *table)
 	uint32_t j;
 
 	// construct pointer to closed VLA array
-	char *(*table_data)[table->nRows][table->nCols] = (char *(*)[table->nRows][table->nCols])table->data;
+	char *(*data)[table->nRows][table->nCols] = (char *(*)[table->nRows][table->nCols])table->data;
 
 	// array of size of columns (in characters)
 	uint32_t sz[table->nCols];
@@ -50,7 +50,7 @@ void table_print(table_Table *table)
 	while (i < table->nRows) {
 		j = 0;
 		while (j < table->nCols) {
-			char *str = (*table_data)[i][j];
+			char *str = (*data)[i][j];
 			uint32_t len = (uint32_t)strlen(str);
 			if (len > sz[j]) {
 				sz[j] = len;
@@ -73,25 +73,25 @@ void table_print(table_Table *table)
 	//
 
 	// top border
-	table_printSep((uint32_t *)&sz, table->nCols);
+	table_separator((uint32_t *)&sz, table->nCols);
 
 	if (table->header != NULL) {
 		table_printRow(table->header, (uint32_t *)&sz, table->nCols);
-		table_printSep((uint32_t *)&sz, table->nCols);
+		table_separator((uint32_t *)&sz, table->nCols);
 	}
 
 	i = 0;
 	while (i < table->nRows) {
-		table_printRow(&(*table_data)[i], (uint32_t *)&sz, table->nCols);
+		table_printRow(&(*data)[i], (uint32_t *)&sz, table->nCols);
 		i = i + 1;
 
 		if (table->separate && i < table->nRows) {
-			table_printSep((uint32_t *)&sz, table->nCols);
+			table_separator((uint32_t *)&sz, table->nCols);
 		}
 	}
 
 	// bottom border
-	table_printSep((uint32_t *)&sz, table->nCols);
+	table_separator((uint32_t *)&sz, table->nCols);
 }
 
 
@@ -120,13 +120,13 @@ static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols)
 }
 
 
-// печатает строку отделяющую записи таблицы
+// печатает строку +---+---+ отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
-static void table_printSep(uint32_t *sz, uint32_t m)
+static void table_separator(uint32_t *sz, uint32_t n)
 {
 	uint32_t i = 0;
-	while (i < m) {
+	while (i < n) {
 		printf("+");
 		uint32_t j = 0;
 		while (j < sz[i]) {

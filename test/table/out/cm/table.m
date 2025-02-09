@@ -21,7 +21,7 @@ public func print(table: *Table) -> Unit {
 	var j: Nat32
 
 	// construct pointer to closed VLA array
-	let table_data = *[table.nRows][table.nCols]*Str8 table.data
+	let data = *[table.nRows][table.nCols]*Str8 table.data
 
 	// array of size of columns (in characters)
 	var sz: [table.nCols]Nat32 = []
@@ -46,7 +46,7 @@ public func print(table: *Table) -> Unit {
 	while i < table.nRows {
 		j = 0
 		while j < table.nCols {
-			let str = table_data[i][j]
+			let str = data[i][j]
 			let len = Nat32 string.strlen(str)
 			if len > sz[j] {
 				sz[j] = len
@@ -69,25 +69,25 @@ public func print(table: *Table) -> Unit {
 	//
 
 	// top border
-	printSep(&sz, table.nCols)
+	separator(&sz, table.nCols)
 
 	if table.header != nil {
 		printRow(table.header, &sz, table.nCols)
-		printSep(&sz, table.nCols)
+		separator(&sz, table.nCols)
 	}
 
 	i = 0
 	while i < table.nRows {
-		printRow(&(table_data[i]), &sz, table.nCols)
+		printRow(&(data[i]), &sz, table.nCols)
 		i = i + 1
 
 		if table.separate and i < table.nRows {
-			printSep(&sz, table.nCols)
+			separator(&sz, table.nCols)
 		}
 	}
 
 	// bottom border
-	printSep(&sz, table.nCols)
+	separator(&sz, table.nCols)
 }
 
 
@@ -115,12 +115,12 @@ func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 }
 
 
-// печатает строку отделяющую записи таблицы
+// печатает строку +---+---+ отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
-func printSep(sz: *[]Nat32, m: Nat32) -> Unit {
+func separator(sz: *[]Nat32, n: Nat32) -> Unit {
 	var i: Nat32 = Nat32 0
-	while i < m {
+	while i < n {
 		stdio.printf("+")
 		var j: Nat32 = Nat32 0
 		while j < sz[i] {

@@ -68,11 +68,11 @@ public func print(table: *Table) {
 	//
 
 	// top border
-	printSep(&sz, table.nCols)
+	separator(&sz, table.nCols)
 
 	if table.header != nil {
 		printRow(table.header, &sz, table.nCols)
-		printSep(&sz, table.nCols)
+		separator(&sz, table.nCols)
 	}
 
 	i = 0
@@ -81,12 +81,12 @@ public func print(table: *Table) {
 		++i
 
 		if (table.separate and i < table.nRows) {
-			printSep(&sz, table.nCols)
+			separator(&sz, table.nCols)
 		}
 	}
 
 	// bottom border
-	printSep(&sz, table.nCols)
+	separator(&sz, table.nCols)
 }
 
 
@@ -114,12 +114,12 @@ func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) {
 }
 
 
-// печатает строку отделяющую записи таблицы
+// печатает строку +---+---+ отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
-func printSep(sz: *[]Nat32, m: Nat32) {
+func separator(sz: *[]Nat32, n: Nat32) {
 	var i = Nat32 0
-	while i < m {
+	while i < n {
 		printf("+")
 		var j = Nat32 0
 		while j < sz[i] {
