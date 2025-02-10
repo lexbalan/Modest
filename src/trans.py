@@ -939,6 +939,11 @@ def do_value_ref(x):
 	return nv
 
 
+def do_value_new(x):
+	v = do_value(x['value'])
+	return ValueNew(v)
+
+
 def do_value_deref(x):
 	v = do_rvalue(x['value'])
 
@@ -1599,6 +1604,7 @@ def do_value_immediate_string(x):
 	return v
 
 
+
 def do_value_unsafe(x):
 	#info("do_value_unsafe", ti)
 	ti = x['ti']
@@ -1656,6 +1662,7 @@ def do_value(x):
 	elif k == 'pos': v = do_value_pos(x)
 	elif k == 'shl': v = do_value_shift(x)
 	elif k == 'shr': v = do_value_shift(x)
+	elif k == 'new': v = do_value_new(x)
 	elif k == 'unsafe': v = do_value_unsafe(x)
 	elif k == 'sizeof_value': v = do_value_sizeof_value(x)
 	elif k == 'sizeof_type': v = do_value_sizeof_type(x)

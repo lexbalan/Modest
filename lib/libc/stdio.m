@@ -79,7 +79,7 @@ public func sscanf(buf: *ConstCharStr, format: *ConstCharStr, ...) -> Int
 @unused_result
 public func sprintf(buf: *CharStr, format: *ConstCharStr, ...) -> Int
 
-
+@unused_result
 public func vfprintf(f: *File, format: *ConstCharStr, args: __VA_List) -> Int
 public func vprintf(format: *ConstCharStr, args: __VA_List) -> Int
 public func vsprintf(str: *CharStr, format: *ConstCharStr, args: __VA_List) -> Int

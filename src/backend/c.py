@@ -648,6 +648,10 @@ def str_value_slice(x, ctx):
 	return str_value_index(y, ctx)
 
 
+def str_value_new(x, ctx):
+	t_str = str_type(x.value.type)
+	return '(%s *)calloc(1, sizeof(%s))' % (t_str, t_str)
+
 
 def str_value_index(x, ctx):
 	sstr = ''
@@ -1330,6 +1334,8 @@ def str_value(x, ctx=[], parent_expr=None):
 		sstr += str_value_access(x, ctx)
 	elif isinstance(x, ValueSlice):
 		sstr += str_value_slice(x, ctx)
+	elif isinstance(x, ValueNew):
+		sstr += str_value_new(x, ctx)
 	elif isinstance(x, ValueSizeofValue):
 		sstr += str_value_sizeof_value(x, ctx)
 	elif isinstance(x, ValueSizeofType):
@@ -1352,8 +1358,7 @@ def str_value(x, ctx=[], parent_expr=None):
 		sstr += "/*<ValueUndefined>*/"
 		1/0
 	else:
-		print(x)
-		sstr += "<%s>" % 'k'
+		sstr += "<%s>" % str(x)
 
 	if need_wrap:
 		sstr += ")"

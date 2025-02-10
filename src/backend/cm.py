@@ -573,6 +573,10 @@ def print_value_by_id(x, ctx):
 	print_id_for(x)
 
 
+def print_value_new(x, ctx):
+	out("new ")
+	print_value(x.value)
+
 
 # Сделал отдельный метод печати строк и есть отдельный для печати
 def print_value_string(x, ctx):
@@ -682,6 +686,7 @@ def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
 	elif isinstance(x, ValueIndex): print_value_index(x, ctx)
 	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
 	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
+	elif isinstance(x, ValueNew): print_value_new(x, ctx)
 	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
 	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
 	elif isinstance(x, ValueAlignof): print_value_alignof(x, ctx)

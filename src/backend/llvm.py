@@ -989,6 +989,28 @@ def do_eval_shr(x):
 
 
 
+def ll_malloc(res_type, obj_type):
+	obj_sz = _eval_sizeof_type(obj_type)
+	return ll_malloc_sz(res_type, obj_sz)
+
+
+def ll_malloc_sz(t, llsz):
+	# %1 = call %table_Table* @malloc(%Int32 8)
+	lv = ll_reg_operation('call', t)
+	print_type(t)
+	out(" @malloc(")
+	llvm_print_type_value(llsz)
+	out(")")
+	return lv
+
+
+def do_eval_new(x):
+	lv = ll_malloc(x.type, x.value.type)
+	val = do_reval(x.value)
+	llvm_store(lv, val)
+	return lv
+
+
 def do_eval_deref(x):
 	ptr_val = do_reval(x.value)
 	return llvm_deref(ptr_val)
@@ -1770,6 +1792,7 @@ def do_eval(x):
 	elif isinstance(x, ValueIndex): y = do_eval_index(x)
 	elif isinstance(x, ValueAccessRecord): y = do_eval_access(x)
 	elif isinstance(x, ValueSlice): y = do_eval_slice(x)
+	elif isinstance(x, ValueNew): y = do_eval_new(x)
 	elif isinstance(x, ValueZero): y = do_eval_literal(x)
 	elif isinstance(x, ValueSizeofValue): y = do_eval_sizeof_value(x)
 	elif isinstance(x, ValueSizeofType): y = do_eval_sizeof_type(x)

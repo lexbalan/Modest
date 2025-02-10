@@ -326,6 +326,16 @@ class ValueSlice(Value):
 		self.is_lvalue = True
 
 
+class ValueNew(Value):
+	def __init__(self, value, ti=None):
+		assert(isinstance(value, Value))
+
+		from .type import TypePointer
+		type = TypePointer(value.type, ti=ti)
+		super().__init__(type=type, ti=ti)
+		self.value = value
+
+
 class ValueRef(Value):
 	def __init__(self, value, ti=None):
 		assert(isinstance(value, Value))

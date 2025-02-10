@@ -70,6 +70,12 @@ var table10: table.Table = table.Table {
 
 
 public func main() -> Int32 {
+	let tab = new table.Table {}
+
+	if tab == nil {
+		stdio.printf("cannot create object\n")
+	}
+
 	table.print(&table00)
 	stdio.printf("\n")
 
