@@ -68,7 +68,7 @@ static void main_test()
 	memcpy(&yy, &(int32_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}, sizeof yy);
 	int32_t i = 0;
 	while (i < LENGTHOF(yy)) {
-		int32_t y = yy[i];
+		const int32_t y = yy[i];
 		printf("yy[%i] = %i\n", i, y);
 		i = i + 1;
 	}
@@ -205,7 +205,7 @@ int main()
 
 	int32_t i = 0;
 	while (i < 10) {
-		int32_t a = main_globalArray[i];
+		const int32_t a = main_globalArray[i];
 		printf("globalArray[%i] = %i\n", i, a);
 		i = i + 1;
 	}
@@ -217,7 +217,7 @@ int main()
 
 	i = 0;
 	while (i < 3) {
-		int32_t a = localArray[i];
+		const int32_t a = localArray[i];
 		printf("localArray[%i] = %i\n", i, a);
 		i = i + 1;
 	}
@@ -229,7 +229,7 @@ int main()
 
 	i = 0;
 	while (i < 3) {
-		int32_t a = globalArrayPtr[i];
+		const int32_t a = globalArrayPtr[i];
 		printf("globalArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
@@ -241,7 +241,7 @@ int main()
 
 	i = 0;
 	while (i < 3) {
-		int32_t a = localArrayPtr[i];
+		const int32_t a = localArrayPtr[i];
 		printf("localArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
@@ -332,7 +332,7 @@ int main()
 	int32_t ax = 10;
 	int32_t bx = 20;
 	int32_t cx = 30;
-	int32_t dx = 40;
+	const int32_t dx = 40;
 
 	const int32_t __y[4] = {ax, bx, cx, dx	};
 

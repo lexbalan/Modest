@@ -40,17 +40,17 @@ int main()
 	main_print_ab(10, 20);
 
 	// call function with two arguments and return value
-	int32_t arg_a = 1;
-	int32_t arg_b = 2;
-	int32_t sum_result = main_sum(arg_a, arg_b);
+	const int32_t arg_a = 1;
+	const int32_t arg_b = 2;
+	const int32_t sum_result = main_sum(arg_a, arg_b);
 	printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result);
 
 
 	int32_t(*fptr)(int32_t a, int32_t b) = &main_sum;
 	// call function with two arguments and return value
-	int32_t arg_a2 = 1;
-	int32_t arg_b2 = 2;
-	int32_t fptr_result = fptr(arg_a2, arg_b2);
+	const int32_t arg_a2 = 1;
+	const int32_t arg_b2 = 2;
+	const int32_t fptr_result = fptr(arg_a2, arg_b2);
 	printf("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result);
 
 	return 0;

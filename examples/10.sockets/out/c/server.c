@@ -28,7 +28,7 @@ static bool server_write_file(int sockfd)
 	}
 
 	while (true) {
-		ssize_t n = recv(sockfd, (char *)&buffer, server_bufSize, 0);
+		const ssize_t n = recv(sockfd, (char *)&buffer, server_bufSize, 0);
 
 		if (n <= 0) {
 			break;
@@ -44,7 +44,7 @@ static bool server_write_file(int sockfd)
 
 int main()
 {
-	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0) {
 		perror("[-] Error in socket");
 		exit(1);
@@ -80,9 +80,9 @@ int main()
 	socklen_t addr_size = (socklen_t)sizeof(struct sockaddr_in);
 	struct sockaddr_in new_addr;
 	struct sockaddr *const sa = (struct sockaddr *)&new_addr;
-	int new_sock = accept(sockfd, sa, &addr_size);
+	const int new_sock = accept(sockfd, sa, &addr_size);
 
-	bool suc = server_write_file(new_sock);
+	const bool suc = server_write_file(new_sock);
 	if (suc) {
 		printf("[+] Data written in the text file");
 	} else {

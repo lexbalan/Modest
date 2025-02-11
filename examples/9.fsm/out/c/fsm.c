@@ -46,7 +46,7 @@ void fsm_run(fsm_FSM *fsm)
 	printf("fsm::run()\n");
 
 	if (fsm->substate == fsm_substateEntering) {
-		uint32_t nexstate = fsm->nexstate;
+		const uint32_t nexstate = fsm->nexstate;
 		fsm_StateDesc *const state = &fsm->states[nexstate];
 
 		if (fsm_verbose) {

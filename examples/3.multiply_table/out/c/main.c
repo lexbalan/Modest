@@ -13,7 +13,7 @@ static void main_mtab(uint32_t n)
 	// or
 	//var m = 1   // by default integer var get system int type (-mint option)
 	while (m < 10) {
-		uint32_t nm = n * m;
+		const uint32_t nm = n * m;
 		printf("%u * %u = %u\n", n, m, nm);
 		m = m + 1;
 	}

@@ -114,7 +114,7 @@ static void sha256_transform(sha256_Context *ctx, uint8_t *data)
 	uint32_t j = 0;
 
 	while (i < 16) {
-		uint32_t x = (uint32_t)data[j + 0] << 24 | (uint32_t)data[j + 1] << 16 | (uint32_t)data[j + 2] << 8 | (uint32_t)data[j + 3] << 0;
+		const uint32_t x = (uint32_t)data[j + 0] << 24 | (uint32_t)data[j + 1] << 16 | (uint32_t)data[j + 2] << 8 | (uint32_t)data[j + 3] << 0;
 
 		m[i] = x;
 		j = j + 4;
@@ -131,8 +131,8 @@ static void sha256_transform(sha256_Context *ctx, uint8_t *data)
 
 	i = 0;
 	while (i < 64) {
-		uint32_t t1 = (uint32_t)x[7] + (uint32_t)sha256_ep1(x[4]) + (uint32_t)sha256_ch(x[4], x[5], x[6]) + sha256_k[i] + (uint32_t)m[i];
-		uint32_t t2 = (uint32_t)sha256_ep0(x[0]) + (uint32_t)sha256_maj(x[0], x[1], x[2]);
+		const uint32_t t1 = (uint32_t)x[7] + (uint32_t)sha256_ep1(x[4]) + (uint32_t)sha256_ch(x[4], x[5], x[6]) + sha256_k[i] + (uint32_t)m[i];
+		const uint32_t t2 = (uint32_t)sha256_ep0(x[0]) + (uint32_t)sha256_maj(x[0], x[1], x[2]);
 
 		x[7] = x[6];
 		x[6] = x[5];
@@ -214,7 +214,7 @@ static void sha256_final(sha256_Context *ctx, uint8_t *outHash)
 
 	i = 0;
 	while (i < 4) {
-		uint32_t sh = 24 - i * 8;
+		const uint32_t sh = 24 - i * 8;
 		outHash[i + 0] = (uint8_t)(ctx->state[0] >> sh);
 		outHash[i + 4] = (uint8_t)(ctx->state[1] >> sh);
 		outHash[i + 8] = (uint8_t)(ctx->state[2] >> sh);

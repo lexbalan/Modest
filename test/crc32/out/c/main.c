@@ -22,7 +22,7 @@ int main()
 {
 	printf("CRC32 test\n");
 
-	uint32_t crc = crc32_run((uint8_t *)&main_data, LENGTHOF(main_data));
+	const uint32_t crc = crc32_run((uint8_t *)&main_data, LENGTHOF(main_data));
 
 	printf("crc32.doHash(\"%s\") = %08X\n", (char *)main_datastring, crc);
 

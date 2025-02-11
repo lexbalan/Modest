@@ -11,11 +11,11 @@ int main()
 {
 	console_print("test console print\n");
 
-	uint32_t c = U'🐀';
+	const uint32_t c = U'🐀';
 	char *const s = "Hi!";
-	int32_t i = (int32_t)-1;
-	uint32_t n = 123;
-	uint32_t x = 0x1234567F;
+	const int32_t i = (int32_t)-1;
+	const uint32_t n = 123;
+	const uint32_t x = 0x1234567F;
 
 	console_print("\\\n");
 	console_print("@\n");

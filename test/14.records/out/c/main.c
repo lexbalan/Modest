@@ -94,7 +94,7 @@ static void main_test_records()
 	printf("s.x.b.y = %d\n", main_s.x->b.y);
 
 
-	main_Struct x = main_s;
+	const main_Struct x = main_s;
 
 	printf("x.x.a.x = %d\n", x.x->a.x);
 	printf("x.x.a.y = %d\n", x.x->a.y);

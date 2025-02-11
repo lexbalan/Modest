@@ -65,10 +65,10 @@ typedef struct main_WrappedArray main_WrappedArray;
 // Pythagorean theorem
 static float main_distance(main_Point a, main_Point b)
 {
-	double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
-	double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
-	double dx2 = pow(dx, (double)(2));
-	double dy2 = pow(dy, (double)(2));
+	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
+	const double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
+	const double dx2 = pow(dx, (double)(2));
+	const double dy2 = pow(dy, (double)(2));
 	return sqrt(dx2 + dy2);
 }
 
@@ -81,10 +81,10 @@ static float main_lineLength(main_Line line)
 
 int main()
 {
-	float lines_0_len = main_lineLength(main_lines[0]);
-	float lines_1_len = main_lineLength(main_lines[1]);
-	float lines_2_len = main_lineLength(main_lines[2]);
-	float lines_3_len = main_lineLength(main_lines[3]);
+	const float lines_0_len = main_lineLength(main_lines[0]);
+	const float lines_1_len = main_lineLength(main_lines[1]);
+	const float lines_2_len = main_lineLength(main_lines[2]);
+	const float lines_3_len = main_lineLength(main_lines[3]);
 
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);

@@ -21,7 +21,7 @@ int main()
 
 	i = 0;
 	while (i < 10) {
-		int32_t v = main_globalArray1[i];
+		const int32_t v = main_globalArray1[i];
 		printf("globalArray1[%d] = %d\n", i, v);
 		i = i + 1;
 	}
@@ -45,7 +45,7 @@ int main()
 
 	i = 0;
 	while (i < 10) {
-		int32_t v = localArray1[i];
+		const int32_t v = localArray1[i];
 		printf("localArray1[%d] = %d\n", i, v);
 		i = i + 1;
 	}

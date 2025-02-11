@@ -52,10 +52,10 @@ static float main_min(float a, float b)
 // Pythagorean theorem
 static float main_distance(main_Point a, main_Point b)
 {
-	float dx = main_max(a.x, b.x) - main_min(a.x, b.x);
-	float dy = main_max(a.y, b.y) - main_min(a.y, b.y);
-	double dx2 = pow(dx, (double)(2));
-	double dy2 = pow(dy, (double)(2));
+	const float dx = main_max(a.x, b.x) - main_min(a.x, b.x);
+	const float dy = main_max(a.y, b.y) - main_min(a.y, b.y);
+	const double dx2 = pow(dx, (double)(2));
+	const double dy2 = pow(dy, (double)(2));
 	return sqrt(dx2 + dy2);
 }
 
@@ -81,7 +81,7 @@ static void main_ptr_example()
 int main()
 {
 	// by value
-	float len = main_lineLength(main_line);
+	const float len = main_lineLength(main_line);
 	printf("line length = %f\n", len);
 
 	main_ptr_example();

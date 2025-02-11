@@ -410,6 +410,8 @@ def is_sim_sim(t):
 def str_type(t, core='', label='', as_const=''):
 	aka = type_get_aka(t)
 	if aka != None:
+		if as_const:
+			out("const ")
 		return aka + core + prespace(label)
 
 	if as_const:

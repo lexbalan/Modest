@@ -16,10 +16,10 @@ int main()
 {
 	printf("unistd test\n");
 
-	pid_t pid = getpid();
+	const pid_t pid = getpid();
 	printf("pid = %d\n", pid);
 
-	long hid = gethostid();
+	const long hid = gethostid();
 	printf("hostid = %ld\n", hid);
 
 	// current control terminal

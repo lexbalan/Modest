@@ -35,7 +35,7 @@ static bool client_send_file(FILE *fp, int sockfd)
 
 int main()
 {
-	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0) {
 		perror("[-] Error in socket");
 		exit(1);
@@ -66,7 +66,7 @@ int main()
 		exit(1);
 	}
 
-	bool suc = client_send_file(fp, sockfd);
+	const bool suc = client_send_file(fp, sockfd);
 	if (suc) {
 		printf("[+] File data send successfully\n");
 	} else {

@@ -271,9 +271,9 @@ int32_t main()
 		i = i + 1;
 	}
 
-	int32_t _add = main_farr[0](5, 7);
+	const int32_t _add = main_farr[0](5, 7);
 	printf("farr[0](5, 7) = %d\n", _add);
-	int32_t _sub = main_farr[1](5, 7);
+	const int32_t _sub = main_farr[1](5, 7);
 	printf("farr[1](5, 7) = %d\n", _sub);
 
 	i = 0;

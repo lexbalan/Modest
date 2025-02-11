@@ -15,9 +15,9 @@
 static int32_t main_get_number(int32_t min, int32_t max);
 int32_t main()
 {
-	int32_t number = main_get_number(main_minNumber, main_maxNumber);
+	const int32_t number = main_get_number(main_minNumber, main_maxNumber);
 
-	int32_t n = 5;
+	const int32_t n = 5;
 
 	if (number < n) {
 		printf("entered number (%i) is less than %i\n", number, n);

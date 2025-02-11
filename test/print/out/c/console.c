@@ -53,7 +53,7 @@ void console_putchar_utf16(uint16_t c)
 	cc[0] = c;
 	cc[1] = 0;
 	uint32_t char32;
-	uint8_t n = utf_utf16_to_utf32((uint16_t *)&cc, &char32);
+	const uint8_t n = utf_utf16_to_utf32((uint16_t *)&cc, &char32);
 	console_putchar_utf32(char32);
 }
 
@@ -62,11 +62,11 @@ void console_putchar_utf32(uint32_t c)
 {
 	char decoded_buf[4];
 	memset(&decoded_buf, 0, sizeof decoded_buf);
-	int32_t n = (int32_t)utf_utf32_to_utf8(c, &decoded_buf);
+	const int32_t n = (int32_t)utf_utf32_to_utf8(c, &decoded_buf);
 
 	int32_t i = 0;
 	while (i < n) {
-		char c = decoded_buf[i];
+		const char c = decoded_buf[i];
 		console_putchar_utf8(c);
 		i = i + 1;
 	}
@@ -89,7 +89,7 @@ void console_puts8(char *s)
 {
 	int32_t i = 0;
 	while (true) {
-		char c = s[i];
+		const char c = s[i];
 		if (c == 0) {
 			break;
 		}
@@ -106,13 +106,13 @@ void console_puts16(uint16_t *s)
 		// нельзя просто так взять и вызвать putchar_utf16
 		// тк в строке может быть суррогатная пара UTF_16 символов
 
-		uint16_t cc16 = s[i];
+		const uint16_t cc16 = s[i];
 		if (cc16 == 0) {
 			break;
 		}
 
 		uint32_t char32;
-		uint8_t n = utf_utf16_to_utf32((uint16_t *)&s[i], &char32);
+		const uint8_t n = utf_utf16_to_utf32((uint16_t *)&s[i], &char32);
 		if (n == 0) {
 			break;
 		}
@@ -128,7 +128,7 @@ void console_puts32(uint32_t *s)
 {
 	int32_t i = 0;
 	while (true) {
-		uint32_t c = s[i];
+		const uint32_t c = s[i];
 		if (c == 0) {
 			break;
 		}
@@ -159,7 +159,7 @@ int32_t console_vfprint(int32_t fd, char *form, va_list va)
 {
 	char strbuf[256];
 	memset(&strbuf, 0, sizeof strbuf);
-	int32_t n = console_vsprint((char *)&strbuf, form, va);
+	const int32_t n = console_vsprint((char *)&strbuf, form, va);
 	strbuf[n] = '\x0';
 	write(fd, (char *)&strbuf, ((size_t)(uint32_t)n));
 	return n;
@@ -222,16 +222,16 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			//
 			// %i & %d for signed integer (Int)
 			//
-			int32_t x = va_arg(va, int32_t);
-			int32_t n = console_sprint_dec_int32(sptr, x);
+			const int32_t x = va_arg(va, int32_t);
+			const int32_t n = console_sprint_dec_int32(sptr, x);
 			j = j + n;
 
 		} else if (c == 'n') {
 			//
 			// %n for unsigned integer (Nat)
 			//
-			uint32_t x = va_arg(va, uint32_t);
-			int32_t n = console_sprint_dec_n32(sptr, x);
+			const uint32_t x = va_arg(va, uint32_t);
+			const int32_t n = console_sprint_dec_n32(sptr, x);
 			j = j + n;
 
 		} else if (c == 'x' || c == 'p') {
@@ -239,8 +239,8 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			// %x for unsigned integer (Nat)
 			// %p for pointers
 			//
-			uint32_t x = va_arg(va, uint32_t);
-			int32_t n = console_sprint_hex_nat32(sptr, x);
+			const uint32_t x = va_arg(va, uint32_t);
+			const int32_t n = console_sprint_hex_nat32(sptr, x);
 			j = j + n;
 
 		} else if (c == 's') {
@@ -255,8 +255,8 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			//
 			// %c for char
 			//
-			uint32_t c = va_arg(va, uint32_t);
-			int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)sptr);
+			const uint32_t c = va_arg(va, uint32_t);
+			const int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)sptr);
 			j = j + n;
 		}
 	}
@@ -289,7 +289,7 @@ static int32_t console_sprint_hex_nat32(char *buf, uint32_t x)
 	int32_t i = 0;
 
 	while (true) {
-		uint32_t n = d % 16;
+		const uint32_t n = d % 16;
 		d = d / 16;
 
 		tmpbuf[i] = console_n_to_hex_sym((uint8_t)n);
@@ -319,7 +319,7 @@ static int32_t console_sprint_dec_int32(char *buf, int32_t x)
 	char tmpbuf[11];
 	memset(&tmpbuf, 0, sizeof tmpbuf);
 	int32_t d = x;
-	bool neg = d < 0;
+	const bool neg = d < 0;
 
 	if (neg) {
 		d = -d;
@@ -327,7 +327,7 @@ static int32_t console_sprint_dec_int32(char *buf, int32_t x)
 
 	int32_t i = 0;
 	while (true) {
-		int32_t n = d % 10;
+		const int32_t n = d % 10;
 		d = d / 10;
 		tmpbuf[i] = console_n_to_dec_sym((uint8_t)n);
 		i = i + 1;
@@ -364,7 +364,7 @@ static int32_t console_sprint_dec_n32(char *buf, uint32_t x)
 	int32_t i = 0;
 
 	while (true) {
-		uint32_t n = d % 10;
+		const uint32_t n = d % 10;
 		d = d / 10;
 		tmpbuf[i] = console_n_to_dec_sym((uint8_t)n);
 		i = i + 1;

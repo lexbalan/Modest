@@ -17,35 +17,35 @@ int main()
 {
 	printf("generic types test\n");
 
-	bool t1 = main_test_generic_integer();
+	const bool t1 = main_test_generic_integer();
 	if (t1) {
 		printf("test_generic_integer passed\n");
 	} else {
 		printf("test_generic_integer failed\n");
 	}
 
-	bool t2 = main_test_generic_float();
+	const bool t2 = main_test_generic_float();
 	if (t2) {
 		printf("test_generic_float passed\n");
 	} else {
 		printf("test_generic_float failed\n");
 	}
 
-	bool t3 = main_test_generic_char();
+	const bool t3 = main_test_generic_char();
 	if (t3) {
 		printf("test_generic_char passed\n");
 	} else {
 		printf("test_generic_char failed\n");
 	}
 
-	bool t4 = main_test_generic_array();
+	const bool t4 = main_test_generic_array();
 	if (t4) {
 		printf("test_generic_array passed\n");
 	} else {
 		printf("test_generic_array failed\n");
 	}
 
-	bool t5 = main_test_generic_record();
+	const bool t5 = main_test_generic_record();
 	if (t5) {
 		printf("test_generic_record passed\n");
 	} else {
