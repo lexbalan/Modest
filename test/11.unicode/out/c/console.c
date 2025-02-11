@@ -216,7 +216,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 
 		i = i + 2;
 
-		char *sptr = &buf[j];
+		char *const sptr = &buf[j];
 
 		if (c == 'i' || c == 'd') {
 			//
@@ -247,7 +247,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			//
 			// %s pointer to string
 			//
-			char *s = va_arg(va, char *);
+			char *const s = va_arg(va, char *);
 			strcpy(sptr, s);
 			j = j + (int32_t)strlen(s);
 

@@ -148,8 +148,8 @@ int main()
 	}
 
 	// comparison between two record (by pointer)
-	main_Point2D *pr2 = &p2d2;
-	struct __anonymous_struct_5 *pr3 = &p2d3;
+	main_Point2D *const pr2 = &p2d2;
+	struct __anonymous_struct_5 *const pr3 = &p2d3;
 
 	if (memcmp(&*pr2, &*pr3, sizeof(main_Point2D)) == 0) {
 		printf("*pr2 == *pr3\n");
@@ -186,7 +186,7 @@ int main()
 	int32_t ax = 10;
 	int32_t bx = 20;
 
-	struct {int32_t x; int32_t y;
+	const struct {int32_t x; int32_t y;
 	} __px = {.x = ax, .y = bx	};
 
 	ax = 111;

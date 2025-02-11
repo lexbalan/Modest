@@ -68,7 +68,7 @@ static float main_lineLength(main_Line line)
 
 static void main_ptr_example()
 {
-	main_Point *ptr_p = (main_Point *)malloc(sizeof(main_Point));
+	main_Point *const ptr_p = (main_Point *)malloc(sizeof(main_Point));
 
 	// access by pointer
 	ptr_p->x = (float)(10);

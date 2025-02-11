@@ -75,7 +75,7 @@ static inline uint32_t sha256_sig1(uint32_t x)
 	0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, \
 	0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 \
 }
-uint32_t sha256_initalState[8] = _sha256_initalState;
+const uint32_t sha256_initalState[8] = _sha256_initalState;
 
 
 static void sha256_contextInit(sha256_Context *ctx)
@@ -102,7 +102,7 @@ static void sha256_contextInit(sha256_Context *ctx)
 	0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, \
 	0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2 \
 }
-uint32_t sha256_k[64] = _sha256_k;
+const uint32_t sha256_k[64] = _sha256_k;
 
 
 static void sha256_transform(sha256_Context *ctx, uint8_t *data)

@@ -34,11 +34,11 @@ int main()
 	getcwd((char *)&cwd, LENGTHOF(cwd));
 	printf("cwd = %s\n", &cwd);
 
-	char *tty = ttyname(0);
+	char *const tty = ttyname(0);
 	printf("ttyname = %s\n", tty);
 
 
-	char *s = getenv("PATH");
+	char *const s = getenv("PATH");
 	printf("PATH = %s\n", s);
 
 	while (true) {

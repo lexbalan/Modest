@@ -51,7 +51,7 @@ int main()
 		}
 	};
 
-	struct sockaddr *sockaddr = (struct sockaddr *)&server_addr;
+	struct sockaddr *const sockaddr = (struct sockaddr *)&server_addr;
 	int e = connect(sockfd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Connecting");
@@ -60,7 +60,7 @@ int main()
 
 	printf("[+] Connected to server\n");
 
-	FILE *fp = fopen(client_filename, "r");
+	FILE *const fp = fopen(client_filename, "r");
 	if (fp == NULL) {
 		perror("[-] Error in reading file");
 		exit(1);

@@ -25,7 +25,7 @@ static void main_write_example()
 {
 	printf("run write_example\n");
 
-	FILE *fp = fopen(main_filename, "wb");
+	FILE *const fp = fopen(main_filename, "wb");
 
 	if (fp == NULL) {
 		printf("error: cannot create file '%s'", main_filename);
@@ -50,7 +50,7 @@ static void main_read_example()
 {
 	printf("run read_example\n");
 
-	FILE *fp = fopen(main_filename, "rb");
+	FILE *const fp = fopen(main_filename, "rb");
 
 	if (fp == NULL) {
 		printf("error: cannot open file '%s'", main_filename);

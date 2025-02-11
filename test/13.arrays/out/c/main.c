@@ -15,7 +15,7 @@
 
 
 #define _main_constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-uint8_t main_constantArray[10] = _main_constantArray;
+const uint8_t main_constantArray[10] = _main_constantArray;
 
 static int32_t main_globalArray[10] = _main_constantArray;
 
@@ -56,9 +56,9 @@ static void main_f0(char *_x, char *sret_)
 
 
 #define _main_startSequence  {0xAA, 0x55, 0x02}
-uint8_t main_startSequence[3] = _main_startSequence;
+const uint8_t main_startSequence[3] = _main_startSequence;
 #define _main_stopSequence  {0x16}
-uint8_t main_stopSequence[1] = _main_stopSequence;
+const uint8_t main_stopSequence[1] = _main_stopSequence;
 
 
 static void main_test()
@@ -285,8 +285,8 @@ int main()
 
 
 	// check equality between two arrays (by pointer)
-	int32_t *pa = &a;
-	int32_t *pb = &b;
+	int32_t *const pa = &a;
+	int32_t *const pb = &b;
 
 	if (memcmp(&*pa, &*pb, sizeof(int32_t[3])) == 0) {
 		printf("*pa == *pb\n");
@@ -306,7 +306,7 @@ int main()
 	int int200 = 200;
 	int int300 = 300;
 	// immutable, non immediate value (array)
-	int __init_array[3] = {int100, int200, int300	};
+	const int __init_array[3] = {int100, int200, int300	};
 
 	// check local literal array assignation to local array
 	int32_t e[4];
@@ -334,7 +334,7 @@ int main()
 	int32_t cx = 30;
 	int32_t dx = 40;
 
-	int32_t __y[4] = {ax, bx, cx, dx	};
+	const int32_t __y[4] = {ax, bx, cx, dx	};
 
 	ax = 111;
 	bx = 222;

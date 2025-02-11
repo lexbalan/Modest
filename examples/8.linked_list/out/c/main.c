@@ -13,7 +13,7 @@
 static void main_nat32_list_insert(list_List *lst, uint32_t x)
 {
 	// alloc memory for Nat32 value
-	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
+	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
 	list_append(lst, p_nat32);
 }
@@ -25,7 +25,7 @@ static void main_list_print_forward(list_List *lst)
 	printf("list_print_forward:\n");
 	list_Node *pn = list_first_node_get(lst);
 	while (pn != NULL) {
-		uint32_t *x = (uint32_t *)list_node_data_get(pn);
+		uint32_t *const x = (uint32_t *)list_node_data_get(pn);
 		printf("v = %u\n", *x);
 		pn = list_node_next_get(pn);
 	}
@@ -38,7 +38,7 @@ static void main_list_print_backward(list_List *lst)
 	printf("list_print_backward:\n");
 	list_Node *pn = list_last_node_get(lst);
 	while (pn != NULL) {
-		uint32_t *x = (uint32_t *)list_node_data_get(pn);
+		uint32_t *const x = (uint32_t *)list_node_data_get(pn);
 		printf("v = %u\n", *x);
 		pn = list_node_prev_get(pn);
 	}
@@ -49,7 +49,7 @@ int main()
 {
 	printf("linked list example\n");
 
-	list_List *list0 = list_create();
+	list_List *const list0 = list_create();
 
 	//list0.size  // access to private field of record
 
@@ -87,7 +87,7 @@ int main()
 	// test list.node_get
 	int32_t i = 0;
 	while (i >= -12) {
-		list_Node *node = list_node_get(list0, i);
+		list_Node *const node = list_node_get(list0, i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
@@ -95,7 +95,7 @@ int main()
 			continue;
 		}
 
-		uint32_t *px = (uint32_t *)list_node_data_get(node);
+		uint32_t *const px = (uint32_t *)list_node_data_get(node);
 		printf("list(%i) = %i\n", i, *px);
 		i = i - 1;
 	}
@@ -104,7 +104,7 @@ int main()
 
 	i = 0;
 	while (i <= 12) {
-		list_Node *node = list_node_get(list0, i);
+		list_Node *const node = list_node_get(list0, i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
@@ -112,7 +112,7 @@ int main()
 			continue;
 		}
 
-		uint32_t *px = (uint32_t *)list_node_data_get(node);
+		uint32_t *const px = (uint32_t *)list_node_data_get(node);
 		printf("list(%i) = %i\n", i, *px);
 		i = i + 1;
 	}
@@ -120,7 +120,7 @@ int main()
 	printf("-----------------------------------------\n");
 
 
-	uint32_t *p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
+	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = 1234;
 	list_insert(list0, 4, p_nat32);
 

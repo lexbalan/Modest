@@ -76,6 +76,8 @@ public func main() -> Int32 {
 		stdio.printf("cannot create object\n")
 	}
 
+	*tab = table00
+
 	table.print(&table00)
 	stdio.printf("\n")
 

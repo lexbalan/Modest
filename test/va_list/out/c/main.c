@@ -40,7 +40,7 @@ int main()
 	main_my_printf("My Printf Test %d\n", k);
 
 	char c = '$';
-	char *s = "Hi!";
+	char *const s = "Hi!";
 	int32_t i = (int32_t)-1;
 	uint32_t n = 123;
 	uint32_t x = 0x1234567F;

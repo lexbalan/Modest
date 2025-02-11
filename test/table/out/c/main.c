@@ -78,11 +78,13 @@ static table_Table main_table10 = {
 
 int32_t main()
 {
-	table_Table *tab = (table_Table *)calloc(1, sizeof(table_Table));
+	table_Table *const tab = (table_Table *)calloc(1, sizeof(table_Table));
 
 	if (tab == NULL) {
 		printf("cannot create object\n");
 	}
+
+	*tab = main_table00;
 
 	table_print((table_Table *)&main_table00);
 	printf("\n");

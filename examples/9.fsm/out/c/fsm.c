@@ -47,7 +47,7 @@ void fsm_run(fsm_FSM *fsm)
 
 	if (fsm->substate == fsm_substateEntering) {
 		uint32_t nexstate = fsm->nexstate;
-		fsm_StateDesc *state = &fsm->states[nexstate];
+		fsm_StateDesc *const state = &fsm->states[nexstate];
 
 		if (fsm_verbose) {
 			printf("enter %s\n", &state->name);
@@ -61,14 +61,14 @@ void fsm_run(fsm_FSM *fsm)
 		fsm->substate = fsm_substateLoop;
 
 	} else if (fsm->substate == fsm_substateLoop) {
-		fsm_StateDesc *state = &fsm->states[fsm->state];
+		fsm_StateDesc *const state = &fsm->states[fsm->state];
 
 		if (state->loop != NULL) {
 			state->loop(fsm);
 		}
 
 	} else if (fsm->substate == fsm_substateLeaving) {
-		fsm_StateDesc *state = &fsm->states[fsm->state];
+		fsm_StateDesc *const state = &fsm->states[fsm->state];
 
 		if (fsm_verbose) {
 			printf("exit %s\n", &state->name);

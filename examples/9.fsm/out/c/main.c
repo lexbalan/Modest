@@ -93,7 +93,7 @@ static void main_on_exit(fsm_FSM *x)
 
 static void main_beacon_entry(fsm_FSM *x)
 {
-	char *from_name = fsm_state_no_name(x, x->state);
+	char *const from_name = fsm_state_no_name(x, x->state);
 	printf("beacon_entry from %s\n", from_name);
 }
 
@@ -112,7 +112,7 @@ static void main_beacon_loop(fsm_FSM *x)
 
 static void main_beacon_exit(fsm_FSM *x)
 {
-	char *to_name = fsm_state_no_name(x, x->nexstate);
+	char *const to_name = fsm_state_no_name(x, x->nexstate);
 	printf("beacon_exit to %s\n", to_name);
 }
 

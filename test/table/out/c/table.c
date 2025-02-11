@@ -24,7 +24,7 @@ void table_print(table_Table *table)
 	uint32_t j;
 
 	// construct pointer to closed VLA array
-	char *(*data)[table->nRows][table->nCols] = (char *(*)[table->nRows][table->nCols])table->data;
+	char *(*const data)[table->nRows][table->nCols] = (char *(*)[table->nRows][table->nCols])table->data;
 
 	// array of size of columns (in characters)
 	uint32_t sz[table->nCols];
@@ -95,12 +95,12 @@ void table_print(table_Table *table)
 
 static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols)
 {
-	char *(*row)[nCols] = (char *(*)[nCols])raw_row;
+	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
 
 	uint32_t j = 0;
 	while (j < nCols) {
 		printf("|");
-		char *s = (*row)[j];
+		char *const s = (*row)[j];
 		uint32_t len = (uint32_t)strlen(s);
 		if (s[0] != '\x0') {
 			len = len + 1;

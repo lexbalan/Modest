@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 #define _main_arr  {1, 2}
-int32_t main_arr[2] = _main_arr;
+const int32_t main_arr[2] = _main_arr;
 
 static int32_t main_arr0[2] = _main_arr;
 static int32_t main_arr1[2] = _main_arr;

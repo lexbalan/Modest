@@ -21,7 +21,7 @@ static bool server_write_file(int sockfd)
 	char buffer[server_bufSize];
 	memset(&buffer, 0, sizeof buffer);
 
-	FILE *fp = fopen(server_filename, "w");
+	FILE *const fp = fopen(server_filename, "w");
 	if (fp == NULL) {
 		perror("[-] Error in creating file");
 		return false;
@@ -60,7 +60,7 @@ int main()
 		}
 	};
 
-	struct sockaddr *sockaddr = (struct sockaddr *)&server_addr;
+	struct sockaddr *const sockaddr = (struct sockaddr *)&server_addr;
 	int e = bind(sockfd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Binding");
@@ -79,7 +79,7 @@ int main()
 
 	socklen_t addr_size = (socklen_t)sizeof(struct sockaddr_in);
 	struct sockaddr_in new_addr;
-	struct sockaddr *sa = (struct sockaddr *)&new_addr;
+	struct sockaddr *const sa = (struct sockaddr *)&new_addr;
 	int new_sock = accept(sockfd, sa, &addr_size);
 
 	bool suc = server_write_file(new_sock);

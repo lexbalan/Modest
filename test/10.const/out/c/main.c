@@ -11,7 +11,7 @@
 
 
 #define _main_carr  {0, 10, 15, 20, 25, 30}
-uint8_t main_carr[6] = _main_carr;
+const uint8_t main_carr[6] = _main_carr;
 
 
 struct main_Point {
@@ -51,7 +51,7 @@ typedef struct main_Line main_Line;
 }
 
 #define _main_lines  {main_line0, main_line1, main_line2, main_line3}
-main_Line main_lines[4] = _main_lines;
+const main_Line main_lines[4] = _main_lines;
 
 
 struct main_WrappedArray {

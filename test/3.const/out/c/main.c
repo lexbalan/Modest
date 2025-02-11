@@ -27,11 +27,11 @@ typedef struct main_Point main_Point;
 	{.x = 1, .y = 1	}, \
 	{.x = 2, .y = 2	} \
 }
-struct {uint8_t x; uint8_t y;
+const struct {uint8_t x; uint8_t y;
 } main_ps[3] = _main_ps;
 
 #define _main_points  _main_ps
-main_Point main_points[3] = _main_points;
+const main_Point main_points[3] = _main_points;
 
 
 // есть проблема - в C глобальные переменные с модификатором const

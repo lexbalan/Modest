@@ -364,16 +364,21 @@ then_0:
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str33 to [0 x i8]*))
 	br label %endif_0
 endif_0:
+; -- cons_composite_from_composite_by_adr --
+	%4 = bitcast %table_Table* @main_table00 to %table_Table*
+	%5 = load %table_Table, %table_Table* %4
+; -- end cons_composite_from_composite_by_adr --
+	store %table_Table %5, %table_Table* %1
 	call void @table_print(%table_Table* bitcast (%table_Table* @main_table00 to %table_Table*))
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str34 to [0 x i8]*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str34 to [0 x i8]*))
 	call void @table_print(%table_Table* bitcast (%table_Table* @main_table01 to %table_Table*))
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str35 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str35 to [0 x i8]*))
 	call void @table_print(%table_Table* bitcast (%table_Table* @main_table02 to %table_Table*))
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str36 to [0 x i8]*))
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str36 to [0 x i8]*))
 	call void @table_print(%table_Table* bitcast (%table_Table* @main_table03 to %table_Table*))
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str37 to [0 x i8]*))
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str37 to [0 x i8]*))
 	call void @table_print(%table_Table* bitcast (%table_Table* @main_table10 to %table_Table*))
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str38 to [0 x i8]*))
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str38 to [0 x i8]*))
 	ret %Int32 0
 }
 

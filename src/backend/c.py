@@ -407,10 +407,16 @@ def is_sim_sim(t):
 
 
 # label - used for variable/field definition form of type expr (variable id)
-def str_type(t, core='', label=''):
+def str_type(t, core='', label='', as_const=''):
 	aka = type_get_aka(t)
 	if aka != None:
 		return aka + core + prespace(label)
+
+	if as_const:
+		if t.is_pointer():
+			label = 'const ' + label
+		else:
+			out("const ")
 
 	if t.is_func():
 		return str_type_func(t, label, core)
@@ -424,8 +430,8 @@ def str_type(t, core='', label=''):
 
 
 
-def print_type(t, label=''):
-	out(str_type(t, core='', label=label))
+def print_type(t, label='', as_const=''):
+	out(str_type(t, core='', label=label, as_const=as_const))
 
 
 def print_type_record(t, tag):
@@ -651,6 +657,7 @@ def str_value_slice(x, ctx):
 def str_value_new(x, ctx):
 	t_str = str_type(x.value.type)
 	return '(%s *)calloc(1, sizeof(%s))' % (t_str, t_str)
+
 
 
 def str_value_index(x, ctx):
@@ -1858,7 +1865,7 @@ def print_def_type(x):
 # Указатель, массив и функция образуют пиздецовый заговор
 def print_variable(id_str, t, as_const=False, init_value=None, prefix=''):
 	assert (t != None)
-	print_type(t, label=(prefix + id_str))
+	print_type(t, label=(prefix + id_str), as_const=as_const)
 	if init_value != None:
 		out(" = ")
 		print_value(init_value)
