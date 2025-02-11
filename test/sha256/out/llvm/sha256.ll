@@ -257,10 +257,7 @@ define internal void @sha256_contextInit(%sha256_Context* %ctx) {
 	%7 = insertvalue [8 x %Word32] %6, %Word32 2600822924, 5
 	%8 = insertvalue [8 x %Word32] %7, %Word32 528734635, 6
 	%9 = insertvalue [8 x %Word32] %8, %Word32 1541459225, 7
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%10 = zext i8 8 to %Int32
-	; -- end vol eval --
 	store [8 x %Word32] %9, [8 x %Word32]* %1
 	ret void
 }
@@ -333,11 +330,7 @@ define internal void @sha256_contextInit(%sha256_Context* %ctx) {
 ]
 define internal void @sha256_transform(%sha256_Context* %ctx, [0 x %Word8]* %data) {
 	%1 = alloca [64 x %Word32], align 1
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%2 = zext i8 64 to %Int32
-	; -- end vol eval --
-	; -- zero fill rest of array
 	%3 = mul %Int32 %2, 4
 	%4 = bitcast [64 x %Word32]* %1 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %4, i8 0, %Int32 %3, i1 0)
@@ -446,10 +439,7 @@ break_2:
 	%88 = alloca [8 x %Word32], align 1
 	%89 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
 	%90 = load [8 x %Word32], [8 x %Word32]* %89
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%91 = zext i8 8 to %Int32
-	; -- end vol eval --
 	store [8 x %Word32] %90, [8 x %Word32]* %88
 	store %Int32 0, %Int32* %5
 	br label %again_3

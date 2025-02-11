@@ -248,10 +248,7 @@ define %Int @main() {
 
 	; copy arrays by value
 	%5 = load [10 x %Int32], [10 x %Int32]* @main_glb_a1
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%6 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %5, [10 x %Int32]* @main_glb_a0
 	%7 = getelementptr [10 x %Int32], [10 x %Int32]* @main_glb_a0, %Int32 0, %Int32 0
 	%8 = load %Int32, %Int32* %7
@@ -291,11 +288,7 @@ define %Int @main() {
 	; copy arrays by value
 	; C backend will be use memcpy()
 	%28 = alloca [10 x %Int32], align 1
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%29 = zext i8 10 to %Int32
-	; -- end vol eval --
-	; -- zero fill rest of array
 	%30 = mul %Int32 %29, 4
 	%31 = bitcast [10 x %Int32]* %28 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %31, i8 0, %Int32 %30, i1 0)
@@ -303,16 +296,10 @@ define %Int @main() {
 	%33 = insertvalue [10 x %Int32] zeroinitializer, %Int32 42, 0
 	%34 = insertvalue [10 x %Int32] %33, %Int32 53, 1
 	%35 = insertvalue [10 x %Int32] %34, %Int32 64, 2
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%36 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %35, [10 x %Int32]* %32
 	%37 = load [10 x %Int32], [10 x %Int32]* %32
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%38 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %37, [10 x %Int32]* %28
 	%39 = getelementptr [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 0
 	%40 = load %Int32, %Int32* %39

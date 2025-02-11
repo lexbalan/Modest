@@ -660,14 +660,14 @@ then_9:
 	; %c for char
 	;
 	%91 = va_arg i8** %1, %Char32
-	%92 = mul i8 4, 1  ; calc VLA item size
-; -- CONS PTR TO ARRAY --
-	%93 = bitcast [0 x %Char8]* %56 to [4 x %Char8]*
-	%94 = call %Int8 @utf_utf32_to_utf8(%Char32 %91, [4 x %Char8]* %93)
-	%95 = sext %Int8 %94 to %Int32
-	%96 = load %Int32, %Int32* %3
-	%97 = add %Int32 %96, %95
-	store %Int32 %97, %Int32* %3
+	%92 = mul i8 4, 1
+	%93 = mul i8 4, 1
+	%94 = bitcast [0 x %Char8]* %56 to [4 x %Char8]*
+	%95 = call %Int8 @utf_utf32_to_utf8(%Char32 %91, [4 x %Char8]* %94)
+	%96 = sext %Int8 %95 to %Int32
+	%97 = load %Int32, %Int32* %3
+	%98 = add %Int32 %97, %96
+	store %Int32 %98, %Int32* %3
 	br label %endif_9
 endif_9:
 	br label %endif_8
@@ -680,8 +680,8 @@ endif_6:
 endif_5:
 	br label %again_1
 break_1:
-	%98 = load %Int32, %Int32* %3
-	ret %Int32 %98
+	%99 = load %Int32, %Int32* %3
+	ret %Int32 %99
 }
 
 define internal %Char8 @console_n_to_dec_sym(%Int8 %n) {

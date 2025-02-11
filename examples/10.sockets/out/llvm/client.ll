@@ -347,11 +347,7 @@ then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%9 = zext i16 1024 to %Int32
-	; -- end vol eval --
-	; -- zero fill rest of array
 	%10 = mul %Int32 %9, 1
 	%11 = bitcast [1024 x %Char8]* %1 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %11, i8 0, %Int32 %10, i1 0)

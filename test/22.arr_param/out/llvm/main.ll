@@ -206,10 +206,7 @@ define internal void @main_getarr10([10 x %Int32]* %0) {
 	%8 = insertvalue [10 x %Int32] %7, %Int32 7, 7
 	%9 = insertvalue [10 x %Int32] %8, %Int32 8, 8
 	%10 = insertvalue [10 x %Int32] %9, %Int32 9, 9
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%11 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %10, [10 x %Int32]* %0
 	ret void
 }
@@ -219,16 +216,10 @@ define internal void @main_getarr10([10 x %Int32]* %0) {
 ; receive & returns array by value
 define internal void @main_arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %Int32] %__b) {
 	%a = alloca [10 x %Int32]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%2 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %__a, [10 x %Int32]* %a
 	%b = alloca [10 x %Int32]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%3 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %__b, [10 x %Int32]* %b
 	%4 = alloca [10 x %Int32], align 1
 	%5 = alloca %Int32, align 4
@@ -255,10 +246,7 @@ body_1:
 	br label %again_1
 break_1:
 	%19 = load [10 x %Int32], [10 x %Int32]* %4
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%20 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %19, [10 x %Int32]* %0
 	ret void
 }
@@ -276,10 +264,7 @@ define %Int32 @main() {; alloca memory for return value
 	%9 = insertvalue [10 x %Int32] %8, %Int32 8, 8
 	%10 = insertvalue [10 x %Int32] %9, %Int32 9, 9
 	%11 = alloca [10 x %Int32]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%12 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %10, [10 x %Int32]* %11
 	%13 = bitcast [10 x %Int32]* %1 to i8*
 	%14 = bitcast [10 x %Int32]* %11 to i8*
@@ -300,10 +285,7 @@ endif_0:
 	%25 = insertvalue [10 x i8] %24, i8 80, 8
 	%26 = insertvalue [10 x i8] %25, i8 90, 9
 	%27 = alloca [10 x i8]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%28 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x i8] %26, [10 x i8]* %27
 	%29 = load [10 x %Int32], [10 x %Int32]* %1
 	%30 = insertvalue [10 x %Int32] zeroinitializer, %Int32 10, 1
@@ -327,10 +309,7 @@ endif_0:
 	%47 = insertvalue [10 x %Int32] %46, %Int32 88, 8
 	%48 = insertvalue [10 x %Int32] %47, %Int32 99, 9
 	%49 = alloca [10 x %Int32]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%50 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %48, [10 x %Int32]* %49
 	%51 = bitcast [10 x %Int32]* %39 to i8*
 	%52 = bitcast [10 x %Int32]* %49 to i8*
@@ -355,10 +334,7 @@ endif_1:
 	%66 = insertvalue [10 x %Int32] %65, %Int32 16, 8
 	%67 = insertvalue [10 x %Int32] %66, %Int32 18, 9
 	%68 = alloca [10 x %Int32]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%69 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %67, [10 x %Int32]* %68
 	%70 = bitcast [10 x %Int32]* %58 to i8*
 	%71 = bitcast [10 x %Int32]* %68 to i8*

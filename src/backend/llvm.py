@@ -590,16 +590,16 @@ def llvm_store_simple(dst, src):
 
 
 def do_assign_arrays(dst, src):
-	out("\n\t; -- ASSIGN ARRAY --")
+	#out("\n\t; -- ASSIGN ARRAY --")
 
-	out("\n\t; -- start vol eval --")
+	#out("\n\t; -- start vol eval --")
 	volume = do_reval(src['type'].volume)
 	volume = trim(volume, 32)
-	out("\n\t; -- end vol eval --")
+	#out("\n\t; -- end vol eval --")
 
 	if 'items' in src:
 		if src['items'] == []:
-			out("\n\t; -- zero fill rest of array")
+			#out("\n\t; -- zero fill rest of array")
 
 			# `size = volume * item_size`
 			item_sz = src['type'].of.size
@@ -1132,7 +1132,6 @@ def index(x):
 
 
 def do_eval_index(x):
-	out("\n; -- INDEX --")
 	if x.isImmediate():
 		return do_eval_literal(x)
 
@@ -1147,7 +1146,6 @@ def getET(et):
 	return et
 
 
-
 # GEP !элемент массива на который указываешь!
 def ass(left, indexes):
 	result_type = left['type']
@@ -1158,30 +1156,27 @@ def ass(left, indexes):
 	if lt.is_pointer():
 		lt = lt.to
 
-	#info("index VLA", lt.ti)
 	if lt.is_vla():
-		out("\n; -- INDEX VLA --")
+		rootType = lt.get_array_root()
+		# получаем полное смещение в единицах - rootType
+		# (GEP будет оперировать с шагом sizeof(rootType))
+		# Полное смещение - смещение сразу для всех индексов (если их несколько)
+		#out("\n\t; -- INDEX VLA --")
 		full_offset = llvm_value_zero(foundation.typeInt32)
 		i = 0
-		while i < len(indexes): #lt.is_array():
-			#if not hasattr(lt, 'itemSizeInRootElements'):
-			#	info("????", lt.ti)
-
+		while i < len(indexes):
 			index = indexes[i]
-			step = lt.of.runtimeSizeInRoots
+			step = lt.of.runtimeSizeRoots
 			offset = llvm_eval_binary('mul', index, step)
 			full_offset = llvm_eval_binary('add', full_offset, offset)
 			lt = lt.of
 			i += 1
 
-		rootType = lt
 		ep = llvm_gep(left, left['type'], [full_offset], result_type, rootType)
-		out("\n; -- END INDEX VLA --")
+		#out("\n\t; -- END INDEX VLA --")
 		return ep
-	# VLA VLA VLA
 
 	# classic access through pointer
-
 	et = getET(left['type'])
 	indexes = (llvm_value_num_zero,) + indexes
 	return llvm_gep(left, left['type'], indexes, result_type, et)
@@ -1442,10 +1437,12 @@ def eval_cons_array(x):
 def handleVLA(t):
 	#info("calculate VLA step", t.ti)
 	# type size (in VLA chain) in root-items
-	runtimeSizeInRoots = None
+	runtimeSizeRoots = None
+	runtimeSizeBytes = None
+	runtimeVolume = None
 
-	if hasattr(t, 'runtimeSizeInRoots'):
-		# already handled type
+	if hasattr(t, 'runtimeSizeRoots'):
+		# already handled type, skip
 		return
 
 	if t.is_array():
@@ -1453,22 +1450,30 @@ def handleVLA(t):
 		# Get VLA size
 		# размер массива = его объем * объем его элемента
 		if t.is_closed_array():
-			out("\n; -- HANDLE VLA --")
+			#out("\n\t; -- HANDLE VLA --")
 			volume = do_reval(t.volume)
-			runtimeSizeInRoots = llvm_eval_binary('mul', volume, t.of.runtimeSizeInRoots)
-			#out("  ; calc VLA item size")
-			out("\n; -- END HANDLE VLA --")
+			runtimeVolume = volume
+			runtimeSizeRoots = llvm_eval_binary('mul', volume, t.of.runtimeSizeRoots)
+			#out("\n\t; -- END HANDLE VLA --")
 		else:
 			# Если это open_array
-			runtimeSizeInRoots = llvm_value_num(foundation.typeInt32, 1)
+			runtimeSizeRoots = llvm_value_num(foundation.typeInt32, 1)
+			runtimeVolume = llvm_value_num(foundation.typeInt32, 1)
+
+		runtimeSizeBytes = llvm_eval_binary('mul', runtimeVolume, t.of.runtimeSizeBytes)
 
 	else:
 		# Если встретили указатель - перешагиваем и идем дальше
 		if t.is_pointer():
 			handleVLA(t.to)
-		runtimeSizeInRoots = llvm_value_num(foundation.typeInt32, 1)
 
-	t.runtimeSizeInRoots = runtimeSizeInRoots
+		runtimeSizeBytes = llvm_value_num(foundation.typeInt32, t.size)
+		runtimeSizeRoots = llvm_value_num(foundation.typeInt32, 1)
+		runtimeVolume = llvm_value_num(foundation.typeInt32, 1)
+
+	t.runtimeSizeRoots = runtimeSizeRoots
+	t.runtimeSizeBytes = runtimeSizeBytes
+	t.runtimeVolume = runtimeVolume
 	return
 
 
@@ -1481,10 +1486,6 @@ def do_eval_cons_pointer_to_array(x):
 	# TODO! Тут неверное условие if
 	if type.to.is_closed_array():
 		handleVLA(type.to)
-
-	# Конструирование указателя на массив массивов
-	# из указателя на массив массивов
-	out("\n; -- CONS PTR TO ARRAY --")
 
 	v = do_reval(value)
 
@@ -1764,10 +1765,11 @@ def _eval_sizeof_type(t):
 	if t.is_vla():
 		handleVLA(t)
 
+		return t.runtimeSizeBytes
 		# size = VLA_volume * sizeof(VLA_rootType)
 		rs = t.get_array_root().size
 		rootSize = llvm_value_num(foundation.typeInt32, rs)
-		size = llvm_eval_binary('mul', t.runtimeSizeInRoots, rootSize)
+		size = llvm_eval_binary('mul', t.runtimeSizeRoots, rootSize)
 		return size
 
 	return llvm_value_num(foundation.typeInt32, t.size)
@@ -1833,7 +1835,7 @@ def do_eval_lengthof(x):
 	t = x.value.type
 	if t.is_vla():
 		handleVLA(t)
-		return t.runtimeSizeInRoots
+		return t.runtimeVolume
 
 	return llvm_value_num(foundation.typeInt32, t.length)
 
@@ -1950,7 +1952,7 @@ def print_stmt_var(x):
 	# Calculate size of VLA value in runtime (!)
 	if t.contains_vla():
 		handleVLA(t)
-		sz = t.runtimeSizeInRoots
+		sz = t.runtimeSizeRoots
 	if t.is_vla():
 		t = t.get_array_root()
 	# VLA VLA VLA
@@ -1988,7 +1990,7 @@ def print_stmt_const(x):
 	# Calculate size of VLA value in runtime (!)
 	if t.contains_vla():
 		handleVLA(t)
-		sz = t.runtimeSizeInRoots
+		sz = t.runtimeSizeRoots
 	if t.is_vla():
 		t = t.get_array_root()
 	# VLA VLA VLA

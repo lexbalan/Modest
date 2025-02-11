@@ -23,15 +23,6 @@ public func print(table: *Table) {
 
 	// construct pointer to closed VLA array
 	let data = *[table.nRows][table.nCols]*Str8 table.data
-	// BEGIN
-	printf("lengthof(data[0]) = %d\n", lengthof(data[0]))
-	// +++++++++++++
-	var y0 = &data[0]
-	printf("y0[0] = %d\n", y0[0])
-	// @@@@@@@@@@@@@
-	var y1 = &data[1]
-	printf("y1[0] = %d\n", y1[0])
-//	// #############
 
 	// array of size of columns (in characters)
 	var sz: [table.nCols]Nat32 = []
@@ -86,10 +77,7 @@ public func print(table: *Table) {
 
 	i = 0
 	while i < table.nRows {
-		// ????????
-		var y = &data[i]
-		// --------
-		printRow(y, &sz, table.nCols)
+		printRow(&data[i], &sz, table.nCols)
 		++i
 
 		if table.separate and i < table.nRows {
@@ -103,7 +91,6 @@ public func print(table: *Table) {
 
 
 func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) {
-	//printf("? = %x\n", unsafe Word64 raw_row)
 	let row = unsafe *[nCols]*Str8 raw_row
 
 	var j = Nat32 0

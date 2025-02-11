@@ -80,7 +80,6 @@ void table_print(table_Table *table)
 
 	i = 0;
 	while (i < table->nRows) {
-		// ????????
 		table_printRow(&(*data)[i], (uint32_t *)&sz, table->nCols);
 		i = i + 1;
 
@@ -96,7 +95,6 @@ void table_print(table_Table *table)
 
 static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols)
 {
-	printf("? = %x\n", (uint64_t)raw_row);
 	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
 
 	uint32_t j = 0;

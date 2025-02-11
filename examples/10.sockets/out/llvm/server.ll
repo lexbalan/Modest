@@ -269,11 +269,7 @@ then_1:
 	br label %endif_1
 endif_1:
 	%9 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x %Char8]* %1)
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%10 = zext i16 1024 to %Int32
-	; -- end vol eval --
-	; -- zero fill rest of array
 	%11 = mul %Int32 %10, 1
 	%12 = bitcast [1024 x %Char8]* %1 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, %Int32 %11, i1 0)

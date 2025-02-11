@@ -212,10 +212,7 @@ declare void @perror(%ConstCharStr* %str)
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
 	%2 = load [10 x %Int32], [10 x %Int32]* @main_globalArray0
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%3 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %2, [10 x %Int32]* @main_globalArray1
 	%4 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %4
@@ -260,25 +257,15 @@ endif_0:
 	%27 = insertvalue [10 x %Int32] %26, %Int32 7, 7
 	%28 = insertvalue [10 x %Int32] %27, %Int32 8, 8
 	%29 = insertvalue [10 x %Int32] %28, %Int32 9, 9
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%30 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %29, [10 x %Int32]* %20
 	%31 = alloca [10 x %Int32], align 1
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%32 = zext i8 10 to %Int32
-	; -- end vol eval --
-	; -- zero fill rest of array
 	%33 = mul %Int32 %32, 4
 	%34 = bitcast [10 x %Int32]* %31 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %34, i8 0, %Int32 %33, i1 0)
 	%35 = load [10 x %Int32], [10 x %Int32]* %20
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%36 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %35, [10 x %Int32]* %31
 	store %Int32 0, %Int32* %4
 	br label %again_2

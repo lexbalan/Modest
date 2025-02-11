@@ -353,17 +353,11 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ;var arrayOfChars = [Char8 "a", 'b', 'c']
 define internal void @main_f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%x = alloca [20 x %Char8]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%2 = zext i8 20 to %Int32
-	; -- end vol eval --
 	store [20 x %Char8] %__x, [20 x %Char8]* %x
 	%3 = alloca [20 x %Char8], align 1
 	%4 = load [20 x %Char8], [20 x %Char8]* %x
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%5 = zext i8 20 to %Int32
-	; -- end vol eval --
 	store [20 x %Char8] %4, [20 x %Char8]* %3
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), [20 x %Char8]* %3)
 
@@ -373,10 +367,7 @@ define internal void @main_f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%8 = bitcast [20 x %Char8]* %x to [6 x %Char8]*
 	%9 = load [6 x %Char8], [6 x %Char8]* %8
 ; -- end cons_composite_from_composite_by_adr --
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%10 = zext i8 6 to %Int32
-	; -- end vol eval --
 	store [6 x %Char8] %9, [6 x %Char8]* %7
 	%11 = getelementptr [6 x %Char8], [6 x %Char8]* %7, %Int32 0, %Int32 5
 	store %Char8 0, %Char8* %11
@@ -388,10 +379,7 @@ define internal void @main_f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%14 = bitcast [20 x %Char8]* %x to [30 x %Char8]*
 	%15 = load [30 x %Char8], [30 x %Char8]* %14
 ; -- end cons_composite_from_composite_by_adr --
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%16 = zext i8 30 to %Int32
-	; -- end vol eval --
 	store [30 x %Char8] %15, [30 x %Char8]* %13
 	%17 = getelementptr [30 x %Char8], [30 x %Char8]* %13, %Int32 0, %Int32 6
 	store %Char8 77, %Char8* %17
@@ -410,10 +398,7 @@ define internal void @main_f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%24 = getelementptr [30 x %Char8], [30 x %Char8]* %13, %Int32 0, %Int32 13
 	store %Char8 0, %Char8* %24
 	%25 = load [30 x %Char8], [30 x %Char8]* %13
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%26 = zext i8 30 to %Int32
-	; -- end vol eval --
 	store [30 x %Char8] %25, [30 x %Char8]* %0
 	ret void
 }
@@ -433,10 +418,7 @@ define internal void @main_test() {
 	%3 = insertvalue [6 x %Int32] %2, %Int32 85, 1
 	%4 = insertvalue [6 x %Int32] %3, %Int32 2, 2
 	%5 = insertvalue [6 x %Int32] %4, %Int32 22, 5
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%6 = zext i8 6 to %Int32
-	; -- end vol eval --
 	store [6 x %Int32] %5, [6 x %Int32]* %1
 	%7 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %7
@@ -908,10 +890,7 @@ define %Int @main() {
 	%14 = alloca [30 x %Char8]
 	call void @main_f0([30 x %Char8]* %14, [20 x %Char8] %13)
 	%15 = load [30 x %Char8], [30 x %Char8]* %14
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%16 = zext i8 30 to %Int32
-	; -- end vol eval --
 	store [30 x %Char8] %15, [30 x %Char8]* %1
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str9 to [0 x i8]*), [30 x %Char8]* %1)
 	%18 = alloca %Int32, align 4
@@ -937,10 +916,7 @@ break_1:
 	%30 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
 	%31 = insertvalue [3 x %Int32] %30, %Int32 5, 1
 	%32 = insertvalue [3 x %Int32] %31, %Int32 6, 2
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%33 = zext i8 3 to %Int32
-	; -- end vol eval --
 	store [3 x %Int32] %32, [3 x %Int32]* %29
 	store %Int32 0, %Int32* %18
 	br label %again_2
@@ -1009,10 +985,7 @@ break_4:
 	%69 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
 	%70 = insertvalue [3 x %Int32] %69, %Int32 2, 1
 	%71 = insertvalue [3 x %Int32] %70, %Int32 3, 2
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%72 = zext i8 3 to %Int32
-	; -- end vol eval --
 	store [3 x %Int32] %71, [3 x %Int32]* %68
 	%73 = getelementptr [3 x %Int32], [3 x %Int32]* %68, %Int32 0, %Int32 0
 	%74 = load %Int32, %Int32* %73
@@ -1029,10 +1002,7 @@ break_4:
 	; this variable are copy of array a
 	%82 = alloca [3 x %Int32], align 1
 	%83 = load [3 x %Int32], [3 x %Int32]* %68
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%84 = zext i8 3 to %Int32
-	; -- end vol eval --
 	store [3 x %Int32] %83, [3 x %Int32]* %82
 	%85 = getelementptr [3 x %Int32], [3 x %Int32]* %82, %Int32 0, %Int32 0
 	%86 = load %Int32, %Int32* %85
@@ -1064,20 +1034,14 @@ endif_0:
 	%101 = insertvalue [3 x %Int32] zeroinitializer, %Int32 10, 0
 	%102 = insertvalue [3 x %Int32] %101, %Int32 20, 1
 	%103 = insertvalue [3 x %Int32] %102, %Int32 30, 2
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%104 = zext i8 3 to %Int32
-	; -- end vol eval --
 	store [3 x %Int32] %103, [3 x %Int32]* %100
 	%105 = alloca [6 x %Int32], align 1
 ; -- cons_composite_from_composite_by_adr --
 	%106 = bitcast [3 x %Int32]* %100 to [6 x %Int32]*
 	%107 = load [6 x %Int32], [6 x %Int32]* %106
 ; -- end cons_composite_from_composite_by_adr --
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%108 = zext i8 6 to %Int32
-	; -- end vol eval --
 	store [6 x %Int32] %107, [6 x %Int32]* %105
 	%109 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 0
 	%110 = load %Int32, %Int32* %109
@@ -1138,10 +1102,7 @@ endif_1:
 	%143 = load %Int, %Int* %135
 	%144 = insertvalue [3 x %Int] %142, %Int %143, 2
 	%145 = alloca [3 x %Int]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%146 = zext i8 3 to %Int32
-	; -- end vol eval --
 	store [3 x %Int] %144, [3 x %Int]* %145
 
 	; check local literal array assignation to local array
@@ -1150,10 +1111,7 @@ endif_1:
 	%148 = bitcast [3 x %Int]* %145 to [4 x %Int32]*
 	%149 = load [4 x %Int32], [4 x %Int32]* %148
 ; -- end cons_composite_from_composite_by_adr --
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%150 = zext i8 4 to %Int32
-	; -- end vol eval --
 	store [4 x %Int32] %149, [4 x %Int32]* %147
 	%151 = getelementptr [4 x %Int32], [4 x %Int32]* %147, %Int32 0, %Int32 0
 	%152 = load %Int32, %Int32* %151
@@ -1170,10 +1128,7 @@ endif_1:
 	%160 = bitcast [3 x %Int]* %145 to [10 x %Int32]*
 	%161 = load [10 x %Int32], [10 x %Int32]* %160
 ; -- end cons_composite_from_composite_by_adr --
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%162 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %161, [10 x %Int32]* @main_globalArray
 	%163 = getelementptr [10 x %Int32], [10 x %Int32]* @main_globalArray, %Int32 0, %Int32 0
 	%164 = load %Int32, %Int32* %163
@@ -1184,11 +1139,7 @@ endif_1:
 	%169 = getelementptr [10 x %Int32], [10 x %Int32]* @main_globalArray, %Int32 0, %Int32 2
 	%170 = load %Int32, %Int32* %169
 	%171 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str38 to [0 x i8]*), %Int32 2, %Int32 %170)
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%172 = zext i8 10 to %Int32
-	; -- end vol eval --
-	; -- zero fill rest of array
 	%173 = mul %Int32 %172, 4
 	%174 = bitcast [10 x %Int32]* @main_globalArray to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %174, i8 0, %Int32 %173, i1 0)
@@ -1213,10 +1164,7 @@ endif_1:
 	%186 = insertvalue [4 x %Int32] %184, %Int32 %185, 2
 	%187 = insertvalue [4 x %Int32] %186, %Int32 40, 3
 	%188 = alloca [4 x %Int32]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%189 = zext i8 4 to %Int32
-	; -- end vol eval --
 	store [4 x %Int32] %187, [4 x %Int32]* %188
 	store %Int32 111, %Int32* %175
 	store %Int32 222, %Int32* %176
@@ -1238,10 +1186,7 @@ endif_1:
 	%204 = insertvalue [4 x %Int32] %203, %Int32 30, 2
 	%205 = insertvalue [4 x %Int32] %204, %Int32 40, 3
 	%206 = alloca [4 x %Int32]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%207 = zext i8 4 to %Int32
-	; -- end vol eval --
 	store [4 x %Int32] %205, [4 x %Int32]* %206
 	%208 = bitcast [4 x %Int32]* %188 to i8*
 	%209 = bitcast [4 x %Int32]* %206 to i8*
@@ -1261,10 +1206,7 @@ endif_2:
 	%217 = insertvalue [5 x %Char8] %216, %Char8 105, 3
 	%218 = insertvalue [5 x %Char8] %217, %Char8 33, 4
 	%219 = alloca [5 x %Char8]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%220 = zext i8 5 to %Int32
-	; -- end vol eval --
 	store [5 x %Char8] %218, [5 x %Char8]* %219
 	%221 = zext i8 2 to %Int32
 	%222 = getelementptr [5 x %Char8], [5 x %Char8]* %219, %Int32 0, %Int32 %221
@@ -1272,10 +1214,7 @@ endif_2:
 	%224 = insertvalue [2 x %Char8] zeroinitializer, %Char8 72, 0
 	%225 = insertvalue [2 x %Char8] %224, %Char8 105, 1
 	%226 = alloca [2 x %Char8]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%227 = zext i8 2 to %Int32
-	; -- end vol eval --
 	store [2 x %Char8] %225, [2 x %Char8]* %226
 	%228 = bitcast [2 x %Char8]* %223 to i8*
 	%229 = bitcast [2 x %Char8]* %226 to i8*

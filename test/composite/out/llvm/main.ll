@@ -232,26 +232,17 @@ define internal void @main_f4([10 x %Int32]* %0, %Int32 %x) {
 	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 0
 	%3 = insertvalue [10 x %Int32] %2, %Int32 2, 1
 	%4 = insertvalue [10 x %Int32] %3, %Int32 3, 2
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%5 = zext i8 10 to %Int32
-	; -- end vol eval --
 	store [10 x %Int32] %4, [10 x %Int32]* %0
 	ret void
 }
 
 define internal void @main_f5([32 x %Int32]* %0, [32 x %Int32] %__a) {
 	%a = alloca [32 x %Int32]
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%2 = zext i8 32 to %Int32
-	; -- end vol eval --
 	store [32 x %Int32] %__a, [32 x %Int32]* %a
 	%3 = load [32 x %Int32], [32 x %Int32]* %a
-	; -- ASSIGN ARRAY --
-	; -- start vol eval --
 	%4 = zext i8 32 to %Int32
-	; -- end vol eval --
 	store [32 x %Int32] %3, [32 x %Int32]* %0
 	ret void
 }
