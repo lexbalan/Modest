@@ -1132,6 +1132,7 @@ def index(x):
 
 
 def do_eval_index(x):
+	out("\n; -- INDEX --")
 	if x.isImmediate():
 		return do_eval_literal(x)
 
@@ -1160,21 +1161,21 @@ def ass(left, indexes):
 	#info("index VLA", lt.ti)
 	if lt.is_vla():
 		out("\n; -- INDEX VLA --")
-		offset = llvm_value_zero(foundation.typeInt32)
+		full_offset = llvm_value_zero(foundation.typeInt32)
 		i = 0
 		while i < len(indexes): #lt.is_array():
 			#if not hasattr(lt, 'itemSizeInRootElements'):
 			#	info("????", lt.ti)
 
-			step = lt.of.runtimeSizeInRoots
 			index = indexes[i]
-			off = llvm_eval_binary('mul', index, step)
-			offset = llvm_eval_binary('add', offset, off)
+			step = lt.of.runtimeSizeInRoots
+			offset = llvm_eval_binary('mul', index, step)
+			full_offset = llvm_eval_binary('add', full_offset, offset)
 			lt = lt.of
 			i += 1
 
 		rootType = lt
-		ep = llvm_gep(left, left['type'], [offset], result_type, rootType)
+		ep = llvm_gep(left, left['type'], [full_offset], result_type, rootType)
 		out("\n; -- END INDEX VLA --")
 		return ep
 	# VLA VLA VLA
@@ -1304,6 +1305,10 @@ def do_eval_access(x):
 # cast type a to type b
 def select_cast_operator(a, b):
 	if Type.is_number(a) or Type.is_integer(a) or Type.is_char(a) or Type.is_bool(a) or Type.is_word(a):
+
+		if Type.is_pointer(b):
+			return 'bitcast'
+
 		if Type.is_number(b) or Type.is_integer(b) or Type.is_char(b) or Type.is_bool(b) or Type.is_word(b):
 			signed = Type.is_signed(b)
 
@@ -1334,7 +1339,7 @@ def select_cast_operator(a, b):
 	elif Type.is_pointer(a):
 		if Type.is_pointer(b):
 			return 'bitcast'
-		elif Type.is_integer(b):
+		elif Type.is_integer(b) or Type.is_word(b):
 			return 'ptrtoint'
 
 	elif Type.is_float(a):
@@ -1351,7 +1356,7 @@ def select_cast_operator(a, b):
 			else:
 				return 'bitcast'
 
-	return 'cast <%s -> %s>' % (a['kind'], b['kind'])
+	return 'cast <%s -> %s>' % (str(a), str(b))
 
 
 
@@ -1436,19 +1441,23 @@ def eval_cons_array(x):
 # Ex: *[m]*[n]*[p]Int32
 def handleVLA(t):
 	#info("calculate VLA step", t.ti)
-
 	# type size (in VLA chain) in root-items
 	runtimeSizeInRoots = None
 
+	if hasattr(t, 'runtimeSizeInRoots'):
+		# already handled type
+		return
+
 	if t.is_array():
 		handleVLA(t.of)
-		# Get array size
-		# размер этого
-		# массива = его объем * объем его элемента
+		# Get VLA size
+		# размер массива = его объем * объем его элемента
 		if t.is_closed_array():
+			out("\n; -- HANDLE VLA --")
 			volume = do_reval(t.volume)
 			runtimeSizeInRoots = llvm_eval_binary('mul', volume, t.of.runtimeSizeInRoots)
-			out("  ; calc VLA item size")
+			#out("  ; calc VLA item size")
+			out("\n; -- END HANDLE VLA --")
 		else:
 			# Если это open_array
 			runtimeSizeInRoots = llvm_value_num(foundation.typeInt32, 1)
@@ -1796,7 +1805,7 @@ def do_eval(x):
 	elif isinstance(x, ValueZero): y = do_eval_literal(x)
 	elif isinstance(x, ValueSizeofValue): y = do_eval_sizeof_value(x)
 	elif isinstance(x, ValueSizeofType): y = do_eval_sizeof_type(x)
-	elif isinstance(x, ValueLengthof): y = do_eval_literal(x)
+	elif isinstance(x, ValueLengthof): y = do_eval_lengthof(x)
 	elif isinstance(x, ValueAlignof): y = do_eval_literal(x)
 	elif isinstance(x, ValueOffsetof): y = do_eval_literal(x)
 	elif isinstance(x, ValueVaStart): y = do_eval_va_start(x)
@@ -1820,6 +1829,15 @@ def do_eval(x):
 	return y
 
 
+def do_eval_lengthof(x):
+	t = x.value.type
+	if t.is_vla():
+		handleVLA(t)
+		return t.runtimeSizeInRoots
+
+	return llvm_value_num(foundation.typeInt32, t.length)
+
+
 #
 #
 #
@@ -1828,7 +1846,6 @@ def print_stmt_assign(x):
 	l = do_eval(x.left)
 	r = do_reval(x.right)
 	llvm_store(l, r)
-
 
 
 def print_stmt_if(x):

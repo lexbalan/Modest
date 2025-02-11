@@ -376,7 +376,6 @@ class ValueSizeofType(Value):
 
 class ValueSizeofValue(Value):
 	def __init__(self, value, ti=None):
-		value_size = value.type.size
 
 		type = None
 		if value.type.is_vla():
@@ -385,12 +384,35 @@ class ValueSizeofValue(Value):
 			type = typeSysInt
 		else:
 			from type import type_number_for
+			value_size = value.type.size
 			type = type_number_for(value_size, signed=False, ti=ti)
 
 		super().__init__(type=type, ti=ti)
 		self.of = value
-		self.immediate = True
-		self.asset = value_size
+		if not value.type.is_vla():
+			self.immediate = True
+			self.asset = value_size
+
+
+
+class ValueLengthof(Value):
+	def __init__(self, value, ti=None):
+
+		type = None
+		if value.type.is_vla():
+			# is a VLA
+			from trans import typeSysInt
+			type = typeSysInt
+		else:
+			from type import type_number_for
+			length = value.type.volume.asset
+			type = type_number_for(length, signed=False, ti=ti)
+		super().__init__(type=type, ti=ti)
+		if not value.type.is_vla():
+			self.asset = length
+			self.immediate = True
+
+		self.value = value
 
 
 
@@ -421,16 +443,6 @@ class ValueOffsetof(Value):
 		self.immediate = True
 		self.asset = offset
 
-
-class ValueLengthof(Value):
-	def __init__(self, value, ti=None):
-		length = value.type.volume.asset
-		from type import type_number_for
-		type = type_number_for(length, signed=False, ti=ti)
-		super().__init__(type=type, ti=ti)
-		self.value = value
-		self.immediate = True
-		self.asset = length
 
 
 class ValueVaStart(Value):
