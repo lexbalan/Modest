@@ -161,6 +161,7 @@ def value_array_cons(t, v, method, ti):
 	#	var a = [100]Int init_array
 	#
 
+	size = 0
 	if v.items != None:
 		items = []
 
@@ -168,9 +169,11 @@ def value_array_cons(t, v, method, ti):
 			from .cons import value_cons_implicit_check
 			casted_item = value_cons_implicit_check(t.of, item)
 			casted_item.nl = item.nl
+			size += casted_item.type.size
 			items.append(casted_item)
 		nv.items = items
 
+	nv.type.size = size
 	return nv
 
 

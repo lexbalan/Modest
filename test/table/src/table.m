@@ -6,6 +6,10 @@ include "libc/stdlib"
 include "libc/string"
 
 
+public type Row record {
+
+}
+
 public type Table record {
 	public header: *[]*Str8
 	public data: *[][]*Str8
