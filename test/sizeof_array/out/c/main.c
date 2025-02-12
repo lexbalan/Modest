@@ -4,12 +4,31 @@
 #include <string.h>
 #include "main.h"
 
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
+#ifndef __lengthof
+#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* __lengthof */
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+
+static int32_t main_a0[6] = (int32_t[6]){0, 1, 2, 3, 4, 5};
+static int32_t main_a1[2][6] = (int32_t[2][6]){0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5};
+static int32_t main_a2[3][6] = (int32_t[3][6]){
+	0, 1, 2, 3, 4, 5,
+	0, 1, 2, 3, 4, 5,
+	0, 1, 2, 3, 4, 5
+};
+static int32_t main_a3[2][2][6] = (int32_t[2][2][6]){
+
+	0, 1, 2, 3, 4, 5,
+	0, 1, 2, 3, 4, 5,
+
+	0, 1, 2, 3, 4, 5,
+	0, 1, 2, 3, 4, 5
+};
 
 static char *main_data[5][4] = (char *[5][4]){
 	"0", "Alef", "Betha", "Emma",
@@ -20,41 +39,58 @@ static char *main_data[5][4] = (char *[5][4]){
 };
 
 
-static void main_f2(char *(*pa)[], int32_t m, int32_t n)
-{
-	char *(*const pg)[m][n] = (char *(*)[m][n])pa;
-	char *(*const ph)[n] = &(*pg)[3];
-	char *(*const pk)[n] = &(*pg)[4];
-	printf("ph[0] = %s\n", (*ph)[1]);
-	printf("pk[0] = %s\n", (*pk)[1]);
-}
-
-
-static void main_print2DArray(char *(*pa)[], int32_t m, int32_t n)
-{
-	char *(*const pg)[m][n] = (char *(*)[m][n])pa;
-	int32_t i = 0;
-	while (i < m) {
-		int32_t j = 0;
-		while (j < n) {
-			printf("pa[%i][%i] = %s\n", i, j, (*pg)[i][j]);
-			j = j + 1;
-		}
-		i = i + 1;
-	}
-}
+static char *main_data2[5][4] = (char *[5][4]){
+	"0", "Alef", "Betha", "Emma",
+	"1", "Clock", "Depth", "Free",
+	"2", "Ink", "Julia", "Keyword",
+	"3", "Ultra", "Video", "Word",
+	"4", "Xerox", "Yep", "Zn"
+};
 
 
 int32_t main()
 {
-	main_f2((void *)&main_data, 5, 4);
+	printf("lengthof(a0) = %lu\n", __lengthof(main_a0));
+	printf("sizeof(a0) = %lu\n", sizeof main_a0);
+
+	//printf("lengthof(a0[0]) = %lu\n", lengthof(a0[0]))
+	printf("sizeof(a0[0]) = %lu\n", sizeof main_a0[0]);
+
+	printf("\n");
+
+	printf("lengthof(a1) = %lu\n", __lengthof(main_a1));
+	printf("sizeof(a1) = %lu\n", sizeof main_a1);
+
+	printf("lengthof(a1[0]) = %lu\n", __lengthof(main_a1[0]));
+	printf("sizeof(a1[0]) = %lu\n", sizeof main_a1[0]);
+	printf("sizeof(a1[0][0]) = %lu\n", sizeof main_a1[0][0]);
+
+	printf("\n");
+
+	printf("lengthof(a2) = %lu\n", __lengthof(main_a2));
+	printf("sizeof(a2) = %lu\n", sizeof main_a2);
+
+	printf("\n");
+
+	printf("lengthof(a3) = %lu\n", __lengthof(main_a3));
+	printf("lengthof(a3[0]) = %lu\n", __lengthof(main_a3[0]));
+	printf("lengthof(a3[0][0]) = %lu\n", __lengthof(main_a3[0][0]));
+	printf("sizeof(a3) = %lu\n", sizeof main_a3);
+
+	//
+	printf("\n");
 
 	printf("sizeof(data) = %lu\n", sizeof main_data);
 	printf("sizeof(data[0]) = %lu\n", sizeof main_data[0]);
+	printf("lengthof(data) = %lu\n", __lengthof(main_data));
+	printf("lengthof(data[0]) = %lu\n", __lengthof(main_data[0]));
 
-	printf("lengthof(data) = %lu\n", LENGTHOF(main_data));
-	printf("lengthof(data[0]) = %lu\n", LENGTHOF(main_data[0]));
+	printf("\n");
 
+	printf("sizeof(data2) = %lu\n", sizeof main_data2);
+	printf("sizeof(data2[0]) = %lu\n", sizeof main_data2[0]);
+	printf("lengthof(data2) = %lu\n", __lengthof(main_data2));
+	printf("lengthof(data2[0]) = %lu\n", __lengthof(main_data2[0]));
 
 	//print2DArray(&data, 5, 4)
 	return 0;

@@ -1263,7 +1263,7 @@ def str_value_offsetof(x, ctx):
 
 
 def str_value_lengthof(x, ctx):
-	sstr = "LENGTHOF("
+	sstr = "__lengthof("
 	sstr += str_value(x.value)
 	sstr += ")"
 	return sstr
@@ -2130,7 +2130,9 @@ def print_cfile(module, _outname):
 
 	if 'use_lengthof' in module.att:
 		newline()
-		out("#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))")
+		out("#ifndef __lengthof\n")
+		out("#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))\n")
+		out("#endif /* __lengthof */\n")
 		newline()
 
 	if len(module.anon_recs) > 0:

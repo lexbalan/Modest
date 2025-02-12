@@ -136,7 +136,7 @@ def value_array_cons(t, v, method, ti):
 
 	nv = ValueCons(t, v, method, ti)
 	nv.immediate = v.immediate
-	
+
 	if v.immediate:
 		nv.items = 1
 
