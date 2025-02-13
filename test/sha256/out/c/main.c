@@ -2,13 +2,16 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
+#include "./sha256.h"
+
+#ifndef __lengthof
+#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* __lengthof */
+
+
 #include "main.h"
 
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
-
-#include <stdio.h>
-
-#include "./sha256.h"
 
 #define main_inputDataLength  32
 
@@ -78,7 +81,7 @@ int main()
 	printf("test SHA256\n");
 
 	int32_t i = 0;
-	while (i < (int)LENGTHOF(main_tests)) {
+	while (i < (int)__lengthof(main_tests)) {
 		main_SHA256_TestCase *const test = main_tests[i];
 		const bool test_result = main_doTest((main_SHA256_TestCase *)test);
 

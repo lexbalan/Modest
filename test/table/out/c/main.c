@@ -2,13 +2,16 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "main.h"
-
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifndef __lengthof
+#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* __lengthof */
+
+
+#include "main.h"
 
 
 
@@ -38,40 +41,40 @@ static char *main_table_data1[4][4] = (char *[4][4]){
 static table_Table main_table00 = {
 	.header = NULL,
 	.data = (void *)&main_table_data0,
-	.nRows = LENGTHOF(main_table_data0),
-	.nCols = LENGTHOF(main_table_data0[0]),
+	.nRows = __lengthof(main_table_data0),
+	.nCols = __lengthof(main_table_data0[0]),
 	.separate = false
 };
 
 static table_Table main_table01 = {
 	.header = &main_table_header0,
 	.data = (void *)&main_table_data0,
-	.nRows = LENGTHOF(main_table_data0),
-	.nCols = LENGTHOF(main_table_data0[0]),
+	.nRows = __lengthof(main_table_data0),
+	.nCols = __lengthof(main_table_data0[0]),
 	.separate = false
 };
 
 static table_Table main_table02 = {
 	.header = NULL,
 	.data = (void *)&main_table_data0,
-	.nRows = LENGTHOF(main_table_data0),
-	.nCols = LENGTHOF(main_table_data0[0]),
+	.nRows = __lengthof(main_table_data0),
+	.nCols = __lengthof(main_table_data0[0]),
 	.separate = true
 };
 
 static table_Table main_table03 = {
 	.header = &main_table_header0,
 	.data = (void *)&main_table_data0,
-	.nRows = LENGTHOF(main_table_data0),
-	.nCols = LENGTHOF(main_table_data0[0]),
+	.nRows = __lengthof(main_table_data0),
+	.nCols = __lengthof(main_table_data0[0]),
 	.separate = true
 };
 
 static table_Table main_table10 = {
 	.header = &main_table_header1,
 	.data = (void *)&main_table_data1,
-	.nRows = LENGTHOF(main_table_data1),
-	.nCols = LENGTHOF(main_table_data1[0]),
+	.nRows = __lengthof(main_table_data1),
+	.nCols = __lengthof(main_table_data1[0]),
 	.separate = true
 };
 

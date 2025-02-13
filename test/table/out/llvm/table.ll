@@ -223,6 +223,9 @@ declare [0 x %Char]* @strerror(%Int %error)
 @str6 = private constant [2 x i8] [i8 45, i8 0]
 @str7 = private constant [3 x i8] [i8 43, i8 10, i8 0]
 ; -- endstrings --
+%table_Row = type {
+};
+
 %table_Table = type {
 	[0 x %Str8*]*,
 	[0 x [0 x %Str8*]]*,

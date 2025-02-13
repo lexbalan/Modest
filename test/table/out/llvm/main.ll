@@ -215,6 +215,9 @@ declare [0 x %Char]* @strerror(%Int %error)
 ; -- 1
 ; ?? table ??
 ; from import
+%table_Row = type {
+};
+
 %table_Table = type {
 	[0 x %Str8*]*,
 	[0 x [0 x %Str8*]]*,

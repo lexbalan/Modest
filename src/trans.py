@@ -2429,6 +2429,8 @@ def do_attribute(x):
 		attribute_add('inline')
 	elif kind == 'extern':
 		attribute_add('extern')
+	elif kind == 'volatile':
+		attribute_add('volatile')
 	elif kind == 'packed':
 		attribute_add('packed')
 	elif kind == 'unused_result':

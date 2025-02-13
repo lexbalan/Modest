@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "main.h"
-
 #include <stdio.h>
+
+#include "main.h"
 
 
 static void main_mtab(uint32_t n)

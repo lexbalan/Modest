@@ -35,6 +35,9 @@ func print2DArray(pa: *[][]*Str8, m: Int32, n: Int32) {
 }
 
 
+@volatile
+var f: Int32
+
 public func main() -> Int32 {
 	f2(&data, 5, 4)
 

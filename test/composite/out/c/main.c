@@ -2,12 +2,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
+
 #include "main.h"
 
 /* anonymous records */
 struct __anonymous_struct_2 {int32_t x; int32_t y;
 };
-#include <stdio.h>
 
 // Test for composite types
 

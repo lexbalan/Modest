@@ -42,6 +42,12 @@ func foo(x: Int32, y: Int32 = 50) {
 
 //$pragma insert "// text insertion"
 
+@volatile
+var f: Int32
+
+@volatile
+var p: *Int32
+
 public func main() -> Int32 {
 	print3DArray(&a, 2, 2, 3)
 

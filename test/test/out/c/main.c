@@ -2,39 +2,37 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "main.h"
 
-#include <stdio.h>
-
-
-#include <stdlib.h>
-
-
-#include <string.h>
-
-
-
 //@property("type.generic", true)
 
-static int32_t a[2][3] = (int32_t[2][3]){
+static int32_t main_a[2][2][3] = (int32_t[2][2][3]){
+
 	1, 2, 3,
-	4, 5, 6
+	4, 5, 6,
+
+	7, 8, 9,
+	10, 11, 12
 };
 
 
-static void print2DArray(int32_t(*pa)[], int32_t m, int32_t n)
+static void main_print3DArray(int32_t(*pa)[], int32_t m, int32_t n, int32_t p)
 {
-	//let pg = *[m][n]Int32 pa
-	int32_t gg[m][n];
-	memset(&gg, 0, sizeof gg);
-
-	int32_t(*pg)[m][n] = (int32_t(*)[m][n])pa;
+	//let pg: *[m][n][p]Int32 = *[m][n][p]Int32 pa
+	int32_t(*const pg)[m][n][p] = (int32_t(*)[m][n][p])pa;
 	int32_t i = 0;
 	while (i < m) {
 		int32_t j = 0;
 		while (j < n) {
-			printf("pa[%i][%i] = %i\n", i, j, (*pg)[i][j]);
+			int32_t k = 0;
+			while (k < p) {
+				printf("pa[%i][%i][%i] = %i\n", i, j, k, (*pg)[i][j][k]);
+				k = k + 1;
+			}
 			j = j + 1;
 		}
 		i = i + 1;
@@ -42,7 +40,7 @@ static void print2DArray(int32_t(*pa)[], int32_t m, int32_t n)
 }
 
 
-static void foo(int32_t x, int32_t y)
+static void main_foo(int32_t x, int32_t y)
 {
 	printf("foo(%d, %d)\n", x, y);
 }
@@ -50,14 +48,17 @@ static void foo(int32_t x, int32_t y)
 
 //$pragma insert "// text insertion"
 
+
+static volatile int32_t main_f;
+
+
+static int32_t *volatile main_p;
+
 int32_t main()
 {
-	int32_t(*pa)[];
-	pa = (void *)&a;
+	main_print3DArray((void *)&main_a, 2, 2, 3);
 
-	print2DArray((void *)&a, 2, 3);
-
-	foo(1, 2);
+	main_foo(1, 2);
 
 	return 0;
 }

@@ -407,18 +407,26 @@ def is_sim_sim(t):
 
 
 # label - used for variable/field definition form of type expr (variable id)
-def str_type(t, core='', label='', as_const=''):
+def str_type(t, core='', label='', as_const='', as_volatile=''):
 	aka = type_get_aka(t)
 	if aka != None:
 		if as_const:
-			out("const ")
+			out('const ')
+		if as_volatile:
+			out('volatile ')
+
 		return aka + core + prespace(label)
 
-	if as_const:
-		if t.is_pointer():
+	if t.is_pointer():
+		if as_const:
 			label = 'const ' + label
-		else:
-			out("const ")
+		if as_volatile:
+			label = 'volatile ' + label
+	else:
+		if as_const:
+			out('const ')
+		if as_volatile:
+			out('volatile ')
 
 	if t.is_func():
 		return str_type_func(t, label, core)
@@ -432,8 +440,8 @@ def str_type(t, core='', label='', as_const=''):
 
 
 
-def print_type(t, label='', as_const=''):
-	out(str_type(t, core='', label=label, as_const=as_const))
+def print_type(t, label='', as_const='', as_volatile=''):
+	out(str_type(t, core='', label=label, as_const=as_const, as_volatile=as_volatile))
 
 
 def print_type_record(t, tag):
@@ -1865,9 +1873,9 @@ def print_def_type(x):
 
 
 # Указатель, массив и функция образуют пиздецовый заговор
-def print_variable(id_str, t, as_const=False, init_value=None, prefix=''):
+def print_variable(id_str, t, as_const=False, as_volatile=False, init_value=None, prefix=''):
 	assert (t != None)
-	print_type(t, label=(prefix + id_str), as_const=as_const)
+	print_type(t, label=(prefix + id_str), as_const=as_const, as_volatile=as_volatile)
 	if init_value != None:
 		out(" = ")
 		print_value(init_value)
@@ -1886,10 +1894,10 @@ def print_def_var(x, isdecl=False):
 
 	if var.hasAttribute('extern'):
 		out("extern ")
-	if var.hasAttribute('volatile'):
-		out("volatile ")
 
-	print_variable(get_id_str(x.value), var.type)
+	as_volatile = x.hasAttribute('volatile')
+
+	print_variable(get_id_str(x.value), var.type, as_volatile=as_volatile)
 
 	init_value = x.init_value
 
@@ -1988,9 +1996,7 @@ def print_cdecl_func(x):
 
 
 def print_directive(x):
-	if isinstance(x, StmtDirectiveCInclude):
-		include(x.c_name, local=x.is_local)
-		return
+	pass
 
 
 def is_private(x):
@@ -2042,7 +2048,9 @@ def print_header(module, outname):
 	for x in module.defs:
 		if isinstance(x, StmtDirective):
 			newline()
-			print_directive(x)
+			if isinstance(x, StmtDirectiveCInclude):
+				include(x.c_name, local=x.is_local)
+			#print_directive(x)
 
 	newline()
 
@@ -2094,6 +2102,22 @@ def print_header(module, outname):
 
 
 
+usee = {
+	#
+	'use_va_arg': """
+#include <stdarg.h>
+""",
+
+	#
+	'use_lengthof': """
+
+#ifndef __lengthof
+#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* __lengthof */
+"""
+	#
+}
+
 def print_cfile(module, _outname):
 	outname = _outname + '.c'
 
@@ -2120,23 +2144,21 @@ def print_cfile(module, _outname):
 	newline()
 	include("string.h", local=False)
 
-	if 'use_va_arg' in module.att:
-		newline()
-		include("stdarg.h", local=False)
+	for x in module.defs:
+		if isinstance(x, StmtDirectiveCInclude):
+			newline()
+			include(x.c_name, local=x.is_local)
 
+	for use in module.att:
+		if use in usee:
+			out(usee[use])
+
+	newline()
 	newline()
 	include("%s.h" % module.id)
-	newline()
-
-	if 'use_lengthof' in module.att:
-		newline()
-		out("#ifndef __lengthof\n")
-		out("#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))\n")
-		out("#endif /* __lengthof */\n")
-		newline()
 
 	if len(module.anon_recs) > 0:
-		out("\n/* anonymous records */")
+		out("\n\n/* anonymous records */")
 		for anon_rec in module.anon_recs:
 			nl_indent()
 			print_type_record(anon_rec, tag=anon_rec.c_anon_id)
@@ -2145,6 +2167,9 @@ def print_cfile(module, _outname):
 
 	for x in module.defs:
 		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
+			continue
+
+		if isinstance(x, StmtDirectiveCInclude):
 			continue
 
 		newline(x.nl)

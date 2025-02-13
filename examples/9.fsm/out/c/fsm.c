@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "fsm.h"
-
 #include <stdio.h>
+
+#include "fsm.h"
 
 
 #define fsm_verbose  true

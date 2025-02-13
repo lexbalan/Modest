@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "main.h"
-
 #include <stdio.h>
+
+#include "main.h"
 
 
 struct main_Point {

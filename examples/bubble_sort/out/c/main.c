@@ -2,11 +2,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "main.h"
-
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
-
 #include <stdio.h>
+
+#ifndef __lengthof
+#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* __lengthof */
+
+
+#include "main.h"
 
 static int32_t main_array[21] = (int32_t[21]){
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4,
@@ -45,13 +48,13 @@ int32_t main()
 	//fill_array(&array, lengthof(array))
 
 	printf("array before:\n");
-	main_print_array((int32_t *)&main_array, LENGTHOF(main_array));
+	main_print_array((int32_t *)&main_array, __lengthof(main_array));
 	printf("\n");
 
-	main_bubble_sort32((int32_t *)&main_array, LENGTHOF(main_array));
+	main_bubble_sort32((int32_t *)&main_array, __lengthof(main_array));
 
 	printf("array after:\n");
-	main_print_array((int32_t *)&main_array, LENGTHOF(main_array));
+	main_print_array((int32_t *)&main_array, __lengthof(main_array));
 	printf("\n");
 
 	return 0;

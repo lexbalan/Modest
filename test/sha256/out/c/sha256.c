@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "sha256.h"
-
 #include <string.h>
+
+#include "sha256.h"
 
 
 

@@ -2,12 +2,15 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "main.h"
-
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
-
 #include <stdio.h>
 #include <math.h>
+
+#ifndef __lengthof
+#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* __lengthof */
+
+
+#include "main.h"
 
 //@attribute("c_no_print")
 //import "misc/minmax"
@@ -67,7 +70,7 @@ static void main_test()
 	int32_t yy[6];
 	memcpy(&yy, &(int32_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}, sizeof yy);
 	int32_t i = 0;
-	while (i < LENGTHOF(yy)) {
+	while (i < __lengthof(yy)) {
 		const int32_t y = yy[i];
 		printf("yy[%i] = %i\n", i, y);
 		i = i + 1;

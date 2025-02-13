@@ -2,11 +2,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "main.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
+#include "main.h"
 
 
 #define main_mathPi  3.141592653589793238462643383279502884

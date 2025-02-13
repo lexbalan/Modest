@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "crc32.h"
-
 #include <stdio.h>
+
+#include "crc32.h"
 
 
 uint32_t crc32_run(uint8_t *buf, uint32_t len)

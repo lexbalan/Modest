@@ -2,14 +2,17 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "main.h"
-
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
-
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
-#include <stdlib.h>// getenv
+#include <stdlib.h>
+
+#ifndef __lengthof
+#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* __lengthof */
+
+
+#include "main.h"// getenv
 
 
 int main()
@@ -31,7 +34,7 @@ int main()
 	// current working directory
 	char cwd[128];
 	memset(&cwd, 0, sizeof cwd);
-	getcwd((char *)&cwd, LENGTHOF(cwd));
+	getcwd((char *)&cwd, __lengthof(cwd));
 	printf("cwd = %s\n", &cwd);
 
 	char *const tty = ttyname(0);

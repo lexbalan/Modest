@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "delay.h"
-
 #include <time.h>
+
+#include "delay.h"
 
 
 void delay_us(uint64_t us)

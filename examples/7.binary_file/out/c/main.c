@@ -2,10 +2,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "main.h"
-
 #include <string.h>
 #include <stdio.h>
+
+#include "main.h"
 
 
 // FIXIT: not worked LLVM result (!)

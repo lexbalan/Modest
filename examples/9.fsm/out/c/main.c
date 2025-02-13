@@ -2,12 +2,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
+#include "./delay.h"
+
 #include "main.h"
 
-#include <stdio.h>
 
-
-#include "./delay.h"
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)

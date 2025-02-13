@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
+
 #include "main.h"
 
 /* anonymous records */
@@ -9,7 +11,6 @@ struct __anonymous_struct_5 {uint32_t x; uint32_t y;
 };
 struct __anonymous_struct_6 {uint32_t x; uint32_t y;
 };
-#include <stdio.h>
 
 struct main_Point2D {
 	uint32_t x;
