@@ -5,12 +5,12 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "main.h"
+
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
-
-#include "main.h"
 
 //@attribute("c_no_print")
 //import "misc/minmax"

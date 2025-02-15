@@ -7,12 +7,12 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include "main.h"
+
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
-
-
-#include "main.h"// getenv
+// getenv
 
 
 int main()

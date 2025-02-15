@@ -12,6 +12,8 @@
 
 
 
+
+
 struct sha256_Context {
 	uint8_t data[64];
 	uint32_t datalen;

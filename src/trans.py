@@ -1523,6 +1523,11 @@ def do_value_integer(x):
 				base = 16
 
 	num = int(x['str'], base)
+
+	if nbits_for_num(num) > 64:
+		if not 'use_bigint' in cmodule.att:
+			cmodule.att.append('use_bigint')
+
 	v = value_integer_create(num, ti=x['ti'])
 	v.nsigns = num_string_len
 

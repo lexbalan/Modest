@@ -5,12 +5,12 @@
 #include <stdio.h>
 #include "./crc32.h"
 
+#include "main.h"
+
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
-
-#include "main.h"
 
 
 

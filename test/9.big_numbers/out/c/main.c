@@ -6,8 +6,11 @@
 
 #include "main.h"
 
+#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))
 
-static unsigned __int128 main_big0 = (((__int128)0x123456789ABCDEFULL << 64) | ((__int128)0xFEDCBA9876543210ULL));
+
+
+static unsigned __int128 main_big0 = BIG_INT128(0x123456789ABCDEFULL, 0xFEDCBA9876543210ULL);
 
 
 static uint64_t main_high_128(unsigned __int128 x)
@@ -25,7 +28,7 @@ static uint64_t main_low_128(unsigned __int128 x)
 int main()
 {
 
-	#define __big1  (((__int128)0xFFFFFFFFFFFFFFFFULL << 64) | ((__int128)0xFFFFFFFFFFFFFFFFULL))
+	#define __big1  BIG_INT128(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL)
 
 	unsigned __int128 big2;
 	big2 = __big1;

@@ -4,12 +4,12 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "main.h"
+
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
-
-#include "main.h"
 
 static int32_t main_array[21] = (int32_t[21]){
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4,
