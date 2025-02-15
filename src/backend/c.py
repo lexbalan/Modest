@@ -1151,6 +1151,7 @@ def str_value_enum(x, ctx):
 
 
 def str_literal_integer(num, nsigns=0, is_big=False, is_hex=False):
+	global need_big_int
 	sstr = ''
 	# Big Number?
 	if is_big:
@@ -1158,8 +1159,7 @@ def str_literal_integer(num, nsigns=0, is_big=False, is_hex=False):
 			# print Big Numbers
 			high64 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
 			low64 = num & 0xFFFFFFFFFFFFFFFF
-
-			sstr += "(((__int128)0x%XULL << 64) | ((__int128)0x%XULL))" % (high64, low64)
+			sstr += "BIG_INT128(0x%XULL, 0x%XULL)" % (high64, low64)
 			return sstr
 
 
@@ -2102,20 +2102,18 @@ def print_header(module, outname):
 
 
 
-usee = {
-	#
-	'use_va_arg': """
-#include <stdarg.h>
-""",
-
+macro_definitions = {
 	#
 	'use_lengthof': """
-
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
-"""
+""",
+
 	#
+	'use_bigint': """
+#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))
+"""
 }
 
 def print_cfile(module, _outname):
@@ -2144,18 +2142,25 @@ def print_cfile(module, _outname):
 	newline()
 	include("string.h", local=False)
 
+	if 'use_va_arg' in module.att:
+		newline()
+		include("stdarg.h", local=False)
+
 	for x in module.defs:
 		if isinstance(x, StmtDirectiveCInclude):
 			newline()
 			include(x.c_name, local=x.is_local)
 
-	for use in module.att:
-		if use in usee:
-			out(usee[use])
-
 	newline()
 	newline()
 	include("%s.h" % module.id)
+
+
+	for use in module.att:
+		newline()
+		if use in macro_definitions:
+			out(macro_definitions[use])
+
 
 	if len(module.anon_recs) > 0:
 		out("\n\n/* anonymous records */")

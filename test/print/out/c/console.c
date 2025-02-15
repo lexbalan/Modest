@@ -2,15 +2,15 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdarg.h>
 #include "./utf.h"
 #include "./console.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdarg.h>
-
 
 #include "console.h"
+
 
 
 //$pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
