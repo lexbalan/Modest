@@ -12,6 +12,11 @@ include "libc/ctypes64"
 @property("type.id.c", "in_addr_t")
 public type InAddrT Nat32
 
+
+@property("value.id.c", "INADDR_ANY")
+public const inAddrAny = 0
+
+
 @property("type.id.c", "in_port_t")
 public type InPortT Nat16
 

@@ -11,4 +11,5 @@ cd stmt_if && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM &&
 cd stmt_while && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. &&\
 cd demo1 && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd bubble_sort && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. #&& \
+cd web && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. #&& \
 #cd m328p_blink && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
