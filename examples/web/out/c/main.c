@@ -17,7 +17,10 @@
 
 
 #define main_port  8080
-#define main_receive_buffer_size  (1024 * 4)
+#define main_receive_buffer_size  1024
+#define main_send_buffer_size  1024
+
+static char *main_httpHeader = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n";
 
 
 static uint16_t main_htons(uint16_t x)
@@ -25,6 +28,7 @@ static uint16_t main_htons(uint16_t x)
 	return x << 8 | x >> 8;
 }
 
+static uint32_t main_cnt;
 
 static void main_handle_request(int32_t client_socket)
 {
@@ -40,8 +44,10 @@ static void main_handle_request(int32_t client_socket)
 
 	printf("Received request:\n%s\n", (char *)&buffer);
 
-	char response[112];
-	memcpy(&response, &"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n<html><body><h1>Hello, World!</h1></body></html>\x0", sizeof response);
+	char response[main_send_buffer_size];
+	memset(&response, 0, sizeof response);
+	sprintf((char *)&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>\x0", main_httpHeader, main_cnt);
+
 	write(client_socket, (char *)&response, strlen((char *)&response));
 	close(client_socket);
 }
@@ -93,6 +99,7 @@ int32_t main()
 			continue;
 		}
 		main_handle_request(client_socket);
+		main_cnt = main_cnt + 1;
 	}
 
 	close(server_socket);
