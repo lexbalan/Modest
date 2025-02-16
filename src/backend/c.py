@@ -1150,17 +1150,20 @@ def str_value_enum(x, ctx):
 
 
 
-def str_literal_integer(num, nsigns=0, is_big=False, is_hex=False):
+def str_literal_integer(type, num, nsigns=0, is_big=False, is_hex=False):
 	global need_big_int
 	sstr = ''
 	# Big Number?
-	if is_big:
-		if True:
-			# print Big Numbers
-			high64 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
-			low64 = num & 0xFFFFFFFFFFFFFFFF
-			sstr += "BIG_INT128(0x%XULL, 0x%XULL)" % (high64, low64)
-			return sstr
+	if type.width > 64:
+		# print Big Numbers
+		a1 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
+		a0 = (num >>  0) & 0xFFFFFFFFFFFFFFFF
+		if type.width == 128:
+			return "BIG_INT128(0x%XULL, 0x%XULL)" % (a1, a0)
+		elif type.width == 256:
+			a3 = (num >> 192) & 0xFFFFFFFFFFFFFFFF
+			a2 = (num >> 128) & 0xFFFFFFFFFFFFFFFF
+			return "BIG_INT256(0x%XULL, 0x%XULL, 0x%XULL, 0x%XULL)" % (a3, a2, a1, a0)
 
 
 	if is_hex:
@@ -1197,7 +1200,7 @@ def str_value_literal(x, ctx):
 		nsigns = 0
 		if hasattr(x, 'nsigns'):
 			nsigns = x.nsigns
-		sstr += str_literal_integer(x.asset, nsigns=nsigns, is_big=x.type.width > 64, is_hex=x.hasAttribute('hexadecimal'))
+		sstr += str_literal_integer(x.type, x.asset, nsigns=nsigns, is_hex=x.hasAttribute('hexadecimal'))
 
 	elif t.is_float():
 		sstr += str_literal_float(x.asset)
@@ -2113,6 +2116,7 @@ macro_definitions = {
 	#
 	'use_bigint': """
 #define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))
+#define BIG_INT256(x3, x2, x1, x0)
 """
 }
 

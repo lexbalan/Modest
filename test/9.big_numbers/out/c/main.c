@@ -7,6 +7,7 @@
 #include "main.h"
 
 #define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))
+#define BIG_INT256(x3, x2, x1, x0)
 
 
 
@@ -29,6 +30,7 @@ int main()
 {
 
 	#define __big1  BIG_INT128(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL)
+	#define __big2  BIG_INT256(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL)
 
 	unsigned __int128 big2;
 	big2 = __big1;
@@ -58,6 +60,7 @@ int main()
 	return 0;
 
 #undef __big1
+#undef __big2
 #undef __sig0
 }
 

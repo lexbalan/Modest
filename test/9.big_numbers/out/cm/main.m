@@ -18,6 +18,7 @@ func low_128(x: Word128) -> Word64 {
 public func main() -> ctypes64.Int {
 
 	let big1 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+	let big2 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 
 	var big2: Nat128
 	big2 = big1
