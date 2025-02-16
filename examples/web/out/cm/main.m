@@ -7,7 +7,7 @@
 
 
 const port = 8080
-const receive_buffer = 1024 * 4
+const receive_buffer_size = 1024 * 4
 
 
 func htons(x: Word16) -> Word16 {
@@ -16,17 +16,13 @@ func htons(x: Word16) -> Word16 {
 
 
 func handle_request(client_socket: Int32) -> Unit {
-	stdio.printf("handle_request()\n")
-
-	var buffer: [receive_buffer]Word8
-
+	var buffer: [receive_buffer_size]Word8
 	let bytes_received = unistd.read(client_socket, &buffer, lengthof(buffer) - 1)
 	if bytes_received < 0 {
 		stdio.perror("read")
 		unistd.close(client_socket)
 		return
 	}
-
 	buffer[bytes_received] = 0
 
 	stdio.printf("Received request:\n%s\n", *Str8 &buffer)
@@ -38,19 +34,13 @@ func handle_request(client_socket: Int32) -> Unit {
 
 
 public func main() -> Int32 {
-	var server_socket: Int32
-	var client_socket: Int32
-	var server_addr: socket.Struct_sockaddr_in
-	var client_addr: socket.Struct_sockaddr_in
-	var client_len: socket.SocklenT = sizeof client_addr
-
-	server_socket = socket.socket(socket.af_INET, socket.c_SOCK_STREAM, 0)
+	let server_socket = socket.socket(socket.af_INET, socket.c_SOCK_STREAM, 0)
 	if server_socket < 0 {
 		stdio.perror("socket")
 		stdlib.exit(1)
 	}
 
-	server_addr = {
+	var server_addr: socket.Struct_sockaddr_in = socket.Struct_sockaddr_in {
 		sin_family = socket.af_INET
 		sin_addr = {
 			s_addr = socket.inAddrAny
@@ -59,8 +49,8 @@ public func main() -> Int32 {
 	}
 
 	// Bind socket to address
-	let soc = *socket.Struct_sockaddr &server_addr
-	var rc: ctypes64.Int = socket.bind(server_socket, soc, sizeof server_addr)
+	let socadr = *socket.Struct_sockaddr &server_addr
+	var rc: ctypes64.Int = socket.bind(server_socket, socadr, sizeof server_addr)
 	if rc < 0 {
 		stdio.perror("bind")
 		unistd.close(server_socket)
@@ -79,13 +69,14 @@ public func main() -> Int32 {
 
 	// Handle input connections
 	while true {
-		let soc = *socket.Struct_sockaddr &client_addr
-		client_socket = socket.accept(server_socket, soc, &client_len)
+		var client_addr: socket.Struct_sockaddr_in
+		let socadr = *socket.Struct_sockaddr &client_addr
+		var client_adr_len: socket.SocklenT = sizeof client_addr
+		let client_socket = socket.accept(server_socket, socadr, &client_adr_len)
 		if client_socket < 0 {
 			stdio.perror("accept")
 			again
 		}
-
 		handle_request(client_socket)
 	}
 

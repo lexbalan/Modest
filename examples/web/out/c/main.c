@@ -17,7 +17,7 @@
 
 
 #define main_port  8080
-#define main_receive_buffer  (1024 * 4)
+#define main_receive_buffer_size  (1024 * 4)
 
 
 static uint16_t main_htons(uint16_t x)
@@ -28,18 +28,14 @@ static uint16_t main_htons(uint16_t x)
 
 static void main_handle_request(int32_t client_socket)
 {
-	printf("handle_request()\n");
-
-	uint8_t buffer[main_receive_buffer];
+	uint8_t buffer[main_receive_buffer_size];
 	memset(&buffer, 0, sizeof buffer);
-
 	const ssize_t bytes_received = read(client_socket, (uint8_t *)&buffer, __lengthof(buffer) - 1);
 	if (bytes_received < 0) {
 		perror("read");
 		close(client_socket);
 		return;
 	}
-
 	buffer[bytes_received] = 0;
 
 	printf("Received request:\n%s\n", (char *)&buffer);
@@ -53,19 +49,13 @@ static void main_handle_request(int32_t client_socket)
 
 int32_t main()
 {
-	int32_t server_socket;
-	int32_t client_socket;
-	struct sockaddr_in server_addr;
-	struct sockaddr_in client_addr;
-	socklen_t client_len = sizeof client_addr;
-
-	server_socket = socket(AF_INET, SOCK_STREAM, 0);
+	const int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_socket < 0) {
 		perror("socket");
 		exit(1);
 	}
 
-	server_addr = (struct sockaddr_in){
+	struct sockaddr_in server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
 		.sin_addr = {
 			.s_addr = INADDR_ANY
@@ -74,8 +64,8 @@ int32_t main()
 	};
 
 	// Bind socket to address
-	struct sockaddr *const soc = (struct sockaddr *)&server_addr;
-	int rc = bind(server_socket, soc, sizeof server_addr);
+	struct sockaddr *const socadr = (struct sockaddr *)&server_addr;
+	int rc = bind(server_socket, socadr, sizeof server_addr);
 	if (rc < 0) {
 		perror("bind");
 		close(server_socket);
@@ -94,13 +84,14 @@ int32_t main()
 
 	// Handle input connections
 	while (true) {
-		struct sockaddr *const soc = (struct sockaddr *)&client_addr;
-		client_socket = accept(server_socket, soc, &client_len);
+		struct sockaddr_in client_addr;
+		struct sockaddr *const socadr = (struct sockaddr *)&client_addr;
+		socklen_t client_adr_len = sizeof client_addr;
+		const int client_socket = accept(server_socket, socadr, &client_adr_len);
 		if (client_socket < 0) {
 			perror("accept");
 			continue;
 		}
-
 		main_handle_request(client_socket);
 	}
 
