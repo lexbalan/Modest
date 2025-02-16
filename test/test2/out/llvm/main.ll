@@ -243,36 +243,55 @@ declare [0 x %Char]* @strerror(%Int %error)
 @str26 = private constant [22 x i8] [i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 111, i8 102, i8 40, i8 100, i8 97, i8 116, i8 97, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
 @str27 = private constant [25 x i8] [i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 111, i8 102, i8 40, i8 100, i8 97, i8 116, i8 97, i8 91, i8 48, i8 93, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
 ; -- endstrings --
-@main_data = internal global [5 x [4 x [0 x %Char8]*]] [
-	[4 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str1 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([5 x i8]* @str2 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str3 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([5 x i8]* @str4 to [0 x i8]*)
+%main_Dat = type {
+	%Int8,
+	%Int32
+};
+
+@main_xxx = internal global [3 x %main_Dat] [
+	%main_Dat {
+		%Int8 0,
+		%Int32 1
+	},
+	%main_Dat {
+		%Int8 2,
+		%Int32 3
+	},
+	%main_Dat {
+		%Int8 4,
+		%Int32 5
+	}
+]
+@main_data = internal global [5 x [4 x %Str8*]] [
+	[4 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str1 to [0 x i8]*),
+		%Str8* bitcast ([5 x i8]* @str2 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str3 to [0 x i8]*),
+		%Str8* bitcast ([5 x i8]* @str4 to [0 x i8]*)
 	],
-	[4 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str5 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str6 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str7 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([5 x i8]* @str8 to [0 x i8]*)
+	[4 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str6 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str7 to [0 x i8]*),
+		%Str8* bitcast ([5 x i8]* @str8 to [0 x i8]*)
 	],
-	[4 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str9 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([4 x i8]* @str10 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str11 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([8 x i8]* @str12 to [0 x i8]*)
+	[4 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str9 to [0 x i8]*),
+		%Str8* bitcast ([4 x i8]* @str10 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str11 to [0 x i8]*),
+		%Str8* bitcast ([8 x i8]* @str12 to [0 x i8]*)
 	],
-	[4 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str13 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str14 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str15 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([5 x i8]* @str16 to [0 x i8]*)
+	[4 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str13 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str14 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str15 to [0 x i8]*),
+		%Str8* bitcast ([5 x i8]* @str16 to [0 x i8]*)
 	],
-	[4 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str17 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str18 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([4 x i8]* @str19 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([3 x i8]* @str20 to [0 x i8]*)
+	[4 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str17 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str18 to [0 x i8]*),
+		%Str8* bitcast ([4 x i8]* @str19 to [0 x i8]*),
+		%Str8* bitcast ([3 x i8]* @str20 to [0 x i8]*)
 	]
 ]
 define internal void @main_f2([0 x [0 x %Str8*]]* %pa, %Int32 %m, %Int32 %n) {
@@ -357,8 +376,9 @@ break_1:
 	ret void
 }
 
+@main_f = internal global %Int32 zeroinitializer
 define %Int32 @main() {
-	call void @main_f2([0 x [0 x %Str8*]]* bitcast ([5 x [4 x [0 x %Char8]*]]* @main_data to [0 x [0 x %Str8*]]*), %Int32 5, %Int32 4)
+	call void @main_f2([0 x [0 x %Str8*]]* bitcast ([5 x [4 x %Str8*]]* @main_data to [0 x [0 x %Str8*]]*), %Int32 5, %Int32 4)
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str24 to [0 x i8]*), %Int32 160)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str25 to [0 x i8]*), %Int32 32)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str26 to [0 x i8]*), %Int32 5)

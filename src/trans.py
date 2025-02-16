@@ -62,7 +62,6 @@ from util import nbits_for_num, nbytes_for_bits
 
 
 production = True
-prev_production = True  # TODO: это бред, сделай стек!
 
 
 # current file directory
@@ -2219,14 +2218,17 @@ def def_var(x):
 			if v.type.is_string():
 				# for case:
 				# var arrayFromString: []Char8 = "abc"
-				length = len(v.asset)
-				volume = value_integer_create(length)
+				str_length = len(v.asset)
+				volume = value_integer_create(str_length)
 				t = TypeArray(t.of, volume, ti=x['ti'])
 			elif v.type.is_array():
 				# for case:
 				# var a: []*Str8 = ["Ab", "aB", "AAb"]
-				v = value_cons_default(v)
-				t = Type.copy(v.type)
+
+				volume = value_integer_create(v.type.volume.asset)
+				t = TypeArray(t.of, volume, ti=x['ti'])
+				#v = value_cons_default(v)
+				#t = Type.copy(v.type)
 
 		v = value_cons_implicit_check(t, v)
 
@@ -2388,7 +2390,7 @@ skipp = False
 prev_skipp = False
 
 def do_attribute(x):
-	global skipp, prev_skipp, production, prev_production
+	global skipp, prev_skipp, production
 	kind = x['kind']
 	args = x['args']
 
@@ -2578,7 +2580,7 @@ def translate(abspath, is_import=False, is_include=False):
 
 
 def process_module(idStr, ast, is_import=False, is_include=False):
-	global skipp, production, prev_production
+	global skipp, production
 
 	global properties
 	properties = {}

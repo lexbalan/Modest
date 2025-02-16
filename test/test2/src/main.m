@@ -3,6 +3,17 @@ include "libc/stdlib"
 include "libc/string"
 
 
+type Dat record {
+	a: Nat8
+	b: Nat32
+}
+
+var xxx: []Dat = [
+	{a=0, b=1}
+	{a=2, b=3}
+	{a=4, b=5}
+]
+
 var data: [][]*Str8 = [
 	["0", "Alef",    "Betha",   "Emma"]
 	["1", "Clock",   "Depth",   "Free"]

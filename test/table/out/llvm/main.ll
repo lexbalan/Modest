@@ -269,58 +269,58 @@ declare void @table_print(%table_Table* %table)
 @str37 = private constant [2 x i8] [i8 10, i8 0]
 @str38 = private constant [2 x i8] [i8 10, i8 0]
 ; -- endstrings --
-@main_table_header0 = internal global [3 x [0 x %Char8]*] [
-	[0 x %Char8]* bitcast ([2 x i8]* @str1 to [0 x i8]*),
-	[0 x %Char8]* bitcast ([8 x i8]* @str2 to [0 x i8]*),
-	[0 x %Char8]* bitcast ([8 x i8]* @str3 to [0 x i8]*)
+@main_table_header0 = internal global [3 x %Str8*] [
+	%Str8* bitcast ([2 x i8]* @str1 to [0 x i8]*),
+	%Str8* bitcast ([8 x i8]* @str2 to [0 x i8]*),
+	%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*)
 ]
-@main_table_data0 = internal global [3 x [3 x [0 x %Char8]*]] [
-	[3 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str4 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([5 x i8]* @str5 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str6 to [0 x i8]*)
+@main_table_data0 = internal global [3 x [3 x %Str8*]] [
+	[3 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*),
+		%Str8* bitcast ([5 x i8]* @str5 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str6 to [0 x i8]*)
 	],
-	[3 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str7 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str8 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str9 to [0 x i8]*)
+	[3 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str7 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str8 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str9 to [0 x i8]*)
 	],
-	[3 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str10 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str11 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str12 to [0 x i8]*)
+	[3 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str10 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str11 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str12 to [0 x i8]*)
 	]
 ]
-@main_table_header1 = internal global [4 x [0 x %Char8]*] [
-	[0 x %Char8]* bitcast ([2 x i8]* @str13 to [0 x i8]*),
-	[0 x %Char8]* bitcast ([8 x i8]* @str14 to [0 x i8]*),
-	[0 x %Char8]* bitcast ([8 x i8]* @str15 to [0 x i8]*),
-	[0 x %Char8]* bitcast ([8 x i8]* @str16 to [0 x i8]*)
+@main_table_header1 = internal global [4 x %Str8*] [
+	%Str8* bitcast ([2 x i8]* @str13 to [0 x i8]*),
+	%Str8* bitcast ([8 x i8]* @str14 to [0 x i8]*),
+	%Str8* bitcast ([8 x i8]* @str15 to [0 x i8]*),
+	%Str8* bitcast ([8 x i8]* @str16 to [0 x i8]*)
 ]
-@main_table_data1 = internal global [4 x [4 x [0 x %Char8]*]] [
-	[4 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str17 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([5 x i8]* @str18 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str19 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([5 x i8]* @str20 to [0 x i8]*)
+@main_table_data1 = internal global [4 x [4 x %Str8*]] [
+	[4 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str17 to [0 x i8]*),
+		%Str8* bitcast ([5 x i8]* @str18 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str19 to [0 x i8]*),
+		%Str8* bitcast ([5 x i8]* @str20 to [0 x i8]*)
 	],
-	[4 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str21 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str22 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str23 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([5 x i8]* @str24 to [0 x i8]*)
+	[4 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str21 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str22 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str23 to [0 x i8]*),
+		%Str8* bitcast ([5 x i8]* @str24 to [0 x i8]*)
 	],
-	[4 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str25 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([4 x i8]* @str26 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str27 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([8 x i8]* @str28 to [0 x i8]*)
+	[4 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str25 to [0 x i8]*),
+		%Str8* bitcast ([4 x i8]* @str26 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str27 to [0 x i8]*),
+		%Str8* bitcast ([8 x i8]* @str28 to [0 x i8]*)
 	],
-	[4 x [0 x %Char8]*] [
-		[0 x %Char8]* bitcast ([2 x i8]* @str29 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str30 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([6 x i8]* @str31 to [0 x i8]*),
-		[0 x %Char8]* bitcast ([5 x i8]* @str32 to [0 x i8]*)
+	[4 x %Str8*] [
+		%Str8* bitcast ([2 x i8]* @str29 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str30 to [0 x i8]*),
+		%Str8* bitcast ([6 x i8]* @str31 to [0 x i8]*),
+		%Str8* bitcast ([5 x i8]* @str32 to [0 x i8]*)
 	]
 ]
 @main_table00 = internal global %table_Table {

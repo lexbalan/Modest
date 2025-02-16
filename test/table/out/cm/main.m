@@ -5,22 +5,22 @@
 import "table" as table
 
 
-var table_header0: [3]*[]Char8 = [
+var table_header0: [3]*Str8 = [
 	"#", "Header0", "Header1"
 ]
 
-var table_data0: [3][3]*[]Char8 = [
+var table_data0: [3][3]*Str8 = [
 	["0", "Alef", "Betha"]
 	["1", "Clock", "Depth"]
 	["2", "Earth", "Fight"]
 ]
 
 
-var table_header1: [4]*[]Char8 = [
+var table_header1: [4]*Str8 = [
 	"#", "Header0", "Header1", "Header2"
 ]
 
-var table_data1: [4][4]*[]Char8 = [
+var table_data1: [4][4]*Str8 = [
 	["0", "Alef", "Betha", "Emma"]
 	["1", "Clock", "Depth", "Free"]
 	["2", "Ink", "Julia", "Keyword"]
