@@ -7,7 +7,15 @@
 
 
 const port = 8080
-const receive_buffer_size = 1024 * 4
+
+const receive_buffer_size = 1024
+const send_buffer_size = 1024
+
+
+var httpHeader: *[]Char8 = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n"
+
+
+var pageCounter: Nat32
 
 
 func htons(x: Word16) -> Word16 {
@@ -27,7 +35,9 @@ func handle_request(client_socket: Int32) -> Unit {
 
 	stdio.printf("Received request:\n%s\n", *Str8 &buffer)
 
-	var response: [112]Char8 = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n<html><body><h1>Hello, World!</h1></body></html>\x0"
+	var response: [send_buffer_size]Char8
+	stdio.sprintf(&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>\x0", httpHeader, pageCounter)
+
 	unistd.write(client_socket, &response, string.strlen(&response))
 	unistd.close(client_socket)
 }
@@ -78,6 +88,7 @@ public func main() -> Int32 {
 			again
 		}
 		handle_request(client_socket)
+		pageCounter = pageCounter + 1
 	}
 
 	unistd.close(server_socket)

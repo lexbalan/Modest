@@ -341,6 +341,7 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 @str9 = private constant [7 x i8] [i8 97, i8 99, i8 99, i8 101, i8 112, i8 116, i8 0]
 ; -- endstrings --
 @main_httpHeader = internal global [0 x %Char8]* bitcast ([64 x i8]* @str1 to [0 x i8]*)
+@main_pageCounter = internal global %Int32 zeroinitializer
 define internal %Word16 @main_htons(%Word16 %x) {
 	%1 = zext i8 8 to %Word16
 	%2 = shl %Word16 %x, %1
@@ -350,7 +351,6 @@ define internal %Word16 @main_htons(%Word16 %x) {
 	ret %Word16 %5
 }
 
-@main_cnt = internal global %Int32 zeroinitializer
 define internal void @main_handle_request(%Int32 %client_socket) {
 	%1 = alloca [1024 x %Word8], align 1
 	%2 = bitcast [1024 x %Word8]* %1 to i8*
@@ -371,7 +371,7 @@ endif_0:
 	%11 = alloca [1024 x %Char8], align 1
 	%12 = bitcast [1024 x %Char8]* %11 to %CharStr*
 	%13 = load [0 x %Char8]*, [0 x %Char8]** @main_httpHeader
-	%14 = load %Int32, %Int32* @main_cnt
+	%14 = load %Int32, %Int32* @main_pageCounter
 	%15 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %12, %ConstCharStr* bitcast ([57 x i8]* @str4 to [0 x i8]*), [0 x %Char8]* %13, %Int32 %14)
 	%16 = bitcast [1024 x %Char8]* %11 to i8*
 	%17 = bitcast [1024 x %Char8]* %11 to [0 x %ConstChar]*
@@ -444,9 +444,9 @@ then_3:
 	br label %endif_3
 endif_3:
 	call void @main_handle_request(%Int %22)
-	%25 = load %Int32, %Int32* @main_cnt
+	%25 = load %Int32, %Int32* @main_pageCounter
 	%26 = add %Int32 %25, 1
-	store %Int32 %26, %Int32* @main_cnt
+	store %Int32 %26, %Int32* @main_pageCounter
 	br label %again_1
 break_1:
 	%27 = call %Int @close(%Int %1)
