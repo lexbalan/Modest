@@ -44,7 +44,7 @@ static void handle_request(int32_t client_socket)
 
 	char response[send_buffer_size];
 	memset(&response, 0, sizeof response);
-	sprintf((char *)&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>\x0", httpHeader, pageCounter);
+	sprintf((char *)&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", httpHeader, pageCounter);
 
 	write(client_socket, (char *)&response, strlen((char *)&response));
 	close(client_socket);

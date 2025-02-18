@@ -41,7 +41,7 @@ func handle_request(client_socket: Int32) -> Unit {
 	var response: [send_buffer_size]Char8
 	sprintf(
 		&response,
-		"%s<html><body><h1>Hello, World! (%d)</h1></body></html>\0",
+		"%s<html><body><h1>Hello, World! (%d)</h1></body></html>",
 		httpHeader,
 		pageCounter
 	)

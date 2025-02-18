@@ -333,7 +333,7 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 @str1 = private constant [64 x i8] [i8 72, i8 84, i8 84, i8 80, i8 47, i8 49, i8 46, i8 49, i8 32, i8 50, i8 48, i8 48, i8 32, i8 79, i8 75, i8 13, i8 10, i8 67, i8 111, i8 110, i8 116, i8 101, i8 110, i8 116, i8 45, i8 84, i8 121, i8 112, i8 101, i8 58, i8 32, i8 116, i8 101, i8 120, i8 116, i8 47, i8 104, i8 116, i8 109, i8 108, i8 13, i8 10, i8 67, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 105, i8 111, i8 110, i8 58, i8 32, i8 99, i8 108, i8 111, i8 115, i8 101, i8 13, i8 10, i8 13, i8 10, i8 0]
 @str2 = private constant [5 x i8] [i8 114, i8 101, i8 97, i8 100, i8 0]
 @str3 = private constant [22 x i8] [i8 82, i8 101, i8 99, i8 101, i8 105, i8 118, i8 101, i8 100, i8 32, i8 114, i8 101, i8 113, i8 117, i8 101, i8 115, i8 116, i8 58, i8 10, i8 37, i8 115, i8 10, i8 0]
-@str4 = private constant [57 x i8] [i8 37, i8 115, i8 60, i8 104, i8 116, i8 109, i8 108, i8 62, i8 60, i8 98, i8 111, i8 100, i8 121, i8 62, i8 60, i8 104, i8 49, i8 62, i8 72, i8 101, i8 108, i8 108, i8 111, i8 44, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 32, i8 40, i8 37, i8 100, i8 41, i8 60, i8 47, i8 104, i8 49, i8 62, i8 60, i8 47, i8 98, i8 111, i8 100, i8 121, i8 62, i8 60, i8 47, i8 104, i8 116, i8 109, i8 108, i8 62, i8 0, i8 0]
+@str4 = private constant [56 x i8] [i8 37, i8 115, i8 60, i8 104, i8 116, i8 109, i8 108, i8 62, i8 60, i8 98, i8 111, i8 100, i8 121, i8 62, i8 60, i8 104, i8 49, i8 62, i8 72, i8 101, i8 108, i8 108, i8 111, i8 44, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 32, i8 40, i8 37, i8 100, i8 41, i8 60, i8 47, i8 104, i8 49, i8 62, i8 60, i8 47, i8 98, i8 111, i8 100, i8 121, i8 62, i8 60, i8 47, i8 104, i8 116, i8 109, i8 108, i8 62, i8 0]
 @str5 = private constant [7 x i8] [i8 115, i8 111, i8 99, i8 107, i8 101, i8 116, i8 0]
 @str6 = private constant [5 x i8] [i8 98, i8 105, i8 110, i8 100, i8 0]
 @str7 = private constant [7 x i8] [i8 108, i8 105, i8 115, i8 116, i8 101, i8 110, i8 0]
@@ -372,7 +372,7 @@ endif_0:
 	%12 = bitcast [1024 x %Char8]* %11 to %CharStr*
 	%13 = load [0 x %Char8]*, [0 x %Char8]** @httpHeader
 	%14 = load %Int32, %Int32* @pageCounter
-	%15 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %12, %ConstCharStr* bitcast ([57 x i8]* @str4 to [0 x i8]*), [0 x %Char8]* %13, %Int32 %14)
+	%15 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %12, %ConstCharStr* bitcast ([56 x i8]* @str4 to [0 x i8]*), [0 x %Char8]* %13, %Int32 %14)
 	%16 = bitcast [1024 x %Char8]* %11 to i8*
 	%17 = bitcast [1024 x %Char8]* %11 to [0 x %ConstChar]*
 	%18 = call %SizeT @strlen([0 x %ConstChar]* %17)
