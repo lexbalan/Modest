@@ -7,7 +7,7 @@
 #include "fsm.h"
 
 
-#define fsm_verbose  true
+#define verbose  true
 
 // Вынужден добавлять export тк иначе не идет в хедер к структуре
 // Короче, проблема зависимостей тяжело зависла в воздухе
@@ -49,7 +49,7 @@ void fsm_run(fsm_FSM *fsm)
 		const uint32_t nexstate = fsm->nexstate;
 		fsm_StateDesc *const state = &fsm->states[nexstate];
 
-		if (fsm_verbose) {
+		if (verbose) {
 			printf("enter %s\n", &state->name);
 		}
 
@@ -70,7 +70,7 @@ void fsm_run(fsm_FSM *fsm)
 	} else if (fsm->substate == fsm_substateLeaving) {
 		fsm_StateDesc *const state = &fsm->states[fsm->state];
 
-		if (fsm_verbose) {
+		if (verbose) {
 			printf("exit %s\n", &state->name);
 		}
 

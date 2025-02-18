@@ -16,27 +16,21 @@
 
 
 
-#define main_port  8080
+#define port  8080
 
-#define main_receive_buffer_size  1024
-#define main_send_buffer_size  1024
-
-
-static char *main_httpHeader = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n";
+#define receive_buffer_size  1024
+#define send_buffer_size  1024
 
 
-static uint32_t main_pageCounter;
+static char *httpHeader = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n";
 
 
-static uint16_t main_htons(uint16_t x)
+static uint32_t pageCounter;
+
+
+static void handle_request(int32_t client_socket)
 {
-	return x << 8 | x >> 8;
-}
-
-
-static void main_handle_request(int32_t client_socket)
-{
-	uint8_t buffer[main_receive_buffer_size];
+	uint8_t buffer[receive_buffer_size];
 	memset(&buffer, 0, sizeof buffer);
 	const ssize_t bytes_received = read(client_socket, (uint8_t *)&buffer, __lengthof(buffer) - 1);
 	if (bytes_received < 0) {
@@ -48,9 +42,9 @@ static void main_handle_request(int32_t client_socket)
 
 	printf("Received request:\n%s\n", (char *)&buffer);
 
-	char response[main_send_buffer_size];
+	char response[send_buffer_size];
 	memset(&response, 0, sizeof response);
-	sprintf((char *)&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>\x0", main_httpHeader, main_pageCounter);
+	sprintf((char *)&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>\x0", httpHeader, pageCounter);
 
 	write(client_socket, (char *)&response, strlen((char *)&response));
 	close(client_socket);
@@ -70,7 +64,7 @@ int32_t main()
 		.sin_addr = {
 			.s_addr = INADDR_ANY
 		},
-		.sin_port = (unsigned short)main_htons(main_port)
+		.sin_port = (unsigned short)htons(port)
 	};
 
 	// Bind socket to address
@@ -90,7 +84,7 @@ int32_t main()
 		exit(1);
 	}
 
-	printf("Server listening on port %d...\n", (uint32_t)main_port);
+	printf("Server listening on port %d...\n", (uint32_t)port);
 
 	// Handle input connections
 	while (true) {
@@ -102,8 +96,8 @@ int32_t main()
 			perror("accept");
 			continue;
 		}
-		main_handle_request(client_socket);
-		main_pageCounter = main_pageCounter + 1;
+		handle_request(client_socket);
+		pageCounter = pageCounter + 1;
 	}
 
 	close(server_socket);

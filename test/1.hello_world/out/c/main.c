@@ -6,15 +6,15 @@
 
 #include "main.h"
 
-#define main_hello  "Hello"
-#define main_world  "World!"
+#define hello  "Hello"
+#define world  "World!"
 
-#define main_hello_world  (main_hello " " main_world)
+#define hello_world  (hello " " world)
 
 
 int main()
 {
-	printf("%s\n", (char *)main_hello_world);
+	printf("%s\n", (char *)hello_world);
 	return 0;
 }
 

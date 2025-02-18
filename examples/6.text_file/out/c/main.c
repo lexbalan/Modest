@@ -15,17 +15,17 @@
 //include "libc/stdio"
 
 
-#define main_filename  "file.txt"
+#define filename  "file.txt"
 
 
-static void main_write_example()
+static void write_example()
 {
 	printf("run write_example\n");
 
-	FILE *const fp = fopen(main_filename, "w");
+	FILE *const fp = fopen(filename, "w");
 
 	if (fp == NULL) {
-		printf("error: cannot create file '%s'", main_filename);
+		printf("error: cannot create file '%s'", filename);
 		return;
 	}
 
@@ -35,18 +35,18 @@ static void main_write_example()
 }
 
 
-static void main_read_example()
+static void read_example()
 {
 	printf("run read_example\n");
 
-	FILE *const fp = fopen(main_filename, "r");
+	FILE *const fp = fopen(filename, "r");
 
 	if (fp == NULL) {
-		printf("error: cannot open file '%s'", main_filename);
+		printf("error: cannot open file '%s'", filename);
 		return;
 	}
 
-	printf("file '%s' contains: ", main_filename);
+	printf("file '%s' contains: ", filename);
 	while (true) {
 		const int ch = fgetc(fp);
 		if (ch == EOF) {
@@ -62,8 +62,8 @@ static void main_read_example()
 int main()
 {
 	printf("text_file example\n");
-	main_write_example();
-	main_read_example();
+	write_example();
+	read_example();
 	return 0;
 }
 

@@ -6,19 +6,19 @@
 
 #include "main.h"
 
-#define main_hello  "Hello"
-#define main_world  "World"
-#define main_party_corn  U"🎉"
+#define hello  "Hello"
+#define world  "World"
+#define party_corn  U"🎉"
 
-#define main_greeting  (main_hello " " main_world)//+ " " + party_corn
+#define greeting  (hello " " world)//+ " " + party_corn
 
 
-#define main_test  "test"
+#define test  "test"
 
 
 int main()
 {
-	printf("%s\n", (char *)main_greeting);
+	printf("%s\n", (char *)greeting);
 
 	if (true) {
 		printf("test ok.\n");

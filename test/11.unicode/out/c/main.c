@@ -12,34 +12,34 @@
 // include test (!)
 
 
-#define _main_ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
-const uint8_t main_ratSymbolUTF8[4] = _main_ratSymbolUTF8;
-#define _main_ratSymbolUTF16  {0xD83D, 0xDC00}
-const uint16_t main_ratSymbolUTF16[2] = _main_ratSymbolUTF16;
-#define main_ratSymbolUTF32  0x0001F400
+#define _ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
+const uint8_t ratSymbolUTF8[4] = _ratSymbolUTF8;
+#define _ratSymbolUTF16  {0xD83D, 0xDC00}
+const uint16_t ratSymbolUTF16[2] = _ratSymbolUTF16;
+#define ratSymbolUTF32  0x0001F400
 
-#define _main_arr_partycorn  "🎉"
-const char main_arr_partycorn[4] = _main_arr_partycorn;
-#define _main_arr_unicorn  "🦄"
-const char main_arr_unicorn[4] = _main_arr_unicorn;
-#define _main_arr_rat  "🐀"
-const char main_arr_rat[4] = _main_arr_rat;
+#define _arr_partycorn  "🎉"
+const char arr_partycorn[4] = _arr_partycorn;
+#define _arr_unicorn  "🦄"
+const char arr_unicorn[4] = _arr_unicorn;
+#define _arr_rat  "🐀"
+const char arr_rat[4] = _arr_rat;
 
-#define main_genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define main_string8Const  "S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define main_string16Const  u"S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define main_string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define string8Const  "S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define string16Const  u"S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
 
-static char main_arr_utf8[8] = "Hi!\n";
-static uint16_t main_arr_utf16[9] = u"Hello Ω!\n";
-static uint32_t main_arr_utf32[8] = U"Hello!\n";
+static char arr_utf8[8] = "Hi!\n";
+static uint16_t arr_utf16[9] = u"Hello Ω!\n";
+static uint32_t arr_utf32[8] = U"Hello!\n";
 
 
 int32_t main()
 {
-	char *str8 = main_string8Const;
-	uint16_t *str16 = main_string16Const;
-	uint32_t *str32 = main_string32Const;
+	char *str8 = string8Const;
+	uint16_t *str16 = string16Const;
+	uint32_t *str32 = string32Const;
 
 	console_puts8(str8);
 	console_puts8("\n");

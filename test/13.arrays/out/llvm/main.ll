@@ -319,7 +319,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ;@attribute("c_no_print")
 ;import "misc/minmax"
 ;$pragma c_include "./minmax.h"
-@main_constantArray = constant [10 x i8] [
+@constantArray = constant [10 x i8] [
 	i8 1,
 	i8 2,
 	i8 3,
@@ -331,7 +331,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 	i8 9,
 	i8 10
 ]
-@main_globalArray = internal global [10 x %Int32] [
+@globalArray = internal global [10 x %Int32] [
 	%Int32 1,
 	%Int32 2,
 	%Int32 3,
@@ -343,7 +343,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 	%Int32 9,
 	%Int32 10
 ]
-@main_arrayFromString = internal global [3 x %Char8] [
+@arrayFromString = internal global [3 x %Char8] [
 	%Char8 97,
 	%Char8 98,
 	%Char8 99
@@ -351,7 +351,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 
 
 ;var arrayOfChars = [Char8 "a", 'b', 'c']
-define internal void @main_f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
+define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%x = alloca [20 x %Char8]
 	%2 = zext i8 20 to %Int32
 	store [20 x %Char8] %__x, [20 x %Char8]* %x
@@ -403,15 +403,15 @@ define internal void @main_f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	ret void
 }
 
-@main_startSequence = constant [3 x i8] [
+@startSequence = constant [3 x i8] [
 	i8 170,
 	i8 85,
 	i8 2
 ]
-@main_stopSequence = constant [1 x i8] [
+@stopSequence = constant [1 x i8] [
 	i8 22
 ]
-define internal void @main_test() {
+define internal void @test() {
 	; тестируем работу с локальным generic массивом
 	%1 = alloca [6 x %Int32], align 1
 	%2 = insertvalue [6 x %Int32] zeroinitializer, %Int32 170, 0
@@ -441,7 +441,7 @@ break_1:
 	ret void
 }
 
-@main_a0 = internal global [2 x [2 x [5 x %Int32]]] [
+@a0 = internal global [2 x [2 x [5 x %Int32]]] [
 	[2 x [5 x %Int32]] [
 		[5 x %Int32] [
 			%Int32 0,
@@ -475,30 +475,30 @@ break_1:
 		]
 	]
 ]
-@main_a1 = internal global [5 x %Int32] [
+@a1 = internal global [5 x %Int32] [
 	%Int32 0,
 	%Int32 1,
 	%Int32 2,
 	%Int32 3,
 	%Int32 4
 ]
-@main_a2 = internal global [5 x %Int32] [
+@a2 = internal global [5 x %Int32] [
 	%Int32 5,
 	%Int32 6,
 	%Int32 7,
 	%Int32 8,
 	%Int32 9
 ]
-@main_a3 = internal global [2 x [5 x %Int32]*] [
-	[5 x %Int32]* @main_a1,
-	[5 x %Int32]* @main_a2
+@a3 = internal global [2 x [5 x %Int32]*] [
+	[5 x %Int32]* @a1,
+	[5 x %Int32]* @a2
 ]
-@main_a4 = internal global [2 x [2 x [5 x %Int32]*]*] [
-	[2 x [5 x %Int32]*]* @main_a3,
-	[2 x [5 x %Int32]*]* @main_a3
+@a4 = internal global [2 x [2 x [5 x %Int32]*]*] [
+	[2 x [5 x %Int32]*]* @a3,
+	[2 x [5 x %Int32]*]* @a3
 ]
-@main_p0 = internal global [2 x [2 x [5 x %Int32]*]*]* @main_a4
-@main_a10 = internal global [10 x [10 x %Int32]] [
+@p0 = internal global [2 x [2 x [5 x %Int32]*]*]* @a4
+@a10 = internal global [10 x [10 x %Int32]] [
 	[10 x %Int32] [
 		%Int32 1,
 		%Int32 2,
@@ -620,7 +620,7 @@ break_1:
 		%Int32 100
 	]
 ]
-define internal void @main_test_arrays() {
+define internal void @test_arrays() {
 	%1 = alloca %Int32, align 4
 	%2 = alloca %Int32, align 4
 	%3 = alloca %Int32, align 4
@@ -640,10 +640,10 @@ again_2:
 body_2:
 	%8 = load %Int32, %Int32* %2
 	%9 = load %Int32, %Int32* %1
-	%10 = getelementptr [10 x [10 x %Int32]], [10 x [10 x %Int32]]* @main_a10, %Int32 0, %Int32 %9, %Int32 %8
+	%10 = getelementptr [10 x [10 x %Int32]], [10 x [10 x %Int32]]* @a10, %Int32 0, %Int32 %9, %Int32 %8
 	%11 = load %Int32, %Int32* %2
 	%12 = load %Int32, %Int32* %1
-	%13 = getelementptr [10 x [10 x %Int32]], [10 x [10 x %Int32]]* @main_a10, %Int32 0, %Int32 %12, %Int32 %11
+	%13 = getelementptr [10 x [10 x %Int32]], [10 x [10 x %Int32]]* @a10, %Int32 0, %Int32 %12, %Int32 %11
 	%14 = load %Int32, %Int32* %13
 	%15 = mul %Int32 %14, 2
 	store %Int32 %15, %Int32* %10
@@ -675,7 +675,7 @@ body_4:
 	%25 = load %Int32, %Int32* %2
 	%26 = load %Int32, %Int32* %2
 	%27 = load %Int32, %Int32* %1
-	%28 = getelementptr [10 x [10 x %Int32]], [10 x [10 x %Int32]]* @main_a10, %Int32 0, %Int32 %27, %Int32 %26
+	%28 = getelementptr [10 x [10 x %Int32]], [10 x [10 x %Int32]]* @a10, %Int32 0, %Int32 %27, %Int32 %26
 	%29 = load %Int32, %Int32* %28
 	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str4 to [0 x i8]*), %Int32 %24, %Int32 %25, %Int32 %29)
 	%31 = load %Int32, %Int32* %2
@@ -715,7 +715,7 @@ body_7:
 	%44 = load %Int32, %Int32* %3
 	%45 = load %Int32, %Int32* %2
 	%46 = load %Int32, %Int32* %1
-	%47 = getelementptr [2 x [2 x [5 x %Int32]]], [2 x [2 x [5 x %Int32]]]* @main_a0, %Int32 0, %Int32 %46, %Int32 %45, %Int32 %44
+	%47 = getelementptr [2 x [2 x [5 x %Int32]]], [2 x [2 x [5 x %Int32]]]* @a0, %Int32 0, %Int32 %46, %Int32 %45, %Int32 %44
 	%48 = load %Int32, %Int32* %47
 	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str5 to [0 x i8]*), %Int32 %41, %Int32 %42, %Int32 %43, %Int32 %48)
 	%50 = load %Int32, %Int32* %3
@@ -753,7 +753,7 @@ body_9:
 	%61 = load %Int32, %Int32* %2
 	%62 = load %Int32, %Int32* %2
 	%63 = load %Int32, %Int32* %1
-	%64 = getelementptr [2 x [5 x %Int32]*], [2 x [5 x %Int32]*]* @main_a3, %Int32 0, %Int32 %63
+	%64 = getelementptr [2 x [5 x %Int32]*], [2 x [5 x %Int32]*]* @a3, %Int32 0, %Int32 %63
 	%65 = load [5 x %Int32]*, [5 x %Int32]** %64
 	%66 = getelementptr [5 x %Int32], [5 x %Int32]* %65, %Int32 0, %Int32 %62
 	%67 = load %Int32, %Int32* %66
@@ -797,7 +797,7 @@ body_12:
 	%82 = load %Int32, %Int32* %3
 	%83 = load %Int32, %Int32* %2
 	%84 = load %Int32, %Int32* %1
-	%85 = getelementptr [2 x [2 x [5 x %Int32]*]*], [2 x [2 x [5 x %Int32]*]*]* @main_a4, %Int32 0, %Int32 %84
+	%85 = getelementptr [2 x [2 x [5 x %Int32]*]*], [2 x [2 x [5 x %Int32]*]*]* @a4, %Int32 0, %Int32 %84
 	%86 = load [2 x [5 x %Int32]*]*, [2 x [5 x %Int32]*]** %85
 	%87 = getelementptr [2 x [5 x %Int32]*], [2 x [5 x %Int32]*]* %86, %Int32 0, %Int32 %83
 	%88 = load [5 x %Int32]*, [5 x %Int32]** %87
@@ -846,7 +846,7 @@ body_15:
 	%107 = load %Int32, %Int32* %3
 	%108 = load %Int32, %Int32* %2
 	%109 = load %Int32, %Int32* %1
-	%110 = load [2 x [2 x [5 x %Int32]*]*]*, [2 x [2 x [5 x %Int32]*]*]** @main_p0
+	%110 = load [2 x [2 x [5 x %Int32]*]*]*, [2 x [2 x [5 x %Int32]*]*]** @p0
 	%111 = getelementptr [2 x [2 x [5 x %Int32]*]*], [2 x [2 x [5 x %Int32]*]*]* %110, %Int32 0, %Int32 %109
 	%112 = load [2 x [5 x %Int32]*]*, [2 x [5 x %Int32]*]** %111
 	%113 = getelementptr [2 x [5 x %Int32]*], [2 x [5 x %Int32]*]* %112, %Int32 0, %Int32 %108
@@ -888,7 +888,7 @@ define %Int @main() {
 	%12 = insertvalue [20 x %Char8] %11, %Char8 100, 10
 	%13 = insertvalue [20 x %Char8] %12, %Char8 33, 11; alloca memory for return value
 	%14 = alloca [30 x %Char8]
-	call void @main_f0([30 x %Char8]* %14, [20 x %Char8] %13)
+	call void @f0([30 x %Char8]* %14, [20 x %Char8] %13)
 	%15 = load [30 x %Char8], [30 x %Char8]* %14
 	%16 = zext i8 30 to %Int32
 	store [30 x %Char8] %15, [30 x %Char8]* %1
@@ -902,7 +902,7 @@ again_1:
 	br %Bool %20 , label %body_1, label %break_1
 body_1:
 	%21 = load %Int32, %Int32* %18
-	%22 = getelementptr [10 x %Int32], [10 x %Int32]* @main_globalArray, %Int32 0, %Int32 %21
+	%22 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 %21
 	%23 = load %Int32, %Int32* %22
 	%24 = load %Int32, %Int32* %18
 	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str10 to [0 x i8]*), %Int32 %24, %Int32 %23)
@@ -937,7 +937,7 @@ body_2:
 break_2:
 	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str13 to [0 x i8]*))
 	%44 = alloca [0 x %Int32]*, align 8
-	store [0 x %Int32]* bitcast ([10 x %Int32]* @main_globalArray to [0 x %Int32]*), [0 x %Int32]** %44
+	store [0 x %Int32]* bitcast ([10 x %Int32]* @globalArray to [0 x %Int32]*), [0 x %Int32]** %44
 	store %Int32 0, %Int32* %18
 	br label %again_3
 again_3:
@@ -1129,19 +1129,19 @@ endif_1:
 	%161 = load [10 x %Int32], [10 x %Int32]* %160
 ; -- end cons_composite_from_composite_by_adr --
 	%162 = zext i8 10 to %Int32
-	store [10 x %Int32] %161, [10 x %Int32]* @main_globalArray
-	%163 = getelementptr [10 x %Int32], [10 x %Int32]* @main_globalArray, %Int32 0, %Int32 0
+	store [10 x %Int32] %161, [10 x %Int32]* @globalArray
+	%163 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 0
 	%164 = load %Int32, %Int32* %163
 	%165 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str36 to [0 x i8]*), %Int32 0, %Int32 %164)
-	%166 = getelementptr [10 x %Int32], [10 x %Int32]* @main_globalArray, %Int32 0, %Int32 1
+	%166 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 1
 	%167 = load %Int32, %Int32* %166
 	%168 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str37 to [0 x i8]*), %Int32 1, %Int32 %167)
-	%169 = getelementptr [10 x %Int32], [10 x %Int32]* @main_globalArray, %Int32 0, %Int32 2
+	%169 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 2
 	%170 = load %Int32, %Int32* %169
 	%171 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str38 to [0 x i8]*), %Int32 2, %Int32 %170)
 	%172 = zext i8 10 to %Int32
 	%173 = mul %Int32 %172, 4
-	%174 = bitcast [10 x %Int32]* @main_globalArray to i8*
+	%174 = bitcast [10 x %Int32]* @globalArray to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %174, i8 0, %Int32 %173, i1 0)
 
 
@@ -1228,7 +1228,7 @@ else_3:
 	%233 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str46 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-	call void @main_test_arrays()
+	call void @test_arrays()
 	ret %Int 0
 }
 

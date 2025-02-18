@@ -18,6 +18,8 @@ var httpHeader: *[]Char8 = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnec
 var pageCounter: Nat32
 
 
+
+
 func htons(x: Word16) -> Word16 {
 	return x << 8 or x >> 8
 }

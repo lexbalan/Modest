@@ -7,7 +7,7 @@
 #include "main.h"
 
 
-static int32_t main_named_args_test(int32_t a, int32_t b, int32_t c)
+static int32_t named_args_test(int32_t a, int32_t b, int32_t c)
 {
 	return (a - b) * c;
 }
@@ -23,7 +23,7 @@ int main()
 
 	#define __x0  ((__a - __b) * __c)
 
-	const int32_t x1 = main_named_args_test(__a, __b, __c);
+	const int32_t x1 = named_args_test(__a, __b, __c);
 
 	if (__x0 == x1) {
 		printf("test passed\n");

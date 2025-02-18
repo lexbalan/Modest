@@ -315,35 +315,35 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 ; -- endstrings --
 
 ; include test (!)
-@main_ratSymbolUTF8 = constant [4 x i8] [
+@ratSymbolUTF8 = constant [4 x i8] [
 	i8 240,
 	i8 159,
 	i8 144,
 	i8 128
 ]
-@main_ratSymbolUTF16 = constant [2 x i16] [
+@ratSymbolUTF16 = constant [2 x i16] [
 	i16 55357,
 	i16 56320
 ]
-@main_arr_partycorn = constant [4 x %Char8] [
+@arr_partycorn = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 142,
 	%Char8 137
 ]
-@main_arr_unicorn = constant [4 x %Char8] [
+@arr_unicorn = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 166,
 	%Char8 132
 ]
-@main_arr_rat = constant [4 x %Char8] [
+@arr_rat = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 144,
 	%Char8 128
 ]
-@main_arr_utf8 = internal global [8 x %Char8] [
+@arr_utf8 = internal global [8 x %Char8] [
 	%Char8 72,
 	%Char8 105,
 	%Char8 33,
@@ -353,7 +353,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char8 0,
 	%Char8 0
 ]
-@main_arr_utf16 = internal global [9 x %Char16] [
+@arr_utf16 = internal global [9 x %Char16] [
 	%Char16 72,
 	%Char16 101,
 	%Char16 108,
@@ -364,7 +364,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char16 33,
 	%Char16 10
 ]
-@main_arr_utf32 = internal global [8 x %Char32] [
+@arr_utf32 = internal global [8 x %Char32] [
 	%Char32 72,
 	%Char32 101,
 	%Char32 108,

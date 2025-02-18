@@ -424,7 +424,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 
 ;include "libc/ctypes64"
 ;include "libc/stdio"
-define internal void @main_write_example() {
+define internal void @write_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
 	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
 	%3 = icmp eq %File* %2, null
@@ -439,7 +439,7 @@ endif_0:
 	ret void
 }
 
-define internal void @main_read_example() {
+define internal void @read_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
 	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
 	%3 = icmp eq %File* %2, null
@@ -470,8 +470,8 @@ break_1:
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*))
-	call void @main_write_example()
-	call void @main_read_example()
+	call void @write_example()
+	call void @read_example()
 	ret %Int 0
 }
 

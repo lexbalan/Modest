@@ -155,14 +155,14 @@ declare [0 x %Char]* @strerror(%Int %error)
 ; -- strings --
 ; -- endstrings --
 %sha256_Hash = type [32 x %Word8];
-%sha256_Context = type {
+%Context = type {
 	[64 x %Word8],
 	%Int32,
 	%Int64,
 	[8 x %Word32]
 };
 
-define internal %Word32 @sha256_rotleft(%Word32 %a, %Int32 %b) {
+define internal %Word32 @rotleft(%Word32 %a, %Int32 %b) {
 	%1 = bitcast %Int32 %b to %Word32
 	%2 = shl %Word32 %a, %1
 	%3 = sub %Int32 32, %b
@@ -172,7 +172,7 @@ define internal %Word32 @sha256_rotleft(%Word32 %a, %Int32 %b) {
 	ret %Word32 %6
 }
 
-define internal %Word32 @sha256_rotright(%Word32 %a, %Int32 %b) {
+define internal %Word32 @rotright(%Word32 %a, %Int32 %b) {
 	%1 = bitcast %Int32 %b to %Word32
 	%2 = lshr %Word32 %a, %1
 	%3 = sub %Int32 32, %b
@@ -182,7 +182,7 @@ define internal %Word32 @sha256_rotright(%Word32 %a, %Int32 %b) {
 	ret %Word32 %6
 }
 
-define internal %Word32 @sha256_ch(%Word32 %x, %Word32 %y, %Word32 %z) {
+define internal %Word32 @ch(%Word32 %x, %Word32 %y, %Word32 %z) {
 	%1 = and %Word32 %x, %y
 	%2 = xor %Word32 %x, -1
 	%3 = and %Word32 %2, %z
@@ -190,7 +190,7 @@ define internal %Word32 @sha256_ch(%Word32 %x, %Word32 %y, %Word32 %z) {
 	ret %Word32 %4
 }
 
-define internal %Word32 @sha256_maj(%Word32 %x, %Word32 %y, %Word32 %z) {
+define internal %Word32 @maj(%Word32 %x, %Word32 %y, %Word32 %z) {
 	%1 = and %Word32 %x, %y
 	%2 = and %Word32 %x, %z
 	%3 = and %Word32 %y, %z
@@ -199,27 +199,27 @@ define internal %Word32 @sha256_maj(%Word32 %x, %Word32 %y, %Word32 %z) {
 	ret %Word32 %5
 }
 
-define internal %Word32 @sha256_ep0(%Word32 %x) {
-	%1 = call %Word32 @sha256_rotright(%Word32 %x, %Int32 2)
-	%2 = call %Word32 @sha256_rotright(%Word32 %x, %Int32 13)
-	%3 = call %Word32 @sha256_rotright(%Word32 %x, %Int32 22)
+define internal %Word32 @ep0(%Word32 %x) {
+	%1 = call %Word32 @rotright(%Word32 %x, %Int32 2)
+	%2 = call %Word32 @rotright(%Word32 %x, %Int32 13)
+	%3 = call %Word32 @rotright(%Word32 %x, %Int32 22)
 	%4 = xor %Word32 %2, %3
 	%5 = xor %Word32 %1, %4
 	ret %Word32 %5
 }
 
-define internal %Word32 @sha256_ep1(%Word32 %x) {
-	%1 = call %Word32 @sha256_rotright(%Word32 %x, %Int32 6)
-	%2 = call %Word32 @sha256_rotright(%Word32 %x, %Int32 11)
-	%3 = call %Word32 @sha256_rotright(%Word32 %x, %Int32 25)
+define internal %Word32 @ep1(%Word32 %x) {
+	%1 = call %Word32 @rotright(%Word32 %x, %Int32 6)
+	%2 = call %Word32 @rotright(%Word32 %x, %Int32 11)
+	%3 = call %Word32 @rotright(%Word32 %x, %Int32 25)
 	%4 = xor %Word32 %2, %3
 	%5 = xor %Word32 %1, %4
 	ret %Word32 %5
 }
 
-define internal %Word32 @sha256_sig0(%Word32 %x) {
-	%1 = call %Word32 @sha256_rotright(%Word32 %x, %Int32 7)
-	%2 = call %Word32 @sha256_rotright(%Word32 %x, %Int32 18)
+define internal %Word32 @sig0(%Word32 %x) {
+	%1 = call %Word32 @rotright(%Word32 %x, %Int32 7)
+	%2 = call %Word32 @rotright(%Word32 %x, %Int32 18)
 	%3 = zext i8 3 to %Word32
 	%4 = lshr %Word32 %x, %3
 	%5 = xor %Word32 %2, %4
@@ -227,9 +227,9 @@ define internal %Word32 @sha256_sig0(%Word32 %x) {
 	ret %Word32 %6
 }
 
-define internal %Word32 @sha256_sig1(%Word32 %x) {
-	%1 = call %Word32 @sha256_rotright(%Word32 %x, %Int32 17)
-	%2 = call %Word32 @sha256_rotright(%Word32 %x, %Int32 19)
+define internal %Word32 @sig1(%Word32 %x) {
+	%1 = call %Word32 @rotright(%Word32 %x, %Int32 17)
+	%2 = call %Word32 @rotright(%Word32 %x, %Int32 19)
 	%3 = zext i8 10 to %Word32
 	%4 = lshr %Word32 %x, %3
 	%5 = xor %Word32 %2, %4
@@ -237,7 +237,7 @@ define internal %Word32 @sha256_sig1(%Word32 %x) {
 	ret %Word32 %6
 }
 
-@sha256_initalState = constant [8 x i32] [
+@initalState = constant [8 x i32] [
 	i32 1779033703,
 	i32 3144134277,
 	i32 1013904242,
@@ -247,8 +247,8 @@ define internal %Word32 @sha256_sig1(%Word32 %x) {
 	i32 528734635,
 	i32 1541459225
 ]
-define internal void @sha256_contextInit(%sha256_Context* %ctx) {
-	%1 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+define internal void @contextInit(%Context* %ctx) {
+	%1 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%2 = insertvalue [8 x %Word32] zeroinitializer, %Word32 1779033703, 0
 	%3 = insertvalue [8 x %Word32] %2, %Word32 3144134277, 1
 	%4 = insertvalue [8 x %Word32] %3, %Word32 1013904242, 2
@@ -262,7 +262,7 @@ define internal void @sha256_contextInit(%sha256_Context* %ctx) {
 	ret void
 }
 
-@sha256_k = constant [64 x i32] [
+@k = constant [64 x i32] [
 	i32 1116352408,
 	i32 1899447441,
 	i32 3049323471,
@@ -328,7 +328,7 @@ define internal void @sha256_contextInit(%sha256_Context* %ctx) {
 	i32 3204031479,
 	i32 3329325298
 ]
-define internal void @sha256_transform(%sha256_Context* %ctx, [0 x %Word8]* %data) {
+define internal void @transform(%Context* %ctx, [0 x %Word8]* %data) {
 	%1 = alloca [64 x %Word32], align 1
 	%2 = zext i8 64 to %Int32
 	%3 = mul %Int32 %2, 4
@@ -405,7 +405,7 @@ body_2:
 	%58 = bitcast %Int32 %57 to %Int32
 	%59 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %58
 	%60 = load %Word32, %Word32* %59
-	%61 = call %Word32 @sha256_sig1(%Word32 %60)
+	%61 = call %Word32 @sig1(%Word32 %60)
 	%62 = bitcast %Word32 %61 to %Int32
 	%63 = load %Int32, %Int32* %5
 	%64 = sub %Int32 %63, 7
@@ -419,7 +419,7 @@ body_2:
 	%72 = bitcast %Int32 %71 to %Int32
 	%73 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %72
 	%74 = load %Word32, %Word32* %73
-	%75 = call %Word32 @sha256_sig0(%Word32 %74)
+	%75 = call %Word32 @sig0(%Word32 %74)
 	%76 = bitcast %Word32 %75 to %Int32
 	%77 = add %Int32 %69, %76
 	%78 = load %Int32, %Int32* %5
@@ -437,7 +437,7 @@ body_2:
 	br label %again_2
 break_2:
 	%88 = alloca [8 x %Word32], align 1
-	%89 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%89 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%90 = load [8 x %Word32], [8 x %Word32]* %89
 	%91 = zext i8 8 to %Int32
 	store [8 x %Word32] %90, [8 x %Word32]* %88
@@ -453,7 +453,7 @@ body_3:
 	%96 = bitcast %Word32 %95 to %Int32
 	%97 = getelementptr [8 x %Word32], [8 x %Word32]* %88, %Int32 0, %Int32 4
 	%98 = load %Word32, %Word32* %97
-	%99 = call %Word32 @sha256_ep1(%Word32 %98)
+	%99 = call %Word32 @ep1(%Word32 %98)
 	%100 = bitcast %Word32 %99 to %Int32
 	%101 = add %Int32 %96, %100
 	%102 = getelementptr [8 x %Word32], [8 x %Word32]* %88, %Int32 0, %Int32 4
@@ -462,12 +462,12 @@ body_3:
 	%105 = load %Word32, %Word32* %104
 	%106 = getelementptr [8 x %Word32], [8 x %Word32]* %88, %Int32 0, %Int32 6
 	%107 = load %Word32, %Word32* %106
-	%108 = call %Word32 @sha256_ch(%Word32 %103, %Word32 %105, %Word32 %107)
+	%108 = call %Word32 @ch(%Word32 %103, %Word32 %105, %Word32 %107)
 	%109 = bitcast %Word32 %108 to %Int32
 	%110 = add %Int32 %101, %109
 	%111 = load %Int32, %Int32* %5
 	%112 = bitcast %Int32 %111 to %Int32
-	%113 = getelementptr [64 x i32], [64 x i32]* @sha256_k, %Int32 0, %Int32 %112
+	%113 = getelementptr [64 x i32], [64 x i32]* @k, %Int32 0, %Int32 %112
 	%114 = load i32, i32* %113
 	%115 = bitcast i32 %114 to %Int32
 	%116 = add %Int32 %110, %115
@@ -479,7 +479,7 @@ body_3:
 	%122 = add %Int32 %116, %121
 	%123 = getelementptr [8 x %Word32], [8 x %Word32]* %88, %Int32 0, %Int32 0
 	%124 = load %Word32, %Word32* %123
-	%125 = call %Word32 @sha256_ep0(%Word32 %124)
+	%125 = call %Word32 @ep0(%Word32 %124)
 	%126 = bitcast %Word32 %125 to %Int32
 	%127 = getelementptr [8 x %Word32], [8 x %Word32]* %88, %Int32 0, %Int32 0
 	%128 = load %Word32, %Word32* %127
@@ -487,7 +487,7 @@ body_3:
 	%130 = load %Word32, %Word32* %129
 	%131 = getelementptr [8 x %Word32], [8 x %Word32]* %88, %Int32 0, %Int32 2
 	%132 = load %Word32, %Word32* %131
-	%133 = call %Word32 @sha256_maj(%Word32 %128, %Word32 %130, %Word32 %132)
+	%133 = call %Word32 @maj(%Word32 %128, %Word32 %130, %Word32 %132)
 	%134 = bitcast %Word32 %133 to %Int32
 	%135 = add %Int32 %126, %134
 	%136 = getelementptr [8 x %Word32], [8 x %Word32]* %88, %Int32 0, %Int32 7
@@ -538,11 +538,11 @@ again_4:
 	br %Bool %166 , label %body_4, label %break_4
 body_4:
 	%167 = load %Int32, %Int32* %5
-	%168 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%168 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%169 = bitcast %Int32 %167 to %Int32
 	%170 = getelementptr [8 x %Word32], [8 x %Word32]* %168, %Int32 0, %Int32 %169
 	%171 = load %Int32, %Int32* %5
-	%172 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%172 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%173 = bitcast %Int32 %171 to %Int32
 	%174 = getelementptr [8 x %Word32], [8 x %Word32]* %172, %Int32 0, %Int32 %173
 	%175 = load %Word32, %Word32* %174
@@ -563,7 +563,7 @@ break_4:
 	ret void
 }
 
-define internal void @sha256_update(%sha256_Context* %ctx, [0 x %Word8]* %msg, %Int32 %msgLen) {
+define internal void @update(%Context* %ctx, [0 x %Word8]* %msg, %Int32 %msgLen) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
 	br label %again_1
@@ -572,9 +572,9 @@ again_1:
 	%3 = icmp ult %Int32 %2, %msgLen
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
-	%4 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 1
+	%4 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%5 = load %Int32, %Int32* %4
-	%6 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%6 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%7 = bitcast %Int32 %5 to %Int32
 	%8 = getelementptr [64 x %Word8], [64 x %Word8]* %6, %Int32 0, %Int32 %7
 	%9 = load %Int32, %Int32* %1
@@ -582,25 +582,25 @@ body_1:
 	%11 = getelementptr [0 x %Word8], [0 x %Word8]* %msg, %Int32 0, %Int32 %10
 	%12 = load %Word8, %Word8* %11
 	store %Word8 %12, %Word8* %8
-	%13 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 1
-	%14 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 1
+	%13 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%14 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%15 = load %Int32, %Int32* %14
 	%16 = add %Int32 %15, 1
 	store %Int32 %16, %Int32* %13
-	%17 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 1
+	%17 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%18 = load %Int32, %Int32* %17
 	%19 = icmp eq %Int32 %18, 64
 	br %Bool %19 , label %then_0, label %endif_0
 then_0:
-	%20 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%20 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%21 = bitcast [64 x %Word8]* %20 to [0 x %Word8]*
-	call void @sha256_transform(%sha256_Context* %ctx, [0 x %Word8]* %21)
-	%22 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
-	%23 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
+	call void @transform(%Context* %ctx, [0 x %Word8]* %21)
+	%22 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%23 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%24 = load %Int64, %Int64* %23
 	%25 = add %Int64 %24, 512
 	store %Int64 %25, %Int64* %22
-	%26 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 1
+	%26 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	store %Int32 0, %Int32* %26
 	br label %endif_0
 endif_0:
@@ -612,16 +612,16 @@ break_1:
 	ret void
 }
 
-define internal void @sha256_final(%sha256_Context* %ctx, %sha256_Hash* %outHash) {
+define internal void @final(%Context* %ctx, %sha256_Hash* %outHash) {
 	%1 = alloca %Int32, align 4
-	%2 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 1
+	%2 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%3 = load %Int32, %Int32* %2
 	store %Int32 %3, %Int32* %1
 
 	; Pad whatever data is left in the buffer.
 	%4 = alloca %Int32, align 4
 	store %Int32 64, %Int32* %4
-	%5 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 1
+	%5 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%6 = load %Int32, %Int32* %5
 	%7 = icmp ult %Int32 %6, 56
 	br %Bool %7 , label %then_0, label %endif_0
@@ -630,7 +630,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%8 = load %Int32, %Int32* %1
-	%9 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%9 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%10 = bitcast %Int32 %8 to %Int32
 	%11 = getelementptr [64 x %Word8], [64 x %Word8]* %9, %Int32 0, %Int32 %10
 	store %Word8 128, %Word8* %11
@@ -638,7 +638,7 @@ endif_0:
 	%13 = add %Int32 %12, 1
 	store %Int32 %13, %Int32* %1
 	%14 = load %Int32, %Int32* %1
-	%15 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%15 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%16 = bitcast %Int32 %14 to %Int32
 	%17 = getelementptr [64 x %Word8], [64 x %Word8]* %15, %Int32 0, %Int32 %16
 	%18 = bitcast %Word8* %17 to i8*
@@ -648,15 +648,15 @@ endif_0:
 	%22 = zext %Int32 %21 to %SizeT
 	%23 = call i8* @memset(i8* %18, %Int 0, %SizeT %22)
 	;ctx.data[i:n-i] = []
-	%24 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 1
+	%24 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%25 = load %Int32, %Int32* %24
 	%26 = icmp uge %Int32 %25, 56
 	br %Bool %26 , label %then_1, label %endif_1
 then_1:
-	%27 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%27 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%28 = bitcast [64 x %Word8]* %27 to [0 x %Word8]*
-	call void @sha256_transform(%sha256_Context* %ctx, [0 x %Word8]* %28)
-	%29 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	call void @transform(%Context* %ctx, [0 x %Word8]* %28)
+	%29 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%30 = bitcast [64 x %Word8]* %29 to i8*
 	%31 = call i8* @memset(i8* %30, %Int 0, %SizeT 56)
 	;ctx.data[0:56] = []
@@ -664,90 +664,90 @@ then_1:
 endif_1:
 
 	; Append to the padding the total message's length in bits and transform.
-	%32 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
-	%33 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
-	%34 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 1
+	%32 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%33 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%34 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%35 = load %Int32, %Int32* %34
 	%36 = zext %Int32 %35 to %Int64
 	%37 = mul %Int64 %36, 8
 	%38 = load %Int64, %Int64* %33
 	%39 = add %Int64 %38, %37
 	store %Int64 %39, %Int64* %32
-	%40 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%40 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%41 = getelementptr [64 x %Word8], [64 x %Word8]* %40, %Int32 0, %Int32 63
-	%42 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
+	%42 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%43 = load %Int64, %Int64* %42
 	%44 = bitcast %Int64 %43 to %Word64
 	%45 = zext i8 0 to %Word64
 	%46 = lshr %Word64 %44, %45
 	%47 = trunc %Word64 %46 to %Word8
 	store %Word8 %47, %Word8* %41
-	%48 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%48 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%49 = getelementptr [64 x %Word8], [64 x %Word8]* %48, %Int32 0, %Int32 62
-	%50 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
+	%50 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%51 = load %Int64, %Int64* %50
 	%52 = bitcast %Int64 %51 to %Word64
 	%53 = zext i8 8 to %Word64
 	%54 = lshr %Word64 %52, %53
 	%55 = trunc %Word64 %54 to %Word8
 	store %Word8 %55, %Word8* %49
-	%56 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%56 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%57 = getelementptr [64 x %Word8], [64 x %Word8]* %56, %Int32 0, %Int32 61
-	%58 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
+	%58 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%59 = load %Int64, %Int64* %58
 	%60 = bitcast %Int64 %59 to %Word64
 	%61 = zext i8 16 to %Word64
 	%62 = lshr %Word64 %60, %61
 	%63 = trunc %Word64 %62 to %Word8
 	store %Word8 %63, %Word8* %57
-	%64 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%64 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%65 = getelementptr [64 x %Word8], [64 x %Word8]* %64, %Int32 0, %Int32 60
-	%66 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
+	%66 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%67 = load %Int64, %Int64* %66
 	%68 = bitcast %Int64 %67 to %Word64
 	%69 = zext i8 24 to %Word64
 	%70 = lshr %Word64 %68, %69
 	%71 = trunc %Word64 %70 to %Word8
 	store %Word8 %71, %Word8* %65
-	%72 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%72 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%73 = getelementptr [64 x %Word8], [64 x %Word8]* %72, %Int32 0, %Int32 59
-	%74 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
+	%74 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%75 = load %Int64, %Int64* %74
 	%76 = bitcast %Int64 %75 to %Word64
 	%77 = zext i8 32 to %Word64
 	%78 = lshr %Word64 %76, %77
 	%79 = trunc %Word64 %78 to %Word8
 	store %Word8 %79, %Word8* %73
-	%80 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%80 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%81 = getelementptr [64 x %Word8], [64 x %Word8]* %80, %Int32 0, %Int32 58
-	%82 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
+	%82 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%83 = load %Int64, %Int64* %82
 	%84 = bitcast %Int64 %83 to %Word64
 	%85 = zext i8 40 to %Word64
 	%86 = lshr %Word64 %84, %85
 	%87 = trunc %Word64 %86 to %Word8
 	store %Word8 %87, %Word8* %81
-	%88 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%88 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%89 = getelementptr [64 x %Word8], [64 x %Word8]* %88, %Int32 0, %Int32 57
-	%90 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
+	%90 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%91 = load %Int64, %Int64* %90
 	%92 = bitcast %Int64 %91 to %Word64
 	%93 = zext i8 48 to %Word64
 	%94 = lshr %Word64 %92, %93
 	%95 = trunc %Word64 %94 to %Word8
 	store %Word8 %95, %Word8* %89
-	%96 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%96 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%97 = getelementptr [64 x %Word8], [64 x %Word8]* %96, %Int32 0, %Int32 56
-	%98 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 2
+	%98 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%99 = load %Int64, %Int64* %98
 	%100 = bitcast %Int64 %99 to %Word64
 	%101 = zext i8 56 to %Word64
 	%102 = lshr %Word64 %100, %101
 	%103 = trunc %Word64 %102 to %Word8
 	store %Word8 %103, %Word8* %97
-	%104 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 0
+	%104 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%105 = bitcast [64 x %Word8]* %104 to [0 x %Word8]*
-	call void @sha256_transform(%sha256_Context* %ctx, [0 x %Word8]* %105)
+	call void @transform(%Context* %ctx, [0 x %Word8]* %105)
 
 	; Since this implementation uses little endian byte ordering
 	; and SHA uses big endian, reverse all the bytes
@@ -766,7 +766,7 @@ body_1:
 	%112 = add %Int32 %111, 0
 	%113 = bitcast %Int32 %112 to %Int32
 	%114 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %113
-	%115 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%115 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%116 = getelementptr [8 x %Word32], [8 x %Word32]* %115, %Int32 0, %Int32 0
 	%117 = load %Word32, %Word32* %116
 	%118 = bitcast %Int32 %110 to %Word32
@@ -777,7 +777,7 @@ body_1:
 	%122 = add %Int32 %121, 4
 	%123 = bitcast %Int32 %122 to %Int32
 	%124 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %123
-	%125 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%125 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%126 = getelementptr [8 x %Word32], [8 x %Word32]* %125, %Int32 0, %Int32 1
 	%127 = load %Word32, %Word32* %126
 	%128 = bitcast %Int32 %110 to %Word32
@@ -788,7 +788,7 @@ body_1:
 	%132 = add %Int32 %131, 8
 	%133 = bitcast %Int32 %132 to %Int32
 	%134 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %133
-	%135 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%135 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%136 = getelementptr [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 2
 	%137 = load %Word32, %Word32* %136
 	%138 = bitcast %Int32 %110 to %Word32
@@ -799,7 +799,7 @@ body_1:
 	%142 = add %Int32 %141, 12
 	%143 = bitcast %Int32 %142 to %Int32
 	%144 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %143
-	%145 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%145 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%146 = getelementptr [8 x %Word32], [8 x %Word32]* %145, %Int32 0, %Int32 3
 	%147 = load %Word32, %Word32* %146
 	%148 = bitcast %Int32 %110 to %Word32
@@ -810,7 +810,7 @@ body_1:
 	%152 = add %Int32 %151, 16
 	%153 = bitcast %Int32 %152 to %Int32
 	%154 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %153
-	%155 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%155 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%156 = getelementptr [8 x %Word32], [8 x %Word32]* %155, %Int32 0, %Int32 4
 	%157 = load %Word32, %Word32* %156
 	%158 = bitcast %Int32 %110 to %Word32
@@ -821,7 +821,7 @@ body_1:
 	%162 = add %Int32 %161, 20
 	%163 = bitcast %Int32 %162 to %Int32
 	%164 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %163
-	%165 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%165 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%166 = getelementptr [8 x %Word32], [8 x %Word32]* %165, %Int32 0, %Int32 5
 	%167 = load %Word32, %Word32* %166
 	%168 = bitcast %Int32 %110 to %Word32
@@ -832,7 +832,7 @@ body_1:
 	%172 = add %Int32 %171, 24
 	%173 = bitcast %Int32 %172 to %Int32
 	%174 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %173
-	%175 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%175 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%176 = getelementptr [8 x %Word32], [8 x %Word32]* %175, %Int32 0, %Int32 6
 	%177 = load %Word32, %Word32* %176
 	%178 = bitcast %Int32 %110 to %Word32
@@ -843,7 +843,7 @@ body_1:
 	%182 = add %Int32 %181, 28
 	%183 = bitcast %Int32 %182 to %Int32
 	%184 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %183
-	%185 = getelementptr %sha256_Context, %sha256_Context* %ctx, %Int32 0, %Int32 3
+	%185 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%186 = getelementptr [8 x %Word32], [8 x %Word32]* %185, %Int32 0, %Int32 7
 	%187 = load %Word32, %Word32* %186
 	%188 = bitcast %Int32 %110 to %Word32
@@ -859,14 +859,14 @@ break_1:
 }
 
 define void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %outHash) {
-	%1 = alloca %sha256_Context, align 128
-	store %sha256_Context zeroinitializer, %sha256_Context* %1
-	%2 = bitcast %sha256_Context* %1 to %sha256_Context*
-	call void @sha256_contextInit(%sha256_Context* %2)
-	%3 = bitcast %sha256_Context* %1 to %sha256_Context*
-	call void @sha256_update(%sha256_Context* %3, [0 x %Word8]* %msg, %Int32 %msgLen)
-	%4 = bitcast %sha256_Context* %1 to %sha256_Context*
-	call void @sha256_final(%sha256_Context* %4, %sha256_Hash* %outHash)
+	%1 = alloca %Context, align 128
+	store %Context zeroinitializer, %Context* %1
+	%2 = bitcast %Context* %1 to %Context*
+	call void @contextInit(%Context* %2)
+	%3 = bitcast %Context* %1 to %Context*
+	call void @update(%Context* %3, [0 x %Word8]* %msg, %Int32 %msgLen)
+	%4 = bitcast %Context* %1 to %Context*
+	call void @final(%Context* %4, %sha256_Hash* %outHash)
 	ret void
 }
 

@@ -2760,7 +2760,18 @@ def def_def(ast, is_include=False):
 				add_spices(y, ast_atts=x['attributes'])
 				if not is_include:
 					y.parent = cmodule
-				module_append(y, to_export=x['access_modifier'] == 'public')
+
+				is_public = x['access_modifier'] == 'public'
+
+				if not is_public:
+					# Добавляем атрибут 'nodecorate'
+					# ко всем непубличным сущностям
+					if hasattr(y, 'value'):
+						y.value.att.append('nodecorate')
+					else:
+						y.type.att.append('nodecorate')
+
+				module_append(y, to_export=is_public)
 		elif isa == 'ast_comment':
 			comment = do_stmt_comment(x)
 			module_append(comment)

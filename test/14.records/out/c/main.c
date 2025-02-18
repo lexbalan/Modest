@@ -12,44 +12,44 @@ struct __anonymous_struct_5 {uint32_t x; uint32_t y;
 struct __anonymous_struct_6 {uint32_t x; uint32_t y;
 };
 
-struct main_Point2D {
+struct Point2D {
 	uint32_t x;
 	uint32_t y;
 };
-typedef struct main_Point2D main_Point2D;
+typedef struct Point2D Point2D;
 
-struct main_Point3D {
+struct Point3D {
 	uint32_t x;
 	uint32_t y;
 	uint32_t z;
 };
-typedef struct main_Point3D main_Point3D;
+typedef struct Point3D Point3D;
 
 
-#define main_xx  {.x = 1, .y = 2}
-#define main_yy  {.x = 1, .y = 2}
+#define xx  {.x = 1, .y = 2}
+#define yy  {.x = 1, .y = 2}
 
 
 
 
-struct main_Point {
+struct Point {
 	int32_t x;
 	int32_t y;
 };
-typedef struct main_Point main_Point;
+typedef struct Point Point;
 
-struct main_Line {
-	main_Point a;
-	main_Point b;
+struct Line {
+	Point a;
+	Point b;
 };
-typedef struct main_Line main_Line;
+typedef struct Line Line;
 
-static main_Line main_line = {
+static Line line = {
 	.a = {.x = 10, .y = 11	},
 	.b = {.x = 12, .y = 13	}
 };
 
-static main_Line main_lines[3] = (main_Line[3]){
+static Line lines[3] = (Line[3]){
 	{
 		.a = {.x = 1, .y = 2		},
 		.b = {.x = 3, .y = 4		}
@@ -64,38 +64,38 @@ static main_Line main_lines[3] = (main_Line[3]){
 	}
 };
 
-static main_Line *main_pLines[3] = (main_Line *[3]){&main_lines[0], &main_lines[1], &main_lines[2]};
+static Line *pLines[3] = (Line *[3]){&lines[0], &lines[1], &lines[2]};
 
-struct main_Struct {
-	main_Line *x;
+struct Struct {
+	Line *x;
 };
-typedef struct main_Struct main_Struct;
+typedef struct Struct Struct;
 
-static main_Struct main_s = {.x = &main_lines[0]};
+static Struct s = {.x = &lines[0]};
 
 
-static void main_test_records()
+static void test_records()
 {
-	printf("line.a.x = %d\n", main_line.a.x);
-	printf("line.a.y = %d\n", main_line.a.y);
+	printf("line.a.x = %d\n", line.a.x);
+	printf("line.a.y = %d\n", line.a.y);
 
-	printf("line.b.x = %d\n", main_line.b.x);
-	printf("line.b.y = %d\n", main_line.b.y);
+	printf("line.b.x = %d\n", line.b.x);
+	printf("line.b.y = %d\n", line.b.y);
 
-	printf("pLines[0].a.x = %d\n", main_pLines[0]->a.x);
-	printf("pLines[0].a.y = %d\n", main_pLines[0]->a.y);
+	printf("pLines[0].a.x = %d\n", pLines[0]->a.x);
+	printf("pLines[0].a.y = %d\n", pLines[0]->a.y);
 
-	printf("pLines[0].b.x = %d\n", main_pLines[0]->b.x);
-	printf("pLines[0].b.y = %d\n", main_pLines[0]->b.y);
+	printf("pLines[0].b.x = %d\n", pLines[0]->b.x);
+	printf("pLines[0].b.y = %d\n", pLines[0]->b.y);
 
-	printf("s.x.a.x = %d\n", main_s.x->a.x);
-	printf("s.x.a.y = %d\n", main_s.x->a.y);
+	printf("s.x.a.x = %d\n", s.x->a.x);
+	printf("s.x.a.y = %d\n", s.x->a.y);
 
-	printf("s.x.b.x = %d\n", main_s.x->b.x);
-	printf("s.x.b.y = %d\n", main_s.x->b.y);
+	printf("s.x.b.x = %d\n", s.x->b.x);
+	printf("s.x.b.y = %d\n", s.x->b.y);
 
 
-	const main_Struct x = main_s;
+	const Struct x = s;
 
 	printf("x.x.a.x = %d\n", x.x->a.x);
 	printf("x.x.a.y = %d\n", x.x->a.y);
@@ -118,10 +118,10 @@ int main()
 	}
 
 	// compare two Point2D records
-	main_Point2D p2d0 = (main_Point2D){.x = 1, .y = 2	};
-	main_Point2D p2d1 = (main_Point2D){.x = 10, .y = 20	};
+	Point2D p2d0 = (Point2D){.x = 1, .y = 2	};
+	Point2D p2d1 = (Point2D){.x = 10, .y = 20	};
 
-	if (memcmp(&p2d0, &p2d1, sizeof(main_Point2D)) == 0) {
+	if (memcmp(&p2d0, &p2d1, sizeof(Point2D)) == 0) {
 		printf("p2d0 == p2d1\n");
 	} else {
 		printf("p2d0 != p2d1\n");
@@ -129,10 +129,10 @@ int main()
 
 
 	// compare Point2D with anonymous record
-	main_Point2D p2d2 = p2d0;
-	struct __anonymous_struct_5 p2d3 = (struct __anonymous_struct_5)main_xx;
+	Point2D p2d2 = p2d0;
+	struct __anonymous_struct_5 p2d3 = (struct __anonymous_struct_5)xx;
 
-	if (memcmp(&p2d2, &p2d3, sizeof(main_Point2D)) == 0) {
+	if (memcmp(&p2d2, &p2d3, sizeof(Point2D)) == 0) {
 		printf("p2d2 == p2d3\n");
 	} else {
 		printf("p2d2 != p2d3\n");
@@ -149,10 +149,10 @@ int main()
 	}
 
 	// comparison between two record (by pointer)
-	main_Point2D *const pr2 = &p2d2;
+	Point2D *const pr2 = &p2d2;
 	struct __anonymous_struct_5 *const pr3 = &p2d3;
 
-	if (memcmp(&*pr2, &*pr3, sizeof(main_Point2D)) == 0) {
+	if (memcmp(&*pr2, &*pr3, sizeof(Point2D)) == 0) {
 		printf("*pr2 == *pr3\n");
 	} else {
 		printf("*pr2 != *pr3\n");
@@ -171,14 +171,14 @@ int main()
 */
 
 	// assign record by pointer
-	*pr2 = (main_Point2D){.x = 100, .y = 200	};
+	*pr2 = (Point2D){.x = 100, .y = 200	};
 	*pr3 = (struct __anonymous_struct_5){	};
 
 	// cons Point3D from Point2D (record extension)
 	// (it is possible if dst record contained all fields from src record
 	// and their types are equal)  ((EXPERIMENTAL))
-	main_Point3D p3d;
-	p3d = *(main_Point3D*)&p2d2;
+	Point3D p3d;
+	p3d = *(Point3D*)&p2d2;
 
 
 	// проверка того как локальная константа-массив
@@ -204,7 +204,7 @@ int main()
 		printf("test failed\n");
 	}
 
-	main_test_records();
+	test_records();
 
 	return 0;
 

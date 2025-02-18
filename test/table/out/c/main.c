@@ -15,22 +15,22 @@
 
 
 
-static char *main_table_header0[3] = (char *[3]){
+static char *table_header0[3] = (char *[3]){
 	"#", "Header0", "Header1"
 };
 
-static char *main_table_data0[3][3] = (char *[3][3]){
+static char *table_data0[3][3] = (char *[3][3]){
 	"0", "Alef", "Betha",
 	"1", "Clock", "Depth",
 	"2", "Earth", "Fight"
 };
 
 
-static char *main_table_header1[4] = (char *[4]){
+static char *table_header1[4] = (char *[4]){
 	"#", "Header0", "Header1", "Header2"
 };
 
-static char *main_table_data1[4][4] = (char *[4][4]){
+static char *table_data1[4][4] = (char *[4][4]){
 	"0", "Alef", "Betha", "Emma",
 	"1", "Clock", "Depth", "Free",
 	"2", "Ink", "Julia", "Keyword",
@@ -38,43 +38,43 @@ static char *main_table_data1[4][4] = (char *[4][4]){
 };
 
 
-static table_Table main_table00 = {
+static table_Table table00 = {
 	.header = NULL,
-	.data = (void *)&main_table_data0,
-	.nRows = __lengthof(main_table_data0),
-	.nCols = __lengthof(main_table_data0[0]),
+	.data = (void *)&table_data0,
+	.nRows = __lengthof(table_data0),
+	.nCols = __lengthof(table_data0[0]),
 	.separate = false
 };
 
-static table_Table main_table01 = {
-	.header = &main_table_header0,
-	.data = (void *)&main_table_data0,
-	.nRows = __lengthof(main_table_data0),
-	.nCols = __lengthof(main_table_data0[0]),
+static table_Table table01 = {
+	.header = &table_header0,
+	.data = (void *)&table_data0,
+	.nRows = __lengthof(table_data0),
+	.nCols = __lengthof(table_data0[0]),
 	.separate = false
 };
 
-static table_Table main_table02 = {
+static table_Table table02 = {
 	.header = NULL,
-	.data = (void *)&main_table_data0,
-	.nRows = __lengthof(main_table_data0),
-	.nCols = __lengthof(main_table_data0[0]),
+	.data = (void *)&table_data0,
+	.nRows = __lengthof(table_data0),
+	.nCols = __lengthof(table_data0[0]),
 	.separate = true
 };
 
-static table_Table main_table03 = {
-	.header = &main_table_header0,
-	.data = (void *)&main_table_data0,
-	.nRows = __lengthof(main_table_data0),
-	.nCols = __lengthof(main_table_data0[0]),
+static table_Table table03 = {
+	.header = &table_header0,
+	.data = (void *)&table_data0,
+	.nRows = __lengthof(table_data0),
+	.nCols = __lengthof(table_data0[0]),
 	.separate = true
 };
 
-static table_Table main_table10 = {
-	.header = &main_table_header1,
-	.data = (void *)&main_table_data1,
-	.nRows = __lengthof(main_table_data1),
-	.nCols = __lengthof(main_table_data1[0]),
+static table_Table table10 = {
+	.header = &table_header1,
+	.data = (void *)&table_data1,
+	.nRows = __lengthof(table_data1),
+	.nCols = __lengthof(table_data1[0]),
 	.separate = true
 };
 
@@ -87,21 +87,21 @@ int32_t main()
 		printf("cannot create object\n");
 	}
 
-	*tab = main_table00;
+	*tab = table00;
 
-	table_print((table_Table *)&main_table00);
+	table_print((table_Table *)&table00);
 	printf("\n");
 
-	table_print((table_Table *)&main_table01);
+	table_print((table_Table *)&table01);
 	printf("\n");
 
-	table_print((table_Table *)&main_table02);
+	table_print((table_Table *)&table02);
 	printf("\n");
 
-	table_print((table_Table *)&main_table03);
+	table_print((table_Table *)&table03);
 	printf("\n");
 
-	table_print((table_Table *)&main_table10);
+	table_print((table_Table *)&table10);
 	printf("\n");
 
 	return 0;

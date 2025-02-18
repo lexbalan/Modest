@@ -9,26 +9,26 @@
 #include "server.h"
 
 
-#define server_filename  "file2.txt"
+#define filename  "file2.txt"
 
-#define server_ipAddress  "127.0.0.1"
-#define server_port  8080
-#define server_bufSize  1024
+#define ipAddress  "127.0.0.1"
+#define port  8080
+#define bufSize  1024
 
 
-static bool server_write_file(int sockfd)
+static bool write_file(int sockfd)
 {
-	char buffer[server_bufSize];
+	char buffer[bufSize];
 	memset(&buffer, 0, sizeof buffer);
 
-	FILE *const fp = fopen(server_filename, "w");
+	FILE *const fp = fopen(filename, "w");
 	if (fp == NULL) {
 		perror("[-] Error in creating file");
 		return false;
 	}
 
 	while (true) {
-		const ssize_t n = recv(sockfd, (char *)&buffer, server_bufSize, 0);
+		const ssize_t n = recv(sockfd, (char *)&buffer, bufSize, 0);
 
 		if (n <= 0) {
 			break;
@@ -54,9 +54,9 @@ int main()
 
 	struct sockaddr_in server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
-		.sin_port = server_port,
+		.sin_port = port,
 		.sin_addr = (struct in_addr){
-			.s_addr = inet_addr(server_ipAddress)
+			.s_addr = inet_addr(ipAddress)
 		}
 	};
 
@@ -82,7 +82,7 @@ int main()
 	struct sockaddr *const sa = (struct sockaddr *)&new_addr;
 	const int new_sock = accept(sockfd, sa, &addr_size);
 
-	const bool suc = server_write_file(new_sock);
+	const bool suc = write_file(new_sock);
 	if (suc) {
 		printf("[+] Data written in the text file");
 	} else {

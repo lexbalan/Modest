@@ -13,109 +13,109 @@ struct __anonymous_struct_3 {int32_t x;
 };
 
 
-struct main_Type1 {
+struct Type1 {
 	int32_t x;
 };
-typedef struct main_Type1 main_Type1;
+typedef struct Type1 Type1;
 
-struct main_Type2 {
+struct Type2 {
 	int32_t x;
 };
-typedef struct main_Type2 main_Type2;
+typedef struct Type2 Type2;
 
-typedef main_Type1 main_Type3;
+typedef Type1 Type3;
 
 
-static void main_f0_val(main_Type1 x)
+static void f0_val(Type1 x)
 {
 	printf("f0 x.x = %d\n", x.x);
 }
 
-static void main_f1_val(main_Type2 x)
+static void f1_val(Type2 x)
 {
 	printf("f1 x.x = %d\n", x.x);
 }
 
-static void main_f2_val(main_Type3 x)
+static void f2_val(Type3 x)
 {
 	printf("f2 x.x = %d\n", x.x);
 }
 
-static void main_f3_val(struct __anonymous_struct_2 x)
+static void f3_val(struct __anonymous_struct_2 x)
 {
 	printf("f3 x.x = %d\n", x.x);
 }
 
 
-static void main_f0_ptr(main_Type1 *x)
+static void f0_ptr(Type1 *x)
 {
 	printf("f0p x.x = %d\n", x->x);
 }
 
-static void main_f1_ptr(main_Type2 *x)
+static void f1_ptr(Type2 *x)
 {
 	printf("f1p x.x = %d\n", x->x);
 }
 
-static void main_f2_ptr(main_Type3 *x)
+static void f2_ptr(Type3 *x)
 {
 	printf("f2p x.x = %d\n", x->x);
 }
 
-static void main_f3_ptr(struct __anonymous_struct_3 *x)
+static void f3_ptr(struct __anonymous_struct_3 *x)
 {
 	printf("f3p x.x = %d\n", x->x);
 }
 
 
-static main_Type1 main_a = {.x = 1};
-static main_Type2 main_b = {.x = 2};
-static main_Type3 main_c = {.x = 3};
+static Type1 a = {.x = 1};
+static Type2 b = {.x = 2};
+static Type3 c = {.x = 3};
 
 
 
-static void main_test_by_value()
+static void test_by_value()
 {
-	main_f0_val(main_a);
-	main_f1_val(*(main_Type2*)&main_a);
-	main_f2_val(main_a);
-	main_f3_val(*(struct __anonymous_struct_2*)&main_a);
+	f0_val(a);
+	f1_val(*(Type2*)&a);
+	f2_val(a);
+	f3_val(*(struct __anonymous_struct_2*)&a);
 
-	main_f0_val(*(main_Type1*)&main_b);
-	main_f1_val(main_b);
-	main_f2_val(*(main_Type3*)&main_b);
-	main_f3_val(*(struct __anonymous_struct_2*)&main_b);
+	f0_val(*(Type1*)&b);
+	f1_val(b);
+	f2_val(*(Type3*)&b);
+	f3_val(*(struct __anonymous_struct_2*)&b);
 
-	main_f0_val(main_c);
-	main_f1_val(*(main_Type2*)&main_c);
-	main_f2_val(main_c);
-	main_f3_val(*(struct __anonymous_struct_2*)&main_c);
+	f0_val(c);
+	f1_val(*(Type2*)&c);
+	f2_val(c);
+	f3_val(*(struct __anonymous_struct_2*)&c);
 }
 
 
-static void main_test_by_pointer()
+static void test_by_pointer()
 {
-	main_f0_ptr(&main_a);
-	main_f1_ptr((main_Type2 *)&main_a);
-	main_f2_ptr((main_Type3 *)&main_a);
-	main_f3_ptr((struct __anonymous_struct_3 *)&main_a);
+	f0_ptr(&a);
+	f1_ptr((Type2 *)&a);
+	f2_ptr((Type3 *)&a);
+	f3_ptr((struct __anonymous_struct_3 *)&a);
 
-	main_f0_ptr((main_Type1 *)&main_b);
-	main_f1_ptr(&main_b);
-	main_f2_ptr((main_Type3 *)&main_b);
-	main_f3_ptr((struct __anonymous_struct_3 *)&main_b);
+	f0_ptr((Type1 *)&b);
+	f1_ptr(&b);
+	f2_ptr((Type3 *)&b);
+	f3_ptr((struct __anonymous_struct_3 *)&b);
 
-	main_f0_ptr((main_Type1 *)&main_c);
-	main_f1_ptr((main_Type2 *)&main_c);
-	main_f2_ptr(&main_c);
-	main_f3_ptr((struct __anonymous_struct_3 *)&main_c);
+	f0_ptr((Type1 *)&c);
+	f1_ptr((Type2 *)&c);
+	f2_ptr(&c);
+	f3_ptr((struct __anonymous_struct_3 *)&c);
 }
 
 
 int main()
 {
-	main_test_by_value();
-	main_test_by_pointer();
+	test_by_value();
+	test_by_pointer();
 	return 0;
 }
 

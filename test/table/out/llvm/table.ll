@@ -408,7 +408,7 @@ break_4:
 	%101 = bitcast [0 x %Int32]* %21 to [0 x %Int32]*
 	%102 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%103 = load %Int32, %Int32* %102
-	call void @table_separator([0 x %Int32]* %101, %Int32 %103)
+	call void @separator([0 x %Int32]* %101, %Int32 %103)
 	%104 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
 	%105 = load [0 x %Str8*]*, [0 x %Str8*]** %104
 	%106 = icmp ne [0 x %Str8*]* %105, null
@@ -419,11 +419,11 @@ then_3:
 	%109 = bitcast [0 x %Int32]* %21 to [0 x %Int32]*
 	%110 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%111 = load %Int32, %Int32* %110
-	call void @table_printRow([0 x %Str8*]* %108, [0 x %Int32]* %109, %Int32 %111)
+	call void @printRow([0 x %Str8*]* %108, [0 x %Int32]* %109, %Int32 %111)
 	%112 = bitcast [0 x %Int32]* %21 to [0 x %Int32]*
 	%113 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%114 = load %Int32, %Int32* %113
-	call void @table_separator([0 x %Int32]* %112, %Int32 %114)
+	call void @separator([0 x %Int32]* %112, %Int32 %114)
 	br label %endif_3
 endif_3:
 	store %Int32 0, %Int32* %3
@@ -443,7 +443,7 @@ body_5:
 	%124 = bitcast [0 x %Int32]* %21 to [0 x %Int32]*
 	%125 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%126 = load %Int32, %Int32* %125
-	call void @table_printRow([0 x %Str8*]* %123, [0 x %Int32]* %124, %Int32 %126)
+	call void @printRow([0 x %Str8*]* %123, [0 x %Int32]* %124, %Int32 %126)
 	%127 = load %Int32, %Int32* %3
 	%128 = add %Int32 %127, 1
 	store %Int32 %128, %Int32* %3
@@ -459,7 +459,7 @@ then_4:
 	%136 = bitcast [0 x %Int32]* %21 to [0 x %Int32]*
 	%137 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%138 = load %Int32, %Int32* %137
-	call void @table_separator([0 x %Int32]* %136, %Int32 %138)
+	call void @separator([0 x %Int32]* %136, %Int32 %138)
 	br label %endif_4
 endif_4:
 	br label %again_5
@@ -469,13 +469,13 @@ break_5:
 	%139 = bitcast [0 x %Int32]* %21 to [0 x %Int32]*
 	%140 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%141 = load %Int32, %Int32* %140
-	call void @table_separator([0 x %Int32]* %139, %Int32 %141)
+	call void @separator([0 x %Int32]* %139, %Int32 %141)
 	%142 = load i8*, i8** %1
 	call void @llvm.stackrestore(i8* %142)
 	ret void
 }
 
-define internal void @table_printRow([0 x %Str8*]* %raw_row, [0 x %Int32]* %sz, %Int32 %nCols) {
+define internal void @printRow([0 x %Str8*]* %raw_row, [0 x %Int32]* %sz, %Int32 %nCols) {
 	%1 = alloca i8*
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
@@ -547,7 +547,7 @@ break_1:
 ; печатает строку +---+---+ отделяющую записи таблицы
 ; получает указатель на массив с размерами колонок
 ; и количество элементов в ней
-define internal void @table_separator([0 x %Int32]* %sz, %Int32 %n) {
+define internal void @separator([0 x %Int32]* %sz, %Int32 %n) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
 	br label %again_1

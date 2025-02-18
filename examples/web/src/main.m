@@ -19,6 +19,8 @@ var httpHeader = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: clos
 var pageCounter: Nat32
 
 
+@extern
+@attribute("c_no_print")
 func htons(x: Word16) -> Word16 {
 	return (x << 8) or (x >> 8)
 }

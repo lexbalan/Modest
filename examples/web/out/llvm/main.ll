@@ -340,9 +340,9 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 @str8 = private constant [32 x i8] [i8 83, i8 101, i8 114, i8 118, i8 101, i8 114, i8 32, i8 108, i8 105, i8 115, i8 116, i8 101, i8 110, i8 105, i8 110, i8 103, i8 32, i8 111, i8 110, i8 32, i8 112, i8 111, i8 114, i8 116, i8 32, i8 37, i8 100, i8 46, i8 46, i8 46, i8 10, i8 0]
 @str9 = private constant [7 x i8] [i8 97, i8 99, i8 99, i8 101, i8 112, i8 116, i8 0]
 ; -- endstrings --
-@main_httpHeader = internal global [0 x %Char8]* bitcast ([64 x i8]* @str1 to [0 x i8]*)
-@main_pageCounter = internal global %Int32 zeroinitializer
-define internal %Word16 @main_htons(%Word16 %x) {
+@httpHeader = internal global [0 x %Char8]* bitcast ([64 x i8]* @str1 to [0 x i8]*)
+@pageCounter = internal global %Int32 zeroinitializer
+define internal %Word16 @htons(%Word16 %x) {
 	%1 = zext i8 8 to %Word16
 	%2 = shl %Word16 %x, %1
 	%3 = zext i8 8 to %Word16
@@ -351,7 +351,7 @@ define internal %Word16 @main_htons(%Word16 %x) {
 	ret %Word16 %5
 }
 
-define internal void @main_handle_request(%Int32 %client_socket) {
+define internal void @handle_request(%Int32 %client_socket) {
 	%1 = alloca [1024 x %Word8], align 1
 	%2 = bitcast [1024 x %Word8]* %1 to i8*
 	%3 = call %SSizeT @read(%Int32 %client_socket, i8* %2, %SizeT 1023)
@@ -370,8 +370,8 @@ endif_0:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %9)
 	%11 = alloca [1024 x %Char8], align 1
 	%12 = bitcast [1024 x %Char8]* %11 to %CharStr*
-	%13 = load [0 x %Char8]*, [0 x %Char8]** @main_httpHeader
-	%14 = load %Int32, %Int32* @main_pageCounter
+	%13 = load [0 x %Char8]*, [0 x %Char8]** @httpHeader
+	%14 = load %Int32, %Int32* @pageCounter
 	%15 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %12, %ConstCharStr* bitcast ([57 x i8]* @str4 to [0 x i8]*), [0 x %Char8]* %13, %Int32 %14)
 	%16 = bitcast [1024 x %Char8]* %11 to i8*
 	%17 = bitcast [1024 x %Char8]* %11 to [0 x %ConstChar]*
@@ -392,7 +392,7 @@ then_0:
 endif_0:
 	%3 = alloca %Struct_sockaddr_in, align 16
 	%4 = insertvalue %Struct_sockaddr_in zeroinitializer, %Int8 2, 1
-	%5 = call %Word16 @main_htons(%Word16 8080)
+	%5 = call %Word16 @htons(%Word16 8080)
 	%6 = bitcast %Word16 %5 to %UnsignedShort
 	%7 = insertvalue %Struct_sockaddr_in %4, %UnsignedShort %6, 2
 	store %Struct_sockaddr_in %7, %Struct_sockaddr_in* %3
@@ -443,10 +443,10 @@ then_3:
 	br label %again_1
 	br label %endif_3
 endif_3:
-	call void @main_handle_request(%Int %22)
-	%25 = load %Int32, %Int32* @main_pageCounter
+	call void @handle_request(%Int %22)
+	%25 = load %Int32, %Int32* @pageCounter
 	%26 = add %Int32 %25, 1
-	store %Int32 %26, %Int32* @main_pageCounter
+	store %Int32 %26, %Int32* @pageCounter
 	br label %again_1
 break_1:
 	%27 = call %Int @close(%Int %1)

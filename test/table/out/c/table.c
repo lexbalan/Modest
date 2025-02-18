@@ -18,8 +18,8 @@
 // but we can receive pointer to open array
 // and after construct pointer to closed array with required dimensions
 
-static void table_separator(uint32_t *sz, uint32_t n);
-static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols);
+static void separator(uint32_t *sz, uint32_t n);
+static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols);
 void table_print(table_Table *table)
 {
 	uint32_t i;
@@ -73,29 +73,29 @@ void table_print(table_Table *table)
 	//
 
 	// top border
-	table_separator((uint32_t *)&sz, table->nCols);
+	separator((uint32_t *)&sz, table->nCols);
 
 	if (table->header != NULL) {
-		table_printRow(table->header, (uint32_t *)&sz, table->nCols);
-		table_separator((uint32_t *)&sz, table->nCols);
+		printRow(table->header, (uint32_t *)&sz, table->nCols);
+		separator((uint32_t *)&sz, table->nCols);
 	}
 
 	i = 0;
 	while (i < table->nRows) {
-		table_printRow(&(*data)[i], (uint32_t *)&sz, table->nCols);
+		printRow(&(*data)[i], (uint32_t *)&sz, table->nCols);
 		i = i + 1;
 
 		if (table->separate && i < table->nRows) {
-			table_separator((uint32_t *)&sz, table->nCols);
+			separator((uint32_t *)&sz, table->nCols);
 		}
 	}
 
 	// bottom border
-	table_separator((uint32_t *)&sz, table->nCols);
+	separator((uint32_t *)&sz, table->nCols);
 }
 
 
-static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols)
+static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols)
 {
 	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
 
@@ -123,7 +123,7 @@ static void table_printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols)
 // печатает строку +---+---+ отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
-static void table_separator(uint32_t *sz, uint32_t n)
+static void separator(uint32_t *sz, uint32_t n)
 {
 	uint32_t i = 0;
 	while (i < n) {

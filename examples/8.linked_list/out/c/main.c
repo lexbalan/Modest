@@ -10,7 +10,7 @@
 
 
 // wrap around linked list for list.List Nat32
-static void main_nat32_list_insert(list_List *lst, uint32_t x)
+static void nat32_list_insert(list_List *lst, uint32_t x)
 {
 	// alloc memory for Nat32 value
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
@@ -20,7 +20,7 @@ static void main_nat32_list_insert(list_List *lst, uint32_t x)
 
 
 // show list conent from first item to last
-static void main_list_print_forward(list_List *lst)
+static void list_print_forward(list_List *lst)
 {
 	printf("list_print_forward:\n");
 	list_Node *pn = list_first_node_get(lst);
@@ -33,7 +33,7 @@ static void main_list_print_forward(list_List *lst)
 
 
 // show list conent from last item to first
-static void main_list_print_backward(list_List *lst)
+static void list_print_backward(list_List *lst)
 {
 	printf("list_print_backward:\n");
 	list_Node *pn = list_last_node_get(lst);
@@ -59,27 +59,27 @@ int main()
 	}
 
 	// add some Nat32 values to list
-	main_nat32_list_insert(list0, 0);
-	main_nat32_list_insert(list0, 10);
-	main_nat32_list_insert(list0, 20);
-	main_nat32_list_insert(list0, 30);
-	main_nat32_list_insert(list0, 40);
-	main_nat32_list_insert(list0, 50);
-	main_nat32_list_insert(list0, 60);
-	main_nat32_list_insert(list0, 70);
-	main_nat32_list_insert(list0, 80);
-	main_nat32_list_insert(list0, 90);
-	main_nat32_list_insert(list0, 100);
+	nat32_list_insert(list0, 0);
+	nat32_list_insert(list0, 10);
+	nat32_list_insert(list0, 20);
+	nat32_list_insert(list0, 30);
+	nat32_list_insert(list0, 40);
+	nat32_list_insert(list0, 50);
+	nat32_list_insert(list0, 60);
+	nat32_list_insert(list0, 70);
+	nat32_list_insert(list0, 80);
+	nat32_list_insert(list0, 90);
+	nat32_list_insert(list0, 100);
 
 	// print list size
 	const uint32_t list_size = list_size_get(list0);
 	printf("linked list size: %u\n", list_size);
 
 	// print list forward
-	main_list_print_forward(list0);
+	list_print_forward(list0);
 
 	// print list backward
-	main_list_print_backward(list0);
+	list_print_backward(list0);
 
 
 	printf("\nlist.node_get(list, n) test\n");
@@ -124,7 +124,7 @@ int main()
 	*p_nat32 = 1234;
 	list_insert(list0, 4, p_nat32);
 
-	main_list_print_forward(list0);
+	list_print_forward(list0);
 
 	return 0;
 }

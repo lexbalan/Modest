@@ -13,151 +13,151 @@ struct __anonymous_struct_2 {int32_t x; int32_t y;
 // Test for composite types
 
 // Pointers
-static int32_t *main_p0;
-static int32_t **main_p1;
+static int32_t *p0;
+static int32_t **p1;
 
 
 // Functions
-static void main_f0()
+static void f0()
 {
 	return;
 }
 
-static int32_t main_f1(int32_t x)
+static int32_t f1(int32_t x)
 {
 	return x;
 }
 
-static int32_t main_f2(int32_t a, int32_t b)
+static int32_t f2(int32_t a, int32_t b)
 {
 	return a + b;
 }
 
-static int32_t *main_f3()
+static int32_t *f3()
 {
 	return NULL;
 }
 
-static void main_f4(int32_t x, int32_t *sret_)
+static void f4(int32_t x, int32_t *sret_)
 {
 	memcpy(sret_, &(int32_t[10]){1, 2, 3	}, sizeof(int32_t[10]));
 }
 
-static void main_f5(int32_t *_a, int32_t *sret_)
+static void f5(int32_t *_a, int32_t *sret_)
 {
 	int32_t a[32];
 	memcpy(a, _a, sizeof(int32_t[32]));
 	memcpy(sret_, &a, sizeof(int32_t[32]));
 }
 
-static int32_t *main_f6(int32_t *a)
+static int32_t *f6(int32_t *a)
 {
 	return NULL;
 }
 
-static void main_f7(void(*f)())
+static void f7(void(*f)())
 {
 	return;
 }
 
-static void(*main_f8(void(*f)()))()
+static void(*f8(void(*f)()))()
 {
-	return &main_f0;
+	return &f0;
 }
 
-static void(**main_f9(void(*f)()))()
+static void(**f9(void(*f)()))()
 {
 	return NULL;
 }
 
-static void(**main_f10(void(**f)()))()
+static void(**f10(void(**f)()))()
 {
 	return f;
 }
 
-static void(**main_f11(int32_t *(**f)(int32_t a, int32_t *b)))()
+static void(**f11(int32_t *(**f)(int32_t a, int32_t *b)))()
 {
 	return NULL;
 }
 
-static void(**main_f12(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))()
+static void(**f12(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))()
 {
 	return NULL;
 }
 
-static void(**main_f13(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))()
+static void(**f13(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))()
 {
 	return NULL;
 }
 
 
 // Pointers to function
-static void(*main_pf0)() = &main_f0;
-static int32_t(*main_pf1)(int32_t x) = &main_f1;
-static int32_t(*main_pf2)(int32_t a, int32_t b) = &main_f2;
-static int32_t *(*main_pf3)() = &main_f3;
-static void(*main_pf4)(int32_t x, int32_t *sret_) = &main_f4;
-static void(*main_pf5)(int32_t *_a, int32_t *sret_) = &main_f5;
-static int32_t *(*main_pf6)(int32_t *a) = &main_f6;
-static void(*main_pf7)(void(*f)()) = &main_f7;
-static void(*(*main_pf8)(void(*f)()))() = &main_f8;
-static void(**(*main_pf9)(void(*f)()))() = &main_f9;
-static void(**(*main_pf10)(void(**f)()))() = &main_f10;
-static void(**(*main_pf11)(int32_t *(**f)(int32_t a, int32_t *b)))() = &main_f11;
-static void(**(*main_pf12)(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))() = &main_f12;
-static void(**(*main_pf13)(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() = &main_f13;
+static void(*pf0)() = &f0;
+static int32_t(*pf1)(int32_t x) = &f1;
+static int32_t(*pf2)(int32_t a, int32_t b) = &f2;
+static int32_t *(*pf3)() = &f3;
+static void(*pf4)(int32_t x, int32_t *sret_) = &f4;
+static void(*pf5)(int32_t *_a, int32_t *sret_) = &f5;
+static int32_t *(*pf6)(int32_t *a) = &f6;
+static void(*pf7)(void(*f)()) = &f7;
+static void(*(*pf8)(void(*f)()))() = &f8;
+static void(**(*pf9)(void(*f)()))() = &f9;
+static void(**(*pf10)(void(**f)()))() = &f10;
+static void(**(*pf11)(int32_t *(**f)(int32_t a, int32_t *b)))() = &f11;
+static void(**(*pf12)(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))() = &f12;
+static void(**(*pf13)(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() = &f13;
 
 
 // Arrays
-static int32_t main_a0[5] = (int32_t[5]){0, 1, 2, 3, 4};
-static int32_t *main_a1[5] = (int32_t *[5]){&main_a0[0], &main_a0[1], &main_a0[2], &main_a0[3], &main_a0[4]};
-static int32_t **main_a2[5] = (int32_t **[5]){&main_a1[0], &main_a1[1], &main_a1[2], &main_a1[3], &main_a1[4]};
-static void(*main_a3[5])() = (void(*[5])()){&main_f0};
-static int main_a4[2][5] = (int[2][5]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-static int *main_a5[2] = (int *[2]){&main_a4[0], &main_a4[1]};
+static int32_t a0[5] = (int32_t[5]){0, 1, 2, 3, 4};
+static int32_t *a1[5] = (int32_t *[5]){&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]};
+static int32_t **a2[5] = (int32_t **[5]){&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]};
+static void(*a3[5])() = (void(*[5])()){&f0};
+static int a4[2][5] = (int[2][5]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+static int *a5[2] = (int *[2]){&a4[0], &a4[1]};
 // Проблема в том что мой getelementptr не умеет в цепь-молнию
 // а здесь без нее никак... придется взяться за это и сделать наконец
 //var a6: [2][5]*Int = [
 //	[&a4[0][0], &a4[0][1], &a4[0][2], &a4[0][3], &a4[0][4]]
 //	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
 //]
-static int *main_a7[2][5] = (int *[2][5]){
-	&main_a0, &main_a0, &main_a0, &main_a0, &main_a0,
-	&main_a0, &main_a0, &main_a0, &main_a0, &main_a0
+static int *a7[2][5] = (int *[2][5]){
+	&a0, &a0, &a0, &a0, &a0,
+	&a0, &a0, &a0, &a0, &a0
 };
-static int *(*main_a8[2][5])[2][5] = (int *(*[2][5])[2][5]){
-	(void *)&main_a7, (void *)&main_a7, (void *)&main_a7, (void *)&main_a7, (void *)&main_a7,
-	(void *)&main_a7, (void *)&main_a7, (void *)&main_a7, (void *)&main_a7, (void *)&main_a7
+static int *(*a8[2][5])[2][5] = (int *(*[2][5])[2][5]){
+	(void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7,
+	(void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7
 };
-static int(*(*(*main_a9[5])[10])[2])(int a);
+static int(*(*(*a9[5])[10])[2])(int a);
 
 
 //
-static int32_t *main_p2 = &main_a0;
-static int32_t(**main_p3)[5] = &main_p2;
+static int32_t *p2 = &a0;
+static int32_t(**p3)[5] = &p2;
 
 
 
 
-struct main_RGB24 {
+struct RGB24 {
 	uint8_t red;
 	uint8_t green;
 	uint8_t blue;
 };
-typedef struct main_RGB24 main_RGB24;
+typedef struct RGB24 RGB24;
 
-static main_RGB24 main_rgb0[2] = (main_RGB24[2]){
+static RGB24 rgb0[2] = (RGB24[2]){
 	{.red = 200, .green = 0, .blue = 0	},
 	{.red = 200, .green = 0, .blue = 0	}
 };
 
-struct main_AnimationPoint {
-	main_RGB24 color;
+struct AnimationPoint {
+	RGB24 color;
 	uint32_t time;
 };
-typedef struct main_AnimationPoint main_AnimationPoint;
+typedef struct AnimationPoint AnimationPoint;
 
-static main_AnimationPoint main_ap = {
+static AnimationPoint ap = {
 	.color = {
 		.red = 200,
 		.green = 0,
@@ -167,7 +167,7 @@ static main_AnimationPoint main_ap = {
 };
 
 
-static main_AnimationPoint main_animation0_points[5] = (main_AnimationPoint[5]){
+static AnimationPoint animation0_points[5] = (AnimationPoint[5]){
 	{.color = {.red = 200, .green = 0, .blue = 0		}, .time = 3	},
 	{.color = {.red = 0, .green = 200, .blue = 0		}, .time = 30	},
 	{.color = {.red = 100, .green = 100, .blue = 0		}, .time = 300	},
@@ -175,7 +175,7 @@ static main_AnimationPoint main_animation0_points[5] = (main_AnimationPoint[5]){
 	{.color = {.red = 0, .green = 0, .blue = 255		}, .time = 3000	}
 };
 
-static main_AnimationPoint main_animation1_points[5] = (main_AnimationPoint[5]){
+static AnimationPoint animation1_points[5] = (AnimationPoint[5]){
 	{.color = {.red = 200, .green = 0, .blue = 0		}, .time = 3	},
 	{.color = {.red = 0, .green = 200, .blue = 0		}, .time = 30	},
 	{.color = {.red = 100, .green = 100, .blue = 0		}, .time = 300	},
@@ -183,7 +183,7 @@ static main_AnimationPoint main_animation1_points[5] = (main_AnimationPoint[5]){
 	{.color = {.red = 0, .green = 0, .blue = 255		}, .time = 3000	}
 };
 
-static main_AnimationPoint main_animation2_points[5] = (main_AnimationPoint[5]){
+static AnimationPoint animation2_points[5] = (AnimationPoint[5]){
 	{.color = {.red = 200, .green = 0, .blue = 0		}, .time = 3	},
 	{.color = {.red = 0, .green = 200, .blue = 0		}, .time = 30	},
 	{.color = {.red = 100, .green = 100, .blue = 0		}, .time = 300	},
@@ -192,71 +192,71 @@ static main_AnimationPoint main_animation2_points[5] = (main_AnimationPoint[5]){
 };
 
 
-static void main_xy(struct __anonymous_struct_2 x)
+static void xy(struct __anonymous_struct_2 x)
 {
 }
 
 
-static int32_t main_arrr[3][3] = (int32_t[3][3]){
+static int32_t arrr[3][3] = (int32_t[3][3]){
 	1, 2, 3,
 	4, 5, 6,
 	7, 8, 9
 };
 
 
-static void(*main_arry[3][3])();
+static void(*arry[3][3])();
 
 
-static int32_t main_add(int32_t a, int32_t b)
+static int32_t add(int32_t a, int32_t b)
 {
 	return a + b;
 }
 
-static int32_t main_sub(int32_t a, int32_t b)
+static int32_t sub(int32_t a, int32_t b)
 {
 	return a - b;
 }
 
 
-static int32_t(*main_farr[2])(int32_t a, int32_t b) = (int32_t(*[2])(int32_t a, int32_t b)){
-	&main_add, &main_sub
+static int32_t(*farr[2])(int32_t a, int32_t b) = (int32_t(*[2])(int32_t a, int32_t b)){
+	&add, &sub
 };
 
-static void main_hi(char *x)
+static void hi(char *x)
 {
 	printf("Hi %s!\n", x);
 }
 
-static void(*main_hiarr[10])(char *x) = (void(*[10])(char *x)){
-	&main_hi, &main_hi, &main_hi, &main_hi, &main_hi, &main_hi, &main_hi, &main_hi, &main_hi, &main_hi
+static void(*hiarr[10])(char *x) = (void(*[10])(char *x)){
+	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
 };
 
-struct main_Wrap {
+struct Wrap {
 	void(*fhi)(char *x);
 	int32_t(*fop)(int32_t a, int32_t b);
 };
-typedef struct main_Wrap main_Wrap;
+typedef struct Wrap Wrap;
 
-static main_Wrap main_wrap0 = {
-	.fhi = &main_hi,
-	.fop = &main_add
+static Wrap wrap0 = {
+	.fhi = &hi,
+	.fop = &add
 };
 
-static main_Wrap *main_awrap[2] = (main_Wrap *[2]){&main_wrap0, &main_wrap0};
+static Wrap *awrap[2] = (Wrap *[2]){&wrap0, &wrap0};
 
 int32_t main()
 {
-	main_xy((struct __anonymous_struct_2){.x = 10, .y = 20	});
+	xy((struct __anonymous_struct_2){.x = 10, .y = 20	});
 
 	printf("test1 (eq): ");
-	if (memcmp(&main_animation0_points, &main_animation1_points, sizeof(main_AnimationPoint[5])) == 0) {
+	if (memcmp(&animation0_points, &animation1_points, sizeof(AnimationPoint[5])) == 0) {
 		printf("eq\n");
 	} else {
 		printf("ne\n");
 	}
 
 	printf("test2 (ne): ");
-	if (memcmp(&main_animation1_points, &main_animation2_points, sizeof(main_AnimationPoint[5])) == 0) {
+	if (memcmp(&animation1_points, &animation2_points, sizeof(AnimationPoint[5])) == 0) {
 		printf("eq\n");
 	} else {
 		printf("ne\n");
@@ -266,24 +266,24 @@ int32_t main()
 	while (i < 3) {
 		int32_t j = 0;
 		while (j < 3) {
-			printf("arrr[%d][%d] = %d\n", i, j, main_arrr[i][j]);
+			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j]);
 			j = j + 1;
 		}
 		i = i + 1;
 	}
 
-	const int32_t _add = main_farr[0](5, 7);
+	const int32_t _add = farr[0](5, 7);
 	printf("farr[0](5, 7) = %d\n", _add);
-	const int32_t _sub = main_farr[1](5, 7);
+	const int32_t _sub = farr[1](5, 7);
 	printf("farr[1](5, 7) = %d\n", _sub);
 
 	i = 0;
 	while (i < 10) {
-		main_hiarr[i]("LOL");
+		hiarr[i]("LOL");
 		i = i + 1;
 	}
 
-	main_awrap[0]->fhi("World");
+	awrap[0]->fhi("World");
 	//let y = awrap[0]
 	//y.fhi("World")
 

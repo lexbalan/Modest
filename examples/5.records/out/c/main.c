@@ -9,20 +9,20 @@
 #include "main.h"
 
 
-struct main_Point {
+struct Point {
 	float x;
 	float y;
 };
-typedef struct main_Point main_Point;
+typedef struct Point Point;
 
-struct main_Line {
-	main_Point a;
-	main_Point b;
+struct Line {
+	Point a;
+	Point b;
 };
-typedef struct main_Line main_Line;
+typedef struct Line Line;
 
 
-static main_Line main_line = {
+static Line line = {
 	.a = {.x = 0, .y = 0	},
 	.b = {.x = 1.0, .y = 1.0	}
 };
@@ -30,7 +30,7 @@ static main_Line main_line = {
 
 
 
-static float main_max(float a, float b)
+static float max(float a, float b)
 {
 	if (a > b) {
 		return a;
@@ -40,7 +40,7 @@ static float main_max(float a, float b)
 
 
 
-static float main_min(float a, float b)
+static float min(float a, float b)
 {
 	if (a < b) {
 		return a;
@@ -50,25 +50,25 @@ static float main_min(float a, float b)
 
 
 // Pythagorean theorem
-static float main_distance(main_Point a, main_Point b)
+static float distance(Point a, Point b)
 {
-	const float dx = main_max(a.x, b.x) - main_min(a.x, b.x);
-	const float dy = main_max(a.y, b.y) - main_min(a.y, b.y);
+	const float dx = max(a.x, b.x) - min(a.x, b.x);
+	const float dy = max(a.y, b.y) - min(a.y, b.y);
 	const double dx2 = pow(dx, (double)(2));
 	const double dy2 = pow(dy, (double)(2));
 	return sqrt(dx2 + dy2);
 }
 
 
-static float main_lineLength(main_Line line)
+static float lineLength(Line line)
 {
-	return main_distance(line.a, line.b);
+	return distance(line.a, line.b);
 }
 
 
-static void main_ptr_example()
+static void ptr_example()
 {
-	main_Point *const ptr_p = (main_Point *)malloc(sizeof(main_Point));
+	Point *const ptr_p = (Point *)malloc(sizeof(Point));
 
 	// access by pointer
 	ptr_p->x = (float)(10);
@@ -81,10 +81,10 @@ static void main_ptr_example()
 int main()
 {
 	// by value
-	const float len = main_lineLength(main_line);
+	const float len = lineLength(line);
 	printf("line length = %f\n", len);
 
-	main_ptr_example();
+	ptr_example();
 
 	return 0;
 }

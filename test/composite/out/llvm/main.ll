@@ -205,30 +205,30 @@ declare void @perror(%ConstCharStr* %str)
 ; Test for composite types
 
 ; Pointers
-@main_p0 = internal global %Int32* zeroinitializer
-@main_p1 = internal global %Int32** zeroinitializer
+@p0 = internal global %Int32* zeroinitializer
+@p1 = internal global %Int32** zeroinitializer
 
 
 ; Functions
-define internal void @main_f0() {
+define internal void @f0() {
 	ret void
 	ret void
 }
 
-define internal %Int32 @main_f1(%Int32 %x) {
+define internal %Int32 @f1(%Int32 %x) {
 	ret %Int32 %x
 }
 
-define internal %Int32 @main_f2(%Int32 %a, %Int32 %b) {
+define internal %Int32 @f2(%Int32 %a, %Int32 %b) {
 	%1 = add %Int32 %a, %b
 	ret %Int32 %1
 }
 
-define internal %Int32* @main_f3() {
+define internal %Int32* @f3() {
 	ret %Int32* null
 }
 
-define internal void @main_f4([10 x %Int32]* %0, %Int32 %x) {
+define internal void @f4([10 x %Int32]* %0, %Int32 %x) {
 	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 0
 	%3 = insertvalue [10 x %Int32] %2, %Int32 2, 1
 	%4 = insertvalue [10 x %Int32] %3, %Int32 3, 2
@@ -237,7 +237,7 @@ define internal void @main_f4([10 x %Int32]* %0, %Int32 %x) {
 	ret void
 }
 
-define internal void @main_f5([32 x %Int32]* %0, [32 x %Int32] %__a) {
+define internal void @f5([32 x %Int32]* %0, [32 x %Int32] %__a) {
 	%a = alloca [32 x %Int32]
 	%2 = zext i8 32 to %Int32
 	store [32 x %Int32] %__a, [32 x %Int32]* %a
@@ -247,88 +247,88 @@ define internal void @main_f5([32 x %Int32]* %0, [32 x %Int32] %__a) {
 	ret void
 }
 
-define internal [32 x %Int32]* @main_f6([32 x %Int32]* %a) {
+define internal [32 x %Int32]* @f6([32 x %Int32]* %a) {
 	ret [32 x %Int32]* null
 }
 
-define internal void @main_f7(void ()* %f) {
+define internal void @f7(void ()* %f) {
 	ret void
 	ret void
 }
 
-define internal void ()* @main_f8(void ()* %f) {
-	ret void ()* @main_f0
+define internal void ()* @f8(void ()* %f) {
+	ret void ()* @f0
 }
 
-define internal void ()** @main_f9(void ()* %f) {
+define internal void ()** @f9(void ()* %f) {
 	ret void ()** null
 }
 
-define internal void ()** @main_f10(void ()** %f) {
+define internal void ()** @f10(void ()** %f) {
 	ret void ()** %f
 }
 
-define internal void ()** @main_f11([10 x %Int32]* (%Int32, %Int32*)** %f) {
+define internal void ()** @f11([10 x %Int32]* (%Int32, %Int32*)** %f) {
 	ret void ()** null
 }
 
-define internal void ()** @main_f12([10 x %Int32]* ([32 x %Int32]*, [64 x %Int32]**)** %f) {
+define internal void ()** @f12([10 x %Int32]* ([32 x %Int32]*, [64 x %Int32]**)** %f) {
 	ret void ()** null
 }
 
-define internal void ()** @main_f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**)** %f) {
+define internal void ()** @f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**)** %f) {
 	ret void ()** null
 }
 
 
 
 ; Pointers to function
-@main_pf0 = internal global void ()* @main_f0
-@main_pf1 = internal global %Int32 (%Int32)* @main_f1
-@main_pf2 = internal global %Int32 (%Int32, %Int32)* @main_f2
-@main_pf3 = internal global %Int32* ()* @main_f3
-@main_pf4 = internal global void ([10 x %Int32]*, %Int32)* @main_f4
-@main_pf5 = internal global void ([32 x %Int32]*, [32 x %Int32])* @main_f5
-@main_pf6 = internal global [32 x %Int32]* ([32 x %Int32]*)* @main_f6
-@main_pf7 = internal global void (void ()*)* @main_f7
-@main_pf8 = internal global void ()* (void ()*)* @main_f8
-@main_pf9 = internal global void ()** (void ()*)* @main_f9
-@main_pf10 = internal global void ()** (void ()**)* @main_f10
-@main_pf11 = internal global void ()** ([10 x %Int32]* (%Int32, %Int32*)**)* @main_f11
-@main_pf12 = internal global void ()** ([10 x %Int32]* ([32 x %Int32]*, [64 x %Int32]**)**)* @main_f12
-@main_pf13 = internal global void ()** ([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**)**)* @main_f13
+@pf0 = internal global void ()* @f0
+@pf1 = internal global %Int32 (%Int32)* @f1
+@pf2 = internal global %Int32 (%Int32, %Int32)* @f2
+@pf3 = internal global %Int32* ()* @f3
+@pf4 = internal global void ([10 x %Int32]*, %Int32)* @f4
+@pf5 = internal global void ([32 x %Int32]*, [32 x %Int32])* @f5
+@pf6 = internal global [32 x %Int32]* ([32 x %Int32]*)* @f6
+@pf7 = internal global void (void ()*)* @f7
+@pf8 = internal global void ()* (void ()*)* @f8
+@pf9 = internal global void ()** (void ()*)* @f9
+@pf10 = internal global void ()** (void ()**)* @f10
+@pf11 = internal global void ()** ([10 x %Int32]* (%Int32, %Int32*)**)* @f11
+@pf12 = internal global void ()** ([10 x %Int32]* ([32 x %Int32]*, [64 x %Int32]**)**)* @f12
+@pf13 = internal global void ()** ([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**)**)* @f13
 
 
 ; Arrays
-@main_a0 = internal global [5 x %Int32] [
+@a0 = internal global [5 x %Int32] [
 	%Int32 0,
 	%Int32 1,
 	%Int32 2,
 	%Int32 3,
 	%Int32 4
 ]
-@main_a1 = internal global [5 x %Int32*] [
-	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @main_a0, %Int32 0, %Int32 0),
-	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @main_a0, %Int32 0, %Int32 1),
-	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @main_a0, %Int32 0, %Int32 2),
-	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @main_a0, %Int32 0, %Int32 3),
-	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @main_a0, %Int32 0, %Int32 4)
+@a1 = internal global [5 x %Int32*] [
+	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @a0, %Int32 0, %Int32 0),
+	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @a0, %Int32 0, %Int32 1),
+	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @a0, %Int32 0, %Int32 2),
+	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @a0, %Int32 0, %Int32 3),
+	%Int32* getelementptr ([5 x %Int32], [5 x %Int32]* @a0, %Int32 0, %Int32 4)
 ]
-@main_a2 = internal global [5 x %Int32**] [
-	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @main_a1, %Int32 0, %Int32 0),
-	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @main_a1, %Int32 0, %Int32 1),
-	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @main_a1, %Int32 0, %Int32 2),
-	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @main_a1, %Int32 0, %Int32 3),
-	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @main_a1, %Int32 0, %Int32 4)
+@a2 = internal global [5 x %Int32**] [
+	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @a1, %Int32 0, %Int32 0),
+	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @a1, %Int32 0, %Int32 1),
+	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @a1, %Int32 0, %Int32 2),
+	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @a1, %Int32 0, %Int32 3),
+	%Int32** getelementptr ([5 x %Int32*], [5 x %Int32*]* @a1, %Int32 0, %Int32 4)
 ]
-@main_a3 = internal global [5 x void ()*] [
-	void ()* @main_f0,
+@a3 = internal global [5 x void ()*] [
+	void ()* @f0,
 	void ()* null,
 	void ()* null,
 	void ()* null,
 	void ()* null
 ]
-@main_a4 = internal global [2 x [5 x %Int]] [
+@a4 = internal global [2 x [5 x %Int]] [
 	[5 x %Int] [
 		%Int 0,
 		%Int 1,
@@ -344,9 +344,9 @@ define internal void ()** @main_f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int3
 		%Int 9
 	]
 ]
-@main_a5 = internal global [2 x [5 x %Int]*] [
-	[5 x %Int]* getelementptr ([2 x [5 x %Int]], [2 x [5 x %Int]]* @main_a4, %Int32 0, %Int32 0),
-	[5 x %Int]* getelementptr ([2 x [5 x %Int]], [2 x [5 x %Int]]* @main_a4, %Int32 0, %Int32 1)
+@a5 = internal global [2 x [5 x %Int]*] [
+	[5 x %Int]* getelementptr ([2 x [5 x %Int]], [2 x [5 x %Int]]* @a4, %Int32 0, %Int32 0),
+	[5 x %Int]* getelementptr ([2 x [5 x %Int]], [2 x [5 x %Int]]* @a4, %Int32 0, %Int32 1)
 ]
 ; Проблема в том что мой getelementptr не умеет в цепь-молнию
 ; а здесь без нее никак... придется взяться за это и сделать наконец
@@ -354,110 +354,110 @@ define internal void ()** @main_f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int3
 ;	[&a4[0][0], &a4[0][1], &a4[0][2], &a4[0][3], &a4[0][4]]
 ;	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
 ;]
-@main_a7 = internal global [2 x [5 x [5 x %Int]*]] [
+@a7 = internal global [2 x [5 x [5 x %Int]*]] [
 	[5 x [5 x %Int]*] [
-		[5 x %Int32]* @main_a0,
-		[5 x %Int32]* @main_a0,
-		[5 x %Int32]* @main_a0,
-		[5 x %Int32]* @main_a0,
-		[5 x %Int32]* @main_a0
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0
 	],
 	[5 x [5 x %Int]*] [
-		[5 x %Int32]* @main_a0,
-		[5 x %Int32]* @main_a0,
-		[5 x %Int32]* @main_a0,
-		[5 x %Int32]* @main_a0,
-		[5 x %Int32]* @main_a0
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0,
+		[5 x %Int32]* @a0
 	]
 ]
-@main_a8 = internal global [2 x [5 x [2 x [5 x [5 x %Int]*]]*]] [
+@a8 = internal global [2 x [5 x [2 x [5 x [5 x %Int]*]]*]] [
 	[5 x [2 x [5 x [5 x %Int]*]]*] [
-		[2 x [5 x [5 x %Int]*]]* @main_a7,
-		[2 x [5 x [5 x %Int]*]]* @main_a7,
-		[2 x [5 x [5 x %Int]*]]* @main_a7,
-		[2 x [5 x [5 x %Int]*]]* @main_a7,
-		[2 x [5 x [5 x %Int]*]]* @main_a7
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7
 	],
 	[5 x [2 x [5 x [5 x %Int]*]]*] [
-		[2 x [5 x [5 x %Int]*]]* @main_a7,
-		[2 x [5 x [5 x %Int]*]]* @main_a7,
-		[2 x [5 x [5 x %Int]*]]* @main_a7,
-		[2 x [5 x [5 x %Int]*]]* @main_a7,
-		[2 x [5 x [5 x %Int]*]]* @main_a7
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7,
+		[2 x [5 x [5 x %Int]*]]* @a7
 	]
 ]
-@main_a9 = internal global [5 x [10 x [2 x %Int (%Int)*]*]*] zeroinitializer
+@a9 = internal global [5 x [10 x [2 x %Int (%Int)*]*]*] zeroinitializer
 
 
 ;
-@main_p2 = internal global [5 x %Int32]* @main_a0
-@main_p3 = internal global [5 x %Int32]** @main_p2
-%main_RGB24 = type {
+@p2 = internal global [5 x %Int32]* @a0
+@p3 = internal global [5 x %Int32]** @p2
+%RGB24 = type {
 	%Int8,
 	%Int8,
 	%Int8
 };
 
-@main_rgb0 = internal global [2 x %main_RGB24] [
-	%main_RGB24 {
+@rgb0 = internal global [2 x %RGB24] [
+	%RGB24 {
 		%Int8 200,
 		%Int8 0,
 		%Int8 0
 	},
-	%main_RGB24 {
+	%RGB24 {
 		%Int8 200,
 		%Int8 0,
 		%Int8 0
 	}
 ]
-%main_AnimationPoint = type {
-	%main_RGB24,
+%AnimationPoint = type {
+	%RGB24,
 	%Int32
 };
 
-@main_ap = internal global %main_AnimationPoint {
-	%main_RGB24 {
+@ap = internal global %AnimationPoint {
+	%RGB24 {
 		%Int8 200,
 		%Int8 0,
 		%Int8 0
 	},
 	%Int32 3000
 }
-@main_animation0_points = internal global [5 x %main_AnimationPoint] [
-	%main_AnimationPoint {
-		%main_RGB24 {
+@animation0_points = internal global [5 x %AnimationPoint] [
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 200,
 			%Int8 0,
 			%Int8 0
 		},
 		%Int32 3
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 0,
 			%Int8 200,
 			%Int8 0
 		},
 		%Int32 30
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 100,
 			%Int8 100,
 			%Int8 0
 		},
 		%Int32 300
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 254,
 			%Int8 254,
 			%Int8 0
 		},
 		%Int32 20
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 0,
 			%Int8 0,
 			%Int8 255
@@ -465,41 +465,41 @@ define internal void ()** @main_f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int3
 		%Int32 3000
 	}
 ]
-@main_animation1_points = internal global [5 x %main_AnimationPoint] [
-	%main_AnimationPoint {
-		%main_RGB24 {
+@animation1_points = internal global [5 x %AnimationPoint] [
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 200,
 			%Int8 0,
 			%Int8 0
 		},
 		%Int32 3
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 0,
 			%Int8 200,
 			%Int8 0
 		},
 		%Int32 30
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 100,
 			%Int8 100,
 			%Int8 0
 		},
 		%Int32 300
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 254,
 			%Int8 254,
 			%Int8 0
 		},
 		%Int32 20
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 0,
 			%Int8 0,
 			%Int8 255
@@ -507,41 +507,41 @@ define internal void ()** @main_f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int3
 		%Int32 3000
 	}
 ]
-@main_animation2_points = internal global [5 x %main_AnimationPoint] [
-	%main_AnimationPoint {
-		%main_RGB24 {
+@animation2_points = internal global [5 x %AnimationPoint] [
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 200,
 			%Int8 0,
 			%Int8 0
 		},
 		%Int32 3
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 0,
 			%Int8 200,
 			%Int8 0
 		},
 		%Int32 30
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 100,
 			%Int8 100,
 			%Int8 0
 		},
 		%Int32 300
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 255,
 			%Int8 254,
 			%Int8 0
 		},
 		%Int32 20
 	},
-	%main_AnimationPoint {
-		%main_RGB24 {
+	%AnimationPoint {
+		%RGB24 {
 			%Int8 0,
 			%Int8 0,
 			%Int8 255
@@ -549,11 +549,11 @@ define internal void ()** @main_f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int3
 		%Int32 3000
 	}
 ]
-define internal void @main_xy({%Int32,%Int32} %x) {
+define internal void @xy({%Int32,%Int32} %x) {
 	ret void
 }
 
-@main_arrr = internal global [3 x [3 x %Int32]] [
+@arrr = internal global [3 x [3 x %Int32]] [
 	[3 x %Int32] [
 		%Int32 1,
 		%Int32 2,
@@ -570,58 +570,58 @@ define internal void @main_xy({%Int32,%Int32} %x) {
 		%Int32 9
 	]
 ]
-@main_arry = internal global [3 x [3 x void ()*]] zeroinitializer
-define internal %Int32 @main_add(%Int32 %a, %Int32 %b) {
+@arry = internal global [3 x [3 x void ()*]] zeroinitializer
+define internal %Int32 @add(%Int32 %a, %Int32 %b) {
 	%1 = add %Int32 %a, %b
 	ret %Int32 %1
 }
 
-define internal %Int32 @main_sub(%Int32 %a, %Int32 %b) {
+define internal %Int32 @sub(%Int32 %a, %Int32 %b) {
 	%1 = sub %Int32 %a, %b
 	ret %Int32 %1
 }
 
-@main_farr = internal global [2 x %Int32 (%Int32, %Int32)*] [
-	%Int32 (%Int32, %Int32)* @main_add,
-	%Int32 (%Int32, %Int32)* @main_sub
+@farr = internal global [2 x %Int32 (%Int32, %Int32)*] [
+	%Int32 (%Int32, %Int32)* @add,
+	%Int32 (%Int32, %Int32)* @sub
 ]
-define internal void @main_hi(%Str8* %x) {
+define internal void @hi(%Str8* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Str8* %x)
 	ret void
 }
 
-@main_hiarr = internal global [10 x void (%Str8*)*] [
-	void (%Str8*)* @main_hi,
-	void (%Str8*)* @main_hi,
-	void (%Str8*)* @main_hi,
-	void (%Str8*)* @main_hi,
-	void (%Str8*)* @main_hi,
-	void (%Str8*)* @main_hi,
-	void (%Str8*)* @main_hi,
-	void (%Str8*)* @main_hi,
-	void (%Str8*)* @main_hi,
-	void (%Str8*)* @main_hi
+@hiarr = internal global [10 x void (%Str8*)*] [
+	void (%Str8*)* @hi,
+	void (%Str8*)* @hi,
+	void (%Str8*)* @hi,
+	void (%Str8*)* @hi,
+	void (%Str8*)* @hi,
+	void (%Str8*)* @hi,
+	void (%Str8*)* @hi,
+	void (%Str8*)* @hi,
+	void (%Str8*)* @hi,
+	void (%Str8*)* @hi
 ]
-%main_Wrap = type {
+%Wrap = type {
 	void (%Str8*)*,
 	%Int32 (%Int32, %Int32)*
 };
 
-@main_wrap0 = internal global %main_Wrap {
-	void (%Str8*)* @main_hi,
-	%Int32 (%Int32, %Int32)* @main_add
+@wrap0 = internal global %Wrap {
+	void (%Str8*)* @hi,
+	%Int32 (%Int32, %Int32)* @add
 }
-@main_awrap = internal global [2 x %main_Wrap*] [
-	%main_Wrap* @main_wrap0,
-	%main_Wrap* @main_wrap0
+@awrap = internal global [2 x %Wrap*] [
+	%Wrap* @wrap0,
+	%Wrap* @wrap0
 ]
 define %Int32 @main() {
 	%1 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
 	%2 = insertvalue {%Int32,%Int32} %1, %Int32 20, 1
-	call void @main_xy({%Int32,%Int32} %2)
+	call void @xy({%Int32,%Int32} %2)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
-	%4 = bitcast [5 x %main_AnimationPoint]* @main_animation0_points to i8*
-	%5 = bitcast [5 x %main_AnimationPoint]* @main_animation1_points to i8*
+	%4 = bitcast [5 x %AnimationPoint]* @animation0_points to i8*
+	%5 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
 	%6 = call i1 (i8*, i8*, i64) @memeq(i8* %4, i8* %5, %Int64 40)
 	%7 = icmp ne %Bool %6, 0
 	br %Bool %7 , label %then_0, label %else_0
@@ -633,8 +633,8 @@ else_0:
 	br label %endif_0
 endif_0:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
-	%11 = bitcast [5 x %main_AnimationPoint]* @main_animation1_points to i8*
-	%12 = bitcast [5 x %main_AnimationPoint]* @main_animation2_points to i8*
+	%11 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
+	%12 = bitcast [5 x %AnimationPoint]* @animation2_points to i8*
 	%13 = call i1 (i8*, i8*, i64) @memeq(i8* %11, i8* %12, %Int64 40)
 	%14 = icmp ne %Bool %13, 0
 	br %Bool %14 , label %then_1, label %else_1
@@ -665,7 +665,7 @@ body_2:
 	%24 = load %Int32, %Int32* %20
 	%25 = load %Int32, %Int32* %20
 	%26 = load %Int32, %Int32* %17
-	%27 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* @main_arrr, %Int32 0, %Int32 %26, %Int32 %25
+	%27 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* @arrr, %Int32 0, %Int32 %26, %Int32 %25
 	%28 = load %Int32, %Int32* %27
 	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str8 to [0 x i8]*), %Int32 %23, %Int32 %24, %Int32 %28)
 	%30 = load %Int32, %Int32* %20
@@ -678,11 +678,11 @@ break_2:
 	store %Int32 %33, %Int32* %17
 	br label %again_1
 break_1:
-	%34 = getelementptr [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @main_farr, %Int32 0, %Int32 0
+	%34 = getelementptr [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0, %Int32 0
 	%35 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %34
 	%36 = call %Int32 %35(%Int32 5, %Int32 7)
 	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str9 to [0 x i8]*), %Int32 %36)
-	%38 = getelementptr [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @main_farr, %Int32 0, %Int32 1
+	%38 = getelementptr [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0, %Int32 1
 	%39 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %38
 	%40 = call %Int32 %39(%Int32 5, %Int32 7)
 	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str10 to [0 x i8]*), %Int32 %40)
@@ -694,7 +694,7 @@ again_3:
 	br %Bool %43 , label %body_3, label %break_3
 body_3:
 	%44 = load %Int32, %Int32* %17
-	%45 = getelementptr [10 x void (%Str8*)*], [10 x void (%Str8*)*]* @main_hiarr, %Int32 0, %Int32 %44
+	%45 = getelementptr [10 x void (%Str8*)*], [10 x void (%Str8*)*]* @hiarr, %Int32 0, %Int32 %44
 	%46 = load void (%Str8*)*, void (%Str8*)** %45
 	call void %46(%Str8* bitcast ([4 x i8]* @str11 to [0 x i8]*))
 	%47 = load %Int32, %Int32* %17
@@ -702,9 +702,9 @@ body_3:
 	store %Int32 %48, %Int32* %17
 	br label %again_3
 break_3:
-	%49 = getelementptr [2 x %main_Wrap*], [2 x %main_Wrap*]* @main_awrap, %Int32 0, %Int32 0
-	%50 = load %main_Wrap*, %main_Wrap** %49
-	%51 = getelementptr %main_Wrap, %main_Wrap* %50, %Int32 0, %Int32 0
+	%49 = getelementptr [2 x %Wrap*], [2 x %Wrap*]* @awrap, %Int32 0, %Int32 0
+	%50 = load %Wrap*, %Wrap** %49
+	%51 = getelementptr %Wrap, %Wrap* %50, %Int32 0, %Int32 0
 	%52 = load void (%Str8*)*, void (%Str8*)** %51
 	call void %52(%Str8* bitcast ([6 x i8]* @str12 to [0 x i8]*))
 	;let y = awrap[0]

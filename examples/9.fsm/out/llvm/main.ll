@@ -259,36 +259,36 @@ declare void @fsm_run(%fsm_FSM* %fsm)
 ;@attribute("c_no_print")
 
 ;$pragma c_include "./ff_main.h"
-@main_cnt = internal global %Int8 zeroinitializer
+@cnt = internal global %Int8 zeroinitializer
 
 
 ;
 ; State Off
 ;
-define internal void @main_off_entry(%fsm_FSM* %x) {
+define internal void @off_entry(%fsm_FSM* %x) {
 	;printf("off_entry\n")
 	ret void
 }
 
-define internal void @main_off_loop(%fsm_FSM* %x) {
+define internal void @off_loop(%fsm_FSM* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
-	%2 = load %Int8, %Int8* @main_cnt
+	%2 = load %Int8, %Int8* @cnt
 	%3 = icmp ult %Int8 %2, 10
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	%4 = load %Int8, %Int8* @main_cnt
+	%4 = load %Int8, %Int8* @cnt
 	%5 = add %Int8 %4, 1
-	store %Int8 %5, %Int8* @main_cnt
+	store %Int8 %5, %Int8* @cnt
 	br label %endif_0
 else_0:
-	store %Int8 0, %Int8* @main_cnt
+	store %Int8 0, %Int8* @cnt
 	call void @fsm_switch(%fsm_FSM* %x, %Int32 1)
 	br label %endif_0
 endif_0:
 	ret void
 }
 
-define internal void @main_off_exit(%fsm_FSM* %x) {
+define internal void @off_exit(%fsm_FSM* %x) {
 	;printf("off_exit\n")
 	ret void
 }
@@ -298,30 +298,30 @@ define internal void @main_off_exit(%fsm_FSM* %x) {
 ;
 ; State On
 ;
-define internal void @main_on_entry(%fsm_FSM* %x) {
+define internal void @on_entry(%fsm_FSM* %x) {
 	;printf("on_entry\n")
 	ret void
 }
 
-define internal void @main_on_loop(%fsm_FSM* %x) {
+define internal void @on_loop(%fsm_FSM* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*))
-	%2 = load %Int8, %Int8* @main_cnt
+	%2 = load %Int8, %Int8* @cnt
 	%3 = icmp ult %Int8 %2, 10
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	%4 = load %Int8, %Int8* @main_cnt
+	%4 = load %Int8, %Int8* @cnt
 	%5 = add %Int8 %4, 1
-	store %Int8 %5, %Int8* @main_cnt
+	store %Int8 %5, %Int8* @cnt
 	br label %endif_0
 else_0:
-	store %Int8 0, %Int8* @main_cnt
+	store %Int8 0, %Int8* @cnt
 	call void @fsm_switch(%fsm_FSM* %x, %Int32 2)
 	br label %endif_0
 endif_0:
 	ret void
 }
 
-define internal void @main_on_exit(%fsm_FSM* %x) {
+define internal void @on_exit(%fsm_FSM* %x) {
 	;printf("on_exit\n")
 	ret void
 }
@@ -331,7 +331,7 @@ define internal void @main_on_exit(%fsm_FSM* %x) {
 ;
 ; State Beacon
 ;
-define internal void @main_beacon_entry(%fsm_FSM* %x) {
+define internal void @beacon_entry(%fsm_FSM* %x) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 1
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Str8* @fsm_state_no_name(%fsm_FSM* %x, %Int32 %2)
@@ -339,25 +339,25 @@ define internal void @main_beacon_entry(%fsm_FSM* %x) {
 	ret void
 }
 
-define internal void @main_beacon_loop(%fsm_FSM* %x) {
+define internal void @beacon_loop(%fsm_FSM* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
-	%2 = load %Int8, %Int8* @main_cnt
+	%2 = load %Int8, %Int8* @cnt
 	%3 = icmp ult %Int8 %2, 10
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	%4 = load %Int8, %Int8* @main_cnt
+	%4 = load %Int8, %Int8* @cnt
 	%5 = add %Int8 %4, 1
-	store %Int8 %5, %Int8* @main_cnt
+	store %Int8 %5, %Int8* @cnt
 	br label %endif_0
 else_0:
-	store %Int8 0, %Int8* @main_cnt
+	store %Int8 0, %Int8* @cnt
 	call void @fsm_switch(%fsm_FSM* %x, %Int32 0)
 	br label %endif_0
 endif_0:
 	ret void
 }
 
-define internal void @main_beacon_exit(%fsm_FSM* %x) {
+define internal void @beacon_exit(%fsm_FSM* %x) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 2
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Str8* @fsm_state_no_name(%fsm_FSM* %x, %Int32 %2)
@@ -365,7 +365,7 @@ define internal void @main_beacon_exit(%fsm_FSM* %x) {
 	ret void
 }
 
-@main_fsm0 = internal global %fsm_FSM {
+@fsm0 = internal global %fsm_FSM {
 	[8 x %Char8] [
 		%Char8 70,
 		%Char8 108,
@@ -391,9 +391,9 @@ define internal void @main_beacon_exit(%fsm_FSM* %x) {
 				%Char8 0,
 				%Char8 0
 			],
-			void (%fsm_FSM*)* @main_off_entry,
-			void (%fsm_FSM*)* @main_off_loop,
-			void (%fsm_FSM*)* @main_off_exit
+			void (%fsm_FSM*)* @off_entry,
+			void (%fsm_FSM*)* @off_loop,
+			void (%fsm_FSM*)* @off_exit
 		},
 		%fsm_StateDesc {
 			[8 x %Char8] [
@@ -406,9 +406,9 @@ define internal void @main_beacon_exit(%fsm_FSM* %x) {
 				%Char8 0,
 				%Char8 0
 			],
-			void (%fsm_FSM*)* @main_on_entry,
-			void (%fsm_FSM*)* @main_on_loop,
-			void (%fsm_FSM*)* @main_on_exit
+			void (%fsm_FSM*)* @on_entry,
+			void (%fsm_FSM*)* @on_loop,
+			void (%fsm_FSM*)* @on_exit
 		},
 		%fsm_StateDesc {
 			[8 x %Char8] [
@@ -421,9 +421,9 @@ define internal void @main_beacon_exit(%fsm_FSM* %x) {
 				%Char8 0,
 				%Char8 0
 			],
-			void (%fsm_FSM*)* @main_beacon_entry,
-			void (%fsm_FSM*)* @main_beacon_loop,
-			void (%fsm_FSM*)* @main_beacon_exit
+			void (%fsm_FSM*)* @beacon_entry,
+			void (%fsm_FSM*)* @beacon_loop,
+			void (%fsm_FSM*)* @beacon_exit
 		},
 		%fsm_StateDesc zeroinitializer,
 		%fsm_StateDesc zeroinitializer,
@@ -445,7 +445,7 @@ define %Int @main() {
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	call void @fsm_run(%fsm_FSM* @main_fsm0)
+	call void @fsm_run(%fsm_FSM* @fsm0)
 	call void @delay_ms(%Int64 500)
 	br label %again_1
 break_1:

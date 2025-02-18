@@ -197,7 +197,7 @@ declare void @perror(%ConstCharStr* %str)
 @str7 = private constant [40 x i8] [i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 108, i8 101, i8 115, i8 115, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 44, i8 32, i8 116, i8 114, i8 121, i8 32, i8 97, i8 103, i8 97, i8 105, i8 110, i8 10, i8 0]
 ; -- endstrings --
 define %Int32 @main() {
-	%1 = call %Int32 @main_get_number(%Int32 0, %Int32 10)
+	%1 = call %Int32 @get_number(%Int32 0, %Int32 10)
 	%2 = icmp slt %Int32 %1, 5
 	br %Bool %2 , label %then_0, label %else_0
 then_0:
@@ -218,7 +218,7 @@ endif_0:
 	ret %Int32 0
 }
 
-define internal %Int32 @main_get_number(%Int32 %min, %Int32 %max) {
+define internal %Int32 @get_number(%Int32 %min, %Int32 %max) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
 	br label %again_1

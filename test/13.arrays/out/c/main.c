@@ -17,18 +17,18 @@
 //$pragma c_include "./minmax.h"
 
 
-#define _main_constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-const uint8_t main_constantArray[10] = _main_constantArray;
+#define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+const uint8_t constantArray[10] = _constantArray;
 
-static int32_t main_globalArray[10] = _main_constantArray;
+static int32_t globalArray[10] = _constantArray;
 
-static char main_arrayFromString[3] = "abc";
+static char arrayFromString[3] = "abc";
 
 
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
 
-static void main_f0(char *_x, char *sret_)
+static void f0(char *_x, char *sret_)
 {
 	char x[20];
 	memcpy(x, _x, sizeof(char[20]));
@@ -58,13 +58,13 @@ static void main_f0(char *_x, char *sret_)
 }
 
 
-#define _main_startSequence  {0xAA, 0x55, 0x02}
-const uint8_t main_startSequence[3] = _main_startSequence;
-#define _main_stopSequence  {0x16}
-const uint8_t main_stopSequence[1] = _main_stopSequence;
+#define _startSequence  {0xAA, 0x55, 0x02}
+const uint8_t startSequence[3] = _startSequence;
+#define _stopSequence  {0x16}
+const uint8_t stopSequence[1] = _stopSequence;
 
 
-static void main_test()
+static void test()
 {
 	// тестируем работу с локальным generic массивом
 	int32_t yy[6];
@@ -83,7 +83,7 @@ static void main_test()
 
 
 
-static int32_t main_a0[2][2][5] = (int32_t[2][2][5]){
+static int32_t a0[2][2][5] = (int32_t[2][2][5]){
 
 	0, 1, 2, 3, 4,
 	5, 6, 7, 8, 9,
@@ -92,14 +92,14 @@ static int32_t main_a0[2][2][5] = (int32_t[2][2][5]){
 	15, 16, 17, 18, 19
 };
 
-static int32_t main_a1[5] = (int32_t[5]){0, 1, 2, 3, 4};
-static int32_t main_a2[5] = (int32_t[5]){5, 6, 7, 8, 9};
-static int32_t *main_a3[2] = (int32_t *[2]){&main_a1, &main_a2};
-static int32_t *(*main_a4[2])[2] = (int32_t *(*[2])[2]){&main_a3, &main_a3};
-static int32_t *(*(*main_p0)[2])[2] = &main_a4;
+static int32_t a1[5] = (int32_t[5]){0, 1, 2, 3, 4};
+static int32_t a2[5] = (int32_t[5]){5, 6, 7, 8, 9};
+static int32_t *a3[2] = (int32_t *[2]){&a1, &a2};
+static int32_t *(*a4[2])[2] = (int32_t *(*[2])[2]){&a3, &a3};
+static int32_t *(*(*p0)[2])[2] = &a4;
 
 
-static int32_t main_a10[10][10] = (int32_t[10][10]){
+static int32_t a10[10][10] = (int32_t[10][10]){
 	1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 	11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 	21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
@@ -113,7 +113,7 @@ static int32_t main_a10[10][10] = (int32_t[10][10]){
 };
 
 
-static void main_test_arrays()
+static void test_arrays()
 {
 	int32_t i;
 	int32_t j;
@@ -123,7 +123,7 @@ static void main_test_arrays()
 	while (i < 10) {
 		j = 0;
 		while (j < 10) {
-			main_a10[i][j] = main_a10[i][j] * 2;
+			a10[i][j] = a10[i][j] * 2;
 			j = j + 1;
 		}
 		i = i + 1;
@@ -133,7 +133,7 @@ static void main_test_arrays()
 	while (i < 10) {
 		j = 0;
 		while (j < 10) {
-			printf("a10[%d][%d] = %d\n", i, j, main_a10[i][j]);
+			printf("a10[%d][%d] = %d\n", i, j, a10[i][j]);
 			j = j + 1;
 		}
 		i = i + 1;
@@ -145,7 +145,7 @@ static void main_test_arrays()
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, main_a0[i][j][k]);
+				printf("a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -158,7 +158,7 @@ static void main_test_arrays()
 	while (i < 2) {
 		j = 0;
 		while (j < 5) {
-			printf("a3[%d][%d] = %d\n", i, j, main_a3[i][j]);
+			printf("a3[%d][%d] = %d\n", i, j, a3[i][j]);
 			j = j + 1;
 		}
 		i = i + 1;
@@ -171,7 +171,7 @@ static void main_test_arrays()
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, (*main_a4[i])[j][k]);
+				printf("a3[%d][%d][%d] = %d\n", i, j, k, (*a4[i])[j][k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -185,7 +185,7 @@ static void main_test_arrays()
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("p0[%d][%d][%d] = %d\n", i, j, k, (*(*main_p0)[i])[j][k]);
+				printf("p0[%d][%d][%d] = %d\n", i, j, k, (*(*p0)[i])[j][k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -203,12 +203,12 @@ int main()
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	char em[30];
-	main_f0("Hello World!", &em);
+	f0("Hello World!", &em);
 	printf("em = %s\n", &em);
 
 	int32_t i = 0;
 	while (i < 10) {
-		const int32_t a = main_globalArray[i];
+		const int32_t a = globalArray[i];
 		printf("globalArray[%i] = %i\n", i, a);
 		i = i + 1;
 	}
@@ -228,7 +228,7 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t *globalArrayPtr;
-	globalArrayPtr = (int32_t *)&main_globalArray;
+	globalArrayPtr = (int32_t *)&globalArray;
 
 	i = 0;
 	while (i < 3) {
@@ -320,13 +320,13 @@ int main()
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	memcpy(&main_globalArray, &__init_array, sizeof main_globalArray);
-	printf("globalArray[%i] = %i\n", 0, main_globalArray[0]);
-	printf("globalArray[%i] = %i\n", 1, main_globalArray[1]);
-	printf("globalArray[%i] = %i\n", 2, main_globalArray[2]);
+	memcpy(&globalArray, &__init_array, sizeof globalArray);
+	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
+	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
+	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
 
 
-	memset(&main_globalArray, 0, sizeof main_globalArray);
+	memset(&globalArray, 0, sizeof globalArray);
 
 
 	// проверка того как локальная константа-массив
@@ -364,7 +364,7 @@ int main()
 		printf("test failed\n");
 	}
 
-	main_test_arrays();
+	test_arrays();
 
 	return 0;
 }

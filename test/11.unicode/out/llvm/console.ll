@@ -598,7 +598,7 @@ then_5:
 	; %i & %d for signed integer (Int)
 	;
 	%62 = va_arg i8** %1, %Int32
-	%63 = call %Int32 @console_sprint_dec_int32([0 x %Char8]* %56, %Int32 %62)
+	%63 = call %Int32 @sprint_dec_int32([0 x %Char8]* %56, %Int32 %62)
 	%64 = load %Int32, %Int32* %3
 	%65 = add %Int32 %64, %63
 	store %Int32 %65, %Int32* %3
@@ -612,7 +612,7 @@ then_6:
 	; %n for unsigned integer (Nat)
 	;
 	%68 = va_arg i8** %1, %Int32
-	%69 = call %Int32 @console_sprint_dec_n32([0 x %Char8]* %56, %Int32 %68)
+	%69 = call %Int32 @sprint_dec_n32([0 x %Char8]* %56, %Int32 %68)
 	%70 = load %Int32, %Int32* %3
 	%71 = add %Int32 %70, %69
 	store %Int32 %71, %Int32* %3
@@ -630,7 +630,7 @@ then_7:
 	; %p for pointers
 	;
 	%77 = va_arg i8** %1, %Int32
-	%78 = call %Int32 @console_sprint_hex_nat32([0 x %Char8]* %56, %Int32 %77)
+	%78 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %56, %Int32 %77)
 	%79 = load %Int32, %Int32* %3
 	%80 = add %Int32 %79, %78
 	store %Int32 %80, %Int32* %3
@@ -684,17 +684,17 @@ break_1:
 	ret %Int32 %99
 }
 
-define internal %Char8 @console_n_to_dec_sym(%Int8 %n) {
+define internal %Char8 @n_to_dec_sym(%Int8 %n) {
 	%1 = add %Int8 48, %n
 	%2 = bitcast %Int8 %1 to %Char8
 	ret %Char8 %2
 }
 
-define internal %Char8 @console_n_to_hex_sym(%Int8 %n) {
+define internal %Char8 @n_to_hex_sym(%Int8 %n) {
 	%1 = icmp ult %Int8 %n, 10
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	%2 = call %Char8 @console_n_to_dec_sym(%Int8 %n)
+	%2 = call %Char8 @n_to_dec_sym(%Int8 %n)
 	ret %Char8 %2
 	br label %endif_0
 endif_0:
@@ -704,7 +704,7 @@ endif_0:
 	ret %Char8 %6
 }
 
-define internal %Int32 @console_sprint_hex_nat32([0 x %Char8]* %buf, %Int32 %x) {
+define internal %Int32 @sprint_hex_nat32([0 x %Char8]* %buf, %Int32 %x) {
 	%1 = alloca [8 x %Char8], align 1
 	%2 = alloca %Int32, align 4
 	store %Int32 %x, %Int32* %2
@@ -722,7 +722,7 @@ body_1:
 	%8 = load %Int32, %Int32* %3
 	%9 = getelementptr [8 x %Char8], [8 x %Char8]* %1, %Int32 0, %Int32 %8
 	%10 = trunc %Int32 %5 to %Int8
-	%11 = call %Char8 @console_n_to_hex_sym(%Int8 %10)
+	%11 = call %Char8 @n_to_hex_sym(%Int8 %10)
 	store %Char8 %11, %Char8* %9
 	%12 = load %Int32, %Int32* %3
 	%13 = add %Int32 %12, 1
@@ -767,7 +767,7 @@ break_2:
 	ret %Int32 %31
 }
 
-define internal %Int32 @console_sprint_dec_int32([0 x %Char8]* %buf, %Int32 %x) {
+define internal %Int32 @sprint_dec_int32([0 x %Char8]* %buf, %Int32 %x) {
 	%1 = alloca [11 x %Char8], align 1
 	%2 = alloca %Int32, align 4
 	store %Int32 %x, %Int32* %2
@@ -794,7 +794,7 @@ body_1:
 	%12 = load %Int32, %Int32* %7
 	%13 = getelementptr [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %12
 	%14 = trunc %Int32 %9 to %Int8
-	%15 = call %Char8 @console_n_to_dec_sym(%Int8 %14)
+	%15 = call %Char8 @n_to_dec_sym(%Int8 %14)
 	store %Char8 %15, %Char8* %13
 	%16 = load %Int32, %Int32* %7
 	%17 = add %Int32 %16, 1
@@ -846,7 +846,7 @@ break_2:
 	ret %Int32 %38
 }
 
-define internal %Int32 @console_sprint_dec_n32([0 x %Char8]* %buf, %Int32 %x) {
+define internal %Int32 @sprint_dec_n32([0 x %Char8]* %buf, %Int32 %x) {
 	%1 = alloca [11 x %Char8], align 1
 	%2 = alloca %Int32, align 4
 	store %Int32 %x, %Int32* %2
@@ -864,7 +864,7 @@ body_1:
 	%8 = load %Int32, %Int32* %3
 	%9 = getelementptr [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %8
 	%10 = trunc %Int32 %5 to %Int8
-	%11 = call %Char8 @console_n_to_dec_sym(%Int8 %10)
+	%11 = call %Char8 @n_to_dec_sym(%Int8 %10)
 	store %Char8 %11, %Char8* %9
 	%12 = load %Int32, %Int32* %3
 	%13 = add %Int32 %12, 1

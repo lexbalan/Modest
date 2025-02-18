@@ -294,24 +294,24 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str9 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 54, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
 @str10 = private constant [12 x i8] [i8 115, i8 108, i8 111, i8 112, i8 101, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 ; -- endstrings --
-define internal double @main_squareOfCircle(double %radius) {
+define internal double @squareOfCircle(double %radius) {
 	%1 = call %Double @pow(double %radius, %Double 2.0000000000000000)
 	%2 = fmul %Double %1, 3.1415926535897931
 	ret %Double %2
 }
 
-%main_Point2D = type {
+%Point2D = type {
 	%Int,
 	%Int
 };
 
-define internal float @main_slope(%main_Point2D %a, %main_Point2D %b) {
-	%1 = extractvalue %main_Point2D %a, 0
-	%2 = extractvalue %main_Point2D %b, 0
+define internal float @slope(%Point2D %a, %Point2D %b) {
+	%1 = extractvalue %Point2D %a, 0
+	%2 = extractvalue %Point2D %b, 0
 	%3 = sub %Int %1, %2
 	%4 = call %Int @abs(%Int %3)
-	%5 = extractvalue %main_Point2D %a, 1
-	%6 = extractvalue %main_Point2D %b, 1
+	%5 = extractvalue %Point2D %a, 1
+	%6 = extractvalue %Point2D %b, 1
 	%7 = sub %Int %5, %6
 	%8 = call %Int @abs(%Int %7)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*), %Int %4)
@@ -326,18 +326,18 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*))
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int32 2)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), double 0.6666666666666666)
-	%4 = call double @main_squareOfCircle(double 10.0000000000000000)
+	%4 = call double @squareOfCircle(double 10.0000000000000000)
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), double %4)
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str7 to [0 x i8]*), double 0.1250000000000000)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str8 to [0 x i8]*), %Int32 4)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str9 to [0 x i8]*), %Int32 8)
 
 	; printf %f ожидает получить double а не float!
-	%9 = insertvalue %main_Point2D zeroinitializer, %Int 10, 0
-	%10 = insertvalue %main_Point2D %9, %Int 20, 1
-	%11 = insertvalue %main_Point2D zeroinitializer, %Int 30, 0
-	%12 = insertvalue %main_Point2D %11, %Int 50, 1
-	%13 = call float @main_slope(%main_Point2D %10, %main_Point2D %12)
+	%9 = insertvalue %Point2D zeroinitializer, %Int 10, 0
+	%10 = insertvalue %Point2D %9, %Int 20, 1
+	%11 = insertvalue %Point2D zeroinitializer, %Int 30, 0
+	%12 = insertvalue %Point2D %11, %Int 50, 1
+	%13 = call float @slope(%Point2D %10, %Point2D %12)
 	%14 = fpext float %13 to double
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str10 to [0 x i8]*), double %14)
 	ret %Int 0

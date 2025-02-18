@@ -180,7 +180,9 @@ def get_id_str(x):
 		xmodule = x.getModule()
 		if xmodule != None:
 			if not 'nodecorate' in xmodule.att:
-				return "%s_%s" % (xmodule.id, id.str)
+				#if x.access_level != 'private':
+				if not x.hasAttribute('static'):
+					return "%s_%s" % (xmodule.id, id.str)
 
 	return id.str
 

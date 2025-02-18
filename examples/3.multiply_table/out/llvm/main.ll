@@ -191,7 +191,7 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [14 x i8] [i8 37, i8 117, i8 32, i8 42, i8 32, i8 37, i8 117, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 @str2 = private constant [23 x i8] [i8 109, i8 117, i8 108, i8 116, i8 105, i8 112, i8 108, i8 121, i8 32, i8 116, i8 97, i8 98, i8 108, i8 101, i8 32, i8 102, i8 111, i8 114, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define internal void @main_mtab(%Int32 %n) {
+define internal void @mtab(%Int32 %n) {
 	%1 = alloca %Int32, align 4
 	store %Int32 1, %Int32* %1
 	; or
@@ -216,7 +216,7 @@ break_1:
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), %Int32 4)
-	call void @main_mtab(%Int32 4)
+	call void @mtab(%Int32 4)
 	ret %Int 0
 }
 
