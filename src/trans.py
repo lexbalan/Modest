@@ -1326,12 +1326,12 @@ def submodule_access(x):
 		if v != None:
 			error("access to module private item", ti)
 
-	if v.type.is_incompleted():
-		v = value_update_incompleted_type(submodule, v, iname)
-
 	if v == None:
 		error("module '%s' does not have value '%s'" % (mname, iname), x['ti'])
 		return ValueBad(x['ti'])
+
+	if v.type.is_incompleted():
+		v = value_update_incompleted_type(submodule, v, iname)
 
 	return v
 
