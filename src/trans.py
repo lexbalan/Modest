@@ -534,6 +534,10 @@ def do_type_name(x):
 			return TypeBad(t['ti'])
 		t = module_type_get_public(imp.module, id_str)
 
+		if t == None:
+			error("undefined type", x['ti'])
+			return TypeBad(x['ti'])
+
 		if t.is_incompleted():
 			t = type_update_incompleted(imp.module, t, id_str)
 	else:
