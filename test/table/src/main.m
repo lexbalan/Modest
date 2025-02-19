@@ -71,10 +71,6 @@ var table10 = table.Table {
 
 
 public func main() -> Int32 {
-
-	//printf("sizeof('ABC') = %d\n", sizeof("ABC"))
-	//printf("lengthof('ABC') = %d\n", lengthof("ABC"))
-
 	let tab = new table.Table {}
 
 	if tab == nil {
