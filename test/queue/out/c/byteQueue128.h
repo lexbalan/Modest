@@ -4,9 +4,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+
+
 #include "queue.h"
-
-
 
 
 #define byteQueue128_cap  16

@@ -107,7 +107,9 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports --
+; -- print imports 'byteRing16' --
+; -- 1
+; ?? queue ??
 ; from included ctypes64
 %Str = type %Str8;
 %Char = type %Char8;
@@ -185,6 +187,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
+; from import
 %queue_Queue = type {
 	%Int32,
 	%Int32,
@@ -199,26 +202,20 @@ declare %Bool @queue_isEmpty(%queue_Queue* %q)
 declare %Bool @queue_isFull(%queue_Queue* %q)
 declare %Int32 @queue_getPutPosition(%queue_Queue* %q)
 declare %Int32 @queue_getGetPosition(%queue_Queue* %q)
-; -- end print imports --
+; end from import
+; -- end print imports 'byteRing16' --
 ; -- strings --
 ; -- endstrings --
-
-
 %byteRing16_Word8Ring16 = type {
 	%queue_Queue,
 	[16 x %Word8]
 };
 
-
 define void @byteRing16_init(%byteRing16_Word8Ring16* %q) {
-	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
+	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
 	call void @queue_init(%queue_Queue* %1, %Int32 16)
-	; -- STMT ASSIGN ARRAY --
-	%2 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 1
-	; -- start vol eval --
-	%3 = zext i5 16 to %Int32
-	; -- end vol eval --
-	; -- zero fill rest of array
+	%2 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 1
+	%3 = zext i8 16 to %Int32
 	%4 = mul %Int32 %3, 1
 	%5 = bitcast [16 x %Word8]* %2 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %5, i8 0, %Int32 %4, i1 0)
@@ -226,52 +223,57 @@ define void @byteRing16_init(%byteRing16_Word8Ring16* %q) {
 }
 
 define %Int32 @byteRing16_capacity(%byteRing16_Word8Ring16* %q) {
-	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
+	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
 	%2 = call %Int32 @queue_capacity(%queue_Queue* %1)
 	ret %Int32 %2
 }
 
 define %Int32 @byteRing16_size(%byteRing16_Word8Ring16* %q) {
-	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
+	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
 	%2 = call %Int32 @queue_size(%queue_Queue* %1)
 	ret %Int32 %2
 }
 
 define %Bool @byteRing16_isFull(%byteRing16_Word8Ring16* %q) {
-	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
+	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
 	%2 = call %Bool @queue_isFull(%queue_Queue* %1)
 	ret %Bool %2
 }
 
 define %Bool @byteRing16_isEmpty(%byteRing16_Word8Ring16* %q) {
-	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
+	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
 	%2 = call %Bool @queue_isEmpty(%queue_Queue* %1)
 	ret %Bool %2
 }
 
 define %Bool @byteRing16_put(%byteRing16_Word8Ring16* %q, %Word8 %b) {
-	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
+;if queue.isFull(&q.queue) {
+;		return false
+;	}
+	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
 	%2 = call %Int32 @queue_getPutPosition(%queue_Queue* %1)
-	%3 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 1
-	%4 = getelementptr inbounds [16 x %Word8], [16 x %Word8]* %3, %Int32 0, %Int32 %2
-	store %Word8 %b, %Word8* %4
+	%3 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 1
+	%4 = bitcast %Int32 %2 to %Int32
+	%5 = getelementptr [16 x %Word8], [16 x %Word8]* %3, %Int32 0, %Int32 %4
+	store %Word8 %b, %Word8* %5
 	ret %Bool 1
 }
 
 define %Bool @byteRing16_get(%byteRing16_Word8Ring16* %q, %Word8* %b) {
-	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
+	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
 	%2 = call %Bool @queue_isEmpty(%queue_Queue* %1)
 	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%4 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
+	%4 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
 	%5 = call %Int32 @queue_getGetPosition(%queue_Queue* %4)
-	%6 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 1
-	%7 = getelementptr inbounds [16 x %Word8], [16 x %Word8]* %6, %Int32 0, %Int32 %5
-	%8 = load %Word8, %Word8* %7
-	store %Word8 %8, %Word8* %b
+	%6 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 1
+	%7 = bitcast %Int32 %5 to %Int32
+	%8 = getelementptr [16 x %Word8], [16 x %Word8]* %6, %Int32 0, %Int32 %7
+	%9 = load %Word8, %Word8* %8
+	store %Word8 %9, %Word8* %b
 	ret %Bool 1
 }
 

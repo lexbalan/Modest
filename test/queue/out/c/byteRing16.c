@@ -1,4 +1,3 @@
-// ./out/c/byteRing16.c
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,34 +7,40 @@
 
 
 
+
+
+
+
+
+
 void byteRing16_init(byteRing16_Word8Ring16 *q)
 {
-	queue_init((queue_Queue *)&q->queue, byteRing16_cap);
-	memset(&q->data, 0, sizeof(uint8_t[byteRing16_cap]));
+	queue_init(&q->queue, byteRing16_cap);
+	memset(&q->data, 0, sizeof q->data);
 }
 
 
 uint32_t byteRing16_capacity(byteRing16_Word8Ring16 *q)
 {
-	return queue_capacity((queue_Queue *)&q->queue);
+	return queue_capacity(&q->queue);
 }
 
 
 uint32_t byteRing16_size(byteRing16_Word8Ring16 *q)
 {
-	return queue_size((queue_Queue *)&q->queue);
+	return queue_size(&q->queue);
 }
 
 
 bool byteRing16_isFull(byteRing16_Word8Ring16 *q)
 {
-	return queue_isFull((queue_Queue *)&q->queue);
+	return queue_isFull(&q->queue);
 }
 
 
 bool byteRing16_isEmpty(byteRing16_Word8Ring16 *q)
 {
-	return queue_isEmpty((queue_Queue *)&q->queue);
+	return queue_isEmpty(&q->queue);
 }
 
 
@@ -45,7 +50,7 @@ bool byteRing16_put(byteRing16_Word8Ring16 *q, uint8_t b)
 		return false
 	}*/
 
-	const uint32_t p = queue_getPutPosition((queue_Queue *)&q->queue);
+	const uint32_t p = queue_getPutPosition(&q->queue);
 	q->data[p] = b;
 
 	return true;
@@ -54,11 +59,11 @@ bool byteRing16_put(byteRing16_Word8Ring16 *q, uint8_t b)
 
 bool byteRing16_get(byteRing16_Word8Ring16 *q, uint8_t *b)
 {
-	if (queue_isEmpty((queue_Queue *)&q->queue)) {
+	if (queue_isEmpty(&q->queue)) {
 		return false;
 	}
 
-	const uint32_t g = queue_getGetPosition((queue_Queue *)&q->queue);
+	const uint32_t g = queue_getGetPosition(&q->queue);
 	*b = q->data[g];
 
 	return true;

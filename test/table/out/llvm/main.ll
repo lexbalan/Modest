@@ -262,13 +262,12 @@ declare void @table_print(%table_Table* %table)
 @str30 = private constant [6 x i8] [i8 85, i8 108, i8 116, i8 114, i8 97, i8 0]
 @str31 = private constant [6 x i8] [i8 86, i8 105, i8 100, i8 101, i8 111, i8 0]
 @str32 = private constant [5 x i8] [i8 87, i8 111, i8 114, i8 100, i8 0]
-@str33 = private constant [20 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 39, i8 65, i8 66, i8 67, i8 39, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str34 = private constant [22 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 32, i8 111, i8 98, i8 106, i8 101, i8 99, i8 116, i8 10, i8 0]
+@str33 = private constant [22 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 32, i8 111, i8 98, i8 106, i8 101, i8 99, i8 116, i8 10, i8 0]
+@str34 = private constant [2 x i8] [i8 10, i8 0]
 @str35 = private constant [2 x i8] [i8 10, i8 0]
 @str36 = private constant [2 x i8] [i8 10, i8 0]
 @str37 = private constant [2 x i8] [i8 10, i8 0]
 @str38 = private constant [2 x i8] [i8 10, i8 0]
-@str39 = private constant [2 x i8] [i8 10, i8 0]
 ; -- endstrings --
 @table_header0 = internal global [3 x %Str8*] [
 	%Str8* bitcast ([2 x i8]* @str1 to [0 x i8]*),
@@ -360,30 +359,29 @@ declare void @table_print(%table_Table* %table)
 	%Bool 1
 }
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str33 to [0 x i8]*), %Int32 1)
-	%2 = call %table_Table* @malloc(%Int32 32)
-	store %table_Table zeroinitializer, %table_Table* %2
-	%3 = icmp eq %table_Table* %2, null
-	br %Bool %3 , label %then_0, label %endif_0
+	%1 = call %table_Table* @malloc(%Int32 32)
+	store %table_Table zeroinitializer, %table_Table* %1
+	%2 = icmp eq %table_Table* %1, null
+	br %Bool %2 , label %then_0, label %endif_0
 then_0:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str34 to [0 x i8]*))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str33 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 ; -- cons_composite_from_composite_by_adr --
-	%5 = bitcast %table_Table* @table00 to %table_Table*
-	%6 = load %table_Table, %table_Table* %5
+	%4 = bitcast %table_Table* @table00 to %table_Table*
+	%5 = load %table_Table, %table_Table* %4
 ; -- end cons_composite_from_composite_by_adr --
-	store %table_Table %6, %table_Table* %2
+	store %table_Table %5, %table_Table* %1
 	call void @table_print(%table_Table* bitcast (%table_Table* @table00 to %table_Table*))
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str35 to [0 x i8]*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str34 to [0 x i8]*))
 	call void @table_print(%table_Table* bitcast (%table_Table* @table01 to %table_Table*))
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str36 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str35 to [0 x i8]*))
 	call void @table_print(%table_Table* bitcast (%table_Table* @table02 to %table_Table*))
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str37 to [0 x i8]*))
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str36 to [0 x i8]*))
 	call void @table_print(%table_Table* bitcast (%table_Table* @table03 to %table_Table*))
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str38 to [0 x i8]*))
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str37 to [0 x i8]*))
 	call void @table_print(%table_Table* bitcast (%table_Table* @table10 to %table_Table*))
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str39 to [0 x i8]*))
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str38 to [0 x i8]*))
 	ret %Int32 0
 }
 

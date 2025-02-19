@@ -184,11 +184,11 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports --
-; -- end print imports --
+; -- print imports 'queue' --
+; -- 0
+; -- end print imports 'queue' --
 ; -- strings --
 ; -- endstrings --
-
 %queue_Queue = type {
 	%Int32,
 	%Int32,
@@ -196,62 +196,64 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32
 };
 
-
 define void @queue_init(%queue_Queue* %q, %Int32 %capacity) {
 	store %queue_Queue zeroinitializer, %queue_Queue* %q
-	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
+	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
 	store %Int32 %capacity, %Int32* %1
 	ret void
 }
 
 define %Int32 @queue_capacity(%queue_Queue* %q) {
-	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
+	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
 	%2 = load %Int32, %Int32* %1
 	ret %Int32 %2
 }
 
 define %Int32 @queue_size(%queue_Queue* %q) {
-	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
+	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
 	%2 = load %Int32, %Int32* %1
 	ret %Int32 %2
 }
 
 define %Bool @queue_isEmpty(%queue_Queue* %q) {
-	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
+	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
 	%2 = load %Int32, %Int32* %1
 	%3 = icmp eq %Int32 %2, 0
 	ret %Bool %3
 }
 
 define %Bool @queue_isFull(%queue_Queue* %q) {
-	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
-	%2 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
+	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
+	%2 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
 	%3 = load %Int32, %Int32* %1
 	%4 = load %Int32, %Int32* %2
 	%5 = icmp eq %Int32 %3, %4
 	ret %Bool %5
 }
 
+
+
+; you must check isFull(queue) before call 'getPutPosition'
 define %Int32 @queue_getPutPosition(%queue_Queue* %q) {
-	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 2
+	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 2
 	%2 = load %Int32, %Int32* %1
-	%3 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 2
-	%4 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
+	%3 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 2
+	%4 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
 	%5 = load %Int32, %Int32* %4
-	%6 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 2
+	%6 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 2
 	%7 = load %Int32, %Int32* %6
 	%8 = call %Int32 @next(%Int32 %5, %Int32 %7)
 	store %Int32 %8, %Int32* %3
-	%9 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
-	%10 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
+	%9 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
+	%10 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
 	%11 = load %Int32, %Int32* %10
 	%12 = sub %Int32 %11, 1
 	%13 = load %Int32, %Int32* %9
 	%14 = icmp ult %Int32 %13, %12
 	br %Bool %14 , label %then_0, label %endif_0
 then_0:
-	%15 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
-	%16 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
+	%15 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
+	%16 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
 	%17 = load %Int32, %Int32* %16
 	%18 = add %Int32 %17, 1
 	store %Int32 %18, %Int32* %15
@@ -260,23 +262,26 @@ endif_0:
 	ret %Int32 %2
 }
 
+
+
+; you must check isEmpty(queue) before call 'getGetPosition'
 define %Int32 @queue_getGetPosition(%queue_Queue* %q) {
-	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 3
+	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 3
 	%2 = load %Int32, %Int32* %1
-	%3 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 3
-	%4 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
+	%3 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 3
+	%4 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
 	%5 = load %Int32, %Int32* %4
-	%6 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 3
+	%6 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 3
 	%7 = load %Int32, %Int32* %6
 	%8 = call %Int32 @next(%Int32 %5, %Int32 %7)
 	store %Int32 %8, %Int32* %3
-	%9 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
+	%9 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
 	%10 = load %Int32, %Int32* %9
 	%11 = icmp ugt %Int32 %10, 0
 	br %Bool %11 , label %then_0, label %endif_0
 then_0:
-	%12 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
-	%13 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
+	%12 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
+	%13 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
 	%14 = load %Int32, %Int32* %13
 	%15 = sub %Int32 %14, 1
 	store %Int32 %15, %Int32* %12

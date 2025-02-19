@@ -264,7 +264,11 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports --
+; -- print imports 'main' --
+; -- 2
+; ?? bq ??
+; ?? queue ??
+; from import
 %queue_Queue = type {
 	%Int32,
 	%Int32,
@@ -279,6 +283,8 @@ declare %Bool @queue_isEmpty(%queue_Queue* %q)
 declare %Bool @queue_isFull(%queue_Queue* %q)
 declare %Int32 @queue_getPutPosition(%queue_Queue* %q)
 declare %Int32 @queue_getGetPosition(%queue_Queue* %q)
+; end from import
+; from import
 %byteQueue128_Word8Queue128 = type {
 	%queue_Queue,
 	[16 x %Word8]
@@ -291,6 +297,10 @@ declare %Bool @byteQueue128_isFull(%byteQueue128_Word8Queue128* %q)
 declare %Bool @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* %q)
 declare %Bool @byteQueue128_put(%byteQueue128_Word8Queue128* %q, %Word8 %b)
 declare %Bool @byteQueue128_get(%byteQueue128_Word8Queue128* %q, %Word8* %b)
+; end from import
+; ?? br ??
+; ?? queue ??
+; from import
 %queue_Queue = type {
 	%Int32,
 	%Int32,
@@ -305,6 +315,8 @@ declare %Bool @queue_isEmpty(%queue_Queue* %q)
 declare %Bool @queue_isFull(%queue_Queue* %q)
 declare %Int32 @queue_getPutPosition(%queue_Queue* %q)
 declare %Int32 @queue_getGetPosition(%queue_Queue* %q)
+; end from import
+; from import
 %byteRing16_Word8Ring16 = type {
 	%queue_Queue,
 	[16 x %Word8]
@@ -317,18 +329,17 @@ declare %Bool @byteRing16_isFull(%byteRing16_Word8Ring16* %q)
 declare %Bool @byteRing16_isEmpty(%byteRing16_Word8Ring16* %q)
 declare %Bool @byteRing16_put(%byteRing16_Word8Ring16* %q, %Word8 %b)
 declare %Bool @byteRing16_get(%byteRing16_Word8Ring16* %q, %Word8* %b)
-; -- end print imports --
+; end from import
+; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [15 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 102, i8 117, i8 108, i8 108, i8 10, i8 0]
 @str2 = private constant [12 x i8] [i8 98, i8 113, i8 46, i8 112, i8 117, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 @str3 = private constant [16 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 101, i8 109, i8 112, i8 116, i8 121, i8 10, i8 0]
 @str4 = private constant [13 x i8] [i8 98, i8 113, i8 46, i8 103, i8 101, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
-
 @bq0 = internal global %byteQueue128_Word8Queue128 zeroinitializer
 @br0 = internal global %byteRing16_Word8Ring16 zeroinitializer
 @ii = internal global %Int32 zeroinitializer
-
 define internal void @padd(%Int %n) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
@@ -361,6 +372,9 @@ break_1:
 	ret void
 }
 
+
+
+; выгребаем все и печатаем в консоль
 define internal void @fetch(%Int %n) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
