@@ -300,7 +300,7 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 %InAddrT = type %Int32;
 %InPortT = type %Int16;
 %SocklenT = type %Int32;
-%Struct_sockaddr = type {
+%SockAddr = type {
 	%UnsignedShort,
 	[14 x %Char8]
 };
@@ -309,7 +309,7 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 	%InAddrT
 };
 
-%Struct_sockaddr_in = type {
+%SockAddrIn = type {
 	%Int8,
 	%Int8,
 	%UnsignedShort,
@@ -319,12 +319,12 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
 declare %InAddrT @inet_addr([0 x %ConstChar]* %cp)
 declare %Int @socket(%Int %domain, %Int %_type, %Int %protocol)
-declare %Int @bind(%Int %socket, %Struct_sockaddr* %addr, %SocklenT %addrlen)
+declare %Int @bind(%Int %socket, %SockAddr* %addr, %SocklenT %addrlen)
 declare %Int @listen(%Int %socket, %Int %backlog)
-declare %Int @connect(%Int %socket, %Struct_sockaddr* %addr, %SocklenT %addrlen)
+declare %Int @connect(%Int %socket, %SockAddr* %addr, %SocklenT %addrlen)
 declare %SSizeT @send(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
 declare %SSizeT @recv(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
-declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
+declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 0
@@ -390,17 +390,17 @@ then_0:
 	call void @exit(%Int 1)
 	br label %endif_0
 endif_0:
-	%3 = alloca %Struct_sockaddr_in, align 16
-	%4 = insertvalue %Struct_sockaddr_in zeroinitializer, %Int8 2, 1
+	%3 = alloca %SockAddrIn, align 16
+	%4 = insertvalue %SockAddrIn zeroinitializer, %Int8 2, 1
 	%5 = call %Word16 @htons(%Word16 8080)
 	%6 = bitcast %Word16 %5 to %UnsignedShort
-	%7 = insertvalue %Struct_sockaddr_in %4, %UnsignedShort %6, 2
-	store %Struct_sockaddr_in %7, %Struct_sockaddr_in* %3
+	%7 = insertvalue %SockAddrIn %4, %UnsignedShort %6, 2
+	store %SockAddrIn %7, %SockAddrIn* %3
 
 	; Bind socket to address
-	%8 = bitcast %Struct_sockaddr_in* %3 to %Struct_sockaddr*
+	%8 = bitcast %SockAddrIn* %3 to %SockAddr*
 	%9 = alloca %Int, align 4
-	%10 = call %Int @bind(%Int %1, %Struct_sockaddr* %8, %SocklenT 16)
+	%10 = call %Int @bind(%Int %1, %SockAddr* %8, %SocklenT 16)
 	store %Int %10, %Int* %9
 	%11 = load %Int, %Int* %9
 	%12 = icmp slt %Int %11, 0
@@ -431,11 +431,11 @@ endif_2:
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%19 = alloca %Struct_sockaddr_in, align 16
-	%20 = bitcast %Struct_sockaddr_in* %19 to %Struct_sockaddr*
+	%19 = alloca %SockAddrIn, align 16
+	%20 = bitcast %SockAddrIn* %19 to %SockAddr*
 	%21 = alloca %SocklenT, align 4
 	store %SocklenT 16, %SocklenT* %21
-	%22 = call %Int @accept(%Int %1, %Struct_sockaddr* %20, %SocklenT* %21)
+	%22 = call %Int @accept(%Int %1, %SockAddr* %20, %SocklenT* %21)
 	%23 = icmp slt %Int %22, 0
 	br %Bool %23 , label %then_3, label %endif_3
 then_3:

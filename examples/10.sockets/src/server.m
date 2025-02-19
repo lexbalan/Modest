@@ -46,7 +46,7 @@ public func main() -> Int {
 
 	printf("[+] Server socket created\n")
 
-	var server_addr = Struct_sockaddr_in {
+	var server_addr = SockAddrIn {
 		sin_family = af_INET
 		sin_port = port
 		sin_addr = Struct_in_addr {
@@ -54,8 +54,8 @@ public func main() -> Int {
 		}
 	}
 
-	let sockaddr = *Struct_sockaddr Ptr &server_addr
-	var e = bind(sockfd, sockaddr, SocklenT sizeof(Struct_sockaddr_in))
+	let sockaddr = *SockAddr Ptr &server_addr
+	var e = bind(sockfd, sockaddr, SocklenT sizeof(SockAddrIn))
 	if e < 0 {
 		perror("[-] Error in Binding")
 		exit(1)
@@ -71,9 +71,9 @@ public func main() -> Int {
 
 	printf("[+] Listening...\n")
 
-	var addr_size = SocklenT sizeof(Struct_sockaddr_in)
-	var new_addr: Struct_sockaddr_in
-	let sa = *Struct_sockaddr Ptr &new_addr
+	var addr_size = SocklenT sizeof(SockAddrIn)
+	var new_addr: SockAddrIn
+	let sa = *SockAddr Ptr &new_addr
 	let new_sock = accept(sockfd, sa, &addr_size)
 
 	let suc = write_file(new_sock)

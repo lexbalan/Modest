@@ -2297,9 +2297,9 @@ def memcopy_assign(left, right):
 	out(", ")
 	out(str_value_as_ptr(right))
 	out(", sizeof ")
+	#print_type(left.type)
 	print_value(left)
 	out(")")
-
 
 
 def memzero_sizeof(left):

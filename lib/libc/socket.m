@@ -25,7 +25,7 @@ public type SocklenT Nat32
 
 
 @property("type.id.c", "struct sockaddr")
-public type Struct_sockaddr record {
+public type SockAddr record {
 	public sa_family: UnsignedShort  // address family
 	public sa_data: [14]Char8        // up to 14 bytes of direct address
 }
@@ -38,7 +38,7 @@ public type Struct_in_addr record {
 
 
 @property("type.id.c", "struct sockaddr_in")
-public type Struct_sockaddr_in record {
+public type SockAddrIn record {
 // $if APPLE
 	public sin_len: Nat8
 	public sin_family: Nat8
@@ -126,14 +126,14 @@ func inet_ntoa(in: Struct_in_addr) -> *Char
 */
 
 public func socket(domain: Int, _type: Int, protocol: Int) -> Int
-public func bind(socket: Int, addr: *Struct_sockaddr, addrlen: SocklenT) -> Int
+public func bind(socket: Int, addr: *SockAddr, addrlen: SocklenT) -> Int
 public func listen(socket: Int, backlog: Int) -> Int
-public func connect(socket: Int, addr: *Struct_sockaddr, addrlen: SocklenT) -> Int
+public func connect(socket: Int, addr: *SockAddr, addrlen: SocklenT) -> Int
 
 public func send(socket: Int, buf: Ptr, len: SizeT, flags: Int) -> SSizeT
 public func recv(socket: Int, buf: Ptr, len: SizeT, flags: Int) -> SSizeT
 
 // вообще syscall, разберись
-public func accept(socket: Int, addr: *Struct_sockaddr, addrlen: *SocklenT) -> Int
+public func accept(socket: Int, addr: *SockAddr, addrlen: *SocklenT) -> Int
 
 

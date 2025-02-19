@@ -52,7 +52,7 @@ public func main() -> Int32 {
 		stdlib.exit(1)
 	}
 
-	var server_addr: socket.Struct_sockaddr_in = socket.Struct_sockaddr_in {
+	var server_addr: socket.SockAddrIn = socket.SockAddrIn {
 		sin_family = socket.af_INET
 		sin_addr = {
 			s_addr = socket.inAddrAny
@@ -61,7 +61,7 @@ public func main() -> Int32 {
 	}
 
 	// Bind socket to address
-	let socadr = *socket.Struct_sockaddr &server_addr
+	let socadr = *socket.SockAddr &server_addr
 	var rc: ctypes64.Int = socket.bind(server_socket, socadr, sizeof server_addr)
 	if rc < 0 {
 		stdio.perror("bind")
@@ -81,8 +81,8 @@ public func main() -> Int32 {
 
 	// Handle input connections
 	while true {
-		var client_addr: socket.Struct_sockaddr_in
-		let socadr = *socket.Struct_sockaddr &client_addr
+		var client_addr: socket.SockAddrIn
+		let socadr = *socket.SockAddr &client_addr
 		var client_adr_len: socket.SocklenT = sizeof client_addr
 		let client_socket = socket.accept(server_socket, socadr, &client_adr_len)
 		if client_socket < 0 {

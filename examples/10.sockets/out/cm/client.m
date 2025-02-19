@@ -35,7 +35,7 @@ public func main() -> ctypes64.Int {
 
 	stdio.printf("[+] Server socket created\n")
 
-	var server_addr: socket.Struct_sockaddr_in = socket.Struct_sockaddr_in {
+	var server_addr: socket.SockAddrIn = socket.SockAddrIn {
 		sin_family = socket.af_INET
 		sin_port = port
 		sin_addr = {
@@ -44,7 +44,7 @@ public func main() -> ctypes64.Int {
 	}
 
 	let sockaddr = &server_addr
-	var e: ctypes64.Int = socket.connect(sockfd, sockaddr, socket.SocklenT sizeof(socket.Struct_sockaddr_in))
+	var e: ctypes64.Int = socket.connect(sockfd, sockaddr, socket.SocklenT sizeof(socket.SockAddrIn))
 	if e < 0 {
 		stdio.perror("[-] Error in Connecting")
 		stdlib.exit(1)

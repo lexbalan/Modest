@@ -44,7 +44,7 @@ public func main() -> ctypes64.Int {
 
 	stdio.printf("[+] Server socket created\n")
 
-	var server_addr: socket.Struct_sockaddr_in = socket.Struct_sockaddr_in {
+	var server_addr: socket.SockAddrIn = socket.SockAddrIn {
 		sin_family = socket.af_INET
 		sin_port = port
 		sin_addr = socket.Struct_in_addr {
@@ -53,7 +53,7 @@ public func main() -> ctypes64.Int {
 	}
 
 	let sockaddr = &server_addr
-	var e: ctypes64.Int = socket.bind(sockfd, sockaddr, socket.SocklenT sizeof(socket.Struct_sockaddr_in))
+	var e: ctypes64.Int = socket.bind(sockfd, sockaddr, socket.SocklenT sizeof(socket.SockAddrIn))
 	if e < 0 {
 		stdio.perror("[-] Error in Binding")
 		stdlib.exit(1)
@@ -69,8 +69,8 @@ public func main() -> ctypes64.Int {
 
 	stdio.printf("[+] Listening...\n")
 
-	var addr_size: socket.SocklenT = socket.SocklenT sizeof(socket.Struct_sockaddr_in)
-	var new_addr: socket.Struct_sockaddr_in
+	var addr_size: socket.SocklenT = socket.SocklenT sizeof(socket.SockAddrIn)
+	var new_addr: socket.SockAddrIn
 	let sa = &new_addr
 	let new_sock = socket.accept(sockfd, sa, &addr_size)
 

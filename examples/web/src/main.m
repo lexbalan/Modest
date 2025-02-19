@@ -58,7 +58,7 @@ public func main() -> Int32 {
         exit(1)
     }
 
-	var server_addr = Struct_sockaddr_in {
+	var server_addr = SockAddrIn {
 		sin_family = af_INET
     	sin_addr = {
 			s_addr = inAddrAny
@@ -67,7 +67,7 @@ public func main() -> Int32 {
 	}
 
     // Bind socket to address
-	let socadr = unsafe *Struct_sockaddr &server_addr
+	let socadr = unsafe *SockAddr &server_addr
 	var rc = bind(server_socket, socadr, sizeof(server_addr))
     if rc < 0 {
         perror("bind")
@@ -87,8 +87,8 @@ public func main() -> Int32 {
 
     // Handle input connections
     while true {
-		var client_addr: Struct_sockaddr_in
-		let socadr = unsafe *Struct_sockaddr &client_addr
+		var client_addr: SockAddrIn
+		let socadr = unsafe *SockAddr &client_addr
 		var client_adr_len: SocklenT = sizeof(client_addr)
         let client_socket = accept(server_socket, socadr, &client_adr_len)
         if client_socket < 0 {
