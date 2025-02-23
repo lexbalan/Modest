@@ -446,8 +446,8 @@ class Type(Entity):
 
 class TypeBad(Type):
 	def __init__(self, ti=None):
-		self.incomplete = False
 		super().__init__(ti=ti)
+		self.incomplete = False
 
 
 class TypeNumber(Type):

@@ -568,7 +568,7 @@ def do_type_array(x):
 
 	volume = do_value(x['size'])
 
-	if Value.isBad(volume):
+	if volume.isBad():
 		return TypeArray(of, volume, ti=x['ti'])
 
 	if not Value.isUndefined(volume):
@@ -734,7 +734,7 @@ def do_value_bin(x):
 	r = do_rvalue(x['right'])
 	ti = x['ti']
 
-	if Value.isBad(l) or Value.isBad(r):
+	if l.isBad() or r.isBad():
 		return ValueBad(ti)
 
 	# Ops with different types
@@ -836,7 +836,7 @@ def do_value_bin(x):
 def do_value_not(x):
 	v = do_rvalue(x['value'])
 
-	if Value.isBad(v):
+	if v.isBad():
 		return v
 
 	vtype = v.type
@@ -867,7 +867,7 @@ def do_value_not(x):
 def do_value_neg(x):
 	v = do_rvalue(x['value'])
 
-	if Value.isBad(v):
+	if v.isBad():
 		return v
 
 	vtype = v.type
@@ -894,7 +894,7 @@ def do_value_neg(x):
 def do_value_pos(x):
 	v = do_rvalue(x['value'])
 
-	if Value.isBad(v):
+	if v.isBad():
 		return v
 
 	vtype = v.type
@@ -917,7 +917,7 @@ def do_value_pos(x):
 def do_value_ref(x):
 	v = do_value(x['value'])
 
-	if Value.isBad(v):
+	if v.isBad():
 		return v
 
 	ti = x['ti']
@@ -950,7 +950,7 @@ def do_value_new(x):
 def do_value_deref(x):
 	v = do_rvalue(x['value'])
 
-	if Value.isBad(v):
+	if v.isBad():
 		return v
 
 	vtype = v.type
@@ -1070,7 +1070,7 @@ def do_value___defined_value(x):
 def do_value_call(x):
 	fn = do_rvalue(x['left'])
 
-	if Value.isBad(fn):
+	if fn.isBad():
 		#error("undefined value", fn.ti)
 		return ValueBad(x['ti'])
 
@@ -1122,7 +1122,7 @@ def do_value_call(x):
 		arg = do_rvalue(a['value'])
 
 
-		if not Value.isBad(arg):
+		if not arg.isBad():
 			arg = value_cons_implicit_check(param.type, arg)
 
 			if not arg.isImmediate():
@@ -1149,7 +1149,7 @@ def do_value_call(x):
 		a = x['args'][i]['value']
 		argval = do_rvalue(a)
 
-		if not Value.isBad(argval):
+		if not argval.isBad():
 			if argval.type.is_generic():
 				warning("extra argument with generic type", a['ti'])
 				argval = value_cons_default(argval)
@@ -1181,7 +1181,7 @@ def do_value_call(x):
 def do_value_index(x):
 	left = do_rvalue(x['left'])
 
-	if Value.isBad(left):
+	if left.isBad():
 		return ValueBad(x['ti'])
 
 	left_typ = left.type
@@ -1204,7 +1204,7 @@ def do_value_index(x):
 
 	index = do_rvalue(x['index'])
 
-	if Value.isBad(index):
+	if index.isBad():
 		return ValueBad(x['ti'])
 
 	if not (index.type.is_integer() or index.type.is_number()):
@@ -1248,10 +1248,10 @@ def do_value_slice(x):
 
 	if x['index_to'] != None:
 		index_to = do_rvalue(x['index_to'])
-		if Value.isBad(index_to):
+		if index_to.isBad():
 			return ValueBad(x['ti'])
 
-	if Value.isBad(left) or Value.isBad(index_from):
+	if left.isBad() or index_from.isBad():
 		return ValueBad(x['ti'])
 
 	left_type = left.type
@@ -1354,7 +1354,7 @@ def do_value_access(x):
 
 	left = do_rvalue(x['left'])
 
-	if Value.isBad(left):
+	if left.isBad():
 		return ValueBad(x['ti'])
 
 	field_id = Id(x['right'])
@@ -1417,7 +1417,7 @@ def do_value_access(x):
 def do_value_cons(x):
 	v = do_rvalue(x['value'])
 	t = do_type(x['type'])
-	if Value.isBad(v) or t.is_bad():
+	if v.isBad() or t.is_bad():
 		return ValueBad(x['ti'])
 	return value_cons_explicit(t, v, x['ti'])
 
@@ -1438,14 +1438,19 @@ def do_value_id(x):
 
 
 	global cdef
-	if v.type.is_incompleted():
-		v = value_update_incompleted_type(cmodule, v, v.id.str)
 
-		if v == None:
+	if v.isBad():
+		return v
+
+	if v.type.is_incompleted():
+		v_upd = value_update_incompleted_type(cmodule, v, v.id.str)
+
+		if v_upd == None:
 			error("use of incomplete value", x['ti'])
 			return ValueBad(x['ti'])
 
-		cdef.deps.append(v)
+		cdef.deps.append(v_upd)
+		return v_upd
 
 #	if 'usecnt' in v:
 #		v['usecnt'] = v['usecnt'] + 1
@@ -1587,7 +1592,7 @@ bin_ops = [
 def do_value_immediate(x, allow_ptr_to_str=False):
 	v = do_value(x)
 
-	if Value.isBad(v):
+	if v.isBad():
 		return v
 
 	if not v.isImmediate():
@@ -1603,7 +1608,7 @@ def do_value_immediate(x, allow_ptr_to_str=False):
 def do_value_immediate_string(x):
 	v = do_value_immediate(x)
 
-	if Value.isBad(v):
+	if v.isBad():
 		return v
 
 	if not v.type.is_string():
@@ -1775,7 +1780,7 @@ def do_stmt_var(x):
 def do_stmt_if(x):
 	cond = do_rvalue(x['cond'])
 
-	if Value.isBad(cond):
+	if cond.isBad():
 		return StmtBad(x)
 
 	if not cond.type.is_bool():
@@ -1800,7 +1805,7 @@ def do_stmt_if(x):
 def do_stmt_while(x):
 	cond = do_rvalue(x['cond'])
 
-	if Value.isBad(cond):
+	if cond.isBad():
 		return StmtBad(x)
 
 	if not cond.type.is_bool():
@@ -1837,7 +1842,7 @@ def do_stmt_return(x):
 	retval = None
 	if ret_val_present:
 		rv = do_rvalue(x['value'])
-		if not Value.isBad(rv):
+		if not rv.isBad():
 			retval = value_cons_implicit_check(func_ret_type, rv)
 
 	return StmtReturn(retval, ti=x['ti'])
@@ -1871,7 +1876,15 @@ def do_stmt_assign(x):
 	l = do_value(x['left'])
 	r = do_rvalue(x['right'])
 
-	if Value.isBad(l) or Value.isBad(r):
+	if l.isBad():
+		if x['left']['kind'] == 'id':
+			# if left is 'unknown id':
+			id = Id(x['left'])
+			t = r.type
+			#mass
+			l = add_local_var(id, t, id.ti)
+
+	if l.isBad or r.isBad():
 		return StmtBad(x)
 
 	if not l.isLvalue():
@@ -1890,7 +1903,7 @@ def do_stmt_assign(x):
 def do_stmt_incdec(x, op='add'):
 	v = do_value(x['value'])
 
-	if Value.isBad(v):
+	if v.isBad():
 		return StmtBad(x)
 
 	if v.isImmutable():
@@ -1910,7 +1923,7 @@ def do_stmt_incdec(x, op='add'):
 def do_stmt_value(x):
 	v = do_rvalue(x['value'])
 
-	if Value.isBad(v):
+	if v.isBad():
 		return StmtBad(x)
 
 	if not v.type.is_unit():
@@ -2129,7 +2142,7 @@ def def_const(x):
 
 
 
-#	if Value.isBad(init_value):
+#	if init_value.isBad():
 #		module_value_add_public(cmodule, id.str, init_value)
 #		return DefConst(id, init_value, init_value, x['ti'])
 
@@ -2459,7 +2472,7 @@ def do_import(x):
 
 	import_expr = do_value_immediate_string(x['expr'])
 
-	if Value.isBad(import_expr):
+	if import_expr.isBad():
 		return None
 
 	# Literal string to python string
@@ -2929,7 +2942,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 		arg = extra_args[i]
 		arg_type = arg.type
 
-		if Value.isBad(arg):
+		if arg.isBad():
 			i += 1
 			continue
 
@@ -2999,7 +3012,7 @@ def cp_immediate(to, _from):
 	prev_production = production
 	c = do_value_immediate(args[0])
 
-	if Value.isBad(c):
+	if c.isBad():
 		return None
 
 	if not Type. is_bool(c['type']):
@@ -3017,7 +3030,7 @@ elif kind == 'elseif':
 	production = False
 	c = do_value_immediate(args[0])
 
-	if Value.isBad(c):
+	if c.isBad():
 		return None
 
 	if not Type. is_bool(c['type']):
@@ -3040,7 +3053,7 @@ elif kind == 'endif':
 elif kind == 'info':
 	v = do_value_immediate_string(args[0])
 
-	if Value.isBad(v):
+	if v.isBad():
 		fatal("unsuitable value", x['ti'])
 
 	msg = v.asset
@@ -3049,7 +3062,7 @@ elif kind == 'info':
 elif kind == 'warning':
 	v = do_value_immediate_string(args[0])
 
-	if Value.isBad(v):
+	if v.isBad():
 		fatal("unsuitable value", x['ti'])
 
 	msg = v.asset
@@ -3058,7 +3071,7 @@ elif kind == 'warning':
 elif kind == 'error':
 	v = do_value_immediate_string(args[0])
 
-	if Value.isBad(v):
+	if v.isBad():
 		fatal("unsuitable value", x['ti'])
 
 	msg = v.asset
@@ -3067,7 +3080,7 @@ elif kind == 'error':
 
 elif kind == 'undef':
 	v = do_value_immediate_string(args[0])
-	if Value.isBad(v):
+	if v.isBad():
 		fatal("unsuitable value", x['ti'])
 	id_str = v.asset
 	cmodule.symtab_public.ValueUndef(id_str)
