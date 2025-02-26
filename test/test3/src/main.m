@@ -4,11 +4,10 @@ include "libc/string"
 
 
 public func main() -> Int32 {
-	a = y
+	a = k
 	let c = a + 1
 	let d = c - 1
 
 	return 0
 }
-
 

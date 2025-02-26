@@ -737,10 +737,13 @@ def do_value_bin(x):
 	if l.isBad() or r.isBad():
 		return ValueBad(ti)
 
+	if l.type.is_bad() or r.type.is_bad():
+		return ValueBad(ti)
+
 	# Ops with different types
 	if op == 'add':
 		# массивы могут быть разной длины (то есть с разными типами)
-		# поэтому сложение массивов (only immediate) требует обхода проверок типа ниже
+		# поэтому сложение immediate массивов требует обхода проверок типа ниже
 		if l.type.is_array() and r.type.is_array():
 			return value_array_add(l, r, ti)
 		# у string вообще всегда одинакоывый тип и нет смысла приводить их
@@ -1881,7 +1884,7 @@ def do_stmt_assign(x):
 			# if left is 'unknown id':
 			id = Id(x['left'])
 			t = r.type
-			#mass
+			#mass2
 			l = add_local_var(id, t, id.ti)
 
 	if l.isBad or r.isBad():
