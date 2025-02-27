@@ -1649,8 +1649,6 @@ def do_value_undefined(x):
 
 
 def do_rvalue(x):
-	#v = do_value(x)
-	#return value_load(v)
 	return do_value(x)
 
 
