@@ -15,7 +15,8 @@ const send_buffer_size = 1024
 const httpHeader = *Str8 (
 	"HTTP/1.1 200 OK\r\n" +
 	"Content-Type: text/html\r\n" +
-	"Connection: close\r\n\r\n"
+	"Connection: close\r\n" +
+	"\r\n"
 )
 
 

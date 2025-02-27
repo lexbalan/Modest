@@ -20,7 +20,7 @@
 #define receive_buffer_size  1024
 #define send_buffer_size  1024
 
-#define httpHeader  (char *)("HTTP/1.1 200 OK\r\n" "Content-Type: text/html\r\n" "Connection: close\r\n\r\n")
+#define httpHeader  (char *)("HTTP/1.1 200 OK\r\n" "Content-Type: text/html\r\n" "Connection: close\r\n" "\r\n")
 
 static uint32_t pageCounter;
 
