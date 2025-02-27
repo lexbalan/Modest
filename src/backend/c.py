@@ -900,6 +900,10 @@ def str_value_cons(x, ctx):
 		if from_type.is_string():
 			return str_literal_char(x.asset, x.type.width)
 
+	elif type.is_unsigned_integer() or type.is_word():
+		if from_type.is_unsigned_integer() or from_type.is_word():
+			return str_value(value)
+
 
 	if x.method == 'implicit':
 

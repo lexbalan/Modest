@@ -1884,10 +1884,9 @@ def do_stmt_assign(x):
 			# if left is 'unknown id':
 			id = Id(x['left'])
 			t = r.type
-			#mass2
 			l = add_local_var(id, t, id.ti)
 
-	if l.isBad or r.isBad():
+	if l.isBad() or r.isBad():
 		return StmtBad(x)
 
 	if not l.isLvalue():

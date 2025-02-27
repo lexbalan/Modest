@@ -98,6 +98,10 @@ class Type(Entity):
 		return isinstance(self, TypeInt)
 
 
+	def is_unsigned_integer(self):
+		return self.is_integer() and self.is_unsigned()
+
+
 	def is_float(self):
 		return isinstance(self, TypeFloat)
 

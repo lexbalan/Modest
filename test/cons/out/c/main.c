@@ -22,7 +22,7 @@ int main()
 
 
 	const uint8_t a = 0xFF;
-	const uint32_t b = (uint32_t)a;
+	const uint32_t b = a;
 	printf("a = %u\n", a);
 	printf("b = %u\n", b);
 

@@ -64,7 +64,7 @@ int32_t main()
 		.sin_addr = {
 			.s_addr = INADDR_ANY
 		},
-		.sin_port = (unsigned short)htons(port)
+		.sin_port = htons(port)
 	};
 
 	// Bind socket to address

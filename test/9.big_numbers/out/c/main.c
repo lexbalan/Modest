@@ -16,13 +16,13 @@ static unsigned __int128 big0 = BIG_INT128(0x123456789ABCDEFULL, 0xFEDCBA9876543
 
 static uint64_t high_128(unsigned __int128 x)
 {
-	return (uint64_t)(x >> 64);
+	return x >> 64;
 }
 
 
 static uint64_t low_128(unsigned __int128 x)
 {
-	return (uint64_t)(x & 0xFFFFFFFFFFFFFFFF);
+	return x & 0xFFFFFFFFFFFFFFFF;
 }
 
 
@@ -39,13 +39,13 @@ int main()
 
 	uint32_t a = 0x1;
 
-	unsigned __int128 big_sum = __big1 + big2 + (unsigned __int128)a;
+	unsigned __int128 big_sum = __big1 + big2 + a;
 
-	printf("big0 = 0x%llX%llX\n", high_128((unsigned __int128)big0), low_128((unsigned __int128)big0));
+	printf("big0 = 0x%llX%llX\n", high_128(big0), low_128(big0));
 	printf("big1 = 0x%llX%llX\n", high_128((unsigned __int128)__big1), low_128((unsigned __int128)__big1));
-	printf("big2 = 0x%llX%llX\n", high_128((unsigned __int128)big2), low_128((unsigned __int128)big2));
-	printf("big3 = 0x%llX%llX\n", high_128((unsigned __int128)big3), low_128((unsigned __int128)big3));
-	printf("big_sum = 0x%llX%llX\n", high_128((unsigned __int128)big_sum), low_128((unsigned __int128)big_sum));
+	printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2));
+	printf("big3 = 0x%llX%llX\n", high_128(big3), low_128(big3));
+	printf("big_sum = 0x%llX%llX\n", high_128(big_sum), low_128(big_sum));
 
 
 	// signed big int test
