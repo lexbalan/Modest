@@ -8,11 +8,9 @@
 #include "main.h"
 
 
-
 // FIXIT: not worked LLVM result (!)
 
 #define filename  "file.bin"
-
 
 // chunk of data for read/write operations in file
 struct Chunk {
@@ -20,7 +18,6 @@ struct Chunk {
 	char data[1024];
 };
 typedef struct Chunk Chunk;
-
 
 static void write_example()
 {
@@ -46,7 +43,6 @@ static void write_example()
 	fclose(fp);
 }
 
-
 static void read_example()
 {
 	printf("run read_example\n");
@@ -67,7 +63,6 @@ static void read_example()
 
 	fclose(fp);
 }
-
 
 int main()
 {

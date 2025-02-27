@@ -14,7 +14,6 @@
 
 
 
-
 static char *table_header0[3] = (char *[3]){
 	"#", "Header0", "Header1"
 };
@@ -24,7 +23,6 @@ static char *table_data0[3][3] = (char *[3][3]){
 	"1", "Clock", "Depth",
 	"2", "Earth", "Fight"
 };
-
 
 static char *table_header1[4] = (char *[4]){
 	"#", "Header0", "Header1", "Header2"
@@ -36,7 +34,6 @@ static char *table_data1[4][4] = (char *[4][4]){
 	"2", "Ink", "Julia", "Keyword",
 	"3", "Ultra", "Video", "Word"
 };
-
 
 static table_Table table00 = {
 	.header = NULL,
@@ -77,7 +74,6 @@ static table_Table table10 = {
 	.nCols = __lengthof(table_data1[0]),
 	.separate = true
 };
-
 
 int32_t main()
 {

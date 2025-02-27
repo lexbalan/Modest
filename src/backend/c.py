@@ -2092,7 +2092,11 @@ def print_header(module, outname):
 				continue
 
 		#out("+" + str(x.__class__))
-		newline(x.nl)
+		#newline(x.nl)
+		if x.nl >= 2:
+			newline(2)
+		else:
+			newline(1)
 
 		if isinstance(x, StmtImport):
 			if not 'do_not_include' in x.module.att:
@@ -2201,7 +2205,10 @@ def print_cfile(module, _outname):
 		if isinstance(x, StmtDirectiveCInclude):
 			continue
 
-		newline(x.nl)
+		if x.nl >= 2:
+			newline(2)
+		else:
+			newline(1)
 
 		if isinstance(x, StmtDefConst) and is_private(x):
 			print_deps(x.deps)

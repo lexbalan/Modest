@@ -12,7 +12,6 @@
 
 #define hello_world  (hello " " world)
 
-
 int main()
 {
 	printf("%s\n", (char *)hello_world);

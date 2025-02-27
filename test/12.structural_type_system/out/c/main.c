@@ -13,7 +13,6 @@ struct __anonymous_struct_2 {int32_t x;
 struct __anonymous_struct_3 {int32_t x;
 };
 
-
 struct Type1 {
 	int32_t x;
 };
@@ -25,7 +24,6 @@ struct Type2 {
 typedef struct Type2 Type2;
 
 typedef Type1 Type3;
-
 
 static void f0_val(Type1 x)
 {
@@ -47,7 +45,6 @@ static void f3_val(struct __anonymous_struct_2 x)
 	printf("f3 x.x = %d\n", x.x);
 }
 
-
 static void f0_ptr(Type1 *x)
 {
 	printf("f0p x.x = %d\n", x->x);
@@ -68,12 +65,9 @@ static void f3_ptr(struct __anonymous_struct_3 *x)
 	printf("f3p x.x = %d\n", x->x);
 }
 
-
 static Type1 a = {.x = 1};
 static Type2 b = {.x = 2};
 static Type3 c = {.x = 3};
-
-
 
 static void test_by_value()
 {
@@ -93,7 +87,6 @@ static void test_by_value()
 	f3_val(*(struct __anonymous_struct_2*)&c);
 }
 
-
 static void test_by_pointer()
 {
 	f0_ptr(&a);
@@ -111,7 +104,6 @@ static void test_by_pointer()
 	f2_ptr(&c);
 	f3_ptr((struct __anonymous_struct_3 *)&c);
 }
-
 
 int main()
 {

@@ -10,13 +10,11 @@
 #include "client.h"
 
 
-
 #define filename  "file.txt"
 
 #define ipAddress  "127.0.0.1"
 #define port  8080
 #define bufSize  1024
-
 
 static bool send_file(FILE *fp, int sockfd)
 {
@@ -32,7 +30,6 @@ static bool send_file(FILE *fp, int sockfd)
 
 	return true;
 }
-
 
 int main()
 {

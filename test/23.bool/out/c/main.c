@@ -7,8 +7,6 @@
 #include "main.h"
 
 
-
-
 int main()
 {
 	printf("bool check\nm");

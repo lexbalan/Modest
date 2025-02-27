@@ -5,10 +5,10 @@
 #include <string.h>
 
 #include "memory.h"
+
 //
 
 #define systemWidth  64
-
 
 //$if (systemWidth == 64)
 typedef uint64_t Word;
@@ -18,9 +18,7 @@ typedef uint64_t Nat;
 //type Nat Nat32
 //$endif
 
-
 #define memoryAlignment  (systemWidth / 8)
-
 
 void memory_zero(void *mem, uint64_t len)
 {
@@ -60,7 +58,6 @@ void memory_zero(void *mem, uint64_t len)
 	}
 }
 
-
 void memory_copy(void *dst, void *src, uint64_t len)
 {
 	const uint64_t len_words = len / sizeof(Word);
@@ -83,7 +80,6 @@ void memory_copy(void *dst, void *src, uint64_t len)
 		i = i + 1;
 	}
 }
-
 
 bool memory_eq(void *mem0, void *mem1, uint64_t len)
 {

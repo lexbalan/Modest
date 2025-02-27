@@ -15,7 +15,6 @@
 
 #define inputDataLength  32
 
-
 struct SHA256_TestCase {
 	char input_data[inputDataLength];
 	uint32_t input_data_len;
@@ -23,7 +22,6 @@ struct SHA256_TestCase {
 	sha256_Hash expected_result;
 };
 typedef struct SHA256_TestCase SHA256_TestCase;
-
 
 static SHA256_TestCase test0 = {
 	.input_data = "abc",
@@ -47,10 +45,8 @@ static SHA256_TestCase test1 = {
 	}
 };
 
-
 #define _tests  {&test0, (SHA256_TestCase *)&test1}
 const SHA256_TestCase *tests[2] = _tests;
-
 
 static bool doTest(SHA256_TestCase *test)
 {
@@ -74,7 +70,6 @@ static bool doTest(SHA256_TestCase *test)
 
 	return memcmp(&test_hash, &test->expected_result, sizeof(sha256_Hash)) == 0;
 }
-
 
 int main()
 {

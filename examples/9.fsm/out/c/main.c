@@ -19,14 +19,11 @@
 
 //$pragma c_include "./ff_main.h"
 
-
 #define flashlightStateOff  0
 #define flashlightStateOn  1
 #define flashlightStateBeacon  2
 
-
 static uint8_t cnt;
-
 
 //
 // State Off
@@ -37,7 +34,6 @@ static void off_entry(fsm_FSM *x)
 	(void)x;
 	//printf("off_entry\n")
 }
-
 
 static void off_loop(fsm_FSM *x)
 {
@@ -50,13 +46,11 @@ static void off_loop(fsm_FSM *x)
 	}
 }
 
-
 static void off_exit(fsm_FSM *x)
 {
 	(void)x;
 	//printf("off_exit\n")
 }
-
 
 //
 // State On
@@ -67,7 +61,6 @@ static void on_entry(fsm_FSM *x)
 	(void)x;
 	//printf("on_entry\n")
 }
-
 
 static void on_loop(fsm_FSM *x)
 {
@@ -80,13 +73,11 @@ static void on_loop(fsm_FSM *x)
 	}
 }
 
-
 static void on_exit(fsm_FSM *x)
 {
 	(void)x;
 	//printf("on_exit\n")
 }
-
 
 //
 // State Beacon
@@ -97,7 +88,6 @@ static void beacon_entry(fsm_FSM *x)
 	char *const from_name = fsm_state_no_name(x, x->state);
 	printf("beacon_entry from %s\n", from_name);
 }
-
 
 static void beacon_loop(fsm_FSM *x)
 {
@@ -110,14 +100,11 @@ static void beacon_loop(fsm_FSM *x)
 	}
 }
 
-
 static void beacon_exit(fsm_FSM *x)
 {
 	char *const to_name = fsm_state_no_name(x, x->nexstate);
 	printf("beacon_exit to %s\n", to_name);
 }
-
-
 
 static fsm_FSM fsm0 = {
 	.name = "Flash",
@@ -147,8 +134,6 @@ static fsm_FSM fsm0 = {
 		}
 	}
 };
-
-
 
 int main()
 {

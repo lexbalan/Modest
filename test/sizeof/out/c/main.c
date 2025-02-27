@@ -7,7 +7,6 @@
 #include "main.h"
 
 
-
 struct Point {
 	uint32_t x;
 	uint32_t y;
@@ -49,7 +48,6 @@ struct Mixed4 {
 	Mixed3 s2;
 };
 typedef struct Mixed4 Mixed4;
-
 
 //var s: Mixed2
 static char c;

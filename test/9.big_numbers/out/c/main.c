@@ -10,21 +10,17 @@
 #define BIG_INT256(x3, x2, x1, x0)
 
 
-
 static unsigned __int128 big0 = BIG_INT128(0x123456789ABCDEFULL, 0xFEDCBA9876543210ULL);
-
 
 static uint64_t high_128(unsigned __int128 x)
 {
 	return x >> 64;
 }
 
-
 static uint64_t low_128(unsigned __int128 x)
 {
 	return x & 0xFFFFFFFFFFFFFFFF;
 }
-
 
 int main()
 {

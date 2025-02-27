@@ -8,12 +8,9 @@
 #include <time.h>
 
 
-
 void delay_us(uint64_t us);
 
-
 void delay_ms(uint64_t ms);
-
 
 void delay_sec(uint64_t s);
 

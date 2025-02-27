@@ -9,22 +9,18 @@
 #include "main.h"
 
 
-
 #define mathPi  3.141592653589793238462643383279502884
-
 
 static double squareOfCircle(double radius)
 {
 	return pow(radius, (double)(2)) * mathPi;
 }
 
-
 struct Point2D {
 	int x;
 	int y;
 };
 typedef struct Point2D Point2D;
-
 
 static float slope(Point2D a, Point2D b)
 {
@@ -34,7 +30,6 @@ static float slope(Point2D a, Point2D b)
 	printf("dy = %d\n", dy);
 	return (float)dy / (float)dx;
 }
-
 
 int main()
 {

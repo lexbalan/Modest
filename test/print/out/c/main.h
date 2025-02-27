@@ -7,7 +7,6 @@
 
 #include "console.h"
 
-
 int main();
 
 #endif /* MAIN_H */

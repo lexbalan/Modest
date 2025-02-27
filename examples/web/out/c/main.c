@@ -15,18 +15,14 @@
 #endif /* __lengthof */
 
 
-
 #define port  8080
 
 #define receive_buffer_size  1024
 #define send_buffer_size  1024
 
-
 static char *httpHeader = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n";
 
-
 static uint32_t pageCounter;
-
 
 static void handle_request(int32_t client_socket)
 {
@@ -49,7 +45,6 @@ static void handle_request(int32_t client_socket)
 	write(client_socket, (char *)&response, strlen((char *)&response));
 	close(client_socket);
 }
-
 
 int32_t main()
 {

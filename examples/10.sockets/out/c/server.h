@@ -10,7 +10,6 @@
 #include <arpa/inet.h>
 
 
-
 int main();
 
 #endif /* SERVER_H */

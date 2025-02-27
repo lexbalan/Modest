@@ -12,8 +12,8 @@
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
-// getenv
 
+// getenv
 
 int main()
 {

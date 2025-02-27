@@ -26,12 +26,8 @@ struct Point3D {
 };
 typedef struct Point3D Point3D;
 
-
 #define xx  {.x = 1, .y = 2}
 #define yy  {.x = 1, .y = 2}
-
-
-
 
 struct Point {
 	int32_t x;
@@ -74,7 +70,6 @@ typedef struct Struct Struct;
 
 static Struct s = {.x = &lines[0]};
 
-
 static void test_records()
 {
 	printf("line.a.x = %d\n", line.a.x);
@@ -104,7 +99,6 @@ static void test_records()
 	printf("x.x.b.x = %d\n", x.x->b.x);
 	printf("x.x.b.y = %d\n", x.x->b.y);
 }
-
 
 int main()
 {

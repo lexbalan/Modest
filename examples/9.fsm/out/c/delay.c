@@ -7,7 +7,6 @@
 #include "delay.h"
 
 
-
 void delay_us(uint64_t us)
 {
 	const clock_t start_time = clock();
@@ -16,12 +15,10 @@ void delay_us(uint64_t us)
 	}
 }
 
-
 void delay_ms(uint64_t ms)
 {
 	delay_us(ms * 1000);
 }
-
 
 void delay_sec(uint64_t s)
 {

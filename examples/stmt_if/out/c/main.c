@@ -7,7 +7,6 @@
 #include "main.h"
 
 
-
 int main()
 {
 	printf("if statement example\n");

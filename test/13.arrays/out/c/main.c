@@ -16,7 +16,6 @@
 //import "misc/minmax"
 //$pragma c_include "./minmax.h"
 
-
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 const uint8_t constantArray[10] = _constantArray;
 
@@ -24,9 +23,7 @@ static int32_t globalArray[10] = _constantArray;
 
 static char arrayFromString[3] = "abc";
 
-
 //var arrayOfChars = [Char8 "a", 'b', 'c']
-
 
 static void f0(char *_x, char *sret_)
 {
@@ -57,12 +54,10 @@ static void f0(char *_x, char *sret_)
 	memcpy(sret_, &res, sizeof(char[30]));
 }
 
-
 #define _startSequence  {0xAA, 0x55, 0x02}
 const uint8_t startSequence[3] = _startSequence;
 #define _stopSequence  {0x16}
 const uint8_t stopSequence[1] = _stopSequence;
-
 
 static void test()
 {
@@ -76,12 +71,6 @@ static void test()
 		i = i + 1;
 	}
 }
-
-
-
-
-
-
 
 static int32_t a0[2][2][5] = (int32_t[2][2][5]){
 
@@ -98,7 +87,6 @@ static int32_t *a3[2] = (int32_t *[2]){&a1, &a2};
 static int32_t *(*a4[2])[2] = (int32_t *(*[2])[2]){&a3, &a3};
 static int32_t *(*(*p0)[2])[2] = &a4;
 
-
 static int32_t a10[10][10] = (int32_t[10][10]){
 	1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 	11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -111,7 +99,6 @@ static int32_t a10[10][10] = (int32_t[10][10]){
 	81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
 	91, 92, 93, 94, 95, 96, 97, 98, 99, 100
 };
-
 
 static void test_arrays()
 {
@@ -193,10 +180,6 @@ static void test_arrays()
 		i = i + 1;
 	}
 }
-
-
-
-
 
 int main()
 {

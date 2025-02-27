@@ -17,7 +17,6 @@ struct __anonymous_struct_2 {int32_t x; int32_t y;
 static int32_t *p0;
 static int32_t **p1;
 
-
 // Functions
 static void f0()
 {
@@ -91,7 +90,6 @@ static void(**f13(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))()
 	return NULL;
 }
 
-
 // Pointers to function
 static void(*pf0)() = &f0;
 static int32_t(*pf1)(int32_t x) = &f1;
@@ -107,7 +105,6 @@ static void(**(*pf10)(void(**f)()))() = &f10;
 static void(**(*pf11)(int32_t *(**f)(int32_t a, int32_t *b)))() = &f11;
 static void(**(*pf12)(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))() = &f12;
 static void(**(*pf13)(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() = &f13;
-
 
 // Arrays
 static int32_t a0[5] = (int32_t[5]){0, 1, 2, 3, 4};
@@ -132,13 +129,9 @@ static int *(*a8[2][5])[2][5] = (int *(*[2][5])[2][5]){
 };
 static int(*(*(*a9[5])[10])[2])(int a);
 
-
 //
 static int32_t *p2 = &a0;
 static int32_t(**p3)[5] = &p2;
-
-
-
 
 struct RGB24 {
 	uint8_t red;
@@ -167,7 +160,6 @@ static AnimationPoint ap = {
 	.time = 3000
 };
 
-
 static AnimationPoint animation0_points[5] = (AnimationPoint[5]){
 	{.color = {.red = 200, .green = 0, .blue = 0		}, .time = 3	},
 	{.color = {.red = 0, .green = 200, .blue = 0		}, .time = 30	},
@@ -192,11 +184,9 @@ static AnimationPoint animation2_points[5] = (AnimationPoint[5]){
 	{.color = {.red = 0, .green = 0, .blue = 255		}, .time = 3000	}
 };
 
-
 static void xy(struct __anonymous_struct_2 x)
 {
 }
-
 
 static int32_t arrr[3][3] = (int32_t[3][3]){
 	1, 2, 3,
@@ -204,9 +194,7 @@ static int32_t arrr[3][3] = (int32_t[3][3]){
 	7, 8, 9
 };
 
-
 static void(*arry[3][3])();
-
 
 static int32_t add(int32_t a, int32_t b)
 {
@@ -217,7 +205,6 @@ static int32_t sub(int32_t a, int32_t b)
 {
 	return a - b;
 }
-
 
 static int32_t(*farr[2])(int32_t a, int32_t b) = (int32_t(*[2])(int32_t a, int32_t b)){
 	&add, &sub
