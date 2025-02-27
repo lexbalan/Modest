@@ -265,7 +265,7 @@ declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 2
+; -- 1
 ; ?? bq ??
 ; ?? queue ??
 ; from import
@@ -285,50 +285,18 @@ declare %Int32 @queue_getPutPosition(%queue_Queue* %q)
 declare %Int32 @queue_getGetPosition(%queue_Queue* %q)
 ; end from import
 ; from import
-%byteQueue128_Word8Queue128 = type {
+%byteQueue128_Queue128Word8 = type {
 	%queue_Queue,
 	[16 x %Word8]
 };
 
-declare void @byteQueue128_init(%byteQueue128_Word8Queue128* %q)
-declare %Int32 @byteQueue128_capacity(%byteQueue128_Word8Queue128* %q)
-declare %Int32 @byteQueue128_size(%byteQueue128_Word8Queue128* %q)
-declare %Bool @byteQueue128_isFull(%byteQueue128_Word8Queue128* %q)
-declare %Bool @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* %q)
-declare %Bool @byteQueue128_put(%byteQueue128_Word8Queue128* %q, %Word8 %b)
-declare %Bool @byteQueue128_get(%byteQueue128_Word8Queue128* %q, %Word8* %b)
-; end from import
-; ?? br ??
-; ?? queue ??
-; from import
-%queue_Queue = type {
-	%Int32,
-	%Int32,
-	%Int32,
-	%Int32
-};
-
-declare void @queue_init(%queue_Queue* %q, %Int32 %capacity)
-declare %Int32 @queue_capacity(%queue_Queue* %q)
-declare %Int32 @queue_size(%queue_Queue* %q)
-declare %Bool @queue_isEmpty(%queue_Queue* %q)
-declare %Bool @queue_isFull(%queue_Queue* %q)
-declare %Int32 @queue_getPutPosition(%queue_Queue* %q)
-declare %Int32 @queue_getGetPosition(%queue_Queue* %q)
-; end from import
-; from import
-%byteRing16_Word8Ring16 = type {
-	%queue_Queue,
-	[16 x %Word8]
-};
-
-declare void @byteRing16_init(%byteRing16_Word8Ring16* %q)
-declare %Int32 @byteRing16_capacity(%byteRing16_Word8Ring16* %q)
-declare %Int32 @byteRing16_size(%byteRing16_Word8Ring16* %q)
-declare %Bool @byteRing16_isFull(%byteRing16_Word8Ring16* %q)
-declare %Bool @byteRing16_isEmpty(%byteRing16_Word8Ring16* %q)
-declare %Bool @byteRing16_put(%byteRing16_Word8Ring16* %q, %Word8 %b)
-declare %Bool @byteRing16_get(%byteRing16_Word8Ring16* %q, %Word8* %b)
+declare void @byteQueue128_init(%byteQueue128_Queue128Word8* %q)
+declare %Int32 @byteQueue128_capacity(%byteQueue128_Queue128Word8* %q)
+declare %Int32 @byteQueue128_size(%byteQueue128_Queue128Word8* %q)
+declare %Bool @byteQueue128_isFull(%byteQueue128_Queue128Word8* %q)
+declare %Bool @byteQueue128_isEmpty(%byteQueue128_Queue128Word8* %q)
+declare %Bool @byteQueue128_put(%byteQueue128_Queue128Word8* %q, %Word8 %b)
+declare %Bool @byteQueue128_get(%byteQueue128_Queue128Word8* %q, %Word8* %b)
 ; end from import
 ; -- end print imports 'main' --
 ; -- strings --
@@ -337,8 +305,9 @@ declare %Bool @byteRing16_get(%byteRing16_Word8Ring16* %q, %Word8* %b)
 @str3 = private constant [16 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 101, i8 109, i8 112, i8 116, i8 121, i8 10, i8 0]
 @str4 = private constant [13 x i8] [i8 98, i8 113, i8 46, i8 103, i8 101, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
-@bq0 = internal global %byteQueue128_Word8Queue128 zeroinitializer
-@br0 = internal global %byteRing16_Word8Ring16 zeroinitializer
+;import "./byteRing16" as br
+@bq0 = internal global %byteQueue128_Queue128Word8 zeroinitializer
+;var br0: br.Word8Ring16
 @ii = internal global %Int32 zeroinitializer
 define internal void @padd(%Int %n) {
 	%1 = alloca %Int32, align 4
@@ -349,7 +318,7 @@ again_1:
 	%3 = icmp slt %Int32 %2, %n
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
-	%4 = call %Bool @byteQueue128_isFull(%byteQueue128_Word8Queue128* @bq0)
+	%4 = call %Bool @byteQueue128_isFull(%byteQueue128_Queue128Word8* @bq0)
 	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
@@ -360,7 +329,7 @@ endif_0:
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), %Int32 %7)
 	%9 = load %Int32, %Int32* @ii
 	%10 = trunc %Int32 %9 to %Word8
-	%11 = call %Bool @byteQueue128_put(%byteQueue128_Word8Queue128* @bq0, %Word8 %10)
+	%11 = call %Bool @byteQueue128_put(%byteQueue128_Queue128Word8* @bq0, %Word8 %10)
 	%12 = load %Int32, %Int32* %1
 	%13 = add %Int32 %12, 1
 	store %Int32 %13, %Int32* %1
@@ -384,7 +353,7 @@ again_1:
 	%3 = icmp slt %Int32 %2, %n
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
-	%4 = call %Bool @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* @bq0)
+	%4 = call %Bool @byteQueue128_isEmpty(%byteQueue128_Queue128Word8* @bq0)
 	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*))
@@ -392,7 +361,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%7 = alloca %Word8, align 1
-	%8 = call %Bool @byteQueue128_get(%byteQueue128_Word8Queue128* @bq0, %Word8* %7)
+	%8 = call %Bool @byteQueue128_get(%byteQueue128_Queue128Word8* @bq0, %Word8* %7)
 	%9 = load %Word8, %Word8* %7
 	%10 = sext %Word8 %9 to %Int
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), %Int %10)
@@ -405,12 +374,12 @@ break_1:
 }
 
 define %Int @main() {
-	call void @byteQueue128_init(%byteQueue128_Word8Queue128* @bq0)
+	call void @byteQueue128_init(%byteQueue128_Queue128Word8* @bq0)
 	call void @padd(%Int 3)
 	call void @fetch(%Int 7)
 	call void @padd(%Int 12)
 	call void @fetch(%Int 7)
-	call void @padd(%Int 22)
+	call void @padd(%Int 12)
 	call void @fetch(%Int 7)
 	ret %Int 0
 }

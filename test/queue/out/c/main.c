@@ -7,11 +7,11 @@
 
 #include "main.h"
 
+//import "./byteRing16" as br
 
 
-
-static byteQueue128_Word8Queue128 bq0;
-static byteRing16_Word8Ring16 br0;
+static byteQueue128_Queue128Word8 bq0;
+//var br0: br.Word8Ring16
 
 
 static int32_t ii;
@@ -59,7 +59,7 @@ int main()
 	fetch(7);
 	padd(12);
 	fetch(7);
-	padd(22);
+	padd(3);
 	fetch(7);
 
 	return 0;

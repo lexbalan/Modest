@@ -1,7 +1,5 @@
 
-include "libc/ctypes64"
 @c_include "stdio.h"
-include "libc/stdio"
 
 
 public type Queue record {
@@ -41,6 +39,8 @@ public func isEmpty(q: *Queue) -> Bool {
 public func isFull(q: *Queue) -> Bool {
 	return q.size == q.capacity
 }
+
+
 // you must check isFull(queue) before call 'getPutPosition'
 
 public func getPutPosition(q: *Queue) -> Nat32 {
@@ -51,6 +51,8 @@ public func getPutPosition(q: *Queue) -> Nat32 {
 	}
 	return pos
 }
+
+
 // you must check isEmpty(queue) before call 'getGetPosition'
 
 public func getGetPosition(q: *Queue) -> Nat32 {

@@ -5,11 +5,11 @@ include "libc/math"
 include "libc/stdio"
 
 import "./byteQueue128" as bq
-import "./byteRing16" as br
+//import "./byteRing16" as br
 
 
-var bq0: bq.Word8Queue128
-var br0: br.Word8Ring16
+var bq0: bq.Queue128Word8
+//var br0: br.Word8Ring16
 
 
 var ii: Int32
@@ -54,7 +54,7 @@ public func main() -> Int {
 	fetch(7)
 	padd(12)
 	fetch(7)
-	padd(22)
+	padd(3)
 	fetch(7)
 
 	return 0
