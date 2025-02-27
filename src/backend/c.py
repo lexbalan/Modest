@@ -1367,6 +1367,8 @@ def str_value(x, ctx=[], parent_expr=None):
 		sstr += str_value_access(x, ctx)
 	elif isinstance(x, ValueSlice):
 		sstr += str_value_slice(x, ctx)
+	elif isinstance(x, ValueSubexpr):
+		sstr += print_value_subexpr(x, ctx)
 	elif isinstance(x, ValueNew):
 		sstr += str_value_new(x, ctx)
 	elif isinstance(x, ValueSizeofValue):
@@ -1387,8 +1389,6 @@ def str_value(x, ctx=[], parent_expr=None):
 		sstr += str_value_va_end(x, ctx)
 	elif isinstance(x, ValueVaCopy):
 		sstr += str_value_va_copy(x, ctx)
-	elif isinstance(x, ValueSubexpr):
-		sstr += print_value_subexpr(x, ctx)
 	elif isinstance(x, ValueUndefined):
 		sstr += "/*<ValueUndefined>*/"
 		1/0

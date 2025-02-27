@@ -690,6 +690,7 @@ def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
 	elif isinstance(x, ValueIndex): print_value_index(x, ctx)
 	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
 	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
+	elif isinstance(x, ValueSubexpr): print_value_subexpr(x, ctx)
 	elif isinstance(x, ValueNew): print_value_new(x, ctx)
 	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
 	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
@@ -701,7 +702,6 @@ def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
 	elif isinstance(x, ValueVaEnd): print_value_va_end(x, ctx)
 	elif isinstance(x, ValueVaCopy): print_value_va_copy(x, ctx)
 	elif isinstance(x, ValueUndefined): out("/*U*/")
-	elif isinstance(x, ValueSubexpr): print_value_subexpr(x, ctx)
 	else: out("%s" % str(x.__class__))
 
 	if need_wrap:

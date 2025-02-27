@@ -1803,6 +1803,7 @@ def do_eval(x):
 	elif isinstance(x, ValueIndex): y = do_eval_index(x)
 	elif isinstance(x, ValueAccessRecord): y = do_eval_access(x)
 	elif isinstance(x, ValueSlice): y = do_eval_slice(x)
+	elif isinstance(x, ValueSubexpr): y = do_eval(x.value)
 	elif isinstance(x, ValueNew): y = do_eval_new(x)
 	elif isinstance(x, ValueZero): y = do_eval_literal(x)
 	elif isinstance(x, ValueSizeofValue): y = do_eval_sizeof_value(x)
@@ -1814,7 +1815,6 @@ def do_eval(x):
 	elif isinstance(x, ValueVaArg): y = do_eval_va_arg(x)
 	elif isinstance(x, ValueVaEnd): y = do_eval_va_end(x)
 	elif isinstance(x, ValueVaCopy): y = do_eval_va_copy(x)
-	elif isinstance(x, ValueSubexpr): y = do_eval(x.value)
 	else:
 		out("<??>")
 
