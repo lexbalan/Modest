@@ -1692,7 +1692,7 @@ def do_value(x):
 	elif k == '__defined_type': v = do_value___defined_type(x)
 	elif k == '__defined_value': v = do_value___defined_value(x)
 	elif k == 'undefined': v = do_value_undefined(x)
-	elif k == 'bad': v = do_value_bad(x['ti'])
+	elif k == 'bad': v = do_value_bad(x)
 
 	assert(v != None)
 	v.ti = x['ti']

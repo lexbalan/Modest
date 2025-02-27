@@ -340,7 +340,6 @@ declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
 @str8 = private constant [32 x i8] [i8 83, i8 101, i8 114, i8 118, i8 101, i8 114, i8 32, i8 108, i8 105, i8 115, i8 116, i8 101, i8 110, i8 105, i8 110, i8 103, i8 32, i8 111, i8 110, i8 32, i8 112, i8 111, i8 114, i8 116, i8 32, i8 37, i8 100, i8 46, i8 46, i8 46, i8 10, i8 0]
 @str9 = private constant [7 x i8] [i8 97, i8 99, i8 99, i8 101, i8 112, i8 116, i8 0]
 ; -- endstrings --
-@httpHeader = internal global [0 x %Char8]* bitcast ([64 x i8]* @str1 to [0 x i8]*)
 @pageCounter = internal global %Int32 zeroinitializer
 define internal %Word16 @htons(%Word16 %x) {
 	%1 = zext i8 8 to %Word16
@@ -370,14 +369,13 @@ endif_0:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %9)
 	%11 = alloca [1024 x %Char8], align 1
 	%12 = bitcast [1024 x %Char8]* %11 to %CharStr*
-	%13 = load [0 x %Char8]*, [0 x %Char8]** @httpHeader
-	%14 = load %Int32, %Int32* @pageCounter
-	%15 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %12, %ConstCharStr* bitcast ([56 x i8]* @str4 to [0 x i8]*), [0 x %Char8]* %13, %Int32 %14)
-	%16 = bitcast [1024 x %Char8]* %11 to i8*
-	%17 = bitcast [1024 x %Char8]* %11 to [0 x %ConstChar]*
-	%18 = call %SizeT @strlen([0 x %ConstChar]* %17)
-	%19 = call %SSizeT @write(%Int32 %client_socket, i8* %16, %SizeT %18)
-	%20 = call %Int @close(%Int32 %client_socket)
+	%13 = load %Int32, %Int32* @pageCounter
+	%14 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %12, %ConstCharStr* bitcast ([56 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([64 x i8]* @str1 to [0 x i8]*), %Int32 %13)
+	%15 = bitcast [1024 x %Char8]* %11 to i8*
+	%16 = bitcast [1024 x %Char8]* %11 to [0 x %ConstChar]*
+	%17 = call %SizeT @strlen([0 x %ConstChar]* %16)
+	%18 = call %SSizeT @write(%Int32 %client_socket, i8* %15, %SizeT %17)
+	%19 = call %Int @close(%Int32 %client_socket)
 	ret void
 }
 

@@ -12,8 +12,11 @@ const port = 8080
 const receive_buffer_size = 1024
 const send_buffer_size = 1024
 
-
-var httpHeader = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n"
+const httpHeader = *Str8 (
+	"HTTP/1.1 200 OK\r\n" +
+	"Content-Type: text/html\r\n" +
+	"Connection: close\r\n\r\n"
+)
 
 
 var pageCounter: Nat32
