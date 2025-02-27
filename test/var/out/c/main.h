@@ -7,7 +7,6 @@
 
 #include <stdio.h>
 
-// -> *[]Char8
 
 
 int main();

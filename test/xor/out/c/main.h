@@ -9,10 +9,6 @@
 
 
 
-//xor_encrypt = xor_encrypter
-//xor_decrypt = xor_encrypter
-
-
 int main();
 
 #endif /* MAIN_H */

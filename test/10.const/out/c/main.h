@@ -12,12 +12,6 @@
 
 
 
-
-
-
-// Pythagorean theorem
-
-
 int main();
 
 #endif /* MAIN_H */

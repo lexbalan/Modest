@@ -9,7 +9,6 @@
 
 
 
-
 void lib_foo();
 
 #endif /* LIB_H */

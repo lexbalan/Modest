@@ -2054,31 +2054,44 @@ def print_header(module, outname):
 	include("stdbool.h", local=False)
 	newline()
 
+	nl_after_defs = False
 	for x in module.defs:
 		if isinstance(x, StmtDirective):
-			newline()
 			if isinstance(x, StmtDirectiveCInclude):
+				newline()
 				include(x.c_name, local=x.is_local)
+				nl_after_defs = True
 			#print_directive(x)
 
-	newline()
-
+	if nl_after_defs:
+		newline()
 
 	# print C `#include ""` directive for included modules
+	nl_after_incs = False
 	for inc in module.included_modules:
 		if not 'do_not_include' in inc.att:
 			newline()
 			include(inc.id + '.h', local=True)
+			nl_after_incs = True
 
+	if nl_after_incs:
+		newline()
 
 	for x in module.defs:
-
 		if is_private(x):
 			continue
 
 		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
+		if isinstance(x, StmtComment):
+			continue
+
+		if isinstance(x, StmtDirective):
+			if isinstance(x, StmtDirectiveCInclude):
+				continue
+
+		#out("+" + str(x.__class__))
 		newline(x.nl)
 
 		if isinstance(x, StmtImport):

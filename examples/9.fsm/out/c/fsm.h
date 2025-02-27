@@ -7,10 +7,6 @@
 
 #include <stdio.h>
 
-
-
-// Вынужден добавлять export тк иначе не идет в хедер к структуре
-// Короче, проблема зависимостей тяжело зависла в воздухе
 #define fsm_nameMaxLength  8
 #define fsm_maxStates  16
 

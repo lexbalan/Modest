@@ -11,8 +11,6 @@
 
 
 
-
-
 struct list_Node;
 typedef struct list_Node list_Node;
 
@@ -59,11 +57,6 @@ void *list_node_data_get(list_Node *node);
 
 
 void list_node_insert_right(list_Node *left, list_Node *new_right);
-
-
-// get list node by number
-// if number is out of range returns nil
-// if number < 0 - go backward
 list_Node *list_node_get(list_List *list, int32_t pos);
 
 

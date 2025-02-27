@@ -8,10 +8,6 @@
 #include <stdio.h>
 
 
-
-
-//var s: Mixed2
-
 int main();
 
 #endif /* MAIN_H */
