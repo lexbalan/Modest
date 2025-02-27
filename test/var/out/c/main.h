@@ -7,12 +7,6 @@
 
 #include <stdio.h>
 
-
-
-
-
-
-
 // -> *[]Char8
 
 

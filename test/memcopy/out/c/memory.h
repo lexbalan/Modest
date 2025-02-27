@@ -10,18 +10,11 @@
 ////
 
 
-
-
 //$if (systemWidth == 64)
-
-
 //$elseif (systemWidth == 32)
 //type Word Word32
 //type Nat Nat32
 //$endif
-
-
-
 
 
 void memory_zero(void *mem, uint64_t len);

@@ -34,12 +34,8 @@ typedef struct table_Table table_Table;
 void table_print(table_Table *table);
 
 
-
-
-
 // печатает строку +---+---+ отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
-
 
 #endif /* TABLE_H */

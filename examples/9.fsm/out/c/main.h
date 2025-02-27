@@ -23,25 +23,9 @@
 //$pragma c_include "./ff_main.h"
 
 
-
-
-
-
-
-
-
-
 //
 // State Off
 //
-
-
-
-
-
-
-
-
 
 
 //
@@ -49,29 +33,9 @@
 //
 
 
-
-
-
-
-
-
-
-
 //
 // State Beacon
 //
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

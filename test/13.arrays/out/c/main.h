@@ -16,44 +16,7 @@
 //$pragma c_include "./minmax.h"
 
 
-
-
-
-
-
-
-
 //var arrayOfChars = [Char8 "a", 'b', 'c']
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

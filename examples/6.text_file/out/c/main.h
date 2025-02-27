@@ -23,15 +23,6 @@
 //include "libc/stdio"
 
 
-
-
-
-
-
-
-
-
-
 int main();
 
 #endif /* MAIN_H */

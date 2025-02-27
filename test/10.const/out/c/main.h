@@ -15,38 +15,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Pythagorean theorem
-
-
-
-
 
 
 int main();

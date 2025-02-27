@@ -7,16 +7,7 @@
 
 #include <stdio.h>
 
-
-
-
-
-
-
 //+ " " + party_corn
-
-
-
 
 
 int main();

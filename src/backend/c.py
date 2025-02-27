@@ -2072,13 +2072,14 @@ def print_header(module, outname):
 
 
 	for x in module.defs:
-		newline(x.nl)
 
 		if is_private(x):
 			continue
 
 		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
+
+		newline(x.nl)
 
 		if isinstance(x, StmtImport):
 			if not 'do_not_include' in x.module.att:

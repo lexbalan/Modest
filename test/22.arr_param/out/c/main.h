@@ -13,9 +13,7 @@
 // returns array by value
 
 
-
 // receive & returns array by value
-
 
 
 int32_t main();
