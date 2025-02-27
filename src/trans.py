@@ -1654,6 +1654,10 @@ def do_rvalue(x):
 	return do_value(x)
 
 
+def do_value_subexpr(x):
+	return do_value(x['value'])
+
+
 def do_value(x):
 	assert(x['isa'] == 'ast_value')
 
@@ -1680,6 +1684,7 @@ def do_value(x):
 	elif k == 'shr': v = do_value_shift(x)
 	elif k == 'new': v = do_value_new(x)
 	elif k == 'unsafe': v = do_value_unsafe(x)
+	elif k == 'subexpr': v = do_value_subexpr(x)
 	elif k == 'sizeof_value': v = do_value_sizeof_value(x)
 	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
 	elif k == 'alignof': v = do_value_alignof(x)

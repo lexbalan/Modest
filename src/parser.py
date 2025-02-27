@@ -1080,8 +1080,13 @@ class Parser:
 			v = self.expr_value()
 			self.skipn("\n")
 			self.need(")")
-			v['ti'] = ti
-			return v
+			return {
+				'isa': 'ast_value',
+				'kind': 'subexpr',
+				'value': v,
+				'ti': ti
+			}
+
 
 		elif self.ctok_class() == 'id':
 			id = self.identifier()
