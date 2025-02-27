@@ -11,7 +11,7 @@ const port = 8080
 const receive_buffer_size = 1024
 const send_buffer_size = 1024
 
-const httpHeader = *Str8 "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n" + "Connection: close\r\n" + "\r\n"
+const httpHeader = *Str8 ("HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n" + "Connection: close\r\n" + "\r\n")
 
 
 var pageCounter: Nat32
@@ -20,7 +20,7 @@ var pageCounter: Nat32
 
 
 func htons(x: Word16) -> Word16 {
-	return x << 8 or x >> 8
+	return (x << 8) or (x >> 8)
 }
 
 

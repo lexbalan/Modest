@@ -12,7 +12,7 @@ func bubble_sort32(array: *[]Int32, len: Int32) -> Unit {
 	while need_to_sort {
 		need_to_sort = false
 		var i: Int32 = 0
-		while i < len - 1 {
+		while i < (len - 1) {
 			let i0 = array[i]
 			let i1 = array[i + 1]
 

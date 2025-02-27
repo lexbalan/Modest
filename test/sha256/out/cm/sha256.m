@@ -17,22 +17,22 @@ type Context record {
 
 
 func rotleft(a: Word32, b: Nat32) -> Word32 {
-	return a << b or a >> 32 - b
+	return (a << b) or (a >> (32 - b))
 }
 
 
 func rotright(a: Word32, b: Nat32) -> Word32 {
-	return a >> b or a << 32 - b
+	return (a >> b) or (a << (32 - b))
 }
 
 
 func ch(x: Word32, y: Word32, z: Word32) -> Word32 {
-	return x and y xor notx and z
+	return (x and y) xor (notx and z)
 }
 
 
 func maj(x: Word32, y: Word32, z: Word32) -> Word32 {
-	return x and y xor x and z xor y and z
+	return (x and y) xor (x and z) xor (y and z)
 }
 
 
@@ -47,12 +47,12 @@ func ep1(x: Word32) -> Word32 {
 
 
 func sig0(x: Word32) -> Word32 {
-	return rotright(x, 7) xor rotright(x, 18) xor x >> 3
+	return rotright(x, 7) xor rotright(x, 18) xor (x >> 3)
 }
 
 
 func sig1(x: Word32) -> Word32 {
-	return rotright(x, 17) xor rotright(x, 19) xor x >> 10
+	return rotright(x, 17) xor rotright(x, 19) xor (x >> 10)
 }
 
 
@@ -95,7 +95,7 @@ func transform(ctx: *Context, data: *[]Word8) -> Unit {
 	var j: Nat32 = Nat32 0
 
 	while i < 16 {
-		let x = Word32 data[j + 0] << 24 or Word32 data[j + 1] << 16 or Word32 data[j + 2] << 08 or Word32 data[j + 3] << 00
+		let x = (Word32 data[j + 0] << 24) or (Word32 data[j + 1] << 16) or (Word32 data[j + 2] << 08) or (Word32 data[j + 3] << 00)
 
 		m[i] = x
 		j = j + 4
@@ -103,7 +103,7 @@ func transform(ctx: *Context, data: *[]Word8) -> Unit {
 	}
 
 	while i < 64 {
-		m[i] = Word32 Nat32 sig1(m[i - 2]) + Nat32 m[i - 7] + Nat32 sig0(m[i - 15]) + Nat32 m[i - 16]
+		m[i] = Word32 (Nat32 sig1(m[i - 2]) + Nat32 m[i - 7] + Nat32 sig0(m[i - 15]) + Nat32 m[i - 16])
 		i = i + 1
 	}
 
@@ -117,18 +117,18 @@ func transform(ctx: *Context, data: *[]Word8) -> Unit {
 		x[7] = x[6]
 		x[6] = x[5]
 		x[5] = x[4]
-		x[4] = Word32 Nat32 x[3] + t1
+		x[4] = Word32 (Nat32 x[3] + t1)
 		x[3] = x[2]
 		x[2] = x[1]
 		x[1] = x[0]
-		x[0] = Word32 t1 + t2
+		x[0] = Word32 (t1 + t2)
 
 		i = i + 1
 	}
 
 	i = 0
 	while i < 8 {
-		ctx.state[i] = Word32 Nat32 ctx.state[i] + Nat32 x[i]
+		ctx.state[i] = Word32 (Nat32 ctx.state[i] + Nat32 x[i])
 		i = i + 1
 	}
 }
@@ -163,7 +163,7 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 
 	i = i + 1
 
-	string.memset(&(ctx.data[i]), 0, ctypes64.SizeT n - i)
+	string.memset(&(ctx.data[i]), 0, ctypes64.SizeT (n - i))
 	//ctx.data[i:n-i] = []
 
 	if ctx.datalen >= 56 {
@@ -175,14 +175,14 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 	// Append to the padding the total message's length in bits and transform.
 	ctx.bitlen = ctx.bitlen + Nat64 ctx.datalen * 8
 
-	ctx.data[63] = Word8 Word64 ctx.bitlen >> 00
-	ctx.data[62] = Word8 Word64 ctx.bitlen >> 08
-	ctx.data[61] = Word8 Word64 ctx.bitlen >> 16
-	ctx.data[60] = Word8 Word64 ctx.bitlen >> 24
-	ctx.data[59] = Word8 Word64 ctx.bitlen >> 32
-	ctx.data[58] = Word8 Word64 ctx.bitlen >> 40
-	ctx.data[57] = Word8 Word64 ctx.bitlen >> 48
-	ctx.data[56] = Word8 Word64 ctx.bitlen >> 56
+	ctx.data[63] = Word8 (Word64 ctx.bitlen >> 00)
+	ctx.data[62] = Word8 (Word64 ctx.bitlen >> 08)
+	ctx.data[61] = Word8 (Word64 ctx.bitlen >> 16)
+	ctx.data[60] = Word8 (Word64 ctx.bitlen >> 24)
+	ctx.data[59] = Word8 (Word64 ctx.bitlen >> 32)
+	ctx.data[58] = Word8 (Word64 ctx.bitlen >> 40)
+	ctx.data[57] = Word8 (Word64 ctx.bitlen >> 48)
+	ctx.data[56] = Word8 (Word64 ctx.bitlen >> 56)
 
 	transform(ctx, &(ctx.data))
 
@@ -193,14 +193,14 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 	i = 0
 	while i < 4 {
 		let sh = 24 - i * 8
-		outHash[i + 00] = Word8 ctx.state[0] >> sh
-		outHash[i + 04] = Word8 ctx.state[1] >> sh
-		outHash[i + 08] = Word8 ctx.state[2] >> sh
-		outHash[i + 12] = Word8 ctx.state[3] >> sh
-		outHash[i + 16] = Word8 ctx.state[4] >> sh
-		outHash[i + 20] = Word8 ctx.state[5] >> sh
-		outHash[i + 24] = Word8 ctx.state[6] >> sh
-		outHash[i + 28] = Word8 ctx.state[7] >> sh
+		outHash[i + 00] = Word8 (ctx.state[0] >> sh)
+		outHash[i + 04] = Word8 (ctx.state[1] >> sh)
+		outHash[i + 08] = Word8 (ctx.state[2] >> sh)
+		outHash[i + 12] = Word8 (ctx.state[3] >> sh)
+		outHash[i + 16] = Word8 (ctx.state[4] >> sh)
+		outHash[i + 20] = Word8 (ctx.state[5] >> sh)
+		outHash[i + 24] = Word8 (ctx.state[6] >> sh)
+		outHash[i + 28] = Word8 (ctx.state[7] >> sh)
 		i = i + 1
 	}
 }

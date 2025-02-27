@@ -14,7 +14,7 @@ static void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t 
 	while (i < buflen) {
 		buf[i] = buf[i] ^ key[j];
 
-		if (j < keylen - 1) {
+		if (j < (keylen - 1)) {
 			j = j + 1;
 		} else {
 			j = 0;

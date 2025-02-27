@@ -24,7 +24,7 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 		uint32_t j = 0;
 		while (j < 8) {
 			if ((crc & 1) != 0) {
-				crc = crc >> 1 ^ 0xEDB88320U;
+				crc = (crc >> 1) ^ 0xEDB88320U;
 			} else {
 				crc = crc >> 1;
 			}
@@ -48,7 +48,7 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 		const uint32_t y = (crc ^ x) & 0xFF;
 		// 2
 		const uint8_t yy = y;
-		crc = crc_table[yy] ^ crc >> 8;
+		crc = crc_table[yy] ^ (crc >> 8);
 		i = i + 1;
 	}
 

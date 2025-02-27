@@ -21,22 +21,22 @@ typedef struct Context Context;
 
 static inline uint32_t rotleft(uint32_t a, uint32_t b)
 {
-	return a << b | a >> (32 - b);
+	return (a << b) | (a >> ((32 - b)));
 }
 
 static inline uint32_t rotright(uint32_t a, uint32_t b)
 {
-	return a >> b | a << (32 - b);
+	return (a >> b) | (a << ((32 - b)));
 }
 
 static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z)
 {
-	return x & y ^ ~x & z;
+	return (x & y) ^ (~x & z);
 }
 
 static inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z)
 {
-	return x & y ^ x & z ^ y & z;
+	return (x & y) ^ (x & z) ^ (y & z);
 }
 
 static inline uint32_t ep0(uint32_t x)
@@ -51,12 +51,12 @@ static inline uint32_t ep1(uint32_t x)
 
 static inline uint32_t sig0(uint32_t x)
 {
-	return rotright(x, 7) ^ rotright(x, 18) ^ x >> 3;
+	return rotright(x, 7) ^ rotright(x, 18) ^ (x >> 3);
 }
 
 static inline uint32_t sig1(uint32_t x)
 {
-	return rotright(x, 17) ^ rotright(x, 19) ^ x >> 10;
+	return rotright(x, 17) ^ rotright(x, 19) ^ (x >> 10);
 }
 
 #define _initalState  { \
@@ -99,7 +99,7 @@ static void transform(Context *ctx, uint8_t *data)
 	uint32_t j = 0;
 
 	while (i < 16) {
-		const uint32_t x = data[j + 0] << 24 | data[j + 1] << 16 | data[j + 2] << 8 | data[j + 3] << 0;
+		const uint32_t x = (data[j + 0] << 24) | (data[j + 1] << 16) | (data[j + 2] << 8) | (data[j + 3] << 0);
 
 		m[i] = x;
 		j = j + 4;
@@ -107,7 +107,7 @@ static void transform(Context *ctx, uint8_t *data)
 	}
 
 	while (i < 64) {
-		m[i] = sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16];
+		m[i] = (sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16]);
 		i = i + 1;
 	}
 
@@ -122,18 +122,18 @@ static void transform(Context *ctx, uint8_t *data)
 		x[7] = x[6];
 		x[6] = x[5];
 		x[5] = x[4];
-		x[4] = x[3] + t1;
+		x[4] = (x[3] + t1);
 		x[3] = x[2];
 		x[2] = x[1];
 		x[1] = x[0];
-		x[0] = t1 + t2;
+		x[0] = (t1 + t2);
 
 		i = i + 1;
 	}
 
 	i = 0;
 	while (i < 8) {
-		ctx->state[i] = ctx->state[i] + x[i];
+		ctx->state[i] = (ctx->state[i] + x[i]);
 		i = i + 1;
 	}
 }
@@ -168,7 +168,7 @@ static void final(Context *ctx, uint8_t *outHash)
 
 	i = i + 1;
 
-	memset(&ctx->data[i], 0, n - i);
+	memset(&ctx->data[i], 0, (n - i));
 	//ctx.data[i:n-i] = []
 
 	if (ctx->datalen >= 56) {
@@ -180,14 +180,14 @@ static void final(Context *ctx, uint8_t *outHash)
 	// Append to the padding the total message's length in bits and transform.
 	ctx->bitlen = ctx->bitlen + ctx->datalen * 8;
 
-	ctx->data[63] = ctx->bitlen >> 0;
-	ctx->data[62] = ctx->bitlen >> 8;
-	ctx->data[61] = ctx->bitlen >> 16;
-	ctx->data[60] = ctx->bitlen >> 24;
-	ctx->data[59] = ctx->bitlen >> 32;
-	ctx->data[58] = ctx->bitlen >> 40;
-	ctx->data[57] = ctx->bitlen >> 48;
-	ctx->data[56] = ctx->bitlen >> 56;
+	ctx->data[63] = (ctx->bitlen >> 0);
+	ctx->data[62] = (ctx->bitlen >> 8);
+	ctx->data[61] = (ctx->bitlen >> 16);
+	ctx->data[60] = (ctx->bitlen >> 24);
+	ctx->data[59] = (ctx->bitlen >> 32);
+	ctx->data[58] = (ctx->bitlen >> 40);
+	ctx->data[57] = (ctx->bitlen >> 48);
+	ctx->data[56] = (ctx->bitlen >> 56);
 
 	transform(ctx, (uint8_t *)&ctx->data);
 
@@ -198,14 +198,14 @@ static void final(Context *ctx, uint8_t *outHash)
 	i = 0;
 	while (i < 4) {
 		const uint32_t sh = 24 - i * 8;
-		outHash[i + 0] = ctx->state[0] >> sh;
-		outHash[i + 4] = ctx->state[1] >> sh;
-		outHash[i + 8] = ctx->state[2] >> sh;
-		outHash[i + 12] = ctx->state[3] >> sh;
-		outHash[i + 16] = ctx->state[4] >> sh;
-		outHash[i + 20] = ctx->state[5] >> sh;
-		outHash[i + 24] = ctx->state[6] >> sh;
-		outHash[i + 28] = ctx->state[7] >> sh;
+		outHash[i + 0] = (ctx->state[0] >> sh);
+		outHash[i + 4] = (ctx->state[1] >> sh);
+		outHash[i + 8] = (ctx->state[2] >> sh);
+		outHash[i + 12] = (ctx->state[3] >> sh);
+		outHash[i + 16] = (ctx->state[4] >> sh);
+		outHash[i + 20] = (ctx->state[5] >> sh);
+		outHash[i + 24] = (ctx->state[6] >> sh);
+		outHash[i + 28] = (ctx->state[7] >> sh);
 		i = i + 1;
 	}
 }

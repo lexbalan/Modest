@@ -107,7 +107,7 @@ func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 		}
 
 		var k: Nat32 = Nat32 0
-		while k < sz[j] - len {
+		while k < (sz[j] - len) {
 			stdio.printf(" ")
 			k = k + 1
 		}

@@ -659,6 +659,10 @@ def print_value_va_copy(x, ctx):
 	print_value(x.src)
 	out(")")
 
+def print_value_subexpr(x, ctx):
+	out("(")
+	print_value(x.value)
+	out(")")
 
 def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
 
@@ -697,7 +701,8 @@ def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
 	elif isinstance(x, ValueVaEnd): print_value_va_end(x, ctx)
 	elif isinstance(x, ValueVaCopy): print_value_va_copy(x, ctx)
 	elif isinstance(x, ValueUndefined): out("/*U*/")
-	else: out("<%s>" % 'k')
+	elif isinstance(x, ValueSubexpr): print_value_subexpr(x, ctx)
+	else: out("%s" % str(x.__class__))
 
 	if need_wrap:
 		out(")")

@@ -260,7 +260,7 @@ static char n_to_hex_sym(uint8_t n)
 	if (n < 10) {
 		return n_to_dec_sym(n);
 	}
-	return (char)((uint8_t)'A' + n - 10);
+	return (char)((uint8_t)'A' + (n - 10));
 }
 
 static int32_t sprint_hex_nat32(char *buf, uint32_t x)

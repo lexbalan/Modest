@@ -7,7 +7,7 @@ include "libc/time"
 
 public func us(us: Nat64) {
 	let start_time = clock()
-	while (clock() < start_time + us) {
+	while clock() < start_time + us {
 		// just waiting
 	}
 }

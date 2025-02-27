@@ -17,7 +17,7 @@ public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 		var j: Nat32 = Nat32 0
 		while j < 8 {
 			if (crc and 1) != 0 {
-				crc = crc >> 1 xor 0xEDB88320
+				crc = (crc >> 1) xor 0xEDB88320
 			} else {
 				crc = crc >> 1
 			}
@@ -41,7 +41,7 @@ public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 		let y = (crc xor x) and 0xFF
 		// 2
 		let yy = Nat8 y
-		crc = crc_table[yy] xor crc >> 8
+		crc = crc_table[yy] xor (crc >> 8)
 		i = i + 1
 	}
 

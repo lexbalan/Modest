@@ -22,7 +22,7 @@ static void bubble_sort32(int32_t *array, int32_t len)
 	while (need_to_sort) {
 		need_to_sort = false;
 		int32_t i = 0;
-		while (i < len - 1) {
+		while (i < (len - 1)) {
 			const int32_t i0 = array[i];
 			const int32_t i1 = array[i + 1];
 

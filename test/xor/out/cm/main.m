@@ -8,7 +8,7 @@ func xor_encrypter(buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -
 	while i < buflen {
 		buf[i] = buf[i] xor key[j]
 
-		if j < keylen - 1 {
+		if j < (keylen - 1) {
 			j = j + 1
 		} else {
 			j = 0

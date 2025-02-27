@@ -1814,6 +1814,7 @@ def do_eval(x):
 	elif isinstance(x, ValueVaArg): y = do_eval_va_arg(x)
 	elif isinstance(x, ValueVaEnd): y = do_eval_va_end(x)
 	elif isinstance(x, ValueVaCopy): y = do_eval_va_copy(x)
+	elif isinstance(x, ValueSubexpr): y = do_eval(x.value)
 	else:
 		out("<??>")
 

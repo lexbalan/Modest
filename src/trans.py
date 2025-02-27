@@ -1653,7 +1653,11 @@ def do_rvalue(x):
 
 
 def do_value_subexpr(x):
-	return do_value(x['value'])
+	v = do_value(x['value'])
+	nv = ValueSubexpr(v, ti=x['ti'])
+	if v.isImmediate():
+		cp_immediate(nv, v)
+	return nv
 
 
 def do_value(x):

@@ -245,6 +245,14 @@ class ValueUn(Value):
 		self.value = value
 
 
+class ValueSubexpr(Value):
+	def __init__(self, value, ti=None):
+		#mass
+		assert(isinstance(value, Value))
+		super().__init__(type=value.type, ti=ti)
+		self.value = value
+
+
 #TODO: maybe without op?
 class ValueBin(Value):
 	def __init__(self, type, op, left, right, ti=None):

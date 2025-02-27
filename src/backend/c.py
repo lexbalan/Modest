@@ -1321,6 +1321,13 @@ def str_value_va_copy(x, ctx):
 	return sstr
 
 
+def print_value_subexpr(x, ctx):
+	sstr = "("
+	sstr += str_value(x.value)
+	sstr += ")"
+	return sstr
+
+
 def str_value(x, ctx=[], parent_expr=None):
 	sstr = ''
 	need_wrap = False
@@ -1380,6 +1387,8 @@ def str_value(x, ctx=[], parent_expr=None):
 		sstr += str_value_va_end(x, ctx)
 	elif isinstance(x, ValueVaCopy):
 		sstr += str_value_va_copy(x, ctx)
+	elif isinstance(x, ValueSubexpr):
+		sstr += print_value_subexpr(x, ctx)
 	elif isinstance(x, ValueUndefined):
 		sstr += "/*<ValueUndefined>*/"
 		1/0

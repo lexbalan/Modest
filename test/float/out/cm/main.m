@@ -31,7 +31,7 @@ public func main() -> ctypes64.Int {
 	stdio.printf("float test\n")
 
 	stdio.printf("2 = %d\n", Int32 2)
-	stdio.printf("2/3 = %f\n", Float64 2.0 / 3)
+	stdio.printf("2/3 = %f\n", Float64 (2.0 / 3))
 
 	let r = 10
 	let s = squareOfCircle(r)

@@ -14,12 +14,12 @@ static unsigned __int128 big0 = BIG_INT128(0x123456789ABCDEFULL, 0xFEDCBA9876543
 
 static uint64_t high_128(unsigned __int128 x)
 {
-	return x >> 64;
+	return (x >> 64);
 }
 
 static uint64_t low_128(unsigned __int128 x)
 {
-	return x & 0xFFFFFFFFFFFFFFFF;
+	return (x & 0xFFFFFFFFFFFFFFFF);
 }
 
 int main()
