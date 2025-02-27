@@ -10,6 +10,7 @@
 
 
 
+
 // constants with type String(Generic)
 #define str8_example  "String"
 #define str16_example  (u"String-Ω")

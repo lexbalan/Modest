@@ -7,6 +7,7 @@
 #include "main.h"
 
 
+
 #define utf8Char  "s"
 #define utf16Char  u"Я"
 #define utf32Char  U"🐀"

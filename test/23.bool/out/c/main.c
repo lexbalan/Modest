@@ -8,6 +8,7 @@
 
 
 
+
 int main()
 {
 	printf("bool check\nm");

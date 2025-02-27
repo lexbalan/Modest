@@ -8,6 +8,7 @@
 
 
 
+
 struct Object {
 	char firstname[32];
 	char lastname[32];

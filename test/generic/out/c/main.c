@@ -8,6 +8,7 @@
 
 
 
+
 static bool test_generic_integer();
 static bool test_generic_float();
 static bool test_generic_char();

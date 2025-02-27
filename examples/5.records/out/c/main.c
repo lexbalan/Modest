@@ -9,6 +9,7 @@
 #include "main.h"
 
 
+
 struct Point {
 	float x;
 	float y;

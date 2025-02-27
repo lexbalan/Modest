@@ -8,6 +8,7 @@
 #include "main.h"
 
 
+
 // FIXIT: not worked LLVM result (!)
 
 #define filename  "file.bin"

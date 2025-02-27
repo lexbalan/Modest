@@ -2178,10 +2178,10 @@ def print_cfile(module, _outname):
 	newline()
 	newline()
 	include("%s.h" % module.id)
+	newline()
 
 
 	for use in module.att:
-		newline()
 		if use in macro_definitions:
 			out(macro_definitions[use])
 

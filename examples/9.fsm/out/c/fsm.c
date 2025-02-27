@@ -7,6 +7,7 @@
 #include "fsm.h"
 
 
+
 #define verbose  true
 
 // Вынужден добавлять export тк иначе не идет в хедер к структуре
