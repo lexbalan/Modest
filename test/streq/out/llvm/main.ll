@@ -210,15 +210,17 @@ declare %SizeT @strlen([0 x %ConstChar]* %s)
 declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
+declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [3 x i8] [i8 37, i8 115, i8 0]
-@str2 = private constant [3 x i8] [i8 37, i8 115, i8 0]
-@str3 = private constant [2 x i8] [i8 7, i8 0]
-@str4 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str2 = private constant [2 x i8] [i8 10, i8 0]
+@str3 = private constant [5 x i8] [i8 83, i8 69, i8 84, i8 10, i8 0]
+@str4 = private constant [5 x i8] [i8 71, i8 69, i8 84, i8 10, i8 0]
+@str5 = private constant [21 x i8] [i8 117, i8 110, i8 107, i8 110, i8 111, i8 119, i8 110, i8 32, i8 99, i8 111, i8 109, i8 109, i8 97, i8 110, i8 100, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
 ; -- endstrings --
 @prompt = internal global [32 x %Char8] [
 	%Char8 35,
@@ -265,40 +267,71 @@ again_1:
 body_1:
 	%5 = bitcast [32 x %Char8]* @prompt to %Str8*
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str1 to [0 x i8]*), %Str8* %5)
-	%7 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str2 to [0 x i8]*), %Str8* %4)
-	%8 = insertvalue %Str8 zeroinitializer, %Char8 98, 0
-	%9 = insertvalue %Str8 %8, %Char8 101, 1
-	%10 = insertvalue %Str8 %9, %Char8 101, 2
-	%11 = insertvalue %Str8 %10, %Char8 112, 3
-	%12 = alloca %Str8
-	%13 = zext i8 4 to %Int32
-	store %Str8 %11, %Str8* %12
-	%14 = bitcast %Str8* %4 to i8*
-	%15 = bitcast %Str8* %12 to i8*
-	%16 = call i1 (i8*, i8*, i64) @memeq(i8* %14, i8* %15, %Int64 4)
-	%17 = icmp ne %Bool %16, 0
-	br %Bool %17 , label %then_0, label %else_0
+	%7 = bitcast [32 x %Char8]* %1 to %CharStr*
+	%8 = load %File*, %File** @stdin
+	%9 = call %CharStr* @fgets(%CharStr* %7, %Int 32, %File* %8)
+	; convert first '\n' -> '\0'
+	%10 = call %SizeT @strcspn(%Str8* %4, %Str8* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+	%11 = trunc %SizeT %10 to %Int32
+	%12 = getelementptr [32 x %Char8], [32 x %Char8]* %1, %Int32 0, %Int32 %11
+	store %Char8 0, %Char8* %12
+	%13 = insertvalue %Str8 zeroinitializer, %Char8 101, 0
+	%14 = insertvalue %Str8 %13, %Char8 120, 1
+	%15 = insertvalue %Str8 %14, %Char8 105, 2
+	%16 = insertvalue %Str8 %15, %Char8 116, 3
+	%17 = alloca %Str8
+	%18 = zext i8 4 to %Int32
+	store %Str8 %16, %Str8* %17
+	%19 = bitcast %Str8* %4 to i8*
+	%20 = bitcast %Str8* %17 to i8*
+	%21 = call i1 (i8*, i8*, i64) @memeq(i8* %19, i8* %20, %Int64 4)
+	%22 = icmp ne %Bool %21, 0
+	br %Bool %22 , label %then_0, label %else_0
 then_0:
-	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
+	br label %break_1
 	br label %endif_0
 else_0:
-	%19 = insertvalue %Str8 zeroinitializer, %Char8 101, 0
-	%20 = insertvalue %Str8 %19, %Char8 120, 1
-	%21 = insertvalue %Str8 %20, %Char8 105, 2
-	%22 = insertvalue %Str8 %21, %Char8 116, 3
-	%23 = alloca %Str8
-	%24 = zext i8 4 to %Int32
-	store %Str8 %22, %Str8* %23
-	%25 = bitcast %Str8* %4 to i8*
-	%26 = bitcast %Str8* %23 to i8*
-	%27 = call i1 (i8*, i8*, i64) @memeq(i8* %25, i8* %26, %Int64 4)
-	%28 = icmp ne %Bool %27, 0
-	br %Bool %28 , label %then_1, label %else_1
+	%24 = zext i8 0 to %Int32
+	%25 = getelementptr %Str8, %Str8* %4, %Int32 0, %Int32 %24
+;
+	%26 = bitcast %Char8* %25 to [3 x %Char8]*
+	%27 = insertvalue [3 x %Char8] zeroinitializer, %Char8 115, 0
+	%28 = insertvalue [3 x %Char8] %27, %Char8 101, 1
+	%29 = insertvalue [3 x %Char8] %28, %Char8 116, 2
+	%30 = alloca [3 x %Char8]
+	%31 = zext i8 3 to %Int32
+	store [3 x %Char8] %29, [3 x %Char8]* %30
+	%32 = bitcast [3 x %Char8]* %26 to i8*
+	%33 = bitcast [3 x %Char8]* %30 to i8*
+	%34 = call i1 (i8*, i8*, i64) @memeq(i8* %32, i8* %33, %Int64 3)
+	%35 = icmp ne %Bool %34, 0
+	br %Bool %35 , label %then_1, label %else_1
 then_1:
-	br label %break_1
+	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Str8* %4)
+	%37 = zext i8 0 to %Int32
+	%38 = getelementptr %Str8, %Str8* %4, %Int32 0, %Int32 %37
+;
+	%39 = bitcast %Char8* %38 to [3 x %Char8]*
+	%40 = insertvalue [3 x %Char8] zeroinitializer, %Char8 103, 0
+	%41 = insertvalue [3 x %Char8] %40, %Char8 101, 1
+	%42 = insertvalue [3 x %Char8] %41, %Char8 116, 2
+	%43 = alloca [3 x %Char8]
+	%44 = zext i8 3 to %Int32
+	store [3 x %Char8] %42, [3 x %Char8]* %43
+	%45 = bitcast [3 x %Char8]* %39 to i8*
+	%46 = bitcast [3 x %Char8]* %43 to i8*
+	%47 = call i1 (i8*, i8*, i64) @memeq(i8* %45, i8* %46, %Int64 3)
+	%48 = icmp ne %Bool %47, 0
+	br %Bool %48 , label %then_2, label %else_2
+then_2:
+	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str4 to [0 x i8]*))
+	br label %endif_2
+else_2:
+	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str5 to [0 x i8]*), %Str8* %4)
+	br label %endif_2
+endif_2:
 	br label %endif_1
 endif_1:
 	br label %endif_0

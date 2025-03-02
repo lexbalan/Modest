@@ -73,6 +73,13 @@ def array_can(to, from_type, method, ti):
 
 	# String -> []CharX
 	if from_type.is_string():
+		#info("can?", ti)
+		if method == 'implicit':
+			if to.volume.asset != None:
+				srtlen = from_type.length
+				if srtlen != to.volume.asset:
+					return False
+
 		return to.of.is_char() or to.of.is_word()
 
 	if not from_type.is_array():
@@ -126,6 +133,10 @@ def value_array_cons(t, v, method, ti):
 			volume = v.type.volume
 		elif Type.is_string(v.type):
 			srtlen = v.type.length
+
+			#info("value_array_create_from_string", ti)
+			#print(t.volume.asset)
+
 			volume = value_integer_create(srtlen)
 		else:
 			assert(False)
@@ -141,7 +152,6 @@ def value_array_cons(t, v, method, ti):
 		nv.items = 1
 
 	if Type.is_string(v.type):
-		#info("value_array_create_from_string", ti)
 		char_type = t.of
 		items = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
 		nv.items = items

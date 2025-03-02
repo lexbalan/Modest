@@ -5,23 +5,27 @@ include "libc/string"
 
 const defaultPrompt =  "# "
 
-var prompt: [32]Char8 = defaultPrompt
+var prompt: [32]Char8 = [32]Char8 defaultPrompt
 
 
 public func main() -> Int32 {
-	var input: [32]Char8
-	let s = *Str8 &input
+	var buffer: [32]Char8
+	let s = *Str8 &buffer
 
 	while true {
 		printf("%s", *Str8 &prompt)
-		scanf("%s", s)
+		fgets(&buffer, sizeof(buffer), stdin)
+		// convert first '\n' -> '\0'
+		buffer[strcspn(s, "\n")] = '\0'
 
-		if *s == 'beep' {
-			printf("\a")
-		} else if *s == 'exit' {
+		if *s == 'exit' {
 			break
+		} else if s[0:3] == 'set' {
+			printf("SET\n")
+		} else if s[0:3] == 'get' {
+			printf("GET\n")
 		} else {
-			printf("s = %s\n", s)
+			printf("unknown command: %s\n", s)
 		}
 	}
 

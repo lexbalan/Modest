@@ -15,20 +15,24 @@ static char prompt[32] = defaultPrompt;
 
 int32_t main()
 {
-	char input[32];
-	memset(&input, 0, sizeof input);
-	char *const s = (char *)&input;
+	char buffer[32];
+	memset(&buffer, 0, sizeof buffer);
+	char *const s = (char *)&buffer;
 
 	while (true) {
 		printf("%s", (char *)&prompt);
-		scanf("%s", s);
+		fgets((char *)&buffer, sizeof buffer, stdin);
+		// convert first '\n' -> '\0'
+		buffer[strcspn(s, "\n")] = '\x0';
 
-		if ((strcmp(s, "beep") == 0)) {
-			printf("\a");
-		} else if ((strcmp(s, "exit") == 0)) {
+		if (strcmp(s, "exit") == 0) {
 			break;
+		} else if (memcmp(&s[0], "set", sizeof(char[3 - 0])) == 0) {
+			printf("SET\n");
+		} else if (memcmp(&s[0], "get", sizeof(char[3 - 0])) == 0) {
+			printf("GET\n");
 		} else {
-			printf("s = %s\n", s);
+			printf("unknown command: %s\n", s);
 		}
 	}
 

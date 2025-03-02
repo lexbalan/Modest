@@ -2104,7 +2104,6 @@ def print_header(module, outname):
 			if isinstance(x, StmtDirectiveCInclude):
 				continue
 
-		#out("+" + str(x.__class__))
 		#newline(x.nl)
 		if x.nl >= 2:
 			newline(2)
@@ -2292,16 +2291,24 @@ def str_value_as_ptr(x):
 	yy = x
 	x = get_root_value(x)
 
+	#print(x.__class__)
 	if isinstance(x, ValueDeref):
 		return str_value(x.value)
 
+	if isinstance(x, ValueLiteral):
+		print("SDSDSD")
+		if x.type.is_string():
+			return str_value(x)
+
 	if isinstance(x, ValueCons):
+		sstr += "/**/"
 		# for *s == "Hi!"
 		# string literal will be implicitly casted to StrX
 		# and for getting pointer to this string
 		# we need to print just string literal,
 		# because in C string literal is pointer to c-string
-		if x.type.is_str() and x.value.type.is_string():
+		#if x.type.is_str() and
+		if x.value.type.is_string():
 			return str_value(x.value)
 
 	sstr += "&"

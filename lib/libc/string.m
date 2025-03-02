@@ -23,3 +23,4 @@ public func strcat(s1: *[]Char, s2: *[]ConstChar) -> *[]Char
 public func strncat(s1: *[]Char, s2: *[]ConstChar, n: SizeT) -> *[]Char
 public func strerror(error: Int) -> *[]Char
 
+public func strcspn(str1: *Str8, str2: *Str8) -> SizeT

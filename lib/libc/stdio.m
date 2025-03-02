@@ -19,6 +19,13 @@ public type CharStr Str
 @property("type.id.c", "const char *")
 public type ConstCharStr CharStr
 
+@property("value.id.c", "stdin")
+public var stdin: *File
+@property("value.id.c", "stdout")
+public var stdout: *File
+@property("value.id.c", "stderr")
+public var stderr: *File
+
 
 @property("value.id.c", "EOF")
 public const c_EOF = -1

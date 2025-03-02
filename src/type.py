@@ -150,7 +150,7 @@ def type_print(t, print_aka=True):
 		print(t.id.str, end='')
 
 	elif t.is_string():
-		print("String", end='')
+		print("String(len=%d)" % t.length, end='')
 
 	elif t.is_incompleted():
 		print('undefined', end='')
