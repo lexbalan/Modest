@@ -1359,7 +1359,7 @@ class Parser:
 
 
 	def parse_access_modifier(self):
-		if self.match('public'):
+		if self.match('public') or self.match('export'):
 			return 'public'
 		elif self.match('private'):
 			return 'private'

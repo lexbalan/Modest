@@ -2283,14 +2283,14 @@ def def_func(x, dostmt=True):
 	global cfunc
 	global cmodule
 
-	func_id = Id(x['id'])
-	log('def_func: %s' % func_id.str)
+	log('def_func: %s' % x['id']['str'])
 
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
-	fn = ctx_value_get(func_id.str)
+	fn = ctx_value_get(x['id']['str'])
 
-	definition = StmtDefFunc(func_id, fn, None, x['ti'])
+	definition = StmtDefFunc(fn.id, fn, None, x['ti'])
+	definition.id = fn.id
 	definition.parent = cmodule
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
@@ -2307,7 +2307,7 @@ def def_func(x, dostmt=True):
 	if fn.type.is_bad():
 		return None
 
-	if func_id.str == 'main':
+	if fn.id.str == 'main':
 		fn.att.append('nodecorate')
 
 	if x['stmt'] == None:
@@ -2456,6 +2456,9 @@ def do_attribute(x):
 			value = eval(value)
 
 		property_add(args[0]['str'], value)
+
+	elif kind == 'c_alias':
+		property_add("id.c", args[0]['str'])
 
 	elif kind == 'inline':
 		attribute_add('static')

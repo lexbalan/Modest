@@ -69,7 +69,8 @@ def utf32cc_to_utf8_str(cc):
 	return utf8_string
 
 
-"""def utf16_to_utf32(c):
+"""
+def utf16_to_utf32(c):
 	leading = c[0]
 
 	if (leading < 0xD800) | (leading > 0xDFFF):
