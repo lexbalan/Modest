@@ -572,6 +572,10 @@ def str_value_eq_composite(x, ctx):
 	if x.isImmediate():
 		return str_literal_bool(x.asset)
 
+	# если сравниваем строки (Str8, Str16, Str32)
+	if left.type.is_str() and right.type.is_str():
+		return strcmp_str(left, right, op=op)
+
 	return memcmp_eq_str(left, right, op=op)
 
 
@@ -2288,35 +2292,37 @@ def str_value_as_ptr(x):
 	yy = x
 	x = get_root_value(x)
 
-	if isinstance(x, ValueUn) and x.op == 'deref':
+	if isinstance(x, ValueDeref):
+		return str_value(x.value)
+
+	if isinstance(x, ValueCons):
+		# for *s == "Hi!"
+		# string literal will be implicitly casted to StrX
+		# and for getting pointer to this string
+		# we need to print just string literal,
+		# because in C string literal is pointer to c-string
+		if x.type.is_str() and x.value.type.is_string():
+			return str_value(x.value)
+
+	sstr += "&"
+
+	t = yy.type
+	# КОСТЫЛЬ!
+
+	if isinstance(x, ValueBin) and x.op in ['literal', 'add']:
+		sstr += '(' + str_type(t) + ')'
+
+	elif cons_vla_from_literal_array(x):
+		# we need to print:
+		#  &(uint32_t[]){1, 2, 3, 4, 5}
+		# instead of:
+		#  &(uint32_t[len]){1, 2, 3, 4, 5}
+		sstr += '(' + str_type(t) + ')'
 		sstr += str_value(x.value)
-	else:
-		sstr += "&"
-
-		t = yy.type
-		# КОСТЫЛЬ!
-		
-		if isinstance(x, ValueBin) and x.op in ['literal', 'add']:
-			sstr += "("
-			if t.is_array():
-				sstr += str_type(t)
-			else:
-				sstr += str_type(t)
-			sstr += ")"
-
-		elif cons_vla_from_literal_array(x):
-			# we need to print:
-			#  &(uint32_t[]){1, 2, 3, 4, 5}
-			# instead of:
-			#  &(uint32_t[len]){1, 2, 3, 4, 5}
-			sstr += "("
-			sstr += str_type(t)
-			sstr += ")"
-			sstr += str_value(x.value)
-			return sstr
-
-		sstr += str_value(x)
 		return sstr
+
+	sstr += str_value(x)
+	return sstr
 
 
 
@@ -2347,8 +2353,22 @@ def memzero_sizeof(left):
 def memcmp_eq(left, right, op='eq'):
 	return memcmp_eq_str(left, right, op=op)
 
+
+def strcmp_str(left, right, op='eq'):
+	sstr = '(strcmp('
+	sstr += str_value_as_ptr(left)
+	sstr += ', '
+	sstr += str_value_as_ptr(right)
+	if op == 'eq':
+		sstr += ') == 0'
+	else:
+		sstr += ') != 0'
+	sstr += ')'
+	return sstr
+
+
 def memcmp_eq_str(left, right, op='eq'):
-	sstr = 'memcmp('
+	sstr = '(memcmp('
 	sstr += str_value_as_ptr(left)
 	sstr += ', '
 	sstr += str_value_as_ptr(right)
@@ -2360,6 +2380,7 @@ def memcmp_eq_str(left, right, op='eq'):
 		sstr += ') == 0'
 	else:
 		sstr += ') != 0'
+	sstr += ')'
 	return sstr
 
 

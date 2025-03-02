@@ -40,7 +40,7 @@ def value_array_create(items, ti=None):
 	for item in items:
 		items_type = select_common_type(items_type, item.type)
 		if items_type.is_bad():
-			error("value with unsuitable type", item['ti'])
+			error("value with unsuitable type2", item['ti'])
 			return ValueBad({'ti': ti})
 
 	# неявно приводим все элементы к этому типу

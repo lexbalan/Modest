@@ -969,8 +969,8 @@ def do_value_deref(x):
 	is_func_ptr = to.is_func()
 	is_free_ptr = to.is_free_pointer()
 	is_open_array_ptr =  to.is_open_array()
-	if is_func_ptr or is_free_ptr or is_open_array_ptr:
-		error("unsuitable type", v.ti)
+	if is_func_ptr or is_free_ptr: #or is_open_array_ptr:
+		error("unsuitable type3", v.ti)
 
 	return ValueDeref(v, ti=x['ti'])
 

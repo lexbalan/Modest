@@ -50,9 +50,10 @@ def pointer_can(to, from_type, method, ti):
 		return True  # cons *X from FreePointer
 
 	# cons *[n]X from *[]X
-	if to.to.is_closed_array() and from_type.to.is_open_array():
-		return array_can2(from_type.to, to.to)
-		#return True
+	if to.is_pointer() and from_type.is_pointer():
+		if to.to.is_closed_array() and from_type.to.is_open_array():
+			return array_can2(from_type.to, to.to)
+			#return True
 
 	if method == 'explicit':
 		return False

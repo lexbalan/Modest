@@ -215,177 +215,96 @@ declare [0 x %Char]* @strerror(%Int %error)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [2 x i8] [i8 48, i8 0]
-@str2 = private constant [5 x i8] [i8 65, i8 108, i8 101, i8 102, i8 0]
-@str3 = private constant [6 x i8] [i8 66, i8 101, i8 116, i8 104, i8 97, i8 0]
-@str4 = private constant [5 x i8] [i8 69, i8 109, i8 109, i8 97, i8 0]
-@str5 = private constant [2 x i8] [i8 49, i8 0]
-@str6 = private constant [6 x i8] [i8 67, i8 108, i8 111, i8 99, i8 107, i8 0]
-@str7 = private constant [6 x i8] [i8 68, i8 101, i8 112, i8 116, i8 104, i8 0]
-@str8 = private constant [5 x i8] [i8 70, i8 114, i8 101, i8 101, i8 0]
-@str9 = private constant [2 x i8] [i8 50, i8 0]
-@str10 = private constant [4 x i8] [i8 73, i8 110, i8 107, i8 0]
-@str11 = private constant [6 x i8] [i8 74, i8 117, i8 108, i8 105, i8 97, i8 0]
-@str12 = private constant [8 x i8] [i8 75, i8 101, i8 121, i8 119, i8 111, i8 114, i8 100, i8 0]
-@str13 = private constant [2 x i8] [i8 51, i8 0]
-@str14 = private constant [6 x i8] [i8 85, i8 108, i8 116, i8 114, i8 97, i8 0]
-@str15 = private constant [6 x i8] [i8 86, i8 105, i8 100, i8 101, i8 111, i8 0]
-@str16 = private constant [5 x i8] [i8 87, i8 111, i8 114, i8 100, i8 0]
-@str17 = private constant [2 x i8] [i8 52, i8 0]
-@str18 = private constant [6 x i8] [i8 88, i8 101, i8 114, i8 111, i8 120, i8 0]
-@str19 = private constant [4 x i8] [i8 89, i8 101, i8 112, i8 0]
-@str20 = private constant [3 x i8] [i8 90, i8 110, i8 0]
-@str21 = private constant [12 x i8] [i8 112, i8 104, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str22 = private constant [12 x i8] [i8 112, i8 107, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str23 = private constant [17 x i8] [i8 112, i8 97, i8 91, i8 37, i8 105, i8 93, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str24 = private constant [20 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 100, i8 97, i8 116, i8 97, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
-@str25 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 100, i8 97, i8 116, i8 97, i8 91, i8 48, i8 93, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
-@str26 = private constant [22 x i8] [i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 111, i8 102, i8 40, i8 100, i8 97, i8 116, i8 97, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
-@str27 = private constant [25 x i8] [i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 111, i8 102, i8 40, i8 100, i8 97, i8 116, i8 97, i8 91, i8 48, i8 93, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
+@str1 = private constant [3 x i8] [i8 37, i8 115, i8 0]
+@str2 = private constant [3 x i8] [i8 37, i8 115, i8 0]
+@str3 = private constant [2 x i8] [i8 7, i8 0]
+@str4 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 ; -- endstrings --
-%main_Dat = type {
-	%Int8,
-	%Int32
-};
-
-@main_xxx = internal global [3 x %main_Dat] [
-	%main_Dat {
-		%Int8 0,
-		%Int32 1
-	},
-	%main_Dat {
-		%Int8 2,
-		%Int32 3
-	},
-	%main_Dat {
-		%Int8 4,
-		%Int32 5
-	}
+@prompt = internal global [32 x %Char8] [
+	%Char8 35,
+	%Char8 32,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0
 ]
-@main_data = internal global [5 x [4 x %Str8*]] [
-	[4 x %Str8*] [
-		%Str8* bitcast ([2 x i8]* @str1 to [0 x i8]*),
-		%Str8* bitcast ([5 x i8]* @str2 to [0 x i8]*),
-		%Str8* bitcast ([6 x i8]* @str3 to [0 x i8]*),
-		%Str8* bitcast ([5 x i8]* @str4 to [0 x i8]*)
-	],
-	[4 x %Str8*] [
-		%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*),
-		%Str8* bitcast ([6 x i8]* @str6 to [0 x i8]*),
-		%Str8* bitcast ([6 x i8]* @str7 to [0 x i8]*),
-		%Str8* bitcast ([5 x i8]* @str8 to [0 x i8]*)
-	],
-	[4 x %Str8*] [
-		%Str8* bitcast ([2 x i8]* @str9 to [0 x i8]*),
-		%Str8* bitcast ([4 x i8]* @str10 to [0 x i8]*),
-		%Str8* bitcast ([6 x i8]* @str11 to [0 x i8]*),
-		%Str8* bitcast ([8 x i8]* @str12 to [0 x i8]*)
-	],
-	[4 x %Str8*] [
-		%Str8* bitcast ([2 x i8]* @str13 to [0 x i8]*),
-		%Str8* bitcast ([6 x i8]* @str14 to [0 x i8]*),
-		%Str8* bitcast ([6 x i8]* @str15 to [0 x i8]*),
-		%Str8* bitcast ([5 x i8]* @str16 to [0 x i8]*)
-	],
-	[4 x %Str8*] [
-		%Str8* bitcast ([2 x i8]* @str17 to [0 x i8]*),
-		%Str8* bitcast ([6 x i8]* @str18 to [0 x i8]*),
-		%Str8* bitcast ([4 x i8]* @str19 to [0 x i8]*),
-		%Str8* bitcast ([3 x i8]* @str20 to [0 x i8]*)
-	]
-]
-define internal void @main_f2([0 x [0 x %Str8*]]* %pa, %Int32 %m, %Int32 %n) {
-	%1 = alloca i8*
-	%2 = call i8* @llvm.stacksave() 
-	store i8* %2, i8** %1
-	%3 = mul %Int32 1, 1
-	%4 = mul %Int32 %n, 1
-	%5 = mul %Int32 %n, 8
-	%6 = mul %Int32 %m, %4
-	%7 = mul %Int32 %m, %5
-	%8 = bitcast [0 x [0 x %Str8*]]* %pa to [0 x [0 x %Str*]]*
-	%9 = mul %Int32 3, %4
-	%10 = add %Int32 0, %9
-	%11 = getelementptr %Str*, [0 x [0 x %Str*]]* %8, %Int32 %10
-	%12 = mul %Int32 4, %4
-	%13 = add %Int32 0, %12
-	%14 = getelementptr %Str*, [0 x [0 x %Str*]]* %8, %Int32 %13
-	%15 = mul %Int32 1, 1
-	%16 = add %Int32 0, %15
-	%17 = getelementptr %Str*, [0 x %Str*]* %11, %Int32 %16
-	%18 = load %Str*, %Str** %17
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str21 to [0 x i8]*), %Str* %18)
-	%20 = mul %Int32 1, 1
-	%21 = add %Int32 0, %20
-	%22 = getelementptr %Str*, [0 x %Str*]* %14, %Int32 %21
-	%23 = load %Str*, %Str** %22
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str22 to [0 x i8]*), %Str* %23)
-	%25 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %25)
-	ret void
-}
-
-define internal void @main_print2DArray([0 x [0 x %Str8*]]* %pa, %Int32 %m, %Int32 %n) {
-	%1 = alloca i8*
-	%2 = call i8* @llvm.stacksave() 
-	store i8* %2, i8** %1
-	%3 = mul %Int32 %n, 1
-	%4 = mul %Int32 %n, 8
-	%5 = mul %Int32 %m, %3
-	%6 = mul %Int32 %m, %4
-	%7 = bitcast [0 x [0 x %Str8*]]* %pa to [0 x [0 x %Str*]]*
-	%8 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %8
+define %Int32 @main() {
+	%1 = alloca [32 x %Char8], align 1
+	%2 = mul i8 4, 1
+	%3 = mul i8 4, 1
+	%4 = bitcast [32 x %Char8]* %1 to %Str8*
 	br label %again_1
 again_1:
-	%9 = load %Int32, %Int32* %8
-	%10 = icmp slt %Int32 %9, %m
-	br %Bool %10 , label %body_1, label %break_1
+	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%11 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %11
-	br label %again_2
-again_2:
-	%12 = load %Int32, %Int32* %11
-	%13 = icmp slt %Int32 %12, %n
-	br %Bool %13 , label %body_2, label %break_2
-body_2:
-	%14 = load %Int32, %Int32* %8
-	%15 = load %Int32, %Int32* %11
-	%16 = load %Int32, %Int32* %11
-	%17 = load %Int32, %Int32* %8
-	%18 = mul %Int32 %17, %3
-	%19 = add %Int32 0, %18
-	%20 = mul %Int32 %16, 1
-	%21 = add %Int32 %19, %20
-	%22 = getelementptr %Str*, [0 x [0 x %Str*]]* %7, %Int32 %21
-	%23 = load %Str*, %Str** %22
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str23 to [0 x i8]*), %Int32 %14, %Int32 %15, %Str* %23)
-	%25 = load %Int32, %Int32* %11
-	%26 = add %Int32 %25, 1
-	store %Int32 %26, %Int32* %11
-	br label %again_2
-break_2:
-	%27 = load %Int32, %Int32* %8
-	%28 = add %Int32 %27, 1
-	store %Int32 %28, %Int32* %8
+	%5 = bitcast [32 x %Char8]* @prompt to %Str8*
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str1 to [0 x i8]*), %Str8* %5)
+	%7 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str2 to [0 x i8]*), %Str8* %4)
+	%8 = insertvalue %Str8 zeroinitializer, %Char8 98, 0
+	%9 = insertvalue %Str8 %8, %Char8 101, 1
+	%10 = insertvalue %Str8 %9, %Char8 101, 2
+	%11 = insertvalue %Str8 %10, %Char8 112, 3
+	%12 = alloca %Str8
+	%13 = zext i8 4 to %Int32
+	store %Str8 %11, %Str8* %12
+	%14 = bitcast %Str8* %4 to i8*
+	%15 = bitcast %Str8* %12 to i8*
+	%16 = call i1 (i8*, i8*, i64) @memeq(i8* %14, i8* %15, %Int64 4)
+	%17 = icmp ne %Bool %16, 0
+	br %Bool %17 , label %then_0, label %else_0
+then_0:
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
+	br label %endif_0
+else_0:
+	%19 = insertvalue %Str8 zeroinitializer, %Char8 101, 0
+	%20 = insertvalue %Str8 %19, %Char8 120, 1
+	%21 = insertvalue %Str8 %20, %Char8 105, 2
+	%22 = insertvalue %Str8 %21, %Char8 116, 3
+	%23 = alloca %Str8
+	%24 = zext i8 4 to %Int32
+	store %Str8 %22, %Str8* %23
+	%25 = bitcast %Str8* %4 to i8*
+	%26 = bitcast %Str8* %23 to i8*
+	%27 = call i1 (i8*, i8*, i64) @memeq(i8* %25, i8* %26, %Int64 4)
+	%28 = icmp ne %Bool %27, 0
+	br %Bool %28 , label %then_1, label %else_1
+then_1:
+	br label %break_1
+	br label %endif_1
+else_1:
+	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Str8* %4)
+	br label %endif_1
+endif_1:
+	br label %endif_0
+endif_0:
 	br label %again_1
 break_1:
-	%29 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %29)
-	ret void
-}
-
-@main_f = internal global %Int32 zeroinitializer
-define %Int32 @main() {
-	call void @main_f2([0 x [0 x %Str8*]]* bitcast ([5 x [4 x %Str8*]]* @main_data to [0 x [0 x %Str8*]]*), %Int32 5, %Int32 4)
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str24 to [0 x i8]*), %Int32 160)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str25 to [0 x i8]*), %Int32 32)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str26 to [0 x i8]*), %Int32 5)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str27 to [0 x i8]*), %Int32 4)
-
-
-	;print2DArray(&data, 5, 4)
 	ret %Int32 0
 }
 

@@ -74,6 +74,7 @@ class Type(Entity):
 		return isinstance(self, TypeBool)
 
 
+	# Special type for StringLiteral (!)
 	def is_string(self):
 		return isinstance(self, TypeString)
 
@@ -237,10 +238,16 @@ class Type(Entity):
 			return self.to.is_array()
 		return False
 
-
+	# array of char not always is Str (!) (z-string) see is_str
 	def is_pointer_to_array_of_char(self):
 		if self.is_pointer():
 			return self.to.is_array_of_char()
+		return False
+
+
+	def is_str(self):
+		if self.is_array_of_char():
+			return 'z-string' in self.att
 		return False
 
 
