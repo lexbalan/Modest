@@ -237,14 +237,14 @@ int32_t main()
 	xy((struct __anonymous_struct_2){.x = 10, .y = 20	});
 
 	printf("test1 (eq): ");
-	if ((memcmp(&animation0_points, &animation1_points, sizeof(AnimationPoint[5])) == 0)) {
+	if (memcmp(&animation0_points, &animation1_points, sizeof(AnimationPoint[5])) == 0) {
 		printf("eq\n");
 	} else {
 		printf("ne\n");
 	}
 
 	printf("test2 (ne): ");
-	if ((memcmp(&animation1_points, &animation2_points, sizeof(AnimationPoint[5])) == 0)) {
+	if (memcmp(&animation1_points, &animation2_points, sizeof(AnimationPoint[5])) == 0) {
 		printf("eq\n");
 	} else {
 		printf("ne\n");

@@ -25,7 +25,7 @@ int main()
 	printf("globalPoint1.x = %d\n", globalPoint1.x);
 	printf("globalPoint1.x = %d\n", globalPoint1.y);
 
-	if ((memcmp(&globalPoint0, &globalPoint1, sizeof(Point)) == 0)) {
+	if (memcmp(&globalPoint0, &globalPoint1, sizeof(Point)) == 0) {
 		printf("globalPoint test passed\n");
 	} else {
 		printf("globalPoint test failed\n");
@@ -41,7 +41,7 @@ int main()
 	printf("localPoint1.x = %d\n", localPoint1.x);
 	printf("localPoint1.x = %d\n", localPoint1.y);
 
-	if ((memcmp(&localPoint0, &localPoint1, sizeof(Point)) == 0)) {
+	if (memcmp(&localPoint0, &localPoint1, sizeof(Point)) == 0) {
 		printf("localPoint test passed\n");
 	} else {
 		printf("localPoint test failed\n");

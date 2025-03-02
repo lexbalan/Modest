@@ -250,7 +250,7 @@ int main()
 	printf("b[2] = %i\n", b[2]);
 
 	// check equality between two arrays (by value)
-	if ((memcmp(&a, &b, sizeof(int32_t[3])) == 0)) {
+	if (memcmp(&a, &b, sizeof(int32_t[3])) == 0) {
 		printf("a == b\n");
 	} else {
 		printf("a != b\n");
@@ -274,7 +274,7 @@ int main()
 	int32_t *const pa = &a;
 	int32_t *const pb = &b;
 
-	if ((memcmp(pa, pb, sizeof(int32_t[3])) == 0)) {
+	if (memcmp(pa, pb, sizeof(int32_t[3])) == 0) {
 		printf("*pa == *pb\n");
 	} else {
 		printf("*pa != *pb\n");
@@ -331,7 +331,7 @@ int main()
 	printf("y[%i] = %i (must be 30)\n", 2, __y[2]);
 	printf("y[%i] = %i (must be 40)\n", 3, __y[3]);
 
-	if ((memcmp(&__y, &(int32_t[4]){10, 20, 30, 40	}, sizeof(int32_t[4])) == 0)) {
+	if (memcmp(&__y, &(int32_t[4]){10, 20, 30, 40	}, sizeof(int32_t[4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
@@ -341,7 +341,7 @@ int main()
 	char sa[5];
 	memcpy(&sa, &"LoHi!", sizeof sa);
 
-	if ((memcmp(&sa[2], &"Hi", sizeof(char[4 - 2])) == 0)) {
+	if (memcmp(&sa[2], &"Hi", sizeof(char[4 - 2])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

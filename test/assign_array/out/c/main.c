@@ -25,7 +25,7 @@ int main()
 		i = i + 1;
 	}
 
-	if ((memcmp(&globalArray0, &globalArray1, sizeof(int32_t[10])) == 0)) {
+	if (memcmp(&globalArray0, &globalArray1, sizeof(int32_t[10])) == 0) {
 		printf("globalArray test passed\n");
 	} else {
 		printf("globalArray test failed\n");
@@ -49,7 +49,7 @@ int main()
 		i = i + 1;
 	}
 
-	if ((memcmp(&localArray0, &localArray1, sizeof(int32_t[10])) == 0)) {
+	if (memcmp(&localArray0, &localArray1, sizeof(int32_t[10])) == 0) {
 		printf("localArray test passed\n");
 	} else {
 		printf("localArray test failed\n");

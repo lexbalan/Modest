@@ -2355,7 +2355,9 @@ def memcmp_eq(left, right, op='eq'):
 
 
 def strcmp_str(left, right, op='eq'):
-	sstr = '(strcmp('
+	# не берем все в скобки все тк это eq операция
+	# и ее приоритет не нарушается (!)
+	sstr = 'strcmp('
 	sstr += str_value_as_ptr(left)
 	sstr += ', '
 	sstr += str_value_as_ptr(right)
@@ -2363,12 +2365,13 @@ def strcmp_str(left, right, op='eq'):
 		sstr += ') == 0'
 	else:
 		sstr += ') != 0'
-	sstr += ')'
 	return sstr
 
 
 def memcmp_eq_str(left, right, op='eq'):
-	sstr = '(memcmp('
+	# не берем все в скобки все тк это eq операция
+	# и ее приоритет не нарушается (!)
+	sstr = 'memcmp('
 	sstr += str_value_as_ptr(left)
 	sstr += ', '
 	sstr += str_value_as_ptr(right)
@@ -2380,7 +2383,6 @@ def memcmp_eq_str(left, right, op='eq'):
 		sstr += ') == 0'
 	else:
 		sstr += ') != 0'
-	sstr += ')'
 	return sstr
 
 
