@@ -136,19 +136,6 @@ break_2:
 %PIDT = type %Int32;
 %UIDT = type %Int32;
 %GIDT = type %Int32;
-; from included string
-declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
-declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
-declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
-declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
-declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
-declare %SizeT @strlen([0 x %ConstChar]* %s)
-declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare [0 x %Char]* @strerror(%Int %error)
-declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; from included stdio
 %File = type %Int8;
 %FposT = type %Int8;
@@ -196,91 +183,44 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
+; from included stdlib
+declare void @abort()
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
+declare i8* @calloc(%SizeT %num, %SizeT %size)
+declare void @exit(%Int %x)
+declare void @free(i8* %ptr)
+declare %Str* @getenv(%Str* %name)
+declare %LongInt @labs(%LongInt %x)
+declare %Str* @secure_getenv(%Str* %name)
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
+; from included string
+declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
+declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
+declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
+declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
+declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
+declare %SizeT @strlen([0 x %ConstChar]* %s)
+declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare [0 x %Char]* @strerror(%Int %error)
+declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 98, i8 105, i8 110, i8 0]
-@str2 = private constant [19 x i8] [i8 114, i8 117, i8 110, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
-@str3 = private constant [3 x i8] [i8 119, i8 98, i8 0]
-@str4 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
-@str5 = private constant [3 x i8] [i8 105, i8 100, i8 0]
-@str6 = private constant [5 x i8] [i8 100, i8 97, i8 116, i8 97, i8 0]
-@str7 = private constant [18 x i8] [i8 114, i8 117, i8 110, i8 32, i8 114, i8 101, i8 97, i8 100, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
-@str8 = private constant [3 x i8] [i8 114, i8 98, i8 0]
-@str9 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
-@str10 = private constant [21 x i8] [i8 102, i8 105, i8 108, i8 101, i8 32, i8 34, i8 37, i8 115, i8 34, i8 32, i8 99, i8 111, i8 110, i8 116, i8 97, i8 105, i8 110, i8 115, i8 58, i8 10, i8 0]
-@str11 = private constant [16 x i8] [i8 99, i8 104, i8 117, i8 110, i8 107, i8 46, i8 105, i8 100, i8 58, i8 32, i8 34, i8 37, i8 115, i8 34, i8 10, i8 0]
-@str12 = private constant [18 x i8] [i8 99, i8 104, i8 117, i8 110, i8 107, i8 46, i8 100, i8 97, i8 116, i8 97, i8 58, i8 32, i8 34, i8 37, i8 115, i8 34, i8 10, i8 0]
-@str13 = private constant [21 x i8] [i8 98, i8 105, i8 110, i8 97, i8 114, i8 121, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 ; -- endstrings --
-
-
-; FIXIT: not worked LLVM result (!)
-
-
-; chunk of data for read/write operations in file
-%Chunk = type {
-	[100 x %Char],
-	[1024 x %Char]
-};
-
-define internal void @write_example() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
-	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*))
-	%3 = icmp eq %File* %2, null
-	br %Bool %3 , label %then_0, label %endif_0
-then_0:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	ret void
-	br label %endif_0
-endif_0:
-	%6 = alloca %Chunk, align 2048
-
-	; pointers casting requires -funsafe translator option
-	; (see Makefile)
-	%7 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 0
-	%8 = bitcast [100 x %Char]* %7 to [0 x %Char]*
-	%9 = call [0 x %Char]* @strcpy([0 x %Char]* %8, [0 x %Char]* bitcast ([3 x i8]* @str5 to [0 x i8]*))
-	%10 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 1
-	%11 = bitcast [1024 x %Char]* %10 to [0 x %Char]*
-	%12 = call [0 x %Char]* @strcpy([0 x %Char]* %11, [0 x %Char]* bitcast ([5 x i8]* @str6 to [0 x i8]*))
-
-	; write chunk to file
-	%13 = bitcast %Chunk* %6 to i8*
-	%14 = call %SizeT @fwrite(i8* %13, %SizeT 2048, %SizeT 1, %File* %2)
-	%15 = call %Int @fclose(%File* %2)
-	ret void
-}
-
-define internal void @read_example() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str7 to [0 x i8]*))
-	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str8 to [0 x i8]*))
-	%3 = icmp eq %File* %2, null
-	br %Bool %3 , label %then_0, label %endif_0
-then_0:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str9 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	ret void
-	br label %endif_0
-endif_0:
-	%6 = alloca %Chunk, align 2048
-	%7 = bitcast %Chunk* %6 to i8*
-	%8 = call %SizeT @fread(i8* %7, %SizeT 2048, %SizeT 1, %File* %2)
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	%10 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 0
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), [100 x %Char]* %10)
-	%12 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 1
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str12 to [0 x i8]*), [1024 x %Char]* %12)
-	%14 = call %Int @fclose(%File* %2)
-	ret void
-}
-
-define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str13 to [0 x i8]*))
-	call void @write_example()
-	call void @read_example()
-	ret %Int 0
+define %Int32 @main() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str1 to [0 x i8]*))
+	ret %Int32 0
 }
 
 

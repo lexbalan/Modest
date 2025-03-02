@@ -183,62 +183,10 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; from included stdlib
-declare void @abort()
-declare %Int @abs(%Int %x)
-declare %Int @atexit(void ()* %x)
-declare %Double @atof([0 x %ConstChar]* %nptr)
-declare %Int @atoi([0 x %ConstChar]* %nptr)
-declare %LongInt @atol([0 x %ConstChar]* %nptr)
-declare i8* @calloc(%SizeT %num, %SizeT %size)
-declare void @exit(%Int %x)
-declare void @free(i8* %ptr)
-declare %Str* @getenv(%Str* %name)
-declare %LongInt @labs(%LongInt %x)
-declare %Str* @secure_getenv(%Str* %name)
-declare i8* @malloc(%SizeT %size)
-declare %Int @system([0 x %ConstChar]* %string)
-; from included string
-declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
-declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
-declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
-declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
-declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
-declare %SizeT @strlen([0 x %ConstChar]* %s)
-declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare [0 x %Char]* @strerror(%Int %error)
-declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
-; from included time
-%TimeT = type %Int32;
-%ClockT = type %UnsignedLong;
-%StructTM = type {
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%Int,
-	%LongInt,
-	%ConstChar*
-};
-
-declare %ClockT @clock()
-declare %Double @difftime(%TimeT %end, %TimeT %beginning)
-declare %TimeT @mktime(%StructTM* %timeptr)
-declare %TimeT @time(%TimeT* %timer)
-declare %Char* @asctime(%StructTM* %timeptr)
-declare %Char* @ctime(%TimeT* %timer)
-declare %StructTM* @gmtime(%TimeT* %timer)
-declare %StructTM* @localtime(%TimeT* %timer)
-declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
-declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
-declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
+; -- end print includes --
+; -- print imports 'main' --
+; -- 1
+; ?? console ??
 ; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
@@ -325,154 +273,117 @@ declare %Int @unlink([0 x %ConstChar]* %path)
 declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
-; from included math
-declare %Double @acos(%Double %x)
-declare %Double @asin(%Double %x)
-declare %Double @atan(%Double %x)
-declare %Double @atan2(%Double %a, %Double %b)
-declare %Double @cos(%Double %x)
-declare %Double @sin(%Double %x)
-declare %Double @tan(%Double %x)
-declare %Double @cosh(%Double %x)
-declare %Double @sinh(%Double %x)
-declare %Double @tanh(%Double %x)
-declare %Double @exp(%Double %x)
-declare %Double @frexp(%Double %a, %Int* %i)
-declare %Double @ldexp(%Double %a, %Int %i)
-declare %Double @log(%Double %x)
-declare %Double @log10(%Double %x)
-declare %Double @modf(%Double %a, %Double* %b)
-declare %Double @pow(%Double %a, %Double %b)
-declare %Double @sqrt(%Double %x)
-declare %Double @ceil(%Double %x)
-declare %Double @fabs(%Double %x)
-declare %Double @floor(%Double %x)
-declare %Double @fmod(%Double %a, %Double %b)
-declare %LongDouble @acosl(%LongDouble %x)
-declare %LongDouble @asinl(%LongDouble %x)
-declare %LongDouble @atanl(%LongDouble %x)
-declare %LongDouble @atan2l(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @cosl(%LongDouble %x)
-declare %LongDouble @sinl(%LongDouble %x)
-declare %LongDouble @tanl(%LongDouble %x)
-declare %LongDouble @acoshl(%LongDouble %x)
-declare %LongDouble @asinhl(%LongDouble %x)
-declare %LongDouble @atanhl(%LongDouble %x)
-declare %LongDouble @coshl(%LongDouble %x)
-declare %LongDouble @sinhl(%LongDouble %x)
-declare %LongDouble @tanhl(%LongDouble %x)
-declare %LongDouble @expl(%LongDouble %x)
-declare %LongDouble @exp2l(%LongDouble %x)
-declare %LongDouble @expm1l(%LongDouble %x)
-declare %LongDouble @frexpl(%LongDouble %a, %Int* %i)
-declare %Int @ilogbl(%LongDouble %x)
-declare %LongDouble @ldexpl(%LongDouble %a, %Int %i)
-declare %LongDouble @logl(%LongDouble %x)
-declare %LongDouble @log10l(%LongDouble %x)
-declare %LongDouble @log1pl(%LongDouble %x)
-declare %LongDouble @log2l(%LongDouble %x)
-declare %LongDouble @logbl(%LongDouble %x)
-declare %LongDouble @modfl(%LongDouble %a, %LongDouble* %b)
-declare %LongDouble @scalbnl(%LongDouble %a, %Int %i)
-declare %LongDouble @scalblnl(%LongDouble %a, %LongInt %i)
-declare %LongDouble @cbrtl(%LongDouble %x)
-declare %LongDouble @fabsl(%LongDouble %x)
-declare %LongDouble @hypotl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @powl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @sqrtl(%LongDouble %x)
-declare %LongDouble @erfl(%LongDouble %x)
-declare %LongDouble @erfcl(%LongDouble %x)
-declare %LongDouble @lgammal(%LongDouble %x)
-declare %LongDouble @tgammal(%LongDouble %x)
-declare %LongDouble @ceill(%LongDouble %x)
-declare %LongDouble @floorl(%LongDouble %x)
-declare %LongDouble @nearbyintl(%LongDouble %x)
-declare %LongDouble @rintl(%LongDouble %x)
-declare %LongInt @lrintl(%LongDouble %x)
-declare %LongLongInt @llrintl(%LongDouble %x)
-declare %LongDouble @roundl(%LongDouble %x)
-declare %LongInt @lroundl(%LongDouble %x)
-declare %LongLongInt @llroundl(%LongDouble %x)
-declare %LongDouble @truncl(%LongDouble %x)
-declare %LongDouble @fmodl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @remainderl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @remquol(%LongDouble %a, %LongDouble %b, %Int* %i)
-declare %LongDouble @copysignl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @nanl(%ConstChar* %x)
-declare %LongDouble @nextafterl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @nexttowardl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @fdiml(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
-declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
-; from included libc
-; -- end print includes --
-; -- print imports 'main' --
-; -- 0
+; from included string
+declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
+declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
+declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
+declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
+declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
+declare %SizeT @strlen([0 x %ConstChar]* %s)
+declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare [0 x %Char]* @strerror(%Int %error)
+declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
+; ?? utf ??
+; from import
+declare %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
+declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
+; end from import
+; from import
+declare void @console_putchar8(%Char8 %c)
+declare void @console_putchar16(%Char16 %c)
+declare void @console_putchar32(%Char32 %c)
+declare void @console_putchar_utf8(%Char8 %c)
+declare void @console_putchar_utf16(%Char16 %c)
+declare void @console_putchar_utf32(%Char32 %c)
+declare void @console_puts8(%Str8* %s)
+declare void @console_puts16(%Str16* %s)
+declare void @console_puts32(%Str32* %s)
+declare void @console_print(%Str8* %form, ...)
+declare %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, i8* %va)
+declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
+; end from import
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0]
-@str2 = private constant [19 x i8] [i8 114, i8 117, i8 110, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
-@str3 = private constant [2 x i8] [i8 119, i8 0]
-@str4 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
-@str5 = private constant [12 x i8] [i8 115, i8 111, i8 109, i8 101, i8 32, i8 116, i8 101, i8 120, i8 116, i8 46, i8 10, i8 0]
-@str6 = private constant [18 x i8] [i8 114, i8 117, i8 110, i8 32, i8 114, i8 101, i8 97, i8 100, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
-@str7 = private constant [2 x i8] [i8 114, i8 0]
-@str8 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
-@str9 = private constant [21 x i8] [i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 32, i8 99, i8 111, i8 110, i8 116, i8 97, i8 105, i8 110, i8 115, i8 58, i8 32, i8 0]
-@str10 = private constant [19 x i8] [i8 116, i8 101, i8 120, i8 116, i8 95, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str1 = private constant [7 x i8] [i8 83, i8 116, i8 114, i8 105, i8 110, i8 103, i8 0]
+@str2 = private constant [9 x i16] [i16 83, i16 116, i16 114, i16 105, i16 110, i16 103, i16 45, i16 937, i16 0]
+@str3 = private constant [13 x i32] [i32 83, i32 116, i32 114, i32 105, i32 110, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]
+@str4 = private constant [2 x i8] [i8 10, i8 0]
+@str5 = private constant [2 x i8] [i8 10, i8 0]
+@str6 = private constant [3 x i8] [i8 10, i8 10, i8 0]
+@str7 = private constant [2 x i8] [i8 10, i8 0]
+@str8 = private constant [2 x i8] [i8 10, i8 0]
+@str9 = private constant [3 x i8] [i8 10, i8 10, i8 0]
+@str10 = private constant [2 x i8] [i8 10, i8 0]
+@str11 = private constant [2 x i8] [i8 10, i8 0]
+@str12 = private constant [2 x i8] [i8 10, i8 0]
 ; -- endstrings --
 
-;include "libc/ctypes64"
-;include "libc/stdio"
-define internal void @write_example() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
-	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
-	%3 = icmp eq %File* %2, null
-	br %Bool %3 , label %then_0, label %endif_0
-then_0:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	ret void
-	br label %endif_0
-endif_0:
-	%6 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([12 x i8]* @str5 to [0 x i8]*))
-	%7 = call %Int @fclose(%File* %2)
-	ret void
-}
 
-define internal void @read_example() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
-	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-	%3 = icmp eq %File* %2, null
-	br %Bool %3 , label %then_0, label %endif_0
-then_0:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str8 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	ret void
-	br label %endif_0
-endif_0:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str9 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	br label %again_1
-again_1:
-	br %Bool 1 , label %body_1, label %break_1
-body_1:
-	%7 = call %Int @fgetc(%File* %2)
-	%8 = icmp eq %Int %7, -1
-	br %Bool %8 , label %then_1, label %endif_1
-then_1:
-	br label %break_1
-	br label %endif_1
-endif_1:
-	%10 = call %Int @putchar(%Int %7)
-	br label %again_1
-break_1:
-	%11 = call %Int @fclose(%File* %2)
-	ret void
-}
+; constants with type String(Generic)
 
+; variables with type Array of Chars
+@string8 = internal global [6 x %Char8] [
+	%Char8 83,
+	%Char8 116,
+	%Char8 114,
+	%Char8 105,
+	%Char8 110,
+	%Char8 103
+]
+@string16 = internal global [8 x %Char16] [
+	%Char16 83,
+	%Char16 116,
+	%Char16 114,
+	%Char16 105,
+	%Char16 110,
+	%Char16 103,
+	%Char16 45,
+	%Char16 937
+]
+@string32 = internal global [12 x %Char32] [
+	%Char32 83,
+	%Char32 116,
+	%Char32 114,
+	%Char32 105,
+	%Char32 110,
+	%Char32 103,
+	%Char32 45,
+	%Char32 937,
+	%Char32 32,
+	%Char32 128000,
+	%Char32 127881,
+	%Char32 129412
+]
+
+; variables with type Pointer to Array of Chars
+@ptr_to_string8 = internal global [0 x %Char8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
+@ptr_to_string16 = internal global [0 x %Char16]* bitcast ([9 x i16]* @str2 to [0 x i16]*)
+@ptr_to_string32 = internal global [0 x %Char32]* bitcast ([13 x i32]* @str3 to [0 x i32]*)
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*))
-	call void @write_example()
-	call void @read_example()
+	call void @console_putchar_utf8(%Char8 65)
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	call void @console_putchar_utf16(%Char16 937)
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+	call void @console_putchar_utf32(%Char32 129412)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str6 to [0 x i8]*))
+	call void @console_puts8(%Str8* bitcast ([6 x %Char8]* @string8 to %Str8*))
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+	call void @console_puts16(%Str16* bitcast ([8 x %Char16]* @string16 to %Str16*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
+	call void @console_puts32(%Str32* bitcast ([12 x %Char32]* @string32 to %Str32*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*))
+	%7 = load [0 x %Char8]*, [0 x %Char8]** @ptr_to_string8
+	call void @console_puts8([0 x %Char8]* %7)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
+	%9 = load [0 x %Char16]*, [0 x %Char16]** @ptr_to_string16
+	call void @console_puts16([0 x %Char16]* %9)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str11 to [0 x i8]*))
+	%11 = load [0 x %Char32]*, [0 x %Char32]** @ptr_to_string32
+	call void @console_puts32([0 x %Char32]* %11)
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
 	ret %Int 0
 }
 

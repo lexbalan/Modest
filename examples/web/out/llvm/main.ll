@@ -210,6 +210,7 @@ declare %SizeT @strlen([0 x %ConstChar]* %s)
 declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
+declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
