@@ -2460,6 +2460,8 @@ def do_attribute(x):
 	elif kind == 'c_alias':
 		property_add("id.c", args[0]['str'])
 
+	elif kind == 'nodecorate':
+		attribute_add('nodecorate')
 	elif kind == 'inline':
 		attribute_add('static')
 		attribute_add('inline')
@@ -2855,6 +2857,7 @@ def import_abspath(s, ext='.hm'):
 # directive '@attribute'
 def add_attributes(obj):
 	atts = attributes_get()
+
 	for att in atts:
 		lr = att.split(":")
 		if len(lr) == 1:

@@ -226,7 +226,7 @@ def value_cons(t, v, method, ti):
 	if nv != None:
 		nv.nl = v.nl
 	else:
-		print(t['kind'])
+		print(t)
 		htype.type_print(t)
 		htype.type_print(v.type)
 

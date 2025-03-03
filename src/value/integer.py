@@ -104,14 +104,15 @@ def integer_can(to, from_type, method, ti):
 
 
 def value_integer_cons(t, v, method, ti):
+	#info("value_integer_cons()", ti)
 	_check_width(v.type, t, method, ti)
 
 	if v.isImmediate():
 		_check_width(v.type, t, method, ti)
 
-		if not t.signed:
-			if v.asset < 0:
-				return None
+		#if not t.signed:
+		#	if v.asset < 0:
+		#		return None
 
 		if method != 'implicit':
 			nv = ValueCons(t, v, method, ti=ti)

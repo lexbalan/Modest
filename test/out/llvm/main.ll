@@ -216,10 +216,26 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@str1 = private constant [9 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str2 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]
+@str3 = private constant [9 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
+%main_Point = type {
+	%Int32,
+	%Int32
+};
+
+@main_v0 = global %Int32 zeroinitializer
+define void @main_f0() {
+	ret void
+}
+
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str1 to [0 x i8]*))
+	%1 = alloca %main_Point, align 8
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+	%3 = load %Int32, %Int32* @main_v0
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), %Int32 %3)
+	call void @main_f0()
 	ret %Int32 0
 }
 
