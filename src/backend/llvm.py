@@ -1023,25 +1023,6 @@ def do_eval_ref(v):
 	return nv
 
 
-def do_eval_not(v, xor_msk):
-	#%10 = xor i32 %9, -1
-	# or
-	#%10 = xor i32 %9, 1
-	ve = do_reval(v.value)
-	minus_one = llvm_value_num(v.type, xor_msk)
-	return llvm_eval_binary('xor', ve, minus_one, v)
-
-
-
-def do_eval_neg(v):
-	#%10 = sub i32 0, %9
-	ve = do_reval(v.value)
-	zero = llvm_value_num(v.type, 0)
-	return llvm_eval_binary('sub', zero, ve, v)
-
-
-
-
 def do_eval_call(v):
 	# eval all args
 	args = []
@@ -1752,19 +1733,31 @@ def do_eval_va_copy(x):
 	return llvm_va_copy(dst, src)
 
 
-def do_eval_un(x):
-	y = None
-	k = x.op
+def do_eval_not2(v, xor_msk):
+	#%10 = xor i32 %9, -1
+	# or
+	#%10 = xor i32 %9, 1
+	ve = do_reval(v.value)
+	minus_one = llvm_value_num(v.type, xor_msk)
+	return llvm_eval_binary('xor', ve, minus_one, v)
 
-	if k == 'neg':
-		y = do_eval_neg(x)
-	return y
 
-def do_eval_not2(x):
+def do_eval_not(x):
 	if x.value.type.is_bool():
-		return do_eval_not(x, xor_msk=1)
+		return do_eval_not2(x, xor_msk=1)
 	# is word
-	return do_eval_not(x, xor_msk=-1)
+	return do_eval_not2(x, xor_msk=-1)
+
+
+def do_eval_neg(v):
+	#%10 = sub i32 0, %9
+	ve = do_reval(v.value)
+	zero = llvm_value_num(v.type, 0)
+	return llvm_eval_binary('sub', zero, ve, v)
+
+
+def do_eval_pos(v):
+	return do_reval(v.value)
 
 
 def _eval_sizeof_type(t):
@@ -1799,7 +1792,6 @@ def do_eval(x):
 	elif isinstance(x, ValueShl): y = do_eval_shl(x)
 	elif isinstance(x, ValueShr): y = do_eval_shr(x)
 	elif isinstance(x, ValueCons): y = do_eval_cons(x)
-	elif isinstance(x, ValueUn): y = do_eval_un(x)
 	elif isinstance(x, ValueRef): y = do_eval_ref(x)
 	elif isinstance(x, ValueDeref): y = do_eval_deref(x)
 	elif isinstance(x, ValueConst): y = do_eval_const(x)
@@ -1810,7 +1802,9 @@ def do_eval(x):
 	elif isinstance(x, ValueAccessRecord): y = do_eval_access(x)
 	elif isinstance(x, ValueSlice): y = do_eval_slice(x)
 	elif isinstance(x, ValueSubexpr): y = do_eval(x.value)
-	elif isinstance(x, ValueNot): y = do_eval_not2(x)
+	elif isinstance(x, ValueNot): y = do_eval_not(x)
+	elif isinstance(x, ValueNeg): y = do_eval_neg(x)
+	elif isinstance(x, ValuePos): y = do_eval_pos(x)
 	elif isinstance(x, ValueNew): y = do_eval_new(x)
 	elif isinstance(x, ValueZero): y = do_eval_literal(x)
 	elif isinstance(x, ValueSizeofValue): y = do_eval_sizeof_value(x)

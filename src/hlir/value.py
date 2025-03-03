@@ -234,16 +234,6 @@ class ValueFunc(Value):
 		self.definition = None  # *StmtDefFunc
 
 
-#TODO: maybe without op?
-class ValueUn(Value):
-	def __init__(self, type, op, value, ti=None):
-		from .type import Type
-		assert(isinstance(type, Type))
-		assert(isinstance(value, Value))
-		super().__init__(type=type, ti=ti)
-		self.op = op
-		self.value = value
-
 
 class ValueNot(Value):
 	def __init__(self, type, value, ti=None):
@@ -252,6 +242,43 @@ class ValueNot(Value):
 		assert(isinstance(value, Value))
 		super().__init__(type=type, ti=ti)
 		self.value = value
+
+
+class ValueNeg(Value):
+	def __init__(self, type, value, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(value, Value))
+		super().__init__(type=type, ti=ti)
+		self.value = value
+
+
+class ValuePos(Value):
+	def __init__(self, type, value, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(value, Value))
+		super().__init__(type=type, ti=ti)
+		self.value = value
+
+
+class ValueRef(Value):
+	def __init__(self, value, ti=None):
+		assert(isinstance(value, Value))
+
+		from .type import TypePointer
+		type = TypePointer(value.type, ti=ti)
+		super().__init__(type=type, ti=ti)
+		self.value = value
+
+
+class ValueDeref(Value):
+	def __init__(self, value, ti=None):
+		assert(isinstance(value, Value))
+		super().__init__(type=value.type.to, ti=ti)
+		self.value = value
+		self.is_lvalue = True
+
 
 
 class ValueSubexpr(Value):
@@ -351,24 +378,6 @@ class ValueNew(Value):
 		type = TypePointer(value.type, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.value = value
-
-
-class ValueRef(Value):
-	def __init__(self, value, ti=None):
-		assert(isinstance(value, Value))
-
-		from .type import TypePointer
-		type = TypePointer(value.type, ti=ti)
-		super().__init__(type=type, ti=ti)
-		self.value = value
-
-
-class ValueDeref(Value):
-	def __init__(self, value, ti=None):
-		assert(isinstance(value, Value))
-		super().__init__(type=value.type.to, ti=ti)
-		self.value = value
-		self.is_lvalue = True
 
 
 class ValueSizeofType(Value):

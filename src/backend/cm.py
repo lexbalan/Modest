@@ -58,7 +58,7 @@ precedenceMax = len(aprecedence) - 1
 # приоритет операции
 def precedence(x):
 	i = 0
-	if isinstance(x, ValueBin) or isinstance(x, ValueUn):
+	if isinstance(x, ValueBin):
 		k = x.op
 		while i < precedenceMax + 1:
 			if k in aprecedence[i]:
@@ -71,6 +71,9 @@ def precedence(x):
 		elif isinstance(x, ValueAccessRecord): i = 11
 		elif isinstance(x, ValueShl): i = 7
 		elif isinstance(x, ValueShr): i = 7
+		elif isinstance(x, ValuePos): i = 10
+		elif isinstance(x, ValueNeg): i = 10
+		elif isinstance(x, ValueNot): i = 10
 		else: i = 12
 
 	return i
@@ -275,8 +278,18 @@ def print_value_not(x, ctx):
 	print_value(x.value, parent_expr=x)
 
 
-def print_value_un(x, ctx):
-	out(un_ops[x.op]); print_value(x.value, parent_expr=x)
+def print_value_neg(x, ctx):
+	out('-')
+	print_value(x.value, parent_expr=x)
+
+
+def print_value_pos(x, ctx):
+	out('+')
+	print_value(x.value, parent_expr=x)
+
+
+#def print_value_un(x, ctx):
+#	out(un_ops[x.op]); print_value(x.value, parent_expr=x)
 
 
 def print_ValueCall(x, ctx):
@@ -684,7 +697,6 @@ def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
 	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
 	elif isinstance(x, ValueShl): print_value_shl(x, ctx)
 	elif isinstance(x, ValueShr): print_value_shr(x, ctx)
-	elif isinstance(x, ValueUn): print_value_un(x, ctx)
 	elif isinstance(x, ValueRef): print_value_ref(x, ctx)
 	elif isinstance(x, ValueDeref): print_value_deref(x, ctx)
 	elif isinstance(x, ValueConst): print_value_by_id(x, ctx)
@@ -697,6 +709,8 @@ def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
 	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
 	elif isinstance(x, ValueSubexpr): print_value_subexpr(x, ctx)
 	elif isinstance(x, ValueNot): print_value_not(x, ctx)
+	elif isinstance(x, ValueNeg): print_value_neg(x, ctx)
+	elif isinstance(x, ValuePos): print_value_pos(x, ctx)
 	elif isinstance(x, ValueNew): print_value_new(x, ctx)
 	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
 	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)

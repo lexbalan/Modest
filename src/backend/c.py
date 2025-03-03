@@ -146,7 +146,7 @@ precedenceMax = len(aprecedence) - 1
 # приоритет операции
 def precedence(x):
 	i = 0
-	if isinstance(x, ValueBin) or isinstance(x, ValueUn):
+	if isinstance(x, ValueBin):
 		k = x.op
 		while i < precedenceMax + 1:
 			if k in aprecedence[i]:
@@ -161,6 +161,9 @@ def precedence(x):
 		elif isinstance(x, ValueAccessRecord): i = 11
 		elif isinstance(x, ValueShl): i = 7
 		elif isinstance(x, ValueShr): i = 7
+		elif isinstance(x, ValuePos): i = 10
+		elif isinstance(x, ValueNeg): i = 10
+		elif isinstance(x, ValueNot): i = 10
 		else: i = 12
 
 	return i
@@ -586,11 +589,7 @@ un_ops = {
 }
 
 
-def str_value_un(x, ctx):
-	sstr = ''
-	sstr += (un_ops[x.op])
-	sstr += str_value(x.value, parent_expr=x)
-	return sstr
+
 
 
 def str_value_not(x, ctx):
@@ -599,6 +598,18 @@ def str_value_not(x, ctx):
 		sstr += '!'
 	else:
 		sstr += '~'
+	sstr += str_value(x.value, parent_expr=x)
+	return sstr
+
+
+def str_value_neg(x, ctx):
+	sstr = '-'
+	sstr += str_value(x.value, parent_expr=x)
+	return sstr
+
+
+def str_value_pos(x, ctx):
+	sstr = '+'
 	sstr += str_value(x.value, parent_expr=x)
 	return sstr
 
@@ -1359,8 +1370,6 @@ def str_value(x, ctx=[], parent_expr=None):
 		sstr += str_value_shl(x, ctx)
 	elif isinstance(x, ValueShr):
 		sstr += str_value_shr(x, ctx)
-	elif isinstance(x, ValueUn):
-		sstr += str_value_un(x, ctx)
 	elif isinstance(x, ValueRef):
 		sstr += str_value_ref(x, ctx)
 	elif isinstance(x, ValueDeref):
@@ -1385,6 +1394,10 @@ def str_value(x, ctx=[], parent_expr=None):
 		sstr += str_value_subexpr(x, ctx)
 	elif isinstance(x, ValueNot):
 		sstr += str_value_not(x, ctx)
+	elif isinstance(x, ValueNeg):
+		sstr += str_value_neg(x, ctx)
+	elif isinstance(x, ValuePos):
+		sstr += str_value_pos(x, ctx)
 	elif isinstance(x, ValueNew):
 		sstr += str_value_new(x, ctx)
 	elif isinstance(x, ValueSizeofValue):

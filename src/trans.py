@@ -881,7 +881,7 @@ def do_value_neg(x):
 	else:
 		vtype.signed = True
 
-	nv = ValueUn(vtype, 'neg', v, ti=x['ti'])
+	nv = ValueNeg(vtype, v, ti=x['ti'])
 
 	if v.isImmediate():
 		nv.asset = -v.asset
@@ -905,7 +905,7 @@ def do_value_pos(x):
 	if not vtype.is_signed():
 		error("expected value with signed type", v.ti)
 
-	nv = ValueUn(vtype, 'pos', v, ti=x['ti'])
+	nv = ValuePos(vtype, v, ti=x['ti'])
 
 	if v.isImmediate():
 		nv.asset = +v.asset
