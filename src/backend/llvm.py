@@ -1755,10 +1755,16 @@ def do_eval_va_copy(x):
 def do_eval_un(x):
 	y = None
 	k = x.op
-	if k == 'not': y = do_eval_not(x, xor_msk=-1)
-	elif k == 'logic_not': y = do_eval_not(x, xor_msk=1)
-	elif k == 'neg': y = do_eval_neg(x)
+
+	if k == 'neg':
+		y = do_eval_neg(x)
 	return y
+
+def do_eval_not2(x):
+	if x.value.type.is_bool():
+		return do_eval_not(x, xor_msk=1)
+	# is word
+	return do_eval_not(x, xor_msk=-1)
 
 
 def _eval_sizeof_type(t):
@@ -1804,6 +1810,7 @@ def do_eval(x):
 	elif isinstance(x, ValueAccessRecord): y = do_eval_access(x)
 	elif isinstance(x, ValueSlice): y = do_eval_slice(x)
 	elif isinstance(x, ValueSubexpr): y = do_eval(x.value)
+	elif isinstance(x, ValueNot): y = do_eval_not2(x)
 	elif isinstance(x, ValueNew): y = do_eval_new(x)
 	elif isinstance(x, ValueZero): y = do_eval_literal(x)
 	elif isinstance(x, ValueSizeofValue): y = do_eval_sizeof_value(x)

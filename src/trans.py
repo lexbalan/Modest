@@ -852,7 +852,7 @@ def do_value_not(x):
 	if vtype.is_bool():
 		op = 'logic_not'
 
-	nv = ValueUn(vtype, op, v, ti=x['ti'])
+	nv = ValueNot(vtype, v, ti=x['ti'])
 
 	if v.isImmediate():
 		# because: ~(1) = -1 (not 0) !

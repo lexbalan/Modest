@@ -270,6 +270,11 @@ def print_value_deref(x, ctx):
 	print_value(x.value, parent_expr=x)
 
 
+def print_value_not(x, ctx):
+	out('not ')
+	print_value(x.value, parent_expr=x)
+
+
 def print_value_un(x, ctx):
 	out(un_ops[x.op]); print_value(x.value, parent_expr=x)
 
@@ -691,6 +696,7 @@ def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
 	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
 	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
 	elif isinstance(x, ValueSubexpr): print_value_subexpr(x, ctx)
+	elif isinstance(x, ValueNot): print_value_not(x, ctx)
 	elif isinstance(x, ValueNew): print_value_new(x, ctx)
 	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
 	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)

@@ -27,7 +27,7 @@ func rotright(a: Word32, b: Nat32) -> Word32 {
 
 
 func ch(x: Word32, y: Word32, z: Word32) -> Word32 {
-	return (x and y) xor (notx and z)
+	return (x and y) xor (not x and z)
 }
 
 

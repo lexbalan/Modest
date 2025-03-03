@@ -245,6 +245,15 @@ class ValueUn(Value):
 		self.value = value
 
 
+class ValueNot(Value):
+	def __init__(self, type, value, ti=None):
+		from .type import Type
+		assert(isinstance(type, Type))
+		assert(isinstance(value, Value))
+		super().__init__(type=type, ti=ti)
+		self.value = value
+
+
 class ValueSubexpr(Value):
 	def __init__(self, value, ti=None):
 		#mass

@@ -593,6 +593,16 @@ def str_value_un(x, ctx):
 	return sstr
 
 
+def str_value_not(x, ctx):
+	sstr = ''
+	if x.value.type.is_bool():
+		sstr += '!'
+	else:
+		sstr += '~'
+	sstr += str_value(x.value, parent_expr=x)
+	return sstr
+
+
 def str_value_ref(x, ctx):
 	sstr = ''
 	# Если берем указатель на массив массивов, то приводим его к void *
@@ -1325,7 +1335,7 @@ def str_value_va_copy(x, ctx):
 	return sstr
 
 
-def print_value_subexpr(x, ctx):
+def str_value_subexpr(x, ctx):
 	sstr = "("
 	sstr += str_value(x.value)
 	sstr += ")"
@@ -1372,7 +1382,9 @@ def str_value(x, ctx=[], parent_expr=None):
 	elif isinstance(x, ValueSlice):
 		sstr += str_value_slice(x, ctx)
 	elif isinstance(x, ValueSubexpr):
-		sstr += print_value_subexpr(x, ctx)
+		sstr += str_value_subexpr(x, ctx)
+	elif isinstance(x, ValueNot):
+		sstr += str_value_not(x, ctx)
 	elif isinstance(x, ValueNew):
 		sstr += str_value_new(x, ctx)
 	elif isinstance(x, ValueSizeofValue):
