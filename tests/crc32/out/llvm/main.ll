@@ -213,6 +213,7 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
 	%2 = call %Word32 @crc32_run([0 x %Word8]* bitcast ([9 x %Word8]* @data to [0 x %Word8]*), %Int32 9)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Word32 %2)
+; if_0
 	%4 = icmp eq %Word32 %2, 3421780262
 	br %Bool %4 , label %then_0, label %else_0
 then_0:

@@ -200,6 +200,7 @@ define internal void @xor_encrypter([0 x %Word8]* %buf, %Int32 %buflen, [0 x %Wo
 	store %Int32 0, %Int32* %1
 	%2 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %2
+; while_1
 	br label %again_1
 again_1:
 	%3 = load %Int32, %Int32* %1
@@ -219,6 +220,7 @@ body_1:
 	%15 = load %Word8, %Word8* %13
 	%16 = xor %Word8 %14, %15
 	store %Word8 %16, %Word8* %7
+; if_0
 	%17 = sub %Int32 %keylen, 1
 	%18 = load %Int32, %Int32* %2
 	%19 = icmp ult %Int32 %18, %17
@@ -267,6 +269,7 @@ break_1:
 define internal void @print_bytes([0 x %Word8]* %buf, %Int32 %len) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	%2 = load %Int32, %Int32* %1

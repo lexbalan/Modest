@@ -198,6 +198,7 @@ define %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len) {
 	;
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
+; while_1
 	br label %again_1
 again_1:
 	%4 = load %Int32, %Int32* %3
@@ -209,12 +210,14 @@ body_1:
 	store %Word32 %7, %Word32* %2
 	%8 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %8
+; while_2
 	br label %again_2
 again_2:
 	%9 = load %Int32, %Int32* %8
 	%10 = icmp ult %Int32 %9, 8
 	br %Bool %10 , label %body_2, label %break_2
 body_2:
+; if_0
 	%11 = load %Word32, %Word32* %2
 	%12 = and %Word32 %11, 1
 	%13 = icmp ne %Word32 %12, 0
@@ -254,6 +257,7 @@ break_1:
 	;
 	store %Word32 4294967295, %Word32* %2
 	store %Int32 0, %Int32* %3
+; while_3
 	br label %again_3
 again_3:
 	%29 = load %Int32, %Int32* %3

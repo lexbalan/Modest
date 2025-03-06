@@ -379,6 +379,7 @@ define internal %Bool @doTest(%SHA256_TestCase* %test) {
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
 	%9 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %9
+; while_1
 	br label %again_1
 again_1:
 	%10 = load %Int32, %Int32* %9
@@ -407,6 +408,7 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
 	%2 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %2
+; while_1
 	br label %again_1
 again_1:
 	%3 = load %Int32, %Int32* %2
@@ -420,6 +422,7 @@ body_1:
 	%9 = call %Bool @doTest(%SHA256_TestCase* %8)
 	%10 = alloca %Str8*, align 8
 	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %10
+; if_0
 	br %Bool %9 , label %then_0, label %endif_0
 then_0:
 	store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %10

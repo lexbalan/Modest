@@ -224,6 +224,7 @@ define internal void @arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %In
 	%4 = alloca [10 x %Int32], align 1
 	%5 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %5
+; while_1
 	br label %again_1
 again_1:
 	%6 = load %Int32, %Int32* %5
@@ -254,6 +255,7 @@ break_1:
 define %Int32 @main() {; alloca memory for return value
 	%1 = alloca [10 x %Int32]
 	call void @getarr10([10 x %Int32]* %1)
+; if_0
 	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%3 = insertvalue [10 x %Int32] %2, %Int32 2, 2
 	%4 = insertvalue [10 x %Int32] %3, %Int32 3, 3
@@ -299,6 +301,7 @@ endif_0:
 	%38 = insertvalue [10 x %Int32] %37, %Int32 90, 9; alloca memory for return value
 	%39 = alloca [10 x %Int32]
 	call void @arraysAdd([10 x %Int32]* %39, [10 x %Int32] %29, [10 x %Int32] %38)
+; if_1
 	%40 = insertvalue [10 x %Int32] zeroinitializer, %Int32 11, 1
 	%41 = insertvalue [10 x %Int32] %40, %Int32 22, 2
 	%42 = insertvalue [10 x %Int32] %41, %Int32 33, 3
@@ -324,6 +327,7 @@ endif_1:
 	%57 = load [10 x %Int32], [10 x %Int32]* %1; alloca memory for return value
 	%58 = alloca [10 x %Int32]
 	call void @arraysAdd([10 x %Int32]* %58, [10 x %Int32] %56, [10 x %Int32] %57)
+; if_2
 	%59 = insertvalue [10 x %Int32] zeroinitializer, %Int32 2, 1
 	%60 = insertvalue [10 x %Int32] %59, %Int32 4, 2
 	%61 = insertvalue [10 x %Int32] %60, %Int32 6, 3
@@ -347,6 +351,7 @@ then_2:
 endif_2:
 	%75 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %75
+; while_1
 	br label %again_1
 again_1:
 	%76 = load %Int32, %Int32* %75

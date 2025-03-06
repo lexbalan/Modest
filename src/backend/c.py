@@ -933,8 +933,8 @@ def str_value_cons(x, ctx):
 	if x.method == 'implicit':
 
 		if isinstance(value, ValueRef):
-			# Приводим явно указатель на массив к указателю на его элемент
-			# В случае когда происходит неявное приведение;
+			# Явно приводим указатель на массив к указателю на его элемент
+			# В случае когда происходит НЕЯВНОЕ приведение;
 			if value.value.type.is_array():
 				if value.value.type.of.is_simple():
 					sstr += ("(")

@@ -276,12 +276,14 @@ define void @table_print(%table_Table* %table) {
 	;
 	; calculate max length (in chars) of column
 	;
+; if_0
 	%26 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
 	%27 = load [0 x %Str8*]*, [0 x %Str8*]** %26
 	%28 = icmp ne [0 x %Str8*]* %27, null
 	br %Bool %28 , label %then_0, label %endif_0
 then_0:
 	store %Int32 0, %Int32* %3
+; while_1
 	br label %again_1
 again_1:
 	%29 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
@@ -298,6 +300,7 @@ body_1:
 	%38 = load %Str8*, %Str8** %37
 	%39 = call %SizeT @strlen(%Str8* %38)
 	%40 = trunc %SizeT %39 to %Int32
+; if_1
 	%41 = load %Int32, %Int32* %3
 	%42 = mul %Int32 %41, 1
 	%43 = add %Int32 0, %42
@@ -321,6 +324,7 @@ break_1:
 	br label %endif_0
 endif_0:
 	store %Int32 0, %Int32* %3
+; while_2
 	br label %again_2
 again_2:
 	%53 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
@@ -330,6 +334,7 @@ again_2:
 	br %Bool %56 , label %body_2, label %break_2
 body_2:
 	store %Int32 0, %Int32* %4
+; while_3
 	br label %again_3
 again_3:
 	%57 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
@@ -348,6 +353,7 @@ body_3:
 	%68 = load %Str8*, %Str8** %67
 	%69 = call %SizeT @strlen(%Str8* %68)
 	%70 = trunc %SizeT %69 to %Int32
+; if_2
 	%71 = load %Int32, %Int32* %4
 	%72 = mul %Int32 %71, 1
 	%73 = add %Int32 0, %72
@@ -374,6 +380,7 @@ break_3:
 	br label %again_2
 break_2:
 	store %Int32 0, %Int32* %3
+; while_4
 	br label %again_4
 again_4:
 	%85 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
@@ -410,6 +417,7 @@ break_4:
 	%102 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%103 = load %Int32, %Int32* %102
 	call void @separator([0 x %Int32]* %101, %Int32 %103)
+; if_3
 	%104 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
 	%105 = load [0 x %Str8*]*, [0 x %Str8*]** %104
 	%106 = icmp ne [0 x %Str8*]* %105, null
@@ -428,6 +436,7 @@ then_3:
 	br label %endif_3
 endif_3:
 	store %Int32 0, %Int32* %3
+; while_5
 	br label %again_5
 again_5:
 	%115 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
@@ -448,6 +457,7 @@ body_5:
 	%127 = load %Int32, %Int32* %3
 	%128 = add %Int32 %127, 1
 	store %Int32 %128, %Int32* %3
+; if_4
 	%129 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 4
 	%130 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
 	%131 = load %Int32, %Int32* %3
@@ -485,6 +495,7 @@ define internal void @printRow([0 x %Str8*]* %raw_row, [0 x %Int32]* %sz, %Int32
 	%5 = bitcast [0 x %Str8*]* %raw_row to [0 x %Str8*]*
 	%6 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %6
+; while_1
 	br label %again_1
 again_1:
 	%7 = load %Int32, %Int32* %6
@@ -501,6 +512,7 @@ body_1:
 	%16 = call %SizeT @strlen(%Str8* %14)
 	%17 = trunc %SizeT %16 to %Int32
 	store %Int32 %17, %Int32* %15
+; if_0
 	%18 = getelementptr %Str8, %Str8* %14, %Int32 0, %Int32 0
 	%19 = load %Char8, %Char8* %18
 	%20 = icmp ne %Char8 %19, 0
@@ -514,6 +526,7 @@ then_0:
 endif_0:
 	%24 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %24
+; while_2
 	br label %again_2
 again_2:
 	%25 = load %Int32, %Int32* %6
@@ -551,6 +564,7 @@ break_1:
 define internal void @separator([0 x %Int32]* %sz, %Int32 %n) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	%2 = load %Int32, %Int32* %1
@@ -560,6 +574,7 @@ body_1:
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
 	%5 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %5
+; while_2
 	br label %again_2
 again_2:
 	%6 = load %Int32, %Int32* %1

@@ -900,7 +900,6 @@ def do_reval(x):
 
 
 def do_eval_bin(x):
-
 	if x.isImmediate():
 		return do_eval_literal(x)
 
@@ -1486,8 +1485,18 @@ def do_eval_cons(x):
 	from_type = value.type
 	type = x.type
 
+	# (!) WARNING (!)
+	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
+	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
+	# required: (uint64_t)((uint32)int32_value)
+	if type.is_integer():
+		if from_type.is_integer() or from_type.is_number():
+			if from_type.is_signed() and type.is_unsigned():
+				v = do_reval(value)
+				return docast(v, type)
 
-	# skipping cast to the same type
+
+	# skipping cast to THE SAME type
 	if id(value.type) == id(type):
 		return do_reval(value)
 
@@ -1547,6 +1556,7 @@ def do_eval_cons(x):
 				return do_eval_literal(x)
 
 	v = do_reval(value)
+
 
 	if is_global_context():
 		return v
@@ -1856,6 +1866,7 @@ def print_stmt_if(x):
 	global fctx
 	if_id = fctx['if_no']
 	fctx['if_no'] = fctx['if_no'] + 1
+	out("\n; if_%d" % if_id)
 	cv = do_reval(x.cond)
 
 	then_label = 'then_%d' % if_id
@@ -1893,6 +1904,7 @@ def print_stmt_while(x):
 	break_label = 'break_%d' % cur_while_id
 	body_label = 'body_%d' % cur_while_id
 
+	out("\n; while_%d" % cur_while_id)
 	llvm_jump(again_label)
 	llvm_label(again_label)
 	cv = do_reval(x.cond)

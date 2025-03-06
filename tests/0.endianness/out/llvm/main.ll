@@ -199,6 +199,7 @@ define %Int @main() {
 	%3 = load %Word8, %Word8* %2
 	%4 = icmp eq %Word8 %3, 1
 	%5 = alloca %Str8*, align 8
+; if_0
 	br %Bool %4 , label %then_0, label %else_0
 then_0:
 	store %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*), %Str8** %5

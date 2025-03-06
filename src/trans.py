@@ -101,6 +101,7 @@ def module_type_add_public(m, id_str, t):
 	#t['module'] = m
 	t.att.append('global_entity')
 
+
 def module_value_add_public(m, id_str, v):
 	#print("module %s value_add_public %s" % (m['id'], id_str))
 	m.symtab_public.value_add(id_str, v)
@@ -113,6 +114,7 @@ def module_type_add_private(m, id_str, t):
 	m.symtab_private.type_add(id_str, t)
 	#t['module'] = m
 	t.att.append('global_entity')
+
 
 def module_value_add_private(m, id_str, v):
 	#print("module %s value_add_private %s" % (m['id'], id_str))

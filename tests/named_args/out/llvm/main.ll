@@ -201,6 +201,7 @@ define internal %Int32 @named_args_test(%Int32 %a, %Int32 %b, %Int32 %c) {
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
 	%2 = call %Int32 @named_args_test(%Int32 25, %Int32 15, %Int32 3)
+; if_0
 	%3 = icmp eq %Int32 30, %2
 	br %Bool %3 , label %then_0, label %else_0
 then_0:

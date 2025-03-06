@@ -381,6 +381,7 @@ define %Int @main() {
 	%2 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 7, 1
 	%3 = alloca {%Int32,%Int32}
 	store {%Int32,%Int32} %2, {%Int32,%Int32}* %3
+; if_0
 	br %Bool 1 , label %then_0, label %else_0
 then_0:
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str18 to [0 x i8]*))
@@ -399,6 +400,7 @@ endif_0:
 	%10 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
 	%11 = insertvalue %Point2D %10, %Int32 20, 1
 	store %Point2D %11, %Point2D* %9
+; if_1
 	%12 = bitcast %Point2D* %6 to i8*
 	%13 = bitcast %Point2D* %9 to i8*
 	%14 = call i1 (i8*, i8*, i64) @memeq(i8* %12, i8* %13, %Int64 8)
@@ -424,6 +426,7 @@ endif_1:
 	%22 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
 	%23 = insertvalue {%Int32,%Int32} %22, %Int32 2, 1
 	store {%Int32,%Int32} %23, {%Int32,%Int32}* %21
+; if_2
 ; -- cons_composite_from_composite_by_adr --
 	%24 = bitcast {%Int32,%Int32}* %21 to %Point2D*
 	%25 = load %Point2D, %Point2D* %24
@@ -449,6 +452,7 @@ endif_2:
 	%34 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
 	%35 = insertvalue {%Int32,%Int32} %34, %Int32 2, 1
 	store {%Int32,%Int32} %35, {%Int32,%Int32}* %33
+; if_3
 ; -- cons_composite_from_composite_by_adr --
 	%36 = bitcast {%Int32,%Int32}* %33 to {%Int32,%Int32}*
 	%37 = load {%Int32,%Int32}, {%Int32,%Int32}* %36
@@ -469,6 +473,7 @@ else_3:
 endif_3:
 
 	; comparison between two record (by pointer)
+; if_4
 ; -- cons_composite_from_composite_by_adr --
 	%45 = bitcast {%Int32,%Int32}* %21 to %Point2D*
 	%46 = load %Point2D, %Point2D* %45
@@ -537,6 +542,7 @@ endif_4:
 	%69 = getelementptr {%Int32,%Int32}, {%Int32,%Int32}* %65, %Int32 0, %Int32 1
 	%70 = load %Int32, %Int32* %69
 	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str29 to [0 x i8]*), %Int32 %70)
+; if_5
 ; -- cons_composite_from_composite_by_adr --
 	%72 = bitcast {%Int32,%Int32}* %65 to {%Int32,%Int32}*
 	%73 = load {%Int32,%Int32}, {%Int32,%Int32}* %72

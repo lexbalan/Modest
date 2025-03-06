@@ -194,6 +194,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Int32 128)
+; if_0
 	br %Bool 1 , label %then_0, label %else_0
 then_0:
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))

@@ -216,6 +216,7 @@ define %Int @main() {
 	store [10 x %Int32] %2, [10 x %Int32]* @globalArray1
 	%4 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %4
+; while_1
 	br label %again_1
 again_1:
 	%5 = load %Int32, %Int32* %4
@@ -232,6 +233,7 @@ body_1:
 	store %Int32 %13, %Int32* %4
 	br label %again_1
 break_1:
+; if_0
 	%14 = bitcast [10 x %Int32]* @globalArray0 to i8*
 	%15 = bitcast [10 x %Int32]* @globalArray1 to i8*
 	%16 = call i1 (i8*, i8*, i64) @memeq(i8* %14, i8* %15, %Int64 40)
@@ -268,6 +270,7 @@ endif_0:
 	%36 = zext i8 10 to %Int32
 	store [10 x %Int32] %35, [10 x %Int32]* %31
 	store %Int32 0, %Int32* %4
+; while_2
 	br label %again_2
 again_2:
 	%37 = load %Int32, %Int32* %4
@@ -284,6 +287,7 @@ body_2:
 	store %Int32 %45, %Int32* %4
 	br label %again_2
 break_2:
+; if_1
 	%46 = bitcast [10 x %Int32]* %20 to i8*
 	%47 = bitcast [10 x %Int32]* %31 to i8*
 	%48 = call i1 (i8*, i8*, i64) @memeq(i8* %46, i8* %47, %Int64 40)

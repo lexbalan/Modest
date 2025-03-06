@@ -113,6 +113,7 @@ break_2:
 ; -- strings --
 ; -- endstrings --
 define %Int32 @minmax_min_int32(%Int32 %a, %Int32 %b) {
+; if_0
 	%1 = icmp slt %Int32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -123,6 +124,7 @@ endif_0:
 }
 
 define %Int32 @minmax_max_int32(%Int32 %a, %Int32 %b) {
+; if_0
 	%1 = icmp sgt %Int32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -133,6 +135,7 @@ endif_0:
 }
 
 define %Int64 @minmax_min_int64(%Int64 %a, %Int64 %b) {
+; if_0
 	%1 = icmp slt %Int64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -143,6 +146,7 @@ endif_0:
 }
 
 define %Int64 @minmax_max_int64(%Int64 %a, %Int64 %b) {
+; if_0
 	%1 = icmp sgt %Int64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -153,6 +157,7 @@ endif_0:
 }
 
 define %Int32 @minmax_min_nat32(%Int32 %a, %Int32 %b) {
+; if_0
 	%1 = icmp ult %Int32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -163,6 +168,7 @@ endif_0:
 }
 
 define %Int32 @minmax_max_nat32(%Int32 %a, %Int32 %b) {
+; if_0
 	%1 = icmp ugt %Int32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -173,6 +179,7 @@ endif_0:
 }
 
 define %Int64 @minmax_min_nat64(%Int64 %a, %Int64 %b) {
+; if_0
 	%1 = icmp ult %Int64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -183,6 +190,7 @@ endif_0:
 }
 
 define %Int64 @minmax_max_nat64(%Int64 %a, %Int64 %b) {
+; if_0
 	%1 = icmp ugt %Int64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -193,6 +201,7 @@ endif_0:
 }
 
 define float @minmax_min_float32(float %a, float %b) {
+; if_0
 	%1 = fcmp olt float %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -203,6 +212,7 @@ endif_0:
 }
 
 define float @minmax_max_float32(float %a, float %b) {
+; if_0
 	%1 = fcmp ogt float %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -213,6 +223,7 @@ endif_0:
 }
 
 define double @minmax_min_float64(double %a, double %b) {
+; if_0
 	%1 = fcmp olt double %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -223,6 +234,7 @@ endif_0:
 }
 
 define double @minmax_max_float64(double %a, double %b) {
+; if_0
 	%1 = fcmp ogt double %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:

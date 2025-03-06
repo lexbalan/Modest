@@ -30,12 +30,26 @@ public func main() -> Int32 {
 	printf("test %d\n", v0)
 	f0()
 
-	let x = Int8 -1
+//	let x = Int8 -1
+//
+//	i32 = Int32 x
+//	u32 = Nat32 x
 
-	i32 = Int32 x
-	u32 = Nat32 x
-	printf("i32 = 0x%08x (%d)\n", i32, i32)
-	printf("u32 = 0x%08x (%d)\n", u32, u32)
+	if Int32 Int8 -1 == Int32 -1 {
+		printf("Int8 -1 -> Int32 test passed.\n")
+	} else {
+		printf("Int8 -1 -> Int32 test failed.\n")
+	}
+
+	if Nat32 Int8 -1 == Nat32 0xff {
+		printf("Int8 -1 -> Nat32 test passed.\n")
+	} else {
+		printf("Int8 -1 -> Nat32 test failed.\n")
+	}
+
+	//printf("i32 = 0x%08x (%d)\n", i32, i32)
+	//printf("u32 = 0x%08x (%d)\n", u32, u32)
+
 	return 0
 }
 

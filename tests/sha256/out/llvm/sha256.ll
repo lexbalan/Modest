@@ -339,6 +339,7 @@ define internal void @transform(%Context* %ctx, [0 x %Word8]* %data) {
 	store %Int32 0, %Int32* %5
 	%6 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %6
+; while_1
 	br label %again_1
 again_1:
 	%7 = load %Int32, %Int32* %5
@@ -392,6 +393,7 @@ body_1:
 	store %Int32 %50, %Int32* %5
 	br label %again_1
 break_1:
+; while_2
 	br label %again_2
 again_2:
 	%51 = load %Int32, %Int32* %5
@@ -443,6 +445,7 @@ break_2:
 	%91 = zext i8 8 to %Int32
 	store [8 x %Word32] %90, [8 x %Word32]* %88
 	store %Int32 0, %Int32* %5
+; while_3
 	br label %again_3
 again_3:
 	%92 = load %Int32, %Int32* %5
@@ -532,6 +535,7 @@ body_3:
 	br label %again_3
 break_3:
 	store %Int32 0, %Int32* %5
+; while_4
 	br label %again_4
 again_4:
 	%165 = load %Int32, %Int32* %5
@@ -567,6 +571,7 @@ break_4:
 define internal void @update(%Context* %ctx, [0 x %Word8]* %msg, %Int32 %msgLen) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	%2 = load %Int32, %Int32* %1
@@ -588,6 +593,7 @@ body_1:
 	%15 = load %Int32, %Int32* %14
 	%16 = add %Int32 %15, 1
 	store %Int32 %16, %Int32* %13
+; if_0
 	%17 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%18 = load %Int32, %Int32* %17
 	%19 = icmp eq %Int32 %18, 64
@@ -622,6 +628,7 @@ define internal void @final(%Context* %ctx, %sha256_Hash* %outHash) {
 	; Pad whatever data is left in the buffer.
 	%4 = alloca %Int32, align 4
 	store %Int32 64, %Int32* %4
+; if_0
 	%5 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%6 = load %Int32, %Int32* %5
 	%7 = icmp ult %Int32 %6, 56
@@ -649,6 +656,7 @@ endif_0:
 	%22 = zext %Int32 %21 to %SizeT
 	%23 = call i8* @memset(i8* %18, %Int 0, %SizeT %22)
 	;ctx.data[i:n-i] = []
+; if_1
 	%24 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%25 = load %Int32, %Int32* %24
 	%26 = icmp uge %Int32 %25, 56
@@ -754,6 +762,7 @@ endif_1:
 	; and SHA uses big endian, reverse all the bytes
 	; when copying the final state to the output hash.
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	%106 = load %Int32, %Int32* %1

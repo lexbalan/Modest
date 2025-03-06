@@ -30,12 +30,26 @@ int32_t main()
 	printf("test %d\n", main_v0);
 	main_f0();
 
-	const int8_t x = (int8_t)-1;
+	//	let x = Int8 -1
+	//
+	//	i32 = Int32 x
+	//	u32 = Nat32 x
 
-	i32 = (int32_t)x;
-	u32 = ((uint32_t)(uint8_t)x);
-	printf("i32 = 0x%08x (%d)\n", i32, i32);
-	printf("u32 = 0x%08x (%d)\n", u32, u32);
+	if ((int32_t)(int8_t)-1 == (int32_t)-1) {
+		printf("Int8 -1 -> Int32 test passed.\n");
+	} else {
+		printf("Int8 -1 -> Int32 test failed.\n");
+	}
+
+	if (((uint32_t)(uint8_t)(int8_t)-1) == 0xFF) {
+		printf("Int8 -1 -> Nat32 test passed.\n");
+	} else {
+		printf("Int8 -1 -> Nat32 test failed.\n");
+	}
+
+	//printf("i32 = 0x%08x (%d)\n", i32, i32)
+	//printf("u32 = 0x%08x (%d)\n", u32, u32)
+
 	return 0;
 }
 

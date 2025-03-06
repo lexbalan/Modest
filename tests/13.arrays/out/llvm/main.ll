@@ -422,6 +422,7 @@ define internal void @test() {
 	store [6 x %Int32] %5, [6 x %Int32]* %1
 	%7 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %7
+; while_1
 	br label %again_1
 again_1:
 	%8 = load %Int32, %Int32* %7
@@ -625,6 +626,7 @@ define internal void @test_arrays() {
 	%2 = alloca %Int32, align 4
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	%4 = load %Int32, %Int32* %1
@@ -632,6 +634,7 @@ again_1:
 	br %Bool %5 , label %body_1, label %break_1
 body_1:
 	store %Int32 0, %Int32* %2
+; while_2
 	br label %again_2
 again_2:
 	%6 = load %Int32, %Int32* %2
@@ -658,6 +661,7 @@ break_2:
 	br label %again_1
 break_1:
 	store %Int32 0, %Int32* %1
+; while_3
 	br label %again_3
 again_3:
 	%20 = load %Int32, %Int32* %1
@@ -665,6 +669,7 @@ again_3:
 	br %Bool %21 , label %body_3, label %break_3
 body_3:
 	store %Int32 0, %Int32* %2
+; while_4
 	br label %again_4
 again_4:
 	%22 = load %Int32, %Int32* %2
@@ -689,6 +694,7 @@ break_4:
 	br label %again_3
 break_3:
 	store %Int32 0, %Int32* %1
+; while_5
 	br label %again_5
 again_5:
 	%35 = load %Int32, %Int32* %1
@@ -696,6 +702,7 @@ again_5:
 	br %Bool %36 , label %body_5, label %break_5
 body_5:
 	store %Int32 0, %Int32* %2
+; while_6
 	br label %again_6
 again_6:
 	%37 = load %Int32, %Int32* %2
@@ -703,6 +710,7 @@ again_6:
 	br %Bool %38 , label %body_6, label %break_6
 body_6:
 	store %Int32 0, %Int32* %3
+; while_7
 	br label %again_7
 again_7:
 	%39 = load %Int32, %Int32* %3
@@ -736,6 +744,7 @@ break_5:
 	;
 	;
 	store %Int32 0, %Int32* %1
+; while_8
 	br label %again_8
 again_8:
 	%56 = load %Int32, %Int32* %1
@@ -743,6 +752,7 @@ again_8:
 	br %Bool %57 , label %body_8, label %break_8
 body_8:
 	store %Int32 0, %Int32* %2
+; while_9
 	br label %again_9
 again_9:
 	%58 = load %Int32, %Int32* %2
@@ -771,6 +781,7 @@ break_8:
 	;
 	;
 	store %Int32 0, %Int32* %1
+; while_10
 	br label %again_10
 again_10:
 	%73 = load %Int32, %Int32* %1
@@ -778,6 +789,7 @@ again_10:
 	br %Bool %74 , label %body_10, label %break_10
 body_10:
 	store %Int32 0, %Int32* %2
+; while_11
 	br label %again_11
 again_11:
 	%75 = load %Int32, %Int32* %2
@@ -785,6 +797,7 @@ again_11:
 	br %Bool %76 , label %body_11, label %break_11
 body_11:
 	store %Int32 0, %Int32* %3
+; while_12
 	br label %again_12
 again_12:
 	%77 = load %Int32, %Int32* %3
@@ -820,6 +833,7 @@ break_11:
 	br label %again_10
 break_10:
 	store %Int32 0, %Int32* %1
+; while_13
 	br label %again_13
 again_13:
 	%98 = load %Int32, %Int32* %1
@@ -827,6 +841,7 @@ again_13:
 	br %Bool %99 , label %body_13, label %break_13
 body_13:
 	store %Int32 0, %Int32* %2
+; while_14
 	br label %again_14
 again_14:
 	%100 = load %Int32, %Int32* %2
@@ -834,6 +849,7 @@ again_14:
 	br %Bool %101 , label %body_14, label %break_14
 body_14:
 	store %Int32 0, %Int32* %3
+; while_15
 	br label %again_15
 again_15:
 	%102 = load %Int32, %Int32* %3
@@ -895,6 +911,7 @@ define %Int @main() {
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str9 to [0 x i8]*), [30 x %Char8]* %1)
 	%18 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %18
+; while_1
 	br label %again_1
 again_1:
 	%19 = load %Int32, %Int32* %18
@@ -919,6 +936,7 @@ break_1:
 	%33 = zext i8 3 to %Int32
 	store [3 x %Int32] %32, [3 x %Int32]* %29
 	store %Int32 0, %Int32* %18
+; while_2
 	br label %again_2
 again_2:
 	%34 = load %Int32, %Int32* %18
@@ -939,6 +957,7 @@ break_2:
 	%44 = alloca [0 x %Int32]*, align 8
 	store [0 x %Int32]* bitcast ([10 x %Int32]* @globalArray to [0 x %Int32]*), [0 x %Int32]** %44
 	store %Int32 0, %Int32* %18
+; while_3
 	br label %again_3
 again_3:
 	%45 = load %Int32, %Int32* %18
@@ -961,6 +980,7 @@ break_3:
 	%57 = bitcast [3 x %Int32]* %29 to [0 x %Int32]*
 	store [0 x %Int32]* %57, [0 x %Int32]** %56
 	store %Int32 0, %Int32* %18
+; while_4
 	br label %again_4
 again_4:
 	%58 = load %Int32, %Int32* %18
@@ -1015,6 +1035,7 @@ break_4:
 	%93 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str22 to [0 x i8]*), %Int32 %92)
 
 	; check equality between two arrays (by value)
+; if_0
 	%94 = bitcast [3 x %Int32]* %68 to i8*
 	%95 = bitcast [3 x %Int32]* %82 to i8*
 	%96 = call i1 (i8*, i8*, i64) @memeq(i8* %94, i8* %95, %Int64 12)
@@ -1064,6 +1085,7 @@ endif_0:
 
 
 	; check equality between two arrays (by pointer)
+; if_1
 	%127 = bitcast [3 x %Int32]* %68 to i8*
 	%128 = bitcast [3 x %Int32]* %82 to i8*
 	%129 = call i1 (i8*, i8*, i64) @memeq(i8* %127, i8* %128, %Int64 12)
@@ -1181,6 +1203,7 @@ endif_1:
 	%199 = getelementptr [4 x %Int32], [4 x %Int32]* %188, %Int32 0, %Int32 3
 	%200 = load %Int32, %Int32* %199
 	%201 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str42 to [0 x i8]*), %Int32 3, %Int32 %200)
+; if_2
 	%202 = insertvalue [4 x %Int32] zeroinitializer, %Int32 10, 0
 	%203 = insertvalue [4 x %Int32] %202, %Int32 20, 1
 	%204 = insertvalue [4 x %Int32] %203, %Int32 30, 2
@@ -1208,6 +1231,7 @@ endif_2:
 	%219 = alloca [5 x %Char8]
 	%220 = zext i8 5 to %Int32
 	store [5 x %Char8] %218, [5 x %Char8]* %219
+; if_3
 	%221 = zext i8 2 to %Int32
 	%222 = getelementptr [5 x %Char8], [5 x %Char8]* %219, %Int32 0, %Int32 %221
 	%223 = bitcast %Char8* %222 to [2 x %Char8]*

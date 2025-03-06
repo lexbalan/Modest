@@ -116,6 +116,7 @@ break_2:
 ; декодирует символ UTF-32 в последовательность UTF-8
 define %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {
 	%1 = bitcast %Char32 %c to %Int32
+; if_0
 	%2 = icmp ule %Int32 %1, 127
 	br %Bool %2 , label %then_0, label %else_0
 then_0:
@@ -125,6 +126,7 @@ then_0:
 	ret %Int8 1
 	br label %endif_0
 else_0:
+; if_1
 	%6 = icmp ule %Int32 %1, 2047
 	br %Bool %6 , label %then_1, label %else_1
 then_1:
@@ -146,6 +148,7 @@ then_1:
 	ret %Int8 2
 	br label %endif_1
 else_1:
+; if_2
 	%21 = icmp ule %Int32 %1, 65535
 	br %Bool %21 , label %then_2, label %else_2
 then_2:
@@ -174,6 +177,7 @@ then_2:
 	ret %Int8 3
 	br label %endif_2
 else_2:
+; if_3
 	%42 = icmp ule %Int32 %1, 1114111
 	br %Bool %42 , label %then_3, label %endif_3
 then_3:
@@ -225,6 +229,7 @@ define %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result) {
 	%1 = getelementptr [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 0
 	%2 = load %Char16, %Char16* %1
 	%3 = zext %Char16 %2 to %Int32
+; if_0
 	%4 = icmp ult %Int32 %3, 55296
 	%5 = icmp ugt %Int32 %3, 57343
 	%6 = or %Bool %4, %5
@@ -235,6 +240,7 @@ then_0:
 	ret %Int8 1
 	br label %endif_0
 else_0:
+; if_1
 	%9 = icmp uge %Int32 %3, 56320
 	br %Bool %9 , label %then_1, label %else_1
 then_1:
@@ -250,6 +256,7 @@ else_1:
 	%15 = getelementptr [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 1
 	%16 = load %Char16, %Char16* %15
 	%17 = zext %Char16 %16 to %Int32
+; if_2
 	%18 = icmp ult %Int32 %17, 56320
 	%19 = icmp ugt %Int32 %17, 57343
 	%20 = or %Bool %18, %19

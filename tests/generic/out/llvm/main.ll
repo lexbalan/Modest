@@ -207,6 +207,7 @@ declare void @perror(%ConstCharStr* %str)
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))
 	%2 = call %Bool @test_generic_integer()
+; if_0
 	br %Bool %2 , label %then_0, label %else_0
 then_0:
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str2 to [0 x i8]*))
@@ -216,6 +217,7 @@ else_0:
 	br label %endif_0
 endif_0:
 	%5 = call %Bool @test_generic_float()
+; if_1
 	br %Bool %5 , label %then_1, label %else_1
 then_1:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
@@ -225,6 +227,7 @@ else_1:
 	br label %endif_1
 endif_1:
 	%8 = call %Bool @test_generic_char()
+; if_2
 	br %Bool %8 , label %then_2, label %else_2
 then_2:
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
@@ -234,6 +237,7 @@ else_2:
 	br label %endif_2
 endif_2:
 	%11 = call %Bool @test_generic_array()
+; if_3
 	br %Bool %11 , label %then_3, label %else_3
 then_3:
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str8 to [0 x i8]*))
@@ -243,6 +247,7 @@ else_3:
 	br label %endif_3
 endif_3:
 	%14 = call %Bool @test_generic_record()
+; if_4
 	br %Bool %14 , label %then_4, label %else_4
 then_4:
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str10 to [0 x i8]*))
@@ -333,6 +338,7 @@ define internal %Bool @test_generic_array() {
 	%4 = alloca [4 x i8]
 	%5 = zext i8 4 to %Int32
 	store [4 x i8] %3, [4 x i8]* %4
+; if_0
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str12 to [0 x i8]*))
@@ -350,6 +356,7 @@ endif_0:
 	%11 = insertvalue [4 x %Int32] %10, %Int32 3, 3
 	%12 = zext i8 4 to %Int32
 	store [4 x %Int32] %11, [4 x %Int32]* %8
+; if_1
 	%13 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
 	%14 = insertvalue [4 x %Int32] %13, %Int32 2, 2
 	%15 = insertvalue [4 x %Int32] %14, %Int32 3, 3
@@ -374,6 +381,7 @@ endif_1:
 	%27 = insertvalue [4 x %Int64] %26, %Int64 3, 3
 	%28 = zext i8 4 to %Int32
 	store [4 x %Int64] %27, [4 x %Int64]* %24
+; if_2
 	%29 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
 	%30 = insertvalue [4 x %Int64] %29, %Int64 2, 2
 	%31 = insertvalue [4 x %Int64] %30, %Int64 3, 3
@@ -398,6 +406,7 @@ endif_2:
 	%43 = insertvalue [10 x %Int32] %42, %Int32 3, 3
 	%44 = zext i8 10 to %Int32
 	store [10 x %Int32] %43, [10 x %Int32]* %40
+; if_3
 	%45 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%46 = insertvalue [10 x %Int32] %45, %Int32 2, 2
 	%47 = insertvalue [10 x %Int32] %46, %Int32 3, 3

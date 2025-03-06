@@ -362,6 +362,7 @@ declare void @table_print(%table_Table* %table)
 define %Int32 @main() {
 	%1 = call %table_Table* @malloc(%Int32 32)
 	store %table_Table zeroinitializer, %table_Table* %1
+; if_0
 	%2 = icmp eq %table_Table* %1, null
 	br %Bool %2 , label %then_0, label %endif_0
 then_0:

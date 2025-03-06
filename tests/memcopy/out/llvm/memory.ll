@@ -131,6 +131,7 @@ define void @memory_zero(i8* %mem, %Int64 %len) {
 	; align the pointer
 	%4 = alloca %Int64, align 8
 	store %Int64 0, %Int64* %4
+; while_1
 	br label %again_1
 again_1:
 	%5 = load %Int64, %Int64* %4
@@ -155,6 +156,7 @@ break_1:
 	%16 = getelementptr [0 x %Word8], [0 x %Word8]* %3, %Int32 0, %Int32 %15
 	%17 = bitcast %Word8* %16 to [0 x %Word]*
 	store %Int64 0, %Int64* %4
+; while_2
 	br label %again_2
 again_2:
 	%18 = load %Int64, %Int64* %4
@@ -179,6 +181,7 @@ break_2:
 	%29 = getelementptr [0 x %Word], [0 x %Word]* %17, %Int32 0, %Int32 %28
 	%30 = bitcast %Word* %29 to [0 x %Word8]*
 	store %Int64 0, %Int64* %4
+; while_3
 	br label %again_3
 again_3:
 	%31 = load %Int64, %Int64* %4
@@ -203,6 +206,7 @@ define void @memory_copy(i8* %dst, i8* %src, %Int64 %len) {
 	%3 = bitcast i8* %dst to [0 x %Word]*
 	%4 = alloca %Int64, align 8
 	store %Int64 0, %Int64* %4
+; while_1
 	br label %again_1
 again_1:
 	%5 = load %Int64, %Int64* %4
@@ -232,6 +236,7 @@ break_1:
 	%23 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int32 %22
 	%24 = bitcast %Word* %23 to [0 x %Word8]*
 	store %Int64 0, %Int64* %4
+; while_2
 	br label %again_2
 again_2:
 	%25 = load %Int64, %Int64* %4
@@ -260,12 +265,14 @@ define %Bool @memory_eq(i8* %mem0, i8* %mem1, %Int64 %len) {
 	%3 = bitcast i8* %mem1 to [0 x %Word]*
 	%4 = alloca %Int64, align 8
 	store %Int64 0, %Int64* %4
+; while_1
 	br label %again_1
 again_1:
 	%5 = load %Int64, %Int64* %4
 	%6 = icmp ult %Int64 %5, %1
 	br %Bool %6 , label %body_1, label %break_1
 body_1:
+; if_0
 	%7 = load %Int64, %Int64* %4
 	%8 = trunc %Int64 %7 to %Int32
 	%9 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Int32 %8
@@ -295,12 +302,14 @@ break_1:
 	%26 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int32 %25
 	%27 = bitcast %Word* %26 to [0 x %Word8]*
 	store %Int64 0, %Int64* %4
+; while_2
 	br label %again_2
 again_2:
 	%28 = load %Int64, %Int64* %4
 	%29 = icmp ult %Int64 %28, %19
 	br %Bool %29 , label %body_2, label %break_2
 body_2:
+; if_1
 	%30 = load %Int64, %Int64* %4
 	%31 = trunc %Int64 %30 to %Int32
 	%32 = getelementptr [0 x %Word8], [0 x %Word8]* %23, %Int32 0, %Int32 %31

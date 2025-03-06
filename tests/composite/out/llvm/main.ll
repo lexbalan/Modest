@@ -620,6 +620,7 @@ define %Int32 @main() {
 	%2 = insertvalue {%Int32,%Int32} %1, %Int32 20, 1
 	call void @xy({%Int32,%Int32} %2)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
+; if_0
 	%4 = bitcast [5 x %AnimationPoint]* @animation0_points to i8*
 	%5 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
 	%6 = call i1 (i8*, i8*, i64) @memeq(i8* %4, i8* %5, %Int64 40)
@@ -633,6 +634,7 @@ else_0:
 	br label %endif_0
 endif_0:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
+; if_1
 	%11 = bitcast [5 x %AnimationPoint]* @animation1_points to i8*
 	%12 = bitcast [5 x %AnimationPoint]* @animation2_points to i8*
 	%13 = call i1 (i8*, i8*, i64) @memeq(i8* %11, i8* %12, %Int64 40)
@@ -647,6 +649,7 @@ else_1:
 endif_1:
 	%17 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %17
+; while_1
 	br label %again_1
 again_1:
 	%18 = load %Int32, %Int32* %17
@@ -655,6 +658,7 @@ again_1:
 body_1:
 	%20 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %20
+; while_2
 	br label %again_2
 again_2:
 	%21 = load %Int32, %Int32* %20
@@ -687,6 +691,7 @@ break_1:
 	%40 = call %Int32 %39(%Int32 5, %Int32 7)
 	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str10 to [0 x i8]*), %Int32 %40)
 	store %Int32 0, %Int32* %17
+; while_3
 	br label %again_3
 again_3:
 	%42 = load %Int32, %Int32* %17

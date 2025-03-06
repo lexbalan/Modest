@@ -221,6 +221,7 @@ define %Int @main() {
 	%6 = getelementptr %Point, %Point* @globalPoint1, %Int32 0, %Int32 1
 	%7 = load %Int32, %Int32* %6
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), %Int32 %7)
+; if_0
 	%9 = bitcast %Point* @globalPoint0 to i8*
 	%10 = bitcast %Point* @globalPoint1 to i8*
 	%11 = call i1 (i8*, i8*, i64) @memeq(i8* %9, i8* %10, %Int64 8)
@@ -249,6 +250,7 @@ endif_0:
 	%23 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 1
 	%24 = load %Int32, %Int32* %23
 	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), %Int32 %24)
+; if_1
 	%26 = bitcast %Point* %15 to i8*
 	%27 = bitcast %Point* %18 to i8*
 	%28 = call i1 (i8*, i8*, i64) @memeq(i8* %26, i8* %27, %Int64 8)
