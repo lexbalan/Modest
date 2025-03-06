@@ -48,7 +48,7 @@ public func isFull(q: *Queue) -> Bool {
 public func getPutPosition(q: *Queue) -> Nat32 {
 	let pos = q.p
 	q.p = next(q.capacity, q.p)
-	if q.size < (q.capacity - 1) {
+	if q.size < q.capacity {
 		++q.size
 	}
 	return pos
