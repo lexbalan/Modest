@@ -5,7 +5,7 @@ from .unit import unit_can, ValueUnit_cons
 from .bool import bool_can, value_bool_cons
 from .word import word_can, value_word_cons
 from .char import char_can, value_char_cons
-from .integer import integer_can, value_integer_cons, value_integer_create
+from .integer import integer_can, value_integer_cons
 from .float import float_can, value_float_cons
 from .record import record_can, value_record_cons
 from .array import array_can, value_array_cons

@@ -198,12 +198,14 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 define %Int32 @main() {
 	%1 = call %Int32 @get_number(%Int32 0, %Int32 10)
+; if_0
 	%2 = icmp slt %Int32 %1, 5
 	br %Bool %2 , label %then_0, label %else_0
 then_0:
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str1 to [0 x i8]*), %Int32 %1, %Int32 5)
 	br label %endif_0
 else_0:
+; if_1
 	%4 = icmp sgt %Int32 %1, 5
 	br %Bool %4 , label %then_1, label %else_1
 then_1:
@@ -221,12 +223,14 @@ endif_0:
 define internal %Int32 @get_number(%Int32 %min, %Int32 %max) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str4 to [0 x i8]*), %Int32 %min, %Int32 %max)
 	%3 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str5 to [0 x i8]*), %Int32* %1)
+; if_0
 	%4 = load %Int32, %Int32* %1
 	%5 = icmp slt %Int32 %4, %min
 	br %Bool %5 , label %then_0, label %else_0
@@ -235,6 +239,7 @@ then_0:
 	br label %again_1
 	br label %endif_0
 else_0:
+; if_1
 	%8 = load %Int32, %Int32* %1
 	%9 = icmp sgt %Int32 %8, %max
 	br %Bool %9 , label %then_1, label %else_1

@@ -355,6 +355,7 @@ define internal void @handle_request(%Int32 %client_socket) {
 	%1 = alloca [1024 x %Word8], align 1
 	%2 = bitcast [1024 x %Word8]* %1 to i8*
 	%3 = call %SSizeT @read(%Int32 %client_socket, i8* %2, %SizeT 1023)
+; if_0
 	%4 = icmp slt %SSizeT %3, 0
 	br %Bool %4 , label %then_0, label %endif_0
 then_0:
@@ -382,6 +383,7 @@ endif_0:
 
 define %Int32 @main() {
 	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)
+; if_0
 	%2 = icmp slt %Int %1, 0
 	br %Bool %2 , label %then_0, label %endif_0
 then_0:
@@ -401,6 +403,7 @@ endif_0:
 	%9 = alloca %Int, align 4
 	%10 = call %Int @bind(%Int %1, %SockAddr* %8, %SocklenT 16)
 	store %Int %10, %Int* %9
+; if_1
 	%11 = load %Int, %Int* %9
 	%12 = icmp slt %Int %11, 0
 	br %Bool %12 , label %then_1, label %endif_1
@@ -414,6 +417,7 @@ endif_1:
 	; Starting listen to connection
 	%14 = call %Int @listen(%Int %1, %Int 5)
 	store %Int %14, %Int* %9
+; if_2
 	%15 = load %Int, %Int* %9
 	%16 = icmp slt %Int %15, 0
 	br %Bool %16 , label %then_2, label %endif_2
@@ -426,6 +430,7 @@ endif_2:
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str8 to [0 x i8]*), %Int32 8080)
 
 	; Handle input connections
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
@@ -435,6 +440,7 @@ body_1:
 	%21 = alloca %SocklenT, align 4
 	store %SocklenT 16, %SocklenT* %21
 	%22 = call %Int @accept(%Int %1, %SockAddr* %20, %SocklenT* %21)
+; if_3
 	%23 = icmp slt %Int %22, 0
 	br %Bool %23 , label %then_3, label %endif_3
 then_3:

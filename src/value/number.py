@@ -1,6 +1,27 @@
 
 from error import error
-from hlir.value import ValueCons
+from hlir.value import ValueLiteral, ValueCons
+import type as htype
+from util import nbits_for_num
+
+
+def value_number_create(num, typ=None, ti=None):
+	if typ == None:
+		typ = htype.type_number_for(num, signed=num < 0, ti=ti)
+	else:
+		nbits = nbits_for_num(num)
+
+		if nbits > typ.width:
+			from error import error
+			error("value size not corresponded type size", ti)
+			return ValueBad(ti)
+
+	v = ValueLiteral(typ, ti)
+	v.asset = num
+	v.nsigns = 0
+	v.immediate = True
+	return v
+
 
 
 def number_can(to, from_type, method, ti):

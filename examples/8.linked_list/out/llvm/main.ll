@@ -269,6 +269,7 @@ define internal void @list_print_forward(%list_List* %lst) {
 	%2 = alloca %list_Node*, align 8
 	%3 = call %list_Node* @list_first_node_get(%list_List* %lst)
 	store %list_Node* %3, %list_Node** %2
+; while_1
 	br label %again_1
 again_1:
 	%4 = load %list_Node*, %list_Node** %2
@@ -296,6 +297,7 @@ define internal void @list_print_backward(%list_List* %lst) {
 	%2 = alloca %list_Node*, align 8
 	%3 = call %list_Node* @list_last_node_get(%list_List* %lst)
 	store %list_Node* %3, %list_Node** %2
+; while_1
 	br label %again_1
 again_1:
 	%4 = load %list_Node*, %list_Node** %2
@@ -320,6 +322,7 @@ define %Int @main() {
 	%2 = call %list_List* @list_create()
 
 	;list0.size  // access to private field of record
+; if_0
 	%3 = icmp eq %list_List* %2, null
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
@@ -355,6 +358,7 @@ endif_0:
 	; test list.node_get
 	%9 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %9
+; while_1
 	br label %again_1
 again_1:
 	%10 = load %Int32, %Int32* %9
@@ -363,6 +367,7 @@ again_1:
 body_1:
 	%12 = load %Int32, %Int32* %9
 	%13 = call %list_Node* @list_node_get(%list_List* %2, %Int32 %12)
+; if_1
 	%14 = icmp eq %list_Node* %13, null
 	br %Bool %14 , label %then_1, label %endif_1
 then_1:
@@ -386,6 +391,7 @@ endif_1:
 break_1:
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @str11 to [0 x i8]*))
 	store %Int32 0, %Int32* %9
+; while_2
 	br label %again_2
 again_2:
 	%28 = load %Int32, %Int32* %9
@@ -394,6 +400,7 @@ again_2:
 body_2:
 	%30 = load %Int32, %Int32* %9
 	%31 = call %list_Node* @list_node_get(%list_List* %2, %Int32 %30)
+; if_2
 	%32 = icmp eq %list_Node* %31, null
 	br %Bool %32 , label %then_2, label %endif_2
 then_2:

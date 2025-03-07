@@ -226,6 +226,7 @@ declare void @perror(%ConstCharStr* %str)
 define internal void @bubble_sort32([0 x %Int32]* %array, %Int32 %len) {
 	%1 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %1
+; while_1
 	br label %again_1
 again_1:
 	%2 = load %Bool, %Bool* %1
@@ -234,6 +235,7 @@ body_1:
 	store %Bool 0, %Bool* %1
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
+; while_2
 	br label %again_2
 again_2:
 	%4 = sub %Int32 %len, 1
@@ -248,6 +250,7 @@ body_2:
 	%11 = add %Int32 %10, 1
 	%12 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %11
 	%13 = load %Int32, %Int32* %12
+; if_0
 	%14 = icmp sgt %Int32 %9, %13
 	br %Bool %14 , label %then_0, label %endif_0
 then_0:
@@ -289,6 +292,7 @@ define internal void @print_array([0 x %Int32]* %array, %Int32 %len) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
 	%2 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %2
+; while_1
 	br label %again_1
 again_1:
 	%3 = load %Int32, %Int32* %2
@@ -312,6 +316,7 @@ define internal void @fill_array([0 x %Int32]* %array, %Int32 %len) {
 	%1 = sub i16 0, 1000
 	%2 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %2
+; while_1
 	br label %again_1
 again_1:
 	%3 = load %Int32, %Int32* %2
@@ -335,12 +340,14 @@ break_1:
 define internal %Int32 @get_number(%Int32 %min, %Int32 %max) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str8 to [0 x i8]*), %Int32 %min, %Int32 %max)
 	%3 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*), %Int32* %1)
+; if_0
 	%4 = load %Int32, %Int32* %1
 	%5 = icmp slt %Int32 %4, %min
 	br %Bool %5 , label %then_0, label %else_0
@@ -349,6 +356,7 @@ then_0:
 	br label %again_1
 	br label %endif_0
 else_0:
+; if_1
 	%8 = load %Int32, %Int32* %1
 	%9 = icmp sgt %Int32 %8, %max
 	br %Bool %9 , label %then_1, label %else_1

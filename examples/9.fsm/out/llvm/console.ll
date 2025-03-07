@@ -339,6 +339,7 @@ define void @console_putchar_utf32(%Char32 %c) {
 	%3 = sext %Int8 %2 to %Int32
 	%4 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %4
+; while_1
 	br label %again_1
 again_1:
 	%5 = load %Int32, %Int32* %4
@@ -373,6 +374,7 @@ break_1:
 define void @console_puts8(%Str8* %s) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
@@ -380,6 +382,7 @@ body_1:
 	%2 = load %Int32, %Int32* %1
 	%3 = getelementptr %Str8, %Str8* %s, %Int32 0, %Int32 %2
 	%4 = load %Char8, %Char8* %3
+; if_0
 	%5 = icmp eq %Char8 %4, 0
 	br %Bool %5 , label %then_0, label %endif_0
 then_0:
@@ -398,6 +401,7 @@ break_1:
 define void @console_puts16(%Str16* %s) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
@@ -407,6 +411,7 @@ body_1:
 	%2 = load %Int32, %Int32* %1
 	%3 = getelementptr %Str16, %Str16* %s, %Int32 0, %Int32 %2
 	%4 = load %Char16, %Char16* %3
+; if_0
 	%5 = icmp eq %Char16 %4, 0
 	br %Bool %5 , label %then_0, label %endif_0
 then_0:
@@ -418,6 +423,7 @@ endif_0:
 	%9 = getelementptr %Str16, %Str16* %s, %Int32 0, %Int32 %8
 	%10 = bitcast %Char16* %9 to [0 x %Char16]*
 	%11 = call %Int8 @utf_utf16_to_utf32([0 x %Char16]* %10, %Char32* %7)
+; if_1
 	%12 = icmp eq %Int8 %11, 0
 	br %Bool %12 , label %then_1, label %endif_1
 then_1:
@@ -438,6 +444,7 @@ break_1:
 define void @console_puts32(%Str32* %s) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
@@ -445,6 +452,7 @@ body_1:
 	%2 = load %Int32, %Int32* %1
 	%3 = getelementptr %Str32, %Str32* %s, %Int32 0, %Int32 %2
 	%4 = load %Char32, %Char32* %3
+; if_0
 	%5 = icmp eq %Char32 %4, 0
 	br %Bool %5 , label %then_0, label %endif_0
 then_0:
@@ -493,6 +501,7 @@ define %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va) {
 	store %Int32 0, %Int32* %2
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
@@ -502,6 +511,7 @@ body_1:
 	%6 = getelementptr %Str8, %Str8* %form, %Int32 0, %Int32 %5
 	%7 = load %Char8, %Char8* %6
 	store %Char8 %7, %Char8* %4
+; if_0
 	%8 = load %Char8, %Char8* %4
 	%9 = icmp eq %Char8 %8, 0
 	br %Bool %9 , label %then_0, label %endif_0
@@ -509,10 +519,12 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
+; if_1
 	%11 = load %Char8, %Char8* %4
 	%12 = icmp ne %Char8 %11, 123
 	br %Bool %12 , label %then_1, label %endif_1
 then_1:
+; if_2
 	%13 = load %Char8, %Char8* %4
 	%14 = icmp eq %Char8 %13, 125
 	br %Bool %14 , label %then_2, label %endif_2
@@ -524,6 +536,7 @@ then_2:
 	%18 = getelementptr %Str8, %Str8* %form, %Int32 0, %Int32 %17
 	%19 = load %Char8, %Char8* %18
 	store %Char8 %19, %Char8* %4
+; if_3
 	%20 = load %Char8, %Char8* %4
 	%21 = icmp eq %Char8 %20, 125
 	br %Bool %21 , label %then_3, label %endif_3
@@ -565,6 +578,7 @@ endif_1:
 	%41 = getelementptr %Str8, %Str8* %form, %Int32 0, %Int32 %40
 	%42 = load %Char8, %Char8* %41
 	store %Char8 %42, %Char8* %4
+; if_4
 	%43 = load %Char8, %Char8* %4
 	%44 = icmp eq %Char8 %43, 123
 	br %Bool %44 , label %then_4, label %endif_4
@@ -588,6 +602,7 @@ endif_4:
 	%55 = getelementptr [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %54
 ;
 	%56 = bitcast %Char8* %55 to [0 x %Char8]*
+; if_5
 	%57 = load %Char8, %Char8* %4
 	%58 = icmp eq %Char8 %57, 105
 	%59 = load %Char8, %Char8* %4
@@ -605,6 +620,7 @@ then_5:
 	store %Int32 %65, %Int32* %3
 	br label %endif_5
 else_5:
+; if_6
 	%66 = load %Char8, %Char8* %4
 	%67 = icmp eq %Char8 %66, 110
 	br %Bool %67 , label %then_6, label %else_6
@@ -619,6 +635,7 @@ then_6:
 	store %Int32 %71, %Int32* %3
 	br label %endif_6
 else_6:
+; if_7
 	%72 = load %Char8, %Char8* %4
 	%73 = icmp eq %Char8 %72, 120
 	%74 = load %Char8, %Char8* %4
@@ -637,6 +654,7 @@ then_7:
 	store %Int32 %80, %Int32* %3
 	br label %endif_7
 else_7:
+; if_8
 	%81 = load %Char8, %Char8* %4
 	%82 = icmp eq %Char8 %81, 115
 	br %Bool %82 , label %then_8, label %else_8
@@ -653,6 +671,7 @@ then_8:
 	store %Int32 %88, %Int32* %3
 	br label %endif_8
 else_8:
+; if_9
 	%89 = load %Char8, %Char8* %4
 	%90 = icmp eq %Char8 %89, 99
 	br %Bool %90 , label %then_9, label %endif_9
@@ -692,6 +711,7 @@ define internal %Char8 @n_to_dec_sym(%Int8 %n) {
 }
 
 define internal %Char8 @n_to_hex_sym(%Int8 %n) {
+; if_0
 	%1 = icmp ult %Int8 %n, 10
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -711,6 +731,7 @@ define internal %Int32 @sprint_hex_nat32([0 x %Char8]* %buf, %Int32 %x) {
 	store %Int32 %x, %Int32* %2
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
@@ -728,6 +749,7 @@ body_1:
 	%12 = load %Int32, %Int32* %3
 	%13 = add %Int32 %12, 1
 	store %Int32 %13, %Int32* %3
+; if_0
 	%14 = load %Int32, %Int32* %2
 	%15 = icmp eq %Int32 %14, 0
 	br %Bool %15 , label %then_0, label %endif_0
@@ -741,6 +763,7 @@ break_1:
 	; mirroring into buffer
 	%17 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %17
+; while_2
 	br label %again_2
 again_2:
 	%18 = load %Int32, %Int32* %3
@@ -774,6 +797,7 @@ define internal %Int32 @sprint_dec_int32([0 x %Char8]* %buf, %Int32 %x) {
 	store %Int32 %x, %Int32* %2
 	%3 = load %Int32, %Int32* %2
 	%4 = icmp slt %Int32 %3, 0
+; if_0
 	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	%5 = load %Int32, %Int32* %2
@@ -783,6 +807,7 @@ then_0:
 endif_0:
 	%7 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %7
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
@@ -800,6 +825,7 @@ body_1:
 	%16 = load %Int32, %Int32* %7
 	%17 = add %Int32 %16, 1
 	store %Int32 %17, %Int32* %7
+; if_1
 	%18 = load %Int32, %Int32* %2
 	%19 = icmp eq %Int32 %18, 0
 	br %Bool %19 , label %then_1, label %endif_1
@@ -811,6 +837,7 @@ endif_1:
 break_1:
 	%21 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %21
+; if_2
 	br %Bool %4 , label %then_2, label %endif_2
 then_2:
 	%22 = getelementptr [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 0
@@ -820,6 +847,7 @@ then_2:
 	store %Int32 %24, %Int32* %21
 	br label %endif_2
 endif_2:
+; while_2
 	br label %again_2
 again_2:
 	%25 = load %Int32, %Int32* %7
@@ -853,6 +881,7 @@ define internal %Int32 @sprint_dec_n32([0 x %Char8]* %buf, %Int32 %x) {
 	store %Int32 %x, %Int32* %2
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
@@ -870,6 +899,7 @@ body_1:
 	%12 = load %Int32, %Int32* %3
 	%13 = add %Int32 %12, 1
 	store %Int32 %13, %Int32* %3
+; if_0
 	%14 = load %Int32, %Int32* %2
 	%15 = icmp eq %Int32 %14, 0
 	br %Bool %15 , label %then_0, label %endif_0
@@ -881,6 +911,7 @@ endif_0:
 break_1:
 	%17 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %17
+; while_2
 	br label %again_2
 again_2:
 	%18 = load %Int32, %Int32* %3

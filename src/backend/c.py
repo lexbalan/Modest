@@ -9,7 +9,6 @@ from value.value import *
 import type as htype
 from type import select_common_type, type_print
 from hlir.value import ValueIndex
-from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_by_id, align_to
 from main import settings
 import foundation

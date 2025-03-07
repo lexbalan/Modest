@@ -307,6 +307,7 @@ declare void @perror(%ConstCharStr* %str)
 	}
 }
 define internal %Float @max(%Float %a, %Float %b) {
+; if_0
 	%1 = fcmp ogt %Float %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
@@ -317,6 +318,7 @@ endif_0:
 }
 
 define internal %Float @min(%Float %a, %Float %b) {
+; if_0
 	%1 = fcmp olt %Float %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:

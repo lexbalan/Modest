@@ -196,6 +196,7 @@ define internal void @mtab(%Int32 %n) {
 	store %Int32 1, %Int32* %1
 	; or
 	;var m = 1   // by default integer var get system int type (-mint option)
+; while_1
 	br label %again_1
 again_1:
 	%2 = load %Int32, %Int32* %1

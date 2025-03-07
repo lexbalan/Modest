@@ -16,7 +16,7 @@ from hlir.hlir import *
 import foundation
 
 from value.bool import value_bool_create
-from value.integer import value_integer_create
+from value.number import value_number_create
 from value.float import value_float_create
 from value.array import value_array_create, value_array_add
 from value.string import value_string_create, value_string_add
@@ -407,7 +407,7 @@ def init():
 
 
 	global valueTrue, valueFalse, valueNil
-	valueNil = value_integer_create(0, typ=foundation.typeNil)
+	valueNil = value_number_create(0, typ=foundation.typeNil)
 	valueTrue = value_bool_create(1)
 	valueFalse = value_bool_create(0)
 
@@ -449,8 +449,8 @@ def init_builtin_values():
 	compilerName = value_string_create(compilerNameString, ti=None)
 
 	# compiler version
-	compilerVersionMajor = value_integer_create(0, typ=foundation.typeNat32)
-	compilerVersionMinor = value_integer_create(7, typ=foundation.typeNat32)
+	compilerVersionMajor = value_number_create(0, typ=foundation.typeNat32)
+	compilerVersionMinor = value_number_create(7, typ=foundation.typeNat32)
 
 	compiler_version_initializers = [
 		Initializer(Id().fromStr('major'), compilerVersionMajor),
@@ -478,10 +478,10 @@ def init_builtin_values():
 
 
 	__targetName = value_string_create(target_name)
-	__targetCharWidth = value_integer_create(char_width, typ=foundation.typeNat32)
-	__targetIntWidth = value_integer_create(int_width, typ=foundation.typeNat32)
-	__targetFloatWidth = value_integer_create(flt_width, typ=foundation.typeNat32)
-	__targetPointerWidth = value_integer_create(pointer_width, typ=foundation.typeNat32)
+	__targetCharWidth = value_number_create(char_width, typ=foundation.typeNat32)
+	__targetIntWidth = value_number_create(int_width, typ=foundation.typeNat32)
+	__targetFloatWidth = value_number_create(flt_width, typ=foundation.typeNat32)
+	__targetPointerWidth = value_number_create(pointer_width, typ=foundation.typeNat32)
 
 	# '__target' record
 	target_initializers = [
@@ -1534,6 +1534,7 @@ def do_value_integer(x):
 			if x['str'][1] == 'x':
 				num_string_len = num_string_len - 2
 				base = 16
+				#mass
 
 	num = int(x['str'], base)
 
@@ -1541,7 +1542,7 @@ def do_value_integer(x):
 		if not 'use_bigint' in cmodule.att:
 			cmodule.att.append('use_bigint')
 
-	v = value_integer_create(num, ti=x['ti'])
+	v = value_number_create(num, ti=x['ti'])
 	v.nsigns = num_string_len
 
 	if base == 16:
@@ -1925,7 +1926,7 @@ def do_stmt_incdec(x, op='add'):
 		error("expected value with integer type", v.ti)
 		return StmtBad(x)
 
-	one = value_integer_create(1, typ=v.type, ti=x['ti'])
+	one = value_number_create(1, typ=v.type, ti=x['ti'])
 	nv = ValueBin(v.type, op, v, one, ti=x['ti'])
 	return StmtAssign(v, nv, ti=x['ti'])
 
@@ -2247,13 +2248,13 @@ def def_var(x):
 				# for case:
 				# var arrayFromString: []Char8 = "abc"
 				str_length = len(v.asset)
-				volume = value_integer_create(str_length)
+				volume = value_number_create(str_length)
 				t = TypeArray(t.of, volume, ti=x['ti'])
 			elif v.type.is_array():
 				# for case:
 				# var a: []*Str8 = ["Ab", "aB", "AAb"]
 
-				volume = value_integer_create(v.type.volume.asset)
+				volume = value_number_create(v.type.volume.asset)
 				t = TypeArray(t.of, volume, ti=x['ti'])
 				#v = value_cons_default(v)
 				#t = Type.copy(v.type)

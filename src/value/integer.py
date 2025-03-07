@@ -1,29 +1,9 @@
 
 from error import info, warning, error
-from util import nbits_for_num
-import type as htype
 from type import type_print
-from hlir.value import ValueLiteral, ValueCons
+from hlir.value import ValueCons
 from hlir.type import Type
-
-
-def value_integer_create(num, typ=None, ti=None):
-	if typ == None:
-		typ = htype.type_number_for(num, signed=num < 0, ti=ti)
-	else:
-		nbits = nbits_for_num(num)
-
-		if nbits > typ.width:
-			from error import error
-			error("value size not corresponded type size", ti)
-			return ValueBad(ti)
-
-	v = ValueLiteral(typ, ti)
-	v.asset = num
-	v.nsigns = 0
-	v.immediate = True
-	return v
-
+from util import nbits_for_num
 
 
 warning_cast_data_loss = True

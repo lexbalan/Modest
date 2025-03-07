@@ -272,6 +272,7 @@ define internal void @off_entry(%fsm_FSM* %x) {
 
 define internal void @off_loop(%fsm_FSM* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
+; if_0
 	%2 = load %Int8, %Int8* @cnt
 	%3 = icmp ult %Int8 %2, 10
 	br %Bool %3 , label %then_0, label %else_0
@@ -305,6 +306,7 @@ define internal void @on_entry(%fsm_FSM* %x) {
 
 define internal void @on_loop(%fsm_FSM* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*))
+; if_0
 	%2 = load %Int8, %Int8* @cnt
 	%3 = icmp ult %Int8 %2, 10
 	br %Bool %3 , label %then_0, label %else_0
@@ -341,6 +343,7 @@ define internal void @beacon_entry(%fsm_FSM* %x) {
 
 define internal void @beacon_loop(%fsm_FSM* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
+; if_0
 	%2 = load %Int8, %Int8* @cnt
 	%3 = icmp ult %Int8 %2, 10
 	br %Bool %3 , label %then_0, label %else_0
@@ -441,6 +444,7 @@ define internal void @beacon_exit(%fsm_FSM* %x) {
 	]
 }
 define %Int @main() {
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1

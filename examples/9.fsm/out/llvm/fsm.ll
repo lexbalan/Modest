@@ -230,6 +230,7 @@ define void @fsm_switch(%fsm_FSM* %fsm, %Int32 %state) {
 
 define void @fsm_run(%fsm_FSM* %fsm) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
+; if_0
 	%2 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
 	%3 = load %Int32, %Int32* %2
 	%4 = icmp eq %Int32 %3, 0
@@ -240,12 +241,14 @@ then_0:
 	%7 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
 	%8 = bitcast %Int32 %6 to %Int32
 	%9 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %7, %Int32 0, %Int32 %8
+; if_1
 	br %Bool 1 , label %then_1, label %endif_1
 then_1:
 	%10 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %9, %Int32 0, %Int32 0
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), [8 x %Char8]* %10)
 	br label %endif_1
 endif_1:
+; if_2
 	%12 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %9, %Int32 0, %Int32 1
 	%13 = load %fsm_Handler, %fsm_Handler* %12
 	%14 = icmp ne %fsm_Handler %13, null
@@ -262,6 +265,7 @@ endif_2:
 	store %Int32 1, %Int32* %18
 	br label %endif_0
 else_0:
+; if_3
 	%19 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
 	%20 = load %Int32, %Int32* %19
 	%21 = icmp eq %Int32 %20, 1
@@ -272,6 +276,7 @@ then_3:
 	%24 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
 	%25 = bitcast %Int32 %23 to %Int32
 	%26 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %24, %Int32 0, %Int32 %25
+; if_4
 	%27 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %26, %Int32 0, %Int32 2
 	%28 = load %fsm_Handler, %fsm_Handler* %27
 	%29 = icmp ne %fsm_Handler %28, null
@@ -284,6 +289,7 @@ then_4:
 endif_4:
 	br label %endif_3
 else_3:
+; if_5
 	%32 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
 	%33 = load %Int32, %Int32* %32
 	%34 = icmp eq %Int32 %33, 2
@@ -294,12 +300,14 @@ then_5:
 	%37 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
 	%38 = bitcast %Int32 %36 to %Int32
 	%39 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %37, %Int32 0, %Int32 %38
+; if_6
 	br %Bool 1 , label %then_6, label %endif_6
 then_6:
 	%40 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %39, %Int32 0, %Int32 0
 	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), [8 x %Char8]* %40)
 	br label %endif_6
 endif_6:
+; if_7
 	%42 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %39, %Int32 0, %Int32 3
 	%43 = load %fsm_Handler, %fsm_Handler* %42
 	%44 = icmp ne %fsm_Handler %43, null

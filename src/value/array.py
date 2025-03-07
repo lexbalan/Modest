@@ -4,7 +4,7 @@ import foundation
 from type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
-from .integer import value_integer_create
+from .number import value_number_create
 from hlir.value import Value, ValueBad, ValueLiteral, ValueCons, ValueZero, ValueBin
 from hlir.type import Type, TypeArray
 
@@ -137,7 +137,7 @@ def value_array_cons(t, v, method, ti):
 			#info("value_array_create_from_string", ti)
 			#print(t.volume.asset)
 
-			volume = value_integer_create(srtlen)
+			volume = value_number_create(srtlen)
 		else:
 			assert(False)
 
@@ -189,7 +189,7 @@ def value_array_cons(t, v, method, ti):
 
 
 def _value_array_create(items, item_type, length, is_generic=False, ti=None):
-	array_volume = value_integer_create(length)
+	array_volume = value_number_create(length)
 	array_type = TypeArray(item_type, volume=array_volume, ti=ti)
 	array_type.generic = is_generic
 	v = ValueLiteral(array_type, ti)
@@ -202,7 +202,7 @@ def _value_array_create(items, item_type, length, is_generic=False, ti=None):
 def value_array_add(l, r, ti):
 	items = l.items + r.items
 	length = len(items)
-	str_array_volume = value_integer_create(length)
+	str_array_volume = value_number_create(length)
 	item_type = select_common_type(l.type.of, r.type.of)
 
 	# неявно приводим все элементы к общему типу

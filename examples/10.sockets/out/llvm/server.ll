@@ -249,6 +249,7 @@ declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
 define internal %Bool @write_file(%Int %sockfd) {
 	%1 = alloca [1024 x %Char8], align 1
 	%2 = call %File* @fopen(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+; if_0
 	%3 = icmp eq %File* %2, null
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
@@ -256,12 +257,14 @@ then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%5 = bitcast [1024 x %Char8]* %1 to i8*
 	%6 = call %SSizeT @recv(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
+; if_1
 	%7 = icmp sle %SSizeT %6, 0
 	br %Bool %7 , label %then_1, label %endif_1
 then_1:
@@ -280,6 +283,7 @@ break_1:
 
 define %Int @main() {
 	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)
+; if_0
 	%2 = icmp slt %Int %1, 0
 	br %Bool %2 , label %then_0, label %endif_0
 then_0:
@@ -300,6 +304,7 @@ endif_0:
 	%12 = alloca %Int, align 4
 	%13 = call %Int @bind(%Int %1, %SockAddr* %11, %SocklenT 16)
 	store %Int %13, %Int* %12
+; if_1
 	%14 = load %Int, %Int* %12
 	%15 = icmp slt %Int %14, 0
 	br %Bool %15 , label %then_1, label %endif_1
@@ -311,6 +316,7 @@ endif_1:
 	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str9 to [0 x i8]*))
 	%17 = call %Int @listen(%Int %1, %Int 10)
 	store %Int %17, %Int* %12
+; if_2
 	%18 = load %Int, %Int* %12
 	%19 = icmp ne %Int %18, 0
 	br %Bool %19 , label %then_2, label %endif_2
@@ -327,6 +333,7 @@ endif_2:
 	%24 = bitcast i8* %23 to %SockAddr*
 	%25 = call %Int @accept(%Int %1, %SockAddr* %24, %SocklenT* %21)
 	%26 = call %Bool @write_file(%Int %25)
+; if_3
 	br %Bool %26 , label %then_3, label %else_3
 then_3:
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str12 to [0 x i8]*))

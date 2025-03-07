@@ -205,6 +205,7 @@ define %Int @main() {
 	%5 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*), %Int32* %2)
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str4 to [0 x i8]*))
 	%7 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str5 to [0 x i8]*), %Int32* %3)
+; if_0
 	%8 = load %Int32, %Int32* %2
 	%9 = load %Int32, %Int32* %3
 	%10 = icmp sgt %Int32 %8, %9
@@ -213,6 +214,7 @@ then_0:
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str6 to [0 x i8]*))
 	br label %endif_0
 else_0:
+; if_1
 	%12 = load %Int32, %Int32* %2
 	%13 = load %Int32, %Int32* %3
 	%14 = icmp slt %Int32 %12, %13

@@ -195,6 +195,7 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %2
+; while_1
 	br label %again_1
 again_1:
 	%3 = load %Int32, %Int32* %2

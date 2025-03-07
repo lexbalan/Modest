@@ -172,6 +172,7 @@ declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
 ; -- endstrings --
 define void @delay_us(%Int64 %us) {
 	%1 = call %ClockT @clock()
+; while_1
 	br label %again_1
 again_1:
 	%2 = call %ClockT @clock()
