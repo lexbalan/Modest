@@ -13,8 +13,6 @@ def type_number_for(num, signed=False, ti=None):
 	return TypeNumber(width=required_width, signed=signed, ti=ti)
 
 
-
-
 # ищем поле с таким id в типе record
 def record_field_get(t, id):
 	return get_item_by_id(t.fields, id)

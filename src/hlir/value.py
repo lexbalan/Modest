@@ -383,7 +383,6 @@ class ValueNew(Value):
 class ValueSizeofType(Value):
 	def __init__(self, of, ti=None):
 		value_size = of.size
-		from type import type_number_for
 
 		type = None
 		if of.is_vla():
