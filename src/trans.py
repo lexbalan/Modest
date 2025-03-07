@@ -21,7 +21,7 @@ from value.float import value_float_create
 from value.array import value_array_create, value_array_add
 from value.string import value_string_create, value_string_add
 from value.record import value_record_create
-
+from value.value import value_imm_literal_create
 
 import decimal
 # max number of signs after .
@@ -407,7 +407,7 @@ def init():
 
 
 	global valueTrue, valueFalse, valueNil
-	valueNil = value_number_create(0, typ=foundation.typeNil)
+	valueNil = value_imm_literal_create(foundation.typeNil, 0)
 	valueTrue = value_bool_create(1)
 	valueFalse = value_bool_create(0)
 
@@ -449,8 +449,8 @@ def init_builtin_values():
 	compilerName = value_string_create(compilerNameString, ti=None)
 
 	# compiler version
-	compilerVersionMajor = value_number_create(0, typ=foundation.typeNat32)
-	compilerVersionMinor = value_number_create(7, typ=foundation.typeNat32)
+	compilerVersionMajor = value_imm_literal_create(foundation.typeNat32, 0)
+	compilerVersionMinor = value_imm_literal_create(foundation.typeNat32, 7)
 
 	compiler_version_initializers = [
 		Initializer(Id().fromStr('major'), compilerVersionMajor),
@@ -478,10 +478,10 @@ def init_builtin_values():
 
 
 	__targetName = value_string_create(target_name)
-	__targetCharWidth = value_number_create(char_width, typ=foundation.typeNat32)
-	__targetIntWidth = value_number_create(int_width, typ=foundation.typeNat32)
-	__targetFloatWidth = value_number_create(flt_width, typ=foundation.typeNat32)
-	__targetPointerWidth = value_number_create(pointer_width, typ=foundation.typeNat32)
+	__targetCharWidth = value_imm_literal_create(foundation.typeNat32, char_width)
+	__targetIntWidth = value_imm_literal_create(foundation.typeNat32, int_width)
+	__targetFloatWidth = value_imm_literal_create(foundation.typeNat32, flt_width)
+	__targetPointerWidth = value_imm_literal_create(foundation.typeNat32, pointer_width)
 
 	# '__target' record
 	target_initializers = [
@@ -1926,7 +1926,7 @@ def do_stmt_incdec(x, op='add'):
 		error("expected value with integer type", v.ti)
 		return StmtBad(x)
 
-	one = value_number_create(1, typ=v.type, ti=x['ti'])
+	one = value_imm_literal_create(v.type, 1, ti=x['ti'])
 	nv = ValueBin(v.type, op, v, one, ti=x['ti'])
 	return StmtAssign(v, nv, ti=x['ti'])
 

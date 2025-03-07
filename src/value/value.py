@@ -1,14 +1,11 @@
 
+from hlir.value import ValueLiteral
 
-"""
-def value_is_lvalue(x):
-	isinstance(x, ValueVar)
-	isinstance(x, ValueAccessRecord)
-	isinstance(x, ValueIndex)
-	isinstance(x, ValueSlice)
-	isinstance(x, ValueDeref)
-	return x['kind'] in ['var', 'access', 'index', 'slice', 'deref']
-"""
 
+def value_imm_literal_create(type, asset=None, ti=None):
+	v = ValueLiteral(type, ti)
+	v.asset = asset
+	v.immediate = True
+	return v
 
 
