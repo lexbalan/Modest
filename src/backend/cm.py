@@ -616,6 +616,7 @@ def print_value_literal(x, ctx):
 	elif Type.is_pointer(t): print_value_ptr(x, ctx)
 	elif Type.is_bool(t): print_value_bool_create(x, ctx)
 	elif Type.is_char(t): print_value_char_create(x, ctx)
+	elif Type.is_word(t): print_value_integer(x, ctx)
 	elif Type.is_enum(t): print_value_integer(x, ctx)
 	#elif Type.is_byte(t): print_value_integer(x, ctx)
 	return

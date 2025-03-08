@@ -9,7 +9,7 @@ from value.value import *
 import type as htype
 from type import select_common_type, type_print
 from hlir.value import ValueIndex
-from util import align_bits_up, nbits_for_num, get_item_by_id, align_to
+from util import nbits_for_num, get_item_by_id, align_to
 from main import settings
 import foundation
 
@@ -1970,7 +1970,14 @@ def print_def_const(x):
 	if const_value.type.is_array():
 		print_macro_definition(id_str, init_value, val_ctx=[], prefix='_')
 		newline()
-		print_variable(id_str, const_value.type, as_const=True)
+
+		t = const_value.type
+		from value.cons import _select_minimal_type_for
+		def_type = _select_minimal_type_for(t)
+		if def_type != None:
+			t = def_type
+
+		print_variable(id_str, t, as_const=True)
 		out(" = _%s;" % id_str)
 		const_value.addAttribute('kostil')
 		return

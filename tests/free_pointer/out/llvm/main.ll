@@ -213,7 +213,7 @@ define %Int32 @main() {
 	; and use it as usualy
 	%8 = load i8*, i8** %4
 	%9 = bitcast i8* %8 to %Int64*
-	store %Int64 81985529216486895, %Int64* %9
+	store %Int64 123456789123456789, %Int64* %9
 	%10 = load %Int64, %Int64* %3
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), %Int64 %10)
 

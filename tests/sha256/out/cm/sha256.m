@@ -111,7 +111,7 @@ func transform(ctx: *Context, data: *[]Word8) -> Unit {
 
 	i = 0
 	while i < 64 {
-		let t1 = Nat32 x[7] + Nat32 ep1(x[4]) + Nat32 ch(x[4], x[5], x[6]) + k[i] + Nat32 m[i]
+		let t1 = Nat32 x[7] + Nat32 ep1(x[4]) + Nat32 ch(x[4], x[5], x[6]) + Nat32 k[i] + Nat32 m[i]
 		let t2 = Nat32 ep0(x[0]) + Nat32 maj(x[0], x[1], x[2])
 
 		x[7] = x[6]

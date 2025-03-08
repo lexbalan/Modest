@@ -260,7 +260,7 @@ else_0:
 	br label %endif_0
 endif_0:
 ; if_1
-	br %Bool 0 , label %then_1, label %else_1
+	br %Bool 1 , label %then_1, label %else_1
 then_1:
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str6 to [0 x i8]*))
 	br label %endif_1

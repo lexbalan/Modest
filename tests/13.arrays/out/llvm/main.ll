@@ -403,23 +403,23 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	ret void
 }
 
-@startSequence = constant [3 x i8] [
-	i8 170,
-	i8 85,
-	i8 2
+@startSequence = constant [3 x %Word8] [
+	%Word8 170,
+	%Word8 85,
+	%Word8 2
 ]
-@stopSequence = constant [1 x i8] [
-	i8 22
+@stopSequence = constant [1 x i5] [
+	i5 22
 ]
 define internal void @test() {
 	; тестируем работу с локальным generic массивом
-	%1 = alloca [6 x %Int32], align 1
-	%2 = insertvalue [6 x %Int32] zeroinitializer, %Int32 170, 0
-	%3 = insertvalue [6 x %Int32] %2, %Int32 85, 1
-	%4 = insertvalue [6 x %Int32] %3, %Int32 2, 2
-	%5 = insertvalue [6 x %Int32] %4, %Int32 22, 5
+	%1 = alloca [6 x %Word64], align 1
+	%2 = insertvalue [6 x %Word64] zeroinitializer, %Word64 170, 0
+	%3 = insertvalue [6 x %Word64] %2, %Word64 85, 1
+	%4 = insertvalue [6 x %Word64] %3, %Word64 2, 2
+	%5 = insertvalue [6 x %Word64] %4, %Word64 22, 5
 	%6 = zext i8 6 to %Int32
-	store [6 x %Int32] %5, [6 x %Int32]* %1
+	store [6 x %Word64] %5, [6 x %Word64]* %1
 	%7 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %7
 ; while_1
@@ -430,10 +430,10 @@ again_1:
 	br %Bool %9 , label %body_1, label %break_1
 body_1:
 	%10 = load %Int32, %Int32* %7
-	%11 = getelementptr [6 x %Int32], [6 x %Int32]* %1, %Int32 0, %Int32 %10
-	%12 = load %Int32, %Int32* %11
+	%11 = getelementptr [6 x %Word64], [6 x %Word64]* %1, %Int32 0, %Int32 %10
+	%12 = load %Word64, %Word64* %11
 	%13 = load %Int32, %Int32* %7
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Int32 %13, %Int32 %12)
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Int32 %13, %Word64 %12)
 	%15 = load %Int32, %Int32* %7
 	%16 = add %Int32 %15, 1
 	store %Int32 %16, %Int32* %7

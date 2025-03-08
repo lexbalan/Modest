@@ -316,15 +316,15 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 ; -- endstrings --
 
 ; include test (!)
-@ratSymbolUTF8 = constant [4 x i8] [
-	i8 240,
-	i8 159,
-	i8 144,
-	i8 128
+@ratSymbolUTF8 = constant [4 x %Word8] [
+	%Word8 240,
+	%Word8 159,
+	%Word8 144,
+	%Word8 128
 ]
-@ratSymbolUTF16 = constant [2 x i16] [
-	i16 55357,
-	i16 56320
+@ratSymbolUTF16 = constant [2 x %Word16] [
+	%Word16 55357,
+	%Word16 56320
 ]
 @arr_partycorn = constant [4 x %Char8] [
 	%Char8 240,

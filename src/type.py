@@ -9,7 +9,7 @@ from hlir.type import *
 
 
 def type_number_for(num, signed=False, ti=None):
-	required_width = align_bits_up(nbits_for_num(num))
+	required_width = align_bits_up(nbits_for_num(num)) #align_bits_up
 	return TypeNumber(width=required_width, signed=signed, ti=ti)
 
 
@@ -247,7 +247,6 @@ def select_common_type(a, b):
 		if b.is_char():
 			if a.is_string():
 				return b
-
 
 		if a.is_word():
 			if b.is_integer() and b.generic:

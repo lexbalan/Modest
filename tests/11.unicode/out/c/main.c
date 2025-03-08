@@ -13,9 +13,9 @@
 // include test (!)
 
 #define _ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
-const uint8_t ratSymbolUTF8[4] = _ratSymbolUTF8;
+const uint64_t ratSymbolUTF8[4] = _ratSymbolUTF8;
 #define _ratSymbolUTF16  {0xD83D, 0xDC00}
-const uint16_t ratSymbolUTF16[2] = _ratSymbolUTF16;
+const uint64_t ratSymbolUTF16[2] = _ratSymbolUTF16;
 #define ratSymbolUTF32  0x0001F400
 
 #define _arr_partycorn  "🎉"

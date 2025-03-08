@@ -10,7 +10,7 @@
 #define BIG_INT256(x3, x2, x1, x0)
 
 
-static unsigned __int128 big0 = BIG_INT128(0x123456789ABCDEFULL, 0xFEDCBA9876543210ULL);
+static unsigned __int128 big0 = 0x0123456789ABCDEFFEDCBA9876543210;
 
 static uint64_t high_128(unsigned __int128 x)
 {
@@ -33,12 +33,12 @@ int main()
 
 	unsigned __int128 big3 = 0x1;
 
-	uint32_t a = 0x1;
+	uint32_t a = 1;
 
 	unsigned __int128 big_sum = __big1 + big2 + a;
 
 	printf("big0 = 0x%llX%llX\n", high_128(big0), low_128(big0));
-	printf("big1 = 0x%llX%llX\n", high_128((unsigned __int128)__big1), low_128((unsigned __int128)__big1));
+	printf("big1 = 0x%llX%llX\n", high_128(__big1), low_128(__big1));
 	printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2));
 	printf("big3 = 0x%llX%llX\n", high_128(big3), low_128(big3));
 	printf("big_sum = 0x%llX%llX\n", high_128(big_sum), low_128(big_sum));

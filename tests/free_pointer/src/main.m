@@ -21,7 +21,7 @@ public func main () -> Int32 {
 	// (because runtime doesn't have any idea about value type it pointee),
 	// but you can construct another (non Free) pointer from it
 	// and use it as usualy
-	*(*Int64 freePointer) = 0x123456789ABCDEF
+	*(*Int64 freePointer) = 123456789123456789
 
 	printf("c = 0x%llX\n", c)
 

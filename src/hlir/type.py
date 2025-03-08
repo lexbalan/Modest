@@ -4,7 +4,7 @@
 
 import copy
 import settings
-from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up, align_to
+from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_to
 
 from .entity import Entity
 from hlir.value import Value
@@ -162,6 +162,10 @@ class Type(Entity):
 
 	def is_generic(self):
 		return self.generic
+
+
+	def is_generic_word(self):
+		return self.is_word() and self.is_generic()
 
 
 	def is_generic_char(self):
@@ -370,6 +374,8 @@ class Type(Entity):
 
 	@staticmethod
 	def eq(a, b, opt=[]):
+		assert a != None
+		assert b != None
 		if id(a) == id(b):
 			return True
 

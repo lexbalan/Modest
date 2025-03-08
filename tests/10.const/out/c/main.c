@@ -11,7 +11,7 @@
 
 
 #define _carr  {0, 10, 15, 20, 25, 30}
-const uint8_t carr[6] = _carr;
+const int32_t carr[6] = _carr;
 
 struct Point {
 	double x;

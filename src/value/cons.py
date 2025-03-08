@@ -12,8 +12,8 @@ from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons
 from .bad import bad_can, ValueBad_cons
 from .number import number_can, value_number_cons
-from hlir.type import Type, TypeArray
-
+from hlir.type import Type, TypeArray, TypeWord
+from util import align_bits_up
 
 # can be implicitly constructed value with type a from type b?
 def cons_can(to, from_type, method, ti):
@@ -133,23 +133,26 @@ def value_cons_explicit(t, v, ti):
 
 def value_cons_default(v):
 	assert(isinstance(v, Value))
-	t = _select_default_type_for(v.type)
-	if t != None:
-		#info("default cons", v.ti)
-		nv = value_cons_implicit(t, v, v.ti)
-		#if features.get('paranoid'):
-		#	print("constructed: ", end='')
-		#	htype.type_print(nv.type)
-		#	print('')
-		return nv
+
+	# only for generics
+	if v.type.is_generic():
+		t = _select_default_type_for(v.type)
+		if t != None:
+			nv = value_cons_implicit(t, v, v.ti)
+			#if features.get('paranoid'):
+			#	print("constructed: ", end='')
+			#	htype.type_print(nv.type)
+			#	print('')
+			return nv
 
 	return v
 
 
 
 def _select_default_type_for(t):
-	from trans import typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
+	from trans import typeSysWord, typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
+	# ONLY FOR GENERICS
 	if not t.is_generic():
 		return None
 
@@ -168,19 +171,73 @@ def _select_default_type_for(t):
 	elif t.is_char():
 		return typeSysChar
 
+	elif t.is_word():
+		return typeSysWord
+
 	elif t.is_array():
 		item_type = t.of
-		if t.of.is_generic():
+		if item_type.is_generic():
 			# выбираем тип для generic-элемента
 			# [1, 2]  -> [2]Int32 [Int32 1, Int32 2]
-			item_type = _select_default_type_for(t.of)
+			item_type = _select_default_type_for(item_type)
 
-		return TypeArray(item_type, t.volume, t.ti)
+			if item_type == None:
+				# не смогли подобрать default тип для элемента массива
+				return None
+
+		nt = TypeArray(item_type, t.volume, t.ti)
+		return nt
 
 
 	# corresponded type not found!
 	return None
 
+
+
+def _select_minimal_type_for(t):
+	# ONLY FOR GENERICS
+	if not t.is_generic():
+		return None
+
+	if t.is_array():
+		pass
+	elif t.is_string():
+		return typeSysStr
+
+	w = align_bits_up(t.width)
+
+	if t.is_number():
+		t = TypeInt(w)
+		if t.is_unsigned():
+			t = TypeNat(w)
+		return t
+
+
+	elif t.is_float():
+		return TypeFloat(w)
+
+	elif t.is_char():
+		return TypeChar(w)
+
+	elif t.is_word():
+		return TypeWord(w)
+
+	elif t.is_array():
+		item_type = t.of
+		if item_type.is_generic():
+			# выбираем тип для generic-элемента
+			# [1, 2]  -> [2]Int32 [Int32 1, Int32 2]
+			item_type = _select_default_type_for(t.of)
+
+			if item_type == None:
+				# не смогли подобрать default тип для элемента массива
+				return None
+
+		nt = TypeArray(item_type, t.volume, t.ti)
+		return nt
+
+	# corresponded type not found!
+	return None
 
 
 # данная локальная функция пытается привести v к t
@@ -240,7 +297,7 @@ def value_cons(t, v, method, ti):
 # привести и взять себе; Таким образом мы идем как литерал нода
 # и в то же время как cons нода
 def value_cons_immediate(t, v, method, ti):
-	assert(method in ['implicit', 'explicit', 'unsafe'])
+	assert method in ['implicit', 'explicit', 'unsafe']
 	nv = ValueCons(t, v, method, ti)
 
 	nv.asset = v.asset

@@ -22,6 +22,7 @@ from value.array import value_array_create, value_array_add
 from value.string import value_string_create, value_string_add
 from value.record import value_record_create
 from value.value import value_imm_literal_create
+from value.word import value_word_create
 
 import decimal
 # max number of signs after .
@@ -337,6 +338,7 @@ def feature_add(s):
 
 lib_path = ""
 
+typeSysWord = None
 typeSysChar = None
 typeSysInt = None
 typeSysNat = None
@@ -417,13 +419,15 @@ def init():
 
 
 	target_name = str(settings.get('target_name'))
+	word_width = int(settings.get('word_width'))
 	char_width = int(settings.get('char_width'))
 	int_width = int(settings.get('integer_width'))
 	flt_width = int(settings.get('float_width'))
 	pointer_width = int(settings.get('pointer_width'))
 
-	global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
+	global typeSysWord, typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
+	typeSysWord = TypeWord(word_width)
 	typeSysChar = foundation.type_select_char(char_width)
 	typeSysInt = foundation.type_select_int(int_width)
 	typeSysNat = foundation.type_select_nat(int_width)
@@ -1535,6 +1539,17 @@ def do_value_integer(x):
 				num_string_len = num_string_len - 2
 				base = 16
 				#mass
+				num = int(x['str'], base)
+
+				if nbits_for_num(num) > 64:
+					if not 'use_bigint' in cmodule.att:
+						cmodule.att.append('use_bigint')
+
+				v = value_word_create(num, x['ti'])
+				v.nsigns = num_string_len
+				v.addAttribute('hexadecimal')
+				return v
+
 
 	num = int(x['str'], base)
 
@@ -1545,8 +1560,8 @@ def do_value_integer(x):
 	v = value_number_create(num, ti=x['ti'])
 	v.nsigns = num_string_len
 
-	if base == 16:
-		v.addAttribute('hexadecimal')
+	#if base == 16:
+	#	v.addAttribute('hexadecimal')
 
 	return v
 

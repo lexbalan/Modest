@@ -47,7 +47,7 @@ const stopSequence = [0x16]
 
 func test() -> Unit {
 	// тестируем работу с локальным generic массивом
-	var yy: [6]Int32 = startSequence + [] + stopSequence
+	var yy: [6]Word64 = startSequence + [] + stopSequence
 	var i: Int32 = 0
 	while i < lengthof(yy) {
 		let y = yy[i]

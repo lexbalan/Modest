@@ -17,7 +17,7 @@
 //$pragma c_include "./minmax.h"
 
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-const uint8_t constantArray[10] = _constantArray;
+const int32_t constantArray[10] = _constantArray;
 
 static int32_t globalArray[10] = _constantArray;
 
@@ -55,18 +55,18 @@ static void f0(char *_x, char *sret_)
 }
 
 #define _startSequence  {0xAA, 0x55, 0x02}
-const uint8_t startSequence[3] = _startSequence;
+const uint64_t startSequence[3] = _startSequence;
 #define _stopSequence  {0x16}
-const uint8_t stopSequence[1] = _stopSequence;
+const uint64_t stopSequence[1] = _stopSequence;
 
 static void test()
 {
 	// тестируем работу с локальным generic массивом
-	int32_t yy[6];
-	memcpy(&yy, /**/&(int32_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}, sizeof yy);
+	uint64_t yy[6];
+	memcpy(&yy, /**/&(uint64_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}, sizeof yy);
 	int32_t i = 0;
 	while (i < __lengthof(yy)) {
-		const int32_t y = yy[i];
+		const uint64_t y = yy[i];
 		printf("yy[%i] = %i\n", i, y);
 		i = i + 1;
 	}
