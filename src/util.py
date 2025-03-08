@@ -69,6 +69,39 @@ def utf32cc_to_utf8_str(cc):
 	return utf8_string
 
 
+
+
+
+
+
+def int_to_bitstring(x, width):
+	return format(x & (2**width - 1), '0%db' % width)
+
+def bitstring_to_int(bitstring, width):
+	# Преобразуем строку в число
+	number = int(bitstring, 2)
+
+	# Если старший бит равен 1, то число отрицательное
+	if bitstring[0] == '1':
+		number -= (1 << width)
+
+	return number
+
+
+# Получает int и расширяет его битовое представление нулями
+# с width_from до width_to
+def int_zext(x, width_from, width_to):
+	bitstring = int_to_bitstring(x, width_from)
+	# extend bitstring with zeros
+	if width_to > width_from:
+		pad = width_to - width_from
+		bitstring = "0" * pad + bitstring
+	#else:
+	return bitstring_to_int(bitstring, width_to)
+
+
+
+
 """
 def utf16_to_utf32(c):
 	leading = c[0]

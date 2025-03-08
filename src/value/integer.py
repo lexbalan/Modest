@@ -3,7 +3,7 @@ from error import info, warning, error
 from type import type_print
 from hlir.value import ValueCons
 from hlir.type import Type
-from util import nbits_for_num
+from util import nbits_for_num, int_zext
 
 
 warning_cast_data_loss = True
@@ -82,13 +82,13 @@ def integer_can(to, from_type, method, ti):
 
 
 
-
 def value_integer_cons(t, v, method, ti):
 	#info("value_integer_cons()", ti)
 	_check_width(v.type, t, method, ti)
 
 	if v.isImmediate():
 		_check_width(v.type, t, method, ti)
+#		info("CONS ", ti)
 
 		#if not t.signed:
 		#	if v.asset < 0:
@@ -96,7 +96,13 @@ def value_integer_cons(t, v, method, ti):
 
 		if method != 'implicit':
 			nv = ValueCons(t, v, method, ti=ti)
-			nv.asset = int(v.asset)  # here can be float
+
+			if t.is_unsigned() and v.type.is_signed():
+				nv.asset = int_zext(v.asset, v.type.width, t.width)
+
+			else:
+				nv.asset = int(v.asset)  # here can be float
+
 			nv.immediate = True
 			return nv
 		return _value_integer_cons_immediate(t, v, method, ti)
