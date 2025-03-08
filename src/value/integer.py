@@ -98,7 +98,8 @@ def value_integer_cons(t, v, method, ti):
 			nv = ValueCons(t, v, method, ti=ti)
 
 			if t.is_unsigned() and v.type.is_signed():
-				nv.asset = int_zext(v.asset, v.type.width, t.width)
+				if v.asset < 0:
+					nv.asset = -v.asset
 
 			else:
 				nv.asset = int(v.asset)  # here can be float

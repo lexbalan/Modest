@@ -960,11 +960,17 @@ def str_value_cons(x, ctx):
 
 	# (!) WARNING (!)
 	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
-	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
+	# - in Cm Int32(-1) -> Word64 => 0x00000000ffffffff
+	# - in Cm Int32(-1) -> Nat64 => 1
 	# required: (uint64_t)((uint32)int32_value)
-	if type.is_integer():
-		if from_type.is_integer() or from_type.is_number():
-			if from_type.is_signed() and type.is_unsigned():
+	#if type.is_integer():
+	if from_type.is_integer() or from_type.is_number():
+		if from_type.is_signed():
+			if type.is_integer() and type.is_unsigned():
+				v = str_value(value)
+				#"#define ABS(x) ((x) < 0 ? -(x) : (x))"
+				return "ABS(" + v + ")"
+			elif type.is_word():
 				if from_type.size < type.size:
 					sstr += ("((")
 					sstr += str_type(type)
@@ -2184,6 +2190,10 @@ macro_definitions = {
 	'use_bigint': """
 #define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))
 #define BIG_INT256(x3, x2, x1, x0)
+""",
+
+	'use_abs': """
+#define ABS(x) ((x) < 0 ? -(x) : (x))
 """
 }
 
@@ -2231,6 +2241,8 @@ def print_cfile(module, _outname):
 	for use in module.att:
 		if use in macro_definitions:
 			out(macro_definitions[use])
+
+	out("#define ABS(x) ((x) < 0 ? -(x) : (x))")
 
 
 	if len(module.anon_recs) > 0:

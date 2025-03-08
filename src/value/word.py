@@ -3,7 +3,7 @@ from error import info, warning, error
 import type as type
 from hlir.value import ValueCons
 from value.value import value_imm_literal_create
-from util import nbits_for_num
+from util import nbits_for_num, int_zext
 
 
 def value_word_create(num, ti=None):
@@ -16,11 +16,19 @@ def value_word_create(num, ti=None):
 
 
 def _value_word_cons_immediate(t, v, method, ti):
-	if v.type.width > t.width:
-		error("word overflow", ti)
+	#info("_value_word_cons_immediate", ti)
+	if method == 'implicit':
+		if v.type.width > t.width:
+			error("word overflow", ti)
 
 	from .cons import value_cons_immediate
-	return value_cons_immediate(t, v, method, ti)
+	nv = value_cons_immediate(t, v, method, ti)
+
+	if v.type.is_signed():
+		nv.asset = int_zext(v.asset, v.type.width, t.width)
+		#print("ASAMSALSMK %d" % nv.asset)
+
+	return nv
 
 
 

@@ -37,15 +37,22 @@ public func main() -> Int32 {
 	//	u32 = Nat32 x
 
 	if Int32 Int8 -1 == Int32 -1 {
-		stdio.printf("Int8 -1 -> Int32 test passed.\n")
+		stdio.printf("Int8 -1 -> Int32 test passed\n")
 	} else {
-		stdio.printf("Int8 -1 -> Int32 test failed.\n")
+		stdio.printf("Int8 -1 -> Int32 test failed\n")
 	}
 
-	if Nat32 Int8 -1 == Nat32 0xFF {
-		stdio.printf("Int8 -1 -> Nat32 test passed.\n")
+	if Nat32 Int8 -1 == Nat32 1 {
+		stdio.printf("Int8 -1 -> Nat32 test passed\n")
 	} else {
-		stdio.printf("Int8 -1 -> Nat32 test failed.\n")
+		stdio.printf("Int8 -1 -> Nat32 test failed\n")
+	}
+
+	let c3 = Word32 Int8 -1
+	if c3 == 0xFF {
+		stdio.printf("Int8 -1 -> Word32 test passed\n")
+	} else {
+		stdio.printf("Int8 -1 -> Word32 test failed\n")
 	}
 
 	//printf("i32 = 0x%08x (%d)\n", i32, i32)
