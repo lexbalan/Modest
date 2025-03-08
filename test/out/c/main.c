@@ -41,19 +41,19 @@ int32_t main()
 	const uint32_t w32 = (uint32_t)(uint8_t)i8;
 
 	if (((int32_t)(int8_t)-1 == -1) && (i32 == -1)) {
-		printf("Int8 -1 -> Int32 test passed\n");
+		printf("Int8 -1 -> Int32 (-1) test passed\n");
 	} else {
 		printf("Int8 -1 -> Int32 test failed\n");
 	}
 
 	if ((ABS((int8_t)-1) == 1) && (n32 == 1)) {
-		printf("Int8 -1 -> Nat32 test passed\n");
+		printf("Int8 -1 -> Nat32 (1) test passed\n");
 	} else {
 		printf("Int8 -1 -> Nat32 test failed\n");
 	}
 
 	if (((uint32_t)(uint8_t)(int8_t)-1 == 0xFF) && (w32 == 0xFF)) {
-		printf("Int8 -1 -> Word32 test passed\n");
+		printf("Int8 -1 -> Word32 (0xff) test passed\n");
 	} else {
 		printf("Int8 -1 -> Word32 test failed\n");
 	}

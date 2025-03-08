@@ -42,19 +42,19 @@ public func main() -> Int32 {
 	let w32 = Word32 i8
 
 	if (Int32 Int8 -1 == -1) and (i32 == -1) {
-		stdio.printf("Int8 -1 -> Int32 test passed\n")
+		stdio.printf("Int8 -1 -> Int32 (-1) test passed\n")
 	} else {
 		stdio.printf("Int8 -1 -> Int32 test failed\n")
 	}
 
 	if (Nat32 Int8 -1 == 1) and (n32 == 1) {
-		stdio.printf("Int8 -1 -> Nat32 test passed\n")
+		stdio.printf("Int8 -1 -> Nat32 (1) test passed\n")
 	} else {
 		stdio.printf("Int8 -1 -> Nat32 test failed\n")
 	}
 
 	if (Word32 Int8 -1 == 0xFF) and (w32 == 0xFF) {
-		stdio.printf("Int8 -1 -> Word32 test passed\n")
+		stdio.printf("Int8 -1 -> Word32 (0xff) test passed\n")
 	} else {
 		stdio.printf("Int8 -1 -> Word32 test failed\n")
 	}
