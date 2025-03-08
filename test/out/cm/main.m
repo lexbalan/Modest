@@ -36,20 +36,24 @@ public func main() -> Int32 {
 	//	i32 = Int32 x
 	//	u32 = Nat32 x
 
-	if Int32 Int8 -1 == Int32 -1 {
+	let i8 = Int8 -1
+	let n32 = Nat32 i8
+	let i32 = Int32 i8
+	let w32 = Word32 i8
+
+	if (Int32 Int8 -1 == -1) and (i32 == -1) {
 		stdio.printf("Int8 -1 -> Int32 test passed\n")
 	} else {
 		stdio.printf("Int8 -1 -> Int32 test failed\n")
 	}
 
-	if Nat32 Int8 -1 == Nat32 1 {
+	if (Nat32 Int8 -1 == 1) and (n32 == 1) {
 		stdio.printf("Int8 -1 -> Nat32 test passed\n")
 	} else {
 		stdio.printf("Int8 -1 -> Nat32 test failed\n")
 	}
 
-	let c3 = Word32 Int8 -1
-	if c3 == 0xFF {
+	if (Word32 Int8 -1 == 0xFF) and (w32 == 0xFF) {
 		stdio.printf("Int8 -1 -> Word32 test passed\n")
 	} else {
 		stdio.printf("Int8 -1 -> Word32 test failed\n")
