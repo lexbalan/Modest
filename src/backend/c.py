@@ -2233,15 +2233,13 @@ def print_cfile(module, _outname):
 
 	newline()
 	newline()
-	include("%s.h" % module.id)
+	include(module.id + '.h')
 	newline()
 
 
 	for use in module.att:
 		if use in macro_definitions:
 			out(macro_definitions[use])
-
-	out("#define ABS(x) ((x) < 0 ? -(x) : (x))")
 
 
 	if len(module.anon_recs) > 0:

@@ -82,6 +82,12 @@ context = None  # current context (symtab)
 cdef = None
 
 
+def cmodule_use(x):
+	global cmodule
+	if not x in cmodule.att:
+		cmodule.att.append(x)
+
+
 
 # TODO: attribute 'unsafe' for cast operation
 unsafe_mode = False
@@ -1031,8 +1037,7 @@ def do_value_lengthof_value(x):
 		return ValueBad({'ti': ti})
 
 	# for C backend, because C cannot do lengthof(x)
-	if not 'use_lengthof' in cmodule.att:
-		cmodule.att.append('use_lengthof')
+	cmodule_use('use_lengthof')
 
 	return ValueLengthof(arg, ti)
 
@@ -1542,8 +1547,7 @@ def do_value_integer(x):
 				num = int(x['str'], base)
 
 				if nbits_for_num(num) > 64:
-					if not 'use_bigint' in cmodule.att:
-						cmodule.att.append('use_bigint')
+					cmodule_use('use_bigint')
 
 				v = value_word_create(num, x['ti'])
 				v.nsigns = num_string_len
@@ -1554,8 +1558,7 @@ def do_value_integer(x):
 	num = int(x['str'], base)
 
 	if nbits_for_num(num) > 64:
-		if not 'use_bigint' in cmodule.att:
-			cmodule.att.append('use_bigint')
+		cmodule_use('use_bigint')
 
 	v = value_number_create(num, ti=x['ti'])
 	v.nsigns = num_string_len
@@ -2349,8 +2352,7 @@ def def_func(x, dostmt=True):
 
 	# for C backend, for #include <stdarg.h>
 	if fn.type.extra_args:
-		if not 'use_va_arg' in cmodule.att:
-			cmodule.att.append('use_va_arg')
+		cmodule_use('use_va_arg')
 
 	# check unuse
 	#for param in params:
