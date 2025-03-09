@@ -25,10 +25,7 @@ def _value_word_cons_immediate(t, v, method, ti):
 	nv = value_cons_immediate(t, v, method, ti)
 
 	if v.type.is_signed():
-		from trans import cmodule_use
-		cmodule_use('use_abs')
 		nv.asset = int_zext(v.asset, v.type.width, t.width)
-		#print("ASAMSALSMK %d" % nv.asset)
 
 	return nv
 

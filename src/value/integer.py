@@ -86,14 +86,12 @@ def value_integer_cons(t, v, method, ti):
 	#info("value_integer_cons()", ti)
 	_check_width(v.type, t, method, ti)
 
+	if t.is_unsigned() and v.type.is_signed():
+		from trans import cmodule_use
+		cmodule_use('use_abs')
+
 	if v.isImmediate():
 		_check_width(v.type, t, method, ti)
-#		info("CONS ", ti)
-
-		#if not t.signed:
-		#	if v.asset < 0:
-		#		return None
-
 		if method != 'implicit':
 			nv = ValueCons(t, v, method, ti=ti)
 

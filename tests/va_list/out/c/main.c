@@ -8,6 +8,8 @@
 
 #include "main.h"
 
+#define ABS(x) ((x) < 0 ? -(x) : (x))
+
 
 //include "lightfood/print"
 //$pragma c_include "./print.h"
@@ -28,7 +30,7 @@ static ssize_t my_printf(char *format, ...)
 
 	va_end(va2);
 
-	return write(STDOUT_FILENO, (char *)&buf, ((size_t)(uint32_t)n));
+	return write(STDOUT_FILENO, (char *)&buf, ABS(n));
 
 #undef __strMaxLen
 }
