@@ -37,6 +37,11 @@ int32_t main()
 	//	i32 = Int32 x
 	//	u32 = Nat32 x
 
+	int32_t x = 1;
+	//var y: Int32 = 0x1
+	uint32_t z = 1;
+	uint32_t w = 0x1;
+
 	const int8_t i8 = (int8_t)-1;
 	const uint32_t n32 = ABS(i8);
 	const int32_t i32 = (int32_t)i8;
