@@ -1221,7 +1221,7 @@ def do_value_index(x):
 	if index.isBad():
 		return ValueBad(x['ti'])
 
-	if not (index.type.is_integer() or index.type.is_number()):
+	if not (index.type.is_arithmetical() or index.type.is_number()):
 		error("expected integer value", x['index'])
 		return ValueBad(x['ti'])
 
@@ -1940,7 +1940,7 @@ def do_stmt_incdec(x, op='add'):
 		error("expected mutable value", v.ti)
 		return StmtBad(x)
 
-	if not v.type.is_integer():
+	if not v.type.is_arithmetical():
 		error("expected value with integer type", v.ti)
 		return StmtBad(x)
 

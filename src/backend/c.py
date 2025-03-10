@@ -924,8 +924,8 @@ def str_value_cons(x, ctx):
 		if from_type.is_string():
 			return str_literal_char(x.asset, x.type.width)
 
-	elif type.is_unsigned_integer() or type.is_word():
-		if from_type.is_unsigned_integer() or from_type.is_word():
+	elif type.is_natural() or type.is_word():
+		if from_type.is_natural() or from_type.is_word():
 			return str_value(value)
 
 
@@ -966,7 +966,7 @@ def str_value_cons(x, ctx):
 	#if type.is_integer():
 	if from_type.is_integer() or from_type.is_number():
 		if from_type.is_signed():
-			if type.is_integer() and type.is_unsigned():
+			if type.is_natural():
 				v = str_value(value)
 				#"#define ABS(x) ((x) < 0 ? -(x) : (x))"
 				return "ABS(" + v + ")"
@@ -1231,7 +1231,7 @@ def str_literal_pointer(type, num):
 def str_value_literal(x, ctx):
 	sstr = ''
 	t = x.type
-	if t.is_integer() or t.is_number() or t.is_word():
+	if t.is_arithmetical() or t.is_number() or t.is_word():
 		nsigns = 0
 		if hasattr(x, 'nsigns'):
 			nsigns = x.nsigns
@@ -2341,13 +2341,13 @@ def str_value_as_ptr(x):
 			return str_value(x)
 
 	if isinstance(x, ValueCons):
-		sstr += "/**/"
 		# for *s == "Hi!"
 		# string literal will be implicitly casted to StrX
 		# and for getting pointer to this string
 		# we need to print just string literal,
 		# because in C string literal is pointer to c-string
 		#if x.type.is_str() and
+		#sstr += "/**/"
 		if x.value.type.is_string():
 			return str_value(x.value)
 

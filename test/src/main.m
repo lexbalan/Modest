@@ -35,6 +35,7 @@ public func main() -> Int32 {
 //	i32 = Int32 x
 //	u32 = Nat32 x
 
+	// не проверяет дубликаты имен!
 	var x: Int32 = 1
 	//var y: Int32 = 0x1  // error!
 	var z: Word32 = 1

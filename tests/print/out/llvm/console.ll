@@ -706,8 +706,9 @@ break_1:
 
 define internal %Char8 @n_to_dec_sym(%Int8 %n) {
 	%1 = add %Int8 48, %n
-	%2 = bitcast %Int8 %1 to %Char8
-	ret %Char8 %2
+	%2 = bitcast %Int8 %1 to %Word8
+	%3 = bitcast %Word8 %2 to %Char8
+	ret %Char8 %3
 }
 
 define internal %Char8 @n_to_hex_sym(%Int8 %n) {
@@ -721,8 +722,9 @@ then_0:
 endif_0:
 	%4 = sub %Int8 %n, 10
 	%5 = add %Int8 65, %4
-	%6 = bitcast %Int8 %5 to %Char8
-	ret %Char8 %6
+	%6 = bitcast %Int8 %5 to %Word8
+	%7 = bitcast %Word8 %6 to %Char8
+	ret %Char8 %7
 }
 
 define internal %Int32 @sprint_hex_nat32([0 x %Char8]* %buf, %Int32 %x) {

@@ -141,60 +141,63 @@ body_1:
 	%7 = load %Int64, %Int64* %4
 	%8 = trunc %Int64 %7 to %Int32
 	%9 = getelementptr [0 x %Word8], [0 x %Word8]* %3, %Int32 0, %Int32 %8
-	store %Word8 0, %Word8* %9
-	%10 = load %Int64, %Int64* %4
-	%11 = add %Int64 %10, 1
-	store %Int64 %11, %Int64* %4
+	%10 = bitcast i8 0 to %Word8
+	store %Word8 %10, %Word8* %9
+	%11 = load %Int64, %Int64* %4
+	%12 = add %Int64 %11, 1
+	store %Int64 %12, %Int64* %4
 	br label %again_1
 break_1:
 
 	; word operation
-	%12 = sub %Int64 %len, %2
-	%13 = udiv %Int64 %12, 8
-	%14 = load %Int64, %Int64* %4
-	%15 = trunc %Int64 %14 to %Int32
-	%16 = getelementptr [0 x %Word8], [0 x %Word8]* %3, %Int32 0, %Int32 %15
-	%17 = bitcast %Word8* %16 to [0 x %Word]*
+	%13 = sub %Int64 %len, %2
+	%14 = udiv %Int64 %13, 8
+	%15 = load %Int64, %Int64* %4
+	%16 = trunc %Int64 %15 to %Int32
+	%17 = getelementptr [0 x %Word8], [0 x %Word8]* %3, %Int32 0, %Int32 %16
+	%18 = bitcast %Word8* %17 to [0 x %Word]*
 	store %Int64 0, %Int64* %4
 ; while_2
 	br label %again_2
 again_2:
-	%18 = load %Int64, %Int64* %4
-	%19 = icmp ult %Int64 %18, %13
-	br %Bool %19 , label %body_2, label %break_2
+	%19 = load %Int64, %Int64* %4
+	%20 = icmp ult %Int64 %19, %14
+	br %Bool %20 , label %body_2, label %break_2
 body_2:
-	%20 = load %Int64, %Int64* %4
-	%21 = trunc %Int64 %20 to %Int32
-	%22 = getelementptr [0 x %Word], [0 x %Word]* %17, %Int32 0, %Int32 %21
-	store %Word 0, %Word* %22
-	%23 = load %Int64, %Int64* %4
-	%24 = add %Int64 %23, 1
-	store %Int64 %24, %Int64* %4
+	%21 = load %Int64, %Int64* %4
+	%22 = trunc %Int64 %21 to %Int32
+	%23 = getelementptr [0 x %Word], [0 x %Word]* %18, %Int32 0, %Int32 %22
+	%24 = zext i8 0 to %Word
+	store %Word %24, %Word* %23
+	%25 = load %Int64, %Int64* %4
+	%26 = add %Int64 %25, 1
+	store %Int64 %26, %Int64* %4
 	br label %again_2
 break_2:
 
 	; byte operation
-	%25 = sub %Int64 %len, %2
-	%26 = urem %Int64 %25, 8
-	%27 = load %Int64, %Int64* %4
-	%28 = trunc %Int64 %27 to %Int32
-	%29 = getelementptr [0 x %Word], [0 x %Word]* %17, %Int32 0, %Int32 %28
-	%30 = bitcast %Word* %29 to [0 x %Word8]*
+	%27 = sub %Int64 %len, %2
+	%28 = urem %Int64 %27, 8
+	%29 = load %Int64, %Int64* %4
+	%30 = trunc %Int64 %29 to %Int32
+	%31 = getelementptr [0 x %Word], [0 x %Word]* %18, %Int32 0, %Int32 %30
+	%32 = bitcast %Word* %31 to [0 x %Word8]*
 	store %Int64 0, %Int64* %4
 ; while_3
 	br label %again_3
 again_3:
-	%31 = load %Int64, %Int64* %4
-	%32 = icmp ult %Int64 %31, %26
-	br %Bool %32 , label %body_3, label %break_3
-body_3:
 	%33 = load %Int64, %Int64* %4
-	%34 = trunc %Int64 %33 to %Int32
-	%35 = getelementptr [0 x %Word8], [0 x %Word8]* %30, %Int32 0, %Int32 %34
-	store %Word8 0, %Word8* %35
-	%36 = load %Int64, %Int64* %4
-	%37 = add %Int64 %36, 1
-	store %Int64 %37, %Int64* %4
+	%34 = icmp ult %Int64 %33, %28
+	br %Bool %34 , label %body_3, label %break_3
+body_3:
+	%35 = load %Int64, %Int64* %4
+	%36 = trunc %Int64 %35 to %Int32
+	%37 = getelementptr [0 x %Word8], [0 x %Word8]* %32, %Int32 0, %Int32 %36
+	%38 = bitcast i8 0 to %Word8
+	store %Word8 %38, %Word8* %37
+	%39 = load %Int64, %Int64* %4
+	%40 = add %Int64 %39, 1
+	store %Int64 %40, %Int64* %4
 	br label %again_3
 break_3:
 	ret void

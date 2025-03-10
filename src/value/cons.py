@@ -6,6 +6,7 @@ from .bool import bool_can, value_bool_cons
 from .word import word_can, value_word_cons
 from .char import char_can, value_char_cons
 from .integer import integer_can, value_integer_cons
+from .natural import natural_can, value_natural_cons
 from .float import float_can, value_float_cons
 from .record import record_can, value_record_cons
 from .array import array_can, value_array_cons
@@ -34,6 +35,7 @@ def cons_can(to, from_type, method, ti):
 	checker = None
 	if to.is_number(): checker = number_can
 	elif to.is_integer(): checker = integer_can
+	elif to.is_natural(): checker = natural_can
 	elif to.is_unit(): checker = unit_can
 	elif to.is_bool(): checker = bool_can
 	elif to.is_word(): checker = word_can
@@ -264,6 +266,7 @@ def value_cons(t, v, method, ti):
 	constructor = None
 	if t.is_number(): constructor = value_number_cons
 	elif t.is_integer(): constructor = value_integer_cons
+	elif t.is_natural(): constructor = value_natural_cons
 	elif t.is_float(): constructor = value_float_cons
 	elif t.is_array(): constructor = value_array_cons
 	elif t.is_record(): constructor = value_record_cons

@@ -232,7 +232,7 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 
 
 func n_to_dec_sym(n: Nat8) -> Char8 {
-	return Char8 (Nat8 Char8 "0" + n)
+	return Char8 Word8 (Nat8 Word8 Char8 "0" + n)
 }
 
 
@@ -240,7 +240,7 @@ func n_to_hex_sym(n: Nat8) -> Char8 {
 	if n < 10 {
 		return n_to_dec_sym(n)
 	}
-	return Char8 (Nat8 Char8 "A" + (n - 10))
+	return Char8 Word8 (Nat8 Word8 Char8 "A" + (n - 10))
 }
 
 

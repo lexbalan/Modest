@@ -141,7 +141,7 @@ def type_print(t, print_aka=True):
 	elif t.is_word():
 		print(t.id.str, end='')
 
-	elif t.is_integer():
+	elif t.is_integer() or t.is_natural():
 		print(t.id.str, end='')
 
 	elif t.is_float():
@@ -249,12 +249,12 @@ def select_common_type(a, b):
 				return b
 
 		if a.is_word():
-			if b.is_integer() and b.generic:
+			if b.is_arithmetical() and b.generic:
 				return a
 
 
 		if b.is_word():
-			if a.is_integer() and a.generic:
+			if a.is_arithmetical() and a.generic:
 				return b
 
 		# array && string | string && array
@@ -290,18 +290,18 @@ def select_common_type(a, b):
 			return a
 
 		if a.is_float():
-			if b.is_integer():
+			if b.is_arithmetical():
 				return a
 
 		if b.is_float():
-			if a.is_integer():
+			if a.is_arithmetical():
 				return b
 
 		if a.is_number():
-			if b.is_integer() or b.is_word() or b.is_float():
+			if b.is_arithmetical() or b.is_word() or b.is_float():
 				return b
 
-		if a.is_integer() or a.is_word() or a.is_float():
+		if a.is_arithmetical() or a.is_word() or a.is_float():
 			if b.is_number():
 				return a
 

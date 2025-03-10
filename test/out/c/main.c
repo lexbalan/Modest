@@ -37,8 +37,9 @@ int32_t main()
 	//	i32 = Int32 x
 	//	u32 = Nat32 x
 
+	// не проверяет дубликаты имен!
 	int32_t x = 1;
-	//var y: Int32 = 0x1
+	//var y: Int32 = 0x1  // error!
 	uint32_t z = 1;
 	uint32_t w = 0x1;
 

@@ -196,20 +196,21 @@ define %Int @main() {
 	%1 = alloca %Word16, align 2
 	store %Word16 1, %Word16* %1
 	%2 = bitcast %Word16* %1 to %Word8*
-	%3 = load %Word8, %Word8* %2
-	%4 = icmp eq %Word8 %3, 1
-	%5 = alloca %Str8*, align 8
+	%3 = bitcast i8 1 to %Word8
+	%4 = load %Word8, %Word8* %2
+	%5 = icmp eq %Word8 %4, %3
+	%6 = alloca %Str8*, align 8
 ; if_0
-	br %Bool %4 , label %then_0, label %else_0
+	br %Bool %5 , label %then_0, label %else_0
 then_0:
-	store %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*), %Str8** %5
+	store %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*), %Str8** %6
 	br label %endif_0
 else_0:
-	store %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8** %5
+	store %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8** %6
 	br label %endif_0
 endif_0:
-	%6 = load %Str8*, %Str8** %5
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), %Str8* %6)
+	%7 = load %Str8*, %Str8** %6
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), %Str8* %7)
 	ret %Int 0
 }
 

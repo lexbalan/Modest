@@ -99,8 +99,12 @@ class Type(Entity):
 		return isinstance(self, TypeInt)
 
 
-	def is_unsigned_integer(self):
-		return self.is_integer() and self.is_unsigned()
+	def is_natural(self):
+		return isinstance(self, TypeNat)
+
+
+	def is_arithmetical(self):
+		return self.is_integer() or self.is_natural()
 
 
 	def is_float(self):
@@ -140,6 +144,11 @@ class Type(Entity):
 		elif self.is_pointer():
 			return self.to.contains_vla()
 		return False
+
+
+
+	def is_scalar_type(t):
+		return t.is_word() or t.is_integer() or t.is_natural() or t.is_char() or t.is_number()
 
 
 	def is_composite(self):
@@ -295,7 +304,11 @@ class Type(Entity):
 
 	@staticmethod
 	def eq_integer(a, b, opt):
-		return (a.width == b.width) and (a.signed == b.signed)
+		return a.width == b.width
+
+	@staticmethod
+	def eq_natural(a, b, opt):
+		return a.width == b.width
 
 	@staticmethod
 	def eq_char(a, b, opt):
@@ -400,6 +413,7 @@ class Type(Entity):
 
 		# normal checking
 		if isinstance(a, TypeInt): return Type.eq_integer(a, b, opt)
+		elif isinstance(a, TypeNat): return Type.eq_natural(a, b, opt)
 		elif isinstance(a, TypeBool): return True
 		elif isinstance(a, TypeNumber): return True
 		elif isinstance(a, TypeFunc): return Type.eq_func(a, b, opt)
@@ -534,18 +548,31 @@ class TypeWord(Type):
 
 
 class TypeInt(Type):
-	def __init__(self, width, signed=True, ti=None):
+	def __init__(self, width, ti=None):
 		super().__init__(width=width, ops=INT_OPS, ti=ti)
 		self.incomplete = False
 
-		alias = get_int_alias(width, signed)
+		alias = get_int_alias(width, signed=True)
 
 		from .misc import Id
 		self.id = Id().fromStr(alias['cm'])
 		self.id.c = alias['c']
 		self.id.llvm = alias['llvm']
+		self.signed = True
 
-		self.signed = signed
+
+class TypeNat(Type):
+	def __init__(self, width, ti=None):
+		super().__init__(width=width, ops=INT_OPS, ti=ti)
+		self.incomplete = False
+
+		alias = get_int_alias(width, signed=False)
+
+		from .misc import Id
+		self.id = Id().fromStr(alias['cm'])
+		self.id.c = alias['c']
+		self.id.llvm = alias['llvm']
+		self.signed = False
 
 
 class TypeFloat(Type):

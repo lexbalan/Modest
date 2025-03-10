@@ -100,12 +100,12 @@ def init():
 	typeInt128 = TypeInt(width=128)
 	typeInt256 = TypeInt(width=256)
 
-	typeNat8 = TypeInt(width=8, signed=False)
-	typeNat16 = TypeInt(width=16, signed=False)
-	typeNat32 = TypeInt(width=32, signed=False)
-	typeNat64 = TypeInt(width=64, signed=False)
-	typeNat128 = TypeInt(width=128, signed=False)
-	typeNat256 = TypeInt(width=256, signed=False)
+	typeNat8 = TypeNat(width=8)
+	typeNat16 = TypeNat(width=16)
+	typeNat32 = TypeNat(width=32)
+	typeNat64 = TypeNat(width=64)
+	typeNat128 = TypeNat(width=128)
+	typeNat256 = TypeNat(width=256)
 
 	typeFloat32 = TypeFloat(width=32)
 	typeFloat64 = TypeFloat(width=64)

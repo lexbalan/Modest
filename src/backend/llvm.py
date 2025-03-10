@@ -1279,12 +1279,12 @@ def do_eval_access(x):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-	if Type.is_number(a) or Type.is_integer(a) or Type.is_char(a) or Type.is_bool(a) or Type.is_word(a):
+	if a.is_number() or a.is_arithmetical() or a.is_char() or a.is_bool() or a.is_word():
 
 		if Type.is_pointer(b):
 			return 'bitcast'
 
-		if Type.is_number(b) or Type.is_integer(b) or Type.is_char(b) or Type.is_bool(b) or Type.is_word(b):
+		if b.is_number() or b.is_arithmetical() or b.is_char() or b.is_bool() or b.is_word():
 			signed = Type.is_signed(b)
 
 			# Это плохо тк не работает в некоторых особых ситуациях
@@ -1314,12 +1314,12 @@ def select_cast_operator(a, b):
 	elif Type.is_pointer(a):
 		if Type.is_pointer(b):
 			return 'bitcast'
-		elif Type.is_integer(b) or Type.is_word(b):
+		elif Type.is_arithmetical(b) or Type.is_word(b):
 			return 'ptrtoint'
 
 	elif Type.is_float(a):
 		# Float -> Integer
-		if Type.is_integer(b):
+		if Type.is_arithmetical(b):
 			return 'fptosi' if Type.is_signed(b) else 'fptoui'
 
 		# Float -> Float
@@ -1479,7 +1479,6 @@ def do_eval_cons_pointer_to_array(x):
 	return docast(v, type)
 
 
-
 def do_eval_cons(x):
 	value = x.value
 	from_type = value.type
@@ -1489,11 +1488,17 @@ def do_eval_cons(x):
 	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
 	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
 	# required: (uint64_t)((uint32)int32_value)
-	if type.is_integer():
+	if type.is_word():
+		#if from_type.is_integer() or from_type.is_number():
 		if from_type.is_integer() or from_type.is_number():
-			if from_type.is_signed() and type.is_unsigned():
-				v = do_reval(value)
-				return docast(v, type)
+			v = do_reval(value)
+			return docast(v, type)
+
+
+	if type.is_scalar_type():
+		if from_type.is_number():
+			if type.width == from_type.width:
+				return do_reval(value)
 
 
 	# skipping cast to THE SAME type
@@ -1701,7 +1706,7 @@ def do_eval_bool(x):
 def do_eval_literal(x):
 	xt = x.type
 	if xt.is_number(): return llvm_value_num(xt, x.asset)
-	elif xt.is_integer(): return llvm_value_num(xt, x.asset)
+	elif xt.is_arithmetical(): return llvm_value_num(xt, x.asset)
 	elif xt.is_float(): return llvm_value_num(xt, x.asset)
 	elif xt.is_record(): return do_eval_record(x)
 	elif xt.is_array(): return do_eval_array(x)
@@ -1713,7 +1718,7 @@ def do_eval_literal(x):
 	elif xt.is_string(): return do_eval_string(x)
 	#elif xt.is_enum(): return llvm_value_num(xt, x.asset)
 	else:
-		error("do_eval_literal: unknown literal", x['ti'])
+		error("do_eval_literal: unknown literal", x.ti)
 		Value.print(x)
 		exit(1)
 

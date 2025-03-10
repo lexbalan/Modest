@@ -37,20 +37,20 @@ def _check_width(from_type, t, method, ti):
 
 
 
-def _value_integer_cons_immediate(t, v, method, ti):
+def _value_natural_cons_immediate(t, v, method, ti):
 	#info("value_cons_int_immediate", ti)
 	width = t.width
 	need_width = nbits_for_num(v.asset)
 
 	if need_width > width:
-		error("integer overflow", ti)
+		error("natural overflow", ti)
 
 	from .cons import value_cons_immediate
 	return value_cons_immediate(t, v, method, ti)
 
 
 
-def integer_can(to, from_type, method, ti):
+def natural_can(to, from_type, method, ti):
 	if Type.is_number(from_type):
 		return from_type.width <= to.width
 
@@ -62,8 +62,8 @@ def integer_can(to, from_type, method, ti):
 
 	# explicit or unsafe cons method
 	c = Type.is_number(from_type)
-	c0 = Type.is_integer(from_type)
-	c1 = Type.is_natural(from_type)
+	c0 = Type.is_natural(from_type)
+	c1 = Type.is_integer(from_type)
 	c2 = Type.is_char(from_type)
 	c3 = Type.is_word(from_type)
 	c4 = Type.is_bool(from_type)
@@ -83,18 +83,29 @@ def integer_can(to, from_type, method, ti):
 
 
 
-def value_integer_cons(t, v, method, ti):
-	#info("value_integer_cons()", ti)
+def value_natural_cons(t, v, method, ti):
+	#info("value_natural_cons()", ti)
 	_check_width(v.type, t, method, ti)
+
+	if v.type.is_signed():
+		from trans import cmodule_use
+		cmodule_use('use_abs')
 
 	if v.isImmediate():
 		_check_width(v.type, t, method, ti)
 		if method != 'implicit':
 			nv = ValueCons(t, v, method, ti=ti)
-			nv.asset = int(v.asset)  # here can be float
+
+			if v.type.is_signed():
+				if v.asset < 0:
+					nv.asset = -v.asset
+
+			else:
+				nv.asset = int(v.asset)  # here can be float
+
 			nv.immediate = True
 			return nv
-		return _value_integer_cons_immediate(t, v, method, ti)
+		return _value_natural_cons_immediate(t, v, method, ti)
 
 	return ValueCons(t, v, method, ti=ti)
 

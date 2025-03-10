@@ -278,18 +278,19 @@ define internal %Bool @test_generic_integer() {
 
 	; and to Word8
 	%5 = alloca %Word8, align 1
-	store %Word8 1, %Word8* %5
+	%6 = bitcast i8 1 to %Word8
+	store %Word8 %6, %Word8* %5
 
 
 	; explicit cast GenericInteger value
-	%6 = alloca %Char8, align 1
-	store %Char8 1, %Char8* %6
-	%7 = alloca %Char16, align 2
-	store %Char16 1, %Char16* %7
-	%8 = alloca %Char32, align 4
-	store %Char32 1, %Char32* %8
-	%9 = alloca %Bool, align 1
-	store %Bool 1, %Bool* %9
+	%7 = alloca %Char8, align 1
+	store %Char8 1, %Char8* %7
+	%8 = alloca %Char16, align 2
+	store %Char16 1, %Char16* %8
+	%9 = alloca %Char32, align 4
+	store %Char32 1, %Char32* %9
+	%10 = alloca %Bool, align 1
+	store %Bool 1, %Bool* %10
 	ret %Bool 1
 }
 

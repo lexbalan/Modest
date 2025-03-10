@@ -43,7 +43,7 @@ def word_can(to, from_type, method, ti):
 
 	c = from_type.is_number()
 	c0 = from_type.is_word()
-	c1 = from_type.is_integer()
+	c1 = from_type.is_arithmetical()
 	c2 = from_type.is_char()
 	c3 = from_type.is_bool()
 	c4 = from_type.is_pointer()

@@ -366,18 +366,19 @@ then_0:
 endif_0:
 	%7 = trunc %SSizeT %3 to %Int32
 	%8 = getelementptr [1024 x %Word8], [1024 x %Word8]* %1, %Int32 0, %Int32 %7
-	store %Word8 0, %Word8* %8
-	%9 = bitcast [1024 x %Word8]* %1 to %Str8*
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %9)
-	%11 = alloca [1024 x %Char8], align 1
-	%12 = bitcast [1024 x %Char8]* %11 to %CharStr*
-	%13 = load %Int32, %Int32* @pageCounter
-	%14 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %12, %ConstCharStr* bitcast ([56 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([64 x i8]* @str1 to [0 x i8]*), %Int32 %13)
-	%15 = bitcast [1024 x %Char8]* %11 to i8*
-	%16 = bitcast [1024 x %Char8]* %11 to [0 x %ConstChar]*
-	%17 = call %SizeT @strlen([0 x %ConstChar]* %16)
-	%18 = call %SSizeT @write(%Int32 %client_socket, i8* %15, %SizeT %17)
-	%19 = call %Int @close(%Int32 %client_socket)
+	%9 = bitcast i8 0 to %Word8
+	store %Word8 %9, %Word8* %8
+	%10 = bitcast [1024 x %Word8]* %1 to %Str8*
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %10)
+	%12 = alloca [1024 x %Char8], align 1
+	%13 = bitcast [1024 x %Char8]* %12 to %CharStr*
+	%14 = load %Int32, %Int32* @pageCounter
+	%15 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %13, %ConstCharStr* bitcast ([56 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([64 x i8]* @str1 to [0 x i8]*), %Int32 %14)
+	%16 = bitcast [1024 x %Char8]* %12 to i8*
+	%17 = bitcast [1024 x %Char8]* %12 to [0 x %ConstChar]*
+	%18 = call %SizeT @strlen([0 x %ConstChar]* %17)
+	%19 = call %SSizeT @write(%Int32 %client_socket, i8* %16, %SizeT %18)
+	%20 = call %Int @close(%Int32 %client_socket)
 	ret void
 }
 
@@ -393,41 +394,42 @@ then_0:
 endif_0:
 	%3 = alloca %SockAddrIn, align 16
 	%4 = insertvalue %SockAddrIn zeroinitializer, %Int8 2, 1
-	%5 = call %Word16 @htons(%Word16 8080)
-	%6 = bitcast %Word16 %5 to %UnsignedShort
-	%7 = insertvalue %SockAddrIn %4, %UnsignedShort %6, 2
-	store %SockAddrIn %7, %SockAddrIn* %3
+	%5 = bitcast i16 8080 to %Word16
+	%6 = call %Word16 @htons(%Word16 %5)
+	%7 = bitcast %Word16 %6 to %UnsignedShort
+	%8 = insertvalue %SockAddrIn %4, %UnsignedShort %7, 2
+	store %SockAddrIn %8, %SockAddrIn* %3
 
 	; Bind socket to address
-	%8 = bitcast %SockAddrIn* %3 to %SockAddr*
-	%9 = alloca %Int, align 4
-	%10 = call %Int @bind(%Int %1, %SockAddr* %8, %SocklenT 16)
-	store %Int %10, %Int* %9
+	%9 = bitcast %SockAddrIn* %3 to %SockAddr*
+	%10 = alloca %Int, align 4
+	%11 = call %Int @bind(%Int %1, %SockAddr* %9, %SocklenT 16)
+	store %Int %11, %Int* %10
 ; if_1
-	%11 = load %Int, %Int* %9
-	%12 = icmp slt %Int %11, 0
-	br %Bool %12 , label %then_1, label %endif_1
+	%12 = load %Int, %Int* %10
+	%13 = icmp slt %Int %12, 0
+	br %Bool %13 , label %then_1, label %endif_1
 then_1:
 	call void @perror(%ConstCharStr* bitcast ([5 x i8]* @str6 to [0 x i8]*))
-	%13 = call %Int @close(%Int %1)
+	%14 = call %Int @close(%Int %1)
 	call void @exit(%Int 1)
 	br label %endif_1
 endif_1:
 
 	; Starting listen to connection
-	%14 = call %Int @listen(%Int %1, %Int 5)
-	store %Int %14, %Int* %9
+	%15 = call %Int @listen(%Int %1, %Int 5)
+	store %Int %15, %Int* %10
 ; if_2
-	%15 = load %Int, %Int* %9
-	%16 = icmp slt %Int %15, 0
-	br %Bool %16 , label %then_2, label %endif_2
+	%16 = load %Int, %Int* %10
+	%17 = icmp slt %Int %16, 0
+	br %Bool %17 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([7 x i8]* @str7 to [0 x i8]*))
-	%17 = call %Int @close(%Int %1)
+	%18 = call %Int @close(%Int %1)
 	call void @exit(%Int 1)
 	br label %endif_2
 endif_2:
-	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str8 to [0 x i8]*), %Int32 8080)
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str8 to [0 x i8]*), %Int32 8080)
 
 	; Handle input connections
 ; while_1
@@ -435,26 +437,26 @@ endif_2:
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%19 = alloca %SockAddrIn, align 16
-	%20 = bitcast %SockAddrIn* %19 to %SockAddr*
-	%21 = alloca %SocklenT, align 4
-	store %SocklenT 16, %SocklenT* %21
-	%22 = call %Int @accept(%Int %1, %SockAddr* %20, %SocklenT* %21)
+	%20 = alloca %SockAddrIn, align 16
+	%21 = bitcast %SockAddrIn* %20 to %SockAddr*
+	%22 = alloca %SocklenT, align 4
+	store %SocklenT 16, %SocklenT* %22
+	%23 = call %Int @accept(%Int %1, %SockAddr* %21, %SocklenT* %22)
 ; if_3
-	%23 = icmp slt %Int %22, 0
-	br %Bool %23 , label %then_3, label %endif_3
+	%24 = icmp slt %Int %23, 0
+	br %Bool %24 , label %then_3, label %endif_3
 then_3:
 	call void @perror(%ConstCharStr* bitcast ([7 x i8]* @str9 to [0 x i8]*))
 	br label %again_1
 	br label %endif_3
 endif_3:
-	call void @handle_request(%Int %22)
-	%25 = load %Int32, %Int32* @pageCounter
-	%26 = add %Int32 %25, 1
-	store %Int32 %26, %Int32* @pageCounter
+	call void @handle_request(%Int %23)
+	%26 = load %Int32, %Int32* @pageCounter
+	%27 = add %Int32 %26, 1
+	store %Int32 %27, %Int32* @pageCounter
 	br label %again_1
 break_1:
-	%27 = call %Int @close(%Int %1)
+	%28 = call %Int @close(%Int %1)
 	ret %Int32 0
 }
 

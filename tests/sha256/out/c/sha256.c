@@ -67,7 +67,7 @@ const uint64_t initalState[8] = _initalState;
 
 static void contextInit(Context *ctx)
 {
-	memcpy(&ctx->state, /**/&initalState, sizeof ctx->state);
+	memcpy(&ctx->state, &initalState, sizeof ctx->state);
 }
 
 #define _k  { \

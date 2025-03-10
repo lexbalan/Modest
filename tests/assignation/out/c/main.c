@@ -66,7 +66,7 @@ int main()
 	int32_t loc_a0[10];
 	memset(&loc_a0, 0, sizeof loc_a0);
 	int32_t loc_a1[10];
-	memcpy(&loc_a1, /**/&(int32_t[10]){42, 53, 64	}, sizeof loc_a1);
+	memcpy(&loc_a1, &(int32_t[10]){42, 53, 64	}, sizeof loc_a1);
 
 	memcpy(&loc_a0, &loc_a1, sizeof loc_a0);
 

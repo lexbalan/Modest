@@ -63,7 +63,7 @@ static void test()
 {
 	// тестируем работу с локальным generic массивом
 	uint64_t yy[6];
-	memcpy(&yy, /**/&(uint64_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}, sizeof yy);
+	memcpy(&yy, &(uint64_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}, sizeof yy);
 	int32_t i = 0;
 	while (i < __lengthof(yy)) {
 		const uint64_t y = yy[i];
@@ -199,7 +199,7 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t localArray[3];
-	memcpy(&localArray, /**/&(int32_t[3]){4, 5, 6	}, sizeof localArray);
+	memcpy(&localArray, &(int32_t[3]){4, 5, 6	}, sizeof localArray);
 
 	i = 0;
 	while (i < 3) {
@@ -235,7 +235,7 @@ int main()
 	// assign array to array 1
 	// (with equal types)
 	int32_t a[3];
-	memcpy(&a, /**/&(int32_t[3]){1, 2, 3	}, sizeof a);
+	memcpy(&a, &(int32_t[3]){1, 2, 3	}, sizeof a);
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -259,7 +259,7 @@ int main()
 	// assign array to array 2
 	// (with array extending)
 	int32_t c[3];
-	memcpy(&c, /**/&(int32_t[3]){10, 20, 30	}, sizeof c);
+	memcpy(&c, &(int32_t[3]){10, 20, 30	}, sizeof c);
 	int32_t d[6];
 	memcpy(&d, &c, sizeof d);
 	printf("d[0] = %i\n", d[0]);
@@ -331,7 +331,7 @@ int main()
 	printf("y[%i] = %i (must be 30)\n", 2, __y[2]);
 	printf("y[%i] = %i (must be 40)\n", 3, __y[3]);
 
-	if (memcmp(&__y, /**/&(int32_t[4]){10, 20, 30, 40	}, sizeof(int32_t[4])) == 0) {
+	if (memcmp(&__y, &(int32_t[4]){10, 20, 30, 40	}, sizeof(int32_t[4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
@@ -339,7 +339,7 @@ int main()
 
 
 	char sa[5];
-	memcpy(&sa, /**/&"LoHi!", sizeof sa);
+	memcpy(&sa, &"LoHi!", sizeof sa);
 
 	if (memcmp(&sa[2], "Hi", sizeof(char[4 - 2])) == 0) {
 		printf("test passed\n");

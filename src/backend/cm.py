@@ -115,6 +115,9 @@ def print_stmt_comment_line(x):
 
 
 
+def print_TypeNat(t):
+	out(get_type_id(t))
+
 def print_TypeInt(t):
 	out(get_type_id(t))
 
@@ -219,6 +222,7 @@ def print_type(t):
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
 	if Type.is_integer(t): print_TypeInt(t)
+	elif Type.is_natural(t): print_TypeNat(t)
 	elif Type.is_func(t): print_type_func(t)
 	elif Type.is_array(t): print_type_array(t)
 	elif Type.is_record(t): print_type_record(t)
@@ -608,7 +612,7 @@ def print_value_string(x, ctx):
 def print_value_literal(x, ctx):
 	t = x.type
 	if Type.is_number(t): print_value_integer(x, ctx)
-	elif Type.is_integer(t): print_value_integer(x, ctx)
+	elif Type.is_arithmetical(t): print_value_integer(x, ctx)
 	elif Type.is_float(t): print_value_float(x, ctx)
 	elif Type.is_string(t): print_value_string(x, ctx)
 	elif Type.is_record(t): print_value_record(x, ctx)

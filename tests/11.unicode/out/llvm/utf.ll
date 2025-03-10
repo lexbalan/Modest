@@ -235,46 +235,48 @@ define %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result) {
 	%6 = or %Bool %4, %5
 	br %Bool %6 , label %then_0, label %else_0
 then_0:
-	%7 = bitcast %Int32 %3 to %Char32
-	store %Char32 %7, %Char32* %result
+	%7 = bitcast %Int32 %3 to %Word32
+	%8 = bitcast %Word32 %7 to %Char32
+	store %Char32 %8, %Char32* %result
 	ret %Int8 1
 	br label %endif_0
 else_0:
 ; if_1
-	%9 = icmp uge %Int32 %3, 56320
-	br %Bool %9 , label %then_1, label %else_1
+	%10 = icmp uge %Int32 %3, 56320
+	br %Bool %10 , label %then_1, label %else_1
 then_1:
 	;error("Illegal code sequence")
 	br label %endif_1
 else_1:
-	%10 = alloca %Word32, align 4
-	%11 = bitcast %Int32 %3 to %Word32
-	%12 = and %Word32 %11, 1023
-	%13 = zext i8 10 to %Word32
-	%14 = shl %Word32 %12, %13
-	store %Word32 %14, %Word32* %10
-	%15 = getelementptr [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 1
-	%16 = load %Char16, %Char16* %15
-	%17 = zext %Char16 %16 to %Int32
+	%11 = alloca %Word32, align 4
+	%12 = bitcast %Int32 %3 to %Word32
+	%13 = and %Word32 %12, 1023
+	%14 = zext i8 10 to %Word32
+	%15 = shl %Word32 %13, %14
+	store %Word32 %15, %Word32* %11
+	%16 = getelementptr [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 1
+	%17 = load %Char16, %Char16* %16
+	%18 = zext %Char16 %17 to %Int32
 ; if_2
-	%18 = icmp ult %Int32 %17, 56320
-	%19 = icmp ugt %Int32 %17, 57343
-	%20 = or %Bool %18, %19
-	br %Bool %20 , label %then_2, label %else_2
+	%19 = icmp ult %Int32 %18, 56320
+	%20 = icmp ugt %Int32 %18, 57343
+	%21 = or %Bool %19, %20
+	br %Bool %21 , label %then_2, label %else_2
 then_2:
 	;error("Illegal code sequence")
 	br label %endif_2
 else_2:
-	%21 = bitcast %Int32 %17 to %Word32
-	%22 = and %Word32 %21, 1023
-	%23 = load %Word32, %Word32* %10
-	%24 = or %Word32 %23, %22
-	store %Word32 %24, %Word32* %10
-	%25 = load %Word32, %Word32* %10
-	%26 = bitcast %Word32 %25 to %Int32
-	%27 = add %Int32 %26, 65536
-	%28 = bitcast %Int32 %27 to %Char32
-	store %Char32 %28, %Char32* %result
+	%22 = bitcast %Int32 %18 to %Word32
+	%23 = and %Word32 %22, 1023
+	%24 = load %Word32, %Word32* %11
+	%25 = or %Word32 %24, %23
+	store %Word32 %25, %Word32* %11
+	%26 = load %Word32, %Word32* %11
+	%27 = bitcast %Word32 %26 to %Int32
+	%28 = add %Int32 %27, 65536
+	%29 = bitcast %Int32 %28 to %Word32
+	%30 = bitcast %Word32 %29 to %Char32
+	store %Char32 %30, %Char32* %result
 	ret %Int8 2
 	br label %endif_2
 endif_2:
