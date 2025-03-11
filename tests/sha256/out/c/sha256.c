@@ -6,6 +6,12 @@
 
 #include "sha256.h"
 
+#ifndef __lengthof
+#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* __lengthof */
+
+#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) {(*dst)[i] = (*src)[i];}
+
 
 
 
@@ -67,7 +73,7 @@ const uint64_t initalState[8] = _initalState;
 
 static void contextInit(Context *ctx)
 {
-	memcpy(&ctx->state, &initalState, sizeof ctx->state);
+	ARRCPY(&ctx->state, &initalState, __lengthof(initalState));
 }
 
 #define _k  { \
@@ -112,7 +118,7 @@ static void transform(Context *ctx, uint8_t *data)
 	}
 
 	uint32_t x[8];
-	memcpy(&x, &ctx->state, sizeof x);
+	ARRCPY(&x, &ctx->state, __lengthof(ctx->state));
 
 	i = 0;
 	while (i < 64) {

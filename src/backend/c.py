@@ -2193,8 +2193,13 @@ macro_definitions = {
 
 	'use_abs': """
 #define ABS(x) ((x) < 0 ? -(x) : (x))
+""",
+
+	'use_arrcpy': """
+#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) {(*dst)[i] = (*src)[i];}
 """
 }
+
 
 def print_cfile(module, _outname):
 	outname = _outname + '.c'
@@ -2372,12 +2377,31 @@ def str_value_as_ptr(x):
 	return sstr
 
 
+def memcp(dst, src, len):
+	s = """
+	for (uint32_t i = 0; i < {len}; i++) {{dst}[i] = {src}[i];}
+	"""
+	mass
+	out(s)
 
 def memcopy_assign(left, right):
 	rv = get_root_value(right)
 	if rv.isZero():
 		memzero_sizeof(left)
 		return
+
+	#mass
+	#'use_arrcpy'
+	if left.type.is_array() and right.type.is_array():
+		if left.type.of.size != right.type.size:
+			out("ARRCPY(")
+			out(str_value_as_ptr(left))
+			out(", ")
+			out(str_value_as_ptr(right))
+			out(", __lengthof(")
+			out(str_value(right))
+			out("))")
+			return
 
 	out("memcpy(")
 	out(str_value_as_ptr(left))
@@ -2431,5 +2455,6 @@ def memcmp_eq_str(left, right, op='eq'):
 	else:
 		sstr += ') != 0'
 	return sstr
+
 
 

@@ -1925,6 +1925,11 @@ def do_stmt_assign(x):
 		error("expected mutable value", l.ti)
 		return StmtBad(x)
 
+	if l.type.is_array() and r.type.is_array():
+		if l.type.of.size != r.type.size:
+			cmodule_use('use_lengthof')
+			cmodule_use('use_arrcpy')
+
 	r = value_cons_implicit_check(l.type, r)
 	return StmtAssign(l, r, ti=x['ti'])
 
