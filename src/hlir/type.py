@@ -79,7 +79,7 @@ class Type(Entity):
 		return isinstance(self, TypeString)
 
 
-	def is_number(self):
+	def is_num(self):
 		return isinstance(self, TypeNumber)
 
 
@@ -148,7 +148,7 @@ class Type(Entity):
 
 
 	def is_scalar_type(t):
-		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_number()
+		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_num()
 
 
 	def is_composite(self):

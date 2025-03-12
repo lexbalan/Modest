@@ -13,7 +13,7 @@ def value_number_create(num, ti=None):
 
 
 def number_can(to, from_type, method, ti):
-	return type_is_number(from_type)
+	return type_is_num(from_type)
 
 
 def value_number_cons(t, v, method, ti):

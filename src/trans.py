@@ -16,7 +16,7 @@ from hlir.hlir import *
 import foundation
 
 from value.bool import value_bool_create
-from value.number import value_number_create
+from value.num import value_number_create
 from value.float import value_float_create
 from value.array import value_array_create, value_array_add
 from value.string import value_string_create, value_string_add
@@ -592,7 +592,7 @@ def do_type_array(x):
 			else:
 				error("non local VLA", t.size.ti)
 
-		#if not (Type.is_int(volume['type']) or volume.type.is_number()):
+		#if not (Type.is_int(volume['type']) or volume.type.is_num()):
 		#if volume.type.is_signed():
 		#	error("required value with Number or Integer type", volume.ti)
 
@@ -837,7 +837,7 @@ def do_value_bin(x):
 		else:
 			asset = ops[op](l.asset, r.asset)
 
-		if t.is_number():
+		if t.is_num():
 			# (для операций типа 1 + 2)
 			# Пересматриваем generic тип для нового значения
 			nv.type = htype.type_number_for(asset, signed=asset < 0, ti=ti)
@@ -1221,7 +1221,7 @@ def do_value_index(x):
 	if index.isBad():
 		return ValueBad(x['ti'])
 
-	if not (index.type.is_arithmetical() or index.type.is_number()):
+	if not (index.type.is_arithmetical() or index.type.is_num()):
 		error("expected integer value", x['index'])
 		return ValueBad(x['ti'])
 

@@ -918,7 +918,7 @@ def str_value_cons(x, ctx):
 
 
 	elif type.is_float():
-		if from_type.is_int() or from_type.is_number():
+		if from_type.is_int() or from_type.is_num():
 			return print_cast(type, value, ctx)
 
 	elif type.is_char():
@@ -951,7 +951,7 @@ def str_value_cons(x, ctx):
 
 		# print postfix ('u', 'U', 'L', 'LL', etc.)
 		if isinstance(value, ValueLiteral):
-			if from_type.is_number() or from_type.is_int() or from_type.is_word():
+			if from_type.is_num() or from_type.is_int() or from_type.is_word():
 				# up to 'long long'
 				if type.width <= 64:
 					sstr += print_suffix(type, value.asset)
@@ -969,7 +969,7 @@ def str_value_cons(x, ctx):
 	# - in Cm Int32(-1) -> Nat64 => 1
 	# required: (uint64_t)((uint32)int32_value)
 	#if type.is_int():
-	if from_type.is_int() or from_type.is_number():
+	if from_type.is_int() or from_type.is_num():
 		if from_type.is_signed():
 			if type.is_nat():
 				v = str_value(value)
@@ -1236,7 +1236,7 @@ def str_literal_pointer(type, num):
 def str_value_literal(x, ctx):
 	sstr = ''
 	t = x.type
-	if t.is_arithmetical() or t.is_number() or t.is_word():
+	if t.is_arithmetical() or t.is_num() or t.is_word():
 		nsigns = 0
 		if hasattr(x, 'nsigns'):
 			nsigns = x.nsigns

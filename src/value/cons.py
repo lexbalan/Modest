@@ -5,14 +5,14 @@ from .unit import unit_can, ValueUnit_cons
 from .bool import bool_can, value_bool_cons
 from .word import word_can, value_word_cons
 from .char import char_can, value_char_cons
-from .integer import integer_can, value_integer_cons
-from .natural import natural_can, value_natural_cons
+from .int import integer_can, value_integer_cons
+from .nat import natural_can, value_natural_cons
 from .float import float_can, value_float_cons
 from .record import record_can, value_record_cons
 from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons
 from .bad import bad_can, ValueBad_cons
-from .number import number_can, value_number_cons
+from .num import number_can, value_number_cons
 from hlir.type import Type, TypeArray, TypeWord
 from util import align_bits_up
 
@@ -33,7 +33,7 @@ def cons_can(to, from_type, method, ti):
 			method = 'unsafe'
 
 	checker = None
-	if to.is_number(): checker = number_can
+	if to.is_num(): checker = number_can
 	elif to.is_int(): checker = integer_can
 	elif to.is_nat(): checker = natural_can
 	elif to.is_unit(): checker = unit_can
@@ -158,7 +158,7 @@ def _select_default_type_for(t):
 	if not t.is_generic():
 		return None
 
-	if t.is_number():
+	if t.is_num():
 		t = typeSysInt
 		if t.is_unsigned():
 			t = typeSysNat
@@ -208,7 +208,7 @@ def _select_minimal_type_for(t):
 
 	w = align_bits_up(t.width)
 
-	if t.is_number():
+	if t.is_num():
 		t = TypeInt(w)
 		if t.is_unsigned():
 			t = TypeNat(w)
@@ -264,7 +264,7 @@ def value_cons(t, v, method, ti):
 
 
 	constructor = None
-	if t.is_number(): constructor = value_number_cons
+	if t.is_num(): constructor = value_number_cons
 	elif t.is_int(): constructor = value_integer_cons
 	elif t.is_nat(): constructor = value_natural_cons
 	elif t.is_float(): constructor = value_float_cons

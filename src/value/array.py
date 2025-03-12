@@ -3,17 +3,12 @@ import type as htype
 import foundation
 from type import type_print, select_common_type
 from error import info, warning, error
-from .char import utf32_chars_to_utfx_chars
-from .number import value_number_create
-from hlir.value import Value, ValueBad, ValueLiteral, ValueCons, ValueZero, ValueBin
 from hlir.type import Type, TypeArray
+from hlir.value import Value, ValueBad, ValueLiteral, ValueCons, ValueZero, ValueBin
+from .char import utf32_chars_to_utfx_chars
+from .num import value_number_create
 
 
-"""
-type_print(t)
-	print(" ", end='')
-	print(t.size)
-"""
 
 # TODO: переделай здесь все - тут все плохо...
 # получает на вход список элементов

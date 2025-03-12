@@ -611,7 +611,7 @@ def print_value_string(x, ctx):
 
 def print_value_literal(x, ctx):
 	t = x.type
-	if Type.is_number(t): print_value_integer(x, ctx)
+	if Type.is_num(t): print_value_integer(x, ctx)
 	elif Type.is_arithmetical(t): print_value_integer(x, ctx)
 	elif Type.is_float(t): print_value_float(x, ctx)
 	elif Type.is_string(t): print_value_string(x, ctx)
