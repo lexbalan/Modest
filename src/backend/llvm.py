@@ -872,7 +872,7 @@ def print_type(t):
 	elif t.is_array(): print_type_array(t)
 	#elif t.is_enum(): print_type_enum(t)
 
-	elif t.is_integer():
+	elif t.is_int():
 		print_int_type_for(t.width)
 
 	elif t.is_float():
@@ -1489,8 +1489,8 @@ def do_eval_cons(x):
 	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
 	# required: (uint64_t)((uint32)int32_value)
 	if type.is_word():
-		#if from_type.is_integer() or from_type.is_number():
-		if from_type.is_integer() or from_type.is_number():
+		#if from_type.is_int() or from_type.is_number():
+		if from_type.is_int() or from_type.is_number():
 			v = do_reval(value)
 			return docast(v, type)
 

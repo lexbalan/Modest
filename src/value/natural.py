@@ -62,8 +62,8 @@ def natural_can(to, from_type, method, ti):
 
 	# explicit or unsafe cons method
 	c = Type.is_number(from_type)
-	c0 = Type.is_natural(from_type)
-	c1 = Type.is_integer(from_type)
+	c0 = Type.is_nat(from_type)
+	c1 = Type.is_int(from_type)
 	c2 = Type.is_char(from_type)
 	c3 = Type.is_word(from_type)
 	c4 = Type.is_bool(from_type)

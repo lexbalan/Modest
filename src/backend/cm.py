@@ -221,8 +221,8 @@ def print_type(t):
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
-	if Type.is_integer(t): print_TypeInt(t)
-	elif Type.is_natural(t): print_TypeNat(t)
+	if Type.is_int(t): print_TypeInt(t)
+	elif Type.is_nat(t): print_TypeNat(t)
 	elif Type.is_func(t): print_type_func(t)
 	elif Type.is_array(t): print_type_array(t)
 	elif Type.is_record(t): print_type_record(t)

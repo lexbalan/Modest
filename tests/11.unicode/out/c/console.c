@@ -276,7 +276,7 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x)
 		const uint32_t n = d % 16;
 		d = d / 16;
 
-		tmpbuf[i] = n_to_hex_sym(n);
+		tmpbuf[i] = n_to_hex_sym((uint8_t)n);
 		i = i + 1;
 
 		if (d == 0) {
@@ -348,7 +348,7 @@ static int32_t sprint_dec_n32(char *buf, uint32_t x)
 	while (true) {
 		const uint32_t n = d % 10;
 		d = d / 10;
-		tmpbuf[i] = n_to_dec_sym(n);
+		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
 		i = i + 1;
 
 		if (d == 0) {

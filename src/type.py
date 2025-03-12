@@ -141,7 +141,7 @@ def type_print(t, print_aka=True):
 	elif t.is_word():
 		print(t.id.str, end='')
 
-	elif t.is_integer() or t.is_natural():
+	elif t.is_int() or t.is_nat():
 		print(t.id.str, end='')
 
 	elif t.is_float():

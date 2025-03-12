@@ -34,8 +34,8 @@ def cons_can(to, from_type, method, ti):
 
 	checker = None
 	if to.is_number(): checker = number_can
-	elif to.is_integer(): checker = integer_can
-	elif to.is_natural(): checker = natural_can
+	elif to.is_int(): checker = integer_can
+	elif to.is_nat(): checker = natural_can
 	elif to.is_unit(): checker = unit_can
 	elif to.is_bool(): checker = bool_can
 	elif to.is_word(): checker = word_can
@@ -265,8 +265,8 @@ def value_cons(t, v, method, ti):
 
 	constructor = None
 	if t.is_number(): constructor = value_number_cons
-	elif t.is_integer(): constructor = value_integer_cons
-	elif t.is_natural(): constructor = value_natural_cons
+	elif t.is_int(): constructor = value_integer_cons
+	elif t.is_nat(): constructor = value_natural_cons
 	elif t.is_float(): constructor = value_float_cons
 	elif t.is_array(): constructor = value_array_cons
 	elif t.is_record(): constructor = value_record_cons

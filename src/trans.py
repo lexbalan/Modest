@@ -592,7 +592,7 @@ def do_type_array(x):
 			else:
 				error("non local VLA", t.size.ti)
 
-		#if not (Type.is_integer(volume['type']) or volume.type.is_number()):
+		#if not (Type.is_int(volume['type']) or volume.type.is_number()):
 		#if volume.type.is_signed():
 		#	error("required value with Number or Integer type", volume.ti)
 
@@ -1926,7 +1926,7 @@ def do_stmt_assign(x):
 		return StmtBad(x)
 
 	if l.type.is_array() and r.type.is_array():
-		if l.type.of.size != r.type.size:
+		if l.type.of.size != r.type.of.size:
 			cmodule_use('use_lengthof')
 			cmodule_use('use_arrcpy')
 
@@ -2998,18 +2998,18 @@ def extra_args_check(specs, extra_args, expected_pointers):
 
 
 		if spec in ['i', 'd']:
-			if arg_type.is_integer():
+			if arg_type.is_int():
 				if not arg_type.is_signed():
 					warning("expected signed integer value", arg.ti)
 			else:
 				warning("expected integer value2", arg.ti)
 
 		elif spec == 'x':
-			if not arg_type.is_integer():
+			if not arg_type.is_int():
 				warning("expected integer value3", arg.ti)
 
 		elif spec == 'u':
-			if arg_type.is_integer():
+			if arg_type.is_int():
 				if arg_type.is_signed():
 					warning("expected unsigned integer value", arg.ti)
 			else:

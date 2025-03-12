@@ -38,7 +38,7 @@ void table_print(table_Table *table)
 	if (table->header != NULL) {
 		i = 0;
 		while (i < table->nCols) {
-			const uint32_t len = strlen((*table->header)[i]);
+			const uint32_t len = (uint32_t)strlen((*table->header)[i]);
 			if (len > sz[i]) {
 				sz[i] = len;
 			}
@@ -50,7 +50,7 @@ void table_print(table_Table *table)
 	while (i < table->nRows) {
 		j = 0;
 		while (j < table->nCols) {
-			const uint32_t len = strlen((*data)[i][j]);
+			const uint32_t len = (uint32_t)strlen((*data)[i][j]);
 			if (len > sz[j]) {
 				sz[j] = len;
 			}
@@ -101,7 +101,7 @@ static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols)
 	while (j < nCols) {
 		printf("|");
 		char *const s = (*row)[j];
-		uint32_t len = strlen(s);
+		uint32_t len = (uint32_t)strlen(s);
 		if (s[0] != '\x0') {
 			len = len + 1;
 			printf(" %s", s);

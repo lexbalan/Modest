@@ -11,6 +11,8 @@
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
+#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) {(*dst)[i] = (*src)[i];}
+
 
 //@attribute("c_no_print")
 //import "misc/minmax"

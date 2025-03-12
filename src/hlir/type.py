@@ -95,16 +95,16 @@ class Type(Entity):
 		return isinstance(self, TypeWord)
 
 
-	def is_integer(self):
+	def is_int(self):
 		return isinstance(self, TypeInt)
 
 
-	def is_natural(self):
+	def is_nat(self):
 		return isinstance(self, TypeNat)
 
 
 	def is_arithmetical(self):
-		return self.is_integer() or self.is_natural()
+		return self.is_int() or self.is_nat()
 
 
 	def is_float(self):
@@ -148,7 +148,7 @@ class Type(Entity):
 
 
 	def is_scalar_type(t):
-		return t.is_word() or t.is_integer() or t.is_natural() or t.is_char() or t.is_number()
+		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_number()
 
 
 	def is_composite(self):
@@ -172,6 +172,11 @@ class Type(Entity):
 	def is_generic(self):
 		return self.generic
 
+	def is_generic_int(self):
+		return self.is_int() and self.is_generic()
+
+	def is_generic_nat(self):
+		return self.is_nat() and self.is_generic()
 
 	def is_generic_word(self):
 		return self.is_word() and self.is_generic()

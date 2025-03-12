@@ -6,6 +6,12 @@
 
 #include "main.h"
 
+#ifndef __lengthof
+#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* __lengthof */
+
+#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) {(*dst)[i] = (*src)[i];}
+
 
 
 static bool test_generic_integer();

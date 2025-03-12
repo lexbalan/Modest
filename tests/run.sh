@@ -25,8 +25,6 @@ cd va_list && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM &&
 cd char && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. &&\
 cd float && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. &&\
 cd builtin_constants && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd table && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
-cd sha256 && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
 cd string && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd asm && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd crc32 && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \

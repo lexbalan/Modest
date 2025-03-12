@@ -884,6 +884,7 @@ def str_value_cons(x, ctx):
 	value = x.value
 	from_type = value.type
 
+
 	if type.is_array():
 		return str_value_cons_array(x, ctx)
 
@@ -917,16 +918,20 @@ def str_value_cons(x, ctx):
 
 
 	elif type.is_float():
-		if from_type.is_integer() or from_type.is_number():
+		if from_type.is_int() or from_type.is_number():
 			return print_cast(type, value, ctx)
 
 	elif type.is_char():
 		if from_type.is_string():
 			return str_literal_char(x.asset, x.type.width)
 
-	elif type.is_natural() or type.is_word():
-		if from_type.is_natural() or from_type.is_word():
-			return str_value(value)
+	elif type.is_nat() or type.is_word():
+		if from_type.is_nat() or from_type.is_word():
+			if from_type.is_generic_nat():
+				return str_value(value)
+			if type.width == from_type.width:
+				return str_value(value)
+
 
 
 	if x.method == 'implicit':
@@ -946,7 +951,7 @@ def str_value_cons(x, ctx):
 
 		# print postfix ('u', 'U', 'L', 'LL', etc.)
 		if isinstance(value, ValueLiteral):
-			if from_type.is_number() or from_type.is_integer() or from_type.is_word():
+			if from_type.is_number() or from_type.is_int() or from_type.is_word():
 				# up to 'long long'
 				if type.width <= 64:
 					sstr += print_suffix(type, value.asset)
@@ -963,10 +968,10 @@ def str_value_cons(x, ctx):
 	# - in Cm Int32(-1) -> Word64 => 0x00000000ffffffff
 	# - in Cm Int32(-1) -> Nat64 => 1
 	# required: (uint64_t)((uint32)int32_value)
-	#if type.is_integer():
-	if from_type.is_integer() or from_type.is_number():
+	#if type.is_int():
+	if from_type.is_int() or from_type.is_number():
 		if from_type.is_signed():
-			if type.is_natural():
+			if type.is_nat():
 				v = str_value(value)
 				#"#define ABS(x) ((x) < 0 ? -(x) : (x))"
 				return "ABS(" + v + ")"
@@ -2393,7 +2398,7 @@ def memcopy_assign(left, right):
 	#mass
 	#'use_arrcpy'
 	if left.type.is_array() and right.type.is_array():
-		if left.type.of.size != right.type.size:
+		if left.type.of.size != right.type.of.size:
 			out("ARRCPY(")
 			out(str_value_as_ptr(left))
 			out(", ")
