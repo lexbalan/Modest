@@ -206,33 +206,33 @@ define %Int @main() {
 	%5 = icmp ne %Int8 %4, 0
 	store %Bool %5, %Bool* %3
 	%6 = load %Int8, %Int8* %2
-	%7 = zext %Int8 %6 to %Int32
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int32 %7)
+	%7 = zext %Int8 %6 to %Word32
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Word32 %7)
 	%9 = load %Bool, %Bool* %3
-	%10 = zext %Bool %9 to %Int32
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Int32 %10)
+	%10 = zext %Bool %9 to %Word32
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Word32 %10)
 	store %Int8 2, %Int8* %2
 	;b = Bool x
 	%12 = load %Int8, %Int8* %2
 	%13 = icmp ne %Int8 %12, 0
 	store %Bool %13, %Bool* %3
 	%14 = load %Int8, %Int8* %2
-	%15 = zext %Int8 %14 to %Int32
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int32 %15)
+	%15 = zext %Int8 %14 to %Word32
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Word32 %15)
 	%17 = load %Bool, %Bool* %3
-	%18 = zext %Bool %17 to %Int32
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Int32 %18)
+	%18 = zext %Bool %17 to %Word32
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Word32 %18)
 	store %Int8 3, %Int8* %2
 	;b = Bool x
 	%20 = load %Int8, %Int8* %2
 	%21 = icmp ne %Int8 %20, 0
 	store %Bool %21, %Bool* %3
 	%22 = load %Int8, %Int8* %2
-	%23 = zext %Int8 %22 to %Int32
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Int32 %23)
+	%23 = zext %Int8 %22 to %Word32
+	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Word32 %23)
 	%25 = load %Bool, %Bool* %3
-	%26 = zext %Bool %25 to %Int32
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str7 to [0 x i8]*), %Int32 %26)
+	%26 = zext %Bool %25 to %Word32
+	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str7 to [0 x i8]*), %Word32 %26)
 	ret %Int 0
 }
 

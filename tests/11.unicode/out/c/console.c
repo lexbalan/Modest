@@ -44,7 +44,7 @@ void console_putchar32(uint32_t c)
 
 void console_putchar_utf8(char c)
 {
-	putchar((int32_t)c);
+	putchar((int32_t)(uint32_t)c);
 }
 
 void console_putchar_utf16(uint16_t c)

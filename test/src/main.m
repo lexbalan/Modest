@@ -30,6 +30,9 @@ public func main() -> Int32 {
 	printf("test %d\n", v0)
 	f0()
 
+
+
+
 //	let x = Int8 -1
 //
 //	i32 = Int32 x

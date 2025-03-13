@@ -104,7 +104,7 @@ func test_generic_char() -> Bool {
 	var d: Char32 = a
 
 	// explicit cast GenericChar value to Int32
-	var char_code: Int32 = Int32 Char32 a
+	var char_code: Int32 = Int32 Word32 Char32 a
 
 	return true
 }

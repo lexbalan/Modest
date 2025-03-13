@@ -314,8 +314,9 @@ define void @console_putchar32(%Char32 %c) {
 }
 
 define void @console_putchar_utf8(%Char8 %c) {
-	%1 = sext %Char8 %c to %Int32
-	%2 = call %Int @putchar(%Int32 %1)
+	%1 = zext %Char8 %c to %Word32
+	%2 = bitcast %Word32 %1 to %Int32
+	%3 = call %Int @putchar(%Int32 %2)
 	ret void
 }
 

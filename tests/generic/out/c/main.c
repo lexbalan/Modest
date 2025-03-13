@@ -127,7 +127,7 @@ static bool test_generic_char()
 	uint32_t d = U'A';
 
 	// explicit cast GenericChar value to Int32
-	int32_t char_code = (int32_t)U'A';
+	int32_t char_code = (int32_t)(uint32_t)U'A';
 
 	return true;
 

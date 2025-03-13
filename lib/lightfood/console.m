@@ -29,7 +29,7 @@ public func putchar32(c: Char32) -> Unit {
 
 
 public func putchar_utf8(c: Char8) -> Unit {
-	putchar(Int32 c)
+	putchar(Int32 Word32 c)
 }
 
 

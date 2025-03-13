@@ -14,20 +14,20 @@ public func main() -> Int {
 	x = 1
 	//b = Bool x
 	b = x != 0
-	printf("x = %u\n", Nat32 x)
-	printf("x to Bool = %u\n", Nat32 b)
+	printf("x = %u\n", Word32 x)
+	printf("x to Bool = %u\n", Word32 b)
 
 	x = 2
 	//b = Bool x
 	b = x != 0
-	printf("x = %u\n", Nat32 x)
-	printf("x to Bool = %u\n", Nat32 b)
+	printf("x = %u\n", Word32 x)
+	printf("x to Bool = %u\n", Word32 b)
 
 	x = 3
 	//b = Bool x
 	b = x != 0
-	printf("x = %u\n", Nat32 x)
-	printf("x to Bool = %u\n", Nat32 b)
+	printf("x = %u\n", Word32 x)
+	printf("x to Bool = %u\n", Word32 b)
 
 	return 0
 }
