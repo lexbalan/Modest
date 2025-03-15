@@ -32,19 +32,19 @@ static void f0(char *_x, char *sret_)
 	char x[20];
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
-	memcpy(&local_copy_of_x, &x, sizeof local_copy_of_x);
+	memcpy(&local_copy_of_x, &x, sizeof(char[20]));
 	printf("f0(\"%s\")\n", &local_copy_of_x);
 
 	// truncate array
 	char mic[6];
-	memcpy(&mic, &x, sizeof mic);
+	memcpy(&mic, &x, sizeof(char[6]));
 	mic[5] = '\x0';
 
 	printf("f0 mic = \"%s\"\n", &mic);
 
 	// extend array
 	char res[30];
-	memcpy(&res, &x, sizeof res);
+	memcpy(&res, &x, sizeof(char[30]));
 	res[6] = 'M';
 	res[7] = 'o';
 	res[8] = 'd';
@@ -65,7 +65,7 @@ static void test()
 {
 	// тестируем работу с локальным generic массивом
 	uint64_t yy[6];
-	memcpy(&yy, &(uint64_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}, sizeof yy);
+	memcpy(&yy, &(uint64_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}, sizeof(uint64_t[6]));
 	int32_t i = 0;
 	while (i < __lengthof(yy)) {
 		const uint64_t y = yy[i];
@@ -201,7 +201,7 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t localArray[3];
-	memcpy(&localArray, &(int32_t[3]){4, 5, 6	}, sizeof localArray);
+	memcpy(&localArray, &(int32_t[3]){4, 5, 6	}, sizeof(int32_t[3]));
 
 	i = 0;
 	while (i < 3) {
@@ -237,7 +237,7 @@ int main()
 	// assign array to array 1
 	// (with equal types)
 	int32_t a[3];
-	memcpy(&a, &(int32_t[3]){1, 2, 3	}, sizeof a);
+	memcpy(&a, &(int32_t[3]){1, 2, 3	}, sizeof(int32_t[3]));
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -246,7 +246,7 @@ int main()
 	// (with type [3]Int32)
 	// this variable are copy of array a
 	int32_t b[3];
-	memcpy(&b, &a, sizeof b);
+	memcpy(&b, &a, sizeof(int32_t[3]));
 	printf("b[0] = %i\n", b[0]);
 	printf("b[1] = %i\n", b[1]);
 	printf("b[2] = %i\n", b[2]);
@@ -261,9 +261,9 @@ int main()
 	// assign array to array 2
 	// (with array extending)
 	int32_t c[3];
-	memcpy(&c, &(int32_t[3]){10, 20, 30	}, sizeof c);
+	memcpy(&c, &(int32_t[3]){10, 20, 30	}, sizeof(int32_t[3]));
 	int32_t d[6];
-	memcpy(&d, &c, sizeof d);
+	memcpy(&d, &c, sizeof(int32_t[6]));
 	printf("d[0] = %i\n", d[0]);
 	printf("d[1] = %i\n", d[1]);
 	printf("d[2] = %i\n", d[2]);
@@ -299,13 +299,13 @@ int main()
 	// check local literal array assignation to local array
 	int32_t e[4];
 	memset(&e, 0, sizeof e);
-	memcpy(&e, &__init_array, sizeof e);
+	memcpy(&e, &__init_array, sizeof(int32_t[4]));
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	memcpy(&globalArray, &__init_array, sizeof globalArray);
+	memcpy(&globalArray, &__init_array, sizeof(int32_t[10]));
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
@@ -341,7 +341,7 @@ int main()
 
 
 	char sa[5];
-	memcpy(&sa, &"LoHi!", sizeof sa);
+	memcpy(&sa, &"LoHi!", sizeof(char[5]));
 
 	if (memcmp(&sa[2], "Hi", sizeof(char[4 - 2])) == 0) {
 		printf("test passed\n");

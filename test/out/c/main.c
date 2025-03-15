@@ -32,6 +32,25 @@ int32_t main()
 	printf("test %d\n", main_v0);
 	main_f0();
 
+	int32_t x1 = 5;
+	int32_t x2 = 15;
+
+	int32_t a0[10];
+	memset(&a0, 0, sizeof a0);
+	//
+	int32_t a1[5];
+	memcpy(&a1, &a0[2], sizeof(int32_t[5]));
+	//
+	int32_t a2[20];
+	memset(&a2, 0, sizeof a2);
+	memcpy(&a2[5], &a0, sizeof(int32_t[15 - 5]));
+	//
+	int32_t a3[20];
+	memset(&a3, 0, sizeof a3);
+	memcpy(&a3[x1], &a0, sizeof(int32_t[x2 - x1]));
+	//
+	memcpy(&a3[3], &a2[4], sizeof(int32_t[12 - 3]));
+
 	//	let x = Int8 -1
 	//
 	//	i32 = Int32 x

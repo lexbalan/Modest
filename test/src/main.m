@@ -30,8 +30,20 @@ public func main() -> Int32 {
 	printf("test %d\n", v0)
 	f0()
 
+	var x1 = 5
+	var x2 = 15
 
-
+	var a0: [10]Int32 = []
+	//
+	var a1: [5]Int32  = a0[2:7]
+	//
+	var a2: [20]Int32
+	a2[5:15] = a0
+	//
+	var a3: [20]Int32
+	a3[x1:x2] = a0
+	//
+	a3[3:12] = a2[4:13]
 
 //	let x = Int8 -1
 //

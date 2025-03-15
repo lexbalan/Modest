@@ -1549,7 +1549,7 @@ def print_stmt_var(x):
 			if Value.isUndefined(init_value):
 				memzero_sizeof(var_value)
 			else:
-				memcopy_assign(var_value, init_value)
+				assign_array(var_value, init_value)
 
 			out(";")
 			return
@@ -1685,6 +1685,18 @@ def assign_array(left, right):
 		out(str_value_call(right, [], sret=left))
 		return
 	
+	#'use_arrcpy'
+	#if left.type.is_array() and right.type.is_array():
+	if left.type.of.size != right.type.of.size:
+		out("ARRCPY(")
+		out(str_value_as_ptr(left))
+		out(", ")
+		out(str_value_as_ptr(right))
+		out(", __lengthof(")
+		out(str_value(right))
+		out("))")
+		return
+
 	memcopy_assign(left, right)
 	return
 
@@ -2382,12 +2394,6 @@ def str_value_as_ptr(x):
 	return sstr
 
 
-def memcp(dst, src, len):
-	s = """
-	for (uint32_t i = 0; i < {len}; i++) {{dst}[i] = {src}[i];}
-	"""
-	mass
-	out(s)
 
 def memcopy_assign(left, right):
 	rv = get_root_value(right)
@@ -2395,27 +2401,14 @@ def memcopy_assign(left, right):
 		memzero_sizeof(left)
 		return
 
-	#mass
-	#'use_arrcpy'
-	if left.type.is_array() and right.type.is_array():
-		if left.type.of.size != right.type.of.size:
-			out("ARRCPY(")
-			out(str_value_as_ptr(left))
-			out(", ")
-			out(str_value_as_ptr(right))
-			out(", __lengthof(")
-			out(str_value(right))
-			out("))")
-			return
-
 	out("memcpy(")
 	out(str_value_as_ptr(left))
 	out(", ")
 	out(str_value_as_ptr(right))
-	out(", sizeof ")
-	#print_type(left.type)
-	print_value(left)
-	out(")")
+	out(", sizeof(")
+	print_type(left.type)
+	#print_value(left)
+	out("))")
 
 
 def memzero_sizeof(left):
