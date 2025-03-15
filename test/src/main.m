@@ -35,7 +35,7 @@ public func main() -> Int32 {
 
 	var a0: [10]Int32 = []
 	//
-	var a1: [5]Int32  = a0[2:7]
+	var a1: [5]Int32 = a0[2:7]
 	//
 	var a2: [20]Int32
 	a2[5:15] = a0
