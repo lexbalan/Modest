@@ -50,6 +50,9 @@ int32_t main()
 	memcpy(&a3[x1], &a0, sizeof(int32_t[x2 - x1]));
 	//
 	memcpy(&a3[3], &a2[4], sizeof(int32_t[12 - 3]));
+	//
+	memcpy(&a0, &a3[3], sizeof(int32_t[10]));
+
 
 	//	let x = Int8 -1
 	//

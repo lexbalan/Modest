@@ -44,6 +44,9 @@ public func main() -> Int32 {
 	a3[x1:x2] = a0
 	//
 	a3[3:12] = a2[4:13]
+	//
+	a0 = a3[3:13]
+
 
 //	let x = Int8 -1
 //

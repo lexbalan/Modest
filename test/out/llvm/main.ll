@@ -290,6 +290,14 @@ define %Int32 @main() {
 	%35 = load [9 x %Int32], [9 x %Int32]* %34
 	%36 = zext i8 9 to %Int32
 	store [9 x %Int32] %35, [9 x %Int32]* %31
+	;
+	%37 = zext i8 3 to %Int32
+	%38 = getelementptr [20 x %Int32], [20 x %Int32]* %23, %Int32 0, %Int32 %37
+	%39 = bitcast %Int32* %38 to [10 x %Int32]*
+	%40 = load [10 x %Int32], [10 x %Int32]* %39
+	%41 = zext i8 10 to %Int32
+	store [10 x %Int32] %40, [10 x %Int32]* %7
+
 
 	;	let x = Int8 -1
 	;
@@ -297,41 +305,41 @@ define %Int32 @main() {
 	;	u32 = Nat32 x
 
 	; не проверяет дубликаты имен!
-	%37 = alloca %Int32, align 4
-	store %Int32 1, %Int32* %37
+	%42 = alloca %Int32, align 4
+	store %Int32 1, %Int32* %42
 	;var y: Int32 = 0x1  // error!
-	%38 = alloca %Word32, align 4
-	%39 = zext i8 1 to %Word32
-	store %Word32 %39, %Word32* %38
-	%40 = alloca %Word32, align 4
-	store %Word32 1, %Word32* %40
-	%41 = sub i8 0, 1
-	%42 = zext %Int8 %41 to %Word32
+	%43 = alloca %Word32, align 4
+	%44 = zext i8 1 to %Word32
+	store %Word32 %44, %Word32* %43
+	%45 = alloca %Word32, align 4
+	store %Word32 1, %Word32* %45
+	%46 = sub i8 0, 1
+	%47 = zext %Int8 %46 to %Word32
 ; if_0
 	br %Bool 1 , label %then_0, label %else_0
 then_0:
-	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @str4 to [0 x i8]*))
+	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @str4 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str5 to [0 x i8]*))
+	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str5 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 ; if_1
 	br %Bool 1 , label %then_1, label %else_1
 then_1:
-	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str6 to [0 x i8]*))
+	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str6 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%46 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str7 to [0 x i8]*))
+	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str7 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 ; if_2
 	br %Bool 1 , label %then_2, label %else_2
 then_2:
-	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str8 to [0 x i8]*))
+	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str8 to [0 x i8]*))
 	br label %endif_2
 else_2:
-	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str9 to [0 x i8]*))
+	%53 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str9 to [0 x i8]*))
 	br label %endif_2
 endif_2:
 
