@@ -46,7 +46,7 @@ static SHA256_TestCase test1 = {
 };
 
 #define _tests  {&test0, (SHA256_TestCase *)&test1}
-const SHA256_TestCase *tests[2] = _tests;
+static const SHA256_TestCase *tests[2] = _tests;
 
 static bool doTest(SHA256_TestCase *test)
 {

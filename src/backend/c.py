@@ -1677,6 +1677,30 @@ def print_stmt_asm(x):
 
 
 
+def str_array_len(array_value):
+	slen = "<slen>"
+	if array_value.isImmediate():
+		slen = str(array_value.type.volume.asset)
+	else:
+		slen = "__lengthof(" + str_value(array_value) + ')'
+	return slen
+
+
+def assign_array_by_for(left, right, slen):
+	sleft = str_value(left)
+	sright = str_value(right)
+
+	#out("ARRCPY(%s, %s, %s" % (sleft, sright, slen))
+
+	out("for (uint32_t i__ = 0; i__ < %s; i__++) {" % slen)
+	indent_up()
+	nl_indent(1)
+	out("%s[i__] = %s[i__];" % (sleft, sright))
+	indent_down()
+	nl_indent(1)
+	out("}")
+
+
 def assign_array(left, right):
 	# если справа 'обернутое' значение
 	# (для того чтобы в C вернуть массив из функции
@@ -1685,19 +1709,21 @@ def assign_array(left, right):
 		out(str_value_call(right, [], sret=left))
 		return
 	
-	#'use_arrcpy'
-	#if left.type.is_array() and right.type.is_array():
-	if left.type.of.size != right.type.of.size:
-		out("ARRCPY(")
-		out(str_value_as_ptr(left))
-		out(", ")
-		out(str_value_as_ptr(right))
-		out(", __lengthof(")
-		out(str_value(right))
-		out("))")
+	rv = get_root_value(right)
+	if rv.isZero():
+		memzero(left)
 		return
 
-	assign_by_memcopy(left, right)
+	if isinstance(right, ValueCons):
+		# Если справа приведенный к левому массив (более короткий? Generic)
+		r_root = get_root_value(right)
+		#out("/*? %s ?*/" % r_root.type.volume.asset)
+		right = r_root
+
+	slen = str_array_len(left)
+	assign_array_by_for(left, right, slen)
+
+	#assign_by_memcopy(left, right)
 	return
 
 
@@ -1999,6 +2025,8 @@ def print_def_const(x):
 		if def_type != None:
 			t = def_type
 
+		if not x.hasAttribute('global'):
+			out("static ")
 		print_variable(id_str, t, as_const=True)
 		out(" = _%s;" % id_str)
 		const_value.addAttribute('kostil')
@@ -2212,9 +2240,11 @@ macro_definitions = {
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 """,
 
-	'use_arrcpy': """
-#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) {(*dst)[i] = (*src)[i];}
-"""
+#	'use_arrcpy': """
+##define ARRCPY(dst, src, len) for (uint32_t i__ = 0; i__ < (len); i__++) { \\
+#	(*dst)[i__] = (*src)[i__]; \\
+#}
+#"""
 }
 
 
@@ -2354,6 +2384,10 @@ def str_value_as_ptr(x):
 	x = get_root_value(x)
 
 	#print(x.__class__)
+#	if x.type.is_array():
+#		# поскольку массив в C является в некотором роде указателем
+#		return str_value(x)
+
 	if isinstance(x, ValueDeref):
 		return str_value(x.value)
 

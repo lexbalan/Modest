@@ -37,6 +37,17 @@ class Value(Entity):
 	def isImmediate(self):
 		return self.immediate
 
+	def isZero(self):
+		if self.isImmediate():
+			if self.type.is_composite():
+				return self.items == []
+			else:
+				return self.asset == 0
+
+			#return (self.asset == 0 or self.asset == None) and (self.items == None or self.items == [])
+		return False
+
+
 	def isImmutable(self):
 		# ONLY lvalue CAN be an immutable value,
 		# BUT if immutable flag is set, it is immutable value anyway

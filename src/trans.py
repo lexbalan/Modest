@@ -1925,10 +1925,20 @@ def do_stmt_assign(x):
 		error("expected mutable value", l.ti)
 		return StmtBad(x)
 
+# Есть проблема - generic массив справа неявно приводится к типу массива слева
+# и как следствие right имеет тип левого!
+# НО ведь в коде реально right может иметь другой тип, и это приводит к пиздецу..
+# (кароче присваивание generic массива )
+#	if l.type.is_array() and r.type.is_array():
+#		if l.type.of.size != r.type.of.size:
+#			cmodule_use('use_lengthof')
+#			cmodule_use('use_arrcpy')
+# поэтому пока ВСЕГДА использую ARRCPY
 	if l.type.is_array() and r.type.is_array():
-		if l.type.of.size != r.type.of.size:
+		if not r.isZero():
 			cmodule_use('use_lengthof')
 			cmodule_use('use_arrcpy')
+
 
 	r = value_cons_implicit_check(l.type, r)
 	return StmtAssign(l, r, ti=x['ti'])

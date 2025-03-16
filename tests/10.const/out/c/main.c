@@ -11,7 +11,7 @@
 
 
 #define _carr  {0, 10, 15, 20, 25, 30}
-const int32_t carr[6] = _carr;
+static const int32_t carr[6] = _carr;
 
 struct Point {
 	double x;
@@ -50,7 +50,7 @@ typedef struct Line Line;
 }
 
 #define _lines  {line0, line1, line2, line3}
-const Line lines[4] = _lines;
+static const Line lines[4] = _lines;
 
 struct WrappedArray {
 	int32_t x;

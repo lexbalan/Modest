@@ -11,15 +11,13 @@
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
-#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) {(*dst)[i] = (*src)[i];}
-
 
 //@attribute("c_no_print")
 //import "misc/minmax"
 //$pragma c_include "./minmax.h"
 
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-const int32_t constantArray[10] = _constantArray;
+static const int32_t constantArray[10] = _constantArray;
 
 static int32_t globalArray[10] = _constantArray;
 
@@ -32,19 +30,25 @@ static void f0(char *_x, char *sret_)
 	char x[20];
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
-	memcpy(&local_copy_of_x, &x, sizeof(char[20]));
+	for (uint32_t i__ = 0; i__ < __lengthof(local_copy_of_x); i__++) {
+		local_copy_of_x[i__] = x[i__];
+	};
 	printf("f0(\"%s\")\n", &local_copy_of_x);
 
 	// truncate array
 	char mic[6];
-	memcpy(&mic, &x, sizeof(char[6]));
+	for (uint32_t i__ = 0; i__ < __lengthof(mic); i__++) {
+		mic[i__] = x[i__];
+	};
 	mic[5] = '\x0';
 
 	printf("f0 mic = \"%s\"\n", &mic);
 
 	// extend array
 	char res[30];
-	memcpy(&res, &x, sizeof(char[30]));
+	for (uint32_t i__ = 0; i__ < __lengthof(res); i__++) {
+		res[i__] = x[i__];
+	};
 	res[6] = 'M';
 	res[7] = 'o';
 	res[8] = 'd';
@@ -57,15 +61,17 @@ static void f0(char *_x, char *sret_)
 }
 
 #define _startSequence  {0xAA, 0x55, 0x02}
-const uint64_t startSequence[3] = _startSequence;
+static const uint64_t startSequence[3] = _startSequence;
 #define _stopSequence  {0x16}
-const uint64_t stopSequence[1] = _stopSequence;
+static const uint64_t stopSequence[1] = _stopSequence;
 
 static void test()
 {
 	// тестируем работу с локальным generic массивом
 	uint64_t yy[6];
-	memcpy(&yy, &(uint64_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}, sizeof(uint64_t[6]));
+	for (uint32_t i__ = 0; i__ < __lengthof(yy); i__++) {
+		yy[i__] = (uint64_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}[i__];
+	};
 	int32_t i = 0;
 	while (i < __lengthof(yy)) {
 		const uint64_t y = yy[i];
@@ -201,7 +207,9 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t localArray[3];
-	memcpy(&localArray, &(int32_t[3]){4, 5, 6	}, sizeof(int32_t[3]));
+	for (uint32_t i__ = 0; i__ < __lengthof(localArray); i__++) {
+		localArray[i__] = (int32_t[3]){4, 5, 6	}[i__];
+	};
 
 	i = 0;
 	while (i < 3) {
@@ -237,7 +245,9 @@ int main()
 	// assign array to array 1
 	// (with equal types)
 	int32_t a[3];
-	memcpy(&a, &(int32_t[3]){1, 2, 3	}, sizeof(int32_t[3]));
+	for (uint32_t i__ = 0; i__ < __lengthof(a); i__++) {
+		a[i__] = (int32_t[3]){1, 2, 3	}[i__];
+	};
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -246,7 +256,9 @@ int main()
 	// (with type [3]Int32)
 	// this variable are copy of array a
 	int32_t b[3];
-	memcpy(&b, &a, sizeof(int32_t[3]));
+	for (uint32_t i__ = 0; i__ < __lengthof(b); i__++) {
+		b[i__] = a[i__];
+	};
 	printf("b[0] = %i\n", b[0]);
 	printf("b[1] = %i\n", b[1]);
 	printf("b[2] = %i\n", b[2]);
@@ -261,9 +273,13 @@ int main()
 	// assign array to array 2
 	// (with array extending)
 	int32_t c[3];
-	memcpy(&c, &(int32_t[3]){10, 20, 30	}, sizeof(int32_t[3]));
+	for (uint32_t i__ = 0; i__ < __lengthof(c); i__++) {
+		c[i__] = (int32_t[3]){10, 20, 30	}[i__];
+	};
 	int32_t d[6];
-	memcpy(&d, &c, sizeof(int32_t[6]));
+	for (uint32_t i__ = 0; i__ < __lengthof(d); i__++) {
+		d[i__] = c[i__];
+	};
 	printf("d[0] = %i\n", d[0]);
 	printf("d[1] = %i\n", d[1]);
 	printf("d[2] = %i\n", d[2]);
@@ -299,13 +315,17 @@ int main()
 	// check local literal array assignation to local array
 	int32_t e[4];
 	memset(&e, 0, sizeof(int32_t[4]));
-	memcpy(&e, &__init_array, sizeof(int32_t[4]));
+	for (uint32_t i__ = 0; i__ < __lengthof(e); i__++) {
+		e[i__] = __init_array[i__];
+	};
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	memcpy(&globalArray, &__init_array, sizeof(int32_t[10]));
+	for (uint32_t i__ = 0; i__ < __lengthof(globalArray); i__++) {
+		globalArray[i__] = __init_array[i__];
+	};
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
@@ -341,7 +361,9 @@ int main()
 
 
 	char sa[5];
-	memcpy(&sa, &"LoHi!", sizeof(char[5]));
+	for (uint32_t i__ = 0; i__ < 5; i__++) {
+		sa[i__] = "LoHi!"[i__];
+	};
 
 	if (memcmp(&sa[2], "Hi", sizeof(char[4 - 2])) == 0) {
 		printf("test passed\n");
