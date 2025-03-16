@@ -8,6 +8,12 @@
 
 #include "main.h"
 
+#ifndef __lengthof
+#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* __lengthof */
+
+#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) {(*dst)[i] = (*src)[i];}
+
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
@@ -36,22 +42,24 @@ int32_t main()
 	int32_t x2 = 15;
 
 	int32_t a0[10];
-	memset(&a0, 0, sizeof a0);
+	memset(&a0,0 , sizeof(int32_t[10]));
 	//
 	int32_t a1[5];
 	memcpy(&a1, &a0[2], sizeof(int32_t[5]));
 	//
 	int32_t a2[20];
-	memset(&a2, 0, sizeof a2);
+	memset(&a2,0 , sizeof(int32_t[20]));
 	memcpy(&a2[5], &a0, sizeof(int32_t[15 - 5]));
 	//
 	int32_t a3[20];
-	memset(&a3, 0, sizeof a3);
+	memset(&a3,0 , sizeof(int32_t[20]));
 	memcpy(&a3[x1], &a0, sizeof(int32_t[x2 - x1]));
 	//
 	memcpy(&a3[3], &a2[4], sizeof(int32_t[12 - 3]));
 	//
 	memcpy(&a0, &a3[3], sizeof(int32_t[10]));
+	//
+	memset(&a3[3],0 , sizeof(int32_t[13 - 3]));
 
 
 	//	let x = Int8 -1

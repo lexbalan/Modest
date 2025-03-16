@@ -150,7 +150,7 @@ static bool test_generic_array()
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Int32
 	int32_t b[4];
-	memset(&b, 0, sizeof b);
+	memset(&b, 0, sizeof(int32_t[4]));
 	memcpy(&b, &(int32_t[4])__a, sizeof(int32_t[4]));
 
 	if (memcmp(&b, &(int32_t[4]){0, 1, 2, 3	}, sizeof(int32_t[4])) != 0) {
@@ -160,7 +160,7 @@ static bool test_generic_array()
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Nat64
 	int64_t c[4];
-	memset(&c, 0, sizeof c);
+	memset(&c, 0, sizeof(int64_t[4]));
 	memcpy(&c, &(int64_t[4])__a, sizeof(int64_t[4]));
 
 	if (memcmp(&c, &(int64_t[4]){0, 1, 2, 3	}, sizeof(int64_t[4])) != 0) {

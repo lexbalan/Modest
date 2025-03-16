@@ -37,7 +37,7 @@ int main()
 	int32_t localArray0[10];
 	memcpy(&localArray0, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9	}, sizeof(int32_t[10]));
 	int32_t localArray1[10];
-	memset(&localArray1, 0, sizeof localArray1);
+	memset(&localArray1, 0, sizeof(int32_t[10]));
 
 
 	memcpy(&localArray1, &localArray0, sizeof(int32_t[10]));

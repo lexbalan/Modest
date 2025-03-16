@@ -93,7 +93,7 @@ const uint64_t k[64] = _k;
 static void transform(Context *ctx, uint8_t *data)
 {
 	uint32_t m[64];
-	memset(&m, 0, sizeof m);
+	memset(&m, 0, sizeof(uint32_t[64]));
 
 	uint32_t i = 0;
 	uint32_t j = 0;

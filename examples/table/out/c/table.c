@@ -29,7 +29,7 @@ void table_print(table_Table *table)
 
 	// array of size of columns (in characters)
 	uint32_t sz[table->nCols];
-	memset(&sz, 0, sizeof sz);
+	memset(&sz, 0, sizeof(uint32_t[table->nCols]));
 
 	//
 	// calculate max length (in chars) of column

@@ -18,7 +18,7 @@
 static bool write_file(int sockfd)
 {
 	char buffer[bufSize];
-	memset(&buffer, 0, sizeof buffer);
+	memset(&buffer, 0, sizeof(char[bufSize]));
 
 	FILE *const fp = fopen(filename, "w");
 	if (fp == NULL) {
@@ -34,7 +34,7 @@ static bool write_file(int sockfd)
 		}
 
 		fprintf(fp, "%s", &buffer);
-		memset(&buffer, 0, sizeof buffer);
+		memset(&buffer, 0, sizeof(char[bufSize]));
 	}
 
 	return true;

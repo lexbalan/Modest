@@ -27,13 +27,13 @@ int main()
 
 	// current control terminal
 	char cterm[128];
-	memset(&cterm, 0, sizeof cterm);
+	memset(&cterm, 0, sizeof(char[128]));
 	ctermid((char *)&cterm);
 	printf("ctermid = %s\n", &cterm);
 
 	// current working directory
 	char cwd[128];
-	memset(&cwd, 0, sizeof cwd);
+	memset(&cwd, 0, sizeof(char[128]));
 	getcwd((char *)&cwd, __lengthof(cwd));
 	printf("cwd = %s\n", &cwd);
 

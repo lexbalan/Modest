@@ -21,7 +21,7 @@ static void arraysAdd(int32_t *_a, int32_t *_b, int32_t *sret_)
 	int32_t b[10];
 	memcpy(b, _b, sizeof(int32_t[10]));
 	int32_t c[10];
-	memset(&c, 0, sizeof c);
+	memset(&c, 0, sizeof(int32_t[10]));
 	int32_t i = 0;
 	while (i < 10) {
 		c[i] = a[i] + b[i];

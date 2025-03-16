@@ -576,9 +576,9 @@ def str_value_eq_composite(x, ctx):
 
 	# если сравниваем строки (Str8, Str16, Str32)
 	if left.type.is_str() and right.type.is_str():
-		return strcmp_str(left, right, op=op)
+		return eq_str_by_strcmp(left, right, op=op)
 
-	return memcmp_eq_str(left, right, op=op)
+	return eq_str_by_memcmp(left, right, op=op)
 
 
 un_ops = {
@@ -1547,7 +1547,7 @@ def print_stmt_var(x):
 			nl_indent(1)
 
 			if Value.isUndefined(init_value):
-				memzero_sizeof(var_value)
+				memzero(var_value)
 			else:
 				assign_array(var_value, init_value)
 
@@ -1697,7 +1697,7 @@ def assign_array(left, right):
 		out("))")
 		return
 
-	memcopy_assign(left, right)
+	assign_by_memcopy(left, right)
 	return
 
 
@@ -2358,7 +2358,6 @@ def str_value_as_ptr(x):
 		return str_value(x.value)
 
 	if isinstance(x, ValueLiteral):
-		print("SDSDSD")
 		if x.type.is_string():
 			return str_value(x)
 
@@ -2395,10 +2394,10 @@ def str_value_as_ptr(x):
 
 
 
-def memcopy_assign(left, right):
+def assign_by_memcopy(left, right):
 	rv = get_root_value(right)
 	if rv.isZero():
-		memzero_sizeof(left)
+		memzero(left)
 		return
 
 	out("memcpy(")
@@ -2407,23 +2406,22 @@ def memcopy_assign(left, right):
 	out(str_value_as_ptr(right))
 	out(", sizeof(")
 	print_type(left.type)
-	#print_value(left)
 	out("))")
 
 
-def memzero_sizeof(left):
+def memzero(value):
 	out("memset(")
-	out(str_value_as_ptr(left))
-	out(", 0, sizeof ")
-	print_value(left)
-	out(")")
+	out(str_value_as_ptr(value))
+	out(", 0, sizeof(")
+	print_type(value.type)
+	out("))")
 
 
-def memcmp_eq(left, right, op='eq'):
-	return memcmp_eq_str(left, right, op=op)
+#def eq_by_memcmp(left, right, op='eq'):
+#	return eq_str_by_memcmp(left, right, op=op)
 
 
-def strcmp_str(left, right, op='eq'):
+def eq_str_by_strcmp(left, right, op='eq'):
 	# не берем все в скобки все тк это eq операция
 	# и ее приоритет не нарушается (!)
 	sstr = 'strcmp('
@@ -2437,7 +2435,7 @@ def strcmp_str(left, right, op='eq'):
 	return sstr
 
 
-def memcmp_eq_str(left, right, op='eq'):
+def eq_str_by_memcmp(left, right, op='eq'):
 	# не берем все в скобки все тк это eq операция
 	# и ее приоритет не нарушается (!)
 	sstr = 'memcmp('

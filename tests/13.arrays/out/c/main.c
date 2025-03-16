@@ -298,7 +298,7 @@ int main()
 
 	// check local literal array assignation to local array
 	int32_t e[4];
-	memset(&e, 0, sizeof e);
+	memset(&e, 0, sizeof(int32_t[4]));
 	memcpy(&e, &__init_array, sizeof(int32_t[4]));
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
@@ -311,7 +311,7 @@ int main()
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
 
 
-	memset(&globalArray, 0, sizeof globalArray);
+	memset(&globalArray, 0, sizeof(int32_t[10]));
 
 
 	// проверка того как локальная константа-массив
