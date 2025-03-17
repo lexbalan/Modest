@@ -10,6 +10,10 @@
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
+#define ARRCPY(dst, src, len) for (uint32_t i__ = 0; i__ < (len); i__++) { \
+	(*dst)[i__] = (*src)[i__]; \
+}
+
 
 static int32_t globalArray0[10] = (int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 static int32_t globalArray1[10] = (int32_t[10]){};
@@ -18,9 +22,7 @@ int main()
 {
 	printf("test assign_array\n");
 
-	for (uint32_t i__ = 0; i__ < __lengthof(globalArray1); i__++) {
-		globalArray1[i__] = globalArray0[i__];
-	};
+	ARRCPY((&globalArray1), (&globalArray0), (__lengthof(globalArray1)));
 
 	int32_t i;
 
@@ -41,16 +43,12 @@ int main()
 	// local
 
 	int32_t localArray0[10];
-	for (uint32_t i__ = 0; i__ < __lengthof(localArray0); i__++) {
-		localArray0[i__] = (int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9	}[i__];
-	};
+	ARRCPY((&localArray0), (&(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9	}), (__lengthof(localArray0)));
 	int32_t localArray1[10];
 	memset(&localArray1, 0, sizeof(int32_t[10]));
 
 
-	for (uint32_t i__ = 0; i__ < __lengthof(localArray1); i__++) {
-		localArray1[i__] = localArray0[i__];
-	};
+	ARRCPY((&localArray1), (&localArray0), (__lengthof(localArray1)));
 
 	i = 0;
 	while (i < 10) {

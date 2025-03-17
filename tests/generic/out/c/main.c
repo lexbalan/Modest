@@ -10,6 +10,10 @@
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
+#define ARRCPY(dst, src, len) for (uint32_t i__ = 0; i__ < (len); i__++) { \
+	(*dst)[i__] = (*src)[i__]; \
+}
+
 
 
 static bool test_generic_integer();
@@ -149,9 +153,7 @@ static bool test_generic_array()
 	// implicit cast Generic([4]GenericInteger) value to [4]Int32
 	int32_t b[4];
 	memset(&b, 0, sizeof(int32_t[4]));
-	for (uint32_t i__ = 0; i__ < __lengthof(b); i__++) {
-		b[i__] = (int32_t[4])__a[i__];
-	};
+	ARRCPY((&b), (&(int32_t[4])__a), (__lengthof(b)));
 
 	if (memcmp(&b, &(int32_t[4]){0, 1, 2, 3	}, sizeof(int32_t[4])) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
@@ -161,9 +163,7 @@ static bool test_generic_array()
 	// implicit cast Generic([4]GenericInteger) value to [4]Nat64
 	int64_t c[4];
 	memset(&c, 0, sizeof(int64_t[4]));
-	for (uint32_t i__ = 0; i__ < __lengthof(c); i__++) {
-		c[i__] = (int64_t[4])__a[i__];
-	};
+	ARRCPY((&c), (&(int64_t[4])__a), (__lengthof(c)));
 
 	if (memcmp(&c, &(int64_t[4]){0, 1, 2, 3	}, sizeof(int64_t[4])) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
@@ -172,9 +172,7 @@ static bool test_generic_array()
 
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
 	int32_t d[10];
-	for (uint32_t i__ = 0; i__ < __lengthof(d); i__++) {
-		d[i__] = (int32_t[10])__a[i__];
-	};
+	ARRCPY((&d), (&(int32_t[10])__a), (__lengthof(d)));
 
 	if (memcmp(&d, &(int32_t[10]){0, 1, 2, 3, 0	}, sizeof(int32_t[10])) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");

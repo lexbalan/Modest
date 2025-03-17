@@ -10,6 +10,10 @@
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
+#define ARRCPY(dst, src, len) for (uint32_t i__ = 0; i__ < (len); i__++) { \
+	(*dst)[i__] = (*src)[i__]; \
+}
+
 
 // Simply record for records assignation test
 struct Point {
@@ -40,9 +44,7 @@ int main()
 
 
 	// copy arrays by value
-	for (uint32_t i__ = 0; i__ < __lengthof(glb_a0); i__++) {
-		glb_a0[i__] = glb_a1[i__];
-	};
+	ARRCPY((&glb_a0), (&glb_a1), (__lengthof(glb_a0)));
 
 	printf("glb_a0[0] = %i\n", glb_a0[0]);
 	printf("glb_a0[1] = %i\n", glb_a0[1]);
@@ -72,13 +74,9 @@ int main()
 	int32_t loc_a0[10];
 	memset(&loc_a0, 0, sizeof(int32_t[10]));
 	int32_t loc_a1[10];
-	for (uint32_t i__ = 0; i__ < __lengthof(loc_a1); i__++) {
-		loc_a1[i__] = (int32_t[10]){42, 53, 64	}[i__];
-	};
+	ARRCPY((&loc_a1), (&(int32_t[10]){42, 53, 64	}), (__lengthof(loc_a1)));
 
-	for (uint32_t i__ = 0; i__ < __lengthof(loc_a0); i__++) {
-		loc_a0[i__] = loc_a1[i__];
-	};
+	ARRCPY((&loc_a0), (&loc_a1), (__lengthof(loc_a0)));
 
 	printf("loc_a0[0] = %i\n", loc_a0[0]);
 	printf("loc_a0[1] = %i\n", loc_a0[1]);

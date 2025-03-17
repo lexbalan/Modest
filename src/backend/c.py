@@ -1686,19 +1686,16 @@ def str_array_len(array_value):
 	return slen
 
 
-def assign_array_by_for(left, right, slen):
-	sleft = str_value(left)
-	sright = str_value(right)
+def assign_array_by_for(sleft, sright, slen):
+	out("ARRCPY((%s), (%s), (%s))" % (sleft, sright, slen))
 
-	#out("ARRCPY(%s, %s, %s" % (sleft, sright, slen))
-
-	out("for (uint32_t i__ = 0; i__ < %s; i__++) {" % slen)
-	indent_up()
-	nl_indent(1)
-	out("%s[i__] = %s[i__];" % (sleft, sright))
-	indent_down()
-	nl_indent(1)
-	out("}")
+#	out("for (uint32_t i = 0; i < (%s); i++) {" % slen)
+#	indent_up()
+#	nl_indent(1)
+#	out("(*%s)[i] = (*%s)[i];" % (sleft, sright))
+#	indent_down()
+#	nl_indent(1)
+#	out("}")
 
 
 def assign_array(left, right):
@@ -1720,8 +1717,24 @@ def assign_array(left, right):
 		#out("/*? %s ?*/" % r_root.type.volume.asset)
 		right = r_root
 
-	slen = str_array_len(left)
-	assign_array_by_for(left, right, slen)
+	sleft = str_value_as_ptr(left)
+#	l_root = get_root_value(left)
+#	print(l_root)
+#	if isinstance(l_root, ValueLiteral):
+#		sleft = "(" + sleft + ")"
+
+	sright = str_value_as_ptr(right)
+#	r_root = get_root_value(right)
+#	if isinstance(r_root, ValueLiteral):
+#		sright = "(" + sright + ")"
+
+
+	slen = None
+	if isinstance(left, ValueVar) or isinstance(left, ValueConst):
+		slen = str_array_len(left)
+	else:
+		slen = str_value(left.type.volume)
+	assign_array_by_for(sleft, sright, slen)
 
 	#assign_by_memcopy(left, right)
 	return
@@ -2240,11 +2253,11 @@ macro_definitions = {
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 """,
 
-#	'use_arrcpy': """
-##define ARRCPY(dst, src, len) for (uint32_t i__ = 0; i__ < (len); i__++) { \\
-#	(*dst)[i__] = (*src)[i__]; \\
-#}
-#"""
+	'use_arrcpy': """
+#define ARRCPY(dst, src, len) for (uint32_t i__ = 0; i__ < (len); i__++) { \\
+	(*dst)[i__] = (*src)[i__]; \\
+}
+"""
 }
 
 
@@ -2384,9 +2397,10 @@ def str_value_as_ptr(x):
 	x = get_root_value(x)
 
 	#print(x.__class__)
-#	if x.type.is_array():
-#		# поскольку массив в C является в некотором роде указателем
-#		return str_value(x)
+	#if x.type.is_array():
+	#	# поскольку массив в C является в некотором роде указателем
+	#	if isinstance(x, ValueVar) or isinstance(x, ValueConst) or isinstance(x, ValueAccessRecord):
+	#		return str_value(x)
 
 	if isinstance(x, ValueDeref):
 		return str_value(x.value)

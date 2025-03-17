@@ -10,6 +10,10 @@
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
+#define ARRCPY(dst, src, len) for (uint32_t i__ = 0; i__ < (len); i__++) { \
+	(*dst)[i__] = (*src)[i__]; \
+}
+
 
 
 
@@ -71,9 +75,7 @@ static const uint64_t initalState[8] = _initalState;
 
 static void contextInit(Context *ctx)
 {
-	for (uint32_t i__ = 0; i__ < __lengthof(ctx->state); i__++) {
-		ctx->state[i__] = initalState[i__];
-	};
+	ARRCPY((&ctx->state), (&initalState), (8));
 }
 
 #define _k  { \
@@ -118,9 +120,7 @@ static void transform(Context *ctx, uint8_t *data)
 	}
 
 	uint32_t x[8];
-	for (uint32_t i__ = 0; i__ < __lengthof(x); i__++) {
-		x[i__] = ctx->state[i__];
-	};
+	ARRCPY((&x), (&ctx->state), (__lengthof(x)));
 
 	i = 0;
 	while (i < 64) {
