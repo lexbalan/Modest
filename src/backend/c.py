@@ -384,7 +384,7 @@ def str_type_func(t, label='', core=''):
 
 
 
-def str_type_pointer(t, label, core=''):
+def str_type_pointer(t, label='', ptr_to_array=False, core=''):
 	tx = t
 
 	c = ''
@@ -393,7 +393,8 @@ def str_type_pointer(t, label, core=''):
 		c += '*'
 
 	if is_sim_sim(t):
-		tx = tx.of
+		if not ptr_to_array:
+			tx = tx.of
 
 	if not is_type_named(tx):
 		core = '(' + c + core + label + ')'
@@ -1681,6 +1682,8 @@ def str_array_len(array_value):
 	slen = "<slen>"
 	if array_value.isImmediate():
 		slen = str(array_value.type.volume.asset)
+	elif isinstance(array_value, ValueSlice):
+		slen = str_value(array_value.type.volume)
 	else:
 		slen = "__lengthof(" + str_value(array_value) + ')'
 	return slen
@@ -2394,13 +2397,18 @@ def cons_vla_from_literal_array(x):
 def str_value_as_ptr(x):
 	sstr = ''
 	yy = x
-	x = get_root_value(x)
+	root = get_root_value(x)
 
 	#print(x.__class__)
 	#if x.type.is_array():
 	#	# поскольку массив в C является в некотором роде указателем
 	#	if isinstance(x, ValueVar) or isinstance(x, ValueConst) or isinstance(x, ValueAccessRecord):
 	#		return str_value(x)
+
+	if isinstance(root, ValueSlice):
+		ptr2slice = TypePointer(x.type)
+		sptr = str_type_pointer(pointerToSlice, label='', ptr_to_array=True)
+		sstr += '(%s)' % sptr
 
 	if isinstance(x, ValueDeref):
 		return str_value(x.value)
@@ -2425,10 +2433,10 @@ def str_value_as_ptr(x):
 	t = yy.type
 	# КОСТЫЛЬ!
 
-	if isinstance(x, ValueBin) and x.op in ['literal', 'add']:
+	if isinstance(root, ValueBin) and root.op in ['literal', 'add']:
 		sstr += '(' + str_type(t) + ')'
 
-	elif cons_vla_from_literal_array(x):
+	elif cons_vla_from_literal_array(root):
 		# we need to print:
 		#  &(uint32_t[]){1, 2, 3, 4, 5}
 		# instead of:
