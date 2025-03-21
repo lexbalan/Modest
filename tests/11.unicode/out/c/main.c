@@ -26,9 +26,9 @@ static const char arr_unicorn[4] = _arr_unicorn;
 static const char arr_rat[4] = _arr_rat;
 
 #define genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define string8Const  "S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define string16Const  u"S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define string8Const  (char *)genericStringConst
+#define string16Const  (uint16_t *)genericStringConst
+#define string32Const  (uint32_t *)genericStringConst
 
 static char arr_utf8[8] = "Hi!\n";
 static uint16_t arr_utf16[9] = u"Hello Ω!\n";

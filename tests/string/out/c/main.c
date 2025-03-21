@@ -22,8 +22,8 @@ static uint32_t string32[12] = U"String-Ω 🐀🎉🦄";
 
 // variables with type Pointer to Array of Chars
 static char *ptr_to_string8 = str8_example;
-static uint16_t *ptr_to_string16 = u"String-Ω";
-static uint32_t *ptr_to_string32 = U"String-Ω 🐀🎉🦄";
+static uint16_t *ptr_to_string16 = str16_example;
+static uint32_t *ptr_to_string32 = str32_example;
 
 int main()
 {

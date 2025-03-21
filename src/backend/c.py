@@ -885,7 +885,6 @@ def str_value_cons(x, ctx):
 	value = x.value
 	from_type = value.type
 
-
 	if type.is_array():
 		return str_value_cons_array(x, ctx)
 
@@ -893,8 +892,11 @@ def str_value_cons(x, ctx):
 		return str_value_cons_record(x, ctx)
 
 	elif type.is_pointer():
-		if from_type.is_string():
-		# cast <string literal> to <pointer to array of chars>:
+		#if type.to.is_str():
+		#	return str_value(value)
+
+		if type.to.is_string():
+			# cast <string literal> to <pointer to array of chars>:
 			# let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 			# let string8Const = *Str8 genericStringConst  // <-
 			if type.to.of.width != from_type.width:
@@ -917,7 +919,6 @@ def str_value_cons(x, ctx):
 					#sstr += ("\n// -- DIM --\n")
 					#return do_eval_cons_pointer_to_array(x)
 
-
 	elif type.is_float():
 		if from_type.is_int() or from_type.is_num():
 			return print_cast(type, value, ctx)
@@ -932,7 +933,6 @@ def str_value_cons(x, ctx):
 				return str_value(value)
 			if type.width == from_type.width:
 				return str_value(value)
-
 
 
 	if x.method == 'implicit':

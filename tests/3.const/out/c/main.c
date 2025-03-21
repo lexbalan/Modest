@@ -12,8 +12,8 @@
 
 #define genericStringConst  "Hello!"
 #define string8Const  (char *)genericStringConst
-#define string16Const  u"Hello!"
-#define string32Const  U"Hello!"
+#define string16Const  (uint16_t *)genericStringConst
+#define string32Const  (uint32_t *)genericStringConst
 
 struct Point {
 	uint32_t x;

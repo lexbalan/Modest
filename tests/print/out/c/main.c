@@ -20,9 +20,9 @@ int main()
 	console_print("\\\n");
 	console_print("@\n");
 	console_print("#AA#\n");
-	console_print("🎉A\n");
+	console_print(U"🎉A\n");
 
-	console_print("Это строка записанная кириллицей.\n");
+	console_print(u"Это строка записанная кириллицей.\n");
 
 	console_print("{{c}}\n");
 	console_print("c = \"{c}\"\n", c);

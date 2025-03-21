@@ -12,6 +12,10 @@
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
+#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) { \
+	(*dst)[i] = (*src)[i]; \
+}
+
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
@@ -29,6 +33,17 @@ void main_f0()
 static int32_t i32;
 static uint32_t u32;
 
+static uint8_t prev_p[10];
+static void xxx(uint8_t *p)
+{
+	uint8_t *const xp = (uint8_t *)p;
+	if (memcmp(&prev_p, xp, sizeof(uint8_t[10])) == 0) {
+		printf("xp eq\n");
+	} else {
+		printf("xp ne\n");
+	}
+}
+
 int32_t main()
 {
 	main_Point p;
@@ -39,35 +54,38 @@ int32_t main()
 	int32_t x1 = 5;
 	int32_t x2 = 15;
 
+	uint8_t w0[10];
+	memset(&w0, 0, sizeof(uint8_t[10]));
 	int32_t a0[10];
-	memset(a0, 0, sizeof(int32_t[10]));
+	memset(&a0, 0, sizeof(int32_t[10]));
 	//
 	int32_t a1[5];
-	for (uint32_t i = 0; i < (__lengthof(a1)); i++) {
-		(a1)[i] = (&a0[2])[i];
-	};
+	ARRCPY((&a1), ((int32_t(*)[7 - 2])&a0[2]), (__lengthof(a1)));
 	//
 	int32_t a2[20];
-	memset(a2, 0, sizeof(int32_t[20]));
-	for (uint32_t i = 0; i < (15 - 5); i++) {
-		(&a2[5])[i] = (a0)[i];
-	};
+	memset(&a2, 0, sizeof(int32_t[20]));
+	ARRCPY(((int32_t(*)[15 - 5])&a2[5]), (&a0), (15 - 5));
 	//
 	int32_t a3[20];
-	memset(a3, 0, sizeof(int32_t[20]));
-	for (uint32_t i = 0; i < (x2 - x1); i++) {
-		(&a3[x1])[i] = (a0)[i];
-	};
+	memset(&a3, 0, sizeof(int32_t[20]));
+	ARRCPY(((int32_t(*)[x2 - x1])&a3[x1]), (&a0), (x2 - x1));
 	//
-	for (uint32_t i = 0; i < (12 - 3); i++) {
-		(&a3[3])[i] = (&a2[4])[i];
-	};
+	ARRCPY(((int32_t(*)[12 - 3])&a3[3]), ((int32_t(*)[13 - 4])&a2[4]), (12 - 3));
 	//
-	for (uint32_t i = 0; i < (__lengthof(a0)); i++) {
-		(a0)[i] = (&a3[3])[i];
-	};
+	ARRCPY((&a0), ((int32_t(*)[13 - 3])&a3[3]), (__lengthof(a0)));
 	//
-	memset(&a3[3], 0, sizeof(int32_t[13 - 3]));
+	memset((int32_t(*)[13 - 3])&a3[3], 0, sizeof(int32_t[13 - 3]));
+
+	xxx((uint8_t *)&w0);
+
+	int *const pa2 = (int *)&a2;
+
+	if (memcmp(pa2, &a0, sizeof(int[10])) == 0) {
+		printf("eq!\n");
+	} else {
+		printf("eq!\n");
+	}
+
 
 
 	//	let x = Int8 -1

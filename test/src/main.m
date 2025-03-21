@@ -24,6 +24,17 @@ public func f0() -> Unit {
 var i32: Int32
 var u32: Nat32
 
+
+var prev_p: [10]Word8
+func xxx(p: *[]Word8) -> Unit {
+	let xp = *[10]Word8 p
+	if prev_p == *xp {
+		printf("xp eq\n")
+	} else {
+		printf("xp ne\n")
+	}
+}
+
 public func main() -> Int32 {
 	var p: Point
 	printf("test %s\n", *Str8 cq)
@@ -33,6 +44,7 @@ public func main() -> Int32 {
 	var x1 = 5
 	var x2 = 15
 
+	var w0: [10]Word8 = []
 	var a0: [10]Int32 = []
 	//
 	var a1: [5]Int32 = a0[2:7]
@@ -48,6 +60,17 @@ public func main() -> Int32 {
 	a0 = a3[3:13]
 	//
 	a3[3:13] = []
+
+	xxx(&w0)
+
+	let pa2 = unsafe *[10]Int &a2
+
+	if *pa2 == a0 {
+		printf("eq!\n")
+	} else {
+		printf("eq!\n")
+	}
+
 
 
 //	let x = Int8 -1
