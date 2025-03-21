@@ -384,7 +384,7 @@ def str_type_func(t, label='', core=''):
 
 
 
-def str_type_pointer(t, label='', ptr_to_array=False, core=''):
+def str_type_pointer(t, label='', core='', ptr_to_array=False):
 	tx = t
 
 	c = ''
@@ -579,7 +579,7 @@ def str_value_eq_composite(x, ctx):
 	if left.type.is_str() and right.type.is_str():
 		return eq_str_by_strcmp(left, right, op=op)
 
-	return eq_str_by_memcmp(left, right, op=op)
+	return eq_by_memcmp(left, right, op=op)
 
 
 un_ops = {
@@ -2405,18 +2405,6 @@ def str_value_as_ptr(x):
 	#	if isinstance(x, ValueVar) or isinstance(x, ValueConst) or isinstance(x, ValueAccessRecord):
 	#		return str_value(x)
 
-	if isinstance(root, ValueSlice):
-		ptr2slice = TypePointer(x.type)
-		sptr = str_type_pointer(pointerToSlice, label='', ptr_to_array=True)
-		sstr += '(%s)' % sptr
-
-	if isinstance(x, ValueDeref):
-		return str_value(x.value)
-
-	if isinstance(x, ValueLiteral):
-		if x.type.is_string():
-			return str_value(x)
-
 	if isinstance(x, ValueCons):
 		# for *s == "Hi!"
 		# string literal will be implicitly casted to StrX
@@ -2427,6 +2415,19 @@ def str_value_as_ptr(x):
 		#sstr += "/**/"
 		if x.value.type.is_string():
 			return str_value(x.value)
+
+	if isinstance(root, ValueSlice):
+		ptr2slice = TypePointer(x.type)
+		sptr = str_type_pointer(ptr2slice, label='', ptr_to_array=True)
+		sstr += '(%s)' % sptr
+
+	if isinstance(root, ValueDeref):
+		return str_value(root.value)
+
+	if isinstance(root, ValueLiteral):
+		if root.type.is_string():
+			return str_value(root)
+
 
 	sstr += "&"
 
@@ -2445,7 +2446,7 @@ def str_value_as_ptr(x):
 		sstr += str_value(x.value)
 		return sstr
 
-	sstr += str_value(x)
+	sstr += str_value(root)
 	return sstr
 
 
@@ -2474,7 +2475,7 @@ def memzero(value):
 
 
 #def eq_by_memcmp(left, right, op='eq'):
-#	return eq_str_by_memcmp(left, right, op=op)
+#	return eq_by_memcmp(left, right, op=op)
 
 
 def eq_str_by_strcmp(left, right, op='eq'):
@@ -2491,7 +2492,7 @@ def eq_str_by_strcmp(left, right, op='eq'):
 	return sstr
 
 
-def eq_str_by_memcmp(left, right, op='eq'):
+def eq_by_memcmp(left, right, op='eq'):
 	# не берем все в скобки все тк это eq операция
 	# и ее приоритет не нарушается (!)
 	sstr = 'memcmp('

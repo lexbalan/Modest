@@ -11,8 +11,8 @@
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
-#define ARRCPY(dst, src, len) for (uint32_t i__ = 0; i__ < (len); i__++) { \
-	(*dst)[i__] = (*src)[i__]; \
+#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) { \
+	(*dst)[i] = (*src)[i]; \
 }
 
 
@@ -345,7 +345,7 @@ int main()
 	char sa[5];
 	ARRCPY((&sa), (&"LoHi!"), (5));
 
-	if (memcmp(&sa[2], "Hi", sizeof(char[4 - 2])) == 0) {
+	if (memcmp((char(*)[4 - 2])&sa[2], "Hi", sizeof(char[4 - 2])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
