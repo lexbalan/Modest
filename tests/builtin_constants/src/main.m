@@ -1,4 +1,4 @@
-// test/builtin_constants/src/main.m
+// tests/builtin_constants/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

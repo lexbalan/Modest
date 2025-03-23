@@ -1,4 +1,4 @@
-// test/shift/src/main.m
+// tests/shift/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

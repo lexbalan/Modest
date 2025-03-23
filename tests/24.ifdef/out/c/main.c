@@ -1,4 +1,4 @@
-// test/34.ifdef/src/main.cm
+// tests/34.ifdef/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

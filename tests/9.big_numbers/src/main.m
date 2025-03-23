@@ -1,4 +1,4 @@
-// test/9.big_numbers/src/main.m
+// tests/9.big_numbers/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

@@ -11,7 +11,7 @@ __asm(<# asm_text #>, <# outputs #>, <# inputs #>, <# clobbers #>)
 
 
 ```swift
-// test/asm/src/main.m
+// tests/asm/src/main.m
 
 import "libc/stdio"
 

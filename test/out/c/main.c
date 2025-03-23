@@ -37,10 +37,8 @@ static uint8_t prev_p[10];
 static void xxx(uint8_t *p)
 {
 	uint8_t *const xp = (uint8_t *)p;
-	if (memcmp(&prev_p, xp, sizeof(uint8_t[10])) == 0) {
-		printf("xp eq\n");
-	} else {
-		printf("xp ne\n");
+	if (memcmp(&prev_p, &xp, sizeof(uint8_t[10])) != 0) {
+		ARRCPY((&prev_p), (&xp), (__lengthof(prev_p)));
 	}
 }
 
@@ -80,7 +78,7 @@ int32_t main()
 
 	int *const pa2 = (int *)&a2;
 
-	if (memcmp(pa2, &a0, sizeof(int[10])) == 0) {
+	if (memcmp(&pa2, &a0, sizeof(int[10])) == 0) {
 		printf("eq!\n");
 	} else {
 		printf("eq!\n");

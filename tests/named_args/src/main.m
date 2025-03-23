@@ -1,4 +1,4 @@
-// test/named_args/src/main.m
+// tests/named_args/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

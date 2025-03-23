@@ -1,4 +1,4 @@
-// test/11.unicode/src/main.m
+// tests/11.unicode/src/main.m
 
 $pragma c_include "./utf.h"
 $pragma c_include "./console.h"

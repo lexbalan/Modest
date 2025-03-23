@@ -384,7 +384,7 @@ def str_type_func(t, label='', core=''):
 
 
 
-def str_type_pointer(t, label='', core='', ptr_to_array=False):
+def str_type_pointer(t, label='', core='', as_ptr_to_array=False):
 	tx = t
 
 	c = ''
@@ -393,7 +393,7 @@ def str_type_pointer(t, label='', core='', ptr_to_array=False):
 		c += '*'
 
 	if is_sim_sim(t):
-		if not ptr_to_array:
+		if not as_ptr_to_array:
 			tx = tx.of
 
 	if not is_type_named(tx):
@@ -1689,16 +1689,6 @@ def str_array_len(array_value):
 	return slen
 
 
-def assign_array_by_for(sleft, sright, slen):
-	out("ARRCPY((%s), (%s), (%s))" % (sleft, sright, slen))
-
-#	out("for (uint32_t i = 0; i < (%s); i++) {" % slen)
-#	indent_up()
-#	nl_indent(1)
-#	out("(*%s)[i] = (*%s)[i];" % (sleft, sright))
-#	indent_down()
-#	nl_indent(1)
-#	out("}")
 
 
 def assign_array(left, right):
@@ -1727,6 +1717,7 @@ def assign_array(left, right):
 #		sleft = "(" + sleft + ")"
 
 	sright = str_value_as_ptr(right)
+	#sright = ("/* %s */" % str(right.__class__)) + sright
 #	r_root = get_root_value(right)
 #	if isinstance(r_root, ValueLiteral):
 #		sright = "(" + sright + ")"
@@ -1737,7 +1728,8 @@ def assign_array(left, right):
 		slen = str_array_len(left)
 	else:
 		slen = str_value(left.type.volume)
-	assign_array_by_for(sleft, sright, slen)
+
+	out("ARRCPY((%s), (%s), (%s))" % (sleft, sright, slen))
 
 	#assign_by_memcopy(left, right)
 	return
@@ -2418,11 +2410,11 @@ def str_value_as_ptr(x):
 
 	if isinstance(root, ValueSlice):
 		ptr2slice = TypePointer(x.type)
-		sptr = str_type_pointer(ptr2slice, label='', ptr_to_array=True)
+		sptr = str_type_pointer(ptr2slice, label='', as_ptr_to_array=True)
 		sstr += '(%s)' % sptr
 
 	if isinstance(root, ValueDeref):
-		return str_value(root.value)
+		return "&" + str_value(root.value)
 
 	if isinstance(root, ValueLiteral):
 		if root.type.is_string():

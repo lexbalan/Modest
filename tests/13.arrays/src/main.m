@@ -1,4 +1,4 @@
-// test/arrays/src/main.m
+// tests/arrays/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

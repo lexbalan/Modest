@@ -1,4 +1,4 @@
-// test/slices/src/main.m
+// tests/slices/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

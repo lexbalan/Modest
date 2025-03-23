@@ -1,4 +1,4 @@
-// test/assign_record/src/main.m
+// tests/assign_record/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

@@ -1,4 +1,4 @@
-// test/stat/src/main.m
+// tests/stat/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

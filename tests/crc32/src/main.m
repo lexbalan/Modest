@@ -1,4 +1,4 @@
-// test/crc32/src/main.m
+// tests/crc32/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

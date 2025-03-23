@@ -524,7 +524,7 @@ def do_field(x):
 	f = Field(id, t, init_value=iv, ti=x['ti'])
 	f.nl = x['nl']
 	f.access_level = x['access_modifier']
-	add_spices(f, ast_atts=x['attributes'])
+	add_spices(f, ast_atts=x['attributes'], ti=x['ti'])
 	return f
 
 
@@ -2609,6 +2609,8 @@ def do_directive(x):
 		elif s0 == 'insert':
 			print("-INSERT " + args[1])
 			return StmtDirectiveInsert(args[1], x['ti'])
+		elif s0 == 'c_func_prefix':
+			pass
 
 	return None
 
@@ -2823,7 +2825,7 @@ def def_def(ast, is_include=False):
 				y = def_var(x)
 
 			if y != None:
-				add_spices(y, ast_atts=x['attributes'])
+				add_spices(y, ast_atts=x['attributes'], ti=x['ti'])
 				if not is_include:
 					y.parent = cmodule
 
@@ -2890,7 +2892,7 @@ def import_abspath(s, ext='.hm'):
 
 
 # directive '@attribute'
-def add_attributes(obj):
+def add_attributes(obj, ti):
 	atts = attributes_get()
 
 	for att in atts:
@@ -2917,14 +2919,18 @@ def set_att(obj, path, att):
 
 
 
-def set_prop(obj, path, val):
+def set_prop(obj, path, val, ti):
 	if len(path) == 1:
 		f = path[0]
 		setattr(obj, f, val)
 
 	elif len(path) > 1:
+		if not hasattr(obj, path[0]):
+			error("property '%s' not exist" % path[0], ti)
+			return
+
 		a = getattr(obj, path[0])
-		set_prop(a, path[1:], val)
+		set_prop(a, path[1:], val, ti)
 
 	else:
 		assert(False)
@@ -2932,7 +2938,7 @@ def set_prop(obj, path, val):
 
 
 # directive '@property'
-def add_properties(obj):
+def add_properties(obj, ti):
 	global properties
 	props = properties
 	properties = {}
@@ -2941,11 +2947,11 @@ def add_properties(obj):
 		k = prop
 		v = props[prop]
 		path_array = prop.split(".")
-		set_prop(obj, path_array, v)
+		set_prop(obj, path_array, v, ti)
 
 
 
-def add_spices(obj, ast_atts=None):
+def add_spices(obj, ast_atts=None, ti=None):
 	global attributes
 	global properties
 
@@ -2959,8 +2965,8 @@ def add_spices(obj, ast_atts=None):
 		for a in ast_atts:
 			do_attribute(a)
 
-	add_properties(obj)
-	add_attributes(obj)
+	add_properties(obj, ti)
+	add_attributes(obj, ti)
 
 
 

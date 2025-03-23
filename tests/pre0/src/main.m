@@ -1,4 +1,4 @@
-// test/pre0/src/main.m
+// tests/pre0/src/main.m
 
 include "console"
 import "lib"

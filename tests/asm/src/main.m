@@ -1,4 +1,4 @@
-// test/asm/src/main.m
+// tests/asm/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

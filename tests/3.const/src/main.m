@@ -1,4 +1,4 @@
-// test/3.const/src/main.m
+// tests/3.const/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

@@ -1,4 +1,4 @@
-// test/14.records/src/main.m
+// tests/14.records/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

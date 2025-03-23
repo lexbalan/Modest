@@ -28,10 +28,8 @@ var u32: Nat32
 var prev_p: [10]Word8
 func xxx(p: *[]Word8) -> Unit {
 	let xp = *[10]Word8 p
-	if prev_p == *xp {
-		printf("xp eq\n")
-	} else {
-		printf("xp ne\n")
+	if prev_p != *xp {
+		prev_p = *xp
 	}
 }
 

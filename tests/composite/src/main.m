@@ -1,4 +1,4 @@
-// test/composite
+// tests/composite
 //
 
 include "libc/stdio"

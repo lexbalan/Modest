@@ -1,4 +1,4 @@
-// test/float/src/main.m
+// tests/float/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

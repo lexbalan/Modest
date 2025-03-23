@@ -94,7 +94,7 @@ public func main() -> Int {
 #### Call with named arguments
 
 ```swift
-// test/named_args/src/main.m
+// tests/named_args/src/main.m
 
 import "libc/stdio"
 
