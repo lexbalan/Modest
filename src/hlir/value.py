@@ -37,6 +37,9 @@ class Value(Entity):
 	def isImmediate(self):
 		return self.immediate
 
+	def isRuntime(self):
+		return not self.isImmediate()
+
 	def isZero(self):
 		if self.isImmediate():
 			if self.type.is_composite():
@@ -108,7 +111,7 @@ class Value(Entity):
 
 	# Only for immediate value (!)
 	def isZero(self):
-		if not self.isImmediate():
+		if self.isRuntime():
 			return False
 
 		if self.type.is_array():

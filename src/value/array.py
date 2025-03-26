@@ -27,7 +27,7 @@ def value_array_create(items, ti=None):
 	# -> весь массив - не immediate
 	is_immediate = True
 	for item in items:
-		if not item.isImmediate():
+		if item.isRuntime():
 			is_immediate = False
 
 	# Получаем наиболее подходящий общий тип элементов массива

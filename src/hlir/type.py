@@ -132,7 +132,7 @@ class Type(Entity):
 			return False
 		if Value.isUndefined(self.volume):
 			return False
-		return not self.volume.isImmediate()
+		return self.volume.isRuntime()
 
 
 	# *[10]*[3]*[n] -> True

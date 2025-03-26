@@ -1528,52 +1528,27 @@ def print_stmt_var(x):
 	var_value = x.value
 	init_value = x.init_value
 
-	#if DONT_PRINT_UNUSED:
-	#	if init_value != None:
-	#		if var_value['usecnt'] == 0:
-	#			if init_value['kind'] != 'call':
-	#				return
-
 	print_variable(get_id_str(var_value), var_value.type)
-
-	v = var_value
-	iv = init_value
 
 	if init_value.isUndefined():
 		# инициализация неопределенным значением
+		# (отсутствие явной инициализации)
 		out(";")
 		return
 
-	# если инициализирующее значение - это
-	# литерал массива включающий в себя переменные
-	# то печатаем это иначе (w/ memcpy)
-
 	if var_value.type.is_array():
-
-		if not init_value.isImmediate():
-			runtimeLiteral = isinstance(iv, ValueLiteral)
-			if not runtimeLiteral:
-				out(";")
-				nl_indent()
-				do_assign(v, iv, x.ti)
-				return
-
-				# array assignation by non-immediate value
-				out(";")
-				nl_indent(1)
-
-			if init_value.isUndefined():
-				memzero(var_value)
-			else:
-				assign_array(var_value, init_value, x['ti'])
-
+		if init_value.isRuntime() or var_value.type.is_vla():
+			# нельзя присваивать VLA значение при создании...
+			# только после можно уже что то туда загрузить
+			out(";")
+			nl_indent()
+			assign_array(var_value, init_value, x.ti)
 			out(";")
 			return
 
 	out(" = ")
 	#print_value(init_value)
 	out(str_static_initializer(init_value))
-
 	out(";")
 	return
 
@@ -1629,7 +1604,7 @@ def print_stmt_const(x):
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
 	if iv.type.is_array():
-		runtimeLiteral = isinstance(iv, ValueLiteral) and not iv.isImmediate()
+		runtimeLiteral = isinstance(iv, ValueLiteral) and iv.isRuntime()
 		if not runtimeLiteral:
 			print_variable(get_id_str(x), v.type)
 			out(";")

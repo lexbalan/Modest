@@ -584,7 +584,7 @@ def do_type_array(x):
 		return TypeArray(of, volume, ti=x['ti'])
 
 	if not Value.isUndefined(volume):
-		if not volume.isImmediate():
+		if volume.isRuntime():
 			#info("VLA", t['ti'])
 			if is_local_context():
 				global cfunc
@@ -1168,7 +1168,7 @@ def do_value_call(x):
 				warning("extra argument with generic type", a['ti'])
 				argval = value_cons_default(argval)
 
-			if not argval.isImmediate():
+			if argval.isRuntime():
 				imm_args = False
 
 			extra_args.append(argval)
