@@ -2005,7 +2005,6 @@ def print_def_var(x, isdecl=False):
 def str_static_initializer(v):
 	root = get_root_value(v)
 	if root.isImmediate():
-	#if root.isLiteral() or root.isConst():
 		if v.type.is_composite():
 
 			if v.isLiteral():
@@ -2015,8 +2014,6 @@ def str_static_initializer(v):
 
 			s = str_value_literal(root, [])
 
-			#print()
-			#type_print(root.type)
 			if root.type.is_string():
 				left_char_width = 0
 				if v.type.is_array():
@@ -2026,8 +2023,7 @@ def str_static_initializer(v):
 
 				if not s[0] in ['u', 'U']:
 					s = string_literal_prefix(left_char_width) + s
-			#return '/*__as_literal__*/' + s
-			return  s
+			return s
 
 	return str_value(v)
 
