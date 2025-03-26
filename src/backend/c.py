@@ -1269,14 +1269,12 @@ def str_value_literal(x, ctx):
 def str_value_const(x, ctx):
 	sstr = ''
 
-	if x.type.is_generic():
-		#if not x.type.is_string():
-		if x.type.is_composite():
-			from trans import is_global_value
-			if is_global_value(x):
-				sstr += '(%s)' % str_type(x.type)
+	if x.type.is_generic() and x.type.is_composite():
+		from trans import is_global_value
+		if is_global_value(x):
+			sstr += '(%s)' % str_type(x.type)
 
-	elif x.type.is_array() and is_global_context():
+	elif x.type.is_composite() and is_global_context():
 		sstr += '(%s)' % str_type(x.type)
 
 	sstr += get_id_str(x)

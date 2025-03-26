@@ -30,8 +30,8 @@ typedef struct Line Line;
 #define pointOne  {.x = 1.0, .y = 1.0}
 
 #define line0  { \
-	.a = pointZero, \
-	.b = pointOne \
+	.a = (Point)pointZero, \
+	.b = (Point)pointOne \
 }
 
 #define line1  { \
@@ -40,8 +40,8 @@ typedef struct Line Line;
 }
 
 #define line2  { \
-	.a = pointZero, \
-	.b = pointOne \
+	.a = (Point)pointZero, \
+	.b = (Point)pointOne \
 }
 
 #define line3  { \
@@ -49,7 +49,7 @@ typedef struct Line Line;
 	.b = {.x = 30, .y = 40	} \
 }
 
-#define lines  {line0, line1, line2, line3}
+#define lines  {(Line)line0, (Line)line1, (Line)line2, (Line)line3}
 
 
 struct WrappedArray {
