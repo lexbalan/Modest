@@ -66,61 +66,61 @@ int main()
 static bool test_generic_integer()
 {
 	// Any integer literal have GenericInteger type
-	#define __one  1
+	#define one  1
 
 	// result of such expressions also have generic type
-	#define __two  (1 + __one)
+	#define two  (1 + one)
 
 	// GenericInteger value can be implicitly casted to any Integer type
-	int32_t a = __one;
-	uint64_t b = __one;
+	int32_t a = one;
+	uint64_t b = one;
 
 	// to Float
-	float f = (float)__one;
-	double g = (double)__one;
+	float f = (float)one;
+	double g = (double)one;
 
 	// and to Word8
-	uint8_t x = __one;
+	uint8_t x = one;
 
 
 	// explicit cast GenericInteger value
 
-	char c = (char)__one;
-	uint16_t d = (uint16_t)__one;
-	uint32_t e = (uint32_t)__one;
+	char c = (char)one;
+	uint16_t d = (uint16_t)one;
+	uint32_t e = (uint32_t)one;
 
-	bool k = __one != 0;
+	bool k = one != 0;
 
 	return true;
 
-#undef __one
-#undef __two
+#undef one
+#undef two
 }
 
 static bool test_generic_float()
 {
 	// Any float literal have GenericFloat type
-	#define __pi  3.141592653589793238462643383279502884
+	#define pi  3.141592653589793238462643383279502884
 
 	// value with GenericFloat type
 	// can be implicit casted to any Float type
 	// (in this case value may lose precision)
-	float f = __pi;
-	double g = __pi;
+	float f = pi;
+	double g = pi;
 
 	// explicit cast GenericFloat value to Int32
-	int32_t x = (int32_t)__pi;
+	int32_t x = (int32_t)pi;
 
 	return true;
 
-#undef __pi
+#undef pi
 }
 
 static bool test_generic_char()
 {
 	// Any char value expression have GenericChar type
 	// (you can pick GenericChar value by index of GenericString value)
-	#define __a  "A"
+	#define a  "A"
 
 	// value with GenericChar type
 	// can be implicit casted to any Char type
@@ -133,14 +133,14 @@ static bool test_generic_char()
 
 	return true;
 
-#undef __a
+#undef a
 }
 
 static bool test_generic_array()
 {
 	// Any array expression have GenericArray type
 	// this array expression (GenericArray of four GenericInteger items)
-	#define __a  {0, 1, 2, 3	}
+	#define a  {0, 1, 2, 3	}
 
 	if (false) {
 		printf("error: a != [0, 1, 2, 3]\n");
@@ -152,7 +152,7 @@ static bool test_generic_array()
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Int32
 	int32_t b[4];
-	ARRCPY((&b), (&((uint8_t[4])__a)), (__lengthof(b)));
+	ARRCPY((&b), (&((uint8_t[4])a)), (__lengthof(b)));
 
 	if (memcmp(&b, &((int32_t[4]){0, 1, 2, 3	}), sizeof(int32_t[4])) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
@@ -161,7 +161,7 @@ static bool test_generic_array()
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Nat64
 	int64_t c[4];
-	ARRCPY((&c), (&((uint8_t[4])__a)), (__lengthof(c)));
+	ARRCPY((&c), (&((uint8_t[4])a)), (__lengthof(c)));
 
 	if (memcmp(&c, &((int64_t[4]){0, 1, 2, 3	}), sizeof(int64_t[4])) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
@@ -178,7 +178,7 @@ static bool test_generic_array()
 
 	return true;
 
-#undef __a
+#undef a
 }
 
 struct Point2D {
@@ -199,7 +199,7 @@ static bool test_generic_record()
 	// Any record expression have GenericRecord type
 	// this record expression have type:
 	// Generic(record {x: GenericInteger, y: GenericInteger})
-	#define __p  {.x = 10, .y = 20	}
+	#define p  {.x = 10, .y = 20	}
 
 	// value with GenericRecord type
 	// can be implicit casted to Record with same fields.
@@ -207,16 +207,16 @@ static bool test_generic_record()
 	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32}
 	Point2D point_2d;
-	point_2d = (Point2D)__p;
+	point_2d = (Point2D)p;
 
 
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32, z: Int32}
 	Point3D point_3d;
-	point_3d = (Point3D)__p;
+	point_3d = (Point3D)p;
 
 	return true;
 
-#undef __p
+#undef p
 }
 

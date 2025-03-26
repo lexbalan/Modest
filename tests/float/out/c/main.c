@@ -38,12 +38,12 @@ int main()
 	printf("2 = %d\n", 2);
 	printf("2/3 = %f\n", (double)(2.0 / (double)(3)));
 
-	#define __r  10
-	const double s = squareOfCircle((double)__r);
+	#define r  10
+	const double s = squareOfCircle((double)r);
 	printf("s = %f\n", s);
 
-	#define __k  (1.0 / (double)(8))
-	printf("k = %f\n", (double)__k);
+	#define k  (1.0 / (double)(8))
+	printf("k = %f\n", (double)k);
 
 	printf("sizeof(Float32) = %lu\n", sizeof(float));
 	printf("sizeof(Float64) = %lu\n", sizeof(double));
@@ -54,7 +54,7 @@ int main()
 
 	return 0;
 
-#undef __r
-#undef __k
+#undef r
+#undef k
 }
 

@@ -9,8 +9,8 @@
 
 uint32_t crc32_run(uint8_t *buf, uint32_t len)
 {
-	#define __tableSize  256
-	uint32_t crc_table[__tableSize];
+	#define tableSize  256
+	uint32_t crc_table[tableSize];
 	uint32_t crc;
 
 	//
@@ -18,7 +18,7 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 	//
 
 	uint32_t i = 0;
-	while (i < __tableSize) {
+	while (i < tableSize) {
 		crc = i;
 		uint32_t j = 0;
 		while (j < 8) {
@@ -53,6 +53,6 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len)
 
 	return crc ^ 0xFFFFFFFF;
 
-#undef __tableSize
+#undef tableSize
 }
 

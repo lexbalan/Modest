@@ -292,17 +292,17 @@ int main()
 	int int200 = 200;
 	int int300 = 300;
 	// immutable, non immediate value (array)
-	const int __init_array[3] = {int100, int200, int300	};
+	const int init_array[3] = {int100, int200, int300	};
 
 	// check local literal array assignation to local array
 	int32_t e[4];
-	ARRCPY((&e), (&__init_array), (__lengthof(e)));
+	ARRCPY((&e), (&init_array), (__lengthof(e)));
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	ARRCPY((&globalArray), (&__init_array), (__lengthof(globalArray)));
+	ARRCPY((&globalArray), (&init_array), (__lengthof(globalArray)));
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
@@ -319,18 +319,18 @@ int main()
 	int32_t cx = 30;
 	const int32_t dx = 40;
 
-	const int32_t __y[4] = {ax, bx, cx, dx	};
+	const int32_t y[4] = {ax, bx, cx, dx	};
 
 	ax = 111;
 	bx = 222;
 	cx = 333;
 
-	printf("y[%i] = %i (must be 10)\n", 0, __y[0]);
-	printf("y[%i] = %i (must be 20)\n", 1, __y[1]);
-	printf("y[%i] = %i (must be 30)\n", 2, __y[2]);
-	printf("y[%i] = %i (must be 40)\n", 3, __y[3]);
+	printf("y[%i] = %i (must be 10)\n", 0, y[0]);
+	printf("y[%i] = %i (must be 20)\n", 1, y[1]);
+	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
+	printf("y[%i] = %i (must be 40)\n", 3, y[3]);
 
-	if (memcmp(&__y, &((int32_t[4]){10, 20, 30, 40	}), sizeof(int32_t[4])) == 0) {
+	if (memcmp(&y, &((int32_t[4]){10, 20, 30, 40	}), sizeof(int32_t[4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

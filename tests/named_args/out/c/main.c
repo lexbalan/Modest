@@ -16,15 +16,15 @@ int main()
 {
 	printf("test named_args\n");
 
-	#define __a  25
-	#define __b  15
-	#define __c  3
+	#define a  25
+	#define b  15
+	#define c  3
 
-	#define __x0  ((__a - __b) * __c)
+	#define x0  ((a - b) * c)
 
-	const int32_t x1 = named_args_test(__a, __b, __c);
+	const int32_t x1 = named_args_test(a, b, c);
 
-	if (__x0 == x1) {
+	if (x0 == x1) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
@@ -32,9 +32,9 @@ int main()
 
 	return 0;
 
-#undef __a
-#undef __b
-#undef __c
-#undef __x0
+#undef a
+#undef b
+#undef c
+#undef x0
 }
 

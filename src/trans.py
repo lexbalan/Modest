@@ -1736,12 +1736,6 @@ def do_value(x):
 def do_stmt_const(x):
 	global cfunc
 	v = do_const(x)
-
-	if v.init_value.type.is_generic():
-		# generic immediate в C печатается как #define
-		# и его надо манглить иначе возникает куча проблем
-		v.id.c = '__' + v.id.str
-
 	v.addAttribute('local') # need for LLVM printer (!)
 	ctx_value_add(v.id.str, v)
 	definition = StmtDefConst(v.id, v, v.init_value, ti=x['ti'])

@@ -105,7 +105,7 @@ int main()
 	printf("records test\n");
 
 	// check value_record_eq for immediate values
-	#define __ver  {.major = 0, .minor = 7	}
+	#define ver  {.major = 0, .minor = 7	}
 	if (true) {
 		printf("version 0.7\n");
 	} else {
@@ -183,15 +183,15 @@ int main()
 	int32_t bx = 20;
 
 	const struct {int32_t x; int32_t y;
-	} __px = {.x = ax, .y = bx	};
+	} px = {.x = ax, .y = bx	};
 
 	ax = 111;
 	bx = 222;
 
-	printf("px.x = %i (must be 10)\n", __px.x);
-	printf("px.y = %i (must be 20)\n", __px.y);
+	printf("px.x = %i (must be 10)\n", px.x);
+	printf("px.y = %i (must be 20)\n", px.y);
 
-	if (memcmp(&__px, &((struct {int32_t x; int32_t y;
+	if (memcmp(&px, &((struct {int32_t x; int32_t y;
 	}){.x = 10, .y = 20	}), sizeof(struct {int32_t x; int32_t y;
 	})) == 0) {
 		printf("test passed\n");
@@ -203,6 +203,6 @@ int main()
 
 	return 0;
 
-#undef __ver
+#undef ver
 }
 

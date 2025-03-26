@@ -1585,6 +1585,8 @@ def print_stmt_const(x):
 	const_value = x.value
 	init_value = x.init_value
 
+
+
 	# print generic constant as C macro
 	if value_is_generic_immediate(const_value):
 		id_str = get_id_str(const_value)
@@ -1712,6 +1714,11 @@ def assign_array(left, right, ti):
 	if Type.eq(l_root.type, r_root.type):
 		assign_by_memcopy(left, right)
 		return
+
+#	if right.isConst():
+#		out("/*CONST*/")
+#		assign_by_memcopy(left, right)
+#		return
 
 	out("ARRCPY((%s), (%s), (%s))" % (sleft, sright, slen))
 	return
@@ -1996,7 +2003,6 @@ def print_def_var(x, isdecl=False):
 # .arr = (uint8_t [3]){1, 2, 3}  // not worked
 # .arr = {1, 2, 3}  // worked
 def str_static_initializer(v):
-	#mass
 	root = get_root_value(v)
 	if root.isImmediate():
 	#if root.isLiteral() or root.isConst():
