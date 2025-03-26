@@ -20,10 +20,10 @@
 //import "misc/minmax"
 //$pragma c_include "./minmax.h"
 
-#define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-static const int32_t constantArray[10] = _constantArray;
+#define constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-static int32_t globalArray[10] = _constantArray;
+
+static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 static char arrayFromString[3] = "abc";
 
@@ -58,10 +58,10 @@ static void f0(char *_x, char *sret_)
 	memcpy(sret_, &res, sizeof(char[30]));
 }
 
-#define _startSequence  {0xAA, 0x55, 0x02}
-static const uint64_t startSequence[3] = _startSequence;
-#define _stopSequence  {0x16}
-static const uint64_t stopSequence[1] = _stopSequence;
+#define startSequence  {0xAA, 0x55, 0x02}
+
+#define stopSequence  {0x16}
+
 
 static void test()
 {
@@ -76,7 +76,7 @@ static void test()
 	}
 }
 
-static int32_t a0[2][2][5] = (int32_t[2][2][5]){
+static int32_t a0[2][2][5] = {
 
 	0, 1, 2, 3, 4,
 	5, 6, 7, 8, 9,
@@ -85,13 +85,13 @@ static int32_t a0[2][2][5] = (int32_t[2][2][5]){
 	15, 16, 17, 18, 19
 };
 
-static int32_t a1[5] = (int32_t[5]){0, 1, 2, 3, 4};
-static int32_t a2[5] = (int32_t[5]){5, 6, 7, 8, 9};
-static int32_t *a3[2] = (int32_t *[2]){&a1, &a2};
-static int32_t *(*a4[2])[2] = (int32_t *(*[2])[2]){&a3, &a3};
+static int32_t a1[5] = {0, 1, 2, 3, 4};
+static int32_t a2[5] = {5, 6, 7, 8, 9};
+static int32_t *a3[2] = {&a1, &a2};
+static int32_t *(*a4[2])[2] = {&a3, &a3};
 static int32_t *(*(*p0)[2])[2] = &a4;
 
-static int32_t a10[10][10] = (int32_t[10][10]){
+static int32_t a10[10][10] = {
 	1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 	11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 	21, 22, 23, 24, 25, 26, 27, 28, 29, 30,

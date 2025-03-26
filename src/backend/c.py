@@ -1117,13 +1117,7 @@ def str_literal_record(type, items, nl_end=1):
 
 		sstr += ".%s = " % field_id_str
 
-		# 'no-literal-array-cast' - когда прописываем инициализаторы
-		# литерал массива не нужно приводить к типу массива
-		# тк C это не умеет:
-		# .arr = (uint8_t [3]){1, 2, 3}  // not worked
-		# .arr = {1, 2, 3}  // worked
-		# вот такая вот херня
-		sstr += str_value(ini.value, ['no-literal-array-cast'])
+		sstr += str_value(ini.value)
 		if i < (nitems - 1):
 			sstr += ","
 
@@ -1164,12 +1158,20 @@ def code_to_char(cc):
 		return chr(cc)
 
 
+def string_literal_prefix(width):
+	prefix = ""
+	if width <= 8:
+		return ""
+	elif width <= 16:
+		return "u"
+	elif width <= 32:
+		return "U"
+	return ""
+
+
 def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 	sstr = ''
-	prefix = ""
-	if width <= 8: prefix = ""
-	elif width <= 16: prefix = "u"
-	elif width <= 32: prefix = "U"
+	prefix = string_literal_prefix(width)
 	sstr += (prefix)
 	sstr += (quote)
 	for cc in utf32_codes:
@@ -1267,8 +1269,15 @@ def str_value_literal(x, ctx):
 def str_value_const(x, ctx):
 	sstr = ''
 
-	if x.type.is_array() and is_global_context():
-		sstr += ('_')
+	if x.type.is_generic():
+		#if not x.type.is_string():
+		if x.type.is_composite():
+			from trans import is_global_value
+			if is_global_value(x):
+				sstr += '(%s)' % str_type(x.type)
+
+	elif x.type.is_array() and is_global_context():
+		sstr += '(%s)' % str_type(x.type)
 
 	sstr += get_id_str(x)
 	return sstr
@@ -1557,7 +1566,8 @@ def print_stmt_var(x):
 
 	if not Value.isUndefined(init_value):
 		out(" = ")
-		print_value(init_value)
+		#print_value(init_value)
+		out(str_static_initializer(init_value))
 
 	out(";")
 	return
@@ -2004,10 +2014,43 @@ def print_def_var(x, isdecl=False):
 
 	if not Value.isUndefined(init_value):
 		out(" = ")
-		print_value(init_value, ctx=['no-literal-array-cast'])
-
+		out(str_static_initializer(init_value))
 	out(";")
 
+
+# В C нельзя присвоить глобальной переменной/константе композитное значение
+# но можно присвоить литерал композитного значения который не приведен к конкр. типу:
+# .arr = (uint8_t [3]){1, 2, 3}  // not worked
+# .arr = {1, 2, 3}  // worked
+def str_static_initializer(v):
+	#mass
+	root = get_root_value(v)
+	if root.isImmediate():
+	#if root.isLiteral() or root.isConst():
+		if v.type.is_composite():
+
+			if v.isLiteral():
+				id_str = get_id_str(root)
+				if id_str != None:
+					return id_str
+
+			s = str_value_literal(root, [])
+
+			#print()
+			#type_print(root.type)
+			if root.type.is_string():
+				left_char_width = 0
+				if v.type.is_array():
+					left_char_width = v.type.of.width
+				elif v.type.is_str():
+					left_char_width = v.type.width
+
+				if not s[0] in ['u', 'U']:
+					s = string_literal_prefix(left_char_width) + s
+			#return '/*__as_literal__*/' + s
+			return  s
+
+	return str_value(v)
 
 
 def print_def_const(x):
@@ -2023,7 +2066,7 @@ def print_def_const(x):
 	# обычно будем использовать сам макрос,
 	# но в случае индексирования переменной - будем обращаться к переменной
 	if const_value.type.is_array():
-		print_macro_definition(id_str, init_value, val_ctx=[], prefix='_')
+		print_macro_definition(id_str, init_value, val_ctx=[], prefix='')
 		newline()
 
 		t = const_value.type
@@ -2032,10 +2075,10 @@ def print_def_const(x):
 		if def_type != None:
 			t = def_type
 
-		if not x.hasAttribute('global'):
-			out("static ")
-		print_variable(id_str, t, as_const=True)
-		out(" = _%s;" % id_str)
+#		if not x.hasAttribute('global'):
+#			out("static ")
+#		print_variable(id_str, t, as_const=True)
+#		out(" = _%s;" % id_str)
 		const_value.addAttribute('kostil')
 		return
 
@@ -2393,13 +2436,22 @@ def str_value_as_ptr(x):
 	if root.isImmediate():
 	#if root.isLiteral() or root.isConst():
 		if x.type.is_composite():
-			v = str_value(root)
+			vs = str_value(root)
+
+			#if root.isConst() and 'global_entity' in x.att:
+			#if x.type.is_array():
+			if not root.type.is_generic():
+				return "&" + vs
 
 			if root.isConst() and 'global_entity' in x.att:
-				return "&" + v
+				# глобальная константа-массив при печати (в str_value_const)
+				# печатается как приведение к типу массива
+				# поэтому не приводим еще раз (что в си будет ощибкой),
+				# а просто берем адрес
+				return "&" + vs
 
 			t = str_type(x.type)
-			return "&((%s)%s)" % (t, v)
+			return "&((%s)%s)" % (t, vs)
 
 
 	#print(x.__class__)

@@ -7,11 +7,11 @@
 #include "main.h"
 
 
-#define _arr  {1, 2}
-static const int32_t arr[2] = _arr;
+#define arr  {1, 2}
 
-static int32_t arr0[2] = _arr;
-static int32_t arr1[2] = _arr;
+
+static int32_t arr0[2] = {1, 2};
+static int32_t arr1[2] = {1, 2};
 static char *str = "Hello!";
 // -> *[]Char8
 

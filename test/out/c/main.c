@@ -42,8 +42,8 @@ static void xxx(uint8_t *p)
 	}
 }
 
-#define _ini  {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-static const int32_t ini[10] = _ini;
+#define ini  {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+
 
 int32_t main()
 {
@@ -56,9 +56,9 @@ int32_t main()
 	int32_t x2 = 15;
 
 	uint8_t w0[10];
-	ARRCPY((&w0), (&ini), (__lengthof(w0)));
+	ARRCPY((&w0), (&((uint8_t[10])ini)), (__lengthof(w0)));
 	int32_t a0[10];
-	ARRCPY((&a0), (&ini), (__lengthof(a0)));
+	ARRCPY((&a0), (&((uint8_t[10])ini)), (__lengthof(a0)));
 	//
 	int32_t a1[5];
 	memcpy(&a1, (int32_t(*)[7 - 2])&a0[2], sizeof(int32_t[5]));

@@ -12,18 +12,18 @@
 
 // include test (!)
 
-#define _ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
-static const uint64_t ratSymbolUTF8[4] = _ratSymbolUTF8;
-#define _ratSymbolUTF16  {0xD83D, 0xDC00}
-static const uint64_t ratSymbolUTF16[2] = _ratSymbolUTF16;
+#define ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
+
+#define ratSymbolUTF16  {0xD83D, 0xDC00}
+
 #define ratSymbolUTF32  0x0001F400
 
-#define _arr_partycorn  "🎉"
-static const char arr_partycorn[4] = _arr_partycorn;
-#define _arr_unicorn  "🦄"
-static const char arr_unicorn[4] = _arr_unicorn;
-#define _arr_rat  "🐀"
-static const char arr_rat[4] = _arr_rat;
+#define arr_partycorn  "🎉"
+
+#define arr_unicorn  "🦄"
+
+#define arr_rat  "🐀"
+
 
 #define genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
 #define string8Const  (char *)genericStringConst

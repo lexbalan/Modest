@@ -254,8 +254,8 @@ def str_type(t):
 		return str_type_record(t)
 	elif Type.is_pointer(t):
 		return str_type_pointer(t)
-	elif k == 'undefined':
-		return "<undefined>"
+	elif Type.is_string(t):
+		return "String"
 	else:
 		return "<type:" + str(t) + ">"
 

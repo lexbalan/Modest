@@ -14,21 +14,21 @@
 
 
 
-static char *table_header0[3] = (char *[3]){
+static char *table_header0[3] = {
 	"#", "Header0", "Header1"
 };
 
-static char *table_data0[3][3] = (char *[3][3]){
+static char *table_data0[3][3] = {
 	"0", "Alef", "Betha",
 	"1", "Clock", "Depth",
 	"2", "Earth", "Fight"
 };
 
-static char *table_header1[4] = (char *[4]){
+static char *table_header1[4] = {
 	"#", "Header0", "Header1", "Header2"
 };
 
-static char *table_data1[4][4] = (char *[4][4]){
+static char *table_data1[4][4] = {
 	"0", "Alef", "Betha", "Emma",
 	"1", "Clock", "Depth", "Free",
 	"2", "Ink", "Julia", "Keyword",

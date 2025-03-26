@@ -11,7 +11,7 @@
 #endif /* __lengthof */
 
 
-static int32_t array[21] = (int32_t[21]){
+static int32_t array[21] = {
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4,
 	11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
 };

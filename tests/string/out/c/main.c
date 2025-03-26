@@ -16,7 +16,7 @@
 #define str32_example  (U"String-Ω 🐀🎉🦄")
 
 // variables with type Array of Chars
-static char string8[6] = str8_example;
+static char string8[6] = "String";
 static uint16_t string16[8] = u"String-Ω";
 static uint32_t string32[12] = U"String-Ω 🐀🎉🦄";
 
