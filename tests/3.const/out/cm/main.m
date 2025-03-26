@@ -22,25 +22,25 @@ const ps = [
 	{x = 2, y = 2}
 ]
 
-const points = [3]Point ps
+const points = [<str_value>]Point ps
 
 
 // есть проблема - в C глобальные переменные с модификатором const
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
-var points2: [3]Point = points
+var points2: [<str_value>]Point = points
 
 
 // define function main
-public func main() -> ctypes64.Int {
-	stdio.printf("test const\n")
+public func main() -> Int {
+	stdio.("test const\n")
 
-	stdio.printf("genericIntConst = %d\n", Int32 genericIntConst)
-	stdio.printf("int32Const = %d\n", int32Const)
+	stdio.("genericIntConst = %d\n", Int32 genericIntConst)
+	stdio.("int32Const = %d\n", int32Const)
 
 	//	printf("genericStringConst = %s\n", genericStringConst)
-	stdio.printf("string8Const = %s\n", string8Const)
+	stdio.("string8Const = %s\n", string8Const)
 
 	return 0
 }

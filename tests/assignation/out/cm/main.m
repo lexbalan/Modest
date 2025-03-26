@@ -15,34 +15,34 @@ var glb_i1: Int32 = 321
 var glb_r0: Point = {}
 var glb_r1: Point = {x = 20, y = 10}
 
-var glb_a0: [10]Int32 = []
-var glb_a1: [10]Int32 = [64, 53, 42]
+var glb_a0: [<str_value>]Int32 = []
+var glb_a1: [<str_value>]Int32 = [64, 53, 42]
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("test assignation\n")
+public func main() -> Int {
+	stdio.("test assignation\n")
 
 	// -----------------------------------
 	// Global
 
 	// copy integers by value
 	glb_i0 = glb_i1
-	stdio.printf("glb_i0 = %i\n", glb_i0)
+	stdio.("glb_i0 = %i\n", glb_i0)
 
 
 	// copy arrays by value
 	glb_a0 = glb_a1
 
-	stdio.printf("glb_a0[0] = %i\n", glb_a0[0])
-	stdio.printf("glb_a0[1] = %i\n", glb_a0[1])
-	stdio.printf("glb_a0[2] = %i\n", glb_a0[2])
+	stdio.("glb_a0[0] = %i\n", glb_a0[0])
+	stdio.("glb_a0[1] = %i\n", glb_a0[1])
+	stdio.("glb_a0[2] = %i\n", glb_a0[2])
 
 
 	// copy records by value
 	glb_r0 = glb_r1
 
-	stdio.printf("glb_r0.x = %i\n", glb_r0.x)
-	stdio.printf("glb_r0.y = %i\n", glb_r0.y)
+	stdio.("glb_r0.x = %i\n", glb_r0.x)
+	stdio.("glb_r0.y = %i\n", glb_r0.y)
 
 
 	// -----------------------------------
@@ -54,18 +54,18 @@ public func main() -> ctypes64.Int {
 
 	loc_i0 = loc_i1
 
-	stdio.printf("loc_i0 = %i\n", loc_i0)
+	stdio.("loc_i0 = %i\n", loc_i0)
 
 	// copy arrays by value
 	// C backend will be use memcpy()
-	var loc_a0: [10]Int32 = []
-	var loc_a1: [10]Int32 = [42, 53, 64]
+	var loc_a0: [<str_value>]Int32 = []
+	var loc_a1: [<str_value>]Int32 = [42, 53, 64]
 
 	loc_a0 = loc_a1
 
-	stdio.printf("loc_a0[0] = %i\n", loc_a0[0])
-	stdio.printf("loc_a0[1] = %i\n", loc_a0[1])
-	stdio.printf("loc_a0[2] = %i\n", loc_a0[2])
+	stdio.("loc_a0[0] = %i\n", loc_a0[0])
+	stdio.("loc_a0[1] = %i\n", loc_a0[1])
+	stdio.("loc_a0[2] = %i\n", loc_a0[2])
 
 
 	// copy records by value
@@ -75,8 +75,8 @@ public func main() -> ctypes64.Int {
 
 	loc_r0 = loc_r1
 
-	stdio.printf("loc_r0.x = %i\n", loc_r0.x)
-	stdio.printf("loc_r0.y = %i\n", loc_r0.y)
+	stdio.("loc_r0.x = %i\n", loc_r0.x)
+	stdio.("loc_r0.y = %i\n", loc_r0.y)
 
 
 	// error: closed arrays of closed arrays are denied

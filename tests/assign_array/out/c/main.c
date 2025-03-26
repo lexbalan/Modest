@@ -22,7 +22,7 @@ int main()
 {
 	printf("test assign_array\n");
 
-	ARRCPY((&globalArray1), (&globalArray0), (__lengthof(globalArray1)));
+	memcpy(&globalArray1, &globalArray0, sizeof(int32_t[10]));
 
 	int32_t i;
 
@@ -43,12 +43,12 @@ int main()
 	// local
 
 	int32_t localArray0[10];
-	ARRCPY((&localArray0), (&(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9	}), (__lengthof(localArray0)));
+	ARRCPY((&localArray0), (&((uint8_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9	})), (__lengthof(localArray0)));
 	int32_t localArray1[10];
 	memset(&localArray1, 0, sizeof(int32_t[10]));
 
 
-	ARRCPY((&localArray1), (&localArray0), (__lengthof(localArray1)));
+	memcpy(&localArray1, &localArray0, sizeof(int32_t[10]));
 
 	i = 0;
 	while (i < 10) {

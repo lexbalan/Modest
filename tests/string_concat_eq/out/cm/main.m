@@ -11,13 +11,13 @@ const greeting = hello + " " + world//+ " " + party_corn
 const test = "test"
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("%s\n", *Str8 greeting)
+public func main() -> Int {
+	stdio.("%s\n", *Str8 greeting)
 
 	if test == "test" {
-		stdio.printf("test ok.\n")
+		stdio.("test ok.\n")
 	} else {
-		stdio.printf("test failed.\n")
+		stdio.("test failed.\n")
 	}
 
 	return 0

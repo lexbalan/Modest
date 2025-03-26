@@ -38,9 +38,12 @@ static void xxx(uint8_t *p)
 {
 	uint8_t *const xp = (uint8_t *)p;
 	if (memcmp(&prev_p, &xp, sizeof(uint8_t[10])) != 0) {
-		ARRCPY((&prev_p), (&xp), (__lengthof(prev_p)));
+		memcpy(&prev_p, &xp, sizeof(uint8_t[10]));
 	}
 }
+
+#define _ini  {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+static const int32_t ini[10] = _ini;
 
 int32_t main()
 {
@@ -53,24 +56,24 @@ int32_t main()
 	int32_t x2 = 15;
 
 	uint8_t w0[10];
-	memset(&w0, 0, sizeof(uint8_t[10]));
+	ARRCPY((&w0), (&ini), (__lengthof(w0)));
 	int32_t a0[10];
-	memset(&a0, 0, sizeof(int32_t[10]));
+	ARRCPY((&a0), (&ini), (__lengthof(a0)));
 	//
 	int32_t a1[5];
-	ARRCPY((&a1), ((int32_t(*)[7 - 2])&a0[2]), (__lengthof(a1)));
+	memcpy(&a1, (int32_t(*)[7 - 2])&a0[2], sizeof(int32_t[5]));
 	//
 	int32_t a2[20];
 	memset(&a2, 0, sizeof(int32_t[20]));
-	ARRCPY(((int32_t(*)[15 - 5])&a2[5]), (&a0), (15 - 5));
+	memcpy((int32_t(*)[15 - 5])&a2[5], &a0, sizeof(int32_t[15 - 5]));
 	//
 	int32_t a3[20];
 	memset(&a3, 0, sizeof(int32_t[20]));
-	ARRCPY(((int32_t(*)[x2 - x1])&a3[x1]), (&a0), (x2 - x1));
+	memcpy((int32_t(*)[x2 - x1])&a3[x1], &a0, sizeof(int32_t[x2 - x1]));
 	//
-	ARRCPY(((int32_t(*)[12 - 3])&a3[3]), ((int32_t(*)[13 - 4])&a2[4]), (12 - 3));
+	memcpy((int32_t(*)[12 - 3])&a3[3], (int32_t(*)[13 - 4])&a2[4], sizeof(int32_t[12 - 3]));
 	//
-	ARRCPY((&a0), ((int32_t(*)[13 - 3])&a3[3]), (__lengthof(a0)));
+	memcpy(&a0, (int32_t(*)[13 - 3])&a3[3], sizeof(int32_t[10]));
 	//
 	memset((int32_t(*)[13 - 3])&a3[3], 0, sizeof(int32_t[13 - 3]));
 

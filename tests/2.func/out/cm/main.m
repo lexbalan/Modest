@@ -3,12 +3,12 @@
 
 
 func func1() -> Unit {
-	stdio.printf("func1 was called\n")
+	stdio.("func1 was called\n")
 }
 
 
 func print_ab(a: Int32, b: Int32) -> Unit {
-	stdio.printf("print_ab(a=%i, b=%i)\n", a, b)
+	stdio.("print_ab(a=%i, b=%i)\n", a, b)
 }
 
 
@@ -18,8 +18,8 @@ func sum(a: Int32, b: Int32) -> Int32 {
 
 
 // define function main
-public func main() -> ctypes64.Int {
-	stdio.printf("test func\n")
+public func main() -> Int {
+	stdio.("test func\n")
 
 	// call declared & defined functions
 	func0()
@@ -32,7 +32,7 @@ public func main() -> ctypes64.Int {
 	let arg_a = Int32 1
 	let arg_b = Int32 2
 	let sum_result = sum(arg_a, arg_b)
-	stdio.printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result)
+	stdio.("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result)
 
 
 	var fptr: *(a: Int32, b: Int32) -> Int32 = &sum
@@ -40,13 +40,13 @@ public func main() -> ctypes64.Int {
 	let arg_a2 = Int32 1
 	let arg_b2 = Int32 2
 	let fptr_result = fptr(arg_a2, arg_b2)
-	stdio.printf("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result)
+	stdio.("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result)
 
 	return 0
 }
 
 
 func func0() -> Unit {
-	stdio.printf("func0 was called\n")
+	stdio.("func0 was called\n")
 }
 

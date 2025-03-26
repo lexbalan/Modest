@@ -191,8 +191,8 @@ int main()
 	printf("px.x = %i (must be 10)\n", __px.x);
 	printf("px.y = %i (must be 20)\n", __px.y);
 
-	if (memcmp(&__px, &(struct {int32_t x; int32_t y;
-	}){.x = 10, .y = 20	}, sizeof(struct {int32_t x; int32_t y;
+	if (memcmp(&__px, &((struct {int32_t x; int32_t y;
+	}){.x = 10, .y = 20	}), sizeof(struct {int32_t x; int32_t y;
 	})) == 0) {
 		printf("test passed\n");
 	} else {

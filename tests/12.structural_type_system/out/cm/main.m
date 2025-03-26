@@ -14,36 +14,36 @@ type Type3 Type1
 
 
 func f0_val(x: Type1) -> Unit {
-	stdio.printf("f0 x.x = %d\n", x.x)
+	stdio.("f0 x.x = %d\n", x.x)
 }
 
 func f1_val(x: Type2) -> Unit {
-	stdio.printf("f1 x.x = %d\n", x.x)
+	stdio.("f1 x.x = %d\n", x.x)
 }
 
 func f2_val(x: Type3) -> Unit {
-	stdio.printf("f2 x.x = %d\n", x.x)
+	stdio.("f2 x.x = %d\n", x.x)
 }
 
 func f3_val(x: record {x: Int32}) -> Unit {
-	stdio.printf("f3 x.x = %d\n", x.x)
+	stdio.("f3 x.x = %d\n", x.x)
 }
 
 
 func f0_ptr(x: *Type1) -> Unit {
-	stdio.printf("f0p x.x = %d\n", x.x)
+	stdio.("f0p x.x = %d\n", x.x)
 }
 
 func f1_ptr(x: *Type2) -> Unit {
-	stdio.printf("f1p x.x = %d\n", x.x)
+	stdio.("f1p x.x = %d\n", x.x)
 }
 
 func f2_ptr(x: *Type3) -> Unit {
-	stdio.printf("f2p x.x = %d\n", x.x)
+	stdio.("f2p x.x = %d\n", x.x)
 }
 
 func f3_ptr(x: *record {x: Int32}) -> Unit {
-	stdio.printf("f3p x.x = %d\n", x.x)
+	stdio.("f3p x.x = %d\n", x.x)
 }
 
 
@@ -89,7 +89,7 @@ func test_by_pointer() -> Unit {
 }
 
 
-public func main() -> ctypes64.Int {
+public func main() -> Int {
 	test_by_value()
 	test_by_pointer()
 	return 0

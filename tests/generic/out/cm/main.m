@@ -2,42 +2,42 @@
 @c_include "stdio.h"
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("generic types test\n")
+public func main() -> Int {
+	stdio.("generic types test\n")
 
 	let t1 = test_generic_integer()
 	if t1 {
-		stdio.printf("test_generic_integer passed\n")
+		stdio.("test_generic_integer passed\n")
 	} else {
-		stdio.printf("test_generic_integer failed\n")
+		stdio.("test_generic_integer failed\n")
 	}
 
 	let t2 = test_generic_float()
 	if t2 {
-		stdio.printf("test_generic_float passed\n")
+		stdio.("test_generic_float passed\n")
 	} else {
-		stdio.printf("test_generic_float failed\n")
+		stdio.("test_generic_float failed\n")
 	}
 
 	let t3 = test_generic_char()
 	if t3 {
-		stdio.printf("test_generic_char passed\n")
+		stdio.("test_generic_char passed\n")
 	} else {
-		stdio.printf("test_generic_char failed\n")
+		stdio.("test_generic_char failed\n")
 	}
 
 	let t4 = test_generic_array()
 	if t4 {
-		stdio.printf("test_generic_array passed\n")
+		stdio.("test_generic_array passed\n")
 	} else {
-		stdio.printf("test_generic_array failed\n")
+		stdio.("test_generic_array failed\n")
 	}
 
 	let t5 = test_generic_record()
 	if t5 {
-		stdio.printf("test_generic_record passed\n")
+		stdio.("test_generic_record passed\n")
 	} else {
-		stdio.printf("test_generic_integer failed\n")
+		stdio.("test_generic_integer failed\n")
 	}
 
 	return 0
@@ -116,7 +116,7 @@ func test_generic_array() -> Bool {
 	let a = [0, 1, 2, 3]
 
 	if a != [0, 1, 2, 3] {
-		stdio.printf("error: a != [0, 1, 2, 3]\n")
+		stdio.("error: a != [0, 1, 2, 3]\n")
 		return false
 	}
 
@@ -124,28 +124,28 @@ func test_generic_array() -> Bool {
 	// can be implicit casted to Array with compatible type and same size
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Int32
-	var b: [4]Int32
+	var b: [<str_value>]Int32
 	b = a
 
 	if b != [0, 1, 2, 3] {
-		stdio.printf("b != [0, 1, 2, 3]\n")
+		stdio.("b != [0, 1, 2, 3]\n")
 		return false
 	}
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Nat64
-	var c: [4]Int64
+	var c: [<str_value>]Int64
 	c = a
 
 	if c != [0, 1, 2, 3] {
-		stdio.printf("c != [0, 1, 2, 3]\n")
+		stdio.("c != [0, 1, 2, 3]\n")
 		return false
 	}
 
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
-	var d: [10]Int32 = [10]Int32 a
+	var d: [<str_value>]Int32 = [<str_value>]Int32 a
 
 	if d != [0, 1, 2, 3] {
-		stdio.printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n")
+		stdio.("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n")
 		return false
 	}
 

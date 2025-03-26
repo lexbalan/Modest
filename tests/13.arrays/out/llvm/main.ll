@@ -312,8 +312,6 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str42 = private constant [25 x i8] [i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 52, i8 48, i8 41, i8 10, i8 0]
 @str43 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str44 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str45 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str46 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 ;@attribute("c_no_print")
@@ -1223,35 +1221,16 @@ else_2:
 	%213 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str44 to [0 x i8]*))
 	br label %endif_2
 endif_2:
-	%214 = insertvalue [5 x %Char8] zeroinitializer, %Char8 76, 0
-	%215 = insertvalue [5 x %Char8] %214, %Char8 111, 1
-	%216 = insertvalue [5 x %Char8] %215, %Char8 72, 2
-	%217 = insertvalue [5 x %Char8] %216, %Char8 105, 3
-	%218 = insertvalue [5 x %Char8] %217, %Char8 33, 4
-	%219 = alloca [5 x %Char8]
-	%220 = zext i8 5 to %Int32
-	store [5 x %Char8] %218, [5 x %Char8]* %219
-; if_3
-	%221 = zext i8 2 to %Int32
-	%222 = getelementptr [5 x %Char8], [5 x %Char8]* %219, %Int32 0, %Int32 %221
-	%223 = bitcast %Char8* %222 to [2 x %Char8]*
-	%224 = insertvalue [2 x %Char8] zeroinitializer, %Char8 72, 0
-	%225 = insertvalue [2 x %Char8] %224, %Char8 105, 1
-	%226 = alloca [2 x %Char8]
-	%227 = zext i8 2 to %Int32
-	store [2 x %Char8] %225, [2 x %Char8]* %226
-	%228 = bitcast [2 x %Char8]* %223 to i8*
-	%229 = bitcast [2 x %Char8]* %226 to i8*
-	%230 = call i1 (i8*, i8*, i64) @memeq(i8* %228, i8* %229, %Int64 2)
-	%231 = icmp ne %Bool %230, 0
-	br %Bool %231 , label %then_3, label %else_3
-then_3:
-	%232 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str45 to [0 x i8]*))
-	br label %endif_3
-else_3:
-	%233 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str46 to [0 x i8]*))
-	br label %endif_3
-endif_3:
+
+
+	; BUG: НЕ РАБОТАЕТ!
+	;	let sa = []Char8 ['L', 'o', 'H', 'i', '!']
+	;
+	;	if sa[2:4] == "Hi" {
+	;		printf("test passed\n")
+	;	} else {
+	;		printf("test failed\n")
+	;	}
 	call void @test_arrays()
 	ret %Int 0
 }

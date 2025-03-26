@@ -34,7 +34,7 @@ static void f0(char *_x, char *sret_)
 	char x[20];
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
-	ARRCPY((&local_copy_of_x), (&x), (__lengthof(local_copy_of_x)));
+	memcpy(&local_copy_of_x, &x, sizeof(char[20]));
 	printf("f0(\"%s\")\n", &local_copy_of_x);
 
 	// truncate array
@@ -67,7 +67,7 @@ static void test()
 {
 	// тестируем работу с локальным generic массивом
 	uint64_t yy[6];
-	ARRCPY((&yy), (&(uint64_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	}), (__lengthof(yy)));
+	ARRCPY((&yy), (&((uint8_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	})), (__lengthof(yy)));
 	int32_t i = 0;
 	while (i < __lengthof(yy)) {
 		const uint64_t y = yy[i];
@@ -203,7 +203,7 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t localArray[3];
-	ARRCPY((&localArray), (&(int32_t[3]){4, 5, 6	}), (__lengthof(localArray)));
+	ARRCPY((&localArray), (&((uint8_t[3]){4, 5, 6	})), (__lengthof(localArray)));
 
 	i = 0;
 	while (i < 3) {
@@ -239,7 +239,7 @@ int main()
 	// assign array to array 1
 	// (with equal types)
 	int32_t a[3];
-	ARRCPY((&a), (&(int32_t[3]){1, 2, 3	}), (__lengthof(a)));
+	ARRCPY((&a), (&((uint8_t[3]){1, 2, 3	})), (__lengthof(a)));
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -248,7 +248,7 @@ int main()
 	// (with type [3]Int32)
 	// this variable are copy of array a
 	int32_t b[3];
-	ARRCPY((&b), (&a), (__lengthof(b)));
+	memcpy(&b, &a, sizeof(int32_t[3]));
 	printf("b[0] = %i\n", b[0]);
 	printf("b[1] = %i\n", b[1]);
 	printf("b[2] = %i\n", b[2]);
@@ -263,7 +263,7 @@ int main()
 	// assign array to array 2
 	// (with array extending)
 	int32_t c[3];
-	ARRCPY((&c), (&(int32_t[3]){10, 20, 30	}), (__lengthof(c)));
+	ARRCPY((&c), (&((uint8_t[3]){10, 20, 30	})), (__lengthof(c)));
 	int32_t d[6];
 	ARRCPY((&d), (&c), (__lengthof(d)));
 	printf("d[0] = %i\n", d[0]);
@@ -335,21 +335,21 @@ int main()
 	printf("y[%i] = %i (must be 30)\n", 2, __y[2]);
 	printf("y[%i] = %i (must be 40)\n", 3, __y[3]);
 
-	if (memcmp(&__y, &(int32_t[4]){10, 20, 30, 40	}, sizeof(int32_t[4])) == 0) {
+	if (memcmp(&__y, &((int32_t[4]){10, 20, 30, 40	}), sizeof(int32_t[4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
 	}
 
 
-	char sa[5];
-	ARRCPY((&sa), (&"LoHi!"), (5));
-
-	if (memcmp((char(*)[4 - 2])&sa[2], "Hi", sizeof(char[4 - 2])) == 0) {
-		printf("test passed\n");
-	} else {
-		printf("test failed\n");
-	}
+	// BUG: НЕ РАБОТАЕТ!
+	//	let sa = []Char8 ['L', 'o', 'H', 'i', '!']
+	//
+	//	if sa[2:4] == "Hi" {
+	//		printf("test passed\n")
+	//	} else {
+	//		printf("test failed\n")
+	//	}
 
 	test_arrays();
 

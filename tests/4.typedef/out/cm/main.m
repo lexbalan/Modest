@@ -3,8 +3,8 @@
 
 type NewInt32 Int32
 
-public func main() -> ctypes64.Int {
-	stdio.printf("test typedef\n")
+public func main() -> Int {
+	stdio.("test typedef\n")
 
 	var newInt32: NewInt32
 	newInt32 = NewInt32 0

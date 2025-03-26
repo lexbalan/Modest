@@ -21,22 +21,21 @@ struct Point {
 };
 typedef struct Point Point;
 
-#define _ps  { \
+#define ps  { \
 	{.x = 0, .y = 0	}, \
 	{.x = 1, .y = 1	}, \
 	{.x = 2, .y = 2	} \
 }
-static const struct {uint8_t x; uint8_t y;
-} ps[3] = _ps;
 
-#define _points  _ps
-static const Point points[3] = _points;
+
+#define points  ps
+
 
 // есть проблема - в C глобальные переменные с модификатором const
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
-static Point points2[3] = _points;
+static Point points2[3] = points;
 
 // define function main
 int main()

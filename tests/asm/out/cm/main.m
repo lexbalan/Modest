@@ -22,13 +22,13 @@ func sumsub64(a: Int64, b: Int64) -> Unit {
 
 	__asm("add %0, %2, %3\nsub %1, %2, %3\n", [["=&r", sum], ["=&r", sub]], [["r", a], ["r", b]], ["cc"])
 
-	stdio.printf("sumsub64 sum = %lld\n", sum)
-	stdio.printf("sumsub64 sub = %lld\n", sub)
+	stdio.("sumsub64 sum = %lld\n", sum)
+	stdio.("sumsub64 sub = %lld\n", sub)
 }
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("inline asm test\n")
+public func main() -> Int {
+	stdio.("inline asm test\n")
 
 	var a: Int64 = 10
 	var b: Int64 = 20
@@ -36,8 +36,8 @@ public func main() -> ctypes64.Int {
 	let sum = sum64(a, b)
 	let sub = sub64(a, b)
 
-	stdio.printf("sum(%lld, %lld) = %lld\n", a, b, sum)
-	stdio.printf("sub(%lld, %lld) = %lld\n", a, b, sub)
+	stdio.("sum(%lld, %lld) = %lld\n", a, b, sum)
+	stdio.("sub(%lld, %lld) = %lld\n", a, b, sub)
 
 	sumsub64(a, b)
 

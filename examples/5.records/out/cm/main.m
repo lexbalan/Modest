@@ -5,8 +5,8 @@
 
 
 type Point record {
-	x: ctypes64.Float
-	y: ctypes64.Float
+	x: Float
+	y: Float
 }
 
 type Line record {
@@ -23,7 +23,7 @@ var line: Line = {
 
 
 
-func max(a: ctypes64.Float, b: ctypes64.Float) -> ctypes64.Float {
+func max(a: Float, b: Float) -> Float {
 	if a > b {
 		return a
 	}
@@ -32,7 +32,7 @@ func max(a: ctypes64.Float, b: ctypes64.Float) -> ctypes64.Float {
 
 
 
-func min(a: ctypes64.Float, b: ctypes64.Float) -> ctypes64.Float {
+func min(a: Float, b: Float) -> Float {
 	if a < b {
 		return a
 	}
@@ -41,35 +41,35 @@ func min(a: ctypes64.Float, b: ctypes64.Float) -> ctypes64.Float {
 
 
 // Pythagorean theorem
-func distance(a: Point, b: Point) -> ctypes64.Float {
+func distance(a: Point, b: Point) -> Float {
 	let dx = max(a.x, b.x) - min(a.x, b.x)
 	let dy = max(a.y, b.y) - min(a.y, b.y)
-	let dx2 = math.pow(dx, 2)
-	let dy2 = math.pow(dy, 2)
-	return math.sqrt(dx2 + dy2)
+	let dx2 = math.(dx, 2)
+	let dy2 = math.(dy, 2)
+	return math.(dx2 + dy2)
 }
 
 
-func lineLength(line: Line) -> ctypes64.Float {
+func lineLength(line: Line) -> Float {
 	return distance(line.a, line.b)
 }
 
 
 func ptr_example() -> Unit {
-	let ptr_p = stdlib.malloc(sizeof(Point))
+	let ptr_p = stdlib.(sizeof(Point))
 
 	// access by pointer
 	ptr_p.x = 10
 	ptr_p.y = 20
 
-	stdio.printf("point(%f, %f)\n", ptr_p.x, ptr_p.y)
+	stdio.("point(%f, %f)\n", ptr_p.x, ptr_p.y)
 }
 
 
-public func main() -> ctypes64.Int {
+public func main() -> Int {
 	// by value
 	let len = lineLength(line)
-	stdio.printf("line length = %f\n", len)
+	stdio.("line length = %f\n", len)
 
 	ptr_example()
 

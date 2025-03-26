@@ -2,23 +2,23 @@
 @c_include "stdio.h"
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("if statement example\n")
+public func main() -> Int {
+	stdio.("if statement example\n")
 
 	var a: Int32
 	var b: Int32
 
-	stdio.printf("enter a: ")
-	stdio.scanf("%d", &a)
-	stdio.printf("enter b: ")
-	stdio.scanf("%d", &b)
+	stdio.("enter a: ")
+	stdio.("%d", &a)
+	stdio.("enter b: ")
+	stdio.("%d", &b)
 
 	if a > b {
-		stdio.printf("a > b\n")
+		stdio.("a > b\n")
 	} else if a < b {
-		stdio.printf("a < b\n")
+		stdio.("a < b\n")
 	} else {
-		stdio.printf("a == b\n")
+		stdio.("a == b\n")
 	}
 
 	return 0

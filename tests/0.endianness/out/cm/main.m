@@ -2,7 +2,7 @@
 @c_include "stdio.h"
 
 
-public func main() -> ctypes64.Int {
+public func main() -> Int {
 	var check: Word16 = 0x0001
 	let is_le = *(*Word8 &check) == 1
 
@@ -13,7 +13,7 @@ public func main() -> ctypes64.Int {
 		kind = "big"
 	}
 
-	stdio.printf("%s-endian\n", kind)
+	stdio.("%s-endian\n", kind)
 
 	return 0
 }

@@ -54,28 +54,28 @@ const wa = WrappedArray {}
 
 
 // Pythagorean theorem
-func distance(a: Point, b: Point) -> ctypes64.Float {
-	let dx = minmax.max_float64(a.x, b.x) - minmax.min_float64(a.x, b.x)
-	let dy = minmax.max_float64(a.y, b.y) - minmax.min_float64(a.y, b.y)
-	let dx2 = math.pow(dx, 2)
-	let dy2 = math.pow(dy, 2)
-	return math.sqrt(dx2 + dy2)
+func distance(a: Point, b: Point) -> Float {
+	let dx = minmax.(a.x, b.x) - minmax.(a.x, b.x)
+	let dy = minmax.(a.y, b.y) - minmax.(a.y, b.y)
+	let dx2 = math.(dx, 2)
+	let dy2 = math.(dy, 2)
+	return math.(dx2 + dy2)
 }
 
 
-func lineLength(line: Line) -> ctypes64.Float {
+func lineLength(line: Line) -> Float {
 	return distance(line.a, line.b)
 }
 
 
-public func main() -> ctypes64.Int {
+public func main() -> Int {
 	let lines_0_len = lineLength(lines[0])
 	let lines_1_len = lineLength(lines[1])
 	let lines_2_len = lineLength(lines[2])
 	let lines_3_len = lineLength(lines[3])
 
-	stdio.printf("lines_0_len = %f\n", lines_0_len)
-	stdio.printf("lines_1_len = %f\n", lines_1_len)
+	stdio.("lines_0_len = %f\n", lines_0_len)
+	stdio.("lines_1_len = %f\n", lines_1_len)
 
 	//	let y = wa.x
 

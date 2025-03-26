@@ -33,6 +33,9 @@ func xxx(p: *[]Word8) -> Unit {
 	}
 }
 
+
+const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
 public func main() -> Int32 {
 	var p: Point
 	printf("test %s\n", *Str8 cq)
@@ -42,8 +45,8 @@ public func main() -> Int32 {
 	var x1 = 5
 	var x2 = 15
 
-	var w0: [10]Word8 = []
-	var a0: [10]Int32 = []
+	var w0: [10]Word8 = ini
+	var a0: [10]Int32 = ini
 	//
 	var a1: [5]Int32 = a0[2:7]
 	//

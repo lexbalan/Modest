@@ -26,24 +26,24 @@ var cnt: Nat8
 // State Off
 //
 
-func off_entry(x: *fsm.FSM) -> Unit {
+func off_entry(x: *FSM) -> Unit {
 	Unit x
 	//printf("off_entry\n")
 }
 
 
-func off_loop(x: *fsm.FSM) -> Unit {
-	stdio.printf("off_loop\n")
+func off_loop(x: *FSM) -> Unit {
+	stdio.("off_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
 		cnt = 0
-		fsm.switch(x, flashlightStateOn)
+		fsm.(x, flashlightStateOn)
 	}
 }
 
 
-func off_exit(x: *fsm.FSM) -> Unit {
+func off_exit(x: *FSM) -> Unit {
 	Unit x
 	//printf("off_exit\n")
 }
@@ -53,24 +53,24 @@ func off_exit(x: *fsm.FSM) -> Unit {
 // State On
 //
 
-func on_entry(x: *fsm.FSM) -> Unit {
+func on_entry(x: *FSM) -> Unit {
 	Unit x
 	//printf("on_entry\n")
 }
 
 
-func on_loop(x: *fsm.FSM) -> Unit {
-	stdio.printf("on_loop\n")
+func on_loop(x: *FSM) -> Unit {
+	stdio.("on_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
 		cnt = 0
-		fsm.switch(x, flashlightStateBeacon)
+		fsm.(x, flashlightStateBeacon)
 	}
 }
 
 
-func on_exit(x: *fsm.FSM) -> Unit {
+func on_exit(x: *FSM) -> Unit {
 	Unit x
 	//printf("on_exit\n")
 }
@@ -80,51 +80,51 @@ func on_exit(x: *fsm.FSM) -> Unit {
 // State Beacon
 //
 
-func beacon_entry(x: *fsm.FSM) -> Unit {
-	let from_name = fsm.state_no_name(x, x.state)
-	stdio.printf("beacon_entry from %s\n", from_name)
+func beacon_entry(x: *FSM) -> Unit {
+	let from_name = fsm.(x, x.state)
+	stdio.("beacon_entry from %s\n", from_name)
 }
 
 
-func beacon_loop(x: *fsm.FSM) -> Unit {
-	stdio.printf("beacon_loop\n")
+func beacon_loop(x: *FSM) -> Unit {
+	stdio.("beacon_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
 		cnt = 0
-		fsm.switch(x, flashlightStateOff)
+		fsm.(x, flashlightStateOff)
 	}
 }
 
 
-func beacon_exit(x: *fsm.FSM) -> Unit {
-	let to_name = fsm.state_no_name(x, x.nexstate)
-	stdio.printf("beacon_exit to %s\n", to_name)
+func beacon_exit(x: *FSM) -> Unit {
+	let to_name = fsm.(x, x.nexstate)
+	stdio.("beacon_exit to %s\n", to_name)
 }
 
 
 
-var fsm0: fsm.FSM = {
+var fsm0: FSM = {
 	name = "Flash"
 	state = 0
 	nexstate = 0
-	substate = fsm.substateEntering
+	substate = fsm.
 	states = [
-		fsm.StateDesc {
+		StateDesc {
 			name = "Off"
 			entry = &off_entry
 			loop = &off_loop
 			exit = &off_exit
 		}
 
-		fsm.StateDesc {
+		StateDesc {
 			name = "On"
 			entry = &on_entry
 			loop = &on_loop
 			exit = &on_exit
 		}
 
-		fsm.StateDesc {
+		StateDesc {
 			name = "Beacon"
 			entry = &beacon_entry
 			loop = &beacon_loop
@@ -135,11 +135,11 @@ var fsm0: fsm.FSM = {
 
 
 
-public func main() -> ctypes64.Int {
+public func main() -> Int {
 
 	while true {
-		fsm.run(&fsm0)
-		delay.ms(500)
+		fsm.(&fsm0)
+		delay.(500)
 	}
 
 	return 0

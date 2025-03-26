@@ -5,22 +5,22 @@
 import "table" as table
 
 
-var table_header0: [3]*Str8 = [
+var table_header0: [<str_value>]*Str8 = [
 	"#", "Header0", "Header1"
 ]
 
-var table_data0: [3][3]*Str8 = [
+var table_data0: [<str_value>][<str_value>]*Str8 = [
 	["0", "Alef", "Betha"]
 	["1", "Clock", "Depth"]
 	["2", "Earth", "Fight"]
 ]
 
 
-var table_header1: [4]*Str8 = [
+var table_header1: [<str_value>]*Str8 = [
 	"#", "Header0", "Header1", "Header2"
 ]
 
-var table_data1: [4][4]*Str8 = [
+var table_data1: [<str_value>][<str_value>]*Str8 = [
 	["0", "Alef", "Betha", "Emma"]
 	["1", "Clock", "Depth", "Free"]
 	["2", "Ink", "Julia", "Keyword"]
@@ -28,7 +28,7 @@ var table_data1: [4][4]*Str8 = [
 ]
 
 
-var table00: table.Table = table.Table {
+var table00: Table = Table {
 	header = nil
 	data = &table_data0
 	nRows = lengthof(table_data0)
@@ -36,7 +36,7 @@ var table00: table.Table = table.Table {
 	separate = false
 }
 
-var table01: table.Table = table.Table {
+var table01: Table = Table {
 	header = &table_header0
 	data = &table_data0
 	nRows = lengthof(table_data0)
@@ -44,7 +44,7 @@ var table01: table.Table = table.Table {
 	separate = false
 }
 
-var table02: table.Table = table.Table {
+var table02: Table = Table {
 	header = nil
 	data = &table_data0
 	nRows = lengthof(table_data0)
@@ -52,7 +52,7 @@ var table02: table.Table = table.Table {
 	separate = true
 }
 
-var table03: table.Table = table.Table {
+var table03: Table = Table {
 	header = &table_header0
 	data = &table_data0
 	nRows = lengthof(table_data0)
@@ -60,7 +60,7 @@ var table03: table.Table = table.Table {
 	separate = true
 }
 
-var table10: table.Table = table.Table {
+var table10: Table = Table {
 	header = &table_header1
 	data = &table_data1
 	nRows = lengthof(table_data1)
@@ -70,28 +70,28 @@ var table10: table.Table = table.Table {
 
 
 public func main() -> Int32 {
-	let tab = new table.Table {}
+	let tab = new Table {}
 
 	if tab == nil {
-		stdio.printf("cannot create object\n")
+		stdio.("cannot create object\n")
 	}
 
 	*tab = table00
 
-	table.print(&table00)
-	stdio.printf("\n")
+	table.(&table00)
+	stdio.("\n")
 
-	table.print(&table01)
-	stdio.printf("\n")
+	table.(&table01)
+	stdio.("\n")
 
-	table.print(&table02)
-	stdio.printf("\n")
+	table.(&table02)
+	stdio.("\n")
 
-	table.print(&table03)
-	stdio.printf("\n")
+	table.(&table03)
+	stdio.("\n")
 
-	table.print(&table10)
-	stdio.printf("\n")
+	table.(&table10)
+	stdio.("\n")
 
 	return 0
 }

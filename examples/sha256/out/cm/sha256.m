@@ -4,14 +4,14 @@
 
 public const hashSize = 32
 
-public type Hash [hashSize]Word8
+public type Hash [<str_value>]Word8
 
 
 type Context record {
-	data: [64]Word8
+	data: [<str_value>]Word8
 	datalen: Nat32
 	bitlen: Nat64
-	state: [8]Word32
+	state: [<str_value>]Word32
 }
 
 
@@ -89,7 +89,7 @@ const k = [
 
 
 func transform(ctx: *Context, data: *[]Word8) -> Unit {
-	var m: [64]Word32 = [64]Word32 []
+	var m: [<str_value>]Word32 = [<str_value>]Word32 []
 
 	var i: Nat32 = Nat32 0
 	var j: Nat32 = Nat32 0
@@ -107,7 +107,7 @@ func transform(ctx: *Context, data: *[]Word8) -> Unit {
 		i = i + 1
 	}
 
-	var x: [8]Word32 = ctx.state
+	var x: [<str_value>]Word32 = ctx.state
 
 	i = 0
 	while i < 64 {
@@ -163,12 +163,12 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 
 	i = i + 1
 
-	string.memset(&(ctx.data[i]), 0, ctypes64.SizeT (n - i))
+	string.(&(ctx.data[i]), 0, SizeT (n - i))
 	//ctx.data[i:n-i] = []
 
 	if ctx.datalen >= 56 {
 		transform(ctx, &(ctx.data))
-		string.memset(&(ctx.data), 0, 56)
+		string.(&(ctx.data), 0, 56)
 		//ctx.data[0:56] = []
 	}
 

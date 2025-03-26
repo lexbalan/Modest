@@ -7,8 +7,8 @@ const utf16Char = "Я"
 const utf32Char = "🐀"
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("test/char\n")
+public func main() -> Int {
+	stdio.("test/char\n")
 
 	var ch08: Char8
 	var ch16: Char16

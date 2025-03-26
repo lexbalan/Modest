@@ -2610,6 +2610,7 @@ def do_directive(x):
 			print("-INSERT " + args[1])
 			return StmtDirectiveInsert(args[1], x['ti'])
 		elif s0 == 'c_func_prefix':
+			print('c_func_prefix = %s' % args[1])
 			pass
 
 	return None

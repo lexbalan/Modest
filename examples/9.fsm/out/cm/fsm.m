@@ -13,7 +13,7 @@ public const maxStates = 16
 public type Handler *(x: *FSM) -> Unit
 
 public type StateDesc record {
-	public name: [nameMaxLength]Char8
+	public name: [<str_value>]Char8
 	public entry: Handler
 	public loop: Handler
 	public exit: Handler
@@ -26,11 +26,11 @@ public const substateLeaving = 2
 
 
 public type FSM record {
-	public name: [nameMaxLength]Char8
+	public name: [<str_value>]Char8
 	public state: Nat32
 	public nexstate: Nat32
 	public substate: Nat32
-	public states: [maxStates]StateDesc
+	public states: [<str_value>]StateDesc
 }
 
 
@@ -46,14 +46,14 @@ public func switch(fsm: *FSM, state: Nat32) -> Unit {
 
 
 public func run(fsm: *FSM) -> Unit {
-	stdio.printf("fsm::run()\n")
+	stdio.("fsm::run()\n")
 
 	if fsm.substate == substateEntering {
 		let nexstate = fsm.nexstate
 		let state = &(fsm.states[nexstate])
 
 		if verbose {
-			stdio.printf("enter %s\n", &(state.name))
+			stdio.("enter %s\n", &(state.name))
 		}
 
 		if state.entry != nil {
@@ -74,7 +74,7 @@ public func run(fsm: *FSM) -> Unit {
 		let state = &(fsm.states[fsm.state])
 
 		if verbose {
-			stdio.printf("exit %s\n", &(state.name))
+			stdio.("exit %s\n", &(state.name))
 		}
 
 		if state.exit != nil {

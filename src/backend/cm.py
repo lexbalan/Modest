@@ -27,6 +27,16 @@ def nl_indent(nl=1):
 		indent()
 
 
+nl_str = "\n"
+
+
+def str_nl_indent(nl=1):
+	s = nl_str * nl
+	if nl > 0:
+		s += indentation(INDENT_SYMBOL)
+	return s
+
+
 def get_id_str(x):
 	id = x.id
 
@@ -82,92 +92,104 @@ def precedence(x):
 cmodule = None
 
 
-def print_id_for(x):
+def str_id_for(x):
 	xm = x.getModule()
 	if xm != None:
 		if xm != cmodule:
-			out("%s." % xm.id)
-	out(get_id_str(x))
+			return "%s." % xm.id
+	return get_id_str(x)
+
+
+def print_id_for(x):
+	out(str_id_for(x))
 
 
 def print_stmt_comment(x):
+	out(str_stmt_comment(x))
+
+
+def str_stmt_comment(x):
+	s = ""
 	if isinstance(x, StmtCommentLine):
-		print_stmt_comment_line(x)
+		s = str_stmt_comment_line(x)
 	elif isinstance(x, StmtCommentBlock):
-		print_stmt_comment_block(x)
+		s = str_stmt_comment_block(x)
+	return s
 
 
-def print_stmt_comment_block(x):
-	out("/*%s*/" % x.text)
+def str_stmt_comment_block(x):
+	return "/*%s*/" % x.text
 
 
-def print_stmt_comment_line(x):
+def str_stmt_comment_line(x):
 	lines = x.lines
 	i = 0
 	n = len(lines)
+	s = ''
 	while i < n:
 		line = lines[i]
-		out("//%s" % line['str'])
+		s += "//%s" % line['str']
 		i = i + 1
 		if i < n:
-			newline()
-			indent()
+			s += str_nl_indent()
+	return s
 
 
 
-def print_TypeNat(t):
-	out(get_type_id(t))
-
-def print_TypeInt(t):
-	out(get_type_id(t))
+def str_TypeNat(t):
+	return get_type_id(t)
 
 
-def print_type_array(t):
-	out("[")
+def str_TypeInt(t):
+	return get_type_id(t)
+
+
+def str_type_array(t):
+	s = ""
+	s += "["
 	if not Value.isUndefined(t.volume):
-		print_value(t.volume)
-	out("]")
-	print_type(t.of)
+		s += str_value(t.volume)
+	s += "]"
+	s += str_type(t.of)
+	return s
 
 
-def print_type_pointer(t):
+def str_type_pointer(t):
 	if Type.is_free_pointer(t):
-		out("Ptr")
-	else:
-		out("*"); print_type(t.to)
+		return "Ptr"
+	return "*" + str_type(t.to)
 
 
-def print_field(x):
-	print_id_for(x)
-	out(": ")
-	print_type(x.type)
+def str_field(x):
+	return str_id_for(x) + ": " + str_type(x.type)
 
 
-def print_type_record(t):
-	out("record {")
+def str_type_record(t):
+	s = "record {"
 	indent_up()
 
 	prev_nl = 1
 	for field in t.fields:
 		if prev_nl == 0:
-			out(", ")
+			s += ", "
 
 		# print comments
 		if field.comments:
 			for comment in field.comments:
-				nl_indent(comment.nl)
-				print_stmt_comment(comment)
+				s += str_nl_indent(comment.nl)
+				s += str_stmt_comment(comment)
 
-		nl_indent(field.nl)
+		s += str_nl_indent(field.nl)
 		prev_nl = field.nl
 
 		if field.access_level == 'public':
-			out("public ")
-		print_field(field)
+			s += "public "
+		s += str_field(field)
 
 	indent_down()
-	nl_indent(t.nl_end)
-	out("}")
+	s += str_nl_indent(t.nl_end)
+	s += "}"
+	return s
 
 
 def print_type_enum(t):
@@ -182,22 +204,23 @@ def print_type_enum(t):
 	out("\n}")
 
 
-def print_type_func(t, extra_args=False):
-	out('(')
+def str_type_func(t, extra_args=False):
+	s = '('
 	fields = t.params
 	i = 0
 	n = len(fields)
 	while i < n:
-		if i > 0: out(", ")
-		print_field(fields[i])
+		if i > 0:
+			s += ", "
+		s += str_field(fields[i])
 		i = i + 1
 
 	if extra_args:
-		#out(", va_list: __VA_List")
-		out(", ...")
+		s += ", ..."
 
-	out(') -> ')
-	print_type(t.to)
+	s += ') -> '
+	s += str_type(t.to)
+	return s
 
 
 def get_type_id(t):
@@ -209,28 +232,36 @@ def get_type_id(t):
 	return None
 
 
-def print_type(t):
+def str_type(t):
 	assert(isinstance(t, Type))
 
 	# Если тип связан с идентификатором - распечатаем его
 	id_str = get_type_id(t)
 	if id_str != None:
-		print_id_for(t)
-		#out(id_str)
-		return
+		return id_str #str_id_for(t)
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
-	if Type.is_int(t): print_TypeInt(t)
-	elif Type.is_nat(t): print_TypeNat(t)
-	elif Type.is_func(t): print_type_func(t)
-	elif Type.is_array(t): print_type_array(t)
-	elif Type.is_record(t): print_type_record(t)
-	elif Type.is_pointer(t): print_type_pointer(t)
-	#elif Type.is_enum(t): print_type_enum(t)
-	elif k == 'undefined': pass
-	else: out("<type:" + str(t) + ">")
+	if Type.is_int(t):
+		return str_TypeInt(t)
+	elif Type.is_nat(t):
+		return str_TypeNat(t)
+	elif Type.is_func(t):
+		return str_type_func(t)
+	elif Type.is_array(t):
+		return str_type_array(t)
+	elif Type.is_record(t):
+		return str_type_record(t)
+	elif Type.is_pointer(t):
+		return str_type_pointer(t)
+	elif k == 'undefined':
+		return "<undefined>"
+	else:
+		return "<type:" + str(t) + ">"
 
+
+def print_type(t):
+	out(str_type(t))
 
 
 bin_ops = {
@@ -733,6 +764,9 @@ def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
 		out(")")
 
 
+def str_value(x):
+	return "<str_value>"
+
 
 def print_stmt_type(x):
 	out("type ")
@@ -766,7 +800,7 @@ def print_stmt_func(x):
 	ft = func.type
 	out('func ')
 	print_id_for(func)
-	print_type_func(ft, extra_args=ft.extra_args)
+	out(str_type_func(ft, extra_args=ft.extra_args))
 	print_stmt_block(x.stmt)
 
 

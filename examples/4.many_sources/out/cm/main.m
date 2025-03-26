@@ -3,9 +3,9 @@
 import "lib" as lib
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("hello from main\n")
-	lib.foo()
+public func main() -> Int {
+	stdio.("hello from main\n")
+	lib.()
 	return 0
 }
 

@@ -4,14 +4,14 @@ import "lightfood/memory" as mem
 
 
 type Object record {
-	firstname: [32]Char8
-	lastname: [32]Char8
+	firstname: [<str_value>]Char8
+	lastname: [<str_value>]Char8
 	age: Int32
 }
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("memcopy test\n")
+public func main() -> Int {
+	stdio.("memcopy test\n")
 
 	var o1: Object
 	var o2: Object
@@ -23,13 +23,13 @@ public func main() -> ctypes64.Int {
 	}
 
 	let len = sizeof(Object)
-	stdio.printf("LEN = %u\n", Nat32 len)
+	stdio.("LEN = %u\n", Nat32 len)
 
-	memory.copy(&o2, &o1, len)
+	memory.(&o2, &o1, len)
 
-	stdio.printf("firstname = '%s'\n", &(o2.firstname))
-	stdio.printf("lastname = '%s'\n", &(o2.lastname))
-	stdio.printf("age = %d\n", o2.age)
+	stdio.("firstname = '%s'\n", &(o2.firstname))
+	stdio.("lastname = '%s'\n", &(o2.lastname))
+	stdio.("age = %d\n", o2.age)
 
 	return 0
 }

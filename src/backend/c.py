@@ -1537,7 +1537,7 @@ def print_stmt_var(x):
 		if not runtimeLiteral:
 			out(";")
 			nl_indent()
-			do_assign(v, iv)
+			do_assign(v, iv, x.ti)
 			return
 
 
@@ -1550,7 +1550,7 @@ def print_stmt_var(x):
 			if Value.isUndefined(init_value):
 				memzero(var_value)
 			else:
-				assign_array(var_value, init_value)
+				assign_array(var_value, init_value, x['ti'])
 
 			out(";")
 			return
@@ -1619,7 +1619,7 @@ def print_stmt_const(x):
 			print_variable(get_id_str(x), v.type)
 			out(";")
 			nl_indent()
-			do_assign(v, iv)
+			do_assign(v, iv, x.ti)
 			return
 
 	# Локальные константы (втч. композитные) печатаем как переменные
@@ -1691,7 +1691,7 @@ def str_array_len(array_value):
 
 
 
-def assign_array(left, right):
+def assign_array(left, right, ti):
 	# если справа 'обернутое' значение
 	# (для того чтобы в C вернуть массив из функции
 	# его нужно 'обернуть' в структуру)
@@ -1699,6 +1699,8 @@ def assign_array(left, right):
 		out(str_value_call(right, [], sret=left))
 		return
 	
+	#info("??", ti)
+
 	rv = get_root_value(right)
 	if rv.isZero():
 		memzero(left)
@@ -1710,17 +1712,9 @@ def assign_array(left, right):
 		#out("/*? %s ?*/" % r_root.type.volume.asset)
 		right = r_root
 
-	sleft = str_value_as_ptr(left)
-#	l_root = get_root_value(left)
-#	print(l_root)
-#	if isinstance(l_root, ValueLiteral):
-#		sleft = "(" + sleft + ")"
 
+	sleft = str_value_as_ptr(left)
 	sright = str_value_as_ptr(right)
-	#sright = ("/* %s */" % str(right.__class__)) + sright
-#	r_root = get_root_value(right)
-#	if isinstance(r_root, ValueLiteral):
-#		sright = "(" + sright + ")"
 
 
 	slen = None
@@ -1729,17 +1723,22 @@ def assign_array(left, right):
 	else:
 		slen = str_value(left.type.volume)
 
-	out("ARRCPY((%s), (%s), (%s))" % (sleft, sright, slen))
+	l_root = get_root_value(left)
+	r_root = get_root_value(right)
 
-	#assign_by_memcopy(left, right)
+	if Type.eq(l_root.type, r_root.type):
+		assign_by_memcopy(left, right)
+		return
+
+	out("ARRCPY((%s), (%s), (%s))" % (sleft, sright, slen))
 	return
 
 
-def do_assign(left, right):
+def do_assign(left, right, ti):
 	#out("/*%s*/" % right['kind'])
 
 	if right.type.is_array():
-		assign_array(left, right)
+		assign_array(left, right, ti)
 
 	else:
 		print_value(left)
@@ -1751,7 +1750,7 @@ def do_assign(left, right):
 
 
 def print_stmt_assign(x):
-	do_assign(x.left, x.right)
+	do_assign(x.left, x.right, x.ti)
 
 
 def print_stmt_value(x):
@@ -2369,8 +2368,8 @@ def get_root_value(x):
 		# конструирование complex_immediate печатаем
 		# for: (uint32_t[3]){1, 2, 3}
 		# for: (Point){.x=1, .y=2}
-		if x.value.isImmediate():
-			return x
+#		if x.value.isImmediate():
+#			return x
 		return get_root_value(x.value)
 	return x
 
@@ -2390,6 +2389,18 @@ def str_value_as_ptr(x):
 	sstr = ''
 	yy = x
 	root = get_root_value(x)
+
+	if root.isImmediate():
+	#if root.isLiteral() or root.isConst():
+		if x.type.is_composite():
+			v = str_value(root)
+
+			if root.isConst() and 'global_entity' in x.att:
+				return "&" + v
+
+			t = str_type(x.type)
+			return "&((%s)%s)" % (t, v)
+
 
 	#print(x.__class__)
 	#if x.type.is_array():

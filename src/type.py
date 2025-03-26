@@ -69,7 +69,8 @@ def type_print_array(t, print_aka=True):
 
 	if not Value.isUndefined(array_size):
 		if t.is_vla():
-			print("%s" % array_size.id.str, end='')
+
+			print("%s" % str(array_size), end='')
 		else:
 			sz = array_size.asset
 			print("%d" % sz, end='')
@@ -92,9 +93,17 @@ def type_print_func(t, print_aka=True):
 	type_print(t.to)
 
 
+
 def type_print(t, print_aka=True):
 	assert isinstance(t, Type)
+	from backend.cm import str_type
+	print(str_type(t), end='')
+	return
 
+	#if t.generic:
+	#	print(")", end='')
+
+	"""
 	if t.hasAttribute('volatile'):
 		print("volatile_", end='')
 	if t.hasAttribute('const'):
@@ -161,7 +170,7 @@ def type_print(t, print_aka=True):
 
 	if t.generic:
 		print(")", end='')
-
+	"""
 
 
 

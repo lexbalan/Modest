@@ -10,8 +10,8 @@
 
 
 
-#define _carr  {0, 10, 15, 20, 25, 30}
-static const int32_t carr[6] = _carr;
+#define carr  {0, 10, 15, 20, 25, 30}
+
 
 struct Point {
 	double x;
@@ -49,8 +49,8 @@ typedef struct Line Line;
 	.b = {.x = 30, .y = 40	} \
 }
 
-#define _lines  {line0, line1, line2, line3}
-static const Line lines[4] = _lines;
+#define lines  {line0, line1, line2, line3}
+
 
 struct WrappedArray {
 	int32_t x;

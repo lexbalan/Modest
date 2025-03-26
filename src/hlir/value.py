@@ -63,6 +63,14 @@ class Value(Entity):
 	def isUndefined(self):
 		return isinstance(self, ValueUndefined)
 
+	def isLiteral(self):
+		return isinstance(self, ValueLiteral)
+
+	def isConst(self):
+		return isinstance(self, ValueConst)
+
+	def isVar(self):
+		return isinstance(self, ValueVar)
 
 
 	# op = 'eq' | 'ne

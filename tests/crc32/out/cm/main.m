@@ -8,20 +8,20 @@ const datastring = "123456789"
 const expected_hash = 0xCBF43926
 
 
-var data: [9]Word8 = [9]Word8 datastring
+var data: [<str_value>]Word8 = [<str_value>]Word8 datastring
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("CRC32 test\n")
+public func main() -> Int {
+	stdio.("CRC32 test\n")
 
-	let crc = crc32.run(&data, lengthof(data))
+	let crc = crc32.(&data, lengthof(data))
 
-	stdio.printf("crc32.doHash(\"%s\") = %08X\n", *Str8 datastring, crc)
+	stdio.("crc32.doHash(\"%s\") = %08X\n", *Str8 datastring, crc)
 
 	if crc == expected_hash {
-		stdio.printf("test passed\n")
+		stdio.("test passed\n")
 	} else {
-		stdio.printf("test failed\n")
+		stdio.("test failed\n")
 	}
 
 	return 0

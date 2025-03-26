@@ -120,7 +120,7 @@ static void transform(Context *ctx, uint8_t *data)
 	}
 
 	uint32_t x[8];
-	ARRCPY((&x), (&ctx->state), (__lengthof(x)));
+	memcpy(&x, &ctx->state, sizeof(uint32_t[8]));
 
 	i = 0;
 	while (i < 64) {

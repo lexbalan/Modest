@@ -34,7 +34,7 @@ var line: Line = {
 	b = {x = 12, y = 13}
 }
 
-var lines: [3]Line = [
+var lines: [<str_value>]Line = [
 	Line {
 		a = {x = 1, y = 2}
 		b = {x = 3, y = 4}
@@ -49,7 +49,7 @@ var lines: [3]Line = [
 	}
 ]
 
-var pLines: [3]*Line = [&(lines[0]), &(lines[1]), &(lines[2])]
+var pLines: [<str_value>]*Line = [&(lines[0]), &(lines[1]), &(lines[2])]
 
 type Struct record {
 	x: *Line
@@ -59,44 +59,44 @@ var s: Struct = {x = &(lines[0])}
 
 
 func test_records() -> Unit {
-	stdio.printf("line.a.x = %d\n", line.a.x)
-	stdio.printf("line.a.y = %d\n", line.a.y)
+	stdio.("line.a.x = %d\n", line.a.x)
+	stdio.("line.a.y = %d\n", line.a.y)
 
-	stdio.printf("line.b.x = %d\n", line.b.x)
-	stdio.printf("line.b.y = %d\n", line.b.y)
+	stdio.("line.b.x = %d\n", line.b.x)
+	stdio.("line.b.y = %d\n", line.b.y)
 
-	stdio.printf("pLines[0].a.x = %d\n", pLines[0].a.x)
-	stdio.printf("pLines[0].a.y = %d\n", pLines[0].a.y)
+	stdio.("pLines[0].a.x = %d\n", pLines[0].a.x)
+	stdio.("pLines[0].a.y = %d\n", pLines[0].a.y)
 
-	stdio.printf("pLines[0].b.x = %d\n", pLines[0].b.x)
-	stdio.printf("pLines[0].b.y = %d\n", pLines[0].b.y)
+	stdio.("pLines[0].b.x = %d\n", pLines[0].b.x)
+	stdio.("pLines[0].b.y = %d\n", pLines[0].b.y)
 
-	stdio.printf("s.x.a.x = %d\n", s.x.a.x)
-	stdio.printf("s.x.a.y = %d\n", s.x.a.y)
+	stdio.("s.x.a.x = %d\n", s.x.a.x)
+	stdio.("s.x.a.y = %d\n", s.x.a.y)
 
-	stdio.printf("s.x.b.x = %d\n", s.x.b.x)
-	stdio.printf("s.x.b.y = %d\n", s.x.b.y)
+	stdio.("s.x.b.x = %d\n", s.x.b.x)
+	stdio.("s.x.b.y = %d\n", s.x.b.y)
 
 
 	let x = s
 
-	stdio.printf("x.x.a.x = %d\n", x.x.a.x)
-	stdio.printf("x.x.a.y = %d\n", x.x.a.y)
+	stdio.("x.x.a.x = %d\n", x.x.a.x)
+	stdio.("x.x.a.y = %d\n", x.x.a.y)
 
-	stdio.printf("x.x.b.x = %d\n", x.x.b.x)
-	stdio.printf("x.x.b.y = %d\n", x.x.b.y)
+	stdio.("x.x.b.x = %d\n", x.x.b.x)
+	stdio.("x.x.b.y = %d\n", x.x.b.y)
 }
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("records test\n")
+public func main() -> Int {
+	stdio.("records test\n")
 
 	// check value_record_eq for immediate values
 	let ver = {name = "m2", version = {major = 0, minor = 7}}.version
 	if ver == {major = 0, minor = 7} {
-		stdio.printf("version 0.7\n")
+		stdio.("version 0.7\n")
 	} else {
-		stdio.printf("version not 0.7\n")
+		stdio.("version not 0.7\n")
 	}
 
 	// compare two Point2D records
@@ -104,9 +104,9 @@ public func main() -> ctypes64.Int {
 	var p2d1: Point2D = {x = 10, y = 20}
 
 	if p2d0 == p2d1 {
-		stdio.printf("p2d0 == p2d1\n")
+		stdio.("p2d0 == p2d1\n")
 	} else {
-		stdio.printf("p2d0 != p2d1\n")
+		stdio.("p2d0 != p2d1\n")
 	}
 
 
@@ -115,9 +115,9 @@ public func main() -> ctypes64.Int {
 	var p2d3: record {x: Nat32, y: Nat32} = record {x: Nat32, y: Nat32} xx
 
 	if p2d2 == p2d3 {
-		stdio.printf("p2d2 == p2d3\n")
+		stdio.("p2d2 == p2d3\n")
 	} else {
-		stdio.printf("p2d2 != p2d3\n")
+		stdio.("p2d2 != p2d3\n")
 	}
 
 
@@ -125,9 +125,9 @@ public func main() -> ctypes64.Int {
 	var p2d4: record {x: Nat32, y: Nat32} = record {x: Nat32, y: Nat32} {x = 1, y = 2}
 
 	if p2d3 == p2d4 {
-		stdio.printf("p2d3 == p2d4\n")
+		stdio.("p2d3 == p2d4\n")
 	} else {
-		stdio.printf("p2d3 != p2d4\n")
+		stdio.("p2d3 != p2d4\n")
 	}
 
 	// comparison between two record (by pointer)
@@ -135,9 +135,9 @@ public func main() -> ctypes64.Int {
 	let pr3 = &p2d3
 
 	if *pr2 == *pr3 {
-		stdio.printf("*pr2 == *pr3\n")
+		stdio.("*pr2 == *pr3\n")
 	} else {
-		stdio.printf("*pr2 != *pr3\n")
+		stdio.("*pr2 != *pr3\n")
 	}
 
 	/*
@@ -174,13 +174,13 @@ public func main() -> ctypes64.Int {
 	ax = 111
 	bx = 222
 
-	stdio.printf("px.x = %i (must be 10)\n", px.x)
-	stdio.printf("px.y = %i (must be 20)\n", px.y)
+	stdio.("px.x = %i (must be 10)\n", px.x)
+	stdio.("px.y = %i (must be 20)\n", px.y)
 
 	if px == {x = 10, y = 20} {
-		stdio.printf("test passed\n")
+		stdio.("test passed\n")
 	} else {
-		stdio.printf("test failed\n")
+		stdio.("test failed\n")
 	}
 
 	test_records()

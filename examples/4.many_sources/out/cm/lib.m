@@ -3,6 +3,6 @@
 
 
 public func foo() -> Unit {
-	stdio.printf("hello from lib.foo\n")
+	stdio.("hello from lib.foo\n")
 }
 

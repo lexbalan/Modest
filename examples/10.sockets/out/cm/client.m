@@ -12,11 +12,11 @@ const port = 8080
 const bufSize = 1024
 
 
-func send_file(fp: *stdio.File, sockfd: ctypes64.Int) -> Bool {
-	var data: [bufSize]Char8
+func send_file(fp: *File, sockfd: Int) -> Bool {
+	var data: [<str_value>]Char8
 
-	while stdio.fgets(&data, bufSize, fp) != nil {
-		if socket.send(sockfd, &data, ctypes64.SizeT sizeof([bufSize]Char8), 0) == -1 {
+	while stdio.(&data, bufSize, fp) != nil {
+		if socket.(sockfd, &data, SizeT sizeof([<str_value>]Char8), 0) == -1 {
 			return false
 		}
 		data = []
@@ -26,47 +26,47 @@ func send_file(fp: *stdio.File, sockfd: ctypes64.Int) -> Bool {
 }
 
 
-public func main() -> ctypes64.Int {
-	let sockfd = socket.socket(socket.af_INET, socket.c_SOCK_STREAM, 0)
+public func main() -> Int {
+	let sockfd = socket.(socket., socket., 0)
 	if sockfd < 0 {
-		stdio.perror("[-] Error in socket")
-		stdlib.exit(1)
+		stdio.("[-] Error in socket")
+		stdlib.(1)
 	}
 
-	stdio.printf("[+] Server socket created\n")
+	stdio.("[+] Server socket created\n")
 
-	var server_addr: socket.SockAddrIn = socket.SockAddrIn {
-		sin_family = socket.af_INET
+	var server_addr: SockAddrIn = SockAddrIn {
+		sin_family = socket.
 		sin_port = port
 		sin_addr = {
-			s_addr = socket.inet_addr(ipAddress)
+			s_addr = socket.(ipAddress)
 		}
 	}
 
 	let sockaddr = &server_addr
-	var e: ctypes64.Int = socket.connect(sockfd, sockaddr, socket.SocklenT sizeof(socket.SockAddrIn))
+	var e: Int = socket.(sockfd, sockaddr, SocklenT sizeof(SockAddrIn))
 	if e < 0 {
-		stdio.perror("[-] Error in Connecting")
-		stdlib.exit(1)
+		stdio.("[-] Error in Connecting")
+		stdlib.(1)
 	}
 
-	stdio.printf("[+] Connected to server\n")
+	stdio.("[+] Connected to server\n")
 
-	let fp = stdio.fopen(filename, "r")
+	let fp = stdio.(filename, "r")
 	if fp == nil {
-		stdio.perror("[-] Error in reading file")
-		stdlib.exit(1)
+		stdio.("[-] Error in reading file")
+		stdlib.(1)
 	}
 
 	let suc = send_file(fp, sockfd)
 	if suc {
-		stdio.printf("[+] File data send successfully\n")
+		stdio.("[+] File data send successfully\n")
 	} else {
-		stdio.perror("[-] Error in sendung data")
+		stdio.("[-] Error in sendung data")
 	}
 
-	unistd.close(sockfd)
-	stdio.printf("[+] Disconnected from the server\n")
+	unistd.(sockfd)
+	stdio.("[+] Disconnected from the server\n")
 
 	return 0
 }

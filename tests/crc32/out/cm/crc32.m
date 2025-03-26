@@ -4,7 +4,7 @@
 
 public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 	let tableSize = 256
-	var crc_table: [tableSize]Word32
+	var crc_table: [<str_value>]Word32
 	var crc: Word32
 
 	//

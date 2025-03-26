@@ -6,7 +6,7 @@
 //$pragma c_include "./print.h"
 
 
-func my_printf(format: *Str8, ...) -> ctypes64.SSizeT {
+func my_printf(format: *Str8, ...) -> SSizeT {
 	var va: va_list
 	var va2: va_list
 
@@ -15,16 +15,16 @@ func my_printf(format: *Str8, ...) -> ctypes64.SSizeT {
 	__va_start(va2, format)
 
 	let strMaxLen = 127 + 1
-	var buf: [strMaxLen]Char8
-	let n = stdio.vsnprintf(&buf, strMaxLen, format, va2)
+	var buf: [<str_value>]Char8
+	let n = stdio.(&buf, strMaxLen, format, va2)
 
 	__va_end(va2)
 
-	return unistd.write(unistd.c_STDOUT_FILENO, &buf, ctypes64.SizeT n)
+	return unistd.(unistd., &buf, SizeT n)
 }
 
 
-public func main() -> ctypes64.Int {
+public func main() -> Int {
 	var k: Int32 = 10
 	my_printf("My Printf Test %d\n", k)
 

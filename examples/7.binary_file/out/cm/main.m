@@ -10,18 +10,18 @@ const filename = *Str8 "file.bin"
 
 // chunk of data for read/write operations in file
 type Chunk record {
-	id: [100]ctypes64.Char
-	data: [1024]ctypes64.Char
+	id: [<str_value>]Char
+	data: [<str_value>]Char
 }
 
 
 func write_example() -> Unit {
-	stdio.printf("run write_example\n")
+	stdio.("run write_example\n")
 
-	let fp = stdio.fopen(filename, "wb")
+	let fp = stdio.(filename, "wb")
 
 	if fp == nil {
-		stdio.printf("error: cannot create file '%s'", filename)
+		stdio.("error: cannot create file '%s'", filename)
 		return
 	}
 
@@ -29,39 +29,39 @@ func write_example() -> Unit {
 
 	// pointers casting requires -funsafe translator option
 	// (see Makefile)
-	string.strcpy(&(chunk.id), *[]ctypes64.Char "id")
-	string.strcpy(&(chunk.data), *[]ctypes64.Char "data")
+	string.(&(chunk.id), *[]Char "id")
+	string.(&(chunk.data), *[]Char "data")
 
 	// write chunk to file
-	stdio.fwrite(&chunk, sizeof(Chunk), 1, fp)
+	stdio.(&chunk, sizeof(Chunk), 1, fp)
 
-	stdio.fclose(fp)
+	stdio.(fp)
 }
 
 
 func read_example() -> Unit {
-	stdio.printf("run read_example\n")
+	stdio.("run read_example\n")
 
-	let fp = stdio.fopen(filename, "rb")
+	let fp = stdio.(filename, "rb")
 
 	if fp == nil {
-		stdio.printf("error: cannot open file '%s'", filename)
+		stdio.("error: cannot open file '%s'", filename)
 		return
 	}
 
 	var chunk: Chunk
-	stdio.fread(&chunk, sizeof(Chunk), 1, fp)
+	stdio.(&chunk, sizeof(Chunk), 1, fp)
 
-	stdio.printf("file \"%s\" contains:\n", filename)
-	stdio.printf("chunk.id: \"%s\"\n", &(chunk.id))
-	stdio.printf("chunk.data: \"%s\"\n", &(chunk.data))
+	stdio.("file \"%s\" contains:\n", filename)
+	stdio.("chunk.id: \"%s\"\n", &(chunk.id))
+	stdio.("chunk.data: \"%s\"\n", &(chunk.data))
 
-	stdio.fclose(fp)
+	stdio.(fp)
 }
 
 
-public func main() -> ctypes64.Int {
-	stdio.printf("binary file example\n")
+public func main() -> Int {
+	stdio.("binary file example\n")
 	write_example()
 	read_example()
 	return 0
