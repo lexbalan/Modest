@@ -66,8 +66,7 @@ static void f0(char *_x, char *sret_)
 static void test()
 {
 	// тестируем работу с локальным generic массивом
-	uint64_t yy[6];
-	ARRCPY((&yy), (&((uint8_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	})), (__lengthof(yy)));
+	uint64_t yy[6] = {0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	};
 	int32_t i = 0;
 	while (i < __lengthof(yy)) {
 		const uint64_t y = yy[i];
@@ -202,8 +201,7 @@ int main()
 
 	printf("------------------------------------\n");
 
-	int32_t localArray[3];
-	ARRCPY((&localArray), (&((uint8_t[3]){4, 5, 6	})), (__lengthof(localArray)));
+	int32_t localArray[3] = {4, 5, 6	};
 
 	i = 0;
 	while (i < 3) {
@@ -238,8 +236,7 @@ int main()
 
 	// assign array to array 1
 	// (with equal types)
-	int32_t a[3];
-	ARRCPY((&a), (&((uint8_t[3]){1, 2, 3	})), (__lengthof(a)));
+	int32_t a[3] = {1, 2, 3	};
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -262,8 +259,7 @@ int main()
 
 	// assign array to array 2
 	// (with array extending)
-	int32_t c[3];
-	ARRCPY((&c), (&((uint8_t[3]){10, 20, 30	})), (__lengthof(c)));
+	int32_t c[3] = {10, 20, 30	};
 	int32_t d[6];
 	ARRCPY((&d), (&c), (__lengthof(d)));
 	printf("d[0] = %i\n", d[0]);

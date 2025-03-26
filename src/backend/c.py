@@ -1548,19 +1548,19 @@ def print_stmt_var(x):
 	# литерал массива включающий в себя переменные
 	# то печатаем это иначе (w/ memcpy)
 
-	#if iv.type.is_array():
 	if var_value.type.is_array():
-		runtimeLiteral = isinstance(iv, ValueLiteral) and not iv.isImmediate()
-		if not runtimeLiteral:
-			out(";")
-			nl_indent()
-			do_assign(v, iv, x.ti)
-			return
 
 		if not init_value.isImmediate():
-			# array assignation by non-immediate value
-			out(";")
-			nl_indent(1)
+			runtimeLiteral = isinstance(iv, ValueLiteral)
+			if not runtimeLiteral:
+				out(";")
+				nl_indent()
+				do_assign(v, iv, x.ti)
+				return
+
+				# array assignation by non-immediate value
+				out(";")
+				nl_indent(1)
 
 			if init_value.isUndefined():
 				memzero(var_value)
@@ -1570,10 +1570,9 @@ def print_stmt_var(x):
 			out(";")
 			return
 
-	if not Value.isUndefined(init_value):
-		out(" = ")
-		#print_value(init_value)
-		out(str_static_initializer(init_value))
+	out(" = ")
+	#print_value(init_value)
+	out(str_static_initializer(init_value))
 
 	out(";")
 	return

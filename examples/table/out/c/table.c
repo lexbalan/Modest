@@ -28,8 +28,7 @@ void table_print(table_Table *table)
 	char *(*const data)[table->nRows][table->nCols] = (char *(*)[table->nRows][table->nCols])table->data;
 
 	// array of size of columns (in characters)
-	uint32_t sz[table->nCols];
-	memset(&sz, 0, sizeof(uint32_t[table->nCols]));
+	uint32_t sz[table->nCols] = {	};
 
 	//
 	// calculate max length (in chars) of column
