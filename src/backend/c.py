@@ -1584,39 +1584,34 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 
 def print_stmt_const(x):
 	id = x.id
-	v = x.value
-	iv = x.init_value
-
-	#if DONT_PRINT_UNUSED:
-	#	if v['usecnt'] == 0:
-	#		if iv['kind'] != 'call':
-	#			return
+	const_value = x.value
+	init_value = x.init_value
 
 	# print generic constant as C macro
-	if value_is_generic_immediate(v):
-		id_str = get_id_str(v)
+	if value_is_generic_immediate(const_value):
+		id_str = get_id_str(const_value)
 		# если точный тип константы неизвестен - печатаем ее как макро
-		print_macro_definition(id_str, iv)
+		print_macro_definition(id_str, init_value)
 		global func_undef_list
 		func_undef_list.append(id_str)
 		return
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
-	if iv.type.is_array():
-		runtimeLiteral = isinstance(iv, ValueLiteral) and iv.isRuntime()
+	if init_value.type.is_array():
+		runtimeLiteral = isinstance(init_value, ValueLiteral) and init_value.isRuntime()
 		if not runtimeLiteral:
-			print_variable(get_id_str(x), v.type)
+			print_variable(get_id_str(x), const_value.type)
 			out(";")
 			nl_indent()
-			do_assign(v, iv, x.ti)
+			do_assign(const_value, init_value, x.ti)
 			return
 
 	# Локальные константы (втч. композитные) печатаем как переменные
 	# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
-	print_variable(get_id_str(x), v.type, as_const=True)
+	print_variable(get_id_str(x), const_value.type, as_const=True)
 	out(" = ")
-	print_value(iv)
+	print_value(init_value)
 	out(";")
 	return
 
