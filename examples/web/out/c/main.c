@@ -27,7 +27,6 @@ static uint32_t pageCounter;
 static void handle_request(int32_t client_socket)
 {
 	uint8_t buffer[receive_buffer_size];
-	memset(&buffer, 0, sizeof(uint8_t[receive_buffer_size]));
 	const ssize_t bytes_received = read(client_socket, (uint8_t *)&buffer, __lengthof(buffer) - 1);
 	if (bytes_received < 0) {
 		perror("read");
@@ -39,7 +38,6 @@ static void handle_request(int32_t client_socket)
 	printf("Received request:\n%s\n", (char *)&buffer);
 
 	char response[send_buffer_size];
-	memset(&response, 0, sizeof(char[send_buffer_size]));
 	sprintf((char *)&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", httpHeader, pageCounter);
 
 	write(client_socket, (char *)&response, strlen((char *)&response));

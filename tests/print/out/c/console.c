@@ -50,7 +50,6 @@ void console_putchar_utf8(char c)
 void console_putchar_utf16(uint16_t c)
 {
 	uint16_t cc[2];
-	memset(&cc, 0, sizeof(uint16_t[2]));
 	cc[0] = c;
 	cc[1] = 0;
 	uint32_t char32;
@@ -61,7 +60,6 @@ void console_putchar_utf16(uint16_t c)
 void console_putchar_utf32(uint32_t c)
 {
 	char decoded_buf[4];
-	memset(&decoded_buf, 0, sizeof(char[4]));
 	const int32_t n = (int32_t)utf_utf32_to_utf8(c, &decoded_buf);
 
 	int32_t i = 0;
@@ -148,7 +146,6 @@ int32_t console_vsprint(char *buf, char *form, va_list va);
 int32_t console_vfprint(int32_t fd, char *form, va_list va)
 {
 	char strbuf[256];
-	memset(&strbuf, 0, sizeof(char[256]));
 	const int32_t n = console_vsprint((char *)&strbuf, form, va);
 	strbuf[n] = '\x0';
 	write(fd, (char *)&strbuf, ABS(n));
@@ -268,7 +265,6 @@ static char n_to_hex_sym(uint8_t n)
 static int32_t sprint_hex_nat32(char *buf, uint32_t x)
 {
 	char tmpbuf[8];
-	memset(&tmpbuf, 0, sizeof(char[8]));
 	uint32_t d = x;
 	int32_t i = 0;
 
@@ -300,7 +296,6 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x)
 static int32_t sprint_dec_int32(char *buf, int32_t x)
 {
 	char tmpbuf[11];
-	memset(&tmpbuf, 0, sizeof(char[11]));
 	int32_t d = x;
 	const bool neg = d < 0;
 
@@ -341,7 +336,6 @@ static int32_t sprint_dec_int32(char *buf, int32_t x)
 static int32_t sprint_dec_n32(char *buf, uint32_t x)
 {
 	char tmpbuf[11];
-	memset(&tmpbuf, 0, sizeof(char[11]));
 	uint32_t d = x;
 	int32_t i = 0;
 

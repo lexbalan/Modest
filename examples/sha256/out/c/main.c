@@ -51,7 +51,6 @@ static SHA256_TestCase test1 = {
 static bool doTest(SHA256_TestCase *test)
 {
 	sha256_Hash test_hash;
-	memset(&test_hash, 0, sizeof(sha256_Hash));
 	uint8_t *const msg = (uint8_t *)&test->input_data;
 	const uint32_t msg_len = test->input_data_len;
 

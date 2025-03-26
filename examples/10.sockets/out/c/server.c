@@ -18,7 +18,6 @@
 static bool write_file(int sockfd)
 {
 	char buffer[bufSize];
-	memset(&buffer, 0, sizeof(char[bufSize]));
 
 	FILE *const fp = fopen(filename, "w");
 	if (fp == NULL) {
