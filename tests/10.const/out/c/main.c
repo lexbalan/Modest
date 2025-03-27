@@ -12,7 +12,6 @@
 
 #define carr  {0, 10, 15, 20, 25, 30}
 
-
 struct Point {
 	double x;
 	double y;
@@ -30,8 +29,8 @@ typedef struct Line Line;
 #define pointOne  {.x = 1.0, .y = 1.0}
 
 #define line0  { \
-	.a = (Point)pointZero, \
-	.b = (Point)pointOne \
+	.a = pointZero, \
+	.b = pointOne \
 }
 
 #define line1  { \
@@ -40,8 +39,8 @@ typedef struct Line Line;
 }
 
 #define line2  { \
-	.a = (Point)pointZero, \
-	.b = (Point)pointOne \
+	.a = pointZero, \
+	.b = pointOne \
 }
 
 #define line3  { \
@@ -49,8 +48,7 @@ typedef struct Line Line;
 	.b = {.x = 30, .y = 40	} \
 }
 
-#define lines  {(Line)line0, (Line)line1, (Line)line2, (Line)line3}
-
+#define lines  {line0, line1, line2, line3}
 
 struct WrappedArray {
 	int32_t x;
@@ -76,10 +74,10 @@ static float lineLength(Line line)
 
 int main()
 {
-	const float lines_0_len = lineLength((Line[4])lines[0]);
-	const float lines_1_len = lineLength((Line[4])lines[1]);
-	const float lines_2_len = lineLength((Line[4])lines[2]);
-	const float lines_3_len = lineLength((Line[4])lines[3]);
+	const float lines_0_len = lineLength(((Line[4])lines)[0]);
+	const float lines_1_len = lineLength(((Line[4])lines)[1]);
+	const float lines_2_len = lineLength(((Line[4])lines)[2]);
+	const float lines_3_len = lineLength(((Line[4])lines)[3]);
 
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);

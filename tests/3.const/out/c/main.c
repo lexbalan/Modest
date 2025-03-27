@@ -27,10 +27,7 @@ typedef struct Point Point;
 	{.x = 2, .y = 2	} \
 }
 
-
-#define points  (struct {uint8_t x; uint8_t y; \
-}[3])ps
-
+#define points  (Point[3])ps
 
 // есть проблема - в C глобальные переменные с модификатором const
 // не могут быть так инициализированы, поскольку points является приведением

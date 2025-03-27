@@ -117,9 +117,6 @@ def init():
 	CC_LONG_LONG_SIZE_BITS = 64
 
 
-def value_is_generic_immediate(x):
-	return x.isImmediate() and x.type.is_generic()
-
 
 
 CONS_PRECEDENCE = 10
@@ -166,6 +163,20 @@ def precedence(x):
 		else: i = 12
 
 	return i
+
+
+
+
+
+def value_is_generic_immediate(v):
+	return v.isImmediate() and v.type.is_generic()
+
+#mass
+# такое значение определено как макрос
+def value_is_generic_immediate_const(v):
+	return v.isConst() and v.isImmediate() and v.type.is_generic()
+
+
 
 
 
@@ -708,7 +719,12 @@ def str_value_index(x, ctx):
 		if not is_sim_sim(left.type):
 			sstr += "(*"
 
-	sstr += str_value(left, ctx=ctx, parent_expr=x)
+	if value_is_generic_immediate_const(left):
+		ts = str_type(left.type)
+		vs = str_value(left, ctx=ctx, parent_expr=x)
+		sstr += '((%s)%s)' % (ts, vs)
+	else:
+		sstr += str_value(left, ctx=ctx, parent_expr=x)
 
 	if left.type.is_pointer():
 		if not is_sim_sim(left.type):
@@ -729,10 +745,17 @@ def str_value_access(x, ctx):
 	# и результат операции доступа - константа которая уже тут
 	#if left.type.is_generic():
 	#	if x.isImmediate():
-	if value_is_generic_immediate(left):
-		return str_value_literal(x, ['print_immediate'])
+	if not left.isConst():
+		if value_is_generic_immediate(left):
+			return str_value_literal(x, [])
 
-	sstr += str_value(left, parent_expr=x)
+	if value_is_generic_immediate_const(left):
+		ts = str_type(left.type)
+		vs = str_value(left, ctx=ctx, parent_expr=x)
+		sstr += '((%s)%s)' % (ts, vs)
+	else:
+		sstr += str_value(left, parent_expr=x)
+
 	if left.type.is_pointer():
 		sstr += ('->')
 	else:
@@ -1272,6 +1295,7 @@ def str_value_literal(x, ctx):
 def str_value_const(x, ctx):
 	sstr = ''
 
+	"""
 	if x.type.is_generic() and x.type.is_composite():
 		from trans import is_global_value
 		if is_global_value(x):
@@ -1279,6 +1303,7 @@ def str_value_const(x, ctx):
 
 	elif x.type.is_composite() and is_global_context():
 		sstr += '(%s)' % str_type(x.type)
+	"""
 
 	sstr += get_id_str(x)
 	return sstr
@@ -1325,6 +1350,9 @@ def str_value_offsetof(x, ctx):
 
 
 def str_value_lengthof(x, ctx):
+	if value_is_generic_immediate_const(x.value):
+		return str(x.value.type.volume.asset)
+
 	sstr = "__lengthof("
 	sstr += str_value(x.value)
 	sstr += ")"
@@ -1587,8 +1615,6 @@ def print_stmt_const(x):
 	id = x.id
 	const_value = x.value
 	init_value = x.init_value
-
-
 
 	# print generic constant as C macro
 	if value_is_generic_immediate(const_value):
@@ -2001,24 +2027,21 @@ def print_def_var(x, isdecl=False):
 	out(";")
 
 
+
+
 # В C нельзя присвоить глобальной переменной/константе композитное значение
 # но можно присвоить литерал композитного значения который не приведен к конкр. типу:
 # .arr = (uint8_t [3]){1, 2, 3}  // not worked
 # .arr = {1, 2, 3}  // worked
 def str_static_initializer(v):
 	root = get_root_value(v)
+
+	if value_is_generic_immediate_const(root):
+		return get_id_str(root)
+
 	if root.isImmediate():
-
-		# v.isLiteral() and
-		if root.type.is_generic():
-			id_str = get_id_str(root)
-			if id_str != None:
-				return id_str
-
 		if v.type.is_composite():
-
 			s = str_value_literal(root, [])
-
 			if root.type.is_string():
 				left_char_width = 0
 				if v.type.is_array():
@@ -2028,7 +2051,6 @@ def str_static_initializer(v):
 
 				if not s[0] in ['u', 'U']:
 					s = string_literal_prefix(left_char_width) + s
-			#return "/*$*/" + s
 			return s
 
 	return str_value(v)
@@ -2046,22 +2068,22 @@ def print_def_const(x):
 	# затем создаем одноименную переменную (инициализируем ее макроопределением).
 	# обычно будем использовать сам макрос,
 	# но в случае индексирования переменной - будем обращаться к переменной
-	if const_value.type.is_array():
-		print_macro_definition(id_str, init_value, val_ctx=[], prefix='')
-		newline()
-
-		t = const_value.type
-		from value.cons import _select_minimal_type_for
-		def_type = _select_minimal_type_for(t)
-		if def_type != None:
-			t = def_type
+#	if const_value.type.is_array():
+#		print_macro_definition(id_str, init_value, val_ctx=[], prefix='')
+#		newline()
+#
+#		t = const_value.type
+#		from value.cons import _select_minimal_type_for
+#		def_type = _select_minimal_type_for(t)
+#		if def_type != None:
+#			t = def_type
 
 #		if not x.hasAttribute('global'):
 #			out("static ")
 #		print_variable(id_str, t, as_const=True)
 #		out(" = _%s;" % id_str)
-		const_value.addAttribute('kostil')
-		return
+#		const_value.addAttribute('kostil')
+#		return
 
 	print_macro_definition(id_str, init_value, val_ctx=[])
 	return
@@ -2417,15 +2439,26 @@ def str_value_as_ptr(x):
 	if root.type.is_str() or root.type.is_string():
 		return "&" + str_value(root)
 
+
+	if value_is_generic_immediate_const(root):
+		vs = str_value(root)
+		ts = str_type(x.type)
+		return "&((%s)%s)" % (ts, vs)
+		return "&" + vs
+
 	if root.isImmediate():
 	#if root.isLiteral() or root.isConst():
+
+		if not root.type.is_generic():
+			return "&" + vs
+
 		if x.type.is_composite():
 			vs = str_value(root)
 
 			#if root.isConst() and 'global_entity' in x.att:
 			#if x.type.is_array():
-			if not root.type.is_generic():
-				return "&" + vs
+#			if not root.type.is_generic():
+#				return "&" + vs
 
 			if root.isConst() and 'global_entity' in x.att:
 				# глобальная константа-массив при печати (в str_value_const)
@@ -2434,8 +2467,8 @@ def str_value_as_ptr(x):
 				# а просто берем адрес
 				return "&" + vs
 
-			t = str_type(x.type)
-			return "&((%s)%s)" % (t, vs)
+			ts = str_type(x.type)
+			return "&((%s)%s)" % (ts, vs)
 
 
 	#print(x.__class__)

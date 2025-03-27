@@ -13,17 +13,12 @@
 // include test (!)
 
 #define ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
-
 #define ratSymbolUTF16  {0xD83D, 0xDC00}
-
 #define ratSymbolUTF32  0x0001F400
 
 #define arr_partycorn  "🎉"
-
 #define arr_unicorn  "🦄"
-
 #define arr_rat  "🐀"
-
 
 #define genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
 #define string8Const  (char *)genericStringConst

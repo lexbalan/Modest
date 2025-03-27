@@ -199,10 +199,11 @@ declare void @perror(%ConstCharStr* %str)
 @str9 = private constant [27 x i8] [i8 116, i8 101, i8 115, i8 116, i8 95, i8 103, i8 101, i8 110, i8 101, i8 114, i8 105, i8 99, i8 95, i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 @str10 = private constant [28 x i8] [i8 116, i8 101, i8 115, i8 116, i8 95, i8 103, i8 101, i8 110, i8 101, i8 114, i8 105, i8 99, i8 95, i8 114, i8 101, i8 99, i8 111, i8 114, i8 100, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str11 = private constant [29 x i8] [i8 116, i8 101, i8 115, i8 116, i8 95, i8 103, i8 101, i8 110, i8 101, i8 114, i8 105, i8 99, i8 95, i8 105, i8 110, i8 116, i8 101, i8 103, i8 101, i8 114, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str12 = private constant [26 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 97, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 93, i8 10, i8 0]
-@str13 = private constant [19 x i8] [i8 98, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 93, i8 10, i8 0]
-@str14 = private constant [19 x i8] [i8 99, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 93, i8 10, i8 0]
-@str15 = private constant [37 x i8] [i8 100, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 93, i8 10, i8 0]
+@str12 = private constant [12 x i8] [i8 97, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str13 = private constant [26 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 97, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 93, i8 10, i8 0]
+@str14 = private constant [19 x i8] [i8 98, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 93, i8 10, i8 0]
+@str15 = private constant [19 x i8] [i8 99, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 93, i8 10, i8 0]
+@str16 = private constant [37 x i8] [i8 100, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 93, i8 10, i8 0]
 ; -- endstrings --
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))
@@ -339,10 +340,30 @@ define internal %Bool @test_generic_array() {
 	%4 = alloca [4 x i8]
 	%5 = zext i8 4 to %Int32
 	store [4 x i8] %3, [4 x i8]* %4
+	%6 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %6
+; while_1
+	br label %again_1
+again_1:
+	%7 = load %Int32, %Int32* %6
+	%8 = icmp slt %Int32 %7, 4
+	br %Bool %8 , label %body_1, label %break_1
+body_1:
+	%9 = load %Int32, %Int32* %6
+	%10 = load %Int32, %Int32* %6
+	%11 = getelementptr [4 x i8], [4 x i8]* %4, %Int32 0, %Int32 %10
+	%12 = load i8, i8* %11
+	%13 = sext i8 %12 to %Int32
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str12 to [0 x i8]*), %Int32 %9, %Int32 %13)
+	%15 = load %Int32, %Int32* %6
+	%16 = add %Int32 %15, 1
+	store %Int32 %16, %Int32* %6
+	br label %again_1
+break_1:
 ; if_0
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str12 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str13 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
@@ -351,76 +372,76 @@ endif_0:
 	; can be implicit casted to Array with compatible type and same size
 
 	; implicit cast Generic([4]GenericInteger) value to [4]Int32
-	%8 = alloca [4 x %Int32], align 1
-	%9 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
-	%10 = insertvalue [4 x %Int32] %9, %Int32 2, 2
-	%11 = insertvalue [4 x %Int32] %10, %Int32 3, 3
-	%12 = zext i8 4 to %Int32
-	store [4 x %Int32] %11, [4 x %Int32]* %8
+	%19 = alloca [4 x %Int32], align 1
+	%20 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
+	%21 = insertvalue [4 x %Int32] %20, %Int32 2, 2
+	%22 = insertvalue [4 x %Int32] %21, %Int32 3, 3
+	%23 = zext i8 4 to %Int32
+	store [4 x %Int32] %22, [4 x %Int32]* %19
 ; if_1
-	%13 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
-	%14 = insertvalue [4 x %Int32] %13, %Int32 2, 2
-	%15 = insertvalue [4 x %Int32] %14, %Int32 3, 3
-	%16 = alloca [4 x %Int32]
-	%17 = zext i8 4 to %Int32
-	store [4 x %Int32] %15, [4 x %Int32]* %16
-	%18 = bitcast [4 x %Int32]* %8 to i8*
-	%19 = bitcast [4 x %Int32]* %16 to i8*
-	%20 = call i1 (i8*, i8*, i64) @memeq(i8* %18, i8* %19, %Int64 16)
-	%21 = icmp eq %Bool %20, 0
-	br %Bool %21 , label %then_1, label %endif_1
+	%24 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
+	%25 = insertvalue [4 x %Int32] %24, %Int32 2, 2
+	%26 = insertvalue [4 x %Int32] %25, %Int32 3, 3
+	%27 = alloca [4 x %Int32]
+	%28 = zext i8 4 to %Int32
+	store [4 x %Int32] %26, [4 x %Int32]* %27
+	%29 = bitcast [4 x %Int32]* %19 to i8*
+	%30 = bitcast [4 x %Int32]* %27 to i8*
+	%31 = call i1 (i8*, i8*, i64) @memeq(i8* %29, i8* %30, %Int64 16)
+	%32 = icmp eq %Bool %31, 0
+	br %Bool %32 , label %then_1, label %endif_1
 then_1:
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str13 to [0 x i8]*))
+	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str14 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:
 
 	; implicit cast Generic([4]GenericInteger) value to [4]Nat64
-	%24 = alloca [4 x %Int64], align 1
-	%25 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
-	%26 = insertvalue [4 x %Int64] %25, %Int64 2, 2
-	%27 = insertvalue [4 x %Int64] %26, %Int64 3, 3
-	%28 = zext i8 4 to %Int32
-	store [4 x %Int64] %27, [4 x %Int64]* %24
+	%35 = alloca [4 x %Int64], align 1
+	%36 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
+	%37 = insertvalue [4 x %Int64] %36, %Int64 2, 2
+	%38 = insertvalue [4 x %Int64] %37, %Int64 3, 3
+	%39 = zext i8 4 to %Int32
+	store [4 x %Int64] %38, [4 x %Int64]* %35
 ; if_2
-	%29 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
-	%30 = insertvalue [4 x %Int64] %29, %Int64 2, 2
-	%31 = insertvalue [4 x %Int64] %30, %Int64 3, 3
-	%32 = alloca [4 x %Int64]
-	%33 = zext i8 4 to %Int32
-	store [4 x %Int64] %31, [4 x %Int64]* %32
-	%34 = bitcast [4 x %Int64]* %24 to i8*
-	%35 = bitcast [4 x %Int64]* %32 to i8*
-	%36 = call i1 (i8*, i8*, i64) @memeq(i8* %34, i8* %35, %Int64 32)
-	%37 = icmp eq %Bool %36, 0
-	br %Bool %37 , label %then_2, label %endif_2
+	%40 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
+	%41 = insertvalue [4 x %Int64] %40, %Int64 2, 2
+	%42 = insertvalue [4 x %Int64] %41, %Int64 3, 3
+	%43 = alloca [4 x %Int64]
+	%44 = zext i8 4 to %Int32
+	store [4 x %Int64] %42, [4 x %Int64]* %43
+	%45 = bitcast [4 x %Int64]* %35 to i8*
+	%46 = bitcast [4 x %Int64]* %43 to i8*
+	%47 = call i1 (i8*, i8*, i64) @memeq(i8* %45, i8* %46, %Int64 32)
+	%48 = icmp eq %Bool %47, 0
+	br %Bool %48 , label %then_2, label %endif_2
 then_2:
-	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str14 to [0 x i8]*))
+	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str15 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_2
 endif_2:
 
 	; explicit cast Generic([4]GenericInteger) value to [10]Int32
-	%40 = alloca [10 x %Int32], align 1
-	%41 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
-	%42 = insertvalue [10 x %Int32] %41, %Int32 2, 2
-	%43 = insertvalue [10 x %Int32] %42, %Int32 3, 3
-	%44 = zext i8 10 to %Int32
-	store [10 x %Int32] %43, [10 x %Int32]* %40
+	%51 = alloca [10 x %Int32], align 1
+	%52 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
+	%53 = insertvalue [10 x %Int32] %52, %Int32 2, 2
+	%54 = insertvalue [10 x %Int32] %53, %Int32 3, 3
+	%55 = zext i8 10 to %Int32
+	store [10 x %Int32] %54, [10 x %Int32]* %51
 ; if_3
-	%45 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
-	%46 = insertvalue [10 x %Int32] %45, %Int32 2, 2
-	%47 = insertvalue [10 x %Int32] %46, %Int32 3, 3
-	%48 = alloca [10 x %Int32]
-	%49 = zext i8 10 to %Int32
-	store [10 x %Int32] %47, [10 x %Int32]* %48
-	%50 = bitcast [10 x %Int32]* %40 to i8*
-	%51 = bitcast [10 x %Int32]* %48 to i8*
-	%52 = call i1 (i8*, i8*, i64) @memeq(i8* %50, i8* %51, %Int64 40)
-	%53 = icmp eq %Bool %52, 0
-	br %Bool %53 , label %then_3, label %endif_3
+	%56 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
+	%57 = insertvalue [10 x %Int32] %56, %Int32 2, 2
+	%58 = insertvalue [10 x %Int32] %57, %Int32 3, 3
+	%59 = alloca [10 x %Int32]
+	%60 = zext i8 10 to %Int32
+	store [10 x %Int32] %58, [10 x %Int32]* %59
+	%61 = bitcast [10 x %Int32]* %51 to i8*
+	%62 = bitcast [10 x %Int32]* %59 to i8*
+	%63 = call i1 (i8*, i8*, i64) @memeq(i8* %61, i8* %62, %Int64 40)
+	%64 = icmp eq %Bool %63, 0
+	br %Bool %64 , label %then_3, label %endif_3
 then_3:
-	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str15 to [0 x i8]*))
+	%65 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str16 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_3
 endif_3:

@@ -22,7 +22,6 @@
 
 #define constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-
 static int32_t globalArray[10] = constantArray;
 
 static char arrayFromString[3] = "abc";
@@ -59,9 +58,7 @@ static void f0(char *_x, char *sret_)
 }
 
 #define startSequence  {0xAA, 0x55, 0x02}
-
 #define stopSequence  {0x16}
-
 
 static void test()
 {

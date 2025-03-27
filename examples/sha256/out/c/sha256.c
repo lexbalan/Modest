@@ -72,10 +72,9 @@ static inline uint32_t sig1(uint32_t x)
 	0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 \
 }
 
-
 static void contextInit(Context *ctx)
 {
-	ARRCPY((&ctx->state), (&(uint32_t[8])initalState), (8));
+	ARRCPY((&ctx->state), (&((uint32_t[8])initalState)), (8));
 }
 
 #define k  { \
@@ -96,7 +95,6 @@ static void contextInit(Context *ctx)
 	0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, \
 	0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2 \
 }
-
 
 static void transform(Context *ctx, uint8_t *data)
 {
@@ -123,7 +121,7 @@ static void transform(Context *ctx, uint8_t *data)
 
 	i = 0;
 	while (i < 64) {
-		const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + (uint32_t[64])k[i] + m[i];
+		const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + ((uint32_t[64])k)[i] + m[i];
 		const uint32_t t2 = ep0(x[0]) + maj(x[0], x[1], x[2]);
 
 		x[7] = x[6];

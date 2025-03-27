@@ -45,12 +45,11 @@ static void xxx(uint8_t *p)
 #define ca  4
 static int32_t va = ca;
 
-#define p0  {.x = 0, .y = 0}
+#define p0  {.x = 1, .y = 2}
 static struct {uint8_t x; uint8_t y;
 } p = p0;
 
 #define ini  {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-
 
 int32_t main()
 {
@@ -58,6 +57,9 @@ int32_t main()
 	printf("test %s\n", (char *)main_cq);
 	printf("test %d\n", main_v0);
 	main_f0();
+
+	printf("p0.x = %d\n", ((struct {uint8_t x; uint8_t y;
+	})p0).x);
 
 	int32_t x1 = 5;
 	int32_t x2 = 15;

@@ -38,7 +38,7 @@ func xxx(p: *[]Word8) -> Unit {
 const ca = 4
 var va = ca
 
-const p0 = {x=0, y=0}
+const p0 = {x=1, y=2}
 var p = p0
 
 const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -48,6 +48,8 @@ public func main() -> Int32 {
 	printf("test %s\n", *Str8 cq)
 	printf("test %d\n", v0)
 	f0()
+
+	printf("p0.x = %d\n", p0.x)
 
 	var x1 = 5
 	var x2 = 15
