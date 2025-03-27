@@ -420,8 +420,8 @@ def str_type_pointer(t, label='', core='', as_ptr_to_array=False):
 
 def is_sim_sim(t):
 	if t.is_pointer_to_array():
-		if not t.to.hasAttribute('alias'):
-			return is_type_named(t.to.of)
+		return is_type_named(t.to.of)
+	return False
 
 
 
