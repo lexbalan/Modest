@@ -16,9 +16,9 @@
 #define str32_example  (U"String-Ω 🐀🎉🦄")
 
 // variables with type Array of Chars
-static char string8[6] = "String";
-static uint16_t string16[8] = u"String-Ω";
-static uint32_t string32[12] = U"String-Ω 🐀🎉🦄";
+static char string8[6] = str8_example;
+static uint16_t string16[8] = str16_example;
+static uint32_t string32[12] = str32_example;
 
 // variables with type Pointer to Array of Chars
 static char *ptr_to_string8 = str8_example;

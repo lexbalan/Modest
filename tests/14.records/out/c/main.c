@@ -125,7 +125,7 @@ int main()
 
 	// compare Point2D with anonymous record
 	Point2D p2d2 = p2d0;
-	struct __anonymous_struct_5 p2d3 = {.x = 1, .y = 2	};
+	struct __anonymous_struct_5 p2d3 = xx;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(Point2D)) == 0) {
 		printf("p2d2 == p2d3\n");

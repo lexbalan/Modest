@@ -34,6 +34,13 @@ func xxx(p: *[]Word8) -> Unit {
 }
 
 
+
+const ca = 4
+var va = ca
+
+const p0 = {x=0, y=0}
+var p = p0
+
 const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 public func main() -> Int32 {

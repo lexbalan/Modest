@@ -63,6 +63,9 @@ def pointer_can(to, from_type, method, ti):
 	if from_type.is_pointer():
 		return True  # Ptr -> Ptr
 
+	if from_type.is_word():
+		return True  # Word -> Ptr
+
 	return False
 
 

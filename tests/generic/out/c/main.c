@@ -76,8 +76,8 @@ static bool test_generic_integer()
 	uint64_t b = one;
 
 	// to Float
-	float f = (float)one;
-	double g = (double)one;
+	float f = one;
+	double g = one;
 
 	// and to Word8
 	uint8_t x = one;
@@ -85,9 +85,9 @@ static bool test_generic_integer()
 
 	// explicit cast GenericInteger value
 
-	char c = (char)one;
-	uint16_t d = (uint16_t)one;
-	uint32_t e = (uint32_t)one;
+	char c = one;
+	uint16_t d = one;
+	uint32_t e = one;
 
 	bool k = one != 0;
 
@@ -109,7 +109,7 @@ static bool test_generic_float()
 	double g = pi;
 
 	// explicit cast GenericFloat value to Int32
-	int32_t x = (int32_t)pi;
+	int32_t x = pi;
 
 	return true;
 
@@ -124,12 +124,12 @@ static bool test_generic_char()
 
 	// value with GenericChar type
 	// can be implicit casted to any Char type
-	char b = 'A';
-	uint16_t c = u'A';
-	uint32_t d = U'A';
+	char b = a;
+	uint16_t c = a;
+	uint32_t d = a;
 
 	// explicit cast GenericChar value to Int32
-	int32_t char_code = (int32_t)(uint32_t)U'A';
+	int32_t char_code = a;
 
 	return true;
 
@@ -169,7 +169,7 @@ static bool test_generic_array()
 	}
 
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
-	int32_t d[10] = {0, 1, 2, 3	};
+	int32_t d[10] = a;
 
 	if (memcmp(&d, &((int32_t[10]){0, 1, 2, 3, 0	}), sizeof(int32_t[10])) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");

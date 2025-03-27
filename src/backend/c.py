@@ -175,6 +175,9 @@ def get_id_str(x):
 
 	id = x.id
 
+	if id == None:
+		return None
+
 	if id.c != None:
 		return id.c
 
@@ -2005,12 +2008,14 @@ def print_def_var(x, isdecl=False):
 def str_static_initializer(v):
 	root = get_root_value(v)
 	if root.isImmediate():
-		if v.type.is_composite():
 
-			if v.isLiteral():
-				id_str = get_id_str(root)
-				if id_str != None:
-					return id_str
+		# v.isLiteral() and
+		if root.type.is_generic():
+			id_str = get_id_str(root)
+			if id_str != None:
+				return id_str
+
+		if v.type.is_composite():
 
 			s = str_value_literal(root, [])
 
@@ -2023,6 +2028,7 @@ def str_static_initializer(v):
 
 				if not s[0] in ['u', 'U']:
 					s = string_literal_prefix(left_char_width) + s
+			#return "/*$*/" + s
 			return s
 
 	return str_value(v)
@@ -2407,6 +2413,9 @@ def str_value_as_ptr(x):
 	sstr = ''
 	yy = x
 	root = get_root_value(x)
+
+	if root.type.is_str() or root.type.is_string():
+		return "&" + str_value(root)
 
 	if root.isImmediate():
 	#if root.isLiteral() or root.isConst():
