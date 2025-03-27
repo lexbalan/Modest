@@ -147,7 +147,7 @@ int main()
 	Point2D *const pr2 = &p2d2;
 	struct __anonymous_struct_5 *const pr3 = &p2d3;
 
-	if (memcmp(&pr2, &pr3, sizeof(Point2D)) == 0) {
+	if (memcmp(pr2, pr3, sizeof(Point2D)) == 0) {
 		printf("*pr2 == *pr3\n");
 	} else {
 		printf("*pr2 != *pr3\n");

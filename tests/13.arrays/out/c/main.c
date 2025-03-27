@@ -271,7 +271,7 @@ int main()
 	int32_t *const pa = &a;
 	int32_t *const pb = &b;
 
-	if (memcmp(&pa, &pb, sizeof(int32_t[3])) == 0) {
+	if (memcmp(pa, pb, sizeof(int32_t[3])) == 0) {
 		printf("*pa == *pb\n");
 	} else {
 		printf("*pa != *pb\n");

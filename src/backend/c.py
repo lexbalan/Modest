@@ -2460,7 +2460,8 @@ def str_value_as_ptr(x):
 		sstr += '(%s)' % sptr
 
 	if isinstance(root, ValueDeref):
-		return "&" + str_value(root.value)
+		return str_value(root.value)
+
 
 	if isinstance(root, ValueLiteral):
 		if root.type.is_string():
