@@ -1287,32 +1287,13 @@ def str_value_literal(x, ctx):
 
 
 def str_value_const(x, ctx):
-	sstr = ''
+	return get_id_str(x)
 
-	"""
-	if x.type.is_generic() and x.type.is_composite():
-		from trans import is_global_value
-		if is_global_value(x):
-			sstr += '(%s)' % str_type(x.type)
-
-	elif x.type.is_composite() and is_global_context():
-		sstr += '(%s)' % str_type(x.type)
-	"""
-
-	sstr += get_id_str(x)
-	return sstr
-
-
+def str_value_var(x, ctx):
+	return get_id_str(x)
 
 def str_value_func(x, ctx):
 	return get_id_str(x)
-
-
-def str_value_var(x, ctx):
-	y = get_id_str(x)
-	if y == None:
-		print(":" + str(x))
-	return y
 
 
 def str_value_sizeof_value(x, ctx):
