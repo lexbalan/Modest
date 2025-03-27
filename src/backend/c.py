@@ -712,28 +712,22 @@ def str_value_new(x, ctx):
 
 
 def str_value_index(x, ctx):
-	sstr = ''
 	left = x.left
 
-	if left.type.is_pointer():
-		if not is_sim_sim(left.type):
-			sstr += "(*"
+	left_str = ''
 
 	if value_is_generic_immediate_const(left):
 		ts = str_type(left.type)
 		vs = str_value(left, ctx=ctx, parent_expr=x)
-		sstr += '((%s)%s)' % (ts, vs)
+		left_str = '((%s)%s)' % (ts, vs)
 	else:
-		sstr += str_value(left, ctx=ctx, parent_expr=x)
+		left_str = str_value(left, ctx=ctx, parent_expr=x)
 
-	if left.type.is_pointer():
-		if not is_sim_sim(left.type):
-			sstr += (")")
 
-	sstr += "["
-	sstr += str_value(x.index)
-	sstr += "]"
-	return sstr
+	if left.type.is_pointer() and not is_sim_sim(left.type):
+		left_str = "(*%s)" % left_str
+
+	return left_str + '[' + str_value(x.index) + ']'
 
 
 
