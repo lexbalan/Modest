@@ -2430,7 +2430,8 @@ def str_value_as_ptr(x):
 	yy = x
 	root = get_root_value(x)
 
-	if root.type.is_str() or root.type.is_string():
+	#root.type.is_str() or
+	if root.type.is_string():
 		return "&" + str_value(root)
 
 
