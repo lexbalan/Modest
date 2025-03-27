@@ -2424,10 +2424,11 @@ def cons_vla_from_literal_array(x):
 	return False
 
 
-# получает значение, печатает указатель на его корень (корневое значение)
+# получает значение, печатает указатель на его корневое значение
 def str_value_as_ptr(x):
 	sstr = ''
-	yy = x
+
+	t = x.type
 	root = get_root_value(x)
 
 	#root.type.is_str() or
@@ -2449,8 +2450,6 @@ def str_value_as_ptr(x):
 		# and for getting pointer to this string
 		# we need to print just string literal,
 		# because in C string literal is pointer to c-string
-		#if x.type.is_str() and
-		#sstr += "/**/"
 		if x.value.type.is_string():
 			return str_value(x.value)
 
@@ -2462,7 +2461,6 @@ def str_value_as_ptr(x):
 	if isinstance(root, ValueDeref):
 		return str_value(root.value)
 
-
 	if isinstance(root, ValueLiteral):
 		if root.type.is_string():
 			return str_value(root)
@@ -2470,8 +2468,6 @@ def str_value_as_ptr(x):
 
 	sstr += "&"
 
-	t = yy.type
-	# КОСТЫЛЬ!
 
 	if isinstance(root, ValueBin) and root.op in ['literal', 'add']:
 		sstr += '(' + str_type(t) + ')'
