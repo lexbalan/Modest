@@ -2435,42 +2435,13 @@ def str_value_as_ptr(x):
 		return "&" + str_value(root)
 
 
-	if value_is_generic_immediate_const(root):
-		vs = str_value(root)
-		ts = str_type(x.type)
-		return "&((%s)%s)" % (ts, vs)
-		return "&" + vs
-
 	if root.isImmediate():
-	#if root.isLiteral() or root.isConst():
-
-		if not root.type.is_generic():
-			return "&" + vs
-
-		if x.type.is_composite():
+		if x.type.is_composite() or value_is_generic_immediate_const(root):
+			# generic immediate const is just a macro!
 			vs = str_value(root)
-
-			#if root.isConst() and 'global_entity' in x.att:
-			#if x.type.is_array():
-#			if not root.type.is_generic():
-#				return "&" + vs
-
-			if root.isConst() and 'global_entity' in x.att:
-				# глобальная константа-массив при печати (в str_value_const)
-				# печатается как приведение к типу массива
-				# поэтому не приводим еще раз (что в си будет ощибкой),
-				# а просто берем адрес
-				return "&" + vs
-
 			ts = str_type(x.type)
 			return "&((%s)%s)" % (ts, vs)
 
-
-	#print(x.__class__)
-	#if x.type.is_array():
-	#	# поскольку массив в C является в некотором роде указателем
-	#	if isinstance(x, ValueVar) or isinstance(x, ValueConst) or isinstance(x, ValueAccessRecord):
-	#		return str_value(x)
 
 	if isinstance(x, ValueCons):
 		# for *s == "Hi!"
