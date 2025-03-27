@@ -9,8 +9,8 @@ include "libc/socket"
 
 const port = 8080
 
-const receive_buffer_size = 1024
-const send_buffer_size = 1024
+const receiveBufferSize = 1024
+const sendBufferSize = 1024
 
 const httpHeader = *Str8 (
 	"HTTP/1.1 200 OK\r\n" +
@@ -30,8 +30,8 @@ func htons(x: Word16) -> Word16 {
 }
 
 
-func handle_request(client_socket: Int32) -> Unit {
-	var buffer: [receive_buffer_size]Word8
+func handleRequest(client_socket: Int32) -> Unit {
+	var buffer: [receiveBufferSize]Word8
     let bytes_received = read(client_socket, &buffer, lengthof(buffer) - 1)
     if bytes_received < 0 {
         perror("read")
@@ -42,7 +42,7 @@ func handle_request(client_socket: Int32) -> Unit {
 
     printf("Received request:\n%s\n", unsafe *Str8 &buffer)
 
-	var response: [send_buffer_size]Char8
+	var response: [sendBufferSize]Char8
 	sprintf(
 		&response,
 		"%s<html><body><h1>Hello, World! (%d)</h1></body></html>",
@@ -99,7 +99,7 @@ public func main() -> Int32 {
             perror("accept")
             again
         }
-        handle_request(client_socket)
+        handleRequest(client_socket)
 		++pageCounter
     }
 

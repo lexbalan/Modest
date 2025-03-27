@@ -351,7 +351,7 @@ define internal %Word16 @htons(%Word16 %x) {
 	ret %Word16 %5
 }
 
-define internal void @handle_request(%Int32 %client_socket) {
+define internal void @handleRequest(%Int32 %client_socket) {
 	%1 = alloca [1024 x %Word8], align 1
 	%2 = bitcast [1024 x %Word8]* %1 to i8*
 	%3 = call %SSizeT @read(%Int32 %client_socket, i8* %2, %SizeT 1023)
@@ -450,7 +450,7 @@ then_3:
 	br label %again_1
 	br label %endif_3
 endif_3:
-	call void @handle_request(%Int %23)
+	call void @handleRequest(%Int %23)
 	%26 = load %Int32, %Int32* @pageCounter
 	%27 = add %Int32 %26, 1
 	store %Int32 %27, %Int32* @pageCounter

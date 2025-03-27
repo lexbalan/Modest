@@ -8,8 +8,8 @@
 
 const port = 8080
 
-const receive_buffer_size = 1024
-const send_buffer_size = 1024
+const receiveBufferSize = 1024
+const sendBufferSize = 1024
 
 const httpHeader = *Str8 ("HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n" + "Connection: close\r\n" + "\r\n")
 
@@ -24,7 +24,7 @@ func htons(x: Word16) -> Word16 {
 }
 
 
-func handle_request(client_socket: Int32) -> Unit {
+func handleRequest(client_socket: Int32) -> Unit {
 	var buffer: [<str_value>]Word8
 	let bytes_received = unistd.(client_socket, &buffer, lengthof(buffer) - 1)
 	if bytes_received < 0 {
@@ -88,7 +88,7 @@ public func main() -> Int32 {
 			stdio.("accept")
 			again
 		}
-		handle_request(client_socket)
+		handleRequest(client_socket)
 		pageCounter = pageCounter + 1
 	}
 

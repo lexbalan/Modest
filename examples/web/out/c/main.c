@@ -17,16 +17,16 @@
 
 #define port  8080
 
-#define receive_buffer_size  1024
-#define send_buffer_size  1024
+#define receiveBufferSize  1024
+#define sendBufferSize  1024
 
 #define httpHeader  (char *)("HTTP/1.1 200 OK\r\n" "Content-Type: text/html\r\n" "Connection: close\r\n" "\r\n")
 
 static uint32_t pageCounter;
 
-static void handle_request(int32_t client_socket)
+static void handleRequest(int32_t client_socket)
 {
-	uint8_t buffer[receive_buffer_size];
+	uint8_t buffer[receiveBufferSize];
 	const ssize_t bytes_received = read(client_socket, (uint8_t *)&buffer, __lengthof(buffer) - 1);
 	if (bytes_received < 0) {
 		perror("read");
@@ -37,7 +37,7 @@ static void handle_request(int32_t client_socket)
 
 	printf("Received request:\n%s\n", (char *)&buffer);
 
-	char response[send_buffer_size];
+	char response[sendBufferSize];
 	sprintf((char *)&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", httpHeader, pageCounter);
 
 	write(client_socket, (char *)&response, strlen((char *)&response));
@@ -89,7 +89,7 @@ int32_t main()
 			perror("accept");
 			continue;
 		}
-		handle_request(client_socket);
+		handleRequest(client_socket);
 		pageCounter = pageCounter + 1;
 	}
 
