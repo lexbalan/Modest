@@ -406,8 +406,8 @@ def str_type_pointer(t, label='', core='', as_ptr_to_array=False):
 		tx = tx.to
 		c += '*'
 
-	if is_sim_sim(t):
-		if not as_ptr_to_array:
+	if not as_ptr_to_array:
+		if is_sim_sim(t):
 			tx = tx.of
 
 	if not is_type_named(tx):
