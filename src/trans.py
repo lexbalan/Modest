@@ -1145,7 +1145,7 @@ def do_value_call(x):
 			id = None
 			if a['key'] != None:
 				id = Id(a['key'])
-			args.append(Initializer(id, arg))
+			args.append(Initializer(id, arg, ti=a['ti'], nl=a['nl']))
 
 
 		i += 1
@@ -1160,7 +1160,8 @@ def do_value_call(x):
 
 	# extra_args rest args
 	while i < nargs:
-		a = x['args'][i]['value']
+		ini = x['args'][i]
+		a = ini['value']
 		argval = do_rvalue(a)
 
 		if not argval.isBad():
@@ -1171,7 +1172,7 @@ def do_value_call(x):
 			if argval.isRuntime():
 				imm_args = False
 
-			extra_args.append(Initializer(id, argval))
+			extra_args.append(Initializer(id, argval, ti=ini['ti'], nl=ini['nl']))
 
 		i += 1
 

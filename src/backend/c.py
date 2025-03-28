@@ -662,8 +662,18 @@ def str_value_call(v, ctx, sret=None):
 
 	sstr += ("(")
 
+	need_sk = False
+
 	i = 0
 	while i < n:
+		sk = args[i].nl > 0
+		if sk:
+			need_sk = True
+			sstr += '\n' * args[i].nl
+			indent_up()
+			sstr += indent_str(INDENT_SYMBOL)
+			indent_down()
+
 		a = args[i].value
 
 		# не всегда когда есть аргумент есть и соотв ему параметер (!)
@@ -684,12 +694,18 @@ def str_value_call(v, ctx, sret=None):
 
 		i = i + 1
 		if i < n:
-			sstr += (", ")
+			if sk:
+				sstr += ","
+			else:
+				sstr += ", "
 
 	if sret != None:
 		if i > 0:
 			sstr += (", ")
 		sstr += str_value_as_ptr(sret)
+
+	if need_sk:
+		sstr += "\n" + indent_str(INDENT_SYMBOL)
 
 	sstr += (")")
 	return sstr

@@ -793,11 +793,19 @@ class Parser:
 				args = []
 				while not self.match(")"):
 					arg = None
-					self.skip_tokens_class(['nl'])
+					#print(self.ctok())
+					#mass
+					#self.skip_tokens_class(['nl'])
+					nl_cnt = 0
+					while self.token_class_is('nl'):
+						self.skip()
+						nl_cnt += 1
+
+					if self.match(")"):
+						break
 
 					arg_ti = self.ti()
 					arg_value = self.expr_value()
-					nl_cnt = 0
 					arg_id = None
 					if self.match("="):
 						if arg_value['kind'] != 'id':
@@ -820,15 +828,20 @@ class Parser:
 					}
 					args.append(arg)
 
-					self.need_sep(separators=[',', '\n'], stoppers=[')'])
+					if not self.token_class_is('nl'):
+						self.need_sep(separators=[',', '\n'], stoppers=[')'])
+
+
 
 				v = {
 					'isa': 'ast_value',
 					'kind': 'call',
 					'left': v,
 					'args': args,
+					'nl': 0,
 					'ti': ti
 				}
+
 			elif self.match("."):
 				field_id = self.identifier()
 				ti['start'] = v['ti']

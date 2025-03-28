@@ -335,18 +335,29 @@ def str_value_call(x, ctx):
 	s += "("
 	i = 0
 	args = x.args
+	need_sk = False
 	n = len(args)
 	while i < n:
 		arg = args[i]
-		if i > 0:
+
+		if arg.nl > 0:
+			need_sk = True
+			s += '\n' * args[i].nl
+			indent_up()
+			s += indent_s()
+			indent_down()
+		elif i > 0:
 			s += ", "
 
 		if arg.id != None:
 			s += "%s = " % get_id_str(arg)
 		s += str_value(arg.value)
 
-
 		i = i + 1
+
+	if need_sk:
+		s += "\n" + indent_s()
+
 	s += ")"
 	return s
 
