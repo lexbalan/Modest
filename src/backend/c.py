@@ -2381,16 +2381,9 @@ def run(module, _outname, options):
 
 
 
-# возвращает само значение из цепочки cons
-# (если только это не cons который приводит generic_composite,
-# тк такой cons нужно печатать)
+# возвращает корневое значение из цепочки ValueCons
 def get_root_value(x):
 	if isinstance(x, ValueCons):
-		# конструирование complex_immediate печатаем
-		# for: (uint32_t[3]){1, 2, 3}
-		# for: (Point){.x=1, .y=2}
-#		if x.value.isImmediate():
-#			return x
 		return get_root_value(x.value)
 	return x
 
