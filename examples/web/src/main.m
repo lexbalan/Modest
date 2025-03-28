@@ -46,8 +46,7 @@ func handleRequest(client_socket: Int32) -> Unit {
 	sprintf(
 		&response,
 		"%s<html><body><h1>Hello, World! (%d)</h1></body></html>",
-		httpHeader,
-		pageCounter
+		httpHeader, pageCounter
 	)
 
     write(client_socket, &response, strlen(&response))
@@ -58,7 +57,7 @@ func handleRequest(client_socket: Int32) -> Unit {
 public func main() -> Int32 {
     let server_socket = socket(af_INET, c_SOCK_STREAM, 0)
     if server_socket < 0 {
-        perror("socket")
+        perror("cannot create socket")
         exit(1)
     }
 
@@ -74,7 +73,7 @@ public func main() -> Int32 {
 	let socadr = unsafe *SockAddr &server_addr
 	var rc = bind(server_socket, socadr, sizeof(server_addr))
     if rc < 0 {
-        perror("bind")
+        perror("cannot bind socket")
         close(server_socket)
         exit(1)
     }
@@ -82,7 +81,7 @@ public func main() -> Int32 {
     // Starting listen to connection
 	rc = listen(server_socket, 5)
     if rc < 0 {
-        perror("listen")
+        perror("cannot listen socket")
         close(server_socket)
         exit(1)
     }
@@ -96,7 +95,7 @@ public func main() -> Int32 {
 		var client_adr_len: SocklenT = sizeof(client_addr)
         let client_socket = accept(server_socket, socadr, &client_adr_len)
         if client_socket < 0 {
-            perror("accept")
+            perror("cannot accept connection")
             again
         }
         handleRequest(client_socket)
