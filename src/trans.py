@@ -1142,11 +1142,11 @@ def do_value_call(x):
 			if not arg.isImmediate():
 				imm_args = False
 
+			id = None
 			if a['key'] != None:
 				id = Id(a['key'])
-				args.append(Initializer(id, arg))
-			else:
-				args.append(arg)
+			args.append(Initializer(id, arg))
+
 
 		i += 1
 
@@ -1171,7 +1171,7 @@ def do_value_call(x):
 			if argval.isRuntime():
 				imm_args = False
 
-			extra_args.append(argval)
+			extra_args.append(Initializer(id, argval))
 
 		i += 1
 

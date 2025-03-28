@@ -341,13 +341,10 @@ def str_value_call(x, ctx):
 		if i > 0:
 			s += ", "
 
-
-		if isinstance(arg, Initializer):
-			# named parameter
+		if arg.id != None:
 			s += "%s = " % get_id_str(arg)
-			s += str_value(arg.value)
-		else:
-			s += str_value(arg)
+		s += str_value(arg.value)
+
 
 		i = i + 1
 	s += ")"

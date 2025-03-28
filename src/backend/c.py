@@ -664,11 +664,7 @@ def str_value_call(v, ctx, sret=None):
 
 	i = 0
 	while i < n:
-		a = None
-		if isinstance(args[i], Initializer):
-			a = args[i].value
-		else:
-			a = args[i]
+		a = args[i].value
 
 		# не всегда когда есть аргумент есть и соотв ему параметер (!)
 		try:
