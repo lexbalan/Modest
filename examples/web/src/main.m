@@ -34,7 +34,7 @@ func handleRequest(client_socket: Int32) -> Unit {
 	var buffer: [receiveBufferSize]Word8
     let bytes_received = read(client_socket, &buffer, lengthof(buffer) - 1)
     if bytes_received < 0 {
-        perror("read")
+        perror("cannot read socket")
         close(client_socket)
         return
     }

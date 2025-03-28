@@ -28,7 +28,7 @@ func handleRequest(client_socket: Int32) -> Unit {
 	var buffer: [receiveBufferSize]Word8
 	let bytes_received = unistd.read(client_socket, &buffer, lengthof(buffer) - 1)
 	if bytes_received < 0 {
-		stdio.perror("read")
+		stdio.perror("cannot read socket")
 		unistd.close(client_socket)
 		return
 	}

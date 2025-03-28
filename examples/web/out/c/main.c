@@ -29,7 +29,7 @@ static void handleRequest(int32_t client_socket)
 	uint8_t buffer[receiveBufferSize];
 	const ssize_t bytes_received = read(client_socket, (uint8_t *)&buffer, __lengthof(buffer) - 1);
 	if (bytes_received < 0) {
-		perror("read");
+		perror("cannot read socket");
 		close(client_socket);
 		return;
 	}
