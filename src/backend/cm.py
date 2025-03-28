@@ -96,7 +96,7 @@ def str_id_for(x):
 	xm = x.getModule()
 	if xm != None:
 		if xm != cmodule:
-			return "%s." % xm.id
+			return "%s.%s" % (xm.id, x.id.str)
 	return get_id_str(x)
 
 
@@ -929,15 +929,20 @@ def print_import(x):
 
 
 def print_directive(x):
-	if isinstance(x, StmtDirectiveCInclude):
-		out("@c_include \"%s\"" % x.c_name)
+	pass
+	#if isinstance(x, StmtImport):
+	#	m = m.module
+	#	out('import "%s"' % m.)
+	#if isinstance(x, StmtDirectiveCInclude):
+	#	out("@c_include \"%s\"" % x.c_name)
 
 
 
 def printTopLevelStmt(x):
 	assert(isinstance(x, Stmt))
 
-	newline(n=x.nl)
+	if not isinstance(x, StmtDirective):
+		newline(n=x.nl)
 
 	if isinstance(x, StmtDef):
 		if x.access_level == 'public':
@@ -957,6 +962,13 @@ def run(module, outname, options):
 	global cmodule
 	cmodule = module
 	output_open(outname + '.m')
+	for x in module.imports:
+		stmt_import = module.imports[x]
+		out('import "%s"\n' % (stmt_import.impline))
+	for x in module.included_modules:
+		out('include "%s"\n' % (str(x.id)))
+	#	m = m.module
+	#	out('import "%s"' % m.)
 	for x in module.defs:
 		printTopLevelStmt(x)
 	out("\n\n")

@@ -1,5 +1,5 @@
+include "stdio"
 
-@c_include "stdio.h"
 
 
 public func run(buf: *[]Word8, len: Nat32) -> Word32 {

@@ -1,5 +1,6 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 const hello = "Hello"
 const world = "World"
@@ -12,12 +13,12 @@ const test = "test"
 
 
 public func main() -> Int {
-	stdio.("%s\n", *Str8 greeting)
+	stdio.printf("%s\n", *Str8 greeting)
 
 	if test == "test" {
-		stdio.("test ok.\n")
+		stdio.printf("test ok.\n")
 	} else {
-		stdio.("test failed.\n")
+		stdio.printf("test failed.\n")
 	}
 
 	return 0

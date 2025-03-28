@@ -1,8 +1,8 @@
+include "stdio"
 
-@c_include "stdio.h"
 
 
 public func foo() -> Unit {
-	stdio.("hello from lib.foo\n")
+	stdio.printf("hello from lib.foo\n")
 }
 

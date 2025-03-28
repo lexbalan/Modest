@@ -1,9 +1,9 @@
+import "misc/utf"
+include "ctypes64"
+include "unistd"
+include "stdio"
+include "string"
 
-@c_include "./utf.h"
-@c_include "./console.h"
-@c_include "unistd.h"
-@c_include "stdio.h"
-@c_include "string.h"
 import "misc/utf" as utf
 
 //$pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
@@ -26,7 +26,7 @@ public func putchar32(c: Char32) -> Unit {
 
 
 public func putchar_utf8(c: Char8) -> Unit {
-	stdio.(Int32 Word32 c)
+	stdio.putchar(Int32 Word32 c)
 }
 
 
@@ -35,14 +35,14 @@ public func putchar_utf16(c: Char16) -> Unit {
 	cc[0] = c
 	cc[1] = Char16 0
 	var char32: Char32
-	let n = utf.(&cc, &char32)
+	let n = utf.utf16_to_utf32(&cc, &char32)
 	putchar_utf32(char32)
 }
 
 
 public func putchar_utf32(c: Char32) -> Unit {
 	var decoded_buf: [<str_value>]Char8
-	let n = Int32 utf.(c, &decoded_buf)
+	let n = Int32 utf.utf32_to_utf8(c, &decoded_buf)
 
 	var i: Int32 = Int32 0
 	while i < n {
@@ -90,7 +90,7 @@ public func puts16(s: *Str16) -> Unit {
 		}
 
 		var char32: Char32
-		let n = utf.(*[]Char16 &(s[i]), &char32)
+		let n = utf.utf16_to_utf32(*[]Char16 &(s[i]), &char32)
 		if n == 0 {
 			break
 		}
@@ -120,7 +120,7 @@ public func puts32(s: *Str32) -> Unit {
 public func print(form: *Str8, ...) -> Unit {
 	var va: va_list
 	__va_start(va, form)
-	vfprint(unistd., form, va)
+	vfprint(unistd.c_STDOUT_FILENO, form, va)
 	__va_end(va)
 }
 
@@ -131,7 +131,7 @@ public func vfprint(fd: Int32, form: *Str8, va: va_list) -> Int32 {
 	var strbuf: [<str_value>]Char8
 	let n = vsprint(&strbuf, form, va)
 	strbuf[n] = "\x0"
-	unistd.(fd, &strbuf, SizeT n)
+	unistd.write(fd, &strbuf, SizeT n)
 	return n
 }
 
@@ -213,15 +213,15 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			// %s pointer to string
 			//
 			let s = __va_arg(va, *Str8)
-			string.(sptr, s)
-			j = j + Int32 string.(s)
+			string.strcpy(sptr, s)
+			j = j + Int32 string.strlen(s)
 
 		} else if c == "c" {
 			//
 			// %c for char
 			//
 			let c = __va_arg(va, Char32)
-			let n = Int32 utf.(c, *[<str_value>]Char8 sptr)
+			let n = Int32 utf.utf32_to_utf8(c, *[<str_value>]Char8 sptr)
 			j = j + n
 		}
 	}

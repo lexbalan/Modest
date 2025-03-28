@@ -1,9 +1,11 @@
+import "lightfood/console"
+include "ctypes64"
 
 import "lightfood/console" as console
 
 
 public func main() -> Int {
-	console.("test console print\n")
+	console.print("test console print\n")
 
 	let c = Char32 "🐀"
 	let s = *Str8 "Hi!"
@@ -11,19 +13,19 @@ public func main() -> Int {
 	let n = Nat32 123
 	let x = Nat32 0x1234567F
 
-	console.("\\\n")
-	console.("@\n")
-	console.("#AA#\n")
-	console.("🎉A\n")
+	console.print("\\\n")
+	console.print("@\n")
+	console.print("#AA#\n")
+	console.print("🎉A\n")
 
-	console.("Это строка записанная кириллицей.\n")
+	console.print("Это строка записанная кириллицей.\n")
 
-	console.("{{c}}\n")
-	console.("c = \"{c}\"\n", c)
-	console.("s = \"{s}\"\n", s)
-	console.("i = {i}\n", i)
-	console.("n = {n}\n", n)
-	console.("x = 0x{x}\n", x)
+	console.print("{{c}}\n")
+	console.print("c = \"{c}\"\n", c)
+	console.print("s = \"{s}\"\n", s)
+	console.print("i = {i}\n", i)
+	console.print("n = {n}\n", n)
+	console.print("x = 0x{x}\n", x)
 
 	return 0
 }

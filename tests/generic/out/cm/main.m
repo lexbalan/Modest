@@ -1,43 +1,44 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 
 public func main() -> Int {
-	stdio.("generic types test\n")
+	stdio.printf("generic types test\n")
 
 	let t1 = test_generic_integer()
 	if t1 {
-		stdio.("test_generic_integer passed\n")
+		stdio.printf("test_generic_integer passed\n")
 	} else {
-		stdio.("test_generic_integer failed\n")
+		stdio.printf("test_generic_integer failed\n")
 	}
 
 	let t2 = test_generic_float()
 	if t2 {
-		stdio.("test_generic_float passed\n")
+		stdio.printf("test_generic_float passed\n")
 	} else {
-		stdio.("test_generic_float failed\n")
+		stdio.printf("test_generic_float failed\n")
 	}
 
 	let t3 = test_generic_char()
 	if t3 {
-		stdio.("test_generic_char passed\n")
+		stdio.printf("test_generic_char passed\n")
 	} else {
-		stdio.("test_generic_char failed\n")
+		stdio.printf("test_generic_char failed\n")
 	}
 
 	let t4 = test_generic_array()
 	if t4 {
-		stdio.("test_generic_array passed\n")
+		stdio.printf("test_generic_array passed\n")
 	} else {
-		stdio.("test_generic_array failed\n")
+		stdio.printf("test_generic_array failed\n")
 	}
 
 	let t5 = test_generic_record()
 	if t5 {
-		stdio.("test_generic_record passed\n")
+		stdio.printf("test_generic_record passed\n")
 	} else {
-		stdio.("test_generic_integer failed\n")
+		stdio.printf("test_generic_integer failed\n")
 	}
 
 	return 0
@@ -117,12 +118,12 @@ func test_generic_array() -> Bool {
 
 	var i: Int32 = 0
 	while i < 4 {
-		stdio.("a[%i] = %i\n", i, a[i])
+		stdio.printf("a[%i] = %i\n", i, a[i])
 		i = i + 1
 	}
 
 	if a != [0, 1, 2, 3] {
-		stdio.("error: a != [0, 1, 2, 3]\n")
+		stdio.printf("error: a != [0, 1, 2, 3]\n")
 		return false
 	}
 
@@ -134,7 +135,7 @@ func test_generic_array() -> Bool {
 	b = a
 
 	if b != [0, 1, 2, 3] {
-		stdio.("b != [0, 1, 2, 3]\n")
+		stdio.printf("b != [0, 1, 2, 3]\n")
 		return false
 	}
 
@@ -143,7 +144,7 @@ func test_generic_array() -> Bool {
 	c = a
 
 	if c != [0, 1, 2, 3] {
-		stdio.("c != [0, 1, 2, 3]\n")
+		stdio.printf("c != [0, 1, 2, 3]\n")
 		return false
 	}
 
@@ -151,7 +152,7 @@ func test_generic_array() -> Bool {
 	var d: [<str_value>]Int32 = [<str_value>]Int32 a
 
 	if d != [0, 1, 2, 3] {
-		stdio.("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n")
+		stdio.printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n")
 		return false
 	}
 

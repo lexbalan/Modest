@@ -38,14 +38,16 @@ static void f0(char *_x, char *sret_)
 
 	// truncate array
 	char mic[6];
-	ARRCPY((&mic), (&x), (__lengthof(mic)));
+	memcpy(&mic, (char(*)[6 - 0])&x[0], sizeof(char[6]));
 	mic[5] = '\x0';
 
 	printf("f0 mic = \"%s\"\n", &mic);
 
 	// extend array
 	char res[30];
-	ARRCPY((&res), (&x), (__lengthof(res)));
+	memcpy((char(*)[20 - 0])&res[0], &x, sizeof(char[20 - 0]));
+	memset((char(*)[30 - 20])&res[20], 0, sizeof(char[30 - 20]));
+
 	res[6] = 'M';
 	res[7] = 'o';
 	res[8] = 'd';
@@ -257,15 +259,17 @@ int main()
 	// assign array to array 2
 	// (with array extending)
 	int32_t c[3] = {10, 20, 30	};
+
 	int32_t d[6];
-	ARRCPY((&d), (&c), (__lengthof(d)));
+	memcpy((int32_t(*)[3 - 0])&d[0], &c, sizeof(int32_t[3 - 0]));
+	memset((int32_t(*)[6 - 3])&d[3], 0, sizeof(int32_t[6 - 3]));
+
 	printf("d[0] = %i\n", d[0]);
 	printf("d[1] = %i\n", d[1]);
 	printf("d[2] = %i\n", d[2]);
 	printf("d[3] = %i\n", d[3]);
 	printf("d[4] = %i\n", d[4]);
 	printf("d[5] = %i\n", d[5]);
-
 
 	// check equality between two arrays (by pointer)
 	int32_t *const pa = &a;

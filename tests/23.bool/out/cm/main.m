@@ -1,10 +1,11 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 
 
 public func main() -> Int {
-	stdio.("bool check\nm")
+	stdio.printf("bool check\nm")
 
 	var x: Nat8
 	var b: Bool
@@ -12,20 +13,20 @@ public func main() -> Int {
 	x = 1
 	//b = Bool x
 	b = x != 0
-	stdio.("x = %u\n", Word32 x)
-	stdio.("x to Bool = %u\n", Word32 b)
+	stdio.printf("x = %u\n", Word32 x)
+	stdio.printf("x to Bool = %u\n", Word32 b)
 
 	x = 2
 	//b = Bool x
 	b = x != 0
-	stdio.("x = %u\n", Word32 x)
-	stdio.("x to Bool = %u\n", Word32 b)
+	stdio.printf("x = %u\n", Word32 x)
+	stdio.printf("x to Bool = %u\n", Word32 b)
 
 	x = 3
 	//b = Bool x
 	b = x != 0
-	stdio.("x = %u\n", Word32 x)
-	stdio.("x to Bool = %u\n", Word32 b)
+	stdio.printf("x = %u\n", Word32 x)
+	stdio.printf("x to Bool = %u\n", Word32 b)
 
 	return 0
 }

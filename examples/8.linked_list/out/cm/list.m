@@ -1,6 +1,7 @@
+include "ctypes64"
+include "stdlib"
+include "stdio"
 
-@c_include "stdlib.h"
-@c_include "stdio.h"
 
 
 public type Node record {
@@ -17,7 +18,7 @@ public type List record {
 
 
 public func create() -> *List {
-	let list = stdlib.(sizeof(List))
+	let list = stdlib.malloc(sizeof(List))
 
 	if list == nil {
 		return nil
@@ -72,7 +73,7 @@ public func node_first(list: *List, new_node: *Node) -> *Node {
 
 
 public func node_create() -> *Node {
-	let node = stdlib.(sizeof(Node))
+	let node = stdlib.malloc(sizeof(Node))
 
 	if node == nil {
 		return nil
@@ -112,7 +113,7 @@ public func node_data_get(node: *Node) -> Ptr {
 
 
 public func node_insert_right(left: *Node, new_right: *Node) -> Unit {
-	stdio.("node_insert_right\n")
+	stdio.printf("node_insert_right\n")
 
 	let old_right = left.next
 	left.next = new_right
@@ -134,7 +135,7 @@ public func node_get(list: *List, pos: Int32) -> *Node {
 		return nil
 	}
 
-	stdio.("node_get(%d)\n", pos)
+	stdio.printf("node_get(%d)\n", pos)
 	var node: *Node
 
 	if pos >= 0 {
@@ -176,7 +177,7 @@ public func node_insert(list: *List, pos: Int32, new_node: *Node) -> *Node {
 		return nil
 	}
 
-	stdio.("node_insert(%d)\n", pos)
+	stdio.printf("node_insert(%d)\n", pos)
 
 
 	let n = node_get(list, pos)
@@ -249,7 +250,7 @@ public func append(list: *List, data: Ptr) -> *Node {
 	let node = node_append(list, new_node)
 
 	if node == nil {
-		stdlib.(new_node)
+		stdlib.free(new_node)
 	}
 
 	return node

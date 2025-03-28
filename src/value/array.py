@@ -80,6 +80,8 @@ def array_can(to, from_type, method, ti):
 	if not from_type.is_array():
 		return False
 
+	if not from_type.is_generic():
+		return False
 
 	# Check item type
 	# проверяем может ли тип элемента из v

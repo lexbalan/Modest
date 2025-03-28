@@ -1,5 +1,6 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 
 type Point record {
@@ -60,15 +61,15 @@ type X record {
 var x: X
 
 public func main() -> Int {
-	stdio.("test cast operation\n")
+	stdio.printf("test cast operation\n")
 
 	let start_adr = Nat64 &c
-	stdio.("off(c) = %llu\n", Nat64 &c - start_adr)
-	stdio.("off(i) = %llu\n", Nat64 &i - start_adr)
-	stdio.("off(f) = %llu\n", Nat64 &f - start_adr)
-	stdio.("off(i2) = %llu\n", Nat64 &i2 - start_adr)
-	stdio.("off(p) = %llu\n", Nat64 &p - start_adr)
-	stdio.("off(g) = %llu\n", Nat64 &g - start_adr)
+	stdio.printf("off(c) = %llu\n", Nat64 &c - start_adr)
+	stdio.printf("off(i) = %llu\n", Nat64 &i - start_adr)
+	stdio.printf("off(f) = %llu\n", Nat64 &f - start_adr)
+	stdio.printf("off(i2) = %llu\n", Nat64 &i2 - start_adr)
+	stdio.printf("off(p) = %llu\n", Nat64 &p - start_adr)
+	stdio.printf("off(g) = %llu\n", Nat64 &g - start_adr)
 
 	// дженерики в с явно не приводятся, но нектороые нужно!
 	//	printf("offsetof(x.c) = %llu\n", Nat64 offsetof(X.c))
@@ -82,69 +83,69 @@ public func main() -> Int {
 	// sizeof(void) in C  == 1
 	// sizeof(Unit) in CM == 0
 	// TODO: here is a broblem
-	stdio.("sizeof(Unit) = %llu\n", Nat64 sizeof(Unit))
-	stdio.("alignof(Unit) = %llu\n", Nat64 alignof(Unit))
+	stdio.printf("sizeof(Unit) = %llu\n", Nat64 sizeof(Unit))
+	stdio.printf("alignof(Unit) = %llu\n", Nat64 alignof(Unit))
 
-	stdio.("sizeof(Bool) = %llu\n", Nat64 sizeof(Bool))
-	stdio.("alignof(Bool) = %llu\n", Nat64 alignof(Bool))
+	stdio.printf("sizeof(Bool) = %llu\n", Nat64 sizeof(Bool))
+	stdio.printf("alignof(Bool) = %llu\n", Nat64 alignof(Bool))
 
-	stdio.("sizeof(Nat8) = %llu\n", Nat64 sizeof(Nat8))
-	stdio.("alignof(Nat8) = %llu\n", Nat64 alignof(Nat8))
-	stdio.("sizeof(Nat16) = %llu\n", Nat64 sizeof(Nat16))
-	stdio.("alignof(Nat16) = %llu\n", Nat64 alignof(Nat16))
-	stdio.("sizeof(Nat32) = %llu\n", Nat64 sizeof(Nat32))
-	stdio.("alignof(Nat32) = %llu\n", Nat64 alignof(Nat32))
-	stdio.("sizeof(Nat64) = %llu\n", Nat64 sizeof(Nat64))
-	stdio.("alignof(Nat64) = %llu\n", Nat64 alignof(Nat64))
-	stdio.("sizeof(Nat128) = %llu\n", Nat64 sizeof(Nat128))
-	stdio.("alignof(Nat128) = %llu\n", Nat64 alignof(Nat128))
+	stdio.printf("sizeof(Nat8) = %llu\n", Nat64 sizeof(Nat8))
+	stdio.printf("alignof(Nat8) = %llu\n", Nat64 alignof(Nat8))
+	stdio.printf("sizeof(Nat16) = %llu\n", Nat64 sizeof(Nat16))
+	stdio.printf("alignof(Nat16) = %llu\n", Nat64 alignof(Nat16))
+	stdio.printf("sizeof(Nat32) = %llu\n", Nat64 sizeof(Nat32))
+	stdio.printf("alignof(Nat32) = %llu\n", Nat64 alignof(Nat32))
+	stdio.printf("sizeof(Nat64) = %llu\n", Nat64 sizeof(Nat64))
+	stdio.printf("alignof(Nat64) = %llu\n", Nat64 alignof(Nat64))
+	stdio.printf("sizeof(Nat128) = %llu\n", Nat64 sizeof(Nat128))
+	stdio.printf("alignof(Nat128) = %llu\n", Nat64 alignof(Nat128))
 	// type Nat256 not implemented
 	//printf("sizeof(Nat256) = %llu\n", Nat64 sizeof(Nat256))
 
-	stdio.("sizeof(Int8) = %llu\n", Nat64 sizeof(Int8))
-	stdio.("alignof(Int8) = %llu\n", Nat64 alignof(Int8))
-	stdio.("sizeof(Int16) = %llu\n", Nat64 sizeof(Int16))
-	stdio.("alignof(Int16) = %llu\n", Nat64 alignof(Int16))
-	stdio.("sizeof(Int32) = %llu\n", Nat64 sizeof(Int32))
-	stdio.("alignof(Int32) = %llu\n", Nat64 alignof(Int32))
-	stdio.("sizeof(Int64) = %llu\n", Nat64 sizeof(Int64))
-	stdio.("alignof(Int64) = %llu\n", Nat64 alignof(Int64))
-	stdio.("sizeof(Int128) = %llu\n", Nat64 sizeof(Int128))
-	stdio.("alignof(Int128) = %llu\n", Nat64 alignof(Int128))
+	stdio.printf("sizeof(Int8) = %llu\n", Nat64 sizeof(Int8))
+	stdio.printf("alignof(Int8) = %llu\n", Nat64 alignof(Int8))
+	stdio.printf("sizeof(Int16) = %llu\n", Nat64 sizeof(Int16))
+	stdio.printf("alignof(Int16) = %llu\n", Nat64 alignof(Int16))
+	stdio.printf("sizeof(Int32) = %llu\n", Nat64 sizeof(Int32))
+	stdio.printf("alignof(Int32) = %llu\n", Nat64 alignof(Int32))
+	stdio.printf("sizeof(Int64) = %llu\n", Nat64 sizeof(Int64))
+	stdio.printf("alignof(Int64) = %llu\n", Nat64 alignof(Int64))
+	stdio.printf("sizeof(Int128) = %llu\n", Nat64 sizeof(Int128))
+	stdio.printf("alignof(Int128) = %llu\n", Nat64 alignof(Int128))
 	// type Int256 not implemented
 	//printf("sizeof(Int256) = %llu\n", Nat64 sizeof(Int256))
 
-	stdio.("sizeof(Char8) = %llu\n", Nat64 sizeof(Char8))
-	stdio.("alignof(Char8) = %llu\n", Nat64 alignof(Char8))
-	stdio.("sizeof(Char16) = %llu\n", Nat64 sizeof(Char16))
-	stdio.("alignof(Char16) = %llu\n", Nat64 alignof(Char16))
-	stdio.("sizeof(Char32) = %llu\n", Nat64 sizeof(Char32))
-	stdio.("alignof(Char32) = %llu\n", Nat64 alignof(Char32))
+	stdio.printf("sizeof(Char8) = %llu\n", Nat64 sizeof(Char8))
+	stdio.printf("alignof(Char8) = %llu\n", Nat64 alignof(Char8))
+	stdio.printf("sizeof(Char16) = %llu\n", Nat64 sizeof(Char16))
+	stdio.printf("alignof(Char16) = %llu\n", Nat64 alignof(Char16))
+	stdio.printf("sizeof(Char32) = %llu\n", Nat64 sizeof(Char32))
+	stdio.printf("alignof(Char32) = %llu\n", Nat64 alignof(Char32))
 
 	// pointer size (for example pointer to []Char8)
-	stdio.("sizeof(*Str8) = %llu\n", Nat64 sizeof(*Str8))
-	stdio.("alignof(*Str8) = %llu\n", Nat64 alignof(*Str8))
+	stdio.printf("sizeof(*Str8) = %llu\n", Nat64 sizeof(*Str8))
+	stdio.printf("alignof(*Str8) = %llu\n", Nat64 alignof(*Str8))
 
 	// array size
-	stdio.("sizeof([10]Int32) = %llu\n", Nat64 sizeof([<str_value>]Int32))
-	stdio.("alignof([10]Int32) = %llu\n", Nat64 alignof([<str_value>]Int32))
+	stdio.printf("sizeof([10]Int32) = %llu\n", Nat64 sizeof([<str_value>]Int32))
+	stdio.printf("alignof([10]Int32) = %llu\n", Nat64 alignof([<str_value>]Int32))
 
-	stdio.("> alignof([3]Point) = %llu\n", Nat64 alignof([<str_value>]Point))
+	stdio.printf("> alignof([3]Point) = %llu\n", Nat64 alignof([<str_value>]Point))
 
 
 	// record size
-	stdio.("sizeof(Point) = %llu\n", Nat64 sizeof(Point))
-	stdio.("alignof(Point) = %llu\n", Nat64 alignof(Point))
+	stdio.printf("sizeof(Point) = %llu\n", Nat64 sizeof(Point))
+	stdio.printf("alignof(Point) = %llu\n", Nat64 alignof(Point))
 
 	//	printf("offsetof(Point.x) = %llu\n", Nat64 offsetof(Point.x))
 	//	printf("offsetof(Point.y) = %llu\n", Nat64 offsetof(Point.y))
 
 
-	stdio.("sizeof(Mixed1) = %llu\n", Nat64 sizeof(Mixed1))
-	stdio.("alignof(Mixed1) = %llu\n", Nat64 alignof(Mixed1))
+	stdio.printf("sizeof(Mixed1) = %llu\n", Nat64 sizeof(Mixed1))
+	stdio.printf("alignof(Mixed1) = %llu\n", Nat64 alignof(Mixed1))
 
-	stdio.("sizeof(Mixed2) = %llu\n", Nat64 sizeof(Mixed2))
-	stdio.("alignof(Mixed2) = %llu\n", Nat64 alignof(Mixed2))
+	stdio.printf("sizeof(Mixed2) = %llu\n", Nat64 sizeof(Mixed2))
+	stdio.printf("alignof(Mixed2) = %llu\n", Nat64 alignof(Mixed2))
 
 
 	//	printf("offsetof(Mixed2.i) = %llu\n", Nat64 offsetof(Mixed2.i))
@@ -154,11 +155,11 @@ public func main() -> Int {
 	//	printf("offsetof(Mixed2.m) = %llu\n", Nat64 offsetof(Mixed2.m))
 
 
-	stdio.("sizeof(Mixed3) = %llu\n", Nat64 sizeof(Mixed3))
-	stdio.("alignof(Mixed3) = %llu\n", Nat64 alignof(Mixed3))
+	stdio.printf("sizeof(Mixed3) = %llu\n", Nat64 sizeof(Mixed3))
+	stdio.printf("alignof(Mixed3) = %llu\n", Nat64 alignof(Mixed3))
 
-	stdio.("sizeof(Mixed4) = %llu\n", Nat64 sizeof(Mixed4))
-	stdio.("alignof(Mixed4) = %llu\n", Nat64 alignof(Mixed4))
+	stdio.printf("sizeof(Mixed4) = %llu\n", Nat64 sizeof(Mixed4))
+	stdio.printf("alignof(Mixed4) = %llu\n", Nat64 alignof(Mixed4))
 
 	//	printf("offsetof(Mixed4.s) = %llu\n", Nat64 offsetof(Mixed4.s))
 	//	printf("offsetof(Mixed4.c) = %llu\n", Nat64 offsetof(Mixed4.c))

@@ -1,5 +1,7 @@
+import "lightfood/memory"
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 import "lightfood/memory" as mem
 
 
@@ -11,7 +13,7 @@ type Object record {
 
 
 public func main() -> Int {
-	stdio.("memcopy test\n")
+	stdio.printf("memcopy test\n")
 
 	var o1: Object
 	var o2: Object
@@ -23,13 +25,13 @@ public func main() -> Int {
 	}
 
 	let len = sizeof(Object)
-	stdio.("LEN = %u\n", Nat32 len)
+	stdio.printf("LEN = %u\n", Nat32 len)
 
-	memory.(&o2, &o1, len)
+	memory.copy(&o2, &o1, len)
 
-	stdio.("firstname = '%s'\n", &(o2.firstname))
-	stdio.("lastname = '%s'\n", &(o2.lastname))
-	stdio.("age = %d\n", o2.age)
+	stdio.printf("firstname = '%s'\n", &(o2.firstname))
+	stdio.printf("lastname = '%s'\n", &(o2.lastname))
+	stdio.printf("age = %d\n", o2.age)
 
 	return 0
 }

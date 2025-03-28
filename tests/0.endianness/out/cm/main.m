@@ -1,5 +1,6 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 
 public func main() -> Int {
@@ -13,7 +14,7 @@ public func main() -> Int {
 		kind = "big"
 	}
 
-	stdio.("%s-endian\n", kind)
+	stdio.printf("%s-endian\n", kind)
 
 	return 0
 }

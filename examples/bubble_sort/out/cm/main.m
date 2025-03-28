@@ -1,5 +1,6 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 var array: [<str_value>]Int32 = [
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4
@@ -33,25 +34,25 @@ func bubble_sort32(array: *[]Int32, len: Int32) -> Unit {
 public func main() -> Int32 {
 	//fill_array(&array, lengthof(array))
 
-	stdio.("array before:\n")
+	stdio.printf("array before:\n")
 	print_array(&array, lengthof(array))
-	stdio.("\n")
+	stdio.printf("\n")
 
 	bubble_sort32(&array, lengthof(array))
 
-	stdio.("array after:\n")
+	stdio.printf("array after:\n")
 	print_array(&array, lengthof(array))
-	stdio.("\n")
+	stdio.printf("\n")
 
 	return 0
 }
 
 
 func print_array(array: *[]Int32, len: Int32) -> Unit {
-	stdio.("\n")
+	stdio.printf("\n")
 	var i: Int32 = 0
 	while i < len {
-		stdio.("array[%i] = %i\n", i, array[i])
+		stdio.printf("array[%i] = %i\n", i, array[i])
 		i = i + 1
 	}
 }
@@ -62,7 +63,7 @@ func fill_array(array: *[]Int32, len: Int32) -> Unit {
 	let max = 1000
 	var i: Int32 = 0
 	while i < len {
-		stdio.("[%i] ", i)
+		stdio.printf("[%i] ", i)
 		let x = get_number(min, max)
 		array[i] = x
 		i = i + 1
@@ -74,14 +75,14 @@ func get_number(min: Int32, max: Int32) -> Int32 {
 	var number: Int32 = Int32 0
 
 	while true {
-		stdio.("enter a number (%i .. %i): ", min, max)
-		stdio.("%d", &number)
+		stdio.printf("enter a number (%i .. %i): ", min, max)
+		stdio.scanf("%d", &number)
 
 		if number < min {
-			stdio.("number must be greater than %i, try again\n", min)
+			stdio.printf("number must be greater than %i, try again\n", min)
 			again
 		} else if number > max {
-			stdio.("number must be less than %i, try again\n", max)
+			stdio.printf("number must be less than %i, try again\n", max)
 			again
 		} else {
 			break

@@ -1,5 +1,6 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 
 type Point record {
@@ -12,17 +13,17 @@ var globalPoint1: Point = {}
 
 
 public func main() -> Int {
-	stdio.("test assign_array\n")
+	stdio.printf("test assign_array\n")
 
 	globalPoint1 = globalPoint0
 
-	stdio.("globalPoint1.x = %d\n", globalPoint1.x)
-	stdio.("globalPoint1.x = %d\n", globalPoint1.y)
+	stdio.printf("globalPoint1.x = %d\n", globalPoint1.x)
+	stdio.printf("globalPoint1.x = %d\n", globalPoint1.y)
 
 	if globalPoint0 == globalPoint1 {
-		stdio.("globalPoint test passed\n")
+		stdio.printf("globalPoint test passed\n")
 	} else {
-		stdio.("globalPoint test failed\n")
+		stdio.printf("globalPoint test failed\n")
 	}
 
 	// local
@@ -32,13 +33,13 @@ public func main() -> Int {
 
 	localPoint1 = localPoint0
 
-	stdio.("localPoint1.x = %d\n", localPoint1.x)
-	stdio.("localPoint1.x = %d\n", localPoint1.y)
+	stdio.printf("localPoint1.x = %d\n", localPoint1.x)
+	stdio.printf("localPoint1.x = %d\n", localPoint1.y)
 
 	if localPoint0 == localPoint1 {
-		stdio.("localPoint test passed\n")
+		stdio.printf("localPoint test passed\n")
 	} else {
-		stdio.("localPoint test failed\n")
+		stdio.printf("localPoint test failed\n")
 	}
 
 	return 0

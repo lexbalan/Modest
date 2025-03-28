@@ -24,13 +24,16 @@ func f0(x: [20]Char8) -> [30]Char8 {
 	printf("f0(\"%s\")\n", &local_copy_of_x)
 
 	// truncate array
-	var mic = [6]Char8 x
+	var mic: [6]Char8 = x[0:6]
 	mic[5] = '\x0'
 
 	printf("f0 mic = \"%s\"\n", &mic)
 
 	// extend array
-	var res = [30]Char8 x
+	var res: [30]Char8
+	res[0:20] = x
+	res[20:30] = []
+
 	res[6] = 'M'
 	res[7] = 'o'
 	res[8] = 'd'
@@ -253,14 +256,17 @@ public func main() -> Int {
 	// assign array to array 2
 	// (with array extending)
 	var c: [3]Int32 = [10, 20, 30]
-	var d: [6]Int32 = [6]Int32 c
+
+	var d: [6]Int32
+	d[0:3] = c
+	d[3:6] = []
+
 	printf("d[0] = %i\n", d[0])
 	printf("d[1] = %i\n", d[1])
 	printf("d[2] = %i\n", d[2])
 	printf("d[3] = %i\n", d[3])
 	printf("d[4] = %i\n", d[4])
 	printf("d[5] = %i\n", d[5])
-
 
 	// check equality between two arrays (by pointer)
 	let pa = &a

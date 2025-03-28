@@ -1,5 +1,5 @@
+include "stdio"
 
-@c_include "stdio.h"
 
 // Test for composite types
 
@@ -194,7 +194,7 @@ var farr: [<str_value>]*(a: Int32, b: Int32) -> Int32 = [
 ]
 
 func hi(x: *Str8) -> Unit {
-	stdio.("Hi %s!\n", x)
+	stdio.printf("Hi %s!\n", x)
 }
 
 var hiarr: [<str_value>]*(x: *Str8) -> Unit = [
@@ -216,34 +216,34 @@ var awrap: [<str_value>]*Wrap = [&wrap0, &wrap0]
 public func main() -> Int32 {
 	xy({x = 10, y = 20})
 
-	stdio.("test1 (eq): ")
+	stdio.printf("test1 (eq): ")
 	if animation0_points == animation1_points {
-		stdio.("eq\n")
+		stdio.printf("eq\n")
 	} else {
-		stdio.("ne\n")
+		stdio.printf("ne\n")
 	}
 
-	stdio.("test2 (ne): ")
+	stdio.printf("test2 (ne): ")
 	if animation1_points == animation2_points {
-		stdio.("eq\n")
+		stdio.printf("eq\n")
 	} else {
-		stdio.("ne\n")
+		stdio.printf("ne\n")
 	}
 
 	var i: Int32 = 0
 	while i < 3 {
 		var j: Int32 = 0
 		while j < 3 {
-			stdio.("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
+			stdio.printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
 			j = j + 1
 		}
 		i = i + 1
 	}
 
 	let _add = farr[0](5, 7)
-	stdio.("farr[0](5, 7) = %d\n", _add)
+	stdio.printf("farr[0](5, 7) = %d\n", _add)
 	let _sub = farr[1](5, 7)
-	stdio.("farr[1](5, 7) = %d\n", _sub)
+	stdio.printf("farr[1](5, 7) = %d\n", _sub)
 
 	i = 0
 	while i < 10 {

@@ -48,7 +48,7 @@ int32_t main()
 {
 	const int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_socket < 0) {
-		perror("socket");
+		perror("cannot create socket");
 		exit(1);
 	}
 
@@ -64,7 +64,7 @@ int32_t main()
 	struct sockaddr *const socadr = (struct sockaddr *)&server_addr;
 	int rc = bind(server_socket, socadr, sizeof server_addr);
 	if (rc < 0) {
-		perror("bind");
+		perror("cannot bind socket");
 		close(server_socket);
 		exit(1);
 	}
@@ -72,7 +72,7 @@ int32_t main()
 	// Starting listen to connection
 	rc = listen(server_socket, 5);
 	if (rc < 0) {
-		perror("listen");
+		perror("cannot listen socket");
 		close(server_socket);
 		exit(1);
 	}
@@ -86,7 +86,7 @@ int32_t main()
 		socklen_t client_adr_len = sizeof client_addr;
 		const int client_socket = accept(server_socket, socadr, &client_adr_len);
 		if (client_socket < 0) {
-			perror("accept");
+			perror("cannot accept connection");
 			continue;
 		}
 		handleRequest(client_socket);

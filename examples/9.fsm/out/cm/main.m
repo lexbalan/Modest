@@ -1,8 +1,10 @@
+import "lightfood/delay"
+import "fsm"
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 import "lightfood/delay" as delay
 import "fsm" as fsm
-@c_include "./delay.h"
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
@@ -33,12 +35,12 @@ func off_entry(x: *FSM) -> Unit {
 
 
 func off_loop(x: *FSM) -> Unit {
-	stdio.("off_loop\n")
+	stdio.printf("off_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
 		cnt = 0
-		fsm.(x, flashlightStateOn)
+		fsm.switch(x, flashlightStateOn)
 	}
 }
 
@@ -60,12 +62,12 @@ func on_entry(x: *FSM) -> Unit {
 
 
 func on_loop(x: *FSM) -> Unit {
-	stdio.("on_loop\n")
+	stdio.printf("on_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
 		cnt = 0
-		fsm.(x, flashlightStateBeacon)
+		fsm.switch(x, flashlightStateBeacon)
 	}
 }
 
@@ -81,25 +83,25 @@ func on_exit(x: *FSM) -> Unit {
 //
 
 func beacon_entry(x: *FSM) -> Unit {
-	let from_name = fsm.(x, x.state)
-	stdio.("beacon_entry from %s\n", from_name)
+	let from_name = fsm.state_no_name(x, x.state)
+	stdio.printf("beacon_entry from %s\n", from_name)
 }
 
 
 func beacon_loop(x: *FSM) -> Unit {
-	stdio.("beacon_loop\n")
+	stdio.printf("beacon_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
 		cnt = 0
-		fsm.(x, flashlightStateOff)
+		fsm.switch(x, flashlightStateOff)
 	}
 }
 
 
 func beacon_exit(x: *FSM) -> Unit {
-	let to_name = fsm.(x, x.nexstate)
-	stdio.("beacon_exit to %s\n", to_name)
+	let to_name = fsm.state_no_name(x, x.nexstate)
+	stdio.printf("beacon_exit to %s\n", to_name)
 }
 
 
@@ -108,7 +110,7 @@ var fsm0: FSM = {
 	name = "Flash"
 	state = 0
 	nexstate = 0
-	substate = fsm.
+	substate = fsm.substateEntering
 	states = [
 		StateDesc {
 			name = "Off"
@@ -138,8 +140,8 @@ var fsm0: FSM = {
 public func main() -> Int {
 
 	while true {
-		fsm.(&fsm0)
-		delay.(500)
+		fsm.run(&fsm0)
+		delay.ms(500)
 	}
 
 	return 0

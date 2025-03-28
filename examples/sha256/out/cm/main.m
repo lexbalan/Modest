@@ -1,7 +1,8 @@
+import "misc/sha256"
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 import "misc/sha256" as sha256
-@c_include "./sha256.h"
 
 const inputDataLength = 32
 
@@ -45,25 +46,25 @@ func doTest(test: *SHA256_TestCase) -> Bool {
 	let msg = *[]Word8 &(test.input_data)
 	let msg_len = test.input_data_len
 
-	sha256.(msg, msg_len, &test_hash)
+	sha256.hash(msg, msg_len, &test_hash)
 
-	stdio.("'%s'", &(test.input_data))
-	stdio.(" -> ")
+	stdio.printf("'%s'", &(test.input_data))
+	stdio.printf(" -> ")
 
 	var i: Int32 = 0
-	while i < sha256. {
-		stdio.("%02X", test_hash[i])
+	while i < sha256.hashSize {
+		stdio.printf("%02X", test_hash[i])
 		i = i + 1
 	}
 
-	stdio.("\n")
+	stdio.printf("\n")
 
 	return test_hash == test.expected_result
 }
 
 
 public func main() -> Int {
-	stdio.("test SHA256\n")
+	stdio.printf("test SHA256\n")
 
 	var i: Int32 = 0
 	while i < Int lengthof(tests) {
@@ -75,7 +76,7 @@ public func main() -> Int {
 			res = "passed"
 		}
 
-		stdio.("test #%i: %s\n", i, res)
+		stdio.printf("test #%i: %s\n", i, res)
 
 		i = i + 1
 	}

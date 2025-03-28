@@ -1,7 +1,8 @@
+import "table"
+include "stdio"
+include "stdlib"
+include "string"
 
-@c_include "stdio.h"
-@c_include "stdlib.h"
-@c_include "string.h"
 import "table" as table
 
 
@@ -73,25 +74,25 @@ public func main() -> Int32 {
 	let tab = new Table {}
 
 	if tab == nil {
-		stdio.("cannot create object\n")
+		stdio.printf("cannot create object\n")
 	}
 
 	*tab = table00
 
-	table.(&table00)
-	stdio.("\n")
+	table.print(&table00)
+	stdio.printf("\n")
 
-	table.(&table01)
-	stdio.("\n")
+	table.print(&table01)
+	stdio.printf("\n")
 
-	table.(&table02)
-	stdio.("\n")
+	table.print(&table02)
+	stdio.printf("\n")
 
-	table.(&table03)
-	stdio.("\n")
+	table.print(&table03)
+	stdio.printf("\n")
 
-	table.(&table10)
-	stdio.("\n")
+	table.print(&table10)
+	stdio.printf("\n")
 
 	return 0
 }

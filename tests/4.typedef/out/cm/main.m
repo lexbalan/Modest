@@ -1,10 +1,11 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 type NewInt32 Int32
 
 public func main() -> Int {
-	stdio.("test typedef\n")
+	stdio.printf("test typedef\n")
 
 	var newInt32: NewInt32
 	newInt32 = NewInt32 0

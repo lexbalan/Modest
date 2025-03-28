@@ -1,5 +1,6 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 const arr = [Int32 1, Int32 2]
 
@@ -12,12 +13,12 @@ public func main() -> Int {
 	var x: Int32 = 127
 	var y: Int32 = x + 1
 
-	stdio.("y = %i\n", y)
+	stdio.printf("y = %i\n", y)
 
 	if y == 128 {
-		stdio.("test passed\n")
+		stdio.printf("test passed\n")
 	} else {
-		stdio.("test failed\n")
+		stdio.printf("test failed\n")
 	}
 
 	return 0

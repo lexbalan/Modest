@@ -1,8 +1,9 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 public func main() -> Int {
-	stdio.("Hello World!\n")
+	stdio.printf("Hello World!\n")
 	return 0
 }
 

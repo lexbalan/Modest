@@ -1,51 +1,53 @@
+import "list"
+include "ctypes64"
+include "stdlib"
+include "stdio"
 
-@c_include "stdlib.h"
-@c_include "stdio.h"
 import "list" as list
 
 
 // wrap around linked list for list.List Nat32
 func nat32_list_insert(lst: *List, x: Nat32) -> Unit {
 	// alloc memory for Nat32 value
-	let p_nat32 = stdlib.(sizeof(Nat32))
+	let p_nat32 = stdlib.malloc(sizeof(Nat32))
 	*p_nat32 = x
-	list.(lst, p_nat32)
+	list.append(lst, p_nat32)
 }
 
 
 // show list conent from first item to last
 func list_print_forward(lst: *List) -> Unit {
-	stdio.("list_print_forward:\n")
-	var pn: *Node = list.(lst)
+	stdio.printf("list_print_forward:\n")
+	var pn: *Node = list.first_node_get(lst)
 	while pn != nil {
-		let x = list.(pn)
-		stdio.("v = %u\n", *x)
-		pn = list.(pn)
+		let x = list.node_data_get(pn)
+		stdio.printf("v = %u\n", *x)
+		pn = list.node_next_get(pn)
 	}
 }
 
 
 // show list conent from last item to first
 func list_print_backward(lst: *List) -> Unit {
-	stdio.("list_print_backward:\n")
-	var pn: *Node = list.(lst)
+	stdio.printf("list_print_backward:\n")
+	var pn: *Node = list.last_node_get(lst)
 	while pn != nil {
-		let x = list.(pn)
-		stdio.("v = %u\n", *x)
-		pn = list.(pn)
+		let x = list.node_data_get(pn)
+		stdio.printf("v = %u\n", *x)
+		pn = list.node_prev_get(pn)
 	}
 }
 
 
 public func main() -> Int {
-	stdio.("linked list example\n")
+	stdio.printf("linked list example\n")
 
-	let list0 = list.()
+	let list0 = list.create()
 
 	//list0.size  // access to private field of record
 
 	if list0 == nil {
-		stdio.("error: cannot create list")
+		stdio.printf("error: cannot create list")
 		return 1
 	}
 
@@ -63,8 +65,8 @@ public func main() -> Int {
 	nat32_list_insert(list0, 100)
 
 	// print list size
-	let list_size = list.(list0)
-	stdio.("linked list size: %u\n", list_size)
+	let list_size = list.size_get(list0)
+	stdio.printf("linked list size: %u\n", list_size)
 
 	// print list forward
 	list_print_forward(list0)
@@ -73,47 +75,47 @@ public func main() -> Int {
 	list_print_backward(list0)
 
 
-	stdio.("\nlist.node_get(list, n) test\n")
+	stdio.printf("\nlist.node_get(list, n) test\n")
 
 	// test list.node_get
 	var i: Int32 = 0
 	while i >= -12 {
-		let node = list.(list0, i)
+		let node = list.node_get(list0, i)
 
 		if node == nil {
-			stdio.("node %i not exist\n", i)
+			stdio.printf("node %i not exist\n", i)
 			i = i - 1
 			again
 		}
 
-		let px = list.(node)
-		stdio.("list(%i) = %i\n", i, *px)
+		let px = list.node_data_get(node)
+		stdio.printf("list(%i) = %i\n", i, *px)
 		i = i - 1
 	}
 
-	stdio.("-----------------------------------------\n")
+	stdio.printf("-----------------------------------------\n")
 
 	i = 0
 	while i <= 12 {
-		let node = list.(list0, i)
+		let node = list.node_get(list0, i)
 
 		if node == nil {
-			stdio.("node %i not exist\n", i)
+			stdio.printf("node %i not exist\n", i)
 			i = i + 1
 			again
 		}
 
-		let px = list.(node)
-		stdio.("list(%i) = %i\n", i, *px)
+		let px = list.node_data_get(node)
+		stdio.printf("list(%i) = %i\n", i, *px)
 		i = i + 1
 	}
 
-	stdio.("-----------------------------------------\n")
+	stdio.printf("-----------------------------------------\n")
 
 
-	let p_nat32 = stdlib.(sizeof(Nat32))
+	let p_nat32 = stdlib.malloc(sizeof(Nat32))
 	*p_nat32 = 1234
-	list.(list0, pos = 4, data = p_nat32)
+	list.insert(list0, pos = 4, data = p_nat32)
 
 	list_print_forward(list0)
 

@@ -1,7 +1,7 @@
+import "lightfood/console"
+include "ctypes64"
+include "stdio"
 
-@c_include "./utf.h"
-@c_include "./console.h"
-@c_include "stdio.h"
 import "lightfood/console" as console
 
 
@@ -22,28 +22,28 @@ var ptr_to_string32: *[]Char32 = str32_example
 
 
 public func main() -> Int {
-	console.("A")
-	stdio.("\n")
-	console.("Ω")
-	stdio.("\n")
-	console.("🦄")
+	console.putchar_utf8("A")
+	stdio.printf("\n")
+	console.putchar_utf16("Ω")
+	stdio.printf("\n")
+	console.putchar_utf32("🦄")
 
-	stdio.("\n\n")
+	stdio.printf("\n\n")
 
-	console.(&string8)
-	stdio.("\n")
-	console.(&string16)
-	stdio.("\n")
-	console.(&string32)
+	console.puts8(&string8)
+	stdio.printf("\n")
+	console.puts16(&string16)
+	stdio.printf("\n")
+	console.puts32(&string32)
 
-	stdio.("\n\n")
+	stdio.printf("\n\n")
 
-	console.(ptr_to_string8)
-	stdio.("\n")
-	console.(ptr_to_string16)
-	stdio.("\n")
-	console.(ptr_to_string32)
-	stdio.("\n")
+	console.puts8(ptr_to_string8)
+	stdio.printf("\n")
+	console.puts16(ptr_to_string16)
+	stdio.printf("\n")
+	console.puts32(ptr_to_string32)
+	stdio.printf("\n")
 
 	return 0
 }

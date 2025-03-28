@@ -1,6 +1,7 @@
+include "ctypes64"
+include "stdio"
+include "unistd"
 
-@c_include "stdio.h"
-@c_include "unistd.h"
 
 //include "lightfood/print"
 //$pragma c_include "./print.h"
@@ -16,11 +17,11 @@ func my_printf(format: *Str8, ...) -> SSizeT {
 
 	let strMaxLen = 127 + 1
 	var buf: [<str_value>]Char8
-	let n = stdio.(&buf, strMaxLen, format, va2)
+	let n = stdio.vsnprintf(&buf, strMaxLen, format, va2)
 
 	__va_end(va2)
 
-	return unistd.(unistd., &buf, SizeT n)
+	return unistd.write(unistd.c_STDOUT_FILENO, &buf, SizeT n)
 }
 
 

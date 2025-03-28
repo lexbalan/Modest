@@ -1,5 +1,6 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 const genericIntConst = 42
 const int32Const = Int32 genericIntConst
@@ -34,13 +35,13 @@ var points2: [<str_value>]Point = points
 
 // define function main
 public func main() -> Int {
-	stdio.("test const\n")
+	stdio.printf("test const\n")
 
-	stdio.("genericIntConst = %d\n", Int32 genericIntConst)
-	stdio.("int32Const = %d\n", int32Const)
+	stdio.printf("genericIntConst = %d\n", Int32 genericIntConst)
+	stdio.printf("int32Const = %d\n", int32Const)
 
 	//	printf("genericStringConst = %s\n", genericStringConst)
-	stdio.("string8Const = %s\n", string8Const)
+	stdio.printf("string8Const = %s\n", string8Const)
 
 	return 0
 }

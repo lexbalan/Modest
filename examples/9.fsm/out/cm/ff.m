@@ -1,10 +1,10 @@
+include "time"
 
-@c_include "time.h"
 
 
 public func us(us: Nat64) -> Unit {
-	let start_time = time.()
-	while time.() < start_time + us {
+	let start_time = time.clock()
+	while time.clock() < start_time + us {
 		// just waiting
 	}
 }

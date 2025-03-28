@@ -1,7 +1,8 @@
+include "ctypes64"
+include "math"
+include "stdlib"
+include "stdio"
 
-@c_include "math.h"
-@c_include "stdlib.h"
-@c_include "stdio.h"
 
 
 type Point record {
@@ -44,9 +45,9 @@ func min(a: Float, b: Float) -> Float {
 func distance(a: Point, b: Point) -> Float {
 	let dx = max(a.x, b.x) - min(a.x, b.x)
 	let dy = max(a.y, b.y) - min(a.y, b.y)
-	let dx2 = math.(dx, 2)
-	let dy2 = math.(dy, 2)
-	return math.(dx2 + dy2)
+	let dx2 = math.pow(dx, 2)
+	let dy2 = math.pow(dy, 2)
+	return math.sqrt(dx2 + dy2)
 }
 
 
@@ -56,20 +57,20 @@ func lineLength(line: Line) -> Float {
 
 
 func ptr_example() -> Unit {
-	let ptr_p = stdlib.(sizeof(Point))
+	let ptr_p = stdlib.malloc(sizeof(Point))
 
 	// access by pointer
 	ptr_p.x = 10
 	ptr_p.y = 20
 
-	stdio.("point(%f, %f)\n", ptr_p.x, ptr_p.y)
+	stdio.printf("point(%f, %f)\n", ptr_p.x, ptr_p.y)
 }
 
 
 public func main() -> Int {
 	// by value
 	let len = lineLength(line)
-	stdio.("line length = %f\n", len)
+	stdio.printf("line length = %f\n", len)
 
 	ptr_example()
 

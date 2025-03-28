@@ -1,5 +1,6 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 
 func xor_encrypter(buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -> Unit {
@@ -31,32 +32,32 @@ var test_key: [<str_value>]Char8 = "abc"
 func print_bytes(buf: *[]Word8, len: Nat32) -> Unit {
 	var i: Nat32 = Nat32 0
 	while i < len {
-		stdio.("0x%02X ", buf[i])
+		stdio.printf("0x%02X ", buf[i])
 		i = i + 1
 	}
-	stdio.("\n")
+	stdio.printf("\n")
 }
 
 
 public func main() -> Int {
-	stdio.("test xor encrypting\n")
+	stdio.printf("test xor encrypting\n")
 
 	let tmsg = *[]Word8 &test_msg
 	let tkey = *[]Word8 &test_key
 
-	stdio.("before encrypt test_msg: \n")
+	stdio.printf("before encrypt test_msg: \n")
 	print_bytes(tmsg, msg_length)
 
 	// encrypt test data
 	xor_encrypter(tmsg, msg_length, tkey, key_length)
 
-	stdio.("after encrypt test_msg: \n")
+	stdio.printf("after encrypt test_msg: \n")
 	print_bytes(tmsg, msg_length)
 
 	// decrypt test data
 	xor_encrypter(tmsg, msg_length, tkey, key_length)
 
-	stdio.("after decrypt test_msg: \n")
+	stdio.printf("after decrypt test_msg: \n")
 	print_bytes(tmsg, msg_length)
 
 	return 0

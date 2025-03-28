@@ -1,9 +1,9 @@
+include "stdio"
+include "stdlib"
+include "string"
+include "unistd"
+include "socket"
 
-@c_include "stdio.h"
-@c_include "stdlib.h"
-@c_include "string.h"
-@c_include "unistd.h"
-@c_include "arpa/inet.h"
 
 
 const port = 8080
@@ -26,73 +26,73 @@ func htons(x: Word16) -> Word16 {
 
 func handleRequest(client_socket: Int32) -> Unit {
 	var buffer: [<str_value>]Word8
-	let bytes_received = unistd.(client_socket, &buffer, lengthof(buffer) - 1)
+	let bytes_received = unistd.read(client_socket, &buffer, lengthof(buffer) - 1)
 	if bytes_received < 0 {
-		stdio.("read")
-		unistd.(client_socket)
+		stdio.perror("read")
+		unistd.close(client_socket)
 		return
 	}
 	buffer[bytes_received] = 0
 
-	stdio.("Received request:\n%s\n", *Str8 &buffer)
+	stdio.printf("Received request:\n%s\n", *Str8 &buffer)
 
 	var response: [<str_value>]Char8
-	stdio.(&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", httpHeader, pageCounter)
+	stdio.sprintf(&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", httpHeader, pageCounter)
 
-	unistd.(client_socket, &response, string.(&response))
-	unistd.(client_socket)
+	unistd.write(client_socket, &response, string.strlen(&response))
+	unistd.close(client_socket)
 }
 
 
 public func main() -> Int32 {
-	let server_socket = socket.(socket., socket., 0)
+	let server_socket = socket.socket(socket.af_INET, socket.c_SOCK_STREAM, 0)
 	if server_socket < 0 {
-		stdio.("socket")
-		stdlib.(1)
+		stdio.perror("cannot create socket")
+		stdlib.exit(1)
 	}
 
 	var server_addr: SockAddrIn = SockAddrIn {
-		sin_family = socket.
+		sin_family = socket.af_INET
 		sin_addr = {
-			s_addr = socket.
+			s_addr = socket.inAddrAny
 		}
 		sin_port = UnsignedShort htons(port)
 	}
 
 	// Bind socket to address
 	let socadr = *SockAddr &server_addr
-	var rc: Int = socket.(server_socket, socadr, sizeof server_addr)
+	var rc: Int = socket.bind(server_socket, socadr, sizeof server_addr)
 	if rc < 0 {
-		stdio.("bind")
-		unistd.(server_socket)
-		stdlib.(1)
+		stdio.perror("cannot bind socket")
+		unistd.close(server_socket)
+		stdlib.exit(1)
 	}
 
 	// Starting listen to connection
-	rc = socket.(server_socket, 5)
+	rc = socket.listen(server_socket, 5)
 	if rc < 0 {
-		stdio.("listen")
-		unistd.(server_socket)
-		stdlib.(1)
+		stdio.perror("cannot listen socket")
+		unistd.close(server_socket)
+		stdlib.exit(1)
 	}
 
-	stdio.("Server listening on port %d...\n", Nat32 port)
+	stdio.printf("Server listening on port %d...\n", Nat32 port)
 
 	// Handle input connections
 	while true {
 		var client_addr: SockAddrIn
 		let socadr = *SockAddr &client_addr
 		var client_adr_len: SocklenT = sizeof client_addr
-		let client_socket = socket.(server_socket, socadr, &client_adr_len)
+		let client_socket = socket.accept(server_socket, socadr, &client_adr_len)
 		if client_socket < 0 {
-			stdio.("accept")
+			stdio.perror("cannot accept connection")
 			again
 		}
 		handleRequest(client_socket)
 		pageCounter = pageCounter + 1
 	}
 
-	unistd.(server_socket)
+	unistd.close(server_socket)
 	return 0
 }
 

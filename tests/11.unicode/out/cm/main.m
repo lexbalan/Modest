@@ -1,7 +1,7 @@
+import "lightfood/console"
+include "ctypes64"
+include "stdio"
 
-@c_include "./utf.h"
-@c_include "./console.h"
-@c_include "stdio.h"
 import "lightfood/console" as console
 
 // include test (!)
@@ -30,14 +30,14 @@ public func main() -> Int32 {
 	var str16: *Str16 = string16Const
 	var str32: *Str32 = string32Const
 
-	console.(str8)
-	console.("\n")
+	console.puts8(str8)
+	console.puts8("\n")
 
-	console.(str16)
-	console.("\n")
+	console.puts16(str16)
+	console.puts8("\n")
 
-	console.(str32)
-	console.("\n")
+	console.puts32(str32)
+	console.puts8("\n")
 
 	return 0
 }

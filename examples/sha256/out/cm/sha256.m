@@ -1,5 +1,6 @@
+include "ctypes64"
+include "string"
 
-@c_include "string.h"
 
 
 public const hashSize = 32
@@ -163,12 +164,12 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 
 	i = i + 1
 
-	string.(&(ctx.data[i]), 0, SizeT (n - i))
+	string.memset(&(ctx.data[i]), 0, SizeT (n - i))
 	//ctx.data[i:n-i] = []
 
 	if ctx.datalen >= 56 {
 		transform(ctx, &(ctx.data))
-		string.(&(ctx.data), 0, 56)
+		string.memset(&(ctx.data), 0, 56)
 		//ctx.data[0:56] = []
 	}
 

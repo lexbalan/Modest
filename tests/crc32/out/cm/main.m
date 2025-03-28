@@ -1,6 +1,7 @@
+import "misc/crc32"
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
-@c_include "./crc32.h"
 import "misc/crc32" as crc32
 
 
@@ -12,16 +13,16 @@ var data: [<str_value>]Word8 = [<str_value>]Word8 datastring
 
 
 public func main() -> Int {
-	stdio.("CRC32 test\n")
+	stdio.printf("CRC32 test\n")
 
-	let crc = crc32.(&data, lengthof(data))
+	let crc = crc32.run(&data, lengthof(data))
 
-	stdio.("crc32.doHash(\"%s\") = %08X\n", *Str8 datastring, crc)
+	stdio.printf("crc32.doHash(\"%s\") = %08X\n", *Str8 datastring, crc)
 
 	if crc == expected_hash {
-		stdio.("test passed\n")
+		stdio.printf("test passed\n")
 	} else {
-		stdio.("test failed\n")
+		stdio.printf("test failed\n")
 	}
 
 	return 0

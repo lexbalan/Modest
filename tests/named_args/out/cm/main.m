@@ -1,5 +1,6 @@
+include "ctypes64"
+include "stdio"
 
-@c_include "stdio.h"
 
 
 func named_args_test(a: Int32, b: Int32, c: Int32) -> Int32 {
@@ -8,7 +9,7 @@ func named_args_test(a: Int32, b: Int32, c: Int32) -> Int32 {
 
 
 public func main() -> Int {
-	stdio.("test named_args\n")
+	stdio.printf("test named_args\n")
 
 	let a = 25
 	let b = 15
@@ -19,9 +20,9 @@ public func main() -> Int {
 	let x1 = named_args_test(a = a, b = b, c = c)
 
 	if x0 == x1 {
-		stdio.("test passed\n")
+		stdio.printf("test passed\n")
 	} else {
-		stdio.("test failed\n")
+		stdio.printf("test failed\n")
 	}
 
 	return 0
