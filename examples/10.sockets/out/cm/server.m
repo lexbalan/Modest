@@ -13,7 +13,7 @@ const bufSize = 1024
 
 
 func write_file(sockfd: Int) -> Bool {
-	var buffer: [<str_value>]Char8
+	var buffer: [bufSize]Char8
 
 	let fp = stdio.fopen(filename, "w")
 	if fp == nil {

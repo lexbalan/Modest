@@ -131,7 +131,7 @@ func test_generic_array() -> Bool {
 	// can be implicit casted to Array with compatible type and same size
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Int32
-	var b: [<str_value>]Int32
+	var b: [4]Int32
 	b = a
 
 	if b != [0, 1, 2, 3] {
@@ -140,7 +140,7 @@ func test_generic_array() -> Bool {
 	}
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Nat64
-	var c: [<str_value>]Int64
+	var c: [4]Int64
 	c = a
 
 	if c != [0, 1, 2, 3] {
@@ -149,7 +149,7 @@ func test_generic_array() -> Bool {
 	}
 
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
-	var d: [<str_value>]Int32 = [<str_value>]Int32 a
+	var d: [10]Int32 = [10]Int32 a
 
 	if d != [0, 1, 2, 3] {
 		stdio.printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n")

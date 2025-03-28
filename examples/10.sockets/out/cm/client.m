@@ -14,10 +14,10 @@ const bufSize = 1024
 
 
 func send_file(fp: *File, sockfd: Int) -> Bool {
-	var data: [<str_value>]Char8
+	var data: [bufSize]Char8
 
 	while stdio.fgets(&data, bufSize, fp) != nil {
-		if socket.send(sockfd, &data, SizeT sizeof([<str_value>]Char8), 0) == -1 {
+		if socket.send(sockfd, &data, SizeT sizeof([bufSize]Char8), 0) == -1 {
 			return false
 		}
 		data = []

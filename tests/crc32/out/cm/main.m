@@ -9,7 +9,7 @@ const datastring = "123456789"
 const expected_hash = 0xCBF43926
 
 
-var data: [<str_value>]Word8 = [<str_value>]Word8 datastring
+var data: [9]Word8 = [9]Word8 datastring
 
 
 public func main() -> Int {

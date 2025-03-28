@@ -25,10 +25,10 @@ public func print(table: *Table) -> Unit {
 	var j: Nat32
 
 	// construct pointer to closed VLA array
-	let data = *[<str_value>][<str_value>]*Str8 table.data
+	let data = *[table.nRows][table.nCols]*Str8 table.data
 
 	// array of size of columns (in characters)
-	var sz: [<str_value>]Nat32 = []
+	var sz: [table.nCols]Nat32 = []
 
 	//
 	// calculate max length (in chars) of column
@@ -80,7 +80,7 @@ public func print(table: *Table) -> Unit {
 
 	i = 0
 	while i < table.nRows {
-		printRow(&(data[i]), &sz, table.nCols)
+		printRow(&data[i], &sz, table.nCols)
 		i = i + 1
 
 		if table.separate and i < table.nRows {
@@ -94,7 +94,7 @@ public func print(table: *Table) -> Unit {
 
 
 func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
-	let row = *[<str_value>]*Str8 raw_row
+	let row = *[nCols]*Str8 raw_row
 
 	var j: Nat32 = Nat32 0
 	while j < nCols {

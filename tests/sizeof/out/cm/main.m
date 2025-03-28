@@ -18,7 +18,7 @@ type Mixed2 record {
 	i: Int32
 	c: Char8
 	f: Float64
-	c2: [<str_value>]Char8
+	c2: [3]Char8
 	m: Mixed1
 }
 
@@ -26,7 +26,7 @@ type Mixed3 record {
 	c: Char8
 	i: Int32
 	f: Float64
-	c2: [<str_value>]Char8
+	c2: [9]Char8
 }
 
 type Mixed4 record {
@@ -34,9 +34,9 @@ type Mixed4 record {
 	c: Char8
 	i: Int32
 	f: Float64
-	c2: [<str_value>]Char8
+	c2: [9]Char8
 	i2: Int16
-	p: [<str_value>]Point
+	p: [3]Point
 	s2: Mixed3
 }
 
@@ -46,7 +46,7 @@ var c: Char8
 var i: Int32
 var f: Float64
 var i2: Int16
-var p: [<str_value>]Point
+var p: [3]Point
 var g: Bool
 
 type X record {
@@ -54,7 +54,7 @@ type X record {
 	i: Int32
 	f: Float64
 	i2: Int16
-	p: [<str_value>]Point
+	p: [3]Point
 	g: Bool
 }
 
@@ -127,10 +127,10 @@ public func main() -> Int {
 	stdio.printf("alignof(*Str8) = %llu\n", Nat64 alignof(*Str8))
 
 	// array size
-	stdio.printf("sizeof([10]Int32) = %llu\n", Nat64 sizeof([<str_value>]Int32))
-	stdio.printf("alignof([10]Int32) = %llu\n", Nat64 alignof([<str_value>]Int32))
+	stdio.printf("sizeof([10]Int32) = %llu\n", Nat64 sizeof([10]Int32))
+	stdio.printf("alignof([10]Int32) = %llu\n", Nat64 alignof([10]Int32))
 
-	stdio.printf("> alignof([3]Point) = %llu\n", Nat64 alignof([<str_value>]Point))
+	stdio.printf("> alignof([3]Point) = %llu\n", Nat64 alignof([3]Point))
 
 
 	// record size

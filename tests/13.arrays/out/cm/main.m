@@ -10,26 +10,26 @@ include "math"
 
 const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
 
-var globalArray: [<str_value>]Int32 = constantArray
+var globalArray: [10]Int32 = constantArray
 
-var arrayFromString: [<str_value>]Char8 = "abc"
+var arrayFromString: [3]Char8 = "abc"
 
 
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
 
-func f0(x: [<str_value>]Char8) -> [<str_value>]Char8 {
-	var local_copy_of_x: [<str_value>]Char8 = x
+func f0(x: [20]Char8) -> [30]Char8 {
+	var local_copy_of_x: [20]Char8 = x
 	stdio.printf("f0(\"%s\")\n", &local_copy_of_x)
 
 	// truncate array
-	var mic: [<str_value>]Char8 = x[0:6]
+	var mic: [6]Char8 = x[0:6]
 	mic[5] = "\x0"
 
 	stdio.printf("f0 mic = \"%s\"\n", &mic)
 
 	// extend array
-	var res: [<str_value>]Char8
+	var res: [30]Char8
 	res[0:20] = x
 	res[20:30] = []
 
@@ -51,7 +51,7 @@ const stopSequence = [0x16]
 
 func test() -> Unit {
 	// тестируем работу с локальным generic массивом
-	var yy: [<str_value>]Word64 = startSequence + [] + stopSequence
+	var yy: [6]Word64 = startSequence + [] + stopSequence
 	var i: Int32 = 0
 	while i < lengthof(yy) {
 		let y = yy[i]
@@ -66,7 +66,7 @@ func test() -> Unit {
 
 
 
-var a0: [<str_value>][<str_value>][<str_value>]Int32 = [
+var a0: [2][2][5]Int32 = [
 	[
 		[0, 1, 2, 3, 4]
 		[5, 6, 7, 8, 9]
@@ -77,14 +77,14 @@ var a0: [<str_value>][<str_value>][<str_value>]Int32 = [
 	]
 ]
 
-var a1: [<str_value>]Int32 = [0, 1, 2, 3, 4]
-var a2: [<str_value>]Int32 = [5, 6, 7, 8, 9]
-var a3: [<str_value>]*[<str_value>]Int32 = [&a1, &a2]
-var a4: [<str_value>]*[<str_value>]*[<str_value>]Int32 = [&a3, &a3]
-var p0: *[<str_value>]*[<str_value>]*[<str_value>]Int32 = &a4
+var a1: [5]Int32 = [0, 1, 2, 3, 4]
+var a2: [5]Int32 = [5, 6, 7, 8, 9]
+var a3: [2]*[5]Int32 = [&a1, &a2]
+var a4: [2]*[2]*[5]Int32 = [&a3, &a3]
+var p0: *[2]*[2]*[5]Int32 = &a4
 
 
-var a10: [<str_value>][<str_value>]Int32 = [
+var a10: [10][10]Int32 = [
 	[01, 02, 03, 04, 05, 06, 07, 08, 09, 10]
 	[11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 	[21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
@@ -185,7 +185,7 @@ func test_arrays() -> Unit {
 public func main() -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
-	var em: [<str_value>]Char8 = f0("Hello World!")
+	var em: [30]Char8 = f0("Hello World!")
 	stdio.printf("em = %s\n", &em)
 
 	var i: Int32 = 0
@@ -197,7 +197,7 @@ public func main() -> Int {
 
 	stdio.printf("------------------------------------\n")
 
-	var localArray: [<str_value>]Int32 = [4, 5, 6]
+	var localArray: [3]Int32 = [4, 5, 6]
 
 	i = 0
 	while i < 3 {
@@ -232,7 +232,7 @@ public func main() -> Int {
 
 	// assign array to array 1
 	// (with equal types)
-	var a: [<str_value>]Int32 = [1, 2, 3]
+	var a: [3]Int32 = [1, 2, 3]
 	stdio.printf("a[0] = %i\n", a[0])
 	stdio.printf("a[1] = %i\n", a[1])
 	stdio.printf("a[2] = %i\n", a[2])
@@ -240,7 +240,7 @@ public func main() -> Int {
 	// create (and initialize) new variable b
 	// (with type [3]Int32)
 	// this variable are copy of array a
-	var b: [<str_value>]Int32 = a
+	var b: [3]Int32 = a
 	stdio.printf("b[0] = %i\n", b[0])
 	stdio.printf("b[1] = %i\n", b[1])
 	stdio.printf("b[2] = %i\n", b[2])
@@ -254,9 +254,9 @@ public func main() -> Int {
 
 	// assign array to array 2
 	// (with array extending)
-	var c: [<str_value>]Int32 = [10, 20, 30]
+	var c: [3]Int32 = [10, 20, 30]
 
-	var d: [<str_value>]Int32
+	var d: [6]Int32
 	d[0:3] = c
 	d[3:6] = []
 
@@ -292,7 +292,7 @@ public func main() -> Int {
 	let init_array = [int100, int200, int300]
 
 	// check local literal array assignation to local array
-	var e: [<str_value>]Int32
+	var e: [4]Int32
 	e = init_array
 	stdio.printf("e[0] = %i\n", e[0])
 	stdio.printf("e[1] = %i\n", e[1])

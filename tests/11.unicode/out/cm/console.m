@@ -31,7 +31,7 @@ public func putchar_utf8(c: Char8) -> Unit {
 
 
 public func putchar_utf16(c: Char16) -> Unit {
-	var cc: [<str_value>]Char16
+	var cc: [2]Char16
 	cc[0] = c
 	cc[1] = Char16 0
 	var char32: Char32
@@ -41,7 +41,7 @@ public func putchar_utf16(c: Char16) -> Unit {
 
 
 public func putchar_utf32(c: Char32) -> Unit {
-	var decoded_buf: [<str_value>]Char8
+	var decoded_buf: [4]Char8
 	let n = Int32 utf.utf32_to_utf8(c, &decoded_buf)
 
 	var i: Int32 = Int32 0
@@ -90,7 +90,7 @@ public func puts16(s: *Str16) -> Unit {
 		}
 
 		var char32: Char32
-		let n = utf.utf16_to_utf32(*[]Char16 &(s[i]), &char32)
+		let n = utf.utf16_to_utf32(*[]Char16 &s[i], &char32)
 		if n == 0 {
 			break
 		}
@@ -128,7 +128,7 @@ public func print(form: *Str8, ...) -> Unit {
 
 
 public func vfprint(fd: Int32, form: *Str8, va: va_list) -> Int32 {
-	var strbuf: [<str_value>]Char8
+	var strbuf: [256]Char8
 	let n = vsprint(&strbuf, form, va)
 	strbuf[n] = "\x0"
 	unistd.write(fd, &strbuf, SizeT n)
@@ -221,7 +221,7 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			// %c for char
 			//
 			let c = __va_arg(va, Char32)
-			let n = Int32 utf.utf32_to_utf8(c, *[<str_value>]Char8 sptr)
+			let n = Int32 utf.utf32_to_utf8(c, *[4]Char8 sptr)
 			j = j + n
 		}
 	}
@@ -245,7 +245,7 @@ func n_to_hex_sym(n: Nat8) -> Char8 {
 
 
 func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
-	var tmpbuf: [<str_value>]Char8
+	var tmpbuf: [8]Char8
 	var d: Nat32 = x
 	var i: Int32 = 0
 
@@ -276,7 +276,7 @@ func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
 
 
 func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
-	var tmpbuf: [<str_value>]Char8
+	var tmpbuf: [11]Char8
 	var d: Int32 = x
 	let neg = d < 0
 
@@ -316,7 +316,7 @@ func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 
 
 func sprint_dec_n32(buf: *[]Char8, x: Nat32) -> Int32 {
-	var tmpbuf: [<str_value>]Char8
+	var tmpbuf: [11]Char8
 	var d: Nat32 = x
 	var i: Int32 = 0
 

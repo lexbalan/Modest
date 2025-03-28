@@ -5,14 +5,14 @@ include "string"
 
 public const hashSize = 32
 
-public type Hash [<str_value>]Word8
+public type Hash [hashSize]Word8
 
 
 type Context record {
-	data: [<str_value>]Word8
+	data: [64]Word8
 	datalen: Nat32
 	bitlen: Nat64
-	state: [<str_value>]Word32
+	state: [8]Word32
 }
 
 
@@ -90,7 +90,7 @@ const k = [
 
 
 func transform(ctx: *Context, data: *[]Word8) -> Unit {
-	var m: [<str_value>]Word32 = [<str_value>]Word32 []
+	var m: [64]Word32 = [64]Word32 []
 
 	var i: Nat32 = Nat32 0
 	var j: Nat32 = Nat32 0
@@ -108,7 +108,7 @@ func transform(ctx: *Context, data: *[]Word8) -> Unit {
 		i = i + 1
 	}
 
-	var x: [<str_value>]Word32 = ctx.state
+	var x: [8]Word32 = ctx.state
 
 	i = 0
 	while i < 64 {
@@ -141,7 +141,7 @@ func update(ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
 		ctx.data[ctx.datalen] = msg[i]
 		ctx.datalen = ctx.datalen + 1
 		if ctx.datalen == 64 {
-			transform(ctx, &(ctx.data))
+			transform(ctx, &ctx.data)
 			ctx.bitlen = ctx.bitlen + 512
 			ctx.datalen = 0
 		}
@@ -164,12 +164,12 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 
 	i = i + 1
 
-	string.memset(&(ctx.data[i]), 0, SizeT (n - i))
+	string.memset(&ctx.data[i], 0, SizeT (n - i))
 	//ctx.data[i:n-i] = []
 
 	if ctx.datalen >= 56 {
-		transform(ctx, &(ctx.data))
-		string.memset(&(ctx.data), 0, 56)
+		transform(ctx, &ctx.data)
+		string.memset(&ctx.data, 0, 56)
 		//ctx.data[0:56] = []
 	}
 
@@ -185,7 +185,7 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 	ctx.data[57] = Word8 (Word64 ctx.bitlen >> 48)
 	ctx.data[56] = Word8 (Word64 ctx.bitlen >> 56)
 
-	transform(ctx, &(ctx.data))
+	transform(ctx, &ctx.data)
 
 	// Since this implementation uses little endian byte ordering
 	// and SHA uses big endian, reverse all the bytes

@@ -35,7 +35,7 @@ var line: Line = {
 	b = {x = 12, y = 13}
 }
 
-var lines: [<str_value>]Line = [
+var lines: [3]Line = [
 	Line {
 		a = {x = 1, y = 2}
 		b = {x = 3, y = 4}
@@ -50,13 +50,13 @@ var lines: [<str_value>]Line = [
 	}
 ]
 
-var pLines: [<str_value>]*Line = [&(lines[0]), &(lines[1]), &(lines[2])]
+var pLines: [3]*Line = [&lines[0], &lines[1], &lines[2]]
 
 type Struct record {
 	x: *Line
 }
 
-var s: Struct = {x = &(lines[0])}
+var s: Struct = {x = &lines[0]}
 
 
 func test_records() -> Unit {

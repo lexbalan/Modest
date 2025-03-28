@@ -16,12 +16,12 @@ public func main() -> Int {
 	stdio.printf("hostid = %ld\n", hid)
 
 	// current control terminal
-	var cterm: [<str_value>]Char8
+	var cterm: [128]Char8
 	unistd.ctermid(&cterm)
 	stdio.printf("ctermid = %s\n", &cterm)
 
 	// current working directory
-	var cwd: [<str_value>]Char8
+	var cwd: [128]Char8
 	unistd.getcwd(&cwd, lengthof(cwd))
 	stdio.printf("cwd = %s\n", &cwd)
 

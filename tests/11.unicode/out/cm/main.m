@@ -20,9 +20,9 @@ const string8Const = *Str8 genericStringConst
 const string16Const = *Str16 genericStringConst
 const string32Const = *Str32 genericStringConst
 
-var arr_utf8: [<str_value>]Char8 = "Hi!\n"
-var arr_utf16: [<str_value>]Char16 = "Hello Ω!\n"
-var arr_utf32: [<str_value>]Char32 = "Hello!\n"
+var arr_utf8: [8]Char8 = "Hi!\n"
+var arr_utf16: [9]Char16 = "Hello Ω!\n"
+var arr_utf32: [8]Char32 = "Hello!\n"
 
 
 public func main() -> Int32 {

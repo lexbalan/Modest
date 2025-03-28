@@ -23,14 +23,14 @@ const ps = [
 	{x = 2, y = 2}
 ]
 
-const points = [<str_value>]Point ps
+const points = [3]Point ps
 
 
 // есть проблема - в C глобальные переменные с модификатором const
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
-var points2: [<str_value>]Point = points
+var points2: [3]Point = points
 
 
 // define function main

@@ -3,8 +3,8 @@ include "stdio"
 
 
 
-var globalArray0: [<str_value>]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-var globalArray1: [<str_value>]Int32 = []
+var globalArray0: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+var globalArray1: [10]Int32 = []
 
 
 public func main() -> Int {
@@ -30,8 +30,8 @@ public func main() -> Int {
 
 	// local
 
-	var localArray0: [<str_value>]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-	var localArray1: [<str_value>]Int32 = []
+	var localArray0: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+	var localArray1: [10]Int32 = []
 
 
 	localArray1 = localArray0

@@ -3,14 +3,14 @@ include "stdio"
 
 
 // returns array by value
-func getarr10() -> [<str_value>]Int32 {
+func getarr10() -> [10]Int32 {
 	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 }
 
 
 // receive & returns array by value
-func arraysAdd(a: [<str_value>]Int32, b: [<str_value>]Int32) -> [<str_value>]Int32 {
-	var c: [<str_value>]Int32
+func arraysAdd(a: [10]Int32, b: [10]Int32) -> [10]Int32 {
+	var c: [10]Int32
 	var i: Int32 = 0
 	while i < 10 {
 		c[i] = a[i] + b[i]

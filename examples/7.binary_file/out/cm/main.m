@@ -11,8 +11,8 @@ const filename = *Str8 "file.bin"
 
 // chunk of data for read/write operations in file
 type Chunk record {
-	id: [<str_value>]Char
-	data: [<str_value>]Char
+	id: [100]Char
+	data: [1024]Char
 }
 
 
@@ -30,8 +30,8 @@ func write_example() -> Unit {
 
 	// pointers casting requires -funsafe translator option
 	// (see Makefile)
-	string.strcpy(&(chunk.id), *[]Char "id")
-	string.strcpy(&(chunk.data), *[]Char "data")
+	string.strcpy(&chunk.id, *[]Char "id")
+	string.strcpy(&chunk.data, *[]Char "data")
 
 	// write chunk to file
 	stdio.fwrite(&chunk, sizeof(Chunk), 1, fp)
@@ -54,8 +54,8 @@ func read_example() -> Unit {
 	stdio.fread(&chunk, sizeof(Chunk), 1, fp)
 
 	stdio.printf("file \"%s\" contains:\n", filename)
-	stdio.printf("chunk.id: \"%s\"\n", &(chunk.id))
-	stdio.printf("chunk.data: \"%s\"\n", &(chunk.data))
+	stdio.printf("chunk.id: \"%s\"\n", &chunk.id)
+	stdio.printf("chunk.data: \"%s\"\n", &chunk.data)
 
 	stdio.fclose(fp)
 }

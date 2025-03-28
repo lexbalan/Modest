@@ -25,7 +25,7 @@ func htons(x: Word16) -> Word16 {
 
 
 func handleRequest(client_socket: Int32) -> Unit {
-	var buffer: [<str_value>]Word8
+	var buffer: [receiveBufferSize]Word8
 	let bytes_received = unistd.read(client_socket, &buffer, lengthof(buffer) - 1)
 	if bytes_received < 0 {
 		stdio.perror("read")
@@ -36,7 +36,7 @@ func handleRequest(client_socket: Int32) -> Unit {
 
 	stdio.printf("Received request:\n%s\n", *Str8 &buffer)
 
-	var response: [<str_value>]Char8
+	var response: [sendBufferSize]Char8
 	stdio.sprintf(&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", httpHeader, pageCounter)
 
 	unistd.write(client_socket, &response, string.strlen(&response))

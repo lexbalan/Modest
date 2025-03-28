@@ -1,12 +1,26 @@
 
 import type as htype
 from error import info
-from .common import *
+from .common import output_open, out, output_close
 from hlir.hlir import *
 from util import get_item_by_id
 import foundation
 
 INDENT_SYMBOL = "\t"
+
+
+
+indent_level = 0
+
+def indent_up():
+	global indent_level
+	indent_level = indent_level + 1
+
+
+def indent_down():
+	global indent_level
+	indent_level = indent_level - 1
+
 
 
 def init():
@@ -16,9 +30,17 @@ def init():
 def newline(n=1):
 	out('\n' * n)
 
+def newline_s(n=1):
+	return '\n' * n
+
+def indent_s():
+	global indent_level
+	return INDENT_SYMBOL * indent_level
+
 
 def indent():
-	ind(INDENT_SYMBOL)
+	out(indent_s())
+
 
 
 def nl_indent(nl=1):
@@ -33,7 +55,7 @@ nl_str = "\n"
 def str_nl_indent(nl=1):
 	s = nl_str * nl
 	if nl > 0:
-		s += indentation(INDENT_SYMBOL)
+		s += indent_s()
 	return s
 
 
@@ -100,8 +122,8 @@ def str_id_for(x):
 	return get_id_str(x)
 
 
-def print_id_for(x):
-	out(str_id_for(x))
+#def str_id_for(x):
+#	out(str_id_for(x))
 
 
 def print_stmt_comment(x):
@@ -192,18 +214,6 @@ def str_type_record(t):
 	return s
 
 
-def print_type_enum(t):
-	out("enum {")
-	items = t.items
-	i = 0
-	while i < len(items):
-		item = items[i]
-		out(NL_INDENT)
-		print_id_for(item)
-		i = i + 1
-	out("\n}")
-
-
 def str_type_func(t, extra_args=False):
 	s = '('
 	fields = t.params
@@ -260,9 +270,6 @@ def str_type(t):
 		return "<type:" + str(t) + ">"
 
 
-def print_type(t):
-	out(str_type(t))
-
 
 bin_ops = {
 	'or': 'or', 'xor': 'xor', 'and': 'and', 'shl': '<<', 'shr': '>>',
@@ -272,23 +279,28 @@ bin_ops = {
 }
 
 
-def print_value_bin(x, ctx):
-	print_value(x.left, parent_expr=x)
-	out(' %s ' % bin_ops[x.op])
-	print_value(x.right, parent_expr=x)
+def str_value_bin(x, ctx):
+	s = ''
+	s += str_value(x.left, parent_expr=x)
+	s += ' %s ' % bin_ops[x.op]
+	s += str_value(x.right, parent_expr=x)
+	return s
 
 
-def print_value_shl(x, ctx):
-	print_value(x.left, parent_expr=x)
-	out(' << ')
-	print_value(x.right, parent_expr=x)
+def str_value_shl(x, ctx):
+	s = ''
+	s += str_value(x.left, parent_expr=x)
+	s += ' << '
+	s += str_value(x.right, parent_expr=x)
+	return s
 
 
-def print_value_shr(x, ctx):
-	print_value(x.left, parent_expr=x)
-	out(' >> ')
-	print_value(x.right, parent_expr=x)
-
+def str_value_shr(x, ctx):
+	s = ''
+	s += str_value(x.left, parent_expr=x)
+	s += ' >> '
+	s += str_value(x.right, parent_expr=x)
+	return s
 
 
 un_ops = {
@@ -298,114 +310,107 @@ un_ops = {
 }
 
 
-def print_value_ref(x, ctx):
-	out('&')
-	print_value(x.value, parent_expr=x)
+def str_value_ref(x, ctx):
+	return '&' + str_value(x.value, parent_expr=x)
 
 
-def print_value_deref(x, ctx):
-	out('*')
-	print_value(x.value, parent_expr=x)
+def str_value_deref(x, ctx):
+	return '*' + str_value(x.value, parent_expr=x)
 
 
-def print_value_not(x, ctx):
-	out('not ')
-	print_value(x.value, parent_expr=x)
+def str_value_not(x, ctx):
+	return 'not ' + str_value(x.value, parent_expr=x)
 
 
-def print_value_neg(x, ctx):
-	out('-')
-	print_value(x.value, parent_expr=x)
+def str_value_neg(x, ctx):
+	return '-' + str_value(x.value, parent_expr=x)
 
 
-def print_value_pos(x, ctx):
-	out('+')
-	print_value(x.value, parent_expr=x)
+def str_value_pos(x, ctx):
+	return '+' + str_value(x.value, parent_expr=x)
 
 
-#def print_value_un(x, ctx):
-#	out(un_ops[x.op]); print_value(x.value, parent_expr=x)
-
-
-def print_ValueCall(x, ctx):
-	print_value(x.func)
-	out("(")
+def str_value_call(x, ctx):
+	s = str_value(x.func)
+	s += "("
 	i = 0
 	args = x.args
 	n = len(args)
 	while i < n:
 		arg = args[i]
-		if i > 0: out(", ")
+		if i > 0:
+			s += ", "
 
 
 		if isinstance(arg, Initializer):
 			# named parameter
-			out("%s = " % get_id_str(arg))
-			print_value(arg.value)
+			s += "%s = " % get_id_str(arg)
+			s += str_value(arg.value)
 		else:
-			print_value(arg)
-
+			s += str_value(arg)
 
 		i = i + 1
-	out(")")
+	s += ")"
+	return s
 
 
-def print_value_index(x, ctx):
-	print_value(x.left, parent_expr=x)
-	out("["); print_value(x.index); out("]")
+def str_value_index(x, ctx):
+	s = str_value(x.left, parent_expr=x)
+	s += "[" + str_value(x.index) + "]"
+	return s
 
 
-def print_value_slice(x, ctx):
+def str_value_slice(x, ctx):
 	left = x.left
-	print_value(left, parent_expr=x)
-	out("[")
-	print_value(x.index_from)
-	out(":")
+	s = str_value(left, parent_expr=x)
+	s += "["
+	s += str_value(x.index_from)
+	s += ":"
 	if not isinstance(x.index_to, ValueUndefined):
-		print_value(x.index_to)
-	out("]")
+		s += str_value(x.index_to)
+	s += "]"
+	return s
 
 
-def print_value_access(x, ctx):
-	print_value(x.left, parent_expr=x)
-	out(".")
-	print_id_for(x.field)
+def str_value_access(x, ctx):
+	s=str_value(x.left, parent_expr=x)
+	s += "."
+	s += str_id_for(x.field)
+	return s
 
 
-def print_value_access_module(x, ctx):
+def str_value_access_module(x, ctx):
 	left = x.left
 	id_str = get_id_str(x.right)
-	out("%s.%s" % (left.id, id_str))
+	return "%s.%s" % (left.id, id_str)
 
 
-def print_cast(t, v, ctx=[]):
-	print_type(t)
-	out(" ")
-	print_value(v, ctx=ctx)
+def str_cons(t, v, ctx=[]):
+	s = str_type(t)
+	s += " "
+	s += str_value(v, ctx=ctx)
+	return s
 
 
-def print_value_cons(x, ctx):
+def str_value_cons(x, ctx):
 	value = x.value
 	from_type = value.type
 	to_type = x.type
 
 	if x.method == 'implicit':
-		print_value(value)
-		return
+		return str_value(value)
 
 	# NO need cast ptr to *void
 	if Type.is_pointer(from_type):
 		if Type.is_free_pointer(to_type):
-			print_value(value)
-			return
+			return str_value(value)
 
 	# NO need cast *void to ptr
 	if Type.is_free_pointer(from_type):
 		if Type.is_pointer(to_type):
-			print_value(value)
-			return
+			return str_value(value)
 
-	print_cast(to_type, value, ctx)
+	return str_cons(to_type, value, ctx)
 
 
 
@@ -422,14 +427,12 @@ def is_zero_tail(values, i, n):
 
 
 # print Array literal
-def print_value_array(v, ctx):
+def str_value_array(v, ctx):
 
-	#?
 	if Type.is_array_of_char(v.type):
-		print_value_str(v, ctx=[])
-		return
+		return str_value_str(v, ctx=[])
 
-	out("[")
+	s = ""
 	indent_up()
 
 	values = v.items
@@ -444,24 +447,23 @@ def print_value_array(v, ctx):
 
 		nl = a.nl
 		if nl > 0:
-			newline(nl)
-			indent()
+			s +=  newline_s(nl)
+			s += indent_s()
 		else:
 			if i > 0:
-				out(', ')
+				s += ', '
 
-		print_value(a, ctx=ctx)
+		s += str_value(a, ctx=ctx)
 
 		i = i + 1
-
 
 	indent_down()
 
 	if v.nl_end > 0:
-		newline(v.nl_end)
-		indent()
+		s += newline_s(v.nl_end)
+		s += indent_s()
 
-	out("]")
+	return "[%s]" % s
 
 
 
@@ -488,7 +490,7 @@ def code_to_char(cc):
 
 
 # print Array of Char literal
-def print_value_str(x, ctx):
+def str_value_str(x, ctx):
 	asset = x.asset
 
 	char_codes = []
@@ -497,31 +499,31 @@ def print_value_str(x, ctx):
 		cc = x.asset[i].asset
 		char_codes.append(cc)
 		i = i + 1
-	print_str_literal(char_codes)
+	return str_literal_string(char_codes)
 
 
 # print value with type String
-def print_strx(string):
+def str_strx(string):
 	char_codes = []
 	for c in string.asset:
 		cc = ord(c)
 		char_codes.append(cc)
-	print_str_literal(char_codes)
+	return str_literal_string(char_codes)
 
 
 # print Array of Char codes literal
-def print_str_literal(char_codes):
-	out("\"")
+def str_literal_string(char_codes):
+	s = ''
 	for cc in char_codes:
-		out(code_to_char(cc))
-	out("\"")
+		s += code_to_char(cc)
+	return '"%s"' % s
 
 
 # print Record literal
-def print_value_record(v, ctx):
+def str_value_record(v, ctx):
 	multiline = not 'oneline' in ctx
 
-	out("{")
+	s = ''
 
 	indent_up()
 
@@ -530,54 +532,52 @@ def print_value_record(v, ctx):
 	while i < nitems:
 		item = v.type.fields[i]
 		field_str = get_id_str(item)
-
 		ini = get_item_by_id(v.items, field_str)
 
 		nl = ini.nl
 		if nl > 0:
-			newline(nl)
-			indent()
+			s +=  newline_s(nl)
+			s += indent_s()
 		else:
 			if i > 0:
-				out(" ")
+				s += " "
 
-		out("%s = " % field_str)
-		print_value(ini.value, ctx)
+		s += "%s = " % field_str
+		s += str_value(ini.value, ctx)
 
 		if nl == 0:
 			if i < (nitems - 1):
-				out(",")
+				s += ","
 
 		i = i + 1
 
 	indent_down()
 
 	if v.nl_end > 0:
-		newline(v.nl_end)
-		indent()
+		s +=  newline_s(v.nl_end)
+		s += indent_s()
 
-	out("}")
+	return "{%s}" % s
 
 
 # print Bool literal
-def print_value_bool_create(x, ctx):
+def str_value_bool_create(x, ctx):
 	if x.asset:
-		out('true')
+		return 'true'
 	else:
-		out('false')
+		return 'false'
 
 
 # print Char literal
-def print_value_char_create(x, ctx):
-	num = x.asset
-	if num >= 0x20:
-		out("\"%s\"" % chr(num))
-	else:
-		out("\"\\x%x\"" % num)
+def str_value_char_create(x, ctx):
+	cc = x.asset
+	if cc < 0x20:
+		return "\"\\x%x\"" % cc
+	return "\"%s\"" % chr(cc)
 
 
 # print Int literal
-def print_value_integer(x, ctx):
+def str_value_integer(x, ctx):
 	num = x.asset
 
 	nsigns = 0
@@ -591,206 +591,218 @@ def print_value_integer(x, ctx):
 		pre = '0x'
 
 	fmt = "%s%%0%d%s" % (pre, nsigns, spec)
-	out(fmt % num)
+	return fmt % num
 
 
 
-# print Float literal
-def print_value_float(x, ctx):
-	out('{0:f}'.format(x.asset))
+def str_value_float(x, ctx):
+	return '{0:f}'.format(x.asset)
 
 
 
 # print Pointer literal
-def print_value_ptr(x, ctx):
+def str_value_ptr(x, ctx):
 	if x.asset == 0:
-		out("nil")
-	else:
-		print_type(x['type'])
-		out(" 0x%08X" % x.asset)
+		return "nil"
+
+	return str_type(x['type']) + " 0x%08X" % x.asset
 
 
-# print Zero literal
-def print_ValueZero(x, ctx):
-	t = x.type
-	if Type.is_array(t): out("[]")
-	elif Type.is_record(t): out("{}")
-	else: out("0")
+def str_value_enum(x, ctx):
+	return str_id_for(x)
 
 
-def print_value_enum(x, ctx):
-	print_id_for(x)
+def str_value_by_id(x, ctx):
+	return str_id_for(x)
 
 
-def print_value_by_id(x, ctx):
-	print_id_for(x)
-
-
-def print_value_new(x, ctx):
-	out("new ")
-	print_value(x.value)
+def str_value_new(x, ctx):
+	return "new " + str_value(x.value)
 
 
 # Сделал отдельный метод печати строк и есть отдельный для печати
-def print_value_string(x, ctx):
+def str_value_string(x, ctx):
 	char_codes = []
 	for char in x.asset:
 		cc = ord(char)
 		char_codes.append(cc)
-	print_str_literal(char_codes)
+	return str_literal_string(char_codes)
 
 
-def print_value_literal(x, ctx):
+def str_value_literal(x, ctx):
 	t = x.type
-	if Type.is_num(t): print_value_integer(x, ctx)
-	elif Type.is_arithmetical(t): print_value_integer(x, ctx)
-	elif Type.is_float(t): print_value_float(x, ctx)
-	elif Type.is_string(t): print_value_string(x, ctx)
-	elif Type.is_record(t): print_value_record(x, ctx)
-	elif Type.is_array(t): print_value_array(x, ctx)
-	elif Type.is_pointer(t): print_value_ptr(x, ctx)
-	elif Type.is_bool(t): print_value_bool_create(x, ctx)
-	elif Type.is_char(t): print_value_char_create(x, ctx)
-	elif Type.is_word(t): print_value_integer(x, ctx)
-	elif Type.is_enum(t): print_value_integer(x, ctx)
-	#elif Type.is_byte(t): print_value_integer(x, ctx)
-	return
+	if Type.is_num(t):
+		return str_value_integer(x, ctx)
+	elif Type.is_arithmetical(t):
+		return str_value_integer(x, ctx)
+	elif Type.is_float(t):
+		return str_value_float(x, ctx)
+	elif Type.is_string(t):
+		return str_value_string(x, ctx)
+	elif Type.is_record(t):
+		return str_value_record(x, ctx)
+	elif Type.is_array(t):
+		return str_value_array(x, ctx)
+	elif Type.is_pointer(t):
+		return str_value_ptr(x, ctx)
+	elif Type.is_bool(t):
+		return str_value_bool_create(x, ctx)
+	elif Type.is_char(t):
+		return str_value_char_create(x, ctx)
+	elif Type.is_word(t):
+		return str_value_integer(x, ctx)
+	elif Type.is_enum(t):
+		return str_value_integer(x, ctx)
+	return "<str_value_literal:%s>" % str(x)
 
 
-def print_value_sizeof_value(x, ctx):
-	out("sizeof ")
-	print_value(x.of)
+def str_value_sizeof_value(x, ctx):
+	return "sizeof " + str_value(x.of)
+
+def str_value_sizeof_type(x, ctx):
+	return "sizeof(" + str_type(x.of) + ')'
+
+def str_value_alignof(x, ctx):
+	return "alignof(" + str_type(x.of) + ")"
+
+def str_value_lengthof(x, ctx):
+	return "lengthof(" + str_value(x.value) + ")"
+
+def str_value_offsetof(x, ctx):
+	return "offsetof(" + str_type(x.of) + '.' + x.field.str + ')'
 
 
-def print_value_sizeof_type(x, ctx):
-	out("sizeof(")
-	print_type(x.of)
-	out(")")
+def str_value_va_start(x, ctx):
+	s="__va_start("
+	s += str_value(x.va_list)
+	s += ", "
+	s += str_value(x.last_param)
+	s += ")"
+	return s
 
 
-def print_value_alignof(x, ctx):
-	out("alignof(")
-	print_type(x.of)
-	out(")")
-
-def print_value_lengthof(x, ctx):
-	out("lengthof(")
-	print_value(x.value)
-	out(")")
-
-def print_value_offsetof(x, ctx):
-	out("offsetof(")
-	print_type(x.of)
-	out('.%s' % x.field.str)
-	out(")")
-
-def print_value_va_start(x, ctx):
-	out("__va_start(")
-	print_value(x.va_list)
-	out(", ")
-	print_value(x.last_param)
-	out(")")
+def str_value_va_arg(x, ctx):
+	s = "__va_arg("
+	s += str_value(x.va_list)
+	s += ", "
+	s += str_type(x.type)
+	s += ")"
+	return s
 
 
-def print_value_va_arg(x, ctx):
-	out("__va_arg(")
-	print_value(x.va_list)
-	out(", ")
-	print_type(x.type)
-	out(")")
+def str_value_va_end(x, ctx):
+	return "__va_end(" + str_value(x.va_list) + ")"
 
 
-def print_value_va_end(x, ctx):
-	out("__va_end(")
-	print_value(x.va_list)
-	out(")")
+def str_value_va_copy(x, ctx):
+	s="__va_copy("
+	s += str_value(x.dst)
+	s += ", "
+	s += str_value(x.src)
+	s += ")"
+	return s
 
 
-def print_value_va_copy(x, ctx):
-	out("__va_copy(")
-	print_value(x.dst)
-	out(", ")
-	print_value(x.src)
-	out(")")
+def str_value_subexpr(x, ctx):
+	return "(" + str_value(x.value) + ")"
 
-def print_value_subexpr(x, ctx):
-	out("(")
-	print_value(x.value)
-	out(")")
 
-def print_value(x, ctx=[], parent_expr=None, print_just_id=True):
-
-	need_wrap = False
-	if parent_expr != None:
-		need_wrap = precedence(x) < precedence(parent_expr)
+def str_value(x, ctx=[], parent_expr=None):
 
 	assert(isinstance(x, Value))
 
-	if need_wrap:
-		out("(")
+	if isinstance(x, ValueLiteral):
+		return str_value_literal(x, ctx)
+	elif isinstance(x, ValueBin):
+		return str_value_bin(x, ctx)
+	elif isinstance(x, ValueShl):
+		return str_value_shl(x, ctx)
+	elif isinstance(x, ValueShr):
+		return str_value_shr(x, ctx)
+	elif isinstance(x, ValueRef):
+		return str_value_ref(x, ctx)
+	elif isinstance(x, ValueDeref):
+		return str_value_deref(x, ctx)
+	elif isinstance(x, ValueConst):
+		return str_value_by_id(x, ctx)
+	elif isinstance(x, ValueFunc):
+		return str_value_by_id(x, ctx)
+	elif isinstance(x, ValueVar):
+		return str_value_by_id(x, ctx)
+	elif isinstance(x, ValueCons):
+		return str_value_cons(x, ctx)
+	elif isinstance(x, ValueCall):
+		return str_value_call(x, ctx)
+	elif isinstance(x, ValueIndex):
+		return str_value_index(x, ctx)
+	elif isinstance(x, ValueAccessRecord):
+		return str_value_access(x, ctx)
+	elif isinstance(x, ValueSlice):
+		return str_value_slice(x, ctx)
+	elif isinstance(x, ValueSubexpr):
+		return str_value_subexpr(x, ctx)
+	elif isinstance(x, ValueNot):
+		return str_value_not(x, ctx)
+	elif isinstance(x, ValueNeg):
+		return str_value_neg(x, ctx)
+	elif isinstance(x, ValuePos):
+		return str_value_pos(x, ctx)
+	elif isinstance(x, ValueNew):
+		return str_value_new(x, ctx)
+	elif isinstance(x, ValueSizeofValue):
+		return str_value_sizeof_value(x, ctx)
+	elif isinstance(x, ValueSizeofType):
+		return str_value_sizeof_type(x, ctx)
+	elif isinstance(x, ValueAlignof):
+		return str_value_alignof(x, ctx)
+	elif isinstance(x, ValueOffsetof):
+		return str_value_offsetof(x, ctx)
+	elif isinstance(x, ValueLengthof):
+		return str_value_lengthof(x, ctx)
+	elif isinstance(x, ValueVaArg):
+		return str_value_va_arg(x, ctx)
+	elif isinstance(x, ValueVaStart):
+		return str_value_va_start(x, ctx)
+	elif isinstance(x, ValueVaEnd):
+		return str_value_va_end(x, ctx)
+	elif isinstance(x, ValueVaCopy):
+		return str_value_va_copy(x, ctx)
+	elif isinstance(x, ValueUndefined):
+		return "<undef>"
+	else:
+		return "%s" % str(x.__class__)
 
-	if isinstance(x, ValueLiteral): print_value_literal(x, ctx)
-	elif isinstance(x, ValueBin): print_value_bin(x, ctx)
-	elif isinstance(x, ValueShl): print_value_shl(x, ctx)
-	elif isinstance(x, ValueShr): print_value_shr(x, ctx)
-	elif isinstance(x, ValueRef): print_value_ref(x, ctx)
-	elif isinstance(x, ValueDeref): print_value_deref(x, ctx)
-	elif isinstance(x, ValueConst): print_value_by_id(x, ctx)
-	elif isinstance(x, ValueFunc): print_value_by_id(x, ctx)
-	elif isinstance(x, ValueVar): print_value_by_id(x, ctx)
-	elif isinstance(x, ValueCons): print_value_cons(x, ctx)
-	elif isinstance(x, ValueCall): print_ValueCall(x, ctx)
-	elif isinstance(x, ValueIndex): print_value_index(x, ctx)
-	elif isinstance(x, ValueAccessRecord): print_value_access(x, ctx)
-	elif isinstance(x, ValueSlice): print_value_slice(x, ctx)
-	elif isinstance(x, ValueSubexpr): print_value_subexpr(x, ctx)
-	elif isinstance(x, ValueNot): print_value_not(x, ctx)
-	elif isinstance(x, ValueNeg): print_value_neg(x, ctx)
-	elif isinstance(x, ValuePos): print_value_pos(x, ctx)
-	elif isinstance(x, ValueNew): print_value_new(x, ctx)
-	elif isinstance(x, ValueSizeofValue): print_value_sizeof_value(x, ctx)
-	elif isinstance(x, ValueSizeofType): print_value_sizeof_type(x, ctx)
-	elif isinstance(x, ValueAlignof): print_value_alignof(x, ctx)
-	elif isinstance(x, ValueOffsetof): print_value_offsetof(x, ctx)
-	elif isinstance(x, ValueLengthof): print_value_lengthof(x, ctx)
-	elif isinstance(x, ValueVaArg): print_value_va_arg(x, ctx)
-	elif isinstance(x, ValueVaStart): print_value_va_start(x, ctx)
-	elif isinstance(x, ValueVaEnd): print_value_va_end(x, ctx)
-	elif isinstance(x, ValueVaCopy): print_value_va_copy(x, ctx)
-	elif isinstance(x, ValueUndefined): out("/*U*/")
-	else: out("%s" % str(x.__class__))
-
-	if need_wrap:
-		out(")")
+	#if need_wrap:
+	#	out(")")
 
 
-def str_value(x):
-	return "<str_value>"
+def print_value(x):
+	return out(str_value(x))
 
 
 def print_stmt_type(x):
 	out("type ")
-	print_id_for(x)
+	out(str_id_for(x))
 	out(" ")
-	print_type(x.original_type)
+	out(str_type(x.original_type))
 
 
 def print_stmt_const(x, operator='const'):
 	out("%s " % operator)
-	print_id_for(x)
+	out(str_id_for(x))
 	out(" = ")
-	print_value(x.init_value, print_just_id=False)
+	out(str_value(x.init_value))
 
 
 def print_stmt_var(x):
 	out("var ")
-	print_id_for(x.value)
+	out(str_id_for(x.value))
 	out(": ")
-	print_type(x.value.type)
+	out(str_type(x.value.type))
 	iv = x.init_value
 	if not Value.isUndefined(iv):
 		out(" = ")
-		print_value(iv)
+		out(str_value(iv))
 
 
 def print_stmt_func(x):
@@ -799,7 +811,7 @@ def print_stmt_func(x):
 	func = x.value
 	ft = func.type
 	out('func ')
-	print_id_for(func)
+	out(str_id_for(func))
 	out(str_type_func(ft, extra_args=ft.extra_args))
 	print_stmt_block(x.stmt)
 
@@ -870,6 +882,10 @@ def print_asm_pair(pair):
 	out(']')
 
 
+def print_list_by(args, func):
+	for arg in args:
+		func(arg)
+
 # for print_stmt_asm:
 # prints pairs: <specifier> <value>
 def print_asm_pairs(args):
@@ -880,7 +896,7 @@ def print_asm_pairs(args):
 
 def print_stmt_asm(x):
 	out('__asm(')
-	print_strx(x.text)
+	out(str_strx(x.text))
 
 	if len(x.outputs) > 0:
 		out(', ')
@@ -962,15 +978,17 @@ def run(module, outname, options):
 	global cmodule
 	cmodule = module
 	output_open(outname + '.m')
+
 	for x in module.imports:
 		stmt_import = module.imports[x]
 		out('import "%s"\n' % (stmt_import.impline))
+
 	for x in module.included_modules:
 		out('include "%s"\n' % (str(x.id)))
-	#	m = m.module
-	#	out('import "%s"' % m.)
+
 	for x in module.defs:
 		printTopLevelStmt(x)
+
 	out("\n\n")
 	output_close()
 
