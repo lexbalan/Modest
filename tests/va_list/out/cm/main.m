@@ -17,11 +17,11 @@ func my_printf(format: *Str8, ...) -> SSizeT {
 
 	let strMaxLen = 127 + 1
 	var buf: [strMaxLen]Char8
-	let n = stdio.vsnprintf(&buf, strMaxLen, format, va2)
+	let n = vsnprintf(&buf, strMaxLen, format, va2)
 
 	__va_end(va2)
 
-	return unistd.write(unistd.c_STDOUT_FILENO, &buf, SizeT n)
+	return write(c_STDOUT_FILENO, &buf, SizeT n)
 }
 
 

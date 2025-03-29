@@ -35,7 +35,7 @@ public func print(table: *Table) -> Unit {
 	if table.header != nil {
 		i = 0
 		while i < table.nCols {
-			let len = Nat32 string.strlen(table.header[i])
+			let len = Nat32 strlen(table.header[i])
 			if len > sz[i] {
 				sz[i] = len
 			}
@@ -47,7 +47,7 @@ public func print(table: *Table) -> Unit {
 	while i < table.nRows {
 		j = 0
 		while j < table.nCols {
-			let len = Nat32 string.strlen(data[i][j])
+			let len = Nat32 strlen(data[i][j])
 			if len > sz[j] {
 				sz[j] = len
 			}
@@ -96,22 +96,22 @@ func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 
 	var j: Nat32 = Nat32 0
 	while j < nCols {
-		stdio.printf("|")
+		printf("|")
 		let s = row[j]
-		var len: Nat32 = Nat32 string.strlen(s)
+		var len: Nat32 = Nat32 strlen(s)
 		if s[0] != "\x0" {
 			len = len + 1
-			stdio.printf(" %s", s)
+			printf(" %s", s)
 		}
 
 		var k: Nat32 = Nat32 0
 		while k < (sz[j] - len) {
-			stdio.printf(" ")
+			printf(" ")
 			k = k + 1
 		}
 		j = j + 1
 	}
-	stdio.printf("|\n")
+	printf("|\n")
 }
 
 
@@ -121,14 +121,14 @@ func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 func separator(sz: *[]Nat32, n: Nat32) -> Unit {
 	var i: Nat32 = Nat32 0
 	while i < n {
-		stdio.printf("+")
+		printf("+")
 		var j: Nat32 = Nat32 0
 		while j < sz[i] {
-			stdio.printf("-")
+			printf("-")
 			j = j + 1
 		}
 		i = i + 1
 	}
-	stdio.printf("+\n")
+	printf("+\n")
 }
 

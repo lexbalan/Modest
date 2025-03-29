@@ -1347,7 +1347,8 @@ def submodule_access(x):
 	if v.type.is_incompleted():
 		v = value_update_incompleted_type(submodule, v, iname)
 
-	return v
+	#mass
+	return ValueAccessModule(v.type, x['left'], x['right'], v, ti=x['ti'])
 
 
 

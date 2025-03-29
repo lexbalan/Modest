@@ -13,7 +13,7 @@ type Object record {
 
 
 public func main() -> Int {
-	stdio.printf("memcopy test\n")
+	printf("memcopy test\n")
 
 	var o1: Object
 	var o2: Object
@@ -25,13 +25,13 @@ public func main() -> Int {
 	}
 
 	let len = sizeof(Object)
-	stdio.printf("LEN = %u\n", Nat32 len)
+	printf("LEN = %u\n", Nat32 len)
 
-	memory.copy(&o2, &o1, len)
+	mem.copy(&o2, &o1, len)
 
-	stdio.printf("firstname = '%s'\n", &o2.firstname)
-	stdio.printf("lastname = '%s'\n", &o2.lastname)
-	stdio.printf("age = %d\n", o2.age)
+	printf("firstname = '%s'\n", &o2.firstname)
+	printf("lastname = '%s'\n", &o2.lastname)
+	printf("age = %d\n", o2.age)
 
 	return 0
 }

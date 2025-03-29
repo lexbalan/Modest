@@ -9,7 +9,7 @@ func named_args_test(a: Int32, b: Int32, c: Int32) -> Int32 {
 
 
 public func main() -> Int {
-	stdio.printf("test named_args\n")
+	printf("test named_args\n")
 
 	let a = 25
 	let b = 15
@@ -24,9 +24,9 @@ public func main() -> Int {
 	)
 
 	if x0 == x1 {
-		stdio.printf("test passed\n")
+		printf("test passed\n")
 	} else {
-		stdio.printf("test failed\n")
+		printf("test failed\n")
 	}
 
 	return 0

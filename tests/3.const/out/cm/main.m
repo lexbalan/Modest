@@ -35,13 +35,13 @@ var points2: [3]Point = points
 
 // define function main
 public func main() -> Int {
-	stdio.printf("test const\n")
+	printf("test const\n")
 
-	stdio.printf("genericIntConst = %d\n", Int32 genericIntConst)
-	stdio.printf("int32Const = %d\n", int32Const)
+	printf("genericIntConst = %d\n", Int32 genericIntConst)
+	printf("int32Const = %d\n", int32Const)
 
 	//	printf("genericStringConst = %s\n", genericStringConst)
-	stdio.printf("string8Const = %s\n", string8Const)
+	printf("string8Const = %s\n", string8Const)
 
 	return 0
 }

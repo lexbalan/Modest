@@ -164,12 +164,12 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 
 	i = i + 1
 
-	string.memset(&ctx.data[i], 0, SizeT (n - i))
+	memset(&ctx.data[i], 0, SizeT (n - i))
 	//ctx.data[i:n-i] = []
 
 	if ctx.datalen >= 56 {
 		transform(ctx, &ctx.data)
-		string.memset(&ctx.data, 0, 56)
+		memset(&ctx.data, 0, 56)
 		//ctx.data[0:56] = []
 	}
 

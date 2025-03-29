@@ -3,6 +3,6 @@ include "stdio"
 
 
 public func foo() -> Unit {
-	stdio.printf("hello from lib.foo\n")
+	printf("hello from lib.foo\n")
 }
 

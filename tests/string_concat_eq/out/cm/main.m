@@ -13,12 +13,12 @@ const test = "test"
 
 
 public func main() -> Int {
-	stdio.printf("%s\n", *Str8 greeting)
+	printf("%s\n", *Str8 greeting)
 
 	if test == "test" {
-		stdio.printf("test ok.\n")
+		printf("test ok.\n")
 	} else {
-		stdio.printf("test failed.\n")
+		printf("test failed.\n")
 	}
 
 	return 0

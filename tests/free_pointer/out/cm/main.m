@@ -22,7 +22,7 @@ public func main() -> Int32 {
 	// and use it as usualy
 	*(freePointer) = 123456789123456789
 
-	stdio.printf("c = 0x%llX\n", c)
+	printf("c = 0x%llX\n", c)
 
 	// Let's create new pointer to *Int64 from freePointer
 	let px = freePointer
@@ -31,7 +31,7 @@ public func main() -> Int32 {
 	let x = *px
 
 	// for pointer mechanics checking
-	stdio.printf("x = 0x%llX\n", x)
+	printf("x = 0x%llX\n", x)
 
 	return 0
 }

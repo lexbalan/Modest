@@ -14,7 +14,7 @@ public func main() -> Int {
 		kind = "big"
 	}
 
-	stdio.printf("%s-endian\n", kind)
+	printf("%s-endian\n", kind)
 
 	return 0
 }

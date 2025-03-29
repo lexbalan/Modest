@@ -6,7 +6,7 @@ import "lib" as lib
 
 
 public func main() -> Int {
-	stdio.printf("hello from main\n")
+	printf("hello from main\n")
 	lib.foo()
 	return 0
 }

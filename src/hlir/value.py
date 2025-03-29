@@ -361,6 +361,19 @@ class ValueAccessRecord(Value):
 		self.is_lvalue = True
 
 
+class ValueAccessModule(Value):
+	def __init__(self, type, imp, id, value, ti=None):
+		super().__init__(type=type, ti=ti)
+		self.imp = imp
+		self.id = id
+		self.value = value
+
+		self.asset = value.asset
+		self.items = value.items
+
+		self.is_lvalue = True
+
+
 #TODO: get type from array element type
 class ValueIndex(Value):
 	def __init__(self, type, left, index, ti=None):

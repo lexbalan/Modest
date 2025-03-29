@@ -4,13 +4,13 @@ include "stdio"
 
 
 public func main() -> Int {
-	stdio.printf("while statement test\n")
+	printf("while statement test\n")
 
 	var a: Int32 = 0
 	let b = 10
 
 	while a < b {
-		stdio.printf("a = %d\n", a)
+		printf("a = %d\n", a)
 		a = a + 1
 	}
 

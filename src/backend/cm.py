@@ -115,10 +115,10 @@ cmodule = None
 
 
 def str_id_for(x):
-	xm = x.getModule()
-	if xm != None:
-		if xm != cmodule:
-			return "%s.%s" % (xm.id, x.id.str)
+	#xm = x.getModule()
+	#if xm != None:
+	#	if xm != cmodule:
+	#		return "%s.%s" % (xm.id, x.id.str)
 	return get_id_str(x)
 
 
@@ -392,9 +392,9 @@ def str_value_access(x, ctx):
 
 
 def str_value_access_module(x, ctx):
-	left = x.left
-	id_str = get_id_str(x.right)
-	return "%s.%s" % (left.id, id_str)
+	left = x.imp['str']
+	id_str = x.id['str'] #get_id_str(x.id)
+	return "%s.%s" % (left, id_str)
 
 
 def str_cons(t, v, ctx=[]):
@@ -749,6 +749,8 @@ def str_value(x, ctx=[], parent_expr=None):
 		return str_value_call(x, ctx)
 	elif isinstance(x, ValueIndex):
 		return str_value_index(x, ctx)
+	elif isinstance(x, ValueAccessModule):
+		return str_value_access_module(x, ctx)
 	elif isinstance(x, ValueAccessRecord):
 		return str_value_access(x, ctx)
 	elif isinstance(x, ValueSlice):

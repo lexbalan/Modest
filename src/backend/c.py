@@ -743,6 +743,14 @@ def str_value_index(x, ctx):
 
 
 
+def str_value_access_module(x, ctx):
+	return str_value(x.value, ctx)
+
+	left = x.imp['str']
+	id_str = x.id['str']
+	return "%s_%s" % (left, id_str)
+
+
 def str_value_access(x, ctx):
 	sstr = ''
 	left = x.left
@@ -1430,6 +1438,8 @@ def str_value(x, ctx=[], parent_expr=None):
 		sstr += str_value_call(x, ctx)
 	elif isinstance(x, ValueIndex):
 		sstr += str_value_index(x, ctx)
+	elif isinstance(x, ValueAccessModule):
+		return str_value_access_module(x, ctx)
 	elif isinstance(x, ValueAccessRecord):
 		sstr += str_value_access(x, ctx)
 	elif isinstance(x, ValueSlice):

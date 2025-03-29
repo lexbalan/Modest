@@ -26,7 +26,7 @@ public func putchar32(c: Char32) -> Unit {
 
 
 public func putchar_utf8(c: Char8) -> Unit {
-	stdio.putchar(Int32 Word32 c)
+	putchar(Int32 Word32 c)
 }
 
 
@@ -120,7 +120,7 @@ public func puts32(s: *Str32) -> Unit {
 public func print(form: *Str8, ...) -> Unit {
 	var va: va_list
 	__va_start(va, form)
-	vfprint(unistd.c_STDOUT_FILENO, form, va)
+	vfprint(c_STDOUT_FILENO, form, va)
 	__va_end(va)
 }
 
@@ -131,7 +131,7 @@ public func vfprint(fd: Int32, form: *Str8, va: va_list) -> Int32 {
 	var strbuf: [256]Char8
 	let n = vsprint(&strbuf, form, va)
 	strbuf[n] = "\x0"
-	unistd.write(fd, &strbuf, SizeT n)
+	write(fd, &strbuf, SizeT n)
 	return n
 }
 
@@ -210,8 +210,8 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			// %s pointer to string
 			//
 			let s = __va_arg(va, *Str8)
-			string.strcpy(sptr, s)
-			j = j + Int32 string.strlen(s)
+			strcpy(sptr, s)
+			j = j + Int32 strlen(s)
 		} else if c == "c" {
 			//
 			// %c for char

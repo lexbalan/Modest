@@ -13,12 +13,12 @@ public func main() -> Int {
 	var x: Int32 = 127
 	var y: Int32 = x + 1
 
-	stdio.printf("y = %i\n", y)
+	printf("y = %i\n", y)
 
 	if y == 128 {
-		stdio.printf("test passed\n")
+		printf("test passed\n")
 	} else {
-		stdio.printf("test failed\n")
+		printf("test failed\n")
 	}
 
 	return 0

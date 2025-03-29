@@ -74,25 +74,25 @@ public func main() -> Int32 {
 	let tab = new Table {}
 
 	if tab == nil {
-		stdio.printf("cannot create object\n")
+		printf("cannot create object\n")
 	}
 
 	*tab = table00
 
 	table.print(&table00)
-	stdio.printf("\n")
+	printf("\n")
 
 	table.print(&table01)
-	stdio.printf("\n")
+	printf("\n")
 
 	table.print(&table02)
-	stdio.printf("\n")
+	printf("\n")
 
 	table.print(&table03)
-	stdio.printf("\n")
+	printf("\n")
 
 	table.print(&table10)
-	stdio.printf("\n")
+	printf("\n")
 
 	return 0
 }
