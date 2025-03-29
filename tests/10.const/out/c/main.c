@@ -34,8 +34,8 @@ typedef struct Line Line;
 }
 
 #define line1  { \
-	.a = {.x = 10, .y = 20	}, \
-	.b = {.x = 30, .y = 40	} \
+	.a = {.x = 10, .y = 20}, \
+	.b = {.x = 30, .y = 40} \
 }
 
 #define line2  { \
@@ -44,8 +44,8 @@ typedef struct Line Line;
 }
 
 #define line3  { \
-	.a = {.x = 10, .y = 20	}, \
-	.b = {.x = 30, .y = 40	} \
+	.a = {.x = 10, .y = 20}, \
+	.b = {.x = 30, .y = 40} \
 }
 
 #define lines  {line0, line1, line2, line3}

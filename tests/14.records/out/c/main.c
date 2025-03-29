@@ -42,22 +42,22 @@ struct Line {
 typedef struct Line Line;
 
 static Line line = {
-	.a = {.x = 10, .y = 11	},
-	.b = {.x = 12, .y = 13	}
+	.a = {.x = 10, .y = 11},
+	.b = {.x = 12, .y = 13}
 };
 
 static Line lines[3] = {
 	{
-		.a = {.x = 1, .y = 2		},
-		.b = {.x = 3, .y = 4		}
+		.a = {.x = 1, .y = 2},
+		.b = {.x = 3, .y = 4}
 	},
 	{
-		.a = {.x = 5, .y = 6		},
-		.b = {.x = 7, .y = 8		}
+		.a = {.x = 5, .y = 6},
+		.b = {.x = 7, .y = 8}
 	},
 	{
-		.a = {.x = 9, .y = 10		},
-		.b = {.x = 11, .y = 12		}
+		.a = {.x = 9, .y = 10},
+		.b = {.x = 11, .y = 12}
 	}
 };
 
@@ -105,7 +105,7 @@ int main()
 	printf("records test\n");
 
 	// check value_record_eq for immediate values
-	#define ver  {.major = 0, .minor = 7	}
+	#define ver  {.major = 0, .minor = 7}
 	if (true) {
 		printf("version 0.7\n");
 	} else {
@@ -113,8 +113,8 @@ int main()
 	}
 
 	// compare two Point2D records
-	Point2D p2d0 = {.x = 1, .y = 2	};
-	Point2D p2d1 = {.x = 10, .y = 20	};
+	Point2D p2d0 = {.x = 1, .y = 2};
+	Point2D p2d1 = {.x = 10, .y = 20};
 
 	if (memcmp(&p2d0, &p2d1, sizeof(Point2D)) == 0) {
 		printf("p2d0 == p2d1\n");
@@ -135,7 +135,7 @@ int main()
 
 
 	// comparison between two anonymous record
-	struct __anonymous_struct_6 p2d4 = {.x = 1, .y = 2	};
+	struct __anonymous_struct_6 p2d4 = {.x = 1, .y = 2};
 
 	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_5)) == 0) {
 		printf("p2d3 == p2d4\n");
@@ -166,8 +166,8 @@ int main()
 */
 
 	// assign record by pointer
-	*pr2 = (Point2D){.x = 100, .y = 200	};
-	*pr3 = (struct __anonymous_struct_5){	};
+	*pr2 = (Point2D){.x = 100, .y = 200};
+	*pr3 = (struct __anonymous_struct_5){};
 
 	// cons Point3D from Point2D (record extension)
 	// (it is possible if dst record contained all fields from src record
@@ -183,7 +183,7 @@ int main()
 	int32_t bx = 20;
 
 	const struct {int32_t x; int32_t y;
-	} px = {.x = ax, .y = bx	};
+	} px = {.x = ax, .y = bx};
 
 	ax = 111;
 	bx = 222;
@@ -192,7 +192,7 @@ int main()
 	printf("px.y = %i (must be 20)\n", px.y);
 
 	if (memcmp(&px, &((struct {int32_t x; int32_t y;
-	}){.x = 10, .y = 20	}), sizeof(struct {int32_t x; int32_t y;
+	}){.x = 10, .y = 20}), sizeof(struct {int32_t x; int32_t y;
 	})) == 0) {
 		printf("test passed\n");
 	} else {

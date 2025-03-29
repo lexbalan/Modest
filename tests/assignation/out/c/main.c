@@ -83,8 +83,8 @@ int main()
 
 	// copy records by value
 	// C backend will be use memcpy()
-	Point loc_r0 = {	};
-	Point loc_r1 = {.x = 10, .y = 20	};
+	Point loc_r0 = {};
+	Point loc_r1 = {.x = 10, .y = 20};
 
 	loc_r0 = loc_r1;
 

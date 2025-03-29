@@ -62,14 +62,12 @@ public func run(fsm: *FSM) -> Unit {
 
 		fsm.state = nexstate
 		fsm.substate = substateLoop
-
 	} else if fsm.substate == substateLoop {
 		let state = &fsm.states[fsm.state]
 
 		if state.loop != nil {
 			state.loop(fsm)
 		}
-
 	} else if fsm.substate == substateLeaving {
 		let state = &fsm.states[fsm.state]
 

@@ -309,7 +309,5 @@ def value_cons_immediate(t, v, method, ti):
 	if v.hasAttribute('hexadecimal'):
 		nv.addAttribute('hexadecimal')
 
-	nv.nl_end = v.nl_end
-
 	return nv
 

@@ -232,7 +232,6 @@ class Parser:
 			'isa': 'ast_type',
 			'kind': 'record',
 			'fields': fields,
-			'nl_end': spaceline_cnt,
 			'ti': ti
 		}
 
@@ -932,7 +931,6 @@ class Parser:
 			'isa': 'ast_value',
 			'kind': 'array',
 			'items': items,
-			'nl_end': nl_cnt,
 			'ti': array_ti
 		}
 
@@ -981,7 +979,6 @@ class Parser:
 			'isa': 'ast_value',
 			'kind': 'record',
 			'items': items,
-			'nl_end': nl_cnt,
 			'ti': record_ti
 		}
 
@@ -1366,7 +1363,6 @@ class Parser:
 			'kind': 'block',
 			'stmts': stmts,
 			'nl': 0,
-			'nl_end': nl_cnt,
 			'ti': ti
 		}
 

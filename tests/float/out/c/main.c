@@ -49,7 +49,7 @@ int main()
 	printf("sizeof(Float64) = %lu\n", sizeof(double));
 
 	// printf %f ожидает получить double а не float!
-	const float sl = slope((Point2D){.x = 10, .y = 20	}, (Point2D){.x = 30, .y = 50	});
+	const float sl = slope((Point2D){.x = 10, .y = 20}, (Point2D){.x = 30, .y = 50});
 	printf("slope = %f\n", (double)sl);
 
 	return 0;

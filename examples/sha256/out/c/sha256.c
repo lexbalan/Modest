@@ -217,7 +217,7 @@ static void final(Context *ctx, uint8_t *outHash)
 
 void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash)
 {
-	Context ctx = {	};
+	Context ctx = {};
 	contextInit((Context *)&ctx);
 	update((Context *)&ctx, msg, msgLen);
 	final((Context *)&ctx, outHash);

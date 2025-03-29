@@ -141,8 +141,8 @@ struct RGB24 {
 typedef struct RGB24 RGB24;
 
 static RGB24 rgb0[2] = {
-	{.red = 200, .green = 0, .blue = 0	},
-	{.red = 200, .green = 0, .blue = 0	}
+	{.red = 200, .green = 0, .blue = 0},
+	{.red = 200, .green = 0, .blue = 0}
 };
 
 struct AnimationPoint {
@@ -161,27 +161,27 @@ static AnimationPoint ap = {
 };
 
 static AnimationPoint animation0_points[5] = {
-	{.color = {.red = 200, .green = 0, .blue = 0		}, .time = 3	},
-	{.color = {.red = 0, .green = 200, .blue = 0		}, .time = 30	},
-	{.color = {.red = 100, .green = 100, .blue = 0		}, .time = 300	},
-	{.color = {.red = 254, .green = 254, .blue = 0		}, .time = 20	},
-	{.color = {.red = 0, .green = 0, .blue = 255		}, .time = 3000	}
+	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	{.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
+	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 
 static AnimationPoint animation1_points[5] = {
-	{.color = {.red = 200, .green = 0, .blue = 0		}, .time = 3	},
-	{.color = {.red = 0, .green = 200, .blue = 0		}, .time = 30	},
-	{.color = {.red = 100, .green = 100, .blue = 0		}, .time = 300	},
-	{.color = {.red = 254, .green = 254, .blue = 0		}, .time = 20	},
-	{.color = {.red = 0, .green = 0, .blue = 255		}, .time = 3000	}
+	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	{.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
+	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 
 static AnimationPoint animation2_points[5] = {
-	{.color = {.red = 200, .green = 0, .blue = 0		}, .time = 3	},
-	{.color = {.red = 0, .green = 200, .blue = 0		}, .time = 30	},
-	{.color = {.red = 100, .green = 100, .blue = 0		}, .time = 300	},
-	{.color = {.red = 255, .green = 254, .blue = 0		}, .time = 20	},
-	{.color = {.red = 0, .green = 0, .blue = 255		}, .time = 3000	}
+	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	{.color = {.red = 255, .green = 254, .blue = 0}, .time = 20},
+	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 
 static void xy(struct __anonymous_struct_2 x)
@@ -234,7 +234,7 @@ static Wrap *awrap[2] = {&wrap0, &wrap0};
 
 int32_t main()
 {
-	xy((struct __anonymous_struct_2){.x = 10, .y = 20	});
+	xy((struct __anonymous_struct_2){.x = 10, .y = 20});
 
 	printf("test1 (eq): ");
 	if (memcmp(&animation0_points, &animation1_points, sizeof(AnimationPoint[5])) == 0) {

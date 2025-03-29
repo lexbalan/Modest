@@ -191,6 +191,7 @@ def str_type_record(t):
 	indent_up()
 
 	prev_nl = 1
+	nl_end_e = 0
 	for field in t.fields:
 		if prev_nl == 0:
 			s += ", "
@@ -201,6 +202,9 @@ def str_type_record(t):
 				s += str_nl_indent(comment.nl)
 				s += str_stmt_comment(comment)
 
+		if field.nl > 0:
+			nl_end_e = 1
+
 		s += str_nl_indent(field.nl)
 		prev_nl = field.nl
 
@@ -209,7 +213,7 @@ def str_type_record(t):
 		s += str_field(field)
 
 	indent_down()
-	s += str_nl_indent(t.nl_end)
+	s += str_nl_indent(nl_end_e)
 	s += "}"
 	return s
 
@@ -442,7 +446,7 @@ def str_value_array(v, ctx):
 
 	s = ""
 	indent_up()
-
+	nl_end_e = 0
 	values = v.items
 	i = 0
 	n = len(values)
@@ -455,6 +459,7 @@ def str_value_array(v, ctx):
 
 		nl = a.nl
 		if nl > 0:
+			nl_end_e = 1
 			s +=  newline_s(nl)
 			s += indent_s()
 		else:
@@ -467,8 +472,8 @@ def str_value_array(v, ctx):
 
 	indent_down()
 
-	if v.nl_end > 0:
-		s += newline_s(v.nl_end)
+	if nl_end_e > 0:
+		s += newline_s(nl_end_e)
 		s += indent_s()
 
 	return "[%s]" % s
@@ -534,7 +539,7 @@ def str_value_record(v, ctx):
 	s = ''
 
 	indent_up()
-
+	nl_end_e = 0
 	nitems = len(v.items)
 	i = 0
 	while i < nitems:
@@ -544,6 +549,7 @@ def str_value_record(v, ctx):
 
 		nl = ini.nl
 		if nl > 0:
+			nl_end_e = 1
 			s +=  newline_s(nl)
 			s += indent_s()
 		else:
@@ -561,8 +567,8 @@ def str_value_record(v, ctx):
 
 	indent_down()
 
-	if v.nl_end > 0:
-		s +=  newline_s(v.nl_end)
+	if nl_end_e > 0:
+		s +=  newline_s(nl_end_e)
 		s += indent_s()
 
 	return "{%s}" % s
@@ -825,12 +831,13 @@ def print_stmt_func(x):
 
 
 def print_stmt_block(s):
+	nl_end_e = 1
 	out(" {")
 	indent_up()
 	for stmt in s.stmts:
 		print_stmt(stmt)
 	indent_down()
-	nl_indent(s.nl_end)
+	nl_indent(nl_end_e)
 	out("}")
 
 

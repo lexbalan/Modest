@@ -252,7 +252,6 @@ def implicit_cast_list(items, to_type):
 	for item in items:
 		casted_item = value_cons_implicit(to_type, item)
 		casted_item.nl = item.nl
-		casted_item.nl_end = item.nl_end
 		casted_items.append(casted_item)
 	return casted_items
 

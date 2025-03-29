@@ -210,7 +210,6 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			const int32_t x = va_arg(va, int32_t);
 			const int32_t n = sprint_dec_int32(sptr, x);
 			j = j + n;
-
 		} else if (c == 'n') {
 			//
 			// %n for unsigned integer (Nat)
@@ -218,7 +217,6 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			const uint32_t x = va_arg(va, uint32_t);
 			const int32_t n = sprint_dec_n32(sptr, x);
 			j = j + n;
-
 		} else if (c == 'x' || c == 'p') {
 			//
 			// %x for unsigned integer (Nat)
@@ -227,7 +225,6 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			const uint32_t x = va_arg(va, uint32_t);
 			const int32_t n = sprint_hex_nat32(sptr, x);
 			j = j + n;
-
 		} else if (c == 's') {
 			//
 			// %s pointer to string
@@ -235,7 +232,6 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			char *const s = va_arg(va, char *);
 			strcpy(sptr, s);
 			j = j + (int32_t)strlen(s);
-
 		} else if (c == 'c') {
 			//
 			// %c for char

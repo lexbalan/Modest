@@ -26,9 +26,6 @@ class Value(Entity):
 		self.asset = None
 
 		self.nl = 0
-		# Нужен для возможного переноса строки
-		# перед закрытием скобки композитного литерала
-		self.nl_end = 0
 
 
 	def isLvalue(self):
@@ -214,7 +211,6 @@ class ValueCons(Value):
 		super().__init__(type=type, ti=ti)
 		self.value = value
 		self.method = method
-		self.nl_end = value.nl_end
 
 
 #TODO: onl value as arg (undefined if not init_value, but type from it)

@@ -22,9 +22,9 @@ struct Point {
 typedef struct Point Point;
 
 #define ps  { \
-	{.x = 0, .y = 0	}, \
-	{.x = 1, .y = 1	}, \
-	{.x = 2, .y = 2	} \
+	{.x = 0, .y = 0}, \
+	{.x = 1, .y = 1}, \
+	{.x = 2, .y = 2} \
 }
 
 #define points  (Point[3])ps
@@ -34,9 +34,10 @@ typedef struct Point Point;
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
 static Point points2[3] = {
-	{.x = 0, .y = 0	},
-	{.x = 1, .y = 1	},
-	{.x = 2, .y = 2	}};
+	{.x = 0, .y = 0},
+	{.x = 1, .y = 1},
+	{.x = 2, .y = 2}
+};
 
 // define function main
 int main()

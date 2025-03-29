@@ -190,7 +190,6 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			let x = __va_arg(va, Int32)
 			let n = sprint_dec_int32(sptr, x)
 			j = j + n
-
 		} else if c == "n" {
 			//
 			// %n for unsigned integer (Nat)
@@ -198,7 +197,6 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			let x = __va_arg(va, Nat32)
 			let n = sprint_dec_n32(sptr, x)
 			j = j + n
-
 		} else if c == "x" or c == "p" {
 			//
 			// %x for unsigned integer (Nat)
@@ -207,7 +205,6 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			let x = __va_arg(va, Nat32)
 			let n = sprint_hex_nat32(sptr, x)
 			j = j + n
-
 		} else if c == "s" {
 			//
 			// %s pointer to string
@@ -215,7 +212,6 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			let s = __va_arg(va, *Str8)
 			string.strcpy(sptr, s)
 			j = j + Int32 string.strlen(s)
-
 		} else if c == "c" {
 			//
 			// %c for char

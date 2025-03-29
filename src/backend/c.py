@@ -1091,6 +1091,7 @@ def str_literal_char(cc, width):
 
 def str_literal_array(type, items, nl_end=1):
 	sstr = ''
+
 	if type.is_array_of_char():
 		char_type = type.of
 		char_width = char_type.width
@@ -1111,11 +1112,16 @@ def str_literal_array(type, items, nl_end=1):
 				i = i + 1
 			return print_utf32codes_as_string(utf32_codes, width=char_width)
 
+	nl_end_e = 0
+	for item in items:
+		if item.nl > 0:
+			nl_end_e = 1
+
 	sstr += "{"
 	indent_up()
 	sstr += print_array_values(items, [])
 	indent_down()
-	sstr += newline_str(n=nl_end)
+	sstr += newline_str(n=nl_end_e)
 	sstr += indent_str(INDENT_SYMBOL)
 	sstr += "}"
 	return sstr
@@ -1123,13 +1129,14 @@ def str_literal_array(type, items, nl_end=1):
 
 
 
-def str_literal_record(type, items, nl_end=1):
+def str_literal_record(type, items):
 	sstr = "{"
 	indent_up()
 
 	nitems = len(items)
 	i = 0
 
+	nl_end = 0
 	# for situation when firat item is ValueZero
 	# without it, forst value will be printed with space before it.
 	item_printed = False
@@ -1141,6 +1148,7 @@ def str_literal_record(type, items, nl_end=1):
 
 		nl = ini.nl
 		if nl > 0:
+			nl_end = 1
 			sstr += newline_str(n=nl)
 			sstr += indent_str(INDENT_SYMBOL)
 		else:
@@ -1158,8 +1166,9 @@ def str_literal_record(type, items, nl_end=1):
 
 	indent_down()
 
-	sstr += newline_str(n=nl_end)
-	sstr += indent_str(INDENT_SYMBOL)
+	if nl_end > 0:
+		sstr += newline_str(n=nl_end)
+		sstr += indent_str(INDENT_SYMBOL)
 	sstr += ("}")
 
 	#if cast_req:
@@ -1282,9 +1291,9 @@ def str_value_literal(x, ctx):
 	elif t.is_string():
 		sstr += str_literal_string(x.asset, char_width=x.type.width)
 	elif t.is_record():
-		sstr += str_literal_record(x.type, x.items, nl_end=x.nl_end)
+		sstr += str_literal_record(x.type, x.items)
 	elif t.is_array():
-		sstr += str_literal_array(x.type, x.items, nl_end=x.nl_end)
+		sstr += str_literal_array(x.type, x.items)
 	elif t.is_bool():
 		sstr += str_literal_bool(x.asset)
 	elif t.is_char():
@@ -1796,12 +1805,12 @@ def print_stmts(stmts):
 
 def print_stmt_block(s):
 	out("{")
+	nl_end_e = 1
 	indent_up()
 	print_stmts(s.stmts)
 	indent_down()
-	endnl = s.nl_end
-	newline(n=endnl)
-	if endnl:
+	newline(n=nl_end_e)
+	if nl_end_e > 0:
 		indent()
 	out("}")
 

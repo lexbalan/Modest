@@ -53,14 +53,12 @@ void fsm_run(fsm_FSM *fsm)
 
 		fsm->state = nexstate;
 		fsm->substate = fsm_substateLoop;
-
 	} else if (fsm->substate == fsm_substateLoop) {
 		fsm_StateDesc *const state = &fsm->states[fsm->state];
 
 		if (state->loop != NULL) {
 			state->loop(fsm);
 		}
-
 	} else if (fsm->substate == fsm_substateLeaving) {
 		fsm_StateDesc *const state = &fsm->states[fsm->state];
 

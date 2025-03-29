@@ -4,9 +4,7 @@ include "string"
 
 
 
-public type Row record {
-
-}
+public type Row record {}
 
 public type Table record {
 	public header: *[]*Str8

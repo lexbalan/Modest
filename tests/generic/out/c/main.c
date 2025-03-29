@@ -205,7 +205,7 @@ static bool test_generic_record()
 	// Any record expression have GenericRecord type
 	// this record expression have type:
 	// Generic(record {x: GenericInteger, y: GenericInteger})
-	#define p  {.x = 10, .y = 20	}
+	#define p  {.x = 10, .y = 20}
 
 	// value with GenericRecord type
 	// can be implicit casted to Record with same fields.

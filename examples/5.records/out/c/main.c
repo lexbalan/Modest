@@ -22,8 +22,8 @@ struct Line {
 typedef struct Line Line;
 
 static Line line = {
-	.a = {.x = 0, .y = 0	},
-	.b = {.x = 1.0, .y = 1.0	}
+	.a = {.x = 0, .y = 0},
+	.b = {.x = 1.0, .y = 1.0}
 };
 
 static float max(float a, float b)

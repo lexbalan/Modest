@@ -13,14 +13,12 @@ uint8_t utf_utf32_to_utf8(uint32_t c, char *buf)
 	if (x <= 0x0000007F) {
 		buf[0] = (char)x;
 		return 1;
-
 	} else if (x <= 0x000007FF) {
 		const uint32_t c0 = (x >> 6) & 0x1F;
 		const uint32_t c1 = (x >> 0) & 0x3F;
 		buf[0] = (char)(0xC0 | c0);
 		buf[1] = (char)(0x80 | c1);
 		return 2;
-
 	} else if (x <= 0x0000FFFF) {
 		const uint32_t c0 = (x >> 12) & 0x0F;
 		const uint32_t c1 = (x >> 6) & 0x3F;
@@ -29,7 +27,6 @@ uint8_t utf_utf32_to_utf8(uint32_t c, char *buf)
 		buf[1] = (char)(0x80 | c1);
 		buf[2] = (char)(0x80 | c2);
 		return 3;
-
 	} else if (x <= 0x0010FFFF) {
 		const uint32_t c0 = (x >> 18) & 0x07;
 		const uint32_t c1 = (x >> 12) & 0x3F;

@@ -633,7 +633,6 @@ def do_type_record(x):
 		fields.append(f)
 
 	rec = TypeRecord(fields, ti=x['ti'])
-	rec.nl_end = x['nl_end']
 	rec.uid = uid
 
 	# add anon record (before)
@@ -1497,7 +1496,6 @@ def do_value_array(x):
 			items.append(item_value)
 
 	v = value_array_create(items, ti=x['ti'])
-	v.nl_end = x['nl_end']
 	return v
 
 
@@ -1523,7 +1521,6 @@ def do_value_record(x):
 			initializers.append(p)
 
 	v = value_record_create(initializers, ti=x['ti'])
-	v.nl_end = x['nl_end']
 	return v
 
 
@@ -2068,7 +2065,7 @@ def do_stmt(x):
 def do_stmt_block(x, parent=None):
 	context_push()
 
-	block = StmtBlock([], ti=x['ti'], nl_end=x['nl_end'])
+	block = StmtBlock([], ti=x['ti'])
 	block.parent = parent
 
 	stmts = []
