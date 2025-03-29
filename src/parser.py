@@ -793,7 +793,6 @@ class Parser:
 				while not self.match(")"):
 					arg = None
 					#print(self.ctok())
-					#mass
 					#self.skip_tokens_class(['nl'])
 					nl_cnt = 0
 					while self.token_class_is('nl'):

@@ -301,7 +301,6 @@ class ValueDeref(Value):
 
 class ValueSubexpr(Value):
 	def __init__(self, value, ti=None):
-		#mass
 		assert(isinstance(value, Value))
 		super().__init__(type=value.type, ti=ti)
 		self.value = value

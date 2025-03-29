@@ -171,7 +171,7 @@ def precedence(x):
 def value_is_generic_immediate(v):
 	return v.isImmediate() and v.type.is_generic()
 
-#mass
+
 # такое значение определено как макрос
 def value_is_generic_immediate_const(v):
 	return v.isConst() and v.isImmediate() and v.type.is_generic()

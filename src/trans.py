@@ -1347,7 +1347,6 @@ def submodule_access(x):
 	if v.type.is_incompleted():
 		v = value_update_incompleted_type(submodule, v, iname)
 
-	#mass
 	return ValueAccessModule(v.type, x['left'], x['right'], v, ti=x['ti'])
 
 
@@ -1542,7 +1541,6 @@ def do_value_integer(x):
 			if x['str'][1] == 'x':
 				num_string_len = num_string_len - 2
 				base = 16
-				#mass
 				num = int(x['str'], base)
 
 				if nbits_for_num(num) > 64:
