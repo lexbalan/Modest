@@ -1129,8 +1129,9 @@ def str_literal_array(type, items, nl_end=1):
 	indent_up()
 	sstr += print_array_values(items, [])
 	indent_down()
-	sstr += newline_str(n=nl_end_e)
-	sstr += indent_str(INDENT_SYMBOL)
+	if nl_end_e > 0:
+		sstr += newline_str(n=nl_end_e)
+		sstr += indent_str(INDENT_SYMBOL)
 	sstr += "}"
 	return sstr
 

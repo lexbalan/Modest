@@ -140,7 +140,7 @@ static bool test_generic_array()
 {
 	// Any array expression have GenericArray type
 	// this array expression (GenericArray of four GenericInteger items)
-	#define a  {0, 1, 2, 3	}
+	#define a  {0, 1, 2, 3}
 
 	int32_t i = 0;
 	while (i < 4) {
@@ -160,7 +160,7 @@ static bool test_generic_array()
 	int32_t b[4];
 	ARRCPY((&b), (&((uint8_t[4])a)), (__lengthof(b)));
 
-	if (memcmp(&b, &((int32_t[4]){0, 1, 2, 3	}), sizeof(int32_t[4])) != 0) {
+	if (memcmp(&b, &((int32_t[4]){0, 1, 2, 3}), sizeof(int32_t[4])) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -169,7 +169,7 @@ static bool test_generic_array()
 	int64_t c[4];
 	ARRCPY((&c), (&((uint8_t[4])a)), (__lengthof(c)));
 
-	if (memcmp(&c, &((int64_t[4]){0, 1, 2, 3	}), sizeof(int64_t[4])) != 0) {
+	if (memcmp(&c, &((int64_t[4]){0, 1, 2, 3}), sizeof(int64_t[4])) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -177,7 +177,7 @@ static bool test_generic_array()
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
 	int32_t d[10] = a;
 
-	if (memcmp(&d, &((int32_t[10]){0, 1, 2, 3, 0	}), sizeof(int32_t[10])) != 0) {
+	if (memcmp(&d, &((int32_t[10]){0, 1, 2, 3, 0}), sizeof(int32_t[10])) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
 		return false;
 	}

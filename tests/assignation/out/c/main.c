@@ -71,8 +71,8 @@ int main()
 
 	// copy arrays by value
 	// C backend will be use memcpy()
-	int32_t loc_a0[10] = {	};
-	int32_t loc_a1[10] = {42, 53, 64	};
+	int32_t loc_a0[10] = {};
+	int32_t loc_a1[10] = {42, 53, 64};
 
 	memcpy(&loc_a0, &loc_a1, sizeof(int32_t[10]));
 

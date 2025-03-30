@@ -71,6 +71,8 @@ public func main() -> Int32 {
 	//
 	a3[3:13] = []
 
+	var a4: [10]Int32 = []
+
 	xxx(&w0)
 
 	let pa2 = unsafe *[10]Int &a2

@@ -65,7 +65,7 @@ static void f0(char *_x, char *sret_)
 static void test()
 {
 	// тестируем работу с локальным generic массивом
-	uint64_t yy[6] = {0xAA, 0x55, 0x02, 0x00, 0x00, 0x16	};
+	uint64_t yy[6] = {0xAA, 0x55, 0x02, 0x00, 0x00, 0x16};
 	int32_t i = 0;
 	while (i < __lengthof(yy)) {
 		const uint64_t y = yy[i];
@@ -200,7 +200,7 @@ int main()
 
 	printf("------------------------------------\n");
 
-	int32_t localArray[3] = {4, 5, 6	};
+	int32_t localArray[3] = {4, 5, 6};
 
 	i = 0;
 	while (i < 3) {
@@ -235,7 +235,7 @@ int main()
 
 	// assign array to array 1
 	// (with equal types)
-	int32_t a[3] = {1, 2, 3	};
+	int32_t a[3] = {1, 2, 3};
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -258,7 +258,7 @@ int main()
 
 	// assign array to array 2
 	// (with array extending)
-	int32_t c[3] = {10, 20, 30	};
+	int32_t c[3] = {10, 20, 30};
 
 	int32_t d[6];
 	memcpy((int32_t(*)[3 - 0])&d[0], &c, sizeof(int32_t[3 - 0]));
@@ -293,7 +293,7 @@ int main()
 	int int200 = 200;
 	int int300 = 300;
 	// immutable, non immediate value (array)
-	const int init_array[3] = {int100, int200, int300	};
+	const int init_array[3] = {int100, int200, int300};
 
 	// check local literal array assignation to local array
 	int32_t e[4];
@@ -320,7 +320,7 @@ int main()
 	int32_t cx = 30;
 	const int32_t dx = 40;
 
-	const int32_t y[4] = {ax, bx, cx, dx	};
+	const int32_t y[4] = {ax, bx, cx, dx};
 
 	ax = 111;
 	bx = 222;
@@ -331,7 +331,7 @@ int main()
 	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
 	printf("y[%i] = %i (must be 40)\n", 3, y[3]);
 
-	if (memcmp(&y, &((int32_t[4]){10, 20, 30, 40	}), sizeof(int32_t[4])) == 0) {
+	if (memcmp(&y, &((int32_t[4]){10, 20, 30, 40}), sizeof(int32_t[4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

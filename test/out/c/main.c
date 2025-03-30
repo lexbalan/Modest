@@ -37,8 +37,8 @@ static uint8_t prev_p[10];
 static void xxx(uint8_t *p)
 {
 	uint8_t *const xp = (uint8_t *)p;
-	if (memcmp(&prev_p, &xp, sizeof(uint8_t[10])) != 0) {
-		memcpy(&prev_p, &xp, sizeof(uint8_t[10]));
+	if (memcmp(&prev_p, xp, sizeof(uint8_t[10])) != 0) {
+		memcpy(&prev_p, xp, sizeof(uint8_t[10]));
 	}
 }
 
@@ -82,11 +82,13 @@ int32_t main()
 	//
 	memset((int32_t(*)[13 - 3])&a3[3], 0, sizeof(int32_t[13 - 3]));
 
+	int32_t a4[10] = {};
+
 	xxx((uint8_t *)&w0);
 
 	int *const pa2 = (int *)&a2;
 
-	if (memcmp(&pa2, &a0, sizeof(int[10])) == 0) {
+	if (memcmp(pa2, &a0, sizeof(int[10])) == 0) {
 		printf("eq!\n");
 	} else {
 		printf("eq!\n");
