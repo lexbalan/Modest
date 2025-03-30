@@ -1,3 +1,4 @@
+// Simple Web server example
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -13,7 +14,7 @@
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
-// Simple Web server example
+
 
 #define port  8080
 

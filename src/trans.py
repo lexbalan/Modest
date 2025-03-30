@@ -2660,7 +2660,7 @@ def process_module(idStr, ast, is_import=False, is_include=False):
 	cmodule = Module(idStr, ast, symtab_public, symtab_private)
 
 	# 0. do imports & directives
-	while True:#x in ast:
+	while len(ast) > 0:
 		x = ast[0]
 		isa = x['isa']
 		y = None

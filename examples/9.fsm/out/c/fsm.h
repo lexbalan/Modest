@@ -1,3 +1,4 @@
+// examples/fsm/fsm.cm
 
 #ifndef FSM_H
 #define FSM_H

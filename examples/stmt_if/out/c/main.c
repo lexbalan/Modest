@@ -1,3 +1,4 @@
+// examples/stmt_if/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -5,7 +6,7 @@
 #include <stdio.h>
 
 #include "main.h"
-// examples/stmt_if/src/main.m
+
 
 int main()
 {

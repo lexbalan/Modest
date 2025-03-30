@@ -1,3 +1,4 @@
+// sha256.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -13,7 +14,7 @@
 #define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) { \
 	(*dst)[i] = (*src)[i]; \
 }
-// sha256.m
+
 
 struct Context {
 	uint8_t data[64];

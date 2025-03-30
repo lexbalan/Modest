@@ -1,3 +1,4 @@
+// examples/demo1/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -9,7 +10,7 @@
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
-// examples/demo1/src/main.m
+
 
 static int32_t array[21] = {
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4,

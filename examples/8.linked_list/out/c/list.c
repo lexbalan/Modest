@@ -1,3 +1,4 @@
+// examples/8.linked_list/linked_list.cm
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,7 +9,7 @@
 #include "list.h"
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
-// examples/8.linked_list/linked_list.cm
+
 
 list_List *list_create()
 {

@@ -1,3 +1,4 @@
+// examples/fsm/fsm.cm
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -5,7 +6,7 @@
 #include <stdio.h>
 
 #include "fsm.h"
-// examples/fsm/fsm.cm
+
 
 #define verbose  true
 

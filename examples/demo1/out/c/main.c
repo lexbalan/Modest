@@ -1,3 +1,4 @@
+// examples/demo1/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -5,7 +6,7 @@
 #include <stdio.h>
 
 #include "main.h"
-// examples/demo1/src/main.m
+
 
 #define minNumber  0
 #define maxNumber  10
