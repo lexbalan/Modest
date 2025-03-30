@@ -1,3 +1,4 @@
+// examples/4.many_sources/main.m
 
 #ifndef MAIN_H
 #define MAIN_H

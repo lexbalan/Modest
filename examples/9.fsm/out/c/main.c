@@ -6,7 +6,7 @@
 #include "./delay.h"
 
 #include "main.h"
-
+// examples/fsm/src/main.m
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)

@@ -3,10 +3,10 @@ include "ctypes64"
 include "unistd"
 include "stdio"
 include "string"
-
-import "misc/utf" as utf
+// lightfood/console.m
 
 //$pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
+import "misc/utf" as utf
 
 
 public func putchar8(c: Char8) -> Unit {

@@ -1697,12 +1697,12 @@ class Parser:
 
 		output = []
 
-		# Head
-		if not self.is_end():
-			if self.token_class_is('comment-block'):
-				x = self.parse_comment_block()
-			elif self.token_class_is('comment-line'):
-				x = self.parse_comment_line()
+#		# Head
+#		if not self.is_end():
+#			if self.token_class_is('comment-block'):
+#				x = self.parse_comment_block()
+#			elif self.token_class_is('comment-line'):
+#				x = self.parse_comment_line()
 
 
 

@@ -111,7 +111,7 @@ break_2:
 ; -- 0
 ; -- end print imports 'minmax' --
 ; -- strings --
-; -- endstrings --
+; -- endstrings --; minmax.m
 define %Int32 @minmax_min_int32(%Int32 %a, %Int32 %b) {
 ; if_0
 	%1 = icmp slt %Int32 %a, %b

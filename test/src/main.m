@@ -75,6 +75,9 @@ public func main() -> Int32 {
 
 	xxx(&w0)
 
+	var yy = Word8 1
+	var we: Word8 = Word8 Nat8 yy
+
 	let pa2 = unsafe *[10]Int &a2
 
 	if *pa2 == a0 {

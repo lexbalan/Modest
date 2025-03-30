@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 #include "fsm.h"
-
+// examples/fsm/fsm.cm
 
 #define verbose  true
 

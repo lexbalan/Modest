@@ -169,7 +169,7 @@ declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
 ; -- 0
 ; -- end print imports 'delay' --
 ; -- strings --
-; -- endstrings --
+; -- endstrings --; lightfood/delay.m
 define void @delay_us(%Int64 %us) {
 	%1 = call %ClockT @clock()
 ; while_1

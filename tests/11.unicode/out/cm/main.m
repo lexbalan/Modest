@@ -1,10 +1,10 @@
 import "lightfood/console"
 include "ctypes64"
 include "stdio"
-
-import "lightfood/console" as console
+// tests/11.unicode/src/main.m
 
 // include test (!)
+import "lightfood/console" as console
 
 
 const ratSymbolUTF8 = [0xF0, 0x9F, 0x90, 0x80]

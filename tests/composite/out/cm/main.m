@@ -1,5 +1,6 @@
 include "stdio"
-
+// tests/composite
+//
 
 // Test for composite types
 

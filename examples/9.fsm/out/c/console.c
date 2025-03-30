@@ -12,13 +12,9 @@
 #include "console.h"
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
+// lightfood/console.m
 
-
-//$pragma do_not_include
-// for Int
-// for write()
-// for putchar()
-// for strlen, strcpy
+//$pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
 
 
 void console_putchar_utf8(char c);

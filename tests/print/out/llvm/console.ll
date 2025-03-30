@@ -295,7 +295,7 @@ declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; end from import
 ; -- end print imports 'console' --
 ; -- strings --
-; -- endstrings --
+; -- endstrings --; lightfood/console.m
 
 ;$pragma do_not_include; for Int; for write(); for putchar(); for strlen, strcpy
 define void @console_putchar8(%Char8 %c) {

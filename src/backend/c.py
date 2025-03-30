@@ -798,9 +798,9 @@ def str_cast_hard(t, v, ctx=[]):
 
 def str_cast(t, v, ctx=[]):
 	# protection from (uint8_t)(uint8_t)...
-	if isinstance(v, ValueCons):
-		if get_id_str(t) == get_id_str(v.type):
-			return str_cast(v.type, v.value, ctx)
+#	if isinstance(v, ValueCons):
+#		if get_id_str(t) == get_id_str(v.type):
+#			return str_cast(v.type, v.value, ctx)
 
 
 	#array_as_ptr = not 'array_as_array' in ctx
@@ -2199,15 +2199,24 @@ def print_deps(deps):
 
 
 def nnl(nl):
-	if nl >= 2:
-		newline(2)
-	else:
+	if nl == 1:
 		newline(1)
+	elif nl >= 2:
+		newline(2)
 
 
 def print_header(module, outname):
 	outname = outname + '.h'
 	output_open(outname)
+
+	# Печатаем первые комментарии
+	if len(module.defs) > 0:
+		def0 = module.defs[0]
+		if isinstance(def0, StmtComment):
+			nnl(def0.nl)
+			print_comment(def0)
+			newline()
+
 
 	guardsymbol = outname.split("/")[-1]
 	guardsymbol = guardsymbol[:-2].upper() + '_H'
@@ -2327,15 +2336,20 @@ def print_cfile(module, _outname):
 		output_close()
 		return
 
-	# before all print first comment (header) if present
-	if len(module.defs) > 0:
-		first = module.defs[0]
-		if isinstance(first, StmtComment):
-			print_comment(first)
-			module.defs = module.defs[1:]
-			newline()
+	defs = module.defs
 
-	guardsymbol = ''
+	# Печатаем первые комментарии
+	if len(defs) > 0:
+		def0 = defs[0]
+		if isinstance(def0, StmtComment):
+			nnl(def0.nl)
+			print_comment(def0)
+			newline()
+			defs = defs[1:]
+		else:
+			print(_outname)
+			print(def0)
+
 
 	newline()
 	include("stdint.h", local=False)
@@ -2348,7 +2362,7 @@ def print_cfile(module, _outname):
 		newline()
 		include("stdarg.h", local=False)
 
-	for x in module.defs:
+	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude):
 			newline()
 			include(x.c_name, local=x.is_local)
@@ -2372,14 +2386,12 @@ def print_cfile(module, _outname):
 			out(";")
 
 
-	for x in module.defs:
+	for x in defs:
 		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
 		if isinstance(x, StmtDirectiveCInclude):
 			continue
-
-
 
 		if isinstance(x, StmtDefConst) and is_private(x):
 			nnl(x.nl)

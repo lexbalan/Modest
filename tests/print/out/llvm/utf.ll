@@ -111,7 +111,9 @@ break_2:
 ; -- 0
 ; -- end print imports 'utf' --
 ; -- strings --
-; -- endstrings --
+; -- endstrings --; utf.m
+; algorithms from wikipedia
+; (https://ru.wikipedia.org/wiki/UTF-16)
 
 ; декодирует символ UTF-32 в последовательность UTF-8
 define %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {

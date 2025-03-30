@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #include "main.h"
-
+// examples/7.binary_file/main.m
 
 // FIXIT: not worked LLVM result (!)
 

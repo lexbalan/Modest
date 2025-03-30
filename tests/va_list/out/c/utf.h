@@ -1,3 +1,6 @@
+// utf.m
+// algorithms from wikipedia
+// (https://ru.wikipedia.org/wiki/UTF-16)
 
 #ifndef UTF_H
 #define UTF_H

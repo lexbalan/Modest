@@ -10,7 +10,7 @@
 #include <math.h>
 
 #include "main.h"
-
+// examples/6.text_file/main.m
 
 //include "libc/ctypes64"
 //include "libc/stdio"

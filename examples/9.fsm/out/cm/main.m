@@ -4,7 +4,7 @@ include "ctypes64"
 include "stdio"
 
 import "lightfood/delay" as delay
-import "fsm" as fsm
+import "fsm" as fsm// examples/fsm/src/main.m
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)

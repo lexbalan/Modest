@@ -285,7 +285,7 @@ declare double @minmax_max_float64(double %a, double %b)
 ; -- strings --
 @str1 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 48, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 @str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 49, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-; -- endstrings --
+; -- endstrings --; tests/10.const/src/main.m
 @carr = constant [6 x i8] [
 	i8 0,
 	i8 10,

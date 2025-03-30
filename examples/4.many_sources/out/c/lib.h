@@ -1,3 +1,4 @@
+// examples/4.many_sources/lib.cm
 
 #ifndef LIB_H
 #define LIB_H

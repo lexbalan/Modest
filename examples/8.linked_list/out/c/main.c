@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #include "main.h"
-
+// examples/8.linked_list/src/main.m
 
 // wrap around linked list for list.List Nat32
 static void nat32_list_insert(list_List *lst, uint32_t x)

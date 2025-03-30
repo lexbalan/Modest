@@ -313,7 +313,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 @str4 = private constant [2 x i8] [i8 10, i8 0]
 @str5 = private constant [2 x i8] [i8 10, i8 0]
 @str6 = private constant [2 x i8] [i8 10, i8 0]
-; -- endstrings --
+; -- endstrings --; tests/11.unicode/src/main.m
 
 ; include test (!)
 @ratSymbolUTF8 = constant [4 x %Word8] [

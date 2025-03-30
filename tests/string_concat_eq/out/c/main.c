@@ -1,3 +1,4 @@
+// tests/string_concat_eq/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -11,8 +12,7 @@
 #define world  "World"
 #define party_corn  U"🎉"
 
-#define greeting  (hello " " world)
-//+ " " + party_corn
+#define greeting  (hello " " world)//+ " " + party_corn
 
 #define test  "test"
 

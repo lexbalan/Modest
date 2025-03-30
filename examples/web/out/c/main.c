@@ -13,7 +13,7 @@
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
-
+// Simple Web server example
 
 #define port  8080
 

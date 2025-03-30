@@ -1,3 +1,4 @@
+// tests/12.structural_type_system/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>

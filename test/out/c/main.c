@@ -19,10 +19,6 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
-
-
-
-
 static int32_t main_v0;
 
 //@attribute("value:nodecorate")
@@ -85,6 +81,9 @@ int32_t main()
 	int32_t a4[10] = {};
 
 	xxx((uint8_t *)&w0);
+
+	uint8_t yy = 1;
+	uint8_t we = yy;
 
 	int *const pa2 = (int *)&a2;
 

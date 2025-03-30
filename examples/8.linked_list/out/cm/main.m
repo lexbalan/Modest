@@ -3,7 +3,7 @@ include "ctypes64"
 include "stdlib"
 include "stdio"
 
-import "list" as list
+import "list" as list// examples/8.linked_list/src/main.m
 
 
 // wrap around linked list for list.List Nat32

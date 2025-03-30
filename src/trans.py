@@ -2660,17 +2660,24 @@ def process_module(idStr, ast, is_import=False, is_include=False):
 	cmodule = Module(idStr, ast, symtab_public, symtab_private)
 
 	# 0. do imports & directives
-	for x in ast:
+	while True:#x in ast:
+		x = ast[0]
 		isa = x['isa']
 		y = None
 		if isa == 'ast_import':
 			y = do_import(x)
-
 		elif isa == 'ast_directive':
 			y = do_directive(x)
+		elif isa == 'ast_comment':
+			y = do_stmt_comment(x)
+		else:
+			break
+
+		ast = ast[1:]
 
 		if y != None:
 			module_append(y)
+
 
 	if is_import:
 		pre_imp(ast)
