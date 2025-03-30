@@ -675,22 +675,26 @@ def str_value_call(v, ctx, sret=None):
 			indent_down()
 
 		a = args[i].value
+		param_id = args[i].id
+		if param_id != None:
+			sstr += "/*%s=*/" % param_id.str
+
 
 		# не всегда когда есть аргумент есть и соотв ему параметер (!)
-		try:
-			# если тип аргумента отличается модификатором (const, volatile)
-			# то явно приведем его к типу параметра, чтобы C не ругался
-			# (try: проверяем только те аргументы, для которых есть параметры)
-			p = params[i]
-			pt = p['type']
-
-			if not Type.eq(pt, a['type'], opt=['att_checking']):
-				sstr += str_cast(pt, a)
-			else:
-				sstr += str_value(a, ctx=ctx)
-
-		except:
-			sstr += str_value(a, ctx=ctx)
+#		try:
+#			# если тип аргумента отличается модификатором (const, volatile)
+#			# то явно приведем его к типу параметра, чтобы C не ругался
+#			# (try: проверяем только те аргументы, для которых есть параметры)
+#			p = params[i]
+#			pt = p['type']
+#
+#			if not Type.eq(pt, a['type'], opt=['att_checking']):
+#				sstr += str_cast(pt, a)
+#			else:
+#			sstr += str_value(a, ctx=ctx)
+#
+#		except:
+		sstr += str_value(a, ctx=ctx)
 
 		i = i + 1
 		if i < n:

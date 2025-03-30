@@ -24,9 +24,9 @@ int main()
 	#define x0  ((a - b) * c)
 
 	const int32_t x1 = named_args_test(
-		a,
-		b,
-		c
+		/*a=*/a,
+		/*b=*/b,
+		/*c=*/c
 	);
 
 	if (x0 == x1) {
