@@ -685,7 +685,7 @@ def str_value_call(v, ctx, sret=None):
 			pt = p['type']
 
 			if not Type.eq(pt, a['type'], opt=['att_checking']):
-				sstr += print_cast(pt, a)
+				sstr += str_cast(pt, a)
 			else:
 				sstr += str_value(a, ctx=ctx)
 
@@ -780,7 +780,7 @@ def str_value_access(x, ctx):
 
 
 
-def print_cast_hard(t, v, ctx=[]):
+def str_cast_hard(t, v, ctx=[]):
 	# hard cast is possible only in function body
 	assert(is_local_context())
 	sstr = ''
@@ -796,7 +796,13 @@ def print_cast_hard(t, v, ctx=[]):
 	return sstr
 
 
-def print_cast(t, v, ctx=[]):
+def str_cast(t, v, ctx=[]):
+	# protection from (uint8_t)(uint8_t)...
+	if isinstance(v, ValueCons):
+		if get_id_str(t) == get_id_str(v.type):
+			return str_cast(v.type, v.value, ctx)
+
+
 	#array_as_ptr = not 'array_as_array' in ctx
 	sstr = "("
 	sstr += str_type(t)
@@ -826,7 +832,7 @@ def str_value_cons_record(x, ctx):
 
 	if from_type.is_generic_record():
 		if is_local_context():
-			return print_cast(to_type, value)
+			return str_cast(to_type, value)
 		else:
 			return str_value(value, ctx=ctx)
 
@@ -838,7 +844,7 @@ def str_value_cons_record(x, ctx):
 			# и приведение не требуется
 			return str_value(value, ctx=ctx)
 		# C cannot cast struct to struct (!)
-		return print_cast_hard(to_type, value)
+		return str_cast_hard(to_type, value)
 
 
 
@@ -875,7 +881,7 @@ def str_value_cons_array(x, ctx):
 					char_width = to_type.of.width
 					return str_literal_string(chars, char_width=char_width)
 
-			return print_cast(to_type, value, ctx=ctx)
+			return str_cast(to_type, value, ctx=ctx)
 		else:
 			return str_value(value, ctx=ctx)
 		return '<??>'
@@ -895,7 +901,7 @@ def str_value_cons_array(x, ctx):
 	if value.type.is_string():
 		return str_value(value, ctx=ctx)
 
-	return print_cast(to_type, value, ctx)
+	return str_cast(to_type, value, ctx)
 
 
 
@@ -950,7 +956,7 @@ def str_value_cons(x, ctx):
 			if from_type.is_pointer_to_record():
 				# НО если это реально один и тот же тип, то приведение не нужно!
 				if id(from_type) != id(type):
-					return print_cast(type, value, ctx)
+					return str_cast(type, value, ctx)
 
 		if from_type.is_pointer():
 			if from_type.to.is_array():
@@ -961,7 +967,7 @@ def str_value_cons(x, ctx):
 
 	elif type.is_float():
 		if from_type.is_int() or from_type.is_num():
-			return print_cast(type, value, ctx)
+			return str_cast(type, value, ctx)
 
 	elif type.is_char():
 		if from_type.is_string():
@@ -1022,7 +1028,7 @@ def str_value_cons(x, ctx):
 					sstr += str_type(type)
 					sstr += (")")
 					nat_same_sz = foundation.type_select_nat(from_type.width)
-					sstr += print_cast(nat_same_sz, value, ctx)
+					sstr += str_cast(nat_same_sz, value, ctx)
 					return sstr
 
 
@@ -1032,7 +1038,7 @@ def str_value_cons(x, ctx):
 		if value.type.is_free_pointer():
 			value = value.value
 
-	return print_cast(type, value, ctx)
+	return str_cast(type, value, ctx)
 
 
 
