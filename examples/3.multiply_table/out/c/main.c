@@ -22,11 +22,9 @@ static void mtab(uint32_t n)
 
 int main()
 {
-	#define n  (2 * 2)
+	const uint8_t n = 2 * 2;
 	printf("multiply table for %d\n", (int32_t)n);
-	mtab(n);
+	mtab((uint32_t)n);
 	return 0;
-
-#undef n
 }
 

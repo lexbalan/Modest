@@ -552,11 +552,7 @@ def str_value_shl(x, ctx):
 	sstr += str_value(x.left, parent_expr=x)
 	sstr += ' << '
 	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar]
-	if need_wrap_right:
-		sstr += "("
-	sstr += str_value(x.right, parent_expr=x)
-	if need_wrap_right:
-		sstr += ")"
+	sstr += str_value(x.right, parent_expr=x, wrapped=need_wrap_right)
 	return sstr
 
 
@@ -565,11 +561,7 @@ def str_value_shr(x, ctx):
 	sstr += str_value(x.left, parent_expr=x)
 	sstr += (' >> ')
 	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar]
-	if need_wrap_right:
-		sstr += ("(")
-	sstr += str_value(x.right, parent_expr=x)
-	if need_wrap_right:
-		sstr += (")")
+	sstr += str_value(x.right, parent_expr=x, wrapped=need_wrap_right)
 	return sstr
 
 
@@ -792,11 +784,7 @@ def str_cast_hard(t, v, ctx=[]):
 	sstr += str_type(t)
 	sstr += "*)&"
 	need_wrap = precedence(v) < CONS_PRECEDENCE
-	if need_wrap:
-		sstr += "("
-	sstr += str_value(v, ctx=ctx)
-	if need_wrap:
-		sstr += ")"
+	sstr += str_value(v, ctx=ctx, wrapped=need_wrap)
 	return sstr
 
 
@@ -815,15 +803,10 @@ def str_cast(t, v, ctx=[]):
 	need_wrap = precedence(v) < CONS_PRECEDENCE
 
 	# add for arrays add (!)
-	if isinstance(v, ValueLiteral) or (isinstance(v, ValueBin) and v.op == 'add'):
-		need_wrap = not v.type.is_composite()
+#	if isinstance(v, ValueLiteral) or (isinstance(v, ValueBin) and v.op == 'add'):
+#		need_wrap = not v.type.is_composite()
 
-	if need_wrap:
-		sstr += ("(")
-	sstr += str_value(v, ctx=ctx)
-	if need_wrap:
-		sstr += (")")
-
+	sstr += str_value(v, ctx=ctx, wrapped=need_wrap)
 	return sstr
 
 
@@ -996,8 +979,25 @@ def str_value_cons(x, ctx):
 					sstr += str_type(value.value.type.of)
 					sstr += (" *)")
 
-		# не печатаем обычный implicit_cast
-		# (это не касается того что выше ^^)
+		#
+		# Когда производится неявное приведение локальной generic константы
+		# К реальному типу, ширина которого отлична от ширины выбраной для константы
+		# Делаем явное приведение типа:
+		#   const int16_t min = -1000;
+		#   const uint16_t max = 1000;
+		#   const int32_t x = get_number((int32_t)min, (int32_t)max);
+		#
+		if value.type.is_generic():
+			from trans import is_global_value
+			if not is_global_value(value):
+				if value.isConst():
+					if type.width != value.type.width:
+						return str_cast(type, value, ctx)
+
+		#
+		# Now we do not print implicit cons (!)
+		#
+
 		sstr += str_value(value)
 
 		# print postfix ('u', 'U', 'L', 'LL', etc.)
@@ -1416,9 +1416,11 @@ def str_value_subexpr(x, ctx):
 	return sstr
 
 
-def str_value(x, ctx=[], parent_expr=None):
+def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 	sstr = ''
 	need_wrap = False
+	if wrapped:
+		need_wrap = True
 	if parent_expr != None:
 		need_wrap = precedence(x) < precedence(parent_expr)
 
@@ -1620,11 +1622,7 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 		need_wrap = precedence(value) < precedenceMax
 
 	nl_str = " \\\n"
-	if need_wrap:
-		out("(")
-	print_value(value)
-	if need_wrap:
-		out(")")
+	out(str_value(value, wrapped=need_wrap))
 	nl_str = "\n"
 
 
@@ -1635,12 +1633,13 @@ def print_stmt_const(x):
 
 	# print generic constant as C macro
 	if value_is_generic_immediate(const_value):
-		id_str = get_id_str(const_value)
-		# если точный тип константы неизвестен - печатаем ее как макро
-		print_macro_definition(id_str, init_value)
-		global func_undef_list
-		func_undef_list.append(id_str)
-		return
+		if const_value.type.is_composite() or const_value.type.is_string():
+			id_str = get_id_str(const_value)
+			# если точный тип константы неизвестен - печатаем ее как макро
+			print_macro_definition(id_str, init_value)
+			global func_undef_list
+			func_undef_list.append(id_str)
+			return
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
@@ -2074,7 +2073,6 @@ def str_static_initializer(v):
 
 
 def print_def_const(x):
-	global nl_str
 	const_value = x.value
 	init_value = x.init_value
 	id = x.id

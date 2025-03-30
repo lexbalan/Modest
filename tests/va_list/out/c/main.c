@@ -24,15 +24,13 @@ static ssize_t my_printf(char *format, ...)
 
 	va_start(va2, format);
 
-	#define strMaxLen  (127 + 1)
+	const uint8_t strMaxLen = 127 + 1;
 	char buf[strMaxLen];
-	const int n = vsnprintf((char *)&buf, strMaxLen, format, va2);
+	const int n = vsnprintf((char *)&buf, (size_t)strMaxLen, format, va2);
 
 	va_end(va2);
 
 	return write(STDOUT_FILENO, (char *)&buf, ABS(n));
-
-#undef strMaxLen
 }
 
 int main()

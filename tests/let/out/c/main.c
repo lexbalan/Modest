@@ -10,8 +10,8 @@
 
 int main()
 {
-	#define x  127
-	#define y  (x + 1)
+	const uint8_t x = 127;
+	const uint8_t y = x + 1;
 
 	printf("y = %i\n", (int32_t)y);
 
@@ -22,8 +22,5 @@ int main()
 	}
 
 	return 0;
-
-#undef x
-#undef y
 }
 

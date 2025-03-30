@@ -26,12 +26,12 @@ typedef struct Context Context;
 
 static inline uint32_t rotleft(uint32_t a, uint32_t b)
 {
-	return (a << b) | (a >> ((32 - b)));
+	return (a << b) | (a >> (32 - b));
 }
 
 static inline uint32_t rotright(uint32_t a, uint32_t b)
 {
-	return (a >> b) | (a << ((32 - b)));
+	return (a >> b) | (a << (32 - b));
 }
 
 static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z)

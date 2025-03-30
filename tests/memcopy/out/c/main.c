@@ -28,17 +28,15 @@ int main()
 		.age = 30
 	};
 
-	#define len  sizeof(Object)
+	const uint8_t len = sizeof(Object);
 	printf("LEN = %u\n", (uint32_t)len);
 
-	memory_copy(&o2, &o1, len);
+	memory_copy(&o2, &o1, (uint64_t)len);
 
 	printf("firstname = '%s'\n", &o2.firstname);
 	printf("lastname = '%s'\n", &o2.lastname);
 	printf("age = %d\n", o2.age);
 
 	return 0;
-
-#undef len
 }
 

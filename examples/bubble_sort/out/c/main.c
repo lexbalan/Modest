@@ -73,18 +73,15 @@ static void print_array(int32_t *array, int32_t len)
 static int32_t get_number(int32_t min, int32_t max);
 static void fill_array(int32_t *array, int32_t len)
 {
-	#define min  (-1000)
-	#define max  1000
+	const int16_t min = -1000;
+	const uint16_t max = 1000;
 	int32_t i = 0;
 	while (i < len) {
 		printf("[%i] ", i);
-		const int32_t x = get_number(min, max);
+		const int32_t x = get_number((int32_t)min, (int32_t)max);
 		array[i] = x;
 		i = i + 1;
 	}
-
-#undef min
-#undef max
 }
 
 static int32_t get_number(int32_t min, int32_t max)
