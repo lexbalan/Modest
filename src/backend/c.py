@@ -2192,6 +2192,12 @@ def print_deps(deps):
 	out("\n")
 
 
+def nnl(nl):
+	if nl >= 2:
+		newline(2)
+	else:
+		newline(1)
+
 
 def print_header(module, outname):
 	outname = outname + '.h'
@@ -2238,40 +2244,36 @@ def print_header(module, outname):
 		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
-		if isinstance(x, StmtComment):
-			continue
-
-		if isinstance(x, StmtDirective):
-			if isinstance(x, StmtDirectiveCInclude):
-				continue
-
-		#newline(x.nl)
-		if x.nl >= 2:
-			newline(2)
-		else:
-			newline(1)
+		#if isinstance(x, StmtDirective):
+		#	if isinstance(x, StmtDirectiveCInclude):
+		#		continue
 
 		if isinstance(x, StmtImport):
+			nnl(x.nl)
 			if not 'do_not_include' in x.module.att:
 				s = os.path.basename(x.impline)
 				include(s + '.h', local=True)
-
 		elif isinstance(x, StmtDefFunc):
+			nnl(x.nl)
 			if x.hasAttribute('inline'):
 				print_def_func(x)
 				continue
 			print_decl_func(x)
 		elif isinstance(x, StmtDefVar):
+			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_var(x)
 		elif isinstance(x, StmtDefType):
+			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_type(x)
 		elif isinstance(x, StmtDefConst):
+			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_const(x)
-		elif isinstance(x, StmtComment):
-			print_comment(x)
+		#elif isinstance(x, StmtComment):
+		#	nnl(x.nl)
+		#	print_comment(x)
 
 	newline()
 	newline()
@@ -2308,11 +2310,7 @@ macro_definitions = {
 }
 
 
-def nnl(nl):
-	if nl >= 2:
-		newline(2)
-	else:
-		newline(1)
+
 
 def print_cfile(module, _outname):
 	outname = _outname + '.c'
