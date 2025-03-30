@@ -12,7 +12,6 @@
 #endif /* __lengthof */
 
 
-
 #define datastring  "123456789"
 #define expected_hash  0xCBF43926
 

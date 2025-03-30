@@ -6,7 +6,6 @@
 #include "main.h"
 
 
-
 int main()
 {
 	console_print("test console print\n");

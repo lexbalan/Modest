@@ -13,7 +13,6 @@
 #endif /* __lengthof */
 
 
-
 static char *table_header0[3] = {
 	"#", "Header0", "Header1"
 };

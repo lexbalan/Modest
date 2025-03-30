@@ -12,7 +12,6 @@
 #endif /* __lengthof */
 
 
-
 #define inputDataLength  32
 
 struct SHA256_TestCase {

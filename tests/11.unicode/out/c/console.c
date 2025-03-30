@@ -14,7 +14,6 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
-
 //$pragma do_not_include
 // for Int
 // for write()

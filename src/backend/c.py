@@ -2308,6 +2308,12 @@ macro_definitions = {
 }
 
 
+def nnl(nl):
+	if nl >= 2:
+		newline(2)
+	else:
+		newline(1)
+
 def print_cfile(module, _outname):
 	outname = _outname + '.c'
 
@@ -2369,24 +2375,26 @@ def print_cfile(module, _outname):
 		if isinstance(x, StmtDirectiveCInclude):
 			continue
 
-		if x.nl >= 2:
-			newline(2)
-		else:
-			newline(1)
+
 
 		if isinstance(x, StmtDefConst) and is_private(x):
+			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_const(x)
 		elif isinstance(x, StmtDefType) and is_private(x):
+			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_type(x)
 		elif isinstance(x, StmtDefVar):
+			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_var(x)
 		elif isinstance(x, StmtDefFunc):
+			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_func(x)
 		elif isinstance(x, StmtComment):
+			nnl(x.nl)
 			print_comment(x)
 		elif isinstance(x, StmtDirective):
 			print_directive(x)

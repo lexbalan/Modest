@@ -9,7 +9,6 @@
 #include "main.h"
 
 
-
 #define carr  {0, 10, 15, 20, 25, 30}
 
 struct Point {
