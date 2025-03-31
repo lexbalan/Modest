@@ -191,16 +191,12 @@ class Parser:
 				if self.match('\n'):
 					spaceline_cnt = spaceline_cnt + 1
 					continue
-				elif self.token_class_is('comment-block'):
-					x = self.parse_comment_block()
-					x['nl'] = spaceline_cnt
+
+				comm = self.parse_comment()
+				if comm != None:
+					comm['nl'] = spaceline_cnt
 					spaceline_cnt = 0
-					comments.append(x)
-				elif self.token_class_is('comment-line'):
-					x = self.parse_comment_line()
-					x['nl'] = spaceline_cnt
-					spaceline_cnt = 0
-					comments.append(x)
+					comments.append(comm)
 				elif self.token_class_is('attribute'):
 					x = self.parse_attribute()
 					x['nl'] = spaceline_cnt
@@ -910,16 +906,6 @@ class Parser:
 				comm['nl'] = nl_cnt
 				items.append(comm)
 				continue
-			"""if self.token_class_is('comment-block'):
-				x = self.parse_comment_block()
-				x['nl'] = nl_cnt
-				items.append(x)
-				continue
-			elif self.token_class_is('comment-line'):
-				x = self.parse_comment_line()
-				x['nl'] = nl_cnt
-				items.append(x)
-				continue"""
 
 			if self.match("]"):
 				break
@@ -962,18 +948,6 @@ class Parser:
 				comm['nl'] = nl_cnt
 				items.append(comm)
 				continue
-			"""
-			if self.token_class_is('comment-block'):
-				x = self.parse_comment_block()
-				x['nl'] = nl_cnt
-				items.append(x)
-				continue
-			elif self.token_class_is('comment-line'):
-				x = self.parse_comment_line()
-				x['nl'] = nl_cnt
-				items.append(x)
-				continue
-			"""
 
 			if self.match("}"):
 				break
