@@ -192,7 +192,7 @@ class Parser:
 					spaceline_cnt = spaceline_cnt + 1
 					continue
 
-				comm = self.parse_comment()
+				comm = self.parse_if_comment()
 				if comm != None:
 					comm['nl'] = spaceline_cnt
 					spaceline_cnt = 0
@@ -798,7 +798,7 @@ class Parser:
 					if self.match(")"):
 						break
 
-					comm = self.parse_comment()
+					comm = self.parse_if_comment()
 					if comm != None:
 						#comm['nl'] = nl_cnt
 						#args.append(comm)
@@ -882,12 +882,12 @@ class Parser:
 				return v
 
 
-	def parse_comment(self):
+	def parse_if_comment(self):
 		if self.token_class_is('comment-block'):
-			return self.parse_comment_block()
+			return self.parse_if_comment_block()
 			return x
 		elif self.token_class_is('comment-line'):
-			return self.parse_comment_line()
+			return self.parse_if_comment_line()
 		return None
 
 
@@ -901,7 +901,7 @@ class Parser:
 			#self.skip_tokens_class(['nl'])
 			nl_cnt = self.skip_blanks()
 
-			comm = self.parse_comment()
+			comm = self.parse_if_comment()
 			if comm != None:
 				comm['nl'] = nl_cnt
 				items.append(comm)
@@ -943,7 +943,7 @@ class Parser:
 			#self.skip_tokens_class(['nl'])
 			nl_cnt = self.skip_blanks()
 
-			comm = self.parse_comment()
+			comm = self.parse_if_comment()
 			if comm != None:
 				comm['nl'] = nl_cnt
 				items.append(comm)
@@ -1384,7 +1384,7 @@ class Parser:
 
 				x = None
 
-				comm = self.parse_comment()
+				comm = self.parse_if_comment()
 				if comm != None:
 					comm['nl'] = nl_cnt
 					comments_and_attributes.append(comm)
@@ -1609,13 +1609,13 @@ class Parser:
 			self.skip()
 
 
-	def parse_comment_line(self):
+	def parse_if_comment_line(self):
 		ti = self.ti()
 		x = self.gettok()
 		return {'isa': 'ast_comment', 'kind': 'comment-line', 'lines': x, 'ti': ti}
 
 
-	def parse_comment_block(self):
+	def parse_if_comment_block(self):
 		ti = self.ti()
 		x = self.gettok()
 		return {'isa': 'ast_comment', 'kind': 'comment-block', 'text': x, 'ti': ti}
@@ -1692,9 +1692,9 @@ class Parser:
 #		# Head
 #		if not self.is_end():
 #			if self.token_class_is('comment-block'):
-#				x = self.parse_comment_block()
+#				x = self.parse_if_comment_block()
 #			elif self.token_class_is('comment-line'):
-#				x = self.parse_comment_line()
+#				x = self.parse_if_comment_line()
 
 
 
@@ -1740,9 +1740,9 @@ class Parser:
 			elif self.match('type'):
 				x = self.parse_def_type()
 			elif self.token_class_is('comment-block'):
-				x = self.parse_comment_block()
+				x = self.parse_if_comment_block()
 			elif self.token_class_is('comment-line'):
-				x = self.parse_comment_line()
+				x = self.parse_if_comment_line()
 			elif self.token_class_is('directive'):
 				x = self.parse_directive()
 			elif self.match('import'):
