@@ -1,3 +1,5 @@
+// tests/threads/src/main.m
+// valgrind --leak-check=full ./easy.run
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -7,7 +9,6 @@
 #include <pthread.h>
 
 #include "main.h"
-
 
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;

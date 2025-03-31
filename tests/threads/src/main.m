@@ -20,14 +20,14 @@ func thread0(param: Ptr) -> Ptr {
 
 	while global_counter < 32 {
 		// increment global counter
-		pthread.pthread_mutex_lock(&mutex)
+		pthread.mutex_lock(&mutex)
 		++global_counter
-		pthread.pthread_mutex_unlock(&mutex)
+		pthread.mutex_unlock(&mutex)
 
 		usleep(500000)
 	}
 
-	pthread.pthread_exit(nil)
+	pthread.exit(nil)
 	return nil
 }
 
@@ -40,9 +40,9 @@ func thread1(param: Ptr) -> Ptr {
 
 	while global_counter_value < 32 {
 		// fast read global counter
-		pthread.pthread_mutex_lock(&mutex)
+		pthread.mutex_lock(&mutex)
 		global_counter_value = global_counter
-		pthread.pthread_mutex_unlock(&mutex)
+		pthread.mutex_unlock(&mutex)
 
 		if global_counter_prev != global_counter_value {
 			global_counter_prev = global_counter_value
@@ -50,7 +50,7 @@ func thread1(param: Ptr) -> Ptr {
 		}
 	}
 
-	pthread.pthread_exit(nil)
+	pthread.exit(nil)
 	return nil
 }
 
@@ -63,15 +63,15 @@ public func main() -> Int {
 	var pthread0: pthread.PThreadT
 	var pthread1: pthread.PThreadT
 
-	rc = pthread.pthread_create(&pthread0, nil, &thread0, nil)
-	rc = pthread.pthread_create(&pthread1, nil, &thread1, nil)
+	rc = pthread.create(&pthread0, nil, &thread0, nil)
+	rc = pthread.create(&pthread1, nil, &thread1, nil)
 
 	//pthread.detach(pthread0)
 	var rc0, rc1: Ptr
-	rc = pthread.pthread_join(pthread0, &rc0)
-	rc = pthread.pthread_join(pthread1, &rc1)
+	rc = pthread.join(pthread0, &rc0)
+	rc = pthread.join(pthread1, &rc1)
 
-	pthread.pthread_exit(nil)
+	pthread.exit(nil)
 
 	return 0
 }

@@ -6,6 +6,7 @@ class Id(Entity):
 	def __init__(self, x=None):
 		super().__init__(None)
 
+		self.prefix = None
 		self.str = None
 
 		if x != None:

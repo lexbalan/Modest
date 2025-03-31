@@ -1,3 +1,5 @@
+// tests/threads/src/main.m
+// valgrind --leak-check=full ./easy.run
 
 #ifndef MAIN_H
 #define MAIN_H

@@ -64,6 +64,7 @@ from util import nbits_for_num, nbytes_for_bits
 
 production = True
 
+global_prefix = None
 
 # current file directory
 env_current_file_dir = ""
@@ -2099,9 +2100,11 @@ def do_stmt_block(x, parent=None):
 def def_type(x):
 	global cmodule
 	global cdef
+	global global_prefix
 
 	id = Id(x['id'])
 	log("def_type: %s" % id.str)
+	id.prefix = global_prefix
 
 	nt = ctx_type_get(id.str)
 
@@ -2159,8 +2162,10 @@ def def_type(x):
 def def_const(x):
 	#global cdef
 	global cmodule
+	global global_prefix
 
 	const_value = do_const(x)
+	const_value.id.prefix = global_prefix
 
 	is_public = x['access_modifier'] == 'public'
 	cmodule_value_add(const_value.id.str, const_value, is_public=is_public)
@@ -2227,9 +2232,11 @@ def do_const(x):
 
 def def_var(x):
 	global cdef
+	global cdeglobal_prefixf
 
 	id = Id(x['id'])
 	log("def_var %s" % id.str)
+	id.prefix = global_prefix
 
 	# already defined? (check identifier)
 	already = ctx_value_get(id.str)
@@ -2309,12 +2316,14 @@ def def_func(x, dostmt=True):
 	global cdef
 	global cfunc
 	global cmodule
+	global global_prefix
 
 	log('def_func: %s' % x['id']['str'])
 
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
 	fn = ctx_value_get(x['id']['str'])
+	fn.id.prefix = global_prefix
 
 	definition = StmtDefFunc(fn.id, fn, None, x['ti'])
 	definition.id = fn.id
@@ -2579,8 +2588,9 @@ def do_import(x):
 
 
 def do_directive(x):
-	#info("directive %s" % x['kind'], x['ti'])
 	global cmodule
+	global global_prefix
+	#info("directive %s" % x['kind'], x['ti'])
 	if x['kind'] == 'pragma':
 		args = x['args']
 		s0 = args[0]
@@ -2600,9 +2610,15 @@ def do_directive(x):
 		elif s0 == 'insert':
 			print("-INSERT " + args[1])
 			return StmtDirectiveInsert(args[1], x['ti'])
-		elif s0 == 'c_func_prefix':
-			print('c_func_prefix = %s' % args[1])
+		elif s0 == 'append_prefix':
+			prefix = args[1]
+			#print('append_prefix = %s' % prefix)
+			global_prefix = prefix
 			pass
+		elif s0 == 'remove_prefix':
+			prefix = args[1]
+			#print('remove_prefix = %s' % prefix)
+			global_prefix = global_prefix.removesuffix(prefix)
 
 	return None
 

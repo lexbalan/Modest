@@ -200,6 +200,10 @@ def get_id_str(x):
 				if not x.hasAttribute('static'):
 					return "%s_%s" % (xmodule.id, id.str)
 
+
+	if id.prefix != None:
+		return id.prefix + id.str
+
 	return id.str
 
 

@@ -463,7 +463,7 @@ public func pipe (fildes: *[2]Int) -> Int
 public func pread (fildes: Int, buf: Ptr, nbyte: SizeT, offset: OffT) -> SSizeT
 
 // pthread_atfork - register fork handlers
-public func pthread_atfork (prepare: *()->Unit, parent: *()->Unit, child: *()->Unit) -> Int
+//public func pthread_atfork (prepare: *()->Unit, parent: *()->Unit, child: *()->Unit) -> Int
 
 // pwrite - write on a file
 public func pwrite (fildes: Int, buf: Ptr, nbyte: SizeT, offset: OffT) -> SSizeT
