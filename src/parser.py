@@ -802,6 +802,12 @@ class Parser:
 					if self.match(")"):
 						break
 
+					comm = self.parse_comment()
+					if comm != None:
+						#comm['nl'] = nl_cnt
+						#args.append(comm)
+						continue
+
 					arg_ti = self.ti()
 					arg_value = self.expr_value()
 					arg_id = None
@@ -809,11 +815,6 @@ class Parser:
 						if arg_value['kind'] != 'id':
 							error("expected identifier", arg_value['ti'])
 
-						#if not 'id' in arg_value:
-							#print("isa = " + arg_value['isa'])
-							#print("kind = " + arg_value['kind'])
-							#print(arg_value)
-							#info("HERE", arg_value['ti'])
 						arg_id = arg_value#['id']
 						arg_value = self.expr_value()
 
@@ -885,6 +886,14 @@ class Parser:
 				return v
 
 
+	def parse_comment(self):
+		if self.token_class_is('comment-block'):
+			return self.parse_comment_block()
+			return x
+		elif self.token_class_is('comment-line'):
+			return self.parse_comment_line()
+		return None
+
 
 	def parse_value_array(self, ti):
 		array_ti = self.ti()
@@ -896,7 +905,12 @@ class Parser:
 			#self.skip_tokens_class(['nl'])
 			nl_cnt = self.skip_blanks()
 
-			if self.token_class_is('comment-block'):
+			comm = self.parse_comment()
+			if comm != None:
+				comm['nl'] = nl_cnt
+				items.append(comm)
+				continue
+			"""if self.token_class_is('comment-block'):
 				x = self.parse_comment_block()
 				x['nl'] = nl_cnt
 				items.append(x)
@@ -905,7 +919,7 @@ class Parser:
 				x = self.parse_comment_line()
 				x['nl'] = nl_cnt
 				items.append(x)
-				continue
+				continue"""
 
 			if self.match("]"):
 				break
@@ -943,6 +957,12 @@ class Parser:
 			#self.skip_tokens_class(['nl'])
 			nl_cnt = self.skip_blanks()
 
+			comm = self.parse_comment()
+			if comm != None:
+				comm['nl'] = nl_cnt
+				items.append(comm)
+				continue
+			"""
 			if self.token_class_is('comment-block'):
 				x = self.parse_comment_block()
 				x['nl'] = nl_cnt
@@ -953,6 +973,7 @@ class Parser:
 				x['nl'] = nl_cnt
 				items.append(x)
 				continue
+			"""
 
 			if self.match("}"):
 				break
@@ -1388,14 +1409,11 @@ class Parser:
 				#	break
 
 				x = None
-				if self.token_class_is('comment-block'):
-					x = self.parse_comment_block()
-					x['nl'] = nl_cnt
-					comments_and_attributes.append(x)
-				elif self.token_class_is('comment-line'):
-					x = self.parse_comment_line()
-					x['nl'] = nl_cnt
-					comments_and_attributes.append(x)
+
+				comm = self.parse_comment()
+				if comm != None:
+					comm['nl'] = nl_cnt
+					comments_and_attributes.append(comm)
 				elif self.token_class_is('attribute'):
 					x = self.parse_attribute()
 					x['nl'] = nl_cnt
