@@ -987,12 +987,14 @@ def str_value_cons(x, ctx):
 		#   const uint16_t max = 1000;
 		#   const int32_t x = get_number((int32_t)min, (int32_t)max);
 		#
-		if value.type.is_generic():
-			from trans import is_global_value
-			if not is_global_value(value):
-				if value.isConst():
-					if type.width != value.type.width:
-						return str_cast(type, value, ctx)
+		# Это ХОРОШАЯ практика но я отказываюсь от С const
+		# тк массив с ней - не VLA
+#		if value.type.is_generic():
+#			from trans import is_global_value
+#			if not is_global_value(value):
+#				if value.isConst():
+#					if type.width != value.type.width:
+#						return str_cast(type, value, ctx)
 
 		#
 		# Now we do not print implicit cons (!)
@@ -1327,6 +1329,9 @@ def str_value_literal(x, ctx):
 
 
 def str_value_const(x, ctx):
+	#if value_is_generic_immediate(x):
+	#	return str_value_literal(x, ctx)
+
 	return get_id_str(x)
 
 def str_value_var(x, ctx):
@@ -1633,13 +1638,13 @@ def print_stmt_const(x):
 
 	# print generic constant as C macro
 	if value_is_generic_immediate(const_value):
-		if const_value.type.is_composite() or const_value.type.is_string():
-			id_str = get_id_str(const_value)
-			# если точный тип константы неизвестен - печатаем ее как макро
-			print_macro_definition(id_str, init_value)
-			global func_undef_list
-			func_undef_list.append(id_str)
-			return
+		#if const_value.type.is_composite() or const_value.type.is_string():
+		id_str = get_id_str(const_value)
+		# если точный тип константы неизвестен - печатаем ее как макро
+		print_macro_definition(id_str, init_value)
+		global func_undef_list
+		func_undef_list.append(id_str)
+		return
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
@@ -2053,7 +2058,7 @@ def str_static_initializer(v):
 	root = get_root_value(v)
 
 	if value_is_generic_immediate_const(root):
-		return get_id_str(root)
+		return str_value_const(root, [])
 
 	if root.isImmediate():
 		if v.type.is_composite():

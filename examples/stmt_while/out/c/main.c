@@ -13,13 +13,15 @@ int main()
 	printf("while statement test\n");
 
 	int32_t a = 0;
-	const uint8_t b = 10;
+	#define b  10
 
-	while (a < (int32_t)b) {
+	while (a < b) {
 		printf("a = %d\n", a);
 		a = a + 1;
 	}
 
 	return 0;
+
+#undef b
 }
 

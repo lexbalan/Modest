@@ -39,11 +39,11 @@ int main()
 	printf("2 = %d\n", 2);
 	printf("2/3 = %f\n", (double)(2.0 / (double)3));
 
-	const uint8_t r = 10;
+	#define r  10
 	const double s = squareOfCircle((double)r);
 	printf("s = %f\n", s);
 
-	const double k = 1.0 / (double)8;
+	#define k  (1.0 / (double)8)
 	printf("k = %f\n", (double)k);
 
 	printf("sizeof(Float32) = %lu\n", sizeof(float));
@@ -54,5 +54,8 @@ int main()
 	printf("slope = %f\n", (double)sl);
 
 	return 0;
+
+#undef r
+#undef k
 }
 

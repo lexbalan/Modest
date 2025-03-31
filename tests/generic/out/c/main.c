@@ -67,10 +67,10 @@ int main()
 static bool test_generic_integer()
 {
 	// Any integer literal have GenericInteger type
-	const uint8_t one = 1;
+	#define one  1
 
 	// result of such expressions also have generic type
-	const uint8_t two = 1 + one;
+	#define two  (1 + one)
 
 	// GenericInteger value can be implicitly casted to any Integer type
 	int32_t a = one;
@@ -93,12 +93,15 @@ static bool test_generic_integer()
 	bool k = one != 0;
 
 	return true;
+
+#undef one
+#undef two
 }
 
 static bool test_generic_float()
 {
 	// Any float literal have GenericFloat type
-	const double pi = 3.141592653589793238462643383279502884;
+	#define pi  3.141592653589793238462643383279502884
 
 	// value with GenericFloat type
 	// can be implicit casted to any Float type
@@ -110,6 +113,8 @@ static bool test_generic_float()
 	int32_t x = pi;
 
 	return true;
+
+#undef pi
 }
 
 static bool test_generic_char()
