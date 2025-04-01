@@ -75,7 +75,10 @@ int32_t main()
 	}
 
 	// Starting listen to connection
-	rc = listen(server_socket, 5);
+	rc = listen(
+		/*socket=*/server_socket,
+		/*backlog=*/5
+	);
 	if (rc < 0) {
 		perror("cannot listen socket");
 		close(server_socket);

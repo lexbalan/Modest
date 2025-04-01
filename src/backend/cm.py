@@ -354,7 +354,10 @@ def str_value_call(x, ctx):
 			s += ", "
 
 		if arg.id != None:
-			s += "%s = " % get_id_str(arg)
+			if arg.nl > 0:
+				s += "%s = " % get_id_str(arg)
+			else:
+				s += "%s=" % get_id_str(arg)
 		s += str_value(arg.value)
 
 		i = i + 1
