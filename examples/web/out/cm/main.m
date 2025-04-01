@@ -73,10 +73,7 @@ public func main() -> Int32 {
 	}
 
 	// Starting listen to connection
-	rc = listen(
-		socket = server_socket
-		backlog = 5
-	)
+	rc = listen(socket=server_socket, backlog=5)
 	if rc < 0 {
 		perror("cannot listen socket")
 		close(server_socket)
