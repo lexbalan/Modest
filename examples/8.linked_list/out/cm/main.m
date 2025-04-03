@@ -115,7 +115,7 @@ public func main() -> Int {
 
 	let p_nat32 = malloc(sizeof(Nat32))
 	*p_nat32 = 1234
-	list.insert(list0, pos = 4, data = p_nat32)
+	list.insert(list0, pos=4, data=p_nat32)
 
 	list_print_forward(list0)
 

@@ -1,5 +1,10 @@
 // libc/termios.m
 
+$pragma do_not_include
+$pragma module_nodecorate
+$pragma c_include "termios.h"
+
+
 type Int Int32
 type Nat Nat32
 type CC_T Char8 //Char
@@ -69,13 +74,13 @@ public const c_NOFLSH = 0x80000000  // don't flush after interrupt
 const c_NCCS = 20
 
 public type Termios record {
-	c_iflag:  TCFlagT       // input flags
-	c_oflag:  TCFlagT       // output flags
-	c_cflag:  TCFlagT       // control flags
-	c_lflag:  TCFlagT       // local flags
-	c_cc:     [c_NCCS]CC_T  // control chars
-	c_ispeed: Int           // input speed
-	c_ospeed: Int           // output speed
+	public c_iflag:  TCFlagT       // input flags
+	public c_oflag:  TCFlagT       // output flags
+	public c_cflag:  TCFlagT       // control flags
+	public c_lflag:  TCFlagT       // local flags
+	public c_cc:     [c_NCCS]CC_T  // control chars
+	public c_ispeed: Int           // input speed
+	public c_ospeed: Int           // output speed
 }
 
 

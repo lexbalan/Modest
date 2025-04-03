@@ -258,7 +258,7 @@ def str_type_record(t, tag=''):
 		s += str_nl_indent(field.nl)
 		prev_nl = field.nl
 
-		s+= str_type(field.type, core='', label=get_id_str(field))
+		s += str_var(field.type, id_str=get_id_str(field))
 		s += ";"
 
 	indent_down()
@@ -289,13 +289,7 @@ def is_type_named(t):
 	return type_get_aka(t) != None
 
 
-def prespace(s):
-	if s == '':
-		return ''
-	return ' ' + s
-
-
-def str_type_array(t, label='', core=''):
+def str_type_array(t, core=''):
 	t0 = t
 
 	# handle array of array .. case
@@ -320,22 +314,24 @@ def str_type_array(t, label='', core=''):
 
 	if t.of.is_pointer():
 		of = t.of
+
+		if len(core) > 0:
+			if core[0] == ' ':
+				core = core[1:]
+
 		if of.to.is_array():
-			core = core + label + dims
+			core = core + dims
 			return str_type(of, core=core)
 
 		elif of.to.is_func():
-			core = core + label + dims
+			core = core + dims
 			return str_type(t.of, core=core)
 
 		elif is_type_named(of.to):
-			return str_type(of) + core + label + dims
+			return str_type(of) + core + dims
 
 	left = str_type(t.of)
-
-	if not t.of.is_pointer():
-		label = prespace(label)
-	return left + core + label + dims
+	return left + core + dims
 
 
 
@@ -360,7 +356,7 @@ def strFuncParamlist(params, va_arg):
 				ptype = TypePointer(ptype)
 				pstr = '_' + pstr
 
-		s += str_type(ptype, label=pstr)
+		s += str_var(ptype, id_str=pstr)
 		i += 1
 
 	if va_arg:
@@ -372,7 +368,7 @@ def strFuncParamlist(params, va_arg):
 	return s
 
 
-def str_type_func(t, label='', core=''):
+def str_type_func(t, core=''):
 	fparams = t.params
 	fto = t.to
 	if t.to.is_array():
@@ -392,17 +388,17 @@ def str_type_func(t, label='', core=''):
 	if not is_type_named(fto):
 		if fto.is_pointer():
 			if fto.to.is_pointer() or fto.to.is_array() or fto.to.is_func():
-				core = core + label + params
+				core = core + params
 				return str_type(fto, core=core)
 
 	left = str_type(fto)
-	if not fto.is_pointer():
-		label = prespace(label)
-	return left + core + label + params
+	if left[-1] == '*' and core[0] == ' ':
+		core = core[1:]
+	return left + core + params
 
 
 
-def str_type_pointer(t, label='', core='', as_ptr_to_array=False):
+def str_type_pointer(t, core='', as_ptr_to_array=False):
 	tx = t
 
 	c = ''
@@ -410,15 +406,19 @@ def str_type_pointer(t, label='', core='', as_ptr_to_array=False):
 		tx = tx.to
 		c += '*'
 
+	if len(core) > 0:
+		if core[0] == ' ':
+			core = core[1:]
+
 	if not as_ptr_to_array:
 		if is_sim_sim(t):
 			tx = tx.of
 
 	if not is_type_named(tx):
-		core = '(' + c + core + label + ')'
+		core = '(' + c + core + ')'
 		return str_type(tx, core=core)
 
-	return str_type(tx) + ' ' + c + core + label
+	return str_type(tx) + ' ' + c + core
 
 
 
@@ -430,21 +430,23 @@ def is_sim_sim(t):
 
 
 # label - used for variable/field definition form of type expr (variable id)
-def str_type(t, core='', label='', as_const='', as_volatile=''):
+def str_type(t, core='', as_const='', as_volatile=''):
+	#print("CORE = '%s'" % core)
 	aka = type_get_aka(t)
 	if aka != None:
+		pre = ''
 		if as_const:
-			out('const ')
+			pre += 'const '
 		if as_volatile:
-			out('volatile ')
+			pre += 'volatile '
 
-		return aka + core + prespace(label)
+		return pre + aka + core
 
 	if t.is_pointer():
 		if as_const:
-			label = 'const ' + label
+			core = 'const' + core
 		if as_volatile:
-			label = 'volatile ' + label
+			core = 'volatile' + core
 	else:
 		if as_const:
 			out('const ')
@@ -452,19 +454,23 @@ def str_type(t, core='', label='', as_const='', as_volatile=''):
 			out('volatile ')
 
 	if t.is_func():
-		return str_type_func(t, label, core)
+		return str_type_func(t, core)
 	elif t.is_pointer():
-		return str_type_pointer(t, label, core)
+		return str_type_pointer(t, core)
 	elif t.is_array():
-		return str_type_array(t, label, core)
+		return str_type_array(t, core)
 	elif t.is_record():
-		return str_type_record(t) + prespace(label)
+		return str_type_record(t) + core
 	return '<type:%s>' % str(t)
 
 
 
-def print_type(t, label='', as_const='', as_volatile=''):
-	out(str_type(t, core='', label=label, as_const=as_const, as_volatile=as_volatile))
+def str_var(t, id_str, as_const=False, as_volatile=False):
+	return str_type(t, core = ' ' + id_str, as_const=as_const, as_volatile=as_volatile)
+
+
+def print_type(t, as_const='', as_volatile=''):
+	out(str_type(t, as_const=as_const, as_volatile=as_volatile))
 
 
 def print_type_record(t, tag):
@@ -1888,7 +1894,7 @@ def print_func_paramlist(ftype):
 
 
 def print_func_signature(id_str, ftype):
-	print_type(ftype, label=id_str)
+	out(str_var(ftype, id_str=id_str))
 
 
 
@@ -2012,7 +2018,7 @@ def print_def_type(x):
 		return
 
 	out("typedef ")
-	print_type(otype, label=id_str)
+	out(str_var(otype, id_str=id_str))
 	out(";")
 
 
@@ -2020,7 +2026,7 @@ def print_def_type(x):
 # Указатель, массив и функция образуют пиздецовый заговор
 def print_variable(id_str, t, as_const=False, as_volatile=False, init_value=None, prefix=''):
 	assert (t != None)
-	print_type(t, label=(prefix + id_str), as_const=as_const, as_volatile=as_volatile)
+	out(str_var(t, id_str=(prefix + id_str), as_const=as_const, as_volatile=as_volatile))
 	if init_value != None:
 		out(" = ")
 		print_value(init_value)
@@ -2496,7 +2502,7 @@ def str_value_as_ptr(x):
 
 	if isinstance(root, ValueSlice):
 		ptr2slice = TypePointer(x.type)
-		sptr = str_type_pointer(ptr2slice, label='', as_ptr_to_array=True)
+		sptr = str_type_pointer(ptr2slice, as_ptr_to_array=True)
 		sstr += '(%s)' % sptr
 
 	if isinstance(root, ValueDeref):

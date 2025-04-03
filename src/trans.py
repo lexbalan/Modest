@@ -2839,7 +2839,7 @@ def def_def(ast, is_include=False):
 			elif kind == 'var':
 				y = def_var(x)
 
-			if y != None:
+			if y != None and not isinstance(y, StmtBad):
 				add_spices(y, ast_atts=x['attributes'], ti=x['ti'])
 				if not is_include:
 					y.parent = cmodule
