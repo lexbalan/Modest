@@ -428,10 +428,7 @@ def is_sim_sim(t):
 	return False
 
 
-
-# label - used for variable/field definition form of type expr (variable id)
 def str_type(t, core='', as_const='', as_volatile=''):
-	#print("CORE = '%s'" % core)
 	aka = type_get_aka(t)
 	if aka != None:
 		pre = ''
