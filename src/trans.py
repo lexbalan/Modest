@@ -307,21 +307,22 @@ def property_add(id, value):
 
 
 attributes = []
+private_attributes = []
 
-def attribute_add(at):
+
+def attribute_add(at, private=False):
 	global attributes
 	#print("attribute_add " + at)
-	if isinstance(at, list):
-		attributes.extend(at)
+	if private:
+		if isinstance(at, list):
+			private_attributes.extend(at)
+		else:
+			private_attributes.append(at)
 	else:
-		attributes.append(at)
-
-
-def attributes_get():
-	global attributes
-	attributes2 = attributes
-	attributes = []
-	return attributes2
+		if isinstance(at, list):
+			attributes.extend(at)
+		else:
+			attributes.append(at)
 
 
 
@@ -1734,6 +1735,7 @@ def do_value(x):
 def do_stmt_const(x):
 	global cfunc
 	v = do_const(x)
+	v.type.private_att.append('c_const')
 	v.addAttribute('local') # need for LLVM printer (!)
 	ctx_value_add(v.id.str, v)
 	definition = StmtDefConst(v.id, v, v.init_value, ti=x['ti'])
@@ -2204,7 +2206,7 @@ def do_const(x):
 
 	type = None
 	if x['type'] != None:
-		type = do_type(x['type'])
+		type = Type.copy(do_type(x['type']))
 
 	init_value = do_rvalue(x['init_value'])
 
@@ -2218,9 +2220,10 @@ def do_const(x):
 	if type != None:
 		init_value = value_cons_implicit_check(type, init_value)
 	else:
-		type = init_value.type
+		type = Type.copy(init_value.type)
 
 	const_value = ValueConst(type, id, init_value=init_value, ti=id.ti)
+
 
 	if init_value.isImmediate():
 		const_value.immediate = True
@@ -2503,7 +2506,7 @@ def do_attribute(x):
 	elif kind == 'extern':
 		attribute_add('extern')
 	elif kind == 'volatile':
-		attribute_add('volatile')
+		attribute_add('type:c_volatile')
 	elif kind == 'packed':
 		attribute_add('packed')
 	elif kind == 'unused_result':
@@ -2906,63 +2909,28 @@ def import_abspath(s, ext='.hm'):
 
 
 
-# directive '@attribute'
-def add_attributes(obj, ti):
-	atts = attributes_get()
 
-	for att in atts:
-		lr = att.split(":")
-		if len(lr) == 1:
-			att = lr[0]
-			obj.addAttribute(att)
-		elif len(lr) > 1:
-			set_att(obj, lr[0].split('.'), lr[1])
-
+# example: path = "value.type"
+def getObjAttrByPath(x, path):
+	steps = path.split(".")
+	for step in steps:
+		if not hasattr(x, step):
+			fatal("Object %s has not attribute %s" % (str(x), step))
+			return None
+		x = getattr(x, step)
+	return x
 
 
-def set_att(obj, path, att):
-	if len(path) == 1:
-		x = getattr(obj, path[0])
-		x.addAttribute(att)
-
-	elif len(path) > 1:
-		f = path[0]
-		o = getattr(obj, f)
-		set_att(o, path[1:], att)
-	else:
-		assert(False)
-
-
-
-def set_prop(obj, path, val, ti):
-	if len(path) == 1:
-		f = path[0]
-		setattr(obj, f, val)
-
-	elif len(path) > 1:
-		if not hasattr(obj, path[0]):
-			error("property '%s' not exist" % path[0], ti)
+def setObjAttrByPath(x, path, value):
+	steps = path.split(".")
+	for step in steps[0:-1]:
+		if not hasattr(x, step):
+			fatal("Object %s has not attribute %s" % (str(x), step))
 			return
+		x = getattr(x, step)
 
-		a = getattr(obj, path[0])
-		set_prop(a, path[1:], val, ti)
-
-	else:
-		assert(False)
-
-
-
-# directive '@property'
-def add_properties(obj, ti):
-	global properties
-	props = properties
-	properties = {}
-
-	for prop in props:
-		k = prop
-		v = props[prop]
-		path_array = prop.split(".")
-		set_prop(obj, path_array, v, ti)
+	if x != None:
+		setattr(x, steps[-1], value)
 
 
 
@@ -2980,8 +2948,22 @@ def add_spices(obj, ast_atts=None, ti=None):
 		for a in ast_atts:
 			do_attribute(a)
 
-	add_properties(obj, ti)
-	add_attributes(obj, ti)
+	# Add Attributes
+	for prop_id in properties:
+		setObjAttrByPath(obj, prop_id, properties[prop_id])
+	properties = {}
+
+	# Add Properties
+	for att in attributes:
+		lr = att.split(":")
+		if len(lr) == 1:
+			att = lr[0]
+			obj.addAttribute(att)
+		elif len(lr) > 1:
+			x = getObjAttrByPath(obj, lr[0])
+			if x != None:
+				x.addAttribute(lr[1])
+	attributes = []
 
 
 

@@ -383,10 +383,12 @@ def str_type_pointer(t, core='', need_close=False, as_ptr_to_array=False, as_con
 		tx = tx.to
 		left += '*'
 
-	if as_const:
+	if 'c_const' in t.private_att:
 		left += 'const '
-	if as_volatile:
+	if 'c_volatile' in t.att:
 		left += 'volatile '
+	if 'c_restrict' in t.att:
+		left += 'restrict '
 
 	if not as_ptr_to_array:
 		if is_sim_sim(t):
@@ -419,9 +421,9 @@ def str_named(t, core='', as_const=False, as_volatile=False):
 	aka = type_get_aka(t)
 	if aka != None:
 		pre = ''
-		if as_const:
+		if 'c_const' in t.private_att:
 			pre += 'const '
-		if as_volatile:
+		if 'c_volatile' in t.att:
 			pre += 'volatile '
 
 		return pre + aka + core

@@ -44,6 +44,9 @@ class Type(Entity):
 		self.align = align
 		self.ops = ops
 		self.att = []
+		# private atributes ONLY for this type (!)
+		# Type.copy() do not copies this field (!)
+		self.private_att = []
 		self.deps = []
 		self.signed = None  # Not defined for all types (!)
 		self.ti = None
@@ -440,7 +443,10 @@ class Type(Entity):
 	@staticmethod
 	def copy(x):
 		# copy type
-		return copy.copy(x)
+		y = copy.copy(x)
+		y.att = copy.copy(x.att)
+		y.private_att = []
+		return y
 
 	@staticmethod
 	def update(dst, src):
