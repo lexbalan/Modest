@@ -74,6 +74,9 @@ cfunc = None
 def newline_str(n):
 	return nl_str * n
 
+def nl_indent_str(n):
+	return newline_str(n) + indent_str(INDENT_SYMBOL)
+
 def newline(n=1):
 	out(newline_str(n))
 
@@ -268,7 +271,8 @@ def str_type_record(t, tag=''):
 
 
 
-"""def print_type_enum(t):
+"""
+def print_type_enum(t):
 	out("enum {")
 	indent_up()
 	items = t.items
@@ -281,8 +285,8 @@ def str_type_record(t, tag=''):
 		i = i + 1
 	indent_down()
 	nl_indent()
-	out("}")"""
-
+	out("}")
+"""
 
 
 def is_type_named(t):
@@ -375,7 +379,7 @@ def str_type_func(t, core='', need_close=False):
 
 
 
-def str_type_pointer(t, core='', need_close=False, as_ptr_to_array=False, as_const=False, as_volatile=False):
+def str_type_pointer(t, core='', need_close=False, as_ptr_to_array=False, as_volatile=False):
 	tx = t
 
 	left = ''
@@ -385,7 +389,7 @@ def str_type_pointer(t, core='', need_close=False, as_ptr_to_array=False, as_con
 
 	if 'c_const' in t.private_att:
 		left += 'const '
-	if 'c_volatile' in t.att:
+	if 'c_volatile' in t.att or as_volatile:
 		left += 'volatile '
 	if 'c_restrict' in t.att:
 		left += 'restrict '
@@ -417,7 +421,7 @@ def is_sim_sim(t):
 	return False
 
 
-def str_named(t, core='', as_const=False, as_volatile=False):
+def str_named(t, core='', as_volatile=False):
 	aka = type_get_aka(t)
 	if aka != None:
 		pre = ''
@@ -428,26 +432,15 @@ def str_named(t, core='', as_const=False, as_volatile=False):
 
 		return pre + aka + core
 
-#	if t.is_pointer():
-#		if as_const:
-#			core = 'const ' + core
-#		if as_volatile:
-#			core = 'volatile ' + core
-#	else:
-#		if as_const:
-#			out('const ')
-#		if as_volatile:
-#			out('volatile ')
 
-
-def str_type(t, core='', need_close=False, as_const='', as_volatile=''):
+def str_type(t, core='', need_close=False, as_volatile=''):
 
 	if is_type_named(t):
-		return str_named(t, core, as_const=as_const, as_volatile=as_volatile)
+		return str_named(t, core, as_volatile=as_volatile)
 	elif t.is_func():
 		return str_type_func(t, core, need_close=need_close)
 	elif t.is_pointer():
-		return str_type_pointer(t, core, need_close=need_close, as_const=as_const, as_volatile=as_volatile)
+		return str_type_pointer(t, core, need_close=need_close, as_volatile=as_volatile)
 	elif t.is_array():
 		return str_type_array(t, core, need_close=need_close)
 	elif t.is_record():
@@ -457,14 +450,14 @@ def str_type(t, core='', need_close=False, as_const='', as_volatile=''):
 
 
 
-def str_var(t, id_str, as_const=False, as_volatile=False):
+def str_var(t, id_str, as_volatile=False):
 	#if is_type_named(t) or not t.is_pointer():
 	id_str =  ' ' + id_str
-	return str_type(t, core=id_str, as_const=as_const, as_volatile=as_volatile)
+	return str_type(t, core=id_str, as_volatile=as_volatile)
 
 
-def print_type(t, as_const='', as_volatile=''):
-	out(str_type(t, as_const=as_const, as_volatile=as_volatile))
+def print_type(t, as_volatile=''):
+	out(str_type(t, as_volatile=as_volatile))
 
 
 def print_type_record(t, tag):
@@ -512,21 +505,6 @@ def str_value_bin(x, ctx):
 	rk = ''
 	if hasattr(right, 'op'):
 		rk = right.op
-
-#	if op in ['shl', 'shr']:
-#		need_wrap_left = precedence(left) < 10
-#		need_wrap_right = precedence(right) < 10
-#	elif op == 'logic_or':
-#		if lk != 'logic_or':
-#			need_wrap_left = precedence(left) < 10
-#		if rk != 'logic_or':
-#			need_wrap_right = precedence(right) < 10
-#	elif op == 'logic_and':
-#		if lk != 'logic_and':
-#			need_wrap_left = precedence(left) < 10
-#		if rk != 'logic_and':
-#			need_wrap_right = precedence(right) < 10
-#
 
 	if op == 'add':
 		if left.type.is_array():
@@ -597,8 +575,6 @@ un_ops = {
 	'pos': '+', 'neg': '-',
 	'not': '~', 'logic_not': '!'
 }
-
-
 
 
 
@@ -984,23 +960,6 @@ def str_value_cons(x, ctx):
 					sstr += (" *)")
 
 		#
-		# Когда производится неявное приведение локальной generic константы
-		# К реальному типу, ширина которого отлична от ширины выбраной для константы
-		# Делаем явное приведение типа:
-		#   const int16_t min = -1000;
-		#   const uint16_t max = 1000;
-		#   const int32_t x = get_number((int32_t)min, (int32_t)max);
-		#
-		# Это ХОРОШАЯ практика но я отказываюсь от С const
-		# тк массив с ней - не VLA
-#		if value.type.is_generic():
-#			from trans import is_global_value
-#			if not is_global_value(value):
-#				if value.isConst():
-#					if type.width != value.type.width:
-#						return str_cast(type, value, ctx)
-
-		#
 		# Now we do not print implicit cons (!)
 		#
 
@@ -1073,8 +1032,7 @@ def print_array_values(values, ctx):
 
 		nl = a.nl
 		if nl > 0:
-			sstr += newline_str(n=nl)
-			sstr += indent_str(INDENT_SYMBOL)
+			sstr += nl_indent_str(n=nl)
 		else:
 			if i > 0:
 				sstr += " "
@@ -1146,8 +1104,7 @@ def str_literal_array(type, items, nl_end=1):
 	sstr += print_array_values(items, [])
 	indent_down()
 	if nl_end_e > 0:
-		sstr += newline_str(n=nl_end_e)
-		sstr += indent_str(INDENT_SYMBOL)
+		sstr += nl_indent_str(n=nl_end_e)
 	sstr += "}"
 	return sstr
 
@@ -1174,8 +1131,7 @@ def str_literal_record(type, items):
 		nl = ini.nl
 		if nl > 0:
 			nl_end = 1
-			sstr += newline_str(n=nl)
-			sstr += indent_str(INDENT_SYMBOL)
+			sstr += nl_indent_str(n=nl)
 		else:
 			if item_printed:
 				sstr += " "
@@ -1192,8 +1148,7 @@ def str_literal_record(type, items):
 	indent_down()
 
 	if nl_end > 0:
-		sstr += newline_str(n=nl_end)
-		sstr += indent_str(INDENT_SYMBOL)
+		sstr += nl_indent_str(n=nl_end)
 	sstr += ("}")
 
 	#if cast_req:
@@ -1663,7 +1618,7 @@ def print_stmt_const(x):
 
 	# Локальные константы (втч. композитные) печатаем как переменные
 	# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
-	print_variable(get_id_str(x), const_value.type, as_const=True)
+	print_variable(get_id_str(x), const_value.type)
 	out(" = ")
 	print_value(init_value)
 	out(";")
@@ -2018,9 +1973,9 @@ def print_def_type(x):
 
 
 # Указатель, массив и функция образуют пиздецовый заговор
-def print_variable(id_str, t, as_const=False, as_volatile=False, init_value=None, prefix=''):
+def print_variable(id_str, t, as_volatile=False, init_value=None, prefix=''):
 	assert (t != None)
-	out(str_var(t, id_str=(prefix + id_str), as_const=as_const, as_volatile=as_volatile))
+	out(str_var(t, id_str=(prefix + id_str), as_volatile=as_volatile))
 	if init_value != None:
 		out(" = ")
 		print_value(init_value)
@@ -2086,32 +2041,8 @@ def print_def_const(x):
 	init_value = x.init_value
 	id = x.id
 	id_str = get_id_str(const_value)
-
-	# глобальные константы-массивы печатаем особенно
-	# сперва печатаем его литерал как одноименный макрос с префиксом '_'
-	# затем создаем одноименную переменную (инициализируем ее макроопределением).
-	# обычно будем использовать сам макрос,
-	# но в случае индексирования переменной - будем обращаться к переменной
-#	if const_value.type.is_array():
-#		print_macro_definition(id_str, init_value, val_ctx=[], prefix='')
-#		newline()
-#
-#		t = const_value.type
-#		from value.cons import _select_minimal_type_for
-#		def_type = _select_minimal_type_for(t)
-#		if def_type != None:
-#			t = def_type
-
-#		if not x.hasAttribute('global'):
-#			out("static ")
-#		print_variable(id_str, t, as_const=True)
-#		out(" = _%s;" % id_str)
-#		const_value.addAttribute('kostil')
-#		return
-
 	print_macro_definition(id_str, init_value, val_ctx=[])
 	return
-
 
 
 def include(string, local=True):

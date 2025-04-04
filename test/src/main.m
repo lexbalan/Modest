@@ -34,6 +34,14 @@ func xxx(p: *[]Word8) -> Unit {
 }
 
 
+@volatile
+type VolatileStruct record {
+	a: Int32
+}
+
+@volatile
+type Vprt Ptr
+
 
 const ca = 4
 var va = ca
@@ -50,6 +58,12 @@ public func main() -> Int32 {
 	f0()
 
 	printf("p0.x = %d\n", p0.x)
+
+	var v = VolatileStruct {}
+	var pv = &v
+	var av: [10]VolatileStruct
+	var pav: *[10]*VolatileStruct
+	var pp: Vprt
 
 	var x1 = 5
 	var x2 = 15

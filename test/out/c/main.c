@@ -38,6 +38,13 @@ static void xxx(uint8_t *p)
 	}
 }
 
+struct VolatileStruct {
+	int32_t a;
+};
+typedef struct VolatileStruct VolatileStruct;
+
+typedef void *Vprt;
+
 #define ca  4
 static int32_t va = ca;
 
@@ -56,6 +63,12 @@ int32_t main()
 
 	printf("p0.x = %d\n", ((struct {uint8_t x; uint8_t y;
 	})p0).x);
+
+	volatile VolatileStruct v = {};
+	volatile VolatileStruct *pv = &v;
+	volatile VolatileStruct av[10];
+	volatile VolatileStruct *(*pav)[10];
+	volatile Vprt pp;
 
 	int32_t x1 = 5;
 	int32_t x2 = 15;
