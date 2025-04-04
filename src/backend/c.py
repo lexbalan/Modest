@@ -15,7 +15,8 @@ import foundation
 
 import copy
 
-INDENT_SYMBOL = "\t"
+
+indent_symbol = "\t"
 
 cmodule = None
 
@@ -74,22 +75,21 @@ cfunc = None
 def newline_str(n):
 	return nl_str * n
 
-def nl_indent_str(n):
-	return newline_str(n) + indent_str(INDENT_SYMBOL)
+#def str_nl_indent(n):
+#	return newline_str(n) + indent_str(indent_symbol)
 
 def newline(n=1):
 	out(newline_str(n))
 
 
-
 def indent():
-	out(indent_str(INDENT_SYMBOL))
+	out(indent_str(indent_symbol))
 
 
 def str_nl_indent(nl=1):
 	s = nl_str * nl
 	if nl > 0:
-		s += indentation(INDENT_SYMBOL)
+		s += indentation(indent_symbol)
 	return s
 
 
@@ -643,7 +643,7 @@ def str_value_call(v, ctx, sret=None):
 			need_sk = True
 			sstr += '\n' * args[i].nl
 			indent_up()
-			sstr += indent_str(INDENT_SYMBOL)
+			sstr += indent_str(indent_symbol)
 			indent_down()
 
 		a = args[i].value
@@ -681,7 +681,7 @@ def str_value_call(v, ctx, sret=None):
 		sstr += str_value_as_ptr(sret)
 
 	if need_sk:
-		sstr += "\n" + indent_str(INDENT_SYMBOL)
+		sstr += "\n" + indent_str(indent_symbol)
 
 	sstr += (")")
 	return sstr
@@ -1032,7 +1032,7 @@ def print_array_values(values, ctx):
 
 		nl = a.nl
 		if nl > 0:
-			sstr += nl_indent_str(n=nl)
+			sstr += str_nl_indent(nl=nl)
 		else:
 			if i > 0:
 				sstr += " "
@@ -1104,7 +1104,7 @@ def str_literal_array(type, items, nl_end=1):
 	sstr += print_array_values(items, [])
 	indent_down()
 	if nl_end_e > 0:
-		sstr += nl_indent_str(n=nl_end_e)
+		sstr += str_nl_indent(nl=nl_end_e)
 	sstr += "}"
 	return sstr
 
@@ -1131,7 +1131,7 @@ def str_literal_record(type, items):
 		nl = ini.nl
 		if nl > 0:
 			nl_end = 1
-			sstr += nl_indent_str(n=nl)
+			sstr += str_nl_indent(nl=nl)
 		else:
 			if item_printed:
 				sstr += " "
@@ -1148,7 +1148,7 @@ def str_literal_record(type, items):
 	indent_down()
 
 	if nl_end > 0:
-		sstr += nl_indent_str(n=nl_end)
+		sstr += str_nl_indent(nl=nl_end)
 	sstr += ("}")
 
 	#if cast_req:
