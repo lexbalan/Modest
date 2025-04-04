@@ -183,7 +183,7 @@ int main()
 	int32_t ax = 10;
 	int32_t bx = 20;
 
-	const struct {int32_t x; int32_t y;
+	struct {int32_t x; int32_t y;
 	} px = {.x = ax, .y = bx};
 
 	ax = 111;

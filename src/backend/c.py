@@ -289,14 +289,12 @@ def is_type_named(t):
 	return type_get_aka(t) != None
 
 
-def str_type_array(t, core=''):
-	t0 = t
-
+def str_type_array(t, core='', need_close=False):
 	# handle array of array .. case
-	dims = ''
+	right = ''
 	i = 0
 	while True:
-		dims += '['
+		right += '['
 		if t.volume:
 			if Value.isUndefined(t.volume):
 				# В Си не можем печатать такое a[][], или такое a[][10], etc.
@@ -304,34 +302,19 @@ def str_type_array(t, core=''):
 				while t.of.is_array():
 					t = t.of
 			else:
-				dims += str_value(t.volume)
+				right += str_value(t.volume)
 
-		dims += ']'
-		if not t.of.is_array():
-			break
+		right += ']'
 		t = t.of
+		if not t.is_array():
+			break
 		i += 1
 
-	if t.of.is_pointer():
-		of = t.of
+	if need_close:
+		core += ')'
 
-		if len(core) > 0:
-			if core[0] == ' ':
-				core = core[1:]
+	return str_type(t, core=core+right)
 
-		if of.to.is_array():
-			core = core + dims
-			return str_type(of, core=core)
-
-		elif of.to.is_func():
-			core = core + dims
-			return str_type(t.of, core=core)
-
-		elif is_type_named(of.to):
-			return str_type(of) + core + dims
-
-	left = str_type(t.of)
-	return left + core + dims
 
 
 
@@ -368,7 +351,7 @@ def strFuncParamlist(params, va_arg):
 	return s
 
 
-def str_type_func(t, core=''):
+def str_type_func(t, core='', need_close=False):
 	fparams = t.params
 	fto = t.to
 	if t.to.is_array():
@@ -383,42 +366,46 @@ def str_type_func(t, core=''):
 		fparams = t.params + [sret_param]
 		fto = foundation.typeUnit
 
-	params = strFuncParamlist(fparams, t.extra_args)
+	paramlist = strFuncParamlist(fparams, t.extra_args)
 
-	if not is_type_named(fto):
-		if fto.is_pointer():
-			if fto.to.is_pointer() or fto.to.is_array() or fto.to.is_func():
-				core = core + params
-				return str_type(fto, core=core)
+	if need_close:
+		core += ')'
 
-	left = str_type(fto)
-	if left[-1] == '*' and core[0] == ' ':
-		core = core[1:]
-	return left + core + params
+	return str_type(fto, core=core+paramlist)
 
 
 
-def str_type_pointer(t, core='', as_ptr_to_array=False):
+def str_type_pointer(t, core='', need_close=False, as_ptr_to_array=False, as_const=False, as_volatile=False):
 	tx = t
 
-	c = ''
+	left = ''
 	while tx.is_pointer():
 		tx = tx.to
-		c += '*'
+		left += '*'
 
-	if len(core) > 0:
-		if core[0] == ' ':
-			core = core[1:]
+	if as_const:
+		left += 'const '
+	if as_volatile:
+		left += 'volatile '
 
 	if not as_ptr_to_array:
 		if is_sim_sim(t):
 			tx = tx.of
 
-	if not is_type_named(tx):
-		core = '(' + c + core + ')'
-		return str_type(tx, core=core)
+	need_close = tx.is_array() or tx.is_func()
+	if need_close:
+		left = '(' + left
+	else:
+		left = ' ' + left
 
-	return str_type(tx) + ' ' + c + core
+	# К идентификатору вначале прибавляется пробел слева
+	# но в случае * он лишний, так уж повелось в СИ
+	nc = left+core
+	if len(core) > 0:
+		if core[0] == ' ':
+			nc = left+core[1:]
+
+	return str_type(tx, core=nc, need_close=need_close)
 
 
 
@@ -428,7 +415,7 @@ def is_sim_sim(t):
 	return False
 
 
-def str_type(t, core='', as_const='', as_volatile=''):
+def str_named(t, core='', as_const=False, as_volatile=False):
 	aka = type_get_aka(t)
 	if aka != None:
 		pre = ''
@@ -439,31 +426,39 @@ def str_type(t, core='', as_const='', as_volatile=''):
 
 		return pre + aka + core
 
-	if t.is_pointer():
-		if as_const:
-			core = 'const' + core
-		if as_volatile:
-			core = 'volatile' + core
-	else:
-		if as_const:
-			out('const ')
-		if as_volatile:
-			out('volatile ')
+#	if t.is_pointer():
+#		if as_const:
+#			core = 'const ' + core
+#		if as_volatile:
+#			core = 'volatile ' + core
+#	else:
+#		if as_const:
+#			out('const ')
+#		if as_volatile:
+#			out('volatile ')
 
-	if t.is_func():
-		return str_type_func(t, core)
+
+def str_type(t, core='', need_close=False, as_const='', as_volatile=''):
+
+	if is_type_named(t):
+		return str_named(t, core, as_const=as_const, as_volatile=as_volatile)
+	elif t.is_func():
+		return str_type_func(t, core, need_close=need_close)
 	elif t.is_pointer():
-		return str_type_pointer(t, core)
+		return str_type_pointer(t, core, need_close=need_close, as_const=as_const, as_volatile=as_volatile)
 	elif t.is_array():
-		return str_type_array(t, core)
+		return str_type_array(t, core, need_close=need_close)
 	elif t.is_record():
 		return str_type_record(t) + core
+
 	return '<type:%s>' % str(t)
 
 
 
 def str_var(t, id_str, as_const=False, as_volatile=False):
-	return str_type(t, core = ' ' + id_str, as_const=as_const, as_volatile=as_volatile)
+	#if is_type_named(t) or not t.is_pointer():
+	id_str =  ' ' + id_str
+	return str_type(t, core=id_str, as_const=as_const, as_volatile=as_volatile)
 
 
 def print_type(t, as_const='', as_volatile=''):

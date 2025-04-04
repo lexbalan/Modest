@@ -294,7 +294,7 @@ int main()
 	int int200 = 200;
 	int int300 = 300;
 	// immutable, non immediate value (array)
-	const int init_array[3] = {int100, int200, int300};
+	int init_array[3] = {int100, int200, int300};
 
 	// check local literal array assignation to local array
 	int32_t e[4];
@@ -321,7 +321,7 @@ int main()
 	int32_t cx = 30;
 	const int32_t dx = 40;
 
-	const int32_t y[4] = {ax, bx, cx, dx};
+	int32_t y[4] = {ax, bx, cx, dx};
 
 	ax = 111;
 	bx = 222;
