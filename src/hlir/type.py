@@ -123,6 +123,10 @@ class Type(Entity):
 		return isinstance(self, TypeInt) or isinstance(self, TypeNumber) or isinstance(self, TypeFloat)
 
 
+	def is_number(self):
+		return isinstance(self, TypeNumber)
+
+
 	def is_func(self):
 		return isinstance(self, TypeFunc)
 

@@ -189,12 +189,12 @@ def get_id_str(x):
 
 
 
-def type_get_aka(t):
+def get_type_id(t):
 	s = get_id_str(t)
 	if s != None:
 		return s
 
-	if t.is_numeric():
+	if t.is_number():
 		s = 'int%d_t' % t.width
 		if not t.signed:
 			s = 'u' + s
@@ -268,7 +268,7 @@ def print_type_enum(t):
 
 
 def is_type_named(t):
-	return type_get_aka(t) != None
+	return get_type_id(t) != None
 
 
 def str_type_array(t, core='', need_close=False):
@@ -401,7 +401,7 @@ def is_sim_sim(t):
 
 
 def str_named(t, core=''):
-	aka = type_get_aka(t)
+	aka = get_type_id(t)
 	if aka != None:
 		pre = ''
 		if 'c_const' in t.private_att:
