@@ -1,62 +1,11 @@
 
 import type as htype
 from error import info
-from .common import output_open, out, output_close
+from .common import *
 from hlir.hlir import *
 from util import get_item_by_id
 import foundation
 
-INDENT_SYMBOL = "\t"
-
-
-
-indent_level = 0
-
-def indent_up():
-	global indent_level
-	indent_level = indent_level + 1
-
-
-def indent_down():
-	global indent_level
-	indent_level = indent_level - 1
-
-
-
-def init():
-	pass
-
-
-def newline(n=1):
-	out('\n' * n)
-
-def newline_s(n=1):
-	return '\n' * n
-
-def indent_s():
-	global indent_level
-	return INDENT_SYMBOL * indent_level
-
-
-def indent():
-	out(indent_s())
-
-
-
-def nl_indent(nl=1):
-	newline(nl)
-	if nl > 0:
-		indent()
-
-
-nl_str = "\n"
-
-
-def str_nl_indent(nl=1):
-	s = nl_str * nl
-	if nl > 0:
-		s += indent_s()
-	return s
 
 
 def get_id_str(x):
@@ -346,9 +295,8 @@ def str_value_call(x, ctx):
 
 		if arg.nl > 0:
 			need_sk = True
-			s += '\n' * args[i].nl
 			indent_up()
-			s += indent_s()
+			s += str_nl_indent(args[i].nl)
 			indent_down()
 		elif i > 0:
 			s += ", "
@@ -363,7 +311,7 @@ def str_value_call(x, ctx):
 		i = i + 1
 
 	if need_sk:
-		s += "\n" + indent_s()
+		s += str_nl_indent()
 
 	s += ")"
 	return s
@@ -463,8 +411,7 @@ def str_value_array(v, ctx):
 		nl = a.nl
 		if nl > 0:
 			nl_end_e = 1
-			s +=  newline_s(nl)
-			s += indent_s()
+			s += str_nl_indent(nl)
 		else:
 			if i > 0:
 				s += ', '
@@ -476,8 +423,7 @@ def str_value_array(v, ctx):
 	indent_down()
 
 	if nl_end_e > 0:
-		s += newline_s(nl_end_e)
-		s += indent_s()
+		s += str_nl_indent(nl_end_e)
 
 	return "[%s]" % s
 
@@ -553,8 +499,7 @@ def str_value_record(v, ctx):
 		nl = ini.nl
 		if nl > 0:
 			nl_end_e = 1
-			s +=  newline_s(nl)
-			s += indent_s()
+			s += str_nl_indent(nl)
 		else:
 			if i > 0:
 				s += " "
@@ -571,8 +516,7 @@ def str_value_record(v, ctx):
 	indent_down()
 
 	if nl_end_e > 0:
-		s +=  newline_s(nl_end_e)
-		s += indent_s()
+		s += str_nl_indent(nl_end_e)
 
 	return "{%s}" % s
 
@@ -842,7 +786,7 @@ def print_stmt_block(s):
 	for stmt in s.stmts:
 		print_stmt(stmt)
 	indent_down()
-	nl_indent(nl_end_e)
+	out(str_nl_indent(nl_end_e))
 	out("}")
 
 
@@ -937,7 +881,7 @@ def print_stmt_asm(x):
 
 def print_stmt(x):
 	assert(isinstance(x, Stmt))
-	nl_indent(x.nl)
+	out(str_nl_indent(x.nl))
 	if isinstance(x, StmtBlock): print_stmt_block(x)
 	elif isinstance(x, StmtValueExpression): print_stmt_value(x)
 	elif isinstance(x, StmtAssign): print_stmt_assign(x)
@@ -978,7 +922,7 @@ def printTopLevelStmt(x):
 	assert(isinstance(x, Stmt))
 
 	if not isinstance(x, StmtDirective):
-		newline(n=x.nl)
+		out(str_newline(n=x.nl))
 
 	if isinstance(x, StmtDef):
 		if x.access_level == 'public':
@@ -991,6 +935,10 @@ def printTopLevelStmt(x):
 	elif isinstance(x, StmtComment): print_stmt_comment(x)
 	elif isinstance(x, StmtImport): print_import(x)
 	elif isinstance(x, StmtDirective): print_directive(x)
+
+
+def init():
+	pass
 
 
 

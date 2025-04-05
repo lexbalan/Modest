@@ -16,8 +16,6 @@ import foundation
 import copy
 
 
-indent_symbol = "\t"
-
 cmodule = None
 
 
@@ -66,32 +64,12 @@ styles = {
 styleguide = styles['legacy']
 
 
-nl_str = "\n"
-
 
 cfunc = None
 
 
-def newline_str(n):
-	return nl_str * n
-
-#def str_nl_indent(n):
-#	return newline_str(n) + indent_str(indent_symbol)
-
 def newline(n=1):
-	out(newline_str(n))
-
-
-def indent():
-	out(indent_str(indent_symbol))
-
-
-def str_nl_indent(nl=1):
-	s = nl_str * nl
-	if nl > 0:
-		s += indentation(indent_symbol)
-	return s
-
+	out(str_newline(n))
 
 def nl_indent(nl=1):
 	out(str_nl_indent(nl))
@@ -643,7 +621,7 @@ def str_value_call(v, ctx, sret=None):
 			need_sk = True
 			sstr += '\n' * args[i].nl
 			indent_up()
-			sstr += indent_str(indent_symbol)
+			sstr += str_indent()
 			indent_down()
 
 		a = args[i].value
@@ -681,7 +659,7 @@ def str_value_call(v, ctx, sret=None):
 		sstr += str_value_as_ptr(sret)
 
 	if need_sk:
-		sstr += "\n" + indent_str(indent_symbol)
+		sstr += str_nl_indent()
 
 	sstr += (")")
 	return sstr
@@ -1585,9 +1563,9 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	if not (is_literal or is_comp or is_str):
 		need_wrap = precedence(value) < precedenceMax
 
-	nl_str = " \\\n"
+	set_nl_symbol(" \\\n")
 	out(str_value(value, wrapped=need_wrap))
-	nl_str = "\n"
+	set_nl_symbol("\n")
 
 
 def print_stmt_const(x):
@@ -1793,9 +1771,11 @@ def print_stmt_block(s):
 	indent_up()
 	print_stmts(s.stmts)
 	indent_down()
-	newline(n=nl_end_e)
-	if nl_end_e > 0:
-		indent()
+
+	nl_indent(nl=nl_end_e)
+	#newline(n=nl_end_e)
+	#if nl_end_e > 0:
+	#	indent()
 	out("}")
 
 
@@ -2078,8 +2058,7 @@ def print_comment_line(x):
 		out("//%s" % line['str'])
 		i = i + 1
 		if i < n:
-			newline()
-			indent()
+			nl_indent()
 
 
 

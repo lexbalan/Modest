@@ -4,41 +4,11 @@ import os
 f = None
 
 
+nl_symbol = "\n"
+indent_symbol = "\t"
+
 indent_level = 0
 
-def indent_up():
-	global indent_level
-	indent_level = indent_level + 1
-
-
-def indent_down():
-	global indent_level
-	indent_level = indent_level - 1
-
-
-def indent_str(symbol):
-	global indent_level
-	return symbol * indent_level
-
-
-def indentation(symbol):
-	global indent_level
-	return symbol * indent_level
-
-
-def nl_indentation(n, symbol='\t'):
-	global indent_level
-	return "\n" + symbol * indent_level
-
-
-def ind(symbol):
-	f.write(indentation(symbol))
-
-
-
-def out(s):
-	global f
-	f.write(str(s))
 
 
 def output_open(fname):
@@ -52,6 +22,52 @@ def output_open(fname):
 def output_close():
 	global f
 	f.close()
+
+
+def out(s):
+	global f
+	f.write(str(s))
+
+
+
+
+def indent_up():
+	global indent_level
+	indent_level = indent_level + 1
+
+
+def indent_down():
+	global indent_level
+	indent_level = indent_level - 1
+
+
+
+def set_nl_symbol(x):
+	global nl_symbol
+	nl_symbol = x
+
+
+def str_newline(n=1):
+	return nl_symbol * n
+
+
+def str_indent():
+	global indent_level
+	global indent_symbol
+	return indent_symbol * indent_level
+
+
+def str_nl_indent(nl=1):
+	s = nl_symbol * nl
+	if nl > 0:
+		s += str_indent()
+	return s
+
+
+
+def ind(symbol):
+	out(str_indent())
+
 
 
 def print_list_by(items, method, separator=', '):
