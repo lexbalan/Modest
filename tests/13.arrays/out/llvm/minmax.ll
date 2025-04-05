@@ -156,92 +156,92 @@ endif_0:
 	ret %Int64 %b
 }
 
-define %Int32 @minmax_min_nat32(%Int32 %a, %Int32 %b) {
+define %Nat32 @minmax_min_nat32(%Nat32 %a, %Nat32 %b) {
 ; if_0
-	%1 = icmp ult %Int32 %a, %b
+	%1 = icmp ult %Nat32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret %Int32 %a
+	ret %Nat32 %a
 	br label %endif_0
 endif_0:
-	ret %Int32 %b
+	ret %Nat32 %b
 }
 
-define %Int32 @minmax_max_nat32(%Int32 %a, %Int32 %b) {
+define %Nat32 @minmax_max_nat32(%Nat32 %a, %Nat32 %b) {
 ; if_0
-	%1 = icmp ugt %Int32 %a, %b
+	%1 = icmp ugt %Nat32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret %Int32 %a
+	ret %Nat32 %a
 	br label %endif_0
 endif_0:
-	ret %Int32 %b
+	ret %Nat32 %b
 }
 
-define %Int64 @minmax_min_nat64(%Int64 %a, %Int64 %b) {
+define %Nat64 @minmax_min_nat64(%Nat64 %a, %Nat64 %b) {
 ; if_0
-	%1 = icmp ult %Int64 %a, %b
+	%1 = icmp ult %Nat64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret %Int64 %a
+	ret %Nat64 %a
 	br label %endif_0
 endif_0:
-	ret %Int64 %b
+	ret %Nat64 %b
 }
 
-define %Int64 @minmax_max_nat64(%Int64 %a, %Int64 %b) {
+define %Nat64 @minmax_max_nat64(%Nat64 %a, %Nat64 %b) {
 ; if_0
-	%1 = icmp ugt %Int64 %a, %b
+	%1 = icmp ugt %Nat64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret %Int64 %a
+	ret %Nat64 %a
 	br label %endif_0
 endif_0:
-	ret %Int64 %b
+	ret %Nat64 %b
 }
 
-define float @minmax_min_float32(float %a, float %b) {
+define %Float32 @minmax_min_float32(%Float32 %a, %Float32 %b) {
 ; if_0
-	%1 = fcmp olt float %a, %b
+	%1 = fcmp olt %Float32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret float %a
+	ret %Float32 %a
 	br label %endif_0
 endif_0:
-	ret float %b
+	ret %Float32 %b
 }
 
-define float @minmax_max_float32(float %a, float %b) {
+define %Float32 @minmax_max_float32(%Float32 %a, %Float32 %b) {
 ; if_0
-	%1 = fcmp ogt float %a, %b
+	%1 = fcmp ogt %Float32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret float %a
+	ret %Float32 %a
 	br label %endif_0
 endif_0:
-	ret float %b
+	ret %Float32 %b
 }
 
-define double @minmax_min_float64(double %a, double %b) {
+define %Float64 @minmax_min_float64(%Float64 %a, %Float64 %b) {
 ; if_0
-	%1 = fcmp olt double %a, %b
+	%1 = fcmp olt %Float64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret double %a
+	ret %Float64 %a
 	br label %endif_0
 endif_0:
-	ret double %b
+	ret %Float64 %b
 }
 
-define double @minmax_max_float64(double %a, double %b) {
+define %Float64 @minmax_max_float64(%Float64 %a, %Float64 %b) {
 ; if_0
-	%1 = fcmp ogt double %a, %b
+	%1 = fcmp ogt %Float64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret double %a
+	ret %Float64 %a
 	br label %endif_0
 endif_0:
-	ret double %b
+	ret %Float64 %b
 }
 
 

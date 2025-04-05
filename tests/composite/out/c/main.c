@@ -212,6 +212,12 @@ static int32_t(*farr[2])(int32_t a, int32_t b) = {
 	&add, &sub
 };
 
+typedef void He();
+
+static void he(He *x)
+{
+}
+
 static void hi(char *x)
 {
 	printf("Hi %s!\n", x);

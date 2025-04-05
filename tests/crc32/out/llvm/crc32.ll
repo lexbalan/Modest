@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -199,32 +199,32 @@ declare void @perror(%ConstCharStr* %str)
 ;  MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
 ;   одинарных, двойных, пакетных и всех нечетных ошибок
 ;
-define %Word32 @crc32_run([0 x %Word8]* %buf, %Int32 %len) {
+define %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len) {
 	%1 = alloca [256 x %Word32], align 1
 	%2 = alloca %Word32, align 4
 
 	;
 	; create table before
 	;
-	%3 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %3
+	%3 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %3
 ; while_1
 	br label %again_1
 again_1:
-	%4 = load %Int32, %Int32* %3
-	%5 = icmp ult %Int32 %4, 256
+	%4 = load %Nat32, %Nat32* %3
+	%5 = icmp ult %Nat32 %4, 256
 	br %Bool %5 , label %body_1, label %break_1
 body_1:
-	%6 = load %Int32, %Int32* %3
-	%7 = bitcast %Int32 %6 to %Word32
+	%6 = load %Nat32, %Nat32* %3
+	%7 = bitcast %Nat32 %6 to %Word32
 	store %Word32 %7, %Word32* %2
-	%8 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %8
+	%8 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %8
 ; while_2
 	br label %again_2
 again_2:
-	%9 = load %Int32, %Int32* %8
-	%10 = icmp ult %Int32 %9, 8
+	%9 = load %Nat32, %Nat32* %8
+	%10 = icmp ult %Nat32 %9, 8
 	br %Bool %10 , label %body_2, label %break_2
 body_2:
 ; if_0
@@ -248,19 +248,19 @@ else_0:
 	store %Word32 %22, %Word32* %2
 	br label %endif_0
 endif_0:
-	%23 = load %Int32, %Int32* %8
-	%24 = add %Int32 %23, 1
-	store %Int32 %24, %Int32* %8
+	%23 = load %Nat32, %Nat32* %8
+	%24 = add %Nat32 %23, 1
+	store %Nat32 %24, %Nat32* %8
 	br label %again_2
 break_2:
-	%25 = load %Int32, %Int32* %3
-	%26 = bitcast %Int32 %25 to %Int32
-	%27 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int32 %26
+	%25 = load %Nat32, %Nat32* %3
+	%26 = bitcast %Nat32 %25 to %Nat32
+	%27 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Nat32 %26
 	%28 = load %Word32, %Word32* %2
 	store %Word32 %28, %Word32* %27
-	%29 = load %Int32, %Int32* %3
-	%30 = add %Int32 %29, 1
-	store %Int32 %30, %Int32* %3
+	%29 = load %Nat32, %Nat32* %3
+	%30 = add %Nat32 %29, 1
+	store %Nat32 %30, %Nat32* %3
 	br label %again_1
 break_1:
 
@@ -268,36 +268,36 @@ break_1:
 	; calculate CRC32
 	;
 	store %Word32 4294967295, %Word32* %2
-	store %Int32 0, %Int32* %3
+	store %Nat32 0, %Nat32* %3
 ; while_3
 	br label %again_3
 again_3:
-	%31 = load %Int32, %Int32* %3
-	%32 = icmp ult %Int32 %31, %len
+	%31 = load %Nat32, %Nat32* %3
+	%32 = icmp ult %Nat32 %31, %len
 	br %Bool %32 , label %body_3, label %break_3
 body_3:
 	; 1
-	%33 = load %Int32, %Int32* %3
-	%34 = bitcast %Int32 %33 to %Int32
-	%35 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %34
+	%33 = load %Nat32, %Nat32* %3
+	%34 = bitcast %Nat32 %33 to %Nat32
+	%35 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Nat32 %34
 	%36 = load %Word8, %Word8* %35
 	%37 = zext %Word8 %36 to %Word32
 	%38 = load %Word32, %Word32* %2
 	%39 = xor %Word32 %38, %37
 	%40 = and %Word32 %39, 255
 	; 2
-	%41 = trunc %Word32 %40 to %Int8
-	%42 = zext %Int8 %41 to %Int32
-	%43 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int32 %42
+	%41 = trunc %Word32 %40 to %Nat8
+	%42 = zext %Nat8 %41 to %Nat32
+	%43 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Nat32 %42
 	%44 = load %Word32, %Word32* %2
 	%45 = zext i8 8 to %Word32
 	%46 = lshr %Word32 %44, %45
 	%47 = load %Word32, %Word32* %43
 	%48 = xor %Word32 %47, %46
 	store %Word32 %48, %Word32* %2
-	%49 = load %Int32, %Int32* %3
-	%50 = add %Int32 %49, 1
-	store %Int32 %50, %Int32* %3
+	%49 = load %Nat32, %Nat32* %3
+	%50 = add %Nat32 %49, 1
+	store %Nat32 %50, %Nat32* %3
 	br label %again_3
 break_3:
 	%51 = load %Word32, %Word32* %2

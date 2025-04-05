@@ -4,7 +4,7 @@
 
 import copy
 import settings
-from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_to
+from util import get_item_by_id, align_bits_up, nbits_for_num, nbytes_for_bits, align_to
 
 from .entity import Entity
 from hlir.value import Value
@@ -389,7 +389,7 @@ class Type(Entity):
 
 	# TODO: REMOVE IT!
 	@staticmethod
-	def eq_incompleteined(a, b, opt):
+	def eq_incompleted(a, b, opt):
 		return id(a) == id(b)
 
 
@@ -433,7 +433,7 @@ class Type(Entity):
 		elif isinstance(a, TypeFloat): return Type.eq_float(a, b, opt)
 		elif isinstance(a, TypeString): return True
 		elif isinstance(a, TypeUnit): return True
-		elif isinstance(a, TypeUndeifned): return Type.eq_incompleteined(a, b, opt)
+		elif isinstance(a, TypeUndeifned): return Type.eq_incompleted(a, b, opt)
 		elif isinstance(a, TypeVaList): return True
 		#elif k == 'enum': return eq_enum(a, b, opt)
 		assert(False)
@@ -531,11 +531,13 @@ class TypeBool(Type):
 		self.incomplete = False
 		self.id = Id().fromStr('Bool')
 		self.id.c = 'bool'
-		self.id.llvm = '%Bool'
+		self.id.llvm = 'Bool'
 
 
 class TypeWord(Type):
 	def __init__(self, width, ti=None):
+		width = align_bits_up(width)
+
 		super().__init__(width=width, ops=WORD_OPS, ti=ti)
 		self.incomplete = False
 
@@ -547,10 +549,11 @@ class TypeWord(Type):
 		else:
 			calias = 'uint%d_t' % width
 
-		if width in [8, 16, 32, 64, 128]:
-			llvm_alias = '%%Word%d' % width
-		else:
-			llvm_alias = 'i%d' % width
+		llvm_alias = 'Word%d' % width
+		#if width in [8, 16, 32, 64, 128]:
+		#	llvm_alias = 'Word%d' % width
+		#else:
+		#	llvm_alias = 'i%d' % width
 
 		from .misc import Id
 		self.id = Id().fromStr('Word%d' % width)
@@ -600,7 +603,7 @@ class TypeFloat(Type):
 		from .misc import Id
 		self.id = Id().fromStr('Float%d' % width)
 		self.id.c = calias
-		self.id.llvm = calias
+		self.id.llvm = 'Float%d' % width
 
 
 class TypeChar(Type):
@@ -616,7 +619,7 @@ class TypeChar(Type):
 			self.id.c = 'char'
 		else:
 			self.id.c = 'uint%d_t' % width
-		self.id.llvm = '%%Char%d' % width
+		self.id.llvm = 'Char%d' % width
 
 
 class TypePointer(Type):
@@ -695,10 +698,12 @@ class TypeVaList(Type):
 		self.incomplete = False
 		self.id = Id().fromStr('va_list')
 		self.id.c = 'va_list'
-		self.id.llvm = 'i8*'
+		self.id.llvm = '__VA_List'
 
 
 def get_int_alias(width, signed):
+	width = align_bits_up(width)
+
 	if signed:
 		aka = 'Int%d' % width
 
@@ -707,10 +712,7 @@ def get_int_alias(width, signed):
 		else:
 			calias = 'int%d_t' % width
 
-		if width in [8, 16, 32, 64, 128]:
-			llvm_alias = '%%Int%d' % width
-		else:
-			llvm_alias = 'i%d' % width
+		llvm_alias = 'Int%d' % width
 
 	else:
 		aka = 'Nat%d' % width
@@ -719,10 +721,6 @@ def get_int_alias(width, signed):
 		else:
 			calias = 'uint%d_t' % width
 
-		if width in [8, 16, 32, 64, 128]:
-			llvm_alias = '%%Int%d' % width
-		else:
-			llvm_alias = 'i%d' % width
+		llvm_alias = 'Nat%d' % width
+
 	return {'c': calias, 'llvm': llvm_alias, 'cm': aka}
-
-

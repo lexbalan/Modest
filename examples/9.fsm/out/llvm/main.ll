@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -216,9 +216,9 @@ declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Str
 declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
 declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
 ; from import
-declare void @delay_us(%Int64 %us)
-declare void @delay_ms(%Int64 %ms)
-declare void @delay_sec(%Int64 %s)
+declare void @delay_us(%Nat64 %us)
+declare void @delay_ms(%Nat64 %ms)
+declare void @delay_sec(%Nat64 %s)
 ; end from import
 ; ?? fsm ??
 ; from import
@@ -232,14 +232,14 @@ declare void @delay_sec(%Int64 %s)
 
 %fsm_FSM = type {
 	[8 x %Char8],
-	%Int32,
-	%Int32,
-	%Int32,
+	%Nat32,
+	%Nat32,
+	%Nat32,
 	[16 x %fsm_StateDesc]
 };
 
-declare %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Int32 %state_no)
-declare void @fsm_switch(%fsm_FSM* %fsm, %Int32 %state)
+declare %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Nat32 %state_no)
+declare void @fsm_switch(%fsm_FSM* %fsm, %Nat32 %state)
 declare void @fsm_run(%fsm_FSM* %fsm)
 ; end from import
 ; -- end print imports 'main' --
@@ -259,7 +259,7 @@ declare void @fsm_run(%fsm_FSM* %fsm)
 ;@attribute("c_no_print")
 
 ;$pragma c_include "./ff_main.h"
-@cnt = internal global %Int8 zeroinitializer
+@cnt = internal global %Nat8 zeroinitializer
 
 
 ;
@@ -273,17 +273,17 @@ define internal void @off_entry(%fsm_FSM* %x) {
 define internal void @off_loop(%fsm_FSM* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
 ; if_0
-	%2 = load %Int8, %Int8* @cnt
-	%3 = icmp ult %Int8 %2, 10
+	%2 = load %Nat8, %Nat8* @cnt
+	%3 = icmp ult %Nat8 %2, 10
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	%4 = load %Int8, %Int8* @cnt
-	%5 = add %Int8 %4, 1
-	store %Int8 %5, %Int8* @cnt
+	%4 = load %Nat8, %Nat8* @cnt
+	%5 = add %Nat8 %4, 1
+	store %Nat8 %5, %Nat8* @cnt
 	br label %endif_0
 else_0:
-	store %Int8 0, %Int8* @cnt
-	call void @fsm_switch(%fsm_FSM* %x, %Int32 1)
+	store %Nat8 0, %Nat8* @cnt
+	call void @fsm_switch(%fsm_FSM* %x, %Nat32 1)
 	br label %endif_0
 endif_0:
 	ret void
@@ -307,17 +307,17 @@ define internal void @on_entry(%fsm_FSM* %x) {
 define internal void @on_loop(%fsm_FSM* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*))
 ; if_0
-	%2 = load %Int8, %Int8* @cnt
-	%3 = icmp ult %Int8 %2, 10
+	%2 = load %Nat8, %Nat8* @cnt
+	%3 = icmp ult %Nat8 %2, 10
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	%4 = load %Int8, %Int8* @cnt
-	%5 = add %Int8 %4, 1
-	store %Int8 %5, %Int8* @cnt
+	%4 = load %Nat8, %Nat8* @cnt
+	%5 = add %Nat8 %4, 1
+	store %Nat8 %5, %Nat8* @cnt
 	br label %endif_0
 else_0:
-	store %Int8 0, %Int8* @cnt
-	call void @fsm_switch(%fsm_FSM* %x, %Int32 2)
+	store %Nat8 0, %Nat8* @cnt
+	call void @fsm_switch(%fsm_FSM* %x, %Nat32 2)
 	br label %endif_0
 endif_0:
 	ret void
@@ -335,8 +335,8 @@ define internal void @on_exit(%fsm_FSM* %x) {
 ;
 define internal void @beacon_entry(%fsm_FSM* %x) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 1
-	%2 = load %Int32, %Int32* %1
-	%3 = call %Str8* @fsm_state_no_name(%fsm_FSM* %x, %Int32 %2)
+	%2 = load %Nat32, %Nat32* %1
+	%3 = call %Str8* @fsm_state_no_name(%fsm_FSM* %x, %Nat32 %2)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %3)
 	ret void
 }
@@ -344,17 +344,17 @@ define internal void @beacon_entry(%fsm_FSM* %x) {
 define internal void @beacon_loop(%fsm_FSM* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
 ; if_0
-	%2 = load %Int8, %Int8* @cnt
-	%3 = icmp ult %Int8 %2, 10
+	%2 = load %Nat8, %Nat8* @cnt
+	%3 = icmp ult %Nat8 %2, 10
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	%4 = load %Int8, %Int8* @cnt
-	%5 = add %Int8 %4, 1
-	store %Int8 %5, %Int8* @cnt
+	%4 = load %Nat8, %Nat8* @cnt
+	%5 = add %Nat8 %4, 1
+	store %Nat8 %5, %Nat8* @cnt
 	br label %endif_0
 else_0:
-	store %Int8 0, %Int8* @cnt
-	call void @fsm_switch(%fsm_FSM* %x, %Int32 0)
+	store %Nat8 0, %Nat8* @cnt
+	call void @fsm_switch(%fsm_FSM* %x, %Nat32 0)
 	br label %endif_0
 endif_0:
 	ret void
@@ -362,8 +362,8 @@ endif_0:
 
 define internal void @beacon_exit(%fsm_FSM* %x) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 2
-	%2 = load %Int32, %Int32* %1
-	%3 = call %Str8* @fsm_state_no_name(%fsm_FSM* %x, %Int32 %2)
+	%2 = load %Nat32, %Nat32* %1
+	%3 = call %Str8* @fsm_state_no_name(%fsm_FSM* %x, %Nat32 %2)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %3)
 	ret void
 }
@@ -379,9 +379,9 @@ define internal void @beacon_exit(%fsm_FSM* %x) {
 		%Char8 0,
 		%Char8 0
 	],
-	%Int32 0,
-	%Int32 0,
-	%Int32 0,
+	%Nat32 0,
+	%Nat32 0,
+	%Nat32 0,
 	[16 x %fsm_StateDesc] [
 		%fsm_StateDesc {
 			[8 x %Char8] [
@@ -450,7 +450,7 @@ again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	call void @fsm_run(%fsm_FSM* @fsm0)
-	call void @delay_ms(%Int64 500)
+	call void @delay_ms(%Nat64 500)
 	br label %again_1
 break_1:
 	ret %Int 0

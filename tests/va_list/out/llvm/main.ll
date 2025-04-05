@@ -114,34 +114,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -169,11 +169,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -289,18 +289,18 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ;include "lightfood/print"
 ;$pragma c_include "./print.h"
 define internal %SSizeT @my_printf(%Str8* %format, ...) {
-	%1 = alloca i8*, align 1
-	%2 = alloca i8*, align 1
-	%3 = bitcast i8** %2 to i8*
-	%4 = bitcast i8** %1 to i8*
+	%1 = alloca %__VA_List, align 1
+	%2 = alloca %__VA_List, align 1
+	%3 = bitcast %__VA_List* %2 to i8*
+	%4 = bitcast %__VA_List* %1 to i8*
 	call void @llvm.va_copy(i8* %3, i8* %4)
-	%5 = bitcast i8** %2 to i8*
+	%5 = bitcast %__VA_List* %2 to i8*
 	call void @llvm.va_start(i8* %5)
 	%6 = alloca [128 x %Char8], align 1
 	%7 = bitcast [128 x %Char8]* %6 to %CharStr*
-	%8 = load i8*, i8** %2
-	%9 = call %Int @vsnprintf(%CharStr* %7, %SizeT 128, %Str8* %format, i8* %8)
-	%10 = bitcast i8** %2 to i8*
+	%8 = load %__VA_List, %__VA_List* %2
+	%9 = call %Int @vsnprintf(%CharStr* %7, %SizeT 128, %Str8* %format, %__VA_List %8)
+	%10 = bitcast %__VA_List* %2 to i8*
 	call void @llvm.va_end(i8* %10)
 	%11 = bitcast [128 x %Char8]* %6 to i8*
 	%12 = zext %Int %9 to %SizeT
@@ -317,8 +317,8 @@ define %Int @main() {
 	%5 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([10 x i8]* @str4 to [0 x i8]*), %Char8 36)
 	%6 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
 	%7 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Int32 -1)
-	%8 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([8 x i8]* @str7 to [0 x i8]*), %Int32 123)
-	%9 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([10 x i8]* @str8 to [0 x i8]*), %Int32 305419903)
+	%8 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([8 x i8]* @str7 to [0 x i8]*), %Nat32 123)
+	%9 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([10 x i8]* @str8 to [0 x i8]*), %Nat32 305419903)
 	ret %Int 0
 }
 

@@ -264,6 +264,8 @@ endif_0:
 	ret void
 }
 
+@xx = internal global [0 x [10 x %Int]*]* zeroinitializer
+@yy = internal global [0 x [10 x %Int]*]* zeroinitializer
 @va = internal global %Int32 4
 @p = internal global {
 	i8,
@@ -394,20 +396,28 @@ define %Int32 @main() {
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %89, i8 0, %Int32 %88, i1 0)
 	%90 = bitcast [10 x %Word8]* %8 to [0 x %Word8]*
 	call void @xxx([0 x %Word8]* %90)
-	%91 = mul i8 10, 1
-	%92 = mul i8 10, 4
-	%93 = bitcast [20 x %Int32]* %55 to [10 x %Int]*
+	%91 = alloca %Word8, align 1
+	%92 = bitcast i8 1 to %Word8
+	store %Word8 %92, %Word8* %91
+	%93 = alloca %Word8, align 1
+	%94 = load %Word8, %Word8* %91
+	%95 = bitcast %Word8 %94 to %Int8
+	%96 = bitcast %Int8 %95 to %Word8
+	store %Word8 %96, %Word8* %93
+	%97 = mul i8 10, 1
+	%98 = mul i8 10, 4
+	%99 = bitcast [20 x %Int32]* %55 to [10 x %Int]*
 ; if_0
-	%94 = bitcast [10 x %Int]* %93 to i8*
-	%95 = bitcast [10 x %Int32]* %38 to i8*
-	%96 = call i1 (i8*, i8*, i64) @memeq(i8* %94, i8* %95, %Int64 40)
-	%97 = icmp ne %Bool %96, 0
-	br %Bool %97 , label %then_0, label %else_0
+	%100 = bitcast [10 x %Int]* %99 to i8*
+	%101 = bitcast [10 x %Int32]* %38 to i8*
+	%102 = call i1 (i8*, i8*, i64) @memeq(i8* %100, i8* %101, %Int64 40)
+	%103 = icmp ne %Bool %102, 0
+	br %Bool %103 , label %then_0, label %else_0
 then_0:
-	%98 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str5 to [0 x i8]*))
+	%104 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str5 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%99 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str6 to [0 x i8]*))
+	%105 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str6 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 
@@ -419,41 +429,41 @@ endif_0:
 	;	u32 = Nat32 x
 
 	; не проверяет дубликаты имен!
-	%100 = alloca %Int32, align 4
-	store %Int32 1, %Int32* %100
+	%106 = alloca %Int32, align 4
+	store %Int32 1, %Int32* %106
 	;var y: Int32 = 0x1  // error!
-	%101 = alloca %Word32, align 4
-	%102 = zext i8 1 to %Word32
-	store %Word32 %102, %Word32* %101
-	%103 = alloca %Word32, align 4
-	store %Word32 1, %Word32* %103
-	%104 = sub i8 0, 1
-	%105 = zext %Int8 %104 to %Word32
+	%107 = alloca %Word32, align 4
+	%108 = zext i8 1 to %Word32
+	store %Word32 %108, %Word32* %107
+	%109 = alloca %Word32, align 4
+	store %Word32 1, %Word32* %109
+	%110 = sub i8 0, 1
+	%111 = zext %Int8 %110 to %Word32
 ; if_1
 	br %Bool 1 , label %then_1, label %else_1
 then_1:
-	%106 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @str7 to [0 x i8]*))
+	%112 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @str7 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%107 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str8 to [0 x i8]*))
+	%113 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str8 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 ; if_2
 	br %Bool 1 , label %then_2, label %else_2
 then_2:
-	%108 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str9 to [0 x i8]*))
+	%114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str9 to [0 x i8]*))
 	br label %endif_2
 else_2:
-	%109 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str10 to [0 x i8]*))
+	%115 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str10 to [0 x i8]*))
 	br label %endif_2
 endif_2:
 ; if_3
 	br %Bool 1 , label %then_3, label %else_3
 then_3:
-	%110 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str11 to [0 x i8]*))
+	%116 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str11 to [0 x i8]*))
 	br label %endif_3
 else_3:
-	%111 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str12 to [0 x i8]*))
+	%117 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str12 to [0 x i8]*))
 	br label %endif_3
 endif_3:
 

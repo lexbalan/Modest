@@ -9,17 +9,21 @@ class Id(Entity):
 		self.prefix = None
 		self.str = None
 
-		if x != None:
-			self.str = x['str']
-			self.ti = x['ti']
-
+		# Каждый принтер всегда использует только свой алиас (!)
+		# Такой алиас может быть переопределен без вреда для фронтенда
 		self.c = None
 		self.llvm = None
 		self.cm = None
 
+		if x != None:
+			self.fromStr(x['str'])
+			self.ti = x['ti']
 
-	def fromStr(self, x):
-		self.str = x
+	def fromStr(self, id_str):
+		self.str = id_str
+		self.c = id_str
+		self.llvm = id_str
+		self.cm = id_str
 		return self
 
 

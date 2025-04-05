@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -272,14 +272,14 @@ declare %Int32 @minmax_min_int32(%Int32 %a, %Int32 %b)
 declare %Int32 @minmax_max_int32(%Int32 %a, %Int32 %b)
 declare %Int64 @minmax_min_int64(%Int64 %a, %Int64 %b)
 declare %Int64 @minmax_max_int64(%Int64 %a, %Int64 %b)
-declare %Int32 @minmax_min_nat32(%Int32 %a, %Int32 %b)
-declare %Int32 @minmax_max_nat32(%Int32 %a, %Int32 %b)
-declare %Int64 @minmax_min_nat64(%Int64 %a, %Int64 %b)
-declare %Int64 @minmax_max_nat64(%Int64 %a, %Int64 %b)
-declare float @minmax_min_float32(float %a, float %b)
-declare float @minmax_max_float32(float %a, float %b)
-declare double @minmax_min_float64(double %a, double %b)
-declare double @minmax_max_float64(double %a, double %b)
+declare %Nat32 @minmax_min_nat32(%Nat32 %a, %Nat32 %b)
+declare %Nat32 @minmax_max_nat32(%Nat32 %a, %Nat32 %b)
+declare %Nat64 @minmax_min_nat64(%Nat64 %a, %Nat64 %b)
+declare %Nat64 @minmax_max_nat64(%Nat64 %a, %Nat64 %b)
+declare %Float32 @minmax_min_float32(%Float32 %a, %Float32 %b)
+declare %Float32 @minmax_max_float32(%Float32 %a, %Float32 %b)
+declare %Float64 @minmax_min_float64(%Float64 %a, %Float64 %b)
+declare %Float64 @minmax_max_float64(%Float64 %a, %Float64 %b)
 ; end from import
 ; -- end print imports 'main' --
 ; -- strings --
@@ -295,8 +295,8 @@ declare double @minmax_max_float64(double %a, double %b)
 	i8 30
 ]
 %Point = type {
-	double,
-	double
+	%Float64,
+	%Float64
 };
 
 %Line = type {
@@ -307,42 +307,42 @@ declare double @minmax_max_float64(double %a, double %b)
 @lines = constant [4 x %Line] [
 	%Line {
 		%Point {
-			double 0.0000000000000000,
-			double 0.0000000000000000
+			%Float64 0.0000000000000000,
+			%Float64 0.0000000000000000
 		},
 		%Point {
-			double 1.0000000000000000,
-			double 1.0000000000000000
+			%Float64 1.0000000000000000,
+			%Float64 1.0000000000000000
 		}
 	},
 	%Line {
 		%Point {
-			double 10.0000000000000000,
-			double 20.0000000000000000
+			%Float64 10.0000000000000000,
+			%Float64 20.0000000000000000
 		},
 		%Point {
-			double 30.0000000000000000,
-			double 40.0000000000000000
+			%Float64 30.0000000000000000,
+			%Float64 40.0000000000000000
 		}
 	},
 	%Line {
 		%Point {
-			double 0.0000000000000000,
-			double 0.0000000000000000
+			%Float64 0.0000000000000000,
+			%Float64 0.0000000000000000
 		},
 		%Point {
-			double 1.0000000000000000,
-			double 1.0000000000000000
+			%Float64 1.0000000000000000,
+			%Float64 1.0000000000000000
 		}
 	},
 	%Line {
 		%Point {
-			double 10.0000000000000000,
-			double 20.0000000000000000
+			%Float64 10.0000000000000000,
+			%Float64 20.0000000000000000
 		},
 		%Point {
-			double 30.0000000000000000,
-			double 40.0000000000000000
+			%Float64 30.0000000000000000,
+			%Float64 40.0000000000000000
 		}
 	}
 ]
@@ -356,20 +356,20 @@ declare double @minmax_max_float64(double %a, double %b)
 define internal %Float @distance(%Point %a, %Point %b) {
 	%1 = extractvalue %Point %a, 0
 	%2 = extractvalue %Point %b, 0
-	%3 = call double @minmax_max_float64(double %1, double %2)
+	%3 = call %Float64 @minmax_max_float64(%Float64 %1, %Float64 %2)
 	%4 = extractvalue %Point %a, 0
 	%5 = extractvalue %Point %b, 0
-	%6 = call double @minmax_min_float64(double %4, double %5)
-	%7 = fsub double %3, %6
+	%6 = call %Float64 @minmax_min_float64(%Float64 %4, %Float64 %5)
+	%7 = fsub %Float64 %3, %6
 	%8 = extractvalue %Point %a, 1
 	%9 = extractvalue %Point %b, 1
-	%10 = call double @minmax_max_float64(double %8, double %9)
+	%10 = call %Float64 @minmax_max_float64(%Float64 %8, %Float64 %9)
 	%11 = extractvalue %Point %a, 1
 	%12 = extractvalue %Point %b, 1
-	%13 = call double @minmax_min_float64(double %11, double %12)
-	%14 = fsub double %10, %13
-	%15 = call %Double @pow(double %7, %Double 2.0000000000000000)
-	%16 = call %Double @pow(double %14, %Double 2.0000000000000000)
+	%13 = call %Float64 @minmax_min_float64(%Float64 %11, %Float64 %12)
+	%14 = fsub %Float64 %10, %13
+	%15 = call %Double @pow(%Float64 %7, %Double 2.0000000000000000)
+	%16 = call %Double @pow(%Float64 %14, %Double 2.0000000000000000)
 	%17 = fadd %Double %15, %16
 	%18 = call %Double @sqrt(%Double %17)
 	ret %Double %18
@@ -383,26 +383,26 @@ define internal %Float @lineLength(%Line %line) {
 }
 
 define %Int @main() {
-	%1 = insertvalue %Point zeroinitializer, double 1.0000000000000000, 0
-	%2 = insertvalue %Point %1, double 1.0000000000000000, 1
+	%1 = insertvalue %Point zeroinitializer, %Float64 1.0000000000000000, 0
+	%2 = insertvalue %Point %1, %Float64 1.0000000000000000, 1
 	%3 = insertvalue %Line zeroinitializer, %Point %2, 1
 	%4 = call %Float @lineLength(%Line %3)
-	%5 = insertvalue %Point zeroinitializer, double 10.0000000000000000, 0
-	%6 = insertvalue %Point %5, double 20.0000000000000000, 1
+	%5 = insertvalue %Point zeroinitializer, %Float64 10.0000000000000000, 0
+	%6 = insertvalue %Point %5, %Float64 20.0000000000000000, 1
 	%7 = insertvalue %Line zeroinitializer, %Point %6, 0
-	%8 = insertvalue %Point zeroinitializer, double 30.0000000000000000, 0
-	%9 = insertvalue %Point %8, double 40.0000000000000000, 1
+	%8 = insertvalue %Point zeroinitializer, %Float64 30.0000000000000000, 0
+	%9 = insertvalue %Point %8, %Float64 40.0000000000000000, 1
 	%10 = insertvalue %Line %7, %Point %9, 1
 	%11 = call %Float @lineLength(%Line %10)
-	%12 = insertvalue %Point zeroinitializer, double 1.0000000000000000, 0
-	%13 = insertvalue %Point %12, double 1.0000000000000000, 1
+	%12 = insertvalue %Point zeroinitializer, %Float64 1.0000000000000000, 0
+	%13 = insertvalue %Point %12, %Float64 1.0000000000000000, 1
 	%14 = insertvalue %Line zeroinitializer, %Point %13, 1
 	%15 = call %Float @lineLength(%Line %14)
-	%16 = insertvalue %Point zeroinitializer, double 10.0000000000000000, 0
-	%17 = insertvalue %Point %16, double 20.0000000000000000, 1
+	%16 = insertvalue %Point zeroinitializer, %Float64 10.0000000000000000, 0
+	%17 = insertvalue %Point %16, %Float64 20.0000000000000000, 1
 	%18 = insertvalue %Line zeroinitializer, %Point %17, 0
-	%19 = insertvalue %Point zeroinitializer, double 30.0000000000000000, 0
-	%20 = insertvalue %Point %19, double 40.0000000000000000, 1
+	%19 = insertvalue %Point zeroinitializer, %Float64 30.0000000000000000, 0
+	%20 = insertvalue %Point %19, %Float64 40.0000000000000000, 1
 	%21 = insertvalue %Line %18, %Point %20, 1
 	%22 = call %Float @lineLength(%Line %21)
 	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), %Float %4)

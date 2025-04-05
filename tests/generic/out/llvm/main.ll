@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -268,14 +268,14 @@ define internal %Bool @test_generic_integer() {
 	; GenericInteger value can be implicitly casted to any Integer type
 	%1 = alloca %Int32, align 4
 	store %Int32 1, %Int32* %1
-	%2 = alloca %Int64, align 8
-	store %Int64 1, %Int64* %2
+	%2 = alloca %Nat64, align 8
+	store %Nat64 1, %Nat64* %2
 
 	; to Float
-	%3 = alloca float, align 4
-	store float 1.0000000000000000, float* %3
-	%4 = alloca double, align 8
-	store double 1.0000000000000000, double* %4
+	%3 = alloca %Float32, align 4
+	store %Float32 1.0000000000000000, %Float32* %3
+	%4 = alloca %Float64, align 8
+	store %Float64 1.0000000000000000, %Float64* %4
 
 	; and to Word8
 	%5 = alloca %Word8, align 1
@@ -301,10 +301,10 @@ define internal %Bool @test_generic_float() {
 	; value with GenericFloat type
 	; can be implicit casted to any Float type
 	; (in this case value may lose precision)
-	%1 = alloca float, align 4
-	store float 3.1415927410125732, float* %1
-	%2 = alloca double, align 8
-	store double 3.1415926535897931, double* %2
+	%1 = alloca %Float32, align 4
+	store %Float32 3.1415927410125732, %Float32* %1
+	%2 = alloca %Float64, align 8
+	store %Float64 3.1415926535897931, %Float64* %2
 
 	; explicit cast GenericFloat value to Int32
 	%3 = alloca %Int32, align 4
@@ -338,7 +338,7 @@ define internal %Bool @test_generic_array() {
 	%2 = insertvalue [4 x i8] %1, i8 2, 2
 	%3 = insertvalue [4 x i8] %2, i8 3, 3
 	%4 = alloca [4 x i8]
-	%5 = zext i8 4 to %Int32
+	%5 = zext i8 4 to %Nat32
 	store [4 x i8] %3, [4 x i8]* %4
 	%6 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %6
@@ -376,14 +376,14 @@ endif_0:
 	%20 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
 	%21 = insertvalue [4 x %Int32] %20, %Int32 2, 2
 	%22 = insertvalue [4 x %Int32] %21, %Int32 3, 3
-	%23 = zext i8 4 to %Int32
+	%23 = zext i8 4 to %Nat32
 	store [4 x %Int32] %22, [4 x %Int32]* %19
 ; if_1
 	%24 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
 	%25 = insertvalue [4 x %Int32] %24, %Int32 2, 2
 	%26 = insertvalue [4 x %Int32] %25, %Int32 3, 3
 	%27 = alloca [4 x %Int32]
-	%28 = zext i8 4 to %Int32
+	%28 = zext i8 4 to %Nat32
 	store [4 x %Int32] %26, [4 x %Int32]* %27
 	%29 = bitcast [4 x %Int32]* %19 to i8*
 	%30 = bitcast [4 x %Int32]* %27 to i8*
@@ -401,14 +401,14 @@ endif_1:
 	%36 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
 	%37 = insertvalue [4 x %Int64] %36, %Int64 2, 2
 	%38 = insertvalue [4 x %Int64] %37, %Int64 3, 3
-	%39 = zext i8 4 to %Int32
+	%39 = zext i8 4 to %Nat32
 	store [4 x %Int64] %38, [4 x %Int64]* %35
 ; if_2
 	%40 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
 	%41 = insertvalue [4 x %Int64] %40, %Int64 2, 2
 	%42 = insertvalue [4 x %Int64] %41, %Int64 3, 3
 	%43 = alloca [4 x %Int64]
-	%44 = zext i8 4 to %Int32
+	%44 = zext i8 4 to %Nat32
 	store [4 x %Int64] %42, [4 x %Int64]* %43
 	%45 = bitcast [4 x %Int64]* %35 to i8*
 	%46 = bitcast [4 x %Int64]* %43 to i8*
@@ -426,14 +426,14 @@ endif_2:
 	%52 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%53 = insertvalue [10 x %Int32] %52, %Int32 2, 2
 	%54 = insertvalue [10 x %Int32] %53, %Int32 3, 3
-	%55 = zext i8 10 to %Int32
+	%55 = zext i8 10 to %Nat32
 	store [10 x %Int32] %54, [10 x %Int32]* %51
 ; if_3
 	%56 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%57 = insertvalue [10 x %Int32] %56, %Int32 2, 2
 	%58 = insertvalue [10 x %Int32] %57, %Int32 3, 3
 	%59 = alloca [10 x %Int32]
-	%60 = zext i8 10 to %Int32
+	%60 = zext i8 10 to %Nat32
 	store [10 x %Int32] %58, [10 x %Int32]* %59
 	%61 = bitcast [10 x %Int32]* %51 to i8*
 	%62 = bitcast [10 x %Int32]* %59 to i8*

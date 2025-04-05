@@ -111,31 +111,31 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included time
 %TimeT = type %Int32;
 %ClockT = type %UnsignedLong;
@@ -170,7 +170,7 @@ declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
 ; -- end print imports 'delay' --
 ; -- strings --
 ; -- endstrings --; lightfood/delay.m
-define void @delay_us(%Int64 %us) {
+define void @delay_us(%Nat64 %us) {
 	%1 = call %ClockT @clock()
 ; while_1
 	br label %again_1
@@ -186,15 +186,15 @@ break_1:
 	ret void
 }
 
-define void @delay_ms(%Int64 %ms) {
-	%1 = mul %Int64 %ms, 1000
-	call void @delay_us(%Int64 %1)
+define void @delay_ms(%Nat64 %ms) {
+	%1 = mul %Nat64 %ms, 1000
+	call void @delay_us(%Nat64 %1)
 	ret void
 }
 
-define void @delay_sec(%Int64 %s) {
-	%1 = mul %Int64 %s, 1000000
-	call void @delay_us(%Int64 %1)
+define void @delay_sec(%Nat64 %s) {
+	%1 = mul %Nat64 %s, 1000000
+	call void @delay_us(%Nat64 %1)
 	ret void
 }
 

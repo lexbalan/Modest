@@ -112,36 +112,34 @@ def ll_reg_operation(op, type, reg=None):
 
 
 def get_id_str(x):
+	if not hasattr(x, 'id'):
+		return None
+
 	id = x.id
 
-	if x.id.llvm != None:
-		return x.id.llvm
+	id_str = None
+	if id.llvm != None:
+		id_str = id.llvm
+
+	if id.prefix != None:
+		id_str = id.prefix + id_str
 
 	if not x.hasAttribute('nodecorate'):
 		xmodule = x.getModule()
 		if xmodule != None:
 			if not 'nodecorate' in xmodule.att:
-				return "%s_%s" % (xmodule.id, id.str)
+				id_str = "%s_%s" % (xmodule.id, id_str)
 
-	if id.prefix != None:
-		return id.prefix + id.str
-
-	return id.str
+	return id_str
 
 
-def type_get_aka(t):
-	if not hasattr(t, 'id'):
+
+def get_type_id(t):
+	id_str = get_id_str(t)
+	if id_str == None:
 		return None
+	return '%' + id_str
 
-	id = t.id
-
-	if id.llvm:
-		return id.llvm
-
-	if not t.is_generic():
-		return '%' + get_id_str(t)
-
-	return id.str
 
 
 
@@ -844,7 +842,7 @@ def print_type(t):
 	assert(isinstance(t, Type))
 	print_aka=True
 
-	id_str = type_get_aka(t)
+	id_str = get_type_id(t)
 	if id_str != None:
 		out(id_str)
 		return
@@ -858,7 +856,7 @@ def print_type(t):
 				out("%" + t['id'].str)
 				return
 
-		t_id = type_get_aka(t)
+		t_id = get_type_id(t)
 		if t_id != None:
 			out(t_id)
 			return

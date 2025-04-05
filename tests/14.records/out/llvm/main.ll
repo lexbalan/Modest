@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -221,14 +221,14 @@ declare void @perror(%ConstCharStr* %str)
 @str31 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --; tests/14.records/src/main.m
 %Point2D = type {
-	%Int32,
-	%Int32
+	%Nat32,
+	%Nat32
 };
 
 %Point3D = type {
-	%Int32,
-	%Int32,
-	%Int32
+	%Nat32,
+	%Nat32,
+	%Nat32
 };
 
 %Point = type {
@@ -378,9 +378,9 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str17 to [0 x i8]*))
 
 	; check value_record_eq for immediate values
-	%2 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 7, 1
-	%3 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %2, {%Int32,%Int32}* %3
+	%2 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 7, 1
+	%3 = alloca {%Nat32,%Nat32}
+	store {%Nat32,%Nat32} %2, {%Nat32,%Nat32}* %3
 ; if_0
 	br %Bool 1 , label %then_0, label %else_0
 then_0:
@@ -393,12 +393,12 @@ endif_0:
 
 	; compare two Point2D records
 	%6 = alloca %Point2D, align 8
-	%7 = insertvalue %Point2D zeroinitializer, %Int32 1, 0
-	%8 = insertvalue %Point2D %7, %Int32 2, 1
+	%7 = insertvalue %Point2D zeroinitializer, %Nat32 1, 0
+	%8 = insertvalue %Point2D %7, %Nat32 2, 1
 	store %Point2D %8, %Point2D* %6
 	%9 = alloca %Point2D, align 8
-	%10 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
-	%11 = insertvalue %Point2D %10, %Int32 20, 1
+	%10 = insertvalue %Point2D zeroinitializer, %Nat32 10, 0
+	%11 = insertvalue %Point2D %10, %Nat32 20, 1
 	store %Point2D %11, %Point2D* %9
 ; if_1
 	%12 = bitcast %Point2D* %6 to i8*
@@ -422,13 +422,13 @@ endif_1:
 	%20 = load %Point2D, %Point2D* %19
 ; -- end cons_composite_from_composite_by_adr --
 	store %Point2D %20, %Point2D* %18
-	%21 = alloca {%Int32,%Int32}, align 8
-	%22 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
-	%23 = insertvalue {%Int32,%Int32} %22, %Int32 2, 1
-	store {%Int32,%Int32} %23, {%Int32,%Int32}* %21
+	%21 = alloca {%Nat32,%Nat32}, align 8
+	%22 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
+	%23 = insertvalue {%Nat32,%Nat32} %22, %Nat32 2, 1
+	store {%Nat32,%Nat32} %23, {%Nat32,%Nat32}* %21
 ; if_2
 ; -- cons_composite_from_composite_by_adr --
-	%24 = bitcast {%Int32,%Int32}* %21 to %Point2D*
+	%24 = bitcast {%Nat32,%Nat32}* %21 to %Point2D*
 	%25 = load %Point2D, %Point2D* %24
 ; -- end cons_composite_from_composite_by_adr --
 	%26 = alloca %Point2D
@@ -448,19 +448,19 @@ endif_2:
 
 
 	; comparison between two anonymous record
-	%33 = alloca {%Int32,%Int32}, align 8
-	%34 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
-	%35 = insertvalue {%Int32,%Int32} %34, %Int32 2, 1
-	store {%Int32,%Int32} %35, {%Int32,%Int32}* %33
+	%33 = alloca {%Nat32,%Nat32}, align 8
+	%34 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
+	%35 = insertvalue {%Nat32,%Nat32} %34, %Nat32 2, 1
+	store {%Nat32,%Nat32} %35, {%Nat32,%Nat32}* %33
 ; if_3
 ; -- cons_composite_from_composite_by_adr --
-	%36 = bitcast {%Int32,%Int32}* %33 to {%Int32,%Int32}*
-	%37 = load {%Int32,%Int32}, {%Int32,%Int32}* %36
+	%36 = bitcast {%Nat32,%Nat32}* %33 to {%Nat32,%Nat32}*
+	%37 = load {%Nat32,%Nat32}, {%Nat32,%Nat32}* %36
 ; -- end cons_composite_from_composite_by_adr --
-	%38 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %37, {%Int32,%Int32}* %38
-	%39 = bitcast {%Int32,%Int32}* %21 to i8*
-	%40 = bitcast {%Int32,%Int32}* %38 to i8*
+	%38 = alloca {%Nat32,%Nat32}
+	store {%Nat32,%Nat32} %37, {%Nat32,%Nat32}* %38
+	%39 = bitcast {%Nat32,%Nat32}* %21 to i8*
+	%40 = bitcast {%Nat32,%Nat32}* %38 to i8*
 	%41 = call i1 (i8*, i8*, i64) @memeq(i8* %39, i8* %40, %Int64 8)
 	%42 = icmp ne %Bool %41, 0
 	br %Bool %42 , label %then_3, label %else_3
@@ -475,7 +475,7 @@ endif_3:
 	; comparison between two record (by pointer)
 ; if_4
 ; -- cons_composite_from_composite_by_adr --
-	%45 = bitcast {%Int32,%Int32}* %21 to %Point2D*
+	%45 = bitcast {%Nat32,%Nat32}* %21 to %Point2D*
 	%46 = load %Point2D, %Point2D* %45
 ; -- end cons_composite_from_composite_by_adr --
 	%47 = alloca %Point2D
@@ -506,10 +506,10 @@ endif_4:
 ;
 
 	; assign record by pointer
-	%54 = insertvalue %Point2D zeroinitializer, %Int32 100, 0
-	%55 = insertvalue %Point2D %54, %Int32 200, 1
+	%54 = insertvalue %Point2D zeroinitializer, %Nat32 100, 0
+	%55 = insertvalue %Point2D %54, %Nat32 200, 1
 	store %Point2D %55, %Point2D* %18
-	store {%Int32,%Int32} zeroinitializer, {%Int32,%Int32}* %21
+	store {%Nat32,%Nat32} zeroinitializer, {%Nat32,%Nat32}* %21
 
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record

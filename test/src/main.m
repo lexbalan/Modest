@@ -35,7 +35,7 @@ func xxx(p: *[]Word8) -> Unit {
 
 
 @attribute("value.type:c_volatile")
-var xx: *[]*[10]Int
+var xx, yy: *[]*[10]Int
 
 
 const ca = 4

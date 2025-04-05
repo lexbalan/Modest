@@ -33,9 +33,10 @@ def align_bits_up(x):
 	return aligned_bits
 
 
-# 7 -> 1, 9 -> 2, 17 -> 32, etc.
+# 7 -> 1, 9 -> 2, 17 -> 4, etc.
 def nbytes_for_bits(x):
 	return align_bits_up(x) // 8
+
 
 
 # returns -1 if not found

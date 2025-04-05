@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -205,26 +205,26 @@ declare void @perror(%ConstCharStr* %str)
 
 %fsm_FSM = type {
 	[8 x %Char8],
-	%Int32,
-	%Int32,
-	%Int32,
+	%Nat32,
+	%Nat32,
+	%Nat32,
 	[16 x %fsm_StateDesc]
 };
 
-define %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Int32 %state_no) {
+define %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Nat32 %state_no) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
-	%2 = bitcast %Int32 %state_no to %Int32
-	%3 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %1, %Int32 0, %Int32 %2
+	%2 = bitcast %Nat32 %state_no to %Nat32
+	%3 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %1, %Int32 0, %Nat32 %2
 	%4 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %3, %Int32 0, %Int32 0
 	%5 = bitcast [8 x %Char8]* %4 to %Str8*
 	ret %Str8* %5
 }
 
-define void @fsm_switch(%fsm_FSM* %fsm, %Int32 %state) {
+define void @fsm_switch(%fsm_FSM* %fsm, %Nat32 %state) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 2
-	store %Int32 %state, %Int32* %1
+	store %Nat32 %state, %Nat32* %1
 	%2 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
-	store %Int32 2, %Int32* %2
+	store %Nat32 2, %Nat32* %2
 	ret void
 }
 
@@ -232,15 +232,15 @@ define void @fsm_run(%fsm_FSM* %fsm) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
 ; if_0
 	%2 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
-	%3 = load %Int32, %Int32* %2
-	%4 = icmp eq %Int32 %3, 0
+	%3 = load %Nat32, %Nat32* %2
+	%4 = icmp eq %Nat32 %3, 0
 	br %Bool %4 , label %then_0, label %else_0
 then_0:
 	%5 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 2
-	%6 = load %Int32, %Int32* %5
+	%6 = load %Nat32, %Nat32* %5
 	%7 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
-	%8 = bitcast %Int32 %6 to %Int32
-	%9 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %7, %Int32 0, %Int32 %8
+	%8 = bitcast %Nat32 %6 to %Nat32
+	%9 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %7, %Int32 0, %Nat32 %8
 ; if_1
 	br %Bool 1 , label %then_1, label %endif_1
 then_1:
@@ -260,22 +260,22 @@ then_2:
 	br label %endif_2
 endif_2:
 	%17 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
-	store %Int32 %6, %Int32* %17
+	store %Nat32 %6, %Nat32* %17
 	%18 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
-	store %Int32 1, %Int32* %18
+	store %Nat32 1, %Nat32* %18
 	br label %endif_0
 else_0:
 ; if_3
 	%19 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
-	%20 = load %Int32, %Int32* %19
-	%21 = icmp eq %Int32 %20, 1
+	%20 = load %Nat32, %Nat32* %19
+	%21 = icmp eq %Nat32 %20, 1
 	br %Bool %21 , label %then_3, label %else_3
 then_3:
 	%22 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
-	%23 = load %Int32, %Int32* %22
+	%23 = load %Nat32, %Nat32* %22
 	%24 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
-	%25 = bitcast %Int32 %23 to %Int32
-	%26 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %24, %Int32 0, %Int32 %25
+	%25 = bitcast %Nat32 %23 to %Nat32
+	%26 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %24, %Int32 0, %Nat32 %25
 ; if_4
 	%27 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %26, %Int32 0, %Int32 2
 	%28 = load %fsm_Handler, %fsm_Handler* %27
@@ -291,15 +291,15 @@ endif_4:
 else_3:
 ; if_5
 	%32 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
-	%33 = load %Int32, %Int32* %32
-	%34 = icmp eq %Int32 %33, 2
+	%33 = load %Nat32, %Nat32* %32
+	%34 = icmp eq %Nat32 %33, 2
 	br %Bool %34 , label %then_5, label %endif_5
 then_5:
 	%35 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
-	%36 = load %Int32, %Int32* %35
+	%36 = load %Nat32, %Nat32* %35
 	%37 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
-	%38 = bitcast %Int32 %36 to %Int32
-	%39 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %37, %Int32 0, %Int32 %38
+	%38 = bitcast %Nat32 %36 to %Nat32
+	%39 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %37, %Int32 0, %Nat32 %38
 ; if_6
 	br %Bool 1 , label %then_6, label %endif_6
 then_6:
@@ -319,7 +319,7 @@ then_7:
 	br label %endif_7
 endif_7:
 	%47 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
-	store %Int32 0, %Int32* %47
+	store %Nat32 0, %Nat32* %47
 	br label %endif_5
 endif_5:
 	br label %endif_3

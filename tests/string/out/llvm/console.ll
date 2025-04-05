@@ -114,31 +114,31 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
@@ -225,8 +225,8 @@ declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -254,11 +254,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -289,8 +289,8 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- 1
 ; ?? utf ??
 ; from import
-declare %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
-declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
+declare %Nat8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
+declare %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; end from import
 ; -- end print imports 'console' --
 ; -- strings --
@@ -327,7 +327,7 @@ define void @console_putchar_utf16(%Char16 %c) {
 	store %Char16 0, %Char16* %3
 	%4 = alloca %Char32, align 4
 	%5 = bitcast [2 x %Char16]* %1 to [0 x %Char16]*
-	%6 = call %Int8 @utf_utf16_to_utf32([0 x %Char16]* %5, %Char32* %4)
+	%6 = call %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %5, %Char32* %4)
 	%7 = load %Char32, %Char32* %4
 	call void @console_putchar_utf32(%Char32 %7)
 	ret void
@@ -335,8 +335,8 @@ define void @console_putchar_utf16(%Char16 %c) {
 
 define void @console_putchar_utf32(%Char32 %c) {
 	%1 = alloca [4 x %Char8], align 1
-	%2 = call %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %1)
-	%3 = sext %Int8 %2 to %Int32
+	%2 = call %Nat8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %1)
+	%3 = sext %Nat8 %2 to %Int32
 	%4 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %4
 ; while_1
@@ -422,9 +422,9 @@ endif_0:
 	%8 = load %Int32, %Int32* %1
 	%9 = getelementptr %Str16, %Str16* %s, %Int32 0, %Int32 %8
 	%10 = bitcast %Char16* %9 to [0 x %Char16]*
-	%11 = call %Int8 @utf_utf16_to_utf32([0 x %Char16]* %10, %Char32* %7)
+	%11 = call %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %10, %Char32* %7)
 ; if_1
-	%12 = icmp eq %Int8 %11, 0
+	%12 = icmp eq %Nat8 %11, 0
 	br %Bool %12 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
@@ -432,7 +432,7 @@ then_1:
 endif_1:
 	%14 = load %Char32, %Char32* %7
 	call void @console_putchar_utf32(%Char32 %14)
-	%15 = sext %Int8 %11 to %Int32
+	%15 = sext %Nat8 %11 to %Int32
 	%16 = load %Int32, %Int32* %1
 	%17 = add %Int32 %16, %15
 	store %Int32 %17, %Int32* %1
@@ -469,23 +469,23 @@ break_1:
 }
 
 define void @console_print(%Str8* %form, ...) {
-	%1 = alloca i8*, align 1
-	%2 = bitcast i8** %1 to i8*
+	%1 = alloca %__VA_List, align 1
+	%2 = bitcast %__VA_List* %1 to i8*
 	call void @llvm.va_start(i8* %2)
-	%3 = load i8*, i8** %1
-	%4 = call %Int32 @console_vfprint(%Int32 1, %Str8* %form, i8* %3)
-	%5 = bitcast i8** %1 to i8*
+	%3 = load %__VA_List, %__VA_List* %1
+	%4 = call %Int32 @console_vfprint(%Int32 1, %Str8* %form, %__VA_List %3)
+	%5 = bitcast %__VA_List* %1 to i8*
 	call void @llvm.va_end(i8* %5)
 	ret void
 }
 
-define %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, i8* %va) {
+define %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, %__VA_List %va) {
 	%1 = alloca i8*
-	store i8* %va, i8** %1
+	store %__VA_List %va, i8** %1
 	%2 = alloca [256 x %Char8], align 1
 	%3 = bitcast [256 x %Char8]* %2 to [0 x %Char8]*
-	%4 = load i8*, i8** %1
-	%5 = call %Int32 @console_vsprint([0 x %Char8]* %3, %Str8* %form, i8* %4)
+	%4 = load %__VA_List, %__VA_List* %1
+	%5 = call %Int32 @console_vsprint([0 x %Char8]* %3, %Str8* %form, %__VA_List %4)
 	%6 = getelementptr [256 x %Char8], [256 x %Char8]* %2, %Int32 0, %Int32 %5
 	store %Char8 0, %Char8* %6
 	%7 = bitcast [256 x %Char8]* %2 to i8*
@@ -494,9 +494,9 @@ define %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, i8* %va) {
 	ret %Int32 %5
 }
 
-define %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va) {
+define %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va) {
 	%1 = alloca i8*
-	store i8* %va, i8** %1
+	store %__VA_List %va, i8** %1
 	%2 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %2
 	%3 = alloca %Int32, align 4
@@ -613,7 +613,7 @@ then_5:
 	;
 	; %i & %d for signed integer (Int)
 	;
-	%62 = va_arg i8** %1, %Int32
+	%62 = va_arg %__VA_List* %1, %Int32
 	%63 = call %Int32 @sprint_dec_int32([0 x %Char8]* %56, %Int32 %62)
 	%64 = load %Int32, %Int32* %3
 	%65 = add %Int32 %64, %63
@@ -628,8 +628,8 @@ then_6:
 	;
 	; %n for unsigned integer (Nat)
 	;
-	%68 = va_arg i8** %1, %Int32
-	%69 = call %Int32 @sprint_dec_n32([0 x %Char8]* %56, %Int32 %68)
+	%68 = va_arg %__VA_List* %1, %Nat32
+	%69 = call %Int32 @sprint_dec_n32([0 x %Char8]* %56, %Nat32 %68)
 	%70 = load %Int32, %Int32* %3
 	%71 = add %Int32 %70, %69
 	store %Int32 %71, %Int32* %3
@@ -647,8 +647,8 @@ then_7:
 	; %x for unsigned integer (Nat)
 	; %p for pointers
 	;
-	%77 = va_arg i8** %1, %Int32
-	%78 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %56, %Int32 %77)
+	%77 = va_arg %__VA_List* %1, %Nat32
+	%78 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %56, %Nat32 %77)
 	%79 = load %Int32, %Int32* %3
 	%80 = add %Int32 %79, %78
 	store %Int32 %80, %Int32* %3
@@ -662,7 +662,7 @@ then_8:
 	;
 	; %s pointer to string
 	;
-	%83 = va_arg i8** %1, %Str8*
+	%83 = va_arg %__VA_List* %1, %Str8*
 	%84 = call [0 x %Char]* @strcpy([0 x %Char8]* %56, %Str8* %83)
 	%85 = call %SizeT @strlen(%Str8* %83)
 	%86 = trunc %SizeT %85 to %Int32
@@ -679,12 +679,12 @@ then_9:
 	;
 	; %c for char
 	;
-	%91 = va_arg i8** %1, %Char32
+	%91 = va_arg %__VA_List* %1, %Char32
 	%92 = mul i8 4, 1
 	%93 = mul i8 4, 1
 	%94 = bitcast [0 x %Char8]* %56 to [4 x %Char8]*
-	%95 = call %Int8 @utf_utf32_to_utf8(%Char32 %91, [4 x %Char8]* %94)
-	%96 = sext %Int8 %95 to %Int32
+	%95 = call %Nat8 @utf_utf32_to_utf8(%Char32 %91, [4 x %Char8]* %94)
+	%96 = sext %Nat8 %95 to %Int32
 	%97 = load %Int32, %Int32* %3
 	%98 = add %Int32 %97, %96
 	store %Int32 %98, %Int32* %3
@@ -704,33 +704,33 @@ break_1:
 	ret %Int32 %99
 }
 
-define internal %Char8 @n_to_dec_sym(%Int8 %n) {
-	%1 = add %Int8 48, %n
-	%2 = bitcast %Int8 %1 to %Word8
+define internal %Char8 @n_to_dec_sym(%Nat8 %n) {
+	%1 = add %Nat8 48, %n
+	%2 = bitcast %Nat8 %1 to %Word8
 	%3 = bitcast %Word8 %2 to %Char8
 	ret %Char8 %3
 }
 
-define internal %Char8 @n_to_hex_sym(%Int8 %n) {
+define internal %Char8 @n_to_hex_sym(%Nat8 %n) {
 ; if_0
-	%1 = icmp ult %Int8 %n, 10
+	%1 = icmp ult %Nat8 %n, 10
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	%2 = call %Char8 @n_to_dec_sym(%Int8 %n)
+	%2 = call %Char8 @n_to_dec_sym(%Nat8 %n)
 	ret %Char8 %2
 	br label %endif_0
 endif_0:
-	%4 = sub %Int8 %n, 10
-	%5 = add %Int8 65, %4
-	%6 = bitcast %Int8 %5 to %Word8
+	%4 = sub %Nat8 %n, 10
+	%5 = add %Nat8 65, %4
+	%6 = bitcast %Nat8 %5 to %Word8
 	%7 = bitcast %Word8 %6 to %Char8
 	ret %Char8 %7
 }
 
-define internal %Int32 @sprint_hex_nat32([0 x %Char8]* %buf, %Int32 %x) {
+define internal %Int32 @sprint_hex_nat32([0 x %Char8]* %buf, %Nat32 %x) {
 	%1 = alloca [8 x %Char8], align 1
-	%2 = alloca %Int32, align 4
-	store %Int32 %x, %Int32* %2
+	%2 = alloca %Nat32, align 4
+	store %Nat32 %x, %Nat32* %2
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
 ; while_1
@@ -738,22 +738,22 @@ define internal %Int32 @sprint_hex_nat32([0 x %Char8]* %buf, %Int32 %x) {
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%4 = load %Int32, %Int32* %2
-	%5 = urem %Int32 %4, 16
-	%6 = load %Int32, %Int32* %2
-	%7 = udiv %Int32 %6, 16
-	store %Int32 %7, %Int32* %2
+	%4 = load %Nat32, %Nat32* %2
+	%5 = urem %Nat32 %4, 16
+	%6 = load %Nat32, %Nat32* %2
+	%7 = udiv %Nat32 %6, 16
+	store %Nat32 %7, %Nat32* %2
 	%8 = load %Int32, %Int32* %3
 	%9 = getelementptr [8 x %Char8], [8 x %Char8]* %1, %Int32 0, %Int32 %8
-	%10 = trunc %Int32 %5 to %Int8
-	%11 = call %Char8 @n_to_hex_sym(%Int8 %10)
+	%10 = trunc %Nat32 %5 to %Nat8
+	%11 = call %Char8 @n_to_hex_sym(%Nat8 %10)
 	store %Char8 %11, %Char8* %9
 	%12 = load %Int32, %Int32* %3
 	%13 = add %Int32 %12, 1
 	store %Int32 %13, %Int32* %3
 ; if_0
-	%14 = load %Int32, %Int32* %2
-	%15 = icmp eq %Int32 %14, 0
+	%14 = load %Nat32, %Nat32* %2
+	%15 = icmp eq %Nat32 %14, 0
 	br %Bool %15 , label %then_0, label %endif_0
 then_0:
 	br label %break_1
@@ -821,8 +821,8 @@ body_1:
 	store %Int32 %11, %Int32* %2
 	%12 = load %Int32, %Int32* %7
 	%13 = getelementptr [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %12
-	%14 = trunc %Int32 %9 to %Int8
-	%15 = call %Char8 @n_to_dec_sym(%Int8 %14)
+	%14 = trunc %Int32 %9 to %Nat8
+	%15 = call %Char8 @n_to_dec_sym(%Nat8 %14)
 	store %Char8 %15, %Char8* %13
 	%16 = load %Int32, %Int32* %7
 	%17 = add %Int32 %16, 1
@@ -877,10 +877,10 @@ break_2:
 	ret %Int32 %38
 }
 
-define internal %Int32 @sprint_dec_n32([0 x %Char8]* %buf, %Int32 %x) {
+define internal %Int32 @sprint_dec_n32([0 x %Char8]* %buf, %Nat32 %x) {
 	%1 = alloca [11 x %Char8], align 1
-	%2 = alloca %Int32, align 4
-	store %Int32 %x, %Int32* %2
+	%2 = alloca %Nat32, align 4
+	store %Nat32 %x, %Nat32* %2
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
 ; while_1
@@ -888,22 +888,22 @@ define internal %Int32 @sprint_dec_n32([0 x %Char8]* %buf, %Int32 %x) {
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%4 = load %Int32, %Int32* %2
-	%5 = urem %Int32 %4, 10
-	%6 = load %Int32, %Int32* %2
-	%7 = udiv %Int32 %6, 10
-	store %Int32 %7, %Int32* %2
+	%4 = load %Nat32, %Nat32* %2
+	%5 = urem %Nat32 %4, 10
+	%6 = load %Nat32, %Nat32* %2
+	%7 = udiv %Nat32 %6, 10
+	store %Nat32 %7, %Nat32* %2
 	%8 = load %Int32, %Int32* %3
 	%9 = getelementptr [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %8
-	%10 = trunc %Int32 %5 to %Int8
-	%11 = call %Char8 @n_to_dec_sym(%Int8 %10)
+	%10 = trunc %Nat32 %5 to %Nat8
+	%11 = call %Char8 @n_to_dec_sym(%Nat8 %10)
 	store %Char8 %11, %Char8* %9
 	%12 = load %Int32, %Int32* %3
 	%13 = add %Int32 %12, 1
 	store %Int32 %13, %Int32* %3
 ; if_0
-	%14 = load %Int32, %Int32* %2
-	%15 = icmp eq %Int32 %14, 0
+	%14 = load %Nat32, %Nat32* %2
+	%15 = icmp eq %Nat32 %14, 0
 	br %Bool %15 , label %then_0, label %endif_0
 then_0:
 	br label %break_1

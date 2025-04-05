@@ -9,12 +9,11 @@ import foundation
 
 
 def get_id_str(x):
-	id = x.id
-
-	if id.cm != None:
-		return id.cm
-
-	return id.str
+	if not hasattr(x, 'id'):
+		return None
+	if x.id == None:
+		return None
+	return x.id.cm
 
 
 aprecedence = [
@@ -63,17 +62,6 @@ def precedence(x):
 cmodule = None
 
 
-def str_id_for(x):
-	#xm = x.getModule()
-	#if xm != None:
-	#	if xm != cmodule:
-	#		return "%s.%s" % (xm.id, x.id.str)
-	return get_id_str(x)
-
-
-#def str_id_for(x):
-#	out(str_id_for(x))
-
 
 def print_stmt_comment(x):
 	out(str_stmt_comment(x))
@@ -108,11 +96,11 @@ def str_stmt_comment_line(x):
 
 
 def str_TypeNat(t):
-	return get_type_id(t)
+	return get_id_str(t)
 
 
 def str_TypeInt(t):
-	return get_type_id(t)
+	return get_id_str(t)
 
 
 def str_type_array(t):
@@ -132,7 +120,7 @@ def str_type_pointer(t):
 
 
 def str_field(x):
-	return str_id_for(x) + ": " + str_type(x.type)
+	return get_id_str(x) + ": " + str_type(x.type)
 
 
 def str_type_record(t):
@@ -186,22 +174,14 @@ def str_type_func(t, extra_args=False):
 	return s
 
 
-def get_type_id(t):
-	if hasattr(t, 'id'):
-		if t.id.cm:
-			return t.cm
-		return t.id.str
-
-	return None
-
 
 def str_type(t):
 	assert(isinstance(t, Type))
 
 	# Если тип связан с идентификатором - распечатаем его
-	id_str = get_type_id(t)
+	id_str = get_id_str(t)
 	if id_str != None:
-		return id_str #str_id_for(t)
+		return id_str #get_id_str(t)
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
@@ -338,7 +318,7 @@ def str_value_slice(x, ctx):
 def str_value_access(x, ctx):
 	s=str_value(x.left, parent_expr=x)
 	s += "."
-	s += str_id_for(x.field)
+	s += get_id_str(x.field)
 	return s
 
 
@@ -570,11 +550,11 @@ def str_value_ptr(x, ctx):
 
 
 def str_value_enum(x, ctx):
-	return str_id_for(x)
+	return get_id_str(x)
 
 
 def str_value_by_id(x, ctx):
-	return str_id_for(x)
+	return get_id_str(x)
 
 
 def str_value_new(x, ctx):
@@ -745,21 +725,21 @@ def print_value(x):
 
 def print_stmt_type(x):
 	out("type ")
-	out(str_id_for(x))
+	out(get_id_str(x))
 	out(" ")
 	out(str_type(x.original_type))
 
 
 def print_stmt_const(x, operator='const'):
 	out("%s " % operator)
-	out(str_id_for(x))
+	out(get_id_str(x))
 	out(" = ")
 	out(str_value(x.init_value))
 
 
 def print_stmt_var(x):
 	out("var ")
-	out(str_id_for(x.value))
+	out(get_id_str(x.value))
 	out(": ")
 	out(str_type(x.value.type))
 	iv = x.init_value
@@ -774,7 +754,7 @@ def print_stmt_func(x):
 	func = x.value
 	ft = func.type
 	out('func ')
-	out(str_id_for(func))
+	out(get_id_str(func))
 	out(str_type_func(ft, extra_args=ft.extra_args))
 	print_stmt_block(x.stmt)
 

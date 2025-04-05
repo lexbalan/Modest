@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -198,37 +198,37 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --; tests/bool/src/main.m
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca %Int8, align 1
+	%2 = alloca %Nat8, align 1
 	%3 = alloca %Bool, align 1
-	store %Int8 1, %Int8* %2
+	store %Nat8 1, %Nat8* %2
 	;b = Bool x
-	%4 = load %Int8, %Int8* %2
-	%5 = icmp ne %Int8 %4, 0
+	%4 = load %Nat8, %Nat8* %2
+	%5 = icmp ne %Nat8 %4, 0
 	store %Bool %5, %Bool* %3
-	%6 = load %Int8, %Int8* %2
-	%7 = zext %Int8 %6 to %Word32
+	%6 = load %Nat8, %Nat8* %2
+	%7 = zext %Nat8 %6 to %Word32
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Word32 %7)
 	%9 = load %Bool, %Bool* %3
 	%10 = zext %Bool %9 to %Word32
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Word32 %10)
-	store %Int8 2, %Int8* %2
+	store %Nat8 2, %Nat8* %2
 	;b = Bool x
-	%12 = load %Int8, %Int8* %2
-	%13 = icmp ne %Int8 %12, 0
+	%12 = load %Nat8, %Nat8* %2
+	%13 = icmp ne %Nat8 %12, 0
 	store %Bool %13, %Bool* %3
-	%14 = load %Int8, %Int8* %2
-	%15 = zext %Int8 %14 to %Word32
+	%14 = load %Nat8, %Nat8* %2
+	%15 = zext %Nat8 %14 to %Word32
 	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Word32 %15)
 	%17 = load %Bool, %Bool* %3
 	%18 = zext %Bool %17 to %Word32
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Word32 %18)
-	store %Int8 3, %Int8* %2
+	store %Nat8 3, %Nat8* %2
 	;b = Bool x
-	%20 = load %Int8, %Int8* %2
-	%21 = icmp ne %Int8 %20, 0
+	%20 = load %Nat8, %Nat8* %2
+	%21 = icmp ne %Nat8 %20, 0
 	store %Bool %21, %Bool* %3
-	%22 = load %Int8, %Int8* %2
-	%23 = zext %Int8 %22 to %Word32
+	%22 = load %Nat8, %Nat8* %2
+	%23 = zext %Nat8 %22 to %Word32
 	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Word32 %23)
 	%25 = load %Bool, %Bool* %3
 	%26 = zext %Bool %25 to %Word32

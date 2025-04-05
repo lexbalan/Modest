@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -233,17 +233,17 @@ define internal void @f4([10 x %Int32]* %0, %Int32 %x) {
 	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 0
 	%3 = insertvalue [10 x %Int32] %2, %Int32 2, 1
 	%4 = insertvalue [10 x %Int32] %3, %Int32 3, 2
-	%5 = zext i8 10 to %Int32
+	%5 = zext i8 10 to %Nat32
 	store [10 x %Int32] %4, [10 x %Int32]* %0
 	ret void
 }
 
 define internal void @f5([32 x %Int32]* %0, [32 x %Int32] %__a) {
 	%a = alloca [32 x %Int32]
-	%2 = zext i8 32 to %Int32
+	%2 = zext i8 32 to %Nat32
 	store [32 x %Int32] %__a, [32 x %Int32]* %a
 	%3 = load [32 x %Int32], [32 x %Int32]* %a
-	%4 = zext i8 32 to %Int32
+	%4 = zext i8 32 to %Nat32
 	store [32 x %Int32] %3, [32 x %Int32]* %0
 	ret void
 }
@@ -394,160 +394,160 @@ define internal void ()** @f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**
 @p2 = internal global [5 x %Int32]* @a0
 @p3 = internal global [5 x %Int32]** @p2
 %RGB24 = type {
-	%Int8,
-	%Int8,
-	%Int8
+	%Nat8,
+	%Nat8,
+	%Nat8
 };
 
 @rgb0 = internal global [2 x %RGB24] [
 	%RGB24 {
-		%Int8 200,
-		%Int8 0,
-		%Int8 0
+		%Nat8 200,
+		%Nat8 0,
+		%Nat8 0
 	},
 	%RGB24 {
-		%Int8 200,
-		%Int8 0,
-		%Int8 0
+		%Nat8 200,
+		%Nat8 0,
+		%Nat8 0
 	}
 ]
 %AnimationPoint = type {
 	%RGB24,
-	%Int32
+	%Nat32
 };
 
 @ap = internal global %AnimationPoint {
 	%RGB24 {
-		%Int8 200,
-		%Int8 0,
-		%Int8 0
+		%Nat8 200,
+		%Nat8 0,
+		%Nat8 0
 	},
-	%Int32 3000
+	%Nat32 3000
 }
 @animation0_points = internal global [5 x %AnimationPoint] [
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 200,
-			%Int8 0,
-			%Int8 0
+			%Nat8 200,
+			%Nat8 0,
+			%Nat8 0
 		},
-		%Int32 3
+		%Nat32 3
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 0,
-			%Int8 200,
-			%Int8 0
+			%Nat8 0,
+			%Nat8 200,
+			%Nat8 0
 		},
-		%Int32 30
+		%Nat32 30
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 100,
-			%Int8 100,
-			%Int8 0
+			%Nat8 100,
+			%Nat8 100,
+			%Nat8 0
 		},
-		%Int32 300
+		%Nat32 300
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 254,
-			%Int8 254,
-			%Int8 0
+			%Nat8 254,
+			%Nat8 254,
+			%Nat8 0
 		},
-		%Int32 20
+		%Nat32 20
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 0,
-			%Int8 0,
-			%Int8 255
+			%Nat8 0,
+			%Nat8 0,
+			%Nat8 255
 		},
-		%Int32 3000
+		%Nat32 3000
 	}
 ]
 @animation1_points = internal global [5 x %AnimationPoint] [
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 200,
-			%Int8 0,
-			%Int8 0
+			%Nat8 200,
+			%Nat8 0,
+			%Nat8 0
 		},
-		%Int32 3
+		%Nat32 3
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 0,
-			%Int8 200,
-			%Int8 0
+			%Nat8 0,
+			%Nat8 200,
+			%Nat8 0
 		},
-		%Int32 30
+		%Nat32 30
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 100,
-			%Int8 100,
-			%Int8 0
+			%Nat8 100,
+			%Nat8 100,
+			%Nat8 0
 		},
-		%Int32 300
+		%Nat32 300
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 254,
-			%Int8 254,
-			%Int8 0
+			%Nat8 254,
+			%Nat8 254,
+			%Nat8 0
 		},
-		%Int32 20
+		%Nat32 20
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 0,
-			%Int8 0,
-			%Int8 255
+			%Nat8 0,
+			%Nat8 0,
+			%Nat8 255
 		},
-		%Int32 3000
+		%Nat32 3000
 	}
 ]
 @animation2_points = internal global [5 x %AnimationPoint] [
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 200,
-			%Int8 0,
-			%Int8 0
+			%Nat8 200,
+			%Nat8 0,
+			%Nat8 0
 		},
-		%Int32 3
+		%Nat32 3
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 0,
-			%Int8 200,
-			%Int8 0
+			%Nat8 0,
+			%Nat8 200,
+			%Nat8 0
 		},
-		%Int32 30
+		%Nat32 30
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 100,
-			%Int8 100,
-			%Int8 0
+			%Nat8 100,
+			%Nat8 100,
+			%Nat8 0
 		},
-		%Int32 300
+		%Nat32 300
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 255,
-			%Int8 254,
-			%Int8 0
+			%Nat8 255,
+			%Nat8 254,
+			%Nat8 0
 		},
-		%Int32 20
+		%Nat32 20
 	},
 	%AnimationPoint {
 		%RGB24 {
-			%Int8 0,
-			%Int8 0,
-			%Int8 255
+			%Nat8 0,
+			%Nat8 0,
+			%Nat8 255
 		},
-		%Int32 3000
+		%Nat32 3000
 	}
 ]
 define internal void @xy({%Int32,%Int32} %x) {
@@ -586,6 +586,11 @@ define internal %Int32 @sub(%Int32 %a, %Int32 %b) {
 	%Int32 (%Int32, %Int32)* @add,
 	%Int32 (%Int32, %Int32)* @sub
 ]
+%He = type void ();
+define internal void @he(%He* %x) {
+	ret void
+}
+
 define internal void @hi(%Str8* %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Str8* %x)
 	ret void

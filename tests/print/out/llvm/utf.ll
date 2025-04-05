@@ -116,22 +116,22 @@ break_2:
 ; (https://ru.wikipedia.org/wiki/UTF-16)
 
 ; декодирует символ UTF-32 в последовательность UTF-8
-define %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {
+define %Nat8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {
 	%1 = bitcast %Char32 %c to %Word32
 ; if_0
-	%2 = bitcast %Word32 %1 to %Int32
-	%3 = icmp ule %Int32 %2, 127
+	%2 = bitcast %Word32 %1 to %Nat32
+	%3 = icmp ule %Nat32 %2, 127
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
 	%4 = getelementptr [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 0
 	%5 = trunc %Word32 %1 to %Char8
 	store %Char8 %5, %Char8* %4
-	ret %Int8 1
+	ret %Nat8 1
 	br label %endif_0
 else_0:
 ; if_1
-	%7 = bitcast %Word32 %1 to %Int32
-	%8 = icmp ule %Int32 %7, 2047
+	%7 = bitcast %Word32 %1 to %Nat32
+	%8 = icmp ule %Nat32 %7, 2047
 	br %Bool %8 , label %then_1, label %else_1
 then_1:
 	%9 = zext i8 6 to %Word32
@@ -148,12 +148,12 @@ then_1:
 	%19 = or %Word32 128, %14
 	%20 = trunc %Word32 %19 to %Char8
 	store %Char8 %20, %Char8* %18
-	ret %Int8 2
+	ret %Nat8 2
 	br label %endif_1
 else_1:
 ; if_2
-	%22 = bitcast %Word32 %1 to %Int32
-	%23 = icmp ule %Int32 %22, 65535
+	%22 = bitcast %Word32 %1 to %Nat32
+	%23 = icmp ule %Nat32 %22, 65535
 	br %Bool %23 , label %then_2, label %else_2
 then_2:
 	%24 = zext i8 12 to %Word32
@@ -177,12 +177,12 @@ then_2:
 	%40 = or %Word32 128, %32
 	%41 = trunc %Word32 %40 to %Char8
 	store %Char8 %41, %Char8* %39
-	ret %Int8 3
+	ret %Nat8 3
 	br label %endif_2
 else_2:
 ; if_3
-	%43 = bitcast %Word32 %1 to %Int32
-	%44 = icmp ule %Int32 %43, 1114111
+	%43 = bitcast %Word32 %1 to %Nat32
+	%44 = icmp ule %Nat32 %43, 1114111
 	br %Bool %44 , label %then_3, label %endif_3
 then_3:
 	%45 = zext i8 18 to %Word32
@@ -213,7 +213,7 @@ then_3:
 	%67 = or %Word32 128, %56
 	%68 = trunc %Word32 %67 to %Char8
 	store %Char8 %68, %Char8* %66
-	ret %Int8 4
+	ret %Nat8 4
 	br label %endif_3
 endif_3:
 	br label %endif_2
@@ -222,32 +222,32 @@ endif_2:
 endif_1:
 	br label %endif_0
 endif_0:
-	ret %Int8 0
+	ret %Nat8 0
 }
 
 
 
 ; returns n-symbols from input stream
-define %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result) {
+define %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result) {
 	%1 = getelementptr [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 0
 	%2 = load %Char16, %Char16* %1
 	%3 = zext %Char16 %2 to %Word32
 ; if_0
-	%4 = bitcast %Word32 %3 to %Int32
-	%5 = icmp ult %Int32 %4, 55296
-	%6 = bitcast %Word32 %3 to %Int32
-	%7 = icmp ugt %Int32 %6, 57343
+	%4 = bitcast %Word32 %3 to %Nat32
+	%5 = icmp ult %Nat32 %4, 55296
+	%6 = bitcast %Word32 %3 to %Nat32
+	%7 = icmp ugt %Nat32 %6, 57343
 	%8 = or %Bool %5, %7
 	br %Bool %8 , label %then_0, label %else_0
 then_0:
 	%9 = bitcast %Word32 %3 to %Char32
 	store %Char32 %9, %Char32* %result
-	ret %Int8 1
+	ret %Nat8 1
 	br label %endif_0
 else_0:
 ; if_1
-	%11 = bitcast %Word32 %3 to %Int32
-	%12 = icmp uge %Int32 %11, 56320
+	%11 = bitcast %Word32 %3 to %Nat32
+	%12 = icmp uge %Nat32 %11, 56320
 	br %Bool %12 , label %then_1, label %else_1
 then_1:
 	;error("Illegal code sequence")
@@ -262,10 +262,10 @@ else_1:
 	%18 = load %Char16, %Char16* %17
 	%19 = zext %Char16 %18 to %Word32
 ; if_2
-	%20 = bitcast %Word32 %19 to %Int32
-	%21 = icmp ult %Int32 %20, 56320
-	%22 = bitcast %Word32 %19 to %Int32
-	%23 = icmp ugt %Int32 %22, 57343
+	%20 = bitcast %Word32 %19 to %Nat32
+	%21 = icmp ult %Nat32 %20, 56320
+	%22 = bitcast %Word32 %19 to %Nat32
+	%23 = icmp ugt %Nat32 %22, 57343
 	%24 = or %Bool %21, %23
 	br %Bool %24 , label %then_2, label %else_2
 then_2:
@@ -277,19 +277,19 @@ else_2:
 	%27 = or %Word32 %26, %25
 	store %Word32 %27, %Word32* %13
 	%28 = load %Word32, %Word32* %13
-	%29 = bitcast %Word32 %28 to %Int32
-	%30 = add %Int32 %29, 65536
-	%31 = bitcast %Int32 %30 to %Word32
+	%29 = bitcast %Word32 %28 to %Nat32
+	%30 = add %Nat32 %29, 65536
+	%31 = bitcast %Nat32 %30 to %Word32
 	%32 = bitcast %Word32 %31 to %Char32
 	store %Char32 %32, %Char32* %result
-	ret %Int8 2
+	ret %Nat8 2
 	br label %endif_2
 endif_2:
 	br label %endif_1
 endif_1:
 	br label %endif_0
 endif_0:
-	ret %Int8 0
+	ret %Nat8 0
 }
 
 

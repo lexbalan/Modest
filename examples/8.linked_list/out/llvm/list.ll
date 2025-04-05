@@ -111,31 +111,31 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdlib
 declare void @abort()
 declare %Int @abs(%Int %x)
@@ -152,8 +152,8 @@ declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -181,11 +181,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -216,7 +216,7 @@ declare void @perror(%ConstCharStr* %str)
 %list_List = type {
 	%list_Node*,
 	%list_Node*,
-	%Int32
+	%Nat32
 };
 
 define %list_List* @list_create() {
@@ -233,17 +233,17 @@ endif_0:
 	ret %list_List* %2
 }
 
-define %Int32 @list_size_get(%list_List* %list) {
+define %Nat32 @list_size_get(%list_List* %list) {
 ; if_0
 	%1 = icmp eq %list_List* %list, null
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret %Int32 0
+	ret %Nat32 0
 	br label %endif_0
 endif_0:
 	%3 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%4 = load %Int32, %Int32* %3
-	ret %Int32 %4
+	%4 = load %Nat32, %Nat32* %3
+	ret %Nat32 %4
 }
 
 define %list_Node* @list_first_node_get(%list_List* %list) {
@@ -288,9 +288,9 @@ endif_0:
 	store %list_Node* %new_node, %list_Node** %6
 	%7 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
 	%8 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%9 = load %Int32, %Int32* %8
-	%10 = add %Int32 %9, 1
-	store %Int32 %10, %Int32* %7
+	%9 = load %Nat32, %Nat32* %8
+	%10 = add %Nat32 %9, 1
+	store %Nat32 %10, %Nat32* %7
 	ret %list_Node* %new_node
 }
 
@@ -377,8 +377,8 @@ define %list_Node* @list_node_get(%list_List* %list, %Int32 %pos) {
 ; if_0
 	%1 = icmp eq %list_List* %list, null
 	%2 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%3 = load %Int32, %Int32* %2
-	%4 = icmp eq %Int32 %3, 0
+	%3 = load %Nat32, %Nat32* %2
+	%4 = icmp eq %Nat32 %3, 0
 	%5 = or %Bool %1, %4
 	br %Bool %5 , label %then_0, label %endif_0
 then_0:
@@ -395,32 +395,32 @@ then_1:
 	%10 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 0
 	%11 = load %list_Node*, %list_Node** %10
 	store %list_Node* %11, %list_Node** %8
-	%12 = bitcast %Int32 %pos to %Int32
+	%12 = bitcast %Int32 %pos to %Nat32
 ; if_2
 	%13 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%14 = load %Int32, %Int32* %13
-	%15 = icmp ugt %Int32 %12, %14
+	%14 = load %Nat32, %Nat32* %13
+	%15 = icmp ugt %Nat32 %12, %14
 	br %Bool %15 , label %then_2, label %endif_2
 then_2:
 	ret %list_Node* null
 	br label %endif_2
 endif_2:
-	%17 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %17
+	%17 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %17
 ; while_1
 	br label %again_1
 again_1:
-	%18 = load %Int32, %Int32* %17
-	%19 = icmp ult %Int32 %18, %12
+	%18 = load %Nat32, %Nat32* %17
+	%19 = icmp ult %Nat32 %18, %12
 	br %Bool %19 , label %body_1, label %break_1
 body_1:
 	%20 = load %list_Node*, %list_Node** %8
 	%21 = getelementptr %list_Node, %list_Node* %20, %Int32 0, %Int32 0
 	%22 = load %list_Node*, %list_Node** %21
 	store %list_Node* %22, %list_Node** %8
-	%23 = load %Int32, %Int32* %17
-	%24 = add %Int32 %23, 1
-	store %Int32 %24, %Int32* %17
+	%23 = load %Nat32, %Nat32* %17
+	%24 = add %Nat32 %23, 1
+	store %Nat32 %24, %Nat32* %17
 	br label %again_1
 break_1:
 	br label %endif_1
@@ -430,33 +430,33 @@ else_1:
 	%26 = load %list_Node*, %list_Node** %25
 	store %list_Node* %26, %list_Node** %8
 	%27 = sub %Int32 0, %pos
-	%28 = bitcast %Int32 %27 to %Int32
-	%29 = sub %Int32 %28, 1
+	%28 = bitcast %Int32 %27 to %Nat32
+	%29 = sub %Nat32 %28, 1
 ; if_3
 	%30 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%31 = load %Int32, %Int32* %30
-	%32 = icmp ugt %Int32 %29, %31
+	%31 = load %Nat32, %Nat32* %30
+	%32 = icmp ugt %Nat32 %29, %31
 	br %Bool %32 , label %then_3, label %endif_3
 then_3:
 	ret %list_Node* null
 	br label %endif_3
 endif_3:
-	%34 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %34
+	%34 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %34
 ; while_2
 	br label %again_2
 again_2:
-	%35 = load %Int32, %Int32* %34
-	%36 = icmp ult %Int32 %35, %29
+	%35 = load %Nat32, %Nat32* %34
+	%36 = icmp ult %Nat32 %35, %29
 	br %Bool %36 , label %body_2, label %break_2
 body_2:
 	%37 = load %list_Node*, %list_Node** %8
 	%38 = getelementptr %list_Node, %list_Node* %37, %Int32 0, %Int32 1
 	%39 = load %list_Node*, %list_Node** %38
 	store %list_Node* %39, %list_Node** %8
-	%40 = load %Int32, %Int32* %34
-	%41 = add %Int32 %40, 1
-	store %Int32 %41, %Int32* %34
+	%40 = load %Nat32, %Nat32* %34
+	%41 = add %Nat32 %40, 1
+	store %Nat32 %41, %Nat32* %34
 	br label %again_2
 break_2:
 	br label %endif_1
@@ -495,9 +495,9 @@ endif_2:
 	call void @list_node_insert_right(%list_Node* %9, %list_Node* %new_node)
 	%12 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
 	%13 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%14 = load %Int32, %Int32* %13
-	%15 = add %Int32 %14, 1
-	store %Int32 %15, %Int32* %12
+	%14 = load %Nat32, %Nat32* %13
+	%15 = add %Nat32 %14, 1
+	store %Nat32 %15, %Nat32* %12
 	ret %list_Node* %new_node
 }
 
@@ -530,9 +530,9 @@ endif_1:
 	store %list_Node* %new_node, %list_Node** %11
 	%12 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
 	%13 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%14 = load %Int32, %Int32* %13
-	%15 = add %Int32 %14, 1
-	store %Int32 %15, %Int32* %12
+	%14 = load %Nat32, %Nat32* %13
+	%15 = add %Nat32 %14, 1
+	store %Nat32 %15, %Nat32* %12
 	ret %list_Node* %new_node
 }
 

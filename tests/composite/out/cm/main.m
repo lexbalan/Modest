@@ -193,6 +193,12 @@ var farr: [2]*(a: Int32, b: Int32) -> Int32 = [
 	&add, &sub
 ]
 
+
+type He () -> Unit
+
+func he(x: *He) -> Unit {
+}
+
 func hi(x: *Str8) -> Unit {
 	printf("Hi %s!\n", x)
 }

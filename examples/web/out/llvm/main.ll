@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -297,9 +297,9 @@ declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; from included socket
-%InAddrT = type %Int32;
-%InPortT = type %Int16;
-%SocklenT = type %Int32;
+%InAddrT = type %Nat32;
+%InPortT = type %Nat16;
+%SocklenT = type %Nat32;
 %SockAddr = type {
 	%UnsignedShort,
 	[14 x %Char8]
@@ -310,11 +310,11 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 };
 
 %SockAddrIn = type {
-	%Int8,
-	%Int8,
+	%Nat8,
+	%Nat8,
 	%UnsignedShort,
 	%Struct_in_addr,
-	[8 x %Int8]
+	[8 x %Nat8]
 };
 
 declare %InAddrT @inet_addr([0 x %ConstChar]* %cp)
@@ -340,7 +340,7 @@ declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
 @str8 = private constant [32 x i8] [i8 83, i8 101, i8 114, i8 118, i8 101, i8 114, i8 32, i8 108, i8 105, i8 115, i8 116, i8 101, i8 110, i8 105, i8 110, i8 103, i8 32, i8 111, i8 110, i8 32, i8 112, i8 111, i8 114, i8 116, i8 32, i8 37, i8 100, i8 46, i8 46, i8 46, i8 10, i8 0]
 @str9 = private constant [25 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 97, i8 99, i8 99, i8 101, i8 112, i8 116, i8 32, i8 99, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 105, i8 111, i8 110, i8 0]
 ; -- endstrings --; Simple Web server example
-@pageCounter = internal global %Int32 zeroinitializer
+@pageCounter = internal global %Nat32 zeroinitializer
 define internal %Word16 @htons(%Word16 %x) {
 	%1 = zext i8 8 to %Word16
 	%2 = shl %Word16 %x, %1
@@ -363,16 +363,16 @@ then_0:
 	ret void
 	br label %endif_0
 endif_0:
-	%7 = trunc %SSizeT %3 to %Int32
-	%8 = getelementptr [1024 x %Word8], [1024 x %Word8]* %1, %Int32 0, %Int32 %7
+	%7 = trunc %SSizeT %3 to %Nat32
+	%8 = getelementptr [1024 x %Word8], [1024 x %Word8]* %1, %Int32 0, %Nat32 %7
 	%9 = bitcast i8 0 to %Word8
 	store %Word8 %9, %Word8* %8
 	%10 = bitcast [1024 x %Word8]* %1 to %Str8*
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %10)
 	%12 = alloca [1024 x %Char8], align 1
 	%13 = bitcast [1024 x %Char8]* %12 to %CharStr*
-	%14 = load %Int32, %Int32* @pageCounter
-	%15 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %13, %ConstCharStr* bitcast ([56 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([64 x i8]* @str1 to [0 x i8]*), %Int32 %14)
+	%14 = load %Nat32, %Nat32* @pageCounter
+	%15 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %13, %ConstCharStr* bitcast ([56 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([64 x i8]* @str1 to [0 x i8]*), %Nat32 %14)
 	%16 = bitcast [1024 x %Char8]* %12 to i8*
 	%17 = bitcast [1024 x %Char8]* %12 to [0 x %ConstChar]*
 	%18 = call %SizeT @strlen([0 x %ConstChar]* %17)
@@ -392,7 +392,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%3 = alloca %SockAddrIn, align 16
-	%4 = insertvalue %SockAddrIn zeroinitializer, %Int8 2, 1
+	%4 = insertvalue %SockAddrIn zeroinitializer, %Nat8 2, 1
 	%5 = bitcast i16 8080 to %Word16
 	%6 = call %Word16 @htons(%Word16 %5)
 	%7 = bitcast %Word16 %6 to %UnsignedShort
@@ -428,7 +428,7 @@ then_2:
 	call void @exit(%Int 1)
 	br label %endif_2
 endif_2:
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str8 to [0 x i8]*), %Int32 8080)
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str8 to [0 x i8]*), %Nat32 8080)
 
 	; Handle input connections
 ; while_1
@@ -450,9 +450,9 @@ then_3:
 	br label %endif_3
 endif_3:
 	call void @handleRequest(%Int %23)
-	%26 = load %Int32, %Int32* @pageCounter
-	%27 = add %Int32 %26, 1
-	store %Int32 %27, %Int32* @pageCounter
+	%26 = load %Nat32, %Nat32* @pageCounter
+	%27 = add %Nat32 %26, 1
+	store %Nat32 %27, %Nat32* @pageCounter
 	br label %again_1
 break_1:
 	%28 = call %Int @close(%Int %1)

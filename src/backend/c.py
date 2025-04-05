@@ -170,8 +170,12 @@ def get_id_str(x):
 	if id == None:
 		return None
 
-	if id.c != None:
-		return id.c
+	id_str = id.c
+	if id_str == None:
+		return None
+
+	if id.prefix != None:
+		id_str = id.prefix + id_str
 
 	if not x.hasAttribute('nodecorate'):
 		xmodule = x.getModule()
@@ -179,13 +183,9 @@ def get_id_str(x):
 			if not 'nodecorate' in xmodule.att:
 				#if x.access_level != 'private':
 				if not x.hasAttribute('static'):
-					return "%s_%s" % (xmodule.id, id.str)
+					id_str = "%s_%s" % (xmodule.id, id_str)
 
-
-	if id.prefix != None:
-		return id.prefix + id.str
-
-	return id.str
+	return id_str
 
 
 
@@ -357,7 +357,7 @@ def str_type_func(t, core='', need_close=False):
 
 
 
-def str_type_pointer(t, core='', need_close=False, as_ptr_to_array=False, as_volatile=False):
+def str_type_pointer(t, core='', as_ptr_to_array=False):
 	tx = t
 
 	left = ''
@@ -367,16 +367,17 @@ def str_type_pointer(t, core='', need_close=False, as_ptr_to_array=False, as_vol
 
 	if 'c_const' in t.private_att:
 		left += 'const '
-	if 'c_volatile' in t.att or as_volatile:
+	if 'c_volatile' in t.att:
 		left += 'volatile '
 	if 'c_restrict' in t.att:
 		left += 'restrict '
 
+	# (!) Печатать указатель на массив как указатель на его элемент (!)
 	if not as_ptr_to_array:
 		if is_sim_sim(t):
 			tx = tx.of
 
-	need_close = tx.is_array() or tx.is_func()
+	need_close = not is_type_named(tx) and (tx.is_array() or tx.is_func())
 	if need_close:
 		left = '(' + left
 	else:
@@ -399,26 +400,24 @@ def is_sim_sim(t):
 	return False
 
 
-def str_named(t, core='', as_volatile=False):
+def str_named(t, core=''):
 	aka = type_get_aka(t)
 	if aka != None:
 		pre = ''
 		if 'c_const' in t.private_att:
 			pre += 'const '
-		if 'c_volatile' in t.att:
-			pre += 'volatile '
 
 		return pre + aka + core
 
 
-def str_type(t, core='', need_close=False, as_volatile=''):
+def str_type(t, core='', need_close=False):
 
 	if is_type_named(t):
-		return str_named(t, core, as_volatile=as_volatile)
+		return str_named(t, core)
+	elif t.is_pointer():
+		return str_type_pointer(t, core)
 	elif t.is_func():
 		return str_type_func(t, core, need_close=need_close)
-	elif t.is_pointer():
-		return str_type_pointer(t, core, need_close=need_close, as_volatile=as_volatile)
 	elif t.is_array():
 		return str_type_array(t, core, need_close=need_close)
 	elif t.is_record():
@@ -428,14 +427,14 @@ def str_type(t, core='', need_close=False, as_volatile=''):
 
 
 
-def str_var(t, id_str, as_volatile=False):
+def str_var(t, id_str):
 	#if is_type_named(t) or not t.is_pointer():
 	id_str =  ' ' + id_str
-	return str_type(t, core=id_str, as_volatile=as_volatile)
+	return str_type(t, core=id_str)
 
 
-def print_type(t, as_volatile=''):
-	out(str_type(t, as_volatile=as_volatile))
+def print_type(t):
+	out(str_type(t))
 
 
 def print_type_record(t, tag):
@@ -1953,9 +1952,9 @@ def print_def_type(x):
 
 
 # Указатель, массив и функция образуют пиздецовый заговор
-def print_variable(id_str, t, as_volatile=False, init_value=None, prefix=''):
+def print_variable(id_str, t, init_value=None, prefix=''):
 	assert (t != None)
-	out(str_var(t, id_str=(prefix + id_str), as_volatile=as_volatile))
+	out(str_var(t, id_str=(prefix + id_str)))
 	if init_value != None:
 		out(" = ")
 		print_value(init_value)
@@ -1975,9 +1974,7 @@ def print_def_var(x, isdecl=False):
 	if var.hasAttribute('extern'):
 		out("extern ")
 
-	as_volatile = x.hasAttribute('volatile')
-
-	print_variable(get_id_str(x.value), var.type, as_volatile=as_volatile)
+	print_variable(get_id_str(x.value), var.type)
 
 	init_value = x.init_value
 

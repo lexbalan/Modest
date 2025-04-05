@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -212,7 +212,7 @@ declare void @perror(%ConstCharStr* %str)
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
 	%2 = load [10 x %Int32], [10 x %Int32]* @globalArray0
-	%3 = zext i8 10 to %Int32
+	%3 = zext i8 10 to %Nat32
 	store [10 x %Int32] %2, [10 x %Int32]* @globalArray1
 	%4 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %4
@@ -259,15 +259,15 @@ endif_0:
 	%27 = insertvalue [10 x %Int32] %26, %Int32 7, 7
 	%28 = insertvalue [10 x %Int32] %27, %Int32 8, 8
 	%29 = insertvalue [10 x %Int32] %28, %Int32 9, 9
-	%30 = zext i8 10 to %Int32
+	%30 = zext i8 10 to %Nat32
 	store [10 x %Int32] %29, [10 x %Int32]* %20
 	%31 = alloca [10 x %Int32], align 1
-	%32 = zext i8 10 to %Int32
-	%33 = mul %Int32 %32, 4
+	%32 = zext i8 10 to %Nat32
+	%33 = mul %Nat32 %32, 4
 	%34 = bitcast [10 x %Int32]* %31 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %34, i8 0, %Int32 %33, i1 0)
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %34, i8 0, %Nat32 %33, i1 0)
 	%35 = load [10 x %Int32], [10 x %Int32]* %20
-	%36 = zext i8 10 to %Int32
+	%36 = zext i8 10 to %Nat32
 	store [10 x %Int32] %35, [10 x %Int32]* %31
 	store %Int32 0, %Int32* %4
 ; while_2
