@@ -2055,9 +2055,6 @@ def do_stmt(x):
 	else: s = StmtBad(x)
 
 	assert(s != None)
-
-	if not 'nl' in x:
-		print(x['kind'])
 	s.nl = x['nl']
 
 	return s

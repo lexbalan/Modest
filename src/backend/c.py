@@ -2288,9 +2288,6 @@ def print_cfile(module, _outname):
 			print_comment(def0)
 			newline()
 			defs = defs[1:]
-		else:
-			print(_outname)
-			print(def0)
 
 
 	newline()
