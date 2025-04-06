@@ -402,18 +402,17 @@ def is_sim_sim(t):
 
 def str_named(t, core=''):
 	aka = get_type_id(t)
-	if aka != None:
-		pre = ''
-		if 'c_const' in t.private_att:
-			pre += 'const '
-		if 'c_volatile' in t.att:
-			pre += 'volatile '
-
-		return pre + aka + core
+	if aka == None:
+		return None
+	pre = ''
+	if 'c_const' in t.private_att:
+		pre += 'const '
+	if 'c_volatile' in t.att:
+		pre += 'volatile '
+	return pre + aka + core
 
 
 def str_type(t, core='', need_close=False):
-
 	if is_type_named(t):
 		return str_named(t, core)
 	elif t.is_pointer():
