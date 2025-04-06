@@ -406,6 +406,8 @@ def str_named(t, core=''):
 		pre = ''
 		if 'c_const' in t.private_att:
 			pre += 'const '
+		if 'c_volatile' in t.att:
+			pre += 'volatile '
 
 		return pre + aka + core
 
