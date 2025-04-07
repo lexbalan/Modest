@@ -648,9 +648,9 @@ def do_type_enum(x):
 	enum_type = htype.type_enum(x['ti'])
 
 	i = 0
-	for item in x.items:
+	for item in x.asset:
 		id = item['id']
-		enum_type.items.append({
+		enum_type.asset.append({
 			'isa': 'enum_item',
 			'id': id,
 			'number': i,
@@ -1243,8 +1243,8 @@ def do_value_index(x):
 					error("array index out of bounds", x['index'])
 					return ValueBad(x['ti'])
 
-				if index_imm < len(left.items):
-					item = left.items[index_imm]
+				if index_imm < len(left.asset):
+					item = left.asset[index_imm]
 				else:
 					item = ValueZero(array_typ.of, x['ti'])
 
@@ -1419,7 +1419,7 @@ def do_value_access(x):
 
 		# access to immediate object
 		if left.isImmediate():
-			initializer = get_item_by_id(left.items, field_id.str)
+			initializer = get_item_by_id(left.asset, field_id.str)
 
 			# (!) #asset of immediate index & access contains VALUE (!)
 			nv.immediate = True
@@ -3045,8 +3045,8 @@ def extra_args_check(specs, extra_args, expected_pointers):
 def cp_immediate(to, _from):
 	if _from.asset != None:
 		to.asset = _from.asset
-	if _from.items != None:
-		to.items = _from.items
+	if _from.asset != None:
+		to.asset = _from.asset
 
 	to.immediate = _from.immediate
 	to.immutable = _from.immutable

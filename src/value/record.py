@@ -36,7 +36,7 @@ def value_record_create(initializers=[], ti=None):
 	record_type.generic = True
 
 	v = ValueLiteral(record_type, ti)
-	v.items = initializers
+	v.asset = initializers
 	v.immediate = is_immediate
 	return v
 
@@ -73,11 +73,11 @@ def value_record_cons(t, v, method, ti):
 	# литерал записи всегда имеет тип Generic(Array)
 	# это позволяет конструировать из него разные записи
 
-	if v.items != None:
+	if v.asset != None:
 		# конструируем запись на основе другой generic записи
 		items = []
 		for field in t.fields:
-			initializer = get_item_by_id(v.items, field.id.str)
+			initializer = get_item_by_id(v.asset, field.id.str)
 			vv = None
 			if initializer:
 				from .cons import value_cons_implicit_check
@@ -88,7 +88,7 @@ def value_record_cons(t, v, method, ti):
 			ni = Initializer(field.id, vv, ti=ti, nl=0)
 			items.append(ni)
 
-		nv.items = items
+		nv.asset = items
 
 	return nv
 
@@ -101,7 +101,7 @@ def value_record_eq(l, r, op, ti):
 	if l.isImmediate() and r.isImmediate():
 		eq_result = True
 
-		for lx, rx in zip(l.items, r.items):
+		for lx, rx in zip(l.asset, r.asset):
 			if not Value.eq(lx.value, rx.value, op, ti):
 				eq_result = False
 				break

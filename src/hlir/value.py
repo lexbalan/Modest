@@ -21,8 +21,10 @@ class Value(Entity):
 		# immutable anyway flag
 		self.immutable = False
 
-		# (!) items can be not only in #immediate value (!)
-		self.items = None
+		# in case of scalar value type here is code
+		# in case of record value here is list of class Initializer
+		# in case of array value here is list of values
+		# (!) Array & Record items can be not only immediate value (!)
 		self.asset = None
 
 		self.nl = 0
@@ -40,11 +42,11 @@ class Value(Entity):
 	def isZero(self):
 		if self.isImmediate():
 			if self.type.is_composite():
-				return self.items == []
+				return self.asset == []
 			else:
 				return self.asset == 0
 
-			#return (self.asset == 0 or self.asset == None) and (self.items == None or self.items == [])
+			#return (self.asset == 0 or self.asset == None) and (self.asset == None or self.asset == [])
 		return False
 
 
@@ -112,13 +114,13 @@ class Value(Entity):
 			return False
 
 		if self.type.is_array():
-			for item in self.items:
+			for item in self.asset:
 				if not item.isZero():
 					return False
 			return True
 
 		if self.type.is_record():
-			for initializer in self.items:
+			for initializer in self.asset:
 				if not initializer.value.isZero():
 					return False
 			return True
@@ -147,10 +149,10 @@ class Value(Entity):
 		print('immutable = ' + str(x.immutable))
 
 		if x.immediate:
-			if x.items != None:
-				print("items_len = %d" % len(x.items))
+			if x.asset != None:
+				print("items_len = %d" % len(x.asset))
 				print("items[0] = ")
-				print(x.items[0])
+				print(x.asset[0])
 
 		"""print("additional fields:")
 
@@ -195,7 +197,7 @@ class ValueZero(Value):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		if type.is_composite():
-			self.items = []
+			self.asset = []
 		else:
 			self.asset = 0
 		self.immediate = True
@@ -368,7 +370,6 @@ class ValueAccessModule(Value):
 		self.value = value
 
 		self.asset = value.asset
-		self.items = value.items
 
 		self.is_lvalue = True
 

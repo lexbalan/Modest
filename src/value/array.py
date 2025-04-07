@@ -58,7 +58,7 @@ def value_array_create_from_string(t, v, method, ti=None):
 
 	nv = ValueCons(t, v, method, ti)
 	nv.immediate = True
-	nv.items = chars
+	nv.asset = chars
 	return nv
 """
 
@@ -139,12 +139,12 @@ def value_array_cons(t, v, method, ti):
 	nv.immediate = v.immediate
 
 	if v.immediate:
-		nv.items = 1
+		nv.asset = 1
 
 	if Type.is_string(v.type):
 		char_type = t.of
 		items = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
-		nv.items = items
+		nv.asset = items
 		return nv
 
 	# литерал массива всегда имеет тип Generic(Array)
@@ -162,16 +162,16 @@ def value_array_cons(t, v, method, ti):
 	#
 
 	size = 0
-	if v.items != None:
+	if v.asset != None:
 		items = []
 
-		for item in v.items:
+		for item in v.asset:
 			from .cons import value_cons_implicit_check
 			casted_item = value_cons_implicit_check(t.of, item)
 			casted_item.nl = item.nl
 			size += casted_item.type.size
 			items.append(casted_item)
-		nv.items = items
+		nv.asset = items
 
 	nv.type.size = size
 	return nv
@@ -183,14 +183,14 @@ def _value_array_create(items, item_type, length, is_generic=False, ti=None):
 	array_type = TypeArray(item_type, volume=array_volume, ti=ti)
 	array_type.generic = is_generic
 	v = ValueLiteral(array_type, ti)
-	v.items = items
+	v.asset = items
 	return v
 
 
 
 # Складывает два массива (оба - immediate!)
 def value_array_add(l, r, ti):
-	items = l.items + r.items
+	items = l.asset + r.asset
 	length = len(items)
 	str_array_volume = value_number_create(length)
 	item_type = select_common_type(l.type.of, r.type.of)
@@ -203,7 +203,7 @@ def value_array_add(l, r, ti):
 	type_result.generic = True  # FIXIT!
 
 	nv = ValueBin(type_result, 'add', l, r, ti=ti)
-	nv.items = items
+	nv.asset = items
 	nv.immediate = True
 	return nv
 
@@ -224,7 +224,7 @@ def value_array_eq(l, r, op, ti):
 		else:
 			fatal("dynamic immediate array volume not implemented", ti)
 
-		for lx, rx in zip(l.items, r.items):
+		for lx, rx in zip(l.asset, r.asset):
 			if not Value.eq(lx, rx, op, ti):
 				eq_result = False
 				break

@@ -247,7 +247,7 @@ def str_type_record(t, tag=''):
 def print_type_enum(t):
 	out("enum {")
 	indent_up()
-	items = t.items
+	items = t.asset
 	i = 0
 	while i < len(items):
 		if i > 0: out(',')
@@ -813,7 +813,7 @@ def str_value_cons_array(x, ctx):
 			if to_type.of.is_char():
 				if from_type.of.is_string():
 					chars = []
-					for item in value.items:
+					for item in value.asset:
 						ch = item.asset
 						chars.append(ch)
 
@@ -1010,7 +1010,7 @@ def print_array_values(values, ctx):
 				sstr += " "
 
 		if a.type.is_closed_array():
-			sstr += print_array_values(a.items, ctx)
+			sstr += print_array_values(a.asset, ctx)
 		else:
 			sstr += str_value(a, ctx)
 
@@ -1243,9 +1243,9 @@ def str_value_literal(x, ctx):
 	elif t.is_string():
 		sstr += str_literal_string(x.asset, char_width=x.type.width)
 	elif t.is_record():
-		sstr += str_literal_record(x.type, x.items)
+		sstr += str_literal_record(x.type, x.asset)
 	elif t.is_array():
-		sstr += str_literal_array(x.type, x.items)
+		sstr += str_literal_array(x.type, x.asset)
 	elif t.is_bool():
 		sstr += str_literal_bool(x.asset)
 	elif t.is_char():

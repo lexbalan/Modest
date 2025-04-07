@@ -1381,7 +1381,7 @@ def eval_cons_record(x):
 	from_type = value.type
 	to_type = x.type
 
-	if x.items != None:
+	if x.asset != None:
 		return do_eval_literal(x)
 
 	# Cm имеет структурную систему типов, тогда как llvm - номинативную
@@ -1581,7 +1581,7 @@ def do_eval_array(v):
 	# сперва вычисляем все элементы массива в регистры
 	# (кроме констант, они едут до последнего)
 	items = []
-	for item in v.items:
+	for item in v.asset:
 		iv = do_reval(item)
 		items.append(iv)
 
@@ -1602,8 +1602,8 @@ def do_eval_array(v):
 	# набиваем массив
 	items = []
 	i = 0
-	while i < len(v.items):
-		item = v.items[i]
+	while i < len(v.asset):
+		item = v.asset[i]
 		# нет смысла засовывать в 'массив по значению' нулевые элементы
 		# тк он порождается из zeroinitializer и zero filled by default
 		if not item.isZero():
@@ -1624,7 +1624,7 @@ def do_eval_record(v):
 
 	if is_global_context():
 		items = []
-		for initializer in v.items:
+		for initializer in v.asset:
 			iv = do_reval(initializer.value)
 			items.append({'id': initializer.id, 'value': iv})
 		return llvm_value_record(items, rec_type)
@@ -1634,7 +1634,7 @@ def do_eval_record(v):
 	xv = llvm_value_record([], rec_type)
 
 	# набиваем структуру
-	for initializer in v.items:
+	for initializer in v.asset:
 		# нет смысла засовывать в структуру по значению нулевые элементы
 		# тк она порождается из zeroinitializer и по умолчанию заполнена нулями
 		if not initializer.value.isZero():

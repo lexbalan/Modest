@@ -9,11 +9,13 @@ import foundation
 
 
 def get_id_str(x):
-	if not hasattr(x, 'id'):
-		return None
-	if x.id == None:
-		return None
-	return x.id.cm
+	if hasattr(x, 'id'):
+		if x.id.cm != x.id.str:
+			print("SADKAMWDLKMSLMDLSMLDMSLMDLMSLDMSLDMALMDLKMASLDMASLMKDLKAMSLDMLSD")
+			print("cm=%s" % x.id.cm)
+			print("str=%s" % x.id.str)
+		return x.id.cm
+	return None
 
 
 aprecedence = [
@@ -55,7 +57,6 @@ def precedence(x):
 		elif isinstance(x, ValueNeg): i = 10
 		elif isinstance(x, ValueNot): i = 10
 		else: i = 12
-
 	return i
 
 
@@ -68,12 +69,11 @@ def print_stmt_comment(x):
 
 
 def str_stmt_comment(x):
-	s = ""
 	if isinstance(x, StmtCommentLine):
-		s = str_stmt_comment_line(x)
+		return str_stmt_comment_line(x)
 	elif isinstance(x, StmtCommentBlock):
-		s = str_stmt_comment_block(x)
-	return s
+		return str_stmt_comment_block(x)
+	return ""
 
 
 def str_stmt_comment_block(x):
@@ -174,22 +174,17 @@ def str_type_func(t, extra_args=False):
 	return s
 
 
-
 def str_type(t):
 	assert(isinstance(t, Type))
 
 	# Если тип связан с идентификатором - распечатаем его
 	id_str = get_id_str(t)
 	if id_str != None:
-		return id_str #get_id_str(t)
+		return id_str
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
-	if Type.is_int(t):
-		return str_TypeInt(t)
-	elif Type.is_nat(t):
-		return str_TypeNat(t)
-	elif Type.is_func(t):
+	if Type.is_func(t):
 		return str_type_func(t)
 	elif Type.is_array(t):
 		return str_type_array(t)
@@ -201,7 +196,6 @@ def str_type(t):
 		return "String"
 	else:
 		return "<type:" + str(t) + ">"
-
 
 
 bin_ops = {
@@ -316,7 +310,7 @@ def str_value_slice(x, ctx):
 
 
 def str_value_access(x, ctx):
-	s=str_value(x.left, parent_expr=x)
+	s = str_value(x.left, parent_expr=x)
 	s += "."
 	s += get_id_str(x.field)
 	return s
@@ -324,7 +318,7 @@ def str_value_access(x, ctx):
 
 def str_value_access_module(x, ctx):
 	left = x.imp['str']
-	id_str = x.id['str'] #get_id_str(x.id)
+	id_str = x.id['str']
 	return "%s.%s" % (left, id_str)
 
 
@@ -378,7 +372,7 @@ def str_value_array(v, ctx):
 	s = ""
 	indent_up()
 	nl_end_e = 0
-	values = v.items
+	values = v.asset
 	i = 0
 	n = len(values)
 	while i < n:
@@ -469,12 +463,12 @@ def str_value_record(v, ctx):
 
 	indent_up()
 	nl_end_e = 0
-	nitems = len(v.items)
+	nitems = len(v.asset)
 	i = 0
 	while i < nitems:
 		item = v.type.fields[i]
 		field_str = get_id_str(item)
-		ini = get_item_by_id(v.items, field_str)
+		ini = get_item_by_id(v.asset, field_str)
 
 		nl = ini.nl
 		if nl > 0:
@@ -614,7 +608,7 @@ def str_value_offsetof(x, ctx):
 
 
 def str_value_va_start(x, ctx):
-	s="__va_start("
+	s = "__va_start("
 	s += str_value(x.va_list)
 	s += ", "
 	s += str_value(x.last_param)
@@ -636,7 +630,7 @@ def str_value_va_end(x, ctx):
 
 
 def str_value_va_copy(x, ctx):
-	s="__va_copy("
+	s = "__va_copy("
 	s += str_value(x.dst)
 	s += ", "
 	s += str_value(x.src)
