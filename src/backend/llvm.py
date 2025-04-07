@@ -116,19 +116,17 @@ def get_id_str(x):
 		return None
 
 	id = x.id
-
-	id_str = None
-	if id.llvm != None:
-		id_str = id.llvm
+	id_str = id.llvm
 
 	if id.prefix != None:
 		id_str = id.prefix + id_str
 
 	if not x.hasAttribute('nodecorate'):
-		module = x.getModule()
-		if module != None:
-			if not 'nodecorate' in module.att:
-				id_str = "%s_%s" % (module.prefix, id_str)
+		if not x.hasAttribute('static'):
+			module = x.getModule()
+			if module != None:
+				if not 'nodecorate' in module.att:
+					id_str = "%s_%s" % (module.prefix, id_str)
 
 	return id_str
 

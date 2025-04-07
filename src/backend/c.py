@@ -166,23 +166,17 @@ def get_id_str(x):
 		return None
 
 	id = x.id
-
-	if id == None:
-		return None
-
 	id_str = id.c
-	if id_str == None:
-		return None
 
 	if id.prefix != None:
 		id_str = id.prefix + id_str
 
 	if not x.hasAttribute('nodecorate'):
-		module = x.getModule()
-		if module != None:
-			if not 'nodecorate' in module.att:
-				#if x.access_level != 'private':
-				if not x.hasAttribute('static'):
+		if not x.hasAttribute('static'):
+			module = x.getModule()
+			if module != None:
+				if not 'nodecorate' in module.att:
+					#if x.access_level != 'private':
 					id_str = "%s_%s" % (module.prefix, id_str)
 
 	return id_str
