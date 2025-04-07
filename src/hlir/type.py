@@ -391,12 +391,6 @@ class Type(Entity):
 		return a.width == b.width
 
 
-	# TODO: REMOVE IT!
-	@staticmethod
-	def eq_incompleted(a, b, opt):
-		return id(a) == id(b)
-
-
 	@staticmethod
 	def eq(a, b, opt=[]):
 		assert a != None
@@ -423,7 +417,7 @@ class Type(Entity):
 		if a.is_generic() != b.is_generic():
 			return False
 
-		# normal checking
+		# usual checking
 		if isinstance(a, TypeInt): return Type.eq_integer(a, b, opt)
 		elif isinstance(a, TypeNat): return Type.eq_natural(a, b, opt)
 		elif isinstance(a, TypeBool): return True
@@ -437,9 +431,7 @@ class Type(Entity):
 		elif isinstance(a, TypeFloat): return Type.eq_float(a, b, opt)
 		elif isinstance(a, TypeString): return True
 		elif isinstance(a, TypeUnit): return True
-		elif isinstance(a, TypeUndeifned): return Type.eq_incompleted(a, b, opt)
 		elif isinstance(a, TypeVaList): return True
-		#elif k == 'enum': return eq_enum(a, b, opt)
 		assert(False)
 		return False
 

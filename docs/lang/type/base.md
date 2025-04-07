@@ -78,7 +78,7 @@ while not b {
 
 
 ### Word type
-
+Word type is unsigned integer type that allows bitwise operations.
 ```zig
 public func main () -> Int32 {
 	var byte: Word8

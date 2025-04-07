@@ -1455,19 +1455,10 @@ def do_eval_cons_pointer_to_array(x):
 	type = x.type
 
 	# Calculate size of VLA value in runtime (!)
-	# TODO! Тут неверное условие if
-	if type.to.is_closed_array():
+	if type.to.is_vla():
 		handleVLA(type.to)
 
 	v = do_reval(value)
-
-#	if is_global_context():
-#		return v
-#
-#	# Приводим immediate значение прямо по месту
-#	if value.isImmediate():
-#		return llvm_value_inline_cast(type, v)
-
 	return docast(v, type)
 
 
