@@ -68,13 +68,6 @@ def array_can(to, from_type, method, ti):
 
 	# String -> []CharX
 	if from_type.is_string():
-		#info("can?", ti)
-		"""if method == 'implicit':
-			if to.is_closed_array():
-				srtlen = from_type.length
-				if srtlen != to.volume.asset:
-					return False"""
-
 		return to.of.is_char() or to.of.is_word()
 
 	if not from_type.is_array():

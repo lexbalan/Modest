@@ -1895,7 +1895,6 @@ def add_local_var(id, typ, ti):
 
 
 
-
 def do_stmt_assign(x):
 	l = do_value(x['left'])
 	r = do_rvalue(x['right'])
@@ -1919,7 +1918,7 @@ def do_stmt_assign(x):
 		return StmtBad(x)
 
 # Есть проблема - generic массив справа неявно приводится к типу массива слева
-# и как следствие right имеет тип левого!
+# и как следствие right имеет тип левого (из ValueLiteral он превращается в ValueCons)
 # НО ведь в коде реально right может иметь другой тип, и это приводит к пиздецу..
 # (кароче присваивание generic массива )
 #	if l.type.is_array() and r.type.is_array():
