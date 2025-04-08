@@ -211,21 +211,15 @@ def ctx_type_get(id_str, as_copy=True):
 
 
 
-def ctx_value_get(id_str):
+def ctx_value_get(id_str, shallow=False, as_copy=False):
 	global context
 	#print("ctx_value_get %s" % id_str)
-	x = context['private'].value_get(id_str)
+	x = context['private'].value_get(id_str, recursive=not shallow, as_copy=as_copy)
 	if x != None:
 		return x
-	x = context['public'].value_get(id_str)
+	x = context['public'].value_get(id_str, recursive=not shallow, as_copy=as_copy)
 	return x
 
-
-
-# искать ТОЛЬКО внутри текущего контекста (блока)
-def ctx_value_get_shallow(id_str):
-	global cmodule
-	return cmodule.symtab_public.value_get(id_str, recursive=False)
 
 
 
@@ -1740,7 +1734,7 @@ def do_stmt_var(x):
 		t = Type.copy(v.type)
 
 	# check if identifier is free (in current block)
-	already = ctx_value_get_shallow(var_id.str)
+	already = ctx_value_get(var_id.str, shallow=True, as_copy=False)
 	if already != None:
 		error("local id redefinition", x['id'].ti)
 		info("firstly defined here", already['id'].ti)
@@ -2150,7 +2144,7 @@ def do_const(x):
 	log("do_const: %s" % id.str)
 
 	# check if identifier is free
-	pre_exist = ctx_value_get_shallow(id.str)
+	pre_exist = ctx_value_get(id.str, shallow=True, as_copy=False)
 	if pre_exist != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
@@ -2275,7 +2269,7 @@ def def_func(x, dostmt=True):
 
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
-	fn = ctx_value_get(x['id']['str'])
+	fn = ctx_value_get(x['id']['str'], as_copy=False)
 	fn.id.prefix = global_prefix
 
 	definition = StmtDefFunc(fn.id, fn, None, x['ti'])
