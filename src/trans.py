@@ -136,8 +136,8 @@ def module_value_add_private(m, id_str, v):
 # public
 
 # search type in module
-def module_type_get_public(m, id_str, as_copy=True):
-	return m.symtab_public.type_get(id_str, as_copy=as_copy)
+def module_type_get_public(m, id_str):
+	return m.symtab_public.type_get(id_str)
 
 # search value in module
 def module_value_get_public(m, id_str):
@@ -146,8 +146,8 @@ def module_value_get_public(m, id_str):
 # private
 
 # search type in module
-def module_type_get_private(m, id_str, as_copy=True):
-	return m.symtab_private.type_get(id_str, as_copy=as_copy)
+#def module_type_get_private(m, id_str):
+#	return m.symtab_private.type_get(id_str)
 
 # search value in module
 def module_value_get_private(m, id_str):
@@ -185,27 +185,6 @@ def cmodule_type_add(id_str, t, is_public=False):
 	module_type_add(cmodule, id_str, t, is_public=is_public)
 
 
-def module_type_get(m, id_str, only_public=False, as_copy=True):
-	#print("module_type_get: " + id_str)
-
-	t = m.symtab_public.type_get(id_str, as_copy=as_copy)
-	if t != None:
-		return t
-
-	if only_public:
-		return None
-
-	t = m.symtab_private.type_get(id_str, as_copy=as_copy)
-	if t != None:
-		return t
-
-	#
-	for included_module in m.included_modules:
-		t = included_module.symtab_public.type_get(id_str, as_copy=as_copy)
-		if t != None:
-			return t
-
-	return None
 
 
 # search value in module
@@ -239,28 +218,33 @@ def module_value_get(m, id_str, only_public=False):
 
 def ctx_type_add(id_str, t):
 	global context
-	context.type_add(id_str, t)
+	context['private'].type_add(id_str, t)
 
 def ctx_value_add(id_str, v):
 	global context
-	context.value_add(id_str, v)
+	context['private'].value_add(id_str, v)
 
 
 
 def ctx_type_get(id_str, as_copy=True):
 	#print("ctx_type_get %s" % id_str)
 	global context
-	x = context.type_get(id_str, as_copy=as_copy)
+	x = context['private'].type_get(id_str, as_copy=as_copy)
 	if x != None:
 		return x
-	global cmodule
-	return module_type_get(cmodule, id_str, as_copy=as_copy)
+	x = context['public'].type_get(id_str, as_copy=as_copy)
+	if x != None:
+		return x
+
 
 
 def ctx_value_get(id_str):
 	#print("ctx_value_get %s" % id_str)
 	global context
-	x = context.value_get(id_str)
+	x = context['private'].value_get(id_str)
+	if x != None:
+		return x
+	x = context['public'].value_get(id_str)
 	if x != None:
 		return x
 	global cmodule
@@ -288,11 +272,17 @@ def module_append(definition, to_export=False):
 
 def context_push():
 	global context
-	context = context.branch(domain='local')
+	context = {
+		'public': context['public'].branch(domain='local'),
+		'private': context['private'].branch(domain='local')
+	}
 
 def context_pop():
 	global context
-	context = context.parent_get()
+	context = {
+		'public': context['public'].parent_get(),
+		'private': context['private'].parent_get()
+	}
 
 
 
@@ -556,7 +546,7 @@ def do_type_name(x):
 		if t.is_incompleted():
 			t = type_update_incompleted(imp.module, t, id_str)
 	else:
-		t = module_type_get(cmodule, id_str)
+		t = ctx_type_get(id_str)
 
 	if t == None:
 		error("undefined type", x['ti'])
@@ -2672,7 +2662,10 @@ def process_module(idStr, ast, is_import=False, is_include=False):
 
 	global context
 	prev_context = context
-	context = symtab_public
+	context = {
+		'public': symtab_public,
+		'private': symtab_private
+	}
 
 	cmodule = Module(idStr, ast, symtab_public, symtab_private)
 
