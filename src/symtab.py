@@ -40,19 +40,29 @@ class Symtab:
 		return t
 
 
-	def value_get(self, id, domain='global', recursive=True):
+	def value_get(self, id, domain='global', recursive=True, as_copy=False):
 		if domain == 'local':
 			if self.domain != 'local':
 				return None
 
+		v = None
 		if id in self.values:
-			return self.values[id]
+			v = self.values[id]
 
-		if recursive:
+		elif recursive:
 			if self.parent != None:
-				return self.parent.value_get(id, domain)
+				v = self.parent.value_get(id, domain)
 
-		return None
+		if v == None:
+			return None
+
+		if v.type.is_incompleted():
+			return v
+		if as_copy:
+			return v.copy()
+		else:
+			return v
+
 
 
 	def ValueUndef(self, id):

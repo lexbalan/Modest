@@ -187,33 +187,6 @@ def cmodule_type_add(id_str, t, is_public=False):
 
 
 
-# search value in module
-def module_value_get(m, id_str, only_public=False):
-	#print("module_value_get: " + id_str)
-
-	v = m.symtab_public.value_get(id_str)
-	if v != None:
-		return v
-
-	if only_public:
-		return None
-
-	v = m.symtab_private.value_get(id_str)
-	if v != None:
-		return v
-
-	#
-	for included_module in m.included_modules:
-		v = included_module.symtab_public.value_get(id_str)
-		if v != None:
-			return v
-
-	return None
-
-
-
-
-
 # ONLY FOR LOCALS:
 
 def ctx_type_add(id_str, t):
@@ -239,16 +212,13 @@ def ctx_type_get(id_str, as_copy=True):
 
 
 def ctx_value_get(id_str):
-	#print("ctx_value_get %s" % id_str)
 	global context
+	#print("ctx_value_get %s" % id_str)
 	x = context['private'].value_get(id_str)
 	if x != None:
 		return x
 	x = context['public'].value_get(id_str)
-	if x != None:
-		return x
-	global cmodule
-	return module_value_get(cmodule, id_str)
+	return x
 
 
 

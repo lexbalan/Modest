@@ -5,6 +5,7 @@
 from error import info
 from .entity import Entity
 from .misc import Id, Field
+import copy
 
 
 class Value(Entity):
@@ -73,6 +74,10 @@ class Value(Entity):
 
 	def isVar(self):
 		return isinstance(self, ValueVar)
+
+
+	def copy(self):
+		return copy.copy(self)
 
 
 	# op = 'eq' | 'ne
