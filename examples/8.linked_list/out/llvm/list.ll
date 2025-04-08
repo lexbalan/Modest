@@ -230,7 +230,8 @@ then_0:
 	br label %endif_0
 endif_0:
 	store %list_List zeroinitializer, %list_List* %2
-	ret %list_List* %2
+	%5 = bitcast %list_List* %2 to %list_List*
+	ret %list_List* %5
 }
 
 define %Nat32 @list_size_get(%list_List* %list) {
@@ -256,7 +257,8 @@ then_0:
 endif_0:
 	%3 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 0
 	%4 = load %list_Node*, %list_Node** %3
-	ret %list_Node* %4
+	%5 = bitcast %list_Node* %4 to %list_Node*
+	ret %list_Node* %5
 }
 
 define %list_Node* @list_last_node_get(%list_List* %list) {
@@ -269,7 +271,8 @@ then_0:
 endif_0:
 	%3 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
 	%4 = load %list_Node*, %list_Node** %3
-	ret %list_Node* %4
+	%5 = bitcast %list_Node* %4 to %list_Node*
+	ret %list_Node* %5
 }
 
 define %list_Node* @list_node_first(%list_List* %list, %list_Node* %new_node) {
@@ -283,15 +286,18 @@ then_0:
 	br label %endif_0
 endif_0:
 	%5 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 0
-	store %list_Node* %new_node, %list_Node** %5
-	%6 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
-	store %list_Node* %new_node, %list_Node** %6
-	%7 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%8 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%9 = load %Nat32, %Nat32* %8
-	%10 = add %Nat32 %9, 1
-	store %Nat32 %10, %Nat32* %7
-	ret %list_Node* %new_node
+	%6 = bitcast %list_Node* %new_node to %list_Node*
+	store %list_Node* %6, %list_Node** %5
+	%7 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
+	%8 = bitcast %list_Node* %new_node to %list_Node*
+	store %list_Node* %8, %list_Node** %7
+	%9 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
+	%10 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
+	%11 = load %Nat32, %Nat32* %10
+	%12 = add %Nat32 %11, 1
+	store %Nat32 %12, %Nat32* %9
+	%13 = bitcast %list_Node* %new_node to %list_Node*
+	ret %list_Node* %13
 }
 
 define %list_Node* @list_node_create() {
@@ -305,7 +311,8 @@ then_0:
 	br label %endif_0
 endif_0:
 	store %list_Node zeroinitializer, %list_Node* %2
-	ret %list_Node* %2
+	%5 = bitcast %list_Node* %2 to %list_Node*
+	ret %list_Node* %5
 }
 
 define %list_Node* @list_node_next_get(%list_Node* %node) {
@@ -318,7 +325,8 @@ then_0:
 endif_0:
 	%3 = getelementptr %list_Node, %list_Node* %node, %Int32 0, %Int32 0
 	%4 = load %list_Node*, %list_Node** %3
-	ret %list_Node* %4
+	%5 = bitcast %list_Node* %4 to %list_Node*
+	ret %list_Node* %5
 }
 
 define %list_Node* @list_node_prev_get(%list_Node* %node) {
@@ -331,7 +339,8 @@ then_0:
 endif_0:
 	%3 = getelementptr %list_Node, %list_Node* %node, %Int32 0, %Int32 1
 	%4 = load %list_Node*, %list_Node** %3
-	ret %list_Node* %4
+	%5 = bitcast %list_Node* %4 to %list_Node*
+	ret %list_Node* %5
 }
 
 define i8* @list_node_data_get(%list_Node* %node) {
@@ -352,19 +361,22 @@ define void @list_node_insert_right(%list_Node* %left, %list_Node* %new_right) {
 	%2 = getelementptr %list_Node, %list_Node* %left, %Int32 0, %Int32 0
 	%3 = load %list_Node*, %list_Node** %2
 	%4 = getelementptr %list_Node, %list_Node* %left, %Int32 0, %Int32 0
-	store %list_Node* %new_right, %list_Node** %4
+	%5 = bitcast %list_Node* %new_right to %list_Node*
+	store %list_Node* %5, %list_Node** %4
 ; if_0
-	%5 = icmp ne %list_Node* %3, null
-	br %Bool %5 , label %then_0, label %endif_0
+	%6 = icmp ne %list_Node* %3, null
+	br %Bool %6 , label %then_0, label %endif_0
 then_0:
-	%6 = getelementptr %list_Node, %list_Node* %3, %Int32 0, %Int32 1
-	store %list_Node* %new_right, %list_Node** %6
+	%7 = getelementptr %list_Node, %list_Node* %3, %Int32 0, %Int32 1
+	%8 = bitcast %list_Node* %new_right to %list_Node*
+	store %list_Node* %8, %list_Node** %7
 	br label %endif_0
 endif_0:
-	%7 = getelementptr %list_Node, %list_Node* %new_right, %Int32 0, %Int32 0
-	store %list_Node* %3, %list_Node** %7
-	%8 = getelementptr %list_Node, %list_Node* %new_right, %Int32 0, %Int32 1
-	store %list_Node* %left, %list_Node** %8
+	%9 = getelementptr %list_Node, %list_Node* %new_right, %Int32 0, %Int32 0
+	store %list_Node* %3, %list_Node** %9
+	%10 = getelementptr %list_Node, %list_Node* %new_right, %Int32 0, %Int32 1
+	%11 = bitcast %list_Node* %left to %list_Node*
+	store %list_Node* %11, %list_Node** %10
 	ret void
 }
 
@@ -394,75 +406,80 @@ then_1:
 	; go forward
 	%10 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 0
 	%11 = load %list_Node*, %list_Node** %10
-	store %list_Node* %11, %list_Node** %8
-	%12 = bitcast %Int32 %pos to %Nat32
+	%12 = bitcast %list_Node* %11 to %list_Node*
+	store %list_Node* %12, %list_Node** %8
+	%13 = bitcast %Int32 %pos to %Nat32
 ; if_2
-	%13 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%14 = load %Nat32, %Nat32* %13
-	%15 = icmp ugt %Nat32 %12, %14
-	br %Bool %15 , label %then_2, label %endif_2
+	%14 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
+	%15 = load %Nat32, %Nat32* %14
+	%16 = icmp ugt %Nat32 %13, %15
+	br %Bool %16 , label %then_2, label %endif_2
 then_2:
 	ret %list_Node* null
 	br label %endif_2
 endif_2:
-	%17 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %17
+	%18 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %18
 ; while_1
 	br label %again_1
 again_1:
-	%18 = load %Nat32, %Nat32* %17
-	%19 = icmp ult %Nat32 %18, %12
-	br %Bool %19 , label %body_1, label %break_1
+	%19 = load %Nat32, %Nat32* %18
+	%20 = icmp ult %Nat32 %19, %13
+	br %Bool %20 , label %body_1, label %break_1
 body_1:
-	%20 = load %list_Node*, %list_Node** %8
-	%21 = getelementptr %list_Node, %list_Node* %20, %Int32 0, %Int32 0
-	%22 = load %list_Node*, %list_Node** %21
-	store %list_Node* %22, %list_Node** %8
-	%23 = load %Nat32, %Nat32* %17
-	%24 = add %Nat32 %23, 1
-	store %Nat32 %24, %Nat32* %17
+	%21 = load %list_Node*, %list_Node** %8
+	%22 = getelementptr %list_Node, %list_Node* %21, %Int32 0, %Int32 0
+	%23 = load %list_Node*, %list_Node** %22
+	%24 = bitcast %list_Node* %23 to %list_Node*
+	store %list_Node* %24, %list_Node** %8
+	%25 = load %Nat32, %Nat32* %18
+	%26 = add %Nat32 %25, 1
+	store %Nat32 %26, %Nat32* %18
 	br label %again_1
 break_1:
 	br label %endif_1
 else_1:
 	; go backward
-	%25 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
-	%26 = load %list_Node*, %list_Node** %25
-	store %list_Node* %26, %list_Node** %8
-	%27 = sub %Int32 0, %pos
-	%28 = bitcast %Int32 %27 to %Nat32
-	%29 = sub %Nat32 %28, 1
+	%27 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
+	%28 = load %list_Node*, %list_Node** %27
+	%29 = bitcast %list_Node* %28 to %list_Node*
+	store %list_Node* %29, %list_Node** %8
+	%30 = sub %Int32 0, %pos
+	%31 = bitcast %Int32 %30 to %Nat32
+	%32 = sub %Nat32 %31, 1
 ; if_3
-	%30 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%31 = load %Nat32, %Nat32* %30
-	%32 = icmp ugt %Nat32 %29, %31
-	br %Bool %32 , label %then_3, label %endif_3
+	%33 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
+	%34 = load %Nat32, %Nat32* %33
+	%35 = icmp ugt %Nat32 %32, %34
+	br %Bool %35 , label %then_3, label %endif_3
 then_3:
 	ret %list_Node* null
 	br label %endif_3
 endif_3:
-	%34 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %34
+	%37 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %37
 ; while_2
 	br label %again_2
 again_2:
-	%35 = load %Nat32, %Nat32* %34
-	%36 = icmp ult %Nat32 %35, %29
-	br %Bool %36 , label %body_2, label %break_2
+	%38 = load %Nat32, %Nat32* %37
+	%39 = icmp ult %Nat32 %38, %32
+	br %Bool %39 , label %body_2, label %break_2
 body_2:
-	%37 = load %list_Node*, %list_Node** %8
-	%38 = getelementptr %list_Node, %list_Node* %37, %Int32 0, %Int32 1
-	%39 = load %list_Node*, %list_Node** %38
-	store %list_Node* %39, %list_Node** %8
-	%40 = load %Nat32, %Nat32* %34
-	%41 = add %Nat32 %40, 1
-	store %Nat32 %41, %Nat32* %34
+	%40 = load %list_Node*, %list_Node** %8
+	%41 = getelementptr %list_Node, %list_Node* %40, %Int32 0, %Int32 1
+	%42 = load %list_Node*, %list_Node** %41
+	%43 = bitcast %list_Node* %42 to %list_Node*
+	store %list_Node* %43, %list_Node** %8
+	%44 = load %Nat32, %Nat32* %37
+	%45 = add %Nat32 %44, 1
+	store %Nat32 %45, %Nat32* %37
 	br label %again_2
 break_2:
 	br label %endif_1
 endif_1:
-	%42 = load %list_Node*, %list_Node** %8
-	ret %list_Node* %42
+	%46 = load %list_Node*, %list_Node** %8
+	%47 = bitcast %list_Node* %46 to %list_Node*
+	ret %list_Node* %47
 }
 
 define %list_Node* @list_node_insert(%list_List* %list, %Int32 %pos, %list_Node* %new_node) {
@@ -476,29 +493,34 @@ then_0:
 	br label %endif_0
 endif_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str3 to [0 x i8]*), %Int32 %pos)
-	%6 = call %list_Node* @list_node_get(%list_List* %list, %Int32 %pos)
+	%6 = bitcast %list_List* %list to %list_List*
+	%7 = call %list_Node* @list_node_get(%list_List* %6, %Int32 %pos)
 ; if_1
-	%7 = icmp eq %list_Node* %6, null
-	br %Bool %7 , label %then_1, label %endif_1
+	%8 = icmp eq %list_Node* %7, null
+	br %Bool %8 , label %then_1, label %endif_1
 then_1:
 	ret %list_Node* null
 	br label %endif_1
 endif_1:
-	%9 = call %list_Node* @list_node_prev_get(%list_Node* %6)
+	%10 = bitcast %list_Node* %7 to %list_Node*
+	%11 = call %list_Node* @list_node_prev_get(%list_Node* %10)
 ; if_2
-	%10 = icmp eq %list_Node* %9, null
-	br %Bool %10 , label %then_2, label %endif_2
+	%12 = icmp eq %list_Node* %11, null
+	br %Bool %12 , label %then_2, label %endif_2
 then_2:
 	ret %list_Node* null
 	br label %endif_2
 endif_2:
-	call void @list_node_insert_right(%list_Node* %9, %list_Node* %new_node)
-	%12 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%13 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%14 = load %Nat32, %Nat32* %13
-	%15 = add %Nat32 %14, 1
-	store %Nat32 %15, %Nat32* %12
-	ret %list_Node* %new_node
+	%14 = bitcast %list_Node* %11 to %list_Node*
+	%15 = bitcast %list_Node* %new_node to %list_Node*
+	call void @list_node_insert_right(%list_Node* %14, %list_Node* %15)
+	%16 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
+	%17 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
+	%18 = load %Nat32, %Nat32* %17
+	%19 = add %Nat32 %18, 1
+	store %Nat32 %19, %Nat32* %16
+	%20 = bitcast %list_Node* %new_node to %list_Node*
+	ret %list_Node* %20
 }
 
 define %list_Node* @list_node_append(%list_List* %list, %list_Node* %new_node) {
@@ -518,22 +540,27 @@ endif_0:
 	br %Bool %7 , label %then_1, label %else_1
 then_1:
 	%8 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 0
-	store %list_Node* %new_node, %list_Node** %8
+	%9 = bitcast %list_Node* %new_node to %list_Node*
+	store %list_Node* %9, %list_Node** %8
 	br label %endif_1
 else_1:
-	%9 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
-	%10 = load %list_Node*, %list_Node** %9
-	call void @list_node_insert_right(%list_Node* %10, %list_Node* %new_node)
+	%10 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
+	%11 = load %list_Node*, %list_Node** %10
+	%12 = bitcast %list_Node* %11 to %list_Node*
+	%13 = bitcast %list_Node* %new_node to %list_Node*
+	call void @list_node_insert_right(%list_Node* %12, %list_Node* %13)
 	br label %endif_1
 endif_1:
-	%11 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
-	store %list_Node* %new_node, %list_Node** %11
-	%12 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%13 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%14 = load %Nat32, %Nat32* %13
-	%15 = add %Nat32 %14, 1
-	store %Nat32 %15, %Nat32* %12
-	ret %list_Node* %new_node
+	%14 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
+	%15 = bitcast %list_Node* %new_node to %list_Node*
+	store %list_Node* %15, %list_Node** %14
+	%16 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
+	%17 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
+	%18 = load %Nat32, %Nat32* %17
+	%19 = add %Nat32 %18, 1
+	store %Nat32 %19, %Nat32* %16
+	%20 = bitcast %list_Node* %new_node to %list_Node*
+	ret %list_Node* %20
 }
 
 define %list_Node* @list_insert(%list_List* %list, %Int32 %pos, i8* %data) {
@@ -547,8 +574,11 @@ then_0:
 endif_0:
 	%4 = getelementptr %list_Node, %list_Node* %1, %Int32 0, %Int32 2
 	store i8* %data, i8** %4
-	%5 = call %list_Node* @list_node_insert(%list_List* %list, %Int32 %pos, %list_Node* %1)
-	ret %list_Node* %5
+	%5 = bitcast %list_List* %list to %list_List*
+	%6 = bitcast %list_Node* %1 to %list_Node*
+	%7 = call %list_Node* @list_node_insert(%list_List* %5, %Int32 %pos, %list_Node* %6)
+	%8 = bitcast %list_Node* %7 to %list_Node*
+	ret %list_Node* %8
 }
 
 define %list_Node* @list_append(%list_List* %list, i8* %data) {
@@ -569,16 +599,19 @@ then_1:
 endif_1:
 	%6 = getelementptr %list_Node, %list_Node* %3, %Int32 0, %Int32 2
 	store i8* %data, i8** %6
-	%7 = call %list_Node* @list_node_append(%list_List* %list, %list_Node* %3)
+	%7 = bitcast %list_List* %list to %list_List*
+	%8 = bitcast %list_Node* %3 to %list_Node*
+	%9 = call %list_Node* @list_node_append(%list_List* %7, %list_Node* %8)
 ; if_2
-	%8 = icmp eq %list_Node* %7, null
-	br %Bool %8 , label %then_2, label %endif_2
+	%10 = icmp eq %list_Node* %9, null
+	br %Bool %10 , label %then_2, label %endif_2
 then_2:
-	%9 = bitcast %list_Node* %3 to i8*
-	call void @free(i8* %9)
+	%11 = bitcast %list_Node* %3 to i8*
+	call void @free(i8* %11)
 	br label %endif_2
 endif_2:
-	ret %list_Node* %7
+	%12 = bitcast %list_Node* %9 to %list_Node*
+	ret %list_Node* %12
 }
 
 

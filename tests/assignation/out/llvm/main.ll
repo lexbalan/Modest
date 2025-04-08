@@ -262,72 +262,78 @@ define %Int @main() {
 
 
 	; copy records by value
-	%16 = load %Point, %Point* @glb_r1
-	store %Point %16, %Point* @glb_r0
-	%17 = getelementptr %Point, %Point* @glb_r0, %Int32 0, %Int32 0
-	%18 = load %Int32, %Int32* %17
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), %Int32 %18)
-	%20 = getelementptr %Point, %Point* @glb_r0, %Int32 0, %Int32 1
-	%21 = load %Int32, %Int32* %20
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Int32 %21)
+; -- cons_composite_from_composite_by_adr --
+	%16 = bitcast %Point* @glb_r1 to %Point*
+	%17 = load %Point, %Point* %16
+; -- end cons_composite_from_composite_by_adr --
+	store %Point %17, %Point* @glb_r0
+	%18 = getelementptr %Point, %Point* @glb_r0, %Int32 0, %Int32 0
+	%19 = load %Int32, %Int32* %18
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), %Int32 %19)
+	%21 = getelementptr %Point, %Point* @glb_r0, %Int32 0, %Int32 1
+	%22 = load %Int32, %Int32* %21
+	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Int32 %22)
 
 
 	; -----------------------------------
 	; Local
 
 	; copy integers by value
-	%23 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %23
 	%24 = alloca %Int32, align 4
-	store %Int32 123, %Int32* %24
-	%25 = load %Int32, %Int32* %24
-	store %Int32 %25, %Int32* %23
-	%26 = load %Int32, %Int32* %23
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), %Int32 %26)
+	store %Int32 0, %Int32* %24
+	%25 = alloca %Int32, align 4
+	store %Int32 123, %Int32* %25
+	%26 = load %Int32, %Int32* %25
+	store %Int32 %26, %Int32* %24
+	%27 = load %Int32, %Int32* %24
+	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), %Int32 %27)
 
 	; copy arrays by value
 	; C backend will be use memcpy()
-	%28 = alloca [10 x %Int32], align 1
-	%29 = zext i8 10 to %Nat32
-	%30 = mul %Nat32 %29, 4
-	%31 = bitcast [10 x %Int32]* %28 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %31, i8 0, %Nat32 %30, i1 0)
-	%32 = alloca [10 x %Int32], align 1
-	%33 = insertvalue [10 x %Int32] zeroinitializer, %Int32 42, 0
-	%34 = insertvalue [10 x %Int32] %33, %Int32 53, 1
-	%35 = insertvalue [10 x %Int32] %34, %Int32 64, 2
-	%36 = zext i8 10 to %Nat32
-	store [10 x %Int32] %35, [10 x %Int32]* %32
-	%37 = load [10 x %Int32], [10 x %Int32]* %32
-	%38 = zext i8 10 to %Nat32
-	store [10 x %Int32] %37, [10 x %Int32]* %28
-	%39 = getelementptr [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 0
-	%40 = load %Int32, %Int32* %39
-	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), %Int32 %40)
-	%42 = getelementptr [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 1
-	%43 = load %Int32, %Int32* %42
-	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), %Int32 %43)
-	%45 = getelementptr [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 2
-	%46 = load %Int32, %Int32* %45
-	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), %Int32 %46)
+	%29 = alloca [10 x %Int32], align 1
+	%30 = zext i8 10 to %Nat32
+	%31 = mul %Nat32 %30, 4
+	%32 = bitcast [10 x %Int32]* %29 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %32, i8 0, %Nat32 %31, i1 0)
+	%33 = alloca [10 x %Int32], align 1
+	%34 = insertvalue [10 x %Int32] zeroinitializer, %Int32 42, 0
+	%35 = insertvalue [10 x %Int32] %34, %Int32 53, 1
+	%36 = insertvalue [10 x %Int32] %35, %Int32 64, 2
+	%37 = zext i8 10 to %Nat32
+	store [10 x %Int32] %36, [10 x %Int32]* %33
+	%38 = load [10 x %Int32], [10 x %Int32]* %33
+	%39 = zext i8 10 to %Nat32
+	store [10 x %Int32] %38, [10 x %Int32]* %29
+	%40 = getelementptr [10 x %Int32], [10 x %Int32]* %29, %Int32 0, %Int32 0
+	%41 = load %Int32, %Int32* %40
+	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), %Int32 %41)
+	%43 = getelementptr [10 x %Int32], [10 x %Int32]* %29, %Int32 0, %Int32 1
+	%44 = load %Int32, %Int32* %43
+	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), %Int32 %44)
+	%46 = getelementptr [10 x %Int32], [10 x %Int32]* %29, %Int32 0, %Int32 2
+	%47 = load %Int32, %Int32* %46
+	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), %Int32 %47)
 
 
 	; copy records by value
 	; C backend will be use memcpy()
-	%48 = alloca %Point, align 8
-	store %Point zeroinitializer, %Point* %48
 	%49 = alloca %Point, align 8
-	%50 = insertvalue %Point zeroinitializer, %Int32 10, 0
-	%51 = insertvalue %Point %50, %Int32 20, 1
-	store %Point %51, %Point* %49
-	%52 = load %Point, %Point* %49
-	store %Point %52, %Point* %48
-	%53 = getelementptr %Point, %Point* %48, %Int32 0, %Int32 0
-	%54 = load %Int32, %Int32* %53
-	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %54)
-	%56 = getelementptr %Point, %Point* %48, %Int32 0, %Int32 1
-	%57 = load %Int32, %Int32* %56
-	%58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %57)
+	store %Point zeroinitializer, %Point* %49
+	%50 = alloca %Point, align 8
+	%51 = insertvalue %Point zeroinitializer, %Int32 10, 0
+	%52 = insertvalue %Point %51, %Int32 20, 1
+	store %Point %52, %Point* %50
+; -- cons_composite_from_composite_by_adr --
+	%53 = bitcast %Point* %50 to %Point*
+	%54 = load %Point, %Point* %53
+; -- end cons_composite_from_composite_by_adr --
+	store %Point %54, %Point* %49
+	%55 = getelementptr %Point, %Point* %49, %Int32 0, %Int32 0
+	%56 = load %Int32, %Int32* %55
+	%57 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %56)
+	%58 = getelementptr %Point, %Point* %49, %Int32 0, %Int32 1
+	%59 = load %Int32, %Int32* %58
+	%60 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %59)
 
 
 	; error: closed arrays of closed arrays are denied

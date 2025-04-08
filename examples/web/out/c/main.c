@@ -67,7 +67,7 @@ int32_t main()
 
 	// Bind socket to address
 	struct sockaddr *const socadr = (struct sockaddr *)&server_addr;
-	int rc = bind(server_socket, socadr, sizeof server_addr);
+	int rc = bind(server_socket, (struct sockaddr *)socadr, sizeof server_addr);
 	if (rc < 0) {
 		perror("cannot bind socket");
 		close(server_socket);
@@ -89,7 +89,7 @@ int32_t main()
 		struct sockaddr_in client_addr;
 		struct sockaddr *const socadr = (struct sockaddr *)&client_addr;
 		socklen_t client_adr_len = sizeof client_addr;
-		const int client_socket = accept(server_socket, socadr, &client_adr_len);
+		const int client_socket = accept(server_socket, (struct sockaddr *)socadr, &client_adr_len);
 		if (client_socket < 0) {
 			perror("cannot accept connection");
 			continue;

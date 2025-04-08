@@ -378,39 +378,40 @@ endif_0:
 	%10 = bitcast %SockAddrIn* %4 to i8*
 	%11 = bitcast i8* %10 to %SockAddr*
 	%12 = alloca %Int, align 4
-	%13 = call %Int @connect(%Int %1, %SockAddr* %11, %SocklenT 16)
-	store %Int %13, %Int* %12
+	%13 = bitcast %SockAddr* %11 to %SockAddr*
+	%14 = call %Int @connect(%Int %1, %SockAddr* %13, %SocklenT 16)
+	store %Int %14, %Int* %12
 ; if_1
-	%14 = load %Int, %Int* %12
-	%15 = icmp slt %Int %14, 0
-	br %Bool %15 , label %then_1, label %endif_1
+	%15 = load %Int, %Int* %12
+	%16 = icmp slt %Int %15, 0
+	br %Bool %16 , label %then_1, label %endif_1
 then_1:
 	call void @perror(%ConstCharStr* bitcast ([24 x i8]* @str4 to [0 x i8]*))
 	call void @exit(%Int 1)
 	br label %endif_1
 endif_1:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
-	%17 = call %File* @fopen(%ConstCharStr* bitcast ([9 x i8]* @str6 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
+	%18 = call %File* @fopen(%ConstCharStr* bitcast ([9 x i8]* @str6 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
 ; if_2
-	%18 = icmp eq %File* %17, null
-	br %Bool %18 , label %then_2, label %endif_2
+	%19 = icmp eq %File* %18, null
+	br %Bool %19 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([26 x i8]* @str8 to [0 x i8]*))
 	call void @exit(%Int 1)
 	br label %endif_2
 endif_2:
-	%19 = call %Bool @send_file(%File* %17, %Int %1)
+	%20 = call %Bool @send_file(%File* %18, %Int %1)
 ; if_3
-	br %Bool %19 , label %then_3, label %else_3
+	br %Bool %20 , label %then_3, label %else_3
 then_3:
-	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str9 to [0 x i8]*))
+	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str9 to [0 x i8]*))
 	br label %endif_3
 else_3:
 	call void @perror(%ConstCharStr* bitcast ([26 x i8]* @str10 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-	%21 = call %Int @close(%Int %1)
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
+	%22 = call %Int @close(%Int %1)
+	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
 	ret %Int 0
 }
 

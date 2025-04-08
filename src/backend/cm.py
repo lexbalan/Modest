@@ -195,7 +195,7 @@ def str_type(t):
 	elif Type.is_string(t):
 		return "String"
 	else:
-		return "<type:" + str(t) + ">"
+		return str(t)
 
 
 bin_ops = {

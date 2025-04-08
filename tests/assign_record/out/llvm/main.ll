@@ -213,54 +213,72 @@ declare void @perror(%ConstCharStr* %str)
 }
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
-	%2 = load %Point, %Point* @globalPoint0
-	store %Point %2, %Point* @globalPoint1
-	%3 = getelementptr %Point, %Point* @globalPoint1, %Int32 0, %Int32 0
-	%4 = load %Int32, %Int32* %3
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), %Int32 %4)
-	%6 = getelementptr %Point, %Point* @globalPoint1, %Int32 0, %Int32 1
-	%7 = load %Int32, %Int32* %6
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), %Int32 %7)
+; -- cons_composite_from_composite_by_adr --
+	%2 = bitcast %Point* @globalPoint0 to %Point*
+	%3 = load %Point, %Point* %2
+; -- end cons_composite_from_composite_by_adr --
+	store %Point %3, %Point* @globalPoint1
+	%4 = getelementptr %Point, %Point* @globalPoint1, %Int32 0, %Int32 0
+	%5 = load %Int32, %Int32* %4
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), %Int32 %5)
+	%7 = getelementptr %Point, %Point* @globalPoint1, %Int32 0, %Int32 1
+	%8 = load %Int32, %Int32* %7
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), %Int32 %8)
 ; if_0
-	%9 = bitcast %Point* @globalPoint0 to i8*
-	%10 = bitcast %Point* @globalPoint1 to i8*
-	%11 = call i1 (i8*, i8*, i64) @memeq(i8* %9, i8* %10, %Int64 8)
-	%12 = icmp ne %Bool %11, 0
-	br %Bool %12 , label %then_0, label %else_0
+; -- cons_composite_from_composite_by_adr --
+	%10 = bitcast %Point* @globalPoint1 to %Point*
+	%11 = load %Point, %Point* %10
+; -- end cons_composite_from_composite_by_adr --
+	%12 = alloca %Point
+	store %Point %11, %Point* %12
+	%13 = bitcast %Point* @globalPoint0 to i8*
+	%14 = bitcast %Point* %12 to i8*
+	%15 = call i1 (i8*, i8*, i64) @memeq(i8* %13, i8* %14, %Int64 8)
+	%16 = icmp ne %Bool %15, 0
+	br %Bool %16 , label %then_0, label %else_0
 then_0:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str4 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str4 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 
 	; local
-	%15 = alloca %Point, align 8
-	%16 = insertvalue %Point zeroinitializer, %Int32 10, 0
-	%17 = insertvalue %Point %16, %Int32 20, 1
-	store %Point %17, %Point* %15
-	%18 = alloca %Point, align 8
-	store %Point zeroinitializer, %Point* %18
-	%19 = load %Point, %Point* %15
-	store %Point %19, %Point* %18
-	%20 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 0
-	%21 = load %Int32, %Int32* %20
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str6 to [0 x i8]*), %Int32 %21)
-	%23 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 1
-	%24 = load %Int32, %Int32* %23
-	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), %Int32 %24)
+	%19 = alloca %Point, align 8
+	%20 = insertvalue %Point zeroinitializer, %Int32 10, 0
+	%21 = insertvalue %Point %20, %Int32 20, 1
+	store %Point %21, %Point* %19
+	%22 = alloca %Point, align 8
+	store %Point zeroinitializer, %Point* %22
+; -- cons_composite_from_composite_by_adr --
+	%23 = bitcast %Point* %19 to %Point*
+	%24 = load %Point, %Point* %23
+; -- end cons_composite_from_composite_by_adr --
+	store %Point %24, %Point* %22
+	%25 = getelementptr %Point, %Point* %22, %Int32 0, %Int32 0
+	%26 = load %Int32, %Int32* %25
+	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str6 to [0 x i8]*), %Int32 %26)
+	%28 = getelementptr %Point, %Point* %22, %Int32 0, %Int32 1
+	%29 = load %Int32, %Int32* %28
+	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), %Int32 %29)
 ; if_1
-	%26 = bitcast %Point* %15 to i8*
-	%27 = bitcast %Point* %18 to i8*
-	%28 = call i1 (i8*, i8*, i64) @memeq(i8* %26, i8* %27, %Int64 8)
-	%29 = icmp ne %Bool %28, 0
-	br %Bool %29 , label %then_1, label %else_1
+; -- cons_composite_from_composite_by_adr --
+	%31 = bitcast %Point* %22 to %Point*
+	%32 = load %Point, %Point* %31
+; -- end cons_composite_from_composite_by_adr --
+	%33 = alloca %Point
+	store %Point %32, %Point* %33
+	%34 = bitcast %Point* %19 to i8*
+	%35 = bitcast %Point* %33 to i8*
+	%36 = call i1 (i8*, i8*, i64) @memeq(i8* %34, i8* %35, %Int64 8)
+	%37 = icmp ne %Bool %36, 0
+	br %Bool %37 , label %then_1, label %else_1
 then_1:
-	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str8 to [0 x i8]*))
+	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str8 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str9 to [0 x i8]*))
+	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str9 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 	ret %Int 0

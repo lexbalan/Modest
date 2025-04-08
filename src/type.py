@@ -166,7 +166,7 @@ def type_print(t, print_aka=True):
 		print('Unit', end='')
 
 	else:
-		print("<type:%s>" % str(t), end='')
+		print(str(t), end='')
 
 	if t.generic:
 		print(")", end='')

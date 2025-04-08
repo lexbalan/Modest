@@ -78,6 +78,7 @@ modules = {}
 
 cmodule = None  # Current module
 cfunc = None	# current function
+# TODO: разберись с контекстом- сейчас он только symtab_public!
 context = None  # current context (symtab)
 cdef = None
 
@@ -135,8 +136,8 @@ def module_value_add_private(m, id_str, v):
 # public
 
 # search type in module
-def module_type_get_public(m, id_str):
-	return m.symtab_public.type_get(id_str)
+def module_type_get_public(m, id_str, as_copy=True):
+	return m.symtab_public.type_get(id_str, as_copy=as_copy)
 
 # search value in module
 def module_value_get_public(m, id_str):
@@ -145,8 +146,8 @@ def module_value_get_public(m, id_str):
 # private
 
 # search type in module
-def module_type_get_private(m, id_str):
-	return m.symtab_private.type_get(id_str)
+def module_type_get_private(m, id_str, as_copy=True):
+	return m.symtab_private.type_get(id_str, as_copy=as_copy)
 
 # search value in module
 def module_value_get_private(m, id_str):
@@ -184,23 +185,23 @@ def cmodule_type_add(id_str, t, is_public=False):
 	module_type_add(cmodule, id_str, t, is_public=is_public)
 
 
-def module_type_get(m, id_str, only_public=False):
+def module_type_get(m, id_str, only_public=False, as_copy=True):
 	#print("module_type_get: " + id_str)
 
-	t = m.symtab_public.type_get(id_str)
+	t = m.symtab_public.type_get(id_str, as_copy=as_copy)
 	if t != None:
 		return t
 
 	if only_public:
 		return None
 
-	t = m.symtab_private.type_get(id_str)
+	t = m.symtab_private.type_get(id_str, as_copy=as_copy)
 	if t != None:
 		return t
 
 	#
 	for included_module in m.included_modules:
-		t = included_module.symtab_public.type_get(id_str)
+		t = included_module.symtab_public.type_get(id_str, as_copy=as_copy)
 		if t != None:
 			return t
 
@@ -246,14 +247,15 @@ def ctx_value_add(id_str, v):
 
 
 
-def ctx_type_get(id_str):
+def ctx_type_get(id_str, as_copy=True):
 	#print("ctx_type_get %s" % id_str)
 	global context
-	x = context.type_get(id_str)
+	x = context.type_get(id_str, as_copy=as_copy)
 	if x != None:
 		return x
 	global cmodule
-	return module_type_get(cmodule, id_str)
+	return module_type_get(cmodule, id_str, as_copy=as_copy)
+
 
 def ctx_value_get(id_str):
 	#print("ctx_value_get %s" % id_str)
@@ -2103,7 +2105,10 @@ def def_type(x):
 	log("def_type: %s" % id.str)
 	id.prefix = global_prefix
 
-	nt = ctx_type_get(id.str)
+	# mass
+	# (!) Здесь нам нужно получить не копию типа, как это происходит везде,
+	# (!) а его оригинал.
+	nt = ctx_type_get(id.str, as_copy=False)
 
 	if not nt.is_incompleted():
 		error("type redefinition", x['ti'])

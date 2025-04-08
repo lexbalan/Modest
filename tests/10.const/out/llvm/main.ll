@@ -377,9 +377,21 @@ define internal %Float @distance(%Point %a, %Point %b) {
 
 define internal %Float @lineLength(%Line %line) {
 	%1 = extractvalue %Line %line, 0
-	%2 = extractvalue %Line %line, 1
-	%3 = call %Float @distance(%Point %1, %Point %2)
-	ret %Float %3
+; -- cons_composite_from_composite_by_value --
+	%2 = alloca %Point
+	store %Point %1, %Point* %2
+	%3 = bitcast %Point* %2 to %Point*
+; -- end cons_composite_from_composite_by_value --
+	%4 = load %Point, %Point* %3
+	%5 = extractvalue %Line %line, 1
+; -- cons_composite_from_composite_by_value --
+	%6 = alloca %Point
+	store %Point %5, %Point* %6
+	%7 = bitcast %Point* %6 to %Point*
+; -- end cons_composite_from_composite_by_value --
+	%8 = load %Point, %Point* %7
+	%9 = call %Float @distance(%Point %4, %Point %8)
+	ret %Float %9
 }
 
 define %Int @main() {

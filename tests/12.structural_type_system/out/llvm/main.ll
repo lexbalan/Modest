@@ -271,72 +271,81 @@ define internal void @f3_ptr({%Int32}* %x) {
 	%Int32 3
 }
 define internal void @test_by_value() {
-	%1 = load %Type1, %Type1* @a
-	call void @f0_val(%Type1 %1)
 ; -- cons_composite_from_composite_by_adr --
-	%2 = bitcast %Type1* @a to %Type2*
-	%3 = load %Type2, %Type2* %2
+	%1 = bitcast %Type1* @a to %Type1*
+	%2 = load %Type1, %Type1* %1
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f1_val(%Type2 %3)
+	call void @f0_val(%Type1 %2)
 ; -- cons_composite_from_composite_by_adr --
-	%4 = bitcast %Type1* @a to %Type3*
-	%5 = load %Type3, %Type3* %4
+	%3 = bitcast %Type1* @a to %Type2*
+	%4 = load %Type2, %Type2* %3
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f2_val(%Type3 %5)
+	call void @f1_val(%Type2 %4)
 ; -- cons_composite_from_composite_by_adr --
-	%6 = bitcast %Type1* @a to {%Int32}*
-	%7 = load {%Int32}, {%Int32}* %6
+	%5 = bitcast %Type1* @a to %Type3*
+	%6 = load %Type3, %Type3* %5
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f3_val({%Int32} %7)
+	call void @f2_val(%Type3 %6)
 ; -- cons_composite_from_composite_by_adr --
-	%8 = bitcast %Type2* @b to %Type1*
-	%9 = load %Type1, %Type1* %8
+	%7 = bitcast %Type1* @a to {%Int32}*
+	%8 = load {%Int32}, {%Int32}* %7
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f0_val(%Type1 %9)
-	%10 = load %Type2, %Type2* @b
-	call void @f1_val(%Type2 %10)
+	call void @f3_val({%Int32} %8)
 ; -- cons_composite_from_composite_by_adr --
-	%11 = bitcast %Type2* @b to %Type3*
-	%12 = load %Type3, %Type3* %11
+	%9 = bitcast %Type2* @b to %Type1*
+	%10 = load %Type1, %Type1* %9
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f2_val(%Type3 %12)
+	call void @f0_val(%Type1 %10)
 ; -- cons_composite_from_composite_by_adr --
-	%13 = bitcast %Type2* @b to {%Int32}*
-	%14 = load {%Int32}, {%Int32}* %13
+	%11 = bitcast %Type2* @b to %Type2*
+	%12 = load %Type2, %Type2* %11
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f3_val({%Int32} %14)
+	call void @f1_val(%Type2 %12)
 ; -- cons_composite_from_composite_by_adr --
-	%15 = bitcast %Type3* @c to %Type1*
-	%16 = load %Type1, %Type1* %15
+	%13 = bitcast %Type2* @b to %Type3*
+	%14 = load %Type3, %Type3* %13
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f0_val(%Type1 %16)
+	call void @f2_val(%Type3 %14)
 ; -- cons_composite_from_composite_by_adr --
-	%17 = bitcast %Type3* @c to %Type2*
-	%18 = load %Type2, %Type2* %17
+	%15 = bitcast %Type2* @b to {%Int32}*
+	%16 = load {%Int32}, {%Int32}* %15
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f1_val(%Type2 %18)
-	%19 = load %Type3, %Type3* @c
-	call void @f2_val(%Type3 %19)
+	call void @f3_val({%Int32} %16)
 ; -- cons_composite_from_composite_by_adr --
-	%20 = bitcast %Type3* @c to {%Int32}*
-	%21 = load {%Int32}, {%Int32}* %20
+	%17 = bitcast %Type3* @c to %Type1*
+	%18 = load %Type1, %Type1* %17
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f3_val({%Int32} %21)
+	call void @f0_val(%Type1 %18)
+; -- cons_composite_from_composite_by_adr --
+	%19 = bitcast %Type3* @c to %Type2*
+	%20 = load %Type2, %Type2* %19
+; -- end cons_composite_from_composite_by_adr --
+	call void @f1_val(%Type2 %20)
+; -- cons_composite_from_composite_by_adr --
+	%21 = bitcast %Type3* @c to %Type3*
+	%22 = load %Type3, %Type3* %21
+; -- end cons_composite_from_composite_by_adr --
+	call void @f2_val(%Type3 %22)
+; -- cons_composite_from_composite_by_adr --
+	%23 = bitcast %Type3* @c to {%Int32}*
+	%24 = load {%Int32}, {%Int32}* %23
+; -- end cons_composite_from_composite_by_adr --
+	call void @f3_val({%Int32} %24)
 	ret void
 }
 
 define internal void @test_by_pointer() {
-	call void @f0_ptr(%Type1* @a)
+	call void @f0_ptr(%Type1* bitcast (%Type1* @a to %Type1*))
 	call void @f1_ptr(%Type2* bitcast (%Type1* @a to %Type2*))
 	call void @f2_ptr(%Type3* bitcast (%Type1* @a to %Type3*))
 	call void @f3_ptr({%Int32}* bitcast (%Type1* @a to {%Int32}*))
 	call void @f0_ptr(%Type1* bitcast (%Type2* @b to %Type1*))
-	call void @f1_ptr(%Type2* @b)
+	call void @f1_ptr(%Type2* bitcast (%Type2* @b to %Type2*))
 	call void @f2_ptr(%Type3* bitcast (%Type2* @b to %Type3*))
 	call void @f3_ptr({%Int32}* bitcast (%Type2* @b to {%Int32}*))
 	call void @f0_ptr(%Type1* bitcast (%Type3* @c to %Type1*))
 	call void @f1_ptr(%Type2* bitcast (%Type3* @c to %Type2*))
-	call void @f2_ptr(%Type3* @c)
+	call void @f2_ptr(%Type3* bitcast (%Type3* @c to %Type3*))
 	call void @f3_ptr({%Int32}* bitcast (%Type3* @c to {%Int32}*))
 	ret void
 }

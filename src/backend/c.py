@@ -417,8 +417,7 @@ def str_type(t, core='', need_close=False):
 		return str_type_array(t, core, need_close=need_close)
 	elif t.is_record():
 		return str_type_record(t) + core
-
-	return '<type:%s>' % str(t)
+	return str(t)
 
 
 

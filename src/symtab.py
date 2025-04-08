@@ -1,4 +1,6 @@
 
+from hlir.type import Type
+
 
 class Symtab:
 	def __init__(self, parent=None, domain='global'):
@@ -18,14 +20,24 @@ class Symtab:
 		return v
 
 
-	def type_get(self, id):
+	# Вообще этот метод всегда возвращает поверхностную копию типа
+	# но в некоторых ситуациях (при определении типа) нам нужен именно оригинал
+	# поэтому есть параметр as_copy
+	# Но в случае когда тип incompleted мы всегда возвращаем сам тип (!)
+	# Это нужно для ситуации когда определяем структуру включающую ссылку на себя
+	def type_get(self, id, as_copy=True):
+		t = None
 		if id in self.types:
-			return self.types[id]
+			t = self.types[id]
 
-		if self.parent != None:
-			return self.parent.type_get(id)
+		elif self.parent != None:
+			t = self.parent.type_get(id)
 
-		return None
+		if t != None:
+			if as_copy and not t.is_incompleted():
+				return t.copy()
+
+		return t
 
 
 	def value_get(self, id, domain='global', recursive=True):

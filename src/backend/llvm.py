@@ -890,7 +890,7 @@ def print_type(t):
 		out("i8*")
 
 	else:
-		out("<type:%s>" % str(t))
+		out(str(t))
 
 
 

@@ -436,17 +436,16 @@ class Type(Entity):
 		return False
 
 
-	@staticmethod
-	def copy(x):
-		# copy type
-		y = copy.copy(x)
-		y.att = copy.copy(x.att)
+	def copy(self):
+		y = copy.copy(self)
+		y.att = copy.copy(self.att)
 		y.private_att = []
 		return y
 
+
 	@staticmethod
 	def update(dst, src):
-		# За каким то **** это работает... Ура.
+		# Это даже как то работает, ок, пока сойдет
 		dst.__dict__.clear()
 		dst.__dict__.update(src.__dict__)
 		dst.att = copy.copy(src.att)
