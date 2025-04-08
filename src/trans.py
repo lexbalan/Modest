@@ -298,22 +298,15 @@ def property_add(id, value):
 
 
 attributes = []
-private_attributes = []
 
 
 def attribute_add(at, private=False):
 	global attributes
 	#print("attribute_add " + at)
-	if private:
-		if isinstance(at, list):
-			private_attributes.extend(at)
-		else:
-			private_attributes.append(at)
+	if isinstance(at, list):
+		attributes.extend(at)
 	else:
-		if isinstance(at, list):
-			attributes.extend(at)
-		else:
-			attributes.append(at)
+		attributes.append(at)
 
 
 
@@ -693,7 +686,6 @@ def do_type(x):
 	else: t = bad_type(x['ti'])
 
 	t.ti = x['ti']
-
 	return t
 
 
@@ -870,7 +862,6 @@ def do_value_not(x):
 	return nv
 
 
-
 def do_value_neg(x):
 	v = do_rvalue(x['value'])
 
@@ -895,7 +886,6 @@ def do_value_neg(x):
 			nv.type = htype.type_number_for(v.asset, signed=True, ti=x['ti'])
 
 	return nv
-
 
 
 def do_value_pos(x):
@@ -934,7 +924,7 @@ def do_value_ref(x):
 	if v.isImmutable():
 		if not vtype.is_func() or vtype.is_incompleted():
 			error("expected mutable value or function", v.ti)
-			return ValueBad(x['ti'])
+			return ValueBad(ti)
 
 	nv = ValueRef(v, ti=ti)
 
