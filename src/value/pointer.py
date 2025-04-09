@@ -79,8 +79,8 @@ def value_pointer_cons(t, v, method, ti):
 			nv.addAttribute('zstring')
 
 			# регистрируем строку в модуле
-			from trans import module_strings_add
-			module_strings_add(nv)
+			from trans import cmodule_strings_add
+			cmodule_strings_add(nv)
 
 			return nv
 		from .cons import value_cons_immediate

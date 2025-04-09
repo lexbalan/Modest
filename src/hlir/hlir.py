@@ -21,3 +21,37 @@ class Module:
 		#self.lldeps = []
 		self.defs = []
 		self.att = []
+
+
+	def type_add(self, id_str, t, is_public=False):
+		#print('module_type_add (%s, isPublic=%d)' % (id_str, is_public))
+		if is_public:
+			self.symtab_public.type_add(id_str, t)
+		else:
+			self.symtab_private.type_add(id_str, t)
+		t.att.append('global_entity')
+
+
+	def value_add(self, id_str, v, is_public=False):
+		#print('module_value_add (%s, isPublic=%d)' % (id_str, is_public))
+		if is_public:
+			self.symtab_public.value_add(id_str, v)
+		else:
+			self.symtab_private.value_add(id_str, v)
+		v.addAttribute('global_entity')
+
+
+	def value_get_public(self, id_str):
+		return self.symtab_public.value_get(id_str)
+
+	def value_get_private(self, id_str):
+		return self.symtab_private.value_get(id_str)
+
+	def type_get_public(self, id_str):
+		return self.symtab_public.type_get(id_str)
+
+	def type_get_private(self, id_str):
+		return self.symtab_private.type_get(id_str)
+
+
+

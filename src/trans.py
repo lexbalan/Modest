@@ -97,83 +97,19 @@ def is_unsafe_mode():
 
 
 # тепреь вызывается только из конструктора строки (value)
-def module_strings_add(v):
+def cmodule_strings_add(v):
 	global cmodule
 	cmodule.strings.append(v)
 
 
-
-def module_type_add_public(m, id_str, t):
-	#print("module %s type_add_public %s" % (m['id'], id_str))
-	m.symtab_public.type_add(id_str, t)
-	#t['module'] = m
-	t.att.append('global_entity')
-
-
-def module_value_add_public(m, id_str, v):
-	#print("module %s value_add_public %s" % (m['id'], id_str))
-	m.symtab_public.value_add(id_str, v)
-	#v['module'] = m
-	v.addAttribute('global_entity')
-
-
-def module_type_add_private(m, id_str, t):
-	#print("module %s type_add_private %s" % (m['id'], id_str))
-	m.symtab_private.type_add(id_str, t)
-	#t['module'] = m
-	t.att.append('global_entity')
-
-
-def module_value_add_private(m, id_str, v):
-	#print("module %s value_add_private %s" % (m['id'], id_str))
-	m.symtab_private.value_add(id_str, v)
-	#v['module'] = m
-	v.addAttribute('global_entity')
-
-
-
-
-# public
-
-# search type in module
-def module_type_get_public(m, id_str):
-	return m.symtab_public.type_get(id_str)
-
-# search value in module
-def module_value_get_public(m, id_str):
-	return m.symtab_public.value_get(id_str)
-
-
-
-def module_type_add(m, id_str, t, is_public=False):
-	#print('module_type_add (%s, isPublic=%d)' % (id_str, is_public))
-	if is_public:
-		module_type_add_public(m, id_str, t)
-	else:
-		module_type_add_private(m, id_str, t)
-
-	#t['module'] = m
-
-
-def module_value_add(m, id_str, v, is_public=False):
-	#print('module_value_add (%s, isPublic=%d)' % (id_str, is_public))
-	if is_public:
-		module_value_add_public(m, id_str, v)
-	else:
-		module_value_add_private(m, id_str, v)
-
-	#v['module'] = m
-
-
 def cmodule_value_add(id_str, v, is_public=False):
 	global cmodule
-	module_value_add(cmodule, id_str, v, is_public=is_public)
+	cmodule.value_add(id_str, v, is_public=is_public)
 
 
 def cmodule_type_add(id_str, t, is_public=False):
 	global cmodule
-	module_type_add(cmodule, id_str, t, is_public=is_public)
-
+	cmodule.type_add(id_str, t, is_public=is_public)
 
 
 
@@ -218,11 +154,11 @@ def ctx_value_get(id_str, shallow=False, as_copy=True):
 
 
 
-def module_append(definition, to_export=False):
+def cmodule_append(definition, to_export=False):
+	global cmodule
+
 	if definition == None:
 		return
-
-	global cmodule
 
 	cmodule.defs.append(definition)
 	definition.parent = cmodule
@@ -279,7 +215,7 @@ def insert(s):
 		'nl': 1,
 		'ti': None
 	}
-	module_append(directive_insert)
+	cmodule_append(directive_insert)
 
 
 def feature_add(s):
@@ -489,7 +425,7 @@ def do_type_name(x):
 		if imp == None:
 			error("unknown module", x['module']['ti'])
 			return TypeBad(t['ti'])
-		t = module_type_get_public(imp.module, id_str)
+		t = imp.module.type_get_public(id_str)
 
 		if t == None:
 			error("undefined type", x['ti'])
@@ -587,7 +523,7 @@ def do_type_record(x):
 	cmodule.anon_recs.append(rec)
 	return rec
 
-
+"""
 def do_type_enum(x):
 	enum_type = htype.type_enum(x['ti'])
 
@@ -607,11 +543,11 @@ def do_type_enum(x):
 
 		item_val['id'] = id
 		global cmodule
-		module_value_add_public(cmodule, id.str, item_val)
+		cmodule.value_add_public(, id.str, item_val)
 		i += 1
 
 	return enum_type
-
+"""
 
 
 def do_type_func(x, func_id="_"):
@@ -641,7 +577,7 @@ def do_type(x):
 	elif k == 'pointer': t = do_type_pointer(x)
 	elif k == 'array': t = do_type_array(x)
 	elif k == 'record': t = do_type_record(x)
-	elif k == 'enum': t = do_type_enum(x)
+	#elif k == 'enum': t = do_type_enum(x)
 	else: t = bad_type(x['ti'])
 
 	t.ti = x['ti']
@@ -1276,9 +1212,9 @@ def submodule_access(x):
 	imp = cmodule.imports[mname]
 	submodule = imp.module
 
-	v = module_value_get_public(submodule, iname)
+	v = submodule.value_get_public(iname)
 	if v == None:
-		v = submodule.symtab_private.value_get(iname)
+		v = submodule.value_get_private(iname)
 		if v != None:
 			error("access to module private item", ti)
 
@@ -2019,20 +1955,6 @@ def do_stmt_block(x, parent=None):
 
 
 
-"""def symbol_const(id, init_value, is_public=False):
-	const_value = ValueConst(init_value.type, id, init_value, id.ti)
-	const_value.att.extend(init_value.att)
-
-	# Now let can be immediate!
-	if init_value.isImmediate():
-		const_value.immediate = True
-		cp_immediate(const_value, init_value)
-
-	global cmodule
-	cmodule_value_add(id.str, const_value, is_public=is_public)
-	#module_value_add_public(cmodule, id.str, const_value)
-	return const_value"""
-
 
 
 def def_type(x):
@@ -2123,15 +2045,6 @@ def def_const(x):
 	return definition
 
 
-
-#	if init_value.isBad():
-#		module_value_add_public(cmodule, id.str, init_value)
-#		return DefConst(id, init_value, init_value, x['ti'])
-
-#	t = do_type(x['type'])
-#	if not t.is_incompleted():
-#		if not t.is_bad():
-#			init_value = value_cons_implicit_check(t, init_value)
 
 def do_const(x):
 	id = Id(x['id'])
@@ -2509,7 +2422,7 @@ def do_import(x):
 			# это костыль, но пока так
 			for d in m.defs:
 				if isinstance(d, StmtDirectiveCInclude):
-					module_append(d)
+					cmodule_append(d)
 
 		cmodule.included_modules.append(m)
 		return
@@ -2628,7 +2541,7 @@ def process_module(idStr, ast, is_import=False, is_include=False):
 		ast = ast[1:]
 
 		if y != None:
-			module_append(y)
+			cmodule_append(y)
 
 
 	if is_import:
@@ -2790,11 +2703,11 @@ def def_def(ast, is_include=False):
 					y.parent = cmodule
 
 				is_public = x['access_modifier'] == 'public'
-				module_append(y, to_export=is_public)
+				cmodule_append(y, to_export=is_public)
 
 		elif isa == 'ast_comment':
 			comment = do_stmt_comment(x)
-			module_append(comment)
+			cmodule_append(comment)
 
 		elif isa == 'ast_directive':
 			y = do_directive(x)
