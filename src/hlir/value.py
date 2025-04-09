@@ -77,7 +77,9 @@ class Value(Entity):
 
 
 	def copy(self):
-		return copy.copy(self)
+		v = copy.copy(self)
+		v.att = copy.copy(self.att)
+		return v
 
 
 	# op = 'eq' | 'ne
