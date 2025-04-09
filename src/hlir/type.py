@@ -51,6 +51,7 @@ class Type(Entity):
 		self.signed = None  # Not defined for all types (!)
 		self.ti = None
 		self.incomplete = True
+		self.definition = None
 		pass
 
 

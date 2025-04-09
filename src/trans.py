@@ -37,7 +37,7 @@ parser = Parser()
 # сущность из текущего модуля
 def is_local_entity(x):
 	global cmodule
-	if hasattr(x, 'definition'):
+	if hasattr(x, 'definition') and x.definition != None:
 		return x.definition.parent == cmodule
 	return True
 
@@ -211,7 +211,7 @@ def ctx_type_get(id_str, as_copy=True):
 
 
 
-def ctx_value_get(id_str, shallow=False, as_copy=False):
+def ctx_value_get(id_str, shallow=False, as_copy=True):
 	global context
 	#print("ctx_value_get %s" % id_str)
 	x = context['private'].value_get(id_str, recursive=not shallow, as_copy=as_copy)
@@ -1017,12 +1017,12 @@ def do_value_va_copy(x):
 
 
 def do_value___defined_type(x):
-	t = ctx_type_get(x['type']['id'].str)
+	t = ctx_type_get(x['type']['id'].str, as_copy=False)
 	return t != None
 
 
 def do_value___defined_value(x):
-	v = ctx_value_get(x['value']['id'].str)
+	v = ctx_value_get(x['value']['id'].str, as_copy=False)
 	return v != None
 
 
@@ -2186,7 +2186,7 @@ def def_var(x):
 	id.prefix = global_prefix
 
 	# already defined? (check identifier)
-	already = ctx_value_get(id.str)
+	already = ctx_value_get(id.str, as_copy=False)
 	if already != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
@@ -2272,15 +2272,8 @@ def def_func(x, dostmt=True):
 	fn = ctx_value_get(x['id']['str'], as_copy=False)
 	fn.id.prefix = global_prefix
 
-	definition = StmtDefFunc(fn.id, fn, None, x['ti'])
-	definition.id = fn.id
-	definition.parent = cmodule
-	definition.module = cmodule
-	definition.access_level = x['access_modifier']
-	definition.nl = x['nl']
-	cdef = definition
+	cdef = fn.definition
 
-	fn.definition = definition
 
 	if fn.type.is_incompleted():
 		fn.type = do_type_func(x['type'])
@@ -2294,7 +2287,7 @@ def def_func(x, dostmt=True):
 		fn.att.append('nodecorate')
 
 	if x['stmt'] == None:
-		return definition
+		return fn.definition
 
 	context_push()  # create params context
 
@@ -2336,13 +2329,13 @@ def def_func(x, dostmt=True):
 				elif not isinstance(stmts[-1], StmtReturn):
 					warning("expected return operator at end", stmt.ti)
 
-	definition.stmt = stmt
+	fn.definition.stmt = stmt
 
 	context_pop()  # remove params context
 	cfunc = prev_cfunc
 	cdef = None
 
-	return definition
+	return fn.definition
 
 
 
@@ -2764,6 +2757,15 @@ def pre_def(ast, is_include=False):
 				# Create function value with incomplete type
 				t = Type(x['ti'])  # Incomplete type (!)
 				v = ValueFunc(t, Id(x['id']), x['ti'])
+
+				definition = StmtDefFunc(v.id, v, None, x['ti'])
+				definition.id = v.id
+				definition.parent = cmodule
+				definition.module = cmodule
+				definition.access_level = x['access_modifier']
+				definition.nl = x['nl']
+				v.definition = definition
+
 				if not is_include:
 					v.parent = cmodule
 				cmodule_value_add(id['str'], v, is_public=is_public)
@@ -2793,16 +2795,8 @@ def def_def(ast, is_include=False):
 					y.parent = cmodule
 
 				is_public = x['access_modifier'] == 'public'
-
-				if not is_public:
-					# Добавляем атрибут 'nodecorate'
-					# ко всем непубличным сущностям
-					if hasattr(y, 'value'):
-						y.value.att.append('nodecorate')
-					else:
-						y.type.att.append('nodecorate')
-
 				module_append(y, to_export=is_public)
+
 		elif isa == 'ast_comment':
 			comment = do_stmt_comment(x)
 			module_append(comment)

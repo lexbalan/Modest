@@ -13,6 +13,7 @@ class Value(Entity):
 		super().__init__(ti)
 		self.id = None
 		self.type = type
+		self.definition = None # *StmtDefVar, *StmtDefConst, *StmtDefFunc
 
 		self.immediate = False
 
@@ -233,7 +234,6 @@ class ValueVar(Value):
 		self.id = id
 		self.init_value = init_value
 		self.usecnt = 0
-		self.definition = None  # *StmtDefVar
 		self.is_lvalue = True
 
 
@@ -247,7 +247,6 @@ class ValueConst(Value):
 		self.id = id
 		self.init_value = init_value
 		self.usecnt = 0
-		self.definition = None  # *StmtDefConst
 
 
 class ValueFunc(Value):
@@ -258,7 +257,6 @@ class ValueFunc(Value):
 		super().__init__(type=type, ti=ti)
 		self.id = id
 		self.usecnt = 0
-		self.definition = None  # *StmtDefFunc
 
 
 

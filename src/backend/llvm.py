@@ -110,6 +110,13 @@ def ll_reg_operation(op, type, reg=None):
 	return llvm_value_reg(reg, type)
 
 
+def is_global_public(x):
+	if hasattr(x, 'definition'):
+		if x.definition != None:
+			if x.definition.access_level == 'public':
+				return True
+	return False
+
 
 def get_id_str(x):
 	if not hasattr(x, 'id'):
@@ -123,10 +130,11 @@ def get_id_str(x):
 
 	if not x.hasAttribute('nodecorate'):
 		if not x.hasAttribute('static'):
-			module = x.getModule()
-			if module != None:
-				if not 'nodecorate' in module.att:
-					id_str = "%s_%s" % (module.prefix, id_str)
+			if is_global_public(x):
+				module = x.getModule()
+				if module != None:
+					if not 'nodecorate' in module.att:
+						id_str = "%s_%s" % (module.prefix, id_str)
 
 	return id_str
 

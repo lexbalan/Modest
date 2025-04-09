@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -243,22 +243,20 @@ define void @main_f0() {
 }
 
 @i32 = internal global %Int32 zeroinitializer
-@u32 = internal global %Int32 zeroinitializer
+@u32 = internal global %Nat32 zeroinitializer
 @prev_p = internal global [10 x %Word8] zeroinitializer
 define internal void @xxx([0 x %Word8]* %p) {
-	%1 = mul i8 10, 1
-	%2 = mul i8 10, 1
-	%3 = bitcast [0 x %Word8]* %p to [10 x %Word8]*
+	%1 = bitcast [0 x %Word8]* %p to [10 x %Word8]*
 ; if_0
-	%4 = bitcast [10 x %Word8]* @prev_p to i8*
-	%5 = bitcast [10 x %Word8]* %3 to i8*
-	%6 = call i1 (i8*, i8*, i64) @memeq(i8* %4, i8* %5, %Int64 10)
-	%7 = icmp eq %Bool %6, 0
-	br %Bool %7 , label %then_0, label %endif_0
+	%2 = bitcast [10 x %Word8]* @prev_p to i8*
+	%3 = bitcast [10 x %Word8]* %1 to i8*
+	%4 = call i1 (i8*, i8*, i64) @memeq(i8* %2, i8* %3, %Int64 10)
+	%5 = icmp eq %Bool %4, 0
+	br %Bool %5 , label %then_0, label %endif_0
 then_0:
-	%8 = load [10 x %Word8], [10 x %Word8]* %3
-	%9 = zext i8 10 to %Int32
-	store [10 x %Word8] %8, [10 x %Word8]* @prev_p
+	%6 = load [10 x %Word8], [10 x %Word8]* %1
+	%7 = zext i8 10 to %Nat32
+	store [10 x %Word8] %6, [10 x %Word8]* @prev_p
 	br label %endif_0
 endif_0:
 	ret void
@@ -326,7 +324,7 @@ define %Int32 @main() {
 	%34 = insertvalue [10 x %Word8] %32, %Word8 %33, 8
 	%35 = bitcast i8 9 to %Word8
 	%36 = insertvalue [10 x %Word8] %34, %Word8 %35, 9
-	%37 = zext i8 10 to %Int32
+	%37 = zext i8 10 to %Nat32
 	store [10 x %Word8] %36, [10 x %Word8]* %8
 	%38 = alloca [10 x %Int32], align 1
 	%39 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
@@ -338,23 +336,23 @@ define %Int32 @main() {
 	%45 = insertvalue [10 x %Int32] %44, %Int32 7, 7
 	%46 = insertvalue [10 x %Int32] %45, %Int32 8, 8
 	%47 = insertvalue [10 x %Int32] %46, %Int32 9, 9
-	%48 = zext i8 10 to %Int32
+	%48 = zext i8 10 to %Nat32
 	store [10 x %Int32] %47, [10 x %Int32]* %38
 	;
 	%49 = alloca [5 x %Int32], align 1
-	%50 = zext i8 2 to %Int32
-	%51 = getelementptr [10 x %Int32], [10 x %Int32]* %38, %Int32 0, %Int32 %50
+	%50 = zext i8 2 to %Nat32
+	%51 = getelementptr [10 x %Int32], [10 x %Int32]* %38, %Int32 0, %Nat32 %50
 	%52 = bitcast %Int32* %51 to [5 x %Int32]*
 	%53 = load [5 x %Int32], [5 x %Int32]* %52
-	%54 = zext i8 5 to %Int32
+	%54 = zext i8 5 to %Nat32
 	store [5 x %Int32] %53, [5 x %Int32]* %49
 	;
 	%55 = alloca [20 x %Int32], align 1
-	%56 = zext i8 5 to %Int32
-	%57 = getelementptr [20 x %Int32], [20 x %Int32]* %55, %Int32 0, %Int32 %56
+	%56 = zext i8 5 to %Nat32
+	%57 = getelementptr [20 x %Int32], [20 x %Int32]* %55, %Int32 0, %Nat32 %56
 	%58 = bitcast %Int32* %57 to [10 x %Int32]*
 	%59 = load [10 x %Int32], [10 x %Int32]* %38
-	%60 = zext i8 10 to %Int32
+	%60 = zext i8 10 to %Nat32
 	store [10 x %Int32] %59, [10 x %Int32]* %58
 	;
 	%61 = alloca [20 x %Int32], align 1
@@ -362,38 +360,38 @@ define %Int32 @main() {
 	%63 = getelementptr [20 x %Int32], [20 x %Int32]* %61, %Int32 0, %Int32 %62
 	%64 = bitcast %Int32* %63 to [0 x %Int32]*
 	%65 = load [10 x %Int32], [10 x %Int32]* %38
-	%66 = zext i8 10 to %Int32
+	%66 = zext i8 10 to %Nat32
 	store [10 x %Int32] %65, [0 x %Int32]* %64
 	;
-	%67 = zext i8 3 to %Int32
-	%68 = getelementptr [20 x %Int32], [20 x %Int32]* %61, %Int32 0, %Int32 %67
+	%67 = zext i8 3 to %Nat32
+	%68 = getelementptr [20 x %Int32], [20 x %Int32]* %61, %Int32 0, %Nat32 %67
 	%69 = bitcast %Int32* %68 to [9 x %Int32]*
-	%70 = zext i8 4 to %Int32
-	%71 = getelementptr [20 x %Int32], [20 x %Int32]* %55, %Int32 0, %Int32 %70
+	%70 = zext i8 4 to %Nat32
+	%71 = getelementptr [20 x %Int32], [20 x %Int32]* %55, %Int32 0, %Nat32 %70
 	%72 = bitcast %Int32* %71 to [9 x %Int32]*
 	%73 = load [9 x %Int32], [9 x %Int32]* %72
-	%74 = zext i8 9 to %Int32
+	%74 = zext i8 9 to %Nat32
 	store [9 x %Int32] %73, [9 x %Int32]* %69
 	;
-	%75 = zext i8 3 to %Int32
-	%76 = getelementptr [20 x %Int32], [20 x %Int32]* %61, %Int32 0, %Int32 %75
+	%75 = zext i8 3 to %Nat32
+	%76 = getelementptr [20 x %Int32], [20 x %Int32]* %61, %Int32 0, %Nat32 %75
 	%77 = bitcast %Int32* %76 to [10 x %Int32]*
 	%78 = load [10 x %Int32], [10 x %Int32]* %77
-	%79 = zext i8 10 to %Int32
+	%79 = zext i8 10 to %Nat32
 	store [10 x %Int32] %78, [10 x %Int32]* %38
 	;
-	%80 = zext i8 3 to %Int32
-	%81 = getelementptr [20 x %Int32], [20 x %Int32]* %61, %Int32 0, %Int32 %80
+	%80 = zext i8 3 to %Nat32
+	%81 = getelementptr [20 x %Int32], [20 x %Int32]* %61, %Int32 0, %Nat32 %80
 	%82 = bitcast %Int32* %81 to [10 x %Int32]*
-	%83 = zext i8 10 to %Int32
-	%84 = mul %Int32 %83, 4
+	%83 = zext i8 10 to %Nat32
+	%84 = mul %Nat32 %83, 4
 	%85 = bitcast [10 x %Int32]* %82 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %85, i8 0, %Int32 %84, i1 0)
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %85, i8 0, %Nat32 %84, i1 0)
 	%86 = alloca [10 x %Int32], align 1
-	%87 = zext i8 10 to %Int32
-	%88 = mul %Int32 %87, 4
+	%87 = zext i8 10 to %Nat32
+	%88 = mul %Nat32 %87, 4
 	%89 = bitcast [10 x %Int32]* %86 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %89, i8 0, %Int32 %88, i1 0)
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %89, i8 0, %Nat32 %88, i1 0)
 	%90 = bitcast [10 x %Word8]* %8 to [0 x %Word8]*
 	call void @xxx([0 x %Word8]* %90)
 	%91 = alloca %Word8, align 1
@@ -401,23 +399,21 @@ define %Int32 @main() {
 	store %Word8 %92, %Word8* %91
 	%93 = alloca %Word8, align 1
 	%94 = load %Word8, %Word8* %91
-	%95 = bitcast %Word8 %94 to %Int8
-	%96 = bitcast %Int8 %95 to %Word8
+	%95 = bitcast %Word8 %94 to %Nat8
+	%96 = bitcast %Nat8 %95 to %Word8
 	store %Word8 %96, %Word8* %93
-	%97 = mul i8 10, 1
-	%98 = mul i8 10, 4
-	%99 = bitcast [20 x %Int32]* %55 to [10 x %Int]*
+	%97 = bitcast [20 x %Int32]* %55 to [10 x %Int]*
 ; if_0
-	%100 = bitcast [10 x %Int]* %99 to i8*
-	%101 = bitcast [10 x %Int32]* %38 to i8*
-	%102 = call i1 (i8*, i8*, i64) @memeq(i8* %100, i8* %101, %Int64 40)
-	%103 = icmp ne %Bool %102, 0
-	br %Bool %103 , label %then_0, label %else_0
+	%98 = bitcast [10 x %Int]* %97 to i8*
+	%99 = bitcast [10 x %Int32]* %38 to i8*
+	%100 = call i1 (i8*, i8*, i64) @memeq(i8* %98, i8* %99, %Int64 40)
+	%101 = icmp ne %Bool %100, 0
+	br %Bool %101 , label %then_0, label %else_0
 then_0:
-	%104 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str5 to [0 x i8]*))
+	%102 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str5 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%105 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str6 to [0 x i8]*))
+	%103 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str6 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 
@@ -429,41 +425,41 @@ endif_0:
 	;	u32 = Nat32 x
 
 	; не проверяет дубликаты имен!
-	%106 = alloca %Int32, align 4
-	store %Int32 1, %Int32* %106
+	%104 = alloca %Int32, align 4
+	store %Int32 1, %Int32* %104
 	;var y: Int32 = 0x1  // error!
+	%105 = alloca %Word32, align 4
+	%106 = zext i8 1 to %Word32
+	store %Word32 %106, %Word32* %105
 	%107 = alloca %Word32, align 4
-	%108 = zext i8 1 to %Word32
-	store %Word32 %108, %Word32* %107
-	%109 = alloca %Word32, align 4
-	store %Word32 1, %Word32* %109
-	%110 = sub i8 0, 1
-	%111 = zext %Int8 %110 to %Word32
+	store %Word32 1, %Word32* %107
+	%108 = sub i8 0, 1
+	%109 = zext %Int8 %108 to %Word32
 ; if_1
 	br %Bool 1 , label %then_1, label %else_1
 then_1:
-	%112 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @str7 to [0 x i8]*))
+	%110 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @str7 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%113 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str8 to [0 x i8]*))
+	%111 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str8 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 ; if_2
 	br %Bool 1 , label %then_2, label %else_2
 then_2:
-	%114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str9 to [0 x i8]*))
+	%112 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str9 to [0 x i8]*))
 	br label %endif_2
 else_2:
-	%115 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str10 to [0 x i8]*))
+	%113 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str10 to [0 x i8]*))
 	br label %endif_2
 endif_2:
 ; if_3
 	br %Bool 1 , label %then_3, label %else_3
 then_3:
-	%116 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str11 to [0 x i8]*))
+	%114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str11 to [0 x i8]*))
 	br label %endif_3
 else_3:
-	%117 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str12 to [0 x i8]*))
+	%115 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str12 to [0 x i8]*))
 	br label %endif_3
 endif_3:
 
