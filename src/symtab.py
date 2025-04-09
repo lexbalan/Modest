@@ -25,7 +25,7 @@ class Symtab:
 	# поэтому есть параметр as_copy
 	# Но в случае когда тип incompleted мы всегда возвращаем сам тип (!)
 	# Это нужно для ситуации когда определяем структуру включающую ссылку на себя
-	def type_get(self, id, as_copy=True):
+	def type_get(self, id):
 		t = None
 		if id in self.types:
 			t = self.types[id]
@@ -33,14 +33,10 @@ class Symtab:
 		elif self.parent != None:
 			t = self.parent.type_get(id)
 
-		if t != None:
-			if as_copy and not t.is_incompleted():
-				return t.copy()
-
 		return t
 
 
-	def value_get(self, id, domain='global', recursive=True, as_copy=False):
+	def value_get(self, id, domain='global', shallow=False):
 		if domain == 'local':
 			if self.domain != 'local':
 				return None
@@ -49,19 +45,11 @@ class Symtab:
 		if id in self.values:
 			v = self.values[id]
 
-		elif recursive:
+		elif not shallow:
 			if self.parent != None:
 				v = self.parent.value_get(id, domain)
 
-		if v == None:
-			return None
-
-		if v.type.is_incompleted():
-			return v
-		if as_copy:
-			return v.copy()
-		else:
-			return v
+		return v
 
 
 

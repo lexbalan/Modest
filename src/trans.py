@@ -143,16 +143,6 @@ def module_type_get_public(m, id_str):
 def module_value_get_public(m, id_str):
 	return m.symtab_public.value_get(id_str)
 
-# private
-
-# search type in module
-#def module_type_get_private(m, id_str):
-#	return m.symtab_private.type_get(id_str)
-
-# search value in module
-def module_value_get_private(m, id_str):
-	return m.symtab_private.value_get(id_str)
-
 
 
 def module_type_add(m, id_str, t, is_public=False):
@@ -200,26 +190,31 @@ def ctx_value_add(id_str, v):
 
 
 def ctx_type_get(id_str, as_copy=True):
-	#print("ctx_type_get %s" % id_str)
 	global context
-	x = context['private'].type_get(id_str, as_copy=as_copy)
-	if x != None:
-		return x
-	x = context['public'].type_get(id_str, as_copy=as_copy)
-	if x != None:
-		return x
+	#print("ctx_type_get %s" % id_str)
+	t = context['private'].type_get(id_str)
+	if t == None:
+		t = context['public'].type_get(id_str)
 
+	if t != None:
+		if as_copy and not t.is_incompleted():
+			return t.copy()
+
+	return t
 
 
 def ctx_value_get(id_str, shallow=False, as_copy=True):
 	global context
 	#print("ctx_value_get %s" % id_str)
-	x = context['private'].value_get(id_str, recursive=not shallow, as_copy=as_copy)
-	if x != None:
-		return x
-	x = context['public'].value_get(id_str, recursive=not shallow, as_copy=as_copy)
-	return x
+	v = context['private'].value_get(id_str, shallow=shallow)
+	if v == None:
+		v = context['public'].value_get(id_str, shallow=shallow)
 
+	if v != None:
+		if as_copy and not v.type.is_incompleted():
+			return v.copy()
+
+	return v
 
 
 
@@ -1283,7 +1278,7 @@ def submodule_access(x):
 
 	v = module_value_get_public(submodule, iname)
 	if v == None:
-		v = module_value_get_private(submodule, iname)
+		v = submodule.symtab_private.value_get(iname)
 		if v != None:
 			error("access to module private item", ti)
 
