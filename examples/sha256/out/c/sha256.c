@@ -147,7 +147,7 @@ static void update(Context *ctx, uint8_t *msg, uint32_t msgLen)
 		ctx->data[ctx->datalen] = msg[i];
 		ctx->datalen = ctx->datalen + 1;
 		if (ctx->datalen == 64) {
-			transform((Context *)ctx, (uint8_t *)&ctx->data);
+			transform(ctx, (uint8_t *)&ctx->data);
 			ctx->bitlen = ctx->bitlen + 512;
 			ctx->datalen = 0;
 		}
@@ -174,7 +174,7 @@ static void final(Context *ctx, uint8_t *outHash)
 	//ctx.data[i:n-i] = []
 
 	if (ctx->datalen >= 56) {
-		transform((Context *)ctx, (uint8_t *)&ctx->data);
+		transform(ctx, (uint8_t *)&ctx->data);
 		memset((uint8_t *)&ctx->data, 0, 56);
 		//ctx.data[0:56] = []
 	}
@@ -191,7 +191,7 @@ static void final(Context *ctx, uint8_t *outHash)
 	ctx->data[57] = (uint8_t)(ctx->bitlen >> 48);
 	ctx->data[56] = (uint8_t)(ctx->bitlen >> 56);
 
-	transform((Context *)ctx, (uint8_t *)&ctx->data);
+	transform(ctx, (uint8_t *)&ctx->data);
 
 	// Since this implementation uses little endian byte ordering
 	// and SHA uses big endian, reverse all the bytes
@@ -215,8 +215,8 @@ static void final(Context *ctx, uint8_t *outHash)
 void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash)
 {
 	Context ctx = {};
-	contextInit((Context *)&ctx);
-	update((Context *)&ctx, msg, msgLen);
-	final((Context *)&ctx, outHash);
+	contextInit(&ctx);
+	update(&ctx, msg, msgLen);
+	final(&ctx, outHash);
 }
 

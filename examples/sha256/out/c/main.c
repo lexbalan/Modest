@@ -45,7 +45,7 @@ static SHA256_TestCase test1 = {
 	}
 };
 
-#define tests  {&test0, (SHA256_TestCase *)&test1}
+#define tests  {&test0, &test1}
 
 static bool doTest(SHA256_TestCase *test)
 {
@@ -76,7 +76,7 @@ int main()
 	int32_t i = 0;
 	while (i < (int)2) {
 		SHA256_TestCase *const test = ((SHA256_TestCase *[2])tests)[i];
-		const bool test_result = doTest((SHA256_TestCase *)test);
+		const bool test_result = doTest(test);
 
 		char *res = "failed";
 		if (test_result) {

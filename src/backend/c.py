@@ -901,7 +901,7 @@ def str_value_cons(x, ctx):
 		if type.to.is_record():
 			if from_type.is_pointer_to_record():
 				# НО если это реально один и тот же тип, то приведение не нужно!
-				if id(from_type) != id(type):
+				if from_type.definition != type.definition:
 					return str_cast(type, value, ctx)
 
 		if from_type.is_pointer():

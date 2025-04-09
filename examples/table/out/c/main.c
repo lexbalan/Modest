@@ -84,19 +84,19 @@ int32_t main()
 
 	*tab = table00;
 
-	table_print((table_Table *)&table00);
+	table_print(&table00);
 	printf("\n");
 
-	table_print((table_Table *)&table01);
+	table_print(&table01);
 	printf("\n");
 
-	table_print((table_Table *)&table02);
+	table_print(&table02);
 	printf("\n");
 
-	table_print((table_Table *)&table03);
+	table_print(&table03);
 	printf("\n");
 
-	table_print((table_Table *)&table10);
+	table_print(&table10);
 	printf("\n");
 
 	return 0;
