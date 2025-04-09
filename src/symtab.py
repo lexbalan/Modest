@@ -3,11 +3,11 @@ from hlir.type import Type
 
 
 class Symtab:
-	def __init__(self, parent=None, domain='global'):
+	def __init__(self, parent=None):
 		self.parent = parent
 		self.types = {}
 		self.values = {}
-		self.domain = domain
+
 
 	def type_add(self, id, t):
 		self.types[id] = t
@@ -15,7 +15,6 @@ class Symtab:
 
 
 	def value_add(self, id, v):
-		#print("LL_VALUE_ADD " + id)
 		self.values[id] = v
 		return v
 
@@ -36,17 +35,13 @@ class Symtab:
 		return t
 
 
-	def value_get(self, id, domain='global', shallow=False):
-		if domain == 'local':
-			if self.domain != 'local':
-				return None
-
+	def value_get(self, id, shallow=False):
 		v = None
 		if id in self.values:
 			v = self.values[id]
 
 		elif not shallow and self.parent != None:
-			v = self.parent.value_get(id, domain)
+			v = self.parent.value_get(id)
 
 		return v
 
@@ -80,8 +75,8 @@ class Symtab:
 
 
 	# creates new symtab where #parent links to this symtab
-	def branch(self, domain='global'):
-		return Symtab(self, domain=domain)
+	def branch(self):
+		return Symtab(self)
 
 
 	# extend this symtab with types & values from another symtab

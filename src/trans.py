@@ -232,8 +232,8 @@ def module_append(definition, to_export=False):
 def context_push():
 	global context
 	context = {
-		'public': context['public'].branch(domain='local'),
-		'private': context['private'].branch(domain='local')
+		'public': context['public'].branch(),
+		'private': context['private'].branch()
 	}
 
 def context_pop():
