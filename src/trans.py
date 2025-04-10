@@ -119,6 +119,7 @@ def ctx_type_add(id_str, t):
 	global context
 	context['private'].type_add(id_str, t)
 
+
 def ctx_value_add(id_str, v):
 	global context
 	context['private'].value_add(id_str, v)
@@ -154,23 +155,13 @@ def ctx_value_get(id_str, shallow=False, as_copy=True):
 
 
 
-def cmodule_append(definition, to_export=False):
-	global cmodule
-
-	if definition == None:
-		return
-
-	cmodule.defs.append(definition)
-	definition.parent = cmodule
-
-
-
 def context_push():
 	global context
 	context = {
 		'public': context['public'].branch(),
 		'private': context['private'].branch()
 	}
+
 
 def context_pop():
 	global context
@@ -206,7 +197,7 @@ def attribute_add(at, private=False):
 
 
 def insert(s):
-	#global cmodule
+	global cmodule
 	directive_insert = {
 		'isa': 'directive',
 		'kind': 'insert',
@@ -215,7 +206,7 @@ def insert(s):
 		'nl': 1,
 		'ti': None
 	}
-	cmodule_append(directive_insert)
+	cmodule.defs.append(directive_insert)
 
 
 def feature_add(s):
@@ -2422,7 +2413,7 @@ def do_import(x):
 			# это костыль, но пока так
 			for d in m.defs:
 				if isinstance(d, StmtDirectiveCInclude):
-					cmodule_append(d)
+					cmodule.defs.append(d)
 
 		cmodule.included_modules.append(m)
 		return
@@ -2541,7 +2532,8 @@ def process_module(idStr, ast, is_import=False, is_include=False):
 		ast = ast[1:]
 
 		if y != None:
-			cmodule_append(y)
+			cmodule.defs.append(y)
+			y.parent = cmodule
 
 
 	if is_import:
@@ -2703,11 +2695,11 @@ def def_def(ast, is_include=False):
 					y.parent = cmodule
 
 				is_public = x['access_modifier'] == 'public'
-				cmodule_append(y, to_export=is_public)
+				cmodule.defs.append(y)
 
 		elif isa == 'ast_comment':
 			comment = do_stmt_comment(x)
-			cmodule_append(comment)
+			cmodule.defs.append(comment)
 
 		elif isa == 'ast_directive':
 			y = do_directive(x)
