@@ -115,14 +115,20 @@ def cmodule_type_add(id_str, t, is_public=False):
 
 # ONLY FOR LOCALS:
 
-def ctx_type_add(id_str, t):
+def ctx_type_add(id_str, t, is_public=False):
 	global context
-	context['private'].type_add(id_str, t)
+	if is_public:
+		context['public'].type_add(id_str, t)
+	else:
+		context['private'].type_add(id_str, t)
 
 
-def ctx_value_add(id_str, v):
+def ctx_value_add(id_str, v, is_public=False):
 	global context
-	context['private'].value_add(id_str, v)
+	if is_public:
+		context['public'].type_add(id_str, t)
+	else:
+		context['private'].value_add(id_str, v)
 
 
 
@@ -2609,7 +2615,7 @@ def pre_imp(ast):
 				t = Type(x['ti'])  # Incomplete type (!)
 				t.id = id
 				t.parent = cmodule
-				cmodule_type_add(id.str, t, is_public=is_public)
+				ctx_type_add(id.str, t, is_public=is_public)
 
 			elif kind == 'func':
 				# Create function value with incomplete type
