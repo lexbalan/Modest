@@ -263,7 +263,6 @@ endif_0:
 }
 
 @xx = internal global [0 x [10 x %Int]*]* zeroinitializer
-@yy = internal global [0 x [10 x %Int]*]* zeroinitializer
 @va = internal global %Int32 4
 @p = internal global {
 	i8,

@@ -38,8 +38,7 @@ static void xxx(uint8_t *p)
 	}
 }
 
-static int *(*volatile xx)[];
-static int *(*volatile yy)[];
+static int *(*volatile restrict xx)[];
 
 #define ca  4
 static int32_t va = ca;

@@ -42,9 +42,7 @@ def is_local_entity(x):
 	return True
 
 
-# значение глобально (неважно из какого модуля)
-def is_global_value(x):
-	return x.hasAttribute('global_entity')
+
 
 
 def is_local_context():
@@ -820,7 +818,7 @@ def do_value_ref(x):
 
 	nv = ValueRef(v, ti=ti)
 
-	if is_global_value(v):
+	if v.is_global():
 		nv.immediate = True
 		# не можно поставить 0 тк иначе значение будет трактоваться как zero
 		# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
@@ -1608,7 +1606,7 @@ def do_value(x):
 def do_stmt_const(x):
 	global cfunc
 	v = do_const(x)
-	v.type.private_att.append('c_const')
+	v.type.att.append('c_const')
 	v.addAttribute('local') # need for LLVM printer (!)
 	ctx_value_add(v.id.str, v)
 	definition = StmtDefConst(v.id, v, v.init_value, ti=x['ti'])

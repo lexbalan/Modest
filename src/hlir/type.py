@@ -44,9 +44,6 @@ class Type(Entity):
 		self.align = align
 		self.ops = ops
 		self.att = []
-		# private atributes ONLY for this type (!)
-		# Type.copy() do not copies this field (!)
-		self.private_att = []
 		self.deps = []
 		self.signed = None  # Not defined for all types (!)
 		self.ti = None
@@ -439,8 +436,7 @@ class Type(Entity):
 
 	def copy(self):
 		y = copy.copy(self)
-		y.att = copy.copy(self.att)
-		y.private_att = []
+		y.att = []
 		return y
 
 
@@ -451,7 +447,6 @@ class Type(Entity):
 		dst.__dict__.update(src.__dict__)
 		dst.att = copy.copy(src.att)
 		dst.__class__ = src.__class__
-
 
 
 	# cannot create variable with type

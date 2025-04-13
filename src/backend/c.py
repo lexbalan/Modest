@@ -367,7 +367,7 @@ def str_type_pointer(t, core='', as_ptr_to_array=False):
 		tx = tx.to
 		left += '*'
 
-	if 'c_const' in t.private_att:
+	if 'c_const' in t.att:
 		left += 'const '
 	if 'c_volatile' in t.att:
 		left += 'volatile '
@@ -407,7 +407,7 @@ def str_named(t, core=''):
 	if aka == None:
 		return None
 	pre = ''
-	if 'c_const' in t.private_att:
+	if 'c_const' in t.att:
 		pre += 'const '
 	if 'c_volatile' in t.att:
 		pre += 'volatile '
