@@ -453,7 +453,6 @@ def do_type_pointer(x):
 
 def do_type_array(x):
 	of = do_type(x['of'])
-
 	volume = do_value(x['size'])
 
 	if volume.isBad():
@@ -468,18 +467,8 @@ def do_type_array(x):
 			else:
 				error("non local VLA", t.size.ti)
 
-		#if not (Type.is_int(volume['type']) or volume.type.is_num()):
-		#if volume.type.is_signed():
-		#	error("required value with Number or Integer type", volume.ti)
-
-	# closed arrays of closed arrays are denied NOW
-#	if of.is_closed_array():
-#		error("closed arrays of closed arrays are denied", t.ti)
-#		return TypeBad(t)
-
-	assert(volume != None)
-
 	return TypeArray(of, volume, ti=x['ti'])
+
 
 # Нужен для анонимных структур
 # и чтобы отличать копии типа структура от реально другой структуры (C)
@@ -546,7 +535,6 @@ def do_type_enum(x):
 
 
 def do_type_func(x, func_id="_"):
-	# check params
 	params = []
 	for _param in x['params']:
 		param = do_field(_param)
@@ -592,16 +580,19 @@ def do_value_shift(x):
 	if r.type.is_signed():
 		error("expected natural value", x['right'])
 
+	nv = None
 	if op == 'shl':
 		nv = ValueShl(l, r, ti=x['ti'])
-	else:
+	elif op == 'shr':
 		nv = ValueShr(l, r, ti=x['ti'])
+	else:
+		pass
 
 	if l.isImmediate() and r.isImmediate():
 		asset = l.asset
 		if op == 'shl':
 			asset = asset << r.asset
-		else:
+		elif op == 'shr':
 			asset = asset >> r.asset
 		nv.asset = int(asset)
 		nv.immediate = True
@@ -699,25 +690,23 @@ def do_value_bin(x):
 			'add': lambda a, b: a + b,
 			'sub': lambda a, b: a - b,
 			'mul': lambda a, b: a * b,
+			'div': lambda a, b: l.asset // r.asset,
+			'fdiv': lambda a, b: l.asset / r.asset,
 			'rem': lambda a, b: a % b,
 		}
 
-		asset = 0
-		if op == 'div':
-			if not t.is_float():
-				asset = l.asset // r.asset
-			else:
-				asset = l.asset / r.asset
-		else:
-			asset = ops[op](l.asset, r.asset)
+		if op == 'div' and t.is_float():
+			op = 'fdiv'
+
+		asset = ops[op](l.asset, r.asset)
 
 		if t.is_num():
 			# (для операций типа 1 + 2)
 			# Пересматриваем generic тип для нового значения
-			nv.type = htype.type_number_for(asset, signed=asset < 0, ti=ti)
+			nv.type = htype.type_number_for(asset, signed=(asset < 0), ti=ti)
 
-		nv.asset = asset
 		nv.immediate = True
+		nv.asset = asset
 
 	return nv
 
