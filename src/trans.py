@@ -408,7 +408,7 @@ def do_field(x):
 # Do Type
 #
 
-def do_type_name(x):
+def do_type_named(x):
 	global cmodule
 	id = x['id']
 	id_str = id['str']
@@ -567,7 +567,7 @@ def do_type(x):
 
 	t = None
 	k = x['kind']
-	if k == 'name': t = do_type_name(x)
+	if k == 'named': t = do_type_named(x)
 	elif k == 'func': t = do_type_func(x)
 	elif k == 'pointer': t = do_type_pointer(x)
 	elif k == 'array': t = do_type_array(x)
