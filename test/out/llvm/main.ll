@@ -262,6 +262,10 @@ endif_0:
 	ret void
 }
 
+
+
+;@attribute("value.type:c_restrict")
+;@attribute("value.type:c_volatile")
 @xx = internal global [0 x [10 x %Int]*]* zeroinitializer
 @va = internal global %Int32 4
 @p = internal global {

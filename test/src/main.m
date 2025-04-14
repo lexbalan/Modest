@@ -34,8 +34,8 @@ func xxx(p: *[]Word8) -> Unit {
 }
 
 
-@attribute("value.type:c_restrict")
-@attribute("value.type:c_volatile")
+//@attribute("value.type:c_restrict")
+//@attribute("value.type:c_volatile")
 var xx: *[]*[10]Int
 
 
