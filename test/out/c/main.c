@@ -38,6 +38,11 @@ static void xxx(uint8_t *p)
 	}
 }
 
+static void copy(void *dst, void *src, uint32_t size)
+{
+	memcpy(((uint8_t *)dst), ((uint8_t *)src), sizeof(uint8_t[size]));
+}
+
 //@attribute("value.type:c_restrict")
 //@attribute("value.type:c_volatile")
 static int *(*xx)[];
@@ -96,8 +101,6 @@ int32_t main()
 	} else {
 		printf("eq!\n");
 	}
-
-
 
 	//	let x = Int8 -1
 	//

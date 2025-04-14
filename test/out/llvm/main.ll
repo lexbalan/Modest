@@ -262,6 +262,19 @@ endif_0:
 	ret void
 }
 
+define internal void @copy(i8* %dst, i8* %src, %Nat32 %size) {
+	%1 = alloca i8*
+	%2 = call i8* @llvm.stacksave() 
+	store i8* %2, i8** %1
+	%3 = bitcast i8* %dst to [0 x %Word8]*
+	%4 = bitcast i8* %src to [0 x %Word8]*
+	%5 = load [0 x %Word8], [0 x %Word8]* %4
+	store [0 x %Word8] %5, [0 x %Word8]* %3
+	%6 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %6)
+	ret void
+}
+
 
 
 ;@attribute("value.type:c_restrict")
@@ -419,8 +432,6 @@ else_0:
 	%103 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str6 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-
-
 
 	;	let x = Int8 -1
 	;

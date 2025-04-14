@@ -34,6 +34,11 @@ func xxx(p: *[]Word8) -> Unit {
 }
 
 
+func copy(dst: Ptr, src: Ptr, size: Nat32) {
+	*(unsafe *[size]Word8 dst) = *(unsafe *[size]Word8 src)
+}
+
+
 //@attribute("value.type:c_restrict")
 //@attribute("value.type:c_volatile")
 var xx: *[]*[10]Int
@@ -89,8 +94,6 @@ public func main() -> Int32 {
 	} else {
 		printf("eq!\n")
 	}
-
-
 
 //	let x = Int8 -1
 //

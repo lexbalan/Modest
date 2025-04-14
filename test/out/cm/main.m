@@ -1,7 +1,7 @@
+include "stdio"
+include "stdlib"
+include "string"
 
-@c_include "stdio.h"
-@c_include "stdlib.h"
-@c_include "string.h"
 
 
 
@@ -19,22 +19,51 @@ public var v0: Int32
 
 //@attribute("value:nodecorate")
 public func f0() -> Unit {
-
 }
 
 var i32: Int32
 var u32: Nat32
 
+
+var prev_p: [10]Word8
+func xxx(p: *[]Word8) -> Unit {
+	let xp = *[10]Word8 p
+	if prev_p != *xp {
+		prev_p = *xp
+	}
+}
+
+func copy(dst: Ptr, src: Ptr, size: Nat32) -> Unit {
+	*(dst) = *(src)
+}
+
+
+//@attribute("value.type:c_restrict")
+//@attribute("value.type:c_volatile")
+var xx: *[]*[10]Int
+
+
+const ca = 4
+var va: Int32 = ca
+
+const p0 = {x = 1, y = 2}
+var p: record {x: <hlir.type.TypeNumber object at 0x1057494a0>, y: <hlir.type.TypeNumber object at 0x105743d10>} = p0
+
+const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
 public func main() -> Int32 {
 	var p: Point
-	stdio.printf("test %s\n", *Str8 cq)
-	stdio.printf("test %d\n", v0)
+	printf("test %s\n", *Str8 cq)
+	printf("test %d\n", v0)
 	f0()
+
+	printf("p0.x = %d\n", p0.x)
 
 	var x1: Int32 = 5
 	var x2: Int32 = 15
 
-	var a0: [10]Int32 = []
+	var w0: [10]Word8 = ini
+	var a0: [10]Int32 = ini
 	//
 	var a1: [5]Int32 = a0[2:7]
 	//
@@ -47,7 +76,23 @@ public func main() -> Int32 {
 	a3[3:12] = a2[4:13]
 	//
 	a0 = a3[3:13]
+	//
+	a3[3:13] = []
 
+	var a4: [10]Int32 = []
+
+	xxx(&w0)
+
+	var yy: Word8 = Word8 1
+	var we: Word8 = Word8 Nat8 yy
+
+	let pa2 = *[10]Int &a2
+
+	if *pa2 == a0 {
+		printf("eq!\n")
+	} else {
+		printf("eq!\n")
+	}
 
 	//	let x = Int8 -1
 	//
@@ -66,21 +111,21 @@ public func main() -> Int32 {
 	let w32 = Word32 i8
 
 	if (Int32 Int8 -1 == -1) and (i32 == -1) {
-		stdio.printf("Int8 -1 -> Int32 (-1) test passed\n")
+		printf("Int8 -1 -> Int32 (-1) test passed\n")
 	} else {
-		stdio.printf("Int8 -1 -> Int32 test failed\n")
+		printf("Int8 -1 -> Int32 test failed\n")
 	}
 
 	if (Nat32 Int8 -1 == 1) and (n32 == 1) {
-		stdio.printf("Int8 -1 -> Nat32 (1) test passed\n")
+		printf("Int8 -1 -> Nat32 (1) test passed\n")
 	} else {
-		stdio.printf("Int8 -1 -> Nat32 test failed\n")
+		printf("Int8 -1 -> Nat32 test failed\n")
 	}
 
 	if (Word32 Int8 -1 == 0xFF) and (w32 == 0xFF) {
-		stdio.printf("Int8 -1 -> Word32 (0xff) test passed\n")
+		printf("Int8 -1 -> Word32 (0xff) test passed\n")
 	} else {
-		stdio.printf("Int8 -1 -> Word32 test failed\n")
+		printf("Int8 -1 -> Word32 test failed\n")
 	}
 
 	//printf("i32 = 0x%08x (%d)\n", i32, i32)
