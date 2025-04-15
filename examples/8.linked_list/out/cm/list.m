@@ -18,7 +18,7 @@ public type List record {
 
 
 public func create() -> *List {
-	let list = malloc(sizeof(List))
+	let list = *List malloc(sizeof(List))
 
 	if list == nil {
 		return nil
@@ -73,7 +73,7 @@ public func node_first(list: *List, new_node: *Node) -> *Node {
 
 
 public func node_create() -> *Node {
-	let node = malloc(sizeof(Node))
+	let node = *Node malloc(sizeof(Node))
 
 	if node == nil {
 		return nil

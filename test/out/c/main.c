@@ -38,9 +38,31 @@ static void xxx(uint8_t *p)
 	}
 }
 
-static void copy(void *dst, void *src, uint32_t size)
+static void sbuf(void *p, uint32_t size)
 {
-	memcpy(((uint8_t *)dst), ((uint8_t *)src), sizeof(uint8_t[size]));
+	uint8_t *const px = (uint8_t *)p;
+	uint8_t buf[size];
+	memcpy(&buf, px, sizeof(uint8_t[size]));
+}
+
+static void mzero(void *p, uint32_t size)
+{
+	uint8_t *const px = (uint8_t *)p;
+	memset(px, 0, sizeof(uint8_t[size]));
+}
+
+static void mcopy(void *dst, void *src, uint32_t size)
+{
+	uint8_t *const d = (uint8_t *)dst;
+	uint8_t *const s = (uint8_t *)src;
+	memcpy(d, s, sizeof(uint8_t[size]));
+}
+
+static bool mcmp(void *a, void *b, uint32_t size)
+{
+	uint8_t *const ax = (uint8_t *)a;
+	uint8_t *const bx = (uint8_t *)b;
+	return memcmp(ax, bx, sizeof(uint8_t[size])) == 0;
 }
 
 //@attribute("value.type:c_restrict")

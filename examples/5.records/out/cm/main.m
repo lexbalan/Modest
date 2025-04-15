@@ -57,7 +57,7 @@ func lineLength(line: Line) -> Float {
 
 
 func ptr_example() -> Unit {
-	let ptr_p = malloc(sizeof(Point))
+	let ptr_p = *Point malloc(sizeof(Point))
 
 	// access by pointer
 	ptr_p.x = 10

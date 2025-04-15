@@ -33,8 +33,28 @@ func xxx(p: *[]Word8) -> Unit {
 	}
 }
 
-func copy(dst: Ptr, src: Ptr, size: Nat32) -> Unit {
-	*(dst) = *(src)
+
+
+func mzero(p: Ptr, size: Nat32) -> Unit {
+	let px = *[size]Word8 p
+	*px = []
+}
+
+func mcopy(dst: Ptr, src: Ptr, size: Nat32) -> Unit {
+	let d = *[size]Word8 dst
+	let s = *[size]Word8 src
+	*d = *s
+}
+
+func mcmp(a: Ptr, b: Ptr, size: Nat32) -> Bool {
+	let ax = *[size]Word8 a
+	let bx = *[size]Word8 b
+	return *ax == *bx
+}
+
+func sbuf(p: Ptr, size: Nat32) -> Unit {
+	let px = *[size]Word8 p
+	var buf: [size]Word8 = *px
 }
 
 
@@ -47,7 +67,7 @@ const ca = 4
 var va: Int32 = ca
 
 const p0 = {x = 1, y = 2}
-var p: record {x: <hlir.type.TypeNumber object at 0x1057494a0>, y: <hlir.type.TypeNumber object at 0x105743d10>} = p0
+var p: record {x: <hlir.type.TypeNumber object at 0x103b99f10>, y: <hlir.type.TypeNumber object at 0x103b9a090>} = p0
 
 const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 

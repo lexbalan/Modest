@@ -322,12 +322,6 @@ def str_value_access_module(x, ctx):
 	return "%s.%s" % (left, id_str)
 
 
-def str_cons(t, v, ctx=[]):
-	s = str_type(t)
-	s += " "
-	s += str_value(v, ctx=ctx)
-	return s
-
 
 def str_value_cons(x, ctx):
 	value = x.value
@@ -337,17 +331,10 @@ def str_value_cons(x, ctx):
 	if x.method == 'implicit':
 		return str_value(value)
 
-	# NO need cast ptr to *void
-	if Type.is_pointer(from_type):
-		if Type.is_free_pointer(to_type):
-			return str_value(value)
-
-	# NO need cast *void to ptr
-	if Type.is_free_pointer(from_type):
-		if Type.is_pointer(to_type):
-			return str_value(value)
-
-	return str_cons(to_type, value, ctx)
+	s = str_type(to_type)
+	s += " "
+	s += str_value(value, ctx=ctx)
+	return s
 
 
 

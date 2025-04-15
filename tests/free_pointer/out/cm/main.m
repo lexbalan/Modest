@@ -20,12 +20,12 @@ public func main() -> Int32 {
 	// (because runtime doesn't have any idea about value type it pointee),
 	// but you can construct another (non Free) pointer from it
 	// and use it as usualy
-	*(freePointer) = 123456789123456789
+	*(*Int64 freePointer) = 123456789123456789
 
 	printf("c = 0x%llX\n", c)
 
 	// Let's create new pointer to *Int64 from freePointer
-	let px = freePointer
+	let px = *Int64 freePointer
 
 	// And will use it...
 	let x = *px

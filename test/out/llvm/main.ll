@@ -262,16 +262,71 @@ endif_0:
 	ret void
 }
 
-define internal void @copy(i8* %dst, i8* %src, %Nat32 %size) {
+define internal void @mzero(i8* %p, %Nat32 %size) {
+	%1 = alloca i8*
+	%2 = call i8* @llvm.stacksave() 
+	store i8* %2, i8** %1
+	%3 = bitcast i8* %p to [0 x %Word8]*
+	%4 = mul %Nat32 %size, 1
+	%5 = mul %Nat32 %size, 1
+	%6 = mul %Nat32 %size, 1
+	%7 = bitcast [0 x %Word8]* %3 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %7, i8 0, %Nat32 %6, i1 0)
+	%8 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %8)
+	ret void
+}
+
+define internal void @mcopy(i8* %dst, i8* %src, %Nat32 %size) {
 	%1 = alloca i8*
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
 	%3 = bitcast i8* %dst to [0 x %Word8]*
-	%4 = bitcast i8* %src to [0 x %Word8]*
-	%5 = load [0 x %Word8], [0 x %Word8]* %4
-	store [0 x %Word8] %5, [0 x %Word8]* %3
-	%6 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %6)
+	%4 = mul %Nat32 %size, 1
+	%5 = mul %Nat32 %size, 1
+	%6 = bitcast i8* %src to [0 x %Word8]*
+	%7 = mul %Nat32 %size, 1
+	%8 = mul %Nat32 %size, 1
+	%9 = load [0 x %Word8], [0 x %Word8]* %6
+	store [0 x %Word8] %9, [0 x %Word8]* %3
+	%10 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %10)
+	ret void
+}
+
+define internal %Bool @mcmp(i8* %a, i8* %b, %Nat32 %size) {
+	%1 = alloca i8*
+	%2 = call i8* @llvm.stacksave() 
+	store i8* %2, i8** %1
+	%3 = bitcast i8* %a to [0 x %Word8]*
+	%4 = mul %Nat32 %size, 1
+	%5 = mul %Nat32 %size, 1
+	%6 = bitcast i8* %b to [0 x %Word8]*
+	%7 = mul %Nat32 %size, 1
+	%8 = mul %Nat32 %size, 1
+	%9 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %9)
+	%10 = bitcast [0 x %Word8]* %3 to i8*
+	%11 = bitcast [0 x %Word8]* %6 to i8*
+	%12 = call i1 (i8*, i8*, i64) @memeq(i8* %10, i8* %11, %Int64 0)
+	%13 = icmp ne %Bool %12, 0
+	ret %Bool %13
+}
+
+define internal void @sbuf(i8* %p, %Nat32 %size) {
+	%1 = alloca i8*
+	%2 = call i8* @llvm.stacksave() 
+	store i8* %2, i8** %1
+	%3 = bitcast i8* %p to [0 x %Word8]*
+	%4 = mul %Nat32 %size, 1
+	%5 = mul %Nat32 %size, 1
+	%6 = mul %Nat32 %size, 1
+	%7 = mul %Nat32 %size, 1
+	%8 = alloca %Word8, %Nat32 %6, align 1
+	%9 = load [0 x %Word8], [0 x %Word8]* %3
+	store [0 x %Word8] %9, %Word8* %8
+	%10 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %10)
 	ret void
 }
 

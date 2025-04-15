@@ -53,7 +53,7 @@ public func main() -> Int {
 		}
 	}
 
-	let sockaddr = &server_addr
+	let sockaddr = *SockAddr Ptr &server_addr
 	var e: Int = bind(sockfd, sockaddr, SocklenT sizeof(SockAddrIn))
 	if e < 0 {
 		perror("[-] Error in Binding")
@@ -72,7 +72,7 @@ public func main() -> Int {
 
 	var addr_size: SocklenT = SocklenT sizeof(SockAddrIn)
 	var new_addr: SockAddrIn
-	let sa = &new_addr
+	let sa = *SockAddr Ptr &new_addr
 	let new_sock = accept(sockfd, sa, &addr_size)
 
 	let suc = write_file(new_sock)

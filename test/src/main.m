@@ -34,8 +34,27 @@ func xxx(p: *[]Word8) -> Unit {
 }
 
 
-func copy(dst: Ptr, src: Ptr, size: Nat32) {
-	*(unsafe *[size]Word8 dst) = *(unsafe *[size]Word8 src)
+
+func mzero(p: Ptr, size: Nat32) {
+	let px = unsafe *[size]Word8 p
+	*px = []
+}
+
+func mcopy(dst: Ptr, src: Ptr, size: Nat32) {
+	let d = unsafe *[size]Word8 dst
+	let s = unsafe *[size]Word8 src
+	*d = *s
+}
+
+func mcmp(a: Ptr, b: Ptr, size: Nat32) -> Bool {
+	let ax = unsafe *[size]Word8 a
+	let bx = unsafe *[size]Word8 b
+	return *ax == *bx
+}
+
+func sbuf(p: Ptr, size: Nat32) {
+	let px = unsafe *[size]Word8 p
+	var buf = *px
 }
 
 

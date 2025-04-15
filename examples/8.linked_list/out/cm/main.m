@@ -9,7 +9,7 @@ import "list" as list
 // wrap around linked list for list.List Nat32
 func nat32_list_insert(lst: *List, x: Nat32) -> Unit {
 	// alloc memory for Nat32 value
-	let p_nat32 = malloc(sizeof(Nat32))
+	let p_nat32 = *Nat32 malloc(sizeof(Nat32))
 	*p_nat32 = x
 	list.append(lst, p_nat32)
 }
@@ -20,7 +20,7 @@ func list_print_forward(lst: *List) -> Unit {
 	printf("list_print_forward:\n")
 	var pn: *Node = list.first_node_get(lst)
 	while pn != nil {
-		let x = list.node_data_get(pn)
+		let x = *Nat32 list.node_data_get(pn)
 		printf("v = %u\n", *x)
 		pn = list.node_next_get(pn)
 	}
@@ -32,7 +32,7 @@ func list_print_backward(lst: *List) -> Unit {
 	printf("list_print_backward:\n")
 	var pn: *Node = list.last_node_get(lst)
 	while pn != nil {
-		let x = list.node_data_get(pn)
+		let x = *Nat32 list.node_data_get(pn)
 		printf("v = %u\n", *x)
 		pn = list.node_prev_get(pn)
 	}
@@ -88,7 +88,7 @@ public func main() -> Int {
 			again
 		}
 
-		let px = list.node_data_get(node)
+		let px = *Nat32 list.node_data_get(node)
 		printf("list(%i) = %i\n", i, *px)
 		i = i - 1
 	}
@@ -105,7 +105,7 @@ public func main() -> Int {
 			again
 		}
 
-		let px = list.node_data_get(node)
+		let px = *Nat32 list.node_data_get(node)
 		printf("list(%i) = %i\n", i, *px)
 		i = i + 1
 	}
@@ -113,7 +113,7 @@ public func main() -> Int {
 	printf("-----------------------------------------\n")
 
 
-	let p_nat32 = malloc(sizeof(Nat32))
+	let p_nat32 = *Nat32 malloc(sizeof(Nat32))
 	*p_nat32 = 1234
 	list.insert(list0, pos=4, data=p_nat32)
 

@@ -44,7 +44,7 @@ public func main() -> Int {
 		}
 	}
 
-	let sockaddr = &server_addr
+	let sockaddr = *SockAddr Ptr &server_addr
 	var e: Int = connect(sockfd, sockaddr, SocklenT sizeof(SockAddrIn))
 	if e < 0 {
 		perror("[-] Error in Connecting")
