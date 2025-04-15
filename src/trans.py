@@ -588,15 +588,15 @@ def do_value_shift(x):
 	else:
 		pass
 
-	if l.isImmediate() and r.isImmediate():
+	"""if l.isImmediate() and r.isImmediate():
 		asset = l.asset
 		if op == 'shl':
 			asset = asset << r.asset
 		elif op == 'shr':
 			asset = asset >> r.asset
 		nv.asset = int(asset)
-		nv.immediate = True
-		return nv
+		nv.immediate = True"""
+	#	return nv
 
 	if l.type.is_generic():
 		error("expected non-generic value", l.ti)
@@ -673,41 +673,6 @@ def do_value_bin(x):
 		t = foundation.typeBool
 
 	nv = ValueBin(t, op, l, r, ti=ti)
-
-	# if left & right are immediate, we can fold const
-	# and append field .asset to bin_value
-	if l.isImmediate() and r.isImmediate():
-		ops = {
-			'logic_or': lambda a, b: a or b,
-			'logic_and': lambda a, b: a and b,
-			'or': lambda a, b: a | b,
-			'and': lambda a, b: a & b,
-			'xor': lambda a, b: a ^ b,
-			'lt': lambda a, b: a < b,
-			'gt': lambda a, b: a > b,
-			'le': lambda a, b: a <= b,
-			'ge': lambda a, b: a >= b,
-			'add': lambda a, b: a + b,
-			'sub': lambda a, b: a - b,
-			'mul': lambda a, b: a * b,
-			'div': lambda a, b: l.asset // r.asset,
-			'fdiv': lambda a, b: l.asset / r.asset,
-			'rem': lambda a, b: a % b,
-		}
-
-		if op == 'div' and t.is_float():
-			op = 'fdiv'
-
-		asset = ops[op](l.asset, r.asset)
-
-		if t.is_num():
-			# (для операций типа 1 + 2)
-			# Пересматриваем generic тип для нового значения
-			nv.type = htype.type_number_for(asset, signed=(asset < 0), ti=ti)
-
-		nv.immediate = True
-		nv.asset = asset
-
 	return nv
 
 
@@ -728,16 +693,6 @@ def do_value_not(x):
 		op = 'logic_not'
 
 	nv = ValueNot(vtype, v, ti=x['ti'])
-
-	if v.isImmediate():
-		# because: ~(1) = -1 (not 0) !
-		if vtype.is_bool():
-			nv.asset = not v.asset
-		else:
-			nv.asset = ~v.asset
-
-		nv.immediate = True
-
 	return nv
 
 
@@ -756,14 +711,6 @@ def do_value_neg(x):
 		vtype.signed = True
 
 	nv = ValueNeg(vtype, v, ti=x['ti'])
-
-	if v.isImmediate():
-		nv.asset = -v.asset
-		nv.immediate = True
-
-		if nv.type.is_generic():
-			nv.type = htype.type_number_for(v.asset, signed=True, ti=x['ti'])
-
 	return nv
 
 
@@ -779,14 +726,6 @@ def do_value_pos(x):
 		error("expected value with signed type", v.ti)
 
 	nv = ValuePos(vtype, v, ti=x['ti'])
-
-	if v.isImmediate():
-		nv.asset = +v.asset
-		nv.immediate = True
-
-		if nv.type.is_generic():
-			nv.type = htype.type_number_for(v.asset, signed=True, ti=x['ti'])
-
 	return nv
 
 
@@ -806,15 +745,6 @@ def do_value_ref(x):
 			return ValueBad(ti)
 
 	nv = ValueRef(v, ti=ti)
-
-	if v.is_global():
-		nv.immediate = True
-		# не можно поставить 0 тк иначе значение будет трактоваться как zero
-		# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
-		# поэтому временно заткнул единицей, но вообще нужно будет обдумать
-		nv.asset = 1
-		nv.addAttribute('ptr_to_glb_val')
-
 	return nv
 
 
@@ -1091,27 +1021,6 @@ def do_value_index(x):
 		index = value_cons_implicit_check(typeSysInt, index)
 
 	nv = ValueIndex(array_typ.of, left, index, ti=x['ti'])
-
-	if not via_pointer:
-		nv.immutable = left.immutable
-
-		if left.isImmediate():
-			if index.isImmediate():
-				#info("immediate index", x['ti'])
-				index_imm = index.asset
-
-				if index_imm >= array_typ.volume.asset:
-					error("array index out of bounds", x['index'])
-					return ValueBad(x['ti'])
-
-				if index_imm < len(left.asset):
-					item = left.asset[index_imm]
-				else:
-					item = ValueZero(array_typ.of, x['ti'])
-
-				nv.immediate = True
-				cp_immediate(nv, item)
-
 	return nv
 
 
@@ -1174,10 +1083,6 @@ def do_value_slice(x):
 
 	type = TypeArray(array_type.of, slice_volume, generic=False, ti=x['ti'])
 	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
-
-	if not via_pointer:
-		nv.immutable = left.immutable
-
 	return nv
 
 
@@ -1275,17 +1180,6 @@ def do_value_access(x):
 
 
 	nv = ValueAccessRecord(field.type, left, field, ti=x['ti'])
-	if not via_pointer:
-		nv.immutable = left.immutable
-
-		# access to immediate object
-		if left.isImmediate():
-			initializer = get_item_by_id(left.asset, field_id.str)
-
-			# (!) #asset of immediate index & access contains VALUE (!)
-			nv.immediate = True
-			cp_immediate(nv, initializer.value)
-
 	return nv
 
 
@@ -1439,16 +1333,12 @@ def do_value_float(x):
 def do_value_sizeof_type(x):
 	t = do_type(x['type'])
 	nv = ValueSizeofType(t, ti=x['ti'])
-	if t.is_vla():
-		nv.immediate = False
 	return nv
 
 
 def do_value_sizeof_value(x):
 	v = do_value(x['value'])
 	nv = ValueSizeofValue(v, ti=x['ti'])
-	if v.type.is_vla():
-		nv.immediate = False
 	return nv
 
 
@@ -1535,8 +1425,6 @@ def do_rvalue(x):
 def do_value_subexpr(x):
 	v = do_value(x['value'])
 	nv = ValueSubexpr(v, ti=x['ti'])
-	if v.isImmediate():
-		cp_immediate(nv, v)
 	return nv
 
 

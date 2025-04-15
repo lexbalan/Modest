@@ -3,6 +3,7 @@
 #######################################################################
 
 from error import info
+from util import get_item_by_id
 from .entity import Entity
 from .misc import Id, Field
 import copy
@@ -267,6 +268,15 @@ class ValueNot(Value):
 		assert(isinstance(value, Value))
 		super().__init__(type=type, ti=ti)
 		self.value = value
+		if value.isImmediate():
+			# because: ~(1) = -1 (not 0) !
+			if value.type.is_bool():
+				self.asset = not value.asset
+			else:
+				self.asset = ~value.asset
+
+			self.immediate = True
+
 
 
 class ValueNeg(Value):
@@ -276,6 +286,14 @@ class ValueNeg(Value):
 		assert(isinstance(value, Value))
 		super().__init__(type=type, ti=ti)
 		self.value = value
+		
+		if value.isImmediate():
+			self.asset = -value.asset
+			self.immediate = True
+
+			if self.type.is_generic():
+				from type import type_number_for
+				self.type = type_number_for(value.asset, signed=True, ti=ti)
 
 
 class ValuePos(Value):
@@ -285,6 +303,15 @@ class ValuePos(Value):
 		assert(isinstance(value, Value))
 		super().__init__(type=type, ti=ti)
 		self.value = value
+		
+		if value.isImmediate():
+			self.asset = +value.asset
+			self.immediate = True
+
+		if self.type.is_generic():
+			from type import type_number_for
+			self.type = type_number_for(value.asset, signed=True, ti=ti)
+		
 
 
 class ValueRef(Value):
@@ -295,6 +322,14 @@ class ValueRef(Value):
 		type = TypePointer(value.type, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.value = value
+		
+		if value.is_global():
+			self.immediate = True
+			# не можно поставить 0 тк иначе значение будет трактоваться как zero
+			# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
+			# поэтому временно заткнул единицей, но вообще нужно будет обдумать
+			self.asset = 1
+			self.addAttribute('ptr_to_glb_val')
 
 
 class ValueDeref(Value):
@@ -311,6 +346,9 @@ class ValueSubexpr(Value):
 		assert(isinstance(value, Value))
 		super().__init__(type=value.type, ti=ti)
 		self.value = value
+		if value.isImmediate():
+			from trans import cp_immediate
+			cp_immediate(self, value)
 
 
 #TODO: maybe without op?
@@ -324,6 +362,44 @@ class ValueBin(Value):
 		self.op = op
 		self.left = left
 		self.right = right
+		
+		# if left & right are immediate, we can fold const
+		# and append field .asset to bin_value
+		if left.isImmediate() and right.isImmediate():
+			ops = {
+				'logic_or': lambda a, b: a or b,
+				'logic_and': lambda a, b: a and b,
+				'or': lambda a, b: a | b,
+				'and': lambda a, b: a & b,
+				'xor': lambda a, b: a ^ b,
+				'lt': lambda a, b: a < b,
+				'gt': lambda a, b: a > b,
+				'le': lambda a, b: a <= b,
+				'ge': lambda a, b: a >= b,
+				'add': lambda a, b: a + b,
+				'sub': lambda a, b: a - b,
+				'mul': lambda a, b: a * b,
+				'div': lambda a, b: left.asset // right.asset,
+				'fdiv': lambda a, b: left.asset / right.asset,
+				'rem': lambda a, b: a % b,
+				'eq':  lambda a, b: a == b,
+				'ne':  lambda a, b: a != b
+			}
+
+			if op == 'div' and type.is_float():
+				op = 'fdiv'
+
+			asset = ops[op](left.asset, right.asset)
+
+			if type.is_num():
+				# (для операций типа 1 + 2)
+				# Пересматриваем generic тип для нового значения
+				from type import type_number_for
+				self.type = type_number_for(asset, signed=(asset < 0), ti=ti)
+
+			self.immediate = True
+			self.asset = asset
+
 
 
 class ValueShl(Value):
@@ -334,6 +410,10 @@ class ValueShl(Value):
 		self.left = left
 		self.right = right
 
+		if left.isImmediate() and right.isImmediate():
+			self.asset = int(left.asset << right.asset)
+			self.immediate = True
+
 
 class ValueShr(Value):
 	def __init__(self, left, right, ti=None):
@@ -342,6 +422,10 @@ class ValueShr(Value):
 		super().__init__(type=left.type, ti=ti)
 		self.left = left
 		self.right = right
+
+		if left.isImmediate() and right.isImmediate():
+			self.asset = int(left.asset >> right.asset)
+			self.immediate = True
 
 
 #TODO: get type from value ret type
@@ -365,6 +449,18 @@ class ValueAccessRecord(Value):
 		self.left = left
 		self.field = field
 		self.is_lvalue = True
+		
+		if not left.type.is_pointer():
+			self.immutable = left.immutable
+
+			# access to immediate object
+			if left.isImmediate():
+				initializer = get_item_by_id(left.asset, field.id.str)
+
+				# (!) #asset of immediate index & access contains VALUE (!)
+				self.immediate = True
+				from trans import cp_immediate
+				cp_immediate(self, initializer.value)
 
 
 class ValueAccessModule(Value):
@@ -389,6 +485,31 @@ class ValueIndex(Value):
 		self.left = left
 		self.index = index
 		self.is_lvalue = True
+		
+		
+		
+		if not left.type.is_pointer():
+			self.immutable = left.immutable
+			
+			array_typ = left.type
+
+			if left.isImmediate():
+				if index.isImmediate():
+					#info("immediate index", x['ti'])
+					index_imm = index.asset
+
+					if index_imm >= array_typ.volume.asset:
+						error("array index out of bounds", x['index'])
+						return ValueBad(x['ti'])
+
+					if index_imm < len(left.asset):
+						item = left.asset[index_imm]
+					else:
+						item = ValueZero(array_typ.of, x['ti'])
+
+					self.immediate = True
+					from trans import cp_immediate
+					cp_immediate(self, item)
 
 
 #TODO: get type from array type
@@ -404,6 +525,9 @@ class ValueSlice(Value):
 		self.index_from = index_from
 		self.index_to = index_to
 		self.is_lvalue = True
+		
+		if not left.type.is_pointer():
+			self.immutable = left.immutable
 
 
 class ValueNew(Value):
@@ -433,6 +557,9 @@ class ValueSizeofType(Value):
 		self.of = of
 		self.immediate = True
 		self.asset = value_size
+		
+		if of.is_vla():
+			self.immediate = False
 
 
 class ValueSizeofValue(Value):
@@ -453,6 +580,8 @@ class ValueSizeofValue(Value):
 		if not value.type.is_vla():
 			self.immediate = True
 			self.asset = value_size
+		else:
+			self.immediate = False
 
 
 
