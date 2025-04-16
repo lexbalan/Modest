@@ -719,26 +719,16 @@ def needTypeAnno(x):
 	return not (isinstance(x.init_value, ValueCons) and x.init_value.method == 'explicit')
 
 
-def print_stmt_const(x, operator='const'):
-	out("%s " % operator)
-	out(get_id_str(x))
+def print_stmt_def(x, operator='const'):
+	out("%s %s" % (operator, get_id_str(x)))
+
 	if needTypeAnno(x):
 		out(": ")
 		out(str_type(x.value.type))
-	out(" = ")
-	out(str_value(x.init_value))
 
-
-def print_stmt_var(x):
-	out("var ")
-	out(get_id_str(x.value))
-	if needTypeAnno(x):
-		out(": ")
-		out(str_type(x.value.type))
-	iv = x.init_value
-	if not Value.isUndefined(iv):
+	if not x.init_value.isUndefined():
 		out(" = ")
-		out(str_value(iv))
+		out(str_value(x.init_value))
 
 
 def print_stmt_func(x):
@@ -861,8 +851,8 @@ def print_stmt(x):
 	elif isinstance(x, StmtReturn): print_stmt_return(x)
 	elif isinstance(x, StmtIf): print_stmt_if(x)
 	elif isinstance(x, StmtWhile): print_stmt_while(x)
-	elif isinstance(x, StmtDefVar): print_stmt_var(x)
-	elif isinstance(x, StmtDefConst): print_stmt_const(x, operator='let')
+	elif isinstance(x, StmtDefVar): print_stmt_def(x, operator='var')
+	elif isinstance(x, StmtDefConst): print_stmt_def(x, operator='let')
 	elif isinstance(x, StmtBreak): print_stmt_break(x)
 	elif isinstance(x, StmtAgain): print_stmt_again(x)
 	elif isinstance(x, StmtComment): print_stmt_comment(x)
@@ -901,8 +891,8 @@ def printTopLevelStmt(x):
 		if x.access_level == 'public':
 			out("public ")
 
-	if isinstance(x, StmtDefVar): print_stmt_var(x)
-	elif isinstance(x, StmtDefConst): print_stmt_const(x)
+	if isinstance(x, StmtDefVar): print_stmt_def(x, operator='var')
+	elif isinstance(x, StmtDefConst): print_stmt_def(x, operator='const')
 	elif isinstance(x, StmtDefFunc): print_stmt_func(x)
 	elif isinstance(x, StmtDefType): print_stmt_type(x)
 	elif isinstance(x, StmtComment): print_stmt_comment(x)
