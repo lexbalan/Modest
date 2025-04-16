@@ -88,7 +88,7 @@ var pf13: *(f: **(a: *[32]*Int32, b: **[64]*Int32) -> *[10]Int32) -> **() -> Uni
 var a0: [5]Int32 = [0, 1, 2, 3, 4]
 var a1: [5]*Int32 = [&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]]
 var a2: [5]**Int32 = [&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]]
-var a3: [5]*() -> Unit = [5]*() -> Unit [&f0]
+var a3 = [5]*() -> Unit [&f0]
 var a4: [2][5]Int = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
 var a5: [2]*[5]Int = [&a4[0], &a4[1]]
 // Проблема в том что мой getelementptr не умеет в цепь-молнию
@@ -121,7 +121,7 @@ type RGB24 record {
 	blue: Nat8
 }
 
-var rgb0: [2]RGB24 = [2]RGB24 [
+var rgb0 = [2]RGB24 [
 	{red = 200, green = 0, blue = 0}
 	{red = 200, green = 0, blue = 0}
 ]
@@ -131,7 +131,7 @@ type AnimationPoint record {
 	time: Nat32
 }
 
-var ap: AnimationPoint = AnimationPoint {
+var ap = AnimationPoint {
 	color = {
 		red = 200
 		green = 0
@@ -141,7 +141,7 @@ var ap: AnimationPoint = AnimationPoint {
 }
 
 
-var animation0_points: [5]AnimationPoint = [5]AnimationPoint [
+var animation0_points = [5]AnimationPoint [
 	{color = {red = 200, green = 0, blue = 0}, time = 3}
 	{color = {red = 0, green = 200, blue = 0}, time = 30}
 	{color = {red = 100, green = 100, blue = 0}, time = 300}
@@ -149,7 +149,7 @@ var animation0_points: [5]AnimationPoint = [5]AnimationPoint [
 	{color = {red = 0, green = 0, blue = 255}, time = 3000}
 ]
 
-var animation1_points: [5]AnimationPoint = [5]AnimationPoint [
+var animation1_points = [5]AnimationPoint [
 	{color = {red = 200, green = 0, blue = 0}, time = 3}
 	{color = {red = 0, green = 200, blue = 0}, time = 30}
 	{color = {red = 100, green = 100, blue = 0}, time = 300}
@@ -157,7 +157,7 @@ var animation1_points: [5]AnimationPoint = [5]AnimationPoint [
 	{color = {red = 0, green = 0, blue = 255}, time = 3000}
 ]
 
-var animation2_points: [5]AnimationPoint = [5]AnimationPoint [
+var animation2_points = [5]AnimationPoint [
 	{color = {red = 200, green = 0, blue = 0}, time = 3}
 	{color = {red = 0, green = 200, blue = 0}, time = 30}
 	{color = {red = 100, green = 100, blue = 0}, time = 300}
@@ -212,7 +212,7 @@ type Wrap record {
 	fop: *(a: Int32, b: Int32) -> Int32
 }
 
-var wrap0: Wrap = Wrap {
+var wrap0 = Wrap {
 	fhi = &hi
 	fop = &add
 }
@@ -246,9 +246,9 @@ public func main() -> Int32 {
 		i = i + 1
 	}
 
-	let _add = farr[0](5, 7)
+	let _add: Int32 = farr[0](5, 7)
 	printf("farr[0](5, 7) = %d\n", _add)
-	let _sub = farr[1](5, 7)
+	let _sub: Int32 = farr[1](5, 7)
 	printf("farr[1](5, 7) = %d\n", _sub)
 
 	i = 0

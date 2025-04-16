@@ -83,7 +83,7 @@ func on_exit(x: *FSM) -> Unit {
 //
 
 func beacon_entry(x: *FSM) -> Unit {
-	let from_name = fsm.state_no_name(x, x.state)
+	let from_name: *Str8 = fsm.state_no_name(x, x.state)
 	printf("beacon_entry from %s\n", from_name)
 }
 
@@ -100,7 +100,7 @@ func beacon_loop(x: *FSM) -> Unit {
 
 
 func beacon_exit(x: *FSM) -> Unit {
-	let to_name = fsm.state_no_name(x, x.nexstate)
+	let to_name: *Str8 = fsm.state_no_name(x, x.nexstate)
 	printf("beacon_exit to %s\n", to_name)
 }
 

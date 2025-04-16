@@ -43,10 +43,10 @@ func min(a: Float, b: Float) -> Float {
 
 // Pythagorean theorem
 func distance(a: Point, b: Point) -> Float {
-	let dx = max(a.x, b.x) - min(a.x, b.x)
-	let dy = max(a.y, b.y) - min(a.y, b.y)
-	let dx2 = pow(dx, 2)
-	let dy2 = pow(dy, 2)
+	let dx: Float = max(a.x, b.x) - min(a.x, b.x)
+	let dy: Float = max(a.y, b.y) - min(a.y, b.y)
+	let dx2: Double = pow(dx, 2)
+	let dy2: Double = pow(dy, 2)
 	return sqrt(dx2 + dy2)
 }
 
@@ -69,7 +69,7 @@ func ptr_example() -> Unit {
 
 public func main() -> Int {
 	// by value
-	let len = lineLength(line)
+	let len: Float = lineLength(line)
 	printf("line length = %f\n", len)
 
 	ptr_example()

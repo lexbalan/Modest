@@ -34,8 +34,8 @@ public func main() -> Int {
 	var a: Int64 = 10
 	var b: Int64 = 20
 
-	let sum = sum64(a, b)
-	let sub = sub64(a, b)
+	let sum: Int64 = sum64(a, b)
+	let sub: Int64 = sub64(a, b)
 
 	printf("sum(%lld, %lld) = %lld\n", a, b, sum)
 	printf("sub(%lld, %lld) = %lld\n", a, b, sub)

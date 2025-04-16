@@ -6,35 +6,35 @@ include "stdio"
 public func main() -> Int {
 	printf("generic types test\n")
 
-	let t1 = test_generic_integer()
+	let t1: Bool = test_generic_integer()
 	if t1 {
 		printf("test_generic_integer passed\n")
 	} else {
 		printf("test_generic_integer failed\n")
 	}
 
-	let t2 = test_generic_float()
+	let t2: Bool = test_generic_float()
 	if t2 {
 		printf("test_generic_float passed\n")
 	} else {
 		printf("test_generic_float failed\n")
 	}
 
-	let t3 = test_generic_char()
+	let t3: Bool = test_generic_char()
 	if t3 {
 		printf("test_generic_char passed\n")
 	} else {
 		printf("test_generic_char failed\n")
 	}
 
-	let t4 = test_generic_array()
+	let t4: Bool = test_generic_array()
 	if t4 {
 		printf("test_generic_array passed\n")
 	} else {
 		printf("test_generic_array failed\n")
 	}
 
-	let t5 = test_generic_record()
+	let t5: Bool = test_generic_record()
 	if t5 {
 		printf("test_generic_record passed\n")
 	} else {
@@ -66,9 +66,9 @@ func test_generic_integer() -> Bool {
 
 	// explicit cast GenericInteger value
 
-	var c: Char8 = Char8 one
-	var d: Char16 = Char16 one
-	var e: Char32 = Char32 one
+	var c = Char8 one
+	var d = Char16 one
+	var e = Char32 one
 
 	var k: Bool = one != 0
 
@@ -87,7 +87,7 @@ func test_generic_float() -> Bool {
 	var g: Float64 = pi
 
 	// explicit cast GenericFloat value to Int32
-	var x: Int32 = Int32 pi
+	var x = Int32 pi
 
 	return true
 }
@@ -105,7 +105,7 @@ func test_generic_char() -> Bool {
 	var d: Char32 = a
 
 	// explicit cast GenericChar value to Int32
-	var char_code: Int32 = Int32 Word32 Char32 a
+	var char_code = Int32 Word32 Char32 a
 
 	return true
 }
@@ -149,7 +149,7 @@ func test_generic_array() -> Bool {
 	}
 
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
-	var d: [10]Int32 = [10]Int32 a
+	var d = [10]Int32 a
 
 	if d != [0, 1, 2, 3] {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n")

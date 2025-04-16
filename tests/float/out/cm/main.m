@@ -20,8 +20,8 @@ type Point2D record {
 
 
 func slope(a: Point2D, b: Point2D) -> Float32 {
-	let dx = abs(a.x - b.x)
-	let dy = abs(a.y - b.y)
+	let dx: Int = abs(a.x - b.x)
+	let dy: Int = abs(a.y - b.y)
 	printf("dx = %d\n", dx)
 	printf("dy = %d\n", dy)
 	return Float32 dy / Float32 dx
@@ -35,7 +35,7 @@ public func main() -> Int {
 	printf("2/3 = %f\n", Float64 (2.0 / 3))
 
 	let r = 10
-	let s = squareOfCircle(r)
+	let s: Float64 = squareOfCircle(r)
 	printf("s = %f\n", s)
 
 	let k = 1.0 / 8
@@ -45,7 +45,7 @@ public func main() -> Int {
 	printf("sizeof(Float64) = %lu\n", sizeof(Float64))
 
 	// printf %f ожидает получить double а не float!
-	let sl = slope({x = 10, y = 20}, {x = 30, y = 50})
+	let sl: Float32 = slope({x = 10, y = 20}, {x = 30, y = 50})
 	printf("slope = %f\n", Float64 sl)
 
 	return 0

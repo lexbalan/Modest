@@ -32,7 +32,7 @@ public func main() -> Int {
 	// call function with two arguments and return value
 	let arg_a = Int32 1
 	let arg_b = Int32 2
-	let sum_result = sum(arg_a, arg_b)
+	let sum_result: Int32 = sum(arg_a, arg_b)
 	printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result)
 
 
@@ -40,7 +40,7 @@ public func main() -> Int {
 	// call function with two arguments and return value
 	let arg_a2 = Int32 1
 	let arg_b2 = Int32 2
-	let fptr_result = fptr(arg_a2, arg_b2)
+	let fptr_result: Int32 = fptr(arg_a2, arg_b2)
 	printf("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result)
 
 	return 0

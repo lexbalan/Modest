@@ -15,7 +15,7 @@ type SHA256_TestCase record {
 }
 
 
-var test0: SHA256_TestCase = SHA256_TestCase {
+var test0 = SHA256_TestCase {
 	input_data = "abc"
 	input_data_len = 3
 	expected_result = [
@@ -26,7 +26,7 @@ var test0: SHA256_TestCase = SHA256_TestCase {
 	]
 }
 
-var test1: SHA256_TestCase = SHA256_TestCase {
+var test1 = SHA256_TestCase {
 	input_data = "Hello World!"
 	input_data_len = 12
 	expected_result = [
@@ -43,8 +43,8 @@ const tests = [&test0, &test1]
 
 func doTest(test: *SHA256_TestCase) -> Bool {
 	var test_hash: Hash
-	let msg = *[]Word8 &test.input_data
-	let msg_len = test.input_data_len
+	let msg: *[]Word8 = *[]Word8 &test.input_data
+	let msg_len: Nat32 = test.input_data_len
 
 	sha256.hash(msg, msg_len, &test_hash)
 
@@ -68,10 +68,10 @@ public func main() -> Int {
 
 	var i: Int32 = 0
 	while i < Int lengthof(tests) {
-		let test = tests[i]
-		let test_result = doTest(test)
+		let test: *SHA256_TestCase = tests[i]
+		let test_result: Bool = doTest(test)
 
-		var res: *Str8 = *Str8 "failed"
+		var res = *Str8 "failed"
 		if test_result {
 			res = "passed"
 		}

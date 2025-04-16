@@ -28,7 +28,7 @@ func send_file(fp: *File, sockfd: Int) -> Bool {
 
 
 public func main() -> Int {
-	let sockfd = socket(af_INET, c_SOCK_STREAM, 0)
+	let sockfd: Int = socket(af_INET, c_SOCK_STREAM, 0)
 	if sockfd < 0 {
 		perror("[-] Error in socket")
 		exit(1)
@@ -53,13 +53,13 @@ public func main() -> Int {
 
 	printf("[+] Connected to server\n")
 
-	let fp = fopen(filename, "r")
+	let fp: *File = fopen(filename, "r")
 	if fp == nil {
 		perror("[-] Error in reading file")
 		exit(1)
 	}
 
-	let suc = send_file(fp, sockfd)
+	let suc: Bool = send_file(fp, sockfd)
 	if suc {
 		printf("[+] File data send successfully\n")
 	} else {

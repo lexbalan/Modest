@@ -26,7 +26,7 @@ func htons(x: Word16) -> Word16 {
 
 func handleRequest(client_socket: Int32) -> Unit {
 	var buffer: [receiveBufferSize]Word8
-	let bytes_received = read(client_socket, &buffer, lengthof(buffer) - 1)
+	let bytes_received: SSizeT = read(client_socket, &buffer, lengthof(buffer) - 1)
 	if bytes_received < 0 {
 		perror("cannot read socket")
 		close(client_socket)
@@ -49,7 +49,7 @@ func handleRequest(client_socket: Int32) -> Unit {
 
 
 public func main() -> Int32 {
-	let server_socket = socket(af_INET, c_SOCK_STREAM, 0)
+	let server_socket: Int = socket(af_INET, c_SOCK_STREAM, 0)
 	if server_socket < 0 {
 		perror("cannot create socket")
 		exit(1)
@@ -64,7 +64,7 @@ public func main() -> Int32 {
 	}
 
 	// Bind socket to address
-	let socadr = *SockAddr &server_addr
+	let socadr: *SockAddr = *SockAddr &server_addr
 	var rc: Int = bind(server_socket, socadr, sizeof server_addr)
 	if rc < 0 {
 		perror("cannot bind socket")
@@ -85,9 +85,9 @@ public func main() -> Int32 {
 	// Handle input connections
 	while true {
 		var client_addr: SockAddrIn
-		let socadr = *SockAddr &client_addr
+		let socadr: *SockAddr = *SockAddr &client_addr
 		var client_adr_len: SocklenT = sizeof client_addr
-		let client_socket = accept(server_socket, socadr, &client_adr_len)
+		let client_socket: Int = accept(server_socket, socadr, &client_adr_len)
 		if client_socket < 0 {
 			perror("cannot accept connection")
 			again

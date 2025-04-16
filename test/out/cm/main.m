@@ -55,6 +55,11 @@ func mcmp(a: Ptr, b: Ptr, size: Nat32) -> Bool {
 func sbuf(p: Ptr, size: Nat32) -> Unit {
 	let px = *[size]Word8 p
 	var buf: [size]Word8 = *px
+	var i: Nat32 = Nat32 0
+	while i < size {
+		let x = buf[i]
+		i = i + 1
+	}
 }
 
 
@@ -67,7 +72,7 @@ const ca = 4
 var va: Int32 = ca
 
 const p0 = {x = 1, y = 2}
-var p: record {x: <hlir.type.TypeNumber object at 0x103b99f10>, y: <hlir.type.TypeNumber object at 0x103b9a090>} = p0
+var p = p0
 
 const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 

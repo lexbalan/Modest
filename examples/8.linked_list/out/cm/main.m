@@ -42,7 +42,7 @@ func list_print_backward(lst: *List) -> Unit {
 public func main() -> Int {
 	printf("linked list example\n")
 
-	let list0 = list.create()
+	let list0: *List = list.create()
 
 	//list0.size  // access to private field of record
 
@@ -65,7 +65,7 @@ public func main() -> Int {
 	nat32_list_insert(list0, 100)
 
 	// print list size
-	let list_size = list.size_get(list0)
+	let list_size: Nat32 = list.size_get(list0)
 	printf("linked list size: %u\n", list_size)
 
 	// print list forward
@@ -80,7 +80,7 @@ public func main() -> Int {
 	// test list.node_get
 	var i: Int32 = 0
 	while i >= -12 {
-		let node = list.node_get(list0, i)
+		let node: *Node = list.node_get(list0, i)
 
 		if node == nil {
 			printf("node %i not exist\n", i)
@@ -97,7 +97,7 @@ public func main() -> Int {
 
 	i = 0
 	while i <= 12 {
-		let node = list.node_get(list0, i)
+		let node: *Node = list.node_get(list0, i)
 
 		if node == nil {
 			printf("node %i not exist\n", i)

@@ -14,8 +14,8 @@ func bubble_sort32(array: *[]Int32, len: Int32) -> Unit {
 		need_to_sort = false
 		var i: Int32 = 0
 		while i < (len - 1) {
-			let i0 = array[i]
-			let i1 = array[i + 1]
+			let i0: Int32 = array[i]
+			let i1: Int32 = array[i + 1]
 
 			if i0 > i1 {
 				// swap
@@ -64,7 +64,7 @@ func fill_array(array: *[]Int32, len: Int32) -> Unit {
 	var i: Int32 = 0
 	while i < len {
 		printf("[%i] ", i)
-		let x = get_number(min, max)
+		let x: Int32 = get_number(min, max)
 		array[i] = x
 		i = i + 1
 	}
@@ -72,7 +72,7 @@ func fill_array(array: *[]Int32, len: Int32) -> Unit {
 
 
 func get_number(min: Int32, max: Int32) -> Int32 {
-	var number: Int32 = Int32 0
+	var number = Int32 0
 
 	while true {
 		printf("enter a number (%i .. %i): ", min, max)

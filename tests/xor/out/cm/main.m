@@ -4,8 +4,8 @@ include "stdio"
 
 
 func xor_encrypter(buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -> Unit {
-	var i: Nat32 = Nat32 0
-	var j: Nat32 = Nat32 0
+	var i = Nat32 0
+	var j = Nat32 0
 	while i < buflen {
 		buf[i] = buf[i] xor key[j]
 
@@ -30,7 +30,7 @@ var test_key: [key_length + 1]Char8 = "abc"
 
 
 func print_bytes(buf: *[]Word8, len: Nat32) -> Unit {
-	var i: Nat32 = Nat32 0
+	var i = Nat32 0
 	while i < len {
 		printf("0x%02X ", buf[i])
 		i = i + 1
@@ -42,8 +42,8 @@ func print_bytes(buf: *[]Word8, len: Nat32) -> Unit {
 public func main() -> Int {
 	printf("test xor encrypting\n")
 
-	let tmsg = *[]Word8 &test_msg
-	let tkey = *[]Word8 &test_key
+	let tmsg: *[]Word8 = *[]Word8 &test_msg
+	let tkey: *[]Word8 = *[]Word8 &test_key
 
 	printf("before encrypt test_msg: \n")
 	print_bytes(tmsg, msg_length)

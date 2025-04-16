@@ -17,7 +17,7 @@ public func main() -> Int {
 
 	let x0 = (a - b) * c
 
-	let x1 = named_args_test(
+	let x1: Int32 = named_args_test(
 		a = a
 		b = b
 		c = c

@@ -63,7 +63,7 @@ var x: X
 public func main() -> Int {
 	printf("test cast operation\n")
 
-	let start_adr = Nat64 &c
+	let start_adr: Nat64 = Nat64 &c
 	printf("off(c) = %llu\n", Nat64 &c - start_adr)
 	printf("off(i) = %llu\n", Nat64 &i - start_adr)
 	printf("off(f) = %llu\n", Nat64 &f - start_adr)

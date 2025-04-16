@@ -28,7 +28,7 @@ public func main() -> Int32 {
 	let px = *Int64 freePointer
 
 	// And will use it...
-	let x = *px
+	let x: Int64 = *px
 
 	// for pointer mechanics checking
 	printf("x = 0x%llX\n", x)

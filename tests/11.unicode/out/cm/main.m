@@ -11,9 +11,9 @@ const ratSymbolUTF8 = [0xF0, 0x9F, 0x90, 0x80]
 const ratSymbolUTF16 = [0xD83D, 0xDC00]
 const ratSymbolUTF32 = 0x0001F400
 
-const arr_partycorn = "🎉"
-const arr_unicorn = "🦄"
-const arr_rat = "🐀"
+const arr_partycorn: [4]Char8 = "🎉"
+const arr_unicorn: [4]Char8 = "🦄"
+const arr_rat: [4]Char8 = "🐀"
 
 const genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 const string8Const = *Str8 genericStringConst

@@ -9,13 +9,13 @@ const datastring = "123456789"
 const expected_hash = 0xCBF43926
 
 
-var data: [9]Word8 = [9]Word8 datastring
+var data = [9]Word8 datastring
 
 
 public func main() -> Int {
 	printf("CRC32 test\n")
 
-	let crc = crc32.run(&data, lengthof(data))
+	let crc: Word32 = crc32.run(&data, lengthof(data))
 
 	printf("crc32.doHash(\"%s\") = %08X\n", *Str8 datastring, crc)
 

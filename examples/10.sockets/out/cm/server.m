@@ -15,14 +15,14 @@ const bufSize = 1024
 func write_file(sockfd: Int) -> Bool {
 	var buffer: [bufSize]Char8
 
-	let fp = fopen(filename, "w")
+	let fp: *File = fopen(filename, "w")
 	if fp == nil {
 		perror("[-] Error in creating file")
 		return false
 	}
 
 	while true {
-		let n = recv(sockfd, &buffer, bufSize, 0)
+		let n: SSizeT = recv(sockfd, &buffer, bufSize, 0)
 
 		if n <= 0 {
 			break
@@ -37,7 +37,7 @@ func write_file(sockfd: Int) -> Bool {
 
 
 public func main() -> Int {
-	let sockfd = socket(af_INET, c_SOCK_STREAM, 0)
+	let sockfd: Int = socket(af_INET, c_SOCK_STREAM, 0)
 	if sockfd < 0 {
 		perror("[-] Error in socket")
 		exit(1)
@@ -70,12 +70,12 @@ public func main() -> Int {
 
 	printf("[+] Listening...\n")
 
-	var addr_size: SocklenT = SocklenT sizeof(SockAddrIn)
+	var addr_size = SocklenT sizeof(SockAddrIn)
 	var new_addr: SockAddrIn
 	let sa = *SockAddr Ptr &new_addr
-	let new_sock = accept(sockfd, sa, &addr_size)
+	let new_sock: Int = accept(sockfd, sa, &addr_size)
 
-	let suc = write_file(new_sock)
+	let suc: Bool = write_file(new_sock)
 	if suc {
 		printf("[+] Data written in the text file")
 	} else {

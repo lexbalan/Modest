@@ -9,10 +9,10 @@ include "stdlib"
 public func main() -> Int {
 	printf("unistd test\n")
 
-	let pid = getpid()
+	let pid: PIDT = getpid()
 	printf("pid = %d\n", pid)
 
-	let hid = gethostid()
+	let hid: Long = gethostid()
 	printf("hostid = %ld\n", hid)
 
 	// current control terminal
@@ -25,11 +25,11 @@ public func main() -> Int {
 	getcwd(&cwd, lengthof(cwd))
 	printf("cwd = %s\n", &cwd)
 
-	let tty = ttyname(0)
+	let tty: *[]Char = ttyname(0)
 	printf("ttyname = %s\n", tty)
 
 
-	let s = getenv("PATH")
+	let s: *Str = getenv("PATH")
 	printf("PATH = %s\n", s)
 
 	while true {

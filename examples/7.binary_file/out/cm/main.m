@@ -19,7 +19,7 @@ type Chunk record {
 func write_example() -> Unit {
 	printf("run write_example\n")
 
-	let fp = fopen(filename, "wb")
+	let fp: *File = fopen(filename, "wb")
 
 	if fp == nil {
 		printf("error: cannot create file '%s'", filename)
@@ -43,7 +43,7 @@ func write_example() -> Unit {
 func read_example() -> Unit {
 	printf("run read_example\n")
 
-	let fp = fopen(filename, "rb")
+	let fp: *File = fopen(filename, "rb")
 
 	if fp == nil {
 		printf("error: cannot open file '%s'", filename)

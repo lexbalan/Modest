@@ -79,7 +79,7 @@ func test_records() -> Unit {
 	printf("s.x.b.y = %d\n", s.x.b.y)
 
 
-	let x = s
+	let x: Struct = s
 
 	printf("x.x.a.x = %d\n", x.x.a.x)
 	printf("x.x.a.y = %d\n", x.x.a.y)
@@ -132,8 +132,8 @@ public func main() -> Int {
 	}
 
 	// comparison between two record (by pointer)
-	let pr2 = &p2d2
-	let pr3 = &p2d3
+	let pr2: *Point2D = &p2d2
+	let pr3: *record {x: Nat32, y: Nat32} = &p2d3
 
 	if *pr2 == *pr3 {
 		printf("*pr2 == *pr3\n")
@@ -167,8 +167,8 @@ public func main() -> Int {
 	// проверка того как локальная константа-массив
 	// "замораживает" свои элементы
 
-	var ax: Int32 = Int32 10
-	var bx: Int32 = Int32 20
+	var ax = Int32 10
+	var bx = Int32 20
 
 	let px = {x = ax, y = bx}
 

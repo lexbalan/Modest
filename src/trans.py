@@ -507,6 +507,7 @@ def do_type_record(x):
 	cmodule.anon_recs.append(rec)
 	return rec
 
+
 """
 def do_type_enum(x):
 	enum_type = htype.type_enum(x['ti'])
@@ -587,16 +588,6 @@ def do_value_shift(x):
 		nv = ValueShr(l, r, ti=x['ti'])
 	else:
 		pass
-
-	"""if l.isImmediate() and r.isImmediate():
-		asset = l.asset
-		if op == 'shl':
-			asset = asset << r.asset
-		elif op == 'shr':
-			asset = asset >> r.asset
-		nv.asset = int(asset)
-		nv.immediate = True"""
-	#	return nv
 
 	if l.type.is_generic():
 		error("expected non-generic value", l.ti)
@@ -937,7 +928,6 @@ def do_value_call(x):
 			if a['key'] != None:
 				id = Id(a['key'])
 			args.append(Initializer(id, arg, ti=a['ti'], nl=a['nl']))
-
 
 		i += 1
 

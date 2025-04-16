@@ -2,7 +2,7 @@ include "stdio"
 // examples/fsm/fsm.cm
 
 
-const verbose = true
+const verbose: Bool = true
 
 // Вынужден добавлять export тк иначе не идет в хедер к структуре
 // Короче, проблема зависимостей тяжело зависла в воздухе
@@ -49,8 +49,8 @@ public func run(fsm: *FSM) -> Unit {
 	printf("fsm::run()\n")
 
 	if fsm.substate == substateEntering {
-		let nexstate = fsm.nexstate
-		let state = &fsm.states[nexstate]
+		let nexstate: Nat32 = fsm.nexstate
+		let state: *StateDesc = &fsm.states[nexstate]
 
 		if verbose {
 			printf("enter %s\n", &state.name)
@@ -63,13 +63,13 @@ public func run(fsm: *FSM) -> Unit {
 		fsm.state = nexstate
 		fsm.substate = substateLoop
 	} else if fsm.substate == substateLoop {
-		let state = &fsm.states[fsm.state]
+		let state: *StateDesc = &fsm.states[fsm.state]
 
 		if state.loop != nil {
 			state.loop(fsm)
 		}
 	} else if fsm.substate == substateLeaving {
-		let state = &fsm.states[fsm.state]
+		let state: *StateDesc = &fsm.states[fsm.state]
 
 		if verbose {
 			printf("exit %s\n", &state.name)

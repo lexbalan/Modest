@@ -54,7 +54,7 @@ func test() -> Unit {
 	var yy: [6]Word64 = startSequence + [] + stopSequence
 	var i: Int32 = 0
 	while i < lengthof(yy) {
-		let y = yy[i]
+		let y: Word64 = yy[i]
 		printf("yy[%i] = %i\n", i, y)
 		i = i + 1
 	}
@@ -190,7 +190,7 @@ public func main() -> Int {
 
 	var i: Int32 = 0
 	while i < 10 {
-		let a = globalArray[i]
+		let a: Int32 = globalArray[i]
 		printf("globalArray[%i] = %i\n", i, a)
 		i = i + 1
 	}
@@ -201,7 +201,7 @@ public func main() -> Int {
 
 	i = 0
 	while i < 3 {
-		let a = localArray[i]
+		let a: Int32 = localArray[i]
 		printf("localArray[%i] = %i\n", i, a)
 		i = i + 1
 	}
@@ -213,7 +213,7 @@ public func main() -> Int {
 
 	i = 0
 	while i < 3 {
-		let a = globalArrayPtr[i]
+		let a: Int32 = globalArrayPtr[i]
 		printf("globalArrayPtr[%i] = %i\n", i, a)
 		i = i + 1
 	}
@@ -225,7 +225,7 @@ public func main() -> Int {
 
 	i = 0
 	while i < 3 {
-		let a = localArrayPtr[i]
+		let a: Int32 = localArrayPtr[i]
 		printf("localArrayPtr[%i] = %i\n", i, a)
 		i = i + 1
 	}
@@ -268,8 +268,8 @@ public func main() -> Int {
 	printf("d[5] = %i\n", d[5])
 
 	// check equality between two arrays (by pointer)
-	let pa = &a
-	let pb = &b
+	let pa: *[3]Int32 = &a
+	let pb: *[3]Int32 = &b
 
 	if *pa == *pb {
 		printf("*pa == *pb\n")
@@ -311,9 +311,9 @@ public func main() -> Int {
 	// проверка того как локальная константа-массив
 	// "замораживает" свои элементы
 
-	var ax: Int32 = Int32 10
-	var bx: Int32 = Int32 20
-	var cx: Int32 = Int32 30
+	var ax = Int32 10
+	var bx = Int32 20
+	var cx = Int32 30
 	let dx = Int32 40
 
 	let y = [ax, bx, cx, dx]

@@ -29,7 +29,7 @@ var table_data1: [4][4]*Str8 = [
 ]
 
 
-var table00: Table = Table {
+var table00 = Table {
 	header = nil
 	data = &table_data0
 	nRows = lengthof(table_data0)
@@ -37,7 +37,7 @@ var table00: Table = Table {
 	separate = false
 }
 
-var table01: Table = Table {
+var table01 = Table {
 	header = &table_header0
 	data = &table_data0
 	nRows = lengthof(table_data0)
@@ -45,7 +45,7 @@ var table01: Table = Table {
 	separate = false
 }
 
-var table02: Table = Table {
+var table02 = Table {
 	header = nil
 	data = &table_data0
 	nRows = lengthof(table_data0)
@@ -53,7 +53,7 @@ var table02: Table = Table {
 	separate = true
 }
 
-var table03: Table = Table {
+var table03 = Table {
 	header = &table_header0
 	data = &table_data0
 	nRows = lengthof(table_data0)
@@ -61,7 +61,7 @@ var table03: Table = Table {
 	separate = true
 }
 
-var table10: Table = Table {
+var table10 = Table {
 	header = &table_header1
 	data = &table_data1
 	nRows = lengthof(table_data1)
@@ -71,7 +71,7 @@ var table10: Table = Table {
 
 
 public func main() -> Int32 {
-	let tab = new Table {}
+	let tab: *Table = new Table {}
 
 	if tab == nil {
 		printf("cannot create object\n")

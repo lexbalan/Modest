@@ -35,7 +35,7 @@ public func print(table: *Table) -> Unit {
 	if table.header != nil {
 		i = 0
 		while i < table.nCols {
-			let len = Nat32 strlen(table.header[i])
+			let len: Nat32 = Nat32 strlen(table.header[i])
 			if len > sz[i] {
 				sz[i] = len
 			}
@@ -47,7 +47,7 @@ public func print(table: *Table) -> Unit {
 	while i < table.nRows {
 		j = 0
 		while j < table.nCols {
-			let len = Nat32 strlen(data[i][j])
+			let len: Nat32 = Nat32 strlen(data[i][j])
 			if len > sz[j] {
 				sz[j] = len
 			}
@@ -92,19 +92,19 @@ public func print(table: *Table) -> Unit {
 
 
 func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
-	let row = *[nCols]*Str8 raw_row
+	let row: *[nCols]*Str8 = *[nCols]*Str8 raw_row
 
-	var j: Nat32 = Nat32 0
+	var j = Nat32 0
 	while j < nCols {
 		printf("|")
-		let s = row[j]
+		let s: *Str8 = row[j]
 		var len: Nat32 = Nat32 strlen(s)
 		if s[0] != "\x0" {
 			len = len + 1
 			printf(" %s", s)
 		}
 
-		var k: Nat32 = Nat32 0
+		var k = Nat32 0
 		while k < (sz[j] - len) {
 			printf(" ")
 			k = k + 1
@@ -119,10 +119,10 @@ func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
 func separator(sz: *[]Nat32, n: Nat32) -> Unit {
-	var i: Nat32 = Nat32 0
+	var i = Nat32 0
 	while i < n {
 		printf("+")
-		var j: Nat32 = Nat32 0
+		var j = Nat32 0
 		while j < sz[i] {
 			printf("-")
 			j = j + 1

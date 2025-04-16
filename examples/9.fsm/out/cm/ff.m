@@ -3,7 +3,7 @@ include "time"
 
 
 public func us(us: Nat64) -> Unit {
-	let start_time = clock()
+	let start_time: ClockT = clock()
 	while clock() < start_time + us {
 		// just waiting
 	}

@@ -21,10 +21,10 @@ public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 	// create table before
 	//
 
-	var i: Nat32 = Nat32 0
+	var i = Nat32 0
 	while i < tableSize {
 		crc = Word32 i
-		var j: Nat32 = Nat32 0
+		var j = Nat32 0
 		while j < 8 {
 			if (crc and 1) != 0 {
 				crc = (crc >> 1) xor 0xEDB88320
@@ -48,9 +48,9 @@ public func run(buf: *[]Word8, len: Nat32) -> Word32 {
 	while i < len {
 		// 1
 		let x = Word32 buf[i]
-		let y = (crc xor x) and 0xFF
+		let y: Word32 = (crc xor x) and 0xFF
 		// 2
-		let yy = Nat8 y
+		let yy: Nat8 = Nat8 y
 		crc = crc_table[yy] xor (crc >> 8)
 		i = i + 1
 	}

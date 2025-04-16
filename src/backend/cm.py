@@ -711,9 +711,20 @@ def print_stmt_type(x):
 	out(str_type(x.original_type))
 
 
+# принимает StmtConst / StmtVar
+# возвращает true если в нем нужно явно аннотировать тип
+def needTypeAnno(x):
+	if x.value.type.is_generic():
+		return False
+	return not (isinstance(x.init_value, ValueCons) and x.init_value.method == 'explicit')
+
+
 def print_stmt_const(x, operator='const'):
 	out("%s " % operator)
 	out(get_id_str(x))
+	if needTypeAnno(x):
+		out(": ")
+		out(str_type(x.value.type))
 	out(" = ")
 	out(str_value(x.init_value))
 
@@ -721,8 +732,9 @@ def print_stmt_const(x, operator='const'):
 def print_stmt_var(x):
 	out("var ")
 	out(get_id_str(x.value))
-	out(": ")
-	out(str_type(x.value.type))
+	if needTypeAnno(x):
+		out(": ")
+		out(str_type(x.value.type))
 	iv = x.init_value
 	if not Value.isUndefined(iv):
 		out(" = ")

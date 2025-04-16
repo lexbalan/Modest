@@ -90,13 +90,13 @@ const k = [
 
 
 func transform(ctx: *Context, data: *[]Word8) -> Unit {
-	var m: [64]Word32 = [64]Word32 []
+	var m = [64]Word32 []
 
-	var i: Nat32 = Nat32 0
-	var j: Nat32 = Nat32 0
+	var i = Nat32 0
+	var j = Nat32 0
 
 	while i < 16 {
-		let x = (Word32 data[j + 0] << 24) or (Word32 data[j + 1] << 16) or (Word32 data[j + 2] << 08) or (Word32 data[j + 3] << 00)
+		let x: Word32 = (Word32 data[j + 0] << 24) or (Word32 data[j + 1] << 16) or (Word32 data[j + 2] << 08) or (Word32 data[j + 3] << 00)
 
 		m[i] = x
 		j = j + 4
@@ -112,8 +112,8 @@ func transform(ctx: *Context, data: *[]Word8) -> Unit {
 
 	i = 0
 	while i < 64 {
-		let t1 = Nat32 x[7] + Nat32 ep1(x[4]) + Nat32 ch(x[4], x[5], x[6]) + Nat32 k[i] + Nat32 m[i]
-		let t2 = Nat32 ep0(x[0]) + Nat32 maj(x[0], x[1], x[2])
+		let t1: Nat32 = Nat32 x[7] + Nat32 ep1(x[4]) + Nat32 ch(x[4], x[5], x[6]) + Nat32 k[i] + Nat32 m[i]
+		let t2: Nat32 = Nat32 ep0(x[0]) + Nat32 maj(x[0], x[1], x[2])
 
 		x[7] = x[6]
 		x[6] = x[5]
@@ -136,7 +136,7 @@ func transform(ctx: *Context, data: *[]Word8) -> Unit {
 
 
 func update(ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
-	var i: Nat32 = Nat32 0
+	var i = Nat32 0
 	while i < msgLen {
 		ctx.data[ctx.datalen] = msg[i]
 		ctx.datalen = ctx.datalen + 1
@@ -155,7 +155,7 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 
 	// Pad whatever data is left in the buffer.
 
-	var n: Nat32 = Nat32 64
+	var n = Nat32 64
 	if ctx.datalen < 56 {
 		n = 56
 	}
@@ -193,7 +193,7 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 
 	i = 0
 	while i < 4 {
-		let sh = 24 - i * 8
+		let sh: Nat32 = 24 - i * 8
 		outHash[i + 00] = Word8 (ctx.state[0] >> sh)
 		outHash[i + 04] = Word8 (ctx.state[1] >> sh)
 		outHash[i + 08] = Word8 (ctx.state[2] >> sh)

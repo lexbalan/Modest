@@ -55,6 +55,11 @@ func mcmp(a: Ptr, b: Ptr, size: Nat32) -> Bool {
 func sbuf(p: Ptr, size: Nat32) {
 	let px = unsafe *[size]Word8 p
 	var buf = *px
+	var i = Nat32 0
+	while i < size {
+		let x = buf[i]
+		++i
+	}
 }
 
 
