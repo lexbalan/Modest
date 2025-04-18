@@ -550,10 +550,21 @@ def do_type_func(x, func_id="_"):
 
 
 
-def do_type(x):
-	for a in x['attributes']:
-		do_attribute(a)
+def add_spices_type(t, atts):
+	for a in atts:
+		k = a['kind']
+		t.att.append(k)
 
+		if t.is_array():
+			if k == 'const':
+				t.of.att.append('const')
+			if k == 'volatile':
+				t.of.att.append('volatile')
+
+	return t
+
+
+def do_type(x):
 	t = None
 	k = x['kind']
 	if k == 'named': t = do_type_named(x)
@@ -565,6 +576,7 @@ def do_type(x):
 	else: t = bad_type(x['ti'])
 
 	t.ti = x['ti']
+	t = add_spices_type(t, x['attributes'])
 	return t
 
 
@@ -1473,7 +1485,7 @@ def do_value(x):
 def do_stmt_const(x):
 	global cfunc
 	v = do_const(x)
-	v.type.att.append('c_const')
+	v.type.att.append('const')
 	v.addAttribute('local') # need for LLVM printer (!)
 	ctx_value_add(v.id.str, v)
 	definition = StmtDefConst(v.id, v, v.init_value, ti=x['ti'])

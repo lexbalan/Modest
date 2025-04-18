@@ -277,27 +277,28 @@ def str_type_array(t, core='', need_close=False):
 	# handle array of array .. case
 	right = ''
 	i = 0
+	t2 = t
 	while True:
 		right += '['
-		if t.volume:
-			if Value.isUndefined(t.volume):
+		if t2.volume:
+			if Value.isUndefined(t2.volume):
 				# В Си не можем печатать такое a[][], или такое a[][10], etc.
 				# А печатаем просто a[] (пропускаем все после пустых скобок)
-				while t.of.is_array():
-					t = t.of
+				while t2.of.is_array():
+					t2 = t2.of
 			else:
-				right += str_value(t.volume)
+				right += str_value(t2.volume)
 
 		right += ']'
-		t = t.of
-		if not t.is_array():
+		t2 = t2.of
+		if not t2.is_array():
 			break
 		i += 1
 
 	if need_close:
 		core += ')'
 
-	return str_type(t, core=core+right)
+	return str_type(t2, core=core+right)
 
 
 
@@ -367,11 +368,11 @@ def str_type_pointer(t, core='', as_ptr_to_array=False):
 		tx = tx.to
 		left += '*'
 
-	if 'c_const' in t.att:
+	if 'const' in t.att:
 		left += 'const '
-	if 'c_volatile' in t.att:
+	if 'volatile' in t.att:
 		left += 'volatile '
-	if 'c_restrict' in t.att:
+	if 'restrict' in t.att:
 		left += 'restrict '
 
 	# (!) Печатать указатель на массив как указатель на его элемент (!)
@@ -407,9 +408,9 @@ def str_named(t, core=''):
 	if aka == None:
 		return None
 	pre = ''
-	if 'c_const' in t.att:
+	if 'const' in t.att:
 		pre += 'const '
-	if 'c_volatile' in t.att:
+	if 'volatile' in t.att:
 		pre += 'volatile '
 	return pre + aka + core
 

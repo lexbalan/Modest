@@ -65,7 +65,8 @@ func sbuf(p: Ptr, size: Nat32) {
 
 //@attribute("value.type:c_restrict")
 //@attribute("value.type:c_volatile")
-var xx: *[]*[10]Int
+var xx: *[]*@volatile[10]Int
+var yy: @volatile[10]Int
 
 
 const ca = 4

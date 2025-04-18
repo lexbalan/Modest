@@ -325,8 +325,27 @@ define internal void @sbuf(i8* %p, %Nat32 %size) {
 	%8 = alloca %Word8, %Nat32 %6, align 1
 	%9 = load [0 x %Word8], [0 x %Word8]* %3
 	store [0 x %Word8] %9, %Word8* %8
-	%10 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %10)
+	%10 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %10
+; while_1
+	br label %again_1
+again_1:
+	%11 = load %Nat32, %Nat32* %10
+	%12 = icmp ult %Nat32 %11, %size
+	br %Bool %12 , label %body_1, label %break_1
+body_1:
+	%13 = load %Nat32, %Nat32* %10
+	%14 = mul %Nat32 %13, 1
+	%15 = add %Int32 0, %14
+	%16 = getelementptr %Word8, [0 x %Word8]* %8, %Int32 %15
+	%17 = load %Word8, %Word8* %16
+	%18 = load %Nat32, %Nat32* %10
+	%19 = add %Nat32 %18, 1
+	store %Nat32 %19, %Nat32* %10
+	br label %again_1
+break_1:
+	%20 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %20)
 	ret void
 }
 
@@ -335,6 +354,7 @@ define internal void @sbuf(i8* %p, %Nat32 %size) {
 ;@attribute("value.type:c_restrict")
 ;@attribute("value.type:c_volatile")
 @xx = internal global [0 x [10 x %Int]*]* zeroinitializer
+@yy = internal global [10 x %Int] zeroinitializer
 @va = internal global %Int32 4
 @p = internal global {
 	i8,
