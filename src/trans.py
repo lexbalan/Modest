@@ -400,7 +400,7 @@ def do_field(x):
 	f = Field(id, t, init_value=iv, ti=x['ti'])
 	f.nl = x['nl']
 	f.access_level = x['access_modifier']
-	add_spices(f, ast_atts=x['attributes'], ti=x['ti'])
+	add_spices(f, ast_atts=x['atts'], ti=x['ti'])
 	return f
 
 
@@ -576,7 +576,7 @@ def do_type(x):
 	else: t = bad_type(x['ti'])
 
 	t.ti = x['ti']
-	t = add_spices_type(t, x['attributes'])
+	t = add_spices_type(t, x['atts'])
 	return t
 
 
@@ -1064,6 +1064,7 @@ def do_value_slice(x):
 			'kind': 'sub',
 			'left': x['index_to'],
 			'right': x['index_from'],
+			'atts': [],
 			'ti': ti
 		}
 
@@ -1430,6 +1431,14 @@ def do_value_subexpr(x):
 	return nv
 
 
+def add_spices_value(v, atts):
+	for a in atts:
+		k = a['kind']
+		print("VALUE_ATT: " + k)
+		v.att.append(k)
+	return v
+
+
 def do_value(x):
 	assert(x['isa'] == 'ast_value')
 
@@ -1474,6 +1483,7 @@ def do_value(x):
 	assert(v != None)
 	v.ti = x['ti']
 
+	v = add_spices_value(v, x['atts'])
 	return v
 
 
@@ -2161,7 +2171,7 @@ def check_stmt(stmt):
 
 
 def is_nodecorate(x):
-	for a in x['attributes']:
+	for a in x['atts']:
 		if a['kind'] == 'nodecorate':
 			return True
 	return False
@@ -2573,7 +2583,7 @@ def def_def(ast, is_include=False):
 				y = def_var(x)
 
 			if y != None and not isinstance(y, StmtBad):
-				add_spices(y, ast_atts=x['attributes'], ti=x['ti'])
+				add_spices(y, ast_atts=x['atts'], ti=x['ti'])
 				if not is_include:
 					y.parent = cmodule
 
