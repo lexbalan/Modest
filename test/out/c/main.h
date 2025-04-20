@@ -21,6 +21,8 @@ typedef struct main_Point main_Point;
 static int32_t main_v0;
 void main_f0();
 
+int32_t main_ma();
+
 int32_t main();
 
 #endif /* MAIN_H */

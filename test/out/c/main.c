@@ -73,7 +73,7 @@ static void sbuf(void *p, uint32_t size)
 static volatile int *const (*xx)[];
 static volatile int yy[10];
 
-int32_t ma();
+extern int32_t main_ma();
 
 #define ca  4
 static int32_t va = ca;

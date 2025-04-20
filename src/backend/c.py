@@ -1868,6 +1868,9 @@ def print_def_func(x):
 	if x.hasAttribute('inline'):
 		out("inline ")
 
+	if x.hasAttribute('extern'):
+		out("extern ")
+
 	ftype = func.type
 
 	# если функция уже была определена, то обертки над ее типами

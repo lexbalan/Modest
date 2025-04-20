@@ -2148,11 +2148,11 @@ def check_stmt(stmt):
 
 
 
-def is_nodecorate(x):
-	for a in x['atts']:
-		if a['kind'] == 'nodecorate':
-			return True
-	return False
+#def is_nodecorate(x):
+#	for a in x['atts']:
+#		if a['kind'] == 'nodecorate':
+#			return True
+#	return False
 
 
 # пропускать остальные ветви (elseif & else) условной директивы
@@ -2609,8 +2609,8 @@ def add_spices_def(x, ast_atts):
 			if len(args) > 0:
 				arg = args[0]['str']
 				if arg == 'C':
-					add_att(x, 'nodecorate')
 					print("EXTERN C")
+					add_att(x, 'nodecorate')
 
 		elif kind == 'unused_result':
 			add_att(x, "value.type.to:dispensable")
