@@ -349,12 +349,9 @@ break_1:
 	ret void
 }
 
-
-
-;@attribute("value.type:c_restrict")
-;@attribute("value.type:c_volatile")
 @xx = internal global [0 x [10 x %Int]*]* zeroinitializer
 @yy = internal global [10 x %Int] zeroinitializer
+declare internal %Int32 @ma()
 @va = internal global %Int32 4
 @p = internal global {
 	i8,

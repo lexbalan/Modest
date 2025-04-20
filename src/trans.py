@@ -2609,7 +2609,9 @@ def add_spices_def(x, ast_atts):
 			if len(args) > 0:
 				arg = args[0]['str']
 				if arg == 'C':
+					add_att(x, 'nodecorate')
 					print("EXTERN C")
+
 		elif kind == 'unused_result':
 			add_att(x, "value.type.to:dispensable")
 		else:

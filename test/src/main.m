@@ -67,7 +67,8 @@ var xx: *@const[]*@volatile[10]Int
 var yy: @volatile[10]Int
 
 
-@extern("C") func ma() -> Int32
+@extern("C")
+func ma() -> Int32
 
 
 const ca = 4
