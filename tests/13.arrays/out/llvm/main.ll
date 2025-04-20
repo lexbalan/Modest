@@ -314,7 +314,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str44 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --; tests/arrays/src/main.m
 
-;@attribute("c_no_print")
+;@c_no_print
 ;import "misc/minmax"
 ;$pragma c_include "./minmax.h"
 @constantArray = constant [10 x i8] [

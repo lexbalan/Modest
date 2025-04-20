@@ -3,7 +3,7 @@ include "stdio"
 include "math"
 // tests/arrays/src/main.m
 
-//@attribute("c_no_print")
+//@c_no_print
 //import "misc/minmax"
 //$pragma c_include "./minmax.h"
 

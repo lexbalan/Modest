@@ -27,7 +27,7 @@ static Line line = {
 	.b = {.x = 1.0, .y = 1.0}
 };
 
-static float max(float a, float b)
+static inline float max(float a, float b)
 {
 	if (a > b) {
 		return a;
@@ -35,7 +35,7 @@ static float max(float a, float b)
 	return b;
 }
 
-static float min(float a, float b)
+static inline float min(float a, float b)
 {
 	if (a < b) {
 		return a;

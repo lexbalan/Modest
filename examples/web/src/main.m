@@ -24,7 +24,7 @@ var pageCounter: Nat32
 
 
 @extern
-@attribute("c_no_print")
+@c_no_print
 func htons(x: Word16) -> Word16 {
 	return (x << 8) or (x >> 8)
 }

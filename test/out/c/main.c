@@ -70,10 +70,10 @@ static void sbuf(void *p, uint32_t size)
 	}
 }
 
-//@attribute("value.type:c_restrict")
-//@attribute("value.type:c_volatile")
 static volatile int *const (*xx)[];
 static volatile int yy[10];
+
+int32_t ma();
 
 #define ca  4
 static int32_t va = ca;

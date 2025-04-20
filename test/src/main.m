@@ -63,11 +63,11 @@ func sbuf(p: Ptr, size: Nat32) {
 }
 
 
-//@attribute("value.type:c_restrict")
-//@attribute("value.type:c_volatile")
 var xx: *@const[]*@volatile[10]Int
 var yy: @volatile[10]Int
 
+
+@extern("C") func ma() -> Int32
 
 
 const ca = 4

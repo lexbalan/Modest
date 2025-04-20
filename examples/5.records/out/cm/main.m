@@ -23,14 +23,12 @@ var line: Line = {
 
 
 
-
 func max(a: Float, b: Float) -> Float {
 	if a > b {
 		return a
 	}
 	return b
 }
-
 
 
 func min(a: Float, b: Float) -> Float {

@@ -176,29 +176,6 @@ def context_pop():
 
 
 
-properties = {}
-
-
-# used in metadirs
-# add 'properties' to entity descriptor
-def property_add(id, value):
-	global properties
-	properties[id] = value
-
-
-
-attributes = []
-
-
-def attribute_add(at, private=False):
-	global attributes
-	#print("attribute_add " + at)
-	if isinstance(at, list):
-		attributes.extend(at)
-	else:
-		attributes.append(at)
-
-
 
 def insert(s):
 	global cmodule
@@ -400,7 +377,8 @@ def do_field(x):
 	f = Field(id, t, init_value=iv, ti=x['ti'])
 	f.nl = x['nl']
 	f.access_level = x['access_modifier']
-	add_spices(f, ast_atts=x['atts'], ti=x['ti'])
+	#mass
+#	add_spices(f, ast_atts=x['atts'], ti=x['ti'])
 	return f
 
 
@@ -2182,66 +2160,6 @@ def is_nodecorate(x):
 skipp = False
 prev_skipp = False
 
-def do_attribute(x):
-	global skipp, prev_skipp, production
-	kind = x['kind']
-	args = x['args']
-
-	if kind == 'attribute':
-		attribute_add(args[0]['str'])
-
-	elif kind == 'property':
-		k = args[1]['kind']
-
-		if args[0]['kind'] != 'string':
-			error("expected String literal", args[0]['ti'])
-			return
-
-		if not k in ['string', 'number', 'id']:
-			error("expected String, Number or Id literal in property value", args[1]['ti'])
-			return
-
-		# propertp can be:
-		# @property("type.uuu", true)
-		# @property("type.vvv", false)
-		# @property("type.xxx", 123)
-		# @property("type.yyy", "abc")
-		# @property("type.zzz", nil)
-
-		value = args[1]['str']
-		if k == 'string':
-			pass
-		elif k == 'id':
-			value = args[1]['str']
-			if value == 'true':
-				value = True
-			elif value == 'false':
-				value = False
-			elif value == 'nil':
-				value = None
-		elif k == 'number':
-			value = eval(value)
-
-		property_add(args[0]['str'], value)
-
-	elif kind == 'c_alias':
-		property_add("id.c", args[0]['str'])
-
-	elif kind == 'nodecorate':
-		attribute_add('nodecorate')
-	elif kind == 'inline':
-		attribute_add('static')
-		attribute_add('inline')
-	elif kind == 'extern':
-		attribute_add('extern')
-	elif kind == 'packed':
-		attribute_add('packed')
-	elif kind == 'unused_result':
-		attribute_add("value.type.to:dispensable")
-	else:
-		attribute_add(kind)
-
-	return None
 
 
 
@@ -2387,11 +2305,6 @@ def translate(abspath, is_import=False, is_include=False):
 
 def process_module(idStr, ast, is_import=False, is_include=False):
 	global skipp, production
-
-	global properties
-	properties = {}
-	global attributes
-	attributes = []
 
 	global cmodule
 	prev_module = cmodule
@@ -2583,7 +2496,7 @@ def def_def(ast, is_include=False):
 				y = def_var(x)
 
 			if y != None and not isinstance(y, StmtBad):
-				add_spices(y, ast_atts=x['atts'], ti=x['ti'])
+				add_spices_def(y, x['atts'])
 				if not is_include:
 					y.parent = cmodule
 
@@ -2666,36 +2579,58 @@ def setObjAttrByPath(x, path, value):
 
 
 
-def add_spices(obj, ast_atts=None, ti=None):
-	global attributes
-	global properties
+def add_prop(x, key, val):
+	#print("PROP('%s', '%s')" % (key, val))
+	setObjAttrByPath(x, key, val)
 
-	attributes = []
-	properties = {}
 
-	if obj == None:
-		return
+def add_spices_def(x, ast_atts):
+	for a in ast_atts:
+		kind = a['kind']
 
-	if ast_atts!=None:
-		for a in ast_atts:
-			do_attribute(a)
+		if kind == 'property':
+			args = a['args']
+			key = args[0]['str']
+			val = args[1]['str']
+			add_prop(x, key, val)
 
-	# Add Attributes
-	for prop_id in properties:
-		setObjAttrByPath(obj, prop_id, properties[prop_id])
-	properties = {}
+		elif kind == 'static':
+			add_att(x, 'static')
+		elif kind == 'inline':
+			add_att(x, 'static')
+			add_att(x, 'inline')
+		elif kind == 'nodecorate':
+			add_att(x, 'nodecorate')
+		elif kind == 'c_no_print':
+			add_att(x, "c_no_print")
+		elif kind == 'extern':
+			add_att(x, "extern")
+			args = a['args']
+			if len(args) > 0:
+				arg = args[0]['str']
+				if arg == 'C':
+					print("EXTERN C")
+		elif kind == 'unused_result':
+			add_att(x, "value.type.to:dispensable")
+		else:
+			print(a)
+			exit(1)
+			key = a['args'][0]['str']
+			print(key)
+			add_att(x, key)
+		#attribute_add(kind)
 
+
+def add_att(x, att):
 	# Add Properties
-	for att in attributes:
-		lr = att.split(":")
-		if len(lr) == 1:
-			att = lr[0]
-			obj.addAttribute(att)
-		elif len(lr) > 1:
-			x = getObjAttrByPath(obj, lr[0])
-			if x != None:
-				x.addAttribute(lr[1])
-	attributes = []
+	lr = att.split(":")
+	if len(lr) == 1:
+		att = lr[0]
+		x.addAttribute(att)
+	elif len(lr) > 1:
+		x2 = getObjAttrByPath(x, lr[0])
+		if x2 != None:
+			x2.addAttribute(lr[1])
 
 
 

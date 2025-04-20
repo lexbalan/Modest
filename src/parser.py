@@ -1983,23 +1983,17 @@ class Parser:
 			if x == None:
 				continue
 
-			if isinstance(x, list):
-				for subx in x:
-					subx['nl'] = 1
-					subx['ti'] = ti
-					subx['access_modifier'] = access_modifier
-					subx['atts'] = attributes
+			if not isinstance(x, list):
+				x = [x]
 
-				x[0]['nl'] = spaceline_cnt
-				output.extend(x)
+			for subx in x:
+				subx['nl'] = 1
+				subx['ti'] = ti
+				subx['access_modifier'] = access_modifier
+				subx['atts'] = attributes
 
-			else:
-				x['nl'] = spaceline_cnt
-				x['ti'] = ti
-				x['atts'] = attributes
-				x['access_modifier'] = access_modifier
-
-				output.append(x)
+			x[0]['nl'] = spaceline_cnt
+			output.extend(x)
 
 			attributes = []
 			spaceline_cnt = 0
