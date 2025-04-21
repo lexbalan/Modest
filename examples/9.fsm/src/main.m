@@ -2,6 +2,7 @@
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
+$pragma c_include "./delay.h"
 
 include "libc/ctypes64"
 include "libc/stdio"
@@ -9,12 +10,7 @@ include "libc/stdio"
 import "lightfood/delay"
 import "fsm"
 
-//@attribute("c_no_print")
-//import "lightfood/main"
-//@attribute("c_no_print")
 
-//$pragma c_include "./ff_main.h"
-$pragma c_include "./delay.h"
 
 
 

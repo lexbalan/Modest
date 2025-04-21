@@ -9,11 +9,8 @@ include "stdio"
 import "lightfood/delay" as delay
 import "fsm" as fsm
 
-//@attribute("c_no_print")
-//import "lightfood/main"
-//@attribute("c_no_print")
 
-//$pragma c_include "./ff_main.h"
+
 
 
 const flashlightStateOff = 0

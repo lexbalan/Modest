@@ -3,20 +3,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <stdio.h>
 #include "./delay.h"
+#include <stdio.h>
 
 #include "main.h"
 
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
-
-//@attribute("c_no_print")
-//import "lightfood/main"
-//@attribute("c_no_print")
-
-//$pragma c_include "./ff_main.h"
 
 #define flashlightStateOff  0
 #define flashlightStateOn  1

@@ -6,8 +6,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <stdio.h>
 #include "./delay.h"
+#include <stdio.h>
 
 
 #include "fsm.h"

@@ -235,7 +235,7 @@ public func insert (list: *List, pos: Int32, data: Ptr) -> *Node {
 }
 
 
-@attribute("value:dispensable")
+@unused_result
 public func append (list: *List, data: Ptr) -> *Node {
 	if list == nil {
 		return nil

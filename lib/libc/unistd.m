@@ -9,7 +9,7 @@ $pragma c_include "unistd.h"
 include "libc/ctypes64"
 
 
-//@attribute("extern")
+//@extern("C)
 //var environ: *[]*Char
 @property("id.c", "SEEK_SET")
 public const seekSet = 0

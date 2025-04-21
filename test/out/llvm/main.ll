@@ -239,7 +239,6 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @main_v0 = global %Int32 zeroinitializer
 
 
-;@attribute("value:nodecorate")
 define void @main_f0() {
 	ret void
 }
