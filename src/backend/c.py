@@ -1973,7 +1973,7 @@ def print_def_var(x, isdecl=False):
 	#id = x['id']
 	var = x.value
 	if USE_STATIC_VARIABLES:
-		if not var.hasAttribute('global'):
+		if x.access_level == 'private':
 			if not var.hasAttribute('extern'):
 				out("static ")
 

@@ -18,7 +18,7 @@ typedef struct Point Point;
 
 #define cq  "Hi!"
 
-static int32_t v0;
+int32_t v0;
 void main_f0();
 
 void sbuf(void *p, uint32_t size);

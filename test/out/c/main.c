@@ -23,7 +23,7 @@
 struct __anonymous_struct_1 {int32_t a; int32_t b;
 };
 
-static int32_t v0;
+int32_t v0;
 
 //@attribute("value:nodecorate")
 void main_f0()
