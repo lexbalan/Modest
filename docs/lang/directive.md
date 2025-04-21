@@ -105,12 +105,11 @@ $endif
 ## Attributes & Properties
 
 ```swift
-@attribute("value:volatile")
-var byteFromUart: Word8
+var byteFromUart: @volatile Word8
 ```
 
 ```swift
-@property("type.id.c", "int")
+@property("id.c", "int")
 type Int Int32
 ```
 

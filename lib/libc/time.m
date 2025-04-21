@@ -8,14 +8,14 @@ include "libc/ctypes64"
 
 
 /* time in seconds since 1970 */
-@property("type.id.c", "time_t")
+@property("id.c", "time_t")
 public type TimeT Int32
 
-@property("type.id.c", "clock_t")
+@property("id.c", "clock_t")
 public type ClockT UnsignedLong
 
 
-@property("type.id.c", "struct tm")
+@property("id.c", "struct tm")
 public type StructTM record {
 	public tm_sec: Int	   // Seconds [0-60]
 	public tm_min: Int	   // Minutes [0-59]

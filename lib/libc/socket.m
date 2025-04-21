@@ -9,35 +9,35 @@ include "libc/ctypes64"
 
 
 
-@property("type.id.c", "in_addr_t")
+@property("id.c", "in_addr_t")
 public type InAddrT Nat32
 
 
-@property("value.id.c", "INADDR_ANY")
+@property("id.c", "INADDR_ANY")
 public const inAddrAny = 0
 
 
-@property("type.id.c", "in_port_t")
+@property("id.c", "in_port_t")
 public type InPortT Nat16
 
-@property("type.id.c", "socklen_t")
+@property("id.c", "socklen_t")
 public type SocklenT Nat32
 
 
-@property("type.id.c", "struct sockaddr")
+@property("id.c", "struct sockaddr")
 public type SockAddr record {
 	public sa_family: UnsignedShort  // address family
 	public sa_data: [14]Char8        // up to 14 bytes of direct address
 }
 
 
-@property("type.id.c", "struct in_addr")
+@property("id.c", "struct in_addr")
 public type Struct_in_addr record {
 	public s_addr: InAddrT
 }
 
 
-@property("type.id.c", "struct sockaddr_in")
+@property("id.c", "struct sockaddr_in")
 public type SockAddrIn record {
 // $if APPLE
 	public sin_len: Nat8
@@ -50,15 +50,15 @@ public type SockAddrIn record {
 	public sin_zero: [8]Nat8
 }
 
-@property("value.id.c", "SOCK_STREAM")
+@property("id.c", "SOCK_STREAM")
 public const c_SOCK_STREAM = 1  // stream socket
-@property("value.id.c", "SOCK_DGRAM")
+@property("id.c", "SOCK_DGRAM")
 public const c_SOCK_DGRAM = 2   // datagram socket
-@property("value.id.c", "SOCK_RAW")
+@property("id.c", "SOCK_RAW")
 public const c_SOCK_RAW = 3     // raw-protocol interface
-@property("value.id.c", "SOCK_RDM")
+@property("id.c", "SOCK_RDM")
 public const c_SOCK_RDM = 4     // reliably-delivered message
-@property("value.id.c", "SOCK_SEQPACKET")
+@property("id.c", "SOCK_SEQPACKET")
 public const c_SOCK_SEQPACKET = 5  // sequenced packet stream
 //#ifdef _KERNEL
 //const SOCK_TYPE_MASK = 0x000F	// mask that covers the above
@@ -72,7 +72,7 @@ public const af_UNSPEC = 0       // unspecified
 public const af_UNIX = 1         // local to host
 public const af_LOCAL = af_UNIX  // draft POSIX compatibility
 
-@property("value.id.c", "AF_INET")
+@property("id.c", "AF_INET")
 public const af_INET = 2         // internetwork: UDP, TCP, etc.
 
 public const af_IMPLINK = 3      // arpanet imp addresses

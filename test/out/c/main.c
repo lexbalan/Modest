@@ -25,8 +25,7 @@ struct __anonymous_struct_1 {int32_t a; int32_t b;
 
 int32_t v0;
 
-//@attribute("value:nodecorate")
-void main_f0()
+void f0()
 {
 }
 
@@ -115,7 +114,7 @@ int32_t main()
 	Point p;
 	printf("test %s\n", (char *)cq);
 	printf("test %d\n", v0);
-	main_f0();
+	f0();
 
 	printf("p0.x = %d\n", ((struct {uint8_t x; uint8_t y;
 	})p0).x);

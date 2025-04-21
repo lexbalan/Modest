@@ -8,65 +8,65 @@ include "libc/ctypes64"
 
 type Nat Nat64
 
-@property("type.id.c", "clockid_t")
+@property("id.c", "clockid_t")
 type ClockIdT Int
 
-@property("type.id.c", "struct timespec")
+@property("id.c", "struct timespec")
 type StructTimespec record {}
 
-@property("type.id.c", "struct sched_param")
+@property("id.c", "struct sched_param")
 type StructSchedParam record {}
 
 
 //typedef struct	pthread			*pthread_t;
-@property("type.id.c", "struct pthread")
+@property("id.c", "struct pthread")
 public type PThread record {}
 
-@property("type.id.c", "pthread_t")
+@property("id.c", "pthread_t")
 public type PThreadT Ptr
-@property("type.id.c", "pthread_mutex_t")
+@property("id.c", "pthread_mutex_t")
 public type PThreadMutexT Ptr
 
 
-@property("type.id.c", "struct pthread_attr")
+@property("id.c", "struct pthread_attr")
 public type PThreadAttr Ptr
-@property("type.id.c", "pthread_attr_t")
+@property("id.c", "pthread_attr_t")
 public type PThreadAttrT Ptr
-@property("type.id.c", "pthread_mutexattr_t")
+@property("id.c", "pthread_mutexattr_t")
 public type PThreadMutexAttrT Ptr
-@property("type.id.c", "pthread_cond_t")
+@property("id.c", "pthread_cond_t")
 public type PThreadCondT Ptr
-@property("type.id.c", "pthread_condattr_t")
+@property("id.c", "pthread_condattr_t")
 public type PThreadCondAttrT Ptr
-@property("type.id.c", "pthread_key_t")
+@property("id.c", "pthread_key_t")
 public type PThreadKeyT Int
-@property("type.id.c", "pthread_once_t")
+@property("id.c", "pthread_once_t")
 public type PThreadOnceT Ptr
-@property("type.id.c", "pthread_rwlock_t")
+@property("id.c", "pthread_rwlock_t")
 public type PThreadRWLockT Ptr
-@property("type.id.c", "pthread_rwlockattr_t")
+@property("id.c", "pthread_rwlockattr_t")
 public type PThreadRWLockAttrT Ptr
-@property("type.id.c", "pthread_barrier_t")
+@property("id.c", "pthread_barrier_t")
 public type PThreadBarrierT Ptr
-@property("type.id.c", "pthread_barrierattr_t")
+@property("id.c", "pthread_barrierattr_t")
 public type PThreadBarrierAttrT Ptr
-@property("type.id.c", "pthread_spinlock_t")
+@property("id.c", "pthread_spinlock_t")
 public type PThreadSpinlockT Ptr
 
 
 
-@property("value.id.c", "PTHREAD_MUTEX_INITIALIZER")
+@property("id.c", "PTHREAD_MUTEX_INITIALIZER")
 public const mutexInitializer = nil
-@property("value.id.c", "PTHREAD_COND_INITIALIZER")
+@property("id.c", "PTHREAD_COND_INITIALIZER")
 public const condInitializer = nil
-@property("value.id.c", "PTHREAD_RWLOCK_INITIALIZER")
+@property("id.c", "PTHREAD_RWLOCK_INITIALIZER")
 public const rwlockInitializer = nil
 
-@property("value.id.c", "PTHREAD_PRIO_NONE")
+@property("id.c", "PTHREAD_PRIO_NONE")
 public const pthreadPrioNone = nil
-@property("value.id.c", "PTHREAD_PRIO_INHERIT")
+@property("id.c", "PTHREAD_PRIO_INHERIT")
 public const pthreadPrioInherit = nil
-@property("value.id.c", "PTHREAD_PRIO_PROTECT")
+@property("id.c", "PTHREAD_PRIO_PROTECT")
 public const pthreadPrioProtect = nil
 
 

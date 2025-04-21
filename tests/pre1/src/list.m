@@ -221,7 +221,7 @@ public func node_append (list: *List, new_node: *Node) -> *Node {
 }
 
 
-@attribute("value:dispensable")
+@unused_result
 public func insert (list: *List, pos: Int32, data: Ptr) -> *Node {
 	let new_node = node_create()
 

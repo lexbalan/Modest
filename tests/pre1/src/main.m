@@ -48,8 +48,8 @@ public public func main() -> Int {
 let default = 5
 
 
-@property("value.id.c", "arrshow")
-@property("value.id.cm", "arrshow")
+@property("id.c", "arrshow")
+@property("id.cm", "arrshow")
 func arrayShow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
 	var i = 0

@@ -6,23 +6,23 @@ include "libc/ctypes"
 include "libc/stat"
 
 // open-only flags
-@property("value.id.c", "O_RDONLY")
+@property("id.c", "O_RDONLY")
 public const o_RDONLY = Int32 0x00000000    // open for reading only
-@property("value.id.c", "O_WRONLY")
+@property("id.c", "O_WRONLY")
 public const o_WRONLY = Int32 0x00000001    // open for writing only
-@property("value.id.c", "O_RDWR")
+@property("id.c", "O_RDWR")
 public const o_RDWR = Int32 0x00000002      // open for reading and writing
-@property("value.id.c", "O_ACCMODE")
+@property("id.c", "O_ACCMODE")
 public const o_ACCMODE = Int32 0x00000003   // mask for above modes
 
 public const o_NONBLOCK = Int32 0x00000004  // no delay
 public const o_APPEND = Int32 0x00000008    // set append mode
 
-@property("value.id.c", "O_CREAT")
+@property("id.c", "O_CREAT")
 public const o_CREAT = Int32 0x00000200     // create if nonexistent
-@property("value.id.c", "O_TRUNC")
+@property("id.c", "O_TRUNC")
 public const o_TRUNC = Int32 0x00000400     // truncate to zero length
-@property("value.id.c", "O_EXCL")
+@property("id.c", "O_EXCL")
 public const o_EXCL = Int32 0x00000800      // error if already exists
 
 

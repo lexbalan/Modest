@@ -16,7 +16,6 @@ public const cq = "Hi!"
 public var v0: Int32
 
 @nodecorate
-//@attribute("value:nodecorate")
 public func f0() -> Unit {
 
 }

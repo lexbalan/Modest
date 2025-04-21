@@ -3,68 +3,68 @@
 $pragma do_not_include
 $pragma c_no_print
 
-@property("type.id.c", "char *")
+@property("id.c", "char *")
 type Str Str8
 
-@property("type.id.c", "char")
+@property("id.c", "char")
 type Char Char8
 
-@property("type.id.c", "const char")
+@property("id.c", "const char")
 type ConstChar Char
 
-@property("type.id.c", "signed char")
+@property("id.c", "signed char")
 type SignedChar Int8
 
-@property("type.id.c", "unsigned char")
+@property("id.c", "unsigned char")
 type UnsignedChar Nat8
 
 
-@property("type.id.c", "short")
+@property("id.c", "short")
 type Short Int16
 
-@property("type.id.c", "unsigned short")
+@property("id.c", "unsigned short")
 type UnsignedShort Nat16
 
 
-@property("type.id.c", "int")
+@property("id.c", "int")
 type Int Int32
 
-@property("type.id.c", "unsigned int")
+@property("id.c", "unsigned int")
 type UnsignedInt Nat32
 
-@property("type.id.c", "long int")
+@property("id.c", "long int")
 type LongInt Int64
 
-@property("type.id.c", "unsigned long int")
+@property("id.c", "unsigned long int")
 type UnsignedLongInt Nat64
 
 
-@property("type.id.c", "long")
+@property("id.c", "long")
 type Long Int64
 
-@property("type.id.c", "unsigned long")
+@property("id.c", "unsigned long")
 type UnsignedLong Nat64
 
-@property("type.id.c", "long long")
+@property("id.c", "long long")
 type LongLong Int64
 
-@property("type.id.c", "unsigned long long")
+@property("id.c", "unsigned long long")
 type UnsignedLongLong Nat64
 
-@property("type.id.c", "long long int")
+@property("id.c", "long long int")
 type LongLongInt Int64
 
-@property("type.id.c", "unsigned long long int")
+@property("id.c", "unsigned long long int")
 type UnsignedLongLongInt Nat64
 
 
-@property("type.id.c", "float")
+@property("id.c", "float")
 type Float Float64
 
-@property("type.id.c", "double")
+@property("id.c", "double")
 type Double Float64
 
-@property("type.id.c", "long double")
+@property("id.c", "long double")
 type LongDouble Float64
 
 

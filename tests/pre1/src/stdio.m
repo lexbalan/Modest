@@ -14,27 +14,27 @@ include "./ctypes64"
 
 public type Opaque *Nat8
 
-@property("type.id.c", "FILE")
+@property("id.c", "FILE")
 public type File Opaque
 
-@property("type.id.c", "fpos_t")
+@property("id.c", "fpos_t")
 public type FposT Opaque
 
-@property("type.id.c", "char *")
+@property("id.c", "char *")
 public type CharStr Str
 
-@property("type.id.c", "const char *")
+@property("id.c", "const char *")
 public type ConstCharStr CharStr
 
 
-@property("value.id.c", "EOF")
+@property("id.c", "EOF")
 public const c_EOF = -1
 
-@property("value.id.c", "SEEK_SET")
+@property("id.c", "SEEK_SET")
 public const seekSet = 0
-@property("value.id.c", "SEEK_CUR")
+@property("id.c", "SEEK_CUR")
 public const seekCur = 1
-@property("value.id.c", "SEEK_END")
+@property("id.c", "SEEK_END")
 public const seekEnd = 2
 
 @unused_result
