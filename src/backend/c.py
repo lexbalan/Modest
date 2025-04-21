@@ -178,7 +178,7 @@ def get_id_str(x):
 	if id.prefix != None:
 		id_str = id.prefix + id_str
 
-	if not x.hasAttribute('nodecorate'):
+	if not x.id.hasAttribute('nodecorate'):
 		if not x.hasAttribute('static'):
 			if is_global_public(x):
 				module = x.getModule()

@@ -10,18 +10,20 @@
 #include <string.h>
 
 
-struct main_Point {
+struct Point {
 	int32_t x;
 	int32_t y;
 };
-typedef struct main_Point main_Point;
+typedef struct Point Point;
 
-#define main_cq  "Hi!"
+#define cq  "Hi!"
 
-static int32_t main_v0;
+static int32_t v0;
 void main_f0();
 
-int32_t main_ma();
+void sbuf(void *p, uint32_t size);
+
+int32_t ma();
 
 int32_t main();
 

@@ -52,7 +52,8 @@ func mcmp(a: Ptr, b: Ptr, size: Nat32) -> Bool {
 	return *ax == *bx
 }
 
-func sbuf(p: Ptr, size: Nat32) {
+@nodecorate
+public func sbuf(p: Ptr, size: Nat32) {
 	let px = unsafe *[size]Word8 p
 	var buf = *px
 	var i = Nat32 0
@@ -71,6 +72,25 @@ var yy: @volatile[10]Int
 public func ma() -> Int32
 
 
+//type State enum {
+//	#stateInit
+//	#stateOff
+//	#stateStartup
+//	#stateRun
+//	#stateShutdown
+//}
+
+
+func ab_ret(a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
+	return {a=a, b=b}
+}
+
+func ab_test() {
+	let x = ab_ret(9, 11)
+	printf("x.a = %i\n", x.a)
+	printf("x.a = %i\n", x.b)
+}
+
 const ca = 4
 var va = ca
 
@@ -80,6 +100,8 @@ var p = p0
 const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 public func main() -> Int32 {
+	ab_test()
+
 	var p: Point
 	printf("test %s\n", *Str8 cq)
 	printf("test %d\n", v0)

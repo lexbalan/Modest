@@ -2044,7 +2044,6 @@ def def_func(x, dostmt=True):
 
 	cdef = fn.definition
 
-
 	if fn.type.is_incompleted():
 		fn.type = do_type_func(x['type'])
 		if fn.type.is_incompleted():
@@ -2054,7 +2053,7 @@ def def_func(x, dostmt=True):
 		return None
 
 	if fn.id.str == 'main':
-		fn.att.append('nodecorate')
+		fn.id.addAttribute('nodecorate')
 
 	if x['stmt'] == None:
 		return fn.definition
@@ -2147,12 +2146,6 @@ def check_stmt(stmt):
 		check_block(stmt['stmt'])
 
 
-
-#def is_nodecorate(x):
-#	for a in x['atts']:
-#		if a['kind'] == 'nodecorate':
-#			return True
-#	return False
 
 
 # пропускать остальные ветви (elseif & else) условной директивы
@@ -2600,7 +2593,7 @@ def add_spices_def(x, ast_atts):
 			add_att(x, 'static')
 			add_att(x, 'inline')
 		elif kind == 'nodecorate':
-			add_att(x, 'nodecorate')
+			add_att(x, 'id:nodecorate')
 		elif kind == 'c_no_print':
 			add_att(x, "c_no_print")
 		elif kind == 'extern':
@@ -2610,7 +2603,7 @@ def add_spices_def(x, ast_atts):
 				arg = args[0]['str']
 				if arg == 'C':
 					print("EXTERN C")
-					add_att(x, 'nodecorate')
+					add_att(x, 'id:nodecorate')
 
 		elif kind == 'unused_result':
 			add_att(x, "value.type.to:dispensable")

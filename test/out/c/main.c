@@ -19,7 +19,11 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
-static int32_t main_v0;
+/* anonymous records */
+struct __anonymous_struct_1 {int32_t a; int32_t b;
+};
+
+static int32_t v0;
 
 //@attribute("value:nodecorate")
 void main_f0()
@@ -58,7 +62,7 @@ static bool mcmp(void *a, void *b, uint32_t size)
 	return memcmp(ax, bx, sizeof(uint8_t[size])) == 0;
 }
 
-static void sbuf(void *p, uint32_t size)
+void sbuf(void *p, uint32_t size)
 {
 	uint8_t *const px = (uint8_t *)p;
 	uint8_t buf[size];
@@ -73,7 +77,27 @@ static void sbuf(void *p, uint32_t size)
 static volatile int *const (*xx)[];
 static volatile int yy[10];
 
-extern int32_t main_ma();
+extern int32_t ma();
+
+//type State enum {
+//	#stateInit
+//	#stateOff
+//	#stateStartup
+//	#stateRun
+//	#stateShutdown
+//}
+
+static struct __anonymous_struct_1 ab_ret(int32_t a, int32_t b)
+{
+	return (struct __anonymous_struct_1){.a = a, .b = b};
+}
+
+static void ab_test()
+{
+	const struct __anonymous_struct_1 x = ab_ret(9, 11);
+	printf("x.a = %i\n", x.a);
+	printf("x.a = %i\n", x.b);
+}
 
 #define ca  4
 static int32_t va = ca;
@@ -86,9 +110,11 @@ static struct {uint8_t x; uint8_t y;
 
 int32_t main()
 {
-	main_Point p;
-	printf("test %s\n", (char *)main_cq);
-	printf("test %d\n", main_v0);
+	ab_test();
+
+	Point p;
+	printf("test %s\n", (char *)cq);
+	printf("test %d\n", v0);
 	main_f0();
 
 	printf("p0.x = %d\n", ((struct {uint8_t x; uint8_t y;
