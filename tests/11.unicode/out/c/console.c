@@ -217,7 +217,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			// %c for char
 			//
 			const uint32_t c = va_arg(va, uint32_t);
-			const int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)sptr);
+			const int32_t n = (int32_t)utf_utf32_to_utf8(c, sptr);
 			j = j + n;
 		}
 	}
