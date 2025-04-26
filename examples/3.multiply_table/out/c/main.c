@@ -1,4 +1,3 @@
-// examples/3.multiply_table/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>

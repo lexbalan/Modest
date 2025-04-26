@@ -1,4 +1,3 @@
-// tests/var/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -12,7 +11,7 @@
 
 static int32_t arr0[2] = arr;
 static int32_t arr1[2] = arr;
-static char *str = "Hello!";// -> *[]Char8
+static char *str = "Hello!";
 
 int main()
 {

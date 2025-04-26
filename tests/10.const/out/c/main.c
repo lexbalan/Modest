@@ -1,4 +1,3 @@
-// tests/10.const/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -12,15 +11,11 @@
 
 #define carr  {0, 10, 15, 20, 25, 30}
 
-struct Point {
-	double x;
-	double y;
+struct Point {double x; double y;
 };
 typedef struct Point Point;
 
-struct Line {
-	Point a;
-	Point b;
+struct Line {Point a; Point b;
 };
 typedef struct Line Line;
 
@@ -50,14 +45,11 @@ typedef struct Line Line;
 
 #define lines  {line0, line1, line2, line3}
 
-struct WrappedArray {
-	int32_t x;
+struct WrappedArray {int32_t x;
 };
 typedef struct WrappedArray WrappedArray;
 
 #define wa  {}
-
-// Pythagorean theorem
 static float distance(Point a, Point b)
 {
 	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);

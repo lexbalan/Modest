@@ -1,4 +1,3 @@
-// tests/shift/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -7,9 +6,6 @@
 
 #include "main.h"
 
-
-// left must be Word
-// right must be Nat
 
 int main()
 {

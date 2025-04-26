@@ -1,4 +1,3 @@
-// lightfood/memory.m
 
 #ifndef MEMORY_H
 #define MEMORY_H

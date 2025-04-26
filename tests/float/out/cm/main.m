@@ -2,7 +2,7 @@ include "ctypes64"
 include "stdio"
 include "stdlib"
 include "math"
-// tests/float/src/main.m
+
 
 
 const mathPi = 3.141592653589793238462643383279502884
@@ -13,10 +13,7 @@ func squareOfCircle(radius: Float64) -> Float64 {
 }
 
 
-type Point2D record {
-	x: Int
-	y: Int
-}
+type Point2D record {x: Int, y: Int}
 
 
 func slope(a: Point2D, b: Point2D) -> Float32 {

@@ -1,4 +1,3 @@
-// examples/stmt_while/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>

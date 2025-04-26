@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// examples/demo1/src/main.m
+
 
 var array: [21]Int32 = [
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4

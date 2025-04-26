@@ -185,8 +185,21 @@ class Parser:
 
 			spaceline_cnt = 0
 
+			ca = self.parse_comments_attributes(nl_cnt=spaceline_cnt)
+			comments.extend(ca[0])
+			attributes.extend(ca[1])
+			spaceline_cnt = ca[2]
+
+			if self.match(","):
+				pass
+			elif self.match(";"):
+				pass
+			elif self.match("\n"):
+				pass
+
 			# skip spaces & comments before
-			while True:
+			"""while True:
+
 				if self.match('\n'):
 					spaceline_cnt = spaceline_cnt + 1
 					continue
@@ -206,7 +219,7 @@ class Parser:
 				elif self.match(";"):
 					pass
 				else:
-					break
+					break"""
 
 			if self.match("}"):
 				break
@@ -369,9 +382,10 @@ class Parser:
 
 		# parse all attributes before
 		attributes = []
-		while self.token_class_is('attribute'):
-			x = self.parse_attribute()
-			attributes.append(x)
+		ca = self.parse_comments_attributes()
+		#comments.extend(ca[0])
+		attributes.extend(ca[1])
+		#spaceline_cnt = ca[2]
 
 		t = {'isa': 'ast_type', 'kind': 'unknown', 'ti': ti}
 
@@ -436,13 +450,6 @@ class Parser:
 	# Parse Value
 	#
 
-	def parse_attributes(self):
-		atts = []
-		while self.token_class_is('attribute'):
-			a = self.parse_attribute()
-			atts.append(a)
-		return atts
-
 	def expr_ValueUndefined(self, ti):
 		return {
 			'isa': 'ast_value',
@@ -454,7 +461,12 @@ class Parser:
 
 	def expr_value(self):
 
-		atts = self.parse_attributes()
+		#atts = self.parse_attributes()
+		ca = self.parse_comments_attributes()
+		#comments.extend(ca[0])
+		atts = ca[1]
+		#spaceline_cnt = ca[2]
+
 		x = self.expr_value_1()
 		#x['nl'] = 0
 		x['atts'] = atts
@@ -1059,14 +1071,30 @@ class Parser:
 				}
 			#elif self.look("[") and self.is_value_expr():
 			elif self.match("["):
-				#self.skip()  # "["
-				i = self.expr_value()
+				#
+				# ARRAY INDEXING OR SLICING
+				#
+
+				i = None
+				j = None
+				is_slicing = False
+
 				if self.match(":"):
-					j = None
-					if not self.match("]"):
-						j = self.expr_value()
-						self.need("]")
-					ti['start'] = v['ti']
+					is_slicing = True
+					j = self.expr_value()
+				else:
+					i = self.expr_value()
+					if self.match(":"):
+						is_slicing = True
+						if not self.look("]"):
+							j = self.expr_value()
+				self.need("]")
+
+				assert not (i == None and j == None)
+
+				ti['start'] = v['ti']
+
+				if is_slicing:
 					v = {
 						'isa': 'ast_value',
 						'kind': 'slice',
@@ -1078,8 +1106,6 @@ class Parser:
 					}
 					return v
 
-				self.need("]")
-				ti['start'] = v['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'index',
@@ -1589,6 +1615,28 @@ class Parser:
 			return 'private'
 		return 'private'
 
+
+	def parse_comments_attributes(self, nl_cnt=0):
+		comments = []
+		atts = []
+		while True:
+			comm = self.parse_if_comment()
+			if comm != None:
+				comm['nl'] = nl_cnt
+				comments.append(comm)
+			elif self.token_class_is('attribute'):
+				x = self.parse_attribute()
+				x['nl'] = nl_cnt
+				atts.append(x)
+			#elif self.match("\n"):
+			#	pass
+			else:
+				break
+			nl_cnt = self.skip_blanks()
+
+		return (comments, atts, nl_cnt)
+
+
 	def parse_field(self):
 		ti = self.ti()
 
@@ -1596,28 +1644,9 @@ class Parser:
 		while True:
 			nl_cnt = 0
 
-			comments_and_attributes = []
-			while True:
-				nl_cnt = self.skip_blanks()
-
-				#if self.is_identifier():
-				#	break
-
-				x = None
-
-				comm = self.parse_if_comment()
-				if comm != None:
-					comm['nl'] = nl_cnt
-					comments_and_attributes.append(comm)
-				elif self.token_class_is('attribute'):
-					x = self.parse_attribute()
-					x['nl'] = nl_cnt
-					comments_and_attributes.append(x)
-				else:
-					break
-				#if x != None:
-				#	x['nl'] = nl_cnt
-
+			ca = self.parse_comments_attributes(nl_cnt=nl_cnt)
+			comments_and_attributes = ca[0] + ca[1]
+			nl_cnt = ca[2]
 
 			access_modifier = self.parse_access_modifier()
 
@@ -1924,12 +1953,12 @@ class Parser:
 		public_region = False
 
 		attributes = []
+		comments = []
 		while not self.is_end():
-
-			if self.token_class_is('attribute'):
-				a = self.parse_attribute()
-				attributes.append(a)
-				continue
+			ca = self.parse_comments_attributes(nl_cnt=spaceline_cnt)
+			comments.extend(ca[0])
+			attributes.extend(ca[1])
+			spaceline_cnt = ca[2]
 
 			access_modifier = 'private'
 
@@ -1960,10 +1989,10 @@ class Parser:
 				x = self.parse_def_var()
 			elif self.match('type'):
 				x = self.parse_def_type()
-			elif self.token_class_is('comment-block'):
-				x = self.parse_if_comment_block()
-			elif self.token_class_is('comment-line'):
-				x = self.parse_if_comment_line()
+			#elif self.token_class_is('comment-block'):
+			#	x = self.parse_if_comment_block()
+			#elif self.token_class_is('comment-line'):
+			#	x = self.parse_if_comment_line()
 			elif self.token_class_is('directive'):
 				x = self.parse_directive()
 			elif self.match('import'):
@@ -1991,6 +2020,7 @@ class Parser:
 				subx['ti'] = ti
 				subx['access_modifier'] = access_modifier
 				subx['atts'] = attributes
+				subx['comms'] = comments
 
 			x[0]['nl'] = spaceline_cnt
 			output.extend(x)

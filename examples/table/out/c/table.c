@@ -9,10 +9,6 @@
 #include "table.h"
 
 
-// we cannot receive VLA by value,
-// but we can receive pointer to open array
-// and after construct pointer to closed array with required dimensions
-
 static void separator(uint32_t *sz, uint32_t n);
 static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols);
 void table_print(table_Table *table)
@@ -112,10 +108,6 @@ static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols)
 	}
 	printf("|\n");
 }
-
-// печатает строку +---+---+ отделяющую записи таблицы
-// получает указатель на массив с размерами колонок
-// и количество элементов в ней
 static void separator(uint32_t *sz, uint32_t n)
 {
 	uint32_t i = 0;

@@ -3,7 +3,7 @@ include "stdlib"
 include "string"
 include "unistd"
 include "socket"
-// Simple Web server example
+
 
 
 const port = 8080
@@ -15,10 +15,6 @@ const httpHeader = *Str8 ("HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n" 
 
 
 var pageCounter: Nat32
-
-
-
-
 func htons(x: Word16) -> Word16 {
 	return (x << 8) or (x >> 8)
 }

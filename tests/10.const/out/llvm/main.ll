@@ -285,7 +285,7 @@ declare %Float64 @minmax_max_float64(%Float64 %a, %Float64 %b)
 ; -- strings --
 @str1 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 48, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 @str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 49, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-; -- endstrings --; tests/10.const/src/main.m
+; -- endstrings --
 @carr = constant [6 x i8] [
 	i8 0,
 	i8 10,
@@ -350,9 +350,6 @@ declare %Float64 @minmax_max_float64(%Float64 %a, %Float64 %b)
 	%Int32
 };
 
-
-
-; Pythagorean theorem
 define internal %Float @distance(%Point %a, %Point %b) {
 	%1 = extractvalue %Point %a, 0
 	%2 = extractvalue %Point %b, 0

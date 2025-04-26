@@ -1,7 +1,7 @@
 import "misc/crc32"
 include "ctypes64"
 include "stdio"
-// tests/crc32/src/main.m
+
 import "misc/crc32" as crc32
 
 

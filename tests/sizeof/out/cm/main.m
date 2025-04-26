@@ -1,47 +1,17 @@
 include "ctypes64"
 include "stdio"
-// tests/sizeof/src/main.m
 
 
-type Point record {
-	x: Nat32
-	y: Nat32
-}
 
-type Mixed1 record {
-	c: Char8
-	i: Int32
-	f: Float64
-}
+type Point record {x: Nat32, y: Nat32}
 
-type Mixed2 record {
-	i: Int32
-	c: Char8
-	f: Float64
-	c2: [3]Char8
-	m: Mixed1
-}
+type Mixed1 record {c: Char8, i: Int32, f: Float64}
 
-type Mixed3 record {
-	c: Char8
-	i: Int32
-	f: Float64
-	c2: [9]Char8
-}
+type Mixed2 record {i: Int32, c: Char8, f: Float64, c2: [3]Char8, m: Mixed1}
 
-type Mixed4 record {
-	s: Mixed2
-	c: Char8
-	i: Int32
-	f: Float64
-	c2: [9]Char8
-	i2: Int16
-	p: [3]Point
-	s2: Mixed3
-}
+type Mixed3 record {c: Char8, i: Int32, f: Float64, c2: [9]Char8}
 
-
-//var s: Mixed2
+type Mixed4 record {s: Mixed2, c: Char8, i: Int32, f: Float64, c2: [9]Char8, i2: Int16, p: [3]Point, s2: Mixed3}
 var c: Char8
 var i: Int32
 var f: Float64
@@ -49,14 +19,7 @@ var i2: Int16
 var p: [3]Point
 var g: Bool
 
-type X record {
-	c: Char8
-	i: Int32
-	f: Float64
-	i2: Int16
-	p: [3]Point
-	g: Bool
-}
+type X record {c: Char8, i: Int32, f: Float64, i2: Int16, p: [3]Point, g: Bool}
 
 var x: X
 

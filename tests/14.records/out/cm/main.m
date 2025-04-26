@@ -1,17 +1,10 @@
 include "ctypes64"
 include "stdio"
-// tests/14.records/src/main.m
 
-type Point2D record {
-	x: Nat32
-	y: Nat32
-}
 
-type Point3D record {
-	x: Nat32
-	y: Nat32
-	z: Nat32
-}
+type Point2D record {x: Nat32, y: Nat32}
+
+type Point3D record {x: Nat32, y: Nat32, z: Nat32}
 
 
 const xx = {x = 1, y = 2}
@@ -20,15 +13,9 @@ const yy = Point2D {x = 1, y = 2}
 
 
 
-type Point record {
-	x: Int32
-	y: Int32
-}
+type Point record {x: Int32, y: Int32}
 
-type Line record {
-	a: Point
-	b: Point
-}
+type Line record {a: Point, b: Point}
 
 var line: Line = {
 	a = {x = 10, y = 11}
@@ -52,9 +39,7 @@ var lines: [3]Line = [
 
 var pLines: [3]*Line = [&lines[0], &lines[1], &lines[2]]
 
-type Struct record {
-	x: *Line
-}
+type Struct record {x: *Line}
 
 var s: Struct = {x = &lines[0]}
 

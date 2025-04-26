@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/1.hello_world/src/main.m
+
 
 
 public func main() -> Int {
@@ -161,16 +161,9 @@ func test_generic_array() -> Bool {
 
 
 
-type Point2D record {
-	x: Int32
-	y: Int32
-}
+type Point2D record {x: Int32, y: Int32}
 
-type Point3D record {
-	x: Int32
-	y: Int32
-	z: Int32
-}
+type Point3D record {x: Int32, y: Int32, z: Int32}
 
 
 func test_generic_record() -> Bool {

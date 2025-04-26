@@ -1,4 +1,3 @@
-// tests/free_pointer/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>

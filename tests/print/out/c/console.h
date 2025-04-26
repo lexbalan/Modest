@@ -1,4 +1,3 @@
-// lightfood/console.m
 
 #ifndef CONSOLE_H
 #define CONSOLE_H
@@ -33,9 +32,7 @@ void console_puts16(uint16_t *s);
 void console_puts32(uint32_t *s);
 
 void console_print(char *form, ...);
-
 int32_t console_vfprint(int32_t fd, char *form, va_list va);
-
 int32_t console_vsprint(char *buf, char *form, va_list va);
 
 #endif /* CONSOLE_H */

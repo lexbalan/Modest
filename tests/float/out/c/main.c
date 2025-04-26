@@ -1,4 +1,3 @@
-// tests/float/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -17,9 +16,7 @@ static double squareOfCircle(double radius)
 	return pow(radius, (double)2) * mathPi;
 }
 
-struct Point2D {
-	int x;
-	int y;
+struct Point2D {int x; int y;
 };
 typedef struct Point2D Point2D;
 

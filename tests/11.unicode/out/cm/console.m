@@ -3,9 +3,7 @@ include "ctypes64"
 include "unistd"
 include "stdio"
 include "string"
-// lightfood/console.m
 
-//$pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
 import "misc/utf" as utf
 
 
@@ -51,19 +49,6 @@ public func putchar_utf32(c: Char32) -> Unit {
 		i = i + 1
 	}
 }
-
-
-//
-// puts
-//
-
-
-/*
-// проблема тк puts уже определен в include ^^
-public func puts(s: *Str8) -> Unit {
-	puts8(s)
-}
-*/
 
 public func puts8(s: *Str8) -> Unit {
 	var i: Int32 = 0
@@ -123,10 +108,6 @@ public func print(form: *Str8, ...) -> Unit {
 	vfprint(c_STDOUT_FILENO, form, va)
 	__va_end(va)
 }
-
-
-
-
 public func vfprint(fd: Int32, form: *Str8, va: va_list) -> Int32 {
 	var strbuf: [256]Char8
 	let n: Int32 = vsprint(&strbuf, form, va)
@@ -134,9 +115,6 @@ public func vfprint(fd: Int32, form: *Str8, va: va_list) -> Int32 {
 	write(fd, &strbuf, SizeT n)
 	return n
 }
-
-
-
 public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 	var i: Int32 = 0
 	var j: Int32 = 0
@@ -224,9 +202,6 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 
 	return j
 }
-
-
-
 func n_to_dec_sym(n: Nat8) -> Char8 {
 	return Char8 Word8 (Nat8 Word8 Char8 "0" + n)
 }

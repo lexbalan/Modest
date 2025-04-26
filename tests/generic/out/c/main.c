@@ -1,4 +1,3 @@
-// tests/1.hello_world/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -188,16 +187,11 @@ static bool test_generic_array()
 #undef a
 }
 
-struct Point2D {
-	int32_t x;
-	int32_t y;
+struct Point2D {int32_t x; int32_t y;
 };
 typedef struct Point2D Point2D;
 
-struct Point3D {
-	int32_t x;
-	int32_t y;
-	int32_t z;
+struct Point3D {int32_t x; int32_t y; int32_t z;
 };
 typedef struct Point3D Point3D;
 

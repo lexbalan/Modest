@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/assign_array/src/main.m
+
 
 
 var globalArray0: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]

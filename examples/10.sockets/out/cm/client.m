@@ -3,7 +3,7 @@ include "stdio"
 include "stdlib"
 include "unistd"
 include "socket"
-/* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
+
 
 
 const filename = "file.txt"

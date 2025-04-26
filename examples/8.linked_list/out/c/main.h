@@ -1,4 +1,3 @@
-// examples/8.linked_list/src/main.m
 
 #ifndef MAIN_H
 #define MAIN_H

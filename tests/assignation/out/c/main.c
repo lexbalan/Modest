@@ -1,4 +1,3 @@
-// tests/assignation/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -15,11 +14,7 @@
 	(*dst)[i] = (*src)[i]; \
 }
 
-
-// Simply record for records assignation test
-struct Point {
-	int32_t x;
-	int32_t y;
+struct Point {int32_t x; int32_t y;
 };
 typedef struct Point Point;
 

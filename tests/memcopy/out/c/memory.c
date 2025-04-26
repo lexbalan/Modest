@@ -1,4 +1,3 @@
-// lightfood/memory.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -7,17 +6,9 @@
 #include "memory.h"
 
 
-////
-
 #define systemWidth  64
-
-//$if (systemWidth == 64)
 typedef uint64_t Word;
 typedef uint64_t Nat;
-//$elseif (systemWidth == 32)
-//type Word Word32
-//type Nat Nat32
-//$endif
 
 #define memoryAlignment  (systemWidth / 8)
 

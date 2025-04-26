@@ -1,4 +1,3 @@
-// examples/5.records/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -10,15 +9,11 @@
 #include "main.h"
 
 
-struct Point {
-	float x;
-	float y;
+struct Point {float x; float y;
 };
 typedef struct Point Point;
 
-struct Line {
-	Point a;
-	Point b;
+struct Line {Point a; Point b;
 };
 typedef struct Line Line;
 
@@ -26,7 +21,6 @@ static Line line = {
 	.a = {.x = 0, .y = 0},
 	.b = {.x = 1.0, .y = 1.0}
 };
-
 static inline float max(float a, float b)
 {
 	if (a > b) {
@@ -34,7 +28,6 @@ static inline float max(float a, float b)
 	}
 	return b;
 }
-
 static inline float min(float a, float b)
 {
 	if (a < b) {
@@ -42,8 +35,6 @@ static inline float min(float a, float b)
 	}
 	return b;
 }
-
-// Pythagorean theorem
 static float distance(Point a, Point b)
 {
 	const float dx = max(a.x, b.x) - min(a.x, b.x);

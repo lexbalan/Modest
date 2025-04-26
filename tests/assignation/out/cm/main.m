@@ -1,13 +1,7 @@
 include "ctypes64"
 include "stdio"
-// tests/assignation/src/main.m
 
-
-// Simply record for records assignation test
-type Point record {
-	x: Int32
-	y: Int32
-}
+type Point record {x: Int32, y: Int32}
 
 
 var glb_i0: Int32 = 0

@@ -312,11 +312,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str42 = private constant [25 x i8] [i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 52, i8 48, i8 41, i8 10, i8 0]
 @str43 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str44 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-; -- endstrings --; tests/arrays/src/main.m
-
-;@c_no_print
-;import "misc/minmax"
-;$pragma c_include "./minmax.h"
+; -- endstrings --
 @constantArray = constant [10 x i8] [
 	i8 1,
 	i8 2,
@@ -346,9 +342,6 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 	%Char8 98,
 	%Char8 99
 ]
-
-
-;var arrayOfChars = [Char8 "a", 'b', 'c']
 define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%x = alloca [20 x %Char8]
 	%2 = zext i8 20 to %Nat32

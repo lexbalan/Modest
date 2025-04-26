@@ -1,15 +1,11 @@
 import "lightfood/memory"
 include "ctypes64"
 include "stdio"
-// tests/1.hello_world/src/main.m
+
 import "lightfood/memory" as mem
 
 
-type Object record {
-	firstname: [32]Char8
-	lastname: [32]Char8
-	age: Int32
-}
+type Object record {firstname: [32]Char8, lastname: [32]Char8, age: Int32}
 
 
 public func main() -> Int {

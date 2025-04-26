@@ -1,4 +1,3 @@
-// lightfood/delay.m
 
 #include <stdint.h>
 #include <stdbool.h>

@@ -1,4 +1,3 @@
-// tests/va/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -10,10 +9,6 @@
 #include "main.h"
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
-
-
-//include "lightfood/print"
-//$pragma c_include "./print.h"
 
 static ssize_t my_printf(char *format, ...)
 {

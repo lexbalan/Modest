@@ -1,4 +1,3 @@
-// tests/string/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -9,18 +8,12 @@
 
 #include "main.h"
 
-
-// constants with type String(Generic)
 #define str8_example  "String"
 #define str16_example  (u"String-Ω")
 #define str32_example  (U"String-Ω 🐀🎉🦄")
-
-// variables with type Array of Chars
 static char string8[6] = str8_example;
 static uint16_t string16[8] = str16_example;
 static uint32_t string32[12] = str32_example;
-
-// variables with type Pointer to Array of Chars
 static char *ptr_to_string8 = str8_example;
 static uint16_t *ptr_to_string16 = str16_example;
 static uint32_t *ptr_to_string32 = str32_example;

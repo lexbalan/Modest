@@ -1,4 +1,3 @@
-// tests/1.hello_world/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,10 +7,7 @@
 #include "main.h"
 
 
-struct Object {
-	char firstname[32];
-	char lastname[32];
-	int32_t age;
+struct Object {char firstname[32]; char lastname[32]; int32_t age;
 };
 typedef struct Object Object;
 

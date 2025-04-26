@@ -1,20 +1,12 @@
 include "ctypes64"
 include "stdlib"
 include "stdio"
-// examples/8.linked_list/linked_list.cm
 
 
-public type Node record {
-	next: *Node
-	prev: *Node
-	data: Ptr
-}
 
-public type List record {
-	head: *Node
-	tail: *Node
-	size: Nat32
-}
+public type Node record {next: *Node, prev: *Node, data: Ptr}
+
+public type List record {head: *Node, tail: *Node, size: Nat32}
 
 
 public func create() -> *List {
@@ -125,11 +117,6 @@ public func node_insert_right(left: *Node, new_right: *Node) -> Unit {
 	new_right.next = old_right
 	new_right.prev = left
 }
-
-
-// get list node by number
-// if number is out of range returns nil
-// if number < 0 - go backward
 public func node_get(list: *List, pos: Int32) -> *Node {
 	if list == nil or list.size == 0 {
 		return nil
@@ -217,9 +204,6 @@ public func node_append(list: *List, new_node: *Node) -> *Node {
 
 	return new_node
 }
-
-
-
 public func insert(list: *List, pos: Int32, data: Ptr) -> *Node {
 	let new_node: *Node = node_create()
 
@@ -231,9 +215,6 @@ public func insert(list: *List, pos: Int32, data: Ptr) -> *Node {
 
 	return node_insert(list, pos, new_node)
 }
-
-
-
 public func append(list: *List, data: Ptr) -> *Node {
 	if list == nil {
 		return nil

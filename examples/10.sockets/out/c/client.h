@@ -1,4 +1,3 @@
-/* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
 
 #ifndef CLIENT_H
 #define CLIENT_H

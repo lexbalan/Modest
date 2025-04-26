@@ -1,4 +1,3 @@
-// examples/demo1/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>

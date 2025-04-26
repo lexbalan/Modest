@@ -1,19 +1,10 @@
 include "ctypes64"
 include "string"
 include "stdio"
-// examples/7.binary_file/main.m
 
-
-// FIXIT: not worked LLVM result (!)
 
 const filename = *Str8 "file.bin"
-
-
-// chunk of data for read/write operations in file
-type Chunk record {
-	id: [100]Char
-	data: [1024]Char
-}
+type Chunk record {id: [100]Char, data: [1024]Char}
 
 
 func write_example() -> Unit {

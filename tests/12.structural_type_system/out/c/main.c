@@ -1,4 +1,3 @@
-// tests/12.structural_type_system/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -14,13 +13,11 @@ struct __anonymous_struct_2 {int32_t x;
 struct __anonymous_struct_3 {int32_t x;
 };
 
-struct Type1 {
-	int32_t x;
+struct Type1 {int32_t x;
 };
 typedef struct Type1 Type1;
 
-struct Type2 {
-	int32_t x;
+struct Type2 {int32_t x;
 };
 typedef struct Type2 Type2;
 

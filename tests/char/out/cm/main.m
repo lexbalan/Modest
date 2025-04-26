@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/char/src/main.m
+
 
 
 const utf8Char = "s"

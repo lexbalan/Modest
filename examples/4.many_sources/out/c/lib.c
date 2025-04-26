@@ -1,4 +1,3 @@
-// examples/4.many_sources/lib.cm
 
 #include <stdint.h>
 #include <stdbool.h>

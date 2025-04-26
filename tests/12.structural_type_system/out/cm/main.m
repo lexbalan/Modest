@@ -1,15 +1,11 @@
 include "ctypes64"
 include "stdio"
-// tests/12.structural_type_system/src/main.m
 
 
-type Type1 record {
-	x: Int32
-}
 
-type Type2 record {
-	x: Int32
-}
+type Type1 record {x: Int32}
+
+type Type2 record {x: Int32}
 
 type Type3 Type1
 

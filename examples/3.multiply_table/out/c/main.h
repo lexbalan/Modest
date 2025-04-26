@@ -1,4 +1,3 @@
-// examples/3.multiply_table/src/main.m
 
 #ifndef MAIN_H
 #define MAIN_H

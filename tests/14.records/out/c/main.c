@@ -1,4 +1,3 @@
-// tests/14.records/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -14,31 +13,22 @@ struct __anonymous_struct_5 {uint32_t x; uint32_t y;
 struct __anonymous_struct_6 {uint32_t x; uint32_t y;
 };
 
-struct Point2D {
-	uint32_t x;
-	uint32_t y;
+struct Point2D {uint32_t x; uint32_t y;
 };
 typedef struct Point2D Point2D;
 
-struct Point3D {
-	uint32_t x;
-	uint32_t y;
-	uint32_t z;
+struct Point3D {uint32_t x; uint32_t y; uint32_t z;
 };
 typedef struct Point3D Point3D;
 
 #define xx  {.x = 1, .y = 2}
 #define yy  {.x = 1, .y = 2}
 
-struct Point {
-	int32_t x;
-	int32_t y;
+struct Point {int32_t x; int32_t y;
 };
 typedef struct Point Point;
 
-struct Line {
-	Point a;
-	Point b;
+struct Line {Point a; Point b;
 };
 typedef struct Line Line;
 
@@ -64,8 +54,7 @@ static Line lines[3] = {
 
 static Line *pLines[3] = (Line *[3]){&lines[0], &lines[1], &lines[2]};
 
-struct Struct {
-	Line *x;
+struct Struct {Line *x;
 };
 typedef struct Struct Struct;
 

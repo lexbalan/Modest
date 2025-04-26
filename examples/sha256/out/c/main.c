@@ -1,4 +1,3 @@
-// tests/sha256/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -15,11 +14,7 @@
 
 #define inputDataLength  32
 
-struct SHA256_TestCase {
-	char input_data[inputDataLength];
-	uint32_t input_data_len;
-
-	sha256_Hash expected_result;
+struct SHA256_TestCase {char input_data[inputDataLength]; uint32_t input_data_len; sha256_Hash expected_result;
 };
 typedef struct SHA256_TestCase SHA256_TestCase;
 

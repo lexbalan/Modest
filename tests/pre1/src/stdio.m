@@ -27,6 +27,13 @@ public type CharStr Str
 public type ConstCharStr CharStr
 
 
+// TODO:
+// @stdin = external global ptr, align 8
+public extern const stdin: *File
+public extern const stdout: *File
+public extern const stderr: *File
+
+
 @property("id.c", "EOF")
 public const c_EOF = -1
 

@@ -2,10 +2,7 @@ import "lightfood/delay"
 import "fsm"
 include "ctypes64"
 include "stdio"
-// examples/fsm/src/main.m
 
-// This is flashlight final state machine example
-// (just for compiler test and language demonstration)
 import "lightfood/delay" as delay
 import "fsm" as fsm
 
@@ -19,11 +16,6 @@ const flashlightStateBeacon = 2
 
 
 var cnt: Nat8
-
-
-//
-// State Off
-//
 
 func off_entry(x: *FSM) -> Unit {
 	Unit x
@@ -47,11 +39,6 @@ func off_exit(x: *FSM) -> Unit {
 	//printf("off_exit\n")
 }
 
-
-//
-// State On
-//
-
 func on_entry(x: *FSM) -> Unit {
 	Unit x
 	//printf("on_entry\n")
@@ -73,11 +60,6 @@ func on_exit(x: *FSM) -> Unit {
 	Unit x
 	//printf("on_exit\n")
 }
-
-
-//
-// State Beacon
-//
 
 func beacon_entry(x: *FSM) -> Unit {
 	let from_name: *Str8 = fsm.state_no_name(x, x.state)

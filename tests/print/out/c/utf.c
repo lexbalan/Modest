@@ -1,6 +1,3 @@
-// utf.m
-// algorithms from wikipedia
-// (https://ru.wikipedia.org/wiki/UTF-16)
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,8 +5,6 @@
 
 #include "utf.h"
 
-
-// декодирует символ UTF-32 в последовательность UTF-8
 uint8_t utf_utf32_to_utf8(uint32_t c, char *buf)
 {
 	const uint32_t x = (uint32_t)c;
@@ -45,8 +40,6 @@ uint8_t utf_utf32_to_utf8(uint32_t c, char *buf)
 
 	return 0;
 }
-
-// returns n-symbols from input stream
 uint8_t utf_utf16_to_utf32(uint16_t *c, uint32_t *result)
 {
 	const uint32_t leading = (uint32_t)c[0];

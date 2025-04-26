@@ -1,4 +1,3 @@
-// tests/assign_record/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,9 +7,7 @@
 #include "main.h"
 
 
-struct Point {
-	int32_t x;
-	int32_t y;
+struct Point {int32_t x; int32_t y;
 };
 typedef struct Point Point;
 

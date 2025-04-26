@@ -3,7 +3,7 @@ include "stdio"
 include "time"
 include "unistd"
 include "stdlib"
-// tests/unistd/src/main.m// getenv
+
 
 
 public func main() -> Int {

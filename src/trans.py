@@ -1007,7 +1007,14 @@ def do_value_index(x):
 def do_value_slice(x):
 	#info("do_value_slice", x['ti'])
 	left = do_value(x['left'])
-	index_from = do_rvalue(x['index_from'])
+
+	index_from = None
+	if x['index_from'] != None:
+		index_from = do_rvalue(x['index_from'])
+	else:
+		print("mass")
+		index_from = value_imm_literal_create(foundation.typeNat32, 0)
+
 	index_to = None
 	ti = x['ti']
 

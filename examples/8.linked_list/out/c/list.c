@@ -1,4 +1,3 @@
-// examples/8.linked_list/linked_list.cm
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -119,10 +118,6 @@ void list_node_insert_right(list_Node *left, list_Node *new_right)
 	new_right->next = old_right;
 	new_right->prev = left;
 }
-
-// get list node by number
-// if number is out of range returns nil
-// if number < 0 - go backward
 list_Node *list_node_get(list_List *list, int32_t pos)
 {
 	if (list == NULL || list->size == 0) {
@@ -210,7 +205,6 @@ list_Node *list_node_append(list_List *list, list_Node *new_node)
 
 	return new_node;
 }
-
 list_Node *list_insert(list_List *list, int32_t pos, void *data)
 {
 	list_Node *const new_node = list_node_create();
@@ -223,7 +217,6 @@ list_Node *list_insert(list_List *list, int32_t pos, void *data)
 
 	return list_node_insert(list, pos, new_node);
 }
-
 list_Node *list_append(list_List *list, void *data)
 {
 	if (list == NULL) {

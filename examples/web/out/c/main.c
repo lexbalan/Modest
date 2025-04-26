@@ -1,4 +1,3 @@
-// Simple Web server example
 
 #include <stdint.h>
 #include <stdbool.h>

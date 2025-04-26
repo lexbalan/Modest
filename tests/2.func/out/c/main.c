@@ -1,4 +1,3 @@
-// tests/2.func/src/main.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -22,8 +21,6 @@ static int32_t sum(int32_t a, int32_t b)
 {
 	return a + b;
 }
-
-// define function main
 
 static void func0();
 int main()

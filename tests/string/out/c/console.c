@@ -1,4 +1,3 @@
-// lightfood/console.m
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -14,8 +13,6 @@
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
-
-//$pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
 
 
 void console_putchar_utf8(char c);
@@ -65,17 +62,6 @@ void console_putchar_utf32(uint32_t c)
 		i = i + 1;
 	}
 }
-
-//
-// puts
-//
-
-/*
-// проблема тк puts уже определен в include ^^
-public func puts(s: *Str8) -> Unit {
-	puts8(s)
-}
-*/
 
 void console_puts8(char *s)
 {
@@ -137,7 +123,6 @@ void console_print(char *form, ...)
 	va_end(va);
 }
 
-
 int32_t console_vsprint(char *buf, char *form, va_list va);
 int32_t console_vfprint(int32_t fd, char *form, va_list va)
 {
@@ -147,7 +132,6 @@ int32_t console_vfprint(int32_t fd, char *form, va_list va)
 	write(fd, (char *)&strbuf, ABS(n));
 	return n;
 }
-
 
 static int32_t sprint_dec_int32(char *buf, int32_t x);
 static int32_t sprint_dec_n32(char *buf, uint32_t x);
@@ -240,7 +224,6 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 
 	return j;
 }
-
 static inline char n_to_dec_sym(uint8_t n)
 {
 	return (char)((uint8_t)'0' + n);
