@@ -8,7 +8,7 @@ func char8ToInt(c: Char8) -> Int {
 
 
 
-type Tokenizer record {input: *[]Char8, position: Nat32}
+type Tokenizer record {input: *[]Char8, position: Nat32, tokensBufPos: Nat16, tokensPos: Nat16, tokensBuf: *[]Char8, tokens: *[]*[]Char8}
 
 
 func gettok(t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
@@ -51,12 +51,10 @@ func gettok(t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 
 var prompt: [32]Char8 = "# "
 var prompt_len: Nat8 = 2
-var inbuf: [1024]Char8
+
 
 var tokensBuf: [4 * 1024]Char8
-var tokensBufPos: Nat16
-var tokens: [64]*Str8
-var tokensPos: Nat16
+
 
 
 
@@ -65,31 +63,26 @@ func showPrompt() -> Unit {
 }
 
 
-func tokenize(inbuf: *[]Char8, tokens: *[]*[]Char8) -> Unit {
-	// Токенизируем строку
-	var tokenizer: Tokenizer = {
-		position = 0
-		input = inbuf
-	}
+func tokenize(tokenizer: *Tokenizer) -> Unit {
 	while true {
 		let max_toklen: Nat16 = 128
 		var token: [max_toklen]Char8
 
-		var p: *Char8 = &tokensBuf[tokensBufPos]
-		let toklen: Nat16 = gettok(&tokenizer, &token, max_toklen)
+		var p: *Char8 = &tokenizer.tokensBuf[tokenizer.tokensBufPos]
+		let toklen: Nat16 = gettok(tokenizer, &token, max_toklen)
 		if toklen == 0 {
 			break
 		}
 
 		// save token in tokens buffer
-		let pbuf: *[]Char8 = &tokensBuf[tokensBufPos:]
+		let pbuf: *[<undef> - tokenizer.tokensBufPos]Char8 = &tokenizer.tokensBuf[tokenizer.tokensBufPos:]
 		pbuf[0:toklen] = token[0:toklen]
-		tokensBufPos = tokensBufPos + toklen
-		pbuf[tokensBufPos] = "\x0"
-		tokensBufPos = tokensBufPos + 1
+		tokenizer.tokensBufPos = tokenizer.tokensBufPos + toklen
+		pbuf[tokenizer.tokensBufPos] = "\x0"
+		tokenizer.tokensBufPos = tokenizer.tokensBufPos + 1
 		// save pointer to token
-		tokens[tokensPos] = pbuf
-		tokensPos = tokensPos + 1
+		tokenizer.tokens[tokenizer.tokensPos] = pbuf
+		tokenizer.tokensPos = tokenizer.tokensPos + 1
 	}
 }
 
@@ -97,14 +90,23 @@ func tokenize(inbuf: *[]Char8, tokens: *[]*[]Char8) -> Unit {
 public func main() -> Int32 {
 	printf("HARSH v0.1\n")
 
+	var inbuf: [1024]Char8
+
 	while true {
 		showPrompt()
 		fgets(&inbuf, sizeof inbuf, stdin)
 		var tokens: [64]*[]Char8
-		tokenize(&inbuf, &tokens)
+
+		// Токенизируем строку
+		var tokenizer: Tokenizer = Tokenizer {
+			input = &inbuf
+			tokensBuf = &tokensBuf
+			tokens = &tokens
+		}
+		tokenize(&tokenizer)
 
 		var i = Nat16 0
-		while i < tokensPos {
+		while i < tokenizer.tokensPos {
 			printf("token: '%s'\n", tokens[i])
 			i = i + 1
 		}

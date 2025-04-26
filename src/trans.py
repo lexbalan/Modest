@@ -591,7 +591,10 @@ def do_value_bin(x):
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
 	ti = x['ti']
+	return do_value_bin2(op, l, r, ti)
 
+
+def do_value_bin2(op, l, r, ti):
 	if l.isBad() or r.isBad():
 		return ValueBad(ti)
 
@@ -624,7 +627,7 @@ def do_value_bin(x):
 
 	t = htype.select_common_type(l.type, r.type)
 	if t.is_bad():
-		error("different types in operation", x['ti'])
+		error("different types in operation", ti)
 		return ValueBad(ti)
 
 	l = value_cons_implicit(t, l)
@@ -1004,27 +1007,34 @@ def do_value_index(x):
 	return nv
 
 
+def valueZeroNumber():
+	gt = TypeNumber()
+	return value_imm_literal_create(gt, 0)
+
 def do_value_slice(x):
 	#info("do_value_slice", x['ti'])
+	ti = x['ti']
+
 	left = do_value(x['left'])
+	if left.isBad():
+		return ValueBad(x['ti'])
 
 	index_from = None
 	if x['index_from'] != None:
 		index_from = do_rvalue(x['index_from'])
+		if index_from.isBad():
+			return ValueBad(ti)
 	else:
-		print("mass")
-		index_from = value_imm_literal_create(foundation.typeNat32, 0)
+		index_from = valueZeroNumber()
 
 	index_to = None
-	ti = x['ti']
-
 	if x['index_to'] != None:
 		index_to = do_rvalue(x['index_to'])
 		if index_to.isBad():
-			return ValueBad(x['ti'])
+			return ValueBad(ti)
+	else:
+		index_to = ValueUndefined(TypeNumber())
 
-	if left.isBad() or index_from.isBad():
-		return ValueBad(x['ti'])
 
 	left_type = left.type
 	via_pointer = left_type.is_pointer()
@@ -1038,36 +1048,20 @@ def do_value_slice(x):
 
 
 	# получаем размер слайса
-	slice_volume = None  # asg_value
-
 	# строим выражения для C бекенда в частности
 	# тк volume of array должен быть выражением
 	# а для слайса [a:b] это (b - a)
-	if index_from != None and index_to != None:
-		de = {
-			'isa': 'ast_value',
-			'kind': 'sub',
-			'left': x['index_to'],
-			'right': x['index_from'],
-			'atts': [],
-			'ti': ti
-		}
+	slice_volume = do_value_bin2('sub', index_to, index_from, x['ti'])
 
-		slice_volume = do_value(de)
+	if isinstance(index_to, ValueUndefined):
+		info("VU", x['ti'])
 
-		slice_len = 0  # len as integer
-		if slice_volume.isImmediate():
-			slice_len = slice_volume.asset
-
-			if slice_len < 0:
-				error("wrong slice direction", x['ti'])
-				return ValueBad(x['ti'])
-
-	if slice_volume == None:
-		slice_volume = ValueUndefined(typeSysNat, x['ti'])
-
-	if index_to == None:
-		index_to = ValueUndefined(typeSysInt)
+	slice_len = 0  # len as integer
+	if slice_volume.isImmediate():
+		slice_len = slice_volume.asset
+		if slice_len < 0:
+			error("wrong slice direction", x['ti'])
+			return ValueBad(x['ti'])
 
 	type = TypeArray(array_type.of, slice_volume, generic=False, ti=x['ti'])
 	nv = ValueSlice(type, left, index_from, index_to, x['ti'])

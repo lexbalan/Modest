@@ -147,7 +147,13 @@ def get_type_id(t):
 	return '%' + id_str
 
 
-
+def llvm_value_undef(type):
+	return {
+		'isa': 'll_value',
+		'kind': 'undef',
+		'type': type,
+		'is_adr': False
+	}
 
 def llvm_value_zero(type):
 	return {
@@ -469,6 +475,7 @@ def llvm_print_value(x):
 	elif k == 'inline_cast': llvm_print_value_inline_cast(x)
 	elif k == 'inline_getelemantptr': llvm_print_value_inline_getelemantptr(x)
 	elif k == 'zero': llvm_print_ValueZero(x)
+	elif k == 'undef': out("undef")
 	else:
 		out("<llvm::unknown_value_kind '%s'>" % k)
 		info("<llvm::unknown_value_kind '%s'>" % k, x['ti'])
@@ -1823,6 +1830,7 @@ def do_eval(x):
 	elif isinstance(x, ValueVaArg): y = do_eval_va_arg(x)
 	elif isinstance(x, ValueVaEnd): y = do_eval_va_end(x)
 	elif isinstance(x, ValueVaCopy): y = do_eval_va_copy(x)
+	elif isinstance(x, ValueUndefined): y = llvm_value_undef(x.type)
 	else:
 		out("<??>")
 
