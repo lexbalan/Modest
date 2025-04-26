@@ -56,6 +56,7 @@ var inbuf: [1024]Char8
 var tokensBuf: [4 * 1024]Char8
 var tokensBufPos: Nat16
 var tokens: [64]*Str8
+var tokensPos: Nat16
 
 
 
@@ -63,9 +64,6 @@ func showPrompt() -> Unit {
 	write(0, &prompt, SizeT prompt_len)
 }
 
-func push(token: *[]Char8, toklen: Nat16) -> Unit {
-	printf("PUSH \"%s\"\n", token)
-}
 
 func tokenize(inbuf: *[]Char8, tokens: *[]*[]Char8) -> Unit {
 	// Токенизируем строку
@@ -83,9 +81,15 @@ func tokenize(inbuf: *[]Char8, tokens: *[]*[]Char8) -> Unit {
 			break
 		}
 
-		//
-		tokensBuf[tokensBufPos:tokensBufPos + toklen] = token[0:toklen]
-		push(&token, toklen)
+		// save token in tokens buffer
+		let pbuf: *[]Char8 = &tokensBuf[tokensBufPos:]
+		pbuf[0:toklen] = token[0:toklen]
+		tokensBufPos = tokensBufPos + toklen
+		pbuf[tokensBufPos] = "\x0"
+		tokensBufPos = tokensBufPos + 1
+		// save pointer to token
+		tokens[tokensPos] = pbuf
+		tokensPos = tokensPos + 1
 	}
 }
 
@@ -98,6 +102,12 @@ public func main() -> Int32 {
 		fgets(&inbuf, sizeof inbuf, stdin)
 		var tokens: [64]*[]Char8
 		tokenize(&inbuf, &tokens)
+
+		var i = Nat16 0
+		while i < tokensPos {
+			printf("token: '%s'\n", tokens[i])
+			i = i + 1
+		}
 	}
 	return 0
 }

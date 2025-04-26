@@ -68,15 +68,11 @@ static char inbuf[1024];
 static char tokensBuf[4 * 1024];
 static uint16_t tokensBufPos;
 static char *tokens[64];
+static uint16_t tokensPos;
 
 static void showPrompt()
 {
 	write(0, (char *)&prompt, (size_t)prompt_len);
-}
-
-static void push(char *token, uint16_t toklen)
-{
-	printf("PUSH \"%s\"\n", token);
 }
 
 static void tokenize(char *inbuf, char *(*tokens)[])
@@ -96,14 +92,15 @@ static void tokenize(char *inbuf, char *(*tokens)[])
 			break;
 		}
 
-		// save token
+		// save token in tokens buffer
 		char *const pbuf = &tokensBuf[tokensBufPos];
 		memcpy((char(*)[toklen - 0])&pbuf[0], (char(*)[toklen - 0])&token[0], sizeof(char[toklen - 0]));
 		tokensBufPos = tokensBufPos + toklen;
 		pbuf[tokensBufPos] = '\x0';
 		tokensBufPos = tokensBufPos + 1;
-
-		push((char *)&token, toklen);
+		// save pointer to token
+		(*tokens)[tokensPos] = pbuf;
+		tokensPos = tokensPos + 1;
 	}
 }
 
@@ -116,6 +113,12 @@ int32_t main()
 		fgets((char *)&inbuf, sizeof inbuf, stdin);
 		char *tokens[64];
 		tokenize((char *)&inbuf, &tokens);
+
+		uint16_t i = 0;
+		while (i < tokensPos) {
+			printf("token: '%s'\n", tokens[i]);
+			i = i + 1;
+		}
 	}
 	return 0;
 }
