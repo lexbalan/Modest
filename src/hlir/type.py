@@ -135,7 +135,7 @@ class Type(Entity):
 	def is_vla(self):
 		if not self.is_array():
 			return False
-		if Value.isUndefined(self.volume):
+		if self.volume.isUndef():
 			return False
 		return self.volume.isRuntime()
 
@@ -210,13 +210,13 @@ class Type(Entity):
 
 	def is_closed_array(self):
 		if self.is_array():
-			return not Value.isUndefined(self.volume)
+			return not self.volume.isUndef()
 		return False
 
 
 	def is_open_array(self):
 		if self.is_array():
-			return Value.isUndefined(self.volume)
+			return self.volume.isUndef()
 		return False
 
 
@@ -334,8 +334,8 @@ class Type(Entity):
 
 	@staticmethod
 	def eq_array(a, b, opt):
-		if Value.isUndefined(a.volume) or Value.isUndefined(b.volume):
-			if Value.isUndefined(a.volume) and Value.isUndefined(b.volume):
+		if a.volume.isUndef() or b.volume.isUndef():
+			if a.volume.isUndef() and b.volume.isUndef():
 				return Type.eq(a.of, b.of, opt)
 			return False
 

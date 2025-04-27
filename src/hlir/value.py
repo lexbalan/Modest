@@ -64,9 +64,8 @@ class Value(Entity):
 		return isinstance(self, ValueBad)
 
 
-	#@staticmethod
-	def isUndefined(self):
-		return isinstance(self, ValueUndefined)
+	def isUndef(self):
+		return isinstance(self, ValueUndef)
 
 	def isLiteral(self):
 		return isinstance(self, ValueLiteral)
@@ -183,7 +182,7 @@ class ValueBad(Value):
 		self.id = Id().fromStr('_')
 
 
-class ValueUndefined(Value):
+class ValueUndef(Value):
 	def __init__(self, type=None, ti=None):
 		from .type import Type
 		if type==None:

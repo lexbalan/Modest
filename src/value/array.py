@@ -90,7 +90,7 @@ def array_can(to, from_type, method, ti):
 
 	if from_type.is_generic():
 		# GenericArray -> Array
-		if Value.isUndefined(to.volume):
+		if to.volume.isUndef():
 			return True
 
 		if not to.volume.isImmediate():
@@ -113,7 +113,7 @@ def array_can(to, from_type, method, ti):
 def value_array_cons(t, v, method, ti):
 	#info("value_array_cons", ti)
 
-	if Value.isUndefined(t.volume):
+	if t.volume.isUndef():
 		# for case: `[]Int32 [1, 2, 3]`
 		# we try to construct array with undefined volume from array with defined volume
 		# in this case we take volume of value array

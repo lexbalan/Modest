@@ -292,7 +292,7 @@ def init():
 	typeSysNat = foundation.type_select_nat(int_width)
 	typeSysFloat = foundation.typeFloat64
 
-	undefinedVolume = ValueUndefined(typeSysNat, ti=None)
+	undefinedVolume = ValueUndef(typeSysNat, ti=None)
 	typeSysStr = TypePointer(TypeArray(typeSysChar, undefinedVolume))
 
 	init_builtin_values()
@@ -436,7 +436,7 @@ def do_type_array(x):
 	if volume.isBad():
 		return TypeArray(of, volume, ti=x['ti'])
 
-	if not Value.isUndefined(volume):
+	if not volume.isUndef():
 		if volume.isRuntime():
 			#info("VLA", t['ti'])
 			if is_local_context():
@@ -598,12 +598,9 @@ def do_value_bin2(op, l, r, ti):
 	if l.isBad() or r.isBad():
 		return ValueBad(ti)
 
-	if l.type.is_bad() or r.type.is_bad():
-		return ValueBad(ti)
-
-	if isinstance(l, ValueUndefined) or isinstance(r, ValueUndefined):
+	if isinstance(l, ValueUndef) or isinstance(r, ValueUndef):
 		t = htype.select_common_type(l.type, r.type)
-		return ValueUndefined(t)
+		return ValueUndef(t)
 
 
 	# Ops with different types
@@ -1038,7 +1035,7 @@ def do_value_slice(x):
 		if index_to.isBad():
 			return ValueBad(ti)
 	else:
-		index_to = ValueUndefined(TypeNumber())
+		index_to = ValueUndef(TypeNumber())
 
 
 	left_type = left.type
@@ -1058,7 +1055,7 @@ def do_value_slice(x):
 	# а для слайса [a:b] это (b - a)
 	slice_volume = do_value_bin2('sub', index_to, index_from, x['ti'])
 
-	if isinstance(index_to, ValueUndefined):
+	if isinstance(index_to, ValueUndef):
 		info("VU", x['ti'])
 
 	slice_len = 0  # len as integer
@@ -1401,7 +1398,7 @@ def do_value_bad(x):
 
 def do_value_undefined(x):
 	t = htype.TypeBad(x['ti'])
-	return ValueUndefined(t, x['ti'])
+	return ValueUndef(t, x['ti'])
 
 
 
@@ -1499,7 +1496,7 @@ def do_stmt_var(x):
 	v = do_rvalue(x['init_value'])
 
 	tu = t == None
-	vu = Value.isUndefined(v)
+	vu = v.isUndef()
 
 	# error: no type, no init valuetu = type_is_incompleted(t)
 	if tu == True and vu == True:
@@ -1523,7 +1520,7 @@ def do_stmt_var(x):
 			error("unsuitable type1", x['type']['ti'])
 
 	# type & init value present
-	if t != None and not Value.isUndefined(v):
+	if t != None and not v.isUndef():
 		v = value_cons_implicit_check(t, v)
 
 	if t == None:
@@ -1631,7 +1628,7 @@ def do_stmt_break(x):
 
 
 def add_local_var(id, typ, ti):
-	iv = ValueUndefined(typ)
+	iv = ValueUndef(typ)
 	var_value = ValueVar(typ, id, init_value=iv, ti=ti)
 	var_value.addAttribute('local')
 	ctx_value_add(id.str, var_value)
@@ -1979,7 +1976,7 @@ def def_var(x):
 	v = do_rvalue(x['init_value'])
 
 	tu = t == None
-	vu = Value.isUndefined(v)
+	vu = v.isUndef()
 
 	# error: no type, no init valuetu = type_is_incompleted(t)
 	if tu == True and vu == True:
@@ -2074,7 +2071,7 @@ def def_func(x, dostmt=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		param_value = ValueConst(param.type, param.id, init_value=ValueUndefined(param.type), ti=param.ti)
+		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
 		param_value.addAttribute('local')
 		param_value.addAttribute('param')
 		ctx_value_add(param.id.str, param_value)
@@ -2425,14 +2422,14 @@ def pre_imp(ast):
 
 			elif kind == 'const':
 				t = Type(x['ti'])  # Incomplete type (!)
-				iv = ValueUndefined(ti=x['ti'])
+				iv = ValueUndef(ti=x['ti'])
 				v = ValueConst(t, id, init_value=iv, ti=x['ti'])
 				v.parent = cmodule
 				cmodule_value_add(id.str, v, is_public=is_public)
 
 			elif kind == 'var':
 				t = Type(x['ti'])  # Incomplete type (!)
-				iv = ValueUndefined(ti=x['ti'])
+				iv = ValueUndef(ti=x['ti'])
 				v = ValueVar(t, id, init_value=iv, ti=x['ti'])
 				v.parent = cmodule
 				cmodule_value_add(id.str, v, is_public=is_public)

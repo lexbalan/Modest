@@ -310,24 +310,19 @@ class Parser:
 		return False
 
 
-	def is_type_expr(self):
-		pos = self.getpos()			# save position
-		result = self.check_is_type()  # check
-		self.setpos(pos)			   # restore position
+	def check(self, checker):
+		pos = self.getpos()
+		result = checker()
+		self.setpos(pos)
 		return result
 
+
+	def is_type_expr(self):
+		return self.check(self.check_is_type)
 
 	# TODO: now not used
 	def is_value_expr(self):
-		pos = self.getpos()				   # save position
-		result = not self.check_is_type()  # check
-
-		# TODO!
-		#if result == False:
-		#	return self.is_value_expr()
-
-		self.setpos(pos)				   # restore position
-		return result
+		return None
 
 
 	def expr_type_func(self):
@@ -413,7 +408,7 @@ class Parser:
 		elif self.match("["):
 			y = {'isa': 'ast_type', 'kind': 'array', 'size': None, 'ti': ti}
 			if self.match("]"):
-				y['size'] = self.expr_ValueUndefined(ti)
+				y['size'] = self.expr_ValueUndef(ti)
 			else:
 				y['size'] = self.expr_value()
 				self.need("]")
@@ -450,7 +445,7 @@ class Parser:
 	# Parse Value
 	#
 
-	def expr_ValueUndefined(self, ti):
+	def expr_ValueUndef(self, ti):
 		return {
 			'isa': 'ast_value',
 			'kind': 'undefined',
@@ -1794,7 +1789,7 @@ class Parser:
 		if self.is_assign_operator():
 			init_value = self.expr_value()
 		else:
-			init_value = self.expr_ValueUndefined(ti)
+			init_value = self.expr_ValueUndef(ti)
 
 		res = []
 		for id in ids:

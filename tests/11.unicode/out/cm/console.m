@@ -159,7 +159,7 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 
 		i = i + 2
 
-		let sptr: *[<undef> - j]Char8 = &buf[j:]
+		let sptr: *[]Char8 = &buf[j:]
 
 		if c == "i" or c == "d" {
 			//
@@ -195,7 +195,7 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			// %c for char
 			//
 			let c: Char32 = __va_arg(va, Char32)
-			let n = Int32 utf.utf32_to_utf8(c, sptr)
+			let n = Int32 utf.utf32_to_utf8(c, *[4]Char8 sptr)
 			j = j + n
 		}
 	}

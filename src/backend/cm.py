@@ -106,7 +106,7 @@ def str_TypeInt(t):
 def str_type_array(t):
 	s = ""
 	s += "["
-	if not Value.isUndefined(t.volume):
+	if not t.volume.isUndef():
 		s += str_value(t.volume)
 	s += "]"
 	s += str_type(t.of)
@@ -303,7 +303,7 @@ def str_value_slice(x, ctx):
 	s += "["
 	s += str_value(x.index_from)
 	s += ":"
-	if not isinstance(x.index_to, ValueUndefined):
+	if not isinstance(x.index_to, ValueUndef):
 		s += str_value(x.index_to)
 	s += "]"
 	return s
@@ -691,7 +691,7 @@ def str_value(x, ctx=[], parent_expr=None):
 		return str_value_va_end(x, ctx)
 	elif isinstance(x, ValueVaCopy):
 		return str_value_va_copy(x, ctx)
-	elif isinstance(x, ValueUndefined):
+	elif isinstance(x, ValueUndef):
 		return "<undef>"
 	else:
 		return "%s" % str(x.__class__)
@@ -726,7 +726,7 @@ def print_stmt_def(x, operator='const'):
 		out(": ")
 		out(str_type(x.value.type))
 
-	if not x.init_value.isUndefined():
+	if not x.init_value.isUndef():
 		out(" = ")
 		out(str_value(x.init_value))
 

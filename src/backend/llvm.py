@@ -718,7 +718,7 @@ def llvm_memcmp(op, p0, p1, size):
 	zero = llvm_value_num(foundation.typeBool, 0)
 	op = 'ne' if op == 'eq' else 'eq'
 
-	vvv = ValueUndefined(foundation.typeBool)
+	vvv = ValueUndef(foundation.typeBool)
 	rv2 = llvm_eval_binary('icmp %s' % op, rv, zero, vvv)
 
 	return rv2
@@ -1830,7 +1830,7 @@ def do_eval(x):
 	elif isinstance(x, ValueVaArg): y = do_eval_va_arg(x)
 	elif isinstance(x, ValueVaEnd): y = do_eval_va_end(x)
 	elif isinstance(x, ValueVaCopy): y = do_eval_va_copy(x)
-	elif isinstance(x, ValueUndefined): y = llvm_value_undef(x.type)
+	elif isinstance(x, ValueUndef): y = llvm_value_undef(x.type)
 	else:
 		out("<??>")
 
@@ -1981,7 +1981,7 @@ def print_stmt_var(x):
 	locals_add(id_str, left)
 
 	init_value = x.init_value
-	if not Value.isUndefined(init_value):
+	if not init_value.isUndef():
 		iv = do_reval(init_value)
 		llvm_store(left, iv)
 
@@ -2437,7 +2437,7 @@ def print_def_var(x, as_extern=False):
 	print_type(var.type)
 
 	if not is_extern:
-		if not Value.isUndefined(x.init_value):
+		if not x.init_value.isUndef():
 			out(" ")
 			llvm_print_value(do_eval(x.init_value))
 		else:

@@ -587,98 +587,90 @@ endif_4:
 	%55 = getelementptr [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %54
 ;
 	%56 = bitcast %Char8* %55 to [0 x %Char8]*
-	%57 = sext i8 undef to %Int32
-	%58 = load %Int32, %Int32* %3
-	%59 = sub %Int32 %57, %58
-	%60 = mul %Int32 %59, 1
-	%61 = mul %Int32 %59, 1
 ; if_5
-	%62 = load %Char8, %Char8* %4
-	%63 = icmp eq %Char8 %62, 105
-	%64 = load %Char8, %Char8* %4
-	%65 = icmp eq %Char8 %64, 100
-	%66 = or %Bool %63, %65
-	br %Bool %66 , label %then_5, label %else_5
+	%57 = load %Char8, %Char8* %4
+	%58 = icmp eq %Char8 %57, 105
+	%59 = load %Char8, %Char8* %4
+	%60 = icmp eq %Char8 %59, 100
+	%61 = or %Bool %58, %60
+	br %Bool %61 , label %then_5, label %else_5
 then_5:
 	;
 	; %i & %d for signed integer (Int)
 	;
-	%67 = va_arg %__VA_List* %1, %Int32
-	%68 = bitcast [0 x %Char8]* %56 to [0 x %Char8]*
-	%69 = call %Int32 @sprint_dec_int32([0 x %Char8]* %68, %Int32 %67)
-	%70 = load %Int32, %Int32* %3
-	%71 = add %Int32 %70, %69
-	store %Int32 %71, %Int32* %3
+	%62 = va_arg %__VA_List* %1, %Int32
+	%63 = call %Int32 @sprint_dec_int32([0 x %Char8]* %56, %Int32 %62)
+	%64 = load %Int32, %Int32* %3
+	%65 = add %Int32 %64, %63
+	store %Int32 %65, %Int32* %3
 	br label %endif_5
 else_5:
 ; if_6
-	%72 = load %Char8, %Char8* %4
-	%73 = icmp eq %Char8 %72, 110
-	br %Bool %73 , label %then_6, label %else_6
+	%66 = load %Char8, %Char8* %4
+	%67 = icmp eq %Char8 %66, 110
+	br %Bool %67 , label %then_6, label %else_6
 then_6:
 	;
 	; %n for unsigned integer (Nat)
 	;
-	%74 = va_arg %__VA_List* %1, %Nat32
-	%75 = bitcast [0 x %Char8]* %56 to [0 x %Char8]*
-	%76 = call %Int32 @sprint_dec_n32([0 x %Char8]* %75, %Nat32 %74)
-	%77 = load %Int32, %Int32* %3
-	%78 = add %Int32 %77, %76
-	store %Int32 %78, %Int32* %3
+	%68 = va_arg %__VA_List* %1, %Nat32
+	%69 = call %Int32 @sprint_dec_n32([0 x %Char8]* %56, %Nat32 %68)
+	%70 = load %Int32, %Int32* %3
+	%71 = add %Int32 %70, %69
+	store %Int32 %71, %Int32* %3
 	br label %endif_6
 else_6:
 ; if_7
-	%79 = load %Char8, %Char8* %4
-	%80 = icmp eq %Char8 %79, 120
-	%81 = load %Char8, %Char8* %4
-	%82 = icmp eq %Char8 %81, 112
-	%83 = or %Bool %80, %82
-	br %Bool %83 , label %then_7, label %else_7
+	%72 = load %Char8, %Char8* %4
+	%73 = icmp eq %Char8 %72, 120
+	%74 = load %Char8, %Char8* %4
+	%75 = icmp eq %Char8 %74, 112
+	%76 = or %Bool %73, %75
+	br %Bool %76 , label %then_7, label %else_7
 then_7:
 	;
 	; %x for unsigned integer (Nat)
 	; %p for pointers
 	;
-	%84 = va_arg %__VA_List* %1, %Nat32
-	%85 = bitcast [0 x %Char8]* %56 to [0 x %Char8]*
-	%86 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %85, %Nat32 %84)
-	%87 = load %Int32, %Int32* %3
-	%88 = add %Int32 %87, %86
-	store %Int32 %88, %Int32* %3
+	%77 = va_arg %__VA_List* %1, %Nat32
+	%78 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %56, %Nat32 %77)
+	%79 = load %Int32, %Int32* %3
+	%80 = add %Int32 %79, %78
+	store %Int32 %80, %Int32* %3
 	br label %endif_7
 else_7:
 ; if_8
-	%89 = load %Char8, %Char8* %4
-	%90 = icmp eq %Char8 %89, 115
-	br %Bool %90 , label %then_8, label %else_8
+	%81 = load %Char8, %Char8* %4
+	%82 = icmp eq %Char8 %81, 115
+	br %Bool %82 , label %then_8, label %else_8
 then_8:
 	;
 	; %s pointer to string
 	;
-	%91 = va_arg %__VA_List* %1, %Str8*
-	%92 = bitcast [0 x %Char8]* %56 to [0 x %Char]*
-	%93 = call [0 x %Char]* @strcpy([0 x %Char]* %92, %Str8* %91)
-	%94 = call %SizeT @strlen(%Str8* %91)
-	%95 = trunc %SizeT %94 to %Int32
-	%96 = load %Int32, %Int32* %3
-	%97 = add %Int32 %96, %95
-	store %Int32 %97, %Int32* %3
+	%83 = va_arg %__VA_List* %1, %Str8*
+	%84 = call [0 x %Char]* @strcpy([0 x %Char8]* %56, %Str8* %83)
+	%85 = call %SizeT @strlen(%Str8* %83)
+	%86 = trunc %SizeT %85 to %Int32
+	%87 = load %Int32, %Int32* %3
+	%88 = add %Int32 %87, %86
+	store %Int32 %88, %Int32* %3
 	br label %endif_8
 else_8:
 ; if_9
-	%98 = load %Char8, %Char8* %4
-	%99 = icmp eq %Char8 %98, 99
-	br %Bool %99 , label %then_9, label %endif_9
+	%89 = load %Char8, %Char8* %4
+	%90 = icmp eq %Char8 %89, 99
+	br %Bool %90 , label %then_9, label %endif_9
 then_9:
 	;
 	; %c for char
 	;
-	%100 = va_arg %__VA_List* %1, %Char32
-	%101 = call %Nat8 @utf_utf32_to_utf8(%Char32 %100, [0 x %Char8]* %56)
-	%102 = sext %Nat8 %101 to %Int32
-	%103 = load %Int32, %Int32* %3
-	%104 = add %Int32 %103, %102
-	store %Int32 %104, %Int32* %3
+	%91 = va_arg %__VA_List* %1, %Char32
+	%92 = bitcast [0 x %Char8]* %56 to [4 x %Char8]*
+	%93 = call %Nat8 @utf_utf32_to_utf8(%Char32 %91, [4 x %Char8]* %92)
+	%94 = sext %Nat8 %93 to %Int32
+	%95 = load %Int32, %Int32* %3
+	%96 = add %Int32 %95, %94
+	store %Int32 %96, %Int32* %3
 	br label %endif_9
 endif_9:
 	br label %endif_8
@@ -691,8 +683,8 @@ endif_6:
 endif_5:
 	br label %again_1
 break_1:
-	%105 = load %Int32, %Int32* %3
-	ret %Int32 %105
+	%97 = load %Int32, %Int32* %3
+	ret %Int32 %97
 }
 
 define internal %Char8 @n_to_dec_sym(%Nat8 %n) {

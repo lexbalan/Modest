@@ -281,7 +281,7 @@ def str_type_array(t, core='', need_close=False):
 	while True:
 		right += '['
 		if t2.volume:
-			if Value.isUndefined(t2.volume):
+			if t2.volume.isUndef():
 				# В Си не можем печатать такое a[][], или такое a[][10], etc.
 				# А печатаем просто a[] (пропускаем все после пустых скобок)
 				while t2.of.is_array():
@@ -1429,8 +1429,8 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 		sstr += str_value_va_end(x, ctx)
 	elif isinstance(x, ValueVaCopy):
 		sstr += str_value_va_copy(x, ctx)
-	elif isinstance(x, ValueUndefined):
-		sstr += "/*<ValueUndefined>*/"
+	elif isinstance(x, ValueUndef):
+		sstr += "/*<ValueUndef>*/"
 		1/0
 	else:
 		sstr += "<%s>" % str(x)
@@ -1522,7 +1522,7 @@ def print_stmt_var(x):
 
 	print_variable(get_id_str(var_value), var_value.type)
 
-	if init_value.isUndefined():
+	if init_value.isUndef():
 		# инициализация неопределенным значением
 		# (отсутствие явной инициализации)
 		out(";")
@@ -1984,7 +1984,7 @@ def print_def_var(x, isdecl=False):
 
 	init_value = x.init_value
 
-	if not Value.isUndefined(init_value):
+	if not init_value.isUndef():
 		out(" = ")
 		out(str_static_initializer(init_value))
 	out(";")
