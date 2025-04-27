@@ -105,9 +105,9 @@ static void tokenize(Tokenizer *tokenizer)
 	}
 }
 
-static void exec(char *cmd, char *(*argv)[])
+static void execute(char *cmd, uint16_t argc, char *(*argv)[])
 {
-	printf("%s", cmd);
+	printf("%s (n=%d)", cmd, argc);
 	printf(" [");
 	int32_t i = 0;
 	while (true) {
@@ -143,8 +143,12 @@ int32_t main()
 
 		// "выполняем" команду
 		char *const cmd = (*tokenizer.tokens)[0];
+		uint16_t argc = tokenizer.tokensPos;
+		if (argc > 0) {
+			argc = argc - 1;
+		}
 		char *(*const argv)[] = &(*tokenizer.tokens)[1];
-		exec(cmd, argv);
+		execute(cmd, argc, argv);
 	}
 
 	return 0;

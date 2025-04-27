@@ -92,8 +92,8 @@ func tokenize(tokenizer: *Tokenizer) -> Unit {
 }
 
 
-func exec(cmd: *Str8, argv: *[]*Str8) -> Unit {
-	printf("%s", cmd)
+func execute(cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
+	printf("%s (n=%d)", cmd, argc)
 	printf(" [")
 	var i: Int32 = 0
 	while true {
@@ -129,8 +129,12 @@ public func main() -> Int32 {
 
 		// "выполняем" команду
 		let cmd: *[]Char8 = tokenizer.tokens[0]
+		var argc: Nat16 = tokenizer.tokensPos
+		if argc > 0 {
+			argc = argc - 1
+		}
 		let argv: *[]*[]Char8 = &tokenizer.tokens[1:]
-		exec(cmd, argv)
+		execute(cmd, argc, argv)
 	}
 
 	return 0

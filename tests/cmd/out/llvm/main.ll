@@ -290,7 +290,7 @@ declare %Int @tolower(%Int %x)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [3 x i8] [i8 37, i8 115, i8 0]
+@str1 = private constant [10 x i8] [i8 37, i8 115, i8 32, i8 40, i8 110, i8 61, i8 37, i8 100, i8 41, i8 0]
 @str2 = private constant [3 x i8] [i8 32, i8 91, i8 0]
 @str3 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
 @str4 = private constant [3 x i8] [i8 93, i8 10, i8 0]
@@ -579,8 +579,8 @@ break_1:
 	ret void
 }
 
-define internal void @exec(%Str8* %cmd, [0 x %Str8*]* %argv) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str1 to [0 x i8]*), %Str8* %cmd)
+define internal void @execute(%Str8* %cmd, %Nat16 %argc, [0 x %Str8*]* %argv) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %Str8* %cmd, %Nat16 %argc)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str2 to [0 x i8]*))
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
@@ -643,13 +643,28 @@ body_1:
 	%18 = load [0 x [0 x %Char8]*]*, [0 x [0 x %Char8]*]** %17
 	%19 = getelementptr [0 x [0 x %Char8]*], [0 x [0 x %Char8]*]* %18, %Int32 0, %Int32 0
 	%20 = load [0 x %Char8]*, [0 x %Char8]** %19
-	%21 = getelementptr %Tokenizer, %Tokenizer* %10, %Int32 0, %Int32 5
-	%22 = load [0 x [0 x %Char8]*]*, [0 x [0 x %Char8]*]** %21
-	%23 = zext i8 1 to %Nat32
-	%24 = getelementptr [0 x [0 x %Char8]*], [0 x [0 x %Char8]*]* %22, %Int32 0, %Nat32 %23
+	%21 = alloca %Nat16, align 2
+	%22 = getelementptr %Tokenizer, %Tokenizer* %10, %Int32 0, %Int32 3
+	%23 = load %Nat16, %Nat16* %22
+	store %Nat16 %23, %Nat16* %21
+; if_0
+	%24 = load %Nat16, %Nat16* %21
+	%25 = icmp ugt %Nat16 %24, 0
+	br %Bool %25 , label %then_0, label %endif_0
+then_0:
+	%26 = load %Nat16, %Nat16* %21
+	%27 = sub %Nat16 %26, 1
+	store %Nat16 %27, %Nat16* %21
+	br label %endif_0
+endif_0:
+	%28 = getelementptr %Tokenizer, %Tokenizer* %10, %Int32 0, %Int32 5
+	%29 = load [0 x [0 x %Char8]*]*, [0 x [0 x %Char8]*]** %28
+	%30 = zext i8 1 to %Nat32
+	%31 = getelementptr [0 x [0 x %Char8]*], [0 x [0 x %Char8]*]* %29, %Int32 0, %Nat32 %30
 ;
-	%25 = bitcast [0 x %Char8]** %24 to [0 x [0 x %Char8]*]*
-	call void @exec([0 x %Char8]* %20, [0 x [0 x %Char8]*]* %25)
+	%32 = bitcast [0 x %Char8]** %31 to [0 x [0 x %Char8]*]*
+	%33 = load %Nat16, %Nat16* %21
+	call void @execute([0 x %Char8]* %20, %Nat16 %33, [0 x [0 x %Char8]*]* %32)
 	br label %again_1
 break_1:
 	ret %Int32 0
