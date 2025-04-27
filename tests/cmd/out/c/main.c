@@ -127,8 +127,6 @@ int32_t main()
 
 	char inbuf[1024];
 
-	1 / 2;
-
 	while (true) {
 		showPrompt();
 		fgets((char *)&inbuf, sizeof inbuf, stdin);

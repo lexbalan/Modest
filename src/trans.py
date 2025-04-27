@@ -177,6 +177,32 @@ def context_pop():
 
 
 
+def add_spices_any(v, atts):
+	for a in atts:
+		k = a['kind']
+		v.att.append(k)
+	return v
+
+
+def add_spices_value(v, atts):
+	add_spices_any(v, atts)
+
+
+def add_spices_type(t, atts):
+	for a in atts:
+		k = a['kind']
+		t.att.append(k)
+
+		if t.is_array():
+			if k == 'const':
+				t.of.att.append('const')
+			if k == 'volatile':
+				t.of.att.append('volatile')
+
+	return t
+
+
+
 def insert(s):
 	global cmodule
 	directive_insert = {
@@ -377,8 +403,8 @@ def do_field(x):
 	f = Field(id, t, init_value=iv, ti=x['ti'])
 	f.nl = x['nl']
 	f.access_level = x['access_modifier']
-	#mass
-#	add_spices(f, ast_atts=x['atts'], ti=x['ti'])
+
+	add_spices_any(f, x['atts'])
 	return f
 
 
@@ -528,20 +554,6 @@ def do_type_func(x, func_id="_"):
 
 
 
-def add_spices_type(t, atts):
-	for a in atts:
-		k = a['kind']
-		t.att.append(k)
-
-		if t.is_array():
-			if k == 'const':
-				t.of.att.append('const')
-			if k == 'volatile':
-				t.of.att.append('volatile')
-
-	return t
-
-
 def do_type(x):
 	t = None
 	k = x['kind']
@@ -554,7 +566,7 @@ def do_type(x):
 	else: t = bad_type(x['ti'])
 
 	t.ti = x['ti']
-	t = add_spices_type(t, x['atts'])
+	add_spices_type(t, x['atts'])
 	return t
 
 
@@ -1426,12 +1438,6 @@ def do_value_subexpr(x):
 	return nv
 
 
-def add_spices_value(v, atts):
-	for a in atts:
-		k = a['kind']
-		print("VALUE_ATT: " + k)
-		v.att.append(k)
-	return v
 
 
 def do_value(x):
@@ -1478,7 +1484,7 @@ def do_value(x):
 	assert(v != None)
 	v.ti = x['ti']
 
-	v = add_spices_value(v, x['atts'])
+	add_spices_value(v, x['atts'])
 	return v
 
 
@@ -1845,7 +1851,6 @@ def def_type(x):
 	log("def_type: %s" % id.str)
 	id.prefix = global_prefix
 
-	# mass
 	# (!) Здесь нам нужно получить не копию типа, как это происходит везде,
 	# (!) а его оригинал.
 	nt = ctx_type_get(id.str, as_copy=False)
