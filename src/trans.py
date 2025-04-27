@@ -2606,14 +2606,9 @@ def add_spices_def(x, ast_atts):
 			key = args[0]['str']
 			val = args[1]['str']
 			add_prop(x, key, val)
-
 		elif kind == 'inline':
 			add_att(x, 'static')
 			add_att(x, 'inline')
-		elif kind == 'nodecorate':
-			add_att(x, 'id:nodecorate')
-		elif kind == 'c_no_print':
-			add_att(x, "c_no_print")
 		elif kind == 'extern':
 			add_att(x, "extern")
 			args = a['args']
@@ -2621,6 +2616,11 @@ def add_spices_def(x, ast_atts):
 				arg = args[0]['str']
 				if arg == 'C':
 					add_att(x, 'id:nodecorate')
+		elif kind == 'nodecorate':
+			add_att(x, 'id:nodecorate')
+		elif kind == 'c_no_print':
+			add_att(x, "c_no_print")
+
 		else:
 			print(a)
 			exit(1)
