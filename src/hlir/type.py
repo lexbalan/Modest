@@ -137,7 +137,7 @@ class Type(Entity):
 			return False
 		if self.volume.isUndef():
 			return False
-		return self.volume.isRuntime()
+		return self.volume.isRuntimeValue()
 
 
 	# *[10]*[3]*[n] -> True

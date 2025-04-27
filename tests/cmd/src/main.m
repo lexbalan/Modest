@@ -4,7 +4,6 @@ include "libc/unistd"
 include "libc/ctype"
 
 
-
 var prompt: [32]Char8 = "# "
 var prompt_len: Nat8 = 2
 
@@ -16,13 +15,10 @@ func showPrompt() {
 }
 
 
-
-
 @inline
-func char8ToInt(c: Char8) -> Int {
+func char8ToInt (c: Char8) -> Int {
 	return Int Word32 Word8 c
 }
-
 
 
 type Tokenizer record {
@@ -36,11 +32,11 @@ type Tokenizer record {
 }
 
 
-func is_blank(c: Char8) -> Bool {
+func is_blank (c: Char8) -> Bool {
 	return c == ' ' or c == '\n'
 }
 
-func gettok(t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
+func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 	var c = t.input[t.position]
 
 	// skip blanks
@@ -80,7 +76,7 @@ func gettok(t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 }
 
 
-func tokenize(tokenizer: *Tokenizer) {
+func tokenize (tokenizer: *Tokenizer) {
 	while true {
 		let max_toklen: Nat16 = 128
 		var token: [max_toklen]Char8
@@ -105,7 +101,7 @@ func tokenize(tokenizer: *Tokenizer) {
 }
 
 
-func execute(cmd: *Str8, argc: Nat16, argv: *[]*Str8) {
+func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) {
 	printf("%s (n=%d)", cmd, argc)
 	printf(" [")
 	var i = 0
@@ -121,7 +117,7 @@ func execute(cmd: *Str8, argc: Nat16, argv: *[]*Str8) {
 }
 
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	printf("HARSH v0.1\n")
 
 	var inbuf: [1024]Char8

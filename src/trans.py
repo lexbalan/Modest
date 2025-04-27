@@ -463,7 +463,7 @@ def do_type_array(x):
 		return TypeArray(of, volume, ti=x['ti'])
 
 	if not volume.isUndef():
-		if volume.isRuntime():
+		if volume.isRuntimeValue():
 			#info("VLA", t['ti'])
 			if is_local_context():
 				global cfunc
@@ -967,7 +967,7 @@ def do_value_call(x):
 				warning("extra argument with generic type", a['ti'])
 				argval = value_cons_default(argval)
 
-			if argval.isRuntime():
+			if argval.isRuntimeValue():
 				imm_args = False
 
 			extra_args.append(Initializer(id, argval, ti=ini['ti'], nl=ini['nl']))
@@ -2387,7 +2387,6 @@ def type_update_incompleted(module, t, idStr):
 		tx = do_type(x['type'])
 		Type.update(t, tx)
 
-		#cmodule.lldeps.append(t)
 		return tx
 
 	return t
@@ -2407,7 +2406,6 @@ def value_update_incompleted_type(module, v, idStr):
 		t = do_type(x['type'])
 		Type.update(v.type, t)
 
-		#cmodule.lldeps.append(v)
 		return v
 
 

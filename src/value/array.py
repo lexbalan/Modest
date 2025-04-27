@@ -27,7 +27,7 @@ def value_array_create(items, ti=None):
 	# -> весь массив - не immediate
 	is_immediate = True
 	for item in items:
-		if item.isRuntime():
+		if item.isRuntimeValue():
 			is_immediate = False
 
 	# Получаем наиболее подходящий общий тип элементов массива
@@ -44,23 +44,6 @@ def value_array_create(items, ti=None):
 
 	v.immediate = is_immediate  #TODO: need to implement 'immediate' flag
 	return v
-
-
-"""
-def value_array_create_from_string(t, v, method, ti=None):
-	#info("value_array_create_from_string", ti)
-	char_type = t.of
-	chars = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
-
-	pad_rquired = t.volume.asset - len(chars)
-	if pad_rquired > 0:
-		chars = chars + [ValueZero(char_type, ti)] * pad_rquired
-
-	nv = ValueCons(t, v, method, ti)
-	nv.immediate = True
-	nv.asset = chars
-	return nv
-"""
 
 
 # TODO: see select_common_type!
@@ -123,10 +106,6 @@ def value_array_cons(t, v, method, ti):
 			volume = v.type.volume
 		elif Type.is_string(v.type):
 			srtlen = v.type.length
-
-			#info("value_array_create_from_string", ti)
-			#print(t.volume.asset)
-
 			volume = value_number_create(srtlen)
 		else:
 			assert(False)

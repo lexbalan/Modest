@@ -25,8 +25,7 @@ static char tokensBuf[4 * 1024];
 static void showPrompt()
 {
 	write(0, (char *)&prompt, (size_t)prompt_len);
-}
-static inline int char8ToInt(char c)
+}static inline int char8ToInt(char c)
 {
 	return (int)(uint32_t)(uint8_t)c;
 }

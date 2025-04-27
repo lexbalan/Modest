@@ -1529,7 +1529,7 @@ def print_stmt_var(x):
 		return
 
 	if var_value.type.is_array():
-		if init_value.isRuntime() or var_value.type.is_vla():
+		if init_value.isRuntimeValue() or var_value.type.is_vla():
 			# нельзя присваивать VLA значение при создании...
 			# только после можно уже что то туда загрузить
 			out(";")
@@ -1588,7 +1588,7 @@ def print_stmt_const(x):
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
 	if init_value.type.is_array():
-		runtimeLiteral = isinstance(init_value, ValueLiteral) and init_value.isRuntime()
+		runtimeLiteral = isinstance(init_value, ValueLiteral) and init_value.isRuntimeValue()
 		if not runtimeLiteral:
 			print_variable(get_id_str(x), const_value.type)
 			out(";")

@@ -1197,7 +1197,7 @@ def do_eval_slice(x):
 
 	# если сам массив находится в регистре: (let rec = get_rec())
 	if not array['is_adr']:
-		if v['index'].isRuntime():
+		if v['index'].isRuntimeValue():
 			error("expected immediate index value", x.ti)
 			return llvm_value_zero(x.type)
 
