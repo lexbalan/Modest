@@ -37,24 +37,19 @@ public const seekCur = 1
 @property("id.c", "SEEK_END")
 public const seekEnd = 2
 
-@unused_result
-public func fclose(f: *File) -> Int
+
+public func fclose(f: *File) -> @unused Int
 public func feof(f: *File) -> Int
 public func ferror(f: *File) -> Int
-@unused_result
-public func fflush(f: *File) -> Int
-@unused_result
-public func fgetpos(f: *File, pos: *FposT) -> Int
+public func fflush(f: *File) -> @unused Int
+public func fgetpos(f: *File, pos: *FposT) -> @unused Int
 
 public func fopen(fname: *ConstCharStr, mode: *ConstCharStr) -> *File
-@unused_result
-public func fread(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
-@unused_result
-public func fwrite(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
+public func fread(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> @unused SizeT
+public func fwrite(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> @unused SizeT
 public func freopen(fname: *ConstCharStr, mode: *ConstCharStr, f: *File) -> *File
 
-@unused_result
-public func fseek(f: *File, offset: LongInt, whence: Int) -> Int
+public func fseek(f: *File, offset: LongInt, whence: Int) -> @unused Int
 
 public func fsetpos(f: *File, pos: *FposT) -> Int
 public func ftell(f: *File) -> LongInt
@@ -67,48 +62,32 @@ public func setvbuf(f: *File, buf: *CharStr, mode: Int, size: SizeT) -> Int
 public func tmpfile() -> *File
 public func tmpnam(str: *CharStr) -> *CharStr
 
-	//@unused_result
-@unused_result
-public func printf(s: *ConstCharStr, ...) -> Int
 
-@unused_result
-public func scanf(s: *ConstCharStr, ...) -> Int
-
-@unused_result
-public func fprintf(f: *File, format: *Str, ...) -> Int
-
-@unused_result
-public func fscanf(f: *File, format: *ConstCharStr, ...) -> Int
-
-@unused_result
-public func sscanf(buf: *ConstCharStr, format: *ConstCharStr, ...) -> Int
-
-@unused_result
-public func sprintf(buf: *CharStr, format: *ConstCharStr, ...) -> Int
-
-@unused_result
-public func vfprintf(f: *File, format: *ConstCharStr, args: __VA_List) -> Int
-public func vprintf(format: *ConstCharStr, args: __VA_List) -> Int
-public func vsprintf(str: *CharStr, format: *ConstCharStr, args: __VA_List) -> Int
-public func vsnprintf(str: *CharStr, n: SizeT, format: *ConstCharStr, args: __VA_List) -> Int
-public func __vsnprintf_chk (dest:*CharStr, len:SizeT, flags:Int, dstlen:SizeT, format:*ConstCharStr, arg: __VA_List) -> Int
+public func printf(s: *ConstCharStr, ...) -> @unused Int
+public func scanf(s: *ConstCharStr, ...) -> @unused Int
+public func fprintf(f: *File, format: *Str, ...) -> @unused Int
+public func fscanf(f: *File, format: *ConstCharStr, ...) -> @unused Int
+public func sscanf(buf: *ConstCharStr, format: *ConstCharStr, ...) -> @unused Int
+public func sprintf(buf: *CharStr, format: *ConstCharStr, ...) -> @unused Int
+public func vfprintf(f: *File, format: *ConstCharStr, args: __VA_List) -> @unused Int
+public func vprintf(format: *ConstCharStr, args: __VA_List) -> @unused Int
+public func vsprintf(str: *CharStr, format: *ConstCharStr, args: __VA_List) -> @unused Int
+public func vsnprintf(str: *CharStr, n: SizeT, format: *ConstCharStr, args: __VA_List) -> @unused Int
+public func __vsnprintf_chk (dest:*CharStr, len:SizeT, flags:Int, dstlen:SizeT, format:*ConstCharStr, arg: __VA_List) -> @unused Int
 
 
 public func fgetc(f: *File) -> Int
 public func fputc(char: Int, f: *File) -> Int
 
-public func fgets(str: *CharStr, n: Int, f: *File) -> *CharStr
-public func fputs(str: *ConstCharStr, f: *File) -> Int
+public func fgets(str: *CharStr, n: Int, f: *File) -> @unused *CharStr
+public func fputs(str: *ConstCharStr, f: *File) -> @unused Int
 
 public func getc(f: *File) -> Int
 public func getchar() -> Int
 public func gets(str: *CharStr) -> *CharStr
-@unused_result
-public func putc(char: Int, f: *File) -> Int
-@unused_result
-public func putchar(char: Int) -> Int
-@unused_result
-public func puts(str: *ConstCharStr) -> Int
+public func putc(char: Int, f: *File) -> @unused Int
+public func putchar(char: Int) -> @unused Int
+public func puts(str: *ConstCharStr) -> @unused Int
 public func ungetc(char: Int, f: *File) -> Int
 public func perror(str: *ConstCharStr) -> Unit
 

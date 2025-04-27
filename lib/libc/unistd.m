@@ -319,7 +319,7 @@ public func chroot (path: *[]ConstChar) -> Int
 public func chown (pathname: *[]ConstChar, owner: UIDT, group: GIDT) -> Int
 
 // close - close a file descriptor
-public func close (fildes: Int) -> Int
+public func close (fildes: Int) -> @unused Int
 
 // confstr - get configurable variables
 public func confstr (name: Int, buf: *[]Char, len: SizeT) -> SizeT
@@ -502,8 +502,7 @@ public func setsid () -> PIDT
 public func setuid (uid: UIDT) -> Int
 
 // sleep - suspend execution for an interval of time
-@unused_result
-public func sleep (seconds: UnsignedInt) -> UnsignedInt
+public func sleep (seconds: UnsignedInt) -> @unused UnsignedInt
 
 // swab - swap bytes
 public func swab (src: Ptr, dst: Ptr, nbytes: SSizeT) -> Unit
@@ -545,7 +544,6 @@ public func usleep (useconds: USecondsT) -> Int
 public func vfork () -> PIDT
 
 // write, writev, pwrite - write on a file
-@unused_result
-public func write (fildes: Int, buf: Ptr, nbyte: SizeT) -> SSizeT
+public func write (fildes: Int, buf: Ptr, nbyte: SizeT) -> @unused SSizeT
 
 

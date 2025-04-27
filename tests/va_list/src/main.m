@@ -7,8 +7,7 @@ include "libc/unistd"
 //include "lightfood/print"
 //$pragma c_include "./print.h"
 
-@unused_result
-func my_printf(format: *Str8, ...) -> SSizeT {
+func my_printf(format: *Str8, ...) -> @unused SSizeT {
 	var va: __VA_List
 	var va2: __VA_List
 

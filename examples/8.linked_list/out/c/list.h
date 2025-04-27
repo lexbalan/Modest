@@ -44,7 +44,9 @@ list_Node *list_node_get(list_List *list, int32_t pos);
 list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node);
 
 list_Node *list_node_append(list_List *list, list_Node *new_node);
+
 list_Node *list_insert(list_List *list, int32_t pos, void *data);
+
 list_Node *list_append(list_List *list, void *data);
 
 #endif /* LIST_H */

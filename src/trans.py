@@ -598,7 +598,7 @@ def do_value_bin2(op, l, r, ti):
 	if l.isBad() or r.isBad():
 		return ValueBad(ti)
 
-	if isinstance(l, ValueUndef) or isinstance(r, ValueUndef):
+	if l.isUndef() or r.isUndef():
 		t = htype.select_common_type(l.type, r.type)
 		return ValueUndef(t)
 
@@ -665,7 +665,7 @@ def do_value_bin2(op, l, r, ti):
 def do_value_not(x):
 	v = do_rvalue(x['value'])
 
-	if v.isBad():
+	if v.isBad() or v.isUndef():
 		return v
 
 	vtype = v.type
@@ -685,7 +685,7 @@ def do_value_not(x):
 def do_value_neg(x):
 	v = do_rvalue(x['value'])
 
-	if v.isBad():
+	if v.isBad() or v.isUndef():
 		return v
 
 	vtype = v.type
@@ -703,7 +703,7 @@ def do_value_neg(x):
 def do_value_pos(x):
 	v = do_rvalue(x['value'])
 
-	if v.isBad():
+	if v.isBad() or v.isUndef():
 		return v
 
 	vtype = v.type
@@ -718,7 +718,7 @@ def do_value_pos(x):
 def do_value_ref(x):
 	v = do_value(x['value'])
 
-	if v.isBad():
+	if v.isBad() or v.isUndef():
 		return v
 
 	ti = x['ti']
@@ -736,13 +736,17 @@ def do_value_ref(x):
 
 def do_value_new(x):
 	v = do_value(x['value'])
+
+	if v.isBad() or v.isUndef():
+		return v
+
 	return ValueNew(v)
 
 
 def do_value_deref(x):
 	v = do_rvalue(x['value'])
 
-	if v.isBad():
+	if v.isBad() or v.isUndef():
 		return v
 
 	vtype = v.type
@@ -809,6 +813,9 @@ def do_value_lengthof_value(x):
 	ti = x['ti']
 	arg = do_rvalue(x['value'])
 
+	if arg.isBad() or arg.isUndef():
+		return arg
+
 	if not arg.type.is_array():
 		error("expected value with array type", x['value'])
 		return ValueBad({'ti': ti})
@@ -860,6 +867,9 @@ def do_value___defined_value(x):
 
 def do_value_call(x):
 	fn = do_rvalue(x['left'])
+
+	if fn.isBad() or fn.isUndef():
+		return fn
 
 	if fn.isBad():
 		#error("undefined value", fn.ti)
@@ -975,6 +985,10 @@ def do_value_index(x):
 	if left.isBad():
 		return ValueBad(x['ti'])
 
+	if left.isUndef():
+		return ValueUndef(x['ti'])
+
+
 	left_typ = left.type
 
 	via_pointer = left_typ.is_pointer()
@@ -1055,8 +1069,8 @@ def do_value_slice(x):
 	# а для слайса [a:b] это (b - a)
 	slice_volume = do_value_bin2('sub', index_to, index_from, x['ti'])
 
-	if isinstance(index_to, ValueUndef):
-		info("VU", x['ti'])
+	#if isinstance(index_to, ValueUndef):
+	#	info("VU", x['ti'])
 
 	slice_len = 0  # len as integer
 	if slice_volume.isImmediate():
@@ -1706,7 +1720,7 @@ def do_stmt_value(x):
 		return StmtBad(x)
 
 	if not v.type.is_unit():
-		if not v.type.hasAttribute('dispensable'):
+		if not v.type.hasAttribute('unused'):
 			warning("unused result of %s expression" % x['value']['kind'], v.ti)
 
 	return StmtValueExpression(v, ti=x['ti'])
@@ -2606,9 +2620,6 @@ def add_spices_def(x, ast_atts):
 				arg = args[0]['str']
 				if arg == 'C':
 					add_att(x, 'id:nodecorate')
-
-		elif kind == 'unused_result':
-			add_att(x, "value.type.to:dispensable")
 		else:
 			print(a)
 			exit(1)

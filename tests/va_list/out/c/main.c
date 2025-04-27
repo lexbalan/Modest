@@ -10,6 +10,7 @@
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
+
 static ssize_t my_printf(char *format, ...)
 {
 	va_list va;

@@ -108,6 +108,9 @@ public func print(form: *Str8, ...) -> Unit {
 	vfprint(c_STDOUT_FILENO, form, va)
 	__va_end(va)
 }
+
+
+
 public func vfprint(fd: Int32, form: *Str8, va: va_list) -> Int32 {
 	var strbuf: [256]Char8
 	let n: Int32 = vsprint(&strbuf, form, va)
@@ -115,6 +118,8 @@ public func vfprint(fd: Int32, form: *Str8, va: va_list) -> Int32 {
 	write(fd, &strbuf, SizeT n)
 	return n
 }
+
+
 public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 	var i: Int32 = 0
 	var j: Int32 = 0

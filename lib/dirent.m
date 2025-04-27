@@ -46,7 +46,7 @@ public const dt_WHT = 14
 
 
 public func opendir(dirname: *[]Char8) -> *Dir
-public func closedir(dirp: *Dir) -> Int
+public func closedir(dirp: *Dir) -> @unused Int
 
 public func readdir(dirp: *Dir) -> *Dirent
 public func readdir_r(dirp: *Dir, entry: *Dirent, result: **Dirent) -> Int

@@ -7,8 +7,7 @@
 import "libc/stdio"
 import "libc/unistd"
 
-@unused_result
-func print(format: *Str8, ...) -> SSizeT {
+func print(format: *Str8, ...) -> @unused SSizeT {
 	var va: __VA_List
 
 	__va_start(va, format)

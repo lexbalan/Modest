@@ -129,8 +129,7 @@ public func print(form: *Str8, ...) {
 
 
 
-@unused_result
-public func vfprint(fd: Int32, form: *Str8, va: __VA_List) -> Int32 {
+public func vfprint(fd: Int32, form: *Str8, va: __VA_List) -> @unused Int32 {
 	var strbuf: [256]Char8
 	let n = vsprint(&strbuf, form, va)
 	strbuf[n] = '\x0'
@@ -139,8 +138,7 @@ public func vfprint(fd: Int32, form: *Str8, va: __VA_List) -> Int32 {
 }
 
 
-@unused_result
-public func vsprint(buf: *[]Char8, form: *Str8, va: __VA_List) -> Int32 {
+public func vsprint(buf: *[]Char8, form: *Str8, va: __VA_List) -> @unused Int32 {
 	var i = 0  // form index
 	var j = 0  // out buf index
 

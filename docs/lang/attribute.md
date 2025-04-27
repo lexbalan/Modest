@@ -4,15 +4,14 @@
 Attributes are a way to change (or add) meta information of defined entities. Using the attribute mechanism allows you to influence the compilation process
 
 ```swift
-@unused_result
-func my_func () -> Int {
+func my_func () -> @unused Int {
   return 0
 }
 
 public func main () {
   // Here we ignore my_func return value,
   // but there is no warning,
-  // because my_func defined with attribute "dispensable"
+  // because my_func return type declared with attribute "unused"
   my_func()
 }
 ```

@@ -205,6 +205,7 @@ list_Node *list_node_append(list_List *list, list_Node *new_node)
 
 	return new_node;
 }
+
 list_Node *list_insert(list_List *list, int32_t pos, void *data)
 {
 	list_Node *const new_node = list_node_create();
@@ -217,6 +218,7 @@ list_Node *list_insert(list_List *list, int32_t pos, void *data)
 
 	return list_node_insert(list, pos, new_node);
 }
+
 list_Node *list_append(list_List *list, void *data)
 {
 	if (list == NULL) {

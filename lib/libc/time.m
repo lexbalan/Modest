@@ -46,8 +46,7 @@ public func difftime(end: TimeT, beginning: TimeT) -> Double
 public func mktime(timeptr: *StructTM) -> TimeT
 
 // Get current time
-@unused_result
-public func time(timer: *TimeT) -> TimeT
+public func time(timer: *TimeT) -> @unused TimeT
 
 // Convert tm structure to string
 public func asctime(timeptr: *StructTM) -> *Char

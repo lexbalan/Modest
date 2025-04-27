@@ -220,8 +220,7 @@ public func node_append (list: *List, new_node: *Node) -> *Node {
 }
 
 
-@unused_result
-public func insert (list: *List, pos: Int32, data: Ptr) -> *Node {
+public func insert (list: *List, pos: Int32, data: Ptr) -> @unused *Node {
 	let new_node = node_create()
 
 	if new_node == nil {
@@ -234,8 +233,7 @@ public func insert (list: *List, pos: Int32, data: Ptr) -> *Node {
 }
 
 
-@unused_result
-public func append (list: *List, data: Ptr) -> *Node {
+public func append (list: *List, data: Ptr) -> @unused *Node {
 	if list == nil {
 		return nil
 	}

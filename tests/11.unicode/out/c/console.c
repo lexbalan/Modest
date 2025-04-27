@@ -123,6 +123,7 @@ void console_print(char *form, ...)
 	va_end(va);
 }
 
+
 int32_t console_vsprint(char *buf, char *form, va_list va);
 int32_t console_vfprint(int32_t fd, char *form, va_list va)
 {
@@ -132,6 +133,7 @@ int32_t console_vfprint(int32_t fd, char *form, va_list va)
 	write(fd, (char *)&strbuf, ABS(n));
 	return n;
 }
+
 
 static int32_t sprint_dec_int32(char *buf, int32_t x);
 static int32_t sprint_dec_n32(char *buf, uint32_t x);
