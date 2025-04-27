@@ -16,6 +16,16 @@
 	(*dst)[i] = (*src)[i]; \
 }
 
+
+static char prompt[32] = "# ";
+static uint8_t prompt_len = 2;
+
+static char tokensBuf[4 * 1024];
+
+static void showPrompt()
+{
+	write(0, (char *)&prompt, (size_t)prompt_len);
+}
 static inline int char8ToInt(char c)
 {
 	return (int)(uint32_t)(uint8_t)c;
@@ -24,6 +34,11 @@ static inline int char8ToInt(char c)
 struct Tokenizer {char *input; uint32_t position; uint16_t tokensBufPos; uint16_t tokensPos; char *tokensBuf; char *(*tokens)[];
 };
 typedef struct Tokenizer Tokenizer;
+
+static bool is_blank(char c)
+{
+	return c == ' ' || c == '\n';
+}
 
 static uint16_t gettok(Tokenizer *t, char *output, uint16_t lim)
 {
@@ -47,8 +62,9 @@ static uint16_t gettok(Tokenizer *t, char *output, uint16_t lim)
 	uint16_t outpos = 0;
 
 	c = t->input[t->position];
-	if (isalnum(char8ToInt(c))) {
-		while (isalnum(char8ToInt(c))) {
+	//if isalnum(char8ToInt(c)) {
+	if (!is_blank(c)) {
+		while (!is_blank(c)) {
 			output[outpos] = c;
 			t->position = t->position + 1;
 			outpos = outpos + 1;
@@ -56,19 +72,12 @@ static uint16_t gettok(Tokenizer *t, char *output, uint16_t lim)
 		}
 		output[outpos] = '\x0';
 	} else {
+		output[outpos] = c;
+		t->position = t->position + 1;
+		outpos = outpos + 1;
 	}
 
 	return outpos;
-}
-
-static char prompt[32] = "# ";
-static uint8_t prompt_len = 2;
-
-static char tokensBuf[4 * 1024];
-
-static void showPrompt()
-{
-	write(0, (char *)&prompt, (size_t)prompt_len);
 }
 
 static void tokenize(Tokenizer *tokenizer)
@@ -92,7 +101,24 @@ static void tokenize(Tokenizer *tokenizer)
 		// save pointer to token
 		(*tokenizer->tokens)[tokenizer->tokensPos] = pbuf;
 		tokenizer->tokensPos = tokenizer->tokensPos + 1;
+		(*tokenizer->tokens)[tokenizer->tokensPos] = NULL;
 	}
+}
+
+static void exec(char *cmd, char *(*argv)[])
+{
+	printf("%s", cmd);
+	printf(" [");
+	int32_t i = 0;
+	while (true) {
+		char *const ptok = (*argv)[i];
+		if (ptok == NULL) {
+			break;
+		}
+		printf("'%s'", ptok);
+		i = i + 1;
+	}
+	printf("]\n");
 }
 
 int32_t main()
@@ -104,7 +130,8 @@ int32_t main()
 	while (true) {
 		showPrompt();
 		fgets((char *)&inbuf, sizeof inbuf, stdin);
-		char *tokens[64];
+
+		char *tokens[64] = {};
 
 		// Токенизируем строку
 		Tokenizer tokenizer = (Tokenizer){
@@ -114,12 +141,12 @@ int32_t main()
 		};
 		tokenize(&tokenizer);
 
-		uint16_t i = 0;
-		while (i < tokenizer.tokensPos) {
-			printf("token: '%s'\n", tokens[i]);
-			i = i + 1;
-		}
+		// "выполняем" команду
+		char *const cmd = (*tokenizer.tokens)[0];
+		char *(*const argv)[] = &(*tokenizer.tokens)[1];
+		exec(cmd, argv);
 	}
+
 	return 0;
 }
 

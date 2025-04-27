@@ -601,6 +601,11 @@ def do_value_bin2(op, l, r, ti):
 	if l.type.is_bad() or r.type.is_bad():
 		return ValueBad(ti)
 
+	if isinstance(l, ValueUndefined) or isinstance(r, ValueUndefined):
+		t = htype.select_common_type(l.type, r.type)
+		return ValueUndefined(t)
+
+
 	# Ops with different types
 	if op == 'add':
 		# массивы могут быть разной длины (то есть с разными типами)

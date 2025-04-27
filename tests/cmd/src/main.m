@@ -4,6 +4,20 @@ include "libc/unistd"
 include "libc/ctype"
 
 
+
+var prompt: [32]Char8 = "# "
+var prompt_len: Nat8 = 2
+
+var tokensBuf: [4*1024]Char8
+
+
+func showPrompt() {
+	write(0, &prompt, SizeT prompt_len)
+}
+
+
+
+
 @inline
 func char8ToInt(c: Char8) -> Int {
 	return Int Word32 Word8 c
@@ -21,6 +35,10 @@ type Tokenizer record {
 	tokens: *[]*[]Char8
 }
 
+
+func is_blank(c: Char8) -> Bool {
+	return c == ' ' or c == '\n'
+}
 
 func gettok(t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 	var c = t.input[t.position]
@@ -43,8 +61,9 @@ func gettok(t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 	var outpos: Nat16 = 0
 
 	c = t.input[t.position]
-	if isalnum(char8ToInt(c)) {
-		while isalnum(char8ToInt(c)) {
+	//if isalnum(char8ToInt(c)) {
+	if not is_blank(c) {
+		while not is_blank(c) {
 			output[outpos] = c
 			++t.position
 			++outpos
@@ -52,26 +71,12 @@ func gettok(t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 		}
 		output[outpos] = '\0'
 	} else {
-
+		output[outpos] = c
+		++t.position
+		++outpos
 	}
 
 	return outpos
-}
-
-
-
-
-var prompt: [32]Char8 = "# "
-var prompt_len: Nat8 = 2
-
-
-var tokensBuf: [4*1024]Char8
-
-
-
-
-func showPrompt() {
-	write(0, &prompt, SizeT prompt_len)
 }
 
 
@@ -95,7 +100,24 @@ func tokenize(tokenizer: *Tokenizer) {
 		// save pointer to token
 		tokenizer.tokens[tokenizer.tokensPos] = pbuf
 		++tokenizer.tokensPos
+		tokenizer.tokens[tokenizer.tokensPos] = nil
 	}
+}
+
+
+func exec(cmd: *Str8, argv: *[]*Str8) {
+	printf("%s", cmd)
+	printf(" [")
+	var i = 0
+	while true {
+		let ptok = argv[i]
+		if ptok == nil {
+			break
+		}
+		printf("'%s'", ptok)
+		++i
+	}
+	printf("]\n")
 }
 
 
@@ -107,7 +129,8 @@ public func main() -> Int32 {
 	while true {
 		showPrompt()
 		fgets(&inbuf, sizeof(inbuf), stdin)
-		var tokens: [64]*[]Char8
+
+		var tokens: [64]*[]Char8 = []
 
 		// Токенизируем строку
 		var tokenizer = Tokenizer {
@@ -117,12 +140,12 @@ public func main() -> Int32 {
 		}
 		tokenize(&tokenizer)
 
-		var i = Nat16 0
-		while i < tokenizer.tokensPos {
-			printf("token: '%s'\n", tokens[i])
-			++i
-		}
+		// "выполняем" команду
+		let cmd = tokenizer.tokens[0]
+		let argv = &tokenizer.tokens[1:]
+		exec(cmd, argv)
 	}
+
 	return 0
 }
 
