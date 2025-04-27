@@ -2601,14 +2601,12 @@ def add_spices_def(x, ast_atts):
 	for a in ast_atts:
 		kind = a['kind']
 
-		if kind == 'property':
+		if kind == 'set':
 			args = a['args']
 			key = args[0]['str']
 			val = args[1]['str']
 			add_prop(x, key, val)
 
-		elif kind == 'static':
-			add_att(x, 'static')
 		elif kind == 'inline':
 			add_att(x, 'static')
 			add_att(x, 'inline')
@@ -2629,7 +2627,6 @@ def add_spices_def(x, ast_atts):
 			key = a['args'][0]['str']
 			print(key)
 			add_att(x, key)
-		#attribute_add(kind)
 
 
 def add_att(x, att):

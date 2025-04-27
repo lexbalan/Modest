@@ -14,16 +14,16 @@ include "./ctypes64"
 
 public type Opaque *Nat8
 
-@property("id.c", "FILE")
+@set("id.c", "FILE")
 public type File Opaque
 
-@property("id.c", "fpos_t")
+@set("id.c", "fpos_t")
 public type FposT Opaque
 
-@property("id.c", "char *")
+@set("id.c", "char *")
 public type CharStr Str
 
-@property("id.c", "const char *")
+@set("id.c", "const char *")
 public type ConstCharStr CharStr
 
 
@@ -34,14 +34,14 @@ public extern const stdout: *File
 public extern const stderr: *File
 
 
-@property("id.c", "EOF")
+@set("id.c", "EOF")
 public const c_EOF = -1
 
-@property("id.c", "SEEK_SET")
+@set("id.c", "SEEK_SET")
 public const seekSet = 0
-@property("id.c", "SEEK_CUR")
+@set("id.c", "SEEK_CUR")
 public const seekCur = 1
-@property("id.c", "SEEK_END")
+@set("id.c", "SEEK_END")
 public const seekEnd = 2
 
 public func fclose(f: *File) -> @unused Int

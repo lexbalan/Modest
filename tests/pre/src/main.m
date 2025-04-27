@@ -40,8 +40,8 @@ public func main() -> sub::Int {
 }
 
 
-@property("c", "arrshow")
-@property("cm_alias", "arrshow")
+@set("c", "arrshow")
+@set("cm_alias", "arrshow")
 func arrayShow(array: *Arr, size: sub::Int) -> Unit {
 	print("arrayShow:\n")
 	var i = 0

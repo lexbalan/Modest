@@ -11,38 +11,38 @@ include "libc/ctypes64"
 
 //@extern("C)
 //var environ: *[]*Char
-@property("id.c", "SEEK_SET")
+@set("id.c", "SEEK_SET")
 public const seekSet = 0
-@property("id.c", "SEEK_CUR")
+@set("id.c", "SEEK_CUR")
 public const seekCur = 1
-@property("id.c", "SEEK_END")
+@set("id.c", "SEEK_END")
 public const seekEnd = 2
 
-@property("id.c", "STDIN_FILENO")
+@set("id.c", "STDIN_FILENO")
 public const c_STDIN_FILENO = 0
-@property("id.c", "STDOUT_FILENO")
+@set("id.c", "STDOUT_FILENO")
 public const c_STDOUT_FILENO = 1
-@property("id.c", "STDERR_FILENO")
+@set("id.c", "STDERR_FILENO")
 public const c_STDERR_FILENO = 2
 
 
 // lockf function - record locking on files
-@property("id.c", "F_ULOCK")
+@set("id.c", "F_ULOCK")
 public const c_F_ULOCK = 0  // unlock locked sections
-@property("id.c", "F_LOCK")
+@set("id.c", "F_LOCK")
 public const c_F_LOCK = 1   // lock a section for exclusive use
-@property("id.c", "F_TLOCK")
+@set("id.c", "F_TLOCK")
 public const c_F_TLOCK = 2  // test and lock a section for exclusive use
-@property("id.c", "F_TEST")
+@set("id.c", "F_TEST")
 public const c_F_TEST = 3
 
-@property("id.c", "F_OK")
+@set("id.c", "F_OK")
 public const c_F_OK = 0  // Test for existence of file
-@property("id.c", "R_OK")
+@set("id.c", "R_OK")
 public const c_R_OK = 4  // Test for read permission
-@property("id.c", "W_OK")
+@set("id.c", "W_OK")
 public const c_W_OK = 2  // Test for write permission
-@property("id.c", "X_OK")
+@set("id.c", "X_OK")
 public const c_X_OK = 1  // Test for execute (search) permission
 
 

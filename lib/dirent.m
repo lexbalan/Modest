@@ -2,18 +2,18 @@
 
 $pragma module_nodecorate
 
-@property("id.c", "DIR")
+@set("id.c", "DIR")
 public type Dir record {}
 
-@property("id.c", "int")
+@set("id.c", "int")
 type Int Int32
-@property("id.c", "ino_t")
+@set("id.c", "ino_t")
 type InoT Nat32
-@property("id.c", "off_t")
+@set("id.c", "off_t")
 type OffT Nat32
 
 
-@property("id.c", "struct dirent")
+@set("id.c", "struct dirent")
 public type Dirent record {
 	public d_ino: InoT			/* inode number */
 	public d_off: OffT			/* offset to the next dirent */
@@ -25,23 +25,23 @@ public type Dirent record {
 
 
 /* File types for `d_type'.  */
-@property("id.c", "DT_UNKNOWN")
+@set("id.c", "DT_UNKNOWN")
 public const dt_UNKNOWN = 0
-@property("id.c", "DT_FIFO")
+@set("id.c", "DT_FIFO")
 public const dt_FIFO = 1
-@property("id.c", "DT_CHR")
+@set("id.c", "DT_CHR")
 public const dt_CHR = 2
-@property("id.c", "DT_DIR")
+@set("id.c", "DT_DIR")
 public const dt_DIR = 4
-@property("id.c", "DT_BLK")
+@set("id.c", "DT_BLK")
 public const dt_BLK = 6
-@property("id.c", "DT_REG")
+@set("id.c", "DT_REG")
 public const dt_REG = 8
-@property("id.c", "DT_LNK")
+@set("id.c", "DT_LNK")
 public const dt_LNK = 10
-@property("id.c", "DT_SOCK")
+@set("id.c", "DT_SOCK")
 public const dt_SOCK = 12
-@property("id.c", "DT_WHT")
+@set("id.c", "DT_WHT")
 public const dt_WHT = 14
 
 

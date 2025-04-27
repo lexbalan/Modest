@@ -36,7 +36,7 @@ public func main () {
 
 Property `gnu_att`
 ```swift
-@property("gnu_att", "interrupt(\"WCH-Interrupt-fast\")")
+@set("gnu_att", "interrupt(\"WCH-Interrupt-fast\")")
 func wch_systick_interrupt() {
 	//
 }

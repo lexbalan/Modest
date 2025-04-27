@@ -2,7 +2,7 @@ include "libc/stdio"
 include "libc/stdlib"
 include "libc/string"
 
-//@property("type.generic", true)
+//@set("type.generic", true)
 
 var a: [2][2][3]Int32 = [
 	[

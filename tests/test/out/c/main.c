@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-//@property("type.generic", true)
+//@set("type.generic", true)
 
 static int32_t main_a[2][2][3] = (int32_t[2][2][3]){
 

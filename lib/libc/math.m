@@ -7,10 +7,10 @@ $pragma c_include "math.h"
 include "./ctypes64"
 
 
-@property("id.c", "M_PI")
+@set("id.c", "M_PI")
 public const m_PI = 3.141592653589793238462643383279502884
 
-@property("id.c", "M_E")
+@set("id.c", "M_E")
 public const m_E =  2.718281828459045235360287471352662498
 
 

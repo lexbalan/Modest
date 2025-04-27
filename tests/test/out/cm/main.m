@@ -3,7 +3,7 @@
 @c_include "stdlib.h"
 @c_include "string.h"
 
-//@property("type.generic", true)
+//@set("type.generic", true)
 
 var a: [2][2][3]Int32 = [
 	[

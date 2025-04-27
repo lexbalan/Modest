@@ -7,7 +7,7 @@ $pragma c_include "./sub2.h"
 
 
 // this c_alias - not worked!
-//@property("id.c", "int")
+//@set("id.c", "int")
 public type Int Int32
 
 public const subName = "SubName"

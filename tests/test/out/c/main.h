@@ -13,7 +13,7 @@
 
 
 
-//@property("type.generic", true)
+//@set("type.generic", true)
 
 
 

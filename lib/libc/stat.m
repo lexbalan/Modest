@@ -20,7 +20,7 @@ public type BlkCntT Nat64
 public type DarwinIno64T Nat64
 
 //
-//@property("id.c", "struct stat")
+//@set("id.c", "struct stat")
 //type Stat record {
 //	st_dev: DevT			/* номер устройства */
 //	st_ino: InoT			/* inode */
@@ -40,7 +40,7 @@ public type DarwinIno64T Nat64
 
 public type DarwinTimeT Nat64
 
-@property("id.c", "struct timespec")
+@set("id.c", "struct timespec")
 public type Timespec record {
 	public tv_sec: DarwinTimeT
 	public tv_nsec: Long
@@ -50,7 +50,7 @@ public type Timespec record {
 	/* for MACOS see: /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys
 	*/
 
-@property("id.c", "struct stat")
+@set("id.c", "struct stat")
 public type Stat record {
 	public st_dev: DevT             // [XSI] ID of device containing file
 	public st_mode: ModeT           // [XSI] Mode of file (see below)
@@ -78,7 +78,7 @@ public type Stat record {
 
 
 	// 01_stat for MACOS
-@property("id.llvm", "\\01_stat")
+@set("id.llvm", "\\01_stat")
 public func stat(path: *[]ConstChar, stat: *Stat) -> Int
 
 
@@ -135,49 +135,49 @@ public const s_ISVTX = 0x0200    // (0001000) save swapped text even after use
 
 
 	/* is directory */
-@property("id.c", "S_ISDIR")
+@set("id.c", "S_ISDIR")
 public func s_ISDIR(m: ModeT) -> Bool {
 	return (m and s_IFMT) == s_IFDIR
 }
 
 	/* is char special */
-@property("id.c", "S_ISCHR")
+@set("id.c", "S_ISCHR")
 public func s_ISCHR(m: ModeT) -> Bool {
 	return (m and s_IFMT) == s_IFCHR
 }
 
 	/* is block special */
-@property("id.c", "S_ISBLK")
+@set("id.c", "S_ISBLK")
 public func s_ISBLK(m: ModeT) -> Bool {
 	return (m and s_IFMT) == s_IFBLK
 }
 
 	/* is regular file */
-@property("id.c", "S_ISREG")
+@set("id.c", "S_ISREG")
 public func s_ISREG(m: ModeT) -> Bool {
 	return (m and s_IFMT) == s_IFREG
 }
 
 	/* is fifo or socket */
-@property("id.c", "S_ISFIFO")
+@set("id.c", "S_ISFIFO")
 public func s_ISFIFO(m: ModeT) -> Bool {
 	return (m and s_IFMT) == s_IFIFO
 }
 
 	/* is symbolic link */
-@property("id.c", "S_ISLNK")
+@set("id.c", "S_ISLNK")
 public func s_ISLNK(m: ModeT) -> Bool {
 	return (m and s_IFMT) == s_IFLNK
 }
 
 	/* is socket */
-@property("id.c", "S_ISSOCK")
+@set("id.c", "S_ISSOCK")
 public func s_ISSOCK(m: ModeT) -> Bool {
 	return (m and s_IFMT) == s_IFSOCK
 }
 
 	/* is whiteout */
-@property("id.c", "S_ISWHT")
+@set("id.c", "S_ISWHT")
 public func s_ISWHT(m: ModeT) -> Bool {
 	return (m and s_IFMT) == s_IFWHT
 }

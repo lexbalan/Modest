@@ -109,7 +109,7 @@ var byteFromUart: @volatile Word8
 ```
 
 ```swift
-@property("id.c", "int")
+@set("id.c", "int")
 type Int Int32
 ```
 
