@@ -238,6 +238,12 @@ foundation_module = None
 
 
 
+def valueZeroNumber():
+	gt = TypeNumber()
+	return value_imm_literal_create(gt, 0)
+
+
+
 def init():
 	global foundation_module, lib_path
 	lib_path = settings.get('lib')
@@ -548,7 +554,6 @@ def do_value_shift(x):
 	op = x['kind']  # 'shl' | 'shr'
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
-	type_result = l.type
 
 	if not l.type.is_word():
 		error("expected word value", x['left'])
@@ -737,7 +742,7 @@ def do_value_deref(x):
 	to = vtype.to
 	is_func_ptr = to.is_func()
 	is_free_ptr = to.is_free_pointer()
-	is_open_array_ptr =  to.is_open_array()
+	is_open_array_ptr = to.is_open_array()
 	if is_func_ptr or is_free_ptr: #or is_open_array_ptr:
 		error("unsuitable type3", v.ti)
 
@@ -804,10 +809,9 @@ def do_value_lengthof_value(x):
 
 def do_value_va_start(x):
 	args = x['values']
-	ti = x['ti']
 	va_list = do_value(args[0])
 	last_param = do_rvalue(args[1])
-	return ValueVaStart(va_list, last_param, ti)
+	return ValueVaStart(va_list, last_param, x['ti'])
 
 
 def do_value_va_arg(x):
@@ -995,9 +999,6 @@ def do_value_index(x):
 	return ValueIndex(array_typ.of, left, index, ti=x['ti'])
 
 
-def valueZeroNumber():
-	gt = TypeNumber()
-	return value_imm_literal_create(gt, 0)
 
 def do_value_slice(x):
 	#info("do_value_slice", x['ti'])
@@ -1040,9 +1041,6 @@ def do_value_slice(x):
 	# тк volume of array должен быть выражением
 	# а для слайса [a:b] это (b - a)
 	slice_volume = do_value_bin2('sub', index_to, index_from, x['ti'])
-
-	#if isinstance(index_to, ValueUndef):
-	#	info("VU", x['ti'])
 
 	slice_len = 0  # len as integer
 	if slice_volume.isImmediate():
@@ -1127,14 +1125,6 @@ def do_value_access(x):
 	if field == None:
 		error("undefined field '%s'" % field_id.str, x['ti'])
 		return ValueBad(x['ti'])
-
-	# PROBLEM: у анонимных структур нет поля 'definition'
-	# и непонятно как с этимм быть. Можно добавить module
-	# в каждую сущность, но...
-#	if record_type['definition']['module'] != cmodule:
-#		if not 'public' in field['att']:
-#			error("access to private field", x['ti'])
-
 
 	if field.type.is_bad():
 		return ValueBad(x.ti)
@@ -1381,7 +1371,6 @@ def do_value_bad(x):
 def do_value_undefined(x):
 	t = htype.TypeBad(x['ti'])
 	return ValueUndef(t, x['ti'])
-
 
 
 def do_rvalue(x):
@@ -1841,16 +1830,6 @@ def def_type(x):
 	nt.definition = definition
 	nt.parent = cmodule  # добавляем заново тк очистили его выше!
 	nt.ti_def = id.ti
-
-
-	if not cmodule.hasAttribute('do_not_include'):
-		# В случае когда не печатаем typedef явно (!)
-		# Убираем алиасы которые висели на оригинальном типе
-		#if 'c' in nt['id']:
-		#	nt.pop('c')
-		#if 'llvm_alias' in nt['id']:
-		#	nt.pop('llvm_alias')
-		pass
 
 	if ty.is_record():
 		cmodule.records.append(nt)
