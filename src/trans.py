@@ -557,12 +557,8 @@ def do_value_shift(x):
 		error("expected natural value", x['right'])
 
 	nv = None
-	if op == 'shl':
-		nv = ValueShl(l, r, ti=x['ti'])
-	elif op == 'shr':
-		nv = ValueShr(l, r, ti=x['ti'])
-	else:
-		pass
+	if op == 'shl': nv = ValueShl(l, r, ti=x['ti'])
+	elif op == 'shr': nv = ValueShr(l, r, ti=x['ti'])
 
 	if l.type.is_generic():
 		error("expected non-generic value", l.ti)
@@ -643,8 +639,7 @@ def do_value_bin2(op, l, r, ti):
 	if op in (htype.EQ_OPS + htype.RELATIONAL_OPS):
 		t = foundation.typeBool
 
-	nv = ValueBin(t, op, l, r, ti=ti)
-	return nv
+	return ValueBin(t, op, l, r, ti=ti)
 
 
 def do_value_not(x):
@@ -663,8 +658,7 @@ def do_value_not(x):
 	if vtype.is_bool():
 		op = 'logic_not'
 
-	nv = ValueNot(vtype, v, ti=x['ti'])
-	return nv
+	return ValueNot(vtype, v, ti=x['ti'])
 
 
 def do_value_neg(x):
@@ -681,8 +675,7 @@ def do_value_neg(x):
 	else:
 		vtype.signed = True
 
-	nv = ValueNeg(vtype, v, ti=x['ti'])
-	return nv
+	return ValueNeg(vtype, v, ti=x['ti'])
 
 
 def do_value_pos(x):
@@ -696,8 +689,7 @@ def do_value_pos(x):
 	if vtype.is_unsigned():
 		error("expected value with signed type", v.ti)
 
-	nv = ValuePos(vtype, v, ti=x['ti'])
-	return nv
+	return ValuePos(vtype, v, ti=x['ti'])
 
 
 def do_value_ref(x):
@@ -715,8 +707,7 @@ def do_value_ref(x):
 			error("expected mutable value or function", v.ti)
 			return ValueBad(ti)
 
-	nv = ValueRef(v, ti=ti)
-	return nv
+	return ValueRef(v, ti=ti)
 
 
 def do_value_new(x):
@@ -826,17 +817,15 @@ def do_value_va_arg(x):
 
 
 def do_value_va_end(x):
-	ti = x['ti']
 	va_list = do_value(x['value'])
-	return ValueVaEnd(va_list, ti)
+	return ValueVaEnd(va_list, x['ti'])
 
 
 def do_value_va_copy(x):
 	args = x['values']
-	ti = x['ti']
 	va_list0 = do_value(args[0])
 	va_list1 = do_value(args[1])
-	return ValueVaCopy(va_list0, va_list1, ti)
+	return ValueVaCopy(va_list0, va_list1, x['ti'])
 
 
 def do_value___defined_type(x):
@@ -959,8 +948,7 @@ def do_value_call(x):
 			else:
 				error("expected literal string argument", first_arg['ti'])"""
 
-	rv = ValueCall(ftype.to, fn, args + extra_args, ti=x['ti'])
-	return rv
+	return ValueCall(ftype.to, fn, args + extra_args, ti=x['ti'])
 
 
 
@@ -1004,8 +992,7 @@ def do_value_index(x):
 	if index.type.is_generic():
 		index = value_cons_implicit_check(typeSysInt, index)
 
-	nv = ValueIndex(array_typ.of, left, index, ti=x['ti'])
-	return nv
+	return ValueIndex(array_typ.of, left, index, ti=x['ti'])
 
 
 def valueZeroNumber():
@@ -1065,8 +1052,7 @@ def do_value_slice(x):
 			return ValueBad(x['ti'])
 
 	type = TypeArray(array_type.of, slice_volume, generic=False, ti=x['ti'])
-	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
-	return nv
+	return ValueSlice(type, left, index_from, index_to, x['ti'])
 
 
 
@@ -1162,8 +1148,7 @@ def do_value_access(x):
 			error("access to private field of record", x['right']['ti'])
 
 
-	nv = ValueAccessRecord(field.type, left, field, ti=x['ti'])
-	return nv
+	return ValueAccessRecord(field.type, left, field, ti=x['ti'])
 
 
 
@@ -1315,14 +1300,12 @@ def do_value_float(x):
 
 def do_value_sizeof_type(x):
 	t = do_type(x['type'])
-	nv = ValueSizeofType(t, ti=x['ti'])
-	return nv
+	return ValueSizeofType(t, ti=x['ti'])
 
 
 def do_value_sizeof_value(x):
 	v = do_value(x['value'])
-	nv = ValueSizeofValue(v, ti=x['ti'])
-	return nv
+	return ValueSizeofValue(v, ti=x['ti'])
 
 
 
@@ -1407,9 +1390,7 @@ def do_rvalue(x):
 
 def do_value_subexpr(x):
 	v = do_value(x['value'])
-	nv = ValueSubexpr(v, ti=x['ti'])
-	return nv
-
+	return ValueSubexpr(v, ti=x['ti'])
 
 
 
