@@ -120,7 +120,7 @@ public func puts32(s: *Str32) -> Unit {
 
 
 
-public func print(form: *Str8, ...) {
+public func print(form: *Str8, ...) -> Unit {
 	var va: __VA_List
 	__va_start(va, form)
 	vfprint(c_STDOUT_FILENO, form, va)

@@ -9,7 +9,7 @@ func func1() -> Unit {
 }
 
 
-func print_ab(a: Int32, b: Int32) {
+func print_ab(a: Int32, b: Int32) -> Unit {
 	printf("print_ab(a=%i, b=%i)\n", a, b)
 }
 

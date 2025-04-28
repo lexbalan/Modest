@@ -67,7 +67,7 @@ const initalState = [
 ]
 
 
-func contextInit(ctx: *Context) {
+func contextInit (ctx: *Context) -> Unit {
 	ctx.state = initalState
 }
 
@@ -92,7 +92,7 @@ const k = [
 ]
 
 
-func transform(ctx: *Context, data: *[]Word8) {
+func transform (ctx: *Context, data: *[]Word8) -> Unit {
 	var m = [64]Word32 []
 
 	var i = Nat32 0
@@ -138,7 +138,7 @@ func transform(ctx: *Context, data: *[]Word8) {
 }
 
 
-func update(ctx: *Context, msg: *[]Word8, msgLen: Nat32) {
+func update (ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
 	var i = Nat32 0
 	while i < msgLen {
 		ctx.data[ctx.datalen] = msg[i]
@@ -153,7 +153,7 @@ func update(ctx: *Context, msg: *[]Word8, msgLen: Nat32) {
 }
 
 
-func final(ctx: *Context, outHash: *Hash) {
+func final (ctx: *Context, outHash: *Hash) -> Unit {
 	var i: Nat32 = ctx.datalen
 
 	// Pad whatever data is left in the buffer.
@@ -210,7 +210,7 @@ func final(ctx: *Context, outHash: *Hash) {
 }
 
 
-public func hash(msg: *[]Word8, msgLen: Nat32, outHash: *Hash) {
+public func hash (msg: *[]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
 	var ctx = Context {}
 	contextInit(&ctx)
 	update(&ctx, msg, msgLen)

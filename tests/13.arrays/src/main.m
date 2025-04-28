@@ -50,7 +50,7 @@ const startSequence = [0xAA, 0x55, 0x02]
 const stopSequence = [0x16]
 
 
-func test() {
+func test () -> Unit {
 	// тестируем работу с локальным generic массивом
 	var yy = startSequence + [0x00, 0x00] + stopSequence
 	var i = 0

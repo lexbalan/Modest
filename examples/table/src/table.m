@@ -22,7 +22,7 @@ public type Table record {
 // we cannot receive VLA by value,
 // but we can receive pointer to open array
 // and after construct pointer to closed array with required dimensions
-public func print(table: *Table) {
+public func print (table: *Table) -> Unit {
 	var i, j: Nat32
 
 	// construct pointer to closed VLA array
@@ -94,7 +94,7 @@ public func print(table: *Table) {
 }
 
 
-func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) {
+func printRow (raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 	let row = unsafe *[nCols]*Str8 raw_row
 
 	var j = Nat32 0
@@ -121,7 +121,7 @@ func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) {
 // печатает строку +---+---+ отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
-func separator(sz: *[]Nat32, n: Nat32) {
+func separator (sz: *[]Nat32, n: Nat32) -> Unit {
 	var i = Nat32 0
 	while i < n {
 		printf("+")

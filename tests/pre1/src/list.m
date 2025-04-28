@@ -114,7 +114,7 @@ public func node_data_get (node: *Node) -> Ptr {
 }
 
 
-public func node_insert_right (left: *Node, new_right: *Node) {
+public func node_insert_right (left: *Node, new_right: *Node) -> Unit {
 	//printf("node_insert_right\n")
 
 	let old_right = left.next

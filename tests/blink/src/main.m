@@ -2,7 +2,7 @@
 import "libc/stdio"
 
 
-public func print(form: *Str8, ...) {
+public func print(form: *Str8, ...) -> Unit {
 	var va: __VA_List
 	__va_start(va, form)
 
