@@ -133,7 +133,7 @@ def get_id_str(x):
 			if is_global_public(x):
 				module = x.getModule()
 				if module != None:
-					if not 'nodecorate' in module.att:
+					if not module.hasAttribute('nodecorate'):
 						id_str = "%s_%s" % (module.prefix, id_str)
 
 	return id_str
@@ -2766,7 +2766,7 @@ def run(module, outname, options):
 	lo("%Str32 = type [0 x %Char32]")
 	lo("%__VA_List = type i8*")
 
-	if 'use_va_arg' in module.att:
+	if module.hasAttribute('use_va_arg'):
 		lo("declare void @llvm.va_start(i8*)")
 		lo("declare void @llvm.va_copy(i8*, i8*)")
 		lo("declare void @llvm.va_end(i8*)")

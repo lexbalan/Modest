@@ -33,6 +33,9 @@ class Value(Entity):
 		self.nl = 0
 
 
+	def hasAttribute(self, a):
+		return a in self.att or self.type.hasAttribute(a)
+
 	def isLvalue(self):
 		return self.is_lvalue
 

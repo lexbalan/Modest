@@ -10,16 +10,20 @@ class Module:
 		self.id = idStr
 		self.ast = ast
 		self.prefix = None
-		self.strings = [] # for LLVM backend
-		self.records = [] # for C backend
+		self.strings = []   # for LLVM backend
+		self.records = []   # for C backend
 		self.anon_recs = [] # anonymous records for C backend
-		self.imports = {} # '<import_id>' => {'isa': 'module'}
+		self.imports = {}   # '<import_id>' => {'isa': 'module'}
 		self.included_modules = []
 		self.symtab_public = symtab_public
 		self.symtab_private = symtab_private
 		self.source_abspath = None
 		self.defs = []
 		self.att = []
+
+
+	def hasAttribute(self, a):
+		return a in self.att
 
 
 	def type_add(self, id_str, t, is_public=False):

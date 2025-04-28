@@ -1889,7 +1889,7 @@ def def_type(x):
 	nt.ti_def = id.ti
 
 
-	if not ('do_not_include' in cmodule.att):
+	if not cmodule.hasAttribute('do_not_include'):
 		# В случае когда не печатаем typedef явно (!)
 		# Убираем алиасы которые висели на оригинальном типе
 		#if 'c' in nt['id']:
@@ -2223,7 +2223,7 @@ def do_import(x):
 		if m == None:
 			fatal("cannot import module")
 
-		if 'c_no_print' in m.att:
+		if m.hasAttribute('c_no_print'):
 			for xx in m.defs:
 				xx['att'].append('c_no_print')
 

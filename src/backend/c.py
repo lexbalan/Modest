@@ -183,7 +183,7 @@ def get_id_str(x):
 			if is_global_public(x):
 				module = x.getModule()
 				if module != None:
-					if not 'nodecorate' in module.att:
+					if not module.hasAttribute('nodecorate'):
 						#if x.access_level != 'private':
 						id_str = "%s_%s" % (module.prefix, id_str)
 
@@ -368,11 +368,11 @@ def str_type_pointer(t, core='', as_ptr_to_array=False):
 		tx = tx.to
 		left += '*'
 
-	if 'const' in t.att:
+	if t.hasAttribute('const'):
 		left += 'const '
-	if 'volatile' in t.att:
+	if t.hasAttribute('volatile'):
 		left += 'volatile '
-	if 'restrict' in t.att:
+	if t.hasAttribute('restrict'):
 		left += 'restrict '
 
 	# (!) Печатать указатель на массив как указатель на его элемент (!)
@@ -408,9 +408,9 @@ def str_named(t, core=''):
 	if aka == None:
 		return None
 	pre = ''
-	if 'const' in t.att:
+	if t.hasAttribute('const'):
 		pre += 'const '
-	if 'volatile' in t.att:
+	if t.hasAttribute('volatile'):
 		pre += 'volatile '
 	return pre + aka + core
 
@@ -2168,7 +2168,7 @@ def print_header(module, outname):
 	# print C `#include ""` directive for included modules
 	nl_after_incs = False
 	for inc in module.included_modules:
-		if not 'do_not_include' in inc.att:
+		if not inc.hasAttribute('do_not_include'):
 			newline()
 			include(inc.id + '.h', local=True)
 			nl_after_incs = True
@@ -2189,7 +2189,7 @@ def print_header(module, outname):
 
 		if isinstance(x, StmtImport):
 			nnl(x.nl)
-			if not 'do_not_include' in x.module.att:
+			if not x.module.hasAttribute('do_not_include'):
 				s = os.path.basename(x.impline)
 				include(s + '.h', local=True)
 		elif isinstance(x, StmtDefFunc):
@@ -2256,7 +2256,7 @@ def print_cfile(module, _outname):
 
 	output_open(outname)
 
-	if 'c_no_print' in module.att:
+	if module.hasAttribute('c_no_print'):
 		output_close()
 		return
 
@@ -2279,7 +2279,7 @@ def print_cfile(module, _outname):
 	newline()
 	include("string.h", local=False)
 
-	if 'use_va_arg' in module.att:
+	if module.hasAttribute('use_va_arg'):
 		newline()
 		include("stdarg.h", local=False)
 
