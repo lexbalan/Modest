@@ -512,32 +512,6 @@ def do_type_record(x):
 	return rec
 
 
-"""
-def do_type_enum(x):
-	enum_type = htype.type_enum(x['ti'])
-
-	i = 0
-	for item in x.asset:
-		id = item['id']
-		enum_type.asset.append({
-			'isa': 'enum_item',
-			'id': id,
-			'number': i,
-			'ti': item['ti']
-		})
-
-		# add enum item to global context
-		item_val = ValueLiteral(enum_type, item['ti'])
-		item_val.asset = i
-
-		item_val['id'] = id
-		global cmodule
-		cmodule.value_add_public(, id.str, item_val)
-		i += 1
-
-	return enum_type
-"""
-
 
 def do_type_func(x, func_id="_"):
 	params = []
@@ -562,7 +536,6 @@ def do_type(x):
 	elif k == 'pointer': t = do_type_pointer(x)
 	elif k == 'array': t = do_type_array(x)
 	elif k == 'record': t = do_type_record(x)
-	#elif k == 'enum': t = do_type_enum(x)
 	else: t = bad_type(x['ti'])
 
 	t.ti = x['ti']
@@ -703,7 +676,7 @@ def do_value_neg(x):
 	vtype = v.type
 
 	if not vtype.is_generic():
-		if not vtype.is_signed():
+		if vtype.is_unsigned():
 			error("expected value with signed type", v.ti)
 	else:
 		vtype.signed = True
@@ -720,7 +693,7 @@ def do_value_pos(x):
 
 	vtype = v.type
 
-	if not vtype.is_signed():
+	if vtype.is_unsigned():
 		error("expected value with signed type", v.ti)
 
 	nv = ValuePos(vtype, v, ti=x['ti'])
@@ -2687,7 +2660,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 
 		if spec in ['i', 'd']:
 			if arg_type.is_int():
-				if not arg_type.is_signed():
+				if arg_type.is_unsigned():
 					warning("expected signed integer value", arg.ti)
 			else:
 				warning("expected integer value2", arg.ti)

@@ -36,6 +36,7 @@ func is_blank (c: Char8) -> Bool {
 	return c == ' ' or c == '\n'
 }
 
+
 func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 	var c = t.input[t.position]
 
