@@ -10,7 +10,7 @@ var prompt_len: Nat8 = 2
 var tokensBuf: [4*1024]Char8
 
 
-func showPrompt() {
+func showPrompt() -> Unit {
 	write(0, &prompt, SizeT prompt_len)
 }
 
@@ -76,7 +76,7 @@ func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 }
 
 
-func tokenize (tokenizer: *Tokenizer) {
+func tokenize (tokenizer: *Tokenizer) -> Unit {
 	while true {
 		let max_toklen: Nat16 = 128
 		var token: [max_toklen]Char8
@@ -101,7 +101,7 @@ func tokenize (tokenizer: *Tokenizer) {
 }
 
 
-func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) {
+func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
 	printf("%s (n=%d)", cmd, argc)
 	printf(" [")
 	var i = 0
@@ -148,6 +148,5 @@ public func main () -> Int32 {
 
 	return 0
 }
-
 
 
