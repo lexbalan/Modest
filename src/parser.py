@@ -126,8 +126,17 @@ class Parser:
 	def is_assign_operator(self):
 		return self.match("<-") or self.match("=") or self.match("=")
 
+	def is_number(self):
+		return self.ctok_class() == 'num'
+
 	def is_identifier(self):
 		return self.ctok_class() == 'id'
+
+	def is_Identifier(self):
+		return self.ctok_class() == 'Id'
+
+	def is_string(self):
+		return self.ctok_class() == 'str'
 
 	def is_operator(self):
 		return self.ctok_class() == 'op'
@@ -138,10 +147,10 @@ class Parser:
 
 	def identifier(self):
 		ti = self.ti()
-		if not self.is_identifier():
-			self.skip()
-			error("expected identifier", ti)
-			return None
+#		if not self.is_identifier():
+#			self.skip()
+#			error("expected identifier", ti)
+#			return None
 		s = self.gettok()
 		return {'isa': 'ast_id', 'kind': 'id', 'str': s, 'ti': ti} #Id(s, ti=ti) ####
 
@@ -245,10 +254,9 @@ class Parser:
 
 
 	def check_is_field(self):
+		self.match("public") or self.match("private")
 		if self.is_identifier():
-			token = self.gettok()
-			if isUpperIdentifierToken(token):
-				return False
+			self.skip()
 			if not self.match(':'):
 				return False
 
@@ -260,7 +268,10 @@ class Parser:
 
 
 	def check_is_type(self):
-		if self.is_identifier():
+		if self.is_Identifier():
+			return True
+
+		elif self.is_identifier():
 			if self.nextok() == '.':
 				self.skip()
 				self.skip()
@@ -416,28 +427,27 @@ class Parser:
 			y['of'] = self.expr_type()
 			t = y
 
-		elif self.ctok_class() == 'id':
-			if isUpperIdentifierToken(self.ctok()):
-				id = self.identifier()
-				t = {
-					'isa': 'ast_type',
-					'kind': 'named',
-					'id': id,
-					'ti': ti
-				}
+		elif self.is_Identifier():
+			id = self.identifier()
+			t = {
+				'isa': 'ast_type',
+				'kind': 'named',
+				'id': id,
+				'ti': ti
+			}
 
-			else:
-				left = self.identifier()
-				self.need(".")
-				right = self.identifier()
+		elif self.is_identifier():
+			left = self.identifier()
+			self.need(".")
+			right = self.identifier()
 
-				t = {
-					'isa': 'ast_type',
-					'kind': 'named',
-					'module': left,
-					'id': right,
-					'ti': ti
-				}
+			t = {
+				'isa': 'ast_type',
+				'kind': 'named',
+				'module': left,
+				'id': right,
+				'ti': ti
+			}
 
 		t['atts'] = attributes
 		return t
@@ -1328,7 +1338,7 @@ class Parser:
 			}
 
 
-		elif self.ctok_class() == 'id':
+		elif self.is_identifier():
 			id = self.identifier()
 			return {
 				'isa': 'ast_value',
@@ -1338,7 +1348,7 @@ class Parser:
 				'ti': id['ti']
 			}
 
-		elif self.ctok_class() == 'num':
+		elif self.is_number():
 			numstr = self.gettok()
 			return {
 				'isa': 'ast_value',
@@ -1349,11 +1359,11 @@ class Parser:
 				'ti': ti
 			}
 
-		elif self.ctok_class() == 'str':
+		elif self.is_string():
 			s = self.gettok()
 			return self.parse_value_string(s, ti)
 
-		elif self.ctok_class() == 'tag':
+		elif self.is_tag():
 			num = self.gettok()
 			return {'isa': 'ast_value', 'kind': 'tag', 'tag': num, 'ti': ti}
 

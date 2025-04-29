@@ -188,7 +188,15 @@ class CmLexer(Lexer):
 			s = s + str(self.getc())
 			c = self.peep()
 
-		return ('id', s)
+
+		isa = 'id'
+		for c in s:
+			if c.isalpha():
+				if c.isupper():
+					isa = 'Id'
+				break
+
+		return (isa, s)
 
 
 	def doNumber(self):
