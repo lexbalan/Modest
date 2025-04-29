@@ -5,8 +5,8 @@ include "libc/string"
 
 @nodecorate
 public type Point record {
-	x: Int32
-	y: Int32
+	x: Int32  // hi!
+	y: Int32  // lo?
 }
 
 @nodecorate
@@ -25,7 +25,7 @@ var u32: Nat32
 
 
 var prev_p: [10]Word8
-func xxx(p: *[]Word8) -> Unit {
+func xxx (p: *[]Word8) -> Unit {
 	let xp = *[10]Word8 p
 	if prev_p != *xp {
 		prev_p = *xp
@@ -34,25 +34,25 @@ func xxx(p: *[]Word8) -> Unit {
 
 
 
-func mzero(p: Ptr, size: Nat32) {
+func mzero (p: Ptr, size: Nat32) -> Unit {
 	let px = unsafe *[size]Word8 p
 	*px = []
 }
 
-func mcopy(dst: Ptr, src: Ptr, size: Nat32) {
+func mcopy (dst: Ptr, src: Ptr, size: Nat32) -> Unit {
 	let d = unsafe *[size]Word8 dst
 	let s = unsafe *[size]Word8 src
 	*d = *s
 }
 
-func mcmp(a: Ptr, b: Ptr, size: Nat32) -> Bool {
+func mcmp (a: Ptr, b: Ptr, size: Nat32) -> Bool {
 	let ax = unsafe *[size]Word8 a
 	let bx = unsafe *[size]Word8 b
 	return *ax == *bx
 }
 
 @nodecorate
-public func sbuf(p: Ptr, size: Nat32) {
+public func sbuf (p: Ptr, size: Nat32) -> Unit {
 	let px = unsafe *[size]Word8 p
 	var buf = *px
 	var i = Nat32 0
@@ -68,7 +68,7 @@ var yy: @volatile[10]Int
 
 
 @extern("C")
-public func ma() -> Int32
+public func ma () -> Int32
 
 
 //type State enum {
@@ -80,11 +80,11 @@ public func ma() -> Int32
 //}
 
 
-func ab_ret(a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
+func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
 	return {a=a, b=b}
 }
 
-func ab_test() {
+func ab_test () -> Unit {
 	let x = ab_ret(9, 11)
 	printf("x.a = %i\n", x.a)
 	printf("x.a = %i\n", x.b)
@@ -98,7 +98,7 @@ var p = p0
 
 const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	ab_test()
 
 	var p: Point

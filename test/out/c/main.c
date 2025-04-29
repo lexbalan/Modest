@@ -78,14 +78,6 @@ static volatile int yy[10];
 
 extern int32_t ma();
 
-//type State enum {
-//	#stateInit
-//	#stateOff
-//	#stateStartup
-//	#stateRun
-//	#stateShutdown
-//}
-
 static struct __anonymous_struct_1 ab_ret(int32_t a, int32_t b)
 {
 	return (struct __anonymous_struct_1){.a = a, .b = b};

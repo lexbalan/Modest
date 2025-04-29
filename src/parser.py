@@ -214,10 +214,13 @@ class Parser:
 
 			f = self.parse_field()
 
+			line_comm = self.parse_if_comment()
+
 			if f != None:
 				f[0].update({
 					'atts': attributes,
 					'comments': comments,
+					'line_comment': line_comm,
 					'nl': nl_cnt,
 				})
 
