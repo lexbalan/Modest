@@ -275,9 +275,9 @@ class Parser:
 			if self.nextok() == '.':
 				self.skip()
 				self.skip()
+				if self.is_Identifier():
+					return True
 			token = self.gettok()
-			if isUpperIdentifierToken(token):
-				return True
 			return token in ['record', 'enum']
 
 		elif self.is_operator():
