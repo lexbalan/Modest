@@ -1858,13 +1858,25 @@ class Parser:
 	def parse_if_comment_line(self):
 		ti = self.ti()
 		x = self.gettok()
-		return {'isa': 'ast_comment', 'kind': 'comment-line', 'lines': x, 'ti': ti}
+		return {
+			'isa': 'ast_comment',
+			'kind': 'comment-line',
+			'lines': x,
+			'nl': 0,
+			'ti': ti
+		}
 
 
 	def parse_if_comment_block(self):
 		ti = self.ti()
 		x = self.gettok()
-		return {'isa': 'ast_comment', 'kind': 'comment-block', 'text': x, 'ti': ti}
+		return {
+			'isa': 'ast_comment',
+			'kind': 'comment-block',
+			'text': x,
+			'nl': 0,
+			'ti': ti
+		}
 
 
 

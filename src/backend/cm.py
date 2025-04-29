@@ -147,7 +147,11 @@ def str_type_record(t):
 
 		if field.access_level == 'public':
 			s += "public "
+
 		s += str_field(field)
+
+		if field.line_comment:
+			s += '  ' + str_stmt_comment(field.line_comment)
 
 	indent_down()
 	s += str_nl_indent(nl_end_e)

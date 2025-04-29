@@ -6,8 +6,8 @@ include "string"
 
 
 public type Point record {
-	x: Int32
-	y: Int32
+	x: Int32  // hi!
+	y: Int32  // lo?
 }
 
 
@@ -35,37 +35,51 @@ func xxx(p: *[]Word8) -> Unit {
 
 
 func mzero(p: Ptr, size: Nat32) -> Unit {
-	let px = *[size]Word8 p
+	let px: *[size]Word8 = *[size]Word8 p
 	*px = []
 }
 
 func mcopy(dst: Ptr, src: Ptr, size: Nat32) -> Unit {
-	let d = *[size]Word8 dst
-	let s = *[size]Word8 src
+	let d: *[size]Word8 = *[size]Word8 dst
+	let s: *[size]Word8 = *[size]Word8 src
 	*d = *s
 }
 
 func mcmp(a: Ptr, b: Ptr, size: Nat32) -> Bool {
-	let ax = *[size]Word8 a
-	let bx = *[size]Word8 b
+	let ax: *[size]Word8 = *[size]Word8 a
+	let bx: *[size]Word8 = *[size]Word8 b
 	return *ax == *bx
 }
 
-func sbuf(p: Ptr, size: Nat32) -> Unit {
-	let px = *[size]Word8 p
+
+public func sbuf(p: Ptr, size: Nat32) -> Unit {
+	let px: *[size]Word8 = *[size]Word8 p
 	var buf: [size]Word8 = *px
-	var i: Nat32 = Nat32 0
+	var i = Nat32 0
 	while i < size {
-		let x = buf[i]
+		let x: Word8 = buf[i]
 		i = i + 1
 	}
 }
 
 
-//@attribute("value.type:c_restrict")
-//@attribute("value.type:c_volatile")
 var xx: *[]*[10]Int
+var yy: [10]Int
 
+
+
+public
+
+
+func ab_ret(a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
+	return {a = a, b = b}
+}
+
+func ab_test() -> Unit {
+	let x: record {a: Int32, b: Int32} = ab_ret(9, 11)
+	printf("x.a = %i\n", x.a)
+	printf("x.a = %i\n", x.b)
+}
 
 const ca = 4
 var va: Int32 = ca
@@ -76,6 +90,8 @@ var p = p0
 const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 public func main() -> Int32 {
+	ab_test()
+
 	var p: Point
 	printf("test %s\n", *Str8 cq)
 	printf("test %d\n", v0)
@@ -107,10 +123,10 @@ public func main() -> Int32 {
 
 	xxx(&w0)
 
-	var yy: Word8 = Word8 1
-	var we: Word8 = Word8 Nat8 yy
+	var yy = Word8 1
+	var we = Word8 Nat8 yy
 
-	let pa2 = *[10]Int &a2
+	let pa2: *[10]Int = *[10]Int &a2
 
 	if *pa2 == a0 {
 		printf("eq!\n")
