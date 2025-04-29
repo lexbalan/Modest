@@ -231,15 +231,13 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @str13 = private constant [38 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 45, i8 49, i8 32, i8 45, i8 62, i8 32, i8 87, i8 111, i8 114, i8 100, i8 51, i8 50, i8 32, i8 40, i8 48, i8 120, i8 102, i8 102, i8 41, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str14 = private constant [31 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 45, i8 49, i8 32, i8 45, i8 62, i8 32, i8 87, i8 111, i8 114, i8 100, i8 51, i8 50, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-%main_Point = type {
+%Point = type {
 	%Int32,
 	%Int32
 };
 
-@main_v0 = global %Int32 zeroinitializer
-
-
-define void @main_f0() {
+@v0 = global %Int32 zeroinitializer
+define void @f0() {
 	ret void
 }
 
@@ -314,7 +312,7 @@ define internal %Bool @mcmp(i8* %a, i8* %b, %Nat32 %size) {
 	ret %Bool %13
 }
 
-define void @main_sbuf(i8* %p, %Nat32 %size) {
+define void @sbuf(i8* %p, %Nat32 %size) {
 	%1 = alloca i8*
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
@@ -352,16 +350,7 @@ break_1:
 
 @xx = internal global [0 x [10 x %Int]*]* zeroinitializer
 @yy = internal global [10 x %Int] zeroinitializer
-declare %Int32 @main_ma()
-
-
-;type State enum {
-;	#stateInit
-;	#stateOff
-;	#stateStartup
-;	#stateRun
-;	#stateShutdown
-;}
+declare %Int32 @ma()
 define internal {%Int32,%Int32} @ab_ret(%Int32 %a, %Int32 %b) {
 	%1 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 %a, 0
 	%2 = insertvalue {%Int32,%Int32} %1, %Int32 %b, 1
@@ -403,11 +392,11 @@ define internal void @ab_test() {
 ]
 define %Int32 @main() {
 	call void @ab_test()
-	%1 = alloca %main_Point, align 8
+	%1 = alloca %Point, align 8
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str4 to [0 x i8]*))
-	%3 = load %Int32, %Int32* @main_v0
+	%3 = load %Int32, %Int32* @v0
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str5 to [0 x i8]*), %Int32 %3)
-	call void @main_f0()
+	call void @f0()
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str6 to [0 x i8]*), %Int32 1)
 	%6 = alloca %Int32, align 4
 	store %Int32 5, %Int32* %6

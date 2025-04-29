@@ -244,6 +244,10 @@ def str_type_record(t, tag=''):
 		s += str_var(field.type, id_str=get_id_str(field))
 		s += ";"
 
+		if field.line_comment:
+			s += '  ' + str_stmt_comment(field.line_comment)
+
+
 	indent_down()
 	s += str_nl_indent(1)
 	s += "}"
@@ -2042,27 +2046,33 @@ def print_insert(x):
 
 
 def print_comment(x):
+	out(str_stmt_comment(x))
+
+def str_stmt_comment(x):
 	if isinstance(x, StmtCommentLine):
-		print_comment_line(x)
+		return print_comment_line(x)
 	elif isinstance(x, StmtCommentBlock):
-		print_comment_block(x)
+		return print_comment_block(x)
+	return None
 
 
-def print_comment_block(x):
-	out("/*%s*/" % x.text)
+def str_comment_block(x):
+	return "/*%s*/" % x.text
 
 
 def print_comment_line(x):
 	lines = x.lines
 	i = 0
 	n = len(lines)
+	s = ''
 	while i < n:
 		line = lines[i]
-		out("//%s" % line['str'])
+		s += "//%s" % line['str']
 		i = i + 1
 		if i < n:
-			nl_indent()
+			s += str_nl_indent()
 
+	return s
 
 
 def print_cdecl_type(x):

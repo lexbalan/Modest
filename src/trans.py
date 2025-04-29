@@ -501,11 +501,9 @@ def do_type_record(x):
 			continue
 
 		if 'comments' in field:
-			f.comments = []
 			for comment in field['comments']:
 				f.comments.append(do_stmt_comment(comment))
 
-		f.line_comment = None
 		if field['line_comment']:
 			f.line_comment = do_stmt_comment(field['line_comment'])
 

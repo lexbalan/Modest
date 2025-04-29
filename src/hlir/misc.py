@@ -40,7 +40,8 @@ class Field(Entity):
 		self.att = []
 		self.nl = 0
 		self.ti = ti
-		self.comments = None
+		self.comments = []
+		self.line_comment = None
 
 
 

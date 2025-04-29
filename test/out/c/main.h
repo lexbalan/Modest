@@ -11,8 +11,8 @@
 
 
 struct Point {
-	int32_t x;
-	int32_t y;
+	int32_t x;  // hi!
+	int32_t y;  // lo?
 };
 typedef struct Point Point;
 

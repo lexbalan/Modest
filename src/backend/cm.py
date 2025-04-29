@@ -10,10 +10,6 @@ import foundation
 
 def get_id_str(x):
 	if hasattr(x, 'id'):
-		if x.id.cm != x.id.str:
-			print("SADKAMWDLKMSLMDLSMLDMSLMDLMSLDMSLDMALMDLKMASLDMASLMKDLKAMSLDMLSD")
-			print("cm=%s" % x.id.cm)
-			print("str=%s" % x.id.str)
 		return x.id.cm
 	return None
 
