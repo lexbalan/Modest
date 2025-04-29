@@ -50,6 +50,7 @@ typedef struct Line Line;
 #define lines  {line0, line1, line2, line3}
 
 struct WrappedArray {
+	//array: [10]Int32
 	int32_t x;
 };
 typedef struct WrappedArray WrappedArray;

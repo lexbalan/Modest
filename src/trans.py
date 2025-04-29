@@ -500,9 +500,9 @@ def do_type_record(x):
 			error("redefinition of '%s' field" % field_id_str, field.ti)
 			continue
 
-		if 'comments' in field:
-			for comment in field['comments']:
-				f.comments.append(do_stmt_comment(comment))
+		#if 'comments' in field:
+		for comment in field['comments']:
+			f.comments.append(do_stmt_comment(comment))
 
 		if field['line_comment']:
 			f.line_comment = do_stmt_comment(field['line_comment'])

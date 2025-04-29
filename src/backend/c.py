@@ -234,9 +234,8 @@ def str_type_record(t, tag=''):
 
 		if field.comments:
 			for comment in field.comments:
-				#s += str_nl_indent(comment['nl'])
-				#print_comment(comment)
-				pass
+				s += str_nl_indent(comment.nl)
+				s += str_stmt_comment(comment)
 
 		s += str_nl_indent(field.nl)
 		prev_nl = field.nl
@@ -2050,9 +2049,9 @@ def print_comment(x):
 
 def str_stmt_comment(x):
 	if isinstance(x, StmtCommentLine):
-		return print_comment_line(x)
+		return str_comment_line(x)
 	elif isinstance(x, StmtCommentBlock):
-		return print_comment_block(x)
+		return str_comment_block(x)
 	return None
 
 
@@ -2060,7 +2059,7 @@ def str_comment_block(x):
 	return "/*%s*/" % x.text
 
 
-def print_comment_line(x):
+def str_comment_line(x):
 	lines = x.lines
 	i = 0
 	n = len(lines)
