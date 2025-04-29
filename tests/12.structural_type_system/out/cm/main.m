@@ -3,9 +3,13 @@ include "stdio"
 
 
 
-type Type1 record {x: Int32}
+type Type1 record {
+	x: Int32
+}
 
-type Type2 record {x: Int32}
+type Type2 record {
+	x: Int32
+}
 
 type Type3 Type1
 

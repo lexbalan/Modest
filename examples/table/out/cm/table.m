@@ -6,7 +6,13 @@ include "string"
 
 public type Row record {}
 
-public type Table record {public header: *[]*Str8, public data: *[][]*Str8, public nRows: Nat32, public nCols: Nat32, public separate: Bool}
+public type Table record {
+	public header: *[]*Str8
+	public data: *[][]*Str8
+	public nRows: Nat32
+	public nCols: Nat32
+	public separate: Bool
+}
 public func print(table: *Table) -> Unit {
 	var i: Nat32
 	var j: Nat32

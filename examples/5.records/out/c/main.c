@@ -9,11 +9,15 @@
 #include "main.h"
 
 
-struct Point {float x; float y;
+struct Point {
+	float x;
+	float y;
 };
 typedef struct Point Point;
 
-struct Line {Point a; Point b;
+struct Line {
+	Point a;
+	Point b;
 };
 typedef struct Line Line;
 
@@ -21,6 +25,7 @@ static Line line = {
 	.a = {.x = 0, .y = 0},
 	.b = {.x = 1.0, .y = 1.0}
 };
+
 static inline float max(float a, float b)
 {
 	if (a > b) {
@@ -28,6 +33,7 @@ static inline float max(float a, float b)
 	}
 	return b;
 }
+
 static inline float min(float a, float b)
 {
 	if (a < b) {

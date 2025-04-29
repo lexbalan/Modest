@@ -15,6 +15,10 @@ const httpHeader = *Str8 ("HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n" 
 
 
 var pageCounter: Nat32
+
+
+
+
 func htons(x: Word16) -> Word16 {
 	return (x << 8) or (x >> 8)
 }

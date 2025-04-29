@@ -184,65 +184,43 @@ class Parser:
 		self.need("{")
 		fields = []
 
-		spaceline_cnt = 0
-
 		while True:
-			#self.skip_tokens_class(['nl'])
-
 			comments = []
 			attributes = []
 
-			spaceline_cnt = 0
+			nl_cnt = 0
 
-			ca = self.parse_comments_attributes(nl_cnt=spaceline_cnt)
-			comments.extend(ca[0])
-			attributes.extend(ca[1])
-			spaceline_cnt = ca[2]
-
-			if self.match(","):
-				pass
-			elif self.match(";"):
-				pass
-			elif self.match("\n"):
-				pass
-
-			# skip spaces & comments before
-			"""while True:
-
-				if self.match('\n'):
-					spaceline_cnt = spaceline_cnt + 1
-					continue
-
+			while True:
 				comm = self.parse_if_comment()
 				if comm != None:
-					comm['nl'] = spaceline_cnt
-					spaceline_cnt = 0
+					comm['nl'] = nl_cnt
+					nl_cnt = 0
 					comments.append(comm)
 				elif self.token_class_is('attribute'):
 					x = self.parse_attribute()
-					x['nl'] = spaceline_cnt
-					spaceline_cnt = 0
+					x['nl'] = nl_cnt
 					attributes.append(x)
+				elif self.match("\n"):
+					nl_cnt += 1
 				elif self.match(","):
 					pass
 				elif self.match(";"):
 					pass
 				else:
-					break"""
+					break
+
 
 			if self.match("}"):
 				break
 
 			f = self.parse_field()
-			#f = self.stmt_var()
-
-			self.need_sep(separators=['\n', ',', ';'], eat=False)
 
 			if f != None:
-				f[0].update({'comments': comments})
-				f[0].update({'atts': attributes})
-				f[0]['nl'] = spaceline_cnt
-				spaceline_cnt = 0
+				f[0].update({
+					'comments': comments,
+					'atts': attributes,
+					'nl': nl_cnt
+				})
 				fields.extend(f)
 
 		return {
@@ -1629,6 +1607,7 @@ class Parser:
 			comm = self.parse_if_comment()
 			if comm != None:
 				comm['nl'] = nl_cnt
+				nl_cnt = 0
 				comments.append(comm)
 			elif self.token_class_is('attribute'):
 				x = self.parse_attribute()
@@ -1638,7 +1617,7 @@ class Parser:
 			#	pass
 			else:
 				break
-			nl_cnt = self.skip_blanks()
+			nl_cnt += self.skip_blanks()
 
 		return (comments, atts, nl_cnt)
 

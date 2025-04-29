@@ -15,7 +15,9 @@
 #define string16Const  (uint16_t *)genericStringConst
 #define string32Const  (uint32_t *)genericStringConst
 
-struct Point {uint32_t x; uint32_t y;
+struct Point {
+	uint32_t x;
+	uint32_t y;
 };
 typedef struct Point Point;
 

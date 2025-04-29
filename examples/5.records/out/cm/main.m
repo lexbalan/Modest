@@ -5,21 +5,32 @@ include "stdio"
 
 
 
-type Point record {x: Float, y: Float}
+type Point record {
+	x: Float
+	y: Float
+}
 
-type Line record {a: Point, b: Point}
+type Line record {
+	a: Point
+	b: Point
+}
 
 
 var line: Line = {
 	a = {x = 0, y = 0}
 	b = {x = 1.0, y = 1.0}
 }
+
+
+
 func max(a: Float, b: Float) -> Float {
 	if a > b {
 		return a
 	}
 	return b
 }
+
+
 func min(a: Float, b: Float) -> Float {
 	if a < b {
 		return a

@@ -226,6 +226,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 
 	return j;
 }
+
 static inline char n_to_dec_sym(uint8_t n)
 {
 	return (char)((uint8_t)'0' + n);

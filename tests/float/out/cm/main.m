@@ -13,7 +13,10 @@ func squareOfCircle(radius: Float64) -> Float64 {
 }
 
 
-type Point2D record {x: Int, y: Int}
+type Point2D record {
+	x: Int
+	y: Int
+}
 
 
 func slope(a: Point2D, b: Point2D) -> Float32 {

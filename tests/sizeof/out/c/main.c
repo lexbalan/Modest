@@ -7,23 +7,45 @@
 #include "main.h"
 
 
-struct Point {uint32_t x; uint32_t y;
+struct Point {
+	uint32_t x;
+	uint32_t y;
 };
 typedef struct Point Point;
 
-struct Mixed1 {char c; int32_t i; double f;
+struct Mixed1 {
+	char c;
+	int32_t i;
+	double f;
 };
 typedef struct Mixed1 Mixed1;
 
-struct Mixed2 {int32_t i; char c; double f; char c2[3]; Mixed1 m;
+struct Mixed2 {
+	int32_t i;
+	char c;
+	double f;
+	char c2[3];
+	Mixed1 m;
 };
 typedef struct Mixed2 Mixed2;
 
-struct Mixed3 {char c; int32_t i; double f; char c2[9];
+struct Mixed3 {
+	char c;
+	int32_t i;
+	double f;
+	char c2[9];
 };
 typedef struct Mixed3 Mixed3;
 
-struct Mixed4 {Mixed2 s; char c; int32_t i; double f; char c2[9]; int16_t i2; Point p[3]; Mixed3 s2;
+struct Mixed4 {
+	Mixed2 s;
+	char c;
+	int32_t i;
+	double f;
+	char c2[9];
+	int16_t i2;
+	Point p[3];
+	Mixed3 s2;
 };
 typedef struct Mixed4 Mixed4;
 static char c;
@@ -33,7 +55,13 @@ static int16_t i2;
 static Point p[3];
 static bool g;
 
-struct X {char c; int32_t i; double f; int16_t i2; Point p[3]; bool g;
+struct X {
+	char c;
+	int32_t i;
+	double f;
+	int16_t i2;
+	Point p[3];
+	bool g;
 };
 typedef struct X X;
 

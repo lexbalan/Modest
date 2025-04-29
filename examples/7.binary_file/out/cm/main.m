@@ -4,7 +4,10 @@ include "stdio"
 
 
 const filename = *Str8 "file.bin"
-type Chunk record {id: [100]Char, data: [1024]Char}
+type Chunk record {
+	id: [100]Char
+	data: [1024]Char
+}
 
 
 func write_example() -> Unit {

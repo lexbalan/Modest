@@ -7,7 +7,12 @@ import "misc/sha256" as sha256
 const inputDataLength = 32
 
 
-type SHA256_TestCase record {input_data: [inputDataLength]Char8, input_data_len: Nat32, expected_result: Hash}
+type SHA256_TestCase record {
+	input_data: [inputDataLength]Char8
+	input_data_len: Nat32
+
+	expected_result: Hash
+}
 
 
 var test0 = SHA256_TestCase {

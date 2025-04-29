@@ -207,6 +207,9 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 
 	return j
 }
+
+
+
 func n_to_dec_sym(n: Nat8) -> Char8 {
 	return Char8 Word8 (Nat8 Word8 Char8 "0" + n)
 }

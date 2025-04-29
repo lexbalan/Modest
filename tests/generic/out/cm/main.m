@@ -161,9 +161,16 @@ func test_generic_array() -> Bool {
 
 
 
-type Point2D record {x: Int32, y: Int32}
+type Point2D record {
+	x: Int32
+	y: Int32
+}
 
-type Point3D record {x: Int32, y: Int32, z: Int32}
+type Point3D record {
+	x: Int32
+	y: Int32
+	z: Int32
+}
 
 
 func test_generic_record() -> Bool {

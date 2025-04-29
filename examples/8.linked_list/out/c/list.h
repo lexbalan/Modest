@@ -13,10 +13,16 @@
 struct list_Node;
 typedef struct list_Node list_Node;
 
-struct list_Node {list_Node *next; list_Node *prev; void *data;
+struct list_Node {
+	list_Node *next;
+	list_Node *prev;
+	void *data;
 };
 
-struct list_List {list_Node *head; list_Node *tail; uint32_t size;
+struct list_List {
+	list_Node *head;
+	list_Node *tail;
+	uint32_t size;
 };
 typedef struct list_List list_List;
 

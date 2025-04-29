@@ -14,7 +14,9 @@
 	(*dst)[i] = (*src)[i]; \
 }
 
-struct Point {int32_t x; int32_t y;
+struct Point {
+	int32_t x;
+	int32_t y;
 };
 typedef struct Point Point;
 

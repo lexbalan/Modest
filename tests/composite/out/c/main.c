@@ -115,7 +115,10 @@ static int(*(*(*a9[5])[10])[2])(int a);
 static int32_t *p2 = &a0;
 static int32_t(**p3)[5] = &p2;
 
-struct RGB24 {uint8_t red; uint8_t green; uint8_t blue;
+struct RGB24 {
+	uint8_t red;
+	uint8_t green;
+	uint8_t blue;
 };
 typedef struct RGB24 RGB24;
 
@@ -124,7 +127,9 @@ static RGB24 rgb0[2] = {
 	{.red = 200, .green = 0, .blue = 0}
 };
 
-struct AnimationPoint {RGB24 color; uint32_t time;
+struct AnimationPoint {
+	RGB24 color;
+	uint32_t time;
 };
 typedef struct AnimationPoint AnimationPoint;
 
@@ -202,7 +207,9 @@ static void(*hiarr[10])(char *x) = {
 	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
 };
 
-struct Wrap {void(*fhi)(char *x); int32_t(*fop)(int32_t a, int32_t b);
+struct Wrap {
+	void(*fhi)(char *x);
+	int32_t(*fop)(int32_t a, int32_t b);
 };
 typedef struct Wrap Wrap;
 

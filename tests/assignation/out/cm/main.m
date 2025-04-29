@@ -1,7 +1,10 @@
 include "ctypes64"
 include "stdio"
 
-type Point record {x: Int32, y: Int32}
+type Point record {
+	x: Int32
+	y: Int32
+}
 
 
 var glb_i0: Int32 = 0

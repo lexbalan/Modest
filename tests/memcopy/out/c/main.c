@@ -7,7 +7,10 @@
 #include "main.h"
 
 
-struct Object {char firstname[32]; char lastname[32]; int32_t age;
+struct Object {
+	char firstname[32];
+	char lastname[32];
+	int32_t age;
 };
 typedef struct Object Object;
 

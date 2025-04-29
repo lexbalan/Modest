@@ -9,7 +9,12 @@ public const maxStates = 16
 
 public type Handler *(x: *FSM) -> Unit
 
-public type StateDesc record {public name: [nameMaxLength]Char8, public entry: Handler, public loop: Handler, public exit: Handler}
+public type StateDesc record {
+	public name: [nameMaxLength]Char8
+	public entry: Handler
+	public loop: Handler
+	public exit: Handler
+}
 
 
 public const substateEntering = 0
@@ -17,7 +22,13 @@ public const substateLoop = 1
 public const substateLeaving = 2
 
 
-public type FSM record {public name: [nameMaxLength]Char8, public state: Nat32, public nexstate: Nat32, public substate: Nat32, public states: [maxStates]StateDesc}
+public type FSM record {
+	public name: [nameMaxLength]Char8
+	public state: Nat32
+	public nexstate: Nat32
+	public substate: Nat32
+	public states: [maxStates]StateDesc
+}
 
 
 public func state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {

@@ -3,7 +3,10 @@ include "stdio"
 
 
 
-type Point record {x: Int32, y: Int32}
+type Point record {
+	x: Int32
+	y: Int32
+}
 
 var globalPoint0: Point = {x = 10, y = 20}
 var globalPoint1: Point = {}

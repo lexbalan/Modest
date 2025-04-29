@@ -8,28 +8,50 @@ public const hashSize = 32
 public type Hash [hashSize]Word8
 
 
-type Context record {data: [64]Word8, datalen: Nat32, bitlen: Nat64, state: [8]Word32}
+type Context record {
+	data: [64]Word8
+	datalen: Nat32
+	bitlen: Nat64
+	state: [8]Word32
+}
+
+
+
 func rotleft(a: Word32, b: Nat32) -> Word32 {
 	return (a << b) or (a >> (32 - b))
 }
+
+
 func rotright(a: Word32, b: Nat32) -> Word32 {
 	return (a >> b) or (a << (32 - b))
 }
+
+
 func ch(x: Word32, y: Word32, z: Word32) -> Word32 {
 	return (x and y) xor (not x and z)
 }
+
+
 func maj(x: Word32, y: Word32, z: Word32) -> Word32 {
 	return (x and y) xor (x and z) xor (y and z)
 }
+
+
 func ep0(x: Word32) -> Word32 {
 	return rotright(x, 2) xor rotright(x, 13) xor rotright(x, 22)
 }
+
+
 func ep1(x: Word32) -> Word32 {
 	return rotright(x, 6) xor rotright(x, 11) xor rotright(x, 25)
 }
+
+
 func sig0(x: Word32) -> Word32 {
 	return rotright(x, 7) xor rotright(x, 18) xor (x >> 3)
 }
+
+
 func sig1(x: Word32) -> Word32 {
 	return rotright(x, 17) xor rotright(x, 19) xor (x >> 10)
 }
