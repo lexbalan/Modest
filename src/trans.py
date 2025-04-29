@@ -1669,7 +1669,7 @@ def do_stmt_value(x):
 		return StmtBad(x)
 
 	if not v.type.is_unit():
-		if not v.type.hasAttribute('unused'):
+		if not v.hasAttribute('unused'):
 			warning("unused result of %s expression" % x['value']['kind'], v.ti)
 
 	return StmtValueExpression(v, ti=x['ti'])
