@@ -185,11 +185,11 @@ class Parser:
 		fields = []
 
 		while True:
+			nl_cnt = 0
 			comments = []
 			attributes = []
 
-			nl_cnt = 0
-
+			# Skip blanks, handle comments & attributes
 			while True:
 				comm = self.parse_if_comment()
 				if comm != None:
@@ -209,7 +209,6 @@ class Parser:
 				else:
 					break
 
-
 			if self.match("}"):
 				break
 
@@ -217,10 +216,19 @@ class Parser:
 
 			if f != None:
 				f[0].update({
-					'comments': comments,
 					'atts': attributes,
-					'nl': nl_cnt
+					'comments': comments,
+					'nl': nl_cnt,
 				})
+
+				if len(f) > 1:
+					for subf in f[1:]:
+						subf.update({
+							'atts': attributes,
+							'comments': [],
+							'nl': 1
+						})
+
 				fields.extend(f)
 
 		return {
