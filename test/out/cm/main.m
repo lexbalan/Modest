@@ -68,7 +68,7 @@ var yy: [10]Int
 
 
 
-public
+
 
 
 func ab_ret(a: Int32, b: Int32) -> record {a: Int32, b: Int32} {

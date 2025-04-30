@@ -4,7 +4,6 @@ include "ctype"
 
 
 
-
 var prompt: [32]Char8 = "# "
 var prompt_len: Nat8 = 2
 
@@ -14,18 +13,29 @@ var tokensBuf: [4 * 1024]Char8
 func showPrompt() -> Unit {
 	write(0, &prompt, SizeT prompt_len)
 }
+
+
+
 func char8ToInt(c: Char8) -> Int {
 	return Int Word32 Word8 c
 }
 
 
+type Tokenizer record {
+	input: *[]Char8
+	position: Nat32
+	tokensBufPos: Nat16
+	tokensPos: Nat16
 
-type Tokenizer record {input: *[]Char8, position: Nat32, tokensBufPos: Nat16, tokensPos: Nat16, tokensBuf: *[]Char8, tokens: *[]*[]Char8}
+	tokensBuf: *[]Char8
+	tokens: *[]*[]Char8
+}
 
 
 func is_blank(c: Char8) -> Bool {
 	return c == " " or c == "\n"
 }
+
 
 func gettok(t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 	var c: Char8 = t.input[t.position]

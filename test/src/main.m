@@ -68,7 +68,7 @@ var yy: @volatile[10]Int
 
 
 @extern("C")
-public func ma () -> Int32
+func ma () -> Int32
 
 
 //type State enum {

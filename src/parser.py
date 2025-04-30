@@ -381,7 +381,6 @@ class Parser:
 		ca = self.parse_comments_attributes()
 		#comments.extend(ca[0])
 		attributes.extend(ca[1])
-		#spaceline_cnt = ca[2]
 
 		t = {'isa': 'ast_type', 'kind': 'unknown', 'ti': ti}
 

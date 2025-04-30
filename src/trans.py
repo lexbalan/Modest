@@ -2545,6 +2545,9 @@ def add_spices_def(x, ast_atts):
 			if key[-4:] == 'id.c':
 				add_att(x, 'id:nodecorate')
 
+		elif kind == 'packed':
+			add_att(x, 'packed')
+
 		elif kind == 'inline':
 			add_att(x, 'static')
 			add_att(x, 'inline')

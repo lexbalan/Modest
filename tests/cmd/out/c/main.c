@@ -26,12 +26,20 @@ static void showPrompt()
 {
 	write(0, (char *)&prompt, (size_t)prompt_len);
 }
+
 static inline int char8ToInt(char c)
 {
 	return (int)(uint32_t)(uint8_t)c;
 }
 
-struct Tokenizer {char *input; uint32_t position; uint16_t tokensBufPos; uint16_t tokensPos; char *tokensBuf; char *(*tokens)[];
+struct Tokenizer {
+	char *input;
+	uint32_t position;
+	uint16_t tokensBufPos;
+	uint16_t tokensPos;
+
+	char *tokensBuf;
+	char *(*tokens)[];
 };
 typedef struct Tokenizer Tokenizer;
 
