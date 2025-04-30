@@ -2527,11 +2527,6 @@ def setObjAttrByPath(x, path, value):
 
 
 
-def add_prop(x, key, val):
-	#print("PROP('%s', '%s')" % (key, val))
-	setObjAttrByPath(x, key, val)
-
-
 def add_spices_def(x, ast_atts):
 	for a in ast_atts:
 		kind = a['kind']
@@ -2540,14 +2535,13 @@ def add_spices_def(x, ast_atts):
 			args = a['args']
 			key = args[0]['str']
 			val = args[1]['str']
-			add_prop(x, key, val)
+			setObjAttrByPath(x, key, val)
 
 			if key[-4:] == 'id.c':
 				add_att(x, 'id:nodecorate')
 
 		elif kind == 'packed':
 			add_att(x, 'packed')
-
 		elif kind == 'inline':
 			add_att(x, 'static')
 			add_att(x, 'inline')
