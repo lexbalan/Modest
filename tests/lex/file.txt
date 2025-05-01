@@ -1,0 +1,11 @@
+
+type Int = Int32
+
+const x = 10
+
+var a: Int
+
+func main () -> Unit {
+	return 0
+}
+
