@@ -103,8 +103,6 @@ func gettok(lex: *Lexer) -> Bool {
 }
 
 
-
-
 public func main() -> Int {
 	printf("text_file example\n")
 

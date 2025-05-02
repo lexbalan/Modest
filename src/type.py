@@ -240,7 +240,7 @@ def select_common_type(a, b):
 				return a
 
 		else:
-			return TypeBad(None)
+			return None
 
 
 	if a.__class__.__name__ != b.__class__.__name__:
@@ -315,6 +315,6 @@ def select_common_type(a, b):
 				return a
 
 	print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))
-	return TypeBad(None)
+	return None
 
 

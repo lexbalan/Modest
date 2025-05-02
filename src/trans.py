@@ -578,8 +578,7 @@ def do_value_bin(x):
 	op = x['kind']
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
-	ti = x['ti']
-	return do_value_bin2(op, l, r, ti)
+	return do_value_bin2(op, l, r, x['ti'])
 
 
 def do_value_bin2(op, l, r, ti):
@@ -597,7 +596,7 @@ def do_value_bin2(op, l, r, ti):
 		# поэтому сложение immediate массивов требует обхода проверок типа ниже
 		if l.type.is_array() and r.type.is_array():
 			return value_array_add(l, r, ti)
-		# у string вообще всегда одинакоывый тип и нет смысла приводить их
+		# у string тип всегда одинаковый и приводить их не нужно
 		elif l.type.is_string() and r.type.is_string():
 			return value_string_add(l, r, ti)
 
@@ -616,7 +615,7 @@ def do_value_bin2(op, l, r, ti):
 	#
 
 	t = htype.select_common_type(l.type, r.type)
-	if t.is_bad():
+	if t == None:
 		error("different types in operation", ti)
 		return ValueBad(ti)
 
@@ -745,8 +744,9 @@ def do_value_deref(x):
 	is_func_ptr = to.is_func()
 	is_free_ptr = to.is_free_pointer()
 	is_open_array_ptr = to.is_open_array()
-	if is_func_ptr or is_free_ptr: #or is_open_array_ptr:
-		error("unsuitable type3", v.ti)
+	is_vla = to.is_vla()
+	if is_func_ptr or is_free_ptr or is_open_array_ptr or is_vla:
+		error("cannot dereference pointer", v.ti)
 
 	return ValueDeref(v, ti=x['ti'])
 
@@ -942,18 +942,6 @@ def do_value_call(x):
 
 		i += 1
 
-
-	"""if fn.id:
-		func_id_str = fn.id.str
-		if func_id_str in ['print', 'scanf', 'print']:
-			expected_pointers = func_id_str == 'scanf'
-			first_arg = x['args'][0]['value']
-			if first_arg['kind'] in ['string', 'string_concat']:
-				specs = get_cspecs(first_arg['str'])
-				extra_args_check(specs, extra_args, expected_pointers)
-			else:
-				error("expected literal string argument", first_arg['ti'])"""
-
 	return ValueCall(ftype.to, fn, args + extra_args, ti=x['ti'])
 
 
@@ -967,14 +955,12 @@ def do_value_index(x):
 	if left.isUndef():
 		return ValueUndef(x['ti'])
 
+	left_type = left.type
+	via_pointer = left_type.is_pointer()
 
-	left_typ = left.type
-
-	via_pointer = left_typ.is_pointer()
-
-	array_typ = left_typ
+	array_typ = left_type
 	if via_pointer:
-		array_typ = left_typ.to
+		array_typ = left_type.to
 
 	if not array_typ.is_array():
 		error("expected array or pointer to array", left.ti)
@@ -1520,13 +1506,13 @@ def do_stmt_if(x):
 
 	_then = do_stmt(x['then'])
 
-	if isinstance(_then, StmtBad):
+	if _then.is_bad():
 		return StmtBad(x)
 
 	_else = None
 	if x['else'] != None:
 		_else = do_stmt(x['else'])
-		if isinstance(_else, StmtBad):
+		if _else.is_bad():
 			return StmtBad(x['else'])
 
 	return StmtIf(cond, _then, _else, ti=x['ti'])
@@ -1545,7 +1531,7 @@ def do_stmt_while(x):
 
 	block = do_stmt(x['stmt'])
 
-	if isinstance(block, StmtBad):
+	if block.is_bad():
 		return StmtBad(x)
 
 	return StmtWhile(cond, block, ti=x['ti'])
@@ -1775,7 +1761,7 @@ def do_stmt_block(x, parent=None):
 	stmts = []
 	for stmt in x['stmts']:
 		s = do_stmt(stmt)
-		if not isinstance(s, StmtBad):
+		if not s.is_bad():
 			s.parent = block
 			block.stmts.append(s)
 
@@ -2138,7 +2124,7 @@ def do_import(x):
 
 	#info("AS %s" % _as, x['ti'])
 
-	abspath = import_abspath(impline, ext='.m')
+	abspath = get_import_abspath(impline, ext='.m')
 
 	log('do_import("%s")' % impline)
 
@@ -2448,7 +2434,7 @@ def def_def(ast, is_include=False):
 			elif kind == 'var':
 				y = def_var(x)
 
-			if y != None and not isinstance(y, StmtBad):
+			if y != None and not y.is_bad():
 				add_spices_def(y, x['atts'])
 				if not is_include:
 					y.parent = cmodule
@@ -2472,7 +2458,7 @@ imp_paths = []
 
 # получает строку импорта (и неявно глобальный контекст)
 # и возвращает полный путь к модулю
-def import_abspath(s, ext='.hm'):
+def get_import_abspath(s, ext='.m'):
 	s = s + ext
 
 	is_local = s[0:2] == './' or s[0:3] == '../'
@@ -2666,8 +2652,6 @@ def extra_args_check(specs, extra_args, expected_pointers):
 
 
 def cp_immediate(to, _from):
-	if _from.asset != None:
-		to.asset = _from.asset
 	if _from.asset != None:
 		to.asset = _from.asset
 

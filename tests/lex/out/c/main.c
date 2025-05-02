@@ -14,6 +14,10 @@
 #include "main.h"
 
 
+/* anonymous records */
+struct __anonymous_struct_2 {int32_t ok;
+};
+
 #define filename  "file.txt"
 
 #define tokenId  1
@@ -33,9 +37,10 @@ typedef struct Lexer Lexer;
 
 static Lexer lex;
 
-static void init(Lexer *object)
+static struct __anonymous_struct_2 init(Lexer *object)
 {
 	object->toklen = 0;
+	return (struct __anonymous_struct_2){.ok = 0};
 }
 
 static bool is_alpha(char c)

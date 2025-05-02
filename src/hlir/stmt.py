@@ -11,11 +11,16 @@ class Stmt(Entity):
 		self.att = []
 		self.nl = nl
 
+	def is_bad(self):
+		return False
 
 
 class StmtBad(Stmt):
 	def __init__(self, ti, nl=1):
 		super().__init__(ti)
+
+	def is_bad(self):
+		return True
 
 
 class StmtComment(Stmt):

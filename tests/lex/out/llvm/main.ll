@@ -443,10 +443,10 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 };
 
 @lex = internal global %Lexer zeroinitializer
-define internal void @init(%Lexer* %object) {
+define internal {%Int32} @init(%Lexer* %object) {
 	%1 = getelementptr %Lexer, %Lexer* %object, %Int32 0, %Int32 5
 	store %Nat16 0, %Nat16* %1
-	ret void
+	ret {%Int32} zeroinitializer
 }
 
 define internal %Bool @is_alpha(%Char8 %c) {
@@ -677,32 +677,32 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
 	%2 = alloca %Lexer, align 512
 	%3 = bitcast %Lexer* %2 to %Lexer*
-	call void @init(%Lexer* %3)
-	%4 = getelementptr %Lexer, %Lexer* %2, %Int32 0, %Int32 0
-	%5 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
-	store %File* %5, %File** %4
+	%4 = call {%Int32} @init(%Lexer* %3)
+	%5 = getelementptr %Lexer, %Lexer* %2, %Int32 0, %Int32 0
+	%6 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
+	store %File* %6, %File** %5
 ; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%6 = bitcast %Lexer* %2 to %Lexer*
-	%7 = call %Bool @gettok(%Lexer* %6)
+	%7 = bitcast %Lexer* %2 to %Lexer*
+	%8 = call %Bool @gettok(%Lexer* %7)
 ; if_0
-	%8 = xor %Bool %7, 1
-	br %Bool %8 , label %then_0, label %endif_0
+	%9 = xor %Bool %8, 1
+	br %Bool %9 , label %then_0, label %endif_0
 then_0:
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str4 to [0 x i8]*))
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str4 to [0 x i8]*))
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%11 = getelementptr %Lexer, %Lexer* %2, %Int32 0, %Int32 4
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), [256 x %Char8]* %11)
+	%12 = getelementptr %Lexer, %Lexer* %2, %Int32 0, %Int32 4
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), [256 x %Char8]* %12)
 	br label %again_1
 break_1:
-	%13 = getelementptr %Lexer, %Lexer* %2, %Int32 0, %Int32 0
-	%14 = load %File*, %File** %13
-	%15 = call %Int @fclose(%File* %14)
+	%14 = getelementptr %Lexer, %Lexer* %2, %Int32 0, %Int32 0
+	%15 = load %File*, %File** %14
+	%16 = call %Int @fclose(%File* %15)
 	ret %Int 0
 }
 
