@@ -1483,8 +1483,8 @@ def do_stmt_var(x):
 	# check if identifier is free (in current block)
 	already = ctx_value_get(var_id.str, shallow=True, as_copy=False)
 	if already != None:
-		error("local id redefinition", x['id'].ti)
-		info("firstly defined here", already['id'].ti)
+		error("local id redefinition", x['id']['ti'])
+		info("firstly defined here", already.id.ti)
 		return StmtBad(x)
 
 	var_value = add_local_var(var_id, t, var_id.ti)

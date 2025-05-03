@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -190,10 +190,9 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 @str1 = private constant [19 x i8] [i8 98, i8 105, i8 103, i8 48, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
 @str2 = private constant [19 x i8] [i8 98, i8 105, i8 103, i8 49, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
-@str3 = private constant [19 x i8] [i8 98, i8 105, i8 103, i8 50, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
-@str4 = private constant [19 x i8] [i8 98, i8 105, i8 103, i8 51, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
-@str5 = private constant [22 x i8] [i8 98, i8 105, i8 103, i8 95, i8 115, i8 117, i8 109, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
-@str6 = private constant [13 x i8] [i8 115, i8 105, i8 103, i8 49, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
+@str3 = private constant [19 x i8] [i8 98, i8 105, i8 103, i8 51, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
+@str4 = private constant [22 x i8] [i8 98, i8 105, i8 103, i8 95, i8 115, i8 117, i8 109, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
+@str5 = private constant [13 x i8] [i8 115, i8 105, i8 103, i8 49, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 ; -- endstrings --
 @big0 = internal global %Word128 1512366075204170947332355369683137040
 define internal %Word64 @high_128(%Word128 %x) {
@@ -211,56 +210,48 @@ define internal %Word64 @low_128(%Word128 %x) {
 
 define %Int @main() {
 	%1 = alloca %Word128, align 16
-	store %Word128 340282366920938463463374607431768211455, %Word128* %1
-	%2 = alloca %Word128, align 16
-	store %Word128 1, %Word128* %2
-	%3 = alloca %Int32, align 4
-	store %Int32 1, %Int32* %3
-	%4 = alloca %Int128, align 16
-	%5 = load %Word128, %Word128* %1
-	%6 = bitcast %Word128 %5 to %Int128
-	%7 = add %Int128 340282366920938463463374607431768211455, %6
-	%8 = load %Int32, %Int32* %3
-	%9 = zext %Int32 %8 to %Int128
-	%10 = add %Int128 %7, %9
-	store %Int128 %10, %Int128* %4
-	%11 = load %Word128, %Word128* @big0
-	%12 = call %Word64 @high_128(%Word128 %11)
-	%13 = load %Word128, %Word128* @big0
-	%14 = call %Word64 @low_128(%Word128 %13)
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*), %Word64 %12, %Word64 %14)
-	%16 = call %Word64 @high_128(%Word128 340282366920938463463374607431768211455)
-	%17 = call %Word64 @low_128(%Word128 340282366920938463463374607431768211455)
-	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*), %Word64 %16, %Word64 %17)
-	%19 = load %Word128, %Word128* %1
-	%20 = call %Word64 @high_128(%Word128 %19)
-	%21 = load %Word128, %Word128* %1
-	%22 = call %Word64 @low_128(%Word128 %21)
-	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str3 to [0 x i8]*), %Word64 %20, %Word64 %22)
-	%24 = load %Word128, %Word128* %2
-	%25 = call %Word64 @high_128(%Word128 %24)
-	%26 = load %Word128, %Word128* %2
-	%27 = call %Word64 @low_128(%Word128 %26)
-	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), %Word64 %25, %Word64 %27)
-	%29 = load %Int128, %Int128* %4
-	%30 = bitcast %Int128 %29 to %Word128
-	%31 = call %Word64 @high_128(%Word128 %30)
-	%32 = load %Int128, %Int128* %4
-	%33 = bitcast %Int128 %32 to %Word128
-	%34 = call %Word64 @low_128(%Word128 %33)
-	%35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Word64 %31, %Word64 %34)
+	store %Word128 1, %Word128* %1
+	%2 = alloca %Nat32, align 4
+	store %Nat32 1, %Nat32* %2
+	%3 = alloca %Nat128, align 16
+	%4 = load %Nat32, %Nat32* %2
+	%5 = zext %Nat32 %4 to %Nat128
+	%6 = add %Nat128 115792089237316195423570985008687907853269984665640564039457584007913129639935, %5
+	%7 = add %Nat128 340282366920938463463374607431768211455, %6
+	store %Nat128 %7, %Nat128* %3
+	%8 = load %Word128, %Word128* @big0
+	%9 = call %Word64 @high_128(%Word128 %8)
+	%10 = load %Word128, %Word128* @big0
+	%11 = call %Word64 @low_128(%Word128 %10)
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*), %Word64 %9, %Word64 %11)
+	%13 = call %Word64 @high_128(%Word128 340282366920938463463374607431768211455)
+	%14 = call %Word64 @low_128(%Word128 340282366920938463463374607431768211455)
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*), %Word64 %13, %Word64 %14)
+	;printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2))
+	%16 = load %Word128, %Word128* %1
+	%17 = call %Word64 @high_128(%Word128 %16)
+	%18 = load %Word128, %Word128* %1
+	%19 = call %Word64 @low_128(%Word128 %18)
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str3 to [0 x i8]*), %Word64 %17, %Word64 %19)
+	%21 = load %Nat128, %Nat128* %3
+	%22 = bitcast %Nat128 %21 to %Word128
+	%23 = call %Word64 @high_128(%Word128 %22)
+	%24 = load %Nat128, %Nat128* %3
+	%25 = bitcast %Nat128 %24 to %Word128
+	%26 = call %Word64 @low_128(%Word128 %25)
+	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str4 to [0 x i8]*), %Word64 %23, %Word64 %26)
 
 
 	; signed big int test
-	%36 = sub i8 0, 1
-	%37 = alloca %Int128, align 16
-	store %Int128 -1, %Int128* %37
-	%38 = load %Int128, %Int128* %37
-	%39 = add %Int128 %38, 1
-	store %Int128 %39, %Int128* %37
-	%40 = load %Int128, %Int128* %37
-	%41 = trunc %Int128 %40 to %Int64
-	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str6 to [0 x i8]*), %Int64 %41)
+	%28 = sub i8 0, 1
+	%29 = alloca %Int128, align 16
+	store %Int128 -1, %Int128* %29
+	%30 = load %Int128, %Int128* %29
+	%31 = add %Int128 %30, 1
+	store %Int128 %31, %Int128* %29
+	%32 = load %Int128, %Int128* %29
+	%33 = trunc %Int128 %32 to %Nat64
+	%34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*), %Nat64 %33)
 	ret %Int 0
 }
 
