@@ -228,6 +228,7 @@ class Parser:
 					for subf in f[1:]:
 						subf.update({
 							'atts': attributes,
+							'line_comment': None,
 							'comments': [],
 							'nl': 1
 						})
