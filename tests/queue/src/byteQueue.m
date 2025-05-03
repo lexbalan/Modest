@@ -1,4 +1,4 @@
-// byteQueue128
+// byteQueue
 // queue implementation example
 
 import "queue"
