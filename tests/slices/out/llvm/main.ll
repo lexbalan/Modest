@@ -111,34 +111,34 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -166,11 +166,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -213,6 +213,7 @@ declare void @perror(%ConstCharStr* %str)
 define internal void @array_print([0 x %Int32]* %pa, %Int32 %len) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+; while_1
 	br label %again_1
 again_1:
 	%2 = load %Int32, %Int32* %1
@@ -248,17 +249,18 @@ define %Int @main() {
 	%9 = insertvalue [10 x %Int32] %8, %Int32 7, 7
 	%10 = insertvalue [10 x %Int32] %9, %Int32 8, 8
 	%11 = insertvalue [10 x %Int32] %10, %Int32 9, 9
-	%12 = zext i8 10 to %Int32
+	%12 = zext i8 10 to %Nat32
 	store [10 x %Int32] %11, [10 x %Int32]* %2
-	%13 = zext i8 1 to %Int32
-	%14 = getelementptr [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int32 %13
+	%13 = zext i8 1 to %Nat32
+	%14 = getelementptr [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Nat32 %13
 	%15 = bitcast %Int32* %14 to [1 x %Int32]*
 	%16 = load [1 x %Int32], [1 x %Int32]* %15
 	%17 = alloca [1 x %Int32]
-	%18 = zext i8 1 to %Int32
+	%18 = zext i8 1 to %Nat32
 	store [1 x %Int32] %16, [1 x %Int32]* %17
 	%19 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %19
+; while_1
 	br label %again_1
 again_1:
 	%20 = load %Int32, %Int32* %19
@@ -280,15 +282,16 @@ break_1:
 	;
 	; by ptr
 	;
-	%30 = zext i8 5 to %Int32
-	%31 = getelementptr [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int32 %30
+	%30 = zext i8 5 to %Nat32
+	%31 = getelementptr [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Nat32 %30
 ;
 	%32 = bitcast %Int32* %31 to [3 x %Int32]*
 	%33 = load [3 x %Int32], [3 x %Int32]* %32
 	%34 = alloca [3 x %Int32]
-	%35 = zext i8 3 to %Int32
+	%35 = zext i8 3 to %Nat32
 	store [3 x %Int32] %33, [3 x %Int32]* %34
 	store %Int32 0, %Int32* %19
+; while_2
 	br label %again_2
 again_2:
 	%36 = load %Int32, %Int32* %19
@@ -308,22 +311,23 @@ break_2:
 	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str6 to [0 x i8]*))
 	%46 = alloca [1 x %Int32], align 1
 	%47 = load [1 x %Int32], [1 x %Int32]* %17
-	%48 = zext i8 1 to %Int32
+	%48 = zext i8 1 to %Nat32
 	store [1 x %Int32] %47, [1 x %Int32]* %46
 	%49 = alloca [3 x %Int32], align 1
 	%50 = load [3 x %Int32], [3 x %Int32]* %34
-	%51 = zext i8 3 to %Int32
+	%51 = zext i8 3 to %Nat32
 	store [3 x %Int32] %50, [3 x %Int32]* %49
-	%52 = zext i8 2 to %Int32
-	%53 = getelementptr [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int32 %52
+	%52 = zext i8 2 to %Nat32
+	%53 = getelementptr [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Nat32 %52
 	%54 = bitcast %Int32* %53 to [4 x %Int32]*
 	%55 = insertvalue [4 x %Int32] zeroinitializer, %Int32 10, 0
 	%56 = insertvalue [4 x %Int32] %55, %Int32 20, 1
 	%57 = insertvalue [4 x %Int32] %56, %Int32 30, 2
 	%58 = insertvalue [4 x %Int32] %57, %Int32 40, 3
-	%59 = zext i8 4 to %Int32
+	%59 = zext i8 4 to %Nat32
 	store [4 x %Int32] %58, [4 x %Int32]* %54
 	store %Int32 0, %Int32* %19
+; while_3
 	br label %again_3
 again_3:
 	%60 = load %Int32, %Int32* %19
@@ -352,16 +356,17 @@ break_3:
 	%78 = insertvalue [10 x %Int32] %77, %Int32 80, 7
 	%79 = insertvalue [10 x %Int32] %78, %Int32 90, 8
 	%80 = insertvalue [10 x %Int32] %79, %Int32 100, 9
-	%81 = zext i8 10 to %Int32
+	%81 = zext i8 10 to %Nat32
 	store [10 x %Int32] %80, [10 x %Int32]* %70
-	%82 = zext i8 2 to %Int32
-	%83 = getelementptr [10 x %Int32], [10 x %Int32]* %70, %Int32 0, %Int32 %82
+	%82 = zext i8 2 to %Nat32
+	%83 = getelementptr [10 x %Int32], [10 x %Int32]* %70, %Int32 0, %Nat32 %82
 	%84 = bitcast %Int32* %83 to [3 x %Int32]*
-	%85 = zext i8 3 to %Int32
-	%86 = mul %Int32 %85, 4
+	%85 = zext i8 3 to %Nat32
+	%86 = mul %Nat32 %85, 4
 	%87 = bitcast [3 x %Int32]* %84 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %87, i8 0, %Int32 %86, i1 0)
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %87, i8 0, %Nat32 %86, i1 0)
 	store %Int32 0, %Int32* %19
+; while_4
 	br label %again_4
 again_4:
 	%88 = load %Int32, %Int32* %19
@@ -372,8 +377,8 @@ body_4:
 	%91 = load %Int32, %Int32* %19
 	%92 = getelementptr [10 x %Int32], [10 x %Int32]* %70, %Int32 0, %Int32 %91
 	%93 = load %Int32, %Int32* %92
-	%94 = bitcast %Int32 %93 to %Int32
-	%95 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str9 to [0 x i8]*), %Int32 %90, %Int32 %94)
+	%94 = bitcast %Int32 %93 to %Nat32
+	%95 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str9 to [0 x i8]*), %Int32 %90, %Nat32 %94)
 	%96 = load %Int32, %Int32* %19
 	%97 = add %Int32 %96, 1
 	store %Int32 %97, %Int32* %19
@@ -381,8 +386,8 @@ body_4:
 break_4:
 	%98 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str10 to [0 x i8]*))
 	%99 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str11 to [0 x i8]*))
-	%100 = zext i8 2 to %Int32
-	%101 = getelementptr [10 x %Int32], [10 x %Int32]* %70, %Int32 0, %Int32 %100
+	%100 = zext i8 2 to %Nat32
+	%101 = getelementptr [10 x %Int32], [10 x %Int32]* %70, %Int32 0, %Nat32 %100
 	%102 = bitcast %Int32* %101 to [6 x %Int32]*
 	%103 = bitcast [6 x %Int32]* %102 to [0 x %Int32]*
 	call void @array_print([0 x %Int32]* %103, %Int32 6)
@@ -426,7 +431,7 @@ break_4:
 	%129 = insertvalue [10 x %Int32] %128, %Int32 7, 7
 	%130 = insertvalue [10 x %Int32] %129, %Int32 8, 8
 	%131 = insertvalue [10 x %Int32] %130, %Int32 9, 9
-	%132 = zext i8 10 to %Int32
+	%132 = zext i8 10 to %Nat32
 	store [10 x %Int32] %131, [10 x %Int32]* %122
 	%133 = alloca %Int32, align 4
 	store %Int32 4, %Int32* %133
@@ -451,7 +456,7 @@ break_4:
 	%149 = insertvalue [5 x %Int32] %148, %Int32 30, 2
 	%150 = insertvalue [5 x %Int32] %149, %Int32 40, 3
 	%151 = insertvalue [5 x %Int32] %150, %Int32 50, 4
-	%152 = zext i8 5 to %Int32
+	%152 = zext i8 5 to %Nat32
 	store [5 x %Int32] %151, [5 x %Int32]* %146
 	%153 = alloca [10 x %Int32], align 1
 	%154 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
@@ -463,19 +468,19 @@ break_4:
 	%160 = insertvalue [10 x %Int32] %159, %Int32 7, 7
 	%161 = insertvalue [10 x %Int32] %160, %Int32 8, 8
 	%162 = insertvalue [10 x %Int32] %161, %Int32 9, 9
-	%163 = zext i8 10 to %Int32
+	%163 = zext i8 10 to %Nat32
 	store [10 x %Int32] %162, [10 x %Int32]* %153
 
 	; test with let
-	%164 = zext i8 3 to %Int32
-	%165 = getelementptr [10 x %Int32], [10 x %Int32]* %153, %Int32 0, %Int32 %164
+	%164 = zext i8 3 to %Nat32
+	%165 = getelementptr [10 x %Int32], [10 x %Int32]* %153, %Int32 0, %Nat32 %164
 	%166 = bitcast %Int32* %165 to [5 x %Int32]*
 	%167 = insertvalue [5 x %Int32] zeroinitializer, %Int32 11, 0
 	%168 = insertvalue [5 x %Int32] %167, %Int32 22, 1
 	%169 = insertvalue [5 x %Int32] %168, %Int32 33, 2
 	%170 = insertvalue [5 x %Int32] %169, %Int32 44, 3
 	%171 = insertvalue [5 x %Int32] %170, %Int32 55, 4
-	%172 = zext i8 5 to %Int32
+	%172 = zext i8 5 to %Nat32
 	store [5 x %Int32] %171, [5 x %Int32]* %166
 	%173 = bitcast [10 x %Int32]* %153 to [0 x %Int32]*
 	call void @array_print([0 x %Int32]* %173, %Int32 10)
@@ -490,12 +495,12 @@ break_4:
 	%182 = insertvalue [10 x %Int32] %181, %Int32 70, 7
 	%183 = insertvalue [10 x %Int32] %182, %Int32 80, 8
 	%184 = insertvalue [10 x %Int32] %183, %Int32 90, 9
-	%185 = zext i8 10 to %Int32
+	%185 = zext i8 10 to %Nat32
 	store [10 x %Int32] %184, [10 x %Int32]* %175
-	%186 = alloca %Int8, align 1
-	store %Int8 111, %Int8* %186
-	%187 = alloca %Int8, align 1
-	store %Int8 222, %Int8* %187
+	%186 = alloca %Nat8, align 1
+	store %Nat8 111, %Nat8* %186
+	%187 = alloca %Nat8, align 1
+	store %Nat8 222, %Nat8* %187
 
 	; test with var
 	%188 = alloca %Int32, align 4
@@ -505,19 +510,19 @@ break_4:
 	%190 = load %Int32, %Int32* %188
 	%191 = getelementptr [10 x %Int32], [10 x %Int32]* %175, %Int32 0, %Int32 %190
 	%192 = bitcast %Int32* %191 to [0 x %Int32]*
-	%193 = load %Int8, %Int8* %186
-	%194 = sext %Int8 %193 to %Int32
-	%195 = load %Int8, %Int8* %187
-	%196 = sext %Int8 %195 to %Int32
-	%197 = load %Int8, %Int8* %186
-	%198 = sext %Int8 %197 to %Int32
+	%193 = load %Nat8, %Nat8* %186
+	%194 = sext %Nat8 %193 to %Int32
+	%195 = load %Nat8, %Nat8* %187
+	%196 = sext %Nat8 %195 to %Int32
+	%197 = load %Nat8, %Nat8* %186
+	%198 = sext %Nat8 %197 to %Int32
 	%199 = insertvalue [2 x %Int32] zeroinitializer, %Int32 %198, 0
-	%200 = load %Int8, %Int8* %187
-	%201 = sext %Int8 %200 to %Int32
+	%200 = load %Nat8, %Nat8* %187
+	%201 = sext %Nat8 %200 to %Int32
 	%202 = insertvalue [2 x %Int32] %199, %Int32 %201, 1
 ; -- cons_composite_from_composite_by_value --
 	%203 = alloca [2 x %Int32]
-	%204 = zext i8 2 to %Int32
+	%204 = zext i8 2 to %Nat32
 	store [2 x %Int32] %202, [2 x %Int32]* %203
 	%205 = bitcast [2 x %Int32]* %203 to [0 x %Int32]*
 ; -- end cons_composite_from_composite_by_value --

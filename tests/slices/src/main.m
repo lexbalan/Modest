@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-func array_print(pa: *[]Int32, len: Int32) {
+func array_print (pa: *[]Int32, len: Int32) -> Unit {
 	var i = 0
 	while i < len {
 		printf("a[%d] = %d\n", i, pa[i])
@@ -13,7 +13,7 @@ func array_print(pa: *[]Int32, len: Int32) {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("test slices\n")
 
 	//
