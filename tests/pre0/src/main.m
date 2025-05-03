@@ -12,7 +12,6 @@ type Point2 record {
 
 //var p: lib.XXX
 
-@nodecorate
 public public func main() -> lib.Int {
 	init()
 

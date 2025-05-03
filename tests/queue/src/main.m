@@ -49,7 +49,7 @@ func fetch(n: Int) -> Unit {
 const qsize = 10
 var qbuf: [qsize]Word8
 
-@nodecorate
+
 public func main() -> Int {
 	bq.init(&bq0, &qbuf, qsize)
 

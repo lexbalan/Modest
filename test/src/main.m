@@ -3,19 +3,16 @@ include "libc/stdlib"
 include "libc/string"
 
 
-@nodecorate
+
 public type Point record {
 	x: Int32  // hi!
 	y: Int32  // lo?
 }
 
-@nodecorate
 public const cq = "Hi!"
 
-@nodecorate
 public var v0: Int32
 
-@nodecorate
 public func f0() -> Unit {
 
 }
@@ -51,7 +48,7 @@ func mcmp (a: Ptr, b: Ptr, size: Nat32) -> Bool {
 	return *ax == *bx
 }
 
-@nodecorate
+
 public func sbuf (p: Ptr, size: Nat32) -> Unit {
 	let px = unsafe *[size]Word8 p
 	var buf = *px

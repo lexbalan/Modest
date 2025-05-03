@@ -2,7 +2,6 @@
 $pragma c_include "stdio.h"
 
 
-@c_no_print
-@nodecorate
+@extern("C")
 public func printf(s: *Str8, ...)
 
