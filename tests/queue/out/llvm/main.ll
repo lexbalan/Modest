@@ -265,10 +265,9 @@ declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 1
-; ?? bq ??
-; ?? queue ??
-; from import
+; -- 2
+
+; from import "queue"
 %queue_Queue = type {
 	%Nat32,
 	%Nat32,
@@ -283,8 +282,10 @@ declare %Bool @queue_isEmpty(%queue_Queue* %q)
 declare %Bool @queue_isFull(%queue_Queue* %q)
 declare %Nat32 @queue_getPutPosition(%queue_Queue* %q)
 declare %Nat32 @queue_getGetPosition(%queue_Queue* %q)
-; end from import
-; from import
+
+; end from import "queue"
+
+; from import "bq"
 %byteQueue_QueueWord8 = type {
 	%queue_Queue,
 	[0 x %Word8]*
@@ -297,7 +298,24 @@ declare %Bool @byteQueue_isFull(%byteQueue_QueueWord8* %q)
 declare %Bool @byteQueue_isEmpty(%byteQueue_QueueWord8* %q)
 declare %Bool @byteQueue_put(%byteQueue_QueueWord8* %q, %Word8 %b)
 declare %Bool @byteQueue_get(%byteQueue_QueueWord8* %q, %Word8* %b)
-; end from import
+
+; end from import "bq"
+
+; from import "br"
+%byteRing_RingWord8 = type {
+	%queue_Queue,
+	[0 x %Word8]*
+};
+
+declare void @byteRing_init(%byteRing_RingWord8* %q, [0 x %Word8]* %buf, %Nat32 %capacity)
+declare %Nat32 @byteRing_capacity(%byteRing_RingWord8* %q)
+declare %Nat32 @byteRing_size(%byteRing_RingWord8* %q)
+declare %Bool @byteRing_isFull(%byteRing_RingWord8* %q)
+declare %Bool @byteRing_isEmpty(%byteRing_RingWord8* %q)
+declare %Bool @byteRing_put(%byteRing_RingWord8* %q, %Word8 %b)
+declare %Bool @byteRing_get(%byteRing_RingWord8* %q, %Word8* %b)
+
+; end from import "br"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [17 x i8] [i8 60, i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 102, i8 117, i8 108, i8 108, i8 62, i8 10, i8 0]
@@ -306,6 +324,7 @@ declare %Bool @byteQueue_get(%byteQueue_QueueWord8* %q, %Word8* %b)
 @str4 = private constant [13 x i8] [i8 98, i8 113, i8 46, i8 103, i8 101, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 @bq0 = internal global %byteQueue_QueueWord8 zeroinitializer
+@br0 = internal global %byteRing_RingWord8 zeroinitializer
 @ii = internal global %Int32 zeroinitializer
 define internal void @padd(%Int %n) {
 	%1 = alloca %Int32, align 4

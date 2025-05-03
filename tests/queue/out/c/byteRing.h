@@ -7,8 +7,6 @@
 
 #include "queue.h"
 
-#define byteRing_cap  16
-
 struct byteRing_RingWord8 {
 	queue_Queue queue;
 	uint8_t *data;

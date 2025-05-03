@@ -5,11 +5,11 @@ include "libc/math"
 include "libc/stdio"
 
 import "./byteQueue" as bq
-//import "./byteRing" as br
+import "./byteRing" as br
 
 
 var bq0: bq.QueueWord8
-//var br0: br.RingWord8
+var br0: br.RingWord8
 
 
 var ii: Int32

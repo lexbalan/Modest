@@ -1,51 +1,54 @@
+import "./byteQueue"
+import "./byteRing"
+include "ctypes64"
+include "math"
+include "stdio"
 
-@c_include "math.h"
-@c_include "stdio.h"
-import "./byteQueue128" as bq
-//import "./byteRing16" as br
+import "./byteQueue" as bq
+import "./byteRing" as br
 
 
-var bq0: byteQueue128.Queue128Word8
-//var br0: br.Word8Ring16
+var bq0: QueueWord8
+var br0: RingWord8
 
 
 var ii: Int32
-func padd(n: ctypes64.Int) -> Unit {
+func padd(n: Int) -> Unit {
 	var i: Int32 = 0
 	while i < n {
-		if byteQueue128.isFull(&bq0) {
-			stdio.printf("queue is full\n")
+		if bq.isFull(&bq0) {
+			printf("<queue is full>\n")
 			break
 		}
 
-		stdio.printf("bq.put(%d)\n", ii)
-		byteQueue128.put(&bq0, Word8 ii)
+		printf("bq.put(%d)\n", ii)
+		bq.put(&bq0, Word8 ii)
 		i = i + 1
 		ii = ii + 1
 	}
 }
-
-
-// выгребаем все и печатаем в консоль
-func fetch(n: ctypes64.Int) -> Unit {
+func fetch(n: Int) -> Unit {
 	var i: Int32 = 0
 	while i < n {
-		if byteQueue128.isEmpty(&bq0) {
-			stdio.printf("queue is empty\n")
+		if bq.isEmpty(&bq0) {
+			printf("<queue is empty>\n")
 			break
 		}
 
 		var x: Word8
-		let res = byteQueue128.get(&bq0, &x)
-		stdio.printf("bq.get = %d\n", ctypes64.Int x)
+		let res: Bool = bq.get(&bq0, &x)
+		printf("bq.get = %d\n", Int x)
 		i = i + 1
 	}
 }
 
 
+const qsize = 10
+var qbuf: [qsize]Word8
 
-public func main() -> ctypes64.Int {
-	byteQueue128.init(&bq0)
+
+public func main() -> Int {
+	bq.init(&bq0, &qbuf, qsize)
 
 	padd(3)
 	fetch(7)

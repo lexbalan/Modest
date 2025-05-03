@@ -2663,14 +2663,22 @@ def print_included(m):
 				#	print_decl_const(x)
 
 
+
+already_imported = []
+
 def print_imports(imports):
 	for imp_id in imports:
-		out("\n; ?? %s ??" % imp_id)
 		imp = imports[imp_id]
+
+		# Защита от повторной распечатки импорта
+		if imp.name in already_imported:
+			continue
+		already_imported.append(imp.name)
+
 		print_included(imp)
 		print_imports(imp.module.imports)
 
-		out("\n; from import")
+		out("\n\n; from import \"%s\"" % imp.name)
 
 		for d in imp.module.defs:
 			if is_private(d):
@@ -2681,9 +2689,8 @@ def print_imports(imports):
 			elif isinstance(d, StmtDefFunc):
 				print_decl_func(d)
 
-		out("\n; end from import")
+		out("\n\n; end from import \"%s\"" % imp.name)
 
-		#een(imp.defs, decl_only=True)
 
 
 separatorLine = "\n; " + '-' * 77

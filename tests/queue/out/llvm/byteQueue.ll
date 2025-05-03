@@ -109,7 +109,6 @@ break_2:
 ; -- end print includes --
 ; -- print imports 'byteQueue' --
 ; -- 1
-; ?? queue ??
 ; from included ctypes64
 %Str = type %Str8;
 %Char = type %Char8;
@@ -187,7 +186,8 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; from import
+
+; from import "queue"
 %queue_Queue = type {
 	%Nat32,
 	%Nat32,
@@ -202,7 +202,8 @@ declare %Bool @queue_isEmpty(%queue_Queue* %q)
 declare %Bool @queue_isFull(%queue_Queue* %q)
 declare %Nat32 @queue_getPutPosition(%queue_Queue* %q)
 declare %Nat32 @queue_getGetPosition(%queue_Queue* %q)
-; end from import
+
+; end from import "queue"
 ; -- end print imports 'byteQueue' --
 ; -- strings --
 ; -- endstrings --
