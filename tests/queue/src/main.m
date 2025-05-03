@@ -1,23 +1,23 @@
-// tests/pre0/src/main.m
+// tests/queue/src/main.m
 
 include "libc/ctypes64"
 include "libc/math"
 include "libc/stdio"
 
-import "./byteQueue128" as bq
-//import "./byteRing16" as br
+import "./byteQueue" as bq
+//import "./byteRing" as br
 
 
-var bq0: bq.Queue128Word8
-//var br0: br.Word8Ring16
+var bq0: bq.QueueWord8
+//var br0: br.RingWord8
 
 
 var ii: Int32
-func padd(n: Int) {
+func padd (n: Int) -> Unit {
 	var i = 0
 	while i < n {
 		if bq.isFull(&bq0) {
-			printf("queue is full\n")
+			printf("<queue is full>\n")
 			break
 		}
 
@@ -34,7 +34,7 @@ func fetch(n: Int) -> Unit {
 	var i = 0
 	while i < n {
 		if bq.isEmpty(&bq0) {
-			printf("queue is empty\n")
+			printf("<queue is empty>\n")
 			break
 		}
 
@@ -46,9 +46,12 @@ func fetch(n: Int) -> Unit {
 }
 
 
+const qsize = 10
+var qbuf: [qsize]Word8
+
 @nodecorate
 public func main() -> Int {
-	bq.init(&bq0)
+	bq.init(&bq0, &qbuf, qsize)
 
 	padd(3)
 	fetch(7)

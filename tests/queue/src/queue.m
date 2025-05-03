@@ -12,39 +12,33 @@ public type Queue record {
 }
 
 
-@inlinehint
-public func init(q: *Queue, capacity: Nat32) {
+public func init (q: *Queue, capacity: Nat32) -> Unit {
 	*q = {}
 	q.capacity = capacity
 }
 
 
-@inlinehint
 public func capacity(q: *Queue) -> Nat32 {
 	return q.capacity
 }
 
 
-@inlinehint
 public func size(q: *Queue) -> Nat32 {
 	return q.size
 }
 
 
-@inlinehint
 public func isEmpty(q: *Queue) -> Bool {
 	return q.size == 0
 }
 
 
-@inlinehint
 public func isFull(q: *Queue) -> Bool {
 	return q.size == q.capacity
 }
 
 
 // you must check isFull(queue) before call 'getPutPosition'
-@inlinehint
 public func getPutPosition(q: *Queue) -> Nat32 {
 	let pos = q.p
 	q.p = next(q.capacity, q.p)
@@ -56,7 +50,6 @@ public func getPutPosition(q: *Queue) -> Nat32 {
 
 
 // you must check isEmpty(queue) before call 'getGetPosition'
-@inlinehint
 public func getGetPosition(q: *Queue) -> Nat32 {
 	let pos = q.g
 	q.g = next(q.capacity, q.g)
@@ -67,7 +60,6 @@ public func getGetPosition(q: *Queue) -> Nat32 {
 }
 
 
-@inline
 func next(capacity: Nat32, x: Nat32) -> Nat32 {
 	if x < capacity - 1 {
 		return x + 1

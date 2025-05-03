@@ -7,42 +7,44 @@ import "queue"
 public const cap = 16
 
 
-public type Queue128Word8 record {
+public type RingWord8 record {
 	queue: queue.Queue
-	data: [cap]Word8
+	data: *[]Word8
 }
 
 
-public func init(q: *Queue128Word8) -> Unit {
-	queue.init(&q.queue, capacity=cap)
-	q.data = []
+public func init(q: *RingWord8, buf: *[]Word8, capacity: Nat32) -> Unit {
+	queue.init(&q.queue, capacity=capacity)
+	q.data = buf
 }
 
 
-public func capacity(q: *Queue128Word8) -> Nat32 {
+public func capacity(q: *RingWord8) -> Nat32 {
 	return queue.capacity(&q.queue)
 }
 
 
-public func size(q: *Queue128Word8) -> Nat32 {
+public func size(q: *RingWord8) -> Nat32 {
 	return queue.size(&q.queue)
 }
 
 
-public func isFull(q: *Queue128Word8) -> Bool {
+public func isFull(q: *RingWord8) -> Bool {
 	return queue.isFull(&q.queue)
 }
 
 
-public func isEmpty(q: *Queue128Word8) -> Bool {
+public func isEmpty(q: *RingWord8) -> Bool {
 	return queue.isEmpty(&q.queue)
 }
 
 
-public func put(q: *Queue128Word8, b: Word8) -> Bool {
+public func put(q: *RingWord8, b: Word8) -> Bool {
+	/*
 	if queue.isFull(&q.queue) {
 		return false
 	}
+	*/
 
 	let p = queue.getPutPosition(&q.queue)
 	q.data[p] = b
@@ -51,7 +53,7 @@ public func put(q: *Queue128Word8, b: Word8) -> Bool {
 }
 
 
-public func get(q: *Queue128Word8, b: *Word8) -> Bool {
+public func get(q: *RingWord8, b: *Word8) -> Bool {
 	if queue.isEmpty(&q.queue) {
 		return false
 	}
@@ -61,4 +63,5 @@ public func get(q: *Queue128Word8, b: *Word8) -> Bool {
 
 	return true
 }
+
 
