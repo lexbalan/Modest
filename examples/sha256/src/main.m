@@ -16,7 +16,7 @@ type SHA256_TestCase record {
 	input_data_len: Nat32
 
 	expected_result: sha256.Hash
-	//expected_result: Word256
+	//expected_result2: Word256
 }
 
 
@@ -30,7 +30,7 @@ var test0 = SHA256_TestCase {
 		0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
 	]
 
-	//expected_result = 0xBA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD
+	//expected_result2 = 0xBA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD
 }
 
 var test1 = SHA256_TestCase {
@@ -43,7 +43,7 @@ var test1 = SHA256_TestCase {
 		0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
 	]
 
-	//expected_result = 0x7F83B1657FF1FC53B92DC18148A1D65DFC2D4B1FA3D677284ADDD200126D9069
+	//expected_result2 = 0x7F83B1657FF1FC53B92DC18148A1D65DFC2D4B1FA3D677284ADDD200126D9069
 }
 
 
