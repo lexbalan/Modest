@@ -186,7 +186,6 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 1
-; ?? sha256 ??
 ; from included string
 declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
 declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
@@ -200,10 +199,12 @@ declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
-; from import
+
+; from import "sha256"
 %sha256_Hash = type [32 x %Word8];
 declare void @sha256_hash([0 x %Word8]* %msg, %Nat32 %msgLen, %sha256_Hash* %outHash)
-; end from import
+
+; end from import "sha256"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]

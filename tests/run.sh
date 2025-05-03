@@ -36,6 +36,6 @@ cd print && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && c
 cd 13.* && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd sizeof && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd memcopy && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
-#cd queue && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
+cd queue && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
 #cd 24.* && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 #cd slices && echo "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \

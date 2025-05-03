@@ -103,46 +103,45 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: byteRing16
+; MODULE: queueWord8
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'byteRing16' --
+; -- print imports 'queueWord8' --
 ; -- 1
-; ?? queue ??
 ; from included ctypes64
 %Str = type %Str8;
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type %Nat8;
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -170,11 +169,11 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -187,93 +186,109 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; from import
+
+; from import "queue"
 %queue_Queue = type {
-	%Int32,
-	%Int32,
-	%Int32,
-	%Int32
+	%Nat32,
+	%Nat32,
+	%Nat32,
+	%Nat32
 };
 
-declare void @queue_init(%queue_Queue* %q, %Int32 %capacity)
-declare %Int32 @queue_capacity(%queue_Queue* %q)
-declare %Int32 @queue_size(%queue_Queue* %q)
+declare void @queue_init(%queue_Queue* %q, %Nat32 %capacity)
+declare %Nat32 @queue_capacity(%queue_Queue* %q)
+declare %Nat32 @queue_size(%queue_Queue* %q)
 declare %Bool @queue_isEmpty(%queue_Queue* %q)
 declare %Bool @queue_isFull(%queue_Queue* %q)
-declare %Int32 @queue_getPutPosition(%queue_Queue* %q)
-declare %Int32 @queue_getGetPosition(%queue_Queue* %q)
-; end from import
-; -- end print imports 'byteRing16' --
+declare %Nat32 @queue_getPutPosition(%queue_Queue* %q)
+declare %Nat32 @queue_getGetPosition(%queue_Queue* %q)
+
+; end from import "queue"
+; -- end print imports 'queueWord8' --
 ; -- strings --
 ; -- endstrings --
-%byteRing16_Word8Ring16 = type {
+%queueWord8_QueueWord8 = type {
 	%queue_Queue,
-	[16 x %Word8]
+	[0 x %Word8]*
 };
 
-define void @byteRing16_init(%byteRing16_Word8Ring16* %q) {
-	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
-	call void @queue_init(%queue_Queue* %1, %Int32 16)
-	%2 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 1
-	%3 = zext i8 16 to %Int32
-	%4 = mul %Int32 %3, 1
-	%5 = bitcast [16 x %Word8]* %2 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %5, i8 0, %Int32 %4, i1 0)
+define void @queueWord8_init(%queueWord8_QueueWord8* %q, [0 x %Word8]* %buf, %Nat32 %capacity) {
+	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	call void @queue_init(%queue_Queue* %2, %Nat32 %capacity)
+	%3 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
+	store [0 x %Word8]* %buf, [0 x %Word8]** %3
 	ret void
 }
 
-define %Int32 @byteRing16_capacity(%byteRing16_Word8Ring16* %q) {
-	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
-	%2 = call %Int32 @queue_capacity(%queue_Queue* %1)
-	ret %Int32 %2
+define %Nat32 @queueWord8_capacity(%queueWord8_QueueWord8* %q) {
+	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call %Nat32 @queue_capacity(%queue_Queue* %2)
+	ret %Nat32 %3
 }
 
-define %Int32 @byteRing16_size(%byteRing16_Word8Ring16* %q) {
-	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
-	%2 = call %Int32 @queue_size(%queue_Queue* %1)
-	ret %Int32 %2
+define %Nat32 @queueWord8_size(%queueWord8_QueueWord8* %q) {
+	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call %Nat32 @queue_size(%queue_Queue* %2)
+	ret %Nat32 %3
 }
 
-define %Bool @byteRing16_isFull(%byteRing16_Word8Ring16* %q) {
-	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
-	%2 = call %Bool @queue_isFull(%queue_Queue* %1)
-	ret %Bool %2
+define %Bool @queueWord8_isFull(%queueWord8_QueueWord8* %q) {
+	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call %Bool @queue_isFull(%queue_Queue* %2)
+	ret %Bool %3
 }
 
-define %Bool @byteRing16_isEmpty(%byteRing16_Word8Ring16* %q) {
-	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
-	%2 = call %Bool @queue_isEmpty(%queue_Queue* %1)
-	ret %Bool %2
+define %Bool @queueWord8_isEmpty(%queueWord8_QueueWord8* %q) {
+	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call %Bool @queue_isEmpty(%queue_Queue* %2)
+	ret %Bool %3
 }
 
-define %Bool @byteRing16_put(%byteRing16_Word8Ring16* %q, %Word8 %b) {
-;if queue.isFull(&q.queue) {
-;		return false
-;	}
-	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
-	%2 = call %Int32 @queue_getPutPosition(%queue_Queue* %1)
-	%3 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 1
-	%4 = bitcast %Int32 %2 to %Int32
-	%5 = getelementptr [16 x %Word8], [16 x %Word8]* %3, %Int32 0, %Int32 %4
-	store %Word8 %b, %Word8* %5
-	ret %Bool 1
-}
-
-define %Bool @byteRing16_get(%byteRing16_Word8Ring16* %q, %Word8* %b) {
-	%1 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
-	%2 = call %Bool @queue_isEmpty(%queue_Queue* %1)
-	br %Bool %2 , label %then_0, label %endif_0
+define %Bool @queueWord8_put(%queueWord8_QueueWord8* %q, %Word8 %b) {
+; if_0
+	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call %Bool @queue_isFull(%queue_Queue* %2)
+	br %Bool %3 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%4 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 0
-	%5 = call %Int32 @queue_getGetPosition(%queue_Queue* %4)
-	%6 = getelementptr %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, %Int32 0, %Int32 1
-	%7 = bitcast %Int32 %5 to %Int32
-	%8 = getelementptr [16 x %Word8], [16 x %Word8]* %6, %Int32 0, %Int32 %7
-	%9 = load %Word8, %Word8* %8
-	store %Word8 %9, %Word8* %b
+	%5 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
+	%7 = call %Nat32 @queue_getPutPosition(%queue_Queue* %6)
+	%8 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
+	%9 = load [0 x %Word8]*, [0 x %Word8]** %8
+	%10 = bitcast %Nat32 %7 to %Nat32
+	%11 = getelementptr [0 x %Word8], [0 x %Word8]* %9, %Int32 0, %Nat32 %10
+	store %Word8 %b, %Word8* %11
+	ret %Bool 1
+}
+
+define %Bool @queueWord8_get(%queueWord8_QueueWord8* %q, %Word8* %b) {
+; if_0
+	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call %Bool @queue_isEmpty(%queue_Queue* %2)
+	br %Bool %3 , label %then_0, label %endif_0
+then_0:
+	ret %Bool 0
+	br label %endif_0
+endif_0:
+	%5 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
+	%7 = call %Nat32 @queue_getGetPosition(%queue_Queue* %6)
+	%8 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
+	%9 = load [0 x %Word8]*, [0 x %Word8]** %8
+	%10 = bitcast %Nat32 %7 to %Nat32
+	%11 = getelementptr [0 x %Word8], [0 x %Word8]* %9, %Int32 0, %Nat32 %10
+	%12 = load %Word8, %Word8* %11
+	store %Word8 %12, %Word8* %b
 	ret %Bool 1
 }
 

@@ -186,7 +186,6 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 1
-; ?? console ??
 ; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
@@ -285,12 +284,14 @@ declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
-; ?? utf ??
-; from import
+
+; from import "utf"
 declare %Nat8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
 declare %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
-; end from import
-; from import
+
+; end from import "utf"
+
+; from import "console"
 declare void @console_putchar8(%Char8 %c)
 declare void @console_putchar16(%Char16 %c)
 declare void @console_putchar32(%Char32 %c)
@@ -303,7 +304,8 @@ declare void @console_puts32(%Str32* %s)
 declare void @console_print(%Str8* %form, ...)
 declare %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, %__VA_List %va)
 declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va)
-; end from import
+
+; end from import "console"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [7 x i8] [i8 83, i8 116, i8 114, i8 105, i8 110, i8 103, i8 0]

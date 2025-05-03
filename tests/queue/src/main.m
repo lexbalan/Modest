@@ -4,8 +4,8 @@ include "libc/ctypes64"
 include "libc/math"
 include "libc/stdio"
 
-import "./byteQueue" as bq
-import "./byteRing" as br
+import "./queueWord8" as bq
+import "./ringWord8" as br
 
 
 var bq0: bq.QueueWord8

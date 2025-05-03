@@ -266,8 +266,8 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 1
-; ?? minmax ??
-; from import
+
+; from import "minmax"
 declare %Int32 @minmax_min_int32(%Int32 %a, %Int32 %b)
 declare %Int32 @minmax_max_int32(%Int32 %a, %Int32 %b)
 declare %Int64 @minmax_min_int64(%Int64 %a, %Int64 %b)
@@ -280,7 +280,8 @@ declare %Float32 @minmax_min_float32(%Float32 %a, %Float32 %b)
 declare %Float32 @minmax_max_float32(%Float32 %a, %Float32 %b)
 declare %Float64 @minmax_min_float64(%Float64 %a, %Float64 %b)
 declare %Float64 @minmax_max_float64(%Float64 %a, %Float64 %b)
-; end from import
+
+; end from import "minmax"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 48, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]

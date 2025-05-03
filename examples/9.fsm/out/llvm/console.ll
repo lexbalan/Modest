@@ -287,11 +287,12 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
 ; -- print imports 'console' --
 ; -- 1
-; ?? utf ??
-; from import
+
+; from import "utf"
 declare %Nat8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
 declare %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
-; end from import
+
+; end from import "utf"
 ; -- end print imports 'console' --
 ; -- strings --
 ; -- endstrings --

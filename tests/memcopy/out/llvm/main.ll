@@ -186,12 +186,13 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 1
-; ?? mem ??
-; from import
+
+; from import "mem"
 declare void @memory_zero(i8* %mem, %Nat64 %len)
 declare void @memory_copy(i8* %dst, i8* %src, %Nat64 %len)
 declare %Bool @memory_eq(i8* %mem0, i8* %mem1, %Nat64 %len)
-; end from import
+
+; end from import "mem"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [14 x i8] [i8 109, i8 101, i8 109, i8 99, i8 111, i8 112, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]

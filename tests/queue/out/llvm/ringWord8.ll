@@ -103,11 +103,11 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: byteQueue
+; MODULE: ringWord8
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'byteQueue' --
+; -- print imports 'ringWord8' --
 ; -- 1
 ; from included ctypes64
 %Str = type %Str8;
@@ -204,75 +204,71 @@ declare %Nat32 @queue_getPutPosition(%queue_Queue* %q)
 declare %Nat32 @queue_getGetPosition(%queue_Queue* %q)
 
 ; end from import "queue"
-; -- end print imports 'byteQueue' --
+; -- end print imports 'ringWord8' --
 ; -- strings --
 ; -- endstrings --
-%byteQueue_QueueWord8 = type {
+%ringWord8_RingWord8 = type {
 	%queue_Queue,
 	[0 x %Word8]*
 };
 
-define void @byteQueue_init(%byteQueue_QueueWord8* %q, [0 x %Word8]* %buf, %Nat32 %capacity) {
-	%1 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 0
+define void @ringWord8_init(%ringWord8_RingWord8* %q, [0 x %Word8]* %buf, %Nat32 %capacity) {
+	%1 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 0
 	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
 	call void @queue_init(%queue_Queue* %2, %Nat32 %capacity)
-	%3 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 1
+	%3 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 1
 	store [0 x %Word8]* %buf, [0 x %Word8]** %3
 	ret void
 }
 
-define %Nat32 @byteQueue_capacity(%byteQueue_QueueWord8* %q) {
-	%1 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 0
+define %Nat32 @ringWord8_capacity(%ringWord8_RingWord8* %q) {
+	%1 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 0
 	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
 	%3 = call %Nat32 @queue_capacity(%queue_Queue* %2)
 	ret %Nat32 %3
 }
 
-define %Nat32 @byteQueue_size(%byteQueue_QueueWord8* %q) {
-	%1 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 0
+define %Nat32 @ringWord8_size(%ringWord8_RingWord8* %q) {
+	%1 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 0
 	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
 	%3 = call %Nat32 @queue_size(%queue_Queue* %2)
 	ret %Nat32 %3
 }
 
-define %Bool @byteQueue_isFull(%byteQueue_QueueWord8* %q) {
-	%1 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 0
+define %Bool @ringWord8_isFull(%ringWord8_RingWord8* %q) {
+	%1 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 0
 	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
 	%3 = call %Bool @queue_isFull(%queue_Queue* %2)
 	ret %Bool %3
 }
 
-define %Bool @byteQueue_isEmpty(%byteQueue_QueueWord8* %q) {
-	%1 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 0
+define %Bool @ringWord8_isEmpty(%ringWord8_RingWord8* %q) {
+	%1 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 0
 	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
 	%3 = call %Bool @queue_isEmpty(%queue_Queue* %2)
 	ret %Bool %3
 }
 
-define %Bool @byteQueue_put(%byteQueue_QueueWord8* %q, %Word8 %b) {
-; if_0
-	%1 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 0
+define %Bool @ringWord8_put(%ringWord8_RingWord8* %q, %Word8 %b) {
+;
+;	if queue.isFull(&q.queue) {
+;		return false
+;	}
+;	
+	%1 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 0
 	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Bool @queue_isFull(%queue_Queue* %2)
-	br %Bool %3 , label %then_0, label %endif_0
-then_0:
-	ret %Bool 0
-	br label %endif_0
-endif_0:
-	%5 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 0
-	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
-	%7 = call %Nat32 @queue_getPutPosition(%queue_Queue* %6)
-	%8 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 1
-	%9 = load [0 x %Word8]*, [0 x %Word8]** %8
-	%10 = bitcast %Nat32 %7 to %Nat32
-	%11 = getelementptr [0 x %Word8], [0 x %Word8]* %9, %Int32 0, %Nat32 %10
-	store %Word8 %b, %Word8* %11
+	%3 = call %Nat32 @queue_getPutPosition(%queue_Queue* %2)
+	%4 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 1
+	%5 = load [0 x %Word8]*, [0 x %Word8]** %4
+	%6 = bitcast %Nat32 %3 to %Nat32
+	%7 = getelementptr [0 x %Word8], [0 x %Word8]* %5, %Int32 0, %Nat32 %6
+	store %Word8 %b, %Word8* %7
 	ret %Bool 1
 }
 
-define %Bool @byteQueue_get(%byteQueue_QueueWord8* %q, %Word8* %b) {
+define %Bool @ringWord8_get(%ringWord8_RingWord8* %q, %Word8* %b) {
 ; if_0
-	%1 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 0
+	%1 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 0
 	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
 	%3 = call %Bool @queue_isEmpty(%queue_Queue* %2)
 	br %Bool %3 , label %then_0, label %endif_0
@@ -280,10 +276,10 @@ then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%5 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 0
+	%5 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 0
 	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
 	%7 = call %Nat32 @queue_getGetPosition(%queue_Queue* %6)
-	%8 = getelementptr %byteQueue_QueueWord8, %byteQueue_QueueWord8* %q, %Int32 0, %Int32 1
+	%8 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 1
 	%9 = load [0 x %Word8]*, [0 x %Word8]** %8
 	%10 = bitcast %Nat32 %7 to %Nat32
 	%11 = getelementptr [0 x %Word8], [0 x %Word8]* %9, %Int32 0, %Nat32 %10

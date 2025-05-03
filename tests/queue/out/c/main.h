@@ -8,8 +8,8 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "byteQueue.h"
-#include "byteRing.h"
+#include "queueWord8.h"
+#include "ringWord8.h"
 
 int main();
 

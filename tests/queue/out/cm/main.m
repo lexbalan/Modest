@@ -1,11 +1,11 @@
-import "./byteQueue"
-import "./byteRing"
+import "./queueWord8"
+import "./ringWord8"
 include "ctypes64"
 include "math"
 include "stdio"
 
-import "./byteQueue" as bq
-import "./byteRing" as br
+import "./queueWord8" as bq
+import "./ringWord8" as br
 
 
 var bq0: QueueWord8

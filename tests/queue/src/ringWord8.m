@@ -1,4 +1,4 @@
-// byteRing
+// ringWord8
 // queue implementation example
 
 import "queue"

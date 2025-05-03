@@ -214,8 +214,8 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 1
-; ?? table ??
-; from import
+
+; from import "table"
 %table_Row = type {
 };
 
@@ -228,7 +228,8 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 };
 
 declare void @table_print(%table_Table* %table)
-; end from import
+
+; end from import "table"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [2 x i8] [i8 35, i8 0]

@@ -186,7 +186,6 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 2
-; ?? delay ??
 ; from included time
 %TimeT = type %Int32;
 %ClockT = type %UnsignedLong;
@@ -215,13 +214,15 @@ declare %StructTM* @localtime(%TimeT* %timer)
 declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
 declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
 declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
-; from import
+
+; from import "delay"
 declare void @delay_us(%Nat64 %us)
 declare void @delay_ms(%Nat64 %ms)
 declare void @delay_sec(%Nat64 %s)
-; end from import
-; ?? fsm ??
-; from import
+
+; end from import "delay"
+
+; from import "fsm"
 %fsm_Handler = type void (%fsm_FSM*)*;
 %fsm_StateDesc = type {
 	[8 x %Char8],
@@ -241,7 +242,8 @@ declare void @delay_sec(%Nat64 %s)
 declare %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Nat32 %state_no)
 declare void @fsm_switch(%fsm_FSM* %fsm, %Nat32 %state)
 declare void @fsm_run(%fsm_FSM* %fsm)
-; end from import
+
+; end from import "fsm"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [10 x i8] [i8 111, i8 102, i8 102, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]

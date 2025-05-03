@@ -186,10 +186,11 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 1
-; ?? crc32 ??
-; from import
+
+; from import "crc32"
 declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
-; end from import
+
+; end from import "crc32"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 67, i8 82, i8 67, i8 51, i8 50, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]

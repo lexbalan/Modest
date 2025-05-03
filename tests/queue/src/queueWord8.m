@@ -1,4 +1,4 @@
-// byteQueue
+// queueWord8
 // queue implementation example
 
 import "queue"

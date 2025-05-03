@@ -3,40 +3,42 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "byteQueue.h"
+#include "ringWord8.h"
 
 
-void byteQueue_init(byteQueue_QueueWord8 *q, uint8_t *buf, uint32_t capacity)
+void ringWord8_init(ringWord8_RingWord8 *q, uint8_t *buf, uint32_t capacity)
 {
 	queue_init(&q->queue, /*capacity=*/capacity);
 	q->data = buf;
 }
 
-uint32_t byteQueue_capacity(byteQueue_QueueWord8 *q)
+uint32_t ringWord8_capacity(ringWord8_RingWord8 *q)
 {
 	return queue_capacity(&q->queue);
 }
 
-uint32_t byteQueue_size(byteQueue_QueueWord8 *q)
+uint32_t ringWord8_size(ringWord8_RingWord8 *q)
 {
 	return queue_size(&q->queue);
 }
 
-bool byteQueue_isFull(byteQueue_QueueWord8 *q)
+bool ringWord8_isFull(ringWord8_RingWord8 *q)
 {
 	return queue_isFull(&q->queue);
 }
 
-bool byteQueue_isEmpty(byteQueue_QueueWord8 *q)
+bool ringWord8_isEmpty(ringWord8_RingWord8 *q)
 {
 	return queue_isEmpty(&q->queue);
 }
 
-bool byteQueue_put(byteQueue_QueueWord8 *q, uint8_t b)
+bool ringWord8_put(ringWord8_RingWord8 *q, uint8_t b)
 {
-	if (queue_isFull(&q->queue)) {
-		return false;
+	/*
+	if queue.isFull(&q.queue) {
+		return false
 	}
+	*/
 
 	const uint32_t p = queue_getPutPosition(&q->queue);
 	q->data[p] = b;
@@ -44,7 +46,7 @@ bool byteQueue_put(byteQueue_QueueWord8 *q, uint8_t b)
 	return true;
 }
 
-bool byteQueue_get(byteQueue_QueueWord8 *q, uint8_t *b)
+bool ringWord8_get(ringWord8_RingWord8 *q, uint8_t *b)
 {
 	if (queue_isEmpty(&q->queue)) {
 		return false;
