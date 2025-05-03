@@ -10,6 +10,11 @@
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
+#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) { \
+	(*dst)[i] = (*src)[i]; \
+}
+
+#define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
 static void array_print(int32_t *pa, int32_t len)
@@ -21,7 +26,6 @@ static void array_print(int32_t *pa, int32_t len)
 	}
 }
 
-
 int main()
 {
 	printf("test slices\n");
@@ -30,11 +34,10 @@ int main()
 	// by value
 	//
 
-	int32_t a[10];
-	memcpy(&a, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9	}, sizeof a);
+	int32_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 	int32_t s1[2 - 1];
-	memcpy(&s1, &a[1], sizeof s1);
+	memcpy(&s1, (int32_t(*)[2 - 1])&a[1], sizeof(int32_t[2 - 1]));
 	int32_t i = 0;
 	while (i < __lengthof(s1)) {
 		printf("s1[%d] = %d\n", i, s1[i]);
@@ -49,7 +52,7 @@ int main()
 
 	int32_t *const pa = &a;
 	int32_t s2[8 - 5];
-	memcpy(&s2, &pa[5], sizeof s2);
+	memcpy(&s2, (int32_t(*)[8 - 5])&pa[5], sizeof(int32_t[8 - 5]));
 	i = 0;
 	while (i < __lengthof(s2)) {
 		printf("s2[%d] = %d\n", i, s2[i]);
@@ -59,13 +62,13 @@ int main()
 	printf("--------------------------------------------\n");
 
 	int32_t vs1[2 - 1];
-	memcpy(&vs1, &s1, sizeof vs1);
+	memcpy(&vs1, &s1, sizeof(int32_t[2 - 1]));
 	int32_t vs2[8 - 5];
-	memcpy(&vs2, &s2, sizeof vs2);
+	memcpy(&vs2, &s2, sizeof(int32_t[8 - 5]));
 
-	#define __ax  2
-	#define __bx  6
-	memcpy(&a[__ax], &(int32_t[__bx - __ax]){10, 20, 30, 40	}, sizeof a[__ax]);
+	#define ax  2
+	#define bx  6
+	ARRCPY(((int32_t(*)[bx - ax])&a[ax]), (&((uint8_t[4]){10, 20, 30, 40})), (bx - ax));
 
 	i = 0;
 	while (i < __lengthof(a)) {
@@ -75,24 +78,23 @@ int main()
 
 	printf("--------------------------------------------\n");
 
-	int32_t s[10];
-	memcpy(&s, &(int32_t[10]){10, 20, 30, 40, 50, 60, 70, 80, 90, 100	}, sizeof s);
+	int32_t s[10] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
-	memset(&s[2], 0, sizeof s[2]);
+	memset((int32_t(*)[5 - 2])&s[2], 0, sizeof(int32_t[5 - 2]));
 
 	i = 0;
 	while (i < __lengthof(s)) {
-		printf("s[%d] = %d\n", i, (uint32_t)s[i]);
+		printf("s[%d] = %d\n", i, ABS(s[i]));
 		i = i + 1;
 	}
 
 	printf("--------------------------------------------\n");
 	printf("test pointer to slice\n");
 
-	#define __aa  2
-	#define __bb  8
+	#define aa  2
+	#define bb  8
 
-	int32_t *const p = &s[__aa];
+	int32_t *const p = &s[aa];
 	array_print(p, __lengthof(*p));
 
 	printf("--------------------------------------------\n");
@@ -123,33 +125,29 @@ int main()
 	printf("zero slice by var\n");
 	// NOT WORKED NOW
 
-	int32_t ss[10];
-	memcpy(&ss, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9	}, sizeof ss);
+	int32_t ss[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 	int32_t k = 4;
 	int32_t j = 7;
-	memset(&ss[k], 0, sizeof ss[k]);
+	memset((int32_t(*)[j - k])&ss[k], 0, sizeof(int32_t[j - k]));
 	array_print((int32_t *)&ss, 10);
 
 	printf("--------------------------------------------\n");
 	printf("copy slice by var\n");
 
-	int32_t src[5];
-	memcpy(&src, &(int32_t[5]){10, 20, 30, 40, 50	}, sizeof src);
-	int32_t dst[10];
-	memcpy(&dst, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9	}, sizeof dst);
+	int32_t src[5] = {10, 20, 30, 40, 50};
+	int32_t dst[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 	// test with let
-	#define __i1  3
-	#define __j1  8
-	memcpy(&dst[__i1], &(int32_t[__j1 - __i1]){11, 22, 33, 44, 55	}, sizeof dst[__i1]);
+	#define i1  3
+	#define j1  8
+	ARRCPY(((int32_t(*)[j1 - i1])&dst[i1]), (&((uint8_t[5]){11, 22, 33, 44, 55})), (j1 - i1));
 
 	array_print((int32_t *)&dst, 10);
 
 	printf("--------------------------------------------\n");
 
-	int32_t dst2[10];
-	memcpy(&dst2, &(int32_t[10]){0, 10, 20, 30, 40, 50, 60, 70, 80, 90	}, sizeof dst2);
+	int32_t dst2[10] = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90};
 
 	uint8_t axx = 111;
 	uint8_t bxx = 222;
@@ -157,17 +155,17 @@ int main()
 	// test with var
 	int32_t i2 = 3;
 	int32_t j2 = 5;
-	memcpy(&dst2[i2], &{(int32_t)axx, (int32_t)bxx	}, sizeof dst2[i2]);
+	ARRCPY(((int32_t(*)[j2 - i2])&dst2[i2]), (&{(int32_t)axx, (int32_t)bxx}), (j2 - i2));
 
 	array_print((int32_t *)&dst2, 10);
 
 	return 0;
 
-#undef __ax
-#undef __bx
-#undef __aa
-#undef __bb
-#undef __i1
-#undef __j1
+#undef ax
+#undef bx
+#undef aa
+#undef bb
+#undef i1
+#undef j1
 }
 
