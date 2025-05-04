@@ -13,7 +13,7 @@ var br0: br.RingWord8
 
 
 var ii: Int32
-func padd (n: Int) -> Unit {
+func fill (n: Int) -> Unit {
 	var i = 0
 	while i < n {
 		if bq.isFull(&bq0) {
@@ -29,7 +29,7 @@ func padd (n: Int) -> Unit {
 }
 
 
-// выгребаем все и печатаем в консоль
+// выгребаем и распечатываем n значений
 func fetch(n: Int) -> Unit {
 	var i = 0
 	while i < n {
@@ -53,11 +53,11 @@ var qbuf: [qsize]Word8
 public func main() -> Int {
 	bq.init(&bq0, &qbuf, qsize)
 
-	padd(3)
+	fill(3)
 	fetch(7)
-	padd(12)
+	fill(12)
 	fetch(7)
-	padd(3)
+	fill(3)
 	fetch(7)
 
 	return 0

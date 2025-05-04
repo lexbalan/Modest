@@ -329,7 +329,7 @@ declare %Bool @ringWord8_get(%ringWord8_RingWord8* %q, %Word8* %b)
 @bq0 = internal global %queueWord8_QueueWord8 zeroinitializer
 @br0 = internal global %ringWord8_RingWord8 zeroinitializer
 @ii = internal global %Int32 zeroinitializer
-define internal void @padd(%Int %n) {
+define internal void @fill(%Int %n) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
 ; while_1
@@ -397,11 +397,11 @@ break_1:
 @qbuf = internal global [10 x %Word8] zeroinitializer
 define %Int @main() {
 	call void @queueWord8_init(%queueWord8_QueueWord8* bitcast (%queueWord8_QueueWord8* @bq0 to %queueWord8_QueueWord8*), [0 x %Word8]* bitcast ([10 x %Word8]* @qbuf to [0 x %Word8]*), %Nat32 10)
-	call void @padd(%Int 3)
+	call void @fill(%Int 3)
 	call void @fetch(%Int 7)
-	call void @padd(%Int 12)
+	call void @fill(%Int 12)
 	call void @fetch(%Int 7)
-	call void @padd(%Int 3)
+	call void @fill(%Int 3)
 	call void @fetch(%Int 7)
 	ret %Int 0
 }

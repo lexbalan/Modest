@@ -12,7 +12,7 @@ static queueWord8_QueueWord8 bq0;
 static ringWord8_RingWord8 br0;
 
 static int32_t ii;
-static void padd(int n)
+static void fill(int n)
 {
 	int32_t i = 0;
 	while (i < n) {
@@ -50,11 +50,11 @@ int main()
 {
 	queueWord8_init(&bq0, (uint8_t *)&qbuf, qsize);
 
-	padd(3);
+	fill(3);
 	fetch(7);
-	padd(12);
+	fill(12);
 	fetch(7);
-	padd(3);
+	fill(3);
 	fetch(7);
 
 	return 0;
