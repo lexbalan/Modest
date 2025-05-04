@@ -10,28 +10,6 @@
 #include <string.h>
 
 
-
-
-
-//@set("type.generic", true)
-
-
-
-
-
-
-
-
-
-
-//$pragma insert "// text insertion"
-
-
-
-
-
-
-
 int32_t main();
 
 #endif /* MAIN_H */

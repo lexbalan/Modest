@@ -95,6 +95,10 @@ var p = p0
 
 const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+
+@extern("C")
+var yyy: @volatile [32]Int32
+
 public func main () -> Int32 {
 	ab_test()
 

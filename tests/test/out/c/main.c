@@ -8,9 +8,8 @@
 
 #include "main.h"
 
-//@set("type.generic", true)
 
-static int32_t main_a[2][2][3] = (int32_t[2][2][3]){
+static int32_t a[2][2][3] = {
 
 	1, 2, 3,
 	4, 5, 6,
@@ -19,8 +18,7 @@ static int32_t main_a[2][2][3] = (int32_t[2][2][3]){
 	10, 11, 12
 };
 
-
-static void main_print3DArray(int32_t(*pa)[], int32_t m, int32_t n, int32_t p)
+static void print3DArray(int32_t(*pa)[], int32_t m, int32_t n, int32_t p)
 {
 	//let pg: *[m][n][p]Int32 = *[m][n][p]Int32 pa
 	int32_t(*const pg)[m][n][p] = (int32_t(*)[m][n][p])pa;
@@ -39,26 +37,19 @@ static void main_print3DArray(int32_t(*pa)[], int32_t m, int32_t n, int32_t p)
 	}
 }
 
-
-static void main_foo(int32_t x, int32_t y)
+static void foo(int32_t x, int32_t y)
 {
 	printf("foo(%d, %d)\n", x, y);
 }
 
-
-//$pragma insert "// text insertion"
-
-
-static volatile int32_t main_f;
-
-
-static int32_t *volatile main_p;
+static volatile int32_t f;
+static int32_t *p;
 
 int32_t main()
 {
-	main_print3DArray((void *)&main_a, 2, 2, 3);
+	print3DArray((void *)&a, 2, 2, 3);
 
-	main_foo(1, 2);
+	foo(1, 2);
 
 	return 0;
 }

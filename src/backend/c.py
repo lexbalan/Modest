@@ -1977,10 +1977,10 @@ def print_def_var(x, isdecl=False):
 	var = x.value
 	if USE_STATIC_VARIABLES:
 		if x.access_level == 'private':
-			if not var.hasAttribute('extern'):
+			if not x.hasAttribute('extern'):
 				out("static ")
 
-	if var.hasAttribute('extern'):
+	if x.hasAttribute('extern'):
 		out("extern ")
 
 	print_variable(get_id_str(x.value), var.type)

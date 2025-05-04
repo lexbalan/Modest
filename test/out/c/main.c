@@ -23,9 +23,9 @@
 struct __anonymous_struct_1 {int32_t a; int32_t b;
 };
 
-int32_t v0;
+int32_t main_v0;
 
-void f0()
+void main_f0()
 {
 }
 
@@ -61,7 +61,7 @@ static bool mcmp(void *a, void *b, uint32_t size)
 	return memcmp(ax, bx, sizeof(uint8_t[size])) == 0;
 }
 
-void sbuf(void *p, uint32_t size)
+void main_sbuf(void *p, uint32_t size)
 {
 	uint8_t *const px = (uint8_t *)p;
 	uint8_t buf[size];
@@ -99,14 +99,16 @@ static struct {uint8_t x; uint8_t y;
 
 #define ini  {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
+extern volatile int32_t yyy[32];
+
 int32_t main()
 {
 	ab_test();
 
-	Point p;
-	printf("test %s\n", (char *)cq);
-	printf("test %d\n", v0);
-	f0();
+	main_Point p;
+	printf("test %s\n", (char *)main_cq);
+	printf("test %d\n", main_v0);
+	main_f0();
 
 	printf("p0.x = %d\n", ((struct {uint8_t x; uint8_t y;
 	})p0).x);
