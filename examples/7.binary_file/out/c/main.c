@@ -26,12 +26,10 @@ static void write_example()
 		return;
 	}
 
-	Chunk chunk;
-
-	// pointers casting requires -funsafe translator option
-	// (see Makefile)
-	strcpy((char *)&chunk.id, "id");
-	strcpy((char *)&chunk.data, "data");
+	Chunk chunk = {
+		.id = "id",
+		.data = "data"
+	};
 
 	// write chunk to file
 	fwrite(&chunk, sizeof(Chunk), 1, fp);

@@ -27,12 +27,10 @@ func write_example () -> Unit {
 		return
 	}
 
-	var chunk: Chunk
-
-	// pointers casting requires -funsafe translator option
-	// (see Makefile)
-	strcpy(&chunk.id, *[]Char "id")
-	strcpy(&chunk.data, *[]Char "data")
+	var chunk: Chunk = {
+		id = [100]Char "id"
+		data = [1024]Char "data"
+	}
 
 	// write chunk to file
 	fwrite(&chunk, sizeof(Chunk), 1, fp)
