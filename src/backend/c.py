@@ -1974,6 +1974,10 @@ def print_def_var(x, isdecl=False):
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
 	#id = x['id']
+
+	if hasattr(x, 'alignment'):
+		out("__attribute__((aligned(%d)))\n" % x.alignment)
+
 	var = x.value
 	if USE_STATIC_VARIABLES:
 		if x.access_level == 'private':

@@ -30,6 +30,8 @@ void main_f0()
 }
 
 int32_t i32;
+
+__attribute__((aligned(4)))
 static uint32_t u32;
 
 static uint8_t prev_p[10];
