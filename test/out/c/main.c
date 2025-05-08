@@ -29,7 +29,7 @@ void main_f0()
 {
 }
 
-static int32_t i32;
+int32_t i32;
 static uint32_t u32;
 
 static uint8_t prev_p[10];

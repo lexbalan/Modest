@@ -2543,6 +2543,8 @@ def add_spices_def(x, ast_atts):
 				arg = args[0]['str']
 				if arg == 'C':
 					add_att(x, 'id:nodecorate')
+		elif kind == 'nonstatic':
+			add_att(x, 'nonstatic')
 		elif kind == 'nodecorate':
 			add_att(x, 'id:nodecorate')
 		elif kind == 'c_no_print':

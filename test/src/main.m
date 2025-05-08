@@ -17,6 +17,7 @@ public func f0() -> Unit {
 
 }
 
+@nonstatic
 var i32: Int32
 var u32: Nat32
 
