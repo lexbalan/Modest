@@ -13,7 +13,7 @@ var br0: RingWord8
 
 
 var ii: Int32
-func fill(n: Int) -> Unit {
+func fill (n: Int) -> Unit {
 	var i: Int32 = 0
 	while i < n {
 		if bq.isFull(&bq0) {
@@ -27,7 +27,7 @@ func fill(n: Int) -> Unit {
 		ii = ii + 1
 	}
 }
-func fetch(n: Int) -> Unit {
+func fetch (n: Int) -> Unit {
 	var i: Int32 = 0
 	while i < n {
 		if bq.isEmpty(&bq0) {
@@ -47,7 +47,7 @@ const qsize = 10
 var qbuf: [qsize]Word8
 
 
-public func main() -> Int {
+public func main () -> Int {
 	bq.init(&bq0, &qbuf, qsize)
 
 	fill(3)

@@ -736,8 +736,9 @@ def print_stmt_func(x):
 		return
 	func = x.value
 	ft = func.type
-	out('func ')
+	out("func ")
 	out(get_id_str(func))
+	out(" ")
 	out(str_type_func(ft, extra_args=ft.extra_args))
 	print_stmt_block(x.stmt)
 

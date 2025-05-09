@@ -112,83 +112,6 @@ break_2:
 ; -- end print includes --
 ; -- print imports 'queueWord8' --
 ; -- 1
-; from included ctypes64
-%Str = type %Str8;
-%Char = type %Char8;
-%ConstChar = type %Char;
-%SignedChar = type %Int8;
-%UnsignedChar = type %Nat8;
-%Short = type %Int16;
-%UnsignedShort = type %Nat16;
-%Int = type %Int32;
-%UnsignedInt = type %Nat32;
-%LongInt = type %Int64;
-%UnsignedLongInt = type %Nat64;
-%Long = type %Int64;
-%UnsignedLong = type %Nat64;
-%LongLong = type %Int64;
-%UnsignedLongLong = type %Nat64;
-%LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Nat64;
-%Float = type %Float64;
-%Double = type %Float64;
-%LongDouble = type %Float64;
-%SizeT = type %UnsignedLongInt;
-%SSizeT = type %LongInt;
-%IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
-%OffT = type %Int64;
-%USecondsT = type %Nat32;
-%PIDT = type %Int32;
-%UIDT = type %Nat32;
-%GIDT = type %Nat32;
-; from included stdio
-%File = type %Nat8;
-%FposT = type %Nat8;
-%CharStr = type %Str;
-%ConstCharStr = type %CharStr;
-declare %Int @fclose(%File* %f)
-declare %Int @feof(%File* %f)
-declare %Int @ferror(%File* %f)
-declare %Int @fflush(%File* %f)
-declare %Int @fgetpos(%File* %f, %FposT* %pos)
-declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
-declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
-declare %Int @fsetpos(%File* %f, %FposT* %pos)
-declare %LongInt @ftell(%File* %f)
-declare %Int @remove(%ConstCharStr* %fname)
-declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
-declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buf)
-declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
-declare %File* @tmpfile()
-declare %CharStr* @tmpnam(%CharStr* %str)
-declare %Int @printf(%ConstCharStr* %s, ...)
-declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%File* %f, %Str* %format, ...)
-declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
-declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
-declare %Int @fgetc(%File* %f)
-declare %Int @fputc(%Int %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
-declare %Int @fputs(%ConstCharStr* %str, %File* %f)
-declare %Int @getc(%File* %f)
-declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
-declare %Int @putc(%Int %char, %File* %f)
-declare %Int @putchar(%Int %char)
-declare %Int @puts(%ConstCharStr* %str)
-declare %Int @ungetc(%Int %char, %File* %f)
-declare void @perror(%ConstCharStr* %str)
 
 ; from import "queue"
 %queue_Queue = type {
@@ -293,6 +216,95 @@ endif_0:
 	%12 = load %Word8, %Word8* %11
 	store %Word8 %12, %Word8* %b
 	ret %Bool 1
+}
+
+define %Nat32 @queueWord8_read(%queueWord8_QueueWord8* %q, [0 x %Word8]* %data, %Nat32 %len) {
+	%1 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %1
+; while_1
+	br label %again_1
+again_1:
+	%2 = load %Nat32, %Nat32* %1
+	%3 = icmp ult %Nat32 %2, %len
+	br %Bool %3 , label %body_1, label %break_1
+body_1:
+	%4 = alloca %Word8, align 1
+; if_0
+	%5 = bitcast %queueWord8_QueueWord8* %q to %queueWord8_QueueWord8*
+	%6 = call %Bool @queueWord8_get(%queueWord8_QueueWord8* %5, %Word8* %4)
+	%7 = xor %Bool %6, 1
+	br %Bool %7 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	%9 = load %Nat32, %Nat32* %1
+	%10 = bitcast %Nat32 %9 to %Nat32
+	%11 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Nat32 %10
+	%12 = load %Word8, %Word8* %4
+	store %Word8 %12, %Word8* %11
+	%13 = load %Nat32, %Nat32* %1
+	%14 = add %Nat32 %13, 1
+	store %Nat32 %14, %Nat32* %1
+	br label %again_1
+break_1:
+	%15 = load %Nat32, %Nat32* %1
+	ret %Nat32 %15
+}
+
+define %Nat32 @queueWord8_write(%queueWord8_QueueWord8* %q, [0 x %Word8]* %data, %Nat32 %len) {
+	%1 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %1
+; while_1
+	br label %again_1
+again_1:
+	%2 = load %Nat32, %Nat32* %1
+	%3 = icmp ult %Nat32 %2, %len
+	br %Bool %3 , label %body_1, label %break_1
+body_1:
+	%4 = load %Nat32, %Nat32* %1
+	%5 = bitcast %Nat32 %4 to %Nat32
+	%6 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Nat32 %5
+	%7 = load %Word8, %Word8* %6
+; if_0
+	%8 = bitcast %queueWord8_QueueWord8* %q to %queueWord8_QueueWord8*
+	%9 = call %Bool @queueWord8_put(%queueWord8_QueueWord8* %8, %Word8 %7)
+	%10 = xor %Bool %9, 1
+	br %Bool %10 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	%12 = load %Nat32, %Nat32* %1
+	%13 = add %Nat32 %12, 1
+	store %Nat32 %13, %Nat32* %1
+	br label %again_1
+break_1:
+	%14 = load %Nat32, %Nat32* %1
+	ret %Nat32 %14
+}
+
+define void @queueWord8_clear(%queueWord8_QueueWord8* %q) {
+	%1 = alloca i8*
+	%2 = call i8* @llvm.stacksave() 
+	store i8* %2, i8** %1
+	%3 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%4 = bitcast %queue_Queue* %3 to %queue_Queue*
+	%5 = call %Nat32 @queue_capacity(%queue_Queue* %4)
+	%6 = mul %Nat32 %5, 1
+	%7 = mul %Nat32 %5, 1
+	%8 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
+	%9 = load [0 x %Word8]*, [0 x %Word8]** %8
+	%10 = bitcast [0 x %Word8]* %9 to [0 x %Word8]*
+	%11 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%12 = bitcast %queue_Queue* %11 to %queue_Queue*
+	%13 = call %Nat32 @queue_capacity(%queue_Queue* %12)
+	%14 = mul %Nat32 %13, 1
+	%15 = bitcast [0 x %Word8]* %10 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %15, i8 0, %Nat32 %14, i1 0)
+	%16 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %16)
+	ret void
 }
 
 

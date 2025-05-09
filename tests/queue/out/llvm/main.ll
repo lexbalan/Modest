@@ -301,6 +301,9 @@ declare %Bool @queueWord8_isFull(%queueWord8_QueueWord8* %q)
 declare %Bool @queueWord8_isEmpty(%queueWord8_QueueWord8* %q)
 declare %Bool @queueWord8_put(%queueWord8_QueueWord8* %q, %Word8 %b)
 declare %Bool @queueWord8_get(%queueWord8_QueueWord8* %q, %Word8* %b)
+declare %Nat32 @queueWord8_read(%queueWord8_QueueWord8* %q, [0 x %Word8]* %data, %Nat32 %len)
+declare %Nat32 @queueWord8_write(%queueWord8_QueueWord8* %q, [0 x %Word8]* %data, %Nat32 %len)
+declare void @queueWord8_clear(%queueWord8_QueueWord8* %q)
 
 ; end from import "bq"
 

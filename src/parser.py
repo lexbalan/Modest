@@ -356,7 +356,6 @@ class Parser:
 				'ti': ti
 			}
 		else:
-			error("---->>>>>", ti)
 			return {
 				'isa': 'ast_type',
 				'kind': 'func',

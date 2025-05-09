@@ -61,3 +61,38 @@ public func get (q: *QueueWord8, b: *Word8) -> Bool {
 }
 
 
+
+public func read (q: *QueueWord8, data: *[]Word8, len: Nat32) -> Nat32 {
+	var n: Nat32 = 0
+	while n < len {
+		var x: Word8
+		if not get(q, &x) {
+			break
+		}
+		data[n] = x
+		++n
+	}
+	return n
+}
+
+
+public func write (q: *QueueWord8, data: *[]Word8, len: Nat32) -> Nat32 {
+	var n: Nat32 = 0
+	while n < len {
+		let x = data[n]
+		if not put(q, x) {
+			break
+		}
+		++n
+	}
+	return n
+}
+
+
+
+public func clear (q: *QueueWord8) -> Unit {
+	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
+	*pdata = []
+}
+
+

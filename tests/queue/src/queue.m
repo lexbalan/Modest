@@ -1,9 +1,5 @@
 //module queue
 
-include "libc/ctypes64"
-include "libc/stdio"
-
-
 public type Queue record {
 	capacity: Nat32  // Number of items queue can hold up
 	size: Nat32      // Number of items in queue now

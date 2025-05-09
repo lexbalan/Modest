@@ -243,11 +243,6 @@ endif_0:
 	%14 = insertvalue %Chunk %9, [1024 x %Char] %13, 1
 	store %Chunk %14, %Chunk* %6
 
-	; pointers casting requires -funsafe translator option
-	; (see Makefile)
-	;	strcpy(&chunk.id, *[]Char "id")
-	;	strcpy(&chunk.data, *[]Char "data")
-
 	; write chunk to file
 	%15 = bitcast %Chunk* %6 to i8*
 	%16 = call %SizeT @fwrite(i8* %15, %SizeT 2048, %SizeT 1, %File* %2)

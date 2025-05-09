@@ -1,6 +1,3 @@
-include "ctypes64"
-include "stdio"
-
 
 
 public type Queue record {
@@ -11,31 +8,31 @@ public type Queue record {
 }
 
 
-public func init(q: *Queue, capacity: Nat32) -> Unit {
+public func init (q: *Queue, capacity: Nat32) -> Unit {
 	*q = {}
 	q.capacity = capacity
 }
 
 
-public func capacity(q: *Queue) -> Nat32 {
+public func capacity (q: *Queue) -> Nat32 {
 	return q.capacity
 }
 
 
-public func size(q: *Queue) -> Nat32 {
+public func size (q: *Queue) -> Nat32 {
 	return q.size
 }
 
 
-public func isEmpty(q: *Queue) -> Bool {
+public func isEmpty (q: *Queue) -> Bool {
 	return q.size == 0
 }
 
 
-public func isFull(q: *Queue) -> Bool {
+public func isFull (q: *Queue) -> Bool {
 	return q.size == q.capacity
 }
-public func getPutPosition(q: *Queue) -> Nat32 {
+public func getPutPosition (q: *Queue) -> Nat32 {
 	let pos: Nat32 = q.p
 	q.p = next(q.capacity, q.p)
 	if q.size < q.capacity {
@@ -43,7 +40,7 @@ public func getPutPosition(q: *Queue) -> Nat32 {
 	}
 	return pos
 }
-public func getGetPosition(q: *Queue) -> Nat32 {
+public func getGetPosition (q: *Queue) -> Nat32 {
 	let pos: Nat32 = q.g
 	q.g = next(q.capacity, q.g)
 	if q.size > 0 {
@@ -53,7 +50,7 @@ public func getGetPosition(q: *Queue) -> Nat32 {
 }
 
 
-func next(capacity: Nat32, x: Nat32) -> Nat32 {
+func next (capacity: Nat32, x: Nat32) -> Nat32 {
 	if x < capacity - 1 {
 		return x + 1
 	}

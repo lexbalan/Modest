@@ -27,4 +27,10 @@ bool queueWord8_put(queueWord8_QueueWord8 *q, uint8_t b);
 
 bool queueWord8_get(queueWord8_QueueWord8 *q, uint8_t *b);
 
+uint32_t queueWord8_read(queueWord8_QueueWord8 *q, uint8_t *data, uint32_t len);
+
+uint32_t queueWord8_write(queueWord8_QueueWord8 *q, uint8_t *data, uint32_t len);
+
+void queueWord8_clear(queueWord8_QueueWord8 *q);
+
 #endif /* QUEUEWORD8_H */

@@ -56,3 +56,36 @@ bool queueWord8_get(queueWord8_QueueWord8 *q, uint8_t *b)
 	return true;
 }
 
+uint32_t queueWord8_read(queueWord8_QueueWord8 *q, uint8_t *data, uint32_t len)
+{
+	uint32_t n = 0;
+	while (n < len) {
+		uint8_t x;
+		if (!queueWord8_get(q, &x)) {
+			break;
+		}
+		data[n] = x;
+		n = n + 1;
+	}
+	return n;
+}
+
+uint32_t queueWord8_write(queueWord8_QueueWord8 *q, uint8_t *data, uint32_t len)
+{
+	uint32_t n = 0;
+	while (n < len) {
+		const uint8_t x = data[n];
+		if (!queueWord8_put(q, x)) {
+			break;
+		}
+		n = n + 1;
+	}
+	return n;
+}
+
+void queueWord8_clear(queueWord8_QueueWord8 *q)
+{
+	uint8_t *const pdata = (uint8_t *)q->data;
+	memset(pdata, 0, sizeof(uint8_t[queue_capacity(&q->queue)]));
+}
+
