@@ -3,7 +3,7 @@ include "stdio"
 
 
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	var a: Bool
 	var b: Int32
 	var c: Int64

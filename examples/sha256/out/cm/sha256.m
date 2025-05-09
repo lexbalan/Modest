@@ -17,42 +17,42 @@ type Context record {
 
 
 
-func rotleft(a: Word32, b: Nat32) -> Word32 {
+func rotleft (a: Word32, b: Nat32) -> Word32 {
 	return (a << b) or (a >> (32 - b))
 }
 
 
-func rotright(a: Word32, b: Nat32) -> Word32 {
+func rotright (a: Word32, b: Nat32) -> Word32 {
 	return (a >> b) or (a << (32 - b))
 }
 
 
-func ch(x: Word32, y: Word32, z: Word32) -> Word32 {
+func ch (x: Word32, y: Word32, z: Word32) -> Word32 {
 	return (x and y) xor (not x and z)
 }
 
 
-func maj(x: Word32, y: Word32, z: Word32) -> Word32 {
+func maj (x: Word32, y: Word32, z: Word32) -> Word32 {
 	return (x and y) xor (x and z) xor (y and z)
 }
 
 
-func ep0(x: Word32) -> Word32 {
+func ep0 (x: Word32) -> Word32 {
 	return rotright(x, 2) xor rotright(x, 13) xor rotright(x, 22)
 }
 
 
-func ep1(x: Word32) -> Word32 {
+func ep1 (x: Word32) -> Word32 {
 	return rotright(x, 6) xor rotright(x, 11) xor rotright(x, 25)
 }
 
 
-func sig0(x: Word32) -> Word32 {
+func sig0 (x: Word32) -> Word32 {
 	return rotright(x, 7) xor rotright(x, 18) xor (x >> 3)
 }
 
 
-func sig1(x: Word32) -> Word32 {
+func sig1 (x: Word32) -> Word32 {
 	return rotright(x, 17) xor rotright(x, 19) xor (x >> 10)
 }
 
@@ -64,7 +64,7 @@ const initalState = [
 ]
 
 
-func contextInit(ctx: *Context) -> Unit {
+func contextInit (ctx: *Context) -> Unit {
 	ctx.state = initalState
 }
 
@@ -89,7 +89,7 @@ const k = [
 ]
 
 
-func transform(ctx: *Context, data: *[]Word8) -> Unit {
+func transform (ctx: *Context, data: *[]Word8) -> Unit {
 	var m = [64]Word32 []
 
 	var i = Nat32 0
@@ -135,7 +135,7 @@ func transform(ctx: *Context, data: *[]Word8) -> Unit {
 }
 
 
-func update(ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
+func update (ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
 	var i = Nat32 0
 	while i < msgLen {
 		ctx.data[ctx.datalen] = msg[i]
@@ -150,7 +150,7 @@ func update(ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
 }
 
 
-func final(ctx: *Context, outHash: *Hash) -> Unit {
+func final (ctx: *Context, outHash: *Hash) -> Unit {
 	var i: Nat32 = ctx.datalen
 
 	// Pad whatever data is left in the buffer.
@@ -207,7 +207,7 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 }
 
 
-public func hash(msg: *[]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
+public func hash (msg: *[]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
 	var ctx: Context = Context {}
 	contextInit(&ctx)
 	update(&ctx, msg, msgLen)

@@ -3,7 +3,7 @@ include "stdio"
 include "unistd"
 
 
-func my_printf(format: *Str8, ...) -> SSizeT {
+func my_printf (format: *Str8, ...) -> SSizeT {
 	var va: va_list
 	var va2: va_list
 
@@ -21,7 +21,7 @@ func my_printf(format: *Str8, ...) -> SSizeT {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	var k: Int32 = 10
 	my_printf("My Printf Test %d\n", k)
 

@@ -17,7 +17,7 @@ public type List record {
 }
 
 
-public func create() -> *List {
+public func create () -> *List {
 	let list = *List malloc(sizeof(List))
 
 	if list == nil {
@@ -30,7 +30,7 @@ public func create() -> *List {
 }
 
 
-public func size_get(list: *List) -> Nat32 {
+public func size_get (list: *List) -> Nat32 {
 	if list == nil {
 		return 0
 	}
@@ -39,7 +39,7 @@ public func size_get(list: *List) -> Nat32 {
 }
 
 
-public func first_node_get(list: *List) -> *Node {
+public func first_node_get (list: *List) -> *Node {
 	if list == nil {
 		return nil
 	}
@@ -48,7 +48,7 @@ public func first_node_get(list: *List) -> *Node {
 }
 
 
-public func last_node_get(list: *List) -> *Node {
+public func last_node_get (list: *List) -> *Node {
 	if list == nil {
 		return nil
 	}
@@ -57,7 +57,7 @@ public func last_node_get(list: *List) -> *Node {
 }
 
 
-public func node_first(list: *List, new_node: *Node) -> *Node {
+public func node_first (list: *List, new_node: *Node) -> *Node {
 	if list == nil or new_node == nil {
 		return nil
 	}
@@ -72,7 +72,7 @@ public func node_first(list: *List, new_node: *Node) -> *Node {
 
 
 
-public func node_create() -> *Node {
+public func node_create () -> *Node {
 	let node = *Node malloc(sizeof(Node))
 
 	if node == nil {
@@ -85,7 +85,7 @@ public func node_create() -> *Node {
 }
 
 
-public func node_next_get(node: *Node) -> *Node {
+public func node_next_get (node: *Node) -> *Node {
 	if node == nil {
 		return nil
 	}
@@ -94,7 +94,7 @@ public func node_next_get(node: *Node) -> *Node {
 }
 
 
-public func node_prev_get(node: *Node) -> *Node {
+public func node_prev_get (node: *Node) -> *Node {
 	if node == nil {
 		return nil
 	}
@@ -103,7 +103,7 @@ public func node_prev_get(node: *Node) -> *Node {
 }
 
 
-public func node_data_get(node: *Node) -> Ptr {
+public func node_data_get (node: *Node) -> Ptr {
 	if node == nil {
 		return nil
 	}
@@ -112,7 +112,7 @@ public func node_data_get(node: *Node) -> Ptr {
 }
 
 
-public func node_insert_right(left: *Node, new_right: *Node) -> Unit {
+public func node_insert_right (left: *Node, new_right: *Node) -> Unit {
 	printf("node_insert_right\n")
 
 	let old_right: *Node = left.next
@@ -125,7 +125,7 @@ public func node_insert_right(left: *Node, new_right: *Node) -> Unit {
 	new_right.next = old_right
 	new_right.prev = left
 }
-public func node_get(list: *List, pos: Int32) -> *Node {
+public func node_get (list: *List, pos: Int32) -> *Node {
 	if list == nil or list.size == 0 {
 		return nil
 	}
@@ -167,7 +167,7 @@ public func node_get(list: *List, pos: Int32) -> *Node {
 }
 
 
-public func node_insert(list: *List, pos: Int32, new_node: *Node) -> *Node {
+public func node_insert (list: *List, pos: Int32, new_node: *Node) -> *Node {
 	if list == nil or new_node == nil {
 		return nil
 	}
@@ -195,7 +195,7 @@ public func node_insert(list: *List, pos: Int32, new_node: *Node) -> *Node {
 
 
 
-public func node_append(list: *List, new_node: *Node) -> *Node {
+public func node_append (list: *List, new_node: *Node) -> *Node {
 	if list == nil or new_node == nil {
 		return nil
 	}
@@ -214,7 +214,7 @@ public func node_append(list: *List, new_node: *Node) -> *Node {
 }
 
 
-public func insert(list: *List, pos: Int32, data: Ptr) -> *Node {
+public func insert (list: *List, pos: Int32, data: Ptr) -> *Node {
 	let new_node: *Node = node_create()
 
 	if new_node == nil {
@@ -227,7 +227,7 @@ public func insert(list: *List, pos: Int32, data: Ptr) -> *Node {
 }
 
 
-public func append(list: *List, data: Ptr) -> *Node {
+public func append (list: *List, data: Ptr) -> *Node {
 	if list == nil {
 		return nil
 	}

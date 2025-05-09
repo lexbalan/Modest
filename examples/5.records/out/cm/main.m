@@ -23,7 +23,7 @@ var line: Line = {
 
 
 
-func max(a: Float, b: Float) -> Float {
+func max (a: Float, b: Float) -> Float {
 	if a > b {
 		return a
 	}
@@ -31,13 +31,13 @@ func max(a: Float, b: Float) -> Float {
 }
 
 
-func min(a: Float, b: Float) -> Float {
+func min (a: Float, b: Float) -> Float {
 	if a < b {
 		return a
 	}
 	return b
 }
-func distance(a: Point, b: Point) -> Float {
+func distance (a: Point, b: Point) -> Float {
 	let dx: Float = max(a.x, b.x) - min(a.x, b.x)
 	let dy: Float = max(a.y, b.y) - min(a.y, b.y)
 	let dx2: Double = pow(dx, 2)
@@ -46,12 +46,12 @@ func distance(a: Point, b: Point) -> Float {
 }
 
 
-func lineLength(line: Line) -> Float {
+func lineLength (line: Line) -> Float {
 	return distance(line.a, line.b)
 }
 
 
-func ptr_example() -> Unit {
+func ptr_example () -> Unit {
 	let ptr_p = *Point malloc(sizeof(Point))
 
 	// access by pointer
@@ -62,7 +62,7 @@ func ptr_example() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	// by value
 	let len: Float = lineLength(line)
 	printf("line length = %f\n", len)

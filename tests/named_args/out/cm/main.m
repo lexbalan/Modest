@@ -3,12 +3,12 @@ include "stdio"
 
 
 
-func named_args_test(a: Int32, b: Int32, c: Int32) -> Int32 {
+func named_args_test (a: Int32, b: Int32, c: Int32) -> Int32 {
 	return (a - b) * c
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("test named_args\n")
 
 	let a = 25

@@ -11,7 +11,7 @@ var globalArray: [10]Int32 = constantArray
 var arrayFromString: [3]Char8 = "abc"
 
 
-func f0(x: [20]Char8) -> [30]Char8 {
+func f0 (x: [20]Char8) -> [30]Char8 {
 	var local_copy_of_x: [20]Char8 = x
 	printf("f0(\"%s\")\n", &local_copy_of_x)
 
@@ -42,7 +42,7 @@ const startSequence = [0xAA, 0x55, 0x02]
 const stopSequence = [0x16]
 
 
-func test() -> Unit {
+func test () -> Unit {
 	// тестируем работу с локальным generic массивом
 	var yy: [6]Word64 = startSequence + [] + stopSequence
 	var i: Int32 = 0
@@ -91,7 +91,7 @@ var a10: [10][10]Int32 = [
 ]
 
 
-func test_arrays() -> Unit {
+func test_arrays () -> Unit {
 	var i: Int32
 	var j: Int32
 	var k: Int32
@@ -175,7 +175,7 @@ func test_arrays() -> Unit {
 
 
 
-public func main() -> Int {
+public func main () -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	var em: [30]Char8 = f0("Hello World!")

@@ -6,7 +6,7 @@ include "stdlib"
 
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("unistd test\n")
 
 	let pid: PIDT = getpid()

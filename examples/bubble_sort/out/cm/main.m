@@ -8,7 +8,7 @@ var array: [21]Int32 = [
 ]
 
 
-func bubble_sort32(array: *[]Int32, len: Int32) -> Unit {
+func bubble_sort32 (array: *[]Int32, len: Int32) -> Unit {
 	var need_to_sort: Bool = true
 	while need_to_sort {
 		need_to_sort = false
@@ -31,7 +31,7 @@ func bubble_sort32(array: *[]Int32, len: Int32) -> Unit {
 }
 
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	//fill_array(&array, lengthof(array))
 
 	printf("array before:\n")
@@ -48,7 +48,7 @@ public func main() -> Int32 {
 }
 
 
-func print_array(array: *[]Int32, len: Int32) -> Unit {
+func print_array (array: *[]Int32, len: Int32) -> Unit {
 	printf("\n")
 	var i: Int32 = 0
 	while i < len {
@@ -58,7 +58,7 @@ func print_array(array: *[]Int32, len: Int32) -> Unit {
 }
 
 
-func fill_array(array: *[]Int32, len: Int32) -> Unit {
+func fill_array (array: *[]Int32, len: Int32) -> Unit {
 	let min = -1000
 	let max = 1000
 	var i: Int32 = 0
@@ -71,7 +71,7 @@ func fill_array(array: *[]Int32, len: Int32) -> Unit {
 }
 
 
-func get_number(min: Int32, max: Int32) -> Int32 {
+func get_number (min: Int32, max: Int32) -> Int32 {
 	var number = Int32 0
 
 	while true {

@@ -8,7 +8,7 @@ type Nat Nat64
 const memoryAlignment = systemWidth / 8
 
 
-public func zero(mem: Ptr, len: Nat64) -> Unit {
+public func zero (mem: Ptr, len: Nat64) -> Unit {
 	let z: Nat = Nat mem % memoryAlignment
 
 	let memptr: *[]Word8 = *[]Word8 mem
@@ -46,7 +46,7 @@ public func zero(mem: Ptr, len: Nat64) -> Unit {
 }
 
 
-public func copy(dst: Ptr, src: Ptr, len: Nat64) -> Unit {
+public func copy (dst: Ptr, src: Ptr, len: Nat64) -> Unit {
 	let len_words: Nat64 = len / sizeof(Word)
 	let src_w = *[]Word src
 	let dst_w = *[]Word dst
@@ -69,7 +69,7 @@ public func copy(dst: Ptr, src: Ptr, len: Nat64) -> Unit {
 }
 
 
-public func eq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
+public func eq (mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 	let len_words: Nat64 = len / sizeof(Word)
 	let mem0_w: *[]Word = *[]Word mem0
 	let mem1_w: *[]Word = *[]Word mem1

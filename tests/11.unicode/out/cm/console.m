@@ -7,28 +7,28 @@ include "string"
 import "misc/utf" as utf
 
 
-public func putchar8(c: Char8) -> Unit {
+public func putchar8 (c: Char8) -> Unit {
 	putchar_utf8(c)
 }
 
 
-public func putchar16(c: Char16) -> Unit {
+public func putchar16 (c: Char16) -> Unit {
 	putchar_utf16(c)
 }
 
 
-public func putchar32(c: Char32) -> Unit {
+public func putchar32 (c: Char32) -> Unit {
 	putchar_utf32(c)
 }
 
 
 
-public func putchar_utf8(c: Char8) -> Unit {
+public func putchar_utf8 (c: Char8) -> Unit {
 	putchar(Int32 Word32 c)
 }
 
 
-public func putchar_utf16(c: Char16) -> Unit {
+public func putchar_utf16 (c: Char16) -> Unit {
 	var cc: [2]Char16
 	cc[0] = c
 	cc[1] = Char16 0
@@ -38,7 +38,7 @@ public func putchar_utf16(c: Char16) -> Unit {
 }
 
 
-public func putchar_utf32(c: Char32) -> Unit {
+public func putchar_utf32 (c: Char32) -> Unit {
 	var decoded_buf: [4]Char8
 	let n = Int32 utf.utf32_to_utf8(c, &decoded_buf)
 
@@ -50,7 +50,7 @@ public func putchar_utf32(c: Char32) -> Unit {
 	}
 }
 
-public func puts8(s: *Str8) -> Unit {
+public func puts8 (s: *Str8) -> Unit {
 	var i: Int32 = 0
 	while true {
 		let c: Char8 = s[i]
@@ -63,7 +63,7 @@ public func puts8(s: *Str8) -> Unit {
 }
 
 
-public func puts16(s: *Str16) -> Unit {
+public func puts16 (s: *Str16) -> Unit {
 	var i: Int32 = 0
 	while true {
 		// нельзя просто так взять и вызвать putchar_utf16
@@ -87,7 +87,7 @@ public func puts16(s: *Str16) -> Unit {
 }
 
 
-public func puts32(s: *Str32) -> Unit {
+public func puts32 (s: *Str32) -> Unit {
 	var i: Int32 = 0
 	while true {
 		let c: Char32 = s[i]
@@ -102,7 +102,7 @@ public func puts32(s: *Str32) -> Unit {
 
 
 
-public func print(form: *Str8, ...) -> Unit {
+public func print (form: *Str8, ...) -> Unit {
 	var va: va_list
 	__va_start(va, form)
 	vfprint(c_STDOUT_FILENO, form, va)
@@ -111,7 +111,7 @@ public func print(form: *Str8, ...) -> Unit {
 
 
 
-public func vfprint(fd: Int32, form: *Str8, va: va_list) -> Int32 {
+public func vfprint (fd: Int32, form: *Str8, va: va_list) -> Int32 {
 	var strbuf: [256]Char8
 	let n: Int32 = vsprint(&strbuf, form, va)
 	strbuf[n] = "\x0"
@@ -120,7 +120,7 @@ public func vfprint(fd: Int32, form: *Str8, va: va_list) -> Int32 {
 }
 
 
-public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
+public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 	var i: Int32 = 0
 	var j: Int32 = 0
 
@@ -210,12 +210,12 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 
 
 
-func n_to_dec_sym(n: Nat8) -> Char8 {
+func n_to_dec_sym (n: Nat8) -> Char8 {
 	return Char8 Word8 (Nat8 Word8 Char8 "0" + n)
 }
 
 
-func n_to_hex_sym(n: Nat8) -> Char8 {
+func n_to_hex_sym (n: Nat8) -> Char8 {
 	if n < 10 {
 		return n_to_dec_sym(n)
 	}
@@ -223,7 +223,7 @@ func n_to_hex_sym(n: Nat8) -> Char8 {
 }
 
 
-func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
+func sprint_hex_nat32 (buf: *[]Char8, x: Nat32) -> Int32 {
 	var tmpbuf: [8]Char8
 	var d: Nat32 = x
 	var i: Int32 = 0
@@ -254,7 +254,7 @@ func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
 }
 
 
-func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
+func sprint_dec_int32 (buf: *[]Char8, x: Int32) -> Int32 {
 	var tmpbuf: [11]Char8
 	var d: Int32 = x
 	let neg: Bool = d < 0
@@ -294,7 +294,7 @@ func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 }
 
 
-func sprint_dec_n32(buf: *[]Char8, x: Nat32) -> Int32 {
+func sprint_dec_n32 (buf: *[]Char8, x: Nat32) -> Int32 {
 	var tmpbuf: [11]Char8
 	var d: Nat32 = x
 	var i: Int32 = 0

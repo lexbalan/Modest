@@ -2,7 +2,7 @@ include "ctypes64"
 include "stdio"
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("test shift\n")
 
 	var c: Word32

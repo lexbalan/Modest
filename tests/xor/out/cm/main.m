@@ -3,7 +3,7 @@ include "stdio"
 
 
 
-func xor_encrypter(buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -> Unit {
+func xor_encrypter (buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -> Unit {
 	var i = Nat32 0
 	var j = Nat32 0
 	while i < buflen {
@@ -26,7 +26,7 @@ var test_msg: [msg_length + 1]Char8 = "Hello World!"
 var test_key: [key_length + 1]Char8 = "abc"
 
 
-func print_bytes(buf: *[]Word8, len: Nat32) -> Unit {
+func print_bytes (buf: *[]Word8, len: Nat32) -> Unit {
 	var i = Nat32 0
 	while i < len {
 		printf("0x%02X ", buf[i])
@@ -36,7 +36,7 @@ func print_bytes(buf: *[]Word8, len: Nat32) -> Unit {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("test xor encrypting\n")
 
 	let tmsg: *[]Word8 = *[]Word8 &test_msg

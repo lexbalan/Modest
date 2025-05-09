@@ -25,7 +25,7 @@ const ps = [
 
 const points = [3]Point ps
 var points2: [3]Point = points
-public func main() -> Int {
+public func main () -> Int {
 	printf("test const\n")
 
 	printf("genericIntConst = %d\n", Int32 genericIntConst)

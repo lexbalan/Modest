@@ -4,13 +4,13 @@ include "stdlib"
 include "stdio"
 
 import "list" as list
-func nat32_list_insert(lst: *List, x: Nat32) -> Unit {
+func nat32_list_insert (lst: *List, x: Nat32) -> Unit {
 	// alloc memory for Nat32 value
 	let p_nat32 = *Nat32 malloc(sizeof(Nat32))
 	*p_nat32 = x
 	list.append(lst, p_nat32)
 }
-func list_print_forward(lst: *List) -> Unit {
+func list_print_forward (lst: *List) -> Unit {
 	printf("list_print_forward:\n")
 	var pn: *Node = list.first_node_get(lst)
 	while pn != nil {
@@ -19,7 +19,7 @@ func list_print_forward(lst: *List) -> Unit {
 		pn = list.node_next_get(pn)
 	}
 }
-func list_print_backward(lst: *List) -> Unit {
+func list_print_backward (lst: *List) -> Unit {
 	printf("list_print_backward:\n")
 	var pn: *Node = list.last_node_get(lst)
 	while pn != nil {
@@ -30,7 +30,7 @@ func list_print_backward(lst: *List) -> Unit {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("linked list example\n")
 
 	let list0: *List = list.create()

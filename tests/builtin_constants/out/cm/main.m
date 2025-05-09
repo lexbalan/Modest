@@ -3,7 +3,7 @@ include "stdio"
 
 
 
-public func main() -> Int {
+public func main () -> Int {
 
 	// __compiler
 	printf("__compiler.name = %s\n", *Str8 {name = "m2", version = {major = 0, minor = 7}}.name)

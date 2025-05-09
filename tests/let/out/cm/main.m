@@ -3,7 +3,7 @@ include "stdio"
 
 
 
-public func main() -> Int {
+public func main () -> Int {
 	let x = 127
 	let y = x + 1
 

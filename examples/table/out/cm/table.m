@@ -13,7 +13,7 @@ public type Table record {
 	public nCols: Nat32
 	public separate: Bool
 }
-public func print(table: *Table) -> Unit {
+public func print (table: *Table) -> Unit {
 	var i: Nat32
 	var j: Nat32
 
@@ -86,7 +86,7 @@ public func print(table: *Table) -> Unit {
 }
 
 
-func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
+func printRow (raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 	let row: *[nCols]*Str8 = *[nCols]*Str8 raw_row
 
 	var j = Nat32 0
@@ -108,7 +108,7 @@ func printRow(raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 	}
 	printf("|\n")
 }
-func separator(sz: *[]Nat32, n: Nat32) -> Unit {
+func separator (sz: *[]Nat32, n: Nat32) -> Unit {
 	var i = Nat32 0
 	while i < n {
 		printf("+")

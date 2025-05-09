@@ -59,7 +59,7 @@ type Struct record {
 var s: Struct = {x = &lines[0]}
 
 
-func test_records() -> Unit {
+func test_records () -> Unit {
 	printf("line.a.x = %d\n", line.a.x)
 	printf("line.a.y = %d\n", line.a.y)
 
@@ -89,7 +89,7 @@ func test_records() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("records test\n")
 
 	// check value_record_eq for immediate values

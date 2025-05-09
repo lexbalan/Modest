@@ -10,7 +10,7 @@ type Chunk record {
 }
 
 
-func write_example() -> Unit {
+func write_example () -> Unit {
 	printf("run write_example\n")
 
 	let fp: *File = fopen(filename, "wb")
@@ -32,7 +32,7 @@ func write_example() -> Unit {
 }
 
 
-func read_example() -> Unit {
+func read_example () -> Unit {
 	printf("run read_example\n")
 
 	let fp: *File = fopen(filename, "rb")
@@ -53,7 +53,7 @@ func read_example() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("binary file example\n")
 	write_example()
 	read_example()

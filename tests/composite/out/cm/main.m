@@ -2,59 +2,59 @@ include "stdio"
 
 var p0: *Int32
 var p1: **Int32
-func f0() -> Unit {
+func f0 () -> Unit {
 	return
 }
 
-func f1(x: Int32) -> Int32 {
+func f1 (x: Int32) -> Int32 {
 	return x
 }
 
-func f2(a: Int32, b: Int32) -> Int32 {
+func f2 (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-func f3() -> *Int32 {
+func f3 () -> *Int32 {
 	return nil
 }
 
-func f4(x: Int32) -> [10]Int32 {
+func f4 (x: Int32) -> [10]Int32 {
 	return [10]Int32 [1, 2, 3]
 }
 
-func f5(a: [32]Int32) -> [32]Int32 {
+func f5 (a: [32]Int32) -> [32]Int32 {
 	return a
 }
 
-func f6(a: *[32]Int32) -> *[32]Int32 {
+func f6 (a: *[32]Int32) -> *[32]Int32 {
 	return nil
 }
 
-func f7(f: *() -> Unit) -> Unit {
+func f7 (f: *() -> Unit) -> Unit {
 	return
 }
 
-func f8(f: *() -> Unit) -> *() -> Unit {
+func f8 (f: *() -> Unit) -> *() -> Unit {
 	return &f0
 }
 
-func f9(f: *() -> Unit) -> **() -> Unit {
+func f9 (f: *() -> Unit) -> **() -> Unit {
 	return nil
 }
 
-func f10(f: **() -> Unit) -> **() -> Unit {
+func f10 (f: **() -> Unit) -> **() -> Unit {
 	return f
 }
 
-func f11(f: **(a: Int32, b: *Int32) -> *[10]Int32) -> **() -> Unit {
+func f11 (f: **(a: Int32, b: *Int32) -> *[10]Int32) -> **() -> Unit {
 	return nil
 }
 
-func f12(f: **(a: *[32]Int32, b: **[64]Int32) -> *[10]Int32) -> **() -> Unit {
+func f12 (f: **(a: *[32]Int32, b: **[64]Int32) -> *[10]Int32) -> **() -> Unit {
 	return nil
 }
 
-func f13(f: **(a: *[32]*Int32, b: **[64]*Int32) -> *[10]Int32) -> **() -> Unit {
+func f13 (f: **(a: *[32]*Int32, b: **[64]*Int32) -> *[10]Int32) -> **() -> Unit {
 	return nil
 }
 var pf0: *() -> Unit = &f0
@@ -143,7 +143,7 @@ var animation2_points = [5]AnimationPoint [
 ]
 
 
-func xy(x: record {x: Int32, y: Int32}) -> Unit {
+func xy (x: record {x: Int32, y: Int32}) -> Unit {
 }
 
 
@@ -157,11 +157,11 @@ var arrr: [3][3]Int32 = [
 var arry: [3][3]*() -> Unit
 
 
-func add(a: Int32, b: Int32) -> Int32 {
+func add (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-func sub(a: Int32, b: Int32) -> Int32 {
+func sub (a: Int32, b: Int32) -> Int32 {
 	return a - b
 }
 
@@ -173,10 +173,10 @@ var farr: [2]*(a: Int32, b: Int32) -> Int32 = [
 
 type He () -> Unit
 
-func he(x: *He) -> Unit {
+func he (x: *He) -> Unit {
 }
 
-func hi(x: *Str8) -> Unit {
+func hi (x: *Str8) -> Unit {
 	printf("Hi %s!\n", x)
 }
 
@@ -196,7 +196,7 @@ var wrap0 = Wrap {
 
 var awrap: [2]*Wrap = [&wrap0, &wrap0]
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	xy({x = 10, y = 20})
 
 	printf("test1 (eq): ")

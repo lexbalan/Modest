@@ -31,18 +31,18 @@ public type FSM record {
 }
 
 
-public func state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
+public func state_no_name (fsm: *FSM, state_no: Nat32) -> *Str8 {
 	return &fsm.states[state_no].name
 }
 
 
-public func switch(fsm: *FSM, state: Nat32) -> Unit {
+public func switch (fsm: *FSM, state: Nat32) -> Unit {
 	fsm.nexstate = state
 	fsm.substate = substateLeaving
 }
 
 
-public func run(fsm: *FSM) -> Unit {
+public func run (fsm: *FSM) -> Unit {
 	printf("fsm::run()\n")
 
 	if fsm.substate == substateEntering {

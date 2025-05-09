@@ -52,7 +52,7 @@ type WrappedArray record {
 }
 
 const wa = WrappedArray {}
-func distance(a: Point, b: Point) -> Float {
+func distance (a: Point, b: Point) -> Float {
 	let dx: Float64 = minmax.max_float64(a.x, b.x) - minmax.min_float64(a.x, b.x)
 	let dy: Float64 = minmax.max_float64(a.y, b.y) - minmax.min_float64(a.y, b.y)
 	let dx2: Double = pow(dx, 2)
@@ -61,12 +61,12 @@ func distance(a: Point, b: Point) -> Float {
 }
 
 
-func lineLength(line: Line) -> Float {
+func lineLength (line: Line) -> Float {
 	return distance(line.a, line.b)
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	let lines_0_len: Float = lineLength(lines[0])
 	let lines_1_len: Float = lineLength(lines[1])
 	let lines_2_len: Float = lineLength(lines[2])

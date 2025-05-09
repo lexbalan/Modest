@@ -14,36 +14,36 @@ type Type2 record {
 type Type3 Type1
 
 
-func f0_val(x: Type1) -> Unit {
+func f0_val (x: Type1) -> Unit {
 	printf("f0 x.x = %d\n", x.x)
 }
 
-func f1_val(x: Type2) -> Unit {
+func f1_val (x: Type2) -> Unit {
 	printf("f1 x.x = %d\n", x.x)
 }
 
-func f2_val(x: Type3) -> Unit {
+func f2_val (x: Type3) -> Unit {
 	printf("f2 x.x = %d\n", x.x)
 }
 
-func f3_val(x: record {x: Int32}) -> Unit {
+func f3_val (x: record {x: Int32}) -> Unit {
 	printf("f3 x.x = %d\n", x.x)
 }
 
 
-func f0_ptr(x: *Type1) -> Unit {
+func f0_ptr (x: *Type1) -> Unit {
 	printf("f0p x.x = %d\n", x.x)
 }
 
-func f1_ptr(x: *Type2) -> Unit {
+func f1_ptr (x: *Type2) -> Unit {
 	printf("f1p x.x = %d\n", x.x)
 }
 
-func f2_ptr(x: *Type3) -> Unit {
+func f2_ptr (x: *Type3) -> Unit {
 	printf("f2p x.x = %d\n", x.x)
 }
 
-func f3_ptr(x: *record {x: Int32}) -> Unit {
+func f3_ptr (x: *record {x: Int32}) -> Unit {
 	printf("f3p x.x = %d\n", x.x)
 }
 
@@ -54,7 +54,7 @@ var c: Type3 = {x = 3}
 
 
 
-func test_by_value() -> Unit {
+func test_by_value () -> Unit {
 	f0_val(a)
 	f1_val(a)
 	f2_val(a)
@@ -72,7 +72,7 @@ func test_by_value() -> Unit {
 }
 
 
-func test_by_pointer() -> Unit {
+func test_by_pointer () -> Unit {
 	f0_ptr(&a)
 	f1_ptr(&a)
 	f2_ptr(&a)
@@ -90,7 +90,7 @@ func test_by_pointer() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	test_by_value()
 	test_by_pointer()
 	return 0

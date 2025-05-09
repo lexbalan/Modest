@@ -12,7 +12,7 @@ const greeting = hello + " " + world
 const test = "test"
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("%s\n", *Str8 greeting)
 
 	if test == "test" {

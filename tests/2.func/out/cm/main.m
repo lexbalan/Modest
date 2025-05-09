@@ -3,20 +3,20 @@ include "stdio"
 
 
 
-func func1() -> Unit {
+func func1 () -> Unit {
 	printf("func1 was called\n")
 }
 
 
-func print_ab(a: Int32, b: Int32) -> Unit {
+func print_ab (a: Int32, b: Int32) -> Unit {
 	printf("print_ab(a=%i, b=%i)\n", a, b)
 }
 
 
-func sum(a: Int32, b: Int32) -> Int32 {
+func sum (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
-public func main() -> Int {
+public func main () -> Int {
 	printf("test func\n")
 
 	// call declared & defined functions
@@ -44,7 +44,7 @@ public func main() -> Int {
 }
 
 
-func func0() -> Unit {
+func func0 () -> Unit {
 	printf("func0 was called\n")
 }
 

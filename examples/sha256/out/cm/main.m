@@ -41,7 +41,7 @@ var test1 = SHA256_TestCase {
 const tests = [&test0, &test1]
 
 
-func doTest(test: *SHA256_TestCase) -> Bool {
+func doTest (test: *SHA256_TestCase) -> Bool {
 	var test_hash: Hash
 	let msg: *[]Word8 = *[]Word8 &test.input_data
 	let msg_len: Nat32 = test.input_data_len
@@ -63,7 +63,7 @@ func doTest(test: *SHA256_TestCase) -> Bool {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("test SHA256\n")
 
 	var i: Int32 = 0

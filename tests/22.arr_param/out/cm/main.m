@@ -1,9 +1,9 @@
 include "stdio"
 
-func getarr10() -> [10]Int32 {
+func getarr10 () -> [10]Int32 {
 	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 }
-func arraysAdd(a: [10]Int32, b: [10]Int32) -> [10]Int32 {
+func arraysAdd (a: [10]Int32, b: [10]Int32) -> [10]Int32 {
 	var c: [10]Int32
 	var i: Int32 = 0
 	while i < 10 {
@@ -14,7 +14,7 @@ func arraysAdd(a: [10]Int32, b: [10]Int32) -> [10]Int32 {
 }
 
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	let a: [10]Int32 = getarr10()
 
 	if a == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] {
