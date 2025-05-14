@@ -991,54 +991,59 @@ class Parser:
 			return y
 
 
+	def parse_args(self):
+		args = []
+		self.match("(")
+		while not self.match(")"):
+			arg = None
+			#print(self.ctok())
+			#self.skip_tokens_class(['nl'])
+			nl_cnt = 0
+			while self.token_class_is('nl'):
+				self.skip()
+				nl_cnt += 1
+
+			if self.match(")"):
+				break
+
+			comm = self.parse_if_comment()
+			if comm != None:
+				#comm['nl'] = nl_cnt
+				#args.append(comm)
+				continue
+
+			arg_ti = self.ti()
+			arg_value = self.expr_value()
+			arg_id = None
+			if self.match("="):
+				if arg_value['kind'] != 'id':
+					error("expected identifier", arg_value['ti'])
+
+				arg_id = arg_value#['id']
+				arg_value = self.expr_value()
+
+			arg = {
+				'isa': 'ast_kv',
+				'key': arg_id,
+				'value': arg_value,
+				'nl': nl_cnt,
+				'ti': arg_ti
+			}
+			args.append(arg)
+
+			if not self.token_class_is('nl'):
+				self.need_sep(separators=[',', '\n'], stoppers=[')'])
+
+		return args
+
+
 	def expr_value_11(self):
 		# CALL
 		v = self.expr_value_term()
 		while True:
 			ti = self.ti()
-			if self.match("("):
-				args = []
-				while not self.match(")"):
-					arg = None
-					#print(self.ctok())
-					#self.skip_tokens_class(['nl'])
-					nl_cnt = 0
-					while self.token_class_is('nl'):
-						self.skip()
-						nl_cnt += 1
-
-					if self.match(")"):
-						break
-
-					comm = self.parse_if_comment()
-					if comm != None:
-						#comm['nl'] = nl_cnt
-						#args.append(comm)
-						continue
-
-					arg_ti = self.ti()
-					arg_value = self.expr_value()
-					arg_id = None
-					if self.match("="):
-						if arg_value['kind'] != 'id':
-							error("expected identifier", arg_value['ti'])
-
-						arg_id = arg_value#['id']
-						arg_value = self.expr_value()
-
-					arg = {
-						'isa': 'ast_kv',
-						'key': arg_id,
-						'value': arg_value,
-						'nl': nl_cnt,
-						'ti': arg_ti
-					}
-					args.append(arg)
-
-					if not self.token_class_is('nl'):
-						self.need_sep(separators=[',', '\n'], stoppers=[')'])
-
-
+			if self.look("("):
+				args = self.parse_args()
 
 				v = {
 					'isa': 'ast_value',
@@ -1879,27 +1884,13 @@ class Parser:
 
 
 
-
-	def parse_arglist(self):
-		self.need("(")
-		args = []
-		while not self.match(")"):
-			arg = None
-			self.skip_tokens_class(['nl'])
-			arg_ti = self.ti()
-			arg_value = self.expr_value()
-			args.append(arg_value)
-			self.need_sep(separators=[',', '\n'], stoppers=[')'])
-		return args
-
-
 	def parse_attribute(self):
 		ti = self.ti()
 		x = self.gettok()
 
 		args = []
 		if self.look("("):
-			args = self.parse_arglist()
+			args = self.parse_args()
 
 		att = {
 			'isa': 'ast_attribute',

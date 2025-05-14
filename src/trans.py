@@ -2524,8 +2524,8 @@ def add_spices_def(x, ast_atts):
 
 		if kind == 'set':
 			args = a['args']
-			key = args[0]['str']
-			val = args[1]['str']
+			key = args[0]['value']['str']
+			val = args[1]['value']['str']
 			setObjAttrByPath(x, key, val)
 
 			if key[-4:] == 'id.c':
@@ -2540,11 +2540,11 @@ def add_spices_def(x, ast_atts):
 			add_att(x, "extern")
 			args = a['args']
 			if len(args) > 0:
-				arg = args[0]['str']
+				arg = args[0]['value']['str']
 				if arg == 'C':
 					add_att(x, 'id:nodecorate')
 		elif kind == 'alignment':
-			val = int(a['args'][0]['str'])
+			val = int(a['args'][0]['value']['str'])
 			setObjAttrByPath(x, 'alignment', val)
 		elif kind == 'nonstatic':
 			add_att(x, 'nonstatic')
@@ -2552,11 +2552,13 @@ def add_spices_def(x, ast_atts):
 			add_att(x, 'id:nodecorate')
 		elif kind == 'c_no_print':
 			add_att(x, "c_no_print")
-
+		elif kind == 'info':
+			msg = str(a['args'][0]['value']['str'])
+			info(msg, x.ti)
 		else:
 			print(a)
 			exit(1)
-			key = a['args'][0]['str']
+			key = a['args'][0]['value']['str']
 			print(key)
 			add_att(x, key)
 
