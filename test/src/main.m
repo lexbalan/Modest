@@ -1,7 +1,8 @@
+
+
 include "libc/stdio"
 include "libc/stdlib"
 include "libc/string"
-
 
 
 public type Point record {
@@ -21,6 +22,9 @@ public func f0() -> Unit {
 var i32: Int32
 @alignment(4)
 var u32: Nat32
+
+
+var a32: Word32
 
 
 var prev_p: [10]Word8

@@ -246,6 +246,7 @@ define void @main_f0() {
 
 @i32 = internal global %Int32 zeroinitializer
 @u32 = internal global %Nat32 zeroinitializer
+@a32 = internal global %Word32 zeroinitializer
 @prev_p = internal global [10 x %Word8] zeroinitializer
 define internal void @xxx([0 x %Word8]* %p) {
 	%1 = bitcast [0 x %Word8]* %p to [10 x %Word8]*

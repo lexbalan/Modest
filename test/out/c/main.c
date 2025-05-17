@@ -34,6 +34,8 @@ int32_t i32;
 __attribute__((aligned(4)))
 static uint32_t u32;
 
+static uint32_t a32;
+
 static uint8_t prev_p[10];
 static void xxx(uint8_t *p)
 {

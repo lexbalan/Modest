@@ -1761,8 +1761,13 @@ class Parser:
 		if self.is_comment():
 			self.skip()
 
+#		while self.is_comment() or self.look("\n"):
+#			if self.is_end():
+#				break
+#			self.skip()
+
 		stmt = None
-		if not self.look("\n"):
+		if self.look("{"):
 			stmt = self.stmt_block()
 
 		return {
@@ -1937,14 +1942,17 @@ class Parser:
 
 		output = []
 
-#		# Head
+		# Head
 #		if not self.is_end():
-#			if self.token_class_is('comment-block'):
-#				x = self.parse_if_comment_block()
-#			elif self.token_class_is('comment-line'):
-#				x = self.parse_if_comment_line()
-
-
+#			while True:
+#				ca = self.parse_comments_attributes(nl_cnt=0)
+#
+#				if not self.match('\n') and ca == None:
+#					break
+#
+#		if self.match('module'):
+#			id = self.identifier()
+#			print("MODULE %s" % id['str'])
 
 		spaceline_cnt = 0
 

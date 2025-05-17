@@ -4,28 +4,29 @@ include "string"
 
 
 
-
 public type Point record {
 	x: Int32  // hi!
 	y: Int32  // lo?
 }
 
-
 public const cq = "Hi!"
-
 
 public var v0: Int32
 
-
-public func f0() -> Unit {
+public func f0 () -> Unit {
 }
 
+
 var i32: Int32
+
 var u32: Nat32
 
 
+var a32: Word32
+
+
 var prev_p: [10]Word8
-func xxx(p: *[]Word8) -> Unit {
+func xxx (p: *[]Word8) -> Unit {
 	let xp = *[10]Word8 p
 	if prev_p != *xp {
 		prev_p = *xp
@@ -34,25 +35,25 @@ func xxx(p: *[]Word8) -> Unit {
 
 
 
-func mzero(p: Ptr, size: Nat32) -> Unit {
+func mzero (p: Ptr, size: Nat32) -> Unit {
 	let px: *[size]Word8 = *[size]Word8 p
 	*px = []
 }
 
-func mcopy(dst: Ptr, src: Ptr, size: Nat32) -> Unit {
+func mcopy (dst: Ptr, src: Ptr, size: Nat32) -> Unit {
 	let d: *[size]Word8 = *[size]Word8 dst
 	let s: *[size]Word8 = *[size]Word8 src
 	*d = *s
 }
 
-func mcmp(a: Ptr, b: Ptr, size: Nat32) -> Bool {
+func mcmp (a: Ptr, b: Ptr, size: Nat32) -> Bool {
 	let ax: *[size]Word8 = *[size]Word8 a
 	let bx: *[size]Word8 = *[size]Word8 b
 	return *ax == *bx
 }
 
 
-public func sbuf(p: Ptr, size: Nat32) -> Unit {
+public func sbuf (p: Ptr, size: Nat32) -> Unit {
 	let px: *[size]Word8 = *[size]Word8 p
 	var buf: [size]Word8 = *px
 	var i = Nat32 0
@@ -71,11 +72,11 @@ var yy: [10]Int
 
 
 
-func ab_ret(a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
+func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
 	return {a = a, b = b}
 }
 
-func ab_test() -> Unit {
+func ab_test () -> Unit {
 	let x: record {a: Int32, b: Int32} = ab_ret(9, 11)
 	printf("x.a = %i\n", x.a)
 	printf("x.a = %i\n", x.b)
@@ -89,7 +90,11 @@ var p = p0
 
 const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-public func main() -> Int32 {
+
+
+var yyy: [32]Int32
+
+public func main () -> Int32 {
 	ab_test()
 
 	var p: Point
