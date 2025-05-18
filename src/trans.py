@@ -942,7 +942,11 @@ def do_value_call(x):
 
 		i += 1
 
-	return ValueCall(ftype.to, fn, args + extra_args, ti=x['ti'])
+	nv = ValueCall(ftype.to, fn, args + extra_args, ti=x['ti'])
+	return nv
+
+
+
 
 
 
@@ -1124,7 +1128,6 @@ def do_value_access(x):
 	if not is_local_entity(record_type):
 		if field.access_level == 'private':
 			error("access to private field of record", x['right']['ti'])
-
 
 	return ValueAccessRecord(field.type, left, field, ti=x['ti'])
 
@@ -1833,6 +1836,10 @@ def def_const(x):
 	global global_prefix
 
 	const_value = do_const(x)
+
+	if not const_value.isImmediate():
+		error("expected immediate value", x['init_value']['ti'])
+
 	const_value.id.prefix = global_prefix
 
 	is_public = x['access_modifier'] == 'public'
@@ -1880,7 +1887,6 @@ def do_const(x):
 		type = Type.copy(init_value.type)
 
 	const_value = ValueConst(type, id, init_value=init_value, ti=id.ti)
-
 
 	if init_value.isImmediate():
 		const_value.immediate = True

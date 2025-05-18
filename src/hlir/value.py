@@ -259,6 +259,7 @@ class ValueFunc(Value):
 		assert(isinstance(id, Id))
 		super().__init__(type=type, ti=ti)
 		self.id = id
+		self.is_pure = True
 		self.usecnt = 0
 
 
@@ -439,6 +440,17 @@ class ValueCall(Value):
 		super().__init__(type=type, ti=ti)
 		self.func = func
 		self.args = args
+
+		args_is_imm = True
+		for arg in args:
+			if not arg.value.isImmediate():
+				args_is_imm = False
+				break
+
+		if func.is_pure and args_is_imm:
+			pass
+			#self.immediate = True
+			#self.asset = 0
 
 
 class ValueAccessRecord(Value):

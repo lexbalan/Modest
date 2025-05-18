@@ -4,6 +4,11 @@ include "string"
 
 
 
+func add (a: Int32, b: Int32) -> Int32 {
+	return a + b
+}
+
+
 public type Point record {
 	x: Int32  // hi!
 	y: Int32  // lo?

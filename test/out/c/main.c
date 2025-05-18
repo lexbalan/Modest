@@ -23,6 +23,11 @@
 struct __anonymous_struct_1 {int32_t a; int32_t b;
 };
 
+static int32_t add(int32_t a, int32_t b)
+{
+	return a + b;
+}
+
 int32_t main_v0;
 
 void main_f0()
