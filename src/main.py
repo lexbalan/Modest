@@ -13,37 +13,68 @@ from common import settings, features
 
 
 
-# применяет конфигурационный файл поверх существующей конфигурации
-def apply_config(config_name):
-	from common import settings
-	cfg_path = os.path.expandvars("${MODEST_DIR}/cfg/%s.toml" % config_name)
-	with open(cfg_path, "rb") as toml:
-		config = tomllib.load(toml)
-		settings.update(config)
+def main():
+	#print(os.getcwd())
+
+	parser = argparse.ArgumentParser(
+		prog = 'ProgramName',
+		#description = 'What the program does',
+		#epilog = 'Text at the bottom of help'
+	)
+
+	#parser.add_argument('filename', action='append', default=['main'])
+	parser.add_argument('-i', '--include')
+	parser.add_argument('-o', '--output')
+	parser.add_argument('-L', '--lib')
+	parser.add_argument('-s', '--setup', help='-setup=<value>')
+	parser.add_argument('-f', '--feature', action='append', help='[unsafe]')
+	parser.add_argument('-m', action='append', help='-m<var>=<value>')
+	parser.add_argument('-d', action='append', help='-d<constant_name>="<value_expression>"')
+	#parser.add_argument('-v', '--verbose')
+	#args = parser.parse_args()
+	args, files = parser.parse_known_args()
 
 
-parser = argparse.ArgumentParser(
-	prog = 'ProgramName',
-	#description = 'What the program does',
-	#epilog = 'Text at the bottom of help'
-)
+	cfg_path = os.path.expandvars("${MODEST_DIR}/cfg/%s.toml" % 'default')
+	apply_config(cfg_path)
 
 
-#parser.add_argument('filename', action='append', default=['main'])
-parser.add_argument('-i', '--include')
-parser.add_argument('-o', '--output')
-parser.add_argument('-L', '--lib')
-parser.add_argument('-s', '--setup', help='-setup=<value>')
-parser.add_argument('-f', '--feature', action='append', help='[unsafe]')
-parser.add_argument('-m', action='append', help='-m<var>=<value>')
-parser.add_argument('-d', action='append', help='-d<constant_name>="<value_expression>"')
-#parser.add_argument('-v', '--verbose')
-#args = parser.parse_args()
-args, files = parser.parse_known_args()
+	path_lib = os.getenv('MODEST_LIB')
+	if path_lib != None:
+		settings['lib'] = path_lib
+
+
+	libb = args.lib
+	if libb != None:
+		settings['lib'] = libb
+
+	if path_lib == None and libb == None:
+		error.fatal("MODEST_LIB required")
+
+
+	# parse features (ex. -funsafe)
+	global features
+	if args.feature != None:
+		for feature in args.feature:
+			features.append(feature)
+
+
+	# parse modifiers (-mbackend=c, -mstyle=legacy)
+	# and change default settings
+	if args.m != None:
+		for mod in args.m:
+			k, v = mod.split('=')
+			settings[k] = v
+
+
+	for src_filename in files:
+		src_name = os.path.normpath(src_filename)
+		do_file(src_name, args)
 
 
 
-def do_file(src_name):
+
+def do_file(src_name, args):
 	if not os.path.isfile(src_name):
 		error.fatal("file %s not found" % src_name)
 
@@ -84,43 +115,14 @@ def do_file(src_name):
 	backend.run(module, outname, {'include_dir': include_dir})
 
 
-def main():
-	#print(os.getcwd())
 
-	apply_config('default')
+# применяет конфигурационный файл поверх существующей конфигурации
+def apply_config(cfg_path):
+	from common import settings
+	with open(cfg_path, "rb") as toml:
+		config = tomllib.load(toml)
+		settings.update(config)
 
-	path_lib = os.getenv('MODEST_LIB')
-	if path_lib != None:
-		settings['lib'] = path_lib
-
-
-	libb = args.lib
-	if libb != None:
-		settings['lib'] = libb
-
-	if path_lib == None and libb == None:
-		error.fatal("MODEST_LIB required")
-
-
-	# parse features (ex. -funsafe)
-	global features
-	if args.feature != None:
-		for feature in args.feature:
-			features.append(feature)
-
-
-	# parse modifiers (-mbackend=c, -mstyle=legacy)
-	# and change default settings
-	if args.m != None:
-		for mod in args.m:
-			k, v = mod.split('=')
-			settings[k] = v
-
-
-	for src_filename in files:
-		#print("=%s" % src_filename)
-		src_name = os.path.normpath(src_filename)
-		do_file(src_name)
 
 
 
