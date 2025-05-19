@@ -9,7 +9,7 @@ from lexer import CmLexer
 from parser import Parser
 
 from util import get_item_by_id
-from common import features, settings
+from common import settings, features
 import type as htype
 from hlir.hlir import *
 
@@ -25,13 +25,11 @@ from value.value import value_imm_literal_create
 from value.word import value_word_create
 
 import decimal
-# max number of signs after .
-# decimal operation precision
-decimal.getcontext().prec = settings['precision']
 
 
 lexer = CmLexer()
 parser = Parser()
+
 
 
 # сущность из текущего модуля
@@ -244,6 +242,11 @@ def valueZeroNumber():
 def init():
 	global foundation_module
 	#lib_path = settings['lib']
+
+	# max number of signs after .
+	# decimal operation precision
+	decimal.getcontext().prec = settings['precision']
+
 
 	foundation_module = foundation.init()
 

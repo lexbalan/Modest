@@ -6,29 +6,20 @@ import os
 import argparse
 import importlib
 import tomllib
-from common import settings
+
 import error
+import trans
+from common import settings, features
 
 
-def load_config(config_name):
-	config = {}
 
-	# Opening a Toml file using tomlib
+# применяет конфигурационный файл поверх существующей конфигурации
+def apply_config(config_name):
+	from common import settings
 	cfg_path = os.path.expandvars("${MODEST_DIR}/cfg/%s.toml" % config_name)
 	with open(cfg_path, "rb") as toml:
 		config = tomllib.load(toml)
-
-	for k in config:
-		v = config[k]
-		settings[k] = v
-
-
-#print("WTF?")  # за каким то хером вызываетс два раза, видимо из-за импорта
-load_config('default')
-
-
-import trans
-from common import features
+		settings.update(config)
 
 
 parser = argparse.ArgumentParser(
@@ -93,9 +84,10 @@ def do_file(src_name):
 	backend.run(module, outname, {'include_dir': include_dir})
 
 
-
 def main():
 	#print(os.getcwd())
+
+	apply_config('default')
 
 	path_lib = os.getenv('MODEST_LIB')
 	if path_lib != None:
@@ -117,21 +109,12 @@ def main():
 			features.append(feature)
 
 
-	if args.setup != None:
-		setup_name = args.setup
-		load_config(setup_name)
-
 	# parse modifiers (-mbackend=c, -mstyle=legacy)
 	# and change default settings
 	if args.m != None:
 		for mod in args.m:
 			k, v = mod.split('=')
 			settings[k] = v
-
-
-	#if args.d != None:
-	#	for d in args.d:
-	#		print("DEF: " + str(d))
 
 
 	for src_filename in files:
