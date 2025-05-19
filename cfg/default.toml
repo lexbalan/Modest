@@ -2,8 +2,8 @@
 # cfg/default.toml
 #
 
-target_name = 'Default'
-machine_name = 'Generic'
+target_name = "Default"
+machine_name = "Generic"
 
 word_width = 64
 integer_width = 32
