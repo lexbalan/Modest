@@ -9,7 +9,7 @@ from lexer import CmLexer
 from parser import Parser
 
 from util import get_item_by_id
-from common import settings
+from common import features, settings
 import type as htype
 from hlir.hlir import *
 
@@ -217,8 +217,7 @@ def insert(s):
 
 
 def feature_add(s):
-	from main import features
-	features.set(s)
+	features.append(s)
 
 
 typeSysWord = None
@@ -1339,8 +1338,7 @@ def do_value_immediate_string(x):
 def do_value_unsafe(x):
 	#info("do_value_unsafe", ti)
 	ti = x['ti']
-	from main import features
-	if not features.get('unsafe'):
+	if not 'unsafe' in features:
 		error("for use 'unsafe' operator required -funsafe option", ti)
 
 	global unsafe_mode

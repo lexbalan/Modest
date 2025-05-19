@@ -1,5 +1,8 @@
 # error.py
 
+from common import features
+
+
 warncnt = 0
 errcnt = 0
 
@@ -135,16 +138,14 @@ def log(s):
 
 
 def note(s, ti=None):
-	from main import features
-	if features.get('paranoid'):
+	if 'paranoid' in features:
 		error(s, ti)
 		return
 	printNote(s, ti)
 
 
 def info(s, ti=None):
-	from main import features
-	if features.get('paranoid'):
+	if 'paranoid' in features:
 		printWarning(s, ti)
 		return
 
@@ -152,8 +153,7 @@ def info(s, ti=None):
 
 
 def warning(s, ti=None):
-	from main import features
-	if features.get('paranoid'):
+	if 'paranoid' in features:
 		error(s, ti)
 		return
 	printWarning(s, ti)

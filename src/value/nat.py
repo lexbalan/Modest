@@ -23,7 +23,7 @@ def _check_width(from_type, t, method, ti):
 
 		elif warning_cast_data_loss:
 			from trans import is_unsafe_mode
-			if not (is_unsafe_mode() or features.get('unsafe-downcast')):
+			if not (is_unsafe_mode() or 'unsafe-downcast' in features):
 				warning("value cons with potential data loss", ti)
 
 	if not rv:

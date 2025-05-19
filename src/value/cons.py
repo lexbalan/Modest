@@ -141,7 +141,7 @@ def value_cons_default(v):
 		t = _select_default_type_for(v.type)
 		if t != None:
 			nv = value_cons_implicit(t, v, v.ti)
-			#if features.get('paranoid'):
+			#if 'paranoid' in features:
 			#	print("constructed: ", end='')
 			#	htype.type_print(nv.type)
 			#	print('')

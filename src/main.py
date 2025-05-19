@@ -28,7 +28,7 @@ load_config('default')
 
 
 import trans
-import features
+from common import features
 
 
 parser = argparse.ArgumentParser(
@@ -61,9 +61,6 @@ def do_file(src_name):
 	#print(root_name)
 	#print("CPL: " + src_name)
 
-	# is header?
-	if src_name[-2:] == 'hm':
-		features.set('header')
 
 	src_abspath = os.path.abspath(src_name)
 	src_dirname = os.path.dirname(src_abspath)
@@ -117,7 +114,7 @@ def main():
 	global features
 	if args.feature != None:
 		for feature in args.feature:
-			features.set(feature)
+			features.append(feature)
 
 
 	if args.setup != None:
