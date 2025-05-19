@@ -9,7 +9,7 @@ from lexer import CmLexer
 from parser import Parser
 
 from util import get_item_by_id
-from main import settings
+from common import settings
 import type as htype
 from hlir.hlir import *
 
@@ -27,7 +27,7 @@ from value.word import value_word_create
 import decimal
 # max number of signs after .
 # decimal operation precision
-decimal.getcontext().prec = settings.get('precision')
+decimal.getcontext().prec = settings['precision']
 
 
 lexer = CmLexer()
@@ -221,8 +221,6 @@ def feature_add(s):
 	features.set(s)
 
 
-lib_path = ""
-
 typeSysWord = None
 typeSysChar = None
 typeSysInt = None
@@ -245,8 +243,8 @@ def valueZeroNumber():
 
 
 def init():
-	global foundation_module, lib_path
-	lib_path = settings.get('lib')
+	global foundation_module
+	#lib_path = settings['lib']
 
 	foundation_module = foundation.init()
 
@@ -309,12 +307,12 @@ def init():
 	root_symtab.value_add('false', valueFalse)
 
 
-	target_name = str(settings.get('target_name'))
-	word_width = int(settings.get('word_width'))
-	char_width = int(settings.get('char_width'))
-	int_width = int(settings.get('integer_width'))
-	flt_width = int(settings.get('float_width'))
-	pointer_width = int(settings.get('pointer_width'))
+	target_name = str(settings['target_name'])
+	word_width = int(settings['word_width'])
+	char_width = int(settings['char_width'])
+	int_width = int(settings['integer_width'])
+	flt_width = int(settings['float_width'])
+	pointer_width = int(settings['pointer_width'])
 
 	global typeSysWord, typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
@@ -365,11 +363,11 @@ def init_builtin_values():
 	# __target
 	#
 
-	target_name = str(settings.get('target_name'))
-	char_width = int(settings.get('char_width'))
-	int_width = int(settings.get('integer_width'))
-	flt_width = int(settings.get('float_width'))
-	pointer_width = int(settings.get('pointer_width'))
+	target_name = str(settings['target_name'])
+	char_width = int(settings['char_width'])
+	int_width = int(settings['integer_width'])
+	flt_width = int(settings['float_width'])
+	pointer_width = int(settings['pointer_width'])
 
 
 	__targetName = value_string_create(target_name)
@@ -2490,7 +2488,7 @@ def get_import_abspath(s, ext='.m'):
 				break
 
 		if full_name == '':
-			full_name = lib_path + '/' + s
+			full_name = settings['lib'] + '/' + s
 
 	if not os.path.exists(full_name):
 		print("%s not exist" % full_name)

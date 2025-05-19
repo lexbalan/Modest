@@ -10,7 +10,7 @@ import type as htype
 from type import select_common_type, type_print
 from hlir.value import ValueIndex
 from util import nbits_for_num, get_item_by_id, align_to
-from main import settings
+from common import settings
 import foundation
 
 import copy
@@ -87,7 +87,7 @@ def is_global_context():
 
 def init():
 	global styleguide
-	stylename = settings.get('style')
+	stylename = settings['style']
 	if stylename != None:
 		if stylename in styles:
 			styleguide = styles[stylename]

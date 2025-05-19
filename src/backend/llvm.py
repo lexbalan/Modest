@@ -9,7 +9,7 @@ from type import type_print
 from hlir.value import ValueZero
 from util import align_bits_up
 from pprint import pprint
-import settings
+from common import settings
 
 import foundation
 
@@ -57,8 +57,8 @@ llvm_value_num_zero = None
 
 def init():
 	global LLVM_TARGET_TRIPLE, LLVM_TARGET_DATALAYOUT, llvm_value_num_zero
-	LLVM_TARGET_TRIPLE = settings.get('target_triple')
-	LLVM_TARGET_DATALAYOUT = settings.get('target_datalayout')
+	LLVM_TARGET_TRIPLE = settings['target_triple']
+	LLVM_TARGET_DATALAYOUT = settings['target_datalayout']
 	llvm_value_num_zero = llvm_value_num(foundation.typeInt32, 0)
 
 

@@ -1,6 +1,6 @@
 
-import settings
 import decimal
+from common import settings
 from error import info, warning, error
 import type as type
 from type import TypeFloat
@@ -10,7 +10,7 @@ from hlir.value import ValueLiteral, ValueCons
 
 def value_float_create(num, ti=None):
 	#info("value_float_create", ti)
-	flt_width = int(settings.get('float_width'))
+	flt_width = int(settings['float_width'])
 	typ = TypeFloat(width=flt_width, ti=ti)
 	typ.generic = True
 	v = ValueLiteral(typ, ti)

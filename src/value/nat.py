@@ -79,8 +79,8 @@ def natural_can(to, from_type, method, ti):
 		return False
 
 	if Type.is_pointer(from_type):
-		from main import settings
-		return to.width >= int(settings.get('pointer_width'))
+		from common import settings
+		return to.width >= int(settings['pointer_width'])
 
 	return False
 

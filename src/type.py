@@ -1,7 +1,6 @@
 
 import copy
 from error import info, warning, error, fatal
-import settings
 from hlir.hlir import Id, Field, Value
 from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up
 from hlir.type import *

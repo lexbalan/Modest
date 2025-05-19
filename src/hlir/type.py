@@ -3,7 +3,7 @@
 ######################################################################
 
 import copy
-import settings
+from common import settings
 from util import get_item_by_id, align_bits_up, nbits_for_num, nbytes_for_bits, align_to
 
 from .entity import Entity
@@ -615,7 +615,7 @@ class TypeChar(Type):
 
 class TypePointer(Type):
 	def __init__(self, to, generic=False, ti=None):
-		w = int(settings.get('pointer_width'))
+		w = int(settings['pointer_width'])
 		super().__init__(width=w, generic=generic, ops=PTR_OPS, ti=ti)
 		self.incomplete = False
 		self.to = to
@@ -674,7 +674,7 @@ class TypeRecord(Type):
 
 class TypeFunc(Type):
 	def __init__(self, params, to, va_args, ti=None):
-		w = int(settings.get('pointer_width'))
+		w = int(settings['pointer_width'])
 		super().__init__(width=w, ops=PTR_OPS, ti=ti)
 		self.incomplete = False
 		self.params = params

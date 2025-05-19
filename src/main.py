@@ -6,7 +6,7 @@ import os
 import argparse
 import importlib
 import tomllib
-import settings
+from common import settings
 import error
 
 
@@ -20,7 +20,7 @@ def load_config(config_name):
 
 	for k in config:
 		v = config[k]
-		settings.set(k, v)
+		settings[k] = v
 
 
 #print("WTF?")  # за каким то хером вызываетс два раза, видимо из-за импорта
@@ -68,7 +68,7 @@ def do_file(src_name):
 	src_abspath = os.path.abspath(src_name)
 	src_dirname = os.path.dirname(src_abspath)
 
-	settings.set('path', src_dirname)
+	settings['path'] = src_dirname
 
 
 	trans.init()
@@ -78,7 +78,7 @@ def do_file(src_name):
 		exit(1)
 
 	# select & init backend
-	backend_name = settings.get('backend')
+	backend_name = settings['backend']
 	backend = importlib.import_module("backend.%s" % backend_name)
 	backend.init()
 
@@ -102,12 +102,12 @@ def main():
 
 	path_lib = os.getenv('MODEST_LIB')
 	if path_lib != None:
-		settings.set('lib', path_lib)
+		settings['lib'] = path_lib
 
 
 	libb = args.lib
 	if libb != None:
-		settings.set('lib', libb)
+		settings['lib'] = libb
 
 	if path_lib == None and libb == None:
 		error.fatal("MODEST_LIB required")
@@ -129,7 +129,7 @@ def main():
 	if args.m != None:
 		for mod in args.m:
 			k, v = mod.split('=')
-			settings.set(k, v)
+			settings[k] = v
 
 
 	#if args.d != None:
