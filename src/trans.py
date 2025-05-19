@@ -1837,8 +1837,8 @@ def def_const(x):
 
 	const_value = do_const(x)
 
-	if not const_value.isImmediate():
-		error("expected immediate value", x['init_value']['ti'])
+	#if not const_value.isImmediate():
+	#	error("expected immediate value", x['init_value']['ti'])
 
 	const_value.id.prefix = global_prefix
 

@@ -604,6 +604,10 @@ def str_value_deref(x, ctx):
 
 def str_value_call(v, ctx, sret=None):
 	sstr = ''
+
+	if v.isImmediate():
+		return str_value_literal(v, ctx)
+
 	left = v.func
 
 	sstr += str_value(left)
@@ -1263,8 +1267,10 @@ def str_value_literal(x, ctx):
 		sstr += str_literal_char(x.asset, x.type.width)
 	elif t.is_pointer():
 		sstr += str_literal_pointer(x.type, x.asset)
+	#elif t.is_unit():
+	#	sstr = ''
 	else:
-		error("str_value_literal not implemented", x.ti)
+		error("str_value_literal not implemented for %s" % str(x.type), x.ti)
 
 	return sstr
 

@@ -215,6 +215,7 @@ class ValueZero(Value):
 		self.addAttribute('zero')
 
 
+
 class ValueCons(Value):
 	def __init__(self, type, value, method, ti=None):
 		from .type import Type
@@ -224,6 +225,7 @@ class ValueCons(Value):
 		super().__init__(type=type, ti=ti)
 		self.value = value
 		self.method = method
+
 
 
 #TODO: onl value as arg (undefined if not init_value, but type from it)
@@ -259,7 +261,7 @@ class ValueFunc(Value):
 		assert(isinstance(id, Id))
 		super().__init__(type=type, ti=ti)
 		self.id = id
-		self.is_pure = True
+		self.is_pure = False
 		self.usecnt = 0
 
 
@@ -431,6 +433,14 @@ class ValueShr(Value):
 			self.immediate = True
 
 
+def get_func_from(x):
+	if isinstance(x, ValueFunc):
+		return x
+	elif isinstance(x, ValueAccessModule):
+		return x.value
+	return None
+
+
 #TODO: get type from value ret type
 class ValueCall(Value):
 	def __init__(self, type, func, args, ti=None):
@@ -447,10 +457,11 @@ class ValueCall(Value):
 				args_is_imm = False
 				break
 
-		if func.is_pure and args_is_imm:
-			pass
-			#self.immediate = True
-			#self.asset = 0
+		fn = get_func_from(func)
+		if fn != None:
+			if fn.is_pure and args_is_imm:
+				self.immediate = True
+				self.asset = 0
 
 
 class ValueAccessRecord(Value):

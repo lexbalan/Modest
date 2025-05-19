@@ -9,7 +9,7 @@ func add (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-//const yx = add(2, 2)
+const yx = add(2, 2)
 
 
 public type Point record {
@@ -90,15 +90,15 @@ func ma () -> Int32
 //}
 
 
-func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
-	return {a=a, b=b}
-}
-
-func ab_test () -> Unit {
-	let x = ab_ret(9, 11)
-	printf("x.a = %i\n", x.a)
-	printf("x.a = %i\n", x.b)
-}
+//func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
+//	return {a=a, b=b}
+//}
+//
+//func ab_test () -> Unit {
+//	let x = ab_ret(9, 11)
+//	printf("x.a = %i\n", x.a)
+//	printf("x.a = %i\n", x.b)
+//}
 
 const ca = 4
 var va = ca
@@ -113,12 +113,12 @@ const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 var yyy: @volatile [32]Int32
 
 public func main () -> Int32 {
-	ab_test()
+	//ab_test()
 
 	var p: Point
 	printf("test %s\n", *Str8 cq)
 	printf("test %d\n", v0)
-	f0()
+	//f0()
 
 	printf("p0.x = %d\n", p0.x)
 

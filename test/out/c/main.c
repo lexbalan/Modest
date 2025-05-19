@@ -19,14 +19,12 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
-/* anonymous records */
-struct __anonymous_struct_1 {int32_t a; int32_t b;
-};
-
 static int32_t add(int32_t a, int32_t b)
 {
 	return a + b;
 }
+
+#define yx  (0)
 
 int32_t main_v0;
 
@@ -87,18 +85,6 @@ static volatile int yy[10];
 
 extern int32_t ma();
 
-static struct __anonymous_struct_1 ab_ret(int32_t a, int32_t b)
-{
-	return (struct __anonymous_struct_1){.a = a, .b = b};
-}
-
-static void ab_test()
-{
-	const struct __anonymous_struct_1 x = ab_ret(9, 11);
-	printf("x.a = %i\n", x.a);
-	printf("x.a = %i\n", x.b);
-}
-
 #define ca  4
 static int32_t va = ca;
 
@@ -112,12 +98,12 @@ extern volatile int32_t yyy[32];
 
 int32_t main()
 {
-	ab_test();
+	//ab_test()
 
 	main_Point p;
 	printf("test %s\n", (char *)main_cq);
 	printf("test %d\n", main_v0);
-	main_f0();
+	//f0()
 
 	printf("p0.x = %d\n", ((struct {uint8_t x; uint8_t y;
 	})p0).x);

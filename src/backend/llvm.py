@@ -1037,6 +1037,10 @@ def do_eval_ref(v):
 
 
 def do_eval_call(v):
+
+	if v.isImmediate():
+		return do_eval_literal(v)
+
 	# eval all args
 	args = []
 	for a in v.args:
