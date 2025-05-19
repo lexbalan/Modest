@@ -75,16 +75,18 @@ def value_pointer_cons(t, v, method, ti):
 		if v.type.is_string():
 			nv = ValueCons(t, v, method, ti=ti)
 			nv.linktime = True
-			nv.strdata = utf32_chars_to_utfx_chars(v.asset, t.to.of, ti)
+			char_type = t.to.of
+			nv.strdata = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
 			nv.addAttribute('zstring')
 
 			# регистрируем строку в модуле
 			from trans import cmodule_strings_add
 			cmodule_strings_add(nv)
-
 			return nv
-		from .cons import value_cons_immediate
-		return value_cons_immediate(t, v, method, ti)
+
+		else:
+			from .cons import value_cons_immediate
+			return value_cons_immediate(t, v, method, ti)
 
 	return ValueCons(t, v, method, ti=ti)
 
