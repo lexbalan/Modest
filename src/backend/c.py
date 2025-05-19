@@ -61,7 +61,8 @@ styles = {
 	'allman': modern_style,
 }
 
-styleguide = styles['legacy']
+default_style = styles['legacy']
+styleguide = default_style
 
 
 
@@ -88,6 +89,7 @@ def is_global_context():
 def init():
 	global styleguide
 	stylename = settings['output_style']
+	print("STYLE = " +  stylename)
 	if stylename != None:
 		if stylename in styles:
 			styleguide = styles[stylename]
@@ -219,7 +221,7 @@ def str_type_record(t, tag=''):
 		s += (" %s" % tag)
 
 	if styleguide['LINE_BREAK_BEFORE_STRUCT_BRACE']:
-		s += nl_str
+		s += str_newline(1)
 	else:
 		s += " "
 

@@ -12,9 +12,19 @@ import trans
 from common import settings, features
 
 
+# 1. Сперва применяется default config
+# 2. Затем (опционально) конфиг проекта
+# 3. Затем опции командной строки
+# 4. И в последнюю очередь - pragma опции
+
 
 def main():
-	#print(os.getcwd())
+	cwd = os.getcwd()
+	print(cwd)
+
+	# Загружаем default config
+	cfg_path = os.path.expandvars("${MODEST_DIR}/cfg/%s.toml" % 'default')
+	apply_config(cfg_path)
 
 	parser = argparse.ArgumentParser(
 		prog = 'ProgramName',
@@ -26,6 +36,7 @@ def main():
 	parser.add_argument('-i', '--include')
 	parser.add_argument('-o', '--output')
 	parser.add_argument('-L', '--lib')
+	parser.add_argument('--config', help='--config=<./main.cfg>')
 	parser.add_argument('-s', '--setup', help='-setup=<value>')
 	parser.add_argument('-f', '--feature', action='append', help='[unsafe]')
 	parser.add_argument('-m', action='append', help='-m<var>=<value>')
@@ -35,9 +46,9 @@ def main():
 	args, files = parser.parse_known_args()
 
 
-	cfg_path = os.path.expandvars("${MODEST_DIR}/cfg/%s.toml" % 'default')
-	apply_config(cfg_path)
-
+	fdg = args.config
+	if fdg != None:
+		apply_config(cwd + '/' + fdg)
 
 	path_lib = os.getenv('MODEST_LIB')
 	if path_lib != None:
@@ -122,7 +133,6 @@ def apply_config(cfg_path):
 	with open(cfg_path, "rb") as toml:
 		config = tomllib.load(toml)
 		settings.update(config)
-
 
 
 

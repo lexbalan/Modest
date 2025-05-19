@@ -24,8 +24,6 @@ static int32_t add(int32_t a, int32_t b)
 	return a + b;
 }
 
-#define yx  (0)
-
 int32_t main_v0;
 
 void main_f0()
@@ -43,7 +41,8 @@ static uint8_t prev_p[10];
 static void xxx(uint8_t *p)
 {
 	uint8_t *const xp = (uint8_t *)p;
-	if (memcmp(&prev_p, xp, sizeof(uint8_t[10])) != 0) {
+	if (memcmp(&prev_p, xp, sizeof(uint8_t[10])) != 0)
+	{
 		memcpy(&prev_p, xp, sizeof(uint8_t[10]));
 	}
 }
@@ -74,7 +73,8 @@ void main_sbuf(void *p, uint32_t size)
 	uint8_t buf[size];
 	memcpy(&buf, px, sizeof(uint8_t[size]));
 	uint32_t i = 0;
-	while (i < size) {
+	while (i < size)
+	{
 		const uint8_t x = buf[i];
 		i = i + 1;
 	}
@@ -89,7 +89,8 @@ extern int32_t ma();
 static int32_t va = ca;
 
 #define p0  {.x = 1, .y = 2}
-static struct {uint8_t x; uint8_t y;
+static struct
+{uint8_t x; uint8_t y;
 } p = p0;
 
 #define ini  {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
@@ -105,7 +106,8 @@ int32_t main()
 	printf("test %d\n", main_v0);
 	//f0()
 
-	printf("p0.x = %d\n", ((struct {uint8_t x; uint8_t y;
+	printf("p0.x = %d\n", ((struct
+{uint8_t x; uint8_t y;
 	})p0).x);
 
 	int32_t x1 = 5;
@@ -138,9 +140,12 @@ int32_t main()
 
 	int *const pa2 = (int *)&a2;
 
-	if (memcmp(pa2, &a0, sizeof(int[10])) == 0) {
+	if (memcmp(pa2, &a0, sizeof(int[10])) == 0)
+	{
 		printf("eq!\n");
-	} else {
+	}
+	else
+	{
 		printf("eq!\n");
 	}
 
@@ -160,21 +165,30 @@ int32_t main()
 	const int32_t i32 = (int32_t)i8;
 	const uint32_t w32 = (uint32_t)(uint8_t)i8;
 
-	if (((int32_t)(int8_t)-1 == -1) && (i32 == -1)) {
+	if (((int32_t)(int8_t)-1 == -1) && (i32 == -1))
+	{
 		printf("Int8 -1 -> Int32 (-1) test passed\n");
-	} else {
+	}
+	else
+	{
 		printf("Int8 -1 -> Int32 test failed\n");
 	}
 
-	if ((ABS((int8_t)-1) == 1) && (n32 == 1)) {
+	if ((ABS((int8_t)-1) == 1) && (n32 == 1))
+	{
 		printf("Int8 -1 -> Nat32 (1) test passed\n");
-	} else {
+	}
+	else
+	{
 		printf("Int8 -1 -> Nat32 test failed\n");
 	}
 
-	if (((uint32_t)(uint8_t)(int8_t)-1 == 0xFF) && (w32 == 0xFF)) {
+	if (((uint32_t)(uint8_t)(int8_t)-1 == 0xFF) && (w32 == 0xFF))
+	{
 		printf("Int8 -1 -> Word32 (0xff) test passed\n");
-	} else {
+	}
+	else
+	{
 		printf("Int8 -1 -> Word32 test failed\n");
 	}
 

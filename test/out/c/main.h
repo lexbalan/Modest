@@ -10,7 +10,8 @@
 #include <string.h>
 
 
-struct main_Point {
+struct main_Point
+{
 	int32_t x;  // hi!
 	int32_t y;  // lo?
 };

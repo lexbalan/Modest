@@ -9,7 +9,7 @@ func add (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-const yx = add(2, 2)
+//const yx = add(2, 2)
 
 
 public type Point record {

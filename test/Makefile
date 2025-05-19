@@ -21,7 +21,7 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
+	mcc -o $(CPREFIX)/main --config=config.toml -mbackend=c -funsafe $(INDIR)/main.m
 	CC $(CPREFIX)/main.c
 
 
