@@ -16,6 +16,9 @@ class Value(Entity):
 		self.type = type
 		self.definition = None # *StmtDefVar, *StmtDefConst, *StmtDefFunc
 
+		# this value is immediate but are known only in link time
+		self.linktime = False
+		# this value is immediate
 		self.immediate = False
 
 		#

@@ -73,9 +73,9 @@ def pointer_can(to, from_type, method, ti):
 def value_pointer_cons(t, v, method, ti):
 	if v.isImmediate():
 		if v.type.is_string():
-			s_imm = utf32_chars_to_utfx_chars(v.asset, t.to.of, ti)
 			nv = ValueCons(t, v, method, ti=ti)
-			nv.asset = s_imm
+			nv.linktime = True
+			nv.strdata = utf32_chars_to_utfx_chars(v.asset, t.to.of, ti)
 			nv.addAttribute('zstring')
 
 			# регистрируем строку в модуле
