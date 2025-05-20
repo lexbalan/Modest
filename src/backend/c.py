@@ -2,6 +2,8 @@
 # но индексируешь переменной (в цикле например)
 
 
+import copy
+
 from .common import *
 from error import info, error, fatal
 from hlir.hlir import *
@@ -10,10 +12,8 @@ import type as htype
 from type import select_common_type, type_print
 from hlir.value import ValueIndex
 from util import nbits_for_num, get_item_by_id, align_to
-from common import settings
 import foundation
 
-import copy
 
 
 cmodule = None
@@ -87,7 +87,7 @@ def is_global_context():
 	return cfunc == None
 
 
-def init():
+def init(settings):
 	global styleguide
 	stylename = settings['output_style']
 	print("STYLE = " +  stylename)
@@ -2364,13 +2364,13 @@ def print_cfile(module, _outname):
 
 
 
-def run(module, _outname, options):
+def run(module, _outname, settings):
 	global cmodule
 	cmodule = module
 
 	hpath = _outname
-	if 'include_dir' in options:
-		inc_dir = options['include_dir']
+	if 'include_dir' in settings:
+		inc_dir = settings['include_dir']
 		hname = os.path.basename(_outname)
 		hpath = inc_dir + '/' + hname
 

@@ -901,7 +901,7 @@ def printTopLevelStmt(x):
 	elif isinstance(x, StmtDirective): print_directive(x)
 
 
-def init():
+def init(settings):
 	pass
 
 

@@ -12,11 +12,6 @@ import trans
 from common import settings, features
 
 
-# 1. Сперва применяется default config
-# 2. Затем (опционально) конфиг проекта
-# 3. Затем опции командной строки
-# 4. И в последнюю очередь - pragma опции
-
 
 def main():
 	cwd = os.getcwd()
@@ -54,7 +49,6 @@ def main():
 	if fdg != None:
 		apply_config(cwd + '/' + fdg)
 
-
 	libb = args.lib
 	if libb != None:
 		settings['lib'] = libb
@@ -74,7 +68,6 @@ def main():
 			k, v = mod.split('=')
 			settings[k] = v
 
-
 	outname = args.output
 	if outname == None:
 		outname = root_name
@@ -93,12 +86,12 @@ def main():
 
 def do_file(src_name, outname, settings):
 	if not os.path.isfile(src_name):
-		error.fatal("file %s not found" % src_name)
+		error.fatal("file \"%s\" not found" % src_name)
 
-	file_base_name = os.path.basename(src_name)
-	root_name = file_base_name.split(".")[0]
-	src_abspath = os.path.abspath(src_name)
-	src_dirname = os.path.dirname(src_abspath)
+#	file_base_name = os.path.basename(src_name)
+#	root_name = file_base_name.split(".")[0]
+#	src_abspath = os.path.abspath(src_name)
+#	src_dirname = os.path.dirname(src_abspath)
 
 	trans.init()
 	module = trans.translate(src_name)
@@ -109,8 +102,8 @@ def do_file(src_name, outname, settings):
 	# select & run backend
 	backend_impline = "backend." + settings['backend']
 	backend = importlib.import_module(backend_impline)
-	backend.init()
-	backend.run(module, outname, {'include_dir': settings['include_dir']})
+	backend.init(settings)
+	backend.run(module, outname, settings)
 
 
 

@@ -9,9 +9,9 @@ from type import type_print
 from hlir.value import ValueZero
 from util import align_bits_up
 from pprint import pprint
-from common import settings
 
 import foundation
+
 
 cmodule = None
 
@@ -55,7 +55,7 @@ def is_global_context():
 
 llvm_value_num_zero = None
 
-def init():
+def init(settings):
 	global LLVM_TARGET_TRIPLE, LLVM_TARGET_DATALAYOUT, llvm_value_num_zero
 	LLVM_TARGET_TRIPLE = settings['target_triple']
 	LLVM_TARGET_DATALAYOUT = settings['target_datalayout']
