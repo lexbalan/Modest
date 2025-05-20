@@ -72,6 +72,7 @@ cfunc = None
 def newline(n=1):
 	out(str_newline(n))
 
+
 def nl_indent(nl=1):
 	out(str_nl_indent(nl))
 
