@@ -74,15 +74,24 @@ def main():
 			k, v = mod.split('=')
 			settings[k] = v
 
+
+	outname = args.output
+	if outname == None:
+		outname = root_name
+
+	include_dir = args.include
+	if args.include == None:
+		include_dir = os.path.dirname(outname)
+	settings['include_dir'] = include_dir
+
 	# handle source files
 	for src_filename in files:
 		src_name = os.path.normpath(src_filename)
-		do_file(src_name, args)
+		do_file(src_name, outname, settings)
 
 
 
-
-def do_file(src_name, args):
+def do_file(src_name, outname, settings):
 	if not os.path.isfile(src_name):
 		error.fatal("file %s not found" % src_name)
 
@@ -97,20 +106,11 @@ def do_file(src_name, args):
 	if error.errcnt > 0 or module == None:
 		exit(1)
 
-	# print output
-	outname = args.output
-	if outname == None:
-		outname = root_name
-
-	include_dir = args.include
-	if args.include == None:
-		include_dir = os.path.dirname(outname)
-
 	# select & run backend
 	backend_impline = "backend." + settings['backend']
 	backend = importlib.import_module(backend_impline)
 	backend.init()
-	backend.run(module, outname, {'include_dir': include_dir})
+	backend.run(module, outname, {'include_dir': settings['include_dir']})
 
 
 
