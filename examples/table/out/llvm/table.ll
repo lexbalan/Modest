@@ -452,35 +452,36 @@ body_5:
 	%125 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%126 = load %Nat32, %Nat32* %125
 	call void @printRow([0 x %Str8*]* %123, [0 x %Nat32]* %124, %Nat32 %126)
-	%127 = load %Nat32, %Nat32* %3
-	%128 = add %Nat32 %127, 1
-	store %Nat32 %128, %Nat32* %3
 ; if_4
-	%129 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 4
-	%130 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
+	%127 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 4
+	%128 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 2
+	%129 = load %Nat32, %Nat32* %128
+	%130 = sub %Nat32 %129, 1
 	%131 = load %Nat32, %Nat32* %3
-	%132 = load %Nat32, %Nat32* %130
-	%133 = icmp ult %Nat32 %131, %132
-	%134 = load %Bool, %Bool* %129
-	%135 = and %Bool %134, %133
-	br %Bool %135 , label %then_4, label %endif_4
+	%132 = icmp ult %Nat32 %131, %130
+	%133 = load %Bool, %Bool* %127
+	%134 = and %Bool %133, %132
+	br %Bool %134 , label %then_4, label %endif_4
 then_4:
-	%136 = bitcast [0 x %Nat32]* %21 to [0 x %Nat32]*
-	%137 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%138 = load %Nat32, %Nat32* %137
-	call void @separator([0 x %Nat32]* %136, %Nat32 %138)
+	%135 = bitcast [0 x %Nat32]* %21 to [0 x %Nat32]*
+	%136 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%137 = load %Nat32, %Nat32* %136
+	call void @separator([0 x %Nat32]* %135, %Nat32 %137)
 	br label %endif_4
 endif_4:
+	%138 = load %Nat32, %Nat32* %3
+	%139 = add %Nat32 %138, 1
+	store %Nat32 %139, %Nat32* %3
 	br label %again_5
 break_5:
 
 	; bottom border
-	%139 = bitcast [0 x %Nat32]* %21 to [0 x %Nat32]*
-	%140 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
-	%141 = load %Nat32, %Nat32* %140
-	call void @separator([0 x %Nat32]* %139, %Nat32 %141)
-	%142 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %142)
+	%140 = bitcast [0 x %Nat32]* %21 to [0 x %Nat32]*
+	%141 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
+	%142 = load %Nat32, %Nat32* %141
+	call void @separator([0 x %Nat32]* %140, %Nat32 %142)
+	%143 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %143)
 	ret void
 }
 

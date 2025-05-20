@@ -74,11 +74,12 @@ void table_print(table_Table *table)
 	i = 0;
 	while (i < table->nRows) {
 		printRow(&(*data)[i], (uint32_t *)&sz, table->nCols);
-		i = i + 1;
 
-		if (table->separate && i < table->nRows) {
+		if (table->separate && i < table->nRows - 1) {
 			separator((uint32_t *)&sz, table->nCols);
 		}
+
+		i = i + 1;
 	}
 
 	// bottom border

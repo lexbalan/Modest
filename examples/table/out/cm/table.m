@@ -74,11 +74,12 @@ public func print (table: *Table) -> Unit {
 	i = 0
 	while i < table.nRows {
 		printRow(&data[i], &sz, table.nCols)
-		i = i + 1
 
-		if table.separate and i < table.nRows {
+		if table.separate and i < table.nRows - 1 {
 			separator(&sz, table.nCols)
 		}
+
+		i = i + 1
 	}
 
 	// bottom border
