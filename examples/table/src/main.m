@@ -75,6 +75,7 @@ public func main() -> Int32 {
 
 	if tab == nil {
 		printf("cannot create object\n")
+		return exitFailure
 	}
 
 	*tab = table00

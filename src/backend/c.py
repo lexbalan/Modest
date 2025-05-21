@@ -90,7 +90,6 @@ def is_global_context():
 def init(settings):
 	global styleguide
 	stylename = settings['output_style']
-	print("STYLE = " +  stylename)
 	if stylename != None:
 		if stylename in styles:
 			styleguide = styles[stylename]

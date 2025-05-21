@@ -80,6 +80,7 @@ int32_t main()
 
 	if (tab == NULL) {
 		printf("cannot create object\n");
+		return EXIT_FAILURE;
 	}
 
 	*tab = table00;
