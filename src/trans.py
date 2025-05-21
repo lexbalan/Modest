@@ -1835,10 +1835,11 @@ def def_const(x):
 	global global_prefix
 
 	const_value = do_const(x)
+	iv = const_value.init_value
 
-	if not (const_value.init_value.isImmediate() or const_value.init_value.linktime):
-		print(const_value.init_value)
-		error("expected immediate value", const_value.init_value.ti)
+	if not isinstance(iv, ValueUndef):
+		if not (iv.isImmediate() or iv.linktime):
+			error("expected immediate value", iv.ti)
 
 	const_value.id.prefix = global_prefix
 

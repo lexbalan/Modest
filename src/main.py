@@ -1,6 +1,3 @@
-#
-# ../mcc -o main -mbackend=printer_c -mopt=speed -funsafe main.m
-#
 
 import os
 import argparse
