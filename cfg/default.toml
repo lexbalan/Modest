@@ -16,8 +16,13 @@ precision = 256
 
 libs = [""]
 
+#[backend]
 backend = "llvm"
+
+#[backend.llvm]
 target_datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
 target_triple = "arm64-apple-macosx12.0.0"
+
+#[backend.c]
 output_style = "legacy"
 

@@ -28,7 +28,7 @@ C:
 	#mcc -o $(CPREFIX)/memory -mbackend=c -funsafe ${MODEST_LIB}/lightfood/memory.m
 	mcc -o ./out/c/memory -mbackend=c -funsafe ${MODEST_LIB}/lightfood/memory.m
 
-	CC $(CPREFIX)/main.c $(CPREFIX)/memory.c
+	$(CC) $(CPREFIX)/main.c $(CPREFIX)/memory.c
 
 
 clean:

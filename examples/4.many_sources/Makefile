@@ -31,7 +31,7 @@ LLVM:
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
 	mcc -o $(CPREFIX)/lib -mbackend=c $(INDIR)/lib.m
-	CC $(CPREFIX)/main.c $(CPREFIX)/lib.c
+	$(CC) $(CPREFIX)/main.c $(CPREFIX)/lib.c
 
 
 clean:

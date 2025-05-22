@@ -34,7 +34,7 @@ C:
 	mcc -o $(CPREFIX)/main -mbackend=c -funsafe -mint=64 $(INDIR)/main.m
 	mcc -o $(CPREFIX)/list -mbackend=c -mint=64 $(INDIR)/list.m
 	
-	CC $(CPREFIX)/main.c $(CPREFIX)/list.c
+	$(CC) $(CPREFIX)/main.c $(CPREFIX)/list.c
 
 
 clean:

@@ -29,7 +29,7 @@ C:
 	mcc -o $(CPREFIX)/sub -fheader -mbackend=c $(INDIR)/sub.m
 	mcc -o $(CPREFIX)/sub2 -fheader -mbackend=c $(INDIR)/sub2.m
 	mcc -o $(CPREFIX)/console -fheader -mbackend=c $(INDIR)/console.m
-	CC $(CPREFIX)/main.c 
+	$(CC) $(CPREFIX)/main.c 
 
 
 clean:

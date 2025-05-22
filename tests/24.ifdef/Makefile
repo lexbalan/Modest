@@ -22,7 +22,7 @@ LLVM:
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
-	CC $(CPREFIX)/main.c
+	$(CC) $(CPREFIX)/main.c
 
 
 clean:

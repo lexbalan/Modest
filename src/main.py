@@ -12,7 +12,7 @@ from common import settings, features
 
 def main():
 	cwd = os.getcwd()
-	print(cwd)
+	#print(cwd)
 
 	path_lib = os.getenv('MODEST_LIB')
 	if path_lib != None:
@@ -21,6 +21,8 @@ def main():
 	# Загружаем default config
 	cfg_path = os.path.expandvars("${MODEST_DIR}/cfg/%s.toml" % 'default')
 	apply_config(cfg_path)
+
+	#print(settings)
 
 	parser = argparse.ArgumentParser(
 		prog = 'ProgramName',

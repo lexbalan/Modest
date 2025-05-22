@@ -28,7 +28,7 @@ C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
 	mcc -o $(CPREFIX)/sub -mbackend=c $(INDIR)/sub.m
 	mcc -o $(CPREFIX)/console -mbackend=c $(INDIR)/console.m
-	CC $(CPREFIX)/main.c $(CPREFIX)/sub.c
+	$(CC) $(CPREFIX)/main.c $(CPREFIX)/sub.c
 
 
 clean:
