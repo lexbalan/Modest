@@ -7,6 +7,7 @@ CMPREFIX=$(OUTDIR)/cm
 CPREFIX=$(OUTDIR)/c
 LLVMPREFIX = $(OUTDIR)/llvm
 
+LIBS = -lm
 
 all: LLVM
 
@@ -17,12 +18,12 @@ CM:
 
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
-	clang $(LLVMPREFIX)/main.ll
+	clang $(LIBS) $(LLVMPREFIX)/main.ll
 
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
-	$(CC) $(CPREFIX)/main.c
+	$(CC) $(LIBS) $(CPREFIX)/main.c
 
 
 clean:

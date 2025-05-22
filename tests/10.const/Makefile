@@ -7,6 +7,7 @@ CMPREFIX=$(OUTDIR)/cm
 CPREFIX=$(OUTDIR)/c
 LLVMPREFIX = $(OUTDIR)/llvm
 
+LIBS = -lm
 
 all: LLVM
 
@@ -19,14 +20,14 @@ LLVM:
 	mcc -o $(LLVMPREFIX)/minmax $(C_OPTIONS) -mbackend=llvm -funsafe ${MODEST_LIB}/misc/minmax.m
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
 	
-	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/minmax.ll
+	clang $(LIBS) $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/minmax.ll
     
 
 
 C:
 	mcc -o $(CPREFIX)/minmax $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/misc/minmax.m
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/minmax.c
+	$(CC) $(LIBS) $(CPREFIX)/main.c $(CPREFIX)/minmax.c
 	
 	
 

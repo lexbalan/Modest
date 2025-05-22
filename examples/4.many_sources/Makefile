@@ -25,7 +25,7 @@ LLVM:
 	clang -c $(LLVMPREFIX)/lib.ll
 	
 	# compile .o files to a.out
-	CC main.o lib.o -o a.out
+	$(CC) main.o lib.o -o a.out
 
 
 C:

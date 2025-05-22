@@ -25,7 +25,7 @@ LLVM:
 	#clang -c $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/linked_list.ll
 	
 	# 3. *.o -> a.out
-	#CC main.o linked_list.o -o a.out
+	#$(CC) main.o linked_list.o -o a.out
 	
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/list.ll
 
