@@ -5,7 +5,7 @@
 ```zig
 
 // for Int & printf
-import "libc/stdio"
+include "libc/stdio"
 
 
 public func main () -> Int {
@@ -19,7 +19,7 @@ public func main () -> Int {
 
 ```zig
 
-import "libc/stdio"
+include "libc/stdio"
 
 
 func mtab (n: Nat32) -> Unit {
@@ -51,8 +51,8 @@ public func main () -> Int {
 // this example shows how to create records Point & Line
 // and determine length of the line
 
-import "libc/math"
-import "libc/stdio"
+include "libc/math"
+include "libc/stdio"
 
 
 type Point record {
@@ -134,7 +134,7 @@ public func main () -> Int {
 
 // this example shows how to write & read text file
 
-import "libc/stdio"
+include "libc/stdio"
 
 
 const filename = *Str8 "file.txt"
