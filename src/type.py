@@ -31,7 +31,7 @@ def print_list_by(lst, method):
 
 def type_print_record(t, print_aka=True):
 	if t.is_generic_record():
-		print("Record{...}", end='')
+		print("GenericRecord{...}", end='')
 		return
 
 #			for f in t.fields:

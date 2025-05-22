@@ -942,8 +942,7 @@ def do_value_call(x):
 
 		i += 1
 
-	nv = ValueCall(ftype.to, fn, args + extra_args, ti=x['ti'])
-	return nv
+	return ValueCall(ftype.to, fn, args + extra_args, ti=x['ti'])
 
 
 
@@ -1647,8 +1646,8 @@ def do_stmt_incdec(x, op='add'):
 		return StmtBad(x)
 
 	one = value_imm_literal_create(v.type, 1, ti=x['ti'])
-	nv = ValueBin(v.type, op, v, one, ti=x['ti'])
-	return StmtAssign(v, nv, ti=x['ti'])
+	xv = ValueBin(v.type, op, v, one, ti=x['ti'])
+	return StmtAssign(v, xv, ti=x['ti'])
 
 
 
