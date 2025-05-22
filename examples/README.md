@@ -3,8 +3,8 @@
 ### Hello World
 
 ```zig
-// see: examples/1.hello_world/src/main.m
 
+// for Int & printf
 import "libc/stdio"
 
 public func main() -> Int {
@@ -16,12 +16,11 @@ public func main() -> Int {
 ### Multiply table
 
 ```zig
-// see: examples/3.multiply_table/src/main.m
 
 import "libc/stdio"
 
 
-func mtab(n: Nat32) {
+func mtab (n: Nat32) -> Unit {
     var m: Nat32 = 1
     while m < 10 {
         let nm = n * m
@@ -33,7 +32,7 @@ func mtab(n: Nat32) {
 }
 
 
-public func main() -> Int32 {
+public func main () -> Int {
     let n = 2 * 2
     printf("multiply table for %d\n", n)
     mtab(n)
@@ -46,7 +45,6 @@ public func main() -> Int32 {
 ### Records
 
 ```zig
-// see: examples/5.records/main.m
 
 // this example shows how to create records Point & Line
 // and determine length of the line
@@ -73,7 +71,7 @@ var line: Line = {
 
 
 @inline
-func max(a: Float, b: Float) -> Float {
+func max (a: Float, b: Float) -> Float {
     if a > b {
         return a
     }
@@ -81,7 +79,7 @@ func max(a: Float, b: Float) -> Float {
 }
 
 @inline
-func min(a: Float, b: Float) -> Float {
+func min (a: Float, b: Float) -> Float {
     if a < b {
         return a
     }
@@ -90,7 +88,7 @@ func min(a: Float, b: Float) -> Float {
 
 
 // Pythagorean theorem
-func distance(a: Point, b: Point) -> Float {
+func distance (a: Point, b: Point) -> Float {
     let dx = max(a.x, b.x) - min(a.x, b.x)
     let dy = max(a.y, b.y) - min(a.y, b.y)
     let dx2 = pow(dx, 2)
@@ -104,7 +102,7 @@ func lineLength (line: Line) -> Float {
 }
 
 
-func ptr_example() -> Unit {
+func ptr_example () -> Unit {
     let ptr_p = *Point malloc(sizeof(Point))
 
     // access by pointer
@@ -115,7 +113,7 @@ func ptr_example() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
     // by value
     let len = lineLength(line)
     printf("line length = %f\n", len)
@@ -131,7 +129,6 @@ public func main() -> Int {
 ### Text file
 
 ```zig
-// see: examples/6.text_file/main.m
 
 // this example shows how to write & read text file
 
@@ -141,7 +138,7 @@ import "libc/stdio"
 const filename = *Str8 "file.txt"
 
 
-func write_example() -> Unit {
+func write_example () -> Unit {
     printf("run write_example\n")
 
     let fp = fopen(filename, "w")
@@ -157,7 +154,7 @@ func write_example() -> Unit {
 }
 
 
-func read_example() -> Unit {
+func read_example () -> Unit {
     printf("run read_example\n")
 
     let fp = fopen(filename, "r")
@@ -180,7 +177,7 @@ func read_example() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
     printf("text_file example\n")
     write_example()
     read_example()
@@ -188,3 +185,4 @@ public func main() -> Int {
 }
 
 ```
+
