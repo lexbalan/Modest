@@ -7,10 +7,12 @@
 // for Int & printf
 import "libc/stdio"
 
-public func main() -> Int {
+
+public func main () -> Int {
     printf("Hello World!\n")
     return 0
 }
+
 ```
 
 ### Multiply table
