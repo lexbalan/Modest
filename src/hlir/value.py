@@ -498,6 +498,7 @@ class ValueAccessModule(Value):
 		self.id = id
 		self.value = value
 
+		self.immediate = value.immediate
 		self.asset = value.asset
 
 		self.is_lvalue = True

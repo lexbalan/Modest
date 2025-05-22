@@ -111,8 +111,19 @@ const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 @extern("C")
 var yyy: @volatile [32]Int32
 
+
+
+func divtest () -> Unit {
+    var a: Int32 = 7
+	var b: Int32 = -3
+    printf("%d / %d = %d\n", a, b, a / b)
+    printf("%d %% %d = %d\n", a, b, a % b)
+}
+
 public func main () -> Int32 {
 	//ab_test()
+
+	divtest()
 
 	var p: Point
 	printf("test %s\n", *Str8 cq)

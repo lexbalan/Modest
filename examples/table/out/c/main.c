@@ -76,15 +76,6 @@ static table_Table table10 = {
 
 int32_t main()
 {
-	table_Table *const tab = (table_Table *)calloc(1, sizeof(table_Table));
-
-	if (tab == NULL) {
-		printf("cannot create object\n");
-		return EXIT_FAILURE;
-	}
-
-	*tab = table00;
-
 	table_print(&table00);
 	printf("\n");
 

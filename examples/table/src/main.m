@@ -71,15 +71,6 @@ var table10 = table.Table {
 
 
 public func main() -> Int32 {
-	let tab = new table.Table {}
-
-	if tab == nil {
-		printf("cannot create object\n")
-		return exitFailure
-	}
-
-	*tab = table00
-
 	table.print(&table00)
 	printf("\n")
 

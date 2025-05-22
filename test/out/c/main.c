@@ -97,9 +97,19 @@ static struct
 
 extern volatile int32_t yyy[32];
 
+static void divtest()
+{
+	int32_t a = 7;
+	int32_t b = -3;
+	printf("%d / %d = %d\n", a, b, a / b);
+	printf("%d %% %d = %d\n", a, b, a % b);
+}
+
 int32_t main()
 {
 	//ab_test()
+
+	divtest();
 
 	main_Point p;
 	printf("test %s\n", (char *)main_cq);
