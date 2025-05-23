@@ -1833,26 +1833,26 @@ def def_const(x):
 	global cmodule
 	global global_prefix
 
-	const_value = do_const(x)
-	iv = const_value.init_value
+	nv = do_const(x)
+	iv = nv.init_value
 
 	if not isinstance(iv, ValueUndef):
 		if not (iv.isImmediate() or iv.linktime):
 			error("expected immediate value", iv.ti)
 
-	const_value.id.prefix = global_prefix
+	nv.id.prefix = global_prefix
 
 	is_public = x['access_modifier'] == 'public'
-	cmodule_value_add(const_value.id.str, const_value, is_public=is_public)
+	cmodule_value_add(nv.id.str, nv, is_public=is_public)
 
-	definition = StmtDefConst(const_value.id, const_value, const_value.init_value, x['ti'])
+	definition = StmtDefConst(nv.id, nv, iv, x['ti'])
 	definition.parent = cmodule
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
 
-	const_value.parent = cmodule
-	const_value.definition = definition
+	nv.parent = cmodule
+	nv.definition = definition
 
 	return definition
 
