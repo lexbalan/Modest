@@ -408,6 +408,10 @@ def do_field(x):
 
 	f = Field(id, t, init_value=iv, ti=x['ti'])
 	f.nl = x['nl']
+
+	if f.nl == 0:
+		f.nl = 1
+
 	f.access_level = x['access_modifier']
 
 	add_spices_any(f, x['atts'])
