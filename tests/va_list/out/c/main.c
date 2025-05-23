@@ -33,8 +33,8 @@ static ssize_t my_printf(char *format, ...)
 
 int main()
 {
-	int32_t k = 10;
-	my_printf("My Printf Test %d\n", k);
+	uint32_t k = 10;
+	my_printf("My Printf Test %u\n", k);
 
 	const char c = '$';
 	char *const s = "Hi!";

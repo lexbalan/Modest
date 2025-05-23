@@ -57,7 +57,7 @@ static bool doTest(SHA256_TestCase *test)
 	printf("'%s'", &test->input_data);
 	printf(" -> ");
 
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i < sha256_hashSize) {
 		printf("%02X", test_hash[i]);
 		i = i + 1;
@@ -72,8 +72,8 @@ int main()
 {
 	printf("test SHA256\n");
 
-	int32_t i = 0;
-	while (i < (int)2) {
+	uint32_t i = 0;
+	while (i < 2) {
 		SHA256_TestCase *const test = ((SHA256_TestCase *[2])tests)[i];
 		const bool test_result = doTest(test);
 

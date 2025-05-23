@@ -11,7 +11,7 @@ var str = "Hello!"   // -> *[]Char8
 
 
 public func main() -> Int {
-	var x = 127
+	var x: Int32 = 127
 	var y = x + 1
 
 	printf("y = %i\n", y)

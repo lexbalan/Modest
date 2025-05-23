@@ -1464,6 +1464,7 @@ def do_stmt_var(x):
 		# type undef, value ok
 		#Type.update(nt, v.type)
 		if v.type.is_generic():
+			error("variable with generic type", x['ti'])
 			v = value_cons_default(v)
 		t = Type.copy(v.type)
 

@@ -51,9 +51,9 @@ var b: [size_m][size_n]*[size_p]Int32 = [
 func test0() {
 	printf("test0:\n")
 	printf("sizeof(a) = %d\n", unsafe Int32 sizeof(a))
-	var i = 0
+	var i: Nat32 = 0
 	while i < size_m {
-		var j = 0
+		var j: Nat32 = 0
 		while j < size_n {
 			var k = 0
 			while k < size_p {
@@ -78,9 +78,9 @@ func test1(pa: *[][][]Int32, m: Int32, n: Int32, p: Int32) {
 	printf("sizeof(pa2) = %d\n", Int32 sizeof(pa2))
 	printf("sizeof(*pa2) = %d\n", sizeof(*pa2))
 
-	var i = 0
+	var i: Nat32 = 0
 	while i < m {
-		var j = 0
+		var j: Nat32 = 0
 		while j < n {
 			var k = 0
 			while k < p {
@@ -105,9 +105,9 @@ func test2(pb: *[][]*[]Int32, m: Int32, n: Int32, p: Int32) {
 
 	printf("sizeof([m][n]*[p]Int32) = %d\n", sizeof([m][n]*[p]Int32))
 
-	var i = 0
+	var i: Nat32 = 0
 	while i < m {
-		var j = 0
+		var j: Nat32 = 0
 		while j < n {
 			var k = 0
 			while k < p {
@@ -132,9 +132,9 @@ func checkLocal3DArray() {
 	var x: [a][b][c]Int32
 
 	// Write
-	var i = 0
+	var i: Nat32 = 0
 	while i < a {
-		var j = 0
+		var j: Nat32 = 0
 		while j < b {
 			var k = 0
 			while k < c {
@@ -149,7 +149,7 @@ func checkLocal3DArray() {
 	// Read
 	i = 0
 	while i < a {
-		var j = 0
+		var j: Nat32 = 0
 		while j < b {
 			var k = 0
 			while k < c {

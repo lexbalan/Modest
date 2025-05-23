@@ -13,8 +13,8 @@ var br0: br.RingWord8
 
 
 var ii: Int32
-func fill (n: Int) -> Unit {
-	var i = 0
+func fill (n: Nat32) -> Unit {
+	var i: Nat32 = 0
 	while i < n {
 		if bq.isFull(&bq0) {
 			printf("<queue is full>\n")
@@ -30,8 +30,8 @@ func fill (n: Int) -> Unit {
 
 
 // выгребаем и распечатываем n значений
-func fetch(n: Int) -> Unit {
-	var i = 0
+func fetch(n: Nat32) -> Unit {
+	var i: Nat32 = 0
 	while i < n {
 		if bq.isEmpty(&bq0) {
 			printf("<queue is empty>\n")

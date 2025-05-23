@@ -196,20 +196,20 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %2
+	%2 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %2
 ; while_1
 	br label %again_1
 again_1:
-	%3 = load %Int32, %Int32* %2
-	%4 = icmp slt %Int32 %3, 10
+	%3 = load %Nat32, %Nat32* %2
+	%4 = icmp ult %Nat32 %3, 10
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	%5 = load %Int32, %Int32* %2
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int32 %5)
-	%7 = load %Int32, %Int32* %2
-	%8 = add %Int32 %7, 1
-	store %Int32 %8, %Int32* %2
+	%5 = load %Nat32, %Nat32* %2
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Nat32 %5)
+	%7 = load %Nat32, %Nat32* %2
+	%8 = add %Nat32 %7, 1
+	store %Nat32 %8, %Nat32* %2
 	br label %again_1
 break_1:
 	ret %Int 0

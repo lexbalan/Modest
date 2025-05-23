@@ -26,8 +26,8 @@ func my_printf(format: *Str8, ...) -> @unused SSizeT {
 
 
 public func main() -> Int {
-	var k = 10
-	my_printf("My Printf Test %d\n", k)
+	var k: Nat32 = 10
+	my_printf("My Printf Test %u\n", k)
 
 	let c = Char8 "$"
 	let s = *Str8 "Hi!"

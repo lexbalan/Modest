@@ -69,7 +69,7 @@ public func puts(s: *Str8) -> Unit {
 */
 
 public func puts8(s: *Str8) -> Unit {
-	var i = 0
+	var i: Nat32 = 0
 	while true {
 		let c = s[i]
 		if c == Char8 0 {
@@ -82,7 +82,7 @@ public func puts8(s: *Str8) -> Unit {
 
 
 public func puts16(s: *Str16) -> Unit {
-	var i = 0
+	var i: Nat32 = 0
 	while true {
 		// нельзя просто так взять и вызвать putchar_utf16
 		// тк в строке может быть суррогатная пара UTF_16 символов
@@ -100,13 +100,13 @@ public func puts16(s: *Str16) -> Unit {
 
 		putchar_utf32(char32)
 
-		i = i + Int32 n
+		i = i + Nat32 n
 	}
 }
 
 
 public func puts32(s: *Str32) -> Unit {
-	var i = 0
+	var i: Nat32 = 0
 	while true {
 		let c = s[i]
 		if c == Char32 0 {
@@ -139,8 +139,8 @@ public func vfprint(fd: Int32, form: *Str8, va: __VA_List) -> @unused Int32 {
 
 
 public func vsprint(buf: *[]Char8, form: *Str8, va: __VA_List) -> @unused Int32 {
-	var i = 0  // form index
-	var j = 0  // out buf index
+	var i: Nat32 = 0  // form index
+	var j: Int32 = 0  // out buf index
 
 	while true {
 		var c = form[i]
@@ -222,8 +222,8 @@ public func vsprint(buf: *[]Char8, form: *Str8, va: __VA_List) -> @unused Int32 
 			// %c for char
 			//
 			let c = __va_arg(va, Char32)
-			let n = Int32 utf.utf32_to_utf8(c, unsafe *[4]Char8 sptr)
-			j = j + n
+			let n = utf.utf32_to_utf8(c, unsafe *[4]Char8 sptr)
+			j = j + Int32 n
 		}
 	}
 
@@ -248,7 +248,7 @@ func n_to_hex_sym(n: Nat8) -> Char8 {
 func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
 	var tmpbuf: [8]Char8
 	var d = x
-	var i = 0
+	var i: Nat32 = 0
 
 	while true {
 		let n = d % 16
@@ -263,7 +263,7 @@ func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
 	}
 
 	// mirroring into buffer
-	var j = 0
+	var j: Int32 = 0
 	while i > 0 {
 		--i
 		buf[j] = tmpbuf[i]
@@ -285,7 +285,7 @@ func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 		d = -d
 	}
 
-	var i = 0
+	var i: Nat32 = 0
 	while true {
 		let n = d % 10
 		d = d / 10
@@ -297,7 +297,7 @@ func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 		}
 	}
 
-	var j = 0
+	var j: Int32 = 0
 
 	if neg {
 		buf[0] = "-"
@@ -319,7 +319,7 @@ func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 func sprint_dec_n32(buf: *[]Char8, x: Nat32) -> Int32 {
 	var tmpbuf: [11]Char8
 	var d = x
-	var i = 0
+	var i: Nat32 = 0
 
 	while true {
 		let n = d % 10
@@ -332,7 +332,7 @@ func sprint_dec_n32(buf: *[]Char8, x: Nat32) -> Int32 {
 		}
 	}
 
-	var j = 0
+	var j: Int32 = 0
 	while i > 0 {
 		--i
 		buf[j] = tmpbuf[i]

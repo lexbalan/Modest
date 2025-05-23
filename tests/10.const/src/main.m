@@ -83,7 +83,7 @@ public func main() -> Int {
 
 //	let y = wa.x
 
-//	var i = 0
+//	var i: Nat32 = 0
 //	while i < 10 {
 //		let x = wa.array[i]
 //		printf("x[%d]=%d\n", i, x)

@@ -51,7 +51,7 @@ func doTest (test: *SHA256_TestCase) -> Bool {
 	printf("'%s'", &test.input_data)
 	printf(" -> ")
 
-	var i: Int32 = 0
+	var i: Nat32 = 0
 	while i < sha256.hashSize {
 		printf("%02X", test_hash[i])
 		i = i + 1
@@ -66,8 +66,8 @@ func doTest (test: *SHA256_TestCase) -> Bool {
 public func main () -> Int {
 	printf("test SHA256\n")
 
-	var i: Int32 = 0
-	while i < Int lengthof(tests) {
+	var i: Nat32 = 0
+	while i < lengthof(tests) {
 		let test: *SHA256_TestCase = tests[i]
 		let test_result: Bool = doTest(test)
 

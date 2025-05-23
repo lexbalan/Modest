@@ -44,7 +44,7 @@ public func main() -> sub::Int {
 @set("cm_alias", "arrshow")
 func arrayShow(array: *Arr, size: sub::Int) -> Unit {
 	print("arrayShow:\n")
-	var i = 0
+	var i: Nat32 = 0
 	while i < 10 {
 		print("array[%d] = %d\n", i, array[i])
 		++i

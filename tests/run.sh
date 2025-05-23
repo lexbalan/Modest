@@ -1,41 +1,41 @@
-cd 0.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 1.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 2.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 3.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 4.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 9.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 10.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 11.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 12.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 14.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd var && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 22.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd 23.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd cons && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd composite && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd xor && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd named_args && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd let && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd shift && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd string_concat_eq && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd assign_array && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd assign_record && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd assignation && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd va_list && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd char && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. &&\
-cd float && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. &&\
-cd builtin_constants && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd string && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd asm && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd crc32 && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd float && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd free_pointer && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd unistd && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd generic && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd print && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
-cd 13.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd sizeof && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-cd memcopy && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
-cd queue && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd ..
-#cd 24.* && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-#cd slices && printf "\nBUILD:" "$PWD" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 0.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 1.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 2.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 3.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 4.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 9.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 10.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 11.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 12.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 14.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd var && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 22.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd 23.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd cons && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd composite && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd xor && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd named_args && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd let && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd shift && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd string_concat_eq && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd assign_array && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd assign_record && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd assignation && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd va_list && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd char && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. &&\
+cd float && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. &&\
+cd builtin_constants && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd string && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd asm && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd crc32 && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd float && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd free_pointer && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd unistd && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd generic && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd print && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd ..
+cd 13.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd sizeof && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd memcopy && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd ..
+cd queue && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd ..
+#cd 24.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+#cd slices && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \

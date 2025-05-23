@@ -273,7 +273,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; -- strings --
 @str1 = private constant [10 x i8] [i8 102, i8 48, i8 40, i8 34, i8 37, i8 115, i8 34, i8 41, i8 10, i8 0]
 @str2 = private constant [15 x i8] [i8 102, i8 48, i8 32, i8 109, i8 105, i8 99, i8 32, i8 61, i8 32, i8 34, i8 37, i8 115, i8 34, i8 10, i8 0]
-@str3 = private constant [13 x i8] [i8 121, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str3 = private constant [13 x i8] [i8 121, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 @str4 = private constant [18 x i8] [i8 97, i8 49, i8 48, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str5 = private constant [21 x i8] [i8 97, i8 51, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str6 = private constant [17 x i8] [i8 97, i8 51, i8 91, i8 37, i8 100, i8 93, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
@@ -414,30 +414,32 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 ]
 define internal void @test() {
 	; тестируем работу с локальным generic массивом
-	%1 = alloca [6 x %Word64], align 1
-	%2 = insertvalue [6 x %Word64] zeroinitializer, %Word64 170, 0
-	%3 = insertvalue [6 x %Word64] %2, %Word64 85, 1
-	%4 = insertvalue [6 x %Word64] %3, %Word64 2, 2
-	%5 = insertvalue [6 x %Word64] %4, %Word64 22, 5
+	%1 = alloca [6 x %Word8], align 1
+	%2 = insertvalue [6 x %Word8] zeroinitializer, %Word8 170, 0
+	%3 = insertvalue [6 x %Word8] %2, %Word8 85, 1
+	%4 = insertvalue [6 x %Word8] %3, %Word8 2, 2
+	%5 = insertvalue [6 x %Word8] %4, %Word8 22, 5
 	%6 = zext i8 6 to %Nat32
-	store [6 x %Word64] %5, [6 x %Word64]* %1
-	%7 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %7
+	store [6 x %Word8] %5, [6 x %Word8]* %1
+	%7 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %7
 ; while_1
 	br label %again_1
 again_1:
-	%8 = load %Int32, %Int32* %7
-	%9 = icmp slt %Int32 %8, 6
+	%8 = load %Nat32, %Nat32* %7
+	%9 = icmp ult %Nat32 %8, 6
 	br %Bool %9 , label %body_1, label %break_1
 body_1:
-	%10 = load %Int32, %Int32* %7
-	%11 = getelementptr [6 x %Word64], [6 x %Word64]* %1, %Int32 0, %Int32 %10
-	%12 = load %Word64, %Word64* %11
-	%13 = load %Int32, %Int32* %7
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Int32 %13, %Word64 %12)
-	%15 = load %Int32, %Int32* %7
-	%16 = add %Int32 %15, 1
-	store %Int32 %16, %Int32* %7
+	%10 = load %Nat32, %Nat32* %7
+	%11 = bitcast %Nat32 %10 to %Nat32
+	%12 = getelementptr [6 x %Word8], [6 x %Word8]* %1, %Int32 0, %Nat32 %11
+	%13 = load %Word8, %Word8* %12
+	%14 = load %Nat32, %Nat32* %7
+	%15 = zext %Word8 %13 to %Word32
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Nat32 %14, %Word32 %15)
+	%17 = load %Nat32, %Nat32* %7
+	%18 = add %Nat32 %17, 1
+	store %Nat32 %18, %Nat32* %7
 	br label %again_1
 break_1:
 	ret void
@@ -910,199 +912,203 @@ define %Int @main() {
 	%16 = zext i8 30 to %Nat32
 	store [30 x %Char8] %15, [30 x %Char8]* %1
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str9 to [0 x i8]*), [30 x %Char8]* %1)
-	%18 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %18
+	%18 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %18
 ; while_1
 	br label %again_1
 again_1:
-	%19 = load %Int32, %Int32* %18
-	%20 = icmp slt %Int32 %19, 10
+	%19 = load %Nat32, %Nat32* %18
+	%20 = icmp ult %Nat32 %19, 10
 	br %Bool %20 , label %body_1, label %break_1
 body_1:
-	%21 = load %Int32, %Int32* %18
-	%22 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 %21
-	%23 = load %Int32, %Int32* %22
-	%24 = load %Int32, %Int32* %18
-	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str10 to [0 x i8]*), %Int32 %24, %Int32 %23)
-	%26 = load %Int32, %Int32* %18
-	%27 = add %Int32 %26, 1
-	store %Int32 %27, %Int32* %18
+	%21 = load %Nat32, %Nat32* %18
+	%22 = bitcast %Nat32 %21 to %Nat32
+	%23 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Nat32 %22
+	%24 = load %Int32, %Int32* %23
+	%25 = load %Nat32, %Nat32* %18
+	%26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str10 to [0 x i8]*), %Nat32 %25, %Int32 %24)
+	%27 = load %Nat32, %Nat32* %18
+	%28 = add %Nat32 %27, 1
+	store %Nat32 %28, %Nat32* %18
 	br label %again_1
 break_1:
-	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str11 to [0 x i8]*))
-	%29 = alloca [3 x %Int32], align 1
-	%30 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
-	%31 = insertvalue [3 x %Int32] %30, %Int32 5, 1
-	%32 = insertvalue [3 x %Int32] %31, %Int32 6, 2
-	%33 = zext i8 3 to %Nat32
-	store [3 x %Int32] %32, [3 x %Int32]* %29
-	store %Int32 0, %Int32* %18
+	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str11 to [0 x i8]*))
+	%30 = alloca [3 x %Int32], align 1
+	%31 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
+	%32 = insertvalue [3 x %Int32] %31, %Int32 5, 1
+	%33 = insertvalue [3 x %Int32] %32, %Int32 6, 2
+	%34 = zext i8 3 to %Nat32
+	store [3 x %Int32] %33, [3 x %Int32]* %30
+	store %Nat32 0, %Nat32* %18
 ; while_2
 	br label %again_2
 again_2:
-	%34 = load %Int32, %Int32* %18
-	%35 = icmp slt %Int32 %34, 3
-	br %Bool %35 , label %body_2, label %break_2
+	%35 = load %Nat32, %Nat32* %18
+	%36 = icmp ult %Nat32 %35, 3
+	br %Bool %36 , label %body_2, label %break_2
 body_2:
-	%36 = load %Int32, %Int32* %18
-	%37 = getelementptr [3 x %Int32], [3 x %Int32]* %29, %Int32 0, %Int32 %36
-	%38 = load %Int32, %Int32* %37
-	%39 = load %Int32, %Int32* %18
-	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str12 to [0 x i8]*), %Int32 %39, %Int32 %38)
-	%41 = load %Int32, %Int32* %18
-	%42 = add %Int32 %41, 1
-	store %Int32 %42, %Int32* %18
+	%37 = load %Nat32, %Nat32* %18
+	%38 = bitcast %Nat32 %37 to %Nat32
+	%39 = getelementptr [3 x %Int32], [3 x %Int32]* %30, %Int32 0, %Nat32 %38
+	%40 = load %Int32, %Int32* %39
+	%41 = load %Nat32, %Nat32* %18
+	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str12 to [0 x i8]*), %Nat32 %41, %Int32 %40)
+	%43 = load %Nat32, %Nat32* %18
+	%44 = add %Nat32 %43, 1
+	store %Nat32 %44, %Nat32* %18
 	br label %again_2
 break_2:
-	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str13 to [0 x i8]*))
-	%44 = alloca [0 x %Int32]*, align 8
-	store [0 x %Int32]* bitcast ([10 x %Int32]* @globalArray to [0 x %Int32]*), [0 x %Int32]** %44
-	store %Int32 0, %Int32* %18
+	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str13 to [0 x i8]*))
+	%46 = alloca [0 x %Int32]*, align 8
+	store [0 x %Int32]* bitcast ([10 x %Int32]* @globalArray to [0 x %Int32]*), [0 x %Int32]** %46
+	store %Nat32 0, %Nat32* %18
 ; while_3
 	br label %again_3
 again_3:
-	%45 = load %Int32, %Int32* %18
-	%46 = icmp slt %Int32 %45, 3
-	br %Bool %46 , label %body_3, label %break_3
+	%47 = load %Nat32, %Nat32* %18
+	%48 = icmp ult %Nat32 %47, 3
+	br %Bool %48 , label %body_3, label %break_3
 body_3:
-	%47 = load %Int32, %Int32* %18
-	%48 = load [0 x %Int32]*, [0 x %Int32]** %44
-	%49 = getelementptr [0 x %Int32], [0 x %Int32]* %48, %Int32 0, %Int32 %47
-	%50 = load %Int32, %Int32* %49
-	%51 = load %Int32, %Int32* %18
-	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str14 to [0 x i8]*), %Int32 %51, %Int32 %50)
-	%53 = load %Int32, %Int32* %18
-	%54 = add %Int32 %53, 1
-	store %Int32 %54, %Int32* %18
+	%49 = load %Nat32, %Nat32* %18
+	%50 = load [0 x %Int32]*, [0 x %Int32]** %46
+	%51 = bitcast %Nat32 %49 to %Nat32
+	%52 = getelementptr [0 x %Int32], [0 x %Int32]* %50, %Int32 0, %Nat32 %51
+	%53 = load %Int32, %Int32* %52
+	%54 = load %Nat32, %Nat32* %18
+	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str14 to [0 x i8]*), %Nat32 %54, %Int32 %53)
+	%56 = load %Nat32, %Nat32* %18
+	%57 = add %Nat32 %56, 1
+	store %Nat32 %57, %Nat32* %18
 	br label %again_3
 break_3:
-	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str15 to [0 x i8]*))
-	%56 = alloca [0 x %Int32]*, align 8
-	%57 = bitcast [3 x %Int32]* %29 to [0 x %Int32]*
-	store [0 x %Int32]* %57, [0 x %Int32]** %56
-	store %Int32 0, %Int32* %18
+	%58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str15 to [0 x i8]*))
+	%59 = alloca [0 x %Int32]*, align 8
+	%60 = bitcast [3 x %Int32]* %30 to [0 x %Int32]*
+	store [0 x %Int32]* %60, [0 x %Int32]** %59
+	store %Nat32 0, %Nat32* %18
 ; while_4
 	br label %again_4
 again_4:
-	%58 = load %Int32, %Int32* %18
-	%59 = icmp slt %Int32 %58, 3
-	br %Bool %59 , label %body_4, label %break_4
+	%61 = load %Nat32, %Nat32* %18
+	%62 = icmp ult %Nat32 %61, 3
+	br %Bool %62 , label %body_4, label %break_4
 body_4:
-	%60 = load %Int32, %Int32* %18
-	%61 = load [0 x %Int32]*, [0 x %Int32]** %56
-	%62 = getelementptr [0 x %Int32], [0 x %Int32]* %61, %Int32 0, %Int32 %60
-	%63 = load %Int32, %Int32* %62
-	%64 = load %Int32, %Int32* %18
-	%65 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str16 to [0 x i8]*), %Int32 %64, %Int32 %63)
-	%66 = load %Int32, %Int32* %18
-	%67 = add %Int32 %66, 1
-	store %Int32 %67, %Int32* %18
+	%63 = load %Nat32, %Nat32* %18
+	%64 = load [0 x %Int32]*, [0 x %Int32]** %59
+	%65 = bitcast %Nat32 %63 to %Nat32
+	%66 = getelementptr [0 x %Int32], [0 x %Int32]* %64, %Int32 0, %Nat32 %65
+	%67 = load %Int32, %Int32* %66
+	%68 = load %Nat32, %Nat32* %18
+	%69 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str16 to [0 x i8]*), %Nat32 %68, %Int32 %67)
+	%70 = load %Nat32, %Nat32* %18
+	%71 = add %Nat32 %70, 1
+	store %Nat32 %71, %Nat32* %18
 	br label %again_4
 break_4:
 
 	; assign array to array 1
 	; (with equal types)
-	%68 = alloca [3 x %Int32], align 1
-	%69 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
-	%70 = insertvalue [3 x %Int32] %69, %Int32 2, 1
-	%71 = insertvalue [3 x %Int32] %70, %Int32 3, 2
-	%72 = zext i8 3 to %Nat32
-	store [3 x %Int32] %71, [3 x %Int32]* %68
-	%73 = getelementptr [3 x %Int32], [3 x %Int32]* %68, %Int32 0, %Int32 0
-	%74 = load %Int32, %Int32* %73
-	%75 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str17 to [0 x i8]*), %Int32 %74)
-	%76 = getelementptr [3 x %Int32], [3 x %Int32]* %68, %Int32 0, %Int32 1
-	%77 = load %Int32, %Int32* %76
-	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str18 to [0 x i8]*), %Int32 %77)
-	%79 = getelementptr [3 x %Int32], [3 x %Int32]* %68, %Int32 0, %Int32 2
-	%80 = load %Int32, %Int32* %79
-	%81 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str19 to [0 x i8]*), %Int32 %80)
+	%72 = alloca [3 x %Int32], align 1
+	%73 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
+	%74 = insertvalue [3 x %Int32] %73, %Int32 2, 1
+	%75 = insertvalue [3 x %Int32] %74, %Int32 3, 2
+	%76 = zext i8 3 to %Nat32
+	store [3 x %Int32] %75, [3 x %Int32]* %72
+	%77 = getelementptr [3 x %Int32], [3 x %Int32]* %72, %Int32 0, %Int32 0
+	%78 = load %Int32, %Int32* %77
+	%79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str17 to [0 x i8]*), %Int32 %78)
+	%80 = getelementptr [3 x %Int32], [3 x %Int32]* %72, %Int32 0, %Int32 1
+	%81 = load %Int32, %Int32* %80
+	%82 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str18 to [0 x i8]*), %Int32 %81)
+	%83 = getelementptr [3 x %Int32], [3 x %Int32]* %72, %Int32 0, %Int32 2
+	%84 = load %Int32, %Int32* %83
+	%85 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str19 to [0 x i8]*), %Int32 %84)
 
 	; create (and initialize) new variable b
 	; (with type [3]Int32)
 	; this variable are copy of array a
-	%82 = alloca [3 x %Int32], align 1
-	%83 = load [3 x %Int32], [3 x %Int32]* %68
-	%84 = zext i8 3 to %Nat32
-	store [3 x %Int32] %83, [3 x %Int32]* %82
-	%85 = getelementptr [3 x %Int32], [3 x %Int32]* %82, %Int32 0, %Int32 0
-	%86 = load %Int32, %Int32* %85
-	%87 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str20 to [0 x i8]*), %Int32 %86)
-	%88 = getelementptr [3 x %Int32], [3 x %Int32]* %82, %Int32 0, %Int32 1
-	%89 = load %Int32, %Int32* %88
-	%90 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str21 to [0 x i8]*), %Int32 %89)
-	%91 = getelementptr [3 x %Int32], [3 x %Int32]* %82, %Int32 0, %Int32 2
-	%92 = load %Int32, %Int32* %91
-	%93 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str22 to [0 x i8]*), %Int32 %92)
+	%86 = alloca [3 x %Int32], align 1
+	%87 = load [3 x %Int32], [3 x %Int32]* %72
+	%88 = zext i8 3 to %Nat32
+	store [3 x %Int32] %87, [3 x %Int32]* %86
+	%89 = getelementptr [3 x %Int32], [3 x %Int32]* %86, %Int32 0, %Int32 0
+	%90 = load %Int32, %Int32* %89
+	%91 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str20 to [0 x i8]*), %Int32 %90)
+	%92 = getelementptr [3 x %Int32], [3 x %Int32]* %86, %Int32 0, %Int32 1
+	%93 = load %Int32, %Int32* %92
+	%94 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str21 to [0 x i8]*), %Int32 %93)
+	%95 = getelementptr [3 x %Int32], [3 x %Int32]* %86, %Int32 0, %Int32 2
+	%96 = load %Int32, %Int32* %95
+	%97 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str22 to [0 x i8]*), %Int32 %96)
 
 	; check equality between two arrays (by value)
 ; if_0
-	%94 = bitcast [3 x %Int32]* %68 to i8*
-	%95 = bitcast [3 x %Int32]* %82 to i8*
-	%96 = call i1 (i8*, i8*, i64) @memeq(i8* %94, i8* %95, %Int64 12)
-	%97 = icmp ne %Bool %96, 0
-	br %Bool %97 , label %then_0, label %else_0
+	%98 = bitcast [3 x %Int32]* %72 to i8*
+	%99 = bitcast [3 x %Int32]* %86 to i8*
+	%100 = call i1 (i8*, i8*, i64) @memeq(i8* %98, i8* %99, %Int64 12)
+	%101 = icmp ne %Bool %100, 0
+	br %Bool %101 , label %then_0, label %else_0
 then_0:
-	%98 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str23 to [0 x i8]*))
+	%102 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str23 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%99 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str24 to [0 x i8]*))
+	%103 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str24 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 
 	; assign array to array 2
 	; (with array extending)
-	%100 = alloca [3 x %Int32], align 1
-	%101 = insertvalue [3 x %Int32] zeroinitializer, %Int32 10, 0
-	%102 = insertvalue [3 x %Int32] %101, %Int32 20, 1
-	%103 = insertvalue [3 x %Int32] %102, %Int32 30, 2
-	%104 = zext i8 3 to %Nat32
-	store [3 x %Int32] %103, [3 x %Int32]* %100
-	%105 = alloca [6 x %Int32], align 1
-	%106 = zext i8 0 to %Nat32
-	%107 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Nat32 %106
-	%108 = bitcast %Int32* %107 to [3 x %Int32]*
-	%109 = load [3 x %Int32], [3 x %Int32]* %100
-	%110 = zext i8 3 to %Nat32
-	store [3 x %Int32] %109, [3 x %Int32]* %108
-	%111 = zext i8 3 to %Nat32
-	%112 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Nat32 %111
-	%113 = bitcast %Int32* %112 to [3 x %Int32]*
+	%104 = alloca [3 x %Int32], align 1
+	%105 = insertvalue [3 x %Int32] zeroinitializer, %Int32 10, 0
+	%106 = insertvalue [3 x %Int32] %105, %Int32 20, 1
+	%107 = insertvalue [3 x %Int32] %106, %Int32 30, 2
+	%108 = zext i8 3 to %Nat32
+	store [3 x %Int32] %107, [3 x %Int32]* %104
+	%109 = alloca [6 x %Int32], align 1
+	%110 = zext i8 0 to %Nat32
+	%111 = getelementptr [6 x %Int32], [6 x %Int32]* %109, %Int32 0, %Nat32 %110
+	%112 = bitcast %Int32* %111 to [3 x %Int32]*
+	%113 = load [3 x %Int32], [3 x %Int32]* %104
 	%114 = zext i8 3 to %Nat32
-	%115 = mul %Nat32 %114, 4
-	%116 = bitcast [3 x %Int32]* %113 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %116, i8 0, %Nat32 %115, i1 0)
-	%117 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 0
-	%118 = load %Int32, %Int32* %117
-	%119 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str25 to [0 x i8]*), %Int32 %118)
-	%120 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 1
-	%121 = load %Int32, %Int32* %120
-	%122 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str26 to [0 x i8]*), %Int32 %121)
-	%123 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 2
-	%124 = load %Int32, %Int32* %123
-	%125 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str27 to [0 x i8]*), %Int32 %124)
-	%126 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 3
-	%127 = load %Int32, %Int32* %126
-	%128 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str28 to [0 x i8]*), %Int32 %127)
-	%129 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 4
-	%130 = load %Int32, %Int32* %129
-	%131 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str29 to [0 x i8]*), %Int32 %130)
-	%132 = getelementptr [6 x %Int32], [6 x %Int32]* %105, %Int32 0, %Int32 5
-	%133 = load %Int32, %Int32* %132
-	%134 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str30 to [0 x i8]*), %Int32 %133)
+	store [3 x %Int32] %113, [3 x %Int32]* %112
+	%115 = zext i8 3 to %Nat32
+	%116 = getelementptr [6 x %Int32], [6 x %Int32]* %109, %Int32 0, %Nat32 %115
+	%117 = bitcast %Int32* %116 to [3 x %Int32]*
+	%118 = zext i8 3 to %Nat32
+	%119 = mul %Nat32 %118, 4
+	%120 = bitcast [3 x %Int32]* %117 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %120, i8 0, %Nat32 %119, i1 0)
+	%121 = getelementptr [6 x %Int32], [6 x %Int32]* %109, %Int32 0, %Int32 0
+	%122 = load %Int32, %Int32* %121
+	%123 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str25 to [0 x i8]*), %Int32 %122)
+	%124 = getelementptr [6 x %Int32], [6 x %Int32]* %109, %Int32 0, %Int32 1
+	%125 = load %Int32, %Int32* %124
+	%126 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str26 to [0 x i8]*), %Int32 %125)
+	%127 = getelementptr [6 x %Int32], [6 x %Int32]* %109, %Int32 0, %Int32 2
+	%128 = load %Int32, %Int32* %127
+	%129 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str27 to [0 x i8]*), %Int32 %128)
+	%130 = getelementptr [6 x %Int32], [6 x %Int32]* %109, %Int32 0, %Int32 3
+	%131 = load %Int32, %Int32* %130
+	%132 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str28 to [0 x i8]*), %Int32 %131)
+	%133 = getelementptr [6 x %Int32], [6 x %Int32]* %109, %Int32 0, %Int32 4
+	%134 = load %Int32, %Int32* %133
+	%135 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str29 to [0 x i8]*), %Int32 %134)
+	%136 = getelementptr [6 x %Int32], [6 x %Int32]* %109, %Int32 0, %Int32 5
+	%137 = load %Int32, %Int32* %136
+	%138 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str30 to [0 x i8]*), %Int32 %137)
 
 	; check equality between two arrays (by pointer)
 ; if_1
-	%135 = bitcast [3 x %Int32]* %68 to i8*
-	%136 = bitcast [3 x %Int32]* %82 to i8*
-	%137 = call i1 (i8*, i8*, i64) @memeq(i8* %135, i8* %136, %Int64 12)
-	%138 = icmp ne %Bool %137, 0
-	br %Bool %138 , label %then_1, label %else_1
+	%139 = bitcast [3 x %Int32]* %72 to i8*
+	%140 = bitcast [3 x %Int32]* %86 to i8*
+	%141 = call i1 (i8*, i8*, i64) @memeq(i8* %139, i8* %140, %Int64 12)
+	%142 = icmp ne %Bool %141, 0
+	br %Bool %142 , label %then_1, label %else_1
 then_1:
-	%139 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str31 to [0 x i8]*))
+	%143 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str31 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%140 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str32 to [0 x i8]*))
+	%144 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str32 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 
@@ -1114,120 +1120,120 @@ endif_1:
 
 	;let aa = [111] + [222] + [333]
 	; cons literal array from var items
-	%141 = alloca %Int, align 4
-	store %Int 100, %Int* %141
-	%142 = alloca %Int, align 4
-	store %Int 200, %Int* %142
-	%143 = alloca %Int, align 4
-	store %Int 300, %Int* %143
+	%145 = alloca %Int, align 4
+	store %Int 100, %Int* %145
+	%146 = alloca %Int, align 4
+	store %Int 200, %Int* %146
+	%147 = alloca %Int, align 4
+	store %Int 300, %Int* %147
 	; immutable, non immediate value (array)
-	%144 = load %Int, %Int* %141
-	%145 = load %Int, %Int* %142
-	%146 = load %Int, %Int* %143
-	%147 = load %Int, %Int* %141
-	%148 = insertvalue [3 x %Int] zeroinitializer, %Int %147, 0
-	%149 = load %Int, %Int* %142
-	%150 = insertvalue [3 x %Int] %148, %Int %149, 1
-	%151 = load %Int, %Int* %143
-	%152 = insertvalue [3 x %Int] %150, %Int %151, 2
-	%153 = alloca [3 x %Int]
-	%154 = zext i8 3 to %Nat32
-	store [3 x %Int] %152, [3 x %Int]* %153
+	%148 = load %Int, %Int* %145
+	%149 = load %Int, %Int* %146
+	%150 = load %Int, %Int* %147
+	%151 = load %Int, %Int* %145
+	%152 = insertvalue [3 x %Int] zeroinitializer, %Int %151, 0
+	%153 = load %Int, %Int* %146
+	%154 = insertvalue [3 x %Int] %152, %Int %153, 1
+	%155 = load %Int, %Int* %147
+	%156 = insertvalue [3 x %Int] %154, %Int %155, 2
+	%157 = alloca [3 x %Int]
+	%158 = zext i8 3 to %Nat32
+	store [3 x %Int] %156, [3 x %Int]* %157
 
 	; check local literal array assignation to local array
-	%155 = alloca [4 x %Int32], align 1
+	%159 = alloca [4 x %Int32], align 1
 ; -- cons_composite_from_composite_by_adr --
-	%156 = bitcast [3 x %Int]* %153 to [4 x %Int32]*
-	%157 = load [4 x %Int32], [4 x %Int32]* %156
+	%160 = bitcast [3 x %Int]* %157 to [4 x %Int32]*
+	%161 = load [4 x %Int32], [4 x %Int32]* %160
 ; -- end cons_composite_from_composite_by_adr --
-	%158 = zext i8 4 to %Nat32
-	store [4 x %Int32] %157, [4 x %Int32]* %155
-	%159 = getelementptr [4 x %Int32], [4 x %Int32]* %155, %Int32 0, %Int32 0
-	%160 = load %Int32, %Int32* %159
-	%161 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str33 to [0 x i8]*), %Int32 %160)
-	%162 = getelementptr [4 x %Int32], [4 x %Int32]* %155, %Int32 0, %Int32 1
-	%163 = load %Int32, %Int32* %162
-	%164 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str34 to [0 x i8]*), %Int32 %163)
-	%165 = getelementptr [4 x %Int32], [4 x %Int32]* %155, %Int32 0, %Int32 2
-	%166 = load %Int32, %Int32* %165
-	%167 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str35 to [0 x i8]*), %Int32 %166)
+	%162 = zext i8 4 to %Nat32
+	store [4 x %Int32] %161, [4 x %Int32]* %159
+	%163 = getelementptr [4 x %Int32], [4 x %Int32]* %159, %Int32 0, %Int32 0
+	%164 = load %Int32, %Int32* %163
+	%165 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str33 to [0 x i8]*), %Int32 %164)
+	%166 = getelementptr [4 x %Int32], [4 x %Int32]* %159, %Int32 0, %Int32 1
+	%167 = load %Int32, %Int32* %166
+	%168 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str34 to [0 x i8]*), %Int32 %167)
+	%169 = getelementptr [4 x %Int32], [4 x %Int32]* %159, %Int32 0, %Int32 2
+	%170 = load %Int32, %Int32* %169
+	%171 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str35 to [0 x i8]*), %Int32 %170)
 
 	; check local literal array assignation to global array
 ; -- cons_composite_from_composite_by_adr --
-	%168 = bitcast [3 x %Int]* %153 to [10 x %Int32]*
-	%169 = load [10 x %Int32], [10 x %Int32]* %168
+	%172 = bitcast [3 x %Int]* %157 to [10 x %Int32]*
+	%173 = load [10 x %Int32], [10 x %Int32]* %172
 ; -- end cons_composite_from_composite_by_adr --
-	%170 = zext i8 10 to %Nat32
-	store [10 x %Int32] %169, [10 x %Int32]* @globalArray
-	%171 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 0
-	%172 = load %Int32, %Int32* %171
-	%173 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str36 to [0 x i8]*), %Int32 0, %Int32 %172)
-	%174 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 1
-	%175 = load %Int32, %Int32* %174
-	%176 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str37 to [0 x i8]*), %Int32 1, %Int32 %175)
-	%177 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 2
-	%178 = load %Int32, %Int32* %177
-	%179 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str38 to [0 x i8]*), %Int32 2, %Int32 %178)
-	%180 = zext i8 10 to %Nat32
-	%181 = mul %Nat32 %180, 4
-	%182 = bitcast [10 x %Int32]* @globalArray to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %182, i8 0, %Nat32 %181, i1 0)
+	%174 = zext i8 10 to %Nat32
+	store [10 x %Int32] %173, [10 x %Int32]* @globalArray
+	%175 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 0
+	%176 = load %Int32, %Int32* %175
+	%177 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str36 to [0 x i8]*), %Int32 0, %Int32 %176)
+	%178 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 1
+	%179 = load %Int32, %Int32* %178
+	%180 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str37 to [0 x i8]*), %Int32 1, %Int32 %179)
+	%181 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 2
+	%182 = load %Int32, %Int32* %181
+	%183 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str38 to [0 x i8]*), %Int32 2, %Int32 %182)
+	%184 = zext i8 10 to %Nat32
+	%185 = mul %Nat32 %184, 4
+	%186 = bitcast [10 x %Int32]* @globalArray to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %186, i8 0, %Nat32 %185, i1 0)
 
 
 	; проверка того как локальная константа-массив
 	; "замораживает" свои элементы
-	%183 = alloca %Int32, align 4
-	store %Int32 10, %Int32* %183
-	%184 = alloca %Int32, align 4
-	store %Int32 20, %Int32* %184
-	%185 = alloca %Int32, align 4
-	store %Int32 30, %Int32* %185
-	%186 = load %Int32, %Int32* %183
-	%187 = load %Int32, %Int32* %184
-	%188 = load %Int32, %Int32* %185
-	%189 = load %Int32, %Int32* %183
-	%190 = insertvalue [4 x %Int32] zeroinitializer, %Int32 %189, 0
-	%191 = load %Int32, %Int32* %184
-	%192 = insertvalue [4 x %Int32] %190, %Int32 %191, 1
-	%193 = load %Int32, %Int32* %185
-	%194 = insertvalue [4 x %Int32] %192, %Int32 %193, 2
-	%195 = insertvalue [4 x %Int32] %194, %Int32 40, 3
-	%196 = alloca [4 x %Int32]
-	%197 = zext i8 4 to %Nat32
-	store [4 x %Int32] %195, [4 x %Int32]* %196
-	store %Int32 111, %Int32* %183
-	store %Int32 222, %Int32* %184
-	store %Int32 333, %Int32* %185
-	%198 = getelementptr [4 x %Int32], [4 x %Int32]* %196, %Int32 0, %Int32 0
-	%199 = load %Int32, %Int32* %198
-	%200 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str39 to [0 x i8]*), %Int32 0, %Int32 %199)
-	%201 = getelementptr [4 x %Int32], [4 x %Int32]* %196, %Int32 0, %Int32 1
-	%202 = load %Int32, %Int32* %201
-	%203 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str40 to [0 x i8]*), %Int32 1, %Int32 %202)
-	%204 = getelementptr [4 x %Int32], [4 x %Int32]* %196, %Int32 0, %Int32 2
-	%205 = load %Int32, %Int32* %204
-	%206 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str41 to [0 x i8]*), %Int32 2, %Int32 %205)
-	%207 = getelementptr [4 x %Int32], [4 x %Int32]* %196, %Int32 0, %Int32 3
-	%208 = load %Int32, %Int32* %207
-	%209 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str42 to [0 x i8]*), %Int32 3, %Int32 %208)
+	%187 = alloca %Int32, align 4
+	store %Int32 10, %Int32* %187
+	%188 = alloca %Int32, align 4
+	store %Int32 20, %Int32* %188
+	%189 = alloca %Int32, align 4
+	store %Int32 30, %Int32* %189
+	%190 = load %Int32, %Int32* %187
+	%191 = load %Int32, %Int32* %188
+	%192 = load %Int32, %Int32* %189
+	%193 = load %Int32, %Int32* %187
+	%194 = insertvalue [4 x %Int32] zeroinitializer, %Int32 %193, 0
+	%195 = load %Int32, %Int32* %188
+	%196 = insertvalue [4 x %Int32] %194, %Int32 %195, 1
+	%197 = load %Int32, %Int32* %189
+	%198 = insertvalue [4 x %Int32] %196, %Int32 %197, 2
+	%199 = insertvalue [4 x %Int32] %198, %Int32 40, 3
+	%200 = alloca [4 x %Int32]
+	%201 = zext i8 4 to %Nat32
+	store [4 x %Int32] %199, [4 x %Int32]* %200
+	store %Int32 111, %Int32* %187
+	store %Int32 222, %Int32* %188
+	store %Int32 333, %Int32* %189
+	%202 = getelementptr [4 x %Int32], [4 x %Int32]* %200, %Int32 0, %Int32 0
+	%203 = load %Int32, %Int32* %202
+	%204 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str39 to [0 x i8]*), %Int32 0, %Int32 %203)
+	%205 = getelementptr [4 x %Int32], [4 x %Int32]* %200, %Int32 0, %Int32 1
+	%206 = load %Int32, %Int32* %205
+	%207 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str40 to [0 x i8]*), %Int32 1, %Int32 %206)
+	%208 = getelementptr [4 x %Int32], [4 x %Int32]* %200, %Int32 0, %Int32 2
+	%209 = load %Int32, %Int32* %208
+	%210 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str41 to [0 x i8]*), %Int32 2, %Int32 %209)
+	%211 = getelementptr [4 x %Int32], [4 x %Int32]* %200, %Int32 0, %Int32 3
+	%212 = load %Int32, %Int32* %211
+	%213 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str42 to [0 x i8]*), %Int32 3, %Int32 %212)
 ; if_2
-	%210 = insertvalue [4 x %Int32] zeroinitializer, %Int32 10, 0
-	%211 = insertvalue [4 x %Int32] %210, %Int32 20, 1
-	%212 = insertvalue [4 x %Int32] %211, %Int32 30, 2
-	%213 = insertvalue [4 x %Int32] %212, %Int32 40, 3
-	%214 = alloca [4 x %Int32]
-	%215 = zext i8 4 to %Nat32
-	store [4 x %Int32] %213, [4 x %Int32]* %214
-	%216 = bitcast [4 x %Int32]* %196 to i8*
-	%217 = bitcast [4 x %Int32]* %214 to i8*
-	%218 = call i1 (i8*, i8*, i64) @memeq(i8* %216, i8* %217, %Int64 16)
-	%219 = icmp ne %Bool %218, 0
-	br %Bool %219 , label %then_2, label %else_2
+	%214 = insertvalue [4 x %Int32] zeroinitializer, %Int32 10, 0
+	%215 = insertvalue [4 x %Int32] %214, %Int32 20, 1
+	%216 = insertvalue [4 x %Int32] %215, %Int32 30, 2
+	%217 = insertvalue [4 x %Int32] %216, %Int32 40, 3
+	%218 = alloca [4 x %Int32]
+	%219 = zext i8 4 to %Nat32
+	store [4 x %Int32] %217, [4 x %Int32]* %218
+	%220 = bitcast [4 x %Int32]* %200 to i8*
+	%221 = bitcast [4 x %Int32]* %218 to i8*
+	%222 = call i1 (i8*, i8*, i64) @memeq(i8* %220, i8* %221, %Int64 16)
+	%223 = icmp ne %Bool %222, 0
+	br %Bool %223 , label %then_2, label %else_2
 then_2:
-	%220 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str43 to [0 x i8]*))
+	%224 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str43 to [0 x i8]*))
 	br label %endif_2
 else_2:
-	%221 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str44 to [0 x i8]*))
+	%225 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str44 to [0 x i8]*))
 	br label %endif_2
 endif_2:
 

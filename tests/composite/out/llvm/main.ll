@@ -633,71 +633,74 @@ else_1:
 	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str7 to [0 x i8]*))
 	br label %endif_1
 endif_1:
-	%17 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %17
+	%17 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %17
 ; while_1
 	br label %again_1
 again_1:
-	%18 = load %Int32, %Int32* %17
-	%19 = icmp slt %Int32 %18, 3
+	%18 = load %Nat32, %Nat32* %17
+	%19 = icmp ult %Nat32 %18, 3
 	br %Bool %19 , label %body_1, label %break_1
 body_1:
-	%20 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %20
+	%20 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %20
 ; while_2
 	br label %again_2
 again_2:
-	%21 = load %Int32, %Int32* %20
-	%22 = icmp slt %Int32 %21, 3
+	%21 = load %Nat32, %Nat32* %20
+	%22 = icmp ult %Nat32 %21, 3
 	br %Bool %22 , label %body_2, label %break_2
 body_2:
-	%23 = load %Int32, %Int32* %17
-	%24 = load %Int32, %Int32* %20
-	%25 = load %Int32, %Int32* %20
-	%26 = load %Int32, %Int32* %17
-	%27 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* @arrr, %Int32 0, %Int32 %26, %Int32 %25
-	%28 = load %Int32, %Int32* %27
-	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str8 to [0 x i8]*), %Int32 %23, %Int32 %24, %Int32 %28)
-	%30 = load %Int32, %Int32* %20
-	%31 = add %Int32 %30, 1
-	store %Int32 %31, %Int32* %20
+	%23 = load %Nat32, %Nat32* %17
+	%24 = load %Nat32, %Nat32* %20
+	%25 = load %Nat32, %Nat32* %20
+	%26 = load %Nat32, %Nat32* %17
+	%27 = bitcast %Nat32 %26 to %Nat32
+	%28 = bitcast %Nat32 %25 to %Nat32
+	%29 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* @arrr, %Int32 0, %Nat32 %27, %Nat32 %28
+	%30 = load %Int32, %Int32* %29
+	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str8 to [0 x i8]*), %Nat32 %23, %Nat32 %24, %Int32 %30)
+	%32 = load %Nat32, %Nat32* %20
+	%33 = add %Nat32 %32, 1
+	store %Nat32 %33, %Nat32* %20
 	br label %again_2
 break_2:
-	%32 = load %Int32, %Int32* %17
-	%33 = add %Int32 %32, 1
-	store %Int32 %33, %Int32* %17
+	%34 = load %Nat32, %Nat32* %17
+	%35 = add %Nat32 %34, 1
+	store %Nat32 %35, %Nat32* %17
 	br label %again_1
 break_1:
-	%34 = getelementptr [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0, %Int32 0
-	%35 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %34
-	%36 = call %Int32 %35(%Int32 5, %Int32 7)
-	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str9 to [0 x i8]*), %Int32 %36)
-	%38 = getelementptr [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0, %Int32 1
-	%39 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %38
-	%40 = call %Int32 %39(%Int32 5, %Int32 7)
-	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str10 to [0 x i8]*), %Int32 %40)
-	store %Int32 0, %Int32* %17
+	%36 = getelementptr [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0, %Int32 0
+	%37 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %36
+	%38 = call %Int32 %37(%Int32 5, %Int32 7)
+	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str9 to [0 x i8]*), %Int32 %38)
+	%40 = getelementptr [2 x %Int32 (%Int32, %Int32)*], [2 x %Int32 (%Int32, %Int32)*]* @farr, %Int32 0, %Int32 1
+	%41 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %40
+	%42 = call %Int32 %41(%Int32 5, %Int32 7)
+	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str10 to [0 x i8]*), %Int32 %42)
+	store %Nat32 0, %Nat32* %17
 ; while_3
 	br label %again_3
 again_3:
-	%42 = load %Int32, %Int32* %17
-	%43 = icmp slt %Int32 %42, 10
-	br %Bool %43 , label %body_3, label %break_3
+	%44 = load %Nat32, %Nat32* %17
+	%45 = icmp ult %Nat32 %44, 10
+	br %Bool %45 , label %body_3, label %break_3
 body_3:
-	%44 = load %Int32, %Int32* %17
-	%45 = getelementptr [10 x void (%Str8*)*], [10 x void (%Str8*)*]* @hiarr, %Int32 0, %Int32 %44
-	%46 = load void (%Str8*)*, void (%Str8*)** %45
-	call void %46(%Str8* bitcast ([4 x i8]* @str11 to [0 x i8]*))
-	%47 = load %Int32, %Int32* %17
-	%48 = add %Int32 %47, 1
-	store %Int32 %48, %Int32* %17
+	%46 = load %Nat32, %Nat32* %17
+	%47 = bitcast %Nat32 %46 to %Nat32
+	%48 = getelementptr [10 x void (%Str8*)*], [10 x void (%Str8*)*]* @hiarr, %Int32 0, %Nat32 %47
+	%49 = load void (%Str8*)*, void (%Str8*)** %48
+	call void %49(%Str8* bitcast ([4 x i8]* @str11 to [0 x i8]*))
+	%50 = load %Nat32, %Nat32* %17
+	%51 = add %Nat32 %50, 1
+	store %Nat32 %51, %Nat32* %17
 	br label %again_3
 break_3:
-	%49 = getelementptr [2 x %Wrap*], [2 x %Wrap*]* @awrap, %Int32 0, %Int32 0
-	%50 = load %Wrap*, %Wrap** %49
-	%51 = getelementptr %Wrap, %Wrap* %50, %Int32 0, %Int32 0
-	%52 = load void (%Str8*)*, void (%Str8*)** %51
-	call void %52(%Str8* bitcast ([6 x i8]* @str12 to [0 x i8]*))
+	%52 = getelementptr [2 x %Wrap*], [2 x %Wrap*]* @awrap, %Int32 0, %Int32 0
+	%53 = load %Wrap*, %Wrap** %52
+	%54 = getelementptr %Wrap, %Wrap* %53, %Int32 0, %Int32 0
+	%55 = load void (%Str8*)*, void (%Str8*)** %54
+	call void %55(%Str8* bitcast ([6 x i8]* @str12 to [0 x i8]*))
 	;let y = awrap[0]
 	;y.fhi("World")
 	ret %Int32 0

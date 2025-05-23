@@ -5,7 +5,7 @@ include "libc/stdio"
 
 
 func array_print (pa: *[]Int32, len: Int32) -> Unit {
-	var i = 0
+	var i: Nat32 = 0
 	while i < len {
 		printf("a[%d] = %d\n", i, pa[i])
 		++i
@@ -23,7 +23,7 @@ public func main () -> Int {
 	var a: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 	let s1 = a[1:2]
-	var i = 0
+	var i: Nat32 = 0
 	while i < lengthof(s1) {
 		printf("s1[%d] = %d\n", i, s1[i])
 		++i

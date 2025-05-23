@@ -8,9 +8,13 @@
 
 
 /* anonymous records */
-struct __anonymous_struct_5 {uint32_t x; uint32_t y;
+struct __anonymous_struct_5 {
+	uint32_t x;
+	uint32_t y;
 };
-struct __anonymous_struct_6 {uint32_t x; uint32_t y;
+struct __anonymous_struct_6 {
+	uint32_t x;
+	uint32_t y;
 };
 
 struct Point2D {

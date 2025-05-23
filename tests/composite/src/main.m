@@ -242,9 +242,9 @@ public func main() -> Int32 {
 		printf("ne\n")
 	}
 
-	var i = 0
+	var i: Nat32 = 0
 	while i < 3 {
-		var j = 0
+		var j: Nat32 = 0
 		while j < 3 {
 			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
 			++j

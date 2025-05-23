@@ -226,7 +226,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 -6,
 	%Int32 -9
 ]
-define internal void @bubble_sort32([0 x %Int32]* %array, %Int32 %len) {
+define internal void @bubble_sort32([0 x %Int32]* %array, %Nat32 %len) {
 	%1 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %1
 ; while_1
@@ -236,42 +236,46 @@ again_1:
 	br %Bool %2 , label %body_1, label %break_1
 body_1:
 	store %Bool 0, %Bool* %1
-	%3 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %3
+	%3 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %3
 ; while_2
 	br label %again_2
 again_2:
-	%4 = sub %Int32 %len, 1
-	%5 = load %Int32, %Int32* %3
-	%6 = icmp slt %Int32 %5, %4
+	%4 = sub %Nat32 %len, 1
+	%5 = load %Nat32, %Nat32* %3
+	%6 = icmp ult %Nat32 %5, %4
 	br %Bool %6 , label %body_2, label %break_2
 body_2:
-	%7 = load %Int32, %Int32* %3
-	%8 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %7
-	%9 = load %Int32, %Int32* %8
-	%10 = load %Int32, %Int32* %3
-	%11 = add %Int32 %10, 1
-	%12 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %11
-	%13 = load %Int32, %Int32* %12
+	%7 = load %Nat32, %Nat32* %3
+	%8 = bitcast %Nat32 %7 to %Nat32
+	%9 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %8
+	%10 = load %Int32, %Int32* %9
+	%11 = load %Nat32, %Nat32* %3
+	%12 = add %Nat32 %11, 1
+	%13 = bitcast %Nat32 %12 to %Nat32
+	%14 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %13
+	%15 = load %Int32, %Int32* %14
 ; if_0
-	%14 = icmp sgt %Int32 %9, %13
-	br %Bool %14 , label %then_0, label %endif_0
+	%16 = icmp sgt %Int32 %10, %15
+	br %Bool %16 , label %then_0, label %endif_0
 then_0:
 	; swap
-	%15 = load %Int32, %Int32* %3
-	%16 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %15
-	store %Int32 %13, %Int32* %16
-	%17 = load %Int32, %Int32* %3
-	%18 = add %Int32 %17, 1
-	%19 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %18
-	store %Int32 %9, %Int32* %19
+	%17 = load %Nat32, %Nat32* %3
+	%18 = bitcast %Nat32 %17 to %Nat32
+	%19 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %18
+	store %Int32 %15, %Int32* %19
+	%20 = load %Nat32, %Nat32* %3
+	%21 = add %Nat32 %20, 1
+	%22 = bitcast %Nat32 %21 to %Nat32
+	%23 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %22
+	store %Int32 %10, %Int32* %23
 	store %Bool 1, %Bool* %1
 	br label %break_2
 	br label %endif_0
 endif_0:
-	%21 = load %Int32, %Int32* %3
-	%22 = add %Int32 %21, 1
-	store %Int32 %22, %Int32* %3
+	%25 = load %Nat32, %Nat32* %3
+	%26 = add %Nat32 %25, 1
+	store %Nat32 %26, %Nat32* %3
 	br label %again_2
 break_2:
 	br label %again_1
@@ -282,59 +286,61 @@ break_1:
 define %Int32 @main() {
 	;fill_array(&array, lengthof(array))
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
-	call void @print_array([0 x %Int32]* bitcast ([21 x %Int32]* @array to [0 x %Int32]*), %Int32 21)
+	call void @print_array([0 x %Int32]* bitcast ([21 x %Int32]* @array to [0 x %Int32]*), %Nat32 21)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-	call void @bubble_sort32([0 x %Int32]* bitcast ([21 x %Int32]* @array to [0 x %Int32]*), %Int32 21)
+	call void @bubble_sort32([0 x %Int32]* bitcast ([21 x %Int32]* @array to [0 x %Int32]*), %Nat32 21)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
-	call void @print_array([0 x %Int32]* bitcast ([21 x %Int32]* @array to [0 x %Int32]*), %Int32 21)
+	call void @print_array([0 x %Int32]* bitcast ([21 x %Int32]* @array to [0 x %Int32]*), %Nat32 21)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
 	ret %Int32 0
 }
 
-define internal void @print_array([0 x %Int32]* %array, %Int32 %len) {
+define internal void @print_array([0 x %Int32]* %array, %Nat32 %len) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-	%2 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %2
+	%2 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %2
 ; while_1
 	br label %again_1
 again_1:
-	%3 = load %Int32, %Int32* %2
-	%4 = icmp slt %Int32 %3, %len
+	%3 = load %Nat32, %Nat32* %2
+	%4 = icmp ult %Nat32 %3, %len
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	%5 = load %Int32, %Int32* %2
-	%6 = load %Int32, %Int32* %2
-	%7 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %6
-	%8 = load %Int32, %Int32* %7
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str6 to [0 x i8]*), %Int32 %5, %Int32 %8)
-	%10 = load %Int32, %Int32* %2
-	%11 = add %Int32 %10, 1
-	store %Int32 %11, %Int32* %2
+	%5 = load %Nat32, %Nat32* %2
+	%6 = load %Nat32, %Nat32* %2
+	%7 = bitcast %Nat32 %6 to %Nat32
+	%8 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %7
+	%9 = load %Int32, %Int32* %8
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str6 to [0 x i8]*), %Nat32 %5, %Int32 %9)
+	%11 = load %Nat32, %Nat32* %2
+	%12 = add %Nat32 %11, 1
+	store %Nat32 %12, %Nat32* %2
 	br label %again_1
 break_1:
 	ret void
 }
 
-define internal void @fill_array([0 x %Int32]* %array, %Int32 %len) {
+define internal void @fill_array([0 x %Int32]* %array, %Nat32 %len) {
 	%1 = sub i16 0, 1000
-	%2 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %2
+	%2 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %2
 ; while_1
 	br label %again_1
 again_1:
-	%3 = load %Int32, %Int32* %2
-	%4 = icmp slt %Int32 %3, %len
+	%3 = load %Nat32, %Nat32* %2
+	%4 = icmp ult %Nat32 %3, %len
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	%5 = load %Int32, %Int32* %2
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), %Int32 %5)
+	%5 = load %Nat32, %Nat32* %2
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), %Nat32 %5)
 	%7 = call %Int32 @get_number(%Int32 -1000, %Int32 1000)
-	%8 = load %Int32, %Int32* %2
-	%9 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %8
-	store %Int32 %7, %Int32* %9
-	%10 = load %Int32, %Int32* %2
-	%11 = add %Int32 %10, 1
-	store %Int32 %11, %Int32* %2
+	%8 = load %Nat32, %Nat32* %2
+	%9 = bitcast %Nat32 %8 to %Nat32
+	%10 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %9
+	store %Int32 %7, %Int32* %10
+	%11 = load %Nat32, %Nat32* %2
+	%12 = add %Nat32 %11, 1
+	store %Nat32 %12, %Nat32* %2
 	br label %again_1
 break_1:
 	ret void

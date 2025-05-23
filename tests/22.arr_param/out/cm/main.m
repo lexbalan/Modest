@@ -5,7 +5,7 @@ func getarr10 () -> [10]Int32 {
 }
 func arraysAdd (a: [10]Int32, b: [10]Int32) -> [10]Int32 {
 	var c: [10]Int32
-	var i: Int32 = 0
+	var i: Nat32 = 0
 	while i < 10 {
 		c[i] = a[i] + b[i]
 		i = i + 1
@@ -35,7 +35,7 @@ public func main () -> Int32 {
 		printf("test3 passed!\n")
 	}
 
-	var i: Int32 = 0
+	var i: Nat32 = 0
 	while i < 10 {
 		printf("d[%i] = %i\n", i, d[i])
 		i = i + 1

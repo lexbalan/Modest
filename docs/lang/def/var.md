@@ -55,7 +55,7 @@ public func main() -> Int {
 	printf("before counter = %i\n", counter)
 
 	// call function count for ten times
-	var i = 0
+	var i: Nat32 = 0
 	while i < 10 {
 		count()
 		++i

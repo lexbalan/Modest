@@ -12,9 +12,9 @@ static queueWord8_QueueWord8 bq0;
 static ringWord8_RingWord8 br0;
 
 static int32_t ii;
-static void fill(int n)
+static void fill(uint32_t n)
 {
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i < n) {
 		if (queueWord8_isFull(&bq0)) {
 			printf("<queue is full>\n");
@@ -27,9 +27,9 @@ static void fill(int n)
 		ii = ii + 1;
 	}
 }
-static void fetch(int n)
+static void fetch(uint32_t n)
 {
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i < n) {
 		if (queueWord8_isEmpty(&bq0)) {
 			printf("<queue is empty>\n");

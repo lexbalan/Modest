@@ -34,9 +34,9 @@ func f2(pa: *[][]*Str8, m: Int32, n: Int32) {
 
 func print2DArray(pa: *[][]*Str8, m: Int32, n: Int32) {
 	let pg = *[m][n]*Str pa
-	var i = 0
+	var i: Nat32 = 0
 	while i < m {
-		var j = 0
+		var j: Nat32 = 0
 		while j < n {
 			printf("pa[%i][%i] = %s\n", i, j, pg[i][j])
 			++j

@@ -116,7 +116,7 @@ func test_generic_array () -> Bool {
 	// this array expression (GenericArray of four GenericInteger items)
 	let a = [0, 1, 2, 3]
 
-	var i: Int32 = 0
+	var i: Nat32 = 0
 	while i < 4 {
 		printf("a[%i] = %i\n", i, a[i])
 		i = i + 1

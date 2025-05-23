@@ -8,7 +8,9 @@
 
 
 /* anonymous records */
-struct __anonymous_struct_2 {int32_t x; int32_t y;
+struct __anonymous_struct_2 {
+	int32_t x;
+	int32_t y;
 };
 static int32_t *p0;
 static int32_t **p1;
@@ -238,9 +240,9 @@ int32_t main()
 		printf("ne\n");
 	}
 
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i < 3) {
-		int32_t j = 0;
+		uint32_t j = 0;
 		while (j < 3) {
 			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j]);
 			j = j + 1;

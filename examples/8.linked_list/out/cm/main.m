@@ -69,9 +69,9 @@ public func main () -> Int {
 	printf("\nlist.node_get(list, n) test\n")
 
 	// test list.node_get
-	var i: Int32 = 0
+	var i: Nat32 = 0
 	while i >= -12 {
-		let node: *Node = list.node_get(list0, i)
+		let node: *Node = list.node_get(list0, Int32 i)
 
 		if node == nil {
 			printf("node %i not exist\n", i)
@@ -88,7 +88,7 @@ public func main () -> Int {
 
 	i = 0
 	while i <= 12 {
-		let node: *Node = list.node_get(list0, i)
+		let node: *Node = list.node_get(list0, Int32 i)
 
 		if node == nil {
 			printf("node %i not exist\n", i)

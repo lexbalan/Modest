@@ -44,11 +44,11 @@ const stopSequence = [0x16]
 
 func test () -> Unit {
 	// тестируем работу с локальным generic массивом
-	var yy: [6]Word64 = startSequence + [] + stopSequence
-	var i: Int32 = 0
+	var yy: [6]Word8 = startSequence + [] + stopSequence
+	var i: Nat32 = 0
 	while i < lengthof(yy) {
-		let y: Word64 = yy[i]
-		printf("yy[%i] = %i\n", i, y)
+		let y: Word8 = yy[i]
+		printf("yy[%i] = %u\n", i, Word32 y)
 		i = i + 1
 	}
 }
@@ -181,7 +181,7 @@ public func main () -> Int {
 	var em: [30]Char8 = f0("Hello World!")
 	printf("em = %s\n", &em)
 
-	var i: Int32 = 0
+	var i: Nat32 = 0
 	while i < 10 {
 		let a: Int32 = globalArray[i]
 		printf("globalArray[%i] = %i\n", i, a)

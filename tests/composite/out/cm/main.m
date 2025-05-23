@@ -143,7 +143,10 @@ var animation2_points = [5]AnimationPoint [
 ]
 
 
-func xy (x: record {x: Int32, y: Int32}) -> Unit {
+func xy (x: record {
+	x: Int32
+	y: Int32
+}) -> Unit {
 }
 
 
@@ -213,9 +216,9 @@ public func main () -> Int32 {
 		printf("ne\n")
 	}
 
-	var i: Int32 = 0
+	var i: Nat32 = 0
 	while i < 3 {
-		var j: Int32 = 0
+		var j: Nat32 = 0
 		while j < 3 {
 			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
 			j = j + 1

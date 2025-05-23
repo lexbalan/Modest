@@ -19,9 +19,9 @@ var a: [2][2][3]Int32 = [
 func print3DArray (pa: *[][][]Int32, m: Int32, n: Int32, p: Int32) -> Unit {
 	//let pg: *[m][n][p]Int32 = *[m][n][p]Int32 pa
 	let pg = *[m][n][p]Int32 pa
-	var i = 0
+	var i: Nat32 = 0
 	while i < m {
-		var j = 0
+		var j: Nat32 = 0
 		while j < n {
 			var k = 0
 			while k < p {

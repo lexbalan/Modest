@@ -59,11 +59,11 @@ static void f0(char *_x, char *sret_)
 static void test()
 {
 	// тестируем работу с локальным generic массивом
-	uint64_t yy[6] = {0xAA, 0x55, 0x02, 0x00, 0x00, 0x16};
-	int32_t i = 0;
+	uint8_t yy[6] = {0xAA, 0x55, 0x02, 0x00, 0x00, 0x16};
+	uint32_t i = 0;
 	while (i < __lengthof(yy)) {
-		const uint64_t y = yy[i];
-		printf("yy[%i] = %i\n", i, y);
+		const uint8_t y = yy[i];
+		printf("yy[%i] = %u\n", i, (uint32_t)y);
 		i = i + 1;
 	}
 }
@@ -185,7 +185,7 @@ int main()
 	f0("Hello World!", &em);
 	printf("em = %s\n", &em);
 
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i < 10) {
 		const int32_t a = globalArray[i];
 		printf("globalArray[%i] = %i\n", i, a);

@@ -19,7 +19,7 @@ var array: [arrayLength]Int32 = [1, 2, 3, 4, 5]
 
 
 public func main() -> Int {
-	var i = 0
+	var i: Nat32 = 0
 	while i < arrayLength {
 		// index array
 		let array_item = array[i]
@@ -46,7 +46,7 @@ var ptr_to_array: *[]Nat32
 public func main() -> Int {
 	ptr_to_array = &array
 
-	var i = 0
+	var i: Nat32 = 0
 	while i < arrayLength {
 		// index pointer to array
 		let array_item = ptr_to_array[i]

@@ -11,8 +11,8 @@ int main()
 {
 	printf("while statement test\n");
 
-	int32_t a = 0;
-	#define b  10
+	uint32_t a = 0;
+	const uint32_t b = 10;
 
 	while (a < b) {
 		printf("a = %d\n", a);
@@ -20,7 +20,5 @@ int main()
 	}
 
 	return 0;
-
-#undef b
 }
 

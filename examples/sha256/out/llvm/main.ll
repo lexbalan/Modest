@@ -381,63 +381,65 @@ define internal %Bool @doTest(%SHA256_TestCase* %test) {
 	%6 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 0
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x %Char8]* %6)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
-	%9 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %9
+	%9 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %9
 ; while_1
 	br label %again_1
 again_1:
-	%10 = load %Int32, %Int32* %9
-	%11 = icmp slt %Int32 %10, 32
+	%10 = load %Nat32, %Nat32* %9
+	%11 = icmp ult %Nat32 %10, 32
 	br %Bool %11 , label %body_1, label %break_1
 body_1:
-	%12 = load %Int32, %Int32* %9
-	%13 = getelementptr %sha256_Hash, %sha256_Hash* %1, %Int32 0, %Int32 %12
-	%14 = load %Word8, %Word8* %13
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), %Word8 %14)
-	%16 = load %Int32, %Int32* %9
-	%17 = add %Int32 %16, 1
-	store %Int32 %17, %Int32* %9
+	%12 = load %Nat32, %Nat32* %9
+	%13 = bitcast %Nat32 %12 to %Nat32
+	%14 = getelementptr %sha256_Hash, %sha256_Hash* %1, %Int32 0, %Nat32 %13
+	%15 = load %Word8, %Word8* %14
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), %Word8 %15)
+	%17 = load %Nat32, %Nat32* %9
+	%18 = add %Nat32 %17, 1
+	store %Nat32 %18, %Nat32* %9
 	br label %again_1
 break_1:
-	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-	%19 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 2
-	%20 = bitcast %sha256_Hash* %1 to i8*
-	%21 = bitcast %sha256_Hash* %19 to i8*
-	%22 = call i1 (i8*, i8*, i64) @memeq(i8* %20, i8* %21, %Int64 32)
-	%23 = icmp ne %Bool %22, 0
-	ret %Bool %23
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	%20 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 2
+	%21 = bitcast %sha256_Hash* %1 to i8*
+	%22 = bitcast %sha256_Hash* %20 to i8*
+	%23 = call i1 (i8*, i8*, i64) @memeq(i8* %21, i8* %22, %Int64 32)
+	%24 = icmp ne %Bool %23, 0
+	ret %Bool %24
 }
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
-	%2 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %2
+	%2 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %2
 ; while_1
 	br label %again_1
 again_1:
-	%3 = load %Int32, %Int32* %2
-	%4 = icmp slt %Int32 %3, 2
+	%3 = load %Nat32, %Nat32* %2
+	%4 = icmp ult %Nat32 %3, 2
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	%5 = load %Int32, %Int32* %2
-	%6 = getelementptr [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @tests, %Int32 0, %Int32 %5
-	%7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
-	%8 = bitcast %SHA256_TestCase* %7 to %SHA256_TestCase*
-	%9 = call %Bool @doTest(%SHA256_TestCase* %8)
-	%10 = alloca %Str8*, align 8
-	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %10
+	%5 = load %Nat32, %Nat32* %2
+	%6 = bitcast %Nat32 %5 to %Nat32
+	%7 = getelementptr [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @tests, %Int32 0, %Nat32 %6
+	%8 = load %SHA256_TestCase*, %SHA256_TestCase** %7
+	%9 = bitcast %SHA256_TestCase* %8 to %SHA256_TestCase*
+	%10 = call %Bool @doTest(%SHA256_TestCase* %9)
+	%11 = alloca %Str8*, align 8
+	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %11
 ; if_0
-	br %Bool %9 , label %then_0, label %endif_0
+	br %Bool %10 , label %then_0, label %endif_0
 then_0:
-	store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %10
+	store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %11
 	br label %endif_0
 endif_0:
-	%11 = load %Int32, %Int32* %2
-	%12 = load %Str8*, %Str8** %10
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), %Int32 %11, %Str8* %12)
-	%14 = load %Int32, %Int32* %2
-	%15 = add %Int32 %14, 1
-	store %Int32 %15, %Int32* %2
+	%12 = load %Nat32, %Nat32* %2
+	%13 = load %Str8*, %Str8** %11
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), %Nat32 %12, %Str8* %13)
+	%15 = load %Nat32, %Nat32* %2
+	%16 = add %Nat32 %15, 1
+	store %Nat32 %16, %Nat32* %2
 	br label %again_1
 break_1:
 	ret %Int 0

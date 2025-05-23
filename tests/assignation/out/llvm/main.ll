@@ -342,9 +342,9 @@ define %Int @main() {
 ;
 ;	var aa: [dim1][dim2]Int32
 ;
-;	var i = 0
+;	var i: Nat32 = 0
 ;	while i < 16 {
-;		var j = 0
+;		var j: Nat32 = 0
 ;		while j < 16 {
 ;			aa[i][j] = i * j
 ;			j = j + 1

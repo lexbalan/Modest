@@ -105,7 +105,7 @@ func tokenize (tokenizer: *Tokenizer) -> Unit {
 func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
 	printf("%s (n=%d)", cmd, argc)
 	printf(" [")
-	var i = 0
+	var i: Nat32 = 0
 	while true {
 		let ptok = argv[i]
 		if ptok == nil {

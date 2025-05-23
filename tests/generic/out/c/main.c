@@ -142,7 +142,7 @@ static bool test_generic_array()
 	// this array expression (GenericArray of four GenericInteger items)
 	#define a  {0, 1, 2, 3}
 
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i < 4) {
 		printf("a[%i] = %i\n", i, ((uint8_t[4])a)[i]);
 		i = i + 1;

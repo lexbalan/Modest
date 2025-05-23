@@ -7,6 +7,8 @@
 
 #include "main.h"
 
+#define ABS(x) ((x) < 0 ? -(x) : (x))
+
 static void nat32_list_insert(list_List *lst, uint32_t x)
 {
 	// alloc memory for Nat32 value
@@ -75,9 +77,9 @@ int main()
 	printf("\nlist.node_get(list, n) test\n");
 
 	// test list.node_get
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i >= -12) {
-		list_Node *const node = list_node_get(list0, i);
+		list_Node *const node = list_node_get(list0, (int32_t)i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
@@ -94,7 +96,7 @@ int main()
 
 	i = 0;
 	while (i <= 12) {
-		list_Node *const node = list_node_get(list0, i);
+		list_Node *const node = list_node_get(list0, (int32_t)i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);

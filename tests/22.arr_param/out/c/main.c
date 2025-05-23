@@ -17,7 +17,7 @@ static void arraysAdd(int32_t *_a, int32_t *_b, int32_t *sret_)
 	int32_t b[10];
 	memcpy(b, _b, sizeof(int32_t[10]));
 	int32_t c[10];
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i < 10) {
 		c[i] = a[i] + b[i];
 		i = i + 1;
@@ -50,7 +50,7 @@ int32_t main()
 		printf("test3 passed!\n");
 	}
 
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i < 10) {
 		printf("d[%i] = %i\n", i, d[i]);
 		i = i + 1;

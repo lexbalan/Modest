@@ -65,7 +65,7 @@ void console_putchar_utf32(uint32_t c)
 
 void console_puts8(char *s)
 {
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (true) {
 		const char c = s[i];
 		if (c == 0) {
@@ -78,7 +78,7 @@ void console_puts8(char *s)
 
 void console_puts16(uint16_t *s)
 {
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (true) {
 		// нельзя просто так взять и вызвать putchar_utf16
 		// тк в строке может быть суррогатная пара UTF_16 символов
@@ -96,13 +96,13 @@ void console_puts16(uint16_t *s)
 
 		console_putchar_utf32(char32);
 
-		i = i + (int32_t)n;
+		i = i + (uint32_t)n;
 	}
 }
 
 void console_puts32(uint32_t *s)
 {
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (true) {
 		const uint32_t c = s[i];
 		if (c == 0) {
@@ -140,7 +140,7 @@ static int32_t sprint_dec_n32(char *buf, uint32_t x);
 static int32_t sprint_hex_nat32(char *buf, uint32_t x);
 int32_t console_vsprint(char *buf, char *form, va_list va)
 {
-	int32_t i = 0;
+	uint32_t i = 0;
 	int32_t j = 0;
 
 	while (true) {
@@ -219,8 +219,8 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			// %c for char
 			//
 			const uint32_t c = va_arg(va, uint32_t);
-			const int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)sptr);
-			j = j + n;
+			const uint8_t n = utf_utf32_to_utf8(c, (char *)sptr);
+			j = j + (int32_t)n;
 		}
 	}
 
@@ -244,7 +244,7 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x)
 {
 	char tmpbuf[8];
 	uint32_t d = x;
-	int32_t i = 0;
+	uint32_t i = 0;
 
 	while (true) {
 		const uint32_t n = d % 16;
@@ -281,7 +281,7 @@ static int32_t sprint_dec_int32(char *buf, int32_t x)
 		d = -d;
 	}
 
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (true) {
 		const int32_t n = d % 10;
 		d = d / 10;
@@ -315,7 +315,7 @@ static int32_t sprint_dec_n32(char *buf, uint32_t x)
 {
 	char tmpbuf[11];
 	uint32_t d = x;
-	int32_t i = 0;
+	uint32_t i = 0;
 
 	while (true) {
 		const uint32_t n = d % 10;

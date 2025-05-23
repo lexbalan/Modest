@@ -52,7 +52,7 @@ let default = 5
 @set("id.cm", "arrshow")
 func arrayShow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
-	var i = 0
+	var i: Nat32 = 0
 	while i < 10 {
 		printf("array[%d] = %d\n", i, array[i])
 		++i

@@ -332,14 +332,14 @@ declare %Bool @ringWord8_get(%ringWord8_RingWord8* %q, %Word8* %b)
 @bq0 = internal global %queueWord8_QueueWord8 zeroinitializer
 @br0 = internal global %ringWord8_RingWord8 zeroinitializer
 @ii = internal global %Int32 zeroinitializer
-define internal void @fill(%Int %n) {
-	%1 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %1
+define internal void @fill(%Nat32 %n) {
+	%1 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %1
 ; while_1
 	br label %again_1
 again_1:
-	%2 = load %Int32, %Int32* %1
-	%3 = icmp slt %Int32 %2, %n
+	%2 = load %Nat32, %Nat32* %1
+	%3 = icmp ult %Nat32 %2, %n
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
 ; if_0
@@ -355,9 +355,9 @@ endif_0:
 	%9 = load %Int32, %Int32* @ii
 	%10 = trunc %Int32 %9 to %Word8
 	%11 = call %Bool @queueWord8_put(%queueWord8_QueueWord8* bitcast (%queueWord8_QueueWord8* @bq0 to %queueWord8_QueueWord8*), %Word8 %10)
-	%12 = load %Int32, %Int32* %1
-	%13 = add %Int32 %12, 1
-	store %Int32 %13, %Int32* %1
+	%12 = load %Nat32, %Nat32* %1
+	%13 = add %Nat32 %12, 1
+	store %Nat32 %13, %Nat32* %1
 	%14 = load %Int32, %Int32* @ii
 	%15 = add %Int32 %14, 1
 	store %Int32 %15, %Int32* @ii
@@ -366,14 +366,14 @@ break_1:
 	ret void
 }
 
-define internal void @fetch(%Int %n) {
-	%1 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %1
+define internal void @fetch(%Nat32 %n) {
+	%1 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %1
 ; while_1
 	br label %again_1
 again_1:
-	%2 = load %Int32, %Int32* %1
-	%3 = icmp slt %Int32 %2, %n
+	%2 = load %Nat32, %Nat32* %1
+	%3 = icmp ult %Nat32 %2, %n
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
 ; if_0
@@ -389,9 +389,9 @@ endif_0:
 	%9 = load %Word8, %Word8* %7
 	%10 = sext %Word8 %9 to %Int
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), %Int %10)
-	%12 = load %Int32, %Int32* %1
-	%13 = add %Int32 %12, 1
-	store %Int32 %13, %Int32* %1
+	%12 = load %Nat32, %Nat32* %1
+	%13 = add %Nat32 %12, 1
+	store %Nat32 %13, %Nat32* %1
 	br label %again_1
 break_1:
 	ret void
@@ -400,12 +400,12 @@ break_1:
 @qbuf = internal global [10 x %Word8] zeroinitializer
 define %Int @main() {
 	call void @queueWord8_init(%queueWord8_QueueWord8* bitcast (%queueWord8_QueueWord8* @bq0 to %queueWord8_QueueWord8*), [0 x %Word8]* bitcast ([10 x %Word8]* @qbuf to [0 x %Word8]*), %Nat32 10)
-	call void @fill(%Int 3)
-	call void @fetch(%Int 7)
-	call void @fill(%Int 12)
-	call void @fetch(%Int 7)
-	call void @fill(%Int 3)
-	call void @fetch(%Int 7)
+	call void @fill(%Nat32 3)
+	call void @fetch(%Nat32 7)
+	call void @fill(%Nat32 12)
+	call void @fetch(%Nat32 7)
+	call void @fill(%Nat32 3)
+	call void @fetch(%Nat32 7)
 	ret %Int 0
 }
 

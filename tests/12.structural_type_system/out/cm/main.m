@@ -26,7 +26,9 @@ func f2_val (x: Type3) -> Unit {
 	printf("f2 x.x = %d\n", x.x)
 }
 
-func f3_val (x: record {x: Int32}) -> Unit {
+func f3_val (x: record {
+	x: Int32
+}) -> Unit {
 	printf("f3 x.x = %d\n", x.x)
 }
 
@@ -43,7 +45,9 @@ func f2_ptr (x: *Type3) -> Unit {
 	printf("f2p x.x = %d\n", x.x)
 }
 
-func f3_ptr (x: *record {x: Int32}) -> Unit {
+func f3_ptr (x: *record {
+	x: Int32
+}) -> Unit {
 	printf("f3p x.x = %d\n", x.x)
 }
 

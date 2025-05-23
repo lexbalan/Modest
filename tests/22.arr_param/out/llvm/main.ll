@@ -219,33 +219,36 @@ define internal void @arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %In
 	%3 = zext i8 10 to %Nat32
 	store [10 x %Int32] %__b, [10 x %Int32]* %b
 	%4 = alloca [10 x %Int32], align 1
-	%5 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %5
+	%5 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %5
 ; while_1
 	br label %again_1
 again_1:
-	%6 = load %Int32, %Int32* %5
-	%7 = icmp slt %Int32 %6, 10
+	%6 = load %Nat32, %Nat32* %5
+	%7 = icmp ult %Nat32 %6, 10
 	br %Bool %7 , label %body_1, label %break_1
 body_1:
-	%8 = load %Int32, %Int32* %5
-	%9 = getelementptr [10 x %Int32], [10 x %Int32]* %4, %Int32 0, %Int32 %8
-	%10 = load %Int32, %Int32* %5
-	%11 = getelementptr [10 x %Int32], [10 x %Int32]* %a, %Int32 0, %Int32 %10
-	%12 = load %Int32, %Int32* %5
-	%13 = getelementptr [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Int32 %12
-	%14 = load %Int32, %Int32* %11
-	%15 = load %Int32, %Int32* %13
-	%16 = add %Int32 %14, %15
-	store %Int32 %16, %Int32* %9
-	%17 = load %Int32, %Int32* %5
-	%18 = add %Int32 %17, 1
-	store %Int32 %18, %Int32* %5
+	%8 = load %Nat32, %Nat32* %5
+	%9 = bitcast %Nat32 %8 to %Nat32
+	%10 = getelementptr [10 x %Int32], [10 x %Int32]* %4, %Int32 0, %Nat32 %9
+	%11 = load %Nat32, %Nat32* %5
+	%12 = bitcast %Nat32 %11 to %Nat32
+	%13 = getelementptr [10 x %Int32], [10 x %Int32]* %a, %Int32 0, %Nat32 %12
+	%14 = load %Nat32, %Nat32* %5
+	%15 = bitcast %Nat32 %14 to %Nat32
+	%16 = getelementptr [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Nat32 %15
+	%17 = load %Int32, %Int32* %13
+	%18 = load %Int32, %Int32* %16
+	%19 = add %Int32 %17, %18
+	store %Int32 %19, %Int32* %10
+	%20 = load %Nat32, %Nat32* %5
+	%21 = add %Nat32 %20, 1
+	store %Nat32 %21, %Nat32* %5
 	br label %again_1
 break_1:
-	%19 = load [10 x %Int32], [10 x %Int32]* %4
-	%20 = zext i8 10 to %Nat32
-	store [10 x %Int32] %19, [10 x %Int32]* %0
+	%22 = load [10 x %Int32], [10 x %Int32]* %4
+	%23 = zext i8 10 to %Nat32
+	store [10 x %Int32] %22, [10 x %Int32]* %0
 	ret void
 }
 
@@ -346,23 +349,24 @@ then_2:
 	%74 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str3 to [0 x i8]*))
 	br label %endif_2
 endif_2:
-	%75 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %75
+	%75 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %75
 ; while_1
 	br label %again_1
 again_1:
-	%76 = load %Int32, %Int32* %75
-	%77 = icmp slt %Int32 %76, 10
+	%76 = load %Nat32, %Nat32* %75
+	%77 = icmp ult %Nat32 %76, 10
 	br %Bool %77 , label %body_1, label %break_1
 body_1:
-	%78 = load %Int32, %Int32* %75
-	%79 = load %Int32, %Int32* %75
-	%80 = getelementptr [10 x %Int32], [10 x %Int32]* %58, %Int32 0, %Int32 %79
-	%81 = load %Int32, %Int32* %80
-	%82 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*), %Int32 %78, %Int32 %81)
-	%83 = load %Int32, %Int32* %75
-	%84 = add %Int32 %83, 1
-	store %Int32 %84, %Int32* %75
+	%78 = load %Nat32, %Nat32* %75
+	%79 = load %Nat32, %Nat32* %75
+	%80 = bitcast %Nat32 %79 to %Nat32
+	%81 = getelementptr [10 x %Int32], [10 x %Int32]* %58, %Int32 0, %Nat32 %80
+	%82 = load %Int32, %Int32* %81
+	%83 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*), %Nat32 %78, %Int32 %82)
+	%84 = load %Nat32, %Nat32* %75
+	%85 = add %Nat32 %84, 1
+	store %Nat32 %85, %Nat32* %75
 	br label %again_1
 break_1:
 	ret %Int32 0
