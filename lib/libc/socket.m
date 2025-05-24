@@ -50,6 +50,27 @@ public type SockAddrIn record {
 	public sin_zero: [8]Nat8
 }
 
+
+
+@set("id.c", "SOL_SOCKET")
+public const c_SOL_SOCKET = 1   // for setsockopt
+
+
+@set("id.c", "SO_REUSEADDR")
+public const c_SO_REUSEADDR = 2
+
+
+// from "sys/socket.h"
+
+public func setsockopt (
+	socket: Int, level: Int,
+	option_name: Int, option_value: Ptr,
+	option_len: SocklenT
+) -> @unused Int
+
+
+
+
 @set("id.c", "SOCK_STREAM")
 public const c_SOCK_STREAM = 1  // stream socket
 @set("id.c", "SOCK_DGRAM")
@@ -130,8 +151,8 @@ public func bind(socket: Int, addr: *SockAddr, addrlen: SocklenT) -> Int
 public func listen(socket: Int, backlog: Int) -> Int
 public func connect(socket: Int, addr: *SockAddr, addrlen: SocklenT) -> Int
 
-public func send(socket: Int, buf: Ptr, len: SizeT, flags: Int) -> SSizeT
-public func recv(socket: Int, buf: Ptr, len: SizeT, flags: Int) -> SSizeT
+public func send(socket: Int, buf: Ptr, len: SizeT, flags: Int) -> @unused SSizeT
+public func recv(socket: Int, buf: Ptr, len: SizeT, flags: Int) -> @unused SSizeT
 
 // вообще syscall, разберись
 public func accept(socket: Int, addr: *SockAddr, addrlen: *SocklenT) -> Int

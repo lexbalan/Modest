@@ -1546,21 +1546,16 @@ class Parser:
 
 	def skip_blanks(self):
 		nl_cnt = 0
-		while True:
-			#if ctok_class == 'nl':
-			#if self.look(" ") or self.look("\t"):
-			#	self.skip()
-			#	continue
+		while not self.is_end():
+			if not self.look('\n'):
+				break
 
-			#el
+			self.skip()
+			nl_cnt = nl_cnt + 1
+			continue
 
-			if self.look('\n'):
-				self.skip()
-				nl_cnt = nl_cnt + 1
-				continue
+		return nl_cnt
 
-			else:
-				return nl_cnt
 
 
 	def stmt_block(self):
@@ -1618,7 +1613,7 @@ class Parser:
 	def parse_comments_attributes(self, nl_cnt=0):
 		comments = []
 		atts = []
-		while True:
+		while not self.is_end():
 			comm = self.parse_if_comment()
 			if comm != None:
 				comm['nl'] = nl_cnt
@@ -1641,7 +1636,7 @@ class Parser:
 		ti = self.ti()
 
 		objs = []
-		while True:
+		while not self.is_end():
 			nl_cnt = 0
 
 			ca = self.parse_comments_attributes(nl_cnt=nl_cnt)

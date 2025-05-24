@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <arpa/inet.h>
 
 #include "main.h"
 

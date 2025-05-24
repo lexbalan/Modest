@@ -307,6 +307,8 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 	[8 x %Nat8]
 };
 
+declare %Int @setsockopt(%Int %socket, %Int %level, %Int %option_name, i8* %option_value, %SocklenT %option_len)
+declare %Word16 @htons(%Word16 %x)
 declare %InAddrT @inet_addr([0 x %ConstChar]* %cp)
 declare %Int @socket(%Int %domain, %Int %_type, %Int %protocol)
 declare %Int @bind(%Int %socket, %SockAddr* %addr, %SocklenT %addrlen)

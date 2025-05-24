@@ -180,6 +180,7 @@ def printWarning(s, ti):
 def error(s, ti=None):
 	global errcnt
 	errcnt = errcnt + 1
+	#print(ti)
 	common_message('error: ', COLOR_ERROR, s, ti)
 	if errcnt >= MAX_ERRORS:
 		exit(-1)

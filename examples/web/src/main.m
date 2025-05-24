@@ -5,6 +5,7 @@ include "libc/stdlib"
 include "libc/string"
 include "libc/unistd"
 include "libc/socket"
+include "libc/arpa/inet"
 
 
 const port = 8080
@@ -23,11 +24,11 @@ const httpHeader = *Str8 (
 var pageCounter: Nat32
 
 
-@extern
-@c_no_print
-func htons(x: Word16) -> Word16 {
-	return (x << 8) or (x >> 8)
-}
+//@extern
+//@c_no_print
+//func htons(x: Word16) -> Word16 {
+//	return (x << 8) or (x >> 8)
+//}
 
 
 func handleRequest(client_socket: Int32) -> Unit {

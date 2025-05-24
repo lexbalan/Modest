@@ -27,6 +27,9 @@ def pointer_can(to, from_type, method, ti):
 
 	# String -> *[]CharX
 	if from_type.is_string():
+		# (!) or to.is_free_pointer()
+		# нельзя приводить строковой литерал к Ptr
+		# тк в таком случае мы не знаем какой у нас будет тип символа
 		return to.is_pointer_to_array_of_char()
 
 	if from_type.is_pointer():

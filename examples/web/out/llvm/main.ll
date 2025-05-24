@@ -320,6 +320,7 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 	[8 x %Nat8]
 };
 
+declare %Int @setsockopt(%Int %socket, %Int %level, %Int %option_name, i8* %option_value, %SocklenT %option_len)
 declare %InAddrT @inet_addr([0 x %ConstChar]* %cp)
 declare %Int @socket(%Int %domain, %Int %_type, %Int %protocol)
 declare %Int @bind(%Int %socket, %SockAddr* %addr, %SocklenT %addrlen)
@@ -328,6 +329,11 @@ declare %Int @connect(%Int %socket, %SockAddr* %addr, %SocklenT %addrlen)
 declare %SSizeT @send(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
 declare %SSizeT @recv(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
 declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
+; from included inet
+declare %Word32 @htonl(%Word32 %host32)
+declare %Word32 @ntohl(%Word32 %net32)
+declare %Word16 @ntohs(%Word16 %net16)
+declare %Word16 @htons(%Word16 %x)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 0
@@ -344,15 +350,6 @@ declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
 @str9 = private constant [25 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 97, i8 99, i8 99, i8 101, i8 112, i8 116, i8 32, i8 99, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 105, i8 111, i8 110, i8 0]
 ; -- endstrings --
 @pageCounter = internal global %Nat32 zeroinitializer
-define internal %Word16 @htons(%Word16 %x) {
-	%1 = zext i8 8 to %Word16
-	%2 = shl %Word16 %x, %1
-	%3 = zext i8 8 to %Word16
-	%4 = lshr %Word16 %x, %3
-	%5 = or %Word16 %2, %4
-	ret %Word16 %5
-}
-
 define internal void @handleRequest(%Int32 %client_socket) {
 	%1 = alloca [1024 x %Word8], align 1
 	%2 = bitcast [1024 x %Word8]* %1 to i8*

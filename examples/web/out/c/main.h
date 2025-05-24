@@ -10,6 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <arpa/inet.h>
 
 
 int32_t main();
