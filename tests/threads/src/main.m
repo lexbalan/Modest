@@ -6,7 +6,7 @@ include "libc/stdio"
 include "libc/unistd"
 
 import "misc/pthread"
-$pragma c_include "pthread.h"
+pragma c_include "pthread.h"
 
 
 var mutex: pthread.PThreadMutexT = pthread.mutexInitializer

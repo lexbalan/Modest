@@ -1,5 +1,5 @@
 
-$pragma do_not_include
+pragma do_not_include
 
 public include "libc/ctypes64"
 public include "libc/stdio"

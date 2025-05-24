@@ -1,7 +1,7 @@
 // libc/ctypes64.m
 
-$pragma do_not_include
-$pragma module_nodecorate
+pragma do_not_include
+pragma module_nodecorate
 
 
 @set("id.c", "char *")

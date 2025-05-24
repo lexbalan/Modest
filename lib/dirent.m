@@ -1,6 +1,6 @@
 // dirent.m
 
-$pragma module_nodecorate
+pragma module_nodecorate
 
 @set("id.c", "DIR")
 public type Dir record {}

@@ -1,9 +1,9 @@
 // lightfood/console.m
 
-//$pragma do_not_include
+//pragma do_not_include
 
-$pragma c_include "./utf.h"
-$pragma c_include "./console.h"
+pragma c_include "./utf.h"
+pragma c_include "./console.h"
 
 include "libc/ctypes64"  // for Int
 include "libc/unistd"  // for write()

@@ -1,8 +1,8 @@
 // libc/time.m
 
-$pragma do_not_include
-$pragma module_nodecorate
-$pragma c_include "time.h"
+pragma do_not_include
+pragma module_nodecorate
+pragma c_include "time.h"
 
 include "libc/ctypes64"
 

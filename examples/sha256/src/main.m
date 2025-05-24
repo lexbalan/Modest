@@ -5,7 +5,7 @@ include "libc/stdio"
 
 
 import "misc/sha256"
-$pragma c_include "./sha256.h"
+pragma c_include "./sha256.h"
 
 
 const inputDataLength = 32

@@ -1,5 +1,5 @@
 
-$pragma unsafe
+pragma unsafe
 
 include "libc/stdio"
 include "libc/stdlib"

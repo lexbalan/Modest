@@ -1,7 +1,7 @@
 
-$pragma do_not_include
-$pragma module_nodecorate
-$pragma c_include "pthread.h"
+pragma do_not_include
+pragma module_nodecorate
+pragma c_include "pthread.h"
 
 include "libc/ctypes64"
 
@@ -70,7 +70,7 @@ public const pthreadPrioInherit = nil
 public const pthreadPrioProtect = nil
 
 
-$pragma append_prefix "pthread_"
+pragma append_prefix "pthread_"
 
 public func atfork(prepare: *() -> Unit, parent: *() -> Unit, child: *() -> Unit) -> Int
 public func attr_destroy(a: *PThreadAttrT) -> Int
@@ -171,6 +171,6 @@ public func spin_lock(s: *PThreadSpinlockT) -> Int
 public func spin_unlock(s: *PThreadSpinlockT) -> Int
 public func getcpuclockid(p: PThreadT, c: *ClockIdT) -> Int
 
-$pragma remove_prefix "pthread_"
+pragma remove_prefix "pthread_"
 
 

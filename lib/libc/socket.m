@@ -1,9 +1,9 @@
 // libc/socket.m
 
-$pragma do_not_include
-$pragma module_nodecorate
-$pragma c_include "arpa/inet.h"
-//$pragma c_include "sys/socket.h"
+pragma do_not_include
+pragma module_nodecorate
+pragma c_include "arpa/inet.h"
+//pragma c_include "sys/socket.h"
 
 include "libc/ctypes64"
 

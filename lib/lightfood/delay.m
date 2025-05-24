@@ -1,6 +1,6 @@
 // lightfood/delay.m
 
-$pragma do_not_include
+pragma do_not_include
 
 include "libc/time"
 

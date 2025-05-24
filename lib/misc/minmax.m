@@ -1,6 +1,6 @@
 // minmax.m
 
-$pragma do_not_include
+pragma do_not_include
 
 
 public func min_int32(a: Int32, b: Int32) -> Int32 {

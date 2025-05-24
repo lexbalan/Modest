@@ -3,7 +3,7 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-$pragma c_include "./crc32.h"
+pragma c_include "./crc32.h"
 import "misc/crc32"
 
 

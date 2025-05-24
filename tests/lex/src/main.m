@@ -1,6 +1,6 @@
 // tests/lex/main.m
 
-$pragma unsafe
+pragma unsafe
 
 include "libc/stdio"
 include "libc/ctype"

@@ -1,7 +1,7 @@
 // libc/ctypes.m
 
-$pragma do_not_include
-$pragma module_nodecorate
+pragma do_not_include
+pragma module_nodecorate
 
 //import "./system"
 

@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 include "libc/math"
 
-$pragma c_include "./minmax.h"
+pragma c_include "./minmax.h"
 
 import "misc/minmax"
 

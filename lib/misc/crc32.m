@@ -10,8 +10,8 @@
    одинарных, двойных, пакетных и всех нечетных ошибок
 */
 
-$pragma do_not_include
-$pragma unsafe
+pragma do_not_include
+pragma unsafe
 
 include "libc/stdio"
 

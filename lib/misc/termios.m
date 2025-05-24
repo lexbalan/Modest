@@ -1,8 +1,8 @@
 // libc/termios.m
 
-$pragma do_not_include
-$pragma module_nodecorate
-$pragma c_include "termios.h"
+pragma do_not_include
+pragma module_nodecorate
+pragma c_include "termios.h"
 
 
 type Int Int32

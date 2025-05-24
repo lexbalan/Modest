@@ -1,7 +1,7 @@
 // libc/ctypes64.hm
 
-$pragma do_not_include
-$pragma c_no_print
+pragma do_not_include
+pragma c_no_print
 
 @set("id.c", "char *")
 type Str Str8

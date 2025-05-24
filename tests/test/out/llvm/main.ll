@@ -324,7 +324,7 @@ define internal void @main_foo(%Int32 %x, %Int32 %y) {
 
 
 
-;$pragma insert "// text insertion"
+;pragma insert "// text insertion"
 @main_f = internal global %Int32 zeroinitializer
 @main_p = internal global %Int32* zeroinitializer
 define %Int32 @main() {

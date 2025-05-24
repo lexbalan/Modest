@@ -40,7 +40,7 @@ func foo (x: Int32, y: Int32 = 50) -> Unit {
 }
 
 
-//$pragma insert "// text insertion"
+//pragma insert "// text insertion"
 
 var f: @volatile Int32
 var p: *Int32

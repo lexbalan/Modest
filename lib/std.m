@@ -1,6 +1,6 @@
 // std.m
 
-$pragma do_not_include
+pragma do_not_include
 
 //$if (__target.intWidth == 32)
 type Byte = Word8

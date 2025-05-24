@@ -1,8 +1,8 @@
 // libc/stat.m
 
-$pragma do_not_include
-$pragma module_nodecorate
-$pragma c_include "sys/stat.h"
+pragma do_not_include
+pragma module_nodecorate
+pragma c_include "sys/stat.h"
 
 include "libc/ctypes64"
 include "libc/time"

@@ -1994,7 +1994,8 @@ class Parser:
 			#	x = self.parse_if_comment_block()
 			#elif self.token_class_is('comment-line'):
 			#	x = self.parse_if_comment_line()
-			elif self.token_class_is('directive'):
+			#token_class_is('directive'):
+			elif self.look('pragma'):
 				x = self.parse_directive()
 			elif self.match('import'):
 				x = self.parse_import()

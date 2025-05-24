@@ -41,7 +41,7 @@ func foo(x: Int32, y: Int32) -> Unit {
 }
 
 
-//$pragma insert "// text insertion"
+//pragma insert "// text insertion"
 
 
 var f: Int32

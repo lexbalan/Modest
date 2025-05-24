@@ -2,8 +2,8 @@
 // algorithms from wikipedia
 // (https://ru.wikipedia.org/wiki/UTF-16)
 
-$pragma do_not_include
-$pragma unsafe
+pragma do_not_include
+pragma unsafe
 
 
 // декодирует символ UTF-32 в последовательность UTF-8

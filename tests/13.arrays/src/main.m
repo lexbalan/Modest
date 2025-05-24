@@ -6,7 +6,7 @@ include "libc/math"
 
 //@c_no_print
 //import "misc/minmax"
-//$pragma c_include "./minmax.h"
+//pragma c_include "./minmax.h"
 
 
 const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]

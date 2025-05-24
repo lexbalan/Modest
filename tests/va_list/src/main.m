@@ -5,7 +5,7 @@ include "libc/stdio"
 include "libc/unistd"
 
 //include "lightfood/print"
-//$pragma c_include "./print.h"
+//pragma c_include "./print.h"
 
 func my_printf(format: *Str8, ...) -> @unused SSizeT {
 	var va: __VA_List

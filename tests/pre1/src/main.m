@@ -1,6 +1,6 @@
 // tests/pre1/src/main.m
 
-$pragma c_include "stdio.h"
+pragma c_include "stdio.h"
 include "stdio"
 
 import "sub"

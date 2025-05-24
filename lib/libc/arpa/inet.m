@@ -1,8 +1,8 @@
 // arpa/inet
 
-$pragma do_not_include
-$pragma module_nodecorate
-$pragma c_include "arpa/inet.h"
+pragma do_not_include
+pragma module_nodecorate
+pragma c_include "arpa/inet.h"
 
 
 public func htonl(host32: Word32) -> Word32

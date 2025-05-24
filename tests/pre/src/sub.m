@@ -1,8 +1,8 @@
 
 
 import "sub2"
-$pragma c_include "./sub2.h"
-//$pragma do_not_include
+pragma c_include "./sub2.h"
+//pragma do_not_include
 
 
 

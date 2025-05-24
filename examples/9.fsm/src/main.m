@@ -2,7 +2,7 @@
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
-$pragma c_include "./delay.h"
+pragma c_include "./delay.h"
 
 include "libc/ctypes64"
 include "libc/stdio"

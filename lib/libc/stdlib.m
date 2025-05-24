@@ -1,8 +1,8 @@
 // libc/stdlib.m
 
-$pragma do_not_include
-$pragma module_nodecorate
-$pragma c_include "stdlib.h"
+pragma do_not_include
+pragma module_nodecorate
+pragma c_include "stdlib.h"
 
 include "ctypes64"
 

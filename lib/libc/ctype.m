@@ -1,8 +1,8 @@
 // libc/ctype.m
 
-$pragma do_not_include
-$pragma module_nodecorate
-$pragma c_include "ctype.h"
+pragma do_not_include
+pragma module_nodecorate
+pragma c_include "ctype.h"
 
 include "ctypes64"
 

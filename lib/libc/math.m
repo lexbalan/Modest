@@ -1,8 +1,9 @@
 // libc/math.m
 
-$pragma do_not_include
-$pragma module_nodecorate
-$pragma c_include "math.h"
+pragma do_not_include
+pragma module_nodecorate
+pragma c_include "math.h"
+
 
 include "./ctypes64"
 

@@ -1,6 +1,6 @@
 // libc/errno.m
 
-$pragma module_nodecorate
+pragma module_nodecorate
 
 
 /*

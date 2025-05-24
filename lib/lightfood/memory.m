@@ -1,7 +1,7 @@
 // lightfood/memory.m
 
 //
-$pragma unsafe
+pragma unsafe
 //
 
 const systemWidth = 64

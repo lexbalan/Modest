@@ -1,5 +1,5 @@
 
-$pragma c_include "stdio.h"
+pragma c_include "stdio.h"
 
 
 @extern("C")
