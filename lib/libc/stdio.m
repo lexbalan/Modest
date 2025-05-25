@@ -20,11 +20,11 @@ public type CharStr = Str
 public type ConstCharStr = CharStr
 
 @set("id.c", "stdin")
-public var stdin: *File
+public const stdin: *File
 @set("id.c", "stdout")
-public var stdout: *File
+public const stdout: *File
 @set("id.c", "stderr")
-public var stderr: *File
+public const stderr: *File
 
 
 @set("id.c", "EOF")

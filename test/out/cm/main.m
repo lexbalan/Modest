@@ -16,7 +16,7 @@ public type Point record {
 
 public const cq = "Hi!"
 
-public var v0: Int32
+var v0: Int32
 
 public func f0 () -> Unit {
 }

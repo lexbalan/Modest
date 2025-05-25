@@ -19,8 +19,6 @@ typedef struct main_Point main_Point;
 
 #define main_cq  "Hi!"
 
-int32_t main_v0;
-
 void main_f0();
 
 void main_sbuf(void *p, uint32_t size);

@@ -1918,6 +1918,10 @@ def def_var(x):
 	definition.module = cmodule
 	definition.parent = cmodule
 	definition.access_level = x['access_modifier']
+	if definition.access_level == 'public':
+		if settings['public_vars_forbidden']:
+			error("public variables are forbidden", x['ti'])
+
 	definition.nl = x['nl']
 	cdef = definition
 

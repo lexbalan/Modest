@@ -24,7 +24,7 @@ static int32_t add(int32_t a, int32_t b)
 	return a + b;
 }
 
-int32_t main_v0;
+static int32_t v0;
 
 void main_f0()
 {
@@ -113,7 +113,7 @@ int32_t main()
 
 	main_Point p;
 	printf("test %s\n", (char *)main_cq);
-	printf("test %d\n", main_v0);
+	printf("test %d\n", v0);
 	//f0()
 
 	printf("p0.x = %d\n", ((struct

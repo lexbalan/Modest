@@ -26,3 +26,7 @@ target_triple = "arm64-apple-macosx12.0.0"
 #[backend.c]
 output_style = "legacy"
 
+
+public_vars_forbidden = true
+
+
