@@ -48,16 +48,18 @@ func mzero (p: Ptr, size: Nat32) -> Unit {
 	*px = []
 }
 
+
 func mcopy (dst: Ptr, src: Ptr, size: Nat32) -> Unit {
-	let d = unsafe *[size]Word8 dst
-	let s = unsafe *[size]Word8 src
-	*d = *s
+	let pd = unsafe *[size]Word8 dst
+	let ps = unsafe *[size]Word8 src
+	*pd = *ps
 }
 
+
 func mcmp (a: Ptr, b: Ptr, size: Nat32) -> Bool {
-	let ax = unsafe *[size]Word8 a
-	let bx = unsafe *[size]Word8 b
-	return *ax == *bx
+	let pa = unsafe *[size]Word8 a
+	let bb = unsafe *[size]Word8 b
+	return *pa == *pb
 }
 
 
