@@ -58,7 +58,7 @@ func mcopy (dst: Ptr, src: Ptr, size: Nat32) -> Unit {
 
 func mcmp (a: Ptr, b: Ptr, size: Nat32) -> Bool {
 	let pa = unsafe *[size]Word8 a
-	let bb = unsafe *[size]Word8 b
+	let pb = unsafe *[size]Word8 b
 	return *pa == *pb
 }
 
@@ -122,6 +122,7 @@ func divtest () -> Unit {
     printf("%d %% %d = %d\n", a, b, a % b)
 }
 
+
 public func main () -> Int32 {
 	//ab_test()
 
@@ -134,8 +135,8 @@ public func main () -> Int32 {
 
 	printf("p0.x = %d\n", p0.x)
 
-	var x1 = 5
-	var x2 = 15
+	var x1 = Int32 5
+	var x2 = Int32 15
 
 	var w0: [10]Word8 = ini
 	var a0: [10]Int32 = ini

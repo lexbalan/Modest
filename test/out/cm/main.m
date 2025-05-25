@@ -8,8 +8,6 @@ func add (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-const yx: Int32 = add(2, 2)
-
 
 public type Point record {
 	x: Int32  // hi!
@@ -47,16 +45,18 @@ func mzero (p: Ptr, size: Nat32) -> Unit {
 	*px = []
 }
 
+
 func mcopy (dst: Ptr, src: Ptr, size: Nat32) -> Unit {
-	let d: *[size]Word8 = *[size]Word8 dst
-	let s: *[size]Word8 = *[size]Word8 src
-	*d = *s
+	let pd: *[size]Word8 = *[size]Word8 dst
+	let ps: *[size]Word8 = *[size]Word8 src
+	*pd = *ps
 }
 
+
 func mcmp (a: Ptr, b: Ptr, size: Nat32) -> Bool {
-	let ax: *[size]Word8 = *[size]Word8 a
-	let bx: *[size]Word8 = *[size]Word8 b
-	return *ax == *bx
+	let pa: *[size]Word8 = *[size]Word8 a
+	let pb: *[size]Word8 = *[size]Word8 b
+	return *pa == *pb
 }
 
 
@@ -90,8 +90,19 @@ const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 var yyy: [32]Int32
 
+
+
+func divtest () -> Unit {
+	var a: Int32 = 7
+	var b: Int32 = -3
+	printf("%d / %d = %d\n", a, b, a / b)
+	printf("%d %% %d = %d\n", a, b, a % b)
+}
+
 public func main () -> Int32 {
 	//ab_test()
+
+	divtest()
 
 	var p: Point
 	printf("test %s\n", *Str8 cq)
@@ -100,8 +111,8 @@ public func main () -> Int32 {
 
 	printf("p0.x = %d\n", p0.x)
 
-	var x1: Int32 = 5
-	var x2: Int32 = 15
+	var x1 = Int32 5
+	var x2 = Int32 15
 
 	var w0: [10]Word8 = ini
 	var a0: [10]Int32 = ini

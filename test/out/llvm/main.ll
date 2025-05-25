@@ -383,9 +383,9 @@ declare internal %Int32 @ma()
 @yyy = internal global [32 x %Int32]
 define internal void @divtest() {
 	%1 = alloca %Int32, align 4
-	store %Int32 -7, %Int32* %1
+	store %Int32 7, %Int32* %1
 	%2 = alloca %Int32, align 4
-	store %Int32 3, %Int32* %2
+	store %Int32 -3, %Int32* %2
 	%3 = load %Int32, %Int32* %1
 	%4 = load %Int32, %Int32* %2
 	%5 = load %Int32, %Int32* %1

@@ -55,16 +55,16 @@ static void mzero(void *p, uint32_t size)
 
 static void mcopy(void *dst, void *src, uint32_t size)
 {
-	uint8_t *const d = (uint8_t *)dst;
-	uint8_t *const s = (uint8_t *)src;
-	memcpy(d, s, sizeof(uint8_t[size]));
+	uint8_t *const pd = (uint8_t *)dst;
+	uint8_t *const ps = (uint8_t *)src;
+	memcpy(pd, ps, sizeof(uint8_t[size]));
 }
 
 static bool mcmp(void *a, void *b, uint32_t size)
 {
-	uint8_t *const ax = (uint8_t *)a;
-	uint8_t *const bx = (uint8_t *)b;
-	return memcmp(ax, bx, sizeof(uint8_t[size])) == 0;
+	uint8_t *const pa = (uint8_t *)a;
+	uint8_t *const pb = (uint8_t *)b;
+	return memcmp(pa, pb, sizeof(uint8_t[size])) == 0;
 }
 
 void main_sbuf(void *p, uint32_t size)
