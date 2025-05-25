@@ -16,8 +16,7 @@ public const e2BIG = 7     // Argument list too long
 public const eNOEXEC = 8   // Exec format error
 public const eBADF = 9     // Bad file descriptor
 public const eCHILD = 10   // No child processes
-public const eDEADLK = 11  // Resource deadlock avoided
-					  // 11 was EAGAIN
+public const eDEADLK = 11  // Resource deadlock avoided (11 was EAGAIN)
 public const eNOMEM = 12   // Cannot allocate memory
 public const eACCES = 13   // Permission denied
 public const eFAULT = 14   // Bad address

@@ -11,12 +11,13 @@ include "libc/ctypes64"
 
 //@extern("C)
 //var environ: *[]*Char
+
 @set("id.c", "SEEK_SET")
-public const seekSet = 0
+public const c_SEEK_SET = 0
 @set("id.c", "SEEK_CUR")
-public const seekCur = 1
+public const c_SEEK_CUR = 1
 @set("id.c", "SEEK_END")
-public const seekEnd = 2
+public const c_SEEK_END = 2
 
 @set("id.c", "STDIN_FILENO")
 public const c_STDIN_FILENO = 0

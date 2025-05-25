@@ -29,7 +29,7 @@ func send_file(fp: *File, sockfd: Int) -> Bool {
 
 
 public func main() -> Int {
-	let sockfd = socket(af_INET, c_SOCK_STREAM, 0)
+	let sockfd = socket(c_AF_INET, c_SOCK_STREAM, 0)
 	if sockfd < 0 {
 		perror("[-] Error in socket")
 		exit(1)
@@ -38,7 +38,7 @@ public func main() -> Int {
 	printf("[+] Server socket created\n")
 
 	var server_addr = SockAddrIn {
-		sin_family = af_INET
+		sin_family = c_AF_INET
 		sin_port = port
 		sin_addr = {
 			s_addr = inet_addr(ipAddress)

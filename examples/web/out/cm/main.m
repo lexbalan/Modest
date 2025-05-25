@@ -43,14 +43,14 @@ func handleRequest (client_socket: Int32) -> Unit {
 
 
 public func main () -> Int32 {
-	let server_socket: Int = socket(af_INET, c_SOCK_STREAM, 0)
+	let server_socket: Int = socket(c_AF_INET, c_SOCK_STREAM, 0)
 	if server_socket < 0 {
 		perror("cannot create socket")
 		exit(1)
 	}
 
 	var server_addr: SockAddrIn = SockAddrIn {
-		sin_family = af_INET
+		sin_family = c_AF_INET
 		sin_addr = {
 			s_addr = inAddrAny
 		}
