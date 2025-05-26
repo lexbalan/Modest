@@ -2023,10 +2023,10 @@ def def_func(x, dostmt=True):
 
 	params = fn.type.params
 
-	if len(params) > 0:
-		p0 = params[0]
-		if p0.id.str == 'self':
-			info("SELF", p0.ti)
+	#if len(params) > 0:
+	#	p0 = params[0]
+	#	if p0.id.str == 'self':
+	#		info("SELF", p0.ti)
 
 	i = 0
 	while i < len(params):

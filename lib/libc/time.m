@@ -17,11 +17,11 @@ public type ClockT = UnsignedLong
 
 @set("id.c", "struct tm")
 public type StructTM = record {
-	public tm_sec: Int	   // Seconds [0-60]
-	public tm_min: Int	   // Minutes [0-59]
+	public tm_sec: Int	  // Seconds [0-60]
+	public tm_min: Int	  // Minutes [0-59]
 	public tm_hour: Int   // Hours	[0-23]
 	public tm_mday: Int   // Day of month [1-31]
-	public tm_mon: Int	   // Month	[0-11]
+	public tm_mon: Int	  // Month	[0-11]
 	public tm_year: Int   // Year (from 1900)
 	public tm_wday: Int   // Day of week [0-6]
 	public tm_yday: Int   // Day in year [0-365]

@@ -57,11 +57,10 @@ public func remove (fname: *ConstCharStr) -> Int
 public func rename (old_filename: *ConstCharStr, new_filename: *ConstCharStr) -> Int
 public func rewind (f: *File) -> Unit
 public func setbuf (f: *File, buf: *CharStr) -> Unit
-	//func setvbuf (f: *File, buf: *[]Char, mode: Int, size: SizeT) -> Int
+//func setvbuf (f: *File, buf: *[]Char, mode: Int, size: SizeT) -> Int
 public func setvbuf (f: *File, buf: *CharStr, mode: Int, size: SizeT) -> Int
 public func tmpfile () -> *File
 public func tmpnam (str: *CharStr) -> *CharStr
-
 
 public func printf (s: *ConstCharStr, ...) -> @unused Int
 public func scanf (s: *ConstCharStr, ...) -> @unused Int
@@ -73,7 +72,7 @@ public func vfprintf (f: *File, format: *ConstCharStr, args: __VA_List) -> @unus
 public func vprintf (format: *ConstCharStr, args: __VA_List) -> @unused Int
 public func vsprintf (str: *CharStr, format: *ConstCharStr, args: __VA_List) -> @unused Int
 public func vsnprintf (str: *CharStr, n: SizeT, format: *ConstCharStr, args: __VA_List) -> @unused Int
-public func __vsnprintf_chk  (dest:*CharStr, len:SizeT, flags:Int, dstlen:SizeT, format:*ConstCharStr, arg: __VA_List) -> @unused Int
+public func __vsnprintf_chk (dest:*CharStr, len:SizeT, flags:Int, dstlen:SizeT, format:*ConstCharStr, arg: __VA_List) -> @unused Int
 
 
 public func fgetc (f: *File) -> Int
