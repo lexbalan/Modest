@@ -45,24 +45,30 @@ type_array ::= '[' [value_expr] ']' type_expr
 type_func ::= '(' [params] ')' '->' type_expr
 type_record ::= 'record' '{' [fields] '}'
 
-value_expr ::= value_unary | value_binary | value_primary
-value_primary ::= value_literal | value_call | value_index | value_slice | value_access
 
-unary_operator = '+' | '-' | '*' | '&'
-value_unary ::= unary_operator value_expr
-binary_operator = '+' | '-' | '*' | '/' | '%' | 'and' | 'or' | 'xor' | '<<' | '>>'
-value_binary ::= value_expr (binary_operator value_expr)+
+type_cast ::= type value_expr
 
-value_call ::= value_expr '(' [arguments] ')'
-arguments ::= named_arguments | positional_arguments
+value_expr ::= expr_value_1
+expr_value_1 ::= expr_value_2 ('or' expr_value_2)*
+expr_value_2 ::= expr_value_3 ('xor' expr_value_3)*
+expr_value_3 ::= expr_value_4 ('and' expr_value_4)*
+expr_value_4 ::= expr_value_5 (('==' | '!=') expr_value_4)*
+expr_value_5 ::= expr_value_6 (('<' | '>' | '<=' | '>=') expr_value_5)*
+expr_value_6 ::= expr_value_7 (('<<' | '>>') expr_value_6)*
+expr_value_7 ::= expr_value_8 (('+' | '-') expr_value_7)*
+expr_value_8 ::= expr_value_9 (('*' | '/' | '%') expr_value_8)*
+expr_value_9 ::= type_cast | expr_value_10
+expr_value_10 ::= ('*'+ | '&' | 'not' | 'new' | 'unsafe' | 'sizeof')* expr_value_11
+expr_value_11 ::= expr_value_12 (('(' [arguments] ')') | ('.' id) | ('[' value_expr [':' value_expr] ']'))*
+
+expr_value_12 ::= value_literal | id
+
 named_arguments ::= (keyvalue (lsep keyvalue)*)
 positional_arguments ::= (value_expr (lsep value_expr)*)
+arguments ::= named_arguments | positional_arguments
 keyvalue ::= id '=' value_expr
-value_index ::= value_expr '[' value_expr ']'
-value_slice ::= value_expr '[' value_expr ':' value_expr ']'
-value_access ::= value_expr '.' id
-value_literal ::= value_literal_number | value_literal_string | value_literal_record | value_literal_array
 
+value_literal ::= value_literal_number | value_literal_string | value_literal_record | value_literal_array
 value_literal_number ::= hex | dec
 hex ::= '0x' hexdigit+
 hexdigit ::= <digit> | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
