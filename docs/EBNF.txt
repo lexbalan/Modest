@@ -14,7 +14,7 @@ comment ::= comment_line | comment_block
 comment_line ::= '//' <to the end of line>
 comment_block ::= '/*' <any text> '*/'
 directive ::= import | include | pragma
-import ::= 'import' value_literal_string
+import ::= 'import' value_literal_string ['as' id]
 include ::= 'include' value_literal_string
 pragma ::= 'pragma' id value_literal*
 attribute ::= '@' id ['(' [arguments] ')']
@@ -74,6 +74,4 @@ value_literal_string ::= '"' string_char* '"'
 string_char ::= escaped_char | unescaped_char
 escaped_char ::= '\\' ( '"' | '\\' | 'n' | 't' | 'r' | 'b' | 'f' | 'u' hexdigit hexdigit hexdigit hexdigit)
 unescaped_char ::= <any character except '"' or '\' or control characters>
-
-
 
