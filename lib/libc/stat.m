@@ -108,9 +108,9 @@ public const c_S_IRUSR = 0x0100	// (0000400) R for owner
 public const c_S_IWUSR = 0x0080	// (0000200) W for owner
 public const c_S_IXUSR = 0x0040	// (0000100) X for owner
 
-public const c_S_IREAD = s_IRUSR
-public const c_S_IWRITE = s_IWUSR
-public const c_S_IEXEC = s_IXUSR
+public const c_S_IREAD = c_S_IRUSR
+public const c_S_IWRITE = c_S_IWUSR
+public const c_S_IEXEC = c_S_IXUSR
 
 public const c_S_IRWXG = 0x0038    // (0000070) RWX mask for group
 public const c_S_IRGRP = 0x0020    // (0000040) R for group
@@ -136,50 +136,50 @@ public const c_S_ISVTX = 0x0200    // (0001000) save swapped text even after use
 
 /* is directory */
 @set("id.c", "S_ISDIR")
-public func s_ISDIR (m: ModeT) -> Bool {
-	return (m and s_IFMT) == s_IFDIR
+public func c_S_ISDIR (m: ModeT) -> Bool {
+	return (m and c_S_IFMT) == c_S_IFDIR
 }
 
 /* is char special */
 @set("id.c", "S_ISCHR")
-public func s_ISCHR (m: ModeT) -> Bool {
-	return (m and s_IFMT) == s_IFCHR
+public func c_S_ISCHR (m: ModeT) -> Bool {
+	return (m and c_S_IFMT) == c_S_IFCHR
 }
 
 /* is block special */
 @set("id.c", "S_ISBLK")
-public func s_ISBLK (m: ModeT) -> Bool {
-	return (m and s_IFMT) == s_IFBLK
+public func c_S_ISBLK (m: ModeT) -> Bool {
+	return (m and c_S_IFMT) == c_S_IFBLK
 }
 
 /* is regular file */
 @set("id.c", "S_ISREG")
-public func s_ISREG (m: ModeT) -> Bool {
-	return (m and s_IFMT) == s_IFREG
+public func c_S_ISREG (m: ModeT) -> Bool {
+	return (m and c_S_IFMT) == c_S_IFREG
 }
 
 /* is fifo or socket */
 @set("id.c", "S_ISFIFO")
-public func s_ISFIFO (m: ModeT) -> Bool {
-	return (m and s_IFMT) == s_IFIFO
+public func c_S_ISFIFO (m: ModeT) -> Bool {
+	return (m and c_S_IFMT) == c_S_IFIFO
 }
 
 /* is symbolic link */
 @set("id.c", "S_ISLNK")
-public func s_ISLNK (m: ModeT) -> Bool {
-	return (m and s_IFMT) == s_IFLNK
+public func c_S_ISLNK (m: ModeT) -> Bool {
+	return (m and c_S_IFMT) == c_S_IFLNK
 }
 
 /* is socket */
 @set("id.c", "S_ISSOCK")
-public func s_ISSOCK (m: ModeT) -> Bool {
-	return (m and s_IFMT) == s_IFSOCK
+public func c_S_ISSOCK (m: ModeT) -> Bool {
+	return (m and c_S_IFMT) == c_S_IFSOCK
 }
 
 /* is whiteout */
 @set("id.c", "S_ISWHT")
-public func s_ISWHT (m: ModeT) -> Bool {
-	return (m and s_IFMT) == s_IFWHT
+public func c_S_ISWHT (m: ModeT) -> Bool {
+	return (m and c_S_IFMT) == c_S_IFWHT
 }
 
 
