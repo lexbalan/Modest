@@ -3,14 +3,14 @@
 pragma module_nodecorate
 
 @set("id.c", "DIR")
-public type Dir record {}
+public type Dir = record {}
 
 @set("id.c", "int")
-type Int Int32
+type Int = Int32
 @set("id.c", "ino_t")
-type InoT Nat32
+type InoT = Nat32
 @set("id.c", "off_t")
-type OffT Nat32
+type OffT = Nat32
 
 
 @set("id.c", "struct dirent")
