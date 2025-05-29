@@ -241,7 +241,7 @@ class CmLexer(Lexer):
 	def doOperator1(self):
 		operators1 = (
 			'*', ',', '=', '.', ':', '(', ')', '+', '-', '/',
-			'&', '<', '>', '[', ']', '{', '}', '%', ';'
+			'&', '<', '>', '[', ']', '{', '}', '%', ';', '~'
 		)
 
 		if self.peep() in operators1:

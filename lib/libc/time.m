@@ -29,7 +29,7 @@ public type StructTM = record {
 
 //$if __USE_MISC == 1
 	public tm_gmtoff: LongInt	 // Seconds east of UTC
-	public tm_zone: *ConstChar// Timezone abbreviation
+	public tm_zone: *ConstChar   // Timezone abbreviation
 //$else
 //	public __tm_gmtoff: LongInt   // Seconds east of UTC
 //	public __tm_zone: *ConstChar  // Timezone abbreviation

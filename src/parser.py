@@ -273,6 +273,8 @@ class Parser:
 		elif self.is_operator():
 			token = self.gettok()
 			if token == '*':
+				if self.look("~"):
+					return True
 				# maybe it is pointer? (or it's 'deref' operation)
 				return self.is_type_expr()
 
@@ -388,8 +390,9 @@ class Parser:
 			t = self.expr_type_func()
 
 		elif self.match("*"):
+			imiutable = not self.match("~")
 			t = self.expr_type()
-			t = {'isa': 'ast_type', 'kind': 'pointer', 'to': t, 'ti': ti}
+			t = {'isa': 'ast_type', 'kind': 'pointer', 'to': t, 'immuteble': imiutable, 'ti': ti}
 
 		elif self.match("record"):
 			t = self.expr_type_record(ti)

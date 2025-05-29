@@ -462,7 +462,7 @@ def do_type_named(x):
 
 def do_type_pointer(x):
 	to = do_type(x['to'])
-	return TypePointer(to, ti=x['ti'])
+	return TypePointer(to, immutable=x['immuteble'], ti=x['ti'])
 
 
 def do_type_array(x):

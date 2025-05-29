@@ -368,9 +368,12 @@ def str_type_pointer(t, core='', as_ptr_to_array=False):
 	tx = t
 
 	left = ''
+	#if t.immutable:
+	#	left += "const "
+
 	while tx.is_pointer():
-		tx = tx.to
 		left += '*'
+		tx = tx.to
 
 	if t.hasAttribute('const'):
 		left += 'const '

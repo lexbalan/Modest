@@ -346,6 +346,7 @@ class ValueDeref(Value):
 		super().__init__(type=value.type.to, ti=ti)
 		self.value = value
 		self.is_lvalue = True
+		self.immutable = value.type.immutable
 
 
 
@@ -477,7 +478,7 @@ class ValueAccessRecord(Value):
 		self.left = left
 		self.field = field
 		self.is_lvalue = True
-		
+
 		if not left.type.is_pointer():
 			self.immutable = left.immutable
 

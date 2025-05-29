@@ -614,11 +614,12 @@ class TypeChar(Type):
 
 
 class TypePointer(Type):
-	def __init__(self, to, generic=False, ti=None):
+	def __init__(self, to, immutable=False, generic=False, ti=None):
 		w = int(settings['pointer_width'])
 		super().__init__(width=w, generic=generic, ops=PTR_OPS, ti=ti)
 		self.incomplete = False
 		self.to = to
+		self.immutable = immutable
 
 
 class TypeArray(Type):

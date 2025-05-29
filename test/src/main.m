@@ -11,7 +11,7 @@ func add (a: Int32, b: Int32) -> Int32 {
 //const yx = add(2, 2)
 
 
-public type Point record {
+public type Point = record {
 	x: Int32  // hi!
 	y: Int32  // lo?
 }
@@ -44,13 +44,13 @@ func xxx (p: *[]Word8) -> Unit {
 
 
 func mzero (p: Ptr, size: Nat32) -> Unit {
-	let px = unsafe *[size]Word8 p
+	let px = unsafe *~[size]Word8 p
 	*px = []
 }
 
 
 func mcopy (dst: Ptr, src: Ptr, size: Nat32) -> Unit {
-	let pd = unsafe *[size]Word8 dst
+	let pd = unsafe *~[size]Word8 dst
 	let ps = unsafe *[size]Word8 src
 	*pd = *ps
 }
