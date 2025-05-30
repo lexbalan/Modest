@@ -2221,6 +2221,7 @@ def print_header(module, outname):
 		elif isinstance(x, StmtDefVar):
 			nnl(x.nl)
 			print_deps(x.deps)
+			out("extern ")
 			print_def_var(x)
 		elif isinstance(x, StmtDefType):
 			nnl(x.nl)
