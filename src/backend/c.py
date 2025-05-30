@@ -370,7 +370,7 @@ def str_pointer_chain(t):
 		s += 'const '
 	if t.hasAttribute('volatile'):
 		s += 'volatile '
-	if t.hasAttribute('restrict'):  # not worked!
+	if t.hasAttribute('restrict'):
 		s += 'restrict '
 
 	if t.to.is_pointer():
