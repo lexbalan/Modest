@@ -19,15 +19,13 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
-static int32_t add(int32_t a, int32_t b)
-{
+static int32_t add(int32_t a, int32_t b) {
 	return a + b;
 }
 
 static int32_t v0;
 
-void main_f0()
-{
+void main_f0() {
 }
 
 int32_t i32;
@@ -38,49 +36,46 @@ static uint32_t u32;
 static uint32_t a32;
 
 static uint8_t prev_p[10];
-static void xxx(uint8_t *p)
-{
-	uint8_t *const xp = (uint8_t *)p;
-	if (memcmp(&prev_p, xp, sizeof(uint8_t[10])) != 0)
-	{
+static void xxx(const uint8_t *p) {
+	const uint8_t *const xp = (const uint8_t *)p;
+	if (memcmp(&prev_p, xp, sizeof(uint8_t[10])) != 0) {
 		memcpy(&prev_p, xp, sizeof(uint8_t[10]));
 	}
 }
 
-static void mzero(void *p, uint32_t size)
-{
+static void xxxx(const uint32_t(*const *p)[]) {
+	//
+}
+
+static void mzero(void *p, uint32_t size) {
 	uint8_t *const px = (uint8_t *)p;
 	memset(px, 0, sizeof(uint8_t[size]));
 }
 
-static void mcopy(void *dst, void *src, uint32_t size)
-{
+static void mcopy(void *dst, void *src, uint32_t size) {
 	uint8_t *const pd = (uint8_t *)dst;
-	uint8_t *const ps = (uint8_t *)src;
+	const uint8_t *const ps = (const uint8_t *)src;
 	memcpy(pd, ps, sizeof(uint8_t[size]));
 }
 
-static bool mcmp(void *a, void *b, uint32_t size)
-{
-	uint8_t *const pa = (uint8_t *)a;
-	uint8_t *const pb = (uint8_t *)b;
-	return memcmp(pa, pb, sizeof(uint8_t[size])) == 0;
+static bool mcmp(void *a, void *b, uint32_t size) {
+	const uint8_t *const pa = (const uint8_t *)a;
+	const uint8_t *const pb = (const uint8_t *)b;
+	return memcmp(pa, pb, sizeof(const uint8_t[size])) == 0;
 }
 
-void main_sbuf(void *p, uint32_t size)
-{
-	uint8_t *const px = (uint8_t *)p;
-	uint8_t buf[size];
-	memcpy(&buf, px, sizeof(uint8_t[size]));
+void main_sbuf(void *p, uint32_t size) {
+	const uint8_t *const px = (const uint8_t *)p;
+	const uint8_t buf[size];
+	memcpy(&buf, px, sizeof(const uint8_t[size]));
 	uint32_t i = 0;
-	while (i < size)
-	{
+	while (i < size) {
 		const uint8_t x = buf[i];
 		i = i + 1;
 	}
 }
 
-static volatile int *const (*xx)[];
+static const volatile int *const (*xx)[];
 static volatile int yy[10];
 
 extern int32_t ma();
@@ -89,35 +84,31 @@ extern int32_t ma();
 static int32_t va = ca;
 
 #define p0  {.x = 1, .y = 2}
-static struct
-{uint8_t x; uint8_t y;
+static struct {uint8_t x; uint8_t y;
 } p = p0;
 
 #define ini  {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
 extern volatile int32_t yyy[32];
 
-static void divtest()
-{
+static void divtest() {
 	int32_t a = 7;
 	int32_t b = -3;
 	printf("%d / %d = %d\n", a, b, a / b);
 	printf("%d %% %d = %d\n", a, b, a % b);
 }
 
-int32_t main()
-{
+int32_t main() {
 	//ab_test()
 
 	divtest();
 
 	main_Point p;
-	printf("test %s\n", (char *)main_cq);
+	printf("test %s\n", (const char *)main_cq);
 	printf("test %d\n", v0);
 	//f0()
 
-	printf("p0.x = %d\n", ((struct
-{uint8_t x; uint8_t y;
+	printf("p0.x = %d\n", ((struct {uint8_t x; uint8_t y;
 	})p0).x);
 
 	int32_t x1 = 5;
@@ -148,14 +139,11 @@ int32_t main()
 	uint8_t yy = 1;
 	uint8_t we = yy;
 
-	int *const pa2 = (int *)&a2;
+	const int *const pa2 = (const int *)&a2;
 
-	if (memcmp(pa2, &a0, sizeof(int[10])) == 0)
-	{
+	if (memcmp(pa2, &a0, sizeof(const int[10])) == 0) {
 		printf("eq!\n");
-	}
-	else
-	{
+	} else {
 		printf("eq!\n");
 	}
 
@@ -175,30 +163,21 @@ int32_t main()
 	const int32_t i32 = (int32_t)i8;
 	const uint32_t w32 = (uint32_t)(uint8_t)i8;
 
-	if (((int32_t)(int8_t)-1 == -1) && (i32 == -1))
-	{
+	if (((int32_t)(int8_t)-1 == -1) && (i32 == -1)) {
 		printf("Int8 -1 -> Int32 (-1) test passed\n");
-	}
-	else
-	{
+	} else {
 		printf("Int8 -1 -> Int32 test failed\n");
 	}
 
-	if ((ABS((int8_t)-1) == 1) && (n32 == 1))
-	{
+	if ((ABS((int8_t)-1) == 1) && (n32 == 1)) {
 		printf("Int8 -1 -> Nat32 (1) test passed\n");
-	}
-	else
-	{
+	} else {
 		printf("Int8 -1 -> Nat32 test failed\n");
 	}
 
-	if (((uint32_t)(uint8_t)(int8_t)-1 == 0xFF) && (w32 == 0xFF))
-	{
+	if (((uint32_t)(uint8_t)(int8_t)-1 == 0xFF) && (w32 == 0xFF)) {
 		printf("Int8 -1 -> Word32 (0xff) test passed\n");
-	}
-	else
-	{
+	} else {
 		printf("Int8 -1 -> Word32 test failed\n");
 	}
 

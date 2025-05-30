@@ -40,12 +40,14 @@ declared = []
 func_undef_list = []
 
 legacy_style = {
+	'name': 'legacy',
 	'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
-	'LINE_BREAK_BEFORE_FUNC_BRACE': True,
+	'LINE_BREAK_BEFORE_FUNC_BRACE': False,
 	'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
 }
 
 modern_style = {
+	'name': 'modern',
 	'LINE_BREAK_BEFORE_STRUCT_BRACE': True,
 	'LINE_BREAK_BEFORE_FUNC_BRACE': True,
 	'LINE_BREAK_BEFORE_BLOCK_BRACE': True,
@@ -364,30 +366,38 @@ def str_type_func(t, core='', need_close=False):
 
 
 
+def str_pointer_chain(t):
+	s = '*'
+	if t.hasAttribute('const'):
+		s += 'const '
+	if t.hasAttribute('volatile'):
+		s += 'volatile '
+	if t.hasAttribute('restrict'):  # not worked!
+		s += 'restrict '
+
+	if t.to.is_pointer():
+		#if t.immutable:
+		#if t.restrict:
+		s = str_pointer_chain(t.to) + s
+
+	return s
+
+
 def str_type_pointer(t, core='', as_ptr_to_array=False):
-	tx = t
 
 	left = ''
-	#if t.immutable:
-	#	left += "const "
+	left = str_pointer_chain(t)
 
-	while tx.is_pointer():
-		left += '*'
-		tx = tx.to
-
-	if t.hasAttribute('const'):
-		left += 'const '
-	if t.hasAttribute('volatile'):
-		left += 'volatile '
-	if t.hasAttribute('restrict'):
-		left += 'restrict '
+	root_type = t
+	while root_type.is_pointer():
+		root_type = root_type.to
 
 	# (!) Печатать указатель на массив как указатель на его элемент (!)
 	if not as_ptr_to_array:
 		if is_sim_sim(t):
-			tx = tx.of
+			root_type = root_type.of
 
-	need_close = not is_type_named(tx) and (tx.is_array() or tx.is_func())
+	need_close = not is_type_named(root_type) and (root_type.is_array() or root_type.is_func())
 	if need_close:
 		left = '(' + left
 	else:
@@ -400,7 +410,7 @@ def str_type_pointer(t, core='', as_ptr_to_array=False):
 		if core[0] == ' ':
 			nc = left+core[1:]
 
-	return str_type(tx, core=nc, need_close=need_close)
+	return str_type(root_type, core=nc, need_close=need_close)
 
 
 

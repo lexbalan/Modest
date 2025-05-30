@@ -42,6 +42,10 @@ func xxx (p: *[]Word8) -> Unit {
 }
 
 
+func xxxx (p: **[]Nat32) -> Unit {
+	//
+}
+
 
 func mzero (p: Ptr, size: Nat32) -> Unit {
 	let px = unsafe *~[size]Word8 p

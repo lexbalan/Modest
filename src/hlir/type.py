@@ -436,7 +436,7 @@ class Type(Entity):
 
 	def copy(self):
 		y = copy.copy(self)
-		y.att = []
+		y.att = copy.copy(self.att)
 		return y
 
 
@@ -620,6 +620,7 @@ class TypePointer(Type):
 		self.incomplete = False
 		self.to = to
 		self.immutable = immutable
+		self.restrict = False
 
 
 class TypeArray(Type):

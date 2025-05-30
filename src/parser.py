@@ -392,7 +392,7 @@ class Parser:
 		elif self.match("*"):
 			imiutable = not self.match("~")
 			t = self.expr_type()
-			t = {'isa': 'ast_type', 'kind': 'pointer', 'to': t, 'immuteble': imiutable, 'ti': ti}
+			t = {'isa': 'ast_type', 'kind': 'pointer', 'to': t, 'immutable': imiutable, 'ti': ti}
 
 		elif self.match("record"):
 			t = self.expr_type_record(ti)

@@ -1,4 +1,6 @@
 
+import copy
+
 
 class Entity():
 	def __init__(self, ti):
@@ -9,6 +11,10 @@ class Entity():
 
 	def addAttribute(self, a):
 		self.att.append(a)
+
+	def delAttribute(self, a):
+		while a in self.att:
+			self.att.remove(a)
 
 	def hasAttribute(self, a):
 		return a in self.att

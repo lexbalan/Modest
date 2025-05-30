@@ -462,7 +462,13 @@ def do_type_named(x):
 
 def do_type_pointer(x):
 	to = do_type(x['to'])
-	return TypePointer(to, immutable=x['immuteble'], ti=x['ti'])
+	if x['immutable']:
+		#info("imm ptr", to.ti)
+		if to.is_array():
+			to.of.addAttribute('const')
+		else:
+			to.addAttribute('const')
+	return TypePointer(to, ti=x['ti'])
 
 
 def do_type_array(x):
@@ -1974,6 +1980,8 @@ def def_var(x):
 
 	init_value = v
 
+	t.delAttribute('const')
+
 	var_value = ValueVar(t, id, init_value=init_value, ti=id.ti)
 	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 
@@ -2545,7 +2553,6 @@ def add_spices_def(x, ast_atts):
 
 			if key[-4:] == 'id.c':
 				add_att(x, 'id:nodecorate')
-
 		elif kind == 'packed':
 			add_att(x, 'packed')
 		elif kind == 'inline':
