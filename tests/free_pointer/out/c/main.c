@@ -7,8 +7,7 @@
 #include "main.h"
 
 
-int32_t main()
-{
+int32_t main() {
 	bool a;
 	int32_t b;
 	int64_t c;

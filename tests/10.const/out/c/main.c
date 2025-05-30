@@ -56,8 +56,7 @@ struct WrappedArray {
 typedef struct WrappedArray WrappedArray;
 
 #define wa  {}
-static float distance(Point a, Point b)
-{
+static float distance(Point a, Point b) {
 	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
 	const double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
 	const double dx2 = pow(dx, (double)2);
@@ -65,13 +64,11 @@ static float distance(Point a, Point b)
 	return sqrt(dx2 + dy2);
 }
 
-static float lineLength(Line line)
-{
+static float lineLength(Line line) {
 	return distance(line.a, line.b);
 }
 
-int main()
-{
+int main() {
 	const float lines_0_len = lineLength(((Line[4])lines)[0]);
 	const float lines_1_len = lineLength(((Line[4])lines)[1]);
 	const float lines_2_len = lineLength(((Line[4])lines)[2]);

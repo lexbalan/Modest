@@ -33,8 +33,7 @@ static Point points2[3] = {
 	{.x = 1, .y = 1},
 	{.x = 2, .y = 2}
 };
-int main()
-{
+int main() {
 	printf("test const\n");
 
 	printf("genericIntConst = %d\n", (int32_t)genericIntConst);

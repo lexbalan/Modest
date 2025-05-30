@@ -14,8 +14,7 @@
 #endif /* __lengthof */
 
 
-int main()
-{
+int main() {
 	printf("unistd test\n");
 
 	const pid_t pid = getpid();

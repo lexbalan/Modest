@@ -11,8 +11,7 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
-static ssize_t my_printf(char *format, ...)
-{
+static ssize_t my_printf(char *format, ...) {
 	va_list va;
 	va_list va2;
 
@@ -31,8 +30,7 @@ static ssize_t my_printf(char *format, ...)
 #undef strMaxLen
 }
 
-int main()
-{
+int main() {
 	uint32_t k = 10;
 	my_printf("My Printf Test %u\n", k);
 

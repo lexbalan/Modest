@@ -15,8 +15,7 @@ struct Chunk {
 };
 typedef struct Chunk Chunk;
 
-static void write_example()
-{
+static void write_example() {
 	printf("run write_example\n");
 
 	FILE *const fp = fopen(filename, "wb");
@@ -37,8 +36,7 @@ static void write_example()
 	fclose(fp);
 }
 
-static void read_example()
-{
+static void read_example() {
 	printf("run read_example\n");
 
 	FILE *const fp = fopen(filename, "rb");
@@ -58,8 +56,7 @@ static void read_example()
 	fclose(fp);
 }
 
-int main()
-{
+int main() {
 	printf("binary file example\n");
 	write_example();
 	read_example();

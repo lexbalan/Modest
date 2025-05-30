@@ -29,8 +29,7 @@ static Point glb_r1 = {.x = 20, .y = 10};
 static int32_t glb_a0[10] = {};
 static int32_t glb_a1[10] = {64, 53, 42};
 
-int main()
-{
+int main() {
 	printf("test assignation\n");
 
 	// -----------------------------------

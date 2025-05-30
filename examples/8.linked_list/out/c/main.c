@@ -9,15 +9,13 @@
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
-static void nat32_list_insert(list_List *lst, uint32_t x)
-{
+static void nat32_list_insert(list_List *lst, uint32_t x) {
 	// alloc memory for Nat32 value
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
 	list_append(lst, p_nat32);
 }
-static void list_print_forward(list_List *lst)
-{
+static void list_print_forward(list_List *lst) {
 	printf("list_print_forward:\n");
 	list_Node *pn = list_first_node_get(lst);
 	while (pn != NULL) {
@@ -26,8 +24,7 @@ static void list_print_forward(list_List *lst)
 		pn = list_node_next_get(pn);
 	}
 }
-static void list_print_backward(list_List *lst)
-{
+static void list_print_backward(list_List *lst) {
 	printf("list_print_backward:\n");
 	list_Node *pn = list_last_node_get(lst);
 	while (pn != NULL) {
@@ -37,8 +34,7 @@ static void list_print_backward(list_List *lst)
 	}
 }
 
-int main()
-{
+int main() {
 	printf("linked list example\n");
 
 	list_List *const list0 = list_create();

@@ -14,8 +14,7 @@ struct Object {
 };
 typedef struct Object Object;
 
-int main()
-{
+int main() {
 	printf("memcopy test\n");
 
 	Object o1;

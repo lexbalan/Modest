@@ -7,8 +7,7 @@
 #include "main.h"
 
 
-int main()
-{
+int main() {
 	uint16_t check = 0x0001;
 	const bool is_le = *((uint8_t *)&check) == 1;
 

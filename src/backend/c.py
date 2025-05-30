@@ -41,7 +41,7 @@ func_undef_list = []
 
 legacy_style = {
 	'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
-	'LINE_BREAK_BEFORE_FUNC_BRACE': True,
+	'LINE_BREAK_BEFORE_FUNC_BRACE': False,
 	'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
 }
 

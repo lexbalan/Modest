@@ -23,43 +23,35 @@ struct Context {
 };
 typedef struct Context Context;
 
-static inline uint32_t rotleft(uint32_t a, uint32_t b)
-{
+static inline uint32_t rotleft(uint32_t a, uint32_t b) {
 	return (a << b) | (a >> (32 - b));
 }
 
-static inline uint32_t rotright(uint32_t a, uint32_t b)
-{
+static inline uint32_t rotright(uint32_t a, uint32_t b) {
 	return (a >> b) | (a << (32 - b));
 }
 
-static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z)
-{
+static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (~x & z);
 }
 
-static inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z)
-{
+static inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (x & z) ^ (y & z);
 }
 
-static inline uint32_t ep0(uint32_t x)
-{
+static inline uint32_t ep0(uint32_t x) {
 	return rotright(x, 2) ^ rotright(x, 13) ^ rotright(x, 22);
 }
 
-static inline uint32_t ep1(uint32_t x)
-{
+static inline uint32_t ep1(uint32_t x) {
 	return rotright(x, 6) ^ rotright(x, 11) ^ rotright(x, 25);
 }
 
-static inline uint32_t sig0(uint32_t x)
-{
+static inline uint32_t sig0(uint32_t x) {
 	return rotright(x, 7) ^ rotright(x, 18) ^ (x >> 3);
 }
 
-static inline uint32_t sig1(uint32_t x)
-{
+static inline uint32_t sig1(uint32_t x) {
 	return rotright(x, 17) ^ rotright(x, 19) ^ (x >> 10);
 }
 
@@ -68,8 +60,7 @@ static inline uint32_t sig1(uint32_t x)
 	0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 \
 }
 
-static void contextInit(Context *ctx)
-{
+static void contextInit(Context *ctx) {
 	ARRCPY((&ctx->state), (&((uint32_t[8])initalState)), (8));
 }
 
@@ -92,8 +83,7 @@ static void contextInit(Context *ctx)
 	0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2 \
 }
 
-static void transform(Context *ctx, uint8_t *data)
-{
+static void transform(Context *ctx, uint8_t *data) {
 	uint32_t m[64] = {};
 
 	uint32_t i = 0;
@@ -139,8 +129,7 @@ static void transform(Context *ctx, uint8_t *data)
 	}
 }
 
-static void update(Context *ctx, uint8_t *msg, uint32_t msgLen)
-{
+static void update(Context *ctx, uint8_t *msg, uint32_t msgLen) {
 	uint32_t i = 0;
 	while (i < msgLen) {
 		ctx->data[ctx->datalen] = msg[i];
@@ -154,8 +143,7 @@ static void update(Context *ctx, uint8_t *msg, uint32_t msgLen)
 	}
 }
 
-static void final(Context *ctx, uint8_t *outHash)
-{
+static void final(Context *ctx, uint8_t *outHash) {
 	uint32_t i = ctx->datalen;
 
 	// Pad whatever data is left in the buffer.
@@ -211,8 +199,7 @@ static void final(Context *ctx, uint8_t *outHash)
 	}
 }
 
-void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash)
-{
+void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash) {
 	Context ctx = {};
 	contextInit(&ctx);
 	update(&ctx, msg, msgLen);

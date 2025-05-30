@@ -7,8 +7,7 @@
 #include "main.h"
 
 
-int main()
-{
+int main() {
 	printf("while statement test\n");
 
 	uint32_t a = 0;

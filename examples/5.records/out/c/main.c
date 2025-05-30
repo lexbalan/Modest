@@ -26,23 +26,20 @@ static Line line = {
 	.b = {.x = 1.0, .y = 1.0}
 };
 
-static inline float max(float a, float b)
-{
+static inline float max(float a, float b) {
 	if (a > b) {
 		return a;
 	}
 	return b;
 }
 
-static inline float min(float a, float b)
-{
+static inline float min(float a, float b) {
 	if (a < b) {
 		return a;
 	}
 	return b;
 }
-static float distance(Point a, Point b)
-{
+static float distance(Point a, Point b) {
 	const float dx = max(a.x, b.x) - min(a.x, b.x);
 	const float dy = max(a.y, b.y) - min(a.y, b.y);
 	const double dx2 = pow(dx, (double)2);
@@ -50,13 +47,11 @@ static float distance(Point a, Point b)
 	return sqrt(dx2 + dy2);
 }
 
-static float lineLength(Line line)
-{
+static float lineLength(Line line) {
 	return distance(line.a, line.b);
 }
 
-static void ptr_example()
-{
+static void ptr_example() {
 	Point *const ptr_p = (Point *)malloc(sizeof(Point));
 
 	// access by pointer
@@ -66,8 +61,7 @@ static void ptr_example()
 	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }
 
-int main()
-{
+int main() {
 	// by value
 	const float len = lineLength(line);
 	printf("line length = %f\n", len);

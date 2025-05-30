@@ -7,24 +7,20 @@
 #include "main.h"
 
 
-static void func1()
-{
+static void func1() {
 	printf("func1 was called\n");
 }
 
-static void print_ab(int32_t a, int32_t b)
-{
+static void print_ab(int32_t a, int32_t b) {
 	printf("print_ab(a=%i, b=%i)\n", a, b);
 }
 
-static int32_t sum(int32_t a, int32_t b)
-{
+static int32_t sum(int32_t a, int32_t b) {
 	return a + b;
 }
 
 static void func0();
-int main()
-{
+int main() {
 	printf("test func\n");
 
 	// call declared & defined functions
@@ -51,8 +47,7 @@ int main()
 	return 0;
 }
 
-static void func0()
-{
+static void func0() {
 	printf("func0 was called\n");
 }
 

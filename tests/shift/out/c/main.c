@@ -7,8 +7,7 @@
 #include "main.h"
 
 
-int main()
-{
+int main() {
 	printf("test shift\n");
 
 	uint32_t c;
