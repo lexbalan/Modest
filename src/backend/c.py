@@ -368,7 +368,8 @@ def str_type_func(t, core='', need_close=False):
 
 def str_pointer_chain(t):
 	s = '*'
-	if t.hasAttribute('const'):
+	#if t.hasAttribute('const'):
+	if t.const:
 		s += 'const '
 	if t.hasAttribute('volatile'):
 		s += 'volatile '
@@ -425,7 +426,8 @@ def str_named(t, core=''):
 	if aka == None:
 		return None
 	pre = ''
-	if t.hasAttribute('const'):
+	#if t.hasAttribute('const'):
+	if t.const:
 		pre += 'const '
 	if t.hasAttribute('volatile'):
 		pre += 'volatile '

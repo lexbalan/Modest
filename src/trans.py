@@ -465,9 +465,9 @@ def do_type_pointer(x):
 	if x['immutable']:
 		#info("imm ptr", to.ti)
 		if to.is_array():
-			to.of.addAttribute('const')
+			to.of.const = True
 		else:
-			to.addAttribute('const')
+			to.const = True
 	return TypePointer(to, ti=x['ti'])
 
 
@@ -1980,7 +1980,7 @@ def def_var(x):
 
 	init_value = v
 
-	t.delAttribute('const')
+	t.const = False
 
 	var_value = ValueVar(t, id, init_value=init_value, ti=id.ti)
 	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')

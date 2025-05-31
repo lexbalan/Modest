@@ -49,6 +49,9 @@ class Type(Entity):
 		self.ti = None
 		self.incomplete = True
 		self.definition = None
+
+		self.const = False
+		self.volatile = False
 		pass
 
 

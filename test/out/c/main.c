@@ -37,7 +37,7 @@ static uint32_t a32;
 
 static uint8_t prev_p[10];
 static void xxx(const uint8_t *p) {
-	const uint8_t *const xp = (const uint8_t *)p;
+	const uint8_t *xp = (const uint8_t *)p;
 	if (memcmp(&prev_p, xp, sizeof(uint8_t[10])) != 0) {
 		memcpy(&prev_p, xp, sizeof(uint8_t[10]));
 	}
@@ -48,24 +48,24 @@ static void xxxx(const uint32_t(*const *p)[]) {
 }
 
 static void mzero(void *p, uint32_t size) {
-	uint8_t *const px = (uint8_t *)p;
+	uint8_t *px = (uint8_t *)p;
 	memset(px, 0, sizeof(uint8_t[size]));
 }
 
 static void mcopy(void *dst, void *src, uint32_t size) {
-	uint8_t *const pd = (uint8_t *)dst;
-	const uint8_t *const ps = (const uint8_t *)src;
+	uint8_t *pd = (uint8_t *)dst;
+	const uint8_t *ps = (const uint8_t *)src;
 	memcpy(pd, ps, sizeof(uint8_t[size]));
 }
 
 static bool mcmp(void *a, void *b, uint32_t size) {
-	const uint8_t *const pa = (const uint8_t *)a;
-	const uint8_t *const pb = (const uint8_t *)b;
+	const uint8_t *pa = (const uint8_t *)a;
+	const uint8_t *pb = (const uint8_t *)b;
 	return memcmp(pa, pb, sizeof(const uint8_t[size])) == 0;
 }
 
 void main_sbuf(void *p, uint32_t size) {
-	const uint8_t *const px = (const uint8_t *)p;
+	const uint8_t *px = (const uint8_t *)p;
 	const uint8_t buf[size];
 	memcpy(&buf, px, sizeof(const uint8_t[size]));
 	uint32_t i = 0;
@@ -139,7 +139,7 @@ int32_t main() {
 	uint8_t yy = 1;
 	uint8_t we = yy;
 
-	const int *const pa2 = (const int *)&a2;
+	const int *pa2 = (const int *)&a2;
 
 	if (memcmp(pa2, &a0, sizeof(const int[10])) == 0) {
 		printf("eq!\n");
@@ -158,10 +158,10 @@ int32_t main() {
 	uint32_t z = 1;
 	uint32_t w = 0x1;
 
-	const int8_t i8 = (int8_t)-1;
-	const uint32_t n32 = ABS(i8);
-	const int32_t i32 = (int32_t)i8;
-	const uint32_t w32 = (uint32_t)(uint8_t)i8;
+	int8_t i8 = (int8_t)-1;
+	uint32_t n32 = ABS(i8);
+	int32_t i32 = (int32_t)i8;
+	uint32_t w32 = (uint32_t)(uint8_t)i8;
 
 	if (((int32_t)(int8_t)-1 == -1) && (i32 == -1)) {
 		printf("Int8 -1 -> Int32 (-1) test passed\n");
