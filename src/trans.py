@@ -848,6 +848,14 @@ def do_value___defined_value(x):
 	return v != None
 
 
+# проверяет и выполняет приведение при передаче значения
+# - при присваивании
+# - при передаче аргумента в функцию
+# - при возарате значения из функции
+def transmission(to_type, value):
+	return value_cons_implicit_check(to_type, value)
+
+
 
 def do_value_call(x):
 	fn = do_rvalue(x['left'])
@@ -908,7 +916,7 @@ def do_value_call(x):
 
 
 		if not arg.isBad():
-			arg = value_cons_implicit_check(param.type, arg)
+			arg = transmission(param.type, arg)
 
 			if not arg.isImmediate():
 				imm_args = False
@@ -1565,8 +1573,7 @@ def do_stmt_return(x):
 	retval = None
 	if ret_val_present:
 		rv = do_rvalue(x['value'])
-		if not rv.isBad():
-			retval = value_cons_implicit_check(func_ret_type, rv)
+		retval = transmission(func_ret_type, rv)
 
 	return StmtReturn(retval, ti=x['ti'])
 
@@ -1631,7 +1638,7 @@ def do_stmt_assign(x):
 			cmodule_use('use_arrcpy')
 
 
-	r = value_cons_implicit_check(l.type, r)
+	r = transmission(l.type, r)
 	return StmtAssign(l, r, ti=x['ti'])
 
 
