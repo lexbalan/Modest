@@ -10,7 +10,7 @@
 #include <string.h>
 
 
-struct main_Point
+struct __attribute__((packed)) main_Point
 {
 	int32_t x;  // hi!
 	int32_t y;  // lo?

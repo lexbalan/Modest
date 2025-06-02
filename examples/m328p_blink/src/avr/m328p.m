@@ -1,8 +1,8 @@
 
 include "avr"
 
-@packed
-public type GPIO record {
+
+public type GPIO = @packed record {
 	public in: IO8
 	public dir: IO8
 	public out: IO8
