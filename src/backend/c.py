@@ -2226,6 +2226,8 @@ def print_header(module, outname):
 		elif isinstance(x, StmtDefFunc):
 			nnl(x.nl)
 			if x.hasAttribute('inline'):
+				if x.access_level != 'private':
+					out("static ")
 				print_def_func(x)
 				continue
 			print_decl_func(x)
@@ -2360,6 +2362,8 @@ def print_cfile(module, _outname):
 			print_deps(x.deps)
 			print_def_var(x)
 		elif isinstance(x, StmtDefFunc):
+			if x.access_level == 'public' and x.hasAttribute('inline'):
+				continue
 			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_func(x)

@@ -2,6 +2,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 

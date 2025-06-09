@@ -2,6 +2,7 @@
 #ifndef DELAY_H
 #define DELAY_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 

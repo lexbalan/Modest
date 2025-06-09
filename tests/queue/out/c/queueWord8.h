@@ -2,6 +2,7 @@
 #ifndef QUEUEWORD8_H
 #define QUEUEWORD8_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 

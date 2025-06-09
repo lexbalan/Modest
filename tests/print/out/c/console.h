@@ -2,6 +2,7 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 

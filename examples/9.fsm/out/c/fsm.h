@@ -2,6 +2,7 @@
 #ifndef FSM_H
 #define FSM_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 

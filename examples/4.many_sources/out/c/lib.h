@@ -2,6 +2,7 @@
 #ifndef LIB_H
 #define LIB_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 

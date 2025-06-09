@@ -2,6 +2,7 @@
 #ifndef SHA256_H
 #define SHA256_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 

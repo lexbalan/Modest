@@ -2,6 +2,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 
