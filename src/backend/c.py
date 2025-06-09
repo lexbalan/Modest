@@ -2177,6 +2177,8 @@ def print_header(module, outname):
 	out("#ifndef %s\n" % guardsymbol)
 	out("#define %s\n" % guardsymbol)
 	newline()
+	include("stddef.h", local=False)
+	newline()
 	include("stdint.h", local=False)
 	newline()
 	include("stdbool.h", local=False)
@@ -2301,7 +2303,8 @@ def print_cfile(module, _outname):
 			newline()
 			defs = defs[1:]
 
-
+	newline()
+	include("stddef.h", local=False)
 	newline()
 	include("stdint.h", local=False)
 	newline()
