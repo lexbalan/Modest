@@ -7,5 +7,5 @@ pragma module_nodecorate
 pragma c_include "assert.h"
 
 
-public func assert (msg: Str8) -> Unit
+public func assert (cond: Bool) -> Unit
 
