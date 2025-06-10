@@ -2182,16 +2182,15 @@ def print_header(module, outname):
 	include("stdint.h", local=False)
 	newline()
 	include("stdbool.h", local=False)
-	#newline()
 
-	sepp = True
+	need_separator = True
 
 	nl_after_defs = False
 	for x in module.defs:
 		if isinstance(x, StmtDirective):
 			if isinstance(x, StmtDirectiveCInclude):
-				if sepp:
-					sepp = False
+				if need_separator:
+					need_separator = False
 					newline()
 				newline()
 				include(x.c_name, local=x.is_local)
