@@ -1,10 +1,10 @@
-
 #ifndef RINGWORD8_H
 #define RINGWORD8_H
 
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+
 #include "queue.h"
 
 struct ringWord8_RingWord8 {

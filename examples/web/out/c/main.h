@@ -1,4 +1,3 @@
-
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -12,7 +11,6 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <arpa/inet.h>
-
 
 int32_t main();
 

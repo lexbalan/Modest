@@ -1,10 +1,10 @@
-
 #ifndef MINMAX_H
 #define MINMAX_H
 
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+
 
 int32_t minmax_min_int32(int32_t a, int32_t b);
 

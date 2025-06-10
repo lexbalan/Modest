@@ -1,4 +1,3 @@
-
 #ifndef FSM_H
 #define FSM_H
 
@@ -7,7 +6,6 @@
 #include <stdbool.h>
 
 #include <stdio.h>
-
 #define fsm_nameMaxLength  8
 #define fsm_maxStates  16
 

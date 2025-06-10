@@ -1,4 +1,3 @@
-
 #ifndef LIB_H
 #define LIB_H
 
@@ -7,7 +6,6 @@
 #include <stdbool.h>
 
 #include <stdio.h>
-
 
 void lib_foo();
 

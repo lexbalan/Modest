@@ -1,4 +1,3 @@
-
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -10,7 +9,6 @@
 #include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
-
 
 int main();
 

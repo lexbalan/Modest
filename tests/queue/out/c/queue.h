@@ -1,10 +1,10 @@
-
 #ifndef QUEUE_H
 #define QUEUE_H
 
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+
 
 struct queue_Queue {
 	uint32_t capacity;  // Number of items queue can hold up

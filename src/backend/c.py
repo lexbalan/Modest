@@ -2173,32 +2173,19 @@ def print_header(module, outname):
 
 	guardsymbol = outname.split("/")[-1]
 	guardsymbol = guardsymbol[:-2].upper() + '_H'
-	newline()
 	out("#ifndef %s\n" % guardsymbol)
 	out("#define %s\n" % guardsymbol)
-	newline()
-	include("stddef.h", local=False)
-	newline()
-	include("stdint.h", local=False)
-	newline()
-	include("stdbool.h", local=False)
+	newline(); include("stddef.h", local=False)
+	newline(); include("stdint.h", local=False)
+	newline(); include("stdbool.h", local=False)
 
-	need_separator = True
 
-	nl_after_defs = False
-	for x in module.defs:
-		if isinstance(x, StmtDirective):
-			if isinstance(x, StmtDirectiveCInclude):
-				if need_separator:
-					need_separator = False
-					newline()
-				newline()
-				include(x.c_name, local=x.is_local)
-				nl_after_defs = True
-			#print_directive(x)
-
-	if nl_after_defs:
+	if module.defs != []:
 		newline()
+		for x in module.defs:
+			if isinstance(x, StmtDirective):
+				if isinstance(x, StmtDirectiveCInclude):
+					newline(); include(x.c_name, local=x.is_local)
 
 	# print C `#include ""` directive for included modules
 	nl_after_incs = False
@@ -2309,18 +2296,13 @@ def print_cfile(module, _outname):
 			newline()
 			defs = defs[1:]
 
-	newline()
-	include("stddef.h", local=False)
-	newline()
-	include("stdint.h", local=False)
-	newline()
-	include("stdbool.h", local=False)
-	newline()
-	include("string.h", local=False)
+	newline(); include("stddef.h", local=False)
+	newline(); include("stdint.h", local=False)
+	newline(); include("stdbool.h", local=False)
+	newline(); include("string.h", local=False)
 
 	if module.hasAttribute('use_va_arg'):
-		newline()
-		include("stdarg.h", local=False)
+		newline(); include("stdarg.h", local=False)
 
 	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude):
@@ -2328,8 +2310,7 @@ def print_cfile(module, _outname):
 			include(x.c_name, local=x.is_local)
 
 	newline()
-	newline()
-	include(module.id + '.h')
+	newline(); include(module.id + '.h')
 	newline()
 
 

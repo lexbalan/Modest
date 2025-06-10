@@ -1,4 +1,3 @@
-
 #ifndef DELAY_H
 #define DELAY_H
 
@@ -7,7 +6,6 @@
 #include <stdbool.h>
 
 #include <time.h>
-
 
 void delay_us(uint64_t us);
 

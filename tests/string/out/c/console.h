@@ -1,4 +1,3 @@
-
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
@@ -11,7 +10,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-
 
 
 void console_putchar8(char c);

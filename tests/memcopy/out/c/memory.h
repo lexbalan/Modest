@@ -1,10 +1,10 @@
-
 #ifndef MEMORY_H
 #define MEMORY_H
 
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+
 
 void memory_zero(void *mem, uint64_t len);
 
