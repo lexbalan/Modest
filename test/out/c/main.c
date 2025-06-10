@@ -1,4 +1,5 @@
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
@@ -19,8 +20,18 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
+typedef int32_t NewType;
+
 static int32_t add(int32_t a, int32_t b)
 {
+	//	var x: lib.PrivateType
+	//	var y: lib.PublicType
+	//	y = x
+	NewType e;
+	NewType f;
+	int32_t g;
+	const NewType k = e + f;
+	const int32_t m = g + 3;
 	return a + b;
 }
 

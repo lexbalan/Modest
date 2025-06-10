@@ -49,6 +49,11 @@ class Type(Entity):
 		self.ti = None
 		self.incomplete = True
 		self.definition = None
+
+		# особое поле - если оно ненулевое значит это distinct тип
+		# такие типы будут признаны неравными если их поля dictinct отличны
+		# 0 - зарезервирован для не distinct типов (см. @distinct аттрибут)
+		self.distinct = 0
 		pass
 
 
@@ -400,6 +405,9 @@ class Type(Entity):
 			return True
 
 		if a.__class__.__name__ != b.__class__.__name__:
+			return False
+
+		if a.distinct != b.distinct:
 			return False
 
 		# проверять аттрибуты (volatile, const)

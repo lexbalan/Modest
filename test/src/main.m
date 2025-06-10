@@ -3,13 +3,23 @@ include "libc/stdio"
 include "libc/stdlib"
 include "libc/string"
 
+import "lib"
+
+type NewType = @distinct Int32
+
 
 func add (a: Int32, b: Int32) -> Int32 {
+//	var x: lib.PrivateType
+//	var y: lib.PublicType
+//	y = x
+	var e, f: NewType
+	var g: Int32
+	let k = e + f
+	let m = g + 3
 	return a + b
 }
 
 //const yx = add(2, 2)
-
 
 public type Point = @packed record {
 	x: Int32  // hi!

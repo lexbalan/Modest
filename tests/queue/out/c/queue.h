@@ -6,7 +6,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 struct queue_Queue {
 	uint32_t capacity;  // Number of items queue can hold up
 	uint32_t size;  // Number of items in queue now

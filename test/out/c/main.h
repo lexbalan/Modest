@@ -2,6 +2,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -9,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lib.h"
 
 struct __attribute__((packed)) main_Point
 {

@@ -438,6 +438,9 @@ class Parser:
 				'ti': dot_ti
 			}
 
+#		for a in attributes:
+#			print(a['kind'])
+
 		t['atts'] = attributes
 		return t
 

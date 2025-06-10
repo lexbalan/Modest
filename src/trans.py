@@ -79,6 +79,11 @@ context = None  # current context (symtab)
 cdef = None
 
 
+# for @distinct types
+distinct_cnt = 0
+
+
+
 def cmodule_use(x):
 	global cmodule
 	if not x in cmodule.att:
@@ -186,10 +191,17 @@ def add_spices_value(v, atts):
 	add_spices_any(v, atts)
 
 
+
 def add_spices_type(t, atts):
 	for a in atts:
 		k = a['kind']
 		t.att.append(k)
+
+		if k == 'distinct':
+			# Type.distinct must be > 0 (!)
+			global distinct_cnt
+			distinct_cnt += 1
+			t.distinct = distinct_cnt
 
 		if t.is_array():
 			if k == 'const':
@@ -2546,6 +2558,7 @@ def setObjAttrByPath(x, path, value):
 
 
 
+
 def add_spices_def(x, ast_atts):
 	for a in ast_atts:
 		kind = a['kind']
@@ -2559,6 +2572,8 @@ def add_spices_def(x, ast_atts):
 			if key[-4:] == 'id.c':
 				add_att(x, 'id:nodecorate')
 
+		elif kind == 'distinct':
+			info("distinct type", x['ti'])
 		elif kind == 'packed':
 			add_att(x, 'packed')
 		elif kind == 'inline':

@@ -216,7 +216,12 @@ declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "lib"
+%lib_PublicType = type %Int32;
+
+; end from import "lib"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [14 x i8] [i8 37, i8 100, i8 32, i8 47, i8 32, i8 37, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
@@ -234,24 +239,30 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @str13 = private constant [38 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 45, i8 49, i8 32, i8 45, i8 62, i8 32, i8 87, i8 111, i8 114, i8 100, i8 51, i8 50, i8 32, i8 40, i8 48, i8 120, i8 102, i8 102, i8 41, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str14 = private constant [31 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 45, i8 49, i8 32, i8 45, i8 62, i8 32, i8 87, i8 111, i8 114, i8 100, i8 51, i8 50, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
+%NewType = type %Int32;
 define internal %Int32 @add(%Int32 %a, %Int32 %b) {
-	%1 = add %Int32 %a, %b
-	ret %Int32 %1
+	;	var x: lib.PrivateType
+	;	var y: lib.PublicType
+	;	y = x
+	%1 = alloca %NewType, align 4
+	%2 = load %NewType, %NewType* %1
+	%3 = add %NewType %2, %b
+	ret %NewType %3
 }
 
-%main_Point = type {
+%main_Point = type <{
 	%Int32,
 	%Int32
-};
+}>;
 
-@main_v0 = global %Int32 zeroinitializer
+@v0 = internal global %Int32 zeroinitializer
 define void @main_f0() {
 	ret void
 }
 
 @i32 = internal global %Int32 zeroinitializer
 @u32 = internal global %Nat32 zeroinitializer
-@main_a32 = global %Word32 zeroinitializer
+@a32 = internal global %Word32 zeroinitializer
 @prev_p = internal global [10 x %Word8] zeroinitializer
 define internal void @xxx([0 x %Word8]* %p) {
 	%1 = bitcast [0 x %Word8]* %p to [10 x %Word8]*
@@ -406,7 +417,7 @@ define %Int32 @main() {
 	call void @divtest()
 	%1 = alloca %main_Point, align 8
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str4 to [0 x i8]*))
-	%3 = load %Int32, %Int32* @main_v0
+	%3 = load %Int32, %Int32* @v0
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str5 to [0 x i8]*), %Int32 %3)
 	;f0()
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str6 to [0 x i8]*), %Int32 1)

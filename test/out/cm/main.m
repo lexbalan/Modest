@@ -1,13 +1,24 @@
+import "lib"
 include "stdio"
 include "stdlib"
 include "string"
 
+import "lib" as lib
+
+type NewType Int32
 
 
 func add (a: Int32, b: Int32) -> Int32 {
+	//	var x: lib.PrivateType
+	//	var y: lib.PublicType
+	//	y = x
+	var e: NewType
+	var f: NewType
+	var g: Int32
+	let k: NewType = e + f
+	let m: Int32 = g + 3
 	return a + b
 }
-
 
 public type Point record {
 	x: Int32  // hi!
@@ -98,6 +109,7 @@ func divtest () -> Unit {
 	printf("%d / %d = %d\n", a, b, a / b)
 	printf("%d %% %d = %d\n", a, b, a % b)
 }
+
 
 public func main () -> Int32 {
 	//ab_test()
