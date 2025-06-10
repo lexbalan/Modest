@@ -429,24 +429,25 @@ def do_type_named(x):
 
 	t = None
 	if 'module' in x:
-		m_id = x['module']['str']
+		module_id = x['module']['str']
 
-		if not m_id in cmodule.imports:
-			error("unknown namespace '%s'" % m_id)
+		if not module_id in cmodule.imports:
+			error("unknown namespace '%s'" % module_id)
 			return TypeBad(x['ti'])
 
-		imp = cmodule.imports[m_id]
-		if imp == None:
-			error("unknown module", x['module']['ti'])
-			return TypeBad(t['ti'])
-		t = imp.module.type_get_public(id_str)
+		imp_module = cmodule.imports[module_id].module
+		t = imp_module.type_get_public(id_str)
 
 		if t == None:
-			error("undefined type", x['ti'])
+			t = imp_module.type_get_private(id_str)
+			if t != None:
+				error("access to private type", x['ti'])
+			else:
+				error("undefined type", x['ti'])
 			return TypeBad(x['ti'])
 
 		if t.is_incompleted():
-			t = type_update_incompleted(imp.module, t, id_str)
+			t = type_update_incompleted(imp_module, t, id_str)
 	else:
 		t = ctx_type_get(id_str)
 

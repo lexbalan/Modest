@@ -426,6 +426,7 @@ class Parser:
 
 		elif self.is_identifier():
 			left = self.identifier()
+			dot_ti = self.ti()
 			self.need(".")
 			right = self.identifier()
 
@@ -434,7 +435,7 @@ class Parser:
 				'kind': 'named',
 				'module': left,
 				'id': right,
-				'ti': ti
+				'ti': dot_ti
 			}
 
 		t['atts'] = attributes
