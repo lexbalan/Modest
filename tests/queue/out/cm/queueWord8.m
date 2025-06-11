@@ -4,7 +4,7 @@ import "queue" as queue
 
 
 
-public type QueueWord8 record {
+public type QueueWord8 = record {
 	queue: Queue
 	data: *[]Word8
 }

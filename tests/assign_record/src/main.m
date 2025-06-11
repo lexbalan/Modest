@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-type Point record {
+type Point = record {
 	x: Int32
 	y: Int32
 }

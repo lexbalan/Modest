@@ -5,10 +5,10 @@ include "string"
 
 public const hashSize = 32
 
-public type Hash [hashSize]Word8
+public type Hash = [hashSize]Word8
 
 
-type Context record {
+type Context = record {
 	data: [64]Word8
 	datalen: Nat32
 	bitlen: Nat64

@@ -11,7 +11,7 @@ const filename =  *Str8 "file.bin"
 
 
 // chunk of data for read/write operations in file
-type Chunk record {
+type Chunk = record {
 	id: [100]Char
 	data: [1024]Char
 }

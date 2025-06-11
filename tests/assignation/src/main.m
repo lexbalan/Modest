@@ -5,7 +5,7 @@ include "libc/stdio"
 
 
 // Simply record for records assignation test
-type Point record {
+type Point = record {
 	x: Int32
 	y: Int32
 }

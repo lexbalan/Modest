@@ -290,7 +290,7 @@ record {x: Float64, y: Float64}
 ```zig
 // it is good idea to use type definition statement
 // for bind identifier to record type  
-type Point record {
+type Point = record {
 	x: Float64
 	y: Float64
 }

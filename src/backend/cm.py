@@ -707,7 +707,7 @@ def print_value(x):
 def print_stmt_type(x):
 	out("type ")
 	out(get_id_str(x))
-	out(" ")
+	out(" = ")
 	out(str_type(x.original_type))
 
 

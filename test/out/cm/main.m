@@ -5,7 +5,7 @@ include "string"
 
 import "lib" as lib
 
-type NewType Int32
+type NewType = Int32
 const newZero = NewType 0
 const newOne = NewType 1
 const newTwo = NewType 2
@@ -23,7 +23,7 @@ func add (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-public type Point record {
+public type Point = record {
 	x: Int32  // hi!
 	y: Int32  // lo?
 }

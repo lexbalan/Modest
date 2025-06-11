@@ -5,7 +5,7 @@ import "queue"
 
 
 
-public type RingWord8 record {
+public type RingWord8 = record {
 	queue: queue.Queue
 	data: *[]Word8
 }

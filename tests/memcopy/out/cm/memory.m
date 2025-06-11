@@ -1,8 +1,8 @@
 
 
 const systemWidth = 64
-type Word Word64
-type Nat Nat64
+type Word = Word64
+type Nat = Nat64
 
 
 const memoryAlignment = systemWidth / 8

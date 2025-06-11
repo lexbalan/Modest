@@ -55,12 +55,12 @@ include "libc/math"
 include "libc/stdio"
 
 
-type Point record {
+type Point = record {
     x: Float
     y: Float
 }
 
-type Line record {
+type Line = record {
     a: Point
     b: Point
 }

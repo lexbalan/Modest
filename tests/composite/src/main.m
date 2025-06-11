@@ -116,7 +116,7 @@ var p3: **[5]Int32 = &p2
 
 
 
-type RGB24 record {
+type RGB24 = record {
 	red: Nat8
 	green: Nat8
 	blue: Nat8
@@ -127,7 +127,7 @@ var rgb0 = [2]RGB24 [
 	{red = 200, green = 0, blue = 0}
 ]
 
-type AnimationPoint record {
+type AnimationPoint = record {
 	color: RGB24
 	time: Nat32
 }
@@ -185,11 +185,11 @@ var arrr: [3][3]Int32 = [
 var arry: [3][3]*() -> Unit
 
 
-func add(a: Int32, b: Int32) -> Int32 {
+func add (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-func sub(a: Int32, b: Int32) -> Int32 {
+func sub (a: Int32, b: Int32) -> Int32 {
 	return a - b
 }
 
@@ -199,13 +199,13 @@ var farr: [2]*(a: Int32, b: Int32) -> Int32 = [
 ]
 
 
-type He ()->Unit
+type He = ()->Unit
 
-func he(x: *He) -> Unit {
+func he (x: *He) -> Unit {
 
 }
 
-func hi(x: *Str8) -> Unit {
+func hi (x: *Str8) -> Unit {
 	printf("Hi %s!\n", x)
 }
 
@@ -213,7 +213,7 @@ var hiarr: [10]*(x: *Str8) -> Unit = [
 	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
 ]
 
-type Wrap record {
+type Wrap = record {
 	fhi: *(x: *Str8) -> Unit
 	fop: *(a: Int32, b: Int32) -> Int32
 }
@@ -225,7 +225,7 @@ var wrap0 = Wrap {
 
 var awrap = [&wrap0, &wrap0]
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	xy({x=10, y=20})
 
 	printf("test1 (eq): ")

@@ -12,13 +12,13 @@
 
 struct fsm_FSM;
 typedef struct fsm_FSM fsm_FSM;
-typedef void(*fsm_Handler)(fsm_FSM *x);
+typedef void fsm_Handler(fsm_FSM *x);
 
 struct fsm_StateDesc {
 	char name[fsm_nameMaxLength];
-	fsm_Handler entry;
-	fsm_Handler loop;
-	fsm_Handler exit;
+	fsm_Handler *entry;
+	fsm_Handler *loop;
+	fsm_Handler *exit;
 };
 typedef struct fsm_StateDesc fsm_StateDesc;
 

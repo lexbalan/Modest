@@ -3,12 +3,12 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-type Point2D record {
+type Point2D = record {
 	x: Nat32
 	y: Nat32
 }
 
-type Point3D record {
+type Point3D = record {
 	x: Nat32
 	y: Nat32
 	z: Nat32
@@ -21,12 +21,12 @@ const yy = Point2D {x=1, y=2}
 
 
 
-type Point record {
+type Point = record {
 	x: Int32
 	y: Int32
 }
 
-type Line record {
+type Line = record {
 	a: Point
 	b: Point
 }
@@ -53,7 +53,7 @@ var lines = [
 
 var pLines = [&lines[0], &lines[1], &lines[2]]
 
-type Struct record {
+type Struct = record {
 	x: *Line
 }
 

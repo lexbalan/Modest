@@ -1840,7 +1840,7 @@ class Parser:
 		if self.is_comment():
 			self.skip()
 
-		self.match("=")
+		self.need("=")
 
 		t = None
 		if not self.look("\n"):

@@ -2,7 +2,7 @@ include "ctypes64"
 include "stdio"
 
 
-type NewInt32 Int32
+type NewInt32 = Int32
 
 public func main () -> Int {
 	printf("test typedef\n")

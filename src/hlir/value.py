@@ -186,6 +186,8 @@ class ValueBad(Value):
 		super().__init__(type=TypeBad(ti), ti=ti)
 		from .hlir import Id
 		self.id = Id().fromStr('_')
+		# чтобы заткнуть жалобы "expected immediate value"
+		self.immediate = True
 
 
 class ValueUndef(Value):

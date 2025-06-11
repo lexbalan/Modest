@@ -17,7 +17,7 @@ record {x: Int32, y: Int32}  // type 'record with two fields x & y with type Int
 
 
 ```swift
-type Point record {
+type Point = record {
 	x: Int32
 	y: Int32
 }
@@ -25,7 +25,7 @@ type Point record {
 
 public func main () -> Unit {
 	var p: Point
-  
+
 	// we can initialize record with 'literal record value'
 	p = {x=10, y=10}
 

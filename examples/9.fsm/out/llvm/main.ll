@@ -226,12 +226,12 @@ declare void @delay_sec(%Nat64 %s)
 ; end from import "delay"
 
 ; from import "fsm"
-%fsm_Handler = type void (%fsm_FSM*)*;
+%fsm_Handler = type void (%fsm_FSM*);
 %fsm_StateDesc = type {
 	[8 x %Char8],
-	%fsm_Handler,
-	%fsm_Handler,
-	%fsm_Handler
+	%fsm_Handler*,
+	%fsm_Handler*,
+	%fsm_Handler*
 };
 
 %fsm_FSM = type {

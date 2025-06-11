@@ -3,15 +3,15 @@ include "stdio"
 
 
 
-type Type1 record {
+type Type1 = record {
 	x: Int32
 }
 
-type Type2 record {
+type Type2 = record {
 	x: Int32
 }
 
-type Type3 Type1
+type Type3 = Type1
 
 
 func f0_val (x: Type1) -> Unit {

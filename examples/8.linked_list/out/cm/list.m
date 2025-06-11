@@ -4,13 +4,13 @@ include "stdio"
 
 
 
-public type Node record {
+public type Node = record {
 	next: *Node
 	prev: *Node
 	data: Ptr
 }
 
-public type List record {
+public type List = record {
 	head: *Node
 	tail: *Node
 	size: Nat32
