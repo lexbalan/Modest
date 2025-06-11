@@ -25,9 +25,9 @@ def cons_can(to, from_type, method, ti):
 		if method == 'implicit':
 			return False
 
-		if not from_type.is_generic():
-			if method != 'unsafe':
-				return False
+#		if not from_type.is_generic():
+#			if method != 'unsafe':
+#				return False
 
 	if Type.eq(to, from_type):
 		return True

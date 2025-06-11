@@ -15,6 +15,7 @@ const newThree = NewType 3
 func distinctCheck () -> Unit {
 	var a, b: NewType
 	let x = a + b + newZero + NewType 0
+	var y: Int16 = unsafe Int16 x
 	var xx: Int32 = unsafe Int32 x
 	//
 }

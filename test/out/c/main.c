@@ -21,17 +21,23 @@
 
 
 typedef int32_t NewType;
+#define newZero  (0)
+#define newOne  (1)
+#define newTwo  (2)
+#define newThree  (3)
+
+static void distinctCheck()
+{
+	NewType a;
+	NewType b;
+	const NewType x = a + b + newZero + 0;
+	int16_t y = (int16_t)x;
+	int32_t xx = (int32_t)x;
+	//
+}
 
 static int32_t add(int32_t a, int32_t b)
 {
-	//	var x: lib.PrivateType
-	//	var y: lib.PublicType
-	//	y = x
-	NewType e;
-	NewType f;
-	int32_t g;
-	const NewType k = e + f;
-	const int32_t m = g + 3;
 	return a + b;
 }
 
