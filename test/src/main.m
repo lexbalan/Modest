@@ -6,16 +6,20 @@ include "libc/string"
 import "lib"
 
 type NewType = @distinct Int32
+const newZero = NewType 0
+const newOne = NewType 1
+const newTwo = NewType 2
+const newThree = NewType 3
 
+
+func distinctCheck () -> Unit {
+	var a, b: NewType
+	let x = a + b + newZero + NewType 0
+	var xx: Int32 = unsafe Int32 x
+	//
+}
 
 func add (a: Int32, b: Int32) -> Int32 {
-//	var x: lib.PrivateType
-//	var y: lib.PublicType
-//	y = x
-	var e, f: NewType
-	var g: Int32
-	let k = e + f
-	let m = g + 3
 	return a + b
 }
 

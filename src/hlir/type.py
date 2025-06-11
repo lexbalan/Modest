@@ -178,6 +178,8 @@ class Type(Entity):
 	def is_va_list(self):
 		return isinstance(self, TypeVaList)
 
+	def is_distinct(self):
+		return self.distinct > 0
 
 	def is_generic(self):
 		return self.generic

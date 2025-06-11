@@ -245,9 +245,15 @@ define internal %Int32 @add(%Int32 %a, %Int32 %b) {
 	;	var y: lib.PublicType
 	;	y = x
 	%1 = alloca %NewType, align 4
-	%2 = load %NewType, %NewType* %1
-	%3 = add %NewType %2, %b
-	ret %NewType %3
+	%2 = alloca %NewType, align 4
+	%3 = alloca %Int32, align 4
+	%4 = load %NewType, %NewType* %1
+	%5 = load %NewType, %NewType* %2
+	%6 = add %NewType %4, %5
+	%7 = load %Int32, %Int32* %3
+	%8 = add %Int32 %7, 3
+	%9 = add %Int32 %a, %b
+	ret %Int32 %9
 }
 
 %main_Point = type <{

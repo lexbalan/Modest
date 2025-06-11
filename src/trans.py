@@ -645,7 +645,7 @@ def do_value_bin2(op, l, r, ti):
 	r = value_cons_implicit(t, r)
 
 	if not Type.eq(l.type, r.type, ti):
-		error("different types in '%s' operation" % x['kind'], ti)
+		error("different types in binary operation", ti)
 		# print: @@ <left_type> & <right_type> @@
 		print(color_code(CYAN), end='')
 		print('@@ ', end='')

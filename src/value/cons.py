@@ -21,6 +21,14 @@ def cons_can(to, from_type, method, ti):
 	assert(isinstance(to, Type))
 	assert(isinstance(from_type, Type))
 
+	if to.distinct != from_type.distinct:
+		if method == 'implicit':
+			return False
+
+		if not from_type.is_generic():
+			if method != 'unsafe':
+				return False
+
 	if Type.eq(to, from_type):
 		return True
 
@@ -50,7 +58,8 @@ def cons_can(to, from_type, method, ti):
 		info(str(to), to.ti)
 		assert(False)
 
-	return checker(to, from_type, method, ti)
+	can = checker(to, from_type, method, ti)
+	return can
 
 
 
