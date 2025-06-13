@@ -1,5 +1,5 @@
 
 
-public type PublicType Int32
-type PrivateType Int32
+public type PublicType = Int32
+type PrivateType = Int32
 

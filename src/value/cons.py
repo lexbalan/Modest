@@ -21,7 +21,7 @@ def cons_can(to, from_type, method, ti):
 	assert(isinstance(to, Type))
 	assert(isinstance(from_type, Type))
 
-	if to.distinct != from_type.distinct:
+	if to.brand != from_type.brand:
 		if method == 'implicit':
 			return False
 

@@ -5,6 +5,7 @@ include "string"
 
 import "lib" as lib
 
+
 type NewType = Int32
 const newZero = NewType 0
 const newOne = NewType 1
@@ -16,6 +17,8 @@ func distinctCheck () -> Unit {
 	var a: NewType
 	var b: NewType
 	let x: NewType = a + b + newZero + NewType 0
+	var y: Int16 = Int16 x
+	var xx: Int32 = Int32 x
 	//
 }
 

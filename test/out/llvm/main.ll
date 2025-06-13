@@ -240,20 +240,27 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @str14 = private constant [31 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 45, i8 49, i8 32, i8 45, i8 62, i8 32, i8 87, i8 111, i8 114, i8 100, i8 51, i8 50, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 %NewType = type %Int32;
-define internal %Int32 @add(%Int32 %a, %Int32 %b) {
-	;	var x: lib.PrivateType
-	;	var y: lib.PublicType
-	;	y = x
+define internal void @distinctCheck() {
 	%1 = alloca %NewType, align 4
 	%2 = alloca %NewType, align 4
-	%3 = alloca %Int32, align 4
-	%4 = load %NewType, %NewType* %1
-	%5 = load %NewType, %NewType* %2
-	%6 = add %NewType %4, %5
-	%7 = load %Int32, %Int32* %3
-	%8 = add %Int32 %7, 3
-	%9 = add %Int32 %a, %b
-	ret %Int32 %9
+	%3 = load %NewType, %NewType* %1
+	%4 = load %NewType, %NewType* %2
+	%5 = add %NewType %3, %4
+	%6 = add %NewType %5, 0
+	%7 = add %NewType %6, 0
+	%8 = alloca %Int16, align 2
+	%9 = trunc %NewType %7 to %Int16
+	store %Int16 %9, %Int16* %8
+	%10 = alloca %Int32, align 4
+	%11 = bitcast %NewType %7 to %Int32
+	store %Int32 %11, %Int32* %10
+	;
+	ret void
+}
+
+define internal %Int32 @add(%Int32 %a, %Int32 %b) {
+	%1 = add %Int32 %a, %b
+	ret %Int32 %1
 }
 
 %main_Point = type <{

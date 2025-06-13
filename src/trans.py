@@ -198,10 +198,10 @@ def add_spices_type(t, atts):
 		t.att.append(k)
 
 		if k == 'distinct':
-			# Type.distinct must be > 0 (!)
+			# Type.brand must be > 0 (!)
 			global distinct_cnt
 			distinct_cnt += 1
-			t.distinct = distinct_cnt
+			t.brand = distinct_cnt
 
 		if t.is_array():
 			if k == 'const':

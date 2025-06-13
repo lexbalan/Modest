@@ -5,6 +5,7 @@ include "libc/string"
 
 import "lib"
 
+
 type NewType = @distinct Int32
 const newZero = NewType 0
 const newOne = NewType 1
@@ -95,15 +96,6 @@ var yy: @volatile[10]Int
 
 @extern("C")
 func ma () -> Int32
-
-
-//type State enum {
-//	#stateInit
-//	#stateOff
-//	#stateStartup
-//	#stateRun
-//	#stateShutdown
-//}
 
 
 //func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {

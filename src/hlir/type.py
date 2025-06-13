@@ -53,7 +53,7 @@ class Type(Entity):
 		# особое поле - если оно ненулевое значит это distinct тип
 		# такие типы будут признаны неравными если их поля dictinct отличны
 		# 0 - зарезервирован для не distinct типов (см. @distinct аттрибут)
-		self.distinct = 0
+		self.brand = 0
 		pass
 
 
@@ -179,7 +179,7 @@ class Type(Entity):
 		return isinstance(self, TypeVaList)
 
 	def is_distinct(self):
-		return self.distinct > 0
+		return self.brand > 0
 
 	def is_generic(self):
 		return self.generic
@@ -409,7 +409,7 @@ class Type(Entity):
 		if a.__class__.__name__ != b.__class__.__name__:
 			return False
 
-		if a.distinct != b.distinct:
+		if a.brand != b.brand:
 			return False
 
 		# проверять аттрибуты (volatile, const)
