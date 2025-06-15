@@ -31,7 +31,7 @@ int main() {
 
 	// current working directory
 	char cwd[128];
-	getcwd((char *)&cwd, __lengthof(cwd));
+	getcwd((char *)&cwd, (size_t)__lengthof(cwd));
 	printf("cwd = %s\n", &cwd);
 
 	char *const tty = ttyname(0);

@@ -220,7 +220,9 @@ declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; from included stdio
-%File = type %Nat8;
+%File = type {
+};
+
 %FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;

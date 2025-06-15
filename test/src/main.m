@@ -4,6 +4,59 @@ include "libc/stdlib"
 include "libc/string"
 
 import "lib"
+import "fixed"
+
+
+
+func testFixed () -> Unit {
+	let fp0 = fixed.create(1, 2, 4) // 1+2/4
+	printf("fp0 = 0x%08x ", fp0)
+	fixed.print(fp0)
+	printf("\n")
+
+	let fp1 = fixed.create(1, 1, 2) // 1+1/2
+	printf("fp1 = 0x%08x ", fp1)
+	fixed.print(fp1)
+	printf("\n")
+
+	let fp2 = fixed.create(1, 1, 3) // 1+1/3
+	printf("fp2 = 0x%08x ", fp2)
+	fixed.print(fp2)
+	printf("\n")
+
+	let fp3 = fixed.create(1, 2, 128) // 1+2/128 = 1+1/64 = 1+1024/65536
+	printf("fp3 = 0x%08x ", fp3)
+	fixed.print(fp3)
+	printf("\n")
+
+	let fp4 = fixed.add(fp0, fp1)
+	printf("fp4 = 0x%08x ", fp4)
+	fixed.print(fp4)
+	printf("\n")
+
+	let fp5 = fixed.mul(fp0, fp1)
+	printf("fp5 = 0x%08x ", fp5)
+	fixed.print(fp5)
+	printf("\n")
+
+	let one = fixed.create(1, 0, 1) // 1+0/1
+	let two = fixed.create(2, 0, 1) // 2+0/1
+	let dv = fixed.div(one, two)
+	printf("dv = 0x%08x ", dv)
+	fixed.print(dv)
+	printf("\n")
+
+	let pi = fixed.create(3, 1415, 10000) // 3+14/100
+	printf("pi = 0x%08x ", pi)
+	fixed.print(pi)
+	printf("\n")
+
+	// ok!
+	let dv2 = fixed.div(pi, two)
+	printf("dv2 = 0x%08x ", dv2)
+	fixed.print(dv2)
+	printf("\n")
+}
 
 
 type NewType = @distinct Int32
@@ -132,6 +185,8 @@ func divtest () -> Unit {
 
 public func main () -> Int32 {
 	//ab_test()
+
+	testFixed()
 
 	divtest()
 

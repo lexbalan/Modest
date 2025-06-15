@@ -23,7 +23,7 @@ public func main() -> Int {
 
 	// current working directory
 	var cwd: [128]Char8
-	getcwd(&cwd, lengthof(cwd))
+	getcwd(&cwd, SizeT lengthof(cwd))
 	printf("cwd = %s\n", &cwd)
 
 	let tty = ttyname(0)

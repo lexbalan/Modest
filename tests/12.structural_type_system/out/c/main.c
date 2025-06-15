@@ -9,10 +9,10 @@
 
 
 /* anonymous records */
-struct __anonymous_struct_2 {
+struct __anonymous_struct_3 {
 	int32_t x;
 };
-struct __anonymous_struct_3 {
+struct __anonymous_struct_4 {
 	int32_t x;
 };
 
@@ -40,7 +40,7 @@ static void f2_val(Type3 x) {
 	printf("f2 x.x = %d\n", x.x);
 }
 
-static void f3_val(struct __anonymous_struct_2 x) {
+static void f3_val(struct __anonymous_struct_3 x) {
 	printf("f3 x.x = %d\n", x.x);
 }
 
@@ -56,7 +56,7 @@ static void f2_ptr(Type3 *x) {
 	printf("f2p x.x = %d\n", x->x);
 }
 
-static void f3_ptr(struct __anonymous_struct_3 *x) {
+static void f3_ptr(struct __anonymous_struct_4 *x) {
 	printf("f3p x.x = %d\n", x->x);
 }
 
@@ -68,17 +68,17 @@ static void test_by_value() {
 	f0_val(a);
 	f1_val(*(Type2*)&a);
 	f2_val(a);
-	f3_val(*(struct __anonymous_struct_2*)&a);
+	f3_val(*(struct __anonymous_struct_3*)&a);
 
 	f0_val(*(Type1*)&b);
 	f1_val(b);
 	f2_val(*(Type3*)&b);
-	f3_val(*(struct __anonymous_struct_2*)&b);
+	f3_val(*(struct __anonymous_struct_3*)&b);
 
 	f0_val(c);
 	f1_val(*(Type2*)&c);
 	f2_val(c);
-	f3_val(*(struct __anonymous_struct_2*)&c);
+	f3_val(*(struct __anonymous_struct_3*)&c);
 }
 
 static void test_by_pointer() {

@@ -8,7 +8,7 @@ include "libc/ctypes64"
 
 
 @set("id.c", "FILE")
-public type File = Nat8
+public type File = record {}
 
 @set("id.c", "fpos_t")
 public type FposT = Nat8

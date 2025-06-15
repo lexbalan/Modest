@@ -9,7 +9,7 @@
 
 
 /* anonymous records */
-struct __anonymous_struct_2 {
+struct __anonymous_struct_3 {
 	int32_t x;
 	int32_t y;
 };
@@ -155,7 +155,7 @@ static AnimationPoint animation2_points[5] = {
 	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 
-static void xy(struct __anonymous_struct_2 x) {
+static void xy(struct __anonymous_struct_3 x) {
 }
 
 static int32_t arrr[3][3] = {
@@ -205,7 +205,7 @@ static Wrap wrap0 = {
 static Wrap *awrap[2] = {&wrap0, &wrap0};
 
 int32_t main() {
-	xy((struct __anonymous_struct_2){.x = 10, .y = 20});
+	xy((struct __anonymous_struct_3){.x = 10, .y = 20});
 
 	printf("test1 (eq): ");
 	if (memcmp(&animation0_points, &animation1_points, sizeof(AnimationPoint[5])) == 0) {

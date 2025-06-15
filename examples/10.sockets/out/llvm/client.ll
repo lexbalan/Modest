@@ -140,7 +140,9 @@ break_2:
 %UIDT = type %Nat32;
 %GIDT = type %Nat32;
 ; from included stdio
-%File = type %Nat8;
+%File = type {
+};
+
 %FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
@@ -339,23 +341,24 @@ define internal %Bool @send_file(%File* %fp, %Int %sockfd) {
 	br label %again_1
 again_1:
 	%2 = bitcast [1024 x %Char8]* %1 to %CharStr*
-	%3 = call %CharStr* @fgets(%CharStr* %2, %Int 1024, %File* %fp)
-	%4 = icmp ne %CharStr* %3, null
-	br %Bool %4 , label %body_1, label %break_1
+	%3 = bitcast %File* %fp to %File*
+	%4 = call %CharStr* @fgets(%CharStr* %2, %Int 1024, %File* %3)
+	%5 = icmp ne %CharStr* %4, null
+	br %Bool %5 , label %body_1, label %break_1
 body_1:
 ; if_0
-	%5 = bitcast [1024 x %Char8]* %1 to i8*
-	%6 = call %SSizeT @send(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
-	%7 = icmp eq %SSizeT %6, -1
-	br %Bool %7 , label %then_0, label %endif_0
+	%6 = bitcast [1024 x %Char8]* %1 to i8*
+	%7 = call %SSizeT @send(%Int %sockfd, i8* %6, %SizeT 1024, %Int 0)
+	%8 = icmp eq %SSizeT %7, -1
+	br %Bool %8 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%9 = zext i16 1024 to %Nat32
-	%10 = mul %Nat32 %9, 1
-	%11 = bitcast [1024 x %Char8]* %1 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %11, i8 0, %Nat32 %10, i1 0)
+	%10 = zext i16 1024 to %Nat32
+	%11 = mul %Nat32 %10, 1
+	%12 = bitcast [1024 x %Char8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, %Nat32 %11, i1 0)
 	br label %again_1
 break_1:
 	ret %Bool 1
@@ -404,18 +407,19 @@ then_2:
 	call void @exit(%Int 1)
 	br label %endif_2
 endif_2:
-	%20 = call %Bool @send_file(%File* %18, %Int %1)
+	%20 = bitcast %File* %18 to %File*
+	%21 = call %Bool @send_file(%File* %20, %Int %1)
 ; if_3
-	br %Bool %20 , label %then_3, label %else_3
+	br %Bool %21 , label %then_3, label %else_3
 then_3:
-	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str9 to [0 x i8]*))
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str9 to [0 x i8]*))
 	br label %endif_3
 else_3:
 	call void @perror(%ConstCharStr* bitcast ([26 x i8]* @str10 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-	%22 = call %Int @close(%Int %1)
-	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
+	%23 = call %Int @close(%Int %1)
+	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
 	ret %Int 0
 }
 

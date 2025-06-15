@@ -140,7 +140,9 @@ break_2:
 %UIDT = type %Nat32;
 %GIDT = type %Nat32;
 ; from included stdio
-%File = type %Nat8;
+%File = type {
+};
+
 %FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;

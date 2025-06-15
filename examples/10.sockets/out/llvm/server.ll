@@ -140,7 +140,9 @@ break_2:
 %UIDT = type %Nat32;
 %GIDT = type %Nat32;
 ; from included stdio
-%File = type %Nat8;
+%File = type {
+};
+
 %FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
@@ -275,11 +277,12 @@ then_1:
 	br label %break_1
 	br label %endif_1
 endif_1:
-	%9 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x %Char8]* %1)
-	%10 = zext i16 1024 to %Nat32
-	%11 = mul %Nat32 %10, 1
-	%12 = bitcast [1024 x %Char8]* %1 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, %Nat32 %11, i1 0)
+	%9 = bitcast %File* %2 to %File*
+	%10 = call %Int (%File*, %Str*, ...) @fprintf(%File* %9, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x %Char8]* %1)
+	%11 = zext i16 1024 to %Nat32
+	%12 = mul %Nat32 %11, 1
+	%13 = bitcast [1024 x %Char8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %13, i8 0, %Nat32 %12, i1 0)
 	br label %again_1
 break_1:
 	ret %Bool 1

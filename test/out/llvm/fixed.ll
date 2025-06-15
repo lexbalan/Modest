@@ -106,7 +106,7 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: main
+; MODULE: fixed
 
 ; -- print includes --
 ; from included ctypes64
@@ -189,36 +189,138 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports 'main' --
+; -- print imports 'fixed' --
 ; -- 0
-; -- end print imports 'main' --
+; -- end print imports 'fixed' --
 ; -- strings --
-@str1 = private constant [21 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 32, i8 111, i8 112, i8 101, i8 114, i8 97, i8 116, i8 105, i8 111, i8 110, i8 10, i8 0]
-@str2 = private constant [8 x i8] [i8 97, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
-@str3 = private constant [8 x i8] [i8 98, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str1 = private constant [10 x i8] [i8 37, i8 100, i8 43, i8 37, i8 100, i8 47, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
+%fixed_Fixed32 = type %Word32;
+define %fixed_Fixed32 @fixed_create(%Int16 %a, %Nat16 %b, %Nat16 %c) {
+	%1 = zext %Nat16 %b to %Nat32
+	%2 = mul %Nat32 %1, 65536
+	%3 = zext %Nat16 %c to %Nat32
+	%4 = udiv %Nat32 %2, %3
+	%5 = sext %Int16 %a to %Int32
+	%6 = mul %Int32 %5, 65536
+	%7 = bitcast %Int32 %6 to %Word32
+	%8 = bitcast %Nat32 %4 to %Word32
+	%9 = or %Word32 %7, %8
+	%10 = bitcast %Word32 %9 to %fixed_Fixed32
+	ret %fixed_Fixed32 %10
+}
 
-;let x0 = Int32 -1
-;	let x1 = Int64 -1
-;
-;	let y0 = Nat64 x0
-;	let y1 = Nat64 x1
-;
-;	printf("x0 = %llx\n", y0)
-;	printf("x1 = %llx\n", y1)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Nat8 255)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*), %Nat32 255)
+define internal %Int16 @head(%fixed_Fixed32 %x) {
+	%1 = zext i8 16 to %fixed_Fixed32
+	%2 = lshr %fixed_Fixed32 %x, %1
+	%3 = trunc %fixed_Fixed32 %2 to %Int16
+	ret %Int16 %3
+}
 
-	;	let c = Int32 a
-	;	let d = Int32 Int8 -1
-	;	let e = Int32 Int8 255
+define internal %Nat16 @tail(%fixed_Fixed32 %x) {
+	%1 = bitcast %fixed_Fixed32 %x to %Word32
+	%2 = zext i16 65535 to %Word32
+	%3 = and %Word32 %1, %2
+	%4 = trunc %Word32 %3 to %Nat16
+	ret %Nat16 %4
+}
 
-	;	printf("c = %i\n", c)
-	;	printf("d = %i\n", d)
-	;	printf("e = %i\n", e)
-	ret %Int 0
+define void @fixed_print(%fixed_Fixed32 %x) {
+	%1 = call %Int16 @head(%fixed_Fixed32 %x)
+	%2 = alloca %Nat32, align 4
+	%3 = call %Nat16 @tail(%fixed_Fixed32 %x)
+	%4 = zext %Nat16 %3 to %Nat32
+	store %Nat32 %4, %Nat32* %2
+	%5 = alloca %Nat32, align 4
+	store %Nat32 65536, %Nat32* %5
+
+	; сокращаем дробную часть
+; while_1
+	br label %again_1
+again_1:
+	br %Bool 1 , label %body_1, label %break_1
+body_1:
+; if_0
+	%6 = load %Nat32, %Nat32* %2
+	%7 = urem %Nat32 %6, 2
+	%8 = icmp eq %Nat32 %7, 0
+	%9 = load %Nat32, %Nat32* %5
+	%10 = urem %Nat32 %9, 2
+	%11 = icmp eq %Nat32 %10, 0
+	%12 = and %Bool %8, %11
+	br %Bool %12 , label %then_0, label %else_0
+then_0:
+	%13 = load %Nat32, %Nat32* %2
+	%14 = udiv %Nat32 %13, 2
+	store %Nat32 %14, %Nat32* %2
+	%15 = load %Nat32, %Nat32* %5
+	%16 = udiv %Nat32 %15, 2
+	store %Nat32 %16, %Nat32* %5
+	br label %endif_0
+else_0:
+; if_1
+	%17 = load %Nat32, %Nat32* %2
+	%18 = urem %Nat32 %17, 3
+	%19 = icmp eq %Nat32 %18, 0
+	%20 = load %Nat32, %Nat32* %5
+	%21 = urem %Nat32 %20, 3
+	%22 = icmp eq %Nat32 %21, 0
+	%23 = and %Bool %19, %22
+	br %Bool %23 , label %then_1, label %else_1
+then_1:
+	%24 = load %Nat32, %Nat32* %2
+	%25 = udiv %Nat32 %24, 3
+	store %Nat32 %25, %Nat32* %2
+	%26 = load %Nat32, %Nat32* %5
+	%27 = udiv %Nat32 %26, 3
+	store %Nat32 %27, %Nat32* %5
+	br label %endif_1
+else_1:
+	br label %break_1
+	br label %endif_1
+endif_1:
+	br label %endif_0
+endif_0:
+	br label %again_1
+break_1:
+	%29 = load %Nat32, %Nat32* %2
+	%30 = load %Nat32, %Nat32* %5
+	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %Int16 %1, %Nat32 %29, %Nat32 %30)
+	ret void
+}
+
+define %fixed_Fixed32 @fixed_add(%fixed_Fixed32 %a, %fixed_Fixed32 %b) {
+	%1 = bitcast %fixed_Fixed32 %a to %Int32
+	%2 = bitcast %fixed_Fixed32 %b to %Int32
+	%3 = add %Int32 %1, %2
+	%4 = bitcast %Int32 %3 to %fixed_Fixed32
+	ret %fixed_Fixed32 %4
+}
+
+define %fixed_Fixed32 @fixed_sub(%fixed_Fixed32 %a, %fixed_Fixed32 %b) {
+	%1 = bitcast %fixed_Fixed32 %a to %Int32
+	%2 = bitcast %fixed_Fixed32 %b to %Int32
+	%3 = sub %Int32 %1, %2
+	%4 = bitcast %Int32 %3 to %fixed_Fixed32
+	ret %fixed_Fixed32 %4
+}
+
+define %fixed_Fixed32 @fixed_mul(%fixed_Fixed32 %a, %fixed_Fixed32 %b) {
+	%1 = sext %fixed_Fixed32 %a to %Int64
+	%2 = sext %fixed_Fixed32 %b to %Int64
+	%3 = mul %Int64 %1, %2
+	%4 = sdiv %Int64 %3, 65536
+	%5 = trunc %Int64 %4 to %fixed_Fixed32
+	ret %fixed_Fixed32 %5
+}
+
+define %fixed_Fixed32 @fixed_div(%fixed_Fixed32 %a, %fixed_Fixed32 %b) {
+	%1 = sext %fixed_Fixed32 %a to %Int64
+	%2 = sext %fixed_Fixed32 %b to %Int64
+	%3 = mul %Int64 %1, 65536
+	%4 = sdiv %Int64 %3, %2
+	%5 = trunc %Int64 %4 to %fixed_Fixed32
+	ret %fixed_Fixed32 %5
 }
 
 
