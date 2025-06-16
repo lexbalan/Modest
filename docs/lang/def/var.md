@@ -47,7 +47,7 @@ public func main () -> Int32 {
 
 var counter: Int
 
-func count() {
+func count () -> Unit {
 	++counter
 }
 
@@ -60,9 +60,9 @@ public func main() -> Int {
 		count()
 		++i
 	}
-	
+
 	printf("after counter = %i\n", counter)
-	
+
 	return 0
 }
 ```
@@ -75,7 +75,6 @@ Variable definition inside function body creates new *local variable* instance.
 
 ##### Global variables example
 
-
 ```swift
 func mid (a: Int32, b: Int32) -> Int32 {
 	var result: Int32
@@ -85,20 +84,18 @@ func mid (a: Int32, b: Int32) -> Int32 {
 }
 ```
 
-
 ```swift
-
 public func main () -> Int32 {
 	var x: Int16
 	var y = Int32 10
 	var z: Int32 = 10
-	
+
 	// We need to initialize x with some value
 	// because local variable without default value
 	// will contains 'garbage' value from memory
 	// (some kind of 'random' value)
 	x = 5
-	
+
 	printf("x = %hd\n", x)
 	printf("y = %d\n", y)
 	printf("z = %d\n", z)

@@ -156,6 +156,7 @@ Result type will the same as *left* argument type.
 
 ### Shl (Shift to the Left)
 
+Left must be Word
 Allow that ***type***(*left*) will not be equal to ***type***(*right*).
 
 ```zig
@@ -166,7 +167,8 @@ Allow that ***type***(*left*) will not be equal to ***type***(*right*).
 
 ### Shr (Shift to the Right)
 
-Allow that ***type***(*left*) will not be equal to ***type***(*right*). 
+Left must be Word
+Allow that ***type***(*left*) will not be equal to ***type***(*right*).
 
 ```zig
 	a >> b

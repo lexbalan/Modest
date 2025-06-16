@@ -55,17 +55,19 @@
 ### Example
 
 ```swift
-// examples/demo1/src/main.m
+// fast language example
 
 import "libc/stdio"
 
-const minNumber = 0
-const maxNumber = 10
+type Number = Int32
 
-public func main() -> Int32 {
+const minNumber = Number 0
+const maxNumber = Number 10
+
+public func main () -> Int32 {
 	let number = get_number(minNumber, maxNumber)
 
-	let n = Int32 5
+	let n = Number 5
 
 	if number < n {
 		printf("entered number (%i) is less than %i\n", number, n)
@@ -79,8 +81,8 @@ public func main() -> Int32 {
 }
 
 
-func get_number(min: Int32, max: Int32) -> Int32 {
-	var number: Int32
+func get_number (min: Number, max: Number) -> Number {
+	var number: Number
 	number = 0
 
 	while true {

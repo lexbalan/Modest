@@ -17,7 +17,7 @@ func sum_i32 (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-func test_sum () {
+func test_sum () -> Unit {
 	let a = 10
 	let b = 20
 

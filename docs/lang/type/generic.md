@@ -144,12 +144,12 @@ public func main() -> Int {
 #### Example
 ```swift
 
-type Point2D record {
+type Point2D = record {
 	x: Int32
 	y: Int32
 }
 
-type Point3D record {
+type Point3D = record {
 	x: Int32
 	y: Int32
 	z: Int32

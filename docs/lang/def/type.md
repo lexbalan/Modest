@@ -5,14 +5,14 @@ Type definition bounds an [*identifier*](../identifier.md) with a [*type*](../ty
 
 #### Common form
 ```
-type <#identifier#> <#type_expression#>
+type <#identifier#> = <#type_expression#>
 ```
 
 
 #### Examples
 
 ```zig
-type MyInt Int32
+type MyInt = Int32
 
 public func main () -> Int {
 	var x: MyInt
@@ -36,7 +36,7 @@ type <#identifier#>
 // type declared, but not defined
 type MyRecord
 
-type MyRecord record {
+type MyRecord = record {
 	self: *MyRecord
 }
 ```

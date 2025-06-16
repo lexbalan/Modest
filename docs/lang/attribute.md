@@ -8,7 +8,7 @@ func my_func () -> @unused Int {
   return 0
 }
 
-public func main () {
+public func main () -> Unit {
   // Here we ignore my_func return value,
   // but there is no warning,
   // because my_func return type declared with attribute "unused"
@@ -37,7 +37,7 @@ public func main () {
 Property `gnu_att`
 ```swift
 @set("gnu_att", "interrupt(\"WCH-Interrupt-fast\")")
-func wch_systick_interrupt() {
+func wch_systick_interrupt () -> Unit {
 	//
 }
 ```
@@ -46,8 +46,7 @@ will be translated into
 
 ```
 __attribute__((interrupt("WCH-Interrupt-fast")))
-void wch_systick_interrupt()
-{
+void wch_systick_interrupt() {
 	//
 }
 ```

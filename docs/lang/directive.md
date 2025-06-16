@@ -1,5 +1,6 @@
 # Compiler Directives
 
+> OBSOLETE
 
 ## Conditional Compilation
 

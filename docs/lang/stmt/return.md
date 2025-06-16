@@ -17,7 +17,6 @@ return
 #### Examples
 
 ```swift
-
 func mid (a: Int32, b: Int32) -> Int32 {
 	// in this case return statement stops function execution
 	// and returns result of evaluation return value expression

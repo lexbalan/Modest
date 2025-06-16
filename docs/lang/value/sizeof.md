@@ -9,7 +9,7 @@
 ```
 
 ```
-	offsetof(<#type_expression#>)
+	offsetof(<#type_expression#>.<field_id>)
 ```
 
 ```

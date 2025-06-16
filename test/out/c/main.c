@@ -22,51 +22,62 @@
 
 static void testFixed()
 {
-	const fixed_Fixed32 fp0 = fixed_create(1, 2, 4);
+	const fixed32_Fixed32 fp0 = fixed32_create(1, 2, 4);
 	printf("fp0 = 0x%08x ", fp0);
-	fixed_print(fp0);
+	fixed32_print(fp0);
 	printf("\n");
 
-	const fixed_Fixed32 fp1 = fixed_create(1, 1, 2);
+	const fixed32_Fixed32 fp1 = fixed32_create(1, 1, 2);
 	printf("fp1 = 0x%08x ", fp1);
-	fixed_print(fp1);
+	fixed32_print(fp1);
 	printf("\n");
 
-	const fixed_Fixed32 fp2 = fixed_create(1, 1, 3);
+	const fixed32_Fixed32 fp2 = fixed32_create(1, 1, 3);
 	printf("fp2 = 0x%08x ", fp2);
-	fixed_print(fp2);
+	fixed32_print(fp2);
 	printf("\n");
 
-	const fixed_Fixed32 fp3 = fixed_create(1, 2, 128);
+	const fixed32_Fixed32 fp3 = fixed32_create(1, 2, 128);
 	printf("fp3 = 0x%08x ", fp3);
-	fixed_print(fp3);
+	fixed32_print(fp3);
 	printf("\n");
 
-	const fixed_Fixed32 fp4 = fixed_add(fp0, fp1);
+	const fixed32_Fixed32 fp4 = fixed32_add(fp0, fp1);
 	printf("fp4 = 0x%08x ", fp4);
-	fixed_print(fp4);
+	fixed32_print(fp4);
 	printf("\n");
 
-	const fixed_Fixed32 fp5 = fixed_mul(fp0, fp1);
+	const fixed32_Fixed32 fp5 = fixed32_mul(fp0, fp1);
 	printf("fp5 = 0x%08x ", fp5);
-	fixed_print(fp5);
+	fixed32_print(fp5);
 	printf("\n");
 
-	const fixed_Fixed32 one = fixed_create(1, 0, 1);
-	const fixed_Fixed32 two = fixed_create(2, 0, 1);
-	const fixed_Fixed32 dv = fixed_div(one, two);
+	const fixed32_Fixed32 one = fixed32_create(1, 0, 1);
+	const fixed32_Fixed32 two = fixed32_create(2, 0, 1);
+	const fixed32_Fixed32 dv = fixed32_div(one, two);
 	printf("dv = 0x%08x ", dv);
-	fixed_print(dv);
+	fixed32_print(dv);
 	printf("\n");
 
-	const fixed_Fixed32 pi = fixed_create(3, 1415, 10000);
+	const fixed32_Fixed32 pi = fixed32_create(3, 1415, 10000);
 	printf("pi = 0x%08x ", pi);
-	fixed_print(pi);
+	fixed32_print(pi);
 	printf("\n");
 
-	const fixed_Fixed32 dv2 = fixed_div(pi, two);
+	const fixed32_Fixed32 tr = fixed32_trunc(pi);
+	printf("trunc(pi) = 0x%08x ", tr);
+	fixed32_print(tr);
+	printf("\n");
+
+	const fixed32_Fixed32 fr = fixed32_fract(pi);
+	printf("fract(pi) = 0x%08x ", fr);
+	fixed32_print(fr);
+	printf("\n");
+
+	// ok!
+	const fixed32_Fixed32 dv2 = fixed32_div(pi, two);
 	printf("dv2 = 0x%08x ", dv2);
-	fixed_print(dv2);
+	fixed32_print(dv2);
 	printf("\n");
 }
 

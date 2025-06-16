@@ -22,7 +22,6 @@ type Point = record {
 	y: Int32
 }
 
-
 public func main () -> Unit {
 	var p: Point
 
@@ -36,5 +35,4 @@ public func main () -> Unit {
 	printf("p.x = %d\n", p.x)
 	printf("p.y = %d\n", p.y)
 }
-
 ```

@@ -13,20 +13,20 @@
 #### Call by func value
 
 ```swift
-func function_1() -> Unit {
+func function_1 () -> Unit {
 	printf("function_1()\n")
 }
 
-func function_2(x: Int32) {
+func function_2 (x: Int32) -> {
 	printf("function_2(%i)\n", x)
 }
 
-func function_3(x: Int32) -> Int32 {
+func function_3 (x: Int32) -> Int32 {
 	printf("function_3(%i)\n", x)
 	return x + 1
 }
 
-public func main() -> Int {
+public func main () -> Int {
 	// just call
 	function_1()
 
@@ -46,19 +46,18 @@ public func main() -> Int {
 #### Call by pointer to func value
 
 ```swift
-func function_1() -> Unit {
+func function_1 () -> Unit {
 	printf("function_1()\n")
 }
 
-func function_2(x: Int32) {
+func function_2 (x: Int32) -> Unit {
 	printf("function_2(%i)\n", x)
 }
 
-func function_3(x: Int32) -> Int32 {
+func function_3 (x: Int32) -> Int32 {
 	printf("function_3(%i)\n", x)
 	return x + 1
 }
-
 
 var ptr_to_function_1: () -> Unit
 var ptr_to_function_2: (x: Int32) -> Unit
@@ -68,7 +67,6 @@ var ptr_to_function_3: (x: Int32) -> Int32
 // var ptr_to_function_1 = &function_1
 // var ptr_to_function_2 = &function_2
 // var ptr_to_function_3 = &function_3
-
 
 public func main() -> Int {
 	ptr_to_function_1 = &function_1
@@ -99,12 +97,12 @@ public func main() -> Int {
 import "libc/stdio"
 
 
-func named_args_test(a: Int32, b: Int32, c: Int32) -> Int32 {
+func named_args_test (a: Int32, b: Int32, c: Int32) -> Int32 {
 	return (a - b) * c
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("test named_args\n")
 
 	let a = 25

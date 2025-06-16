@@ -106,7 +106,7 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: fixed
+; MODULE: fixed32
 
 ; -- print includes --
 ; from included ctypes64
@@ -189,14 +189,14 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports 'fixed' --
+; -- print imports 'fixed32' --
 ; -- 0
-; -- end print imports 'fixed' --
+; -- end print imports 'fixed32' --
 ; -- strings --
 @str1 = private constant [10 x i8] [i8 37, i8 100, i8 43, i8 37, i8 100, i8 47, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
-%fixed_Fixed32 = type %Word32;
-define %fixed_Fixed32 @fixed_create(%Int16 %a, %Nat16 %b, %Nat16 %c) {
+%fixed32_Fixed32 = type %Word32;
+define %fixed32_Fixed32 @fixed32_create(%Int16 %a, %Nat16 %b, %Nat16 %c) {
 	%1 = zext %Nat16 %b to %Nat32
 	%2 = mul %Nat32 %1, 65536
 	%3 = zext %Nat16 %c to %Nat32
@@ -206,29 +206,29 @@ define %fixed_Fixed32 @fixed_create(%Int16 %a, %Nat16 %b, %Nat16 %c) {
 	%7 = bitcast %Int32 %6 to %Word32
 	%8 = bitcast %Nat32 %4 to %Word32
 	%9 = or %Word32 %7, %8
-	%10 = bitcast %Word32 %9 to %fixed_Fixed32
-	ret %fixed_Fixed32 %10
+	%10 = bitcast %Word32 %9 to %fixed32_Fixed32
+	ret %fixed32_Fixed32 %10
 }
 
-define internal %Int16 @head(%fixed_Fixed32 %x) {
-	%1 = zext i8 16 to %fixed_Fixed32
-	%2 = lshr %fixed_Fixed32 %x, %1
-	%3 = trunc %fixed_Fixed32 %2 to %Int16
+define internal %Int16 @head(%fixed32_Fixed32 %x) {
+	%1 = zext i8 16 to %fixed32_Fixed32
+	%2 = lshr %fixed32_Fixed32 %x, %1
+	%3 = trunc %fixed32_Fixed32 %2 to %Int16
 	ret %Int16 %3
 }
 
-define internal %Nat16 @tail(%fixed_Fixed32 %x) {
-	%1 = bitcast %fixed_Fixed32 %x to %Word32
+define internal %Nat16 @tail(%fixed32_Fixed32 %x) {
+	%1 = bitcast %fixed32_Fixed32 %x to %Word32
 	%2 = zext i16 65535 to %Word32
 	%3 = and %Word32 %1, %2
 	%4 = trunc %Word32 %3 to %Nat16
 	ret %Nat16 %4
 }
 
-define void @fixed_print(%fixed_Fixed32 %x) {
-	%1 = call %Int16 @head(%fixed_Fixed32 %x)
+define void @fixed32_print(%fixed32_Fixed32 %x) {
+	%1 = call %Int16 @head(%fixed32_Fixed32 %x)
 	%2 = alloca %Nat32, align 4
-	%3 = call %Nat16 @tail(%fixed_Fixed32 %x)
+	%3 = call %Nat16 @tail(%fixed32_Fixed32 %x)
 	%4 = zext %Nat16 %3 to %Nat32
 	store %Nat32 %4, %Nat32* %2
 	%5 = alloca %Nat32, align 4
@@ -289,52 +289,80 @@ break_1:
 	ret void
 }
 
-define %fixed_Fixed32 @fixed_add(%fixed_Fixed32 %a, %fixed_Fixed32 %b) {
-	%1 = bitcast %fixed_Fixed32 %a to %Int32
-	%2 = bitcast %fixed_Fixed32 %b to %Int32
+define %fixed32_Fixed32 @fixed32_add(%fixed32_Fixed32 %a, %fixed32_Fixed32 %b) {
+	%1 = bitcast %fixed32_Fixed32 %a to %Int32
+	%2 = bitcast %fixed32_Fixed32 %b to %Int32
 	%3 = add %Int32 %1, %2
-	%4 = bitcast %Int32 %3 to %fixed_Fixed32
-	ret %fixed_Fixed32 %4
+	%4 = bitcast %Int32 %3 to %fixed32_Fixed32
+	ret %fixed32_Fixed32 %4
 }
 
-define %fixed_Fixed32 @fixed_sub(%fixed_Fixed32 %a, %fixed_Fixed32 %b) {
-	%1 = bitcast %fixed_Fixed32 %a to %Int32
-	%2 = bitcast %fixed_Fixed32 %b to %Int32
+define %fixed32_Fixed32 @fixed32_sub(%fixed32_Fixed32 %a, %fixed32_Fixed32 %b) {
+	%1 = bitcast %fixed32_Fixed32 %a to %Int32
+	%2 = bitcast %fixed32_Fixed32 %b to %Int32
 	%3 = sub %Int32 %1, %2
-	%4 = bitcast %Int32 %3 to %fixed_Fixed32
-	ret %fixed_Fixed32 %4
+	%4 = bitcast %Int32 %3 to %fixed32_Fixed32
+	ret %fixed32_Fixed32 %4
 }
 
-define %fixed_Fixed32 @fixed_mul(%fixed_Fixed32 %a, %fixed_Fixed32 %b) {
-	%1 = sext %fixed_Fixed32 %a to %Int64
-	%2 = sext %fixed_Fixed32 %b to %Int64
+define %fixed32_Fixed32 @fixed32_mul(%fixed32_Fixed32 %a, %fixed32_Fixed32 %b) {
+	%1 = sext %fixed32_Fixed32 %a to %Int64
+	%2 = sext %fixed32_Fixed32 %b to %Int64
 	%3 = mul %Int64 %1, %2
 	%4 = sdiv %Int64 %3, 65536
-	%5 = trunc %Int64 %4 to %fixed_Fixed32
-	ret %fixed_Fixed32 %5
+	%5 = trunc %Int64 %4 to %fixed32_Fixed32
+	ret %fixed32_Fixed32 %5
 }
 
-define %fixed_Fixed32 @fixed_div(%fixed_Fixed32 %a, %fixed_Fixed32 %b) {
-	%1 = sext %fixed_Fixed32 %a to %Int64
-	%2 = sext %fixed_Fixed32 %b to %Int64
+define %fixed32_Fixed32 @fixed32_div(%fixed32_Fixed32 %a, %fixed32_Fixed32 %b) {
+	%1 = sext %fixed32_Fixed32 %a to %Int64
+	%2 = sext %fixed32_Fixed32 %b to %Int64
 	%3 = mul %Int64 %1, 65536
 	%4 = sdiv %Int64 %3, %2
-	%5 = trunc %Int64 %4 to %fixed_Fixed32
-	ret %fixed_Fixed32 %5
+	%5 = trunc %Int64 %4 to %fixed32_Fixed32
+	ret %fixed32_Fixed32 %5
 }
 
-define %fixed_Fixed32 @fixed_trunc(%fixed_Fixed32 %x) {
-	%1 = bitcast %fixed_Fixed32 %x to %Word32
+define %fixed32_Fixed32 @fixed32_trunc(%fixed32_Fixed32 %x) {
+	%1 = bitcast %fixed32_Fixed32 %x to %Word32
 	%2 = and %Word32 %1, 4294901760
-	%3 = bitcast %Word32 %2 to %fixed_Fixed32
-	ret %fixed_Fixed32 %3
+	%3 = bitcast %Word32 %2 to %fixed32_Fixed32
+	ret %fixed32_Fixed32 %3
 }
 
-define %fixed_Fixed32 @fixed_fract(%fixed_Fixed32 %x) {
-	%1 = bitcast %fixed_Fixed32 %x to %Word32
+define %fixed32_Fixed32 @fixed32_fract(%fixed32_Fixed32 %x) {
+	%1 = bitcast %fixed32_Fixed32 %x to %Word32
 	%2 = and %Word32 %1, 65535
-	%3 = bitcast %Word32 %2 to %fixed_Fixed32
-	ret %fixed_Fixed32 %3
+	%3 = bitcast %Word32 %2 to %fixed32_Fixed32
+	ret %fixed32_Fixed32 %3
+}
+
+define %fixed32_Fixed32 @fixed32_floor(%fixed32_Fixed32 %x) {
+	%1 = alloca %Int16, align 2
+	%2 = call %Int16 @head(%fixed32_Fixed32 %x)
+	store %Int16 %2, %Int16* %1
+	%3 = load %Int16, %Int16* %1
+	%4 = call %fixed32_Fixed32 @fixed32_create(%Int16 %3, %Nat16 0, %Nat16 1)
+	ret %fixed32_Fixed32 %4
+}
+
+define %fixed32_Fixed32 @fixed32_ceil(%fixed32_Fixed32 %x) {
+	%1 = alloca %Int16, align 2
+	%2 = call %Int16 @head(%fixed32_Fixed32 %x)
+	store %Int16 %2, %Int16* %1
+; if_0
+	%3 = call %Nat16 @tail(%fixed32_Fixed32 %x)
+	%4 = icmp ugt %Nat16 %3, 0
+	br %Bool %4 , label %then_0, label %endif_0
+then_0:
+	%5 = load %Int16, %Int16* %1
+	%6 = add %Int16 %5, 1
+	store %Int16 %6, %Int16* %1
+	br label %endif_0
+endif_0:
+	%7 = load %Int16, %Int16* %1
+	%8 = call %fixed32_Fixed32 @fixed32_create(%Int16 %7, %Nat16 0, %Nat16 1)
+	ret %fixed32_Fixed32 %8
 }
 
 

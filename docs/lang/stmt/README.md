@@ -14,11 +14,11 @@ A few statement can be combined into one *block statement* with `{}` brackets
 {
 	printf("Hello World!\n")
 	printf("I'm feeling good!\n")
-	
+
 	// you can separate statements by newline
 	// (most preferable way, as shown above)
 	// or use semicolon for one-line recording
-	
+
 	printf("How are you?\n"); printf("I hope everything in its right place\n")
 }
 ```

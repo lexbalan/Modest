@@ -106,7 +106,7 @@ true, false
 Creating three variables with type *Array of Char* from string literal
 
 ```zig
-let literalString = "I am a string literal"
+const literalString = "I am a string literal"
 
 var str_array8: []Char8 = literalString
 var str_array16: []Char16 = literalString
@@ -120,7 +120,7 @@ var char32: Char32 = "A"
 Creating three variables with type *Pointer to Array of Char* from string literal
 
 ```zig
-let literalString = "I am a string literal"
+const literalString = "I am a string literal"
 
 var ptr_to_str8: *[]Char8 = literalString
 var ptr_to_str16: *[]Char16 = literalString
@@ -130,7 +130,7 @@ var ptr_to_str32: *[]Char32 = literalString
 Or (the same):
 
 ```zig
-let literalString = "I am a string literal"
+const literalString = "I am a string literal"
 
 var ptr_to_str8: *Str8 = literalString
 var ptr_to_str16: *Str16 = literalString
@@ -145,7 +145,7 @@ public func main () -> Int32 {
 	var string: *Str8
 
 	// implicit cast string literal
-	// (GenericArray of GenericChar) to *Str8 
+	// (GenericArray of GenericChar) to *Str8
 	string = "Hello World!"
 
 	// print string via printf
@@ -166,3 +166,4 @@ public func main () -> Int32 {
 // 'y' with type GenericInt and value 20
 {x = 10, y = 20}
 ```
+

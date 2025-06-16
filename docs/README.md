@@ -1,7 +1,7 @@
 # Modest
 
  Swift-like programming language, created for medium level system programming and embedded development.
- 
+
 * Modern syntax for clear and readable code
 * Strong type system protects your code from occasional bugs
 * Medium level language (like C) - makes it suitable for system and embedded development

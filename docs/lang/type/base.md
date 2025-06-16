@@ -106,10 +106,10 @@ Int8, Int16, Int32, Int64, Int128
 ```zig
 public func main () -> Unit {
 	var a, b: Int32
-	
+
 	a = -1
 	b = 1
-	
+
 	if a < b {
 		printf("a < b\n")
 	} else if a > b {
@@ -161,7 +161,7 @@ import "libc/math"
 
 public func main () -> Unit {
 	var pi: Float64
-	
+
 	pi = M_PI
 
 	printf("pi = %lf\n", pi)
@@ -289,7 +289,7 @@ record {x: Float64, y: Float64}
 *Usage example:*
 ```zig
 // it is good idea to use type definition statement
-// for bind identifier to record type  
+// for bind identifier to record type
 type Point = record {
 	x: Float64
 	y: Float64

@@ -1,9 +1,73 @@
 import "lib"
+import "fixed32"
 include "stdio"
 include "stdlib"
 include "string"
 
 import "lib" as lib
+import "fixed32" as fixed32
+
+
+
+func testFixed () -> Unit {
+	let fp0: Fixed32 = fixed32.create(1, 2, 4)
+	printf("fp0 = 0x%08x ", fp0)
+	fixed32.print(fp0)
+	printf("\n")
+
+	let fp1: Fixed32 = fixed32.create(1, 1, 2)
+	printf("fp1 = 0x%08x ", fp1)
+	fixed32.print(fp1)
+	printf("\n")
+
+	let fp2: Fixed32 = fixed32.create(1, 1, 3)
+	printf("fp2 = 0x%08x ", fp2)
+	fixed32.print(fp2)
+	printf("\n")
+
+	let fp3: Fixed32 = fixed32.create(1, 2, 128)
+	printf("fp3 = 0x%08x ", fp3)
+	fixed32.print(fp3)
+	printf("\n")
+
+	let fp4: Fixed32 = fixed32.add(fp0, fp1)
+	printf("fp4 = 0x%08x ", fp4)
+	fixed32.print(fp4)
+	printf("\n")
+
+	let fp5: Fixed32 = fixed32.mul(fp0, fp1)
+	printf("fp5 = 0x%08x ", fp5)
+	fixed32.print(fp5)
+	printf("\n")
+
+	let one: Fixed32 = fixed32.create(1, 0, 1)
+	let two: Fixed32 = fixed32.create(2, 0, 1)
+	let dv: Fixed32 = fixed32.div(one, two)
+	printf("dv = 0x%08x ", dv)
+	fixed32.print(dv)
+	printf("\n")
+
+	let pi: Fixed32 = fixed32.create(3, 1415, 10000)
+	printf("pi = 0x%08x ", pi)
+	fixed32.print(pi)
+	printf("\n")
+
+	let tr: Fixed32 = fixed32.trunc(pi)
+	printf("trunc(pi) = 0x%08x ", tr)
+	fixed32.print(tr)
+	printf("\n")
+
+	let fr: Fixed32 = fixed32.fract(pi)
+	printf("fract(pi) = 0x%08x ", fr)
+	fixed32.print(fr)
+	printf("\n")
+
+	// ok!
+	let dv2: Fixed32 = fixed32.div(pi, two)
+	printf("dv2 = 0x%08x ", dv2)
+	fixed32.print(dv2)
+	printf("\n")
+}
 
 
 type NewType = Int32
@@ -119,6 +183,8 @@ func divtest () -> Unit {
 
 public func main () -> Int32 {
 	//ab_test()
+
+	testFixed()
 
 	divtest()
 

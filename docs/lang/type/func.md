@@ -28,5 +28,4 @@ public func main () -> Int32 {
 	printf("sum32 (1, 2) = %d\n", x)
 	return 0
 }
-
 ```

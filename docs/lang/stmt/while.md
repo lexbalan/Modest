@@ -22,7 +22,6 @@ while <# condition #> {
 #### Examples
 
 ```swift
-// see: examples/stmt_while/src/main.m
 
 import "libc/stdio"
 
@@ -56,7 +55,7 @@ public func main() -> Int {
 
 ```swift
 
-let nMax = 10
+const nMax = 10
 
 public func main () -> Unit {
 	printf("count for: ")

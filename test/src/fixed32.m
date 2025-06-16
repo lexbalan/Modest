@@ -4,6 +4,7 @@ include "libc/stdio"
 
 public type Fixed32 = @distinct Word32
 
+
 const base = 65536
 
 
@@ -17,6 +18,7 @@ public func create (a: Int16, b: Nat16, c: Nat16) -> Fixed32 {
 func head (x: Fixed32) -> Int16 {
 	return unsafe Int16 (x >> 16)
 }
+
 
 func tail (x: Fixed32) -> Nat16 {
 	return unsafe Nat16 ((Word32 x) and (base-1))
@@ -68,6 +70,32 @@ public func div (a: Fixed32, b: Fixed32) -> Fixed32 {
 	let bx = Int64 b
 	let cx = ax * base / bx
 	return unsafe Fixed32 cx
+}
+
+
+public func trunc (x: Fixed32) -> Fixed32 {
+	return Fixed32 (Word32 x and 0xFFFF0000)
+}
+
+
+public func fract (x: Fixed32) -> Fixed32 {
+	return Fixed32 (Word32 x and 0x0000FFFF)
+}
+
+
+// Округляет вниз (в сторону -∞)
+public func floor (x: Fixed32) -> Fixed32 {
+	var y = head(x)
+	return create(y, 0, 1)
+}
+
+// Округляет вверх (в сторону +∞)
+public func ceil (x: Fixed32) -> Fixed32 {
+	var y = head(x)
+	if tail(x) > 0 {
+		++y
+	}
+	return create(y, 0, 1)
 }
 
 

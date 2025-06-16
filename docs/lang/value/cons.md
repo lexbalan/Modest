@@ -14,13 +14,13 @@
 ```swift
 // fast example
 // construct values from literal values with generic-type
-let i = Int32 1234
-let n = Nat16 0xFFFF
-let f = Float64 0.1234
-let c = Char32 "A"
-let r = Point {x=0, y=0}
-let a = [2]Point [{x=0, y=0}, {x=1, y=1}]
-let p = *Point nil
+const i = Int32 1234
+const n = Nat16 0xFFFF
+const f = Float64 0.1234
+const c = Char32 "A"
+const r = Point {x=0, y=0}
+const a = [2]Point [{x=0, y=0}, {x=1, y=1}]
+const p = *Point nil
 ```
 
 

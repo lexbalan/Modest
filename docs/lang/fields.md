@@ -21,8 +21,8 @@ record {
 }
 ```
 
-Fields in function type expression
+Fields in function type expression (parameters)
 ```swift
-func sum (a : Int64, b : Int64) -> Int64
+func sum (a : Int64, b : Int64) -> Int64 { ... }
 ```
 

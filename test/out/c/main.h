@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lib.h"
-#include "fixed.h"
+#include "fixed32.h"
 
 struct __attribute__((packed)) main_Point
 {

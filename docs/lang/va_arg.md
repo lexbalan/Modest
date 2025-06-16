@@ -27,5 +27,4 @@ public func main() -> Int {
 	print("print test; k = %d\n", k)
 	return 0
 }
-
 ```

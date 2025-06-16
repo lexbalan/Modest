@@ -22,7 +22,7 @@ if <# condition1 #> {
 } else if <# condition2 #> {
 	// do something if condition1 is false and condition2 is true
 
-...
+  ...
 
 } else {
 	// do something if all conditions above are false
@@ -37,7 +37,7 @@ if <# condition1 #> {
 import "libc/stdio"
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("if statement example\n")
 
 	var a: Int32
