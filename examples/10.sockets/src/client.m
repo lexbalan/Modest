@@ -14,7 +14,7 @@ const port = 8080
 const bufSize = 1024
 
 
-func send_file(fp: *File, sockfd: Int) -> Bool {
+func send_file (fp: *File, sockfd: Int) -> Bool {
 	var data: [bufSize]Char8
 
 	while fgets(&data, bufSize, fp) != nil {
@@ -28,7 +28,7 @@ func send_file(fp: *File, sockfd: Int) -> Bool {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	let sockfd = socket(c_AF_INET, c_SOCK_STREAM, 0)
 	if sockfd < 0 {
 		perror("[-] Error in socket")

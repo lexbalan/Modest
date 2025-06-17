@@ -5,7 +5,7 @@ include "libc/stdio"
 
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("bool check\nm")
 
 	var x: Nat8

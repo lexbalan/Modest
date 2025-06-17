@@ -50,7 +50,7 @@ const qsize = 10
 var qbuf: [qsize]Word8
 
 
-public func main() -> Int {
+public func main () -> Int {
 	bq.init(&bq0, &qbuf, qsize)
 
 	fill(3)

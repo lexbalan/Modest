@@ -9,7 +9,7 @@ include "libc/math"
 const mathPi = 3.141592653589793238462643383279502884
 
 
-func squareOfCircle(radius: Float64) -> Float64 {
+func squareOfCircle (radius: Float64) -> Float64 {
 	return pow(radius, 2) * mathPi
 }
 
@@ -20,7 +20,7 @@ type Point2D = record {
 }
 
 
-func slope(a: Point2D, b: Point2D) -> Float32 {
+func slope (a: Point2D, b: Point2D) -> Float32 {
 	let dx = abs(a.x - b.x)
 	let dy = abs(a.y - b.y)
 	printf("dx = %d\n", dx)
@@ -29,7 +29,7 @@ func slope(a: Point2D, b: Point2D) -> Float32 {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("float test\n")
 
 	printf("2 = %d\n", Int32 2)

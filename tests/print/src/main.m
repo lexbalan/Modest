@@ -5,7 +5,7 @@ include "libc/ctypes64"
 import "lightfood/console"
 
 
-public func main() -> Int {
+public func main () -> Int {
 	console.print("test console print\n")
 
 	let c = Char32 "🐀"

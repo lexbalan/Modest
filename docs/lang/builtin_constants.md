@@ -3,7 +3,7 @@
 ```zig
 import "libc/stdio"
 
-public func main() -> Int {
+public func main () -> Int {
 	// __compiler
 	printf("__compiler.name = %s\n", *Str8 __compiler.name)
 	let ver = __compiler.version

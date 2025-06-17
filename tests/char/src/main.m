@@ -9,7 +9,7 @@ const utf16Char = "Я"
 const utf32Char = "🐀"
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("test/char\n")
 
 	var ch08: Char8

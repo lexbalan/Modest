@@ -2,8 +2,10 @@
 include "libc/ctypes64"
 include "libc/stdio"
 include "libc/stat"
-let filename = "Makefile"
-public func main() -> Int {
+
+const filename = "Makefile"
+
+public func main () -> Int {
 	printf("stat(\"%s\"):\n", *Str8 filename)
 
 	var fileStat: Stat

@@ -25,7 +25,7 @@ var ptr_to_string16: *[]Char16 = str16_example
 var ptr_to_string32: *[]Char32 = str32_example
 
 
-public func main() -> Int {
+public func main () -> Int {
 	console.putchar_utf8("A")
 	printf("\n")
 	console.putchar_utf16("Ω")

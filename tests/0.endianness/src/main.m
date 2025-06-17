@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-public func main() -> Int {
+public func main () -> Int {
 	var check: Word16 = 0x0001
 	let is_le = *(unsafe *Word8 &check) == 1
 

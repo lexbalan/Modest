@@ -15,7 +15,7 @@ var mutex: pthread.PThreadMutexT = pthread.mutexInitializer
 var global_counter: Nat32
 
 
-func thread0(param: Ptr) -> Ptr {
+func thread0 (param: Ptr) -> Ptr {
 	printf("Hello from thread 0\n")
 
 	while global_counter < 32 {
@@ -32,7 +32,7 @@ func thread0(param: Ptr) -> Ptr {
 }
 
 
-func thread1(param: Ptr) -> Ptr {
+func thread1 (param: Ptr) -> Ptr {
 	printf("Hello from thread 1\n")
 
 	var global_counter_value: Nat32 = 0
@@ -55,7 +55,7 @@ func thread1(param: Ptr) -> Ptr {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("Hello threads!\n")
 
 	var rc: Int32

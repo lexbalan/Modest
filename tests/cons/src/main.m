@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("test cons operation\n")
 
 	/*let x0 = Int32 -1

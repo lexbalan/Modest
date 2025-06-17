@@ -7,17 +7,17 @@ include "libc/stdio"
 var big0: Word128 = 0x01234567_89ABCDEF_FEDCBA98_76543210
 
 
-func high_128(x: Word128) -> Word64 {
+func high_128 (x: Word128) -> Word64 {
 	return unsafe Word64 (x >> 64)
 }
 
 
-func low_128(x: Word128) -> Word64 {
+func low_128 (x: Word128) -> Word64 {
 	return unsafe Word64 (x and 0xFFFFFFFFFFFFFFFF)
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 
 	let big1 = 0xffffffffffffffffffffffffffffffff
 	let big2 = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff

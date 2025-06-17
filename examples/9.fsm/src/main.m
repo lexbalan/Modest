@@ -135,7 +135,7 @@ var fsm0: fsm.FSM = {
 
 
 
-public func main() -> Int {
+public func main () -> Int {
 
 	while true {
 		fsm.run(&fsm0)

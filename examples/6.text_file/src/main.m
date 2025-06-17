@@ -8,7 +8,7 @@ include "libc/libc"
 const filename = *Str8 "file.txt"
 
 
-func write_example() -> Unit {
+func write_example () -> Unit {
 	printf("run write_example\n")
 
 	let fp = fopen(filename, "w")
@@ -24,7 +24,7 @@ func write_example() -> Unit {
 }
 
 
-func read_example() -> Unit {
+func read_example () -> Unit {
 	printf("run read_example\n")
 
 	let fp = fopen(filename, "r")
@@ -47,7 +47,7 @@ func read_example() -> Unit {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("text_file example\n")
 	write_example()
 	read_example()

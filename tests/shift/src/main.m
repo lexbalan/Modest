@@ -7,7 +7,7 @@ include "libc/stdio"
 // left must be Word
 // right must be Nat
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("test shift\n")
 
 	var c: Word32

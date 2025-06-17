@@ -99,7 +99,7 @@ var a10: [10][10]Int32 = [
 ]
 
 
-func test_arrays() -> Unit {
+func test_arrays () -> Unit {
 	var i: Int32
 	var j: Int32
 	var k: Int32
@@ -181,9 +181,7 @@ func test_arrays() -> Unit {
 
 
 
-
-
-public func main() -> Int {
+public func main () -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	var em = f0("Hello World!")

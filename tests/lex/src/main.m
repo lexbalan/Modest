@@ -13,7 +13,7 @@ const tokenId = 1
 const tokenNum = 2
 const tokenSym = 3
 
-type Lexer record {
+type Lexer = record {
 	fd: *File
 	cc: [2]Char8
 	nback: Nat8
@@ -26,34 +26,33 @@ type Lexer record {
 var lex: Lexer
 
 
-func init(object: *Lexer) -> Unit {
+func init (object: *Lexer) -> Unit {
 	object.toklen = 0
 }
 
 
-
-func is_alpha(c: Char8) -> Bool {
+func is_alpha (c: Char8) -> Bool {
 	return isalpha(Int unsafe Word32 c)
 }
 
-func is_digit(c: Char8) -> Bool {
+func is_digit (c: Char8) -> Bool {
 	return isdigit(Int unsafe Word32 c)
 }
 
 @inline
-func getcc(lex: *Lexer) -> Char8 {
+func getcc (lex: *Lexer) -> Char8 {
 	let c = fgetc(lex.fd)
 	return Char8 unsafe Word8 Word32 c
 }
 
 @inline
-func putcc(lex: *Lexer, c: Char8) -> Unit {
+func putcc (lex: *Lexer, c: Char8) -> Unit {
 	ungetc(Int Word32 Word8 c, lex.fd)
 }
 
 const eof = Char8 Word8 0xff
 
-func gettok(lex: *Lexer) -> Bool {
+func gettok (lex: *Lexer) -> Bool {
 	lex.toklen = 0
 	var c = getcc(lex)
 
@@ -103,7 +102,7 @@ func gettok(lex: *Lexer) -> Bool {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("text_file example\n")
 
 	var lexer: Lexer

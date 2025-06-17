@@ -33,7 +33,7 @@ type <#identifier#>
 #### Examples
 
 ```zig
-// type declared, but not defined
+// type declared, but not defined!
 type MyRecord
 
 type MyRecord = record {

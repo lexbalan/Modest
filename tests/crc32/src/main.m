@@ -14,7 +14,7 @@ const expected_hash = 0xCBF43926
 var data = []Word8 datastring
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("CRC32 test\n")
 
 	let crc = crc32.run(&data, lengthof(data))

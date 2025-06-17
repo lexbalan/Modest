@@ -51,7 +51,7 @@ func count () -> Unit {
 	++counter
 }
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("before counter = %i\n", counter)
 
 	// call function count for ten times

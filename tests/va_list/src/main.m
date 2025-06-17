@@ -7,7 +7,7 @@ include "libc/unistd"
 //include "lightfood/print"
 //pragma c_include "./print.h"
 
-func my_printf(format: *Str8, ...) -> @unused SSizeT {
+func my_printf (format: *Str8, ...) -> @unused SSizeT {
 	var va: __VA_List
 	var va2: __VA_List
 
@@ -25,7 +25,7 @@ func my_printf(format: *Str8, ...) -> @unused SSizeT {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	var k: Nat32 = 10
 	my_printf("My Printf Test %u\n", k)
 

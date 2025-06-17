@@ -7,7 +7,7 @@ include "libc/unistd"
 include "libc/stdlib" // getenv
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("unistd test\n")
 
 	let pid = getpid()

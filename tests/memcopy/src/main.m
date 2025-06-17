@@ -13,7 +13,7 @@ type Object = record {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("memcopy test\n")
 
 	var o1: Object
