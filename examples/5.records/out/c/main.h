@@ -1,3 +1,5 @@
+// examples/5.records/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -8,6 +10,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+// Pythagorean theorem
 
 int main();
 

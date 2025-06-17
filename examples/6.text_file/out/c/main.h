@@ -1,3 +1,5 @@
+// examples/6.text_file/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -11,6 +13,9 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
+
+//include "libc/ctypes64"
+//include "libc/stdio"
 
 int main();
 

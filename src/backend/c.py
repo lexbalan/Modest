@@ -1691,8 +1691,6 @@ def assign_array(left, right, ti):
 	if isinstance(right, ValueCall):
 		out(str_value_call(right, [], sret=left))
 		return
-	
-	#info("??", ti)
 
 	rv = get_root_value(right)
 	if rv.isZero():
@@ -2162,30 +2160,33 @@ def print_header(module, outname):
 	outname = outname + '.h'
 	output_open(outname)
 
+	defs = module.defs
+
 	# Печатаем первые комментарии
-	if len(module.defs) > 0:
-		def0 = module.defs[0]
+	if len(defs) > 0:
+		def0 = defs[0]
 		if isinstance(def0, StmtComment):
 			nnl(def0.nl)
 			print_comment(def0)
 			newline()
-
+			defs = module.defs[1:]
 
 	guardsymbol = outname.split("/")[-1]
 	guardsymbol = guardsymbol[:-2].upper() + '_H'
+	newline()
 	out("#ifndef %s\n" % guardsymbol)
 	out("#define %s\n" % guardsymbol)
 	newline(); include("stddef.h", local=False)
 	newline(); include("stdint.h", local=False)
 	newline(); include("stdbool.h", local=False)
 
-
-	if module.defs != []:
+	if defs != []:
 		newline()
-		for x in module.defs:
+		for x in defs:
 			if isinstance(x, StmtDirective):
 				if isinstance(x, StmtDirectiveCInclude):
-					newline(); include(x.c_name, local=x.is_local)
+					newline();
+					include(x.c_name, local=x.is_local)
 
 	# print C `#include ""` directive for included modules
 	nl_after_incs = False
@@ -2198,7 +2199,7 @@ def print_header(module, outname):
 	if nl_after_incs:
 		newline()
 
-	for x in module.defs:
+	for x in defs:
 		if is_private(x):
 			continue
 
@@ -2235,9 +2236,9 @@ def print_header(module, outname):
 			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_const(x)
-		#elif isinstance(x, StmtComment):
-		#	nnl(x.nl)
-		#	print_comment(x)
+		elif isinstance(x, StmtComment):
+			nnl(x.nl)
+			print_comment(x)
 
 	newline()
 	newline()

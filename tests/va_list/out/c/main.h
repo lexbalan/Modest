@@ -1,3 +1,5 @@
+// tests/va/src/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -7,6 +9,9 @@
 
 #include <stdio.h>
 #include <unistd.h>
+
+//include "lightfood/print"
+//pragma c_include "./print.h"
 
 int main();
 

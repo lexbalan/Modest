@@ -1,8 +1,11 @@
 include "stdio"
-
+// examples/fsm/fsm.cm
 
 
 const verbose: Bool = true
+
+// Вынужден добавлять export тк иначе не идет в хедер к структуре
+// Короче, проблема зависимостей тяжело зависла в воздухе
 public const nameMaxLength = 8
 public const maxStates = 16
 

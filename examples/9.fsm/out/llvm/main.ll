@@ -256,8 +256,16 @@ declare void @fsm_run(%fsm_FSM* %fsm)
 @str3 = private constant [22 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 110, i8 116, i8 114, i8 121, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str4 = private constant [13 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
 @str5 = private constant [19 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 120, i8 105, i8 116, i8 32, i8 116, i8 111, i8 32, i8 37, i8 115, i8 10, i8 0]
-; -- endstrings --
+; -- endstrings --; examples/fsm/src/main.m
+
+; This is flashlight final state machine example
+; (just for compiler test and language demonstration)
 @cnt = internal global %Nat8 zeroinitializer
+
+
+;
+; State Off
+;
 define internal void @off_entry(%fsm_FSM* %x) {
 	;printf("off_entry\n")
 	ret void
@@ -288,6 +296,11 @@ define internal void @off_exit(%fsm_FSM* %x) {
 	ret void
 }
 
+
+
+;
+; State On
+;
 define internal void @on_entry(%fsm_FSM* %x) {
 	;printf("on_entry\n")
 	ret void
@@ -318,6 +331,11 @@ define internal void @on_exit(%fsm_FSM* %x) {
 	ret void
 }
 
+
+
+;
+; State Beacon
+;
 define internal void @beacon_entry(%fsm_FSM* %x) {
 	%1 = bitcast %fsm_FSM* %x to %fsm_FSM*
 	%2 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 1

@@ -1,3 +1,5 @@
+// tests/string_concat_eq/src/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -5,7 +7,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <stdio.h>
+#include <stdio.h>//+ " " + party_corn
 
 int main();
 

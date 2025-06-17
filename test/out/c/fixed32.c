@@ -9,6 +9,8 @@
 
 
 #define base  65536
+
+// x = a + b / c
 fixed32_Fixed32 fixed32_create(int16_t a, uint16_t b, uint16_t c)
 {
 	const uint32_t ntail = (uint32_t)b * base / (uint32_t)c;
@@ -88,11 +90,15 @@ fixed32_Fixed32 fixed32_fract(fixed32_Fixed32 x)
 {
 	return (x & 0x0000FFFF);
 }
+
+// Округляет вниз (в сторону -∞)
 fixed32_Fixed32 fixed32_floor(fixed32_Fixed32 x)
 {
 	int16_t y = head(x);
 	return fixed32_create(y, 0, 1);
 }
+
+// Округляет вверх (в сторону +∞)
 fixed32_Fixed32 fixed32_ceil(fixed32_Fixed32 x)
 {
 	int16_t y = head(x);

@@ -205,9 +205,17 @@ declare void @perror(%ConstCharStr* %str)
 @str10 = private constant [20 x i8] [i8 102, i8 97, i8 114, i8 114, i8 91, i8 49, i8 93, i8 40, i8 53, i8 44, i8 32, i8 55, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str11 = private constant [4 x i8] [i8 76, i8 79, i8 76, i8 0]
 @str12 = private constant [6 x i8] [i8 87, i8 111, i8 114, i8 108, i8 100, i8 0]
-; -- endstrings --
+; -- endstrings --; tests/composite
+;
+
+; Test for composite types
+
+; Pointers
 @p0 = internal global %Int32* zeroinitializer
 @p1 = internal global %Int32** zeroinitializer
+
+
+; Functions
 define internal void @f0() {
 	ret void
 	ret void
@@ -278,6 +286,9 @@ define internal void ()** @f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**
 	ret void ()** null
 }
 
+
+
+; Pointers to function
 @pf0 = internal global void ()* @f0
 @pf1 = internal global %Int32 (%Int32)* @f1
 @pf2 = internal global %Int32 (%Int32, %Int32)* @f2
@@ -292,6 +303,9 @@ define internal void ()** @f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**
 @pf11 = internal global void ()** ([10 x %Int32]* (%Int32, %Int32*)**)* @f11
 @pf12 = internal global void ()** ([10 x %Int32]* ([32 x %Int32]*, [64 x %Int32]**)**)* @f12
 @pf13 = internal global void ()** ([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**)**)* @f13
+
+
+; Arrays
 @a0 = internal global [5 x %Int32] [
 	%Int32 0,
 	%Int32 1,
@@ -340,6 +354,12 @@ define internal void ()** @f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**
 	[5 x %Int]* getelementptr ([2 x [5 x %Int]], [2 x [5 x %Int]]* @a4, %Int32 0, %Int32 0),
 	[5 x %Int]* getelementptr ([2 x [5 x %Int]], [2 x [5 x %Int]]* @a4, %Int32 0, %Int32 1)
 ]
+; Проблема в том что мой getelementptr не умеет в цепь-молнию
+; а здесь без нее никак... придется взяться за это и сделать наконец
+;var a6: [2][5]*Int = [
+;	[&a4[0][0], &a4[0][1], &a4[0][2], &a4[0][3], &a4[0][4]]
+;	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
+;]
 @a7 = internal global [2 x [5 x [5 x %Int]*]] [
 	[5 x [5 x %Int]*] [
 		[5 x %Int32]* @a0,
@@ -373,6 +393,9 @@ define internal void ()** @f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**
 	]
 ]
 @a9 = internal global [5 x [10 x [2 x %Int (%Int)*]*]*] zeroinitializer
+
+
+;
 @p2 = internal global [5 x %Int32]* @a0
 @p3 = internal global [5 x %Int32]** @p2
 %RGB24 = type {

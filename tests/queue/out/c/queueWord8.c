@@ -1,3 +1,5 @@
+// queueWord8
+// queue implementation example
 
 #include <stddef.h>
 #include <stdint.h>

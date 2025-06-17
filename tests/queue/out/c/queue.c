@@ -1,3 +1,4 @@
+//module queue
 
 #include <stddef.h>
 #include <stdint.h>
@@ -28,6 +29,8 @@ bool queue_isFull(queue_Queue *q) {
 	return q->size == q->capacity;
 }
 
+// you must check isFull(queue) before call 'getPutPosition'
+
 static uint32_t next(uint32_t capacity, uint32_t x);
 uint32_t queue_getPutPosition(queue_Queue *q) {
 	const uint32_t pos = q->p;
@@ -37,6 +40,8 @@ uint32_t queue_getPutPosition(queue_Queue *q) {
 	}
 	return pos;
 }
+
+// you must check isEmpty(queue) before call 'getGetPosition'
 uint32_t queue_getGetPosition(queue_Queue *q) {
 	const uint32_t pos = q->g;
 	q->g = next(q->capacity, q->g);

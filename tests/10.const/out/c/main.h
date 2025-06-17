@@ -1,3 +1,5 @@
+// tests/10.const/src/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -9,6 +11,8 @@
 #include <math.h>
 #include "./minmax.h"
 
+
+// Pythagorean theorem
 
 int main();
 

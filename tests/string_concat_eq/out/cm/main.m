@@ -1,12 +1,12 @@
 include "ctypes64"
 include "stdio"
-
+// tests/string_concat_eq/src/main.m
 
 const hello = "Hello"
 const world = "World"
 const party_corn = "🎉"
 
-const greeting = hello + " " + world
+const greeting = hello + " " + world//+ " " + party_corn
 
 
 const test = "test"

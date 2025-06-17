@@ -1,3 +1,5 @@
+// examples/8.linked_list/linked_list.cm
+
 #ifndef LIST_H
 #define LIST_H
 
@@ -44,6 +46,10 @@ list_Node *list_node_prev_get(list_Node *node);
 void *list_node_data_get(list_Node *node);
 
 void list_node_insert_right(list_Node *left, list_Node *new_right);
+
+// get list node by number
+// if number is out of range returns nil
+// if number < 0 - go backward
 list_Node *list_node_get(list_List *list, int32_t pos);
 
 list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node);

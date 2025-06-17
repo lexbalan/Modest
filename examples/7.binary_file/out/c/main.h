@@ -1,3 +1,5 @@
+// examples/7.binary_file/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -7,6 +9,10 @@
 
 #include <string.h>
 #include <stdio.h>
+
+// FIXIT: not worked LLVM result (!)
+
+// chunk of data for read/write operations in file
 
 int main();
 

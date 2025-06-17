@@ -1,3 +1,4 @@
+// tests/arrays/src/main.m
 
 #include <stddef.h>
 #include <stdint.h>
@@ -17,11 +18,17 @@
 }
 
 
+//@c_no_print
+//import "misc/minmax"
+//pragma c_include "./minmax.h"
+
 #define constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 static int32_t globalArray[10] = constantArray;
 
 static char arrayFromString[3] = "abc";
+
+//var arrayOfChars = [Char8 "a", 'b', 'c']
 
 static void f0(char *_x, char *sret_) {
 	char x[20];

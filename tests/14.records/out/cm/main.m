@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-
+// tests/14.records/src/main.m
 
 type Point2D = record {
 	x: Nat32
@@ -16,8 +16,6 @@ type Point3D = record {
 
 const xx = {x = 1, y = 2}
 const yy = Point2D {x = 1, y = 2}
-
-
 
 
 type Point = record {

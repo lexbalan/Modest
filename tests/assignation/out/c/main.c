@@ -1,3 +1,4 @@
+// tests/assignation/src/main.m
 
 #include <stddef.h>
 #include <stdint.h>
@@ -15,6 +16,8 @@
 	(*dst)[i] = (*src)[i]; \
 }
 
+
+// Simply record for records assignation test
 struct Point {
 	int32_t x;
 	int32_t y;

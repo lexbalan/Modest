@@ -2,7 +2,7 @@ include "ctypes64"
 include "math"
 include "stdlib"
 include "stdio"
-
+// examples/5.records/main.m
 
 
 type Point = record {
@@ -37,6 +37,9 @@ func min (a: Float, b: Float) -> Float {
 	}
 	return b
 }
+
+
+// Pythagorean theorem
 func distance (a: Point, b: Point) -> Float {
 	let dx: Float = max(a.x, b.x) - min(a.x, b.x)
 	let dy: Float = max(a.y, b.y) - min(a.y, b.y)

@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-
+// tests/12.structural_type_system/src/main.m
 
 
 type Type1 = record {
@@ -55,7 +55,6 @@ func f3_ptr (x: *record {
 var a: Type1 = {x = 1}
 var b: Type2 = {x = 2}
 var c: Type3 = {x = 3}
-
 
 
 func test_by_value () -> Unit {

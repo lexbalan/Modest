@@ -1,7 +1,7 @@
 include "ctypes64"
 include "stdlib"
 include "stdio"
-
+// examples/8.linked_list/linked_list.cm
 
 
 public type Node = record {
@@ -125,6 +125,11 @@ public func node_insert_right (left: *Node, new_right: *Node) -> Unit {
 	new_right.next = old_right
 	new_right.prev = left
 }
+
+
+// get list node by number
+// if number is out of range returns nil
+// if number < 0 - go backward
 public func node_get (list: *List, pos: Int32) -> *Node {
 	if list == nil or list.size == 0 {
 		return nil

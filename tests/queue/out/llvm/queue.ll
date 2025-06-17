@@ -114,7 +114,7 @@ break_2:
 ; -- 0
 ; -- end print imports 'queue' --
 ; -- strings --
-; -- endstrings --
+; -- endstrings --;module queue
 %queue_Queue = type {
 	%Nat32,
 	%Nat32,
@@ -157,6 +157,9 @@ define %Bool @queue_isFull(%queue_Queue* %q) {
 	ret %Bool %5
 }
 
+
+
+; you must check isFull(queue) before call 'getPutPosition'
 define %Nat32 @queue_getPutPosition(%queue_Queue* %q) {
 	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 2
 	%2 = load %Nat32, %Nat32* %1
@@ -185,6 +188,9 @@ endif_0:
 	ret %Nat32 %2
 }
 
+
+
+; you must check isEmpty(queue) before call 'getGetPosition'
 define %Nat32 @queue_getGetPosition(%queue_Queue* %q) {
 	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 3
 	%2 = load %Nat32, %Nat32* %1

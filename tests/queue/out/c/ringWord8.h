@@ -1,3 +1,6 @@
+// ringWord8
+// queue implementation example
+
 #ifndef RINGWORD8_H
 #define RINGWORD8_H
 

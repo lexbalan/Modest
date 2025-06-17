@@ -1,3 +1,4 @@
+// examples/6.text_file/main.m
 
 #include <stddef.h>
 #include <stdint.h>
@@ -12,6 +13,9 @@
 
 #include "main.h"
 
+
+//include "libc/ctypes64"
+//include "libc/stdio"
 
 #define filename  "file.txt"
 

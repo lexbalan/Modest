@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-
+// tests/xor/src/main.m
 
 
 func xor_encrypter (buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -> Unit {
@@ -18,6 +18,9 @@ func xor_encrypter (buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) 
 		i = i + 1
 	}
 }
+
+//xor_encrypt = xor_encrypter
+//xor_decrypt = xor_encrypter
 
 const msg_length = 12
 const key_length = 3

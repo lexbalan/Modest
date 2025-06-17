@@ -196,7 +196,10 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [12 x i8] [i8 102, i8 115, i8 109, i8 58, i8 58, i8 114, i8 117, i8 110, i8 40, i8 41, i8 10, i8 0]
 @str2 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str3 = private constant [9 x i8] [i8 101, i8 120, i8 105, i8 116, i8 32, i8 37, i8 115, i8 10, i8 0]
-; -- endstrings --
+; -- endstrings --; examples/fsm/fsm.cm
+
+; Вынужден добавлять export тк иначе не идет в хедер к структуре
+; Короче, проблема зависимостей тяжело зависла в воздухе
 %fsm_Handler = type void (%fsm_FSM*);
 %fsm_StateDesc = type {
 	[8 x %Char8],

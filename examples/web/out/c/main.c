@@ -1,3 +1,4 @@
+// Simple Web server example
 
 #include <stddef.h>
 #include <stdint.h>
@@ -25,6 +26,12 @@
 #define httpHeader  (char *)("HTTP/1.1 200 OK\r\n" "Content-Type: text/html\r\n" "Connection: close\r\n" "\r\n")
 
 static uint32_t pageCounter;
+
+//@extern
+//@c_no_print
+//func htons(x: Word16) -> Word16 {
+//	return (x << 8) or (x >> 8)
+//}
 
 static void handleRequest(int32_t client_socket) {
 	uint8_t buffer[receiveBufferSize];

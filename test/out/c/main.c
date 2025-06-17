@@ -102,6 +102,8 @@ static int32_t add(int32_t a, int32_t b)
 	return a + b;
 }
 
+//const yx = add(2, 2)
+
 static int32_t v0;
 
 void main_f0()
@@ -162,6 +164,16 @@ static volatile int *const (*xx)[];
 static volatile int yy[10];
 
 extern int32_t ma();
+
+//func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
+//	return {a=a, b=b}
+//}
+//
+//func ab_test () -> Unit {
+//	let x = ab_ret(9, 11)
+//	printf("x.a = %i\n", x.a)
+//	printf("x.a = %i\n", x.b)
+//}
 
 #define ca  4
 static int32_t va = ca;

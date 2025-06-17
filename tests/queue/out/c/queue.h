@@ -1,3 +1,5 @@
+//module queue
+
 #ifndef QUEUE_H
 #define QUEUE_H
 
@@ -23,7 +25,11 @@ uint32_t queue_size(queue_Queue *q);
 bool queue_isEmpty(queue_Queue *q);
 
 bool queue_isFull(queue_Queue *q);
+
+// you must check isFull(queue) before call 'getPutPosition'
 uint32_t queue_getPutPosition(queue_Queue *q);
+
+// you must check isEmpty(queue) before call 'getGetPosition'
 uint32_t queue_getGetPosition(queue_Queue *q);
 
 #endif /* QUEUE_H */

@@ -2,14 +2,20 @@ import "list"
 include "ctypes64"
 include "stdlib"
 include "stdio"
-
+// examples/8.linked_list/src/main.m
 import "list" as list
+
+
+// wrap around linked list for list.List Nat32
 func nat32_list_insert (lst: *List, x: Nat32) -> Unit {
 	// alloc memory for Nat32 value
 	let p_nat32 = *Nat32 malloc(sizeof(Nat32))
 	*p_nat32 = x
 	list.append(lst, p_nat32)
 }
+
+
+// show list conent from first item to last
 func list_print_forward (lst: *List) -> Unit {
 	printf("list_print_forward:\n")
 	var pn: *Node = list.first_node_get(lst)
@@ -19,6 +25,9 @@ func list_print_forward (lst: *List) -> Unit {
 		pn = list.node_next_get(pn)
 	}
 }
+
+
+// show list conent from last item to first
 func list_print_backward (lst: *List) -> Unit {
 	printf("list_print_backward:\n")
 	var pn: *Node = list.last_node_get(lst)

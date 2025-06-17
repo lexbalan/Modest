@@ -1,3 +1,5 @@
+// tests/composite
+//
 
 #include <stddef.h>
 #include <stdint.h>
@@ -13,8 +15,14 @@ struct __anonymous_struct_3 {
 	int32_t x;
 	int32_t y;
 };
+
+// Test for composite types
+
+// Pointers
 static int32_t *p0;
 static int32_t **p1;
+
+// Functions
 static void f0() {
 	return;
 }
@@ -72,6 +80,8 @@ static void(**f12(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))() {
 static void(**f13(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() {
 	return NULL;
 }
+
+// Pointers to function
 static void(*pf0)() = &f0;
 static int32_t(*pf1)(int32_t x) = &f1;
 static int32_t(*pf2)(int32_t a, int32_t b) = &f2;
@@ -86,12 +96,20 @@ static void(**(*pf10)(void(**f)()))() = &f10;
 static void(**(*pf11)(int32_t *(**f)(int32_t a, int32_t *b)))() = &f11;
 static void(**(*pf12)(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))() = &f12;
 static void(**(*pf13)(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() = &f13;
+
+// Arrays
 static int32_t a0[5] = {0, 1, 2, 3, 4};
 static int32_t *a1[5] = (int32_t *[5]){&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]};
 static int32_t **a2[5] = (int32_t **[5]){&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]};
 static void(*a3[5])() = {&f0};
 static int a4[2][5] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 static int *a5[2] = (int *[2]){&a4[0], &a4[1]};
+// Проблема в том что мой getelementptr не умеет в цепь-молнию
+// а здесь без нее никак... придется взяться за это и сделать наконец
+//var a6: [2][5]*Int = [
+//	[&a4[0][0], &a4[0][1], &a4[0][2], &a4[0][3], &a4[0][4]]
+//	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
+//]
 static int *a7[2][5] = {
 	&a0, &a0, &a0, &a0, &a0,
 	&a0, &a0, &a0, &a0, &a0
@@ -101,6 +119,8 @@ static int *(*a8[2][5])[2][5] = {
 	(void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7
 };
 static int(*(*(*a9[5])[10])[2])(int a);
+
+//
 static int32_t *p2 = &a0;
 static int32_t(**p3)[5] = &p2;
 

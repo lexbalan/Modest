@@ -1,5 +1,6 @@
 import "queue"
-
+// ringWord8
+// queue implementation example
 import "queue" as queue
 
 

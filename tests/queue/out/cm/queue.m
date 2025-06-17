@@ -1,4 +1,4 @@
-
+//module queue
 
 public type Queue = record {
 	capacity: Nat32  // Number of items queue can hold up
@@ -32,6 +32,9 @@ public func isEmpty (q: *Queue) -> Bool {
 public func isFull (q: *Queue) -> Bool {
 	return q.size == q.capacity
 }
+
+
+// you must check isFull(queue) before call 'getPutPosition'
 public func getPutPosition (q: *Queue) -> Nat32 {
 	let pos: Nat32 = q.p
 	q.p = next(q.capacity, q.p)
@@ -40,6 +43,9 @@ public func getPutPosition (q: *Queue) -> Nat32 {
 	}
 	return pos
 }
+
+
+// you must check isEmpty(queue) before call 'getGetPosition'
 public func getGetPosition (q: *Queue) -> Nat32 {
 	let pos: Nat32 = q.g
 	q.g = next(q.capacity, q.g)

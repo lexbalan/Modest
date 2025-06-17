@@ -1,3 +1,5 @@
+// tests/queue/src/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -9,6 +11,8 @@
 #include <stdio.h>
 #include "queueWord8.h"
 #include "ringWord8.h"
+
+// выгребаем и распечатываем n значений
 
 int main();
 

@@ -1,3 +1,4 @@
+// lightfood/console.m
 
 #include <stddef.h>
 #include <stdint.h>
@@ -14,6 +15,8 @@
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
+
+//pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
 
 
 void console_putchar_utf8(char c);
@@ -57,6 +60,17 @@ void console_putchar_utf32(uint32_t c) {
 		i = i + 1;
 	}
 }
+
+//
+// puts
+//
+
+/*
+// проблема тк puts уже определен в include ^^
+public func puts(s: *Str8) -> Unit {
+	puts8(s)
+}
+*/
 
 void console_puts8(char *s) {
 	uint32_t i = 0;

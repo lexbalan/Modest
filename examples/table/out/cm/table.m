@@ -13,6 +13,11 @@ public type Table = record {
 	public nCols: Nat32
 	public separate: Bool
 }
+
+
+// we cannot receive VLA by value,
+// but we can receive pointer to open array
+// and after construct pointer to closed array with required dimensions
 public func print (table: *Table) -> Unit {
 	var i: Nat32
 	var j: Nat32
@@ -109,6 +114,11 @@ func printRow (raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 	}
 	printf("|\n")
 }
+
+
+// печатает строку +---+---+ отделяющую записи таблицы
+// получает указатель на массив с размерами колонок
+// и количество элементов в ней
 func separator (sz: *[]Nat32, n: Nat32) -> Unit {
 	var i = Nat32 0
 	while i < n {

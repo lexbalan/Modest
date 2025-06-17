@@ -300,7 +300,9 @@ declare %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; end from import "utf"
 ; -- end print imports 'console' --
 ; -- strings --
-; -- endstrings --
+; -- endstrings --; lightfood/console.m
+
+;pragma do_not_include; for Int; for write(); for putchar(); for strlen, strcpy
 define void @console_putchar8(%Char8 %c) {
 	call void @console_putchar_utf8(%Char8 %c)
 	ret void
@@ -362,6 +364,19 @@ break_1:
 	ret void
 }
 
+
+
+;
+; puts
+;
+
+
+;
+;// проблема тк puts уже определен в include ^^
+;public func puts(s: *Str8) -> Unit {
+;	puts8(s)
+;}
+;
 define void @console_puts8(%Str8* %s) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1

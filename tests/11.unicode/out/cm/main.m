@@ -1,7 +1,9 @@
 import "lightfood/console"
 include "ctypes64"
 include "stdio"
+// tests/11.unicode/src/main.m
 
+// include test (!)
 import "lightfood/console" as console
 
 

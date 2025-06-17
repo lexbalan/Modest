@@ -3,7 +3,7 @@ import "./ringWord8"
 include "ctypes64"
 include "math"
 include "stdio"
-
+// tests/queue/src/main.m
 import "./queueWord8" as bq
 import "./ringWord8" as br
 
@@ -27,6 +27,9 @@ func fill (n: Nat32) -> Unit {
 		ii = ii + 1
 	}
 }
+
+
+// выгребаем и распечатываем n значений
 func fetch (n: Nat32) -> Unit {
 	var i: Nat32 = 0
 	while i < n {

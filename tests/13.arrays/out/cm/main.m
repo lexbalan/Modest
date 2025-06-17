@@ -1,7 +1,11 @@
 include "ctypes64"
 include "stdio"
 include "math"
+// tests/arrays/src/main.m
 
+//@c_no_print
+//import "misc/minmax"
+//pragma c_include "./minmax.h"
 
 
 const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
@@ -9,6 +13,9 @@ const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
 var globalArray: [10]Int32 = constantArray
 
 var arrayFromString: [3]Char8 = "abc"
+
+
+//var arrayOfChars = [Char8 "a", 'b', 'c']
 
 
 func f0 (x: [20]Char8) -> [30]Char8 {
@@ -170,8 +177,6 @@ func test_arrays () -> Unit {
 		i = i + 1
 	}
 }
-
-
 
 
 

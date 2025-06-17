@@ -2,7 +2,7 @@ import "misc/minmax"
 include "ctypes64"
 include "stdio"
 include "math"
-
+// tests/10.const/src/main.m
 import "misc/minmax" as minmax
 
 
@@ -52,6 +52,9 @@ type WrappedArray = record {
 }
 
 const wa = WrappedArray {}
+
+
+// Pythagorean theorem
 func distance (a: Point, b: Point) -> Float {
 	let dx: Float64 = minmax.max_float64(a.x, b.x) - minmax.min_float64(a.x, b.x)
 	let dy: Float64 = minmax.max_float64(a.y, b.y) - minmax.min_float64(a.y, b.y)

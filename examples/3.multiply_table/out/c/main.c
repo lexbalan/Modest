@@ -1,3 +1,4 @@
+// examples/3.multiply_table/src/main.m
 
 #include <stddef.h>
 #include <stdint.h>

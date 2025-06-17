@@ -1,3 +1,5 @@
+// tests/2.func/src/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -6,6 +8,8 @@
 #include <stdbool.h>
 
 #include <stdio.h>
+
+// define function main
 int main();
 
 #endif /* MAIN_H */

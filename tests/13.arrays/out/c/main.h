@@ -1,3 +1,5 @@
+// tests/arrays/src/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -7,6 +9,12 @@
 
 #include <stdio.h>
 #include <math.h>
+
+//@c_no_print
+//import "misc/minmax"
+//pragma c_include "./minmax.h"
+
+//var arrayOfChars = [Char8 "a", 'b', 'c']
 
 int main();
 

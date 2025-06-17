@@ -1,3 +1,4 @@
+// examples/5.records/main.m
 
 #include <stddef.h>
 #include <stdint.h>
@@ -40,6 +41,8 @@ static inline float min(float a, float b) {
 	}
 	return b;
 }
+
+// Pythagorean theorem
 static float distance(Point a, Point b) {
 	const float dx = max(a.x, b.x) - min(a.x, b.x);
 	const float dy = max(a.y, b.y) - min(a.y, b.y);

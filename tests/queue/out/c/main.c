@@ -1,3 +1,4 @@
+// tests/queue/src/main.m
 
 #include <stddef.h>
 #include <stdint.h>
@@ -27,6 +28,8 @@ static void fill(uint32_t n) {
 		ii = ii + 1;
 	}
 }
+
+// выгребаем и распечатываем n значений
 static void fetch(uint32_t n) {
 	uint32_t i = 0;
 	while (i < n) {

@@ -1,3 +1,4 @@
+// examples/4.many_sources/lib.cm
 
 #include <stddef.h>
 #include <stdint.h>

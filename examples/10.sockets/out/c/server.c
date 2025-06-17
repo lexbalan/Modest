@@ -1,3 +1,4 @@
+/* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
 
 #include <stddef.h>
 #include <stdint.h>

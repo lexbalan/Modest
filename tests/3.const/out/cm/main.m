@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-
+// tests/3.const/src/main.m
 
 const genericIntConst = 42
 const int32Const = Int32 genericIntConst
@@ -24,7 +24,16 @@ const ps = [
 ]
 
 const points = [3]Point ps
+
+
+// есть проблема - в C глобальные переменные с модификатором const
+// не могут быть так инициализированы, поскольку points является приведением
+// непонятно существует ли хорошее решение
+//@set("c_prefix", "const")
 var points2: [3]Point = points
+
+
+// define function main
 public func main () -> Int {
 	printf("test const\n")
 

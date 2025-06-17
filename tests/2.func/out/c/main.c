@@ -1,3 +1,4 @@
+// tests/2.func/src/main.m
 
 #include <stddef.h>
 #include <stdint.h>
@@ -19,6 +20,8 @@ static void print_ab(int32_t a, int32_t b) {
 static int32_t sum(int32_t a, int32_t b) {
 	return a + b;
 }
+
+// define function main
 
 static void func0();
 int main() {

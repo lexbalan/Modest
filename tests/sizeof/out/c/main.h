@@ -1,3 +1,5 @@
+// tests/sizeof/src/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -6,6 +8,8 @@
 #include <stdbool.h>
 
 #include <stdio.h>
+
+//var s: Mixed2
 
 int main();
 

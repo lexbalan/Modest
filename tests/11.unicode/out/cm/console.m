@@ -3,7 +3,9 @@ include "ctypes64"
 include "unistd"
 include "stdio"
 include "string"
+// lightfood/console.m
 
+//pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
 import "misc/utf" as utf
 
 
@@ -49,6 +51,19 @@ public func putchar_utf32 (c: Char32) -> Unit {
 		i = i + 1
 	}
 }
+
+
+//
+// puts
+//
+
+
+/*
+// проблема тк puts уже определен в include ^^
+public func puts(s: *Str8) -> Unit {
+	puts8(s)
+}
+*/
 
 public func puts8 (s: *Str8) -> Unit {
 	var i: Nat32 = 0

@@ -1,3 +1,5 @@
+// examples/fsm/src/main.m
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -8,7 +10,22 @@
 #include "./delay.h"
 #include <stdio.h>
 
+// This is flashlight final state machine example
+// (just for compiler test and language demonstration)
+
 #include "fsm.h"
+
+//
+// State Off
+//
+
+//
+// State On
+//
+
+//
+// State Beacon
+//
 
 int main();
 

@@ -1,3 +1,4 @@
+// tests/shift/src/main.m
 
 #include <stddef.h>
 #include <stdint.h>
@@ -7,6 +8,9 @@
 
 #include "main.h"
 
+
+// left must be Word
+// right must be Nat
 
 int main() {
 	printf("test shift\n");
