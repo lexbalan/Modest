@@ -114,7 +114,9 @@ break_2:
 ; -- 0
 ; -- end print imports 'lib' --
 ; -- strings --
-; -- endstrings --
+; -- endstrings --;
+; * lib.m
+; 
 %lib_PublicType = type %Int32;
 %PrivateType = type %Int32;
 

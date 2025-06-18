@@ -25,6 +25,16 @@ func tail (x: Fixed32) -> Nat16 {
 }
 
 
+public func fromInt16 (x: Int16) -> Fixed32 {
+	return create(x, 0, 1)
+}
+
+
+public func toInt16 (x: Fixed32) -> Int16 {
+	return head(x)
+}
+
+
 public func print (x: Fixed32) -> Unit {
 	let a = head(x)
 	var b: Nat32 = Nat32 tail(x)
@@ -43,7 +53,7 @@ public func print (x: Fixed32) -> Unit {
 		}
 	}
 
-	printf("%d+%d/%d\n", a, b, c)
+	printf("%d+%d/%d\n", Int32 a, b, c)
 }
 
 

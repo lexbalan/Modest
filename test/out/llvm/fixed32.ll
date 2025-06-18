@@ -196,6 +196,9 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [10 x i8] [i8 37, i8 100, i8 43, i8 37, i8 100, i8 47, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 %fixed32_Fixed32 = type %Word32;
+
+
+; x = a + b / c
 define %fixed32_Fixed32 @fixed32_create(%Int16 %a, %Nat16 %b, %Nat16 %c) {
 	%1 = zext %Nat16 %b to %Nat32
 	%2 = mul %Nat32 %1, 65536
@@ -223,6 +226,16 @@ define internal %Nat16 @tail(%fixed32_Fixed32 %x) {
 	%3 = and %Word32 %1, %2
 	%4 = trunc %Word32 %3 to %Nat16
 	ret %Nat16 %4
+}
+
+define %fixed32_Fixed32 @fixed32_fromInt16(%Int16 %x) {
+	%1 = call %fixed32_Fixed32 @fixed32_create(%Int16 %x, %Nat16 0, %Nat16 1)
+	ret %fixed32_Fixed32 %1
+}
+
+define %Int16 @fixed32_toInt16(%fixed32_Fixed32 %x) {
+	%1 = call %Int16 @head(%fixed32_Fixed32 %x)
+	ret %Int16 %1
 }
 
 define void @fixed32_print(%fixed32_Fixed32 %x) {
@@ -283,9 +296,10 @@ endif_1:
 endif_0:
 	br label %again_1
 break_1:
-	%29 = load %Nat32, %Nat32* %2
-	%30 = load %Nat32, %Nat32* %5
-	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %Int16 %1, %Nat32 %29, %Nat32 %30)
+	%29 = sext %Int16 %1 to %Int32
+	%30 = load %Nat32, %Nat32* %2
+	%31 = load %Nat32, %Nat32* %5
+	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %Int32 %29, %Nat32 %30, %Nat32 %31)
 	ret void
 }
 
@@ -337,6 +351,9 @@ define %fixed32_Fixed32 @fixed32_fract(%fixed32_Fixed32 %x) {
 	ret %fixed32_Fixed32 %3
 }
 
+
+
+; Округляет вниз (в сторону -∞)
 define %fixed32_Fixed32 @fixed32_floor(%fixed32_Fixed32 %x) {
 	%1 = alloca %Int16, align 2
 	%2 = call %Int16 @head(%fixed32_Fixed32 %x)
@@ -346,6 +363,8 @@ define %fixed32_Fixed32 @fixed32_floor(%fixed32_Fixed32 %x) {
 	ret %fixed32_Fixed32 %4
 }
 
+
+; Округляет вверх (в сторону +∞)
 define %fixed32_Fixed32 @fixed32_ceil(%fixed32_Fixed32 %x) {
 	%1 = alloca %Int16, align 2
 	%2 = call %Int16 @head(%fixed32_Fixed32 %x)

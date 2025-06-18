@@ -61,7 +61,33 @@ func testFixed () -> Unit {
 	printf("\n")
 
 	// ok!
-	let dv2 = fixed32.div(pi, two)
+//	let dv2 = fixed32.div(pi, two)
+//	printf("dv2 = 0x%08x ", dv2)
+//	fixed32.print(dv2)
+//	printf("\n")
+
+	let zero = fixed32.fromInt16(0)
+
+	// -1+0/1 = ok
+	let mone = fixed32.sub(zero, one)
+	printf("mone = 0x%08x ", mone)
+	fixed32.print(mone)
+	printf("\n")
+
+	var t2 = two
+
+	let oone = fixed32.add(t2, mone)
+	printf("oone = 0x%08x ", oone)
+	fixed32.print(oone)
+	printf("\n")
+
+	let semi = fixed32.sub(zero, fixed32.fromInt16(180))
+	printf("semi = 0x%08x ", semi)
+	fixed32.print(semi)
+	printf("\n")
+
+	//let xx = fixed32.fromInt16(380)
+	let dv2 = fixed32.div(semi, two)
 	printf("dv2 = 0x%08x ", dv2)
 	fixed32.print(dv2)
 	printf("\n")

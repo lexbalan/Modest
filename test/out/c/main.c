@@ -75,7 +75,33 @@ static void testFixed()
 	printf("\n");
 
 	// ok!
-	const fixed32_Fixed32 dv2 = fixed32_div(pi, two);
+	//	let dv2 = fixed32.div(pi, two)
+	//	printf("dv2 = 0x%08x ", dv2)
+	//	fixed32.print(dv2)
+	//	printf("\n")
+
+	const fixed32_Fixed32 zero = fixed32_fromInt16(0);
+
+	// -1+0/1 = ok
+	const fixed32_Fixed32 mone = fixed32_sub(zero, one);
+	printf("mone = 0x%08x ", mone);
+	fixed32_print(mone);
+	printf("\n");
+
+	fixed32_Fixed32 t2 = two;
+
+	const fixed32_Fixed32 oone = fixed32_add(t2, mone);
+	printf("oone = 0x%08x ", oone);
+	fixed32_print(oone);
+	printf("\n");
+
+	const fixed32_Fixed32 semi = fixed32_sub(zero, fixed32_fromInt16(180));
+	printf("semi = 0x%08x ", semi);
+	fixed32_print(semi);
+	printf("\n");
+
+	//let xx = fixed32.fromInt16(380)
+	const fixed32_Fixed32 dv2 = fixed32_div(semi, two);
 	printf("dv2 = 0x%08x ", dv2);
 	fixed32_print(dv2);
 	printf("\n");

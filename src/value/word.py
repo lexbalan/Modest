@@ -47,8 +47,9 @@ def word_can(to, from_type, method, ti):
 	c3 = from_type.is_char()
 	c4 = from_type.is_bool()
 	c5 = from_type.is_pointer()
+	c6 = from_type.is_float()
 
-	if c0 or c1 or c2 or c3 or c4 or c5:
+	if c0 or c1 or c2 or c3 or c4 or c5 or c6:
 		if method == 'unsafe':
 			return True
 		return from_type.width <= to.width

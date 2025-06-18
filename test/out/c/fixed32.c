@@ -27,6 +27,16 @@ static uint16_t tail(fixed32_Fixed32 x)
 	return (uint16_t)((x) & (base - 1));
 }
 
+fixed32_Fixed32 fixed32_fromInt16(int16_t x)
+{
+	return fixed32_create(x, 0, 1);
+}
+
+int16_t fixed32_toInt16(fixed32_Fixed32 x)
+{
+	return head(x);
+}
+
 void fixed32_print(fixed32_Fixed32 x)
 {
 	const int16_t a = head(x);
@@ -52,7 +62,7 @@ void fixed32_print(fixed32_Fixed32 x)
 		}
 	}
 
-	printf("%d+%d/%d\n", a, b, c);
+	printf("%d+%d/%d\n", (int32_t)a, b, c);
 }
 
 fixed32_Fixed32 fixed32_add(fixed32_Fixed32 a, fixed32_Fixed32 b)
