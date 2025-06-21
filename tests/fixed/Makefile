@@ -13,11 +13,15 @@ all: LLVM
 
 CM:
 	mcc -funsafe -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.m
+	mcc -funsafe -o $(CMPREFIX)/fixed32 -mbackend=cm $(INDIR)/fixed32.m
+	mcc -funsafe -o $(CMPREFIX)/fixed64 -mbackend=cm $(INDIR)/fixed64.m
 
 
 LLVM:
 	mcc -funsafe -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
-	clang $(LLVMPREFIX)/main.ll
+	mcc -funsafe -o $(LLVMPREFIX)/fixed32 -mbackend=llvm $(INDIR)/fixed32.m
+	mcc -funsafe -o $(LLVMPREFIX)/fixed64 -mbackend=llvm $(INDIR)/fixed64.m
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/fixed32.ll $(LLVMPREFIX)/fixed64.ll
 
 
 C:

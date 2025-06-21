@@ -28,7 +28,7 @@ fixed32_Fixed32 fixed32_mul(fixed32_Fixed32 a, fixed32_Fixed32 b) {
 fixed32_Fixed32 fixed32_div(fixed32_Fixed32 a, fixed32_Fixed32 b) {
 	const int64_t a64 = (int64_t)a;
 	const int64_t b64 = (int64_t)b;
-	const int64_t v64 = (a64 * (int64_t)multiplier) / b64;
+	const int64_t v64 = a64 * (int64_t)multiplier / b64;
 	return (fixed32_Fixed32)v64;
 }
 

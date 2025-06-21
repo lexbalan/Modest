@@ -1,8 +1,8 @@
+include "stdio"
 
-include "libc/stdio"
 
 
-public type Fixed64 = @distinct Int64
+public type Fixed64 = Int64
 
 
 // FIXIT! (Word64 Int64 1)
@@ -18,17 +18,17 @@ public func sub (a: Fixed64, b: Fixed64) -> Fixed64 {
 }
 
 public func mul (a: Fixed64, b: Fixed64) -> Fixed64 {
-	let a128 = unsafe Int128 a
-	let b128 = unsafe Int128 b
-	let v128 = a128 * b128 / Int128 multiplier
-	return unsafe Fixed64 v128
+	let a128: Int128 = Int128 a
+	let b128: Int128 = Int128 b
+	let v128: Int128 = a128 * b128 / Int128 multiplier
+	return Fixed64 v128
 }
 
 public func div (a: Fixed64, b: Fixed64) -> Fixed64 {
-	let wa = unsafe Int128 a
-	let wb = unsafe Int128 b
-	let v64 = wa * Int128 multiplier / wb
-	return unsafe Fixed64 v64
+	let wa: Int128 = Int128 a
+	let wb: Int128 = Int128 b
+	let v64: Int128 = wa * Int128 multiplier / wb
+	return Fixed64 v64
 }
 
 public func fromInt32 (x: Int32) -> Fixed64 {
@@ -36,7 +36,7 @@ public func fromInt32 (x: Int32) -> Fixed64 {
 }
 
 public func toInt32 (x: Fixed64) -> Int32 {
-	return unsafe Int32 (x / Fixed64 multiplier)
+	return Int32 (x / Fixed64 multiplier)
 }
 
 public func head (x: Fixed64) -> Fixed64 {
@@ -49,15 +49,15 @@ public func tail (x: Fixed64) -> Fixed64 {
 
 
 public func create (a: Int32, b: Int32, c: Int32) -> Fixed64 {
-	let tail = div(fromInt32(b), fromInt32(c))
-	let head = fromInt32(a)
+	let tail: Fixed64 = div(fromInt32(b), fromInt32(c))
+	let head: Fixed64 = fromInt32(a)
 	return add(head, tail)
 }
 
 public func print (x: Fixed64) -> Unit {
-	let a = Int64 x / multiplier
-	var b = Int64 x % multiplier
-	var c = multiplier
+	let a: Int64 = Int64 x / multiplier
+	var b: Int64 = Int64 x % multiplier
+	var c: Int64 = multiplier
 
 	// сокращаем дробную часть
 	while true {
@@ -74,9 +74,8 @@ public func print (x: Fixed64) -> Unit {
 
 	printf("%lld+%lld/%lld", a, b, c)
 
-	let d = toInt32(x)
-	let e =  Int64 tail(x) * 1000000 / multiplier
+	let d: Int32 = toInt32(x)
+	let e: Int64 = Int64 tail(x) * 1000000 / multiplier
 	printf(" = %d.%lld\n", d, e)
 }
-
 

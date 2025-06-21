@@ -106,7 +106,7 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: main
+; MODULE: fixed64
 
 ; -- print includes --
 ; from included ctypes64
@@ -189,59 +189,147 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 1
-
-; from import "fixed"
-%fixed64_Fixed64 = type %Int64;
-declare %fixed64_Fixed64 @fixed64_add(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b)
-declare %fixed64_Fixed64 @fixed64_sub(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b)
-declare %fixed64_Fixed64 @fixed64_mul(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b)
-declare %fixed64_Fixed64 @fixed64_div(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b)
-declare %fixed64_Fixed64 @fixed64_fromInt32(%Int32 %x)
-declare %Int32 @fixed64_toInt32(%fixed64_Fixed64 %x)
-declare %fixed64_Fixed64 @fixed64_head(%fixed64_Fixed64 %x)
-declare %fixed64_Fixed64 @fixed64_tail(%fixed64_Fixed64 %x)
-declare %fixed64_Fixed64 @fixed64_create(%Int32 %a, %Int32 %b, %Int32 %c)
-declare void @fixed64_print(%fixed64_Fixed64 %x)
-
-; end from import "fixed"
-; -- end print imports 'main' --
+; -- print imports 'fixed64' --
+; -- 0
+; -- end print imports 'fixed64' --
 ; -- strings --
-@str1 = private constant [12 x i8] [i8 112, i8 105, i8 32, i8 40, i8 37, i8 108, i8 108, i8 120, i8 41, i8 58, i8 10, i8 0]
-@str2 = private constant [6 x i8] [i8 100, i8 105, i8 118, i8 58, i8 10, i8 0]
-@str3 = private constant [6 x i8] [i8 109, i8 117, i8 108, i8 58, i8 10, i8 0]
-@str4 = private constant [6 x i8] [i8 97, i8 100, i8 100, i8 58, i8 10, i8 0]
-@str5 = private constant [6 x i8] [i8 115, i8 117, i8 98, i8 58, i8 10, i8 0]
-@str6 = private constant [8 x i8] [i8 105, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-; -- endstrings --; tests/fixed/src/main.m
-define %Int @main() {
-	;printf("%s-endian\n", kind)
-	%1 = call %fixed64_Fixed64 @fixed64_fromInt32(%Int32 -10)
-	%2 = call %fixed64_Fixed64 @fixed64_fromInt32(%Int32 3)
-	%3 = call %fixed64_Fixed64 @fixed64_create(%Int32 3, %Int32 141592, %Int32 1000000)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), %fixed64_Fixed64 %3)
-	call void @fixed64_print(%fixed64_Fixed64 %3)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str2 to [0 x i8]*))
-	%6 = call %fixed64_Fixed64 @fixed64_div(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
-	call void @fixed64_print(%fixed64_Fixed64 %6)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str3 to [0 x i8]*))
-	%8 = call %fixed64_Fixed64 @fixed64_mul(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
-	call void @fixed64_print(%fixed64_Fixed64 %8)
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str4 to [0 x i8]*))
-	%10 = call %fixed64_Fixed64 @fixed64_add(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
-	call void @fixed64_print(%fixed64_Fixed64 %10)
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str5 to [0 x i8]*))
-	%12 = call %fixed64_Fixed64 @fixed64_sub(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
-	call void @fixed64_print(%fixed64_Fixed64 %12)
-	%13 = alloca %Int32, align 4
-	%14 = call %Int32 @fixed64_toInt32(%fixed64_Fixed64 %6)
-	store %Int32 %14, %Int32* %13
-	%15 = load %Int32, %Int32* %13
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Int32 %15)
-	%17 = call %fixed64_Fixed64 @fixed64_create(%Int32 1, %Int32 3, %Int32 2)
-	call void @fixed64_print(%fixed64_Fixed64 %17)
-	ret %Int 0
+@str1 = private constant [15 x i8] [i8 37, i8 108, i8 108, i8 100, i8 43, i8 37, i8 108, i8 108, i8 100, i8 47, i8 37, i8 108, i8 108, i8 100, i8 0]
+@str2 = private constant [12 x i8] [i8 32, i8 61, i8 32, i8 37, i8 100, i8 46, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
+; -- endstrings --
+%fixed64_Fixed64 = type %Int64;
+
+
+; FIXIT! (Word64 Int64 1)
+define %fixed64_Fixed64 @fixed64_add(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b) {
+	%1 = add %fixed64_Fixed64 %a, %b
+	ret %fixed64_Fixed64 %1
+}
+
+define %fixed64_Fixed64 @fixed64_sub(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b) {
+	%1 = sub %fixed64_Fixed64 %a, %b
+	ret %fixed64_Fixed64 %1
+}
+
+define %fixed64_Fixed64 @fixed64_mul(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b) {
+	%1 = sext %fixed64_Fixed64 %a to %Int128
+	%2 = sext %fixed64_Fixed64 %b to %Int128
+	%3 = mul %Int128 %1, %2
+	%4 = sdiv %Int128 %3, 4294967296
+	%5 = trunc %Int128 %4 to %fixed64_Fixed64
+	ret %fixed64_Fixed64 %5
+}
+
+define %fixed64_Fixed64 @fixed64_div(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b) {
+	%1 = sext %fixed64_Fixed64 %a to %Int128
+	%2 = sext %fixed64_Fixed64 %b to %Int128
+	%3 = mul %Int128 %1, 4294967296
+	%4 = sdiv %Int128 %3, %2
+	%5 = trunc %Int128 %4 to %fixed64_Fixed64
+	ret %fixed64_Fixed64 %5
+}
+
+define %fixed64_Fixed64 @fixed64_fromInt32(%Int32 %x) {
+	%1 = sext %Int32 %x to %fixed64_Fixed64
+	%2 = mul %fixed64_Fixed64 %1, 4294967296
+	ret %fixed64_Fixed64 %2
+}
+
+define %Int32 @fixed64_toInt32(%fixed64_Fixed64 %x) {
+	%1 = sdiv %fixed64_Fixed64 %x, 4294967296
+	%2 = trunc %fixed64_Fixed64 %1 to %Int32
+	ret %Int32 %2
+}
+
+define %fixed64_Fixed64 @fixed64_head(%fixed64_Fixed64 %x) {
+	%1 = call %Int32 @fixed64_toInt32(%fixed64_Fixed64 %x)
+	%2 = call %fixed64_Fixed64 @fixed64_fromInt32(%Int32 %1)
+	ret %fixed64_Fixed64 %2
+}
+
+define %fixed64_Fixed64 @fixed64_tail(%fixed64_Fixed64 %x) {
+	%1 = call %fixed64_Fixed64 @fixed64_head(%fixed64_Fixed64 %x)
+	%2 = call %fixed64_Fixed64 @fixed64_sub(%fixed64_Fixed64 %x, %fixed64_Fixed64 %1)
+	ret %fixed64_Fixed64 %2
+}
+
+define %fixed64_Fixed64 @fixed64_create(%Int32 %a, %Int32 %b, %Int32 %c) {
+	%1 = call %fixed64_Fixed64 @fixed64_fromInt32(%Int32 %b)
+	%2 = call %fixed64_Fixed64 @fixed64_fromInt32(%Int32 %c)
+	%3 = call %fixed64_Fixed64 @fixed64_div(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
+	%4 = call %fixed64_Fixed64 @fixed64_fromInt32(%Int32 %a)
+	%5 = call %fixed64_Fixed64 @fixed64_add(%fixed64_Fixed64 %4, %fixed64_Fixed64 %3)
+	ret %fixed64_Fixed64 %5
+}
+
+define void @fixed64_print(%fixed64_Fixed64 %x) {
+	%1 = bitcast %fixed64_Fixed64 %x to %Int64
+	%2 = sdiv %Int64 %1, 4294967296
+	%3 = alloca %Int64, align 8
+	%4 = bitcast %fixed64_Fixed64 %x to %Int64
+	%5 = srem %Int64 %4, 4294967296
+	store %Int64 %5, %Int64* %3
+	%6 = alloca %Int64, align 8
+	store %Int64 4294967296, %Int64* %6
+
+	; сокращаем дробную часть
+; while_1
+	br label %again_1
+again_1:
+	br %Bool 1 , label %body_1, label %break_1
+body_1:
+; if_0
+	%7 = load %Int64, %Int64* %3
+	%8 = srem %Int64 %7, 2
+	%9 = icmp eq %Int64 %8, 0
+	%10 = load %Int64, %Int64* %6
+	%11 = srem %Int64 %10, 2
+	%12 = icmp eq %Int64 %11, 0
+	%13 = and %Bool %9, %12
+	br %Bool %13 , label %then_0, label %else_0
+then_0:
+	%14 = load %Int64, %Int64* %3
+	%15 = sdiv %Int64 %14, 2
+	store %Int64 %15, %Int64* %3
+	%16 = load %Int64, %Int64* %6
+	%17 = sdiv %Int64 %16, 2
+	store %Int64 %17, %Int64* %6
+	br label %endif_0
+else_0:
+; if_1
+	%18 = load %Int64, %Int64* %3
+	%19 = srem %Int64 %18, 3
+	%20 = icmp eq %Int64 %19, 0
+	%21 = load %Int64, %Int64* %6
+	%22 = srem %Int64 %21, 3
+	%23 = icmp eq %Int64 %22, 0
+	%24 = and %Bool %20, %23
+	br %Bool %24 , label %then_1, label %else_1
+then_1:
+	%25 = load %Int64, %Int64* %3
+	%26 = sdiv %Int64 %25, 3
+	store %Int64 %26, %Int64* %3
+	%27 = load %Int64, %Int64* %6
+	%28 = sdiv %Int64 %27, 3
+	store %Int64 %28, %Int64* %6
+	br label %endif_1
+else_1:
+	br label %break_1
+	br label %endif_1
+endif_1:
+	br label %endif_0
+endif_0:
+	br label %again_1
+break_1:
+	%30 = load %Int64, %Int64* %3
+	%31 = load %Int64, %Int64* %6
+	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Int64 %2, %Int64 %30, %Int64 %31)
+	%33 = call %Int32 @fixed64_toInt32(%fixed64_Fixed64 %x)
+	%34 = call %fixed64_Fixed64 @fixed64_tail(%fixed64_Fixed64 %x)
+	%35 = bitcast %fixed64_Fixed64 %34 to %Int64
+	%36 = mul %Int64 %35, 1000000
+	%37 = sdiv %Int64 %36, 4294967296
+	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), %Int32 %33, %Int64 %37)
+	ret void
 }
 
 

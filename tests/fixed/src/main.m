@@ -10,9 +10,9 @@ public func main () -> Int {
 	//printf("%s-endian\n", kind)
 	let a = fixed.fromInt32(-10)
 	let b = fixed.fromInt32(3)
-	let pi = fixed.create(3, 1415, 10000)
+	let pi = fixed.create(3, 141592, 1000000)
 
-	printf("pi (%x):\n", pi)
+	printf("pi (%llx):\n", pi)
 	fixed.print(pi)
 
 	printf("div:\n")
@@ -31,7 +31,7 @@ public func main () -> Int {
 	let f = fixed.sub(a, b)
 	fixed.print(f)
 
-	var i: Int32 = Int32 fixed.toInt32(c)
+	var i: Int32 = fixed.toInt32(c)
 	printf("i = %d\n", i)
 
 	let x = fixed.create(1, 3, 2)

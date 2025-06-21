@@ -13,9 +13,9 @@ int main() {
 	//printf("%s-endian\n", kind)
 	const fixed64_Fixed64 a = fixed64_fromInt32(-10);
 	const fixed64_Fixed64 b = fixed64_fromInt32(3);
-	const fixed64_Fixed64 pi = fixed64_create(3, 1415, 10000);
+	const fixed64_Fixed64 pi = fixed64_create(3, 141592, 1000000);
 
-	printf("pi (%x):\n", pi);
+	printf("pi (%llx):\n", pi);
 	fixed64_print(pi);
 
 	printf("div:\n");
