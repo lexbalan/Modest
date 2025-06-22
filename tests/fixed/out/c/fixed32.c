@@ -21,15 +21,13 @@ fixed32_Fixed32 fixed32_sub(fixed32_Fixed32 a, fixed32_Fixed32 b) {
 fixed32_Fixed32 fixed32_mul(fixed32_Fixed32 a, fixed32_Fixed32 b) {
 	const int64_t a64 = (int64_t)a;
 	const int64_t b64 = (int64_t)b;
-	const int64_t v64 = a64 * b64 / (int64_t)multiplier;
-	return (fixed32_Fixed32)v64;
+	return (fixed32_Fixed32)(a64 * b64 / (int64_t)multiplier);
 }
 
 fixed32_Fixed32 fixed32_div(fixed32_Fixed32 a, fixed32_Fixed32 b) {
 	const int64_t a64 = (int64_t)a;
 	const int64_t b64 = (int64_t)b;
-	const int64_t v64 = a64 * (int64_t)multiplier / b64;
-	return (fixed32_Fixed32)v64;
+	return (fixed32_Fixed32)(a64 * (int64_t)multiplier / b64);
 }
 
 fixed32_Fixed32 fixed32_fromInt16(int16_t x) {
