@@ -22,7 +22,7 @@ func fill (n: Nat32) -> Unit {
 		}
 
 		printf("bq.put(%d)\n", ii)
-		bq.put(&bq0, Word8 ii)
+		bq.put(&bq0, unsafe Word8 ii)
 		i = i + 1
 		ii = ii + 1
 	}

@@ -42,8 +42,8 @@ func print_bytes (buf: *[]Word8, len: Nat32) -> Unit {
 public func main () -> Int {
 	printf("test xor encrypting\n")
 
-	let tmsg: *[]Word8 = *[]Word8 &test_msg
-	let tkey: *[]Word8 = *[]Word8 &test_key
+	let tmsg: *[]Word8 = unsafe *[]Word8 &test_msg
+	let tkey: *[]Word8 = unsafe *[]Word8 &test_key
 
 	printf("before encrypt test_msg: \n")
 	print_bytes(tmsg, msg_length)

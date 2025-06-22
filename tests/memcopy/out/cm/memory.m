@@ -18,9 +18,9 @@ const memoryAlignment = systemWidth / 8
 
 
 public func zero (mem: Ptr, len: Nat64) -> Unit {
-	let z: Nat = Nat mem % memoryAlignment
+	let z: Nat = unsafe Nat mem % memoryAlignment
 
-	let memptr: *[]Word8 = *[]Word8 mem
+	let memptr: *[]Word8 = unsafe *[]Word8 mem
 
 	let dst_byte0: *[]Word8 = memptr
 
@@ -34,7 +34,7 @@ public func zero (mem: Ptr, len: Nat64) -> Unit {
 	// word operation
 
 	let len_words: Nat64 = (len - z) / sizeof(Word)
-	let dst_word: *[]Word = *[]Word &memptr[i]
+	let dst_word: *[]Word = unsafe *[]Word &memptr[i]
 
 	i = 0
 	while i < len_words {
@@ -45,7 +45,7 @@ public func zero (mem: Ptr, len: Nat64) -> Unit {
 	// byte operation
 
 	let len_bytes: Nat64 = (len - z) % sizeof(Word)
-	let dst_byte1: *[]Word8 = *[]Word8 &dst_word[i]
+	let dst_byte1: *[]Word8 = unsafe *[]Word8 &dst_word[i]
 
 	i = 0
 	while i < len_bytes {
@@ -67,8 +67,8 @@ public func copy (dst: Ptr, src: Ptr, len: Nat64) -> Unit {
 	}
 
 	let len_bytes: Nat64 = len % sizeof(Word)
-	let src_b: *[]Word8 = *[]Word8 &src_w[i]
-	let dst_b: *[]Word8 = *[]Word8 &dst_w[i]
+	let src_b: *[]Word8 = unsafe *[]Word8 &src_w[i]
+	let dst_b: *[]Word8 = unsafe *[]Word8 &dst_w[i]
 
 	i = 0
 	while i < len_bytes {
@@ -80,8 +80,8 @@ public func copy (dst: Ptr, src: Ptr, len: Nat64) -> Unit {
 
 public func eq (mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 	let len_words: Nat64 = len / sizeof(Word)
-	let mem0_w: *[]Word = *[]Word mem0
-	let mem1_w: *[]Word = *[]Word mem1
+	let mem0_w: *[]Word = unsafe *[]Word mem0
+	let mem1_w: *[]Word = unsafe *[]Word mem1
 
 	var i = Nat64 0
 	while i < len_words {
@@ -92,8 +92,8 @@ public func eq (mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 	}
 
 	let len_bytes: Nat64 = len % sizeof(Word)
-	let mem0_b: *[]Word8 = *[]Word8 &mem0_w[i]
-	let mem1_b: *[]Word8 = *[]Word8 &mem1_w[i]
+	let mem0_b: *[]Word8 = unsafe *[]Word8 &mem0_w[i]
+	let mem1_b: *[]Word8 = unsafe *[]Word8 &mem1_w[i]
 
 	i = 0
 	while i < len_bytes {

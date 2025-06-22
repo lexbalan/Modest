@@ -50,7 +50,7 @@ public func run (buf: *[]Word8, len: Nat32) -> Word32 {
 		let x = Word32 buf[i]
 		let y: Word32 = (crc xor x) and 0xFF
 		// 2
-		let yy: Nat8 = Nat8 y
+		let yy: Nat8 = unsafe Nat8 y
 		crc = crc_table[yy] xor (crc >> 8)
 		i = i + 1
 	}

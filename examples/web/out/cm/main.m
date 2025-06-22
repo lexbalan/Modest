@@ -35,7 +35,7 @@ func handleRequest (client_socket: Int32) -> Unit {
 	}
 	buffer[bytes_received] = 0
 
-	printf("Received request:\n%s\n", *Str8 &buffer)
+	printf("Received request:\n%s\n", unsafe *Str8 &buffer)
 
 	var response: [sendBufferSize]Char8
 	sprintf(
@@ -65,7 +65,7 @@ public func main () -> Int32 {
 	}
 
 	// Bind socket to address
-	let socadr: *SockAddr = *SockAddr &server_addr
+	let socadr: *SockAddr = unsafe *SockAddr &server_addr
 	var rc: Int = bind(server_socket, socadr, sizeof server_addr)
 	if rc < 0 {
 		perror("cannot bind socket")
@@ -86,7 +86,7 @@ public func main () -> Int32 {
 	// Handle input connections
 	while true {
 		var client_addr: SockAddrIn
-		let socadr: *SockAddr = *SockAddr &client_addr
+		let socadr: *SockAddr = unsafe *SockAddr &client_addr
 		var client_adr_len: SocklenT = sizeof client_addr
 		let client_socket: Int = accept(server_socket, socadr, &client_adr_len)
 		if client_socket < 0 {

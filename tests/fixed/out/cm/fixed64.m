@@ -18,17 +18,17 @@ public func sub (a: Fixed64, b: Fixed64) -> Fixed64 {
 }
 
 public func mul (a: Fixed64, b: Fixed64) -> Fixed64 {
-	let a128: Int128 = Int128 a
-	let b128: Int128 = Int128 b
+	let a128: Int128 = unsafe Int128 a
+	let b128: Int128 = unsafe Int128 b
 	let v128: Int128 = a128 * b128 / Int128 multiplier
-	return Fixed64 v128
+	return unsafe Fixed64 v128
 }
 
 public func div (a: Fixed64, b: Fixed64) -> Fixed64 {
-	let wa: Int128 = Int128 a
-	let wb: Int128 = Int128 b
+	let wa: Int128 = unsafe Int128 a
+	let wb: Int128 = unsafe Int128 b
 	let v64: Int128 = wa * Int128 multiplier / wb
-	return Fixed64 v64
+	return unsafe Fixed64 v64
 }
 
 public func fromInt32 (x: Int32) -> Fixed64 {
@@ -36,7 +36,7 @@ public func fromInt32 (x: Int32) -> Fixed64 {
 }
 
 public func toInt32 (x: Fixed64) -> Int32 {
-	return Int32 (x / Fixed64 multiplier)
+	return unsafe Int32 (x / unsafe Fixed64 multiplier)
 }
 
 public func head (x: Fixed64) -> Fixed64 {

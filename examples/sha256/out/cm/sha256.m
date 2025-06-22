@@ -176,14 +176,14 @@ func final (ctx: *Context, outHash: *Hash) -> Unit {
 	// Append to the padding the total message's length in bits and transform.
 	ctx.bitlen = ctx.bitlen + Nat64 ctx.datalen * 8
 
-	ctx.data[63] = Word8 (Word64 ctx.bitlen >> 00)
-	ctx.data[62] = Word8 (Word64 ctx.bitlen >> 08)
-	ctx.data[61] = Word8 (Word64 ctx.bitlen >> 16)
-	ctx.data[60] = Word8 (Word64 ctx.bitlen >> 24)
-	ctx.data[59] = Word8 (Word64 ctx.bitlen >> 32)
-	ctx.data[58] = Word8 (Word64 ctx.bitlen >> 40)
-	ctx.data[57] = Word8 (Word64 ctx.bitlen >> 48)
-	ctx.data[56] = Word8 (Word64 ctx.bitlen >> 56)
+	ctx.data[63] = unsafe Word8 (unsafe Word64 ctx.bitlen >> 00)
+	ctx.data[62] = unsafe Word8 (unsafe Word64 ctx.bitlen >> 08)
+	ctx.data[61] = unsafe Word8 (unsafe Word64 ctx.bitlen >> 16)
+	ctx.data[60] = unsafe Word8 (unsafe Word64 ctx.bitlen >> 24)
+	ctx.data[59] = unsafe Word8 (unsafe Word64 ctx.bitlen >> 32)
+	ctx.data[58] = unsafe Word8 (unsafe Word64 ctx.bitlen >> 40)
+	ctx.data[57] = unsafe Word8 (unsafe Word64 ctx.bitlen >> 48)
+	ctx.data[56] = unsafe Word8 (unsafe Word64 ctx.bitlen >> 56)
 
 	transform(ctx, &ctx.data)
 
@@ -194,14 +194,14 @@ func final (ctx: *Context, outHash: *Hash) -> Unit {
 	i = 0
 	while i < 4 {
 		let sh: Nat32 = 24 - i * 8
-		outHash[i + 00] = Word8 (ctx.state[0] >> sh)
-		outHash[i + 04] = Word8 (ctx.state[1] >> sh)
-		outHash[i + 08] = Word8 (ctx.state[2] >> sh)
-		outHash[i + 12] = Word8 (ctx.state[3] >> sh)
-		outHash[i + 16] = Word8 (ctx.state[4] >> sh)
-		outHash[i + 20] = Word8 (ctx.state[5] >> sh)
-		outHash[i + 24] = Word8 (ctx.state[6] >> sh)
-		outHash[i + 28] = Word8 (ctx.state[7] >> sh)
+		outHash[i + 00] = unsafe Word8 (ctx.state[0] >> sh)
+		outHash[i + 04] = unsafe Word8 (ctx.state[1] >> sh)
+		outHash[i + 08] = unsafe Word8 (ctx.state[2] >> sh)
+		outHash[i + 12] = unsafe Word8 (ctx.state[3] >> sh)
+		outHash[i + 16] = unsafe Word8 (ctx.state[4] >> sh)
+		outHash[i + 20] = unsafe Word8 (ctx.state[5] >> sh)
+		outHash[i + 24] = unsafe Word8 (ctx.state[6] >> sh)
+		outHash[i + 28] = unsafe Word8 (ctx.state[7] >> sh)
 		i = i + 1
 	}
 }

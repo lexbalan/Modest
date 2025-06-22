@@ -90,7 +90,7 @@ public func puts16 (s: *Str16) -> Unit {
 		}
 
 		var char32: Char32
-		let n: Nat8 = utf.utf16_to_utf32(*[]Char16 &s[i], &char32)
+		let n: Nat8 = utf.utf16_to_utf32(unsafe *[]Char16 &s[i], &char32)
 		if n == 0 {
 			break
 		}
@@ -209,13 +209,13 @@ public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			//
 			let s: *Str8 = __va_arg(va, *Str8)
 			strcpy(sptr, s)
-			j = j + Int32 strlen(s)
+			j = j + unsafe Int32 strlen(s)
 		} else if c == "c" {
 			//
 			// %c for char
 			//
 			let c: Char32 = __va_arg(va, Char32)
-			let n: Nat8 = utf.utf32_to_utf8(c, *[4]Char8 sptr)
+			let n: Nat8 = utf.utf32_to_utf8(c, unsafe *[4]Char8 sptr)
 			j = j + Int32 n
 		}
 	}
@@ -247,7 +247,7 @@ func sprint_hex_nat32 (buf: *[]Char8, x: Nat32) -> Int32 {
 		let n: Nat32 = d % 16
 		d = d / 16
 
-		tmpbuf[i] = n_to_hex_sym(Nat8 n)
+		tmpbuf[i] = n_to_hex_sym(unsafe Nat8 n)
 		i = i + 1
 
 		if d == 0 {
@@ -282,7 +282,7 @@ func sprint_dec_int32 (buf: *[]Char8, x: Int32) -> Int32 {
 	while true {
 		let n: Int32 = d % 10
 		d = d / 10
-		tmpbuf[i] = n_to_dec_sym(Nat8 n)
+		tmpbuf[i] = n_to_dec_sym(unsafe Nat8 n)
 		i = i + 1
 
 		if d == 0 {
@@ -317,7 +317,7 @@ func sprint_dec_n32 (buf: *[]Char8, x: Nat32) -> Int32 {
 	while true {
 		let n: Nat32 = d % 10
 		d = d / 10
-		tmpbuf[i] = n_to_dec_sym(Nat8 n)
+		tmpbuf[i] = n_to_dec_sym(unsafe Nat8 n)
 		i = i + 1
 
 		if d == 0 {

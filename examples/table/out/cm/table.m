@@ -35,7 +35,7 @@ public func print (table: *Table) -> Unit {
 	if table.header != nil {
 		i = 0
 		while i < table.nCols {
-			let len: Nat32 = Nat32 strlen(table.header[i])
+			let len: Nat32 = unsafe Nat32 strlen(table.header[i])
 			if len > sz[i] {
 				sz[i] = len
 			}
@@ -47,7 +47,7 @@ public func print (table: *Table) -> Unit {
 	while i < table.nRows {
 		j = 0
 		while j < table.nCols {
-			let len: Nat32 = Nat32 strlen(data[i][j])
+			let len: Nat32 = unsafe Nat32 strlen(data[i][j])
 			if len > sz[j] {
 				sz[j] = len
 			}
@@ -93,13 +93,13 @@ public func print (table: *Table) -> Unit {
 
 
 func printRow (raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
-	let row: *[nCols]*Str8 = *[nCols]*Str8 raw_row
+	let row: *[nCols]*Str8 = unsafe *[nCols]*Str8 raw_row
 
 	var j = Nat32 0
 	while j < nCols {
 		printf("|")
 		let s: *Str8 = row[j]
-		var len: Nat32 = Nat32 strlen(s)
+		var len: Nat32 = unsafe Nat32 strlen(s)
 		if s[0] != "\x0" {
 			len = len + 1
 			printf(" %s", s)

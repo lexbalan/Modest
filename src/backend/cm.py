@@ -331,7 +331,11 @@ def str_value_cons(x, ctx):
 	if x.method == 'implicit':
 		return str_value(value)
 
-	s = str_type(to_type)
+	s = ""
+	if x.method == 'unsafe':
+		s += 'unsafe '
+
+	s += str_type(to_type)
 	s += " "
 	s += str_value(value, ctx=ctx)
 	return s

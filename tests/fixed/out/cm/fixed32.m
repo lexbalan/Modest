@@ -16,17 +16,17 @@ public func sub (a: Fixed32, b: Fixed32) -> Fixed32 {
 }
 
 public func mul (a: Fixed32, b: Fixed32) -> Fixed32 {
-	let a64: Int64 = Int64 a
-	let b64: Int64 = Int64 b
+	let a64: Int64 = unsafe Int64 a
+	let b64: Int64 = unsafe Int64 b
 	let v64: Int64 = a64 * b64 / Int64 multiplier
-	return Fixed32 v64
+	return unsafe Fixed32 v64
 }
 
 public func div (a: Fixed32, b: Fixed32) -> Fixed32 {
-	let a64: Int64 = Int64 a
-	let b64: Int64 = Int64 b
+	let a64: Int64 = unsafe Int64 a
+	let b64: Int64 = unsafe Int64 b
 	let v64: Int64 = a64 * Int64 multiplier / b64
-	return Fixed32 v64
+	return unsafe Fixed32 v64
 }
 
 public func fromInt16 (x: Int16) -> Fixed32 {
@@ -34,7 +34,7 @@ public func fromInt16 (x: Int16) -> Fixed32 {
 }
 
 public func toInt16 (x: Fixed32) -> Int16 {
-	return Int16 (x / Fixed32 multiplier)
+	return unsafe Int16 (x / unsafe Fixed32 multiplier)
 }
 
 public func create (a: Int16, b: Int16, c: Int16) -> Fixed32 {

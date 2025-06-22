@@ -43,7 +43,7 @@ const tests = [&test0, &test1]
 
 func doTest (test: *SHA256_TestCase) -> Bool {
 	var test_hash: Hash
-	let msg: *[]Word8 = *[]Word8 &test.input_data
+	let msg: *[]Word8 = unsafe *[]Word8 &test.input_data
 	let msg_len: Nat32 = test.input_data_len
 
 	sha256.hash(msg, msg_len, &test_hash)
