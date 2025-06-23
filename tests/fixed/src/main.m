@@ -12,6 +12,11 @@ public func main () -> Int {
 	let b = fixed.fromInt32(3)
 	let pi = fixed.create(3, 141592, 1000000)
 
+	var w0: Word32
+	var f0: Float32
+
+	w0 = unsafe Word32 f0
+
 	printf("pi (%llx):\n", pi)
 	fixed.print(pi)
 

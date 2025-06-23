@@ -808,9 +808,9 @@ def str_value_cons_array(x, ctx):
 		# если это литеральная (и не глобальная) константа-массив
 		# то мы должны ее привести к требуемому типу
 		#is_const = value['kind'] in ['const', 'literal', 'add']
-		
+
 		is_const = isinstance(value, ValueLiteral) or isinstance(value, ValueConst) or (isinstance(value, ValueBin) and value.op == 'add')
-		
+
 		if is_const and not value.hasAttribute('kostil'):
 			ctx=['array_as_array']
 
@@ -916,12 +916,21 @@ def str_value_cons(x, ctx):
 		if from_type.is_string():
 			return str_literal_char(x.asset, x.type.width)
 
-	elif type.is_nat() or type.is_word():
+	elif type.is_nat():
 		if from_type.is_nat() or from_type.is_word():
 			if from_type.is_generic_nat():
 				return str_value(value)
-			if type.width == from_type.width:
-				return str_value(value)
+			#if type.width == from_type.width:
+			#	return str_value(value)
+
+	elif type.is_word():
+		#if type.width == from_type.width:
+		#	return str_value(value)
+		if from_type.is_generic():
+			return str_value(value)
+
+		raw = from_type.is_float()
+		return str_cast(type, value, rawMode=raw, ctx=ctx)
 
 
 	if x.method == 'implicit':
@@ -984,6 +993,7 @@ def str_value_cons(x, ctx):
 			value = value.value
 
 	return str_cast(type, value, ctx)
+
 
 
 

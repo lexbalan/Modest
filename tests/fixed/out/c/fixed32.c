@@ -8,7 +8,7 @@
 #include "fixed32.h"
 
 
-#define multiplier  ((int32_t)(1 << 16))
+#define multiplier  ((int32_t)((uint32_t)1 << 16))
 
 fixed32_Fixed32 fixed32_add(fixed32_Fixed32 a, fixed32_Fixed32 b) {
 	return (fixed32_Fixed32)((int32_t)a + (int32_t)b);
