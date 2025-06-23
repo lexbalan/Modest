@@ -2,17 +2,17 @@ include "stdio"
 
 
 
-public type Fixed32 = Int32
+public type Fixed32 = Word32
 
 const multiplier = Int32 (Word32 1 << 16)
 
 
 public func add (a: Fixed32, b: Fixed32) -> Fixed32 {
-	return a + b
+	return Fixed32 (Int32 a + Int32 b)
 }
 
 public func sub (a: Fixed32, b: Fixed32) -> Fixed32 {
-	return a - b
+	return Fixed32 (Int32 a - Int32 b)
 }
 
 public func mul (a: Fixed32, b: Fixed32) -> Fixed32 {
@@ -28,11 +28,11 @@ public func div (a: Fixed32, b: Fixed32) -> Fixed32 {
 }
 
 public func fromInt16 (x: Int16) -> Fixed32 {
-	return Fixed32 x * Fixed32 multiplier
+	return Fixed32 (Int32 x * multiplier)
 }
 
 public func toInt16 (x: Fixed32) -> Int16 {
-	return unsafe Int16 (x / unsafe Fixed32 multiplier)
+	return unsafe Int16 (unsafe Int32 x / multiplier)
 }
 
 public func create (a: Int16, b: Int16, c: Int16) -> Fixed32 {

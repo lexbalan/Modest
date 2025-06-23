@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-typedef int32_t fixed32_Fixed32;
+typedef uint32_t fixed32_Fixed32;
 
 fixed32_Fixed32 fixed32_add(fixed32_Fixed32 a, fixed32_Fixed32 b);
 

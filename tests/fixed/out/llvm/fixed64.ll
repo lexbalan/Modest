@@ -196,18 +196,24 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [15 x i8] [i8 37, i8 108, i8 108, i8 100, i8 43, i8 37, i8 108, i8 108, i8 100, i8 47, i8 37, i8 108, i8 108, i8 100, i8 0]
 @str2 = private constant [12 x i8] [i8 32, i8 61, i8 32, i8 37, i8 100, i8 46, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 ; -- endstrings --
-%fixed64_Fixed64 = type %Int64;
+%fixed64_Fixed64 = type %Word64;
 
 
 ; FIXIT! (Word64 Int64 1)
 define %fixed64_Fixed64 @fixed64_add(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b) {
-	%1 = add %fixed64_Fixed64 %a, %b
-	ret %fixed64_Fixed64 %1
+	%1 = bitcast %fixed64_Fixed64 %a to %Int64
+	%2 = bitcast %fixed64_Fixed64 %b to %Int64
+	%3 = add %Int64 %1, %2
+	%4 = bitcast %Int64 %3 to %fixed64_Fixed64
+	ret %fixed64_Fixed64 %4
 }
 
 define %fixed64_Fixed64 @fixed64_sub(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b) {
-	%1 = sub %fixed64_Fixed64 %a, %b
-	ret %fixed64_Fixed64 %1
+	%1 = bitcast %fixed64_Fixed64 %a to %Int64
+	%2 = bitcast %fixed64_Fixed64 %b to %Int64
+	%3 = sub %Int64 %1, %2
+	%4 = bitcast %Int64 %3 to %fixed64_Fixed64
+	ret %fixed64_Fixed64 %4
 }
 
 define %fixed64_Fixed64 @fixed64_mul(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b) {
@@ -229,15 +235,17 @@ define %fixed64_Fixed64 @fixed64_div(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b) {
 }
 
 define %fixed64_Fixed64 @fixed64_fromInt32(%Int32 %x) {
-	%1 = sext %Int32 %x to %fixed64_Fixed64
-	%2 = mul %fixed64_Fixed64 %1, 4294967296
-	ret %fixed64_Fixed64 %2
+	%1 = sext %Int32 %x to %Int64
+	%2 = mul %Int64 %1, 4294967296
+	%3 = bitcast %Int64 %2 to %fixed64_Fixed64
+	ret %fixed64_Fixed64 %3
 }
 
 define %Int32 @fixed64_toInt32(%fixed64_Fixed64 %x) {
-	%1 = sdiv %fixed64_Fixed64 %x, 4294967296
-	%2 = trunc %fixed64_Fixed64 %1 to %Int32
-	ret %Int32 %2
+	%1 = bitcast %fixed64_Fixed64 %x to %Int64
+	%2 = sdiv %Int64 %1, 4294967296
+	%3 = trunc %Int64 %2 to %Int32
+	ret %Int32 %3
 }
 
 define %fixed64_Fixed64 @fixed64_head(%fixed64_Fixed64 %x) {

@@ -2,7 +2,7 @@ include "stdio"
 
 
 
-public type Fixed64 = Int64
+public type Fixed64 = Word64
 
 
 // FIXIT! (Word64 Int64 1)
@@ -10,11 +10,11 @@ const multiplier = Int64 ((Word64 Int64 1) << 32)
 
 
 public func add (a: Fixed64, b: Fixed64) -> Fixed64 {
-	return a + b
+	return Fixed64 (Int64 a + Int64 b)
 }
 
 public func sub (a: Fixed64, b: Fixed64) -> Fixed64 {
-	return a - b
+	return Fixed64 (Int64 a - Int64 b)
 }
 
 public func mul (a: Fixed64, b: Fixed64) -> Fixed64 {
@@ -30,11 +30,11 @@ public func div (a: Fixed64, b: Fixed64) -> Fixed64 {
 }
 
 public func fromInt32 (x: Int32) -> Fixed64 {
-	return Fixed64 x * Fixed64 multiplier
+	return Fixed64 (Int64 x * multiplier)
 }
 
 public func toInt32 (x: Fixed64) -> Int32 {
-	return unsafe Int32 (x / unsafe Fixed64 multiplier)
+	return unsafe Int32 (unsafe Int64 x / multiplier)
 }
 
 public func head (x: Fixed64) -> Fixed64 {

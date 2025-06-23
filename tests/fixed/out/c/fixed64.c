@@ -12,11 +12,11 @@
 #define multiplier  ((int64_t)(((uint64_t)1) << 32))
 
 fixed64_Fixed64 fixed64_add(fixed64_Fixed64 a, fixed64_Fixed64 b) {
-	return a + b;
+	return (fixed64_Fixed64)((int64_t)a + (int64_t)b);
 }
 
 fixed64_Fixed64 fixed64_sub(fixed64_Fixed64 a, fixed64_Fixed64 b) {
-	return a - b;
+	return (fixed64_Fixed64)((int64_t)a - (int64_t)b);
 }
 
 fixed64_Fixed64 fixed64_mul(fixed64_Fixed64 a, fixed64_Fixed64 b) {
@@ -32,11 +32,11 @@ fixed64_Fixed64 fixed64_div(fixed64_Fixed64 a, fixed64_Fixed64 b) {
 }
 
 fixed64_Fixed64 fixed64_fromInt32(int32_t x) {
-	return (fixed64_Fixed64)x * (fixed64_Fixed64)multiplier;
+	return (fixed64_Fixed64)((int64_t)x * multiplier);
 }
 
 int32_t fixed64_toInt32(fixed64_Fixed64 x) {
-	return (int32_t)(x / (fixed64_Fixed64)multiplier);
+	return (int32_t)((int64_t)x / multiplier);
 }
 
 fixed64_Fixed64 fixed64_head(fixed64_Fixed64 x) {

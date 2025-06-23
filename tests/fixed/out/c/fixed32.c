@@ -11,11 +11,11 @@
 #define multiplier  ((int32_t)(1 << 16))
 
 fixed32_Fixed32 fixed32_add(fixed32_Fixed32 a, fixed32_Fixed32 b) {
-	return a + b;
+	return (fixed32_Fixed32)((int32_t)a + (int32_t)b);
 }
 
 fixed32_Fixed32 fixed32_sub(fixed32_Fixed32 a, fixed32_Fixed32 b) {
-	return a - b;
+	return (fixed32_Fixed32)((int32_t)a - (int32_t)b);
 }
 
 fixed32_Fixed32 fixed32_mul(fixed32_Fixed32 a, fixed32_Fixed32 b) {
@@ -31,11 +31,11 @@ fixed32_Fixed32 fixed32_div(fixed32_Fixed32 a, fixed32_Fixed32 b) {
 }
 
 fixed32_Fixed32 fixed32_fromInt16(int16_t x) {
-	return (fixed32_Fixed32)x * (fixed32_Fixed32)multiplier;
+	return (fixed32_Fixed32)((int32_t)x * multiplier);
 }
 
 int16_t fixed32_toInt16(fixed32_Fixed32 x) {
-	return (int16_t)(x / (fixed32_Fixed32)multiplier);
+	return (int16_t)((int32_t)x / multiplier);
 }
 
 fixed32_Fixed32 fixed32_create(int16_t a, int16_t b, int16_t c) {

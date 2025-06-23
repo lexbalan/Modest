@@ -193,7 +193,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 1
 
 ; from import "fixed"
-%fixed64_Fixed64 = type %Int64;
+%fixed64_Fixed64 = type %Word64;
 declare %fixed64_Fixed64 @fixed64_add(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b)
 declare %fixed64_Fixed64 @fixed64_sub(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b)
 declare %fixed64_Fixed64 @fixed64_mul(%fixed64_Fixed64 %a, %fixed64_Fixed64 %b)

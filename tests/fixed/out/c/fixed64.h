@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-typedef int64_t fixed64_Fixed64;
+typedef uint64_t fixed64_Fixed64;
 
 // FIXIT! (Word64 Int64 1)
 

@@ -1148,7 +1148,7 @@ def do_value_access(x):
 		return ValueBad(x['ti'])
 
 	if field.type.is_bad():
-		return ValueBad(x.ti)
+		return ValueBad(x['ti'])
 
 
 	# Check access permissions

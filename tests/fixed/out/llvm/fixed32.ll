@@ -195,15 +195,21 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 @str1 = private constant [10 x i8] [i8 37, i8 100, i8 43, i8 37, i8 100, i8 47, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
-%fixed32_Fixed32 = type %Int32;
+%fixed32_Fixed32 = type %Word32;
 define %fixed32_Fixed32 @fixed32_add(%fixed32_Fixed32 %a, %fixed32_Fixed32 %b) {
-	%1 = add %fixed32_Fixed32 %a, %b
-	ret %fixed32_Fixed32 %1
+	%1 = bitcast %fixed32_Fixed32 %a to %Int32
+	%2 = bitcast %fixed32_Fixed32 %b to %Int32
+	%3 = add %Int32 %1, %2
+	%4 = bitcast %Int32 %3 to %fixed32_Fixed32
+	ret %fixed32_Fixed32 %4
 }
 
 define %fixed32_Fixed32 @fixed32_sub(%fixed32_Fixed32 %a, %fixed32_Fixed32 %b) {
-	%1 = sub %fixed32_Fixed32 %a, %b
-	ret %fixed32_Fixed32 %1
+	%1 = bitcast %fixed32_Fixed32 %a to %Int32
+	%2 = bitcast %fixed32_Fixed32 %b to %Int32
+	%3 = sub %Int32 %1, %2
+	%4 = bitcast %Int32 %3 to %fixed32_Fixed32
+	ret %fixed32_Fixed32 %4
 }
 
 define %fixed32_Fixed32 @fixed32_mul(%fixed32_Fixed32 %a, %fixed32_Fixed32 %b) {
@@ -225,15 +231,17 @@ define %fixed32_Fixed32 @fixed32_div(%fixed32_Fixed32 %a, %fixed32_Fixed32 %b) {
 }
 
 define %fixed32_Fixed32 @fixed32_fromInt16(%Int16 %x) {
-	%1 = sext %Int16 %x to %fixed32_Fixed32
-	%2 = mul %fixed32_Fixed32 %1, 65536
-	ret %fixed32_Fixed32 %2
+	%1 = sext %Int16 %x to %Int32
+	%2 = mul %Int32 %1, 65536
+	%3 = bitcast %Int32 %2 to %fixed32_Fixed32
+	ret %fixed32_Fixed32 %3
 }
 
 define %Int16 @fixed32_toInt16(%fixed32_Fixed32 %x) {
-	%1 = sdiv %fixed32_Fixed32 %x, 65536
-	%2 = trunc %fixed32_Fixed32 %1 to %Int16
-	ret %Int16 %2
+	%1 = bitcast %fixed32_Fixed32 %x to %Int32
+	%2 = sdiv %Int32 %1, 65536
+	%3 = trunc %Int32 %2 to %Int16
+	ret %Int16 %3
 }
 
 define %fixed32_Fixed32 @fixed32_create(%Int16 %a, %Int16 %b, %Int16 %c) {
