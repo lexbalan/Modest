@@ -164,7 +164,7 @@ static void final(Context *ctx, uint8_t *outHash) {
 
 	if (ctx->datalen >= 56) {
 		transform(ctx, (uint8_t *)&ctx->data);
-		memset((uint8_t *)&ctx->data, 0, 56);
+		memset((void *)&ctx->data, 0, 56);
 		//ctx.data[0:56] = []
 	}
 

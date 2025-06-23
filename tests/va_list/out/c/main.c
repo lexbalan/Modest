@@ -30,7 +30,7 @@ static ssize_t my_printf(char *format, ...) {
 
 	va_end(va2);
 
-	return write(STDOUT_FILENO, (char *)&buf, ABS(n));
+	return write(STDOUT_FILENO, (void *)&buf, ABS(n));
 
 #undef strMaxLen
 }

@@ -27,7 +27,7 @@ static bool write_file(int sockfd) {
 	}
 
 	while (true) {
-		const ssize_t n = recv(sockfd, (char *)&buffer, bufSize, 0);
+		const ssize_t n = recv(sockfd, (void *)&buffer, bufSize, 0);
 
 		if (n <= 0) {
 			break;

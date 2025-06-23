@@ -35,7 +35,7 @@ static uint32_t pageCounter;
 
 static void handleRequest(int32_t client_socket) {
 	uint8_t buffer[receiveBufferSize];
-	const ssize_t bytes_received = read(client_socket, (uint8_t *)&buffer, __lengthof(buffer) - 1);
+	const ssize_t bytes_received = read(client_socket, (void *)&buffer, __lengthof(buffer) - 1);
 	if (bytes_received < 0) {
 		perror("cannot read socket");
 		close(client_socket);
@@ -52,7 +52,7 @@ static void handleRequest(int32_t client_socket) {
 		httpHeader,pageCounter
 	);
 
-	write(client_socket, (char *)&response, strlen((char *)&response));
+	write(client_socket, (void *)&response, strlen((const char *)&response));
 	close(client_socket);
 }
 

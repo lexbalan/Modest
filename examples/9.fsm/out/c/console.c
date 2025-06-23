@@ -134,7 +134,7 @@ int32_t console_vfprint(int32_t fd, char *form, va_list va) {
 	char strbuf[256];
 	const int32_t n = console_vsprint((char *)&strbuf, form, va);
 	strbuf[n] = '\x0';
-	write(fd, (char *)&strbuf, ABS(n));
+	write(fd, (void *)&strbuf, ABS(n));
 	return n;
 }
 

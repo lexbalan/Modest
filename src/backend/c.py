@@ -915,9 +915,7 @@ def str_value_cons(x, ctx):
 			# В случае когда происходит НЕЯВНОЕ приведение;
 			if value.value.type.is_array():
 				if value.value.type.of.is_simple():
-					sstr += ("(")
-					sstr += str_type(value.value.type.of)
-					sstr += (" *)")
+					return str_cast(type, value, ctx)
 
 		#
 		# Now we do not print implicit cons (!)
