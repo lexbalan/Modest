@@ -269,12 +269,13 @@ class Type(Entity):
 		return False
 
 	# array of char not always is Str (!) (z-string) see is_str
-	def is_pointer_to_array_of_char(self):
+	def is_pointer_to_str(self):
 		if self.is_pointer():
 			return self.to.is_array_of_char()
 		return False
 
 
+	# type is array of chars (see is_string() for literals)
 	def is_str(self):
 		if self.is_array_of_char():
 			return 'z-string' in self.att

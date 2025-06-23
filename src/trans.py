@@ -1346,7 +1346,7 @@ def do_value_immediate(x, allow_ptr_to_str=False):
 
 	if not v.isImmediate():
 		if allow_ptr_to_str:
-			if v.type.is_pointer_to_array_of_char():
+			if v.type.is_pointer_to_str():
 				return v
 		error("expected immediate value", x['ti'])
 		return ValueBad(x['ti'])
@@ -2681,7 +2681,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 				warning("expected integer value4", arg.ti)
 
 		elif spec == 's':
-			if not arg_type.is_pointer_to_array_of_char():
+			if not arg_type.is_pointer_to_str():
 				warning("expected pointer to string", arg.ti)
 
 		elif spec == 'f':

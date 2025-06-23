@@ -880,41 +880,16 @@ def str_value_cons(x, ctx):
 	elif type.is_record():
 		return str_value_cons_record(x, ctx)
 
-	elif type.is_pointer():
-		#if type.to.is_str():
-		#	return str_value(value)
+	# у нас типы структурные, а в си - номинальные
+	# поэтому даже если структуры одинаковы, но имена разные
+	# - их нужно жестко приводить
+	# *RecordA -> *RecordB
+	if type.is_pointer_to_record() and from_type.is_pointer_to_record():
+		if from_type.definition != type.definition:
+			return str_cast(type, value, ctx)
 
-		if type.to.is_string():
-			# cast <string literal> to <pointer to array of chars>:
-			# let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
-			# let string8Const = *Str8 genericStringConst  // <-
-			if type.to.of.width != from_type.width:
-				return str_literal_string(value.asset, char_width=type.to.of.width)
-
-		# в у нас типы структурные, в си - номинальные
-		# поэтому даже если структуры одинаковы, но имена разные
-		# их нужно приводить
-		# *RecordA -> *RecordB
-		if type.to.is_record():
-			if from_type.is_pointer_to_record():
-				# НО если это реально один и тот же тип, то приведение не нужно!
-				if from_type.definition != type.definition:
-					return str_cast(type, value, ctx)
-
-		if from_type.is_pointer():
-			if from_type.to.is_array():
-				if type.to.is_array():
-					pass
-					#sstr += ("\n// -- DIM --\n")
-					#return do_eval_cons_pointer_to_array(x)
-
-	#elif type.is_float():
-	#	if from_type.is_int() or from_type.is_num():
-	#		return str_cast(type, value, ctx)
-
-	elif type.is_char():
-		if from_type.is_string():
-			return str_literal_char(x.asset, x.type.width)
+	elif type.is_char() and from_type.is_string():
+		return str_literal_char(x.asset, x.type.width)
 
 	elif type.is_nat():
 		if from_type.is_nat() or from_type.is_word():
