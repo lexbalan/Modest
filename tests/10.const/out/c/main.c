@@ -63,8 +63,8 @@ typedef struct WrappedArray WrappedArray;
 static float distance(Point a, Point b) {
 	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
 	const double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
-	const double dx2 = pow(dx, (double)2);
-	const double dy2 = pow(dy, (double)2);
+	const double dx2 = pow(dx, 2);
+	const double dy2 = pow(dy, 2);
 	return sqrt(dx2 + dy2);
 }
 

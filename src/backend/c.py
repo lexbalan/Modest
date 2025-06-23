@@ -908,9 +908,9 @@ def str_value_cons(x, ctx):
 					#sstr += ("\n// -- DIM --\n")
 					#return do_eval_cons_pointer_to_array(x)
 
-	elif type.is_float():
-		if from_type.is_int() or from_type.is_num():
-			return str_cast(type, value, ctx)
+	#elif type.is_float():
+	#	if from_type.is_int() or from_type.is_num():
+	#		return str_cast(type, value, ctx)
 
 	elif type.is_char():
 		if from_type.is_string():

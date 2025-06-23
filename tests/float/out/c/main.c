@@ -14,7 +14,7 @@
 #define mathPi  3.141592653589793238462643383279502884
 
 static double squareOfCircle(double radius) {
-	return pow(radius, (double)2) * mathPi;
+	return pow(radius, 2) * mathPi;
 }
 
 struct Point2D {
@@ -35,13 +35,13 @@ int main() {
 	printf("float test\n");
 
 	printf("2 = %d\n", 2);
-	printf("2/3 = %f\n", (double)(2.0 / (double)3));
+	printf("2/3 = %f\n", (double)(2.0 / 3));
 
 	#define r  10
-	const double s = squareOfCircle((double)r);
+	const double s = squareOfCircle(r);
 	printf("s = %f\n", s);
 
-	#define k  (1.0 / (double)8)
+	#define k  (1.0 / 8)
 	printf("k = %f\n", (double)k);
 
 	printf("sizeof(Float32) = %lu\n", sizeof(float));
