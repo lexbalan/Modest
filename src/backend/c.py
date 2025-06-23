@@ -752,37 +752,16 @@ def str_value_access(x, ctx):
 
 
 
-
-def str_cast_hard(t, v, ctx=[]):
-	# hard cast is possible only in function body
-	assert(is_local_context())
+def str_cast(t, v, rawMode=False, ctx=[]):
 	sstr = ''
-	sstr += "*("
-	sstr += str_type(t)
-	sstr += "*)&"
-	need_wrap = precedence(v) < CONS_PRECEDENCE
-	sstr += str_value(v, ctx=ctx, wrapped=need_wrap)
-	return sstr
 
-
-def str_cast(t, v, ctx=[]):
-	# protection from (uint8_t)(uint8_t)...
-#	if isinstance(v, ValueCons):
-#		if get_id_str(t) == get_id_str(v.type):
-#			return str_cast(v.type, v.value, ctx)
-
-
-	#array_as_ptr = not 'array_as_array' in ctx
-	sstr = "("
-	sstr += str_type(t)
-	sstr += ")"
+	if rawMode:
+		assert(is_local_context())
+		sstr += "*(" + str_type(t) + "*)&"
+	else:
+		sstr += "(" + str_type(t) + ")"
 
 	need_wrap = precedence(v) < CONS_PRECEDENCE
-
-	# add for arrays add (!)
-#	if isinstance(v, ValueLiteral) or (isinstance(v, ValueBin) and v.op == 'add'):
-#		need_wrap = not v.type.is_composite()
-
 	sstr += str_value(v, ctx=ctx, wrapped=need_wrap)
 	return sstr
 
@@ -808,7 +787,7 @@ def str_value_cons_record(x, ctx):
 			# и приведение не требуется
 			return str_value(value, ctx=ctx)
 		# C cannot cast struct to struct (!)
-		return str_cast_hard(to_type, value)
+		return str_cast(to_type, value, rawMode=True)
 
 
 
