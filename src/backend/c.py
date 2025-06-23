@@ -848,26 +848,6 @@ def str_value_cons_array(x, ctx):
 
 
 
-
-def print_suffix(to_type, num):
-	sstr = ''
-	req_bits = nbits_for_num(num)
-
-	# ! `not is_signed()`, because here can be Word (it nor signed, nor unsigned) !
-	if not to_type.is_signed():
-		if req_bits >= CC_INT_SIZE_BITS:
-			sstr += ("U")
-
-	if req_bits <= CC_INT_SIZE_BITS:
-		pass  # int
-	elif req_bits <= CC_LONG_SIZE_BITS:
-		sstr += ("L")  # long int
-	else:
-		sstr += ("LL")  # long long int
-	return sstr
-
-
-
 def str_value_cons(x, ctx):
 	sstr = ''
 	type = x.type
@@ -909,7 +889,6 @@ def str_value_cons(x, ctx):
 
 
 	if x.method == 'implicit':
-
 		if isinstance(value, ValueRef):
 			# Явно приводим указатель на массив к указателю на его элемент
 			# В случае когда происходит НЕЯВНОЕ приведение;
@@ -917,19 +896,7 @@ def str_value_cons(x, ctx):
 				if value.value.type.of.is_simple():
 					return str_cast(type, value, ctx)
 
-		#
-		# Now we do not print implicit cons (!)
-		#
-
-		sstr += str_value(value)
-
-		# print postfix ('u', 'U', 'L', 'LL', etc.)
-		if isinstance(value, ValueLiteral):
-			if from_type.is_num() or from_type.is_int() or from_type.is_word():
-				# up to 'long long'
-				if type.width <= 64:
-					sstr += print_suffix(type, value.asset)
-		return sstr
+		return str_value(value)
 
 
 	if isinstance(value, ValueLiteral):
@@ -957,7 +924,6 @@ def str_value_cons(x, ctx):
 					nat_same_sz = foundation.type_select_nat(from_type.width)
 					sstr += str_cast(nat_same_sz, value, ctx)
 					return sstr
-
 
 	# for: (uint32_t *)(void *)&i;
 	# remove (void *)
@@ -1173,6 +1139,24 @@ def str_value_enum(x, ctx):
 
 
 
+def print_suffix(to_type, num):
+	sstr = ''
+	req_bits = nbits_for_num(num)
+
+	# ! `not is_signed()`, because here can be Word (it nor signed, nor unsigned) !
+	if to_type.is_unsigned():
+		if req_bits >= CC_INT_SIZE_BITS:
+			sstr += "U"
+
+	if req_bits <= CC_INT_SIZE_BITS:
+		pass  # int
+	elif req_bits <= CC_LONG_SIZE_BITS:
+		sstr += "L"  # long int
+	else:
+		sstr += "LL"  # long long int
+	return sstr
+
+
 def str_literal_integer(type, num, nsigns=0, is_big=False, is_hex=False):
 	global need_big_int
 	sstr = ''
@@ -1188,13 +1172,14 @@ def str_literal_integer(type, num, nsigns=0, is_big=False, is_hex=False):
 			a2 = (num >> 128) & 0xFFFFFFFFFFFFFFFF
 			return "BIG_INT256(0x%XULL, 0x%XULL, 0x%XULL, 0x%XULL)" % (a3, a2, a1, a0)
 
-
 	if is_hex:
 		fmt = "0x%%0%dX" % nsigns
 		sstr += (fmt % num)
 		return sstr
 	else:
 		sstr += (str(num))
+
+	sstr += print_suffix(type, num)
 
 	return sstr
 
