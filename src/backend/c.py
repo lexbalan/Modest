@@ -872,9 +872,8 @@ def str_value_cons(x, ctx):
 		return str_literal_char(x.asset, x.type.width)
 
 	elif type.is_nat():
-		if from_type.is_nat() or from_type.is_word():
-			if from_type.is_generic_nat():
-				return str_value(value)
+		if from_type.is_generic_nat():
+			return str_value(value)
 
 	elif type.is_word():
 		if from_type.is_generic():
@@ -895,7 +894,6 @@ def str_value_cons(x, ctx):
 	if isinstance(value, ValueLiteral):
 		sstr += str_value(value)
 		return sstr
-
 
 	# (!) WARNING (!)
 	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
@@ -922,8 +920,6 @@ def str_value_cons(x, ctx):
 		if value.type.is_free_pointer():
 			value = value.value
 
-	if x.rawMode:
-		info("??", x.ti)
 	return str_cast(type, value, rawMode=x.rawMode, ctx=ctx)
 
 
