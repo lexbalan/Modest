@@ -19,19 +19,6 @@ int main() {
 	const fixed64_Fixed64 b = fixed64_fromInt32(3);
 	const fixed64_Fixed64 pi = fixed64_create(3, 141592, 1000000);
 
-	uint32_t w0;
-	float f0;
-
-	w0 = *(uint32_t*)&f0;
-
-	uint8_t c1 = (uint8_t)'A';
-	uint16_t c2 = (uint16_t)u'A';
-	uint32_t c3 = (uint32_t)U'A';
-
-	char c4[4];
-	xxx(&c3);
-	xxx(/**/(void *)&c4);
-
 	printf("pi (%llx):\n", pi);
 	fixed64_print(pi);
 

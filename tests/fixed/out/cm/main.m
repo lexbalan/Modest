@@ -5,6 +5,10 @@ include "stdio"
 import "fixed64" as fixed
 
 
+func xxx (x: Ptr) -> Unit {
+	//
+}
+
 public func main () -> Int {
 	//printf("%s-endian\n", kind)
 	let a: Fixed64 = fixed.fromInt32(-10)

@@ -215,6 +215,11 @@ declare void @fixed64_print(%fixed64_Fixed64 %x)
 @str5 = private constant [6 x i8] [i8 115, i8 117, i8 98, i8 58, i8 10, i8 0]
 @str6 = private constant [8 x i8] [i8 105, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --; tests/fixed/src/main.m
+define internal void @xxx(i8* %x) {
+	;
+	ret void
+}
+
 define %Int @main() {
 	;printf("%s-endian\n", kind)
 	%1 = call %fixed64_Fixed64 @fixed64_fromInt32(%Int32 -10)
