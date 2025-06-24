@@ -871,14 +871,9 @@ def str_value_cons(x, ctx):
 	elif type.is_char() and from_type.is_string():
 		return str_literal_char(x.asset, x.type.width)
 
-	elif type.is_nat():
-		if from_type.is_generic_nat():
-			return str_value(value)
-
-	elif type.is_word():
+	elif type.is_xword() and from_type.is_xword():
 		if from_type.is_generic():
 			return str_value(value)
-
 
 	if x.method == 'implicit':
 		if isinstance(value, ValueRef):

@@ -109,7 +109,7 @@ static void transform(Context *ctx, uint8_t *data) {
 
 	i = 0;
 	while (i < 64) {
-		const uint32_t t1 = (uint32_t)x[7] + (uint32_t)ep1(x[4]) + (uint32_t)ch(x[4], x[5], x[6]) + (uint32_t)((uint32_t[64])k)[i] + (uint32_t)m[i];
+		const uint32_t t1 = (uint32_t)x[7] + (uint32_t)ep1(x[4]) + (uint32_t)ch(x[4], x[5], x[6]) + ((uint32_t[64])k)[i] + (uint32_t)m[i];
 		const uint32_t t2 = (uint32_t)ep0(x[0]) + (uint32_t)maj(x[0], x[1], x[2]);
 
 		x[7] = x[6];

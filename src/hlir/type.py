@@ -112,6 +112,10 @@ class Type(Entity):
 	def is_arithmetical(self):
 		return self.is_int() or self.is_nat()
 
+	# word, nat, int
+	def is_xword(self):
+		return self.is_word() or self.is_int() or self.is_nat()
+
 
 	def is_float(self):
 		return isinstance(self, TypeFloat)
