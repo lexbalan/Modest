@@ -6,6 +6,10 @@ include "libc/stdio"
 import "fixed64" as fixed
 
 
+func xxx(x: *Unit) -> Unit {
+	//
+}
+
 public func main () -> Int {
 	//printf("%s-endian\n", kind)
 	let a = fixed.fromInt32(-10)
@@ -20,6 +24,10 @@ public func main () -> Int {
 	var c1 = Nat8 Word8 Char8 "A"
 	var c2 = Nat16 Word16 Char16 "A"
 	var c3 = Nat32 Word32 Char32 "A"
+
+	var c4: [4]Char8
+	xxx(&c3)
+	xxx(&c4)
 
 	printf("pi (%llx):\n", pi)
 	fixed.print(pi)

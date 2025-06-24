@@ -9,6 +9,10 @@
 #include "main.h"
 
 
+static void xxx(void *x) {
+	//
+}
+
 int main() {
 	//printf("%s-endian\n", kind)
 	const fixed64_Fixed64 a = fixed64_fromInt32(-10);
@@ -21,8 +25,12 @@ int main() {
 	w0 = *(uint32_t*)&f0;
 
 	uint8_t c1 = (uint8_t)'A';
-	uint16_t c2 = u'A';
-	uint32_t c3 = U'A';
+	uint16_t c2 = (uint16_t)u'A';
+	uint32_t c3 = (uint32_t)U'A';
+
+	char c4[4];
+	xxx(&c3);
+	xxx((void *)&c4);
 
 	printf("pi (%llx):\n", pi);
 	fixed64_print(pi);

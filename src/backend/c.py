@@ -859,7 +859,6 @@ def str_value_cons(x, ctx):
 	if type.is_record():
 		return str_value_cons_record(x, ctx)
 
-
 	# у нас типы структурные, а в си - номинальные
 	# поэтому даже если структуры одинаковы, но имена разные
 	# - их нужно жестко приводить
@@ -900,18 +899,14 @@ def str_value_cons(x, ctx):
 	if from_type.is_int() or from_type.is_num():
 		if from_type.is_signed():
 			if type.is_nat():
-				v = str_value(value)
-				#"#define ABS(x) ((x) < 0 ? -(x) : (x))"
-				return "ABS(" + v + ")"
+				return "ABS(" + str_value(value) + ")"
 			elif type.is_word():
 				if from_type.size < type.size:
-					sstr = "(" + str_type(type) + ")"
 					nat_same_sz = foundation.type_select_nat(from_type.width)
-					sstr += str_cast(nat_same_sz, value, ctx)
-					return sstr
+					return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx)
 
 	# for: (uint32_t *)(void *)&i;
-	# remove (void *)
+	# remove (void *)  ^^^^^^^^
 	if isinstance(value, ValueCons):
 		if value.type.is_free_pointer():
 			value = value.value
