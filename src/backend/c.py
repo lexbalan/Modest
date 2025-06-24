@@ -849,7 +849,6 @@ def str_value_cons_array(x, ctx):
 
 
 def str_value_cons(x, ctx):
-	sstr = ''
 	type = x.type
 	value = x.value
 	from_type = value.type
@@ -906,7 +905,7 @@ def str_value_cons(x, ctx):
 				return "ABS(" + v + ")"
 			elif type.is_word():
 				if from_type.size < type.size:
-					sstr += "(" + str_type(type) + ")"
+					sstr = "(" + str_type(type) + ")"
 					nat_same_sz = foundation.type_select_nat(from_type.width)
 					sstr += str_cast(nat_same_sz, value, ctx)
 					return sstr
