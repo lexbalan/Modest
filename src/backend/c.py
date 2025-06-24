@@ -859,10 +859,10 @@ def str_value_cons(x, ctx):
 	if type.is_record():
 		return str_value_cons_record(x, ctx)
 
+	# *RecordA -> *RecordB
 	# у нас типы структурные, а в си - номинальные
 	# поэтому даже если структуры одинаковы, но имена разные
 	# - их нужно жестко приводить
-	# *RecordA -> *RecordB
 	if type.is_pointer_to_record() and from_type.is_pointer_to_record():
 		if from_type.definition != type.definition:
 			return str_cast(type, value, ctx)
@@ -880,9 +880,8 @@ def str_value_cons(x, ctx):
 		if isinstance(value, ValueRef):
 			# Явно приводим указатель на массив к указателю на его элемент
 			# В случае когда происходит НЕЯВНОЕ приведение;
-			if value.value.type.is_array():
-				if value.value.type.of.is_simple():
-					return str_cast(type, value, ctx)
+			if value.type.is_pointer_to_array():
+				return str_cast(type, value, ctx)
 
 		return str_value(value)
 

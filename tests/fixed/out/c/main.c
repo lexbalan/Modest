@@ -30,7 +30,7 @@ int main() {
 
 	char c4[4];
 	xxx(&c3);
-	xxx((void *)&c4);
+	xxx(/**/(void *)&c4);
 
 	printf("pi (%llx):\n", pi);
 	fixed64_print(pi);
