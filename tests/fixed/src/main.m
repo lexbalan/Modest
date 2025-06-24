@@ -17,6 +17,10 @@ public func main () -> Int {
 
 	w0 = unsafe Word32 f0
 
+	var c1 = Nat8 Word8 Char8 "A"
+	var c2 = Nat16 Word16 Char16 "A"
+	var c3 = Nat32 Word32 Char32 "A"
+
 	printf("pi (%llx):\n", pi)
 	fixed.print(pi)
 

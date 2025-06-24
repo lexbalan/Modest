@@ -30,7 +30,7 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len) {
 
 	uint32_t i = 0;
 	while (i < tableSize) {
-		crc = (uint32_t)i;
+		crc = i;
 		uint32_t j = 0;
 		while (j < 8) {
 			if ((crc & 1) != 0) {

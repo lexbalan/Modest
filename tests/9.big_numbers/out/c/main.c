@@ -39,7 +39,7 @@ int main() {
 	printf("big1 = 0x%llX%llX\n", high_128(big1), low_128(big1));
 	//printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2))
 	printf("big3 = 0x%llX%llX\n", high_128(big3), low_128(big3));
-	printf("big_sum = 0x%llX%llX\n", high_128((unsigned __int128)big_sum), low_128((unsigned __int128)big_sum));
+	printf("big_sum = 0x%llX%llX\n", high_128(big_sum), low_128(big_sum));
 
 
 	// signed big int test

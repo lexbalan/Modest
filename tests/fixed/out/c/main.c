@@ -20,6 +20,10 @@ int main() {
 
 	w0 = *(uint32_t*)&f0;
 
+	uint8_t c1 = (uint8_t)'A';
+	uint16_t c2 = u'A';
+	uint32_t c3 = U'A';
+
 	printf("pi (%llx):\n", pi);
 	fixed64_print(pi);
 

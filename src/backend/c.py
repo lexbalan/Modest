@@ -857,8 +857,9 @@ def str_value_cons(x, ctx):
 	if type.is_array():
 		return str_value_cons_array(x, ctx)
 
-	elif type.is_record():
+	if type.is_record():
 		return str_value_cons_record(x, ctx)
+
 
 	# у нас типы структурные, а в си - номинальные
 	# поэтому даже если структуры одинаковы, но имена разные
@@ -874,6 +875,8 @@ def str_value_cons(x, ctx):
 	elif type.is_xword() and from_type.is_xword():
 		if from_type.is_generic():
 			return str_value(value)
+		if get_id_str(type) == get_id_str(from_type):
+			return str_value(value)
 
 	if x.method == 'implicit':
 		if isinstance(value, ValueRef):
@@ -887,8 +890,7 @@ def str_value_cons(x, ctx):
 
 
 	if isinstance(value, ValueLiteral):
-		sstr += str_value(value)
-		return sstr
+		return str_value(value)
 
 	# (!) WARNING (!)
 	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff

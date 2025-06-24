@@ -100,7 +100,7 @@ static void transform(Context *ctx, uint8_t *data) {
 	}
 
 	while (i < 64) {
-		m[i] = (uint32_t)((uint32_t)sig1(m[i - 2]) + (uint32_t)m[i - 7] + (uint32_t)sig0(m[i - 15]) + (uint32_t)m[i - 16]);
+		m[i] = (sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16]);
 		i = i + 1;
 	}
 
@@ -109,24 +109,24 @@ static void transform(Context *ctx, uint8_t *data) {
 
 	i = 0;
 	while (i < 64) {
-		const uint32_t t1 = (uint32_t)x[7] + (uint32_t)ep1(x[4]) + (uint32_t)ch(x[4], x[5], x[6]) + ((uint32_t[64])k)[i] + (uint32_t)m[i];
-		const uint32_t t2 = (uint32_t)ep0(x[0]) + (uint32_t)maj(x[0], x[1], x[2]);
+		const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + ((uint32_t[64])k)[i] + m[i];
+		const uint32_t t2 = ep0(x[0]) + maj(x[0], x[1], x[2]);
 
 		x[7] = x[6];
 		x[6] = x[5];
 		x[5] = x[4];
-		x[4] = (uint32_t)((uint32_t)x[3] + t1);
+		x[4] = (x[3] + t1);
 		x[3] = x[2];
 		x[2] = x[1];
 		x[1] = x[0];
-		x[0] = (uint32_t)(t1 + t2);
+		x[0] = (t1 + t2);
 
 		i = i + 1;
 	}
 
 	i = 0;
 	while (i < 8) {
-		ctx->state[i] = (uint32_t)((uint32_t)ctx->state[i] + (uint32_t)x[i]);
+		ctx->state[i] = (ctx->state[i] + x[i]);
 		i = i + 1;
 	}
 }
@@ -171,14 +171,14 @@ static void final(Context *ctx, uint8_t *outHash) {
 	// Append to the padding the total message's length in bits and transform.
 	ctx->bitlen = ctx->bitlen + (uint64_t)ctx->datalen * 8;
 
-	ctx->data[63] = (uint8_t)((uint64_t)ctx->bitlen >> 0);
-	ctx->data[62] = (uint8_t)((uint64_t)ctx->bitlen >> 8);
-	ctx->data[61] = (uint8_t)((uint64_t)ctx->bitlen >> 16);
-	ctx->data[60] = (uint8_t)((uint64_t)ctx->bitlen >> 24);
-	ctx->data[59] = (uint8_t)((uint64_t)ctx->bitlen >> 32);
-	ctx->data[58] = (uint8_t)((uint64_t)ctx->bitlen >> 40);
-	ctx->data[57] = (uint8_t)((uint64_t)ctx->bitlen >> 48);
-	ctx->data[56] = (uint8_t)((uint64_t)ctx->bitlen >> 56);
+	ctx->data[63] = (uint8_t)(ctx->bitlen >> 0);
+	ctx->data[62] = (uint8_t)(ctx->bitlen >> 8);
+	ctx->data[61] = (uint8_t)(ctx->bitlen >> 16);
+	ctx->data[60] = (uint8_t)(ctx->bitlen >> 24);
+	ctx->data[59] = (uint8_t)(ctx->bitlen >> 32);
+	ctx->data[58] = (uint8_t)(ctx->bitlen >> 40);
+	ctx->data[57] = (uint8_t)(ctx->bitlen >> 48);
+	ctx->data[56] = (uint8_t)(ctx->bitlen >> 56);
 
 	transform(ctx, (uint8_t *)&ctx->data);
 
