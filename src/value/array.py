@@ -114,7 +114,7 @@ def value_array_cons(t, v, method, ti):
 		t.size = t.of.size * volume.asset
 
 
-	nv = ValueCons(t, v, method, ti)
+	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 	nv.immediate = v.immediate
 
 	if v.immediate:

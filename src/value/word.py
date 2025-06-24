@@ -61,5 +61,6 @@ def word_can(to, from_type, method, ti):
 def value_word_cons(t, v, method, ti):
 	if v.isImmediate():
 		return _value_word_cons_immediate(t, v, method, ti)
-	return ValueCons(t, v, method, rawMode=True, ti=ti)
+	rawMode=v.type.is_float()
+	return ValueCons(t, v, method, rawMode=rawMode, ti=ti)
 

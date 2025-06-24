@@ -97,7 +97,7 @@ def value_natural_cons(t, v, method, ti):
 	if v.isImmediate():
 		_check_width(v.type, t, method, ti)
 		if method != 'implicit':
-			nv = ValueCons(t, v, method, ti=ti)
+			nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 
 			if v.type.is_signed():
 				if v.asset < 0:
@@ -110,6 +110,6 @@ def value_natural_cons(t, v, method, ti):
 			return nv
 		return _value_natural_cons_immediate(t, v, method, ti)
 
-	return ValueCons(t, v, method, ti=ti)
+	return ValueCons(t, v, method, rawMode=False, ti=ti)
 
 

@@ -93,12 +93,12 @@ def value_integer_cons(t, v, method, ti):
 	if v.isImmediate():
 		_check_width(v.type, t, method, ti)
 		if method != 'implicit':
-			nv = ValueCons(t, v, method, ti=ti)
+			nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 			nv.asset = int(v.asset)  # here can be float
 			nv.immediate = True
 			return nv
 		return _value_integer_cons_immediate(t, v, method, ti)
 
-	return ValueCons(t, v, method, ti=ti)
+	return ValueCons(t, v, method, rawMode=False, ti=ti)
 
 

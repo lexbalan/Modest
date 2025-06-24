@@ -222,7 +222,7 @@ class ValueZero(Value):
 
 
 class ValueCons(Value):
-	def __init__(self, type, value, method, rawMode=False, ti=None):
+	def __init__(self, type, value, method, rawMode, ti):
 		from .type import Type
 		assert(isinstance(type, Type))
 		assert(isinstance(value, Value))

@@ -875,17 +875,10 @@ def str_value_cons(x, ctx):
 		if from_type.is_nat() or from_type.is_word():
 			if from_type.is_generic_nat():
 				return str_value(value)
-			#if type.width == from_type.width:
-			#	return str_value(value)
 
 	elif type.is_word():
-		#if type.width == from_type.width:
-		#	return str_value(value)
 		if from_type.is_generic():
 			return str_value(value)
-
-		raw = from_type.is_float()
-		return str_cast(type, value, rawMode=raw, ctx=ctx)
 
 
 	if x.method == 'implicit':
@@ -929,7 +922,9 @@ def str_value_cons(x, ctx):
 		if value.type.is_free_pointer():
 			value = value.value
 
-	return str_cast(type, value, ctx)
+	if x.rawMode:
+		info("??", x.ti)
+	return str_cast(type, value, rawMode=x.rawMode, ctx=ctx)
 
 
 

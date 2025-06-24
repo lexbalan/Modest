@@ -310,7 +310,7 @@ def value_cons(t, v, method, ti):
 # и в то же время как cons нода
 def value_cons_immediate(t, v, method, ti):
 	assert method in ['implicit', 'explicit', 'unsafe']
-	nv = ValueCons(t, v, method, ti)
+	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 
 	nv.asset = v.asset
 	nv.immediate = True

@@ -57,7 +57,7 @@ def value_char_cons(t, v, method, ti):
 	if v.isImmediate():
 		return value_cons_immediate(t, v, method, ti)
 
-	return ValueCons(t, v, method, ti=ti)
+	return ValueCons(t, v, method, rawMode=False, ti=ti)
 
 
 
