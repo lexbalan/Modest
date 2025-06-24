@@ -864,7 +864,7 @@ def str_value_cons(x, ctx):
 	# поэтому даже если структуры одинаковы, но имена разные
 	# - их нужно жестко приводить
 	if type.is_pointer_to_record() and from_type.is_pointer_to_record():
-		if from_type.definition != type.definition:
+		if (from_type.to.definition != type.to.definition):
 			return str_cast(type, value, ctx)
 
 	elif type.is_char() and from_type.is_string():

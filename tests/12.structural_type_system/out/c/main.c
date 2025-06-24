@@ -84,19 +84,19 @@ static void test_by_value() {
 
 static void test_by_pointer() {
 	f0_ptr(&a);
-	f1_ptr(&a);
-	f2_ptr(&a);
-	f3_ptr(&a);
+	f1_ptr((Type2 *)&a);
+	f2_ptr((Type3 *)&a);
+	f3_ptr((struct __anonymous_struct_4 *)&a);
 
-	f0_ptr(&b);
+	f0_ptr((Type1 *)&b);
 	f1_ptr(&b);
-	f2_ptr(&b);
-	f3_ptr(&b);
+	f2_ptr((Type3 *)&b);
+	f3_ptr((struct __anonymous_struct_4 *)&b);
 
-	f0_ptr(&c);
-	f1_ptr(&c);
+	f0_ptr((Type1 *)&c);
+	f1_ptr((Type2 *)&c);
 	f2_ptr(&c);
-	f3_ptr(&c);
+	f3_ptr((struct __anonymous_struct_4 *)&c);
 }
 
 int main() {

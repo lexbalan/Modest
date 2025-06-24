@@ -44,8 +44,8 @@ int main() {
 	#define k  (1.0 / 8)
 	printf("k = %f\n", (double)k);
 
-	printf("sizeof(Float32) = %lu\n", sizeof(float));
-	printf("sizeof(Float64) = %lu\n", sizeof(double));
+	printf("sizeof(Float32) = %lu\n", (uint64_t)sizeof(float));
+	printf("sizeof(Float64) = %lu\n", (uint64_t)sizeof(double));
 
 	// printf %f ожидает получить double а не float!
 	const float sl = slope((Point2D){.x = 10, .y = 20}, (Point2D){.x = 30, .y = 50});
