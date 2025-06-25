@@ -60,12 +60,12 @@ static void f0(char *_x, char *sret_) {
 	memcpy(sret_, &res, sizeof(char[30]));
 }
 
-#define startSequence  {0xAA, 0x55, 0x02}
+#define startSequence  {0xAA, 0x55, 0x2}
 #define stopSequence  {0x16}
 
 static void test() {
 	// тестируем работу с локальным generic массивом
-	uint8_t yy[6] = {0xAA, 0x55, 0x02, 0x00, 0x00, 0x16};
+	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
 	uint32_t i = 0;
 	while (i < __lengthof(yy)) {
 		const uint8_t y = yy[i];

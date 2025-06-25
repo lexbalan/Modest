@@ -1173,34 +1173,34 @@ def str_literal_pointer(type, num):
 
 
 def str_value_literal(x, ctx):
-	sstr = ''
-	t = x.type
+	return str_value_literal2(x.type, x.asset)
+
+
+def str_value_literal2(t, asset):
 	if t.is_arithmetical() or t.is_num() or t.is_word():
-		nsigns = 0
-		if hasattr(x, 'nsigns'):
-			nsigns = x.nsigns
-		sstr += str_literal_number(x.type, x.asset, nsigns=nsigns, is_hex=x.hasAttribute('hexadecimal'))
+		#if hasattr(x, 'nsigns'):
+		#	nsigns = x.nsigns
+		#return str_literal_number(t, asset, is_hex=x.hasAttribute('hexadecimal'))
+		return str_literal_number(t, asset, is_hex=t.is_word())
 
 	elif t.is_float():
-		sstr += str_literal_float(x.asset)
+		return str_literal_float(asset)
 	elif t.is_string():
-		sstr += str_literal_string(x.asset, char_width=x.type.width)
+		return str_literal_string(asset, char_width=t.width)
 	elif t.is_record():
-		sstr += str_literal_record(x.type, x.asset)
+		return str_literal_record(t, asset)
 	elif t.is_array():
-		sstr += str_literal_array(x.type, x.asset)
+		return str_literal_array(t, asset)
 	elif t.is_bool():
-		sstr += str_literal_bool(x.asset)
+		return str_literal_bool(asset)
 	elif t.is_char():
-		sstr += str_literal_char(x.asset, x.type.width)
+		return str_literal_char(asset, t.width)
 	elif t.is_pointer():
-		sstr += str_literal_pointer(x.type, x.asset)
-	#elif t.is_unit():
-	#	sstr = ''
+		return str_literal_pointer(t, asset)
 	else:
-		error("str_value_literal not implemented for %s" % str(x.type), x.ti)
+		error("str_value_literal not implemented for %s" % str(t), x.ti)
 
-	return sstr
+	return "<literal>"
 
 
 
@@ -1307,7 +1307,7 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 
 	if need_wrap:
 		sstr += "("
-	
+
 	if isinstance(x, ValueLiteral):
 		sstr += str_value_literal(x, ctx)
 	elif isinstance(x, ValueBin):
