@@ -859,6 +859,10 @@ def str_value_cons(x, ctx):
 	if type.is_record():
 		return str_value_cons_record(x, ctx)
 
+	if isinstance(value, ValueLiteral):
+		if from_type.is_number():
+			return str_literal_number(type, x.asset)
+
 	# *RecordA -> *RecordB
 	# у нас типы структурные, а в си - номинальные
 	# поэтому даже если структуры одинаковы, но имена разные
@@ -1118,16 +1122,16 @@ def str_value_enum(x, ctx):
 
 
 
-def print_suffix(to_type, num):
+def str_literal_suffix(to_type, num):
 	sstr = ''
 	req_bits = nbits_for_num(num)
 
 	# ! `not is_signed()`, because here can be Word (it nor signed, nor unsigned) !
-	if to_type.is_unsigned():
+	if not to_type.is_signed():
 		if req_bits >= CC_INT_SIZE_BITS:
 			sstr += "U"
 
-	if req_bits <= CC_INT_SIZE_BITS:
+	if req_bits < CC_INT_SIZE_BITS:
 		pass  # int
 	elif req_bits <= CC_LONG_SIZE_BITS:
 		sstr += "L"  # long int
@@ -1136,7 +1140,7 @@ def print_suffix(to_type, num):
 	return sstr
 
 
-def str_literal_integer(type, num, nsigns=0, is_big=False, is_hex=False):
+def str_literal_number(type, num, nsigns=0, is_big=False, is_hex=False):
 	global need_big_int
 	sstr = ''
 	# Big Number?
@@ -1154,11 +1158,11 @@ def str_literal_integer(type, num, nsigns=0, is_big=False, is_hex=False):
 	if is_hex:
 		fmt = "0x%%0%dX" % nsigns
 		sstr += (fmt % num)
-		return sstr
 	else:
-		sstr += (str(num))
+		sstr += str(num)
 
-	sstr += print_suffix(type, num)
+	# mass
+	sstr += str_literal_suffix(type, num) #+ '/*%d.%d*/' % (type.width, type.is_unsigned())
 
 	return sstr
 
@@ -1187,7 +1191,7 @@ def str_value_literal(x, ctx):
 		nsigns = 0
 		if hasattr(x, 'nsigns'):
 			nsigns = x.nsigns
-		sstr += str_literal_integer(x.type, x.asset, nsigns=nsigns, is_hex=x.hasAttribute('hexadecimal'))
+		sstr += str_literal_number(x.type, x.asset, nsigns=nsigns, is_hex=x.hasAttribute('hexadecimal'))
 
 	elif t.is_float():
 		sstr += str_literal_float(x.asset)
@@ -1486,6 +1490,11 @@ def print_stmt_var(x):
 	out(" = ")
 	#print_value(init_value)
 	out(str_static_initializer(init_value))
+
+	# mass
+	#s = ""
+	#if hasattr(init_value, 'value'):
+	#	s = str(init_value.value.type)
 	out(";")
 	return
 

@@ -21,7 +21,7 @@ static uint64_t high_128(unsigned __int128 x) {
 }
 
 static uint64_t low_128(unsigned __int128 x) {
-	return (uint64_t)(x & 0xFFFFFFFFFFFFFFFF);
+	return (uint64_t)(x & 0xFFFFFFFFFFFFFFFFULL);
 }
 
 int main() {
@@ -47,7 +47,7 @@ int main() {
 
 	__int128 sig1 = sig0;
 
-	sig1 = sig1 + 1;
+	sig1 = sig1 + BIG_INT128(0x0ULL, 0x1ULL);
 
 	printf("sig1 = %lld\n", ABS(sig1));
 

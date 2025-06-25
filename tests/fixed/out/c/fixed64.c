@@ -9,7 +9,7 @@
 
 
 // FIXIT! (Word64 Int64 1)
-#define multiplier  ((int64_t)(((uint64_t)1) << 32))
+#define multiplier  ((int64_t)(((uint64_t)1) << 32U))
 
 fixed64_Fixed64 fixed64_add(fixed64_Fixed64 a, fixed64_Fixed64 b) {
 	return (fixed64_Fixed64)((int64_t)a + (int64_t)b);

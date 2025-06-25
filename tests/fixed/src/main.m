@@ -16,6 +16,8 @@ public func main () -> Int {
 	let b = fixed.fromInt32(3)
 	let pi = fixed.create(3, 141592, 1000000)
 
+	var y = Nat64 0x1FFFFFFFF
+
 	printf("pi (%llx):\n", pi)
 	fixed.print(pi)
 
