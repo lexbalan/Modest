@@ -11,9 +11,6 @@
 #include <math.h>
 #include "./minmax.h"
 
-
-// Pythagorean theorem
-
 int main();
 
 #endif /* MAIN_H */

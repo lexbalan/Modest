@@ -13,10 +13,6 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
-
-//include "libc/ctypes64"
-//include "libc/stdio"
-
 int main();
 
 #endif /* MAIN_H */

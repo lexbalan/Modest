@@ -10,10 +10,7 @@
 #include "./utf.h"
 #include "./console.h"
 #include <stdio.h>
-
-// include test (!)
 #include "console.h"
-
 int32_t main();
 
 #endif /* MAIN_H */

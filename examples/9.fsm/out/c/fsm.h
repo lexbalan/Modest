@@ -8,9 +8,6 @@
 #include <stdbool.h>
 
 #include <stdio.h>
-
-// Вынужден добавлять export тк иначе не идет в хедер к структуре
-// Короче, проблема зависимостей тяжело зависла в воздухе
 #define fsm_nameMaxLength  8
 #define fsm_maxStates  16
 
@@ -38,11 +35,8 @@ struct fsm_FSM {
 	uint32_t substate;
 	fsm_StateDesc states[fsm_maxStates];
 };
-
 char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no);
-
 void fsm_switch(fsm_FSM *fsm, uint32_t state);
-
 void fsm_run(fsm_FSM *fsm);
 
 #endif /* FSM_H */

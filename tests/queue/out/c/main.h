@@ -11,9 +11,6 @@
 #include <stdio.h>
 #include "queueWord8.h"
 #include "ringWord8.h"
-
-// выгребаем и распечатываем n значений
-
 int main();
 
 #endif /* MAIN_H */

@@ -10,23 +10,7 @@
 #include "./delay.h"
 #include <stdio.h>
 
-// This is flashlight final state machine example
-// (just for compiler test and language demonstration)
-
 #include "fsm.h"
-
-//
-// State Off
-//
-
-//
-// State On
-//
-
-//
-// State Beacon
-//
-
 int main();
 
 #endif /* MAIN_H */

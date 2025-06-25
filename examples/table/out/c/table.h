@@ -22,14 +22,6 @@ struct table_Table {
 	bool separate;
 };
 typedef struct table_Table table_Table;
-
-// we cannot receive VLA by value,
-// but we can receive pointer to open array
-// and after construct pointer to closed array with required dimensions
 void table_print(table_Table *table);
-
-// печатает строку +---+---+ отделяющую записи таблицы
-// получает указатель на массив с размерами колонок
-// и количество элементов в ней
 
 #endif /* TABLE_H */

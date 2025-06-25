@@ -9,7 +9,6 @@
 
 #include <stdio.h>
 #include "lib.h"
-
 int main();
 
 #endif /* MAIN_H */

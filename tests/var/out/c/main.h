@@ -7,8 +7,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <stdio.h>// -> *[]Char8
-
+#include <stdio.h>
 int main();
 
 #endif /* MAIN_H */

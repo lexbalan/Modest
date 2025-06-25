@@ -2133,7 +2133,8 @@ def print_header(module, outname):
 				s = os.path.basename(x.impline)
 				include(s + '.h', local=True)
 		elif isinstance(x, StmtDefFunc):
-			nnl(x.nl)
+			#nnl(x.nl)
+			nnl(1)
 			if x.hasAttribute('inline'):
 				if x.access_level != 'private':
 					out("static ")
@@ -2153,9 +2154,9 @@ def print_header(module, outname):
 			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_const(x)
-		elif isinstance(x, StmtComment):
-			nnl(x.nl)
-			print_comment(x)
+		#elif isinstance(x, StmtComment):
+		#	nnl(x.nl)
+		#	print_comment(x)
 
 	newline()
 	newline()
