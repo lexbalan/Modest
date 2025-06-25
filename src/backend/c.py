@@ -851,8 +851,6 @@ def str_value_cons(x, ctx):
 		if from_type.is_generic():
 			if x.asset != None:
 				return str_value_literal2(type, x.asset)
-			#if from_type.is_number() or from_type.is_word():
-			#	return str_literal_number(type, x.asset, is_hex=from_type.is_word())
 
 	# *RecordA -> *RecordB
 	# у нас типы структурные, а в си - номинальные
