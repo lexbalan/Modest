@@ -17,21 +17,9 @@ import foundation
 
 cmodule = None
 
-
 NO_TYPEDEF_STRUCTS = False
-
-BOOL_TRUE_LITERAL = 'true'
-BOOL_FALSE_LITERAL = 'false'
 DONT_PRINT_UNUSED = True
 
-USE_STATIC_VARIABLES = True
-
-VA_ARG_CHAR_AS_INT = True
-
-# for integer literals printing
-CC_INT_SIZE_BITS = 32
-CC_LONG_SIZE_BITS = 32
-CC_LONG_LONG_SIZE_BITS = 64
 
 # идетнифиаторы декларированных (или определенных) сущностей
 declared = []
@@ -92,11 +80,6 @@ def init(settings):
 	if stylename != None:
 		if stylename in styles:
 			styleguide = styles[stylename]
-
-	global CC_INT_SIZE_BITS, CC_LONG_SIZE_BITS, CC_LONG_LONG_SIZE_BITS
-	CC_INT_SIZE_BITS = 32
-	CC_LONG_SIZE_BITS = 32
-	CC_LONG_LONG_SIZE_BITS = 64
 
 
 
@@ -1112,9 +1095,9 @@ def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 
 def str_literal_bool(num):
 	if num:
-		return BOOL_TRUE_LITERAL
+		return settings['true_literal']
 	else:
-		return BOOL_FALSE_LITERAL
+		return settings['false_literal']
 
 
 def str_value_enum(x, ctx):
@@ -1128,12 +1111,12 @@ def str_literal_suffix(to_type, num):
 
 	# ! `not is_signed()`, because here can be Word (it nor signed, nor unsigned) !
 	if not to_type.is_signed():
-		if req_bits >= CC_INT_SIZE_BITS:
+		if req_bits >= settings['int_width']:
 			sstr += "U"
 
-	if req_bits < CC_INT_SIZE_BITS:
+	if req_bits < settings['int_width']:
 		pass  # int
-	elif req_bits <= CC_LONG_SIZE_BITS:
+	elif req_bits <= settings['long_width']:
 		sstr += "L"  # long int
 	else:
 		sstr += "LL"  # long long int
@@ -1928,10 +1911,10 @@ def print_def_var(x, isdecl=False):
 		out("__attribute__((aligned(%d)))\n" % x.alignment)
 
 	var = x.value
-	if USE_STATIC_VARIABLES:
-		if x.access_level == 'private':
-			if not (x.hasAttribute('extern') or x.hasAttribute('nonstatic')):
-				out("static ")
+
+	if x.access_level == 'private':
+		if not (x.hasAttribute('extern') or x.hasAttribute('nonstatic')):
+			out("static ")
 
 	if x.hasAttribute('extern'):
 		out("extern ")

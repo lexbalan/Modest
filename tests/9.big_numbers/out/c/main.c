@@ -21,7 +21,7 @@ static uint64_t high_128(unsigned __int128 x) {
 }
 
 static uint64_t low_128(unsigned __int128 x) {
-	return (uint64_t)(x & 0xFFFFFFFFFFFFFFFFULL);
+	return (uint64_t)(x & 0xFFFFFFFFFFFFFFFFUL);
 }
 
 int main() {
