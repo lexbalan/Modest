@@ -5,15 +5,14 @@ include "stdio"
 import "fixed64" as fixed
 
 
-func xxx (x: Ptr) -> Unit {
-	//
-}
 
 public func main () -> Int {
 	//printf("%s-endian\n", kind)
 	let a: Fixed64 = fixed.fromInt32(-10)
 	let b: Fixed64 = fixed.fromInt32(3)
 	let pi: Fixed64 = fixed.create(3, 141592, 1000000)
+
+	var y = Nat64 0x1FFFFFFFF
 
 	printf("pi (%llx):\n", pi)
 	fixed.print(pi)

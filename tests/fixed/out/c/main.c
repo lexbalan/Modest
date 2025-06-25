@@ -9,17 +9,14 @@
 #include "main.h"
 
 
-static void xxx(void *x) {
-	//
-}
-
 int main() {
 	//printf("%s-endian\n", kind)
 	const fixed64_Fixed64 a = fixed64_fromInt32(-10);
 	const fixed64_Fixed64 b = fixed64_fromInt32(3);
 	const fixed64_Fixed64 pi = fixed64_create(3, 141592, 1000000);
 
-	uint64_t y = 0x1FFFFFFFFULL;
+	uint64_t y = 0x1FFFFFFFFUL;
+	int64_t z = 0x1FFFFFFFFL;
 
 	printf("pi (%llx):\n", pi);
 	fixed64_print(pi);

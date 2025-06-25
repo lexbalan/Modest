@@ -215,37 +215,34 @@ declare void @fixed64_print(%fixed64_Fixed64 %x)
 @str5 = private constant [6 x i8] [i8 115, i8 117, i8 98, i8 58, i8 10, i8 0]
 @str6 = private constant [8 x i8] [i8 105, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --; tests/fixed/src/main.m
-define internal void @xxx(i8* %x) {
-	;
-	ret void
-}
-
 define %Int @main() {
 	;printf("%s-endian\n", kind)
 	%1 = call %fixed64_Fixed64 @fixed64_fromInt32(%Int32 -10)
 	%2 = call %fixed64_Fixed64 @fixed64_fromInt32(%Int32 3)
 	%3 = call %fixed64_Fixed64 @fixed64_create(%Int32 3, %Int32 141592, %Int32 1000000)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), %fixed64_Fixed64 %3)
+	%4 = alloca %Nat64, align 8
+	store %Nat64 8589934591, %Nat64* %4
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), %fixed64_Fixed64 %3)
 	call void @fixed64_print(%fixed64_Fixed64 %3)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str2 to [0 x i8]*))
-	%6 = call %fixed64_Fixed64 @fixed64_div(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
-	call void @fixed64_print(%fixed64_Fixed64 %6)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str3 to [0 x i8]*))
-	%8 = call %fixed64_Fixed64 @fixed64_mul(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
-	call void @fixed64_print(%fixed64_Fixed64 %8)
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str4 to [0 x i8]*))
-	%10 = call %fixed64_Fixed64 @fixed64_add(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
-	call void @fixed64_print(%fixed64_Fixed64 %10)
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str5 to [0 x i8]*))
-	%12 = call %fixed64_Fixed64 @fixed64_sub(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
-	call void @fixed64_print(%fixed64_Fixed64 %12)
-	%13 = alloca %Int32, align 4
-	%14 = call %Int32 @fixed64_toInt32(%fixed64_Fixed64 %6)
-	store %Int32 %14, %Int32* %13
-	%15 = load %Int32, %Int32* %13
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Int32 %15)
-	%17 = call %fixed64_Fixed64 @fixed64_create(%Int32 1, %Int32 3, %Int32 2)
-	call void @fixed64_print(%fixed64_Fixed64 %17)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str2 to [0 x i8]*))
+	%7 = call %fixed64_Fixed64 @fixed64_div(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
+	call void @fixed64_print(%fixed64_Fixed64 %7)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str3 to [0 x i8]*))
+	%9 = call %fixed64_Fixed64 @fixed64_mul(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
+	call void @fixed64_print(%fixed64_Fixed64 %9)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str4 to [0 x i8]*))
+	%11 = call %fixed64_Fixed64 @fixed64_add(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
+	call void @fixed64_print(%fixed64_Fixed64 %11)
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str5 to [0 x i8]*))
+	%13 = call %fixed64_Fixed64 @fixed64_sub(%fixed64_Fixed64 %1, %fixed64_Fixed64 %2)
+	call void @fixed64_print(%fixed64_Fixed64 %13)
+	%14 = alloca %Int32, align 4
+	%15 = call %Int32 @fixed64_toInt32(%fixed64_Fixed64 %7)
+	store %Int32 %15, %Int32* %14
+	%16 = load %Int32, %Int32* %14
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Int32 %16)
+	%18 = call %fixed64_Fixed64 @fixed64_create(%Int32 1, %Int32 3, %Int32 2)
+	call void @fixed64_print(%fixed64_Fixed64 %18)
 	ret %Int 0
 }
 

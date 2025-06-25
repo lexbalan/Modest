@@ -10,7 +10,7 @@
 
 
 int main() {
-	uint16_t check = 0x0001;
+	uint16_t check = 0x1;
 	const bool is_le = *((uint8_t *)&check) == 1;
 
 	char *kind;

@@ -21,7 +21,7 @@ static uint64_t high_128(unsigned __int128 x) {
 }
 
 static uint64_t low_128(unsigned __int128 x) {
-	return (uint64_t)(x & 0xFFFFFFFFFFFFFFFFUL);
+	return (uint64_t)(x & BIG_INT128(0x0ULL, 0xFFFFFFFFFFFFFFFFULL));
 }
 
 int main() {
@@ -29,7 +29,7 @@ int main() {
 	#define big1  BIG_INT128(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL)
 	#define big2  BIG_INT256(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL)
 
-	unsigned __int128 big3 = 0x1;
+	unsigned __int128 big3 = BIG_INT128(0x0ULL, 0x1ULL);
 
 	uint32_t a = 1;
 
