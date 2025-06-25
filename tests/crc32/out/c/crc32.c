@@ -33,7 +33,7 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len) {
 		crc = i;
 		uint32_t j = 0;
 		while (j < 8) {
-			if ((crc & 1) != 0) {
+			if ((crc & 0x1) != 0x0) {
 				crc = (crc >> 1) ^ 0xEDB88320UL;
 			} else {
 				crc = crc >> 1;

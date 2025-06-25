@@ -41,7 +41,7 @@ static void handleRequest(int32_t client_socket) {
 		close(client_socket);
 		return;
 	}
-	buffer[bytes_received] = 0;
+	buffer[bytes_received] = 0x0;
 
 	printf("Received request:\n%s\n", (char *)&buffer);
 

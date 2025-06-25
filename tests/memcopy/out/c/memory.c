@@ -32,7 +32,7 @@ void memory_zero(void *mem, uint64_t len) {
 	// align the pointer
 	uint64_t i = 0;
 	while (i < z) {
-		dst_byte0[i] = 0;
+		dst_byte0[i] = 0x0;
 		i = i + 1;
 	}
 
@@ -43,7 +43,7 @@ void memory_zero(void *mem, uint64_t len) {
 
 	i = 0;
 	while (i < len_words) {
-		dst_word[i] = 0;
+		dst_word[i] = 0x0;
 		i = i + 1;
 	}
 
@@ -54,7 +54,7 @@ void memory_zero(void *mem, uint64_t len) {
 
 	i = 0;
 	while (i < len_bytes) {
-		dst_byte1[i] = 0;
+		dst_byte1[i] = 0x0;
 		i = i + 1;
 	}
 }

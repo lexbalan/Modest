@@ -849,8 +849,10 @@ def str_value_cons(x, ctx):
 
 	if isinstance(value, ValueLiteral):
 		if from_type.is_generic():
-			if from_type.is_number() or from_type.is_word():
-				return str_literal_number(type, x.asset, is_hex=from_type.is_word())
+			if x.asset != None:
+				return str_value_literal2(type, x.asset)
+			#if from_type.is_number() or from_type.is_word():
+			#	return str_literal_number(type, x.asset, is_hex=from_type.is_word())
 
 	# *RecordA -> *RecordB
 	# у нас типы структурные, а в си - номинальные
@@ -1182,7 +1184,6 @@ def str_value_literal2(t, asset):
 		#	nsigns = x.nsigns
 		#return str_literal_number(t, asset, is_hex=x.hasAttribute('hexadecimal'))
 		return str_literal_number(t, asset, is_hex=t.is_word())
-
 	elif t.is_float():
 		return str_literal_float(asset)
 	elif t.is_string():
@@ -1200,7 +1201,7 @@ def str_value_literal2(t, asset):
 	else:
 		error("str_value_literal not implemented for %s" % str(t), x.ti)
 
-	return "<literal>"
+	return "<ValueLiteral>"
 
 
 

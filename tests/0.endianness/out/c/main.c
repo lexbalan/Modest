@@ -11,7 +11,7 @@
 
 int main() {
 	uint16_t check = 0x1;
-	const bool is_le = *((uint8_t *)&check) == 1;
+	const bool is_le = *((uint8_t *)&check) == 0x1;
 
 	char *kind;
 	if (is_le) {
