@@ -1,7 +1,6 @@
 # Есть проблема с массивом generic int когда индексируешь и приводишь к инту
 # но индексируешь переменной (в цикле например)
 
-
 import copy
 
 from .common import *
@@ -33,6 +32,12 @@ legacy_style = {
 	'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
 }
 
+kernel_style = {
+	'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
+	'LINE_BREAK_BEFORE_FUNC_BRACE': True,
+	'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
+}
+
 modern_style = {
 	'LINE_BREAK_BEFORE_STRUCT_BRACE': True,
 	'LINE_BREAK_BEFORE_FUNC_BRACE': True,
@@ -41,15 +46,16 @@ modern_style = {
 
 styles = {
 	'legacy': legacy_style,
+	'kernel': kernel_style,
 	'modern': modern_style,
 
 	'KnR': legacy_style,
-	'kernel': legacy_style,
-	'allman': modern_style,
+	'Allman': modern_style,
 }
 
-default_style = styles['legacy']
-styleguide = default_style
+
+# default style is legacy
+styleguide = legacy_style
 
 
 
@@ -286,7 +292,6 @@ def str_type_array(t, core='', need_close=False):
 		core += ')'
 
 	return str_type(t2, core=core+right)
-
 
 
 
@@ -1144,8 +1149,7 @@ def str_literal_number(type, num, nsigns=0, is_big=False, is_hex=False):
 	else:
 		sstr += str(num)
 
-	# mass
-	sstr += str_literal_suffix(type, num) #+ '/*%d.%d*/' % (type.width, type.is_unsigned())
+	sstr += str_literal_suffix(type, num)
 
 	return sstr
 
@@ -1473,11 +1477,6 @@ def print_stmt_var(x):
 	out(" = ")
 	#print_value(init_value)
 	out(str_static_initializer(init_value))
-
-	# mass
-	#s = ""
-	#if hasattr(init_value, 'value'):
-	#	s = str(init_value.value.type)
 	out(";")
 	return
 
