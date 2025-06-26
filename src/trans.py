@@ -2043,6 +2043,7 @@ def def_func(x, dostmt=True):
 
 	if fn.id.str == 'main':
 		fn.id.addAttribute('nodecorate')
+		fn.id.addAttribute('entrypoint')
 
 	if x['stmt'] == None:
 		return fn.definition
