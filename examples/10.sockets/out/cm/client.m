@@ -16,8 +16,8 @@ const bufSize = 1024
 func send_file (fp: *File, sockfd: Int) -> Bool {
 	var data: [bufSize]Char8
 
-	while fgets(&data, bufSize, fp) != nil {
-		if send(sockfd, &data, SizeT sizeof([bufSize]Char8), 0) == -1 {
+	while fgets(&data, lengthof(data), fp) != nil {
+		if send(sockfd, &data, SizeT sizeof data, 0) == -1 {
 			return false
 		}
 		data = []

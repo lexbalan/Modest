@@ -962,6 +962,7 @@ def str_literal_string(chars, char_width):
 	return print_utf32codes_as_string(utf32_codes, char_width)
 
 
+
 def str_literal_char(cc, width):
 	return print_utf32codes_as_string([cc], width, quote="'")
 
@@ -1006,7 +1007,6 @@ def str_literal_array(type, items, nl_end=1):
 
 
 
-
 def str_literal_record(type, items):
 	sstr = "{"
 	indent_up()
@@ -1032,9 +1032,8 @@ def str_literal_record(type, items):
 			if item_printed:
 				sstr += " "
 
-		sstr += ".%s = " % field_id_str
+		sstr += ".%s = %s" % (field_id_str, str_value(ini.value))
 
-		sstr += str_value(ini.value)
 		if i < (nitems - 1):
 			sstr += ","
 
@@ -1045,12 +1044,17 @@ def str_literal_record(type, items):
 
 	if nl_end > 0:
 		sstr += str_nl_indent(nl=nl_end)
-	sstr += ("}")
+	sstr += "}"
 
 	#if cast_req:
 	#	out(")")
 	return sstr
 
+
+def string_literal_prefix(width):
+	if width > 16: return "U"
+	if width > 8: return "u"
+	return ""
 
 
 def code_to_char(cc):
@@ -1075,25 +1079,14 @@ def code_to_char(cc):
 		return chr(cc)
 
 
-def string_literal_prefix(width):
-	prefix = ""
-	if width <= 8:
-		return ""
-	elif width <= 16:
-		return "u"
-	elif width <= 32:
-		return "U"
-	return ""
-
-
 def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 	sstr = ''
 	prefix = string_literal_prefix(width)
-	sstr += (prefix)
-	sstr += (quote)
+	sstr = prefix
+	sstr += quote
 	for cc in utf32_codes:
-		sstr += (code_to_char(cc))
-	sstr += (quote)
+		sstr += code_to_char(cc)
+	sstr += quote
 	return sstr
 
 
@@ -1111,20 +1104,22 @@ def str_value_enum(x, ctx):
 
 
 def str_literal_suffix(to_type, num):
-	sstr = ''
 	req_bits = nbits_for_num(num)
 
-	# ! `not is_signed()`, because here can be Word (it nor signed, nor unsigned) !
-	if not to_type.is_signed():
-		if req_bits >= settings['int_width']:
-			sstr += "U"
-
 	if req_bits < settings['int_width']:
-		pass  # int
-	elif req_bits <= settings['long_width']:
-		sstr += "L"  # long int
-	else:
+		return ""
+
+	sstr = ''
+	if not to_type.is_signed():
+		sstr = "U"
+
+	if req_bits <= settings['long_width']:
+		sstr += "L"   # long int
+	elif req_bits <= settings['long_long_width']:
 		sstr += "LL"  # long long int
+	else:
+		sstr += "XL"  # extra long int (not defined in C)
+
 	return sstr
 
 
@@ -1941,7 +1936,7 @@ def str_static_initializer(v):
 
 	if root.isImmediate():
 		if v.type.is_composite():
-			s = str_value_literal(root, [])
+			str = str_value_literal(root, [])
 			if root.type.is_string():
 				left_char_width = 0
 				if v.type.is_array():
@@ -1949,9 +1944,9 @@ def str_static_initializer(v):
 				elif v.type.is_str():
 					left_char_width = v.type.width
 
-				if not s[0] in ['u', 'U']:
-					s = string_literal_prefix(left_char_width) + s
-			return s
+				if not str[0] in ['u', 'U']:
+					str = string_literal_prefix(left_char_width) + str
+			return str
 
 	return str_value(v)
 
@@ -1980,6 +1975,7 @@ def print_insert(x):
 
 def print_comment(x):
 	out(str_stmt_comment(x))
+
 
 def str_stmt_comment(x):
 	if isinstance(x, StmtCommentLine):
@@ -2101,7 +2097,7 @@ def print_header(module, outname):
 		for x in defs:
 			if isinstance(x, StmtDirective):
 				if isinstance(x, StmtDirectiveCInclude):
-					newline();
+					newline()
 					include(x.c_name, local=x.is_local)
 
 	# print C `#include ""` directive for included modules
@@ -2157,8 +2153,7 @@ def print_header(module, outname):
 		#	nnl(x.nl)
 		#	print_comment(x)
 
-	newline()
-	newline()
+	newline(2)
 	out("#endif /* %s */" % guardsymbol)
 	newline()
 	output_close()
@@ -2190,7 +2185,6 @@ macro_definitions = {
 }
 """
 }
-
 
 
 
@@ -2227,10 +2221,9 @@ def print_cfile(module, _outname):
 			newline()
 			include(x.c_name, local=x.is_local)
 
+	newline(2)
+	include(module.id + '.h')
 	newline()
-	newline(); include(module.id + '.h')
-	newline()
-
 
 	for use in module.att:
 		if use in macro_definitions:
@@ -2276,8 +2269,7 @@ def print_cfile(module, _outname):
 		elif isinstance(x, StmtDirective):
 			print_directive(x)
 
-	newline()
-	newline()
+	newline(2)
 	output_close()
 
 

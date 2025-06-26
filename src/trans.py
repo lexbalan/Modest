@@ -321,7 +321,6 @@ def init():
 	root_symtab.value_add('false', valueFalse)
 
 
-	target_name = str(settings['target_name'])
 	word_width = int(settings['word_width'])
 	char_width = int(settings['char_width'])
 	int_width = int(settings['integer_width'])
@@ -334,7 +333,10 @@ def init():
 	typeSysChar = foundation.type_select_char(char_width)
 	typeSysInt = foundation.type_select_int(int_width)
 	typeSysNat = foundation.type_select_nat(int_width)
+	typeSysSize = foundation.type_select_nat(settings['size_width'])
 	typeSysFloat = foundation.typeFloat64
+
+	root_symtab.type_add('Size', typeSysSize)
 
 	undefinedVolume = ValueUndef(typeSysNat, ti=None)
 	typeSysStr = TypePointer(TypeArray(typeSysChar, undefinedVolume))
@@ -377,14 +379,14 @@ def init_builtin_values():
 	# __target
 	#
 
-	target_name = str(settings['target_name'])
+	#target_name = str(settings['target_name'])
 	char_width = int(settings['char_width'])
 	int_width = int(settings['integer_width'])
 	flt_width = int(settings['float_width'])
 	pointer_width = int(settings['pointer_width'])
 
 
-	__targetName = value_string_create(target_name)
+	__targetName = value_string_create(settings['target_name'])
 	__targetCharWidth = value_imm_literal_create(foundation.typeNat32, char_width)
 	__targetIntWidth = value_imm_literal_create(foundation.typeNat32, int_width)
 	__targetFloatWidth = value_imm_literal_create(foundation.typeNat32, flt_width)

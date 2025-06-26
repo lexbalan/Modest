@@ -6,6 +6,7 @@ target_name = "Default"
 machine_name = "Generic"
 
 word_width = 64
+size_width = 64
 integer_width = 32
 float_width = 64
 pointer_width = 64
