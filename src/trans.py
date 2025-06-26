@@ -2493,7 +2493,8 @@ def def_def(ast, is_include=False):
 			cmodule.defs.append(comment)
 
 		elif isa == 'ast_directive':
-			y = do_directive(x)
+			if x['kind'] == 'pragma':
+				y = do_directive(x)
 
 	return
 

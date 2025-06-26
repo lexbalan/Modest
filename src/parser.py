@@ -2018,6 +2018,8 @@ class Parser:
 				x = self.parse_if_comment_line()
 			elif self.look('pragma'):
 				x = self.parse_directive()
+			#elif self.look('if'):
+			#	pass
 			elif self.match('import'):
 				x = self.parse_import()
 			elif self.match('include'):

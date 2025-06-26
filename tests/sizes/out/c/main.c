@@ -8,7 +8,6 @@
 
 #include "main.h"
 
-
 int main() {
 	char a[10];
 	printf("? = %s\n", &a);
