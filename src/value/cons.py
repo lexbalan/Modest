@@ -143,18 +143,14 @@ def value_cons_explicit(t, v, ti):
 
 
 def value_cons_default(v):
-	assert(isinstance(v, Value))
+	if not v.type.is_generic():
+		return v
 
-	# only for generics
-	if v.type.is_generic():
-		t = _select_default_type_for(v.type)
-		if t != None:
-			nv = value_cons_implicit(t, v, v.ti)
-			#if 'paranoid' in features:
-			#	print("constructed: ", end='')
-			#	htype.type_print(nv.type)
-			#	print('')
-			return nv
+	t = _select_default_type_for(v.type)
+	if t != None:
+		nv = value_cons_implicit(t, v, v.ti)
+		nv.method = 'default'
+		return nv
 
 	return v
 
@@ -222,7 +218,6 @@ def _select_minimal_type_for(t):
 		if t.is_unsigned():
 			t = TypeNat(w)
 		return t
-
 
 	elif t.is_float():
 		return TypeFloat(w)

@@ -17,7 +17,6 @@ public func main () -> Int {
 	var y = Nat64 0x1FFFFFFFF
 	var z = Int64 0x1FFFFFFFF
 
-
 	printf("pi (%llx):\n", pi)
 	fixed.print(pi)
 

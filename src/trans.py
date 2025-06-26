@@ -969,7 +969,7 @@ def do_value_call(x):
 		if not argval.isBad():
 			if argval.type.is_generic():
 				warning("extra argument with generic type", a['ti'])
-				argval = value_cons_default(argval)
+			argval = value_cons_default(argval)
 
 			if argval.isRuntimeValue():
 				imm_args = False

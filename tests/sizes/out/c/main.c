@@ -10,6 +10,9 @@
 
 
 int main() {
+	char a[10];
+	printf("? = %s\n", &a);
+
 	printf("sizeof(Char) = %zu\n", sizeof(char));
 	printf("sizeof(Short) = %zu\n", sizeof(short));
 	printf("sizeof(Int) = %zu\n", sizeof(int));

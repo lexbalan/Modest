@@ -869,7 +869,15 @@ def str_value_cons(x, ctx):
 		if get_id_str(type) == get_id_str(from_type):
 			return str_value(value)
 
-	if x.method == 'implicit':
+#			if argval.type.is_pointer_to_array():
+#				# *[]Char8 -> *Char8
+#				arr_item_type = argval.type.to.of
+#				t = TypePointer(arr_item_type, ti=argval.ti)
+#				from value.cons import value_cons
+#				argval = value_cons(t, argval, 'explicit', ti=argval.ti)
+
+
+	if x.method in ['implicit', 'default']:
 		if isinstance(value, ValueRef):
 			# Явно приводим указатель на массив к указателю на его элемент
 			# В случае когда происходит НЕЯВНОЕ приведение;

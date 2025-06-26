@@ -328,7 +328,7 @@ def str_value_cons(x, ctx):
 	from_type = value.type
 	to_type = x.type
 
-	if x.method == 'implicit':
+	if x.method in ['implicit', 'default']:
 		return str_value(value)
 
 	s = ""

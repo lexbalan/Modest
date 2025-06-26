@@ -5,6 +5,9 @@ include "libc/stdio"
 
 
 public func main () -> Int {
+	var a: [10]Char8
+	printf("? = %s\n", &a)
+
     printf("sizeof(Char) = %zu\n", sizeof(Char))
     printf("sizeof(Short) = %zu\n", sizeof(Short))
     printf("sizeof(Int) = %zu\n", sizeof(Int))
