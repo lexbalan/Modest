@@ -836,6 +836,16 @@ def str_value_cons_array(x, ctx):
 
 
 
+# *[]Char8 -> *Char8
+#def ptr2arr_to_ptr2item(x):
+#	if x.type.is_pointer_to_array():
+#	arr_item_type = x.type.to.of
+#	t = TypePointer(arr_item_type, ti=x.ti)
+#	from value.cons import value_cons
+#	return value_cons(t, x, 'explicit', ti=x.ti)
+#
+
+
 def str_value_cons(x, ctx):
 	type = x.type
 	value = x.value
@@ -868,13 +878,6 @@ def str_value_cons(x, ctx):
 			return str_value(value)
 		if get_id_str(type) == get_id_str(from_type):
 			return str_value(value)
-
-#			if argval.type.is_pointer_to_array():
-#				# *[]Char8 -> *Char8
-#				arr_item_type = argval.type.to.of
-#				t = TypePointer(arr_item_type, ti=argval.ti)
-#				from value.cons import value_cons
-#				argval = value_cons(t, argval, 'explicit', ti=argval.ti)
 
 
 	if x.method in ['implicit', 'default']:
