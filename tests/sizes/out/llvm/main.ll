@@ -200,15 +200,16 @@ declare void @perror(%ConstCharStr* %str)
 @str5 = private constant [25 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 108, i8 111, i8 110, i8 103, i8 32, i8 108, i8 111, i8 110, i8 103, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
 @str6 = private constant [22 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 115, i8 105, i8 122, i8 101, i8 95, i8 116, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
 @str7 = private constant [21 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 118, i8 111, i8 105, i8 100, i8 42, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
-; -- endstrings --; examples/0.endianness/src/main.m
+; -- endstrings --; tests/sizes/src/main.m
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*), %SizeT 1)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), %SizeT 2)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str3 to [0 x i8]*), %SizeT 4)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str4 to [0 x i8]*), %SizeT 8)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*), %SizeT 8)
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str6 to [0 x i8]*), %SizeT 8)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str7 to [0 x i8]*), %SizeT 8)
+	%1 = alloca %Nat64, align 8
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*), %SizeT 1)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), %SizeT 2)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str3 to [0 x i8]*), %SizeT 4)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str4 to [0 x i8]*), %SizeT 8)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*), %SizeT 8)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str6 to [0 x i8]*), %SizeT 8)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str7 to [0 x i8]*), %SizeT 8)
 	ret %Int 0
 }
 

@@ -557,7 +557,7 @@ class ValueSlice(Value):
 		self.index_from = index_from
 		self.index_to = index_to
 		self.is_lvalue = True
-		
+
 		if not left.type.is_pointer():
 			self.immutable = left.immutable
 
@@ -574,44 +574,25 @@ class ValueNew(Value):
 
 class ValueSizeofType(Value):
 	def __init__(self, of, ti=None):
-		value_size = of.size
-
-		type = None
-		if of.is_vla():
-			# is a VLA
-			from trans import typeSysInt
-			type = typeSysInt
-		else:
-			from type import type_number_for
-			type = type_number_for(value_size, signed=False, ti=ti)
-
-		super().__init__(type=type, ti=ti)
+		from trans import typeSysSize
+		super().__init__(type=typeSysSize, ti=ti)
 		self.of = of
-		self.immediate = True
-		self.asset = value_size
-		
-		if of.is_vla():
+		if not of.is_vla():
+			self.immediate = True
+			self.asset = of.size
+		else:
 			self.immediate = False
+
 
 
 class ValueSizeofValue(Value):
 	def __init__(self, value, ti=None):
-
-		type = None
-		if value.type.is_vla():
-			# is a VLA
-			from trans import typeSysInt
-			type = typeSysInt
-		else:
-			from type import type_number_for
-			value_size = value.type.size
-			type = type_number_for(value_size, signed=False, ti=ti)
-
-		super().__init__(type=type, ti=ti)
+		from trans import typeSysSize
+		super().__init__(type=typeSysSize, ti=ti)
 		self.of = value
 		if not value.type.is_vla():
 			self.immediate = True
-			self.asset = value_size
+			self.asset = value.type.size
 		else:
 			self.immediate = False
 
@@ -641,9 +622,10 @@ class ValueLengthof(Value):
 class ValueAlignof(Value):
 	def __init__(self, of, ti=None):
 		align = of.align
-		from type import type_number_for
-		type = type_number_for(align, signed=False, ti=ti)
-		super().__init__(type=type, ti=ti)
+		#from type import type_number_for
+		#type = type_number_for(align, signed=False, ti=ti)
+		from trans import typeSysSize
+		super().__init__(type=typeSysSize, ti=ti)
 		self.of = of
 		self.immediate = True
 		self.asset = align

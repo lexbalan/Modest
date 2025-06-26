@@ -28,6 +28,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -295,8 +296,8 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str5 = private constant [10 x i8] [i8 50, i8 47, i8 51, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 @str6 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 @str7 = private constant [8 x i8] [i8 107, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str8 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
-@str9 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 54, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
+@str8 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
+@str9 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 54, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
 @str10 = private constant [12 x i8] [i8 115, i8 108, i8 111, i8 112, i8 101, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 ; -- endstrings --; tests/float/src/main.m
 define internal %Float64 @squareOfCircle(%Float64 %radius) {
@@ -334,8 +335,8 @@ define %Int @main() {
 	%4 = call %Float64 @squareOfCircle(%Float64 10.0000000000000000)
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Float64 %4)
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str7 to [0 x i8]*), %Float64 0.1250000000000000)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str8 to [0 x i8]*), %Nat64 4)
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str9 to [0 x i8]*), %Nat64 8)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str8 to [0 x i8]*), %Size 4)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str9 to [0 x i8]*), %Size 8)
 
 	; printf %f ожидает получить double а не float!
 	%9 = insertvalue %Point2D zeroinitializer, %Int 10, 0

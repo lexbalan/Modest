@@ -28,6 +28,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -259,7 +260,7 @@ declare %list_Node* @list_append(%list_List* %list, i8* %data)
 ; wrap around linked list for list.List Nat32
 define internal void @nat32_list_insert(%list_List* %lst, %Nat32 %x) {
 	; alloc memory for Nat32 value
-	%1 = call i8* @malloc(%SizeT 4)
+	%1 = call i8* @malloc(%Size 4)
 	%2 = bitcast i8* %1 to %Nat32*
 	store %Nat32 %x, %Nat32* %2
 	%3 = bitcast %list_List* %lst to %list_List*
@@ -458,7 +459,7 @@ endif_2:
 	br label %again_2
 break_2:
 	%65 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @str14 to [0 x i8]*))
-	%66 = call i8* @malloc(%SizeT 4)
+	%66 = call i8* @malloc(%Size 4)
 	%67 = bitcast i8* %66 to %Nat32*
 	store %Nat32 1234, %Nat32* %67
 	%68 = bitcast %list_List* %2 to %list_List*

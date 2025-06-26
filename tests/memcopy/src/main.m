@@ -26,7 +26,7 @@ public func main () -> Int {
 	}
 
 	let len = sizeof(Object)
-	printf("LEN = %u\n", Nat32 len)
+	printf("LEN = %zu\n", len)
 
 	mem.copy(&o2, &o1, len)
 

@@ -54,7 +54,7 @@ public func main () -> Int {
 	}
 
 	let sockaddr = *SockAddr Ptr &server_addr
-	var e: Int = bind(sockfd, sockaddr, SocklenT sizeof(SockAddrIn))
+	var e: Int = bind(sockfd, sockaddr, unsafe SocklenT sizeof(SockAddrIn))
 	if e < 0 {
 		perror("[-] Error in Binding")
 		exit(1)
@@ -70,7 +70,7 @@ public func main () -> Int {
 
 	printf("[+] Listening...\n")
 
-	var addr_size = SocklenT sizeof(SockAddrIn)
+	var addr_size: SocklenT = unsafe SocklenT sizeof(SockAddrIn)
 	var new_addr: SockAddrIn
 	let sa = *SockAddr Ptr &new_addr
 	let new_sock: Int = accept(sockfd, sa, &addr_size)

@@ -5,13 +5,13 @@ include "libc/stdio"
 
 
 public func main () -> Int {
-    printf("sizeof(char) = %zu\n", SizeT sizeof(Char))
-    printf("sizeof(short) = %zu\n", SizeT sizeof(Short))
-    printf("sizeof(int) = %zu\n", SizeT sizeof(Int))
-    printf("sizeof(long) = %zu\n", SizeT sizeof(Long))
-    printf("sizeof(long long) = %zu\n", SizeT sizeof(LongLong))
-    printf("sizeof(size_t) = %zu\n", SizeT sizeof(SizeT))
-    printf("sizeof(void*) = %zu\n", SizeT sizeof(*Unit))
+    printf("sizeof(char) = %zu\n", sizeof(Char))
+    printf("sizeof(short) = %zu\n", sizeof(Short))
+    printf("sizeof(int) = %zu\n", sizeof(Int))
+    printf("sizeof(long) = %zu\n", sizeof(Long))
+    printf("sizeof(long long) = %zu\n", sizeof(LongLong))
+    printf("sizeof(size_t) = %zu\n", sizeof(SizeT))
+    printf("sizeof(void*) = %zu\n", sizeof(*Unit))
 	return 0
 }
 

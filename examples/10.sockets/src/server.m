@@ -1,5 +1,7 @@
 /* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
 
+pragma unsafe
+
 include "libc/ctypes64"
 include "libc/stdio"
 include "libc/stdlib"
@@ -55,7 +57,7 @@ public func main () -> Int {
 	}
 
 	let sockaddr = *SockAddr Ptr &server_addr
-	var e = bind(sockfd, sockaddr, SocklenT sizeof(SockAddrIn))
+	var e = bind(sockfd, sockaddr, unsafe SocklenT sizeof(SockAddrIn))
 	if e < 0 {
 		perror("[-] Error in Binding")
 		exit(1)
@@ -71,7 +73,7 @@ public func main () -> Int {
 
 	printf("[+] Listening...\n")
 
-	var addr_size = SocklenT sizeof(SockAddrIn)
+	var addr_size = unsafe SocklenT sizeof(SockAddrIn)
 	var new_addr: SockAddrIn
 	let sa = *SockAddr Ptr &new_addr
 	let new_sock = accept(sockfd, sa, &addr_size)

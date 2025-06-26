@@ -28,6 +28,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -254,7 +255,7 @@ endif_0:
 	; write chunk to file
 	%15 = bitcast %Chunk* %6 to i8*
 	%16 = bitcast %File* %2 to %File*
-	%17 = call %SizeT @fwrite(i8* %15, %SizeT 2048, %SizeT 1, %File* %16)
+	%17 = call %SizeT @fwrite(i8* %15, %Size 2048, %SizeT 1, %File* %16)
 	%18 = bitcast %File* %2 to %File*
 	%19 = call %Int @fclose(%File* %18)
 	ret void
@@ -274,7 +275,7 @@ endif_0:
 	%6 = alloca %Chunk, align 2048
 	%7 = bitcast %Chunk* %6 to i8*
 	%8 = bitcast %File* %2 to %File*
-	%9 = call %SizeT @fread(i8* %7, %SizeT 2048, %SizeT 1, %File* %8)
+	%9 = call %SizeT @fread(i8* %7, %Size 2048, %SizeT 1, %File* %8)
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	%11 = getelementptr %Chunk, %Chunk* %6, %Int32 0, %Int32 0
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), [100 x %Char]* %11)

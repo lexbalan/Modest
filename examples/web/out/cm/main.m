@@ -66,7 +66,7 @@ public func main () -> Int32 {
 
 	// Bind socket to address
 	let socadr: *SockAddr = unsafe *SockAddr &server_addr
-	var rc: Int = bind(server_socket, socadr, sizeof server_addr)
+	var rc: Int = bind(server_socket, socadr, unsafe SocklenT sizeof server_addr)
 	if rc < 0 {
 		perror("cannot bind socket")
 		close(server_socket)
@@ -87,7 +87,7 @@ public func main () -> Int32 {
 	while true {
 		var client_addr: SockAddrIn
 		let socadr: *SockAddr = unsafe *SockAddr &client_addr
-		var client_adr_len: SocklenT = sizeof client_addr
+		var client_adr_len: SocklenT = unsafe SocklenT sizeof client_addr
 		let client_socket: Int = accept(server_socket, socadr, &client_adr_len)
 		if client_socket < 0 {
 			perror("cannot accept connection")

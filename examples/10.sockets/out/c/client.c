@@ -26,7 +26,7 @@ static bool send_file(FILE *fp, int sockfd) {
 	char data[bufSize];
 
 	while (fgets((char *)&data, __lengthof(data), fp) != NULL) {
-		if (send(sockfd, (void *)&data, (size_t)sizeof data, 0) == -1) {
+		if (send(sockfd, (void *)&data, sizeof data, 0) == -1) {
 			return false;
 		}
 		memset(&data, 0, sizeof(char[bufSize]));

@@ -28,6 +28,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -225,7 +226,7 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 define %list_List* @list_create() {
-	%1 = call i8* @malloc(%SizeT 32)
+	%1 = call i8* @malloc(%Size 32)
 	%2 = bitcast i8* %1 to %list_List*
 ; if_0
 	%3 = icmp eq %list_List* %2, null
@@ -306,7 +307,7 @@ endif_0:
 }
 
 define %list_Node* @list_node_create() {
-	%1 = call i8* @malloc(%SizeT 32)
+	%1 = call i8* @malloc(%Size 32)
 	%2 = bitcast i8* %1 to %list_Node*
 ; if_0
 	%3 = icmp eq %list_Node* %2, null

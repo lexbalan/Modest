@@ -17,7 +17,7 @@ func send_file (fp: *File, sockfd: Int) -> Bool {
 	var data: [bufSize]Char8
 
 	while fgets(&data, lengthof(data), fp) != nil {
-		if send(sockfd, &data, SizeT sizeof data, 0) == -1 {
+		if send(sockfd, &data, sizeof data, 0) == -1 {
 			return false
 		}
 		data = []
@@ -45,7 +45,7 @@ public func main () -> Int {
 	}
 
 	let sockaddr = *SockAddr Ptr &server_addr
-	var e: Int = connect(sockfd, sockaddr, SocklenT sizeof(SockAddrIn))
+	var e: Int = connect(sockfd, sockaddr, unsafe SocklenT sizeof(SockAddrIn))
 	if e < 0 {
 		perror("[-] Error in Connecting")
 		exit(1)

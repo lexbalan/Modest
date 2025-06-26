@@ -24,8 +24,8 @@ public func main () -> Int {
 		age = 30
 	}
 
-	let len = sizeof(Object)
-	printf("LEN = %u\n", Nat32 len)
+	let len: Size = sizeof(Object)
+	printf("LEN = %zu\n", len)
 
 	mem.copy(&o2, &o1, len)
 

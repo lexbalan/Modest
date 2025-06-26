@@ -42,8 +42,8 @@ public func main () -> Int {
 	let k = 1.0 / 8
 	printf("k = %f\n", Float64 k)
 
-	printf("sizeof(Float32) = %lu\n", Nat64 sizeof(Float32))
-	printf("sizeof(Float64) = %lu\n", Nat64 sizeof(Float64))
+	printf("sizeof(Float32) = %zu\n", sizeof(Float32))
+	printf("sizeof(Float64) = %zu\n", sizeof(Float64))
 
 	// printf %f ожидает получить double а не float!
 	let sl = slope({x=10, y=20}, {x=30, y=50})

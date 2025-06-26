@@ -28,6 +28,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -378,7 +379,7 @@ define internal %Float @lineLength(%Line %line) {
 }
 
 define internal void @ptr_example() {
-	%1 = call i8* @malloc(%SizeT 16)
+	%1 = call i8* @malloc(%Size 16)
 	%2 = bitcast i8* %1 to %Point*
 
 	; access by pointer

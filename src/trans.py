@@ -236,6 +236,7 @@ typeSysInt = None
 typeSysNat = None
 typeSysFloat = None
 typeSysStr = None
+typeSysSize = None
 
 valueNil = None
 valueTrue = None
@@ -327,14 +328,17 @@ def init():
 	flt_width = int(settings['float_width'])
 	pointer_width = int(settings['pointer_width'])
 
-	global typeSysWord, typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
+	global typeSysWord, typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr, typeSysSize
 
 	typeSysWord = TypeWord(word_width)
 	typeSysChar = foundation.type_select_char(char_width)
 	typeSysInt = foundation.type_select_int(int_width)
 	typeSysNat = foundation.type_select_nat(int_width)
-	typeSysSize = foundation.type_select_nat(settings['size_width'])
 	typeSysFloat = foundation.typeFloat64
+
+	typeSysSize = foundation.type_select_nat(settings['size_width']).copy()
+	typeSysSize.id = Id().fromStr('Size')
+	typeSysSize.id.c = 'size_t'
 
 	root_symtab.type_add('Size', typeSysSize)
 

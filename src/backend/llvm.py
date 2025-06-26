@@ -2774,6 +2774,7 @@ def run(module, outname, options):
 	lo("%Nat256 = type i256")
 	lo("%Float32 = type float")
 	lo("%Float64 = type double")
+	lo("%%Size = type i%d" % settings['size_width'])
 	lo("%Pointer = type i8*")
 	lo("%Str8 = type [0 x %Char8]")
 	lo("%Str16 = type [0 x %Char16]")

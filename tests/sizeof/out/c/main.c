@@ -94,69 +94,69 @@ int main() {
 	// sizeof(void) in C  == 1
 	// sizeof(Unit) in CM == 0
 	// TODO: here is a broblem
-	printf("sizeof(Unit) = %llu\n", (uint64_t)sizeof(void));
-	printf("alignof(Unit) = %llu\n", (uint64_t)__alignof(void));
+	printf("sizeof(Unit) = %zu\n", sizeof(void));
+	printf("alignof(Unit) = %zu\n", __alignof(void));
 
-	printf("sizeof(Bool) = %llu\n", (uint64_t)sizeof(bool));
-	printf("alignof(Bool) = %llu\n", (uint64_t)__alignof(bool));
+	printf("sizeof(Bool) = %zu\n", sizeof(bool));
+	printf("alignof(Bool) = %zu\n", __alignof(bool));
 
-	printf("sizeof(Nat8) = %llu\n", (uint64_t)sizeof(uint8_t));
-	printf("alignof(Nat8) = %llu\n", (uint64_t)__alignof(uint8_t));
-	printf("sizeof(Nat16) = %llu\n", (uint64_t)sizeof(uint16_t));
-	printf("alignof(Nat16) = %llu\n", (uint64_t)__alignof(uint16_t));
-	printf("sizeof(Nat32) = %llu\n", (uint64_t)sizeof(uint32_t));
-	printf("alignof(Nat32) = %llu\n", (uint64_t)__alignof(uint32_t));
-	printf("sizeof(Nat64) = %llu\n", (uint64_t)sizeof(uint64_t));
-	printf("alignof(Nat64) = %llu\n", (uint64_t)__alignof(uint64_t));
-	printf("sizeof(Nat128) = %llu\n", (uint64_t)sizeof(unsigned __int128));
-	printf("alignof(Nat128) = %llu\n", (uint64_t)__alignof(unsigned __int128));
+	printf("sizeof(Nat8) = %zu\n", sizeof(uint8_t));
+	printf("alignof(Nat8) = %zu\n", __alignof(uint8_t));
+	printf("sizeof(Nat16) = %zu\n", sizeof(uint16_t));
+	printf("alignof(Nat16) = %zu\n", __alignof(uint16_t));
+	printf("sizeof(Nat32) = %zu\n", sizeof(uint32_t));
+	printf("alignof(Nat32) = %zu\n", __alignof(uint32_t));
+	printf("sizeof(Nat64) = %zu\n", sizeof(uint64_t));
+	printf("alignof(Nat64) = %zu\n", __alignof(uint64_t));
+	printf("sizeof(Nat128) = %zu\n", sizeof(unsigned __int128));
+	printf("alignof(Nat128) = %zu\n", __alignof(unsigned __int128));
 	// type Nat256 not implemented
-	//printf("sizeof(Nat256) = %llu\n", Nat64 sizeof(Nat256))
+	//printf("sizeof(Nat256) = %zu\n", sizeof(Nat256))
 
-	printf("sizeof(Int8) = %llu\n", (uint64_t)sizeof(int8_t));
-	printf("alignof(Int8) = %llu\n", (uint64_t)__alignof(int8_t));
-	printf("sizeof(Int16) = %llu\n", (uint64_t)sizeof(int16_t));
-	printf("alignof(Int16) = %llu\n", (uint64_t)__alignof(int16_t));
-	printf("sizeof(Int32) = %llu\n", (uint64_t)sizeof(int32_t));
-	printf("alignof(Int32) = %llu\n", (uint64_t)__alignof(int32_t));
-	printf("sizeof(Int64) = %llu\n", (uint64_t)sizeof(int64_t));
-	printf("alignof(Int64) = %llu\n", (uint64_t)__alignof(int64_t));
-	printf("sizeof(Int128) = %llu\n", (uint64_t)sizeof(__int128));
-	printf("alignof(Int128) = %llu\n", (uint64_t)__alignof(__int128));
+	printf("sizeof(Int8) = %zu\n", sizeof(int8_t));
+	printf("alignof(Int8) = %zu\n", __alignof(int8_t));
+	printf("sizeof(Int16) = %zu\n", sizeof(int16_t));
+	printf("alignof(Int16) = %zu\n", __alignof(int16_t));
+	printf("sizeof(Int32) = %zu\n", sizeof(int32_t));
+	printf("alignof(Int32) = %zu\n", __alignof(int32_t));
+	printf("sizeof(Int64) = %zu\n", sizeof(int64_t));
+	printf("alignof(Int64) = %zu\n", __alignof(int64_t));
+	printf("sizeof(Int128) = %zu\n", sizeof(__int128));
+	printf("alignof(Int128) = %zu\n", __alignof(__int128));
 	// type Int256 not implemented
-	//printf("sizeof(Int256) = %llu\n", Nat64 sizeof(Int256))
+	//printf("sizeof(Int256) = %zu\n", sizeof(Int256))
 
-	printf("sizeof(Char8) = %llu\n", (uint64_t)sizeof(char));
-	printf("alignof(Char8) = %llu\n", (uint64_t)__alignof(char));
-	printf("sizeof(Char16) = %llu\n", (uint64_t)sizeof(uint16_t));
-	printf("alignof(Char16) = %llu\n", (uint64_t)__alignof(uint16_t));
-	printf("sizeof(Char32) = %llu\n", (uint64_t)sizeof(uint32_t));
-	printf("alignof(Char32) = %llu\n", (uint64_t)__alignof(uint32_t));
+	printf("sizeof(Char8) = %zu\n", sizeof(char));
+	printf("alignof(Char8) = %zu\n", __alignof(char));
+	printf("sizeof(Char16) = %zu\n", sizeof(uint16_t));
+	printf("alignof(Char16) = %zu\n", __alignof(uint16_t));
+	printf("sizeof(Char32) = %zu\n", sizeof(uint32_t));
+	printf("alignof(Char32) = %zu\n", __alignof(uint32_t));
 
 	// pointer size (for example pointer to []Char8)
-	printf("sizeof(*Str8) = %llu\n", (uint64_t)sizeof(char *));
-	printf("alignof(*Str8) = %llu\n", (uint64_t)__alignof(char *));
+	printf("sizeof(*Str8) = %zu\n", sizeof(char *));
+	printf("alignof(*Str8) = %zu\n", __alignof(char *));
 
 	// array size
-	printf("sizeof([10]Int32) = %llu\n", (uint64_t)sizeof(int32_t[10]));
-	printf("alignof([10]Int32) = %llu\n", (uint64_t)__alignof(int32_t[10]));
+	printf("sizeof([10]Int32) = %zu\n", sizeof(int32_t[10]));
+	printf("alignof([10]Int32) = %zu\n", __alignof(int32_t[10]));
 
-	printf("> alignof([3]Point) = %llu\n", (uint64_t)__alignof(Point[3]));
+	printf("> alignof([3]Point) = %zu\n", __alignof(Point[3]));
 
 
 	// record size
-	printf("sizeof(Point) = %llu\n", (uint64_t)sizeof(Point));
-	printf("alignof(Point) = %llu\n", (uint64_t)__alignof(Point));
+	printf("sizeof(Point) = %zu\n", sizeof(Point));
+	printf("alignof(Point) = %zu\n", __alignof(Point));
 
 	//	printf("offsetof(Point.x) = %llu\n", Nat64 offsetof(Point.x))
 	//	printf("offsetof(Point.y) = %llu\n", Nat64 offsetof(Point.y))
 
 
-	printf("sizeof(Mixed1) = %llu\n", (uint64_t)sizeof(Mixed1));
-	printf("alignof(Mixed1) = %llu\n", (uint64_t)__alignof(Mixed1));
+	printf("sizeof(Mixed1) = %zu\n", sizeof(Mixed1));
+	printf("alignof(Mixed1) = %zu\n", __alignof(Mixed1));
 
-	printf("sizeof(Mixed2) = %llu\n", (uint64_t)sizeof(Mixed2));
-	printf("alignof(Mixed2) = %llu\n", (uint64_t)__alignof(Mixed2));
+	printf("sizeof(Mixed2) = %zu\n", sizeof(Mixed2));
+	printf("alignof(Mixed2) = %zu\n", __alignof(Mixed2));
 
 
 	//	printf("offsetof(Mixed2.i) = %llu\n", Nat64 offsetof(Mixed2.i))
@@ -166,11 +166,11 @@ int main() {
 	//	printf("offsetof(Mixed2.m) = %llu\n", Nat64 offsetof(Mixed2.m))
 
 
-	printf("sizeof(Mixed3) = %llu\n", (uint64_t)sizeof(Mixed3));
-	printf("alignof(Mixed3) = %llu\n", (uint64_t)__alignof(Mixed3));
+	printf("sizeof(Mixed3) = %zu\n", sizeof(Mixed3));
+	printf("alignof(Mixed3) = %zu\n", __alignof(Mixed3));
 
-	printf("sizeof(Mixed4) = %llu\n", (uint64_t)sizeof(Mixed4));
-	printf("alignof(Mixed4) = %llu\n", (uint64_t)__alignof(Mixed4));
+	printf("sizeof(Mixed4) = %zu\n", sizeof(Mixed4));
+	printf("alignof(Mixed4) = %zu\n", __alignof(Mixed4));
 
 	//	printf("offsetof(Mixed4.s) = %llu\n", Nat64 offsetof(Mixed4.s))
 	//	printf("offsetof(Mixed4.c) = %llu\n", Nat64 offsetof(Mixed4.c))

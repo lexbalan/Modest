@@ -28,6 +28,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -348,7 +349,7 @@ again_1:
 body_1:
 ; if_0
 	%6 = bitcast [1024 x %Char8]* %1 to i8*
-	%7 = call %SSizeT @send(%Int %sockfd, i8* %6, %SizeT 1024, %Int 0)
+	%7 = call %SSizeT @send(%Int %sockfd, i8* %6, %Size 0, %Int 0)
 	%8 = icmp eq %SSizeT %7, -1
 	br %Bool %8 , label %then_0, label %endif_0
 then_0:
