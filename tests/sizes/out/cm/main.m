@@ -4,15 +4,13 @@ include "stdio"
 
 
 public func main () -> Int {
-	var sz: Nat64
-
-	printf("sizeof(char) = %zu\n", SizeT sizeof(Char))
-	printf("sizeof(short) = %zu\n", SizeT sizeof(Short))
-	printf("sizeof(int) = %zu\n", SizeT sizeof(Int))
-	printf("sizeof(long) = %zu\n", SizeT sizeof(Long))
-	printf("sizeof(long long) = %zu\n", SizeT sizeof(LongLong))
-	printf("sizeof(size_t) = %zu\n", SizeT sizeof(SizeT))
-	printf("sizeof(void*) = %zu\n", SizeT sizeof(Ptr))
+	printf("sizeof(Char) = %zu\n", sizeof(Char))
+	printf("sizeof(Short) = %zu\n", sizeof(Short))
+	printf("sizeof(Int) = %zu\n", sizeof(Int))
+	printf("sizeof(Long) = %zu\n", sizeof(Long))
+	printf("sizeof(LongLong) = %zu\n", sizeof(LongLong))
+	printf("sizeof(Size) = %zu\n", sizeof(SizeT))
+	printf("sizeof(*Unit) = %zu\n", sizeof(Ptr))
 	return 0
 }
 

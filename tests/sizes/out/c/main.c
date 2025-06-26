@@ -10,16 +10,13 @@
 
 
 int main() {
-	size_t sz;
-	size_t n = sz;
-
-	printf("sizeof(char) = %zu\n", sizeof(char));
-	printf("sizeof(short) = %zu\n", sizeof(short));
-	printf("sizeof(int) = %zu\n", sizeof(int));
-	printf("sizeof(long) = %zu\n", sizeof(long));
-	printf("sizeof(long long) = %zu\n", sizeof(long long));
-	printf("sizeof(size_t) = %zu\n", sizeof(size_t));
-	printf("sizeof(void*) = %zu\n", sizeof(void *));
+	printf("sizeof(Char) = %zu\n", sizeof(char));
+	printf("sizeof(Short) = %zu\n", sizeof(short));
+	printf("sizeof(Int) = %zu\n", sizeof(int));
+	printf("sizeof(Long) = %zu\n", sizeof(long));
+	printf("sizeof(LongLong) = %zu\n", sizeof(long long));
+	printf("sizeof(Size) = %zu\n", sizeof(size_t));
+	printf("sizeof(*Unit) = %zu\n", sizeof(void *));
 	return 0;
 }
 
