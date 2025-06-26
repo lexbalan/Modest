@@ -4,6 +4,10 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
+pragma insert "#define CDECL"
+pragma insert "CDECL"
+
+
 public func main () -> Int {
     printf("sizeof(Char) = %zu\n", sizeof(Char))
     printf("sizeof(Short) = %zu\n", sizeof(Short))

@@ -1934,7 +1934,7 @@ def do_const(x):
 
 def def_var(x):
 	global cdef
-	global cdeglobal_prefixf
+	global global_prefix
 
 	id = Id(x['id'])
 	log("def_var %s" % id.str)
@@ -2018,7 +2018,7 @@ def def_var(x):
 
 
 
-def def_func(x, dostmt=True):
+def def_func(x):
 	global cdef
 	global cfunc
 	global cmodule
@@ -2079,19 +2079,18 @@ def def_func(x, dostmt=True):
 
 	stmt = None
 
-	if dostmt:
-		if x['stmt'] != None:
-			stmt = do_stmt_block(x['stmt'], parent=fn)
-			check_block(stmt)
+	if x['stmt'] != None:
+		stmt = do_stmt_block(x['stmt'], parent=fn)
+		check_block(stmt)
 
-			# check if return present
-			if not fn.type.to.is_unit():
-				stmts = stmt.stmts
-				if len(stmts) == 0:
-					warning("expected return operator at end", stmt.ti)
-				#elif stmts[-1]['kind'] != 'return':
-				elif not isinstance(stmts[-1], StmtReturn):
-					warning("expected return operator at end", stmt.ti)
+		# check if return present
+		if not fn.type.to.is_unit():
+			stmts = stmt.stmts
+			if len(stmts) == 0:
+				warning("expected return operator at end", stmt.ti)
+			#elif stmts[-1]['kind'] != 'return':
+			elif not isinstance(stmts[-1], StmtReturn):
+				warning("expected return operator at end", stmt.ti)
 
 	fn.definition.stmt = stmt
 
@@ -2145,9 +2144,8 @@ def check_stmt(stmt):
 
 # пропускать остальные ветви (elseif & else) условной директивы
 # тк основная ветвь была выполнена
-skipp = False
-prev_skipp = False
-
+#skipp = False
+#prev_skipp = False
 
 
 

@@ -2039,7 +2039,10 @@ def print_cdecl_func(x):
 
 
 def print_directive(x):
-	pass
+	if isinstance(x, StmtDirectiveInsert):
+		out(x.text)
+		newline()
+
 
 
 def is_private(x):

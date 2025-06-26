@@ -1,7 +1,8 @@
 include "ctypes64"
 include "stdio"
 // tests/sizes/src/main.m
-
+pragma insert "#define CDECL"
+pragma insert "CDECL"
 
 public func main () -> Int {
 	printf("sizeof(Char) = %zu\n", sizeof(Char))

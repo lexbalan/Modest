@@ -877,7 +877,9 @@ def print_import(x):
 
 
 def print_directive(x):
-	pass
+	if isinstance(x, StmtDirectiveInsert):
+		out('\npragma insert "%s"' % x.text)
+
 	#if isinstance(x, StmtImport):
 	#	m = m.module
 	#	out('import "%s"' % m.)

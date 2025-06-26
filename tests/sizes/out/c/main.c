@@ -7,6 +7,8 @@
 #include <stdio.h>
 
 #include "main.h"
+#define CDECL
+CDECL
 
 
 int main() {
