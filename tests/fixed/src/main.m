@@ -6,12 +6,13 @@ include "libc/stdio"
 import "fixed64" as fixed
 
 
-
 public func main () -> Int {
 	//printf("%s-endian\n", kind)
 	let a = fixed.fromInt32(-10)
 	let b = fixed.fromInt32(3)
 	let pi = fixed.create(3, 141592, 1000000)
+
+	const u = Int32 5
 
 	var y = Nat64 0x1FFFFFFFF
 	var z = Int64 0x1FFFFFFFF

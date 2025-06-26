@@ -907,7 +907,6 @@ def str_value_cons(x, ctx):
 
 
 
-
 def is_zero_tail(values, i, n):
 	# если это значание - zero, проверим все остальные справа
 	# и если они тоже zero - их можно не печатать (zero tail)

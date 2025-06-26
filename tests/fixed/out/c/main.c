@@ -15,8 +15,10 @@ int main() {
 	const fixed64_Fixed64 b = fixed64_fromInt32(3);
 	const fixed64_Fixed64 pi = fixed64_create(3, 141592, 1000000);
 
-	uint64_t y = 0x1FFFFFFFFUL;
-	int64_t z = 0x1FFFFFFFFL;
+	const int32_t u = 5;
+
+	uint64_t y = 8589934591UL;
+	int64_t z = 8589934591L;
 
 	printf("pi (%llx):\n", pi);
 	fixed64_print(pi);
