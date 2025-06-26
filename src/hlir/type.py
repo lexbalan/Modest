@@ -621,7 +621,7 @@ class TypeChar(Type):
 
 		from .misc import Id
 		self.id = Id().fromStr('Char%d' % width)
-		if width<=8:
+		if width <= 8:
 			self.id.c = 'char'
 		else:
 			self.id.c = 'uint%d_t' % width

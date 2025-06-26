@@ -127,7 +127,7 @@ def ctx_type_add(id_str, t, is_public=False):
 def ctx_value_add(id_str, v, is_public=False):
 	global context
 	if is_public:
-		context['public'].type_add(id_str, t)
+		context['public'].value_add(id_str, t)
 	else:
 		context['private'].value_add(id_str, v)
 
