@@ -7,12 +7,14 @@ cd 7.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && c
 cd 8.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd 9.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd 10.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd asm && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd stmt_if && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd stmt_while && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. &&\
 cd demo1 && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd bubble_sort && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. #&& \
-cd web && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. #&& \
+cd web && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd sha256 && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd table && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. \
+
 #cd m328p_blink && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd ..
-cd sha256 && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd ..
-cd table && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd ..
 
