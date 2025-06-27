@@ -183,7 +183,7 @@ def error(s, ti=None):
 	#print(ti)
 	common_message('error: ', COLOR_ERROR, s, ti)
 	if errcnt >= MAX_ERRORS:
-		exit(-1)
+		exit(1)
 
 
 def fatal(s, ti=None):

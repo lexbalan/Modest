@@ -57,12 +57,13 @@ class Type(Entity):
 		pass
 
 
-	def supports(self, operation):
-		return operation in self.ops
-
-
 	def is_bad(self):
 		return isinstance(self, TypeBad)
+
+	def supports(self, operation):
+		if self.is_bad():
+			return True
+		return operation in self.ops
 
 
 	# TypeFunc бывает incomplete
@@ -71,6 +72,8 @@ class Type(Entity):
 	def is_incompleted(self):
 		return self.incomplete
 
+	def is_distinct(self):
+		return self.brand != 0
 
 	def is_unit(self):
 		return isinstance(self, TypeUnit)
@@ -181,9 +184,6 @@ class Type(Entity):
 
 	def is_va_list(self):
 		return isinstance(self, TypeVaList)
-
-	def is_distinct(self):
-		return self.brand > 0
 
 	def is_generic(self):
 		return self.generic

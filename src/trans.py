@@ -587,9 +587,11 @@ def do_value_shift(x):
 
 	if not l.type.is_word():
 		error("expected word value", x['left'])
+		return ValueBad(x['ti'])
 
 	if r.type.is_signed():
 		error("expected natural value", x['right'])
+		return ValueBad(x['ti'])
 
 	nv = None
 	if op == 'shl': nv = ValueShl(l, r, ti=x['ti'])
@@ -630,11 +632,11 @@ def do_value_bin2(op, l, r, ti):
 
 	# Check type is valid for the operation
 
-	if not op in l.type.ops:
+	if not l.type.supports(op):
 		error("unsuitable value type for '%s' operation" % op, l.ti)
 		return ValueBad(ti)
 
-	if not op in r.type.ops:
+	if not r.type.supports(op):
 		error("unsuitable value type for '%s' operation" % op, r.ti)
 		return ValueBad(ti)
 
@@ -684,7 +686,7 @@ def do_value_not(x):
 
 	vtype = v.type
 
-	if not 'not' in vtype.ops:
+	if not vtype.supports('not'):
 		error("unsuitable type", v.ti)
 		return ValueBad(x['ti'])
 
@@ -1013,11 +1015,12 @@ def do_value_index(x):
 
 	index = do_rvalue(x['index'])
 
-	if index.isBad():
+	#if index.isBad():
+	if index.type.is_bad():
 		return ValueBad(x['ti'])
 
 	if not (index.type.is_arithmetical() or index.type.is_num()):
-		error("expected integer value", x['index'])
+		error("expected integer value2", x['index'])
 		return ValueBad(x['ti'])
 
 	if index.type.is_generic():

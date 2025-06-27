@@ -126,6 +126,9 @@ def value_cons_explicit(t, v, ti):
 
 	from_type = v.type
 
+	if from_type.is_bad():
+		return ValueBad(v.ti)
+
 	if Type.eq(t, from_type):
 		info("explicit cast to the same type", ti)
 		return v

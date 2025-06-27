@@ -857,6 +857,9 @@ def str_value_cons(x, ctx):
 	if type.is_record():
 		return str_value_cons_record(x, ctx)
 
+	if type.is_distinct():
+		return str_cast(type, value, ctx)
+
 	if isinstance(value, ValueLiteral):
 		if from_type.is_generic():
 			if x.asset != None:
