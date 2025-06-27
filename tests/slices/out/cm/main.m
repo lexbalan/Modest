@@ -1,10 +1,10 @@
 include "ctypes64"
 include "stdio"
+// tests/slices/src/main.m
 
 
-
-func array_print(pa: *[]Int32, len: Int32) -> Unit {
-	var i: Int32 = 0
+func array_print (pa: *[]Int32, len: Nat32) -> Unit {
+	var i: Nat32 = 0
 	while i < len {
 		printf("a[%d] = %d\n", i, pa[i])
 		i = i + 1
@@ -12,7 +12,7 @@ func array_print(pa: *[]Int32, len: Int32) -> Unit {
 }
 
 
-public func main() -> Int {
+public func main () -> Int {
 	printf("test slices\n")
 
 	//
@@ -22,7 +22,7 @@ public func main() -> Int {
 	var a: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 	let s1: [2 - 1]Int32 = a[1:2]
-	var i: Int32 = 0
+	var i: Nat32 = 0
 	while i < lengthof(s1) {
 		printf("s1[%d] = %d\n", i, s1[i])
 		i = i + 1

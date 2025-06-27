@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-func array_print (pa: *[]Int32, len: Int32) -> Unit {
+func array_print (pa: *[]Int32, len: Nat32) -> Unit {
 	var i: Nat32 = 0
 	while i < len {
 		printf("a[%d] = %d\n", i, pa[i])
@@ -96,7 +96,7 @@ public func main () -> Int {
 	printf("before\n")
 	array_print(pw, 10)
 
-	var ind = 1
+	var ind: Int32 = 1
 
 	pw = &pw[ind:]
 
@@ -109,8 +109,8 @@ public func main () -> Int {
 
 	var ss = []Int32 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-	var k = 4
-	var j = 7
+	var k: Int32 = 4
+	var j: Int32 = 7
 	ss[k:j] = []
 	array_print(&ss, 10)
 
@@ -135,8 +135,8 @@ public func main () -> Int {
 	var bxx = Nat8 222
 
 	// test with var
-	var i2 = 3
-	var j2 = 5
+	var i2: Int32 = 3
+	var j2: Int32 = 5
 	dst2[i2:j2] = [Int32 axx, Int32 bxx]
 
 	array_print(&dst2, 10)

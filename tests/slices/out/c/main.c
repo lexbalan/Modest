@@ -1,4 +1,6 @@
+// tests/slices/src/main.m
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
@@ -17,17 +19,15 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
-static void array_print(int32_t *pa, int32_t len)
-{
-	int32_t i = 0;
+static void array_print(int32_t *pa, uint32_t len) {
+	uint32_t i = 0;
 	while (i < len) {
 		printf("a[%d] = %d\n", i, pa[i]);
 		i = i + 1;
 	}
 }
 
-int main()
-{
+int main() {
 	printf("test slices\n");
 
 	//
@@ -38,7 +38,7 @@ int main()
 
 	int32_t s1[2 - 1];
 	memcpy(&s1, (int32_t(*)[2 - 1])&a[1], sizeof(int32_t[2 - 1]));
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (i < __lengthof(s1)) {
 		printf("s1[%d] = %d\n", i, s1[i]);
 		i = i + 1;
