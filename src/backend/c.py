@@ -1256,7 +1256,13 @@ def str_value_lengthof(x, ctx):
 	if value_is_generic_immediate_const(x.value):
 		return str(x.value.type.volume.asset)
 
-	sstr = "__lengthof("
+	if isinstance(x.value, ValueDeref):
+		# решает проблему когда массив представлен указателем на элемент
+		return str_value(x.value.type.volume)
+
+	sstr = ""
+	#sstr += '/*' + str(x.value.type) + '*/'
+	sstr += "__lengthof("
 	sstr += str_value(x.value)
 	sstr += ")"
 	return sstr

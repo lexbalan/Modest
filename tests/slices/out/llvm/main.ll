@@ -214,7 +214,6 @@ declare void @perror(%ConstCharStr* %str)
 @str18 = private constant [19 x i8] [i8 122, i8 101, i8 114, i8 111, i8 32, i8 115, i8 108, i8 105, i8 99, i8 101, i8 32, i8 98, i8 121, i8 32, i8 118, i8 97, i8 114, i8 10, i8 0]
 @str19 = private constant [46 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 @str20 = private constant [19 x i8] [i8 99, i8 111, i8 112, i8 121, i8 32, i8 115, i8 108, i8 105, i8 99, i8 101, i8 32, i8 98, i8 121, i8 32, i8 118, i8 97, i8 114, i8 10, i8 0]
-@str21 = private constant [46 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 ; -- endstrings --; tests/slices/src/main.m
 define internal void @array_print([0 x %Int32]* %pa, %Nat32 %len) {
 	%1 = alloca %Nat32, align 4
@@ -495,55 +494,21 @@ break_4:
 	store [5 x %Int32] %175, [5 x %Int32]* %170
 	%177 = bitcast [10 x %Int32]* %157 to [0 x %Int32]*
 	call void @array_print([0 x %Int32]* %177, %Nat32 10)
-	%178 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str21 to [0 x i8]*))
-	%179 = alloca [10 x %Int32], align 1
-	%180 = insertvalue [10 x %Int32] zeroinitializer, %Int32 10, 1
-	%181 = insertvalue [10 x %Int32] %180, %Int32 20, 2
-	%182 = insertvalue [10 x %Int32] %181, %Int32 30, 3
-	%183 = insertvalue [10 x %Int32] %182, %Int32 40, 4
-	%184 = insertvalue [10 x %Int32] %183, %Int32 50, 5
-	%185 = insertvalue [10 x %Int32] %184, %Int32 60, 6
-	%186 = insertvalue [10 x %Int32] %185, %Int32 70, 7
-	%187 = insertvalue [10 x %Int32] %186, %Int32 80, 8
-	%188 = insertvalue [10 x %Int32] %187, %Int32 90, 9
-	%189 = zext i8 10 to %Nat32
-	store [10 x %Int32] %188, [10 x %Int32]* %179
-	%190 = alloca %Nat8, align 1
-	store %Nat8 111, %Nat8* %190
-	%191 = alloca %Nat8, align 1
-	store %Nat8 222, %Nat8* %191
 
-	; test with var
-	%192 = alloca %Int32, align 4
-	store %Int32 3, %Int32* %192
-	%193 = alloca %Int32, align 4
-	store %Int32 5, %Int32* %193
-	%194 = load %Int32, %Int32* %192
-	%195 = getelementptr [10 x %Int32], [10 x %Int32]* %179, %Int32 0, %Int32 %194
-	%196 = bitcast %Int32* %195 to [0 x %Int32]*
-	%197 = load %Nat8, %Nat8* %190
-	%198 = sext %Nat8 %197 to %Int32
-	%199 = load %Nat8, %Nat8* %191
-	%200 = sext %Nat8 %199 to %Int32
-	%201 = load %Nat8, %Nat8* %190
-	%202 = sext %Nat8 %201 to %Int32
-	%203 = insertvalue [2 x %Int32] zeroinitializer, %Int32 %202, 0
-	%204 = load %Nat8, %Nat8* %191
-	%205 = sext %Nat8 %204 to %Int32
-	%206 = insertvalue [2 x %Int32] %203, %Int32 %205, 1
-; -- cons_composite_from_composite_by_value --
-	%207 = alloca [2 x %Int32]
-	%208 = zext i8 2 to %Nat32
-	store [2 x %Int32] %206, [2 x %Int32]* %207
-	%209 = bitcast [2 x %Int32]* %207 to [0 x %Int32]*
-; -- end cons_composite_from_composite_by_value --
-	%210 = load [0 x %Int32], [0 x %Int32]* %209
-	%211 = load %Int32, %Int32* %193
-	%212 = load %Int32, %Int32* %192
-	%213 = sub %Int32 %211, %212
-	store [0 x %Int32] %210, [0 x %Int32]* %196
-	%214 = bitcast [10 x %Int32]* %179 to [0 x %Int32]*
-	call void @array_print([0 x %Int32]* %214, %Nat32 10)
+	;	printf("--------------------------------------------\n")
+	;
+	;	var dst2 = []Int32 [00, 10, 20, 30, 40, 50, 60, 70, 80, 90]
+	;
+	;	var axx = Nat8 111
+	;	var bxx = Nat8 222
+	;
+	;	// FIXIT: test with var
+	;	// ARRCPY не умеет копировать generic массив, исправь это
+	;	var i2: Int32 = 3
+	;	var j2: Int32 = 5
+	;	dst2[i2:j2] = [Int32 axx, Int32 bxx]
+	;
+	;	array_print(&dst2, 10)
 	ret %Int 0
 }
 

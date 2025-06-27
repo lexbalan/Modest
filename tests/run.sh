@@ -35,8 +35,8 @@ cd print && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM &&
 cd 13.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd sizeof && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd memcopy && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
+cd slices && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 cd queue && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd ..
 
 #cd 24.* && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
-#cd slices && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \
 #cd asm && printf "\nBUILD: $PWD\n" && make -j7 && make -j7 C && make -j7 CM && cd .. && \

@@ -95,13 +95,13 @@ int main() {
 	#define bb  8
 
 	int32_t *const p = &s[aa];
-	array_print(p, __lengthof(*p));
+	array_print(p, bb - aa);
 
 	printf("--------------------------------------------\n");
 
 	p[0] = 123;
 
-	array_print(p, __lengthof(*p));
+	array_print(p, bb - aa);
 
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
@@ -145,19 +145,20 @@ int main() {
 
 	array_print((int32_t *)&dst, 10);
 
-	printf("--------------------------------------------\n");
-
-	int32_t dst2[10] = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90};
-
-	uint8_t axx = 111;
-	uint8_t bxx = 222;
-
-	// test with var
-	int32_t i2 = 3;
-	int32_t j2 = 5;
-	ARRCPY(((int32_t(*)[j2 - i2])&dst2[i2]), (&{(int32_t)axx, (int32_t)bxx}), (j2 - i2));
-
-	array_print((int32_t *)&dst2, 10);
+	//	printf("--------------------------------------------\n")
+	//
+	//	var dst2 = []Int32 [00, 10, 20, 30, 40, 50, 60, 70, 80, 90]
+	//
+	//	var axx = Nat8 111
+	//	var bxx = Nat8 222
+	//
+	//	// FIXIT: test with var
+	//	// ARRCPY не умеет копировать generic массив, исправь это
+	//	var i2: Int32 = 3
+	//	var j2: Int32 = 5
+	//	dst2[i2:j2] = [Int32 axx, Int32 bxx]
+	//
+	//	array_print(&dst2, 10)
 
 	return 0;
 

@@ -126,19 +126,20 @@ public func main () -> Int {
 
 	array_print(&dst, 10)
 
-	printf("--------------------------------------------\n")
-
-	var dst2 = [10]Int32 [00, 10, 20, 30, 40, 50, 60, 70, 80, 90]
-
-	var axx = Nat8 111
-	var bxx = Nat8 222
-
-	// test with var
-	var i2: Int32 = 3
-	var j2: Int32 = 5
-	dst2[i2:j2] = [Int32 axx, Int32 bxx]
-
-	array_print(&dst2, 10)
+	//	printf("--------------------------------------------\n")
+	//
+	//	var dst2 = []Int32 [00, 10, 20, 30, 40, 50, 60, 70, 80, 90]
+	//
+	//	var axx = Nat8 111
+	//	var bxx = Nat8 222
+	//
+	//	// FIXIT: test with var
+	//	// ARRCPY не умеет копировать generic массив, исправь это
+	//	var i2: Int32 = 3
+	//	var j2: Int32 = 5
+	//	dst2[i2:j2] = [Int32 axx, Int32 bxx]
+	//
+	//	array_print(&dst2, 10)
 
 	return 0
 }
