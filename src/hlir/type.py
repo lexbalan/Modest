@@ -72,8 +72,12 @@ class Type(Entity):
 	def is_incompleted(self):
 		return self.incomplete
 
+	def is_generic(self):
+		return self.generic
+
 	def is_distinct(self):
 		return self.brand != 0
+
 
 	def is_unit(self):
 		return isinstance(self, TypeUnit)
@@ -184,9 +188,6 @@ class Type(Entity):
 
 	def is_va_list(self):
 		return isinstance(self, TypeVaList)
-
-	def is_generic(self):
-		return self.generic
 
 	def is_generic_int(self):
 		return self.is_int() and self.is_generic()
