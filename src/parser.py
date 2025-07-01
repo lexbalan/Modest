@@ -39,12 +39,15 @@ class Parser:
 		return c in ['comment-line', 'comment-block']
 
 
-	def skip(self):
+	def skip1(self):
 		if self.ctoken < (len(self.tokens) - 1):
 			self.ctoken = self.ctoken + 1
 
+	def skip(self, token):
+		return self.match(token)
+
 	def skipn(self, token):
-		while self.match(token):
+		while self.skip(token):
 			pass
 
 
@@ -78,19 +81,19 @@ class Parser:
 
 	def gettok(self):
 		t = self.ctok()
-		self.skip()
+		self.skip1()
 		return t
 
 
 	#skip_tokens_class(['nl'])
 	def skip_tokens_class(self, classes):
 		while self.ctok_class() in classes:
-			self.skip()
+			self.skip1()
 
 
 	def skip_tokens(self, tokens):
 		while self.ctok() in tokens:
-			self.skip()
+			self.skip1()
 
 
 	def look(self, token):
@@ -103,7 +106,7 @@ class Parser:
 
 		yes = self.look(token)
 		if yes:
-			self.skip()
+			self.skip1()
 
 		return yes
 
@@ -124,7 +127,7 @@ class Parser:
 
 
 	def is_assign_operator(self):
-		return self.match("<-") or self.match("=") or self.match("=")
+		return self.look("=") or self.look("<-") or self.look(":=")
 
 	def is_number(self):
 		return self.ctok_class() == 'num'
@@ -148,7 +151,7 @@ class Parser:
 	def identifier(self):
 		ti = self.ti()
 #		if not self.is_identifier():
-#			self.skip()
+#			self.skip1()
 #			error("expected identifier", ti)
 #			return None
 		s = self.gettok()
@@ -161,12 +164,12 @@ class Parser:
 		if self.ctok() in separators:
 			if eat:
 				while self.ctok() in separators:
-					self.skip()
+					self.skip1()
 
 		elif self.ctok() in stoppers:
 			pass
 		elif self.ctok_class() in ['comment-line', 'comment-block']:
-			self.skip()
+			self.skip1()
 			pass
 		else:
 			error("expected separator", self.ti())
@@ -246,7 +249,7 @@ class Parser:
 	def check_is_field(self):
 		self.match("public") or self.match("private")
 		if self.is_identifier():
-			self.skip()
+			self.skip1()
 			if not self.match(':'):
 				return False
 
@@ -263,8 +266,8 @@ class Parser:
 
 		elif self.is_identifier():
 			if self.nextok() == '.':
-				self.skip()
-				self.skip()
+				self.skip1()
+				self.skip1()
 				if self.is_Identifier():
 					return True
 			token = self.gettok()
@@ -279,7 +282,7 @@ class Parser:
 			elif token == '[':
 				# maybe it is array?
 				while not self.match(']'):
-					self.skip()
+					self.skip1()
 				return self.is_type_expr()
 
 			elif token == '(':
@@ -328,7 +331,7 @@ class Parser:
 
 	def expr_type_func(self):
 		ti = self.ti()
-		self.skip()  # "("
+		self.skip1()  # "("
 		self.skip_tokens_class(['nl'])
 		arghack = False
 		fields = []
@@ -1004,7 +1007,7 @@ class Parser:
 			#self.skip_tokens_class(['nl'])
 			nl_cnt = 0
 			while self.token_class_is('nl'):
-				self.skip()
+				self.skip1()
 				nl_cnt += 1
 
 			if self.match(")"):
@@ -1380,7 +1383,7 @@ class Parser:
 				tokstr = 'end-of-file'
 
 			error("unexpected token '%s'" % tokstr, self.ti())
-			self.skip()
+			self.skip1()
 			return {
 				'isa': 'ast_value',
 				'kind': 'bad',
@@ -1439,7 +1442,7 @@ class Parser:
 
 
 	def stmt_return(self):
-		self.skip()	# skip 'return' keyword
+		self.skip1()	# skip 'return' keyword
 
 		v = None
 		if not (self.look("\n") or self.look(";") or self.look("}")):
@@ -1480,12 +1483,15 @@ class Parser:
 
 		# stmt expr
 		assign_ti = self.ti()
-		if not (self.is_assign_operator()):
-			return {'isa': 'ast_stmt', 'kind': 'value', 'value': v}
+		if self.is_assign_operator():
+			# stmt assign
+			self.skip1() # skip assign operator
+			self.skip("\n")
+			r = self.expr_value()
+			return {'isa': 'ast_stmt', 'kind': 'assign', 'left': v, 'right': r, 'ti': assign_ti}
 
-		# stmt assign
-		r = self.expr_value()
-		return {'isa': 'ast_stmt', 'kind': 'assign', 'left': v, 'right': r, 'ti': assign_ti}
+		# just value expression statement
+		return {'isa': 'ast_stmt', 'kind': 'value', 'value': v}
 
 
 	def stmt_comment_line(self):
@@ -1556,7 +1562,7 @@ class Parser:
 			if not self.look('\n'):
 				break
 
-			self.skip()
+			self.skip1()
 			nl_cnt = nl_cnt + 1
 			continue
 
@@ -1741,7 +1747,7 @@ class Parser:
 
 		else:
 			imports = []
-			self.skip()  # {
+			self.skip1()  # {
 			while True:
 				nl_cnt = self.skip_blanks()
 
@@ -1776,12 +1782,12 @@ class Parser:
 		ftyp = self.expr_type()
 
 		if self.is_comment():
-			self.skip()
+			self.skip1()
 
 #		while self.is_comment() or self.look("\n"):
 #			if self.is_end():
 #				break
-#			self.skip()
+#			self.skip1()
 
 		stmt = None
 		if self.look("{"):
@@ -1814,6 +1820,7 @@ class Parser:
 
 		init_value = None
 		if self.is_assign_operator():
+			self.skip1() # skip assign operator
 			init_value = self.expr_value()
 		else:
 			init_value = self.expr_ValueUndef(ti)
@@ -1856,7 +1863,7 @@ class Parser:
 		id = self.identifier()
 
 		if self.is_comment():
-			self.skip()
+			self.skip1()
 
 		self.need("=")
 
@@ -1878,7 +1885,7 @@ class Parser:
 			token_str = self.ctok()
 			if token_str in ['func', 'const', 'var', 'type', 'exist', 'extern']:
 				break
-			self.skip()
+			self.skip1()
 
 
 	def parse_if_comment_line(self):
@@ -2061,5 +2068,5 @@ class Parser:
 		while not self.ctok() in stoppers:
 			if self.ctok() == '':
 				return
-			self.skip()
+			self.skip1()
 

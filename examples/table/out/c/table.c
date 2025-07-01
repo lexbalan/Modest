@@ -1,3 +1,6 @@
+/*
+ * table.m
+ */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -92,7 +95,6 @@ void table_print(table_Table *table) {
 
 static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols) {
 	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
-
 	uint32_t j = 0;
 	while (j < nCols) {
 		printf("|");

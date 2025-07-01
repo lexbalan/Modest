@@ -22,10 +22,10 @@ var table_header1: []*Str8 = [
 ]
 
 var table_data1: [][]*Str8 = [
-	["0", "Alef",    "Betha",   "Emma"]
-	["1", "Clock",   "Depth",   "Free"]
-	["2", "Ink",     "Julia",   "Keyword"]
-	["3", "Ultra",   "Video",   "Word"]
+	["0",  "Alef",    "Betha",   "Clock"]
+	["1",  "Depth",   "Emma",    "Free"]
+	["2",  "Ink",     "Julia",   "Keyword"]
+	["3",  "Ultra",   "Video",   "Word"]
 ]
 
 
@@ -70,7 +70,7 @@ var table10 = table.Table {
 }
 
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	table.print(&table00)
 	printf("\n")
 

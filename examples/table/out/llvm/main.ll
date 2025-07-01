@@ -257,10 +257,10 @@ declare void @table_print(%table_Table* %table)
 @str17 = private constant [2 x i8] [i8 48, i8 0]
 @str18 = private constant [5 x i8] [i8 65, i8 108, i8 101, i8 102, i8 0]
 @str19 = private constant [6 x i8] [i8 66, i8 101, i8 116, i8 104, i8 97, i8 0]
-@str20 = private constant [5 x i8] [i8 69, i8 109, i8 109, i8 97, i8 0]
+@str20 = private constant [6 x i8] [i8 67, i8 108, i8 111, i8 99, i8 107, i8 0]
 @str21 = private constant [2 x i8] [i8 49, i8 0]
-@str22 = private constant [6 x i8] [i8 67, i8 108, i8 111, i8 99, i8 107, i8 0]
-@str23 = private constant [6 x i8] [i8 68, i8 101, i8 112, i8 116, i8 104, i8 0]
+@str22 = private constant [6 x i8] [i8 68, i8 101, i8 112, i8 116, i8 104, i8 0]
+@str23 = private constant [5 x i8] [i8 69, i8 109, i8 109, i8 97, i8 0]
 @str24 = private constant [5 x i8] [i8 70, i8 114, i8 101, i8 101, i8 0]
 @str25 = private constant [2 x i8] [i8 50, i8 0]
 @str26 = private constant [4 x i8] [i8 73, i8 110, i8 107, i8 0]
@@ -309,12 +309,12 @@ declare void @table_print(%table_Table* %table)
 		%Str8* bitcast ([2 x i8]* @str17 to [0 x i8]*),
 		%Str8* bitcast ([5 x i8]* @str18 to [0 x i8]*),
 		%Str8* bitcast ([6 x i8]* @str19 to [0 x i8]*),
-		%Str8* bitcast ([5 x i8]* @str20 to [0 x i8]*)
+		%Str8* bitcast ([6 x i8]* @str20 to [0 x i8]*)
 	],
 	[4 x %Str8*] [
 		%Str8* bitcast ([2 x i8]* @str21 to [0 x i8]*),
 		%Str8* bitcast ([6 x i8]* @str22 to [0 x i8]*),
-		%Str8* bitcast ([6 x i8]* @str23 to [0 x i8]*),
+		%Str8* bitcast ([5 x i8]* @str23 to [0 x i8]*),
 		%Str8* bitcast ([5 x i8]* @str24 to [0 x i8]*)
 	],
 	[4 x %Str8*] [

@@ -1,3 +1,6 @@
+/*
+ * table.m
+ */
 
 pragma unsafe
 
@@ -97,7 +100,6 @@ public func print (table: *Table) -> Unit {
 
 func printRow (raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 	let row = unsafe *[nCols]*Str8 raw_row
-
 	var j = Nat32 0
 	while j < nCols {
 		printf("|")

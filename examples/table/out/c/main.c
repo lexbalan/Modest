@@ -29,8 +29,8 @@ static char *table_header1[4] = {
 };
 
 static char *table_data1[4][4] = {
-	"0", "Alef", "Betha", "Emma",
-	"1", "Clock", "Depth", "Free",
+	"0", "Alef", "Betha", "Clock",
+	"1", "Depth", "Emma", "Free",
 	"2", "Ink", "Julia", "Keyword",
 	"3", "Ultra", "Video", "Word"
 };

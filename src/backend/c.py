@@ -1261,7 +1261,6 @@ def str_value_lengthof(x, ctx):
 		return str_value(x.value.type.volume)
 
 	sstr = ""
-	#sstr += '/*' + str(x.value.type) + '*/'
 	sstr += "__lengthof("
 	sstr += str_value(x.value)
 	sstr += ")"
@@ -2285,6 +2284,8 @@ def print_cfile(module, _outname):
 				continue
 			nnl(x.nl)
 			print_deps(x.deps)
+			if x.deps != []:
+				newline()
 			print_def_func(x)
 		elif isinstance(x, StmtComment):
 			nnl(x.nl)
