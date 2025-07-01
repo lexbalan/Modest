@@ -10,9 +10,6 @@ import "lightfood/delay" as delay
 import "fsm" as fsm
 
 
-
-
-
 const flashlightStateOff = 0
 const flashlightStateOn = 1
 const flashlightStateBeacon = 2
@@ -135,7 +132,6 @@ var fsm0: FSM = {
 
 
 public func main () -> Int {
-
 	while true {
 		fsm.run(&fsm0)
 		delay.ms(500)

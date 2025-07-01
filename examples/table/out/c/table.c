@@ -19,6 +19,7 @@
 
 static void separator(uint32_t *sz, uint32_t n);
 static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols);
+
 void table_print(table_Table *table) {
 	uint32_t i;
 	uint32_t j;

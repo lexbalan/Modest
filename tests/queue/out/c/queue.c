@@ -32,6 +32,7 @@ bool queue_isFull(queue_Queue *q) {
 // you must check isFull(queue) before call 'getPutPosition'
 
 static uint32_t next(uint32_t capacity, uint32_t x);
+
 uint32_t queue_getPutPosition(queue_Queue *q) {
 	const uint32_t pos = q->p;
 	q->p = next(q->capacity, q->p);
