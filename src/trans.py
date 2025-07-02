@@ -251,7 +251,6 @@ def valueZeroNumber():
 	return value_imm_literal_create(gt, 0)
 
 
-
 def init():
 	global foundation_module
 	#lib_path = settings['lib']
@@ -346,7 +345,6 @@ def init():
 	typeSysStr = TypePointer(TypeArray(typeSysChar, undefinedVolume))
 
 	init_builtin_values()
-
 
 
 def init_builtin_values():

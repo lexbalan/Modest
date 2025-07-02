@@ -15,7 +15,9 @@ public const c_O_RDWR = Int32 0x00000002      // open for reading and writing
 @set("id.c", "O_ACCMODE")
 public const c_O_ACCMODE = Int32 0x00000003   // mask for above modes
 
+@set("id.c", "O_NONBLOCK")
 public const c_O_NONBLOCK = Int32 0x00000004  // no delay
+@set("id.c", "O_APPEND")
 public const c_O_APPEND = Int32 0x00000008    // set append mode
 
 @set("id.c", "O_CREAT")
@@ -31,31 +33,53 @@ public const c_O_EXCL = Int32 0x00000800      // error if already exists
  */
 
 // command values
+@set("id.c", "F_DUPFD")
 public const c_F_DUPFD = 0           // duplicate file descriptor
+@set("id.c", "F_GETFD")
 public const c_F_GETFD = 1           // get file descriptor flags
+@set("id.c", "F_SETFD")
 public const c_F_SETFD = 2           // set file descriptor flags
+@set("id.c", "F_GETFL")
 public const c_F_GETFL = 3           // get file status flags
+@set("id.c", "F_SETFL")
 public const c_F_SETFL = 4           // set file status flags
+@set("id.c", "F_GETOWN")
 public const c_F_GETOWN = 5          // get SIGIO/SIGURG proc/pgrp
+@set("id.c", "F_SETOWN")
 public const c_F_SETOWN = 6          // set SIGIO/SIGURG proc/pgrp
+@set("id.c", "F_GETLK")
 public const c_F_GETLK = 7           // get record locking information
+@set("id.c", "F_SETLK")
 public const c_F_SETLK = 8           // set record locking information
+@set("id.c", "F_SETLKW")
 public const c_F_SETLKW = 9          // f_SETLK, wait if blocked
+@set("id.c", "F_CLOSEM")
 public const c_F_CLOSEM = 10         // close all fds >= to the one given
+@set("id.c", "F_MAXFD")
 public const c_F_MAXFD = 11          // return the max open fd
+@set("id.c", "F_DUPFD_CLOEXEC")
 public const c_F_DUPFD_CLOEXEC = 12  // close on exec duplicated fd
+@set("id.c", "F_GETNOSIGPIPE")
 public const c_F_GETNOSIGPIPE = 13   // get SIGPIPE disposition
+@set("id.c", "F_SETNOSIGPIPE")
 public const c_F_SETNOSIGPIPE = 14   // set SIGPIPE disposition
+@set("id.c", "F_GETPATH")
 public const c_F_GETPATH = 15        // get pathname associated with fd
+@set("id.c", "F_ADD_SEALS")
 public const c_F_ADD_SEALS = 16      // set seals
+@set("id.c", "F_GET_SEALS")
 public const c_F_GET_SEALS = 17      // get seals
 
 // file descriptor flags (f_GETFD, f_SETFD)
+@set("id.c", "FD_CLOEXEC")
 public const c_FD_CLOEXEC = 1        // close-on-exec flag
 
 // record locking flags (F_GETLK, F_SETLK, F_SETLKW)
+@set("id.c", "F_RDLCK")
 public const c_F_RDLCK = 1  // shared or read lock
+@set("id.c", "F_UNLCK")
 public const c_F_UNLCK = 2  // unlock
+@set("id.c", "F_WRLCK")
 public const c_F_WRLCK = 3  // exclusive or write lock
 
 
