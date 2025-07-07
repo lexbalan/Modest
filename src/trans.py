@@ -2583,6 +2583,8 @@ def add_spices_def(x, ast_atts):
 			info("distinct type", x['ti'])
 		elif kind == 'packed':
 			add_att(x, 'packed')
+		elif kind == 'noinline':
+			add_att(x, 'noinline')
 		elif kind == 'inline':
 			add_att(x, 'static')
 			add_att(x, 'inline')

@@ -35,6 +35,7 @@ static bool bubble_sort32_iter(int32_t *array, uint32_t len) {
 	return false;
 }
 
+__attribute__((noinline))
 static void bubble_sort32(int32_t *array, uint32_t len) {
 	while (bubble_sort32_iter(array, len)) {
 		// continue iterations while is's necessary

@@ -28,6 +28,7 @@ func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
 }
 
 
+@noinline
 func bubble_sort32 (array: *[]Int32, len: Nat32) -> Unit {
 	while bubble_sort32_iter (array, len) {
 		// continue iterations while is's necessary

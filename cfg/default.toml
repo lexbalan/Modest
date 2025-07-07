@@ -5,6 +5,13 @@
 target_name = "Default"
 machine_name = "Generic"
 
+arch="riscv32"
+endianness = "little"
+abi="ilp32"
+fpu="none"
+features = ["omit-frame-pointer"]
+
+
 word_width = 64
 size_width = 64
 integer_width = 32
