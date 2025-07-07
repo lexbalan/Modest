@@ -13,30 +13,31 @@
 #endif /* __lengthof */
 
 
-static int32_t array[21] = {
+static int32_t testArray[21] = {
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4,
 	11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
 };
 
-static void bubble_sort32(int32_t *array, uint32_t len) {
-	bool need_to_sort = true;
-	while (need_to_sort) {
-		need_to_sort = false;
-		uint32_t i = 0;
-		while (i < (len - 1)) {
-			const int32_t i0 = array[i];
-			const int32_t i1 = array[i + 1];
-
-			if (i0 > i1) {
-				// swap
-				array[i] = i1;
-				array[i + 1] = i0;
-				need_to_sort = true;
-				break;
-			}
-
-			i = i + 1;
+// returns true if was swap
+static bool bubble_sort32_iter(int32_t *array, uint32_t len) {
+	uint32_t i = 0;
+	while (i < (len - 1)) {
+		const int32_t left = array[i];
+		const int32_t right = array[i + 1];
+		if (left > right) {
+			// swap
+			array[i] = right;
+			array[i + 1] = left;
+			return true;
 		}
+		i = i + 1;
+	}
+	return false;
+}
+
+static void bubble_sort32(int32_t *array, uint32_t len) {
+	while (bubble_sort32_iter(array, len)) {
+		// continue iterations while is's necessary
 	}
 }
 
@@ -44,16 +45,15 @@ static void bubble_sort32(int32_t *array, uint32_t len) {
 static void print_array(int32_t *array, uint32_t len);
 
 int32_t main() {
-	//fill_array(&array, lengthof(array))
-
 	printf("array before:\n");
-	print_array((int32_t *)&array, __lengthof(array));
+	print_array((int32_t *)&testArray, __lengthof(testArray));
 	printf("\n");
 
-	bubble_sort32((int32_t *)&array, __lengthof(array));
+	// do sort
+	bubble_sort32((int32_t *)&testArray, __lengthof(testArray));
 
 	printf("array after:\n");
-	print_array((int32_t *)&array, __lengthof(array));
+	print_array((int32_t *)&testArray, __lengthof(testArray));
 	printf("\n");
 
 	return 0;
@@ -66,44 +66,5 @@ static void print_array(int32_t *array, uint32_t len) {
 		printf("array[%i] = %i\n", i, array[i]);
 		i = i + 1;
 	}
-}
-
-
-static int32_t get_number(int32_t min, int32_t max);
-
-static void fill_array(int32_t *array, uint32_t len) {
-	#define min  (-1000)
-	#define max  1000
-	uint32_t i = 0;
-	while (i < len) {
-		printf("[%i] ", i);
-		const int32_t x = get_number(min, max);
-		array[i] = x;
-		i = i + 1;
-	}
-
-#undef min
-#undef max
-}
-
-static int32_t get_number(int32_t min, int32_t max) {
-	int32_t number = 0;
-
-	while (true) {
-		printf("enter a number (%i .. %i): ", min, max);
-		scanf("%d", &number);
-
-		if (number < min) {
-			printf("number must be greater than %i, try again\n", min);
-			continue;
-		} else if (number > max) {
-			printf("number must be less than %i, try again\n", max);
-			continue;
-		} else {
-			break;
-		}
-	}
-
-	return number;
 }
 
