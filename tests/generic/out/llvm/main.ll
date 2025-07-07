@@ -360,8 +360,8 @@ body_1:
 	%11 = bitcast %Nat32 %10 to %Nat32
 	%12 = getelementptr [4 x i8], [4 x i8]* %4, %Int32 0, %Nat32 %11
 	%13 = load i8, i8* %12
-	%14 = sext i8 %13 to %Int32
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str12 to [0 x i8]*), %Nat32 %9, %Int32 %14)
+	%14 = zext i8 %13 to %Nat32
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str12 to [0 x i8]*), %Nat32 %9, %Nat32 %14)
 	%16 = load %Nat32, %Nat32* %6
 	%17 = add %Nat32 %16, 1
 	store %Nat32 %17, %Nat32* %6

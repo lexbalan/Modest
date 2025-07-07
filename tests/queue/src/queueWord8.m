@@ -37,7 +37,7 @@ public func isEmpty (q: *QueueWord8) -> Bool {
 }
 
 
-public func put (q: *QueueWord8, b: Word8) -> Bool {
+public func put (q: *QueueWord8, b: Word8) -> @unused Bool {
 	if queue.isFull(&q.queue) {
 		return false
 	}
@@ -49,7 +49,7 @@ public func put (q: *QueueWord8, b: Word8) -> Bool {
 }
 
 
-public func get (q: *QueueWord8, b: *Word8) -> Bool {
+public func get (q: *QueueWord8, b: *Word8) -> @unused Bool {
 	if queue.isEmpty(&q.queue) {
 		return false
 	}

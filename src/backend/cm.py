@@ -814,15 +814,13 @@ def print_asm_pair(pair):
 	out(']')
 
 
-def print_list_by(args, func):
-	for arg in args:
-		func(arg)
 
 # for print_stmt_asm:
 # prints pairs: <specifier> <value>
 def print_asm_pairs(args):
 	out('[')
-	print_list_by(args, print_asm_pair)
+	for arg in args:
+		print_asm_pair(arg)
 	out(']')
 
 
@@ -840,7 +838,8 @@ def print_stmt_asm(x):
 
 	if len(x.clobbers) > 0:
 		out(', [')
-		print_list_by(x.clobbers, print_value)
+		for c in x.clobbers:
+			print_value(c)
 		out(']')
 
 	out(")")

@@ -142,7 +142,7 @@ static bool test_generic_array() {
 
 	uint32_t i = 0;
 	while (i < 4) {
-		printf("a[%i] = %i\n", i, ((uint8_t[4])a)[i]);
+		printf("a[%i] = %i\n", i, (uint32_t)((uint8_t[4])a)[i]);
 		i = i + 1;
 	}
 

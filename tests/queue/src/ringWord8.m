@@ -37,7 +37,7 @@ public func isEmpty (q: *RingWord8) -> Bool {
 }
 
 
-public func put (q: *RingWord8, b: Word8) -> Bool {
+public func put (q: *RingWord8, b: Word8) -> @unused Bool {
 	/*
 	if queue.isFull(&q.queue) {
 		return false
@@ -51,7 +51,7 @@ public func put (q: *RingWord8, b: Word8) -> Bool {
 }
 
 
-public func get (q: *RingWord8, b: *Word8) -> Bool {
+public func get (q: *RingWord8, b: *Word8) -> @unused Bool {
 	if queue.isEmpty(&q.queue) {
 		return false
 	}

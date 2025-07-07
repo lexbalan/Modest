@@ -118,7 +118,7 @@ func test_generic_array () -> Bool {
 
 	var i: Nat32 = 0
 	while i < 4 {
-		printf("a[%i] = %i\n", i, a[i])
+		printf("a[%i] = %i\n", i, Nat32 a[i])
 		i = i + 1
 	}
 
