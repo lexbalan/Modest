@@ -10,8 +10,10 @@
 
 
 __attribute__((section("__DATA, .xdata")))
-__attribute__((aligned(2)))
-static int32_t x;
+__attribute__((aligned(8)))
+static uint32_t x;
+
+extern int32_t ext;
 
 int main() {
 	printf("Attributes example\n");

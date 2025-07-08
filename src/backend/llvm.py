@@ -2262,6 +2262,8 @@ def is_private(x):
 
 #['private', 'internal', 'weak', 'external'] # etc..
 def get_linkage(x):
+	if x.hasAttribute('extern'):
+		return "external"
 	if is_private(x):
 		return "internal"
 	return ""

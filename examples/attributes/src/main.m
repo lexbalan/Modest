@@ -4,10 +4,14 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-@alignment(2)
-@section("__DATA, .xdata")
-var x: Int32
 
+
+@alignment(8)
+@section("__DATA, .xdata")
+var x: Word32
+
+@extern
+var ext: Int32
 
 
 public func main () -> Int {

@@ -5,10 +5,15 @@ include "stdio"
 
 
 
-@section("__DATA, .xdata")
-@alignment(2)
-var x: Int32
 
+
+@section("__DATA, .xdata")
+@alignment(8)
+var x: Word32
+
+
+@extern
+var ext: Int32
 
 
 public func main () -> Int {

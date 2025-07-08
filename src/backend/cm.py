@@ -724,6 +724,10 @@ def needTypeAnno(x):
 
 
 def print_stmt_def(x, operator='const'):
+
+	if x.hasAttribute('extern'):
+		out("@extern\n")
+
 	if hasattr(x, 'section'):
 		out("@section(\"%s\")\n" % x.section)
 
