@@ -756,6 +756,8 @@ def print_stmt_func(x):
 
 	if x.hasAttribute('inline'):
 		out("@inline\n")
+	if x.hasAttribute('noinline'):
+		out("@noinline\n")
 
 	func = x.value
 	ft = func.type

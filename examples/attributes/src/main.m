@@ -23,6 +23,11 @@ func staticInlineFunc (x: Int32) -> Int32 {
 	return x + 1
 }
 
+@noinline
+func staticNoinlineFunc (x: Int32) -> Int32 {
+	return x + 1
+}
+
 
 public func main () -> Int {
 	printf("Attributes example\n")

@@ -203,7 +203,12 @@ declare void @perror(%ConstCharStr* %str)
 
 @ext = external global %Int32
 @x = internal global %Word32 zeroinitializer, section "__DATA, .xdata", align 8
-define internal %Int32 @staticInlineFunc(%Int32 %x) {
+define internal %Int32 @staticInlineFunc(%Int32 %x) alwaysinline {
+	%1 = add %Int32 %x, 1
+	ret %Int32 %1
+}
+
+define internal %Int32 @staticNoinlineFunc(%Int32 %x) noinline {
 	%1 = add %Int32 %x, 1
 	ret %Int32 %1
 }

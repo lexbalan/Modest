@@ -2276,6 +2276,7 @@ def print_linkage(x):
 
 
 
+
 def print_decl_func(x):
 	out("\ndeclare ")
 	print_linkage(x)
@@ -2316,6 +2317,12 @@ def print_def_func(x):
 
 	if need_sret(ftype):
 		reg_get() # get %0 reg for retval
+
+
+	if x.hasAttribute('inline'):
+		out(" alwaysinline")
+	if x.hasAttribute('noinline'):
+		out(" noinline")
 
 	#
 	# Добавляем параметры в локальную таблицу
