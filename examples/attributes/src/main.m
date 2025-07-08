@@ -4,6 +4,13 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
+type MyInt32 = @distinct Int32
+@set("id.c", "MY_ZERO")
+const myZero = MyInt32 0
+@set("id.c", "MY_ONE")
+const myOne = MyInt32 1
+
+
 type ProtocolHeader = @packed record {
 	start: Word16
 	len: Nat16
@@ -15,6 +22,8 @@ var ext: Int32
 @alignment(8)
 @section("__DATA, .xdata")
 var x: Word32
+
+
 
 
 

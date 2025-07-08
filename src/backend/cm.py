@@ -182,6 +182,11 @@ def str_type_func(t, extra_args=False):
 def str_type(t):
 	assert(isinstance(t, Type))
 
+	#s = ""
+
+	#if t.hasAttribute('distinct'):
+	#	s += "@distinct "
+
 	# Если тип связан с идентификатором - распечатаем его
 	id_str = get_id_str(t)
 	if id_str != None:

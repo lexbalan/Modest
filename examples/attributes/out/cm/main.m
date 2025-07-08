@@ -3,6 +3,13 @@ include "stdio"
 // examples/1.hello_world/src/main.m
 
 
+type MyInt32 = Int32
+
+const myZero = MyInt32 0
+
+const myOne = MyInt32 1
+
+
 type ProtocolHeader = @packed record {
 	start: Word16
 	len: Nat16
@@ -17,6 +24,8 @@ var ext: Int32
 @section("__DATA, .xdata")
 @alignment(8)
 var x: Word32
+
+
 
 
 
