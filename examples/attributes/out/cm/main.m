@@ -3,7 +3,14 @@ include "stdio"
 // examples/1.hello_world/src/main.m
 
 
+type ProtocolHeader = @packed record {
+	start: Word16
+	len: Nat16
+}
 
+
+@extern
+var ext: Int32
 
 
 
@@ -11,9 +18,6 @@ include "stdio"
 @alignment(8)
 var x: Word32
 
-
-@extern
-var ext: Int32
 
 
 

@@ -120,7 +120,12 @@ def str_field(x):
 
 
 def str_type_record(t):
-	s = "record {"
+	s = ""
+
+	if t.hasAttribute('packed'):
+		s += "@packed "
+
+	s += "record {"
 	indent_up()
 
 	prev_nl = 1

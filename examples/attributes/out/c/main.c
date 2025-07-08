@@ -9,11 +9,17 @@
 #include "main.h"
 
 
+struct __attribute__((packed)) ProtocolHeader {
+	uint16_t start;
+	uint16_t len;
+};
+typedef struct ProtocolHeader ProtocolHeader;
+
+extern int32_t ext;
+
 __attribute__((section("__DATA, .xdata")))
 __attribute__((aligned(8)))
 static uint32_t x;
-
-extern int32_t ext;
 
 static inline int32_t staticInlineFunc(int32_t x) {
 	return x + 1;
