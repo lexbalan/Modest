@@ -16,6 +16,13 @@ var x: Word32
 var ext: Int32
 
 
+
+@inline
+func staticInlineFunc (x: Int32) -> Int32 {
+	return x + 1
+}
+
+
 public func main () -> Int {
 	printf("Attributes example\n")
 	return 0

@@ -15,6 +15,10 @@ static uint32_t x;
 
 extern int32_t ext;
 
+static inline int32_t staticInlineFunc(int32_t x) {
+	return x + 1;
+}
+
 int main() {
 	printf("Attributes example\n");
 	return 0;

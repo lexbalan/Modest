@@ -748,6 +748,10 @@ def print_stmt_def(x, operator='const'):
 def print_stmt_func(x):
 	if x.stmt == None:
 		return
+
+	if x.hasAttribute('inline'):
+		out("@inline\n")
+
 	func = x.value
 	ft = func.type
 	out("func ")

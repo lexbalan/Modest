@@ -198,6 +198,11 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --; examples/1.hello_world/src/main.m
 @x = internal global %Word32 zeroinitializer, section "__DATA, .xdata", align 8
 @ext = external global %Int32
+define internal %Int32 @staticInlineFunc(%Int32 %x) {
+	%1 = add %Int32 %x, 1
+	ret %Int32 %1
+}
+
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))
 	ret %Int 0
