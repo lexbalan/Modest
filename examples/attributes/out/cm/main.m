@@ -31,6 +31,10 @@ var s: Nat16
 
 
 
+public const const0 = 0
+
+
+
 @inline
 func staticInlineFunc (x: Int32) -> Int32 {
 	return x + 1

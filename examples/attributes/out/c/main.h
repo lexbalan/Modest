@@ -8,6 +8,8 @@
 #include <stdbool.h>
 
 #include <stdio.h>
+
+#define const0  0
 int main();
 
 #endif /* MAIN_H */

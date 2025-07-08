@@ -28,6 +28,10 @@ var x: Word32
 var s: Nat16
 
 
+@nodecorate
+public const const0 = 0
+
+
 @inline
 func staticInlineFunc (x: Int32) -> Int32 {
 	return x + 1
