@@ -24,7 +24,8 @@ var ext: Int32
 var x: Word32
 
 
-
+@nonstatic
+var s: Nat16
 
 
 @inline

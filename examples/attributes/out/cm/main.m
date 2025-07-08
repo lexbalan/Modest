@@ -27,6 +27,7 @@ var x: Word32
 
 
 
+var s: Nat16
 
 
 

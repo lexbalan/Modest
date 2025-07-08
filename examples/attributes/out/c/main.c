@@ -27,6 +27,8 @@ __attribute__((section("__DATA, .xdata")))
 __attribute__((aligned(8)))
 static uint32_t x;
 
+uint16_t s;
+
 static inline int32_t staticInlineFunc(int32_t x) {
 	return x + 1;
 }
