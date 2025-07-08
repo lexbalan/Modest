@@ -20,7 +20,7 @@ LLVM:
 	clang $(LLVMPREFIX)/main.ll
 
 
-C:	
+C:
 	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
 	$(CC) $(CPREFIX)/main.c
 

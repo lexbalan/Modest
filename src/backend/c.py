@@ -1661,16 +1661,12 @@ def assign_array(left, right, ti):
 
 
 def do_assign(left, right, ti):
-	#out("/*%s*/" % right['kind'])
-
 	if right.type.is_array():
 		assign_array(left, right, ti)
-
 	else:
 		print_value(left)
 		out(" = ")
 		print_value(right)
-
 	out(";")
 	return
 
@@ -1920,7 +1916,8 @@ def print_def_var(x, isdecl=False):
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
-	#id = x['id']
+	if hasattr(x, 'section'):
+		out("__attribute__((section(\"%s\")))\n" % x.section)
 
 	if hasattr(x, 'alignment'):
 		out("__attribute__((aligned(%d)))\n" % x.alignment)

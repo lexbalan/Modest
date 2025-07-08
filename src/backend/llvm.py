@@ -2446,6 +2446,13 @@ def print_def_var(x, as_extern=False):
 			llvm_print_value(do_eval(x.init_value))
 		else:
 			out(" zeroinitializer")
+
+	if hasattr(x, 'section'):
+		out(", section \"%s\"" % x.section)
+
+	if hasattr(x, 'alignment'):
+		out(", align %d" % x.alignment)
+
 	return
 
 

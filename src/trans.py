@@ -2598,6 +2598,9 @@ def add_spices_def(x, ast_atts):
 		elif kind == 'alignment':
 			val = int(a['args'][0]['value']['str'])
 			setObjAttrByPath(x, 'alignment', val)
+		elif kind == 'section':
+			val = a['args'][0]['value']['str']
+			setObjAttrByPath(x, 'section', val)
 		elif kind == 'nonstatic':
 			add_att(x, 'nonstatic')
 		elif kind == 'nodecorate':

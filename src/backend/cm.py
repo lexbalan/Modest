@@ -724,6 +724,12 @@ def needTypeAnno(x):
 
 
 def print_stmt_def(x, operator='const'):
+	if hasattr(x, 'section'):
+		out("@section(\"%s\")\n" % x.section)
+
+	if hasattr(x, 'alignment'):
+		out("@alignment(%d)\n" % x.alignment)
+
 	out("%s %s" % (operator, get_id_str(x)))
 
 	if needTypeAnno(x):
