@@ -1922,6 +1922,9 @@ def print_def_var(x, isdecl=False):
 	if x.hasAttribute('used'):
 		out("__attribute__((used))\n")
 
+	if x.hasAttribute('unused'):
+		out("__attribute__((unused))\n")
+
 	if hasattr(x, 'section'):
 		out("__attribute__((section(\"%s\")))\n" % x.section)
 

@@ -43,6 +43,9 @@ uint16_t s;
 __attribute__((used))
 static uint64_t u;
 
+__attribute__((unused))
+static uint64_t u2;
+
 __attribute__((always_inline))
 static inline int32_t staticInlineFunc(int32_t x) {
 	return x + 1;

@@ -40,6 +40,10 @@ var s: Nat16
 var u: Word64
 
 
+@unused
+var u2: Word64
+
+
 
 public const const0 = 0
 
