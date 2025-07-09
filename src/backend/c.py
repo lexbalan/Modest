@@ -1814,7 +1814,7 @@ def print_def_func(x):
 		if x.access_level == 'private':
 			out("static ")
 
-	if x.hasAttribute('inline'):
+	if x.hasAttribute('inline') or x.hasAttribute('inlinehint'):
 		out("inline ")
 
 	if x.hasAttribute('extern'):

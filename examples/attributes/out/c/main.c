@@ -50,6 +50,10 @@ static int32_t staticNoinlineFunc(int32_t x) {
 	return x + 1;
 }
 
+static inline int32_t staticInlineHintFunc(int32_t x) {
+	return x + 1;
+}
+
 int main() {
 	printf("Attributes example\n");
 	return 0;

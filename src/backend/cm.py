@@ -759,6 +759,8 @@ def print_stmt_func(x):
 	if x.stmt == None:
 		return
 
+	if x.hasAttribute('inlinehint'):
+		out("@inlinehint\n")
 	if x.hasAttribute('inline'):
 		out("@inline\n")
 	if x.hasAttribute('noinline'):

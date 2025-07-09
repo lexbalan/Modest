@@ -2319,6 +2319,8 @@ def print_def_func(x):
 		reg_get() # get %0 reg for retval
 
 
+	if x.hasAttribute('inlinehint'):
+		out(" inlinehint")
 	if x.hasAttribute('inline'):
 		out(" alwaysinline")
 	if x.hasAttribute('noinline'):
