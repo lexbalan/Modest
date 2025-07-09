@@ -215,7 +215,11 @@ class Parser:
 			if self.match("}"):
 				break
 
-			f = self.parse_field()
+			#f = self.parse_field()
+			access_modifier = self.parse_access_modifier()
+			f = self.stmt_var()
+			for ff in f:
+				ff['access_modifier'] = access_modifier
 
 			line_comm = self.parse_if_comment()
 
@@ -1660,6 +1664,10 @@ class Parser:
 		return (atts, nl_cnt)
 
 
+	# TODO: кандидат на выбывание!
+	# поля записей могут иметь default значения
+	# параметры фунций тоже
+	# будет время - убери это недоразумение!
 	def parse_field(self):
 		ti = self.ti()
 

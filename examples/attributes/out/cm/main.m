@@ -9,6 +9,7 @@ const myZero = MyInt32 0
 
 const myOne = MyInt32 1
 
+
 // These refined MyInt32 types are compatible with MyInt32
 // but not compatible with anything else (e.g. between them)
 type MyInt32_2 = MyInt32
@@ -57,6 +58,12 @@ func staticNoinlineFunc (x: Int32) -> Int32 {
 @inlinehint
 func staticInlineHintFunc (x: Int32) -> Int32 {
 	return x + 1
+}
+
+
+type Point2D = record {
+	x: Float64
+	y: Float64
 }
 
 

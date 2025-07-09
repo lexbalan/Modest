@@ -54,6 +54,12 @@ static inline int32_t staticInlineHintFunc(int32_t x) {
 	return x + 1;
 }
 
+struct Point2D {
+	double x;
+	double y;
+};
+typedef struct Point2D Point2D;
+
 int main() {
 	printf("Attributes example\n");
 	return 0;

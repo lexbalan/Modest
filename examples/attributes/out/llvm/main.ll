@@ -198,6 +198,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --; examples/attributes/src/main.m
 %MyInt32 = type %Int32;
 
+
 ; These refined MyInt32 types are compatible with MyInt32
 ; but not compatible with anything else (e.g. between them)
 %MyInt32_2 = type %MyInt32;
@@ -224,6 +225,11 @@ define internal %Int32 @staticInlineHintFunc(%Int32 %x) inlinehint {
 	%1 = add %Int32 %x, 1
 	ret %Int32 %1
 }
+
+%Point2D = type {
+	%Float64,
+	%Float64
+};
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))

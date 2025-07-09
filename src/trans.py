@@ -209,7 +209,7 @@ def add_spices_type(t, atts):
 			t.brand = distinct_cnt
 
 		elif k == 'refined':
-			info("refined type", t.ti)
+			#info("refined type", t.ti)
 			t.refine = t.brand
 			distinct_cnt += 1
 			t.brand = distinct_cnt
@@ -423,11 +423,17 @@ def init_builtin_values():
 # pos - position no
 # offset - real offset (address inside container struct)
 def do_field(x):
+	#info("do_field", x['ti'])
 	id = Id(x['id'])
 	if id.str[0].isupper():
 		error("field id must starts with small letter", id.ti)
 
 	t = do_type(x['type'])
+	iv = do_value(x['init_value'])
+
+	if not iv.isUndef():
+		# у поля есть инициализатор
+		pass
 
 	iv = None
 	if x['init_value'] != None:
