@@ -46,6 +46,7 @@ func staticInlineFunc (x: Int32) -> Int32 {
 }
 
 
+
 @noinline
 func staticNoinlineFunc (x: Int32) -> Int32 {
 	return x + 1

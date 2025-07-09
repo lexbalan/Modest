@@ -40,6 +40,7 @@ static uint32_t x;
 
 uint16_t s;
 
+__attribute__((always_inline))
 static inline int32_t staticInlineFunc(int32_t x) {
 	return x + 1;
 }

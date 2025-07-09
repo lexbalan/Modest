@@ -28,6 +28,7 @@ static Line line = {
 	.b = {.x = 1.0, .y = 1.0}
 };
 
+__attribute__((always_inline))
 static inline float max(float a, float b) {
 	if (a > b) {
 		return a;
@@ -35,6 +36,7 @@ static inline float max(float a, float b) {
 	return b;
 }
 
+__attribute__((always_inline))
 static inline float min(float a, float b) {
 	if (a < b) {
 		return a;

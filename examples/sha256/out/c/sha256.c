@@ -25,34 +25,42 @@ struct Context {
 };
 typedef struct Context Context;
 
+__attribute__((always_inline))
 static inline uint32_t rotleft(uint32_t a, uint32_t b) {
 	return (a << b) | (a >> (32 - b));
 }
 
+__attribute__((always_inline))
 static inline uint32_t rotright(uint32_t a, uint32_t b) {
 	return (a >> b) | (a << (32 - b));
 }
 
+__attribute__((always_inline))
 static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (~x & z);
 }
 
+__attribute__((always_inline))
 static inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (x & z) ^ (y & z);
 }
 
+__attribute__((always_inline))
 static inline uint32_t ep0(uint32_t x) {
 	return rotright(x, 2) ^ rotright(x, 13) ^ rotright(x, 22);
 }
 
+__attribute__((always_inline))
 static inline uint32_t ep1(uint32_t x) {
 	return rotright(x, 6) ^ rotright(x, 11) ^ rotright(x, 25);
 }
 
+__attribute__((always_inline))
 static inline uint32_t sig0(uint32_t x) {
 	return rotright(x, 7) ^ rotright(x, 18) ^ (x >> 3);
 }
 
+__attribute__((always_inline))
 static inline uint32_t sig1(uint32_t x) {
 	return rotright(x, 17) ^ rotright(x, 19) ^ (x >> 10);
 }

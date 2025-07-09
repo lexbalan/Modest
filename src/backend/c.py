@@ -1801,6 +1801,9 @@ def print_def_func(x):
 	global cfunc
 	cfunc = func
 
+	if x.hasAttribute('inline'):
+		out("__attribute__((always_inline))\n")
+
 	if x.hasAttribute('noinline'):
 		out("__attribute__((noinline))\n")
 
