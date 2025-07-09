@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// examples/1.hello_world/src/main.m
+// examples/attributes/src/main.m
 
 
 type MyInt32 = Int32
