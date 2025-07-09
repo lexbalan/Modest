@@ -2598,6 +2598,11 @@ def add_spices_def(x, ast_atts):
 
 		#elif kind == 'distinct':
 		#	info("distinct type", x['ti'])
+		elif kind == 'used':
+			# implemented in C, CM
+			add_att(x, 'used')
+		elif kind == 'unused':
+			add_att(x, 'unused')
 		elif kind == 'packed':
 			add_att(x, 'packed')
 		elif kind == 'noinline':

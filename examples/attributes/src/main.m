@@ -33,6 +33,9 @@ var x: Word32
 @nonstatic
 var s: Nat16
 
+@used
+var u: Word64
+
 
 @nodecorate
 public const const0 = 0

@@ -1919,6 +1919,9 @@ def print_def_var(x, isdecl=False):
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
+	if x.hasAttribute('used'):
+		out("__attribute__((used))\n")
+
 	if hasattr(x, 'section'):
 		out("__attribute__((section(\"%s\")))\n" % x.section)
 

@@ -36,6 +36,10 @@ var x: Word32
 var s: Nat16
 
 
+@used
+var u: Word64
+
+
 
 public const const0 = 0
 

@@ -735,6 +735,9 @@ def needTypeAnno(x):
 
 def print_stmt_def(x, operator='const'):
 
+	if x.hasAttribute('used'):
+		out("@used\n")
+
 	if x.hasAttribute('extern'):
 		out("@extern\n")
 
