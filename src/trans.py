@@ -2599,7 +2599,7 @@ def add_spices_def(x, ast_atts):
 		#elif kind == 'distinct':
 		#	info("distinct type", x['ti'])
 		elif kind == 'used':
-			# implemented in C, CM
+			# TODO: not implemented in LLVM (!)
 			add_att(x, 'used')
 		elif kind == 'unused':
 			add_att(x, 'unused')
