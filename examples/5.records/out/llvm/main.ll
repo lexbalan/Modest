@@ -312,7 +312,7 @@ declare void @perror(%ConstCharStr* %str)
 		%Float 1.0000000000000000
 	}
 }
-define internal %Float @max(%Float %a, %Float %b) {
+define internal %Float @max(%Float %a, %Float %b) alwaysinline {
 ; if_0
 	%1 = fcmp ogt %Float %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
@@ -323,7 +323,7 @@ endif_0:
 	ret %Float %b
 }
 
-define internal %Float @min(%Float %a, %Float %b) {
+define internal %Float @min(%Float %a, %Float %b) alwaysinline {
 ; if_0
 	%1 = fcmp olt %Float %a, %b
 	br %Bool %1 , label %then_0, label %endif_0

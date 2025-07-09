@@ -9,6 +9,9 @@ const myZero = MyInt32 0
 
 const myOne = MyInt32 1
 
+type MyInt32_2 = MyInt32
+type MyInt32_3 = MyInt32
+
 
 type ProtocolHeader = @packed record {
 	start: Word16

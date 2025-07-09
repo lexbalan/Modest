@@ -193,13 +193,21 @@ def add_spices_value(v, atts):
 
 
 def add_spices_type(t, atts):
+	global distinct_cnt
+
 	for a in atts:
 		k = a['kind']
 		t.att.append(k)
 
 		if k == 'distinct':
+			#info("distinct type", t.ti)
 			# Type.brand must be > 0 (!)
-			global distinct_cnt
+			distinct_cnt += 1
+			t.brand = distinct_cnt
+
+		elif k == 'refined':
+			info("refined type", t.ti)
+			t.refine = t.brand
 			distinct_cnt += 1
 			t.brand = distinct_cnt
 
@@ -2579,12 +2587,14 @@ def add_spices_def(x, ast_atts):
 			if key[-4:] == 'id.c':
 				add_att(x, 'id:nodecorate')
 
-		elif kind == 'distinct':
-			info("distinct type", x['ti'])
+		#elif kind == 'distinct':
+		#	info("distinct type", x['ti'])
 		elif kind == 'packed':
 			add_att(x, 'packed')
 		elif kind == 'noinline':
 			add_att(x, 'noinline')
+		elif kind == 'inlinehint':
+			add_att(x, 'inlinehint')
 		elif kind == 'inline':
 			#add_att(x, 'static')
 			add_att(x, 'inline')

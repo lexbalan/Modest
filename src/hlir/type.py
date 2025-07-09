@@ -50,10 +50,12 @@ class Type(Entity):
 		self.incomplete = True
 		self.definition = None
 
+		self.parent_type = None
 		# особое поле - если оно ненулевое значит это distinct тип
 		# такие типы будут признаны неравными если их поля dictinct отличны
 		# 0 - зарезервирован для не distinct типов (см. @distinct аттрибут)
 		self.brand = 0
+		self.refine = 0
 		pass
 
 

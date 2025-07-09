@@ -189,138 +189,41 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
+; from included stdlib
+declare void @abort()
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
+declare i8* @calloc(%SizeT %num, %SizeT %size)
+declare void @exit(%Int %x)
+declare void @free(i8* %ptr)
+declare %Str* @getenv(%Str* %name)
+declare %LongInt @labs(%LongInt %x)
+declare %Str* @secure_getenv(%Str* %name)
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
+; from included std
+%std_Byte = type %Word8;
+%std_Int = type %Int32;
+%std_Nat = type %Nat32;
+%std_Size = type %Nat32;
+%std_SSize = type %Int32;
+%std_Address = type %Nat32;
+declare void @std_assert(%Bool %cond, %Str8* %msg)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [15 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 98, i8 101, i8 102, i8 111, i8 114, i8 101, i8 58, i8 10, i8 0]
-@str2 = private constant [2 x i8] [i8 10, i8 0]
-@str3 = private constant [14 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 97, i8 102, i8 116, i8 101, i8 114, i8 58, i8 10, i8 0]
-@str4 = private constant [2 x i8] [i8 10, i8 0]
-@str5 = private constant [2 x i8] [i8 10, i8 0]
-@str6 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-; -- endstrings --; examples/demo1/src/main.m
-@testArray = internal global [21 x %Int32] [
-	%Int32 -3,
-	%Int32 -5,
-	%Int32 2,
-	%Int32 1,
-	%Int32 -1,
-	%Int32 0,
-	%Int32 -2,
-	%Int32 3,
-	%Int32 -4,
-	%Int32 4,
-	%Int32 11,
-	%Int32 9,
-	%Int32 6,
-	%Int32 -7,
-	%Int32 -8,
-	%Int32 5,
-	%Int32 7,
-	%Int32 10,
-	%Int32 8,
-	%Int32 -6,
-	%Int32 -9
-]
-
-
-; returns true if was swap
-define internal %Bool @bubble_sort32_iter([0 x %Int32]* %array, %Nat32 %len) {
-	%1 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %1
-; while_1
-	br label %again_1
-again_1:
-	%2 = sub %Nat32 %len, 1
-	%3 = load %Nat32, %Nat32* %1
-	%4 = icmp ult %Nat32 %3, %2
-	br %Bool %4 , label %body_1, label %break_1
-body_1:
-	%5 = load %Nat32, %Nat32* %1
-	%6 = bitcast %Nat32 %5 to %Nat32
-	%7 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %6
-	%8 = load %Int32, %Int32* %7
-	%9 = load %Nat32, %Nat32* %1
-	%10 = add %Nat32 %9, 1
-	%11 = bitcast %Nat32 %10 to %Nat32
-	%12 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %11
-	%13 = load %Int32, %Int32* %12
-; if_0
-	%14 = icmp sgt %Int32 %8, %13
-	br %Bool %14 , label %then_0, label %endif_0
-then_0:
-	; swap
-	%15 = load %Nat32, %Nat32* %1
-	%16 = bitcast %Nat32 %15 to %Nat32
-	%17 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %16
-	store %Int32 %13, %Int32* %17
-	%18 = load %Nat32, %Nat32* %1
-	%19 = add %Nat32 %18, 1
-	%20 = bitcast %Nat32 %19 to %Nat32
-	%21 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %20
-	store %Int32 %8, %Int32* %21
-	ret %Bool 1
-	br label %endif_0
-endif_0:
-	%23 = load %Nat32, %Nat32* %1
-	%24 = add %Nat32 %23, 1
-	store %Nat32 %24, %Nat32* %1
-	br label %again_1
-break_1:
-	ret %Bool 0
-}
-
-define internal void @bubble_sort32([0 x %Int32]* %array, %Nat32 %len) noinline {
-; while_1
-	br label %again_1
-again_1:
-	%1 = call %Bool @bubble_sort32_iter([0 x %Int32]* %array, %Nat32 %len)
-	br %Bool %1 , label %body_1, label %break_1
-body_1:
-	; continue iterations while is's necessary
-	br label %again_1
-break_1:
-	ret void
-}
-
-define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
-	call void @print_array([0 x %Int32]* bitcast ([21 x %Int32]* @testArray to [0 x %Int32]*), %Nat32 21)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-
-	; do sort
-	call void @bubble_sort32([0 x %Int32]* bitcast ([21 x %Int32]* @testArray to [0 x %Int32]*), %Nat32 21)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
-	call void @print_array([0 x %Int32]* bitcast ([21 x %Int32]* @testArray to [0 x %Int32]*), %Nat32 21)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-	ret %Int32 0
-}
-
-define internal void @print_array([0 x %Int32]* %array, %Nat32 %len) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-	%2 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %2
-; while_1
-	br label %again_1
-again_1:
-	%3 = load %Nat32, %Nat32* %2
-	%4 = icmp ult %Nat32 %3, %len
-	br %Bool %4 , label %body_1, label %break_1
-body_1:
-	%5 = load %Nat32, %Nat32* %2
-	%6 = load %Nat32, %Nat32* %2
-	%7 = bitcast %Nat32 %6 to %Nat32
-	%8 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %7
-	%9 = load %Int32, %Int32* %8
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str6 to [0 x i8]*), %Nat32 %5, %Int32 %9)
-	%11 = load %Nat32, %Nat32* %2
-	%12 = add %Nat32 %11, 1
-	store %Nat32 %12, %Nat32* %2
-	br label %again_1
-break_1:
-	ret void
+@str1 = private constant [29 x i8] [i8 84, i8 104, i8 105, i8 115, i8 32, i8 97, i8 115, i8 115, i8 101, i8 114, i8 116, i8 32, i8 109, i8 117, i8 115, i8 116, i8 32, i8 110, i8 111, i8 116, i8 32, i8 119, i8 111, i8 114, i8 107, i8 115, i8 33, i8 10, i8 0]
+@str2 = private constant [25 x i8] [i8 84, i8 104, i8 105, i8 115, i8 32, i8 97, i8 115, i8 115, i8 101, i8 114, i8 116, i8 32, i8 109, i8 117, i8 115, i8 116, i8 32, i8 119, i8 111, i8 114, i8 107, i8 115, i8 33, i8 10, i8 0]
+; -- endstrings --; examples/0.endianness/src/main.m
+define %std_Int @main() {
+	call void @std_assert(%Bool 1, %Str8* bitcast ([29 x i8]* @str1 to [0 x i8]*))
+	call void @std_assert(%Bool 0, %Str8* bitcast ([25 x i8]* @str2 to [0 x i8]*))
+	ret %std_Int 0
 }
 
 

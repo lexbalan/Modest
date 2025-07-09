@@ -167,7 +167,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 	[8 x %Word32]
 };
 
-define internal %Word32 @rotleft(%Word32 %a, %Nat32 %b) {
+define internal %Word32 @rotleft(%Word32 %a, %Nat32 %b) alwaysinline {
 	%1 = bitcast %Nat32 %b to %Word32
 	%2 = shl %Word32 %a, %1
 	%3 = sub %Nat32 32, %b
@@ -177,7 +177,7 @@ define internal %Word32 @rotleft(%Word32 %a, %Nat32 %b) {
 	ret %Word32 %6
 }
 
-define internal %Word32 @rotright(%Word32 %a, %Nat32 %b) {
+define internal %Word32 @rotright(%Word32 %a, %Nat32 %b) alwaysinline {
 	%1 = bitcast %Nat32 %b to %Word32
 	%2 = lshr %Word32 %a, %1
 	%3 = sub %Nat32 32, %b
@@ -187,7 +187,7 @@ define internal %Word32 @rotright(%Word32 %a, %Nat32 %b) {
 	ret %Word32 %6
 }
 
-define internal %Word32 @ch(%Word32 %x, %Word32 %y, %Word32 %z) {
+define internal %Word32 @ch(%Word32 %x, %Word32 %y, %Word32 %z) alwaysinline {
 	%1 = and %Word32 %x, %y
 	%2 = xor %Word32 %x, -1
 	%3 = and %Word32 %2, %z
@@ -195,7 +195,7 @@ define internal %Word32 @ch(%Word32 %x, %Word32 %y, %Word32 %z) {
 	ret %Word32 %4
 }
 
-define internal %Word32 @maj(%Word32 %x, %Word32 %y, %Word32 %z) {
+define internal %Word32 @maj(%Word32 %x, %Word32 %y, %Word32 %z) alwaysinline {
 	%1 = and %Word32 %x, %y
 	%2 = and %Word32 %x, %z
 	%3 = and %Word32 %y, %z
@@ -204,7 +204,7 @@ define internal %Word32 @maj(%Word32 %x, %Word32 %y, %Word32 %z) {
 	ret %Word32 %5
 }
 
-define internal %Word32 @ep0(%Word32 %x) {
+define internal %Word32 @ep0(%Word32 %x) alwaysinline {
 	%1 = call %Word32 @rotright(%Word32 %x, %Nat32 2)
 	%2 = call %Word32 @rotright(%Word32 %x, %Nat32 13)
 	%3 = call %Word32 @rotright(%Word32 %x, %Nat32 22)
@@ -213,7 +213,7 @@ define internal %Word32 @ep0(%Word32 %x) {
 	ret %Word32 %5
 }
 
-define internal %Word32 @ep1(%Word32 %x) {
+define internal %Word32 @ep1(%Word32 %x) alwaysinline {
 	%1 = call %Word32 @rotright(%Word32 %x, %Nat32 6)
 	%2 = call %Word32 @rotright(%Word32 %x, %Nat32 11)
 	%3 = call %Word32 @rotright(%Word32 %x, %Nat32 25)
@@ -222,7 +222,7 @@ define internal %Word32 @ep1(%Word32 %x) {
 	ret %Word32 %5
 }
 
-define internal %Word32 @sig0(%Word32 %x) {
+define internal %Word32 @sig0(%Word32 %x) alwaysinline {
 	%1 = call %Word32 @rotright(%Word32 %x, %Nat32 7)
 	%2 = call %Word32 @rotright(%Word32 %x, %Nat32 18)
 	%3 = zext i8 3 to %Word32
@@ -232,7 +232,7 @@ define internal %Word32 @sig0(%Word32 %x) {
 	ret %Word32 %6
 }
 
-define internal %Word32 @sig1(%Word32 %x) {
+define internal %Word32 @sig1(%Word32 %x) alwaysinline {
 	%1 = call %Word32 @rotright(%Word32 %x, %Nat32 17)
 	%2 = call %Word32 @rotright(%Word32 %x, %Nat32 19)
 	%3 = zext i8 10 to %Word32

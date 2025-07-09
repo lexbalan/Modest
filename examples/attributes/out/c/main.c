@@ -15,6 +15,9 @@ typedef int32_t MyInt32;
 
 #define MY_ONE  ((MyInt32)1)
 
+typedef MyInt32 MyInt32_2;
+typedef MyInt32 MyInt32_3;
+
 struct __attribute__((packed)) ProtocolHeader {
 	uint16_t start;
 	uint16_t len;

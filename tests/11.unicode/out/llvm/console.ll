@@ -716,7 +716,7 @@ break_1:
 	ret %Int32 %100
 }
 
-define internal %Char8 @n_to_dec_sym(%Nat8 %n) {
+define internal %Char8 @n_to_dec_sym(%Nat8 %n) alwaysinline {
 	%1 = add %Nat8 48, %n
 	%2 = bitcast %Nat8 %1 to %Word8
 	%3 = bitcast %Word8 %2 to %Char8

@@ -23,6 +23,7 @@ var line: Line = {
 
 
 
+@inline
 func max (a: Float, b: Float) -> Float {
 	if a > b {
 		return a
@@ -31,6 +32,7 @@ func max (a: Float, b: Float) -> Float {
 }
 
 
+@inline
 func min (a: Float, b: Float) -> Float {
 	if a < b {
 		return a
