@@ -10,7 +10,7 @@ LLVMPREFIX = $(OUTDIR)/llvm
 
 MCC_OPTIONS = -funsafe -mint=64
 
-all: LLVM
+test: CM LLVM C
 
 
 CM:

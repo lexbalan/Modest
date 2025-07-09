@@ -9,6 +9,8 @@ const myZero = MyInt32 0
 
 const myOne = MyInt32 1
 
+// These refined MyInt32 types are compatible with MyInt32
+// but not compatible with anything else (e.g. between them)
 type MyInt32_2 = MyInt32
 type MyInt32_3 = MyInt32
 

@@ -361,21 +361,9 @@ define internal %Float @distance(%Point %a, %Point %b) {
 
 define internal %Float @lineLength(%Line %line) {
 	%1 = extractvalue %Line %line, 0
-; -- cons_composite_from_composite_by_value --
-	%2 = alloca %Point
-	store %Point %1, %Point* %2
-	%3 = bitcast %Point* %2 to %Point*
-; -- end cons_composite_from_composite_by_value --
-	%4 = load %Point, %Point* %3
-	%5 = extractvalue %Line %line, 1
-; -- cons_composite_from_composite_by_value --
-	%6 = alloca %Point
-	store %Point %5, %Point* %6
-	%7 = bitcast %Point* %6 to %Point*
-; -- end cons_composite_from_composite_by_value --
-	%8 = load %Point, %Point* %7
-	%9 = call %Float @distance(%Point %4, %Point %8)
-	ret %Float %9
+	%2 = extractvalue %Line %line, 1
+	%3 = call %Float @distance(%Point %1, %Point %2)
+	ret %Float %3
 }
 
 define internal void @ptr_example() {
@@ -397,12 +385,9 @@ define internal void @ptr_example() {
 
 define %Int @main() {
 	; by value
-; -- cons_composite_from_composite_by_adr --
-	%1 = bitcast %Line* @line to %Line*
-	%2 = load %Line, %Line* %1
-; -- end cons_composite_from_composite_by_adr --
-	%3 = call %Float @lineLength(%Line %2)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %3)
+	%1 = load %Line, %Line* @line
+	%2 = call %Float @lineLength(%Line %1)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %2)
 	call void @ptr_example()
 	ret %Int 0
 }

@@ -285,8 +285,7 @@ then_0:
 	br label %endif_0
 else_0:
 	store %Nat8 0, %Nat8* @cnt
-	%6 = bitcast %fsm_FSM* %x to %fsm_FSM*
-	call void @fsm_switch(%fsm_FSM* %6, %Nat32 1)
+	call void @fsm_switch(%fsm_FSM* %x, %Nat32 1)
 	br label %endif_0
 endif_0:
 	ret void
@@ -320,8 +319,7 @@ then_0:
 	br label %endif_0
 else_0:
 	store %Nat8 0, %Nat8* @cnt
-	%6 = bitcast %fsm_FSM* %x to %fsm_FSM*
-	call void @fsm_switch(%fsm_FSM* %6, %Nat32 2)
+	call void @fsm_switch(%fsm_FSM* %x, %Nat32 2)
 	br label %endif_0
 endif_0:
 	ret void
@@ -338,11 +336,10 @@ define internal void @on_exit(%fsm_FSM* %x) {
 ; State Beacon
 ;
 define internal void @beacon_entry(%fsm_FSM* %x) {
-	%1 = bitcast %fsm_FSM* %x to %fsm_FSM*
-	%2 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 1
-	%3 = load %Nat32, %Nat32* %2
-	%4 = call %Str8* @fsm_state_no_name(%fsm_FSM* %1, %Nat32 %3)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %4)
+	%1 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 1
+	%2 = load %Nat32, %Nat32* %1
+	%3 = call %Str8* @fsm_state_no_name(%fsm_FSM* %x, %Nat32 %2)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %3)
 	ret void
 }
 
@@ -359,19 +356,17 @@ then_0:
 	br label %endif_0
 else_0:
 	store %Nat8 0, %Nat8* @cnt
-	%6 = bitcast %fsm_FSM* %x to %fsm_FSM*
-	call void @fsm_switch(%fsm_FSM* %6, %Nat32 0)
+	call void @fsm_switch(%fsm_FSM* %x, %Nat32 0)
 	br label %endif_0
 endif_0:
 	ret void
 }
 
 define internal void @beacon_exit(%fsm_FSM* %x) {
-	%1 = bitcast %fsm_FSM* %x to %fsm_FSM*
-	%2 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 2
-	%3 = load %Nat32, %Nat32* %2
-	%4 = call %Str8* @fsm_state_no_name(%fsm_FSM* %1, %Nat32 %3)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %4)
+	%1 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 2
+	%2 = load %Nat32, %Nat32* %1
+	%3 = call %Str8* @fsm_state_no_name(%fsm_FSM* %x, %Nat32 %2)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %3)
 	ret void
 }
 
@@ -456,7 +451,7 @@ define %Int @main() {
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	call void @fsm_run(%fsm_FSM* bitcast (%fsm_FSM* @fsm0 to %fsm_FSM*))
+	call void @fsm_run(%fsm_FSM* @fsm0)
 	call void @delay_ms(%Nat64 500)
 	br label %again_1
 break_1:

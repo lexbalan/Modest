@@ -9,7 +9,7 @@ LLVMPREFIX = $(OUTDIR)/llvm
 
 LIBPREFIX = ./lib
 
-all: LLVM
+test: CM LLVM C
 
 
 C_OPTIONS = -mstyle=legacy

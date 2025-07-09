@@ -603,22 +603,21 @@ body_1:
 	%19 = icmp eq %Nat32 %18, 64
 	br %Bool %19 , label %then_0, label %endif_0
 then_0:
-	%20 = bitcast %Context* %ctx to %Context*
-	%21 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%22 = bitcast [64 x %Word8]* %21 to [0 x %Word8]*
-	call void @transform(%Context* %20, [0 x %Word8]* %22)
+	%20 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%21 = bitcast [64 x %Word8]* %20 to [0 x %Word8]*
+	call void @transform(%Context* %ctx, [0 x %Word8]* %21)
+	%22 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%23 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%24 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%25 = load %Nat64, %Nat64* %24
-	%26 = add %Nat64 %25, 512
-	store %Nat64 %26, %Nat64* %23
-	%27 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
-	store %Nat32 0, %Nat32* %27
+	%24 = load %Nat64, %Nat64* %23
+	%25 = add %Nat64 %24, 512
+	store %Nat64 %25, %Nat64* %22
+	%26 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
+	store %Nat32 0, %Nat32* %26
 	br label %endif_0
 endif_0:
-	%28 = load %Nat32, %Nat32* %1
-	%29 = add %Nat32 %28, 1
-	store %Nat32 %29, %Nat32* %1
+	%27 = load %Nat32, %Nat32* %1
+	%28 = add %Nat32 %27, 1
+	store %Nat32 %28, %Nat32* %1
 	br label %again_1
 break_1:
 	ret void
@@ -667,103 +666,101 @@ endif_0:
 	%26 = icmp uge %Nat32 %25, 56
 	br %Bool %26 , label %then_1, label %endif_1
 then_1:
-	%27 = bitcast %Context* %ctx to %Context*
-	%28 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%29 = bitcast [64 x %Word8]* %28 to [0 x %Word8]*
-	call void @transform(%Context* %27, [0 x %Word8]* %29)
-	%30 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%31 = bitcast [64 x %Word8]* %30 to i8*
-	%32 = call i8* @memset(i8* %31, %Int 0, %SizeT 56)
+	%27 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%28 = bitcast [64 x %Word8]* %27 to [0 x %Word8]*
+	call void @transform(%Context* %ctx, [0 x %Word8]* %28)
+	%29 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%30 = bitcast [64 x %Word8]* %29 to i8*
+	%31 = call i8* @memset(i8* %30, %Int 0, %SizeT 56)
 	;ctx.data[0:56] = []
 	br label %endif_1
 endif_1:
 
 	; Append to the padding the total message's length in bits and transform.
+	%32 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%33 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%34 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%35 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
-	%36 = load %Nat32, %Nat32* %35
-	%37 = zext %Nat32 %36 to %Nat64
-	%38 = mul %Nat64 %37, 8
-	%39 = load %Nat64, %Nat64* %34
-	%40 = add %Nat64 %39, %38
-	store %Nat64 %40, %Nat64* %33
-	%41 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%42 = getelementptr [64 x %Word8], [64 x %Word8]* %41, %Int32 0, %Int32 63
-	%43 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%44 = load %Nat64, %Nat64* %43
-	%45 = bitcast %Nat64 %44 to %Word64
-	%46 = zext i8 0 to %Word64
-	%47 = lshr %Word64 %45, %46
-	%48 = trunc %Word64 %47 to %Word8
-	store %Word8 %48, %Word8* %42
-	%49 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%50 = getelementptr [64 x %Word8], [64 x %Word8]* %49, %Int32 0, %Int32 62
-	%51 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%52 = load %Nat64, %Nat64* %51
-	%53 = bitcast %Nat64 %52 to %Word64
-	%54 = zext i8 8 to %Word64
-	%55 = lshr %Word64 %53, %54
-	%56 = trunc %Word64 %55 to %Word8
-	store %Word8 %56, %Word8* %50
-	%57 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%58 = getelementptr [64 x %Word8], [64 x %Word8]* %57, %Int32 0, %Int32 61
-	%59 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%60 = load %Nat64, %Nat64* %59
-	%61 = bitcast %Nat64 %60 to %Word64
-	%62 = zext i8 16 to %Word64
-	%63 = lshr %Word64 %61, %62
-	%64 = trunc %Word64 %63 to %Word8
-	store %Word8 %64, %Word8* %58
-	%65 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%66 = getelementptr [64 x %Word8], [64 x %Word8]* %65, %Int32 0, %Int32 60
-	%67 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%68 = load %Nat64, %Nat64* %67
-	%69 = bitcast %Nat64 %68 to %Word64
-	%70 = zext i8 24 to %Word64
-	%71 = lshr %Word64 %69, %70
-	%72 = trunc %Word64 %71 to %Word8
-	store %Word8 %72, %Word8* %66
-	%73 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%74 = getelementptr [64 x %Word8], [64 x %Word8]* %73, %Int32 0, %Int32 59
-	%75 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%76 = load %Nat64, %Nat64* %75
-	%77 = bitcast %Nat64 %76 to %Word64
-	%78 = zext i8 32 to %Word64
-	%79 = lshr %Word64 %77, %78
-	%80 = trunc %Word64 %79 to %Word8
-	store %Word8 %80, %Word8* %74
-	%81 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%82 = getelementptr [64 x %Word8], [64 x %Word8]* %81, %Int32 0, %Int32 58
-	%83 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%84 = load %Nat64, %Nat64* %83
-	%85 = bitcast %Nat64 %84 to %Word64
-	%86 = zext i8 40 to %Word64
-	%87 = lshr %Word64 %85, %86
-	%88 = trunc %Word64 %87 to %Word8
-	store %Word8 %88, %Word8* %82
-	%89 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%90 = getelementptr [64 x %Word8], [64 x %Word8]* %89, %Int32 0, %Int32 57
-	%91 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%92 = load %Nat64, %Nat64* %91
-	%93 = bitcast %Nat64 %92 to %Word64
-	%94 = zext i8 48 to %Word64
-	%95 = lshr %Word64 %93, %94
-	%96 = trunc %Word64 %95 to %Word8
-	store %Word8 %96, %Word8* %90
-	%97 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%98 = getelementptr [64 x %Word8], [64 x %Word8]* %97, %Int32 0, %Int32 56
-	%99 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%100 = load %Nat64, %Nat64* %99
-	%101 = bitcast %Nat64 %100 to %Word64
-	%102 = zext i8 56 to %Word64
-	%103 = lshr %Word64 %101, %102
-	%104 = trunc %Word64 %103 to %Word8
-	store %Word8 %104, %Word8* %98
-	%105 = bitcast %Context* %ctx to %Context*
-	%106 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
-	%107 = bitcast [64 x %Word8]* %106 to [0 x %Word8]*
-	call void @transform(%Context* %105, [0 x %Word8]* %107)
+	%34 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%35 = load %Nat32, %Nat32* %34
+	%36 = zext %Nat32 %35 to %Nat64
+	%37 = mul %Nat64 %36, 8
+	%38 = load %Nat64, %Nat64* %33
+	%39 = add %Nat64 %38, %37
+	store %Nat64 %39, %Nat64* %32
+	%40 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%41 = getelementptr [64 x %Word8], [64 x %Word8]* %40, %Int32 0, %Int32 63
+	%42 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%43 = load %Nat64, %Nat64* %42
+	%44 = bitcast %Nat64 %43 to %Word64
+	%45 = zext i8 0 to %Word64
+	%46 = lshr %Word64 %44, %45
+	%47 = trunc %Word64 %46 to %Word8
+	store %Word8 %47, %Word8* %41
+	%48 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%49 = getelementptr [64 x %Word8], [64 x %Word8]* %48, %Int32 0, %Int32 62
+	%50 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%51 = load %Nat64, %Nat64* %50
+	%52 = bitcast %Nat64 %51 to %Word64
+	%53 = zext i8 8 to %Word64
+	%54 = lshr %Word64 %52, %53
+	%55 = trunc %Word64 %54 to %Word8
+	store %Word8 %55, %Word8* %49
+	%56 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%57 = getelementptr [64 x %Word8], [64 x %Word8]* %56, %Int32 0, %Int32 61
+	%58 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%59 = load %Nat64, %Nat64* %58
+	%60 = bitcast %Nat64 %59 to %Word64
+	%61 = zext i8 16 to %Word64
+	%62 = lshr %Word64 %60, %61
+	%63 = trunc %Word64 %62 to %Word8
+	store %Word8 %63, %Word8* %57
+	%64 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%65 = getelementptr [64 x %Word8], [64 x %Word8]* %64, %Int32 0, %Int32 60
+	%66 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%67 = load %Nat64, %Nat64* %66
+	%68 = bitcast %Nat64 %67 to %Word64
+	%69 = zext i8 24 to %Word64
+	%70 = lshr %Word64 %68, %69
+	%71 = trunc %Word64 %70 to %Word8
+	store %Word8 %71, %Word8* %65
+	%72 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%73 = getelementptr [64 x %Word8], [64 x %Word8]* %72, %Int32 0, %Int32 59
+	%74 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%75 = load %Nat64, %Nat64* %74
+	%76 = bitcast %Nat64 %75 to %Word64
+	%77 = zext i8 32 to %Word64
+	%78 = lshr %Word64 %76, %77
+	%79 = trunc %Word64 %78 to %Word8
+	store %Word8 %79, %Word8* %73
+	%80 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%81 = getelementptr [64 x %Word8], [64 x %Word8]* %80, %Int32 0, %Int32 58
+	%82 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%83 = load %Nat64, %Nat64* %82
+	%84 = bitcast %Nat64 %83 to %Word64
+	%85 = zext i8 40 to %Word64
+	%86 = lshr %Word64 %84, %85
+	%87 = trunc %Word64 %86 to %Word8
+	store %Word8 %87, %Word8* %81
+	%88 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%89 = getelementptr [64 x %Word8], [64 x %Word8]* %88, %Int32 0, %Int32 57
+	%90 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%91 = load %Nat64, %Nat64* %90
+	%92 = bitcast %Nat64 %91 to %Word64
+	%93 = zext i8 48 to %Word64
+	%94 = lshr %Word64 %92, %93
+	%95 = trunc %Word64 %94 to %Word8
+	store %Word8 %95, %Word8* %89
+	%96 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%97 = getelementptr [64 x %Word8], [64 x %Word8]* %96, %Int32 0, %Int32 56
+	%98 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%99 = load %Nat64, %Nat64* %98
+	%100 = bitcast %Nat64 %99 to %Word64
+	%101 = zext i8 56 to %Word64
+	%102 = lshr %Word64 %100, %101
+	%103 = trunc %Word64 %102 to %Word8
+	store %Word8 %103, %Word8* %97
+	%104 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%105 = bitcast [64 x %Word8]* %104 to [0 x %Word8]*
+	call void @transform(%Context* %ctx, [0 x %Word8]* %105)
 
 	; Since this implementation uses little endian byte ordering
 	; and SHA uses big endian, reverse all the bytes
@@ -772,104 +769,104 @@ endif_1:
 ; while_1
 	br label %again_1
 again_1:
-	%108 = load %Nat32, %Nat32* %1
-	%109 = icmp ult %Nat32 %108, 4
-	br %Bool %109 , label %body_1, label %break_1
+	%106 = load %Nat32, %Nat32* %1
+	%107 = icmp ult %Nat32 %106, 4
+	br %Bool %107 , label %body_1, label %break_1
 body_1:
-	%110 = load %Nat32, %Nat32* %1
-	%111 = mul %Nat32 %110, 8
-	%112 = sub %Nat32 24, %111
-	%113 = load %Nat32, %Nat32* %1
-	%114 = add %Nat32 %113, 0
-	%115 = bitcast %Nat32 %114 to %Nat32
-	%116 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %115
-	%117 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%118 = getelementptr [8 x %Word32], [8 x %Word32]* %117, %Int32 0, %Int32 0
-	%119 = load %Word32, %Word32* %118
-	%120 = bitcast %Nat32 %112 to %Word32
-	%121 = lshr %Word32 %119, %120
-	%122 = trunc %Word32 %121 to %Word8
-	store %Word8 %122, %Word8* %116
-	%123 = load %Nat32, %Nat32* %1
-	%124 = add %Nat32 %123, 4
-	%125 = bitcast %Nat32 %124 to %Nat32
-	%126 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %125
-	%127 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%128 = getelementptr [8 x %Word32], [8 x %Word32]* %127, %Int32 0, %Int32 1
-	%129 = load %Word32, %Word32* %128
-	%130 = bitcast %Nat32 %112 to %Word32
-	%131 = lshr %Word32 %129, %130
-	%132 = trunc %Word32 %131 to %Word8
-	store %Word8 %132, %Word8* %126
-	%133 = load %Nat32, %Nat32* %1
-	%134 = add %Nat32 %133, 8
-	%135 = bitcast %Nat32 %134 to %Nat32
-	%136 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %135
-	%137 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%138 = getelementptr [8 x %Word32], [8 x %Word32]* %137, %Int32 0, %Int32 2
-	%139 = load %Word32, %Word32* %138
-	%140 = bitcast %Nat32 %112 to %Word32
-	%141 = lshr %Word32 %139, %140
-	%142 = trunc %Word32 %141 to %Word8
-	store %Word8 %142, %Word8* %136
-	%143 = load %Nat32, %Nat32* %1
-	%144 = add %Nat32 %143, 12
-	%145 = bitcast %Nat32 %144 to %Nat32
-	%146 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %145
-	%147 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%148 = getelementptr [8 x %Word32], [8 x %Word32]* %147, %Int32 0, %Int32 3
-	%149 = load %Word32, %Word32* %148
-	%150 = bitcast %Nat32 %112 to %Word32
-	%151 = lshr %Word32 %149, %150
-	%152 = trunc %Word32 %151 to %Word8
-	store %Word8 %152, %Word8* %146
-	%153 = load %Nat32, %Nat32* %1
-	%154 = add %Nat32 %153, 16
-	%155 = bitcast %Nat32 %154 to %Nat32
-	%156 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %155
-	%157 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%158 = getelementptr [8 x %Word32], [8 x %Word32]* %157, %Int32 0, %Int32 4
-	%159 = load %Word32, %Word32* %158
-	%160 = bitcast %Nat32 %112 to %Word32
-	%161 = lshr %Word32 %159, %160
-	%162 = trunc %Word32 %161 to %Word8
-	store %Word8 %162, %Word8* %156
-	%163 = load %Nat32, %Nat32* %1
-	%164 = add %Nat32 %163, 20
-	%165 = bitcast %Nat32 %164 to %Nat32
-	%166 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %165
-	%167 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%168 = getelementptr [8 x %Word32], [8 x %Word32]* %167, %Int32 0, %Int32 5
-	%169 = load %Word32, %Word32* %168
-	%170 = bitcast %Nat32 %112 to %Word32
-	%171 = lshr %Word32 %169, %170
-	%172 = trunc %Word32 %171 to %Word8
-	store %Word8 %172, %Word8* %166
-	%173 = load %Nat32, %Nat32* %1
-	%174 = add %Nat32 %173, 24
-	%175 = bitcast %Nat32 %174 to %Nat32
-	%176 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %175
-	%177 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%178 = getelementptr [8 x %Word32], [8 x %Word32]* %177, %Int32 0, %Int32 6
-	%179 = load %Word32, %Word32* %178
-	%180 = bitcast %Nat32 %112 to %Word32
-	%181 = lshr %Word32 %179, %180
-	%182 = trunc %Word32 %181 to %Word8
-	store %Word8 %182, %Word8* %176
-	%183 = load %Nat32, %Nat32* %1
-	%184 = add %Nat32 %183, 28
-	%185 = bitcast %Nat32 %184 to %Nat32
-	%186 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %185
-	%187 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%188 = getelementptr [8 x %Word32], [8 x %Word32]* %187, %Int32 0, %Int32 7
-	%189 = load %Word32, %Word32* %188
-	%190 = bitcast %Nat32 %112 to %Word32
-	%191 = lshr %Word32 %189, %190
-	%192 = trunc %Word32 %191 to %Word8
-	store %Word8 %192, %Word8* %186
-	%193 = load %Nat32, %Nat32* %1
-	%194 = add %Nat32 %193, 1
-	store %Nat32 %194, %Nat32* %1
+	%108 = load %Nat32, %Nat32* %1
+	%109 = mul %Nat32 %108, 8
+	%110 = sub %Nat32 24, %109
+	%111 = load %Nat32, %Nat32* %1
+	%112 = add %Nat32 %111, 0
+	%113 = bitcast %Nat32 %112 to %Nat32
+	%114 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %113
+	%115 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%116 = getelementptr [8 x %Word32], [8 x %Word32]* %115, %Int32 0, %Int32 0
+	%117 = load %Word32, %Word32* %116
+	%118 = bitcast %Nat32 %110 to %Word32
+	%119 = lshr %Word32 %117, %118
+	%120 = trunc %Word32 %119 to %Word8
+	store %Word8 %120, %Word8* %114
+	%121 = load %Nat32, %Nat32* %1
+	%122 = add %Nat32 %121, 4
+	%123 = bitcast %Nat32 %122 to %Nat32
+	%124 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %123
+	%125 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%126 = getelementptr [8 x %Word32], [8 x %Word32]* %125, %Int32 0, %Int32 1
+	%127 = load %Word32, %Word32* %126
+	%128 = bitcast %Nat32 %110 to %Word32
+	%129 = lshr %Word32 %127, %128
+	%130 = trunc %Word32 %129 to %Word8
+	store %Word8 %130, %Word8* %124
+	%131 = load %Nat32, %Nat32* %1
+	%132 = add %Nat32 %131, 8
+	%133 = bitcast %Nat32 %132 to %Nat32
+	%134 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %133
+	%135 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%136 = getelementptr [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 2
+	%137 = load %Word32, %Word32* %136
+	%138 = bitcast %Nat32 %110 to %Word32
+	%139 = lshr %Word32 %137, %138
+	%140 = trunc %Word32 %139 to %Word8
+	store %Word8 %140, %Word8* %134
+	%141 = load %Nat32, %Nat32* %1
+	%142 = add %Nat32 %141, 12
+	%143 = bitcast %Nat32 %142 to %Nat32
+	%144 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %143
+	%145 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%146 = getelementptr [8 x %Word32], [8 x %Word32]* %145, %Int32 0, %Int32 3
+	%147 = load %Word32, %Word32* %146
+	%148 = bitcast %Nat32 %110 to %Word32
+	%149 = lshr %Word32 %147, %148
+	%150 = trunc %Word32 %149 to %Word8
+	store %Word8 %150, %Word8* %144
+	%151 = load %Nat32, %Nat32* %1
+	%152 = add %Nat32 %151, 16
+	%153 = bitcast %Nat32 %152 to %Nat32
+	%154 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %153
+	%155 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%156 = getelementptr [8 x %Word32], [8 x %Word32]* %155, %Int32 0, %Int32 4
+	%157 = load %Word32, %Word32* %156
+	%158 = bitcast %Nat32 %110 to %Word32
+	%159 = lshr %Word32 %157, %158
+	%160 = trunc %Word32 %159 to %Word8
+	store %Word8 %160, %Word8* %154
+	%161 = load %Nat32, %Nat32* %1
+	%162 = add %Nat32 %161, 20
+	%163 = bitcast %Nat32 %162 to %Nat32
+	%164 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %163
+	%165 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%166 = getelementptr [8 x %Word32], [8 x %Word32]* %165, %Int32 0, %Int32 5
+	%167 = load %Word32, %Word32* %166
+	%168 = bitcast %Nat32 %110 to %Word32
+	%169 = lshr %Word32 %167, %168
+	%170 = trunc %Word32 %169 to %Word8
+	store %Word8 %170, %Word8* %164
+	%171 = load %Nat32, %Nat32* %1
+	%172 = add %Nat32 %171, 24
+	%173 = bitcast %Nat32 %172 to %Nat32
+	%174 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %173
+	%175 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%176 = getelementptr [8 x %Word32], [8 x %Word32]* %175, %Int32 0, %Int32 6
+	%177 = load %Word32, %Word32* %176
+	%178 = bitcast %Nat32 %110 to %Word32
+	%179 = lshr %Word32 %177, %178
+	%180 = trunc %Word32 %179 to %Word8
+	store %Word8 %180, %Word8* %174
+	%181 = load %Nat32, %Nat32* %1
+	%182 = add %Nat32 %181, 28
+	%183 = bitcast %Nat32 %182 to %Nat32
+	%184 = getelementptr %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Nat32 %183
+	%185 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%186 = getelementptr [8 x %Word32], [8 x %Word32]* %185, %Int32 0, %Int32 7
+	%187 = load %Word32, %Word32* %186
+	%188 = bitcast %Nat32 %110 to %Word32
+	%189 = lshr %Word32 %187, %188
+	%190 = trunc %Word32 %189 to %Word8
+	store %Word8 %190, %Word8* %184
+	%191 = load %Nat32, %Nat32* %1
+	%192 = add %Nat32 %191, 1
+	store %Nat32 %192, %Nat32* %1
 	br label %again_1
 break_1:
 	ret void

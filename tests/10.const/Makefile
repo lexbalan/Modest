@@ -9,7 +9,7 @@ LLVMPREFIX = $(OUTDIR)/llvm
 
 LIBS = -lm
 
-all: LLVM
+test: CM LLVM C
 
 
 CM:

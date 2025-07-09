@@ -499,70 +499,69 @@ define internal void @printRow([0 x %Str8*]* %raw_row, [0 x %Nat32]* %sz, %Nat32
 	%1 = alloca i8*
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
-	%3 = mul %Int32 1, 1
-	%4 = mul %Nat32 %nCols, 1
-	%5 = mul %Nat32 %nCols, 8
-	%6 = bitcast [0 x %Str8*]* %raw_row to [0 x %Str8*]*
-	%7 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %7
+	%3 = mul %Nat32 %nCols, 1
+	%4 = mul %Nat32 %nCols, 8
+	%5 = bitcast [0 x %Str8*]* %raw_row to [0 x %Str8*]*
+	%6 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %6
 ; while_1
 	br label %again_1
 again_1:
-	%8 = load %Nat32, %Nat32* %7
-	%9 = icmp ult %Nat32 %8, %nCols
-	br %Bool %9 , label %body_1, label %break_1
+	%7 = load %Nat32, %Nat32* %6
+	%8 = icmp ult %Nat32 %7, %nCols
+	br %Bool %8 , label %body_1, label %break_1
 body_1:
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str1 to [0 x i8]*))
-	%11 = load %Nat32, %Nat32* %7
-	%12 = mul %Nat32 %11, 1
-	%13 = add %Int32 0, %12
-	%14 = getelementptr %Str8*, [0 x %Str8*]* %6, %Int32 %13
-	%15 = load %Str8*, %Str8** %14
-	%16 = alloca %Nat32, align 4
-	%17 = call %SizeT @strlen(%Str8* %15)
-	%18 = trunc %SizeT %17 to %Nat32
-	store %Nat32 %18, %Nat32* %16
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str1 to [0 x i8]*))
+	%10 = load %Nat32, %Nat32* %6
+	%11 = mul %Nat32 %10, 1
+	%12 = add %Int32 0, %11
+	%13 = getelementptr %Str8*, [0 x %Str8*]* %5, %Int32 %12
+	%14 = load %Str8*, %Str8** %13
+	%15 = alloca %Nat32, align 4
+	%16 = call %SizeT @strlen(%Str8* %14)
+	%17 = trunc %SizeT %16 to %Nat32
+	store %Nat32 %17, %Nat32* %15
 ; if_0
-	%19 = getelementptr %Str8, %Str8* %15, %Int32 0, %Int32 0
-	%20 = load %Char8, %Char8* %19
-	%21 = icmp ne %Char8 %20, 0
-	br %Bool %21 , label %then_0, label %endif_0
+	%18 = getelementptr %Str8, %Str8* %14, %Int32 0, %Int32 0
+	%19 = load %Char8, %Char8* %18
+	%20 = icmp ne %Char8 %19, 0
+	br %Bool %20 , label %then_0, label %endif_0
 then_0:
-	%22 = load %Nat32, %Nat32* %16
-	%23 = add %Nat32 %22, 1
-	store %Nat32 %23, %Nat32* %16
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8* %15)
+	%21 = load %Nat32, %Nat32* %15
+	%22 = add %Nat32 %21, 1
+	store %Nat32 %22, %Nat32* %15
+	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8* %14)
 	br label %endif_0
 endif_0:
-	%25 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %25
+	%24 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %24
 ; while_2
 	br label %again_2
 again_2:
-	%26 = load %Nat32, %Nat32* %7
-	%27 = bitcast %Nat32 %26 to %Nat32
-	%28 = getelementptr [0 x %Nat32], [0 x %Nat32]* %sz, %Int32 0, %Nat32 %27
-	%29 = load %Nat32, %Nat32* %28
-	%30 = load %Nat32, %Nat32* %16
-	%31 = sub %Nat32 %29, %30
-	%32 = load %Nat32, %Nat32* %25
-	%33 = icmp ult %Nat32 %32, %31
-	br %Bool %33 , label %body_2, label %break_2
+	%25 = load %Nat32, %Nat32* %6
+	%26 = bitcast %Nat32 %25 to %Nat32
+	%27 = getelementptr [0 x %Nat32], [0 x %Nat32]* %sz, %Int32 0, %Nat32 %26
+	%28 = load %Nat32, %Nat32* %27
+	%29 = load %Nat32, %Nat32* %15
+	%30 = sub %Nat32 %28, %29
+	%31 = load %Nat32, %Nat32* %24
+	%32 = icmp ult %Nat32 %31, %30
+	br %Bool %32 , label %body_2, label %break_2
 body_2:
-	%34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
-	%35 = load %Nat32, %Nat32* %25
-	%36 = add %Nat32 %35, 1
-	store %Nat32 %36, %Nat32* %25
+	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
+	%34 = load %Nat32, %Nat32* %24
+	%35 = add %Nat32 %34, 1
+	store %Nat32 %35, %Nat32* %24
 	br label %again_2
 break_2:
-	%37 = load %Nat32, %Nat32* %7
-	%38 = add %Nat32 %37, 1
-	store %Nat32 %38, %Nat32* %7
+	%36 = load %Nat32, %Nat32* %6
+	%37 = add %Nat32 %36, 1
+	store %Nat32 %37, %Nat32* %6
 	br label %again_1
 break_1:
-	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str4 to [0 x i8]*))
-	%40 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %40)
+	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str4 to [0 x i8]*))
+	%39 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %39)
 	ret void
 }
 

@@ -9,12 +9,20 @@
 #include "main.h"
 
 
+/* anonymous records */
+struct __anonymous_struct_1 {
+	uint16_t start;
+	uint16_t len;
+};
+
 typedef int32_t MyInt32;
 
 #define MY_ZERO  ((MyInt32)0)
 
 #define MY_ONE  ((MyInt32)1)
 
+// These refined MyInt32 types are compatible with MyInt32
+// but not compatible with anything else (e.g. between them)
 typedef MyInt32 MyInt32_2;
 typedef MyInt32 MyInt32_3;
 

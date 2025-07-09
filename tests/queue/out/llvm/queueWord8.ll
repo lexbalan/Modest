@@ -142,81 +142,72 @@ declare %Nat32 @queue_getGetPosition(%queue_Queue* %q)
 
 define void @queueWord8_init(%queueWord8_QueueWord8* %q, [0 x %Word8]* %buf, %Nat32 %capacity) {
 	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	call void @queue_init(%queue_Queue* %2, %Nat32 %capacity)
-	%3 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
-	store [0 x %Word8]* %buf, [0 x %Word8]** %3
+	call void @queue_init(%queue_Queue* %1, %Nat32 %capacity)
+	%2 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
+	store [0 x %Word8]* %buf, [0 x %Word8]** %2
 	ret void
 }
 
 define %Nat32 @queueWord8_capacity(%queueWord8_QueueWord8* %q) {
 	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Nat32 @queue_capacity(%queue_Queue* %2)
-	ret %Nat32 %3
+	%2 = call %Nat32 @queue_capacity(%queue_Queue* %1)
+	ret %Nat32 %2
 }
 
 define %Nat32 @queueWord8_size(%queueWord8_QueueWord8* %q) {
 	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Nat32 @queue_size(%queue_Queue* %2)
-	ret %Nat32 %3
+	%2 = call %Nat32 @queue_size(%queue_Queue* %1)
+	ret %Nat32 %2
 }
 
 define %Bool @queueWord8_isFull(%queueWord8_QueueWord8* %q) {
 	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Bool @queue_isFull(%queue_Queue* %2)
-	ret %Bool %3
+	%2 = call %Bool @queue_isFull(%queue_Queue* %1)
+	ret %Bool %2
 }
 
 define %Bool @queueWord8_isEmpty(%queueWord8_QueueWord8* %q) {
 	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Bool @queue_isEmpty(%queue_Queue* %2)
-	ret %Bool %3
+	%2 = call %Bool @queue_isEmpty(%queue_Queue* %1)
+	ret %Bool %2
 }
 
 define %Bool @queueWord8_put(%queueWord8_QueueWord8* %q, %Word8 %b) {
 ; if_0
 	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Bool @queue_isFull(%queue_Queue* %2)
-	br %Bool %3 , label %then_0, label %endif_0
+	%2 = call %Bool @queue_isFull(%queue_Queue* %1)
+	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%5 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
-	%7 = call %Nat32 @queue_getPutPosition(%queue_Queue* %6)
-	%8 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
-	%9 = load [0 x %Word8]*, [0 x %Word8]** %8
-	%10 = bitcast %Nat32 %7 to %Nat32
-	%11 = getelementptr [0 x %Word8], [0 x %Word8]* %9, %Int32 0, %Nat32 %10
-	store %Word8 %b, %Word8* %11
+	%4 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%5 = call %Nat32 @queue_getPutPosition(%queue_Queue* %4)
+	%6 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
+	%7 = load [0 x %Word8]*, [0 x %Word8]** %6
+	%8 = bitcast %Nat32 %5 to %Nat32
+	%9 = getelementptr [0 x %Word8], [0 x %Word8]* %7, %Int32 0, %Nat32 %8
+	store %Word8 %b, %Word8* %9
 	ret %Bool 1
 }
 
 define %Bool @queueWord8_get(%queueWord8_QueueWord8* %q, %Word8* %b) {
 ; if_0
 	%1 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Bool @queue_isEmpty(%queue_Queue* %2)
-	br %Bool %3 , label %then_0, label %endif_0
+	%2 = call %Bool @queue_isEmpty(%queue_Queue* %1)
+	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%5 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
-	%7 = call %Nat32 @queue_getGetPosition(%queue_Queue* %6)
-	%8 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
-	%9 = load [0 x %Word8]*, [0 x %Word8]** %8
-	%10 = bitcast %Nat32 %7 to %Nat32
-	%11 = getelementptr [0 x %Word8], [0 x %Word8]* %9, %Int32 0, %Nat32 %10
-	%12 = load %Word8, %Word8* %11
-	store %Word8 %12, %Word8* %b
+	%4 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%5 = call %Nat32 @queue_getGetPosition(%queue_Queue* %4)
+	%6 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
+	%7 = load [0 x %Word8]*, [0 x %Word8]** %6
+	%8 = bitcast %Nat32 %5 to %Nat32
+	%9 = getelementptr [0 x %Word8], [0 x %Word8]* %7, %Int32 0, %Nat32 %8
+	%10 = load %Word8, %Word8* %9
+	store %Word8 %10, %Word8* %b
 	ret %Bool 1
 }
 
@@ -232,26 +223,25 @@ again_1:
 body_1:
 	%4 = alloca %Word8, align 1
 ; if_0
-	%5 = bitcast %queueWord8_QueueWord8* %q to %queueWord8_QueueWord8*
-	%6 = call %Bool @queueWord8_get(%queueWord8_QueueWord8* %5, %Word8* %4)
-	%7 = xor %Bool %6, 1
-	br %Bool %7 , label %then_0, label %endif_0
+	%5 = call %Bool @queueWord8_get(%queueWord8_QueueWord8* %q, %Word8* %4)
+	%6 = xor %Bool %5, 1
+	br %Bool %6 , label %then_0, label %endif_0
 then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%9 = load %Nat32, %Nat32* %1
-	%10 = bitcast %Nat32 %9 to %Nat32
-	%11 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Nat32 %10
-	%12 = load %Word8, %Word8* %4
-	store %Word8 %12, %Word8* %11
-	%13 = load %Nat32, %Nat32* %1
-	%14 = add %Nat32 %13, 1
-	store %Nat32 %14, %Nat32* %1
+	%8 = load %Nat32, %Nat32* %1
+	%9 = bitcast %Nat32 %8 to %Nat32
+	%10 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Nat32 %9
+	%11 = load %Word8, %Word8* %4
+	store %Word8 %11, %Word8* %10
+	%12 = load %Nat32, %Nat32* %1
+	%13 = add %Nat32 %12, 1
+	store %Nat32 %13, %Nat32* %1
 	br label %again_1
 break_1:
-	%15 = load %Nat32, %Nat32* %1
-	ret %Nat32 %15
+	%14 = load %Nat32, %Nat32* %1
+	ret %Nat32 %14
 }
 
 define %Nat32 @queueWord8_write(%queueWord8_QueueWord8* %q, [0 x %Word8]* %data, %Nat32 %len) {
@@ -269,21 +259,20 @@ body_1:
 	%6 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Nat32 %5
 	%7 = load %Word8, %Word8* %6
 ; if_0
-	%8 = bitcast %queueWord8_QueueWord8* %q to %queueWord8_QueueWord8*
-	%9 = call %Bool @queueWord8_put(%queueWord8_QueueWord8* %8, %Word8 %7)
-	%10 = xor %Bool %9, 1
-	br %Bool %10 , label %then_0, label %endif_0
+	%8 = call %Bool @queueWord8_put(%queueWord8_QueueWord8* %q, %Word8 %7)
+	%9 = xor %Bool %8, 1
+	br %Bool %9 , label %then_0, label %endif_0
 then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%12 = load %Nat32, %Nat32* %1
-	%13 = add %Nat32 %12, 1
-	store %Nat32 %13, %Nat32* %1
+	%11 = load %Nat32, %Nat32* %1
+	%12 = add %Nat32 %11, 1
+	store %Nat32 %12, %Nat32* %1
 	br label %again_1
 break_1:
-	%14 = load %Nat32, %Nat32* %1
-	ret %Nat32 %14
+	%13 = load %Nat32, %Nat32* %1
+	ret %Nat32 %13
 }
 
 define void @queueWord8_clear(%queueWord8_QueueWord8* %q) {
@@ -291,21 +280,19 @@ define void @queueWord8_clear(%queueWord8_QueueWord8* %q) {
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
 	%3 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%4 = bitcast %queue_Queue* %3 to %queue_Queue*
-	%5 = call %Nat32 @queue_capacity(%queue_Queue* %4)
-	%6 = mul %Nat32 %5, 1
-	%7 = mul %Nat32 %5, 1
-	%8 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
-	%9 = load [0 x %Word8]*, [0 x %Word8]** %8
-	%10 = bitcast [0 x %Word8]* %9 to [0 x %Word8]*
-	%11 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
-	%12 = bitcast %queue_Queue* %11 to %queue_Queue*
-	%13 = call %Nat32 @queue_capacity(%queue_Queue* %12)
-	%14 = mul %Nat32 %13, 1
-	%15 = bitcast [0 x %Word8]* %10 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %15, i8 0, %Nat32 %14, i1 0)
-	%16 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %16)
+	%4 = call %Nat32 @queue_capacity(%queue_Queue* %3)
+	%5 = mul %Nat32 %4, 1
+	%6 = mul %Nat32 %4, 1
+	%7 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 1
+	%8 = load [0 x %Word8]*, [0 x %Word8]** %7
+	%9 = bitcast [0 x %Word8]* %8 to [0 x %Word8]*
+	%10 = getelementptr %queueWord8_QueueWord8, %queueWord8_QueueWord8* %q, %Int32 0, %Int32 0
+	%11 = call %Nat32 @queue_capacity(%queue_Queue* %10)
+	%12 = mul %Nat32 %11, 1
+	%13 = bitcast [0 x %Word8]* %9 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %13, i8 0, %Nat32 %12, i1 0)
+	%14 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %14)
 	ret void
 }
 

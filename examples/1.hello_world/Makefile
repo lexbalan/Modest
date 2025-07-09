@@ -7,8 +7,10 @@ CMPREFIX=$(OUTDIR)/cm
 CPREFIX=$(OUTDIR)/c
 LLVMPREFIX = $(OUTDIR)/llvm
 
+.PHONY: all, clean, CM, LLVM, C
 
-all: LLVM
+
+test: CM LLVM C
 
 
 CM:
@@ -27,3 +29,4 @@ C:
 
 clean:
 	rm *.o
+

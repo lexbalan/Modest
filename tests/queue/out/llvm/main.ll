@@ -346,7 +346,7 @@ again_1:
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
 ; if_0
-	%4 = call %Bool @queueWord8_isFull(%queueWord8_QueueWord8* bitcast (%queueWord8_QueueWord8* @bq0 to %queueWord8_QueueWord8*))
+	%4 = call %Bool @queueWord8_isFull(%queueWord8_QueueWord8* @bq0)
 	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
@@ -357,7 +357,7 @@ endif_0:
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), %Int32 %7)
 	%9 = load %Int32, %Int32* @ii
 	%10 = trunc %Int32 %9 to %Word8
-	%11 = call %Bool @queueWord8_put(%queueWord8_QueueWord8* bitcast (%queueWord8_QueueWord8* @bq0 to %queueWord8_QueueWord8*), %Word8 %10)
+	%11 = call %Bool @queueWord8_put(%queueWord8_QueueWord8* @bq0, %Word8 %10)
 	%12 = load %Nat32, %Nat32* %1
 	%13 = add %Nat32 %12, 1
 	store %Nat32 %13, %Nat32* %1
@@ -383,7 +383,7 @@ again_1:
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
 ; if_0
-	%4 = call %Bool @queueWord8_isEmpty(%queueWord8_QueueWord8* bitcast (%queueWord8_QueueWord8* @bq0 to %queueWord8_QueueWord8*))
+	%4 = call %Bool @queueWord8_isEmpty(%queueWord8_QueueWord8* @bq0)
 	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*))
@@ -391,7 +391,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%7 = alloca %Word8, align 1
-	%8 = call %Bool @queueWord8_get(%queueWord8_QueueWord8* bitcast (%queueWord8_QueueWord8* @bq0 to %queueWord8_QueueWord8*), %Word8* %7)
+	%8 = call %Bool @queueWord8_get(%queueWord8_QueueWord8* @bq0, %Word8* %7)
 	%9 = load %Word8, %Word8* %7
 	%10 = sext %Word8 %9 to %Int
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), %Int %10)
@@ -405,7 +405,7 @@ break_1:
 
 @qbuf = internal global [10 x %Word8] zeroinitializer
 define %Int @main() {
-	call void @queueWord8_init(%queueWord8_QueueWord8* bitcast (%queueWord8_QueueWord8* @bq0 to %queueWord8_QueueWord8*), [0 x %Word8]* bitcast ([10 x %Word8]* @qbuf to [0 x %Word8]*), %Nat32 10)
+	call void @queueWord8_init(%queueWord8_QueueWord8* @bq0, [0 x %Word8]* bitcast ([10 x %Word8]* @qbuf to [0 x %Word8]*), %Nat32 10)
 	call void @fill(%Nat32 3)
 	call void @fetch(%Nat32 7)
 	call void @fill(%Nat32 12)

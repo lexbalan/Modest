@@ -142,7 +142,7 @@ def ctx_type_get(id_str, as_copy=True):
 
 	if t != None:
 		if as_copy and not t.is_incompleted():
-			return t.copy()
+			return t
 
 	return t
 
@@ -194,6 +194,9 @@ def add_spices_value(v, atts):
 
 def add_spices_type(t, atts):
 	global distinct_cnt
+
+	if atts != []:
+		t = t.copy()
 
 	for a in atts:
 		k = a['kind']
@@ -581,7 +584,7 @@ def do_type(x):
 	else: t = bad_type(x['ti'])
 
 	t.ti = x['ti']
-	add_spices_type(t, x['atts'])
+	t = add_spices_type(t, x['atts'])
 	return t
 
 

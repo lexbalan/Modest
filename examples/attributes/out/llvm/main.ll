@@ -197,6 +197,9 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [20 x i8] [i8 65, i8 116, i8 116, i8 114, i8 105, i8 98, i8 117, i8 116, i8 101, i8 115, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 ; -- endstrings --; examples/1.hello_world/src/main.m
 %MyInt32 = type %Int32;
+
+; These refined MyInt32 types are compatible with MyInt32
+; but not compatible with anything else (e.g. between them)
 %MyInt32_2 = type %MyInt32;
 %MyInt32_3 = type %MyInt32;
 %ProtocolHeader = type <{

@@ -7,7 +7,7 @@ CMPREFIX=$(OUTDIR)/cm
 CPREFIX=$(OUTDIR)/c
 LLVMPREFIX = $(OUTDIR)/llvm
 
-all: LLVM
+test: CM LLVM C
 
 
 CM:

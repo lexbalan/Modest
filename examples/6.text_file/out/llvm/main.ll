@@ -441,10 +441,8 @@ then_0:
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = bitcast %File* %2 to %File*
-	%7 = call %Int (%File*, %Str*, ...) @fprintf(%File* %6, %Str* bitcast ([12 x i8]* @str5 to [0 x i8]*))
-	%8 = bitcast %File* %2 to %File*
-	%9 = call %Int @fclose(%File* %8)
+	%6 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([12 x i8]* @str5 to [0 x i8]*))
+	%7 = call %Int @fclose(%File* %2)
 	ret void
 }
 
@@ -465,20 +463,18 @@ endif_0:
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%7 = bitcast %File* %2 to %File*
-	%8 = call %Int @fgetc(%File* %7)
+	%7 = call %Int @fgetc(%File* %2)
 ; if_1
-	%9 = icmp eq %Int %8, -1
-	br %Bool %9 , label %then_1, label %endif_1
+	%8 = icmp eq %Int %7, -1
+	br %Bool %8 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
 	br label %endif_1
 endif_1:
-	%11 = call %Int @putchar(%Int %8)
+	%10 = call %Int @putchar(%Int %7)
 	br label %again_1
 break_1:
-	%12 = bitcast %File* %2 to %File*
-	%13 = call %Int @fclose(%File* %12)
+	%11 = call %Int @fclose(%File* %2)
 	ret void
 }
 
