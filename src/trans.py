@@ -177,44 +177,6 @@ def add_spices_any(v, atts):
 	return v
 
 
-def add_spices_value(v, atts):
-	add_spices_any(v, atts)
-
-
-
-def add_spices_type(t, atts):
-	global distinct_cnt
-
-	if atts != []:
-		t = Type.copy(t)
-
-	for a in atts:
-		k = a['kind']
-		t.att.append(k)
-
-		if k == 'distinct':
-			#info("distinct type", t.ti)
-			# Type.brand must be > 0 (!)
-			distinct_cnt += 1
-			t.brand = distinct_cnt
-
-		elif k == 'refined':
-			#info("refined type", t.ti)
-			t.refine = t.brand
-			distinct_cnt += 1
-			t.brand = distinct_cnt
-
-		if t.is_array():
-			#mass
-			if k == 'const':
-				t.of = Type.copy(t.of)
-				t.of.att.append('const')
-			if k == 'volatile':
-				t.of = Type.copy(t.of)
-				t.of.att.append('volatile')
-
-	return t
-
 
 
 def insert(s):
@@ -570,6 +532,41 @@ def do_type_func(x, func_id="_"):
 
 	return TypeFunc(params, to, x['arghack'], ti=x['ti'])
 
+
+
+
+def add_spices_type(t, atts):
+	global distinct_cnt
+
+	if atts != []:
+		t = Type.copy(t)
+
+	for a in atts:
+		k = a['kind']
+		t.att.append(k)
+
+		if k == 'distinct':
+			#info("distinct type", t.ti)
+			# Type.brand must be > 0 (!)
+			distinct_cnt += 1
+			t.brand = distinct_cnt
+
+		elif k == 'refined':
+			#info("refined type", t.ti)
+			t.refine = t.brand
+			distinct_cnt += 1
+			t.brand = distinct_cnt
+
+		if t.is_array():
+			#mass
+			if k == 'const':
+				t.of = Type.copy(t.of)
+				t.of.att.append('const')
+			if k == 'volatile':
+				t.of = Type.copy(t.of)
+				t.of.att.append('volatile')
+
+	return t
 
 
 def do_type(x):
@@ -1417,6 +1414,14 @@ def do_value_subexpr(x):
 
 
 
+def add_spices_value(v, atts):
+	if atts != []:
+		v = Value.copy(v)
+	for a in atts:
+		v.att.append(a['kind'])
+	return v
+
+
 def do_value(x):
 	assert(x['isa'] == 'ast_value')
 
@@ -1460,9 +1465,7 @@ def do_value(x):
 
 	assert(v != None)
 	v.ti = x['ti']
-
-	add_spices_value(v, x['atts'])
-	return v
+	return add_spices_value(v, x['atts'])
 
 
 #
@@ -2479,23 +2482,23 @@ def def_def(ast, is_include=False):
 		kind = x['kind']
 
 		if isa == 'ast_definition':
-			y = None
+			df = None
 			if kind == 'type':
-				y = def_type(x)
+				df = def_type(x)
 			elif kind == 'const':
-				y = def_const(x)
+				df = def_const(x)
 			elif kind == 'func':
-				y = def_func(x)
+				df = def_func(x)
 			elif kind == 'var':
-				y = def_var(x)
+				df = def_var(x)
 
-			if y != None and not y.is_bad():
-				add_spices_def(y, x['atts'])
+			if df != None:
+				df = add_spices_def(df, x['atts'])
 				if not is_include:
-					y.parent = cmodule
+					df.parent = cmodule
 
 				is_public = x['access_modifier'] == 'public'
-				cmodule.defs.append(y)
+				cmodule.defs.append(df)
 
 		elif isa == 'ast_comment':
 			comment = do_stmt_comment(x)
@@ -2503,7 +2506,7 @@ def def_def(ast, is_include=False):
 
 		elif isa == 'ast_directive':
 			if x['kind'] == 'pragma':
-				y = do_directive(x)
+				df = do_directive(x)
 
 	return
 
@@ -2644,6 +2647,7 @@ def add_spices_def(x, ast_atts):
 			key = a['args'][0]['value']['str']
 			print(key)
 			add_att(x, key)
+	return x
 
 
 def add_att(x, att):

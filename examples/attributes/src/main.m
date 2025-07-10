@@ -18,6 +18,8 @@ type MyInt32_3 = @refined MyInt32
 
 
 const cvb = @volatile Bool true
+var vvb = @volatile Bool true
+
 
 type ProtocolHeader = @packed record {
 	start: Word16

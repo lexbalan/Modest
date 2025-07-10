@@ -130,7 +130,7 @@ def value_cons_explicit(t, v, ti):
 		return ValueBad(v.ti)
 
 	if Type.eq(t, from_type):
-		info("explicit cast to the same type", ti)
+		info("explicit cons from the same type", ti)
 		return v
 
 	if not cons_can(t, from_type, 'explicit', ti):
