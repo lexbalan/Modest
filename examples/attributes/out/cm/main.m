@@ -16,6 +16,8 @@ type MyInt32_2 = MyInt32
 type MyInt32_3 = MyInt32
 
 
+const cvb: Bool = true
+
 type ProtocolHeader = @packed record {
 	start: Word16
 	len: Nat16
@@ -53,6 +55,18 @@ var u2: Word64
 
 public const const0 = 0
 
+
+
+var vb: []Bool
+
+func boolFunction (x: Bool) -> Bool {
+	if x {
+		return true
+	} else {
+		return false
+	}
+	return false
+}
 
 
 @inline

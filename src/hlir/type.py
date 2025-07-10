@@ -460,8 +460,9 @@ class Type(Entity):
 
 
 	def copy(self):
+		#from error import info; info("cp", self.ti)
 		y = copy.copy(self)
-		y.att = []
+		y.att = copy.copy(self.att)
 		return y
 
 

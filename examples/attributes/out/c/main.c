@@ -26,6 +26,8 @@ typedef int32_t MyInt32;
 typedef MyInt32 MyInt32_2;
 typedef MyInt32 MyInt32_3;
 
+#define cvb  true
+
 struct __attribute__((packed)) ProtocolHeader {
 	uint16_t start;
 	uint16_t len;
@@ -49,6 +51,17 @@ static uint64_t u;
 
 __attribute__((unused))
 static uint64_t u2;
+
+static volatile bool vb[];
+
+static bool boolFunction(bool x) {
+	if (x) {
+		return true;
+	} else {
+		return false;
+	}
+	return false;
+}
 
 __attribute__((always_inline))
 static inline int32_t staticInlineFunc(int32_t x) {

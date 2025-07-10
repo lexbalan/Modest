@@ -17,6 +17,8 @@ type MyInt32_2 = @refined MyInt32
 type MyInt32_3 = @refined MyInt32
 
 
+const cvb = @volatile Bool true
+
 type ProtocolHeader = @packed record {
 	start: Word16
 	len: Nat16
@@ -49,6 +51,18 @@ var u2: Word64
 @nodecorate
 public const const0 = 0
 
+
+
+var vb: @volatile []Bool
+
+func boolFunction (x: Bool) -> Bool {
+	if x {
+		return true
+	} else {
+		return false
+	}
+	return false
+}
 
 @inline
 func staticInlineFunc (x: Int32) -> Int32 {

@@ -215,6 +215,20 @@ declare void @perror(%ConstCharStr* %str)
 @s = internal global %Nat16 zeroinitializer
 @u = internal global %Word64 zeroinitializer
 @u2 = internal global %Word64 zeroinitializer
+@vb = internal global [0 x %Bool] zeroinitializer
+define internal %Bool @boolFunction(%Bool %x) {
+; if_0
+	br %Bool %x , label %then_0, label %else_0
+then_0:
+	ret %Bool 1
+	br label %endif_0
+else_0:
+	ret %Bool 0
+	br label %endif_0
+endif_0:
+	ret %Bool 0
+}
+
 define internal %Int32 @staticInlineFunc(%Int32 %x) alwaysinline {
 	%1 = add %Int32 %x, 1
 	ret %Int32 %1

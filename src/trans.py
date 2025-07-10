@@ -133,17 +133,12 @@ def ctx_value_add(id_str, v, is_public=False):
 
 
 
-def ctx_type_get(id_str, as_copy=True):
+def ctx_type_get(id_str):
 	global context
 	#print("ctx_type_get %s" % id_str)
 	t = context['private'].type_get(id_str)
 	if t == None:
 		t = context['public'].type_get(id_str)
-
-	if t != None:
-		if as_copy and not t.is_incompleted():
-			return t
-
 	return t
 
 
@@ -196,7 +191,7 @@ def add_spices_type(t, atts):
 	global distinct_cnt
 
 	if atts != []:
-		t = t.copy()
+		t = Type.copy(t)
 
 	for a in atts:
 		k = a['kind']
@@ -215,9 +210,12 @@ def add_spices_type(t, atts):
 			t.brand = distinct_cnt
 
 		if t.is_array():
+			#mass
 			if k == 'const':
+				t.of = Type.copy(t.of)
 				t.of.att.append('const')
 			if k == 'volatile':
+				t.of = Type.copy(t.of)
 				t.of.att.append('volatile')
 
 	return t
@@ -588,10 +586,8 @@ def do_type(x):
 	elif k == 'array': t = do_type_array(x)
 	elif k == 'record': t = do_type_record(x)
 	else: t = bad_type(x['ti'])
-
 	t.ti = x['ti']
-	t = add_spices_type(t, x['atts'])
-	return t
+	return add_spices_type(t, x['atts'])
 
 
 
@@ -880,7 +876,7 @@ def do_value_va_copy(x):
 
 
 def do_value___defined_type(x):
-	t = ctx_type_get(x['type']['id'].str, as_copy=False)
+	t = ctx_type_get(x['type']['id'].str)
 	return t != None
 
 
@@ -1517,6 +1513,7 @@ def do_stmt_var(x):
 			error("variable with generic type", x['ti'])
 			v = value_cons_default(v)
 		t = Type.copy(v.type)
+		t.att = []
 
 	#if not t.is_incompleted():
 	#	if t.is_bad():
@@ -1535,6 +1532,7 @@ def do_stmt_var(x):
 			v = value_cons_default(v)
 
 		t = Type.copy(v.type)
+		t.att = []
 
 	# check if identifier is free (in current block)
 	already = ctx_value_get(var_id.str, shallow=True, as_copy=False)
@@ -1837,10 +1835,8 @@ def def_type(x):
 	log("def_type: %s" % id.str)
 	id.prefix = global_prefix
 
-	# (!) Здесь нам нужно получить не копию типа, как это происходит везде,
-	# (!) а его оригинал.
-	nt = ctx_type_get(id.str, as_copy=False)
-
+	# тип уже был задекларирован при первом проходе, теперь определяем его
+	nt = ctx_type_get(id.str)
 	if not nt.is_incompleted():
 		error("type redefinition", x['ti'])
 		return None
@@ -1911,6 +1907,12 @@ def def_const(x):
 	return definition
 
 
+#if iv.isBad():
+	#	# check if identifier is free (in current block)
+	#	already = ctx_value_get_shallow(id.str)
+	#	if already != None:
+	#		error("redefinition of '%s'" % id.str, id.ti)
+	#		return StmtBad(x)
 
 def do_const(x):
 	id = Id(x['id'])
@@ -1922,29 +1924,24 @@ def do_const(x):
 	if pre_exist != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
-	type = None
+	iv = do_rvalue(x['init_value'])
+
+	#mass
+	t = None
 	if x['type'] != None:
-		type = Type.copy(do_type(x['type']))
+		t = Type.copy(do_type(x['type']))
+		#type.att = []
+		iv = value_cons_implicit_check(t, iv)
 
-	init_value = do_rvalue(x['init_value'])
+	if t == None:
+		t = Type.copy(iv.type)
+		t.att = []
 
-	#if init_value.isBad():
-	#	# check if identifier is free (in current block)
-	#	already = ctx_value_get_shallow(id.str)
-	#	if already != None:
-	#		error("redefinition of '%s'" % id.str, id.ti)
-	#		return StmtBad(x)
+	const_value = ValueConst(t, id, init_value=iv, ti=id.ti)
 
-	if type != None:
-		init_value = value_cons_implicit_check(type, init_value)
-	else:
-		type = Type.copy(init_value.type)
-
-	const_value = ValueConst(type, id, init_value=init_value, ti=id.ti)
-
-	if init_value.isImmediate():
+	if iv.isImmediate():
 		const_value.immediate = True
-		cp_immediate(const_value, init_value)
+		cp_immediate(const_value, iv)
 
 	return const_value
 
