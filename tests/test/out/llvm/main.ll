@@ -219,7 +219,6 @@ declare [0 x %Char]* @strerror(%Int %error)
 @str2 = private constant [13 x i8] [i8 102, i8 111, i8 111, i8 40, i8 37, i8 100, i8 44, i8 32, i8 37, i8 100, i8 41, i8 10, i8 0]
 ; -- endstrings --
 
-;@set("type.generic", true)
 @main_a = internal global [2 x [2 x [3 x %Int32]]] [
 	[2 x [3 x %Int32]] [
 		[3 x %Int32] [

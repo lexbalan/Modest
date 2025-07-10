@@ -77,8 +77,8 @@ public type Stat = record {
 }
 
 
-	// 01_stat for MACOS
-@set("id.llvm", "\\01_stat")
+// 01_stat for MACOS
+@llalias("id.llvm", "\\01_stat")
 public func stat (path: *[]ConstChar, stat: *Stat) -> Int
 
 

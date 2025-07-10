@@ -247,12 +247,6 @@ declare void @perror(%ConstCharStr* %str)
 		%Nat32 2
 	}
 ]
-
-
-; есть проблема - в C глобальные переменные с модификатором const
-; не могут быть так инициализированы, поскольку points является приведением
-; непонятно существует ли хорошее решение
-;@set("c_prefix", "const")
 @points2 = internal global [3 x %Point] [
 	%Point {
 		%Nat32 0,
