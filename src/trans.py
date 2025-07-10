@@ -2596,8 +2596,12 @@ def add_spices_def(x, ast_atts):
 			if key[-4:] == 'id.c':
 				add_att(x, 'id:nodecorate')
 
-		#elif kind == 'distinct':
-		#	info("distinct type", x['ti'])
+		elif kind == 'alias':
+			val = a['args'][0]['value']['str']
+			setObjAttrByPath(x, "id.c", val)
+			setObjAttrByPath(x, "id.cm", val)
+			setObjAttrByPath(x, "id.llvm", val)
+			add_att(x, 'id:nodecorate')
 		elif kind == 'used':
 			# TODO: not implemented in LLVM (!)
 			add_att(x, 'used')

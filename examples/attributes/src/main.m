@@ -22,6 +22,9 @@ type ProtocolHeader = @packed record {
 	len: Nat16
 }
 
+@alias("name2")
+var name1: Bool
+
 @extern
 var ext: Int32
 
@@ -72,4 +75,5 @@ public func main () -> Int {
 	printf("Attributes example\n")
 	return 0
 }
+
 

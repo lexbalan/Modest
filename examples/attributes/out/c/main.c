@@ -32,6 +32,8 @@ struct __attribute__((packed)) ProtocolHeader {
 };
 typedef struct ProtocolHeader ProtocolHeader;
 
+static bool name2;
+
 extern int32_t ext;
 
 __attribute__((section("__DATA, .xdata")))

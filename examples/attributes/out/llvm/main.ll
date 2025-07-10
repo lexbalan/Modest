@@ -208,6 +208,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Nat16
 }>;
 
+@name2 = internal global %Bool zeroinitializer
 @ext = external global %Int32
 @x = internal global %Word32 zeroinitializer, section "__DATA, .xdata", align 8
 @s = internal global %Nat16 zeroinitializer
