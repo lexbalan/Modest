@@ -12,38 +12,38 @@ include "libc/ctypes64"
 //@extern("C)
 //var environ: *[]*Char
 
-@set("id.c", "SEEK_SET")
+@calias("SEEK_SET")
 public const c_SEEK_SET = 0
-@set("id.c", "SEEK_CUR")
+@calias("SEEK_CUR")
 public const c_SEEK_CUR = 1
-@set("id.c", "SEEK_END")
+@calias("SEEK_END")
 public const c_SEEK_END = 2
 
-@set("id.c", "STDIN_FILENO")
+@calias("STDIN_FILENO")
 public const c_STDIN_FILENO = 0
-@set("id.c", "STDOUT_FILENO")
+@calias("STDOUT_FILENO")
 public const c_STDOUT_FILENO = 1
-@set("id.c", "STDERR_FILENO")
+@calias("STDERR_FILENO")
 public const c_STDERR_FILENO = 2
 
 
 // lockf function - record locking on files
-@set("id.c", "F_ULOCK")
+@calias("F_ULOCK")
 public const c_F_ULOCK = 0  // unlock locked sections
-@set("id.c", "F_LOCK")
+@calias("F_LOCK")
 public const c_F_LOCK = 1   // lock a section for exclusive use
-@set("id.c", "F_TLOCK")
+@calias("F_TLOCK")
 public const c_F_TLOCK = 2  // test and lock a section for exclusive use
-@set("id.c", "F_TEST")
+@calias("F_TEST")
 public const c_F_TEST = 3
 
-@set("id.c", "F_OK")
+@calias("F_OK")
 public const c_F_OK = 0  // Test for existence of file
-@set("id.c", "R_OK")
+@calias("R_OK")
 public const c_R_OK = 4  // Test for read permission
-@set("id.c", "W_OK")
+@calias("W_OK")
 public const c_W_OK = 2  // Test for write permission
-@set("id.c", "X_OK")
+@calias("X_OK")
 public const c_X_OK = 1  // Test for execute (search) permission
 
 

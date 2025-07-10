@@ -2596,6 +2596,10 @@ def add_spices_def(x, ast_atts):
 			if key[-4:] == 'id.c':
 				add_att(x, 'id:nodecorate')
 
+		elif kind == 'calias':
+			val = a['args'][0]['value']['str']
+			setObjAttrByPath(x, "id.c", val)
+			add_att(x, 'id:nodecorate')
 		elif kind == 'alias':
 			val = a['args'][0]['value']['str']
 			setObjAttrByPath(x, "id.c", val)

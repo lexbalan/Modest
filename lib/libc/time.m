@@ -8,14 +8,14 @@ include "libc/ctypes64"
 
 
 /* time in seconds since 1970 */
-@set("id.c", "time_t")
+@calias("time_t")
 public type TimeT = Int32
 
-@set("id.c", "clock_t")
+@calias("clock_t")
 public type ClockT = UnsignedLong
 
 
-@set("id.c", "struct tm")
+@calias("struct tm")
 public type StructTM = record {
 	public tm_sec: Int	  // Seconds [0-60]
 	public tm_min: Int	  // Minutes [0-59]

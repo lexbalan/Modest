@@ -25,6 +25,9 @@ type ProtocolHeader = @packed record {
 var name2: Bool
 
 
+var name11: Bool
+
+
 @extern
 var ext: Int32
 

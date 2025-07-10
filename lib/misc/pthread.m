@@ -8,65 +8,65 @@ include "libc/ctypes64"
 
 type Nat = Nat64
 
-@set("id.c", "clockid_t")
+@calias("clockid_t")
 type ClockIdT = Int
 
-@set("id.c", "struct timespec")
+@calias("struct timespec")
 type StructTimespec = record {}
 
-@set("id.c", "struct sched_param")
+@calias("struct sched_param")
 type StructSchedParam = record {}
 
 
 //typedef struct	pthread			*pthread_t;
-@set("id.c", "struct pthread")
+@calias("struct pthread")
 public type PThread = record {}
 
-@set("id.c", "pthread_t")
+@calias("pthread_t")
 public type PThreadT = Ptr
-@set("id.c", "pthread_mutex_t")
+@calias("pthread_mutex_t")
 public type PThreadMutexT = Ptr
 
 
-@set("id.c", "struct pthread_attr")
+@calias("struct pthread_attr")
 public type PThreadAttr = Ptr
-@set("id.c", "pthread_attr_t")
+@calias("pthread_attr_t")
 public type PThreadAttrT = Ptr
-@set("id.c", "pthread_mutexattr_t")
+@calias("pthread_mutexattr_t")
 public type PThreadMutexAttrT = Ptr
-@set("id.c", "pthread_cond_t")
+@calias("pthread_cond_t")
 public type PThreadCondT = Ptr
-@set("id.c", "pthread_condattr_t")
+@calias("pthread_condattr_t")
 public type PThreadCondAttrT = Ptr
-@set("id.c", "pthread_key_t")
+@calias("pthread_key_t")
 public type PThreadKeyT = Int
-@set("id.c", "pthread_once_t")
+@calias("pthread_once_t")
 public type PThreadOnceT = Ptr
-@set("id.c", "pthread_rwlock_t")
+@calias("pthread_rwlock_t")
 public type PThreadRWLockT = Ptr
-@set("id.c", "pthread_rwlockattr_t")
+@calias("pthread_rwlockattr_t")
 public type PThreadRWLockAttrT = Ptr
-@set("id.c", "pthread_barrier_t")
+@calias("pthread_barrier_t")
 public type PThreadBarrierT = Ptr
-@set("id.c", "pthread_barrierattr_t")
+@calias("pthread_barrierattr_t")
 public type PThreadBarrierAttrT = Ptr
-@set("id.c", "pthread_spinlock_t")
+@calias("pthread_spinlock_t")
 public type PThreadSpinlockT = Ptr
 
 
 
-@set("id.c", "PTHREAD_MUTEX_INITIALIZER")
+@calias("PTHREAD_MUTEX_INITIALIZER")
 public const mutexInitializer = nil
-@set("id.c", "PTHREAD_COND_INITIALIZER")
+@calias("PTHREAD_COND_INITIALIZER")
 public const condInitializer = nil
-@set("id.c", "PTHREAD_RWLOCK_INITIALIZER")
+@calias("PTHREAD_RWLOCK_INITIALIZER")
 public const rwlockInitializer = nil
 
-@set("id.c", "PTHREAD_PRIO_NONE")
+@calias("PTHREAD_PRIO_NONE")
 public const pthreadPrioNone = nil
-@set("id.c", "PTHREAD_PRIO_INHERIT")
+@calias("PTHREAD_PRIO_INHERIT")
 public const pthreadPrioInherit = nil
-@set("id.c", "PTHREAD_PRIO_PROTECT")
+@calias("PTHREAD_PRIO_PROTECT")
 public const pthreadPrioProtect = nil
 
 

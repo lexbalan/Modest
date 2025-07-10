@@ -9,35 +9,35 @@ include "libc/ctypes64"
 
 
 
-@set("id.c", "in_addr_t")
+@calias("in_addr_t")
 public type InAddrT = Nat32
 
 
-@set("id.c", "INADDR_ANY")
+@calias("INADDR_ANY")
 public const inAddrAny = 0
 
 
-@set("id.c", "in_port_t")
+@calias("in_port_t")
 public type InPortT = Nat16
 
-@set("id.c", "socklen_t")
+@calias("socklen_t")
 public type SocklenT = Nat32
 
 
-@set("id.c", "struct sockaddr")
+@calias("struct sockaddr")
 public type SockAddr = record {
 	public sa_family: UnsignedShort  // address family
 	public sa_data: [14]Char8        // up to 14 bytes of direct address
 }
 
 
-@set("id.c", "struct in_addr")
+@calias("struct in_addr")
 public type Struct_in_addr = record {
 	public s_addr: InAddrT
 }
 
 
-@set("id.c", "struct sockaddr_in")
+@calias("struct sockaddr_in")
 public type SockAddrIn = record {
 // $if APPLE
 	public sin_len: Nat8
@@ -52,11 +52,11 @@ public type SockAddrIn = record {
 
 
 
-@set("id.c", "SOL_SOCKET")
+@calias("SOL_SOCKET")
 public const c_SOL_SOCKET = 1   // for setsockopt
 
 
-@set("id.c", "SO_REUSEADDR")
+@calias("SO_REUSEADDR")
 public const c_SO_REUSEADDR = 2
 
 
@@ -71,15 +71,15 @@ public func setsockopt (
 
 
 
-@set("id.c", "SOCK_STREAM")
+@calias("SOCK_STREAM")
 public const c_SOCK_STREAM = 1  // stream socket
-@set("id.c", "SOCK_DGRAM")
+@calias("SOCK_DGRAM")
 public const c_SOCK_DGRAM = 2   // datagram socket
-@set("id.c", "SOCK_RAW")
+@calias("SOCK_RAW")
 public const c_SOCK_RAW = 3     // raw-protocol interface
-@set("id.c", "SOCK_RDM")
+@calias("SOCK_RDM")
 public const c_SOCK_RDM = 4     // reliably-delivered message
-@set("id.c", "SOCK_SEQPACKET")
+@calias("SOCK_SEQPACKET")
 public const c_SOCK_SEQPACKET = 5  // sequenced packet stream
 //#ifdef _KERNEL
 //const SOCK_TYPE_MASK = 0x000F	// mask that covers the above
@@ -93,7 +93,7 @@ public const c_AF_UNSPEC = 0       // unspecified
 public const c_AF_UNIX = 1         // local to host
 public const c_AF_LOCAL = c_AF_UNIX  // draft POSIX compatibility
 
-@set("id.c", "AF_INET")
+@calias("AF_INET")
 public const c_AF_INET = 2         // internetwork: UDP, TCP, etc.
 
 public const c_AF_IMPLINK = 3      // arpanet imp addresses

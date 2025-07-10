@@ -30,7 +30,7 @@ $if (<# value_expression_1 #>)
 	// code activated
 	// when value_expression_1 is true
 $elseif (<# value_expression_2 #>)
-	// code activated 
+	// code activated
 	// when value_expression_1 is false
 	// and value_expression_2 is true
 $endif
@@ -110,7 +110,7 @@ var byteFromUart: @volatile Word8
 ```
 
 ```swift
-@set("id.c", "int")
+@calias("int")
 type Int Int32
 ```
 

@@ -5,9 +5,9 @@ include "libc/stdio"
 
 
 type MyInt32 = @distinct Int32
-@set("id.c", "MY_ZERO")
+@calias("MY_ZERO")
 const myZero = MyInt32 0
-@set("id.c", "MY_ONE")
+@calias("MY_ONE")
 const myOne = MyInt32 1
 
 
@@ -24,6 +24,9 @@ type ProtocolHeader = @packed record {
 
 @alias("name2")
 var name1: Bool
+
+@calias("name22")
+var name11: Bool
 
 @extern
 var ext: Int32
