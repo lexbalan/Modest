@@ -142,17 +142,12 @@ def ctx_type_get(id_str):
 	return t
 
 
-def ctx_value_get(id_str, shallow=False, as_copy=True):
+def ctx_value_get(id_str, shallow=False):
 	global context
 	#print("ctx_value_get %s" % id_str)
 	v = context['private'].value_get(id_str, shallow=shallow)
 	if v == None:
 		v = context['public'].value_get(id_str, shallow=shallow)
-
-	if v != None:
-		if as_copy and not v.type.is_incompleted():
-			return v.copy()
-
 	return v
 
 
@@ -881,7 +876,7 @@ def do_value___defined_type(x):
 
 
 def do_value___defined_value(x):
-	v = ctx_value_get(x['value']['id'].str, as_copy=False)
+	v = ctx_value_get(x['value']['id'].str)
 	return v != None
 
 
@@ -1535,7 +1530,7 @@ def do_stmt_var(x):
 		t.att = []
 
 	# check if identifier is free (in current block)
-	already = ctx_value_get(var_id.str, shallow=True, as_copy=False)
+	already = ctx_value_get(var_id.str, shallow=True)
 	if already != None:
 		error("local id redefinition", x['id']['ti'])
 		info("firstly defined here", already.id.ti)
@@ -1920,7 +1915,7 @@ def do_const(x):
 	log("do_const: %s" % id.str)
 
 	# check if identifier is free
-	pre_exist = ctx_value_get(id.str, shallow=True, as_copy=False)
+	pre_exist = ctx_value_get(id.str, shallow=True)
 	if pre_exist != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
@@ -1956,7 +1951,7 @@ def def_var(x):
 	id.prefix = global_prefix
 
 	# already defined? (check identifier)
-	already = ctx_value_get(id.str, as_copy=False)
+	already = ctx_value_get(id.str)
 	if already != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
@@ -2043,7 +2038,7 @@ def def_func(x):
 
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
-	fn = ctx_value_get(x['id']['str'], as_copy=False)
+	fn = ctx_value_get(x['id']['str'])
 	fn.id.prefix = global_prefix
 
 	cdef = fn.definition
