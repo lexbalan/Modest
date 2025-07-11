@@ -58,9 +58,9 @@ var u2: Word64
 public const const0 = 0
 
 
-
 var rp: *Word32
 var vb: []Bool
+
 
 func boolFunction (x: Bool) -> Bool {
 	if x {
@@ -70,6 +70,7 @@ func boolFunction (x: Bool) -> Bool {
 	}
 	return false
 }
+
 
 
 @inline

@@ -10,9 +10,9 @@ include "libc/stdlib"
 public type Byte = Word8
 public type Int = Int32
 public type Nat = Nat32
-public type Size = Nat32
-public type SSize = Int32
-public type Address = Nat32
+//public type Size = Nat32
+//public type SSize = Int32
+//public type Address = Nat32
 //$elseif (__target.intWidth == 64)
 //type Int Int64
 //type Nat Nat64
