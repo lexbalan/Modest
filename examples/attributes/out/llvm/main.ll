@@ -216,6 +216,7 @@ declare void @perror(%ConstCharStr* %str)
 @s = internal global %Nat16 zeroinitializer
 @u = internal global %Word64 zeroinitializer
 @u2 = internal global %Word64 zeroinitializer
+@rp = internal global %Word32* zeroinitializer
 @vb = internal global [0 x %Bool] zeroinitializer
 define internal %Bool @boolFunction(%Bool %x) {
 ; if_0

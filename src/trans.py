@@ -557,14 +557,17 @@ def add_spices_type(t, atts):
 			distinct_cnt += 1
 			t.brand = distinct_cnt
 
+		# Для C некоторые атрибуты типа массива -
+		# это атрибуты типа его элементов
 		if t.is_array():
-			#mass
-			if k == 'const':
+			if k in ['const', 'volatile', 'restrict']:
 				t.of = Type.copy(t.of)
-				t.of.att.append('const')
-			if k == 'volatile':
-				t.of = Type.copy(t.of)
-				t.of.att.append('volatile')
+				if k == 'const':
+					t.of.att.append('const')
+				if k == 'volatile':
+					t.of.att.append('volatile')
+				if k == 'restrict':
+					t.of.att.append('restrict')
 
 	return t
 
@@ -1924,7 +1927,6 @@ def do_const(x):
 
 	iv = do_rvalue(x['init_value'])
 
-	#mass
 	t = None
 	if x['type'] != None:
 		t = Type.copy(do_type(x['type']))

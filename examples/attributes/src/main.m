@@ -54,8 +54,9 @@ var u2: Word64
 public const const0 = 0
 
 
-
+var rp: @restrict *Word32
 var vb: @volatile []Bool
+
 
 func boolFunction (x: Bool) -> Bool {
 	if x {
@@ -65,6 +66,7 @@ func boolFunction (x: Bool) -> Bool {
 	}
 	return false
 }
+
 
 @inline
 func staticInlineFunc (x: Int32) -> Int32 {

@@ -53,6 +53,7 @@ static uint64_t u;
 __attribute__((unused))
 static uint64_t u2;
 
+static uint32_t *restrict rp;
 static volatile bool vb[];
 
 static bool boolFunction(bool x) {

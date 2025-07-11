@@ -59,6 +59,7 @@ public const const0 = 0
 
 
 
+var rp: *Word32
 var vb: []Bool
 
 func boolFunction (x: Bool) -> Bool {
