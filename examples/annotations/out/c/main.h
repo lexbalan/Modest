@@ -1,4 +1,4 @@
-// examples/attributes/src/main.m
+// examples/annotations/src/main.m
 
 #ifndef MAIN_H
 #define MAIN_H

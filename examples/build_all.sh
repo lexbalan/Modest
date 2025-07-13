@@ -15,7 +15,7 @@ cd bubble_sort && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. #&& \
 cd web && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd sha256 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd table && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
-cd attributes && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. \
+cd annotations && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. \
 
 #cd m328p_blink && printf "\nBUILD: $PWD\n" && make -j7 test && cd ..
 

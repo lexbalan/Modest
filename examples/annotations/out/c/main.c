@@ -1,4 +1,4 @@
-// examples/attributes/src/main.m
+// examples/annotations/src/main.m
 
 #include <stddef.h>
 #include <stdint.h>
