@@ -99,7 +99,18 @@ type Point2D = record {
 }
 
 
-public func main () -> Int {
+const const1 = 10
+const const2 = 20
+
+// переопределение f не вызвало ошибку!
+
+func hello () -> Unit {
+	printf("hi!\n")
+}
+
+
+public func main () -> Int32 {
+	hello()
 	printf("Attributes example\n")
 	return 0
 }

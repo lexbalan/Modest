@@ -10,6 +10,6 @@
 #include <stdio.h>
 
 #define const0  0
-int main();
+int32_t main();
 
 #endif /* MAIN_H */

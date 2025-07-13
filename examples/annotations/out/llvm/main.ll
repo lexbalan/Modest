@@ -194,7 +194,8 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [20 x i8] [i8 65, i8 116, i8 116, i8 114, i8 105, i8 98, i8 117, i8 116, i8 101, i8 115, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str1 = private constant [5 x i8] [i8 104, i8 105, i8 33, i8 10, i8 0]
+@str2 = private constant [20 x i8] [i8 65, i8 116, i8 116, i8 114, i8 105, i8 98, i8 117, i8 116, i8 101, i8 115, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 ; -- endstrings --; examples/annotations/src/main.m
 %MyInt32 = type %Int32;
 
@@ -251,9 +252,17 @@ define internal %Int32 @staticInlineHintFunc(%Int32 %x) inlinehint {
 	%Float64
 };
 
-define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))
-	ret %Int 0
+
+; переопределение f не вызвало ошибку!
+define internal void @hello() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*))
+	ret void
+}
+
+define %Int32 @main() {
+	call void @hello()
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str2 to [0 x i8]*))
+	ret %Int32 0
 }
 
 

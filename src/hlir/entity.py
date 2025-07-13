@@ -4,6 +4,7 @@ class Entity():
 	def __init__(self, ti):
 		self.ti = ti
 		self.att = []
+		self.annotations = {}
 		self.parent = None
 		self.is_global_flag = False
 

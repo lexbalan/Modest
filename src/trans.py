@@ -282,6 +282,15 @@ def init():
 	valueTrue = value_bool_create(1)
 	valueFalse = value_bool_create(0)
 
+#	trueId = Id().fromStr('true')
+#	valueTrue.id = trueId
+#	valueTrue.id.c = trueId
+#	valueTrue.id.llvm = trueId
+#	falseId = Id().fromStr('false')
+#	valueFalse.id = falseId
+#	valueFalse.id.c = falseId
+#	valueFalse.id.llvm = falseId
+
 	root_symtab.value_add('nil', valueNil)
 	root_symtab.value_add('true', valueTrue)
 	root_symtab.value_add('false', valueFalse)
@@ -2584,15 +2593,31 @@ def add_spices_def(x, ast_atts):
 	for a in ast_atts:
 		kind = a['kind']
 
-		if kind == 'set':
-			args = a['args']
-			key = args[0]['value']['str']
-			val = args[1]['value']['str']
-			setObjAttrByPath(x, key, val)
+#		if kind == 'set':
+#			error("SET IS FORBIDDEN!", x['ti'])
+#			args = a['args']
+#			key = args[0]['value']['str']
+#			val = args[1]['value']['str']
+#			setObjAttrByPath(x, key, val)
+#
+#			if key[-4:] == 'id.c':
+#				add_att(x, 'id:nodecorate')
 
-			if key[-4:] == 'id.c':
-				add_att(x, 'id:nodecorate')
+		annotation = {}
 
+		if len(a['args']) == 1:
+			annotation = do_value(a['args'][0]['value'])
+		else:
+			for arg in a['args']:
+				k = arg['key']['str']
+				v = do_value(arg['value'])
+				annotation[k] = v
+
+		x.annotations.update({kind: annotation})
+
+
+		if kind == 'conditional':
+			pass
 		elif kind == 'llalias':
 			val = a['args'][0]['value']['str']
 			setObjAttrByPath(x, "id.llvm", val)

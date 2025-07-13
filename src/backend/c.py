@@ -163,6 +163,9 @@ def get_id_str(x):
 		return None
 
 	id = x.id
+	if not hasattr(id, 'c'):
+		from error import warning
+		warning("??", x.ti)
 	id_str = id.c
 
 	if id.prefix != None:
@@ -1106,6 +1109,7 @@ def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 
 
 def str_literal_bool(num):
+	#print("str_literal_bool")
 	if num:
 		return settings['true_literal']
 	else:
@@ -1320,6 +1324,9 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 	if need_wrap:
 		sstr += "("
 
+	#if hasattr(x, 'id'):
+	#if x.id != None:
+	#	sstr += get_id_str(x)
 	if isinstance(x, ValueLiteral):
 		sstr += str_value_literal(x, ctx)
 	elif isinstance(x, ValueBin):
@@ -1791,6 +1798,10 @@ def print_decl_func(x):
 
 
 
+def getAnnotation(x, annotation):
+	if annotation in x.annotations:
+		return x.annotations[annotation]
+	return None
 
 
 def print_def_func(x):
@@ -1800,6 +1811,10 @@ def print_def_func(x):
 
 	global cfunc
 	cfunc = func
+
+	if getAnnotation(x, 'conditional') != None:
+		a = getAnnotation(x, 'conditional')
+		out("#if (%s)\n" % str_value(a))
 
 	if x.hasAttribute('inline'):
 		out("__attribute__((always_inline))\n")
@@ -1870,6 +1885,10 @@ def print_def_func(x):
 
 	func_undef_list = []
 	out("\n}")
+
+	if getAnnotation(x, 'conditional') != None:
+		a = getAnnotation(x, 'conditional')
+		out("\n#endif /* %s */" % str_value(a))
 
 	if not func.id.str in declared:
 		declared.append(func.id.str)
