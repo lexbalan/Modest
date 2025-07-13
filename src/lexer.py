@@ -344,7 +344,7 @@ class CmLexer(Lexer):
 				break
 			s.append(c)
 
-		return ('attribute', ''.join(s))
+		return ('annotation', ''.join(s))
 
 
 	def doDirective(self):

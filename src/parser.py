@@ -190,19 +190,19 @@ class Parser:
 		while True:
 			nl_cnt = 0
 			comments = []
-			attributes = []
+			annotations = []
 
-			# Skip blanks, handle comments & attributes
+			# Skip blanks, handle comments & annotations
 			while True:
 				comm = self.parse_if_comment()
 				if comm != None:
 					comm['nl'] = nl_cnt
 					nl_cnt = 0
 					comments.append(comm)
-				elif self.token_class_is('attribute'):
-					x = self.parse_attribute()
+				elif self.token_class_is('annotation'):
+					x = self.parse_annotation()
 					x['nl'] = nl_cnt
-					attributes.append(x)
+					annotations.append(x)
 				elif self.match("\n"):
 					nl_cnt += 1
 				elif self.match(","):
@@ -225,7 +225,7 @@ class Parser:
 
 			if f != None:
 				f[0].update({
-					'atts': attributes,
+					'atts': annotations,
 					'comments': comments,
 					'line_comment': line_comm,
 					'nl': nl_cnt,
@@ -234,7 +234,7 @@ class Parser:
 				if len(f) > 1:
 					for subf in f[1:]:
 						subf.update({
-							'atts': attributes,
+							'atts': annotations,
 							'line_comment': None,
 							'comments': [],
 							'nl': 1
@@ -260,8 +260,8 @@ class Parser:
 			return True
 
 
-	def is_attribute(self):
-		return self.token_class_is('attribute')
+	def is_annotation(self):
+		return self.token_class_is('annotation')
 
 
 	def check_is_type(self):
@@ -308,8 +308,8 @@ class Parser:
 
 			return False
 
-		elif self.is_attribute():
-			self.parse_attribute()
+		elif self.is_annotation():
+			self.parse_annotation()
 			return self.check_is_type()
 
 		else:
@@ -383,11 +383,11 @@ class Parser:
 			error("expected type expr", ti)
 			return None
 
-		# parse all attributes before
-		attributes = []
-		ca = self.parse_comments_attributes()
+		# parse all annotations before
+		annotations = []
+		ca = self.parse_comments_annotations()
 		#comments.extend(ca[0])
-		attributes.extend(ca[1])
+		annotations.extend(ca[1])
 
 		t = {'isa': 'ast_type', 'kind': 'unknown', 'ti': ti}
 
@@ -445,10 +445,10 @@ class Parser:
 				'ti': dot_ti
 			}
 
-#		for a in attributes:
+#		for a in annotations:
 #			print(a['kind'])
 
-		t['atts'] = attributes
+		t['atts'] = annotations
 		return t
 
 	#
@@ -466,8 +466,8 @@ class Parser:
 
 	def expr_value(self):
 
-		#atts = self.parse_attributes()
-		ca = self.parse_comments_attributes()
+		#atts = self.parse_annotations()
+		ca = self.parse_comments_annotations()
 		#comments.extend(ca[0])
 		atts = ca[1]
 		#spaceline_cnt = ca[2]
@@ -1626,7 +1626,7 @@ class Parser:
 		return 'private'
 
 
-	def parse_comments_attributes(self, nl_cnt=0):
+	def parse_comments_annotations(self, nl_cnt=0):
 		comments = []
 		atts = []
 		while not self.is_end():
@@ -1635,8 +1635,8 @@ class Parser:
 				comm['nl'] = nl_cnt
 				nl_cnt = 0
 				comments.append(comm)
-			elif self.token_class_is('attribute'):
-				x = self.parse_attribute()
+			elif self.token_class_is('annotation'):
+				x = self.parse_annotation()
 				x['nl'] = nl_cnt
 				atts.append(x)
 			#elif self.match("\n"):
@@ -1648,11 +1648,11 @@ class Parser:
 		return (comments, atts, nl_cnt)
 
 
-	def parse_attributes(self, nl_cnt=0):
+	def parse_annotations(self, nl_cnt=0):
 		atts = []
 		while not self.is_end():
-			if self.token_class_is('attribute'):
-				x = self.parse_attribute()
+			if self.token_class_is('annotation'):
+				x = self.parse_annotation()
 				x['nl'] = nl_cnt
 				atts.append(x)
 			#elif self.match("\n"):
@@ -1675,8 +1675,8 @@ class Parser:
 		while not self.is_end():
 			nl_cnt = 0
 
-			ca = self.parse_comments_attributes(nl_cnt=nl_cnt)
-			comments_and_attributes = ca[0] + ca[1]
+			ca = self.parse_comments_annotations(nl_cnt=nl_cnt)
+			comments_and_annotations = ca[0] + ca[1]
 			nl_cnt = ca[2]
 
 			access_modifier = self.parse_access_modifier()
@@ -1691,7 +1691,7 @@ class Parser:
 
 			objs.append({
 				'id': id,
-				'comments_and_attributes': comments_and_attributes
+				'comments_and_annotations': comments_and_annotations
 			})
 
 			if self.match(','):
@@ -1720,7 +1720,7 @@ class Parser:
 				'init_value': None,
 				'access_modifier': access_modifier,
 				'atts': [],
-				'comments_and_attributes': obj['comments_and_attributes'],
+				'comments_and_annotations': obj['comments_and_annotations'],
 				'nl': 1,
 				'ti': id['ti']
 			}
@@ -1769,7 +1769,7 @@ class Parser:
 					_as = self.identifier()
 
 				import_dir = {
-					'isa': 'ast_attribute',
+					'isa': 'ast_annotation',
 					'kind': 'import',
 					'expr': import_expr,
 					'include': include,
@@ -1921,7 +1921,7 @@ class Parser:
 
 
 
-	def parse_attribute(self):
+	def parse_annotation(self):
 		ti = self.ti()
 		x = self.gettok()
 
@@ -1930,7 +1930,7 @@ class Parser:
 			args = self.parse_args()
 
 		att = {
-			'isa': 'ast_attribute',
+			'isa': 'ast_annotation',
 			'kind': x,
 			'args': args,
 			'ti': ti
@@ -1977,7 +1977,7 @@ class Parser:
 		# Head
 #		if not self.is_end():
 #			while True:
-#				ca = self.parse_comments_attributes(nl_cnt=0)
+#				ca = self.parse_comments_annotations(nl_cnt=0)
 #
 #				if not self.match('\n') and ca == None:
 #					break
@@ -1990,12 +1990,12 @@ class Parser:
 
 		public_region = False
 
-		attributes = []
+		annotations = []
 		#comments = []
 		while not self.is_end():
-			ca = self.parse_attributes(nl_cnt=spaceline_cnt)
+			ca = self.parse_annotations(nl_cnt=spaceline_cnt)
 			#comments.extend(ca[0])
-			attributes.extend(ca[0])
+			annotations.extend(ca[0])
 			spaceline_cnt = ca[1]
 
 			access_modifier = 'private'
@@ -2059,13 +2059,13 @@ class Parser:
 				subx['nl'] = 1
 				subx['ti'] = ti
 				subx['access_modifier'] = access_modifier
-				subx['atts'] = attributes
+				subx['atts'] = annotations
 				#subx['comms'] = comments
 
 			x[0]['nl'] = spaceline_cnt
 			output.extend(x)
 
-			attributes = []
+			annotations = []
 			spaceline_cnt = 0
 
 		return output
