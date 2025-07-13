@@ -225,7 +225,7 @@ class Parser:
 
 			if f != None:
 				f[0].update({
-					'atts': annotations,
+					'anno': annotations,
 					'comments': comments,
 					'line_comment': line_comm,
 					'nl': nl_cnt,
@@ -234,7 +234,7 @@ class Parser:
 				if len(f) > 1:
 					for subf in f[1:]:
 						subf.update({
-							'atts': annotations,
+							'anno': annotations,
 							'line_comment': None,
 							'comments': [],
 							'nl': 1
@@ -448,7 +448,7 @@ class Parser:
 #		for a in annotations:
 #			print(a['kind'])
 
-		t['atts'] = annotations
+		t['anno'] = annotations
 		return t
 
 	#
@@ -459,22 +459,22 @@ class Parser:
 		return {
 			'isa': 'ast_value',
 			'kind': 'undefined',
-			'atts': [],
+			'anno': [],
 			'ti': ti
 		}
 
 
 	def expr_value(self):
 
-		#atts = self.parse_annotations()
+		#anno = self.parse_annotations()
 		ca = self.parse_comments_annotations()
 		#comments.extend(ca[0])
-		atts = ca[1]
+		anno = ca[1]
 		#spaceline_cnt = ca[2]
 
 		x = self.expr_value_1()
 		#x['nl'] = 0
-		x['atts'] = atts
+		x['anno'] = anno
 		return x
 
 
@@ -491,7 +491,7 @@ class Parser:
 				'kind': 'or',
 				'left': v,
 				'right': r,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 		else:
@@ -511,7 +511,7 @@ class Parser:
 				'kind': 'xor',
 				'left': v,
 				'right': r,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 		else:
@@ -531,7 +531,7 @@ class Parser:
 				'kind': 'and',
 				'left': v,
 				'right': r,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 		else:
@@ -552,7 +552,7 @@ class Parser:
 					'kind': 'eq',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			elif self.match("!="):
@@ -565,7 +565,7 @@ class Parser:
 					'kind': 'ne',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			else:
@@ -587,7 +587,7 @@ class Parser:
 					'kind': 'lt',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			elif self.match(">"):
@@ -600,7 +600,7 @@ class Parser:
 					'kind': 'gt',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			if self.match("<="):
@@ -613,7 +613,7 @@ class Parser:
 					'kind': 'le',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			elif self.match(">="):
@@ -626,7 +626,7 @@ class Parser:
 					'kind': 'ge',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			else:
@@ -649,7 +649,7 @@ class Parser:
 					'kind': 'shl',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			elif self.match(">>"):
@@ -663,7 +663,7 @@ class Parser:
 					'kind': 'shr',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			else:
@@ -685,7 +685,7 @@ class Parser:
 					'kind': 'add',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			elif self.match("-"):
@@ -698,7 +698,7 @@ class Parser:
 					'kind': 'sub',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			else:
@@ -720,7 +720,7 @@ class Parser:
 					'kind': 'mul',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			elif self.match("/"):
@@ -733,7 +733,7 @@ class Parser:
 					'kind': 'div',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			elif self.match("%"):
@@ -746,7 +746,7 @@ class Parser:
 					'kind': 'rem',
 					'left': v,
 					'right': r,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			else:
@@ -765,7 +765,7 @@ class Parser:
 				'kind': 'cons',
 				'value': v,
 				'type': t,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -783,7 +783,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'deref',
 				'value': v,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -794,7 +794,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'ref',
 				'value': v,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -805,7 +805,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'not',
 				'value': v,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -816,7 +816,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'pos',
 				'value': v,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -827,7 +827,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'neg',
 				'value': v,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -837,7 +837,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'new',
 				'value': v,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -848,7 +848,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'unsafe',
 				'value': v,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -861,7 +861,7 @@ class Parser:
 					'isa': 'ast_value',
 					'kind': 'sizeof_type',
 					'type': t,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			else:
@@ -870,7 +870,7 @@ class Parser:
 					'isa': 'ast_value',
 					'kind': 'sizeof_value',
 					'value': v,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			self.need(")")
@@ -884,7 +884,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'alignof',
 				'type': t,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -899,7 +899,7 @@ class Parser:
 				'kind': 'offsetof',
 				'type': t,
 				'field': f,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -910,7 +910,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'lengthof_value',
 				'value': v,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 			self.need(")")
@@ -925,7 +925,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': '__va_start',
 				'values': [v0, v1],
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 			self.need(")")
@@ -940,7 +940,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': '__va_copy',
 				'values': [v0, v1],
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 			self.need(")")
@@ -953,7 +953,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': '__va_end',
 				'value': v,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 			self.need(")")
@@ -970,7 +970,7 @@ class Parser:
 				'kind': '__va_arg',
 				'va_list': v,
 				'type': t,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -983,7 +983,7 @@ class Parser:
 					'isa': 'ast_value',
 					'kind': '__defined_type',
 					'type': t,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			else:
@@ -992,7 +992,7 @@ class Parser:
 					'isa': 'ast_value',
 					'kind': '__defined_value',
 					'value': v,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			self.need(")")
@@ -1061,7 +1061,7 @@ class Parser:
 					'kind': 'call',
 					'left': v,
 					'args': args,
-					'atts': [],
+					'anno': [],
 					'nl': 0,
 					'ti': ti
 				}
@@ -1076,7 +1076,7 @@ class Parser:
 					'kind': 'access',
 					'left': v,
 					'right': field_id,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			#elif self.look("[") and self.is_value_expr():
@@ -1111,7 +1111,7 @@ class Parser:
 						'left': v,
 						'index_from': i,
 						'index_to': j,
-						'atts': [],
+						'anno': [],
 						'ti': ti
 					}
 					return v
@@ -1121,7 +1121,7 @@ class Parser:
 					'kind': 'index',
 					'left': v,
 					'index': i,
-					'atts': [],
+					'anno': [],
 					'ti': ti
 				}
 			else:
@@ -1176,7 +1176,7 @@ class Parser:
 			'isa': 'ast_value',
 			'kind': 'array',
 			'items': items,
-			'atts': [],
+			'anno': [],
 			'ti': array_ti
 		}
 
@@ -1220,7 +1220,7 @@ class Parser:
 			'isa': 'ast_value',
 			'kind': 'record',
 			'items': items,
-			'atts': [],
+			'anno': [],
 			'ti': record_ti
 		}
 
@@ -1321,7 +1321,7 @@ class Parser:
 				'kind': 'string',
 				'len': str_len,  # in Characters (!)
 				'str': string,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -1337,7 +1337,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'subexpr',
 				'value': v,
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -1348,7 +1348,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'id',
 				'str': id['str'],
-				'atts': [],
+				'anno': [],
 				'ti': id['ti']
 			}
 
@@ -1359,7 +1359,7 @@ class Parser:
 				'kind': 'number',
 				'str': numstr,
 				#'att': [],
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -1391,7 +1391,7 @@ class Parser:
 			return {
 				'isa': 'ast_value',
 				'kind': 'bad',
-				'atts': [],
+				'anno': [],
 				'ti': ti
 			}
 
@@ -1628,7 +1628,7 @@ class Parser:
 
 	def parse_comments_annotations(self, nl_cnt=0):
 		comments = []
-		atts = []
+		anno = []
 		while not self.is_end():
 			comm = self.parse_if_comment()
 			if comm != None:
@@ -1638,30 +1638,30 @@ class Parser:
 			elif self.token_class_is('annotation'):
 				x = self.parse_annotation()
 				x['nl'] = nl_cnt
-				atts.append(x)
+				anno.append(x)
 			#elif self.match("\n"):
 			#	pass
 			else:
 				break
 			nl_cnt += self.skip_blanks()
 
-		return (comments, atts, nl_cnt)
+		return (comments, anno, nl_cnt)
 
 
 	def parse_annotations(self, nl_cnt=0):
-		atts = []
+		anno = []
 		while not self.is_end():
 			if self.token_class_is('annotation'):
 				x = self.parse_annotation()
 				x['nl'] = nl_cnt
-				atts.append(x)
+				anno.append(x)
 			#elif self.match("\n"):
 			#	pass
 			else:
 				break
 			nl_cnt += self.skip_blanks()
 
-		return (atts, nl_cnt)
+		return (anno, nl_cnt)
 
 
 	# TODO: кандидат на выбывание!
@@ -1719,7 +1719,7 @@ class Parser:
 				'type': t,
 				'init_value': None,
 				'access_modifier': access_modifier,
-				'atts': [],
+				'anno': [],
 				'comments_and_annotations': obj['comments_and_annotations'],
 				'nl': 1,
 				'ti': id['ti']
@@ -1843,7 +1843,7 @@ class Parser:
 				'init_value': init_value,
 
 				'access_modifier': 'public',
-				'atts': [],
+				'anno': [],
 				'nl': 1,
 				'ti': ti
 			}
@@ -2059,7 +2059,7 @@ class Parser:
 				subx['nl'] = 1
 				subx['ti'] = ti
 				subx['access_modifier'] = access_modifier
-				subx['atts'] = annotations
+				subx['anno'] = annotations
 				#subx['comms'] = comments
 
 			x[0]['nl'] = spaceline_cnt

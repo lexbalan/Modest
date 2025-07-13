@@ -402,7 +402,7 @@ def do_field(x):
 
 	f.access_level = x['access_modifier']
 
-	add_spices_any(f, x['atts'])
+	add_spices_any(f, x['anno'])
 	return f
 
 
@@ -582,7 +582,7 @@ def do_type(x):
 	elif k == 'record': t = do_type_record(x)
 	else: t = bad_type(x['ti'])
 	t.ti = x['ti']
-	return add_spices_type(t, x['atts'])
+	return add_spices_type(t, x['anno'])
 
 
 
@@ -1468,7 +1468,7 @@ def do_value(x):
 
 	assert(v != None)
 	v.ti = x['ti']
-	return add_spices_value(v, x['atts'])
+	return add_spices_value(v, x['anno'])
 
 
 #
@@ -2495,7 +2495,7 @@ def def_def(ast, is_include=False):
 				df = def_var(x)
 
 			if df != None:
-				df = add_spices_def(df, x['atts'])
+				df = add_spices_def(df, x['anno'])
 				if not is_include:
 					df.parent = cmodule
 
