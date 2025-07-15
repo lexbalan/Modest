@@ -5,8 +5,10 @@ include "stdio"
 
 type MyInt32 = Int32
 
+@calias("MY_ZERO")
 const myZero = MyInt32 0
 
+@calias("MY_ONE")
 const myOne = MyInt32 1
 
 
@@ -26,9 +28,11 @@ type ProtocolHeader = @packed record {
 }
 
 
+@alias("name2")
 var name2: Bool
 
 
+@calias("name22")
 var name11: Bool
 
 
@@ -37,12 +41,13 @@ var ext: Int32
 
 
 
-@section("__DATA, .xdata")
 @alignment(8)
+@section("__DATA, .xdata")
 var x: Word32
 
 
 
+@nonstatic
 var s: Nat16
 
 
@@ -55,6 +60,7 @@ var u2: Word64
 
 
 
+@nodecorate
 public const const0 = 0
 
 
@@ -104,6 +110,7 @@ const const2 = 20
 
 // переопределение f не вызвало ошибку!
 
+@conditional(const1 < const2)
 func hello () -> Unit {
 	printf("hi!\n")
 }

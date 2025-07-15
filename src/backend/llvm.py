@@ -2319,11 +2319,11 @@ def print_def_func(x):
 		reg_get() # get %0 reg for retval
 
 
-	if x.hasAttribute('inlinehint'):
+	if x.hasAttribute2('inlinehint'):
 		out(" inlinehint")
-	if x.hasAttribute('inline'):
+	if x.hasAttribute2('inline'):
 		out(" alwaysinline")
-	if x.hasAttribute('noinline'):
+	if x.hasAttribute2('noinline'):
 		out(" noinline")
 
 	#
@@ -2439,8 +2439,8 @@ def print_def_type(x):
 
 
 def print_def_var(x, as_extern=False):
-	is_extern = x.hasAttribute('extern') or as_extern
-	is_static = x.hasAttribute('static')
+	is_extern = x.hasAttribute2('extern') or as_extern
+	is_static = x.hasAttribute2('static')
 
 	#mods = ['global', 'constant']
 	mod = 'global'
@@ -2458,11 +2458,13 @@ def print_def_var(x, as_extern=False):
 		else:
 			out(" zeroinitializer")
 
-	if hasattr(x, 'section'):
-		out(", section \"%s\"" % x.section)
+	if x.hasAttribute2('section'):
+		section = x.getAnnotation('section')
+		out(", section \"%s\"" % section.asset)
 
-	if hasattr(x, 'alignment'):
-		out(", align %d" % x.alignment)
+	if x.hasAttribute2('alignment'):
+		alignment = x.getAnnotation('alignment')
+		out(", align %d" % alignment.asset)
 
 	return
 
@@ -2618,9 +2620,9 @@ def een(defs, decl_only=False):
 		if isinstance(x, StmtDirective):
 			continue
 
-		if x.hasAttribute('ll_no_print'):
+		if x.hasAttribute2('ll_no_print'):
 			continue
-		if x.hasAttribute('no_print'):
+		if x.hasAttribute2('no_print'):
 			continue
 
 		if hasattr(x, 'id'):

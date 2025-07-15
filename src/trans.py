@@ -2616,7 +2616,7 @@ def add_spices_def(x, ast_atts):
 		x.annotations.update({kind: annotation})
 
 
-		if kind == 'conditional':
+		if kind in ['conditional', 'used', 'unused', 'inline', 'inlinehint', 'noinline', 'alignment', 'section', 'nonstatic']:
 			pass
 		elif kind == 'llalias':
 			val = a['args'][0]['value']['str']
@@ -2632,20 +2632,6 @@ def add_spices_def(x, ast_atts):
 			setObjAttrByPath(x, "id.cm", val)
 			setObjAttrByPath(x, "id.llvm", val)
 			add_att(x, 'id:nodecorate')
-		elif kind == 'used':
-			# TODO: not implemented in LLVM (!)
-			add_att(x, 'used')
-		elif kind == 'unused':
-			add_att(x, 'unused')
-		elif kind == 'packed':
-			add_att(x, 'packed')
-		elif kind == 'noinline':
-			add_att(x, 'noinline')
-		elif kind == 'inlinehint':
-			add_att(x, 'inlinehint')
-		elif kind == 'inline':
-			#add_att(x, 'static')
-			add_att(x, 'inline')
 		elif kind == 'extern':
 			add_att(x, "extern")
 			args = a['args']
@@ -2653,18 +2639,11 @@ def add_spices_def(x, ast_atts):
 				arg = args[0]['value']['str']
 				if arg == 'C':
 					add_att(x, 'id:nodecorate')
-		elif kind == 'alignment':
-			val = int(a['args'][0]['value']['str'])
-			setObjAttrByPath(x, 'alignment', val)
-		elif kind == 'section':
-			val = a['args'][0]['value']['str']
-			setObjAttrByPath(x, 'section', val)
-		elif kind == 'nonstatic':
-			add_att(x, 'nonstatic')
 		elif kind == 'nodecorate':
 			add_att(x, 'id:nodecorate')
 		elif kind == 'c_no_print':
 			add_att(x, "c_no_print")
+			pass
 		elif kind == 'info':
 			msg = str(a['args'][0]['value']['str'])
 			info(msg, x.ti)

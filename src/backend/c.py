@@ -802,7 +802,7 @@ def str_value_cons_array(x, ctx):
 
 		is_const = isinstance(value, ValueLiteral) or isinstance(value, ValueConst) or (isinstance(value, ValueBin) and value.op == 'add')
 
-		if is_const and not value.hasAttribute('kostil'):
+		if is_const: # and not value.hasAttribute('kostil'):
 			ctx=['array_as_array']
 
 			if to_type.of.is_char():
@@ -1326,6 +1326,7 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 
 	#if hasattr(x, 'id'):
 	#if x.id != None:
+	#	print(x)
 	#	sstr += get_id_str(x)
 	if isinstance(x, ValueLiteral):
 		sstr += str_value_literal(x, ctx)
@@ -1385,11 +1386,8 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 		sstr += str_value_va_end(x, ctx)
 	elif isinstance(x, ValueVaCopy):
 		sstr += str_value_va_copy(x, ctx)
-	elif isinstance(x, ValueUndef):
-		sstr += "/*<ValueUndef>*/"
-		1/0
 	else:
-		sstr += "<%s>" % str(x)
+		sstr += str(x)
 
 	if need_wrap:
 		sstr += ")"
@@ -1784,11 +1782,11 @@ def print_decl_func(x):
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if not x.hasAttribute('extern'):
+	if not x.hasAttribute2('extern'):
 		if x.access_level == 'private':
 			out("static ")
 
-	if x.hasAttribute('inline'):
+	if x.hasAttribute2('inline'):
 		out("inline ")
 
 	ftype = x.value.type
@@ -1797,11 +1795,6 @@ def print_decl_func(x):
 	out(";")
 
 
-
-def getAnnotation(x, annotation):
-	if annotation in x.annotations:
-		return x.annotations[annotation]
-	return None
 
 
 def print_def_func(x):
@@ -1812,27 +1805,27 @@ def print_def_func(x):
 	global cfunc
 	cfunc = func
 
-	if getAnnotation(x, 'conditional') != None:
-		a = getAnnotation(x, 'conditional')
+	if x.getAnnotation('conditional') != None:
+		a = x.getAnnotation('conditional')
 		out("#if (%s)\n" % str_value(a))
 
-	if x.hasAttribute('inline'):
+	if x.hasAttribute2('inline'):
 		out("__attribute__((always_inline))\n")
 
-	if x.hasAttribute('noinline'):
+	if x.hasAttribute2('noinline'):
 		out("__attribute__((noinline))\n")
 
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if not x.hasAttribute('extern'):
+	if not x.hasAttribute2('extern'):
 		if x.access_level == 'private':
 			out("static ")
 
-	if x.hasAttribute('inline') or x.hasAttribute('inlinehint'):
+	if x.hasAttribute2('inline') or x.hasAttribute2('inlinehint'):
 		out("inline ")
 
-	if x.hasAttribute('extern'):
+	if x.hasAttribute2('extern'):
 		out("extern ")
 
 	ftype = func.type
@@ -1886,8 +1879,8 @@ def print_def_func(x):
 	func_undef_list = []
 	out("\n}")
 
-	if getAnnotation(x, 'conditional') != None:
-		a = getAnnotation(x, 'conditional')
+	if x.getAnnotation('conditional') != None:
+		a = x.getAnnotation('conditional')
 		out("\n#endif /* %s */" % str_value(a))
 
 	if not func.id.str in declared:
@@ -1938,25 +1931,27 @@ def print_def_var(x, isdecl=False):
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if x.hasAttribute('used'):
+	if x.hasAttribute2('used'):
 		out("__attribute__((used))\n")
 
-	if x.hasAttribute('unused'):
+	if x.hasAttribute2('unused'):
 		out("__attribute__((unused))\n")
 
-	if hasattr(x, 'section'):
-		out("__attribute__((section(\"%s\")))\n" % x.section)
+	if x.hasAttribute2('section'):
+		section = x.getAnnotation('section')
+		out("__attribute__((section(\"%s\")))\n" % section.asset)
 
-	if hasattr(x, 'alignment'):
-		out("__attribute__((aligned(%d)))\n" % x.alignment)
+	if x.hasAttribute2('alignment'):
+		alignment = x.getAnnotation('alignment')
+		out("__attribute__((aligned(%d)))\n" % alignment.asset)
 
 	var = x.value
 
 	if x.access_level == 'private':
-		if not (x.hasAttribute('extern') or x.hasAttribute('nonstatic')):
+		if not (x.hasAttribute2('extern') or x.hasAttribute2('nonstatic')):
 			out("static ")
 
-	if x.hasAttribute('extern'):
+	if x.hasAttribute2('extern'):
 		out("extern ")
 
 	print_variable(get_id_str(x.value), var.type)
@@ -2165,7 +2160,7 @@ def print_header(module, outname):
 		if is_private(x):
 			continue
 
-		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
+		if x.hasAttribute2('c_no_print') or x.hasAttribute2('no_print'):
 			continue
 
 		#if isinstance(x, StmtDirective):

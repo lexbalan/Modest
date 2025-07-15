@@ -735,20 +735,20 @@ def needTypeAnno(x):
 
 def print_stmt_def(x, operator='const'):
 
-	if x.hasAttribute('used'):
-		out("@used\n")
-
-	if x.hasAttribute('unused'):
-		out("@unused\n")
-
-	if x.hasAttribute('extern'):
-		out("@extern\n")
-
-	if hasattr(x, 'section'):
-		out("@section(\"%s\")\n" % x.section)
-
-	if hasattr(x, 'alignment'):
-		out("@alignment(%d)\n" % x.alignment)
+#	if x.hasAttribute('used'):
+#		out("@used\n")
+#
+#	if x.hasAttribute('unused'):
+#		out("@unused\n")
+#
+#	if x.hasAttribute('extern'):
+#		out("@extern\n")
+#
+#	if hasattr(x, 'section'):
+#		out("@section(\"%s\")\n" % x.section)
+#
+#	if hasattr(x, 'alignment'):
+#		out("@alignment(%d)\n" % x.alignment)
 
 	out("%s %s" % (operator, get_id_str(x)))
 
@@ -765,12 +765,12 @@ def print_stmt_func(x):
 	if x.stmt == None:
 		return
 
-	if x.hasAttribute('inlinehint'):
-		out("@inlinehint\n")
-	if x.hasAttribute('inline'):
-		out("@inline\n")
-	if x.hasAttribute('noinline'):
-		out("@noinline\n")
+#	if x.hasAttribute('inlinehint'):
+#		out("@inlinehint\n")
+#	if x.hasAttribute('inline'):
+#		out("@inline\n")
+#	if x.hasAttribute('noinline'):
+#		out("@noinline\n")
 
 	func = x.value
 	ft = func.type
@@ -926,6 +926,23 @@ def printTopLevelStmt(x):
 
 	if not isinstance(x, StmtDirective):
 		out(str_newline(n=x.nl))
+
+	for a in x.annotations:
+		out("@%s" % (a))
+		v = x.annotations[a]
+		if v == None:
+			pass
+		elif isinstance(v, dict):
+			if v != {}:
+				out("(")
+				#for kv in v:
+				#	out(kv)
+					#out("%s=%s" % (kv))
+				out(")")
+		else:
+			#print(v)
+			out("(%s)" % str_value(v))
+		out("\n")
 
 	if isinstance(x, StmtDef):
 		if x.access_level == 'public':
