@@ -30,7 +30,7 @@ def char_can(to, from_type, method, ti):
 		return False
 
 	c0 = from_type.is_char()
-	c1 = from_type.is_num()
+	c1 = from_type.is_number()
 	c2 = from_type.is_word()
 
 	if c0 or c1 or c2:

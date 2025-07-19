@@ -402,7 +402,7 @@ class ValueBin(Value):
 
 			asset = ops[op](left.asset, right.asset)
 
-			if type.is_num():
+			if type.is_number():
 				# (для операций типа 1 + 2)
 				# Пересматриваем generic тип для нового значения
 				from type import type_number_for

@@ -31,7 +31,7 @@ def _value_float_cons_immediate(t, v, method, ti):
 
 def float_can(to, from_type, method, ti):
 	if from_type.is_generic():
-		return from_type.is_int() or from_type.is_float() or from_type.is_num()
+		return from_type.is_int() or from_type.is_float() or from_type.is_number()
 
 	if method == 'implicit':
 		return False

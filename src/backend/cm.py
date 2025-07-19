@@ -339,7 +339,12 @@ def str_value_cons(x, ctx):
 	to_type = x.type
 
 	if x.method in ['implicit', 'default']:
-		return str_value(value)
+		v = None
+		#try:
+		v = str_value(value)
+		#except:
+		#	print(value.type.kind)
+		return v
 
 	s = ""
 	if x.method == 'unsafe':
@@ -567,7 +572,7 @@ def str_value_string(x, ctx):
 
 def str_value_literal(x, ctx):
 	t = x.type
-	if Type.is_num(t):
+	if Type.is_number(t):
 		return str_value_integer(x, ctx)
 	elif Type.is_arithmetical(t):
 		return str_value_integer(x, ctx)

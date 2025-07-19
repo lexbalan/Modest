@@ -905,7 +905,7 @@ def str_value_cons(x, ctx):
 	# - in Cm Int32(-1) -> Nat64 => 1
 	# required: (uint64_t)((uint32)int32_value)
 	#if type.is_int():
-	if from_type.is_int() or from_type.is_num():
+	if from_type.is_int() or from_type.is_number():
 		if from_type.is_signed():
 			if type.is_nat():
 				return "ABS(" + str_value(value) + ")"
@@ -1189,7 +1189,7 @@ def str_value_literal(x, ctx):
 
 
 def str_value_literal2(t, asset):
-	if t.is_arithmetical() or t.is_num() or t.is_word():
+	if t.is_arithmetical() or t.is_number() or t.is_word():
 		#if hasattr(x, 'nsigns'):
 		#	nsigns = x.nsigns
 		#return str_literal_number(t, asset, is_hex=x.hasAttribute('hexadecimal'))

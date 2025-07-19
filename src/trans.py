@@ -1034,7 +1034,7 @@ def do_value_index(x):
 	if index.type.is_bad():
 		return ValueBad(x['ti'])
 
-	if not (index.type.is_arithmetical() or index.type.is_num()):
+	if not (index.type.is_arithmetical() or index.type.is_number()):
 		error("expected integer value2", x['index'])
 		return ValueBad(x['ti'])
 
@@ -2465,6 +2465,17 @@ def pre_def(ast, is_include=False):
 				t = Type(x['ti'])  # Incomplete type (!)
 				if not is_include:
 					t.parent = cmodule
+
+				# выставляем наперед флаг о том что за тип перед нами
+				# это необходимо для того чтобы is_record() & is_array()
+				# работали для типов которые будут определены позже
+				tk = x['type']['kind']
+				if tk == 'record':
+					t.kind = TYPE_KIND_RECORD
+				elif tk == 'array':
+					t.kind = TYPE_KIND_ARRAY
+				# TODO: продолжи
+
 				cmodule_type_add(id['str'], t, is_public=is_public)
 
 			elif kind == 'func':

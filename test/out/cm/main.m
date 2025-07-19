@@ -8,7 +8,6 @@ import "lib" as lib
 import "fixed32" as fixed32
 
 
-
 func testFixed () -> Unit {
 	let fp0: Fixed32 = fixed32.create(1, 2, 4)
 	printf("fp0 = 0x%08x ", fp0)
@@ -63,7 +62,33 @@ func testFixed () -> Unit {
 	printf("\n")
 
 	// ok!
-	let dv2: Fixed32 = fixed32.div(pi, two)
+	//	let dv2 = fixed32.div(pi, two)
+	//	printf("dv2 = 0x%08x ", dv2)
+	//	fixed32.print(dv2)
+	//	printf("\n")
+
+	let zero: Fixed32 = fixed32.fromInt16(0)
+
+	// -1+0/1 = ok
+	let mone: Fixed32 = fixed32.sub(zero, one)
+	printf("mone = 0x%08x ", mone)
+	fixed32.print(mone)
+	printf("\n")
+
+	var t2: Fixed32 = two
+
+	let oone: Fixed32 = fixed32.add(t2, mone)
+	printf("oone = 0x%08x ", oone)
+	fixed32.print(oone)
+	printf("\n")
+
+	let semi: Fixed32 = fixed32.sub(zero, fixed32.fromInt16(180))
+	printf("semi = 0x%08x ", semi)
+	fixed32.print(semi)
+	printf("\n")
+
+	//let xx = fixed32.fromInt16(380)
+	let dv2: Fixed32 = fixed32.div(semi, two)
 	printf("dv2 = 0x%08x ", dv2)
 	fixed32.print(dv2)
 	printf("\n")
@@ -81,8 +106,8 @@ func distinctCheck () -> Unit {
 	var a: NewType
 	var b: NewType
 	let x: NewType = a + b + newZero + NewType 0
-	var y: Int16 = Int16 x
-	var xx: Int32 = Int32 x
+	var y: Int16 = unsafe Int16 x
+	var xx: Int32 = unsafe Int32 x
 	//
 }
 
@@ -90,7 +115,9 @@ func add (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-public type Point = record {
+//const yx = add(2, 2)
+
+public type Point = @packed record {
 	x: Int32  // hi!
 	y: Int32  // lo?
 }
@@ -103,8 +130,10 @@ public func f0 () -> Unit {
 }
 
 
+@nonstatic
 var i32: Int32
 
+@alignment(4)
 var u32: Nat32
 
 
@@ -122,27 +151,27 @@ func xxx (p: *[]Word8) -> Unit {
 
 
 func mzero (p: Ptr, size: Nat32) -> Unit {
-	let px: *[size]Word8 = *[size]Word8 p
+	let px: *[size]Word8 = unsafe *[size]Word8 p
 	*px = []
 }
 
 
 func mcopy (dst: Ptr, src: Ptr, size: Nat32) -> Unit {
-	let pd: *[size]Word8 = *[size]Word8 dst
-	let ps: *[size]Word8 = *[size]Word8 src
+	let pd: *[size]Word8 = unsafe *[size]Word8 dst
+	let ps: *[size]Word8 = unsafe *[size]Word8 src
 	*pd = *ps
 }
 
 
 func mcmp (a: Ptr, b: Ptr, size: Nat32) -> Bool {
-	let pa: *[size]Word8 = *[size]Word8 a
-	let pb: *[size]Word8 = *[size]Word8 b
+	let pa: *[size]Word8 = unsafe *[size]Word8 a
+	let pb: *[size]Word8 = unsafe *[size]Word8 b
 	return *pa == *pb
 }
 
 
 public func sbuf (p: Ptr, size: Nat32) -> Unit {
-	let px: *[size]Word8 = *[size]Word8 p
+	let px: *[size]Word8 = unsafe *[size]Word8 p
 	var buf: [size]Word8 = *px
 	var i = Nat32 0
 	while i < size {
@@ -157,7 +186,19 @@ var yy: [10]Int
 
 
 
+@extern("C")
 
+
+
+//func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
+//	return {a=a, b=b}
+//}
+//
+//func ab_test () -> Unit {
+//	let x = ab_ret(9, 11)
+//	printf("x.a = %i\n", x.a)
+//	printf("x.a = %i\n", x.b)
+//}
 
 const ca = 4
 var va: Int32 = ca
@@ -169,6 +210,7 @@ const ini = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
 
+@extern("C")
 var yyy: [32]Int32
 
 
@@ -222,7 +264,7 @@ public func main () -> Int32 {
 	var yy = Word8 1
 	var we = Word8 Nat8 yy
 
-	let pa2: *[10]Int = *[10]Int &a2
+	let pa2: *[10]Int = unsafe *[10]Int &a2
 
 	if *pa2 == a0 {
 		printf("eq!\n")

@@ -123,7 +123,7 @@ def type_print(t, print_aka=True):
 	elif t.is_bool():
 		print("Bool", end='')
 
-	elif t.is_num():
+	elif t.is_number():
 		print("Number", end='')
 
 	elif t.is_char():
@@ -305,12 +305,12 @@ def select_common_type(a, b):
 			if a.is_arithmetical():
 				return b
 
-		if a.is_num():
+		if a.is_number():
 			if b.is_arithmetical() or b.is_word() or b.is_float():
 				return b
 
 		if a.is_arithmetical() or a.is_word() or a.is_float():
-			if b.is_num():
+			if b.is_number():
 				return a
 
 	print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))

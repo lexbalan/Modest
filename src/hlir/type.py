@@ -31,6 +31,25 @@ NUM_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
 
 
 
+TYPE_KIND_UNKNOWN = 0
+TYPE_KIND_BAD = 1
+TYPE_KIND_UNIT = 2
+TYPE_KIND_WORD = 3
+TYPE_KIND_INT = 4
+TYPE_KIND_NAT = 5
+TYPE_KIND_CHAR = 6
+TYPE_KIND_FUNC = 7
+TYPE_KIND_ARRAY = 8
+TYPE_KIND_RECORD = 9
+TYPE_KIND_POINTER = 10
+TYPE_KIND_BOOL = 11
+TYPE_KIND_NUMBER = 12
+TYPE_KIND_STRING = 13
+TYPE_KIND_FLOAT = 14
+TYPE_KIND_VA_LIST = 15
+
+
+
 class Type(Entity):
 	def __init__(self, generic=False, width=0, ops=[], ti=None):
 		super().__init__(ti)
@@ -38,6 +57,7 @@ class Type(Entity):
 		align = 1
 		if size > 0:
 			align = size
+		self.kind = TYPE_KIND_UNKNOWN
 		self.generic = generic
 		self.width = width
 		self.size = size
@@ -60,7 +80,8 @@ class Type(Entity):
 
 
 	def is_bad(self):
-		return isinstance(self, TypeBad)
+		return self.kind == TYPE_KIND_BAD
+
 
 	def supports(self, operation):
 		if self.is_bad():
@@ -82,40 +103,57 @@ class Type(Entity):
 
 
 	def is_unit(self):
-		return isinstance(self, TypeUnit)
+		return self.kind == TYPE_KIND_UNIT
 
 
 	def is_bool(self):
-		return isinstance(self, TypeBool)
+		return self.kind == TYPE_KIND_BOOL
 
 
 	# Special type for StringLiteral (!)
 	def is_string(self):
-		return isinstance(self, TypeString)
-
-
-	def is_num(self):
-		return isinstance(self, TypeNumber)
+		return self.kind == TYPE_KIND_STRING
 
 
 	def is_record(self):
-		return isinstance(self, TypeRecord)
+		return self.kind == TYPE_KIND_RECORD
 
 
 	def is_array(self):
-		return isinstance(self, TypeArray)
+		return self.kind == TYPE_KIND_ARRAY
 
 
 	def is_word(self):
-		return isinstance(self, TypeWord)
+		return self.kind == TYPE_KIND_WORD
 
 
 	def is_int(self):
-		return isinstance(self, TypeInt)
+		return self.kind == TYPE_KIND_INT
 
 
 	def is_nat(self):
-		return isinstance(self, TypeNat)
+		return self.kind == TYPE_KIND_NAT
+
+
+	def is_float(self):
+		return self.kind == TYPE_KIND_FLOAT
+
+
+	def is_char(self):
+		return self.kind == TYPE_KIND_CHAR
+
+
+	# numeric type supports arithmetical operations
+	def is_numeric(self):
+		return self.is_int() or self.is_number() or self.is_float()
+
+
+	def is_number(self):
+		return self.kind == TYPE_KIND_NUMBER
+
+
+	def is_func(self):
+		return self.kind == TYPE_KIND_FUNC
 
 
 	def is_arithmetical(self):
@@ -125,26 +163,6 @@ class Type(Entity):
 	def is_xword(self):
 		return self.is_word() or self.is_int() or self.is_nat()
 
-
-	def is_float(self):
-		return isinstance(self, TypeFloat)
-
-
-	def is_char(self):
-		return isinstance(self, TypeChar)
-
-
-	# numeric type supports arithmetical operations
-	def is_numeric(self):
-		return isinstance(self, TypeInt) or isinstance(self, TypeNumber) or isinstance(self, TypeFloat)
-
-
-	def is_number(self):
-		return isinstance(self, TypeNumber)
-
-
-	def is_func(self):
-		return isinstance(self, TypeFunc)
 
 
 
@@ -171,7 +189,7 @@ class Type(Entity):
 
 
 	def is_scalar_type(t):
-		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_num()
+		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_number()
 
 
 	def is_composite(self):
@@ -182,14 +200,14 @@ class Type(Entity):
 
 	def is_nil(self):
 		return False
-		#return isinstance(self, TypeNil)
+
 
 	def is_pointer(self):
-		return isinstance(self, TypePointer)
+		return self.kind == TYPE_KIND_POINTER
 
 
 	def is_va_list(self):
-		return isinstance(self, TypeVaList)
+		return self.kind == TYPE_KIND_VA_LIST
 
 	def is_generic_int(self):
 		return self.is_int() and self.is_generic()
@@ -506,12 +524,14 @@ class Type(Entity):
 class TypeBad(Type):
 	def __init__(self, ti=None):
 		super().__init__(ti=ti)
+		self.kind = TYPE_KIND_BAD
 		self.incomplete = False
 
 
 class TypeNumber(Type):
 	def __init__(self, width=0, signed=False, ti=None):
 		super().__init__(generic=True, width=width, ops=NUM_OPS, ti=ti)
+		self.kind = TYPE_KIND_NUMBER
 		self.incomplete = False
 		from .misc import Id
 		self.id = Id(None)
@@ -524,6 +544,7 @@ class TypeString(Type):
 		width = char_width
 		size = nbytes_for_bits(width)
 		super().__init__(width=width, generic=True, ops=STR_OPS, ti=ti)
+		self.kind = TYPE_KIND_STRING
 		self.incomplete = False
 		self.size=size
 		self.char_width=char_width
@@ -535,6 +556,7 @@ class TypeUnit(Type):
 	def __init__(self, ti=None):
 		super().__init__(ops=UNIT_OPS, ti=ti)
 		from .misc import Id
+		self.kind = TYPE_KIND_UNIT
 		self.incomplete = False
 		self.id = Id().fromStr('Unit')
 		self.id.c = 'void'
@@ -545,6 +567,7 @@ class TypeBool(Type):
 	def __init__(self, ti=None):
 		super().__init__(width=1, ops=BOOL_OPS, ti=ti)
 		from .misc import Id
+		self.kind = TYPE_KIND_BOOL
 		self.incomplete = False
 		self.id = Id().fromStr('Bool')
 		self.id.c = 'bool'
@@ -556,6 +579,7 @@ class TypeWord(Type):
 		width = align_bits_up(width)
 
 		super().__init__(width=width, ops=WORD_OPS, ti=ti)
+		self.kind = TYPE_KIND_WORD
 		self.incomplete = False
 
 		calias = None
@@ -581,6 +605,7 @@ class TypeWord(Type):
 class TypeInt(Type):
 	def __init__(self, width, ti=None):
 		super().__init__(width=width, ops=INT_OPS, ti=ti)
+		self.kind = TYPE_KIND_INT
 		self.incomplete = False
 
 		alias = get_int_alias(width, signed=True)
@@ -595,6 +620,7 @@ class TypeInt(Type):
 class TypeNat(Type):
 	def __init__(self, width, ti=None):
 		super().__init__(width=width, ops=INT_OPS, ti=ti)
+		self.kind = TYPE_KIND_NAT
 		self.incomplete = False
 
 		alias = get_int_alias(width, signed=False)
@@ -609,6 +635,7 @@ class TypeNat(Type):
 class TypeFloat(Type):
 	def __init__(self, width, ti=None):
 		super().__init__(width=width, ops=FLOAT_OPS, ti=ti)
+		self.kind = TYPE_KIND_FLOAT
 		self.incomplete = False
 
 		calias = 'float'
@@ -626,6 +653,7 @@ class TypeFloat(Type):
 class TypeChar(Type):
 	def __init__(self, width, ti=None):
 		super().__init__(width=width, ops=CHAR_OPS, ti=ti)
+		self.kind = TYPE_KIND_CHAR
 		self.incomplete = False
 
 		alias = get_int_alias(width, signed=False)
@@ -643,6 +671,7 @@ class TypePointer(Type):
 	def __init__(self, to, generic=False, ti=None):
 		w = int(settings['pointer_width'])
 		super().__init__(width=w, generic=generic, ops=PTR_OPS, ti=ti)
+		self.kind = TYPE_KIND_POINTER
 		self.incomplete = False
 		self.to = to
 
@@ -661,6 +690,7 @@ class TypeArray(Type):
 				array_size = item_size * volume.asset
 
 		super().__init__(generic=generic, ops=ARR_OPS, ti=ti)
+		self.kind = TYPE_KIND_ARRAY
 		self.incomplete = False
 		self.size=array_size
 		self.of = of
@@ -694,6 +724,7 @@ class TypeRecord(Type):
 		record_size = align_to(offset, record_align)
 
 		super().__init__(generic=generic, width=(record_size * 8), ops=REC_OPS, ti=ti)
+		self.kind = TYPE_KIND_RECORD
 		self.incomplete = False
 		self.fields = fields
 
@@ -702,6 +733,7 @@ class TypeFunc(Type):
 	def __init__(self, params, to, va_args, ti=None):
 		w = int(settings['pointer_width'])
 		super().__init__(width=w, ops=PTR_OPS, ti=ti)
+		self.kind = TYPE_KIND_FUNC
 		self.incomplete = False
 		self.params = params
 		self.to = to
@@ -712,6 +744,7 @@ class TypeVaList(Type):
 	def __init__(self):
 		super().__init__(width=0, ti=None)
 		from .misc import Id
+		self.kind = TYPE_KIND_VA_LIST
 		self.incomplete = False
 		self.id = Id().fromStr('va_list')
 		self.id.c = 'va_list'

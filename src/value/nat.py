@@ -51,7 +51,7 @@ def _value_natural_cons_immediate(t, v, method, ti):
 
 
 def natural_can(to, from_type, method, ti):
-	if Type.is_num(from_type):
+	if Type.is_number(from_type):
 		return from_type.width <= to.width
 
 	if method == 'implicit':
@@ -61,7 +61,7 @@ def natural_can(to, from_type, method, ti):
 		return True
 
 	# explicit or unsafe cons method
-	c0 = Type.is_num(from_type)
+	c0 = Type.is_number(from_type)
 	c1 = Type.is_nat(from_type)
 	c2 = Type.is_word(from_type)
 	c3 = Type.is_int(from_type)

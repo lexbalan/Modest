@@ -6,6 +6,9 @@ public type Fixed32 = Word32
 
 
 const base = 65536
+
+
+// x = a + b / c
 public func create (a: Int16, b: Nat16, c: Nat16) -> Fixed32 {
 	let ntail: Nat32 = Nat32 b * base / Nat32 c
 	return Fixed32 (Word32 (Int32 a * base) or Word32 ntail)
@@ -13,12 +16,22 @@ public func create (a: Int16, b: Nat16, c: Nat16) -> Fixed32 {
 
 
 func head (x: Fixed32) -> Int16 {
-	return Int16 (x >> 16)
+	return unsafe Int16 (x >> 16)
 }
 
 
 func tail (x: Fixed32) -> Nat16 {
-	return Nat16 ((Word32 x) and (base - 1))
+	return unsafe Nat16 ((unsafe Word32 x) and (base - 1))
+}
+
+
+public func fromInt16 (x: Int16) -> Fixed32 {
+	return create(x, 0, 1)
+}
+
+
+public func toInt16 (x: Fixed32) -> Int16 {
+	return head(x)
 }
 
 
@@ -40,7 +53,7 @@ public func print (x: Fixed32) -> Unit {
 		}
 	}
 
-	printf("%d+%d/%d\n", a, b, c)
+	printf("%d+%d/%d\n", Int32 a, b, c)
 }
 
 
@@ -58,7 +71,7 @@ public func mul (a: Fixed32, b: Fixed32) -> Fixed32 {
 	let ax = Int64 a
 	let bx = Int64 b
 	let cx: Int64 = ax * bx / base
-	return Fixed32 cx
+	return unsafe Fixed32 cx
 }
 
 
@@ -66,7 +79,7 @@ public func div (a: Fixed32, b: Fixed32) -> Fixed32 {
 	let ax = Int64 a
 	let bx = Int64 b
 	let cx: Int64 = ax * base / bx
-	return Fixed32 cx
+	return unsafe Fixed32 cx
 }
 
 
@@ -78,10 +91,15 @@ public func trunc (x: Fixed32) -> Fixed32 {
 public func fract (x: Fixed32) -> Fixed32 {
 	return Fixed32 (Word32 x and 0x0000FFFF)
 }
+
+
+// Округляет вниз (в сторону -∞)
 public func floor (x: Fixed32) -> Fixed32 {
 	var y: Int16 = head(x)
 	return create(y, 0, 1)
 }
+
+// Округляет вверх (в сторону +∞)
 public func ceil (x: Fixed32) -> Fixed32 {
 	var y: Int16 = head(x)
 	if tail(x) > 0 {

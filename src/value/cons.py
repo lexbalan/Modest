@@ -41,7 +41,7 @@ def cons_can(to, from_type, method, ti):
 			method = 'unsafe'
 
 	checker = None
-	if to.is_num(): checker = number_can
+	if to.is_number(): checker = number_can
 	elif to.is_int(): checker = integer_can
 	elif to.is_nat(): checker = natural_can
 	elif to.is_unit(): checker = unit_can
@@ -166,7 +166,7 @@ def _select_default_type_for(t):
 	if not t.is_generic():
 		return None
 
-	if t.is_num():
+	if t.is_number():
 		t = typeSysInt
 		if t.is_unsigned():
 			t = typeSysNat
@@ -216,7 +216,7 @@ def _select_minimal_type_for(t):
 
 	w = align_bits_up(t.width)
 
-	if t.is_num():
+	if t.is_number():
 		t = TypeInt(w)
 		if t.is_unsigned():
 			t = TypeNat(w)
@@ -271,7 +271,7 @@ def value_cons(t, v, method, ti):
 
 
 	constructor = None
-	if t.is_num(): constructor = value_number_cons
+	if t.is_number(): constructor = value_number_cons
 	elif t.is_int(): constructor = value_integer_cons
 	elif t.is_nat(): constructor = value_natural_cons
 	elif t.is_float(): constructor = value_float_cons
