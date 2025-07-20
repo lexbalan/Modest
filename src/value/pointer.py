@@ -80,7 +80,7 @@ def value_pointer_cons(t, v, method, ti):
 			nv.linktime = True
 			char_type = t.to.of
 			nv.strdata = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
-			nv.addAttribute('zstring')
+			#nv.addAttribute3('zstring')
 
 			# регистрируем строку в модуле
 			from trans import cmodule_strings_add

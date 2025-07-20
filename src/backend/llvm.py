@@ -1531,7 +1531,7 @@ def do_eval_cons(x):
 			if type.to.is_array_of_char():
 				string_of = type.to.of
 				char_pow = string_of.width
-				iszstr = x.hasAttribute('zstring')
+				iszstr = True #x.hasAttribute3('zstring')
 				return llvm_value_str(x.strid, x.strdata, x.type, isz=iszstr)
 
 	elif type.is_array():
@@ -2541,7 +2541,7 @@ def print_string_ascii(strid, string):
 
 	slen = len(bytes(ss, 'utf-8'))  #+ 1 # +1 (zero)
 
-	if string.hasAttribute('zstring'):
+	if True: #string.hasAttribute3('zstring'):
 		slen = slen + 1
 
 	ss = ss.replace("\a", "\\07")
@@ -2562,7 +2562,7 @@ def print_string_ascii(strid, string):
 def print_string_as_array(strid, string, char_width):
 	slen = len(string.strdata)
 
-	if string.hasAttribute('zstring'):
+	if True: #string.hasAttribute3('zstring'):
 		slen = slen + 1
 
 	lo("@%s = private constant [%d x i%d] [" % (strid, slen, char_width))
@@ -2575,7 +2575,7 @@ def print_string_as_array(strid, string, char_width):
 		out(" %d" % char_code)
 		i = i + 1
 
-	if string.hasAttribute('zstring'):
+	if True: #string.hasAttribute3('zstring'):
 		if slen > 1:
 			out(", ")
 		print_int_type_for(char_width)

@@ -1204,7 +1204,6 @@ def do_value_id(x):
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально (wrong!)
 		v = ValueBad(x['ti'])
-		v.addAttribute('unknown')
 		ctx_value_add(id_str, v)
 		return v
 
