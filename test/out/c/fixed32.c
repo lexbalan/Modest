@@ -14,7 +14,7 @@
 fixed32_Fixed32 fixed32_create(int16_t a, uint16_t b, uint16_t c)
 {
 	const uint32_t ntail = (uint32_t)b * base / (uint32_t)c;
-	return ((uint32_t)((int32_t)a * base) | ntail);
+	return (fixed32_Fixed32)((uint32_t)((int32_t)a * base) | ntail);
 }
 
 static int16_t head(fixed32_Fixed32 x)
@@ -24,7 +24,7 @@ static int16_t head(fixed32_Fixed32 x)
 
 static uint16_t tail(fixed32_Fixed32 x)
 {
-	return (uint16_t)((x) & (base - 1));
+	return (uint16_t)(((uint32_t)x) & (base - 1));
 }
 
 fixed32_Fixed32 fixed32_fromInt16(int16_t x)
@@ -93,12 +93,12 @@ fixed32_Fixed32 fixed32_div(fixed32_Fixed32 a, fixed32_Fixed32 b)
 
 fixed32_Fixed32 fixed32_trunc(fixed32_Fixed32 x)
 {
-	return (x & 0xFFFF0000);
+	return (fixed32_Fixed32)((uint32_t)x & 0xFFFF0000UL);
 }
 
 fixed32_Fixed32 fixed32_fract(fixed32_Fixed32 x)
 {
-	return (x & 0x0000FFFF);
+	return (fixed32_Fixed32)((uint32_t)x & 0xFFFF);
 }
 
 // Округляет вниз (в сторону -∞)

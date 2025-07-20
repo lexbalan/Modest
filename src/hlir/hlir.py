@@ -22,6 +22,10 @@ class Module:
 		self.att = []
 
 
+	def addAttribute(self, a):
+		if not a in self.att:
+			self.att.append(a)
+
 	def hasAttribute(self, a):
 		return a in self.att
 

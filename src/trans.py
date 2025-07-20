@@ -87,7 +87,7 @@ distinct_cnt = 0
 def cmodule_use(x):
 	global cmodule
 	if not x in cmodule.att:
-		cmodule.att.append(x)
+		cmodule.addAttribute(x)
 
 
 
@@ -2254,13 +2254,13 @@ def do_directive(x):
 		s0 = args[0]
 		if s0 == 'do_not_include':
 			#print("ADD do_not_include to %s" % cmodule.id)
-			cmodule.att.append('do_not_include')
+			cmodule.addAttribute('do_not_include')
 		elif s0 == 'module_nodecorate':
-			cmodule.att.append('nodecorate')
+			cmodule.addAttribute('nodecorate')
 		elif s0 == 'c_include':
 			return StmtDirectiveCInclude(args[1])
 		elif s0 == 'c_no_print':
-			cmodule.att.append('c_no_print')
+			cmodule.addAttribute('c_no_print')
 		elif s0 == 'feature':
 			feature_add(args[0])
 		elif s0 == 'unsafe':

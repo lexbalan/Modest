@@ -20,6 +20,13 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
+/* anonymous records */
+struct __anonymous_struct_1
+{
+	int32_t x;  // hi!
+	int32_t y;  // lo?
+};
+
 static void testFixed()
 {
 	const fixed32_Fixed32 fp0 = fixed32_create(1, 2, 4);
@@ -108,16 +115,16 @@ static void testFixed()
 }
 
 typedef int32_t NewType;
-#define newZero  (0)
-#define newOne  (1)
-#define newTwo  (2)
-#define newThree  (3)
+#define newZero  ((NewType)0)
+#define newOne  ((NewType)1)
+#define newTwo  ((NewType)2)
+#define newThree  ((NewType)3)
 
 static void distinctCheck()
 {
 	NewType a;
 	NewType b;
-	const NewType x = a + b + newZero + 0;
+	const NewType x = a + b + newZero + (NewType)0;
 	int16_t y = (int16_t)x;
 	int32_t xx = (int32_t)x;
 	//
@@ -263,7 +270,7 @@ int32_t main()
 
 	xxx((uint8_t *)&w0);
 
-	uint8_t yy = 1;
+	uint8_t yy = 0x1;
 	uint8_t we = yy;
 
 	int *const pa2 = (int *)&a2;
@@ -285,7 +292,7 @@ int32_t main()
 	// не проверяет дубликаты имен!
 	int32_t x = 1;
 	//var y: Int32 = 0x1  // error!
-	uint32_t z = 1;
+	uint32_t z = 0x1;
 	uint32_t w = 0x1;
 
 	const int8_t i8 = (int8_t)-1;

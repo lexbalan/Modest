@@ -28,6 +28,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -354,6 +355,8 @@ define internal void @testFixed() {
 	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str25 to [0 x i8]*), %fixed32_Fixed32 %43)
 	call void @fixed32_print(%fixed32_Fixed32 %43)
 	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str26 to [0 x i8]*))
+
+	;let xx = fixed32.fromInt16(380)
 	%46 = call %fixed32_Fixed32 @fixed32_div(%fixed32_Fixed32 %43, %fixed32_Fixed32 %20)
 	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str27 to [0 x i8]*), %fixed32_Fixed32 %46)
 	call void @fixed32_print(%fixed32_Fixed32 %46)
@@ -398,7 +401,7 @@ define void @main_f0() {
 }
 
 @i32 = internal global %Int32 zeroinitializer
-@u32 = internal global %Nat32 zeroinitializer
+@u32 = internal global %Nat32 zeroinitializer, align 4
 @a32 = internal global %Word32 zeroinitializer
 @prev_p = internal global [10 x %Word8] zeroinitializer
 define internal void @xxx([0 x %Word8]* %p) {
@@ -507,7 +510,7 @@ break_1:
 
 @xx = internal global [0 x [10 x %Int]*]* zeroinitializer
 @yy = internal global [10 x %Int] zeroinitializer
-declare internal %Int32 @ma()
+declare external %Int32 @ma()
 
 
 ;func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
@@ -539,7 +542,7 @@ declare internal %Int32 @ma()
 	i8 8,
 	i8 9
 ]
-@yyy = internal global [32 x %Int32]
+@yyy = external global [32 x %Int32]
 define internal void @divtest() {
 	%1 = alloca %Int32, align 4
 	store %Int32 7, %Int32* %1
