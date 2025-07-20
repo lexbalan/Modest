@@ -377,7 +377,7 @@ class ValueBin(Value):
 		self.op = op
 		self.left = left
 		self.right = right
-		
+
 		# if left & right are immediate, we can fold const
 		# and append field .asset to bin_value
 		if left.isImmediate() and right.isImmediate():

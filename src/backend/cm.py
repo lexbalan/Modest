@@ -122,8 +122,8 @@ def str_field(x):
 def str_type_record(t):
 	s = ""
 
-	if t.hasAttribute2('packed'):
-		s += "@packed "
+	#if t.hasAttribute2('packed'):
+	#	s += "@packed "
 
 	s += "record {"
 	indent_up()
@@ -723,10 +723,27 @@ def print_value(x):
 	return out(str_value(x))
 
 
+
+
+def str_annotation(a, params):
+	mass = ""
+	if params != {}:
+		mass += '('
+		if isinstance(params, dict):
+			pass
+		else:
+			mass += str_value(params)
+		mass += ')'
+	return "@" + a + mass
+
+
 def print_stmt_type(x):
 	out("type ")
 	out(get_id_str(x))
 	out(" = ")
+	annotations = x.original_type.annotations
+	for a in annotations:
+		out(str_annotation(a, params=annotations[a]) + " ")
 	out(str_type(x.original_type))
 
 
@@ -933,20 +950,8 @@ def printTopLevelStmt(x):
 		out(str_newline(n=x.nl))
 
 	for a in x.annotations:
-		out("@%s" % (a))
 		v = x.annotations[a]
-		if v == None:
-			pass
-		elif isinstance(v, dict):
-			if v != {}:
-				out("(")
-				#for kv in v:
-				#	out(kv)
-					#out("%s=%s" % (kv))
-				out(")")
-		else:
-			#print(v)
-			out("(%s)" % str_value(v))
+		out(str_annotation(a, v))
 		out("\n")
 
 	if isinstance(x, StmtDef):

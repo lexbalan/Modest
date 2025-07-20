@@ -552,7 +552,6 @@ def add_spices_type(t, atts):
 
 	for a in atts:
 		k = a['kind']
-		#t.att.append(k)
 		t.annotations[k] = {}
 
 		if k == 'distinct':
