@@ -1672,7 +1672,7 @@ def do_eval_func(x):
 def do_eval_var(x):
 	id_str = get_id_str(x)
 
-	if x.hasAttribute('local'):
+	if x.storage_class in (VALUE_STORAGE_CLASS_LOCAL, VALUE_STORAGE_CLASS_PARAM):
 		y = locals_get(id_str)
 	else:
 		y = llvm_value_id(id_str, x.type)
@@ -1683,7 +1683,7 @@ def do_eval_var(x):
 
 
 def do_eval_const(x):
-	if x.hasAttribute('local'):
+	if x.storage_class in (VALUE_STORAGE_CLASS_LOCAL, VALUE_STORAGE_CLASS_PARAM):
 		localname = get_id_str(x)
 		y = locals_get(localname)
 		return y

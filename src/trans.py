@@ -1490,7 +1490,6 @@ def do_stmt_const(x):
 	global cfunc
 	v = do_const(x)
 	v.type.addAnnotation('const', {})
-	v.addAttribute('local') # need for LLVM printer (!)
 	ctx_value_add(v.id.str, v)
 	definition = StmtDefConst(v.id, v, v.init_value, ti=x['ti'])
 	definition.parent = cfunc
@@ -1643,7 +1642,7 @@ def do_stmt_break(x):
 def add_local_var(id, typ, ti):
 	iv = ValueUndef(typ)
 	var_value = ValueVar(typ, id, init_value=iv, ti=ti)
-	var_value.addAttribute('local')
+	var_value.storage_class = VALUE_STORAGE_CLASS_LOCAL
 	ctx_value_add(id.str, var_value)
 	return var_value
 
@@ -1893,6 +1892,7 @@ def def_const(x):
 	global global_prefix
 
 	nv = do_const(x)
+	nv.storage_class = VALUE_STORAGE_CLASS_GLOBAL
 	iv = nv.init_value
 
 	if not isinstance(iv, ValueUndef):
@@ -1938,7 +1938,6 @@ def do_const(x):
 	t = None
 	if x['type'] != None:
 		t = Type.copy(do_type(x['type']))
-		#type.att = []
 		iv = value_cons_implicit_check(t, iv)
 
 	if t == None:
@@ -2028,6 +2027,7 @@ def def_var(x):
 	init_value = v
 
 	var_value = ValueVar(t, id, init_value=init_value, ti=id.ti)
+	var_value.storage_class = VALUE_STORAGE_CLASS_GLOBAL
 	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 
 
@@ -2086,8 +2086,7 @@ def def_func(x):
 	while i < len(params):
 		param = params[i]
 		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
-		param_value.addAttribute('local')
-		param_value.addAttribute('param')
+		param_value.storage_class = VALUE_STORAGE_CLASS_PARAM
 		ctx_value_add(param.id.str, param_value)
 		i += 1
 

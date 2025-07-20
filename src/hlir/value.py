@@ -8,12 +8,17 @@ from .entity import Entity
 from .misc import Id, Field
 import copy
 
+VALUE_STORAGE_CLASS_GLOBAL = "global"
+VALUE_STORAGE_CLASS_PARAM = "param"
+VALUE_STORAGE_CLASS_LOCAL = "local"
+VALUE_STORAGE_CLASS_DEFAULT = VALUE_STORAGE_CLASS_LOCAL
 
 class Value(Entity):
 	def __init__(self, type, ti=None):
 		super().__init__(ti)
 		self.id = None
 		self.type = type
+		self.storage_class = VALUE_STORAGE_CLASS_DEFAULT
 		self.definition = None # *StmtDefVar, *StmtDefConst, *StmtDefFunc
 
 		# this value is immediate but are known only in link time
@@ -322,7 +327,7 @@ class ValuePos(Value):
 		if self.type.is_generic():
 			from type import type_number_for
 			self.type = type_number_for(value.asset, signed=True, ti=ti)
-		
+
 
 
 class ValueRef(Value):
@@ -333,14 +338,13 @@ class ValueRef(Value):
 		type = TypePointer(value.type, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.value = value
-		
+
 		if value.is_global():
 			self.immediate = True
 			# не можно поставить 0 тк иначе значение будет трактоваться как zero
 			# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
 			# поэтому временно заткнул единицей, но вообще нужно будет обдумать
 			self.asset = 1
-			self.addAttribute('ptr_to_glb_val')
 
 
 class ValueDeref(Value):
