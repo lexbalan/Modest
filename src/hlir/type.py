@@ -459,20 +459,20 @@ class Type(Entity):
 			return False
 
 		# usual checking
-		if isinstance(a, TypeInt): return Type.eq_integer(a, b, opt)
-		elif isinstance(a, TypeNat): return Type.eq_natural(a, b, opt)
-		elif isinstance(a, TypeBool): return True
-		elif isinstance(a, TypeNumber): return True
-		elif isinstance(a, TypeFunc): return Type.eq_func(a, b, opt)
-		elif isinstance(a, TypeRecord): return Type.eq_record(a, b, opt)
-		elif isinstance(a, TypeArray): return Type.eq_array(a, b, opt)
-		elif isinstance(a, TypePointer): return Type.eq_pointer(a, b, opt)
-		elif isinstance(a, TypeChar): return Type.eq_char(a, b, opt)
-		elif isinstance(a, TypeWord): return Type.eq_word(a, b, opt)
-		elif isinstance(a, TypeFloat): return Type.eq_float(a, b, opt)
-		elif isinstance(a, TypeString): return True
-		elif isinstance(a, TypeUnit): return True
-		elif isinstance(a, TypeVaList): return True
+		if a.is_int(): return Type.eq_integer(a, b, opt)
+		elif a.is_nat(): return Type.eq_natural(a, b, opt)
+		elif a.is_bool(): return True
+		elif a.is_number(): return True
+		elif a.is_func(): return Type.eq_func(a, b, opt)
+		elif a.is_record(): return Type.eq_record(a, b, opt)
+		elif a.is_array(): return Type.eq_array(a, b, opt)
+		elif a.is_pointer(): return Type.eq_pointer(a, b, opt)
+		elif a.is_char(): return Type.eq_char(a, b, opt)
+		elif a.is_word(): return Type.eq_word(a, b, opt)
+		elif a.is_float(): return Type.eq_float(a, b, opt)
+		elif a.is_string(): return True
+		elif a.is_unit(): return True
+		elif a.is_va_list(): return True
 		assert(False)
 		return False
 
