@@ -16,6 +16,9 @@ class Entity():
 	def hasAttribute(self, a):
 		return a in self.att
 
+	def addAnnotation(self, annotation, params):
+		if not annotation in self.annotations:
+			self.annotations[annotation] = params
 
 	def getAnnotation(self, annotation):
 		if annotation in self.annotations:

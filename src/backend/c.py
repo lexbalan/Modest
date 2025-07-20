@@ -205,7 +205,7 @@ def get_type_id(t):
 def str_type_record(t, tag=''):
 	s = "struct"
 
-	if t.hasAttribute('packed'):
+	if t.hasAttribute2('packed'):
 		s += " __attribute__((packed))"
 
 	if tag != "":
@@ -357,11 +357,11 @@ def str_type_func(t, core='', need_close=False):
 
 def str_pointer_chain(t):
 	s = '*'
-	if t.hasAttribute('const'):
+	if t.hasAttribute2('const'):
 		s += 'const '
-	if t.hasAttribute('volatile'):
+	if t.hasAttribute2('volatile'):
 		s += 'volatile '
-	if t.hasAttribute('restrict'):
+	if t.hasAttribute2('restrict'):
 		s += 'restrict '
 
 	if t.to.is_pointer():
@@ -412,9 +412,9 @@ def str_named(t, core=''):
 	if aka == None:
 		return None
 	pre = ''
-	if t.hasAttribute('const'):
+	if t.hasAttribute2('const'):
 		pre += 'const '
-	if t.hasAttribute('volatile'):
+	if t.hasAttribute2('volatile'):
 		pre += 'volatile '
 	return pre + aka + core
 
@@ -802,7 +802,7 @@ def str_value_cons_array(x, ctx):
 
 		is_const = isinstance(value, ValueLiteral) or isinstance(value, ValueConst) or (isinstance(value, ValueBin) and value.op == 'add')
 
-		if is_const: # and not value.hasAttribute('kostil'):
+		if is_const:
 			ctx=['array_as_array']
 
 			if to_type.of.is_char():

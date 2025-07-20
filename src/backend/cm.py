@@ -122,7 +122,7 @@ def str_field(x):
 def str_type_record(t):
 	s = ""
 
-	if t.hasAttribute('packed'):
+	if t.hasAttribute2('packed'):
 		s += "@packed "
 
 	s += "record {"
@@ -184,7 +184,7 @@ def str_type(t):
 
 	#s = ""
 
-	#if t.hasAttribute('distinct'):
+	#if t.hasAttribute2('distinct'):
 	#	s += "@distinct "
 
 	# Если тип связан с идентификатором - распечатаем его

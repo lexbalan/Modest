@@ -64,6 +64,7 @@ class Type(Entity):
 		self.align = align
 		self.ops = ops
 		self.att = []
+		self.annotations = {}
 		self.deps = []
 		self.signed = None  # Not defined for all types (!)
 		self.ti = None
@@ -481,8 +482,14 @@ class Type(Entity):
 		#from error import info; info("cp", self.ti)
 		y = copy.copy(self)
 		y.att = copy.copy(self.att)
+		y.annotations = copy.copy(self.annotations)
 		return y
 
+	def reborn(self):
+		nt = self.copy()
+		nt.att = []
+		nt.annotations = {}
+		return nt
 
 	@staticmethod
 	def update(dst, src):
@@ -490,6 +497,7 @@ class Type(Entity):
 		dst.__dict__.clear()
 		dst.__dict__.update(src.__dict__)
 		dst.att = copy.copy(src.att)
+		dst.annotations = copy.copy(src.annotations)
 		dst.__class__ = src.__class__
 
 

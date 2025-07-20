@@ -792,7 +792,7 @@ def print_type_enum(t):
 
 
 def print_type_record(t):
-	packed = t.hasAttribute('packed')
+	packed = t.hasAttribute2('packed')
 
 	if packed:
 		out("<")

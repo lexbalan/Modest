@@ -103,9 +103,9 @@ def type_print(t, print_aka=True):
 	#	print(")", end='')
 
 	"""
-	if t.hasAttribute('volatile'):
+	if t.hasAttribute2('volatile'):
 		print("volatile_", end='')
-	if t.hasAttribute('const'):
+	if t.hasAttribute2('const'):
 		print("const_", end='')
 
 	if t.generic:

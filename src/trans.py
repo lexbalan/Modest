@@ -552,7 +552,8 @@ def add_spices_type(t, atts):
 
 	for a in atts:
 		k = a['kind']
-		t.att.append(k)
+		#t.att.append(k)
+		t.annotations[k] = {}
 
 		if k == 'distinct':
 			#info("distinct type", t.ti)
@@ -572,11 +573,11 @@ def add_spices_type(t, atts):
 			if k in ['const', 'volatile', 'restrict']:
 				t.of = Type.copy(t.of)
 				if k == 'const':
-					t.of.att.append('const')
+					t.of.addAnnotation('const', {})
 				if k == 'volatile':
-					t.of.att.append('volatile')
+					t.of.addAnnotation('volatile', {})
 				if k == 'restrict':
-					t.of.att.append('restrict')
+					t.of.addAnnotation('restrict', {})
 
 	return t
 
@@ -1488,7 +1489,7 @@ def do_value(x):
 def do_stmt_const(x):
 	global cfunc
 	v = do_const(x)
-	v.type.att.append('const')
+	v.type.addAnnotation('const', {})
 	v.addAttribute('local') # need for LLVM printer (!)
 	ctx_value_add(v.id.str, v)
 	definition = StmtDefConst(v.id, v, v.init_value, ti=x['ti'])
@@ -1522,8 +1523,7 @@ def do_stmt_var(x):
 		if v.type.is_generic():
 			error("variable with generic type", x['ti'])
 			v = value_cons_default(v)
-		t = Type.copy(v.type)
-		t.att = []
+		t = Type.reborn(v.type)
 
 	#if not t.is_incompleted():
 	#	if t.is_bad():
@@ -1541,8 +1541,7 @@ def do_stmt_var(x):
 		if v.type.is_generic():
 			v = value_cons_default(v)
 
-		t = Type.copy(v.type)
-		t.att = []
+		t = Type.reborn(v.type)
 
 	# check if identifier is free (in current block)
 	already = ctx_value_get(var_id.str, shallow=True)
@@ -1720,7 +1719,7 @@ def do_stmt_value(x):
 		return StmtBad(x)
 
 	if not v.type.is_unit():
-		if not v.hasAttribute('unused'):
+		if not v.type.hasAttribute2('unused'):
 			warning("unused result of %s expression" % x['value']['kind'], v.ti)
 
 	return StmtValueExpression(v, ti=x['ti'])
@@ -1943,8 +1942,7 @@ def do_const(x):
 		iv = value_cons_implicit_check(t, iv)
 
 	if t == None:
-		t = Type.copy(iv.type)
-		t.att = []
+		t = Type.reborn(iv.type)
 
 	const_value = ValueConst(t, id, init_value=iv, ti=id.ti)
 

@@ -37,7 +37,7 @@ class Value(Entity):
 
 
 	def hasAttribute(self, a):
-		return a in self.att or self.type.hasAttribute(a)
+		return a in self.att or self.type.hasAttribute2(a)
 
 	def isLvalue(self):
 		return self.is_lvalue
