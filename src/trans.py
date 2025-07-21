@@ -103,16 +103,6 @@ def cmodule_strings_add(v):
 	cmodule.strings.append(v)
 
 
-def cmodule_value_add(id_str, v, is_public=False):
-	global cmodule
-	cmodule.value_add(id_str, v, is_public=is_public)
-
-
-def cmodule_type_add(id_str, t, is_public=False):
-	global cmodule
-	cmodule.type_add(id_str, t, is_public=is_public)
-
-
 
 # ONLY FOR LOCALS:
 
