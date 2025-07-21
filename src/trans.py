@@ -1590,7 +1590,9 @@ def do_stmt_return(x):
 
 
 def do_stmt_type(x):
-	fatal("do_stmt_type() not implemented")
+	#mass
+	#fatal("do_stmt_type() not implemented")
+	return def_type(x, is_global=False)
 
 
 def do_stmt_again(x):
@@ -1797,7 +1799,7 @@ def do_stmt_block(x, parent=None):
 
 
 
-def def_type(x):
+def def_type(x, is_global=True):
 	global cmodule
 	global cdef
 	global global_prefix
@@ -1806,16 +1808,21 @@ def def_type(x):
 	log("def_type: %s" % id.str)
 	id.prefix = global_prefix
 
-	# тип уже был задекларирован при первом проходе, теперь определяем его
-	nt = ctx_type_get(id.str)
-	if not nt.is_incompleted():
-		error("type redefinition", x['ti'])
-		return None
+	if is_global:
+		# глобальный тип уже был задекларирован при первом проходе,
+		# теперь определяем его
+		nt = ctx_type_get(id.str)
+		if not nt.is_incompleted():
+			error("type redefinition", x['ti'])
+			return None
+	else:
+		# for local type definition
+		nt = Type(x['ti'])  # Incomplete type (!)
 
 	definition = StmtDefType(id, nt, None, x['ti'])
 	definition.module = cmodule
 	definition.parent = cmodule
-	definition.access_level = x['access_modifier']
+	definition.access_level = x['access_modifier'] if is_global else 'private'
 	definition.nl = x['nl']
 	cdef = definition
 
@@ -1955,7 +1962,7 @@ def def_var(x):
 		# ERROR: type & value undefined
 		v = ValueBad(x['ti'])
 		v.is_global_flag = True
-		ctx_value_add(id.str, v, is_public=x['access_modifier']=='public') #mass
+		ctx_value_add(id.str, v, is_public=x['access_modifier']=='public')
 		return StmtBad(x)
 
 	elif tu == True and vu == False:
@@ -2057,7 +2064,7 @@ def def_func(x):
 		param = params[i]
 		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
 		param_value.storage_class = VALUE_STORAGE_CLASS_PARAM
-		ctx_value_add(param.id.str, param_value, is_public=x['access_modifier'] == 'public') #mass
+		ctx_value_add(param.id.str, param_value, is_public=x['access_modifier'] == 'public')
 		i += 1
 
 	# for C backend, for #include <stdarg.h>

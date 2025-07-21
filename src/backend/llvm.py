@@ -2157,6 +2157,7 @@ def print_stmt(x):
 	elif isinstance(x, StmtAgain): print_stmt_again(x)
 	elif isinstance(x, StmtComment): print_comment(x)
 	elif isinstance(x, StmtAsm): print_stmt_asm(x)
+	elif isinstance(x, StmtDefType): pass #print_def_type(x)
 	else: lo("<stmt %s>" % str(x))
 
 

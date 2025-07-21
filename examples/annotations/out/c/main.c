@@ -57,6 +57,12 @@ static uint32_t *restrict rp;
 static volatile bool vb[];
 
 static bool boolFunction(bool x) {
+
+	struct LocalRecord {
+		int32_t x;
+	};
+	typedef struct LocalRecord LocalRecord;
+
 	if (x) {
 		return true;
 	} else {

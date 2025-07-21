@@ -1696,6 +1696,7 @@ def print_stmt(x):
 	elif isinstance(x, StmtAgain): print_stmt_again(x)
 	elif isinstance(x, StmtComment): print_comment(x)
 	elif isinstance(x, StmtAsm): print_stmt_asm(x)
+	elif isinstance(x, StmtDefType): print_def_type(x)
 	else: lo("<stmt %s>" % str(x))
 
 
@@ -1906,7 +1907,8 @@ def print_def_type(x):
 		print_type_record(otype, tag=id_str)
 		out(";")
 		if not id_str in declared:
-			out("\ntypedef struct %s %s;" % (id_str, id_str))
+			nl_indent()
+			out("typedef struct %s %s;" % (id_str, id_str))
 		return
 
 	out("typedef ")

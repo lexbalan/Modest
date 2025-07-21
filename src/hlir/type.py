@@ -78,7 +78,6 @@ class Type(Entity):
 		# 0 - зарезервирован для не distinct типов (см. @distinct аттрибут)
 		self.brand = 0
 		self.refine = 0
-		pass
 
 
 	def is_bad(self):
@@ -545,7 +544,6 @@ class TypeNumber(Type):
 		from .misc import Id
 		self.id = Id(None)
 		self.signed=signed
-		pass
 
 
 class TypeString(Type):
@@ -558,7 +556,6 @@ class TypeString(Type):
 		self.size=size
 		self.char_width=char_width
 		self.length=length
-		pass
 
 
 class TypeUnit(Type):
