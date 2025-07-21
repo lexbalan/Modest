@@ -12,12 +12,9 @@ def isIdChar(x):
 # Ave Python!
 def isHexDigit(x):
 	cc = ord(x)
-	if cc <= ord('9'):
-		return cc >= ord('0')
-	if cc <= ord('F'):
-		return cc >= ord('A')
-	if cc <= ord('f'):
-		return cc >= ord('a')
+	if cc <= ord('9'): return cc >= ord('0')
+	if cc <= ord('F'): return cc >= ord('A')
+	if cc <= ord('f'): return cc >= ord('a')
 	return False
 
 
