@@ -104,43 +104,6 @@ def cmodule_strings_add(v):
 
 
 
-# ONLY FOR LOCALS:
-
-def ctx_type_add(id_str, t, is_public=False):
-	global context
-	if is_public:
-		context['public'].type_add(id_str, t)
-	else:
-		context['private'].type_add(id_str, t)
-
-
-def ctx_value_add(id_str, v, is_public=False):
-	global context
-	if is_public:
-		context['public'].value_add(id_str, v)
-	else:
-		context['private'].value_add(id_str, v)
-
-
-
-def ctx_type_get(id_str):
-	global context
-	#print("ctx_type_get %s" % id_str)
-	t = context['private'].type_get(id_str)
-	if t == None:
-		t = context['public'].type_get(id_str)
-	return t
-
-
-def ctx_value_get(id_str, shallow=False):
-	global context
-	#print("ctx_value_get %s" % id_str)
-	v = context['private'].value_get(id_str, shallow=shallow)
-	if v == None:
-		v = context['public'].value_get(id_str, shallow=shallow)
-	return v
-
-
 
 def context_push():
 	global context
@@ -159,22 +122,40 @@ def context_pop():
 
 
 
+def ctx_type_add(id_str, t, is_public):
+	global context
+	if is_public:
+		context['public'].type_add(id_str, t)
+	else:
+		context['private'].type_add(id_str, t)
 
 
-def insert(s):
-	global cmodule
-	directive_insert = {
-		'isa': 'directive',
-		'kind': 'insert',
-		'str': s,
-		'att': [],
-		'nl': 1,
-		'ti': None
-	}
-	cmodule.defs.append(directive_insert)
+def ctx_type_get(id_str):
+	global context
+	t = context['private'].type_get(id_str)
+	if t != None:
+		return t
+	return context['public'].type_get(id_str)
 
 
-def feature_add(s):
+def ctx_value_add(id_str, v, is_public):
+	global context
+	if is_public:
+		context['public'].value_add(id_str, v)
+	else:
+		context['private'].value_add(id_str, v)
+
+
+def ctx_value_get(id_str, shallow=False):
+	global context
+	v = context['private'].value_get(id_str, shallow=shallow)
+	if v != None:
+		return v
+	return context['public'].value_get(id_str, shallow=shallow)
+
+
+
+def cmodule_feature_add(s):
 	features.append(s)
 
 
@@ -1188,7 +1169,7 @@ def do_value_id(x):
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально (wrong!)
 		v = ValueBad(x['ti'])
-		ctx_value_add(id_str, v)
+		ctx_value_add(id_str, v, is_public=False)
 		return v
 
 
@@ -1472,7 +1453,7 @@ def do_stmt_const(x):
 	global cfunc
 	v = do_const(x)
 	v.type.addAnnotation('const', {})
-	ctx_value_add(v.id.str, v)
+	ctx_value_add(v.id.str, v, is_public=False)
 	definition = StmtDefConst(v.id, v, v.init_value, ti=x['ti'])
 	definition.parent = cfunc
 	v.definition = definition
@@ -1495,7 +1476,7 @@ def do_stmt_var(x):
 	# error: no type, no init valuetu = type_is_incompleted(t)
 	if tu == True and vu == True:
 		# type & value undefined
-		ctx_value_add(var_id.str, ValueBad(x['ti']))
+		ctx_value_add(var_id.str, ValueBad(x['ti']), is_public=False)
 		return StmtBad(x)
 
 	if tu == True and vu == False:
@@ -1625,7 +1606,7 @@ def add_local_var(id, typ, ti):
 	iv = ValueUndef(typ)
 	var_value = ValueVar(typ, id, init_value=iv, ti=ti)
 	var_value.storage_class = VALUE_STORAGE_CLASS_LOCAL
-	ctx_value_add(id.str, var_value)
+	ctx_value_add(id.str, var_value, is_public=False)
 	return var_value
 
 
@@ -1974,7 +1955,7 @@ def def_var(x):
 		# ERROR: type & value undefined
 		v = ValueBad(x['ti'])
 		v.is_global_flag = True
-		ctx_value_add(id.str, v)
+		ctx_value_add(id.str, v, is_public=x['access_modifier']=='public') #mass
 		return StmtBad(x)
 
 	elif tu == True and vu == False:
@@ -2076,7 +2057,7 @@ def def_func(x):
 		param = params[i]
 		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
 		param_value.storage_class = VALUE_STORAGE_CLASS_PARAM
-		ctx_value_add(param.id.str, param_value)
+		ctx_value_add(param.id.str, param_value, is_public=x['access_modifier'] == 'public') #mass
 		i += 1
 
 	# for C backend, for #include <stdarg.h>
@@ -2248,9 +2229,9 @@ def do_directive(x):
 		elif s0 == 'c_no_print':
 			cmodule.addAttribute('c_no_print')
 		elif s0 == 'feature':
-			feature_add(args[0])
+			cmodule_feature_add(args[0])
 		elif s0 == 'unsafe':
-			feature_add('unsafe')
+			cmodule_feature_add('unsafe')
 		elif s0 == 'insert':
 			print("-INSERT " + args[1])
 			return StmtDirectiveInsert(args[1], x['ti'])
