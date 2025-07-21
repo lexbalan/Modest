@@ -170,14 +170,6 @@ def context_pop():
 
 
 
-def add_spices_any(v, atts):
-	for a in atts:
-		k = a['kind']
-		v.att.append(k)
-	return v
-
-
-
 
 def insert(s):
 	global cmodule
@@ -411,7 +403,7 @@ def do_field(x):
 
 	f.access_level = x['access_modifier']
 
-	add_spices_any(f, x['anno'])
+	#add_spices_any(f, x['anno'])
 	return f
 
 
@@ -2215,7 +2207,7 @@ def do_import(x):
 
 		if m.hasAttribute('c_no_print'):
 			for xx in m.defs:
-				xx['att'].append('c_no_print')
+				xx['anno'].append('c_no_print')
 
 	if x['include']:
 		# INCLUDE
@@ -2598,17 +2590,6 @@ def setObjAttrByPath(x, path, value):
 def add_spices_def(x, ast_atts):
 	for a in ast_atts:
 		kind = a['kind']
-
-#		if kind == 'set':
-#			error("SET IS FORBIDDEN!", x['ti'])
-#			args = a['args']
-#			key = args[0]['value']['str']
-#			val = args[1]['value']['str']
-#			setObjAttrByPath(x, key, val)
-#
-#			if key[-4:] == 'id.c':
-#				add_att(x, 'id:nodecorate')
-
 		annotation = {}
 
 		if len(a['args']) == 1:
@@ -2622,7 +2603,11 @@ def add_spices_def(x, ast_atts):
 		x.annotations.update({kind: annotation})
 
 
-		if kind in ['conditional', 'used', 'unused', 'inline', 'inlinehint', 'noinline', 'alignment', 'section', 'nonstatic']:
+		if kind in [
+			'conditional', 'used', 'unused', 'inline',
+			'inlinehint', 'noinline', 'alignment',
+			'section', 'nonstatic'
+		]:
 			pass
 		elif kind == 'llalias':
 			val = a['args'][0]['value']['str']
