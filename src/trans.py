@@ -2461,6 +2461,8 @@ def pre_def(ast, is_include=False):
 					t.kind = TYPE_KIND_RECORD
 				elif tk == 'array':
 					t.kind = TYPE_KIND_ARRAY
+				elif tk == 'pointer':
+					t.kind = TYPE_KIND_POINTER
 				# TODO: продолжи
 
 				cmodule_type_add(id['str'], t, is_public=is_public)
