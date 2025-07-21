@@ -172,13 +172,12 @@ def get_id_str(x):
 		id_str = id.prefix + id_str
 
 	if not x.id.hasAttribute('nodecorate'):
-		if not x.hasAttribute('static'):
-			if is_global_public(x):
-				module = x.getModule()
-				if module != None:
-					if not module.hasAttribute('nodecorate'):
-						#if x.access_level != 'private':
-						id_str = "%s_%s" % (module.prefix, id_str)
+		if is_global_public(x):
+			module = x.getModule()
+			if module != None:
+				if not module.hasAttribute('nodecorate'):
+					#if x.access_level != 'private':
+					id_str = "%s_%s" % (module.prefix, id_str)
 
 	return id_str
 

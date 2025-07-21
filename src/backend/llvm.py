@@ -129,12 +129,11 @@ def get_id_str(x):
 		id_str = id.prefix + id_str
 
 	if not x.id.hasAttribute('nodecorate'):
-		if not x.hasAttribute('static'):
-			if is_global_public(x):
-				module = x.getModule()
-				if module != None:
-					if not module.hasAttribute('nodecorate'):
-						id_str = "%s_%s" % (module.prefix, id_str)
+		if is_global_public(x):
+			module = x.getModule()
+			if module != None:
+				if not module.hasAttribute('nodecorate'):
+					id_str = "%s_%s" % (module.prefix, id_str)
 
 	return id_str
 
@@ -2440,7 +2439,6 @@ def print_def_type(x):
 
 def print_def_var(x, as_extern=False):
 	is_extern = x.hasAttribute2('extern') or as_extern
-	is_static = x.hasAttribute2('static')
 
 	#mods = ['global', 'constant']
 	mod = 'global'
