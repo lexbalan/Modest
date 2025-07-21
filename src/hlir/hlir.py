@@ -36,7 +36,6 @@ class Module:
 			self.symtab_public.type_add(id_str, t)
 		else:
 			self.symtab_private.type_add(id_str, t)
-		t.is_global_flag = True
 
 
 	def value_add(self, id_str, v, is_public=False):
@@ -45,7 +44,6 @@ class Module:
 			self.symtab_public.value_add(id_str, v)
 		else:
 			self.symtab_private.value_add(id_str, v)
-		v.is_global_flag = True
 
 
 	def value_get_public(self, id_str):

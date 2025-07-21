@@ -1255,7 +1255,9 @@ def str_value_lengthof(x, ctx):
 	if value_is_generic_immediate_const(x.value):
 		return str(x.value.type.volume.asset)
 
-	if isinstance(x.value, ValueDeref):
+	# generic array в си это просто макрос вида {1, 2, 3}
+	# и его нельзя подставить в __lengthof (!)
+	if isinstance(x.value, ValueDeref) or (x.type.is_generic_array()):
 		# решает проблему когда массив представлен указателем на элемент
 		return str_value(x.value.type.volume)
 

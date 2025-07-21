@@ -127,7 +127,7 @@ def ctx_type_add(id_str, t, is_public=False):
 def ctx_value_add(id_str, v, is_public=False):
 	global context
 	if is_public:
-		context['public'].value_add(id_str, t)
+		context['public'].value_add(id_str, v)
 	else:
 		context['private'].value_add(id_str, v)
 
@@ -750,7 +750,9 @@ def do_value_ref(x):
 			error("expected mutable value or function", v.ti)
 			return ValueBad(ti)
 
-	return ValueRef(v, ti=ti)
+	nv = ValueRef(v, ti=ti)
+	nv.linktime = True
+	return nv
 
 
 def do_value_new(x):
@@ -1363,7 +1365,7 @@ def do_value_immediate(x, allow_ptr_to_str=False):
 		if allow_ptr_to_str:
 			if v.type.is_pointer_to_str():
 				return v
-		error("expected immediate value", x['ti'])
+		error("expected immediate value2", x['ti'])
 		return ValueBad(x['ti'])
 
 	return v
@@ -1886,13 +1888,15 @@ def def_const(x):
 	iv = nv.init_value
 
 	if not isinstance(iv, ValueUndef):
-		if not (iv.isImmediate() or iv.linktime):
-			error("expected immediate value", iv.ti)
+		if not iv.isImmediate() and not iv.linktime:
+			print(iv.linktime)
+			error("expected immediate value3", iv.ti)
 
 	nv.id.prefix = global_prefix
 
 	is_public = x['access_modifier'] == 'public'
-	cmodule_value_add(nv.id.str, nv, is_public=is_public)
+	ctx_value_add(nv.id.str, nv, is_public=is_public)
+	nv.is_global_flag = True
 
 	definition = StmtDefConst(nv.id, nv, iv, x['ti'])
 	definition.parent = cmodule
@@ -1978,7 +1982,9 @@ def def_var(x):
 	# error: no type, no init valuetu = type_is_incompleted(t)
 	if tu == True and vu == True:
 		# ERROR: type & value undefined
-		ctx_value_add(id.str, ValueBad(x['ti']))
+		v = ValueBad(x['ti'])
+		v.is_global_flag = True
+		ctx_value_add(id.str, v)
 		return StmtBad(x)
 
 	elif tu == True and vu == False:
@@ -2018,7 +2024,10 @@ def def_var(x):
 
 	var_value = ValueVar(t, id, init_value=init_value, ti=id.ti)
 	var_value.storage_class = VALUE_STORAGE_CLASS_GLOBAL
-	cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
+
+	#cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
+	ctx_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
+	var_value.is_global_flag = True
 
 
 	definition.value = var_value
@@ -2411,27 +2420,31 @@ def pre_imp(ast):
 				t.id = id
 				t.parent = cmodule
 				ctx_type_add(id.str, t, is_public=is_public)
+				t.is_global_flag = True
 
 			elif kind == 'func':
 				# Create function value with incomplete type
 				t = Type(x['ti'])  # Incomplete type (!)
 				v = ValueFunc(t, id, x['ti'])
 				v.parent = cmodule
-				cmodule_value_add(id.str, v, is_public=is_public)
+				ctx_value_add(id.str, v, is_public=is_public)
+				v.is_global_flag = True
 
 			elif kind == 'const':
 				t = Type(x['ti'])  # Incomplete type (!)
 				iv = ValueUndef(ti=x['ti'])
 				v = ValueConst(t, id, init_value=iv, ti=x['ti'])
 				v.parent = cmodule
-				cmodule_value_add(id.str, v, is_public=is_public)
+				ctx_value_add(id.str, v, is_public=is_public)
+				v.is_global_flag = True
 
 			elif kind == 'var':
 				t = Type(x['ti'])  # Incomplete type (!)
 				iv = ValueUndef(ti=x['ti'])
 				v = ValueVar(t, id, init_value=iv, ti=x['ti'])
 				v.parent = cmodule
-				cmodule_value_add(id.str, v, is_public=is_public)
+				ctx_value_add(id.str, v, is_public=is_public)
+				v.is_global_flag = True
 
 
 def pre_def(ast, is_include=False):
@@ -2465,7 +2478,8 @@ def pre_def(ast, is_include=False):
 					t.kind = TYPE_KIND_POINTER
 				# TODO: продолжи
 
-				cmodule_type_add(id['str'], t, is_public=is_public)
+				ctx_type_add(id['str'], t, is_public=is_public)
+				t.is_global_flag = True
 
 			elif kind == 'func':
 				# Create function value with incomplete type
@@ -2482,7 +2496,8 @@ def pre_def(ast, is_include=False):
 
 				if not is_include:
 					v.parent = cmodule
-				cmodule_value_add(id['str'], v, is_public=is_public)
+				ctx_value_add(id['str'], v, is_public=is_public)
+				v.is_global_flag = True
 
 
 def def_def(ast, is_include=False):

@@ -26,9 +26,13 @@ def value_array_create(items, ti=None):
 	# если хотя бы один элемент - не immediate
 	# -> весь массив - не immediate
 	is_immediate = True
+	is_linktime = False
 	for item in items:
 		if item.isRuntimeValue():
 			is_immediate = False
+
+		if item.linktime:
+			is_linktime = True
 
 	# Получаем наиболее подходящий общий тип элементов массива
 	items_type = items[0].type
@@ -43,6 +47,7 @@ def value_array_create(items, ti=None):
 	v = _value_array_create(casted_items, items_type, length, is_generic=True, ti=ti)
 
 	v.immediate = is_immediate  #TODO: need to implement 'immediate' flag
+	v.linktime = is_linktime
 	return v
 
 
