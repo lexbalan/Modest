@@ -1317,8 +1317,8 @@ def do_value_integer(x):
 	v = value_number_create(num, ti=x['ti'])
 	v.nsigns = num_string_len
 
-	#if base == 16:
-	#	v.addAttribute('hexadecimal')
+	if base == 16:
+		v.addAnnotation('hexadecimal', {})
 
 	return v
 

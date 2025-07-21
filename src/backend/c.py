@@ -866,7 +866,8 @@ def str_value_cons(x, ctx):
 	if isinstance(value, ValueLiteral):
 		if from_type.is_generic():
 			if x.asset != None:
-				return str_value_literal2(type, x.asset)
+				as_hex = value.type.is_word() or value.hasAttribute2('hexadecimal')
+				return str_value_literal_with_type(x, type, as_hex=as_hex)
 
 	# *RecordA -> *RecordB
 	# у нас типы структурные, а в си - номинальные
@@ -1173,27 +1174,22 @@ def str_literal_float(num):
 
 
 def str_literal_pointer(type, num):
-	sstr = ''
 	if num == 0:
-		sstr += "NULL"
-	else:
-		sstr += "(("
-		sstr += str_type(type)
-		sstr += ")"
-		sstr += "0x%08X)" % num
-	return sstr
+		return "NULL"
+	return "((" + str_type(type) + ")0x%08X)" % num
 
 
 def str_value_literal(x, ctx):
-	return str_value_literal2(x.type, x.asset)
+	return str_value_literal_with_type(x, x.type)
 
 
-def str_value_literal2(t, asset):
+def str_value_literal_with_type(x, t, as_hex=False):
+	asset = x.asset
+
 	if t.is_arithmetical() or t.is_number() or t.is_word():
-		#if hasattr(x, 'nsigns'):
-		#	nsigns = x.nsigns
-		#return str_literal_number(t, asset, is_hex=x.hasAttribute('hexadecimal'))
-		return str_literal_number(t, asset, is_hex=t.is_word())
+		as_hex = as_hex or x.type.is_word() or x.hasAttribute2('hexadecimal')
+		return str_literal_number(t, asset, is_hex=as_hex)
+
 	elif t.is_float():
 		return str_literal_float(asset)
 	elif t.is_string():

@@ -22,7 +22,7 @@ int main() {
 	printf("x1 = %llx\n", y1)*/
 
 
-	const uint8_t a = 255;
+	const uint8_t a = 0xFF;
 	const uint32_t b = (uint32_t)a;
 	printf("a = %u\n", a);
 	printf("b = %u\n", b);
