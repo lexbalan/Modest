@@ -70,6 +70,7 @@ class Type(Entity):
 		self.ti = None
 		self.incomplete = True
 		self.definition = None
+		self.is_global_flag = True
 
 		self.parent_type = None
 		# особое поле - если оно ненулевое значит это distinct тип
