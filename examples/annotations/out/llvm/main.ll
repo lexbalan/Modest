@@ -204,7 +204,7 @@ declare void @perror(%ConstCharStr* %str)
 ; but not compatible with anything else (e.g. between them)
 %MyInt32_2 = type %MyInt32;
 %MyInt32_3 = type %MyInt32;
-@vvb = internal global %Bool 1
+@vvb = internal global %Int32 1
 %ProtocolHeader = type <{
 	%Word16,
 	%Nat16

@@ -18,8 +18,8 @@ type MyInt32_2 = @distinct @refined MyInt32
 type MyInt32_3 = @distinct @refined MyInt32
 
 
-const cvb: Bool = true
-var vvb: Bool = true
+const cvb = Int32 0
+var vvb = Int32 1
 
 
 type ProtocolHeader = @packed record {

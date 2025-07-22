@@ -17,8 +17,8 @@ type MyInt32_2 = @refined MyInt32
 type MyInt32_3 = @refined MyInt32
 
 
-const cvb = @volatile Bool true
-var vvb = @volatile Bool true
+const cvb = @volatile Int32 0
+var vvb = @volatile Int32 1
 
 
 type ProtocolHeader = @packed record {
