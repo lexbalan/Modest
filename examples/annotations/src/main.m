@@ -59,11 +59,6 @@ var vb: @volatile []Bool
 
 
 func boolFunction (x: Bool) -> Bool {
-
-	type LocalRecord = record {
-		x: Int32
-	}
-
 	if x {
 		return true
 	} else {
