@@ -54,7 +54,7 @@ __attribute__((unused))
 static uint64_t u2;
 
 static uint32_t *restrict rp;
-static volatile bool vb[];
+static volatile bool vb[32];
 
 static bool boolFunction(bool x) {
 	if (x) {

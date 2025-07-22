@@ -15,7 +15,7 @@ type SHA256_TestCase = record {
 }
 
 
-var test0 = SHA256_TestCase {
+var test0: SHA256_TestCase = SHA256_TestCase {
 	input_data = "abc"
 	input_data_len = 3
 	expected_result = [
@@ -26,7 +26,7 @@ var test0 = SHA256_TestCase {
 	]
 }
 
-var test1 = SHA256_TestCase {
+var test1: SHA256_TestCase = SHA256_TestCase {
 	input_data = "Hello World!"
 	input_data_len = 12
 	expected_result = [

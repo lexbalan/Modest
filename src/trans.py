@@ -1463,59 +1463,16 @@ def do_stmt_const(x):
 
 def do_stmt_var(x):
 	global cfunc
-	var_id = Id(x['id'])
-	t = None
-	if x['type'] != None:
-		t = do_type(x['type'])
+	df = def_var(x)
 
-	v = do_rvalue(x['init_value'])
+	df.id.prefix = None
+	df.value.id.prefix = None
+	df.module = None
 
-	tu = t == None
-	vu = v.isUndef()
-
-	# error: no type, no init valuetu = type_is_incompleted(t)
-	if tu == True and vu == True:
-		# type & value undefined
-		ctx_value_add(var_id.str, ValueBad(x['ti']), is_public=False)
-		return StmtBad(x)
-
-	if tu == True and vu == False:
-		# type undef, value ok
-		#Type.update(nt, v.type)
-		if v.type.is_generic():
-			error("variable with generic type", x['ti'])
-			v = value_cons_default(v)
-		t = Type.reborn(v.type)
-
-	#if not t.is_incompleted():
-	#	if t.is_bad():
-	#		ctx_value_add(var_id.str, ValueBad(x['ti']))
-	#		return StmtBad(x)
-	#
-		if t.is_forbidden_var():
-			error("unsuitable type1", x['type']['ti'])
-
-	# type & init value present
-	if t != None and not v.isUndef():
-		v = value_cons_implicit_check(t, v)
-
-	if t == None:
-		if v.type.is_generic():
-			v = value_cons_default(v)
-
-		t = Type.reborn(v.type)
-
-	# check if identifier is free (in current block)
-	already = ctx_value_get(var_id.str, shallow=True)
-	if already != None:
-		error("local id redefinition", x['id']['ti'])
-		info("firstly defined here", already.id.ti)
-		return StmtBad(x)
-
-	var_value = add_local_var(var_id, t, var_id.ti)
-	definition = StmtDefVar(var_id, var_value, v, ti=x['ti'])
-	definition.parent = cfunc
-	return definition
+	df.value.storage_class = VALUE_STORAGE_CLASS_LOCAL
+	df.value.is_global_flag = False
+	df.parent = cfunc
+	return df
 
 
 
@@ -1929,8 +1886,8 @@ def def_var(x):
 	global global_prefix
 
 	id = Id(x['id'])
-	log("def_var %s" % id.str)
 	id.prefix = global_prefix
+	log("def_var %s" % id.str)
 
 	# already defined? (check identifier)
 	already = ctx_value_get(id.str)
@@ -1946,72 +1903,84 @@ def def_var(x):
 			error("public variables are forbidden", x['ti'])
 
 	definition.nl = x['nl']
+	prev_cdef = cdef
 	cdef = definition
 
 	t = None
 	if x['type'] != None:
 		t = do_type(x['type'])
-	v = do_rvalue(x['init_value'])
+
+	iv = do_rvalue(x['init_value'])
 
 	tu = t == None
-	vu = v.isUndef()
+	vu = iv.isUndef()
 
 	# error: no type, no init valuetu = type_is_incompleted(t)
 	if tu == True and vu == True:
 		# ERROR: type & value undefined
-		v = ValueBad(x['ti'])
-		v.is_global_flag = True
-		ctx_value_add(id.str, v, is_public=x['access_modifier']=='public')
+		nv = ValueBad(x['ti'])
+		ctx_value_add(id.str, nv, is_public=x['access_modifier']=='public')
 		return StmtBad(x)
 
 	elif tu == True and vu == False:
 		# type undef, value ok
-
-		#Type.update(nt, v.type)
-		v = value_cons_default(v)
-		t = Type.copy(v.type)
+		#if iv.type.is_generic():
+		#	error("variable with generic type", x['ti'])
+		iv = value_cons_default(iv)
+		t = Type.reborn(iv.type)
 
 	elif tu == False and vu == False:
 		# type ok, value ok
 
 		if t.is_open_array():
-			if v.type.is_string():
+			if iv.type.is_string():
 				# for case:
 				# var arrayFromString: []Char8 = "abc"
-				str_length = len(v.asset)
+				str_length = len(iv.asset)
 				volume = value_number_create(str_length)
 				t = TypeArray(t.of, volume, ti=x['ti'])
-			elif v.type.is_array():
+			elif iv.type.is_array():
 				# for case:
 				# var a: []*Str8 = ["Ab", "aB", "AAb"]
 
-				volume = value_number_create(v.type.volume.asset)
+				volume = value_number_create(iv.type.volume.asset)
 				t = TypeArray(t.of, volume, ti=x['ti'])
 				#v = value_cons_default(v)
 				#t = Type.copy(v.type)
 
-		v = value_cons_implicit_check(t, v)
+		iv = value_cons_implicit_check(t, iv)
 
-	elif tu == False and vu == True:
-		# type ok, value undef
-		# пропишем тип для v
-		v.type = t
+#	elif tu == False and vu == True:
+#		# type ok, value undef
+#		# пропишем тип для v
+#		iv.type = t
+	# type & init value present
+	if t != None and not iv.isUndef():
+		iv = value_cons_implicit_check(t, iv)
 
-	init_value = v
+	if t == None:
+		if iv.type.is_generic():
+			iv = value_cons_default(iv)
 
-	var_value = ValueVar(t, id, init_value=init_value, ti=id.ti)
+		t = Type.reborn(iv.type)
+
+	if t.is_forbidden_var():
+		error("unsuitable type1", x['type']['ti'])
+
+	var_value = ValueVar(t, id, init_value=iv, ti=id.ti)
 	var_value.storage_class = VALUE_STORAGE_CLASS_GLOBAL
 
 	#cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 	ctx_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 	var_value.is_global_flag = True
 
-
 	definition.value = var_value
-	definition.init_value = init_value
-	var_value.parent = cmodule
+	definition.init_value = iv
 	var_value.definition = definition
-	cdef = None
+
+	#var_value.parent = cmodule
+
+	cdef = prev_cdef
 	return definition
 
 

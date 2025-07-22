@@ -131,7 +131,7 @@ type AnimationPoint = record {
 	time: Nat32
 }
 
-var ap = AnimationPoint {
+var ap: AnimationPoint = AnimationPoint {
 	color = {
 		red = 200
 		green = 0
@@ -215,7 +215,7 @@ type Wrap = record {
 	fop: *(a: Int32, b: Int32) -> Int32
 }
 
-var wrap0 = Wrap {
+var wrap0: Wrap = Wrap {
 	fhi = &hi
 	fop = &add
 }

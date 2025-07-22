@@ -55,7 +55,7 @@ public const const0 = 0
 
 
 var rp: @restrict *Word32
-var vb: @volatile []Bool
+var vb: @volatile [32]Bool
 
 
 func boolFunction (x: Bool) -> Bool {
