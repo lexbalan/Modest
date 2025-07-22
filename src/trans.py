@@ -1467,7 +1467,8 @@ def do_stmt_var(x):
 
 	df.id.prefix = None
 	df.value.id.prefix = None
-	df.module = None
+	#df.module = None
+	#df.access_level = mass
 
 	df.value.storage_class = VALUE_STORAGE_CLASS_LOCAL
 	df.value.is_global_flag = False

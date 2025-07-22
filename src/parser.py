@@ -1402,14 +1402,14 @@ class Parser:
 	#
 
 	def stmt_let(self):
-		x = self.parse_stmt_xvar()[0]
+		x = self.parse_stmt_xvar(access_modifier='private')[0]
 		x['isa'] = 'ast_stmt'
 		x['kind'] = 'const'
 		return x
 
 
 	def stmt_var(self):
-		xx = self.parse_stmt_xvar()
+		xx = self.parse_stmt_xvar(access_modifier='private')
 		return xx
 
 
@@ -1812,7 +1812,7 @@ class Parser:
 		}
 
 
-	def parse_stmt_xvar(self):
+	def parse_stmt_xvar(self, access_modifier='public'):
 		ti = self.ti()
 		id = self.identifier()
 
@@ -1843,7 +1843,7 @@ class Parser:
 				'type': t,
 				'init_value': init_value,
 
-				'access_modifier': 'public',
+				'access_modifier': access_modifier,
 				'anno': [],
 				'nl': 1,
 				'ti': ti
