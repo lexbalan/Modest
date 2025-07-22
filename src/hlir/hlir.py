@@ -11,7 +11,6 @@ class Module:
 		self.ast = ast
 		self.prefix = None
 		self.strings = []   # for LLVM backend
-		self.records = []   # for C backend
 		self.anon_recs = [] # anonymous records for C backend
 		self.imports = {}   # '<import_id>' => {'isa': 'module'}
 		self.included_modules = []

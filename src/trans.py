@@ -1824,6 +1824,8 @@ def def_type(x, nt):
 	definition.parent = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
+
+	prev_cdef = cdef
 	cdef = definition
 
 	ty = do_type(x['type'])
@@ -1848,10 +1850,7 @@ def def_type(x, nt):
 	nt.parent = cmodule  # добавляем заново тк очистили его выше!
 	nt.ti_def = id.ti
 
-	if ty.is_record():
-		cmodule.records.append(nt)
-
-	cdef = None
+	cdef = prev_cdef
 	return definition
 
 
