@@ -1529,6 +1529,7 @@ class Parser:
 			s = self.stmt_break()
 		elif self.match('type'):
 			s = self.parse_def_type()
+			s['access_modifier'] = 'private'
 		elif self.match('const'):
 			s = self.stmt_let()
 		elif self.match('++'):

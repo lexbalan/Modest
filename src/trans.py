@@ -1590,9 +1590,7 @@ def do_stmt_return(x):
 
 
 def do_stmt_type(x):
-	#mass
-	#fatal("do_stmt_type() not implemented")
-	return def_type(x, is_global=False)
+	return def_type_local(x)
 
 
 def do_stmt_again(x):
@@ -1797,32 +1795,34 @@ def do_stmt_block(x, parent=None):
 
 
 
+def def_type_global(x):
+	# глобальный тип уже был задекларирован при первом проходе,
+	# теперь доопределяем его
+	nt = ctx_type_get(x['id']['str'])
+	if not nt.is_incompleted():
+		error("type redefinition", x['ti'])
+		return None
+	return def_type(x, nt)
 
 
-def def_type(x, is_global=True):
+def def_type_local(x):
+	nt = Type(x['ti'])
+	return def_type(x, nt)
+
+
+def def_type(x, nt):
 	global cmodule
 	global cdef
 	global global_prefix
 
 	id = Id(x['id'])
-	log("def_type: %s" % id.str)
 	id.prefix = global_prefix
-
-	if is_global:
-		# глобальный тип уже был задекларирован при первом проходе,
-		# теперь определяем его
-		nt = ctx_type_get(id.str)
-		if not nt.is_incompleted():
-			error("type redefinition", x['ti'])
-			return None
-	else:
-		# for local type definition
-		nt = Type(x['ti'])  # Incomplete type (!)
+	log("def_type: %s" % id.str)
 
 	definition = StmtDefType(id, nt, None, x['ti'])
 	definition.module = cmodule
 	definition.parent = cmodule
-	definition.access_level = x['access_modifier'] if is_global else 'private'
+	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
 	cdef = definition
 
@@ -2488,7 +2488,7 @@ def def_def(ast, is_include=False):
 		if isa == 'ast_definition':
 			df = None
 			if kind == 'type':
-				df = def_type(x)
+				df = def_type_global(x)
 			elif kind == 'const':
 				df = def_const(x)
 			elif kind == 'func':
