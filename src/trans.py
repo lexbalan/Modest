@@ -1450,41 +1450,10 @@ def do_value(x):
 
 
 def do_stmt_const(x):
-	global cfunc
-	#v = do_const(x)
-
-	id = Id(x['id'])
-
-	log("do_const: %s" % id.str)
-
-	# check if identifier is free
-	pre_exist = ctx_value_get(id.str, shallow=True)
-	if pre_exist != None:
-		error("redefinition of '%s'" % id.str, id.ti)
-
-	iv = do_rvalue(x['init_value'])
-
-	t = None
-	if x['type'] != None:
-		t = Type.copy(do_type(x['type']))
-		iv = value_cons_implicit_check(t, iv)
-
-	if t == None:
-		t = Type.reborn(iv.type)
-
-	const_value = ValueConst(t, id, init_value=iv, ti=id.ti)
-
-	if iv.isImmediate():
-		const_value.immediate = True
-		cp_immediate(const_value, iv)
-
-	#return const_value
-
-	const_value.type.addAnnotation('const', {})
-	ctx_value_add(id.str, const_value, is_public=False)
-	definition = StmtDefConst(id, const_value, iv, ti=x['ti'])
+	definition = do_stmt_const_common(x)
 	definition.parent = cfunc
-	const_value.definition = definition
+	definition.value.parent = cfunc
+	definition.value.storage_class = VALUE_STORAGE_CLASS_LOCAL
 	return definition
 
 
@@ -1841,13 +1810,10 @@ def def_type(x, nt):
 
 
 
-def def_const(x):
-	#global cdef
+# common method for global & local consts
+def do_stmt_const_common(x):
 	global cmodule
-	global global_prefix
-
 	id = Id(x['id'])
-
 	log("do_const: %s" % id.str)
 
 	# check if identifier is free
@@ -1859,7 +1825,7 @@ def def_const(x):
 
 	t = None
 	if x['type'] != None:
-		t = Type.copy(do_type(x['type']))
+		t = Type.reborn(do_type(x['type']))
 		iv = value_cons_implicit_check(t, iv)
 
 	if t == None:
@@ -1871,31 +1837,39 @@ def def_const(x):
 		const_value.immediate = True
 		cp_immediate(const_value, iv)
 
-	nv = const_value
 
-	#nv = do_const(x)
-	nv.storage_class = VALUE_STORAGE_CLASS_GLOBAL
-	iv = nv.init_value
+	const_value.type.addAnnotation('const', {})
 
-	if not isinstance(iv, ValueUndef):
-		if not iv.isImmediate() and not iv.linktime:
-			print(iv.linktime)
-			error("expected immediate value3", iv.ti)
+	ctx_value_add(id.str, const_value, is_public=x['access_modifier'] == 'public')
 
-	nv.id.prefix = global_prefix
+	definition = StmtDefConst(id, const_value, iv, x['ti'])
 
-	is_public = x['access_modifier'] == 'public'
-	ctx_value_add(nv.id.str, nv, is_public=is_public)
-	nv.is_global_flag = True
-
-	definition = StmtDefConst(nv.id, nv, iv, x['ti'])
-	definition.parent = cmodule
 	definition.module = cmodule
 	definition.access_level = x['access_modifier']
 	definition.nl = x['nl']
+	const_value.definition = definition
+	return definition
 
-	nv.parent = cmodule
-	nv.definition = definition
+
+
+def def_const(x):
+	global global_prefix
+	definition = do_stmt_const_common(x)
+
+	# TODO: centity -> instead cmodule/cfunc;
+	# rm Value#module -> tree instead
+	definition.parent = cmodule
+	definition.value.parent = cmodule
+
+	definition.value.is_global_flag = True
+	definition.value.storage_class = VALUE_STORAGE_CLASS_GLOBAL
+
+	definition.id.prefix = global_prefix
+
+	iv = definition.init_value
+	if not isinstance(iv, ValueUndef):
+		if not iv.isImmediate() and not iv.linktime:
+			error("expected immediate value3", iv.ti)
 
 	return definition
 

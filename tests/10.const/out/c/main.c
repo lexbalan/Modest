@@ -73,10 +73,10 @@ static float lineLength(Line line) {
 }
 
 int main() {
-	const float lines_0_len = lineLength(((Line[4])lines)[0]);
-	const float lines_1_len = lineLength(((Line[4])lines)[1]);
-	const float lines_2_len = lineLength(((Line[4])lines)[2]);
-	const float lines_3_len = lineLength(((Line[4])lines)[3]);
+	const float lines_0_len = lineLength(((const Line[4])lines)[0]);
+	const float lines_1_len = lineLength(((const Line[4])lines)[1]);
+	const float lines_2_len = lineLength(((const Line[4])lines)[2]);
+	const float lines_3_len = lineLength(((const Line[4])lines)[3]);
 
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);
