@@ -85,16 +85,11 @@ struct Point2D {
 };
 typedef struct Point2D Point2D;
 
-#define const1  10
-#define const2  20
-
 // переопределение f не вызвало ошибку!
-
-#if (const1 < const2)
+//@conditional(const1 < const2)
 static void hello() {
 	printf("hi!\n");
 }
-#endif /* const1 < const2 */
 
 int32_t main() {
 	hello();
