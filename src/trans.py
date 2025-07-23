@@ -1825,7 +1825,7 @@ def do_stmt_const_common(x):
 
 	t = None
 	if x['type'] != None:
-		t = Type.reborn(do_type(x['type']))
+		t = Type.copy(do_type(x['type']))
 		iv = value_cons_implicit_check(t, iv)
 
 	if t == None:
