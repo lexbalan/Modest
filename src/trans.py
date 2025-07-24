@@ -1959,8 +1959,9 @@ def def_var(x):
 
 		t = Type.reborn(iv.type)
 
-	if t.is_forbidden_var():
-		error("unsuitable type1", x['type']['ti'])
+	# TODO: мешает extern []X переменным
+	#if t.is_forbidden_var():
+	#	error("unsuitable type1", x['type']['ti'])
 
 	var_value = ValueVar(t, id, init_value=iv, ti=id.ti)
 	var_value.storage_class = VALUE_STORAGE_CLASS_GLOBAL
