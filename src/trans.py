@@ -2240,8 +2240,7 @@ def do_directive(x):
 
 
 def translate(abspath, is_import=False, is_include=False):
-	#log(">>>> TRANSLATE(\"%s\")" % abspath)
-	log("\"%s\"" % abspath)
+	log("\"%s\":" % abspath)
 	log_push()
 	assert(abspath != None)
 	assert(abspath != "")
@@ -2266,7 +2265,6 @@ def translate(abspath, is_import=False, is_include=False):
 	env_current_file_dir = prev_env_current_file_dir
 
 	log_pop()
-	#log("<<<< END-TRANSLATE(\"%s\")\n" % abspath)
 	log("")
 	return m
 
