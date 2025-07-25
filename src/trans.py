@@ -74,6 +74,7 @@ modules = {}
 
 cmodule = None  # Current module
 cfunc = None	# current function
+
 context = None  # current context (symtab)
 cdef = None
 
@@ -417,7 +418,7 @@ def do_type_named(x):
 
 	# если дело происходит не в определении типа и пришел undefined тип
 	if t.is_incompleted():
-		if not isinstance(cdef, StmtDefType):
+		if not cdef.is_stmt_def_type():
 			error("forward references to non-struct type", x['ti'])
 		cdef.deps.append(t)
 
@@ -1485,13 +1486,13 @@ def do_stmt_if(x):
 
 	_then = do_stmt(x['then'])
 
-	if _then.is_bad():
+	if _then.is_stmt_bad():
 		return StmtBad(x)
 
 	_else = None
 	if x['else'] != None:
 		_else = do_stmt(x['else'])
-		if _else.is_bad():
+		if _else.is_stmt_bad():
 			return StmtBad(x['else'])
 
 	return StmtIf(cond, _then, _else, ti=x['ti'])
@@ -1510,7 +1511,7 @@ def do_stmt_while(x):
 
 	block = do_stmt(x['stmt'])
 
-	if block.is_bad():
+	if block.is_stmt_bad():
 		return StmtBad(x)
 
 	return StmtWhile(cond, block, ti=x['ti'])
@@ -1739,7 +1740,7 @@ def do_stmt_block(x, parent=None):
 	stmts = []
 	for stmt in x['stmts']:
 		s = do_stmt(stmt)
-		if not s.is_bad():
+		if not s.is_stmt_bad():
 			s.parent = block
 			block.stmts.append(s)
 
@@ -2045,7 +2046,7 @@ def def_func(x):
 			if len(stmts) == 0:
 				warning("expected return operator at end", stmt.ti)
 			#elif stmts[-1]['kind'] != 'return':
-			elif not isinstance(stmts[-1], StmtReturn):
+			elif not stmts[-1].is_stmt_return():
 				warning("expected return operator at end", stmt.ti)
 
 	fn.definition.stmt = stmt

@@ -4,6 +4,7 @@
 
 from .entity import Entity
 
+
 class Stmt(Entity):
 	def __init__(self, ti, nl=1):
 		super().__init__(ti)
@@ -11,8 +12,48 @@ class Stmt(Entity):
 		self.att = []
 		self.nl = nl
 
-	def is_bad(self):
+	def is_stmt_bad(self):
 		return False
+
+	def is_stmt_block(self):
+		return isinstance(self, StmtBlock)
+
+	def is_stmt_value_expr(self):
+		return isinstance(self, StmtValueExpression)
+
+	def is_stmt_assign(self):
+		return isinstance(self, StmtAssign)
+
+	def is_stmt_return(self):
+		return isinstance(self, StmtReturn)
+
+	def is_stmt_if(self):
+		return isinstance(self, StmtIf)
+
+	def is_stmt_while(self):
+		return isinstance(self, StmtWhile)
+
+	def is_stmt_def_var(self):
+		return isinstance(self, StmtDefVar)
+
+	def is_stmt_def_const(self):
+		return isinstance(self, StmtDefConst)
+
+	def is_stmt_def_type(self):
+		return isinstance(self, StmtDefType)
+
+	def is_stmt_break(self):
+		return isinstance(self, StmtBreak)
+
+	def is_stmt_again(self):
+		return isinstance(self, StmtAgain)
+
+	def is_stmt_comment(self):
+		return isinstance(self, StmtComment)
+
+	def is_stmt_asm(self):
+		return isinstance(self, StmtAsm)
+
 
 
 class StmtBad(Stmt):
