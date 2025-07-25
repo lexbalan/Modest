@@ -74,7 +74,6 @@ modules = {}
 
 cmodule = None  # Current module
 cfunc = None	# current function
-# TODO: разберись с контекстом- сейчас он только symtab_public!
 context = None  # current context (symtab)
 cdef = None
 
