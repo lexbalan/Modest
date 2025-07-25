@@ -2109,7 +2109,7 @@ def check_stmt(stmt):
 #skipp = False
 #prev_skipp = False
 
-
+import_stack = []
 
 def do_import(x):
 	global modules
@@ -2139,6 +2139,27 @@ def do_import(x):
 		error("module %s not found" % impline, import_expr.ti)
 		return None
 
+	# recursive import protection
+	err = False
+	pos = 0
+	kk = [abspath, cmodule.sourcename, _as]
+	ii = len(import_stack) - 1
+	while ii >= 0:
+		im = import_stack[ii]
+		if im[0] == abspath:
+			err = True
+			pos = ii
+		ii -= 1
+	if err:
+		error("recursive import detected", x['ti'])
+		j = pos
+		while j < len(import_stack):
+			print("    " * (j-pos) + "`-> %s (from '%s')" % (import_stack[j][2], import_stack[j][1]))
+			j += 1
+		fatal("recursive import '%s'" % abspath)
+	import_stack.append(kk)
+
+
 	m = None
 
 	# Seek in global modules pool
@@ -2159,6 +2180,9 @@ def do_import(x):
 		if m.hasAttribute('c_no_print'):
 			for xx in m.defs:
 				xx['anno'].append('c_no_print')
+
+	# recursive import protection
+	import_stack.remove(kk)
 
 	if x['include']:
 		# INCLUDE
@@ -2239,7 +2263,7 @@ def translate(abspath, is_import=False, is_include=False):
 	m = None
 	if ast != None:
 		idStr = abspath.split('/')[-1][:-2]
-		m = process_module(idStr, ast, is_import=is_import, is_include=is_include)
+		m = process_module(idStr, abspath, ast, is_import=is_import, is_include=is_include)
 		m.prefix = m.id
 		m.source_abspath = abspath
 
@@ -2251,7 +2275,7 @@ def translate(abspath, is_import=False, is_include=False):
 
 
 
-def process_module(idStr, ast, is_import=False, is_include=False):
+def process_module(idStr, sourcename, ast, is_import=False, is_include=False):
 	global skipp, production
 
 	global cmodule
@@ -2267,7 +2291,7 @@ def process_module(idStr, ast, is_import=False, is_include=False):
 		'private': symtab_private
 	}
 
-	cmodule = Module(idStr, ast, symtab_public, symtab_private)
+	cmodule = Module(idStr, ast, symtab_public, symtab_private, sourcename)
 
 	# 0. do imports & directives
 	while len(ast) > 0:

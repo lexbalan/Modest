@@ -6,8 +6,9 @@ from .value import *
 
 
 class Module:
-	def __init__(self, idStr, ast, symtab_public, symtab_private):
+	def __init__(self, idStr, ast, symtab_public, symtab_private, sourcename):
 		self.id = idStr
+		self.sourcename = sourcename
 		self.ast = ast
 		self.prefix = None
 		self.strings = []   # for LLVM backend

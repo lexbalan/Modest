@@ -27,6 +27,9 @@ COLOR_WARNING = BLUE #MAGENTA
 COLOR_ERROR = RED
 
 
+preColor = BOLD
+
+
 SIMPLE_MARK = True
 
 #
@@ -107,7 +110,7 @@ def common_message(mg, color, s, ti=None):
 				ti = ti['ti']
 		pre = '\n%s:%d:%d:\n' % (ti['file'], ti['start_position']['line'], ti['start_position']['pos'])
 
-	print(pre + colorize(mg, color) + s)
+	print(colorize(pre, preColor) + colorize(mg, color) + s)
 
 	if ti != None:
 		prelin = "%d |" % ti['start_position']['line']
