@@ -1772,7 +1772,6 @@ def def_type(x, nt):
 
 	id = Id(x['id'])
 	id.prefix = global_prefix
-	log("def_type: %s" % id.str)
 
 	definition = StmtDefType(id, nt, None, x['ti'])
 	definition.module = cmodule
@@ -1814,7 +1813,6 @@ def def_type(x, nt):
 def do_stmt_const_common(x):
 	global cmodule
 	id = Id(x['id'])
-	log("do_const: %s" % id.str)
 
 	# check if identifier is free
 	pre_exist = ctx_value_get(id.str, shallow=True)
@@ -1882,7 +1880,6 @@ def def_var(x):
 
 	id = Id(x['id'])
 	id.prefix = global_prefix
-	log("def_var %s" % id.str)
 
 	# already defined? (check identifier)
 	already = ctx_value_get(id.str)
@@ -1986,8 +1983,6 @@ def def_func(x):
 	global cfunc
 	global cmodule
 	global global_prefix
-
-	log('def_func: %s' % x['id']['str'])
 
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
@@ -2133,7 +2128,7 @@ def do_import(x):
 
 	abspath = get_import_abspath(impline, ext='.m')
 
-	log('do_import("%s")' % impline)
+	#log('do_import("%s")' % impline)
 
 	if abspath == None:
 		error("module %s not found" % impline, import_expr.ti)
@@ -2245,7 +2240,8 @@ def do_directive(x):
 
 
 def translate(abspath, is_import=False, is_include=False):
-	log(">>>> TRANSLATE(\"%s\")" % abspath)
+	#log(">>>> TRANSLATE(\"%s\")" % abspath)
+	log("\"%s\"" % abspath)
 	log_push()
 	assert(abspath != None)
 	assert(abspath != "")
@@ -2270,7 +2266,8 @@ def translate(abspath, is_import=False, is_include=False):
 	env_current_file_dir = prev_env_current_file_dir
 
 	log_pop()
-	log("<<<< END-TRANSLATE(\"%s\")\n" % abspath)
+	#log("<<<< END-TRANSLATE(\"%s\")\n" % abspath)
+	log("")
 	return m
 
 
@@ -2472,6 +2469,10 @@ def def_def(ast, is_include=False):
 	for x in ast:
 		isa = x['isa']
 		kind = x['kind']
+
+		# for verbose mode
+		if not x['isa'] in ['ast_comment', 'ast_directive', 'ast_import']:
+			log("define %s %s" % (x['kind'], x['id']['str']))
 
 		if isa == 'ast_definition':
 			df = None
