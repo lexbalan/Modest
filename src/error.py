@@ -132,9 +132,9 @@ def log_pop():
 	log_ind = log_ind - 1
 
 def log(s):
+	global log_ind
 	if verbose_mode:
-		global log_ind
-		print('  ' * log_ind + s)
+		print(('  ' * log_ind) + s)
 
 
 
