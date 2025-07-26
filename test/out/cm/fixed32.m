@@ -2,7 +2,7 @@ include "stdio"
 
 
 
-public type Fixed32 = Word32
+public type Fixed32 = @distinct Word32
 
 
 const base = 65536

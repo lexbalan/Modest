@@ -107,21 +107,14 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: lib
+; MODULE: lib2
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'lib' --
-; -- 1
-
-; from import "lib2"
-
-; end from import "lib2"
-; -- end print imports 'lib' --
+; -- print imports 'lib2' --
+; -- 0
+; -- end print imports 'lib2' --
 ; -- strings --
-; -- endstrings --;
-; * lib.m
-; 
-%lib_PublicType = type %Int32;
-%PrivateType = type %Int32;
+; -- endstrings --
+;import "lib"
 

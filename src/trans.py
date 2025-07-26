@@ -773,7 +773,7 @@ def do_value_deref(x):
 
 def sort_args(params, args):
 	# выходной вектор в котором лежат отсортированные аргументы
-	# в порядке их реальной преедачи в функцию
+	# в порядке их реальной передачи в функцию
 	outvec = []
 
 	# получаем направляющий вектор
@@ -1458,7 +1458,7 @@ def do_value(x):
 
 
 def do_stmt_const(x):
-	definition = do_stmt_const_common(x)
+	definition = def_const_common(x)
 	definition.parent = cfunc
 	definition.value.parent = cfunc
 	definition.value.storage_class = VALUE_STORAGE_CLASS_LOCAL
@@ -1468,7 +1468,7 @@ def do_stmt_const(x):
 
 def do_stmt_var(x):
 	global cfunc
-	df = def_var(x)
+	df = def_var_common(x)
 
 	df.id.prefix = None
 	df.value.id.prefix = None
@@ -1553,7 +1553,8 @@ def do_stmt_return(x):
 
 
 def do_stmt_type(x):
-	return def_type_local(x)
+	nt = Type(x['ti'])
+	return def_type_common(x, nt)
 
 
 def do_stmt_again(x):
@@ -1758,22 +1759,9 @@ def do_stmt_block(x, parent=None):
 
 
 
-def def_type_global(x):
-	# глобальный тип уже был задекларирован при первом проходе,
-	# теперь доопределяем его
-	nt = ctx_type_get(x['id']['str'])
-	if not nt.is_incompleted():
-		error("type redefinition", x['ti'])
-		return None
-	return def_type(x, nt)
 
 
-def def_type_local(x):
-	nt = Type(x['ti'])
-	return def_type(x, nt)
-
-
-def def_type(x, nt):
+def def_type_common(x, nt):
 	global cmodule
 	global cdef
 	global global_prefix
@@ -1816,9 +1804,21 @@ def def_type(x, nt):
 	return definition
 
 
+def def_type_global(x):
+	# глобальный тип уже был задекларирован при первом проходе,
+	# теперь доопределяем его
+	nt = ctx_type_get(x['id']['str'])
+	if not nt.is_incompleted():
+		error("type redefinition", x['ti'])
+		return None
+	return def_type_common(x, nt)
+
+
+
+
 
 # common method for global & local consts
-def do_stmt_const_common(x):
+def def_const_common(x):
 	global cmodule
 	id = Id(x['id'])
 
@@ -1858,9 +1858,9 @@ def do_stmt_const_common(x):
 
 
 
-def def_const(x):
+def def_const_global(x):
 	global global_prefix
-	definition = do_stmt_const_common(x)
+	definition = def_const_common(x)
 
 	# TODO: centity -> instead cmodule/cfunc;
 	# rm Value#module -> tree instead
@@ -1881,18 +1881,12 @@ def def_const(x):
 
 
 
-
-def def_var(x):
+def def_var_common(x):
 	global cdef
 	global global_prefix
 
 	id = Id(x['id'])
 	id.prefix = global_prefix
-
-	# already defined? (check identifier)
-	already = ctx_value_get(id.str)
-	if already != None:
-		error("redefinition of '%s'" % id.str, id.ti)
 
 	definition = StmtDefVar(id, None, None, x['ti'])
 	definition.module = cmodule
@@ -1986,6 +1980,16 @@ def def_var(x):
 
 	cdef = prev_cdef
 	return definition
+
+
+def def_var_global(x):
+	# already defined? (check identifier)
+	already = ctx_value_get(x['id']['str'])
+	if already != None:
+		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+
+	return def_var_common(x)
+
 
 
 
@@ -2488,11 +2492,11 @@ def def_def(ast, is_include=False):
 			if kind == 'type':
 				df = def_type_global(x)
 			elif kind == 'const':
-				df = def_const(x)
+				df = def_const_global(x)
 			elif kind == 'func':
 				df = def_func(x)
 			elif kind == 'var':
-				df = def_var(x)
+				df = def_var_global(x)
 
 			if df != None:
 				df = add_spices_def(df, x['anno'])

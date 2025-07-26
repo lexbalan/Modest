@@ -95,7 +95,7 @@ func testFixed () -> Unit {
 }
 
 
-type NewType = Int32
+type NewType = @distinct Int32
 const newZero = NewType 0
 const newOne = NewType 1
 const newTwo = NewType 2

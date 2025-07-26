@@ -221,6 +221,10 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- print imports 'main' --
 ; -- 2
 
+; from import "lib2"
+
+; end from import "lib2"
+
 ; from import "lib"
 %lib_PublicType = type %Int32;
 
