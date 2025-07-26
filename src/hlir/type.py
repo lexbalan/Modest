@@ -502,28 +502,28 @@ class Type(Entity):
 
 
 	# cannot create variable with type
-	def is_forbidden_var(self, zero_array_forbidden=True):
-		t = self
-		if t.is_incompleted() or t.is_unit() or t.is_func():
+	def is_forbidden_var(self, open_array_forbidden=True, zero_array_forbidden=True):
+
+		if self.is_incompleted() or self.is_unit() or self.is_func():
 			return True
 
-		if t.is_array():
+		if self.is_array():
 			# [_]<Forbidden>
-			if t.of.is_forbidden_var():
+			if self.of.is_forbidden_var():
 				return True
 
-			# []Int
-			if t.is_open_array():
-				return True
+			# []Int32
+			if self.is_open_array():
+				return open_array_forbidden
 
 			# [0]Int
 			from trans import is_unsafe_mode
-			if zero_array_forbidden or not is_unsafe_mode():
-				if t.volume.isImmediate():
-					if t.volume.asset == 0:
-						return True
+			if not is_unsafe_mode():
+				if self.volume.isImmediate():
+					if self.volume.asset == 0:
+						return zero_array_forbidden
 
-			return t.of.is_forbidden_var()
+			return self.of.is_forbidden_var()
 
 		return False
 

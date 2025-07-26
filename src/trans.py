@@ -41,6 +41,15 @@ def is_local_entity(x):
 
 
 
+# Аннотация есть в ast объекте
+def getAnno(x, aname):
+	for a in x['anno']:
+		if a['kind'] == aname:
+			return a
+	return None
+
+
+
 
 
 def is_local_context():
@@ -1956,9 +1965,12 @@ def def_var(x):
 
 		t = Type.reborn(iv.type)
 
-	# TODO: мешает extern []X переменным
-	#if t.is_forbidden_var():
-	#	error("unsuitable type1", x['type']['ti'])
+
+
+	# Переменная может быть типа []X если она внешняя
+	is_not_extern = getAnno(x, 'extern') == None
+	if t.is_forbidden_var(open_array_forbidden=is_not_extern):
+		error("unsuitable type", x['type']['ti'])
 
 	var_value = ValueVar(t, id, init_value=iv, ti=id.ti)
 	var_value.storage_class = VALUE_STORAGE_CLASS_GLOBAL

@@ -41,6 +41,8 @@ static bool name22;
 
 extern int32_t ext;
 
+extern int32_t ext_arr[];
+
 __attribute__((section("__DATA, .xdata")))
 __attribute__((aligned(8)))
 static uint32_t x;

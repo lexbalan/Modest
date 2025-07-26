@@ -40,6 +40,10 @@ var name11: Bool
 var ext: Int32
 
 
+@extern
+var ext_arr: []Int32
+
+
 
 @alignment(8)
 @section("__DATA, .xdata")
