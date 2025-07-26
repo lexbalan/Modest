@@ -2380,32 +2380,32 @@ def pre_imp(ast):
 				t = Type(x['ti'])  # Incomplete type (!)
 				t.id = id
 				t.parent = cmodule
-				ctx_type_add(id.str, t, is_public=is_public)
 				t.is_global_flag = True
+				ctx_type_add(id.str, t, is_public=is_public)
 
 			elif kind == 'func':
 				# Create function value with incomplete type
 				t = Type(x['ti'])  # Incomplete type (!)
 				v = ValueFunc(t, id, x['ti'])
 				v.parent = cmodule
-				ctx_value_add(id.str, v, is_public=is_public)
 				v.is_global_flag = True
+				ctx_value_add(id.str, v, is_public=is_public)
 
 			elif kind == 'const':
 				t = Type(x['ti'])  # Incomplete type (!)
 				iv = ValueUndef(ti=x['ti'])
 				v = ValueConst(t, id, init_value=iv, ti=x['ti'])
 				v.parent = cmodule
-				ctx_value_add(id.str, v, is_public=is_public)
 				v.is_global_flag = True
+				ctx_value_add(id.str, v, is_public=is_public)
 
 			elif kind == 'var':
 				t = Type(x['ti'])  # Incomplete type (!)
 				iv = ValueUndef(ti=x['ti'])
 				v = ValueVar(t, id, init_value=iv, ti=x['ti'])
 				v.parent = cmodule
-				ctx_value_add(id.str, v, is_public=is_public)
 				v.is_global_flag = True
+				ctx_value_add(id.str, v, is_public=is_public)
 
 
 def pre_def(ast, is_include=False):
