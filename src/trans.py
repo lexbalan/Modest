@@ -1090,11 +1090,10 @@ def submodule_access(x):
 	v = submodule.value_get_public(iname)
 	if v == None:
 		v = submodule.value_get_private(iname)
-		if v != None:
-			error("access to module private item", ti)
-
-	if v == None:
-		error("module '%s' does not have value '%s'" % (mname, iname), x['ti'])
+		if v == None:
+			error("access to undeclared value", x['ti'])
+		else:
+			error("attempt to access to private value", ti)
 		return ValueBad(x['ti'])
 
 	if v.type.is_incompleted():
