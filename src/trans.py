@@ -1906,6 +1906,13 @@ def def_var_common(x):
 
 	iv = do_rvalue(x['init_value'])
 
+	# TODO: это костыль что то надо с жтим делать
+	# (у ValueUndef тип по дефолту TypeBad - а тут нам надо чтобы был тип нашей переменной)
+	# Как это решить красиво пока не знаю...
+	# Поэтому заткнул жестко так:
+	if iv.isUndef():
+		iv.type = t
+
 	tu = t == None
 	vu = iv.isUndef()
 
