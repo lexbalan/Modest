@@ -378,6 +378,12 @@ class ValueBin(Value):
 		self.left = left
 		self.right = right
 
+		if left.isBad() or right.isBad():
+			# если один из операндов bad, то и результат тоже bad
+			self.immediate = False
+			self.asset = None
+			return
+
 		# if left & right are immediate, we can fold const
 		# and append field .asset to bin_value
 		if left.isImmediate() and right.isImmediate():

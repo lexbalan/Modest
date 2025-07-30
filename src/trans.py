@@ -634,6 +634,10 @@ def do_value_bin2(op, l, r, ti):
 	t = htype.select_common_type(l.type, r.type)
 	if t == None:
 		error("different types in operation", ti)
+		htype.type_print(l.type)
+		print()
+		htype.type_print(r.type)
+		print()
 		return ValueBad(ti)
 
 	l = value_cons_implicit(t, l)

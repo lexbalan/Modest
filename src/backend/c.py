@@ -1926,7 +1926,7 @@ def print_variable(id_str, t, init_value=None, prefix=''):
 		print_value(init_value)
 
 
-def print_def_var(x, isdecl=False):
+def print_def_var(x, isdecl=False, as_extern=False):
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
@@ -1944,20 +1944,23 @@ def print_def_var(x, isdecl=False):
 		alignment = x.getAnnotation('alignment')
 		out("__attribute__((aligned(%d)))\n" % alignment.asset)
 
+	# TODO: Почему-то атрибут 'extern' не работает, и накостылил через as_extern
+	is_extern = x.hasAttribute2('extern') or as_extern
+
 	var = x.value
 
 	if x.access_level == 'private':
-		if not (x.hasAttribute2('extern') or x.hasAttribute2('nonstatic')):
+		if not (is_extern or x.hasAttribute2('nonstatic')):
 			out("static ")
 
-	if x.hasAttribute2('extern'):
+	if is_extern:
 		out("extern ")
 
 	print_variable(get_id_str(x.value), var.type)
 
 	init_value = x.init_value
 
-	if not init_value.isUndef():
+	if not (init_value.isUndef() or is_extern):
 		out(" = ")
 		out(str_static_initializer(init_value))
 	out(";")
@@ -2181,9 +2184,7 @@ def print_header(module, outname):
 			print_decl_func(x)
 		elif isinstance(x, StmtDefVar):
 			nnl(x.nl)
-			print_deps(x.deps)
-			out("extern ")
-			print_def_var(x)
+			print_def_var(x, as_extern=True)
 		elif isinstance(x, StmtDefType):
 			nnl(x.nl)
 			print_deps(x.deps)
