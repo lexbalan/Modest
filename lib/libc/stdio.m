@@ -62,8 +62,8 @@ public func setvbuf (f: *File, buf: *CharStr, mode: Int, size: SizeT) -> Int
 public func tmpfile () -> *File
 public func tmpnam (str: *CharStr) -> *CharStr
 
-public func printf (s: *ConstCharStr, ...) -> @unused Int
-public func scanf (s: *ConstCharStr, ...) -> @unused Int
+public func printf (str: *ConstCharStr, ...) -> @unused Int
+public func scanf (str: *ConstCharStr, ...) -> @unused Int
 public func fprintf (f: *File, format: *Str, ...) -> @unused Int
 public func fscanf (f: *File, format: *ConstCharStr, ...) -> @unused Int
 public func sscanf (buf: *ConstCharStr, format: *ConstCharStr, ...) -> @unused Int

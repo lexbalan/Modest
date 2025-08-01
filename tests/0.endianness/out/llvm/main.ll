@@ -166,8 +166,8 @@ declare void @setbuf(%File* %f, %CharStr* %buf)
 declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare %Int @printf(%ConstCharStr* %s, ...)
-declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @printf(%ConstCharStr* %str, ...)
+declare %Int @scanf(%ConstCharStr* %str, ...)
 declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
@@ -194,11 +194,27 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [7 x i8] [i8 108, i8 105, i8 116, i8 116, i8 108, i8 101, i8 0]
-@str2 = private constant [4 x i8] [i8 98, i8 105, i8 103, i8 0]
-@str3 = private constant [11 x i8] [i8 37, i8 115, i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 10, i8 0]
+@str1 = private constant [11 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 37, i8 115, i8 33, i8 10, i8 0]
+@str2 = private constant [2 x i8] [i8 83, i8 0]
+@str3 = private constant [5 x i8] [i8 65, i8 108, i8 101, i8 120, i8 0]
+@str4 = private constant [7 x i8] [i8 108, i8 105, i8 116, i8 116, i8 108, i8 101, i8 0]
+@str5 = private constant [4 x i8] [i8 98, i8 105, i8 103, i8 0]
+@str6 = private constant [11 x i8] [i8 37, i8 115, i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 10, i8 0]
 ; -- endstrings --; examples/0.endianness/src/main.m
+define internal void @init(%Str* %first, %Int %mode, %Int %speed, %Int %length) {
+	;
+	ret void
+}
+
+define internal void @hello(%Str8* %name) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), %Str8* %name)
+	ret void
+}
+
 define %Int @main() {
+	call void @init(%Str* bitcast ([2 x i8]* @str2 to [0 x i8]*), %Int 1, %Int 2, %Int 4)
+	call void @hello(%Str8* bitcast ([5 x i8]* @str3 to [0 x i8]*))
+	;hello()
 	%1 = alloca %Word16, align 2
 	store %Word16 1, %Word16* %1
 	%2 = bitcast %Word16* %1 to %Word8*
@@ -209,14 +225,14 @@ define %Int @main() {
 ; if_0
 	br %Bool %5 , label %then_0, label %else_0
 then_0:
-	store %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*), %Str8** %6
+	store %Str8* bitcast ([7 x i8]* @str4 to [0 x i8]*), %Str8** %6
 	br label %endif_0
 else_0:
-	store %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8** %6
+	store %Str8* bitcast ([4 x i8]* @str5 to [0 x i8]*), %Str8** %6
 	br label %endif_0
 endif_0:
 	%7 = load %Str8*, %Str8** %6
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), %Str8* %7)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str6 to [0 x i8]*), %Str8* %7)
 	ret %Int 0
 }
 

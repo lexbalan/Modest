@@ -635,7 +635,8 @@ def str_value_call(v, ctx, sret=None):
 
 		a = args[i].value
 		param_id = args[i].id
-		if param_id != None:
+# TODO: тепреь id есть у всех, и так уже не канает
+		if args[i].named:
 			sstr += "/*%s=*/" % param_id.str
 
 

@@ -775,45 +775,6 @@ def do_value_deref(x):
 
 
 
-def sort_args(params, args):
-	# выходной вектор в котором лежат отсортированные аргументы
-	# в порядке их реальной передачи в функцию
-	outvec = []
-
-	# получаем направляющий вектор
-	vec0=[]
-	for param in params:
-		vec0.append(param.id.str)
-
-	# получаем вектор идентификаторов (или None)
-	vec1=[]
-	vec1.extend(args)
-
-	# теперь разбрасываем аргументы
-	for param_id_str in vec0:
-		# ищем аргумент с именем параметра (param_id_str)
-		k = -1 # -1 значит не найден
-		i = 0
-		while i < len(vec1):
-			item = vec1[i]
-			if item != None:
-				if item['key'] != None:
-					if item['key']['str'] == param_id_str:
-						k = i
-						break
-			i += 1
-
-		j = 0
-		if k >= 0:
-			j = k
-
-		arg = vec1[j]
-		vec1.pop(j)
-		outvec.append(arg)
-
-	return outvec
-
-
 
 def do_value_lengthof_value(x):
 	ti = x['ti']
@@ -897,83 +858,103 @@ def do_value_call(x):
 		error("expected function or pointer to function", x)
 
 	params = ftype.params
-	args = x['args']
 
 	npars = len(params)
-	nargs = len(args)
+	nargs = len(x['args'])
+#	info("nargs = %s " % nargs, x['ti'])
 
-	if nargs < npars:
-		error("not enough args", x)
-		return ValueBad(x['ti'])
+#	if nargs < npars:
+#		error("not enough arguments", x)
+#		return ValueBad(x['ti'])
 
 	if nargs > npars:
 		if not ftype.extra_args:
-			error("too many args", x)
+			error("too many arguments", x)
 			return ValueBad(x['ti'])
 
-	sorted_args = sort_args(params, x['args'])
 
+	def do_arg(param, arg, named=False):
+		arg = transmission(param.type, arg)
+		ini = Initializer(param.id, arg, named=named, ti=a['ti'], nl=a['nl'])
+		return ini
 
-	imm_args = True  # all arguments are immediate?
 
 	args = []
 
-	# normal args
+	#
+	# process positional args
+	#
+
+	# Сперва обработаем позиционные аргументы
+	# Для которых существует соотв. параметр
 	i = 0
-	while i < npars:
+	while i < nargs and i < npars:
 		param = params[i]
-		param_id_str = param.id.str
-		a = sorted_args[i]
-
-		# check param name (if assigned)
+		#p_id_str = param.id.str
+		a = x['args'][i]
 		if a['key'] != None:
-			tasrget_param_id_str = a['key']['str']
-			if tasrget_param_id_str != param_id_str:
-				error("bad parameter id", a['key']['ti'])
-
-		arg = do_rvalue(a['value'])
-
-
-		if not arg.isBad():
-			arg = transmission(param.type, arg)
-
-			if not arg.isImmediate():
-				imm_args = False
-
-			id = None
-			if a['key'] != None:
-				id = Id(a['key'])
-			args.append(Initializer(id, arg, ti=a['ti'], nl=a['nl']))
-
+			break
+		av = do_rvalue(a['value'])
+		arg = do_arg(param, av)
+		args.append(arg)
 		i += 1
 
 	#
-	# extra args
+	# process named args
+	#
+	j = i
+	while j < npars:
+		param = params[j]
+		p_id_str = param.id.str
+		k = i
+		found = False
+		while k < nargs:
+			a = x['args'][k]
+			if a['key'] == None:
+				error("positional argument follows keyword argument", a['ti'])
+				break
+			if param.id.str == a['key']['str']:
+				found = True
+				break
+			# mass
+			k += 1
+
+
+		vx = param.init_value
+		if found:
+			vx = do_rvalue(a['value'])
+		arg = do_arg(param, vx, named=True)
+		args.append(arg)
+
+		j += 1
+
+
+	#
+	# process extra args
 	#
 
-	extra_args = []
-
-	i_before_extra = i
+	i = j
 
 	# extra_args rest args
 	while i < nargs:
-		ini = x['args'][i]
-		a = ini['value']
-		argval = do_rvalue(a)
+		yy = x['args'][i]
+		a = yy['value']
+		arg = do_rvalue(a)
 
-		if not argval.isBad():
-			if argval.type.is_generic():
+		if not arg.isBad():
+			if arg.type.is_generic():
 				warning("extra argument with generic type", a['ti'])
-			argval = value_cons_default(argval)
+			arg = value_cons_default(arg)
 
-			if argval.isRuntimeValue():
+			if arg.isRuntimeValue():
 				imm_args = False
 
-			extra_args.append(Initializer(id, argval, ti=ini['ti'], nl=ini['nl']))
+			ini = Initializer(None, arg, ti=yy['ti'], nl=yy['nl'])
+			args.append(ini)
 
 		i += 1
 
-	return ValueCall(ftype.to, fn, args + extra_args, ti=x['ti'])
+	return ValueCall(ftype.to, fn, args, ti=x['ti'])
 
 
 

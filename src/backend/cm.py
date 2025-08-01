@@ -285,7 +285,7 @@ def str_value_call(x, ctx):
 		elif i > 0:
 			s += ", "
 
-		if arg.id != None:
+		if arg.named:
 			if arg.nl > 0:
 				s += "%s = " % get_id_str(arg)
 			else:

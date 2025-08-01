@@ -29,10 +29,10 @@ class Id(Entity):
 
 
 class Field(Entity):
-	def __init__(self, id, type, init_value=None, ti=None):
+	def __init__(self, _id, _type, init_value=None, ti=None):
 		super().__init__(ti)
-		self.id = id
-		self.type = type
+		self.id = _id
+		self.type = _type
 		self.init_value = init_value
 		self.field_no = 0
 		self.offset = 0
@@ -46,13 +46,16 @@ class Field(Entity):
 
 
 class Initializer(Entity):
-	def __init__(self, id, value, ti=None, nl=0):
+	def __init__(self, _id, value, named=False, ti=None, nl=0):
 		super().__init__(ti)
-		self.id = id
+		self.id = _id
 		self.value = value
 		self.ti = ti
 		self.nl = nl
 		self.att = []
+		# этот инициализатор описывает явно именованную сущность? (аргумент)
+		# нужно чтобы принтер знал когда стоит печатать аргумент как "key=value"
+		self.named = named
 
 
 
