@@ -823,9 +823,10 @@ def print_type_array(t):
 	sz = 0
 	if not t.is_vla():
 		array_size = t.volume
-		if not array_size.type.is_incompleted():
-			if array_size.isImmediate():
-				sz = array_size.asset
+		if not array_size.isUndef():
+			if not array_size.type.is_incompleted():
+				if array_size.isImmediate():
+					sz = array_size.asset
 
 	out("[")
 	out("%d x " % sz)

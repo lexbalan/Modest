@@ -1046,12 +1046,13 @@ def do_value_slice(x):
 	# а для слайса [a:b] это (b - a)
 	slice_volume = do_value_bin2('sub', index_to, index_from, x['ti'])
 
-	slice_len = 0  # len as integer
-	if slice_volume.isImmediate():
-		slice_len = slice_volume.asset
-		if slice_len < 0:
-			error("wrong slice direction", x['ti'])
-			return ValueBad(x['ti'])
+	if not (slice_volume.isUndef() or slice_volume.isUndef()):
+		slice_len = 0  # len as integer
+		if slice_volume.isImmediate():
+			slice_len = slice_volume.asset
+			if slice_len < 0:
+				error("wrong slice direction", x['ti'])
+				return ValueBad(x['ti'])
 
 	type = TypeArray(array_type.of, slice_volume, generic=False, ti=x['ti'])
 	return ValueSlice(type, left, index_from, index_to, x['ti'])

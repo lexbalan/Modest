@@ -691,7 +691,7 @@ class TypeArray(Type):
 			item_align = of.align
 
 		array_size = 0
-		if volume != None:
+		if volume != None and not volume.isUndef():
 			if volume.immediate:
 				array_size = item_size * volume.asset
 

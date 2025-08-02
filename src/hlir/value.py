@@ -203,7 +203,7 @@ class ValueUndef(Value):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.immediate = True
-		self.asset = 0
+		self.asset = None
 
 
 class ValueLiteral(Value):
