@@ -194,29 +194,85 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [7 x i8] [i8 108, i8 105, i8 116, i8 116, i8 108, i8 101, i8 0]
-@str2 = private constant [4 x i8] [i8 98, i8 105, i8 103, i8 0]
-@str3 = private constant [11 x i8] [i8 37, i8 115, i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 10, i8 0]
-; -- endstrings --; examples/0.endianness/src/main.m
+@str1 = private constant [25 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 100, i8 101, i8 102, i8 97, i8 117, i8 108, i8 116, i8 32, i8 112, i8 97, i8 114, i8 97, i8 109, i8 101, i8 116, i8 101, i8 114, i8 115, i8 10, i8 0]
+@str2 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 49, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str3 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 49, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str4 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str5 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+; -- endstrings --; tests/default_params/src/main.m
+define internal %Int32 @func1(%Int32 %x) {
+	ret %Int32 %x
+}
+
+define internal %Int32 @func2(%Int32 %a, %Int32 %b) {
+	%1 = add %Int32 %a, %b
+	ret %Int32 %1
+}
+
+define internal %Bool @test1() {
+	%1 = call %Int32 @func1(%Int32 10)
+	%2 = icmp eq %Int32 %1, 10
+	%3 = call %Int32 @func1(%Int32 10)
+	%4 = icmp eq %Int32 %3, 10
+	%5 = call %Int32 @func1(%Int32 10)
+	%6 = icmp eq %Int32 %5, 10
+	%7 = call %Int32 @func1(%Int32 20)
+	%8 = icmp eq %Int32 %7, 20
+	%9 = call %Int32 @func1(%Int32 20)
+	%10 = icmp eq %Int32 %9, 20
+	%11 = and %Bool %8, %10
+	%12 = and %Bool %6, %11
+	%13 = and %Bool %4, %12
+	%14 = and %Bool %2, %13
+	ret %Bool %14
+}
+
+define internal %Bool @test2() {
+	%1 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%2 = icmp eq %Int32 %1, 30
+	%3 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%4 = icmp eq %Int32 %3, 30
+	%5 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%6 = icmp eq %Int32 %5, 30
+	%7 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%8 = icmp eq %Int32 %7, 30
+	%9 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%10 = icmp eq %Int32 %9, 30
+	%11 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%12 = icmp eq %Int32 %11, 30
+	%13 = call %Int32 @func2(%Int32 20, %Int32 10)
+	%14 = icmp eq %Int32 %13, 30
+	%15 = and %Bool %12, %14
+	%16 = and %Bool %10, %15
+	%17 = and %Bool %8, %16
+	%18 = and %Bool %6, %17
+	%19 = and %Bool %4, %18
+	%20 = and %Bool %2, %19
+	ret %Bool %20
+}
+
 define %Int @main() {
-	%1 = alloca %Word16, align 2
-	store %Word16 1, %Word16* %1
-	%2 = bitcast %Word16* %1 to %Word8*
-	%3 = bitcast i8 1 to %Word8
-	%4 = load %Word8, %Word8* %2
-	%5 = icmp eq %Word8 %4, %3
-	%6 = alloca %Str8*, align 8
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str1 to [0 x i8]*))
+	%2 = call %Bool @test1()
 ; if_0
-	br %Bool %5 , label %then_0, label %else_0
+	br %Bool %2 , label %then_0, label %else_0
 then_0:
-	store %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*), %Str8** %6
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str2 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	store %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8** %6
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	%7 = load %Str8*, %Str8** %6
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), %Str8* %7)
+	%5 = call %Bool @test2()
+; if_1
+	br %Bool %5 , label %then_1, label %else_1
+then_1:
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
+	br label %endif_1
+else_1:
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
+	br label %endif_1
+endif_1:
 	ret %Int 0
 }
 

@@ -17,11 +17,7 @@ public func main () -> Int {
 
 	let x0 = (a - b) * c
 
-	let x1: Int32 = named_args_test(
-		a = a
-		b = b
-		c = c
-	)
+	let x1: Int32 = named_args_test(a=a, b=b, c=c)
 
 	if x0 == x1 {
 		printf("test passed\n")

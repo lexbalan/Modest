@@ -38,9 +38,7 @@ func handleRequest (client_socket: Int32) -> Unit {
 	printf("Received request:\n%s\n", unsafe *Str8 &buffer)
 
 	var response: [sendBufferSize]Char8
-	sprintf(
-		&response
-		"%s<html><body><h1>Hello, World! (%d)</h1></body></html>"
+	sprintf(&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>"
 		httpHeader, pageCounter
 	)
 

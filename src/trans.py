@@ -875,7 +875,7 @@ def do_value_call(x):
 
 	def do_arg(param, arg, named=False):
 		arg = transmission(param.type, arg)
-		ini = Initializer(param.id, arg, named=named, ti=a['ti'], nl=a['nl'])
+		ini = Initializer(param.id, arg, named=named, ti=arg.ti, nl=arg.nl)
 		return ini
 
 

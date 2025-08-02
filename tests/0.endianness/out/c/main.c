@@ -9,20 +9,7 @@
 #include "main.h"
 
 
-static void init(char *first, int mode, int speed, int length) {
-	//
-}
-
-static void hello(char *name) {
-	printf("Hello %s!\n", name);
-}
-
 int main() {
-	init("S", /*mode=*/1, /*speed=*/2, /*length=*/4);
-
-	hello("Alex");
-	//hello()
-
 	uint16_t check = 0x1;
 	const bool is_le = *((uint8_t *)&check) == 0x1;
 
