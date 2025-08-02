@@ -1488,7 +1488,7 @@ class Parser:
 		if self.is_assign_operator():
 			# stmt assign
 			self.skip1() # skip assign operator
-			self.skip("\n")
+			self.skipn("\n")
 			r = self.expr_value()
 			return {'isa': 'ast_stmt', 'kind': 'assign', 'left': v, 'right': r, 'ti': assign_ti}
 
