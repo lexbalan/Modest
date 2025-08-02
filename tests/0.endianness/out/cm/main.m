@@ -3,7 +3,6 @@ include "stdio"
 // examples/0.endianness/src/main.m
 
 
-
 func init (first: *Str, mode: Int, speed: Int, length: Int) -> Unit {
 	//
 }

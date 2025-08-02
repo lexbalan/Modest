@@ -14,7 +14,7 @@ type OffT = Nat32
 
 
 @calias("struct dirent")
-public type Dirent record {
+public type Dirent = record {
 	public d_ino: InoT			/* inode number */
 	public d_off: OffT			/* offset to the next dirent */
 	public d_reclen: Nat16		/* length of this record */

@@ -4,7 +4,6 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-
 func init(first: *Str, mode: Int = 5, speed: Int, length: Int = 4) -> Unit {
 	//
 }
