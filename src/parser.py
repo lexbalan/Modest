@@ -1828,6 +1828,7 @@ class Parser:
 		init_value = None
 		if self.is_assign_operator():
 			self.skip1() # skip assign operator
+			self.skipn("\n")
 			init_value = self.expr_value()
 		else:
 			init_value = self.expr_ValueUndef(ti)
