@@ -365,7 +365,7 @@ def do_field(x):
 		error("field id must starts with small letter", id.ti)
 
 	t = do_type(x['type'])
-	iv = do_value(x['init_value'])
+	iv = do_value_immediate(x['init_value'])
 
 	if not iv.isUndef():
 		# у поля есть инициализатор
