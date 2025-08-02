@@ -238,7 +238,7 @@ define internal %Bool @test2() {
 	%8 = icmp eq %Int32 %7, 30
 	%9 = call %Int32 @func2(%Int32 10, %Int32 20)
 	%10 = icmp eq %Int32 %9, 30
-	%11 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%11 = call %Int32 @func2(%Int32 20, %Int32 10)
 	%12 = icmp eq %Int32 %11, 30
 	%13 = call %Int32 @func2(%Int32 20, %Int32 10)
 	%14 = icmp eq %Int32 %13, 30

@@ -32,7 +32,7 @@ static bool test2() {
 	const bool c2 = func2(/*a=*/10, /*b=*/20) == 30;
 	const bool c3 = func2(/*a=*/10, /*b=*/20) == 30;
 	const bool c4 = func2(/*a=*/10, /*b=*/20) == 30;
-	const bool c5 = func2(/*a=*/10, /*b=*/20) == 30;
+	const bool c5 = func2(/*a=*/20, /*b=*/10) == 30;
 	const bool c6 = func2(/*a=*/20, /*b=*/10) == 30;
 	return c0 && c1 && c2 && c3 && c4 && c5 && c6;
 }

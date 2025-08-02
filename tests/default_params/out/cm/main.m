@@ -30,7 +30,7 @@ func test2 () -> Bool {
 	let c2: Bool = func2(a=10, b=20) == 30
 	let c3: Bool = func2(a=10, b=20) == 30
 	let c4: Bool = func2(a=10, b=20) == 30
-	let c5: Bool = func2(a=10, b=20) == 30
+	let c5: Bool = func2(a=20, b=10) == 30
 	let c6: Bool = func2(a=20, b=10) == 30
 	return c0 and c1 and c2 and c3 and c4 and c5 and c6
 }

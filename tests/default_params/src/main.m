@@ -31,8 +31,8 @@ func test2 () -> Bool {
 	let c2 = func2(a=10, b=20) == 30
 	let c3 = func2(a=10) == 30
 	let c4 = func2(b=20) == 30
-	let c5 = func2(a=10, b=20) == 30
-	let c6 = func2(a=20, b=10) == 30
+	let c5 = func2(a=20, b=10) == 30
+	let c6 = func2(b=10, a=20) == 30
 	return c0 and c1 and c2 and c3 and c4 and c5 and c6
 }
 
