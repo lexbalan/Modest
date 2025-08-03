@@ -17,6 +17,10 @@ static int32_t func2(int32_t a, int32_t b) {
 	return a + b;
 }
 
+static int32_t func3(int32_t a, int32_t b) {
+	return a + b;
+}
+
 static bool test1() {
 	const bool c0 = func1(/*x=*/10) == 10;
 	const bool c1 = func1(10) == 10;
@@ -39,6 +43,9 @@ static bool test2() {
 
 int main() {
 	printf("test default parameters\n");
+
+	//func2(b=10, 10)  // error: positional argument follows keyword argument
+	//func3(4)         // error: undefined parameter 'b'
 
 	const bool test1_passed = test1();
 	if (test1_passed) {

@@ -14,6 +14,11 @@ func func2 (a: Int32, b: Int32) -> Int32 {
 }
 
 
+func func3 (a: Int32, b: Int32) -> Int32 {
+	return a + b
+}
+
+
 func test1 () -> Bool {
 	let c0: Bool = func1(x=10) == 10
 	let c1: Bool = func1(10) == 10
@@ -38,6 +43,9 @@ func test2 () -> Bool {
 
 public func main () -> Int {
 	printf("test default parameters\n")
+
+	//func2(b=10, 10)  // error: positional argument follows keyword argument
+	//func3(4)         // error: undefined parameter 'b'
 
 	let test1_passed: Bool = test1()
 	if test1_passed {

@@ -863,9 +863,7 @@ def do_value_call(x):
 	nargs = len(x['args'])
 #	info("nargs = %s " % nargs, x['ti'])
 
-#	if nargs < npars:
-#		error("not enough arguments", x)
-#		return ValueBad(x['ti'])
+
 
 	if nargs > npars:
 		if not ftype.extra_args:
@@ -899,6 +897,8 @@ def do_value_call(x):
 		args.append(arg)
 		i += 1
 
+	#info("1LL %d, %d" % (len(args), npars), x['ti'])
+
 	#
 	# process named args
 	#
@@ -923,11 +923,19 @@ def do_value_call(x):
 		vx = param.init_value
 		if found:
 			vx = do_rvalue(a['value'])
+		else:
+			if vx.isUndef():
+				error("undefined parameter '%s'" % p_id_str, x['ti'])
 		arg = do_arg(param, vx, named=True)
 		args.append(arg)
 
 		j += 1
 
+
+	#info("%d, %d" % (len(args), npars), x['ti'])
+	if len(args) < npars:
+		error("not enough arguments", x)
+		return ValueBad(x['ti'])
 
 	#
 	# process extra args
@@ -955,8 +963,6 @@ def do_value_call(x):
 		i += 1
 
 	return ValueCall(ftype.to, fn, args, ti=x['ti'])
-
-
 
 
 

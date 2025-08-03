@@ -209,6 +209,11 @@ define internal %Int32 @func2(%Int32 %a, %Int32 %b) {
 	ret %Int32 %1
 }
 
+define internal %Int32 @func3(%Int32 %a, %Int32 %b) {
+	%1 = add %Int32 %a, %b
+	ret %Int32 %1
+}
+
 define internal %Bool @test1() {
 	%1 = call %Int32 @func1(%Int32 10)
 	%2 = icmp eq %Int32 %1, 10
@@ -253,6 +258,9 @@ define internal %Bool @test2() {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str1 to [0 x i8]*))
+
+	;func2(b=10, 10)  // error: positional argument follows keyword argument
+	;func3(4)         // error: undefined parameter 'b'
 	%2 = call %Bool @test1()
 ; if_0
 	br %Bool %2 , label %then_0, label %else_0
