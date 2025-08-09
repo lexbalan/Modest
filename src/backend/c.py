@@ -319,6 +319,10 @@ def strFuncParamlist(params, va_arg):
 				pstr = '_' + pstr
 
 		s += str_var(ptype, id_str=pstr)
+
+		if not param.init_value.isUndef():
+			s += " /* default=" + str_value(param.init_value) + " */"
+
 		i += 1
 
 	if va_arg:

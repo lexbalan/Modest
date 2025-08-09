@@ -116,7 +116,10 @@ def str_type_pointer(t):
 
 
 def str_field(x):
-	return get_id_str(x) + ": " + str_type(x.type)
+	s = get_id_str(x) + ": " + str_type(x.type)
+	if not x.init_value.isUndef():
+		s += " = " + str_value(x.init_value)
+	return s
 
 
 def str_type_record(t):
