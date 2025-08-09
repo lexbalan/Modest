@@ -4,17 +4,17 @@ include "stdio"
 
 
 
-func func1 (x: Int32) -> Int32 {
+func func1 (x: Int32 = 10) -> Int32 {
 	return x
 }
 
 
-func func2 (a: Int32, b: Int32) -> Int32 {
+func func2 (a: Int32 = 10, b: Int32 = 20) -> Int32 {
 	return a + b
 }
 
 
-func func3 (a: Int32, b: Int32) -> Int32 {
+func func3 (a: Int32 = 10, b: Int32) -> Int32 {
 	return a + b
 }
 

@@ -9,15 +9,15 @@
 #include "main.h"
 
 
-static int32_t func1(int32_t x) {
+static int32_t func1(int32_t x /* default=10 */) {
 	return x;
 }
 
-static int32_t func2(int32_t a, int32_t b) {
+static int32_t func2(int32_t a /* default=10 */, int32_t b /* default=20 */) {
 	return a + b;
 }
 
-static int32_t func3(int32_t a, int32_t b) {
+static int32_t func3(int32_t a /* default=10 */, int32_t b) {
 	return a + b;
 }
 
