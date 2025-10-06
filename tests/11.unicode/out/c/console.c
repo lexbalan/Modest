@@ -21,29 +21,34 @@
 
 void console_putchar_utf8(char c);
 
-void console_putchar8(char c) {
+void console_putchar8(char c)
+{
 	console_putchar_utf8(c);
 }
 
 
 void console_putchar_utf16(uint16_t c);
 
-void console_putchar16(uint16_t c) {
+void console_putchar16(uint16_t c)
+{
 	console_putchar_utf16(c);
 }
 
 
 void console_putchar_utf32(uint32_t c);
 
-void console_putchar32(uint32_t c) {
+void console_putchar32(uint32_t c)
+{
 	console_putchar_utf32(c);
 }
 
-void console_putchar_utf8(char c) {
+void console_putchar_utf8(char c)
+{
 	putchar((int32_t)(uint32_t)c);
 }
 
-void console_putchar_utf16(uint16_t c) {
+void console_putchar_utf16(uint16_t c)
+{
 	uint16_t cc[2];
 	cc[0] = c;
 	cc[1] = u'\x0';
@@ -52,7 +57,8 @@ void console_putchar_utf16(uint16_t c) {
 	console_putchar_utf32(char32);
 }
 
-void console_putchar_utf32(uint32_t c) {
+void console_putchar_utf32(uint32_t c)
+{
 	char decoded_buf[4];
 	const int32_t n = (int32_t)utf_utf32_to_utf8(c, &decoded_buf);
 
@@ -75,7 +81,8 @@ public func puts(s: *Str8) -> Unit {
 }
 */
 
-void console_puts8(char *s) {
+void console_puts8(char *s)
+{
 	uint32_t i = 0;
 	while (true) {
 		const char c = s[i];
@@ -87,7 +94,8 @@ void console_puts8(char *s) {
 	}
 }
 
-void console_puts16(uint16_t *s) {
+void console_puts16(uint16_t *s)
+{
 	uint32_t i = 0;
 	while (true) {
 		// нельзя просто так взять и вызвать putchar_utf16
@@ -110,7 +118,8 @@ void console_puts16(uint16_t *s) {
 	}
 }
 
-void console_puts32(uint32_t *s) {
+void console_puts32(uint32_t *s)
+{
 	uint32_t i = 0;
 	while (true) {
 		const uint32_t c = s[i];
@@ -125,7 +134,8 @@ void console_puts32(uint32_t *s) {
 
 int32_t console_vfprint(int32_t fd, char *form, va_list va);
 
-void console_print(char *form, ...) {
+void console_print(char *form, ...)
+{
 	va_list va;
 	va_start(va, form);
 	console_vfprint(STDOUT_FILENO, form, va);
@@ -135,7 +145,8 @@ void console_print(char *form, ...) {
 
 int32_t console_vsprint(char *buf, char *form, va_list va);
 
-int32_t console_vfprint(int32_t fd, char *form, va_list va) {
+int32_t console_vfprint(int32_t fd, char *form, va_list va)
+{
 	char strbuf[256];
 	const int32_t n = console_vsprint((char *)&strbuf, form, va);
 	strbuf[n] = '\x0';
@@ -148,7 +159,8 @@ static int32_t sprint_dec_int32(char *buf, int32_t x);
 static int32_t sprint_dec_n32(char *buf, uint32_t x);
 static int32_t sprint_hex_nat32(char *buf, uint32_t x);
 
-int32_t console_vsprint(char *buf, char *form, va_list va) {
+int32_t console_vsprint(char *buf, char *form, va_list va)
+{
 	uint32_t i = 0;
 	int32_t j = 0;
 
@@ -237,18 +249,21 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 }
 
 __attribute__((always_inline))
-static inline char n_to_dec_sym(uint8_t n) {
+static inline char n_to_dec_sym(uint8_t n)
+{
 	return (char)((uint8_t)'0' + n);
 }
 
-static char n_to_hex_sym(uint8_t n) {
+static char n_to_hex_sym(uint8_t n)
+{
 	if (n < 10) {
 		return n_to_dec_sym(n);
 	}
 	return (char)((uint8_t)'A' + (n - 10));
 }
 
-static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
+static int32_t sprint_hex_nat32(char *buf, uint32_t x)
+{
 	char tmpbuf[8];
 	uint32_t d = x;
 	uint32_t i = 0;
@@ -278,7 +293,8 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
 	return j;
 }
 
-static int32_t sprint_dec_int32(char *buf, int32_t x) {
+static int32_t sprint_dec_int32(char *buf, int32_t x)
+{
 	char tmpbuf[11];
 	int32_t d = x;
 	const bool neg = d < 0;
@@ -317,7 +333,8 @@ static int32_t sprint_dec_int32(char *buf, int32_t x) {
 	return j;
 }
 
-static int32_t sprint_dec_n32(char *buf, uint32_t x) {
+static int32_t sprint_dec_n32(char *buf, uint32_t x)
+{
 	char tmpbuf[11];
 	uint32_t d = x;
 	uint32_t i = 0;

@@ -22,7 +22,8 @@ typedef uint64_t Nat;
 
 #define memoryAlignment  (systemWidth / 8)
 
-void memory_zero(void *mem, uint64_t len) {
+void memory_zero(void *mem, uint64_t len)
+{
 	const Nat z = (Nat)mem % memoryAlignment;
 
 	uint8_t *const memptr = (uint8_t *)mem;
@@ -59,7 +60,8 @@ void memory_zero(void *mem, uint64_t len) {
 	}
 }
 
-void memory_copy(void *dst, void *src, uint64_t len) {
+void memory_copy(void *dst, void *src, uint64_t len)
+{
 	const uint64_t len_words = len / sizeof(Word);
 	Word *const src_w = (Word *)src;
 	Word *const dst_w = (Word *)dst;
@@ -81,7 +83,8 @@ void memory_copy(void *dst, void *src, uint64_t len) {
 	}
 }
 
-bool memory_eq(void *mem0, void *mem1, uint64_t len) {
+bool memory_eq(void *mem0, void *mem1, uint64_t len)
+{
 	const uint64_t len_words = len / sizeof(Word);
 	Word *const mem0_w = (Word *)mem0;
 	Word *const mem1_w = (Word *)mem1;

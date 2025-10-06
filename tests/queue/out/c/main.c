@@ -14,7 +14,8 @@ static queueWord8_QueueWord8 bq0;
 static ringWord8_RingWord8 br0;
 
 static int32_t ii;
-static void fill(uint32_t n) {
+static void fill(uint32_t n)
+{
 	uint32_t i = 0;
 	while (i < n) {
 		if (queueWord8_isFull(&bq0)) {
@@ -30,7 +31,8 @@ static void fill(uint32_t n) {
 }
 
 // выгребаем и распечатываем n значений
-static void fetch(uint32_t n) {
+static void fetch(uint32_t n)
+{
 	uint32_t i = 0;
 	while (i < n) {
 		if (queueWord8_isEmpty(&bq0)) {
@@ -48,7 +50,8 @@ static void fetch(uint32_t n) {
 #define qsize  10
 static uint8_t qbuf[qsize];
 
-int main() {
+int main()
+{
 	queueWord8_init(&bq0, (uint8_t *)&qbuf, qsize);
 
 	fill(3);

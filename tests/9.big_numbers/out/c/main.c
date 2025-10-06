@@ -16,15 +16,18 @@
 
 static unsigned __int128 big0 = BIG_INT128(0x123456789ABCDEFULL, 0xFEDCBA9876543210ULL);
 
-static uint64_t high_128(unsigned __int128 x) {
+static uint64_t high_128(unsigned __int128 x)
+{
 	return (uint64_t)(x >> 64);
 }
 
-static uint64_t low_128(unsigned __int128 x) {
+static uint64_t low_128(unsigned __int128 x)
+{
 	return (uint64_t)(x & BIG_INT128(0x0ULL, 0xFFFFFFFFFFFFFFFFULL));
 }
 
-int main() {
+int main()
+{
 
 	#define big1  BIG_INT128(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL)
 	#define big2  BIG_INT256(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL)

@@ -9,7 +9,8 @@
 #include "main.h"
 
 
-static void mtab(uint32_t n) {
+static void mtab(uint32_t n)
+{
 	uint32_t m = 1;
 	// or
 	//var m = 1   // by default integer var get system int type (-mint option)
@@ -20,7 +21,8 @@ static void mtab(uint32_t n) {
 	}
 }
 
-int main() {
+int main()
+{
 	#define n  (2 * 2)
 	printf("multiply table for %d\n", (int32_t)n);
 	mtab(n);

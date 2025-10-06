@@ -9,7 +9,8 @@
 #include "main.h"
 
 
-int main() {
+int main()
+{
 	printf("hello from main\n");
 	lib_foo();
 	return 0;

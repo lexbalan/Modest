@@ -8,7 +8,8 @@
 #include "main.h"
 
 
-int main() {
+int main()
+{
 	console_print("test console print\n");
 
 	const uint32_t c = U'🐀';

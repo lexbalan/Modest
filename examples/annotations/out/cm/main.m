@@ -104,8 +104,8 @@ func staticInlineHintFunc (x: Int32) -> Int32 {
 
 
 type Point2D = record {
-	x: Float64
-	y: Float64
+	x: Float64 = 0
+	y: Float64 = 0
 }
 
 

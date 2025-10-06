@@ -17,7 +17,8 @@
 #define port  8080
 #define bufSize  1024
 
-static bool write_file(int sockfd) {
+static bool write_file(int sockfd)
+{
 	char buffer[bufSize];
 
 	FILE *const fp = fopen(filename, "w");
@@ -40,7 +41,8 @@ static bool write_file(int sockfd) {
 	return true;
 }
 
-int main() {
+int main()
+{
 	const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0) {
 		perror("[-] Error in socket");

@@ -13,7 +13,8 @@
 
 #define mathPi  3.141592653589793238462643383279502884
 
-static double squareOfCircle(double radius) {
+static double squareOfCircle(double radius)
+{
 	return pow(radius, 2) * mathPi;
 }
 
@@ -23,7 +24,8 @@ struct Point2D {
 };
 typedef struct Point2D Point2D;
 
-static float slope(Point2D a, Point2D b) {
+static float slope(Point2D a, Point2D b)
+{
 	const int dx = abs(a.x - b.x);
 	const int dy = abs(a.y - b.y);
 	printf("dx = %d\n", dx);
@@ -31,7 +33,8 @@ static float slope(Point2D a, Point2D b) {
 	return (float)dy / (float)dx;
 }
 
-int main() {
+int main()
+{
 	printf("float test\n");
 
 	printf("2 = %d\n", 2);

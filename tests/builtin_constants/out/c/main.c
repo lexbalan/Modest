@@ -9,7 +9,8 @@
 #include "main.h"
 
 
-int main() {
+int main()
+{
 
 	// __compiler
 	printf("__compiler.name = %s\n", (char *)"m2");

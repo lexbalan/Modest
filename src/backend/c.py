@@ -28,12 +28,6 @@ func_undef_list = []
 
 legacy_style = {
 	'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
-	'LINE_BREAK_BEFORE_FUNC_BRACE': False,
-	'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
-}
-
-kernel_style = {
-	'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
 	'LINE_BREAK_BEFORE_FUNC_BRACE': True,
 	'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
 }
@@ -46,7 +40,6 @@ modern_style = {
 
 styles = {
 	'legacy': legacy_style,
-	'kernel': kernel_style,
 	'modern': modern_style,
 
 	'KnR': legacy_style,
@@ -320,8 +313,11 @@ def strFuncParamlist(params, va_arg):
 
 		s += str_var(ptype, id_str=pstr)
 
-		if not param.init_value.isUndef():
-			s += " /* default=" + str_value(param.init_value) + " */"
+		if param.init_value != None:
+			# BUG: None прилетает в случае когда функция возвращает массив,
+			# У него нет init_value - это какой то косяк но непросто разобраться
+			if not param.init_value.isUndef():
+				s += " /* default=" + str_value(param.init_value) + " */"
 
 		i += 1
 

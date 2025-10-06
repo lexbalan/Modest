@@ -30,7 +30,8 @@ static char arrayFromString[3] = "abc";
 
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
-static void f0(char *_x, char *sret_) {
+static void f0(char *_x, char *sret_)
+{
 	char x[20];
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
@@ -63,7 +64,8 @@ static void f0(char *_x, char *sret_) {
 #define startSequence  {0xAA, 0x55, 0x2}
 #define stopSequence  {0x16}
 
-static void test() {
+static void test()
+{
 	// тестируем работу с локальным generic массивом
 	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
 	uint32_t i = 0;
@@ -102,7 +104,8 @@ static int32_t a10[10][10] = {
 	91, 92, 93, 94, 95, 96, 97, 98, 99, 100
 };
 
-static void test_arrays() {
+static void test_arrays()
+{
 	int32_t i;
 	int32_t j;
 	int32_t k;
@@ -182,7 +185,8 @@ static void test_arrays() {
 	}
 }
 
-int main() {
+int main()
+{
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	char em[30];

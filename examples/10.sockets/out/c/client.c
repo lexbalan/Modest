@@ -22,7 +22,8 @@
 #define port  8080
 #define bufSize  1024
 
-static bool send_file(FILE *fp, int sockfd) {
+static bool send_file(FILE *fp, int sockfd)
+{
 	char data[bufSize];
 
 	while (fgets((char *)&data, __lengthof(data), fp) != NULL) {
@@ -35,7 +36,8 @@ static bool send_file(FILE *fp, int sockfd) {
 	return true;
 }
 
-int main() {
+int main()
+{
 	const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0) {
 		perror("[-] Error in socket");

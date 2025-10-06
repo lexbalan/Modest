@@ -11,7 +11,8 @@
 
 typedef int32_t NewInt32;
 
-int main() {
+int main()
+{
 	printf("test typedef\n");
 
 	NewInt32 newInt32;
