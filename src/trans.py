@@ -401,7 +401,7 @@ def do_type_named(x):
 		module_id = x['module']['str']
 
 		if not module_id in cmodule.imports:
-			error("unknown namespace '%s'" % module_id)
+			error("unknown namespace '%s'" % module_id, x['ti'])
 			return TypeBad(x['ti'])
 
 		imp_module = cmodule.imports[module_id].module
