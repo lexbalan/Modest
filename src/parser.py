@@ -3,6 +3,7 @@
 #####################################################################
 
 import os
+import re
 from error import error, warning, info
 from hlir.hlir import Id
 from util import utf32cc_to_utf8_str
@@ -148,13 +149,15 @@ class Parser:
 		return self.ctok_class() == 'tag'
 
 
-	def identifier(self):
+	def parse_identifier(self):
 		ti = self.ti()
 #		if not self.is_identifier():
 #			self.skip1()
 #			error("expected identifier", ti)
 #			return None
 		s = self.gettok()
+		if not re.fullmatch(r'[A-Za-z0-9_]+', s):
+			error("bad identifier", ti)
 		return {'isa': 'ast_id', 'kind': 'id', 'str': s, 'ti': ti} #Id(s, ti=ti) ####
 
 
@@ -405,7 +408,7 @@ class Parser:
 			while not self.match("}"):
 				self.skip_tokens_class(['nl'])
 				ti = self.ti()
-				id = self.identifier()
+				id = self.parse_identifier()
 				self.need_sep(separators=['\n', ','])
 				items.append({'id': id, 'ti': ti})
 			t = {'isa': 'ast_type', 'kind': 'enum', 'items': items, 'ti': ti}
@@ -421,7 +424,7 @@ class Parser:
 			t = y
 
 		elif self.is_Identifier():
-			id = self.identifier()
+			id = self.parse_identifier()
 			t = {
 				'isa': 'ast_type',
 				'kind': 'named',
@@ -430,10 +433,10 @@ class Parser:
 			}
 
 		elif self.is_identifier():
-			left = self.identifier()
+			left = self.parse_identifier()
 			dot_ti = self.ti()
 			self.need(".")
-			right = self.identifier()
+			right = self.parse_identifier()
 
 			t = {
 				'isa': 'ast_type',
@@ -890,7 +893,7 @@ class Parser:
 			self.match("(")
 			t = self.expr_type()
 			self.need('.')
-			f = self.identifier()
+			f = self.parse_identifier()
 			self.need(")")
 			return {
 				'isa': 'ast_value',
@@ -1065,7 +1068,7 @@ class Parser:
 				}
 
 			elif self.match("."):
-				field_id = self.identifier()
+				field_id = self.parse_identifier()
 				ti['start'] = v['ti']
 				ti['end'] = field_id['ti']
 
@@ -1198,7 +1201,7 @@ class Parser:
 				break
 
 			item_ti = self.ti()
-			item_id = self.identifier()
+			item_id = self.parse_identifier()
 			self.need("=")
 			item_value = self.expr_value()
 
@@ -1341,7 +1344,7 @@ class Parser:
 
 
 		elif self.is_identifier():
-			id = self.identifier()
+			id = self.parse_identifier()
 			return {
 				'isa': 'ast_value',
 				'kind': 'id',
@@ -1683,7 +1686,7 @@ class Parser:
 			if not self.is_identifier():
 				return None
 
-			id = self.identifier()
+			id = self.parse_identifier()
 
 			if id == None:
 				break
@@ -1740,7 +1743,7 @@ class Parser:
 
 			_as = None
 			if self.match("as"):
-				_as = self.identifier()
+				_as = self.parse_identifier()
 
 			return {
 				'isa': 'ast_import',
@@ -1765,7 +1768,7 @@ class Parser:
 
 				_as = None
 				if self.match("as"):
-					_as = self.identifier()
+					_as = self.parse_identifier()
 
 				import_dir = {
 					'isa': 'ast_annotation',
@@ -1785,7 +1788,7 @@ class Parser:
 
 	def parse_def_func(self):
 		ti = self.ti()
-		id = self.identifier()
+		id = self.parse_identifier()
 		ftyp = self.expr_type()
 
 		if self.is_comment():
@@ -1812,11 +1815,11 @@ class Parser:
 
 	def parse_stmt_xvar(self, access_modifier='public'):
 		ti = self.ti()
-		id = self.identifier()
+		id = self.parse_identifier()
 
 		ids = [id]
 		while self.match(","):
-			id = self.identifier()
+			id = self.parse_identifier()
 			ids.append(id)
 
 		t = None
@@ -1868,7 +1871,7 @@ class Parser:
 
 	def parse_def_type(self):
 		ti = self.ti()
-		id = self.identifier()
+		id = self.parse_identifier()
 
 		if self.is_comment():
 			self.skip1()
@@ -1983,7 +1986,7 @@ class Parser:
 #					break
 #
 #		if self.match('module'):
-#			id = self.identifier()
+#			id = self.parse_identifier()
 #			print("MODULE %s" % id['str'])
 
 		spaceline_cnt = 0
