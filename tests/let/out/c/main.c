@@ -9,8 +9,7 @@
 #include "main.h"
 
 
-int main()
-{
+int main() {
 	#define x  127
 	#define y  (x + 1)
 

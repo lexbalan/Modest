@@ -228,9 +228,18 @@ static void divtest()
 	printf("%d %% %d = %d\n", a, b, a % b);
 }
 
+static int32_t argtest(int32_t a, int32_t b /* default=0 */)
+{
+	return a + b;
+}
+
 int32_t main()
 {
 	//ab_test()
+
+	argtest(1, /*b=*/0);
+	argtest(1, 2);
+	argtest(1, /*b=*/3);
 
 	testFixed();
 

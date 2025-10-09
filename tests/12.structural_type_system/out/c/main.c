@@ -29,43 +29,35 @@ typedef struct Type2 Type2;
 
 typedef Type1 Type3;
 
-static void f0_val(Type1 x)
-{
+static void f0_val(Type1 x) {
 	printf("f0 x.x = %d\n", x.x);
 }
 
-static void f1_val(Type2 x)
-{
+static void f1_val(Type2 x) {
 	printf("f1 x.x = %d\n", x.x);
 }
 
-static void f2_val(Type3 x)
-{
+static void f2_val(Type3 x) {
 	printf("f2 x.x = %d\n", x.x);
 }
 
-static void f3_val(struct __anonymous_struct_3 x)
-{
+static void f3_val(struct __anonymous_struct_3 x) {
 	printf("f3 x.x = %d\n", x.x);
 }
 
-static void f0_ptr(Type1 *x)
-{
+static void f0_ptr(Type1 *x) {
 	printf("f0p x.x = %d\n", x->x);
 }
 
-static void f1_ptr(Type2 *x)
-{
+static void f1_ptr(Type2 *x) {
 	printf("f1p x.x = %d\n", x->x);
 }
 
-static void f2_ptr(Type3 *x)
-{
+static void f2_ptr(Type3 *x) {
 	printf("f2p x.x = %d\n", x->x);
 }
 
-static void f3_ptr(struct __anonymous_struct_4 *x)
-{
+static void f3_ptr(struct __anonymous_struct_4 *x) {
 	printf("f3p x.x = %d\n", x->x);
 }
 
@@ -73,8 +65,7 @@ static Type1 a = {.x = 1};
 static Type2 b = {.x = 2};
 static Type3 c = {.x = 3};
 
-static void test_by_value()
-{
+static void test_by_value() {
 	f0_val(a);
 	f1_val(*(Type2*)&a);
 	f2_val(a);
@@ -91,8 +82,7 @@ static void test_by_value()
 	f3_val(*(struct __anonymous_struct_3*)&c);
 }
 
-static void test_by_pointer()
-{
+static void test_by_pointer() {
 	f0_ptr(&a);
 	f1_ptr((Type2 *)&a);
 	f2_ptr((Type3 *)&a);
@@ -109,8 +99,7 @@ static void test_by_pointer()
 	f3_ptr((struct __anonymous_struct_4 *)&c);
 }
 
-int main()
-{
+int main() {
 	test_by_value();
 	test_by_pointer();
 	return 0;

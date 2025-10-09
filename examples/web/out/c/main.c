@@ -33,8 +33,7 @@ static uint32_t pageCounter;
 //	return (x << 8) or (x >> 8)
 //}
 
-static void handleRequest(int32_t client_socket)
-{
+static void handleRequest(int32_t client_socket) {
 	uint8_t buffer[receiveBufferSize];
 	const ssize_t bytes_received = read(client_socket, (void *)&buffer, __lengthof(buffer) - 1);
 	if (bytes_received < 0) {
@@ -55,8 +54,7 @@ static void handleRequest(int32_t client_socket)
 	close(client_socket);
 }
 
-int32_t main()
-{
+int32_t main() {
 	const int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_socket < 0) {
 		perror("cannot create socket");

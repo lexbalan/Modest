@@ -24,8 +24,7 @@ static bool test_generic_char();
 static bool test_generic_array();
 static bool test_generic_record();
 
-int main()
-{
+int main() {
 	printf("generic types test\n");
 
 	const bool t1 = test_generic_integer();
@@ -66,8 +65,7 @@ int main()
 	return 0;
 }
 
-static bool test_generic_integer()
-{
+static bool test_generic_integer() {
 	// Any integer literal have GenericInteger type
 	#define one  1
 
@@ -100,8 +98,7 @@ static bool test_generic_integer()
 #undef two
 }
 
-static bool test_generic_float()
-{
+static bool test_generic_float() {
 	// Any float literal have GenericFloat type
 	#define pi  3.141592653589793238462643383279502884
 
@@ -119,8 +116,7 @@ static bool test_generic_float()
 #undef pi
 }
 
-static bool test_generic_char()
-{
+static bool test_generic_char() {
 	// Any char value expression have GenericChar type
 	// (you can pick GenericChar value by index of GenericString value)
 	#define a  "A"
@@ -139,8 +135,7 @@ static bool test_generic_char()
 #undef a
 }
 
-static bool test_generic_array()
-{
+static bool test_generic_array() {
 	// Any array expression have GenericArray type
 	// this array expression (GenericArray of four GenericInteger items)
 	#define a  {0, 1, 2, 3}
@@ -203,8 +198,7 @@ struct Point3D {
 };
 typedef struct Point3D Point3D;
 
-static bool test_generic_record()
-{
+static bool test_generic_record() {
 	// Any record expression have GenericRecord type
 	// this record expression have type:
 	// Generic(record {x: GenericInteger, y: GenericInteger})

@@ -13,8 +13,7 @@
 #define utf16Char  u"Я"
 #define utf32Char  U"🐀"
 
-int main()
-{
+int main() {
 	printf("test/char\n");
 
 	char ch08;

@@ -19,8 +19,7 @@
 
 #define filename  "file.txt"
 
-static void write_example()
-{
+static void write_example() {
 	printf("run write_example\n");
 
 	FILE *const fp = fopen(filename, "w");
@@ -35,8 +34,7 @@ static void write_example()
 	fclose(fp);
 }
 
-static void read_example()
-{
+static void read_example() {
 	printf("run read_example\n");
 
 	FILE *const fp = fopen(filename, "r");
@@ -58,8 +56,7 @@ static void read_example()
 	fclose(fp);
 }
 
-int main()
-{
+int main() {
 	printf("text_file example\n");
 	write_example();
 	read_example();

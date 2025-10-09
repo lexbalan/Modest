@@ -14,19 +14,16 @@
 // Вынужден добавлять public тк иначе не идет в хедер к структуре
 // Короче, проблема зависимостей тяжело зависла в воздухе
 
-char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no)
-{
+char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no) {
 	return (char *)&fsm->states[state_no].name;
 }
 
-void fsm_switch(fsm_FSM *fsm, uint32_t state)
-{
+void fsm_switch(fsm_FSM *fsm, uint32_t state) {
 	fsm->nexstate = state;
 	fsm->substate = fsm_substateLeaving;
 }
 
-void fsm_run(fsm_FSM *fsm)
-{
+void fsm_run(fsm_FSM *fsm) {
 	printf("fsm::run()\n");
 
 	if (fsm->substate == fsm_substateEntering) {

@@ -9,21 +9,18 @@
 #include "delay.h"
 
 
-void delay_us(uint64_t us)
-{
+void delay_us(uint64_t us) {
 	const clock_t start_time = clock();
 	while (clock() < start_time + us) {
 		// just waiting
 	}
 }
 
-void delay_ms(uint64_t ms)
-{
+void delay_ms(uint64_t ms) {
 	delay_us(ms * 1000);
 }
 
-void delay_sec(uint64_t s)
-{
+void delay_sec(uint64_t s) {
 	delay_us(s * 1000000);
 }
 

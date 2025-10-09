@@ -218,8 +218,18 @@ func divtest () -> Unit {
 }
 
 
+
+func argtest (a: Int32, b: Int32=0) -> Int32 {
+	return a + b
+}
+
+
 public func main () -> Int32 {
 	//ab_test()
+
+	argtest(1)
+	argtest(1, 2)
+	argtest(1, b=3)
 
 	testFixed()
 

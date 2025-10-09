@@ -38,8 +38,7 @@ static Point points2[3] = {
 };
 
 // define function main
-int main()
-{
+int main() {
 	printf("test const\n");
 
 	printf("genericIntConst = %d\n", (int32_t)genericIntConst);

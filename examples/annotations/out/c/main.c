@@ -58,8 +58,7 @@ static uint64_t u2;
 static uint32_t *restrict rp;
 static volatile bool vb[32];
 
-static bool boolFunction(bool x)
-{
+static bool boolFunction(bool x) {
 	if (x) {
 		return true;
 	} else {
@@ -69,19 +68,16 @@ static bool boolFunction(bool x)
 }
 
 __attribute__((always_inline))
-static inline int32_t staticInlineFunc(int32_t x)
-{
+static inline int32_t staticInlineFunc(int32_t x) {
 	return x + 1;
 }
 
 __attribute__((noinline))
-static int32_t staticNoinlineFunc(int32_t x)
-{
+static int32_t staticNoinlineFunc(int32_t x) {
 	return x + 1;
 }
 
-static inline int32_t staticInlineHintFunc(int32_t x)
-{
+static inline int32_t staticInlineHintFunc(int32_t x) {
 	return x + 1;
 }
 
@@ -93,13 +89,11 @@ typedef struct Point2D Point2D;
 
 // переопределение f не вызвало ошибку!
 //@conditional(const1 < const2)
-static void hello()
-{
+static void hello() {
 	printf("hi!\n");
 }
 
-int32_t main()
-{
+int32_t main() {
 	hello();
 	printf("Attributes example\n");
 	return 0;

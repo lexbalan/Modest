@@ -76,8 +76,7 @@ typedef struct Struct Struct;
 
 static Struct s = {.x = &lines[0]};
 
-static void test_records()
-{
+static void test_records() {
 
 	struct LocalRecord {
 		int32_t x;
@@ -112,8 +111,7 @@ static void test_records()
 	printf("x.x.b.y = %d\n", x.x->b.y);
 }
 
-int main()
-{
+int main() {
 	printf("records test\n");
 
 	// check value_record_eq for immediate values

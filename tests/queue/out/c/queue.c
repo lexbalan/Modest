@@ -8,29 +8,24 @@
 #include "queue.h"
 
 
-void queue_init(queue_Queue *q, uint32_t capacity)
-{
+void queue_init(queue_Queue *q, uint32_t capacity) {
 	*q = (queue_Queue){};
 	q->capacity = capacity;
 }
 
-uint32_t queue_capacity(queue_Queue *q)
-{
+uint32_t queue_capacity(queue_Queue *q) {
 	return q->capacity;
 }
 
-uint32_t queue_size(queue_Queue *q)
-{
+uint32_t queue_size(queue_Queue *q) {
 	return q->size;
 }
 
-bool queue_isEmpty(queue_Queue *q)
-{
+bool queue_isEmpty(queue_Queue *q) {
 	return q->size == 0;
 }
 
-bool queue_isFull(queue_Queue *q)
-{
+bool queue_isFull(queue_Queue *q) {
 	return q->size == q->capacity;
 }
 
@@ -38,8 +33,7 @@ bool queue_isFull(queue_Queue *q)
 
 static uint32_t next(uint32_t capacity, uint32_t x);
 
-uint32_t queue_getPutPosition(queue_Queue *q)
-{
+uint32_t queue_getPutPosition(queue_Queue *q) {
 	const uint32_t pos = q->p;
 	q->p = next(q->capacity, q->p);
 	if (q->size < q->capacity) {
@@ -49,8 +43,7 @@ uint32_t queue_getPutPosition(queue_Queue *q)
 }
 
 // you must check isEmpty(queue) before call 'getGetPosition'
-uint32_t queue_getGetPosition(queue_Queue *q)
-{
+uint32_t queue_getGetPosition(queue_Queue *q) {
 	const uint32_t pos = q->g;
 	q->g = next(q->capacity, q->g);
 	if (q->size > 0) {
@@ -59,8 +52,7 @@ uint32_t queue_getGetPosition(queue_Queue *q)
 	return pos;
 }
 
-static uint32_t next(uint32_t capacity, uint32_t x)
-{
+static uint32_t next(uint32_t capacity, uint32_t x) {
 	if (x < capacity - 1) {
 		return x + 1;
 	}

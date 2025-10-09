@@ -9,23 +9,19 @@
 #include "main.h"
 
 
-static int32_t func1(int32_t x /* default=10 */)
-{
+static int32_t func1(int32_t x /* default=10 */) {
 	return x;
 }
 
-static int32_t func2(int32_t a /* default=10 */, int32_t b /* default=20 */)
-{
+static int32_t func2(int32_t a /* default=10 */, int32_t b /* default=20 */) {
 	return a + b;
 }
 
-static int32_t func3(int32_t a /* default=10 */, int32_t b)
-{
+static int32_t func3(int32_t a /* default=10 */, int32_t b) {
 	return a + b;
 }
 
-static bool test1()
-{
+static bool test1() {
 	const bool c0 = func1(/*x=*/10) == 10;
 	const bool c1 = func1(10) == 10;
 	const bool c2 = func1(/*x=*/10) == 10;
@@ -34,8 +30,7 @@ static bool test1()
 	return c0 && c1 && c2 && c3 && c4;
 }
 
-static bool test2()
-{
+static bool test2() {
 	const bool c0 = func2(/*a=*/10, /*b=*/20) == 30;
 	const bool c1 = func2(10, 20) == 30;
 	const bool c2 = func2(/*a=*/10, /*b=*/20) == 30;
@@ -46,8 +41,7 @@ static bool test2()
 	return c0 && c1 && c2 && c3 && c4 && c5 && c6;
 }
 
-int main()
-{
+int main() {
 	printf("test default parameters\n");
 
 	//func2(b=10, 10)  // error: positional argument follows keyword argument

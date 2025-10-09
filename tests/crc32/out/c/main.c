@@ -19,8 +19,7 @@
 
 static uint8_t data[9] = datastring;
 
-int main()
-{
+int main() {
 	printf("CRC32 test\n");
 
 	const uint32_t crc = crc32_run((uint8_t *)&data, __lengthof(data));

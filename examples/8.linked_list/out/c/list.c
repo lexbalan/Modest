@@ -12,8 +12,7 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
-list_List *list_create()
-{
+list_List *list_create() {
 	list_List *const list = (list_List *)malloc(sizeof(list_List));
 
 	if (list == NULL) {
@@ -25,8 +24,7 @@ list_List *list_create()
 	return list;
 }
 
-uint32_t list_size_get(list_List *list)
-{
+uint32_t list_size_get(list_List *list) {
 	if (list == NULL) {
 		return 0;
 	}
@@ -34,8 +32,7 @@ uint32_t list_size_get(list_List *list)
 	return list->size;
 }
 
-list_Node *list_first_node_get(list_List *list)
-{
+list_Node *list_first_node_get(list_List *list) {
 	if (list == NULL) {
 		return NULL;
 	}
@@ -43,8 +40,7 @@ list_Node *list_first_node_get(list_List *list)
 	return list->head;
 }
 
-list_Node *list_last_node_get(list_List *list)
-{
+list_Node *list_last_node_get(list_List *list) {
 	if (list == NULL) {
 		return NULL;
 	}
@@ -52,8 +48,7 @@ list_Node *list_last_node_get(list_List *list)
 	return list->tail;
 }
 
-list_Node *list_node_first(list_List *list, list_Node *new_node)
-{
+list_Node *list_node_first(list_List *list, list_Node *new_node) {
 	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
@@ -66,8 +61,7 @@ list_Node *list_node_first(list_List *list, list_Node *new_node)
 	return new_node;
 }
 
-list_Node *list_node_create()
-{
+list_Node *list_node_create() {
 	list_Node *const node = (list_Node *)malloc(sizeof(list_Node));
 
 	if (node == NULL) {
@@ -79,8 +73,7 @@ list_Node *list_node_create()
 	return node;
 }
 
-list_Node *list_node_next_get(list_Node *node)
-{
+list_Node *list_node_next_get(list_Node *node) {
 	if (node == NULL) {
 		return NULL;
 	}
@@ -88,8 +81,7 @@ list_Node *list_node_next_get(list_Node *node)
 	return node->next;
 }
 
-list_Node *list_node_prev_get(list_Node *node)
-{
+list_Node *list_node_prev_get(list_Node *node) {
 	if (node == NULL) {
 		return NULL;
 	}
@@ -97,8 +89,7 @@ list_Node *list_node_prev_get(list_Node *node)
 	return node->prev;
 }
 
-void *list_node_data_get(list_Node *node)
-{
+void *list_node_data_get(list_Node *node) {
 	if (node == NULL) {
 		return NULL;
 	}
@@ -106,8 +97,7 @@ void *list_node_data_get(list_Node *node)
 	return node->data;
 }
 
-void list_node_insert_right(list_Node *left, list_Node *new_right)
-{
+void list_node_insert_right(list_Node *left, list_Node *new_right) {
 	printf("node_insert_right\n");
 
 	list_Node *const old_right = left->next;
@@ -124,8 +114,7 @@ void list_node_insert_right(list_Node *left, list_Node *new_right)
 // get list node by number
 // if number is out of range returns nil
 // if number < 0 - go backward
-list_Node *list_node_get(list_List *list, int32_t pos)
-{
+list_Node *list_node_get(list_List *list, int32_t pos) {
 	if (list == NULL || list->size == 0) {
 		return NULL;
 	}
@@ -166,8 +155,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 	return node;
 }
 
-list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node)
-{
+list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node) {
 	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
@@ -193,8 +181,7 @@ list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node)
 	return new_node;
 }
 
-list_Node *list_node_append(list_List *list, list_Node *new_node)
-{
+list_Node *list_node_append(list_List *list, list_Node *new_node) {
 	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
@@ -212,8 +199,7 @@ list_Node *list_node_append(list_List *list, list_Node *new_node)
 	return new_node;
 }
 
-list_Node *list_insert(list_List *list, int32_t pos, void *data)
-{
+list_Node *list_insert(list_List *list, int32_t pos, void *data) {
 	list_Node *const new_node = list_node_create();
 
 	if (new_node == NULL) {
@@ -225,8 +211,7 @@ list_Node *list_insert(list_List *list, int32_t pos, void *data)
 	return list_node_insert(list, pos, new_node);
 }
 
-list_Node *list_append(list_List *list, void *data)
-{
+list_Node *list_append(list_List *list, void *data) {
 	if (list == NULL) {
 		return NULL;
 	}

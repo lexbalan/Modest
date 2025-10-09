@@ -48,8 +48,7 @@ static SHA256_TestCase test1 = {
 
 #define tests  {&test0, &test1}
 
-static bool doTest(SHA256_TestCase *test)
-{
+static bool doTest(SHA256_TestCase *test) {
 	sha256_Hash test_hash;
 	uint8_t *const msg = (uint8_t *)&test->input_data;
 	const uint32_t msg_len = test->input_data_len;
@@ -70,8 +69,7 @@ static bool doTest(SHA256_TestCase *test)
 	return memcmp(&test_hash, &test->expected_result, sizeof(sha256_Hash)) == 0;
 }
 
-int main()
-{
+int main() {
 	printf("test SHA256\n");
 
 	uint32_t i = 0;

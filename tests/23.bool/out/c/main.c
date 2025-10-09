@@ -9,8 +9,7 @@
 #include "main.h"
 
 
-int main()
-{
+int main() {
 	printf("bool check\nm");
 
 	uint8_t x;

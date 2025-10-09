@@ -18,8 +18,7 @@ typedef struct Point Point;
 static Point globalPoint0 = {.x = 10, .y = 20};
 static Point globalPoint1 = {};
 
-int main()
-{
+int main() {
 	printf("test assign_array\n");
 
 	globalPoint1 = globalPoint0;

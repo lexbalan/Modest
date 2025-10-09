@@ -837,6 +837,7 @@ def transmission(to_type, value):
 
 
 
+
 def do_value_call(x):
 	fn = do_rvalue(x['left'])
 
@@ -864,7 +865,6 @@ def do_value_call(x):
 #	info("nargs = %s " % nargs, x['ti'])
 
 
-
 	if nargs > npars:
 		if not ftype.extra_args:
 			error("too many arguments", x)
@@ -877,7 +877,7 @@ def do_value_call(x):
 		return ini
 
 
-	args = []
+	sorted_args = []
 
 	#
 	# process positional args
@@ -894,10 +894,27 @@ def do_value_call(x):
 			break
 		av = do_rvalue(a['value'])
 		arg = do_arg(param, av)
-		args.append(arg)
+		sorted_args.append(arg)
 		i += 1
 
 	#info("1LL %d, %d" % (len(args), npars), x['ti'])
+
+	# проверим все именованные аргументы на наличие одноименного параметра
+	u = 0
+	while u < nargs:
+		a = x['args'][u]
+		if a['key']:
+			param_found = False
+			for p in params:
+				if p.id.str == a['key']['str']:
+					param_found = True
+					break
+			if not param_found:
+				error("unknown argument '%s'" % a['key']['str'], a['ti'])
+		u += 1
+
+	# для каждого парамерта ищем соотв. именованный аргумент
+	# идем по порядку и формируем список передвавемых аргументов
 
 	#
 	# process named args
@@ -927,13 +944,12 @@ def do_value_call(x):
 			if vx.isUndef():
 				error("undefined parameter '%s'" % p_id_str, x['ti'])
 		arg = do_arg(param, vx, named=True)
-		args.append(arg)
-
+		sorted_args.append(arg)
 		j += 1
 
 
-	#info("%d, %d" % (len(args), npars), x['ti'])
-	if len(args) < npars:
+	#info("%d, %d" % (len(sorted_args), npars), x['ti'])
+	if len(sorted_args) < npars:
 		error("not enough arguments", x)
 		return ValueBad(x['ti'])
 
@@ -958,11 +974,11 @@ def do_value_call(x):
 				imm_args = False
 
 			ini = Initializer(None, arg, ti=yy['ti'], nl=yy['nl'])
-			args.append(ini)
+			sorted_args.append(ini)
 
 		i += 1
 
-	return ValueCall(ftype.to, fn, args, ti=x['ti'])
+	return ValueCall(ftype.to, fn, sorted_args, ti=x['ti'])
 
 
 

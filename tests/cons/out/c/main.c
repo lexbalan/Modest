@@ -9,8 +9,7 @@
 #include "main.h"
 
 
-int main()
-{
+int main() {
 	printf("test cons operation\n");
 
 	/*let x0 = Int32 -1

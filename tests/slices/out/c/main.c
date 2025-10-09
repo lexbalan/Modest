@@ -19,8 +19,7 @@
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
 
-static void array_print(int32_t *pa, uint32_t len)
-{
+static void array_print(int32_t *pa, uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
 		printf("a[%d] = %d\n", i, pa[i]);
@@ -28,8 +27,7 @@ static void array_print(int32_t *pa, uint32_t len)
 	}
 }
 
-int main()
-{
+int main() {
 	printf("test slices\n");
 
 	//

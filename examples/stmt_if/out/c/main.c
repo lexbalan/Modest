@@ -9,8 +9,7 @@
 #include "main.h"
 
 
-int main()
-{
+int main() {
 	printf("if statement example\n");
 
 	int32_t a;

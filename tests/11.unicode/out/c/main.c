@@ -30,8 +30,7 @@ static char arr_utf8[8] = "Hi!\n";
 static uint16_t arr_utf16[9] = u"Hello Ω!\n";
 static uint32_t arr_utf32[8] = U"Hello!\n";
 
-int32_t main()
-{
+int32_t main() {
 	char *str8 = string8Const;
 	uint16_t *str16 = string16Const;
 	uint32_t *str32 = string32Const;

@@ -23,14 +23,12 @@ static uint8_t cnt;
 // State Off
 //
 
-static void off_entry(fsm_FSM *x)
-{
+static void off_entry(fsm_FSM *x) {
 	(void)x;
 	//printf("off_entry\n")
 }
 
-static void off_loop(fsm_FSM *x)
-{
+static void off_loop(fsm_FSM *x) {
 	printf("off_loop\n");
 	if (cnt < 10) {
 		cnt = cnt + 1;
@@ -40,8 +38,7 @@ static void off_loop(fsm_FSM *x)
 	}
 }
 
-static void off_exit(fsm_FSM *x)
-{
+static void off_exit(fsm_FSM *x) {
 	(void)x;
 	//printf("off_exit\n")
 }
@@ -50,14 +47,12 @@ static void off_exit(fsm_FSM *x)
 // State On
 //
 
-static void on_entry(fsm_FSM *x)
-{
+static void on_entry(fsm_FSM *x) {
 	(void)x;
 	//printf("on_entry\n")
 }
 
-static void on_loop(fsm_FSM *x)
-{
+static void on_loop(fsm_FSM *x) {
 	printf("on_loop\n");
 	if (cnt < 10) {
 		cnt = cnt + 1;
@@ -67,8 +62,7 @@ static void on_loop(fsm_FSM *x)
 	}
 }
 
-static void on_exit(fsm_FSM *x)
-{
+static void on_exit(fsm_FSM *x) {
 	(void)x;
 	//printf("on_exit\n")
 }
@@ -77,14 +71,12 @@ static void on_exit(fsm_FSM *x)
 // State Beacon
 //
 
-static void beacon_entry(fsm_FSM *x)
-{
+static void beacon_entry(fsm_FSM *x) {
 	char *const from_name = fsm_state_no_name(x, x->state);
 	printf("beacon_entry from %s\n", from_name);
 }
 
-static void beacon_loop(fsm_FSM *x)
-{
+static void beacon_loop(fsm_FSM *x) {
 	printf("beacon_loop\n");
 	if (cnt < 10) {
 		cnt = cnt + 1;
@@ -94,8 +86,7 @@ static void beacon_loop(fsm_FSM *x)
 	}
 }
 
-static void beacon_exit(fsm_FSM *x)
-{
+static void beacon_exit(fsm_FSM *x) {
 	char *const to_name = fsm_state_no_name(x, x->nexstate);
 	printf("beacon_exit to %s\n", to_name);
 }
@@ -129,8 +120,7 @@ static fsm_FSM fsm0 = {
 	}
 };
 
-int main()
-{
+int main() {
 	while (true) {
 		fsm_run(&fsm0);
 		delay_ms(500);
