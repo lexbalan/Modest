@@ -34,6 +34,7 @@ static void write_example() {
 	fclose(fp);
 }
 
+
 static void read_example() {
 	printf("run read_example\n");
 
@@ -56,10 +57,12 @@ static void read_example() {
 	fclose(fp);
 }
 
+
 int main() {
 	printf("text_file example\n");
 	write_example();
 	read_example();
 	return 0;
 }
+
 

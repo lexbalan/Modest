@@ -29,6 +29,7 @@ static void fill(uint32_t n) {
 	}
 }
 
+
 // выгребаем и распечатываем n значений
 static void fetch(uint32_t n) {
 	uint32_t i = 0;
@@ -45,6 +46,7 @@ static void fetch(uint32_t n) {
 	}
 }
 
+
 #define qsize  10
 static uint8_t qbuf[qsize];
 
@@ -60,4 +62,5 @@ int main() {
 
 	return 0;
 }
+
 

@@ -20,6 +20,7 @@ static int64_t sum64(int64_t a, int64_t b) {
 	return sum;
 }
 
+
 static int64_t sub64(int64_t a, int64_t b) {
 	int64_t sub;
 	__asm__ volatile (
@@ -30,6 +31,7 @@ static int64_t sub64(int64_t a, int64_t b) {
 	);
 	return sub;
 }
+
 
 static void sumsub64(int64_t a, int64_t b) {
 	int64_t sum;
@@ -45,6 +47,7 @@ static void sumsub64(int64_t a, int64_t b) {
 	printf("sumsub64 sum = %lld\n", sum);
 	printf("sumsub64 sub = %lld\n", sub);
 }
+
 
 int main() {
 	printf("inline asm test\n");
@@ -62,4 +65,5 @@ int main() {
 
 	return 0;
 }
+
 

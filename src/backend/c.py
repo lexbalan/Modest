@@ -1876,7 +1876,7 @@ def print_def_func(x):
 			out("\n#undef %s" % id_str)
 
 	func_undef_list = []
-	out("\n}")
+	out("\n}\n")
 
 	if x.getAnnotation('conditional') != None:
 		a = x.getAnnotation('conditional')

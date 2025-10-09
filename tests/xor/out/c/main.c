@@ -25,6 +25,7 @@ static void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t 
 	}
 }
 
+
 //xor_encrypt = xor_encrypter
 //xor_decrypt = xor_encrypter
 
@@ -42,6 +43,7 @@ static void print_bytes(uint8_t *buf, uint32_t len) {
 	}
 	printf("\n");
 }
+
 
 int main() {
 	printf("test xor encrypting\n");
@@ -66,4 +68,5 @@ int main() {
 
 	return 0;
 }
+
 

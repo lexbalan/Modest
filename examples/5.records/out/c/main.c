@@ -36,6 +36,7 @@ static inline float max(float a, float b) {
 	return b;
 }
 
+
 __attribute__((always_inline))
 static inline float min(float a, float b) {
 	if (a < b) {
@@ -43,6 +44,7 @@ static inline float min(float a, float b) {
 	}
 	return b;
 }
+
 
 // Pythagorean theorem
 static float distance(Point a, Point b) {
@@ -53,9 +55,11 @@ static float distance(Point a, Point b) {
 	return sqrt(dx2 + dy2);
 }
 
+
 static float lineLength(Line line) {
 	return distance(line.a, line.b);
 }
+
 
 static void ptr_example() {
 	Point *const ptr_p = (Point *)malloc(sizeof(Point));
@@ -67,6 +71,7 @@ static void ptr_example() {
 	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }
 
+
 int main() {
 	// by value
 	const float len = lineLength(line);
@@ -76,4 +81,5 @@ int main() {
 
 	return 0;
 }
+
 

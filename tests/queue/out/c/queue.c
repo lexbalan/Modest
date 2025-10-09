@@ -13,21 +13,26 @@ void queue_init(queue_Queue *q, uint32_t capacity) {
 	q->capacity = capacity;
 }
 
+
 uint32_t queue_capacity(queue_Queue *q) {
 	return q->capacity;
 }
+
 
 uint32_t queue_size(queue_Queue *q) {
 	return q->size;
 }
 
+
 bool queue_isEmpty(queue_Queue *q) {
 	return q->size == 0;
 }
 
+
 bool queue_isFull(queue_Queue *q) {
 	return q->size == q->capacity;
 }
+
 
 // you must check isFull(queue) before call 'getPutPosition'
 
@@ -42,6 +47,7 @@ uint32_t queue_getPutPosition(queue_Queue *q) {
 	return pos;
 }
 
+
 // you must check isEmpty(queue) before call 'getGetPosition'
 uint32_t queue_getGetPosition(queue_Queue *q) {
 	const uint32_t pos = q->g;
@@ -52,10 +58,12 @@ uint32_t queue_getGetPosition(queue_Queue *q) {
 	return pos;
 }
 
+
 static uint32_t next(uint32_t capacity, uint32_t x) {
 	if (x < capacity - 1) {
 		return x + 1;
 	}
 	return 0;
 }
+
 

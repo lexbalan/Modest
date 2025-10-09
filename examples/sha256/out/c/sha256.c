@@ -30,40 +30,48 @@ static inline uint32_t rotleft(uint32_t a, uint32_t b) {
 	return (a << b) | (a >> (32 - b));
 }
 
+
 __attribute__((always_inline))
 static inline uint32_t rotright(uint32_t a, uint32_t b) {
 	return (a >> b) | (a << (32 - b));
 }
+
 
 __attribute__((always_inline))
 static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (~x & z);
 }
 
+
 __attribute__((always_inline))
 static inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (x & z) ^ (y & z);
 }
+
 
 __attribute__((always_inline))
 static inline uint32_t ep0(uint32_t x) {
 	return rotright(x, 2) ^ rotright(x, 13) ^ rotright(x, 22);
 }
 
+
 __attribute__((always_inline))
 static inline uint32_t ep1(uint32_t x) {
 	return rotright(x, 6) ^ rotright(x, 11) ^ rotright(x, 25);
 }
+
 
 __attribute__((always_inline))
 static inline uint32_t sig0(uint32_t x) {
 	return rotright(x, 7) ^ rotright(x, 18) ^ (x >> 3);
 }
 
+
 __attribute__((always_inline))
 static inline uint32_t sig1(uint32_t x) {
 	return rotright(x, 17) ^ rotright(x, 19) ^ (x >> 10);
 }
+
 
 #define initalState  { \
 	0x6A09E667, 0xBB67AE85UL, 0x3C6EF372, 0xA54FF53AUL, \
@@ -73,6 +81,7 @@ static inline uint32_t sig1(uint32_t x) {
 static void contextInit(Context *ctx) {
 	ARRCPY((&ctx->state), (&((uint32_t[8])initalState)), (8));
 }
+
 
 #define k  { \
 	0x428A2F98, 0x71374491, 0xB5C0FBCFUL, 0xE9B5DBA5UL, \
@@ -139,6 +148,7 @@ static void transform(Context *ctx, uint8_t *data) {
 	}
 }
 
+
 static void update(Context *ctx, uint8_t *msg, uint32_t msgLen) {
 	uint32_t i = 0;
 	while (i < msgLen) {
@@ -152,6 +162,7 @@ static void update(Context *ctx, uint8_t *msg, uint32_t msgLen) {
 		i = i + 1;
 	}
 }
+
 
 static void final(Context *ctx, uint8_t *outHash) {
 	uint32_t i = ctx->datalen;
@@ -209,10 +220,12 @@ static void final(Context *ctx, uint8_t *outHash) {
 	}
 }
 
+
 void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash) {
 	Context ctx = {};
 	contextInit(&ctx);
 	update(&ctx, msg, msgLen);
 	final(&ctx, outHash);
 }
+
 

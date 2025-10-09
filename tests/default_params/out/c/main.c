@@ -13,13 +13,16 @@ static int32_t func1(int32_t x /* default=10 */) {
 	return x;
 }
 
+
 static int32_t func2(int32_t a /* default=10 */, int32_t b /* default=20 */) {
 	return a + b;
 }
 
+
 static int32_t func3(int32_t a /* default=10 */, int32_t b) {
 	return a + b;
 }
+
 
 static bool test1() {
 	const bool c0 = func1(/*x=*/10) == 10;
@@ -29,6 +32,7 @@ static bool test1() {
 	const bool c4 = func1(/*x=*/20) == 20;
 	return c0 && c1 && c2 && c3 && c4;
 }
+
 
 static bool test2() {
 	const bool c0 = func2(/*a=*/10, /*b=*/20) == 30;
@@ -40,6 +44,7 @@ static bool test2() {
 	const bool c6 = func2(/*a=*/20, /*b=*/10) == 30;
 	return c0 && c1 && c2 && c3 && c4 && c5 && c6;
 }
+
 
 int main() {
 	printf("test default parameters\n");
@@ -63,4 +68,5 @@ int main() {
 
 	return 0;
 }
+
 

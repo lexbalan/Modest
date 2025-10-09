@@ -60,6 +60,7 @@ static void f0(char *_x, char *sret_) {
 	memcpy(sret_, &res, sizeof(char[30]));
 }
 
+
 #define startSequence  {0xAA, 0x55, 0x2}
 #define stopSequence  {0x16}
 
@@ -73,6 +74,7 @@ static void test() {
 		i = i + 1;
 	}
 }
+
 
 static int32_t a0[2][2][5] = {
 	
@@ -181,6 +183,7 @@ static void test_arrays() {
 		i = i + 1;
 	}
 }
+
 
 int main() {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
@@ -349,4 +352,5 @@ int main() {
 
 	return 0;
 }
+
 

@@ -27,6 +27,7 @@ static void array_print(int32_t *pa, uint32_t len) {
 	}
 }
 
+
 int main() {
 	printf("test slices\n");
 
@@ -169,4 +170,5 @@ int main() {
 #undef i1
 #undef j1
 }
+
 

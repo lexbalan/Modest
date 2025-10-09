@@ -20,9 +20,11 @@ static uint64_t high_128(unsigned __int128 x) {
 	return (uint64_t)(x >> 64);
 }
 
+
 static uint64_t low_128(unsigned __int128 x) {
 	return (uint64_t)(x & BIG_INT128(0x0ULL, 0xFFFFFFFFFFFFFFFFULL));
 }
+
 
 int main() {
 
@@ -57,4 +59,5 @@ int main() {
 #undef big2
 #undef sig0
 }
+
 

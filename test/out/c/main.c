@@ -114,6 +114,7 @@ static void testFixed()
 	printf("\n");
 }
 
+
 typedef int32_t NewType;
 #define newZero  ((NewType)0)
 #define newOne  ((NewType)1)
@@ -130,10 +131,12 @@ static void distinctCheck()
 	//
 }
 
+
 static int32_t add(int32_t a, int32_t b)
 {
 	return a + b;
 }
+
 
 //const yx = add(2, 2)
 
@@ -142,6 +145,7 @@ static int32_t v0;
 void main_f0()
 {
 }
+
 
 int32_t i32;
 
@@ -160,11 +164,13 @@ static void xxx(uint8_t *p)
 	}
 }
 
+
 static void mzero(void *p, uint32_t size)
 {
 	uint8_t *const px = (uint8_t *)p;
 	memset(px, 0, sizeof(uint8_t[size]));
 }
+
 
 static void mcopy(void *dst, void *src, uint32_t size)
 {
@@ -173,12 +179,14 @@ static void mcopy(void *dst, void *src, uint32_t size)
 	memcpy(pd, ps, sizeof(uint8_t[size]));
 }
 
+
 static bool mcmp(void *a, void *b, uint32_t size)
 {
 	uint8_t *const pa = (uint8_t *)a;
 	uint8_t *const pb = (uint8_t *)b;
 	return memcmp(pa, pb, sizeof(uint8_t[size])) == 0;
 }
+
 
 void main_sbuf(void *p, uint32_t size)
 {
@@ -192,6 +200,7 @@ void main_sbuf(void *p, uint32_t size)
 		i = i + 1;
 	}
 }
+
 
 static volatile int *const (*xx)[];
 static volatile int yy[10];
@@ -228,10 +237,12 @@ static void divtest()
 	printf("%d %% %d = %d\n", a, b, a % b);
 }
 
+
 static int32_t argtest(int32_t a, int32_t b /* default=0 */)
 {
 	return a + b;
 }
+
 
 int32_t main()
 {
@@ -341,4 +352,5 @@ int32_t main()
 
 	return 0;
 }
+
 

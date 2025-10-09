@@ -68,9 +68,11 @@ static float distance(Point a, Point b) {
 	return sqrt(dx2 + dy2);
 }
 
+
 static float lineLength(Line line) {
 	return distance(line.a, line.b);
 }
+
 
 int main() {
 	const float lines_0_len = lineLength(((const Line[4])lines)[0]);
@@ -92,4 +94,5 @@ int main() {
 
 	return 0;
 }
+
 

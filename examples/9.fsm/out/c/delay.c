@@ -16,11 +16,14 @@ void delay_us(uint64_t us) {
 	}
 }
 
+
 void delay_ms(uint64_t ms) {
 	delay_us(ms * 1000);
 }
 
+
 void delay_sec(uint64_t s) {
 	delay_us(s * 1000000);
 }
+
 

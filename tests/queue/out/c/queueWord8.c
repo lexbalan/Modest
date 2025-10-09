@@ -14,21 +14,26 @@ void queueWord8_init(queueWord8_QueueWord8 *q, uint8_t *buf, uint32_t capacity) 
 	q->data = buf;
 }
 
+
 uint32_t queueWord8_capacity(queueWord8_QueueWord8 *q) {
 	return queue_capacity(&q->queue);
 }
+
 
 uint32_t queueWord8_size(queueWord8_QueueWord8 *q) {
 	return queue_size(&q->queue);
 }
 
+
 bool queueWord8_isFull(queueWord8_QueueWord8 *q) {
 	return queue_isFull(&q->queue);
 }
 
+
 bool queueWord8_isEmpty(queueWord8_QueueWord8 *q) {
 	return queue_isEmpty(&q->queue);
 }
+
 
 bool queueWord8_put(queueWord8_QueueWord8 *q, uint8_t b) {
 	if (queue_isFull(&q->queue)) {
@@ -41,6 +46,7 @@ bool queueWord8_put(queueWord8_QueueWord8 *q, uint8_t b) {
 	return true;
 }
 
+
 bool queueWord8_get(queueWord8_QueueWord8 *q, uint8_t *b) {
 	if (queue_isEmpty(&q->queue)) {
 		return false;
@@ -51,6 +57,7 @@ bool queueWord8_get(queueWord8_QueueWord8 *q, uint8_t *b) {
 
 	return true;
 }
+
 
 uint32_t queueWord8_read(queueWord8_QueueWord8 *q, uint8_t *data, uint32_t len) {
 	uint32_t n = 0;
@@ -65,6 +72,7 @@ uint32_t queueWord8_read(queueWord8_QueueWord8 *q, uint8_t *data, uint32_t len) 
 	return n;
 }
 
+
 uint32_t queueWord8_write(queueWord8_QueueWord8 *q, uint8_t *data, uint32_t len) {
 	uint32_t n = 0;
 	while (n < len) {
@@ -77,8 +85,10 @@ uint32_t queueWord8_write(queueWord8_QueueWord8 *q, uint8_t *data, uint32_t len)
 	return n;
 }
 
+
 void queueWord8_clear(queueWord8_QueueWord8 *q) {
 	uint8_t *const pdata = (uint8_t *)q->data;
 	memset(pdata, 0, sizeof(uint8_t[queue_capacity(&q->queue)]));
 }
+
 

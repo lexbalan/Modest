@@ -17,6 +17,7 @@ static double squareOfCircle(double radius) {
 	return pow(radius, 2) * mathPi;
 }
 
+
 struct Point2D {
 	int x;
 	int y;
@@ -30,6 +31,7 @@ static float slope(Point2D a, Point2D b) {
 	printf("dy = %d\n", dy);
 	return (float)dy / (float)dx;
 }
+
 
 int main() {
 	printf("float test\n");
@@ -56,4 +58,5 @@ int main() {
 #undef r
 #undef k
 }
+
 

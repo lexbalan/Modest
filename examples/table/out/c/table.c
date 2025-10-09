@@ -94,6 +94,7 @@ void table_print(table_Table *table) {
 	separator((uint32_t *)&sz, table->nCols);
 }
 
+
 static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols) {
 	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
 	uint32_t j = 0;
@@ -116,6 +117,7 @@ static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols) {
 	printf("|\n");
 }
 
+
 // печатает строку +---+---+ отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
@@ -132,4 +134,5 @@ static void separator(uint32_t *sz, uint32_t n) {
 	}
 	printf("+\n");
 }
+
 

@@ -40,6 +40,7 @@ static bool write_file(int sockfd) {
 	return true;
 }
 
+
 int main() {
 	const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0) {
@@ -88,4 +89,5 @@ int main() {
 
 	return 0;
 }
+
 

@@ -35,6 +35,7 @@ static ssize_t my_printf(char *format, ...) {
 #undef strMaxLen
 }
 
+
 int main() {
 	uint32_t k = 10;
 	my_printf("My Printf Test %u\n", k);
@@ -54,4 +55,5 @@ int main() {
 
 	return 0;
 }
+
 

@@ -27,21 +27,26 @@ static void f0() {
 	return;
 }
 
+
 static int32_t f1(int32_t x) {
 	return x;
 }
+
 
 static int32_t f2(int32_t a, int32_t b) {
 	return a + b;
 }
 
+
 static int32_t *f3() {
 	return NULL;
 }
 
+
 static void f4(int32_t x, int32_t *sret_) {
 	memcpy(sret_, &((int32_t[10]){1, 2, 3}), sizeof(int32_t[10]));
 }
+
 
 static void f5(int32_t *_a, int32_t *sret_) {
 	int32_t a[32];
@@ -49,37 +54,46 @@ static void f5(int32_t *_a, int32_t *sret_) {
 	memcpy(sret_, &a, sizeof(int32_t[32]));
 }
 
+
 static int32_t *f6(int32_t *a) {
 	return NULL;
 }
+
 
 static void f7(void(*f)()) {
 	return;
 }
 
+
 static void(*f8(void(*f)()))() {
 	return &f0;
 }
+
 
 static void(**f9(void(*f)()))() {
 	return NULL;
 }
 
+
 static void(**f10(void(**f)()))() {
 	return f;
 }
+
 
 static void(**f11(int32_t *(**f)(int32_t a, int32_t *b)))() {
 	return NULL;
 }
 
+
 static void(**f12(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))() {
 	return NULL;
 }
 
+
 static void(**f13(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() {
 	return NULL;
 }
+
 
 // Pointers to function
 static void(*pf0)() = &f0;
@@ -178,6 +192,7 @@ static AnimationPoint animation2_points[5] = {
 static void xy(struct __anonymous_struct_3 x) {
 }
 
+
 static int32_t arrr[3][3] = {
 	1, 2, 3,
 	4, 5, 6,
@@ -190,9 +205,11 @@ static int32_t add(int32_t a, int32_t b) {
 	return a + b;
 }
 
+
 static int32_t sub(int32_t a, int32_t b) {
 	return a - b;
 }
+
 
 static int32_t(*farr[2])(int32_t a, int32_t b) = {
 	&add, &sub
@@ -203,9 +220,11 @@ typedef void He();
 static void he(He *x) {
 }
 
+
 static void hi(char *x) {
 	printf("Hi %s!\n", x);
 }
+
 
 static void(*hiarr[10])(char *x) = {
 	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
@@ -268,4 +287,5 @@ int32_t main() {
 
 	return 0;
 }
+
 

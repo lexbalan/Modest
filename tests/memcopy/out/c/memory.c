@@ -59,6 +59,7 @@ void memory_zero(void *mem, uint64_t len) {
 	}
 }
 
+
 void memory_copy(void *dst, void *src, uint64_t len) {
 	const uint64_t len_words = len / sizeof(Word);
 	Word *const src_w = (Word *)src;
@@ -80,6 +81,7 @@ void memory_copy(void *dst, void *src, uint64_t len) {
 		i = i + 1;
 	}
 }
+
 
 bool memory_eq(void *mem0, void *mem1, uint64_t len) {
 	const uint64_t len_words = len / sizeof(Word);
@@ -108,4 +110,5 @@ bool memory_eq(void *mem0, void *mem1, uint64_t len) {
 
 	return true;
 }
+
 

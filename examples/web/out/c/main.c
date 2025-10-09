@@ -54,6 +54,7 @@ static void handleRequest(int32_t client_socket) {
 	close(client_socket);
 }
 
+
 int32_t main() {
 	const int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_socket < 0) {
@@ -105,4 +106,5 @@ int32_t main() {
 	close(server_socket);
 	return 0;
 }
+
 

@@ -14,21 +14,26 @@ void ringWord8_init(ringWord8_RingWord8 *q, uint8_t *buf, uint32_t capacity) {
 	q->data = buf;
 }
 
+
 uint32_t ringWord8_capacity(ringWord8_RingWord8 *q) {
 	return queue_capacity(&q->queue);
 }
+
 
 uint32_t ringWord8_size(ringWord8_RingWord8 *q) {
 	return queue_size(&q->queue);
 }
 
+
 bool ringWord8_isFull(ringWord8_RingWord8 *q) {
 	return queue_isFull(&q->queue);
 }
 
+
 bool ringWord8_isEmpty(ringWord8_RingWord8 *q) {
 	return queue_isEmpty(&q->queue);
 }
+
 
 bool ringWord8_put(ringWord8_RingWord8 *q, uint8_t b) {
 	/*
@@ -43,6 +48,7 @@ bool ringWord8_put(ringWord8_RingWord8 *q, uint8_t b) {
 	return true;
 }
 
+
 bool ringWord8_get(ringWord8_RingWord8 *q, uint8_t *b) {
 	if (queue_isEmpty(&q->queue)) {
 		return false;
@@ -53,4 +59,5 @@ bool ringWord8_get(ringWord8_RingWord8 *q, uint8_t *b) {
 
 	return true;
 }
+
 

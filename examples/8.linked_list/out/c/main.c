@@ -20,6 +20,7 @@ static void nat32_list_insert(list_List *lst, uint32_t x) {
 	list_append(lst, p_nat32);
 }
 
+
 // show list conent from first item to last
 static void list_print_forward(list_List *lst) {
 	printf("list_print_forward:\n");
@@ -31,6 +32,7 @@ static void list_print_forward(list_List *lst) {
 	}
 }
 
+
 // show list conent from last item to first
 static void list_print_backward(list_List *lst) {
 	printf("list_print_backward:\n");
@@ -41,6 +43,7 @@ static void list_print_backward(list_List *lst) {
 		pn = list_node_prev_get(pn);
 	}
 }
+
 
 int main() {
 	printf("linked list example\n");
@@ -124,4 +127,5 @@ int main() {
 
 	return 0;
 }
+
 

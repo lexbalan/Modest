@@ -18,10 +18,12 @@ char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no) {
 	return (char *)&fsm->states[state_no].name;
 }
 
+
 void fsm_switch(fsm_FSM *fsm, uint32_t state) {
 	fsm->nexstate = state;
 	fsm->substate = fsm_substateLeaving;
 }
+
 
 void fsm_run(fsm_FSM *fsm) {
 	printf("fsm::run()\n");
@@ -60,4 +62,5 @@ void fsm_run(fsm_FSM *fsm) {
 		fsm->substate = fsm_substateEntering;
 	}
 }
+
 

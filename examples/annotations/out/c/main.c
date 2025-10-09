@@ -67,19 +67,23 @@ static bool boolFunction(bool x) {
 	return false;
 }
 
+
 __attribute__((always_inline))
 static inline int32_t staticInlineFunc(int32_t x) {
 	return x + 1;
 }
+
 
 __attribute__((noinline))
 static int32_t staticNoinlineFunc(int32_t x) {
 	return x + 1;
 }
 
+
 static inline int32_t staticInlineHintFunc(int32_t x) {
 	return x + 1;
 }
+
 
 struct Point2D {
 	double x;
@@ -93,9 +97,11 @@ static void hello() {
 	printf("hi!\n");
 }
 
+
 int32_t main() {
 	hello();
 	printf("Attributes example\n");
 	return 0;
 }
+
 

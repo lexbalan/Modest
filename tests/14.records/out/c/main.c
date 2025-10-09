@@ -111,6 +111,7 @@ static void test_records() {
 	printf("x.x.b.y = %d\n", x.x->b.y);
 }
 
+
 int main() {
 	printf("records test\n");
 
@@ -215,4 +216,5 @@ int main() {
 
 #undef ver
 }
+
 

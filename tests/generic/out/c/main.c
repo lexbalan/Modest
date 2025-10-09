@@ -65,6 +65,7 @@ int main() {
 	return 0;
 }
 
+
 static bool test_generic_integer() {
 	// Any integer literal have GenericInteger type
 	#define one  1
@@ -98,6 +99,7 @@ static bool test_generic_integer() {
 #undef two
 }
 
+
 static bool test_generic_float() {
 	// Any float literal have GenericFloat type
 	#define pi  3.141592653589793238462643383279502884
@@ -115,6 +117,7 @@ static bool test_generic_float() {
 
 #undef pi
 }
+
 
 static bool test_generic_char() {
 	// Any char value expression have GenericChar type
@@ -134,6 +137,7 @@ static bool test_generic_char() {
 
 #undef a
 }
+
 
 static bool test_generic_array() {
 	// Any array expression have GenericArray type
@@ -185,6 +189,7 @@ static bool test_generic_array() {
 #undef a
 }
 
+
 struct Point2D {
 	int32_t x;
 	int32_t y;
@@ -222,4 +227,5 @@ static bool test_generic_record() {
 
 #undef p
 }
+
 

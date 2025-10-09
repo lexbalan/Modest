@@ -46,6 +46,7 @@ uint8_t utf_utf32_to_utf8(uint32_t c, char *buf) {
 	return 0;
 }
 
+
 // returns n-symbols from input stream
 uint8_t utf_utf16_to_utf32(uint16_t *c, uint32_t *result) {
 	const uint32_t leading = (uint32_t)c[0];
@@ -69,4 +70,5 @@ uint8_t utf_utf16_to_utf32(uint16_t *c, uint32_t *result) {
 
 	return 0;
 }
+
 

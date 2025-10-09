@@ -69,6 +69,7 @@ static bool doTest(SHA256_TestCase *test) {
 	return memcmp(&test_hash, &test->expected_result, sizeof(sha256_Hash)) == 0;
 }
 
+
 int main() {
 	printf("test SHA256\n");
 
@@ -89,4 +90,5 @@ int main() {
 
 	return 0;
 }
+
 
