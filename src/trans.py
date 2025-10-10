@@ -2255,6 +2255,10 @@ def do_directive(x):
 		elif s0 == 'insert':
 			print("-INSERT " + args[1])
 			return StmtDirectiveInsert(args[1], x['ti'])
+		elif s0 == 'prefix':
+			prefix = args[1]
+			cmodule.setPrefix(prefix)
+			#mass
 		elif s0 == 'append_prefix':
 			prefix = args[1]
 			#print('append_prefix = %s' % prefix)
@@ -2289,7 +2293,7 @@ def translate(abspath, is_import=False, is_include=False):
 	if ast != None:
 		idStr = abspath.split('/')[-1][:-2]
 		m = process_module(idStr, abspath, ast, is_import=is_import, is_include=is_include)
-		m.prefix = m.id
+		#m.prefix = m.id
 		m.source_abspath = abspath
 
 	env_current_file_dir = prev_env_current_file_dir

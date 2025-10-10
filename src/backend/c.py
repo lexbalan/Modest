@@ -151,26 +151,28 @@ def is_global_public(x):
 	return False
 
 
+
 def get_id_str(x):
 	if not hasattr(x, 'id'):
 		return None
 
 	id = x.id
-	if not hasattr(id, 'c'):
-		from error import warning
-		warning("??", x.ti)
 	id_str = id.c
 
 	if id.prefix != None:
 		id_str = id.prefix + id_str
 
-	if not x.id.hasAttribute('nodecorate'):
-		if is_global_public(x):
-			module = x.getModule()
-			if module != None:
-				if not module.hasAttribute('nodecorate'):
-					#if x.access_level != 'private':
-					id_str = "%s_%s" % (module.prefix, id_str)
+	if x.id.hasAttribute('nodecorate'):
+		return id_str
+
+	if not is_global_public(x):
+		return id_str
+
+	module = x.getModule()
+	if module != None:
+		if not module.hasAttribute('nodecorate'):
+			#if x.access_level != 'private':
+			return "%s_%s" % (module.prefix, id_str)
 
 	return id_str
 
@@ -1851,13 +1853,10 @@ def print_def_func(x):
 	for param in ftype.params:
 		if param.type.is_closed_array():
 			nl_indent(1)
-
 			paramId = get_id_str(param)
 			print_variable(paramId, param.type)
 			out(";")
-
 			nl_indent(1)
-
 			out("memcpy(%s, %s" % (paramId, '_' + paramId))
 			out(", sizeof(")
 			print_type(param.type)
@@ -2131,8 +2130,9 @@ def print_header(module, outname):
 			newline()
 			defs = module.defs[1:]
 
-	guardsymbol = outname.split("/")[-1]
-	guardsymbol = guardsymbol[:-2].upper() + '_H'
+	#guardsymbol = outname.split("/")[-1]
+	#guardsymbol = guardsymbol[:-2].upper() + '_H'
+	guardsymbol = module.prefix.upper() + '_H'
 	newline()
 	out("#ifndef %s\n" % guardsymbol)
 	out("#define %s\n" % guardsymbol)

@@ -10,7 +10,7 @@ class Module:
 		self.id = idStr
 		self.sourcename = sourcename
 		self.ast = ast
-		self.prefix = None
+		self.prefix = idStr
 		self.strings = []   # for LLVM backend
 		self.anon_recs = [] # anonymous records for C backend
 		self.imports = {}   # '<import_id>' => {'isa': 'module'}
@@ -21,6 +21,10 @@ class Module:
 		self.defs = []
 		self.att = []
 
+
+	def setPrefix(self, prefixStr):
+		print("setPrefix('%s')" % prefixStr)
+		self.prefix = prefixStr
 
 	def addAttribute(self, a):
 		if not a in self.att:
