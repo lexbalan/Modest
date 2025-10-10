@@ -47,7 +47,7 @@ static void handleRequest(int32_t client_socket) {
 
 	char response[sendBufferSize];
 	sprintf((char *)&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>",
-		httpHeader,pageCounter
+		httpHeader, pageCounter
 	);
 
 	write(client_socket, (void *)&response, strlen((const char *)&response));
@@ -80,7 +80,7 @@ int32_t main() {
 	}
 
 	// Starting listen to connection
-	rc = listen(/*socket=*/server_socket, /*backlog=*/5);
+	rc = listen(server_socket, 5);
 	if (rc < 0) {
 		perror("cannot listen socket");
 		close(server_socket);

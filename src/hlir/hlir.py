@@ -23,7 +23,6 @@ class Module:
 
 
 	def setPrefix(self, prefixStr):
-		print("setPrefix('%s')" % prefixStr)
 		self.prefix = prefixStr
 
 	def addAttribute(self, a):

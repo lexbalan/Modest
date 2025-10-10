@@ -623,54 +623,42 @@ def str_value_call(v, ctx, sret=None):
 
 	sstr += ("(")
 
-	need_sk = False
+	sk_after = False
 
 	i = 0
 	while i < n:
-		sk = args[i].nl > 0
+		arg = args[i]
+		sk = arg.nl > 0
+
+		if i > 0:
+			sstr += ","
+
 		if sk:
-			need_sk = True
-			sstr += '\n' * args[i].nl
+			sk_after = True
+			sstr += '\n' * arg.nl
 			indent_up()
 			sstr += str_indent()
 			indent_down()
+		elif i > 0:
+			sstr += " "
 
-		a = args[i].value
-		param_id = args[i].id
-# TODO: тепреь id есть у всех, и так уже не канает
-		if args[i].named:
-			sstr += "/*%s=*/" % param_id.str
+		a = arg.value
+		param_id = arg.id
 
+		#if arg.named:
+			#sstr += "/*%s=*/" % param_id.str
 
-		# не всегда когда есть аргумент есть и соотв ему параметер (!)
-#		try:
-#			# если тип аргумента отличается модификатором (const, volatile)
-#			# то явно приведем его к типу параметра, чтобы C не ругался
-#			# (try: проверяем только те аргументы, для которых есть параметры)
-#			p = params[i]
-#			pt = p['type']
-#
-#			if not Type.eq(pt, a['type'], opt=['att_checking']):
-#				sstr += str_cast(pt, a)
-#			else:
-#			sstr += str_value(a, ctx=ctx)
-#
-#		except:
 		sstr += str_value(a, ctx=ctx)
 
 		i = i + 1
-		if i < n:
-			if sk:
-				sstr += ","
-			else:
-				sstr += ", "
+
 
 	if sret != None:
 		if i > 0:
 			sstr += (", ")
 		sstr += str_value_as_ptr(sret)
 
-	if need_sk:
+	if sk_after:
 		sstr += str_nl_indent()
 
 	sstr += (")")
