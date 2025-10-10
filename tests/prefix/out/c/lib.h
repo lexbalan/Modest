@@ -8,6 +8,14 @@
 #include <stdbool.h>
 
 #include <stdio.h>
-void loo_foo();
+
+struct loo_Nothing {
+};
+typedef struct loo_Nothing loo_Nothing;
+
+#define loo_bar  4
+
+extern int32_t loo_spam;
+void loo_foo(uint32_t x);
 
 #endif /* LOO_H */

@@ -194,16 +194,18 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 1
 
 ; from import "lib"
-declare void @loo_foo()
+%loo_Nothing = type {
+};
+
+declare void @loo_foo(%Nat32 %x)
 
 ; end from import "lib"
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [8 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 33, i8 10, i8 0]
 ; -- endstrings --; examples/prefix/src/main.m
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*))
-	call void @loo_foo()
+	%1 = alloca %loo_Nothing, align 1
+	call void @loo_foo(%Nat32 4)
 	ret %Int 0
 }
 

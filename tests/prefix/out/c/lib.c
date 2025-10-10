@@ -11,8 +11,10 @@
 
 //pragma append_prefix loo
 
-void loo_foo() {
-	//
+int32_t loo_spam = 4;
+
+void loo_foo(uint32_t x) {
+	printf("foo(%d)\n", x);
 }
 
 

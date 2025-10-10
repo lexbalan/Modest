@@ -10,8 +10,9 @@
 
 
 int main() {
-	printf("Hello!\n");
-	loo_foo();
+	loo_Nothing nothing;
+	loo_foo(loo_bar);
+	loo_spam;
 	return 0;
 }
 

@@ -6,8 +6,9 @@ import "lib"
 
 
 public func main () -> Int {
-	printf("Hello!\n")
-	lib.foo()
+	var nothing: lib.Nothing
+	lib.foo(lib.bar)
+	lib.spam
 	return 0
 }
 
