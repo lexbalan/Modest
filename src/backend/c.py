@@ -623,7 +623,7 @@ def str_value_call(v, ctx, sret=None):
 
 	sstr += ("(")
 
-	sk_after = False
+	nl_after = False
 
 	i = 0
 	while i < n:
@@ -634,8 +634,8 @@ def str_value_call(v, ctx, sret=None):
 			sstr += ","
 
 		if sk:
-			sk_after = True
-			sstr += '\n' * arg.nl
+			nl_after = True
+			sstr += '\n' #* arg.nl
 			indent_up()
 			sstr += str_indent()
 			indent_down()
@@ -658,7 +658,7 @@ def str_value_call(v, ctx, sret=None):
 			sstr += (", ")
 		sstr += str_value_as_ptr(sret)
 
-	if sk_after:
+	if nl_after:
 		sstr += str_nl_indent()
 
 	sstr += (")")
