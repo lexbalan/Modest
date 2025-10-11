@@ -118,7 +118,7 @@ break_2:
 ; -- 0
 ; -- end print imports 'm328p' --
 ; -- strings --
-; -- endstrings --
+; -- endstrings --; avr/m328p
 %m328p_GPIO = type <{
 	%avr_IO8,
 	%avr_IO8,

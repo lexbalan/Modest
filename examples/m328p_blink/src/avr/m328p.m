@@ -4,9 +4,9 @@ include "avr"
 
 
 public type GPIO = @public @packed record {
-	public in: IO8
-	public dir: IO8
-	public out: IO8
+	in: IO8
+	dir: IO8
+	out: IO8
 }
 
 

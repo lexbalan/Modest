@@ -1625,7 +1625,7 @@ class Parser:
 			return 'public'
 		elif self.match('private'):
 			return 'private'
-		return 'private'
+		return 'default'
 
 
 	def parse_comments_annotations(self, nl_cnt=0):

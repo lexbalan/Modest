@@ -469,24 +469,24 @@ def do_type_record(x):
 	uid = rec_uid
 	rec_uid = rec_uid + 1
 
-	for field in x['fields']:
-		f = do_field(field)
+	for ast_field in x['fields']:
+		field = do_field(ast_field)
 
 		# redefinition?
-		field_id_str = f.id.str
+		field_id_str = field.id.str
 		field_already_exist = get_item_by_id(fields, field_id_str)
 		if field_already_exist != None:
 			error("redefinition of '%s' field" % field_id_str, field.ti)
 			continue
 
 		#if 'comments' in field:
-		for comment in field['comments']:
-			f.comments.append(do_stmt_comment(comment))
+		for comment in ast_field['comments']:
+			field.comments.append(do_stmt_comment(comment))
 
-		if field['line_comment']:
-			f.line_comment = do_stmt_comment(field['line_comment'])
+		if ast_field['line_comment']:
+			field.line_comment = do_stmt_comment(ast_field['line_comment'])
 
-		fields.append(f)
+		fields.append(field)
 
 	rec = TypeRecord(fields, ti=x['ti'])
 	rec.uid = uid

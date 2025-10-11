@@ -6,11 +6,11 @@ import "avr/delay" as delay
 import "avr/m328p" as avr
 
 
-public func main() -> Int16 {
-	avr.portB.dir = 0xFF
+public func main () -> Int16 {
+	avr.portB.dir = 0xff
 
 	while true {
-		avr.portB.out = 0xFF
+		avr.portB.out = 0xff
 		delay.ms(1000)
 
 		avr.portB.out = 0x00

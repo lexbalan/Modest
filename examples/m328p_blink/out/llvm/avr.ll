@@ -115,7 +115,7 @@ break_2:
 ; -- 0
 ; -- end print imports 'avr' --
 ; -- strings --
-; -- endstrings --
+; -- endstrings --; avr
 %avr_IO8 = type %Word8;
 %avr_IO16 = type %Word16;
 
