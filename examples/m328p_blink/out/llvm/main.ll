@@ -10,6 +10,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Word32 = type i32
 %Word64 = type i64
 %Word128 = type i128
+%Word256 = type i256
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -18,13 +19,16 @@ target triple = "arm64-apple-macosx12.0.0"
 %Int32 = type i32
 %Int64 = type i64
 %Int128 = type i128
+%Int256 = type i256
 %Nat8 = type i8
 %Nat16 = type i16
 %Nat32 = type i32
 %Nat64 = type i64
 %Nat128 = type i128
+%Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -107,37 +111,45 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports --
-declare void @delay_ms(%Int32 %x)
+; -- print imports 'main' --
+; -- 2
+
+; from import "delay"
+declare void @delay_ms(%Nat32 %x)
+
+; end from import "delay"
 ; from included avr
-%avr_IO8 = type %Int8;
-%avr_IO16 = type %Int16;
+%avr_IO8 = type %Word8;
+%avr_IO16 = type %Word16;
+
+; from import "avr"
 %m328p_GPIO = type <{
 	%avr_IO8,
 	%avr_IO8,
 	%avr_IO8
 }>;
 
-; -- end print imports --
-; -- strings --
-; -- endstrings --
 
+; end from import "avr"
+; -- end print imports 'main' --
+; -- strings --
+; -- endstrings --; Blink example for Arduino Nano (ATMega328p)
+; FCPU=16MHz
+; LED connected to PORTB
 define %Int16 @main() {
-	%1 = inttoptr i6 35 to %m328p_GPIO*
-	%2 = getelementptr inbounds %m328p_GPIO, %m328p_GPIO* %1, %Int32 0, %Int32 1
-	store %avr_IO8 255, %avr_IO8* %2
+	%1 = getelementptr %m328p_GPIO, %m328p_GPIO* null, %Int32 0, %Int32 1
+	store %avr_IO8 255, %avr_IO8* %1
+; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%3 = inttoptr i6 35 to %m328p_GPIO*
-	%4 = getelementptr inbounds %m328p_GPIO, %m328p_GPIO* %3, %Int32 0, %Int32 2
-	store %avr_IO8 255, %avr_IO8* %4
-	call void @delay_ms(%Int32 1000)
-	%5 = inttoptr i6 35 to %m328p_GPIO*
-	%6 = getelementptr inbounds %m328p_GPIO, %m328p_GPIO* %5, %Int32 0, %Int32 2
-	store %avr_IO8 0, %avr_IO8* %6
-	call void @delay_ms(%Int32 1000)
+	%2 = getelementptr %m328p_GPIO, %m328p_GPIO* null, %Int32 0, %Int32 2
+	store %avr_IO8 255, %avr_IO8* %2
+	call void @delay_ms(%Nat32 1000)
+	%3 = getelementptr %m328p_GPIO, %m328p_GPIO* null, %Int32 0, %Int32 2
+	store %avr_IO8 0, %avr_IO8* %3
+	call void @delay_ms(%Nat32 1000)
 	br label %again_1
 break_1:
 	ret %Int16 0

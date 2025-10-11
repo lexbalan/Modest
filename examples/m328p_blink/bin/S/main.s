@@ -383,7 +383,7 @@ main:                                   ; @main
 	push	r16
 	push	r17
 	ldi	r24, -1
-	out	4, r24
+	sts	1, r24
 	ldi	r24, 232
 	ldi	r25, 3
 	mov	r12, r24
@@ -393,7 +393,7 @@ main:                                   ; @main
 .LBB1_1:                                ; %again_1
                                         ; =>This Inner Loop Header: Depth=1
 	ldi	r24, -1
-	out	5, r24
+	sts	2, r24
 	mov	r14, r12
 	mov	r15, r13
 	mov	r22, r14
@@ -401,7 +401,7 @@ main:                                   ; @main
 	mov	r24, r16
 	mov	r25, r17
 	rcall	delay_ms
-	out	5, r1
+	sts	2, r1
 	mov	r22, r14
 	mov	r23, r15
 	mov	r24, r16

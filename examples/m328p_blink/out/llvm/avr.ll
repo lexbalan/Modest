@@ -10,6 +10,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Word32 = type i32
 %Word64 = type i64
 %Word128 = type i128
+%Word256 = type i256
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -18,13 +19,16 @@ target triple = "arm64-apple-macosx12.0.0"
 %Int32 = type i32
 %Int64 = type i64
 %Int128 = type i128
+%Int256 = type i256
 %Nat8 = type i8
 %Nat16 = type i16
 %Nat32 = type i32
 %Nat64 = type i64
 %Nat128 = type i128
+%Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -107,11 +111,11 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports --
-; -- end print imports --
+; -- print imports 'avr' --
+; -- 0
+; -- end print imports 'avr' --
 ; -- strings --
 ; -- endstrings --
-
-%avr_IO8 = type %Int8;
-%avr_IO16 = type %Int16;
+%avr_IO8 = type %Word8;
+%avr_IO16 = type %Word16;
 

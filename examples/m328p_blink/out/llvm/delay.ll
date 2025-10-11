@@ -10,6 +10,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Word32 = type i32
 %Word64 = type i64
 %Word128 = type i128
+%Word256 = type i256
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -18,13 +19,16 @@ target triple = "arm64-apple-macosx12.0.0"
 %Int32 = type i32
 %Int64 = type i64
 %Int128 = type i128
+%Int256 = type i256
 %Nat8 = type i8
 %Nat16 = type i16
 %Nat32 = type i32
 %Nat64 = type i64
 %Nat128 = type i128
+%Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -107,37 +111,39 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports --
-; -- end print imports --
+; -- print imports 'delay' --
+; -- 0
+; -- end print imports 'delay' --
 ; -- strings --
-; -- endstrings --
-
-@delayCounter = internal global %Int32 0
-
-define void @delay_ms(%Int32 %x) {
-	%1 = alloca %Int32, align 4
-	store %Int32 %x, %Int32* %1
+; -- endstrings --; delay not calibrated
+; just for example
+@delayCounter = internal global %Nat32 0
+define void @delay_ms(%Nat32 %x) {
+	%1 = alloca %Nat32, align 4
+	store %Nat32 %x, %Nat32* %1
+; while_1
 	br label %again_1
 again_1:
-	%2 = load %Int32, %Int32* %1
-	%3 = icmp ugt %Int32 %2, 0
+	%2 = load %Nat32, %Nat32* %1
+	%3 = icmp ugt %Nat32 %2, 0
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
-	store %Int32 0, %Int32* @delayCounter
+	store %Nat32 0, %Nat32* @delayCounter
+; while_2
 	br label %again_2
 again_2:
-	%4 = load %Int32, %Int32* @delayCounter
-	%5 = icmp ult %Int32 %4, 380
+	%4 = load %Nat32, %Nat32* @delayCounter
+	%5 = icmp ult %Nat32 %4, 380
 	br %Bool %5 , label %body_2, label %break_2
 body_2:
-	%6 = load %Int32, %Int32* @delayCounter
-	%7 = add %Int32 %6, 1
-	store %Int32 %7, %Int32* @delayCounter
+	%6 = load %Nat32, %Nat32* @delayCounter
+	%7 = add %Nat32 %6, 1
+	store %Nat32 %7, %Nat32* @delayCounter
 	br label %again_2
 break_2:
-	%8 = load %Int32, %Int32* %1
-	%9 = sub %Int32 %8, 1
-	store %Int32 %9, %Int32* %1
+	%8 = load %Nat32, %Nat32* %1
+	%9 = sub %Nat32 %8, 1
+	store %Nat32 %9, %Nat32* %1
 	br label %again_1
 break_1:
 	ret void
