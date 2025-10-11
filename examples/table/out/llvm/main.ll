@@ -281,7 +281,7 @@ declare void @table_print(%table_Table* %table)
 	%Str8* bitcast ([8 x i8]* @str2 to [0 x i8]*),
 	%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*)
 ]
-@table_data0 = internal global [3 x [3 x %Str8*]] [
+@tableData0 = internal global [3 x [3 x %Str8*]] [
 	[3 x %Str8*] [
 		%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*),
 		%Str8* bitcast ([5 x i8]* @str5 to [0 x i8]*),
@@ -304,7 +304,7 @@ declare void @table_print(%table_Table* %table)
 	%Str8* bitcast ([8 x i8]* @str15 to [0 x i8]*),
 	%Str8* bitcast ([8 x i8]* @str16 to [0 x i8]*)
 ]
-@table_data1 = internal global [4 x [4 x %Str8*]] [
+@tableData1 = internal global [4 x [4 x %Str8*]] [
 	[4 x %Str8*] [
 		%Str8* bitcast ([2 x i8]* @str17 to [0 x i8]*),
 		%Str8* bitcast ([5 x i8]* @str18 to [0 x i8]*),
@@ -332,35 +332,35 @@ declare void @table_print(%table_Table* %table)
 ]
 @table00 = internal global %table_Table {
 	[0 x %Str8*]* null,
-	[0 x [0 x %Str8*]]* @table_data0,
+	[0 x [0 x %Str8*]]* @tableData0,
 	%Nat32 3,
 	%Nat32 3,
 	%Bool 0
 }
 @table01 = internal global %table_Table {
 	[0 x %Str8*]* @table_header0,
-	[0 x [0 x %Str8*]]* @table_data0,
+	[0 x [0 x %Str8*]]* @tableData0,
 	%Nat32 3,
 	%Nat32 3,
 	%Bool 0
 }
 @table02 = internal global %table_Table {
 	[0 x %Str8*]* null,
-	[0 x [0 x %Str8*]]* @table_data0,
+	[0 x [0 x %Str8*]]* @tableData0,
 	%Nat32 3,
 	%Nat32 3,
 	%Bool 1
 }
 @table03 = internal global %table_Table {
 	[0 x %Str8*]* @table_header0,
-	[0 x [0 x %Str8*]]* @table_data0,
+	[0 x [0 x %Str8*]]* @tableData0,
 	%Nat32 3,
 	%Nat32 3,
 	%Bool 1
 }
 @table10 = internal global %table_Table {
 	[0 x %Str8*]* @table_header1,
-	[0 x [0 x %Str8*]]* @table_data1,
+	[0 x [0 x %Str8*]]* @tableData1,
 	%Nat32 4,
 	%Nat32 4,
 	%Bool 1

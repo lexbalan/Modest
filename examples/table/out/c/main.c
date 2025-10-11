@@ -18,7 +18,7 @@ static char *table_header0[3] = {
 	"#", "Header0", "Header1"
 };
 
-static char *table_data0[3][3] = {
+static char *tableData0[3][3] = {
 	"0", "Alef", "Betha",
 	"1", "Clock", "Depth",
 	"2", "Earth", "Fight"
@@ -28,7 +28,7 @@ static char *table_header1[4] = {
 	"#", "Header0", "Header1", "Header2"
 };
 
-static char *table_data1[4][4] = {
+static char *tableData1[4][4] = {
 	"0", "Alef", "Betha", "Clock",
 	"1", "Depth", "Emma", "Free",
 	"2", "Ink", "Julia", "Keyword",
@@ -37,41 +37,41 @@ static char *table_data1[4][4] = {
 
 static table_Table table00 = {
 	.header = NULL,
-	.data = (void *)&table_data0,
-	.nRows = __lengthof(table_data0),
-	.nCols = __lengthof(table_data0[0]),
+	.data = (void *)&tableData0,
+	.nRows = __lengthof(tableData0),
+	.nCols = __lengthof(tableData0[0]),
 	.separate = false
 };
 
 static table_Table table01 = {
 	.header = &table_header0,
-	.data = (void *)&table_data0,
-	.nRows = __lengthof(table_data0),
-	.nCols = __lengthof(table_data0[0]),
+	.data = (void *)&tableData0,
+	.nRows = __lengthof(tableData0),
+	.nCols = __lengthof(tableData0[0]),
 	.separate = false
 };
 
 static table_Table table02 = {
 	.header = NULL,
-	.data = (void *)&table_data0,
-	.nRows = __lengthof(table_data0),
-	.nCols = __lengthof(table_data0[0]),
+	.data = (void *)&tableData0,
+	.nRows = __lengthof(tableData0),
+	.nCols = __lengthof(tableData0[0]),
 	.separate = true
 };
 
 static table_Table table03 = {
 	.header = &table_header0,
-	.data = (void *)&table_data0,
-	.nRows = __lengthof(table_data0),
-	.nCols = __lengthof(table_data0[0]),
+	.data = (void *)&tableData0,
+	.nRows = __lengthof(tableData0),
+	.nCols = __lengthof(tableData0[0]),
 	.separate = true
 };
 
 static table_Table table10 = {
 	.header = &table_header1,
-	.data = (void *)&table_data1,
-	.nRows = __lengthof(table_data1),
-	.nCols = __lengthof(table_data1[0]),
+	.data = (void *)&tableData1,
+	.nRows = __lengthof(tableData1),
+	.nCols = __lengthof(tableData1[0]),
 	.separate = true
 };
 

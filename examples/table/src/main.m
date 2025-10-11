@@ -10,7 +10,7 @@ var table_header0: []*Str8 = [
 	"#", "Header0", "Header1"
 ]
 
-var table_data0: [][]*Str8 = [
+var tableData0: [][]*Str8 = [
 	["0", "Alef",    "Betha"]
 	["1", "Clock",   "Depth"]
 	["2", "Earth",   "Fight"]
@@ -21,7 +21,7 @@ var table_header1: []*Str8 = [
 	"#", "Header0", "Header1", "Header2"
 ]
 
-var table_data1: [][]*Str8 = [
+var tableData1: [][]*Str8 = [
 	["0",  "Alef",    "Betha",   "Clock"]
 	["1",  "Depth",   "Emma",    "Free"]
 	["2",  "Ink",     "Julia",   "Keyword"]
@@ -31,41 +31,41 @@ var table_data1: [][]*Str8 = [
 
 var table00 = table.Table {
 	header = nil
-	data = &table_data0
-	nRows = lengthof(table_data0)
-	nCols = lengthof(table_data0[0])
+	data = &tableData0
+	nRows = lengthof(tableData0)
+	nCols = lengthof(tableData0[0])
 	separate = false
 }
 
 var table01 = table.Table {
 	header = &table_header0
-	data = &table_data0
-	nRows = lengthof(table_data0)
-	nCols = lengthof(table_data0[0])
+	data = &tableData0
+	nRows = lengthof(tableData0)
+	nCols = lengthof(tableData0[0])
 	separate = false
 }
 
 var table02 = table.Table {
 	header = nil
-	data = &table_data0
-	nRows = lengthof(table_data0)
-	nCols = lengthof(table_data0[0])
+	data = &tableData0
+	nRows = lengthof(tableData0)
+	nCols = lengthof(tableData0[0])
 	separate = true
 }
 
 var table03 = table.Table {
 	header = &table_header0
-	data = &table_data0
-	nRows = lengthof(table_data0)
-	nCols = lengthof(table_data0[0])
+	data = &tableData0
+	nRows = lengthof(tableData0)
+	nCols = lengthof(tableData0[0])
 	separate = true
 }
 
 var table10 = table.Table {
 	header = &table_header1
-	data = &table_data1
-	nRows = lengthof(table_data1)
-	nCols = lengthof(table_data1[0])
+	data = &tableData1
+	nRows = lengthof(tableData1)
+	nCols = lengthof(tableData1[0])
 	separate = true
 }
 
