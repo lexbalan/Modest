@@ -15,7 +15,7 @@ const port = 8080
 const bufSize = 1024
 
 
-func write_file (sockfd: Int) -> Bool {
+func writeFile (sockFd: Int) -> Bool {
 	var buffer: [bufSize]Char8
 
 	let fp = fopen(filename, "w")
@@ -25,12 +25,10 @@ func write_file (sockfd: Int) -> Bool {
 	}
 
 	while true {
-		let n = recv(sockfd, &buffer, bufSize, 0)
-
+		let n = recv(sockFd, &buffer, bufSize, 0)
 		if n <= 0 {
 			break
 		}
-
 		fprintf(fp, "%s", &buffer)
 		buffer = []
 	}
@@ -40,15 +38,15 @@ func write_file (sockfd: Int) -> Bool {
 
 
 public func main () -> Int {
-	let sockfd = socket(c_AF_INET, c_SOCK_STREAM, 0)
-	if sockfd < 0 {
+	let sockFd = socket(c_AF_INET, c_SOCK_STREAM, 0)
+	if sockFd < 0 {
 		perror("[-] Error in socket")
 		exit(1)
 	}
 
 	printf("[+] Server socket created\n")
 
-	var server_addr = SockAddrIn {
+	var serverAddr = SockAddrIn {
 		sin_family = c_AF_INET
 		sin_port = port
 		sin_addr = Struct_in_addr {
@@ -56,8 +54,8 @@ public func main () -> Int {
 		}
 	}
 
-	let sockaddr = *SockAddr Ptr &server_addr
-	var e = bind(sockfd, sockaddr, unsafe SocklenT sizeof(SockAddrIn))
+	let sockAddr = *SockAddr Ptr &serverAddr
+	var e = bind(sockFd, sockAddr, unsafe SocklenT sizeof(SockAddrIn))
 	if e < 0 {
 		perror("[-] Error in Binding")
 		exit(1)
@@ -65,7 +63,7 @@ public func main () -> Int {
 
 	printf("[+] Binding Successfull\n")
 
-	e = listen(sockfd, 10)
+	e = listen(sockFd, 10)
 	if e != 0 {
 		perror("[-] Error in Binding")
 		exit(1)
@@ -73,12 +71,12 @@ public func main () -> Int {
 
 	printf("[+] Listening...\n")
 
-	var addr_size = unsafe SocklenT sizeof(SockAddrIn)
-	var new_addr: SockAddrIn
-	let sa = *SockAddr Ptr &new_addr
-	let new_sock = accept(sockfd, sa, &addr_size)
+	var addrSize = unsafe SocklenT sizeof(SockAddrIn)
+	var newAddr: SockAddrIn
+	let sa = *SockAddr Ptr &newAddr
+	let newSock = accept(sockFd, sa, &addrSize)
 
-	let suc = write_file(new_sock)
+	let suc = writeFile(newSock)
 	if suc {
 		printf("[+] Data written in the text file")
 	} else {

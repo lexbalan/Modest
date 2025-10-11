@@ -22,11 +22,11 @@
 #define port  8080
 #define bufSize  1024
 
-static bool send_file(FILE *fp, int sockfd) {
+static bool sendFile(FILE *fp, int sockFd) {
 	char data[bufSize];
 
 	while (fgets((char *)&data, __lengthof(data), fp) != NULL) {
-		if (send(sockfd, (void *)&data, sizeof data, 0) == -1) {
+		if (send(sockFd, (void *)&data, sizeof data, 0) == -1) {
 			return false;
 		}
 		memset(&data, 0, sizeof(char[bufSize]));
@@ -37,8 +37,8 @@ static bool send_file(FILE *fp, int sockfd) {
 
 
 int main() {
-	const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd < 0) {
+	const int sockFd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockFd < 0) {
 		perror("[-] Error in socket");
 		exit(1);
 	}
@@ -54,7 +54,7 @@ int main() {
 	};
 
 	struct sockaddr *const sockaddr = (struct sockaddr *)&server_addr;
-	int e = connect(sockfd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
+	int e = connect(sockFd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Connecting");
 		exit(1);
@@ -68,14 +68,14 @@ int main() {
 		exit(1);
 	}
 
-	const bool suc = send_file(fp, sockfd);
+	const bool suc = sendFile(fp, sockFd);
 	if (suc) {
 		printf("[+] File data send successfully\n");
 	} else {
 		perror("[-] Error in sendung data");
 	}
 
-	close(sockfd);
+	close(sockFd);
 	printf("[+] Disconnected from the server\n");
 
 	return 0;

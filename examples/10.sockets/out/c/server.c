@@ -17,7 +17,7 @@
 #define port  8080
 #define bufSize  1024
 
-static bool write_file(int sockfd) {
+static bool writeFile(int sockFd) {
 	char buffer[bufSize];
 
 	FILE *const fp = fopen(filename, "w");
@@ -27,12 +27,10 @@ static bool write_file(int sockfd) {
 	}
 
 	while (true) {
-		const ssize_t n = recv(sockfd, (void *)&buffer, bufSize, 0);
-
+		const ssize_t n = recv(sockFd, (void *)&buffer, bufSize, 0);
 		if (n <= 0) {
 			break;
 		}
-
 		fprintf(fp, "%s", &buffer);
 		memset(&buffer, 0, sizeof(char[bufSize]));
 	}
@@ -42,15 +40,15 @@ static bool write_file(int sockfd) {
 
 
 int main() {
-	const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd < 0) {
+	const int sockFd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockFd < 0) {
 		perror("[-] Error in socket");
 		exit(1);
 	}
 
 	printf("[+] Server socket created\n");
 
-	struct sockaddr_in server_addr = (struct sockaddr_in){
+	struct sockaddr_in serverAddr = (struct sockaddr_in){
 		.sin_family = AF_INET,
 		.sin_port = port,
 		.sin_addr = (struct in_addr){
@@ -58,8 +56,8 @@ int main() {
 		}
 	};
 
-	struct sockaddr *const sockaddr = (struct sockaddr *)&server_addr;
-	int e = bind(sockfd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
+	struct sockaddr *const sockAddr = (struct sockaddr *)&serverAddr;
+	int e = bind(sockFd, sockAddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Binding");
 		exit(1);
@@ -67,7 +65,7 @@ int main() {
 
 	printf("[+] Binding Successfull\n");
 
-	e = listen(sockfd, 10);
+	e = listen(sockFd, 10);
 	if (e != 0) {
 		perror("[-] Error in Binding");
 		exit(1);
@@ -75,12 +73,12 @@ int main() {
 
 	printf("[+] Listening...\n");
 
-	socklen_t addr_size = (socklen_t)sizeof(struct sockaddr_in);
-	struct sockaddr_in new_addr;
-	struct sockaddr *const sa = (struct sockaddr *)&new_addr;
-	const int new_sock = accept(sockfd, sa, &addr_size);
+	socklen_t addrSize = (socklen_t)sizeof(struct sockaddr_in);
+	struct sockaddr_in newAddr;
+	struct sockaddr *const sa = (struct sockaddr *)&newAddr;
+	const int newSock = accept(sockFd, sa, &addrSize);
 
-	const bool suc = write_file(new_sock);
+	const bool suc = writeFile(newSock);
 	if (suc) {
 		printf("[+] Data written in the text file");
 	} else {

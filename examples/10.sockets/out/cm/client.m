@@ -13,11 +13,11 @@ const port = 8080
 const bufSize = 1024
 
 
-func send_file (fp: *File, sockfd: Int) -> Bool {
+func sendFile (fp: *File, sockFd: Int) -> Bool {
 	var data: [bufSize]Char8
 
 	while fgets(&data, lengthof(data), fp) != nil {
-		if send(sockfd, &data, sizeof data, 0) == -1 {
+		if send(sockFd, &data, sizeof data, 0) == -1 {
 			return false
 		}
 		data = []
@@ -28,8 +28,8 @@ func send_file (fp: *File, sockfd: Int) -> Bool {
 
 
 public func main () -> Int {
-	let sockfd: Int = socket(c_AF_INET, c_SOCK_STREAM, 0)
-	if sockfd < 0 {
+	let sockFd: Int = socket(c_AF_INET, c_SOCK_STREAM, 0)
+	if sockFd < 0 {
 		perror("[-] Error in socket")
 		exit(1)
 	}
@@ -45,7 +45,7 @@ public func main () -> Int {
 	}
 
 	let sockaddr = *SockAddr Ptr &server_addr
-	var e: Int = connect(sockfd, sockaddr, unsafe SocklenT sizeof(SockAddrIn))
+	var e: Int = connect(sockFd, sockaddr, unsafe SocklenT sizeof(SockAddrIn))
 	if e < 0 {
 		perror("[-] Error in Connecting")
 		exit(1)
@@ -59,14 +59,14 @@ public func main () -> Int {
 		exit(1)
 	}
 
-	let suc: Bool = send_file(fp, sockfd)
+	let suc: Bool = sendFile(fp, sockFd)
 	if suc {
 		printf("[+] File data send successfully\n")
 	} else {
 		perror("[-] Error in sendung data")
 	}
 
-	close(sockfd)
+	close(sockFd)
 	printf("[+] Disconnected from the server\n")
 
 	return 0
