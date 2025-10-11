@@ -1788,6 +1788,16 @@ def def_type_common(x, nt):
 
 	ty = do_type(x['type'])
 
+	if ty.is_record():
+		# 'default' -> 'private' &
+		# 'default' -> 'public' for @public record
+		for f in ty.fields:
+			if f.access_level == 'default':
+				if ty.hasAttribute2("public"):
+					f.access_level = 'public'
+				else:
+					f.access_level = 'private'
+
 	if ty.is_bad():
 		return None
 
@@ -1820,8 +1830,6 @@ def def_type_global(x):
 		error("type redefinition", x['ti'])
 		return None
 	return def_type_common(x, nt)
-
-
 
 
 
