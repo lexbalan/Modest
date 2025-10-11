@@ -33,15 +33,15 @@ var pageCounter: Nat32
 //}
 
 
-func handleRequest(client_socket: Int32) -> Unit {
+func handleRequest (clientSocket: Int32) -> Unit {
 	var buffer: [receiveBufferSize]Word8
-    let bytes_received = read(client_socket, &buffer, lengthof(buffer) - 1)
-    if bytes_received < 0 {
+    let bytesReceived = read(clientSocket, &buffer, lengthof(buffer) - 1)
+    if bytesReceived < 0 {
         perror("cannot read socket")
-        close(client_socket)
+        close(clientSocket)
         return
     }
-    buffer[bytes_received] = 0
+    buffer[bytesReceived] = 0
 
     printf("Received request:\n%s\n", unsafe *Str8 &buffer)
 
@@ -52,19 +52,19 @@ func handleRequest(client_socket: Int32) -> Unit {
 		httpHeader, pageCounter
 	)
 
-    write(client_socket, &response, strlen(&response))
-    close(client_socket)
+    write(clientSocket, &response, strlen(&response))
+    close(clientSocket)
 }
 
 
-public func main() -> Int32 {
-    let server_socket = socket(c_AF_INET, c_SOCK_STREAM, 0)
-    if server_socket < 0 {
+public func main () -> Int32 {
+    let serverSocket = socket(c_AF_INET, c_SOCK_STREAM, 0)
+    if serverSocket < 0 {
         perror("cannot create socket")
         exit(1)
     }
 
-	var server_addr = SockAddrIn {
+	var serverAddr = SockAddrIn {
 		sin_family = c_AF_INET
     	sin_addr = {
 			s_addr = inAddrAny
@@ -73,19 +73,19 @@ public func main() -> Int32 {
 	}
 
     // Bind socket to address
-	let socadr = unsafe *SockAddr &server_addr
-	var rc = bind(server_socket, socadr, unsafe SocklenT sizeof(server_addr))
+	let socadr = unsafe *SockAddr &serverAddr
+	var rc = bind(serverSocket, socadr, unsafe SocklenT sizeof(serverAddr))
     if rc < 0 {
         perror("cannot bind socket")
-        close(server_socket)
+        close(serverSocket)
         exit(1)
     }
 
     // Starting listen to connection
-	rc = listen(socket=server_socket, backlog=5)
+	rc = listen(socket=serverSocket, backlog=5)
     if rc < 0 {
         perror("cannot listen socket")
-        close(server_socket)
+        close(serverSocket)
         exit(1)
     }
 
@@ -93,19 +93,19 @@ public func main() -> Int32 {
 
     // Handle input connections
     while true {
-		var client_addr: SockAddrIn
-		let socadr = unsafe *SockAddr &client_addr
-		var client_adr_len = unsafe SocklenT sizeof(client_addr)
-        let client_socket = accept(server_socket, socadr, &client_adr_len)
-        if client_socket < 0 {
+		var clientAddr: SockAddrIn
+		let socadr = unsafe *SockAddr &clientAddr
+		var clientAdrLen = unsafe SocklenT sizeof(clientAddr)
+        let clientSocket = accept(serverSocket, socadr, &clientAdrLen)
+        if clientSocket < 0 {
             perror("cannot accept connection")
             again
         }
-        handleRequest(client_socket)
+        handleRequest(clientSocket)
 		++pageCounter
     }
 
-    close(server_socket)
+    close(serverSocket)
     return 0
 }
 

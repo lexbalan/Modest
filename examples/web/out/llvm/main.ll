@@ -360,16 +360,16 @@ declare %Word16 @htons(%Word16 %x)
 ;func htons(x: Word16) -> Word16 {
 ;	return (x << 8) or (x >> 8)
 ;}
-define internal void @handleRequest(%Int32 %client_socket) {
+define internal void @handleRequest(%Int32 %clientSocket) {
 	%1 = alloca [1024 x %Word8], align 1
 	%2 = bitcast [1024 x %Word8]* %1 to i8*
-	%3 = call %SSizeT @read(%Int32 %client_socket, i8* %2, %SizeT 1023)
+	%3 = call %SSizeT @read(%Int32 %clientSocket, i8* %2, %SizeT 1023)
 ; if_0
 	%4 = icmp slt %SSizeT %3, 0
 	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
-	%5 = call %Int @close(%Int32 %client_socket)
+	%5 = call %Int @close(%Int32 %clientSocket)
 	ret void
 	br label %endif_0
 endif_0:
@@ -386,8 +386,8 @@ endif_0:
 	%16 = bitcast [1024 x %Char8]* %12 to i8*
 	%17 = bitcast [1024 x %Char8]* %12 to [0 x %ConstChar]*
 	%18 = call %SizeT @strlen([0 x %ConstChar]* %17)
-	%19 = call %SSizeT @write(%Int32 %client_socket, i8* %16, %SizeT %18)
-	%20 = call %Int @close(%Int32 %client_socket)
+	%19 = call %SSizeT @write(%Int32 %clientSocket, i8* %16, %SizeT %18)
+	%20 = call %Int @close(%Int32 %clientSocket)
 	ret void
 }
 

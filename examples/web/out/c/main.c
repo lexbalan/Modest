@@ -33,15 +33,15 @@ static uint32_t pageCounter;
 //	return (x << 8) or (x >> 8)
 //}
 
-static void handleRequest(int32_t client_socket) {
+static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[receiveBufferSize];
-	const ssize_t bytes_received = read(client_socket, (void *)&buffer, __lengthof(buffer) - 1);
-	if (bytes_received < 0) {
+	const ssize_t bytesReceived = read(clientSocket, (void *)&buffer, __lengthof(buffer) - 1);
+	if (bytesReceived < 0) {
 		perror("cannot read socket");
-		close(client_socket);
+		close(clientSocket);
 		return;
 	}
-	buffer[bytes_received] = 0x0;
+	buffer[bytesReceived] = 0x0;
 
 	printf("Received request:\n%s\n", (char *)&buffer);
 
@@ -50,19 +50,19 @@ static void handleRequest(int32_t client_socket) {
 		httpHeader, pageCounter
 	);
 
-	write(client_socket, (void *)&response, strlen((const char *)&response));
-	close(client_socket);
+	write(clientSocket, (void *)&response, strlen((const char *)&response));
+	close(clientSocket);
 }
 
 
 int32_t main() {
-	const int server_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if (server_socket < 0) {
+	const int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+	if (serverSocket < 0) {
 		perror("cannot create socket");
 		exit(1);
 	}
 
-	struct sockaddr_in server_addr = (struct sockaddr_in){
+	struct sockaddr_in serverAddr = (struct sockaddr_in){
 		.sin_family = AF_INET,
 		.sin_addr = {
 			.s_addr = INADDR_ANY
@@ -71,19 +71,19 @@ int32_t main() {
 	};
 
 	// Bind socket to address
-	struct sockaddr *const socadr = (struct sockaddr *)&server_addr;
-	int rc = bind(server_socket, socadr, (socklen_t)sizeof server_addr);
+	struct sockaddr *const socadr = (struct sockaddr *)&serverAddr;
+	int rc = bind(serverSocket, socadr, (socklen_t)sizeof serverAddr);
 	if (rc < 0) {
 		perror("cannot bind socket");
-		close(server_socket);
+		close(serverSocket);
 		exit(1);
 	}
 
 	// Starting listen to connection
-	rc = listen(server_socket, 5);
+	rc = listen(serverSocket, 5);
 	if (rc < 0) {
 		perror("cannot listen socket");
-		close(server_socket);
+		close(serverSocket);
 		exit(1);
 	}
 
@@ -91,19 +91,19 @@ int32_t main() {
 
 	// Handle input connections
 	while (true) {
-		struct sockaddr_in client_addr;
-		struct sockaddr *const socadr = (struct sockaddr *)&client_addr;
-		socklen_t client_adr_len = (socklen_t)sizeof client_addr;
-		const int client_socket = accept(server_socket, socadr, &client_adr_len);
-		if (client_socket < 0) {
+		struct sockaddr_in clientAddr;
+		struct sockaddr *const socadr = (struct sockaddr *)&clientAddr;
+		socklen_t clientAdrLen = (socklen_t)sizeof clientAddr;
+		const int clientSocket = accept(serverSocket, socadr, &clientAdrLen);
+		if (clientSocket < 0) {
 			perror("cannot accept connection");
 			continue;
 		}
-		handleRequest(client_socket);
+		handleRequest(clientSocket);
 		pageCounter = pageCounter + 1;
 	}
 
-	close(server_socket);
+	close(serverSocket);
 	return 0;
 }
 
