@@ -33,7 +33,7 @@ void fsm_run(fsm_FSM *fsm) {
 		fsm_StateDesc *const state = &fsm->states[nexstate];
 
 		if (verbose) {
-			printf("enter %s\n", &state->name);
+			printf("enter %s\n", (char *)&state->name);
 		}
 
 		if (state->entry != NULL) {
@@ -52,7 +52,7 @@ void fsm_run(fsm_FSM *fsm) {
 		fsm_StateDesc *const state = &fsm->states[fsm->state];
 
 		if (verbose) {
-			printf("exit %s\n", &state->name);
+			printf("exit %s\n", (char *)&state->name);
 		}
 
 		if (state->exit != NULL) {

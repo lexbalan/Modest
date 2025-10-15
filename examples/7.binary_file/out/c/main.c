@@ -57,8 +57,8 @@ static void read_example() {
 	fread(&chunk, sizeof(Chunk), 1, fp);
 
 	printf("file \"%s\" contains:\n", filename);
-	printf("chunk.id: \"%s\"\n", &chunk.id);
-	printf("chunk.data: \"%s\"\n", &chunk.data);
+	printf("chunk.id: \"%s\"\n", (char *)&chunk.id);
+	printf("chunk.data: \"%s\"\n", (char *)&chunk.data);
 
 	fclose(fp);
 }

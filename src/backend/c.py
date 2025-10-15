@@ -628,6 +628,9 @@ def str_value_call(v, ctx, sret=None):
 	i = 0
 	while i < n:
 		arg = args[i]
+		param = None
+		if i < len(params):
+			param = params[i]
 		sk = arg.nl > 0
 
 		if i > 0:
@@ -647,6 +650,13 @@ def str_value_call(v, ctx, sret=None):
 
 		#if arg.named:
 			#sstr += "/*%s=*/" % param_id.str
+
+		if param == None:
+			# это аргумент без параметра (variadic)
+			if arg.value.type.is_pointer_to_closed_array():
+				# это указатель на массив -> приведем его к указателю на элемент массива
+				# тк C живет по своим правилам
+				sstr += "(%s)" % str_type(TypePointer(arg.value.type.to.of, arg.ti))
 
 		sstr += str_value(a, ctx=ctx)
 
@@ -879,7 +889,8 @@ def str_value_cons(x, ctx):
 
 	if x.method in ['implicit', 'default']:
 		if isinstance(value, ValueRef):
-			# Явно приводим указатель на массив к указателю на его элемент
+		#if value.type.is_pointer_to_array():
+			# Для C явно приводим указатель на массив к указателю на его элемент
 			# В случае когда происходит НЕЯВНОЕ приведение;
 			if value.type.is_pointer_to_array():
 				return str_cast(type, value, ctx)

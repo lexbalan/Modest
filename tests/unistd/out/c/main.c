@@ -28,12 +28,12 @@ int main() {
 	// current control terminal
 	char cterm[128];
 	ctermid((char *)&cterm);
-	printf("ctermid = %s\n", &cterm);
+	printf("ctermid = %s\n", (char *)&cterm);
 
 	// current working directory
 	char cwd[128];
 	getcwd((char *)&cwd, (size_t)__lengthof(cwd));
-	printf("cwd = %s\n", &cwd);
+	printf("cwd = %s\n", (char *)&cwd);
 
 	char *const tty = ttyname(0);
 	printf("ttyname = %s\n", tty);

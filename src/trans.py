@@ -832,7 +832,7 @@ def do_value___defined_value(x):
 # - при присваивании
 # - при передаче аргумента в функцию
 # - при возарате значения из функции
-def transmission(to_type, value):
+def transmission(to_type, value, ti):
 	return value_cons_implicit_check(to_type, value)
 
 
@@ -872,7 +872,7 @@ def do_value_call(x):
 
 
 	def do_arg(param, arg, named=False):
-		arg = transmission(param.type, arg)
+		arg = transmission(param.type, arg, arg.ti)
 		ini = Initializer(param.id, arg, named=named, ti=arg.ti, nl=arg.nl)
 		return ini
 
@@ -1555,7 +1555,7 @@ def do_stmt_return(x):
 	retval = None
 	if ret_val_present:
 		rv = do_rvalue(x['value'])
-		retval = transmission(func_ret_type, rv)
+		retval = transmission(func_ret_type, rv, rv.ti)
 
 	return StmtReturn(retval, ti=x['ti'])
 
@@ -1621,7 +1621,7 @@ def do_stmt_assign(x):
 			cmodule_use('use_arrcpy')
 
 
-	r = transmission(l.type, r)
+	r = transmission(l.type, r, x['ti'])
 	return StmtAssign(l, r, ti=x['ti'])
 
 

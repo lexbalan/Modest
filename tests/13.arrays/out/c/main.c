@@ -35,14 +35,14 @@ static void f0(char *_x, char *sret_) {
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
 	memcpy(&local_copy_of_x, &x, sizeof(char[20]));
-	printf("f0(\"%s\")\n", &local_copy_of_x);
+	printf("f0(\"%s\")\n", (char *)&local_copy_of_x);
 
 	// truncate array
 	char mic[6];
 	memcpy(&mic, (char(*)[6 - 0])&x[0], sizeof(char[6]));
 	mic[5] = '\x0';
 
-	printf("f0 mic = \"%s\"\n", &mic);
+	printf("f0 mic = \"%s\"\n", (char *)&mic);
 
 	// extend array
 	char res[30];
@@ -190,7 +190,7 @@ int main() {
 
 	char em[30];
 	f0("Hello World!", &em);
-	printf("em = %s\n", &em);
+	printf("em = %s\n", (char *)&em);
 
 	uint32_t i = 0;
 	while (i < 10) {

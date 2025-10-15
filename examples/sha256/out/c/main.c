@@ -55,7 +55,7 @@ static bool doTest(SHA256_TestCase *test) {
 
 	sha256_hash(msg, msgLen, &test_hash);
 
-	printf("'%s'", &test->inputData);
+	printf("'%s'", (char *)&test->inputData);
 	printf(" -> ");
 
 	uint32_t i = 0;
