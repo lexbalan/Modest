@@ -13,12 +13,12 @@ def value_number_create(num, ti=None):
 
 
 def number_can(to, from_type, method, ti):
-	return type_is_num(from_type)
+	return from_type.is_number()
 
 
 def value_number_cons(t, v, method, ti):
 	from_type = v.type
-	if number_can(t, from_type, method):
+	if number_can(t, from_type, method, ti):
 		nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 		nv.immediate = v.immediate
 		nv.asset = v.asset

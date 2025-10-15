@@ -938,7 +938,8 @@ def is_zero_tail(values, i, n):
 	return True
 
 
-def print_array_values(values, ctx):
+
+def print_literal_array_items(values, ctx):
 	sstr = ''
 	i = 0
 	n = len(values)
@@ -953,7 +954,7 @@ def print_array_values(values, ctx):
 				sstr += " "
 
 		if a.type.is_closed_array():
-			sstr += print_array_values(a.asset, ctx)
+			sstr += print_literal_array_items(a.asset, ctx)
 		else:
 			sstr += str_value(a, ctx)
 
@@ -1010,6 +1011,7 @@ def str_value_literal_array(type, items, nl_end=1):
 				i = i + 1
 			return print_utf32codes_as_string(utf32_codes, width=char_width)
 
+
 	nl_end_e = 0
 	for item in items:
 		if item.nl > 0:
@@ -1017,7 +1019,7 @@ def str_value_literal_array(type, items, nl_end=1):
 
 	sstr += "{"
 	indent_up()
-	sstr += print_array_values(items, [])
+	sstr += print_literal_array_items(items, [])
 	indent_down()
 	if nl_end_e > 0:
 		sstr += str_nl_indent(nl=nl_end_e)
