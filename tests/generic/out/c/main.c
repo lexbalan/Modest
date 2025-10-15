@@ -87,9 +87,9 @@ static bool test_generic_integer() {
 
 	// explicit cast GenericInteger value
 
-	char c = one;
-	uint16_t d = one;
-	uint32_t e = one;
+	char c = (char)one;
+	uint16_t d = (uint16_t)one;
+	uint32_t e = (uint32_t)one;
 
 	bool k = one != 0;
 
@@ -111,7 +111,7 @@ static bool test_generic_float() {
 	double g = pi;
 
 	// explicit cast GenericFloat value to Int32
-	int32_t x = pi;
+	int32_t x = (int32_t)pi;
 
 	return true;
 
@@ -126,12 +126,12 @@ static bool test_generic_char() {
 
 	// value with GenericChar type
 	// can be implicit casted to any Char type
-	char b = a;
-	uint16_t c = a;
-	uint32_t d = a;
+	char b = 'A';
+	uint16_t c = u'A';
+	uint32_t d = U'A';
 
 	// explicit cast GenericChar value to Int32
-	int32_t char_code = a;
+	int32_t char_code = (int32_t)(uint32_t)U'A';
 
 	return true;
 

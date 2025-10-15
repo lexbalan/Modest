@@ -57,10 +57,11 @@ def integer_can(to, from_type, method, ti):
 	if method == 'implicit':
 		return False
 
+	# explicit or unsafe cons method
+
 	if Type.is_float(from_type):
 		return True
 
-	# explicit or unsafe cons method
 	c0 = Type.is_number(from_type)
 	c1 = Type.is_int(from_type)
 	c2 = Type.is_nat(from_type)

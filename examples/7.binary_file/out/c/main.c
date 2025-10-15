@@ -31,7 +31,7 @@ static void write_example() {
 		return;
 	}
 
-	Chunk chunk = {
+	Chunk chunk = (Chunk){
 		.id = "id",
 		.data = "data"
 	};

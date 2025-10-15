@@ -56,7 +56,7 @@ static void f5(int32_t *_a, int32_t *sret_) {
 
 
 static int32_t *f6(int32_t *a) {
-	return NULL;
+	return (int32_t *)NULL;
 }
 
 
@@ -117,7 +117,7 @@ static int32_t *a1[5] = (int32_t *[5]){&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]};
 static int32_t **a2[5] = (int32_t **[5]){&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]};
 static void(*a3[5])() = {&f0};
 static int a4[2][5] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-static int *a5[2] = (int *[2]){&a4[0], &a4[1]};
+static int *a5[2] = (int *[2]){(int *)&a4[0], (int *)&a4[1]};
 // Проблема в том что мой getelementptr не умеет в цепь-молнию
 // а здесь без нее никак... придется взяться за это и сделать наконец
 //var a6: [2][5]*Int = [
@@ -125,12 +125,12 @@ static int *a5[2] = (int *[2]){&a4[0], &a4[1]};
 //	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
 //]
 static int *a7[2][5] = {
-	&a0, &a0, &a0, &a0, &a0,
-	&a0, &a0, &a0, &a0, &a0
+	(int32_t *)&a0, (int32_t *)&a0, (int32_t *)&a0, (int32_t *)&a0, (int32_t *)&a0,
+	(int32_t *)&a0, (int32_t *)&a0, (int32_t *)&a0, (int32_t *)&a0, (int32_t *)&a0
 };
 static int *(*a8[2][5])[2][5] = {
-	(void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7,
-	(void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7
+	(int *(*)[5])(void *)&a7, (int *(*)[5])(void *)&a7, (int *(*)[5])(void *)&a7, (int *(*)[5])(void *)&a7, (int *(*)[5])(void *)&a7,
+	(int *(*)[5])(void *)&a7, (int *(*)[5])(void *)&a7, (int *(*)[5])(void *)&a7, (int *(*)[5])(void *)&a7, (int *(*)[5])(void *)&a7
 };
 static int(*(*(*a9[5])[10])[2])(int a);
 

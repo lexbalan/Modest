@@ -4,7 +4,7 @@
 import copy
 
 from .common import *
-from error import info, error, fatal
+from error import info, warning, error, fatal
 from hlir.hlir import *
 from value.value import *
 from type import select_common_type, type_print
@@ -450,6 +450,24 @@ def print_type_record(t, tag):
 
 
 
+
+
+# Дополнительная чисто сишная надстройка -
+# проверяем если у нас тут указатель на массив приводим к указателю на его элемент
+def incast(type, value):
+	if value.type.is_pointer_to_closed_array():
+		# Это аргумент с типом указатель на массив
+		# приведем его по месту к указателю на элемент этого массива
+		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
+		to = TypePointer(value.type.to.of, value.ti)
+		return "(%s)" % str_type(to) + str_value(value)
+
+	return str_value(value)
+
+
+
+
+
 bin_ops = {
 	'or': '|', 'xor': '^', 'and': '&', 'shl': '<<', 'shr': '>>',
 	'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
@@ -651,14 +669,11 @@ def str_value_call(v, ctx, sret=None):
 		#if arg.named:
 			#sstr += "/*%s=*/" % param_id.str
 
-		if arg.value.type.is_pointer_to_closed_array():
-			# Это аргумент с типом указатель на массив
-			# приведем его по месту к указателю на элемент этого массива
-			# тк C живет по своим правилам и выкидывает warning чаще там где не надо
-			to = TypePointer(arg.value.type.to.of, arg.ti)
-			sstr += "(%s)" % str_type(to)
+		p_type = a.type
+		if param != None:
+			p_type = param.type
 
-		sstr += str_value(a, ctx=ctx)
+		sstr += incast(p_type, a)
 
 		i = i + 1
 
@@ -854,6 +869,7 @@ def str_value_cons(x, ctx):
 	value = x.value
 	from_type = value.type
 
+
 	if type.is_array():
 		return str_value_cons_array(x, ctx)
 
@@ -939,7 +955,7 @@ def is_zero_tail(values, i, n):
 
 
 
-def print_literal_array_items(values, ctx):
+def print_literal_array_items(values, item_type):
 	sstr = ''
 	i = 0
 	n = len(values)
@@ -954,9 +970,9 @@ def print_literal_array_items(values, ctx):
 				sstr += " "
 
 		if a.type.is_closed_array():
-			sstr += print_literal_array_items(a.asset, ctx)
+			sstr += print_literal_array_items(a.asset, item_type.of)
 		else:
-			sstr += str_value(a, ctx)
+			sstr += incast(item_type, a)
 
 		i = i + 1
 
@@ -1019,7 +1035,7 @@ def str_value_literal_array(type, items, nl_end=1):
 
 	sstr += "{"
 	indent_up()
-	sstr += print_literal_array_items(items, [])
+	sstr += print_literal_array_items(items, type.of)
 	indent_down()
 	if nl_end_e > 0:
 		sstr += str_nl_indent(nl=nl_end_e)
@@ -1465,7 +1481,7 @@ def print_stmt_return(x):
 
 	if x.value != None:
 		out(" ")
-		print_value(x.value)
+		out(incast(cfunc.type.to, x.value))
 
 	out(";")
 
@@ -1494,8 +1510,10 @@ def print_stmt_var(x):
 			return
 
 	out(" = ")
-	#print_value(init_value)
-	out(str_static_initializer(init_value))
+	if init_value.type.is_closed_array():
+		out(str_static_initializer(init_value))
+	else:
+		print_value(init_value)
 	out(";")
 	return
 
@@ -1555,7 +1573,8 @@ def print_stmt_const(x):
 	# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
 	print_variable(get_id_str(x), const_value.type)
 	out(" = ")
-	print_value(init_value)
+	out(incast(const_value.type, init_value))
+	#print_value(init_value)
 	out(";")
 	return
 
@@ -1619,7 +1638,6 @@ def str_array_len(array_value):
 
 
 
-
 def assign_array(left, right, ti):
 	# если справа 'обернутое' значение
 	# (для того чтобы в C вернуть массив из функции
@@ -1635,9 +1653,7 @@ def assign_array(left, right, ti):
 
 	if isinstance(right, ValueCons):
 		# Если справа приведенный к левому массив (более короткий? Generic)
-		r_root = get_root_value(right)
-		#out("/*? %s ?*/" % r_root.type.volume.asset)
-		right = r_root
+		right = get_root_value(right)
 
 
 	sleft = str_value_as_ptr(left)
