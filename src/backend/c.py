@@ -481,7 +481,7 @@ def str_value_bin(x, ctx):
 		elif left.type.is_array():
 			return str_value_eq_array(x, ctx)
 		elif left.type.is_string():
-			return str_literal_bool(x.asset)
+			return str_value_literal_bool(x.asset)
 
 	lk = ''
 	if hasattr(left, 'op'):
@@ -501,7 +501,7 @@ def str_value_bin(x, ctx):
 				# (печатаем сам литерал, тк C иначе не умеет)
 				# (U"Hello World!")
 				#str_value_string(x, ctx)
-				return str_literal_string(x.asset, char_width=x.type.width)
+				return str_value_literal_string(x.asset, char_width=x.type.width)
 
 			sstr += str_value(left, parent_expr=x)
 			sstr += ' '
@@ -546,7 +546,7 @@ def str_value_eq_composite(x, ctx):
 	right = x.right
 
 	if x.isImmediate():
-		return str_literal_bool(x.asset)
+		return str_value_literal_bool(x.asset)
 
 	# если сравниваем строки (Str8, Str16, Str32)
 	if left.type.is_str() and right.type.is_str():
@@ -813,7 +813,7 @@ def str_value_cons_array(x, ctx):
 						chars.append(ch)
 
 					char_width = to_type.of.width
-					return str_literal_string(chars, char_width=char_width)
+					return str_value_literal_string(chars, char_width=char_width)
 
 			return str_cast(to_type, value, ctx=ctx)
 		else:
@@ -827,7 +827,7 @@ def str_value_cons_array(x, ctx):
 			if to_type.of.width == from_type.width:
 				return str_value(value, ctx=ctx)
 			else:
-				return str_literal_string(value.asset, char_width=to_type.of.width)
+				return str_value_literal_string(value.asset, char_width=to_type.of.width)
 			return '<???>'
 
 	# for:
@@ -878,7 +878,7 @@ def str_value_cons(x, ctx):
 			return str_cast(type, value, ctx)
 
 	elif type.is_char() and from_type.is_string():
-		return str_literal_char(x.asset, x.type.width)
+		return str_value_literal_char(x.asset, x.type.width)
 
 	elif type.is_xword() and from_type.is_xword():
 		if from_type.is_generic():
@@ -973,7 +973,7 @@ def print_array_values(values, ctx):
 
 
 
-def str_literal_string(chars, char_width):
+def str_value_literal_string(chars, char_width):
 	utf32_codes = []
 	for ch in chars:
 		cc = ord(ch)
@@ -982,12 +982,12 @@ def str_literal_string(chars, char_width):
 
 
 
-def str_literal_char(cc, width):
+def str_value_literal_char(cc, width):
 	return print_utf32codes_as_string([cc], width, quote="'")
 
 
 
-def str_literal_array(type, items, nl_end=1):
+def str_value_literal_array(type, items, nl_end=1):
 	sstr = ''
 
 	if type.is_array_of_char():
@@ -1026,7 +1026,7 @@ def str_literal_array(type, items, nl_end=1):
 
 
 
-def str_literal_record(type, items):
+def str_value_literal_record(type, items):
 	sstr = "{"
 	indent_up()
 
@@ -1110,8 +1110,8 @@ def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 
 
 
-def str_literal_bool(num):
-	#print("str_literal_bool")
+def str_value_literal_bool(num):
+	#print("str_value_literal_bool")
 	if num:
 		return settings['true_literal']
 	else:
@@ -1123,7 +1123,7 @@ def str_value_enum(x, ctx):
 
 
 
-def str_literal_suffix(to_type, num):
+def str_value_literal_suffix(to_type, num):
 	req_bits = nbits_for_num(num)
 
 	if req_bits < settings['int_width']:
@@ -1143,7 +1143,7 @@ def str_literal_suffix(to_type, num):
 	return sstr
 
 
-def str_literal_number(type, num, nsigns=0, is_big=False, is_hex=False):
+def str_value_literal_number(type, num, nsigns=0, is_big=False, is_hex=False):
 	global need_big_int
 	sstr = ''
 	# Big Number?
@@ -1164,17 +1164,17 @@ def str_literal_number(type, num, nsigns=0, is_big=False, is_hex=False):
 	else:
 		sstr += str(num)
 
-	sstr += str_literal_suffix(type, num)
+	sstr += str_value_literal_suffix(type, num)
 
 	return sstr
 
 
 
-def str_literal_float(num):
+def str_value_literal_float(num):
 	return '{0:f}'.format(num)
 
 
-def str_literal_pointer(type, num):
+def str_value_literal_pointer(type, num):
 	if num == 0:
 		return "NULL"
 	return "((" + str_type(type) + ")0x%08X)" % num
@@ -1189,22 +1189,22 @@ def str_value_literal_with_type(x, t, as_hex=False):
 
 	if t.is_arithmetical() or t.is_number() or t.is_word():
 		as_hex = as_hex or x.type.is_word() or x.hasAttribute2('hexadecimal')
-		return str_literal_number(t, asset, is_hex=as_hex)
+		return str_value_literal_number(t, asset, is_hex=as_hex)
 
 	elif t.is_float():
-		return str_literal_float(asset)
+		return str_value_literal_float(asset)
 	elif t.is_string():
-		return str_literal_string(asset, char_width=t.width)
+		return str_value_literal_string(asset, char_width=t.width)
 	elif t.is_record():
-		return str_literal_record(t, asset)
+		return str_value_literal_record(t, asset)
 	elif t.is_array():
-		return str_literal_array(t, asset)
+		return str_value_literal_array(t, asset)
 	elif t.is_bool():
-		return str_literal_bool(asset)
+		return str_value_literal_bool(asset)
 	elif t.is_char():
-		return str_literal_char(asset, t.width)
+		return str_value_literal_char(asset, t.width)
 	elif t.is_pointer():
-		return str_literal_pointer(t, asset)
+		return str_value_literal_pointer(t, asset)
 	else:
 		error("str_value_literal not implemented for %s" % str(t), x.ti)
 
@@ -1571,7 +1571,7 @@ def print_stmt_asm(x):
 	out('__asm__ volatile (')
 	indent_up()
 	nl_indent(1)
-	out(str_literal_string(x.text.asset, char_width=x.text.type.width))
+	out(str_value_literal_string(x.text.asset, char_width=x.text.type.width))
 
 	# print 'out' pairs
 	args1 = x.outputs
