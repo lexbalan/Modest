@@ -8,7 +8,7 @@ import "lib"
 public func main () -> Int {
 	var nothing: lib.Nothing
 	lib.foo(lib.bar)
-	lib.spam
+	Unit lib.spam
 	return 0
 }
 

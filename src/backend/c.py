@@ -651,12 +651,12 @@ def str_value_call(v, ctx, sret=None):
 		#if arg.named:
 			#sstr += "/*%s=*/" % param_id.str
 
-		if param == None:
-			# это аргумент без параметра (variadic)
-			if arg.value.type.is_pointer_to_closed_array():
-				# это указатель на массив -> приведем его к указателю на элемент массива
-				# тк C живет по своим правилам
-				sstr += "(%s)" % str_type(TypePointer(arg.value.type.to.of, arg.ti))
+		if arg.value.type.is_pointer_to_closed_array():
+			# Это аргумент с типом указатель на массив
+			# приведем его по месту к указателю на элемент этого массива
+			# тк C живет по своим правилам и выкидывает warning чаще там где не надо
+			to = TypePointer(arg.value.type.to.of, arg.ti)
+			sstr += "(%s)" % str_type(to)
 
 		sstr += str_value(a, ctx=ctx)
 

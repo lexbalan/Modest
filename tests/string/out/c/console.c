@@ -59,7 +59,7 @@ void console_putchar_utf16(uint16_t c) {
 
 void console_putchar_utf32(uint32_t c) {
 	char decoded_buf[4];
-	const int32_t n = (int32_t)utf_utf32_to_utf8(c, &decoded_buf);
+	const int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)&decoded_buf);
 
 	int32_t i = 0;
 	while (i < n) {
@@ -239,7 +239,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 			// %c for char
 			//
 			const uint32_t c = va_arg(va, uint32_t);
-			const uint8_t n = utf_utf32_to_utf8(c, (char *)sptr);
+			const uint8_t n = utf_utf32_to_utf8(c, (char *)(char *)sptr);
 			j = j + (int32_t)n;
 		}
 	}
