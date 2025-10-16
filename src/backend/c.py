@@ -459,8 +459,7 @@ def incast(type, value):
 		# Это аргумент с типом указатель на массив
 		# приведем его по месту к указателю на элемент этого массива
 		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
-		to = TypePointer(value.type.to.of, value.ti)
-		return "(%s)" % str_type(to) + str_value(value)
+		return eee(value.type.to.of) + str_value(value)
 
 	return str_value(value)
 
@@ -681,6 +680,12 @@ def str_value_call(v, ctx, sret=None):
 	if sret != None:
 		if i > 0:
 			sstr += (", ")
+
+		# приводим указатель на массив к указателю на его элемент
+		#to = TypePointer(sret.type.of, sret.ti)
+		#sstr += "(%s)" % str_type(to)
+
+		sstr += eee(sret.type.of)
 		sstr += str_value_as_ptr(sret)
 
 	if nl_after:
@@ -689,6 +694,11 @@ def str_value_call(v, ctx, sret=None):
 	sstr += (")")
 	return sstr
 
+
+
+def eee(item_type):
+	to = TypePointer(item_type, ti=None)
+	return "(%s)" % str_type(to)
 
 
 def str_value_slice(x, ctx):

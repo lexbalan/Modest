@@ -189,7 +189,7 @@ int main() {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	char em[30];
-	f0("Hello World!", &em);
+	f0("Hello World!", (char *)&em);
 	printf("em = %s\n", (char *)&em);
 
 	uint32_t i = 0;
