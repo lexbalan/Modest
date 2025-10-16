@@ -87,8 +87,8 @@ static int32_t a0[2][2][5] = {
 
 static int32_t a1[5] = {0, 1, 2, 3, 4};
 static int32_t a2[5] = {5, 6, 7, 8, 9};
-static int32_t *a3[2] = {(int32_t *)&a1, (int32_t *)&a2};
-static int32_t *(*a4[2])[2] = {(int32_t(**)[5])&a3, (int32_t(**)[5])&a3};
+static int32_t *a3[2] = {&a1, &a2};
+static int32_t *(*a4[2])[2] = {&a3, &a3};
 static int32_t *(*(*p0)[2])[2] = &a4;
 
 static int32_t a10[10][10] = {
