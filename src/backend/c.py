@@ -451,6 +451,10 @@ def print_type_record(t, tag):
 
 
 
+def eee(item_type):
+	to = TypePointer(item_type, ti=None)
+	return "(%s)" % str_type(to)
+
 
 # Дополнительная чисто сишная надстройка -
 # проверяем если у нас тут указатель на массив приводим к указателю на его элемент
@@ -695,10 +699,6 @@ def str_value_call(v, ctx, sret=None):
 	return sstr
 
 
-
-def eee(item_type):
-	to = TypePointer(item_type, ti=None)
-	return "(%s)" % str_type(to)
 
 
 def str_value_slice(x, ctx):
