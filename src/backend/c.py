@@ -903,8 +903,11 @@ def str_value_cons(x, ctx):
 		if (from_type.to.definition != type.to.definition):
 			return str_cast(type, value, ctx)
 
-	elif type.is_char() and from_type.is_string():
-		return str_value_literal_char(x.asset, x.type.width)
+	elif from_type.is_string():
+		if type.is_char(): #and isinstance(value, ValueLiteral):
+			return str_value_literal_char(x.asset, x.type.width)
+		elif type.is_pointer_to_array() and isinstance(value, ValueLiteral):
+			return str_value_literal_string(value.asset, type.to.of.width)
 
 	elif type.is_xword() and from_type.is_xword():
 		if from_type.is_generic():

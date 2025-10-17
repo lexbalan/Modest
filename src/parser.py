@@ -1291,7 +1291,7 @@ class Parser:
 							else:
 								if len(cod) == 8:
 									break
-						i = i - 1
+						i -= 1
 						code = int(cod, 16)
 
 					elif sym == 'n': code = ord("\n")   # LF
