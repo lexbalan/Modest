@@ -1864,6 +1864,7 @@ def print_def_func(x):
 	print_func_signature(get_id_str(func), ftype)
 
 	if x.stmt == None:
+		cfunc = None
 		out(";")
 		return
 
