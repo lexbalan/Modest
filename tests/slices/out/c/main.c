@@ -85,7 +85,7 @@ int main() {
 
 	i = 0;
 	while (i < __lengthof(s)) {
-		printf("s[%d] = %d\n", i, ABS(s[i]));
+		printf("s[%d] = %d\n", i, (uint32_t)ABS(s[i]));
 		i = i + 1;
 	}
 

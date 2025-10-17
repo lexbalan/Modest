@@ -700,7 +700,9 @@ def do_value_neg(x):
 		if vtype.is_unsigned():
 			error("expected value with signed type", v.ti)
 	else:
+		# is generic type
 		vtype.signed = True
+		vtype.unsigned = True
 
 	return ValueNeg(vtype, v, ti=x['ti'])
 

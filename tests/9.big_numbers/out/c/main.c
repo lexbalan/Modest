@@ -51,7 +51,7 @@ int main() {
 
 	sig1 = sig1 + BIG_INT128(0x0ULL, 0x1ULL);
 
-	printf("sig1 = %lld\n", ABS(sig1));
+	printf("sig1 = %lld\n", (uint64_t)ABS(sig1));
 
 	return 0;
 

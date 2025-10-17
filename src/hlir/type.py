@@ -66,7 +66,8 @@ class Type(Entity):
 		self.att = []
 		self.annotations = {}
 		self.deps = []
-		self.signed = None  # Not defined for all types (!)
+		self.signed = False
+		self.unsigned = False
 		self.ti = None
 		self.incomplete = True
 		self.definition = None
@@ -334,11 +335,11 @@ class Type(Entity):
 
 
 	def is_signed(self):
-		return self.signed == True
+		return self.signed
 
 
 	def is_unsigned(self):
-		return self.signed == False
+		return self.unsigned
 
 
 	# returns root type of any array
@@ -544,6 +545,7 @@ class TypeNumber(Type):
 		from .misc import Id
 		self.id = Id(None)
 		self.signed=signed
+		self.unsigned=not signed
 
 
 class TypeString(Type):
@@ -635,7 +637,7 @@ class TypeNat(Type):
 		self.id = Id().fromStr(alias['cm'])
 		self.id.c = alias['c']
 		self.id.llvm = alias['llvm']
-		self.signed = False
+		self.unsigned = True
 
 
 class TypeFloat(Type):
@@ -654,6 +656,7 @@ class TypeFloat(Type):
 		self.id = Id().fromStr('Float%d' % width)
 		self.id.c = calias
 		self.id.llvm = 'Float%d' % width
+		self.signed = True
 
 
 class TypeChar(Type):

@@ -185,7 +185,7 @@ def get_type_id(t):
 
 	if t.is_number():
 		s = 'int%d_t' % t.width
-		if not t.signed:
+		if t.is_unsigned():
 			s = 'u' + s
 		return s
 
@@ -936,7 +936,7 @@ def str_value_cons(x, ctx):
 	if from_type.is_int() or from_type.is_number():
 		if from_type.is_signed():
 			if type.is_nat():
-				return "ABS(" + str_value(value) + ")"
+				return "(" + str_type(type) + ")" + "ABS(" + str_value(value) + ")"
 			elif type.is_word():
 				if from_type.size < type.size:
 					nat_same_sz = foundation.type_select_nat(from_type.width)
