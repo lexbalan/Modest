@@ -224,6 +224,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- strings --
 @str1 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
 ; -- endstrings --
+declare external void @xxx()
 %Point = type {
 	%Int32,
 	%Int32
