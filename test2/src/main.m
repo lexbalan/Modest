@@ -20,6 +20,18 @@ var s8: *Str8 = a
 var s16: *Str16 = a
 var s32: *Str32 = a
 
+var cc8: Char8 = "A"
+var cc16: Char16 = "A"
+var cc32: Char32 = "A"
+
+var bb8: Str8 = "A"
+var bb16: Str16 = "A"
+var bb32: Str32 = "A"
+
+var ss8: *Str8 = "A"
+var ss16: *Str16 = "A"
+var ss32: *Str32 = "A"
+
 
 public func main () -> Int32 {
 	printf("test2\n")

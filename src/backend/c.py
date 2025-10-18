@@ -854,10 +854,7 @@ def str_value_cons_array(x, ctx):
 			if to_type.of.width == from_type.width:
 				return str_value(value, ctx=ctx)
 			else:
-				#mass
 				return cstr(value, to_type.of.width)
-				#return "_STR%d(%s)" % (to_type.of.width, str_value(value))
-				#return str_value_literal_string(value.asset, char_width=to_type.of.width)
 			return '<???>'
 
 	# for:
@@ -917,12 +914,9 @@ def str_value_cons(x, ctx):
 		if (from_type.to.definition != type.to.definition):
 			return str_cast(type, value, ctx)
 
-	elif from_type.is_string():
-		if type.is_pointer_to_array() and isinstance(value, ValueLiteral):
-			return str_value_literal_string(value.asset, type.to.of.width)
-
-		elif type.is_pointer_to_array():
-			return cstr(value, type.to.of.width) #"_STR%d(%s)" % (type.to.of.width, str_value(value))
+	elif type.is_pointer_to_array():
+		if from_type.is_string():
+			return cstr(value, type.to.of.width)
 
 
 	elif type.is_xword() and from_type.is_xword():
@@ -2038,7 +2032,7 @@ def str_static_initializer(v):
 
 	if root.isImmediate():
 		if v.type.is_composite():
-			str = str_value_literal(root, [])
+			s = str_value_literal(root, [])
 			if root.type.is_string():
 				left_char_width = 0
 				if v.type.is_array():
@@ -2046,9 +2040,9 @@ def str_static_initializer(v):
 				elif v.type.is_str():
 					left_char_width = v.type.width
 
-				if not str[0] in ['u', 'U']:
-					str = string_literal_prefix(left_char_width) + str
-			return str
+				if not s[0] in ['u', 'U']:
+					s = string_literal_prefix(left_char_width) + s
+			return s
 
 	return str_value(v)
 
