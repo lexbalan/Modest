@@ -127,11 +127,11 @@ static bool test_generic_char() {
 	// value with GenericChar type
 	// can be implicit casted to any Char type
 	char b = a[0];
-	char16_t c = _STR16(a)[0];
-	char32_t d = _STR32(a)[0];
+	char16_t c = _CHR16(a);
+	char32_t d = _CHR32(a);
 
 	// explicit cast GenericChar value to Int32
-	int32_t char_code = (int32_t)(uint32_t)_STR32(a)[0];
+	int32_t char_code = (int32_t)(uint32_t)_CHR32(a);
 
 	return true;
 

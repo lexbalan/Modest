@@ -29,9 +29,9 @@ static char32_t *ptr_to_string32 = _STR32(str32_example);
 int main() {
 	console_putchar_utf8("A"[0]);
 	printf("\n");
-	console_putchar_utf16(_STR16("Ω")[0]);
+	console_putchar_utf16(_CHR16("Ω"));
 	printf("\n");
-	console_putchar_utf32(_STR32("🦄")[0]);
+	console_putchar_utf32(_CHR32("🦄"));
 	printf("\n");
 
 	printf("\n");

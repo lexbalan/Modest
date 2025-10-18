@@ -21,8 +21,8 @@ int main() {
 	char32_t ch32;
 
 	ch08 = utf8Char[0];
-	ch16 = _STR16(utf16Char)[0];
-	ch32 = _STR32(utf32Char)[0];
+	ch16 = _CHR16(utf16Char);
+	ch32 = _CHR32(utf32Char);
 
 	//printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
 	//printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)

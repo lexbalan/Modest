@@ -882,6 +882,12 @@ def cstr(value, sz):
 	return str_value(value)
 
 
+def cchr(value, sz):
+	if sz > 8:
+		return "_CHR%d(%s)" % (sz, str_value(value))
+	return str_value(value) + "[0]"
+
+
 def str_value_cons(x, ctx):
 	type = x.type
 	value = x.value
@@ -897,7 +903,7 @@ def str_value_cons(x, ctx):
 		return str_cast(type, value, ctx)
 
 	if type.is_char() and from_type.is_string():
-		return cstr(value, type.width) + "[0]"
+		return cchr(value, type.width)
 
 	if isinstance(value, ValueLiteral):
 		if from_type.is_generic():
