@@ -10,12 +10,6 @@
 
 #include "main.h"
 
-#define __STR8(x) x
-#define __STR16(x) u##x
-#define __STR32(x) U##x
-#define _STR8(x) __STR8(x)
-#define _STR16(x) __STR16(x)
-#define _STR32(x) __STR32(x)
 
 #define a  "A"
 
@@ -35,13 +29,22 @@ static uint32_t *s32 = _STR32(a);
 static void putc8(char c);
 static void putc16(uint16_t c);
 static void putc32(uint32_t c);
+static void puts8(char *s);
+static void puts16(uint16_t *s);
+static void puts32(uint32_t *s);
 
 int32_t main()
 {
 	printf("test2\n");
-	putc8("A"[0]);
-	putc16(_STR16("A")[0]);
-	putc32(_STR32("A")[0]);
+
+	putc8(a[0]);
+	putc16(_STR16(a)[0]);
+	putc32(_STR32(a)[0]);
+
+	puts8(a);
+	puts16(_STR16(a));
+	puts32(_STR32(a));
+
 	return 0;
 }
 
@@ -55,6 +58,19 @@ static void putc16(uint16_t c)
 }
 
 static void putc32(uint32_t c)
+{
+}
+
+
+static void puts8(char *s)
+{
+}
+
+static void puts16(uint16_t *s)
+{
+}
+
+static void puts32(uint32_t *s)
 {
 }
 

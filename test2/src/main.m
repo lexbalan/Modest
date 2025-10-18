@@ -23,9 +23,15 @@ var s32: *Str32 = a
 
 public func main () -> Int32 {
 	printf("test2\n")
-	putc8("A")
-	putc16("A")
-	putc32("A")
+
+	putc8(a)
+	putc16(a)
+	putc32(a)
+
+	puts8(a)
+	puts16(a)
+	puts32(a)
+
 	return 0
 }
 
@@ -33,4 +39,8 @@ public func main () -> Int32 {
 func putc8 (c: Char8) -> Unit {}
 func putc16 (c: Char16) -> Unit {}
 func putc32 (c: Char32) -> Unit {}
+
+func puts8 (s: *Str8) -> Unit {}
+func puts16 (s: *Str16) -> Unit {}
+func puts32 (s: *Str32) -> Unit {}
 
