@@ -10,20 +10,11 @@
 #include "main.h"
 
 
-extern void xxx();
+#define a  "A"
 
-struct Point
-{
-	int32_t x;
-	int32_t y;
-};
-typedef struct Point Point;
-
-static Point points[3] = {
-	{.x = 0, .y = 0},
-	{.x = 1, .y = 1},
-	{.x = 2, .y = 2}
-};
+static char c8 = a;
+static uint16_t c16 = a;
+static uint32_t c32 = a;
 
 int32_t main()
 {

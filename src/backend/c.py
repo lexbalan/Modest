@@ -905,7 +905,7 @@ def str_value_cons(x, ctx):
 
 	elif from_type.is_string():
 		if type.is_char(): #and isinstance(value, ValueLiteral):
-			return str_value_literal_char(x.asset, x.type.width)
+			return "/**/" + str_value_literal_char(x.asset, x.type.width)
 		elif type.is_pointer_to_array() and isinstance(value, ValueLiteral):
 			return str_value_literal_string(value.asset, type.to.of.width)
 
@@ -2007,7 +2007,8 @@ def str_static_initializer(v):
 	root = get_root_value(v)
 
 	if value_is_generic_immediate_const(root):
-		return str_value_const(root, [])
+		return str_value(root, [])
+		#return "/*?*/" + str_value_const(root, [])
 
 	if root.isImmediate():
 		if v.type.is_composite():

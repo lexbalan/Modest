@@ -4,22 +4,11 @@ include "string"
 
 
 
+const a = "A"
 
-@extern("C")
-
-
-
-type Point = record {
-	x: Int32
-	y: Int32
-}
-
-
-var points: [3]Point = [
-	{x = 0, y = 0}
-	{x = 1, y = 1}
-	{x = 2, y = 2}
-]
+var c8: Char8 = a
+var c16: Char16 = a
+var c32: Char32 = a
 
 
 public func main () -> Int32 {

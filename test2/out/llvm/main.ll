@@ -224,26 +224,9 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- strings --
 @str1 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
 ; -- endstrings --
-declare external void @xxx()
-%Point = type {
-	%Int32,
-	%Int32
-};
-
-@points = internal global [3 x %Point] [
-	%Point {
-		%Int32 0,
-		%Int32 0
-	},
-	%Point {
-		%Int32 1,
-		%Int32 1
-	},
-	%Point {
-		%Int32 2,
-		%Int32 2
-	}
-]
+@c8 = internal global %Char8 65
+@c16 = internal global %Char16 65
+@c32 = internal global %Char32 65
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
 	ret %Int32 0

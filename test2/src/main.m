@@ -4,21 +4,11 @@ include "libc/stdlib"
 include "libc/string"
 
 
-@extern("C")
-func xxx () -> Unit
+const a = "A"
 
-
-type Point = record {
-	x: Int32
-	y: Int32
-}
-
-
-var points: []Point = [
-	{x=0, y=0}
-	{x=1, y=1}
-	{x=2, y=2}
-]
+var c8: Char8 = a
+var c16: Char16 = a
+var c32: Char32 = a
 
 
 public func main () -> Int32 {
