@@ -11,14 +11,14 @@
 
 #define hello  "Hello"
 #define world  "World"
-#define party_corn  U"🎉"
+#define party_corn  "🎉"
 
-#define greeting  (hello " " world)//+ " " + party_corn
+#define greeting  hello " " world//+ " " + party_corn
 
 #define test  "test"
 
 int main() {
-	printf("%s\n", (char *)greeting);
+	printf("%s\n", greeting);
 
 	if (true) {
 		printf("test ok.\n");

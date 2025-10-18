@@ -319,13 +319,15 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 @str3 = private constant [13 x i32] [i32 83, i32 116, i32 114, i32 105, i32 110, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]
 @str4 = private constant [2 x i8] [i8 10, i8 0]
 @str5 = private constant [2 x i8] [i8 10, i8 0]
-@str6 = private constant [3 x i8] [i8 10, i8 10, i8 0]
+@str6 = private constant [2 x i8] [i8 10, i8 0]
 @str7 = private constant [2 x i8] [i8 10, i8 0]
 @str8 = private constant [2 x i8] [i8 10, i8 0]
-@str9 = private constant [3 x i8] [i8 10, i8 10, i8 0]
+@str9 = private constant [2 x i8] [i8 10, i8 0]
 @str10 = private constant [2 x i8] [i8 10, i8 0]
 @str11 = private constant [2 x i8] [i8 10, i8 0]
 @str12 = private constant [2 x i8] [i8 10, i8 0]
+@str13 = private constant [2 x i8] [i8 10, i8 0]
+@str14 = private constant [2 x i8] [i8 10, i8 0]
 ; -- endstrings --; tests/string/src/main.m
 
 
@@ -375,22 +377,24 @@ define %Int @main() {
 	call void @console_putchar_utf16(%Char16 937)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
 	call void @console_putchar_utf32(%Char32 129412)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str6 to [0 x i8]*))
-	call void @console_puts8(%Str8* bitcast ([6 x %Char8]* @string8 to %Str8*))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str6 to [0 x i8]*))
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-	call void @console_puts16(%Str16* bitcast ([8 x %Char16]* @string16 to %Str16*))
+	call void @console_puts8(%Str8* bitcast ([6 x %Char8]* @string8 to %Str8*))
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
+	call void @console_puts16(%Str16* bitcast ([8 x %Char16]* @string16 to %Str16*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str9 to [0 x i8]*))
 	call void @console_puts32(%Str32* bitcast ([12 x %Char32]* @string32 to %Str32*))
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*))
-	%7 = load [0 x %Char8]*, [0 x %Char8]** @ptr_to_string8
-	call void @console_puts8([0 x %Char8]* %7)
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
-	%9 = load [0 x %Char16]*, [0 x %Char16]** @ptr_to_string16
-	call void @console_puts16([0 x %Char16]* %9)
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str11 to [0 x i8]*))
-	%11 = load [0 x %Char32]*, [0 x %Char32]** @ptr_to_string32
-	call void @console_puts32([0 x %Char32]* %11)
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str11 to [0 x i8]*))
+	%9 = load [0 x %Char8]*, [0 x %Char8]** @ptr_to_string8
+	call void @console_puts8([0 x %Char8]* %9)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
+	%11 = load [0 x %Char16]*, [0 x %Char16]** @ptr_to_string16
+	call void @console_puts16([0 x %Char16]* %11)
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str13 to [0 x i8]*))
+	%13 = load [0 x %Char32]*, [0 x %Char32]** @ptr_to_string32
+	call void @console_puts32([0 x %Char32]* %13)
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str14 to [0 x i8]*))
 	ret %Int 0
 }
 

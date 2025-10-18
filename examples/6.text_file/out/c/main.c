@@ -17,7 +17,7 @@
 //include "libc/ctypes64"
 //include "libc/stdio"
 
-#define filename  "file.txt"
+#define filename  ("file.txt")
 
 static void write_example() {
 	printf("run write_example\n");

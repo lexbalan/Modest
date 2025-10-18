@@ -13,6 +13,11 @@ def value_string_create(string, ti=None):
 		n = nbits_for_num(cc)
 		max_char_width = max(max_char_width, n)
 
+#	if max_char_width > 8:
+#		# включаем в модуле поддержку unicode
+#		from trans import cmodule_use
+#		cmodule_use('use_unicode')
+
 	string_type = TypeString(max_char_width, len(string), ti)
 	v = ValueLiteral(string_type, ti)
 	v.asset = string

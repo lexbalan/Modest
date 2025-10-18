@@ -42,17 +42,19 @@ def char_can(to, from_type, method, ti):
 
 
 def value_char_cons(t, v, method, ti):
+	if t.size > 1:
+		# включаем в модуле поддержку unicode
+		from trans import cmodule_use
+		cmodule_use('use_unicode')
+
 	from .cons import value_cons_immediate
 	# String -> Char
 	# ex: var c: Char8 = "A"
 	if v.type.is_string():
-		#if v.type['length'] == 1:
 		cc = ord(v.asset[0])
 		nv = value_cons_immediate(t, v, method, ti)
-		nv.immediate = True
 		nv.asset = cc
 		return nv
-
 
 	if v.isImmediate():
 		return value_cons_immediate(t, v, method, ti)

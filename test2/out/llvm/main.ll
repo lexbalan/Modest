@@ -222,14 +222,44 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
-; -- endstrings --
+@str1 = private constant [2 x i8] [i8 65, i8 0]
+@str2 = private constant [2 x i16] [i16 65, i16 0]
+@str3 = private constant [2 x i32] [i32 65, i32 0]
+@str4 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
+; -- endstrings --; unicode support test
 @c8 = internal global %Char8 65
 @c16 = internal global %Char16 65
 @c32 = internal global %Char32 65
+@b8 = internal global [1 x %Char8] [
+	%Char8 65
+]
+@b16 = internal global [1 x %Char16] [
+	%Char16 65
+]
+@b32 = internal global [1 x %Char32] [
+	%Char32 65
+]
+@s8 = internal global %Str8* bitcast ([2 x i8]* @str1 to [0 x i8]*)
+@s16 = internal global %Str16* bitcast ([2 x i16]* @str2 to [0 x i16]*)
+@s32 = internal global %Str32* bitcast ([2 x i32]* @str3 to [0 x i32]*)
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str4 to [0 x i8]*))
+	call void @putc8(%Char8 65)
+	call void @putc16(%Char16 65)
+	call void @putc32(%Char32 65)
 	ret %Int32 0
+}
+
+define internal void @putc8(%Char8 %c) {
+	ret void
+}
+
+define internal void @putc16(%Char16 %c) {
+	ret void
+}
+
+define internal void @putc32(%Char32 %c) {
+	ret void
 }
 
 

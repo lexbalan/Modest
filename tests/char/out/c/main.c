@@ -10,8 +10,8 @@
 
 
 #define utf8Char  "s"
-#define utf16Char  u"Я"
-#define utf32Char  U"🐀"
+#define utf16Char  "Я"
+#define utf32Char  "🐀"
 
 int main() {
 	printf("test/char\n");
@@ -20,9 +20,9 @@ int main() {
 	uint16_t ch16;
 	uint32_t ch32;
 
-	ch08 = /**/'s';
-	ch16 = /**/u'Я';
-	ch32 = /**/U'🐀';
+	ch08 = utf8Char[0];
+	ch16 = _STR16(utf16Char)[0];
+	ch32 = _STR32(utf32Char)[0];
 
 	//printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
 	//printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)

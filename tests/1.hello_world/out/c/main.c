@@ -12,10 +12,10 @@
 #define hello  "Hello"
 #define world  "World!"
 
-#define hello_world  (hello " " world)
+#define hello_world  hello " " world
 
 int main() {
-	printf("%s\n", (char *)hello_world);
+	printf("%s\n", hello_world);
 	return 0;
 }
 

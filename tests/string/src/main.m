@@ -31,16 +31,18 @@ public func main () -> Int {
 	console.putchar_utf16("Ω")
 	printf("\n")
 	console.putchar_utf32("🦄")
+	printf("\n")
 
-	printf("\n\n")
+	printf("\n")
 
 	console.puts8(&string8)
 	printf("\n")
 	console.puts16(&string16)
 	printf("\n")
 	console.puts32(&string32)
+	printf("\n")
 
-	printf("\n\n")
+	printf("\n")
 
 	console.puts8(ptr_to_string8)
 	printf("\n")

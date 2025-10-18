@@ -126,12 +126,12 @@ static bool test_generic_char() {
 
 	// value with GenericChar type
 	// can be implicit casted to any Char type
-	char b = /**/'A';
-	uint16_t c = /**/u'A';
-	uint32_t d = /**/U'A';
+	char b = a[0];
+	uint16_t c = _STR16(a)[0];
+	uint32_t d = _STR32(a)[0];
 
 	// explicit cast GenericChar value to Int32
-	int32_t char_code = (int32_t)(uint32_t)/**/U'A';
+	int32_t char_code = (int32_t)(uint32_t)_STR32(a)[0];
 
 	return true;
 
@@ -177,7 +177,7 @@ static bool test_generic_array() {
 	}
 
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
-	int32_t d[10] = a;
+	int32_t d[10] = (int32_t[10])a;
 
 	if (memcmp(&d, &((int32_t[10]){0, 1, 2, 3, 0}), sizeof(int32_t[10])) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");

@@ -21,14 +21,14 @@
 #define arr_unicorn  "🦄"
 #define arr_rat  "🐀"
 
-#define genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define string8Const  (char *)genericStringConst
-#define string16Const  (uint16_t *)genericStringConst
-#define string32Const  (uint32_t *)genericStringConst
+#define genericStringConst  "S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define string8Const  (genericStringConst)
+#define string16Const  (_STR16(genericStringConst))
+#define string32Const  (_STR32(genericStringConst))
 
 static char arr_utf8[8] = "Hi!\n";
-static uint16_t arr_utf16[9] = u"Hello Ω!\n";
-static uint32_t arr_utf32[8] = U"Hello!\n";
+static uint16_t arr_utf16[9] = _STR16("Hello Ω!\n");
+static uint32_t arr_utf32[8] = _STR32("Hello!\n");
 
 int32_t main() {
 	char *str8 = string8Const;

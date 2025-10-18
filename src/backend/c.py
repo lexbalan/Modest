@@ -108,10 +108,12 @@ def precedence(x):
 	i = 0
 	if isinstance(x, ValueBin):
 		k = x.op
+		if x.op == 'add' and x.type.is_array():
+			return 12
 		while i < precedenceMax + 1:
 			if k in aprecedence[i]:
 				break
-			i = i + 1
+			i += 1
 	else:
 		if isinstance(x, ValueCons): i = 10
 		elif isinstance(x, ValueSizeofValue): i = 10
@@ -852,7 +854,10 @@ def str_value_cons_array(x, ctx):
 			if to_type.of.width == from_type.width:
 				return str_value(value, ctx=ctx)
 			else:
-				return str_value_literal_string(value.asset, char_width=to_type.of.width)
+				#mass
+				return cstr(value, to_type.of.width)
+				#return "_STR%d(%s)" % (to_type.of.width, str_value(value))
+				#return str_value_literal_string(value.asset, char_width=to_type.of.width)
 			return '<???>'
 
 	# for:
@@ -874,11 +879,16 @@ def str_value_cons_array(x, ctx):
 #
 
 
+def cstr(value, sz):
+	if sz > 8:
+		return "_STR%d(%s)" % (sz, str_value(value))
+	return str_value(value)
+
+
 def str_value_cons(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
-
 
 	if type.is_array():
 		return str_value_cons_array(x, ctx)
@@ -889,11 +899,15 @@ def str_value_cons(x, ctx):
 	if type.is_distinct():
 		return str_cast(type, value, ctx)
 
+	if type.is_char() and from_type.is_string():
+		return cstr(value, type.width) + "[0]"
+
 	if isinstance(value, ValueLiteral):
 		if from_type.is_generic():
 			if x.asset != None:
-				as_hex = value.type.is_word() or value.hasAttribute2('hexadecimal')
-				return str_value_literal_with_type(x, type, as_hex=as_hex)
+				#if not (type.is_char() and from_type.is_string()):
+					as_hex = value.type.is_word() or value.hasAttribute2('hexadecimal')
+					return str_value_literal_with_type(x, type, as_hex=as_hex)
 
 	# *RecordA -> *RecordB
 	# у нас типы структурные, а в си - номинальные
@@ -904,10 +918,12 @@ def str_value_cons(x, ctx):
 			return str_cast(type, value, ctx)
 
 	elif from_type.is_string():
-		if type.is_char(): #and isinstance(value, ValueLiteral):
-			return "/**/" + str_value_literal_char(x.asset, x.type.width)
-		elif type.is_pointer_to_array() and isinstance(value, ValueLiteral):
+		if type.is_pointer_to_array() and isinstance(value, ValueLiteral):
 			return str_value_literal_string(value.asset, type.to.of.width)
+
+		elif type.is_pointer_to_array():
+			return cstr(value, type.to.of.width) #"_STR%d(%s)" % (type.to.of.width, str_value(value))
+
 
 	elif type.is_xword() and from_type.is_xword():
 		if from_type.is_generic():
@@ -1102,8 +1118,8 @@ def str_value_literal_record(type, items):
 
 
 def string_literal_prefix(width):
-	if width > 16: return "U"
-	if width > 8: return "u"
+	#if width > 16: return "U"
+	#if width > 8: return "u"
 	return ""
 
 
@@ -1541,18 +1557,21 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	need_wrap = False
 
 	# Не берем в скобки литералы, композитные значения и строки
+	is_func = isinstance(value, ValueFunc)
+	is_var = isinstance(value, ValueVar)
+	is_const = isinstance(value, ValueConst)
 	is_literal = isinstance(value, ValueLiteral)
 	is_comp = value.type.is_composite()
 
-	is_str = False
-	if isinstance(value, ValueCons):
-		is_str = value.value.type.is_string()
+	is_str = value.type.is_string()
 
-	if not (is_literal or is_comp or is_str):
+	if not (is_literal or is_comp or is_str or is_const or is_var or is_func):
 		need_wrap = precedence(value) < precedenceMax
 
 	set_nl_symbol(" \\\n")
 	out(str_value(value, wrapped=need_wrap))
+
+	#out("/*%s*/" % str_type(value.type))
 	set_nl_symbol("\n")
 
 
@@ -2004,11 +2023,18 @@ def print_def_var(x, isdecl=False, as_extern=False):
 # .arr = (uint8_t [3]){1, 2, 3}  // not worked
 # .arr = {1, 2, 3}  // worked
 def str_static_initializer(v):
+	#mass
+	if v.type.is_char():
+		return str_value(v, [])
+	if v.type.is_pointer_to_str():
+		return str_value(v, [])
+	if v.type.is_array():
+		return str_value(v, [])
+
 	root = get_root_value(v)
 
 	if value_is_generic_immediate_const(root):
 		return str_value(root, [])
-		#return "/*?*/" + str_value_const(root, [])
 
 	if root.isImmediate():
 		if v.type.is_composite():
@@ -2190,6 +2216,17 @@ def print_header(module, outname):
 
 	if nl_after_incs:
 		newline()
+
+	if module.hasAttribute('use_unicode'):
+		out("\n\n#ifndef __STR_UNICODE__")
+		out("\n#define __STR_UNICODE__")
+		out("\n#define __STR8(x) x")
+		out("\n#define __STR16(x) u##x")
+		out("\n#define __STR32(x) U##x")
+		out("\n#define _STR8(x) __STR8(x)")
+		out("\n#define _STR16(x) __STR16(x)")
+		out("\n#define _STR32(x) __STR32(x)")
+		out("\n#endif /* __STR_UNICODE__ */")
 
 	for x in defs:
 		if is_private(x):

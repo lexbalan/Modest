@@ -11,8 +11,8 @@
 
 #define arr  {1, 2}
 
-static int32_t arr0[2] = arr;
-static int32_t arr1[2] = arr;
+static int32_t arr0[2] = (int32_t[2])arr;
+static int32_t arr1[2] = (int32_t[2])arr;
 static char *str = "Hello!";// -> *[]Char8
 
 int main() {

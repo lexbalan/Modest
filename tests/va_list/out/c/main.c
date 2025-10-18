@@ -40,7 +40,7 @@ int main() {
 	uint32_t k = 10;
 	my_printf("My Printf Test %u\n", k);
 
-	const char c = '$';
+	const char c = "$"[0];
 	char *const s = "Hi!";
 	const int32_t i = (int32_t)-1;
 	const uint32_t n = 123;
