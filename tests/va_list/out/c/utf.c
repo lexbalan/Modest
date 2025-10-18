@@ -11,7 +11,7 @@
 
 
 // декодирует символ UTF-32 в последовательность UTF-8
-uint8_t utf_utf32_to_utf8(uint32_t c, char *buf) {
+uint8_t utf_utf32_to_utf8(char32_t c, char *buf) {
 	const uint32_t x = (uint32_t)c;
 
 	if (x <= 0x7F) {
@@ -48,11 +48,11 @@ uint8_t utf_utf32_to_utf8(uint32_t c, char *buf) {
 
 
 // returns n-symbols from input stream
-uint8_t utf_utf16_to_utf32(uint16_t *c, uint32_t *result) {
+uint8_t utf_utf16_to_utf32(char16_t *c, char32_t *result) {
 	const uint32_t leading = (uint32_t)c[0];
 
 	if ((leading < 0xD800) || (leading > 0xDFFF)) {
-		*result = (uint32_t)leading;
+		*result = (char32_t)leading;
 		return 1;
 	} else if (leading >= 0xDC00) {
 		//error("Illegal code sequence")
@@ -63,7 +63,7 @@ uint8_t utf_utf16_to_utf32(uint16_t *c, uint32_t *result) {
 			//error("Illegal code sequence")
 		} else {
 			code = code | (trailing & 0x3FF);
-			*result = (uint32_t)(code + 0x10000);
+			*result = (char32_t)(code + 0x10000);
 			return 2;
 		}
 	}

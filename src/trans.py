@@ -141,6 +141,10 @@ def ctx_type_add(id_str, t, is_public):
 
 def ctx_type_get(id_str):
 	global context
+	if (id_str == 'Char16') or (id_str == 'Char32'):
+		# включаем в модуле поддержку unicode
+		cmodule_use('use_unicode')
+
 	t = context['private'].type_get(id_str)
 	if t != None:
 		return t

@@ -128,10 +128,10 @@ int main() {
 
 	printf("sizeof(Char8) = %zu\n", sizeof(char));
 	printf("alignof(Char8) = %zu\n", __alignof(char));
-	printf("sizeof(Char16) = %zu\n", sizeof(uint16_t));
-	printf("alignof(Char16) = %zu\n", __alignof(uint16_t));
-	printf("sizeof(Char32) = %zu\n", sizeof(uint32_t));
-	printf("alignof(Char32) = %zu\n", __alignof(uint32_t));
+	printf("sizeof(Char16) = %zu\n", sizeof(char16_t));
+	printf("alignof(Char16) = %zu\n", __alignof(char16_t));
+	printf("sizeof(Char32) = %zu\n", sizeof(char32_t));
+	printf("alignof(Char32) = %zu\n", __alignof(char32_t));
 
 	// pointer size (for example pointer to []Char8)
 	printf("sizeof(*Str8) = %zu\n", sizeof(char *));

@@ -27,13 +27,13 @@
 #define string32Const  (_STR32(genericStringConst))
 
 static char arr_utf8[8] = "Hi!\n";
-static uint16_t arr_utf16[9] = _STR16("Hello Ω!\n");
-static uint32_t arr_utf32[8] = _STR32("Hello!\n");
+static char16_t arr_utf16[9] = _STR16("Hello Ω!\n");
+static char32_t arr_utf32[8] = _STR32("Hello!\n");
 
 int32_t main() {
 	char *str8 = string8Const;
-	uint16_t *str16 = string16Const;
-	uint32_t *str32 = string32Const;
+	char16_t *str16 = string16Const;
+	char32_t *str32 = string32Const;
 
 	console_puts8(str8);
 	console_puts8("\n");

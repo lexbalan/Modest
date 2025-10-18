@@ -672,7 +672,7 @@ class TypeChar(Type):
 		if width <= 8:
 			self.id.c = 'char'
 		else:
-			self.id.c = 'uint%d_t' % width
+			self.id.c = 'char%d_t' % width
 		self.id.llvm = 'Char%d' % width
 
 

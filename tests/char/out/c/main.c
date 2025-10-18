@@ -17,8 +17,8 @@ int main() {
 	printf("test/char\n");
 
 	char ch08;
-	uint16_t ch16;
-	uint32_t ch32;
+	char16_t ch16;
+	char32_t ch32;
 
 	ch08 = utf8Char[0];
 	ch16 = _STR16(utf16Char)[0];

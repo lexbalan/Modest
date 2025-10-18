@@ -87,11 +87,6 @@ def value_pointer_cons(t, v, method, ti):
 			from trans import cmodule_strings_add
 			cmodule_strings_add(nv)
 
-			if t.to.of.size > 1:
-				# включаем в модуле поддержку unicode
-				from trans import cmodule_use
-				cmodule_use('use_unicode')
-
 			return nv
 
 		else:
