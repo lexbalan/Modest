@@ -10,6 +10,12 @@
 #include <stdio.h>
 
 #ifndef __STR_UNICODE__
+#if __has_include(<uchar.h>)
+#include <uchar.h>
+#else
+typedef uint16_t char16_t;
+typedef uint32_t char32_t;
+#endif
 #define __STR_UNICODE__
 #define __STR8(x) x
 #define __STR16(x) u##x
@@ -18,6 +24,7 @@
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
 #endif /* __STR_UNICODE__ */
+
 int main();
 
 #endif /* MAIN_H */

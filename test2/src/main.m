@@ -32,6 +32,14 @@ public func main () -> Int32 {
 	puts16(a)
 	puts32(a)
 
+	putc8("A")
+	putc16("A")
+	putc32("A")
+
+	puts8("A")
+	puts16("A")
+	puts32("A")
+
 	return 0
 }
 

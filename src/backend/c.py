@@ -2219,6 +2219,12 @@ def print_header(module, outname):
 
 	if module.hasAttribute('use_unicode'):
 		out("\n\n#ifndef __STR_UNICODE__")
+		out("\n#if __has_include(<uchar.h>)")
+		out("\n#include <uchar.h>")
+		out("\n#else")
+		out("\ntypedef uint16_t char16_t;")
+		out("\ntypedef uint32_t char32_t;")
+		out("\n#endif")
 		out("\n#define __STR_UNICODE__")
 		out("\n#define __STR8(x) x")
 		out("\n#define __STR16(x) u##x")
@@ -2227,6 +2233,7 @@ def print_header(module, outname):
 		out("\n#define _STR16(x) __STR16(x)")
 		out("\n#define _STR32(x) __STR32(x)")
 		out("\n#endif /* __STR_UNICODE__ */")
+		out("\n")
 
 	for x in defs:
 		if is_private(x):

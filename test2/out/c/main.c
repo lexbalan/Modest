@@ -45,6 +45,14 @@ int32_t main()
 	puts16(_STR16(a));
 	puts32(_STR32(a));
 
+	putc8("A"[0]);
+	putc16(_STR16("A")[0]);
+	putc32(_STR32("A")[0]);
+
+	puts8("A");
+	puts16("A");
+	puts32("A");
+
 	return 0;
 }
 
