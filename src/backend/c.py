@@ -892,10 +892,10 @@ def cchr(value, sz):
 	if sz > 8:
 		return "_CHR%d(%s)" % (sz, str_value(value))
 
-	#if value.type.is_string():
-	return str_value_literal_char(ord(value.asset[0]), sz)
+	if value.type.is_string():
+		return str_value_literal_char(ord(value.asset[0]), sz)
 
-	#return str_value(value) + "[0]"
+	return str_value(value) + "[0]"
 
 
 
