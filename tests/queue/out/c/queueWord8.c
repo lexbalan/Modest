@@ -1,12 +1,12 @@
 // queueWord8
 // queue implementation example
 
+#include "queueWord8.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
-#include "queueWord8.h"
 
 
 void queueWord8_init(queueWord8_QueueWord8 *q, uint8_t *buf, uint32_t capacity) {

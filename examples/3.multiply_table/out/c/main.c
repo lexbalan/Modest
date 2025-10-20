@@ -1,12 +1,12 @@
 // examples/3.multiply_table/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#include "main.h"
 
 
 static void mtab(uint32_t n) {

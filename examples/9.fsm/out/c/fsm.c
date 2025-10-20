@@ -1,12 +1,12 @@
 // examples/fsm/fsm.cm
 
+#include "fsm.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#include "fsm.h"
 
 
 #define verbose  true

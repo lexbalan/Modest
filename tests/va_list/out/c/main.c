@@ -1,17 +1,16 @@
 // tests/va/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdarg.h>
+#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 
-#include "main.h"
-
-#include <stdlib.h>
-
+#include "stdlib.h"
 
 //include "lightfood/print"
 //pragma c_include "./print.h"

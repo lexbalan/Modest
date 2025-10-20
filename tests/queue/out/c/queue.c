@@ -1,11 +1,11 @@
 //module queue
 
+#include "queue.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
-#include "queue.h"
 
 
 void queue_init(queue_Queue *q, uint32_t capacity) {

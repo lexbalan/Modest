@@ -1,15 +1,13 @@
 // examples/8.linked_list/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include "main.h"
-
-#include <stdlib.h>
 
 
 // wrap around linked list for list.List Nat32

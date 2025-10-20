@@ -1,12 +1,12 @@
 // tests/named_args/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#include "main.h"
 
 
 static int32_t named_args_test(int32_t a, int32_t b, int32_t c) {

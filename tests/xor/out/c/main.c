@@ -1,12 +1,12 @@
 // tests/xor/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#include "main.h"
 
 
 static void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen) {

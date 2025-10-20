@@ -1,13 +1,13 @@
 // tests/queue/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
 #include <stdio.h>
-
-#include "main.h"
 
 
 static queueWord8_QueueWord8 bq0;

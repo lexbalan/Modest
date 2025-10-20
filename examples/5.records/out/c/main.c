@@ -1,5 +1,7 @@
 // examples/5.records/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -7,8 +9,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include "main.h"
 
 
 struct Point {

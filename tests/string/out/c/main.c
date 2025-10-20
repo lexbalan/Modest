@@ -1,5 +1,7 @@
 // tests/string/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -7,8 +9,6 @@
 #include "./utf.h"
 #include "./console.h"
 #include <stdio.h>
-
-#include "main.h"
 
 
 // constants with type String(Generic)

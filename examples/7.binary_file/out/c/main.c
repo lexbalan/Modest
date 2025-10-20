@@ -1,13 +1,12 @@
 // examples/7.binary_file/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <string.h>
 #include <stdio.h>
-
-#include "main.h"
 
 
 // FIXIT: not worked LLVM result (!)

@@ -2,15 +2,14 @@
  * table.m
  */
 
+#include "table.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "table.h"
 
 
 // we cannot receive VLA by value,

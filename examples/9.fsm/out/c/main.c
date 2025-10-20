@@ -1,13 +1,13 @@
 // examples/fsm/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include "./delay.h"
 #include <stdio.h>
-
-#include "main.h"
 
 
 // This is flashlight final state machine example

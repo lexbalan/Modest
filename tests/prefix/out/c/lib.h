@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 
+
 struct loo_Nothing {
 };
 typedef struct loo_Nothing loo_Nothing;

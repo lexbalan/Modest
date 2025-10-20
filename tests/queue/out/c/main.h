@@ -9,8 +9,11 @@
 
 #include <math.h>
 #include <stdio.h>
+
 #include "queueWord8.h"
+
 #include "ringWord8.h"
+
 int main();
 
 #endif /* MAIN_H */

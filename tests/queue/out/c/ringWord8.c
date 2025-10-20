@@ -1,12 +1,12 @@
 // ringWord8
 // queue implementation example
 
+#include "ringWord8.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
-#include "ringWord8.h"
 
 
 void ringWord8_init(ringWord8_RingWord8 *q, uint8_t *buf, uint32_t capacity) {

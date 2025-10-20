@@ -13,9 +13,11 @@
 #include <stdio.h>
 #include <string.h>
 
+
+
 #ifndef __STR_UNICODE__
 #if __has_include(<uchar.h>)
-#include <uchar.h>
+#include "uchar.h"
 #else
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
@@ -31,7 +33,6 @@ typedef uint32_t char32_t;
 #define _CHR16(x) (__STR16(x)[0])
 #define _CHR32(x) (__STR32(x)[0])
 #endif /* __STR_UNICODE__ */
-
 
 void console_putchar8(char c);
 void console_putchar16(char16_t c);

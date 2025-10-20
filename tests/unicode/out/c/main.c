@@ -1,14 +1,13 @@
 // unicode support test
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "main.h"
 
 
 #define a  "A"

@@ -1,12 +1,12 @@
 // lightfood/delay.m
 
+#include "delay.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
-
-#include "delay.h"
 
 
 void delay_us(uint64_t us) {

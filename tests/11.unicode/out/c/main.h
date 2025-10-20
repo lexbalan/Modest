@@ -11,9 +11,12 @@
 #include "./console.h"
 #include <stdio.h>
 
+#include "console.h"
+
+
 #ifndef __STR_UNICODE__
 #if __has_include(<uchar.h>)
-#include <uchar.h>
+#include "uchar.h"
 #else
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
@@ -30,7 +33,6 @@ typedef uint32_t char32_t;
 #define _CHR32(x) (__STR32(x)[0])
 #endif /* __STR_UNICODE__ */
 
-#include "console.h"
 int32_t main();
 
 #endif /* MAIN_H */

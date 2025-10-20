@@ -10,7 +10,9 @@
 #include "./delay.h"
 #include <stdio.h>
 
+
 #include "fsm.h"
+
 int main();
 
 #endif /* MAIN_H */

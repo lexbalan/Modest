@@ -8,7 +8,9 @@
 #include <stdbool.h>
 
 #include <stdio.h>
+
 #include "memory.h"
+
 int main();
 
 #endif /* MAIN_H */

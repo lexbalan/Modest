@@ -2,12 +2,12 @@
 // algorithms from wikipedia
 // (https://ru.wikipedia.org/wiki/UTF-16)
 
+#include "utf.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
-#include "utf.h"
 
 
 // декодирует символ UTF-32 в последовательность UTF-8

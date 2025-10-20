@@ -1,20 +1,18 @@
 // lightfood/console.m
 
+#include "console.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdarg.h>
+#include <string.h>
 #include "./utf.h"
 #include "./console.h"
 #include <unistd.h>
 #include <stdio.h>
-#include <string.h>
 
-#include "console.h"
-
-#include <stdlib.h>
-
+#include "stdlib.h"
 
 //pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
 

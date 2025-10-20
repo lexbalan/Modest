@@ -1,5 +1,7 @@
 // tests/float/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -7,8 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
-#include "main.h"
 
 
 #define mathPi  3.141592653589793238462643383279502884

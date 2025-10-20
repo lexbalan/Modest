@@ -1,12 +1,12 @@
 // tests/slices/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#include "main.h"
 
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
@@ -20,8 +20,7 @@ do { \
     } \
 } while (0)
 
-#include <stdlib.h>
-
+#include "stdlib.h"
 
 static void array_print(int32_t *pa, uint32_t len) {
 	uint32_t i = 0;

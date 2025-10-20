@@ -1,15 +1,13 @@
 // examples/8.linked_list/linked_list.cm
 
+#include "list.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include "list.h"
-
-#include <stdlib.h>
 
 
 list_List *list_create() {

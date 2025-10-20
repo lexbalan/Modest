@@ -1,5 +1,7 @@
 // tests/10.const/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -7,8 +9,6 @@
 #include <stdio.h>
 #include <math.h>
 #include "./minmax.h"
-
-#include "main.h"
 
 
 #define carr  {0, 10, 15, 20, 25, 30}

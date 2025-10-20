@@ -1,5 +1,7 @@
 /* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
 
+#include "client.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,8 +10,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-
-#include "client.h"
 
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))

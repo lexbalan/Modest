@@ -2087,11 +2087,17 @@ def print_def_const(x):
 	return
 
 
-def include(string, local=True):
+already_included = []
+def include(path, local=True):
+	if path in already_included:
+		return
+
 	if local:
-		include_text = "#include \"%s\"" % string
+		include_text = "\n#include \"%s\"" % path
 	else:
-		include_text = "#include <%s>" % string
+		include_text = "\n#include <%s>" % path
+
+	already_included.append(path)
 	out(include_text)
 
 
@@ -2219,25 +2225,35 @@ def print_header(module, outname):
 	newline()
 	out("#ifndef %s\n" % guardsymbol)
 	out("#define %s\n" % guardsymbol)
-	newline(); include("stddef.h", local=False)
-	newline(); include("stdint.h", local=False)
-	newline(); include("stdbool.h", local=False)
 
+	global already_included
+	already_included = []
+	include("stddef.h", local=False)
+	include("stdint.h", local=False)
+	include("stdbool.h", local=False)
+
+	nl_after_incs = False
 	if defs != []:
 		newline()
 		for x in defs:
 			if isinstance(x, StmtDirective):
 				if isinstance(x, StmtDirectiveCInclude):
-					newline()
 					include(x.c_name, local=x.is_local)
+					nl_after_incs = True
 
 	# print C `#include ""` directive for included modules
-	nl_after_incs = False
 	for inc in module.included_modules:
 		if not inc.hasAttribute('do_not_include'):
-			newline()
 			include(inc.id + '.h', local=True)
 			nl_after_incs = True
+
+	for x in defs:
+		if isinstance(x, StmtImport):
+			nnl(x.nl)
+			if not x.module.hasAttribute('do_not_include'):
+				s = os.path.basename(x.impline)
+				include(s + '.h', local=True)
+				nl_after_incs = True
 
 	if nl_after_incs:
 		newline()
@@ -2245,7 +2261,7 @@ def print_header(module, outname):
 	if module.hasAttribute('use_unicode'):
 		out("\n\n#ifndef __STR_UNICODE__")
 		out("\n#if __has_include(<uchar.h>)")
-		out("\n#include <uchar.h>")
+		include("uchar.h")
 		out("\n#else")
 		out("\ntypedef uint16_t char16_t;")
 		out("\ntypedef uint32_t char32_t;")
@@ -2274,12 +2290,8 @@ def print_header(module, outname):
 		#	if isinstance(x, StmtDirectiveCInclude):
 		#		continue
 
-		if isinstance(x, StmtImport):
-			nnl(x.nl)
-			if not x.module.hasAttribute('do_not_include'):
-				s = os.path.basename(x.impline)
-				include(s + '.h', local=True)
-		elif isinstance(x, StmtDefFunc):
+
+		if isinstance(x, StmtDefFunc):
 			#nnl(x.nl)
 			nnl(1)
 			if x.access_level == 'public' and x.hasAttribute2('inline'):
@@ -2310,6 +2322,10 @@ def print_header(module, outname):
 
 
 
+def helper_use_abs():
+	include("stdlib.h")
+
+
 macro_definitions = {
 	#
 	'use_lengthof': """
@@ -2324,9 +2340,6 @@ macro_definitions = {
 #define BIG_INT256(x3, x2, x1, x0)
 """,
 
-	'use_abs': """
-#include <stdlib.h>
-""",
 
 'use_arrcpy': """
 #define ARRCPY(dst, src, len) \\
@@ -2340,6 +2353,9 @@ do { \\
 }
 
 
+helpers = {
+	'use_abs': helper_use_abs
+}
 
 def print_cfile(module, _outname):
 	outname = _outname + '.c'
@@ -2352,6 +2368,7 @@ def print_cfile(module, _outname):
 
 	defs = module.defs
 
+
 	# Печатаем первые комментарии
 	if len(defs) > 0:
 		def0 = defs[0]
@@ -2361,25 +2378,28 @@ def print_cfile(module, _outname):
 			newline()
 			defs = defs[1:]
 
-	newline(); include("stddef.h", local=False)
-	newline(); include("stdint.h", local=False)
-	newline(); include("stdbool.h", local=False)
-	newline(); include("string.h", local=False)
 
+	global already_included
+	already_included = []
+	include(module.id + '.h')
+	newline()
+	include("stddef.h", local=False)
+	include("stdint.h", local=False)
+	include("stdbool.h", local=False)
 	if module.hasAttribute('use_va_arg'):
-		newline(); include("stdarg.h", local=False)
+		include("stdarg.h", local=False)
+	include("string.h", local=False)
 
 	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude):
-			newline()
 			include(x.c_name, local=x.is_local)
 
-	newline(2)
-	include(module.id + '.h')
 	newline()
 
 	for use in module.att:
-		if use in macro_definitions:
+		if use in helpers:
+			helpers[use]()
+		elif use in macro_definitions:
 			out(macro_definitions[use])
 
 

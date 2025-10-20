@@ -1,17 +1,16 @@
 // examples/6.text_file/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
-
-#include "main.h"
 
 
 //include "libc/ctypes64"

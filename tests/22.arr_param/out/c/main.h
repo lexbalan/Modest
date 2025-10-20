@@ -7,6 +7,7 @@
 #include <stdbool.h>
 
 #include <stdio.h>
+
 int32_t main();
 
 #endif /* MAIN_H */

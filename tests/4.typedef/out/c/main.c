@@ -1,12 +1,12 @@
 // tests/4.typedef/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#include "main.h"
 
 
 typedef int32_t NewInt32;

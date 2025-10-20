@@ -1,12 +1,12 @@
 // tests/default_params/src/main.m
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#include "main.h"
 
 
 static int32_t func1(int32_t x /* default=10 */) {
