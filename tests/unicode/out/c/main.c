@@ -37,8 +37,6 @@ static char *ss8 = "A";
 static char16_t *ss16 = _STR16("A");
 static char32_t *ss32 = _STR32("A");
 
-#define size  3
-
 
 static void putc8(char c);
 static void putc16(char16_t c);
@@ -49,9 +47,8 @@ static void puts32(char32_t *s);
 
 int32_t main()
 {
-	printf("test2\n");
+	printf("test unicode\n");
 
-	uint32_t arr[size] = {0};
 	putc8(a[0]);
 	putc16(_CHR16(a));
 	putc32(_CHR32(a));

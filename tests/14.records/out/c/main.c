@@ -52,7 +52,7 @@ static Line line = {
 	.b = {.x = 12, .y = 13}
 };
 
-static Line lines[3] = (Line[3]){
+static Line lines[3] = {
 	{
 		.a = {.x = 1, .y = 2},
 		.b = {.x = 3, .y = 4}

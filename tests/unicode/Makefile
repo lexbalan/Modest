@@ -22,7 +22,7 @@ LLVM:
 
 C:
 	mcc -o $(CPREFIX)/main --config=config.toml -mbackend=c -funsafe $(INDIR)/main.m
-	$(CC) -pedantic $(CPREFIX)/main.c
+	$(CC) $(CPREFIX)/main.c
 
 
 clean:

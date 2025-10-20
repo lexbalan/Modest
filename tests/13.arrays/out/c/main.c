@@ -24,7 +24,7 @@
 
 #define constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-static int32_t globalArray[10] = (int32_t[10])constantArray;
+static int32_t globalArray[10] = constantArray;
 
 static char arrayFromString[3] = "abc";
 
@@ -66,7 +66,7 @@ static void f0(char *_x, char *sret_) {
 
 static void test() {
 	// тестируем работу с локальным generic массивом
-	uint8_t yy[6] = (uint8_t[6]){0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
+	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
 	uint32_t i = 0;
 	while (i < __lengthof(yy)) {
 		const uint8_t y = yy[i];
@@ -76,7 +76,7 @@ static void test() {
 }
 
 
-static int32_t a0[2][2][5] = (int32_t[2][2][5]){
+static int32_t a0[2][2][5] = {
 	
 	0, 1, 2, 3, 4,
 	5, 6, 7, 8, 9,
@@ -85,13 +85,13 @@ static int32_t a0[2][2][5] = (int32_t[2][2][5]){
 	15, 16, 17, 18, 19
 };
 
-static int32_t a1[5] = (int32_t[5]){0, 1, 2, 3, 4};
-static int32_t a2[5] = (int32_t[5]){5, 6, 7, 8, 9};
-static int32_t *a3[2] = (int32_t *[2]){&a1, &a2};
-static int32_t *(*a4[2])[2] = (int32_t *(*[2])[2]){&a3, &a3};
+static int32_t a1[5] = {0, 1, 2, 3, 4};
+static int32_t a2[5] = {5, 6, 7, 8, 9};
+static int32_t *a3[2] = {&a1, &a2};
+static int32_t *(*a4[2])[2] = {&a3, &a3};
 static int32_t *(*(*p0)[2])[2] = &a4;
 
-static int32_t a10[10][10] = (int32_t[10][10]){
+static int32_t a10[10][10] = {
 	1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 	11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 	21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
@@ -201,7 +201,7 @@ int main() {
 
 	printf("------------------------------------\n");
 
-	int32_t localArray[3] = (int32_t[3]){4, 5, 6};
+	int32_t localArray[3] = {4, 5, 6};
 
 	i = 0;
 	while (i < 3) {
@@ -236,7 +236,7 @@ int main() {
 
 	// assign array to array 1
 	// (with equal types)
-	int32_t a[3] = (int32_t[3]){1, 2, 3};
+	int32_t a[3] = {1, 2, 3};
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -259,7 +259,7 @@ int main() {
 
 	// assign array to array 2
 	// (with array extending)
-	int32_t c[3] = (int32_t[3]){10, 20, 30};
+	int32_t c[3] = {10, 20, 30};
 
 	int32_t d[6];
 	memcpy((int32_t(*)[3 - 0])&d[0], &c, sizeof(int32_t[3 - 0]));

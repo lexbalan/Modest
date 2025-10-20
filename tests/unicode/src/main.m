@@ -33,12 +33,9 @@ var ss16: *Str16 = "A"
 var ss32: *Str32 = "A"
 
 
-const size = 3
-
 public func main () -> Int32 {
-	printf("test2\n")
+	printf("test unicode\n")
 
-	var arr: [size]Nat32 = []
 	putc8(a)
 	putc16(a)
 	putc32(a)

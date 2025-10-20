@@ -876,16 +876,23 @@ def str_value_cons_array(x, ctx):
 #
 
 
+# Выводит строковой литерал C.
+# В случае когда размер символа больше 8 бит,
+# оборачивает его макросом STR<X>()
 def cstr(value, sz):
 	if sz > 8:
 		return "_STR%d(%s)" % (sz, str_value(value))
 	return str_value(value)
 
 
+# Выводит строковой литерал C и превращает его в char
+# В случае когда размер символа больше 8 бит,
+# оборачивает его макросом CHR<X>()
 def cchr(value, sz):
 	if sz > 8:
 		return "_CHR%d(%s)" % (sz, str_value(value))
 	return str_value(value) + "[0]"
+
 
 
 def str_value_cons(x, ctx):
@@ -1061,6 +1068,9 @@ def str_value_literal_array(type, items, nl_end=1):
 	for item in items:
 		if item.nl > 0:
 			nl_end_e = 1
+
+	if len(items) == 0:
+		return "{0}"
 
 	sstr += "{"
 	indent_up()
@@ -2029,7 +2039,8 @@ def str_static_initializer(v):
 	if v.type.is_pointer_to_str():
 		return str_value(v, [])
 	if v.type.is_array():
-		return str_value(v, [])
+		if v.type.of.is_char():
+			return str_value(v, [])
 
 	root = get_root_value(v)
 

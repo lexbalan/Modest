@@ -31,7 +31,11 @@ typedef struct Point Point;
 
 #define points  (Point[3])ps
 
-static Point points2[3] = points;
+static Point points2[3] = {
+	{.x = 0, .y = 0},
+	{.x = 1, .y = 1},
+	{.x = 2, .y = 2}
+};
 
 // define function main
 int main() {

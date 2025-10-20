@@ -38,6 +38,7 @@ cd memcopy && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd slices && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd default_params && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd queue && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+cd unicode && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd prefix && printf "\nBUILD: $PWD\n" && make -j7 test && cd ..
 
 #cd 24.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \

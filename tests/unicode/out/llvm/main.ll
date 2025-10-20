@@ -228,7 +228,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @str4 = private constant [2 x i8] [i8 65, i8 0]
 @str5 = private constant [2 x i16] [i16 65, i16 0]
 @str6 = private constant [2 x i32] [i32 65, i32 0]
-@str7 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
+@str7 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 117, i8 110, i8 105, i8 99, i8 111, i8 100, i8 101, i8 10, i8 0]
 @str8 = private constant [2 x i8] [i8 65, i8 0]
 @str9 = private constant [2 x i16] [i16 65, i16 0]
 @str10 = private constant [2 x i32] [i32 65, i32 0]
@@ -267,7 +267,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @ss16 = internal global %Str16* bitcast ([2 x i16]* @str5 to [0 x i16]*)
 @ss32 = internal global %Str32* bitcast ([2 x i32]* @str6 to [0 x i32]*)
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str7 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
 	call void @putc8(%Char8 65)
 	call void @putc16(%Char16 65)
 	call void @putc32(%Char32 65)
