@@ -11,7 +11,7 @@
 int main() {
 	console_print("test console print\n");
 
-	const char32_t c = _CHR32("🐀");
+	const char32_t c = U'🐀';
 	char *const s = "Hi!";
 	const int32_t i = (int32_t)-1;
 	const uint32_t n = 123;

@@ -889,13 +889,14 @@ def cstr(value, sz):
 # В случае когда размер символа больше 8 бит,
 # оборачивает его макросом CHR<X>()
 def cchr(value, sz):
-	if sz > 8:
-		return "_CHR%d(%s)" % (sz, str_value(value))
+	#if sz > 8:
+	#	return "_CHR%d(%s)" % (sz, str_value(value))
 
-	if value.type.is_string():
-		return str_value_literal_char(ord(value.asset[0]), sz)
+	if isinstance(value, ValueLiteral):
+		if value.type.is_string():
+			return str_value_literal_char(ord(value.asset[0]), sz)
 
-	return str_value(value) + "[0]"
+	return "_CHR%d(%s)" % (sz, str_value(value))
 
 
 
@@ -1040,7 +1041,7 @@ def str_value_literal_string(chars, char_width):
 
 
 def str_value_literal_char(cc, width):
-	return print_utf32codes_as_string([cc], width, quote="'")
+	return string_literal_prefix(width) + print_utf32codes_as_string([cc], width, quote="'")
 
 
 
@@ -1132,8 +1133,8 @@ def str_value_literal_record(type, items):
 
 
 def string_literal_prefix(width):
-	#if width > 16: return "U"
-	#if width > 8: return "u"
+	if width > 16: return "U"
+	if width > 8: return "u"
 	return ""
 
 
@@ -1161,7 +1162,7 @@ def code_to_char(cc):
 
 def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 	sstr = ''
-	prefix = string_literal_prefix(width)
+	prefix = ''#string_literal_prefix(width)
 	sstr = prefix
 	sstr += quote
 	for cc in utf32_codes:

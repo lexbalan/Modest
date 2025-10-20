@@ -126,7 +126,7 @@ static bool test_generic_char() {
 
 	// value with GenericChar type
 	// can be implicit casted to any Char type
-	char b = 'A';
+	char b = _CHR8(a);
 	char16_t c = _CHR16(a);
 	char32_t d = _CHR32(a);
 

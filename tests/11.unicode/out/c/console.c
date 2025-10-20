@@ -50,7 +50,7 @@ void console_putchar_utf8(char c) {
 void console_putchar_utf16(char16_t c) {
 	char16_t cc[2];
 	cc[0] = c;
-	cc[1] = '\x0';
+	cc[1] = u'\x0';
 	char32_t char32;
 	const uint8_t n = utf_utf16_to_utf32((char16_t *)&cc, &char32);
 	console_putchar_utf32(char32);
@@ -101,7 +101,7 @@ void console_puts16(char16_t *s) {
 		// тк в строке может быть суррогатная пара UTF_16 символов
 
 		const char16_t cc16 = s[i];
-		if (cc16 == '\x0') {
+		if (cc16 == u'\x0') {
 			break;
 		}
 
@@ -122,7 +122,7 @@ void console_puts32(char32_t *s) {
 	uint32_t i = 0;
 	while (true) {
 		const char32_t c = s[i];
-		if (c == '\x0') {
+		if (c == U'\x0') {
 			break;
 		}
 		console_putchar_utf32(c);
