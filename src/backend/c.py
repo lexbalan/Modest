@@ -2258,6 +2258,10 @@ def print_header(module, outname):
 	if nl_after_incs:
 		newline()
 
+	for use in module.att:
+		if use in h_helpers:
+			h_helpers[use]()
+
 	if module.hasAttribute('use_unicode'):
 		out("\n#ifndef __STR_UNICODE__")
 		out("\n#if __has_include(<uchar.h>)")
@@ -2334,8 +2338,13 @@ def helper_use_lengthof():
 
 
 def helper_use_bigint():
+	out("\n#ifndef __BIG_INT128__")
 	out("\n#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))")
+	out("\n#endif  /* __BIG_INT128__ */")
+	out("\n")
+	out("\n#ifndef __BIG_INT256__")
 	out("\n#define BIG_INT256(a, b, c, d)")
+	out("\n#endif  /* __BIG_INT256__ */")
 	out("\n")
 
 
@@ -2350,11 +2359,13 @@ def helper_use_arrcpy():
 	out("\n")
 
 
+h_helpers = {
+	'use_bigint': helper_use_bigint,
+}
 
-helpers = {
+c_helpers = {
 	'use_abs': helper_use_abs,
 	'use_lengthof': helper_use_lengthof,
-	'use_bigint': helper_use_bigint,
 	'use_arrcpy': helper_use_arrcpy,
 }
 
@@ -2399,8 +2410,8 @@ def print_cfile(module, _outname):
 	newline()
 
 	for use in module.att:
-		if use in helpers:
-			helpers[use]()
+		if use in c_helpers:
+			c_helpers[use]()
 
 
 	if len(module.anon_recs) > 0:

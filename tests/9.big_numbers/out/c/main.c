@@ -8,9 +8,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))
-#define BIG_INT256(a, b, c, d)
-
 #include "stdlib.h"
 
 static unsigned __int128 big0 = BIG_INT128(0x123456789ABCDEFULL, 0xFEDCBA9876543210ULL);
