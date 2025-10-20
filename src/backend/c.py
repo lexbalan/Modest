@@ -2259,7 +2259,7 @@ def print_header(module, outname):
 		newline()
 
 	if module.hasAttribute('use_unicode'):
-		out("\n\n#ifndef __STR_UNICODE__")
+		out("\n#ifndef __STR_UNICODE__")
 		out("\n#if __has_include(<uchar.h>)")
 		include("uchar.h")
 		out("\n#else")

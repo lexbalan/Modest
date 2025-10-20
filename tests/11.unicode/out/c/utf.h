@@ -9,7 +9,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 #ifndef __STR_UNICODE__
 #if __has_include(<uchar.h>)
 #include "uchar.h"
