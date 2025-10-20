@@ -8,9 +8,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 
 static int32_t testArray[21] = {
@@ -49,14 +49,14 @@ static void print_array(int32_t *array, uint32_t len);
 
 int32_t main() {
 	printf("array before:\n");
-	print_array((int32_t *)&testArray, __lengthof(testArray));
+	print_array((int32_t *)&testArray, LENGTHOF(testArray));
 	printf("\n");
 
 	// do sort
-	bubble_sort32((int32_t *)&testArray, __lengthof(testArray));
+	bubble_sort32((int32_t *)&testArray, LENGTHOF(testArray));
 
 	printf("array after:\n");
-	print_array((int32_t *)&testArray, __lengthof(testArray));
+	print_array((int32_t *)&testArray, LENGTHOF(testArray));
 	printf("\n");
 
 	return 0;
@@ -72,4 +72,6 @@ static void print_array(int32_t *array, uint32_t len) {
 	}
 }
 
+
+#undef LENGTHOF
 

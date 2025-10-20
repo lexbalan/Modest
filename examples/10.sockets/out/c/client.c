@@ -11,9 +11,9 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 
 #define filename  "file.txt"
@@ -25,7 +25,7 @@
 static bool sendFile(FILE *fp, int sockFd) {
 	char data[bufSize];
 
-	while (fgets((char *)&data, __lengthof(data), fp) != NULL) {
+	while (fgets((char *)&data, LENGTHOF(data), fp) != NULL) {
 		if (send(sockFd, (void *)&data, sizeof data, 0) == -1) {
 			return false;
 		}
@@ -81,4 +81,6 @@ int main() {
 	return 0;
 }
 
+
+#undef LENGTHOF
 

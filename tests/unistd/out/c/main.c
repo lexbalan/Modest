@@ -11,9 +11,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 // getenv
 
 int main() {
@@ -32,7 +32,7 @@ int main() {
 
 	// current working directory
 	char cwd[128];
-	getcwd((char *)&cwd, (size_t)__lengthof(cwd));
+	getcwd((char *)&cwd, (size_t)LENGTHOF(cwd));
 	printf("cwd = %s\n", (char *)&cwd);
 
 	char *const tty = ttyname(0);
@@ -50,4 +50,6 @@ int main() {
 	return 0;
 }
 
+
+#undef LENGTHOF
 

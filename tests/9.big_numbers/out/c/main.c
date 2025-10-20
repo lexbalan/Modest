@@ -57,3 +57,6 @@ int main() {
 }
 
 
+#undef __BIG_INT128__
+#undef __BIG_INT256__
+

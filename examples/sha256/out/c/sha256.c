@@ -7,9 +7,9 @@
 #include <stdbool.h>
 #include <string.h>
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 #define ARRCPY(dst, src, len) \
 	do { \
@@ -231,4 +231,7 @@ void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash) {
 	final(&ctx, (uint8_t *)outHash);
 }
 
+
+#undef LENGTHOF
+#undef ARRCPY
 

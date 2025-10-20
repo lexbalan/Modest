@@ -9,9 +9,9 @@
 #include <stdio.h>
 #include <math.h>
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 #define ARRCPY(dst, src, len) \
 	do { \
@@ -72,7 +72,7 @@ static void test() {
 	// тестируем работу с локальным generic массивом
 	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
 	uint32_t i = 0;
-	while (i < __lengthof(yy)) {
+	while (i < LENGTHOF(yy)) {
 		const uint8_t y = yy[i];
 		printf("yy[%i] = %u\n", i, (uint32_t)y);
 		i = i + 1;
@@ -302,13 +302,13 @@ int main() {
 
 	// check local literal array assignation to local array
 	int32_t e[4];
-	ARRCPY(&e, &init_array, __lengthof(e));
+	ARRCPY(&e, &init_array, LENGTHOF(e));
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	ARRCPY(&globalArray, &init_array, __lengthof(globalArray));
+	ARRCPY(&globalArray, &init_array, LENGTHOF(globalArray));
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
@@ -357,4 +357,7 @@ int main() {
 	return 0;
 }
 
+
+#undef LENGTHOF
+#undef ARRCPY
 

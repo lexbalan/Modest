@@ -9,9 +9,9 @@
 #include <stdio.h>
 #include "./crc32.h"
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 
 #define datastring  "123456789"
@@ -22,7 +22,7 @@ static uint8_t data[9] = datastring;
 int main() {
 	printf("CRC32 test\n");
 
-	const uint32_t crc = crc32_run((uint8_t *)&data, __lengthof(data));
+	const uint32_t crc = crc32_run((uint8_t *)&data, LENGTHOF(data));
 
 	printf("crc32.doHash(\"%s\") = %08X\n", datastring, crc);
 
@@ -35,4 +35,6 @@ int main() {
 	return 0;
 }
 
+
+#undef LENGTHOF
 

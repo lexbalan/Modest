@@ -9,9 +9,9 @@
 #include <stdio.h>
 #include "./sha256.h"
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 
 #define inputDataLength  32
@@ -91,4 +91,6 @@ int main() {
 	return 0;
 }
 
+
+#undef LENGTHOF
 

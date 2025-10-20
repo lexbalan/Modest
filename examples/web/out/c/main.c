@@ -11,9 +11,9 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 
 #define port  8080
@@ -33,7 +33,7 @@ static uint32_t pageCounter;
 
 static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[receiveBufferSize];
-	const ssize_t bytesReceived = read(clientSocket, (void *)&buffer, __lengthof(buffer) - 1);
+	const ssize_t bytesReceived = read(clientSocket, (void *)&buffer, LENGTHOF(buffer) - 1);
 	if (bytesReceived < 0) {
 		perror("cannot read socket");
 		close(clientSocket);
@@ -105,4 +105,6 @@ int32_t main() {
 	return 0;
 }
 
+
+#undef LENGTHOF
 

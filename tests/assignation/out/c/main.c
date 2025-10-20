@@ -8,9 +8,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 #define ARRCPY(dst, src, len) \
 	do { \
@@ -136,4 +136,7 @@ int main() {
 	return 0;
 }
 
+
+#undef LENGTHOF
+#undef ARRCPY
 

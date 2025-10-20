@@ -8,9 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 
 static char *table_header0[3] = {
@@ -37,40 +37,40 @@ static char *tableData1[4][4] = {
 static table_Table table00 = {
 	.header = NULL,
 	.data = (void *)&tableData0,
-	.nRows = __lengthof(tableData0),
-	.nCols = __lengthof(tableData0[0]),
+	.nRows = LENGTHOF(tableData0),
+	.nCols = LENGTHOF(tableData0[0]),
 	.separate = false
 };
 
 static table_Table table01 = {
 	.header = &table_header0,
 	.data = (void *)&tableData0,
-	.nRows = __lengthof(tableData0),
-	.nCols = __lengthof(tableData0[0]),
+	.nRows = LENGTHOF(tableData0),
+	.nCols = LENGTHOF(tableData0[0]),
 	.separate = false
 };
 
 static table_Table table02 = {
 	.header = NULL,
 	.data = (void *)&tableData0,
-	.nRows = __lengthof(tableData0),
-	.nCols = __lengthof(tableData0[0]),
+	.nRows = LENGTHOF(tableData0),
+	.nCols = LENGTHOF(tableData0[0]),
 	.separate = true
 };
 
 static table_Table table03 = {
 	.header = &table_header0,
 	.data = (void *)&tableData0,
-	.nRows = __lengthof(tableData0),
-	.nCols = __lengthof(tableData0[0]),
+	.nRows = LENGTHOF(tableData0),
+	.nCols = LENGTHOF(tableData0[0]),
 	.separate = true
 };
 
 static table_Table table10 = {
 	.header = &table_header1,
 	.data = (void *)&tableData1,
-	.nRows = __lengthof(tableData1),
-	.nCols = __lengthof(tableData1[0]),
+	.nRows = LENGTHOF(tableData1),
+	.nCols = LENGTHOF(tableData1[0]),
 	.separate = true
 };
 
@@ -93,4 +93,6 @@ int32_t main() {
 	return 0;
 }
 
+
+#undef LENGTHOF
 

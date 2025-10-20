@@ -25,6 +25,7 @@ declared = []
 
 
 func_undef_list = []
+module_undef_list = []
 
 legacy_style = {
 	'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
@@ -1327,13 +1328,13 @@ def str_value_lengthof(x, ctx):
 			return str(x.value.type.volume.asset)
 
 	# generic array в си это просто макрос вида {1, 2, 3}
-	# и его нельзя подставить в __lengthof (!)
+	# и его нельзя подставить в LENGTHOF (!)
 	if isinstance(x.value, ValueDeref) or (x.type.is_generic_array()):
 		# решает проблему когда массив представлен указателем на элемент
 		return str_value(x.value.type.volume)
 
 	sstr = ""
-	sstr += "__lengthof("
+	sstr += "LENGTHOF("
 	sstr += str_value(x.value)
 	sstr += ")"
 	return sstr
@@ -1597,6 +1598,10 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	set_nl_symbol("\n")
 
 
+def undef(identifier):
+	out("\n#undef %s" % identifier)
+
+
 def print_stmt_const(x):
 	id = x.id
 	const_value = x.value
@@ -1687,7 +1692,7 @@ def str_array_len(array_value):
 	elif isinstance(array_value, ValueSlice):
 		slen = str_value(array_value.type.volume)
 	else:
-		slen = "__lengthof(" + str_value(array_value) + ')'
+		slen = "LENGTHOF(" + str_value(array_value) + ')'
 	return slen
 
 
@@ -1944,7 +1949,7 @@ def print_def_func(x):
 	if len(func_undef_list) > 0:
 		newline()
 		for id_str in func_undef_list:
-			out("\n#undef %s" % id_str)
+			undef(id_str)
 
 	func_undef_list = []
 	out("\n}\n")
@@ -1957,8 +1962,6 @@ def print_def_func(x):
 		declared.append(func.id.str)
 
 	cfunc = None
-
-
 
 
 
@@ -2332,10 +2335,11 @@ def helper_use_abs():
 
 
 def helper_use_lengthof():
-	out("\n#ifndef __lengthof")
-	out("\n#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))")
-	out("\n#endif /* __lengthof */")
+	out("\n#ifndef LENGTHOF")
+	out("\n#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))")
+	out("\n#endif /* LENGTHOF */")
 	out("\n")
+	module_undef_list.append("LENGTHOF")
 
 
 def helper_use_bigint():
@@ -2347,6 +2351,8 @@ def helper_use_bigint():
 	out("\n#define BIG_INT256(a, b, c, d)")
 	out("\n#endif  /* __BIG_INT256__ */")
 	out("\n")
+	module_undef_list.append("__BIG_INT128__")
+	module_undef_list.append("__BIG_INT256__")
 
 
 def helper_use_arrcpy():
@@ -2358,6 +2364,7 @@ def helper_use_arrcpy():
 	out("\n		} \\")
 	out("\n	} while (0)")
 	out("\n")
+	module_undef_list.append("ARRCPY")
 
 
 h_helpers = {
@@ -2455,6 +2462,11 @@ def print_cfile(module, _outname):
 			print_comment(x)
 		elif isinstance(x, StmtDirective):
 			print_directive(x)
+
+	if len(module_undef_list) > 0:
+		newline(1)
+		for u in module_undef_list:
+			undef(u)
 
 	newline(2)
 	output_close()

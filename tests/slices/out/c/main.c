@@ -8,9 +8,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 #define ARRCPY(dst, src, len) \
 	do { \
@@ -43,7 +43,7 @@ int main() {
 	int32_t s1[2 - 1];
 	memcpy(&s1, (int32_t(*)[2 - 1])&a[1], sizeof(int32_t[2 - 1]));
 	uint32_t i = 0;
-	while (i < __lengthof(s1)) {
+	while (i < LENGTHOF(s1)) {
 		printf("s1[%d] = %d\n", i, s1[i]);
 		i = i + 1;
 	}
@@ -58,7 +58,7 @@ int main() {
 	int32_t s2[8 - 5];
 	memcpy(&s2, (int32_t(*)[8 - 5])&pa[5], sizeof(int32_t[8 - 5]));
 	i = 0;
-	while (i < __lengthof(s2)) {
+	while (i < LENGTHOF(s2)) {
 		printf("s2[%d] = %d\n", i, s2[i]);
 		i = i + 1;
 	}
@@ -75,7 +75,7 @@ int main() {
 	ARRCPY((int32_t(*)[bx - ax])&a[ax], &((uint8_t[4]){10, 20, 30, 40}), bx - ax);
 
 	i = 0;
-	while (i < __lengthof(a)) {
+	while (i < LENGTHOF(a)) {
 		printf("a[%d] = %d\n", i, a[i]);
 		i = i + 1;
 	}
@@ -87,7 +87,7 @@ int main() {
 	memset((int32_t(*)[5 - 2])&s[2], 0, sizeof(int32_t[5 - 2]));
 
 	i = 0;
-	while (i < __lengthof(s)) {
+	while (i < LENGTHOF(s)) {
 		printf("s[%d] = %d\n", i, (uint32_t)abs((int)s[i]));
 		i = i + 1;
 	}
@@ -174,4 +174,7 @@ int main() {
 #undef j1
 }
 
+
+#undef LENGTHOF
+#undef ARRCPY
 

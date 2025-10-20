@@ -9,9 +9,9 @@
 #include <unistd.h>
 #include <ctype.h>
 
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 #define ARRCPY(dst, src, len) \
 	do { \
@@ -30,7 +30,7 @@ static char tokensBuf[4 * 1024];
 
 static void showPrompt() {
 	char _prompt[32] = prompt;
-	write(0, (void *)&_prompt, (size_t)__lengthof(prompt));
+	write(0, (void *)&_prompt, (size_t)LENGTHOF(prompt));
 }
 
 
@@ -169,4 +169,7 @@ int32_t main() {
 	return 0;
 }
 
+
+#undef LENGTHOF
+#undef ARRCPY
 
