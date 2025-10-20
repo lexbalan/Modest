@@ -50,6 +50,7 @@ styles = {
 # default style is legacy
 styleguide = legacy_style
 
+EMPTY_ARRAY_LITERAL = "{0}"
 
 
 cfunc = None
@@ -1074,14 +1075,13 @@ def str_value_literal_array(type, items, nl_end=1):
 				i = i + 1
 			return print_utf32codes_as_string(utf32_codes, width=char_width)
 
-
 	nl_end_e = 0
 	for item in items:
 		if item.nl > 0:
 			nl_end_e = 1
 
 	if len(items) == 0:
-		return "{0}"
+		return EMPTY_ARRAY_LITERAL
 
 	sstr += "{"
 	indent_up()
