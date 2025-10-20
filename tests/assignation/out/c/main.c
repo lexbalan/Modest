@@ -13,9 +13,12 @@
 #endif /* __lengthof */
 
 #define ARRCPY(dst, src, len) \
-for (uint32_t i = 0; i < (len); i++) { \
-	(*dst)[i] = (*src)[i]; \
-}
+do { \
+    uint32_t _len = (uint32_t)(len); \
+    for (uint32_t _i = 0; _i < _len; _i++) { \
+        (*dst)[_i] = (*src)[_i]; \
+    } \
+} while (0)
 
 
 // Simply record for records assignation test
