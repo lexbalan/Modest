@@ -502,9 +502,8 @@ class Type(Entity):
 		dst.__class__ = src.__class__
 
 
-	# cannot create variable with type
-	def is_forbidden_var(self, open_array_forbidden=True, zero_array_forbidden=True):
-
+	# cannot create field with type
+	def is_forbidden_field(self):
 		if self.is_incompleted() or self.is_unit() or self.is_func():
 			return True
 
@@ -513,11 +512,20 @@ class Type(Entity):
 			if self.of.is_forbidden_var():
 				return True
 
+			return self.of.is_forbidden_var()
+
+
+	# cannot create variable with type
+	def is_forbidden_var(self, open_array_forbidden=True, zero_array_forbidden=True):
+		if self.is_forbidden_field():
+			return True
+
+		if self.is_array():
 			# []Int32
 			if self.is_open_array():
 				return open_array_forbidden
 
-			# [0]Int
+			# zero sized array is forbidden for vars
 			from trans import is_unsafe_mode
 			if not is_unsafe_mode():
 				if self.volume.isImmediate():

@@ -318,14 +318,14 @@ def init_builtin_values():
 		Initializer(Id().fromStr('major'), compilerVersionMajor),
 		Initializer(Id().fromStr('minor'), compilerVersionMinor)
 	]
-	compilerVersion = value_record_create(compiler_version_initializers)
+	compilerVersion = value_record_create(compiler_version_initializers, ti=None)
 
 	# '__compiler' record
 	compiler_initializers = [
 		Initializer(Id().fromStr('name'), compilerName),
 		Initializer(Id().fromStr('version'), compilerVersion),
 	]
-	compiler = value_record_create(compiler_initializers)
+	compiler = value_record_create(compiler_initializers, ti=None)
 	root_symtab.value_add('__compiler', compiler)
 
 	#
@@ -353,7 +353,7 @@ def init_builtin_values():
 		Initializer(Id().fromStr('floatWidth'), __targetFloatWidth),
 		Initializer(Id().fromStr('pointerWidth'), __targetPointerWidth),
 	]
-	target = value_record_create(target_initializers)
+	target = value_record_create(target_initializers, ti=None)
 	root_symtab.value_add('__target', target)
 
 
@@ -369,6 +369,10 @@ def do_field(x):
 		error("field id must starts with small letter", id.ti)
 
 	t = do_type(x['type'])
+
+	if t.is_forbidden_field():
+		error("unsuitable type", t.ti)
+
 	iv = do_value_immediate(x['init_value'])
 
 	if not iv.isUndef():
@@ -1246,7 +1250,6 @@ def do_value_array(x):
 # Создает value с типом GenericRecord
 # которое далее уже можно привести к конкретной записи
 def do_value_record(x):
-	#info("do_value_record", x['ti'])
 	initializers = []
 	for item in x['items']:
 		# skip comments
@@ -1257,7 +1260,6 @@ def do_value_record(x):
 			item_value = do_rvalue(item['value'])
 			p = Initializer(
 				Id(item['key']),
-				#item['key'],
 				item_value,
 				ti=item['ti'],
 				nl=item['nl']
@@ -1422,7 +1424,7 @@ def add_spices_value(v, atts):
 
 def do_value(x):
 	assert(x['isa'] == 'ast_value')
-
+	#info("do_value", x['ti'])
 	v = None
 
 	k = x['kind']

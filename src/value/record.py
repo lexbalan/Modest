@@ -9,7 +9,7 @@ from hlir.value import ValueLiteral, ValueCons, ValueZero, ValueBin
 
 # получает на вход список инициализаторов
 # конструирует и возвращает GenericRecord value
-def value_record_create(initializers=[], ti=None):
+def value_record_create(initializers, ti):
 	# структура метится как immediate только когда все ее поля immediate
 	is_immediate = True
 
