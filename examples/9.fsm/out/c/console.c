@@ -148,7 +148,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va);
 int32_t console_vfprint(int32_t fd, char *form, va_list va) {
 	char strbuf[256];
 	const int32_t n = console_vsprint((char *)&strbuf, form, va);
-	strbuf[n] = "\x0"[0];
+	strbuf[n] = '\x0';
 	write(fd, (void *)&strbuf, (size_t)ABS(n));
 	return n;
 }
@@ -166,16 +166,16 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 	while (true) {
 		char c = form[i];
 
-		if (c == "\x0"[0]) {
+		if (c == '\x0') {
 			break;
 		}
 
-		if (c != "{"[0]) {
+		if (c != '{') {
 
-			if (c == "}"[0]) {
+			if (c == '}') {
 				i = i + 1;
 				c = form[i];
-				if (c == "}"[0]) {
+				if (c == '}') {
 					buf[j] = c;
 					j = j + 1;
 					i = i + 1;
@@ -194,8 +194,8 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 		i = i + 1;
 		c = form[i];
 
-		if (c == "{"[0]) {
-			buf[j] = "{"[0];
+		if (c == '{') {
+			buf[j] = '{';
 			j = j + 1;
 			i = i + 1;
 			continue;
@@ -205,21 +205,21 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 
 		char *const sptr = &buf[j];
 
-		if (c == "i"[0] || c == "d"[0]) {
+		if (c == 'i' || c == 'd') {
 			//
 			// %i & %d for signed integer (Int)
 			//
 			const int32_t x = va_arg(va, int32_t);
 			const int32_t n = sprint_dec_int32(sptr, x);
 			j = j + n;
-		} else if (c == "n"[0]) {
+		} else if (c == 'n') {
 			//
 			// %n for unsigned integer (Nat)
 			//
 			const uint32_t x = va_arg(va, uint32_t);
 			const int32_t n = sprint_dec_n32(sptr, x);
 			j = j + n;
-		} else if (c == "x"[0] || c == "p"[0]) {
+		} else if (c == 'x' || c == 'p') {
 			//
 			// %x for unsigned integer (Nat)
 			// %p for pointers
@@ -227,14 +227,14 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 			const uint32_t x = va_arg(va, uint32_t);
 			const int32_t n = sprint_hex_nat32(sptr, x);
 			j = j + n;
-		} else if (c == "s"[0]) {
+		} else if (c == 's') {
 			//
 			// %s pointer to string
 			//
 			char *const s = va_arg(va, char *);
 			strcpy(sptr, s);
 			j = j + (int32_t)strlen(s);
-		} else if (c == "c"[0]) {
+		} else if (c == 'c') {
 			//
 			// %c for char
 			//
@@ -250,7 +250,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 
 __attribute__((always_inline))
 static inline char n_to_dec_sym(uint8_t n) {
-	return (char)((uint8_t)"0"[0] + n);
+	return (char)((uint8_t)'0' + n);
 }
 
 
@@ -258,7 +258,7 @@ static char n_to_hex_sym(uint8_t n) {
 	if (n < 10) {
 		return n_to_dec_sym(n);
 	}
-	return (char)((uint8_t)"A"[0] + (n - 10));
+	return (char)((uint8_t)'A' + (n - 10));
 }
 
 
@@ -287,7 +287,7 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
 		j = j + 1;
 	}
 
-	buf[j] = "\x0"[0];
+	buf[j] = '\x0';
 
 	return j;
 }
@@ -317,7 +317,7 @@ static int32_t sprint_dec_int32(char *buf, int32_t x) {
 	int32_t j = 0;
 
 	if (neg) {
-		buf[0] = "-"[0];
+		buf[0] = '-';
 		j = j + 1;
 	}
 
@@ -327,7 +327,7 @@ static int32_t sprint_dec_int32(char *buf, int32_t x) {
 		j = j + 1;
 	}
 
-	buf[j] = "\x0"[0];
+	buf[j] = '\x0';
 
 	return j;
 }
@@ -356,7 +356,7 @@ static int32_t sprint_dec_n32(char *buf, uint32_t x) {
 		j = j + 1;
 	}
 
-	buf[j] = "\x0"[0];
+	buf[j] = '\x0';
 
 	return j;
 }

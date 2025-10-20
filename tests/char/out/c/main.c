@@ -20,7 +20,7 @@ int main() {
 	char16_t ch16;
 	char32_t ch32;
 
-	ch08 = utf8Char[0];
+	ch08 = 's';
 	ch16 = _CHR16(utf16Char);
 	ch32 = _CHR32(utf32Char);
 

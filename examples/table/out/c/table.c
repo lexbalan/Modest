@@ -102,7 +102,7 @@ static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols) {
 		printf("|");
 		char *const s = (*row)[j];
 		uint32_t len = (uint32_t)strlen(s);
-		if (s[0] != "\x0"[0]) {
+		if (s[0] != '\x0') {
 			len = len + 1;
 			printf(" %s", s);
 		}

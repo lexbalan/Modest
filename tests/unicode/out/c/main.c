@@ -13,7 +13,7 @@
 
 #define a  "A"
 
-static char c8 = a[0];
+static char c8 = 'A';
 static char16_t c16 = _CHR16(a);
 static char32_t c32 = _CHR32(a);
 
@@ -25,7 +25,7 @@ static char *s8 = a;
 static char16_t *s16 = _STR16(a);
 static char32_t *s32 = _STR32(a);
 
-static char cc8 = "A"[0];
+static char cc8 = 'A';
 static char16_t cc16 = _CHR16("A");
 static char32_t cc32 = _CHR32("A");
 
@@ -49,7 +49,7 @@ int32_t main()
 {
 	printf("test unicode\n");
 
-	putc8(a[0]);
+	putc8('A');
 	putc16(_CHR16(a));
 	putc32(_CHR32(a));
 
@@ -57,7 +57,7 @@ int32_t main()
 	puts16(_STR16(a));
 	puts32(_STR32(a));
 
-	putc8("A"[0]);
+	putc8('A');
 	putc16(_CHR16("A"));
 	putc32(_CHR32("A"));
 

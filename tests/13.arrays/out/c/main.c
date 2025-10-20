@@ -40,7 +40,7 @@ static void f0(char *_x, char *sret_) {
 	// truncate array
 	char mic[6];
 	memcpy(&mic, (char(*)[6 - 0])&x[0], sizeof(char[6]));
-	mic[5] = "\x0"[0];
+	mic[5] = '\x0';
 
 	printf("f0 mic = \"%s\"\n", (char *)&mic);
 
@@ -49,14 +49,14 @@ static void f0(char *_x, char *sret_) {
 	memcpy((char(*)[20 - 0])&res[0], &x, sizeof(char[20 - 0]));
 	memset((char(*)[30 - 20])&res[20], 0, sizeof(char[30 - 20]));
 
-	res[6] = "M"[0];
-	res[7] = "o"[0];
-	res[8] = "d"[0];
-	res[9] = "e"[0];
-	res[10] = "s"[0];
-	res[11] = "t"[0];
-	res[12] = "!"[0];
-	res[13] = "\x0"[0];
+	res[6] = 'M';
+	res[7] = 'o';
+	res[8] = 'd';
+	res[9] = 'e';
+	res[10] = 's';
+	res[11] = 't';
+	res[12] = '!';
+	res[13] = '\x0';
 	memcpy(sret_, &res, sizeof(char[30]));
 }
 
