@@ -12,12 +12,12 @@
 #endif /* __lengthof */
 
 #define ARRCPY(dst, src, len) \
-do { \
-    uint32_t _len = (uint32_t)(len); \
-    for (uint32_t _i = 0; _i < _len; _i++) { \
-        (*dst)[_i] = (*src)[_i]; \
-    } \
-} while (0)
+	do { \
+		uint32_t _len = (uint32_t)(len); \
+		for (uint32_t _i = 0; _i < _len; _i++) { \
+			(*(dst))[_i] = (*(src))[_i]; \
+		} \
+	} while (0)
 
 
 struct Context {

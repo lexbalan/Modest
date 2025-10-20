@@ -2326,36 +2326,38 @@ def helper_use_abs():
 	include("stdlib.h")
 
 
-macro_definitions = {
-	#
-	'use_lengthof': """
-#ifndef __lengthof
-#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* __lengthof */
-""",
-
-	#
-	'use_bigint': """
-#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))
-#define BIG_INT256(x3, x2, x1, x0)
-""",
+def helper_use_lengthof():
+	out("\n#ifndef __lengthof")
+	out("\n#define __lengthof(x) (sizeof(x) / sizeof((x)[0]))")
+	out("\n#endif /* __lengthof */")
+	out("\n")
 
 
-'use_arrcpy': """
-#define ARRCPY(dst, src, len) \\
-do { \\
-    uint32_t _len = (uint32_t)(len); \\
-    for (uint32_t _i = 0; _i < _len; _i++) { \\
-        (*dst)[_i] = (*src)[_i]; \\
-    } \\
-} while (0)
-"""
-}
+def helper_use_bigint():
+	out("\n#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))")
+	out("\n#define BIG_INT256(a, b, c, d)")
+	out("\n")
+
+
+def helper_use_arrcpy():
+	out("\n#define ARRCPY(dst, src, len) \\")
+	out("\n	do { \\")
+	out("\n		uint32_t _len = (uint32_t)(len); \\")
+	out("\n		for (uint32_t _i = 0; _i < _len; _i++) { \\")
+	out("\n			(*(dst))[_i] = (*(src))[_i]; \\")
+	out("\n		} \\")
+	out("\n	} while (0)")
+	out("\n")
+
 
 
 helpers = {
-	'use_abs': helper_use_abs
+	'use_abs': helper_use_abs,
+	'use_lengthof': helper_use_lengthof,
+	'use_bigint': helper_use_bigint,
+	'use_arrcpy': helper_use_arrcpy,
 }
+
 
 def print_cfile(module, _outname):
 	outname = _outname + '.c'
@@ -2399,8 +2401,6 @@ def print_cfile(module, _outname):
 	for use in module.att:
 		if use in helpers:
 			helpers[use]()
-		elif use in macro_definitions:
-			out(macro_definitions[use])
 
 
 	if len(module.anon_recs) > 0:

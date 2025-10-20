@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))
-#define BIG_INT256(x3, x2, x1, x0)
+#define BIG_INT256(a, b, c, d)
 
 #include "stdlib.h"
 

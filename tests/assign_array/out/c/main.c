@@ -13,12 +13,12 @@
 #endif /* __lengthof */
 
 #define ARRCPY(dst, src, len) \
-do { \
-    uint32_t _len = (uint32_t)(len); \
-    for (uint32_t _i = 0; _i < _len; _i++) { \
-        (*dst)[_i] = (*src)[_i]; \
-    } \
-} while (0)
+	do { \
+		uint32_t _len = (uint32_t)(len); \
+		for (uint32_t _i = 0; _i < _len; _i++) { \
+			(*(dst))[_i] = (*(src))[_i]; \
+		} \
+	} while (0)
 
 
 static int32_t globalArray0[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
