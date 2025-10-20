@@ -8,18 +8,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifndef LENGTHOF
-#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
-#define ARRCPY(dst, src, len) \
-	do { \
-		uint32_t _len = (uint32_t)(len); \
-		for (uint32_t _i = 0; _i < _len; _i++) { \
-			(*(dst))[_i] = (*(src))[_i]; \
-		} \
-	} while (0)
-
 
 // Simply record for records assignation test
 struct Point {
@@ -136,7 +124,4 @@ int main() {
 	return 0;
 }
 
-
-#undef LENGTHOF
-#undef ARRCPY
 

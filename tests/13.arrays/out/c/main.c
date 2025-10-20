@@ -13,14 +13,6 @@
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
 
-#define ARRCPY(dst, src, len) \
-	do { \
-		uint32_t _len = (uint32_t)(len); \
-		for (uint32_t _i = 0; _i < _len; _i++) { \
-			(*(dst))[_i] = (*(src))[_i]; \
-		} \
-	} while (0)
-
 
 //@c_no_print
 //import "misc/minmax"
@@ -302,13 +294,13 @@ int main() {
 
 	// check local literal array assignation to local array
 	int32_t e[4];
-	ARRCPY(&e, &init_array, LENGTHOF(e));
+	memcpy(&e, &init_array, sizeof(int32_t[4]));
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	ARRCPY(&globalArray, &init_array, LENGTHOF(globalArray));
+	memcpy(&globalArray, &init_array, sizeof(int32_t[10]));
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
@@ -359,5 +351,4 @@ int main() {
 
 
 #undef LENGTHOF
-#undef ARRCPY
 

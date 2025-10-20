@@ -1621,9 +1621,10 @@ def do_stmt_assign(x):
 #			cmodule_use('use_arrcpy')
 # поэтому пока ВСЕГДА использую ARRCPY
 	if l.type.is_array() and r.type.is_array():
-		if not r.isZero():
-			cmodule_use('use_lengthof')
-			cmodule_use('use_arrcpy')
+		if l.type.of.size != r.type.of.size:
+			if not r.isZero():
+				cmodule_use('use_lengthof')
+				cmodule_use('use_arrcpy')
 
 
 	r = transmission(l.type, r, x['ti'])

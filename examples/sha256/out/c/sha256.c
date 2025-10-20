@@ -7,18 +7,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#ifndef LENGTHOF
-#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
-#define ARRCPY(dst, src, len) \
-	do { \
-		uint32_t _len = (uint32_t)(len); \
-		for (uint32_t _i = 0; _i < _len; _i++) { \
-			(*(dst))[_i] = (*(src))[_i]; \
-		} \
-	} while (0)
-
 
 struct Context {
 	uint8_t data[64];
@@ -82,7 +70,7 @@ static inline uint32_t sig1(uint32_t x) {
 }
 
 static void contextInit(Context *ctx) {
-	ARRCPY(&ctx->state, &((uint32_t[8])initalState), 8);
+	memcpy(&ctx->state, &((uint32_t[8])initalState), sizeof(uint32_t[8]));
 }
 
 
@@ -231,7 +219,4 @@ void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash) {
 	final(&ctx, (uint8_t *)outHash);
 }
 
-
-#undef LENGTHOF
-#undef ARRCPY
 

@@ -1728,7 +1728,8 @@ def assign_array(left, right, ti):
 	l_root = get_root_value(left)
 	r_root = get_root_value(right)
 
-	if Type.eq(l_root.type, r_root.type):
+	#if Type.eq(l_root.type, r_root.type):
+	if l_root.type.of.size == r_root.type.of.size:
 		assign_by_memcopy(left, right)
 		return
 
