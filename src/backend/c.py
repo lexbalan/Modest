@@ -2038,8 +2038,11 @@ def str_static_initializer(v):
 		return str_value(v, [])
 	if v.type.is_pointer_to_str():
 		return str_value(v, [])
-	if v.type.is_array():
-		if v.type.of.is_char():
+
+	if isinstance(v, ValueCons):
+		root = get_root_value(v)
+		if root.type.is_string():
+			# just string literal
 			return str_value(v, [])
 
 	root = get_root_value(v)
