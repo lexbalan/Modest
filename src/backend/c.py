@@ -967,7 +967,10 @@ def str_value_cons(x, ctx):
 	if from_type.is_int() or from_type.is_number():
 		if from_type.is_signed():
 			if type.is_nat():
-				return "(" + str_type(type) + ")" + "ABS(" + str_value(value) + ")"
+				if value.type.width <= 32:
+					return "(" + str_type(type) + ")" + "abs(" + str_value(value) + ")"
+				else:
+					return "(" + str_type(type) + ")" + "llabs(" + str_value(value) + ")"
 			elif type.is_word():
 				if from_type.size < type.size:
 					nat_same_sz = foundation.type_select_nat(from_type.width)
@@ -2319,7 +2322,7 @@ macro_definitions = {
 """,
 
 	'use_abs': """
-#define ABS(x) ((x) < 0 ? -(x) : (x))
+#include <stdlib.h>
 """,
 
 	'use_arrcpy': """

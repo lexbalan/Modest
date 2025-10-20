@@ -9,7 +9,7 @@
 
 #include "main.h"
 
-#define ABS(x) ((x) < 0 ? -(x) : (x))
+#include <stdlib.h>
 
 
 // wrap around linked list for list.List Nat32

@@ -13,7 +13,7 @@
 
 #include "console.h"
 
-#define ABS(x) ((x) < 0 ? -(x) : (x))
+#include <stdlib.h>
 
 
 //pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
@@ -149,7 +149,7 @@ int32_t console_vfprint(int32_t fd, char *form, va_list va) {
 	char strbuf[256];
 	const int32_t n = console_vsprint((char *)&strbuf, form, va);
 	strbuf[n] = '\x0';
-	write(fd, (void *)&strbuf, (size_t)ABS(n));
+	write(fd, (void *)&strbuf, (size_t)abs(n));
 	return n;
 }
 
@@ -306,7 +306,7 @@ static int32_t sprint_dec_int32(char *buf, int32_t x) {
 	while (true) {
 		const int32_t n = d % 10;
 		d = d / 10;
-		tmpbuf[i] = n_to_dec_sym((uint8_t)ABS(n));
+		tmpbuf[i] = n_to_dec_sym((uint8_t)abs(n));
 		i = i + 1;
 
 		if (d == 0) {

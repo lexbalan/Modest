@@ -11,7 +11,7 @@
 #define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))
 #define BIG_INT256(x3, x2, x1, x0)
 
-#define ABS(x) ((x) < 0 ? -(x) : (x))
+#include <stdlib.h>
 
 
 static unsigned __int128 big0 = BIG_INT128(0x123456789ABCDEFULL, 0xFEDCBA9876543210ULL);
@@ -51,7 +51,7 @@ int main() {
 
 	sig1 = sig1 + BIG_INT128(0x0ULL, 0x1ULL);
 
-	printf("sig1 = %lld\n", (uint64_t)ABS(sig1));
+	printf("sig1 = %lld\n", (uint64_t)llabs(sig1));
 
 	return 0;
 

@@ -9,7 +9,7 @@
 
 #include "list.h"
 
-#define ABS(x) ((x) < 0 ? -(x) : (x))
+#include <stdlib.h>
 
 
 list_List *list_create() {
@@ -135,7 +135,7 @@ list_Node *list_node_get(list_List *list, int32_t pos) {
 	if (pos >= 0) {
 		// go forward
 		node = list->head;
-		const uint32_t n = (uint32_t)ABS(pos);
+		const uint32_t n = (uint32_t)abs(pos);
 
 		if (n > list->size) {
 			return NULL;
@@ -149,7 +149,7 @@ list_Node *list_node_get(list_List *list, int32_t pos) {
 	} else {
 		// go backward
 		node = list->tail;
-		const uint32_t n = ((uint32_t)ABS(-pos)) - 1;
+		const uint32_t n = ((uint32_t)abs(-pos)) - 1;
 
 		if (n > list->size) {
 			return NULL;

@@ -16,7 +16,7 @@
 	(*dst)[i] = (*src)[i]; \
 }
 
-#define ABS(x) ((x) < 0 ? -(x) : (x))
+#include <stdlib.h>
 
 
 static void array_print(int32_t *pa, uint32_t len) {
@@ -85,7 +85,7 @@ int main() {
 
 	i = 0;
 	while (i < __lengthof(s)) {
-		printf("s[%d] = %d\n", i, (uint32_t)ABS(s[i]));
+		printf("s[%d] = %d\n", i, (uint32_t)abs(s[i]));
 		i = i + 1;
 	}
 
