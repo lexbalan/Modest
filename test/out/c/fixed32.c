@@ -1,11 +1,11 @@
 
+#include "fixed32.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#include "fixed32.h"
 
 
 #define base  65536

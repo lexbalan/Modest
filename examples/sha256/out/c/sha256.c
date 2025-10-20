@@ -82,7 +82,7 @@ static inline uint32_t sig1(uint32_t x) {
 }
 
 static void contextInit(Context *ctx) {
-	ARRCPY((&ctx->state), (&((uint32_t[8])initalState)), (8));
+	ARRCPY(&ctx->state, &((uint32_t[8])initalState), 8);
 }
 
 

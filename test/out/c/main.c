@@ -1,23 +1,24 @@
 
+#include "main.h"
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "main.h"
 
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
-#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) { \
-	(*dst)[i] = (*src)[i]; \
-}
-
-#define ABS(x) ((x) < 0 ? -(x) : (x))
+#define ARRCPY(dst, src, len) \
+	do { \
+		uint32_t _len = (uint32_t)(len); \
+		for (uint32_t _i = 0; _i < _len; _i++) { \
+			(*(dst))[_i] = (*(src))[_i]; \
+		} \
+	} while (0)
 
 
 /* anonymous records */
@@ -157,7 +158,7 @@ static uint32_t a32;
 static uint8_t prev_p[10];
 static void xxx(uint8_t *p)
 {
-	uint8_t *const xp = (uint8_t *)p;
+	uint8_t *const xp = (uint8_t *)(uint8_t *)p;
 	if (memcmp(&prev_p, xp, sizeof(uint8_t[10])) != 0)
 	{
 		memcpy(&prev_p, xp, sizeof(uint8_t[10]));
@@ -167,30 +168,30 @@ static void xxx(uint8_t *p)
 
 static void mzero(void *p, uint32_t size)
 {
-	uint8_t *const px = (uint8_t *)p;
+	uint8_t *const px = (uint8_t *)(uint8_t *)p;
 	memset(px, 0, sizeof(uint8_t[size]));
 }
 
 
 static void mcopy(void *dst, void *src, uint32_t size)
 {
-	uint8_t *const pd = (uint8_t *)dst;
-	uint8_t *const ps = (uint8_t *)src;
+	uint8_t *const pd = (uint8_t *)(uint8_t *)dst;
+	uint8_t *const ps = (uint8_t *)(uint8_t *)src;
 	memcpy(pd, ps, sizeof(uint8_t[size]));
 }
 
 
 static bool mcmp(void *a, void *b, uint32_t size)
 {
-	uint8_t *const pa = (uint8_t *)a;
-	uint8_t *const pb = (uint8_t *)b;
+	uint8_t *const pa = (uint8_t *)(uint8_t *)a;
+	uint8_t *const pb = (uint8_t *)(uint8_t *)b;
 	return memcmp(pa, pb, sizeof(uint8_t[size])) == 0;
 }
 
 
 void main_sbuf(void *p, uint32_t size)
 {
-	uint8_t *const px = (uint8_t *)p;
+	uint8_t *const px = (uint8_t *)(uint8_t *)p;
 	uint8_t buf[size];
 	memcpy(&buf, px, sizeof(uint8_t[size]));
 	uint32_t i = 0;
@@ -248,16 +249,16 @@ int32_t main()
 {
 	//ab_test()
 
-	argtest(1, /*b=*/0);
+	argtest(1, 0);
 	argtest(1, 2);
-	argtest(1, /*b=*/3);
+	argtest(1, 3);
 
 	testFixed();
 
 	divtest();
 
 	main_Point p;
-	printf("test %s\n", (char *)main_cq);
+	printf("test %s\n", main_cq);
 	printf("test %d\n", v0);
 	//f0()
 
@@ -286,14 +287,14 @@ int32_t main()
 	//
 	memset((int32_t(*)[13 - 3])&a3[3], 0, sizeof(int32_t[13 - 3]));
 
-	int32_t a4[10] = {};
+	int32_t a4[10] = {0};
 
 	xxx((uint8_t *)&w0);
 
 	uint8_t yy = 0x1;
 	uint8_t we = yy;
 
-	int *const pa2 = (int *)&a2;
+	int *const pa2 = (int *)(int *)&a2;
 
 	if (memcmp(pa2, &a0, sizeof(int[10])) == 0)
 	{
@@ -316,7 +317,7 @@ int32_t main()
 	uint32_t w = 0x1;
 
 	const int8_t i8 = (int8_t)-1;
-	const uint32_t n32 = ABS(i8);
+	const uint32_t n32 = (uint32_t)abs((int)i8);
 	const int32_t i32 = (int32_t)i8;
 	const uint32_t w32 = (uint32_t)(uint8_t)i8;
 
@@ -329,7 +330,7 @@ int32_t main()
 		printf("Int8 -1 -> Int32 test failed\n");
 	}
 
-	if ((ABS((int8_t)-1) == 1) && (n32 == 1))
+	if (((uint32_t)abs((int)(int8_t)-1) == 1) && (n32 == 1))
 	{
 		printf("Int8 -1 -> Nat32 (1) test passed\n");
 	}

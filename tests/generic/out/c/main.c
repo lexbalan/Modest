@@ -164,7 +164,7 @@ static bool test_generic_array() {
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Int32
 	int32_t b[4];
-	ARRCPY((&b), (&((uint8_t[4])a)), (__lengthof(b)));
+	ARRCPY(&b, &((uint8_t[4])a), __lengthof(b));
 
 	if (memcmp(&b, &((int32_t[4]){0, 1, 2, 3}), sizeof(int32_t[4])) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
@@ -173,7 +173,7 @@ static bool test_generic_array() {
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Nat64
 	int64_t c[4];
-	ARRCPY((&c), (&((uint8_t[4])a)), (__lengthof(c)));
+	ARRCPY(&c, &((uint8_t[4])a), __lengthof(c));
 
 	if (memcmp(&c, &((int64_t[4]){0, 1, 2, 3}), sizeof(int64_t[4])) != 0) {
 		printf("c != [0, 1, 2, 3]\n");

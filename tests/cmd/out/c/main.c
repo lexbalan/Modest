@@ -1,4 +1,7 @@
 
+#include "main.h"
+
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
@@ -6,31 +9,36 @@
 #include <unistd.h>
 #include <ctype.h>
 
-#include "main.h"
-
 #ifndef __lengthof
 #define __lengthof(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* __lengthof */
 
-#define ARRCPY(dst, src, len) for (uint32_t i = 0; i < (len); i++) { \
-	(*dst)[i] = (*src)[i]; \
-}
+#define ARRCPY(dst, src, len) \
+	do { \
+		uint32_t _len = (uint32_t)(len); \
+		for (uint32_t _i = 0; _i < _len; _i++) { \
+			(*(dst))[_i] = (*(src))[_i]; \
+		} \
+	} while (0)
 
 
-static char prompt[32] = "# ";
-static uint8_t prompt_len = 2;
+#define prompt  "# "
+//var prompt: [32]Char8 = "# "
+//var prompt_len: Nat8 = 2
 
 static char tokensBuf[4 * 1024];
 
-static void showPrompt()
-{
-	write(0, (char *)&prompt, (size_t)prompt_len);
+static void showPrompt() {
+	char _prompt[32] = prompt;
+	write(0, (void *)&_prompt, (size_t)__lengthof(prompt));
 }
 
-static inline int char8ToInt(char c)
-{
+
+__attribute__((always_inline))
+static inline int char8ToInt(char c) {
 	return (int)(uint32_t)(uint8_t)c;
 }
+
 
 struct Tokenizer {
 	char *input;
@@ -43,13 +51,12 @@ struct Tokenizer {
 };
 typedef struct Tokenizer Tokenizer;
 
-static bool is_blank(char c)
-{
+static bool is_blank(char c) {
 	return c == ' ' || c == '\n';
 }
 
-static uint16_t gettok(Tokenizer *t, char *output, uint16_t lim)
-{
+
+static uint16_t gettok(Tokenizer *t, char *output, uint16_t lim) {
 	char c = t->input[t->position];
 
 	// skip blanks
@@ -88,8 +95,8 @@ static uint16_t gettok(Tokenizer *t, char *output, uint16_t lim)
 	return outpos;
 }
 
-static void tokenize(Tokenizer *tokenizer)
-{
+
+static void tokenize(Tokenizer *tokenizer) {
 	while (true) {
 		const uint16_t max_toklen = 128;
 		char token[max_toklen];
@@ -113,11 +120,11 @@ static void tokenize(Tokenizer *tokenizer)
 	}
 }
 
-static void execute(char *cmd, uint16_t argc, char *(*argv)[])
-{
+
+static void execute(char *cmd, uint16_t argc, char *(*argv)[]) {
 	printf("%s (n=%d)", cmd, argc);
 	printf(" [");
-	int32_t i = 0;
+	uint32_t i = 0;
 	while (true) {
 		char *const ptok = (*argv)[i];
 		if (ptok == NULL) {
@@ -129,17 +136,17 @@ static void execute(char *cmd, uint16_t argc, char *(*argv)[])
 	printf("]\n");
 }
 
-int32_t main()
-{
+
+int32_t main() {
 	printf("HARSH v0.1\n");
 
 	char inbuf[1024];
 
 	while (true) {
 		showPrompt();
-		fgets((char *)&inbuf, sizeof inbuf, stdin);
+		fgets((char *)&inbuf, (int)sizeof inbuf, stdin);
 
-		char *tokens[64] = {};
+		char *tokens[64] = {0};
 
 		// Токенизируем строку
 		Tokenizer tokenizer = (Tokenizer){
@@ -161,4 +168,5 @@ int32_t main()
 
 	return 0;
 }
+
 

@@ -620,7 +620,11 @@ class ValueLengthof(Value):
 			type = typeSysInt
 		else:
 			from type import type_number_for
-			length = value.type.volume.asset
+			length = 0
+			if value.type.is_array():
+				length = value.type.volume.asset
+			elif value.type.is_string():
+				length = len(value.asset)
 			type = type_number_for(length, signed=False, ti=ti)
 		super().__init__(type=type, ti=ti)
 		if not value.type.is_vla():

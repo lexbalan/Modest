@@ -1323,7 +1323,8 @@ def str_value_offsetof(x, ctx):
 
 def str_value_lengthof(x, ctx):
 	if value_is_generic_immediate_const(x.value):
-		return str(x.value.type.volume.asset)
+		if not x.value.type.is_string():
+			return str(x.value.type.volume.asset)
 
 	# generic array в си это просто макрос вида {1, 2, 3}
 	# и его нельзя подставить в __lengthof (!)
@@ -1731,7 +1732,7 @@ def assign_array(left, right, ti):
 #		assign_by_memcopy(left, right)
 #		return
 
-	out("ARRCPY((%s), (%s), (%s))" % (sleft, sright, slen))
+	out("ARRCPY(%s, %s, %s)" % (sleft, sright, slen))
 	return
 
 

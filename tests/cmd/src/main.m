@@ -4,14 +4,16 @@ include "libc/unistd"
 include "libc/ctype"
 
 
-var prompt: [32]Char8 = "# "
-var prompt_len: Nat8 = 2
+const prompt = "# "
+//var prompt: [32]Char8 = "# "
+//var prompt_len: Nat8 = 2
 
 var tokensBuf: [4*1024]Char8
 
 
 func showPrompt() -> Unit {
-	write(0, &prompt, SizeT prompt_len)
+	var _prompt: [32]Char8 = prompt
+	write(0, &_prompt, SizeT lengthof(prompt))
 }
 
 
@@ -21,7 +23,7 @@ func char8ToInt (c: Char8) -> Int {
 }
 
 
-type Tokenizer record {
+type Tokenizer = record {
 	input: *[]Char8
 	position: Nat32
 	tokensBufPos: Nat16
@@ -125,7 +127,7 @@ public func main () -> Int32 {
 
 	while true {
 		showPrompt()
-		fgets(&inbuf, sizeof(inbuf), stdin)
+		fgets(&inbuf, unsafe Int sizeof(inbuf), stdin)
 
 		var tokens: [64]*[]Char8 = []
 

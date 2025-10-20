@@ -4,24 +4,27 @@ include "ctype"
 
 
 
-var prompt: [32]Char8 = "# "
-var prompt_len: Nat8 = 2
+const prompt = "# "
+//var prompt: [32]Char8 = "# "
+//var prompt_len: Nat8 = 2
 
 var tokensBuf: [4 * 1024]Char8
 
 
-func showPrompt() -> Unit {
-	write(0, &prompt, SizeT prompt_len)
+func showPrompt () -> Unit {
+	var _prompt: [32]Char8 = prompt
+	write(0, &_prompt, SizeT lengthof(prompt))
 }
 
 
 
-func char8ToInt(c: Char8) -> Int {
+@inline
+func char8ToInt (c: Char8) -> Int {
 	return Int Word32 Word8 c
 }
 
 
-type Tokenizer record {
+type Tokenizer = record {
 	input: *[]Char8
 	position: Nat32
 	tokensBufPos: Nat16
@@ -32,12 +35,12 @@ type Tokenizer record {
 }
 
 
-func is_blank(c: Char8) -> Bool {
+func is_blank (c: Char8) -> Bool {
 	return c == " " or c == "\n"
 }
 
 
-func gettok(t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
+func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 	var c: Char8 = t.input[t.position]
 
 	// skip blanks
@@ -77,7 +80,7 @@ func gettok(t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 }
 
 
-func tokenize(tokenizer: *Tokenizer) -> Unit {
+func tokenize (tokenizer: *Tokenizer) -> Unit {
 	while true {
 		let max_toklen: Nat16 = 128
 		var token: [max_toklen]Char8
@@ -102,10 +105,10 @@ func tokenize(tokenizer: *Tokenizer) -> Unit {
 }
 
 
-func execute(cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
+func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
 	printf("%s (n=%d)", cmd, argc)
 	printf(" [")
-	var i: Int32 = 0
+	var i: Nat32 = 0
 	while true {
 		let ptok: *Str8 = argv[i]
 		if ptok == nil {
@@ -118,14 +121,14 @@ func execute(cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
 }
 
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	printf("HARSH v0.1\n")
 
 	var inbuf: [1024]Char8
 
 	while true {
 		showPrompt()
-		fgets(&inbuf, sizeof inbuf, stdin)
+		fgets(&inbuf, unsafe Int sizeof inbuf, stdin)
 
 		var tokens: [64]*[]Char8 = []
 

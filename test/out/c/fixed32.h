@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+
 typedef uint32_t fixed32_Fixed32;
 fixed32_Fixed32 fixed32_create(int16_t a, uint16_t b, uint16_t c);
 fixed32_Fixed32 fixed32_fromInt16(int16_t x);

@@ -302,13 +302,13 @@ int main() {
 
 	// check local literal array assignation to local array
 	int32_t e[4];
-	ARRCPY((&e), (&init_array), (__lengthof(e)));
+	ARRCPY(&e, &init_array, __lengthof(e));
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	ARRCPY((&globalArray), (&init_array), (__lengthof(globalArray)));
+	ARRCPY(&globalArray, &init_array, __lengthof(globalArray));
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);

@@ -789,7 +789,7 @@ def do_value_lengthof_value(x):
 	if arg.isBad() or arg.isUndef():
 		return arg
 
-	if not arg.type.is_array():
+	if not (arg.type.is_array() or arg.type.is_string()):
 		error("expected value with array type", x['value'])
 		return ValueBad({'ti': ti})
 
@@ -1544,12 +1544,11 @@ def do_stmt_return(x):
 	global cfunc
 
 	func_ret_type = cfunc.type.to
-
-	is_no_ret_func = func_ret_type.is_unit()
 	ret_val_present = x['value'] != None
 
 	# если забыли вернуть значение
 	# или возвращаем его там, где оно не ожидется
+	is_no_ret_func = func_ret_type.is_unit()
 	if ret_val_present == is_no_ret_func:
 		if ret_val_present:
 			error("unexpected return value", x['value']['ti'])
