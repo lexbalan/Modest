@@ -222,89 +222,16 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [2 x i8] [i8 65, i8 0]
-@str2 = private constant [2 x i16] [i16 65, i16 0]
-@str3 = private constant [2 x i32] [i32 65, i32 0]
-@str4 = private constant [2 x i8] [i8 65, i8 0]
-@str5 = private constant [2 x i16] [i16 65, i16 0]
-@str6 = private constant [2 x i32] [i32 65, i32 0]
-@str7 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
-@str8 = private constant [2 x i8] [i8 65, i8 0]
-@str9 = private constant [2 x i16] [i16 65, i16 0]
-@str10 = private constant [2 x i32] [i32 65, i32 0]
-@str11 = private constant [2 x i8] [i8 65, i8 0]
-@str12 = private constant [2 x i16] [i16 65, i16 0]
-@str13 = private constant [2 x i32] [i32 65, i32 0]
+@str1 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
 ; -- endstrings --; unicode support test
-@c8 = internal global %Char8 65
-@c16 = internal global %Char16 65
-@c32 = internal global %Char32 65
-@b8 = internal global [1 x %Char8] [
-	%Char8 65
-]
-@b16 = internal global [1 x %Char16] [
-	%Char16 65
-]
-@b32 = internal global [1 x %Char32] [
-	%Char32 65
-]
-@s8 = internal global %Str8* bitcast ([2 x i8]* @str1 to [0 x i8]*)
-@s16 = internal global %Str16* bitcast ([2 x i16]* @str2 to [0 x i16]*)
-@s32 = internal global %Str32* bitcast ([2 x i32]* @str3 to [0 x i32]*)
-@cc8 = internal global %Char8 65
-@cc16 = internal global %Char16 65
-@cc32 = internal global %Char32 65
-@bb8 = internal global [1 x %Char8] [
-	%Char8 65
-]
-@bb16 = internal global [1 x %Char16] [
-	%Char16 65
-]
-@bb32 = internal global [1 x %Char32] [
-	%Char32 65
-]
-@ss8 = internal global %Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*)
-@ss16 = internal global %Str16* bitcast ([2 x i16]* @str5 to [0 x i16]*)
-@ss32 = internal global %Str32* bitcast ([2 x i32]* @str6 to [0 x i32]*)
+%E = type {
+	%Int32,
+	[0 x %Int32]
+};
+
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str7 to [0 x i8]*))
-	call void @putc8(%Char8 65)
-	call void @putc16(%Char16 65)
-	call void @putc32(%Char32 65)
-	call void @puts8(%Str8* bitcast ([2 x i8]* @str8 to [0 x i8]*))
-	call void @puts16(%Str16* bitcast ([2 x i16]* @str9 to [0 x i16]*))
-	call void @puts32(%Str32* bitcast ([2 x i32]* @str10 to [0 x i32]*))
-	call void @putc8(%Char8 65)
-	call void @putc16(%Char16 65)
-	call void @putc32(%Char32 65)
-	call void @puts8(%Str8* bitcast ([2 x i8]* @str11 to [0 x i8]*))
-	call void @puts16(%Str16* bitcast ([2 x i16]* @str12 to [0 x i16]*))
-	call void @puts32(%Str32* bitcast ([2 x i32]* @str13 to [0 x i32]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
 	ret %Int32 0
-}
-
-define internal void @putc8(%Char8 %c) {
-	ret void
-}
-
-define internal void @putc16(%Char16 %c) {
-	ret void
-}
-
-define internal void @putc32(%Char32 %c) {
-	ret void
-}
-
-define internal void @puts8(%Str8* %s) {
-	ret void
-}
-
-define internal void @puts16(%Str16* %s) {
-	ret void
-}
-
-define internal void @puts32(%Str32* %s) {
-	ret void
 }
 
 
