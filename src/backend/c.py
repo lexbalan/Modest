@@ -968,9 +968,12 @@ def str_value_cons(x, ctx):
 		if from_type.is_signed():
 			if type.is_nat():
 				if value.type.width <= 32:
-					return "(" + str_type(type) + ")" + "abs(" + str_value(value) + ")"
+					return "(" + str_type(type) + ")" + "abs((int)" + str_value(value) + ")"
+				elif value.type.width <= 64:
+					return "(" + str_type(type) + ")" + "llabs((long long int)" + str_value(value) + ")"
 				else:
 					return "(" + str_type(type) + ")" + "llabs(" + str_value(value) + ")"
+
 			elif type.is_word():
 				if from_type.size < type.size:
 					nat_same_sz = foundation.type_select_nat(from_type.width)

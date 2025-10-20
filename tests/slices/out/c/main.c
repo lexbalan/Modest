@@ -85,7 +85,7 @@ int main() {
 
 	i = 0;
 	while (i < __lengthof(s)) {
-		printf("s[%d] = %d\n", i, (uint32_t)abs(s[i]));
+		printf("s[%d] = %d\n", i, (uint32_t)abs((int)s[i]));
 		i = i + 1;
 	}
 
