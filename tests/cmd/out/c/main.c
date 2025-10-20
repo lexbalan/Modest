@@ -23,8 +23,6 @@
 
 
 #define prompt  "# "
-//var prompt: [32]Char8 = "# "
-//var prompt_len: Nat8 = 2
 
 static char tokensBuf[4 * 1024];
 

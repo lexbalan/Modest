@@ -302,8 +302,6 @@ declare %Int @tolower(%Int %x)
 @str4 = private constant [3 x i8] [i8 93, i8 10, i8 0]
 @str5 = private constant [12 x i8] [i8 72, i8 65, i8 82, i8 83, i8 72, i8 32, i8 118, i8 48, i8 46, i8 49, i8 10, i8 0]
 ; -- endstrings --
-;var prompt: [32]Char8 = "# "
-;var prompt_len: Nat8 = 2
 @tokensBuf = internal global [4096 x %Char8] zeroinitializer
 define internal void @showPrompt() {
 	%1 = alloca [32 x %Char8], align 1

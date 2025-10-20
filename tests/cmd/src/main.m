@@ -5,8 +5,7 @@ include "libc/ctype"
 
 
 const prompt = "# "
-//var prompt: [32]Char8 = "# "
-//var prompt_len: Nat8 = 2
+
 
 var tokensBuf: [4*1024]Char8
 
