@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+
+
 void queue_init(queue_Queue *q, uint32_t capacity) {
 	*q = (queue_Queue){};
 	q->capacity = capacity;

@@ -5,16 +5,15 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
-
 #include "./utf.h"
 #include "./console.h"
 
-
+#include <stdarg.h>
 #include <stdlib.h>
+
 
 //pragma do_not_include  // for Int  // for write()  // for putchar()  // for strlen, strcpy
 

@@ -7,9 +7,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
 #include "./utf.h"
 #include "./console.h"
+
 
 
 // constants with type String(Generic)

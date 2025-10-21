@@ -7,13 +7,12 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
 #include "./sha256.h"
-
 
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
+
 
 #define inputDataLength  32
 

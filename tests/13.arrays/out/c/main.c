@@ -9,11 +9,10 @@
 #include <stdio.h>
 #include <math.h>
 
-
-
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
+
 
 //@c_no_print
 //import "misc/minmax"

@@ -2336,6 +2336,10 @@ def helper_use_abs():
 	include("stdlib.h", local=False)
 
 
+def helper_use_va_arg():
+	include("stdarg.h", local=False)
+
+
 def helper_use_lengthof():
 	out("\n#ifndef LENGTHOF")
 	out("\n#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))")
@@ -2366,6 +2370,7 @@ def helper_use_arrcpy():
 	module_undef_list.append("ARRCPY")
 
 
+
 h_helpers = {
 	'use_bigint': helper_use_bigint,
 }
@@ -2374,12 +2379,279 @@ c_helpers = {
 	'use_abs': helper_use_abs,
 	'use_lengthof': helper_use_lengthof,
 	'use_arrcpy': helper_use_arrcpy,
+	'use_va_arg': helper_use_va_arg,
 }
+
+c_include_helpers = {
+	'use_abs': helper_use_abs,
+	'use_va_arg': helper_use_va_arg,
+}
+
+
+def print_cfile(module, _outname):
+	outname = _outname + '.c'
+
+	output_open(outname)
+
+	if module.hasAttribute('c_no_print'):
+		output_close()
+		return
+
+
+	defs = module.defs
+
+
+	# Печатаем первые комментарии
+	if len(defs) > 0:
+		def0 = defs[0]
+		if isinstance(def0, StmtComment):
+			nnl(def0.nl)
+			print_comment(def0)
+			newline()
+			defs = defs[1:]
+
+
+	global already_included
+	already_included = []
+	include(module.id + '.h')
+	newline()
+
+
+	dirs = [
+		StmtDirectiveCInclude("stddef.h"),
+		StmtDirectiveCInclude("stdint.h"),
+		StmtDirectiveCInclude("stdbool.h"),
+		StmtDirectiveCInclude("string.h"),
+	]
+	defs = dirs + defs
+
+	for x in defs:
+		if isinstance(x, StmtDirectiveCInclude):
+			if not x.is_local and x.c_name in STD_HEADERS:
+				include(x.c_name, local=x.is_local)
+
+
+	xx2 = False
+	for x in defs:
+		if isinstance(x, StmtDirectiveCInclude):
+			include(x.c_name, local=x.is_local)
+			xx2 = True
+
+	if xx2:
+		newline()
+
+	for use in module.att:
+		if use in c_helpers:
+			c_helpers[use]()
+
+	newline()
+
+	if len(module.anon_recs) > 0:
+		out("\n\n/* anonymous records */")
+		for anon_rec in module.anon_recs:
+			nl_indent()
+			print_type_record(anon_rec, tag=anon_rec.c_anon_id)
+			out(";")
+
+	for x in defs:
+		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
+			continue
+
+		if isinstance(x, StmtDirectiveCInclude):
+			continue
+
+		if isinstance(x, StmtDefConst) and is_private(x):
+			nnl(x.nl)
+			print_deps(x.deps)
+			print_def_const(x)
+		elif isinstance(x, StmtDefType) and is_private(x):
+			nnl(x.nl)
+			print_deps(x.deps)
+			print_def_type(x)
+		elif isinstance(x, StmtDefVar):
+			nnl(x.nl)
+			print_deps(x.deps)
+			print_def_var(x)
+		elif isinstance(x, StmtDefFunc):
+			if x.access_level == 'public' and x.hasAttribute2('inline'):
+				continue
+			nnl(x.nl)
+			print_deps(x.deps)
+			if x.deps != []:
+				newline()
+			print_def_func(x)
+		elif isinstance(x, StmtComment):
+			nnl(x.nl)
+			if x.nl == 0:
+				out("  ")
+			print_comment(x)
+		elif isinstance(x, StmtDirective):
+			print_directive(x)
+
+	if len(module_undef_list) > 0:
+		newline(1)
+		for u in module_undef_list:
+			undef(u)
+
+	newline(2)
+	output_close()
+
+
+
+def run(module, _outname, settings):
+	global cmodule
+	cmodule = module
+
+	hpath = _outname
+	if 'include_dir' in settings:
+		inc_dir = settings['include_dir']
+		hname = os.path.basename(_outname)
+		hpath = inc_dir + '/' + hname
+
+	print_header(module, hpath)
+	print_cfile(module, _outname)
+	return
+
+
+
+# возвращает корневое значение из цепочки ValueCons
+def get_root_value(x):
+	if isinstance(x, ValueCons):
+		return get_root_value(x.value)
+	return x
+
+
+
+def cons_vla_from_literal_array(x):
+	if isinstance(x, ValueCons):
+		if x.type.is_vla():
+			#return x['value']['kind'] in ['literal', 'add']
+			if isinstance(x, ValueBin):
+				return x.op in ['literal', 'add']
+	return False
+
+
+# получает значение, печатает указатель на его корневое значение
+def str_value_as_ptr(x):
+	sstr = ''
+
+	t = x.type
+	root = get_root_value(x)
+
+	#root.type.is_str() or
+	if root.type.is_string():
+		return "&" + str_value(root)
+
+
+	if root.isImmediate():
+		if x.type.is_composite() or value_is_generic_immediate_const(root):
+			# generic immediate const is just a macro!
+			vs = str_value(root)
+			ts = str_type(x.type)
+			return "&((%s)%s)" % (ts, vs)
+
+	if isinstance(x, ValueCons):
+		# for *s == "Hi!"
+		# string literal will be implicitly casted to StrX
+		# and for getting pointer to this string
+		# we need to print just string literal,
+		# because in C string literal is pointer to c-string
+		if x.value.type.is_string():
+			return str_value(x.value)
+
+	if isinstance(root, ValueSlice):
+		ptr2slice = TypePointer(x.type)
+		sptr = str_type_pointer(ptr2slice, as_ptr_to_array=True)
+		sstr += '(%s)' % sptr
+
+	if isinstance(root, ValueDeref):
+		return str_value(root.value)
+
+	if isinstance(root, ValueLiteral):
+		if root.type.is_string():
+			return str_value(root)
+
+	sstr += "&"
+
+	if isinstance(root, ValueBin) and root.op in ['literal', 'add']:
+		sstr += '(' + str_type(t) + ')'
+
+	elif cons_vla_from_literal_array(root):
+		# we need to print:
+		#  &(uint32_t[]){1, 2, 3, 4, 5}
+		# instead of:
+		#  &(uint32_t[len]){1, 2, 3, 4, 5}
+		sstr += '(' + str_type(t) + ')'
+		sstr += str_value(x.value)
+		return sstr
+
+	sstr += str_value(root)
+	return sstr
+
+
+
+def assign_by_memcopy(left, right):
+	rv = get_root_value(right)
+	if rv.isZero():
+		memzero(left)
+		return
+
+	out("memcpy(")
+	out(str_value_as_ptr(left))
+	out(", ")
+	out(str_value_as_ptr(right))
+	out(", sizeof(")
+	print_type(left.type)
+	out("))")
+
+
+def memzero(value):
+	out("memset(")
+	out(str_value_as_ptr(value))
+	out(", 0, sizeof(")
+	print_type(value.type)
+	out("))")
+
+
+#def eq_by_memcmp(left, right, op='eq'):
+#	return eq_by_memcmp(left, right, op=op)
+
+
+def eq_str_by_strcmp(left, right, op='eq'):
+	# не берем все в скобки все тк это eq операция
+	# и ее приоритет не нарушается (!)
+	sstr = 'strcmp('
+	sstr += str_value_as_ptr(left)
+	sstr += ', '
+	sstr += str_value_as_ptr(right)
+	if op == 'eq':
+		sstr += ') == 0'
+	else:
+		sstr += ') != 0'
+	return sstr
+
+
+def eq_by_memcmp(left, right, op='eq'):
+	# не берем все в скобки все тк это eq операция
+	# и ее приоритет не нарушается (!)
+	sstr = 'memcmp('
+	sstr += str_value_as_ptr(left)
+	sstr += ', '
+	sstr += str_value_as_ptr(right)
+	sstr += ", sizeof("
+	common_type = select_common_type(left.type, right.type)
+	sstr += str_type(common_type)
+	sstr += ")"
+	if op == 'eq':
+		sstr += ') == 0'
+	else:
+		sstr += ') != 0'
+	return sstr
+
 
 
 
 libc_headers = [
-    # Ввод-вывод и работа с файлами
     "stdio.h",
 
     # Общие утилиты, память, сортировка, случайные числа
@@ -2560,6 +2832,7 @@ posix_headers = [
     "sys/procfs.h",
 ]
 
+
 network_headers = [
     # --- POSIX core networking ---
     "sys/socket.h",     # базовые сокеты (socket, bind, connect, send, recv)
@@ -2606,271 +2879,5 @@ network_headers = [
     "linux/ipv6.h",
 ]
 
-
-
-def print_cfile(module, _outname):
-	outname = _outname + '.c'
-
-	output_open(outname)
-
-	if module.hasAttribute('c_no_print'):
-		output_close()
-		return
-
-	defs = module.defs
-
-
-	# Печатаем первые комментарии
-	if len(defs) > 0:
-		def0 = defs[0]
-		if isinstance(def0, StmtComment):
-			nnl(def0.nl)
-			print_comment(def0)
-			newline()
-			defs = defs[1:]
-
-
-	global already_included
-	already_included = []
-	include(module.id + '.h')
-	newline()
-	include("stddef.h", local=False)
-	include("stdint.h", local=False)
-	include("stdbool.h", local=False)
-	if module.hasAttribute('use_va_arg'):
-		include("stdarg.h", local=False)
-	include("string.h", local=False)
-
-	xx = False
-	for x in defs:
-		if isinstance(x, StmtDirectiveCInclude):
-			if not x.is_local and x.c_name in libc_headers + iso_c_headers + posix_headers + network_headers:
-				include(x.c_name, local=x.is_local)
-				xx = True
-
-	if xx:
-		newline()
-
-	xx2 = False
-	for x in defs:
-		if isinstance(x, StmtDirectiveCInclude):
-			include(x.c_name, local=x.is_local)
-			xx2 = True
-
-	if xx2:
-		newline()
-
-	for use in module.att:
-		if use in c_helpers:
-			newline()
-			c_helpers[use]()
-
-
-	if len(module.anon_recs) > 0:
-		out("\n\n/* anonymous records */")
-		for anon_rec in module.anon_recs:
-			nl_indent()
-			print_type_record(anon_rec, tag=anon_rec.c_anon_id)
-			out(";")
-
-
-	for x in defs:
-		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
-			continue
-
-		if isinstance(x, StmtDirectiveCInclude):
-			continue
-
-		if isinstance(x, StmtDefConst) and is_private(x):
-			nnl(x.nl)
-			print_deps(x.deps)
-			print_def_const(x)
-		elif isinstance(x, StmtDefType) and is_private(x):
-			nnl(x.nl)
-			print_deps(x.deps)
-			print_def_type(x)
-		elif isinstance(x, StmtDefVar):
-			nnl(x.nl)
-			print_deps(x.deps)
-			print_def_var(x)
-		elif isinstance(x, StmtDefFunc):
-			if x.access_level == 'public' and x.hasAttribute2('inline'):
-				continue
-			nnl(x.nl)
-			print_deps(x.deps)
-			if x.deps != []:
-				newline()
-			print_def_func(x)
-		elif isinstance(x, StmtComment):
-			nnl(x.nl)
-			if x.nl == 0:
-				out("  ")
-			print_comment(x)
-		elif isinstance(x, StmtDirective):
-			print_directive(x)
-
-	if len(module_undef_list) > 0:
-		newline(1)
-		for u in module_undef_list:
-			undef(u)
-
-	newline(2)
-	output_close()
-
-
-
-def run(module, _outname, settings):
-	global cmodule
-	cmodule = module
-
-	hpath = _outname
-	if 'include_dir' in settings:
-		inc_dir = settings['include_dir']
-		hname = os.path.basename(_outname)
-		hpath = inc_dir + '/' + hname
-
-	print_header(module, hpath)
-	print_cfile(module, _outname)
-	return
-
-
-
-# возвращает корневое значение из цепочки ValueCons
-def get_root_value(x):
-	if isinstance(x, ValueCons):
-		return get_root_value(x.value)
-	return x
-
-
-
-def cons_vla_from_literal_array(x):
-	if isinstance(x, ValueCons):
-		if x.type.is_vla():
-			#return x['value']['kind'] in ['literal', 'add']
-			if isinstance(x, ValueBin):
-				return x.op in ['literal', 'add']
-	return False
-
-
-# получает значение, печатает указатель на его корневое значение
-def str_value_as_ptr(x):
-	sstr = ''
-
-	t = x.type
-	root = get_root_value(x)
-
-	#root.type.is_str() or
-	if root.type.is_string():
-		return "&" + str_value(root)
-
-
-	if root.isImmediate():
-		if x.type.is_composite() or value_is_generic_immediate_const(root):
-			# generic immediate const is just a macro!
-			vs = str_value(root)
-			ts = str_type(x.type)
-			return "&((%s)%s)" % (ts, vs)
-
-
-	if isinstance(x, ValueCons):
-		# for *s == "Hi!"
-		# string literal will be implicitly casted to StrX
-		# and for getting pointer to this string
-		# we need to print just string literal,
-		# because in C string literal is pointer to c-string
-		if x.value.type.is_string():
-			return str_value(x.value)
-
-	if isinstance(root, ValueSlice):
-		ptr2slice = TypePointer(x.type)
-		sptr = str_type_pointer(ptr2slice, as_ptr_to_array=True)
-		sstr += '(%s)' % sptr
-
-	if isinstance(root, ValueDeref):
-		return str_value(root.value)
-
-	if isinstance(root, ValueLiteral):
-		if root.type.is_string():
-			return str_value(root)
-
-
-	sstr += "&"
-
-
-	if isinstance(root, ValueBin) and root.op in ['literal', 'add']:
-		sstr += '(' + str_type(t) + ')'
-
-	elif cons_vla_from_literal_array(root):
-		# we need to print:
-		#  &(uint32_t[]){1, 2, 3, 4, 5}
-		# instead of:
-		#  &(uint32_t[len]){1, 2, 3, 4, 5}
-		sstr += '(' + str_type(t) + ')'
-		sstr += str_value(x.value)
-		return sstr
-
-	sstr += str_value(root)
-	return sstr
-
-
-
-def assign_by_memcopy(left, right):
-	rv = get_root_value(right)
-	if rv.isZero():
-		memzero(left)
-		return
-
-	out("memcpy(")
-	out(str_value_as_ptr(left))
-	out(", ")
-	out(str_value_as_ptr(right))
-	out(", sizeof(")
-	print_type(left.type)
-	out("))")
-
-
-def memzero(value):
-	out("memset(")
-	out(str_value_as_ptr(value))
-	out(", 0, sizeof(")
-	print_type(value.type)
-	out("))")
-
-
-#def eq_by_memcmp(left, right, op='eq'):
-#	return eq_by_memcmp(left, right, op=op)
-
-
-def eq_str_by_strcmp(left, right, op='eq'):
-	# не берем все в скобки все тк это eq операция
-	# и ее приоритет не нарушается (!)
-	sstr = 'strcmp('
-	sstr += str_value_as_ptr(left)
-	sstr += ', '
-	sstr += str_value_as_ptr(right)
-	if op == 'eq':
-		sstr += ') == 0'
-	else:
-		sstr += ') != 0'
-	return sstr
-
-
-def eq_by_memcmp(left, right, op='eq'):
-	# не берем все в скобки все тк это eq операция
-	# и ее приоритет не нарушается (!)
-	sstr = 'memcmp('
-	sstr += str_value_as_ptr(left)
-	sstr += ', '
-	sstr += str_value_as_ptr(right)
-	sstr += ", sizeof("
-	common_type = select_common_type(left.type, right.type)
-	sstr += str_type(common_type)
-	sstr += ")"
-	if op == 'eq':
-		sstr += ') == 0'
-	else:
-		sstr += ') != 0'
-	return sstr
-
-
+STD_HEADERS = libc_headers + iso_c_headers + posix_headers + network_headers
 

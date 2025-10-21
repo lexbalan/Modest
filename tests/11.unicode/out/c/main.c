@@ -7,9 +7,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
 #include "./utf.h"
 #include "./console.h"
+
 
 
 // include test (!)

@@ -9,6 +9,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+
+
 // декодирует символ UTF-32 в последовательность UTF-8
 uint8_t utf_utf32_to_utf8(char32_t c, char *buf) {
 	const uint32_t x = (uint32_t)c;

@@ -8,12 +8,9 @@
 #include <string.h>
 #include <stdio.h>
 
-
-
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
-
 #define ARRCPY(dst, src, len) \
 	do { \
 		uint32_t _len = (uint32_t)(len); \
@@ -21,8 +18,8 @@
 			(*(dst))[_i] = (*(src))[_i]; \
 		} \
 	} while (0)
-
 #include <stdlib.h>
+
 
 static void array_print(int32_t *pa, uint32_t len) {
 	uint32_t i = 0;

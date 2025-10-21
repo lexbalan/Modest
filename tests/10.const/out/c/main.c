@@ -8,8 +8,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
-
 #include "./minmax.h"
+
 
 
 #define carr  {0, 10, 15, 20, 25, 30}
