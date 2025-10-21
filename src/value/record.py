@@ -35,8 +35,7 @@ def value_record_create(initializers, ti):
 	record_type = TypeRecord(fields, ti)
 	record_type.generic = True
 
-	v = ValueLiteral(record_type, ti)
-	v.asset = initializers
+	v = ValueLiteral(record_type, initializers, ti)
 	v.immediate = is_immediate
 	return v
 

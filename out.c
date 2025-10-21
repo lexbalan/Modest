@@ -13,7 +13,7 @@
 /*this is
 multiline comment*/
 int32_t main() {
-	return;
+	return 0;
 }
 
 

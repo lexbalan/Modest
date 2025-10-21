@@ -7,9 +7,8 @@ import foundation
 
 
 def value_bool_create(val, ti=None):
-	v = ValueLiteral(foundation.typeBool, ti)
+	v = ValueLiteral(foundation.typeBool, val, ti)
 	v.immediate = True
-	v.asset = val
 	return v
 
 

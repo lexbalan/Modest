@@ -14,8 +14,7 @@ def value_string_create(string, ti=None):
 		max_char_width = max(max_char_width, n)
 
 	string_type = TypeString(max_char_width, len(string), ti)
-	v = ValueLiteral(string_type, ti)
-	v.asset = string
+	v = ValueLiteral(string_type, string, ti)
 	v.immediate = True
 	return v
 

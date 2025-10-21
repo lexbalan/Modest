@@ -2,6 +2,7 @@
 import importlib
 from hlir.hlir import *
 from type import TypeFunc, TypeInt
+from hlir.value import ValueLiteral
 
 # создвем модуль
 
@@ -31,7 +32,7 @@ type_func_main_params = []
 type_func_main = TypeFunc(type_func_main_params, type_func_main_to)
 value_func_main = ValueFunc(type_func_main, Id("main"), ti=None)
 
-retval = None
+retval = ValueLiteral(typeInt32, 0)
 stmt0 = StmtReturn(retval, ti=None)
 stmt_func_main = StmtBlock([stmt0], ti=None)
 def_func_main = StmtDefFunc("main", value_func_main, stmt_func_main, ti=None)
@@ -42,6 +43,7 @@ module.defs.append(def_func_main)
 
 settings = {
 	'output_style': 'legacy',
+	'int_width': 32,
 }
 
 backend_impline = "backend.c"

@@ -207,10 +207,11 @@ class ValueUndef(Value):
 
 
 class ValueLiteral(Value):
-	def __init__(self, type, ti=None):
+	def __init__(self, type, asset, ti=None):
 		from .type import Type
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
+		self.asset = asset
 		self.nsigns=0
 
 
