@@ -212,6 +212,7 @@ class ValueLiteral(Value):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.asset = asset
+		self.immediate = True
 		self.nsigns=0
 
 

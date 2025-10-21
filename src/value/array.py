@@ -18,9 +18,7 @@ def value_array_create(items, ti=None):
 	length = len(items)
 	if length == 0:
 		item_type = foundation.typeUnit  # not Null, becase it fail
-		v = _value_array_create([], item_type, 0, is_generic=True, ti=ti)
-		v.immediate = True  #!
-		return v
+		return _value_array_create([], item_type, 0, is_generic=True, ti=ti)
 
 	# Проверяем - immediate ли этот массив?
 	# если хотя бы один элемент - не immediate
@@ -45,7 +43,6 @@ def value_array_create(items, ti=None):
 	# неявно приводим все элементы к этому типу
 	casted_items = implicit_cast_list(items, items_type)
 	v = _value_array_create(casted_items, items_type, length, is_generic=True, ti=ti)
-
 	v.immediate = is_immediate  #TODO: need to implement 'immediate' flag
 	v.linktime = is_linktime
 	return v
@@ -166,8 +163,7 @@ def _value_array_create(items, item_type, length, is_generic=False, ti=None):
 	array_volume = value_number_create(length)
 	array_type = TypeArray(item_type, volume=array_volume, ti=ti)
 	array_type.generic = is_generic
-	v = ValueLiteral(array_type, items, ti)
-	return v
+	return ValueLiteral(array_type, items, ti)
 
 
 

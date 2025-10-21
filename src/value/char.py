@@ -13,8 +13,7 @@ def value_char_create(char_code, _type=None, ti=None):
 		_type = type.type_char(char_width, ti=ti)
 		_type.generic = True
 
-	v = ValueLiteral(_type, char_code, ti)
-	return v
+	return ValueLiteral(_type, char_code, ti)
 
 
 

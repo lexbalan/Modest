@@ -7,9 +7,7 @@ import foundation
 
 
 def value_bool_create(val, ti=None):
-	v = ValueLiteral(foundation.typeBool, val, ti)
-	v.immediate = True
-	return v
+	return ValueLiteral(foundation.typeBool, val, ti)
 
 
 def bool_can(to, from_type, method, ti):

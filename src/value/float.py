@@ -13,9 +13,7 @@ def value_float_create(num, ti=None):
 	flt_width = int(settings['float_width'])
 	typ = TypeFloat(width=flt_width, ti=ti)
 	typ.generic = True
-	v = ValueLiteral(typ, num, ti)
-	v.immediate = True
-	return v
+	return ValueLiteral(typ, num, ti)
 
 
 def _value_float_cons_immediate(t, v, method, ti):
