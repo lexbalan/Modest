@@ -13,6 +13,13 @@
 /*this is
 multiline comment*/
 int32_t main() {
+	while (0) {
+	}
+
+	if (0) {
+	} else {
+	}
+
 	return 0;
 }
 

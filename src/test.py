@@ -27,19 +27,37 @@ module.defs.append(comment1)
 
 typeInt32 = TypeInt(32)
 
+
+# stmt while
+cond = ValueLiteral(typeInt32, 0)
+stmt_block = StmtBlock([], ti=None)
+stmt_while = StmtWhile(cond, stmt_block, ti=None)
+
+
+# stmt if
+cond = ValueLiteral(typeInt32, 0)
+stmt_then = StmtBlock([], ti=None)
+stmt_else = StmtBlock([], ti=None)
+stmt_if = StmtIf(cond, stmt_then, stmt_else, ti=None)
+stmt_if.nl=2
+
+# stmt return
+retval = ValueLiteral(typeInt32, 0)
+stmt0 = StmtReturn(retval, ti=None)
+stmt0.nl=2
+
+# def func
 type_func_main_to = typeInt32
 type_func_main_params = []
 type_func_main = TypeFunc(type_func_main_params, type_func_main_to)
 value_func_main = ValueFunc(type_func_main, Id("main"), ti=None)
-
-retval = ValueLiteral(typeInt32, 0)
-stmt0 = StmtReturn(retval, ti=None)
-stmt_func_main = StmtBlock([stmt0], ti=None)
+stmt_func_main = StmtBlock([stmt_while, stmt_if, stmt0], ti=None)
 def_func_main = StmtDefFunc("main", value_func_main, stmt_func_main, ti=None)
 def_func_main.access_level = 'public'
 module.defs.append(def_func_main)
 
-# распечатываем модуль
+
+# печатаем модуль
 
 settings = {
 	'output_style': 'legacy',
