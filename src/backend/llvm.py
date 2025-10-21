@@ -125,6 +125,9 @@ def get_id_str(x):
 		return None
 
 	id = x.id
+	if id == None:
+		return None
+
 	id_str = id.llvm
 
 	if id.prefix != None:
@@ -867,8 +870,8 @@ def print_type(t):
 		# он типа делает, но потом к переменной с таким типом
 		# хрен обратишься... дерьмо
 		if t.is_record():
-			if hasattr(t, 'id'):
-				out("%" + t['id'].str)
+			if hasattr(t, 'id') and t.id != None:
+				out("%" + t.id.str)
 				return
 
 		t_id = get_type_id(t)

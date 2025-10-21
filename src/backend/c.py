@@ -163,6 +163,8 @@ def get_id_str(x):
 		return None
 
 	id = x.id
+	if id == None:
+		return None
 	id_str = id.c
 
 	if id.prefix != None:

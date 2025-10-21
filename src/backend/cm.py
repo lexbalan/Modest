@@ -9,9 +9,13 @@ import foundation
 
 
 def get_id_str(x):
-	if hasattr(x, 'id'):
-		return x.id.cm
-	return None
+	if not hasattr(x, 'id'):
+		return None
+
+	if x.id == None:
+		return None
+
+	return x.id.cm
 
 
 aprecedence = [

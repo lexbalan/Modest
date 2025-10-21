@@ -12,11 +12,18 @@
 //line comment
 /*this is
 multiline comment*/
+
+typedef int32_t MyType;
+
+#define CONDITION  1
+
+static int32_t counter = 0;
+
 int32_t main() {
-	while (1) {
+	while (counter) {
 	}
 
-	if (1) {
+	if (CONDITION) {
 	} else {
 	}
 

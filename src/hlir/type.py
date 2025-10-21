@@ -55,7 +55,7 @@ TYPE_KIND_VA_LIST = 15
 
 
 class Type(Entity):
-	def __init__(self, generic=False, width=0, ops=[], ti=None):
+	def __init__(self, id=None, generic=False, width=0, ops=[], ti=None):
 		super().__init__(ti)
 		size = nbytes_for_bits(width)
 		align = 1
@@ -76,6 +76,7 @@ class Type(Entity):
 		self.incomplete = True
 		self.definition = None
 		self.is_global_flag = True
+		#self.id = id
 
 		self.parent_type = None
 		# особое поле - если оно ненулевое значит это distinct тип

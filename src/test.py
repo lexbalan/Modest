@@ -29,14 +29,40 @@ typeInt32 = TypeInt(32)
 
 valueInt32_0 = ValueLiteral(typeInt32, 0)
 valueInt32_1 = ValueLiteral(typeInt32, 1)
+valueInt32_5 = ValueLiteral(typeInt32, 5)
+
+
+# def type
+nt = Type(ti=None)
+nt.id = Id("MyType")
+def_type = StmtDefType(Id("MyType"), nt, typeInt32, ti=None)
+def_type.nl = 2
+module.defs.append(def_type)
+
+
+# def const
+constant_init_value = valueInt32_1
+constant = ValueConst(typeInt32, Id("CONDITION"), constant_init_value, ti=None)
+def_constant = StmtDefConst(Id("CONDITION"), constant, constant_init_value, ti=None)
+def_constant.nl = 2
+module.defs.append(def_constant)
+
+
+# def var
+var_init_value = valueInt32_0
+variable = ValueVar(typeInt32, Id("counter"), var_init_value, ti=None)
+def_var = StmtDefVar(Id("counter"), variable, var_init_value, ti=None)
+def_var.nl = 2
+module.defs.append(def_var)
+
 
 # stmt while
-cond = valueInt32_1
+cond = variable
 stmt_block = StmtBlock([], ti=None)
 stmt_while = StmtWhile(cond, stmt_block, ti=None)
 
 # stmt if
-cond = valueInt32_1
+cond = constant
 stmt_then = StmtBlock([], ti=None)
 stmt_else = StmtBlock([], ti=None)
 stmt_if = StmtIf(cond, stmt_then, stmt_else, ti=None)
@@ -55,6 +81,7 @@ value_func_main = ValueFunc(type_func_main, Id("main"), ti=None)
 stmt_func_main = StmtBlock([stmt_while, stmt_if, stmt0], ti=None)
 def_func_main = StmtDefFunc("main", value_func_main, stmt_func_main, ti=None)
 def_func_main.access_level = 'public'
+def_func_main.nl = 2
 module.defs.append(def_func_main)
 
 
