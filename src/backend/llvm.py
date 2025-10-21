@@ -17,6 +17,7 @@ cmodule = None
 
 LLVM_TARGET_TRIPLE = ""
 LLVM_TARGET_DATALAYOUT = ""
+SIZE_WIDTH = 0
 
 
 # LLVM не умеет нативно возвращать большие значения
@@ -56,9 +57,10 @@ def is_global_context():
 llvm_value_num_zero = None
 
 def init(settings):
-	global LLVM_TARGET_TRIPLE, LLVM_TARGET_DATALAYOUT, llvm_value_num_zero
+	global LLVM_TARGET_TRIPLE, LLVM_TARGET_DATALAYOUT, llvm_value_num_zero, SIZE_WIDTH
 	LLVM_TARGET_TRIPLE = settings['target_triple']
 	LLVM_TARGET_DATALAYOUT = settings['target_datalayout']
+	SIZE_WIDTH = settings['size_width']
 	llvm_value_num_zero = llvm_value_num(foundation.typeInt32, 0)
 
 
@@ -2058,7 +2060,7 @@ def print_comment_line(x):
 		line = lines[i]
 		#if need_indent:
 		indent()
-		out(";%s" % line['str'])
+		out(";%s" % line)
 		i = i + 1
 		if i < n:
 			out("\n")
@@ -2113,7 +2115,7 @@ def print_stmt_asm(x):
 		fields = []
 		for o in outs:
 			field_type = o['type']
-			id = Id().fromStr('<noname>')
+			id = Id('<noname>')
 			f = Field(id, field_type, ti=x.ti)
 			fields.append(f)
 
@@ -2760,7 +2762,7 @@ def print_module(m):
 
 
 
-def run(module, outname, options):
+def run(module, outname):
 	global cmodule
 	cmodule = module
 	outname = outname + '.ll'
@@ -2794,7 +2796,7 @@ def run(module, outname, options):
 	lo("%Nat256 = type i256")
 	lo("%Float32 = type float")
 	lo("%Float64 = type double")
-	lo("%%Size = type i%d" % settings['size_width'])
+	lo("%%Size = type i%d" % SIZE_WIDTH)
 	lo("%Pointer = type i8*")
 	lo("%Str8 = type [0 x %Char8]")
 	lo("%Str16 = type [0 x %Char16]")

@@ -75,8 +75,10 @@ def is_global_context():
 	return cfunc == None
 
 
+csettings = {}
 def init(settings):
-	global styleguide
+	global styleguide, csettings
+	csettings = settings
 	stylename = settings['output_style']
 	if stylename != None:
 		if stylename in styles:
@@ -346,7 +348,7 @@ def str_type_func(t, core='', need_close=False):
 		# а сам массив пойдет через указатель sret_
 		# который функция получит своим самым последним параметром
 		# (sret = structure return)
-		sret_param = Field(Id().fromStr('sret_'), TypePointer(t.to))
+		sret_param = Field(Id('sret_'), TypePointer(t.to))
 
 		fparams = t.params + [sret_param]
 		fto = foundation.typeUnit
@@ -1182,9 +1184,9 @@ def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 def str_value_literal_bool(num):
 	#print("str_value_literal_bool")
 	if num:
-		return settings['true_literal']
+		return csettings['true_literal']
 	else:
-		return settings['false_literal']
+		return csettings['false_literal']
 
 
 def str_value_enum(x, ctx):
@@ -1195,16 +1197,16 @@ def str_value_enum(x, ctx):
 def str_value_literal_suffix(to_type, num):
 	req_bits = nbits_for_num(num)
 
-	if req_bits < settings['int_width']:
+	if req_bits < csettings['int_width']:
 		return ""
 
 	sstr = ''
 	if not to_type.is_signed():
 		sstr = "U"
 
-	if req_bits <= settings['long_width']:
+	if req_bits <= csettings['long_width']:
 		sstr += "L"   # long int
-	elif req_bits <= settings['long_long_width']:
+	elif req_bits <= csettings['long_long_width']:
 		sstr += "LL"  # long long int
 	else:
 		sstr += "XL"  # extra long int (not defined in C)
@@ -2134,11 +2136,10 @@ def str_comment_line(x):
 	s = ''
 	while i < n:
 		line = lines[i]
-		s += "//%s" % line['str']
+		s += "//%s" % line
 		i = i + 1
 		if i < n:
 			s += str_nl_indent()
-
 	return s
 
 
@@ -2498,13 +2499,13 @@ def print_cfile(module, _outname):
 
 
 
-def run(module, _outname, settings):
-	global cmodule
+def run(module, _outname):
+	global cmodule, csettings
 	cmodule = module
 
 	hpath = _outname
-	if 'include_dir' in settings:
-		inc_dir = settings['include_dir']
+	if 'include_dir' in csettings:
+		inc_dir = csettings['include_dir']
 		hname = os.path.basename(_outname)
 		hpath = inc_dir + '/' + hname
 

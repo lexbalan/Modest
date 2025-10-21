@@ -190,7 +190,7 @@ class ValueBad(Value):
 		from .type import TypeBad
 		super().__init__(type=TypeBad(ti), ti=ti)
 		from .hlir import Id
-		self.id = Id().fromStr('_')
+		self.id = Id('_')
 		# чтобы заткнуть жалобы "expected immediate value"
 		self.immediate = True
 

@@ -3,28 +3,17 @@ from .entity import Entity
 
 
 class Id(Entity):
-	def __init__(self, x=None):
+	def __init__(self, id_str, ti=None):
 		super().__init__(None)
-
 		self.prefix = None
-		self.str = None
-
 		# Каждый принтер всегда использует только свой алиас (!)
-		# Такой алиас может быть переопределен без вреда для фронтенда
-		self.c = None
-		self.llvm = None
-		self.cm = None
-
-		if x != None:
-			self.fromStr(x['str'])
-			self.ti = x['ti']
-
-	def fromStr(self, id_str):
+		# Такой алиас может быть переопределен без вреда для других принтеров и фронтенда
 		self.str = id_str
 		self.c = id_str
 		self.llvm = id_str
 		self.cm = id_str
-		return self
+		self.ti = ti
+
 
 
 

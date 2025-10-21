@@ -83,7 +83,7 @@ def str_stmt_comment_line(x):
 	s = ''
 	while i < n:
 		line = lines[i]
-		s += "//%s" % line['str']
+		s += "//%s" % line
 		i = i + 1
 		if i < n:
 			s += str_nl_indent()
@@ -971,12 +971,13 @@ def printTopLevelStmt(x):
 	elif isinstance(x, StmtDirective): print_directive(x)
 
 
+
 def init(settings):
 	pass
 
 
 
-def run(module, outname, options):
+def run(module, outname):
 	global cmodule
 	cmodule = module
 	output_open(outname + '.m')

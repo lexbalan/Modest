@@ -3,6 +3,7 @@ import os
 import argparse
 import importlib
 import tomllib
+import type
 
 import error
 import trans
@@ -55,6 +56,8 @@ def main():
 	if settings['lib'] == None:
 		error.fatal("required path to library")
 
+	type.init(settings['pointer_width'])
+
 	# parse features (ex. -funsafe)
 	if args.feature != None:
 		for feature in args.feature:
@@ -102,7 +105,7 @@ def do_file(src_name, outname, settings):
 	backend_impline = "backend." + settings['backend']
 	backend = importlib.import_module(backend_impline)
 	backend.init(settings)
-	backend.run(module, outname, settings)
+	backend.run(module, outname)
 
 
 

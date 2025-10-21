@@ -258,11 +258,11 @@ def init():
 	valueTrue = value_bool_create(1)
 	valueFalse = value_bool_create(0)
 
-#	trueId = Id().fromStr('true')
+#	trueId = Id('true')
 #	valueTrue.id = trueId
 #	valueTrue.id.c = trueId
 #	valueTrue.id.llvm = trueId
-#	falseId = Id().fromStr('false')
+#	falseId = Id('false')
 #	valueFalse.id = falseId
 #	valueFalse.id.c = falseId
 #	valueFalse.id.llvm = falseId
@@ -287,7 +287,7 @@ def init():
 	typeSysFloat = foundation.typeFloat64
 
 	typeSysSize = foundation.type_select_nat(settings['size_width']).copy()
-	typeSysSize.id = Id().fromStr('Size')
+	typeSysSize.id = Id('Size')
 	typeSysSize.id.c = 'size_t'
 
 	root_symtab.type_add('Size', typeSysSize)
@@ -315,15 +315,15 @@ def init_builtin_values():
 	compilerVersionMinor = value_imm_literal_create(foundation.typeNat32, 7)
 
 	compiler_version_initializers = [
-		Initializer(Id().fromStr('major'), compilerVersionMajor),
-		Initializer(Id().fromStr('minor'), compilerVersionMinor)
+		Initializer(Id('major'), compilerVersionMajor),
+		Initializer(Id('minor'), compilerVersionMinor)
 	]
 	compilerVersion = value_record_create(compiler_version_initializers, ti=None)
 
 	# '__compiler' record
 	compiler_initializers = [
-		Initializer(Id().fromStr('name'), compilerName),
-		Initializer(Id().fromStr('version'), compilerVersion),
+		Initializer(Id('name'), compilerName),
+		Initializer(Id('version'), compilerVersion),
 	]
 	compiler = value_record_create(compiler_initializers, ti=None)
 	root_symtab.value_add('__compiler', compiler)
@@ -347,11 +347,11 @@ def init_builtin_values():
 
 	# '__target' record
 	target_initializers = [
-		Initializer(Id().fromStr('name'), __targetName),
-		Initializer(Id().fromStr('charWidth'), __targetCharWidth),
-		Initializer(Id().fromStr('intWidth'), __targetIntWidth),
-		Initializer(Id().fromStr('floatWidth'), __targetFloatWidth),
-		Initializer(Id().fromStr('pointerWidth'), __targetPointerWidth),
+		Initializer(Id('name'), __targetName),
+		Initializer(Id('charWidth'), __targetCharWidth),
+		Initializer(Id('intWidth'), __targetIntWidth),
+		Initializer(Id('floatWidth'), __targetFloatWidth),
+		Initializer(Id('pointerWidth'), __targetPointerWidth),
 	]
 	target = value_record_create(target_initializers, ti=None)
 	root_symtab.value_add('__target', target)
@@ -364,7 +364,7 @@ def init_builtin_values():
 # offset - real offset (address inside container struct)
 def do_field(x):
 	#info("do_field", x['ti'])
-	id = Id(x['id'])
+	id = do_id(x['id'])
 	if id.str[0].isupper():
 		error("field id must starts with small letter", id.ti)
 
@@ -1141,7 +1141,7 @@ def do_value_access(x):
 	if left.isBad():
 		return ValueBad(x['ti'])
 
-	field_id = Id(x['right'])
+	field_id = do_id(x['right'])
 
 	# доступ через переменную-указатель
 	via_pointer = left.type.is_pointer()
@@ -1259,7 +1259,7 @@ def do_value_record(x):
 		if item['isa'] == 'ast_kv':
 			item_value = do_rvalue(item['value'])
 			p = Initializer(
-				Id(item['key']),
+				do_id(item['key']),
 				item_value,
 				ti=item['ti'],
 				nl=item['nl']
@@ -1598,7 +1598,7 @@ def do_stmt_assign(x):
 	if l.isBad():
 		if x['left']['kind'] == 'id':
 			# if left is 'unknown id':
-			id = Id(x['left'])
+			id = do_id(x['left'])
 			t = r.type
 			l = add_local_var(id, t, id.ti)
 
@@ -1677,7 +1677,10 @@ def do_stmt_comment(x):
 
 
 def do_stmt_comment_line(x):
-	return StmtCommentLine(x['lines'], ti=x['ti'], nl=x['nl'])
+	lines = []
+	for xl in x['lines']:
+		lines.append(xl['str'])
+	return StmtCommentLine(lines, ti=x['ti'], nl=x['nl'])
 
 
 def do_stmt_comment_block(x):
@@ -1775,6 +1778,8 @@ def do_stmt_block(x, parent=None):
 
 
 
+def do_id(x):
+	return Id(x['str'], ti=x['ti'])
 
 
 def def_type_common(x, nt):
@@ -1782,7 +1787,7 @@ def def_type_common(x, nt):
 	global cdef
 	global global_prefix
 
-	id = Id(x['id'])
+	id = do_id(x['id'])
 	id.prefix = global_prefix
 
 	definition = StmtDefType(id, nt, None, x['ti'])
@@ -1844,7 +1849,7 @@ def def_type_global(x):
 # common method for global & local consts
 def def_const_common(x):
 	global cmodule
-	id = Id(x['id'])
+	id = do_id(x['id'])
 
 	# check if identifier is free
 	pre_exist = ctx_value_get(id.str, shallow=True)
@@ -1909,7 +1914,7 @@ def def_var_common(x):
 	global cdef
 	global global_prefix
 
-	id = Id(x['id'])
+	id = do_id(x['id'])
 	id.prefix = global_prefix
 
 	definition = StmtDefVar(id, None, None, x['ti'])
@@ -2423,7 +2428,7 @@ def pre_imp(ast):
 
 		if isa == 'ast_definition':
 			is_public = x['access_modifier'] == 'public'
-			id = Id(x['id'])
+			id = do_id(x['id'])
 			ti = id.ti
 
 			if kind == 'type':
@@ -2495,7 +2500,7 @@ def pre_def(ast, is_include=False):
 			elif kind == 'func':
 				# Create function value with incomplete type
 				t = Type(x['ti'])  # Incomplete type (!)
-				v = ValueFunc(t, Id(x['id']), x['ti'])
+				v = ValueFunc(t, do_id(x['id']), x['ti'])
 
 				definition = StmtDefFunc(v.id, v, None, x['ti'])
 				definition.id = v.id

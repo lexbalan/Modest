@@ -3,7 +3,6 @@
 ######################################################################
 
 import copy
-from common import settings
 from util import get_item_by_id, align_bits_up, nbits_for_num, nbytes_for_bits, align_to
 
 from .entity import Entity
@@ -29,6 +28,11 @@ REC_OPS = CONS_OP + EQ_OPS + ('access',)
 STR_OPS = CONS_OP + EQ_OPS + ('add',)
 NUM_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
 
+
+pointer_width = 0
+def init(pwidth):
+	global pointer_width
+	pointer_width = pwidth
 
 
 TYPE_KIND_UNKNOWN = 0
@@ -574,7 +578,7 @@ class TypeUnit(Type):
 		from .misc import Id
 		self.kind = TYPE_KIND_UNIT
 		self.incomplete = False
-		self.id = Id().fromStr('Unit')
+		self.id = Id('Unit')
 		self.id.c = 'void'
 		self.id.llvm = 'void'
 
@@ -585,7 +589,7 @@ class TypeBool(Type):
 		from .misc import Id
 		self.kind = TYPE_KIND_BOOL
 		self.incomplete = False
-		self.id = Id().fromStr('Bool')
+		self.id = Id('Bool')
 		self.id.c = 'bool'
 		self.id.llvm = 'Bool'
 
@@ -613,7 +617,7 @@ class TypeWord(Type):
 		#	llvm_alias = 'i%d' % width
 
 		from .misc import Id
-		self.id = Id().fromStr('Word%d' % width)
+		self.id = Id('Word%d' % width)
 		self.id.c = calias
 		self.id.llvm = llvm_alias
 
@@ -627,7 +631,7 @@ class TypeInt(Type):
 		alias = get_int_alias(width, signed=True)
 
 		from .misc import Id
-		self.id = Id().fromStr(alias['cm'])
+		self.id = Id(alias['cm'])
 		self.id.c = alias['c']
 		self.id.llvm = alias['llvm']
 		self.signed = True
@@ -642,7 +646,7 @@ class TypeNat(Type):
 		alias = get_int_alias(width, signed=False)
 
 		from .misc import Id
-		self.id = Id().fromStr(alias['cm'])
+		self.id = Id(alias['cm'])
 		self.id.c = alias['c']
 		self.id.llvm = alias['llvm']
 		self.unsigned = True
@@ -661,7 +665,7 @@ class TypeFloat(Type):
 		alias = get_int_alias(width, signed=True)
 
 		from .misc import Id
-		self.id = Id().fromStr('Float%d' % width)
+		self.id = Id('Float%d' % width)
 		self.id.c = calias
 		self.id.llvm = 'Float%d' % width
 		self.signed = True
@@ -676,7 +680,7 @@ class TypeChar(Type):
 		alias = get_int_alias(width, signed=False)
 
 		from .misc import Id
-		self.id = Id().fromStr('Char%d' % width)
+		self.id = Id('Char%d' % width)
 		if width <= 8:
 			self.id.c = 'char'
 		else:
@@ -686,7 +690,7 @@ class TypeChar(Type):
 
 class TypePointer(Type):
 	def __init__(self, to, generic=False, ti=None):
-		w = int(settings['pointer_width'])
+		w = int(pointer_width)
 		super().__init__(width=w, generic=generic, ops=PTR_OPS, ti=ti)
 		self.kind = TYPE_KIND_POINTER
 		self.incomplete = False
@@ -747,8 +751,8 @@ class TypeRecord(Type):
 
 
 class TypeFunc(Type):
-	def __init__(self, params, to, va_args, ti=None):
-		w = int(settings['pointer_width'])
+	def __init__(self, params, to, va_args=False, ti=None):
+		w = int(pointer_width)
 		super().__init__(width=w, ops=PTR_OPS, ti=ti)
 		self.kind = TYPE_KIND_FUNC
 		self.incomplete = False
@@ -763,7 +767,7 @@ class TypeVaList(Type):
 		from .misc import Id
 		self.kind = TYPE_KIND_VA_LIST
 		self.incomplete = False
-		self.id = Id().fromStr('va_list')
+		self.id = Id('va_list')
 		self.id.c = 'va_list'
 		self.id.llvm = '__VA_List'
 
