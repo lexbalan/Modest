@@ -7,12 +7,13 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
+
 #include "./crc32.h"
+
 
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
-
 
 #define datastring  "123456789"
 #define expected_hash  0xCBF43926UL

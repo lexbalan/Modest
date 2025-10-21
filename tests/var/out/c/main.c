@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+
 #define arr  {1, 2}
 
 static int32_t arr0[2] = arr;

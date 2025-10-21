@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+
 int32_t main() {
 	bool a;
 	int32_t b;

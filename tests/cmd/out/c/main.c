@@ -9,10 +9,11 @@
 #include <unistd.h>
 #include <ctype.h>
 
+
+
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
-
 
 #define prompt  "# "
 

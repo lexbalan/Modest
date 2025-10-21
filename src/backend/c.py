@@ -2265,6 +2265,7 @@ def print_header(module, outname):
 
 	for use in module.att:
 		if use in h_helpers:
+			newline()
 			h_helpers[use]()
 
 	if module.hasAttribute('use_unicode'):
@@ -2339,7 +2340,6 @@ def helper_use_lengthof():
 	out("\n#ifndef LENGTHOF")
 	out("\n#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))")
 	out("\n#endif /* LENGTHOF */")
-	out("\n")
 	module_undef_list.append("LENGTHOF")
 
 
@@ -2351,7 +2351,6 @@ def helper_use_bigint():
 	out("\n#ifndef __BIG_INT256__")
 	out("\n#define BIG_INT256(a, b, c, d)")
 	out("\n#endif  /* __BIG_INT256__ */")
-	out("\n")
 	module_undef_list.append("__BIG_INT128__")
 	module_undef_list.append("__BIG_INT256__")
 
@@ -2364,7 +2363,6 @@ def helper_use_arrcpy():
 	out("\n			(*(dst))[_i] = (*(src))[_i]; \\")
 	out("\n		} \\")
 	out("\n	} while (0)")
-	out("\n")
 	module_undef_list.append("ARRCPY")
 
 
@@ -2377,6 +2375,237 @@ c_helpers = {
 	'use_lengthof': helper_use_lengthof,
 	'use_arrcpy': helper_use_arrcpy,
 }
+
+
+
+libc_headers = [
+    # Ввод-вывод и работа с файлами
+    "stdio.h",
+
+    # Общие утилиты, память, сортировка, случайные числа
+    "stdlib.h",
+
+    # Строки и память
+    "string.h",
+    "strings.h",  # POSIX, не ISO, но часто включён в libc
+
+    # Символьная классификация и преобразование
+    "ctype.h",
+
+    # Арифметика и математика
+    "math.h",
+    "fenv.h",
+    "complex.h",
+
+    # Время и даты
+    "time.h",
+
+    # Ограничения, типы, стандартные константы
+    "limits.h",
+    "float.h",
+    "stdint.h",
+    "inttypes.h",
+    "stddef.h",
+    "stdbool.h",
+    "stdalign.h",
+    "stdarg.h",
+    "stdnoreturn.h",
+    "stdatomic.h",
+    "uchar.h",   # char16_t / char32_t
+
+    # Локализация
+    "locale.h",
+
+    # Сигналы и ошибки
+    "errno.h",
+    "signal.h",
+    "setjmp.h",
+
+    # Юникод и широкий текст
+    "wchar.h",
+    "wctype.h",
+
+    # Диагностика, утверждения
+    "assert.h",
+
+    # ISO/IEC TR 24731 (дополнения безопасных функций)
+    "stdio_ext.h",  # GNU extension, опционально
+]
+
+
+iso_c_headers = [
+    "assert.h",
+    "complex.h",
+    "ctype.h",
+    "errno.h",
+    "fenv.h",
+    "float.h",
+    "inttypes.h",
+    "iso646.h",
+    "limits.h",
+    "locale.h",
+    "math.h",
+    "setjmp.h",
+    "signal.h",
+    "stdalign.h",
+    "stdarg.h",
+    "stdatomic.h",
+    "stdbool.h",
+    "stddef.h",
+    "stdint.h",
+    "stdio.h",
+    "stdlib.h",
+    "stdnoreturn.h",
+    "string.h",
+    "tgmath.h",
+    "threads.h",
+    "time.h",
+    "uchar.h",
+    "wchar.h",
+    "wctype.h",
+]
+
+
+posix_headers = [
+    # Базовые системные вызовы и типы
+    "unistd.h",
+    "sys/types.h",
+    "sys/stat.h",
+    "sys/time.h",
+    "sys/times.h",
+    "sys/wait.h",
+    "sys/utsname.h",
+    "sys/uio.h",
+    "sys/resource.h",
+    "sys/mman.h",
+    "sys/ipc.h",
+    "sys/msg.h",
+    "sys/sem.h",
+    "sys/shm.h",
+    "sys/socket.h",
+    "sys/select.h",
+    "sys/statvfs.h",
+    "syslog.h",
+
+    # Потоки и синхронизация
+    "pthread.h",
+    "semaphore.h",
+    "mqueue.h",
+    "sched.h",
+    "spawn.h",
+    "time.h",        # POSIX расширяет ISO C time.h
+    "utime.h",
+    "utmpx.h",
+
+    # Работа с файлами, каталогами и путями
+    "fcntl.h",
+    "dirent.h",
+    "ftw.h",
+    "glob.h",
+    "fnmatch.h",
+    "paths.h",
+    "wordexp.h",
+
+    # Работа с пользователями, группами и правами
+    "pwd.h",
+    "grp.h",
+    "shadow.h",
+    "getopt.h",
+    "sys/file.h",
+    "sys/statfs.h",
+    "sys/mount.h",
+
+    # Терминалы, сигналы, управление процессами
+    "termios.h",
+    "termio.h",
+    "signal.h",      # POSIX расширяет ISO C signal.h
+    "ucontext.h",
+    "setjmp.h",      # тоже расширяется
+    "sys/signal.h",
+    "sys/ioctl.h",
+    "sys/param.h",
+
+    # Ввод-вывод, устройства, ресурсы
+    "poll.h",
+    "sys/poll.h",
+    "sys/eventfd.h",
+    "sys/epoll.h",
+    "aio.h",
+
+    # Сети и адреса
+    "netdb.h",
+    "netinet/in.h",
+    "netinet/ip.h",
+    "netinet/tcp.h",
+    "arpa/inet.h",
+    "net/if.h",
+
+    # Локализация и строки
+    "iconv.h",
+    "nl_types.h",
+    "langinfo.h",
+    "regex.h",
+
+    # Работа с паролями и авторизацией
+    "crypt.h",
+    "utmp.h",
+    "sys/sysmacros.h",
+
+    # Расширения POSIX и XSI
+    "dlfcn.h",
+    "sys/ptrace.h",
+    "sys/un.h",
+    "sys/syscall.h",
+    "sys/klog.h",
+    "sys/procfs.h",
+]
+
+network_headers = [
+    # --- POSIX core networking ---
+    "sys/socket.h",     # базовые сокеты (socket, bind, connect, send, recv)
+    "netdb.h",          # getaddrinfo(), gethostbyname(), etc.
+
+    # --- BSD networking extensions (стандарт де-факто) ---
+    "arpa/inet.h",      # inet_ntoa(), inet_pton(), htons(), ntohl()
+    "netinet/in.h",     # sockaddr_in, sockaddr_in6, IPPROTO_TCP, INADDR_ANY
+    "netinet/ip.h",     # структура IP-заголовка (iphdr)
+    "netinet/tcp.h",    # структура TCP-заголовка, флаги TH_SYN и др.
+    "netinet/udp.h",    # структура UDP-заголовка
+    "netinet/icmp.h",   # структура ICMP-заголовка
+    "netinet/if_ether.h",  # Ethernet фреймы, ETH_P_IP, ETH_ALEN и т.д.
+    "netinet/ether.h",     # функции для MAC-адресов (ether_ntoa, ether_aton)
+
+    # --- сетевые интерфейсы и низкоуровневые протоколы ---
+    "net/if.h",         # структура ifreq, ioctl для интерфейсов
+    "net/if_arp.h",     # ARP протокол
+    "net/route.h",      # таблицы маршрутизации
+    "net/ethernet.h",   # Ethernet типы пакетов
+    "netpacket/packet.h",  # Linux raw sockets (AF_PACKET)
+    "net/ppp_defs.h",   # PPP протокол (опционально)
+    "net/if_dl.h",      # BSD link-level адреса (MAC и т.п.)
+
+    # --- протоколы верхнего уровня (иногда присутствуют) ---
+    "arpa/nameser.h",   # DNS resolver API
+    "arpa/tftp.h",      # TFTP
+    "arpa/ftp.h",       # FTP
+    "arpa/telnet.h",    # TELNET
+    "arpa/rpc.h",       # RPC/XDR (устаревшее, но всё ещё в glibc)
+    "rpc/xdr.h",        # XDR (External Data Representation)
+    "rpc/rpc.h",        # старый SunRPC API
+
+    # --- дополнительные / Linux-specific ---
+    "linux/if_packet.h",   # Linux-specific raw socket API
+    "linux/if_ether.h",
+    "linux/if_link.h",
+    "linux/if_tun.h",
+    "linux/netlink.h",
+    "linux/rtnetlink.h",
+    "linux/icmpv6.h",
+    "linux/tcp.h",
+    "linux/udp.h",
+    "linux/ipv6.h",
+]
+
 
 
 def print_cfile(module, _outname):
@@ -2412,14 +2641,28 @@ def print_cfile(module, _outname):
 		include("stdarg.h", local=False)
 	include("string.h", local=False)
 
+	xx = False
+	for x in defs:
+		if isinstance(x, StmtDirectiveCInclude):
+			if not x.is_local and x.c_name in libc_headers + iso_c_headers + posix_headers + network_headers:
+				include(x.c_name, local=x.is_local)
+				xx = True
+
+	if xx:
+		newline()
+
+	xx2 = False
 	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude):
 			include(x.c_name, local=x.is_local)
+			xx2 = True
 
-	newline()
+	if xx2:
+		newline()
 
 	for use in module.att:
 		if use in c_helpers:
+			newline()
 			c_helpers[use]()
 
 

@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+
 #define verbose  true
 
 // Вынужден добавлять public тк иначе не идет в хедер к структуре

@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 
+
 #define a  "A"
 
 static char c8 = _CHR8(a);

@@ -8,6 +8,8 @@
 #include <string.h>
 #include <stdio.h>
 
+
+
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
@@ -19,7 +21,6 @@
 			(*(dst))[_i] = (*(src))[_i]; \
 		} \
 	} while (0)
-
 
 
 static bool test_generic_integer();

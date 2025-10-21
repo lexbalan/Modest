@@ -6,8 +6,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "./delay.h"
 #include <stdio.h>
+
+#include "./delay.h"
 
 
 // This is flashlight final state machine example

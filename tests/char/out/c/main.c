@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+
 #define utf8Char  "s"
 #define utf16Char  "Я"
 #define utf32Char  "🐀"

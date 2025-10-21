@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+
 int main() {
 	loo_Nothing nothing;
 	loo_foo(loo_bar);

@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+
 static void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen) {
 	uint32_t i = 0;
 	uint32_t j = 0;

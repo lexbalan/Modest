@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+
 /* anonymous records */
 struct __anonymous_struct_7 {
 	uint32_t x;

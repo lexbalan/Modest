@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+
 struct Point {
 	uint32_t x;
 	uint32_t y;

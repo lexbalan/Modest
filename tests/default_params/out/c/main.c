@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+
 static int32_t func1(int32_t x /* default=10 */) {
 	return x;
 }

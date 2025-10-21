@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 
+
 /* anonymous records */
 struct __anonymous_struct_3 {
 	int32_t x;

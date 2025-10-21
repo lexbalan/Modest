@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
+
 int main() {
 	printf("bool check\nm");
 

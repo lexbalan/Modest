@@ -8,10 +8,11 @@
 #include <string.h>
 #include <stdio.h>
 
+
+
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
-
 
 static int32_t testArray[21] = {
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4,
