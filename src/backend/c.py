@@ -2254,7 +2254,7 @@ def print_header(module, outname):
 
 	for x in defs:
 		if isinstance(x, StmtImport):
-			nnl(x.nl)
+			#nnl(x.nl)
 			if not x.module.hasAttribute('do_not_include'):
 				s = os.path.basename(x.impline)
 				include(s + '.h', local=True)
@@ -2332,7 +2332,7 @@ def print_header(module, outname):
 
 
 def helper_use_abs():
-	include("stdlib.h")
+	include("stdlib.h", local=False)
 
 
 def helper_use_lengthof():
@@ -2460,6 +2460,8 @@ def print_cfile(module, _outname):
 			print_def_func(x)
 		elif isinstance(x, StmtComment):
 			nnl(x.nl)
+			if x.nl == 0:
+				out("  ")
 			print_comment(x)
 		elif isinstance(x, StmtDirective):
 			print_directive(x)

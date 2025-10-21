@@ -12,9 +12,9 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#include "stdlib.h"
+#include <stdlib.h>
 
-//pragma do_not_include// for Int// for write()// for putchar()// for strlen, strcpy
+//pragma do_not_include  // for Int  // for write()  // for putchar()  // for strlen, strcpy
 
 
 void console_putchar_utf8(char c);

@@ -370,8 +370,8 @@ def do_field(x):
 
 	t = do_type(x['type'])
 
-	if t.is_forbidden_field():
-		error("unsuitable type", t.ti)
+	#if t.is_forbidden_field():
+	#	error("unsuitable type", t.ti)
 
 	iv = do_value_immediate(x['init_value'])
 

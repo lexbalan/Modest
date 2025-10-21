@@ -11,7 +11,6 @@
 #include <math.h>
 #include "./minmax.h"
 
-
 int main();
 
 #endif /* MAIN_H */

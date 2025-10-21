@@ -7,7 +7,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 #include "console.h"
 
 #ifndef __STR_UNICODE__

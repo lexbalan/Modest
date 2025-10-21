@@ -9,8 +9,6 @@
 
 #include "./delay.h"
 #include <stdio.h>
-
-
 #include "fsm.h"
 
 int main();
