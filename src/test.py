@@ -27,22 +27,23 @@ module.defs.append(comment1)
 
 typeInt32 = TypeInt(32)
 
+valueInt32_0 = ValueLiteral(typeInt32, 0)
+valueInt32_1 = ValueLiteral(typeInt32, 1)
 
 # stmt while
-cond = ValueLiteral(typeInt32, 0)
+cond = valueInt32_1
 stmt_block = StmtBlock([], ti=None)
 stmt_while = StmtWhile(cond, stmt_block, ti=None)
 
-
 # stmt if
-cond = ValueLiteral(typeInt32, 0)
+cond = valueInt32_1
 stmt_then = StmtBlock([], ti=None)
 stmt_else = StmtBlock([], ti=None)
 stmt_if = StmtIf(cond, stmt_then, stmt_else, ti=None)
 stmt_if.nl=2
 
 # stmt return
-retval = ValueLiteral(typeInt32, 0)
+retval = valueInt32_0
 stmt0 = StmtReturn(retval, ti=None)
 stmt0.nl=2
 

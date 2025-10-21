@@ -13,10 +13,10 @@
 /*this is
 multiline comment*/
 int32_t main() {
-	while (0) {
+	while (1) {
 	}
 
-	if (0) {
+	if (1) {
 	} else {
 	}
 
