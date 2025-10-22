@@ -103,7 +103,7 @@ def value_record_eq(l, r, op, ti):
 				eq_result = False
 				break
 
-		if op == 'ne':
+		if op == HLIR_VALUE_OP_NE:
 			eq_result = not eq_result
 
 		nv.asset = int(eq_result)

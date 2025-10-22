@@ -389,58 +389,55 @@ class StmtDirectiveInsert(StmtDirective):
 #                            HLIR TYPE                               #
 ######################################################################
 
+HLIR_VALUE_OP_LOGIC_OR = 'lor'
+HLIR_VALUE_OP_LOGIC_XOR = 'lxor'
+HLIR_VALUE_OP_LOGIC_AND = 'land'
+HLIR_VALUE_OP_LOGIC_NOT = 'lnot'
+HLIR_VALUE_OP_OR = 'or'
+HLIR_VALUE_OP_XOR = 'xor'
+HLIR_VALUE_OP_AND = 'and'
+HLIR_VALUE_OP_NOT = 'not'
 
-"""
-def get_item_by_id(_list, id):
-	i = get_index_of_item_with_id(_list, id)
-	if i < 0:
-		return None
-	return _list[i]
+HLIR_VALUE_OP_ADD = 'add'
+HLIR_VALUE_OP_SUB = 'sub'
+HLIR_VALUE_OP_MUL = 'mul'
+HLIR_VALUE_OP_DIV = 'div'
+HLIR_VALUE_OP_REM = 'rem'
+HLIR_VALUE_OP_NEG = 'neg'
+HLIR_VALUE_OP_POS = 'pos'
+
+HLIR_VALUE_OP_SHL = 'shl'
+HLIR_VALUE_OP_SHR = 'shr'
+
+HLIR_VALUE_OP_LT = 'lt'
+HLIR_VALUE_OP_GT = 'gt'
+HLIR_VALUE_OP_LE = 'le'
+HLIR_VALUE_OP_GE = 'ge'
+HLIR_VALUE_OP_EQ = 'eq'
+HLIR_VALUE_OP_NE = 'ne'
+
+HLIR_VALUE_OP_CONS = 'cons'
+HLIR_VALUE_OP_CALL = 'call'
+HLIR_VALUE_OP_REF = 'ref'
+HLIR_VALUE_OP_DEREF = 'deref'
+HLIR_VALUE_OP_INDEX = 'index'
+HLIR_VALUE_OP_ACCESS = 'access'
+
+HLIR_VALUE_OP_SIZEOF = 'sizeof'
+HLIR_VALUE_OP_ALIGNOF = 'alignof'
+HLIR_VALUE_OP_OFFSETOF = 'offsetof'
+HLIR_VALUE_OP_LENGTHOF = 'lengthof'
+HLIR_VALUE_OP_ACCESS_MODULE = 'access_module'
+#HLIR_VALUE_OP_
 
 
-# 7 -> 8, 12 -> 16, 17 -> 32, etc.
-def align_bits_up(x):
-	aligned_bits = 8
-	while aligned_bits < x:
-		aligned_bits = aligned_bits * 2
-	return aligned_bits
 
-# 7 -> 1, 9 -> 2, 17 -> 4, etc.
-def nbytes_for_bits(x):
-	return align_bits_up(x) // 8
-
-
-def nbits_for_num(x):
-	n = 1
-	if x < 0:
-		x = -x
-		n = 2
-
-	y = 1
-	while x > y:
-		y = (y << 1) | 1
-		n = n + 1
-
-	return n
-
-
-
-def align_to(x, y):
-	assert(y != 0)
-
-	while x % y != 0:
-		x = x + 1
-
-	return x
-
-"""
-
-CONS_OP = ('cons',)
-EQ_OPS = ('eq', 'ne')
-RELATIONAL_OPS = ('lt', 'gt', 'le', 'ge')
-ARITHMETICAL_OPS = ('add', 'sub', 'mul', 'div', 'rem', 'neg', 'pos')
-LOGICAL_OPS = ('or', 'xor', 'and', 'not')
-BITWISE_OPS = LOGICAL_OPS #+ ('shl', 'shr') -
+CONS_OP = (HLIR_VALUE_OP_CONS,)
+EQ_OPS = (HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE)
+RELATIONAL_OPS = (HLIR_VALUE_OP_LT, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GE)
+ARITHMETICAL_OPS = (HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_SUB, HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM, HLIR_VALUE_OP_NEG, HLIR_VALUE_OP_POS)
+LOGICAL_OPS = (HLIR_VALUE_OP_OR, HLIR_VALUE_OP_XOR, HLIR_VALUE_OP_AND, HLIR_VALUE_OP_NOT)
+BITWISE_OPS = LOGICAL_OPS #+ (HLIR_VALUE_OP_SHL, HLIR_VALUE_OP_SHR) -
 
 UNIT_OPS = CONS_OP
 WORD_OPS = CONS_OP + EQ_OPS + BITWISE_OPS
@@ -449,10 +446,10 @@ FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
 BOOL_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
 CHAR_OPS = CONS_OP + EQ_OPS
 ENUM_OPS = CONS_OP + EQ_OPS
-PTR_OPS = CONS_OP + EQ_OPS + ('deref',)
-ARR_OPS = CONS_OP + EQ_OPS + ('add', 'index')
-REC_OPS = CONS_OP + EQ_OPS + ('access',)
-STR_OPS = CONS_OP + EQ_OPS + ('add',)
+PTR_OPS = CONS_OP + EQ_OPS + (HLIR_VALUE_OP_DEREF,)
+ARR_OPS = CONS_OP + EQ_OPS + (HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_INDEX)
+REC_OPS = CONS_OP + EQ_OPS + (HLIR_VALUE_OP_ACCESS,)
+STR_OPS = CONS_OP + EQ_OPS + (HLIR_VALUE_OP_ADD,)
 NUM_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
 
 
@@ -1307,12 +1304,12 @@ class Value(Entity):
 		return v
 
 
-	# op = 'eq' | 'ne
+	# op = HLIR_VALUE_OP_EQ | 'ne
 	@staticmethod
 	def eq(l, r, op, ti):
 		assert(isinstance(l, Value))
 		assert(isinstance(r, Value))
-		assert(op in ['eq', 'ne'])
+		assert(op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE])
 
 		if l.type.is_array():
 			from value.array import value_array_eq
@@ -1328,7 +1325,7 @@ class Value(Entity):
 
 		if l.isImmediate() and r.isImmediate():
 			eq_result = False
-			if op == 'eq':
+			if op == HLIR_VALUE_OP_EQ:
 				eq_result = l.asset == r.asset
 			else:
 				eq_result = l.asset != r.asset
@@ -1591,26 +1588,26 @@ class ValueBin(Value):
 		# and append field .asset to bin_value
 		if left.isImmediate() and right.isImmediate():
 			ops = {
-				'logic_or': lambda a, b: a or b,
-				'logic_and': lambda a, b: a and b,
-				'or': lambda a, b: a | b,
-				'and': lambda a, b: a & b,
-				'xor': lambda a, b: a ^ b,
-				'lt': lambda a, b: a < b,
-				'gt': lambda a, b: a > b,
-				'le': lambda a, b: a <= b,
-				'ge': lambda a, b: a >= b,
-				'add': lambda a, b: a + b,
-				'sub': lambda a, b: a - b,
-				'mul': lambda a, b: a * b,
-				'div': lambda a, b: left.asset // right.asset,
+				HLIR_VALUE_OP_LOGIC_OR: lambda a, b: a or b,
+				HLIR_VALUE_OP_LOGIC_AND: lambda a, b: a and b,
+				HLIR_VALUE_OP_OR: lambda a, b: a | b,
+				HLIR_VALUE_OP_AND: lambda a, b: a & b,
+				HLIR_VALUE_OP_XOR: lambda a, b: a ^ b,
+				HLIR_VALUE_OP_LT: lambda a, b: a < b,
+				HLIR_VALUE_OP_GT: lambda a, b: a > b,
+				HLIR_VALUE_OP_LE: lambda a, b: a <= b,
+				HLIR_VALUE_OP_GE: lambda a, b: a >= b,
+				HLIR_VALUE_OP_ADD: lambda a, b: a + b,
+				HLIR_VALUE_OP_SUB: lambda a, b: a - b,
+				HLIR_VALUE_OP_MUL: lambda a, b: a * b,
+				HLIR_VALUE_OP_DIV: lambda a, b: left.asset // right.asset,
 				'fdiv': lambda a, b: left.asset / right.asset,
-				'rem': lambda a, b: a % b,
-				'eq':  lambda a, b: a == b,
-				'ne':  lambda a, b: a != b
+				HLIR_VALUE_OP_REM: lambda a, b: a % b,
+				HLIR_VALUE_OP_EQ:  lambda a, b: a == b,
+				HLIR_VALUE_OP_NE:  lambda a, b: a != b
 			}
 
-			if op == 'div' and type.is_float():
+			if op == HLIR_VALUE_OP_DIV and type.is_float():
 				op = 'fdiv'
 
 			asset = ops[op](left.asset, right.asset)
@@ -1738,7 +1735,7 @@ class ValueIndex(Value):
 					index_imm = index.asset
 
 					if index_imm >= array_typ.volume.asset:
-						error("array index out of bounds", x['index'])
+						error("array index out of bounds", x[HLIR_VALUE_OP_INDEX])
 						return ValueBad(x['ti'])
 
 					if index_imm < len(left.asset):

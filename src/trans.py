@@ -575,7 +575,7 @@ def do_type(x):
 
 
 def do_value_shift(x):
-	op = x['kind']  # 'shl' | 'shr'
+	op = x['kind']  # HLIR_VALUE_OP_SHL | HLIR_VALUE_OP_SHR
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
 
@@ -588,8 +588,8 @@ def do_value_shift(x):
 		return ValueBad(x['ti'])
 
 	nv = None
-	if op == 'shl': nv = ValueShl(l, r, ti=x['ti'])
-	elif op == 'shr': nv = ValueShr(l, r, ti=x['ti'])
+	if op == HLIR_VALUE_OP_SHL: nv = ValueShl(l, r, ti=x['ti'])
+	elif op == HLIR_VALUE_OP_SHR: nv = ValueShr(l, r, ti=x['ti'])
 
 	if l.type.is_generic():
 		error("expected non-generic value", l.ti)
@@ -615,7 +615,7 @@ def do_value_bin2(op, l, r, ti):
 
 
 	# Ops with different types
-	if op == 'add':
+	if op == HLIR_VALUE_OP_ADD:
 		# массивы могут быть разной длины (то есть с разными типами)
 		# поэтому сложение immediate массивов требует обхода проверок типа ниже
 		if l.type.is_array() and r.type.is_array():
@@ -663,12 +663,12 @@ def do_value_bin2(op, l, r, ti):
 		print("\n")
 		return ValueBad(ti)
 
-	if op in ['eq', 'ne']:
+	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 		return Value.eq(l, r, op, ti)
 
 	if Type.eq(t, foundation.typeBool):
-		if op == 'or': op = 'logic_or'
-		elif op == 'and': op = 'logic_and'
+		if op == HLIR_VALUE_OP_OR: op = HLIR_VALUE_OP_LOGIC_OR
+		elif op == HLIR_VALUE_OP_AND: op = HLIR_VALUE_OP_LOGIC_AND
 
 	if op in (htype.EQ_OPS + htype.RELATIONAL_OPS):
 		t = foundation.typeBool
@@ -684,13 +684,13 @@ def do_value_not(x):
 
 	vtype = v.type
 
-	if not vtype.supports('not'):
+	if not vtype.supports(HLIR_VALUE_OP_NOT):
 		error("unsuitable type", v.ti)
 		return ValueBad(x['ti'])
 
-	op = 'not'
+	op = HLIR_VALUE_OP_NOT
 	if vtype.is_bool():
-		op = 'logic_not'
+		op = HLIR_VALUE_OP_LOGIC_NOT
 
 	return ValueNot(vtype, v, ti=x['ti'])
 
@@ -1018,14 +1018,14 @@ def do_value_index(x):
 		error("cannot index array of open array", x['ti'])
 		return ValueBad(x['ti'])
 
-	index = do_rvalue(x['index'])
+	index = do_rvalue(x[HLIR_VALUE_OP_INDEX])
 
 	#if index.isBad():
 	if index.type.is_bad():
 		return ValueBad(x['ti'])
 
 	if not (index.type.is_arithmetical() or index.type.is_number()):
-		error("expected integer value2", x['index'])
+		error("expected integer value2", x[HLIR_VALUE_OP_INDEX])
 		return ValueBad(x['ti'])
 
 	if index.type.is_generic():
@@ -1075,7 +1075,7 @@ def do_value_slice(x):
 	# строим выражения для C бекенда в частности
 	# тк volume of array должен быть выражением
 	# а для слайса [a:b] это (b - a)
-	slice_volume = do_value_bin2('sub', index_to, index_from, x['ti'])
+	slice_volume = do_value_bin2(HLIR_VALUE_OP_SUB, index_to, index_from, x['ti'])
 
 	if not (slice_volume.isUndef() or slice_volume.isUndef()):
 		slice_len = 0  # len as integer
@@ -1343,9 +1343,9 @@ def do_value_offsetof(x):
 
 
 bin_ops = [
-	'or', 'xor', 'and',
-	'eq', 'ne', 'lt', 'gt', 'le', 'ge',
-	'add', 'sub', 'mul', 'div', 'rem'
+	HLIR_VALUE_OP_OR, HLIR_VALUE_OP_XOR, HLIR_VALUE_OP_AND,
+	HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE, HLIR_VALUE_OP_LT, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GE,
+	HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_SUB, HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM
 ]
 
 
@@ -1432,26 +1432,26 @@ def do_value(x):
 	elif k == 'string': v = do_value_string(x)
 	elif k == 'record': v = do_value_record(x)
 	elif k == 'array': v = do_value_array(x)
-	elif k == 'cons': v = do_value_cons(x)
-	elif k == 'call': v = do_value_call(x)
+	elif k == HLIR_VALUE_OP_CONS: v = do_value_cons(x)
+	elif k == HLIR_VALUE_OP_CALL: v = do_value_call(x)
 	elif k in bin_ops: v = do_value_bin(x)
-	elif k == 'ref': v = do_value_ref(x)
-	elif k == 'not': v = do_value_not(x)
-	elif k == 'deref': v = do_value_deref(x)
-	elif k == 'index': v = do_value_index(x)
+	elif k == HLIR_VALUE_OP_REF: v = do_value_ref(x)
+	elif k == HLIR_VALUE_OP_NOT: v = do_value_not(x)
+	elif k == HLIR_VALUE_OP_DEREF: v = do_value_deref(x)
+	elif k == HLIR_VALUE_OP_INDEX: v = do_value_index(x)
 	elif k == 'slice': v = do_value_slice(x)
-	elif k == 'access': v = do_value_access(x)
-	elif k == 'neg': v = do_value_neg(x)
-	elif k == 'pos': v = do_value_pos(x)
-	elif k == 'shl': v = do_value_shift(x)
-	elif k == 'shr': v = do_value_shift(x)
+	elif k == HLIR_VALUE_OP_ACCESS: v = do_value_access(x)
+	elif k == HLIR_VALUE_OP_NEG: v = do_value_neg(x)
+	elif k == HLIR_VALUE_OP_POS: v = do_value_pos(x)
+	elif k == HLIR_VALUE_OP_SHL: v = do_value_shift(x)
+	elif k == HLIR_VALUE_OP_SHR: v = do_value_shift(x)
 	elif k == 'new': v = do_value_new(x)
 	elif k == 'unsafe': v = do_value_unsafe(x)
 	elif k == 'subexpr': v = do_value_subexpr(x)
 	elif k == 'sizeof_value': v = do_value_sizeof_value(x)
 	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
-	elif k == 'alignof': v = do_value_alignof(x)
-	elif k == 'offsetof': v = do_value_offsetof(x)
+	elif k == HLIR_VALUE_OP_ALIGNOF: v = do_value_alignof(x)
+	elif k == HLIR_VALUE_OP_OFFSETOF: v = do_value_offsetof(x)
 	elif k == 'lengthof_value': v = do_value_lengthof_value(x)
 	elif k == '__va_arg': v = do_value_va_arg(x)
 	elif k == '__va_start': v = do_value_va_start(x)
@@ -1633,7 +1633,7 @@ def do_stmt_assign(x):
 
 
 
-def do_stmt_incdec(x, op='add'):
+def do_stmt_incdec(x, op=HLIR_VALUE_OP_ADD):
 	v = do_value(x['value'])
 
 	if v.isBad():
@@ -1743,8 +1743,8 @@ def do_stmt(x):
 	elif k == 'return': s = do_stmt_return(x)
 	elif k == 'again': s = do_stmt_again(x)
 	elif k == 'break': s = do_stmt_break(x)
-	elif k == 'inc': s = do_stmt_incdec(x, 'add')
-	elif k == 'dec': s = do_stmt_incdec(x, 'sub')
+	elif k == 'inc': s = do_stmt_incdec(x, HLIR_VALUE_OP_ADD)
+	elif k == 'dec': s = do_stmt_incdec(x, HLIR_VALUE_OP_SUB)
 	elif k == 'type': s = do_stmt_type(x)
 	elif k == 'comment-line': s = do_stmt_comment_line(x)
 	elif k == 'comment-block': s = do_stmt_comment_block(x)

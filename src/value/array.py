@@ -180,7 +180,7 @@ def value_array_add(l, r, ti):
 	type_result = TypeArray(item_type, volume=str_array_volume, ti=ti)
 	type_result.generic = True  # FIXIT!
 
-	nv = ValueBin(type_result, 'add', l, r, ti=ti)
+	nv = ValueBin(type_result, HLIR_VALUE_OP_ADD, l, r, ti=ti)
 	nv.asset = items
 	nv.immediate = True
 	return nv
@@ -207,7 +207,7 @@ def value_array_eq(l, r, op, ti):
 				eq_result = False
 				break
 
-		if op == 'ne':
+		if op == HLIR_VALUE_OP_NE:
 			eq_result = not eq_result
 
 		nv.asset = int(eq_result)

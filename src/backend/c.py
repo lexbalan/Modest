@@ -87,19 +87,19 @@ def init(settings):
 
 CONS_PRECEDENCE = 10
 aprecedence = [
-	['logic_or'], #0
-	['logic_and'], #1
-	['or'], #2
-	['xor'], #3
-	['and'], #4
-	['eq', 'ne'], #5
-	['lt', 'le', 'gt', 'ge'], #6
-	['shl', 'shr'], #7
-	['add', 'sub'], #8
-	['mul', 'div', 'rem'], #9
-	['pos', 'neg', 'not', 'logic_not', 'cons', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
-	['call', 'index', 'access', 'access_module'], #11
-	['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
+	[HLIR_VALUE_OP_LOGIC_OR], #0
+	[HLIR_VALUE_OP_LOGIC_AND], #1
+	[HLIR_VALUE_OP_OR], #2
+	[HLIR_VALUE_OP_XOR], #3
+	[HLIR_VALUE_OP_AND], #4
+	[HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE], #5
+	[HLIR_VALUE_OP_LT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_GE], #6
+	[HLIR_VALUE_OP_SHL, HLIR_VALUE_OP_SHR], #7
+	[HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_SUB], #8
+	[HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM], #9
+	[HLIR_VALUE_OP_POS, HLIR_VALUE_OP_NEG, HLIR_VALUE_OP_NOT, HLIR_VALUE_OP_LOGIC_NOT, HLIR_VALUE_OP_CONS, HLIR_VALUE_OP_REF, HLIR_VALUE_OP_DEREF, HLIR_VALUE_OP_SIZEOF, HLIR_VALUE_OP_ALIGNOF, HLIR_VALUE_OP_OFFSETOF, HLIR_VALUE_OP_LENGTHOF], #10
+	[HLIR_VALUE_OP_CALL, HLIR_VALUE_OP_INDEX, HLIR_VALUE_OP_ACCESS, HLIR_VALUE_OP_ACCESS_MODULE], #11
+	#['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
 precedenceMax = len(aprecedence) - 1
@@ -110,7 +110,7 @@ def precedence(x):
 	i = 0
 	if isinstance(x, ValueBin):
 		k = x.op
-		if x.op == 'add' and x.type.is_array():
+		if x.op == HLIR_VALUE_OP_ADD and x.type.is_array():
 			return 12
 		while i < precedenceMax + 1:
 			if k in aprecedence[i]:
@@ -478,10 +478,10 @@ def incast(type, value):
 
 
 bin_ops = {
-	'or': '|', 'xor': '^', 'and': '&', 'shl': '<<', 'shr': '>>',
-	'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
-	'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
-	'logic_and': '&&', 'logic_or': '||'
+	HLIR_VALUE_OP_OR: '|', HLIR_VALUE_OP_XOR: '^', HLIR_VALUE_OP_AND: '&', HLIR_VALUE_OP_SHL: '<<', HLIR_VALUE_OP_SHR: '>>',
+	HLIR_VALUE_OP_EQ: '==', HLIR_VALUE_OP_NE: '!=', HLIR_VALUE_OP_LT: '<', HLIR_VALUE_OP_GT: '>', HLIR_VALUE_OP_LE: '<=', HLIR_VALUE_OP_GE: '>=',
+	HLIR_VALUE_OP_ADD: '+', HLIR_VALUE_OP_SUB: '-', HLIR_VALUE_OP_MUL: '*', HLIR_VALUE_OP_DIV: '/', HLIR_VALUE_OP_REM: '%',
+	HLIR_VALUE_OP_LOGIC_AND: '&&', HLIR_VALUE_OP_LOGIC_OR: '||'
 }
 
 
@@ -502,7 +502,7 @@ def str_value_bin(x, ctx):
 	# Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
 	# чтобы он не ругался, завернем такие выражения в скобки
 
-	if op in ['eq', 'ne']:
+	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 		if left.type.is_record():
 			return str_value_eq_record(x, ctx)
 		elif left.type.is_array():
@@ -518,7 +518,7 @@ def str_value_bin(x, ctx):
 	if hasattr(right, 'op'):
 		rk = right.op
 
-	if op == 'add':
+	if op == HLIR_VALUE_OP_ADD:
 		if left.type.is_array():
 			return str_value_literal(x, ctx)
 
@@ -583,9 +583,9 @@ def str_value_eq_composite(x, ctx):
 
 
 un_ops = {
-	'ref': '&', 'deref': '*',
-	'pos': '+', 'neg': '-',
-	'not': '~', 'logic_not': '!'
+	HLIR_VALUE_OP_REF: '&', HLIR_VALUE_OP_DEREF: '*',
+	HLIR_VALUE_OP_POS: '+', HLIR_VALUE_OP_NEG: '-',
+	HLIR_VALUE_OP_NOT: '~', HLIR_VALUE_OP_LOGIC_NOT: '!'
 }
 
 
@@ -829,9 +829,9 @@ def str_value_cons_array(x, ctx):
 	if from_type.is_generic_array():
 		# если это литеральная (и не глобальная) константа-массив
 		# то мы должны ее привести к требуемому типу
-		#is_const = value['kind'] in ['const', 'literal', 'add']
+		#is_const = value['kind'] in ['const', 'literal', HLIR_VALUE_OP_ADD]
 
-		is_const = isinstance(value, ValueLiteral) or isinstance(value, ValueConst) or (isinstance(value, ValueBin) and value.op == 'add')
+		is_const = isinstance(value, ValueLiteral) or isinstance(value, ValueConst) or (isinstance(value, ValueBin) and value.op == HLIR_VALUE_OP_ADD)
 
 		if is_const:
 			ctx=['array_as_array']
@@ -2526,9 +2526,9 @@ def get_root_value(x):
 def cons_vla_from_literal_array(x):
 	if isinstance(x, ValueCons):
 		if x.type.is_vla():
-			#return x['value']['kind'] in ['literal', 'add']
+			#return x['value']['kind'] in ['literal', HLIR_VALUE_OP_ADD]
 			if isinstance(x, ValueBin):
-				return x.op in ['literal', 'add']
+				return x.op in ['literal', HLIR_VALUE_OP_ADD]
 	return False
 
 
@@ -2574,7 +2574,7 @@ def str_value_as_ptr(x):
 
 	sstr += "&"
 
-	if isinstance(root, ValueBin) and root.op in ['literal', 'add']:
+	if isinstance(root, ValueBin) and root.op in ['literal', HLIR_VALUE_OP_ADD]:
 		sstr += '(' + str_type(t) + ')'
 
 	elif cons_vla_from_literal_array(root):
@@ -2614,25 +2614,25 @@ def memzero(value):
 	out("))")
 
 
-#def eq_by_memcmp(left, right, op='eq'):
+#def eq_by_memcmp(left, right, op=HLIR_VALUE_OP_EQ):
 #	return eq_by_memcmp(left, right, op=op)
 
 
-def eq_str_by_strcmp(left, right, op='eq'):
+def eq_str_by_strcmp(left, right, op=HLIR_VALUE_OP_EQ):
 	# не берем все в скобки все тк это eq операция
 	# и ее приоритет не нарушается (!)
 	sstr = 'strcmp('
 	sstr += str_value_as_ptr(left)
 	sstr += ', '
 	sstr += str_value_as_ptr(right)
-	if op == 'eq':
+	if op == HLIR_VALUE_OP_EQ:
 		sstr += ') == 0'
 	else:
 		sstr += ') != 0'
 	return sstr
 
 
-def eq_by_memcmp(left, right, op='eq'):
+def eq_by_memcmp(left, right, op=HLIR_VALUE_OP_EQ):
 	# не берем все в скобки все тк это eq операция
 	# и ее приоритет не нарушается (!)
 	sstr = 'memcmp('
@@ -2643,7 +2643,7 @@ def eq_by_memcmp(left, right, op='eq'):
 	common_type = select_common_type(left.type, right.type)
 	sstr += str_type(common_type)
 	sstr += ")"
-	if op == 'eq':
+	if op == HLIR_VALUE_OP_EQ:
 		sstr += ') == 0'
 	else:
 		sstr += ') != 0'

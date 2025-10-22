@@ -622,7 +622,7 @@ def do_assign_arrays(dst, src):
 			# `size = volume * item_size`
 			item_sz = src['type'].of.size
 			item_size = llvm_value_num(foundation.typeNat32, item_sz)
-			size = llvm_eval_binary('mul', volume, item_size)
+			size = llvm_eval_binary(HLIR_VALUE_OP_MUL, volume, item_size)
 
 			llvm_memzero(dst, size, volatile=False)
 			return
@@ -697,7 +697,7 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
 
 	# offset pointer
 	dst2 = llvm_cast("ptrtoint", dst, foundation.typeInt64)
-	ll_dst_plus_off = llvm_eval_binary('add', dst2, ll_off)
+	ll_dst_plus_off = llvm_eval_binary(HLIR_VALUE_OP_ADD, dst2, ll_off)
 	dst3 = llvm_cast("inttoptr", ll_dst_plus_off, foundation.typeFreePointer)
 
 	# do memzero
@@ -706,11 +706,11 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
 
 # получает два указателя, и размер
 # LLVM не имеет интиринсика memcmp поэтому используем стандартный...
-# @param op = ['eq', 'ne']
+# @param op = [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]
 def llvm_memcmp(op, p0, p1, size):
 	_p0 = llvm_cast('bitcast', p0, foundation.typeFreePointer)
 	_p1 = llvm_cast('bitcast', p1, foundation.typeFreePointer)
-	rv = ll_reg_operation('call', foundation.typeBool)
+	rv = ll_reg_operation(HLIR_VALUE_OP_CALL, foundation.typeBool)
 	out("i1 (i8*, i8*, i64) @memeq(")
 	llvm_print_type_value(_p0)
 	out(", ")
@@ -720,7 +720,7 @@ def llvm_memcmp(op, p0, p1, size):
 	out(")")
 
 	zero = llvm_value_num(foundation.typeBool, 0)
-	op = 'ne' if op == 'eq' else 'eq'
+	op = HLIR_VALUE_OP_NE if op == HLIR_VALUE_OP_EQ else HLIR_VALUE_OP_EQ
 
 	vvv = ValueUndef(foundation.typeBool)
 	rv2 = llvm_eval_binary('icmp %s' % op, rv, zero, vvv)
@@ -929,7 +929,7 @@ def do_eval_bin(x):
 	r = do_eval(x.right)
 
 	if x.left.type.is_composite():
-		if op in ['eq', 'ne']:
+		if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 			# Composite objects comparison
 			# (eq/ne between composite types)
 
@@ -969,7 +969,7 @@ def do_eval_bin(x):
 	l = llvm_dold(l)
 	r = llvm_dold(r)
 
-	if op in ['shl', 'shr']:
+	if op in [HLIR_VALUE_OP_SHL, HLIR_VALUE_OP_SHR]:
 		# LLVM requires the same type for left & right arguments of shift operator
 		# cast right to left
 		if not r['type'].is_generic():
@@ -989,7 +989,7 @@ def do_eval_shl(x):
 	r = do_reval(x.right)
 	r = docast(r, l['type'])
 
-	return llvm_eval_binary('shl', l, r, x)
+	return llvm_eval_binary(HLIR_VALUE_OP_SHL, l, r, x)
 
 
 def do_eval_shr(x):
@@ -1014,7 +1014,7 @@ def ll_malloc(res_type, obj_type):
 
 def ll_malloc_sz(t, llsz):
 	# %1 = call %table_Table* @malloc(%Int32 8)
-	lv = ll_reg_operation('call', t)
+	lv = ll_reg_operation(HLIR_VALUE_OP_CALL, t)
 	print_type(t)
 	out(" @malloc(")
 	llvm_print_type_value(llsz)
@@ -1079,7 +1079,7 @@ def do_eval_call(v):
 		lo("call ")
 		rv = llvm_value_zero(ftype.to)
 	else:
-		rv = ll_reg_operation('call', ftype.to)
+		rv = ll_reg_operation(HLIR_VALUE_OP_CALL, ftype.to)
 
 	if ftype.extra_args:
 		print_type_func(ftype)
@@ -1163,8 +1163,8 @@ def ass(left, indexes):
 		while i < len(indexes):
 			index = indexes[i]
 			step = lt.of.runtimeSizeRoots
-			offset = llvm_eval_binary('mul', index, step)
-			full_offset = llvm_eval_binary('add', full_offset, offset)
+			offset = llvm_eval_binary(HLIR_VALUE_OP_MUL, index, step)
+			full_offset = llvm_eval_binary(HLIR_VALUE_OP_ADD, full_offset, offset)
 			lt = lt.of
 			i += 1
 
@@ -1206,7 +1206,7 @@ def do_eval_slice(x):
 
 	# если сам массив находится в регистре: (let rec = get_rec())
 	if not array['is_adr']:
-		if v['index'].isRuntimeValue():
+		if v[HLIR_VALUE_OP_INDEX].isRuntimeValue():
 			error("expected immediate index value", x.ti)
 			return llvm_value_zero(x.type)
 
@@ -1449,14 +1449,14 @@ def handleVLA(t):
 			#out("\n\t; -- HANDLE VLA --")
 			volume = do_reval(t.volume)
 			runtimeVolume = volume
-			runtimeSizeRoots = llvm_eval_binary('mul', volume, t.of.runtimeSizeRoots)
+			runtimeSizeRoots = llvm_eval_binary(HLIR_VALUE_OP_MUL, volume, t.of.runtimeSizeRoots)
 			#out("\n\t; -- END HANDLE VLA --")
 		else:
 			# Если это open_array
 			runtimeSizeRoots = llvm_value_num(foundation.typeInt32, 1)
 			runtimeVolume = llvm_value_num(foundation.typeInt32, 1)
 
-		runtimeSizeBytes = llvm_eval_binary('mul', runtimeVolume, t.of.runtimeSizeBytes)
+		runtimeSizeBytes = llvm_eval_binary(HLIR_VALUE_OP_MUL, runtimeVolume, t.of.runtimeSizeBytes)
 
 	else:
 		# Если встретили указатель - перешагиваем и идем дальше
@@ -1589,10 +1589,10 @@ def docast(v, to_type):
 
 
 bin_ops = [
-	'logic_or', 'logic_and',
-	'or', 'xor', 'and', 'shl', 'shr',
-	'eq', 'ne', 'lt', 'gt', 'le', 'ge',
-	'add', 'sub', 'mul', 'div', 'rem',
+	HLIR_VALUE_OP_LOGIC_OR, HLIR_VALUE_OP_LOGIC_AND,
+	HLIR_VALUE_OP_OR, HLIR_VALUE_OP_XOR, HLIR_VALUE_OP_AND, HLIR_VALUE_OP_SHL, HLIR_VALUE_OP_SHR,
+	HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE, HLIR_VALUE_OP_LT, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GE,
+	HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_SUB, HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM,
 ]
 
 
@@ -1761,7 +1761,7 @@ def do_eval_not2(v, xor_msk):
 	#%10 = xor i32 %9, 1
 	ve = do_reval(v.value)
 	minus_one = llvm_value_num(v.type, xor_msk)
-	return llvm_eval_binary('xor', ve, minus_one, v)
+	return llvm_eval_binary(HLIR_VALUE_OP_XOR, ve, minus_one, v)
 
 
 def do_eval_not(x):
@@ -1775,7 +1775,7 @@ def do_eval_neg(v):
 	#%10 = sub i32 0, %9
 	ve = do_reval(v.value)
 	zero = llvm_value_num(v.type, 0)
-	return llvm_eval_binary('sub', zero, ve, v)
+	return llvm_eval_binary(HLIR_VALUE_OP_SUB, zero, ve, v)
 
 
 def do_eval_pos(v):
@@ -1790,7 +1790,7 @@ def _eval_sizeof_type(t):
 		# size = VLA_volume * sizeof(VLA_rootType)
 		rs = t.get_array_root().size
 		rootSize = llvm_value_num(foundation.typeInt32, rs)
-		size = llvm_eval_binary('mul', t.runtimeSizeRoots, rootSize)
+		size = llvm_eval_binary(HLIR_VALUE_OP_MUL, t.runtimeSizeRoots, rootSize)
 		return size
 
 	return llvm_value_num(foundation.typeInt32, t.size)
@@ -2827,7 +2827,7 @@ def run(module, outname):
 
 
 
-REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
+REL_OPS = [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE, HLIR_VALUE_OP_LT, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GE]
 
 
 def get_bin_opcode(op, t):
@@ -2850,22 +2850,22 @@ def get_bin_opcode(op, t):
 		return select_bin_opcode_su(sop, uop, t)
 
 	opcode = "<unknown opcode '%s'>" % op
-	if op in ['eq', 'ne']:
+	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 		opcode = select_bin_opcode_f('icmp ' + op, 'fcmp o' + op, t)
-	elif op in ['add', 'sub', 'mul']:
+	elif op in [HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_SUB, HLIR_VALUE_OP_MUL]:
 		opcode = select_bin_opcode_f(op, 'f' + op, t)
-	elif op in ['and', 'or', 'xor', 'shl']:
+	elif op in [HLIR_VALUE_OP_AND, HLIR_VALUE_OP_OR, HLIR_VALUE_OP_XOR, HLIR_VALUE_OP_SHL]:
 		opcode = op
-	elif op in ['div', 'rem']:
+	elif op in [HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM]:
 		opcode = select_bin_opcode_suf('s' + op, 'u' + op, 'f' + op, t)
-	elif op in ['lt', 'gt', 'le', 'ge']:
+	elif op in [HLIR_VALUE_OP_LT, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GE]:
 		opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
-	#elif op == 'shr':
+	#elif op == HLIR_VALUE_OP_SHR:
 	#	opcode = 'ashr' if Type.is_signed(t) else 'lshr'
-	elif op == 'logic_or':
-		opcode = 'or'
-	elif op == 'logic_and':
-		opcode = 'and'
+	elif op == HLIR_VALUE_OP_LOGIC_OR:
+		opcode = HLIR_VALUE_OP_OR
+	elif op == HLIR_VALUE_OP_LOGIC_AND:
+		opcode = HLIR_VALUE_OP_AND
 
 	return opcode
 

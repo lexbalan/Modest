@@ -20,7 +20,7 @@ def value_string_add(l, r, ti):
 	asset = l.asset + r.asset
 	max_char_width = max(l.type.width, r.type.width)
 	type_result = TypeString(max_char_width, len(asset), ti)
-	nv = ValueBin(type_result, 'add', l, r, ti=ti)
+	nv = ValueBin(type_result, HLIR_VALUE_OP_ADD, l, r, ti=ti)
 	nv.asset = asset
 	nv.immediate = True
 	return nv

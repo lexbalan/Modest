@@ -18,19 +18,19 @@ def get_id_str(x):
 
 
 aprecedence = [
-	['logic_or'], #0
-	['logic_and'], #1
-	['or'], #2
-	['xor'], #3
-	['and'], #4
-	['eq', 'ne'], #5
-	['lt', 'le', 'gt', 'ge'], #6
-	['shl', 'shr'], #7
-	['add', 'sub'], #8
-	['mul', 'div', 'rem'], #9
-	['pos', 'neg', 'not', 'logic_not', 'cons', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
-	['call', 'index', 'access', 'access_module'], #11
-	['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
+	[HLIR_VALUE_OP_LOGIC_OR], #0
+	[HLIR_VALUE_OP_LOGIC_AND], #1
+	[HLIR_VALUE_OP_OR], #2
+	[HLIR_VALUE_OP_XOR], #3
+	[HLIR_VALUE_OP_AND], #4
+	[HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE], #5
+	[HLIR_VALUE_OP_LT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_GE], #6
+	[HLIR_VALUE_OP_SHL, HLIR_VALUE_OP_SHR], #7
+	[HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_SUB], #8
+	[HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM], #9
+	[HLIR_VALUE_OP_POS, HLIR_VALUE_OP_NEG, HLIR_VALUE_OP_NOT, HLIR_VALUE_OP_LOGIC_NOT, HLIR_VALUE_OP_CONS, HLIR_VALUE_OP_REF, HLIR_VALUE_OP_DEREF, HLIR_VALUE_OP_SIZEOF, HLIR_VALUE_OP_ALIGNOF, HLIR_VALUE_OP_OFFSETOF, HLIR_VALUE_OP_LENGTHOF], #10
+	[HLIR_VALUE_OP_CALL, HLIR_VALUE_OP_INDEX, HLIR_VALUE_OP_ACCESS, HLIR_VALUE_OP_ACCESS_MODULE], #11
+	#['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
 precedenceMax = len(aprecedence) - 1
@@ -215,10 +215,10 @@ def str_type(t):
 
 
 bin_ops = {
-	'or': 'or', 'xor': 'xor', 'and': 'and', 'shl': '<<', 'shr': '>>',
-	'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
-	'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
-	'logic_and': 'and', 'logic_or': 'or'
+	HLIR_VALUE_OP_OR: HLIR_VALUE_OP_OR, HLIR_VALUE_OP_XOR: HLIR_VALUE_OP_XOR, HLIR_VALUE_OP_AND: HLIR_VALUE_OP_AND, HLIR_VALUE_OP_SHL: '<<', HLIR_VALUE_OP_SHR: '>>',
+	HLIR_VALUE_OP_EQ: '==', HLIR_VALUE_OP_NE: '!=', HLIR_VALUE_OP_LT: '<', HLIR_VALUE_OP_GT: '>', HLIR_VALUE_OP_LE: '<=', HLIR_VALUE_OP_GE: '>=',
+	HLIR_VALUE_OP_ADD: '+', HLIR_VALUE_OP_SUB: '-', HLIR_VALUE_OP_MUL: '*', HLIR_VALUE_OP_DIV: '/', HLIR_VALUE_OP_REM: '%',
+	HLIR_VALUE_OP_LOGIC_AND: HLIR_VALUE_OP_AND, HLIR_VALUE_OP_LOGIC_OR: HLIR_VALUE_OP_OR
 }
 
 
@@ -247,9 +247,9 @@ def str_value_shr(x, ctx):
 
 
 un_ops = {
-	'ref': '&', 'deref': '*',
-	'pos': '+', 'neg': '-',
-	'not': 'not', 'logic_not': 'not'
+	HLIR_VALUE_OP_REF: '&', HLIR_VALUE_OP_DEREF: '*',
+	HLIR_VALUE_OP_POS: '+', HLIR_VALUE_OP_NEG: '-',
+	HLIR_VALUE_OP_NOT: HLIR_VALUE_OP_NOT, HLIR_VALUE_OP_LOGIC_NOT: HLIR_VALUE_OP_NOT
 }
 
 

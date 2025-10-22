@@ -58,11 +58,11 @@ module.defs.append(def_var)
 
 
 # stmt ++
-addd = ValueBin(typeInt32, 'add', variable, valueInt32_1, ti=None)
+addd = ValueBin(typeInt32, HLIR_VALUE_OP_ADD, variable, valueInt32_1, ti=None)
 stmt_inc = StmtAssign(variable, addd, ti=None)
 
 # stmt while
-cond = ValueBin(typeBool, 'lt', variable, valueInt32_5, ti=None)
+cond = ValueBin(typeBool, HLIR_VALUE_OP_LT, variable, valueInt32_5, ti=None)
 stmt_block = StmtBlock([stmt_inc], ti=None)
 stmt_while = StmtWhile(cond, stmt_block, ti=None)
 
@@ -105,7 +105,7 @@ param_a.storage_class = VALUE_STORAGE_CLASS_PARAM
 param_b = ValueConst(p1.type, p1.id, init_value=ValueUndef(p1.type), ti=None)
 param_b.storage_class = VALUE_STORAGE_CLASS_PARAM
 
-retval = ValueBin(typeInt32, 'add', param_a, param_b, ti=None)
+retval = ValueBin(typeInt32, HLIR_VALUE_OP_ADD, param_a, param_b, ti=None)
 stmt_ret = StmtReturn(retval, ti=None)
 
 stmt_func_main = StmtBlock([stmt_ret], ti=None)
