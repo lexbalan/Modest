@@ -2486,11 +2486,11 @@ def pre_def(ast, is_include=False):
 				# работали для типов которые будут определены позже
 				tk = x['type']['kind']
 				if tk == 'record':
-					t.kind = TYPE_KIND_RECORD
+					t.kind = HLIR_TYPE_KIND_RECORD
 				elif tk == 'array':
-					t.kind = TYPE_KIND_ARRAY
+					t.kind = HLIR_TYPE_KIND_ARRAY
 				elif tk == 'pointer':
-					t.kind = TYPE_KIND_POINTER
+					t.kind = HLIR_TYPE_KIND_POINTER
 				# TODO: продолжи
 
 				ctx_type_add(id['str'], t, is_public=is_public)
