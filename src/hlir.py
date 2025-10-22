@@ -29,6 +29,53 @@ def get_item_by_id(_list, id):
 
 
 
+
+
+
+HLIR_VALUE_OP_LOGIC_OR = 'lor'
+HLIR_VALUE_OP_LOGIC_XOR = 'lxor'
+HLIR_VALUE_OP_LOGIC_AND = 'land'
+HLIR_VALUE_OP_LOGIC_NOT = 'lnot'
+HLIR_VALUE_OP_OR = 'or'
+HLIR_VALUE_OP_XOR = 'xor'
+HLIR_VALUE_OP_AND = 'and'
+HLIR_VALUE_OP_NOT = 'not'
+
+HLIR_VALUE_OP_ADD = 'add'
+HLIR_VALUE_OP_SUB = 'sub'
+HLIR_VALUE_OP_MUL = 'mul'
+HLIR_VALUE_OP_DIV = 'div'
+HLIR_VALUE_OP_REM = 'rem'
+HLIR_VALUE_OP_NEG = 'neg'
+HLIR_VALUE_OP_POS = 'pos'
+
+HLIR_VALUE_OP_SHL = 'shl'
+HLIR_VALUE_OP_SHR = 'shr'
+
+HLIR_VALUE_OP_LT = 'lt'
+HLIR_VALUE_OP_GT = 'gt'
+HLIR_VALUE_OP_LE = 'le'
+HLIR_VALUE_OP_GE = 'ge'
+HLIR_VALUE_OP_EQ = 'eq'
+HLIR_VALUE_OP_NE = 'ne'
+
+HLIR_VALUE_OP_CONS = 'cons'
+HLIR_VALUE_OP_CALL = 'call'
+HLIR_VALUE_OP_REF = 'ref'
+HLIR_VALUE_OP_DEREF = 'deref'
+HLIR_VALUE_OP_INDEX = 'index'
+HLIR_VALUE_OP_ACCESS = 'access'
+
+HLIR_VALUE_OP_SIZEOF = 'sizeof'
+HLIR_VALUE_OP_ALIGNOF = 'alignof'
+HLIR_VALUE_OP_OFFSETOF = 'offsetof'
+HLIR_VALUE_OP_LENGTHOF = 'lengthof'
+HLIR_VALUE_OP_ACCESS_MODULE = 'access_module'
+
+
+
+
+
 class Entity():
 	def __init__(self, ti):
 		self.ti = ti
@@ -388,48 +435,6 @@ class StmtDirectiveInsert(StmtDirective):
 ######################################################################
 #                            HLIR TYPE                               #
 ######################################################################
-
-HLIR_VALUE_OP_LOGIC_OR = 'lor'
-HLIR_VALUE_OP_LOGIC_XOR = 'lxor'
-HLIR_VALUE_OP_LOGIC_AND = 'land'
-HLIR_VALUE_OP_LOGIC_NOT = 'lnot'
-HLIR_VALUE_OP_OR = 'or'
-HLIR_VALUE_OP_XOR = 'xor'
-HLIR_VALUE_OP_AND = 'and'
-HLIR_VALUE_OP_NOT = 'not'
-
-HLIR_VALUE_OP_ADD = 'add'
-HLIR_VALUE_OP_SUB = 'sub'
-HLIR_VALUE_OP_MUL = 'mul'
-HLIR_VALUE_OP_DIV = 'div'
-HLIR_VALUE_OP_REM = 'rem'
-HLIR_VALUE_OP_NEG = 'neg'
-HLIR_VALUE_OP_POS = 'pos'
-
-HLIR_VALUE_OP_SHL = 'shl'
-HLIR_VALUE_OP_SHR = 'shr'
-
-HLIR_VALUE_OP_LT = 'lt'
-HLIR_VALUE_OP_GT = 'gt'
-HLIR_VALUE_OP_LE = 'le'
-HLIR_VALUE_OP_GE = 'ge'
-HLIR_VALUE_OP_EQ = 'eq'
-HLIR_VALUE_OP_NE = 'ne'
-
-HLIR_VALUE_OP_CONS = 'cons'
-HLIR_VALUE_OP_CALL = 'call'
-HLIR_VALUE_OP_REF = 'ref'
-HLIR_VALUE_OP_DEREF = 'deref'
-HLIR_VALUE_OP_INDEX = 'index'
-HLIR_VALUE_OP_ACCESS = 'access'
-
-HLIR_VALUE_OP_SIZEOF = 'sizeof'
-HLIR_VALUE_OP_ALIGNOF = 'alignof'
-HLIR_VALUE_OP_OFFSETOF = 'offsetof'
-HLIR_VALUE_OP_LENGTHOF = 'lengthof'
-HLIR_VALUE_OP_ACCESS_MODULE = 'access_module'
-#HLIR_VALUE_OP_
-
 
 
 CONS_OP = (HLIR_VALUE_OP_CONS,)
