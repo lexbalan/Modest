@@ -1,9 +1,9 @@
 
 import copy
+
+from hlir import *
 from error import info, warning, error, fatal
-from hlir.hlir import Id, Field, Value
-from util import get_item_by_id, nbits_for_num, nbytes_for_bits, align_bits_up
-from hlir.type import *
+from util import nbytes_for_bits, align_bits_up
 
 
 
@@ -188,7 +188,6 @@ def select_common_record_type(a, b):
 
 		fieldId = fieldA.id
 		fieldType = select_common_type(fieldA.type, fieldB.type)
-		from hlir.value import ValueUndef
 		newField = Field(fieldId, fieldType, init_value=ValueUndef(fieldType), ti=fieldId.ti)
 		fields.append(newField)
 

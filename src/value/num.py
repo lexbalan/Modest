@@ -1,6 +1,6 @@
 
+from hlir import *
 from error import error
-from hlir.value import ValueLiteral, ValueCons
 import type as htype
 from util import nbits_for_num
 from value.value import value_imm_literal_create

@@ -1,8 +1,7 @@
 
+from hlir import *
 from error import info, warning, error
 from type import type_print
-from hlir.value import ValueCons
-from hlir.type import Type
 from util import nbits_for_num, int_zext
 
 

@@ -1,12 +1,12 @@
 
 import copy
+
+from hlir import *
 from .common import *
 from value.value import *
 from error import info, warning, error, fatal
-from hlir.hlir import *
 import type as htype
 from type import type_print
-from hlir.value import ValueZero
 from util import align_bits_up
 from pprint import pprint
 

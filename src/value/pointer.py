@@ -1,10 +1,8 @@
 
+from hlir import *
 from error import info, warning, error
-import type as type
-from hlir.type import Type
-from hlir.value import ValueCons
 from .char import utf32_chars_to_utfx_chars
-#from .array import array_can
+import type
 
 
 def array_can2(a, b):

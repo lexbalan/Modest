@@ -1,12 +1,10 @@
 
 import importlib
-#from hlir.hlir import *
-#from type import TypeFunc, TypeInt
-#from hlir.value import ValueLiteral
 
-from hlir2 import *
+from hlir import *
 
-# создвем модуль
+
+# создаем модуль
 
 idStr = "main"
 ast = None
@@ -124,7 +122,7 @@ settings = {
 	'int_width': 32,
 }
 
-backend_impline = "backend.c4"
+backend_impline = "backend.c"
 backend = importlib.import_module(backend_impline)
 backend.init(settings)
 backend.run(module, "out")

@@ -1,9 +1,9 @@
 
+from hlir import *
 from error import info, warning, error
-import type as type
 from util import nbits_for_num
-from hlir.value import ValueLiteral, ValueCons
 from unicode import utf32_str_to_utfx_char_codes
+import type
 
 
 def value_char_create(char_code, _type=None, ti=None):

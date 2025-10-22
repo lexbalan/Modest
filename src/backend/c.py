@@ -3,14 +3,12 @@
 
 import copy
 
+from hlir import *
 from .common import *
 from error import info, warning, error, fatal
-from hlir.hlir import *
-from value.value import *
 from type import select_common_type, type_print
-from hlir.value import ValueIndex
-from util import nbits_for_num, get_item_by_id, align_to
 import foundation
+
 
 
 

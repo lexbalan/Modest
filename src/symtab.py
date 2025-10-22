@@ -1,5 +1,5 @@
 
-from hlir.type import Type
+from hlir import *
 
 
 class Symtab:

@@ -1,6 +1,6 @@
 
+from hlir import *
 from error import error
-from hlir.value import ValueCons
 
 
 def unit_can(to, from_type, method, ti):

@@ -1,5 +1,5 @@
 
-from hlir.value import ValueLiteral
+from hlir import *
 
 
 def value_imm_literal_create(type, asset=None, ti=None):

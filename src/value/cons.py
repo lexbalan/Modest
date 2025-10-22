@@ -1,6 +1,6 @@
-import type as htype
+
+from hlir import *
 from error import info, warning, error
-from hlir.value import Value, ValueBad, ValueCons
 from .unit import unit_can, ValueUnit_cons
 from .bool import bool_can, value_bool_cons
 from .word import word_can, value_word_cons
@@ -13,8 +13,9 @@ from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons
 from .bad import bad_can, ValueBad_cons
 from .num import number_can, value_number_cons
-from hlir.type import Type, TypeArray, TypeWord
 from util import align_bits_up
+import type as htype
+
 
 # can be implicitly constructed value with type a from type b?
 def cons_can(to, from_type, method, ti):

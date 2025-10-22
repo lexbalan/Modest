@@ -1,8 +1,8 @@
 
+from hlir import *
 from type import *
-from hlir.hlir import *
-
 from symtab import Symtab
+
 
 typeUnit = None
 typeBool = None
@@ -78,8 +78,6 @@ def init():
 	global type__VA_List
 	global typeSizeof
 
-	#from trans import hlir_def_type
-
 	root_context = Symtab()
 	foundation['context'] = root_context
 
@@ -124,7 +122,6 @@ def init():
 	# не нужно делать decl тк нет собственного имени у этого типа
 
 	typeSysNat = typeNat64
-	from hlir.value import ValueUndef
 	undefinedVolume = ValueUndef(typeSysNat, ti=None)
 	typeStr8 = TypeArray(typeChar8, undefinedVolume, ti=None)
 	typeStr8.id = Id('Str8')

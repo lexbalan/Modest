@@ -1,4 +1,32 @@
+
+
 import copy
+from util import *
+
+
+# returns -1 if not found
+def get_index_of_item_with_id(_list, id):
+	i = 0
+	while i < len(_list):
+		item = _list[i]
+		if item != None:
+			if isinstance(item, Initializer) or isinstance(item, Field):
+				if item.id.str == id:
+					return i
+				i = i + 1
+				continue
+			if item['id'].str == id:
+				return i
+		i = i + 1
+	return -1
+
+
+def get_item_by_id(_list, id):
+	i = get_index_of_item_with_id(_list, id)
+	if i < 0:
+		return None
+	return _list[i]
+
 
 
 class Entity():
@@ -361,8 +389,8 @@ class StmtDirectiveInsert(StmtDirective):
 #                            HLIR TYPE                               #
 ######################################################################
 
-#from util import align_to
 
+"""
 def get_item_by_id(_list, id):
 	i = get_index_of_item_with_id(_list, id)
 	if i < 0:
@@ -405,7 +433,7 @@ def align_to(x, y):
 
 	return x
 
-
+"""
 
 CONS_OP = ('cons',)
 EQ_OPS = ('eq', 'ne')
@@ -884,7 +912,6 @@ class Type(Entity):
 
 
 	def copy(self):
-		#from error import info; info("cp", self.ti)
 		y = copy.copy(self)
 		y.att = copy.copy(self.att)
 		y.annotations = copy.copy(self.annotations)
@@ -1803,8 +1830,6 @@ class ValueLengthof(Value):
 class ValueAlignof(Value):
 	def __init__(self, of, ti=None):
 		align = of.align
-		#from type import type_number_for
-		#type = type_number_for(align, signed=False, ti=ti)
 		from trans import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
 		self.of = of

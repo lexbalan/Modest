@@ -1,7 +1,6 @@
 
+from hlir import *
 from util import nbits_for_num
-from hlir.type import TypeString
-from hlir.value import ValueLiteral, ValueBin
 
 
 

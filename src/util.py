@@ -1,5 +1,4 @@
 
-from hlir.hlir import Initializer, Field
 
 
 def align_to(x, y):
@@ -39,28 +38,6 @@ def nbytes_for_bits(x):
 
 
 
-# returns -1 if not found
-def get_index_of_item_with_id(_list, id):
-	i = 0
-	while i < len(_list):
-		item = _list[i]
-		if item != None:
-			if isinstance(item, Initializer) or isinstance(item, Field):
-				if item.id.str == id:
-					return i
-				i = i + 1
-				continue
-			if item['id'].str == id:
-				return i
-		i = i + 1
-	return -1
-
-
-def get_item_by_id(_list, id):
-	i = get_index_of_item_with_id(_list, id)
-	if i < 0:
-		return None
-	return _list[i]
 
 
 def utf32cc_to_utf8_str(cc):

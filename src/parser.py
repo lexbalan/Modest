@@ -4,10 +4,10 @@
 
 import os
 import re
-from error import error, warning, info
-from hlir.hlir import Id
-from util import utf32cc_to_utf8_str
 
+from hlir import *
+from error import error, warning, info
+from util import utf32cc_to_utf8_str
 
 top_level_stoppers = ['type', 'let', 'const', 'var', 'func']
 func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
