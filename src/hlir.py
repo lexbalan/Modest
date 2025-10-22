@@ -1221,21 +1221,18 @@ def get_int_alias(width, signed):
 
 
 
+HLIR_VALUE_STORAGE_CLASS_GLOBAL = "global"
+HLIR_VALUE_STORAGE_CLASS_PARAM = "param"
+HLIR_VALUE_STORAGE_CLASS_LOCAL = "local"
+HLIR_VALUE_STORAGE_CLASS_DEFAULT = HLIR_VALUE_STORAGE_CLASS_LOCAL
 
-
-
-
-VALUE_STORAGE_CLASS_GLOBAL = "global"
-VALUE_STORAGE_CLASS_PARAM = "param"
-VALUE_STORAGE_CLASS_LOCAL = "local"
-VALUE_STORAGE_CLASS_DEFAULT = VALUE_STORAGE_CLASS_LOCAL
 
 class Value(Entity):
 	def __init__(self, type, ti=None):
 		super().__init__(ti)
 		self.id = None
 		self.type = type
-		self.storage_class = VALUE_STORAGE_CLASS_DEFAULT
+		self.storage_class = HLIR_VALUE_STORAGE_CLASS_DEFAULT
 		self.definition = None # *StmtDefVar, *StmtDefConst, *StmtDefFunc
 
 		# this value is immediate but are known only in link time
@@ -1341,7 +1338,6 @@ class Value(Entity):
 			nv.immediate = True
 
 		return nv
-
 
 
 	# Only for immediate value (!)

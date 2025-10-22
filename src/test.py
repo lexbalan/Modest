@@ -100,10 +100,10 @@ value_func_main = ValueFunc(type_func_main, Id("sum"))
 
 
 param_a = ValueConst(p0.type, p0.id, init_value=ValueUndef(p0.type))
-param_a.storage_class = VALUE_STORAGE_CLASS_PARAM
+param_a.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
 
 param_b = ValueConst(p1.type, p1.id, init_value=ValueUndef(p1.type))
-param_b.storage_class = VALUE_STORAGE_CLASS_PARAM
+param_b.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
 
 retval = ValueBin(typeInt32, HLIR_VALUE_OP_ADD, param_a, param_b)
 stmt_ret = StmtReturn(retval)

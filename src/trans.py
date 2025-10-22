@@ -1476,7 +1476,7 @@ def do_stmt_const(x):
 	definition = def_const_common(x)
 	definition.parent = cfunc
 	definition.value.parent = cfunc
-	definition.value.storage_class = VALUE_STORAGE_CLASS_LOCAL
+	definition.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
 	return definition
 
 
@@ -1490,7 +1490,7 @@ def do_stmt_var(x):
 	#df.module = None
 	#df.access_level = mass
 
-	df.value.storage_class = VALUE_STORAGE_CLASS_LOCAL
+	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
 	df.value.is_global_flag = False
 	df.parent = cfunc
 	return df
@@ -1583,7 +1583,7 @@ def do_stmt_break(x):
 def add_local_var(id, typ, ti):
 	iv = ValueUndef(typ)
 	var_value = ValueVar(typ, id, init_value=iv, ti=ti)
-	var_value.storage_class = VALUE_STORAGE_CLASS_LOCAL
+	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
 	ctx_value_add(id.str, var_value, is_public=False)
 	return var_value
 
@@ -1896,7 +1896,7 @@ def def_const_global(x):
 	definition.value.parent = cmodule
 
 	definition.value.is_global_flag = True
-	definition.value.storage_class = VALUE_STORAGE_CLASS_GLOBAL
+	definition.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 	definition.id.prefix = global_prefix
 
@@ -2001,7 +2001,7 @@ def def_var_common(x):
 		error("unsuitable type", x['type']['ti'])
 
 	var_value = ValueVar(t, id, init_value=iv, ti=id.ti)
-	var_value.storage_class = VALUE_STORAGE_CLASS_GLOBAL
+	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 	#cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
 	ctx_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
@@ -2072,7 +2072,7 @@ def def_func(x):
 	while i < len(params):
 		param = params[i]
 		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
-		param_value.storage_class = VALUE_STORAGE_CLASS_PARAM
+		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
 		ctx_value_add(param.id.str, param_value, is_public=x['access_modifier'] == 'public')
 		i += 1
 
