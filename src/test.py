@@ -85,7 +85,7 @@ type_func_main = TypeFunc(type_func_main_params, type_func_main_to)
 value_func_main = ValueFunc(type_func_main, Id("main"), ti=None)
 stmt_func_main = StmtBlock([stmt_while, stmt_if, stmt_ret], ti=None)
 def_func_main = StmtDefFunc("main", value_func_main, stmt_func_main, ti=None)
-def_func_main.access_level = 'public'
+def_func_main.access_level = HLIR_ACCESS_LEVEL_PUBLIC
 def_func_main.nl = 2
 module.defs.append(def_func_main)
 
@@ -110,7 +110,7 @@ stmt_ret = StmtReturn(retval, ti=None)
 
 stmt_func_main = StmtBlock([stmt_ret], ti=None)
 def_func_main = StmtDefFunc("sum", value_func_main, stmt_func_main, ti=None)
-def_func_main.access_level = 'public'
+def_func_main.access_level = HLIR_ACCESS_LEVEL_PRIVATE
 def_func_main.nl = 2
 module.defs.append(def_func_main)
 

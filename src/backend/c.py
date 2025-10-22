@@ -150,7 +150,7 @@ def value_is_generic_immediate_const(v):
 def is_global_public(x):
 	if hasattr(x, 'definition'):
 		if x.definition != None:
-			if x.definition.access_level == 'public':
+			if x.definition.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 				return True
 	return False
 
@@ -177,7 +177,7 @@ def get_id_str(x):
 	module = x.getModule()
 	if module != None:
 		if not module.hasAttribute('nodecorate'):
-			#if x.access_level != 'private':
+			#if x.access_level != HLIR_ACCESS_LEVEL_PRIVATE:
 			return "%s_%s" % (module.prefix, id_str)
 
 	return id_str
@@ -1863,7 +1863,7 @@ def print_decl_func(x):
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
 	if not x.hasAttribute2('extern'):
-		if x.access_level == 'private':
+		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 			out("static ")
 
 	if x.hasAttribute2('inline'):
@@ -1899,7 +1899,7 @@ def print_def_func(x):
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
 	if not x.hasAttribute2('extern'):
-		if x.access_level == 'private':
+		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 			out("static ")
 
 	if x.hasAttribute2('inline') or x.hasAttribute2('inlinehint'):
@@ -2027,7 +2027,7 @@ def print_def_var(x, isdecl=False, as_extern=False):
 
 	var = x.value
 
-	if x.access_level == 'private':
+	if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 		if not (is_extern or x.hasAttribute2('nonstatic')):
 			out("static ")
 
@@ -2158,7 +2158,7 @@ def print_cdecl_func(x):
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if x.access_level == 'private':
+	if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 		out("static ")
 
 	print_func_signature(get_id_str(sym), x['symbol']['type'])
@@ -2175,7 +2175,7 @@ def print_directive(x):
 
 def is_private(x):
 	if isinstance(x, StmtDef):
-		return x.access_level == 'private'
+		return x.access_level == HLIR_ACCESS_LEVEL_PRIVATE
 	return False
 
 
@@ -2305,7 +2305,7 @@ def print_header(module, outname):
 		if isinstance(x, StmtDefFunc):
 			#nnl(x.nl)
 			nnl(1)
-			if x.access_level == 'public' and x.hasAttribute2('inline'):
+			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
 				out("static ")
 				print_def_func(x)
 				continue
@@ -2474,7 +2474,7 @@ def print_cfile(module, _outname):
 			print_deps(x.deps)
 			print_def_var(x)
 		elif isinstance(x, StmtDefFunc):
-			if x.access_level == 'public' and x.hasAttribute2('inline'):
+			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
 				continue
 			nnl(x.nl)
 			print_deps(x.deps)

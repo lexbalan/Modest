@@ -115,7 +115,7 @@ def ll_reg_operation(op, type, reg=None):
 def is_global_public(x):
 	if hasattr(x, 'definition'):
 		if x.definition != None:
-			if x.definition.access_level == 'public':
+			if x.definition.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 				return True
 	return False
 
@@ -2262,7 +2262,7 @@ def print_func_signature(ftype, idStr):
 
 def is_private(x):
 	if isinstance(x, StmtDef):
-		return x.access_level == 'private'
+		return x.access_level == HLIR_ACCESS_LEVEL_PRIVATE
 	return False
 
 

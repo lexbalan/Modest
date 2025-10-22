@@ -152,7 +152,7 @@ def str_type_record(t):
 		s += str_nl_indent(field.nl)
 		prev_nl = field.nl
 
-		if field.access_level == 'public':
+		if field.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 			s += "public "
 
 		s += str_field(field)
@@ -962,7 +962,7 @@ def printTopLevelStmt(x):
 		out("\n")
 
 	if isinstance(x, StmtDef):
-		if x.access_level == 'public':
+		if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 			out("public ")
 
 	if isinstance(x, StmtDefVar): print_stmt_def(x, operator='var')

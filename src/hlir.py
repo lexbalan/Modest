@@ -73,7 +73,9 @@ HLIR_VALUE_OP_LENGTHOF = 'lengthof'
 HLIR_VALUE_OP_ACCESS_MODULE = 'access_module'
 
 
-
+HLIR_ACCESS_LEVEL_DEFAULT = 'default'
+HLIR_ACCESS_LEVEL_PUBLIC = 'public'
+HLIR_ACCESS_LEVEL_PRIVATE = 'private'
 
 
 class Entity():
@@ -200,7 +202,7 @@ class Field(Entity):
 		self.init_value = init_value
 		self.field_no = 0
 		self.offset = 0
-		self.access_level = 'private'
+		self.access_level = HLIR_ACCESS_LEVEL_PRIVATE
 		self.att = []
 		self.nl = 0
 		self.ti = ti
@@ -315,7 +317,7 @@ class StmtDef(Stmt):
 	def __init__(self, id, ti=None):
 		super().__init__(ti)
 		self.id = id
-		self.access_level = 'private'
+		self.access_level = HLIR_ACCESS_LEVEL_PRIVATE
 
 
 class StmtDefType(StmtDef):

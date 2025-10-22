@@ -1169,7 +1169,7 @@ def do_value_access(x):
 
 	# не у всех типов есть 'definition' (его нет у анонимных записей например)
 	if not is_local_entity(record_type):
-		if field.access_level == 'private':
+		if field.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 			error("access to private field of record", x['right']['ti'])
 
 	return ValueAccessRecord(field.type, left, field, ti=x['ti'])
@@ -1804,11 +1804,11 @@ def def_type_common(x, nt):
 		# 'default' -> 'private' &
 		# 'default' -> 'public' for @public record
 		for f in ty.fields:
-			if f.access_level == 'default':
+			if f.access_level == HLIR_ACCESS_LEVEL_DEFAULT:
 				if ty.hasAttribute2("public"):
-					f.access_level = 'public'
+					f.access_level = HLIR_ACCESS_LEVEL_PUBLIC
 				else:
-					f.access_level = 'private'
+					f.access_level = HLIR_ACCESS_LEVEL_PRIVATE
 
 	if ty.is_bad():
 		return None
@@ -1920,7 +1920,7 @@ def def_var_common(x):
 	definition.module = cmodule
 	definition.parent = cmodule
 	definition.access_level = x['access_modifier']
-	if definition.access_level == 'public':
+	if definition.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 		if settings['public_vars_forbidden']:
 			error("public variables are forbidden", x['ti'])
 
