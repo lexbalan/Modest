@@ -1055,8 +1055,11 @@ def str_value_literal_char(cc, width):
 
 
 
-def str_value_literal_array(type, items, nl_end=1):
+def str_value_literal_array(x, type, items, nl_end=1):
 	sstr = ''
+
+	if not x.isImmediate():
+		sstr += '(%s)' % str_type(type)
 
 	if type.is_array_of_char():
 		char_type = type.of
@@ -1265,7 +1268,7 @@ def str_value_literal_with_type(x, t, as_hex=False):
 	elif t.is_float(): return str_value_literal_float(asset)
 	elif t.is_string(): return str_value_literal_string(asset, char_width=t.width)
 	elif t.is_record(): return str_value_literal_record(t, asset)
-	elif t.is_array(): return str_value_literal_array(t, asset)
+	elif t.is_array(): return str_value_literal_array(x, t, asset)
 	elif t.is_bool(): return str_value_literal_bool(asset)
 	elif t.is_char(): return str_value_literal_char(asset, t.width)
 	elif t.is_pointer(): return str_value_literal_pointer(t, asset)
