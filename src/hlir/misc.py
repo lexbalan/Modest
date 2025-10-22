@@ -18,8 +18,9 @@ class Id(Entity):
 
 
 class Field(Entity):
-	def __init__(self, _id, _type, init_value=None, ti=None):
+	def __init__(self, _id, _type, init_value, ti=None):
 		super().__init__(ti)
+		assert(init_value!=None)
 		self.id = _id
 		self.type = _type
 		self.init_value = init_value

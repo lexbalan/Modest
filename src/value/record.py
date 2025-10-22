@@ -29,7 +29,7 @@ def value_record_create(initializers, ti):
 			is_immediate = False
 
 		# создаем поле для типа generic record
-		field = Field(field_id, field_type, ti=field_ti)
+		field = Field(field_id, field_type, init_value=ValueUndef(field_type), ti=field_ti)
 		fields.append(field)
 
 	record_type = TypeRecord(fields, ti)

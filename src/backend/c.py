@@ -350,7 +350,7 @@ def str_type_func(t, core='', need_close=False):
 		# а сам массив пойдет через указатель sret_
 		# который функция получит своим самым последним параметром
 		# (sret = structure return)
-		sret_param = Field(Id('sret_'), TypePointer(t.to))
+		sret_param = Field(Id('sret_'), TypePointer(t.to), init_value=ValueUndef(t.to))
 
 		fparams = t.params + [sret_param]
 		fto = foundation.typeUnit

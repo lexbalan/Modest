@@ -75,16 +75,41 @@ stmt_if.nl=2
 
 # stmt return
 retval = valueInt32_0
-stmt0 = StmtReturn(retval, ti=None)
-stmt0.nl=2
+stmt_ret = StmtReturn(retval, ti=None)
+stmt_ret.nl=2
 
-# def func
+# def func main
 type_func_main_to = typeInt32
 type_func_main_params = []
 type_func_main = TypeFunc(type_func_main_params, type_func_main_to)
 value_func_main = ValueFunc(type_func_main, Id("main"), ti=None)
-stmt_func_main = StmtBlock([stmt_while, stmt_if, stmt0], ti=None)
+stmt_func_main = StmtBlock([stmt_while, stmt_if, stmt_ret], ti=None)
 def_func_main = StmtDefFunc("main", value_func_main, stmt_func_main, ti=None)
+def_func_main.access_level = 'public'
+def_func_main.nl = 2
+module.defs.append(def_func_main)
+
+
+# def func add
+type_func_main_to = typeInt32
+p0 = Field(Id("a"), typeInt32, init_value=ValueUndef(typeInt32), ti=None)
+p1 = Field(Id("b"), typeInt32, init_value=ValueUndef(typeInt32), ti=None)
+type_func_main_params = [p0, p1]
+type_func_main = TypeFunc(type_func_main_params, type_func_main_to)
+value_func_main = ValueFunc(type_func_main, Id("sum"), ti=None)
+
+
+param_a = ValueConst(p0.type, p0.id, init_value=ValueUndef(p0.type), ti=None)
+param_a.storage_class = VALUE_STORAGE_CLASS_PARAM
+
+param_b = ValueConst(p1.type, p1.id, init_value=ValueUndef(p1.type), ti=None)
+param_b.storage_class = VALUE_STORAGE_CLASS_PARAM
+
+retval = ValueBin(typeInt32, 'add', param_a, param_b, ti=None)
+stmt_ret = StmtReturn(retval, ti=None)
+
+stmt_func_main = StmtBlock([stmt_ret], ti=None)
+def_func_main = StmtDefFunc("sum", value_func_main, stmt_func_main, ti=None)
 def_func_main.access_level = 'public'
 def_func_main.nl = 2
 module.defs.append(def_func_main)

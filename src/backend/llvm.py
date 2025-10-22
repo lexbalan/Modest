@@ -2119,7 +2119,7 @@ def print_stmt_asm(x):
 		for o in outs:
 			field_type = o['type']
 			id = Id('<noname>')
-			f = Field(id, field_type, ti=x.ti)
+			f = Field(id, field_type, init_value=ValueUndef(field_type), ti=x.ti)
 			fields.append(f)
 
 		rt = TypeRecord(fields)

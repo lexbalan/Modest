@@ -188,7 +188,8 @@ def select_common_record_type(a, b):
 
 		fieldId = fieldA.id
 		fieldType = select_common_type(fieldA.type, fieldB.type)
-		newField = Field(fieldId, fieldType, ti=fieldId.ti)
+		from hlir.value import ValueUndef
+		newField = Field(fieldId, fieldType, init_value=ValueUndef(fieldType), ti=fieldId.ti)
 		fields.append(newField)
 
 	newRecord =TypeRecord(fields, ti=a.ti)

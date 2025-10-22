@@ -382,6 +382,8 @@ def do_field(x):
 	iv = None
 	if x['init_value'] != None:
 		iv = do_value(x['init_value'])
+	else:
+		iv = ValueUndef(t)
 
 	f = Field(id, t, init_value=iv, ti=x['ti'])
 	f.nl = x['nl']
