@@ -1058,8 +1058,8 @@ def str_value_literal_char(cc, width):
 def str_value_literal_array(x, type, items, nl_end=1):
 	sstr = ''
 
-	if not x.isImmediate():
-		sstr += '(%s)' % str_type(type)
+	#if not x.isImmediate():
+	#	sstr += '(%s)' % str_type(type)
 
 	if type.is_array_of_char():
 		char_type = type.of
@@ -2570,6 +2570,10 @@ def str_value_as_ptr(x):
 	sstr += "&"
 
 	if isinstance(root, ValueBin) and root.op in ['literal', HLIR_VALUE_OP_ADD]:
+		sstr += '(' + str_type(t) + ')'
+
+	elif isinstance(root, ValueLiteral) and (not root.isImmediate()):
+		# for non immediate literals  {1, 2, var_a, var_b, ...}
 		sstr += '(' + str_type(t) + ')'
 
 	elif cons_vla_from_literal_array(root):
