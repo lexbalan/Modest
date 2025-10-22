@@ -224,13 +224,30 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- strings --
 @str1 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
 ; -- endstrings --; unicode support test
-%E = type {
-	%Int32,
-	[0 x %Int32]
-};
-
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
+	%2 = alloca %Int32, align 4
+	store %Int32 5, %Int32* %2
+	%3 = alloca %Int32, align 4
+	store %Int32 7, %Int32* %3
+	%4 = alloca [4 x %Int32], align 1
+	%5 = load %Int32, %Int32* %2
+	%6 = load %Int32, %Int32* %3
+	%7 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 0
+	%8 = insertvalue [4 x %Int32] %7, %Int32 2, 1
+	%9 = load %Int32, %Int32* %2
+	%10 = insertvalue [4 x %Int32] %8, %Int32 %9, 2
+	%11 = load %Int32, %Int32* %3
+	%12 = insertvalue [4 x %Int32] %10, %Int32 %11, 3
+; -- cons_composite_from_composite_by_value --
+	%13 = alloca [4 x %Int32]
+	%14 = zext i8 4 to %Nat32
+	store [4 x %Int32] %12, [4 x %Int32]* %13
+	%15 = bitcast [4 x %Int32]* %13 to [4 x %Int32]*
+; -- end cons_composite_from_composite_by_value --
+	%16 = load [4 x %Int32], [4 x %Int32]* %15
+	%17 = zext i8 4 to %Nat32
+	store [4 x %Int32] %16, [4 x %Int32]* %4
 	ret %Int32 0
 }
 

@@ -1262,22 +1262,14 @@ def str_value_literal_with_type(x, t, as_hex=False):
 		as_hex = as_hex or x.type.is_word() or x.hasAttribute2('hexadecimal')
 		return str_value_literal_number(t, asset, is_hex=as_hex)
 
-	elif t.is_float():
-		return str_value_literal_float(asset)
-	elif t.is_string():
-		return str_value_literal_string(asset, char_width=t.width)
-	elif t.is_record():
-		return str_value_literal_record(t, asset)
-	elif t.is_array():
-		return str_value_literal_array(t, asset)
-	elif t.is_bool():
-		return str_value_literal_bool(asset)
-	elif t.is_char():
-		return str_value_literal_char(asset, t.width)
-	elif t.is_pointer():
-		return str_value_literal_pointer(t, asset)
-	else:
-		error("str_value_literal not implemented for %s" % str(t), x.ti)
+	elif t.is_float(): return str_value_literal_float(asset)
+	elif t.is_string(): return str_value_literal_string(asset, char_width=t.width)
+	elif t.is_record(): return str_value_literal_record(t, asset)
+	elif t.is_array(): return str_value_literal_array(t, asset)
+	elif t.is_bool(): return str_value_literal_bool(asset)
+	elif t.is_char(): return str_value_literal_char(asset, t.width)
+	elif t.is_pointer(): return str_value_literal_pointer(t, asset)
+	else: error("str_value_literal not implemented for %s" % str(t), x.ti)
 
 	return "<ValueLiteral>"
 
