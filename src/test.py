@@ -1,8 +1,10 @@
 
 import importlib
-from hlir.hlir import *
-from type import TypeFunc, TypeInt
-from hlir.value import ValueLiteral
+#from hlir.hlir import *
+#from type import TypeFunc, TypeInt
+#from hlir.value import ValueLiteral
+
+from hlir2 import *
 
 # создвем модуль
 
