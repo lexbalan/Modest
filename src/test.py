@@ -6,12 +6,7 @@ from hlir import *
 
 # создаем модуль
 
-idStr = "main"
-ast = None
-symtab_public = None
-symtab_private = None
-sourcename = "main.m"
-module = Module(idStr, ast, symtab_public, symtab_private, sourcename)
+module = Module(idStr="main", ast=None, symtab_public=None, symtab_private=None, sourcename="main.m")
 
 
 # Создаем и регистрируем определения
