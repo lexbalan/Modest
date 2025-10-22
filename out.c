@@ -20,7 +20,8 @@ typedef int32_t MyType;
 static int32_t counter = 0;
 
 int32_t main() {
-	while (counter) {
+	while (counter < 5) {
+		counter = counter + 1;
 	}
 
 	if (CONDITION) {

@@ -26,6 +26,7 @@ comment1 = StmtCommentBlock("this is\nmultiline comment", ti=None, nl=1)
 module.defs.append(comment1)
 
 typeInt32 = TypeInt(32)
+typeBool = TypeBool()
 
 valueInt32_0 = ValueLiteral(typeInt32, 0)
 valueInt32_1 = ValueLiteral(typeInt32, 1)
@@ -56,9 +57,13 @@ def_var.nl = 2
 module.defs.append(def_var)
 
 
+# stmt ++
+addd = ValueBin(typeInt32, 'add', variable, valueInt32_1, ti=None)
+stmt_inc = StmtAssign(variable, addd, ti=None)
+
 # stmt while
-cond = variable
-stmt_block = StmtBlock([], ti=None)
+cond = ValueBin(typeBool, 'lt', variable, valueInt32_5, ti=None)
+stmt_block = StmtBlock([stmt_inc], ti=None)
 stmt_while = StmtWhile(cond, stmt_block, ti=None)
 
 # stmt if
