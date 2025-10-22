@@ -124,7 +124,7 @@ settings = {
 	'int_width': 32,
 }
 
-backend_impline = "backend.c"
+backend_impline = "backend.c4"
 backend = importlib.import_module(backend_impline)
 backend.init(settings)
 backend.run(module, "out")
