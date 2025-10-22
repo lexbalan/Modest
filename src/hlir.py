@@ -226,7 +226,7 @@ class Initializer(Entity):
 
 
 class Stmt(Entity):
-	def __init__(self, ti, nl=1):
+	def __init__(self, ti=None, nl=1):
 		super().__init__(ti)
 		self.deps = []
 		self.att = []
@@ -278,7 +278,7 @@ class Stmt(Entity):
 
 
 class StmtBad(Stmt):
-	def __init__(self, ti, nl=1):
+	def __init__(self, ti=None, nl=1):
 		super().__init__(ti)
 
 	def is_bad(self):
@@ -291,20 +291,20 @@ class StmtComment(Stmt):
 
 
 class StmtCommentLine(StmtComment):
-	def __init__(self, lines, ti, nl=0):
+	def __init__(self, lines, ti=None, nl=1):
 		super().__init__(ti, nl)
 		self.lines = lines
 
 
 class StmtCommentBlock(StmtComment):
-	def __init__(self, text, ti, nl=0):
+	def __init__(self, text, ti=None, nl=1):
 		super().__init__(ti, nl)
 		self.text = text
 
 
 
 class StmtImport(Stmt):
-	def __init__(self, impline, name, module, ti, include=False):
+	def __init__(self, impline, name, module, ti=None, include=False):
 		super().__init__(ti)
 		self.impline = impline
 		self.include = include
@@ -350,7 +350,7 @@ class StmtDefFunc(StmtDef):
 
 
 class StmtBlock(Stmt):
-	def __init__(self, stmts, ti):
+	def __init__(self, stmts, ti=None):
 		super().__init__(ti)
 		# количество пустых строк перед закрывающей скобкой блока
 		self.stmts = stmts
