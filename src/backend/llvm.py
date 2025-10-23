@@ -2618,11 +2618,11 @@ def een(defs, decl_only=False):
 	isa_prev = None
 	for x in defs:
 
-		if isinstance(x, StmtComment):
+		if x.is_stmt_comment():
 			print_comment(x)
 			continue
 
-		if isinstance(x, StmtDirective):
+		if x.is_stmt_directive():
 			continue
 
 		if x.hasAttribute2('ll_no_print'):
@@ -2645,22 +2645,22 @@ def een(defs, decl_only=False):
 #			out("\n")
 #			isa_prev = isa
 
-		if isinstance(x, StmtDefVar):
+		if x.is_stmt_def_var():
 			print_def_var(x, as_extern=decl_only)
 
-		elif isinstance(x, StmtDefConst):
+		elif x.is_stmt_def_const():
 			print_def_const(x, as_extern=decl_only)
 
-		elif isinstance(x, StmtDefFunc):
+		elif x.is_stmt_def_func():
 			if not decl_only:
 				print_def_func(x)
 			else:
 				print_decl_func(x)
 
-		elif isinstance(x, StmtDefType):
+		elif x.is_stmt_def_type():
 			print_def_type(x)
 
-		elif isinstance(x, StmtComment):
+		elif x.is_stmt_comment():
 			print_comment(x)
 
 
@@ -2669,8 +2669,9 @@ already_in = []
 
 def print_included(m):
 
-	if isinstance(m, StmtImport):
-		m = m.module
+	if isinstance(m, Stmt):
+		if m.is_stmt_import():
+			m = m.module
 
 	for inc in m.included_modules:
 		# защита от повторного включения
@@ -2684,9 +2685,9 @@ def print_included(m):
 				if is_private(d):
 					continue
 
-				if isinstance(d, StmtDefType):
+				if d.is_stmt_def_type():
 					print_def_type(d)
-				elif isinstance(d, StmtDefFunc):
+				elif d.is_stmt_def_func():
 					print_decl_func(d)
 				#elif d['isa'] == 'def_const':
 				#	print_decl_const(x)
@@ -2713,9 +2714,9 @@ def print_imports(imports):
 			if is_private(d):
 				continue
 
-			if isinstance(d, StmtDefType):
+			if d.is_stmt_def_type():
 				print_def_type(d)
-			elif isinstance(d, StmtDefFunc):
+			elif d.is_stmt_def_func():
 				print_decl_func(d)
 
 		out("\n\n; end from import \"%s\"" % imp.name)

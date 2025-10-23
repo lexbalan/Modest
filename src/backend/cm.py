@@ -796,7 +796,7 @@ def print_stmt_if(x):
 
 	e = x.els
 	if e != None:
-		if isinstance(e, StmtIf):
+		if e.is_stmt_if():
 			out(" else ")
 			print_stmt_if(e)
 		else:
@@ -911,7 +911,7 @@ def print_directive(x):
 	if isinstance(x, StmtDirectiveInsert):
 		out('\npragma insert "%s"' % x.text)
 
-	#if isinstance(x, StmtImport):
+	#if x.is_stmt_import():
 	#	m = m.module
 	#	out('import "%s"' % m.)
 	#if isinstance(x, StmtDirectiveCInclude):
@@ -922,7 +922,7 @@ def print_directive(x):
 def printTopLevelStmt(x):
 	assert(isinstance(x, Stmt))
 
-	if not isinstance(x, StmtDirective):
+	if not x.is_stmt_directive():
 		out(str_newline(n=x.nl))
 
 	for a in x.annotations:
@@ -934,13 +934,13 @@ def printTopLevelStmt(x):
 		if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 			out("public ")
 
-	if isinstance(x, StmtDefVar): print_stmt_def(x, operator='var')
-	elif isinstance(x, StmtDefConst): print_stmt_def(x, operator='const')
-	elif isinstance(x, StmtDefFunc): print_stmt_func(x)
-	elif isinstance(x, StmtDefType): print_stmt_type(x)
-	elif isinstance(x, StmtComment): print_stmt_comment(x)
-	elif isinstance(x, StmtImport): print_import(x)
-	elif isinstance(x, StmtDirective): print_directive(x)
+	if x.is_stmt_def_var(): print_stmt_def(x, operator='var')
+	elif x.is_stmt_def_const(): print_stmt_def(x, operator='const')
+	elif x.is_stmt_def_func(): print_stmt_func(x)
+	elif x.is_stmt_def_type(): print_stmt_type(x)
+	elif x.is_stmt_comment(): print_stmt_comment(x)
+	elif x.is_stmt_import(): print_import(x)
+	elif x.is_stmt_directive(): print_directive(x)
 
 
 

@@ -261,6 +261,9 @@ class Stmt(Entity):
 	def is_stmt_bad(self):
 		return False
 
+	def is_stmt_def_func(self):
+		return isinstance(self, StmtDefFunc)
+
 	def is_stmt_block(self):
 		return isinstance(self, StmtBlock)
 
@@ -299,6 +302,12 @@ class Stmt(Entity):
 
 	def is_stmt_asm(self):
 		return isinstance(self, StmtAsm)
+
+	def is_stmt_directive(self):
+		return isinstance(self, StmtDirective)
+
+	def is_stmt_import(self):
+		return isinstance(self, StmtImport)
 
 
 

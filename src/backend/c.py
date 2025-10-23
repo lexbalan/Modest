@@ -1499,7 +1499,7 @@ def print_stmt_if(x, need_else_branch):
 		else:
 			out(" ")
 
-		if isinstance(e, StmtIf):
+		if e.is_stmt_if():
 			out("else ")
 			print_stmt_if(e, need_else_branch=True)
 		else:
@@ -2221,7 +2221,7 @@ def print_header(module, outname):
 	# Печатаем первые комментарии
 	if len(defs) > 0:
 		def0 = defs[0]
-		if isinstance(def0, StmtComment):
+		if def0.is_stmt_comment():
 			nnl(def0.nl)
 			print_comment(def0)
 			newline()
@@ -2244,7 +2244,7 @@ def print_header(module, outname):
 	if defs != []:
 		newline()
 		for x in defs:
-			if isinstance(x, StmtDirective):
+			if x.is_stmt_directive():
 				if isinstance(x, StmtDirectiveCInclude):
 					include(x.c_name, local=x.is_local)
 					nl_after_incs = True
@@ -2256,7 +2256,7 @@ def print_header(module, outname):
 			nl_after_incs = True
 
 	for x in defs:
-		if isinstance(x, StmtImport):
+		if x.is_stmt_import():
 			#nnl(x.nl)
 			if not x.module.hasAttribute('do_not_include'):
 				s = os.path.basename(x.impline)
@@ -2299,12 +2299,12 @@ def print_header(module, outname):
 		if x.hasAttribute2('c_no_print') or x.hasAttribute2('no_print'):
 			continue
 
-		#if isinstance(x, StmtDirective):
+		#if x.is_stmt_directive():
 		#	if isinstance(x, StmtDirectiveCInclude):
 		#		continue
 
 
-		if isinstance(x, StmtDefFunc):
+		if x.is_stmt_def_func():
 			#nnl(x.nl)
 			nnl(1)
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
@@ -2312,18 +2312,18 @@ def print_header(module, outname):
 				print_def_func(x)
 				continue
 			print_decl_func(x)
-		elif isinstance(x, StmtDefVar):
+		elif x.is_stmt_def_var():
 			nnl(x.nl)
 			print_def_var(x, as_extern=True)
-		elif isinstance(x, StmtDefType):
+		elif x.is_stmt_def_type():
 			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_type(x)
-		elif isinstance(x, StmtDefConst):
+		elif x.is_stmt_def_const():
 			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_const(x)
-		#elif isinstance(x, StmtComment):
+		#elif x.is_stmt_comment():
 		#	nnl(x.nl)
 		#	print_comment(x)
 
@@ -2407,7 +2407,7 @@ def print_cfile(module, _outname):
 	# Печатаем первые комментарии
 	if len(defs) > 0:
 		def0 = defs[0]
-		if isinstance(def0, StmtComment):
+		if def0.is_stmt_comment():
 			nnl(def0.nl)
 			print_comment(def0)
 			newline()
@@ -2463,19 +2463,19 @@ def print_cfile(module, _outname):
 		if isinstance(x, StmtDirectiveCInclude):
 			continue
 
-		if isinstance(x, StmtDefConst) and is_private(x):
+		if x.is_stmt_def_const() and is_private(x):
 			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_const(x)
-		elif isinstance(x, StmtDefType) and is_private(x):
+		elif x.is_stmt_def_type() and is_private(x):
 			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_type(x)
-		elif isinstance(x, StmtDefVar):
+		elif x.is_stmt_def_var():
 			nnl(x.nl)
 			print_deps(x.deps)
 			print_def_var(x)
-		elif isinstance(x, StmtDefFunc):
+		elif x.is_stmt_def_func():
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
 				continue
 			nnl(x.nl)
@@ -2483,12 +2483,12 @@ def print_cfile(module, _outname):
 			if x.deps != []:
 				newline()
 			print_def_func(x)
-		elif isinstance(x, StmtComment):
+		elif x.is_stmt_comment():
 			nnl(x.nl)
 			if x.nl == 0:
 				out("  ")
 			print_comment(x)
-		elif isinstance(x, StmtDirective):
+		elif x.is_stmt_directive():
 			print_directive(x)
 
 	if len(module_undef_list) > 0:
