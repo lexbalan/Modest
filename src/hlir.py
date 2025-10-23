@@ -1256,29 +1256,16 @@ class Value(Entity):
 	def isLvalue(self):
 		return self.is_lvalue
 
-	def isValueImmediate(self):
-		return self.immediate
-
 	def isValueRuntime(self):
 		return not self.isValueImmediate()
 
-	"""def isZero(self):
-		if self.isValueImmediate():
-			if self.type.is_composite():
-				return self.asset == []
-			else:
-				return self.asset == 0
-
-			#return (self.asset == 0 or self.asset == None) and (self.asset == None or self.asset == [])
-		return False"""
-
+	def isValueImmediate(self):
+		return self.immediate
 
 	def isValueImmutable(self):
 		# ONLY lvalue CAN be an immutable value,
 		# BUT if immutable flag is set, it is immutable value anyway
 		return (not self.isLvalue()) or self.immutable
-
-
 
 	def isValueBad(self):
 		return isinstance(self, ValueBad)
@@ -1315,7 +1302,6 @@ class Value(Entity):
 
 	def isValueVaCopy(self):
 		return isinstance(self, ValueVaCopy)
-
 
 	def isValueBin(self):
 		return isinstance(self, ValueBin)
@@ -1524,7 +1510,6 @@ class Value(Entity):
 
 
 
-
 class ValueBad(Value):
 	def __init__(self, ti=None):
 		super().__init__(type=TypeBad(ti), ti=ti)
@@ -1590,6 +1575,7 @@ class ValueVar(Value):
 		self.is_lvalue = True
 
 
+
 class ValueConst(Value):
 	def __init__(self, type, id, init_value, ti=None):
 		assert(isinstance(type, Type))
@@ -1599,6 +1585,7 @@ class ValueConst(Value):
 		self.id = id
 		self.init_value = init_value
 		self.usecnt = 0
+
 
 
 class ValueFunc(Value):
@@ -1645,6 +1632,7 @@ class ValueNeg(Value):
 				self.type = type_number_for(value.asset, signed=True, ti=ti)
 
 
+
 class ValuePos(Value):
 	def __init__(self, type, value, ti=None):
 		assert(isinstance(type, Type))
@@ -1677,6 +1665,7 @@ class ValueRef(Value):
 			self.asset = 1
 
 
+
 class ValueDeref(Value):
 	def __init__(self, value, ti=None):
 		assert(isinstance(value, Value))
@@ -1694,6 +1683,7 @@ class ValueSubexpr(Value):
 		if value.isValueImmediate():
 			from trans import cp_immediate
 			cp_immediate(self, value)
+
 
 
 #TODO: maybe without op?
@@ -1765,6 +1755,7 @@ class ValueShl(Value):
 			self.immediate = True
 
 
+
 class ValueShr(Value):
 	def __init__(self, left, right, ti=None):
 		assert(isinstance(left, Value))
@@ -1778,12 +1769,14 @@ class ValueShr(Value):
 			self.immediate = True
 
 
+
 def get_func_from(x):
 	if isinstance(x, ValueFunc):
 		return x
 	elif isinstance(x, ValueAccessModule):
 		return x.value
 	return None
+
 
 
 #TODO: get type from value ret type
@@ -1806,6 +1799,7 @@ class ValueCall(Value):
 			if fn.is_pure and args_is_imm:
 				self.immediate = True
 				self.asset = 0
+
 
 
 class ValueAccessRecord(Value):
@@ -1831,6 +1825,7 @@ class ValueAccessRecord(Value):
 				cp_immediate(self, initializer.value)
 
 
+
 class ValueAccessModule(Value):
 	def __init__(self, type, imp, id, value, ti=None):
 		super().__init__(type=type, ti=ti)
@@ -1842,6 +1837,7 @@ class ValueAccessModule(Value):
 		self.asset = value.asset
 
 		self.is_lvalue = True
+
 
 
 #TODO: get type from array element type
@@ -1877,6 +1873,7 @@ class ValueIndex(Value):
 					cp_immediate(self, item)
 
 
+
 #TODO: get type from array type
 class ValueSlice(Value):
 	def __init__(self, type, left, index_from, index_to, ti=None):
@@ -1894,12 +1891,14 @@ class ValueSlice(Value):
 			self.immutable = left.immutable
 
 
+
 class ValueNew(Value):
 	def __init__(self, value, ti=None):
 		assert(isinstance(value, Value))
 		type = TypePointer(value.type, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.value = value
+
 
 
 class ValueSizeofType(Value):
@@ -1963,6 +1962,7 @@ class ValueAlignof(Value):
 		self.asset = align
 
 
+
 class ValueOffsetof(Value):
 	def __init__(self, record, field_id, ti=None):
 		from type import record_field_get
@@ -1989,10 +1989,12 @@ class ValueVaStart(Value):
 		self.last_param = lastParam
 
 
+
 class ValueVaArg(Value):
 	def __init__(self, type, vaList, ti=None):
 		super().__init__(type=type, ti=ti)
 		self.va_list = vaList
+
 
 
 class ValueVaEnd(Value):
@@ -2000,6 +2002,7 @@ class ValueVaEnd(Value):
 		from foundation import typeUnit
 		super().__init__(type=typeUnit, ti=ti)
 		self.va_list = vaList
+
 
 
 class ValueVaCopy(Value):
