@@ -39,22 +39,22 @@ precedenceMax = len(aprecedence) - 1
 # приоритет операции
 def precedence(x):
 	i = 0
-	if isinstance(x, ValueBin):
+	if x.isValueBin():
 		k = x.op
 		while i < precedenceMax + 1:
 			if k in aprecedence[i]:
 				break
 			i = i + 1
 	else:
-		if isinstance(x, ValueSizeofValue): i = 10
-		elif isinstance(x, ValueCall): i = 11
-		elif isinstance(x, ValueIndex): i = 11
-		elif isinstance(x, ValueAccessRecord): i = 11
-		elif isinstance(x, ValueShl): i = 7
-		elif isinstance(x, ValueShr): i = 7
-		elif isinstance(x, ValuePos): i = 10
-		elif isinstance(x, ValueNeg): i = 10
-		elif isinstance(x, ValueNot): i = 10
+		if x.isValueSizeofValue(): i = 10
+		elif x.isValueCall(): i = 11
+		elif x.isValueIndex(): i = 11
+		elif x.isValueAccessRecord(): i = 11
+		elif x.isValueShl(): i = 7
+		elif x.isValueShr(): i = 7
+		elif x.isValuePos(): i = 10
+		elif x.isValueNeg(): i = 10
+		elif x.isValueNot(): i = 10
 		else: i = 12
 	return i
 
@@ -319,7 +319,7 @@ def str_value_slice(x, ctx):
 	s += "["
 	s += str_value(x.index_from)
 	s += ":"
-	if not isinstance(x.index_to, ValueUndef):
+	if not x.index_to.isValueUndef():
 		s += str_value(x.index_to)
 	s += "]"
 	return s
@@ -658,68 +658,37 @@ def str_value(x, ctx=[], parent_expr=None):
 
 	assert(isinstance(x, Value))
 
-	if isinstance(x, ValueLiteral):
-		return str_value_literal(x, ctx)
-	elif isinstance(x, ValueBin):
-		return str_value_bin(x, ctx)
-	elif isinstance(x, ValueShl):
-		return str_value_shl(x, ctx)
-	elif isinstance(x, ValueShr):
-		return str_value_shr(x, ctx)
-	elif isinstance(x, ValueRef):
-		return str_value_ref(x, ctx)
-	elif isinstance(x, ValueDeref):
-		return str_value_deref(x, ctx)
-	elif isinstance(x, ValueConst):
-		return str_value_by_id(x, ctx)
-	elif isinstance(x, ValueFunc):
-		return str_value_by_id(x, ctx)
-	elif isinstance(x, ValueVar):
-		return str_value_by_id(x, ctx)
-	elif isinstance(x, ValueCons):
-		return str_value_cons(x, ctx)
-	elif isinstance(x, ValueCall):
-		return str_value_call(x, ctx)
-	elif isinstance(x, ValueIndex):
-		return str_value_index(x, ctx)
-	elif isinstance(x, ValueAccessModule):
-		return str_value_access_module(x, ctx)
-	elif isinstance(x, ValueAccessRecord):
-		return str_value_access(x, ctx)
-	elif isinstance(x, ValueSlice):
-		return str_value_slice(x, ctx)
-	elif isinstance(x, ValueSubexpr):
-		return str_value_subexpr(x, ctx)
-	elif isinstance(x, ValueNot):
-		return str_value_not(x, ctx)
-	elif isinstance(x, ValueNeg):
-		return str_value_neg(x, ctx)
-	elif isinstance(x, ValuePos):
-		return str_value_pos(x, ctx)
-	elif isinstance(x, ValueNew):
-		return str_value_new(x, ctx)
-	elif isinstance(x, ValueSizeofValue):
-		return str_value_sizeof_value(x, ctx)
-	elif isinstance(x, ValueSizeofType):
-		return str_value_sizeof_type(x, ctx)
-	elif isinstance(x, ValueAlignof):
-		return str_value_alignof(x, ctx)
-	elif isinstance(x, ValueOffsetof):
-		return str_value_offsetof(x, ctx)
-	elif isinstance(x, ValueLengthof):
-		return str_value_lengthof(x, ctx)
-	elif isinstance(x, ValueVaArg):
-		return str_value_va_arg(x, ctx)
-	elif isinstance(x, ValueVaStart):
-		return str_value_va_start(x, ctx)
-	elif isinstance(x, ValueVaEnd):
-		return str_value_va_end(x, ctx)
-	elif isinstance(x, ValueVaCopy):
-		return str_value_va_copy(x, ctx)
-	elif isinstance(x, ValueUndef):
-		return "<undef>"
-	else:
-		return "%s" % str(x.__class__)
+	if x.isValueLiteral(): return str_value_literal(x, ctx)
+	elif x.isValueBin(): return str_value_bin(x, ctx)
+	elif x.isValueShl(): return str_value_shl(x, ctx)
+	elif x.isValueShr(): return str_value_shr(x, ctx)
+	elif x.isValueRef(): return str_value_ref(x, ctx)
+	elif x.isValueDeref(): return str_value_deref(x, ctx)
+	elif x.isValueConst(): return str_value_by_id(x, ctx)
+	elif x.isValueFunc(): return str_value_by_id(x, ctx)
+	elif x.isValueVar(): return str_value_by_id(x, ctx)
+	elif x.isValueCons(): return str_value_cons(x, ctx)
+	elif x.isValueCall(): return str_value_call(x, ctx)
+	elif x.isValueIndex(): return str_value_index(x, ctx)
+	elif x.isValueAccessModule(): return str_value_access_module(x, ctx)
+	elif x.isValueAccessRecord(): return str_value_access(x, ctx)
+	elif x.isValueSlice(): return str_value_slice(x, ctx)
+	elif x.isValueSubexpr(): return str_value_subexpr(x, ctx)
+	elif x.isValueNot(): return str_value_not(x, ctx)
+	elif x.isValueNeg(): return str_value_neg(x, ctx)
+	elif x.isValuePos(): return str_value_pos(x, ctx)
+	elif x.isValueNew(): return str_value_new(x, ctx)
+	elif x.isValueSizeofValue(): return str_value_sizeof_value(x, ctx)
+	elif x.isValueSizeofType(): return str_value_sizeof_type(x, ctx)
+	elif x.isValueAlignof(): return str_value_alignof(x, ctx)
+	elif x.isValueOffsetof(): return str_value_offsetof(x, ctx)
+	elif x.isValueLengthof(): return str_value_lengthof(x, ctx)
+	elif x.isValueVaArg(): return str_value_va_arg(x, ctx)
+	elif x.isValueVaStart(): return str_value_va_start(x, ctx)
+	elif x.isValueVaEnd(): return str_value_va_end(x, ctx)
+	elif x.isValueVaCopy(): return str_value_va_copy(x, ctx)
+	elif x.isValueUndef(): return "<undef>"
+	else: return "%s" % str(x.__class__)
 
 	#if need_wrap:
 	#	out(")")
@@ -758,7 +727,7 @@ def print_stmt_type(x):
 def needTypeAnno(x):
 	if x.value.type.is_generic():
 		return False
-	return not (isinstance(x.init_value, ValueCons) and x.init_value.method == 'explicit')
+	return not (x.init_value.isValueCons() and x.init_value.method == 'explicit')
 
 
 def print_stmt_def(x, operator='const'):
