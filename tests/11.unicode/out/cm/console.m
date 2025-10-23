@@ -9,6 +9,7 @@ include "string"
 import "misc/utf" as utf
 
 
+
 public func putchar8 (c: Char8) -> Unit {
 	putchar_utf8(c)
 }
