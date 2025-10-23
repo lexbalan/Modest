@@ -303,6 +303,7 @@ class Stmt(Entity):
 
 
 
+
 class StmtBad(Stmt):
 	def __init__(self, ti=None, nl=1):
 		super().__init__(ti)
@@ -311,15 +312,18 @@ class StmtBad(Stmt):
 		return True
 
 
+
 class StmtComment(Stmt):
 	def __init__(self, ti, nl):
 		super().__init__(ti=ti, nl=nl)
+
 
 
 class StmtCommentLine(StmtComment):
 	def __init__(self, lines, ti=None, nl=1):
 		super().__init__(ti, nl)
 		self.lines = lines
+
 
 
 class StmtCommentBlock(StmtComment):
@@ -346,11 +350,13 @@ class StmtDef(Stmt):
 		self.access_level = HLIR_ACCESS_LEVEL_PRIVATE
 
 
+
 class StmtDefType(StmtDef):
 	def __init__(self, id, newType, protoType, ti=None):
 		super().__init__(id, ti)
 		self.type = newType
 		self.original_type = protoType
+
 
 
 class StmtDefVar(StmtDef):
@@ -360,11 +366,13 @@ class StmtDefVar(StmtDef):
 		self.init_value = init_value
 
 
+
 class StmtDefConst(StmtDef):
 	def __init__(self, id, const_value, init_value=None, ti=None):
 		super().__init__(id, ti)
 		self.value = const_value
 		self.init_value = init_value
+
 
 
 class StmtDefFunc(StmtDef):
@@ -382,10 +390,12 @@ class StmtBlock(Stmt):
 		self.stmts = stmts
 
 
+
 class StmtValueExpression(Stmt):
 	def __init__(self, value, ti=None):
 		super().__init__(ti)
 		self.value = value
+
 
 
 class StmtAssign(Stmt):
@@ -393,6 +403,7 @@ class StmtAssign(Stmt):
 		super().__init__(ti)
 		self.left = left
 		self.right = right
+
 
 
 class StmtIf(Stmt):
@@ -403,6 +414,7 @@ class StmtIf(Stmt):
 		self.els = els
 
 
+
 class StmtWhile(Stmt):
 	def __init__(self, cond, stmt, ti=None):
 		super().__init__(ti)
@@ -410,9 +422,11 @@ class StmtWhile(Stmt):
 		self.stmt = stmt
 
 
+
 class StmtAgain(Stmt):
 	def __init__(self, ti=None):
 		super().__init__(ti)
+
 
 
 class StmtBreak(Stmt):
@@ -420,10 +434,12 @@ class StmtBreak(Stmt):
 		super().__init__(ti)
 
 
+
 class StmtReturn(Stmt):
 	def __init__(self, value=None, ti=None):
 		super().__init__(ti)
 		self.value = value
+
 
 
 class StmtAsm(Stmt):
@@ -448,6 +464,7 @@ class StmtDirectiveCInclude(StmtDirective):
 		self.nl = 1
 		self.c_name = s
 		self.is_local = s[0:2] == './'
+
 
 
 # insert random text into output
