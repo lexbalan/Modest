@@ -13,19 +13,19 @@
 
 
 // constants with type String(Generic)
-#define str8_example  "String"
-#define str16_example  "String-Ω"
-#define str32_example  "String-Ω 🐀🎉🦄"
+#define STR8_EXAMPLE  "String"
+#define STR16_EXAMPLE  "String-Ω"
+#define STR32_EXAMPLE  "String-Ω 🐀🎉🦄"
 
 // variables with type Array of Chars
-static char string8[6] = str8_example;
-static char16_t string16[8] = _STR16(str16_example);
-static char32_t string32[12] = _STR32(str32_example);
+static char string8[6] = STR8_EXAMPLE;
+static char16_t string16[8] = _STR16(STR16_EXAMPLE);
+static char32_t string32[12] = _STR32(STR32_EXAMPLE);
 
 // variables with type Pointer to Array of Chars
-static char *ptr_to_string8 = str8_example;
-static char16_t *ptr_to_string16 = _STR16(str16_example);
-static char32_t *ptr_to_string32 = _STR32(str32_example);
+static char *ptr_to_string8 = STR8_EXAMPLE;
+static char16_t *ptr_to_string16 = _STR16(STR16_EXAMPLE);
+static char32_t *ptr_to_string32 = _STR32(STR32_EXAMPLE);
 
 int main() {
 	console_putchar_utf8('A');

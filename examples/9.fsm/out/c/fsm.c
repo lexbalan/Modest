@@ -10,7 +10,7 @@
 
 
 
-#define verbose  true
+#define VERBOSE  true
 
 // Вынужден добавлять public тк иначе не идет в хедер к структуре
 // Короче, проблема зависимостей тяжело зависла в воздухе
@@ -22,18 +22,18 @@ char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no) {
 
 void fsm_switch(fsm_FSM *fsm, uint32_t state) {
 	fsm->nexstate = state;
-	fsm->substate = fsm_substateLeaving;
+	fsm->substate = FSM_SUBSTATE_LEAVING;
 }
 
 
 void fsm_run(fsm_FSM *fsm) {
 	printf("fsm::run()\n");
 
-	if (fsm->substate == fsm_substateEntering) {
+	if (fsm->substate == FSM_SUBSTATE_ENTERING) {
 		const uint32_t nexstate = fsm->nexstate;
 		fsm_StateDesc *const state = &fsm->states[nexstate];
 
-		if (verbose) {
+		if (VERBOSE) {
 			printf("enter %s\n", (char *)&state->name);
 		}
 
@@ -42,17 +42,17 @@ void fsm_run(fsm_FSM *fsm) {
 		}
 
 		fsm->state = nexstate;
-		fsm->substate = fsm_substateLoop;
-	} else if (fsm->substate == fsm_substateLoop) {
+		fsm->substate = FSM_SUBSTATE_LOOP;
+	} else if (fsm->substate == FSM_SUBSTATE_LOOP) {
 		fsm_StateDesc *const state = &fsm->states[fsm->state];
 
 		if (state->loop != NULL) {
 			state->loop(fsm);
 		}
-	} else if (fsm->substate == fsm_substateLeaving) {
+	} else if (fsm->substate == FSM_SUBSTATE_LEAVING) {
 		fsm_StateDesc *const state = &fsm->states[fsm->state];
 
-		if (verbose) {
+		if (VERBOSE) {
 			printf("exit %s\n", (char *)&state->name);
 		}
 
@@ -60,7 +60,7 @@ void fsm_run(fsm_FSM *fsm) {
 			state->exit(fsm);
 		}
 
-		fsm->substate = fsm_substateEntering;
+		fsm->substate = FSM_SUBSTATE_ENTERING;
 	}
 }
 

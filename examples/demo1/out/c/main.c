@@ -10,14 +10,14 @@
 
 
 
-#define minNumber  0
-#define maxNumber  10
+#define MIN_NUMBER  0
+#define MAX_NUMBER  10
 
 
 static int32_t get_number(int32_t min, int32_t max);
 
 int32_t main() {
-	const int32_t number = get_number(minNumber, maxNumber);
+	const int32_t number = get_number(MIN_NUMBER, MAX_NUMBER);
 
 	const int32_t n = 5;
 

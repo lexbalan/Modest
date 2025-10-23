@@ -17,15 +17,15 @@
 //include "libc/ctypes64"
 //include "libc/stdio"
 
-#define filename  ("file.txt")
+#define FILENAME  ("file.txt")
 
 static void write_example() {
 	printf("run write_example\n");
 
-	FILE *const fp = fopen(filename, "w");
+	FILE *const fp = fopen(FILENAME, "w");
 
 	if (fp == NULL) {
-		printf("error: cannot create file '%s'", filename);
+		printf("error: cannot create file '%s'", FILENAME);
 		return;
 	}
 
@@ -38,14 +38,14 @@ static void write_example() {
 static void read_example() {
 	printf("run read_example\n");
 
-	FILE *const fp = fopen(filename, "r");
+	FILE *const fp = fopen(FILENAME, "r");
 
 	if (fp == NULL) {
-		printf("error: cannot open file '%s'", filename);
+		printf("error: cannot open file '%s'", FILENAME);
 		return;
 	}
 
-	printf("file '%s' contains: ", filename);
+	printf("file '%s' contains: ", FILENAME);
 	while (true) {
 		const int ch = fgetc(fp);
 		if (ch == EOF) {

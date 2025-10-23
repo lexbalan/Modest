@@ -12,7 +12,7 @@
 
 int main() {
 	loo_Nothing nothing;
-	loo_foo(loo_bar);
+	loo_foo(LOO_BAR);
 	(void)loo_spam;
 	return 0;
 }

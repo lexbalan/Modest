@@ -10,10 +10,10 @@
 
 
 
-#define arr  {1, 2}
+#define ARR  {1, 2}
 
-static int32_t arr0[2] = arr;
-static int32_t arr1[2] = arr;
+static int32_t arr0[2] = ARR;
+static int32_t arr1[2] = ARR;
 static char *str = "Hello!";  // -> *[]Char8
 
 int main() {

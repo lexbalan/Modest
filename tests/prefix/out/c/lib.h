@@ -14,7 +14,7 @@ struct loo_Nothing {
 };
 typedef struct loo_Nothing loo_Nothing;
 
-#define loo_bar  4
+#define LOO_BAR  4
 
 extern int32_t loo_spam;
 void loo_foo(uint32_t x);

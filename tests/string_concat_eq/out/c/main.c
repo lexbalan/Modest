@@ -10,16 +10,16 @@
 
 
 
-#define hello  "Hello"
-#define world  "World"
-#define party_corn  "🎉"
+#define HELLO  "Hello"
+#define WORLD  "World"
+#define PARTY_CORN  "🎉"
 
-#define greeting  hello " " world  //+ " " + party_corn
+#define GREETING  HELLO " " WORLD  //+ " " + party_corn
 
-#define test  "test"
+#define TEST  "test"
 
 int main() {
-	printf("%s\n", greeting);
+	printf("%s\n", GREETING);
 
 	if (true) {
 		printf("test ok.\n");

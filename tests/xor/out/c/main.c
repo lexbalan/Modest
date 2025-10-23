@@ -30,11 +30,11 @@ static void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t 
 //xor_encrypt = xor_encrypter
 //xor_decrypt = xor_encrypter
 
-#define msg_length  12
-#define key_length  3
+#define MSG_LENGTH  12
+#define KEY_LENGTH  3
 
-static char test_msg[msg_length + 1] = "Hello World!";
-static char test_key[key_length + 1] = "abc";
+static char test_msg[MSG_LENGTH + 1] = "Hello World!";
+static char test_key[KEY_LENGTH + 1] = "abc";
 
 static void print_bytes(uint8_t *buf, uint32_t len) {
 	uint32_t i = 0;
@@ -53,19 +53,19 @@ int main() {
 	uint8_t *const tkey = (uint8_t *)&test_key;
 
 	printf("before encrypt test_msg: \n");
-	print_bytes(tmsg, msg_length);
+	print_bytes(tmsg, MSG_LENGTH);
 
 	// encrypt test data
-	xor_encrypter(tmsg, msg_length, tkey, key_length);
+	xor_encrypter(tmsg, MSG_LENGTH, tkey, KEY_LENGTH);
 
 	printf("after encrypt test_msg: \n");
-	print_bytes(tmsg, msg_length);
+	print_bytes(tmsg, MSG_LENGTH);
 
 	// decrypt test data
-	xor_encrypter(tmsg, msg_length, tkey, key_length);
+	xor_encrypter(tmsg, MSG_LENGTH, tkey, KEY_LENGTH);
 
 	printf("after decrypt test_msg: \n");
-	print_bytes(tmsg, msg_length);
+	print_bytes(tmsg, MSG_LENGTH);
 
 	return 0;
 }

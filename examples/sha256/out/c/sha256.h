@@ -10,9 +10,9 @@
 #include <string.h>
 
 
-#define sha256_hashSize  32
+#define SHA256_HASH_SIZE  32
 
-typedef uint8_t sha256_Hash[sha256_hashSize];
+typedef uint8_t sha256_Hash[SHA256_HASH_SIZE];
 void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash);
 
 #endif /* SHA256_H */

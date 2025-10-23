@@ -10,6 +10,13 @@ from type import select_common_type, type_print
 import foundation
 
 
+import re
+
+def camel_to_snake(name: str) -> str:
+    # Вставляем подчёркивание перед заглавной буквой, если перед ней — строчная или цифра
+    s = re.sub(r'(?<=[a-z0-9])([A-Z])', r'_\1', name)
+    return s.upper()
+
 
 
 cmodule = None
@@ -1281,8 +1288,11 @@ def str_value_literal_with_type(x, t, as_hex=False):
 def str_value_const(x, ctx):
 	#if value_is_generic_immediate(x):
 	#	return str_value_literal(x, ctx)
+	id_str = get_id_str(x)
+	if x.is_global_flag and not x.id.hasAttribute('nodecorate'):
+		return camel_to_snake(id_str)
+	return id_str
 
-	return get_id_str(x)
 
 def str_value_var(x, ctx):
 	return get_id_str(x)
@@ -2081,11 +2091,8 @@ def str_static_initializer(v):
 
 
 def print_def_const(x):
-	const_value = x.value
-	init_value = x.init_value
-	id = x.id
-	id_str = get_id_str(const_value)
-	print_macro_definition(id_str, init_value, val_ctx=[])
+	id_str = camel_to_snake(get_id_str(x.value))
+	print_macro_definition(id_str, x.init_value, val_ctx=[])
 	return
 
 

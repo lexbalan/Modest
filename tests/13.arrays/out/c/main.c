@@ -14,13 +14,30 @@
 #endif /* LENGTHOF */
 
 
-//@c_no_print
-//import "misc/minmax"
-//pragma c_include "./minmax.h"
+// Что можно делать с массивом
+//   1.1 Создать без инициализации
+//   1.2 Создать и проинициализировать пустым литералом
+//   1.3 Создать и проинициализировать generic литералом
+//   1.4 Создать и проинициализировать non-generic литералом
+//
+//   2.1 Присвоить массив массиву (константу, переменную)
+//   2.2 Передать в функцию
+//   2.3 Вернуть из функции
+//
+//   3.1 Сохранить значение в ячейку массива
+//   3.2 Загрузить значение из ячейки массива
+//
+//   4.1 Загрузить срез (подмассив)
+//   4.2 Сохранить срез (подмассив)
+//
+//   5.1 Получить длину массива (в элементах)
+//   5.2 Получить размер массива (в байтах)
+//
+//   6.1 Создать VLA массив
 
-#define constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+#define CONSTANT_ARRAY  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-static int32_t globalArray[10] = constantArray;
+static int32_t globalArray[10] = CONSTANT_ARRAY;
 
 static char arrayFromString[3] = "abc";
 
@@ -57,8 +74,8 @@ static void f0(char *_x, char *sret_) {
 }
 
 
-#define startSequence  {0xAA, 0x55, 0x2}
-#define stopSequence  {0x16}
+#define START_SEQUENCE  {0xAA, 0x55, 0x2}
+#define STOP_SEQUENCE  {0x16}
 
 static void test() {
 	// тестируем работу с локальным generic массивом

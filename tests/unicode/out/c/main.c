@@ -11,19 +11,19 @@
 
 
 
-#define a  "A"
+#define A  "A"
 
-static char c8 = _CHR8(a);
-static char16_t c16 = _CHR16(a);
-static char32_t c32 = _CHR32(a);
+static char c8 = _CHR8(A);
+static char16_t c16 = _CHR16(A);
+static char32_t c32 = _CHR32(A);
 
-static char b8[1] = a;
-static char16_t b16[1] = _STR16(a);
-static char32_t b32[1] = _STR32(a);
+static char b8[1] = A;
+static char16_t b16[1] = _STR16(A);
+static char32_t b32[1] = _STR32(A);
 
-static char *s8 = a;
-static char16_t *s16 = _STR16(a);
-static char32_t *s32 = _STR32(a);
+static char *s8 = A;
+static char16_t *s16 = _STR16(A);
+static char32_t *s32 = _STR32(A);
 
 static char cc8 = 'A';
 static char16_t cc16 = u'A';
@@ -49,13 +49,13 @@ int32_t main()
 {
 	printf("test unicode\n");
 
-	putc8(_CHR8(a));
-	putc16(_CHR16(a));
-	putc32(_CHR32(a));
+	putc8(_CHR8(A));
+	putc16(_CHR16(A));
+	putc32(_CHR32(A));
 
-	puts8(a);
-	puts16(_STR16(a));
-	puts32(_STR32(a));
+	puts8(A);
+	puts16(_STR16(A));
+	puts32(_STR32(A));
 
 	putc8('A');
 	putc16(u'A');

@@ -12,7 +12,7 @@
 
 
 
-#define carr  {0, 10, 15, 20, 25, 30}
+#define CARR  {0, 10, 15, 20, 25, 30}
 
 struct Point {
 	double x;
@@ -26,31 +26,31 @@ struct Line {
 };
 typedef struct Line Line;
 
-#define zero  0
-#define pointZero  {.x = zero, .y = zero}
-#define pointOne  {.x = 1.0, .y = 1.0}
+#define ZERO  0
+#define POINT_ZERO  {.x = ZERO, .y = ZERO}
+#define POINT_ONE  {.x = 1.0, .y = 1.0}
 
-#define line0  { \
-	.a = pointZero, \
-	.b = pointOne \
+#define LINE0  { \
+	.a = POINT_ZERO, \
+	.b = POINT_ONE \
 }
 
-#define line1  { \
+#define LINE1  { \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
 
-#define line2  { \
-	.a = pointZero, \
-	.b = pointOne \
+#define LINE2  { \
+	.a = POINT_ZERO, \
+	.b = POINT_ONE \
 }
 
-#define line3  { \
+#define LINE3  { \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
 
-#define lines  {line0, line1, line2, line3}
+#define LINES  {LINE0, LINE1, LINE2, LINE3}
 
 struct WrappedArray {
 	//array: [10]Int32
@@ -58,7 +58,7 @@ struct WrappedArray {
 };
 typedef struct WrappedArray WrappedArray;
 
-#define wa  {}
+#define WA  {}
 
 // Pythagorean theorem
 static float distance(Point a, Point b) {
@@ -76,10 +76,10 @@ static float lineLength(Line line) {
 
 
 int main() {
-	const float lines_0_len = lineLength(((const Line[4])lines)[0]);
-	const float lines_1_len = lineLength(((const Line[4])lines)[1]);
-	const float lines_2_len = lineLength(((const Line[4])lines)[2]);
-	const float lines_3_len = lineLength(((const Line[4])lines)[3]);
+	const float lines_0_len = lineLength(((const Line[4])LINES)[0]);
+	const float lines_1_len = lineLength(((const Line[4])LINES)[1]);
+	const float lines_2_len = lineLength(((const Line[4])LINES)[2]);
+	const float lines_3_len = lineLength(((const Line[4])LINES)[3]);
 
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);

@@ -12,28 +12,28 @@
 
 
 
-#define filename  "file2.txt"
+#define FILENAME  "file2.txt"
 
-#define ipAddress  "127.0.0.1"
-#define port  8080
-#define bufSize  1024
+#define IP_ADDRESS  "127.0.0.1"
+#define PORT  8080
+#define BUF_SIZE  1024
 
 static bool writeFile(int sockFd) {
-	char buffer[bufSize];
+	char buffer[BUF_SIZE];
 
-	FILE *const fp = fopen(filename, "w");
+	FILE *const fp = fopen(FILENAME, "w");
 	if (fp == NULL) {
 		perror("[-] Error in creating file");
 		return false;
 	}
 
 	while (true) {
-		const ssize_t n = recv(sockFd, (void *)&buffer, bufSize, 0);
+		const ssize_t n = recv(sockFd, (void *)&buffer, BUF_SIZE, 0);
 		if (n <= 0) {
 			break;
 		}
 		fprintf(fp, "%s", (char *)&buffer);
-		memset(&buffer, 0, sizeof(char[bufSize]));
+		memset(&buffer, 0, sizeof(char[BUF_SIZE]));
 	}
 
 	return true;
@@ -51,9 +51,9 @@ int main() {
 
 	struct sockaddr_in serverAddr = (struct sockaddr_in){
 		.sin_family = AF_INET,
-		.sin_port = port,
+		.sin_port = PORT,
 		.sin_addr = (struct in_addr){
-			.s_addr = inet_addr(ipAddress)
+			.s_addr = inet_addr(IP_ADDRESS)
 		}
 	};
 

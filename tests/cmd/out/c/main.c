@@ -14,13 +14,13 @@
 #endif /* LENGTHOF */
 
 
-#define prompt  "# "
+#define PROMPT  "# "
 
 static char tokensBuf[4 * 1024];
 
 static void showPrompt() {
-	char _prompt[32] = prompt;
-	write(0, (void *)&_prompt, (size_t)LENGTHOF(prompt));
+	char _prompt[32] = PROMPT;
+	write(0, (void *)&_prompt, (size_t)LENGTHOF(PROMPT));
 }
 
 

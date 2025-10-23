@@ -14,9 +14,9 @@
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
 
-#define flashlightStateOff  0
-#define flashlightStateOn  1
-#define flashlightStateBeacon  2
+#define FLASHLIGHT_STATE_OFF  0
+#define FLASHLIGHT_STATE_ON  1
+#define FLASHLIGHT_STATE_BEACON  2
 
 static uint8_t cnt;
 
@@ -36,7 +36,7 @@ static void off_loop(fsm_FSM *x) {
 		cnt = cnt + 1;
 	} else {
 		cnt = 0;
-		fsm_switch(x, flashlightStateOn);
+		fsm_switch(x, FLASHLIGHT_STATE_ON);
 	}
 }
 
@@ -63,7 +63,7 @@ static void on_loop(fsm_FSM *x) {
 		cnt = cnt + 1;
 	} else {
 		cnt = 0;
-		fsm_switch(x, flashlightStateBeacon);
+		fsm_switch(x, FLASHLIGHT_STATE_BEACON);
 	}
 }
 
@@ -90,7 +90,7 @@ static void beacon_loop(fsm_FSM *x) {
 		cnt = cnt + 1;
 	} else {
 		cnt = 0;
-		fsm_switch(x, flashlightStateOff);
+		fsm_switch(x, FLASHLIGHT_STATE_OFF);
 	}
 }
 
@@ -105,7 +105,7 @@ static fsm_FSM fsm0 = {
 	.name = "Flash",
 	.state = 0,
 	.nexstate = 0,
-	.substate = fsm_substateEntering,
+	.substate = FSM_SUBSTATE_ENTERING,
 	.states = {
 		{
 			.name = "Off",

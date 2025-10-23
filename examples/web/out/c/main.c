@@ -16,12 +16,12 @@
 #endif /* LENGTHOF */
 
 
-#define port  8080
+#define PORT  8080
 
-#define receiveBufferSize  1024
-#define sendBufferSize  1024
+#define RECEIVE_BUFFER_SIZE  1024
+#define SEND_BUFFER_SIZE  1024
 
-#define httpHeader  (("HTTP/1.1 200 OK\r\n" "Content-Type: text/html\r\n" "Connection: close\r\n" "\r\n"))
+#define HTTP_HEADER  (("HTTP/1.1 200 OK\r\n" "Content-Type: text/html\r\n" "Connection: close\r\n" "\r\n"))
 
 static uint32_t pageCounter;
 
@@ -32,7 +32,7 @@ static uint32_t pageCounter;
 //}
 
 static void handleRequest(int32_t clientSocket) {
-	uint8_t buffer[receiveBufferSize];
+	uint8_t buffer[RECEIVE_BUFFER_SIZE];
 	const ssize_t bytesReceived = read(clientSocket, (void *)&buffer, LENGTHOF(buffer) - 1);
 	if (bytesReceived < 0) {
 		perror("cannot read socket");
@@ -43,9 +43,9 @@ static void handleRequest(int32_t clientSocket) {
 
 	printf("Received request:\n%s\n", (char *)&buffer);
 
-	char response[sendBufferSize];
+	char response[SEND_BUFFER_SIZE];
 	sprintf((char *)&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>",
-		httpHeader, pageCounter
+		HTTP_HEADER, pageCounter
 	);
 
 	write(clientSocket, (void *)&response, strlen((const char *)&response));
@@ -65,7 +65,7 @@ int32_t main() {
 		.sin_addr = {
 			.s_addr = INADDR_ANY
 		},
-		.sin_port = (unsigned short)htons(port)
+		.sin_port = (unsigned short)htons(PORT)
 	};
 
 	// Bind socket to address
@@ -85,7 +85,7 @@ int32_t main() {
 		exit(1);
 	}
 
-	printf("Server listening on port %d...\n", (uint32_t)port);
+	printf("Server listening on port %d...\n", (uint32_t)PORT);
 
 	// Handle input connections
 	while (true) {

@@ -27,7 +27,7 @@ typedef int32_t MyInt32;
 typedef MyInt32 MyInt32_2;
 typedef MyInt32 MyInt32_3;
 
-#define cvb  (0)
+#define CVB  (0)
 static int32_t vvb = 1;
 
 struct __attribute__((packed)) ProtocolHeader {

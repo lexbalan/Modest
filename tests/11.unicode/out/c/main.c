@@ -14,27 +14,27 @@
 
 // include test (!)
 
-#define ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
-#define ratSymbolUTF16  {0xD83D, 0xDC00}
-#define ratSymbolUTF32  0x1F400
+#define RAT_SYMBOL_UTF8  {0xF0, 0x9F, 0x90, 0x80}
+#define RAT_SYMBOL_UTF16  {0xD83D, 0xDC00}
+#define RAT_SYMBOL_UTF32  0x1F400
 
-#define arr_partycorn  "🎉"
-#define arr_unicorn  "🦄"
-#define arr_rat  "🐀"
+#define ARR_PARTYCORN  "🎉"
+#define ARR_UNICORN  "🦄"
+#define ARR_RAT  "🐀"
 
-#define genericStringConst  "S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define string8Const  (genericStringConst)
-#define string16Const  (_STR16(genericStringConst))
-#define string32Const  (_STR32(genericStringConst))
+#define GENERIC_STRING_CONST  "S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define STRING8_CONST  (GENERIC_STRING_CONST)
+#define STRING16_CONST  (_STR16(GENERIC_STRING_CONST))
+#define STRING32_CONST  (_STR32(GENERIC_STRING_CONST))
 
 static char arr_utf8[8] = "Hi!\n";
 static char16_t arr_utf16[9] = _STR16("Hello Ω!\n");
 static char32_t arr_utf32[8] = _STR32("Hello!\n");
 
 int32_t main() {
-	char *str8 = string8Const;
-	char16_t *str16 = string16Const;
-	char32_t *str32 = string32Const;
+	char *str8 = STRING8_CONST;
+	char16_t *str16 = STRING16_CONST;
+	char32_t *str32 = STRING32_CONST;
 
 	console_puts8(str8);
 	console_puts8("\n");

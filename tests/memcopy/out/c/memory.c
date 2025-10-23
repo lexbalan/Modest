@@ -11,7 +11,7 @@
 
 //  //
 
-#define systemWidth  64
+#define SYSTEM_WIDTH  64
 
 //$if (systemWidth == 64)
 typedef uint64_t Word;
@@ -21,10 +21,10 @@ typedef uint64_t Nat;
 //type Nat Nat32
 //$endif
 
-#define memoryAlignment  (systemWidth / 8)
+#define MEMORY_ALIGNMENT  (SYSTEM_WIDTH / 8)
 
 void memory_zero(void *mem, uint64_t len) {
-	const Nat z = (Nat)mem % memoryAlignment;
+	const Nat z = (Nat)mem % MEMORY_ALIGNMENT;
 
 	uint8_t *const memptr = (uint8_t *)mem;
 

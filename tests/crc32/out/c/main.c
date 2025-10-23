@@ -14,19 +14,19 @@
 #endif /* LENGTHOF */
 
 
-#define datastring  "123456789"
-#define expected_hash  0xCBF43926UL
+#define DATASTRING  "123456789"
+#define EXPECTED_HASH  0xCBF43926UL
 
-static uint8_t data[9] = datastring;
+static uint8_t data[9] = DATASTRING;
 
 int main() {
 	printf("CRC32 test\n");
 
 	const uint32_t crc = crc32_run((uint8_t *)&data, LENGTHOF(data));
 
-	printf("crc32.doHash(\"%s\") = %08X\n", datastring, crc);
+	printf("crc32.doHash(\"%s\") = %08X\n", DATASTRING, crc);
 
-	if (crc == expected_hash) {
+	if (crc == EXPECTED_HASH) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

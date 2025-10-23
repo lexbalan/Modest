@@ -14,10 +14,10 @@
 #endif /* LENGTHOF */
 
 
-#define inputDataLength  32
+#define INPUT_DATA_LENGTH  32
 
 struct SHA256_TestCase {
-	char inputData[inputDataLength];
+	char inputData[INPUT_DATA_LENGTH];
 	uint32_t inputDataLen;
 
 	sha256_Hash expectedResult;
@@ -46,7 +46,7 @@ static SHA256_TestCase test1 = {
 	}
 };
 
-#define tests  {&test0, &test1}
+#define TESTS  {&test0, &test1}
 
 static bool doTest(SHA256_TestCase *test) {
 	sha256_Hash test_hash;
@@ -59,7 +59,7 @@ static bool doTest(SHA256_TestCase *test) {
 	printf(" -> ");
 
 	uint32_t i = 0;
-	while (i < sha256_hashSize) {
+	while (i < SHA256_HASH_SIZE) {
 		printf("%02X", test_hash[i]);
 		i = i + 1;
 	}
@@ -75,7 +75,7 @@ int main() {
 
 	uint32_t i = 0;
 	while (i < 2) {
-		SHA256_TestCase *const test = ((SHA256_TestCase *[2])tests)[i];
+		SHA256_TestCase *const test = ((SHA256_TestCase *[2])TESTS)[i];
 		const bool testResult = doTest(test);
 
 		char *res = "failed";

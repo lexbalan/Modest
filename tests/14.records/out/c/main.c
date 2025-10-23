@@ -33,8 +33,8 @@ struct Point3D {
 };
 typedef struct Point3D Point3D;
 
-#define xx  {.x = 1, .y = 2}
-#define yy  {.x = 1, .y = 2}
+#define XX  {.x = 1, .y = 2}
+#define YY  {.x = 1, .y = 2}
 
 struct Point {
 	int32_t x;
@@ -137,7 +137,7 @@ int main() {
 
 	// compare Point2D with anonymous record
 	Point2D p2d2 = p2d0;
-	struct __anonymous_struct_7 p2d3 = (struct __anonymous_struct_7)xx;
+	struct __anonymous_struct_7 p2d3 = (struct __anonymous_struct_7)XX;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(Point2D)) == 0) {
 		printf("p2d2 == p2d3\n");

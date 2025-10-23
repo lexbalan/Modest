@@ -16,20 +16,20 @@
 #endif /* LENGTHOF */
 
 
-#define filename  "file.txt"
+#define FILENAME  "file.txt"
 
-#define ipAddress  "127.0.0.1"
-#define port  8080
-#define bufSize  1024
+#define IP_ADDRESS  "127.0.0.1"
+#define PORT  8080
+#define BUF_SIZE  1024
 
 static bool sendFile(FILE *fp, int sockFd) {
-	char data[bufSize];
+	char data[BUF_SIZE];
 
 	while (fgets((char *)&data, LENGTHOF(data), fp) != NULL) {
 		if (send(sockFd, (void *)&data, sizeof data, 0) == -1) {
 			return false;
 		}
-		memset(&data, 0, sizeof(char[bufSize]));
+		memset(&data, 0, sizeof(char[BUF_SIZE]));
 	}
 
 	return true;
@@ -47,9 +47,9 @@ int main() {
 
 	struct sockaddr_in server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
-		.sin_port = port,
+		.sin_port = PORT,
 		.sin_addr = {
-			.s_addr = inet_addr(ipAddress)
+			.s_addr = inet_addr(IP_ADDRESS)
 		}
 	};
 
@@ -62,7 +62,7 @@ int main() {
 
 	printf("[+] Connected to server\n");
 
-	FILE *const fp = fopen(filename, "r");
+	FILE *const fp = fopen(FILENAME, "r");
 	if (fp == NULL) {
 		perror("[-] Error in reading file");
 		exit(1);

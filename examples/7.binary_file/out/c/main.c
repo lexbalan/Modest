@@ -12,7 +12,7 @@
 
 // FIXIT: not worked LLVM result (!)
 
-#define filename  ("file.bin")
+#define FILENAME  ("file.bin")
 
 // chunk of data for read/write operations in file
 struct Chunk {
@@ -24,10 +24,10 @@ typedef struct Chunk Chunk;
 static void write_example() {
 	printf("run write_example\n");
 
-	FILE *const fp = fopen(filename, "wb");
+	FILE *const fp = fopen(FILENAME, "wb");
 
 	if (fp == NULL) {
-		printf("error: cannot create file '%s'", filename);
+		printf("error: cannot create file '%s'", FILENAME);
 		return;
 	}
 
@@ -46,17 +46,17 @@ static void write_example() {
 static void read_example() {
 	printf("run read_example\n");
 
-	FILE *const fp = fopen(filename, "rb");
+	FILE *const fp = fopen(FILENAME, "rb");
 
 	if (fp == NULL) {
-		printf("error: cannot open file '%s'", filename);
+		printf("error: cannot open file '%s'", FILENAME);
 		return;
 	}
 
 	Chunk chunk;
 	fread(&chunk, sizeof(Chunk), 1, fp);
 
-	printf("file \"%s\" contains:\n", filename);
+	printf("file \"%s\" contains:\n", FILENAME);
 	printf("chunk.id: \"%s\"\n", (char *)&chunk.id);
 	printf("chunk.data: \"%s\"\n", (char *)&chunk.data);
 
