@@ -113,3 +113,6 @@ bool memory_eq(void *mem0, void *mem1, uint64_t len) {
 }
 
 
+#undef SYSTEM_WIDTH
+#undef MEMORY_ALIGNMENT
+

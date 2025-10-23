@@ -49,3 +49,14 @@ int32_t main() {
 }
 
 
+#undef RAT_SYMBOL_UTF8
+#undef RAT_SYMBOL_UTF16
+#undef RAT_SYMBOL_UTF32
+#undef ARR_PARTYCORN
+#undef ARR_UNICORN
+#undef ARR_RAT
+#undef GENERIC_STRING_CONST
+#undef STRING8_CONST
+#undef STRING16_CONST
+#undef STRING32_CONST
+

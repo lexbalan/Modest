@@ -61,3 +61,5 @@ int main() {
 }
 
 
+#undef MATH_PI
+

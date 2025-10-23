@@ -2093,6 +2093,7 @@ def str_static_initializer(v):
 def print_def_const(x):
 	id_str = camel_to_snake(get_id_str(x.value))
 	print_macro_definition(id_str, x.init_value, val_ctx=[])
+	module_undef_list.append(id_str)
 	return
 
 

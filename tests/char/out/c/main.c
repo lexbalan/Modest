@@ -33,3 +33,7 @@ int main() {
 }
 
 
+#undef UTF8_CHAR
+#undef UTF16_CHAR
+#undef UTF32_CHAR
+

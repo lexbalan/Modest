@@ -375,4 +375,7 @@ int main() {
 
 
 #undef LENGTHOF
+#undef CONSTANT_ARRAY
+#undef START_SEQUENCE
+#undef STOP_SEQUENCE
 

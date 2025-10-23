@@ -83,4 +83,8 @@ int main() {
 
 
 #undef LENGTHOF
+#undef FILENAME
+#undef IP_ADDRESS
+#undef PORT
+#undef BUF_SIZE
 

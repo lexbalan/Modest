@@ -56,3 +56,6 @@ static int32_t get_number(int32_t min, int32_t max) {
 }
 
 
+#undef MIN_NUMBER
+#undef MAX_NUMBER
+

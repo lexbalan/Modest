@@ -65,3 +65,10 @@ void fsm_run(fsm_FSM *fsm) {
 }
 
 
+#undef FSM_NAME_MAX_LENGTH
+#undef FSM_MAX_STATES
+#undef FSM_SUBSTATE_ENTERING
+#undef FSM_SUBSTATE_LOOP
+#undef FSM_SUBSTATE_LEAVING
+#undef VERBOSE
+

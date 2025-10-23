@@ -97,3 +97,14 @@ int main() {
 }
 
 
+#undef CARR
+#undef ZERO
+#undef POINT_ZERO
+#undef POINT_ONE
+#undef LINE0
+#undef LINE1
+#undef LINE2
+#undef LINE3
+#undef LINES
+#undef WA
+

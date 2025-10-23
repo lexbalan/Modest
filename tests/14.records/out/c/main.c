@@ -219,3 +219,6 @@ int main() {
 }
 
 
+#undef XX
+#undef YY
+
