@@ -346,6 +346,13 @@ int main() {
 
 	test_arrays();
 
+
+	// not immediate local array literal test
+	int32_t va = 5;
+	int32_t vb = 7;
+	int32_t varr[4];
+	memcpy(&varr, &(int32_t[4]){1, 2, va, vb}, sizeof(int32_t[4]));
+
 	return 0;
 }
 

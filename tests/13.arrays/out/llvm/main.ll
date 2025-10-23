@@ -1257,6 +1257,31 @@ endif_2:
 	;		printf("test failed\n")
 	;	}
 	call void @test_arrays()
+
+
+	; not immediate local array literal test
+	%226 = alloca %Int32, align 4
+	store %Int32 5, %Int32* %226
+	%227 = alloca %Int32, align 4
+	store %Int32 7, %Int32* %227
+	%228 = alloca [4 x %Int32], align 1
+	%229 = load %Int32, %Int32* %226
+	%230 = load %Int32, %Int32* %227
+	%231 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 0
+	%232 = insertvalue [4 x %Int32] %231, %Int32 2, 1
+	%233 = load %Int32, %Int32* %226
+	%234 = insertvalue [4 x %Int32] %232, %Int32 %233, 2
+	%235 = load %Int32, %Int32* %227
+	%236 = insertvalue [4 x %Int32] %234, %Int32 %235, 3
+; -- cons_composite_from_composite_by_value --
+	%237 = alloca [4 x %Int32]
+	%238 = zext i8 4 to %Nat32
+	store [4 x %Int32] %236, [4 x %Int32]* %237
+	%239 = bitcast [4 x %Int32]* %237 to [4 x %Int32]*
+; -- end cons_composite_from_composite_by_value --
+	%240 = load [4 x %Int32], [4 x %Int32]* %239
+	%241 = zext i8 4 to %Nat32
+	store [4 x %Int32] %240, [4 x %Int32]* %228
 	ret %Int 0
 }
 

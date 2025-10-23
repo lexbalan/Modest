@@ -338,6 +338,12 @@ public func main () -> Int {
 
 	test_arrays()
 
+
+	// not immediate local array literal test
+	var va: Int32 = 5
+	var vb = Int32 7
+	var varr = [4]Int32 [1, 2, va, vb]
+
 	return 0
 }
 

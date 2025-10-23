@@ -1401,7 +1401,6 @@ class Value(Entity):
 class ValueBad(Value):
 	def __init__(self, ti=None):
 		super().__init__(type=TypeBad(ti), ti=ti)
-		from .hlir import Id
 		self.id = Id('_')
 		# чтобы заткнуть жалобы "expected immediate value"
 		self.immediate = True

@@ -12,8 +12,9 @@ from .num import value_number_create
 # TODO: переделай здесь все - тут все плохо...
 # получает на вход список элементов
 # конструирует и возвращает GenericArray value
-def value_array_create(items, ti=None):
-	#info("value_array_create", ti)
+def value_array_create(items, ti):
+	#info("value_array_create()", ti)
+
 	length = len(items)
 	if length == 0:
 		item_type = foundation.typeUnit  # not Null, becase it fail
@@ -35,8 +36,8 @@ def value_array_create(items, ti=None):
 	items_type = items[0].type
 	for item in items:
 		items_type = select_common_type(items_type, item.type)
-		if items_type.is_bad():
-			error("value with unsuitable type2", item['ti'])
+		if items_type == None or items_type.is_bad():
+			error("value with unsuitable type", item.ti)
 			return ValueBad({'ti': ti})
 
 	# неявно приводим все элементы к этому типу
