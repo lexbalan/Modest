@@ -93,7 +93,7 @@ def value_natural_cons(t, v, method, ti):
 		from trans import cmodule_use
 		cmodule_use('use_abs')
 
-	if v.isImmediate():
+	if v.isValueImmediate():
 		_check_width(v.type, t, method, ti)
 		if method != 'implicit':
 			nv = ValueCons(t, v, method, rawMode=False, ti=ti)

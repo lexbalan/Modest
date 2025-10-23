@@ -29,6 +29,32 @@ def get_item_by_id(_list, id):
 
 
 
+def get_int_alias(width, signed):
+	width = align_bits_up(width)
+
+	if signed:
+		aka = 'Int%d' % width
+
+		if width == 128:
+			calias = '__int128'
+		else:
+			calias = 'int%d_t' % width
+
+		llvm_alias = 'Int%d' % width
+
+	else:
+		aka = 'Nat%d' % width
+		if width == 128:
+			calias = 'unsigned __int128'
+		else:
+			calias = 'uint%d_t' % width
+
+		llvm_alias = 'Nat%d' % width
+
+	return {'c': calias, 'llvm': llvm_alias, 'cm': aka}
+
+
+
 
 
 
@@ -76,6 +102,7 @@ HLIR_VALUE_OP_ACCESS_MODULE = 'access_module'
 HLIR_ACCESS_LEVEL_DEFAULT = 'default'
 HLIR_ACCESS_LEVEL_PUBLIC = 'public'
 HLIR_ACCESS_LEVEL_PRIVATE = 'private'
+
 
 
 class Entity():
@@ -189,7 +216,6 @@ class Id(Entity):
 		self.llvm = id_str
 		self.cm = id_str
 		self.ti = ti
-
 
 
 
@@ -609,9 +635,9 @@ class Type(Entity):
 	def is_vla(self):
 		if not self.is_array():
 			return False
-		if self.volume.isUndef():
+		if self.volume.isValueUndef():
 			return False
-		return self.volume.isRuntimeValue()
+		return self.volume.isValueRuntime()
 
 
 	# *[10]*[3]*[n] -> True
@@ -680,13 +706,13 @@ class Type(Entity):
 
 	def is_closed_array(self):
 		if self.is_array():
-			return not self.volume.isUndef()
+			return not self.volume.isValueUndef()
 		return False
 
 
 	def is_open_array(self):
 		if self.is_array():
-			return self.volume.isUndef()
+			return self.volume.isValueUndef()
 		return False
 
 
@@ -812,14 +838,14 @@ class Type(Entity):
 
 	@staticmethod
 	def eq_array(a, b, opt):
-		if a.volume.isUndef() or b.volume.isUndef():
-			if a.volume.isUndef() and b.volume.isUndef():
+		if a.volume.isValueUndef() or b.volume.isValueUndef():
+			if a.volume.isValueUndef() and b.volume.isValueUndef():
 				return Type.eq(a.of, b.of, opt)
 			return False
 
 		# a.volume & b.volume defined
 
-		if a.volume.isImmediate() and b.volume.isImmediate():
+		if a.volume.isValueImmediate() and b.volume.isValueImmediate():
 			if a.volume.asset != b.volume.asset:
 				return False
 
@@ -963,7 +989,7 @@ class Type(Entity):
 			# zero sized array is forbidden for vars
 			from trans import is_unsafe_mode
 			if not is_unsafe_mode():
-				if self.volume.isImmediate():
+				if self.volume.isValueImmediate():
 					if self.volume.asset == 0:
 						return zero_array_forbidden
 
@@ -1054,9 +1080,7 @@ class TypeInt(Type):
 		super().__init__(width=width, ops=INT_OPS, ti=ti)
 		self.kind = HLIR_TYPE_KIND_INT
 		self.incomplete = False
-
 		alias = get_int_alias(width, signed=True)
-
 		self.id = Id(alias['cm'])
 		self.id.c = alias['c']
 		self.id.llvm = alias['llvm']
@@ -1068,9 +1092,7 @@ class TypeNat(Type):
 		super().__init__(width=width, ops=INT_OPS, ti=ti)
 		self.kind = HLIR_TYPE_KIND_NAT
 		self.incomplete = False
-
 		alias = get_int_alias(width, signed=False)
-
 		self.id = Id(alias['cm'])
 		self.id.c = alias['c']
 		self.id.llvm = alias['llvm']
@@ -1088,7 +1110,6 @@ class TypeFloat(Type):
 			calias = 'double'
 
 		alias = get_int_alias(width, signed=True)
-
 		self.id = Id('Float%d' % width)
 		self.id.c = calias
 		self.id.llvm = 'Float%d' % width
@@ -1102,7 +1123,6 @@ class TypeChar(Type):
 		self.incomplete = False
 
 		alias = get_int_alias(width, signed=False)
-
 		self.id = Id('Char%d' % width)
 		if width <= 8:
 			self.id.c = 'char'
@@ -1129,7 +1149,7 @@ class TypeArray(Type):
 			item_align = of.align
 
 		array_size = 0
-		if volume != None and not volume.isUndef():
+		if volume != None and not volume.isValueUndef():
 			if volume.immediate:
 				array_size = item_size * volume.asset
 
@@ -1194,31 +1214,6 @@ class TypeVaList(Type):
 		self.id.llvm = '__VA_List'
 
 
-def get_int_alias(width, signed):
-	width = align_bits_up(width)
-
-	if signed:
-		aka = 'Int%d' % width
-
-		if width == 128:
-			calias = '__int128'
-		else:
-			calias = 'int%d_t' % width
-
-		llvm_alias = 'Int%d' % width
-
-	else:
-		aka = 'Nat%d' % width
-		if width == 128:
-			calias = 'unsigned __int128'
-		else:
-			calias = 'uint%d_t' % width
-
-		llvm_alias = 'Nat%d' % width
-
-	return {'c': calias, 'llvm': llvm_alias, 'cm': aka}
-
-
 
 
 HLIR_VALUE_STORAGE_CLASS_GLOBAL = "global"
@@ -1261,45 +1256,177 @@ class Value(Entity):
 	def isLvalue(self):
 		return self.is_lvalue
 
-	def isImmediate(self):
+	def isValueImmediate(self):
 		return self.immediate
 
-	def isRuntimeValue(self):
-		return not self.isImmediate()
+	def isValueRuntime(self):
+		return not self.isValueImmediate()
 
-	def isZero(self):
-		if self.isImmediate():
+	"""def isZero(self):
+		if self.isValueImmediate():
 			if self.type.is_composite():
 				return self.asset == []
 			else:
 				return self.asset == 0
 
 			#return (self.asset == 0 or self.asset == None) and (self.asset == None or self.asset == [])
-		return False
+		return False"""
 
 
-	def isImmutable(self):
+	def isValueImmutable(self):
 		# ONLY lvalue CAN be an immutable value,
 		# BUT if immutable flag is set, it is immutable value anyway
 		return (not self.isLvalue()) or self.immutable
 
 
 
-	def isBad(self):
+	def isValueBad(self):
 		return isinstance(self, ValueBad)
 
-
-	def isUndef(self):
+	def isValueUndef(self):
 		return isinstance(self, ValueUndef)
 
-	def isLiteral(self):
+	def isValueLiteral(self):
 		return isinstance(self, ValueLiteral)
 
-	def isConst(self):
+	def isValueConst(self):
 		return isinstance(self, ValueConst)
 
-	def isVar(self):
+	def isValueVar(self):
 		return isinstance(self, ValueVar)
+
+	def isValueFunc(self):
+		return isinstance(self, ValueFunc)
+
+	def isValueSubexpr(self):
+		return isinstance(self, ValueSubexpr)
+
+	def isValueNew(self):
+		return isinstance(self, ValueNew)
+
+	def isValueVaArg(self):
+		return isinstance(self, ValueVaArg)
+
+	def isValueVaStart(self):
+		return isinstance(self, ValueVaStart)
+
+	def isValueVaEnd(self):
+		return isinstance(self, ValueVaEnd)
+
+	def isValueVaCopy(self):
+		return isinstance(self, ValueVaCopy)
+
+
+	def isValueBin(self):
+		return isinstance(self, ValueBin)
+
+	def isValueLogicOr(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_LOGIC_OR
+
+	def isValueLogicAnd(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_LOGIC_AND
+
+	def isValueLogicXor(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_LOGIC_XOR
+
+	def isValueLogicNot(self):
+		return isinstance(self, ValueNot) and self.value.type.is_bool()
+
+	def isValueOr(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_OR
+
+	def isValueAnd(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_AND
+
+	def isValueXor(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_XOR
+
+	def isValueNot(self):
+		return isinstance(self, ValueNot) #and not self.value.type.is_bool()
+
+	def isValueAdd(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_ADD
+
+	def isValueSub(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_SUB
+
+	def isValueMul(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_MUL
+
+	def isValueDiv(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_DIV
+
+	def isValueRem(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_REM
+
+	def isValueNeg(self):
+		return isinstance(self, ValueNeg)
+
+	def isValuePos(self):
+		return isinstance(self, ValuePos)
+
+	def isValueShl(self):
+		return isinstance(self, ValueShl)
+
+	def isValueShr(self):
+		return isinstance(self, ValueShr)
+
+	def isValueLt(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_LT
+
+	def isValueGt(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_GT
+
+	def isValueLe(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_LE
+
+	def isValueGe(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_GE
+
+	def isValueEq(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_EQ
+
+	def isValueNe(self):
+		return self.isBin() and self.op == HLIR_VALUE_OP_NE
+
+	def isValueCons(self):
+		return isinstance(self, ValueCons)
+
+	def isValueCall(self):
+		return isinstance(self, ValueCall)
+
+	def isValueRef(self):
+		return isinstance(self, ValueRef)
+
+	def isValueDeref(self):
+		return isinstance(self, ValueDeref)
+
+	def isValueIndex(self):
+		return isinstance(self, ValueIndex)
+
+	def isValueSlice(self):
+		return isinstance(self, ValueSlice)
+
+	def isValueAccessRecord(self):
+		return isinstance(self, ValueAccessRecord)
+
+	def isValueSizeofValue(self):
+		return isinstance(self, ValueSizeofValue)
+
+	def isValueSizeofType(self):
+		return isinstance(self, ValueSizeofType)
+
+	def isValueAlignof(self):
+		return isinstance(self, ValueAlignof)
+
+	def isValueOffsetof(self):
+		return isinstance(self, ValueOffsetof)
+
+	def isValueLengthof(self):
+		return isinstance(self, ValueLengthof)
+
+	def isValueAccessModule(self):
+		return isinstance(self, ValueAccessModule)
 
 
 	def copy(self):
@@ -1327,7 +1454,7 @@ class Value(Entity):
 		from foundation import typeBool
 		nv = ValueBin(typeBool, op, l, r, ti=ti)
 
-		if l.isImmediate() and r.isImmediate():
+		if l.isValueImmediate() and r.isValueImmediate():
 			eq_result = False
 			if op == HLIR_VALUE_OP_EQ:
 				eq_result = l.asset == r.asset
@@ -1341,19 +1468,19 @@ class Value(Entity):
 
 
 	# Only for immediate value (!)
-	def isZero(self):
-		if self.isRuntimeValue():
+	def isValueZero(self):
+		if self.isValueRuntime():
 			return False
 
 		if self.type.is_array():
 			for item in self.asset:
-				if not item.isZero():
+				if not item.isValueZero():
 					return False
 			return True
 
 		if self.type.is_record():
 			for initializer in self.asset:
-				if not initializer.value.isZero():
+				if not initializer.value.isValueZero():
 					return False
 			return True
 
@@ -1491,7 +1618,7 @@ class ValueNot(Value):
 		assert(isinstance(value, Value))
 		super().__init__(type=type, ti=ti)
 		self.value = value
-		if value.isImmediate():
+		if value.isValueImmediate():
 			# because: ~(1) = -1 (not 0) !
 			if value.type.is_bool():
 				self.asset = not value.asset
@@ -1509,7 +1636,7 @@ class ValueNeg(Value):
 		super().__init__(type=type, ti=ti)
 		self.value = value
 
-		if value.isImmediate():
+		if value.isValueImmediate():
 			self.asset = -value.asset
 			self.immediate = True
 
@@ -1525,7 +1652,7 @@ class ValuePos(Value):
 		super().__init__(type=type, ti=ti)
 		self.value = value
 
-		if value.isImmediate():
+		if value.isValueImmediate():
 			self.asset = +value.asset
 			self.immediate = True
 
@@ -1564,7 +1691,7 @@ class ValueSubexpr(Value):
 		assert(isinstance(value, Value))
 		super().__init__(type=value.type, ti=ti)
 		self.value = value
-		if value.isImmediate():
+		if value.isValueImmediate():
 			from trans import cp_immediate
 			cp_immediate(self, value)
 
@@ -1580,7 +1707,7 @@ class ValueBin(Value):
 		self.left = left
 		self.right = right
 
-		if left.isBad() or right.isBad():
+		if left.isValueBad() or right.isValueBad():
 			# если один из операндов bad, то и результат тоже bad
 			self.immediate = False
 			self.asset = None
@@ -1588,7 +1715,7 @@ class ValueBin(Value):
 
 		# if left & right are immediate, we can fold const
 		# and append field .asset to bin_value
-		if left.isImmediate() and right.isImmediate():
+		if left.isValueImmediate() and right.isValueImmediate():
 			ops = {
 				HLIR_VALUE_OP_LOGIC_OR: lambda a, b: a or b,
 				HLIR_VALUE_OP_LOGIC_AND: lambda a, b: a and b,
@@ -1633,7 +1760,7 @@ class ValueShl(Value):
 		self.left = left
 		self.right = right
 
-		if left.isImmediate() and right.isImmediate():
+		if left.isValueImmediate() and right.isValueImmediate():
 			self.asset = int(left.asset << right.asset)
 			self.immediate = True
 
@@ -1646,7 +1773,7 @@ class ValueShr(Value):
 		self.left = left
 		self.right = right
 
-		if left.isImmediate() and right.isImmediate():
+		if left.isValueImmediate() and right.isValueImmediate():
 			self.asset = int(left.asset >> right.asset)
 			self.immediate = True
 
@@ -1670,7 +1797,7 @@ class ValueCall(Value):
 
 		args_is_imm = True
 		for arg in args:
-			if not arg.value.isImmediate():
+			if not arg.value.isValueImmediate():
 				args_is_imm = False
 				break
 
@@ -1695,7 +1822,7 @@ class ValueAccessRecord(Value):
 			self.immutable = left.immutable
 
 			# access to immediate object
-			if left.isImmediate():
+			if left.isValueImmediate():
 				initializer = get_item_by_id(left.asset, field.id.str)
 
 				# (!) #asset of immediate index & access contains VALUE (!)
@@ -1731,8 +1858,8 @@ class ValueIndex(Value):
 			self.immutable = left.immutable
 			array_typ = left.type
 
-			if left.isImmediate():
-				if index.isImmediate():
+			if left.isValueImmediate():
+				if index.isValueImmediate():
 					#info("immediate index", x['ti'])
 					index_imm = index.asset
 

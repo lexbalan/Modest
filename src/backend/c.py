@@ -115,7 +115,7 @@ precedenceMax = len(aprecedence) - 1
 # приоритет операции
 def precedence(x):
 	i = 0
-	if isinstance(x, ValueBin):
+	if x.isValueBin():
 		k = x.op
 		if x.op == HLIR_VALUE_OP_ADD and x.type.is_array():
 			return 12
@@ -124,17 +124,17 @@ def precedence(x):
 				break
 			i += 1
 	else:
-		if isinstance(x, ValueCons): i = 10
-		elif isinstance(x, ValueSizeofValue): i = 10
-		elif isinstance(x, ValueRef): i = 10
-		elif isinstance(x, ValueCall): i = 11
-		elif isinstance(x, ValueIndex): i = 11
-		elif isinstance(x, ValueAccessRecord): i = 11
-		elif isinstance(x, ValueShl): i = 7
-		elif isinstance(x, ValueShr): i = 7
-		elif isinstance(x, ValuePos): i = 10
-		elif isinstance(x, ValueNeg): i = 10
-		elif isinstance(x, ValueNot): i = 10
+		if x.isValueCons(): i = 10
+		elif x.isValueSizeofValue(): i = 10
+		elif x.isValueRef(): i = 10
+		elif x.isValueCall(): i = 11
+		elif x.isValueIndex(): i = 11
+		elif x.isValueAccessRecord(): i = 11
+		elif x.isValueShl(): i = 7
+		elif x.isValueShr(): i = 7
+		elif x.isValuePos(): i = 10
+		elif x.isValueNeg(): i = 10
+		elif x.isValueNot(): i = 10
 		else: i = 12
 
 	return i
@@ -144,12 +144,12 @@ def precedence(x):
 
 
 def value_is_generic_immediate(v):
-	return v.isImmediate() and v.type.is_generic()
+	return v.isValueImmediate() and v.type.is_generic()
 
 
 # такое значение определено как макрос
 def value_is_generic_immediate_const(v):
-	return v.isConst() and v.isImmediate() and v.type.is_generic()
+	return v.isValueConst() and v.isValueImmediate() and v.type.is_generic()
 
 
 
@@ -284,7 +284,7 @@ def str_type_array(t, core='', need_close=False):
 	while True:
 		right += '['
 		if t2.volume:
-			if t2.volume.isUndef():
+			if t2.volume.isValueUndef():
 				# В Си не можем печатать такое a[][], или такое a[][10], etc.
 				# А печатаем просто a[] (пропускаем все после пустых скобок)
 				while t2.of.is_array():
@@ -331,7 +331,7 @@ def strFuncParamlist(params, va_arg):
 		if param.init_value != None:
 			# BUG: None прилетает в случае когда функция возвращает массив,
 			# У него нет init_value - это какой то косяк но непросто разобраться
-			if not param.init_value.isUndef():
+			if not param.init_value.isValueUndef():
 				s += " /* default=" + str_value(param.init_value) + " */"
 
 		i += 1
@@ -579,7 +579,7 @@ def str_value_eq_composite(x, ctx):
 	left = x.left
 	right = x.right
 
-	if x.isImmediate():
+	if x.isValueImmediate():
 		return str_value_literal_bool(x.asset)
 
 	# если сравниваем строки (Str8, Str16, Str32)
@@ -641,7 +641,7 @@ def str_value_deref(x, ctx):
 def str_value_call(v, ctx, sret=None):
 	sstr = ''
 
-	if v.isImmediate():
+	if v.isValueImmediate():
 		return str_value_literal(v, ctx)
 
 	left = v.func
@@ -759,8 +759,8 @@ def str_value_access(x, ctx):
 	# если имеем дело c константной записью (глоб константа)
 	# и результат операции доступа - константа которая уже тут
 	#if left.type.is_generic():
-	#	if x.isImmediate():
-	if not left.isConst():
+	#	if x.isValueImmediate():
+	if not left.isValueConst():
 		if value_is_generic_immediate(left):
 			return str_value_literal(x, [])
 
@@ -838,7 +838,7 @@ def str_value_cons_array(x, ctx):
 		# то мы должны ее привести к требуемому типу
 		#is_const = value['kind'] in ['const', 'literal', HLIR_VALUE_OP_ADD]
 
-		is_const = isinstance(value, ValueLiteral) or isinstance(value, ValueConst) or (isinstance(value, ValueBin) and value.op == HLIR_VALUE_OP_ADD)
+		is_const = value.isValueLiteral() or value.isValueConst() or (value.isValueBin() and value.op == HLIR_VALUE_OP_ADD)
 
 		if is_const:
 			ctx=['array_as_array']
@@ -903,7 +903,7 @@ def cchr(value, sz):
 	#if sz > 8:
 	#	return "_CHR%d(%s)" % (sz, str_value(value))
 
-	if isinstance(value, ValueLiteral):
+	if value.isValueLiteral():
 		if value.type.is_string():
 			return str_value_literal_char(ord(value.asset[0]), sz)
 
@@ -928,7 +928,7 @@ def str_value_cons(x, ctx):
 	if type.is_char() and from_type.is_string():
 		return cchr(value, type.width)
 
-	if isinstance(value, ValueLiteral):
+	if value.isValueLiteral():
 		if from_type.is_generic():
 			if x.asset != None:
 				#if not (type.is_char() and from_type.is_string()):
@@ -956,7 +956,7 @@ def str_value_cons(x, ctx):
 
 
 	if x.method in ['implicit', 'default']:
-		if isinstance(value, ValueRef):
+		if value.isValueRef():
 		#if value.type.is_pointer_to_array():
 			# Для C явно приводим указатель на массив к указателю на его элемент
 			# В случае когда происходит НЕЯВНОЕ приведение;
@@ -966,7 +966,7 @@ def str_value_cons(x, ctx):
 		return str_value(value)
 
 
-	if isinstance(value, ValueLiteral):
+	if value.isValueLiteral():
 		return str_value(value)
 
 	# (!) WARNING (!)
@@ -992,7 +992,7 @@ def str_value_cons(x, ctx):
 
 	# for: (uint32_t *)(void *)&i;
 	# remove (void *)  ^^^^^^^^
-	if isinstance(value, ValueCons):
+	if value.isValueCons():
 		if value.type.is_free_pointer():
 			value = value.value
 
@@ -1006,7 +1006,7 @@ def is_zero_tail(values, i, n):
 	# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
 	while i < n:
 		v = values[i]
-		if not v.isZero():
+		if not v.isValueZero():
 			return False
 		i = i + 1
 	return True
@@ -1037,7 +1037,7 @@ def print_literal_array_items(values, item_type):
 		# если это значание - zero, проверим все остальные справа
 		# и если они тоже zero - их можно не печатать (zero tail)
 		# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
-		if a.isZero():
+		if a.isValueZero():
 			if is_zero_tail(values, i, n):
 				return sstr
 
@@ -1065,7 +1065,7 @@ def str_value_literal_char(cc, width):
 def str_value_literal_array(x, type, items, nl_end=1):
 	sstr = ''
 
-	#if not x.isImmediate():
+	#if not x.isValueImmediate():
 	#	sstr += '(%s)' % str_type(type)
 
 	if type.is_array_of_char():
@@ -1336,7 +1336,7 @@ def str_value_lengthof(x, ctx):
 
 	# generic array в си это просто макрос вида {1, 2, 3}
 	# и его нельзя подставить в LENGTHOF (!)
-	if isinstance(x.value, ValueDeref) or (x.type.is_generic_array()):
+	if x.value.isValueDeref() or x.type.is_generic_array():
 		# решает проблему когда массив представлен указателем на элемент
 		return str_value(x.value.type.volume)
 
@@ -1404,63 +1404,63 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 	#if x.id != None:
 	#	print(x)
 	#	sstr += get_id_str(x)
-	if isinstance(x, ValueLiteral):
+	if x.isValueLiteral():
 		sstr += str_value_literal(x, ctx)
-	elif isinstance(x, ValueBin):
+	elif x.isValueBin():
 		sstr += str_value_bin(x, ctx)
-	elif isinstance(x, ValueShl):
+	elif x.isValueShl():
 		sstr += str_value_shl(x, ctx)
-	elif isinstance(x, ValueShr):
+	elif x.isValueShr():
 		sstr += str_value_shr(x, ctx)
-	elif isinstance(x, ValueRef):
+	elif x.isValueRef():
 		sstr += str_value_ref(x, ctx)
-	elif isinstance(x, ValueDeref):
+	elif x.isValueDeref():
 		sstr += str_value_deref(x, ctx)
-	elif isinstance(x, ValueCons):
+	elif x.isValueCons():
 		sstr += str_value_cons(x, ctx)
-	elif isinstance(x, ValueFunc):
+	elif x.isValueFunc():
 		sstr += str_value_func(x, ctx)
-	elif isinstance(x, ValueVar):
+	elif x.isValueVar():
 		sstr += str_value_var(x, ctx)
-	elif isinstance(x, ValueConst):
+	elif x.isValueConst():
 		sstr += str_value_const(x, ctx)
-	elif isinstance(x, ValueCall):
+	elif x.isValueCall():
 		sstr += str_value_call(x, ctx)
-	elif isinstance(x, ValueIndex):
+	elif x.isValueIndex():
 		sstr += str_value_index(x, ctx)
-	elif isinstance(x, ValueAccessModule):
+	elif x.isValueAccessModule():
 		return str_value_access_module(x, ctx)
-	elif isinstance(x, ValueAccessRecord):
+	elif x.isValueAccessRecord():
 		sstr += str_value_access(x, ctx)
-	elif isinstance(x, ValueSlice):
+	elif x.isValueSlice():
 		sstr += str_value_slice(x, ctx)
-	elif isinstance(x, ValueSubexpr):
+	elif x.isValueSubexpr():
 		sstr += str_value_subexpr(x, ctx)
-	elif isinstance(x, ValueNot):
+	elif x.isValueNot():
 		sstr += str_value_not(x, ctx)
-	elif isinstance(x, ValueNeg):
+	elif x.isValueNeg():
 		sstr += str_value_neg(x, ctx)
-	elif isinstance(x, ValuePos):
+	elif x.isValuePos():
 		sstr += str_value_pos(x, ctx)
-	elif isinstance(x, ValueNew):
+	elif x.isValueNew():
 		sstr += str_value_new(x, ctx)
-	elif isinstance(x, ValueSizeofValue):
+	elif x.isValueSizeofValue():
 		sstr += str_value_sizeof_value(x, ctx)
-	elif isinstance(x, ValueSizeofType):
+	elif x.isValueSizeofType():
 		sstr += str_value_sizeof_type(x, ctx)
-	elif isinstance(x, ValueAlignof):
+	elif x.isValueAlignof():
 		sstr += str_value_alignof(x, ctx)
-	elif isinstance(x, ValueOffsetof):
+	elif x.isValueOffsetof():
 		sstr += str_value_offsetof(x, ctx)
-	elif isinstance(x, ValueLengthof):
+	elif x.isValueLengthof():
 		sstr += str_value_lengthof(x, ctx)
-	elif isinstance(x, ValueVaArg):
+	elif x.isValueVaArg():
 		sstr += str_value_va_arg(x, ctx)
-	elif isinstance(x, ValueVaStart):
+	elif x.isValueVaStart():
 		sstr += str_value_va_start(x, ctx)
-	elif isinstance(x, ValueVaEnd):
+	elif x.isValueVaEnd():
 		sstr += str_value_va_end(x, ctx)
-	elif isinstance(x, ValueVaCopy):
+	elif x.isValueVaCopy():
 		sstr += str_value_va_copy(x, ctx)
 	else:
 		sstr += str(x)
@@ -1552,14 +1552,14 @@ def print_stmt_var(x):
 
 	print_variable(get_id_str(var_value), var_value.type)
 
-	if init_value.isUndef():
+	if init_value.isValueUndef():
 		# инициализация неопределенным значением
 		# (отсутствие явной инициализации)
 		out(";")
 		return
 
 	if var_value.type.is_array():
-		if init_value.isRuntimeValue() or var_value.type.is_vla():
+		if init_value.isValueRuntime() or var_value.type.is_vla():
 			# нельзя присваивать VLA значение при создании...
 			# только после можно уже что то туда загрузить
 			out(";")
@@ -1587,10 +1587,10 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	need_wrap = False
 
 	# Не берем в скобки литералы, композитные значения и строки
-	is_func = isinstance(value, ValueFunc)
-	is_var = isinstance(value, ValueVar)
-	is_const = isinstance(value, ValueConst)
-	is_literal = isinstance(value, ValueLiteral)
+	is_func = value.isValueFunc()
+	is_var = value.isValueVar()
+	is_const = value.isValueConst()
+	is_literal = value.isValueLiteral()
 	is_comp = value.type.is_composite()
 
 	is_str = value.type.is_string()
@@ -1627,7 +1627,7 @@ def print_stmt_const(x):
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
 	if init_value.type.is_array():
-		runtimeLiteral = isinstance(init_value, ValueLiteral) and init_value.isRuntimeValue()
+		runtimeLiteral = init_value.isValueLiteral() and init_value.isValueRuntime()
 		if not runtimeLiteral:
 			print_variable(get_id_str(x), const_value.type)
 			out(";")
@@ -1694,9 +1694,9 @@ def print_stmt_asm(x):
 
 def str_array_len(array_value):
 	slen = "<slen>"
-	if array_value.isImmediate():
+	if array_value.isValueImmediate():
 		slen = str(array_value.type.volume.asset)
-	elif isinstance(array_value, ValueSlice):
+	elif array_value.isValueSlice():
 		slen = str_value(array_value.type.volume)
 	else:
 		slen = "LENGTHOF(" + str_value(array_value) + ')'
@@ -1708,16 +1708,16 @@ def assign_array(left, right, ti):
 	# если справа 'обернутое' значение
 	# (для того чтобы в C вернуть массив из функции
 	# его нужно 'обернуть' в структуру)
-	if isinstance(right, ValueCall):
+	if right.isValueCall():
 		out(str_value_call(right, [], sret=left))
 		return
 
 	rv = get_root_value(right)
-	if rv.isZero():
+	if rv.isValueZero():
 		memzero(left)
 		return
 
-	if isinstance(right, ValueCons):
+	if right.isValueCons():
 		# Если справа приведенный к левому массив (более короткий? Generic)
 		right = get_root_value(right)
 
@@ -1727,7 +1727,7 @@ def assign_array(left, right, ti):
 
 
 	slen = None
-	if isinstance(left, ValueVar) or isinstance(left, ValueConst):
+	if left.isValueVar() or left.isValueConst():
 		slen = str_array_len(left)
 	else:
 		slen = str_value(left.type.volume)
@@ -1740,7 +1740,7 @@ def assign_array(left, right, ti):
 		assign_by_memcopy(left, right)
 		return
 
-#	if right.isConst():
+#	if right.isValueConst():
 #		out("/*CONST*/")
 #		assign_by_memcopy(left, right)
 #		return
@@ -2043,7 +2043,7 @@ def print_def_var(x, isdecl=False, as_extern=False):
 
 	init_value = x.init_value
 
-	if not (init_value.isUndef() or is_extern):
+	if not (init_value.isValueUndef() or is_extern):
 		out(" = ")
 		out(str_static_initializer(init_value))
 	out(";")
@@ -2062,7 +2062,7 @@ def str_static_initializer(v):
 	if v.type.is_pointer_to_str():
 		return str_value(v, [])
 
-	if isinstance(v, ValueCons):
+	if v.isValueCons():
 		root = get_root_value(v)
 		if root.type.is_string():
 			# just string literal
@@ -2073,7 +2073,7 @@ def str_static_initializer(v):
 	if value_is_generic_immediate_const(root):
 		return str_value(root, [])
 
-	if root.isImmediate():
+	if root.isValueImmediate():
 		if v.type.is_composite():
 			s = str_value_literal(root, [])
 			if root.type.is_string():
@@ -2519,17 +2519,17 @@ def run(module, _outname):
 
 # возвращает корневое значение из цепочки ValueCons
 def get_root_value(x):
-	if isinstance(x, ValueCons):
+	if x.isValueCons():
 		return get_root_value(x.value)
 	return x
 
 
 
 def cons_vla_from_literal_array(x):
-	if isinstance(x, ValueCons):
+	if x.isValueCons():
 		if x.type.is_vla():
 			#return x['value']['kind'] in ['literal', HLIR_VALUE_OP_ADD]
-			if isinstance(x, ValueBin):
+			if x.isValueBin():
 				return x.op in ['literal', HLIR_VALUE_OP_ADD]
 	return False
 
@@ -2546,14 +2546,14 @@ def str_value_as_ptr(x):
 		return "&" + str_value(root)
 
 
-	if root.isImmediate():
+	if root.isValueImmediate():
 		if x.type.is_composite() or value_is_generic_immediate_const(root):
 			# generic immediate const is just a macro!
 			vs = str_value(root)
 			ts = str_type(x.type)
 			return "&((%s)%s)" % (ts, vs)
 
-	if isinstance(x, ValueCons):
+	if x.isValueCons():
 		# for *s == "Hi!"
 		# string literal will be implicitly casted to StrX
 		# and for getting pointer to this string
@@ -2562,24 +2562,24 @@ def str_value_as_ptr(x):
 		if x.value.type.is_string():
 			return str_value(x.value)
 
-	if isinstance(root, ValueSlice):
+	if root.isValueSlice():
 		ptr2slice = TypePointer(x.type)
 		sptr = str_type_pointer(ptr2slice, as_ptr_to_array=True)
 		sstr += '(%s)' % sptr
 
-	if isinstance(root, ValueDeref):
+	if root.isValueDeref():
 		return str_value(root.value)
 
-	if isinstance(root, ValueLiteral):
+	if root.isValueLiteral():
 		if root.type.is_string():
 			return str_value(root)
 
 	sstr += "&"
 
-	if isinstance(root, ValueBin) and root.op in ['literal', HLIR_VALUE_OP_ADD]:
+	if root.isValueBin() and root.op in ['literal', HLIR_VALUE_OP_ADD]:
 		sstr += '(' + str_type(t) + ')'
 
-	elif isinstance(root, ValueLiteral) and (not root.isImmediate()):
+	elif root.isValueLiteral() and (not root.isValueImmediate()):
 		# for non immediate literals  {1, 2, var_a, var_b, ...}
 		sstr += '(' + str_type(t) + ')'
 
@@ -2599,7 +2599,7 @@ def str_value_as_ptr(x):
 
 def assign_by_memcopy(left, right):
 	rv = get_root_value(right)
-	if rv.isZero():
+	if rv.isValueZero():
 		memzero(left)
 		return
 

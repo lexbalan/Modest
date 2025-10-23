@@ -73,7 +73,7 @@ def pointer_can(to, from_type, method, ti):
 
 
 def value_pointer_cons(t, v, method, ti):
-	if v.isImmediate():
+	if v.isValueImmediate():
 		if v.type.is_string():
 			nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 			nv.linktime = True

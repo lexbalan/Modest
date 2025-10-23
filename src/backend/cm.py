@@ -105,7 +105,7 @@ def str_TypeInt(t):
 def str_type_array(t):
 	s = ""
 	s += "["
-	if not t.volume.isUndef():
+	if not t.volume.isValueUndef():
 		s += str_value(t.volume)
 	s += "]"
 	s += str_type(t.of)
@@ -120,7 +120,7 @@ def str_type_pointer(t):
 
 def str_field(x):
 	s = get_id_str(x) + ": " + str_type(x.type)
-	if not x.init_value.isUndef():
+	if not x.init_value.isValueUndef():
 		s += " = " + str_value(x.init_value)
 	return s
 
@@ -369,7 +369,7 @@ def is_zero_tail(values, i, n):
 	# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
 	while i < n:
 		v = values[i]
-		if not v.isZero():
+		if not v.isValueZero():
 			return False
 		i = i + 1
 	return True
@@ -390,7 +390,7 @@ def str_value_array(v, ctx):
 	while i < n:
 		a = values[i]
 
-		if a.isZero():
+		if a.isValueZero():
 			if is_zero_tail(values, i, n):
 				break
 
@@ -784,7 +784,7 @@ def print_stmt_def(x, operator='const'):
 		out(": ")
 		out(str_type(x.value.type))
 
-	if not x.init_value.isUndef():
+	if not x.init_value.isValueUndef():
 		out(" = ")
 		out(str_value(x.init_value))
 

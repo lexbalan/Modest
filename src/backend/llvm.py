@@ -828,9 +828,9 @@ def print_type_array(t):
 	sz = 0
 	if not t.is_vla():
 		array_size = t.volume
-		if not array_size.isUndef():
+		if not array_size.isValueUndef():
 			if not array_size.type.is_incompleted():
-				if array_size.isImmediate():
+				if array_size.isValueImmediate():
 					sz = array_size.asset
 
 	out("[")
@@ -919,7 +919,7 @@ def do_reval(x):
 
 
 def do_eval_bin(x):
-	if x.isImmediate():
+	if x.isValueImmediate():
 		return do_eval_literal(x)
 
 	op = x.op
@@ -980,7 +980,7 @@ def do_eval_bin(x):
 
 
 def do_eval_shl(x):
-	if x.isImmediate():
+	if x.isValueImmediate():
 		return do_eval_literal(x)
 
 	# Composite objects comparison (see below)
@@ -993,7 +993,7 @@ def do_eval_shl(x):
 
 
 def do_eval_shr(x):
-	if x.isImmediate():
+	if x.isValueImmediate():
 		return do_eval_literal(x)
 
 	# Composite objects comparison (see below)
@@ -1043,7 +1043,7 @@ def do_eval_ref(v):
 
 def do_eval_call(v):
 
-	if v.isImmediate():
+	if v.isValueImmediate():
 		return do_eval_literal(v)
 
 	# eval all args
@@ -1119,7 +1119,7 @@ def index(x):
 		ll = do_reval(x.left)
 		return (ll, (i,))
 
-	if isinstance(x.left, ValueIndex):
+	if x.left.isValueIndex():
 		y, i2 = index(x.left)
 		return (y, i2 + (i,))
 
@@ -1128,7 +1128,7 @@ def index(x):
 
 
 def do_eval_index(x):
-	if x.isImmediate():
+	if x.isValueImmediate():
 		return do_eval_literal(x)
 
 	left, indexes = index(x)
@@ -1180,7 +1180,7 @@ def ass(left, indexes):
 
 
 def do_eval_slice(x):
-	if x.isImmediate():
+	if x.isValueImmediate():
 		return do_eval_literal(x)
 
 	left = x.left
@@ -1206,7 +1206,7 @@ def do_eval_slice(x):
 
 	# если сам массив находится в регистре: (let rec = get_rec())
 	if not array['is_adr']:
-		if v[HLIR_VALUE_OP_INDEX].isRuntimeValue():
+		if v[HLIR_VALUE_OP_INDEX].isValueRuntime():
 			error("expected immediate index value", x.ti)
 			return llvm_value_zero(x.type)
 
@@ -1254,7 +1254,7 @@ def access(x):
 		ll = do_reval(x.left)
 		return (ll, (i,))
 
-	if isinstance(x.left, ValueAccessRecord):
+	if x.left.isValueAccessRecord():
 		y, i2 = access(x.left)
 		return (y, i2 + (i,))
 
@@ -1263,7 +1263,7 @@ def access(x):
 
 
 def do_eval_access(x):
-	if x.isImmediate():
+	if x.isValueImmediate():
 		return do_eval_literal(x)
 
 	left, fields = access(x)
@@ -1416,7 +1416,7 @@ def eval_cons_record(x):
 
 
 def eval_cons_array(x):
-	if x.isImmediate():
+	if x.isValueImmediate():
 		if Type.is_vla(x.type):
 			return do_eval_literal(x.value)
 		return do_eval_literal(x)
@@ -1560,7 +1560,7 @@ def do_eval_cons(x):
 		return llvm_eval_binary('icmp ne', v, zero, x)
 
 
-	if value.isImmediate():
+	if value.isValueImmediate():
 		if x.asset:
 			# В случае Nat32 &x у нас занчение immediate
 			# но нет asset тк это поздний imm
@@ -1574,7 +1574,7 @@ def do_eval_cons(x):
 		return v
 
 	# Приводим immediate значение прямо по месту
-	if value.isImmediate():
+	if value.isValueImmediate():
 		return llvm_value_inline_cast(type, v)
 
 	return docast(v, type)
@@ -1630,7 +1630,7 @@ def do_eval_array(v):
 		item = v.asset[i]
 		# нет смысла засовывать в 'массив по значению' нулевые элементы
 		# тк он порождается из zeroinitializer и zero filled by default
-		if not item.isZero():
+		if not item.isValueZero():
 			lliv = do_reval(item)
 			xv = insertvalue(xv, lliv, i)
 		i = i + 1
@@ -1661,7 +1661,7 @@ def do_eval_record(v):
 	for initializer in v.asset:
 		# нет смысла засовывать в структуру по значению нулевые элементы
 		# тк она порождается из zeroinitializer и по умолчанию заполнена нулями
-		if not initializer.value.isZero():
+		if not initializer.value.isValueZero():
 			iv = do_reval(initializer.value)
 			field = htype.record_field_get(rec_type, get_id_str(initializer))
 			xv = insertvalue(xv, iv, field.field_no)
@@ -1809,37 +1809,37 @@ def do_eval(x):
 	assert(isinstance(x, Value))
 
 	y = None
-	if isinstance(x, ValueLiteral): y = do_eval_literal(x)
-	elif isinstance(x, ValueBin): y = do_eval_bin(x)
-	elif isinstance(x, ValueShl): y = do_eval_shl(x)
-	elif isinstance(x, ValueShr): y = do_eval_shr(x)
-	elif isinstance(x, ValueCons): y = do_eval_cons(x)
-	elif isinstance(x, ValueRef): y = do_eval_ref(x)
-	elif isinstance(x, ValueDeref): y = do_eval_deref(x)
-	elif isinstance(x, ValueConst): y = do_eval_const(x)
-	elif isinstance(x, ValueFunc): y = do_eval_func(x)
-	elif isinstance(x, ValueVar): y = do_eval_var(x)
-	elif isinstance(x, ValueCall): y = do_eval_call(x)
-	elif isinstance(x, ValueIndex): y = do_eval_index(x)
-	elif isinstance(x, ValueAccessModule): y = do_eval(x.value)
-	elif isinstance(x, ValueAccessRecord): y = do_eval_access(x)
-	elif isinstance(x, ValueSlice): y = do_eval_slice(x)
-	elif isinstance(x, ValueSubexpr): y = do_eval(x.value)
-	elif isinstance(x, ValueNot): y = do_eval_not(x)
-	elif isinstance(x, ValueNeg): y = do_eval_neg(x)
-	elif isinstance(x, ValuePos): y = do_eval_pos(x)
-	elif isinstance(x, ValueNew): y = do_eval_new(x)
-	elif isinstance(x, ValueZero): y = do_eval_literal(x)
-	elif isinstance(x, ValueSizeofValue): y = do_eval_sizeof_value(x)
-	elif isinstance(x, ValueSizeofType): y = do_eval_sizeof_type(x)
-	elif isinstance(x, ValueLengthof): y = do_eval_lengthof(x)
-	elif isinstance(x, ValueAlignof): y = do_eval_literal(x)
-	elif isinstance(x, ValueOffsetof): y = do_eval_literal(x)
-	elif isinstance(x, ValueVaStart): y = do_eval_va_start(x)
-	elif isinstance(x, ValueVaArg): y = do_eval_va_arg(x)
-	elif isinstance(x, ValueVaEnd): y = do_eval_va_end(x)
-	elif isinstance(x, ValueVaCopy): y = do_eval_va_copy(x)
-	elif isinstance(x, ValueUndef): y = llvm_value_undef(x.type)
+	if x.isValueLiteral(): y = do_eval_literal(x)
+	elif x.isValueBin(): y = do_eval_bin(x)
+	elif x.isValueShl(): y = do_eval_shl(x)
+	elif x.isValueShr(): y = do_eval_shr(x)
+	elif x.isValueCons(): y = do_eval_cons(x)
+	elif x.isValueRef(): y = do_eval_ref(x)
+	elif x.isValueDeref(): y = do_eval_deref(x)
+	elif x.isValueConst(): y = do_eval_const(x)
+	elif x.isValueFunc(): y = do_eval_func(x)
+	elif x.isValueVar(): y = do_eval_var(x)
+	elif x.isValueCall(): y = do_eval_call(x)
+	elif x.isValueIndex(): y = do_eval_index(x)
+	elif x.isValueAccessModule(): y = do_eval(x.value)
+	elif x.isValueAccessRecord(): y = do_eval_access(x)
+	elif x.isValueSlice(): y = do_eval_slice(x)
+	elif x.isValueSubexpr(): y = do_eval(x.value)
+	elif x.isValueNot(): y = do_eval_not(x)
+	elif x.isValueNeg(): y = do_eval_neg(x)
+	elif x.isValuePos(): y = do_eval_pos(x)
+	elif x.isValueNew(): y = do_eval_new(x)
+	elif x.isValueZero(): y = do_eval_literal(x)
+	elif x.isValueSizeofValue(): y = do_eval_sizeof_value(x)
+	elif x.isValueSizeofType(): y = do_eval_sizeof_type(x)
+	elif x.isValueLengthof(): y = do_eval_lengthof(x)
+	elif x.isValueAlignof(): y = do_eval_literal(x)
+	elif x.isValueOffsetof(): y = do_eval_literal(x)
+	elif x.isValueVaStart(): y = do_eval_va_start(x)
+	elif x.isValueVaArg(): y = do_eval_va_arg(x)
+	elif x.isValueVaEnd(): y = do_eval_va_end(x)
+	elif x.isValueVaCopy(): y = do_eval_va_copy(x)
+	elif x.isValueUndef(): y = llvm_value_undef(x.type)
 	else:
 		out("<??>")
 
@@ -1990,7 +1990,7 @@ def print_stmt_var(x):
 	locals_add(id_str, left)
 
 	init_value = x.init_value
-	if not init_value.isUndef():
+	if not init_value.isValueUndef():
 		iv = do_reval(init_value)
 		llvm_store(left, iv)
 
@@ -2005,7 +2005,7 @@ def print_stmt_const(x):
 	if iv.type.is_string():
 		return None
 
-	if isinstance(iv, ValueCall):
+	if iv.isValueCall():
 		if need_sret(iv.func.type):
 			v = do_eval_call(iv)
 			locals_add(id_str, v)
@@ -2457,7 +2457,7 @@ def print_def_var(x, as_extern=False):
 	print_type(var.type)
 
 	if not is_extern:
-		if not x.init_value.isUndef():
+		if not x.init_value.isValueUndef():
 			out(" ")
 			llvm_print_value(do_eval(x.init_value))
 		else:

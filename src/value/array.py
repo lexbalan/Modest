@@ -26,7 +26,7 @@ def value_array_create(items, ti):
 	is_immediate = True
 	is_linktime = False
 	for item in items:
-		if item.isRuntimeValue():
+		if item.isValueRuntime():
 			is_immediate = False
 
 		if item.linktime:
@@ -75,10 +75,10 @@ def array_can(to, from_type, method, ti):
 
 	if from_type.is_generic():
 		# GenericArray -> Array
-		if to.volume.isUndef():
+		if to.volume.isValueUndef():
 			return True
 
-		if not to.volume.isImmediate():
+		if not to.volume.isValueImmediate():
 			return True
 
 		# Check array length
@@ -98,7 +98,7 @@ def array_can(to, from_type, method, ti):
 def value_array_cons(t, v, method, ti):
 	#info("value_array_cons", ti)
 
-	if t.volume.isUndef():
+	if t.volume.isValueUndef():
 		# for case: `[]Int32 [1, 2, 3]`
 		# we try to construct array with undefined volume from array with defined volume
 		# in this case we take volume of value array
@@ -193,11 +193,11 @@ def value_array_eq(l, r, op, ti):
 	from foundation import typeBool
 	nv = ValueBin(typeBool, op, l, r, ti=ti)
 
-	if l.isImmediate() and r.isImmediate():
+	if l.isValueImmediate() and r.isValueImmediate():
 		eq_result = True
 		lvolume = l.type.volume
 		rvolume = r.type.volume
-		if lvolume.isImmediate() and rvolume.isImmediate():
+		if lvolume.isValueImmediate() and rvolume.isValueImmediate():
 			if lvolume.asset != rvolume.asset:
 				eq_result = False
 		else:

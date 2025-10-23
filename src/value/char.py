@@ -49,7 +49,7 @@ def value_char_cons(t, v, method, ti):
 		nv.asset = cc
 		return nv
 
-	if v.isImmediate():
+	if v.isValueImmediate():
 		return value_cons_immediate(t, v, method, ti)
 
 	return ValueCons(t, v, method, rawMode=False, ti=ti)

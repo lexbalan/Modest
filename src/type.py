@@ -66,7 +66,7 @@ def type_print_array(t, print_aka=True):
 	print("[", end='')
 	array_size = t.volume
 
-	if not array_size.isUndef():
+	if not array_size.isValueUndef():
 		if t.is_vla():
 
 			print("%s" % str(array_size), end='')

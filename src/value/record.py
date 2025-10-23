@@ -23,7 +23,7 @@ def value_record_create(initializers, ti):
 
 		# если хотя бы один элемент - не immediate
 		# -> весь литерал записи - не immediate
-		if init_value.isRuntimeValue():
+		if init_value.isValueRuntime():
 			is_immediate = False
 
 		# создаем поле для типа generic record
@@ -95,7 +95,7 @@ def value_record_eq(l, r, op, ti):
 	#info("value_record_eq()", ti)
 	from foundation import typeBool
 	nv = ValueBin(typeBool, op, l, r, ti=ti)
-	if l.isImmediate() and r.isImmediate():
+	if l.isValueImmediate() and r.isValueImmediate():
 		eq_result = True
 
 		for lx, rx in zip(l.asset, r.asset):

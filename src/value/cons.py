@@ -73,7 +73,7 @@ def value_cons_implicit(t, v, ti=None):
 	assert(isinstance(t, Type))
 	assert(isinstance(v, Value))
 
-	if v.isBad() or t.is_bad():
+	if v.isValueBad() or t.is_bad():
 		return ValueBad(v.ti)
 
 	ti = v.ti
@@ -122,7 +122,7 @@ def value_cons_explicit(t, v, ti):
 	assert(isinstance(v, Value))
 	assert(ti['isa'] == 'ti')
 
-	if v.isBad() or t.is_bad():
+	if v.isValueBad() or t.is_bad():
 		return ValueBad(v.ti)
 
 	from_type = v.type
@@ -254,7 +254,7 @@ def _select_minimal_type_for(t):
 # возвращает None если не может привести (!)
 # не принтует ошибку (но может выдать info)
 def value_cons(t, v, method, ti):
-	if v.isBad() or t.is_bad():
+	if v.isValueBad() or t.is_bad():
 		return None
 
 	if method == 'implicit':
