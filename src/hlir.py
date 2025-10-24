@@ -1052,6 +1052,7 @@ class TypeString(Type):
 		self.size=size
 		self.char_width=char_width
 		self.length=length
+		#self.volume = ValueLiteral(TypeNumber(width=64), length, ti)
 
 
 class TypeUnit(Type):

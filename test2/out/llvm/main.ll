@@ -223,9 +223,37 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
-; -- endstrings --; unicode support test
+; -- endstrings --; test2
+@a0 = internal global [4 x %Int32] [
+	%Int32 10,
+	%Int32 20,
+	%Int32 30,
+	%Int32 40
+]
+@a1 = internal global [4 x %Int32] [
+	%Int32 10,
+	%Int32 20,
+	%Int32 30,
+	%Int32 40
+]
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
+	%2 = alloca %Int32, align 4
+	store %Int32 10, %Int32* %2
+	%3 = alloca [5 x %Int32], align 1
+	%4 = insertvalue [5 x %Int32] zeroinitializer, %Int32 10, 0
+	%5 = insertvalue [5 x %Int32] %4, %Int32 20, 1
+	%6 = insertvalue [5 x %Int32] %5, %Int32 30, 2
+	%7 = insertvalue [5 x %Int32] %6, %Int32 40, 3
+	%8 = zext i8 5 to %Nat32
+	store [5 x %Int32] %7, [5 x %Int32]* %3
+	%9 = alloca [5 x %Int32], align 1
+	%10 = insertvalue [5 x %Int32] zeroinitializer, %Int32 10, 0
+	%11 = insertvalue [5 x %Int32] %10, %Int32 20, 1
+	%12 = insertvalue [5 x %Int32] %11, %Int32 30, 2
+	%13 = insertvalue [5 x %Int32] %12, %Int32 40, 3
+	%14 = zext i8 5 to %Nat32
+	store [5 x %Int32] %13, [5 x %Int32]* %9
 	ret %Int32 0
 }
 

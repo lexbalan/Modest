@@ -1933,7 +1933,6 @@ def def_var_common(x):
 		t = do_type(x['type'])
 
 	iv = do_rvalue(x['init_value'])
-
 	# TODO: это костыль что то надо с жтим делать
 	# (у ValueUndef тип по дефолту TypeBad - а тут нам надо чтобы был тип нашей переменной)
 	# Как это решить красиво пока не знаю...
@@ -1960,7 +1959,6 @@ def def_var_common(x):
 
 	elif tu == False and vu == False:
 		# type ok, value ok
-
 		if t.is_open_array():
 			if iv.type.is_string():
 				# for case:
@@ -1971,28 +1969,18 @@ def def_var_common(x):
 			elif iv.type.is_array():
 				# for case:
 				# var a: []*Str8 = ["Ab", "aB", "AAb"]
-
 				volume = value_number_create(iv.type.volume.asset)
 				t = TypeArray(t.of, volume, ti=x['ti'])
-				#v = value_cons_default(v)
-				#t = Type.copy(v.type)
 
-		iv = value_cons_implicit_check(t, iv)
-
-#	elif tu == False and vu == True:
-#		# type ok, value undef
-#		# пропишем тип для v
-#		iv.type = t
 	# type & init value present
-	if t != None and not iv.isValueUndef():
-		iv = value_cons_implicit_check(t, iv)
-
-	if t == None:
+	if t != None:
+		if not iv.isValueUndef():
+			iv = value_cons_implicit_check(t, iv)
+	else:
 		if iv.type.is_generic():
 			iv = value_cons_default(iv)
 
 		t = Type.reborn(iv.type)
-
 
 
 	# Переменная может быть типа []X если она внешняя
