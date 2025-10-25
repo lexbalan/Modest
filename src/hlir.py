@@ -362,10 +362,10 @@ class StmtDef(Stmt):
 
 
 class StmtDefType(StmtDef):
-	def __init__(self, id, newType, protoType, ti=None, nl=1):
+	def __init__(self, id, new_type, proto_type, ti=None, nl=1):
 		super().__init__(id, ti, nl)
-		self.type = newType
-		self.original_type = protoType
+		self.type = new_type
+		self.original_type = proto_type
 
 
 
@@ -539,7 +539,7 @@ HLIR_TYPE_KIND_VA_LIST = 15
 
 
 class Type(Entity):
-	def __init__(self, id=None, generic=False, width=0, ops=[], ti=None):
+	def __init__(self, generic=False, width=0, ops=[], ti=None):
 		super().__init__(ti)
 		size = nbytes_for_bits(width)
 		align = 1

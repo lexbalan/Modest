@@ -53,9 +53,9 @@ valueInt32_5 = ValueLiteral(typeInt32, 5)
 
 # def type
 module.defs.append(StmtCommentLine(['this is a type definition'], nl=2))
-nt = Type(ti=None)
-nt.id = Id("MyType")
-def_type = StmtDefType(Id("MyType"), nt, typeInt32)
+new_type = Type(ti=None)
+new_type.id=Id("MyType")
+def_type = StmtDefType(Id("MyType"), new_type=new_type, proto_type=typeInt32)
 module.defs.append(def_type)
 
 
@@ -87,14 +87,13 @@ stmt_block = StmtBlock([stmt_inc])
 stmt_while = StmtWhile(cond, stmt_block)
 
 # stmt if
-cond = constant
+if_cond = constant
 stmt_then = StmtBlock([StmtCommentLine([' then branch'])])
 stmt_else = StmtBlock([StmtCommentBlock(' else branch ')])
-stmt_if = StmtIf(cond, stmt_then, stmt_else, nl=2)
+stmt_if = StmtIf(if_cond, stmt_then, stmt_else, nl=2)
 
 # stmt return
-retval = valueInt32_0
-stmt_ret = StmtReturn(retval, nl=2)
+stmt_ret = StmtReturn(value=valueInt32_0, nl=2)
 
 # def func main
 type_func_main_to = typeInt32
