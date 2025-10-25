@@ -88,8 +88,8 @@ stmt_while = StmtWhile(cond, stmt_block)
 
 # stmt if
 cond = constant
-stmt_then = StmtBlock([])
-stmt_else = StmtBlock([])
+stmt_then = StmtBlock([StmtCommentLine([' then branch'])])
+stmt_else = StmtBlock([StmtCommentBlock(' else branch ')])
 stmt_if = StmtIf(cond, stmt_then, stmt_else, nl=2)
 
 # stmt return

@@ -50,7 +50,9 @@ int32_t main() {
 	}
 
 	if (CONDITION) {
+		// then branch
 	} else {
+		/* else branch */
 	}
 
 	return 0;
