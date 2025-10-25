@@ -4,21 +4,44 @@ import importlib
 from hlir import *
 
 
-# создаем модуль
+mit_license = """
+	MIT License
+
+	Copyright (c) [year] [fullname]
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+"""
+
 
 module = Module(idStr="main", ast=None, symtab_public=None, symtab_private=None, sourcename="main.m")
 
+block_comment = StmtCommentBlock(mit_license, nl=0)
+module.defs.append(block_comment)
 
-# Создаем и регистрируем определения
 
 include0 = StmtDirectiveCInclude("stdio.h")
 module.defs.append(include0)
 
-comment0 = StmtCommentLine(['this is', 'line comment'])
-module.defs.append(comment0)
+line_comment = StmtCommentLine(['this is', 'a line comment'])
+module.defs.append(line_comment)
 
-comment1 = StmtCommentBlock("this is\nmultiline comment")
-module.defs.append(comment1)
+
 
 typeInt32 = TypeInt(32)
 typeBool = TypeBool()
@@ -29,7 +52,6 @@ valueInt32_5 = ValueLiteral(typeInt32, 5)
 
 
 # def type
-
 module.defs.append(StmtCommentLine(['this is a type definition'], nl=2))
 nt = Type(ti=None)
 nt.id = Id("MyType")
@@ -93,7 +115,6 @@ type_func_main_params = [p0, p1]
 type_func_main = TypeFunc(type_func_main_params, type_func_main_to)
 value_func_main = ValueFunc(type_func_main, Id("sum"))
 
-
 param_a = ValueConst(p0.type, p0.id, init_value=ValueUndef(p0.type))
 param_a.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
 
@@ -110,7 +131,6 @@ module.defs.append(def_func_main)
 
 
 # печатаем модуль
-
 settings = {
 	'output_style': 'legacy',
 	'int_width': 32,
