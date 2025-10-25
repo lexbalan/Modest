@@ -140,7 +140,3 @@ int main() {
 }
 
 
-#undef FLASHLIGHT_STATE_OFF
-#undef FLASHLIGHT_STATE_ON
-#undef FLASHLIGHT_STATE_BEACON
-

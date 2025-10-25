@@ -36,7 +36,3 @@ int main() {
 }
 
 
-#undef LENGTHOF
-#undef DATASTRING
-#undef EXPECTED_HASH
-

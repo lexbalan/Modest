@@ -92,7 +92,3 @@ int main() {
 }
 
 
-#undef LENGTHOF
-#undef INPUT_DATA_LENGTH
-#undef TESTS
-

@@ -66,5 +66,3 @@ int main() {
 }
 
 
-#undef FILENAME
-

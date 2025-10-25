@@ -31,9 +31,3 @@ int main() {
 }
 
 
-#undef HELLO
-#undef WORLD
-#undef PARTY_CORN
-#undef GREETING
-#undef TEST
-

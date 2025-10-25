@@ -174,6 +174,3 @@ int main() {
 }
 
 
-#undef LENGTHOF
-#undef ARRCPY
-

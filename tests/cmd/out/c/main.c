@@ -160,6 +160,3 @@ int32_t main() {
 }
 
 
-#undef LENGTHOF
-#undef PROMPT
-

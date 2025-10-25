@@ -72,5 +72,3 @@ int main() {
 }
 
 
-#undef FILENAME
-

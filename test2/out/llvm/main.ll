@@ -224,6 +224,9 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- strings --
 @str1 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
 ; -- endstrings --; test2
+
+
+; Закладывай доставку в цену ramburs
 @a0 = internal global [4 x %Int32] [
 	%Int32 10,
 	%Int32 20,
@@ -236,24 +239,59 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 	%Int32 30,
 	%Int32 40
 ]
+%Point = type {
+	%Int32,
+	%Int32
+};
+
+@points = internal global [2 x %Point] [
+	%Point {
+		%Int32 0,
+		%Int32 0
+	},
+	%Point {
+		%Int32 1,
+		%Int32 1
+	}
+]
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Int32, align 4
 	store %Int32 10, %Int32* %2
 	%3 = alloca [5 x %Int32], align 1
-	%4 = insertvalue [5 x %Int32] zeroinitializer, %Int32 10, 0
-	%5 = insertvalue [5 x %Int32] %4, %Int32 20, 1
-	%6 = insertvalue [5 x %Int32] %5, %Int32 30, 2
-	%7 = insertvalue [5 x %Int32] %6, %Int32 40, 3
-	%8 = zext i8 5 to %Nat32
-	store [5 x %Int32] %7, [5 x %Int32]* %3
-	%9 = alloca [5 x %Int32], align 1
-	%10 = insertvalue [5 x %Int32] zeroinitializer, %Int32 10, 0
-	%11 = insertvalue [5 x %Int32] %10, %Int32 20, 1
-	%12 = insertvalue [5 x %Int32] %11, %Int32 30, 2
-	%13 = insertvalue [5 x %Int32] %12, %Int32 40, 3
-	%14 = zext i8 5 to %Nat32
-	store [5 x %Int32] %13, [5 x %Int32]* %9
+	%4 = load %Int32, %Int32* %2
+	%5 = insertvalue [5 x %Int32] zeroinitializer, %Int32 10, 0
+	%6 = insertvalue [5 x %Int32] %5, %Int32 20, 1
+	%7 = insertvalue [5 x %Int32] %6, %Int32 30, 2
+	%8 = insertvalue [5 x %Int32] %7, %Int32 40, 3
+	%9 = load %Int32, %Int32* %2
+	%10 = insertvalue [5 x %Int32] %8, %Int32 %9, 4
+; -- cons_composite_from_composite_by_value --
+	%11 = alloca [5 x %Int32]
+	%12 = zext i8 5 to %Nat32
+	store [5 x %Int32] %10, [5 x %Int32]* %11
+	%13 = bitcast [5 x %Int32]* %11 to [5 x %Int32]*
+; -- end cons_composite_from_composite_by_value --
+	%14 = load [5 x %Int32], [5 x %Int32]* %13
+	%15 = zext i8 5 to %Nat32
+	store [5 x %Int32] %14, [5 x %Int32]* %3
+	%16 = alloca [5 x %Int32], align 1
+	%17 = load %Int32, %Int32* %2
+	%18 = insertvalue [5 x %Int32] zeroinitializer, %Int32 10, 0
+	%19 = insertvalue [5 x %Int32] %18, %Int32 20, 1
+	%20 = insertvalue [5 x %Int32] %19, %Int32 30, 2
+	%21 = insertvalue [5 x %Int32] %20, %Int32 40, 3
+	%22 = load %Int32, %Int32* %2
+	%23 = insertvalue [5 x %Int32] %21, %Int32 %22, 4
+; -- cons_composite_from_composite_by_value --
+	%24 = alloca [5 x %Int32]
+	%25 = zext i8 5 to %Nat32
+	store [5 x %Int32] %23, [5 x %Int32]* %24
+	%26 = bitcast [5 x %Int32]* %24 to [5 x %Int32]*
+; -- end cons_composite_from_composite_by_value --
+	%27 = load [5 x %Int32], [5 x %Int32]* %26
+	%28 = zext i8 5 to %Nat32
+	store [5 x %Int32] %27, [5 x %Int32]* %16
 	ret %Int32 0
 }
 

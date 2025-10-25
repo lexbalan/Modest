@@ -21,7 +21,3 @@ int main() {
 }
 
 
-#undef HELLO
-#undef WORLD
-#undef HELLO_WORLD
-

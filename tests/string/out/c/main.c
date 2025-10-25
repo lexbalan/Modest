@@ -57,7 +57,3 @@ int main() {
 }
 
 
-#undef STR8_EXAMPLE
-#undef STR16_EXAMPLE
-#undef STR32_EXAMPLE
-

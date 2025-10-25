@@ -71,6 +71,3 @@ int main() {
 }
 
 
-#undef MSG_LENGTH
-#undef KEY_LENGTH
-

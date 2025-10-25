@@ -106,8 +106,3 @@ int32_t main() {
 }
 
 
-#undef CONST0
-#undef MY_ZERO
-#undef MY_ONE
-#undef CVB
-

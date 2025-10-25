@@ -221,7 +221,3 @@ void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash) {
 }
 
 
-#undef SHA256_HASH_SIZE
-#undef INITAL_STATE
-#undef K
-

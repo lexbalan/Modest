@@ -51,5 +51,3 @@ int main() {
 }
 
 
-#undef LENGTHOF
-

@@ -65,5 +65,3 @@ int main() {
 }
 
 
-#undef QSIZE
-

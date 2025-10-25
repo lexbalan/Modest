@@ -32,5 +32,3 @@ int main() {
 }
 
 
-#undef ARR
-

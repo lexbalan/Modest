@@ -2492,10 +2492,10 @@ def print_cfile(module, _outname):
 		elif x.is_stmt_directive():
 			print_directive(x)
 
-	if len(module_undef_list) > 0:
-		newline(1)
-		for u in module_undef_list:
-			undef(u)
+	#if len(module_undef_list) > 0:
+	#	newline(1)
+	#	for u in module_undef_list:
+	#		undef(u)
 
 	newline(2)
 	output_close()

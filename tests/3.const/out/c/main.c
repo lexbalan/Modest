@@ -52,12 +52,3 @@ int main() {
 }
 
 
-#undef GENERIC_INT_CONST
-#undef INT32_CONST
-#undef GENERIC_STRING_CONST
-#undef STRING8_CONST
-#undef STRING16_CONST
-#undef STRING32_CONST
-#undef PS
-#undef POINTS
-

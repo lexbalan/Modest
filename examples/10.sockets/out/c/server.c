@@ -90,8 +90,3 @@ int main() {
 }
 
 
-#undef FILENAME
-#undef IP_ADDRESS
-#undef PORT
-#undef BUF_SIZE
-

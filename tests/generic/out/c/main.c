@@ -232,6 +232,3 @@ static bool test_generic_record() {
 }
 
 
-#undef LENGTHOF
-#undef ARRCPY
-

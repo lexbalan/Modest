@@ -95,5 +95,3 @@ static void puts32(char32_t *s)
 }
 
 
-#undef A
-

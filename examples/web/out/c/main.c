@@ -106,9 +106,3 @@ int32_t main() {
 }
 
 
-#undef LENGTHOF
-#undef PORT
-#undef RECEIVE_BUFFER_SIZE
-#undef SEND_BUFFER_SIZE
-#undef HTTP_HEADER
-

@@ -353,71 +353,72 @@ class StmtImport(Stmt):
 
 
 class StmtDef(Stmt):
-	def __init__(self, id, ti=None):
+	def __init__(self, id, ti=None, nl=1):
 		super().__init__(ti)
 		self.id = id
 		self.access_level = HLIR_ACCESS_LEVEL_PRIVATE
+		self.nl = nl
 
 
 
 class StmtDefType(StmtDef):
-	def __init__(self, id, newType, protoType, ti=None):
-		super().__init__(id, ti)
+	def __init__(self, id, newType, protoType, ti=None, nl=1):
+		super().__init__(id, ti, nl)
 		self.type = newType
 		self.original_type = protoType
 
 
 
 class StmtDefVar(StmtDef):
-	def __init__(self, id, var_value, init_value=None, ti=None):
-		super().__init__(id, ti)
+	def __init__(self, id, var_value, init_value=None, ti=None, nl=1):
+		super().__init__(id, ti, nl)
 		self.value = var_value
 		self.init_value = init_value
 
 
 
 class StmtDefConst(StmtDef):
-	def __init__(self, id, const_value, init_value=None, ti=None):
-		super().__init__(id, ti)
+	def __init__(self, id, const_value, init_value=None, ti=None, nl=1):
+		super().__init__(id, ti, nl)
 		self.value = const_value
 		self.init_value = init_value
 
 
 
 class StmtDefFunc(StmtDef):
-	def __init__(self, id, funcValue, stmt, ti=None):
-		super().__init__(id, ti)
+	def __init__(self, id, funcValue, stmt, ti=None, nl=1):
+		super().__init__(id, ti, nl)
 		self.value = funcValue
 		self.stmt = stmt
 
 
 
 class StmtBlock(Stmt):
-	def __init__(self, stmts, ti=None):
-		super().__init__(ti)
+	def __init__(self, stmts, ti=None, nl=1):
+		super().__init__(ti, nl)
 		# количество пустых строк перед закрывающей скобкой блока
 		self.stmts = stmts
 
 
 
 class StmtValueExpression(Stmt):
-	def __init__(self, value, ti=None):
-		super().__init__(ti)
+	def __init__(self, value, ti=None, nl=1):
+		super().__init__(ti, nl)
 		self.value = value
 
 
 
 class StmtAssign(Stmt):
-	def __init__(self, left, right, ti=None):
-		super().__init__(ti)
+	def __init__(self, left, right, ti=None, nl=1):
+		super().__init__(ti, nl)
 		self.left = left
 		self.right = right
 
 
 
 class StmtIf(Stmt):
-	def __init__(self, cond, then, els=None, ti=None):
-		super().__init__(ti)
+	def __init__(self, cond, then, els=None, ti=None, nl=1):
+		super().__init__(ti, nl)
 		self.cond = cond
 		self.then = then
 		self.els = els
@@ -425,35 +426,35 @@ class StmtIf(Stmt):
 
 
 class StmtWhile(Stmt):
-	def __init__(self, cond, stmt, ti=None):
-		super().__init__(ti)
+	def __init__(self, cond, stmt, ti=None, nl=1):
+		super().__init__(ti, nl=1)
 		self.cond = cond
 		self.stmt = stmt
 
 
 
 class StmtAgain(Stmt):
-	def __init__(self, ti=None):
-		super().__init__(ti)
+	def __init__(self, ti=None, nl=1):
+		super().__init__(ti, nl)
 
 
 
 class StmtBreak(Stmt):
-	def __init__(self, ti=None):
-		super().__init__(ti)
+	def __init__(self, ti=None, nl=1):
+		super().__init__(ti, nl)
 
 
 
 class StmtReturn(Stmt):
-	def __init__(self, value=None, ti=None):
-		super().__init__(ti)
+	def __init__(self, value=None, ti=None, nl=1):
+		super().__init__(ti, nl)
 		self.value = value
 
 
 
 class StmtAsm(Stmt):
-	def __init__(self, text, outputs, inputs, clobbers, ti=None):
-		super().__init__(ti)
+	def __init__(self, text, outputs, inputs, clobbers, ti=None, nl=1):
+		super().__init__(ti, nl=1)
 		self.text = text
 		self.outputs = outputs
 		self.inputs = inputs
@@ -462,14 +463,14 @@ class StmtAsm(Stmt):
 
 
 class StmtDirective(Stmt):
-	def __init__(self, ti):
-		super().__init__(ti)
+	def __init__(self, ti, nl=1):
+		super().__init__(ti, nl)
 
 
 
 class StmtDirectiveCInclude(StmtDirective):
-	def __init__(self, s):
-		super().__init__(None)
+	def __init__(self, s, ti=None, nl=1):
+		super().__init__(ti, nl)
 		self.nl = 1
 		self.c_name = s
 		self.is_local = s[0:2] == './'
@@ -478,8 +479,8 @@ class StmtDirectiveCInclude(StmtDirective):
 
 # insert random text into output
 class StmtDirectiveInsert(StmtDirective):
-	def __init__(self, text, ti):
-		super().__init__(ti)
+	def __init__(self, text, ti=None, nl=1):
+		super().__init__(ti, nl)
 		self.text = text
 
 

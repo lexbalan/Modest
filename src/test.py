@@ -14,10 +14,10 @@ module = Module(idStr="main", ast=None, symtab_public=None, symtab_private=None,
 include0 = StmtDirectiveCInclude("stdio.h")
 module.defs.append(include0)
 
-comment0 = StmtCommentLine(['this is', 'line comment'], nl=1)
+comment0 = StmtCommentLine(['this is', 'line comment'])
 module.defs.append(comment0)
 
-comment1 = StmtCommentBlock("this is\nmultiline comment", nl=1)
+comment1 = StmtCommentBlock("this is\nmultiline comment")
 module.defs.append(comment1)
 
 typeInt32 = TypeInt(32)
@@ -29,28 +29,31 @@ valueInt32_5 = ValueLiteral(typeInt32, 5)
 
 
 # def type
+
+module.defs.append(StmtCommentLine(['this is a type definition'], nl=2))
 nt = Type(ti=None)
 nt.id = Id("MyType")
 def_type = StmtDefType(Id("MyType"), nt, typeInt32)
-def_type.nl = 2
 module.defs.append(def_type)
 
 
 # def const
+module.defs.append(StmtCommentLine(['this is a constant definition'], nl=2))
 constant_init_value = valueInt32_1
 constant = ValueConst(typeInt32, Id("CONDITION"), constant_init_value)
 def_constant = StmtDefConst(Id("CONDITION"), constant, constant_init_value)
-def_constant.nl = 2
 module.defs.append(def_constant)
 
 
 # def var
+module.defs.append(StmtCommentLine(['this is a variable definition'], nl=2))
 var_init_value = valueInt32_0
 variable = ValueVar(typeInt32, Id("counter"), var_init_value)
 def_var = StmtDefVar(Id("counter"), variable, var_init_value)
-def_var.nl = 2
 module.defs.append(def_var)
 
+
+module.defs.append(StmtCommentLine(['this is a function definition'], nl=2))
 
 # stmt ++
 addd = ValueBin(typeInt32, HLIR_VALUE_OP_ADD, variable, valueInt32_1)
@@ -65,13 +68,11 @@ stmt_while = StmtWhile(cond, stmt_block)
 cond = constant
 stmt_then = StmtBlock([])
 stmt_else = StmtBlock([])
-stmt_if = StmtIf(cond, stmt_then, stmt_else)
-stmt_if.nl=2
+stmt_if = StmtIf(cond, stmt_then, stmt_else, nl=2)
 
 # stmt return
 retval = valueInt32_0
-stmt_ret = StmtReturn(retval)
-stmt_ret.nl=2
+stmt_ret = StmtReturn(retval, nl=2)
 
 # def func main
 type_func_main_to = typeInt32
@@ -81,7 +82,6 @@ value_func_main = ValueFunc(type_func_main, Id("main"))
 stmt_func_main = StmtBlock([stmt_while, stmt_if, stmt_ret])
 def_func_main = StmtDefFunc("main", value_func_main, stmt_func_main)
 def_func_main.access_level = HLIR_ACCESS_LEVEL_PUBLIC
-def_func_main.nl = 2
 module.defs.append(def_func_main)
 
 
@@ -106,7 +106,6 @@ stmt_ret = StmtReturn(retval)
 stmt_func_main = StmtBlock([stmt_ret])
 def_func_main = StmtDefFunc("sum", value_func_main, stmt_func_main)
 def_func_main.access_level = HLIR_ACCESS_LEVEL_PRIVATE
-def_func_main.nl = 2
 module.defs.append(def_func_main)
 
 

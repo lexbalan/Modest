@@ -73,5 +73,3 @@ static void print_array(int32_t *array, uint32_t len) {
 }
 
 
-#undef LENGTHOF
-

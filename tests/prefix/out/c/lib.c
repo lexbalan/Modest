@@ -19,5 +19,3 @@ void loo_foo(uint32_t x) {
 }
 
 
-#undef LOO_BAR
-
