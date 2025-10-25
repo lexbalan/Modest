@@ -104,7 +104,6 @@ HLIR_ACCESS_LEVEL_PUBLIC = 'public'
 HLIR_ACCESS_LEVEL_PRIVATE = 'private'
 
 
-
 class Entity():
 	def __init__(self, ti):
 		self.ti = ti
@@ -1464,8 +1463,7 @@ class Value(Entity):
 			return value_record_eq(l, r, op, ti)
 
 		# scalar
-
-		from foundation import typeBool
+		from .defs import typeBool
 		nv = ValueBin(typeBool, op, l, r, ti=ti)
 
 		if l.isValueImmediate() and r.isValueImmediate():
@@ -2011,7 +2009,7 @@ class ValueOffsetof(Value):
 
 class ValueVaStart(Value):
 	def __init__(self, vaList, lastParam, ti=None):
-		from foundation import typeUnit
+		from .defs import typeUnit
 		super().__init__(type=typeUnit, ti=ti)
 		self.va_list = vaList
 		self.last_param = lastParam
@@ -2027,7 +2025,7 @@ class ValueVaArg(Value):
 
 class ValueVaEnd(Value):
 	def __init__(self, vaList, ti=None):
-		from foundation import typeUnit
+		from .defs import typeUnit
 		super().__init__(type=typeUnit, ti=ti)
 		self.va_list = vaList
 
@@ -2035,7 +2033,7 @@ class ValueVaEnd(Value):
 
 class ValueVaCopy(Value):
 	def __init__(self, dst, src, ti=None):
-		from foundation import typeUnit
+		from .defs import typeUnit
 		super().__init__(type=typeUnit, ti=ti)
 		self.dst = dst
 		self.src = src

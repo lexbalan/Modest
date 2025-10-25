@@ -10,8 +10,6 @@ from parser import Parser
 from common import settings, features
 import type as htype
 
-import foundation
-
 from value.bool import value_bool_create
 from value.num import value_number_create
 from value.float import value_float_create
@@ -181,7 +179,6 @@ valueNil = None
 valueTrue = None
 valueFalse = None
 
-foundation_module = None
 
 
 
@@ -191,67 +188,63 @@ def valueZeroNumber():
 
 
 def init():
-	global foundation_module
 	#lib_path = settings['lib']
 
 	# max number of signs after .
 	# decimal operation precision
 	decimal.getcontext().prec = settings['precision']
 
-
-	foundation_module = foundation.init()
-
 	global root_symtab
 	# init main context
 	root_symtab = Symtab()
 
-	root_symtab.type_add('Unit', foundation.typeUnit)
-	root_symtab.type_add('Bool', foundation.typeBool)
+	root_symtab.type_add('Unit', typeUnit)
+	root_symtab.type_add('Bool', typeBool)
 
-	root_symtab.type_add('Word8', foundation.typeWord8)
-	root_symtab.type_add('Word16', foundation.typeWord16)
-	root_symtab.type_add('Word32', foundation.typeWord32)
-	root_symtab.type_add('Word64', foundation.typeWord64)
-	root_symtab.type_add('Word128', foundation.typeWord128)
-	root_symtab.type_add('Word256', foundation.typeWord256)
+	root_symtab.type_add('Word8', typeWord8)
+	root_symtab.type_add('Word16', typeWord16)
+	root_symtab.type_add('Word32', typeWord32)
+	root_symtab.type_add('Word64', typeWord64)
+	root_symtab.type_add('Word128', typeWord128)
+	root_symtab.type_add('Word256', typeWord256)
 
-	root_symtab.type_add('Int8', foundation.typeInt8)
-	root_symtab.type_add('Int16', foundation.typeInt16)
-	root_symtab.type_add('Int32', foundation.typeInt32)
-	root_symtab.type_add('Int64', foundation.typeInt64)
-	root_symtab.type_add('Int128', foundation.typeInt128)
-	root_symtab.type_add('Int256', foundation.typeInt256)
+	root_symtab.type_add('Int8', typeInt8)
+	root_symtab.type_add('Int16', typeInt16)
+	root_symtab.type_add('Int32', typeInt32)
+	root_symtab.type_add('Int64', typeInt64)
+	root_symtab.type_add('Int128', typeInt128)
+	root_symtab.type_add('Int256', typeInt256)
 
-	root_symtab.type_add('Nat8', foundation.typeNat8)
-	root_symtab.type_add('Nat16', foundation.typeNat16)
-	root_symtab.type_add('Nat32', foundation.typeNat32)
-	root_symtab.type_add('Nat64', foundation.typeNat64)
-	root_symtab.type_add('Nat128', foundation.typeNat128)
-	root_symtab.type_add('Nat256', foundation.typeNat256)
+	root_symtab.type_add('Nat8', typeNat8)
+	root_symtab.type_add('Nat16', typeNat16)
+	root_symtab.type_add('Nat32', typeNat32)
+	root_symtab.type_add('Nat64', typeNat64)
+	root_symtab.type_add('Nat128', typeNat128)
+	root_symtab.type_add('Nat256', typeNat256)
 
-	#root_symtab.type_add('Float16', foundation.typeFloat16)
-	root_symtab.type_add('Float32', foundation.typeFloat32)
-	root_symtab.type_add('Float64', foundation.typeFloat64)
+	#root_symtab.type_add('Float16', typeFloat16)
+	root_symtab.type_add('Float32', typeFloat32)
+	root_symtab.type_add('Float64', typeFloat64)
 
-	#root_symtab.type_add('Decimal32', foundation.typeDecimal32)
-	#root_symtab.type_add('Decimal64', foundation.typeDecimal64)
-	#root_symtab.type_add('Decimal128', foundation.typeDecimal128)
+	#root_symtab.type_add('Decimal32', typeDecimal32)
+	#root_symtab.type_add('Decimal64', typeDecimal64)
+	#root_symtab.type_add('Decimal128', typeDecimal128)
 
-	root_symtab.type_add('Char8', foundation.typeChar8)
-	root_symtab.type_add('Char16', foundation.typeChar16)
-	root_symtab.type_add('Char32', foundation.typeChar32)
+	root_symtab.type_add('Char8', typeChar8)
+	root_symtab.type_add('Char16', typeChar16)
+	root_symtab.type_add('Char32', typeChar32)
 
-	root_symtab.type_add('Str8', foundation.typeStr8)
-	root_symtab.type_add('Str16', foundation.typeStr16)
-	root_symtab.type_add('Str32', foundation.typeStr32)
+	root_symtab.type_add('Str8', typeStr8)
+	root_symtab.type_add('Str16', typeStr16)
+	root_symtab.type_add('Str32', typeStr32)
 
-	root_symtab.type_add('Ptr', foundation.typeFreePointer)
+	root_symtab.type_add('Ptr', typeFreePointer)
 
-	root_symtab.type_add('__VA_List', foundation.type__VA_List)
+	root_symtab.type_add('__VA_List', type__VA_List)
 
 
 	global valueTrue, valueFalse, valueNil
-	valueNil = value_imm_literal_create(foundation.typeNil, 0)
+	valueNil = value_imm_literal_create(typeNil, 0)
 	valueTrue = value_bool_create(1)
 	valueFalse = value_bool_create(0)
 
@@ -278,12 +271,12 @@ def init():
 	global typeSysWord, typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr, typeSysSize
 
 	typeSysWord = TypeWord(word_width)
-	typeSysChar = foundation.type_select_char(char_width)
-	typeSysInt = foundation.type_select_int(int_width)
-	typeSysNat = foundation.type_select_nat(int_width)
-	typeSysFloat = foundation.typeFloat64
+	typeSysChar = type_select_char(char_width)
+	typeSysInt = type_select_int(int_width)
+	typeSysNat = type_select_nat(int_width)
+	typeSysFloat = typeFloat64
 
-	typeSysSize = foundation.type_select_nat(settings['size_width']).copy()
+	typeSysSize = type_select_nat(settings['size_width']).copy()
 	typeSysSize.id = Id('Size')
 	typeSysSize.id.c = 'size_t'
 
@@ -308,8 +301,8 @@ def init_builtin_values():
 	compilerName = value_string_create(compilerNameString, ti=None)
 
 	# compiler version
-	compilerVersionMajor = value_imm_literal_create(foundation.typeNat32, 0)
-	compilerVersionMinor = value_imm_literal_create(foundation.typeNat32, 7)
+	compilerVersionMajor = value_imm_literal_create(typeNat32, 0)
+	compilerVersionMinor = value_imm_literal_create(typeNat32, 7)
 
 	compiler_version_initializers = [
 		Initializer(Id('major'), compilerVersionMajor),
@@ -337,10 +330,10 @@ def init_builtin_values():
 
 
 	__targetName = value_string_create(settings['target_name'])
-	__targetCharWidth = value_imm_literal_create(foundation.typeNat32, char_width)
-	__targetIntWidth = value_imm_literal_create(foundation.typeNat32, int_width)
-	__targetFloatWidth = value_imm_literal_create(foundation.typeNat32, flt_width)
-	__targetPointerWidth = value_imm_literal_create(foundation.typeNat32, pointer_width)
+	__targetCharWidth = value_imm_literal_create(typeNat32, char_width)
+	__targetIntWidth = value_imm_literal_create(typeNat32, int_width)
+	__targetFloatWidth = value_imm_literal_create(typeNat32, flt_width)
+	__targetPointerWidth = value_imm_literal_create(typeNat32, pointer_width)
 
 	# '__target' record
 	target_initializers = [
@@ -514,7 +507,7 @@ def do_type_func(x, func_id="_"):
 		if param != None:
 			params.append(param)
 
-	to = foundation.typeUnit
+	to = typeUnit
 	if x['to'] != None:
 		to = do_type(x['to'])
 
@@ -666,12 +659,12 @@ def do_value_bin2(op, l, r, ti):
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 		return Value.eq(l, r, op, ti)
 
-	if Type.eq(t, foundation.typeBool):
+	if Type.eq(t, typeBool):
 		if op == HLIR_VALUE_OP_OR: op = HLIR_VALUE_OP_LOGIC_OR
 		elif op == HLIR_VALUE_OP_AND: op = HLIR_VALUE_OP_LOGIC_AND
 
 	if op in (htype.EQ_OPS + htype.RELATIONAL_OPS):
-		t = foundation.typeBool
+		t = typeBool
 
 	return ValueBin(t, op, l, r, ti=ti)
 

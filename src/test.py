@@ -42,10 +42,6 @@ line_comment = StmtCommentLine(['this is', 'a line comment'])
 module.defs.append(line_comment)
 
 
-
-typeInt32 = TypeInt(32)
-typeBool = TypeBool()
-
 valueInt32_0 = ValueLiteral(typeInt32, 0)
 valueInt32_1 = ValueLiteral(typeInt32, 1)
 valueInt32_5 = ValueLiteral(typeInt32, 5)

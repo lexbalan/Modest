@@ -7,7 +7,6 @@ from hlir import *
 from .common import *
 from error import info, warning, error, fatal
 from type import select_common_type, type_print
-import foundation
 
 
 import re
@@ -358,7 +357,7 @@ def str_type_func(t, core='', need_close=False):
 		sret_param = Field(Id('sret_'), TypePointer(t.to), init_value=ValueUndef(t.to))
 
 		fparams = t.params + [sret_param]
-		fto = foundation.typeUnit
+		fto = typeUnit
 
 	paramlist = strFuncParamlist(fparams, t.extra_args)
 
@@ -987,7 +986,7 @@ def str_value_cons(x, ctx):
 
 			elif type.is_word():
 				if from_type.size < type.size:
-					nat_same_sz = foundation.type_select_nat(from_type.width)
+					nat_same_sz = type_select_nat(from_type.width)
 					return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx)
 
 	# for: (uint32_t *)(void *)&i;

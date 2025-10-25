@@ -1,7 +1,6 @@
 
 from hlir import *
 import type as htype
-import foundation
 from type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
@@ -17,7 +16,7 @@ def value_array_create(items, ti):
 
 	length = len(items)
 	if length == 0:
-		item_type = foundation.typeUnit  # not Null, becase it fail
+		item_type = typeUnit  # not Null, becase it fail
 		return _value_array_create([], item_type, 0, is_generic=True, ti=ti)
 
 	# Проверяем - immediate ли этот массив?
@@ -190,7 +189,6 @@ def value_array_add(l, r, ti):
 
 # FIXIT: it is generic arrays EQ!
 def value_array_eq(l, r, op, ti):
-	from foundation import typeBool
 	nv = ValueBin(typeBool, op, l, r, ti=ti)
 
 	if l.isValueImmediate() and r.isValueImmediate():

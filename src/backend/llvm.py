@@ -10,8 +10,6 @@ from type import type_print
 from util import align_bits_up
 from pprint import pprint
 
-import foundation
-
 
 cmodule = None
 
@@ -61,7 +59,7 @@ def init(settings):
 	LLVM_TARGET_TRIPLE = settings['target_triple']
 	LLVM_TARGET_DATALAYOUT = settings['target_datalayout']
 	SIZE_WIDTH = settings['size_width']
-	llvm_value_num_zero = llvm_value_num(foundation.typeInt32, 0)
+	llvm_value_num_zero = llvm_value_num(typeInt32, 0)
 
 
 def indent():
@@ -300,9 +298,9 @@ def extractvalue(x, t, pos):
 #"%16 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_start(i8* %16)"
 def llvm_va_start(x):
-	y = llvm_cast('bitcast', x, foundation.typeFreePointer)
+	y = llvm_cast('bitcast', x, typeFreePointer)
 	lo("call void @llvm.va_start(i8* %%%s)" % y['reg'])
-	return llvm_value_zero(foundation.typeUnit)
+	return llvm_value_zero(typeUnit)
 
 
 #%44 = va_arg i8** %3, i32
@@ -317,16 +315,16 @@ def llvm_va_arg(va_list, typ):
 #"%96 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_end(i8* %96)"
 def llvm_va_end(x):
-	y = llvm_cast('bitcast', x, foundation.typeFreePointer)
+	y = llvm_cast('bitcast', x, typeFreePointer)
 	lo("call void @llvm.va_end(i8* %%%s)" % y['reg'])
-	return llvm_value_zero(foundation.typeUnit)
+	return llvm_value_zero(typeUnit)
 
 
 def llvm_va_copy(dst, src):
-	dst = llvm_cast('bitcast', dst, foundation.typeFreePointer)
-	src = llvm_cast('bitcast', src, foundation.typeFreePointer)
+	dst = llvm_cast('bitcast', dst, typeFreePointer)
+	src = llvm_cast('bitcast', src, typeFreePointer)
 	lo("call void @llvm.va_copy(i8* %%%s, i8* %%%s)" % (dst['reg'], src['reg']))
-	return llvm_value_zero(foundation.typeUnit)
+	return llvm_value_zero(typeUnit)
 
 
 
@@ -408,7 +406,7 @@ def llvm_print_value_num(x):
 		if num == 0:
 			out("null")
 		else:
-			v = llvm_value_num(foundation.typeNat64, num)
+			v = llvm_value_num(typeNat64, num)
 			llvm_inline_cast('inttoptr', x['type'])
 		return
 
@@ -525,9 +523,9 @@ def llvm_gep(v, object_type, indexes, result_type, et):
 	# поэтому приводим все к 32-битам
 	indexes32 = []
 	for index in indexes:
-		if not Type.eq(index['type'], foundation.typeInt32):
-		#if index['type'].size != 32: #foundation.typeFreePointer.size:
-			index = docast(index, foundation.typeNat32)
+		if not Type.eq(index['type'], typeInt32):
+		#if index['type'].size != 32: #typeFreePointer.size:
+			index = docast(index, typeNat32)
 		indexes32.append(index)
 
 	if is_global_context():
@@ -621,7 +619,7 @@ def do_assign_arrays(dst, src):
 
 			# `size = volume * item_size`
 			item_sz = src['type'].of.size
-			item_size = llvm_value_num(foundation.typeNat32, item_sz)
+			item_size = llvm_value_num(typeNat32, item_sz)
 			size = llvm_eval_binary(HLIR_VALUE_OP_MUL, volume, item_size)
 
 			llvm_memzero(dst, size, volatile=False)
@@ -635,8 +633,8 @@ def do_assign_arrays(dst, src):
 # получает два указателя, и размер
 def llvm_memcpy_immsize(dst, src, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-	dst2 = llvm_cast('bitcast', dst, foundation.typeFreePointer)
-	src2 = llvm_cast('bitcast', src, foundation.typeFreePointer)
+	dst2 = llvm_cast('bitcast', dst, typeFreePointer)
+	src2 = llvm_cast('bitcast', src, typeFreePointer)
 	out(NL_INDENT)
 	out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
 	llvm_print_type_value(dst2)
@@ -648,8 +646,8 @@ def llvm_memcpy_immsize(dst, src, size, volatile=False):
 # получает два указателя, и размер
 def llvm_memcpy(dst, src, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-	dst2 = llvm_cast('bitcast', dst, foundation.typeFreePointer)
-	src2 = llvm_cast('bitcast', src, foundation.typeFreePointer)
+	dst2 = llvm_cast('bitcast', dst, typeFreePointer)
+	src2 = llvm_cast('bitcast', src, typeFreePointer)
 	out(NL_INDENT)
 	out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
 	llvm_print_type_value(dst2)
@@ -661,7 +659,7 @@ def llvm_memcpy(dst, src, size, volatile=False):
 #declare void @llvm.memset.p0.i32(ptr <dest>, i8 <val>, i32 <len>, i1 <isvolatile>)
 def llvm_memzero(dst, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-	dst2 = llvm_cast('bitcast', dst, foundation.typeFreePointer)
+	dst2 = llvm_cast('bitcast', dst, typeFreePointer)
 	out(NL_INDENT)
 	out("call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(")
 	llvm_print_type_value(dst2)
@@ -674,13 +672,13 @@ def llvm_memzero(dst, size, volatile=False):
 def trim(int_value, width):
 	assert(int_value['isa'] == 'll_value')
 	if int_value['type'].width != width:
-		return docast(int_value, foundation.typeNat32)
+		return docast(int_value, typeNat32)
 	return int_value
 
 
 def llvm_memzero(dst, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-	dst2 = llvm_cast('bitcast', dst, foundation.typeFreePointer)
+	dst2 = llvm_cast('bitcast', dst, typeFreePointer)
 	out(NL_INDENT)
 
 	out("call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(")
@@ -693,12 +691,12 @@ def llvm_memzero(dst, size, volatile=False):
 
 # memset with offset from start of dst
 def llvm_memzero_off(dst, offset, size, volatile=False):
-	ll_off = llvm_value_num(foundation.typeInt32, offset)
+	ll_off = llvm_value_num(typeInt32, offset)
 
 	# offset pointer
-	dst2 = llvm_cast("ptrtoint", dst, foundation.typeInt64)
+	dst2 = llvm_cast("ptrtoint", dst, typeInt64)
 	ll_dst_plus_off = llvm_eval_binary(HLIR_VALUE_OP_ADD, dst2, ll_off)
-	dst3 = llvm_cast("inttoptr", ll_dst_plus_off, foundation.typeFreePointer)
+	dst3 = llvm_cast("inttoptr", ll_dst_plus_off, typeFreePointer)
 
 	# do memzero
 	llvm_memzero(dst3, size, volatile=volatile)
@@ -708,9 +706,9 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
 # LLVM не имеет интиринсика memcmp поэтому используем стандартный...
 # @param op = [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]
 def llvm_memcmp(op, p0, p1, size):
-	_p0 = llvm_cast('bitcast', p0, foundation.typeFreePointer)
-	_p1 = llvm_cast('bitcast', p1, foundation.typeFreePointer)
-	rv = ll_reg_operation(HLIR_VALUE_OP_CALL, foundation.typeBool)
+	_p0 = llvm_cast('bitcast', p0, typeFreePointer)
+	_p1 = llvm_cast('bitcast', p1, typeFreePointer)
+	rv = ll_reg_operation(HLIR_VALUE_OP_CALL, typeBool)
 	out("i1 (i8*, i8*, i64) @memeq(")
 	llvm_print_type_value(_p0)
 	out(", ")
@@ -719,10 +717,10 @@ def llvm_memcmp(op, p0, p1, size):
 	llvm_print_type_value(size)
 	out(")")
 
-	zero = llvm_value_num(foundation.typeBool, 0)
+	zero = llvm_value_num(typeBool, 0)
 	op = HLIR_VALUE_OP_NE if op == HLIR_VALUE_OP_EQ else HLIR_VALUE_OP_EQ
 
-	vvv = ValueUndef(foundation.typeBool)
+	vvv = ValueUndef(typeBool)
 	rv2 = llvm_eval_binary('icmp %s' % op, rv, zero, vvv)
 
 	return rv2
@@ -958,7 +956,7 @@ def do_eval_bin(x):
 						1/0
 
 			# Теперь сравниваем значения по указателям и длине (memcmp)
-			sz = llvm_value_num(foundation.typeInt64, l['type'].size)
+			sz = llvm_value_num(typeInt64, l['type'].size)
 
 			return llvm_memcmp(op, l, r, sz)
 
@@ -1070,7 +1068,7 @@ def do_eval_call(v):
 		f = llvm_dold(f)
 		ftype = ftype.to
 
-	to_unit = Type.eq(ftype.to, foundation.typeUnit)
+	to_unit = Type.eq(ftype.to, typeUnit)
 
 
 	# do call
@@ -1158,7 +1156,7 @@ def ass(left, indexes):
 		# (GEP будет оперировать с шагом sizeof(rootType))
 		# Полное смещение - смещение сразу для всех индексов (если их несколько)
 		#out("\n\t; -- INDEX VLA --")
-		full_offset = llvm_value_zero(foundation.typeInt32)
+		full_offset = llvm_value_zero(typeInt32)
 		i = 0
 		while i < len(indexes):
 			index = indexes[i]
@@ -1267,7 +1265,7 @@ def do_eval_access(x):
 		return do_eval_literal(x)
 
 	left, fields = access(x)
-	notype = foundation.typeInt32
+	notype = typeInt32
 	indexes = []
 
 	for f in fields:
@@ -1453,8 +1451,8 @@ def handleVLA(t):
 			#out("\n\t; -- END HANDLE VLA --")
 		else:
 			# Если это open_array
-			runtimeSizeRoots = llvm_value_num(foundation.typeInt32, 1)
-			runtimeVolume = llvm_value_num(foundation.typeInt32, 1)
+			runtimeSizeRoots = llvm_value_num(typeInt32, 1)
+			runtimeVolume = llvm_value_num(typeInt32, 1)
 
 		runtimeSizeBytes = llvm_eval_binary(HLIR_VALUE_OP_MUL, runtimeVolume, t.of.runtimeSizeBytes)
 
@@ -1463,9 +1461,9 @@ def handleVLA(t):
 		if t.is_pointer():
 			handleVLA(t.to)
 
-		runtimeSizeBytes = llvm_value_num(foundation.typeInt32, t.size)
-		runtimeSizeRoots = llvm_value_num(foundation.typeInt32, 1)
-		runtimeVolume = llvm_value_num(foundation.typeInt32, 1)
+		runtimeSizeBytes = llvm_value_num(typeInt32, t.size)
+		runtimeSizeRoots = llvm_value_num(typeInt32, 1)
+		runtimeVolume = llvm_value_num(typeInt32, 1)
 
 	t.runtimeSizeRoots = runtimeSizeRoots
 	t.runtimeSizeBytes = runtimeSizeBytes
@@ -1789,11 +1787,11 @@ def _eval_sizeof_type(t):
 		return t.runtimeSizeBytes
 		# size = VLA_volume * sizeof(VLA_rootType)
 		rs = t.get_array_root().size
-		rootSize = llvm_value_num(foundation.typeInt32, rs)
+		rootSize = llvm_value_num(typeInt32, rs)
 		size = llvm_eval_binary(HLIR_VALUE_OP_MUL, t.runtimeSizeRoots, rootSize)
 		return size
 
-	return llvm_value_num(foundation.typeInt32, t.size)
+	return llvm_value_num(typeInt32, t.size)
 
 
 def do_eval_sizeof_value(x):
@@ -1863,7 +1861,7 @@ def do_eval_lengthof(x):
 		handleVLA(t)
 		return t.runtimeVolume
 
-	return llvm_value_num(foundation.typeInt32, t.length)
+	return llvm_value_num(typeInt32, t.length)
 
 
 #
@@ -2385,7 +2383,7 @@ def print_def_func(x):
 			# и будем передавать va_arg указатель на эту локальную переменную
 
 			# 1. создаем лок переменную для *va_arg
-			va_list_srorage = llvm_alloca(foundation.typeFreePointer)
+			va_list_srorage = llvm_alloca(typeFreePointer)
 
 			# 2. сохраняем в нее полученный (параметр) *va_arg
 			va_list_param_id = get_id_str(param)
@@ -2408,13 +2406,13 @@ def print_def_func(x):
 		#; stack save
 		# %3 = alloca i8*, align 8 ; stack save
 		# %7 = call i8* @llvm.stacksave()
-		stackptr = llvm_alloca(foundation.typeFreePointer)
+		stackptr = llvm_alloca(typeFreePointer)
 		stacksave(stackptr)
 		fctx['stackptr'] = stackptr
 
 	print_stmt_block(x.stmt)
 
-	if Type.eq(ftype.to, foundation.typeUnit):
+	if Type.eq(ftype.to, typeUnit):
 		print_stmt_return(StmtReturn(None))
 
 	indent_down()
