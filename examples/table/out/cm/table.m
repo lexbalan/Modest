@@ -6,9 +6,8 @@ include "string"
  */
 
 
-public type Row = record {}
 
-public type Table = record {
+public type Table = @public record {
 	public header: *[]*Str8
 	public data: *[][]*Str8
 	public nRows: Nat32

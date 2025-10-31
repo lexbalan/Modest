@@ -232,9 +232,6 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- endstrings --;
 ; * table.m
 ; 
-%table_Row = type {
-};
-
 %table_Table = type {
 	[0 x %Str8*]*,
 	[0 x [0 x %Str8*]]*,

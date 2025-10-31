@@ -9,16 +9,13 @@ include "libc/stdlib"
 include "libc/string"
 
 
-public type Row = record {
 
-}
-
-public type Table = record {
-	public header: *[]*Str8
-	public data: *[][]*Str8
-	public nRows: Nat32
-	public nCols: Nat32
-	public separate: Bool
+public type Table = @public record {
+	header: *[]*Str8
+	data: *[][]*Str8
+	nRows: Nat32
+	nCols: Nat32
+	separate: Bool
 }
 
 

@@ -14,10 +14,6 @@
 #include <string.h>
 
 
-struct table_Row {
-};
-typedef struct table_Row table_Row;
-
 struct table_Table {
 	char *(*header)[];
 	char *(*data)[];
