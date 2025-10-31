@@ -1,0 +1,6 @@
+#!/bin/bash
+source "$MODEST_DIR/venv/bin/activate"
+python "$MODEST_DIR/src/main.py" "$@"
+exit_code=$?
+deactivate
+exit $exit_code

@@ -1,0 +1,4 @@
+- name: Modest
+  extensions: [m]
+  tm_scope: source.modest
+

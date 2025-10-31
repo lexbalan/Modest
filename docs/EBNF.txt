@@ -1,0 +1,83 @@
+
+(* Комментарии не игнорируются *)
+
+start ::= module
+
+NL = '\n'
+sep = ';' | NL
+lsep = ',' | NL
+id ::= '_'* <small_letter> (<letter> | <digit> | '_')*
+Id ::= '_'* <big_letter> (<letter> | <digit> | '_')*
+
+module ::= (def | comment | directive | sep)*
+comment ::= comment_line | comment_block
+comment_line ::= '//' <to the end of line>
+comment_block ::= '/*' <any text> '*/'
+directive ::= import | include | pragma
+import ::= 'import' value_literal_string ['as' id]
+include ::= 'include' value_literal_string
+pragma ::= 'pragma' id value_literal*
+attribute ::= '@' id ['(' [arguments] ')']
+spec ::= 'public' | 'private'
+def ::= (attribute NL+)* spec (def_type | def_const | def_var | def_func)
+def_type ::= 'type' Id '=' type_expr
+def_const ::= 'const' (id | decl) ['=' expr]
+def_var ::= 'var' (id | decl) ['=' expr]
+def_func ::= 'func' id type_expr block
+decl ::= id ':' type_expr
+block ::= '{' [statements] NL* '}'
+statement ::= def_var | def_const | stmt_if | stmt_while | stmt_return | stmt_expr | stmt_break | stmt_again
+stmt_if ::= 'if' value_expr block ['else' (block | stmt_if)]
+stmt_while ::= 'while' value_expr block
+stmt_return ::= 'return' [value_expr]
+stmt_expr ::= value_expr sep
+stmt_break ::= 'break'
+stmt_again ::= 'again'
+statements ::= statement (sep statement)*
+
+decls ::= decl (lsep decl)*
+fields ::= decls
+params ::= decls
+
+type_expr ::= Id | type_pointer | type_array | type_func | type_record
+type_pointer ::= '*' type_expr
+type_array ::= '[' [value_expr] ']' type_expr
+type_func ::= '(' [params] ')' '->' type_expr
+type_record ::= 'record' '{' [fields] '}'
+
+
+type_cast ::= type value_expr
+
+value_expr ::= expr_value_1
+expr_value_1 ::= expr_value_2 ('or' expr_value_2)*
+expr_value_2 ::= expr_value_3 ('xor' expr_value_3)*
+expr_value_3 ::= expr_value_4 ('and' expr_value_4)*
+expr_value_4 ::= expr_value_5 (('==' | '!=') expr_value_4)*
+expr_value_5 ::= expr_value_6 (('<' | '>' | '<=' | '>=') expr_value_5)*
+expr_value_6 ::= expr_value_7 (('<<' | '>>') expr_value_6)*
+expr_value_7 ::= expr_value_8 (('+' | '-') expr_value_7)*
+expr_value_8 ::= expr_value_9 (('*' | '/' | '%') expr_value_8)*
+expr_value_9 ::= type_cast | expr_value_10
+expr_value_10 ::= ('*'+ | '&' | 'not' | 'new' | 'unsafe' | 'sizeof')* expr_value_11
+expr_value_11 ::= expr_value_12 (('(' [arguments] ')') | ('.' id) | ('[' value_expr [':' value_expr] ']'))*
+
+expr_value_12 ::= value_literal | id
+
+named_arguments ::= (keyvalue (lsep keyvalue)*)
+positional_arguments ::= (value_expr (lsep value_expr)*)
+arguments ::= named_arguments | positional_arguments
+keyvalue ::= id '=' value_expr
+
+value_literal ::= value_literal_number | value_literal_string | value_literal_record | value_literal_array
+value_literal_number ::= hex | dec
+hex ::= '0x' hexdigit+
+hexdigit ::= <digit> | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+dec ::= <digit>+ ('.' <digit>+)?  -- целое и вещественное
+value_literal_array ::= '[' [value_expr (lsep value_expr)*] NL* ']'
+value_literal_record ::= '{' [keyvalue (lsep keyvalue)*] NL* '}'
+
+value_literal_string ::= '"' string_char* '"'
+string_char ::= escaped_char | unescaped_char
+escaped_char ::= '\\' ( '"' | '\\' | 'n' | 't' | 'r' | 'b' | 'f' | 'u' hexdigit hexdigit hexdigit hexdigit)
+unescaped_char ::= <any character except '"' or '\' or control characters>
+

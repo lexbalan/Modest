@@ -1,0 +1,8 @@
+.DS_Store
+*.o
+a.out
+#test
+#examples/*
+*.pyc
+*/__pycache__
+.vscode
