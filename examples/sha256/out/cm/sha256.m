@@ -28,10 +28,12 @@ func rotright (a: Word32, b: Nat32) -> Word32 {
 }
 
 
+
 @inline
 func ch (x: Word32, y: Word32, z: Word32) -> Word32 {
 	return (x and y) xor (not x and z)
 }
+
 
 
 @inline
@@ -40,10 +42,12 @@ func maj (x: Word32, y: Word32, z: Word32) -> Word32 {
 }
 
 
+
 @inline
 func ep0 (x: Word32) -> Word32 {
 	return rotright(x, 2) xor rotright(x, 13) xor rotright(x, 22)
 }
+
 
 
 @inline
@@ -52,10 +56,12 @@ func ep1 (x: Word32) -> Word32 {
 }
 
 
+
 @inline
 func sig0 (x: Word32) -> Word32 {
 	return rotright(x, 7) xor rotright(x, 18) xor (x >> 3)
 }
+
 
 
 @inline
