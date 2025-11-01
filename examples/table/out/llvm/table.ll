@@ -232,9 +232,10 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- endstrings --;
 ; * table.m
 ; 
+%table_Raw = type [0 x %Str8*];
 %table_Table = type {
 	[0 x %Str8*]*,
-	[0 x [0 x %Str8*]]*,
+	[0 x %table_Raw]*,
 	%Nat32,
 	%Nat32,
 	%Bool
@@ -263,8 +264,8 @@ define void @table_print(%table_Table* %table) {
 	%12 = mul %Nat32 %11, %8
 	%13 = mul %Nat32 %11, %9
 	%14 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 1
-	%15 = load [0 x [0 x %Str8*]]*, [0 x [0 x %Str8*]]** %14
-	%16 = bitcast [0 x [0 x %Str8*]]* %15 to [0 x [0 x %Str8*]]*
+	%15 = load [0 x %table_Raw]*, [0 x %table_Raw]** %14
+	%16 = bitcast [0 x %table_Raw]* %15 to [0 x [0 x %Str8*]]*
 
 	; array of size of columns (in characters)
 	%17 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3

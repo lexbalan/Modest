@@ -222,9 +222,10 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- 1
 
 ; from import "table"
+%table_Raw = type [0 x %Str8*];
 %table_Table = type {
 	[0 x %Str8*]*,
-	[0 x [0 x %Str8*]]*,
+	[0 x %table_Raw]*,
 	%Nat32,
 	%Nat32,
 	%Bool
@@ -329,35 +330,35 @@ declare void @table_print(%table_Table* %table)
 ]
 @table00 = internal global %table_Table {
 	[0 x %Str8*]* null,
-	[0 x [0 x %Str8*]]* @tableData0,
+	[0 x %table_Raw]* @tableData0,
 	%Nat32 3,
 	%Nat32 3,
 	%Bool 0
 }
 @table01 = internal global %table_Table {
 	[0 x %Str8*]* @table_header0,
-	[0 x [0 x %Str8*]]* @tableData0,
+	[0 x %table_Raw]* @tableData0,
 	%Nat32 3,
 	%Nat32 3,
 	%Bool 0
 }
 @table02 = internal global %table_Table {
 	[0 x %Str8*]* null,
-	[0 x [0 x %Str8*]]* @tableData0,
+	[0 x %table_Raw]* @tableData0,
 	%Nat32 3,
 	%Nat32 3,
 	%Bool 1
 }
 @table03 = internal global %table_Table {
 	[0 x %Str8*]* @table_header0,
-	[0 x [0 x %Str8*]]* @tableData0,
+	[0 x %table_Raw]* @tableData0,
 	%Nat32 3,
 	%Nat32 3,
 	%Bool 1
 }
 @table10 = internal global %table_Table {
 	[0 x %Str8*]* @table_header1,
-	[0 x [0 x %Str8*]]* @tableData1,
+	[0 x %table_Raw]* @tableData1,
 	%Nat32 4,
 	%Nat32 4,
 	%Bool 1

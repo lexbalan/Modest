@@ -14,9 +14,11 @@
 #include <string.h>
 
 
+typedef char *table_Raw[];
+
 struct table_Table {
 	char *(*header)[];
-	char *(*data)[];
+	table_Raw *data;
 	uint32_t nRows;
 	uint32_t nCols;
 	bool separate;
