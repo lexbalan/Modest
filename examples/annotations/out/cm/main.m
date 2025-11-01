@@ -72,15 +72,6 @@ var rp: *Word32
 var vb: [32]Bool
 
 
-func boolFunction (x: Bool) -> Bool {
-	if x {
-		return true
-	} else {
-		return false
-	}
-	return false
-}
-
 
 
 @inline
@@ -122,6 +113,9 @@ func hello () -> Unit {
 public func main () -> Int32 {
 	hello()
 	printf("Attributes example\n")
+	Unit staticInlineFunc(0)
+	Unit staticNoinlineFunc(0)
+	Unit staticInlineHintFunc(0)
 	return 0
 }
 

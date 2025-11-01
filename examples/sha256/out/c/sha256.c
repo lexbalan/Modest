@@ -17,11 +17,10 @@ struct Context {
 };
 typedef struct Context Context;
 
-__attribute__((always_inline))
-static inline uint32_t rotleft(uint32_t a, uint32_t b) {
-	return (a << b) | (a >> (32 - b));
-}
-
+//@inline
+//func rotleft(a: Word32, b: Nat32) -> Word32 {
+//	return (a << b) or (a >> (32 - b))
+//}
 
 __attribute__((always_inline))
 static inline uint32_t rotright(uint32_t a, uint32_t b) {

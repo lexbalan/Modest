@@ -53,16 +53,6 @@ static uint64_t u2;
 static uint32_t *restrict rp;
 static volatile bool vb[32];
 
-static bool boolFunction(bool x) {
-	if (x) {
-		return true;
-	} else {
-		return false;
-	}
-	return false;
-}
-
-
 __attribute__((always_inline))
 static inline int32_t staticInlineFunc(int32_t x) {
 	return x + 1;
@@ -96,6 +86,9 @@ static void hello(void) {
 int32_t main(void) {
 	hello();
 	printf("Attributes example\n");
+	(void)staticInlineFunc(0);
+	(void)staticNoinlineFunc(0);
+	(void)staticInlineHintFunc(0);
 	return 0;
 }
 

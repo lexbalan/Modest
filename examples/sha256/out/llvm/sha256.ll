@@ -167,16 +167,12 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 	[8 x %Word32]
 };
 
-define internal %Word32 @rotleft(%Word32 %a, %Nat32 %b) alwaysinline {
-	%1 = bitcast %Nat32 %b to %Word32
-	%2 = shl %Word32 %a, %1
-	%3 = sub %Nat32 32, %b
-	%4 = bitcast %Nat32 %3 to %Word32
-	%5 = lshr %Word32 %a, %4
-	%6 = or %Word32 %2, %5
-	ret %Word32 %6
-}
 
+
+;@inline
+;func rotleft(a: Word32, b: Nat32) -> Word32 {
+;	return (a << b) or (a >> (32 - b))
+;}
 define internal %Word32 @rotright(%Word32 %a, %Nat32 %b) alwaysinline {
 	%1 = bitcast %Nat32 %b to %Word32
 	%2 = lshr %Word32 %a, %1

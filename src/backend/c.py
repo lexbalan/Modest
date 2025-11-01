@@ -1032,7 +1032,7 @@ def print_literal_array_items(values, item_type):
 				sstr += " "
 
 		if a.type.is_closed_array():
-			sstr += print_literal_array_items(a.asset, item_type.of)
+			sstr += '{' + print_literal_array_items(a.asset, item_type.of) + '}'
 		else:
 			sstr += str_value(a) #incast(item_type, a)
 

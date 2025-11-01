@@ -61,15 +61,6 @@ var rp: @restrict *Word32
 var vb: @volatile [32]Bool
 
 
-func boolFunction (x: Bool) -> Bool {
-	if x {
-		return true
-	} else {
-		return false
-	}
-	return false
-}
-
 
 @inline
 func staticInlineFunc (x: Int32) -> Int32 {
@@ -108,6 +99,9 @@ func hello () -> Unit {
 public func main () -> Int32 {
 	hello()
 	printf("Attributes example\n")
+	Unit staticInlineFunc(0)
+	Unit staticNoinlineFunc(0)
+	Unit staticInlineHintFunc(0)
 	return 0
 }
 

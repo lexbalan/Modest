@@ -18,9 +18,9 @@ static char *table_header0[3] = {
 };
 
 static char *tableData0[3][3] = {
-	"0", "Alef", "Betha",
-	"1", "Clock", "Depth",
-	"2", "Earth", "Fight"
+	{"0", "Alef", "Betha"},
+	{"1", "Clock", "Depth"},
+	{"2", "Earth", "Fight"}
 };
 
 static char *table_header1[4] = {
@@ -28,10 +28,10 @@ static char *table_header1[4] = {
 };
 
 static char *tableData1[4][4] = {
-	"0", "Alef", "Betha", "Clock",
-	"1", "Depth", "Emma", "Free",
-	"2", "Ink", "Julia", "Keyword",
-	"3", "Ultra", "Video", "Word"
+	{"0", "Alef", "Betha", "Clock"},
+	{"1", "Depth", "Emma", "Free"},
+	{"2", "Ink", "Julia", "Keyword"},
+	{"3", "Ultra", "Video", "Word"}
 };
 
 static table_Table table00 = {
