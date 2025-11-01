@@ -130,7 +130,7 @@ static fsm_FSM fsm0 = {
 	}
 };
 
-int main() {
+int main(void) {
 	while (true) {
 		fsm_run(&fsm0);
 		delay_ms(500);

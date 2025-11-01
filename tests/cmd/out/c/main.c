@@ -18,7 +18,7 @@
 
 static char tokensBuf[4 * 1024];
 
-static void showPrompt() {
+static void showPrompt(void) {
 	char _prompt[32] = PROMPT;
 	write(0, (void *)&_prompt, (size_t)LENGTHOF(PROMPT));
 }
@@ -127,7 +127,7 @@ static void execute(char *cmd, uint16_t argc, char *(*argv)[]) {
 }
 
 
-int32_t main() {
+int32_t main(void) {
 	printf("HARSH v0.1\n");
 
 	char inbuf[1024];

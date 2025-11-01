@@ -70,7 +70,7 @@ static bool doTest(SHA256_TestCase *test) {
 }
 
 
-int main() {
+int main(void) {
 	printf("test SHA256\n");
 
 	uint32_t i = 0;

@@ -47,7 +47,7 @@ static void bubble_sort32(int32_t *array, uint32_t len) {
 
 static void print_array(int32_t *array, uint32_t len);
 
-int32_t main() {
+int32_t main(void) {
 	printf("array before:\n");
 	print_array((int32_t *)&testArray, LENGTHOF(testArray));
 	printf("\n");

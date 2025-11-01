@@ -74,7 +74,7 @@ static table_Table table10 = {
 	.separate = true
 };
 
-int32_t main() {
+int32_t main(void) {
 	table_print(&table00);
 	printf("\n");
 

@@ -36,7 +36,7 @@ static bool sendFile(FILE *fp, int sockFd) {
 }
 
 
-int main() {
+int main(void) {
 	const int sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd < 0) {
 		perror("[-] Error in socket");

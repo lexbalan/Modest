@@ -27,7 +27,7 @@ LLVM:
 C:
 	mcc -o $(CPREFIX)/minmax $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/misc/minmax.m
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
-	$(CC) $(LIBS) $(CPREFIX)/main.c $(CPREFIX)/minmax.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(LIBS) $(CPREFIX)/main.c $(CPREFIX)/minmax.c
 	
 	
 

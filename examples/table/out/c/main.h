@@ -11,6 +11,6 @@
 #include <string.h>
 #include "table.h"
 
-int32_t main();
+int32_t main(void);
 
 #endif /* MAIN_H */

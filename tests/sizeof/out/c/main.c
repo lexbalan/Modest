@@ -72,7 +72,7 @@ typedef struct X X;
 
 static X x;
 
-int main() {
+int main(void) {
 	printf("test cast operation\n");
 
 	const uint64_t start_adr = (uint64_t)&c;

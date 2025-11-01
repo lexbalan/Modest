@@ -17,6 +17,6 @@
 #ifndef __BIG_INT256__
 #define BIG_INT256(a, b, c, d)
 #endif  /* __BIG_INT256__ */
-int main();
+int main(void);
 
 #endif /* MAIN_H */

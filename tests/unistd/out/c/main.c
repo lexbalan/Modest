@@ -16,7 +16,7 @@
 #endif /* LENGTHOF */
   // getenv
 
-int main() {
+int main(void) {
 	printf("unistd test\n");
 
 	const pid_t pid = getpid();

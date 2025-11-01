@@ -27,12 +27,12 @@ struct list_List {
 	uint32_t size;
 };
 typedef struct list_List list_List;
-list_List *list_create();
+list_List *list_create(void);
 uint32_t list_size_get(list_List *list);
 list_Node *list_first_node_get(list_List *list);
 list_Node *list_last_node_get(list_List *list);
 list_Node *list_node_first(list_List *list, list_Node *new_node);
-list_Node *list_node_create();
+list_Node *list_node_create(void);
 list_Node *list_node_next_get(list_Node *node);
 list_Node *list_node_prev_get(list_Node *node);
 void *list_node_data_get(list_Node *node);

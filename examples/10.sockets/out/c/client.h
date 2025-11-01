@@ -12,6 +12,6 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-int main();
+int main(void);
 
 #endif /* CLIENT_H */

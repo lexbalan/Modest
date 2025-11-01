@@ -21,13 +21,13 @@
 
 
 
-static bool test_generic_integer();
-static bool test_generic_float();
-static bool test_generic_char();
-static bool test_generic_array();
-static bool test_generic_record();
+static bool test_generic_integer(void);
+static bool test_generic_float(void);
+static bool test_generic_char(void);
+static bool test_generic_array(void);
+static bool test_generic_record(void);
 
-int main() {
+int main(void) {
 	printf("generic types test\n");
 
 	const bool t1 = test_generic_integer();
@@ -69,7 +69,7 @@ int main() {
 }
 
 
-static bool test_generic_integer() {
+static bool test_generic_integer(void) {
 	// Any integer literal have GenericInteger type
 	#define one  1
 
@@ -103,7 +103,7 @@ static bool test_generic_integer() {
 }
 
 
-static bool test_generic_float() {
+static bool test_generic_float(void) {
 	// Any float literal have GenericFloat type
 	#define pi  3.141592653589793238462643383279502884
 
@@ -122,7 +122,7 @@ static bool test_generic_float() {
 }
 
 
-static bool test_generic_char() {
+static bool test_generic_char(void) {
 	// Any char value expression have GenericChar type
 	// (you can pick GenericChar value by index of GenericString value)
 	#define a  "A"
@@ -142,7 +142,7 @@ static bool test_generic_char() {
 }
 
 
-static bool test_generic_array() {
+static bool test_generic_array(void) {
 	// Any array expression have GenericArray type
 	// this array expression (GenericArray of four GenericInteger items)
 	#define a  {0, 1, 2, 3}
@@ -206,7 +206,7 @@ struct Point3D {
 };
 typedef struct Point3D Point3D;
 
-static bool test_generic_record() {
+static bool test_generic_record(void) {
 	// Any record expression have GenericRecord type
 	// this record expression have type:
 	// Generic(record {x: GenericInteger, y: GenericInteger})
@@ -219,12 +219,13 @@ static bool test_generic_record() {
 	// to record {x: Int32, y: Int32}
 	Point2D point_2d;
 	point_2d = (Point2D)p;
-
+	(void)point_2d;
 
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32, z: Int32}
 	Point3D point_3d;
 	point_3d = (Point3D)p;
+	(void)point_3d;
 
 	return true;
 

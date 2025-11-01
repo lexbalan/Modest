@@ -51,7 +51,7 @@ static void fetch(uint32_t n) {
 #define QSIZE  10
 static uint8_t qbuf[QSIZE];
 
-int main() {
+int main(void) {
 	queueWord8_init(&bq0, (uint8_t *)&qbuf, QSIZE);
 
 	fill(3);

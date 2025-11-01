@@ -31,6 +31,6 @@ typedef uint32_t char32_t;
 #define _CHR32(x) (__STR32(x)[0])
 #endif /* __STR_UNICODE__ */
 
-int32_t main();
+int32_t main(void);
 
 #endif /* MAIN_H */

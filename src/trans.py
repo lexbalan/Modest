@@ -1535,7 +1535,6 @@ def add_spices_value(v, atts):
 	if atts != []:
 		v = Value.copy(v)
 	for a in atts:
-		print("--? " + a['kind'])
 		v.att.append(a['kind'])
 	return v
 

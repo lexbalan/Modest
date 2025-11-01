@@ -74,7 +74,7 @@ static Type1 a = {.x = 1};
 static Type2 b = {.x = 2};
 static Type3 c = {.x = 3};
 
-static void test_by_value() {
+static void test_by_value(void) {
 	f0_val(a);
 	f1_val(*(Type2*)&a);
 	f2_val(a);
@@ -92,7 +92,7 @@ static void test_by_value() {
 }
 
 
-static void test_by_pointer() {
+static void test_by_pointer(void) {
 	f0_ptr(&a);
 	f1_ptr((Type2 *)&a);
 	f2_ptr((Type3 *)&a);
@@ -110,7 +110,7 @@ static void test_by_pointer() {
 }
 
 
-int main() {
+int main(void) {
 	test_by_value();
 	test_by_pointer();
 	return 0;

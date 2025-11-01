@@ -10,7 +10,7 @@
 
 
 
-int main() {
+int main(void) {
 	printf("bool check\nm");
 
 	uint8_t x;

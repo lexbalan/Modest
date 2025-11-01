@@ -27,11 +27,16 @@
 #define STRING16_CONST  (_STR16(GENERIC_STRING_CONST))
 #define STRING32_CONST  (_STR32(GENERIC_STRING_CONST))
 
+__attribute__((used))
 static char arr_utf8[8] = "Hi!\n";
+
+__attribute__((used))
 static char16_t arr_utf16[9] = _STR16("Hello Ω!\n");
+
+__attribute__((used))
 static char32_t arr_utf32[8] = _STR32("Hello!\n");
 
-int32_t main() {
+int32_t main(void) {
 	char *str8 = STRING8_CONST;
 	char16_t *str16 = STRING16_CONST;
 	char32_t *str32 = STRING32_CONST;

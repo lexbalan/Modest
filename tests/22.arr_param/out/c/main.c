@@ -31,7 +31,7 @@ static void arraysAdd(int32_t *_a, int32_t *_b, int32_t *sret_) {
 }
 
 
-int32_t main() {
+int32_t main(void) {
 	int32_t a[10];
 	getarr10((int32_t *)&a);
 

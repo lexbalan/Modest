@@ -44,7 +44,7 @@ static void list_print_backward(list_List *lst) {
 }
 
 
-int main() {
+int main(void) {
 	printf("linked list example\n");
 
 	list_List *const list0 = list_create();
@@ -83,9 +83,9 @@ int main() {
 	printf("\nlist.node_get(list, n) test\n");
 
 	// test list.node_get
-	uint32_t i = 0;
+	int32_t i = 0;
 	while (i >= -12) {
-		list_Node *const node = list_node_get(list0, (int32_t)i);
+		list_Node *const node = list_node_get(list0, i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
@@ -102,7 +102,7 @@ int main() {
 
 	i = 0;
 	while (i <= 12) {
-		list_Node *const node = list_node_get(list0, (int32_t)i);
+		list_Node *const node = list_node_get(list0, i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);

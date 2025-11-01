@@ -13,7 +13,7 @@
 static int32_t globalArray0[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 static int32_t globalArray1[10] = {0};
 
-int main() {
+int main(void) {
 	printf("test assign_array\n");
 
 	memcpy(&globalArray1, &globalArray0, sizeof(int32_t[10]));

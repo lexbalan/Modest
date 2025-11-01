@@ -12,6 +12,6 @@
 #include "queueWord8.h"
 #include "ringWord8.h"
 
-int main();
+int main(void);
 
 #endif /* MAIN_H */

@@ -195,6 +195,9 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [11 x i8] [i8 116, i8 101, i8 115, i8 116, i8 47, i8 99, i8 104, i8 97, i8 114, i8 10, i8 0]
+@str2 = private constant [18 x i8] [i8 99, i8 104, i8 48, i8 56, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 32, i8 40, i8 37, i8 99, i8 41, i8 10, i8 0]
+@str3 = private constant [18 x i8] [i8 99, i8 104, i8 49, i8 54, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 32, i8 40, i8 37, i8 99, i8 41, i8 10, i8 0]
+@str4 = private constant [18 x i8] [i8 99, i8 104, i8 51, i8 50, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 32, i8 40, i8 37, i8 99, i8 41, i8 10, i8 0]
 ; -- endstrings --; tests/char/src/main.m
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*))
@@ -204,10 +207,23 @@ define %Int @main() {
 	store %Char8 115, %Char8* %2
 	store %Char16 1071, %Char16* %3
 	store %Char32 128000, %Char32* %4
-
-	;printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
-	;printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
-	;printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
+	%5 = load %Char8, %Char8* %2
+	%6 = bitcast %Char8 %5 to %Word8
+	%7 = zext %Word8 %6 to %Word32
+	%8 = bitcast %Word32 %7 to %Nat32
+	%9 = load %Char8, %Char8* %2
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Nat32 %8, %Char8 %9)
+	%11 = load %Char16, %Char16* %3
+	%12 = bitcast %Char16 %11 to %Word16
+	%13 = zext %Word16 %12 to %Word32
+	%14 = bitcast %Word32 %13 to %Nat32
+	%15 = load %Char16, %Char16* %3
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), %Nat32 %14, %Char16 %15)
+	%17 = load %Char32, %Char32* %4
+	%18 = bitcast %Char32 %17 to %Word32
+	%19 = bitcast %Word32 %18 to %Nat32
+	%20 = load %Char32, %Char32* %4
+	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str4 to [0 x i8]*), %Nat32 %19, %Char32 %20)
 	ret %Int 0
 }
 

@@ -25,6 +25,8 @@ const ps = [
 
 const points = [3]Point ps
 
+
+@used
 var points2: [3]Point = points
 
 

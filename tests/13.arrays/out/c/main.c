@@ -77,7 +77,7 @@ static void f0(char *_x, char *sret_) {
 #define START_SEQUENCE  {0xAA, 0x55, 0x2}
 #define STOP_SEQUENCE  {0x16}
 
-static void test() {
+static void test(void) {
 	// тестируем работу с локальным generic массивом
 	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
 	uint32_t i = 0;
@@ -117,7 +117,7 @@ static int32_t a10[10][10] = {
 	91, 92, 93, 94, 95, 96, 97, 98, 99, 100
 };
 
-static void test_arrays() {
+static void test_arrays(void) {
 	int32_t i;
 	int32_t j;
 	int32_t k;
@@ -198,7 +198,7 @@ static void test_arrays() {
 }
 
 
-int main() {
+int main(void) {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	char em[30];

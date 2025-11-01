@@ -11,6 +11,6 @@
 #include <stdio.h>
 #include "list.h"
 
-int main();
+int main(void);
 
 #endif /* MAIN_H */

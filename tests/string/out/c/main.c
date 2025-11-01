@@ -27,7 +27,7 @@ static char *ptr_to_string8 = STR8_EXAMPLE;
 static char16_t *ptr_to_string16 = _STR16(STR16_EXAMPLE);
 static char32_t *ptr_to_string32 = _STR32(STR32_EXAMPLE);
 
-int main() {
+int main(void) {
 	console_putchar_utf8('A');
 	printf("\n");
 	console_putchar_utf16(u'Ω');

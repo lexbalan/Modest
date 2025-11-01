@@ -24,7 +24,7 @@ static int32_t *p0;
 static int32_t **p1;
 
 // Functions
-static void f0() {
+static void f0(void) {
 	return;
 }
 
@@ -39,7 +39,7 @@ static int32_t f2(int32_t a, int32_t b) {
 }
 
 
-static int32_t *f3() {
+static int32_t *f3(void) {
 	return NULL;
 }
 
@@ -61,62 +61,62 @@ static int32_t *f6(int32_t *a) {
 }
 
 
-static void f7(void(*f)()) {
+static void f7(void(*f)(void)) {
 	return;
 }
 
 
-static void(*f8(void(*f)()))() {
+static void(*f8(void(*f)(void)))(void) {
 	return &f0;
 }
 
 
-static void(**f9(void(*f)()))() {
+static void(**f9(void(*f)(void)))(void) {
 	return NULL;
 }
 
 
-static void(**f10(void(**f)()))() {
+static void(**f10(void(**f)(void)))(void) {
 	return f;
 }
 
 
-static void(**f11(int32_t *(**f)(int32_t a, int32_t *b)))() {
+static void(**f11(int32_t *(**f)(int32_t a, int32_t *b)))(void) {
 	return NULL;
 }
 
 
-static void(**f12(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))() {
+static void(**f12(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))(void) {
 	return NULL;
 }
 
 
-static void(**f13(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() {
+static void(**f13(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))(void) {
 	return NULL;
 }
 
 
 // Pointers to function
-static void(*pf0)() = &f0;
+static void(*pf0)(void) = &f0;
 static int32_t(*pf1)(int32_t x) = &f1;
 static int32_t(*pf2)(int32_t a, int32_t b) = &f2;
-static int32_t *(*pf3)() = &f3;
+static int32_t *(*pf3)(void) = &f3;
 static void(*pf4)(int32_t x, int32_t *sret_) = &f4;
 static void(*pf5)(int32_t *_a, int32_t *sret_) = &f5;
 static int32_t *(*pf6)(int32_t *a) = &f6;
-static void(*pf7)(void(*f)()) = &f7;
-static void(*(*pf8)(void(*f)()))() = &f8;
-static void(**(*pf9)(void(*f)()))() = &f9;
-static void(**(*pf10)(void(**f)()))() = &f10;
-static void(**(*pf11)(int32_t *(**f)(int32_t a, int32_t *b)))() = &f11;
-static void(**(*pf12)(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))() = &f12;
-static void(**(*pf13)(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))() = &f13;
+static void(*pf7)(void(*f)(void)) = &f7;
+static void(*(*pf8)(void(*f)(void)))(void) = &f8;
+static void(**(*pf9)(void(*f)(void)))(void) = &f9;
+static void(**(*pf10)(void(**f)(void)))(void) = &f10;
+static void(**(*pf11)(int32_t *(**f)(int32_t a, int32_t *b)))(void) = &f11;
+static void(**(*pf12)(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))(void) = &f12;
+static void(**(*pf13)(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))(void) = &f13;
 
 // Arrays
 static int32_t a0[5] = {0, 1, 2, 3, 4};
 static int32_t *a1[5] = (int32_t *[5]){&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]};
 static int32_t **a2[5] = (int32_t **[5]){&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]};
-static void(*a3[5])() = {&f0};
+static void(*a3[5])(void) = {&f0};
 static int a4[2][5] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 static int *a5[2] = (int *[2]){&a4[0], &a4[1]};
 // Проблема в том что мой getelementptr не умеет в цепь-молнию
@@ -200,7 +200,7 @@ static int32_t arrr[3][3] = {
 	7, 8, 9
 };
 
-static void(*arry[3][3])();
+static void(*arry[3][3])(void);
 
 static int32_t add(int32_t a, int32_t b) {
 	return a + b;
@@ -216,7 +216,7 @@ static int32_t(*farr[2])(int32_t a, int32_t b) = {
 	&add, &sub
 };
 
-typedef void He();
+typedef void He(void);
 
 static void he(He *x) {
 }
@@ -244,7 +244,7 @@ static Wrap wrap0 = {
 
 static Wrap *awrap[2] = {&wrap0, &wrap0};
 
-int32_t main() {
+int32_t main(void) {
 	xy((struct __anonymous_struct_3){.x = 10, .y = 20});
 
 	printf("test1 (eq): ");

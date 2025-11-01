@@ -55,17 +55,17 @@ public func main () -> Int32 {
 }
 
 
-func putc8 (c: Char8) -> Unit {
+func putc8 (c: Char8) -> Unit {Unit c
 }
-func putc16 (c: Char16) -> Unit {
+func putc16 (c: Char16) -> Unit {Unit c
 }
-func putc32 (c: Char32) -> Unit {
+func putc32 (c: Char32) -> Unit {Unit c
 }
 
-func puts8 (s: *Str8) -> Unit {
+func puts8 (s: *Str8) -> Unit {Unit s
 }
-func puts16 (s: *Str16) -> Unit {
+func puts16 (s: *Str16) -> Unit {Unit s
 }
-func puts32 (s: *Str32) -> Unit {
+func puts32 (s: *Str32) -> Unit {Unit s
 }
 

@@ -88,12 +88,12 @@ typedef struct Point2D Point2D;
 
 // переопределение f не вызвало ошибку!
 //@conditional(const1 < const2)
-static void hello() {
+static void hello(void) {
 	printf("hi!\n");
 }
 
 
-int32_t main() {
+int32_t main(void) {
 	hello();
 	printf("Attributes example\n");
 	return 0;

@@ -10,7 +10,7 @@
 
 
 
-int main() {
+int main(void) {
 	printf("hello from main\n");
 	lib_foo();
 	return 0;

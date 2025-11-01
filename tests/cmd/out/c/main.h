@@ -10,6 +10,6 @@
 #include <unistd.h>
 #include <ctype.h>
 
-int32_t main();
+int32_t main(void);
 
 #endif /* MAIN_H */

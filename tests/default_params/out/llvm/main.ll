@@ -209,11 +209,11 @@ define internal %Int32 @func2(%Int32 %a, %Int32 %b) {
 	ret %Int32 %1
 }
 
-define internal %Int32 @func3(%Int32 %a, %Int32 %b) {
-	%1 = add %Int32 %a, %b
-	ret %Int32 %1
-}
 
+
+;func func3 (a: Int32 = 10, b: Int32) -> Int32 {
+;	return a + b
+;}
 define internal %Bool @test1() {
 	%1 = call %Int32 @func1(%Int32 10)
 	%2 = icmp eq %Int32 %1, 10

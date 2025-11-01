@@ -10,6 +10,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int main();
+int main(void);
 
 #endif /* MAIN_H */

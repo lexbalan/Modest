@@ -9,7 +9,7 @@
 
 
 
-int main() {
+int main(void) {
 	console_print("test console print\n");
 
 	const char32_t c = U'🐀';

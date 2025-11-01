@@ -25,7 +25,7 @@ LLVM:
 	#clang -c $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/linked_list.ll
 	
 	# 3. *.o -> a.out
-	#$(CC) main.o linked_list.o -o a.out
+	#clang -Wall -Wextra -pedantic -Wno-unused-variable main.o linked_list.o -o a.out
 	
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/list.ll
 
@@ -34,7 +34,7 @@ C:
 	mcc -o $(CPREFIX)/main -mbackend=c -funsafe -mint=64 $(INDIR)/main.m
 	mcc -o $(CPREFIX)/list -mbackend=c -mint=64 $(INDIR)/list.m
 	
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/list.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/list.c
 
 
 clean:

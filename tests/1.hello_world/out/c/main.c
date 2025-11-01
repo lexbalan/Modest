@@ -15,7 +15,7 @@
 
 #define HELLO_WORLD  HELLO " " WORLD
 
-int main() {
+int main(void) {
 	printf("%s\n", HELLO_WORLD);
 	return 0;
 }

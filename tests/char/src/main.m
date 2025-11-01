@@ -1,5 +1,7 @@
 // tests/char/src/main.m
 
+pragma unsafe
+
 include "libc/ctypes64"
 include "libc/stdio"
 
@@ -7,6 +9,7 @@ include "libc/stdio"
 const utf8Char = "s"
 const utf16Char = "Я"
 const utf32Char = "🐀"
+
 
 
 public func main () -> Int {
@@ -20,9 +23,9 @@ public func main () -> Int {
 	ch16 = utf16Char
 	ch32 = utf32Char
 
-	//printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
-	//printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
-	//printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
+	printf("ch08 = 0x%x (%c)\n", unsafe Nat32 Word32 Word8 ch08, ch08)
+	printf("ch16 = 0x%x (%c)\n", unsafe Nat32 Word32 Word16 ch16, ch16)
+	printf("ch32 = 0x%x (%c)\n", unsafe Nat32 Word32 ch32, ch32)
 
 	return 0
 }

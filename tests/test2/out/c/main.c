@@ -22,7 +22,7 @@
 
 static int32_t a[4];
 
-int32_t main() {
+int32_t main(void) {
 	printf("test2\n");
 	ARRCPY(&a, &((uint8_t[3]){1, 2, 3}), LENGTHOF(a));
 	return 0;

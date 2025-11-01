@@ -13,7 +13,7 @@
 // left must be Word
 // right must be Nat
 
-int main() {
+int main(void) {
 	printf("test shift\n");
 
 	uint32_t c;

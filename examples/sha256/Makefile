@@ -26,7 +26,7 @@ C:
 	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
 	mcc -o $(CPREFIX)/sha256 -mbackend=c $(C_OPTIONS) -funsafe ${MODEST_LIB}/misc/sha256.m
 
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/sha256.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/sha256.c
 
 
 clean:

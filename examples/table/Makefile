@@ -25,7 +25,7 @@ LLVM:
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
 	mcc -o $(CPREFIX)/table -mbackend=c -funsafe $(INDIR)/table.m
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/table.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/table.c
 
 
 clean:

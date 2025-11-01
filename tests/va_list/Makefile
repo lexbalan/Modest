@@ -31,7 +31,7 @@ C:
 	#mcc -o $(CPREFIX)/console $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/lightfood/console.m
 	#mcc -o $(CPREFIX)/print $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/lightfood/print.m
 	
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/utf.c # $(CPREFIX)/console.c $(CPREFIX)/print.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/utf.c # $(CPREFIX)/console.c $(CPREFIX)/print.c
 
 clean:
 	rm *.o

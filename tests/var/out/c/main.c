@@ -16,7 +16,7 @@ static int32_t arr0[2] = ARR;
 static int32_t arr1[2] = ARR;
 static char *str = "Hello!";  // -> *[]Char8
 
-int main() {
+int main(void) {
 	int32_t x = 127;
 	int32_t y = x + 1;
 

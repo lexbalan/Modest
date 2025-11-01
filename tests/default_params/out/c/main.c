@@ -20,12 +20,11 @@ static int32_t func2(int32_t a /* default=10 */, int32_t b /* default=20 */) {
 }
 
 
-static int32_t func3(int32_t a /* default=10 */, int32_t b) {
-	return a + b;
-}
+//func func3 (a: Int32 = 10, b: Int32) -> Int32 {
+//	return a + b
+//}
 
-
-static bool test1() {
+static bool test1(void) {
 	const bool c0 = func1(10) == 10;
 	const bool c1 = func1(10) == 10;
 	const bool c2 = func1(10) == 10;
@@ -35,7 +34,7 @@ static bool test1() {
 }
 
 
-static bool test2() {
+static bool test2(void) {
 	const bool c0 = func2(10, 20) == 30;
 	const bool c1 = func2(10, 20) == 30;
 	const bool c2 = func2(10, 20) == 30;
@@ -47,7 +46,7 @@ static bool test2() {
 }
 
 
-int main() {
+int main(void) {
 	printf("test default parameters\n");
 
 	//func2(b=10, 10)  // error: positional argument follows keyword argument

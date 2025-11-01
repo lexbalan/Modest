@@ -12,11 +12,12 @@
 
 typedef int32_t NewInt32;
 
-int main() {
+int main(void) {
 	printf("test typedef\n");
 
 	NewInt32 newInt32;
 	newInt32 = 0;
+	(void)newInt32;
 
 	//type NewInt16 Int16
 	//var newInt16: NewInt16

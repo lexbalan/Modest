@@ -23,8 +23,11 @@ const string8Const = *Str8 genericStringConst
 const string16Const = *Str16 genericStringConst
 const string32Const = *Str32 genericStringConst
 
+@used
 var arr_utf8: [8]Char8 = "Hi!\n"
+@used
 var arr_utf16: [9]Char16 = "Hello Ω!\n"
+@used
 var arr_utf32: [8]Char32 = "Hello!\n"
 
 

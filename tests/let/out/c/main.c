@@ -10,7 +10,7 @@
 
 
 
-int main() {
+int main(void) {
 	#define x  127
 	#define y  (x + 1)
 

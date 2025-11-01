@@ -39,7 +39,7 @@ C:
 	mcc -o $(CPREFIX)/fsm -mbackend=c $(C_OPTIONS) $(INDIR)/fsm.m
 	mcc -o $(CPREFIX)/main -mbackend=c $(C_OPTIONS) $(INDIR)/main.m
     
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/fsm.c $(CPREFIX)/delay.c $(CPREFIX)/utf.c $(CPREFIX)/console.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/fsm.c $(CPREFIX)/delay.c $(CPREFIX)/utf.c $(CPREFIX)/console.c
 	
 	#mcc -o $(CPREFIX)/print -mbackend=c $(C_OPTIONS) -funsafe ${MODEST_LIB}/lightfood/print.m
 	#$(CPREFIX)/print.c 

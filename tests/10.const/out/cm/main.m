@@ -77,6 +77,8 @@ public func main () -> Int {
 
 	printf("lines_0_len = %f\n", lines_0_len)
 	printf("lines_1_len = %f\n", lines_1_len)
+	printf("lines_2_len = %f\n", lines_2_len)
+	printf("lines_3_len = %f\n", lines_3_len)
 
 	//	let y = wa.x
 

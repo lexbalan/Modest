@@ -10,7 +10,7 @@
 
 
 
-int main() {
+int main(void) {
 
 	// __compiler
 	printf("__compiler.name = %s\n", "m2");

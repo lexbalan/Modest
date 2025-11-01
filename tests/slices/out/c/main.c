@@ -30,7 +30,7 @@ static void array_print(int32_t *pa, uint32_t len) {
 }
 
 
-int main() {
+int main(void) {
 	printf("test slices\n");
 
 	//

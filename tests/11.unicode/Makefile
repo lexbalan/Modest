@@ -29,7 +29,7 @@ C:
 	mcc -o $(CPREFIX)/console $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/lightfood/console.m
 	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
 	
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/utf.c $(CPREFIX)/console.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/utf.c $(CPREFIX)/console.c
     
 
 

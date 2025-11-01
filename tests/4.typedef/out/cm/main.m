@@ -9,6 +9,7 @@ public func main () -> Int {
 
 	var newInt32: NewInt32
 	newInt32 = NewInt32 0
+	Unit newInt32
 
 	//type NewInt16 Int16
 	//var newInt16: NewInt16

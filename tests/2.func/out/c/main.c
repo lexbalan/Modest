@@ -10,7 +10,7 @@
 
 
 
-static void func1() {
+static void func1(void) {
 	printf("func1 was called\n");
 }
 
@@ -27,9 +27,9 @@ static int32_t sum(int32_t a, int32_t b) {
 
 // define function main
 
-static void func0();
+static void func0(void);
 
-int main() {
+int main(void) {
 	printf("test func\n");
 
 	// call declared & defined functions
@@ -57,7 +57,7 @@ int main() {
 }
 
 
-static void func0() {
+static void func0(void) {
 	printf("func0 was called\n");
 }
 

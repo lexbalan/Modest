@@ -46,7 +46,7 @@ static void print_bytes(uint8_t *buf, uint32_t len) {
 }
 
 
-int main() {
+int main(void) {
 	printf("test xor encrypting\n");
 
 	uint8_t *const tmsg = (uint8_t *)&test_msg;

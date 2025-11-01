@@ -32,6 +32,7 @@ typedef struct Point Point;
 
 #define POINTS  (Point[3])PS
 
+__attribute__((used))
 static Point points2[3] = {
 	{.x = 0, .y = 0},
 	{.x = 1, .y = 1},
@@ -39,7 +40,7 @@ static Point points2[3] = {
 };
 
 // define function main
-int main() {
+int main(void) {
 	printf("test const\n");
 
 	printf("genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);

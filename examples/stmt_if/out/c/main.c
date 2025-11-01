@@ -10,7 +10,7 @@
 
 
 
-int main() {
+int main(void) {
 	printf("if statement example\n");
 
 	int32_t a;

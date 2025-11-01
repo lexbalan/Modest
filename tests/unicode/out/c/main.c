@@ -45,7 +45,7 @@ static void puts8(char *s);
 static void puts16(char16_t *s);
 static void puts32(char32_t *s);
 
-int32_t main()
+int32_t main(void)
 {
 	printf("test unicode\n");
 
@@ -70,28 +70,28 @@ int32_t main()
 
 
 static void putc8(char c)
-{
+{(void)c;
 }
 
 static void putc16(char16_t c)
-{
+{(void)c;
 }
 
 static void putc32(char32_t c)
-{
+{(void)c;
 }
 
 
 static void puts8(char *s)
-{
+{(void)s;
 }
 
 static void puts16(char16_t *s)
-{
+{(void)s;
 }
 
 static void puts32(char32_t *s)
-{
+{(void)s;
 }
 
 

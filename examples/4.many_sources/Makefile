@@ -25,13 +25,13 @@ LLVM:
 	clang -c $(LLVMPREFIX)/lib.ll
 	
 	# compile .o files to a.out
-	$(CC) main.o lib.o -o a.out
+	clang -Wall -Wextra -pedantic -Wno-unused-variable main.o lib.o -o a.out
 
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
 	mcc -o $(CPREFIX)/lib -mbackend=c $(INDIR)/lib.m
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/lib.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/lib.c
 
 
 clean:

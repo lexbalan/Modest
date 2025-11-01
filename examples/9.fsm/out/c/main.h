@@ -11,6 +11,6 @@
 #include <stdio.h>
 #include "fsm.h"
 
-int main();
+int main(void);
 
 #endif /* MAIN_H */

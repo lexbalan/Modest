@@ -53,7 +53,7 @@ static void handleRequest(int32_t clientSocket) {
 }
 
 
-int32_t main() {
+int32_t main(void) {
 	const int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (serverSocket < 0) {
 		perror("cannot create socket");

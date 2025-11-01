@@ -10,7 +10,7 @@
 
 
 
-int main() {
+int main(void) {
 	printf("while statement test\n");
 
 	uint32_t a = 0;

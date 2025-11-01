@@ -28,6 +28,6 @@ typedef uint32_t char32_t;
 #define _CHR32(x) (__STR32(x)[0])
 #endif /* __STR_UNICODE__ */
 
-int main();
+int main(void);
 
 #endif /* MAIN_H */

@@ -62,7 +62,7 @@ static float lineLength(Line line) {
 }
 
 
-static void ptr_example() {
+static void ptr_example(void) {
 	Point *const ptr_p = (Point *)malloc(sizeof(Point));
 
 	// access by pointer
@@ -73,7 +73,7 @@ static void ptr_example() {
 }
 
 
-int main() {
+int main(void) {
 	// by value
 	const float len = lineLength(line);
 	printf("line length = %f\n", len);

@@ -56,7 +56,9 @@ styles = {
 styleguide = legacy_style
 
 EMPTY_ARRAY_LITERAL = "{0}"
+EMPTY_RECORD_LITERAL = "{0}"
 
+EMPTY_FUNC_PARAM = "void"
 
 cfunc = None
 
@@ -339,6 +341,9 @@ def strFuncParamlist(params, va_arg):
 		if i > 0:
 			s += ', '
 		s += '...'
+
+	if len(params) == 0:
+		s += EMPTY_FUNC_PARAM
 
 	s += ')'
 	return s
@@ -1111,13 +1116,15 @@ def str_value_literal_record(type, items):
 	indent_up()
 
 	nitems = len(items)
-	i = 0
+	if nitems == 0:
+		return EMPTY_RECORD_LITERAL
 
 	nl_end = 0
 	# for situation when firat item is ValueZero
 	# without it, forst value will be printed with space before it.
 	item_printed = False
 
+	i = 0
 	while i < nitems:
 		item = type.fields[i]
 		field_id_str = get_id_str(item)

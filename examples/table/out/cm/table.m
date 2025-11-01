@@ -6,11 +6,11 @@ include "string"
  */
 
 
-public type Raw = []*Str8
+public type Row = []*Str8
 
 public type Table = @public record {
 	public header: *[]*Str8
-	public data: *[]Raw
+	public data: *[]Row
 	public nRows: Nat32
 	public nCols: Nat32
 	public separate: Bool

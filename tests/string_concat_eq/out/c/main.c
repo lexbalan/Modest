@@ -18,7 +18,7 @@
 
 #define TEST  "test"
 
-int main() {
+int main(void) {
 	printf("%s\n", GREETING);
 
 	if (true) {

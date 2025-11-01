@@ -50,7 +50,7 @@ static void sumsub64(int64_t a, int64_t b) {
 }
 
 
-int main() {
+int main(void) {
 	printf("inline asm test\n");
 
 	int64_t a = 10;

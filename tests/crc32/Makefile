@@ -24,7 +24,7 @@ LLVM:
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
 	mcc -o $(CPREFIX)/crc32 $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/misc/crc32.m
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/crc32.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/crc32.c
 
 
 clean:

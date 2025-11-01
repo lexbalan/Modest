@@ -11,6 +11,6 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 
-int main();
+int main(void);
 
 #endif /* SERVER_H */

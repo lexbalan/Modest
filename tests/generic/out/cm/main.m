@@ -186,12 +186,13 @@ func test_generic_record () -> Bool {
 	// to record {x: Int32, y: Int32}
 	var point_2d: Point2D
 	point_2d = p
-
+	Unit point_2d
 
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32, z: Int32}
 	var point_3d: Point3D
 	point_3d = Point3D p
+	Unit point_3d
 
 	return true
 }

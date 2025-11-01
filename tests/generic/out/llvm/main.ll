@@ -485,7 +485,6 @@ define internal %Bool @test_generic_record() {
 	%6 = insertvalue %Point2D %5, %Int32 20, 1
 	store %Point2D %6, %Point2D* %4
 
-
 	; explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32, z: Int32}
 	%7 = alloca %Point3D, align 16

@@ -33,7 +33,7 @@ C:
 	mcc -o $(CPREFIX)/ringWord8 -mbackend=c $(INDIR)/ringWord8.m
 	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
 	#mcc -o $(CPREFIX)/mutex -mbackend=c $(INDIR)/mutex.m
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/queue.c $(CPREFIX)/queueWord8.c $(CPREFIX)/ringWord8.c 
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/queue.c $(CPREFIX)/queueWord8.c $(CPREFIX)/ringWord8.c 
 
 
 clean:

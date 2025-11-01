@@ -34,7 +34,7 @@ static float slope(Point2D a, Point2D b) {
 }
 
 
-int main() {
+int main(void) {
 	printf("float test\n");
 
 	printf("2 = %d\n", 2);

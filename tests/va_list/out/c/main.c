@@ -36,7 +36,7 @@ static ssize_t my_printf(char *format, ...) {
 }
 
 
-int main() {
+int main(void) {
 	uint32_t k = 10;
 	my_printf("My Printf Test %u\n", k);
 

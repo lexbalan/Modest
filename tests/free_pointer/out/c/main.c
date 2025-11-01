@@ -10,7 +10,7 @@
 
 
 
-int32_t main() {
+int32_t main(void) {
 	bool a;
 	int32_t b;
 	int64_t c;

@@ -9,6 +9,6 @@
 
 #include <stdio.h>
 
-void lib_foo();
+void lib_foo(void);
 
 #endif /* LIB_H */

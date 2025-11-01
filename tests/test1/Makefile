@@ -31,7 +31,7 @@ C:
 	mcc -o $(CPREFIX)/lib --config=config.toml -mbackend=c -funsafe $(INDIR)/lib.m
 	mcc -o $(CPREFIX)/lib2 --config=config.toml -mbackend=c -funsafe $(INDIR)/lib2.m
 	mcc -o $(CPREFIX)/fixed32 --config=config.toml -mbackend=c -funsafe $(INDIR)/fixed32.m
-	$(CC) $(CPREFIX)/main.c $(CPREFIX)/lib.c $(CPREFIX)/fixed32.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/lib.c $(CPREFIX)/fixed32.c
 
 
 clean:

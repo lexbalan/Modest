@@ -23,7 +23,7 @@ LLVM:
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
-	$(CC) $(LIBS) $(CPREFIX)/main.c
+	clang -Wall -Wextra -pedantic -Wno-unused-variable $(LIBS) $(CPREFIX)/main.c
 
 
 clean:
