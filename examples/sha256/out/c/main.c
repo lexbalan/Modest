@@ -74,7 +74,7 @@ int main(void) {
 	printf("test SHA256\n");
 
 	uint32_t i = 0;
-	while (i < 2) {
+	while (i < LENGTHOF(((SHA256_TestCase *[2])TESTS))) {
 		SHA256_TestCase *const test = ((SHA256_TestCase *[2])TESTS)[i];
 		const bool testResult = doTest(test);
 

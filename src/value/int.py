@@ -95,7 +95,7 @@ def value_integer_cons(t, v, method, ti):
 		if method != 'implicit':
 			nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 			nv.asset = int(v.asset)  # here can be float
-			nv.immediate = True
+			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			return nv
 		return _value_integer_cons_immediate(t, v, method, ti)
 

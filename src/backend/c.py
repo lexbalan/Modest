@@ -734,7 +734,11 @@ def str_value_index(x, ctx):
 
 	left_str = ''
 
-	if value_is_generic_immediate_const(left):
+	if left.is_global_flag and left.type.is_generic_array():
+		ts = str_type(left.type)
+		vs = str_value(left, ctx=ctx, parent_expr=x)
+		left_str = '((%s)%s)' % (ts, vs)
+	elif value_is_generic_immediate_const(left):
 		ts = str_type(left.type)
 		vs = str_value(left, ctx=ctx, parent_expr=x)
 		left_str = '((%s)%s)' % (ts, vs)
@@ -744,6 +748,7 @@ def str_value_index(x, ctx):
 
 	if left.type.is_pointer() and not is_sim_sim(left.type):
 		left_str = "(*%s)" % left_str
+
 
 	return left_str + '[' + str_value(x.index) + ']'
 
@@ -842,6 +847,10 @@ def str_value_cons_array(x, ctx):
 		# то мы должны ее привести к требуемому типу
 		#is_const = value['kind'] in ['const', 'literal', HLIR_VALUE_OP_ADD]
 
+		if is_global_context():
+			if value.isValueRuntime() or value.isValueLinktime():
+				return str_value(value, ctx=ctx)
+
 		is_const = value.isValueLiteral() or value.isValueConst() or (value.isValueBin() and value.op == HLIR_VALUE_OP_ADD)
 
 		if is_const:
@@ -876,6 +885,7 @@ def str_value_cons_array(x, ctx):
 	#    var x: [10]Word8 = "0123456789"
 	if value.type.is_string():
 		return str_value(value, ctx=ctx)
+
 
 	return str_cast(to_type, value, ctx)
 
@@ -1346,11 +1356,15 @@ def str_value_lengthof(x, ctx):
 		# решает проблему когда массив представлен указателем на элемент
 		return str_value(x.value.type.volume)
 
+	value = x.value
 	sstr = ""
-	sstr += "LENGTHOF("
-	sstr += str_value(x.value)
-	sstr += ")"
-	return sstr
+	if value.type.is_generic_array():
+		ts = str_type(value.type)
+		vs = str_value(value, ctx=ctx, parent_expr=x)
+		sstr = '((%s)%s)' % (ts, vs)
+	else:
+		sstr += str_value(value)
+	return "LENGTHOF(%s)" % sstr
 
 
 

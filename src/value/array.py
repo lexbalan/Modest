@@ -21,14 +21,13 @@ def value_array_create(items, ti):
 	# Проверяем - immediate ли этот массив?
 	# если хотя бы один элемент - не immediate
 	# -> весь массив - не immediate
-	is_immediate = True
-	is_linktime = False
+	stage = HLIR_VALUE_STAGE_COMPILETIME
 	for item in items:
 		if item.isValueRuntime():
-			is_immediate = False
+			stage = HLIR_VALUE_STAGE_RUNTIME
 
-		if item.linktime:
-			is_linktime = True
+		if item.isValueLinktime() and stage == HLIR_VALUE_STAGE_COMPILETIME:
+			stage = HLIR_VALUE_STAGE_LINKTIME
 
 	# Получаем наиболее подходящий общий тип элементов массива
 	items_type = items[0].type
@@ -41,14 +40,14 @@ def value_array_create(items, ti):
 	# неявно приводим все элементы к этому типу
 	casted_items = implicit_cast_list(items, items_type)
 	v = _value_array_create(casted_items, items_type, length, is_generic=True, ti=ti)
-	v.immediate = is_immediate  #TODO: need to implement 'immediate' flag
-	v.linktime = is_linktime
+	v.stage = stage
+
+	#info("arr=%s" % stage)
 	return v
 
 
 # TODO: see select_common_type!
 def array_can(to, from_type, method, ti):
-
 	# String -> []CharX
 	if from_type.is_string():
 		return to.of.is_char() or to.of.is_word()
@@ -120,10 +119,10 @@ def value_array_cons(t, v, method, ti):
 
 
 	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
-	nv.immediate = v.immediate
+	nv.stage = v.stage
 
-	if v.immediate:
-		nv.asset = 1
+#	if v.isValueImmediate():
+#		nv.asset = 1
 
 	if Type.is_string(v.type):
 		char_type = t.of
@@ -146,9 +145,8 @@ def value_array_cons(t, v, method, ti):
 	#
 
 	size = 0
-	if v.asset != None:
+	if v.isValueImmediate():
 		items = []
-
 		for item in v.asset:
 			from .cons import value_cons_implicit_check
 			casted_item = value_cons_implicit_check(t.of, item)
@@ -188,7 +186,7 @@ def value_array_add(l, r, ti):
 
 	nv = ValueBin(type_result, HLIR_VALUE_OP_ADD, l, r, ti=ti)
 	nv.asset = items
-	nv.immediate = True
+	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 	return nv
 
 
@@ -217,7 +215,7 @@ def value_array_eq(l, r, op, ti):
 			eq_result = not eq_result
 
 		nv.asset = int(eq_result)
-		nv.immediate = True
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	return nv
 

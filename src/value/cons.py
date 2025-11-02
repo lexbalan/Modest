@@ -312,7 +312,7 @@ def value_cons_immediate(t, v, method, ti):
 	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 
 	nv.asset = v.asset
-	nv.immediate = True
+	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	if v.hasAttribute('hexadecimal'):
 		nv.addAttribute('hexadecimal')

@@ -237,12 +237,13 @@ declare void @delay_sec(%Nat64 %s)
 	%fsm_Handler*
 };
 
+%fsm_States = type [16 x %fsm_StateDesc];
 %fsm_FSM = type {
 	[8 x %Char8],
 	%Nat32,
 	%Nat32,
 	%Nat32,
-	[16 x %fsm_StateDesc]
+	%fsm_States
 };
 
 declare %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Nat32 %state_no)
@@ -384,7 +385,7 @@ define internal void @beacon_exit(%fsm_FSM* %x) {
 	%Nat32 0,
 	%Nat32 0,
 	%Nat32 0,
-	[16 x %fsm_StateDesc] [
+	%fsm_States [
 		%fsm_StateDesc {
 			[8 x %Char8] [
 				%Char8 79,

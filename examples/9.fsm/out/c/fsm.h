@@ -25,6 +25,8 @@ struct fsm_StateDesc {
 };
 typedef struct fsm_StateDesc fsm_StateDesc;
 
+typedef fsm_StateDesc fsm_States[FSM_MAX_STATES];
+
 #define FSM_SUBSTATE_ENTERING  0
 #define FSM_SUBSTATE_LOOP  1
 #define FSM_SUBSTATE_LEAVING  2
@@ -34,7 +36,7 @@ struct fsm_FSM {
 	uint32_t state;
 	uint32_t nexstate;
 	uint32_t substate;
-	fsm_StateDesc states[FSM_MAX_STATES];
+	fsm_States states;
 };
 char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no);
 void fsm_switch(fsm_FSM *fsm, uint32_t state);

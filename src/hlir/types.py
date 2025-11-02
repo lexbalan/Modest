@@ -1182,7 +1182,7 @@ class TypeArray(Type):
 
 		array_size = 0
 		if volume != None and not volume.isValueUndef():
-			if volume.immediate:
+			if volume.isValueImmediate():
 				array_size = item_size * volume.asset
 
 		super().__init__(generic=generic, ops=ARR_OPS, ti=ti)
@@ -1254,18 +1254,19 @@ HLIR_VALUE_STORAGE_CLASS_LOCAL = "local"
 HLIR_VALUE_STORAGE_CLASS_DEFAULT = HLIR_VALUE_STORAGE_CLASS_LOCAL
 
 
+HLIR_VALUE_STAGE_COMPILETIME = "immediate"
+HLIR_VALUE_STAGE_LINKTIME = "linktime"
+HLIR_VALUE_STAGE_RUNTIME = "runtime"
+
+
 class Value(Entity):
 	def __init__(self, type, ti=None):
 		super().__init__(ti)
 		self.id = None
 		self.type = type
 		self.storage_class = HLIR_VALUE_STORAGE_CLASS_DEFAULT
-		self.definition = None # *StmtDefVar, *StmtDefConst, *StmtDefFunc
-
-		# this value is immediate but are known only in link time
-		self.linktime = False
-		# this value is immediate
-		self.immediate = False
+		self.definition = None  # *StmtDefVar, *StmtDefConst, *StmtDefFunc
+		self.stage = HLIR_VALUE_STAGE_RUNTIME
 
 		#
 		self.is_lvalue = False
@@ -1288,11 +1289,15 @@ class Value(Entity):
 	def isLvalue(self):
 		return self.is_lvalue
 
-	def isValueRuntime(self):
-		return not self.isValueImmediate()
-
 	def isValueImmediate(self):
-		return self.immediate
+		return self.stage == HLIR_VALUE_STAGE_COMPILETIME
+
+	def isValueLinktime(self):
+		return self.stage == HLIR_VALUE_STAGE_LINKTIME
+
+	def isValueRuntime(self):
+		return self.stage == HLIR_VALUE_STAGE_RUNTIME
+
 
 	def isValueImmutable(self):
 		# ONLY lvalue CAN be an immutable value,
@@ -1490,10 +1495,10 @@ class Value(Entity):
 		type_print(x.type); print()
 		print("att: " + str(x.att))
 
-		print('immediate = ' + str(x.immediate))
+		print('stage = ' + str(x.stage))
 		print('immutable = ' + str(x.immutable))
 
-		if x.immediate:
+		if x.isValueImmediate():
 			if x.asset != None:
 				print("items_len = %d" % len(x.asset))
 				print("items[0] = ")
@@ -1515,7 +1520,7 @@ class ValueBad(Value):
 		super().__init__(type=TypeBad(ti), ti=ti)
 		self.id = Id('_')
 		# чтобы заткнуть жалобы "expected immediate value"
-		self.immediate = True
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 
 class ValueUndef(Value):
@@ -1524,7 +1529,7 @@ class ValueUndef(Value):
 			type = Type(ti)
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
-		self.immediate = True
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.asset = None
 
 
@@ -1533,7 +1538,7 @@ class ValueLiteral(Value):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.asset = asset
-		self.immediate = True
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.nsigns=0
 
 
@@ -1545,7 +1550,7 @@ class ValueZero(Value):
 			self.asset = []
 		else:
 			self.asset = 0
-		self.immediate = True
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.addAttribute('zero')
 
 
@@ -1635,7 +1640,7 @@ class ValueRef(Value):
 		self.value = value
 
 		if value.is_global():
-			self.immediate = True
+			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			# не можно поставить 0 тк иначе значение будет трактоваться как zero
 			# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
 			# поэтому временно заткнул единицей, но вообще нужно будет обдумать
@@ -1733,7 +1738,7 @@ class ValueAccessModule(Value):
 		self.imp = imp
 		self.id = id
 		self.value = value
-		self.immediate = value.immediate
+		self.stage = value.stage
 		self.asset = value.asset
 		self.is_lvalue = True
 
@@ -1781,10 +1786,10 @@ class ValueSizeofType(Value):
 		super().__init__(type=typeSysSize, ti=ti)
 		self.of = of
 		if not of.is_vla():
-			self.immediate = True
+			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			self.asset = of.size
 		else:
-			self.immediate = False
+			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
 
 
@@ -1794,10 +1799,10 @@ class ValueSizeofValue(Value):
 		super().__init__(type=typeSysSize, ti=ti)
 		self.of = value
 		if not value.type.is_vla():
-			self.immediate = True
+			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			self.asset = value.type.size
 		else:
-			self.immediate = False
+			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
 
 
@@ -1820,7 +1825,7 @@ class ValueLengthof(Value):
 		super().__init__(type=type, ti=ti)
 		if not value.type.is_vla():
 			self.asset = length
-			self.immediate = True
+			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 		self.value = value
 
@@ -1832,7 +1837,7 @@ class ValueAlignof(Value):
 		from trans import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
 		self.of = of
-		self.immediate = True
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.asset = align
 
 
@@ -1850,7 +1855,7 @@ class ValueOffsetof(Value):
 		type = type_number_for(offset, signedness=HLIR_TYPE_SIGNEDNESS_UNSIGNED, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.field = field_id
-		self.immediate = True
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.asset = offset
 
 

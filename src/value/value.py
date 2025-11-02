@@ -30,7 +30,7 @@ def value_eq(l, r, op, ti):
 			eq_result = l.asset != r.asset
 
 		nv.asset = int(eq_result)
-		nv.immediate = True
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	return nv
 

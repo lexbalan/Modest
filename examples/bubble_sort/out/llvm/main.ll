@@ -287,14 +287,17 @@ break_1:
 
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
-	call void @print_array([0 x %Int32]* bitcast ([21 x %Int32]* @testArray to [0 x %Int32]*), %Nat32 21)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+	%2 = bitcast [21 x %Int32]* @testArray to [0 x %Int32]*
+	call void @print_array([0 x %Int32]* %2, %Nat32 21)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
 
 	; do sort
-	call void @bubble_sort32([0 x %Int32]* bitcast ([21 x %Int32]* @testArray to [0 x %Int32]*), %Nat32 21)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
-	call void @print_array([0 x %Int32]* bitcast ([21 x %Int32]* @testArray to [0 x %Int32]*), %Nat32 21)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	%4 = bitcast [21 x %Int32]* @testArray to [0 x %Int32]*
+	call void @bubble_sort32([0 x %Int32]* %4, %Nat32 21)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
+	%6 = bitcast [21 x %Int32]* @testArray to [0 x %Int32]*
+	call void @print_array([0 x %Int32]* %6, %Nat32 21)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
 	ret %Int32 0
 }
 

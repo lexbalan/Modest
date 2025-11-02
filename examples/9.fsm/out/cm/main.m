@@ -105,7 +105,7 @@ var fsm0: FSM = {
 	state = 0
 	nexstate = 0
 	substate = fsm.substateEntering
-	states = [
+	states = States [
 		StateDesc {
 			name = "Off"
 			entry = &off_entry

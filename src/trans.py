@@ -590,13 +590,13 @@ def do_value_shift(x):
 		nv = ValueShl(left.type, left, right, ti=x['ti'])
 		if left.isValueImmediate() and right.isValueImmediate():
 			nv.asset = int(left.asset << right.asset)
-			nv.immediate = True
+			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	elif op == HLIR_VALUE_OP_SHR:
 		nv = ValueShr(left.type, left, right, ti=x['ti'])
 		if left.isValueImmediate() and right.isValueImmediate():
 			nv.asset = int(left.asset >> right.asset)
-			nv.immediate = True
+			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	if left.type.is_generic():
 		error("expected non-generic value", left.ti)
@@ -684,7 +684,7 @@ def do_value_bin2(op, l, r, ti):
 
 	if l.isValueBad() or r.isValueBad():
 		# если один из операндов bad, то и результат тоже bad
-		nv.immediate = False
+		nv.stage = HLIR_VALUE_STAGE_RUNTIME
 		nv.asset = None
 		return
 
@@ -724,7 +724,7 @@ def do_value_bin2(op, l, r, ti):
 				signedness = HLIR_TYPE_SIGNEDNESS_SIGNED
 			nv.type = type_number_for(asset, signedness=signedness, ti=ti)
 
-		nv.immediate = True
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		nv.asset = asset
 
 	return nv
@@ -755,7 +755,7 @@ def do_value_not(x):
 		else:
 			nv.asset = ~v.asset
 
-		nv.immediate = True
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	return nv
 
@@ -781,7 +781,7 @@ def do_value_neg(x):
 
 	if v.isValueImmediate():
 		nv.asset = -v.asset
-		nv.immediate = True
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 		if nv.type.is_generic():
 			nv.type = type_number_for(v.asset, signedness=HLIR_TYPE_SIGNEDNESS_SIGNED, ti=v.ti)
@@ -806,7 +806,7 @@ def do_value_pos(x):
 
 	if v.isValueImmediate():
 		nv.asset = +v.asset
-		nv.immediate = True
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	if nv.type.is_generic():
 		nv.type = type_number_for(v.asset, signedness=HLIR_TYPE_SIGNEDNESS_SIGNED, ti=v.ti)
@@ -830,7 +830,7 @@ def do_value_ref(x):
 			return ValueBad(ti)
 
 	nv = ValueRef(v, ti=ti)
-	nv.linktime = True
+	nv.stage = HLIR_VALUE_STAGE_LINKTIME
 	return nv
 
 
@@ -1136,7 +1136,7 @@ def do_value_index(x):
 				else:
 					item = ValueZero(array_typ.of, x['ti'])
 
-				nv.immediate = True
+				nv.stage = HLIR_VALUE_STAGE_COMPILETIME ## TODO: убери это!
 				cp_immediate(nv, item)
 	return nv
 
@@ -1987,8 +1987,8 @@ def def_const_common(x):
 
 	const_value = ValueConst(t, id, init_value=iv, ti=id.ti)
 
+	const_value.stage = iv.stage
 	if iv.isValueImmediate():
-		const_value.immediate = True
 		cp_immediate(const_value, iv)
 
 
@@ -2010,6 +2010,12 @@ def def_const_global(x):
 	global global_prefix
 	definition = def_const_common(x)
 
+	#definition.value.stage = HLIR_VALUE_STAGE_COMPILETIME
+	if definition.value.isValueRuntime():
+		error("runtime!", x['ti'])
+
+	#info("=%s" % definition.value.stage, x['ti'])
+
 	# TODO: centity -> instead cmodule/cfunc;
 	# rm Value#module -> tree instead
 	definition.parent = cmodule
@@ -2022,7 +2028,8 @@ def def_const_global(x):
 
 	iv = definition.init_value
 	if not iv.isValueUndef():
-		if not iv.isValueImmediate() and not iv.linktime:
+		if iv.isValueRuntime():
+			print(iv.stage)
 			error("expected immediate value3", iv.ti)
 
 	return definition
@@ -2893,8 +2900,8 @@ def cp_immediate(to, _from):
 	if _from.asset != None:
 		to.asset = _from.asset
 
-	to.immediate = _from.immediate
 	to.immutable = _from.immutable
+	to.stage = _from.stage
 	return
 
 

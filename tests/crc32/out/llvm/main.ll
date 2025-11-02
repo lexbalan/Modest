@@ -218,16 +218,17 @@ declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
 ]
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-	%2 = call %Word32 @crc32_run([0 x %Word8]* bitcast ([9 x %Word8]* @data to [0 x %Word8]*), %Nat32 9)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Word32 %2)
+	%2 = bitcast [9 x %Word8]* @data to [0 x %Word8]*
+	%3 = call %Word32 @crc32_run([0 x %Word8]* %2, %Nat32 9)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Word32 %3)
 ; if_0
-	%4 = icmp eq %Word32 %2, 3421780262
-	br %Bool %4 , label %then_0, label %else_0
+	%5 = icmp eq %Word32 %3, 3421780262
+	br %Bool %5 , label %then_0, label %else_0
 then_0:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	ret %Int 0

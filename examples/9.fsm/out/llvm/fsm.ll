@@ -209,18 +209,19 @@ declare void @perror(%ConstCharStr* %str)
 	%fsm_Handler*
 };
 
+%fsm_States = type [16 x %fsm_StateDesc];
 %fsm_FSM = type {
 	[8 x %Char8],
 	%Nat32,
 	%Nat32,
 	%Nat32,
-	[16 x %fsm_StateDesc]
+	%fsm_States
 };
 
 define %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Nat32 %state_no) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
 	%2 = bitcast %Nat32 %state_no to %Nat32
-	%3 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %1, %Int32 0, %Nat32 %2
+	%3 = getelementptr %fsm_States, %fsm_States* %1, %Int32 0, %Nat32 %2
 	%4 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %3, %Int32 0, %Int32 0
 	%5 = bitcast [8 x %Char8]* %4 to %Str8*
 	ret %Str8* %5
@@ -246,7 +247,7 @@ then_0:
 	%6 = load %Nat32, %Nat32* %5
 	%7 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
 	%8 = bitcast %Nat32 %6 to %Nat32
-	%9 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %7, %Int32 0, %Nat32 %8
+	%9 = getelementptr %fsm_States, %fsm_States* %7, %Int32 0, %Nat32 %8
 ; if_1
 	br %Bool 1 , label %then_1, label %endif_1
 then_1:
@@ -281,7 +282,7 @@ then_3:
 	%23 = load %Nat32, %Nat32* %22
 	%24 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
 	%25 = bitcast %Nat32 %23 to %Nat32
-	%26 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %24, %Int32 0, %Nat32 %25
+	%26 = getelementptr %fsm_States, %fsm_States* %24, %Int32 0, %Nat32 %25
 ; if_4
 	%27 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %26, %Int32 0, %Int32 2
 	%28 = load %fsm_Handler*, %fsm_Handler** %27
@@ -305,7 +306,7 @@ then_5:
 	%36 = load %Nat32, %Nat32* %35
 	%37 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
 	%38 = bitcast %Nat32 %36 to %Nat32
-	%39 = getelementptr [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %37, %Int32 0, %Nat32 %38
+	%39 = getelementptr %fsm_States, %fsm_States* %37, %Int32 0, %Nat32 %38
 ; if_6
 	br %Bool 1 , label %then_6, label %endif_6
 then_6:

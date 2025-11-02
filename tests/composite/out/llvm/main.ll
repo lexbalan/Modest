@@ -362,14 +362,14 @@ define internal void ()** @f13([10 x %Int32]* ([32 x %Int32*]*, [64 x %Int32*]**
 ;	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
 ;]
 @a7 = internal global [2 x [5 x [5 x %Int]*]] [
-	[5 x [5 x %Int]*] [
+	[5 x [5 x %Int32]*] [
 		[5 x %Int32]* @a0,
 		[5 x %Int32]* @a0,
 		[5 x %Int32]* @a0,
 		[5 x %Int32]* @a0,
 		[5 x %Int32]* @a0
 	],
-	[5 x [5 x %Int]*] [
+	[5 x [5 x %Int32]*] [
 		[5 x %Int32]* @a0,
 		[5 x %Int32]* @a0,
 		[5 x %Int32]* @a0,

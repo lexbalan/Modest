@@ -68,7 +68,7 @@ static Line lines[3] = {
 	}
 };
 
-static Line *pLines[3] = (Line *[3]){&lines[0], &lines[1], &lines[2]};
+static Line *pLines[3] = {&lines[0], &lines[1], &lines[2]};
 
 struct Struct {
 	Line *x;

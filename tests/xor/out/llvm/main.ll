@@ -298,18 +298,20 @@ break_1:
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*))
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
-	call void @print_bytes([0 x %Word8]* bitcast ([13 x %Char8]* @test_msg to [0 x %Word8]*), %Nat32 12)
+	%2 = bitcast [13 x %Char8]* @test_msg to [0 x %Word8]*
+	%3 = bitcast [4 x %Char8]* @test_key to [0 x %Word8]*
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
+	call void @print_bytes([0 x %Word8]* %2, %Nat32 12)
 
 	; encrypt test data
-	call void @xor_encrypter([0 x %Word8]* bitcast ([13 x %Char8]* @test_msg to [0 x %Word8]*), %Nat32 12, [0 x %Word8]* bitcast ([4 x %Char8]* @test_key to [0 x %Word8]*), %Nat32 3)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str5 to [0 x i8]*))
-	call void @print_bytes([0 x %Word8]* bitcast ([13 x %Char8]* @test_msg to [0 x %Word8]*), %Nat32 12)
+	call void @xor_encrypter([0 x %Word8]* %2, %Nat32 12, [0 x %Word8]* %3, %Nat32 3)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str5 to [0 x i8]*))
+	call void @print_bytes([0 x %Word8]* %2, %Nat32 12)
 
 	; decrypt test data
-	call void @xor_encrypter([0 x %Word8]* bitcast ([13 x %Char8]* @test_msg to [0 x %Word8]*), %Nat32 12, [0 x %Word8]* bitcast ([4 x %Char8]* @test_key to [0 x %Word8]*), %Nat32 3)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
-	call void @print_bytes([0 x %Word8]* bitcast ([13 x %Char8]* @test_msg to [0 x %Word8]*), %Nat32 12)
+	call void @xor_encrypter([0 x %Word8]* %2, %Nat32 12, [0 x %Word8]* %3, %Nat32 3)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
+	call void @print_bytes([0 x %Word8]* %2, %Nat32 12)
 	ret %Int 0
 }
 

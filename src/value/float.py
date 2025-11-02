@@ -22,7 +22,7 @@ def _value_float_cons_immediate(t, v, method, ti):
 	from .cons import value_cons_immediate
 	nv = value_cons_immediate(t, v, method, ti)
 	nv.asset = decimal.Decimal(nv.asset)
-	nv.immediate = True
+	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 	return nv
 
 

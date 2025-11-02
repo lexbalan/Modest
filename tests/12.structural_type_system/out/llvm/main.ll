@@ -333,17 +333,26 @@ define internal void @test_by_value() {
 
 define internal void @test_by_pointer() {
 	call void @f0_ptr(%Type1* @a)
-	call void @f1_ptr(%Type2* bitcast (%Type1* @a to %Type2*))
-	call void @f2_ptr(%Type3* bitcast (%Type1* @a to %Type3*))
-	call void @f3_ptr({%Int32}* bitcast (%Type1* @a to {%Int32}*))
-	call void @f0_ptr(%Type1* bitcast (%Type2* @b to %Type1*))
+	%1 = bitcast %Type1* @a to %Type2*
+	call void @f1_ptr(%Type2* %1)
+	%2 = bitcast %Type1* @a to %Type3*
+	call void @f2_ptr(%Type3* %2)
+	%3 = bitcast %Type1* @a to {%Int32}*
+	call void @f3_ptr({%Int32}* %3)
+	%4 = bitcast %Type2* @b to %Type1*
+	call void @f0_ptr(%Type1* %4)
 	call void @f1_ptr(%Type2* @b)
-	call void @f2_ptr(%Type3* bitcast (%Type2* @b to %Type3*))
-	call void @f3_ptr({%Int32}* bitcast (%Type2* @b to {%Int32}*))
-	call void @f0_ptr(%Type1* bitcast (%Type3* @c to %Type1*))
-	call void @f1_ptr(%Type2* bitcast (%Type3* @c to %Type2*))
+	%5 = bitcast %Type2* @b to %Type3*
+	call void @f2_ptr(%Type3* %5)
+	%6 = bitcast %Type2* @b to {%Int32}*
+	call void @f3_ptr({%Int32}* %6)
+	%7 = bitcast %Type3* @c to %Type1*
+	call void @f0_ptr(%Type1* %7)
+	%8 = bitcast %Type3* @c to %Type2*
+	call void @f1_ptr(%Type2* %8)
 	call void @f2_ptr(%Type3* @c)
-	call void @f3_ptr({%Int32}* bitcast (%Type3* @c to {%Int32}*))
+	%9 = bitcast %Type3* @c to {%Int32}*
+	call void @f3_ptr({%Int32}* %9)
 	ret void
 }
 

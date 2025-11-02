@@ -22,6 +22,6 @@ def value_string_add(l, r, ti):
 	type_result = TypeString(max_char_width, len(asset), ti)
 	nv = ValueBin(type_result, HLIR_VALUE_OP_ADD, l, r, ti=ti)
 	nv.asset = asset
-	nv.immediate = True
+	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 	return nv
 

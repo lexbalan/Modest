@@ -405,7 +405,8 @@ break_1:
 
 @qbuf = internal global [10 x %Word8] zeroinitializer
 define %Int @main() {
-	call void @queueWord8_init(%queueWord8_QueueWord8* @bq0, [0 x %Word8]* bitcast ([10 x %Word8]* @qbuf to [0 x %Word8]*), %Nat32 10)
+	%1 = bitcast [10 x %Word8]* @qbuf to [0 x %Word8]*
+	call void @queueWord8_init(%queueWord8_QueueWord8* @bq0, [0 x %Word8]* %1, %Nat32 10)
 	call void @fill(%Nat32 3)
 	call void @fetch(%Nat32 7)
 	call void @fill(%Nat32 12)

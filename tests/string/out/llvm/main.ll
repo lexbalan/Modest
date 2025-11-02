@@ -379,22 +379,25 @@ define %Int @main() {
 	call void @console_putchar_utf32(%Char32 129412)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str6 to [0 x i8]*))
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-	call void @console_puts8(%Str8* bitcast ([6 x %Char8]* @string8 to %Str8*))
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
-	call void @console_puts16(%Str16* bitcast ([8 x %Char16]* @string16 to %Str16*))
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str9 to [0 x i8]*))
-	call void @console_puts32(%Str32* bitcast ([12 x %Char32]* @string32 to %Str32*))
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str11 to [0 x i8]*))
-	%9 = load [0 x %Char8]*, [0 x %Char8]** @ptr_to_string8
-	call void @console_puts8([0 x %Char8]* %9)
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
-	%11 = load [0 x %Char16]*, [0 x %Char16]** @ptr_to_string16
-	call void @console_puts16([0 x %Char16]* %11)
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str13 to [0 x i8]*))
-	%13 = load [0 x %Char32]*, [0 x %Char32]** @ptr_to_string32
-	call void @console_puts32([0 x %Char32]* %13)
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str14 to [0 x i8]*))
+	%5 = bitcast [6 x %Char8]* @string8 to %Str8*
+	call void @console_puts8(%Str8* %5)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
+	%7 = bitcast [8 x %Char16]* @string16 to %Str16*
+	call void @console_puts16(%Str16* %7)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str9 to [0 x i8]*))
+	%9 = bitcast [12 x %Char32]* @string32 to %Str32*
+	call void @console_puts32(%Str32* %9)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str11 to [0 x i8]*))
+	%12 = load [0 x %Char8]*, [0 x %Char8]** @ptr_to_string8
+	call void @console_puts8([0 x %Char8]* %12)
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
+	%14 = load [0 x %Char16]*, [0 x %Char16]** @ptr_to_string16
+	call void @console_puts16([0 x %Char16]* %14)
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str13 to [0 x i8]*))
+	%16 = load [0 x %Char32]*, [0 x %Char32]** @ptr_to_string32
+	call void @console_puts32([0 x %Char32]* %16)
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str14 to [0 x i8]*))
 	ret %Int 0
 }
 

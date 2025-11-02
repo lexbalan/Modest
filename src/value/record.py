@@ -10,6 +10,7 @@ from type import type_print, record_field_get
 def value_record_create(initializers, ti):
 	# структура метится как immediate только когда все ее поля immediate
 	is_immediate = True
+	stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	# сперва пройдемся по инициализаторам
 	# и выясним какие поля у нас здесь имеются
@@ -24,7 +25,10 @@ def value_record_create(initializers, ti):
 		# если хотя бы один элемент - не immediate
 		# -> весь литерал записи - не immediate
 		if init_value.isValueRuntime():
-			is_immediate = False
+			stage = HLIR_VALUE_STAGE_RUNTIME
+
+		if init_value.isValueLinktime() and stage == HLIR_VALUE_STAGE_COMPILETIME:
+			stage = HLIR_VALUE_STAGE_LINKTIME
 
 		# создаем поле для типа generic record
 		field = Field(field_id, field_type, init_value=ValueUndef(field_type), ti=field_ti)
@@ -34,7 +38,7 @@ def value_record_create(initializers, ti):
 	record_type.generic = True
 
 	v = ValueLiteral(record_type, initializers, ti)
-	v.immediate = is_immediate
+	v.stage = stage
 	return v
 
 
@@ -65,7 +69,7 @@ def record_can(to, from_type, method, ti):
 def value_record_cons(t, v, method, ti):
 	#info("value_record_cons", ti)
 	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
-	nv.immediate = v.immediate
+	nv.stage = v.stage
 
 	# литерал записи всегда имеет тип Generic(Array)
 	# это позволяет конструировать из него разные записи
@@ -107,7 +111,7 @@ def value_record_eq(l, r, op, ti):
 			eq_result = not eq_result
 
 		nv.asset = int(eq_result)
-		nv.immediate = True
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	return nv
 
