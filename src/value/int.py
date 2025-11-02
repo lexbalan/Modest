@@ -99,6 +99,8 @@ def value_integer_cons(t, v, method, ti):
 			return nv
 		return _value_integer_cons_immediate(t, v, method, ti)
 
-	return ValueCons(t, v, method, rawMode=False, ti=ti)
+	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return nv
 
 

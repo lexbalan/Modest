@@ -52,7 +52,9 @@ def value_char_cons(t, v, method, ti):
 	if v.isValueImmediate():
 		return value_cons_immediate(t, v, method, ti)
 
-	return ValueCons(t, v, method, rawMode=False, ti=ti)
+	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return nv
 
 
 

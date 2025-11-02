@@ -194,6 +194,7 @@ def value_array_add(l, r, ti):
 # FIXIT: it is generic arrays EQ!
 def value_array_eq(l, r, op, ti):
 	nv = ValueBin(typeBool, op, l, r, ti=ti)
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if l.isValueImmediate() and r.isValueImmediate():
 		eq_result = True

@@ -591,17 +591,20 @@ def do_value_shift(x):
 		if left.isValueImmediate() and right.isValueImmediate():
 			nv.asset = int(left.asset << right.asset)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+			return nv
 
 	elif op == HLIR_VALUE_OP_SHR:
 		nv = ValueShr(left.type, left, right, ti=x['ti'])
 		if left.isValueImmediate() and right.isValueImmediate():
 			nv.asset = int(left.asset >> right.asset)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+			return nv
 
 	if left.type.is_generic():
 		error("expected non-generic value", left.ti)
 		return ValueBad(x['ti'])
 
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -680,13 +683,11 @@ def do_value_bin2(op, l, r, ti):
 	if op in (htype.EQ_OPS + htype.RELATIONAL_OPS):
 		t = typeBool
 
-	nv = ValueBin(t, op, l, r, ti=ti)
-
 	if l.isValueBad() or r.isValueBad():
-		# если один из операндов bad, то и результат тоже bad
-		nv.stage = HLIR_VALUE_STAGE_RUNTIME
-		nv.asset = None
-		return
+		return ValueBad(ti)
+
+	nv = ValueBin(t, op, l, r, ti=ti)
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	# if left & right are immediate, we can fold const
 	# and append field .asset to bin_value
@@ -747,6 +748,7 @@ def do_value_not(x):
 		op = HLIR_VALUE_OP_LOGIC_NOT
 
 	nv = ValueNot(vtype, v, ti=x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if v.isValueImmediate():
 		# because: ~(1) = -1 (not 0) !
@@ -778,6 +780,7 @@ def do_value_neg(x):
 		vtype.unsigned = True
 
 	nv = ValueNeg(vtype, v, ti=x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if v.isValueImmediate():
 		nv.asset = -v.asset
@@ -803,10 +806,11 @@ def do_value_pos(x):
 		error("expected value with signed type", v.ti)
 
 	nv = ValuePos(vtype, v, ti=x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if v.isValueImmediate():
-		nv.asset = +v.asset
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+		nv.asset = +v.asset
 
 	if nv.type.is_generic():
 		nv.type = type_number_for(v.asset, signedness=HLIR_TYPE_SIGNEDNESS_SIGNED, ti=v.ti)
@@ -830,6 +834,11 @@ def do_value_ref(x):
 			return ValueBad(ti)
 
 	nv = ValueRef(v, ti=ti)
+	# TODO: тут есть какая то ошибка, разберись!
+	#if is_local_entity(v):
+	#	mass
+	#	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#else:
 	nv.stage = HLIR_VALUE_STAGE_LINKTIME
 	return nv
 
@@ -840,7 +849,9 @@ def do_value_new(x):
 	if v.isValueBad() or v.isValueUndef():
 		return v
 
-	return ValueNew(v)
+	nv = ValueNew(v)
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return nv
 
 
 def do_value_deref(x):
@@ -866,7 +877,9 @@ def do_value_deref(x):
 	if is_func_ptr or is_free_ptr or is_open_array_ptr:# or is_vla:
 		error("cannot dereference pointer", v.ti)
 
-	return ValueDeref(v, ti=x['ti'])
+	nv = ValueDeref(v, ti=x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return nv
 
 
 
@@ -892,25 +905,33 @@ def do_value_va_start(x):
 	args = x['values']
 	va_list = do_value(args[0])
 	last_param = do_rvalue(args[1])
-	return ValueVaStart(typeUnit, va_list, last_param, x['ti'])
+	nv = ValueVaStart(typeUnit, va_list, last_param, x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return nv
 
 
 def do_value_va_arg(x):
 	va_list = do_value(x['va_list'])
 	type = do_type(x['type'])
-	return ValueVaArg(type, va_list, x['ti'])
+	nv = ValueVaArg(type, va_list, x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return nv
 
 
 def do_value_va_end(x):
 	va_list = do_value(x['value'])
-	return ValueVaEnd(typeUnit, va_list, x['ti'])
+	nv = ValueVaEnd(typeUnit, va_list, x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return nv
 
 
 def do_value_va_copy(x):
 	args = x['values']
 	va_list0 = do_value(args[0])
 	va_list1 = do_value(args[1])
-	return ValueVaCopy(typeUnit, va_list0, va_list1, x['ti'])
+	nv = ValueVaCopy(typeUnit, va_list0, va_list1, x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return nv
 
 
 def do_value___defined_type(x):
@@ -1073,7 +1094,9 @@ def do_value_call(x):
 
 		i += 1
 
-	return ValueCall(ftype.to, fn, sorted_args, ti=x['ti'])
+	nv = ValueCall(ftype.to, fn, sorted_args, ti=x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return nv
 
 
 
@@ -1118,26 +1141,29 @@ def do_value_index(x):
 		index = value_cons_implicit_check(typeSysInt, index)
 
 	nv = ValueIndex(array_typ.of, left, index, ti=x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+
 	if not left.type.is_pointer():
 		nv.immutable = left.immutable
 		array_typ = left.type
 
-		if left.isValueImmediate():
-			if index.isValueImmediate():
-				#info("immediate index", x['ti'])
-				index_imm = index.asset
+		if left.isValueImmediate() and index.isValueImmediate():
+			#info("immediate index", x['ti'])
+			index_imm = index.asset
 
-				if index_imm >= array_typ.volume.asset:
-					error("array index out of bounds", x[HLIR_VALUE_OP_INDEX])
-					return ValueBad(x['ti'])
+			if index_imm >= array_typ.volume.asset:
+				error("array index out of bounds", x[HLIR_VALUE_OP_INDEX])
+				return ValueBad(x['ti'])
 
-				if index_imm < len(left.asset):
-					item = left.asset[index_imm]
-				else:
-					item = ValueZero(array_typ.of, x['ti'])
+			if index_imm < len(left.asset):
+				item = left.asset[index_imm]
+			else:
+				item = ValueZero(array_typ.of, x['ti'])
 
-				nv.stage = HLIR_VALUE_STAGE_COMPILETIME ## TODO: убери это!
-				cp_immediate(nv, item)
+			cp_immediate(nv, item)
+			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+			return nv
+
 	return nv
 
 
@@ -1193,6 +1219,7 @@ def do_value_slice(x):
 
 	type = TypeArray(array_type.of, slice_volume, generic=False, ti=x['ti'])
 	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if not left.type.is_pointer():
 		nv.immutable = left.immutable
 	return nv
@@ -1225,7 +1252,9 @@ def submodule_access(x):
 	if v.type.is_incompleted():
 		v = value_update_incompleted_type(submodule, v, iname)
 
-	return ValueAccessModule(v.type, x['left'], x['right'], v, ti=x['ti'])
+	nv = ValueAccessModule(v.type, x['left'], x['right'], v, ti=x['ti'])
+	nv.stage = v.stage
+	return nv
 
 
 
@@ -1273,7 +1302,6 @@ def do_value_access(x):
 	if field.type.is_bad():
 		return ValueBad(x['ti'])
 
-
 	# Check access permissions
 
 	# не у всех типов есть 'definition' (его нет у анонимных записей например)
@@ -1282,6 +1310,8 @@ def do_value_access(x):
 			error("access to private field of record", x['right']['ti'])
 
 	nv = ValueAccessRecord(field.type, left, field, ti=x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+
 	if not left.type.is_pointer():
 		nv.immutable = left.immutable
 
@@ -1767,6 +1797,7 @@ def do_stmt_incdec(x, op=HLIR_VALUE_OP_ADD):
 
 	one = value_imm_literal_create(v.type, 1, ti=x['ti'])
 	xv = ValueBin(v.type, op, v, one, ti=x['ti'])
+	xv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return StmtAssign(v, xv, ti=x['ti'])
 
 
@@ -2010,7 +2041,6 @@ def def_const_global(x):
 	global global_prefix
 	definition = def_const_common(x)
 
-	#definition.value.stage = HLIR_VALUE_STAGE_COMPILETIME
 	if definition.value.isValueRuntime():
 		error("runtime!", x['ti'])
 
@@ -2188,6 +2218,7 @@ def def_func(x):
 		param = params[i]
 		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
 		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
+		param_value.stage = HLIR_VALUE_STAGE_RUNTIME
 		ctx_value_add(param.id.str, param_value, is_public=x['access_modifier'] == 'public')
 		i += 1
 

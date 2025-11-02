@@ -98,6 +98,8 @@ def value_record_cons(t, v, method, ti):
 def value_record_eq(l, r, op, ti):
 	#info("value_record_eq()", ti)
 	nv = ValueBin(typeBool, op, l, r, ti=ti)
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+
 	if l.isValueImmediate() and r.isValueImmediate():
 		eq_result = True
 

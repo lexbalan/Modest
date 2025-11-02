@@ -264,7 +264,9 @@ def value_cons(t, v, method, ti):
 	if method == 'explicit':
 		# Construction from __VA_List is an exceptional case
 		if v.type.is_va_list():
-			return ValueCons(t, v, 'explicit', ti)
+			nv = ValueCons(t, v, 'explicit', ti)
+			nv.stage = HLIR_VALUE_STAGE_RUNTIME
+			return nv
 
 		from trans import is_unsafe_mode
 		if is_unsafe_mode():

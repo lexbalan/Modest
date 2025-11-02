@@ -77,7 +77,6 @@ def value_pointer_cons(t, v, method, ti):
 		if v.type.is_string():
 			nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 			nv.stage = HLIR_VALUE_STAGE_LINKTIME
-			#nv.linktime = True
 			char_type = t.to.of
 			nv.strdata = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
 			#nv.addAttribute3('zstring')
@@ -92,6 +91,8 @@ def value_pointer_cons(t, v, method, ti):
 			from .cons import value_cons_immediate
 			return value_cons_immediate(t, v, method, ti)
 
-	return ValueCons(t, v, method, rawMode=False, ti=ti)
+	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return nv
 
 
