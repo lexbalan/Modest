@@ -83,6 +83,10 @@ def array_can(to, from_type, method, ti):
 		n_from = from_type.volume.asset
 		n_to = to.volume.asset
 
+		if method == 'implicit':
+			if n_from > 0 and n_from < n_to:
+				warning("implicit cons biggest array from smaller", ti)
+
 		# (нельзя неявно построить меньший массив из большего)
 		return n_from <= n_to
 
