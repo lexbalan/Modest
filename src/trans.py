@@ -834,12 +834,10 @@ def do_value_ref(x):
 			return ValueBad(ti)
 
 	nv = ValueRef(v, ti=ti)
-	# TODO: тут есть какая то ошибка, разберись!
-	#if is_local_entity(v):
-	#	mass
-	#	nv.stage = HLIR_VALUE_STAGE_RUNTIME
-	#else:
-	nv.stage = HLIR_VALUE_STAGE_LINKTIME
+	if v.is_global_flag:
+		nv.stage = HLIR_VALUE_STAGE_LINKTIME
+	else:
+		nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
