@@ -3,7 +3,7 @@
 pragma do_not_include
 
 
-public func min_int32(a: Int32, b: Int32) -> Int32 {
+public func minInt32 (a: Int32, b: Int32) -> Int32 {
 	if a < b {
 		return a
 	}
@@ -11,7 +11,7 @@ public func min_int32(a: Int32, b: Int32) -> Int32 {
 }
 
 
-public func max_int32(a: Int32, b: Int32) -> Int32 {
+public func maxInt32 (a: Int32, b: Int32) -> Int32 {
 	if a > b {
 		return a
 	}
@@ -20,7 +20,7 @@ public func max_int32(a: Int32, b: Int32) -> Int32 {
 
 
 
-public func min_int64(a: Int64, b: Int64) -> Int64 {
+public func minInt64 (a: Int64, b: Int64) -> Int64 {
 	if a < b {
 		return a
 	}
@@ -28,7 +28,7 @@ public func min_int64(a: Int64, b: Int64) -> Int64 {
 }
 
 
-public func max_int64(a: Int64, b: Int64) -> Int64 {
+public func maxInt64 (a: Int64, b: Int64) -> Int64 {
 	if a > b {
 		return a
 	}
@@ -37,7 +37,7 @@ public func max_int64(a: Int64, b: Int64) -> Int64 {
 
 
 
-public func min_nat32(a: Nat32, b: Nat32) -> Nat32 {
+public func minNat32 (a: Nat32, b: Nat32) -> Nat32 {
 	if a < b {
 		return a
 	}
@@ -45,7 +45,7 @@ public func min_nat32(a: Nat32, b: Nat32) -> Nat32 {
 }
 
 
-public func max_nat32(a: Nat32, b: Nat32) -> Nat32 {
+public func maxNat32 (a: Nat32, b: Nat32) -> Nat32 {
 	if a > b {
 		return a
 	}
@@ -54,7 +54,7 @@ public func max_nat32(a: Nat32, b: Nat32) -> Nat32 {
 
 
 
-public func min_nat64(a: Nat64, b: Nat64) -> Nat64 {
+public func minNat64(a: Nat64, b: Nat64) -> Nat64 {
 	if a < b {
 		return a
 	}
@@ -62,7 +62,7 @@ public func min_nat64(a: Nat64, b: Nat64) -> Nat64 {
 }
 
 
-public func max_nat64(a: Nat64, b: Nat64) -> Nat64 {
+public func maxNat64(a: Nat64, b: Nat64) -> Nat64 {
 	if a > b {
 		return a
 	}

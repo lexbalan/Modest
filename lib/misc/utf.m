@@ -7,7 +7,7 @@ pragma unsafe
 
 
 // декодирует символ UTF-32 в последовательность UTF-8
-public func utf32_to_utf8(c: Char32, buf: *[4]Char8) -> Nat8 {
+public func utf32_to_utf8 (c: Char32, buf: *[4]Char8) -> Nat8 {
 	let x = Word32 c
 
 	if Nat32 x <= Nat32 0x0000007F {
@@ -47,7 +47,7 @@ public func utf32_to_utf8(c: Char32, buf: *[4]Char8) -> Nat8 {
 
 
 // returns n-symbols from input stream
-public func utf16_to_utf32(c: *[]Char16, result: *Char32) -> Nat8 {
+public func utf16_to_utf32 (c: *[]Char16, result: *Char32) -> Nat8 {
 	let leading = Word32 c[0]
 
 	if (Nat32 leading < Nat32 0xD800) or (Nat32 leading > Nat32 0xDFFF) {

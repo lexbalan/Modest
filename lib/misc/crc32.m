@@ -16,7 +16,7 @@ pragma unsafe
 include "libc/stdio"
 
 
-public func run(buf: *[]Word8, len: Nat32) -> Word32 {
+public func run (buf: *[]Word8, len: Nat32) -> Word32 {
 	let tableSize = 256
 	var crc_table: [tableSize]Word32
 	var crc: Word32
