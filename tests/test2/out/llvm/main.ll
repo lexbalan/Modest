@@ -172,6 +172,7 @@ declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @snprintf(%CharStr* %buf, %SizeT %size, %ConstCharStr* %format, ...)
 declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
 declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
 declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
@@ -209,10 +210,11 @@ declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
 declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
 declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
 declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
-declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
 declare %SizeT @strlen([0 x %ConstChar]* %s)
+declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
+declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
+declare [0 x %Char]* @strncpy([0 x %Char]* %dst, [0 x %ConstChar]* %src, %SizeT %n)
 declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
@@ -223,15 +225,25 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
+@str2 = private constant [10 x i8] [i8 112, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [10 x i8] [i8 112, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
-@a = internal global [4 x %Int32] zeroinitializer
+%Point = type {
+	%Int32,
+	%Int32
+};
+
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
-	%2 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 0
-	%3 = insertvalue [4 x %Int32] %2, %Int32 2, 1
-	%4 = insertvalue [4 x %Int32] %3, %Int32 3, 2
-	%5 = zext i8 4 to %Nat32
-	store [4 x %Int32] %4, [4 x %Int32]* @a
+	%2 = alloca %Point, align 8
+	%3 = insertvalue %Point zeroinitializer, %Int32 2, 1
+	store %Point %3, %Point* %2
+	%4 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
+	%5 = load %Int32, %Int32* %4
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 %5)
+	%7 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1
+	%8 = load %Int32, %Int32* %7
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Int32 %8)
 	ret %Int32 0
 }
 

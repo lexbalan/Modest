@@ -78,15 +78,19 @@ def value_record_cons(t, v, method, ti):
 		# конструируем запись на основе другой generic записи
 		items = []
 		for field in t.fields:
-			initializer = get_item_by_id(v.asset, field.id.str)
-			vv = None
-			if initializer:
-				from .cons import value_cons_implicit_check
-				vv = value_cons_implicit_check(field.type, initializer.value)
+			explicit_initializer = get_item_by_id(v.asset, field.id.str)
+
+			iv = None
+			if explicit_initializer:
+				iv = explicit_initializer.value
+			#elif field.init_value != None:
+			#	iv = field.init_value
 			else:
-				# Если инициализатора для поля нет, создадим zero-инициализатор
-				vv = ValueZero(field.type, ti)
-			ni = Initializer(field.id, vv, ti=ti, nl=0)
+				iv = ValueZero(field.type, ti)
+
+			from .cons import value_cons_implicit_check
+			iv = value_cons_implicit_check(field.type, iv)
+			ni = Initializer(field.id, iv, ti=ti)
 			items.append(ni)
 
 		nv.asset = items
