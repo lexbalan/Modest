@@ -1248,15 +1248,16 @@ class TypeVaList(Type):
 
 
 
-HLIR_VALUE_STORAGE_CLASS_GLOBAL = "global"
-HLIR_VALUE_STORAGE_CLASS_PARAM = "param"
-HLIR_VALUE_STORAGE_CLASS_LOCAL = "local"
+HLIR_VALUE_STORAGE_CLASS_GLOBAL = 'global'
+HLIR_VALUE_STORAGE_CLASS_PARAM = 'param'
+HLIR_VALUE_STORAGE_CLASS_LOCAL = 'local'
 HLIR_VALUE_STORAGE_CLASS_DEFAULT = HLIR_VALUE_STORAGE_CLASS_LOCAL
 
 
-HLIR_VALUE_STAGE_COMPILETIME = "immediate"
-HLIR_VALUE_STAGE_LINKTIME = "linktime"
-HLIR_VALUE_STAGE_RUNTIME = "runtime"
+HLIR_VALUE_STAGE_UNKNOWN = 'HLIR_VALUE_STAGE_UNKNOWN'
+HLIR_VALUE_STAGE_COMPILETIME = 'HLIR_VALUE_STAGE_COMPILETIME'
+HLIR_VALUE_STAGE_LINKTIME = 'HLIR_VALUE_STAGE_LINKTIME'
+HLIR_VALUE_STAGE_RUNTIME = 'HLIR_VALUE_STAGE_RUNTIME'
 
 
 class Value(Entity):
@@ -1265,7 +1266,7 @@ class Value(Entity):
 		self.id = None
 		self.type = type
 		self.storage_class = HLIR_VALUE_STORAGE_CLASS_DEFAULT
-		self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.stage = HLIR_VALUE_STAGE_UNKNOWN
 		self.definition = None  # *StmtDefVar, *StmtDefConst, *StmtDefFunc
 
 		#
@@ -1520,7 +1521,7 @@ class ValueBad(Value):
 		super().__init__(type=TypeBad(ti), ti=ti)
 		self.id = Id('_')
 		# чтобы заткнуть жалобы "expected immediate value"
-		#self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 
 class ValueUndef(Value):
@@ -1529,7 +1530,7 @@ class ValueUndef(Value):
 			type = Type(ti)
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
-		#self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.asset = None
 
 
@@ -1538,7 +1539,7 @@ class ValueLiteral(Value):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.asset = asset
-		#self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.nsigns=0
 
 
@@ -1550,7 +1551,7 @@ class ValueZero(Value):
 			self.asset = []
 		else:
 			self.asset = 0
-		#self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.addAttribute('zero')
 
 
@@ -1641,7 +1642,7 @@ class ValueRef(Value):
 		self.value = value
 
 		if value.is_global():
-			#self.stage = HLIR_VALUE_STAGE_COMPILETIME
+			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			# не можно поставить 0 тк иначе значение будет трактоваться как zero
 			# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
 			# поэтому временно заткнул единицей, но вообще нужно будет обдумать
@@ -1787,7 +1788,7 @@ class ValueSizeofType(Value):
 		super().__init__(type=typeSysSize, ti=ti)
 		self.of = of
 		if not of.is_vla():
-			#self.stage = HLIR_VALUE_STAGE_COMPILETIME
+			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			self.asset = of.size
 		else:
 			self.stage = HLIR_VALUE_STAGE_RUNTIME
@@ -1800,7 +1801,7 @@ class ValueSizeofValue(Value):
 		super().__init__(type=typeSysSize, ti=ti)
 		self.of = value
 		if not value.type.is_vla():
-			#self.stage = HLIR_VALUE_STAGE_COMPILETIME
+			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			self.asset = value.type.size
 		else:
 			self.stage = HLIR_VALUE_STAGE_RUNTIME
@@ -1826,7 +1827,7 @@ class ValueLengthof(Value):
 		super().__init__(type=type, ti=ti)
 		if not value.type.is_vla():
 			self.asset = length
-			#self.stage = HLIR_VALUE_STAGE_COMPILETIME
+			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 		self.value = value
 
@@ -1838,7 +1839,7 @@ class ValueAlignof(Value):
 		from trans import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
 		self.of = of
-		#self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.asset = align
 
 
@@ -1856,7 +1857,7 @@ class ValueOffsetof(Value):
 		type = type_number_for(offset, signedness=HLIR_TYPE_SIGNEDNESS_UNSIGNED, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.field = field_id
-		#self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.asset = offset
 
 
