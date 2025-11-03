@@ -1122,17 +1122,18 @@ def str_value_literal_array(x, type, items, nl_end=1):
 
 
 def str_value_literal_record(type, items):
-	sstr = "{"
-	indent_up()
-
 	nitems = len(items)
 	if nitems == 0:
 		return EMPTY_RECORD_LITERAL
+
+	sstr = "{"
 
 	nl_end = 0
 	# for situation when firat item is ValueZero
 	# without it, forst value will be printed with space before it.
 	item_printed = False
+
+	indent_up()
 
 	i = 0
 	while i < nitems:

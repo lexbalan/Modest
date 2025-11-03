@@ -116,7 +116,7 @@ break_2:
 ; -- end print imports 'minmax' --
 ; -- strings --
 ; -- endstrings --; minmax.m
-define %Int32 @minmax_min_int32(%Int32 %a, %Int32 %b) {
+define %Int32 @minmax_minInt32(%Int32 %a, %Int32 %b) {
 ; if_0
 	%1 = icmp slt %Int32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
@@ -127,7 +127,7 @@ endif_0:
 	ret %Int32 %b
 }
 
-define %Int32 @minmax_max_int32(%Int32 %a, %Int32 %b) {
+define %Int32 @minmax_maxInt32(%Int32 %a, %Int32 %b) {
 ; if_0
 	%1 = icmp sgt %Int32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
@@ -138,7 +138,7 @@ endif_0:
 	ret %Int32 %b
 }
 
-define %Int64 @minmax_min_int64(%Int64 %a, %Int64 %b) {
+define %Int64 @minmax_minInt64(%Int64 %a, %Int64 %b) {
 ; if_0
 	%1 = icmp slt %Int64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
@@ -149,7 +149,7 @@ endif_0:
 	ret %Int64 %b
 }
 
-define %Int64 @minmax_max_int64(%Int64 %a, %Int64 %b) {
+define %Int64 @minmax_maxInt64(%Int64 %a, %Int64 %b) {
 ; if_0
 	%1 = icmp sgt %Int64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
@@ -160,7 +160,7 @@ endif_0:
 	ret %Int64 %b
 }
 
-define %Nat32 @minmax_min_nat32(%Nat32 %a, %Nat32 %b) {
+define %Nat32 @minmax_minNat32(%Nat32 %a, %Nat32 %b) {
 ; if_0
 	%1 = icmp ult %Nat32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
@@ -171,7 +171,7 @@ endif_0:
 	ret %Nat32 %b
 }
 
-define %Nat32 @minmax_max_nat32(%Nat32 %a, %Nat32 %b) {
+define %Nat32 @minmax_maxNat32(%Nat32 %a, %Nat32 %b) {
 ; if_0
 	%1 = icmp ugt %Nat32 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
@@ -182,7 +182,7 @@ endif_0:
 	ret %Nat32 %b
 }
 
-define %Nat64 @minmax_min_nat64(%Nat64 %a, %Nat64 %b) {
+define %Nat64 @minmax_minNat64(%Nat64 %a, %Nat64 %b) {
 ; if_0
 	%1 = icmp ult %Nat64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
@@ -193,7 +193,7 @@ endif_0:
 	ret %Nat64 %b
 }
 
-define %Nat64 @minmax_max_nat64(%Nat64 %a, %Nat64 %b) {
+define %Nat64 @minmax_maxNat64(%Nat64 %a, %Nat64 %b) {
 ; if_0
 	%1 = icmp ugt %Nat64 %a, %b
 	br %Bool %1 , label %then_0, label %endif_0

@@ -62,40 +62,40 @@ typedef struct WrappedArray WrappedArray;
 
 // Pythagorean theorem
 static float distance(Point a, Point b) {
-		const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
-		const double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
-		const double dx2 = pow(dx, 2);
-		const double dy2 = pow(dy, 2);
-		return sqrt(dx2 + dy2);
+	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
+	const double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
+	const double dx2 = pow(dx, 2);
+	const double dy2 = pow(dy, 2);
+	return sqrt(dx2 + dy2);
 }
 
 
 static float lineLength(Line line) {
-		return distance(line.a, line.b);
+	return distance(line.a, line.b);
 }
 
 
 int main(void) {
-		const float lines_0_len = lineLength(((const Line[4])LINES)[0]);
-		const float lines_1_len = lineLength(((const Line[4])LINES)[1]);
-		const float lines_2_len = lineLength(((const Line[4])LINES)[2]);
-		const float lines_3_len = lineLength(((const Line[4])LINES)[3]);
+	const float lines_0_len = lineLength(((const Line[4])LINES)[0]);
+	const float lines_1_len = lineLength(((const Line[4])LINES)[1]);
+	const float lines_2_len = lineLength(((const Line[4])LINES)[2]);
+	const float lines_3_len = lineLength(((const Line[4])LINES)[3]);
 
-		printf("lines_0_len = %f\n", lines_0_len);
-		printf("lines_1_len = %f\n", lines_1_len);
-		printf("lines_2_len = %f\n", lines_2_len);
-		printf("lines_3_len = %f\n", lines_3_len);
+	printf("lines_0_len = %f\n", lines_0_len);
+	printf("lines_1_len = %f\n", lines_1_len);
+	printf("lines_2_len = %f\n", lines_2_len);
+	printf("lines_3_len = %f\n", lines_3_len);
 
-		//	let y = wa.x
+	//	let y = wa.x
 
-		//	var i: Nat32 = 0
-		//	while i < 10 {
-		//		let x = wa.array[i]
-		//		printf("x[%d]=%d\n", i, x)
-		//		++i
-		//	}
+	//	var i: Nat32 = 0
+	//	while i < 10 {
+	//		let x = wa.array[i]
+	//		printf("x[%d]=%d\n", i, x)
+	//		++i
+	//	}
 
-		return 0;
+	return 0;
 }
 
 

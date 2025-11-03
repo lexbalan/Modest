@@ -68,6 +68,7 @@ public func fprintf (f: *File, format: *Str, ...) -> @unused Int
 public func fscanf (f: *File, format: *ConstCharStr, ...) -> @unused Int
 public func sscanf (buf: *ConstCharStr, format: *ConstCharStr, ...) -> @unused Int
 public func sprintf (buf: *CharStr, format: *ConstCharStr, ...) -> @unused Int
+public func snprintf (buf: *CharStr, size: SizeT, format: *ConstCharStr, ...) -> @unused Int
 public func vfprintf (f: *File, format: *ConstCharStr, args: __VA_List) -> @unused Int
 public func vprintf (format: *ConstCharStr, args: __VA_List) -> @unused Int
 public func vsprintf (str: *CharStr, format: *ConstCharStr, args: __VA_List) -> @unused Int

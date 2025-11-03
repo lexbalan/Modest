@@ -170,7 +170,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 
 
 ;@inline
-;func rotleft(a: Word32, b: Nat32) -> Word32 {
+;func rotleft (a: Word32, b: Nat32) -> Word32 {
 ;	return (a << b) or (a >> (32 - b))
 ;}
 define internal %Word32 @rotright(%Word32 %a, %Nat32 %b) alwaysinline {

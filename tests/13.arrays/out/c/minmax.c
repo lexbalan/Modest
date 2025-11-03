@@ -9,7 +9,7 @@
 
 
 
-int32_t minmax_min_int32(int32_t a, int32_t b) {
+int32_t minmax_minInt32(int32_t a, int32_t b) {
 	if (a < b) {
 		return a;
 	}
@@ -17,7 +17,7 @@ int32_t minmax_min_int32(int32_t a, int32_t b) {
 }
 
 
-int32_t minmax_max_int32(int32_t a, int32_t b) {
+int32_t minmax_maxInt32(int32_t a, int32_t b) {
 	if (a > b) {
 		return a;
 	}
@@ -25,7 +25,7 @@ int32_t minmax_max_int32(int32_t a, int32_t b) {
 }
 
 
-int64_t minmax_min_int64(int64_t a, int64_t b) {
+int64_t minmax_minInt64(int64_t a, int64_t b) {
 	if (a < b) {
 		return a;
 	}
@@ -33,7 +33,7 @@ int64_t minmax_min_int64(int64_t a, int64_t b) {
 }
 
 
-int64_t minmax_max_int64(int64_t a, int64_t b) {
+int64_t minmax_maxInt64(int64_t a, int64_t b) {
 	if (a > b) {
 		return a;
 	}
@@ -41,7 +41,7 @@ int64_t minmax_max_int64(int64_t a, int64_t b) {
 }
 
 
-uint32_t minmax_min_nat32(uint32_t a, uint32_t b) {
+uint32_t minmax_minNat32(uint32_t a, uint32_t b) {
 	if (a < b) {
 		return a;
 	}
@@ -49,7 +49,7 @@ uint32_t minmax_min_nat32(uint32_t a, uint32_t b) {
 }
 
 
-uint32_t minmax_max_nat32(uint32_t a, uint32_t b) {
+uint32_t minmax_maxNat32(uint32_t a, uint32_t b) {
 	if (a > b) {
 		return a;
 	}
@@ -57,7 +57,7 @@ uint32_t minmax_max_nat32(uint32_t a, uint32_t b) {
 }
 
 
-uint64_t minmax_min_nat64(uint64_t a, uint64_t b) {
+uint64_t minmax_minNat64(uint64_t a, uint64_t b) {
 	if (a < b) {
 		return a;
 	}
@@ -65,7 +65,7 @@ uint64_t minmax_min_nat64(uint64_t a, uint64_t b) {
 }
 
 
-uint64_t minmax_max_nat64(uint64_t a, uint64_t b) {
+uint64_t minmax_maxNat64(uint64_t a, uint64_t b) {
 	if (a > b) {
 		return a;
 	}

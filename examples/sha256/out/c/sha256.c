@@ -18,7 +18,7 @@ struct Context {
 typedef struct Context Context;
 
 //@inline
-//func rotleft(a: Word32, b: Nat32) -> Word32 {
+//func rotleft (a: Word32, b: Nat32) -> Word32 {
 //	return (a << b) or (a >> (32 - b))
 //}
 
@@ -214,9 +214,9 @@ static void final(Context *ctx, uint8_t *outHash) {
 
 void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash) {
 	Context ctx = (Context){0};
-		contextInit(&ctx);
-		update(&ctx, msg, msgLen);
-		final(&ctx, (uint8_t *)outHash);
+	contextInit(&ctx);
+	update(&ctx, msg, msgLen);
+	final(&ctx, (uint8_t *)outHash);
 }
 
 

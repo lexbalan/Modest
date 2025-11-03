@@ -181,39 +181,39 @@ int main(void) {
 	*pr2 = (Point2D){.x = 100, .y = 200};
 	*pr3 = (struct __anonymous_struct_7){0};
 
-		// cons Point3D from Point2D (record extension)
-		// (it is possible if dst record contained all fields from src record
-		// and their types are equal)  ((EXPERIMENTAL))
-		Point3D p3d;
-		p3d = *(Point3D*)&p2d2;
+	// cons Point3D from Point2D (record extension)
+	// (it is possible if dst record contained all fields from src record
+	// and their types are equal)  ((EXPERIMENTAL))
+	Point3D p3d;
+	p3d = *(Point3D*)&p2d2;
 
 
-		// проверка того как локальная константа-массив
-		// "замораживает" свои элементы
+	// проверка того как локальная константа-массив
+	// "замораживает" свои элементы
 
-		int32_t ax = 10;
-		int32_t bx = 20;
+	int32_t ax = 10;
+	int32_t bx = 20;
 
-		struct {int32_t x; int32_t y;
-		} px = {.x = ax, .y = bx};
+	struct {int32_t x; int32_t y;
+	} px = {.x = ax, .y = bx};
 
-		ax = 111;
-		bx = 222;
+	ax = 111;
+	bx = 222;
 
-		printf("px.x = %i (must be 10)\n", px.x);
-		printf("px.y = %i (must be 20)\n", px.y);
+	printf("px.x = %i (must be 10)\n", px.x);
+	printf("px.y = %i (must be 20)\n", px.y);
 
-		if (memcmp(&px, &((struct {int32_t x; int32_t y;
-		}){.x = 10, .y = 20}), sizeof(struct {int32_t x; int32_t y;
-		})) == 0) {
-			printf("test passed\n");
-		} else {
-			printf("test failed\n");
-		}
+	if (memcmp(&px, &((struct {int32_t x; int32_t y;
+	}){.x = 10, .y = 20}), sizeof(struct {int32_t x; int32_t y;
+	})) == 0) {
+		printf("test passed\n");
+	} else {
+		printf("test failed\n");
+	}
 
-		test_records();
+	test_records();
 
-		return 0;
+	return 0;
 
 #undef ver
 }

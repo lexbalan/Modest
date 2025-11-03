@@ -306,13 +306,13 @@ public func main () -> Int {
 
 	// check local literal array assignation to local array
 	var e: [4]Int32
-	e = init_array
+	e = [4]Int32 init_array
 	printf("e[0] = %i\n", e[0])
 	printf("e[1] = %i\n", e[1])
 	printf("e[2] = %i\n", e[2])
 
 	// check local literal array assignation to global array
-	globalArray = init_array
+	globalArray = [10]Int32 init_array
 	printf("globalArray[%i] = %i\n", Int32 0, globalArray[0])
 	printf("globalArray[%i] = %i\n", Int32 1, globalArray[1])
 	printf("globalArray[%i] = %i\n", Int32 2, globalArray[2])
