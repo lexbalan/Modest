@@ -29,13 +29,13 @@ static uint32_t ratSymbolUTF322[3] = {0x0};
 #define STRING32_CONST  (_STR32(GENERIC_STRING_CONST))
 
 __attribute__((used))
-static char arr_utf8[6] = "Hi!\n";
+static char arr_utf8[5 + 1] = "Hi!\n";
 
 __attribute__((used))
-static char16_t arr_utf16[10] = _STR16("Hello Ω!\n");
+static char16_t arr_utf16[9 + 1] = _STR16("Hello Ω!\n");
 
 __attribute__((used))
-static char32_t arr_utf32[9] = _STR32("Hello!🦄\n");
+static char32_t arr_utf32[8 + 1] = _STR32("Hello!🦄\n");
 
 int32_t main(void) {
 	char *str8 = STRING8_CONST;

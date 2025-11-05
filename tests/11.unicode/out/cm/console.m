@@ -105,7 +105,6 @@ public func puts16 (s: *Str16) -> Unit {
 
 public func puts32 (s: *Str32) -> Unit {
 	var i: Nat32 = 0
-	printf(".")
 	while true {
 		let c: Char32 = s[i]
 		if c == "\x0" {
@@ -115,7 +114,6 @@ public func puts32 (s: *Str32) -> Unit {
 		i = i + 1
 	}
 }
-
 
 
 

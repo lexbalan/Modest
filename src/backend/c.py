@@ -942,12 +942,12 @@ def str_value_cons(x, ctx):
 	if type.is_char() and from_type.is_string():
 		return cchr(value, type.width)
 
-	if value.isValueLiteral():
-		if from_type.is_generic():
-			if x.asset != None:
-				#if not (type.is_char() and from_type.is_string()):
-					as_hex = value.type.is_word() or value.hasAttribute2('hexadecimal')
-					return str_value_literal_with_type(x, type, as_hex=as_hex)
+
+	if value.isValueLiteral() and from_type.is_generic():
+		if x.asset != None:
+			#if not (type.is_char() and from_type.is_string()):
+				as_hex = value.type.is_word() or value.hasAttribute2('hexadecimal')
+				return str_value_literal_with_type(x, type, as_hex=as_hex)
 
 	# *RecordA -> *RecordB
 	# у нас типы структурные, а в си - номинальные

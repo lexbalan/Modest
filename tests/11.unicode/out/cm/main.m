@@ -10,6 +10,7 @@ import "lightfood/console" as console
 var ratSymbolUTF8: [5]Word8 = [0xF0, 0x9F, 0x90, 0x80]
 var ratSymbolUTF16: [3]Word16 = [0xD83D, 0xDC00]
 var ratSymbolUTF32: [3]Word32 = [0x0001F400]
+var ratSymbolUTF322: [3]Word32 = []
 
 const arr_partycorn: [4]Char8 = "🎉"
 const arr_unicorn: [4]Char8 = "🦄"
@@ -21,14 +22,15 @@ const string16Const = *Str16 genericStringConst
 const string32Const = *Str32 genericStringConst
 
 
-@used
-var arr_utf8: [8]Char8 = "Hi!\n"
 
 @used
-var arr_utf16: [9]Char16 = "Hello Ω!\n"
+var arr_utf8: [5 + 1]Char8 = "Hi!\n"
 
 @used
-var arr_utf32: [8]Char32 = "Hello!🦄\n"
+var arr_utf16: [9 + 1]Char16 = "Hello Ω!\n"
+
+@used
+var arr_utf32: [8 + 1]Char32 = "Hello!🦄\n"
 
 
 public func main () -> Int32 {
@@ -49,14 +51,16 @@ public func main () -> Int32 {
 	console.puts16(&arr_utf16)
 	console.puts32(&arr_utf32)
 
-	//console.puts8(unsafe *Str8 &ratSymbolUTF8)
-	//console.puts16(unsafe *Str16 &ratSymbolUTF16)
+	console.puts8(unsafe *Str8 &ratSymbolUTF8)
+	console.puts16(unsafe *Str16 &ratSymbolUTF16)
 	console.puts32(unsafe *Str32 &ratSymbolUTF32)
 	console.puts32("\n")
 
-	//console.putchar8('A')
-	//console.putchar16('Ω')
-	//console.putchar32('🦄')
+	console.putchar8("A")
+	console.putchar16("Ω")
+	console.putchar32("🦄")
+
+	console.puts16("\n")
 
 	return 0
 }
