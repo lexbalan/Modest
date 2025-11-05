@@ -51,8 +51,8 @@ static inline float min(float a, float b) {
 static float distance(Point a, Point b) {
 	const float dx = max(a.x, b.x) - min(a.x, b.x);
 	const float dy = max(a.y, b.y) - min(a.y, b.y);
-	const double dx2 = pow(dx, 2);
-	const double dy2 = pow(dy, 2);
+	const double dx2 = pow(dx, 2.000000);
+	const double dy2 = pow(dy, 2.000000);
 	return sqrt(dx2 + dy2);
 }
 
@@ -66,8 +66,8 @@ static void ptr_example(void) {
 	Point *const ptr_p = (Point *)malloc(sizeof(Point));
 
 	// access by pointer
-	ptr_p->x = 10;
-	ptr_p->y = 20;
+	ptr_p->x = 10.000000;
+	ptr_p->y = 20.000000;
 
 	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }
