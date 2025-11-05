@@ -9,7 +9,7 @@ type Point = record {
 }
 
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	printf("test2\n")
 
 	var p = Point {x=0}

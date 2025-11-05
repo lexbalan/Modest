@@ -14,9 +14,10 @@
 
 // include test (!)
 
-#define RAT_SYMBOL_UTF8  {0xF0, 0x9F, 0x90, 0x80}
-#define RAT_SYMBOL_UTF16  {0xD83D, 0xDC00}
-#define RAT_SYMBOL_UTF32  0x1F400
+static uint8_t ratSymbolUTF8[5] = {0xF0, 0x9F, 0x90, 0x80, 0x0};
+static uint16_t ratSymbolUTF16[3] = {0xD83D, 0xDC00, 0x0};
+static uint32_t ratSymbolUTF32[3] = {0x1F400, 0x0};
+static uint32_t ratSymbolUTF322[3] = {0x0};
 
 #define ARR_PARTYCORN  "🎉"
 #define ARR_UNICORN  "🦄"
@@ -28,13 +29,13 @@
 #define STRING32_CONST  (_STR32(GENERIC_STRING_CONST))
 
 __attribute__((used))
-static char arr_utf8[8] = "Hi!\n";
+static char arr_utf8[6] = "Hi!\n";
 
 __attribute__((used))
-static char16_t arr_utf16[9] = _STR16("Hello Ω!\n");
+static char16_t arr_utf16[10] = _STR16("Hello Ω!\n");
 
 __attribute__((used))
-static char32_t arr_utf32[8] = _STR32("Hello!\n");
+static char32_t arr_utf32[9] = _STR32("Hello!🦄\n");
 
 int32_t main(void) {
 	char *str8 = STRING8_CONST;
@@ -45,10 +46,25 @@ int32_t main(void) {
 	console_puts8("\n");
 
 	console_puts16(str16);
-	console_puts8("\n");
+	console_puts16(_STR16("\n"));
 
 	console_puts32(str32);
-	console_puts8("\n");
+	console_puts32(_STR32("\n"));
+
+	console_puts8((char *)&arr_utf8);
+	console_puts16((char16_t *)&arr_utf16);
+	console_puts32((char32_t *)&arr_utf32);
+
+	console_puts8((char *)&ratSymbolUTF8);
+	console_puts16((char16_t *)&ratSymbolUTF16);
+	console_puts32((char32_t *)&ratSymbolUTF32);
+	console_puts32(_STR32("\n"));
+
+	console_putchar8('A');
+	console_putchar16(u'Ω');
+	console_putchar32(U'🦄');
+
+	console_puts16(_STR16("\n"));
 
 	return 0;
 }

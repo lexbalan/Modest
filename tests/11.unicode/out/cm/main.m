@@ -7,9 +7,9 @@ include "stdio"
 import "lightfood/console" as console
 
 
-const ratSymbolUTF8 = [0xF0, 0x9F, 0x90, 0x80]
-const ratSymbolUTF16 = [0xD83D, 0xDC00]
-const ratSymbolUTF32 = 0x0001F400
+var ratSymbolUTF8: [5]Word8 = [0xF0, 0x9F, 0x90, 0x80]
+var ratSymbolUTF16: [3]Word16 = [0xD83D, 0xDC00]
+var ratSymbolUTF32: [3]Word32 = [0x0001F400]
 
 const arr_partycorn: [4]Char8 = "🎉"
 const arr_unicorn: [4]Char8 = "🦄"
@@ -28,7 +28,7 @@ var arr_utf8: [8]Char8 = "Hi!\n"
 var arr_utf16: [9]Char16 = "Hello Ω!\n"
 
 @used
-var arr_utf32: [8]Char32 = "Hello!\n"
+var arr_utf32: [8]Char32 = "Hello!🦄\n"
 
 
 public func main () -> Int32 {
@@ -40,10 +40,23 @@ public func main () -> Int32 {
 	console.puts8("\n")
 
 	console.puts16(str16)
-	console.puts8("\n")
+	console.puts16("\n")
 
 	console.puts32(str32)
-	console.puts8("\n")
+	console.puts32("\n")
+
+	console.puts8(&arr_utf8)
+	console.puts16(&arr_utf16)
+	console.puts32(&arr_utf32)
+
+	//console.puts8(unsafe *Str8 &ratSymbolUTF8)
+	//console.puts16(unsafe *Str16 &ratSymbolUTF16)
+	console.puts32(unsafe *Str32 &ratSymbolUTF32)
+	console.puts32("\n")
+
+	//console.putchar8('A')
+	//console.putchar16('Ω')
+	//console.putchar32('🦄')
 
 	return 0
 }

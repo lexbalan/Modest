@@ -70,7 +70,7 @@ public func puts8 (s: *Str8) -> Unit {
 	var i: Nat32 = 0
 	while true {
 		let c: Char8 = s[i]
-		if c == Char8 0 {
+		if c == "\x0" {
 			break
 		}
 		putchar_utf8(c)
@@ -86,7 +86,7 @@ public func puts16 (s: *Str16) -> Unit {
 		// тк в строке может быть суррогатная пара UTF_16 символов
 
 		let cc16: Char16 = s[i]
-		if cc16 == Char16 0 {
+		if cc16 == "\x0" {
 			break
 		}
 
@@ -105,9 +105,10 @@ public func puts16 (s: *Str16) -> Unit {
 
 public func puts32 (s: *Str32) -> Unit {
 	var i: Nat32 = 0
+	printf(".")
 	while true {
 		let c: Char32 = s[i]
-		if c == Char32 0 {
+		if c == "\x0" {
 			break
 		}
 		putchar_utf32(c)
