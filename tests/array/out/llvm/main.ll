@@ -239,6 +239,9 @@ declare void @perror(%ConstCharStr* %str)
 	%Char32 0,
 	%Char32 0
 ]
+define internal [0 x %Int32] @f0([0 x %Int32] %x) {
+}
+
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
 	%2 = alloca [10 x %Int32], align 1

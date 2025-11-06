@@ -1007,7 +1007,11 @@ class Type(Entity):
 
 
 	# cannot create variable with type
-	def is_forbidden_var(self, open_array_forbidden=True, zero_array_forbidden=True):
+	def is_forbidden_var(self, open_array_forbidden=True, zero_array_forbidden=True, unit_forbidden=True):
+		if not unit_forbidden:
+			if self.is_unit():
+				return False
+
 		if self.is_forbidden_field():
 			return True
 
