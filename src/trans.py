@@ -1629,6 +1629,11 @@ def do_stmt_const(x):
 
 def do_stmt_var(x):
 	global cfunc
+
+	already = ctx_value_get(x['id']['str'], shallow=True)
+	if already != None:
+		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+
 	df = def_var_common(x)
 
 	df.id.prefix = None
