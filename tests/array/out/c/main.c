@@ -24,6 +24,11 @@ static int32_t arr0[10];
 static int32_t arr1[10] = C0;
 static char32_t arr2[10] = _STR32(C1);
 
+//func f0 (x: []Int32) -> []Int32 {
+//	var aa: []Int32
+//	var ab: [0]Int32
+//}
+
 
 static void printArrayOf10Char32(char32_t *_a);
 static void sum10IntArrays(int32_t *_a, int32_t *_b, int32_t *sret_);

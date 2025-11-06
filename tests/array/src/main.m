@@ -17,8 +17,10 @@ var arr2: [10]Char32 = c1
 
 
 //func f0 (x: []Int32) -> []Int32 {
-//
+//	var aa: []Int32
+//	var ab: [0]Int32
 //}
+
 
 public func main () -> Int {
 	printf("array test\n")

@@ -993,41 +993,65 @@ class Type(Entity):
 		dst.__class__ = src.__class__
 
 
-	# cannot create field with type
-	def is_forbidden_field(self):
-		if self.is_incompleted() or self.is_unit() or self.is_func():
+
+	def is_forbidden_any(self):
+		if self.is_unit() or self.is_func():
 			return True
 
 		if self.is_array():
-			# [_]<Forbidden>
-			if self.of.is_forbidden_var():
+			if self.of.is_forbidden_any():
 				return True
 
-			return self.of.is_forbidden_var()
+			if self.volume.isValueImmediate():
+				if self.volume.asset == 0:
+					return True
+
+		return False
 
 
-	# cannot create variable with type
-	def is_forbidden_var(self, open_array_forbidden=True, zero_array_forbidden=True, unit_forbidden=True):
-		if not unit_forbidden:
-			if self.is_unit():
-				return False
+	# cannot create field with type
+	def is_forbidden_field(self, open_array_forbidden=True):
+		if self.is_forbidden_any():
+			return True
 
-		if self.is_forbidden_field():
+		if self.is_open_array():
+			return open_array_forbidden
+
+		return False
+
+
+	def is_forbidden_param(self):
+		if self.is_forbidden_any():
+			return True
+		if self.is_open_array():
+			return True
+		return False
+
+
+	def is_forbidden_retval(self):
+		if self.is_func():
+			return True
+		if self.is_array():
+			if self.of.is_forbidden_any():
+				return True
+			if self.is_open_array():
+				return True
+			if self.volume.isValueImmediate():
+				if self.volume.asset == 0:
+					return True
+		return False
+
+
+	def is_forbidden_var(self, open_array_forbidden=True):
+		if self.is_forbidden_any():
 			return True
 
 		if self.is_array():
-			# []Int32
 			if self.is_open_array():
 				return open_array_forbidden
-
-			# zero sized array is forbidden for vars
-			from trans import is_unsafe_mode
-			if not is_unsafe_mode():
-				if self.volume.isValueImmediate():
-					if self.volume.asset == 0:
-						return zero_array_forbidden
-
-			return self.of.is_forbidden_var()
+			if self.volume.isValueImmediate():
+				if self.volume.asset == 0:
+					return True
 
 		return False
 

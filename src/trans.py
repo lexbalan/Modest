@@ -498,7 +498,7 @@ def do_type_func(x, func_id="_"):
 	params = []
 	for _param in x['params']:
 		param = do_field(_param)
-		if param.type.is_forbidden_var():
+		if param.type.is_forbidden_param():
 			error("forbidden param type", param.ti)
 		if param != None:
 			params.append(param)
@@ -507,7 +507,7 @@ def do_type_func(x, func_id="_"):
 	if x['to'] != None:
 		to = do_type(x['to'])
 
-	if to.is_forbidden_var(unit_forbidden=False):
+	if to.is_forbidden_retval():
 		error("forbidden retval type", to.ti)
 
 	return TypeFunc(params, to, x['arghack'], ti=x['ti'])
