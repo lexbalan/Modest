@@ -377,8 +377,9 @@ def is_zero_tail(values, i, n):
 # print Array literal
 def str_value_array(v, ctx):
 
-	if Type.is_array_of_char(v.type):
-		return str_value_str(v, ctx=[])
+	if v.isValueImmediate():
+		if Type.is_array_of_char(v.type):
+			return str_value_str(v, ctx=[])
 
 	s = ""
 	indent_up()

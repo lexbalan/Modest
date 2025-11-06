@@ -35,9 +35,7 @@ public func putchar_utf8 (c: Char8) -> Unit {
 
 
 public func putchar_utf16 (c: Char16) -> Unit {
-	var cc: [2]Char16
-	cc[0] = c
-	cc[1] = Char16 0
+	var cc: [2]Char16 = [c, Char16 '\0']
 	var char32: Char32
 	let n = utf.utf16_to_utf32(&cc, &char32)
 	putchar_utf32(char32)

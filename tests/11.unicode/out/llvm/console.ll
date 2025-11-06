@@ -330,15 +330,21 @@ define void @console_putchar_utf8(%Char8 %c) {
 
 define void @console_putchar_utf16(%Char16 %c) {
 	%1 = alloca [2 x %Char16], align 1
-	%2 = getelementptr [2 x %Char16], [2 x %Char16]* %1, %Int32 0, %Int32 0
-	store %Char16 %c, %Char16* %2
-	%3 = getelementptr [2 x %Char16], [2 x %Char16]* %1, %Int32 0, %Int32 1
-	store %Char16 0, %Char16* %3
-	%4 = alloca %Char32, align 4
-	%5 = bitcast [2 x %Char16]* %1 to [0 x %Char16]*
-	%6 = call %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %5, %Char32* %4)
-	%7 = load %Char32, %Char32* %4
-	call void @console_putchar_utf32(%Char32 %7)
+	%2 = insertvalue [2 x %Char16] zeroinitializer, %Char16 %c, 0
+; -- cons_composite_from_composite_by_value --
+	%3 = alloca [2 x %Char16]
+	%4 = zext i8 2 to %Nat32
+	store [2 x %Char16] %2, [2 x %Char16]* %3
+	%5 = bitcast [2 x %Char16]* %3 to [2 x %Char16]*
+; -- end cons_composite_from_composite_by_value --
+	%6 = load [2 x %Char16], [2 x %Char16]* %5
+	%7 = zext i8 2 to %Nat32
+	store [2 x %Char16] %6, [2 x %Char16]* %1
+	%8 = alloca %Char32, align 4
+	%9 = bitcast [2 x %Char16]* %1 to [0 x %Char16]*
+	%10 = call %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %9, %Char32* %8)
+	%11 = load %Char32, %Char32* %8
+	call void @console_putchar_utf32(%Char32 %11)
 	ret void
 }
 

@@ -1082,7 +1082,7 @@ def str_value_literal_array(x, type, items, nl_end=1):
 	#if not x.isValueImmediate():
 	#	sstr += '(%s)' % str_type(type)
 
-	if type.is_array_of_char():
+	if type.is_array_of_char() and x.isValueImmediate():
 		char_type = type.of
 		char_width = char_type.width
 
