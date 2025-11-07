@@ -125,6 +125,7 @@ HLIR_TYPE_SIGNEDNESS_UNSIGNED = 2
 
 class Entity():
 	def __init__(self, ti):
+		assert((ti == None) or isinstance(ti, TokenInfo))
 		self.ti = ti
 		self.att = []
 		self.annotations = {}
@@ -225,7 +226,7 @@ class Module:
 
 class Id(Entity):
 	def __init__(self, id_str, ti=None):
-		super().__init__(None)
+		super().__init__(ti)
 		self.prefix = None
 		# Каждый принтер всегда использует только свой алиас (!)
 		# Такой алиас может быть переопределен без вреда для других принтеров и фронтенда
@@ -233,7 +234,6 @@ class Id(Entity):
 		self.c = id_str
 		self.llvm = id_str
 		self.cm = id_str
-		self.ti = ti
 
 
 
@@ -249,7 +249,6 @@ class Field(Entity):
 		self.access_level = HLIR_ACCESS_LEVEL_PRIVATE
 		self.att = []
 		self.nl = 0
-		self.ti = ti
 		self.comments = []
 		self.line_comment = None
 
@@ -260,7 +259,6 @@ class Initializer(Entity):
 		super().__init__(ti)
 		self.id = _id
 		self.value = value
-		self.ti = ti
 		self.nl = nl
 		self.att = []
 		# этот инициализатор описывает явно именованную сущность? (аргумент)
