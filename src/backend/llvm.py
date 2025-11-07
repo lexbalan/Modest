@@ -410,11 +410,10 @@ def llvm_print_value_num(x):
 			llvm_inline_cast('inttoptr', x['type'])
 		return
 
-	# integer, float, bool, char
 	if x['type'].is_float():
-		# короче суть такая - число сперва нужно причесать
+		# число сперва нужно причесать,
 		# так, чтобы оно могло быть четко представлено в LLVM float/double
-		# наче LLVM не примет его и сгенерирует ошибку
+		# иначе LLVM не примет его и сгенерирует ошибку
 		packed_float = _float_value_pack(num, x['type'].width)
 		return out("%.16f" % packed_float)
 
@@ -428,8 +427,6 @@ def llvm_print_value_inline_cast(x):
 	v = x['value']
 
 	if v['kind'] in ['num']:
-#		print("----")
-		#print_type(t)
 		if t.is_pointer():
 			out("null")
 		else:
