@@ -1,5 +1,6 @@
 
 from error import error, info
+from hlir import TokenInfo
 
 
 EOF = ''
@@ -54,12 +55,7 @@ class Lexer:
 					# There is a token
 					# # token = ('<token_class>', <token_data>, <ti>)
 					tokenEndPosition = self.getTextPosition()
-					ti = {
-						'isa': 'ti',
-						'file': self.filename,
-						'start_position': tokenStartPosition,
-						'end_position': tokenEndPosition,
-					}
+					ti = TokenInfo(self.filename, tokenStartPosition, tokenEndPosition)
 					token = result + (ti,)
 					tokens.append(token)
 
@@ -415,14 +411,7 @@ class CmLexer(Lexer):
 
 	def doBadSymbol(self):
 		tp = self.getTextPosition()
-
-		ti = {
-			'isa': 'ti',
-			'file': self.filename,
-			'start_position': tp,
-			'end_position': tp,
-		}
-
+		ti = TokenInfo(self.filename, tp, tp)
 		c = self.getc()
 		error("unexpected symbol '%c'" % c, ti)
 		return ('badsym', c)

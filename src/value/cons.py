@@ -120,7 +120,7 @@ def value_cons_implicit_check(t, v):
 def value_cons_explicit(t, v, ti):
 	assert(isinstance(t, Type))
 	assert(isinstance(v, Value))
-	assert(ti['isa'] == 'ti')
+	#assert(ti['isa'] == 'ti')
 
 	if v.isValueBad() or t.is_bad():
 		return ValueBad(v.ti)

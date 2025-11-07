@@ -485,8 +485,8 @@ class Parser:
 		if self.match("or"):
 			self.skipn("\n")
 			r = self.expr_value()
-			ti['start'] = v['ti']
-			ti['end'] = r['ti']
+			ti.start = v['ti']
+			ti.end = r['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'or',
@@ -505,8 +505,8 @@ class Parser:
 		if self.match("xor"):
 			self.skipn("\n")
 			r = self.expr_value_2()
-			ti['start'] = v['ti']
-			ti['end'] = r['ti']
+			ti.start = v['ti']
+			ti.end = r['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'xor',
@@ -525,8 +525,8 @@ class Parser:
 		if self.match("and"):
 			self.skipn("\n")
 			r = self.expr_value_3()
-			ti['start'] = v['ti']
-			ti['end'] = r['ti']
+			ti.start = v['ti']
+			ti.end = r['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'and',
@@ -546,8 +546,8 @@ class Parser:
 			if self.match("=="):
 				self.skipn("\n")
 				r = self.expr_value_5()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'eq',
@@ -559,8 +559,8 @@ class Parser:
 			elif self.match("!="):
 				self.skipn("\n")
 				r = self.expr_value_5()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'ne',
@@ -581,8 +581,8 @@ class Parser:
 			if self.match("<"):
 				self.skipn("\n")
 				r = self.expr_value_6()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'lt',
@@ -594,8 +594,8 @@ class Parser:
 			elif self.match(">"):
 				self.skipn("\n")
 				r = self.expr_value_6()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'gt',
@@ -607,8 +607,8 @@ class Parser:
 			if self.match("<="):
 				self.skipn("\n")
 				r = self.expr_value_6()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'le',
@@ -620,8 +620,8 @@ class Parser:
 			elif self.match(">="):
 				self.skipn("\n")
 				r = self.expr_value_6()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'ge',
@@ -643,8 +643,8 @@ class Parser:
 				self.skipn("\n")
 				l = v
 				r = self.expr_value_7()
-				ti['start'] = l['ti']
-				ti['end'] = r['ti']
+				ti.start = l['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'shl',
@@ -657,8 +657,8 @@ class Parser:
 				self.skipn("\n")
 				l = v
 				r = self.expr_value_7()
-				ti['start'] = l['ti']
-				ti['end'] = r['ti']
+				ti.start = l['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'shr',
@@ -679,8 +679,8 @@ class Parser:
 			if self.match("+"):
 				self.skipn("\n")
 				r = self.expr_value_8()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'add',
@@ -692,8 +692,8 @@ class Parser:
 			elif self.match("-"):
 				self.skipn("\n")
 				r = self.expr_value_8()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'sub',
@@ -714,8 +714,8 @@ class Parser:
 			if self.match("*"):
 				self.skipn("\n")
 				r = self.expr_value_9()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'mul',
@@ -727,8 +727,8 @@ class Parser:
 			elif self.match("/"):
 				self.skipn("\n")
 				r = self.expr_value_9()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'div',
@@ -740,8 +740,8 @@ class Parser:
 			elif self.match("%"):
 				self.skipn("\n")
 				r = self.expr_value_9()
-				ti['start'] = v['ti']
-				ti['end'] = r['ti']
+				ti.start = v['ti']
+				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'rem',
@@ -779,7 +779,7 @@ class Parser:
 		ti = self.ti()
 		if self.match("*"):
 			v = self.expr_value_10()
-			ti['end'] = v['ti']
+			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'deref',
@@ -790,7 +790,7 @@ class Parser:
 
 		elif self.match("&"):
 			v = self.expr_value_11()
-			ti['end'] = v['ti']
+			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'ref',
@@ -801,7 +801,7 @@ class Parser:
 
 		elif self.match("not"):
 			v = self.expr_value_11()
-			ti['end'] = v['ti']
+			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'not',
@@ -812,7 +812,7 @@ class Parser:
 
 		elif self.match("+"):
 			v = self.expr_value_11()
-			ti['end'] = v['ti']
+			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'pos',
@@ -823,7 +823,7 @@ class Parser:
 
 		elif self.match("-"):
 			v = self.expr_value_11()
-			ti['end'] = v['ti']
+			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'neg',
@@ -844,7 +844,7 @@ class Parser:
 
 		elif self.match("unsafe"):
 			v = self.expr_value()
-			ti['end'] = v['ti']
+			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'unsafe',
@@ -1069,8 +1069,8 @@ class Parser:
 
 			elif self.match("."):
 				field_id = self.parse_identifier()
-				ti['start'] = v['ti']
-				ti['end'] = field_id['ti']
+				ti.start = v['ti']
+				ti.end = field_id['ti']
 
 				v = {
 					'isa': 'ast_value',
@@ -1103,7 +1103,7 @@ class Parser:
 
 				assert not (i == None and j == None)
 
-				ti['start'] = v['ti']
+				ti.start = v['ti']
 
 				if is_slicing:
 					v = {

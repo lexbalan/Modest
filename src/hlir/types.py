@@ -4,6 +4,20 @@ import copy
 from util import *
 
 
+class TokenInfo:
+	def __init__(self, source, start, end):
+		self.source = source
+		self.start = start
+		self.end = end
+
+
+#class TextInfo:
+#	def __init__(self, start, end):
+#		self.start = start
+#		self.end = end
+
+
+
 # returns -1 if not found
 def get_index_of_item_with_id(_list, id):
 	i = 0
