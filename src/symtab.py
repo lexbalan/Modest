@@ -47,13 +47,13 @@ class Symtab:
 
 
 
-	def ValueUndef(self, id):
+	def valueUndef(self, id):
 		if id in self.values:
 			del self.values[id]
 			return True
 
 		if self.parent != None:
-			self.parent.ValueUndef(id)
+			self.parent.valueUndef(id)
 			return True
 
 		return False

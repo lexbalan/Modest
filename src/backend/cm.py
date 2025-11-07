@@ -417,14 +417,14 @@ def str_value_array(v, ctx):
 
 def code_to_char(cc):
 	if cc < 0x20:
-		if cc == 0x07: return "\\a" # bell
-		elif cc == 0x08: return "\\b" # backspace
-		elif cc == 0x09: return "\\t" # horizontal tab
-		elif cc == 0x0A: return "\\n" # line feed
-		elif cc == 0x0B: return "\\v" # vertical tab
-		elif cc == 0x0C: return "\\f" # form feed
-		elif cc == 0x0D: return "\\r" # carriage return
-		elif cc == 0x1B: return "\\e" # escape
+		if cc == 0x07: return "\\a"    # bell
+		elif cc == 0x08: return "\\b"  # backspace
+		elif cc == 0x09: return "\\t"  # horizontal tab
+		elif cc == 0x0A: return "\\n"  # line feed
+		elif cc == 0x0B: return "\\v"  # vertical tab
+		elif cc == 0x0C: return "\\f"  # form feed
+		elif cc == 0x0D: return "\\r"  # carriage return
+		elif cc == 0x1B: return "\\e"  # escape
 		else: return "\\x%X" % cc
 
 	elif cc <= 0x7E :

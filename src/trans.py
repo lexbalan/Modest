@@ -1111,7 +1111,7 @@ def do_value_index(x):
 		return ValueBad(x['ti'])
 
 	if left.isValueUndef():
-		return ValueUndef(x['ti'])
+		return ValueUndef(Type(x['ti']), x['ti'])
 
 	left_type = left.type
 	via_pointer = left_type.is_pointer()
@@ -1147,7 +1147,7 @@ def do_value_index(x):
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if not left.type.is_pointer():
-		nv.immutable = left.immutable
+		nv.is_immutable = left.is_immutable
 		array_typ = left.type
 
 		if left.isValueImmediate() and index.isValueImmediate():
@@ -1224,7 +1224,7 @@ def do_value_slice(x):
 	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if not left.type.is_pointer():
-		nv.immutable = left.immutable
+		nv.is_immutable = left.is_immutable
 	return nv
 
 
@@ -1316,7 +1316,7 @@ def do_value_access(x):
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if not left.type.is_pointer():
-		nv.immutable = left.immutable
+		nv.is_immutable = left.is_immutable
 
 		if left.isValueImmediate():
 			initializer = get_item_by_id(left.asset, field.id.str)
@@ -2601,7 +2601,7 @@ def pre_imp(ast):
 
 			elif kind == 'const':
 				t = Type(x['ti'])  # Incomplete type (!)
-				iv = ValueUndef(ti=x['ti'])
+				iv = ValueUndef(t, ti=x['ti'])
 				v = ValueConst(t, id, init_value=iv, ti=x['ti'])
 				v.parent = cmodule
 				v.is_global_flag = True
@@ -2609,7 +2609,7 @@ def pre_imp(ast):
 
 			elif kind == 'var':
 				t = Type(x['ti'])  # Incomplete type (!)
-				iv = ValueUndef(ti=x['ti'])
+				iv = ValueUndef(t, ti=x['ti'])
 				v = ValueVar(t, id, init_value=iv, ti=x['ti'])
 				v.parent = cmodule
 				v.is_global_flag = True
@@ -2939,7 +2939,7 @@ def cp_immediate(to, _from):
 	if _from.asset != None:
 		to.asset = _from.asset
 
-	to.immutable = _from.immutable
+	to.is_immutable = _from.is_immutable
 	to.stage = _from.stage
 	return
 
@@ -3020,7 +3020,7 @@ elif kind == 'undef':
 	if v.isValueBad():
 		fatal("unsuitable value", x['ti'])
 	id_str = v.asset
-	cmodule.symtab_public.ValueUndef(id_str)
+	cmodule.symtab_public.valueUndef(id_str)
 	cmodule.symtab_public.type_undef(id_str)
 
 el"""

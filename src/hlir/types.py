@@ -1297,15 +1297,11 @@ class Value(Entity):
 		self.storage_class = HLIR_VALUE_STORAGE_CLASS_UNKNOWN
 		self.stage = HLIR_VALUE_STAGE_UNKNOWN
 		self.definition = None  # *StmtDefVar, *StmtDefConst, *StmtDefFunc
-
-		#
 		self.is_lvalue = False
-
-		# immutable anyway flag
-		self.immutable = False
+		self.is_immutable = False
 
 		# in case of scalar value type here is code
-		# in case of record value here is list of class Initializer
+		# in case of record value here is list of Initializer objects
 		# in case of array value here is list of values
 		# (!) Array & Record items can be not only immediate value (!)
 		self.asset = None
@@ -1332,7 +1328,7 @@ class Value(Entity):
 	def isValueImmutable(self):
 		# ONLY lvalue CAN be an immutable value,
 		# BUT if immutable flag is set, it is immutable value anyway
-		return (not self.isLvalue()) or self.immutable
+		return (not self.isLvalue()) or self.is_immutable
 
 	def isValueBad(self):
 		return isinstance(self, ValueBad)
@@ -1526,7 +1522,7 @@ class Value(Entity):
 		print("att: " + str(x.att))
 
 		print('stage = ' + str(x.stage))
-		print('immutable = ' + str(x.immutable))
+		print('immutable = ' + str(x.is_immutable))
 
 		if x.isValueImmediate():
 			if x.asset != None:
@@ -1548,15 +1544,12 @@ class Value(Entity):
 class ValueBad(Value):
 	def __init__(self, ti=None):
 		super().__init__(type=TypeBad(ti), ti=ti)
-		self.id = Id('_')
-		# чтобы заткнуть жалобы "expected immediate value"
+		self.id = Id('<value_bad>')
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 
 class ValueUndef(Value):
-	def __init__(self, type=None, ti=None):
-		if type==None:
-			type = Type(ti)
+	def __init__(self, type, ti=None):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
@@ -1569,7 +1562,7 @@ class ValueLiteral(Value):
 		super().__init__(type=type, ti=ti)
 		self.asset = asset
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
-		self.nsigns=0
+		self.nsigns = 0
 
 
 class ValueZero(Value):
