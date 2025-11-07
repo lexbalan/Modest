@@ -1161,7 +1161,7 @@ def do_value_index(x):
 			if index_imm < len(left.asset):
 				item = left.asset[index_imm]
 			else:
-				item = ValueZero(array_typ.of, x['ti'])
+				item = create_zero_literal(array_typ.of)
 
 			cp_immediate(nv, item)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME

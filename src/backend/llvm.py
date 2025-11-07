@@ -339,6 +339,7 @@ def llvm_inline_cast(op, to_type, val):
 
 
 
+
 def llvm_print_value_array(x):
 	items = x['items']
 
@@ -357,7 +358,8 @@ def llvm_print_value_array(x):
 		if i < n:
 			item = items[i]
 		else:
-			item = do_eval(ValueZero(x['type'].of, None))
+			item = do_eval(create_zero_literal(x['type'].of))
+
 		if i > 0: out(",\n")
 		indent()
 		llvm_print_type_value(item)

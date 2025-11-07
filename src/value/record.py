@@ -86,7 +86,7 @@ def value_record_cons(t, v, method, ti):
 			#elif field.init_value != None:
 			#	iv = field.init_value
 			else:
-				iv = ValueZero(field.type, ti)
+				iv = create_zero_literal(field.type, ti=ti)
 
 			from .cons import value_cons_implicit_check
 			iv = value_cons_implicit_check(field.type, iv)

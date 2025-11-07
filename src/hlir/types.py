@@ -1489,6 +1489,9 @@ class Value(Entity):
 		if self.isValueRuntime():
 			return False
 
+		if self.isValueLiteral():
+			return self.asset == 0 or self.asset == []
+
 		if self.type.is_array():
 			for item in self.asset:
 				if not item.isValueZero():
@@ -1565,15 +1568,18 @@ class ValueLiteral(Value):
 		self.nsigns = 0
 
 
-class ValueZero(Value):
-	def __init__(self, type, ti=None):
-		assert(isinstance(type, Type))
-		super().__init__(type=type, ti=ti)
-		if type.is_composite():
-			self.asset = []
-		else:
-			self.asset = 0
-		self.stage = HLIR_VALUE_STAGE_COMPILETIME
+
+def getZeroAsset(t):
+	if t.is_composite():
+		return []
+	return 0
+
+
+def create_zero_literal(t, ti=None):
+	asset = 0
+	if t.is_composite():
+		asset = []
+	return ValueLiteral(t, asset=asset, ti=ti)
 
 
 
