@@ -239,8 +239,8 @@ class Id(Entity):
 
 class Field(Entity):
 	def __init__(self, _id, _type, init_value, ti=None):
-		super().__init__(ti)
 		assert(init_value!=None)
+		super().__init__(ti)
 		self.id = _id
 		self.type = _type
 		self.init_value = init_value
@@ -701,8 +701,10 @@ class Type(Entity):
 	def is_composite(self):
 		return self.is_array() or self.is_record()
 
+
 	def is_simple(self):
 		return not (self.is_composite() or self.is_func() or self.is_pointer())
+
 
 	def is_nil(self):
 		return False
@@ -715,11 +717,14 @@ class Type(Entity):
 	def is_va_list(self):
 		return self.kind == HLIR_TYPE_KIND_VA_LIST
 
+
 	def is_generic_int(self):
 		return self.is_int() and self.is_generic()
 
+
 	def is_generic_nat(self):
 		return self.is_nat() and self.is_generic()
+
 
 	def is_generic_word(self):
 		return self.is_word() and self.is_generic()
@@ -807,7 +812,7 @@ class Type(Entity):
 		return False
 
 
-	# type is array of chars (see is_string() for literals)
+	# Str8, Str16, Str32
 	def is_str(self):
 		if self.is_array_of_char():
 			return 'z-string' in self.att
@@ -989,11 +994,13 @@ class Type(Entity):
 		y.annotations = copy.copy(self.annotations)
 		return y
 
+
 	def reborn(self):
 		nt = self.copy()
 		nt.att = []
 		nt.annotations = {}
 		return nt
+
 
 	@staticmethod
 	def update(dst, src):
