@@ -1574,7 +1574,6 @@ class ValueZero(Value):
 		else:
 			self.asset = 0
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
-		self.addAttribute('zero')
 
 
 
@@ -1590,7 +1589,6 @@ class ValueCons(Value):
 
 
 
-#TODO: onl value as arg (undefined if not init_value, but type from it)
 class ValueVar(Value):
 	def __init__(self, type, id, init_value, ti=None):
 		assert(isinstance(type, Type))
@@ -1689,7 +1687,6 @@ class ValueSubexpr(Value):
 
 
 
-#TODO: maybe without op?
 class ValueBin(Value):
 	def __init__(self, type, op, left, right, ti=None):
 		assert(isinstance(type, Type))
@@ -1724,20 +1721,11 @@ class ValueShr(Value):
 
 
 
-def get_func_from(x):
-	if isinstance(x, ValueFunc):
-		return x
-	elif isinstance(x, ValueAccessModule):
-		return x.value
-	return None
-
-
-
-#TODO: get type from value ret type
 class ValueCall(Value):
 	def __init__(self, type, func, args, ti=None):
 		assert(isinstance(type, Type))
 		assert(isinstance(func, Value))
+		assert(isinstance(args, list))
 		super().__init__(type=type, ti=ti)
 		self.func = func
 		self.args = args
@@ -1768,7 +1756,6 @@ class ValueAccessModule(Value):
 
 
 
-#TODO: get type from array element type
 class ValueIndex(Value):
 	def __init__(self, type, left, index, ti=None):
 		assert(isinstance(type, Type))
@@ -1780,7 +1767,6 @@ class ValueIndex(Value):
 
 
 
-#TODO: get type from array type
 class ValueSlice(Value):
 	def __init__(self, type, left, index_from, index_to, ti=None):
 		assert(isinstance(type, Type))
