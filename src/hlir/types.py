@@ -929,8 +929,9 @@ class Type(Entity):
 
 	@staticmethod
 	def eq(a, b, opt=[]):
-		assert a != None
-		assert b != None
+		assert (a != None) and isinstance(a, Type)
+		assert (b != None) and isinstance(b, Type)
+
 		if id(a) == id(b):
 			return True
 
