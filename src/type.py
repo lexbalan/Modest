@@ -223,7 +223,7 @@ def select_common_type(a, b, ti=None):
 		elif a.is_generic() or b.is_generic():
 			if a.is_string():
 				if b.is_string():
-					if a.char_width > b.char_width:
+					if a.width > b.width:
 						return a
 					else:
 						return b

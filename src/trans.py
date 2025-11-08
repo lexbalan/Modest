@@ -1656,16 +1656,16 @@ def do_stmt_if(x):
 	cond = do_rvalue(x['cond'])
 
 	if cond.isValueBad():
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	if not cond.type.is_bool():
 		error("expected bool value", cond.ti)
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	_then = do_stmt(x['then'])
 
 	if _then.is_stmt_bad():
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	_else = None
 	if x['else'] != None:
@@ -1681,16 +1681,16 @@ def do_stmt_while(x):
 	cond = do_rvalue(x['cond'])
 
 	if cond.isValueBad():
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	if not cond.type.is_bool():
 		error("expected bool value", cond.ti)
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	block = do_stmt(x['stmt'])
 
 	if block.is_stmt_bad():
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	return StmtWhile(cond, block, ti=x['ti'])
 
@@ -1710,7 +1710,7 @@ def do_stmt_return(x):
 			error("unexpected return value", x['value']['ti'])
 		else:
 			error("expected return value", x['ti'])
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	# (!) in return statement retval can be None (!)
 	retval = None
@@ -1757,15 +1757,15 @@ def do_stmt_assign(x):
 			l = add_local_var(id, t, id.ti)
 
 	if l.isValueBad() or r.isValueBad():
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	if not l.isLvalue():
 		error("expected lvalue", l.ti)
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	if l.isValueImmutable():
 		error("expected mutable value", l.ti)
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 # Есть проблема - generic массив справа неявно приводится к типу массива слева
 # и как следствие right имеет тип левого (из ValueLiteral он превращается в ValueCons)
@@ -1792,15 +1792,15 @@ def do_stmt_incdec(x, op=HLIR_VALUE_OP_ADD):
 	v = do_value(x['value'])
 
 	if v.isValueBad():
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	if v.isValueImmutable():
 		error("expected mutable value", v.ti)
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	if not v.type.is_arithmetical():
 		error("expected value with integer type", v.ti)
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	one = value_imm_literal_create(v.type, 1, ti=x['ti'])
 	xv = ValueBin(v.type, op, v, one, ti=x['ti'])
@@ -1813,7 +1813,7 @@ def do_stmt_value(x):
 	v = do_rvalue(x['value'])
 
 	if v.isValueBad():
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	if not v.type.is_unit():
 		if not v.type.hasAttribute2('unused'):
@@ -1905,7 +1905,7 @@ def do_stmt(x):
 	elif k == 'comment-line': s = do_stmt_comment_line(x)
 	elif k == 'comment-block': s = do_stmt_comment_block(x)
 	elif k == 'asm': s = do_stmt_asm(x)
-	else: s = StmtBad(x)
+	else: s = StmtBad(x['ti'])
 
 	assert(s != None)
 	s.nl = x['nl']
@@ -2112,7 +2112,7 @@ def def_var_common(x):
 		# ERROR: type & value undefined
 		nv = ValueBad(x['ti'])
 		ctx_value_add(id.str, nv, is_public=x['access_modifier']=='public')
-		return StmtBad(x)
+		return StmtBad(x['ti'])
 
 	elif tu == True and vu == False:
 		# type undef, value ok

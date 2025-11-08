@@ -22,7 +22,7 @@ def char_can(to, from_type, method, ti):
 		return True
 
 	if from_type.is_string():
-		return from_type.length == 1 and from_type.width <= to.width
+		return from_type.width <= to.width #and from_type.length == 1
 
 	if method == 'implicit':
 		return False

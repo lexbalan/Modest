@@ -1065,20 +1065,6 @@ class TypeBad(Type):
 
 
 
-class TypeString(Type):
-	def __init__(self, char_width, length, ti=None):
-		width = char_width
-		size = nbytes_for_bits(width)
-		super().__init__(width=width, generic=True, ops=STR_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_STRING
-		self.incomplete = False
-		self.size=size
-		self.char_width=char_width
-		self.length=length
-		#self.volume = ValueLiteral(type_number_create(width=64), length, ti)
-
-
-
 class TypeSimple(Type):
 	def __init__(self, width, kind, id, ops, ti=None):
 		super().__init__(width=width, ops=ops, ti=ti)
