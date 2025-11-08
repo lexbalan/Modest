@@ -182,9 +182,9 @@ valueFalse = None
 
 
 
-def valueZeroNumber():
-	gt = type_number_create()
-	return value_imm_literal_create(gt, 0)
+def valueZeroNumber(ti=None):
+	gt = type_number_create(ti=ti)
+	return value_imm_literal_create(gt, asset=0, ti=ti)
 
 
 def init():
@@ -1191,7 +1191,7 @@ def do_value_slice(x):
 		if index_to.isValueBad():
 			return ValueBad(ti)
 	else:
-		index_to = ValueUndef(type_number_create())
+		index_to = ValueUndef(type_number_create(ti=x['ti']))
 
 
 	left_type = left.type

@@ -11,7 +11,7 @@ import type as type
 def value_float_create(num, ti=None):
 	#info("value_float_create", ti)
 	flt_width = int(settings['float_width'])
-	typ = type_float_create(width=flt_width)
+	typ = type_float_create(width=flt_width, ti=ti)
 	typ.generic = True
 	return ValueLiteral(typ, num, ti)
 
