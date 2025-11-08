@@ -866,25 +866,17 @@ class Type(Entity):
 		return not hasattr(self, "id")
 
 
-	@staticmethod
-	def eq_integer(a, b, opt):
-		return a.width == b.width
+
 
 	@staticmethod
-	def eq_natural(a, b, opt):
-		return a.width == b.width
+	def eq_simple(a, b, opt):
+		return (a.kind == b.kind) and (a.width == b.width) and (a.generic == b.generic)
 
-	@staticmethod
-	def eq_char(a, b, opt):
-		return a.width == b.width
-
-	@staticmethod
-	def eq_word(a, b, opt):
-		return a.width == b.width
 
 	@staticmethod
 	def eq_pointer(a, b, opt):
 		return Type.eq(a.to, b.to, opt)
+
 
 	@staticmethod
 	def eq_array(a, b, opt):
@@ -934,14 +926,6 @@ class Type(Entity):
 			return False
 		return Type.eq_fields(a.fields, b.fields, opt)
 
-	@staticmethod
-	def eq_enum(a, b, opt):
-		return id(a) == id(b)
-
-	@staticmethod
-	def eq_float(a, b, opt):
-		return a.width == b.width
-
 
 	@staticmethod
 	def eq(a, b, opt=[]):
@@ -959,8 +943,8 @@ class Type(Entity):
 		if a.brand != b.brand:
 			return False
 
-		if a.is_simple2() and b.is_simple2():
-			return (a.kind == b.kind) and (a.width == b.width) and (a.generic == b.generic)
+		#if a.is_simple2() and b.is_simple2():
+		#	return (a.kind == b.kind) and (a.width == b.width) and (a.generic == b.generic)
 
 		# проверять аттрибуты (volatile, const)
 		# использую для C чтобы можно было более строго проверить типы
@@ -976,21 +960,14 @@ class Type(Entity):
 			return False
 
 		# usual checking
-		if a.is_int(): return Type.eq_integer(a, b, opt)
-		elif a.is_nat(): return Type.eq_natural(a, b, opt)
-		elif a.is_bool(): return True
-		elif a.is_number(): return True
+		if a.is_simple(): return Type.eq_simple(a, b, opt)
 		elif a.is_func(): return Type.eq_func(a, b, opt)
 		elif a.is_record(): return Type.eq_record(a, b, opt)
 		elif a.is_array(): return Type.eq_array(a, b, opt)
 		elif a.is_pointer(): return Type.eq_pointer(a, b, opt)
-		elif a.is_char(): return Type.eq_char(a, b, opt)
-		elif a.is_word(): return Type.eq_word(a, b, opt)
-		elif a.is_float(): return Type.eq_float(a, b, opt)
 		elif a.is_string(): return True
-		elif a.is_unit(): return True
 		elif a.is_va_list(): return True
-		assert(False)
+		else: assert(False)
 		return False
 
 
