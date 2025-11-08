@@ -3,16 +3,12 @@ from .types import *
 
 
 
-
-#typeUnit = TypeUnit()
-
 unit_id = Id('Unit')
 unit_id.c = 'void'
 unit_id.llvm = 'void'
 typeUnit = TypeSimple(0, HLIR_TYPE_KIND_UNIT, unit_id, UNIT_OPS)
 
 
-#typeBool = TypeBool()
 bool_id = Id('Bool')
 bool_id.c = 'bool'
 bool_id.llvm = 'Bool'
@@ -21,7 +17,7 @@ typeBool = TypeSimple(8, HLIR_TYPE_KIND_BOOL, bool_id, BOOL_OPS)
 
 
 def type_number_create(width=0, ti=None):
-	nt = TypeSimple(width, HLIR_TYPE_KIND_NUMBER, Id(None), NUM_OPS)
+	nt = TypeSimple(width, HLIR_TYPE_KIND_NUMBER, Id(None), NUM_OPS, ti)
 	nt.generic = True
 	return nt
 
