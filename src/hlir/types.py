@@ -1452,11 +1452,6 @@ class ValueLiteral(Value):
 
 
 
-def getZeroAsset(t):
-	if t.is_composite():
-		return []
-	return 0
-
 
 def create_zero_literal(t, ti=None):
 	asset = 0
