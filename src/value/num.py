@@ -7,10 +7,10 @@ from value.value import value_imm_literal_create
 
 
 def value_number_create(num, ti=None):
-	signed = HLIR_TYPE_SIGNEDNESS_UNSIGNED
-	if num < 0:
-		signed = HLIR_TYPE_SIGNEDNESS_SIGNED
-	t = htype.type_number_for(num, signedness=signed, ti=ti)
+	#signed = HLIR_TYPE_SIGNEDNESS_UNSIGNED
+	#if num < 0:
+	#	signed = HLIR_TYPE_SIGNEDNESS_SIGNED
+	t = htype.type_number_for(num, ti=ti)
 	v = value_imm_literal_create(t, asset=num, ti=ti)
 	return v
 

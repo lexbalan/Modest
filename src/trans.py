@@ -727,12 +727,7 @@ def do_value_bin2(op, l, r, ti):
 			asset = ops[op](l.asset, r.asset)
 
 		if t.is_number():
-			# (для операций типа 1 + 2)
-			# Пересматриваем generic тип для нового значения
-			signedness = HLIR_TYPE_SIGNEDNESS_UNSIGNED
-			if asset < 0:
-				signedness = HLIR_TYPE_SIGNEDNESS_SIGNED
-			nv.type = type_number_for(asset, signedness=signedness, ti=ti)
+			nv.type = type_number_for(asset, ti=ti)
 
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		nv.asset = asset
@@ -796,7 +791,7 @@ def do_value_neg(x):
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 		if nv.type.is_generic():
-			nv.type = type_number_for(v.asset, signedness=HLIR_TYPE_SIGNEDNESS_SIGNED, ti=v.ti)
+			nv.type = type_number_for(v.asset, ti=v.ti)
 
 	return nv
 
@@ -822,7 +817,7 @@ def do_value_pos(x):
 		nv.asset = +v.asset
 
 	if nv.type.is_generic():
-		nv.type = type_number_for(v.asset, signedness=HLIR_TYPE_SIGNEDNESS_SIGNED, ti=v.ti)
+		nv.type = type_number_for(v.asset, ti=v.ti)
 
 	return nv
 

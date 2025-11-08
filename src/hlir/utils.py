@@ -35,8 +35,8 @@ def type_select_nat(sz):
 	return t
 
 
-def type_number_for(num, signedness=HLIR_TYPE_SIGNEDNESS_NONE, ti=None):
+def type_number_for(num, ti=None):
 	required_width = align_bits_up(nbits_for_num(num))
-	return TypeNumber(width=required_width, signedness=signedness, ti=ti)
+	return TypeNumber(width=required_width, ti=ti)
 
 

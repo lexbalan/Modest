@@ -71,7 +71,7 @@ int main(void) {
 
 	#define ax  2
 	#define bx  6
-	ARRCPY((int32_t(*)[bx - ax])&a[ax], &((uint8_t[4]){10, 20, 30, 40}), bx - ax);
+	ARRCPY((int32_t(*)[bx - ax])&a[ax], &((int8_t[4]){10, 20, 30, 40}), bx - ax);
 
 	i = 0;
 	while (i < LENGTHOF(a)) {
@@ -144,7 +144,7 @@ int main(void) {
 	// test with let
 	#define i1  3
 	#define j1  8
-	ARRCPY((int32_t(*)[j1 - i1])&dst[i1], &((uint8_t[5]){11, 22, 33, 44, 55}), j1 - i1);
+	ARRCPY((int32_t(*)[j1 - i1])&dst[i1], &((int8_t[5]){11, 22, 33, 44, 55}), j1 - i1);
 
 	array_print((int32_t *)&dst, 10);
 

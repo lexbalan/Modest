@@ -571,7 +571,6 @@ class Type(Entity):
 		self.att = []
 		self.annotations = {}
 		self.deps = []
-		self.signedness = HLIR_TYPE_SIGNEDNESS_NONE
 		self.ti = None
 		self.incomplete = True
 		self.definition = None
@@ -848,11 +847,11 @@ class Type(Entity):
 
 
 	def is_signed(self):
-		return self.signedness == HLIR_TYPE_SIGNEDNESS_SIGNED
+		return self.kind == HLIR_TYPE_KIND_INT
 
 
 	def is_unsigned(self):
-		return self.signedness == HLIR_TYPE_SIGNEDNESS_UNSIGNED
+		return self.kind == HLIR_TYPE_KIND_NAT
 
 
 	# returns root type of any array
@@ -1093,12 +1092,11 @@ class TypeBad(Type):
 
 
 class TypeNumber(Type):
-	def __init__(self, width=0, signedness=False, ti=None):
+	def __init__(self, width=0, ti=None):
 		super().__init__(generic=True, width=width, ops=NUM_OPS, ti=ti)
 		self.kind = HLIR_TYPE_KIND_NUMBER
 		self.incomplete = False
 		self.id = Id(None)
-		self.signedness = signedness
 
 
 class TypeString(Type):
@@ -1770,7 +1768,7 @@ class ValueLengthof(Value):
 				length = value.type.volume.asset
 			elif value.type.is_string():
 				length = len(value.asset)
-			type = type_number_for(length, signedness=HLIR_TYPE_SIGNEDNESS_UNSIGNED, ti=ti)
+			type = type_number_for(length, ti=ti)
 		super().__init__(type=type, ti=ti)
 		if not value.type.is_vla():
 			self.asset = length
@@ -1801,7 +1799,7 @@ class ValueOffsetof(Value):
 
 		offset = field['offset']
 		from type import type_number_for
-		type = type_number_for(offset, signedness=HLIR_TYPE_SIGNEDNESS_UNSIGNED, ti=ti)
+		type = type_number_for(offset, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.field = field_id
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
