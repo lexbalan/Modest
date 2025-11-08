@@ -20,6 +20,12 @@ typeBool = TypeSimple(8, HLIR_TYPE_KIND_BOOL, bool_id, BOOL_OPS)
 
 
 
+def type_number_create(width=0, ti=None):
+	nt = TypeSimple(width, HLIR_TYPE_KIND_NUMBER, Id(None), NUM_OPS)
+	nt.generic = True
+	return nt
+
+
 def type_word_create(width):
 	width = align_bits_up(width)
 	id = Id('Word%d' % width)
@@ -48,7 +54,6 @@ def type_int_create(width):
 		id.c = '__int%d' % width
 	id.llvm = 'Int%d' % width
 	nt = TypeSimple(width, HLIR_TYPE_KIND_INT, id, INT_OPS)
-	nt.signedness = HLIR_TYPE_SIGNEDNESS_SIGNED
 	return nt
 
 
@@ -70,7 +75,6 @@ def type_nat_create(width):
 		id.c = 'unsigned __int%d' % width
 	id.llvm = 'Nat%d' % width
 	nt = TypeSimple(width, HLIR_TYPE_KIND_NAT, id, NAT_OPS)
-	nt.signedness = HLIR_TYPE_SIGNEDNESS_UNSIGNED
 	return nt
 
 
@@ -110,7 +114,6 @@ def type_float_create(width):
 		id.c = 'double'
 	id.llvm = 'Float%d' % width
 	nt = TypeSimple(width, HLIR_TYPE_KIND_FLOAT, id, FLOAT_OPS)
-	nt.signedness = HLIR_TYPE_SIGNEDNESS_SIGNED
 	return nt
 
 

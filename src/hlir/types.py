@@ -1091,13 +1091,6 @@ class TypeBad(Type):
 		self.incomplete = False
 
 
-class TypeNumber(Type):
-	def __init__(self, width=0, ti=None):
-		super().__init__(generic=True, width=width, ops=NUM_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_NUMBER
-		self.incomplete = False
-		self.id = Id(None)
-
 
 class TypeString(Type):
 	def __init__(self, char_width, length, ti=None):
@@ -1109,7 +1102,7 @@ class TypeString(Type):
 		self.size=size
 		self.char_width=char_width
 		self.length=length
-		#self.volume = ValueLiteral(TypeNumber(width=64), length, ti)
+		#self.volume = ValueLiteral(type_number_create(width=64), length, ti)
 
 
 
