@@ -1,7 +1,7 @@
 # error.py
 
 from common import features
-
+from hlir import TokenInfo
 
 warncnt = 0
 errcnt = 0
@@ -38,7 +38,8 @@ TABSTOP = 4
 
 def getline(ti):
 	file = ti.source
-	lineno = ti.start['line']
+	start = get_ti_start(ti)
+	lineno = start['line']
 	f = open(file, 'r')
 	lin = f.read().split("\n")[lineno - 1]
 	f.close()
@@ -47,18 +48,18 @@ def getline(ti):
 
 def left_start_pos(ti):
 	#return left_start_pos(ti.start)
-	return ti.start['pos']
+	return get_ti_start(ti)['pos']
 
 
 # length of token
 def tilen(ti):
-	return ti.end['pos'] - ti.start['pos']
+	return get_ti_end(ti)['pos'] - get_ti_start(ti)['pos']
 
 
 def right_end_pos(ti):
 	#if 'end' in ti:
-	#return right_end_pos(ti.end)
-	return ti.start['pos'] - tilen(ti)# - 1
+	#return right_end_pos
+	return get_ti_start(ti)['pos'] - tilen(ti)# - 1
 
 
 def color_code(color):
@@ -91,8 +92,9 @@ def himark(lpos, offset, lenc, rpos, color):
 
 
 def highlight(ti, color, offset):
-	pos = ti.start['pos'] + offset
-	tabpos = ti.start['tab_pos']
+	start = get_ti_start(ti)
+	pos = start['pos'] + offset
+	tabpos = start['tab_pos']
 	offset = pos + tabpos * TABSTOP
 
 	start = left_start_pos(ti) + offset
@@ -100,19 +102,30 @@ def highlight(ti, color, offset):
 	himark(start, offset, tilen(ti), end - 1, color)
 
 
+def get_ti_start(ti):
+	start = ti.start
+	if isinstance(start, TokenInfo):
+		start = start.start
+	return start
+
+def get_ti_end(ti):
+	end = ti.end
+	if isinstance(end, TokenInfo):
+		end = end.end
+	return end
+
 def common_message(mg, color, s, ti=None):
 	pre = ''
 
 	if ti != None:
-		#if ti['isa'] != 'ti':
-		#	if 'ti' in ti:
-		#		ti = ti['ti']
-		pre = '\n%s:%d:%d:\n' % (ti.source, ti.start['line'], ti.start['pos'])
+		start = get_ti_start(ti)
+		pre = '\n%s:%d:%d:\n' % (ti.source, start['line'], start['pos'])
 
 	print(colorize(pre, preColor) + colorize(mg, color) + s)
 
 	if ti != None:
-		prelin = "%d |" % ti.start['line']
+		start = get_ti_start(ti)
+		prelin = "%d |" % start['line']
 		line = getline(ti)
 		line = line.replace('\t', ' ' * TABSTOP)
 		print(prelin + line)
