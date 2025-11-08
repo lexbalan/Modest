@@ -22,7 +22,7 @@ def type_number_create(width=0, ti=None):
 	return nt
 
 
-def type_word_create(width):
+def type_word_create(width, ti=None):
 	width = align_bits_up(width)
 	id = Id('Word%d' % width)
 	if width < 128:
@@ -30,7 +30,7 @@ def type_word_create(width):
 	else:
 		id.c = 'unsigned __int%d' % width
 	id.llvm = 'Word%d' % width
-	return TypeSimple(width, HLIR_TYPE_KIND_WORD, id, WORD_OPS)
+	return TypeSimple(width, HLIR_TYPE_KIND_WORD, id, WORD_OPS, ti)
 
 
 typeWord8 = type_word_create(width=8)
@@ -41,7 +41,7 @@ typeWord128 = type_word_create(width=128)
 typeWord256 = type_word_create(width=256)
 
 
-def type_int_create(width):
+def type_int_create(width, ti=None):
 	width = align_bits_up(width)
 	id = Id('Int%d' % width)
 	if width < 128:
@@ -49,7 +49,7 @@ def type_int_create(width):
 	else:
 		id.c = '__int%d' % width
 	id.llvm = 'Int%d' % width
-	nt = TypeSimple(width, HLIR_TYPE_KIND_INT, id, INT_OPS)
+	nt = TypeSimple(width, HLIR_TYPE_KIND_INT, id, INT_OPS, ti)
 	return nt
 
 
@@ -62,7 +62,7 @@ typeInt128 = type_int_create(width=128)
 typeInt256 = type_int_create(width=256)
 
 
-def type_nat_create(width):
+def type_nat_create(width, ti=None):
 	width = align_bits_up(width)
 	id = Id('Nat%d' % width)
 	if width < 128:
@@ -70,7 +70,7 @@ def type_nat_create(width):
 	else:
 		id.c = 'unsigned __int%d' % width
 	id.llvm = 'Nat%d' % width
-	nt = TypeSimple(width, HLIR_TYPE_KIND_NAT, id, NAT_OPS)
+	nt = TypeSimple(width, HLIR_TYPE_KIND_NAT, id, NAT_OPS, ti)
 	return nt
 
 
@@ -84,7 +84,7 @@ typeNat256 = type_nat_create(width=256)
 
 
 
-def type_char_create(width):
+def type_char_create(width, ti=None):
 	width = align_bits_up(width)
 	id = Id('Char%d' % width)
 	if width == 8:
@@ -92,7 +92,7 @@ def type_char_create(width):
 	else:
 		id.c = 'char%d_t' % width
 	id.llvm = 'Char%d' % width
-	return TypeSimple(width, HLIR_TYPE_KIND_CHAR, id, CHAR_OPS)
+	return TypeSimple(width, HLIR_TYPE_KIND_CHAR, id, CHAR_OPS, ti)
 
 
 
@@ -101,7 +101,7 @@ typeChar16 = type_char_create(width=16)
 typeChar32 = type_char_create(width=32)
 
 
-def type_float_create(width):
+def type_float_create(width, ti=None):
 	width = align_bits_up(width)
 	id = Id('Float%d' % width)
 	if width == 32:
@@ -109,7 +109,7 @@ def type_float_create(width):
 	else:
 		id.c = 'double'
 	id.llvm = 'Float%d' % width
-	nt = TypeSimple(width, HLIR_TYPE_KIND_FLOAT, id, FLOAT_OPS)
+	nt = TypeSimple(width, HLIR_TYPE_KIND_FLOAT, id, FLOAT_OPS, ti)
 	return nt
 
 
