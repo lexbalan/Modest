@@ -953,16 +953,14 @@ class Type(Entity):
 		if a.is_bad() or b.is_bad():
 			return True
 
-
-		if a.is_simple2() and b.is_simple2():
-			return (a.kind == b.kind) and (a.width == b.width) and (a.is_generic() == b.is_generic())
-
-
 		if a.__class__.__name__ != b.__class__.__name__:
 			return False
 
 		if a.brand != b.brand:
 			return False
+
+		if a.is_simple2() and b.is_simple2():
+			return (a.kind == b.kind) and (a.width == b.width) and (a.generic == b.generic)
 
 		# проверять аттрибуты (volatile, const)
 		# использую для C чтобы можно было более строго проверить типы
