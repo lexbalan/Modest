@@ -591,6 +591,7 @@ class Type(Entity):
 
 	def supports(self, operation):
 		if self.is_bad():
+			# bad type supports any operation to prevent errors
 			return True
 		return operation in self.ops
 
@@ -1069,18 +1070,19 @@ class TypeSimple(Type):
 	def __init__(self, width, kind, id, ops, ti=None):
 		super().__init__(width=width, ops=ops, ti=ti)
 		self.kind = kind
+		self.incomplete = False
 		self.id = id
-		self.incomplete = False
 
 
-
-class TypePointer(Type):
-	def __init__(self, to, generic=False, ti=None):
+class TypeFunc(Type):
+	def __init__(self, params, to, va_args=False, ti=None):
 		w = int(pointer_width)
-		super().__init__(width=w, generic=generic, ops=PTR_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_POINTER
+		super().__init__(width=w, ops=PTR_OPS, ti=ti)
+		self.kind = HLIR_TYPE_KIND_FUNC
 		self.incomplete = False
+		self.params = params
 		self.to = to
+		self.extra_args = va_args
 
 
 class TypeArray(Type):
@@ -1136,15 +1138,13 @@ class TypeRecord(Type):
 		self.fields = fields
 
 
-class TypeFunc(Type):
-	def __init__(self, params, to, va_args=False, ti=None):
+class TypePointer(Type):
+	def __init__(self, to, generic=False, ti=None):
 		w = int(pointer_width)
-		super().__init__(width=w, ops=PTR_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_FUNC
+		super().__init__(width=w, generic=generic, ops=PTR_OPS, ti=ti)
+		self.kind = HLIR_TYPE_KIND_POINTER
 		self.incomplete = False
-		self.params = params
 		self.to = to
-		self.extra_args = va_args
 
 
 class TypeVaList(Type):

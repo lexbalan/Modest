@@ -15,6 +15,11 @@ bool_id.llvm = 'Bool'
 typeBool = TypeSimple(8, HLIR_TYPE_KIND_BOOL, bool_id, BOOL_OPS)
 
 
+#def type_bad_create(ti=None):
+#	nt = TypeSimple(width=0, kind=HLIR_TYPE_KIND_BAD, id=Id(None), ops=[], ti=ti)
+#	nt.generic = True
+#	return nt
+
 
 def type_number_create(width=0, ti=None):
 	nt = TypeSimple(width, HLIR_TYPE_KIND_NUMBER, Id(None), NUM_OPS, ti)
