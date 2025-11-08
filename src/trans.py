@@ -206,7 +206,7 @@ def init():
 	root_symtab.type_add('Word32', typeWord32)
 	root_symtab.type_add('Word64', typeWord64)
 	root_symtab.type_add('Word128', typeWord128)
-	root_symtab.type_add('Word256', typeWord256)
+	#root_symtab.type_add('Word256', typeWord256)
 
 	root_symtab.type_add('Int8', typeInt8)
 	root_symtab.type_add('Int16', typeInt16)
@@ -270,7 +270,7 @@ def init():
 
 	global typeSysWord, typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr, typeSysSize
 
-	typeSysWord = TypeWord(word_width)
+	typeSysWord = type_word_create(word_width)
 	typeSysChar = type_select_char(char_width)
 	typeSysInt = type_select_int(int_width)
 	typeSysNat = type_select_nat(int_width)
@@ -642,10 +642,14 @@ def do_value_bin2(op, l, r, ti):
 	# Check type is valid for the operation
 
 	if not l.type.supports(op):
+		print(l.type.kind)
+		print(l.type.ops)
 		error("unsuitable value type for '%s' operation" % op, l.ti)
 		return ValueBad(ti)
 
 	if not r.type.supports(op):
+		print(r.type.kind)
+		print(r.type.ops)
 		error("unsuitable value type for '%s' operation" % op, r.ti)
 		return ValueBad(ti)
 

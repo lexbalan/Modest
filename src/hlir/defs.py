@@ -2,36 +2,121 @@
 from .types import *
 
 
-typeUnit = TypeUnit()
-typeBool = TypeBool()
 
-typeWord8 = TypeWord(width=8)
-typeWord16 = TypeWord(width=16)
-typeWord32 = TypeWord(width=32)
-typeWord64 = TypeWord(width=64)
-typeWord128 = TypeWord(width=128)
-typeWord256 = TypeWord(width=256)
 
-typeInt8 = TypeInt(width=8)
-typeInt16 = TypeInt(width=16)
-typeInt32 = TypeInt(width=32)
-typeInt64 = TypeInt(width=64)
-typeInt128 = TypeInt(width=128)
-typeInt256 = TypeInt(width=256)
+#typeUnit = TypeUnit()
 
-typeNat8 = TypeNat(width=8)
-typeNat16 = TypeNat(width=16)
-typeNat32 = TypeNat(width=32)
-typeNat64 = TypeNat(width=64)
-typeNat128 = TypeNat(width=128)
-typeNat256 = TypeNat(width=256)
+unit_id = Id('Unit')
+unit_id.c = 'void'
+unit_id.llvm = 'void'
+typeUnit = TypeSimple(0, HLIR_TYPE_KIND_UNIT, unit_id, UNIT_OPS)
 
-typeFloat32 = TypeFloat(width=32)
-typeFloat64 = TypeFloat(width=64)
 
-typeChar8 = TypeChar(width=8)
-typeChar16 = TypeChar(width=16)
-typeChar32 = TypeChar(width=32)
+#typeBool = TypeBool()
+bool_id = Id('Bool')
+bool_id.c = 'bool'
+bool_id.llvm = 'Bool'
+typeBool = TypeSimple(8, HLIR_TYPE_KIND_BOOL, bool_id, BOOL_OPS)
+
+
+
+def type_word_create(width):
+	width = align_bits_up(width)
+	id = Id('Word%d' % width)
+	if width < 128:
+		id.c = 'uint%d_t' % width
+	else:
+		id.c = 'unsigned __int%d' % width
+	id.llvm = 'Word%d' % width
+	return TypeSimple(width, HLIR_TYPE_KIND_WORD, id, WORD_OPS)
+
+
+typeWord8 = type_word_create(width=8)
+typeWord16 = type_word_create(width=16)
+typeWord32 = type_word_create(width=32)
+typeWord64 = type_word_create(width=64)
+typeWord128 = type_word_create(width=128)
+typeWord256 = type_word_create(width=256)
+
+
+def type_int_create(width):
+	width = align_bits_up(width)
+	id = Id('Int%d' % width)
+	if width < 128:
+		id.c = 'int%d_t' % width
+	else:
+		id.c = '__int%d' % width
+	id.llvm = 'Int%d' % width
+	nt = TypeSimple(width, HLIR_TYPE_KIND_INT, id, INT_OPS)
+	nt.signedness = HLIR_TYPE_SIGNEDNESS_SIGNED
+	return nt
+
+
+
+typeInt8 = type_int_create(width=8)
+typeInt16 = type_int_create(width=16)
+typeInt32 = type_int_create(width=32)
+typeInt64 = type_int_create(width=64)
+typeInt128 = type_int_create(width=128)
+typeInt256 = type_int_create(width=256)
+
+
+def type_nat_create(width):
+	width = align_bits_up(width)
+	id = Id('Nat%d' % width)
+	if width < 128:
+		id.c = 'uint%d_t' % width
+	else:
+		id.c = 'unsigned __int%d' % width
+	id.llvm = 'Nat%d' % width
+	nt = TypeSimple(width, HLIR_TYPE_KIND_NAT, id, NAT_OPS)
+	nt.signedness = HLIR_TYPE_SIGNEDNESS_UNSIGNED
+	return nt
+
+
+
+typeNat8 = type_nat_create(width=8)
+typeNat16 = type_nat_create(width=16)
+typeNat32 = type_nat_create(width=32)
+typeNat64 = type_nat_create(width=64)
+typeNat128 = type_nat_create(width=128)
+typeNat256 = type_nat_create(width=256)
+
+
+
+def type_char_create(width):
+	width = align_bits_up(width)
+	id = Id('Char%d' % width)
+	if width == 8:
+		id.c = 'char'
+	else:
+		id.c = 'char%d_t' % width
+	id.llvm = 'Char%d' % width
+	return TypeSimple(width, HLIR_TYPE_KIND_CHAR, id, CHAR_OPS)
+
+
+
+typeChar8 = type_char_create(width=8)
+typeChar16 = type_char_create(width=16)
+typeChar32 = type_char_create(width=32)
+
+
+def type_float_create(width):
+	width = align_bits_up(width)
+	id = Id('Float%d' % width)
+	if width == 32:
+		id.c = 'float'
+	else:
+		id.c = 'double'
+	id.llvm = 'Float%d' % width
+	nt = TypeSimple(width, HLIR_TYPE_KIND_FLOAT, id, FLOAT_OPS)
+	nt.signedness = HLIR_TYPE_SIGNEDNESS_SIGNED
+	return nt
+
+
+typeFloat32 = type_float_create(width=32)
+typeFloat64 = type_float_create(width=64)
+
 
 # type Nil = Generic(*Unit)
 typeNil = TypePointer(to=typeUnit)

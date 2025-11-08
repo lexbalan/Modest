@@ -5,14 +5,13 @@ from hlir import *
 from common import settings
 from error import info, warning, error
 import type as type
-from type import TypeFloat
 
 
 
 def value_float_create(num, ti=None):
 	#info("value_float_create", ti)
 	flt_width = int(settings['float_width'])
-	typ = TypeFloat(width=flt_width, ti=ti)
+	typ = type_float_create(width=flt_width)
 	typ.generic = True
 	return ValueLiteral(typ, num, ti)
 

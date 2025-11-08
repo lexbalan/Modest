@@ -1067,7 +1067,7 @@ def do_eval_call(v):
 		f = llvm_dold(f)
 		ftype = ftype.to
 
-	to_unit = Type.eq(ftype.to, typeUnit)
+	to_unit = ftype.to.is_unit()
 
 
 	# do call

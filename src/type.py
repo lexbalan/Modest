@@ -195,7 +195,7 @@ def select_common_record_type(a, b):
 
 # выбирает общий тип для двух входных
 # CAN RETURN NONE!
-def select_common_type(a, b):
+def select_common_type(a, b, ti=None):
 
 	if Type.eq(a, b):
 		return a

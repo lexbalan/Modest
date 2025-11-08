@@ -518,6 +518,7 @@ BITWISE_OPS = LOGICAL_OPS #+ (HLIR_VALUE_OP_SHL, HLIR_VALUE_OP_SHR) -
 UNIT_OPS = CONS_OP
 WORD_OPS = CONS_OP + EQ_OPS + BITWISE_OPS
 INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
+NAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
 FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
 BOOL_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
 CHAR_OPS = CONS_OP + EQ_OPS
@@ -701,6 +702,9 @@ class Type(Entity):
 	def is_composite(self):
 		return self.is_array() or self.is_record()
 
+
+	def is_simple2(self):
+		return isinstance(self, TypeSimple)
 
 	def is_simple(self):
 		return not (self.is_composite() or self.is_func() or self.is_pointer())
@@ -950,6 +954,11 @@ class Type(Entity):
 		if a.is_bad() or b.is_bad():
 			return True
 
+
+		if a.is_simple2() and b.is_simple2():
+			return (a.kind == b.kind) and (a.width == b.width) and (a.is_generic() == b.is_generic())
+
+
 		if a.__class__.__name__ != b.__class__.__name__:
 			return False
 
@@ -1090,8 +1099,6 @@ class TypeNumber(Type):
 		self.incomplete = False
 		self.id = Id(None)
 		self.signedness = signedness
-		#self.signed=signed
-		#self.unsigned=not signed
 
 
 class TypeString(Type):
@@ -1107,107 +1114,14 @@ class TypeString(Type):
 		#self.volume = ValueLiteral(TypeNumber(width=64), length, ti)
 
 
-class TypeUnit(Type):
-	def __init__(self, ti=None):
-		super().__init__(ops=UNIT_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_UNIT
-		self.incomplete = False
-		self.id = Id('Unit')
-		self.id.c = 'void'
-		self.id.llvm = 'void'
 
-
-class TypeBool(Type):
-	def __init__(self, ti=None):
-		super().__init__(width=1, ops=BOOL_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_BOOL
-		self.incomplete = False
-		self.id = Id('Bool')
-		self.id.c = 'bool'
-		self.id.llvm = 'Bool'
-
-
-class TypeWord(Type):
-	def __init__(self, width, ti=None):
-		width = align_bits_up(width)
-
-		super().__init__(width=width, ops=WORD_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_WORD
+class TypeSimple(Type):
+	def __init__(self, width, kind, id, ops, ti=None):
+		super().__init__(width=width, ops=ops, ti=ti)
+		self.kind = kind
+		self.id = id
 		self.incomplete = False
 
-		calias = None
-		llvm_alias = None
-
-		if width == 128:
-			calias = 'unsigned __int128'
-		else:
-			calias = 'uint%d_t' % width
-
-		llvm_alias = 'Word%d' % width
-		#if width in [8, 16, 32, 64, 128]:
-		#	llvm_alias = 'Word%d' % width
-		#else:
-		#	llvm_alias = 'i%d' % width
-
-		self.id = Id('Word%d' % width)
-		self.id.c = calias
-		self.id.llvm = llvm_alias
-
-
-class TypeInt(Type):
-	def __init__(self, width, ti=None):
-		super().__init__(width=width, ops=INT_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_INT
-		self.incomplete = False
-		alias = _get_int_alias(width, signed=True)
-		self.id = Id(alias['cm'])
-		self.id.c = alias['c']
-		self.id.llvm = alias['llvm']
-		self.signedness = HLIR_TYPE_SIGNEDNESS_SIGNED
-
-
-class TypeNat(Type):
-	def __init__(self, width, ti=None):
-		super().__init__(width=width, ops=INT_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_NAT
-		self.incomplete = False
-		alias = _get_int_alias(width, signed=False)
-		self.id = Id(alias['cm'])
-		self.id.c = alias['c']
-		self.id.llvm = alias['llvm']
-		self.signedness = HLIR_TYPE_SIGNEDNESS_UNSIGNED
-
-
-class TypeFloat(Type):
-	def __init__(self, width, ti=None):
-		super().__init__(width=width, ops=FLOAT_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_FLOAT
-		self.incomplete = False
-
-		calias = 'float'
-		if width > 32:
-			calias = 'double'
-
-		alias = _get_int_alias(width, signed=True)
-		self.id = Id('Float%d' % width)
-		self.id.c = calias
-		self.id.llvm = 'Float%d' % width
-		self.signedness = HLIR_TYPE_SIGNEDNESS_SIGNED
-
-
-class TypeChar(Type):
-	def __init__(self, width, ti=None):
-		super().__init__(width=width, ops=CHAR_OPS, ti=ti)
-		self.kind = HLIR_TYPE_KIND_CHAR
-		self.incomplete = False
-
-		#alias = _get_int_alias(width, signed=False)
-		self.id = Id('Char%d' % width)
-		self.id.llvm = 'Char%d' % width
-		if width <= 8:
-			self.id.c = 'char'
-		else:
-			self.id.c = 'char%d_t' % width
 
 
 class TypePointer(Type):

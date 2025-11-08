@@ -16,7 +16,8 @@ def value_array_create(items, ti):
 	length = len(items)
 	if length == 0:
 		item_type = typeUnit  # not Null, becase it fail
-		return _value_array_create([], item_type, 0, is_generic=True, ti=ti)
+		nv = _value_array_create([], item_type, 0, is_generic=True, ti=ti)
+		return nv
 
 	# Проверяем - immediate ли этот массив?
 	# если хотя бы один элемент - не immediate
@@ -58,11 +59,17 @@ def array_can(to, from_type, method, ti):
 	if not from_type.is_generic():
 		return False
 
+	if from_type.is_generic():
+		# from an empty array literal `[]`
+		#info("ARR CAN? %d %d" % (to.is_generic(), from_type.is_generic()), ti)
+		if from_type.size == 0 and from_type.of.is_unit():
+			return True
+
 	# Check item type
 	# проверяем может ли тип элемента из v
 	# быть приведен к типу элемента t
 	# (это обязательное требование к типу v)
-	ct = select_common_type(to.of, from_type.of)
+	ct = select_common_type(to.of, from_type.of, ti)
 
 	if ct == None:
 		return False

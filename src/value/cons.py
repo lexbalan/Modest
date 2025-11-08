@@ -218,19 +218,19 @@ def _select_minimal_type_for(t):
 	w = align_bits_up(t.width)
 
 	if t.is_number():
-		t = TypeInt(w)
+		t = type_int_create(w)
 		if t.is_unsigned():
-			t = TypeNat(w)
+			t = type_nat_create(w)
 		return t
 
 	elif t.is_float():
-		return TypeFloat(w)
+		return type_char_create(w)
 
 	elif t.is_char():
-		return TypeChar(w)
+		return type_char_create(w)
 
 	elif t.is_word():
-		return TypeWord(w)
+		return type_word_create(w)
 
 	elif t.is_array():
 		item_type = t.of
