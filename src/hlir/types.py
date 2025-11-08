@@ -943,9 +943,6 @@ class Type(Entity):
 		if a.brand != b.brand:
 			return False
 
-		#if a.is_simple2() and b.is_simple2():
-		#	return (a.kind == b.kind) and (a.width == b.width) and (a.generic == b.generic)
-
 		# проверять аттрибуты (volatile, const)
 		# использую для C чтобы можно было более строго проверить типы
 		# напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
