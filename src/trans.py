@@ -529,11 +529,11 @@ def add_spices_type(t, atts):
 
 		if k == 'distinct':
 			#info("distinct type", nt.ti)
-			nt.parentee = t
+			nt.distinct = t
 
 		#elif k == 'refined':
 		#	#info("refined type", nt.ti)
-		#	nt.parentee = t
+		#	nt.distinct = t
 
 		# Для C некоторые атрибуты типа массива -
 		# это атрибуты типа его элементов
@@ -2631,18 +2631,6 @@ def pre_def(ast, is_include=False):
 				t = Type(x['ti'])  # Incomplete type (!)
 				if not is_include:
 					t.parent = cmodule
-
-				# выставляем наперед флаг о том что за тип перед нами
-				# это необходимо для того чтобы is_record() & is_array()
-				# работали для типов которые будут определены позже
-				tk = x['type']['kind']
-				if tk == 'record':
-					t.kind = HLIR_TYPE_KIND_RECORD
-				elif tk == 'array':
-					t.kind = HLIR_TYPE_KIND_ARRAY
-				elif tk == 'pointer':
-					t.kind = HLIR_TYPE_KIND_POINTER
-				# TODO: продолжи
 
 				ctx_type_add(id['str'], t, is_public=is_public)
 				t.is_global_flag = True
