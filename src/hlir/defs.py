@@ -59,10 +59,11 @@ def type_float_create(width, ti=None):
 
 
 
-unit_id = Id('Unit')
-unit_id.c = 'void'
-unit_id.llvm = 'void'
-typeUnit = TypeSimple(0, HLIR_TYPE_KIND_UNIT, unit_id, UNIT_OPS)
+
+typeUnit = TypeUnit()
+typeUnit.id = Id('Unit')
+typeUnit.id.c = 'void'
+typeUnit.id.llvm = 'void'
 
 bool_id = Id('Bool')
 bool_id.c = 'bool'

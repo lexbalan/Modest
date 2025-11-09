@@ -537,14 +537,12 @@ def init(pwidth):
 
 
 HLIR_TYPE_KIND_UNKNOWN = 0
-HLIR_TYPE_KIND_UNIT = 2
-HLIR_TYPE_KIND_WORD = 3
-HLIR_TYPE_KIND_INT = 4
-HLIR_TYPE_KIND_NAT = 5
-HLIR_TYPE_KIND_CHAR = 6
-HLIR_TYPE_KIND_BOOL = 11
-HLIR_TYPE_KIND_FLOAT = 14
-HLIR_TYPE_KIND_VA_LIST = 15
+HLIR_TYPE_KIND_WORD = 1
+HLIR_TYPE_KIND_INT = 2
+HLIR_TYPE_KIND_NAT = 3
+HLIR_TYPE_KIND_CHAR = 4
+HLIR_TYPE_KIND_BOOL = 5
+HLIR_TYPE_KIND_FLOAT = 6
 
 
 
@@ -604,7 +602,7 @@ class Type(Entity):
 
 
 	def is_unit(self):
-		return self.kind == HLIR_TYPE_KIND_UNIT
+		return isinstance(self, TypeUnit)
 
 
 	def is_bool(self):
@@ -713,7 +711,7 @@ class Type(Entity):
 
 
 	def is_va_list(self):
-		return self.kind == HLIR_TYPE_KIND_VA_LIST
+		return isinstance(self, TypeVaList)
 
 
 	def is_generic_int(self):
@@ -1074,6 +1072,12 @@ class TypeBad(Type):
 		self.incomplete = False
 
 
+class TypeUnit(Type):
+	def __init__(self, ti=None):
+		super().__init__(ti=ti)
+		self.incomplete = False
+
+
 class TypeNumber(Type):
 	def __init__(self, width=0, ti=None):
 		super().__init__(width=width, ops=NUMBER_OPS, ti=ti)
@@ -1169,7 +1173,6 @@ class TypePointer(Type):
 class TypeVaList(Type):
 	def __init__(self):
 		super().__init__(width=0, ti=None)
-		self.kind = HLIR_TYPE_KIND_VA_LIST
 		self.incomplete = False
 		self.id = Id('va_list')
 		self.id.c = 'va_list'
