@@ -522,12 +522,12 @@ NAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
 FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
 BOOL_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
 CHAR_OPS = CONS_OP + EQ_OPS
-ENUM_OPS = CONS_OP + EQ_OPS
+ENUMBER_OPS = CONS_OP + EQ_OPS
 PTR_OPS = CONS_OP + EQ_OPS + (HLIR_VALUE_OP_DEREF,)
 ARR_OPS = CONS_OP + EQ_OPS + (HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_INDEX)
 REC_OPS = CONS_OP + EQ_OPS + (HLIR_VALUE_OP_ACCESS,)
-STR_OPS = CONS_OP + EQ_OPS + (HLIR_VALUE_OP_ADD,)
-NUM_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
+STRING_OPS = CONS_OP + EQ_OPS + (HLIR_VALUE_OP_ADD,)
+NUMBER_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
 
 
 pointer_width = 0
@@ -1081,6 +1081,22 @@ class TypeBad(Type):
 		self.kind = HLIR_TYPE_KIND_BAD
 		self.incomplete = False
 
+
+class TypeNumber(Type):
+	def __init__(self, width=0, ti=None):
+		super().__init__(width=width, ops=NUMBER_OPS, ti=ti)
+		self.kind = HLIR_TYPE_KIND_NUMBER
+		self.incomplete = False
+		self.generic = True
+
+
+class TypeString(Type):
+	def __init__(self, char_width, length, ti=None):
+		super().__init__(width=char_width, ops=STRING_OPS, ti=ti)
+		self.kind = HLIR_TYPE_KIND_STRING
+		self.incomplete = False
+		self.generic = True
+		self.length = length
 
 
 class TypeSimple(Type):
