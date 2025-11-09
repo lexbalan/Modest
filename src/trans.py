@@ -2696,9 +2696,6 @@ def def_def(ast, is_include=False):
 
 
 
-imp_paths = []
-
-
 # получает строку импорта (и неявно глобальный контекст)
 # и возвращает полный путь к модулю
 def get_import_abspath(s, ext='.m'):
@@ -2720,14 +2717,6 @@ def get_import_abspath(s, ext='.m'):
 
 	else:
 		# imp_paths or lib_path
-
-		# ищем в imp_paths
-		for imp_path in imp_paths:
-			p = imp_path + '/' + s
-			if os.path.exists(p):
-				full_name = p
-				break
-
 		if full_name == '':
 			full_name = settings['lib'] + '/' + s
 
