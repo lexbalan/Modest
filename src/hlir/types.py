@@ -581,8 +581,7 @@ class Type(Entity):
 		# особое поле - если оно ненулевое значит это distinct тип
 		# такие типы будут признаны неравными если их поля dictinct отличны
 		# 0 - зарезервирован для не distinct типов (см. @distinct аттрибут)
-		self.brand = 0
-		self.refine = 0
+		self.parentee = None
 
 
 	def is_bad(self):
@@ -602,11 +601,13 @@ class Type(Entity):
 	def is_incompleted(self):
 		return self.incomplete
 
+
 	def is_generic(self):
 		return self.generic
 
+
 	def is_distinct(self):
-		return self.brand != 0
+		return self.parentee != None
 
 
 	def is_unit(self):
@@ -929,6 +930,16 @@ class Type(Entity):
 
 
 	@staticmethod
+	def is_diff_brand(a, b):
+		if a.parentee != None or b.parentee != None:
+			if a.parentee == None or b.parentee == None:
+				return True
+			if not Type.eq(a.parentee, b.parentee):
+				return True
+		return False
+
+
+	@staticmethod
 	def eq(a, b, opt=[]):
 		assert (a != None) and isinstance(a, Type)
 		assert (b != None) and isinstance(b, Type)
@@ -942,8 +953,14 @@ class Type(Entity):
 		if a.__class__.__name__ != b.__class__.__name__:
 			return False
 
-		if a.brand != b.brand:
+		if Type.is_diff_brand(a, b):
 			return False
+#		if a.parentee != None or b.parentee != None:
+#			if a.parentee == None or b.parentee == None:
+#				return False
+#			if not Type.eq(a.parentee, b.parentee):
+#				return False
+
 
 		# проверять аттрибуты (volatile, const)
 		# использую для C чтобы можно было более строго проверить типы

@@ -13,8 +13,8 @@ const myOne = MyInt32 1
 
 // These refined MyInt32 types are compatible with MyInt32
 // but not compatible with anything else (e.g. between them)
-type MyInt32_2 = @refined MyInt32
-type MyInt32_3 = @refined MyInt32
+type MyInt32_2 = MyInt32
+type MyInt32_3 = MyInt32
 
 
 const cvb = @volatile Int32 0

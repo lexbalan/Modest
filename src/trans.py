@@ -84,7 +84,7 @@ cdef = None
 
 
 # for @distinct types
-distinct_cnt = 0
+#distinct_cnt = 0
 
 
 
@@ -518,38 +518,36 @@ def do_type_func(x, func_id="_"):
 def add_spices_type(t, atts):
 	global distinct_cnt
 
-	if atts != []:
-		t = Type.copy(t)
+	if atts == []:
+		return t
+
+	nt = Type.copy(t)
 
 	for a in atts:
 		k = a['kind']
-		t.annotations[k] = {}
+		nt.annotations[k] = {}
 
 		if k == 'distinct':
-			#info("distinct type", t.ti)
-			# Type.brand must be > 0 (!)
-			distinct_cnt += 1
-			t.brand = distinct_cnt
+			#info("distinct type", nt.ti)
+			nt.parentee = t
 
-		elif k == 'refined':
-			#info("refined type", t.ti)
-			t.refine = t.brand
-			distinct_cnt += 1
-			t.brand = distinct_cnt
+		#elif k == 'refined':
+		#	#info("refined type", nt.ti)
+		#	nt.parentee = t
 
 		# Для C некоторые атрибуты типа массива -
 		# это атрибуты типа его элементов
-		if t.is_array():
+		if nt.is_array():
 			if k in ['const', 'volatile', 'restrict']:
-				t.of = Type.copy(t.of)
+				nt.of = Type.copy(nt.of)
 				if k == 'const':
-					t.of.addAnnotation('const', {})
+					nt.of.addAnnotation('const', {})
 				if k == 'volatile':
-					t.of.addAnnotation('volatile', {})
+					nt.of.addAnnotation('volatile', {})
 				if k == 'restrict':
-					t.of.addAnnotation('restrict', {})
+					nt.of.addAnnotation('restrict', {})
 
-	return t
+	return nt
 
 
 def do_type(x):

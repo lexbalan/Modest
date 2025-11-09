@@ -233,17 +233,24 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 	%Int32
 };
 
+%MyInt32 = type %Int32;
+%MyInt322 = type %MyInt32;
+define internal void @fx(%MyInt322 %i) {
+	;
+	ret void
+}
+
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Point, align 8
-	%3 = insertvalue %Point zeroinitializer, %Int32 2, 1
-	store %Point %3, %Point* %2
-	%4 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
-	%5 = load %Int32, %Int32* %4
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 %5)
-	%7 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1
-	%8 = load %Int32, %Int32* %7
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Int32 %8)
+	store %Point zeroinitializer, %Point* %2
+	%3 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
+	%4 = load %Int32, %Int32* %3
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 %4)
+	%6 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1
+	%7 = load %Int32, %Int32* %6
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Int32 %7)
+	call void @fx(%MyInt322 5)
 	ret %Int32 0
 }
 
