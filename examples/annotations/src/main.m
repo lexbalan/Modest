@@ -5,9 +5,9 @@ include "libc/stdio"
 
 
 type MyInt32 = @distinct Int32
-@calias("MY_ZERO")
+@alias("c", "MY_ZERO")
 const myZero = MyInt32 0
-@calias("MY_ONE")
+@alias("c", "MY_ONE")
 const myOne = MyInt32 1
 
 
@@ -29,7 +29,7 @@ type ProtocolHeader = @packed record {
 @alias("name2")
 var name1: Bool
 
-@calias("name22")
+@alias("c", "name22")
 var name11: Bool
 
 @extern
@@ -88,7 +88,6 @@ type Point2D = record {
 
 
 // переопределение f не вызвало ошибку!
-//@conditional(const1 < const2)
 func hello () -> Unit {
 	printf("hi!\n")
 }

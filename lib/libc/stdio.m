@@ -7,34 +7,34 @@ pragma c_include "stdio.h"
 include "libc/ctypes64"
 
 
-@calias("FILE")
+@alias("c", "FILE")
 public type File = record {}
 
-@calias("fpos_t")
+@alias("c", "fpos_t")
 public type FposT = Nat8
 
-@calias("char *")
+@alias("c", "char *")
 public type CharStr = Str
 
-@calias("const char *")
+@alias("c", "const char *")
 public type ConstCharStr = CharStr
 
-@calias("stdin")
+@alias("c", "stdin")
 public const stdin: *File
-@calias("stdout")
+@alias("c", "stdout")
 public const stdout: *File
-@calias("stderr")
+@alias("c", "stderr")
 public const stderr: *File
 
 
-@calias("EOF")
+@alias("c", "EOF")
 public const c_EOF = -1
 
-@calias("SEEK_SET")
+@alias("c", "SEEK_SET")
 public const c_SEEK_SET = 0
-@calias("SEEK_CUR")
+@alias("c", "SEEK_CUR")
 public const c_SEEK_CUR = 1
-@calias("SEEK_END")
+@alias("c", "SEEK_END")
 public const c_SEEK_END = 2
 
 

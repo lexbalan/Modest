@@ -2763,7 +2763,9 @@ def add_spices_def(x, ast_atts):
 			annotation = do_value(a['args'][0]['value'])
 		else:
 			for arg in a['args']:
-				k = arg['key']['str']
+				k = None
+				if arg['key'] != None:
+					k = arg['key']['str']
 				v = do_value(arg['value'])
 				annotation[k] = v
 
@@ -2771,25 +2773,26 @@ def add_spices_def(x, ast_atts):
 
 
 		if kind in [
-			'conditional', 'used', 'unused', 'inline',
+			'used', 'unused', 'inline',
 			'inlinehint', 'noinline', 'alignment',
 			'section', 'nonstatic'
 		]:
 			pass
-		elif kind == 'llalias':
-			val = a['args'][0]['value']['str']
-			setObjAttrByPath(x, "id.llvm", val)
-			add_att(x, 'id:nodecorate')
-		elif kind == 'calias':
-			val = a['args'][0]['value']['str']
-			setObjAttrByPath(x, "id.c", val)
-			add_att(x, 'id:nodecorate')
 		elif kind == 'alias':
-			val = a['args'][0]['value']['str']
-			setObjAttrByPath(x, "id.c", val)
-			setObjAttrByPath(x, "id.cm", val)
-			setObjAttrByPath(x, "id.llvm", val)
+			# 1. @alias("alias")
+			# 2. @alias("llvm", "llvm_alias")
+			args = a['args']
+			if len(args) == 2:
+				backend = args[0]['value']['str']
+				identifier = args[1]['value']['str']
+				setObjAttrByPath(x, "id.%s" % backend, identifier)
+			elif len(args) == 1:
+				identifier = args[0]['value']['str']
+				setObjAttrByPath(x, "id.c", identifier)
+				setObjAttrByPath(x, "id.cm", identifier)
+				setObjAttrByPath(x, "id.llvm", identifier)
 			add_att(x, 'id:nodecorate')
+
 		elif kind == 'extern':
 			add_att(x, "extern")
 			args = a['args']

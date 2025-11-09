@@ -77,7 +77,6 @@ struct Point2D {
 typedef struct Point2D Point2D;
 
 // переопределение f не вызвало ошибку!
-//@conditional(const1 < const2)
 static void hello(void) {
 	printf("hi!\n");
 }

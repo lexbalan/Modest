@@ -20,7 +20,7 @@ public type BlkCntT = Nat64
 public type DarwinIno64T = Nat64
 
 //
-//@calias("struct stat")
+//@alias("c", "struct stat")
 //type Stat record {
 //	st_dev: DevT			/* номер устройства */
 //	st_ino: InoT			/* inode */
@@ -40,7 +40,7 @@ public type DarwinIno64T = Nat64
 
 public type DarwinTimeT = Nat64
 
-@calias("struct timespec")
+@alias("c", "struct timespec")
 public type Timespec = record {
 	public tv_sec: DarwinTimeT
 	public tv_nsec: Long
@@ -50,7 +50,7 @@ public type Timespec = record {
 	/* for MACOS see: /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys
 	*/
 
-@calias("struct stat")
+@alias("c", "struct stat")
 public type Stat = record {
 	public st_dev: DevT             // [XSI] ID of device containing file
 	public st_mode: ModeT           // [XSI] Mode of file (see below)
@@ -78,7 +78,7 @@ public type Stat = record {
 
 
 // 01_stat for MACOS
-@llalias("\\01_stat")
+@alias("llvm", "\\01_stat")
 public func stat (path: *[]ConstChar, stat: *Stat) -> Int
 
 
@@ -135,49 +135,49 @@ public const c_S_ISVTX = 0x0200    // (0001000) save swapped text even after use
 
 
 /* is directory */
-@calias("S_ISDIR")
+@alias("c", "S_ISDIR")
 public func c_S_ISDIR (m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFDIR
 }
 
 /* is char special */
-@calias("S_ISCHR")
+@alias("c", "S_ISCHR")
 public func c_S_ISCHR (m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFCHR
 }
 
 /* is block special */
-@calias("S_ISBLK")
+@alias("c", "S_ISBLK")
 public func c_S_ISBLK (m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFBLK
 }
 
 /* is regular file */
-@calias("S_ISREG")
+@alias("c", "S_ISREG")
 public func c_S_ISREG (m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFREG
 }
 
 /* is fifo or socket */
-@calias("S_ISFIFO")
+@alias("c", "S_ISFIFO")
 public func c_S_ISFIFO (m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFIFO
 }
 
 /* is symbolic link */
-@calias("S_ISLNK")
+@alias("c", "S_ISLNK")
 public func c_S_ISLNK (m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFLNK
 }
 
 /* is socket */
-@calias("S_ISSOCK")
+@alias("c", "S_ISSOCK")
 public func c_S_ISSOCK (m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFSOCK
 }
 
 /* is whiteout */
-@calias("S_ISWHT")
+@alias("c", "S_ISWHT")
 public func c_S_ISWHT (m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFWHT
 }

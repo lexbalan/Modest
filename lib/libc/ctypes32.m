@@ -4,98 +4,98 @@ pragma do_not_include
 pragma module_nodecorate
 
 
-@calias("char *")
+@alias("c", "char *")
 public type Str = Str8
 
-@calias("char")
+@alias("c", "char")
 public type Char = Char8
 
-@calias("const char")
+@alias("c", "const char")
 public type ConstChar = Char
 
-@calias("signed char")
+@alias("c", "signed char")
 public type SignedChar = Int8
 
-@calias("unsigned char")
+@alias("c", "unsigned char")
 public type UnsignedChar = Nat8
 
 
-@calias("short")
+@alias("c", "short")
 public type Short = Int16
 
-@calias("unsigned short")
+@alias("c", "unsigned short")
 public type UnsignedShort = Nat16
 
 
-@calias("int")
+@alias("c", "int")
 public type Int = Int32
 
-@calias("unsigned int")
+@alias("c", "unsigned int")
 public type UnsignedInt = Nat32
 
-@calias("long int")
+@alias("c", "long int")
 public type LongInt = Int32
 
-@calias("unsigned long int")
+@alias("c", "unsigned long int")
 public type UnsignedLongInt = Nat32
 
 
-@calias("long")
+@alias("c", "long")
 public type Long = Int32
 
-@calias("unsigned long")
+@alias("c", "unsigned long")
 public type UnsignedLong = Nat32
 
-@calias("long long")
+@alias("c", "long long")
 public type LongLong = Int64
 
-@calias("unsigned long long")
+@alias("c", "unsigned long long")
 public type UnsignedLongLong = Nat64
 
-@calias("long long int")
+@alias("c", "long long int")
 public type LongLongInt = Int64
 
-@calias("unsigned long long int")
+@alias("c", "unsigned long long int")
 public type UnsignedLongLongInt Nat64
 
 
-@calias("float")
+@alias("c", "float")
 public type Float = Float64
 
-@calias("double")
+@alias("c", "double")
 public type Double = Float64
 
-@calias("long double")
+@alias("c", "long double")
 public type LongDouble = Float64
 
 
 
-@calias("size_t")
+@alias("c", "size_t")
 public type SizeT = UnsignedLongInt
 
-@calias("ssize_t")
+@alias("c", "ssize_t")
 public type SSizeT = LongInt
 
-@calias("intptr_t")
+@alias("c", "intptr_t")
 public type IntPtrT = Nat32
 
-@calias("ptrdiff_t")
+@alias("c", "ptrdiff_t")
 public type PtrDiffT = Ptr
 
-@calias("off_t")
+@alias("c", "off_t")
 public type OffT = Int32
 
 
-@calias("useconds_t")
+@alias("c", "useconds_t")
 public type USecondsT = Nat32
 
-@calias("pid_t")
+@alias("c", "pid_t")
 public type PIDT = Int32
 
-@calias("uid_t")
+@alias("c", "uid_t")
 public type UIDT = Nat32
 
-@calias("gid_t")
+@alias("c", "gid_t")
 public type GIDT = Nat32
 
 

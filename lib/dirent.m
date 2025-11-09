@@ -2,18 +2,18 @@
 
 pragma module_nodecorate
 
-@calias("DIR")
+@alias("c", "DIR")
 public type Dir = record {}
 
-@calias("int")
+@alias("c", "int")
 type Int = Int32
-@calias("ino_t")
+@alias("c", "ino_t")
 type InoT = Nat32
-@calias("off_t")
+@alias("c", "off_t")
 type OffT = Nat32
 
 
-@calias("struct dirent")
+@alias("c", "struct dirent")
 public type Dirent = record {
 	public d_ino: InoT         /* inode number */
 	public d_off: OffT         /* offset to the next dirent */
@@ -25,23 +25,23 @@ public type Dirent = record {
 
 
 /* File types for `d_type'.  */
-@calias("DT_UNKNOWN")
+@alias("c", "DT_UNKNOWN")
 public const dt_UNKNOWN = 0
-@calias("DT_FIFO")
+@alias("c", "DT_FIFO")
 public const dt_FIFO = 1
-@calias("DT_CHR")
+@alias("c", "DT_CHR")
 public const dt_CHR = 2
-@calias("DT_DIR")
+@alias("c", "DT_DIR")
 public const dt_DIR = 4
-@calias("DT_BLK")
+@alias("c", "DT_BLK")
 public const dt_BLK = 6
-@calias("DT_REG")
+@alias("c", "DT_REG")
 public const dt_REG = 8
-@calias("DT_LNK")
+@alias("c", "DT_LNK")
 public const dt_LNK = 10
-@calias("DT_SOCK")
+@alias("c", "DT_SOCK")
 public const dt_SOCK = 12
-@calias("DT_WHT")
+@alias("c", "DT_WHT")
 public const dt_WHT = 14
 
 

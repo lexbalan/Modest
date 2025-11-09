@@ -245,7 +245,6 @@ define internal %Int32 @staticInlineHintFunc(%Int32 %x) inlinehint {
 
 
 ; переопределение f не вызвало ошибку!
-;@conditional(const1 < const2)
 define internal void @hello() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*))
 	ret void

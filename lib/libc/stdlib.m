@@ -7,9 +7,9 @@ pragma c_include "stdlib.h"
 include "ctypes64"
 
 
-@calias("EXIT_SUCCESS")
+@alias("c", "EXIT_SUCCESS")
 public const exitSuccess: Int = 0
-@calias("EXIT_FAILURE")
+@alias("c", "EXIT_FAILURE")
 public const exitFailure: Int = 1
 
 

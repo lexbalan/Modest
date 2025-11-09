@@ -110,7 +110,7 @@ var byteFromUart: @volatile Word8
 ```
 
 ```swift
-@calias("int")
+@alias("c", "int")
 type Int Int32
 ```
 

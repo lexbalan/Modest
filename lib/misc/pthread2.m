@@ -179,7 +179,7 @@ enum pthread_mutextype {
 #define PTHREAD_MUTEX_STRICT_NP		PTHREAD_MUTEX_STRICT_NP
 #define PTHREAD_MUTEX_DEFAULT		PTHREAD_MUTEX_STRICT_NP
 
-@calias("clockid_t")
+@alias("c", "clockid_t")
 type ClockIdT Int
 
 
