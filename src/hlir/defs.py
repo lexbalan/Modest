@@ -22,8 +22,7 @@ def type_int_create(width, ti=None):
 	else:
 		id.c = '__int%d' % width
 	id.llvm = 'Int%d' % width
-	nt = TypeSimple(width, HLIR_TYPE_KIND_INT, id, INT_OPS, ti)
-	return nt
+	return TypeSimple(width, HLIR_TYPE_KIND_INT, id, INT_OPS, ti)
 
 
 def type_nat_create(width, ti=None):
@@ -34,8 +33,7 @@ def type_nat_create(width, ti=None):
 	else:
 		id.c = 'unsigned __int%d' % width
 	id.llvm = 'Nat%d' % width
-	nt = TypeSimple(width, HLIR_TYPE_KIND_NAT, id, NAT_OPS, ti)
-	return nt
+	return TypeSimple(width, HLIR_TYPE_KIND_NAT, id, NAT_OPS, ti)
 
 
 def type_char_create(width, ti=None):
@@ -57,8 +55,7 @@ def type_float_create(width, ti=None):
 	else:
 		id.c = 'double'
 	id.llvm = 'Float%d' % width
-	nt = TypeSimple(width, HLIR_TYPE_KIND_FLOAT, id, FLOAT_OPS, ti)
-	return nt
+	return TypeSimple(width, HLIR_TYPE_KIND_FLOAT, id, FLOAT_OPS, ti)
 
 
 
