@@ -569,10 +569,10 @@ class Type(Entity):
 		#self.id = id
 
 		self.parent_type = None
-		# особое поле - если оно ненулевое значит это distinct тип
+		# особое поле - если оно ненулевое значит это brand тип
 		# такие типы будут признаны неравными если их поля dictinct отличны
-		# 0 - зарезервирован для не distinct типов (см. @distinct аттрибут)
-		self.distinct = None
+		# 0 - зарезервирован для не brand типов (см. @brand аттрибут)
+		self.brand = 0
 
 
 	def is_bad(self):
@@ -597,8 +597,8 @@ class Type(Entity):
 		return self.generic
 
 
-	def is_distinct(self):
-		return self.distinct != None
+	def is_branded(self):
+		return self.brand != 0
 
 
 	def is_unit(self):
@@ -921,16 +921,6 @@ class Type(Entity):
 
 
 	@staticmethod
-	def is_diff_brand(a, b):
-		if a.distinct != None or b.distinct != None:
-			if a.distinct == None or b.distinct == None:
-				return True
-			if not Type.eq(a.distinct, b.distinct):
-				return True
-		return False
-
-
-	@staticmethod
 	def eq(a, b, opt=[]):
 		assert (a != None) and isinstance(a, Type)
 		assert (b != None) and isinstance(b, Type)
@@ -944,13 +934,8 @@ class Type(Entity):
 		if a.__class__.__name__ != b.__class__.__name__:
 			return False
 
-		if Type.is_diff_brand(a, b):
+		if a.brand !=  b.brand:
 			return False
-#		if a.distinct != None or b.distinct != None:
-#			if a.distinct == None or b.distinct == None:
-#				return False
-#			if not Type.eq(a.distinct, b.distinct):
-#				return False
 
 
 		# проверять аттрибуты (volatile, const)

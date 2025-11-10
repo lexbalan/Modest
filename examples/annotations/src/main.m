@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-type MyInt32 = @distinct Int32
+type MyInt32 = @brand Int32
 @alias("c", "MY_ZERO")
 const myZero = MyInt32 0
 @alias("c", "MY_ONE")

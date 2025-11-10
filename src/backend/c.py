@@ -936,7 +936,7 @@ def str_value_cons(x, ctx):
 	if type.is_record():
 		return str_value_cons_record(x, ctx)
 
-	if type.is_distinct():
+	if type.is_branded():
 		return str_cast(type, value, ctx)
 
 	if type.is_char() and from_type.is_string():

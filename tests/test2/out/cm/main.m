@@ -10,13 +10,15 @@ type Point = record {
 }
 
 
-type MyInt32 = @distinct Int32
-type MyInt322 = @distinct MyInt32
+type MyInt32 = @brand Int32
+type MyInt322 = @brand Int32
 
 
 func fx (i: MyInt322) -> Unit {
 	//
 }
+
+
 
 
 public func main () -> Int32 {
@@ -27,6 +29,10 @@ public func main () -> Int32 {
 	printf("p.x = %d\n", p.x)
 	printf("p.y = %d\n", p.y)
 
+	var x1 = MyInt32 0
+	var x2 = MyInt322 x1
+
+	fx(MyInt322 Nat32 1)
 
 	fx(MyInt322 5)
 

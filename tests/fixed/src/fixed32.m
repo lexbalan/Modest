@@ -2,7 +2,7 @@
 include "libc/stdio"
 
 
-public type Fixed32 = @distinct Word32
+public type Fixed32 = @brand Word32
 
 const multiplier = Int32 (Word32 1 << 16)
 

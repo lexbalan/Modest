@@ -22,7 +22,7 @@ def cons_can(to, from_type, method, ti):
 	assert(isinstance(to, Type))
 	assert(isinstance(from_type, Type))
 
-	if Type.is_diff_brand(to, from_type):
+	if to.brand != from_type.brand:
 		if method == 'implicit':
 			return False
 

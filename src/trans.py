@@ -83,8 +83,8 @@ context = None  # current context (symtab)
 cdef = None
 
 
-# for @distinct types
-#distinct_cnt = 0
+# for @brand types
+brand_cnt = 0
 
 
 
@@ -516,7 +516,7 @@ def do_type_func(x, func_id="_"):
 
 
 def add_spices_type(t, atts):
-	global distinct_cnt
+	global brand_cnt
 
 	if atts == []:
 		return t
@@ -527,13 +527,13 @@ def add_spices_type(t, atts):
 		k = a['kind']
 		nt.annotations[k] = {}
 
-		if k == 'distinct':
-			#info("distinct type", nt.ti)
-			nt.distinct = t
+		if k == 'brand':
+			brand_cnt += 1
+			nt.brand = brand_cnt
 
 		#elif k == 'refined':
 		#	#info("refined type", nt.ti)
-		#	nt.distinct = t
+		#	nt.brand = t
 
 		# Для C некоторые атрибуты типа массива -
 		# это атрибуты типа его элементов

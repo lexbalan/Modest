@@ -189,8 +189,8 @@ def str_type(t):
 
 	#s = ""
 
-	#if t.hasAttribute2('distinct'):
-	#	s += "@distinct "
+	#if t.hasAttribute2('brand'):
+	#	s += "@brand "
 
 	# Если тип связан с идентификатором - распечатаем его
 	id_str = get_id_str(t)

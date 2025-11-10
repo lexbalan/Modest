@@ -17,7 +17,7 @@ struct Point {
 typedef struct Point Point;
 
 typedef int32_t MyInt32;
-typedef MyInt32 MyInt322;
+typedef int32_t MyInt322;
 
 static void fx(MyInt322 i) {
 	//
@@ -32,6 +32,10 @@ int32_t main(void) {
 	printf("p.x = %d\n", p.x);
 	printf("p.y = %d\n", p.y);
 
+	MyInt32 x1 = (MyInt32)0;
+	MyInt322 x2 = (MyInt322)x1;
+
+	fx((MyInt322)1);
 
 	fx((MyInt322)5);
 

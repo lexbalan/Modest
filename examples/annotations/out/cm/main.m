@@ -3,7 +3,7 @@ include "stdio"
 // examples/annotations/src/main.m
 
 
-type MyInt32 = @distinct Int32
+type MyInt32 = @brand Int32
 
 @alias()
 const myZero = MyInt32 0
@@ -14,8 +14,8 @@ const myOne = MyInt32 1
 
 // These refined MyInt32 types are compatible with MyInt32
 // but not compatible with anything else (e.g. between them)
-type MyInt32_2 = @distinct MyInt32
-type MyInt32_3 = @distinct MyInt32
+type MyInt32_2 = @brand MyInt32
+type MyInt32_3 = @brand MyInt32
 
 
 const cvb = Int32 0

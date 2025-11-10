@@ -95,14 +95,14 @@ func testFixed () -> Unit {
 }
 
 
-type NewType = @distinct Int32
+type NewType = @brand Int32
 const newZero = NewType 0
 const newOne = NewType 1
 const newTwo = NewType 2
 const newThree = NewType 3
 
 
-func distinctCheck () -> Unit {
+func brandCheck () -> Unit {
 	var a: NewType
 	var b: NewType
 	let x: NewType = a + b + newZero + NewType 0

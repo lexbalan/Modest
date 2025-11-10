@@ -234,7 +234,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 };
 
 %MyInt32 = type %Int32;
-%MyInt322 = type %MyInt32;
+%MyInt322 = type %Int32;
 define internal void @fx(%MyInt322 %i) {
 	;
 	ret void
@@ -250,6 +250,13 @@ define %Int32 @main() {
 	%6 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1
 	%7 = load %Int32, %Int32* %6
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Int32 %7)
+	%9 = alloca %MyInt32, align 4
+	store %MyInt32 0, %MyInt32* %9
+	%10 = alloca %MyInt322, align 4
+	%11 = load %MyInt32, %MyInt32* %9
+	%12 = bitcast %MyInt32 %11 to %MyInt322
+	store %MyInt322 %12, %MyInt322* %10
+	call void @fx(%MyInt322 1)
 	call void @fx(%MyInt322 5)
 	ret %Int32 0
 }

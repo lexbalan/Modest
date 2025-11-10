@@ -110,7 +110,7 @@ typedef int32_t NewType;
 #define newTwo  ((NewType)2)
 #define newThree  ((NewType)3)
 
-static void distinctCheck()
+static void brandCheck()
 {
 	NewType a;
 	NewType b;
