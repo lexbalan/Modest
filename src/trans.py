@@ -2771,7 +2771,6 @@ def add_spices_def(x, ast_atts):
 
 		x.annotations.update({kind: annotation})
 
-
 		if kind in [
 			'used', 'unused', 'inline',
 			'inlinehint', 'noinline', 'alignment',
@@ -2794,6 +2793,8 @@ def add_spices_def(x, ast_atts):
 			add_att(x, 'id:nodecorate')
 
 		elif kind == 'extern':
+			# 1. @extern()
+			# 2. @extern("C")
 			add_att(x, "extern")
 			args = a['args']
 			if len(args) > 0:
@@ -2801,13 +2802,12 @@ def add_spices_def(x, ast_atts):
 				if arg == 'C':
 					add_att(x, 'id:nodecorate')
 		elif kind == 'nodecorate':
+			# @nodecorate
 			add_att(x, 'id:nodecorate')
+
 		elif kind == 'c_no_print':
 			add_att(x, "c_no_print")
-			pass
-		elif kind == 'info':
-			msg = str(a['args'][0]['value']['str'])
-			info(msg, x.ti)
+
 		else:
 			print(a)
 			exit(1)
