@@ -1,26 +1,26 @@
+include "time"
+include "string"
+include "stdio"
 
-include "libc/time"
-include "libc/string"
-include "libc/stdio"
 
 
 
 public type Date = @public record {
-	year: Nat32
-	month: Nat8
-	day: Nat8
+	public year: Nat32
+	public month: Nat8
+	public day: Nat8
 }
 
 public type Time = @public record {
-	hour: Nat8
-	minute: Nat8
-	second: Nat8
+	public hour: Nat8
+	public minute: Nat8
+	public second: Nat8
 }
 
 
 public type DateTime = @public record {
-	date: Date
-	time: Time
+	public date: Date
+	public time: Time
 }
 
 
@@ -28,13 +28,13 @@ func localTimeNow () -> StructTM {
 	var t: TimeT
 	time(&t)
 	var tm: StructTM
-    let tm2 = localtime_r(&t, &tm)
+	let tm2: *StructTM = localtime_r(&t, &tm)
 	return tm
 }
 
 
 public func timeNow () -> Time {
-	let tm = localTimeNow()
+	let tm: StructTM = localTimeNow()
 	return Time {
 		hour = unsafe Nat8 tm.tm_hour
 		minute = unsafe Nat8 tm.tm_min
@@ -44,7 +44,7 @@ public func timeNow () -> Time {
 
 
 public func dateNow () -> Date {
-	let tm = localTimeNow()
+	let tm: StructTM = localTimeNow()
 	return Date {
 		year = unsafe Nat32 tm.tm_year + 1900
 		month = unsafe Nat8 tm.tm_mon + 1
@@ -54,7 +54,7 @@ public func dateNow () -> Date {
 
 
 public func dateTimeNow () -> DateTime {
-	let tm = localTimeNow()
+	let tm: StructTM = localTimeNow()
 	return DateTime {
 		date = {
 			year = unsafe Nat32 tm.tm_year + 1900
@@ -70,14 +70,14 @@ public func dateTimeNow () -> DateTime {
 }
 
 
-public func dayOfYear() -> Nat32 {
-	let tm = localTimeNow()
+public func dayOfYear () -> Nat32 {
+	let tm: StructTM = localTimeNow()
 	return unsafe Nat32 tm.tm_yday
 }
 
 
-public func dayOfWeek() -> Nat8 {
-	let tm = localTimeNow()
+public func dayOfWeek () -> Nat8 {
+	let tm: StructTM = localTimeNow()
 	return unsafe Nat8 tm.tm_wday
 }
 
@@ -85,10 +85,8 @@ public func dayOfWeek() -> Nat8 {
 
 
 public func sprintDate (s: *[]Char8) -> Int32 {
-	let dt = dateTimeNow()
-	return sprintf(
-		s
-		"%d-%02d-%02d"
+	let dt: DateTime = dateTimeNow()
+	return sprintf(s, "%d-%02d-%02d"
 		dt.date.year
 		dt.date.month
 		dt.date.day
@@ -97,10 +95,8 @@ public func sprintDate (s: *[]Char8) -> Int32 {
 
 
 public func sprintTime (s: *[]Char8) -> Int32 {
-	let dt = dateTimeNow()
-	return sprintf(
-		s
-		"%02d:%02d:%02d"
+	let dt: DateTime = dateTimeNow()
+	return sprintf(s, "%02d:%02d:%02d"
 		dt.time.hour
 		dt.time.minute
 		dt.time.second
@@ -108,13 +104,12 @@ public func sprintTime (s: *[]Char8) -> Int32 {
 }
 
 
-public func sprintDateTime (s: *[]Char8) -> @unused Int32 {
-	let delimiter = Char8 ' '
-	let x0 = sprintDate(&s[0:])
+public func sprintDateTime (s: *[]Char8) -> Int32 {
+	let delimiter = Char8 " "
+	let x0: Int32 = sprintDate(&s[0:])
 	s[x0] = delimiter
-	let x1 = sprintTime(&s[x0+1:])
-	s[x0 + 1 + x1] = '\0'
+	let x1: Int32 = sprintTime(&s[x0 + 1:])
+	s[x0 + 1 + x1] = "\x0"
 	return x0 + 1 + x1
 }
-
 

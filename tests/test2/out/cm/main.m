@@ -1,40 +1,35 @@
+import "lightfood/datetime"
 include "stdio"
 include "stdlib"
 include "string"
 
-
-
-type Point = record {
-	x: Int32 = 1
-	y: Int32 = 2
-}
-
-
-type MyInt32 = @brand Int32
-type MyInt322 = @brand Int32
-
-
-func fx (i: MyInt322) -> Unit {
-	//
-}
-
+import "lightfood/datetime" as datetime
 
 
 
 public func main () -> Int32 {
 	printf("test2\n")
 
-	var p: Point = Point {x = 0}
+	let dt: DateTime = datetime.dateTimeNow()
 
-	printf("p.x = %d\n", p.x)
-	printf("p.y = %d\n", p.y)
+	printf("dateTimeNow = {\n")
+	printf("\tdate = {\n")
+	printf("\t\tyear = %d\n", dt.date.year)
+	printf("\t\tmonth = %d\n", dt.date.month)
+	printf("\t\tday = %d\n", dt.date.day)
+	printf("\t}\n")
+	printf("\ttime = {\n")
+	printf("\t\thour = %d\n", dt.time.hour)
+	printf("\t\tminute = %d\n", dt.time.minute)
+	printf("\t\tsecond = %d\n", dt.time.second)
+	printf("\t}\n")
+	printf("}\n")
 
-	var x1 = MyInt32 0
-	var x2 = MyInt322 x1
 
-	fx(MyInt322 Nat32 1)
+	var dateTimeStr: [32]Char8
+	datetime.sprintDateTime(&dateTimeStr)
+	printf("dt = '%s'\n", &dateTimeStr)
 
-	fx(MyInt322 5)
 
 	return 0
 }

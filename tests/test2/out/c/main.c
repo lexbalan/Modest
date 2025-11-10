@@ -10,34 +10,29 @@
 
 
 
-struct Point {
-	int32_t x;
-	int32_t y;
-};
-typedef struct Point Point;
-
-typedef int32_t MyInt32;
-typedef int32_t MyInt322;
-
-static void fx(MyInt322 i) {
-	//
-}
-
-
 int32_t main(void) {
 	printf("test2\n");
 
-	Point p = (Point){.x = 0};
+	const datetime_DateTime dt = datetime_dateTimeNow();
 
-	printf("p.x = %d\n", p.x);
-	printf("p.y = %d\n", p.y);
+	printf("dateTimeNow = {\n");
+	printf("\tdate = {\n");
+	printf("\t\tyear = %d\n", dt.date.year);
+	printf("\t\tmonth = %d\n", dt.date.month);
+	printf("\t\tday = %d\n", dt.date.day);
+	printf("\t}\n");
+	printf("\ttime = {\n");
+	printf("\t\thour = %d\n", dt.time.hour);
+	printf("\t\tminute = %d\n", dt.time.minute);
+	printf("\t\tsecond = %d\n", dt.time.second);
+	printf("\t}\n");
+	printf("}\n");
 
-	MyInt32 x1 = (MyInt32)0;
-	MyInt322 x2 = (MyInt322)x1;
 
-	fx((MyInt322)1);
+	char dateTimeStr[32];
+	datetime_sprintDateTime((char *)&dateTimeStr);
+	printf("dt = '%s'\n", (char *)&dateTimeStr);
 
-	fx((MyInt322)5);
 
 	return 0;
 }
