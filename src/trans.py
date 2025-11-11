@@ -972,7 +972,7 @@ def do_value_call(x):
 		ftype = ftype.to
 
 	if not ftype.is_func():
-		error("expected function or pointer to function", x)
+		error("expected function or pointer to function", x['ti'])
 
 	params = ftype.params
 
@@ -983,7 +983,7 @@ def do_value_call(x):
 
 	if nargs > npars:
 		if not ftype.extra_args:
-			error("too many arguments", x)
+			error("too many arguments", x['ti'])
 			return ValueBad(x['ti'])
 
 
@@ -1066,7 +1066,7 @@ def do_value_call(x):
 
 	#info("%d, %d" % (len(sorted_args), npars), x['ti'])
 	if len(sorted_args) < npars:
-		error("not enough arguments", x)
+		error("not enough arguments", x['ti'])
 		return ValueBad(x['ti'])
 
 	#
@@ -1097,7 +1097,6 @@ def do_value_call(x):
 	nv = ValueCall(ftype.to, fn, sorted_args, ti=x['ti'])
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
-
 
 
 
@@ -1289,7 +1288,7 @@ def do_value_access(x):
 
 	# check if is record
 	if not record_type.is_record():
-		error("expected record or pointer to record", x)
+		error("expected record or pointer to record", x['ti'])
 		return ValueBad(x['ti'])
 
 	field = htype.record_field_get(record_type, field_id.str)

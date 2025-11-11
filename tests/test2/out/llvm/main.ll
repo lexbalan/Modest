@@ -281,54 +281,17 @@ declare %Int32 @datetime_sprintDateTime([0 x %Char8]* %s)
 ; end from import "datetime"
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [7 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 10, i8 0]
-@str2 = private constant [17 x i8] [i8 100, i8 97, i8 116, i8 101, i8 84, i8 105, i8 109, i8 101, i8 78, i8 111, i8 119, i8 32, i8 61, i8 32, i8 123, i8 10, i8 0]
-@str3 = private constant [11 x i8] [i8 9, i8 100, i8 97, i8 116, i8 101, i8 32, i8 61, i8 32, i8 123, i8 10, i8 0]
-@str4 = private constant [13 x i8] [i8 9, i8 9, i8 121, i8 101, i8 97, i8 114, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str5 = private constant [14 x i8] [i8 9, i8 9, i8 109, i8 111, i8 110, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str6 = private constant [12 x i8] [i8 9, i8 9, i8 100, i8 97, i8 121, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str7 = private constant [4 x i8] [i8 9, i8 125, i8 10, i8 0]
-@str8 = private constant [11 x i8] [i8 9, i8 116, i8 105, i8 109, i8 101, i8 32, i8 61, i8 32, i8 123, i8 10, i8 0]
-@str9 = private constant [13 x i8] [i8 9, i8 9, i8 104, i8 111, i8 117, i8 114, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str10 = private constant [15 x i8] [i8 9, i8 9, i8 109, i8 105, i8 110, i8 117, i8 116, i8 101, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str11 = private constant [15 x i8] [i8 9, i8 9, i8 115, i8 101, i8 99, i8 111, i8 110, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str12 = private constant [4 x i8] [i8 9, i8 125, i8 10, i8 0]
-@str13 = private constant [3 x i8] [i8 125, i8 10, i8 0]
-@str14 = private constant [11 x i8] [i8 100, i8 116, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
+@str1 = private constant [17 x i8] [i8 100, i8 97, i8 116, i8 101, i8 116, i8 105, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
 ; -- endstrings --
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
-	%2 = call %datetime_DateTime @datetime_dateTimeNow()
-	%3 = alloca %datetime_DateTime
-	store %datetime_DateTime %2, %datetime_DateTime* %3
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*))
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*))
-	%6 = getelementptr %datetime_DateTime, %datetime_DateTime* %3, %Int32 0, %Int32 0, %Int32 0
-	%7 = load %Nat32, %Nat32* %6
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), %Nat32 %7)
-	%9 = getelementptr %datetime_DateTime, %datetime_DateTime* %3, %Int32 0, %Int32 0, %Int32 1
-	%10 = load %Nat8, %Nat8* %9
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), %Nat8 %10)
-	%12 = getelementptr %datetime_DateTime, %datetime_DateTime* %3, %Int32 0, %Int32 0, %Int32 2
-	%13 = load %Nat8, %Nat8* %12
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str6 to [0 x i8]*), %Nat8 %13)
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str7 to [0 x i8]*))
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str8 to [0 x i8]*))
-	%17 = getelementptr %datetime_DateTime, %datetime_DateTime* %3, %Int32 0, %Int32 1, %Int32 0
-	%18 = load %Nat8, %Nat8* %17
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str9 to [0 x i8]*), %Nat8 %18)
-	%20 = getelementptr %datetime_DateTime, %datetime_DateTime* %3, %Int32 0, %Int32 1, %Int32 1
-	%21 = load %Nat8, %Nat8* %20
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str10 to [0 x i8]*), %Nat8 %21)
-	%23 = getelementptr %datetime_DateTime, %datetime_DateTime* %3, %Int32 0, %Int32 1, %Int32 2
-	%24 = load %Nat8, %Nat8* %23
-	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str11 to [0 x i8]*), %Nat8 %24)
-	%26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str12 to [0 x i8]*))
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str13 to [0 x i8]*))
-	%28 = alloca [32 x %Char8], align 1
-	%29 = bitcast [32 x %Char8]* %28 to [0 x %Char8]*
-	%30 = call %Int32 @datetime_sprintDateTime([0 x %Char8]* %29)
-	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str14 to [0 x i8]*), [32 x %Char8]* %28)
+	;printf("test2\n")
+	%1 = call %datetime_DateTime @datetime_dateTimeNow()
+	%2 = alloca %datetime_DateTime
+	store %datetime_DateTime %1, %datetime_DateTime* %2
+	%3 = alloca [32 x %Char8], align 1
+	%4 = bitcast [32 x %Char8]* %3 to [0 x %Char8]*
+	%5 = call %Int32 @datetime_sprintDateTime([0 x %Char8]* %4)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*), [32 x %Char8]* %3)
 	ret %Int32 0
 }
 
