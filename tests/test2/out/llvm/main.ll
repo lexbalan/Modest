@@ -282,6 +282,8 @@ declare %Int32 @datetime_sprintDateTime([0 x %Char8]* %s)
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [17 x i8] [i8 100, i8 97, i8 116, i8 101, i8 116, i8 105, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
+@str2 = private constant [16 x i8] [i8 100, i8 97, i8 121, i8 79, i8 102, i8 89, i8 101, i8 97, i8 114, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str3 = private constant [16 x i8] [i8 100, i8 97, i8 121, i8 79, i8 102, i8 87, i8 101, i8 101, i8 107, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 ; -- endstrings --
 define %Int32 @main() {
 	;printf("test2\n")
@@ -292,6 +294,10 @@ define %Int32 @main() {
 	%4 = bitcast [32 x %Char8]* %3 to [0 x %Char8]*
 	%5 = call %Int32 @datetime_sprintDateTime([0 x %Char8]* %4)
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*), [32 x %Char8]* %3)
+	%7 = call %Nat32 @datetime_dayOfYear()
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str2 to [0 x i8]*), %Nat32 %7)
+	%9 = call %Nat8 @datetime_dayOfWeek()
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Nat8 %9)
 	ret %Int32 0
 }
 

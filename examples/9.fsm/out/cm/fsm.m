@@ -13,10 +13,10 @@ public const maxStates = 16
 public type Handler = (x: *FSM) -> Unit
 
 public type StateDesc = @public record {
-	public name: [nameMaxLength]Char8
-	public entry: *Handler
-	public loop: *Handler
-	public exit: *Handler
+	name: [nameMaxLength]Char8
+	entry: *Handler
+	loop: *Handler
+	exit: *Handler
 }
 
 public type States = [maxStates]StateDesc
@@ -27,11 +27,11 @@ public const substateLeaving = 2
 
 
 public type FSM = @public record {
-	public name: [nameMaxLength]Char8
-	public state: Nat32
-	public nexstate: Nat32
-	public substate: Nat32
-	public states: States
+	name: [nameMaxLength]Char8
+	state: Nat32
+	nexstate: Nat32
+	substate: Nat32
+	states: States
 }
 
 

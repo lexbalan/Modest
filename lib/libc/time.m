@@ -17,7 +17,7 @@ public type ClockT = UnsignedLong
 
 @alias("c", "struct tm")
 public type StructTM = @public record {
-	tm_sec: Int	   // Seconds [0-59]
+	tm_sec: Int	   // Seconds [0-60]
 	tm_min: Int	   // Minutes [0-59]
 	tm_hour: Int   // Hours	[0-23]
 	tm_mday: Int   // Day of month [1-31]
@@ -29,7 +29,7 @@ public type StructTM = @public record {
 
 //$if __USE_MISC == 1
 	tm_gmtoff: LongInt	 // Seconds east of UTC
-	tm_zone: *ConstChar// Timezone abbreviation
+	tm_zone: *ConstChar  // Timezone abbreviation
 //$else
 //	__tm_gmtoff: LongInt   // Seconds east of UTC
 //	__tm_zone: *ConstChar  // Timezone abbreviation

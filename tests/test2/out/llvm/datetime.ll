@@ -348,7 +348,8 @@ define %Nat32 @datetime_dayOfYear() {
 	%3 = getelementptr %StructTM, %StructTM* %2, %Int32 0, %Int32 7
 	%4 = load %Int, %Int* %3
 	%5 = bitcast %Int %4 to %Nat32
-	ret %Nat32 %5
+	%6 = add %Nat32 %5, 1
+	ret %Nat32 %6
 }
 
 define %Nat8 @datetime_dayOfWeek() {
@@ -358,7 +359,15 @@ define %Nat8 @datetime_dayOfWeek() {
 	%3 = getelementptr %StructTM, %StructTM* %2, %Int32 0, %Int32 6
 	%4 = load %Int, %Int* %3
 	%5 = trunc %Int %4 to %Nat8
-	ret %Nat8 %5
+; if_0
+	%6 = icmp ugt %Nat8 %5, 0
+	br %Bool %6 , label %then_0, label %endif_0
+then_0:
+	%7 = sub %Nat8 %5, 1
+	ret %Nat8 %7
+	br label %endif_0
+endif_0:
+	ret %Nat8 7
 }
 
 define %Int32 @datetime_sprintDate([0 x %Char8]* %s) {

@@ -130,6 +130,8 @@ def str_type_record(t):
 	#if t.hasAttribute2('packed'):
 	#	s += "@packed "
 
+	is_public = t.hasAttribute2('public')
+
 	s += "record {"
 	indent_up()
 
@@ -151,8 +153,12 @@ def str_type_record(t):
 		s += str_nl_indent(field.nl)
 		prev_nl = field.nl
 
-		if field.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
-			s += "public "
+		if is_public:
+			if field.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
+				s += "private "
+		else:
+			if field.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
+				s += "public "
 
 		s += str_field(field)
 

@@ -43,10 +43,12 @@ public func timeNow () -> Time {
 }
 
 
+const baseYear = 1900
+
 public func dateNow () -> Date {
 	let tm = localTimeNow()
 	return Date {
-		year = unsafe Nat32 tm.tm_year + 1900
+		year = unsafe Nat32 tm.tm_year + baseYear
 		month = unsafe Nat8 tm.tm_mon + 1
 		day = unsafe Nat8 tm.tm_mday
 	}
@@ -57,7 +59,7 @@ public func dateTimeNow () -> DateTime {
 	let tm = localTimeNow()
 	return DateTime {
 		date = {
-			year = unsafe Nat32 tm.tm_year + 1900
+			year = unsafe Nat32 tm.tm_year + baseYear
 			month = unsafe Nat8 tm.tm_mon + 1
 			day = unsafe Nat8 tm.tm_mday
 		}
@@ -70,15 +72,19 @@ public func dateTimeNow () -> DateTime {
 }
 
 
-public func dayOfYear() -> Nat32 {
+public func dayOfYear () -> Nat32 {
 	let tm = localTimeNow()
-	return unsafe Nat32 tm.tm_yday
+	return unsafe Nat32 tm.tm_yday + 1
 }
 
 
-public func dayOfWeek() -> Nat8 {
+public func dayOfWeek () -> Nat8 {
 	let tm = localTimeNow()
-	return unsafe Nat8 tm.tm_wday
+	let cwday = unsafe Nat8 tm.tm_wday
+	if cwday > 0 {
+		return cwday - 1
+	}
+	return 7
 }
 
 

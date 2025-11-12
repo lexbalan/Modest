@@ -6,21 +6,21 @@ include "stdio"
 
 
 public type Date = @public record {
-	public year: Nat32
-	public month: Nat8
-	public day: Nat8
+	year: Nat32
+	month: Nat8
+	day: Nat8
 }
 
 public type Time = @public record {
-	public hour: Nat8
-	public minute: Nat8
-	public second: Nat8
+	hour: Nat8
+	minute: Nat8
+	second: Nat8
 }
 
 
 public type DateTime = @public record {
-	public date: Date
-	public time: Time
+	date: Date
+	time: Time
 }
 
 
@@ -43,10 +43,12 @@ public func timeNow () -> Time {
 }
 
 
+const baseYear = 1900
+
 public func dateNow () -> Date {
 	let tm: StructTM = localTimeNow()
 	return Date {
-		year = unsafe Nat32 tm.tm_year + 1900
+		year = unsafe Nat32 tm.tm_year + baseYear
 		month = unsafe Nat8 tm.tm_mon + 1
 		day = unsafe Nat8 tm.tm_mday
 	}
@@ -57,7 +59,7 @@ public func dateTimeNow () -> DateTime {
 	let tm: StructTM = localTimeNow()
 	return DateTime {
 		date = {
-			year = unsafe Nat32 tm.tm_year + 1900
+			year = unsafe Nat32 tm.tm_year + baseYear
 			month = unsafe Nat8 tm.tm_mon + 1
 			day = unsafe Nat8 tm.tm_mday
 		}
@@ -72,13 +74,17 @@ public func dateTimeNow () -> DateTime {
 
 public func dayOfYear () -> Nat32 {
 	let tm: StructTM = localTimeNow()
-	return unsafe Nat32 tm.tm_yday
+	return unsafe Nat32 tm.tm_yday + 1
 }
 
 
 public func dayOfWeek () -> Nat8 {
 	let tm: StructTM = localTimeNow()
-	return unsafe Nat8 tm.tm_wday
+	let cwday: Nat8 = unsafe Nat8 tm.tm_wday
+	if cwday > 0 {
+		return cwday - 1
+	}
+	return 7
 }
 
 

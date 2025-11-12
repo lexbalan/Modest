@@ -30,10 +30,12 @@ datetime_Time datetime_timeNow(void) {
 }
 
 
+#define BASE_YEAR  1900
+
 datetime_Date datetime_dateNow(void) {
 	const struct tm tm = localTimeNow();
 	return (datetime_Date){
-		.year = (uint32_t)abs((int)tm.tm_year) + 1900,
+		.year = (uint32_t)abs((int)tm.tm_year) + BASE_YEAR,
 		.month = (uint8_t)abs((int)tm.tm_mon) + 1,
 		.day = (uint8_t)abs((int)tm.tm_mday)
 	};
@@ -44,7 +46,7 @@ datetime_DateTime datetime_dateTimeNow(void) {
 	const struct tm tm = localTimeNow();
 	return (datetime_DateTime){
 		.date = {
-			.year = (uint32_t)abs((int)tm.tm_year) + 1900,
+			.year = (uint32_t)abs((int)tm.tm_year) + BASE_YEAR,
 			.month = (uint8_t)abs((int)tm.tm_mon) + 1,
 			.day = (uint8_t)abs((int)tm.tm_mday)
 		},
@@ -59,13 +61,17 @@ datetime_DateTime datetime_dateTimeNow(void) {
 
 uint32_t datetime_dayOfYear(void) {
 	const struct tm tm = localTimeNow();
-	return (uint32_t)abs((int)tm.tm_yday);
+	return (uint32_t)abs((int)tm.tm_yday) + 1;
 }
 
 
 uint8_t datetime_dayOfWeek(void) {
 	const struct tm tm = localTimeNow();
-	return (uint8_t)abs((int)tm.tm_wday);
+	const uint8_t cwday = (uint8_t)abs((int)tm.tm_wday);
+	if (cwday > 0) {
+		return cwday - 1;
+	}
+	return 7;
 }
 
 

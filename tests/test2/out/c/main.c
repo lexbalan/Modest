@@ -17,6 +17,8 @@ int32_t main(void) {
 	char dateTimeStr[32];
 	datetime_sprintDateTime((char *)&dateTimeStr);
 	printf("datetime = '%s'\n", (char *)&dateTimeStr);
+	printf("dayOfYear = %u\n", datetime_dayOfYear());
+	printf("dayOfWeek = %u\n", datetime_dayOfWeek());
 
 	return 0;
 }
