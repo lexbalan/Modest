@@ -7,7 +7,7 @@ from hlir import *
 from error import *
 from lexer import CmLexer
 from parser import Parser
-from common import settings, features
+from common import settings
 import type as htype
 
 from value.bool import value_bool_create
@@ -164,7 +164,7 @@ def ctx_value_get(id_str, shallow=False):
 
 
 def cmodule_feature_add(s):
-	features.append(s)
+	cmodule.att.append(s)
 
 
 typeSysWord = None
@@ -383,6 +383,8 @@ def do_field(x):
 
 	f.access_level = x['access_modifier']
 
+	#f.access_level = get_access_level(x)
+
 	#add_spices_any(f, x['anno'])
 	return f
 
@@ -449,7 +451,6 @@ def do_type_array(x):
 
 	if not volume.isValueUndef():
 		if volume.isValueRuntime():
-			#info("VLA", t['ti'])
 			if is_local_context():
 				global cfunc
 				cfunc.addAttribute('stacksave')
@@ -530,10 +531,6 @@ def add_spices_type(t, atts):
 		if k == 'brand':
 			brand_cnt += 1
 			nt.brand = brand_cnt
-
-		#elif k == 'refined':
-		#	#info("refined type", nt.ti)
-		#	nt.brand = t
 
 		# Для C некоторые атрибуты типа массива -
 		# это атрибуты типа его элементов
@@ -978,7 +975,6 @@ def do_value_call(x):
 
 	npars = len(params)
 	nargs = len(x['args'])
-#	info("nargs = %s " % nargs, x['ti'])
 
 
 	if nargs > npars:
@@ -1012,8 +1008,6 @@ def do_value_call(x):
 		arg = do_arg(param, av)
 		sorted_args.append(arg)
 		i += 1
-
-	#info("1LL %d, %d" % (len(args), npars), x['ti'])
 
 	# проверим все именованные аргументы на наличие одноименного параметра
 	u = 0
@@ -1049,7 +1043,6 @@ def do_value_call(x):
 			if param.id.str == a['key']['str']:
 				found = True
 				break
-			# mass
 			k += 1
 
 
@@ -1064,7 +1057,6 @@ def do_value_call(x):
 		j += 1
 
 
-	#info("%d, %d" % (len(sorted_args), npars), x['ti'])
 	if len(sorted_args) < npars:
 		error("not enough arguments", x['ti'])
 		return ValueBad(x['ti'])
@@ -1147,7 +1139,6 @@ def do_value_index(x):
 		array_typ = left.type
 
 		if left.isValueImmediate() and index.isValueImmediate():
-			#info("immediate index", x['ti'])
 			index_imm = index.asset
 
 			if index_imm >= array_typ.volume.asset:
@@ -1167,7 +1158,6 @@ def do_value_index(x):
 
 
 def do_value_slice(x):
-	#info("do_value_slice", x['ti'])
 	ti = x['ti']
 
 	left = do_value(x['left'])
@@ -1524,9 +1514,8 @@ def do_value_immediate_string(x):
 
 
 def do_value_unsafe(x):
-	#info("do_value_unsafe", ti)
 	ti = x['ti']
-	if not 'unsafe' in features:
+	if not 'unsafe' in cmodule.att:
 		error("for use 'unsafe' operator required -funsafe option", ti)
 
 	global unsafe_mode
@@ -1570,7 +1559,6 @@ def add_spices_value(v, atts):
 
 def do_value(x):
 	assert(x['isa'] == 'ast_value')
-	#info("do_value", x['ti'])
 	v = None
 
 	k = x['kind']
@@ -1945,8 +1933,10 @@ def def_type_common(x, nt):
 	definition = StmtDefType(id, nt, None, x['ti'])
 	definition.module = cmodule
 	definition.parent = cmodule
-	definition.access_level = x['access_modifier']
+	definition.access_level = get_access_level(x)
 	definition.nl = x['nl']
+
+#	info("%s" % get_access_level(x), x['ti'])
 
 	prev_cdef = cdef
 	cdef = definition
@@ -1957,7 +1947,7 @@ def def_type_common(x, nt):
 		# 'default' -> 'private' &
 		# 'default' -> 'public' for @public record
 		for f in ty.fields:
-			if f.access_level == HLIR_ACCESS_LEVEL_DEFAULT:
+			if f.access_level == HLIR_ACCESS_LEVEL_UNDEFINED:
 				if ty.hasAttribute2("public"):
 					f.access_level = HLIR_ACCESS_LEVEL_PUBLIC
 				else:
@@ -1968,11 +1958,9 @@ def def_type_common(x, nt):
 
 	definition.original_type = ty
 
-	#info("DT: " + str(ty), x['ti'])
 	# поскольку этот тип здесь связывается с идентификатором
 	# он уже не анонимный
 	if ty in cmodule.anon_recs:
-		#info("REM: " + str(ty), x['ti'])
 		cmodule.anon_recs.remove(ty)
 
 	# Замещаем внутренности undefined типа на тип справа
@@ -2029,12 +2017,12 @@ def def_const_common(x):
 
 	const_value.type.addAnnotation('const', {})
 
-	ctx_value_add(id.str, const_value, is_public=x['access_modifier'] == 'public')
+	ctx_value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 
 	definition = StmtDefConst(id, const_value, iv, x['ti'])
 
 	definition.module = cmodule
-	definition.access_level = x['access_modifier']
+	definition.access_level = get_access_level(x)
 	definition.nl = x['nl']
 	const_value.definition = definition
 	return definition
@@ -2047,8 +2035,6 @@ def def_const_global(x):
 
 	if definition.value.isValueRuntime():
 		error("runtime!", x['ti'])
-
-	#info("=%s" % definition.value.stage, x['ti'])
 
 	# TODO: centity -> instead cmodule/cfunc;
 	# rm Value#module -> tree instead
@@ -2080,7 +2066,7 @@ def def_var_common(x):
 	definition = StmtDefVar(id, None, None, x['ti'])
 	definition.module = cmodule
 	definition.parent = cmodule
-	definition.access_level = x['access_modifier']
+	definition.access_level = get_access_level(x)
 	if definition.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 		if settings['public_vars_forbidden']:
 			error("public variables are forbidden", x['ti'])
@@ -2108,7 +2094,7 @@ def def_var_common(x):
 	if tu == True and vu == True:
 		# ERROR: type & value undefined
 		nv = ValueBad(x['ti'])
-		ctx_value_add(id.str, nv, is_public=x['access_modifier']=='public')
+		ctx_value_add(id.str, nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 		return StmtBad(x['ti'])
 
 	elif tu == True and vu == False:
@@ -2151,9 +2137,7 @@ def def_var_common(x):
 
 	var_value = ValueVar(t, id, init_value=iv, ti=id.ti)
 	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
-
-	#cmodule_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
-	ctx_value_add(id.str, var_value, is_public=x['access_modifier'] == 'public')
+	ctx_value_add(id.str, var_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 	var_value.is_global_flag = True
 
 	definition.value = var_value
@@ -2212,10 +2196,6 @@ def def_func(x):
 
 	params = fn.type.params
 
-	#if len(params) > 0:
-	#	p0 = params[0]
-	#	if p0.id.str == 'self':
-	#		info("SELF", p0.ti)
 
 	i = 0
 	while i < len(params):
@@ -2223,7 +2203,7 @@ def def_func(x):
 		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
 		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
 		param_value.stage = HLIR_VALUE_STAGE_RUNTIME
-		ctx_value_add(param.id.str, param_value, is_public=x['access_modifier'] == 'public')
+		ctx_value_add(param.id.str, param_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 		i += 1
 
 	# for C backend, for #include <stdarg.h>
@@ -2324,7 +2304,6 @@ def do_import(x):
 	else:
 		_as = impline.split("/")[-1]
 
-	#info("AS %s" % _as, x['ti'])
 
 	abspath = get_import_abspath(impline, ext='.m')
 
@@ -2383,7 +2362,7 @@ def do_import(x):
 		# INCLUDE
 		# забираем публичные символы
 		# и забираем все определения (исключая дубликаты!)
-		if x['access_modifier']:
+		if True:
 			# public include
 			cmodule.symtab_public.extend(m.symtab_public)
 
@@ -2405,7 +2384,6 @@ def do_import(x):
 def do_directive(x):
 	global cmodule
 	global global_prefix
-	#info("directive %s" % x['kind'], x['ti'])
 	if x['kind'] == 'pragma':
 		args = x['args']
 		s0 = args[0]
@@ -2422,6 +2400,9 @@ def do_directive(x):
 			cmodule_feature_add(args[0])
 		elif s0 == 'unsafe':
 			cmodule_feature_add('unsafe')
+		elif s0 == 'public_module':
+			cmodule_feature_add('public_module')
+			pass
 		elif s0 == 'insert':
 			print("-INSERT " + args[1])
 			return StmtDirectiveInsert(args[1], x['ti'])
@@ -2566,6 +2547,19 @@ def value_update_incompleted_type(module, v, idStr):
 
 
 
+def get_access_level(x):
+	if is_local_context():
+		return HLIR_ACCESS_LEVEL_UNDEFINED
+
+	if x['access_modifier'] == HLIR_ACCESS_LEVEL_UNDEFINED:
+		if 'public_module' in cmodule.att:
+			return HLIR_ACCESS_LEVEL_PUBLIC
+		else:
+			return HLIR_ACCESS_LEVEL_PRIVATE
+	return x['access_modifier']
+
+
+
 def pre_imp(ast):
 	global cmodule
 
@@ -2576,7 +2570,7 @@ def pre_imp(ast):
 		kind = x['kind']
 
 		if isa == 'ast_definition':
-			is_public = x['access_modifier'] == 'public'
+			is_public = get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC
 			id = do_id(x['id'])
 			ti = id.ti
 
@@ -2622,7 +2616,7 @@ def pre_def(ast, is_include=False):
 		kind = x['kind']
 
 		if isa == 'ast_definition':
-			is_public = x['access_modifier'] == 'public'
+			is_public = get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC
 			id = x['id']
 			ti = id['ti']
 
@@ -2643,7 +2637,7 @@ def pre_def(ast, is_include=False):
 				definition.id = v.id
 				definition.parent = cmodule
 				definition.module = cmodule
-				definition.access_level = x['access_modifier']
+				definition.access_level = get_access_level(x)
 				definition.nl = x['nl']
 				v.definition = definition
 
@@ -2651,6 +2645,7 @@ def pre_def(ast, is_include=False):
 					v.parent = cmodule
 				ctx_value_add(id['str'], v, is_public=is_public)
 				v.is_global_flag = True
+
 
 
 def def_def(ast, is_include=False):
@@ -2680,7 +2675,6 @@ def def_def(ast, is_include=False):
 				if not is_include:
 					df.parent = cmodule
 
-				is_public = x['access_modifier'] == 'public'
 				cmodule.defs.append(df)
 
 		elif isa == 'ast_comment':

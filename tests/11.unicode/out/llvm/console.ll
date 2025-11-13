@@ -303,9 +303,7 @@ declare %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; end from import "utf"
 ; -- end print imports 'console' --
 ; -- strings --
-; -- endstrings --; lightfood/console.m
-
-;pragma do_not_include; for Int; for write(); for putchar(); for strlen, strcpy
+; -- endstrings --; lightfood/console.m; for Int; for write(); for putchar(); for strlen, strcpy
 define void @console_putchar8(%Char8 %c) {
 	call void @console_putchar_utf8(%Char8 %c)
 	ret void

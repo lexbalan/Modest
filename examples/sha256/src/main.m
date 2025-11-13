@@ -1,5 +1,7 @@
 // tests/sha256/src/main.m
 
+pragma unsafe
+
 include "libc/ctypes64"
 include "libc/stdio"
 

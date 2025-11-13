@@ -1,4 +1,6 @@
 
+pragma unsafe
+
 include "libc/stdio"
 include "libc/unistd"
 include "libc/ctype"

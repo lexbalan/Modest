@@ -252,7 +252,7 @@ class Parser:
 
 
 	def check_is_field(self):
-		self.match("public") or self.match("private")
+		self.parse_access_modifier()
 		if self.is_identifier():
 			self.skip1()
 			if not self.match(':'):
@@ -1403,15 +1403,14 @@ class Parser:
 	#
 
 	def stmt_let(self):
-		x = self.parse_stmt_xvar(access_modifier='private')[0]
+		x = self.parse_stmt_xvar(access_modifier='undefined')[0]
 		x['isa'] = 'ast_stmt'
 		x['kind'] = 'const'
 		return x
 
 
 	def stmt_var(self):
-		xx = self.parse_stmt_xvar(access_modifier='private')
-		return xx
+		return self.parse_stmt_xvar(access_modifier='undefined')
 
 
 	def stmt_if(self):
@@ -1530,7 +1529,7 @@ class Parser:
 			s = self.stmt_break()
 		elif self.match('type'):
 			s = self.parse_def_type()
-			s['access_modifier'] = 'private'
+			s['access_modifier'] = 'undefined'
 		elif self.match('const'):
 			s = self.stmt_let()
 		elif self.match('++'):
@@ -1621,11 +1620,11 @@ class Parser:
 
 
 	def parse_access_modifier(self):
-		if self.match('public') or self.match('export'):
+		if self.match('public'): #or self.match('export'):
 			return 'public'
 		elif self.match('private'):
 			return 'private'
-		return 'default'
+		return 'undefined'
 
 
 	def parse_comments_annotations(self, nl_cnt=0):
@@ -1813,7 +1812,7 @@ class Parser:
 		}
 
 
-	def parse_stmt_xvar(self, access_modifier='public'):
+	def parse_stmt_xvar(self, access_modifier='undefined'):
 		ti = self.ti()
 		id = self.parse_identifier()
 
@@ -1844,7 +1843,6 @@ class Parser:
 				'id': id,
 				'type': t,
 				'init_value': init_value,
-
 				'access_modifier': access_modifier,
 				'anno': [],
 				'nl': 1,
@@ -1991,7 +1989,6 @@ class Parser:
 
 		spaceline_cnt = 0
 
-		public_region = False
 
 		annotations = []
 		#comments = []
@@ -2001,19 +1998,7 @@ class Parser:
 			annotations.extend(ca[0])
 			spaceline_cnt = ca[1]
 
-			access_modifier = 'private'
-
-			#self = parse_access_modifier()
-			if self.match('public'):
-				access_modifier = 'public'
-				if self.match('{'):
-					public_region = True
-			elif self.match('private'):
-				pass
-
-
-			if public_region:
-				access_modifier = 'public'
+			access_modifier = self.parse_access_modifier()
 
 			ti = self.ti()
 

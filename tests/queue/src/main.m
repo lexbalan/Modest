@@ -1,5 +1,7 @@
 // tests/queue/src/main.m
 
+pragma unsafe
+
 include "libc/ctypes64"
 include "libc/math"
 include "libc/stdio"

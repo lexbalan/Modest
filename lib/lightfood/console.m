@@ -1,7 +1,6 @@
 // lightfood/console.m
 
-//pragma do_not_include
-
+pragma unsafe
 pragma c_include "./utf.h"
 pragma c_include "./console.h"
 
