@@ -539,7 +539,7 @@ public func ualarm (useconds: USecondsT, interval: USecondsT) -> USecondsT
 public func unlink (path: *[]ConstChar) -> Int
 
 // usleep - suspend execution for an interval
-public func usleep (useconds: USecondsT) -> Int
+public func usleep (useconds: USecondsT) -> @unused Int
 
 // vfork - create new process; share virtual memory
 public func vfork () -> PIDT

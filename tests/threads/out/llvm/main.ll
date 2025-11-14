@@ -10,6 +10,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Word32 = type i32
 %Word64 = type i64
 %Word128 = type i128
+%Word256 = type i256
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -18,13 +19,16 @@ target triple = "arm64-apple-macosx12.0.0"
 %Int32 = type i32
 %Int64 = type i64
 %Int128 = type i128
+%Int256 = type i256
 %Nat8 = type i8
 %Nat16 = type i16
 %Nat32 = type i32
 %Nat64 = type i64
 %Nat128 = type i128
+%Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
@@ -111,34 +115,36 @@ break_2:
 %Char = type %Char8;
 %ConstChar = type %Char;
 %SignedChar = type %Int8;
-%UnsignedChar = type %Int8;
+%UnsignedChar = type %Nat8;
 %Short = type %Int16;
-%UnsignedShort = type %Int16;
+%UnsignedShort = type %Nat16;
 %Int = type %Int32;
-%UnsignedInt = type %Int32;
+%UnsignedInt = type %Nat32;
 %LongInt = type %Int64;
-%UnsignedLongInt = type %Int64;
+%UnsignedLongInt = type %Nat64;
 %Long = type %Int64;
-%UnsignedLong = type %Int64;
+%UnsignedLong = type %Nat64;
 %LongLong = type %Int64;
-%UnsignedLongLong = type %Int64;
+%UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Int64;
-%Float = type double;
-%Double = type double;
-%LongDouble = type double;
+%UnsignedLongLongInt = type %Nat64;
+%Float = type %Float64;
+%Double = type %Float64;
+%LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type %Int64;
+%IntPtrT = type %Nat64;
 %PtrDiffT = type i8*;
 %OffT = type %Int64;
-%USecondsT = type %Int32;
+%USecondsT = type %Nat32;
 %PIDT = type %Int32;
-%UIDT = type %Int32;
-%GIDT = type %Int32;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
 ; from included stdio
-%File = type %Int8;
-%FposT = type %Int8;
+%File = type {
+};
+
+%FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -160,17 +166,18 @@ declare void @setbuf(%File* %f, %CharStr* %buf)
 declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare %Int @printf(%ConstCharStr* %s, ...)
-declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @printf(%ConstCharStr* %str, ...)
+declare %Int @scanf(%ConstCharStr* %str, ...)
 declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @snprintf(%CharStr* %buf, %SizeT %size, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -271,8 +278,8 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 1
-; ?? pthread ??
-; from import
+
+; from import "pthread"
 %PThread = type {
 };
 
@@ -291,104 +298,105 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 %PThreadBarrierAttrT = type i8*;
 %PThreadSpinlockT = type i8*;
 declare %Int @pthread_atfork(void ()* %prepare, void ()* %parent, void ()* %child)
-declare %Int @pthread_attr_destroy(PThreadAttrT* %a)
-declare %Int @pthread_attr_getstack(PThreadAttrT* %a, i8** %p, %SizeT* %ps)
-declare %Int @pthread_attr_getstacksize(PThreadAttrT* %a, %SizeT* %ps)
-declare %Int @pthread_attr_getstackaddr(PThreadAttrT* %a, i8** %p)
-declare %Int @pthread_attr_getguardsize(PThreadAttrT* %a, %SizeT* %ps)
-declare %Int @pthread_attr_getdetachstate(PThreadAttrT* %a, %Int* %i)
-declare %Int @pthread_attr_init(PThreadAttrT* %a)
-declare %Int @pthread_attr_setstacksize(PThreadAttrT* %a, %SizeT %s)
-declare %Int @pthread_attr_setstack(PThreadAttrT* %a, i8* %p, %SizeT %s)
-declare %Int @pthread_attr_setstackaddr(PThreadAttrT* %a, i8* %p)
-declare %Int @pthread_attr_setguardsize(PThreadAttrT* %a, %SizeT %s)
-declare %Int @pthread_attr_setdetachstate(PThreadAttrT* %a, %Int %i)
+declare %Int @pthread_attr_destroy(%PThreadAttrT* %a)
+declare %Int @pthread_attr_getstack(%PThreadAttrT* %a, i8** %p, %SizeT* %ps)
+declare %Int @pthread_attr_getstacksize(%PThreadAttrT* %a, %SizeT* %ps)
+declare %Int @pthread_attr_getstackaddr(%PThreadAttrT* %a, i8** %p)
+declare %Int @pthread_attr_getguardsize(%PThreadAttrT* %a, %SizeT* %ps)
+declare %Int @pthread_attr_getdetachstate(%PThreadAttrT* %a, %Int* %i)
+declare %Int @pthread_attr_init(%PThreadAttrT* %a)
+declare %Int @pthread_attr_setstacksize(%PThreadAttrT* %a, %SizeT %s)
+declare %Int @pthread_attr_setstack(%PThreadAttrT* %a, i8* %p, %SizeT %s)
+declare %Int @pthread_attr_setstackaddr(%PThreadAttrT* %a, i8* %p)
+declare %Int @pthread_attr_setguardsize(%PThreadAttrT* %a, %SizeT %s)
+declare %Int @pthread_attr_setdetachstate(%PThreadAttrT* %a, %Int %i)
 declare void @pthread_cleanup_pop(%Int %x)
 declare void @pthread_cleanup_push(void (i8*)* %f, i8* %arg)
-declare %Int @pthread_condattr_destroy(PThreadCondAttrT* %ca)
-declare %Int @pthread_condattr_init(PThreadCondAttrT* %ca)
-declare %Int @pthread_cond_broadcast(PThreadCondT* %c)
-declare %Int @pthread_cond_destroy(PThreadCondT* %c)
-declare %Int @pthread_cond_init(PThreadCondT* %c, PThreadCondAttrT* %ca)
-declare %Int @pthread_cond_signal(PThreadCondT* %c)
-declare %Int @pthread_cond_timedwait(PThreadCondT* %c, PThreadMutexT* %m, %StructTimespec* %ts)
-declare %Int @pthread_cond_wait(PThreadCondT* %c, PThreadMutexT* %m)
-declare %Int @pthread_create(PThreadT* %p, PThreadAttrT* %a, i8* (i8*)* %t, i8* %p)
-declare %Int @pthread_detach(PThreadT %t)
-declare %Int @pthread_equal(PThreadT %t0, PThreadT %t1)
+declare %Int @pthread_condattr_destroy(%PThreadCondAttrT* %ca)
+declare %Int @pthread_condattr_init(%PThreadCondAttrT* %ca)
+declare %Int @pthread_cond_broadcast(%PThreadCondT* %c)
+declare %Int @pthread_cond_destroy(%PThreadCondT* %c)
+declare %Int @pthread_cond_init(%PThreadCondT* %c, %PThreadCondAttrT* %ca)
+declare %Int @pthread_cond_signal(%PThreadCondT* %c)
+declare %Int @pthread_cond_timedwait(%PThreadCondT* %c, %PThreadMutexT* %m, %StructTimespec* %ts)
+declare %Int @pthread_cond_wait(%PThreadCondT* %c, %PThreadMutexT* %m)
+declare %Int @pthread_create(%PThreadT* %p, %PThreadAttrT* %a, i8* (i8*)* %t, i8* %p)
+declare %Int @pthread_detach(%PThreadT %t)
+declare %Int @pthread_equal(%PThreadT %t0, %PThreadT %t1)
 declare void @pthread_exit(i8* %p)
 declare i8* @pthread_getspecific(%PThreadKeyT %k)
-declare %Int @pthread_join(PThreadT %p, i8** %p)
+declare %Int @pthread_join(%PThreadT %p, i8** %p)
 declare %Int @pthread_key_create(%PThreadKeyT* %k, void (i8*)* %f)
 declare %Int @pthread_key_delete(%PThreadKeyT %k)
-declare %Int @pthread_kill(PThreadT %p, %Int %i)
-declare %Int @pthread_mutexattr_init(PThreadMutexAttrT* %ma)
-declare %Int @pthread_mutexattr_destroy(PThreadMutexAttrT* %ma)
-declare %Int @pthread_mutexattr_gettype(PThreadMutexAttrT* %ma, %Int* %i)
-declare %Int @pthread_mutexattr_settype(PThreadMutexAttrT* %ma, %Int %i)
-declare %Int @pthread_mutex_destroy(PThreadMutexT* %m)
-declare %Int @pthread_mutex_init(PThreadMutexT* %m, PThreadMutexAttrT* %ma)
-declare %Int @pthread_mutex_lock(PThreadMutexT* %m)
-declare %Int @pthread_mutex_timedlock(PThreadMutexT* %m, %StructTimespec* %ts)
-declare %Int @pthread_mutex_trylock(PThreadMutexT* %m)
-declare %Int @pthread_mutex_unlock(PThreadMutexT* %m)
-declare %Int @pthread_once(PThreadOnceT* %once, void ()* %f)
-declare %Int @pthread_rwlock_destroy(PThreadRWLockT* %lock)
-declare %Int @pthread_rwlock_init(PThreadRWLockT* %lock, PThreadRWLockAttrT* %la)
-declare %Int @pthread_rwlock_rdlock(PThreadRWLockT* %lock)
-declare %Int @pthread_rwlock_timedrdlock(PThreadRWLockT* %lock, %StructTimespec* %ts)
-declare %Int @pthread_rwlock_timedwrlock(PThreadRWLockT* %lock, %StructTimespec* %ts)
-declare %Int @pthread_rwlock_tryrdlock(PThreadRWLockT* %lock)
-declare %Int @pthread_rwlock_trywrlock(PThreadRWLockT* %lock)
-declare %Int @pthread_rwlock_unlock(PThreadRWLockT* %lock)
-declare %Int @pthread_rwlock_wrlock(PThreadRWLockT* %lock)
-declare %Int @pthread_rwlockattr_init(PThreadRWLockAttrT* %la)
-declare %Int @pthread_rwlockattr_getpshared(PThreadRWLockAttrT* %la, %Int* %i)
-declare %Int @pthread_rwlockattr_setpshared(PThreadRWLockAttrT* %la, %Int %i)
-declare %Int @pthread_rwlockattr_destroy(PThreadRWLockAttrT* %la)
-declare PThreadT @pthread_self()
+declare %Int @pthread_kill(%PThreadT %p, %Int %i)
+declare %Int @pthread_mutexattr_init(%PThreadMutexAttrT* %ma)
+declare %Int @pthread_mutexattr_destroy(%PThreadMutexAttrT* %ma)
+declare %Int @pthread_mutexattr_gettype(%PThreadMutexAttrT* %ma, %Int* %i)
+declare %Int @pthread_mutexattr_settype(%PThreadMutexAttrT* %ma, %Int %i)
+declare %Int @pthread_mutex_destroy(%PThreadMutexT* %m)
+declare %Int @pthread_mutex_init(%PThreadMutexT* %m, %PThreadMutexAttrT* %ma)
+declare %Int @pthread_mutex_lock(%PThreadMutexT* %m)
+declare %Int @pthread_mutex_timedlock(%PThreadMutexT* %m, %StructTimespec* %ts)
+declare %Int @pthread_mutex_trylock(%PThreadMutexT* %m)
+declare %Int @pthread_mutex_unlock(%PThreadMutexT* %m)
+declare %Int @pthread_once(%PThreadOnceT* %once, void ()* %f)
+declare %Int @pthread_rwlock_destroy(%PThreadRWLockT* %lock)
+declare %Int @pthread_rwlock_init(%PThreadRWLockT* %lock, %PThreadRWLockAttrT* %la)
+declare %Int @pthread_rwlock_rdlock(%PThreadRWLockT* %lock)
+declare %Int @pthread_rwlock_timedrdlock(%PThreadRWLockT* %lock, %StructTimespec* %ts)
+declare %Int @pthread_rwlock_timedwrlock(%PThreadRWLockT* %lock, %StructTimespec* %ts)
+declare %Int @pthread_rwlock_tryrdlock(%PThreadRWLockT* %lock)
+declare %Int @pthread_rwlock_trywrlock(%PThreadRWLockT* %lock)
+declare %Int @pthread_rwlock_unlock(%PThreadRWLockT* %lock)
+declare %Int @pthread_rwlock_wrlock(%PThreadRWLockT* %lock)
+declare %Int @pthread_rwlockattr_init(%PThreadRWLockAttrT* %la)
+declare %Int @pthread_rwlockattr_getpshared(%PThreadRWLockAttrT* %la, %Int* %i)
+declare %Int @pthread_rwlockattr_setpshared(%PThreadRWLockAttrT* %la, %Int %i)
+declare %Int @pthread_rwlockattr_destroy(%PThreadRWLockAttrT* %la)
+declare %PThreadT @pthread_self()
 declare %Int @pthread_setspecific(%PThreadKeyT %k, i8* %p)
-declare %Int @pthread_cancel(PThreadT %p)
+declare %Int @pthread_cancel(%PThreadT %p)
 declare %Int @pthread_setcancelstate(%Int %a, %Int* %i)
 declare %Int @pthread_setcanceltype(%Int %a, %Int* %i)
 declare void @pthread_testcancel()
-declare %Int @pthread_getprio(PThreadT %p)
-declare %Int @pthread_setprio(PThreadT %p, %Int %prio)
+declare %Int @pthread_getprio(%PThreadT %p)
+declare %Int @pthread_setprio(%PThreadT %p, %Int %prio)
 declare void @pthread_yield()
-declare %Int @pthread_mutexattr_getprioceiling(PThreadMutexAttrT* %ma, %Int* %i)
-declare %Int @pthread_mutexattr_setprioceiling(PThreadMutexAttrT* %ma, %Int %i)
-declare %Int @pthread_mutex_getprioceiling(PThreadMutexT* %m, %Int* %i)
-declare %Int @pthread_mutex_setprioceiling(PThreadMutexT* %m, %Int %i, %Int* %i)
-declare %Int @pthread_mutexattr_getprotocol(PThreadMutexAttrT* %ma, %Int* %i)
-declare %Int @pthread_mutexattr_setprotocol(PThreadMutexAttrT* %ma, %Int %i)
-declare %Int @pthread_condattr_getclock(PThreadCondAttrT* %ca, %ClockIdT* %c)
-declare %Int @pthread_condattr_setclock(PThreadCondAttrT* %ca, %ClockIdT %cid)
-declare %Int @pthread_attr_getinheritsched(PThreadAttrT* %a, %Int* %i)
-declare %Int @pthread_attr_getschedparam(PThreadAttrT* %a, %StructSchedParam* %s)
-declare %Int @pthread_attr_getschedpolicy(PThreadAttrT* %a, %Int* %i)
-declare %Int @pthread_attr_getscope(PThreadAttrT* %a, %Int* %i)
-declare %Int @pthread_attr_setinheritsched(PThreadAttrT* %a, %Int %i)
-declare %Int @pthread_attr_setschedparam(PThreadAttrT* %a, %StructSchedParam* %s)
-declare %Int @pthread_attr_setschedpolicy(PThreadAttrT* %a, %Int %i)
-declare %Int @pthread_attr_setscope(PThreadAttrT* %a, %Int %i)
-declare %Int @pthread_getschedparam(PThreadT %p, %Int* %i, %StructSchedParam* %s)
-declare %Int @pthread_setschedparam(PThreadT %p, %Int %i, %StructSchedParam* %s)
+declare %Int @pthread_mutexattr_getprioceiling(%PThreadMutexAttrT* %ma, %Int* %i)
+declare %Int @pthread_mutexattr_setprioceiling(%PThreadMutexAttrT* %ma, %Int %i)
+declare %Int @pthread_mutex_getprioceiling(%PThreadMutexT* %m, %Int* %i)
+declare %Int @pthread_mutex_setprioceiling(%PThreadMutexT* %m, %Int %i, %Int* %i)
+declare %Int @pthread_mutexattr_getprotocol(%PThreadMutexAttrT* %ma, %Int* %i)
+declare %Int @pthread_mutexattr_setprotocol(%PThreadMutexAttrT* %ma, %Int %i)
+declare %Int @pthread_condattr_getclock(%PThreadCondAttrT* %ca, %ClockIdT* %c)
+declare %Int @pthread_condattr_setclock(%PThreadCondAttrT* %ca, %ClockIdT %cid)
+declare %Int @pthread_attr_getinheritsched(%PThreadAttrT* %a, %Int* %i)
+declare %Int @pthread_attr_getschedparam(%PThreadAttrT* %a, %StructSchedParam* %s)
+declare %Int @pthread_attr_getschedpolicy(%PThreadAttrT* %a, %Int* %i)
+declare %Int @pthread_attr_getscope(%PThreadAttrT* %a, %Int* %i)
+declare %Int @pthread_attr_setinheritsched(%PThreadAttrT* %a, %Int %i)
+declare %Int @pthread_attr_setschedparam(%PThreadAttrT* %a, %StructSchedParam* %s)
+declare %Int @pthread_attr_setschedpolicy(%PThreadAttrT* %a, %Int %i)
+declare %Int @pthread_attr_setscope(%PThreadAttrT* %a, %Int %i)
+declare %Int @pthread_getschedparam(%PThreadT %p, %Int* %i, %StructSchedParam* %s)
+declare %Int @pthread_setschedparam(%PThreadT %p, %Int %i, %StructSchedParam* %s)
 declare %Int @pthread_getconcurrency()
 declare %Int @pthread_setconcurrency(%Int %c)
-declare %Int @pthread_barrier_init(PThreadBarrierT* %b, PThreadBarrierAttrT* %ba, %Nat %n)
-declare %Int @pthread_barrier_destroy(PThreadBarrierT* %b)
-declare %Int @pthread_barrier_wait(PThreadBarrierT* %b)
-declare %Int @pthread_barrierattr_init(PThreadBarrierAttrT* %ba)
-declare %Int @pthread_barrierattr_destroy(PThreadBarrierAttrT* %ba)
-declare %Int @pthread_barrierattr_getpshared(PThreadBarrierAttrT* %ba, %Int* %i)
-declare %Int @pthread_barrierattr_setpshared(PThreadBarrierAttrT* %ba, %Int %i)
-declare %Int @pthread_spin_init(PThreadSpinlockT* %s, %Int %i)
-declare %Int @pthread_spin_destroy(PThreadSpinlockT* %s)
-declare %Int @pthread_spin_trylock(PThreadSpinlockT* %s)
-declare %Int @pthread_spin_lock(PThreadSpinlockT* %s)
-declare %Int @pthread_spin_unlock(PThreadSpinlockT* %s)
-declare %Int @pthread_getcpuclockid(PThreadT %p, %ClockIdT* %c)
-; end from import
+declare %Int @pthread_barrier_init(%PThreadBarrierT* %b, %PThreadBarrierAttrT* %ba, %Nat %n)
+declare %Int @pthread_barrier_destroy(%PThreadBarrierT* %b)
+declare %Int @pthread_barrier_wait(%PThreadBarrierT* %b)
+declare %Int @pthread_barrierattr_init(%PThreadBarrierAttrT* %ba)
+declare %Int @pthread_barrierattr_destroy(%PThreadBarrierAttrT* %ba)
+declare %Int @pthread_barrierattr_getpshared(%PThreadBarrierAttrT* %ba, %Int* %i)
+declare %Int @pthread_barrierattr_setpshared(%PThreadBarrierAttrT* %ba, %Int %i)
+declare %Int @pthread_spin_init(%PThreadSpinlockT* %s, %Int %i)
+declare %Int @pthread_spin_destroy(%PThreadSpinlockT* %s)
+declare %Int @pthread_spin_trylock(%PThreadSpinlockT* %s)
+declare %Int @pthread_spin_lock(%PThreadSpinlockT* %s)
+declare %Int @pthread_spin_unlock(%PThreadSpinlockT* %s)
+declare %Int @pthread_getcpuclockid(%PThreadT %p, %ClockIdT* %c)
+
+; end from import "pthread"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [21 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 116, i8 104, i8 114, i8 101, i8 97, i8 100, i8 32, i8 48, i8 10, i8 0]
@@ -397,23 +405,23 @@ declare %Int @pthread_getcpuclockid(PThreadT %p, %ClockIdT* %c)
 @str4 = private constant [16 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 116, i8 104, i8 114, i8 101, i8 97, i8 100, i8 115, i8 33, i8 10, i8 0]
 ; -- endstrings --; tests/threads/src/main.m
 ; valgrind --leak-check=full ./easy.run
-@mutex = internal global PThreadMutexT null
-@global_counter = internal global %Int32 zeroinitializer
+@mutex = internal global %PThreadMutexT null
+@global_counter = internal global %Nat32 zeroinitializer
 define internal i8* @thread0(i8* %param) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
 ; while_1
 	br label %again_1
 again_1:
-	%2 = load %Int32, %Int32* @global_counter
-	%3 = icmp ult %Int32 %2, 32
+	%2 = load %Nat32, %Nat32* @global_counter
+	%3 = icmp ult %Nat32 %2, 32
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
 	; increment global counter
-	%4 = call %Int @pthread_mutex_lock(PThreadMutexT* @mutex)
-	%5 = load %Int32, %Int32* @global_counter
-	%6 = add %Int32 %5, 1
-	store %Int32 %6, %Int32* @global_counter
-	%7 = call %Int @pthread_mutex_unlock(PThreadMutexT* @mutex)
+	%4 = call %Int @pthread_mutex_lock(%PThreadMutexT* @mutex)
+	%5 = load %Nat32, %Nat32* @global_counter
+	%6 = add %Nat32 %5, 1
+	store %Nat32 %6, %Nat32* @global_counter
+	%7 = call %Int @pthread_mutex_unlock(%PThreadMutexT* @mutex)
 	%8 = call %Int @usleep(%USecondsT 500000)
 	br label %again_1
 break_1:
@@ -423,32 +431,32 @@ break_1:
 
 define internal i8* @thread1(i8* %param) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*))
-	%2 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %2
-	%3 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %3
+	%2 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %2
+	%3 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %3
 ; while_1
 	br label %again_1
 again_1:
-	%4 = load %Int32, %Int32* %2
-	%5 = icmp ult %Int32 %4, 32
+	%4 = load %Nat32, %Nat32* %2
+	%5 = icmp ult %Nat32 %4, 32
 	br %Bool %5 , label %body_1, label %break_1
 body_1:
 	; fast read global counter
-	%6 = call %Int @pthread_mutex_lock(PThreadMutexT* @mutex)
-	%7 = load %Int32, %Int32* @global_counter
-	store %Int32 %7, %Int32* %2
-	%8 = call %Int @pthread_mutex_unlock(PThreadMutexT* @mutex)
+	%6 = call %Int @pthread_mutex_lock(%PThreadMutexT* @mutex)
+	%7 = load %Nat32, %Nat32* @global_counter
+	store %Nat32 %7, %Nat32* %2
+	%8 = call %Int @pthread_mutex_unlock(%PThreadMutexT* @mutex)
 ; if_0
-	%9 = load %Int32, %Int32* %3
-	%10 = load %Int32, %Int32* %2
-	%11 = icmp ne %Int32 %9, %10
+	%9 = load %Nat32, %Nat32* %3
+	%10 = load %Nat32, %Nat32* %2
+	%11 = icmp ne %Nat32 %9, %10
 	br %Bool %11 , label %then_0, label %endif_0
 then_0:
-	%12 = load %Int32, %Int32* %2
-	store %Int32 %12, %Int32* %3
-	%13 = load %Int32, %Int32* %2
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), %Int32 %13)
+	%12 = load %Nat32, %Nat32* %2
+	store %Nat32 %12, %Nat32* %3
+	%13 = load %Nat32, %Nat32* %2
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), %Nat32 %13)
 	br label %endif_0
 endif_0:
 	br label %again_1
@@ -460,21 +468,21 @@ break_1:
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*))
 	%2 = alloca %Int32, align 4
-	%3 = alloca PThreadT, align 8
-	%4 = alloca PThreadT, align 8
-	%5 = call %Int @pthread_create(PThreadT* %3, PThreadAttrT* null, i8* (i8*)* @thread0, i8* null)
+	%3 = alloca %PThreadT, align 1
+	%4 = alloca %PThreadT, align 1
+	%5 = call %Int @pthread_create(%PThreadT* %3, %PThreadAttrT* null, i8* (i8*)* @thread0, i8* null)
 	store %Int %5, %Int32* %2
-	%6 = call %Int @pthread_create(PThreadT* %4, PThreadAttrT* null, i8* (i8*)* @thread1, i8* null)
+	%6 = call %Int @pthread_create(%PThreadT* %4, %PThreadAttrT* null, i8* (i8*)* @thread1, i8* null)
 	store %Int %6, %Int32* %2
 
 	;pthread.detach(pthread0)
-	%7 = alloca i8*, align 8
-	%8 = alloca i8*, align 8
-	%9 = load PThreadT, PThreadT* %3
-	%10 = call %Int @pthread_join(PThreadT %9, i8** %7)
+	%7 = alloca i8*, align 1
+	%8 = alloca i8*, align 1
+	%9 = load %PThreadT, %PThreadT* %3
+	%10 = call %Int @pthread_join(%PThreadT %9, i8** %7)
 	store %Int %10, %Int32* %2
-	%11 = load PThreadT, PThreadT* %4
-	%12 = call %Int @pthread_join(PThreadT %11, i8** %8)
+	%11 = load %PThreadT, %PThreadT* %4
+	%12 = call %Int @pthread_join(%PThreadT %11, i8** %8)
 	store %Int %12, %Int32* %2
 	call void @pthread_exit(i8* null)
 	ret %Int 0

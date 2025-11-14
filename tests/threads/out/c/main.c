@@ -1,6 +1,9 @@
 // tests/threads/src/main.m
 // valgrind --leak-check=full ./easy.run
 
+#include "main.h"
+
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
@@ -8,15 +11,13 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#include "main.h"
 
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static uint32_t global_counter;
 
-static void *thread0(void *param)
-{
+static void *thread0(void *param) {
 	printf("Hello from thread 0\n");
 
 	while (global_counter < 32) {
@@ -32,8 +33,8 @@ static void *thread0(void *param)
 	return NULL;
 }
 
-static void *thread1(void *param)
-{
+
+static void *thread1(void *param) {
 	printf("Hello from thread 1\n");
 
 	uint32_t global_counter_value = 0;
@@ -55,8 +56,8 @@ static void *thread1(void *param)
 	return NULL;
 }
 
-int main()
-{
+
+int main(void) {
 	printf("Hello threads!\n");
 
 	int32_t rc;
@@ -77,4 +78,5 @@ int main()
 
 	return 0;
 }
+
 

@@ -4,6 +4,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -11,8 +12,6 @@
 #include <unistd.h>
 #include <pthread.h>
 
-
-
-int main();
+int main(void);
 
 #endif /* MAIN_H */

@@ -110,10 +110,10 @@ public func mutexattr_gettype (ma: *PThreadMutexAttrT, i: *Int) -> Int
 public func mutexattr_settype (ma: *PThreadMutexAttrT, i: Int) -> Int
 public func mutex_destroy (m: *PThreadMutexT) -> Int
 public func mutex_init (m: *PThreadMutexT, ma: *PThreadMutexAttrT) -> Int
-public func mutex_lock (m: *PThreadMutexT) -> Int
+public func mutex_lock (m: *PThreadMutexT) -> @unused Int
 public func mutex_timedlock (m: *PThreadMutexT, ts: *StructTimespec) -> Int
 public func mutex_trylock (m: *PThreadMutexT) -> Int
-public func mutex_unlock (m: *PThreadMutexT) -> Int
+public func mutex_unlock (m: *PThreadMutexT) -> @unused Int
 public func once (once: *PThreadOnceT, f: *() -> Unit) -> Int
 public func rwlock_destroy (lock: *PThreadRWLockT) -> Int
 public func rwlock_init (lock: *PThreadRWLockT, la: *PThreadRWLockAttrT) -> Int

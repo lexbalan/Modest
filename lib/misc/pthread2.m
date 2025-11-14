@@ -221,10 +221,10 @@ func mutexattr_gettype(ma: *PThreadMutexAttrT, i: *Int) -> Int
 func mutexattr_settype(ma: *PThreadMutexAttrT, i: Int) -> Int
 func mutex_destroy(m: *PThreadMutexT) -> Int
 func mutex_init(m: *PThreadMutexT, ma: *PThreadMutexAttrT) -> Int
-func mutex_lock(m: *PThreadMutexT) -> Int
+func mutex_lock(m: *PThreadMutexT) -> @unused Int
 func mutex_timedlock(m: *PThreadMutexT, ts: *StructTimespec) -> Int
 func mutex_trylock(m: *PThreadMutexT) -> Int
-func mutex_unlock(m: *PThreadMutexT) -> Int
+func mutex_unlock(m: *PThreadMutexT) -> @unused Int
 func once(once: *PThreadOnceT, f: *() -> Unit) -> Int
 func rwlock_destroy(lock: *PThreadRWLockT) -> Int
 func rwlock_init(lock: *PThreadRWLockT, la: *PThreadRWLockAttrT) -> Int
