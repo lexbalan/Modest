@@ -96,10 +96,7 @@ def himark(lpos, offset, lenc, rpos, color):
 
 def highlight(ti, color, offset):
 	start = get_ti_start(ti)
-	pos = start.spaces + offset
-	tabpos = start.tabs
-	offset = pos + start.tabs * TABSTOP
-
+	offset += start.spaces + start.tabs * TABSTOP
 	start = left_start_pos(ti) + offset
 	end = right_end_pos(ti) + offset
 	himark(start, offset, tilen(ti), end - 1, color)
