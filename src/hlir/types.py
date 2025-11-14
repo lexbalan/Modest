@@ -4,17 +4,21 @@ import copy
 from util import *
 
 
+
 class TokenInfo:
-	def __init__(self, source, start, end):
+	def __init__(self, source, line, pos, spaces, tabs, length):
 		self.source = source
+		self.line = line
+		self.pos = pos
+		self.spaces = spaces
+		self.tabs = tabs
+		self.length = length
+
+
+class TextInfo:
+	def __init__(self, start, end):
 		self.start = start
 		self.end = end
-
-
-#class TextInfo:
-#	def __init__(self, start, end):
-#		self.start = start
-#		self.end = end
 
 
 

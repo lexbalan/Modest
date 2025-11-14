@@ -1,4 +1,6 @@
 
+pragma unsafe
+
 include "libc/time"
 include "libc/string"
 include "libc/stdio"

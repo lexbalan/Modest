@@ -54,8 +54,16 @@ class Lexer:
 				if result != None:
 					# There is a token
 					# # token = ('<token_class>', <token_data>, <ti>)
-					tokenEndPosition = self.getTextPosition()
-					ti = TokenInfo(self.filename, tokenStartPosition, tokenEndPosition)
+					endp = self.f.tell()
+
+					ti = TokenInfo(
+						source = self.filename,
+						line = tokenStartPosition['line'],
+						pos = tokenStartPosition['pos'] + tokenStartPosition['tab_pos'],
+						spaces = tokenStartPosition['pos'],
+						tabs = tokenStartPosition['tab_pos'],
+						length = endp - tokenStartPosition['fpos']
+					)
 					token = result + (ti,)
 					tokens.append(token)
 

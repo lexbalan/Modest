@@ -39,7 +39,7 @@ TABSTOP = 4
 def getline(ti):
 	file = ti.source
 	start = get_ti_start(ti)
-	lineno = start['line']
+	lineno = start.line
 	f = open(file, 'r')
 	lin = f.read().split("\n")[lineno - 1]
 	f.close()
@@ -48,18 +48,21 @@ def getline(ti):
 
 def left_start_pos(ti):
 	#return left_start_pos(ti.start)
-	return get_ti_start(ti)['pos']
+	return get_ti_start(ti).pos
 
 
 # length of token
 def tilen(ti):
-	return get_ti_end(ti)['pos'] - get_ti_start(ti)['pos']
+	x = get_ti_end(ti)
+	if isinstance(x, dict):
+		print(x)
+	return get_ti_end(ti).pos - get_ti_start(ti).pos
 
 
 def right_end_pos(ti):
 	#if 'end' in ti:
 	#return right_end_pos
-	return get_ti_start(ti)['pos'] - tilen(ti)# - 1
+	return get_ti_start(ti).pos - tilen(ti)# - 1
 
 
 def color_code(color):
@@ -93,9 +96,9 @@ def himark(lpos, offset, lenc, rpos, color):
 
 def highlight(ti, color, offset):
 	start = get_ti_start(ti)
-	pos = start['pos'] + offset
-	tabpos = start['tab_pos']
-	offset = pos + tabpos * TABSTOP
+	pos = start.spaces + offset
+	tabpos = start.tabs
+	offset = pos + start.tabs * TABSTOP
 
 	start = left_start_pos(ti) + offset
 	end = right_end_pos(ti) + offset
@@ -103,29 +106,25 @@ def highlight(ti, color, offset):
 
 
 def get_ti_start(ti):
-	start = ti.start
-	if isinstance(start, TokenInfo):
-		start = start.start
-	return start
+	return ti
 
 def get_ti_end(ti):
-	end = ti.end
-	if isinstance(end, TokenInfo):
-		end = end.end
-	return end
+	return ti
+
+
 
 def common_message(mg, color, s, ti=None):
 	pre = ''
 
 	if ti != None:
 		start = get_ti_start(ti)
-		pre = '\n%s:%d:%d:\n' % (ti.source, start['line'], start['pos'])
+		pre = '\n%s:%d:%d:\n' % (ti.source, start.line, start.pos)
 
 	print(colorize(pre, preColor) + colorize(mg, color) + s)
 
 	if ti != None:
 		start = get_ti_start(ti)
-		prelin = "%d |" % start['line']
+		prelin = "%d |" % start.line
 		line = getline(ti)
 		line = line.replace('\t', ' ' * TABSTOP)
 		print(prelin + line)

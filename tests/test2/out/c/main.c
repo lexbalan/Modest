@@ -12,7 +12,6 @@
 
 int32_t main(void) {
 	//printf("test2\n")
-
 	const datetime_DateTime dt = datetime_dateTimeNow();
 	char dateTimeStr[32];
 	datetime_sprintDateTime((char *)&dateTimeStr);
