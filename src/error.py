@@ -30,39 +30,19 @@ COLOR_ERROR = RED
 preColor = BOLD
 
 
-SIMPLE_MARK = True
-
-#
 TABSTOP = 4
 
 
 def getline(ti):
 	file = ti.source
-	start = get_ti_start(ti)
-	lineno = start.line
+	lineno = ti.line
 	f = open(file, 'r')
 	lin = f.read().split("\n")[lineno - 1]
 	f.close()
 	return lin
 
 
-def left_start_pos(ti):
-	#return left_start_pos(ti.start)
-	return get_ti_start(ti).pos
 
-
-# length of token
-def tilen(ti):
-	x = get_ti_end(ti)
-	if isinstance(x, dict):
-		print(x)
-	return get_ti_end(ti).pos - get_ti_start(ti).pos
-
-
-def right_end_pos(ti):
-	#if 'end' in ti:
-	#return right_end_pos
-	return get_ti_start(ti).pos - tilen(ti)# - 1
 
 
 def color_code(color):
@@ -75,44 +55,31 @@ def colorize(text, color):
 	return '\033[%dm%s\033[0m' % (color, text)
 
 
-
 def mark(pos, len, color):
 	print(" " * pos, end='')
 	print(colorize('^'*len, color))
 
 
 def highlight(ti, color, offset):
-	start = get_ti_start(ti)
-	offset += start.spaces + start.tabs * TABSTOP
-	length = 1 #start.length
+	offset += ti.spaces + ti.tabs * TABSTOP
+	length = 1 #ti.length
 	mark(offset, length, color)
 
 
-def get_ti_start(ti):
-	return ti
-
-def get_ti_end(ti):
-	return ti
-
-
-
-def common_message(mg, color, s, ti=None):
+def print_common_message(mg, color, s, ti=None):
 	pre = ''
 
 	if ti != None:
-		start = get_ti_start(ti)
-		pre = '\n%s:%d:%d:\n' % (ti.source, start.line, start.pos)
+		pre = '\n%s:%d:%d:\n' % (ti.source, ti.line, ti.pos)
 
 	print(colorize(pre, preColor) + colorize(mg, color) + s)
 
 	if ti != None:
-		start = get_ti_start(ti)
-		prelin = "%d |" % start.line
+		prelin = "%d |" % ti.line
 		line = getline(ti)
 		line = line.replace('\t', ' ' * TABSTOP)
 		print(prelin + line)
 		highlight(ti, color, offset=len(prelin))
-
 
 
 
@@ -132,59 +99,38 @@ def log(s):
 
 
 
-
-
 def note(s, ti=None):
-	if 'paranoid' in features:
-		error(s, ti)
-		return
-	printNote(s, ti)
+	print_common_message('note: ', COLOR_NOTE, s, ti)
 
 
 def info(s, ti=None):
 	if 'paranoid' in features:
 		printWarning(s, ti)
 		return
-
-	printInfo(s, ti)
+	if not show_info:
+		return
+	print_common_message('info: ', COLOR_INFO, s, ti)
 
 
 def warning(s, ti=None):
 	if 'paranoid' in features:
 		error(s, ti)
 		return
-	printWarning(s, ti)
-
-
-
-def printNote(s, ti):
-	common_message('note: ', COLOR_NOTE, s, ti)
-
-
-def printInfo(s, ti):
-	if not show_info:
-		return
-	common_message('info: ', COLOR_INFO, s, ti)
-
-
-def printWarning(s, ti):
 	global warncnt
 	warncnt = warncnt + 1
-
-	common_message('warning: ', COLOR_WARNING, s, ti)
+	print_common_message('warning: ', COLOR_WARNING, s, ti)
 
 
 def error(s, ti=None):
 	global errcnt
 	errcnt = errcnt + 1
-	#print(ti)
-	common_message('error: ', COLOR_ERROR, s, ti)
+	print_common_message('error: ', COLOR_ERROR, s, ti)
 	if errcnt >= MAX_ERRORS:
 		exit(1)
 
 
 def fatal(s, ti=None):
-	#print('\033[91m' + 'fatal error: ' + '\033[0m' + s)
-	common_message('fatal error: ', 91, s, ti)
+	print_common_message('fatal error: ', 91, s, ti)
 	exit(1)
+
 
