@@ -75,31 +75,17 @@ def colorize(text, color):
 	return '\033[%dm%s\033[0m' % (color, text)
 
 
-def mark(pos, color):
+
+def mark(pos, len, color):
 	print(" " * pos, end='')
-	print(colorize('^', color))
-
-
-def himark(lpos, offset, lenc, rpos, color):
-	if SIMPLE_MARK:
-		mark(offset, color)
-		return
-
-	llen = offset - lpos  # длина подчеркивания слева
-	rlen = rpos - offset  # длина подчеркивания справа
-
-	print(" " * lpos, end='')
-	print(colorize('-' * llen, color), end='')
-	print(colorize('^' * lenc, color), end='')
-	print(colorize('-' * rlen, color))
+	print(colorize('^'*len, color))
 
 
 def highlight(ti, color, offset):
 	start = get_ti_start(ti)
 	offset += start.spaces + start.tabs * TABSTOP
-	start = left_start_pos(ti) + offset
-	end = right_end_pos(ti) + offset
-	himark(start, offset, tilen(ti), end - 1, color)
+	length = 1 #start.length
+	mark(offset, length, color)
 
 
 def get_ti_start(ti):
