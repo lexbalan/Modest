@@ -6,6 +6,7 @@ from hlir import TokenInfo
 warncnt = 0
 errcnt = 0
 
+
 MAX_ERRORS = 10
 
 verbose_mode = False
@@ -21,13 +22,11 @@ BLUE = 94
 MAGENTA = 95
 CYAN = 96
 
+
 COLOR_NOTE = BOLD
 COLOR_INFO = CYAN
-COLOR_WARNING = BLUE #MAGENTA
+COLOR_WARNING = BLUE
 COLOR_ERROR = RED
-
-
-preColor = BOLD
 
 
 TABSTOP = 4
@@ -72,7 +71,7 @@ def print_common_message(mg, color, s, ti=None):
 	if ti != None:
 		pre = '\n%s:%d:%d:\n' % (ti.source, ti.line, ti.pos)
 
-	print(colorize(pre, preColor) + colorize(mg, color) + s)
+	print(colorize(pre, BOLD) + colorize(mg, color) + s)
 
 	if ti != None:
 		prelin = "%d |" % ti.line
