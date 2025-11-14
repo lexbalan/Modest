@@ -91,13 +91,13 @@ class Lexer:
 
 	# считать n следующих символов
 	def getn(self, n):
-		s = []
+		s = ""
 		i = 0
 		while i < n:
 			c = self.getc()
-			s.append(c)
+			s += c
 			i = i + 1
-		return "".join(s)
+		return s
 
 
 	# получить текущую позицию в файле (точка сохранения)
