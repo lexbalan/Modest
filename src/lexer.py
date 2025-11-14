@@ -40,7 +40,7 @@ class Lexer:
 
 			# save current lexer position in the source
 			tokenStartPosition = self.getTextPosition()
-			lstart = self.line_fpos
+			line_start_position = self.line_fpos
 
 			for rule in self.lexicalRules:
 				result = rule()
@@ -61,9 +61,9 @@ class Lexer:
 					ti = TokenInfo(
 						source = self.filename,
 						line = tokenStartPosition['line'],
-						fpos = lstart,
-						spaces = tokenStartPosition['space_pos'],
-						tabs = tokenStartPosition['tab_pos'],
+						fpos = line_start_position,
+						spaces = tokenStartPosition['nspaces'],
+						tabs = tokenStartPosition['ntabs'],
 						length = endp - tokenStartPosition['pos']
 					)
 					token = result + (ti,)
@@ -106,16 +106,16 @@ class Lexer:
 			'isa': 'text_position',
 			'pos': self.f.tell(),
 			'line': self.line,
-			'space_pos': self.space_pos,
-			'tab_pos': self.tab_pos
+			'nspaces': self.space_pos,
+			'ntabs': self.tab_pos
 		}
 
 	# установить позицию в файле (возврат на позицию)
 	def setTextPosition(self, pos):
 		self.f.seek(pos['pos'], 0)
 		self.line = pos['line']
-		self.space_pos = pos['space_pos']
-		self.tab_pos = pos['tab_pos']
+		self.space_pos = pos['nspaces']
+		self.tab_pos = pos['ntabs']
 
 
 	# посмотреть n символов вперед
