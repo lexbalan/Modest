@@ -27,7 +27,8 @@ class Lexer:
 
 	def run(self, filename):
 		self.filename = filename
-		self.pos = 0
+		self.line_fpos = 0  # position in file when line starts
+		self.space_pos = 0
 		self.tab_pos = 0
 		self.line = 1
 		self.f = open(filename, "r")
@@ -39,6 +40,7 @@ class Lexer:
 
 			# save current lexer position in the source
 			tokenStartPosition = self.getTextPosition()
+			lstart = self.line_fpos
 
 			for rule in self.lexicalRules:
 				result = rule()
@@ -59,10 +61,10 @@ class Lexer:
 					ti = TokenInfo(
 						source = self.filename,
 						line = tokenStartPosition['line'],
-						pos = tokenStartPosition['pos'] + tokenStartPosition['tab_pos'],
-						spaces = tokenStartPosition['pos'],
+						fpos = lstart,
+						spaces = tokenStartPosition['space_pos'],
 						tabs = tokenStartPosition['tab_pos'],
-						length = endp - tokenStartPosition['fpos']
+						length = endp - tokenStartPosition['pos']
 					)
 					token = result + (ti,)
 					tokens.append(token)
@@ -76,13 +78,14 @@ class Lexer:
 	def getc(self):
 		x = self.f.read(1)
 		if x == '\n':
-			self.pos = 0
+			self.line_fpos = self.f.tell()
+			self.space_pos = 0
 			self.tab_pos = 0
 			self.line = self.line + 1
 		elif x == '\t':
 			self.tab_pos = self.tab_pos + 1
 		else:
-			self.pos = self.pos + 1
+			self.space_pos = self.space_pos + 1
 		return x
 
 
@@ -101,17 +104,17 @@ class Lexer:
 	def getTextPosition(self):
 		return {
 			'isa': 'text_position',
-			'fpos': self.f.tell(),
+			'pos': self.f.tell(),
 			'line': self.line,
-			'pos': self.pos,
+			'space_pos': self.space_pos,
 			'tab_pos': self.tab_pos
 		}
 
 	# установить позицию в файле (возврат на позицию)
 	def setTextPosition(self, pos):
-		self.f.seek(pos['fpos'], 0)
+		self.f.seek(pos['pos'], 0)
 		self.line = pos['line']
-		self.pos = pos['pos']
+		self.space_pos = pos['space_pos']
 		self.tab_pos = pos['tab_pos']
 
 

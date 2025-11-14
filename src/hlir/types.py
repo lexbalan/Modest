@@ -6,10 +6,10 @@ from util import *
 
 
 class TokenInfo:
-	def __init__(self, source, line, pos, spaces, tabs, length):
+	def __init__(self, source, line, fpos, spaces, tabs, length):
 		self.source = source
-		self.line = line
-		self.pos = pos
+		self.line = line # номер строки
+		self.fpos = fpos # позиция начала строки в файле
 		self.spaces = spaces
 		self.tabs = tabs
 		self.length = length

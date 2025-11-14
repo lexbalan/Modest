@@ -32,14 +32,19 @@ COLOR_ERROR = RED
 TABSTOP = 4
 
 
-def getline(ti):
-	file = ti.source
-	lineno = ti.line
-	f = open(file, 'r')
-	lin = f.read().split("\n")[lineno - 1]
-	f.close()
-	return lin
 
+
+def read_line(file, offset):
+	f = open(file, 'r')
+	f.seek(offset)
+	s = ''
+	while True:
+		c = f.read(1)
+		if c == '\n' or c == None:
+			break
+		s += c
+	f.close()
+	return s
 
 
 
@@ -65,20 +70,21 @@ def highlight(ti, color, offset):
 	mark(offset, length, color)
 
 
-def print_common_message(mg, color, s, ti=None):
+def print_common_message(mg, color, s, ti):
 	pre = ''
 
 	if ti != None:
-		pre = '\n%s:%d:%d:\n' % (ti.source, ti.line, ti.pos)
+		npos = ti.spaces + ti.tabs
+		pre = '\n%s:%d:%d:\n' % (ti.source, ti.line, npos)
 
 	print(colorize(pre, BOLD) + colorize(mg, color) + s)
 
 	if ti != None:
-		prelin = "%d |" % ti.line
-		line = getline(ti)
+		margin = "%d |" % ti.line
+		line = read_line(ti.source, ti.fpos)
 		line = line.replace('\t', ' ' * TABSTOP)
-		print(prelin + line)
-		highlight(ti, color, offset=len(prelin))
+		print(margin + line)
+		highlight(ti, color, offset=len(margin))
 
 
 
