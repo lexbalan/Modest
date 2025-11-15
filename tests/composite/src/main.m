@@ -39,31 +39,31 @@ func f6(a: *[32]Int32) -> *[32]Int32 {
 	return nil
 }
 
-func f7(f: *()->Unit) -> Unit {
+func f7(f: *() -> Unit) -> Unit {
 	return
 }
 
-func f8(f: *()->Unit) -> *()->Unit {
+func f8(f: *() -> Unit) -> *() -> Unit {
 	return &f0
 }
 
-func f9(f: *()->Unit) -> **()->Unit {
+func f9(f: *() -> Unit) -> **() -> Unit {
 	return nil
 }
 
-func f10(f: **()->Unit) -> **()->Unit {
+func f10(f: **() -> Unit) -> **() -> Unit {
 	return f
 }
 
-func f11(f: **(a: Int32, b: *Int32)->*[10]Int32) -> **()->Unit {
+func f11(f: **(a: Int32, b: *Int32) -> *[10]Int32) -> **() -> Unit {
 	return nil
 }
 
-func f12(f: **(a: *[32]Int32, b: **[64]Int32)->*[10]Int32) -> **()->Unit {
+func f12(f: **(a: *[32]Int32, b: **[64]Int32) -> *[10]Int32) -> **() -> Unit {
 	return nil
 }
 
-func f13(f: **(a: *[32]*Int32, b: **[64]*Int32)->*[10]Int32) -> **()->Unit {
+func f13(f: **(a: *[32]*Int32, b: **[64]*Int32) -> *[10]Int32) -> **() -> Unit {
 	return nil
 }
 
@@ -76,20 +76,20 @@ var pf3: *() -> *Int32 = &f3
 var pf4: *(x: Int32) -> [10]Int32 = &f4
 var pf5: *(a: [32]Int32) -> [32]Int32 = &f5
 var pf6: *(a: *[32]Int32) -> *[32]Int32 = &f6
-var pf7: *(f: *()->Unit) -> Unit = &f7
-var pf8: *(f: *()->Unit) -> *()->Unit = &f8
-var pf9: *(f: *()->Unit) -> **()->Unit = &f9
-var pf10: *(f: **()->Unit) -> **()->Unit = &f10
-var pf11: *(f: **(a: Int32, b: *Int32)->*[10]Int32) -> **()->Unit = &f11
-var pf12: *(f: **(a: *[32]Int32, b: **[64]Int32)->*[10]Int32) -> **()->Unit = &f12
-var pf13: *(f: **(a: *[32]*Int32, b: **[64]*Int32)->*[10]Int32) -> **()->Unit = &f13
+var pf7: *(f: *() -> Unit) -> Unit = &f7
+var pf8: *(f: *() -> Unit) -> *() -> Unit = &f8
+var pf9: *(f: *() -> Unit) -> **() -> Unit = &f9
+var pf10: *(f: **() -> Unit) -> **() -> Unit = &f10
+var pf11: *(f: **(a: Int32, b: *Int32) -> *[10]Int32) -> **() -> Unit = &f11
+var pf12: *(f: **(a: *[32]Int32, b: **[64]Int32) -> *[10]Int32) -> **() -> Unit = &f12
+var pf13: *(f: **(a: *[32]*Int32, b: **[64]*Int32) -> *[10]Int32) -> **() -> Unit = &f13
 
 
 // Arrays
 var a0: [5]Int32 = [0, 1, 2, 3, 4]
 var a1: [5]*Int32 = [&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]]
 var a2: [5]**Int32 = [&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]]
-var a3: [5]*()->Unit = [5]*()->Unit [&f0]
+var a3: [5]*() -> Unit = [5]*() -> Unit [&f0]
 var a4: [2][5]Int = [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
 var a5: [2]*[5]Int = [&a4[0], &a4[1]]
 // Проблема в том что мой getelementptr не умеет в цепь-молнию
@@ -98,22 +98,23 @@ var a5: [2]*[5]Int = [&a4[0], &a4[1]]
 //	[&a4[0][0], &a4[0][1], &a4[0][2], &a4[0][3], &a4[0][4]]
 //	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
 //]
+
 var a7: [2][5]*[5]Int = [
 	[&a0, &a0, &a0, &a0, &a0]
 	[&a0, &a0, &a0, &a0, &a0]
 ]
+
 var a8: [2][5]*[2][5]*[5]Int = [
 	[&a7, &a7, &a7, &a7, &a7]
 	[&a7, &a7, &a7, &a7, &a7]
 ]
+
 var a9: [5]*[10]*[2]*(a: Int) -> Int
 
 
 //
 var p2: *[5]Int32 = &a0
 var p3: **[5]Int32 = &p2
-
-
 
 
 type RGB24 = record {
@@ -170,7 +171,7 @@ var animation2_points = []AnimationPoint [
 ]
 
 
-func xy(x: record {x: Int32, y: Int32}) -> Unit {
+func xy (x: record {x: Int32, y: Int32}) -> Unit {
 
 }
 
@@ -199,7 +200,7 @@ var farr: [2]*(a: Int32, b: Int32) -> Int32 = [
 ]
 
 
-type He = ()->Unit
+type He = () -> Unit
 
 func he (x: *He) -> Unit {
 
