@@ -216,7 +216,6 @@ class Parser:
 			if self.match("}"):
 				break
 
-			#f = self.parse_field()
 			access_modifier = self.parse_access_modifier()
 			f = self.stmt_var()
 			for ff in f:
@@ -337,7 +336,6 @@ class Parser:
 		arghack = False
 		fields = []
 		while not self.match(")"):
-			#f = self.parse_field()
 			if self.is_identifier():
 				f = self.stmt_var()
 				if isinstance(f, list):
@@ -1658,71 +1656,6 @@ class Parser:
 			nl_cnt += self.skip_blanks()
 
 		return (anno, nl_cnt)
-
-
-	# TODO: кандидат на выбывание!
-	# поля записей могут иметь default значения
-	# параметры фунций тоже
-	# будет время - убери это недоразумение!
-	def parse_field(self):
-		ti = self.ti()
-
-		objs = []
-		while not self.is_end():
-			nl_cnt = 0
-
-			ca = self.parse_comments_annotations(nl_cnt=nl_cnt)
-			comments_and_annotations = ca[0] + ca[1]
-			nl_cnt = ca[2]
-
-			access_modifier = self.parse_access_modifier()
-
-			if not self.is_identifier():
-				return None
-
-			id = self.parse_identifier()
-
-			if id == None:
-				break
-
-			objs.append({
-				'id': id,
-				'comments_and_annotations': comments_and_annotations
-			})
-
-			if self.match(','):
-				self.skip_tokens_class(['nl'])
-				continue
-
-			break
-
-		if objs == []:
-			self.restore(['\n', ','])
-			return None
-
-		if not self.need(":"):
-			self.restore(['\n', ','])
-			return None
-
-		t = self.expr_type()
-
-		fields = []
-		for obj in objs:
-			id = obj['id']
-			field = {
-				'isa': 'field',
-				'id': id,
-				'type': t,
-				'init_value': None,
-				'access_modifier': access_modifier,
-				'anno': [],
-				'comments_and_annotations': obj['comments_and_annotations'],
-				'nl': 1,
-				'ti': id['ti']
-			}
-			fields.append(field)
-
-		return fields
 
 
 	#
