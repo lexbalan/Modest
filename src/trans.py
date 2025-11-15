@@ -620,7 +620,7 @@ def do_value_bin2(op, l, r, ti):
 		return ValueBad(ti)
 
 	if l.isValueUndef() or r.isValueUndef():
-		t = htype.select_common_type(l.type, r.type)
+		t = htype.select_common_type(l.type, r.type, ti)
 		return ValueUndef(t)
 
 
@@ -652,7 +652,7 @@ def do_value_bin2(op, l, r, ti):
 	# Now and further types must be equal (!)
 	#
 
-	t = htype.select_common_type(l.type, r.type)
+	t = htype.select_common_type(l.type, r.type, ti)
 	if t == None:
 		error("different types in operation", ti)
 		htype.type_print(l.type)
@@ -2080,12 +2080,6 @@ def def_var_common(x):
 		t = do_type(x['type'])
 
 	iv = do_rvalue(x['init_value'])
-	# TODO: это костыль что то надо с жтим делать
-	# (у ValueUndef тип по дефолту TypeBad - а тут нам надо чтобы был тип нашей переменной)
-	# Как это решить красиво пока не знаю...
-	# Поэтому заткнул жестко так:
-	if iv.isValueUndef():
-		iv.type = t
 
 	tu = t == None
 	vu = iv.isValueUndef()

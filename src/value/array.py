@@ -7,44 +7,44 @@ from .char import utf32_chars_to_utfx_chars
 
 
 
-# TODO: переделай здесь все - тут все плохо...
-# получает на вход список элементов
-# конструирует и возвращает GenericArray value
+def _value_array_create(items, item_type, length, is_generic=False, ti=None):
+	from .num import value_number_create
+	array_volume = value_number_create(length)
+	array_type = TypeArray(item_type, volume=array_volume, ti=ti)
+	array_type.generic = is_generic
+	return ValueLiteral(array_type, items, ti)
+
+
+
 def value_array_create(items, ti):
 	#info("value_array_create()", ti)
 
 	length = len(items)
-	if length == 0:
-		item_type = typeUnit  # not Null, becase it fail
-		nv = _value_array_create([], item_type, 0, is_generic=True, ti=ti)
-		return nv
 
-	# Проверяем - immediate ли этот массив?
-	# если хотя бы один элемент - не immediate
-	# -> весь массив - не immediate
+	if length == 0:
+		return _value_array_create([], item_type=typeUnit, length=0, is_generic=True, ti=ti)
+
+	# check new value stage
 	stage = HLIR_VALUE_STAGE_COMPILETIME
 	for item in items:
 		if item.isValueRuntime():
 			stage = HLIR_VALUE_STAGE_RUNTIME
-
 		if item.isValueLinktime() and stage == HLIR_VALUE_STAGE_COMPILETIME:
 			stage = HLIR_VALUE_STAGE_LINKTIME
 
 	# Получаем наиболее подходящий общий тип элементов массива
 	items_type = items[0].type
 	for item in items:
-		items_type = select_common_type(items_type, item.type)
+		items_type = select_common_type(items_type, item.type, item.ti)
 		if items_type == None or items_type.is_bad():
 			error("value with unsuitable type", item.ti)
 			return ValueBad({'ti': ti})
 
 	# неявно приводим все элементы к этому типу
 	casted_items = implicit_cast_list(items, items_type)
-	v = _value_array_create(casted_items, items_type, length, is_generic=True, ti=ti)
-	v.stage = stage
-
-	#info("arr=%s" % stage)
-	return v
+	nv = _value_array_create(casted_items, items_type, length, is_generic=True, ti=ti)
+	nv.stage = stage
+	return nv
 
 
 # TODO: see select_common_type!
@@ -167,22 +167,13 @@ def value_array_cons(t, v, method, ti):
 
 
 
-def _value_array_create(items, item_type, length, is_generic=False, ti=None):
-	from .num import value_number_create
-	array_volume = value_number_create(length)
-	array_type = TypeArray(item_type, volume=array_volume, ti=ti)
-	array_type.generic = is_generic
-	return ValueLiteral(array_type, items, ti)
-
-
-
-# Складывает два массива (оба - immediate!)
+# Concat two immediate arrays
 def value_array_add(l, r, ti):
 	items = l.asset + r.asset
 	length = len(items)
 	from .num import value_number_create
 	str_array_volume = value_number_create(length)
-	item_type = select_common_type(l.type.of, r.type.of)
+	item_type = select_common_type(l.type.of, r.type.of, ti)
 
 	# неявно приводим все элементы к общему типу
 	items = implicit_cast_list(items, item_type)

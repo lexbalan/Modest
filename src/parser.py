@@ -329,10 +329,6 @@ class Parser:
 	def is_type_expr(self):
 		return self.check(self.check_is_type)
 
-	# TODO: now not used
-	def is_value_expr(self):
-		return None
-
 
 	def expr_type_func(self):
 		ti = self.ti()
@@ -1080,7 +1076,6 @@ class Parser:
 					'anno': [],
 					'ti': ti
 				}
-			#elif self.look("[") and self.is_value_expr():
 			elif self.match("["):
 				#
 				# ARRAY INDEXING OR SLICING

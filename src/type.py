@@ -172,7 +172,7 @@ def type_print(t, print_aka=True):
 # получает на вход два типа GenericRecord
 # и создает третий тип который является общим для двух входных
 # (тк в случае записей ни один из двух может не подходить как общий)
-def select_common_record_type(a, b):
+def select_common_record_type(a, b, ti):
 	#print("select_common_record_type")
 	if len(a.fields) != len(b.fields):
 		return None
@@ -183,11 +183,11 @@ def select_common_record_type(a, b):
 			return None
 
 		fieldId = fieldA.id
-		fieldType = select_common_type(fieldA.type, fieldB.type)
+		fieldType = select_common_type(fieldA.type, fieldB.type, ti)
 		newField = Field(fieldId, fieldType, init_value=ValueUndef(fieldType), ti=fieldId.ti)
 		fields.append(newField)
 
-	newRecord =TypeRecord(fields, ti=a.ti)
+	newRecord = TypeRecord(fields, ti=a.ti)
 	newRecord.generic = True
 	return newRecord
 
@@ -195,7 +195,7 @@ def select_common_record_type(a, b):
 
 # выбирает общий тип для двух входных
 # CAN RETURN NONE!
-def select_common_type(a, b, ti=None):
+def select_common_type(a, b, ti):
 
 	if Type.eq(a, b):
 		return a
@@ -203,7 +203,7 @@ def select_common_type(a, b, ti=None):
 	if a.__class__.__name__ == b.__class__.__name__:
 		if a.is_generic() and b.is_generic():
 			if a.is_record():
-				return select_common_record_type(a, b)
+				return select_common_record_type(a, b, ti)
 			elif a.is_array():
 				# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
 				if a.of.is_generic():

@@ -2668,7 +2668,7 @@ def eq_by_memcmp(left, right, op=HLIR_VALUE_OP_EQ):
 	sstr += ', '
 	sstr += str_value_as_ptr(right)
 	sstr += ", sizeof("
-	common_type = select_common_type(left.type, right.type)
+	common_type = select_common_type(left.type, right.type, ti=None)
 	sstr += str_type(common_type)
 	sstr += ")"
 	if op == HLIR_VALUE_OP_EQ:
