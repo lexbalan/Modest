@@ -7,20 +7,12 @@ from .char import utf32_chars_to_utfx_chars
 
 
 
-
 def value_array_create(items, ti):
 	#info("value_array_create()", ti)
 
-	# get new value stage
-	stage = HLIR_VALUE_STAGE_COMPILETIME
-	for item in items:
-		if item.isValueRuntime():
-			stage = HLIR_VALUE_STAGE_RUNTIME
-		if item.isValueLinktime() and stage == HLIR_VALUE_STAGE_COMPILETIME:
-			stage = HLIR_VALUE_STAGE_LINKTIME
-
 	length = len(items)
 	item_type = typeUnit
+	stage = HLIR_VALUE_STAGE_COMPILETIME
 	if length > 0:
 		# Получаем наиболее подходящий общий тип элементов массива
 		item_type = items[0].type
@@ -29,8 +21,12 @@ def value_array_create(items, ti):
 			if item_type == None or item_type.is_bad():
 				error("value with unsuitable type", item.ti)
 				return ValueBad({'ti': ti})
+			if item.isValueRuntime():
+				stage = HLIR_VALUE_STAGE_RUNTIME
+			if item.isValueLinktime() and stage == HLIR_VALUE_STAGE_COMPILETIME:
+				stage = HLIR_VALUE_STAGE_LINKTIME
 
-	items = implicit_cast_list(items, item_type)
+	items = implicit_cons_list(items, item_type)
 
 	from .num import value_number_create
 	array_volume = value_number_create(length)
@@ -55,7 +51,6 @@ def array_can(to, from_type, method, ti):
 
 	if from_type.is_generic():
 		# from an empty array literal `[]`
-		#info("ARR CAN? %d %d" % (to.is_generic(), from_type.is_generic()), ti)
 		if from_type.size == 0 and from_type.of.is_unit():
 			return True
 
@@ -122,9 +117,6 @@ def value_array_cons(t, v, method, ti):
 	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 	nv.stage = v.stage
 
-#	if v.isValueImmediate():
-#		nv.asset = 1
-
 	if Type.is_string(v.type):
 		char_type = t.of
 		items = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
@@ -170,7 +162,7 @@ def value_array_add(l, r, ti):
 	item_type = select_common_type(l.type.of, r.type.of, ti)
 
 	# неявно приводим все элементы к общему типу
-	items = implicit_cast_list(items, item_type)
+	items = implicit_cons_list(items, item_type)
 
 	assert(item_type != None)
 	type_result = TypeArray(item_type, volume=str_array_volume, ti=ti)
@@ -214,13 +206,13 @@ def value_array_eq(l, r, op, ti):
 
 
 
-def implicit_cast_list(items, to_type):
-	casted_items = []
+def implicit_cons_list(items, to_type):
+	new_items = []
 	from .cons import value_cons_implicit
 	for item in items:
-		casted_item = value_cons_implicit(to_type, item)
-		casted_item.nl = item.nl
-		casted_items.append(casted_item)
-	return casted_items
+		new_item = value_cons_implicit(to_type, item)
+		new_item.nl = item.nl
+		new_items.append(new_item)
+	return new_items
 
 

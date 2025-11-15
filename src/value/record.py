@@ -8,14 +8,14 @@ from type import type_print, record_field_get
 # получает на вход список инициализаторов
 # конструирует и возвращает GenericRecord value
 def value_record_create(initializers, ti):
-	# структура метится как immediate только когда все ее поля immediate
-	is_immediate = True
+	#info("value_record_create()", ti)
+
 	stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	# сперва пройдемся по инициализаторам
 	# и выясним какие поля у нас здесь имеются
 	# (для того чтобы сконструировать тип записи)
-	fields = []
+	type_fields = []
 	for initializer in initializers:
 		field_id = initializer.id
 		init_value = initializer.value
@@ -32,14 +32,13 @@ def value_record_create(initializers, ti):
 
 		# создаем поле для типа generic record
 		field = Field(field_id, field_type, init_value=ValueUndef(field_type), ti=field_ti)
-		fields.append(field)
+		type_fields.append(field)
 
-	record_type = TypeRecord(fields, ti)
+	record_type = TypeRecord(type_fields, ti)
 	record_type.generic = True
-
-	v = ValueLiteral(record_type, initializers, ti)
-	v.stage = stage
-	return v
+	nv = ValueLiteral(record_type, initializers, ti)
+	nv.stage = stage
+	return nv
 
 
 
@@ -53,6 +52,8 @@ def record_can(to, from_type, method, ti):
 	if method == 'implicit':
 		return False
 
+	# explicit cons record from another record
+
 	# check if all fields in from_type present in t
 	# and their types are equal (!)
 	for field in from_type.fields:
@@ -62,7 +63,7 @@ def record_can(to, from_type, method, ti):
 		if not Type.eq(field.type, field2.type):
 			return False  # if field type not equal
 
-	return True # Record to Record
+	return True  # Record to Record
 
 
 
