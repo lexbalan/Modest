@@ -33,11 +33,7 @@ typedef struct Point Point;
 #define POINTS  (Point[3])PS
 
 __attribute__((used))
-static Point points2[3] = {
-	{.x = 0, .y = 0},
-	{.x = 1, .y = 1},
-	{.x = 2, .y = 2}
-};
+static Point points2[3] = POINTS;
 
 // define function main
 int main(void) {

@@ -1233,6 +1233,9 @@ class Value(Entity):
 	def isValueLiteral(self):
 		return isinstance(self, ValueLiteral)
 
+	def isValueArray(self):
+		return isinstance(self, ValueArray)
+
 	def isValueConst(self):
 		return isinstance(self, ValueConst)
 
@@ -1456,19 +1459,39 @@ class ValueUndef(Value):
 class ValueLiteral(Value):
 	def __init__(self, type, asset, ti=None):
 		assert(isinstance(type, Type))
+		if type.is_array():
+			1/0
 		super().__init__(type=type, ti=ti)
 		self.asset = asset
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.nsigns = 0
 
 
+class ValueArray(Value):
+	def __init__(self, type, items, ti=None):
+		assert(isinstance(type, Type))
+		super().__init__(type=type, ti=ti)
+		self.asset = items
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.nsigns = 0
+
+
+class ValueRecord(Value):
+	def __init__(self, type, initializers, ti=None):
+		assert(isinstance(type, Type))
+		super().__init__(type=type, ti=ti)
+		self.asset = items
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.nsigns = 0
 
 
 def create_zero_literal(t, ti=None):
-	asset = 0
 	if t.is_composite():
-		asset = []
-	return ValueLiteral(t, asset=asset, ti=ti)
+		if t.is_array():
+			return ValueArray(t, items=[], ti=ti)
+		if t.is_record():
+			return ValueRecord(t, initializers=[], ti=ti)
+	return ValueLiteral(t, asset=0, ti=ti)
 
 
 

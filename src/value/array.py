@@ -32,7 +32,7 @@ def value_array_create(items, ti):
 	array_volume = value_number_create(length)
 	array_type = TypeArray(item_type, volume=array_volume, ti=ti)
 	array_type.generic = True
-	nv = ValueLiteral(array_type, items, ti)
+	nv = ValueArray(array_type, items, ti)
 	nv.stage = stage
 	return nv
 

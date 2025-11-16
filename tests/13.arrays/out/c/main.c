@@ -307,7 +307,8 @@ int main(void) {
 	int int200 = 200;
 	int int300 = 300;
 	// immutable, non immediate value (array)
-	int init_array[3] = {int100, int200, int300};
+	int init_array[3];
+	memcpy(&init_array, &(int[3]){int100, int200, int300}, sizeof(int[3]));
 
 	// check local literal array assignation to local array
 	int32_t e[4];
@@ -334,7 +335,8 @@ int main(void) {
 	int32_t cx = 30;
 	const int32_t dx = 40;
 
-	int32_t y[4] = {ax, bx, cx, dx};
+	int32_t y[4];
+	memcpy(&y, &(int32_t[4]){ax, bx, cx, dx}, sizeof(int32_t[4]));
 
 	ax = 111;
 	bx = 222;

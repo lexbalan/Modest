@@ -531,7 +531,7 @@ def str_value_bin(x, ctx):
 
 	if op == HLIR_VALUE_OP_ADD:
 		if left.type.is_array():
-			return str_value_literal(x, ctx)
+			return str_value_array(x, ctx)
 
 		if left.type.is_string():
 			if left.type.width != right.type.width:
@@ -646,7 +646,7 @@ def str_value_call(v, ctx, sret=None):
 	sstr = ''
 
 	if v.isValueImmediate():
-		return str_value_literal(v, ctx)
+		return str_value(v, ctx)
 
 	left = v.func
 
@@ -771,7 +771,9 @@ def str_value_access(x, ctx):
 	#	if x.isValueImmediate():
 	if not left.isValueConst():
 		if value_is_generic_immediate(left):
-			return str_value_literal(x, [])
+			#info("LKMLKMLKMKLMKLM", x.ti)
+			#mass
+			return str_value_literal(x, ctx)
 
 	if value_is_generic_immediate_const(left):
 		ts = str_type(left.type)
@@ -1076,7 +1078,10 @@ def str_value_literal_char(cc, width):
 
 
 
-def str_value_literal_array(x, type, items, nl_end=1):
+def str_value_array(x, ctx):
+	type = x.type
+	items = x.asset
+	nl_end = 1
 	sstr = ''
 
 	#if not x.isValueImmediate():
@@ -1121,7 +1126,9 @@ def str_value_literal_array(x, type, items, nl_end=1):
 
 
 
-def str_value_literal_record(type, items):
+def str_value_record(x):
+	items = x.asset
+	type = x.type
 	nitems = len(items)
 	if nitems == 0:
 		return EMPTY_RECORD_LITERAL
@@ -1291,12 +1298,12 @@ def str_value_literal_with_type(x, t, as_hex=False):
 
 	elif t.is_float(): return str_value_literal_float(asset)
 	elif t.is_string(): return str_value_literal_string(asset, char_width=t.width)
-	elif t.is_record(): return str_value_literal_record(t, asset)
-	elif t.is_array(): return str_value_literal_array(x, t, asset)
+	elif t.is_record(): return str_value_record(x)
 	elif t.is_bool(): return str_value_literal_bool(asset)
 	elif t.is_char(): return str_value_literal_char(asset, t.width)
 	elif t.is_pointer(): return str_value_literal_pointer(t, asset)
 	else: error("str_value_literal not implemented for %s" % str(t), x.ti)
+	1/0
 
 	return "<ValueLiteral>"
 
@@ -1427,6 +1434,8 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 	#	sstr += get_id_str(x)
 	if x.isValueLiteral():
 		sstr += str_value_literal(x, ctx)
+	elif x.isValueArray():
+		sstr += str_value_array(x, ctx)
 	elif x.isValueBin():
 		sstr += str_value_bin(x, ctx)
 	elif x.isValueShl():
@@ -2096,7 +2105,7 @@ def str_static_initializer(v):
 
 	if root.isValueImmediate():
 		if v.type.is_composite():
-			s = str_value_literal(root, [])
+			s = str_value(root, [])
 			if root.type.is_string():
 				left_char_width = 0
 				if v.type.is_array():
@@ -2601,7 +2610,8 @@ def str_value_as_ptr(x):
 	if root.isValueBin() and root.op in ['literal', HLIR_VALUE_OP_ADD]:
 		sstr += '(' + str_type(t) + ')'
 
-	elif root.isValueLiteral() and (not root.isValueImmediate()):
+	#elif root.isValueLiteral() and (not root.isValueImmediate()):
+	elif root.isValueArray() and (not root.isValueImmediate()):
 		# for non immediate literals  {1, 2, var_a, var_b, ...}
 		sstr += '(' + str_type(t) + ')'
 

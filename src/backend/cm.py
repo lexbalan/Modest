@@ -594,8 +594,6 @@ def str_value_literal(x, ctx):
 		return str_value_string(x, ctx)
 	elif Type.is_record(t):
 		return str_value_record(x, ctx)
-	elif Type.is_array(t):
-		return str_value_array(x, ctx)
 	elif Type.is_pointer(t):
 		return str_value_ptr(x, ctx)
 	elif Type.is_bool(t):
@@ -665,6 +663,7 @@ def str_value(x, ctx=[], parent_expr=None):
 	assert(isinstance(x, Value))
 
 	if x.isValueLiteral(): return str_value_literal(x, ctx)
+	elif x.isValueArray(): return str_value_array(x, ctx)
 	elif x.isValueBin(): return str_value_bin(x, ctx)
 	elif x.isValueShl(): return str_value_shl(x, ctx)
 	elif x.isValueShr(): return str_value_shr(x, ctx)
