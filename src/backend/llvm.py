@@ -1808,6 +1808,7 @@ def do_eval(x):
 	y = None
 	if x.isValueLiteral(): y = do_eval_literal(x)
 	elif x.isValueArray(): y = do_eval_array(x)
+	elif x.isValueRecord(): y = do_eval_record(x)
 	elif x.isValueBin(): y = do_eval_bin(x)
 	elif x.isValueShl(): y = do_eval_shl(x)
 	elif x.isValueShr(): y = do_eval_shr(x)

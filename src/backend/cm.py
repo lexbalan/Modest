@@ -664,6 +664,7 @@ def str_value(x, ctx=[], parent_expr=None):
 
 	if x.isValueLiteral(): return str_value_literal(x, ctx)
 	elif x.isValueArray(): return str_value_array(x, ctx)
+	elif x.isValueRecord(): return str_value_record(x, ctx)
 	elif x.isValueBin(): return str_value_bin(x, ctx)
 	elif x.isValueShl(): return str_value_shl(x, ctx)
 	elif x.isValueShr(): return str_value_shr(x, ctx)

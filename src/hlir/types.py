@@ -1236,6 +1236,9 @@ class Value(Entity):
 	def isValueArray(self):
 		return isinstance(self, ValueArray)
 
+	def isValueRecord(self):
+		return isinstance(self, ValueRecord)
+
 	def isValueConst(self):
 		return isinstance(self, ValueConst)
 
@@ -1480,7 +1483,7 @@ class ValueRecord(Value):
 	def __init__(self, type, initializers, ti=None):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
-		self.asset = items
+		self.asset = initializers
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.nsigns = 0
 

@@ -1436,6 +1436,8 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 		sstr += str_value_literal(x, ctx)
 	elif x.isValueArray():
 		sstr += str_value_array(x, ctx)
+	elif x.isValueRecord():
+		sstr += str_value_record(x)
 	elif x.isValueBin():
 		sstr += str_value_bin(x, ctx)
 	elif x.isValueShl():

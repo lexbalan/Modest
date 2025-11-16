@@ -36,7 +36,7 @@ def value_record_create(initializers, ti):
 
 	record_type = TypeRecord(type_fields, ti)
 	record_type.generic = True
-	nv = ValueLiteral(record_type, initializers, ti)
+	nv = ValueRecord(record_type, initializers=initializers, ti=ti)
 	nv.stage = stage
 	return nv
 
