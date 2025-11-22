@@ -2335,8 +2335,7 @@ def do_import(x):
 	is_include_form = x['is_include']
 
 	if m == None:
-		is_import = False
-		m = translate(abspath, is_import=None, is_include=is_include_form)
+		m = translate(abspath, is_include=is_include_form)
 		modules[abspath] = m
 
 		mid = impline.split("/")[-1]
@@ -2402,7 +2401,6 @@ def do_directive(x):
 		elif s0 == 'prefix':
 			prefix = args[1]
 			cmodule.setPrefix(prefix)
-			#mass
 		elif s0 == 'append_prefix':
 			prefix = args[1]
 			#print('append_prefix = %s' % prefix)
@@ -2417,7 +2415,7 @@ def do_directive(x):
 
 
 
-def translate(abspath, is_import=False, is_include=False):
+def translate(abspath, is_include=False):
 	log("\"%s\":" % abspath)
 	log_push()
 	assert(abspath != None)
@@ -2436,7 +2434,7 @@ def translate(abspath, is_import=False, is_include=False):
 	m = None
 	if ast != None:
 		idStr = abspath.split('/')[-1][:-2]
-		m = process_module(idStr, abspath, ast, is_import=is_import, is_include=is_include)
+		m = process_module(idStr, abspath, ast, is_include=is_include)
 		#m.prefix = m.id
 		m.source_abspath = abspath
 
@@ -2448,7 +2446,7 @@ def translate(abspath, is_import=False, is_include=False):
 
 
 
-def process_module(idStr, sourcename, ast, is_import=False, is_include=False):
+def process_module(idStr, sourcename, ast, is_include):
 	global skipp, production
 
 	global cmodule
@@ -2486,12 +2484,8 @@ def process_module(idStr, sourcename, ast, is_import=False, is_include=False):
 			cmodule.defs.append(y)
 			y.parent = cmodule
 
-
-	if is_import:
-		pre_imp(ast)
-	else:
-		pre_def(ast, is_include=is_include)
-		def_def(ast, is_include=is_include)
+	pre_def(ast, is_include=is_include)
+	def_def(ast, is_include=is_include)
 
 	m = cmodule
 
