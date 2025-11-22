@@ -1887,19 +1887,22 @@ class Parser:
 
 		output = []
 
-		# Head
-#		if not self.is_end():
-#			while True:
-#				ca = self.parse_comments_annotations(nl_cnt=0)
-#
-#				if not self.match('\n') and ca == None:
-#					break
-#
-#		if self.match('module'):
-#			id = self.parse_identifier()
-#			print("MODULE %s" % id['str'])
-
 		spaceline_cnt = 0
+
+		while self.skipnl():
+			spaceline_cnt += 1
+		comm = self.parse_if_comment()
+		if comm != None:
+			comm['nl'] = spaceline_cnt
+			spaceline_cnt = 0
+			output.append(comm)
+		while self.skipnl():
+			spaceline_cnt += 1
+		if self.match('module'):
+			ti = self.ti()
+			s = self.gettok()
+			module_str = self.parse_value_string(s, ti)
+			print("MODULE '%s'" % module_str['str'])
 
 
 		annotations = []
@@ -1917,7 +1920,7 @@ class Parser:
 			x = None
 
 			if self.match('\n'):
-				spaceline_cnt = spaceline_cnt + 1
+				spaceline_cnt += 1
 				continue
 
 			if self.match('func'):

@@ -1,5 +1,7 @@
 // examples/0.endianness/src/main.m
 
+module "endianess/main"
+
 pragma unsafe
 
 include "libc/ctypes64"
