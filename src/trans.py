@@ -2291,6 +2291,7 @@ def do_import(x):
 
 	# Literal string to python string
 	impline = import_expr.asset
+	#log('do_import("%s")' % impline)
 
 	_as = None
 	if x['as'] != None:
@@ -2300,9 +2301,6 @@ def do_import(x):
 
 
 	abspath = get_import_abspath(impline, ext='.m')
-
-	#log('do_import("%s")' % impline)
-
 	if abspath == None:
 		error("module %s not found" % impline, import_expr.ti)
 		return None
@@ -2334,10 +2332,11 @@ def do_import(x):
 	if abspath in modules:
 		m = modules[abspath]
 
+	is_include_form = x['is_include']
+
 	if m == None:
 		is_import = False
-		#is_import = not x['include']
-		m = translate(abspath, is_import=is_import, is_include=x['include'])
+		m = translate(abspath, is_import=None, is_include=is_include_form)
 		modules[abspath] = m
 
 		mid = impline.split("/")[-1]
@@ -2352,24 +2351,24 @@ def do_import(x):
 	# recursive import protection
 	import_stack.remove(kk)
 
-	if x['include']:
+	if is_include_form:
 		# INCLUDE
 		# забираем публичные символы
 		# и забираем все определения (исключая дубликаты!)
-		if True:
-			# public include
-			cmodule.symtab_public.extend(m.symtab_public)
 
-			# копируем все c_include из импортированного модуля себе
-			# это костыль, но пока так
-			for d in m.defs:
-				if isinstance(d, StmtDirectiveCInclude):
-					cmodule.defs.append(d)
+		# public include
+		cmodule.symtab_public.extend(m.symtab_public)
+
+		# копируем все c_include из импортированного модуля себе
+		# это костыль, но пока так
+		for d in m.defs:
+			if isinstance(d, StmtDirectiveCInclude):
+				cmodule.defs.append(d)
 
 		cmodule.included_modules.append(m)
 		return
 
-	y = StmtImport(impline, _as, module=m, ti=x['ti'], include=x['include'])
+	y = StmtImport(impline, _as, module=m, ti=x['ti'], include=False)
 	cmodule.imports[_as] = y
 	return y
 
@@ -2686,24 +2685,23 @@ def def_def(ast, is_include=False):
 # получает строку импорта (и неявно глобальный контекст)
 # и возвращает полный путь к модулю
 def get_import_abspath(s, ext='.m'):
-	s = s + ext
+	fname = s + ext
 
-	local_name = s
+	local_name = fname
 	if env_current_file_dir != "":
-		local_name = env_current_file_dir + '/' + s
+		local_name = env_current_file_dir + '/' + fname
 
 	full_name = ''
 
-	is_local = s[0:2] == './' or s[0:3] == '../'
+	is_local = fname[0:2] == './' or fname[0:3] == '../'
 	if is_local:
 		full_name = local_name
 	elif os.path.exists(local_name):
 		full_name = local_name
 	else:
-		full_name = settings['lib'] + '/' + s
+		full_name = settings['lib'] + '/' + fname
 
 	if not os.path.exists(full_name):
-		print("%s not exist" % full_name)
 		return None
 
 	return os.path.abspath(full_name)

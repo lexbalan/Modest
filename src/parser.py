@@ -1676,7 +1676,7 @@ class Parser:
 				'isa': 'ast_import',
 				'kind': 'ast_import',
 				'expr': import_expr,
-				'include': include,
+				'is_include': include,
 				'as': _as,
 				'args': [],
 				'ti': ti
@@ -1701,7 +1701,7 @@ class Parser:
 					'isa': 'ast_annotation',
 					'kind': 'import',
 					'expr': import_expr,
-					'include': include,
+					'is_include': include,
 					'as': _as,
 					'args': [],
 					'ti': ti
