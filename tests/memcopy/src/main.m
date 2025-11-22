@@ -5,6 +5,7 @@ include "libc/stdio"
 
 import "lightfood/memory" as mem
 
+pragma c_include "./memory.h"
 
 type Object = record {
 	firstname: [32]Char8

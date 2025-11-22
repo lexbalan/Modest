@@ -3,7 +3,6 @@ include "ctypes64"
 // tests/print/src/main.m
 import "lightfood/console" as console
 
-
 public func main () -> Int {
 	console.print("test console print\n")
 

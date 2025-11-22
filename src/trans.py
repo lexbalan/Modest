@@ -2471,6 +2471,8 @@ def process_module(idStr, sourcename, ast, is_include):
 		y = None
 		if isa == 'ast_import':
 			y = do_import(x)
+		elif isa == 'ast_include':
+			y = do_import(x)
 		elif isa == 'ast_directive':
 			y = do_directive(x)
 		elif isa == 'ast_comment':
@@ -2643,7 +2645,7 @@ def def_def(ast, is_include=False):
 		kind = x['kind']
 
 		# for verbose mode
-		if not x['isa'] in ['ast_comment', 'ast_directive', 'ast_import']:
+		if not x['isa'] in ['ast_comment', 'ast_directive', 'ast_import', 'ast_include']:
 			log("define %s %s" % (x['kind'], x['id']['str']))
 
 		if isa == 'ast_definition':
@@ -2671,6 +2673,7 @@ def def_def(ast, is_include=False):
 		elif isa == 'ast_directive':
 			if x['kind'] == 'pragma':
 				df = do_directive(x)
+				cmodule.defs.append(df)
 
 	return
 

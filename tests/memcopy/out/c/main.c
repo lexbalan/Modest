@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
+#include "./memory.h"
 
 
 struct Object {

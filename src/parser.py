@@ -1662,54 +1662,38 @@ class Parser:
 	# Top Level Directives
 	#
 
+	def parse_include(self):
+		ti = self.ti()
+		import_expr = self.expr_value()
+
+		return {
+			'isa': 'ast_include',
+			'kind': 'ast_include',
+			'expr': import_expr,
+			'is_include': True,
+			'as': None,
+			'args': [],
+			'ti': ti
+		}
+
+
 	def parse_import(self, include=False):
 		ti = self.ti()
+		import_expr = self.expr_value()
 
-		if not self.look("{"):
-			import_expr = self.expr_value()
+		_as = None
+		if self.match("as"):
+			_as = self.parse_identifier()
 
-			_as = None
-			if self.match("as"):
-				_as = self.parse_identifier()
-
-			return {
-				'isa': 'ast_import',
-				'kind': 'ast_import',
-				'expr': import_expr,
-				'is_include': include,
-				'as': _as,
-				'args': [],
-				'ti': ti
-			}
-
-		else:
-			imports = []
-			self.skip1()  # {
-			while True:
-				nl_cnt = self.skip_blanks()
-
-				if self.match('}'):
-					break
-
-				import_expr = self.expr_value()
-
-				_as = None
-				if self.match("as"):
-					_as = self.parse_identifier()
-
-				import_dir = {
-					'isa': 'ast_annotation',
-					'kind': 'import',
-					'expr': import_expr,
-					'is_include': include,
-					'as': _as,
-					'args': [],
-					'ti': ti
-				}
-
-				imports.append(import_dir)
-
-			return imports
+		return {
+			'isa': 'ast_import',
+			'kind': 'ast_import',
+			'expr': import_expr,
+			'is_include': False,
+			'as': _as,
+			'args': [],
+			'ti': ti
+		}
 
 
 
@@ -1954,7 +1938,7 @@ class Parser:
 			elif self.match('import'):
 				x = self.parse_import()
 			elif self.match('include'):
-				x = self.parse_import(include=True)
+				x = self.parse_include()
 
 			elif public_region:
 				if self.match('}'):
