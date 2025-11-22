@@ -1919,7 +1919,8 @@ class Parser:
 			if self.match('\n'):
 				spaceline_cnt = spaceline_cnt + 1
 				continue
-			elif self.match('func'):
+
+			if self.match('func'):
 				x = self.parse_def_func()
 			elif self.match('const'):
 				x = self.parse_def_const()
@@ -1933,8 +1934,6 @@ class Parser:
 				x = self.parse_if_comment_line()
 			elif self.look('pragma'):
 				x = self.parse_directive()
-			#elif self.look('if'):
-			#	pass
 			elif self.match('import'):
 				x = self.parse_import()
 			elif self.match('include'):
@@ -1949,21 +1948,21 @@ class Parser:
 				self.restore_top_level()
 				continue
 
-			if x == None:
-				continue
-
-			if not isinstance(x, list):
-				x = [x]
-
-			for subx in x:
-				subx['nl'] = 1
-				subx['ti'] = ti
-				subx['access_modifier'] = access_modifier
-				subx['anno'] = annotations
-				#subx['comms'] = comments
-
-			x[0]['nl'] = spaceline_cnt
-			output.extend(x)
+			if x != None:
+				if not isinstance(x, list):
+					x['nl'] = spaceline_cnt
+					x['ti'] = ti
+					x['access_modifier'] = access_modifier
+					x['anno'] = annotations
+					output.append(x)
+				else:
+					for xx in x:
+						xx['nl'] = 1
+						xx['ti'] = ti
+						xx['access_modifier'] = access_modifier
+						xx['anno'] = annotations
+					x[0]['nl'] = spaceline_cnt
+					output.extend(x)
 
 			annotations = []
 			spaceline_cnt = 0

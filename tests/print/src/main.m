@@ -3,7 +3,6 @@
 include "libc/ctypes64"
 
 import "lightfood/console"
-
 pragma c_include "./console.h"
 
 
