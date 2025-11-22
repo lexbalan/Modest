@@ -213,14 +213,14 @@ def init():
 	root_symtab.type_add('Int32', typeInt32)
 	root_symtab.type_add('Int64', typeInt64)
 	root_symtab.type_add('Int128', typeInt128)
-	root_symtab.type_add('Int256', typeInt256)
+	#root_symtab.type_add('Int256', typeInt256)
 
 	root_symtab.type_add('Nat8', typeNat8)
 	root_symtab.type_add('Nat16', typeNat16)
 	root_symtab.type_add('Nat32', typeNat32)
 	root_symtab.type_add('Nat64', typeNat64)
 	root_symtab.type_add('Nat128', typeNat128)
-	root_symtab.type_add('Nat256', typeNat256)
+	#root_symtab.type_add('Nat256', typeNat256)
 
 	#root_symtab.type_add('Float16', typeFloat16)
 	root_symtab.type_add('Float32', typeFloat32)
@@ -2688,24 +2688,19 @@ def def_def(ast, is_include=False):
 def get_import_abspath(s, ext='.m'):
 	s = s + ext
 
-	is_local = s[0:2] == './' or s[0:3] == '../'
-
-	full_name = ''
-
 	local_name = s
 	if env_current_file_dir != "":
 		local_name = env_current_file_dir + '/' + s
 
+	full_name = ''
+
+	is_local = s[0:2] == './' or s[0:3] == '../'
 	if is_local:
 		full_name = local_name
-
 	elif os.path.exists(local_name):
 		full_name = local_name
-
 	else:
-		# imp_paths or lib_path
-		if full_name == '':
-			full_name = settings['lib'] + '/' + s
+		full_name = settings['lib'] + '/' + s
 
 	if not os.path.exists(full_name):
 		print("%s not exist" % full_name)
