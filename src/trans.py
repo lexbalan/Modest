@@ -2376,6 +2376,7 @@ def do_import(x):
 def do_directive(x):
 	global cmodule
 	global global_prefix
+
 	if x['kind'] == 'pragma':
 		args = x['args']
 		s0 = args[0]
@@ -2410,6 +2411,9 @@ def do_directive(x):
 			prefix = args[1]
 			#print('remove_prefix = %s' % prefix)
 			global_prefix = global_prefix.removesuffix(prefix)
+
+	elif x['kind'] == 'module':
+		print("MODULE('%s')" % x['line']['str'])
 
 	return None
 
@@ -2635,6 +2639,13 @@ def pre_def(ast, is_include=False):
 				ctx_value_add(id['str'], v, is_public=is_public)
 				v.is_global_flag = True
 
+		"""elif isa == 'ast_directive':
+			if x['kind'] == 'pragma':
+				print("!!!PRAGMA")
+				#df = do_directive(x)
+				#cmodule.defs.append(df)
+			elif x['kind'] == 'module':
+				print("!!!MODULE '%s'" % x['line']['str'])"""
 
 
 def def_def(ast, is_include=False):
@@ -2670,10 +2681,13 @@ def def_def(ast, is_include=False):
 			comment = do_stmt_comment(x)
 			cmodule.defs.append(comment)
 
-		elif isa == 'ast_directive':
+		"""elif isa == 'ast_directive':
+			#print("SALFDNMALSMDLMWKLSDMLKAWSMLDKMSLKMSLKDMLKAMZSLDMASLKMDLKAMLKMZSLKDMLKASMMLKEWMLKa " + x['kind'])
 			if x['kind'] == 'pragma':
 				df = do_directive(x)
 				cmodule.defs.append(df)
+			elif x['kind'] == 'module':
+				print("MODULE '%s'" % x['line']['str'])"""
 
 	return
 

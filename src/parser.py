@@ -1902,7 +1902,13 @@ class Parser:
 			ti = self.ti()
 			s = self.gettok()
 			module_str = self.parse_value_string(s, ti)
-			print("MODULE '%s'" % module_str['str'])
+			module_directive = {
+				'isa': 'ast_directive',
+				'kind': 'module',
+				'line': module_str,
+				'ti': ti
+			}
+			output.append(module_directive)
 
 
 		annotations = []
