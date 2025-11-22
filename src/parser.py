@@ -1938,11 +1938,6 @@ class Parser:
 				x = self.parse_import()
 			elif self.match('include'):
 				x = self.parse_include()
-
-			elif public_region:
-				if self.match('}'):
-					public_region = False
-
 			else:
 				error("unexpected token '%s'" % self.ctok(), self.ti())
 				self.restore_top_level()
