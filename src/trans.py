@@ -1,7 +1,7 @@
 
 import os
-
 import copy
+import decimal
 
 from hlir import *
 from error import *
@@ -19,7 +19,6 @@ from value.record import value_record_create
 from value.value import value_imm_literal_create
 from value.word import value_word_create
 
-import decimal
 
 
 lexer = CmLexer()
@@ -42,8 +41,6 @@ def getAnno(x, aname):
 		if a['kind'] == aname:
 			return a
 	return None
-
-
 
 
 
@@ -2639,13 +2636,6 @@ def pre_def(ast, is_include=False):
 				ctx_value_add(id['str'], v, is_public=is_public)
 				v.is_global_flag = True
 
-		"""elif isa == 'ast_directive':
-			if x['kind'] == 'pragma':
-				print("!!!PRAGMA")
-				#df = do_directive(x)
-				#cmodule.defs.append(df)
-			elif x['kind'] == 'module':
-				print("!!!MODULE '%s'" % x['line']['str'])"""
 
 
 def def_def(ast, is_include=False):
@@ -2681,13 +2671,6 @@ def def_def(ast, is_include=False):
 			comment = do_stmt_comment(x)
 			cmodule.defs.append(comment)
 
-		"""elif isa == 'ast_directive':
-			#print("SALFDNMALSMDLMWKLSDMLKAWSMLDKMSLKMSLKDMLKAMZSLDMASLKMDLKAMLKMZSLKDMLKASMMLKEWMLKa " + x['kind'])
-			if x['kind'] == 'pragma':
-				df = do_directive(x)
-				cmodule.defs.append(df)
-			elif x['kind'] == 'module':
-				print("MODULE '%s'" % x['line']['str'])"""
 
 	return
 
