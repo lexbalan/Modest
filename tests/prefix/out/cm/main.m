@@ -1,6 +1,6 @@
 import "lib"
 include "stdio"
-// examples/prefix/src/main.m
+
 import "lib" as lib
 
 

@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/14.records/src/main.m
+
 
 type Point2D = record {
 	x: Nat32

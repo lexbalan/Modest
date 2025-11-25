@@ -1,4 +1,3 @@
-// tests/free_pointer/src/main.m
 
 #include "main.h"
 

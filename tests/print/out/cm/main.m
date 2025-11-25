@@ -1,6 +1,6 @@
 import "lightfood/console"
 include "ctypes64"
-// tests/print/src/main.m
+
 import "lightfood/console" as console
 
 public func main () -> Int {

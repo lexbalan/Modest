@@ -1,4 +1,3 @@
-// Simple Web server example
 
 #include "main.h"
 

@@ -1,4 +1,3 @@
-// tests/xor/src/main.m
 
 #include "main.h"
 

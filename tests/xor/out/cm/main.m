@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/xor/src/main.m
+
 
 
 func xor_encrypter (buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -> Unit {

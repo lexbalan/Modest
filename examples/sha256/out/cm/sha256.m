@@ -1,6 +1,6 @@
 include "ctypes64"
 include "string"
-// sha256.m
+
 
 
 public const hashSize = 32

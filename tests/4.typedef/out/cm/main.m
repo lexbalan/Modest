@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/4.typedef/src/main.m
+
 
 type NewInt32 = Int32
 

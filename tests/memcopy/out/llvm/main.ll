@@ -207,7 +207,7 @@ declare %Bool @memory_eq(i8* %mem0, i8* %mem1, %Nat64 %len)
 @str3 = private constant [18 x i8] [i8 102, i8 105, i8 114, i8 115, i8 116, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
 @str4 = private constant [17 x i8] [i8 108, i8 97, i8 115, i8 116, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
 @str5 = private constant [10 x i8] [i8 97, i8 103, i8 101, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-; -- endstrings --; tests/1.hello_world/src/main.m
+; -- endstrings --
 %Object = type {
 	[32 x %Char8],
 	[32 x %Char8],

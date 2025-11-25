@@ -1,4 +1,3 @@
-// tests/string/src/main.m
 
 #include "main.h"
 
@@ -11,6 +10,8 @@
 #include "./console.h"
 
 
+
+// constants with type String(Generic)
 
 // constants with type String(Generic)
 #define STR8_EXAMPLE  "String"

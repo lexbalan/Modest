@@ -1,4 +1,3 @@
-// tests/4.typedef/src/main.m
 
 #include "main.h"
 

@@ -1,4 +1,3 @@
-// tests/va/src/main.m
 
 #include "main.h"
 
@@ -12,6 +11,9 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+
+//include "lightfood/print"
+//pragma c_include "./print.h"
 
 //include "lightfood/print"
 //pragma c_include "./print.h"

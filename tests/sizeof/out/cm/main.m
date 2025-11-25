@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/sizeof/src/main.m
+
 
 
 type Point = record {

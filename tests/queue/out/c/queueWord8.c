@@ -1,5 +1,3 @@
-// queueWord8
-// queue implementation example
 
 #include "queueWord8.h"
 

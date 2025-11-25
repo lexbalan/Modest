@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/asm/src/main.m
+
 
 
 func sum64 (a: Int64, b: Int64) -> Int64 {

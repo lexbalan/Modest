@@ -200,7 +200,7 @@ declare void @perror(%ConstCharStr* %str)
 @str3 = private constant [19 x i8] [i8 98, i8 105, i8 103, i8 51, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
 @str4 = private constant [22 x i8] [i8 98, i8 105, i8 103, i8 95, i8 115, i8 117, i8 109, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
 @str5 = private constant [13 x i8] [i8 115, i8 105, i8 103, i8 49, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
-; -- endstrings --; tests/9.big_numbers/src/main.m
+; -- endstrings --
 @big0 = internal global %Word128 1512366075204170947332355369683137040
 define internal %Word64 @high_128(%Word128 %x) {
 	%1 = zext i8 64 to %Word128

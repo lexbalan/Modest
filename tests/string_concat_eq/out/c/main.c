@@ -1,4 +1,3 @@
-// tests/string_concat_eq/src/main.m
 
 #include "main.h"
 

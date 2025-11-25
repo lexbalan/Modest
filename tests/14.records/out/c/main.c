@@ -1,4 +1,3 @@
-// tests/14.records/src/main.m
 
 #include "main.h"
 

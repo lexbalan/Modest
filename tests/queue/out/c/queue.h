@@ -1,4 +1,3 @@
-//module queue
 
 #ifndef QUEUE_H
 #define QUEUE_H

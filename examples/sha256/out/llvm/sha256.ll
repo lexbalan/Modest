@@ -159,7 +159,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- 0
 ; -- end print imports 'sha256' --
 ; -- strings --
-; -- endstrings --; sha256.m
+; -- endstrings --
 %sha256_Hash = type [32 x %Word8];
 %Context = type {
 	[64 x %Word8],

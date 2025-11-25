@@ -1,4 +1,3 @@
-// tests/default_params/src/main.m
 
 #ifndef MAIN_H
 #define MAIN_H

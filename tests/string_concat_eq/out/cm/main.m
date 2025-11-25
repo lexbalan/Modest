@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/string_concat_eq/src/main.m
+
 
 const hello = "Hello"
 const world = "World"

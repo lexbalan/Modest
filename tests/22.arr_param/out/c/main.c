@@ -10,6 +10,8 @@
 
 
 // returns array by value
+
+// returns array by value
 static void getarr10(int32_t *sret_) {
 	memcpy(sret_, &((int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), sizeof(int32_t[10]));
 }

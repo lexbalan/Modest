@@ -2,7 +2,7 @@ include "ctypes64"
 include "stdio"
 include "stdlib"
 include "socket"
-/* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
+
 
 
 const filename = "file2.txt"

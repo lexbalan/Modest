@@ -1,4 +1,3 @@
-// examples/demo1/src/main.m
 
 #include "main.h"
 

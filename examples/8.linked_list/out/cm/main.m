@@ -2,8 +2,11 @@ import "list"
 include "ctypes64"
 include "stdlib"
 include "stdio"
-// examples/8.linked_list/src/main.m
+
 import "list" as list
+
+
+// wrap around linked list for list.List Nat32
 
 
 // wrap around linked list for list.List Nat32

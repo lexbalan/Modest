@@ -197,7 +197,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 @str1 = private constant [14 x i8] [i8 37, i8 117, i8 32, i8 42, i8 32, i8 37, i8 117, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 @str2 = private constant [23 x i8] [i8 109, i8 117, i8 108, i8 116, i8 105, i8 112, i8 108, i8 121, i8 32, i8 116, i8 97, i8 98, i8 108, i8 101, i8 32, i8 102, i8 111, i8 114, i8 32, i8 37, i8 100, i8 10, i8 0]
-; -- endstrings --; examples/3.multiply_table/src/main.m
+; -- endstrings --
 define internal void @mtab(%Nat32 %n) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 1, %Nat32* %1

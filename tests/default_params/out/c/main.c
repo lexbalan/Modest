@@ -1,4 +1,3 @@
-// tests/default_params/src/main.m
 
 #include "main.h"
 

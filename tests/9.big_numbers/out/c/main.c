@@ -1,4 +1,3 @@
-// tests/9.big_numbers/src/main.m
 
 #include "main.h"
 

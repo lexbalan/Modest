@@ -1,4 +1,3 @@
-//module queue
 
 #include "queue.h"
 

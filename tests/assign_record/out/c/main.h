@@ -1,4 +1,3 @@
-// tests/assign_record/src/main.m
 
 #ifndef MAIN_H
 #define MAIN_H

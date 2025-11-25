@@ -1,4 +1,3 @@
-// sha256.m
 
 #include "sha256.h"
 

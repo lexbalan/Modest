@@ -1,5 +1,8 @@
 include "libc"
-// examples/6.text_file/main.m
+
+
+//include "libc/ctypes64"
+//include "libc/stdio"
 
 //include "libc/ctypes64"
 //include "libc/stdio"

@@ -1,4 +1,3 @@
-// examples/8.linked_list/linked_list.cm
 
 #ifndef LIST_H
 #define LIST_H

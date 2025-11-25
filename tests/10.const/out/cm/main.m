@@ -2,7 +2,7 @@ import "misc/minmax"
 include "ctypes64"
 include "stdio"
 include "math"
-// tests/10.const/src/main.m
+
 import "misc/minmax" as minmax
 
 

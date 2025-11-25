@@ -1,4 +1,3 @@
-// examples/prefix/src/lib.m
 
 #ifndef LOO_H
 #define LOO_H

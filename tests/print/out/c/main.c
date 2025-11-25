@@ -1,4 +1,3 @@
-// tests/print/src/main.m
 
 #include "main.h"
 

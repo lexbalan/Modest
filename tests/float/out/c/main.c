@@ -1,4 +1,3 @@
-// tests/float/src/main.m
 
 #include "main.h"
 

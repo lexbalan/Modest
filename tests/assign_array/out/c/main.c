@@ -1,4 +1,3 @@
-// tests/assign_array/src/main.m
 
 #include "main.h"
 

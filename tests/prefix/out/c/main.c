@@ -1,4 +1,3 @@
-// examples/prefix/src/main.m
 
 #include "main.h"
 

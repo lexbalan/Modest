@@ -1,4 +1,3 @@
-// tests/slices/src/main.m
 
 #include "main.h"
 

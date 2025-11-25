@@ -199,7 +199,7 @@ declare void @perror(%ConstCharStr* %str)
 @str2 = private constant [8 x i8] [i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str3 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str4 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-; -- endstrings --; tests/var/src/main.m
+; -- endstrings --
 @arr = constant [2 x %Int32] [
 	%Int32 1,
 	%Int32 2

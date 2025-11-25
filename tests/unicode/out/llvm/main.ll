@@ -237,7 +237,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @str11 = private constant [2 x i8] [i8 65, i8 0]
 @str12 = private constant [2 x i16] [i16 65, i16 0]
 @str13 = private constant [2 x i32] [i32 65, i32 0]
-; -- endstrings --; unicode support test
+; -- endstrings --
 @c8 = internal global %Char8 65
 @c16 = internal global %Char16 65
 @c32 = internal global %Char32 65

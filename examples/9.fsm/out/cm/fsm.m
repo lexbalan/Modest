@@ -1,5 +1,5 @@
 include "stdio"
-// examples/fsm/fsm.cm
+
 
 
 const verbose: Bool = true

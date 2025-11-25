@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// examples/stmt_if/src/main.m
+
 
 
 public func main () -> Int {

@@ -1,4 +1,3 @@
-// tests/12.structural_type_system/src/main.m
 
 #include "main.h"
 

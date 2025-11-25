@@ -1,4 +1,3 @@
-// tests/unistd/src/main.m
 
 #include "main.h"
 
@@ -14,7 +13,7 @@
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
-  // getenv
+  // getenv  // getenv
 
 int main(void) {
 	printf("unistd test\n");

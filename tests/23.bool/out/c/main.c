@@ -1,4 +1,3 @@
-// tests/bool/src/main.m
 
 #include "main.h"
 

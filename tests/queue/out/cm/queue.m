@@ -1,4 +1,4 @@
-//module queue
+
 
 public type Queue = record {
 	capacity: Nat32  // Number of items queue can hold up

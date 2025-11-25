@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/builtin_constants/src/main.m
+
 
 
 public func main () -> Int {

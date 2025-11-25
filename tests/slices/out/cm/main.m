@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/slices/src/main.m
+
 
 
 func array_print (pa: *[]Int32, len: Nat32) -> Unit {

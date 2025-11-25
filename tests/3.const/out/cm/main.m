@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/3.const/src/main.m
+
 
 const genericIntConst = 42
 const int32Const = Int32 genericIntConst

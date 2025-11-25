@@ -1,7 +1,7 @@
 include "ctypes64"
 include "stdlib"
 include "stdio"
-// examples/8.linked_list/linked_list.cm
+
 
 
 public type Node = record {

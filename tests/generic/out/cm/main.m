@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/1.hello_world/src/main.m
+
 
 
 public func main () -> Int {

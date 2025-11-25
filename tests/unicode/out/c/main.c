@@ -1,4 +1,3 @@
-// unicode support test
 
 #include "main.h"
 

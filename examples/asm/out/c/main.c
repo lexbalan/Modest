@@ -1,4 +1,3 @@
-// tests/asm/src/main.m
 
 #include "main.h"
 

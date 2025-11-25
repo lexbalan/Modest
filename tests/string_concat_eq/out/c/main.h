@@ -1,4 +1,3 @@
-// tests/string_concat_eq/src/main.m
 
 #ifndef MAIN_H
 #define MAIN_H

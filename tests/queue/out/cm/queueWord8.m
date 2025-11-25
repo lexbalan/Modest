@@ -1,6 +1,5 @@
 import "queue"
-// queueWord8
-// queue implementation example
+
 import "queue" as queue
 
 

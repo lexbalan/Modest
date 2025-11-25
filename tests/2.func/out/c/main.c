@@ -1,4 +1,3 @@
-// tests/2.func/src/main.m
 
 #include "main.h"
 

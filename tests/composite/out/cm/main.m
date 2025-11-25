@@ -1,6 +1,9 @@
 include "stdio"
-// tests/composite
-//
+
+
+// Test for composite types
+
+// Pointers
 
 // Test for composite types
 

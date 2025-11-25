@@ -1,4 +1,3 @@
-// tests/builtin_constants/src/main.m
 
 #include "main.h"
 

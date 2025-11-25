@@ -1,4 +1,3 @@
-// tests/crc32/src/main.m
 
 #include "main.h"
 

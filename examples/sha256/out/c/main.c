@@ -1,4 +1,3 @@
-// tests/sha256/src/main.m
 
 #include "main.h"
 

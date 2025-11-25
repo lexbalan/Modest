@@ -1667,8 +1667,8 @@ class Parser:
 		import_expr = self.expr_value()
 
 		return {
-			'isa': 'ast_include',
-			'kind': 'ast_include',
+			'isa': 'ast_directive',
+			'kind': 'include',
 			'expr': import_expr,
 			'is_include': True,
 			'as': None,
@@ -1686,8 +1686,8 @@ class Parser:
 			_as = self.parse_identifier()
 
 		return {
-			'isa': 'ast_import',
-			'kind': 'ast_import',
+			'isa': 'ast_directive',
+			'kind': 'import',
 			'expr': import_expr,
 			'is_include': False,
 			'as': _as,
@@ -1895,7 +1895,7 @@ class Parser:
 		if comm != None:
 			comm['nl'] = spaceline_cnt
 			spaceline_cnt = 0
-			output.append(comm)
+			#output.append(comm)
 		while self.skipnl():
 			spaceline_cnt += 1
 		if self.match('module'):

@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// examples/annotations/src/main.m
+
 
 
 type MyInt32 = @brand Int32

@@ -2252,13 +2252,13 @@ def print_header(module, outname):
 	defs = module.defs
 
 	# Печатаем первые комментарии
-	if len(defs) > 0:
-		def0 = defs[0]
-		if def0.is_stmt_comment():
-			nnl(def0.nl)
-			print_comment(def0)
-			newline()
-			defs = module.defs[1:]
+#	if len(defs) > 0:
+#		def0 = defs[0]
+#		if def0.is_stmt_comment():
+#			nnl(def0.nl)
+#			print_comment(def0)
+#			newline()
+#			defs = module.defs[1:]
 
 	#guardsymbol = outname.split("/")[-1]
 	#guardsymbol = guardsymbol[:-2].upper() + '_H'
@@ -2438,13 +2438,13 @@ def print_cfile(module, _outname):
 
 
 	# Печатаем первые комментарии
-	if len(defs) > 0:
-		def0 = defs[0]
-		if def0.is_stmt_comment():
-			nnl(def0.nl)
-			print_comment(def0)
-			newline()
-			defs = defs[1:]
+#	if len(defs) > 0:
+#		def0 = defs[0]
+#		if def0.is_stmt_comment():
+#			nnl(def0.nl)
+#			print_comment(def0)
+#			newline()
+#			defs = defs[1:]
 
 
 	global already_included

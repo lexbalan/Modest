@@ -329,7 +329,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 @str11 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
 @str12 = private constant [9 x i8] [i8 110, i8 32, i8 61, i8 32, i8 123, i8 110, i8 125, i8 10, i8 0]
 @str13 = private constant [11 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0]
-; -- endstrings --; tests/print/src/main.m
+; -- endstrings --
 define %Int @main() {
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([20 x i8]* @str1 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*))

@@ -1,5 +1,3 @@
-// queueWord8
-// queue implementation example
 
 #ifndef QUEUEWORD8_H
 #define QUEUEWORD8_H

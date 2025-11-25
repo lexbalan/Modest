@@ -1,5 +1,7 @@
 include "stdio"
-// examples/prefix/src/lib.m
+
+
+//pragma append_prefix loo
 
 //pragma append_prefix loo
 

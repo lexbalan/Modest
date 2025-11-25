@@ -1,4 +1,3 @@
-// tests/sizeof/src/main.m
 
 #include "main.h"
 

@@ -1,4 +1,3 @@
-// tests/assign_record/src/main.m
 
 #include "main.h"
 

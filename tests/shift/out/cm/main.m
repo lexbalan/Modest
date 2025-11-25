@@ -1,6 +1,10 @@
 include "ctypes64"
 include "stdio"
-// tests/shift/src/main.m
+
+
+
+// left must be Word
+// right must be Nat
 
 
 // left must be Word

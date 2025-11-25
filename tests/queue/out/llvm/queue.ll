@@ -115,7 +115,7 @@ break_2:
 ; -- 0
 ; -- end print imports 'queue' --
 ; -- strings --
-; -- endstrings --;module queue
+; -- endstrings --
 %queue_Queue = type {
 	%Nat32,
 	%Nat32,

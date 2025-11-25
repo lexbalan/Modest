@@ -3,8 +3,8 @@ include "ctypes64"
 include "unistd"
 include "stdio"
 include "string"
-// lightfood/console.m// for Int// for write()// for putchar()// for strlen, strcpy
-import "misc/utf" as utf
+// for Int// for write()// for putchar()// for strlen, strcpy
+import "misc/utf" as utf// for Int// for write()// for putchar()// for strlen, strcpy
 
 
 

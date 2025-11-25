@@ -1,4 +1,3 @@
-// examples/0.endianness/src/main.m
 
 #include "main.h"
 

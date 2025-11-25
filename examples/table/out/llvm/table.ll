@@ -231,9 +231,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @str5 = private constant [2 x i8] [i8 43, i8 0]
 @str6 = private constant [2 x i8] [i8 45, i8 0]
 @str7 = private constant [3 x i8] [i8 43, i8 10, i8 0]
-; -- endstrings --;
-; * table.m
-; 
+; -- endstrings --
 %table_Row = type [0 x %Str8*];
 %table_Table = type {
 	[0 x %Str8*]*,

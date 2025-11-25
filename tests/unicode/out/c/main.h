@@ -1,4 +1,3 @@
-// unicode support test
 
 #ifndef MAIN_H
 #define MAIN_H

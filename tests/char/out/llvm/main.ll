@@ -199,7 +199,7 @@ declare void @perror(%ConstCharStr* %str)
 @str2 = private constant [18 x i8] [i8 99, i8 104, i8 48, i8 56, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 32, i8 40, i8 37, i8 99, i8 41, i8 10, i8 0]
 @str3 = private constant [18 x i8] [i8 99, i8 104, i8 49, i8 54, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 32, i8 40, i8 37, i8 99, i8 41, i8 10, i8 0]
 @str4 = private constant [18 x i8] [i8 99, i8 104, i8 51, i8 50, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 32, i8 40, i8 37, i8 99, i8 41, i8 10, i8 0]
-; -- endstrings --; tests/char/src/main.m
+; -- endstrings --
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Char8, align 1

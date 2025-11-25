@@ -1,4 +1,3 @@
-// examples/1.hello_world/src/main.m
 
 #include "main.h"
 

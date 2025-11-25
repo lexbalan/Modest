@@ -1,4 +1,3 @@
-// tests/assignation/src/main.m
 
 #include "main.h"
 
@@ -9,6 +8,8 @@
 #include <stdio.h>
 
 
+
+// Simply record for records assignation test
 
 // Simply record for records assignation test
 struct Point {

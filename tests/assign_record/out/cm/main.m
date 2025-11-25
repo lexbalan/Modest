@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/assign_record/src/main.m
+
 
 
 type Point = record {

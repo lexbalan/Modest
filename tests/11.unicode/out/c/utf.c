@@ -1,6 +1,3 @@
-// utf.m
-// algorithms from wikipedia
-// (https://ru.wikipedia.org/wiki/UTF-16)
 
 #include "utf.h"
 
@@ -10,6 +7,8 @@
 #include <string.h>
 
 
+
+// декодирует символ UTF-32 в последовательность UTF-8
 
 // декодирует символ UTF-32 в последовательность UTF-8
 uint8_t utf_utf32_to_utf8(char32_t c, char *buf) {

@@ -201,7 +201,7 @@ declare void @perror(%ConstCharStr* %str)
 @str4 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str5 = private constant [12 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str6 = private constant [14 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 39, i8 37, i8 99, i8 39, i8 10, i8 0]
-; -- endstrings --; tests/array/src/main.m
+; -- endstrings --
 @c0 = constant [10 x i8] [
 	i8 0,
 	i8 1,

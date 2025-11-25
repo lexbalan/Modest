@@ -133,8 +133,7 @@ declare %Nat32 @queue_getGetPosition(%queue_Queue* %q)
 ; end from import "queue"
 ; -- end print imports 'queueWord8' --
 ; -- strings --
-; -- endstrings --; queueWord8
-; queue implementation example
+; -- endstrings --
 %queueWord8_QueueWord8 = type {
 	%queue_Queue,
 	[0 x %Word8]*

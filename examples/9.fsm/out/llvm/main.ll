@@ -259,7 +259,10 @@ declare void @fsm_run(%fsm_FSM* %fsm)
 @str3 = private constant [22 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 110, i8 116, i8 114, i8 121, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str4 = private constant [13 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
 @str5 = private constant [19 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 120, i8 105, i8 116, i8 32, i8 116, i8 111, i8 32, i8 37, i8 115, i8 10, i8 0]
-; -- endstrings --; examples/fsm/src/main.m
+; -- endstrings --
+
+; This is flashlight final state machine example
+; (just for compiler test and language demonstration)
 
 ; This is flashlight final state machine example
 ; (just for compiler test and language demonstration)

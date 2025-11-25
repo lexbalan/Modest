@@ -3,7 +3,7 @@ import "./ringWord8"
 include "ctypes64"
 include "math"
 include "stdio"
-// tests/queue/src/main.m
+
 import "./queueWord8" as bq
 import "./ringWord8" as br
 

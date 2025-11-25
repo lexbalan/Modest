@@ -1,4 +1,3 @@
-// minmax.m
 
 #include "minmax.h"
 

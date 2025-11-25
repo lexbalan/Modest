@@ -1,4 +1,3 @@
-// Simple Web server example
 
 #ifndef MAIN_H
 #define MAIN_H

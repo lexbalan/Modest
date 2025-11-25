@@ -1,8 +1,11 @@
 import "lightfood/console"
 include "ctypes64"
 include "stdio"
-// tests/string/src/main.m
+
 import "lightfood/console" as console
+
+
+// constants with type String(Generic)
 
 
 // constants with type String(Generic)

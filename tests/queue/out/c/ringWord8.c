@@ -1,5 +1,3 @@
-// ringWord8
-// queue implementation example
 
 #include "ringWord8.h"
 

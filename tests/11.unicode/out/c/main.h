@@ -1,4 +1,3 @@
-// tests/11.unicode/src/main.m
 
 #ifndef MAIN_H
 #define MAIN_H

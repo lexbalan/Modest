@@ -1,7 +1,7 @@
 import "misc/sha256"
 include "ctypes64"
 include "stdio"
-// tests/sha256/src/main.m
+
 import "misc/sha256" as sha256
 
 const inputDataLength = 32

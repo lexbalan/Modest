@@ -2374,16 +2374,16 @@ def do_directive(x):
 	global cmodule
 	global global_prefix
 
+	y = None
 	if x['kind'] == 'pragma':
 		args = x['args']
 		s0 = args[0]
 		if s0 == 'do_not_include':
-			#print("ADD do_not_include to %s" % cmodule.id)
 			cmodule.addAttribute('do_not_include')
 		elif s0 == 'module_nodecorate':
 			cmodule.addAttribute('nodecorate')
 		elif s0 == 'c_include':
-			return StmtDirectiveCInclude(args[1])
+			y = StmtDirectiveCInclude(args[1])
 		elif s0 == 'c_no_print':
 			cmodule.addAttribute('c_no_print')
 		elif s0 == 'feature':
@@ -2392,10 +2392,9 @@ def do_directive(x):
 			cmodule_feature_add('unsafe')
 		elif s0 == 'public_module':
 			cmodule_feature_add('public_module')
-			pass
 		elif s0 == 'insert':
 			print("-INSERT " + args[1])
-			return StmtDirectiveInsert(args[1], x['ti'])
+			y = StmtDirectiveInsert(args[1], x['ti'])
 		elif s0 == 'prefix':
 			prefix = args[1]
 			cmodule.setPrefix(prefix)
@@ -2411,8 +2410,12 @@ def do_directive(x):
 
 	elif x['kind'] == 'module':
 		print("MODULE('%s')" % x['line']['str'])
+	elif x['kind'] == 'import':
+		y = do_import(x)
+	elif x['kind'] == 'include':
+		y = do_import(x)
 
-	return None
+	return y
 
 
 
@@ -2466,26 +2469,23 @@ def process_module(idStr, sourcename, ast, is_include):
 	cmodule = Module(idStr, ast, symtab_public, symtab_private, sourcename)
 
 	# 0. do imports & directives
-	while len(ast) > 0:
-		x = ast[0]
+	i = 0
+	while i < len(ast):
+		x = ast[i]
 		isa = x['isa']
 		y = None
-		if isa == 'ast_import':
-			y = do_import(x)
-		elif isa == 'ast_include':
-			y = do_import(x)
-		elif isa == 'ast_directive':
+		if isa == 'ast_directive':
 			y = do_directive(x)
 		elif isa == 'ast_comment':
 			y = do_stmt_comment(x)
 		else:
 			break
 
-		ast = ast[1:]
-
 		if y != None:
 			cmodule.defs.append(y)
 			y.parent = cmodule
+
+		i += 1
 
 	pre_def(ast, is_include=is_include)
 	def_def(ast, is_include=is_include)
@@ -2639,8 +2639,8 @@ def pre_def(ast, is_include=False):
 
 
 def def_def(ast, is_include=False):
-	# 3. Далее идем по всем элементам с самого начала и определяем их.
-	#   - Если элемент использует undefined - заносим его в список зависимостей эл-та
+	# Идем по всем элементам с самого начала и определяем их.
+	# Если элемент использует undefined - заносим его в список зависимостей эл-та
 	for x in ast:
 		isa = x['isa']
 		kind = x['kind']

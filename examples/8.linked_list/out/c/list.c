@@ -1,4 +1,3 @@
-// examples/8.linked_list/linked_list.cm
 
 #include "list.h"
 

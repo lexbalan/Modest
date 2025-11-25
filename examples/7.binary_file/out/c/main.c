@@ -1,4 +1,3 @@
-// examples/7.binary_file/main.m
 
 #include "main.h"
 

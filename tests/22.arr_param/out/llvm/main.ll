@@ -203,6 +203,9 @@ declare void @perror(%ConstCharStr* %str)
 
 
 ; returns array by value
+
+
+; returns array by value
 define internal void @getarr10([10 x %Int32]* %0) {
 	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%3 = insertvalue [10 x %Int32] %2, %Int32 2, 2

@@ -1,4 +1,3 @@
-// examples/5.records/main.m
 
 #include "main.h"
 

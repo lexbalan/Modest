@@ -1,7 +1,7 @@
 include "ctypes64"
 include "string"
 include "stdio"
-// examples/7.binary_file/main.m
+
 
 
 const filename = *Str8 "file.bin"

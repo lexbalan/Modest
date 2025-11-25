@@ -1,4 +1,3 @@
-// lightfood/console.m
 
 #include "console.h"
 
@@ -13,7 +12,7 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
-  // for Int  // for write()  // for putchar()  // for strlen, strcpy
+  // for Int  // for write()  // for putchar()  // for strlen, strcpy  // for Int  // for write()  // for putchar()  // for strlen, strcpy
 
 
 void console_putchar_utf8(char c);

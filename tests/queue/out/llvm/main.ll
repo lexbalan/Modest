@@ -332,7 +332,7 @@ declare %Bool @ringWord8_get(%ringWord8_RingWord8* %q, %Word8* %b)
 @str2 = private constant [12 x i8] [i8 98, i8 113, i8 46, i8 112, i8 117, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 @str3 = private constant [18 x i8] [i8 60, i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 101, i8 109, i8 112, i8 116, i8 121, i8 62, i8 10, i8 0]
 @str4 = private constant [13 x i8] [i8 98, i8 113, i8 46, i8 103, i8 101, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-; -- endstrings --; tests/queue/src/main.m
+; -- endstrings --
 @bq0 = internal global %queueWord8_QueueWord8 zeroinitializer
 @br0 = internal global %ringWord8_RingWord8 zeroinitializer
 @ii = internal global %Int32 zeroinitializer

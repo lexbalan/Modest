@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/12.structural_type_system/src/main.m
+
 
 
 type Type1 = record {

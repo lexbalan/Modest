@@ -2,12 +2,15 @@ import "lightfood/delay"
 import "fsm"
 include "ctypes64"
 include "stdio"
-// examples/fsm/src/main.m
+
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
 import "lightfood/delay" as delay
 import "fsm" as fsm
+
+// This is flashlight final state machine example
+// (just for compiler test and language demonstration)
 
 
 const flashlightStateOff = 0

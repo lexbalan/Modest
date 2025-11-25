@@ -1,6 +1,3 @@
-/*
- * table.m
- */
 
 #include "table.h"
 

@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// examples/3.multiply_table/src/main.m
+
 
 
 func mtab (n: Nat32) -> Unit {

@@ -200,7 +200,7 @@ declare void @perror(%ConstCharStr* %str)
 @str3 = private constant [17 x i8] [i8 105, i8 110, i8 108, i8 105, i8 110, i8 101, i8 32, i8 97, i8 115, i8 109, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str4 = private constant [24 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 @str5 = private constant [24 x i8] [i8 115, i8 117, i8 98, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
-; -- endstrings --; tests/asm/src/main.m
+; -- endstrings --
 define internal %Int64 @sum64(%Int64 %a, %Int64 %b) {
 	%1 = alloca %Int64, align 8
 	%2 = call %Int64 asm sideeffect "add $0, $1, $2", "=r,r,r,~{cc}" (%Int64 %a, %Int64 %b)

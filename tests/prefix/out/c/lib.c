@@ -1,4 +1,3 @@
-// examples/prefix/src/lib.m
 
 #include "lib.h"
 
@@ -9,6 +8,8 @@
 #include <stdio.h>
 
 
+
+//pragma append_prefix loo
 
 //pragma append_prefix loo
 

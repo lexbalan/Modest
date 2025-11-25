@@ -1,9 +1,7 @@
 include "stdio"
 include "stdlib"
 include "string"
-/*
- * table.m
- */
+
 
 
 public type Row = []*Str8

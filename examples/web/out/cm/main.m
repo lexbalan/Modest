@@ -4,7 +4,7 @@ include "string"
 include "unistd"
 include "socket"
 include "inet"
-// Simple Web server example
+
 
 
 const port = 8080

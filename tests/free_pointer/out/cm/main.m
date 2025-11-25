@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/free_pointer/src/main.m
+
 
 
 public func main () -> Int32 {

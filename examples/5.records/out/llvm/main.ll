@@ -292,7 +292,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 @str1 = private constant [15 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 40, i8 37, i8 102, i8 44, i8 32, i8 37, i8 102, i8 41, i8 10, i8 0]
 @str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 32, i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-; -- endstrings --; examples/5.records/main.m
+; -- endstrings --
 %Point = type {
 	%Float,
 	%Float

@@ -1,6 +1,3 @@
-/*
- * table.m
- */
 
 #ifndef TABLE_H
 #define TABLE_H

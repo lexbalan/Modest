@@ -1,4 +1,3 @@
-// examples/7.binary_file/main.m
 
 #ifndef MAIN_H
 #define MAIN_H

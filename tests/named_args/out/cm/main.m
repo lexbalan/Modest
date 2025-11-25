@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/named_args/src/main.m
+
 
 
 func named_args_test (a: Int32, b: Int32, c: Int32) -> Int32 {

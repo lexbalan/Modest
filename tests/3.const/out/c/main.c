@@ -1,4 +1,3 @@
-// tests/3.const/src/main.m
 
 #include "main.h"
 

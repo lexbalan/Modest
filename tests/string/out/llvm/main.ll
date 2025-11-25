@@ -330,7 +330,10 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 @str12 = private constant [2 x i8] [i8 10, i8 0]
 @str13 = private constant [2 x i8] [i8 10, i8 0]
 @str14 = private constant [2 x i8] [i8 10, i8 0]
-; -- endstrings --; tests/string/src/main.m
+; -- endstrings --
+
+
+; constants with type String(Generic)
 
 
 ; constants with type String(Generic)

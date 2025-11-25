@@ -1,4 +1,3 @@
-// examples/fsm/fsm.cm
 
 #include "fsm.h"
 

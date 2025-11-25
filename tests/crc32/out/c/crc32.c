@@ -1,14 +1,3 @@
-/*
-  Name  : CRC-32
-  Poly  : 0x04C11DB7    xxor32 + xxor26 + xxor23 + xxor22 + xxor16 + xxor12 + xxor11
-                       + xxor10 + xxor8 + xxor7 + xxor5 + xxor4 + xxor2 + x + 1
-  Init  : 0xFFFFFFFF
-  Revert: true
-  XorOut: 0xFFFFFFFF
-  Check : 0xCBF43926 ("123456789")
-  MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
-   одинарных, двойных, пакетных и всех нечетных ошибок
-*/
 
 #include "crc32.h"
 

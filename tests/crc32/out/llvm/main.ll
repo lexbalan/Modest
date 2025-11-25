@@ -205,7 +205,7 @@ declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
 @str3 = private constant [10 x i8] [i8 49, i8 50, i8 51, i8 52, i8 53, i8 54, i8 55, i8 56, i8 57, i8 0]
 @str4 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-; -- endstrings --; tests/crc32/src/main.m
+; -- endstrings --
 @data = internal global [9 x %Word8] [
 	%Word8 49,
 	%Word8 50,

@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/var/src/main.m
+
 
 const arr = [Int32 1, Int32 2]
 

@@ -2,7 +2,7 @@ include "ctypes64"
 include "math"
 include "stdlib"
 include "stdio"
-// examples/5.records/main.m
+
 
 
 type Point = record {

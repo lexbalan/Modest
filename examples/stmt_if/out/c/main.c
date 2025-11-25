@@ -1,4 +1,3 @@
-// examples/stmt_if/src/main.m
 
 #include "main.h"
 

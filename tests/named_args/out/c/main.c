@@ -1,4 +1,3 @@
-// tests/named_args/src/main.m
 
 #include "main.h"
 

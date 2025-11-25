@@ -1,6 +1,6 @@
 include "ctypes64"
 include "stdio"
-// tests/2.func/src/main.m
+
 
 
 func func1 () -> Unit {

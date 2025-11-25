@@ -200,7 +200,7 @@ declare void @perror(%ConstCharStr* %str)
 @str3 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 49, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 @str4 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str5 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-; -- endstrings --; tests/default_params/src/main.m
+; -- endstrings --
 define internal %Int32 @func1(%Int32 %x) {
 	ret %Int32 %x
 }

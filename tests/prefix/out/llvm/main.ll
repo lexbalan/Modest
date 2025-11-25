@@ -203,7 +203,7 @@ declare void @loo_foo(%Nat32 %x)
 ; end from import "lib"
 ; -- end print imports 'main' --
 ; -- strings --
-; -- endstrings --; examples/prefix/src/main.m
+; -- endstrings --
 define %Int @main() {
 	%1 = alloca %loo_Nothing, align 1
 	call void @loo_foo(%Nat32 4)

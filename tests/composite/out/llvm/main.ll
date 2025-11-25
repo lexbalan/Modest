@@ -207,8 +207,11 @@ declare void @perror(%ConstCharStr* %str)
 @str10 = private constant [20 x i8] [i8 102, i8 97, i8 114, i8 114, i8 91, i8 49, i8 93, i8 40, i8 53, i8 44, i8 32, i8 55, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str11 = private constant [4 x i8] [i8 76, i8 79, i8 76, i8 0]
 @str12 = private constant [6 x i8] [i8 87, i8 111, i8 114, i8 108, i8 100, i8 0]
-; -- endstrings --; tests/composite
-;
+; -- endstrings --
+
+; Test for composite types
+
+; Pointers
 
 ; Test for composite types
 

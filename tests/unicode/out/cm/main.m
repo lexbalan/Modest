@@ -1,7 +1,7 @@
 include "stdio"
 include "stdlib"
 include "string"
-// unicode support test
+
 
 
 const a = "A"
