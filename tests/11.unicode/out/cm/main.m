@@ -2,11 +2,7 @@ import "lightfood/console"
 include "ctypes64"
 include "stdio"
 
-
-// include test (!)
 import "lightfood/console" as console
-
-// include test (!)
 
 
 var ratSymbolUTF8: [5]Word8 = [0xF0, 0x9F, 0x90, 0x80]

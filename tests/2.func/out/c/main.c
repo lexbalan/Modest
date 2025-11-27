@@ -24,6 +24,7 @@ static int32_t sum(int32_t a, int32_t b) {
 }
 
 
+
 // define function main
 
 static void func0(void);

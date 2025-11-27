@@ -15,15 +15,10 @@ struct __anonymous_struct_3 {
 	int32_t y;
 };
 
-// Test for composite types
-
-// Pointers
-
-// Test for composite types
-
 // Pointers
 static int32_t *p0;
 static int32_t **p1;
+
 
 // Functions
 static void f0(void) {
@@ -98,6 +93,7 @@ static void(**f13(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))(void) 
 }
 
 
+
 // Pointers to function
 static void(*pf0)(void) = &f0;
 static int32_t(*pf1)(int32_t x) = &f1;
@@ -113,6 +109,7 @@ static void(**(*pf10)(void(**f)(void)))(void) = &f10;
 static void(**(*pf11)(int32_t *(**f)(int32_t a, int32_t *b)))(void) = &f11;
 static void(**(*pf12)(int32_t *(**f)(int32_t *a, int32_t(**b)[64])))(void) = &f12;
 static void(**(*pf13)(int32_t *(**f)(int32_t *(*a)[32], int32_t *(**b)[64])))(void) = &f13;
+
 
 // Arrays
 static int32_t a0[5] = {0, 1, 2, 3, 4};
@@ -139,6 +136,7 @@ static int *(*a8[2][5])[2][5] = {
 };
 
 static int(*(*(*a9[5])[10])[2])(int a);
+
 
 //
 static int32_t *p2 = &a0;

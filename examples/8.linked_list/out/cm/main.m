@@ -7,9 +7,6 @@ import "list" as list
 
 
 // wrap around linked list for list.List Nat32
-
-
-// wrap around linked list for list.List Nat32
 func nat32_list_insert (lst: *List, x: Nat32) -> Unit {
 	// alloc memory for Nat32 value
 	let p_nat32 = *Nat32 malloc(sizeof(Nat32))

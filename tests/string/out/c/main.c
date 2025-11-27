@@ -11,7 +11,6 @@
 
 
 
-// constants with type String(Generic)
 
 // constants with type String(Generic)
 #define STR8_EXAMPLE  "String"

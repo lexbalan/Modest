@@ -1938,9 +1938,15 @@ class Parser:
 			elif self.match('type'):
 				x = self.parse_def_type()
 			elif self.token_class_is('comment-block'):
-				x = self.parse_comment_block()
+				self.comment = self.parse_comment_block()
+				self.comment['nl'] = spaceline_cnt
+				spaceline_cnt = 0
+				continue
 			elif self.token_class_is('comment-line'):
-				x = self.parse_comment_line()
+				self.comment = self.parse_comment_line()
+				self.comment['nl'] = spaceline_cnt
+				spaceline_cnt = 0
+				continue
 			elif self.look('pragma'):
 				x = self.parse_pragma()
 			elif self.match('import'):
@@ -1954,6 +1960,7 @@ class Parser:
 
 			if x != None:
 				if not isinstance(x, list):
+					x['comment'] = self.comment
 					x['nl'] = spaceline_cnt
 					x['ti'] = ti
 					x['access_modifier'] = access_modifier
@@ -1966,8 +1973,10 @@ class Parser:
 						xx['access_modifier'] = access_modifier
 						xx['anno'] = annotations
 					x[0]['nl'] = spaceline_cnt
+					x[0]['comment'] = self.comment
 					output.extend(x)
 
+			self.comment = None
 			annotations = []
 			spaceline_cnt = 0
 

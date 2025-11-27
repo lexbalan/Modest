@@ -12,7 +12,7 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
-  // for Int  // for write()  // for putchar()  // for strlen, strcpy  // for Int  // for write()  // for putchar()  // for strlen, strcpy
+
 
 
 void console_putchar_utf8(char c);
@@ -65,9 +65,6 @@ void console_putchar_utf32(char32_t c) {
 }
 
 
-//
-// puts
-//
 
 /*
 // проблема тк puts уже определен в include ^^

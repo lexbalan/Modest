@@ -325,10 +325,6 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 @str7 = private constant [2 x i32] [i32 10, i32 0]
 @str8 = private constant [2 x i16] [i16 10, i16 0]
 ; -- endstrings --
-
-; include test (!)
-
-; include test (!)
 @ratSymbolUTF8 = internal global [5 x %Word8] [
 	%Word8 240,
 	%Word8 159,

@@ -2496,6 +2496,10 @@ def print_cfile(module, _outname):
 		if isinstance(x, StmtDirectiveCInclude):
 			continue
 
+		if x.comment != None:
+			out(str_newline(n=x.comment.nl))
+			print_comment(x.comment)
+
 		if x.is_stmt_def_const() and is_private(x):
 			nnl(x.nl)
 			print_deps(x.deps)

@@ -241,11 +241,6 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 	%Bool
 };
 
-
-
-; we cannot receive VLA by value,
-; but we can receive pointer to open array
-; and after construct pointer to closed array with required dimensions
 define void @table_print(%table_Table* %table) {
 	%1 = alloca i8*
 	%2 = call i8* @llvm.stacksave() 
@@ -563,11 +558,6 @@ break_1:
 	ret void
 }
 
-
-
-; печатает строку +---+---+ отделяющую записи таблицы
-; получает указатель на массив с размерами колонок
-; и количество элементов в ней
 define internal void @separator([0 x %Nat32]* %sz, %Nat32 %n) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1

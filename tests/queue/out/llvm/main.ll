@@ -370,9 +370,6 @@ break_1:
 	ret void
 }
 
-
-
-; выгребаем и распечатываем n значений
 define internal void @fetch(%Nat32 %n) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1

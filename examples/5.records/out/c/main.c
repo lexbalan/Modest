@@ -46,6 +46,7 @@ static inline float min(float a, float b) {
 }
 
 
+
 // Pythagorean theorem
 static float distance(Point a, Point b) {
 	const float dx = max(a.x, b.x) - min(a.x, b.x);

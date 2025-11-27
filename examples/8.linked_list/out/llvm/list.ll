@@ -375,11 +375,6 @@ endif_0:
 	ret void
 }
 
-
-
-; get list node by number
-; if number is out of range returns nil
-; if number < 0 - go backward
 define %list_Node* @list_node_get(%list_List* %list, %Int32 %pos) {
 ; if_0
 	%1 = icmp eq %list_List* %list, null

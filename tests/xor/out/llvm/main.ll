@@ -249,9 +249,6 @@ break_1:
 	ret void
 }
 
-
-;xor_encrypt = xor_encrypter
-;xor_decrypt = xor_encrypter
 @test_msg = internal global [13 x %Char8] [
 	%Char8 72,
 	%Char8 101,

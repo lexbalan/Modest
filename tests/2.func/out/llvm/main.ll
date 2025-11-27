@@ -217,9 +217,6 @@ define internal %Int32 @sum(%Int32 %a, %Int32 %b) {
 	ret %Int32 %1
 }
 
-
-
-; define function main
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*))
 

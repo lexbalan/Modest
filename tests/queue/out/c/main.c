@@ -30,6 +30,7 @@ static void fill(uint32_t n) {
 }
 
 
+
 // выгребаем и распечатываем n значений
 static void fetch(uint32_t n) {
 	uint32_t i = 0;

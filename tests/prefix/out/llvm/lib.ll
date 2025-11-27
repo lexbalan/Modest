@@ -197,10 +197,6 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 @str1 = private constant [9 x i8] [i8 102, i8 111, i8 111, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 ; -- endstrings --
-
-;pragma append_prefix loo
-
-;pragma append_prefix loo
 %loo_Nothing = type {
 };
 

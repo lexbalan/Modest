@@ -200,12 +200,6 @@ declare void @perror(%ConstCharStr* %str)
 @str3 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 51, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 33, i8 10, i8 0]
 @str4 = private constant [12 x i8] [i8 100, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 ; -- endstrings --
-
-
-; returns array by value
-
-
-; returns array by value
 define internal void @getarr10([10 x %Int32]* %0) {
 	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%3 = insertvalue [10 x %Int32] %2, %Int32 2, 2
@@ -221,9 +215,6 @@ define internal void @getarr10([10 x %Int32]* %0) {
 	ret void
 }
 
-
-
-; receive & returns array by value
 define internal void @arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %Int32] %__b) {
 	%a = alloca [10 x %Int32]
 	%2 = zext i8 10 to %Nat32

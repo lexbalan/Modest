@@ -6,9 +6,6 @@ include "unistd"
 //include "lightfood/print"
 //pragma c_include "./print.h"
 
-//include "lightfood/print"
-//pragma c_include "./print.h"
-
 func my_printf (format: *Str8, ...) -> SSizeT {
 	var va: va_list
 	var va2: va_list

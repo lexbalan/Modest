@@ -9,8 +9,6 @@
 
 
 
-// left must be Word
-// right must be Nat
 
 // left must be Word
 // right must be Nat

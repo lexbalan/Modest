@@ -119,6 +119,7 @@ void list_node_insert_right(list_Node *left, list_Node *new_right) {
 }
 
 
+
 // get list node by number
 // if number is out of range returns nil
 // if number < 0 - go backward

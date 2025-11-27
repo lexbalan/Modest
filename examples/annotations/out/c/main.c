@@ -15,6 +15,7 @@ typedef int32_t MyInt32;
 
 #define MY_ONE  ((MyInt32)1)
 
+
 // These refined MyInt32 types are compatible with MyInt32
 // but not compatible with anything else (e.g. between them)
 typedef MyInt32 MyInt32_2;
@@ -74,6 +75,8 @@ struct Point2D {
 	double y;
 };
 typedef struct Point2D Point2D;
+
+
 
 // переопределение f не вызвало ошибку!
 static void hello(void) {

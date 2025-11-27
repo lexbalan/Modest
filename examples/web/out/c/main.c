@@ -24,6 +24,7 @@
 
 static uint32_t pageCounter;
 
+
 //@extern
 //@c_no_print
 //func htons(x: Word16) -> Word16 {

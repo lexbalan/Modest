@@ -6,9 +6,6 @@ import "lightfood/console" as console
 
 
 // constants with type String(Generic)
-
-
-// constants with type String(Generic)
 const str8_example = "String"
 const str16_example = str8_example + "-Ω"
 const str32_example = str16_example + " 🐀🎉🦄"

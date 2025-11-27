@@ -276,6 +276,7 @@ class Stmt(Entity):
 		super().__init__(ti)
 		self.deps = []
 		self.att = []
+		self.comment = None
 		self.nl = nl
 
 	def is_stmt_bad(self):

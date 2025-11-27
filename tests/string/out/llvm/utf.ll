@@ -116,10 +116,6 @@ break_2:
 ; -- end print imports 'utf' --
 ; -- strings --
 ; -- endstrings --
-
-; декодирует символ UTF-32 в последовательность UTF-8
-
-; декодирует символ UTF-32 в последовательность UTF-8
 define %Nat8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {
 	%1 = bitcast %Char32 %c to %Word32
 ; if_0
@@ -229,9 +225,6 @@ endif_0:
 	ret %Nat8 0
 }
 
-
-
-; returns n-symbols from input stream
 define %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result) {
 	%1 = getelementptr [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 0
 	%2 = load %Char16, %Char16* %1

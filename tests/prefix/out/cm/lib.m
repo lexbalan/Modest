@@ -1,10 +1,6 @@
 include "stdio"
 
 
-//pragma append_prefix loo
-
-//pragma append_prefix loo
-
 public type Nothing = record {}
 
 public const bar = 4

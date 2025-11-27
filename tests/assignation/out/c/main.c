@@ -9,7 +9,6 @@
 
 
 
-// Simply record for records assignation test
 
 // Simply record for records assignation test
 struct Point {

@@ -239,12 +239,6 @@ declare void @perror(%ConstCharStr* %str)
 	%Char32 0,
 	%Char32 0
 ]
-
-
-;func f0 (x: []Int32) -> []Int32 {
-;	var aa: []Int32
-;	var ab: [0]Int32
-;}
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
 	%2 = alloca [10 x %Int32], align 1

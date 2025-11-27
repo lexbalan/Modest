@@ -1,8 +1,4 @@
-
-
-////
-
-////
+//
 
 const systemWidth = 64
 

@@ -225,9 +225,6 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 -6,
 	%Int32 -9
 ]
-
-
-; returns true if was swap
 define internal %Bool @bubble_sort32_iter([0 x %Int32]* %array, %Nat32 %len) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1

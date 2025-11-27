@@ -51,6 +51,7 @@ struct Mixed4 {
 };
 typedef struct Mixed4 Mixed4;
 
+
 //var s: Mixed2
 static char c;
 static int32_t i;

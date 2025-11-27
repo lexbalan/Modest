@@ -13,12 +13,6 @@
 
 
 
-//include "libc/ctypes64"
-//include "libc/stdio"
-
-//include "libc/ctypes64"
-//include "libc/stdio"
-
 #define FILENAME  ("file.txt")
 
 static void write_example(void) {

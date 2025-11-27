@@ -2661,6 +2661,10 @@ def def_def(ast, is_include=False):
 				df = def_var_global(x)
 
 			if df != None:
+				if 'comment' in x:
+					if x['comment'] != None:
+						df.comment = do_stmt_comment(x['comment'])
+
 				df = add_spices_def(df, x['anno'])
 				if not is_include:
 					df.parent = cmodule

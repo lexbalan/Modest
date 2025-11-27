@@ -17,6 +17,7 @@ static int32_t testArray[21] = {
 	11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
 };
 
+
 // returns true if was swap
 static bool bubble_sort32_iter(int32_t *array, uint32_t len) {
 	uint32_t i = 0;

@@ -15,9 +15,6 @@
 //include "lightfood/print"
 //pragma c_include "./print.h"
 
-//include "lightfood/print"
-//pragma c_include "./print.h"
-
 static ssize_t my_printf(char *format, ...) {
 	va_list va;
 	va_list va2;

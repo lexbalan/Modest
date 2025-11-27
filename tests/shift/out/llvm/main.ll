@@ -199,14 +199,6 @@ declare void @perror(%ConstCharStr* %str)
 @str2 = private constant [16 x i8] [i8 49, i8 32, i8 60, i8 60, i8 32, i8 51, i8 49, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 10, i8 0]
 @str3 = private constant [25 x i8] [i8 48, i8 120, i8 56, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 32, i8 62, i8 62, i8 32, i8 51, i8 49, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 10, i8 0]
 ; -- endstrings --
-
-
-; left must be Word
-; right must be Nat
-
-
-; left must be Word
-; right must be Nat
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Word32, align 4

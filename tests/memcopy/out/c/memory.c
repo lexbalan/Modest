@@ -6,13 +6,10 @@
 #include <stdbool.h>
 #include <string.h>
 
-
-
-//  //
-
-//  //
+//
 
 #define SYSTEM_WIDTH  64
+
 
 //$if (systemWidth == 64)
 typedef uint64_t Word;

@@ -928,6 +928,10 @@ def print_directive(x):
 def printTopLevelStmt(x):
 	assert(isinstance(x, Stmt))
 
+	if x.comment != None:
+		out(str_newline(n=x.comment.nl))
+		print_stmt_comment(x.comment)
+
 	if not x.is_stmt_directive():
 		out(str_newline(n=x.nl))
 

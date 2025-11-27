@@ -11,10 +11,6 @@
 
 
 
-// include test (!)
-
-// include test (!)
-
 static uint8_t ratSymbolUTF8[5] = {0xF0, 0x9F, 0x90, 0x80, 0x0};
 static uint16_t ratSymbolUTF16[3] = {0xD83D, 0xDC00, 0x0};
 static uint32_t ratSymbolUTF32[3] = {0x1F400, 0x0};

@@ -262,9 +262,6 @@ declare void @perror(%ConstCharStr* %str)
 		%Nat32 2
 	}
 ]
-
-
-; define function main
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 42)

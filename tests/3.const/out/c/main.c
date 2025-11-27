@@ -34,6 +34,7 @@ typedef struct Point Point;
 __attribute__((used))
 static Point points2[3] = POINTS;
 
+
 // define function main
 int main(void) {
 	printf("test const\n");

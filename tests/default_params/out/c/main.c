@@ -19,6 +19,7 @@ static int32_t func2(int32_t a /* default=10 */, int32_t b /* default=20 */) {
 }
 
 
+
 //func func3 (a: Int32 = 10, b: Int32) -> Int32 {
 //	return a + b
 //}

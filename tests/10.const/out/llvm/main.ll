@@ -360,9 +360,6 @@ declare %Float64 @minmax_max_float64(%Float64 %a, %Float64 %b)
 	%Int32
 };
 
-
-
-; Pythagorean theorem
 define internal %Float @distance(%Point %a, %Point %b) {
 	%1 = extractvalue %Point %a, 0
 	%2 = extractvalue %Point %b, 0

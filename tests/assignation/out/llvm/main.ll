@@ -209,12 +209,6 @@ declare void @perror(%ConstCharStr* %str)
 @str12 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str13 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 ; -- endstrings --
-
-
-; Simply record for records assignation test
-
-
-; Simply record for records assignation test
 %Point = type {
 	%Int32,
 	%Int32

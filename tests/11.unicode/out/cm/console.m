@@ -3,8 +3,8 @@ include "ctypes64"
 include "unistd"
 include "stdio"
 include "string"
-// for Int// for write()// for putchar()// for strlen, strcpy
-import "misc/utf" as utf// for Int// for write()// for putchar()// for strlen, strcpy
+
+import "misc/utf" as utf
 
 
 
@@ -48,11 +48,6 @@ public func putchar_utf32 (c: Char32) -> Unit {
 		i = i + 1
 	}
 }
-
-
-//
-// puts
-//
 
 
 /*

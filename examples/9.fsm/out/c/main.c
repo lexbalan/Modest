@@ -10,17 +10,12 @@
 
 
 
-// This is flashlight final state machine example
-// (just for compiler test and language demonstration)
-
-// This is flashlight final state machine example
-// (just for compiler test and language demonstration)
-
 #define FLASHLIGHT_STATE_OFF  0
 #define FLASHLIGHT_STATE_ON  1
 #define FLASHLIGHT_STATE_BEACON  2
 
 static uint8_t cnt;
+
 
 //
 // State Off
@@ -49,6 +44,7 @@ static void off_exit(fsm_FSM *x) {
 }
 
 
+
 //
 // State On
 //
@@ -74,6 +70,7 @@ static void on_exit(fsm_FSM *x) {
 	(void)x;
 	//printf("on_exit\n")
 }
+
 
 
 //
