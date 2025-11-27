@@ -24,6 +24,7 @@ def isUpperIdentifierToken(token):
 
 class Parser:
 	def __init__(self):
+		self.comment = None
 		pass
 
 	def is_end(self):
@@ -1124,10 +1125,9 @@ class Parser:
 
 	def parse_if_comment(self):
 		if self.token_class_is('comment-block'):
-			return self.parse_if_comment_block()
-			return x
+			return self.parse_comment_block()
 		elif self.token_class_is('comment-line'):
-			return self.parse_if_comment_line()
+			return self.parse_comment_line()
 		return None
 
 
@@ -1809,7 +1809,7 @@ class Parser:
 			self.skip1()
 
 
-	def parse_if_comment_line(self):
+	def parse_comment_line(self):
 		ti = self.ti()
 		x = self.gettok()
 		return {
@@ -1821,7 +1821,7 @@ class Parser:
 		}
 
 
-	def parse_if_comment_block(self):
+	def parse_comment_block(self):
 		ti = self.ti()
 		x = self.gettok()
 		return {
@@ -1852,7 +1852,7 @@ class Parser:
 		return att
 
 
-	def parse_directive(self):
+	def parse_pragma(self):
 		ti = self.ti()
 		x = self.gettok()
 
@@ -1938,11 +1938,11 @@ class Parser:
 			elif self.match('type'):
 				x = self.parse_def_type()
 			elif self.token_class_is('comment-block'):
-				x = self.parse_if_comment_block()
+				x = self.parse_comment_block()
 			elif self.token_class_is('comment-line'):
-				x = self.parse_if_comment_line()
+				x = self.parse_comment_line()
 			elif self.look('pragma'):
-				x = self.parse_directive()
+				x = self.parse_pragma()
 			elif self.match('import'):
 				x = self.parse_import()
 			elif self.match('include'):
