@@ -261,6 +261,11 @@ declare void @fsm_run(%fsm_FSM* %fsm)
 @str5 = private constant [19 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 120, i8 105, i8 116, i8 32, i8 116, i8 111, i8 32, i8 37, i8 115, i8 10, i8 0]
 ; -- endstrings --
 @cnt = internal global %Nat8 zeroinitializer
+
+
+;
+; State Off
+;
 define internal void @off_entry(%fsm_FSM* %x) {
 	;printf("off_entry\n")
 	ret void
@@ -290,6 +295,11 @@ define internal void @off_exit(%fsm_FSM* %x) {
 	ret void
 }
 
+
+
+;
+; State On
+;
 define internal void @on_entry(%fsm_FSM* %x) {
 	;printf("on_entry\n")
 	ret void
@@ -319,6 +329,11 @@ define internal void @on_exit(%fsm_FSM* %x) {
 	ret void
 }
 
+
+
+;
+; State Beacon
+;
 define internal void @beacon_entry(%fsm_FSM* %x) {
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 1
 	%2 = load %Nat32, %Nat32* %1

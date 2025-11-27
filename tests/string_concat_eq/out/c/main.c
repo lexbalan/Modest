@@ -13,7 +13,7 @@
 #define WORLD  "World"
 #define PARTY_CORN  "🎉"
 
-#define GREETING  HELLO " " WORLD//+ " " + party_corn
+#define GREETING  HELLO " " WORLD  //+ " " + party_corn
 
 #define TEST  "test"
 

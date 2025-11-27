@@ -13,7 +13,6 @@
 #endif /* LENGTHOF */
 
 
-
 // Что можно делать с массивом
 //   1.1 Создать без инициализации
 //   1.2 Создать и проинициализировать пустым литералом
@@ -40,7 +39,6 @@
 static int32_t globalArray[10] = CONSTANT_ARRAY;
 
 static char arrayFromString[3] = "abc";
-
 
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 

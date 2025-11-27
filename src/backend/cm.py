@@ -948,7 +948,7 @@ def printTopLevelStmt(x):
 	elif x.is_stmt_def_const(): print_stmt_def(x, operator='const')
 	elif x.is_stmt_def_func(): print_stmt_func(x)
 	elif x.is_stmt_def_type(): print_stmt_type(x)
-	elif x.is_stmt_comment(): print_stmt_comment(x)
+	elif x.is_stmt_comment(): print("***"); print_stmt_comment(x)
 	elif x.is_stmt_import(): print_import(x)
 	elif x.is_stmt_directive(): print_directive(x)
 

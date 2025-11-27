@@ -115,9 +115,13 @@ break_2:
 ; -- 0
 ; -- end print imports 'memory' --
 ; -- strings --
-; -- endstrings --
+; -- endstrings --;
 %Word = type %Word64;
 %Nat = type %Nat64;
+;$elseif (systemWidth == 32)
+;type Word Word32
+;type Nat Nat32
+;$endif
 define void @memory_zero(i8* %mem, %Nat64 %len) {
 	%1 = ptrtoint i8* %mem to %Nat
 	%2 = urem %Nat %1, 8

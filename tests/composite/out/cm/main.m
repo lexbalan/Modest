@@ -1,6 +1,8 @@
 include "stdio"
 
 
+// Test for composite types
+
 // Pointers
 var p0: *Int32
 var p1: **Int32

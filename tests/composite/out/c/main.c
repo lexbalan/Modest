@@ -15,6 +15,8 @@ struct __anonymous_struct_3 {
 	int32_t y;
 };
 
+// Test for composite types
+
 // Pointers
 static int32_t *p0;
 static int32_t **p1;

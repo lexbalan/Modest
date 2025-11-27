@@ -10,6 +10,10 @@
 
 
 
+// this is a standalone comment
+
+// this is the main function
+// and it is its comment
 int32_t main(void) {
 	//printf("test2\n")
 	const datetime_DateTime dt = datetime_dateTimeNow();

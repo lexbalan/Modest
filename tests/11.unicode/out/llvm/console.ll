@@ -371,6 +371,19 @@ break_1:
 	ret void
 }
 
+
+
+;
+; puts
+;
+
+
+;
+;// проблема тк puts уже определен в include ^^
+;public func puts(s: *Str8) -> Unit {
+;	puts8(s)
+;}
+;
 define void @console_puts8(%Str8* %s) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1

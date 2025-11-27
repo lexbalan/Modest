@@ -212,7 +212,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 1,
 	%Int32 2
 ]
-@str = internal global [0 x %Char8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
+@str = internal global [0 x %Char8]* bitcast ([7 x i8]* @str1 to [0 x i8]*); -> *[]Char8
 define %Int @main() {
 	%1 = alloca %Int32, align 4
 	store %Int32 127, %Int32* %1

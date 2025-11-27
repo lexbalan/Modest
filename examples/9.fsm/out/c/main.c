@@ -16,7 +16,6 @@
 
 static uint8_t cnt;
 
-
 //
 // State Off
 //
@@ -44,7 +43,6 @@ static void off_exit(fsm_FSM *x) {
 }
 
 
-
 //
 // State On
 //
@@ -70,7 +68,6 @@ static void on_exit(fsm_FSM *x) {
 	(void)x;
 	//printf("on_exit\n")
 }
-
 
 
 //

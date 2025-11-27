@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-//
+  //
 
 #define SYSTEM_WIDTH  64
 

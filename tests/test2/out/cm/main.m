@@ -5,8 +5,10 @@ include "string"
 
 import "lightfood/datetime" as datetime
 
+// this is a standalone comment
 
-
+// this is the main function
+// and it is its comment
 public func main () -> Int32 {
 	//printf("test2\n")
 	let dt: DateTime = datetime.dateTimeNow()

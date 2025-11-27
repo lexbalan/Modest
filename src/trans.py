@@ -2476,14 +2476,18 @@ def process_module(idStr, sourcename, ast, is_include):
 		y = None
 		if isa == 'ast_directive':
 			y = do_directive(x)
+			if y != None:
+				cmodule.defs.append(y)
+				y.parent = cmodule
 		elif isa == 'ast_comment':
-			y = do_stmt_comment(x)
+			#y = do_stmt_comment(x)
+			pass
 		else:
 			break
 
-		if y != None:
-			cmodule.defs.append(y)
-			y.parent = cmodule
+		#if y != None:
+		#	cmodule.defs.append(y)
+		#	y.parent = cmodule
 
 		i += 1
 
@@ -2661,9 +2665,8 @@ def def_def(ast, is_include=False):
 				df = def_var_global(x)
 
 			if df != None:
-				if 'comment' in x:
-					if x['comment'] != None:
-						df.comment = do_stmt_comment(x['comment'])
+				if 'comment' in x and x['comment'] != None:
+					df.comment = do_stmt_comment(x['comment'])
 
 				df = add_spices_def(df, x['anno'])
 				if not is_include:

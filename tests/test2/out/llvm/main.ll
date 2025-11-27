@@ -285,6 +285,8 @@ declare %Int32 @datetime_sprintDateTime([0 x %Char8]* %s)
 @str2 = private constant [16 x i8] [i8 100, i8 97, i8 121, i8 79, i8 102, i8 89, i8 101, i8 97, i8 114, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 @str3 = private constant [16 x i8] [i8 100, i8 97, i8 121, i8 79, i8 102, i8 87, i8 101, i8 101, i8 107, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 ; -- endstrings --
+
+; this is a standalone comment
 define %Int32 @main() {
 	;printf("test2\n")
 	%1 = call %datetime_DateTime @datetime_dateTimeNow()

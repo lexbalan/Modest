@@ -2,10 +2,13 @@ include "libc/stdio"
 include "libc/stdlib"
 include "libc/string"
 
+// import comment
 import "lightfood/datetime"
 
+// this is a standalone comment
 
-
+// this is the main function
+// and it is its comment
 public func main () -> Int32 {
 	//printf("test2\n")
 	let dt = datetime.dateTimeNow()

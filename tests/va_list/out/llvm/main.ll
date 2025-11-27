@@ -292,6 +292,9 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 @str7 = private constant [8 x i8] [i8 110, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str8 = private constant [10 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 10, i8 0]
 ; -- endstrings --
+
+;include "lightfood/print"
+;pragma c_include "./print.h"
 define internal %SSizeT @my_printf(%Str8* %format, ...) {
 	%1 = alloca %__VA_List, align 1
 	%2 = alloca %__VA_List, align 1

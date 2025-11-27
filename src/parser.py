@@ -1927,6 +1927,12 @@ class Parser:
 
 			if self.match('\n'):
 				spaceline_cnt += 1
+
+				if spaceline_cnt > 1:
+					if self.comment != None:
+						output.append(self.comment)
+						self.comment = None
+
 				continue
 
 			if self.match('func'):

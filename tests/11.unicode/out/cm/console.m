@@ -50,6 +50,11 @@ public func putchar_utf32 (c: Char32) -> Unit {
 }
 
 
+//
+// puts
+//
+
+
 /*
 // проблема тк puts уже определен в include ^^
 public func puts(s: *Str8) -> Unit {
