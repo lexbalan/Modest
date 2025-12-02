@@ -43,7 +43,7 @@ int main(void) {
 
 	while (true) {
 		printf("- hi\n");
-		sleep(1);
+		sleep(1);// time in seconds
 	}
 
 	return 0;

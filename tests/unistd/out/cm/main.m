@@ -34,7 +34,7 @@ public func main () -> Int {
 
 	while true {
 		printf("- hi\n")
-		sleep(1)
+		sleep(1)// time in seconds
 	}
 
 	return 0

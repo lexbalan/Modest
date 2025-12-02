@@ -332,17 +332,17 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 ; -- endstrings --
 define %Int @main() {
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([20 x i8]* @str1 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str4 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([6 x i8]* @str5 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*))	; "\\" = "\"
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str4 to [0 x i8]*))	; "\64" = "@"
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([6 x i8]* @str5 to [0 x i8]*))	; "\x23AA\x23" = "#AA#"
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*))	; "\u0001F389A" = "🎉A"
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([64 x i8]* @str7 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str8 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str9 to [0 x i8]*), %Char32 128000)
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str11 to [0 x i8]*), %Int32 -1)
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str12 to [0 x i8]*), %Nat32 123)
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str13 to [0 x i8]*), %Nat32 305419903)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str8 to [0 x i8]*))	; {{c}}
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str9 to [0 x i8]*), %Char32 128000)	; c = "🐀"
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))	; s = "Hi!"
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str11 to [0 x i8]*), %Int32 -1)	; i = -1
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str12 to [0 x i8]*), %Nat32 123)	; n = 123
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str13 to [0 x i8]*), %Nat32 305419903)	; x = 0x1234567F
 	ret %Int 0
 }
 

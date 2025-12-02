@@ -361,7 +361,7 @@ again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str9 to [0 x i8]*))
-	%19 = call %UnsignedInt @sleep(%UnsignedInt 1)
+	%19 = call %UnsignedInt @sleep(%UnsignedInt 1)	; time in seconds
 	br label %again_1
 break_1:
 	ret %Int 0

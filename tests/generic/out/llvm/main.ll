@@ -274,31 +274,31 @@ define internal %Bool @test_generic_integer() {
 
 	; GenericInteger value can be implicitly casted to any Integer type
 	%1 = alloca %Int32, align 4
-	store %Int32 1, %Int32* %1
+	store %Int32 1, %Int32* %1	; implicit cast GenericInteger value to Int32
 	%2 = alloca %Nat64, align 8
-	store %Nat64 1, %Nat64* %2
+	store %Nat64 1, %Nat64* %2	; implicit cast GenericInteger value to INat64
 
 	; to Float
 	%3 = alloca %Float32, align 4
-	store %Float32 1.0000000000000000, %Float32* %3
+	store %Float32 1.0000000000000000, %Float32* %3	; implicit cast GenericInteger value to Float32
 	%4 = alloca %Float64, align 8
-	store %Float64 1.0000000000000000, %Float64* %4
+	store %Float64 1.0000000000000000, %Float64* %4	; implicit cast GenericInteger value to Float64
 
 	; and to Word8
 	%5 = alloca %Word8, align 1
 	%6 = bitcast i8 1 to %Word8
-	store %Word8 %6, %Word8* %5
+	store %Word8 %6, %Word8* %5	; implicit cast GenericInteger value to Word8
 
 
 	; explicit cast GenericInteger value
 	%7 = alloca %Char8, align 1
-	store %Char8 1, %Char8* %7
+	store %Char8 1, %Char8* %7	; explicit cast GenericInteger value to Char8
 	%8 = alloca %Char16, align 2
-	store %Char16 1, %Char16* %8
+	store %Char16 1, %Char16* %8	; explicit cast GenericInteger value to Char16
 	%9 = alloca %Char32, align 4
-	store %Char32 1, %Char32* %9
+	store %Char32 1, %Char32* %9	; explicit cast GenericInteger value to Char32
 	%10 = alloca %Bool, align 1
-	store %Bool 1, %Bool* %10
+	store %Bool 1, %Bool* %10	; explicit cast GenericInteger value to Bool
 	ret %Bool 1
 }
 
@@ -309,9 +309,9 @@ define internal %Bool @test_generic_float() {
 	; can be implicit casted to any Float type
 	; (in this case value may lose precision)
 	%1 = alloca %Float32, align 4
-	store %Float32 3.1415927410125732, %Float32* %1
+	store %Float32 3.1415927410125732, %Float32* %1	; implicit cast GenericFloat value to Float32
 	%2 = alloca %Float64, align 8
-	store %Float64 3.1415926535897931, %Float64* %2
+	store %Float64 3.1415926535897931, %Float64* %2	; implicit cast GenericFloat value to Float64
 
 	; explicit cast GenericFloat value to Int32
 	%3 = alloca %Int32, align 4
@@ -326,11 +326,11 @@ define internal %Bool @test_generic_char() {
 	; value with GenericChar type
 	; can be implicit casted to any Char type
 	%1 = alloca %Char8, align 1
-	store %Char8 65, %Char8* %1
+	store %Char8 65, %Char8* %1	; implicit cast GenericChar value to Char8
 	%2 = alloca %Char16, align 2
-	store %Char16 65, %Char16* %2
+	store %Char16 65, %Char16* %2	; implicit cast GenericChar value to Char16
 	%3 = alloca %Char32, align 4
-	store %Char32 65, %Char32* %3
+	store %Char32 65, %Char32* %3	; implicit cast GenericChar value to Char32
 
 	; explicit cast GenericChar value to Int32
 	%4 = alloca %Int32, align 4

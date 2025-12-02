@@ -68,9 +68,8 @@ class Lexer:
 					)
 					token = result + (ti,)
 					tokens.append(token)
-
 				break
-
+		tokens.append((None, ''))
 		return None
 
 
@@ -376,29 +375,19 @@ class CmLexer(Lexer):
 
 		self.skipn(2)  # skip '//'
 
-		lines = []
-
 		commtext = ""
 
 		while True:
 			# we dont need to eat NL because it will be used by lexer (!)
 			c = self.peep()
 			if c == '\n':
-				lines.append({'str': commtext})
-
-				s = self.peep(3)
-				if s == '\n//':
-					self.skipn(3)
-					commtext = ""
-					continue
-
 				break
-			else:
-				commtext += c
+			commtext += c
 
 			self.skip()
 
-		return ('comment-line', lines)
+		#print("COM: '%s'" % str(commtext))
+		return ('comment-line', commtext)
 
 
 	def doBlockComment(self):

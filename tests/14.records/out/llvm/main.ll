@@ -428,7 +428,7 @@ endif_1:
 	%19 = bitcast %Point2D* %6 to %Point2D*
 	%20 = load %Point2D, %Point2D* %19
 ; -- end cons_composite_from_composite_by_adr --
-	store %Point2D %20, %Point2D* %18
+	store %Point2D %20, %Point2D* %18	; record assignation
 	%21 = alloca {%Nat32,%Nat32}, align 8
 	%22 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
 	%23 = insertvalue {%Nat32,%Nat32} %22, %Nat32 2, 1

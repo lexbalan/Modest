@@ -20,7 +20,7 @@ var cnt: Nat8
 //
 
 func off_entry (x: *FSM) -> Unit {
-	Unit x
+	Unit x// ignore argument
 	//printf("off_entry\n")
 }
 
@@ -37,7 +37,7 @@ func off_loop (x: *FSM) -> Unit {
 
 
 func off_exit (x: *FSM) -> Unit {
-	Unit x
+	Unit x// ignore argument
 	//printf("off_exit\n")
 }
 
@@ -47,7 +47,7 @@ func off_exit (x: *FSM) -> Unit {
 //
 
 func on_entry (x: *FSM) -> Unit {
-	Unit x
+	Unit x// ignore argument
 	//printf("on_entry\n")
 }
 
@@ -64,7 +64,7 @@ func on_loop (x: *FSM) -> Unit {
 
 
 func on_exit (x: *FSM) -> Unit {
-	Unit x
+	Unit x// ignore argument
 	//printf("on_exit\n")
 }
 

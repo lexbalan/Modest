@@ -76,24 +76,24 @@ static bool test_generic_integer(void) {
 	#define two  (1 + one)
 
 	// GenericInteger value can be implicitly casted to any Integer type
-	int32_t a = one;
-	uint64_t b = one;
+	int32_t a = one;// implicit cast GenericInteger value to Int32
+	uint64_t b = one;// implicit cast GenericInteger value to INat64
 
 	// to Float
-	float f = one;
-	double g = one;
+	float f = one;// implicit cast GenericInteger value to Float32
+	double g = one;// implicit cast GenericInteger value to Float64
 
 	// and to Word8
-	uint8_t x = one;
+	uint8_t x = one;// implicit cast GenericInteger value to Word8
 
 
 	// explicit cast GenericInteger value
 
-	char c = (char)one;
-	char16_t d = (char16_t)one;
-	char32_t e = (char32_t)one;
+	char c = (char)one;// explicit cast GenericInteger value to Char8
+	char16_t d = (char16_t)one;// explicit cast GenericInteger value to Char16
+	char32_t e = (char32_t)one;// explicit cast GenericInteger value to Char32
 
-	bool k = one != 0;
+	bool k = one != 0;// explicit cast GenericInteger value to Bool
 
 	return true;
 
@@ -109,8 +109,8 @@ static bool test_generic_float(void) {
 	// value with GenericFloat type
 	// can be implicit casted to any Float type
 	// (in this case value may lose precision)
-	float f = pi;
-	double g = pi;
+	float f = pi;// implicit cast GenericFloat value to Float32
+	double g = pi;// implicit cast GenericFloat value to Float64
 
 	// explicit cast GenericFloat value to Int32
 	int32_t x = (int32_t)pi;
@@ -128,9 +128,9 @@ static bool test_generic_char(void) {
 
 	// value with GenericChar type
 	// can be implicit casted to any Char type
-	char b = _CHR8(a);
-	char16_t c = _CHR16(a);
-	char32_t d = _CHR32(a);
+	char b = _CHR8(a);// implicit cast GenericChar value to Char8
+	char16_t c = _CHR16(a);// implicit cast GenericChar value to Char16
+	char32_t d = _CHR32(a);// implicit cast GenericChar value to Char32
 
 	// explicit cast GenericChar value to Int32
 	int32_t char_code = (int32_t)(uint32_t)_CHR32(a);

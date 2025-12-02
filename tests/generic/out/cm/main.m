@@ -53,24 +53,24 @@ func test_generic_integer () -> Bool {
 	let two = 1 + one
 
 	// GenericInteger value can be implicitly casted to any Integer type
-	var a: Int32 = one
-	var b: Nat64 = one
+	var a: Int32 = one// implicit cast GenericInteger value to Int32
+	var b: Nat64 = one// implicit cast GenericInteger value to INat64
 
 	// to Float
-	var f: Float32 = one
-	var g: Float64 = one
+	var f: Float32 = one// implicit cast GenericInteger value to Float32
+	var g: Float64 = one// implicit cast GenericInteger value to Float64
 
 	// and to Word8
-	var x: Word8 = one
+	var x: Word8 = one// implicit cast GenericInteger value to Word8
 
 
 	// explicit cast GenericInteger value
 
-	var c = Char8 one
-	var d = Char16 one
-	var e = Char32 one
+	var c = Char8 one// explicit cast GenericInteger value to Char8
+	var d = Char16 one// explicit cast GenericInteger value to Char16
+	var e = Char32 one// explicit cast GenericInteger value to Char32
 
-	var k: Bool = one != 0
+	var k: Bool = one != 0// explicit cast GenericInteger value to Bool
 
 	return true
 }
@@ -83,8 +83,8 @@ func test_generic_float () -> Bool {
 	// value with GenericFloat type
 	// can be implicit casted to any Float type
 	// (in this case value may lose precision)
-	var f: Float32 = pi
-	var g: Float64 = pi
+	var f: Float32 = pi// implicit cast GenericFloat value to Float32
+	var g: Float64 = pi// implicit cast GenericFloat value to Float64
 
 	// explicit cast GenericFloat value to Int32
 	var x = Int32 pi
@@ -100,9 +100,9 @@ func test_generic_char () -> Bool {
 
 	// value with GenericChar type
 	// can be implicit casted to any Char type
-	var b: Char8 = a
-	var c: Char16 = a
-	var d: Char32 = a
+	var b: Char8 = a// implicit cast GenericChar value to Char8
+	var c: Char16 = a// implicit cast GenericChar value to Char16
+	var d: Char32 = a// implicit cast GenericChar value to Char32
 
 	// explicit cast GenericChar value to Int32
 	var char_code = Int32 Word32 Char32 a

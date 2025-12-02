@@ -28,7 +28,7 @@ class Parser:
 		pass
 
 	def is_end(self):
-		if self.tokens[self.ctoken][1] == '':
+		if self.tokens[self.ctoken][0] == None:
 			return True
 		return self.ctoken >= (len(self.tokens) - 1)
 
@@ -1491,68 +1491,6 @@ class Parser:
 		return {'isa': 'ast_stmt', 'kind': 'value', 'value': v}
 
 
-	def stmt_comment_line(self):
-		ti = self.ti()
-		x = self.gettok()
-		return {'isa': 'ast_stmt', 'kind': 'comment-line', 'lines': x, 'ti': ti}
-
-
-	def stmt_comment_block(self):
-		ti = self.ti()
-		x = self.gettok()
-		return {'isa': 'ast_stmt', 'kind': 'comment-block', 'text': x, 'ti': ti}
-
-
-	def stmt(self):
-		ti = self.ti()
-
-		if self.match('let'):
-			s = self.stmt_let()
-		elif self.match('if'):
-			s = self.stmt_if()
-		elif self.match('while'):
-			s = self.stmt_while()
-		elif self.look('return'):
-			s = self.stmt_return()
-		elif self.match('var'):
-			s = self.stmt_var()
-		elif self.match('again'):
-			s = self.stmt_again()
-		elif self.match('break'):
-			s = self.stmt_break()
-		elif self.match('type'):
-			s = self.parse_def_type()
-			s['access_modifier'] = 'undefined'
-		elif self.match('const'):
-			s = self.stmt_let()
-		elif self.match('++'):
-			s = self.stmt_inc()
-		elif self.match('--'):
-			s = self.stmt_dec()
-		elif self.look('__asm'):
-			s = self.stmt_asm()
-		else:
-			# comment?
-			cl = self.ctok_class()
-			if cl == 'comment-line':
-				s = self.stmt_comment_line()
-			elif cl == 'comment-block':
-				s = self.stmt_comment_block()
-			else:
-				s = self.stmt_expr_value()
-
-		if s == None:
-			return s
-
-		# переменные могут быть объявлены списком
-		if isinstance(s, list):
-			return s
-
-		if not 'ti' in s:
-			s['ti'] = ti
-
-		return s
-
 
 	def skip_blanks(self):
 		nl_cnt = 0
@@ -1572,36 +1510,91 @@ class Parser:
 		ti = self.ti()
 		#print('stmt_block')
 
-		nl_cnt = 0
+		comment = None
+		spaceline_cnt = 0
 		self.need("{")
 		stmts = []
 		while True:
 			#self.skip_tokens_class(['nl'])
 
-			nl_cnt = self.skip_blanks()
+			spaceline_cnt = self.skip_blanks()
 
+			if spaceline_cnt > 0:
+				if comment:
+					stmts.append(comment)
+					comment = None
 
 			if self.match('}'):
+				if comment != None:
+					stmts.append(comment)
+					comment = None
 				break
 
-			s = self.stmt()
+			ti = self.ti()
+			s = None
+
+			if self.match('let'):
+				s = self.stmt_let()
+			elif self.match('if'):
+				s = self.stmt_if()
+			elif self.match('while'):
+				s = self.stmt_while()
+			elif self.look('return'):
+				s = self.stmt_return()
+			elif self.match('var'):
+				s = self.stmt_var()
+			elif self.token_class_is('comment-block'):
+				comment = self.parse_comment_block()
+				comment['nl'] = spaceline_cnt
+				spaceline_cnt = 0
+				continue
+			elif self.token_class_is('comment-line'):
+				comment = self.parse_comment_line()
+				comment['nl'] = spaceline_cnt
+				spaceline_cnt = 0
+				continue
+			elif self.match('again'):
+				s = self.stmt_again()
+			elif self.match('break'):
+				s = self.stmt_break()
+			elif self.match('type'):
+				s = self.parse_def_type()
+				s['access_modifier'] = 'undefined'
+			elif self.match('const'):
+				s = self.stmt_let()
+			elif self.match('++'):
+				s = self.stmt_inc()
+			elif self.match('--'):
+				s = self.stmt_dec()
+			elif self.look('__asm'):
+				s = self.stmt_asm()
+			elif self.match(';'):
+				pass
+			else:
+				s = self.stmt_expr_value()
 
 			if s != None:
-				sep = self.need_sep(eat=False)
-
 				while self.match(";"):
 					pass
-				#if sep == False:
-				#	break
 
 				if isinstance(s, list):
-					s[0]['nl'] = nl_cnt
+					s[0]['nl'] = spaceline_cnt
+					s[0]['ti'] = ti
+					s[0]['comment'] = comment
 					stmts.extend(s)
 				else:
-					s['nl'] = nl_cnt
+					s['ti'] = ti
+					s['nl'] = spaceline_cnt
+					s['comment'] = comment
 					stmts.append(s)
 
-				nl_cnt = 0
+			elif comment != None:
+				print("STANDALONE COMMENT")
+				stmts.append(comment)
+				comment = None
+
+			comment = None
+			spaceline_cnt = 0
 
 		return {
 			'isa': 'ast_stmt',
@@ -1812,10 +1805,23 @@ class Parser:
 	def parse_comment_line(self):
 		ti = self.ti()
 		x = self.gettok()
+		lines = [x]
+		#pos = self.getpos()
+		# Связываем все идущие под ряд линейные комментарии в один
+		while True:
+			pos = self.getpos()
+			if self.match("\n"):
+				if self.token_class_is('comment-line'):
+					x = self.gettok()
+					lines.append(x)
+				else:
+					self.setpos(pos)
+					break
+
 		return {
 			'isa': 'ast_comment',
 			'kind': 'comment-line',
-			'lines': x,
+			'lines': lines,
 			'nl': 0,
 			'ti': ti
 		}

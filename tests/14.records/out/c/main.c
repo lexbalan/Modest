@@ -135,7 +135,7 @@ int main(void) {
 
 
 	// compare Point2D with anonymous record
-	Point2D p2d2 = p2d0;
+	Point2D p2d2 = p2d0;// record assignation
 	struct __anonymous_struct_7 p2d3 = (struct __anonymous_struct_7)XX;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(Point2D)) == 0) {

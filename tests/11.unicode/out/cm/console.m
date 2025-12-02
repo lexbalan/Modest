@@ -55,13 +55,6 @@ public func putchar_utf32 (c: Char32) -> Unit {
 //
 
 
-/*
-// проблема тк puts уже определен в include ^^
-public func puts(s: *Str8) -> Unit {
-	puts8(s)
-}
-*/
-
 public func puts8 (s: *Str8) -> Unit {
 	var i: Nat32 = 0
 	while true {
@@ -132,8 +125,8 @@ public func vfprint (fd: Int32, form: *Str8, va: va_list) -> Int32 {
 
 
 public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
-	var i: Nat32 = 0
-	var j: Int32 = 0
+	var i: Nat32 = 0// form index
+	var j: Int32 = 0// out buf index
 
 	while true {
 		var c: Char8 = form[i]

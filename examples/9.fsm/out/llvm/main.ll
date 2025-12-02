@@ -266,7 +266,7 @@ declare void @fsm_run(%fsm_FSM* %fsm)
 ;
 ; State Off
 ;
-define internal void @off_entry(%fsm_FSM* %x) {
+define internal void @off_entry(%fsm_FSM* %x) {	; ignore argument
 	;printf("off_entry\n")
 	ret void
 }
@@ -290,7 +290,7 @@ endif_0:
 	ret void
 }
 
-define internal void @off_exit(%fsm_FSM* %x) {
+define internal void @off_exit(%fsm_FSM* %x) {	; ignore argument
 	;printf("off_exit\n")
 	ret void
 }
@@ -300,7 +300,7 @@ define internal void @off_exit(%fsm_FSM* %x) {
 ;
 ; State On
 ;
-define internal void @on_entry(%fsm_FSM* %x) {
+define internal void @on_entry(%fsm_FSM* %x) {	; ignore argument
 	;printf("on_entry\n")
 	ret void
 }
@@ -324,7 +324,7 @@ endif_0:
 	ret void
 }
 
-define internal void @on_exit(%fsm_FSM* %x) {
+define internal void @on_exit(%fsm_FSM* %x) {	; ignore argument
 	;printf("on_exit\n")
 	ret void
 }

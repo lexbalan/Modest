@@ -885,7 +885,13 @@ def print_stmt_asm(x):
 
 def print_stmt(x):
 	assert(isinstance(x, Stmt))
+
+	if x.comment != None:
+		out(str_nl_indent(x.comment.nl))
+		print_stmt_comment(x.comment)
+
 	out(str_nl_indent(x.nl))
+
 	if x.is_stmt_block(): print_stmt_block(x)
 	elif x.is_stmt_value_expr(): print_stmt_value(x)
 	elif x.is_stmt_assign(): print_stmt_assign(x)
@@ -948,7 +954,7 @@ def printTopLevelStmt(x):
 	elif x.is_stmt_def_const(): print_stmt_def(x, operator='const')
 	elif x.is_stmt_def_func(): print_stmt_func(x)
 	elif x.is_stmt_def_type(): print_stmt_type(x)
-	elif x.is_stmt_comment(): print("***"); print_stmt_comment(x)
+	elif x.is_stmt_comment(): print_stmt_comment(x)
 	elif x.is_stmt_import(): print_import(x)
 	elif x.is_stmt_directive(): print_directive(x)
 

@@ -59,13 +59,6 @@ public func putchar_utf32 (c: Char32) -> Unit {
 //
 
 
-/*
-// проблема тк puts уже определен в include ^^
-public func puts(s: *Str8) -> Unit {
-	puts8(s)
-}
-*/
-
 public func puts8 (s: *Str8) -> Unit {
 	var i: Nat32 = 0
 	while true {

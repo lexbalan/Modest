@@ -69,13 +69,6 @@ void console_putchar_utf32(char32_t c) {
 // puts
 //
 
-/*
-// проблема тк puts уже определен в include ^^
-public func puts(s: *Str8) -> Unit {
-	puts8(s)
-}
-*/
-
 void console_puts8(char *s) {
 	uint32_t i = 0;
 	while (true) {
@@ -155,8 +148,8 @@ static int32_t sprint_dec_n32(char *buf, uint32_t x);
 static int32_t sprint_hex_nat32(char *buf, uint32_t x);
 
 int32_t console_vsprint(char *buf, char *form, va_list va) {
-	uint32_t i = 0;
-	int32_t j = 0;
+	uint32_t i = 0;// form index
+	int32_t j = 0;// out buf index
 
 	while (true) {
 		char c = form[i];

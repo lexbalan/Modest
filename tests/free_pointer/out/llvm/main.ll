@@ -208,11 +208,11 @@ define %Int32 @main() {
 
 	; free pointer can points to value of any type
 	%5 = bitcast %Bool* %1 to i8*
-	store i8* %5, i8** %4
+	store i8* %5, i8** %4	; it's ok (just for demonstration)
 	%6 = bitcast %Int32* %2 to i8*
-	store i8* %6, i8** %4
+	store i8* %6, i8** %4	; it's also ok
 	%7 = bitcast %Int64* %3 to i8*
-	store i8* %7, i8** %4
+	store i8* %7, i8** %4	; after all it will be points to value c (with type Int64)
 
 	; you can't do dereference operation with Free pointer
 	; (because runtime doesn't have any idea about value type it pointee),

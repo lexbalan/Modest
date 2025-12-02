@@ -1802,6 +1802,11 @@ def print_stmt_value(x):
 
 def print_stmt(x):
 	assert(isinstance(x, Stmt))
+
+	if x.comment != None:
+		out(str_nl_indent(x.comment.nl))
+		print_comment(x.comment)
+
 	nl_indent(x.nl)
 	if x.is_stmt_block(): print_stmt_block(x)
 	elif x.is_stmt_value_expr(): print_stmt_value(x)

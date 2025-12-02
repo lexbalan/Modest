@@ -115,7 +115,7 @@ public func main () -> Int {
 
 
 	// compare Point2D with anonymous record
-	var p2d2: Point2D = p2d0
+	var p2d2: Point2D = p2d0// record assignation
 	var p2d3: record {
 		x: Nat32
 		y: Nat32

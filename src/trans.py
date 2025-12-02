@@ -1816,7 +1816,7 @@ def do_stmt_comment(x):
 def do_stmt_comment_line(x):
 	lines = []
 	for xl in x['lines']:
-		lines.append(xl['str'])
+		lines.append(xl)
 	return StmtCommentLine(lines, ti=x['ti'], nl=x['nl'])
 
 
@@ -1891,6 +1891,9 @@ def do_stmt(x):
 
 	assert(s != None)
 	s.nl = x['nl']
+
+	if 'comment' in x and x['comment'] != None:
+		s.comment = do_stmt_comment(x['comment'])
 
 	return s
 

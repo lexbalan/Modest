@@ -12,9 +12,9 @@ public func main () -> Int32 {
 	var freePointer: Ptr
 
 	// free pointer can points to value of any type
-	freePointer = &a
-	freePointer = &b
-	freePointer = &c
+	freePointer = &a// it's ok (just for demonstration)
+	freePointer = &b// it's also ok
+	freePointer = &c// after all it will be points to value c (with type Int64)
 
 	// you can't do dereference operation with Free pointer
 	// (because runtime doesn't have any idea about value type it pointee),

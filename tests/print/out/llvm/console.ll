@@ -376,14 +376,6 @@ break_1:
 ;
 ; puts
 ;
-
-
-;
-;// проблема тк puts уже определен в include ^^
-;public func puts(s: *Str8) -> Unit {
-;	puts8(s)
-;}
-;
 define void @console_puts8(%Str8* %s) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
@@ -515,9 +507,9 @@ define %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va)
 	%1 = alloca i8*
 	store %__VA_List %va, i8** %1
 	%2 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %2
+	store %Nat32 0, %Nat32* %2	; form index
 	%3 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %3
+	store %Int32 0, %Int32* %3	; out buf index
 ; while_1
 	br label %again_1
 again_1:
