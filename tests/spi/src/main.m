@@ -1,6 +1,6 @@
 // examples/spi/src/main.m
 
-module "endianess/main"
+module "spi/main"
 
 pragma unsafe
 
@@ -23,7 +23,9 @@ func data_get () -> Bool {
 	return data_line
 }
 
-func delay (x: Nat32) -> Unit {}
+func delay (x: Nat32) -> Unit {
+	//
+}
 
 
 func spi_exchange (x: Word8, cpol: Nat8, hperiod: Nat32) -> Word8 {
