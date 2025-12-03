@@ -35,14 +35,14 @@ static uint8_t spi_exchange(uint8_t x, uint8_t cpol) {
 	uint8_t retval = 0x0;
 	uint8_t i = 7;
 	while (true) {
-		data_set((x & (0x1 << i)) != 0x0);
+		const bool b = (x & (0x1 << i)) != 0x0;
+		data_set(b);
 		delay(1);
-		const bool b = data_get();
-		retval = retval | ((uint8_t)b << i);
+		const bool p = data_get();
+		retval = retval | ((uint8_t)p << i);
 		clock_set(clkActive);
 		delay(1);
 		clock_set(!clkActive);
-
 		if (i == 0) {
 			break;
 		}

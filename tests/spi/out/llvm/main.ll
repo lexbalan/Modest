@@ -239,7 +239,7 @@ body_1:
 	call void @data_set(%Bool %11)
 	call void @delay(%Nat32 1)
 	%12 = call %Bool @data_get()
-	%13 = bitcast %Bool %12 to %Word8
+	%13 = zext %Bool %12 to %Word8
 	%14 = load %Nat8, %Nat8* %4
 	%15 = bitcast %Nat8 %14 to %Word8
 	%16 = shl %Word8 %13, %15

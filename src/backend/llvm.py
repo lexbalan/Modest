@@ -1292,7 +1292,7 @@ def do_eval_access(x):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-	if a.is_number() or a.is_arithmetical() or a.is_char() or a.is_bool() or a.is_word():
+	if a.is_number() or a.is_arithmetical() or a.is_char() or a.is_word():
 
 		if Type.is_pointer(b):
 			return 'bitcast'
@@ -1343,6 +1343,10 @@ def select_cast_operator(a, b):
 				return 'fptrunc'
 			else:
 				return 'bitcast'
+
+	elif a.is_bool():
+		return 'zext'
+
 
 	return 'cast <%s -> %s>' % (str(a), str(b))
 
