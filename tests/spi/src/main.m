@@ -31,10 +31,11 @@ func spi_exchange (x: Word8, cpol: Nat8) -> Word8 {
 	var retval = Word8 0
 	var i = Nat8 7
 	while true {
-		data_set((x and (Word8 1 << i)) != 0)
+		let b = (x and (Word8 1 << i)) != 0
+		data_set(b)
 		delay(1)
-		let b = data_get()
-		retval = retval or (unsafe Word8 b << i)
+		let p = data_get()
+		retval = retval or (unsafe Word8 p << i)
 		clock_set(clkActive)
 		delay(1)
 		clock_set(not clkActive)
