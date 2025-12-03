@@ -963,6 +963,7 @@ def do_value_call(x):
 
 	if not ftype.is_func():
 		error("expected function or pointer to function", x['ti'])
+		return ValueBad(x['ti'])
 
 	params = ftype.params
 
@@ -1044,7 +1045,7 @@ def do_value_call(x):
 			vx = do_rvalue(a['value'])
 		else:
 			if vx.isValueUndef():
-				error("undefined parameter '%s'" % p_id_str, x['ti'])
+				error("unspecified parameter '%s'" % p_id_str, x['ti'])
 		arg = do_arg(param, vx, named=True)
 		sorted_args.append(arg)
 		j += 1

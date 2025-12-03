@@ -217,7 +217,7 @@ define internal void @delay(%Nat32 %x) {
 	ret void
 }
 
-define internal %Word8 @spi_exchange(%Word8 %x, %Nat8 %cpol) {
+define internal %Word8 @spi_exchange(%Word8 %x, %Nat8 %cpol, %Nat32 %hperiod) {
 	%1 = icmp eq %Nat8 %cpol, 0
 	%2 = alloca %Word8, align 1
 	%3 = bitcast i8 0 to %Word8
@@ -237,7 +237,7 @@ body_1:
 	%10 = bitcast i8 0 to %Word8
 	%11 = icmp ne %Word8 %9, %10
 	call void @data_set(%Bool %11)
-	call void @delay(%Nat32 1)
+	call void @delay(%Nat32 %hperiod)
 	%12 = call %Bool @data_get()
 	%13 = zext %Bool %12 to %Word8
 	%14 = load %Nat8, %Nat8* %4
@@ -247,7 +247,7 @@ body_1:
 	%18 = or %Word8 %17, %16
 	store %Word8 %18, %Word8* %2
 	call void @clock_set(%Bool %1)
-	call void @delay(%Nat32 1)
+	call void @delay(%Nat32 %hperiod)
 	%19 = xor %Bool %1, 1
 	call void @clock_set(%Bool %19)
 ; if_0
@@ -267,8 +267,22 @@ break_1:
 	ret %Word8 %25
 }
 
+define internal void @data_out(%Word8 %x) {
+	;
+	ret void
+}
+
+define internal void @port_write(%Word8 %x) {
+	call void @data_out(%Word8 %x)
+	call void @delay(%Nat32 1)
+	call void @clock_set(%Bool 1)
+	call void @delay(%Nat32 1)
+	call void @clock_set(%Bool 0)
+	ret void
+}
+
 define %Int @main() {
-	%1 = call %Word8 @spi_exchange(%Word8 29, %Nat8 0)
+	%1 = call %Word8 @spi_exchange(%Word8 29, %Nat8 0, %Nat32 1)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), %Word8 %1)
 	ret %Int 0
 }
