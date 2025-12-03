@@ -575,11 +575,11 @@ def do_value_shift(x):
 	right = do_rvalue(x['right'])
 
 	if not left.type.is_word():
-		error("expected word value", x['left'])
+		error("expected word value", x['left']['ti'])
 		return ValueBad(x['ti'])
 
 	if right.type.is_signed():
-		error("expected natural value", x['right'])
+		error("expected natural value", x['right']['ti'])
 		return ValueBad(x['ti'])
 
 	nv = None
@@ -634,14 +634,10 @@ def do_value_bin2(op, l, r, ti):
 	# Check type is valid for the operation
 
 	if not l.type.supports(op):
-		print(l.type.kind)
-		print(l.type.ops)
 		error("unsuitable value type for '%s' operation" % op, l.ti)
 		return ValueBad(ti)
 
 	if not r.type.supports(op):
-		print(r.type.kind)
-		print(r.type.ops)
 		error("unsuitable value type for '%s' operation" % op, r.ti)
 		return ValueBad(ti)
 
@@ -886,7 +882,7 @@ def do_value_lengthof_value(x):
 		return arg
 
 	if not (arg.type.is_array() or arg.type.is_string()):
-		error("expected value with array type", x['value'])
+		error("expected value with array type", x['value']['ti'])
 		return ValueBad({'ti': ti})
 
 	# for C backend, because C cannot do lengthof(x)
@@ -1122,7 +1118,7 @@ def do_value_index(x):
 		return ValueBad(x['ti'])
 
 	if not (index.type.is_arithmetical() or index.type.is_number()):
-		error("expected integer value2", x[HLIR_VALUE_OP_INDEX])
+		error("expected integer value2", x['ti'])
 		return ValueBad(x['ti'])
 
 	if index.type.is_generic():
@@ -1139,7 +1135,7 @@ def do_value_index(x):
 			index_imm = index.asset
 
 			if index_imm >= array_typ.volume.asset:
-				error("array index out of bounds", x[HLIR_VALUE_OP_INDEX])
+				error("array index out of bounds", x['ti'])
 				return ValueBad(x['ti'])
 
 			if index_imm < len(left.asset):

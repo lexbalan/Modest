@@ -386,7 +386,6 @@ class CmLexer(Lexer):
 
 			self.skip()
 
-		#print("COM: '%s'" % str(commtext))
 		return ('comment-line', commtext)
 
 
