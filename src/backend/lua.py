@@ -2,9 +2,8 @@
 import type as htype
 from error import info
 from .common import *
-from hlir.hlir import *
-from util import get_item_by_id
-import foundation
+from hlir import *
+#from util import get_item_by_id
 
 
 
@@ -1119,7 +1118,7 @@ def init(settings):
 
 
 
-def run(module, outname, options):
+def run(module, outname):
 	global cmodule
 	cmodule = module
 	output_open(outname + '.lua')
