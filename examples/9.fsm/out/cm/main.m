@@ -64,7 +64,7 @@ public func main () -> Int {
 	while true {
 		if timecnt > 55555 {
 			timecnt = 0
-			fsm.task_1ms(&fsm0)
+			fsm.tick(&fsm0)
 		} else {
 			timecnt = timecnt + 1
 		}

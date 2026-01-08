@@ -71,7 +71,7 @@ int main(void) {
 	while (true) {
 		if (timecnt > 55555) {
 			timecnt = 0;
-			fsm_task_1ms(&fsm0);
+			fsm_tick(&fsm0);
 		} else {
 			timecnt = timecnt + 1;
 		}

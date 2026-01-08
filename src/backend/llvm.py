@@ -2554,6 +2554,7 @@ def print_string_ascii(strid, string):
 
 	ss = ss.replace("\a", "\\07")
 	ss = ss.replace("\b", "\\08")
+	ss = ss.replace("\e", "\\1B")
 	ss = ss.replace("\t", "\\09")
 	ss = ss.replace("\n", "\\0A")
 	ss = ss.replace("\v", "\\0B")

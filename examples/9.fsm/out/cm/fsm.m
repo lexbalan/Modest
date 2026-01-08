@@ -1,14 +1,10 @@
 include "assert"
 include "stdio"
 
-/*
- * FSM
- */
 
 
 public type StateServiceRoutine = (state: ComplexState, payload: Ptr) -> ComplexState
 
-// State descriptor
 public type StateDesc = record {
 	id: *Str8
 	nstages: Nat16
@@ -16,7 +12,6 @@ public type StateDesc = record {
 }
 
 public type StageId = @brand Word16
-public const stageIdDefault = StageId 0
 
 public type ComplexState = @public record {
 	state: *StateDesc
@@ -25,13 +20,9 @@ public type ComplexState = @public record {
 
 public type FSM = record {
 	id: *Str8
-	anyPre: *StateServiceRoutine
-	anyPost: *StateServiceRoutine
 	state: ComplexState
 	next_state: ComplexState
 	payload: Ptr
-
-	limit: Nat32
 
 	timer: Nat32
 	timer_expired: Bool
@@ -40,31 +31,18 @@ public type FSM = record {
 
 public func init (self: *FSM, id: *Str8, initState: *StateDesc, payload: Ptr) -> Unit {
 	self.id = id
-	self.state = {state = initState, stage = stageIdDefault}
-	self.next_state = {state = initState, stage = stageIdDefault}
+	self.state = {state = initState, stage = StageId 0}
+	self.next_state = {state = initState, stage = StageId 0}
 	self.payload = payload
-	self.anyPre = nil
-	self.anyPost = nil
 	self.timer = 0
 	self.timer_expired = false
 }
 
 
-// Обработчик смены состояния
-func handlex (self: *FSM) -> Unit {
-	if self.state == self.next_state {
-		return
-	}
-	// Обрабатываем заказ на смену состояния
-	let state: ComplexState = self.state
-	let next_state: ComplexState = self.next_state
-	printf("[%s] #%s_%u -> #%s_%u\n", self.id, state.state.id, state.stage, next_state.state.id, next_state.stage)
-	self.state = self.next_state
-}
 
 
 public func task (self: *FSM) -> Unit {
-
+	// Сработал таймер-ограничитель времени нахождения в стадии?
 	if self.timer_expired {
 		// Clear timer & Switch to next stage
 		self.timer_expired = false
@@ -73,33 +51,21 @@ public func task (self: *FSM) -> Unit {
 		printf("[%s] fsm timeout (%u) occured, switch_to_stage(%d)\n", self.id, top, self.next_state.stage)
 	}
 
-	handlex(self)
-
-	// Limited stage time handling
-	if self.limit != 0 {
-		self.timer = self.limit
-		self.limit = 0
-	}
-
-	// Any state Pre routine
-	if self.anyPre != nil {
-		self.next_state = self.anyPre(self.state, self.payload)
-		handlex(self)
+	// Есть запрос на смену состояния?
+	if self.next_state != self.state {
+		let state: ComplexState = self.state
+		let next_state: ComplexState = self.next_state
+		printf("[%s] #%s_%u -> #%s_%u\n", self.id, state.state.id, state.stage, next_state.state.id, next_state.stage)
+		self.state = self.next_state
 	}
 
 	// Usual routine
 	let handler: *StateServiceRoutine = self.state.state.handler
 	self.next_state = handler(self.state, self.payload)
-
-	// Any state Post routine
-	if self.anyPost != nil {
-		handlex(self)
-		self.next_state = self.anyPost(self.state, self.payload)
-	}
 }
 
 
-public func task_1ms (self: *FSM) -> Unit {
+public func tick (self: *FSM) -> Unit {
 	if self.timer > 0 {
 		self.timer = self.timer - 1
 		if self.timer == 0 {
@@ -113,12 +79,14 @@ public func task_1ms (self: *FSM) -> Unit {
 
 public func cmdSwitchState (self: *FSM, state: *StateDesc) -> ComplexState {
 	self.timer = 0
-	return ComplexState {state = state, stage = stageIdDefault}
+	self.timer_expired = false
+	return ComplexState {state = state, stage = StageId 0}
 }
 
 
 public func cmdSwitchStage (self: *FSM, stage: Word16) -> ComplexState {
 	self.timer = 0
+	self.timer_expired = false
 	var newState: ComplexState = self.state
 	newState.stage = StageId stage
 	return newState
@@ -127,6 +95,7 @@ public func cmdSwitchStage (self: *FSM, stage: Word16) -> ComplexState {
 
 public func cmdNextStage (self: *FSM) -> ComplexState {
 	self.timer = 0
+	self.timer_expired = false
 	let state: ComplexState = self.state
 	let nextStageIndex: Nat16 = Nat16 (state.stage) + 1
 	//assert(nextStageIndex < state.state.nstages)
@@ -137,8 +106,7 @@ public func cmdNextStage (self: *FSM) -> ComplexState {
 
 
 public func cmdNextStageLimited (self: *FSM, t: Nat32) -> ComplexState {
-	self.timer = 0
-	self.limit = t
+	self.timer = t
 	let state: ComplexState = self.state
 	let nextStageIndex: Nat16 = Nat16 (state.stage) + 1
 	//assert(nextStageIndex < state.state.nstages)
@@ -148,15 +116,6 @@ public func cmdNextStageLimited (self: *FSM, t: Nat32) -> ComplexState {
 }
 
 
-public func cmdPrevStage (self: *FSM) -> ComplexState {
-	self.timer = 0
-	let state: ComplexState = self.state
-	let prevStageIndex: Nat16 = Nat16 (state.stage) - 1
-	//assert(prevStageIndex < state.state.nstages)
-	var newState: ComplexState = state
-	newState.stage = StageId prevStageIndex
-	return newState
-}
 
 
 public func getComplexState (fsm: FSM) -> ComplexState {
@@ -174,17 +133,7 @@ public func getStage (fsm: FSM) -> StageId {
 }
 
 
-public func setAnyPre (self: *FSM, anyPre: *StateServiceRoutine) -> Unit {
-	self.anyPre = anyPre
-}
-
-
-public func setAnyPost (self: *FSM, anyPost: *StateServiceRoutine) -> Unit {
-	self.anyPost = anyPost
-}
-
-
-public func getCurrentStateName (fsm: *FSM) -> *Str8 {
+public func getStateName (fsm: *FSM) -> *Str8 {
 	if fsm.state.state == nil {
 		return "<null>"
 	}

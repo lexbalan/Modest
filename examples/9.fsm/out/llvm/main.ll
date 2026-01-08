@@ -212,30 +212,24 @@ declare void @assert(%Bool %cond)
 
 %fsm_FSM = type {
 	%Str8*,
-	%fsm_StateServiceRoutine*,
-	%fsm_StateServiceRoutine*,
 	%fsm_ComplexState,
 	%fsm_ComplexState,
 	i8*,
-	%Nat32,
 	%Nat32,
 	%Bool
 };
 
 declare void @fsm_init(%fsm_FSM* %self, %Str8* %id, %fsm_StateDesc* %initState, i8* %payload)
 declare void @fsm_task(%fsm_FSM* %self)
-declare void @fsm_task_1ms(%fsm_FSM* %self)
+declare void @fsm_tick(%fsm_FSM* %self)
 declare %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* %self, %fsm_StateDesc* %state)
 declare %fsm_ComplexState @fsm_cmdSwitchStage(%fsm_FSM* %self, %Word16 %stage)
 declare %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* %self)
 declare %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* %self, %Nat32 %t)
-declare %fsm_ComplexState @fsm_cmdPrevStage(%fsm_FSM* %self)
 declare %fsm_ComplexState @fsm_getComplexState(%fsm_FSM %fsm)
 declare %fsm_StateDesc* @fsm_getState(%fsm_FSM %fsm)
 declare %fsm_StageId @fsm_getStage(%fsm_FSM %fsm)
-declare void @fsm_setAnyPre(%fsm_FSM* %self, %fsm_StateServiceRoutine* %anyPre)
-declare void @fsm_setAnyPost(%fsm_FSM* %self, %fsm_StateServiceRoutine* %anyPost)
-declare %Str8* @fsm_getCurrentStateName(%fsm_FSM* %fsm)
+declare %Str8* @fsm_getStateName(%fsm_FSM* %fsm)
 
 ; end from import "fsm"
 ; -- end print imports 'main' --
@@ -426,7 +420,7 @@ body_1:
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
 	store %Nat32 0, %Nat32* @timecnt
-	call void @fsm_task_1ms(%fsm_FSM* @fsm0)
+	call void @fsm_tick(%fsm_FSM* @fsm0)
 	br label %endif_0
 else_0:
 	%4 = load %Nat32, %Nat32* @timecnt
