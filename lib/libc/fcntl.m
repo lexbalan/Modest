@@ -7,25 +7,25 @@ include "libc/stat"
 
 // open-only flags
 @alias("c", "O_RDONLY")
-public const c_O_RDONLY = Int32 0x00000000    // open for reading only
+public const c_O_RDONLY = Word32 0x00000000    // open for reading only
 @alias("c", "O_WRONLY")
-public const c_O_WRONLY = Int32 0x00000001    // open for writing only
+public const c_O_WRONLY = Word32 0x00000001    // open for writing only
 @alias("c", "O_RDWR")
-public const c_O_RDWR = Int32 0x00000002      // open for reading and writing
+public const c_O_RDWR = Word32 0x00000002      // open for reading and writing
 @alias("c", "O_ACCMODE")
-public const c_O_ACCMODE = Int32 0x00000003   // mask for above modes
+public const c_O_ACCMODE = Word32 0x00000003   // mask for above modes
 
 @alias("c", "O_NONBLOCK")
-public const c_O_NONBLOCK = Int32 0x00000004  // no delay
+public const c_O_NONBLOCK = Word32 0x00000004  // no delay
 @alias("c", "O_APPEND")
-public const c_O_APPEND = Int32 0x00000008    // set append mode
+public const c_O_APPEND = Word32 0x00000008    // set append mode
 
 @alias("c", "O_CREAT")
-public const c_O_CREAT = Int32 0x00000200     // create if nonexistent
+public const c_O_CREAT = Word32 0x00000200     // create if nonexistent
 @alias("c", "O_TRUNC")
-public const c_O_TRUNC = Int32 0x00000400     // truncate to zero length
+public const c_O_TRUNC = Word32 0x00000400     // truncate to zero length
 @alias("c", "O_EXCL")
-public const c_O_EXCL = Int32 0x00000800      // error if already exists
+public const c_O_EXCL = Word32 0x00000800      // error if already exists
 
 
 /*
@@ -83,7 +83,7 @@ public const c_F_UNLCK = 2  // unlock
 public const c_F_WRLCK = 3  // exclusive or write lock
 
 
-public func open (fname: *[]ConstChar, opt: Int, ...) -> Int
+public func open (fname: *[]ConstChar, opt: Word32, ...) -> Int
 public func creat (fname: *[]ConstChar, mode: ModeT) -> Int
 public func fcntl (fd: Int, op: Int, ...) -> Int
 

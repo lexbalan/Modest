@@ -6,130 +6,77 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#include "./delay.h"
 
 
 
-#define FLASHLIGHT_STATE_OFF  0
-#define FLASHLIGHT_STATE_ON  1
-#define FLASHLIGHT_STATE_BEACON  2
-
-static uint8_t cnt;
-
-//
-// State Off
-//
-
-static void off_entry(fsm_FSM *x) {
-	(void)x;// ignore argument
-	//printf("off_entry\n")
-}
+static fsm_FSM fsm0;
 
 
-static void off_loop(fsm_FSM *x) {
-	printf("off_loop\n");
-	if (cnt < 10) {
-		cnt = cnt + 1;
-	} else {
-		cnt = 0;
-		fsm_switch(x, FLASHLIGHT_STATE_ON);
+static fsm_ComplexState routine0(fsm_ComplexState state, void *payload);
+static fsm_StateDesc state0 = {.id = "state0", .nstages = 4, .handler = &routine0};
+
+static fsm_ComplexState routine1(fsm_ComplexState state, void *payload);
+static fsm_StateDesc state1 = {.id = "state1", .nstages = 4, .handler = &routine1};
+
+static fsm_ComplexState routine2(fsm_ComplexState state, void *payload);
+static fsm_StateDesc state2 = {.id = "state2", .nstages = 4, .handler = &routine2};
+
+static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
+	if (state.stage == (fsm_StageId)0) {
+		return fsm_cmdNextStage(&fsm0);
+	} else if (state.stage == (fsm_StageId)1) {
+		return fsm_cmdNextStageLimited(&fsm0, 2000);
+	} else if (state.stage == (fsm_StageId)2) {
+		// just stay
+	} else if (state.stage == (fsm_StageId)3) {
+		return fsm_cmdSwitchState(&fsm0, &state1);
 	}
+	return state;
 }
 
 
-static void off_exit(fsm_FSM *x) {
-	(void)x;// ignore argument
-	//printf("off_exit\n")
-}
-
-
-//
-// State On
-//
-
-static void on_entry(fsm_FSM *x) {
-	(void)x;// ignore argument
-	//printf("on_entry\n")
-}
-
-
-static void on_loop(fsm_FSM *x) {
-	printf("on_loop\n");
-	if (cnt < 10) {
-		cnt = cnt + 1;
-	} else {
-		cnt = 0;
-		fsm_switch(x, FLASHLIGHT_STATE_BEACON);
+static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
+	if (state.stage == (fsm_StageId)0) {
+		return fsm_cmdNextStage(&fsm0);
+	} else if (state.stage == (fsm_StageId)1) {
+		return fsm_cmdNextStageLimited(&fsm0, 2000);
+	} else if (state.stage == (fsm_StageId)2) {
+		// just stay
+	} else if (state.stage == (fsm_StageId)3) {
+		return fsm_cmdSwitchState(&fsm0, &state2);
 	}
+	return state;
 }
 
 
-static void on_exit(fsm_FSM *x) {
-	(void)x;// ignore argument
-	//printf("on_exit\n")
-}
-
-
-//
-// State Beacon
-//
-
-static void beacon_entry(fsm_FSM *x) {
-	char *const from_name = fsm_state_no_name(x, x->state);
-	printf("beacon_entry from %s\n", from_name);
-}
-
-
-static void beacon_loop(fsm_FSM *x) {
-	printf("beacon_loop\n");
-	if (cnt < 10) {
-		cnt = cnt + 1;
-	} else {
-		cnt = 0;
-		fsm_switch(x, FLASHLIGHT_STATE_OFF);
+static fsm_ComplexState routine2(fsm_ComplexState state, void *payload) {
+	if (state.stage == (fsm_StageId)0) {
+		return fsm_cmdNextStage(&fsm0);
+	} else if (state.stage == (fsm_StageId)1) {
+		return fsm_cmdNextStageLimited(&fsm0, 2000);
+	} else if (state.stage == (fsm_StageId)2) {
+		// just stay
+	} else if (state.stage == (fsm_StageId)3) {
+		return fsm_cmdSwitchState(&fsm0, &state0);
 	}
+	return state;
 }
 
 
-static void beacon_exit(fsm_FSM *x) {
-	char *const to_name = fsm_state_no_name(x, x->nexstate);
-	printf("beacon_exit to %s\n", to_name);
-}
-
-
-static fsm_FSM fsm0 = {
-	.name = "Flash",
-	.state = 0,
-	.nexstate = 0,
-	.substate = FSM_SUBSTATE_ENTERING,
-	.states = {
-		{
-			.name = "Off",
-			.entry = &off_entry,
-			.loop = &off_loop,
-			.exit = &off_exit
-		},
-
-		{
-			.name = "On",
-			.entry = &on_entry,
-			.loop = &on_loop,
-			.exit = &on_exit
-		},
-
-		{
-			.name = "Beacon",
-			.entry = &beacon_entry,
-			.loop = &beacon_loop,
-			.exit = &beacon_exit
-		}
-	}
-};
+static uint32_t timecnt;
 
 int main(void) {
+	fsm_init(&fsm0, "FSM_0", &state0, NULL);
+
 	while (true) {
-		fsm_run(&fsm0);
-		delay_ms(500);
+		if (timecnt > 55555) {
+			timecnt = 0;
+			fsm_task_1ms(&fsm0);
+		} else {
+			timecnt = timecnt + 1;
+		}
+
+		fsm_task(&fsm0);
 	}
 
 	return 0;

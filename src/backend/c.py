@@ -1190,10 +1190,10 @@ def code_to_char(cc):
 		elif cc == 0x0B: return "\\v"  # vertical tab
 		elif cc == 0x0C: return "\\f"  # form feed
 		elif cc == 0x0D: return "\\r"  # carriage return
-		elif cc == 0x1B: return "\\e"  # escape
+		#elif cc == 0x1B: return "\\e"  # escape
 		else: return "\\x%X" % cc
 
-	elif cc <= 0x7E :
+	elif cc <= 0x7E:
 		sym = chr(cc)
 		if sym == '\\': return '\\\\'
 		elif sym == '"': return '\\"'

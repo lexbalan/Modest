@@ -1295,6 +1295,7 @@ class Parser:
 					elif sym == 't': code = ord("\t")   # TAB
 					elif sym == 'a': code = ord("\a")   # BELL
 					elif sym == 'b': code = ord("\b")   # BACKSPACE
+					#elif sym == 'e': code = 0x1B       # ESC
 					elif sym == 'v': code = ord("\v")   # VT
 					elif sym == 'f': code = ord("\f")   # FF
 

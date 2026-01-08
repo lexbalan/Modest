@@ -44,7 +44,12 @@ def value_char_cons(t, v, method, ti):
 	# String -> Char
 	# ex: var c: Char8 = "A"
 	if v.type.is_string():
-		cc = ord(v.asset[0])
+		c = '\0'
+		if len(v.asset) > 0:
+			c = v.asset[0]
+		else:
+			error("expected not empty string", ti)
+		cc = ord(c)
 		nv = value_cons_immediate(t, v, method, ti)
 		nv.asset = cc
 		return nv

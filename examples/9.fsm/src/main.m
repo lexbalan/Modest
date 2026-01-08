@@ -1,141 +1,76 @@
 // examples/fsm/src/main.m
 
-// This is flashlight final state machine example
-// (just for compiler test and language demonstration)
-pragma c_include "./delay.h"
-
 include "libc/ctypes64"
 include "libc/stdio"
 
-import "lightfood/delay"
 import "fsm"
 
 
-const flashlightStateOff = 0
-const flashlightStateOn = 1
-const flashlightStateBeacon = 2
+var fsm0: fsm.FSM
 
 
-var cnt: Nat8
+var state0 = fsm.StateDesc {id="state0", nstages=4, handler=&routine0}
+var state1 = fsm.StateDesc {id="state1", nstages=4, handler=&routine1}
+var state2 = fsm.StateDesc {id="state2", nstages=4, handler=&routine2}
 
 
-//
-// State Off
-//
-
-func off_entry (x: *fsm.FSM) -> Unit {
-	Unit x  // ignore argument
-	//printf("off_entry\n")
-}
-
-
-func off_loop (x: *fsm.FSM) -> Unit {
-	printf("off_loop\n")
-	if cnt < 10 {
-		cnt = cnt + 1
-	} else {
-		cnt = 0
-		fsm.switch(x, flashlightStateOn)
+func routine0 (state: fsm.ComplexState, payload: Ptr) -> fsm.ComplexState {
+	if state.stage == fsm.StageId 0 {
+		return fsm.cmdNextStage(&fsm0)
+	} else if state.stage == fsm.StageId 1 {
+		return fsm.cmdNextStageLimited(&fsm0, t=2000)
+	} else if state.stage == fsm.StageId 2 {
+		// just stay
+	} else if state.stage == fsm.StageId 3 {
+		return fsm.cmdSwitchState(&fsm0, &state1)
 	}
+	return state
 }
 
 
-func off_exit (x: *fsm.FSM) -> Unit {
-	Unit x  // ignore argument
-	//printf("off_exit\n")
-}
-
-
-//
-// State On
-//
-
-func on_entry (x: *fsm.FSM) -> Unit {
-	Unit x  // ignore argument
-	//printf("on_entry\n")
-}
-
-
-func on_loop (x: *fsm.FSM) -> Unit {
-	printf("on_loop\n")
-	if cnt < 10 {
-		cnt = cnt + 1
-	} else {
-		cnt = 0
-		fsm.switch(x, flashlightStateBeacon)
+func routine1 (state: fsm.ComplexState, payload: Ptr) -> fsm.ComplexState {
+	if state.stage == fsm.StageId 0 {
+		return fsm.cmdNextStage(&fsm0)
+	} else if state.stage == fsm.StageId 1 {
+		return fsm.cmdNextStageLimited(&fsm0, t=2000)
+	} else if state.stage == fsm.StageId 2 {
+		// just stay
+	} else if state.stage == fsm.StageId 3 {
+		return fsm.cmdSwitchState(&fsm0, &state2)
 	}
+	return state
 }
 
 
-func on_exit (x: *fsm.FSM) -> Unit {
-	Unit x  // ignore argument
-	//printf("on_exit\n")
-}
-
-
-//
-// State Beacon
-//
-
-func beacon_entry (x: *fsm.FSM) -> Unit {
-	let from_name = fsm.state_no_name(x, x.state)
-	printf("beacon_entry from %s\n", from_name)
-}
-
-
-func beacon_loop (x: *fsm.FSM) -> Unit {
-	printf("beacon_loop\n")
-	if cnt < 10 {
-		cnt = cnt + 1
-	} else {
-		cnt = 0
-		fsm.switch(x, flashlightStateOff)
+func routine2 (state: fsm.ComplexState, payload: Ptr) -> fsm.ComplexState {
+	if state.stage == fsm.StageId 0 {
+		return fsm.cmdNextStage(&fsm0)
+	} else if state.stage == fsm.StageId 1 {
+		return fsm.cmdNextStageLimited(&fsm0, t=2000)
+	} else if state.stage == fsm.StageId 2 {
+		// just stay
+	} else if state.stage == fsm.StageId 3 {
+		return fsm.cmdSwitchState(&fsm0, &state0)
 	}
+	return state
 }
 
 
-func beacon_exit (x: *fsm.FSM) -> Unit {
-	let to_name = fsm.state_no_name(x, x.nexstate)
-	printf("beacon_exit to %s\n", to_name)
-}
-
-
-
-var fsm0: fsm.FSM = {
-	name = "Flash"
-	state = 0
-	nexstate = 0
-	substate = fsm.substateEntering
-	states = fsm.States [
-		fsm.StateDesc {
-			name = "Off"
-			entry = &off_entry
-			loop = &off_loop
-			exit = &off_exit
-		}
-
-		fsm.StateDesc {
-			name = "On"
-			entry = &on_entry
-			loop = &on_loop
-			exit = &on_exit
-		}
-
-		fsm.StateDesc {
-			name = "Beacon"
-			entry = &beacon_entry
-			loop = &beacon_loop
-			exit = &beacon_exit
-		}
-	]
-}
-
+var timecnt: Nat32
 
 
 public func main () -> Int {
+	fsm.init(&fsm0, id="FSM_0", initState=&state0, payload=nil)
+
 	while true {
-		fsm.run(&fsm0)
-		delay.ms(500)
+		if timecnt > 55555 {
+			timecnt = 0
+			fsm.task_1ms(&fsm0)
+		} else {
+			++timecnt
+		}
+
+		fsm.task(&fsm0)
 	}
 
 	return 0
