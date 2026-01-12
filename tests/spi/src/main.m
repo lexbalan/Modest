@@ -28,7 +28,7 @@ func delay (x: Nat32) -> Unit {
 }
 
 
-func spi_exchange (x: Word8, cpol: Nat8, hperiod: Nat32) -> Word8 {
+public func spi_exchange (x: Word8, cpol: Nat8, hperiod: Nat32) -> Word8 {
 	let clkActive = cpol == 0
 	var retval = Word8 0
 	var i = Nat8 7

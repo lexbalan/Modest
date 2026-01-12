@@ -601,7 +601,7 @@ def do_value_shift(x):
 		error("expected non-generic value", left.ti)
 		return ValueBad(x['ti'])
 
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -684,7 +684,7 @@ def do_value_bin2(op, l, r, ti):
 		return ValueBad(ti)
 
 	nv = ValueBin(t, op, l, r, ti=ti)
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	# if left & right are immediate, we can fold const
 	# and append field .asset to bin_value
@@ -740,7 +740,7 @@ def do_value_not(x):
 		op = HLIR_VALUE_OP_LOGIC_NOT
 
 	nv = ValueNot(vtype, v, ti=x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if v.isValueImmediate():
 		# because: ~(1) = -1 (not 0) !
@@ -772,7 +772,7 @@ def do_value_neg(x):
 		vtype.unsigned = True
 
 	nv = ValueNeg(vtype, v, ti=x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if v.isValueImmediate():
 		nv.asset = -v.asset
@@ -798,7 +798,7 @@ def do_value_pos(x):
 		error("expected value with signed type", v.ti)
 
 	nv = ValuePos(vtype, v, ti=x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if v.isValueImmediate():
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
@@ -828,8 +828,8 @@ def do_value_ref(x):
 	nv = ValueRef(v, ti=ti)
 	if v.is_global_flag:
 		nv.stage = HLIR_VALUE_STAGE_LINKTIME
-	else:
-		nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#else:
+		#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -840,7 +840,7 @@ def do_value_new(x):
 		return v
 
 	nv = ValueNew(v)
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -868,7 +868,7 @@ def do_value_deref(x):
 		error("cannot dereference pointer", v.ti)
 
 	nv = ValueDeref(v, ti=x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -896,7 +896,7 @@ def do_value_va_start(x):
 	va_list = do_value(args[0])
 	last_param = do_rvalue(args[1])
 	nv = ValueVaStart(typeUnit, va_list, last_param, x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -904,14 +904,14 @@ def do_value_va_arg(x):
 	va_list = do_value(x['va_list'])
 	type = do_type(x['type'])
 	nv = ValueVaArg(type, va_list, x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
 def do_value_va_end(x):
 	va_list = do_value(x['value'])
 	nv = ValueVaEnd(typeUnit, va_list, x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -920,7 +920,7 @@ def do_value_va_copy(x):
 	va_list0 = do_value(args[0])
 	va_list1 = do_value(args[1])
 	nv = ValueVaCopy(typeUnit, va_list0, va_list1, x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -953,7 +953,6 @@ def do_value_call(x):
 	if fn.isValueBad():
 		#error("undefined value", fn.ti)
 		return ValueBad(x['ti'])
-
 
 	ftype = fn.type
 
@@ -1020,6 +1019,8 @@ def do_value_call(x):
 	# для каждого парамерта ищем соотв. именованный аргумент
 	# идем по порядку и формируем список передвавемых аргументов
 
+	args_is_ct = True
+
 	#
 	# process named args
 	#
@@ -1043,6 +1044,8 @@ def do_value_call(x):
 		vx = param.init_value
 		if found:
 			vx = do_rvalue(a['value'])
+			if vx.stage != HLIR_VALUE_STAGE_COMPILETIME:
+				args_is_ct = False
 		else:
 			if vx.isValueUndef():
 				error("unspecified parameter '%s'" % p_id_str, x['ti'])
@@ -1067,6 +1070,9 @@ def do_value_call(x):
 		a = yy['value']
 		arg = do_rvalue(a)
 
+		if arg.stage != HLIR_VALUE_STAGE_COMPILETIME:
+			args_is_ct = False
+
 		if not arg.isValueBad():
 			if arg.type.is_generic():
 				warning("extra argument with generic type", a['ti'])
@@ -1080,9 +1086,55 @@ def do_value_call(x):
 
 		i += 1
 
+
 	nv = ValueCall(ftype.to, fn, sorted_args, ti=x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
+
+	if False:
+		if fn.is_pure and args_is_ct:
+			ct_call(fn, sorted_args, x['ti'])
+			# Для композитных пока не делаем! Чет в принтере ломается
+			if not nv.type.is_unit():
+				nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+				if nv.type.is_composite():
+					nv.asset = []
+				else:
+					nv.asset = 0
+
+
+	# (!) Вызов функцией нечистой функции делает ее так же нечистой (!)
+	if cfunc != None and not fn.is_pure:
+		cfunc.is_pure = False
+
 	return nv
+
+
+
+
+def ct_call(fn, args, ti):
+	warning("compile time call not implemented, will returned zero value!", ti)
+	context_push()
+	#create_params(fn)
+	# 1. Формируем параметры в контексте (!)
+	params = fn.type.params
+	i = 0
+	while i < len(params):
+		#arg = args[i]
+		param = params[i]
+		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
+		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
+		param_value.asset = args[i].value.asset  # (!)
+		ctx_value_add(param.id.str, param_value, is_public=False)
+		i += 1
+
+	# 2. Теперь обрабатываем блок функции
+
+	for stmt in fn.definition.stmt.stmts:
+		if stmt.is_stmt_return():
+			print(stmt.value)
+
+	context_pop()
+
 
 
 
@@ -1126,7 +1178,7 @@ def do_value_index(x):
 		index = value_cons_implicit_check(typeSysInt, index)
 
 	nv = ValueIndex(array_typ.of, left, index, ti=x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
@@ -1202,7 +1254,7 @@ def do_value_slice(x):
 
 	type = TypeArray(array_type.of, slice_volume, generic=False, ti=x['ti'])
 	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
 	return nv
@@ -1293,7 +1345,7 @@ def do_value_access(x):
 			error("access to private field of record", x['right']['ti'])
 
 	nv = ValueAccessRecord(field.type, left, field, ti=x['ti'])
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
@@ -1325,6 +1377,12 @@ def do_value_id(x):
 		v = ValueBad(x['ti'])
 		ctx_value_add(id_str, v, is_public=False)
 		return v
+
+	# Если в теле функции происходит доступ к глобальной переменной
+	# значит она не "чистая"
+	if cfunc != None:
+		if v.isValueVar() and v.is_global_flag:
+			cfunc.is_pure = False
 
 
 	global cdef
@@ -1782,9 +1840,9 @@ def do_stmt_incdec(x, op=HLIR_VALUE_OP_ADD):
 		return StmtBad(x['ti'])
 
 	one = value_imm_literal_create(v.type, 1, ti=x['ti'])
-	xv = ValueBin(v.type, op, v, one, ti=x['ti'])
-	xv.stage = HLIR_VALUE_STAGE_RUNTIME
-	return StmtAssign(v, xv, ti=x['ti'])
+	nv = ValueBin(v.type, op, v, one, ti=x['ti'])
+	#nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	return StmtAssign(v, nv, ti=x['ti'])
 
 
 
@@ -2030,8 +2088,8 @@ def def_const_global(x):
 	global global_prefix
 	definition = def_const_common(x)
 
-	if definition.value.isValueRuntime():
-		error("runtime!", x['ti'])
+	#if definition.value.isValueRuntime():
+	#	error("runtime!", x['ti'])
 
 	# TODO: centity -> instead cmodule/cfunc;
 	# rm Value#module -> tree instead
@@ -2046,8 +2104,8 @@ def def_const_global(x):
 	iv = definition.init_value
 	if not iv.isValueUndef():
 		if iv.isValueRuntime():
-			print(iv.stage)
-			error("expected immediate value3", iv.ti)
+			#print(iv.stage)
+			error("expected immediate value", iv.ti)
 
 	return definition
 
@@ -2151,6 +2209,29 @@ def def_var_global(x):
 
 
 
+# Чистый тип функции не принимает и не возвращает указатели
+def is_pure_type(t):
+	if t.to.is_pointer():
+		return False
+	for param in t.params:
+		if param.type.is_pointer():
+			return False
+	return True
+
+
+
+def create_params(fn):
+	params = fn.type.params
+
+	i = 0
+	while i < len(params):
+		param = params[i]
+		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
+		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
+		#param_value.stage = HLIR_VALUE_STAGE_RUNTIME
+		ctx_value_add(param.id.str, param_value, is_public=False)
+		i += 1
+
 
 def def_func(x):
 	global cdef
@@ -2180,22 +2261,27 @@ def def_func(x):
 	if x['stmt'] == None:
 		return fn.definition
 
+	# not above (!)
+	fn.is_pure = is_pure_type(fn.type)
+
 	context_push()  # create params context
 
 	prev_cfunc = cfunc
 	cfunc = fn
 
-	params = fn.type.params
+	create_params(fn)
 
-
-	i = 0
-	while i < len(params):
-		param = params[i]
-		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
-		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
-		param_value.stage = HLIR_VALUE_STAGE_RUNTIME
-		ctx_value_add(param.id.str, param_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
-		i += 1
+#	params = fn.type.params
+#
+#
+#	i = 0
+#	while i < len(params):
+#		param = params[i]
+#		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
+#		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
+#		#param_value.stage = HLIR_VALUE_STAGE_RUNTIME
+#		ctx_value_add(param.id.str, param_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
+#		i += 1
 
 	# for C backend, for #include <stdarg.h>
 	if fn.type.extra_args:
@@ -2225,6 +2311,9 @@ def def_func(x):
 	context_pop()  # remove params context
 	cfunc = prev_cfunc
 	cdef = None
+
+#	if fn.is_pure:
+#		info("pure function", x['ti'])
 
 	return fn.definition
 
@@ -2552,52 +2641,6 @@ def get_access_level(x):
 			return HLIR_ACCESS_LEVEL_PRIVATE
 	return x['access_modifier']
 
-
-
-def pre_imp(ast):
-	global cmodule
-
-	# 1. Проходим по всем типам, создаем их undefined "прототипы".
-	# 2. Проходим по всем функциям, создаем их undefined "прототипы".
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if isa == 'ast_definition':
-			is_public = get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC
-			id = do_id(x['id'])
-			ti = id.ti
-
-			if kind == 'type':
-				t = Type(x['ti'])  # Incomplete type (!)
-				t.id = id
-				t.parent = cmodule
-				t.is_global_flag = True
-				ctx_type_add(id.str, t, is_public=is_public)
-
-			elif kind == 'func':
-				# Create function value with incomplete type
-				t = Type(x['ti'])  # Incomplete type (!)
-				v = ValueFunc(t, id, x['ti'])
-				v.parent = cmodule
-				v.is_global_flag = True
-				ctx_value_add(id.str, v, is_public=is_public)
-
-			elif kind == 'const':
-				t = Type(x['ti'])  # Incomplete type (!)
-				iv = ValueUndef(t, ti=x['ti'])
-				v = ValueConst(t, id, init_value=iv, ti=x['ti'])
-				v.parent = cmodule
-				v.is_global_flag = True
-				ctx_value_add(id.str, v, is_public=is_public)
-
-			elif kind == 'var':
-				t = Type(x['ti'])  # Incomplete type (!)
-				iv = ValueUndef(t, ti=x['ti'])
-				v = ValueVar(t, id, init_value=iv, ti=x['ti'])
-				v.parent = cmodule
-				v.is_global_flag = True
-				ctx_value_add(id.str, v, is_public=is_public)
 
 
 def pre_def(ast, is_include=False):
@@ -2982,3 +3025,53 @@ elif kind == 'undef':
 	cmodule.symtab_public.type_undef(id_str)
 
 el"""
+
+
+
+"""
+def pre_imp(ast):
+	global cmodule
+
+	# 1. Проходим по всем типам, создаем их undefined "прототипы".
+	# 2. Проходим по всем функциям, создаем их undefined "прототипы".
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			is_public = get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC
+			id = do_id(x['id'])
+			ti = id.ti
+
+			if kind == 'type':
+				t = Type(x['ti'])  # Incomplete type (!)
+				t.id = id
+				t.parent = cmodule
+				t.is_global_flag = True
+				ctx_type_add(id.str, t, is_public=is_public)
+
+			elif kind == 'func':
+				# Create function value with incomplete type
+				t = Type(x['ti'])  # Incomplete type (!)
+				v = ValueFunc(t, id, x['ti'])
+				v.parent = cmodule
+				v.is_global_flag = True
+				ctx_value_add(id.str, v, is_public=is_public)
+
+			elif kind == 'const':
+				t = Type(x['ti'])  # Incomplete type (!)
+				iv = ValueUndef(t, ti=x['ti'])
+				v = ValueConst(t, id, init_value=iv, ti=x['ti'])
+				v.parent = cmodule
+				v.is_global_flag = True
+				ctx_value_add(id.str, v, is_public=is_public)
+
+			elif kind == 'var':
+				t = Type(x['ti'])  # Incomplete type (!)
+				iv = ValueUndef(t, ti=x['ti'])
+				v = ValueVar(t, id, init_value=iv, ti=x['ti'])
+				v.parent = cmodule
+				v.is_global_flag = True
+				ctx_value_add(id.str, v, is_public=is_public)
+"""
+

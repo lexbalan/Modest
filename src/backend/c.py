@@ -519,7 +519,7 @@ def str_value_bin(x, ctx):
 		elif left.type.is_array():
 			return str_value_eq_array(x, ctx)
 		elif left.type.is_string():
-			return str_value_literal_bool(x.asset)
+			return str_value_bool(x.asset)
 
 	lk = ''
 	if hasattr(left, 'op'):
@@ -539,7 +539,7 @@ def str_value_bin(x, ctx):
 				# (печатаем сам литерал, тк C иначе не умеет)
 				# (U"Hello World!")
 				#str_value_string(x, ctx)
-				return str_value_literal_string(x.asset, char_width=x.type.width)
+				return str_value_string(x.asset, char_width=x.type.width)
 
 			sstr += str_value(left, parent_expr=x)
 			sstr += ' '
@@ -584,7 +584,7 @@ def str_value_eq_composite(x, ctx):
 	right = x.right
 
 	if x.isValueImmediate():
-		return str_value_literal_bool(x.asset)
+		return str_value_bool(x.asset)
 
 	# если сравниваем строки (Str8, Str16, Str32)
 	if left.type.is_str() and right.type.is_str():
@@ -646,7 +646,10 @@ def str_value_call(v, ctx, sret=None):
 	sstr = ''
 
 	if v.isValueImmediate():
-		return str_value(v, ctx)
+		# Если результат call вычислен в CT - просто распечатаем его значение
+		# Так как вызов функции в глобальных выражениях си невозможен
+		return str_value_with_type(v, v.type)
+
 
 	left = v.func
 
@@ -771,8 +774,6 @@ def str_value_access(x, ctx):
 	#	if x.isValueImmediate():
 	if not left.isValueConst():
 		if value_is_generic_immediate(left):
-			#info("LKMLKMLKMKLMKLM", x.ti)
-			#mass
 			return str_value_literal(x, ctx)
 
 	if value_is_generic_immediate_const(left):
@@ -866,7 +867,7 @@ def str_value_cons_array(x, ctx):
 						chars.append(ch)
 
 					char_width = to_type.of.width
-					return str_value_literal_string(chars, char_width=char_width)
+					return str_value_string(chars, char_width=char_width)
 
 			return str_cast(to_type, value, ctx=ctx)
 		else:
@@ -921,7 +922,7 @@ def cchr(value, sz):
 
 	if value.isValueLiteral():
 		if value.type.is_string():
-			return str_value_literal_char(ord(value.asset[0]), sz)
+			return str_value_char(ord(value.asset[0]), sz)
 
 	return "_CHR%d(%s)" % (sz, str_value(value))
 
@@ -948,7 +949,7 @@ def str_value_cons(x, ctx):
 	if value.isValueLiteral() and from_type.is_generic():
 		if x.asset != None:
 			as_hex = type.is_word() or value.hasAttribute2('hexadecimal')
-			return str_value_literal_with_type(value, type, as_hex=as_hex)
+			return str_value_with_type(value, type, as_hex=as_hex)
 
 
 	# *RecordA -> *RecordB
@@ -1064,7 +1065,7 @@ def print_literal_array_items(values, item_type):
 
 
 
-def str_value_literal_string(chars, char_width):
+def str_value_string(chars, char_width):
 	utf32_codes = []
 	for ch in chars:
 		cc = ord(ch)
@@ -1073,7 +1074,7 @@ def str_value_literal_string(chars, char_width):
 
 
 
-def str_value_literal_char(cc, width):
+def str_value_char(cc, width):
 	return string_literal_prefix(width) + print_utf32codes_as_string([cc], width, quote="'")
 
 
@@ -1083,6 +1084,9 @@ def str_value_array(x, ctx):
 	items = x.asset
 	nl_end = 1
 	sstr = ''
+
+	if len(items) == 0:
+		return EMPTY_ARRAY_LITERAL
 
 	#if not x.isValueImmediate():
 	#	sstr += '(%s)' % str_type(type)
@@ -1123,6 +1127,7 @@ def str_value_array(x, ctx):
 		sstr += str_nl_indent(nl=nl_end_e)
 	sstr += "}"
 	return sstr
+
 
 
 
@@ -1215,8 +1220,8 @@ def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 
 
 
-def str_value_literal_bool(num):
-	#print("str_value_literal_bool")
+def str_value_bool(num):
+	#print("str_value_bool")
 	if num:
 		return csettings['true_literal']
 	else:
@@ -1228,7 +1233,7 @@ def str_value_enum(x, ctx):
 
 
 
-def str_value_literal_suffix(to_type, num):
+def str_value_suffix(to_type, num):
 	req_bits = nbits_for_num(num)
 
 	if req_bits < csettings['int_width']:
@@ -1248,7 +1253,7 @@ def str_value_literal_suffix(to_type, num):
 	return sstr
 
 
-def str_value_literal_number(type, num, nsigns=0, is_big=False, is_hex=False):
+def str_value_number(type, num, nsigns=0, is_big=False, is_hex=False):
 	global need_big_int
 	sstr = ''
 	# Big Number?
@@ -1269,40 +1274,41 @@ def str_value_literal_number(type, num, nsigns=0, is_big=False, is_hex=False):
 	else:
 		sstr += str(num)
 
-	sstr += str_value_literal_suffix(type, num)
+	sstr += str_value_suffix(type, num)
 
 	return sstr
 
 
 
-def str_value_literal_float(num):
-	return '{0:f}'.format(num)
+def str_value_float(v, t):
+	return '{0:f}'.format(v.asset)
 
 
-def str_value_literal_pointer(type, num):
+def str_value_pointer(type, num):
 	if num == 0:
 		return "NULL"
 	return "((" + str_type(type) + ")0x%08X)" % num
 
 
 def str_value_literal(x, ctx):
-	return str_value_literal_with_type(x, x.type)
+	return str_value_with_type(x, x.type)
 
 
-def str_value_literal_with_type(x, t, as_hex=False):
-	asset = x.asset
+def str_value_with_type(v, t, as_hex=False):
+	asset = v.asset
 
 	if t.is_arithmetical() or t.is_number() or t.is_word():
-		as_hex = as_hex or x.type.is_word() or x.hasAttribute2('hexadecimal')
-		return str_value_literal_number(t, asset, is_hex=as_hex)
+		as_hex = as_hex or v.type.is_word() or v.hasAttribute2('hexadecimal')
+		return str_value_number(t, asset, is_hex=as_hex)
 
-	elif t.is_float(): return str_value_literal_float(asset)
-	elif t.is_string(): return str_value_literal_string(asset, char_width=t.width)
-	elif t.is_record(): return str_value_record(x)
-	elif t.is_bool(): return str_value_literal_bool(asset)
-	elif t.is_char(): return str_value_literal_char(asset, t.width)
-	elif t.is_pointer(): return str_value_literal_pointer(t, asset)
-	else: error("str_value_literal not implemented for %s" % str(t), x.ti)
+	elif t.is_float(): return str_value_float(v, t)
+	elif t.is_string(): return str_value_string(asset, char_width=t.width)
+	elif t.is_record(): return str_value_record(v)
+	elif t.is_bool(): return str_value_bool(asset)
+	elif t.is_char(): return str_value_char(asset, t.width)
+	elif t.is_pointer(): return str_value_pointer(t, asset)
+	elif t.is_array(): return str_value_array(v)
+	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
 	1/0
 
 	return "<ValueLiteral>"
@@ -1690,7 +1696,7 @@ def print_stmt_asm(x):
 	out('__asm__ volatile (')
 	indent_up()
 	nl_indent(1)
-	out(str_value_literal_string(x.text.asset, char_width=x.text.type.width))
+	out(str_value_string(x.text.asset, char_width=x.text.type.width))
 
 	# print 'out' pairs
 	args1 = x.outputs

@@ -1190,10 +1190,11 @@ class Value(Entity):
 		self.id = None
 		self.type = type
 		self.storage_class = HLIR_VALUE_STORAGE_CLASS_UNKNOWN
-		self.stage = HLIR_VALUE_STAGE_UNKNOWN
+		self.stage = HLIR_VALUE_STAGE_RUNTIME
 		self.definition = None  # *StmtDefVar, *StmtDefConst, *StmtDefFunc
 		self.is_lvalue = False
 		self.is_immutable = False
+		self.is_pure = False
 
 		# in case of scalar value type here is code
 		# in case of record value here is list of Initializer objects
@@ -1544,6 +1545,7 @@ class ValueFunc(Value):
 		super().__init__(type=type, ti=ti)
 		self.id = id
 		self.is_pure = False
+		self.is_runtime = False
 		self.usecnt = 0
 
 
