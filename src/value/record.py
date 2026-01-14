@@ -50,8 +50,8 @@ def record_can(to, from_type, method, ti):
 	if not from_type.is_generic():
 		return False
 
-	# check if all fields in from_type present in t
-	# and their types are equal (!)
+	# check if all fields present in t
+	# and their types are correct
 	for field_src in from_type.fields:
 		field_dst = record_field_get(to, field_src.id.str)
 		if field_dst == None:
