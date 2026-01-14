@@ -303,6 +303,14 @@ declare void @perror(%ConstCharStr* %str)
 	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 0)
 }
 define internal void @test_records() {
+
+	; Now local types not works
+	;	type LocalRecord = record {
+	;		x: Int32
+	;	}
+	;
+	;	var localRecord: LocalRecord
+	;	Unit localRecord
 	%1 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 0, %Int32 0
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Int32 %2)

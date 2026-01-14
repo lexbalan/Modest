@@ -95,8 +95,8 @@ int main(void) {
 	// sizeof(void) in C  == 1
 	// sizeof(Unit) in CM == 0
 	// TODO: here is a broblem
-	printf("sizeof(Unit) = %zu\n", sizeof(void));
-	printf("alignof(Unit) = %zu\n", __alignof(void));
+	printf("sizeof(Unit) = %zu\n", (/*sizeof(void)*/(size_t)0));
+	printf("alignof(Unit) = %zu\n", (/*alignof(void)*/(size_t)1));
 
 	printf("sizeof(Bool) = %zu\n", sizeof(bool));
 	printf("alignof(Bool) = %zu\n", __alignof(bool));

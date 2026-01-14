@@ -60,9 +60,13 @@ var s: Struct = {x=&lines[0]}
 
 func test_records () -> Unit {
 
-	type LocalRecord = record {
-		x: Int32
-	}
+// Now local types not works
+//	type LocalRecord = record {
+//		x: Int32
+//	}
+//
+//	var localRecord: LocalRecord
+//	Unit localRecord
 
 	printf("line.a.x = %d\n", line.a.x)
 	printf("line.a.y = %d\n", line.a.y)
@@ -166,6 +170,7 @@ public func main () -> Int {
 	// and their types are equal)  ((EXPERIMENTAL))
 	var p3d: Point3D
 	p3d = Point3D p2d2
+	Unit p3d
 
 
 	// проверка того как локальная константа-массив

@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 
-struct loo_Nothing {
+struct loo_Nothing {char __pad__; /* empty record */
 };
 typedef struct loo_Nothing loo_Nothing;
 

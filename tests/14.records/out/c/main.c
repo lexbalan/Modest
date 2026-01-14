@@ -10,11 +10,11 @@
 
 
 /* anonymous records */
-struct __anonymous_struct_7 {
+struct __anonymous_struct_6 {
 	uint32_t x;
 	uint32_t y;
 };
-struct __anonymous_struct_8 {
+struct __anonymous_struct_7 {
 	uint32_t x;
 	uint32_t y;
 };
@@ -78,10 +78,13 @@ static Struct s = {.x = &lines[0]};
 
 static void test_records(void) {
 
-	struct LocalRecord {
-		int32_t x;
-	};
-	typedef struct LocalRecord LocalRecord;
+	// Now local types not works
+	//	type LocalRecord = record {
+	//		x: Int32
+	//	}
+	//
+	//	var localRecord: LocalRecord
+	//	Unit localRecord
 
 	printf("line.a.x = %d\n", line.a.x);
 	printf("line.a.y = %d\n", line.a.y);
@@ -136,7 +139,7 @@ int main(void) {
 
 	// compare Point2D with anonymous record
 	Point2D p2d2 = p2d0;// record assignation
-	struct __anonymous_struct_7 p2d3 = (struct __anonymous_struct_7)XX;
+	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6)XX;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(Point2D)) == 0) {
 		printf("p2d2 == p2d3\n");
@@ -146,9 +149,9 @@ int main(void) {
 
 
 	// comparison between two anonymous record
-	struct __anonymous_struct_8 p2d4 = (struct __anonymous_struct_8){.x = 1, .y = 2};
+	struct __anonymous_struct_7 p2d4 = (struct __anonymous_struct_7){.x = 1, .y = 2};
 
-	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_7)) == 0) {
+	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_6)) == 0) {
 		printf("p2d3 == p2d4\n");
 	} else {
 		printf("p2d3 != p2d4\n");
@@ -156,7 +159,7 @@ int main(void) {
 
 	// comparison between two record (by pointer)
 	Point2D *const pr2 = &p2d2;
-	struct __anonymous_struct_7 *const pr3 = &p2d3;
+	struct __anonymous_struct_6 *const pr3 = &p2d3;
 
 	if (memcmp(pr2, pr3, sizeof(Point2D)) == 0) {
 		printf("*pr2 == *pr3\n");
@@ -178,13 +181,14 @@ int main(void) {
 
 	// assign record by pointer
 	*pr2 = (Point2D){.x = 100, .y = 200};
-	*pr3 = (struct __anonymous_struct_7){0};
+	*pr3 = (struct __anonymous_struct_6){0};
 
 	// cons Point3D from Point2D (record extension)
 	// (it is possible if dst record contained all fields from src record
 	// and their types are equal)  ((EXPERIMENTAL))
 	Point3D p3d;
 	p3d = *(Point3D*)&p2d2;
+	(void)p3d;
 
 
 	// проверка того как локальная константа-массив

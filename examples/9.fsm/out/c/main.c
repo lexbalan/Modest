@@ -22,6 +22,7 @@ static fsm_ComplexState routine2(fsm_ComplexState state, void *payload);
 static fsm_StateDesc state2 = {.id = "state2", .nstages = 4, .handler = &routine2};
 
 static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
+	(void)payload;
 	if (state.stage == (fsm_StageId)0) {
 		return fsm_cmdNextStage(&fsm0);
 	} else if (state.stage == (fsm_StageId)1) {
@@ -36,6 +37,7 @@ static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 
 
 static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
+	(void)payload;
 	if (state.stage == (fsm_StageId)0) {
 		return fsm_cmdNextStage(&fsm0);
 	} else if (state.stage == (fsm_StageId)1) {
@@ -50,6 +52,7 @@ static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
 
 
 static fsm_ComplexState routine2(fsm_ComplexState state, void *payload) {
+	(void)payload;
 	if (state.stage == (fsm_StageId)0) {
 		return fsm_cmdNextStage(&fsm0);
 	} else if (state.stage == (fsm_StageId)1) {

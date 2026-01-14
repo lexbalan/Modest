@@ -922,6 +922,7 @@ break_13:
 
 define %Int @main() {
 	; generic array [4]Char8 will be implicit casted to [10]Char8
+	call void @test()
 	%1 = alloca [30 x %Char8], align 1
 	%2 = insertvalue [20 x %Char8] zeroinitializer, %Char8 72, 0
 	%3 = insertvalue [20 x %Char8] %2, %Char8 101, 1

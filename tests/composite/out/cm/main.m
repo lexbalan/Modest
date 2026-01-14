@@ -199,7 +199,10 @@ var farr: [2]*(a: Int32, b: Int32) -> Int32 = [
 
 type He = () -> Unit
 
+
+@used
 func he (x: *He) -> Unit {
+	Unit x
 }
 
 func hi (x: *Str8) -> Unit {

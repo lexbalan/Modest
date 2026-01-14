@@ -56,7 +56,7 @@ static void f5(int32_t *_a, int32_t *sret_) {
 
 
 static int32_t *f6(int32_t *a) {
-	return (int32_t *)NULL;
+	return NULL;
 }
 
 
@@ -224,6 +224,7 @@ static int32_t(*farr[2])(int32_t a, int32_t b) = {
 typedef void He(void);
 
 static void he(He *x) {
+	(void)x;
 }
 
 

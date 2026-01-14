@@ -52,7 +52,7 @@ int main(void) {
 	// by ptr
 	//
 
-	int32_t *const pa = (int32_t *)&a;
+	int32_t *const pa = &a[0];
 	int32_t s2[8 - 5];
 	memcpy(&s2, (int32_t(*)[8 - 5])&pa[5], sizeof(int32_t[8 - 5]));
 	i = 0;
@@ -96,7 +96,7 @@ int main(void) {
 	#define aa  2
 	#define bb  8
 
-	int32_t *const p = (int32_t *)&s[aa];
+	int32_t *const p = /*<hlir.types.ValueSlice object at 0x1058ae190>*/&s[aa];
 	array_print(p, bb - aa);
 
 	printf("--------------------------------------------\n");

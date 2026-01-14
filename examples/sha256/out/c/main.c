@@ -52,9 +52,9 @@ static bool doTest(SHA256_TestCase *test) {
 	uint8_t *const msg = (uint8_t *)&test->inputData;
 	const uint32_t msgLen = test->inputDataLen;
 
-	sha256_hash(msg, msgLen, (uint8_t *)&test_hash);
+	sha256_hash(msg, msgLen, &test_hash[0]);
 
-	printf("'%s'", (char *)&test->inputData);
+	printf("'%s'", &test->inputData[0]);
 	printf(" -> ");
 
 	uint32_t i = 0;

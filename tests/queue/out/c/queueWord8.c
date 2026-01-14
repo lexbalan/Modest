@@ -86,7 +86,7 @@ uint32_t queueWord8_write(queueWord8_QueueWord8 *q, uint8_t *data, uint32_t len)
 
 
 void queueWord8_clear(queueWord8_QueueWord8 *q) {
-	uint8_t *const pdata = (uint8_t *)(uint8_t *)q->data;
+	uint8_t *const pdata = (uint8_t *)q->data;
 	memset(pdata, 0, sizeof(uint8_t[queue_capacity(&q->queue)]));
 }
 

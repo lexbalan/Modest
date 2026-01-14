@@ -227,6 +227,9 @@ def str_type_record(t, tag=''):
 	s += "{"
 	indent_up()
 
+	if len(t.fields) == 0:
+		s += "char __pad__; /* empty record */"
+
 	prev_nl = 1
 	for field in t.fields:
 
@@ -480,7 +483,11 @@ def incast(type, value):
 		# Это аргумент с типом указатель на массив
 		# приведем его по месту к указателю на элемент этого массива
 		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
-		return eee(value.type.to.of) + str_value(value)
+		if value.isValueRef():
+			if value.value.isValueIndex() or value.value.isValueSlice():
+				return "/*%s*/" % (value.value) + "&" + str_value(value.value)
+			else:
+				return "&" + str_value(value.value) + "[0]"
 
 	return str_value(value)
 
@@ -999,8 +1006,11 @@ def str_value_cons(x, ctx):
 					return "(" + str_type(type) + ")" + "abs((int)" + str_value(value) + ")"
 				elif value.type.width <= 64:
 					return "(" + str_type(type) + ")" + "llabs((long long int)" + str_value(value) + ")"
+				elif value.type.width <= 128:
+					return "(" + str_type(type) + ")" + "abs128(" + str_value(value) + ")"
 				else:
-					return "(" + str_type(type) + ")" + "llabs(" + str_value(value) + ")"
+					return "<ABS_TOO_BIG>"
+
 
 			elif type.is_word():
 				if from_type.size < type.size:
@@ -1338,6 +1348,8 @@ def str_value_sizeof_value(x, ctx):
 
 
 def str_value_sizeof_type(x, ctx):
+	if x.of.is_unit():
+		return "(/*sizeof(void)*/(size_t)0)"
 	sstr = "sizeof("
 	sstr += str_type(x.of)
 	sstr += ")"
@@ -1345,6 +1357,8 @@ def str_value_sizeof_type(x, ctx):
 
 
 def str_value_alignof(x, ctx):
+	if x.of.is_unit():
+		return "(/*alignof(void)*/(size_t)1)"
 	sstr = "__alignof("
 	sstr += str_type(x.of)
 	sstr += ")"
@@ -2397,6 +2411,9 @@ def helper_use_lengthof():
 def helper_use_bigint():
 	out("\n#ifndef __BIG_INT128__")
 	out("\n#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))")
+	out("\nstatic inline __int128 abs128(__int128 x) {")
+	out("\n	return x < 0 ? -x : x;")
+	out("\n}")
 	out("\n#endif  /* __BIG_INT128__ */")
 	out("\n")
 	out("\n#ifndef __BIG_INT256__")

@@ -14,6 +14,7 @@ var state2: StateDesc = StateDesc {id = "state2", nstages = 4, handler = &routin
 
 
 func routine0 (state: ComplexState, payload: Ptr) -> ComplexState {
+	Unit payload
 	if state.stage == StageId 0 {
 		return fsm.cmdNextStage(&fsm0)
 	} else if state.stage == StageId 1 {
@@ -28,6 +29,7 @@ func routine0 (state: ComplexState, payload: Ptr) -> ComplexState {
 
 
 func routine1 (state: ComplexState, payload: Ptr) -> ComplexState {
+	Unit payload
 	if state.stage == StageId 0 {
 		return fsm.cmdNextStage(&fsm0)
 	} else if state.stage == StageId 1 {
@@ -42,6 +44,7 @@ func routine1 (state: ComplexState, payload: Ptr) -> ComplexState {
 
 
 func routine2 (state: ComplexState, payload: Ptr) -> ComplexState {
+	Unit payload
 	if state.stage == StageId 0 {
 		return fsm.cmdNextStage(&fsm0)
 	} else if state.stage == StageId 1 {

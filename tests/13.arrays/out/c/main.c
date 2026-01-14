@@ -47,14 +47,14 @@ static void f0(char *_x, char *sret_) {
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
 	memcpy(&local_copy_of_x, &x, sizeof(char[20]));
-	printf("f0(\"%s\")\n", (char *)&local_copy_of_x);
+	printf("f0(\"%s\")\n", &local_copy_of_x[0]);
 
 	// truncate array
 	char mic[6];
 	memcpy(&mic, (char(*)[6 - 0])&x[0], sizeof(char[6]));
 	mic[5] = '\x0';
 
-	printf("f0 mic = \"%s\"\n", (char *)&mic);
+	printf("f0 mic = \"%s\"\n", &mic[0]);
 
 	// extend array
 	char res[30];
@@ -200,9 +200,11 @@ static void test_arrays(void) {
 int main(void) {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
+	test();
+
 	char em[30];
 	f0("Hello World!", (char *)&em);
-	printf("em = %s\n", (char *)&em);
+	printf("em = %s\n", &em[0]);
 
 	uint32_t i = 0;
 	while (i < 10) {
@@ -285,8 +287,8 @@ int main(void) {
 	printf("d[5] = %i\n", d[5]);
 
 	// check equality between two arrays (by pointer)
-	int32_t *const pa = (int32_t *)&a;
-	int32_t *const pb = (int32_t *)&b;
+	int32_t *const pa = &a[0];
+	int32_t *const pb = &b[0];
 
 	if (memcmp(pa, pb, sizeof(int32_t[3])) == 0) {
 		printf("*pa == *pb\n");
