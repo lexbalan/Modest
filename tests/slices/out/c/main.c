@@ -96,7 +96,7 @@ int main(void) {
 	#define aa  2
 	#define bb  8
 
-	int32_t *const p = /*<hlir.types.ValueSlice object at 0x1058ae190>*/&s[aa];
+	int32_t *const p = &s[aa];
 	array_print(p, bb - aa);
 
 	printf("--------------------------------------------\n");

@@ -470,12 +470,6 @@ def print_type_record(t, tag):
 
 
 
-
-def eee(item_type):
-	to = TypePointer(item_type, ti=None)
-	return "(%s)" % str_type(to)
-
-
 # Дополнительная чисто сишная надстройка -
 # проверяем если у нас тут указатель на массив приводим к указателю на его элемент
 def incast(type, value):
@@ -485,13 +479,11 @@ def incast(type, value):
 		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
 		if value.isValueRef():
 			if value.value.isValueIndex() or value.value.isValueSlice():
-				return "/*%s*/" % (value.value) + "&" + str_value(value.value)
+				return "&" + str_value(value.value)
 			else:
 				return "&" + str_value(value.value) + "[0]"
 
 	return str_value(value)
-
-
 
 
 
@@ -713,10 +705,8 @@ def str_value_call(v, ctx, sret=None):
 			sstr += (", ")
 
 		# приводим указатель на массив к указателю на его элемент
-		#to = TypePointer(sret.type.of, sret.ti)
-		#sstr += "(%s)" % str_type(to)
-
-		sstr += eee(sret.type.of)
+		to = TypePointer(sret.type.of)
+		sstr += "(%s)" % str_type(to)
 		sstr += str_value_as_ptr(sret)
 
 	if nl_after:
