@@ -1911,8 +1911,7 @@ def print_func_signature(id_str, ftype):
 
 
 def print_decl_func(x):
-	#if 'gnu_att' in x:
-	#	out('__attribute__((%s))\n' % x['gnu_att'])
+	print_gcc_attributes_for(x)
 
 	if not x.hasAttribute2('extern'):
 		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
@@ -1928,6 +1927,35 @@ def print_decl_func(x):
 
 
 
+
+def print_gcc_attributes_for(x):
+	possible_attributes = {
+		'inline': 'always_inline',
+		'noinline': 'noinline',
+		'used': 'used',
+		'unused': 'unused'
+	}
+
+	attributes = []
+	for gcc_att in possible_attributes:
+		if x.hasAttribute2(gcc_att):
+			attributes.append(possible_attributes[gcc_att])
+	if attributes != []:
+		att_line = ", ".join(attributes)
+		out("__attribute__((%s))\n" % att_line)
+
+
+	if x.hasAttribute2('section'):
+		section = x.getAnnotation('section')
+		out("__attribute__((section(\"%s\")))\n" % section.asset)
+
+	if x.hasAttribute2('alignment'):
+		alignment = x.getAnnotation('alignment')
+		out("__attribute__((aligned(%d)))\n" % alignment.asset)
+
+
+
+
 def print_def_func(x):
 	global declared
 
@@ -1936,21 +1964,8 @@ def print_def_func(x):
 	global cfunc
 	cfunc = func
 
-	if x.getAnnotation('conditional') != None:
-		a = x.getAnnotation('conditional')
-		out("#if (%s)\n" % str_value(a))
+	print_gcc_attributes_for(x)
 
-	if x.hasAttribute2('inline'):
-		out("__attribute__((always_inline))\n")
-
-	if x.hasAttribute2('noinline'):
-		out("__attribute__((noinline))\n")
-
-	if x.hasAttribute2('unused'):
-		out("__attribute__((unused))\n")
-
-	#if 'gnu_att' in x:
-	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
 	if not x.hasAttribute2('extern'):
 		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
@@ -2011,10 +2026,6 @@ def print_def_func(x):
 	func_undef_list = []
 	out("\n}\n")
 
-	if x.getAnnotation('conditional') != None:
-		a = x.getAnnotation('conditional')
-		out("\n#endif /* %s */" % str_value(a))
-
 	if not func.id.str in declared:
 		declared.append(func.id.str)
 
@@ -2059,22 +2070,7 @@ def print_variable(id_str, t, init_value=None, prefix=''):
 
 
 def print_def_var(x, isdecl=False, as_extern=False):
-	#if 'gnu_att' in x:
-	#	out('__attribute__((%s))\n' % x['gnu_att'])
-
-	if x.hasAttribute2('used'):
-		out("__attribute__((used))\n")
-
-	if x.hasAttribute2('unused'):
-		out("__attribute__((unused))\n")
-
-	if x.hasAttribute2('section'):
-		section = x.getAnnotation('section')
-		out("__attribute__((section(\"%s\")))\n" % section.asset)
-
-	if x.hasAttribute2('alignment'):
-		alignment = x.getAnnotation('alignment')
-		out("__attribute__((aligned(%d)))\n" % alignment.asset)
+	print_gcc_attributes_for(x)
 
 	# TODO: Почему-то атрибут 'extern' не работает, и накостылил через as_extern
 	is_extern = x.hasAttribute2('extern') or as_extern
@@ -2193,28 +2189,6 @@ def str_comment_line(x):
 		if i < n:
 			s += str_nl_indent()
 	return s
-
-
-def print_cdecl_type(x):
-	newline(n=x.nl)
-
-	id_str = get_id_str(x.type)
-	out("struct %s;" % id_str)
-	if not NO_TYPEDEF_STRUCTS:
-		out("\ntypedef struct %s %s;" % (id_str, id_str))
-
-
-def print_cdecl_func(x):
-	newline(n=x.nl)
-
-	#if 'gnu_att' in x:
-	#	out('__attribute__((%s))\n' % x['gnu_att'])
-
-	if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
-		out("static ")
-
-	print_func_signature(get_id_str(sym), x['symbol']['type'])
-	out(";")
 
 
 
