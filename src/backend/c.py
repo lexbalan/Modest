@@ -1945,13 +1945,9 @@ def print_gcc_attributes_for(x):
 		'packed': 'packed',
 	}
 
-	attributes = []
 	for gcc_att0 in possible_attributes0:
 		if x.hasAttribute2(gcc_att0):
-			attributes.append(possible_attributes0[gcc_att0])
-	if attributes != []:
-		att_line = ", ".join(attributes)
-		atts.append(att_line)
+			atts.append(possible_attributes0[gcc_att0])
 
 	#
 	# attributes with one parameter
@@ -1962,7 +1958,6 @@ def print_gcc_attributes_for(x):
 		'alignment': 'aligned',
 	}
 
-	attributes = []
 	for gcc_att1 in possible_attributes1:
 		if x.hasAttribute2(gcc_att1):
 			anno = x.getAnnotation(gcc_att1)
