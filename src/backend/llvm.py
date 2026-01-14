@@ -2629,9 +2629,7 @@ def een(defs, decl_only=False):
 		if x.is_stmt_directive():
 			continue
 
-		if x.hasAttribute2('ll_no_print'):
-			continue
-		if x.hasAttribute2('no_print'):
+		if x.hasAttribute2('no_print') or x.hasAttribute2('ll_no_print'):
 			continue
 
 		if hasattr(x, 'id'):

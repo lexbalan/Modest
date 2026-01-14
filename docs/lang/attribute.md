@@ -22,15 +22,9 @@ public func main () -> Unit {
 
 **ll_no_print** - entity definition must not be printed by LLVM printer
 
-**dispensable** - means that result of function call can be ignored
-
 **extern** - add C "extern" modifier
 
-**static** - add C "static" modifier
-
 **volatile** - add C "volatile" modifier
-
-**global** - do not add "static" to top-level variable (by default - static)
 
 
 
