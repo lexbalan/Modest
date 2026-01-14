@@ -166,7 +166,7 @@ declare void @setbuf(%File* %f, %CharStr* %buf)
 declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare %Int32 @printf(%Char8* %str, ...)
+declare %Int @printf(%ConstCharStr* %str, ...)
 declare %Int @scanf(%ConstCharStr* %str, ...)
 declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
@@ -197,8 +197,15 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 @str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
 ; -- endstrings --
+%Point = type {
+	%Int32,
+	%Int32
+};
+
 define %Int32 @main() {
-	%1 = call %Int32 (%Char8*, ...) @printf(%Char8* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+	%2 = alloca %Point, align 8
+	store %Point zeroinitializer, %Point* %2
 	ret %Int32 0
 }
 

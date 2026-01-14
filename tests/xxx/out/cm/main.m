@@ -1,15 +1,14 @@
-include "ctypes64"
 include "stdio"
 
 
-const hello = "Hello"
-const world = "World!"
+type Point = record {
+	x: Int32
+	y: Int32
+}
 
-const hello_world = hello + " " + world
-
-
-public func main () -> Int {
-	printf("%s\n", *Str8 hello_world)
+public func main () -> Int32 {
+	printf("Hello World!\n")
+	var p: Point = {x = 0, y = 0}
 	return 0
 }
 

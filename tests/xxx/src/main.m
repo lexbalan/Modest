@@ -1,4 +1,4 @@
-// tests/1.hello_world/src/main.m
+// tests/xxx/src/main.m
 
 include "libc/stdio"
 
@@ -9,7 +9,7 @@ type Point = record {
 
 public func main () -> Int32 {
 	printf("Hello World!\n")
-	var p: Point = {y=0, x=0}
+	var p: Point = {x=0, y=0}
 	return 0
 }
 
