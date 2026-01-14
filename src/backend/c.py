@@ -1933,40 +1933,33 @@ def print_decl_func(x):
 
 def print_gcc_attributes_for(x):
 	atts = []
-	#
-	# attributes with no parameters
-	#
 
-	possible_attributes0 = {
+	# attributes with no parameters
+	possible_attributes = {
 		'inline': 'always_inline',
 		'noinline': 'noinline',
 		'used': 'used',
 		'unused': 'unused',
 		'packed': 'packed',
-	}
 
-	for gcc_att0 in possible_attributes0:
-		if x.hasAttribute2(gcc_att0):
-			atts.append(possible_attributes0[gcc_att0])
-
-	#
-	# attributes with one parameter
-	#
-
-	possible_attributes1 = {
+		# attributes with one parameter
 		'section': 'section',
 		'alignment': 'aligned',
 	}
 
-	for gcc_att1 in possible_attributes1:
-		if x.hasAttribute2(gcc_att1):
-			anno = x.getAnnotation(gcc_att1)
-			asset = anno.asset
-			if isinstance(asset, str):
-				arg = '"%s"' % asset
+	for gcc_att in possible_attributes:
+		if x.hasAttribute2(gcc_att):
+			anno = x.getAnnotation(gcc_att)
+			print(anno)
+			if anno == {}:
+				atts.append(possible_attributes[gcc_att])
 			else:
-				arg = str(asset)
-			atts.append("%s(%s)" % (possible_attributes1[gcc_att1], arg))
+				asset = anno.asset
+				if isinstance(asset, str):
+					arg = '"%s"' % asset
+				else:
+					arg = str(asset)
+				atts.append("%s(%s)" % (possible_attributes[gcc_att], arg))
 
 	if atts != []:
 		return "__attribute__((" + ", ".join(atts) + "))"
