@@ -260,23 +260,6 @@ def str_type_record(t, tag=''):
 
 
 
-"""
-def print_type_enum(t):
-	out("enum {")
-	indent_up()
-	items = t.asset
-	i = 0
-	while i < len(items):
-		if i > 0: out(',')
-		item = items[i]
-		nl_indent()
-		get_id_str(item)
-		i = i + 1
-	indent_down()
-	nl_indent()
-	out("}")
-"""
-
 
 def is_type_named(t):
 	return get_type_id(t) != None
