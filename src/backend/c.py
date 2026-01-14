@@ -1935,8 +1935,8 @@ def print_decl_func(x):
 def print_gcc_attributes_for(x):
 	atts = []
 
-	# attributes with no parameters
 	possible_attributes = {
+		# attributes with no parameters
 		'inline': 'always_inline',
 		'noinline': 'noinline',
 		'used': 'used',
@@ -1948,12 +1948,12 @@ def print_gcc_attributes_for(x):
 		'alignment': 'aligned',
 	}
 
-	for gcc_att in possible_attributes:
-		if x.hasAttribute2(gcc_att):
-			anno = x.getAnnotation(gcc_att)
-
+	for att in possible_attributes:
+		if x.hasAttribute2(att):
+			anno = x.getAnnotation(att)
+			gcc_att = possible_attributes[att]
 			if anno == {}:
-				atts.append(possible_attributes[gcc_att])
+				atts.append(gcc_att)
 			else:
 				asset = anno.asset
 				arg = ""
@@ -1961,7 +1961,7 @@ def print_gcc_attributes_for(x):
 					arg = '"%s"' % asset
 				else:
 					arg = str(asset)
-				atts.append("%s(%s)" % (possible_attributes[gcc_att], arg))
+				atts.append("%s(%s)" % (gcc_att, arg))
 
 	if atts != []:
 		return "__attribute__((" + ", ".join(atts) + "))"
