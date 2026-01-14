@@ -31,6 +31,7 @@ declared = []
 func_undef_list = []
 module_undef_list = []
 
+
 legacy_style = {
 	'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
 	'LINE_BREAK_BEFORE_FUNC_BRACE': False,
@@ -1950,11 +1951,12 @@ def print_gcc_attributes_for(x):
 	for gcc_att in possible_attributes:
 		if x.hasAttribute2(gcc_att):
 			anno = x.getAnnotation(gcc_att)
-			print(anno)
+
 			if anno == {}:
 				atts.append(possible_attributes[gcc_att])
 			else:
 				asset = anno.asset
+				arg = ""
 				if isinstance(asset, str):
 					arg = '"%s"' % asset
 				else:

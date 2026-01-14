@@ -661,7 +661,6 @@ def str_value_subexpr(x, ctx):
 
 
 def str_value(x, ctx=[], parent_expr=None):
-
 	assert(isinstance(x, Value))
 
 	if x.isValueLiteral(): return str_value_literal(x, ctx)
