@@ -46,8 +46,8 @@ def record_can(to, from_type, method, ti):
 	if not from_type.is_record():
 		return False
 
-	if from_type.is_generic():
-		return True
+	if not from_type.is_generic():
+		return False
 
 	if method == 'implicit':
 		return False
@@ -58,6 +58,7 @@ def record_can(to, from_type, method, ti):
 	# and their types are equal (!)
 	for field in from_type.fields:
 		field2 = record_field_get(to, field.id.str)
+		print(field.id.str)
 		if field2 == None:
 			return False  # if no field with that name
 		if not Type.eq(field.type, field2.type):

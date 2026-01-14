@@ -215,6 +215,8 @@ def str_type(t):
 		return str_type_pointer(t)
 	elif Type.is_string(t):
 		return "String"
+	elif isinstance(t, TypeNumber):
+		return "Number"
 	else:
 		return str(t)
 
