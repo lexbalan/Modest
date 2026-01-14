@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "queue.h"
+
 
 
 void ringWord8_init(ringWord8_RingWord8 *q, uint8_t *buf, uint32_t capacity) {

@@ -2260,6 +2260,36 @@ def nnl(nl):
 		newline(2)
 
 
+
+def print_helpers(module):
+	for use in module.att:
+		if use in h_helpers:
+			newline()
+			h_helpers[use]()
+
+	if module.hasAttribute('use_unicode'):
+		out("\n")
+		out("\n#ifndef __STR_UNICODE__")
+		out("\n#if __has_include(<uchar.h>)")
+		include("uchar.h")
+		out("\n#else")
+		out("\ntypedef uint16_t char16_t;")
+		out("\ntypedef uint32_t char32_t;")
+		out("\n#endif")
+		out("\n#define __STR_UNICODE__")
+		out("\n#define __STR8(x)  x")
+		out("\n#define __STR16(x) u##x")
+		out("\n#define __STR32(x) U##x")
+		out("\n#define _STR8(x)  __STR8(x)")
+		out("\n#define _STR16(x) __STR16(x)")
+		out("\n#define _STR32(x) __STR32(x)")
+		out("\n#define _CHR8(x)  (__STR8(x)[0])")
+		out("\n#define _CHR16(x) (__STR16(x)[0])")
+		out("\n#define _CHR32(x) (__STR32(x)[0])")
+		out("\n#endif /* __STR_UNICODE__ */")
+		out("\n")
+
+
 def print_header(module, outname):
 	outname = outname + '.h'
 	output_open(outname)
@@ -2314,31 +2344,7 @@ def print_header(module, outname):
 	if nl_after_incs:
 		newline()
 
-	for use in module.att:
-		if use in h_helpers:
-			newline()
-			h_helpers[use]()
-
-	if module.hasAttribute('use_unicode'):
-		out("\n#ifndef __STR_UNICODE__")
-		out("\n#if __has_include(<uchar.h>)")
-		include("uchar.h")
-		out("\n#else")
-		out("\ntypedef uint16_t char16_t;")
-		out("\ntypedef uint32_t char32_t;")
-		out("\n#endif")
-		out("\n#define __STR_UNICODE__")
-		out("\n#define __STR8(x)  x")
-		out("\n#define __STR16(x) u##x")
-		out("\n#define __STR32(x) U##x")
-		out("\n#define _STR8(x)  __STR8(x)")
-		out("\n#define _STR16(x) __STR16(x)")
-		out("\n#define _STR32(x) __STR32(x)")
-		out("\n#define _CHR8(x)  (__STR8(x)[0])")
-		out("\n#define _CHR16(x) (__STR16(x)[0])")
-		out("\n#define _CHR32(x) (__STR32(x)[0])")
-		out("\n#endif /* __STR_UNICODE__ */")
-		out("\n")
+	print_helpers(module)
 
 	for x in defs:
 		if is_private(x):
@@ -2467,8 +2473,9 @@ def print_cfile(module, _outname):
 
 	global already_included
 	already_included = []
-	include(module.id + '.h')
-	newline()
+	if module.id != 'main':
+		include(module.id + '.h')
+		newline()
 
 
 	dirs = [
@@ -2483,6 +2490,40 @@ def print_cfile(module, _outname):
 		if isinstance(x, StmtDirectiveCInclude):
 			if not x.is_local and x.c_name in STD_HEADERS:
 				include(x.c_name, local=x.is_local)
+
+	if module.id == 'main':
+		print_helpers(module)
+
+
+	nl_after_incs = False
+	if defs != []:
+		#newline()
+		for x in defs:
+			if x.is_stmt_directive():
+				if isinstance(x, StmtDirectiveCInclude):
+					include(x.c_name, local=x.is_local)
+					nl_after_incs = True
+
+	# print C `#include ""` directive for included modules
+	for inc in module.included_modules:
+		if not inc.hasAttribute('do_not_include'):
+			include(inc.id + '.h', local=True)
+			nl_after_incs = True
+
+	sss = True
+	for x in defs:
+		if x.is_stmt_import():
+			#nnl(x.nl)
+			if not x.module.hasAttribute('do_not_include'):
+				if sss:
+					sss = False
+					newline()
+				s = os.path.basename(x.impline)
+				include(s + '.h', local=True)
+				nl_after_incs = True
+
+	#if nl_after_incs:
+	#	newline()
 
 
 	xx2 = False
@@ -2566,7 +2607,8 @@ def run(module, _outname):
 		hname = os.path.basename(_outname)
 		hpath = inc_dir + '/' + hname
 
-	print_header(module, hpath)
+	if module.id != 'main':
+		print_header(module, hpath)
 	print_cfile(module, _outname)
 	return
 

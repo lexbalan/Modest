@@ -1,12 +1,12 @@
 
-#include "main.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#include "./memory.h"
+
+#include "memory.h"
+
 
 
 struct Object {

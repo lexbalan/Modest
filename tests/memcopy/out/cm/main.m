@@ -3,6 +3,8 @@ include "ctypes64"
 include "stdio"
 
 import "lightfood/memory" as mem
+
+
 type Object = record {
 	firstname: [32]Char8
 	lastname: [32]Char8

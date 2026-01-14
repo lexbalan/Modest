@@ -1,6 +1,4 @@
 
-#include "main.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -186,9 +184,11 @@ int main(void) {
 	// cons Point3D from Point2D (record extension)
 	// (it is possible if dst record contained all fields from src record
 	// and their types are equal)  ((EXPERIMENTAL))
-	Point3D p3d;
-	p3d = *(Point3D*)&p2d2;
-	(void)p3d;
+	//
+	// Сейчас нельзя конструировать запись не из generic (!)
+	//var p3d: Point3D
+	//p3d = Point3D p2d2
+	//Unit p3d
 
 
 	// проверка того как локальная константа-массив

@@ -43,25 +43,28 @@ def value_record_create(initializers, ti):
 
 
 def record_can(to, from_type, method, ti):
+	#info("record_can?", ti)
 	if not from_type.is_record():
 		return False
 
 	if not from_type.is_generic():
 		return False
 
-	if method == 'implicit':
-		return False
+#	if method == 'implicit':
+#		return False
 
 	# explicit cons record from another record
 
 	# check if all fields in from_type present in t
 	# and their types are equal (!)
-	for field in from_type.fields:
-		field2 = record_field_get(to, field.id.str)
-		print(field.id.str)
-		if field2 == None:
+	for field_src in from_type.fields:
+		field_dst = record_field_get(to, field_src.id.str)
+		if field_dst == None:
 			return False  # if no field with that name
-		if not Type.eq(field.type, field2.type):
+
+		from value.cons import cons_can
+		if not cons_can(field_dst.type, field_src.type, method=method, ti=field_src.ti):
+		#if not Type.eq(field_src.type, field_dst.type):
 			return False  # if field type not equal
 
 	return True  # Record to Record

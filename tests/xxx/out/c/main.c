@@ -17,7 +17,7 @@ typedef struct Point Point;
 
 int32_t main(void) {
 	printf("Hello World!\n");
-	Point p = (Point){.x = 0, .y = 0, .z = 0};
+	Point p = (Point){.y = 0, .x = 0};
 	return 0;
 }
 

@@ -1,12 +1,12 @@
 
-#include "main.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "table.h"
 
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))

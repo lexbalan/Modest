@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "queue.h"
+
 
 
 void queueWord8_init(queueWord8_QueueWord8 *q, uint8_t *buf, uint32_t capacity) {
