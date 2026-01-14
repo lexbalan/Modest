@@ -23,6 +23,7 @@ static void showPrompt(void) {
 
 
 __attribute__((always_inline))
+__attribute__((unused))
 static inline int char8ToInt(char c) {
 	return (int)(uint32_t)(uint8_t)c;
 }

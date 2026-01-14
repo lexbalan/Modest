@@ -1928,7 +1928,6 @@ def print_decl_func(x):
 
 
 
-
 def print_def_func(x):
 	global declared
 
@@ -1946,6 +1945,9 @@ def print_def_func(x):
 
 	if x.hasAttribute2('noinline'):
 		out("__attribute__((noinline))\n")
+
+	if x.hasAttribute2('unused'):
+		out("__attribute__((unused))\n")
 
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])

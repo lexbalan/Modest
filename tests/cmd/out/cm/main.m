@@ -18,7 +18,7 @@ func showPrompt () -> Unit {
 
 
 
-@used
+@unused
 @inline
 func char8ToInt (c: Char8) -> Int {
 	return Int Word32 Word8 c
