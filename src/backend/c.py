@@ -213,8 +213,11 @@ def get_type_id(t):
 def str_type_record(t, tag=''):
 	s = "struct"
 
-	if t.hasAttribute2('packed'):
-		s += " __attribute__((packed))"
+	atts_line = print_gcc_attributes_for(t)
+	if atts_line != "":
+		s += ' ' + atts_line
+	#if t.hasAttribute2('packed'):
+	#	s += " __attribute__((packed))"
 
 	if tag != "":
 		s += (" %s" % tag)
@@ -1911,7 +1914,7 @@ def print_func_signature(id_str, ftype):
 
 
 def print_decl_func(x):
-	print_gcc_attributes_for(x)
+	out(str_add_nl(print_gcc_attributes_for(x)))
 
 	if not x.hasAttribute2('extern'):
 		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
@@ -1929,6 +1932,7 @@ def print_decl_func(x):
 
 
 def print_gcc_attributes_for(x):
+	atts = []
 	#
 	# attributes with no parameters
 	#
@@ -1937,7 +1941,8 @@ def print_gcc_attributes_for(x):
 		'inline': 'always_inline',
 		'noinline': 'noinline',
 		'used': 'used',
-		'unused': 'unused'
+		'unused': 'unused',
+		'packed': 'packed',
 	}
 
 	attributes = []
@@ -1946,7 +1951,7 @@ def print_gcc_attributes_for(x):
 			attributes.append(possible_attributes0[gcc_att0])
 	if attributes != []:
 		att_line = ", ".join(attributes)
-		out("__attribute__((%s))\n" % att_line)
+		atts.append(att_line)
 
 	#
 	# attributes with one parameter
@@ -1966,8 +1971,18 @@ def print_gcc_attributes_for(x):
 				arg = '"%s"' % asset
 			else:
 				arg = str(asset)
-			out("__attribute__((%s(%s)))\n" % (possible_attributes1[gcc_att1], arg))
+			atts.append("%s(%s)" % (possible_attributes1[gcc_att1], arg))
 
+	if atts != []:
+		return "__attribute__((" + ", ".join(atts) + "))"
+
+	return ""
+
+
+def str_add_nl(x):
+	if x != "":
+		return x + '\n'
+	return x
 
 
 def print_def_func(x):
@@ -1978,7 +1993,7 @@ def print_def_func(x):
 	global cfunc
 	cfunc = func
 
-	print_gcc_attributes_for(x)
+	out(str_add_nl(print_gcc_attributes_for(x)))
 
 
 	if not x.hasAttribute2('extern'):
@@ -2084,7 +2099,7 @@ def print_variable(id_str, t, init_value=None, prefix=''):
 
 
 def print_def_var(x, isdecl=False, as_extern=False):
-	print_gcc_attributes_for(x)
+	out(str_add_nl(print_gcc_attributes_for(x)))
 
 	# TODO: Почему-то атрибут 'extern' не работает, и накостылил через as_extern
 	is_extern = x.hasAttribute2('extern') or as_extern
