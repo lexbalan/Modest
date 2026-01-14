@@ -1,6 +1,8 @@
-
+#!/bin/sh
 
 CUR_DIR=$PWD
+
+./configure.sh
 
 echo "" >> ~/.zshrc
 echo "export MODEST_DIR=$CUR_DIR" >> ~/.zshrc

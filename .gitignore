@@ -1,8 +1,7 @@
 .DS_Store
+venv
 *.o
 a.out
-#test
-#examples/*
 *.pyc
 */__pycache__
 .vscode
