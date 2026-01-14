@@ -217,16 +217,15 @@ def str_type_record(t, tag=''):
 	atts_line = print_gcc_attributes_for(t)
 	if atts_line != "":
 		s += ' ' + atts_line
-	#if t.hasAttribute2('packed'):
-	#	s += " __attribute__((packed))"
+
 
 	if tag != "":
-		s += (" %s" % tag)
+		s += ' ' + tag
 
 	if styleguide['LINE_BREAK_BEFORE_STRUCT_BRACE']:
 		s += str_newline(1)
 	else:
-		s += " "
+		s += ' '
 
 	s += "{"
 	indent_up()
@@ -238,7 +237,7 @@ def str_type_record(t, tag=''):
 	for field in t.fields:
 
 		if prev_nl == 0:
-			s += " "
+			s += ' '
 
 		if field.comments:
 			for comment in field.comments:
@@ -253,7 +252,6 @@ def str_type_record(t, tag=''):
 
 		if field.line_comment:
 			s += '  ' + str_stmt_comment(field.line_comment)
-
 
 	indent_down()
 	s += str_nl_indent(1)
