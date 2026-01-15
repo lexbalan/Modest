@@ -430,6 +430,9 @@ def do_type_named(x):
 			error("forward references to non-struct type", x['ti'])
 		cdef.deps.append(t)
 
+	if t.hasAttribute2("deprecated"):
+		warning("using a deprecated type", x['ti'])
+
 	return t
 
 
@@ -1373,6 +1376,9 @@ def do_value_id(x):
 	if v.isValueBad():
 		return v
 
+	if v.hasAttribute2("deprecated"):
+		warning("using a deprecated value", x['ti'])
+
 	if v.type.is_incompleted():
 		v_upd = value_update_incompleted_type(cmodule, v, v.id.str)
 
@@ -2021,7 +2027,9 @@ def def_type_global(x):
 	if not nt.is_incompleted():
 		error("type redefinition", x['ti'])
 		return None
-	return def_type_common(x, nt)
+	df = def_type_common(x, nt)
+	df = add_spices_def(df, x['anno'])
+	return df
 
 
 
@@ -2068,28 +2076,29 @@ def def_const_common(x):
 
 def def_const_global(x):
 	global global_prefix
-	definition = def_const_common(x)
+	df = def_const_common(x)
 
-	#if definition.value.isValueRuntime():
+	#if df.value.isValueRuntime():
 	#	error("runtime!", x['ti'])
 
 	# TODO: centity -> instead cmodule/cfunc;
 	# rm Value#module -> tree instead
-	definition.parent = cmodule
-	definition.value.parent = cmodule
+	df.parent = cmodule
+	df.value.parent = cmodule
 
-	definition.value.is_global_flag = True
-	definition.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
+	df.value.is_global_flag = True
+	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
-	definition.id.prefix = global_prefix
+	df.id.prefix = global_prefix
 
-	iv = definition.init_value
+	iv = df.init_value
 	if not iv.isValueUndef():
 		if iv.isValueRuntime():
 			#print(iv.stage)
 			error("expected immediate value", iv.ti)
 
-	return definition
+	df = add_spices_def(df, x['anno'])
+	return df
 
 
 
@@ -2187,7 +2196,9 @@ def def_var_global(x):
 	if already != None:
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
-	return def_var_common(x)
+	df = def_var_common(x)
+	df = add_spices_def(df, x['anno'])
+	return df
 
 
 
@@ -2241,7 +2252,8 @@ def def_func(x):
 		fn.id.addAttribute('entrypoint')
 
 	if x['stmt'] == None:
-		return fn.definition
+		df = add_spices_def(fn.definition, x['anno'])
+		return df
 
 	# not above (!)
 	fn.is_pure = is_pure_type(fn.type)
@@ -2297,7 +2309,8 @@ def def_func(x):
 #	if fn.is_pure:
 #		info("pure function", x['ti'])
 
-	return fn.definition
+	df = add_spices_def(fn.definition, x['anno'])
+	return df
 
 
 
@@ -2693,7 +2706,6 @@ def def_def(ast, is_include=False):
 				if 'comment' in x and x['comment'] != None:
 					df.comment = do_stmt_comment(x['comment'])
 
-				df = add_spices_def(df, x['anno'])
 				if not is_include:
 					df.parent = cmodule
 
@@ -2808,11 +2820,13 @@ def add_spices_def(x, ast_atts):
 				if arg == 'C':
 					add_att(x, 'id:nodecorate')
 		elif kind == 'nodecorate':
-			# @nodecorate
 			add_att(x, 'id:nodecorate')
 
 		elif kind == 'c_no_print':
 			add_att(x, "c_no_print")
+
+		elif kind == 'deprecated':
+			add_att(x, "deprecated")
 
 		else:
 			print(a)
