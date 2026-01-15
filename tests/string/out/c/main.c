@@ -34,8 +34,8 @@ typedef uint32_t char32_t;
 
 // constants with type String(Generic)
 #define STR8_EXAMPLE  "String"
-#define STR16_EXAMPLE  "String-Ω"
-#define STR32_EXAMPLE  "String-Ω 🐀🎉🦄"
+#define STR16_EXAMPLE  STR8_EXAMPLE "-Ω"
+#define STR32_EXAMPLE  STR16_EXAMPLE " 🐀🎉🦄"
 
 // variables with type Array of Chars
 static char string8[6] = STR8_EXAMPLE;

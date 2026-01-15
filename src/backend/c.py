@@ -517,12 +517,10 @@ def str_value_bin(x, ctx):
 			return str_value_array(x, ctx)
 
 		if left.type.is_string():
-			if left.type.width != right.type.width:
-				# для случаев вроде "Hello" + U"World!"
-				# (печатаем сам литерал, тк C иначе не умеет)
-				# (U"Hello World!")
-				#str_value_string(x, ctx)
-				return str_value_string(x.asset, char_width=x.type.width)
+			#if left.type.width != right.type.width:
+			#	# C не умеет так: "Hello" + U"World!"
+			#	# поэтому печатаем уже склеенный литерал
+			#	return '/**/' + str_value_string(x.asset, char_width=x.type.width)
 
 			return '%s %s' % (str_value(left, parent_expr=x), str_value(right, parent_expr=x))
 
