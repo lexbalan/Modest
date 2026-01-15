@@ -1213,11 +1213,7 @@ def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 
 
 def str_value_bool(num):
-	#print("str_value_bool")
-	if num:
-		return csettings['true_literal']
-	else:
-		return csettings['false_literal']
+	return csettings['true_literal'] if num else csettings['false_literal']
 
 
 def str_value_enum(x, ctx):
@@ -1225,22 +1221,18 @@ def str_value_enum(x, ctx):
 
 
 
-def str_value_suffix(to_type, num):
-	req_bits = nbits_for_num(num)
+def str_value_suffix(req_bits, is_unsigned):
+	sstr = ""
+	if req_bits >= csettings['int_width']:
+		if is_unsigned:
+			sstr += "U"   # unsigned
 
-	if req_bits < csettings['int_width']:
-		return ""
-
-	sstr = ''
-	if not to_type.is_signed():
-		sstr = "U"
-
-	if req_bits <= csettings['long_width']:
-		sstr += "L"   # long int
-	elif req_bits <= csettings['long_long_width']:
-		sstr += "LL"  # long long int
-	else:
-		sstr += "XL"  # extra long int (not defined in C)
+		if req_bits <= csettings['long_width']:
+			sstr += "L"   # long int
+		elif req_bits <= csettings['long_long_width']:
+			sstr += "LL"  # long long int
+		else:
+			sstr += "XL"  # extra long int (not defined in C)
 
 	return sstr
 
@@ -1266,7 +1258,7 @@ def str_value_number(type, num, nsigns=0, is_big=False, is_hex=False):
 	else:
 		sstr += str(num)
 
-	sstr += str_value_suffix(type, num)
+	sstr += str_value_suffix(req_bits=nbits_for_num(num), is_unsigned=not type.is_signed())
 
 	return sstr
 
@@ -1308,8 +1300,6 @@ def str_value_with_type(v, t, as_hex=False):
 
 
 def str_value_const(x, ctx):
-	#if value_is_generic_immediate(x):
-	#	return str_value_literal(x, ctx)
 	id_str = get_id_str(x)
 	if x.is_global_flag and not x.id.hasAttribute('nodecorate'):
 		return camel_to_snake(id_str)
@@ -1318,6 +1308,7 @@ def str_value_const(x, ctx):
 
 def str_value_var(x, ctx):
 	return get_id_str(x)
+
 
 def str_value_func(x, ctx):
 	return get_id_str(x)
@@ -1929,10 +1920,13 @@ def print_gcc_attributes_for(x):
 		'used': 'used',
 		'unused': 'unused',
 		'packed': 'packed',
+		'deprecated': 'deprecated',  # can be with string parameter
+		'weak': 'weak',
 
 		# attributes with one parameter
 		'section': 'section',
 		'alignment': 'aligned',
+		'optimize': 'optimize',
 	}
 
 	atts = []
