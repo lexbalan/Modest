@@ -433,99 +433,65 @@ def str_named(t, core=''):
 
 
 def str_type(t, core='', need_close=False):
-	if is_type_named(t):
-		return str_named(t, core)
-	elif t.is_pointer():
-		return str_type_pointer(t, core)
-	elif t.is_func():
-		return str_type_func(t, core, need_close=need_close)
-	elif t.is_array():
-		return str_type_array(t, core, need_close=need_close)
-	elif t.is_record():
-		return str_type_record(t) + core
+	if is_type_named(t): return str_named(t, core)
+	elif t.is_pointer(): return str_type_pointer(t, core)
+	elif t.is_func(): return str_type_func(t, core, need_close=need_close)
+	elif t.is_array(): return str_type_array(t, core, need_close=need_close)
+	elif t.is_record(): return str_type_record(t) + core
 	return str(t)
 
 
-
 def str_var(t, id_str):
-	#if is_type_named(t) or not t.is_pointer():
-	id_str =  ' ' + id_str
-	return str_type(t, core=id_str)
-
-
-def print_type(t):
-	out(str_type(t))
-
-
-def print_type_record(t, tag):
-	out(str_type_record(t, tag=tag))
-
-
-
-# Дополнительная чисто сишная надстройка -
-# проверяем если у нас тут указатель на массив приводим к указателю на его элемент
-def incast(type, value):
-	if value.type.is_pointer_to_closed_array():
-		# Это аргумент с типом указатель на массив
-		# приведем его по месту к указателю на элемент этого массива
-		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
-		if value.isValueRef():
-			if value.value.isValueIndex() or value.value.isValueSlice():
-				return "&" + str_value(value.value)
-			else:
-				return "&" + str_value(value.value) + "[0]"
-
-	return str_value(value)
-
+	return str_type(t, core=' ' + id_str)
 
 
 bin_ops = {
-	HLIR_VALUE_OP_OR: '|', HLIR_VALUE_OP_XOR: '^', HLIR_VALUE_OP_AND: '&', HLIR_VALUE_OP_SHL: '<<', HLIR_VALUE_OP_SHR: '>>',
-	HLIR_VALUE_OP_EQ: '==', HLIR_VALUE_OP_NE: '!=', HLIR_VALUE_OP_LT: '<', HLIR_VALUE_OP_GT: '>', HLIR_VALUE_OP_LE: '<=', HLIR_VALUE_OP_GE: '>=',
-	HLIR_VALUE_OP_ADD: '+', HLIR_VALUE_OP_SUB: '-', HLIR_VALUE_OP_MUL: '*', HLIR_VALUE_OP_DIV: '/', HLIR_VALUE_OP_REM: '%',
-	HLIR_VALUE_OP_LOGIC_AND: '&&', HLIR_VALUE_OP_LOGIC_OR: '||'
+	HLIR_VALUE_OP_OR: '|',
+	HLIR_VALUE_OP_XOR: '^',
+	HLIR_VALUE_OP_AND: '&',
+	HLIR_VALUE_OP_SHL: '<<',
+	HLIR_VALUE_OP_SHR: '>>',
+	HLIR_VALUE_OP_EQ: '==',
+	HLIR_VALUE_OP_NE: '!=',
+	HLIR_VALUE_OP_LT: '<',
+	HLIR_VALUE_OP_GT: '>',
+	HLIR_VALUE_OP_LE: '<=',
+	HLIR_VALUE_OP_GE: '>=',
+	HLIR_VALUE_OP_ADD: '+',
+	HLIR_VALUE_OP_SUB: '-',
+	HLIR_VALUE_OP_MUL: '*',
+	HLIR_VALUE_OP_DIV: '/',
+	HLIR_VALUE_OP_REM: '%',
+	HLIR_VALUE_OP_LOGIC_AND: '&&',
+	HLIR_VALUE_OP_LOGIC_OR: '||'
 }
 
 
 def str_value_bin(x, ctx):
-	sstr = ''
 	op = x.op
 	left = x.left
 	right = x.right
 
-	# получаем приоритеты операции и операндов
-	p0 = precedence(x)
-	pl = precedence(left)
-	pr = precedence(right)
-	need_wrap_left = pl < p0
-	need_wrap_right = pr < p0
-
-	# GCC выдает warning например в: 1 << 2 + 2, тк считает
-	# Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
-	# чтобы он не ругался, завернем такие выражения в скобки
-
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
-		if left.type.is_record():
-			return str_value_eq_record(x, ctx)
-		elif left.type.is_array():
-			return str_value_eq_array(x, ctx)
-		elif left.type.is_string():
-			return str_value_bool(x.asset)
+		if left.type.is_record(): return str_value_eq_composite(x, ctx)
+		elif left.type.is_array(): return str_value_eq_composite(x, ctx)
+		elif left.type.is_string(): return str_value_bool(x.asset)
 
 	if op == HLIR_VALUE_OP_ADD:
-		if left.type.is_array():
-			return str_value_array(x, ctx)
-
-		if left.type.is_string():
-			#if left.type.width != right.type.width:
-			#	# C не умеет так: "Hello" + U"World!"
-			#	# поэтому печатаем уже склеенный литерал
-			#	return '/**/' + str_value_string(x.asset, char_width=x.type.width)
-
-			return '%s %s' % (str_value(left, parent_expr=x), str_value(right, parent_expr=x))
+		if left.type.is_array(): return str_value_array(x, ctx)
+		if left.type.is_string(): return str_string_add(x)
 
 	return '%s %s %s' % (str_value(left, parent_expr=x), bin_ops[op], str_value(right, parent_expr=x))
 
+
+def str_string_add(x):
+	return '%s %s' % (str_value(x.left, parent_expr=x), str_value(x.right, parent_expr=x))
+
+
+
+# GCC выдает warning например в: 1 << 2 + 2, тк считает
+# Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
+# чтобы он не ругался, завернем такие выражения в скобки
 
 def str_value_shl(x, ctx):
 	sstr = ''
@@ -545,13 +511,6 @@ def str_value_shr(x, ctx):
 	return sstr
 
 
-def str_value_eq_record(x, ctx):
-	return str_value_eq_composite(x, ctx)
-
-
-def str_value_eq_array(x, ctx):
-	return str_value_eq_composite(x, ctx)
-
 
 def str_value_eq_composite(x, ctx):
 	op = x.op
@@ -566,13 +525,6 @@ def str_value_eq_composite(x, ctx):
 		return eq_str_by_strcmp(left, right, op=op)
 
 	return eq_by_memcmp(left, right, op=op)
-
-
-un_ops = {
-	HLIR_VALUE_OP_REF: '&', HLIR_VALUE_OP_DEREF: '*',
-	HLIR_VALUE_OP_POS: '+', HLIR_VALUE_OP_NEG: '-',
-	HLIR_VALUE_OP_NOT: '~', HLIR_VALUE_OP_LOGIC_NOT: '!'
-}
 
 
 
@@ -866,6 +818,23 @@ def cchr(value, sz):
 	if value.isValueLiteral() and value.type.is_string():
 		return str_value_char(ord(value.asset[0]), sz)
 	return "_CHR%d(%s)" % (sz, str_value(value))
+
+
+
+# Дополнительная чисто сишная надстройка:
+# если у нас тут указатель на массив - приводим к указателю на его элемент
+def incast(type, value):
+	if value.type.is_pointer_to_closed_array():
+		# Это аргумент с типом указатель на массив
+		# приведем его по месту к указателю на элемент этого массива
+		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
+		if value.isValueRef():
+			if value.value.isValueIndex() or value.value.isValueSlice():
+				return "&" + str_value(value.value)
+			else:
+				return "&" + str_value(value.value) + "[0]"
+
+	return str_value(value)
 
 
 
@@ -1231,7 +1200,7 @@ def str_value_with_type(v, t, as_hex=False):
 	elif t.is_bool(): return str_value_bool(asset)
 	elif t.is_char(): return str_value_char(asset, t.width)
 	elif t.is_pointer(): return str_value_pointer(t, asset)
-	elif t.is_array(): return str_value_array(v)
+	elif t.is_array(): return str_value_array(v, ctx=[])
 	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
 	1/0
 
@@ -1497,7 +1466,7 @@ def print_stmt_return(x):
 		out("memcpy(sret_, ")
 		out(str_value_as_ptr(x.value))
 		out(", sizeof(")
-		print_type(x.value.type)
+		out(str_type(x.value.type))
 		out("));")
 		return
 
@@ -1792,7 +1761,7 @@ def isSretFunc(ftype):
 
 def print_func_return_type(ftype):
 	if not isSretFunc(ftype):
-		print_type(ftype.to)
+		out(str_type(ftype.to))
 		return
 
 	out("void")
@@ -1951,7 +1920,7 @@ def print_def_func(x):
 			nl_indent(1)
 			out("memcpy(%s, %s" % (paramId, '_' + paramId))
 			out(", sizeof(")
-			print_type(param.type)
+			out(str_type(param.type))
 			out("));")
 
 
@@ -1990,7 +1959,7 @@ def print_def_type(x):
 	otype = x.original_type
 
 	if otype.is_record() and otype.is_anonymous():
-		print_type_record(otype, tag=id_str)
+		out(str_type_record(otype, tag=id_str))
 		out(";")
 		if not id_str in declared:
 			nl_indent()
@@ -2464,7 +2433,7 @@ def print_cfile(module, _outname):
 		out("\n\n/* anonymous records */")
 		for anon_rec in module.anon_recs:
 			nl_indent()
-			print_type_record(anon_rec, tag=anon_rec.c_anon_id)
+			out(str_type_record(anon_rec, tag=anon_rec.c_anon_id))
 			out(";")
 
 	for x in defs:
@@ -2625,7 +2594,7 @@ def assign_by_memcopy(left, right):
 	out(", ")
 	out(str_value_as_ptr(right))
 	out(", sizeof(")
-	print_type(left.type)
+	out(str_type(left.type))
 	out("))")
 
 
@@ -2633,7 +2602,7 @@ def memzero(value):
 	out("memset(")
 	out(str_value_as_ptr(value))
 	out(", 0, sizeof(")
-	print_type(value.type)
+	out(str_type(value.type))
 	out("))")
 
 
