@@ -12,6 +12,9 @@ public func main () -> Int {
 	printf("__compiler.version.major = %u\n", ver.major)
 	printf("__compiler.version.minor = %u\n", ver.minor)
 
+	printf("__compiler.version.major = %u\n", __compiler.version.major)
+	printf("__compiler.version.minor = %u\n", __compiler.version.minor)
+
 	// __target
 	printf("__target.name = %s\n", *Str __target.name)
 	printf("__target.pointerWidth = %u\n", __target.pointerWidth)

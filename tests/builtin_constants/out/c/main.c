@@ -15,6 +15,9 @@ int main(void) {
 	printf("__compiler.version.major = %u\n", ((struct {uint32_t major; uint32_t minor;})ver).major);
 	printf("__compiler.version.minor = %u\n", ((struct {uint32_t major; uint32_t minor;})ver).minor);
 
+	printf("__compiler.version.major = %u\n", 0);
+	printf("__compiler.version.minor = %u\n", 7);
+
 	// __target
 	printf("__target.name = %s\n", "Default");
 	printf("__target.pointerWidth = %u\n", 64);
