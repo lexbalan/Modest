@@ -257,7 +257,7 @@ def str_type_record(t, tag=''):
 
 	if len(t.fields) == 0:
 		s += str_nl_indent(nl_end)
-		s += "char __pad__; /* empty record */"
+		s += "char _; /* empty record placeholder */"
 
 
 	indent_down()
