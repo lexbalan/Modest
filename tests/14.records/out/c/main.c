@@ -197,8 +197,7 @@ int main(void) {
 	int32_t ax = 10;
 	int32_t bx = 20;
 
-	struct {int32_t x; int32_t y;
-	} px = {.x = ax, .y = bx};
+	struct {int32_t x; int32_t y;} px = {.x = ax, .y = bx};
 
 	ax = 111;
 	bx = 222;
@@ -206,9 +205,7 @@ int main(void) {
 	printf("px.x = %i (must be 10)\n", px.x);
 	printf("px.y = %i (must be 20)\n", px.y);
 
-	if (memcmp(&px, &((struct {int32_t x; int32_t y;
-	}){.x = 10, .y = 20}), sizeof(struct {int32_t x; int32_t y;
-	})) == 0) {
+	if (memcmp(&px, &((struct {int32_t x; int32_t y;}){.x = 10, .y = 20}), sizeof(struct {int32_t x; int32_t y;})) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

@@ -230,8 +230,7 @@ def str_type_record(t, tag=''):
 	s += "{"
 	indent_up()
 
-	if len(t.fields) == 0:
-		s += "char __pad__; /* empty record */"
+	nl_end = 0
 
 	prev_nl = 1
 	for field in t.fields:
@@ -244,6 +243,9 @@ def str_type_record(t, tag=''):
 				s += str_nl_indent(comment.nl)
 				s += str_stmt_comment(comment)
 
+		if field.nl > 0:
+			nl_end = 1
+
 		s += str_nl_indent(field.nl)
 		prev_nl = field.nl
 
@@ -253,8 +255,13 @@ def str_type_record(t, tag=''):
 		if field.line_comment:
 			s += '  ' + str_stmt_comment(field.line_comment)
 
+	if len(t.fields) == 0:
+		s += str_nl_indent(nl_end)
+		s += "char __pad__; /* empty record */"
+
+
 	indent_down()
-	s += str_nl_indent(1)
+	s += str_nl_indent(nl_end)
 	s += "}"
 	return s
 

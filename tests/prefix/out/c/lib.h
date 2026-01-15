@@ -9,8 +9,7 @@
 #include <stdio.h>
 
 
-struct loo_Nothing {char __pad__; /* empty record */
-};
+struct loo_Nothing {char __pad__; /* empty record */};
 typedef struct loo_Nothing loo_Nothing;
 
 #define LOO_BAR  4
