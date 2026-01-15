@@ -512,14 +512,6 @@ def str_value_bin(x, ctx):
 		elif left.type.is_string():
 			return str_value_bool(x.asset)
 
-	lk = ''
-	if hasattr(left, 'op'):
-		lk = left.op
-
-	rk = ''
-	if hasattr(right, 'op'):
-		rk = right.op
-
 	if op == HLIR_VALUE_OP_ADD:
 		if left.type.is_array():
 			return str_value_array(x, ctx)
@@ -532,15 +524,9 @@ def str_value_bin(x, ctx):
 				#str_value_string(x, ctx)
 				return str_value_string(x.asset, char_width=x.type.width)
 
-			sstr += str_value(left, parent_expr=x)
-			sstr += ' '
-			sstr += str_value(right, parent_expr=x)
-			return sstr
+			return '%s %s' % (str_value(left, parent_expr=x), str_value(right, parent_expr=x))
 
-	sstr += str_value(left, parent_expr=x)
-	sstr += ' %s ' % bin_ops[op]
-	sstr += str_value(right, parent_expr=x)
-	return sstr
+	return '%s %s %s' % (str_value(left, parent_expr=x), bin_ops[op], str_value(right, parent_expr=x))
 
 
 def str_value_shl(x, ctx):
@@ -555,7 +541,7 @@ def str_value_shl(x, ctx):
 def str_value_shr(x, ctx):
 	sstr = ''
 	sstr += str_value(x.left, parent_expr=x)
-	sstr += (' >> ')
+	sstr += ' >> '
 	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar]
 	sstr += str_value(x.right, parent_expr=x, wrapped=need_wrap_right)
 	return sstr
@@ -603,15 +589,11 @@ def str_value_not(x, ctx):
 
 
 def str_value_neg(x, ctx):
-	sstr = '-'
-	sstr += str_value(x.value, parent_expr=x)
-	return sstr
+	return '-' + str_value(x.value, parent_expr=x)
 
 
 def str_value_pos(x, ctx):
-	sstr = '+'
-	sstr += str_value(x.value, parent_expr=x)
-	return sstr
+	return '+' + str_value(x.value, parent_expr=x)
 
 
 def str_value_ref(x, ctx):
@@ -619,18 +601,15 @@ def str_value_ref(x, ctx):
 	# Если берем указатель на массив массивов, то приводим его к void *
 	# Т.к. в C нет указателя на массив массивов
 	if x.value.type.is_array_of_array():
-		sstr += ("(void *)")
+		sstr += "(void *)"
 
-	sstr += ('&')
+	sstr += '&'
 	sstr += str_value(x.value, parent_expr=x)
 	return sstr
 
 
 def str_value_deref(x, ctx):
-	sstr = ''
-	sstr += ('*')
-	sstr += str_value(x.value, parent_expr=x)
-	return sstr
+	return '*' + str_value(x.value, parent_expr=x)
 
 
 def str_value_call(v, ctx, sret=None):
@@ -640,7 +619,6 @@ def str_value_call(v, ctx, sret=None):
 		# Если результат call вычислен в CT - просто распечатаем его значение
 		# Так как вызов функции в глобальных выражениях си невозможен
 		return str_value_with_type(v, v.type)
-
 
 	left = v.func
 
@@ -653,7 +631,7 @@ def str_value_call(v, ctx, sret=None):
 	args = v.args
 	n = len(args)
 
-	sstr += ("(")
+	sstr += "("
 
 	nl_after = False
 
@@ -694,7 +672,7 @@ def str_value_call(v, ctx, sret=None):
 
 	if sret != None:
 		if i > 0:
-			sstr += (", ")
+			sstr += ", "
 
 		# приводим указатель на массив к указателю на его элемент
 		to = TypePointer(sret.type.of)
@@ -704,9 +682,8 @@ def str_value_call(v, ctx, sret=None):
 	if nl_after:
 		sstr += str_nl_indent()
 
-	sstr += (")")
+	sstr += ")"
 	return sstr
-
 
 
 
@@ -737,10 +714,8 @@ def str_value_index(x, ctx):
 	else:
 		left_str = str_value(left, ctx=ctx, parent_expr=x)
 
-
 	if left.type.is_pointer() and not is_sim_sim(left.type):
 		left_str = "(*%s)" % left_str
-
 
 	return left_str + '[' + str_value(x.index) + ']'
 
@@ -759,8 +734,6 @@ def str_value_access(x, ctx):
 
 	# если имеем дело c константной записью (глоб константа)
 	# и результат операции доступа - константа которая уже тут
-	#if left.type.is_generic():
-	#	if x.isValueImmediate():
 	if not left.isValueConst():
 		if value_is_generic_immediate(left):
 			return str_value_literal(x, ctx)
@@ -773,19 +746,18 @@ def str_value_access(x, ctx):
 		sstr += str_value(left, parent_expr=x)
 
 	if left.type.is_pointer():
-		sstr += ('->')
+		sstr += '->'
 	else:
-		sstr += ('.')
+		sstr += '.'
 
 	sstr += get_id_str(x.field)
 	return sstr
 
 
-
-def str_cast(t, v, rawMode=False, ctx=[]):
+def str_cast(t, v, hard_cast=False, ctx=[]):
 	sstr = ''
 
-	if rawMode:
+	if hard_cast:
 		assert(is_local_context())
 		sstr += "*(" + str_type(t) + "*)&"
 	else:
@@ -794,7 +766,6 @@ def str_cast(t, v, rawMode=False, ctx=[]):
 	need_wrap = precedence(v) < CONS_PRECEDENCE
 	sstr += str_value(v, ctx=ctx, wrapped=need_wrap)
 	return sstr
-
 
 
 def str_value_cons_record(x, ctx):
@@ -817,7 +788,7 @@ def str_value_cons_record(x, ctx):
 			# и приведение не требуется
 			return str_value(value, ctx=ctx)
 		# C cannot cast struct to struct (!)
-		return str_cast(to_type, value, rawMode=True)
+		return str_cast(to_type, value, hard_cast=True)
 
 
 
@@ -861,7 +832,6 @@ def str_value_cons_array(x, ctx):
 			return str_cast(to_type, value, ctx=ctx)
 		else:
 			return str_value(value, ctx=ctx)
-		return '<??>'
 
 
 	if from_type.is_string():
@@ -878,24 +848,13 @@ def str_value_cons_array(x, ctx):
 	if value.type.is_string():
 		return str_value(value, ctx=ctx)
 
-
 	return str_cast(to_type, value, ctx)
 
 
 
-# *[]Char8 -> *Char8
-#def ptr2arr_to_ptr2item(x):
-#	if x.type.is_pointer_to_array():
-#	arr_item_type = x.type.to.of
-#	t = TypePointer(arr_item_type, ti=x.ti)
-#	from value.cons import value_cons
-#	return value_cons(t, x, 'explicit', ti=x.ti)
-#
-
-
 # Выводит строковой литерал C.
 # В случае когда размер символа больше 8 бит,
-# оборачивает его макросом STR<X>()
+# оборачивает его макросом _STR<X>()
 def cstr(value, sz):
 	if sz > 8:
 		return "_STR%d(%s)" % (sz, str_value(value))
@@ -904,15 +863,10 @@ def cstr(value, sz):
 
 # Выводит строковой литерал C и превращает его в char
 # В случае когда размер символа больше 8 бит,
-# оборачивает его макросом CHR<X>()
+# оборачивает его макросом _CHR<X>()
 def cchr(value, sz):
-	#if sz > 8:
-	#	return "_CHR%d(%s)" % (sz, str_value(value))
-
-	if value.isValueLiteral():
-		if value.type.is_string():
-			return str_value_char(ord(value.asset[0]), sz)
-
+	if value.isValueLiteral() and value.type.is_string():
+		return str_value_char(ord(value.asset[0]), sz)
 	return "_CHR%d(%s)" % (sz, str_value(value))
 
 
@@ -952,7 +906,6 @@ def str_value_cons(x, ctx):
 	elif type.is_pointer_to_array():
 		if from_type.is_string():
 			return cstr(value, type.to.of.width)
-
 
 	elif type.is_xword() and from_type.is_xword():
 		if from_type.is_generic():
@@ -1005,7 +958,7 @@ def str_value_cons(x, ctx):
 		if value.type.is_free_pointer():
 			value = value.value
 
-	return str_cast(type, value, rawMode=x.rawMode, ctx=ctx)
+	return str_cast(type, value, hard_cast=x.rawMode, ctx=ctx)
 
 
 
@@ -1051,7 +1004,7 @@ def print_literal_array_items(values, item_type):
 				return sstr
 
 		if i < n:
-			sstr += (',')
+			sstr += ','
 
 	return sstr
 
@@ -1079,9 +1032,6 @@ def str_value_array(x, ctx):
 
 	if len(items) == 0:
 		return EMPTY_ARRAY_LITERAL
-
-	#if not x.isValueImmediate():
-	#	sstr += '(%s)' % str_type(type)
 
 	if type.is_array_of_char() and x.isValueImmediate():
 		char_type = type.of
@@ -1167,8 +1117,6 @@ def str_value_record(x):
 		sstr += str_nl_indent(nl=nl_end)
 	sstr += "}"
 
-	#if cast_req:
-	#	out(")")
 	return sstr
 
 
@@ -1187,7 +1135,7 @@ def code_to_char(cc):
 		elif cc == 0x0B: return "\\v"  # vertical tab
 		elif cc == 0x0C: return "\\f"  # form feed
 		elif cc == 0x0D: return "\\r"  # carriage return
-		#elif cc == 0x1B: return "\\e"  # escape
+		#elif cc == 0x1B: return "\\e" # escape
 		else: return "\\x%X" % cc
 
 	elif cc <= 0x7E:
@@ -1201,9 +1149,7 @@ def code_to_char(cc):
 
 
 def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
-	sstr = ''
-	prefix = ''#string_literal_prefix(width)
-	sstr = prefix
+	sstr = ""
 	sstr += quote
 	for cc in utf32_codes:
 		sstr += code_to_char(cc)
@@ -1214,10 +1160,6 @@ def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 
 def str_value_bool(num):
 	return csettings['true_literal'] if num else csettings['false_literal']
-
-
-def str_value_enum(x, ctx):
-	return get_id_str(x)
 
 
 
