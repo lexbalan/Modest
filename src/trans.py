@@ -1770,13 +1770,6 @@ def do_stmt_assign(x):
 	l = do_value(x['left'])
 	r = do_rvalue(x['right'])
 
-#	if l.isValueBad():
-#		if x['left']['kind'] == 'id':
-#			# if left is 'unknown id':
-#			id = do_id(x['left'])
-#			t = r.type
-#			l = add_local_var(id, t, id.ti)
-
 	if l.isValueBad() or r.isValueBad():
 		return StmtBad(x['ti'])
 
