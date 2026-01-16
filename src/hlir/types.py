@@ -1195,6 +1195,7 @@ class Value(Entity):
 		self.is_lvalue = False
 		self.is_immutable = False
 		self.is_pure = False
+		self.is_initialized = True
 
 		# in case of scalar value type here is code
 		# in case of record value here is list of Initializer objects
@@ -1523,6 +1524,7 @@ class ValueVar(Value):
 		self.stage = HLIR_VALUE_STAGE_RUNTIME
 		self.usecnt = 0
 		self.is_lvalue = True
+		self.is_initialized = False
 
 
 

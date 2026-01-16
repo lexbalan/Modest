@@ -803,6 +803,10 @@ def do_value_pos(x):
 def do_value_ref(x):
 	v = do_value(x['value'])
 
+	# FIXIT: Сейчас сам факт того что взяли указатель на переменную считается тем что она инициализирована,
+	# что конечно неверно, но пока так. Однажды нужно придумать как проверить судьбу этого указателя.
+	v.is_initialized = True
+
 	if v.isValueBad() or v.isValueUndef():
 		return v
 
@@ -880,6 +884,7 @@ def do_value_lengthof_value(x):
 def do_value_va_start(x):
 	args = x['values']
 	va_list = do_value(args[0])
+	va_list.is_initialized = True
 	last_param = do_rvalue(args[1])
 	nv = ValueVaStart(typeUnit, va_list, last_param, x['ti'])
 	return nv
@@ -1115,7 +1120,7 @@ def ct_call(fn, args, ti):
 
 
 def do_value_index(x):
-	left = do_rvalue(x['left'])
+	left = do_value(x['left'])
 
 	if left.isValueBad():
 		return ValueBad(x['ti'])
@@ -1279,7 +1284,7 @@ def do_value_access(x):
 	# access to object
 	#
 
-	left = do_rvalue(x['left'])
+	left = do_value(x['left'])
 
 	if left.isValueBad():
 		return ValueBad(x['ti'])
@@ -1563,7 +1568,10 @@ def do_value_undefined(x):
 
 
 def do_rvalue(x):
-	return do_value(x)
+	v = do_value(x)
+	if not v.is_initialized:
+		error("attempt to use an uninitialized variable", x['ti'])
+	return v
 
 
 def do_value_subexpr(x):
@@ -1649,6 +1657,9 @@ def do_stmt_var(x):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
 	df = def_var_common(x)
+
+	if not df.init_value.isValueUndef():
+		df.value.is_initialized = True
 
 	df.id.prefix = None
 	df.value.id.prefix = None
@@ -1759,12 +1770,12 @@ def do_stmt_assign(x):
 	l = do_value(x['left'])
 	r = do_rvalue(x['right'])
 
-	if l.isValueBad():
-		if x['left']['kind'] == 'id':
-			# if left is 'unknown id':
-			id = do_id(x['left'])
-			t = r.type
-			l = add_local_var(id, t, id.ti)
+#	if l.isValueBad():
+#		if x['left']['kind'] == 'id':
+#			# if left is 'unknown id':
+#			id = do_id(x['left'])
+#			t = r.type
+#			l = add_local_var(id, t, id.ti)
 
 	if l.isValueBad() or r.isValueBad():
 		return StmtBad(x['ti'])
@@ -1776,6 +1787,13 @@ def do_stmt_assign(x):
 	if l.isValueImmutable():
 		error("expected mutable value", l.ti)
 		return StmtBad(x['ti'])
+
+	if l.isValueVar():
+		l.is_initialized = True
+	elif l.isValueIndex() or l.isValueAccessRecord():
+		# FIXIT: Пока считаем что если мы присвоили что то элементу массива или записи
+		# значит их (массив/запись) можно считать инициализированными, но это конечно полуправда
+		l.left.is_initialized = True
 
 # Есть проблема - generic массив справа неявно приводится к типу массива слева
 # и как следствие right имеет тип левого (из ValueLiteral он превращается в ValueCons)
@@ -1873,7 +1891,8 @@ def do_stmt_asm(x):
 	for x in xoutputs['items']:
 		items = x['value']['items']
 		spec = do_rvalue(items[0]['value'])
-		val = do_rvalue(items[1]['value'])
+		val = do_value(items[1]['value'])
+		val.is_initialized = True
 		pair = (spec, val)
 		outputs.append(pair)
 
@@ -2181,6 +2200,7 @@ def def_var_global(x):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
 	df = def_var_common(x)
+	df.value.is_initialized = True
 	df = add_spices_def(df, x['anno'])
 	return df
 

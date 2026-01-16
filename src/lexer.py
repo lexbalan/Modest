@@ -396,7 +396,6 @@ class CmLexer(Lexer):
 		self.skipn(2)  # '/*'
 
 		text = ""
-
 		while True:
 			c = self.getc()
 			if c == "*":

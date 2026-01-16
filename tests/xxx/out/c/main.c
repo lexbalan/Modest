@@ -19,6 +19,9 @@ int32_t main(void) {
 	printf("Hello World!\n");
 	Point p = (Point){.x = 0, .y = 0};
 	M_Y;
+
+	int32_t a;
+	a = a + 1;
 	return 0;
 }
 
