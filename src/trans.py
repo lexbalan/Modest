@@ -581,6 +581,10 @@ def do_value_shift(x):
 		error("expected word value", x['left']['ti'])
 		return ValueBad(x['ti'])
 
+	if left.type.is_generic():
+		error("expected non-generic value", left.ti)
+		return ValueBad(x['ti'])
+
 	if right.type.is_signed():
 		error("expected natural value", x['right']['ti'])
 		return ValueBad(x['ti'])
@@ -591,18 +595,12 @@ def do_value_shift(x):
 		if left.isValueImmediate() and right.isValueImmediate():
 			nv.asset = int(left.asset << right.asset)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-			return nv
 
-	elif op == HLIR_VALUE_OP_SHR:
+	else: #if op == HLIR_VALUE_OP_SHR:
 		nv = ValueShr(left.type, left, right, ti=x['ti'])
 		if left.isValueImmediate() and right.isValueImmediate():
 			nv.asset = int(left.asset >> right.asset)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-			return nv
-
-	if left.type.is_generic():
-		error("expected non-generic value", left.ti)
-		return ValueBad(x['ti'])
 
 	return nv
 
