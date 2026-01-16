@@ -609,10 +609,10 @@ def do_value_bin(x):
 	op = x['kind']
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
-	return do_value_bin2(op, l, r, x['ti'])
+	return do_value_bin_op(op, l, r, x['ti'])
 
 
-def do_value_bin2(op, l, r, ti):
+def do_value_bin_op(op, l, r, ti):
 	if l.isValueBad() or r.isValueBad():
 		return ValueBad(ti)
 
@@ -620,14 +620,10 @@ def do_value_bin2(op, l, r, ti):
 		t = htype.select_common_type(l.type, r.type, ti)
 		return ValueUndef(t)
 
-
 	# Ops with different types
 	if op == HLIR_VALUE_OP_ADD:
-		# массивы могут быть разной длины (то есть с разными типами)
-		# поэтому сложение immediate массивов требует обхода проверок типа ниже
 		if l.type.is_array() and r.type.is_array():
 			return value_array_add(l, r, ti)
-		# у string тип всегда одинаковый и приводить их не нужно
 		elif l.type.is_string() and r.type.is_string():
 			return value_string_add(l, r, ti)
 
@@ -1228,7 +1224,7 @@ def do_value_slice(x):
 	# строим выражения для C бекенда в частности
 	# тк volume of array должен быть выражением
 	# а для слайса [a:b] это (b - a)
-	slice_volume = do_value_bin2(HLIR_VALUE_OP_SUB, index_to, index_from, x['ti'])
+	slice_volume = do_value_bin_op(HLIR_VALUE_OP_SUB, index_to, index_from, x['ti'])
 
 	if not (slice_volume.isValueUndef() or slice_volume.isValueUndef()):
 		slice_len = 0  # len as integer
