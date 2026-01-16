@@ -577,7 +577,7 @@ def do_value_shift(x):
 	left = do_rvalue(x['left'])
 	right = do_rvalue(x['right'])
 
-	if not left.type.is_word():
+	if not (left.type.is_word() or left.type.is_number()):
 		error("expected word value", x['left']['ti'])
 		return ValueBad(x['ti'])
 
