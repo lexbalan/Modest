@@ -777,8 +777,6 @@ def do_value_neg(x):
 	return nv
 
 
-
-
 def do_value_pos(x):
 	v = do_rvalue(x['value'])
 
@@ -953,7 +951,6 @@ def do_value_call(x):
 	npars = len(params)
 	nargs = len(x['args'])
 
-
 	if nargs > npars:
 		if not ftype.extra_args:
 			error("too many arguments", x['ti'])
@@ -1092,8 +1089,6 @@ def do_value_call(x):
 	return nv
 
 
-
-
 def ct_call(fn, args, ti):
 	warning("compile time call not implemented, will returned zero value!", ti)
 	context_push()
@@ -1117,8 +1112,6 @@ def ct_call(fn, args, ti):
 			print(stmt.value)
 
 	context_pop()
-
-
 
 
 def do_value_index(x):
@@ -1193,6 +1186,8 @@ def do_value_slice(x):
 		return ValueBad(x['ti'])
 
 	index_from = None
+	index_to = None
+
 	if x['index_from'] != None:
 		index_from = do_rvalue(x['index_from'])
 		if index_from.isValueBad():
@@ -1200,7 +1195,6 @@ def do_value_slice(x):
 	else:
 		index_from = valueZeroNumber()
 
-	index_to = None
 	if x['index_to'] != None:
 		index_to = do_rvalue(x['index_to'])
 		if index_to.isValueBad():
@@ -1208,12 +1202,10 @@ def do_value_slice(x):
 	else:
 		index_to = ValueUndef(TypeNumber(ti=x['ti']))
 
-
-	left_type = left.type
-	via_pointer = left_type.is_pointer()
-	array_type = left_type
+	via_pointer = left.type.is_pointer()
+	array_type = left.type
 	if via_pointer:
-		array_type = left_type.to
+		array_type = left.type.to
 
 	if not array_type.is_array():
 		error("expected array or pointer to array", left.ti)
@@ -1227,10 +1219,8 @@ def do_value_slice(x):
 	slice_volume = do_value_bin_op(HLIR_VALUE_OP_SUB, index_to, index_from, x['ti'])
 
 	if not (slice_volume.isValueUndef() or slice_volume.isValueUndef()):
-		slice_len = 0  # len as integer
 		if slice_volume.isValueImmediate():
-			slice_len = slice_volume.asset
-			if slice_len < 0:
+			if slice_volume.asset < 0:
 				error("wrong slice direction", x['ti'])
 				return ValueBad(x['ti'])
 

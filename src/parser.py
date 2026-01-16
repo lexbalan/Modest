@@ -99,7 +99,13 @@ class Parser:
 
 
 	def look(self, token):
-		return self.ctok() == token
+		if self.ctok_class() in ('id', 'op', 'nl'):
+			return self.ctok() == token
+		return False
+
+
+	def look_nl(self):
+		return self.ctok_class() == 'nl'
 
 
 	def match(self, token):
@@ -1152,7 +1158,7 @@ class Parser:
 
 			item_value = self.expr_value()
 
-			if not self.look("\n"):
+			if not self.look_nl():
 				self.need_sep(separators=[','], stoppers=[']'])
 
 			item = {
@@ -1198,7 +1204,7 @@ class Parser:
 			self.need("=")
 			item_value = self.expr_value()
 
-			if not self.look("\n"):
+			if not self.look_nl():
 				self.need_sep(separators=[',', '\n'], stoppers=['}'])
 
 			item = {
@@ -1443,7 +1449,7 @@ class Parser:
 		self.skip1()	# skip 'return' keyword
 
 		v = None
-		if not (self.look("\n") or self.look(";") or self.look("}")):
+		if not (self.look_nl() or self.look(";") or self.look("}")):
 			v = self.expr_value()
 
 		return {
@@ -1496,7 +1502,7 @@ class Parser:
 	def skip_blanks(self):
 		nl_cnt = 0
 		while not self.is_end():
-			if not self.look('\n'):
+			if not self.look_nl():
 				break
 
 			self.skip1()
@@ -1699,7 +1705,7 @@ class Parser:
 		if self.is_comment():
 			self.skip1()
 
-#		while self.is_comment() or self.look("\n"):
+#		while self.is_comment() or self.look_nl():
 #			if self.is_end():
 #				break
 #			self.skip1()
@@ -1783,7 +1789,7 @@ class Parser:
 		self.need("=")
 
 		t = None
-		if not self.look("\n"):
+		if not self.look_nl():
 			t = self.expr_type()
 
 		return {

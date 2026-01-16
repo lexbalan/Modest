@@ -14,6 +14,7 @@ public func main () -> Int32 {
 	printf("Hello World!\n")
 	var p: Point = {x = 0, y = 0}
 	mY
+	"{"
 	return 0
 }
 
