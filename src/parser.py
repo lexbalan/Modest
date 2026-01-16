@@ -109,14 +109,10 @@ class Parser:
 
 
 	def match(self, token):
-		if self.token_class_is('str'):
-			return False
-
-		yes = self.look(token)
-		if yes:
+		hit = self.look(token)
+		if hit:
 			self.skip1()
-
-		return yes
+		return hit
 
 
 	def token_class_is(self, clas):
