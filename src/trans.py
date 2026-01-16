@@ -2055,13 +2055,11 @@ def def_const_common(x):
 	if iv.isValueImmediate():
 		cp_immediate(const_value, iv)
 
-
 	const_value.type.addAnnotation('const', {})
 
 	ctx_value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 
 	definition = StmtDefConst(id, const_value, iv, x['ti'])
-
 	definition.module = cmodule
 	definition.access_level = get_access_level(x)
 	definition.nl = x['nl']
@@ -2572,8 +2570,8 @@ def process_module(idStr, sourcename, ast, is_include):
 
 		i += 1
 
-	pre_def(ast, is_include=is_include)
-	def_def(ast, is_include=is_include)
+	def_phase1(ast, is_include=is_include)
+	def_phase2(ast, is_include=is_include)
 
 	m = cmodule
 
@@ -2635,7 +2633,7 @@ def get_access_level(x):
 
 
 
-def pre_def(ast, is_include=False):
+def def_phase1(ast, is_include=False):
 	global cmodule
 
 	# 1. Проходим по всем типам, создаем их undefined "прототипы".
@@ -2677,7 +2675,7 @@ def pre_def(ast, is_include=False):
 
 
 
-def def_def(ast, is_include=False):
+def def_phase2(ast, is_include=False):
 	# Идем по всем элементам с самого начала и определяем их.
 	# Если элемент использует undefined - заносим его в список зависимостей эл-та
 	for x in ast:
@@ -2716,7 +2714,6 @@ def def_def(ast, is_include=False):
 	return
 
 
-
 # получает строку импорта (и неявно глобальный контекст)
 # и возвращает полный путь к модулю
 def get_import_abspath(s, ext='.m'):
@@ -2740,8 +2737,6 @@ def get_import_abspath(s, ext='.m'):
 		return None
 
 	return os.path.abspath(full_name)
-
-
 
 
 # example: path = "value.type"
@@ -2846,7 +2841,6 @@ def add_att(x, att):
 			x2.addAttribute(lr[1])
 
 
-
 # for check print/scanf params
 # returns list of specifiers
 # ex: "%s = %d" -> ['c', 'd']
@@ -2937,134 +2931,4 @@ def cp_immediate(to, _from):
 	to.stage = _from.stage
 	return
 
-
-
-"""if kind == 'if':
-	prev_production = production
-	c = do_value_immediate(args[0])
-
-	if c.isValueBad():
-		return None
-
-	if not Type. is_bool(c['type']):
-		error("expected bool value", c.ti)
-		return None
-
-	cond = c.asset != 0
-
-	production = cond
-	if cond:
-		prev_skipp = skipp
-		skipp = True  # skip another branches
-
-elif kind == 'elseif':
-	production = False
-	c = do_value_immediate(args[0])
-
-	if c.isValueBad():
-		return None
-
-	if not Type. is_bool(c['type']):
-		error("expected bool value", c.ti)
-		return None
-
-	cond = c.asset != 0
-
-	if cond and not skipp:
-		production = True
-		skipp = True  # skip another branches
-
-elif kind == 'else':
-	production = not skipp
-
-elif kind == 'endif':
-	skipp = prev_skipp  # do not skip branches (for new if)
-	production = prev_production
-
-elif kind == 'info':
-	v = do_value_immediate_string(args[0])
-
-	if v.isValueBad():
-		fatal("unsuitable value", x['ti'])
-
-	msg = v.asset
-	info(msg, x['ti'])
-
-elif kind == 'warning':
-	v = do_value_immediate_string(args[0])
-
-	if v.isValueBad():
-		fatal("unsuitable value", x['ti'])
-
-	msg = v.asset
-	warning(msg, x['ti'])
-
-elif kind == 'error':
-	v = do_value_immediate_string(args[0])
-
-	if v.isValueBad():
-		fatal("unsuitable value", x['ti'])
-
-	msg = v.asset
-	error(msg, x['ti'])
-	exit(-1)
-
-elif kind == 'undef':
-	v = do_value_immediate_string(args[0])
-	if v.isValueBad():
-		fatal("unsuitable value", x['ti'])
-	id_str = v.asset
-	cmodule.symtab_public.valueUndef(id_str)
-	cmodule.symtab_public.type_undef(id_str)
-
-el"""
-
-
-
-"""
-def pre_imp(ast):
-	global cmodule
-
-	# 1. Проходим по всем типам, создаем их undefined "прототипы".
-	# 2. Проходим по всем функциям, создаем их undefined "прототипы".
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if isa == 'ast_definition':
-			is_public = get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC
-			id = do_id(x['id'])
-			ti = id.ti
-
-			if kind == 'type':
-				t = Type(x['ti'])  # Incomplete type (!)
-				t.id = id
-				t.parent = cmodule
-				t.is_global_flag = True
-				ctx_type_add(id.str, t, is_public=is_public)
-
-			elif kind == 'func':
-				# Create function value with incomplete type
-				t = Type(x['ti'])  # Incomplete type (!)
-				v = ValueFunc(t, id, x['ti'])
-				v.parent = cmodule
-				v.is_global_flag = True
-				ctx_value_add(id.str, v, is_public=is_public)
-
-			elif kind == 'const':
-				t = Type(x['ti'])  # Incomplete type (!)
-				iv = ValueUndef(t, ti=x['ti'])
-				v = ValueConst(t, id, init_value=iv, ti=x['ti'])
-				v.parent = cmodule
-				v.is_global_flag = True
-				ctx_value_add(id.str, v, is_public=is_public)
-
-			elif kind == 'var':
-				t = Type(x['ti'])  # Incomplete type (!)
-				iv = ValueUndef(t, ti=x['ti'])
-				v = ValueVar(t, id, init_value=iv, ti=x['ti'])
-				v.parent = cmodule
-				v.is_global_flag = True
-				ctx_value_add(id.str, v, is_public=is_public)
-"""
 
