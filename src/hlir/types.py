@@ -130,7 +130,7 @@ HLIR_TYPE_SIGNEDNESS_UNSIGNED = 2
 
 class Entity():
 	def __init__(self, ti):
-		assert((ti == None) or isinstance(ti, TokenInfo))
+		assert((ti == None) or isinstance(ti, TextInfo))
 		self.ti = ti
 		self.att = []
 		self.annotations = {}

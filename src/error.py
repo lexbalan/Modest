@@ -80,6 +80,8 @@ def markline(line, begin, end):
 
 
 def print_common_message(mg, color, s, ti):
+	ti = ti.mid
+
 	pre = ''
 
 	if ti != None:

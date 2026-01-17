@@ -71,14 +71,19 @@ class Parser:
 
 	def nextok(self):
 		if self.ctoken + 1 > len(self.tokens):
+			print("cannot get nextok")
 			pass # TODO
 		return self.tokens[self.ctoken + 1][1]
 
 
-	def ti(self):
+	def tokenInfo(self):
 		assert(len(self.tokens[self.ctoken]) == 3)
-		ti = self.tokens[self.ctoken][2]
-		return ti
+		return self.tokens[self.ctoken][2]
+
+
+	def textInfo(self):
+		tokenInfo = self.tokenInfo()
+		return TextInfo(mid=tokenInfo)
 
 
 	def gettok(self):
@@ -123,7 +128,7 @@ class Parser:
 
 
 	def need(self, token):
-		ti = self.ti()
+		ti = self.textInfo()
 		yes = self.match(token)
 		if not yes:
 			error("expected '%s' token" % token, ti)
@@ -153,7 +158,7 @@ class Parser:
 
 
 	def parse_identifier(self):
-		ti = self.ti()
+		ti = self.textInfo()
 #		if not self.is_identifier():
 #			self.skip1()
 #			error("expected identifier", ti)
@@ -176,7 +181,7 @@ class Parser:
 			self.skip1()
 			pass
 		else:
-			error("expected separator", self.ti())
+			error("expected separator", self.textInfo())
 			self.restore(top_level_stoppers + func_stoppers)
 			return False
 
@@ -333,7 +338,7 @@ class Parser:
 
 
 	def expr_type_func(self):
-		ti = self.ti()
+		ti = self.textInfo()
 		self.skip1()  # "("
 		self.skip_tokens_class(['nl'])
 		arghack = False
@@ -375,7 +380,7 @@ class Parser:
 
 
 	def expr_type(self):
-		ti = self.ti()
+		ti = self.textInfo()
 
 		if not self.is_type_expr():
 			error("expected type expr", ti)
@@ -404,7 +409,7 @@ class Parser:
 			items = []
 			while not self.match("}"):
 				self.skip_tokens_class(['nl'])
-				ti = self.ti()
+				ti = self.textInfo()
 				id = self.parse_identifier()
 				self.need_sep(separators=['\n', ','])
 				items.append({'id': id, 'ti': ti})
@@ -431,7 +436,7 @@ class Parser:
 
 		elif self.is_identifier():
 			left = self.parse_identifier()
-			dot_ti = self.ti()
+			dot_ti = self.textInfo()
 			self.need(".")
 			right = self.parse_identifier()
 
@@ -478,7 +483,7 @@ class Parser:
 
 	def expr_value_1(self):
 		v = self.expr_value_2()
-		ti = self.ti()
+		ti = self.textInfo()
 		if self.match("or"):
 			self.skipn("\n")
 			r = self.expr_value()
@@ -498,7 +503,7 @@ class Parser:
 
 	def expr_value_2(self):
 		v = self.expr_value_3()
-		ti = self.ti()
+		ti = self.textInfo()
 		if self.match("xor"):
 			self.skipn("\n")
 			r = self.expr_value_2()
@@ -518,7 +523,7 @@ class Parser:
 
 	def expr_value_3(self):
 		v = self.expr_value_4()
-		ti = self.ti()
+		ti = self.textInfo()
 		if self.match("and"):
 			self.skipn("\n")
 			r = self.expr_value_3()
@@ -539,7 +544,7 @@ class Parser:
 	def expr_value_4(self):
 		v = self.expr_value_5()
 		while True:
-			ti = self.ti()
+			ti = self.textInfo()
 			if self.match("=="):
 				self.skipn("\n")
 				r = self.expr_value_5()
@@ -574,7 +579,7 @@ class Parser:
 	def expr_value_5(self):
 		v = self.expr_value_6()
 		while True:
-			ti = self.ti()
+			ti = self.textInfo()
 			if self.match("<"):
 				self.skipn("\n")
 				r = self.expr_value_6()
@@ -635,7 +640,7 @@ class Parser:
 	def expr_value_6(self):
 		v = self.expr_value_7()
 		while True:
-			ti = self.ti()
+			ti = self.textInfo()
 			if self.match("<<"):
 				self.skipn("\n")
 				l = v
@@ -672,7 +677,7 @@ class Parser:
 	def expr_value_7(self):
 		v = self.expr_value_8()
 		while True:
-			ti = self.ti()
+			ti = self.textInfo()
 			if self.match("+"):
 				self.skipn("\n")
 				r = self.expr_value_8()
@@ -707,7 +712,7 @@ class Parser:
 	def expr_value_8(self):
 		v = self.expr_value_9()
 		while True:
-			ti = self.ti()
+			ti = self.textInfo()
 			if self.match("*"):
 				self.skipn("\n")
 				r = self.expr_value_9()
@@ -755,7 +760,7 @@ class Parser:
 	# cons
 	def expr_value_9(self):
 		if self.is_type_expr():
-			ti = self.ti()
+			ti = self.textInfo()
 			t = self.expr_type()
 			v = self.expr_value_9()
 			return {
@@ -773,7 +778,7 @@ class Parser:
 
 
 	def expr_value_10(self):
-		ti = self.ti()
+		ti = self.textInfo()
 		if self.match("*"):
 			v = self.expr_value_10()
 			ti.end = v['ti']
@@ -1021,7 +1026,7 @@ class Parser:
 				#args.append(comm)
 				continue
 
-			arg_ti = self.ti()
+			arg_ti = self.textInfo()
 			arg_value = self.expr_value()
 			arg_id = None
 			if self.match("="):
@@ -1050,7 +1055,7 @@ class Parser:
 		# CALL
 		v = self.expr_value_term()
 		while True:
-			ti = self.ti()
+			ti = self.textInfo()
 			if self.look("("):
 				args = self.parse_args()
 
@@ -1134,7 +1139,7 @@ class Parser:
 
 
 	def parse_value_array(self, ti):
-		array_ti = self.ti()
+		array_ti = self.textInfo()
 		items = []
 		nl_cnt = 0
 		item_id = 0
@@ -1178,7 +1183,7 @@ class Parser:
 
 
 	def parse_value_record(self, ti):
-		record_ti = self.ti()
+		record_ti = self.textInfo()
 		items = []
 		nl_cnt = 0
 		self.need("{")
@@ -1195,7 +1200,7 @@ class Parser:
 			if self.match("}"):
 				break
 
-			item_ti = self.ti()
+			item_ti = self.textInfo()
 			item_id = self.parse_identifier()
 			self.need("=")
 			item_value = self.expr_value()
@@ -1323,7 +1328,7 @@ class Parser:
 			}
 
 	def expr_value_term(self):
-		ti = self.ti()
+		ti = self.textInfo()
 
 		if self.match("("):
 			self.skipn("\n")
@@ -1383,7 +1388,7 @@ class Parser:
 			elif tokstr == '':
 				tokstr = 'end-of-file'
 
-			error("unexpected token '%s'" % tokstr, self.ti())
+			error("unexpected token '%s'" % tokstr, self.textInfo())
 			self.skip1()
 			return {
 				'isa': 'ast_value',
@@ -1414,7 +1419,7 @@ class Parser:
 		t = self.stmt_block()
 		e = None
 		if self.match('else'):
-			ti = self.ti()
+			ti = self.textInfo()
 			if self.match('if'):
 				e = self.stmt_if()
 			else:
@@ -1482,7 +1487,7 @@ class Parser:
 		v = self.expr_value()
 
 		# stmt expr
-		assign_ti = self.ti()
+		assign_ti = self.textInfo()
 		if self.is_assign_operator():
 			# stmt assign
 			self.skip1() # skip assign operator
@@ -1510,7 +1515,7 @@ class Parser:
 
 
 	def stmt_block(self):
-		ti = self.ti()
+		ti = self.textInfo()
 		#print('stmt_block')
 
 		comment = None
@@ -1533,7 +1538,7 @@ class Parser:
 					comment = None
 				break
 
-			ti = self.ti()
+			ti = self.textInfo()
 			s = None
 
 			if self.match('let'):
@@ -1659,7 +1664,7 @@ class Parser:
 	#
 
 	def parse_include(self):
-		ti = self.ti()
+		ti = self.textInfo()
 		import_expr = self.expr_value()
 
 		return {
@@ -1674,7 +1679,7 @@ class Parser:
 
 
 	def parse_import(self, include=False):
-		ti = self.ti()
+		ti = self.textInfo()
 		import_expr = self.expr_value()
 
 		_as = None
@@ -1694,7 +1699,7 @@ class Parser:
 
 
 	def parse_def_func(self):
-		ti = self.ti()
+		ti = self.textInfo()
 		id = self.parse_identifier()
 		ftyp = self.expr_type()
 
@@ -1721,7 +1726,7 @@ class Parser:
 
 
 	def parse_stmt_xvar(self, access_modifier='undefined'):
-		ti = self.ti()
+		ti = self.textInfo()
 		id = self.parse_identifier()
 
 		ids = [id]
@@ -1776,7 +1781,7 @@ class Parser:
 
 
 	def parse_def_type(self):
-		ti = self.ti()
+		ti = self.textInfo()
 		id = self.parse_identifier()
 
 		if self.is_comment():
@@ -1806,7 +1811,7 @@ class Parser:
 
 
 	def parse_comment_line(self):
-		ti = self.ti()
+		ti = self.textInfo()
 		x = self.gettok()
 		lines = [x]
 		#pos = self.getpos()
@@ -1831,7 +1836,7 @@ class Parser:
 
 
 	def parse_comment_block(self):
-		ti = self.ti()
+		ti = self.textInfo()
 		x = self.gettok()
 		return {
 			'isa': 'ast_comment',
@@ -1844,7 +1849,7 @@ class Parser:
 
 
 	def parse_annotation(self):
-		ti = self.ti()
+		ti = self.textInfo()
 		x = self.gettok()
 
 		args = []
@@ -1862,7 +1867,7 @@ class Parser:
 
 
 	def parse_pragma(self):
-		ti = self.ti()
+		ti = self.textInfo()
 		x = self.gettok()
 
 		args = []
@@ -1908,7 +1913,7 @@ class Parser:
 		while self.skipnl():
 			spaceline_cnt += 1
 		if self.match('module'):
-			ti = self.ti()
+			ti = self.textInfo()
 			s = self.gettok()
 			module_str = self.parse_value_string(s, ti)
 			module_directive = {
@@ -1930,7 +1935,7 @@ class Parser:
 
 			access_modifier = self.parse_access_modifier()
 
-			ti = self.ti()
+			ti = self.textInfo()
 
 			x = None
 
@@ -1969,7 +1974,7 @@ class Parser:
 			elif self.match('include'):
 				x = self.parse_include()
 			else:
-				error("unexpected token '%s'" % self.ctok(), self.ti())
+				error("unexpected token '%s'" % self.ctok(), self.textInfo())
 				self.restore_top_level()
 				continue
 
