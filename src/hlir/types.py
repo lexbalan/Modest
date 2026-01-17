@@ -16,7 +16,8 @@ class TokenInfo:
 
 
 class TextInfo:
-	def __init__(self, start, end):
+	def __init__(self, mid, start=None, end=None):
+		self.mid = mid
 		self.start = start
 		self.end = end
 
