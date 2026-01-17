@@ -79,44 +79,23 @@ def markline(line, begin, end):
 
 
 
-def getLeftTokenInfo(ti):
-	if isinstance(ti, TokenInfo):
-		return ti
-	elif isinstance(ti, TextInfo):
-		return getLeftTokenInfo(ti.start)
-	return None
 
-def getRightTokenInfo(ti):
-	if isinstance(ti, TokenInfo):
-		return ti
-	elif isinstance(ti, TextInfo):
-		return getRightTokenInfo(ti.end)
-	return None
-
-def getMidTokenInfo(ti):
-	if isinstance(ti, TokenInfo):
-		return ti
-	elif isinstance(ti, TextInfo):
-		return getMidTokenInfo(ti.mid)
-	return None
 
 def print_common_message(mg, color, s, ti):
-	lti = getLeftTokenInfo(ti)
-	mti = getMidTokenInfo(ti)
-	rti = getRightTokenInfo(ti)
+	lti = ti.getLeftTokenInfo()
+	mti = ti.getMidTokenInfo()
+	rti = ti.getRightTokenInfo()
 	start_pos = lti.spaces + lti.tabs * TABSTOP
 	end_pos = rti.spaces + rti.tabs * TABSTOP + rti.length
 
-	ti = mti
-
 	pre = ''
-	if ti != None:
-		npos = lti.spaces + lti.tabs
+	if mti != None:
+		npos = mti.spaces + mti.tabs + 1
 		pre = '\n%s:%d:%d:\n' % (lti.source, lti.line, npos)
 
 	print(colorize(pre, BOLD) + colorize(mg, color) + s)
 
-	if ti != None:
+	if mti != None:
 		margin = "%d |" % lti.line
 		line = read_line(lti.source, lti.fpos)
 		line = line.replace('\t', ' ' * TABSTOP)

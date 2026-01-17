@@ -25,7 +25,7 @@ public func main () -> Int32 {
 	var b: Int64
 	var c: Int32
 	a = a * b + c
-	Point 0
+	offsetof(Point.y)
 	return 0
 }
 

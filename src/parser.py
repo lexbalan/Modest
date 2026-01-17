@@ -694,8 +694,6 @@ class Parser:
 			elif self.match("-"):
 				self.skipn("\n")
 				r = self.expr_value_8()
-				ti.start = v['ti']
-				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'sub',
@@ -716,8 +714,6 @@ class Parser:
 			if self.match("*"):
 				self.skipn("\n")
 				r = self.expr_value_9()
-				ti.start = v['ti']
-				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'mul',
@@ -729,8 +725,6 @@ class Parser:
 			elif self.match("/"):
 				self.skipn("\n")
 				r = self.expr_value_9()
-				ti.start = v['ti']
-				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'div',
@@ -742,8 +736,6 @@ class Parser:
 			elif self.match("%"):
 				self.skipn("\n")
 				r = self.expr_value_9()
-				ti.start = v['ti']
-				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'rem',
@@ -778,60 +770,55 @@ class Parser:
 
 
 	def expr_value_10(self):
-		ti = self.textInfo()
+		start_ti = self.textInfo()
 		if self.match("*"):
 			v = self.expr_value_10()
-			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'deref',
 				'value': v,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
 			}
 
 		elif self.match("&"):
 			v = self.expr_value_11()
-			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'ref',
 				'value': v,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
 			}
 
 		elif self.match("not"):
 			v = self.expr_value_11()
-			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'not',
 				'value': v,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
 			}
 
 		elif self.match("+"):
 			v = self.expr_value_11()
-			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'pos',
 				'value': v,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
 			}
 
 		elif self.match("-"):
 			v = self.expr_value_11()
-			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'neg',
 				'value': v,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
 			}
 
 		elif self.match("new"):
@@ -841,21 +828,21 @@ class Parser:
 				'kind': 'new',
 				'value': v,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
 			}
 
 		elif self.match("unsafe"):
 			v = self.expr_value()
-			ti.end = v['ti']
 			return {
 				'isa': 'ast_value',
 				'kind': 'unsafe',
 				'value': v,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
 			}
 
 		elif self.match("sizeof"):
+			mid_ti = self.textInfo()
 			self.match("(")
 			rv = None
 			if self.is_type_expr():
@@ -865,7 +852,6 @@ class Parser:
 					'kind': 'sizeof_type',
 					'type': t,
 					'anno': [],
-					'ti': ti
 				}
 			else:
 				v = self.expr_value()
@@ -874,28 +860,33 @@ class Parser:
 					'kind': 'sizeof_value',
 					'value': v,
 					'anno': [],
-					'ti': ti
 				}
+			end_ti = self.tokenInfo()
 			self.need(")")
+			rv['ti'] = TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 			return rv
 
 		elif self.match("alignof"):
+			mid_ti = self.textInfo()
 			self.match("(")
 			t = self.expr_type()
+			end_ti = self.tokenInfo()
 			self.need(")")
 			return {
 				'isa': 'ast_value',
 				'kind': 'alignof',
 				'type': t,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 			}
 
 		elif self.match("offsetof"):
+			mid_ti = self.textInfo()
 			self.match("(")
 			t = self.expr_type()
 			self.need('.')
 			f = self.parse_identifier()
+			end_ti = self.tokenInfo()
 			self.need(")")
 			return {
 				'isa': 'ast_value',
@@ -903,81 +894,88 @@ class Parser:
 				'type': t,
 				'field': f,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 			}
 
 		elif self.match("lengthof"):
+			mid_ti = self.textInfo()
 			self.match("(")
 			v = self.expr_value()
-			rv = {
+			end_ti = self.tokenInfo()
+			self.need(")")
+			return {
 				'isa': 'ast_value',
 				'kind': 'lengthof_value',
 				'value': v,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 			}
-			self.need(")")
-			return rv
 
 		elif self.match("__va_start"):
+			mid_ti = self.textInfo()
 			self.match("(")
 			v0 = self.expr_value()
 			self.need(",")
 			v1 = self.expr_value()
-			rv = {
+			end_ti = self.tokenInfo()
+			self.need(")")
+			return {
 				'isa': 'ast_value',
 				'kind': '__va_start',
 				'values': [v0, v1],
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 			}
-			self.need(")")
-			return rv
 
 		elif self.match("__va_copy"):
+			mid_ti = self.textInfo()
 			self.match("(")
 			v0 = self.expr_value()
 			self.need(",")
 			v1 = self.expr_value()
-			rv = {
+			end_ti = self.tokenInfo()
+			self.need(")")
+			return {
 				'isa': 'ast_value',
 				'kind': '__va_copy',
 				'values': [v0, v1],
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 			}
-			self.need(")")
-			return rv
 
 		elif self.match("__va_end"):
-			self.match("(")
+			mid_ti = self.textInfo()
+			self.need("(")
 			v = self.expr_value()
-			rv = {
+			end_ti = self.tokenInfo()
+			self.need(")")
+			return {
 				'isa': 'ast_value',
 				'kind': '__va_end',
 				'value': v,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 			}
-			self.need(")")
-			return rv
 
 		elif self.match("__va_arg"):
-			self.match("(")
+			mid_ti = self.textInfo()
+			self.need("(")
 			v = self.expr_value()
-			self.match(",")
+			self.need(",")
 			t = self.expr_type()
-			self.match(")")
+			end_ti = self.tokenInfo()
+			self.need(")")
 			return {
 				'isa': 'ast_value',
 				'kind': '__va_arg',
 				'va_list': v,
 				'type': t,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 			}
 
 		elif self.match("__defined"):
+			mid_ti = self.textInfo()
 			self.match("(")
 			rv = None
 			if self.is_type_expr():
@@ -987,7 +985,6 @@ class Parser:
 					'kind': '__defined_type',
 					'type': t,
 					'anno': [],
-					'ti': ti
 				}
 			else:
 				v = self.expr_value()
@@ -996,9 +993,10 @@ class Parser:
 					'kind': '__defined_value',
 					'value': v,
 					'anno': [],
-					'ti': ti
 				}
+			end_ti = self.tokenInfo()
 			self.need(")")
+			rv['ti'] = TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 			return rv
 		else:
 			y = self.expr_value_11()
@@ -1007,8 +1005,7 @@ class Parser:
 
 	def parse_args(self):
 		args = []
-		self.match("(")
-		while not self.match(")"):
+		while not self.look(")"):
 			arg = None
 			#print(self.ctok())
 			#self.skip_tokens_class(['nl'])
@@ -1026,22 +1023,27 @@ class Parser:
 				#args.append(comm)
 				continue
 
-			arg_ti = self.textInfo()
+			mid_ti = self.textInfo()
+			start_ti = mid_ti
+			end_ti = mid_ti
 			arg_value = self.expr_value()
 			arg_id = None
-			if self.match("="):
+			if self.look("="):
+				mid_ti = self.textInfo()
+				self.match("=")
 				if arg_value['kind'] != 'id':
 					error("expected identifier", arg_value['ti'])
 
-				arg_id = arg_value#['id']
+				arg_id = arg_value
 				arg_value = self.expr_value()
+				end_ti = self.textInfo()
 
 			arg = {
 				'isa': 'ast_kv',
 				'key': arg_id,
 				'value': arg_value,
 				'nl': nl_cnt,
-				'ti': arg_ti
+				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 			}
 			args.append(arg)
 
@@ -1055,9 +1057,11 @@ class Parser:
 		# CALL
 		v = self.expr_value_term()
 		while True:
-			ti = self.textInfo()
-			if self.look("("):
+			mid_ti = self.textInfo()
+			if self.match("("):
 				args = self.parse_args()
+				end_ti = self.textInfo()
+				self.match(")")
 
 				v = {
 					'isa': 'ast_value',
@@ -1066,21 +1070,19 @@ class Parser:
 					'args': args,
 					'anno': [],
 					'nl': 0,
-					'ti': ti
+					'ti': TextInfo(start=v['ti'], mid=mid_ti, end=end_ti)
 				}
 
 			elif self.match("."):
+				end_ti = self.textInfo()
 				field_id = self.parse_identifier()
-				ti.start = v['ti']
-				ti.end = field_id['ti']
-
 				v = {
 					'isa': 'ast_value',
 					'kind': 'access',
 					'left': v,
 					'right': field_id,
 					'anno': [],
-					'ti': ti
+					'ti': TextInfo(start=v['ti'], mid=mid_ti, end=end_ti)
 				}
 			elif self.match("["):
 				#
@@ -1100,11 +1102,10 @@ class Parser:
 						is_slicing = True
 						if not self.look("]"):
 							j = self.expr_value()
+				end_ti = self.textInfo()
 				self.need("]")
 
 				assert not (i == None and j == None)
-
-				ti.start = v['ti']
 
 				if is_slicing:
 					v = {
@@ -1114,7 +1115,7 @@ class Parser:
 						'index_from': i,
 						'index_to': j,
 						'anno': [],
-						'ti': ti
+						'ti': TextInfo(start=v['ti'], mid=mid_ti, end=end_ti)
 					}
 					return v
 
@@ -1124,7 +1125,7 @@ class Parser:
 					'left': v,
 					'index': i,
 					'anno': [],
-					'ti': ti
+					'ti': TextInfo(start=v['ti'], mid=mid_ti, end=end_ti)
 				}
 			else:
 				return v
@@ -1853,8 +1854,9 @@ class Parser:
 		x = self.gettok()
 
 		args = []
-		if self.look("("):
+		if self.match("("):
 			args = self.parse_args()
+			self.need(")")
 
 		att = {
 			'isa': 'ast_annotation',

@@ -16,10 +16,31 @@ class TokenInfo:
 
 
 class TextInfo:
-	def __init__(self, mid, start, end):
-		self.mid = mid
+	def __init__(self, start, mid, end):
 		self.start = start
+		self.mid = mid
 		self.end = end
+
+	def getLeftTokenInfo(self):
+		if self.start == None:
+			return None
+		if isinstance(self.start, TokenInfo):
+			return self.start
+		return self.start.getLeftTokenInfo()
+
+	def getMidTokenInfo(self):
+		if self.mid == None:
+			return None
+		if isinstance(self.mid, TokenInfo):
+			return self.mid
+		return self.mid.getLeftTokenInfo()
+
+	def getRightTokenInfo(self):
+		if self.end == None:
+			return None
+		if isinstance(self.end, TokenInfo):
+			return self.end
+		return self.end.getLeftTokenInfo()
 
 
 
@@ -1782,12 +1803,12 @@ class ValueAlignof(Value):
 class ValueOffsetof(Value):
 	def __init__(self, record, field_id, ti=None):
 		from type import record_field_get
-		field = record_field_get(of, field_id['str'])
+		field = record_field_get(record, field_id['str'])
 		if field == None:
 			error("undefined field '%s'" % field_id['str'], field_id.ti)
 			return ValueBad({'ti': ti})
 
-		offset = field['offset']
+		offset = field.offset
 		from type import type_number_for
 		type = type_number_for(offset, ti=ti)
 		super().__init__(type=type, ti=ti)
