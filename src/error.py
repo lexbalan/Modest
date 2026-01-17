@@ -93,8 +93,16 @@ def getRightTokenInfo(ti):
 		return getRightTokenInfo(ti.end)
 	return None
 
+def getMidTokenInfo(ti):
+	if isinstance(ti, TokenInfo):
+		return ti
+	elif isinstance(ti, TextInfo):
+		return getMidTokenInfo(ti.mid)
+	return None
+
 def print_common_message(mg, color, s, ti):
 	lti = getLeftTokenInfo(ti)
+	mti = getMidTokenInfo(ti)
 	rti = getRightTokenInfo(ti)
 	start_pos = lti.spaces + lti.tabs * TABSTOP
 	end_pos = rti.spaces + rti.tabs * TABSTOP + rti.length
@@ -106,23 +114,19 @@ def print_common_message(mg, color, s, ti):
 	ti = ti.mid
 
 	pre = ''
-
 	if ti != None:
-		npos = ti.spaces + ti.tabs
-		pre = '\n%s:%d:%d:\n' % (ti.source, ti.line, npos)
+		npos = lti.spaces + lti.tabs
+		pre = '\n%s:%d:%d:\n' % (lti.source, lti.line, npos)
 
 	print(colorize(pre, BOLD) + colorize(mg, color) + s)
 
 	if ti != None:
-		margin = "%d |" % ti.line
-		line = read_line(ti.source, ti.fpos)
+		margin = "%d |" % lti.line
+		line = read_line(lti.source, lti.fpos)
 		line = line.replace('\t', ' ' * TABSTOP)
-		#line = markline(line, ti.spaces + ti.tabs * TABSTOP, ti.length)
-		stt = ti.spaces + ti.tabs * TABSTOP
-		#line = markline(line, stt, stt+ti.length)
 		line = markline(line, start_pos, end_pos)
 		print(margin + line)
-		highlight(ti, color, offset=len(margin))
+		highlight(mti, color, offset=len(margin))
 
 
 

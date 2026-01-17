@@ -702,7 +702,7 @@ class Parser:
 					'left': v,
 					'right': r,
 					'anno': [],
-					'ti': ti
+					'ti': TextInfo(start=v['ti'].start, mid=ti_mid, end=r['ti'].end)
 				}
 			else:
 				break
@@ -724,7 +724,7 @@ class Parser:
 					'left': v,
 					'right': r,
 					'anno': [],
-					'ti': ti
+					'ti': TextInfo(start=v['ti'].start, mid=ti, end=r['ti'].end)
 				}
 			elif self.match("/"):
 				self.skipn("\n")
@@ -737,7 +737,7 @@ class Parser:
 					'left': v,
 					'right': r,
 					'anno': [],
-					'ti': ti
+					'ti': TextInfo(start=v['ti'].start, mid=ti, end=r['ti'].end)
 				}
 			elif self.match("%"):
 				self.skipn("\n")
@@ -750,7 +750,7 @@ class Parser:
 					'left': v,
 					'right': r,
 					'anno': [],
-					'ti': ti
+					'ti': TextInfo(start=v['ti'].start, mid=ti, end=r['ti'].end)
 				}
 			else:
 				break
@@ -769,7 +769,7 @@ class Parser:
 				'value': v,
 				'type': t,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=ti, mid=ti, end=v['ti'].end)
 			}
 
 		else:
