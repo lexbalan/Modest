@@ -15,6 +15,8 @@ show_info = True
 
 ENDC = 0
 BOLD = 1
+ITALIC = 3
+UNDERLINE=4
 RED = 91
 GREEN = 92
 YELLOW = 93
@@ -70,6 +72,13 @@ def highlight(ti, color, offset):
 	mark(offset, length, color)
 
 
+
+def markline(line, begin, end):
+	#return line[0:begin] + colorize(line[begin:end], UNDERLINE) + line[end:]
+	return line[0:begin] + '\033[3;4m' + line[begin:end] + color_code(ENDC) + line[end:]
+
+
+
 def print_common_message(mg, color, s, ti):
 	pre = ''
 
@@ -83,6 +92,9 @@ def print_common_message(mg, color, s, ti):
 		margin = "%d |" % ti.line
 		line = read_line(ti.source, ti.fpos)
 		line = line.replace('\t', ' ' * TABSTOP)
+		#line = markline(line, ti.spaces + ti.tabs * TABSTOP, ti.length)
+		stt = ti.spaces + ti.tabs * TABSTOP
+		line = markline(line, stt, stt+ti.length)
 		print(margin + line)
 		highlight(ti, color, offset=len(margin))
 
