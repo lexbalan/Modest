@@ -107,11 +107,7 @@ def print_common_message(mg, color, s, ti):
 	start_pos = lti.spaces + lti.tabs * TABSTOP
 	end_pos = rti.spaces + rti.tabs * TABSTOP + rti.length
 
-	#start_pos = ti.start.spaces + ti.start.tabs * TABSTOP
-	#end_pos = ti.end.spaces + ti.end.tabs * TABSTOP + ti.end.length
-	#print("START:", start_pos)
-	#print("END:", end_pos)
-	ti = ti.mid
+	ti = mti
 
 	pre = ''
 	if ti != None:
