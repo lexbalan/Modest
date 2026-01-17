@@ -1,7 +1,7 @@
 # error.py
 
 from common import features
-from hlir import TokenInfo
+from hlir import TokenInfo, TextInfo
 
 warncnt = 0
 errcnt = 0
@@ -79,7 +79,30 @@ def markline(line, begin, end):
 
 
 
+def getLeftTokenInfo(ti):
+	if isinstance(ti, TokenInfo):
+		return ti
+	elif isinstance(ti, TextInfo):
+		return getLeftTokenInfo(ti.start)
+	return None
+
+def getRightTokenInfo(ti):
+	if isinstance(ti, TokenInfo):
+		return ti
+	elif isinstance(ti, TextInfo):
+		return getRightTokenInfo(ti.end)
+	return None
+
 def print_common_message(mg, color, s, ti):
+	lti = getLeftTokenInfo(ti)
+	rti = getRightTokenInfo(ti)
+	start_pos = lti.spaces + lti.tabs * TABSTOP
+	end_pos = rti.spaces + rti.tabs * TABSTOP + rti.length
+
+	#start_pos = ti.start.spaces + ti.start.tabs * TABSTOP
+	#end_pos = ti.end.spaces + ti.end.tabs * TABSTOP + ti.end.length
+	#print("START:", start_pos)
+	#print("END:", end_pos)
 	ti = ti.mid
 
 	pre = ''
@@ -96,7 +119,8 @@ def print_common_message(mg, color, s, ti):
 		line = line.replace('\t', ' ' * TABSTOP)
 		#line = markline(line, ti.spaces + ti.tabs * TABSTOP, ti.length)
 		stt = ti.spaces + ti.tabs * TABSTOP
-		line = markline(line, stt, stt+ti.length)
+		#line = markline(line, stt, stt+ti.length)
+		line = markline(line, start_pos, end_pos)
 		print(margin + line)
 		highlight(ti, color, offset=len(margin))
 

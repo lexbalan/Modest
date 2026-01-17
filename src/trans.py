@@ -644,8 +644,10 @@ def do_value_bin_op(op, l, r, ti):
 	t = htype.select_common_type(l.type, r.type, ti)
 	if t == None:
 		error("different types in operation", ti)
+		print("left type  = ", end='')
 		htype.type_print(l.type)
 		print()
+		print("right type = ", end='')
 		htype.type_print(r.type)
 		print()
 		return ValueBad(ti)
@@ -1570,7 +1572,7 @@ def do_value_undefined(x):
 def do_rvalue(x):
 	v = do_value(x)
 	if not v.is_initialized:
-		error("attempt to use an uninitialized variable", x['ti'])
+		warning("attempt to use an uninitialized variable", x['ti'])
 	return v
 
 

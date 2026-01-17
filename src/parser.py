@@ -83,7 +83,7 @@ class Parser:
 
 	def textInfo(self):
 		tokenInfo = self.tokenInfo()
-		return TextInfo(mid=tokenInfo)
+		return TextInfo(start=tokenInfo, mid=tokenInfo, end=tokenInfo)
 
 
 	def gettok(self):
@@ -677,19 +677,19 @@ class Parser:
 	def expr_value_7(self):
 		v = self.expr_value_8()
 		while True:
-			ti = self.textInfo()
+			ti_mid = self.tokenInfo()
 			if self.match("+"):
 				self.skipn("\n")
 				r = self.expr_value_8()
-				ti.start = v['ti']
-				ti.end = r['ti']
+				#ti.start = v['ti']
+				#ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
 					'kind': 'add',
 					'left': v,
 					'right': r,
 					'anno': [],
-					'ti': ti
+					'ti': TextInfo(start=v['ti'].start, mid=ti_mid, end=r['ti'].end)
 				}
 			elif self.match("-"):
 				self.skipn("\n")

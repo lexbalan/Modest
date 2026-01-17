@@ -21,8 +21,10 @@ public func main () -> Int32 {
 	var p: Point = {x=0, y=0}
 	mY
 
-	var a: Int32
-	a = a + 1
+	var a: Int64
+	var b: Int64
+	var c: Int32
+	a = a * b + c
 	return 0
 }
 
