@@ -1411,14 +1411,24 @@ class Parser:
 	#
 
 	def stmt_let(self):
-		x = self.parse_stmt_xvar(access_modifier='undefined')[0]
+		ti_start = self.tokenInfo()
+		self.match("let")
+		x = self.parse_stmt_field()[0]
 		x['isa'] = 'ast_stmt'
 		x['kind'] = 'const'
+		x['ti'].start = ti_start
 		return x
 
 
 	def stmt_var(self):
-		return self.parse_stmt_xvar(access_modifier='undefined')
+		ti_start = self.tokenInfo()
+		self.match("var")
+		xx = self.parse_stmt_field()
+		for x in xx:
+			x['isa'] = 'ast_stmt'
+			x['kind'] = 'var'
+			x['ti'].start = ti_start
+		return xx
 
 
 	def stmt_if(self):
@@ -1454,7 +1464,7 @@ class Parser:
 
 
 	def stmt_return(self):
-		self.skip1()	# skip 'return' keyword
+		self.skip1()  # skip 'return' keyword
 
 		v = None
 		if not (self.look_nl() or self.look(";") or self.look("}")):
@@ -1548,7 +1558,7 @@ class Parser:
 			ti = self.textInfo()
 			s = None
 
-			if self.match('let'):
+			if self.look('let'):
 				s = self.stmt_let()
 			elif self.match('if'):
 				s = self.stmt_if()
@@ -1556,7 +1566,7 @@ class Parser:
 				s = self.stmt_while()
 			elif self.look('return'):
 				s = self.stmt_return()
-			elif self.match('var'):
+			elif self.look('var'):
 				s = self.stmt_var()
 			elif self.token_class_is('comment-block'):
 				comment = self.parse_comment_block()
@@ -1732,8 +1742,10 @@ class Parser:
 		}
 
 
-	def parse_stmt_xvar(self, access_modifier='undefined'):
-		ti = self.textInfo()
+	def parse_stmt_field(self):
+		ti_start = self.textInfo()
+		ti_mid = ti_start
+		ti_end = ti_start
 		id = self.parse_identifier()
 
 		ids = [id]
@@ -1742,8 +1754,11 @@ class Parser:
 			ids.append(id)
 
 		t = None
-		if self.match(":"):
+		if self.look(":"):
+			ti_mid = self.textInfo()
+			self.match(":")
 			t = self.expr_type()
+			ti_end = t['ti'].end
 		else:
 			t = None
 
@@ -1752,21 +1767,22 @@ class Parser:
 			self.skip1() # skip assign operator
 			self.skipn("\n")
 			init_value = self.expr_value()
+			ti_end = init_value['ti'].end
 		else:
-			init_value = self.expr_ValueUndef(ti)
+			init_value = self.expr_ValueUndef(ti_mid)
 
 		res = []
 		for id in ids:
 			xx = {
 				'isa': 'ast_stmt',
-				'kind': 'var',
+				'kind': 'field',
 				'id': id,
 				'type': t,
 				'init_value': init_value,
-				'access_modifier': access_modifier,
+				'access_modifier': 'undefined',
 				'anno': [],
 				'nl': 1,
-				'ti': ti
+				'ti': TextInfo(start=ti_start, mid=ti_mid, end=ti_end)
 			}
 			res.append(xx)
 
@@ -1774,16 +1790,23 @@ class Parser:
 
 
 	def parse_def_const(self):
-		x = self.parse_stmt_xvar()[0]
+		ti_start = self.tokenInfo()
+		self.match("const")
+		x = self.parse_stmt_field()[0]
 		x['isa'] = 'ast_definition'
 		x['kind'] = 'const'
+		x['ti'].start = ti_start
 		return x
 
 
 	def parse_def_var(self):
-		xx = self.parse_stmt_xvar()
+		ti_start = self.tokenInfo()
+		self.match("var")
+		xx = self.parse_stmt_field()
 		for x in xx:
 			x['isa'] = 'ast_definition'
+			x['kind'] = 'var'
+			x['ti'].start = ti_start
 		return xx
 
 
@@ -1959,7 +1982,7 @@ class Parser:
 
 			if self.match('func'):
 				x = self.parse_def_func()
-			elif self.match('const'):
+			elif self.look('const'):
 				x = self.parse_def_const()
 			elif self.match('var'):
 				x = self.parse_def_var()
