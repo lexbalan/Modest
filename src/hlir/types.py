@@ -1087,6 +1087,12 @@ class TypeBad(Type):
 		self.incomplete = False
 
 
+class TypeUndefined(Type):
+	def __init__(self, ti=None):
+		super().__init__(ti=ti)
+		self.incomplete = False
+
+
 class TypeUnit(Type):
 	def __init__(self, ti=None):
 		super().__init__(ti=ti)

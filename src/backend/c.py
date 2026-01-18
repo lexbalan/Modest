@@ -726,9 +726,15 @@ def str_value_cons_record(x, ctx):
 
 	if from_type.is_generic_record():
 		if is_local_context():
+			#print(value)
+			if value.isValueRecord():
+				return "(" + str_type(x.type) + ")" + str_value_record2(x.type, x.asset)
 			return str_cast(to_type, value)
 		else:
 			return str_value(value, ctx=ctx)
+		#	sstr += "(" + str_type(x.type) + ")"
+		#sstr += str_value_record2(x.type, x.asset)
+		#return sstr
 
 	# RecordA -> RecordB
 	#if to_type.is_record():
@@ -1043,9 +1049,13 @@ def str_value_array(x, ctx):
 def str_value_record(x):
 	items = x.asset
 	type = x.type
+	return str_value_record2(type, items)
+
+def str_value_record2(type, items):
 	nitems = len(items)
-	if nitems == 0:
-		return EMPTY_RECORD_LITERAL
+#	if nitems == 0:
+#		print("???")
+#		return EMPTY_RECORD_LITERAL
 
 	sstr = "{"
 
@@ -1056,27 +1066,40 @@ def str_value_record(x):
 
 	indent_up()
 
+	ocnt = 0
+
 	i = 0
 	while i < nitems:
 		item = type.fields[i]
 		field_id_str = get_id_str(item)
 		ini = get_item_by_id(items, field_id_str)
 
+		if ini.value.isValueUndef():
+			# skip undefined field values
+			i = i + 1
+			continue
+
+		if item_printed:
+			sstr += ","
+
 		nl = ini.nl
 		if nl > 0:
 			nl_end = 1
 			sstr += str_nl_indent(nl=nl)
-		else:
-			if item_printed:
-				sstr += " "
+		elif item_printed:
+			sstr += " "
 
 		sstr += ".%s = %s" % (field_id_str, str_value(ini.value))
+		ocnt += 1
 
-		if i < (nitems - 1):
-			sstr += ","
+		#if i < (nitems - 1):
+		#	sstr += ","
 
 		item_printed = True
 		i = i + 1
+
+	if ocnt == 0:
+		sstr += "0"
 
 	indent_down()
 

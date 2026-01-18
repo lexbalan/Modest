@@ -202,10 +202,32 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32
 };
 
+define internal %Point @returnPoint() {
+	%1 = alloca %Point, align 8
+	%2 = getelementptr %Point, %Point* %1, %Int32 0, %Int32 0
+	store %Int32 10, %Int32* %2
+	%3 = load %Point, %Point* %1
+	ret %Point %3
+}
+
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Point, align 8
-	store %Point zeroinitializer, %Point* %2
+	%3 = insertvalue %Point zeroinitializer, %Int32 32, 0
+	%4 = insertvalue %Point %3, %Int32 32, 1
+	store %Point %4, %Point* %2
+	%5 = insertvalue %Point zeroinitializer, %Int32 32, 0
+	%6 = insertvalue %Point %5, %Int32 32, 1
+	store %Point %6, %Point* %2
+
+	;var a: []Int64
+	%7 = alloca %Int64, align 8
+	%8 = alloca %Int32, align 4
+	;a = a * b + c
+	;offsetof(Point.y)
+	;p.z
+	;a = (2 + 2)
+	;var j: jey.Jey
 	ret %Int32 0
 }
 

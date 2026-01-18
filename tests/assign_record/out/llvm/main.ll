@@ -214,10 +214,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 10,
 	%Int32 20
 }
-@globalPoint1 = internal global %Point {
-	%Int32 0,
-	%Int32 0
-}
+@globalPoint1 = internal global %Point zeroinitializer
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
 	%2 = load %Point, %Point* @globalPoint0

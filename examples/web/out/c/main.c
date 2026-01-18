@@ -59,10 +59,10 @@ int32_t main(void) {
 
 	struct sockaddr_in serverAddr = (struct sockaddr_in){
 		.sin_family = AF_INET,
-		.sin_addr = {
+		.sin_port = (unsigned short)htons(PORT),
+		.sin_addr = (struct in_addr){
 			.s_addr = INADDR_ANY
-		},
-		.sin_port = (unsigned short)htons(PORT)
+		}
 	};
 
 	// Bind socket to address

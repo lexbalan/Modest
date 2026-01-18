@@ -383,10 +383,10 @@ class Parser:
 
 
 	def expr_type(self):
-		xti = self.textInfo()
+		start_ti = self.textInfo()
 
 		if not self.is_type_expr():
-			error("expected type expr", start_xti)
+			error("expected type expr", start_ti)
 			return None
 
 		# parse all annotations before

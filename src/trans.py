@@ -1566,6 +1566,7 @@ def do_value_bad(x):
 
 def do_value_undefined(x):
 	t = htype.TypeBad(x['ti'])
+	#t = htype.TypeUndefined(x['ti'])
 	return ValueUndef(t, x['ti'])
 
 

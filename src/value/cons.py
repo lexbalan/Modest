@@ -73,6 +73,9 @@ def value_cons_implicit(t, v, ti=None):
 	assert(isinstance(t, Type))
 	assert(isinstance(v, Value))
 
+	if v.isValueUndef():
+		return value_cons(t, v, 'implicit', ti)
+
 	if v.isValueBad() or t.is_bad():
 		return ValueBad(v.ti)
 

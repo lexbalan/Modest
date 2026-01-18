@@ -138,9 +138,9 @@ int32_t main(void) {
 
 		// Токенизируем строку
 		Tokenizer tokenizer = (Tokenizer){
-			.input = &inbuf,
-			.tokensBuf = &tokensBuf,
-			.tokens = &tokens
+			.input = (char *)&inbuf,
+			.tokensBuf = (char *)&tokensBuf,
+			.tokens = (char *(*)[])&tokens
 		};
 		tokenize(&tokenizer);
 

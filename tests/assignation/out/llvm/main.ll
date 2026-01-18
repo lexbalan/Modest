@@ -216,10 +216,7 @@ declare void @perror(%ConstCharStr* %str)
 
 @glb_i0 = internal global %Int32 0
 @glb_i1 = internal global %Int32 321
-@glb_r0 = internal global %Point {
-	%Int32 0,
-	%Int32 0
-}
+@glb_r0 = internal global %Point zeroinitializer
 @glb_r1 = internal global %Point {
 	%Int32 20,
 	%Int32 10

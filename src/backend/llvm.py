@@ -1650,8 +1650,9 @@ def do_eval_record(v):
 	if is_global_context():
 		items = []
 		for initializer in v.asset:
-			iv = do_reval(initializer.value)
-			items.append({'id': initializer.id, 'value': iv})
+			if not initializer.value.isValueUndef():
+				iv = do_reval(initializer.value)
+				items.append({'id': initializer.id, 'value': iv})
 		return llvm_value_record(items, rec_type)
 
 	# local context
@@ -1662,7 +1663,7 @@ def do_eval_record(v):
 	for initializer in v.asset:
 		# нет смысла засовывать в структуру по значению нулевые элементы
 		# тк она порождается из zeroinitializer и по умолчанию заполнена нулями
-		if not initializer.value.isValueZero():
+		if not (initializer.value.isValueZero() or initializer.value.isValueUndef()):
 			iv = do_reval(initializer.value)
 			field = htype.record_field_get(rec_type, get_id_str(initializer))
 			xv = insertvalue(xv, iv, field.field_no)
