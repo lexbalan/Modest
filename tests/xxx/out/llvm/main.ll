@@ -216,13 +216,10 @@ define %Int32 @main() {
 	%3 = insertvalue %Point zeroinitializer, %Int32 32, 0
 	%4 = insertvalue %Point %3, %Int32 32, 1
 	store %Point %4, %Point* %2
-	%5 = insertvalue %Point zeroinitializer, %Int32 32, 0
-	%6 = insertvalue %Point %5, %Int32 32, 1
-	store %Point %6, %Point* %2
 
 	;var a: []Int64
-	%7 = alloca %Int64, align 8
-	%8 = alloca %Int32, align 4
+	%5 = alloca %Int64, align 8
+	%6 = alloca %Int32, align 4
 	;a = a * b + c
 	;offsetof(Point.y)
 	;p.z

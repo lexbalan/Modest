@@ -27,15 +27,11 @@ static Point returnPoint(void) {
 
 int32_t main(void) {
 	printf("Hello World!\n");
-	Point p = (Point){
-		.x = 32,
-		.y = 32
-	};
+	Point p;
 	p = (Point){
 		.x = 32,
 		.y = 32
 	};
-	M_Y;
 
 	//var a: []Int64
 	int64_t b;

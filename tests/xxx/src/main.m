@@ -21,9 +21,8 @@ func returnPoint () -> Point {
 
 public func main () -> Int32 {
 	printf("Hello World!\n")
-	var p: Point = {}
+	var p: Point
 	p = {}
-	mY
 
 	//var a: []Int64
 	var b: Int64
