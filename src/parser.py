@@ -192,7 +192,9 @@ class Parser:
 	#
 
 
-	def expr_type_record(self, ti):
+	def expr_type_record(self, start_ti):
+		mid_ti = self.tokenInfo()
+		end_ti = None
 		self.need("{")
 		fields = []
 
@@ -220,8 +222,9 @@ class Parser:
 					pass
 				else:
 					break
-
-			if self.match("}"):
+			if self.look("}"):
+				end_ti = self.tokenInfo()
+				self.match("}")
 				break
 
 			access_modifier = self.parse_access_modifier()
@@ -254,7 +257,7 @@ class Parser:
 			'isa': 'ast_type',
 			'kind': 'record',
 			'fields': fields,
-			'ti': ti
+			'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
 		}
 
 
@@ -380,10 +383,10 @@ class Parser:
 
 
 	def expr_type(self):
-		ti = self.textInfo()
+		xti = self.textInfo()
 
 		if not self.is_type_expr():
-			error("expected type expr", ti)
+			error("expected type expr", start_xti)
 			return None
 
 		# parse all annotations before
@@ -392,38 +395,44 @@ class Parser:
 		#comments.extend(ca[0])
 		annotations.extend(ca[1])
 
-		t = {'isa': 'ast_type', 'kind': 'unknown', 'ti': ti}
+		start_ti = self.textInfo()
+
+		t = {
+			'isa': 'ast_type',
+			'kind': 'unknown',
+			'ti': start_ti
+		}
 
 		if self.look("("):
 			t = self.expr_type_func()
 
 		elif self.match("*"):
 			t = self.expr_type()
-			t = {'isa': 'ast_type', 'kind': 'pointer', 'to': t, 'ti': ti}
+			t = {
+				'isa': 'ast_type',
+				'kind': 'pointer',
+				'to': t,
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=t['ti'])
+			}
 
 		elif self.match("record"):
-			t = self.expr_type_record(ti)
-
-		elif self.match("enum"):
-			self.need("{")
-			items = []
-			while not self.match("}"):
-				self.skip_tokens_class(['nl'])
-				ti = self.textInfo()
-				id = self.parse_identifier()
-				self.need_sep(separators=['\n', ','])
-				items.append({'id': id, 'ti': ti})
-			t = {'isa': 'ast_type', 'kind': 'enum', 'items': items, 'ti': ti}
+			t = self.expr_type_record(start_ti)
 
 		elif self.match("["):
-			y = {'isa': 'ast_type', 'kind': 'array', 'size': None, 'ti': ti}
+			size = None
 			if self.match("]"):
-				y['size'] = self.expr_ValueUndef(ti)
+				size = self.expr_ValueUndef(start_ti)
 			else:
-				y['size'] = self.expr_value()
+				size = self.expr_value()
 				self.need("]")
-			y['of'] = self.expr_type()
-			t = y
+			of = self.expr_type()
+			t = {
+				'isa': 'ast_type',
+				'kind': 'array',
+				'of': of,
+				'size': size,
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=of['ti'])
+			}
 
 		elif self.is_Identifier():
 			id = self.parse_identifier()
@@ -431,7 +440,7 @@ class Parser:
 				'isa': 'ast_type',
 				'kind': 'named',
 				'id': id,
-				'ti': ti
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=start_ti)
 			}
 
 		elif self.is_identifier():
@@ -445,11 +454,8 @@ class Parser:
 				'kind': 'named',
 				'module': left,
 				'id': right,
-				'ti': dot_ti
+				'ti': TextInfo(start=start_ti, mid=dot_ti, end=right['ti'])
 			}
-
-#		for a in annotations:
-#			print(a['kind'])
 
 		t['anno'] = annotations
 		return t
@@ -1062,7 +1068,6 @@ class Parser:
 				args = self.parse_args()
 				end_ti = self.textInfo()
 				self.match(")")
-
 				v = {
 					'isa': 'ast_value',
 					'kind': 'call',
@@ -1074,7 +1079,6 @@ class Parser:
 				}
 
 			elif self.match("."):
-				end_ti = self.textInfo()
 				field_id = self.parse_identifier()
 				v = {
 					'isa': 'ast_value',
@@ -1082,7 +1086,7 @@ class Parser:
 					'left': v,
 					'right': field_id,
 					'anno': [],
-					'ti': TextInfo(start=v['ti'], mid=mid_ti, end=end_ti)
+					'ti': TextInfo(start=v['ti'], mid=mid_ti, end=field_id['ti'])
 				}
 			elif self.match("["):
 				#
@@ -1329,19 +1333,20 @@ class Parser:
 			}
 
 	def expr_value_term(self):
-		ti = self.textInfo()
+		ti_start = self.textInfo()
 
 		if self.match("("):
 			self.skipn("\n")
 			v = self.expr_value()
 			self.skipn("\n")
+			ti_end = self.textInfo()
 			self.need(")")
 			return {
 				'isa': 'ast_value',
 				'kind': 'subexpr',
 				'value': v,
 				'anno': [],
-				'ti': ti
+				'ti': TextInfo(start=ti_start, mid=v['ti'].mid, end=ti_end)
 			}
 
 
@@ -1352,7 +1357,7 @@ class Parser:
 				'kind': 'id',
 				'str': id['str'],
 				'anno': [],
-				'ti': id['ti']
+				'ti': ti_start
 			}
 
 		elif self.is_number():
@@ -1363,22 +1368,23 @@ class Parser:
 				'str': numstr,
 				#'att': [],
 				'anno': [],
-				'ti': ti
+				'ti': ti_start
 			}
 
 		elif self.is_string():
+			ti = self.tokenInfo()
 			s = self.gettok()
-			return self.parse_value_string(s, ti)
+			return self.parse_value_string(s, ti_start)
 
 		elif self.is_tag():
 			num = self.gettok()
-			return {'isa': 'ast_value', 'kind': 'tag', 'tag': num, 'ti': ti}
+			return {'isa': 'ast_value', 'kind': 'tag', 'tag': num, 'ti': ti_start}
 
 		elif self.look("["):
-			return self.parse_value_array(ti)
+			return self.parse_value_array(ti_start)
 
 		elif self.look("{"):
-			return self.parse_value_record(ti)
+			return self.parse_value_record(ti_start)
 
 		else:
 			cl = self.ctok_class()
@@ -1395,7 +1401,7 @@ class Parser:
 				'isa': 'ast_value',
 				'kind': 'bad',
 				'anno': [],
-				'ti': ti
+				'ti': ti_start
 			}
 
 

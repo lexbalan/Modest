@@ -74,14 +74,14 @@ def highlight(ti, color, offset):
 
 
 def markline(line, begin, end):
-	#return line[0:begin] + colorize(line[begin:end], UNDERLINE) + line[end:]
-	return line[0:begin] + '\033[3;4m' + line[begin:end] + color_code(ENDC) + line[end:]
-
-
+	#return line[0:begin] + colorize(line[begin:end], ITALIC) + line[end:]
+	#return line[0:begin] + '\033[3;4m' + line[begin:end] + color_code(ENDC) + line[end:]
+	return line[0:begin] + '\033[1;3m' + line[begin:end] + color_code(ENDC) + line[end:]
 
 
 
 def print_common_message(mg, color, s, ti):
+	assert(isinstance(ti, TextInfo))
 	lti = ti.getLeftTokenInfo()
 	mti = ti.getMidTokenInfo()
 	rti = ti.getRightTokenInfo()

@@ -21,11 +21,16 @@ public func main () -> Int32 {
 	var p: Point = {x=0, y=0}
 	mY
 
-	var a: Int64
+	var a: []Int64
 	var b: Int64
 	var c: Int32
-	a = a * b + c
+	//a = a * b + c
 	offsetof(Point.y)
+	p.z
+
+	a = (2 + 2)
+
+	var j: jey.Jey
 	return 0
 }
 

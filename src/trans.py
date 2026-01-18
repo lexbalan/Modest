@@ -1154,7 +1154,7 @@ def do_value_index(x):
 		return ValueBad(x['ti'])
 
 	if not (index.type.is_arithmetical() or index.type.is_number()):
-		error("expected integer value2", x['ti'])
+		error("expected integer value", index.ti)
 		return ValueBad(x['ti'])
 
 	if index.type.is_generic():
@@ -1302,14 +1302,14 @@ def do_value_access(x):
 
 	# check if is record
 	if not record_type.is_record():
-		error("expected record or pointer to record", x['ti'])
+		error("expected record or pointer to record", x['left']['ti'])
 		return ValueBad(x['ti'])
 
 	field = htype.record_field_get(record_type, field_id.str)
 
 	# if field not found
 	if field == None:
-		error("undefined field '%s'" % field_id.str, x['ti'])
+		error("undefined field '%s'" % field_id.str, x['right']['ti'])
 		return ValueBad(x['ti'])
 
 	if field.type.is_bad():
@@ -2169,7 +2169,7 @@ def def_var_common(x):
 	# Переменная может быть типа []X если она внешняя
 	is_not_extern = getAnno(x, 'extern') == None
 	if t.is_forbidden_var(open_array_forbidden=is_not_extern):
-		error("unsuitable type", x['type']['ti'])
+		error("unsuitable variable type", x['type']['ti'])
 
 	var_value = ValueVar(t, id, init_value=iv, ti=id.ti)
 	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL

@@ -8,15 +8,18 @@ from util import *
 class TokenInfo:
 	def __init__(self, source, line, fpos, spaces, tabs, length):
 		self.source = source
-		self.line = line # номер строки
-		self.fpos = fpos # позиция начала строки в файле
-		self.spaces = spaces
-		self.tabs = tabs
-		self.length = length
+		self.line = line  # номер строки
+		self.fpos = fpos  # позиция начала строки в файле
+		self.spaces = spaces  # смещение до начала токена (количество символов ' ')
+		self.tabs = tabs      # смещение до начала токена (количество символов '\t')
+		self.length = length  # длина токена (в символах)
 
 
 class TextInfo:
 	def __init__(self, start, mid, end):
+		assert(isinstance(start, TextInfo) or isinstance(start, TokenInfo))
+		assert(isinstance(mid, TextInfo) or isinstance(mid, TokenInfo))
+		assert(isinstance(end, TextInfo) or isinstance(end, TokenInfo))
 		self.start = start
 		self.mid = mid
 		self.end = end
