@@ -726,8 +726,15 @@ def str_value_cons_record(x, ctx):
 
 	if from_type.is_generic_record():
 		if is_local_context():
-			#print(value)
-			if value.isValueRecord():
+			# !
+			# type Point = record {x: Int32 = 10, y: Int32 = 10}
+			# const p1 = {x=5}
+			# var p: Point = p1
+			# Тогда в си придется напечатать не так:
+			# Point p = p1;
+			# а так:
+			# Point p = (Point){.x = 5, .y = 10};
+			if len(x.asset) != len(value.asset):
 				return "(" + str_type(x.type) + ")" + str_value_record2(x.type, x.asset)
 			return str_cast(to_type, value)
 		else:

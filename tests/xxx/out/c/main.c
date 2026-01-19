@@ -7,6 +7,7 @@
 
 
 
+#define UNIT  {0}
 
 /*@deprecated*/
 struct Point {
@@ -14,6 +15,9 @@ struct Point {
 	int32_t y;
 };
 typedef struct Point Point;
+
+#define P00  {.x = 5, .y = 5}
+#define P01  {.x = 5}
 
 #define M_Y  5
 
@@ -25,11 +29,21 @@ static Point returnPoint(void) {
 }
 
 
+// Двойная инициализация (!) ??
+//func main() -> Int32 {
+//	return 0
+//}
+
 int32_t main(void) {
 	printf("Hello World!\n");
-	Point p;
-	p = (Point){
+	Point p = (Point){
 		.x = 32,
+		.y = 32
+	};
+	// Конструируем Point из записи в которой нет ни одного поля
+	// 1. implicit cons Point from {} (здесь мы создаем ValueCons Point с default полями)
+	p = (Point)P00;
+	p = (Point){.x = 5,
 		.y = 32
 	};
 
@@ -44,4 +58,9 @@ int32_t main(void) {
 	return 0;
 }
 
+
+// Unit
+//public func xxx () -> record {} {
+//	return {}
+//}
 

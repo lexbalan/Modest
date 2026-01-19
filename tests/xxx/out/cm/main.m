@@ -2,6 +2,8 @@ include "stdio"
 
 
 
+const unit = {}
+
 /*@deprecated*/
 type Point = record {
 	x: Int32 = 32
@@ -20,11 +22,16 @@ func returnPoint () -> Point {
 	return p
 }
 
+// Двойная инициализация (!) ??
+//func main() -> Int32 {
+//	return 0
+//}
+
 public func main () -> Int32 {
 	printf("Hello World!\n")
-	var p: Point = {}
-	p = {}
-	mY
+	var p: Point = unit
+	// Конструируем Point из записи в которой нет ни одного поля
+	// 1. implicit cons Point from {} (здесь мы создаем ValueCons Point с default полями)
 
 	//var a: []Int64
 	var b: Int64
@@ -36,4 +43,10 @@ public func main () -> Int32 {
 	//var j: jey.Jey
 	return 0
 }
+
+
+// Unit
+//public func xxx () -> record {} {
+//	return {}
+//}
 

@@ -241,7 +241,7 @@ static bool test_generic_record(void) {
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32, z: Int32}
 	Point3D point_3d;
-	point_3d = (Point3D)p;
+	point_3d = (Point3D){.x = 10, .y = 20};
 	(void)point_3d;
 
 	return true;
