@@ -210,16 +210,30 @@ define internal %Point @returnPoint() {
 	ret %Point %3
 }
 
+
+; Двойная инициализация (!) ??
+;func main() -> Int32 {
+;	return 0
+;}
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Point, align 8
 	%3 = insertvalue %Point zeroinitializer, %Int32 32, 0
 	%4 = insertvalue %Point %3, %Int32 32, 1
 	store %Point %4, %Point* %2
+	; Конструируем Point из записи в которой нет ни одного поля
+	; 1. implicit cons Point from {} (здесь мы создаем ValueCons Point с default полями)
+	%5 = insertvalue %Point zeroinitializer, %Int32 5, 0
+	%6 = insertvalue %Point %5, %Int32 5, 1
+	store %Point %6, %Point* %2
+	%7 = insertvalue %Point zeroinitializer, %Int32 5, 0
+	%8 = insertvalue %Point %7, %Int32 32, 1
+	store %Point %8, %Point* %2
+	%9 = alloca %MyInt, align 4
 
 	;var a: []Int64
-	%5 = alloca %Int64, align 8
-	%6 = alloca %Int32, align 4
+	%10 = alloca %Int64, align 8
+	%11 = alloca %Int32, align 4
 	;a = a * b + c
 	;offsetof(Point.y)
 	;p.z
@@ -228,4 +242,10 @@ define %Int32 @main() {
 	ret %Int32 0
 }
 
+
+
+; Unit
+;public func xxx () -> record {} {
+;	return {}
+;}
 

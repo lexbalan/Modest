@@ -1747,7 +1747,9 @@ def do_stmt_return(x):
 
 def do_stmt_type(x):
 	nt = Type(x['ti'])
-	return def_type_common(x, nt)
+	df = def_type_common(x, nt)
+	ctx_type_add(df.id.str, nt, is_public=False)
+	return df
 
 
 def do_stmt_again(x):

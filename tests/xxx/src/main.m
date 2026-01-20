@@ -37,6 +37,9 @@ public func main () -> Int32 {
 	p = p00
 	p = p01
 
+	type MyInt = Int32
+	var myInt32: MyInt
+
 	//var a: []Int64
 	var b: Int64
 	var c: Int32

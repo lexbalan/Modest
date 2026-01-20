@@ -47,6 +47,9 @@ int32_t main(void) {
 		.y = 32
 	};
 
+	typedef int32_t MyInt;
+	MyInt my32;
+
 	//var a: []Int64
 	int64_t b;
 	int32_t c;

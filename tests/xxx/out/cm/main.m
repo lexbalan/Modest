@@ -10,6 +10,9 @@ type Point = record {
 	y: Int32 = 32
 }
 
+const p00 = {x = 5, y = 5}
+const p01 = {x = 5}
+
 
 @deprecated
 const mY = 5
@@ -32,6 +35,11 @@ public func main () -> Int32 {
 	var p: Point = unit
 	// Конструируем Point из записи в которой нет ни одного поля
 	// 1. implicit cons Point from {} (здесь мы создаем ValueCons Point с default полями)
+	p = p00
+	p = p01
+
+	type MyInt = Int32
+	var myInt32: MyInt
 
 	//var a: []Int64
 	var b: Int64
