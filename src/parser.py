@@ -1416,6 +1416,7 @@ class Parser:
 		x = self.parse_stmt_field()[0]
 		x['isa'] = 'ast_stmt'
 		x['kind'] = 'const'
+		x['ti'] = TextInfo(start=ti_start, mid=x['ti'].mid, end=x['ti'].end)
 		x['ti'].start = ti_start
 		return x
 
@@ -1432,6 +1433,8 @@ class Parser:
 
 
 	def stmt_if(self):
+		ti_start = self.tokenInfo()
+		self.match("if")
 		c = self.expr_value()
 		t = self.stmt_block()
 		e = None
@@ -1448,51 +1451,86 @@ class Parser:
 			'cond': c,
 			'then': t,
 			'else': e,
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_start),
 			'nl': 0
 		}
 
 
 	def stmt_while(self):
-		v = self.expr_value()
-		b = self.stmt_block()
+		ti_start = self.tokenInfo()
+		self.match("while")
+		cond = self.expr_value()
+		stmt = self.stmt_block()
 		return {
 			'isa': 'ast_stmt',
 			'kind': 'while',
-			'cond': v,
-			'stmt': b
+			'cond': cond,
+			'stmt': stmt,
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_start),
+			'nl': 0
 		}
 
 
 	def stmt_return(self):
-		self.skip1()  # skip 'return' keyword
+		ti_start = self.tokenInfo()
+		ti_end = ti_start
+		self.match("return")
 
 		v = None
 		if not (self.look_nl() or self.look(";") or self.look("}")):
 			v = self.expr_value()
+			ti_end = v['ti'].end
 
 		return {
 			'isa': 'ast_stmt',
 			'kind': 'return',
-			'value': v
+			'value': v,
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_end),
 		}
 
 
 	def stmt_again(self):
-		return {'isa': 'ast_stmt', 'kind': 'again'}
+		ti = self.tokenInfo()
+		self.match("again")
+		return {
+			'isa': 'ast_stmt',
+			'kind': 'again',
+			'ti': TextInfo(start=ti, mid=ti, end=ti),
+		}
 
 
 	def stmt_break(self):
-		return {'isa': 'ast_stmt', 'kind': 'break'}
+		ti = self.tokenInfo()
+		self.match("break")
+		return {
+			'isa': 'ast_stmt',
+			'kind': 'break',
+			'ti': TextInfo(start=ti, mid=ti, end=ti),
+		}
 
 
 	def stmt_inc(self):
+		ti_start = self.tokenInfo()
+		self.match("++")
 		v = self.expr_value()
-		return {'isa': 'ast_stmt', 'kind': 'inc', 'value': v}
+		return {
+			'isa': 'ast_stmt',
+			'kind': 'inc',
+			'value': v,
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=v['ti'].end),
+		}
 
 
 	def stmt_dec(self):
+		ti_start = self.tokenInfo()
+		self.match("--")
 		v = self.expr_value()
-		return {'isa': 'ast_stmt', 'kind': 'dec', 'value': v}
+		return {
+			'isa': 'ast_stmt',
+			'kind': 'dec',
+			'value': v,
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=v['ti'].end),
+		}
 
 
 	def stmt_asm(self):
@@ -1503,7 +1541,6 @@ class Parser:
 	def stmt_expr_value(self):
 		v = self.expr_value()
 
-		# stmt expr
 		assign_ti = self.textInfo()
 		if self.is_assign_operator():
 			# stmt assign
@@ -1512,8 +1549,12 @@ class Parser:
 			r = self.expr_value()
 			return {'isa': 'ast_stmt', 'kind': 'assign', 'left': v, 'right': r, 'ti': assign_ti}
 
-		# just value expression statement
-		return {'isa': 'ast_stmt', 'kind': 'value', 'value': v}
+		return {
+			'isa': 'ast_stmt',
+			'kind': 'value',
+			'value': v,
+			'ti': v['ti'],
+		}
 
 
 
@@ -1555,14 +1596,13 @@ class Parser:
 					comment = None
 				break
 
-			ti = self.textInfo()
 			s = None
 
 			if self.look('let'):
 				s = self.stmt_let()
-			elif self.match('if'):
+			elif self.look('if'):
 				s = self.stmt_if()
-			elif self.match('while'):
+			elif self.look('while'):
 				s = self.stmt_while()
 			elif self.look('return'):
 				s = self.stmt_return()
@@ -1578,18 +1618,16 @@ class Parser:
 				comment['nl'] = spaceline_cnt
 				spaceline_cnt = 0
 				continue
-			elif self.match('again'):
+			elif self.look('again'):
 				s = self.stmt_again()
-			elif self.match('break'):
+			elif self.look('break'):
 				s = self.stmt_break()
-			elif self.match('type'):
+			elif self.look('type'):
 				s = self.parse_def_type()
 				s['access_modifier'] = 'undefined'
-			elif self.match('const'):
-				s = self.stmt_let()
-			elif self.match('++'):
+			elif self.look('++'):
 				s = self.stmt_inc()
-			elif self.match('--'):
+			elif self.look('--'):
 				s = self.stmt_dec()
 			elif self.look('__asm'):
 				s = self.stmt_asm()
@@ -1604,11 +1642,9 @@ class Parser:
 
 				if isinstance(s, list):
 					s[0]['nl'] = spaceline_cnt
-					s[0]['ti'] = ti
 					s[0]['comment'] = comment
 					stmts.extend(s)
 				else:
-					s['ti'] = ti
 					s['nl'] = spaceline_cnt
 					s['comment'] = comment
 					stmts.append(s)
@@ -1716,7 +1752,8 @@ class Parser:
 
 
 	def parse_def_func(self):
-		ti = self.textInfo()
+		ti_start = self.textInfo()
+		self.match("func")
 		id = self.parse_identifier()
 		ftyp = self.expr_type()
 
@@ -1728,9 +1765,11 @@ class Parser:
 #				break
 #			self.skip1()
 
+		end_ti = ftyp['ti'].end
 		stmt = None
 		if self.look("{"):
 			stmt = self.stmt_block()
+			end_ti= stmt['ti'].end
 
 		return {
 			'isa': 'ast_definition',
@@ -1738,7 +1777,7 @@ class Parser:
 			'id': id,
 			'type': ftyp,
 			'stmt': stmt,
-			'ti': ti
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=end_ti)
 		}
 
 
@@ -1812,6 +1851,7 @@ class Parser:
 
 	def parse_def_type(self):
 		ti = self.textInfo()
+		self.match("type")
 		id = self.parse_identifier()
 
 		if self.is_comment():
@@ -1966,8 +2006,6 @@ class Parser:
 
 			access_modifier = self.parse_access_modifier()
 
-			ti = self.textInfo()
-
 			x = None
 
 			if self.match('\n'):
@@ -1980,13 +2018,13 @@ class Parser:
 
 				continue
 
-			if self.match('func'):
+			if self.look('func'):
 				x = self.parse_def_func()
 			elif self.look('const'):
 				x = self.parse_def_const()
-			elif self.match('var'):
+			elif self.look('var'):
 				x = self.parse_def_var()
-			elif self.match('type'):
+			elif self.look('type'):
 				x = self.parse_def_type()
 			elif self.token_class_is('comment-block'):
 				self.comment = self.parse_comment_block()
@@ -2013,14 +2051,12 @@ class Parser:
 				if not isinstance(x, list):
 					x['comment'] = self.comment
 					x['nl'] = spaceline_cnt
-					x['ti'] = ti
 					x['access_modifier'] = access_modifier
 					x['anno'] = annotations
 					output.append(x)
 				else:
 					for xx in x:
 						xx['nl'] = 1
-						xx['ti'] = ti
 						xx['access_modifier'] = access_modifier
 						xx['anno'] = annotations
 					x[0]['nl'] = spaceline_cnt
