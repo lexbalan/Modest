@@ -41,7 +41,7 @@ public func main () -> Int32 {
 	type MyInt = Int32
 	var myInt32: MyInt
 
-	//var a: []Int64
+	//var a: []record {a: Int32}
 	var b: Int64
 	var c: Int32
 	//a = a * b + c

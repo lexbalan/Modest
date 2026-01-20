@@ -2303,6 +2303,10 @@ def print_def_func(x):
 	if x.stmt == None:
 		return print_decl_func(x)
 
+	# print local typedefs
+	for typedef in fn.typedefs:
+		print_def_type(typedef)
+
 	fctx = {
 		'func': fn,  # cfunc
 

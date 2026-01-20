@@ -215,6 +215,7 @@ define internal %Point @returnPoint() {
 ;func main() -> Int32 {
 ;	return 0
 ;}
+%main.MyInt = type %Int32;
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Point, align 8
@@ -229,9 +230,9 @@ define %Int32 @main() {
 	%7 = insertvalue %Point zeroinitializer, %Int32 5, 0
 	%8 = insertvalue %Point %7, %Int32 32, 1
 	store %Point %8, %Point* %2
-	%9 = alloca %MyInt, align 4
+	%9 = alloca %main.MyInt, align 4
 
-	;var a: []Int64
+	;var a: []record {a: Int32}
 	%10 = alloca %Int64, align 8
 	%11 = alloca %Int32, align 4
 	;a = a * b + c

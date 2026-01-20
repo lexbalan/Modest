@@ -48,9 +48,9 @@ int32_t main(void) {
 	};
 
 	typedef int32_t MyInt;
-	MyInt my32;
+	MyInt myInt32;
 
-	//var a: []Int64
+	//var a: []record {a: Int32}
 	int64_t b;
 	int32_t c;
 	//a = a * b + c

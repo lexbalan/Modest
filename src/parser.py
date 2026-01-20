@@ -1781,6 +1781,7 @@ class Parser:
 			'id': id,
 			'type': ftyp,
 			'stmt': stmt,
+			'access_modifier': 'undefined',
 			'ti': TextInfo(start=ti_start, mid=ti_start, end=end_ti)
 		}
 
