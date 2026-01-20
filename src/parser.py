@@ -1716,8 +1716,10 @@ class Parser:
 	#
 
 	def parse_include(self):
-		ti = self.textInfo()
+		ti_start = self.textInfo()
+		self.match("include")
 		import_expr = self.expr_value()
+		ti_end = import_expr['ti'].end
 
 		return {
 			'isa': 'ast_directive',
@@ -1726,17 +1728,20 @@ class Parser:
 			'is_include': True,
 			'as': None,
 			'args': [],
-			'ti': ti
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_end)
 		}
 
 
 	def parse_import(self, include=False):
-		ti = self.textInfo()
+		ti_start = self.textInfo()
+		self.match("import")
 		import_expr = self.expr_value()
+		ti_end = import_expr['ti'].end
 
 		_as = None
 		if self.match("as"):
 			_as = self.parse_identifier()
+			ti_end = _as['ti'].end
 
 		return {
 			'isa': 'ast_directive',
@@ -1745,7 +1750,7 @@ class Parser:
 			'is_include': False,
 			'as': _as,
 			'args': [],
-			'ti': ti
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_end)
 		}
 
 
@@ -2038,9 +2043,9 @@ class Parser:
 				continue
 			elif self.look('pragma'):
 				x = self.parse_pragma()
-			elif self.match('import'):
+			elif self.look('import'):
 				x = self.parse_import()
-			elif self.match('include'):
+			elif self.look('include'):
 				x = self.parse_include()
 			else:
 				error("unexpected token '%s'" % self.ctok(), self.textInfo())

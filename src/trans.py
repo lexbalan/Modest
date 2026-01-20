@@ -2627,7 +2627,7 @@ def value_update_incompleted_type(module, v, idStr):
 
 def get_access_level(x):
 	if is_local_context():
-		return HLIR_ACCESS_LEVEL_UNDEFINED
+		return HLIR_ACCESS_LEVEL_LOCAL
 
 	if x['access_modifier'] == HLIR_ACCESS_LEVEL_UNDEFINED:
 		if 'public_module' in cmodule.att:
