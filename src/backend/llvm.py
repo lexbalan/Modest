@@ -2318,12 +2318,13 @@ def print_def_func(x):
 
 		# map for local lets & vars
 		# <id> => <llvm_value>
-		'locals': [{}],
+		'locals': [],
 
 		'stackptr': None,  # for VLA
 	}
 
 	fctx_push(fctx)
+	locals_push()
 
 	out("\ndefine ")
 	print_linkage(x)
