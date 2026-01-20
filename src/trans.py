@@ -1763,16 +1763,6 @@ def do_stmt_break(x):
 
 
 
-def add_local_var(id, typ, ti):
-	iv = ValueUndef(typ)
-	var_value = ValueVar(typ, id, init_value=iv, ti=ti)
-	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
-	ctx_value_add(id.str, var_value, is_public=False)
-	return var_value
-
-
-
-
 def do_stmt_assign(x):
 	l = do_value(x['left'])
 	r = do_rvalue(x['right'])

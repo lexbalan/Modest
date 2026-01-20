@@ -2331,7 +2331,7 @@ def print_def_func(x):
 	print_func_signature(ftype, get_id_str(fn))
 
 	if need_sret(ftype):
-		reg_get() # get %0 reg for retval
+		reg_get()  # get %0 reg for retval
 
 
 	if x.hasAttribute2('inlinehint'):
