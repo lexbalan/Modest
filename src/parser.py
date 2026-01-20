@@ -1624,7 +1624,6 @@ class Parser:
 				s = self.stmt_break()
 			elif self.look('type'):
 				s = self.parse_def_type()
-				s['access_modifier'] = 'undefined'
 			elif self.look('++'):
 				s = self.stmt_inc()
 			elif self.look('--'):
@@ -1868,6 +1867,7 @@ class Parser:
 			'kind': 'type',
 			'id': id,
 			'type': t,
+			'access_modifier': 'undefined',
 			'ti': ti
 		}
 
