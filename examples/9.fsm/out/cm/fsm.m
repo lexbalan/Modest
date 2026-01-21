@@ -3,7 +3,7 @@ include "stdio"
 
 
 
-public type StateServiceRoutine = (state: ComplexState, payload: Ptr) -> ComplexState
+
 
 public type StateDesc = record {
 	id: *Str8
@@ -17,6 +17,8 @@ public type ComplexState = @public record {
 	state: *StateDesc
 	stage: StageId
 }
+
+public type StateServiceRoutine = (state: ComplexState, payload: Ptr) -> ComplexState
 
 public type FSM = record {
 	id: *Str8

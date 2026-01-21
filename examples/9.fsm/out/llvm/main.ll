@@ -197,7 +197,6 @@ declare void @perror(%ConstCharStr* %str)
 declare void @assert(%Bool %cond)
 
 ; from import "fsm"
-%fsm_StateServiceRoutine = type %fsm_ComplexState (%fsm_ComplexState, i8*);
 %fsm_StateDesc = type {
 	%Str8*,
 	%Nat16,
@@ -210,6 +209,7 @@ declare void @assert(%Bool %cond)
 	%fsm_StageId
 };
 
+%fsm_StateServiceRoutine = type %fsm_ComplexState (%fsm_ComplexState, i8*);
 %fsm_FSM = type {
 	%Str8*,
 	%fsm_ComplexState,

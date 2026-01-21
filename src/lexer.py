@@ -312,9 +312,9 @@ class CmLexer(Lexer):
 
 
 	def doTag(self):
-		c = self.peep()
+		c = self.peep(2)
 
-		if c != '#':
+		if c[0] != '#' or not isIdChar(c[1]):
 			return False
 
 		self.skip()  # '#'
@@ -408,10 +408,7 @@ class CmLexer(Lexer):
 
 
 	def doBadSymbol(self):
-		tp = self.getTextPosition()
-		ti = TokenInfo(self.filename, tp, tp)
 		c = self.getc()
-		error("unexpected symbol '%c'" % c, ti)
 		return ('badsym', c)
 
 

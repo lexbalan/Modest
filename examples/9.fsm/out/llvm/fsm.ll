@@ -201,7 +201,6 @@ declare void @perror(%ConstCharStr* %str)
 @str2 = private constant [23 x i8] [i8 91, i8 37, i8 115, i8 93, i8 32, i8 35, i8 37, i8 115, i8 95, i8 37, i8 117, i8 32, i8 45, i8 62, i8 32, i8 35, i8 37, i8 115, i8 95, i8 37, i8 117, i8 10, i8 0]
 @str3 = private constant [7 x i8] [i8 60, i8 110, i8 117, i8 108, i8 108, i8 62, i8 0]
 ; -- endstrings --
-%fsm_StateServiceRoutine = type %fsm_ComplexState (%fsm_ComplexState, i8*);
 %fsm_StateDesc = type {
 	%Str8*,
 	%Nat16,
@@ -214,6 +213,7 @@ declare void @perror(%ConstCharStr* %str)
 	%fsm_StageId
 };
 
+%fsm_StateServiceRoutine = type %fsm_ComplexState (%fsm_ComplexState, i8*);
 %fsm_FSM = type {
 	%Str8*,
 	%fsm_ComplexState,

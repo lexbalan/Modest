@@ -192,7 +192,7 @@ class Parser:
 	#
 
 
-	def expr_type_record(self, start_ti):
+	def parse_type_record(self, start_ti):
 		mid_ti = self.tokenInfo()
 		end_ti = None
 		self.need("{")
@@ -340,7 +340,7 @@ class Parser:
 		return self.check(self.check_is_type)
 
 
-	def expr_type_func(self):
+	def parse_type_func(self):
 		ti = self.textInfo()
 		self.skip1()  # "("
 		self.skip_tokens_class(['nl'])
@@ -404,19 +404,19 @@ class Parser:
 		}
 
 		if self.look("("):
-			t = self.expr_type_func()
+			t = self.parse_type_func()
 
 		elif self.match("*"):
-			t = self.expr_type()
+			to = self.expr_type()
 			t = {
 				'isa': 'ast_type',
 				'kind': 'pointer',
-				'to': t,
+				'to': to,
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=t['ti'])
 			}
 
 		elif self.match("record"):
-			t = self.expr_type_record(start_ti)
+			t = self.parse_type_record(start_ti)
 
 		elif self.match("["):
 			size = None
@@ -1376,9 +1376,9 @@ class Parser:
 			s = self.gettok()
 			return self.parse_value_string(s, ti_start)
 
-		elif self.is_tag():
-			num = self.gettok()
-			return {'isa': 'ast_value', 'kind': 'tag', 'tag': num, 'ti': ti_start}
+#		elif self.is_tag():
+#			num = self.gettok()
+#			return {'isa': 'ast_value', 'kind': 'tag', 'tag': num, 'ti': ti_start}
 
 		elif self.look("["):
 			return self.parse_value_array(ti_start)
@@ -1403,7 +1403,6 @@ class Parser:
 				'anno': [],
 				'ti': ti_start
 			}
-
 
 
 	#
