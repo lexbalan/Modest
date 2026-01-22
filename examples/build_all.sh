@@ -5,7 +5,7 @@ cd 5.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 6.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 7.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 8.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
-#cd 9.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+cd 9.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 10.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd asm && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd stmt_if && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \

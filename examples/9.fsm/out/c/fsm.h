@@ -10,8 +10,15 @@
 #include <stdio.h>
 
 
+typedef uint16_t fsm_StageId;
 
-struct fsm_ComplexState;
+
+struct fsm_StateDesc;
+typedef struct fsm_StateDesc fsm_StateDesc;
+struct fsm_ComplexState {
+	fsm_StateDesc *state;
+	fsm_StageId stage;
+};
 typedef struct fsm_ComplexState fsm_ComplexState;
 
 typedef fsm_ComplexState fsm_StateServiceRoutine(fsm_ComplexState state, void *payload);
@@ -20,14 +27,6 @@ struct fsm_StateDesc {
 	char *id;
 	uint16_t nstages;
 	fsm_StateServiceRoutine *handler;
-};
-typedef struct fsm_StateDesc fsm_StateDesc;
-
-typedef uint16_t fsm_StageId;
-
-struct fsm_ComplexState {
-	fsm_StateDesc *state;
-	fsm_StageId stage;
 };
 
 struct fsm_FSM {

@@ -4,14 +4,6 @@ include "libc/assert"
 include "libc/stdio"
 
 
-
-
-public type StateDesc = record {
-    id: *Str8
-    nstages: Nat16
-    handler: *StateServiceRoutine
-}
-
 public type StageId = @brand Word16
 
 public type ComplexState = @public record {
@@ -20,6 +12,14 @@ public type ComplexState = @public record {
 }
 
 public type StateServiceRoutine = (state: ComplexState, payload: *Unit) -> ComplexState
+
+
+public type StateDesc = record {
+    id: *Str8
+    nstages: Nat16
+    handler: *StateServiceRoutine
+}
+
 
 public type FSM = record {
     id: *Str8
