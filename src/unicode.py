@@ -1,17 +1,16 @@
 
+# Array[chars] -> Array[CharCode]
+def utf32_chars_to_utfx_cc(chars, char_width):
+	if char_width == 8: return chars_to_utf8(chars)
+	elif char_width == 16: return chars_to_utf16(chars)
+	elif char_width == 32: return chars_to_utf32(chars)
+	return []
 
-def utf32_str_to_utfx_char_codes(strx, char_width):
-	char_codes = []
-	if char_width == 8: char_codes = _str2utf8(strx)
-	elif char_width == 16: char_codes = _str2utf16(strx)
-	elif char_width == 32: char_codes = _str2utf32(strx)
-	return char_codes
 
-
-def _str2utf8(string_asset):
+def chars_to_utf8(chars):
 	char8_codes = []
 
-	for c in string_asset:
+	for c in chars:
 		utf8_bytes = bytes(c, encoding='utf-8')
 		i = 0
 		while i < len(utf8_bytes):
@@ -22,10 +21,10 @@ def _str2utf8(string_asset):
 	return char8_codes
 
 
-def _str2utf16(string_asset, encode='big-endian'):
+def chars_to_utf16(chars, encode='big-endian'):
 	char16_codes = []
 
-	for c in string_asset:
+	for c in chars:
 		utf16_bytes = bytes(c, encoding='utf-16')[2:]  # [2:] - skip BOM
 
 		i = 0
@@ -44,14 +43,13 @@ def _str2utf16(string_asset, encode='big-endian'):
 	return char16_codes
 
 
-def _str2utf32(string_asset):
+def chars_to_utf32(chars):
 	char32_codes = []
 
-	for c in string_asset:
+	for c in chars:
 		cc = ord(c)  # (python uses utf32 by default)
 		char32_codes.append(cc)
 
 	return char32_codes
-
 
 

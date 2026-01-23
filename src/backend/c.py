@@ -7,6 +7,7 @@ from hlir import *
 from .common import *
 from error import info, warning, error, fatal
 from type import select_common_type, type_print
+from unicode import chars_to_utf32
 
 
 import re
@@ -789,7 +790,7 @@ def str_value_cons_array(x, ctx):
 						chars.append(ch)
 
 					char_width = to_type.of.width
-					return str_value_string(chars, char_width=char_width)
+					return print_utf32codes_as_string(chars, width=char_width, quote='"')
 
 			return str_cast(to_type, value, ctx=ctx)
 		else:
@@ -995,18 +996,16 @@ def print_literal_array_items(values, item_type):
 
 
 
-def str_value_string(chars, char_width):
-	utf32_codes = []
-	for ch in chars:
-		cc = ord(ch)
-		utf32_codes.append(cc)
-	return print_utf32codes_as_string(utf32_codes, char_width)
-
+def str_value_string(v, ctx):
+	utf32_codes = chars_to_utf32(v.asset)
+	width = v.type.width
+	if v.type.is_generic():
+		width=0
+	return print_utf32codes_as_string(utf32_codes, width=width, quote='"')
 
 
 def str_value_char(cc, width):
-	return string_literal_prefix(width) + print_utf32codes_as_string([cc], width, quote="'")
-
+	return print_utf32codes_as_string([cc], width, quote="'")
 
 
 def str_value_array(x, ctx):
@@ -1036,7 +1035,7 @@ def str_value_array(x, ctx):
 						break
 
 				i = i + 1
-			return print_utf32codes_as_string(utf32_codes, width=char_width)
+			return print_utf32codes_as_string(utf32_codes, width=char_width, quote='"')
 
 	nl_end_e = 0
 	for item in items:
@@ -1122,10 +1121,6 @@ def str_value_record2(type, items):
 	return sstr
 
 
-def string_literal_prefix(width):
-	if width > 16: return "U"
-	if width > 8: return "u"
-	return ""
 
 
 def code_to_char(cc):
@@ -1150,8 +1145,15 @@ def code_to_char(cc):
 		return chr(cc)
 
 
-def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
+def string_literal_prefix(width):
+	if width > 16: return "U"
+	if width > 8: return "u"
+	return ""
+
+
+def print_utf32codes_as_string(utf32_codes, width, quote):
 	sstr = ""
+	sstr += string_literal_prefix(width)
 	sstr += quote
 	for cc in utf32_codes:
 		sstr += code_to_char(cc)
@@ -1230,7 +1232,7 @@ def str_value_with_type(v, t, as_hex=False):
 		return str_value_number(t, asset, is_hex=as_hex)
 
 	elif t.is_float(): return str_value_float(v, t)
-	elif t.is_string(): return str_value_string(asset, char_width=t.width)
+	elif t.is_string(): return str_value_string(v, ctx=[])
 	elif t.is_record(): return str_value_record(v)
 	elif t.is_bool(): return str_value_bool(asset)
 	elif t.is_char(): return str_value_char(asset, t.width)
@@ -1627,7 +1629,9 @@ def print_stmt_asm(x):
 	out('__asm__ volatile (')
 	indent_up()
 	nl_indent(1)
-	out(str_value_string(x.text.asset, char_width=x.text.type.width))
+	s = x.text.asset
+	s = s.replace('\n', '\\n')
+	out('"' + s + '"')
 
 	# print 'out' pairs
 	args1 = x.outputs
@@ -2074,8 +2078,8 @@ def str_static_initializer(v):
 				elif v.type.is_str():
 					left_char_width = v.type.width
 
-				if not s[0] in ['u', 'U']:
-					s = string_literal_prefix(left_char_width) + s
+				#if not s[0] in ['u', 'U']:
+				#	s = string_literal_prefix(left_char_width) + s
 			return s
 
 	return str_value(v)

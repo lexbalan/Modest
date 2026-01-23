@@ -2079,6 +2079,7 @@ def print_comment_line(x):
 "store i64 %13, i64* %7, align 8"
 def print_stmt_asm(x):
 	asm_text = x.text.asset
+	asm_text = asm_text.replace("\n", "\\0A")
 	asm_text = asm_text.replace("%", "$")
 
 	specs = [] # list of spec & clobber strings
@@ -2130,9 +2131,9 @@ def print_stmt_asm(x):
 		rv = llvm_value_reg(reg, rt)
 		print_type(rt)
 
-	out(' asm sideeffect ')
-	print_str_literal(asm_text)
-	out(', "')
+	out(' asm sideeffect "')
+	out(asm_text)
+	out('", "')
 
 	# separator=',' WITHOUT SPACE
 	print_list_by(specs, out, separator=',')
@@ -2522,56 +2523,6 @@ def code_to_char(cc):
 		return chr(cc)
 
 
-def print_str_literal(char_codes):
-	out('"')
-
-	i = 0
-	while i < len(char_codes):
-		cc = ord(char_codes[i])
-
-		if cc == 0:
-			i_before = i
-			while i < len(x.asset):
-				_cc = asset[i]
-				if _cc != 0:
-					i = i_before
-					break
-				i = i + 1
-			out("\"")
-			return
-
-		out(code_to_char(cc))
-
-		i = i + 1
-
-	out('"')
-
-
-def print_string_ascii(strid, string):
-	ss = ""
-
-	for c in string.asset:
-		ss = ss + chr(c.asset)
-
-	slen = len(bytes(ss, 'utf-8'))  #+ 1 # +1 (zero)
-
-	if True: #string.hasAttribute3('zstring'):
-		slen = slen + 1
-
-	ss = ss.replace("\a", "\\07")
-	ss = ss.replace("\b", "\\08")
-	#ss = ss.replace("\e", "\\1B")
-	ss = ss.replace("\t", "\\09")
-	ss = ss.replace("\n", "\\0A")
-	ss = ss.replace("\v", "\\0B")
-	ss = ss.replace("\r", "\\0D")
-	ss = ss.replace("\"", "\\22")
-	ss = ss.replace("\'", "\\27")
-
-	#ex: @str_1 = private constant [4 x i8] c"Hi!\00"
-	lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (strid, slen, ss))
-
-
 
 def print_string_as_array(strid, string, char_width):
 	slen = len(string.strdata)
@@ -2948,7 +2899,6 @@ break_2:
 """
 
 
-
 def stackrestore(sptr):
 	r = llvm_dold(sptr)
 	lo("call void @llvm.stackrestore(")
@@ -2977,3 +2927,57 @@ def _float_value_pack(f_num, width):
 
 	return z
 
+
+
+
+
+#def print_str_literal(char_codes):
+#	out('"')
+#
+#	i = 0
+#	while i < len(char_codes):
+#		cc = ord(char_codes[i])
+#
+#		# skip all after 0 if there's none non zero after
+#		if cc == 0:
+#			i_before = i
+#			while i < len(x.asset):
+#				_cc = asset[i]
+#				if _cc != 0:
+#					i = i_before
+#					break
+#				i = i + 1
+#			out("\"")
+#			return
+#
+#		out(code_to_char(cc))
+#
+#		i = i + 1
+#
+#	out('"')
+#
+#
+#def print_string_ascii(strid, string):
+#	ss = ""
+#
+#	for c in string.asset:
+#		ss = ss + chr(c.asset)
+#
+#	slen = len(bytes(ss, 'utf-8'))  #+ 1 # +1 (zero)
+#
+#	if True: #string.hasAttribute3('zstring'):
+#		slen = slen + 1
+#
+#	ss = ss.replace("\a", "\\07")
+#	ss = ss.replace("\b", "\\08")
+#	#ss = ss.replace("\e", "\\1B")
+#	ss = ss.replace("\t", "\\09")
+#	ss = ss.replace("\n", "\\0A")
+#	ss = ss.replace("\v", "\\0B")
+#	ss = ss.replace("\r", "\\0D")
+#	ss = ss.replace("\"", "\\22")
+#	ss = ss.replace("\'", "\\27")
+#
+#	#ex: @str_1 = private constant [4 x i8] c"Hi!\00"
+#	lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (strid, slen, ss))
+#

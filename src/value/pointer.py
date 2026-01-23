@@ -1,7 +1,7 @@
 
 from hlir import *
 from error import info, warning, error
-from .char import utf32_chars_to_utfx_chars
+from .char import utf32_chars_to_utfx_char_values
 import type
 
 
@@ -71,14 +71,13 @@ def pointer_can(to, from_type, method, ti):
 	return False
 
 
-
 def value_pointer_cons(t, v, method, ti):
 	if v.isValueImmediate():
 		if v.type.is_string():
 			nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 			nv.stage = HLIR_VALUE_STAGE_LINKTIME
 			char_type = t.to.of
-			nv.strdata = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
+			nv.strdata = utf32_chars_to_utfx_char_values(v.asset, char_type, ti)
 			#nv.addAttribute3('zstring')
 
 			# регистрируем строку в модуле

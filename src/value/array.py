@@ -3,7 +3,7 @@ from hlir import *
 import type as htype
 from type import type_print, select_common_type
 from error import info, warning, error
-from .char import utf32_chars_to_utfx_chars
+from .char import utf32_chars_to_utfx_char_values
 
 
 
@@ -119,7 +119,7 @@ def value_array_cons(t, v, method, ti):
 
 	if Type.is_string(v.type):
 		char_type = t.of
-		items = utf32_chars_to_utfx_chars(v.asset, char_type, ti)
+		items = utf32_chars_to_utfx_char_values(v.asset, char_type, ti)
 		nv.asset = items
 		return nv
 
@@ -150,7 +150,6 @@ def value_array_cons(t, v, method, ti):
 
 	nv.type.size = size
 	return nv
-
 
 
 # Concat two immediate arrays

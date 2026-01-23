@@ -2,7 +2,7 @@
 from hlir import *
 from error import info, warning, error
 from util import nbits_for_num
-from unicode import utf32_str_to_utfx_char_codes
+from unicode import utf32_chars_to_utfx_cc
 import type
 
 
@@ -34,9 +34,7 @@ def char_can(to, from_type, method, ti):
 	if c0 or c1 or c2:
 		return from_type.width <= to.width
 
-
 	return False
-
 
 
 def value_char_cons(t, v, method, ti):
@@ -63,12 +61,12 @@ def value_char_cons(t, v, method, ti):
 
 
 
-def utf32_chars_to_utfx_chars(str_asset, char_type, ti):
-	char_codes = utf32_str_to_utfx_char_codes(str_asset, char_type.width)
-	# [char_code] -> [value_char]
-	chars = []
+def utf32_chars_to_utfx_char_values(str_asset, char_type, ti):
+	char_codes = utf32_chars_to_utfx_cc(str_asset, char_type.width)
+	# List[char_code] -> List[value_char]
+	char_values = []
 	for cc in char_codes:
-		char = value_char_create(cc, char_type, ti)
-		chars.append(char)
-	return chars
+		char_value = value_char_create(cc, char_type, ti)
+		char_values.append(char_value)
+	return char_values
 
