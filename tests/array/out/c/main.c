@@ -39,7 +39,7 @@ typedef uint32_t char32_t;
 
 static int32_t arr0[10];
 static int32_t arr1[10] = C0;
-static char32_t arr2[10] = _STR32(C1);
+static char32_t arr2[10] = {U'H', U'e', U'l', U'l', U'o', U'!'};
 
 //func f0 (x: []Int32) -> []Int32 {
 //	var aa: []Int32

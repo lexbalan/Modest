@@ -17,7 +17,7 @@
 static char tokensBuf[4 * 1024];
 
 static void showPrompt(void) {
-	char _prompt[32] = PROMPT;
+	char _prompt[32] = {'#', ' '};
 	write(0, (void *)&_prompt, (size_t)LENGTHOF(PROMPT));
 }
 
@@ -45,6 +45,7 @@ static bool is_blank(char c) {
 
 
 static uint16_t gettok(Tokenizer *t, char *output, uint16_t lim) {
+	(void)lim;
 	char c = t->input[t->position];
 
 	// skip blanks

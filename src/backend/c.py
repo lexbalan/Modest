@@ -615,7 +615,7 @@ def str_value_call(v, ctx, sret=None):
 		if param != None:
 			p_type = param.type
 
-		sstr += incast(p_type, a)
+		sstr += incast(p_type, a) #, ('needx',))
 
 		i = i + 1
 
@@ -797,13 +797,19 @@ def str_value_cons_array(x, ctx):
 
 
 	if from_type.is_string():
-		if to_type.of.is_char():
-			# cast <string literal> to <array of chars>:
-			if to_type.of.width == from_type.width:
-				return str_value(value, ctx=ctx)
-			else:
-				return cstr(value, to_type.of.width)
-			return '<???>'
+		sstr = ""
+		# Из за идиотии СИ приходится делать так!
+		if not 'c_initializer' in x.att:
+			sstr += '(' + str_type(to_type) + ')'
+		sstr += '{' + print_literal_array_items(x.asset, to_type.of) + '}'
+		return sstr
+
+#			# cast <string literal> to <array of chars>:
+#			if to_type.of.width == from_type.width:
+#				return str_value(value, ctx=ctx)
+#			else:
+#				return cstr(value, to_type.of.width)
+#			return '<???>'
 
 	# for:
 	#    var x: [10]Word8 = "0123456789"
@@ -835,18 +841,18 @@ def cchr(value, sz):
 
 # Дополнительная чисто сишная надстройка:
 # если у нас тут указатель на массив - приводим к указателю на его элемент
-def incast(type, value):
+def incast(type, value, ctx=[]):
 	if value.type.is_pointer_to_closed_array():
 		# Это аргумент с типом указатель на массив
 		# приведем его по месту к указателю на элемент этого массива
 		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
 		if value.isValueRef():
 			if value.value.isValueIndex() or value.value.isValueSlice():
-				return "&" + str_value(value.value)
+				return "&" + str_value(value.value, ctx)
 			else:
-				return "&" + str_value(value.value) + "[0]"
+				return "&" + str_value(value.value, ctx) + "[0]"
 
-	return str_value(value)
+	return str_value(value, ctx)
 
 
 
@@ -2042,7 +2048,6 @@ def print_def_var(x, isdecl=False, as_extern=False):
 # .arr = (uint8_t [3]){1, 2, 3}  // not worked
 # .arr = {1, 2, 3}  // worked
 def str_static_initializer(v):
-	#mass
 	if v.type.is_char():
 		return str_value(v, [])
 	if v.type.is_pointer_to_str():

@@ -42,6 +42,7 @@ func is_blank (c: Char8) -> Bool {
 
 
 func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
+	Unit lim
 	var c: Char8 = t.input[t.position]
 
 	// skip blanks

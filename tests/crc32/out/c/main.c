@@ -14,7 +14,7 @@
 #define DATASTRING  "123456789"
 #define EXPECTED_HASH  0xCBF43926UL
 
-static uint8_t data[9] = DATASTRING;
+static uint8_t data[9] = {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
 
 int main(void) {
 	printf("CRC32 test\n");

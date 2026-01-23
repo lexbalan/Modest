@@ -25,8 +25,8 @@ static void writeExample(void) {
 	}
 
 	Chunk chunk = (Chunk){
-		.id = "id",
-		.data = "data"
+		.id = {'i', 'd'},
+		.data = {'d', 'a', 't', 'a'}
 	};
 
 	// write chunk to file

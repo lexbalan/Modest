@@ -36,9 +36,9 @@ static uint16_t ratSymbolUTF16[3] = {0xD83D, 0xDC00, 0x0};
 static uint32_t ratSymbolUTF32[3] = {0x1F400, 0x0};
 static uint32_t ratSymbolUTF322[3] = {0x0};
 
-#define ARR_PARTYCORN  "🎉"
-#define ARR_UNICORN  "🦄"
-#define ARR_RAT  "🐀"
+#define ARR_PARTYCORN  (char[4]){'ð', '', '', ''}
+#define ARR_UNICORN  (char[4]){'ð', '', '¦', ''}
+#define ARR_RAT  (char[4]){'ð', '', '', ''}
 
 #define GENERIC_STRING_CONST  "S-t-r-i-n-g-Ω 🐀🎉🦄"
 #define STRING8_CONST  (GENERIC_STRING_CONST)
@@ -46,13 +46,13 @@ static uint32_t ratSymbolUTF322[3] = {0x0};
 #define STRING32_CONST  (_STR32(GENERIC_STRING_CONST))
 
 __attribute__((used))
-static char arr_utf8[5 + 1] = "Hi!\n";
+static char arr_utf8[5 + 1] = {'H', 'i', '!', '\n'};
 
 __attribute__((used))
-static char16_t arr_utf16[9 + 1] = _STR16("Hello Ω!\n");
+static char16_t arr_utf16[9 + 1] = {u'H', u'e', u'l', u'l', u'o', u' ', u'Ω', u'!', u'\n'};
 
 __attribute__((used))
-static char32_t arr_utf32[8 + 1] = _STR32("Hello!🦄\n");
+static char32_t arr_utf32[8 + 1] = {U'H', U'e', U'l', U'l', U'o', U'!', U'🦄', U'\n'};
 
 int32_t main(void) {
 	char *str8 = STRING8_CONST;

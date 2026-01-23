@@ -36,7 +36,7 @@
 
 static int32_t globalArray[10] = CONSTANT_ARRAY;
 
-static char arrayFromString[3] = "abc";
+static char arrayFromString[3] = {'a', 'b', 'c'};
 
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
@@ -201,7 +201,7 @@ int main(void) {
 	test();
 
 	char em[30];
-	f0("Hello World!", (char *)&em);
+	f0((char[20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'}, (char *)&em);
 	printf("em = %s\n", &em[0]);
 
 	uint32_t i = 0;

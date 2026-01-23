@@ -37,6 +37,8 @@ static Point points2[3] = POINTS;
 int main(void) {
 	printf("test const\n");
 
+	Point points3[3] = POINTS;
+
 	printf("genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);
 	printf("int32Const = %d\n", INT32_CONST);
 
