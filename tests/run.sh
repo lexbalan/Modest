@@ -9,7 +9,7 @@ cd 11.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 12.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 14.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd var && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
-cd 22.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+#cd 22.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 23.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd cons && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd composite && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \

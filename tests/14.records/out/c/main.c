@@ -31,7 +31,7 @@ struct Point3D {
 typedef struct Point3D Point3D;
 
 #define XX  {.x = 1, .y = 2}
-#define YY  {.x = 1, .y = 2}
+#define YY  (Point2D){.x = 1, .y = 2}
 
 struct Point {
 	int32_t x;
@@ -45,21 +45,21 @@ struct Line {
 };
 typedef struct Line Line;
 
-static Line line = {
+static Line line = (Line){
 	.a = {.x = 10, .y = 11},
 	.b = {.x = 12, .y = 13}
 };
 
 static Line lines[3] = {
-	{
+	(Line){
 		.a = {.x = 1, .y = 2},
 		.b = {.x = 3, .y = 4}
 	},
-	{
+	(Line){
 		.a = {.x = 5, .y = 6},
 		.b = {.x = 7, .y = 8}
 	},
-	{
+	(Line){
 		.a = {.x = 9, .y = 10},
 		.b = {.x = 11, .y = 12}
 	}
@@ -72,7 +72,7 @@ struct Struct {
 };
 typedef struct Struct Struct;
 
-static Struct s = {.x = &lines[0]};
+static Struct s = (Struct){.x = &lines[0]};
 
 static void test_records(void) {
 

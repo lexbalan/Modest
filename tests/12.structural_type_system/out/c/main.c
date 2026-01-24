@@ -67,9 +67,9 @@ static void f3_ptr(struct __anonymous_struct_4 *x) {
 }
 
 
-static Type1 a = {.x = 1};
-static Type2 b = {.x = 2};
-static Type3 c = {.x = 3};
+static Type1 a = (Type1){.x = 1};
+static Type2 b = (Type2){.x = 2};
+static Type3 c = (Type3){.x = 3};
 
 static void test_by_value(void) {
 	f0_val(a);

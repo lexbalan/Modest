@@ -34,7 +34,7 @@ static char *tableData1[4][4] = {
 	{"3", "Ultra", "Video", "Word"}
 };
 
-static table_Table table00 = {
+static table_Table table00 = (table_Table){
 	.header = NULL,
 	.data = (void *)&tableData0,
 	.nRows = LENGTHOF(tableData0),
@@ -42,7 +42,7 @@ static table_Table table00 = {
 	.separate = false
 };
 
-static table_Table table01 = {
+static table_Table table01 = (table_Table){
 	.header = &table_header0,
 	.data = (void *)&tableData0,
 	.nRows = LENGTHOF(tableData0),
@@ -50,7 +50,7 @@ static table_Table table01 = {
 	.separate = false
 };
 
-static table_Table table02 = {
+static table_Table table02 = (table_Table){
 	.header = NULL,
 	.data = (void *)&tableData0,
 	.nRows = LENGTHOF(tableData0),
@@ -58,7 +58,7 @@ static table_Table table02 = {
 	.separate = true
 };
 
-static table_Table table03 = {
+static table_Table table03 = (table_Table){
 	.header = &table_header0,
 	.data = (void *)&tableData0,
 	.nRows = LENGTHOF(tableData0),
@@ -66,7 +66,7 @@ static table_Table table03 = {
 	.separate = true
 };
 
-static table_Table table10 = {
+static table_Table table10 = (table_Table){
 	.header = &table_header1,
 	.data = (void *)&tableData1,
 	.nRows = LENGTHOF(tableData1),

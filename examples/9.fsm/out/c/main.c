@@ -13,13 +13,13 @@ static fsm_FSM fsm0;
 
 
 static fsm_ComplexState routine0(fsm_ComplexState state, void *payload);
-static fsm_StateDesc state0 = {.id = "state0", .nstages = 4, .handler = &routine0};
+static fsm_StateDesc state0 = (fsm_StateDesc){.id = "state0", .nstages = 4, .handler = &routine0};
 
 static fsm_ComplexState routine1(fsm_ComplexState state, void *payload);
-static fsm_StateDesc state1 = {.id = "state1", .nstages = 4, .handler = &routine1};
+static fsm_StateDesc state1 = (fsm_StateDesc){.id = "state1", .nstages = 4, .handler = &routine1};
 
 static fsm_ComplexState routine2(fsm_ComplexState state, void *payload);
-static fsm_StateDesc state2 = {.id = "state2", .nstages = 4, .handler = &routine2};
+static fsm_StateDesc state2 = (fsm_StateDesc){.id = "state2", .nstages = 4, .handler = &routine2};
 
 static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 	(void)payload;

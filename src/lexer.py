@@ -60,8 +60,9 @@ class Lexer:
 
 					ti = TokenInfo(
 						source = self.filename,
+						fpos = tokenStartPosition['pos'],
 						line = tokenStartPosition['line'],
-						fpos = line_start_position,
+						lpos = line_start_position,
 						spaces = tokenStartPosition['nspaces'],
 						tabs = tokenStartPosition['ntabs'],
 						length = endp - tokenStartPosition['pos']

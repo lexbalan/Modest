@@ -208,6 +208,11 @@ declare void @perror(%ConstCharStr* %str)
 	%Nat32
 };
 
+%X = type {
+	%Point,
+	[3 x %Point]
+};
+
 @ps = constant [3 x {
 	i8,
 	i8
@@ -248,6 +253,34 @@ declare void @perror(%ConstCharStr* %str)
 		%Nat32 2
 	}
 ]
+@zeroPoints = constant [3 x %Point] [
+	%Point {
+		%Nat32 1,
+		%Nat32 1
+	},
+	%Point {
+		%Nat32 1,
+		%Nat32 1
+	},
+	%Point {
+		%Nat32 1,
+		%Nat32 1
+	}
+]
+@x = internal global %X {
+	%Point {
+		%Nat32 10,
+		%Nat32 20
+	},
+	[3 x %Point] [
+		%Point {
+			%Nat32 20,
+			%Nat32 30
+		},
+		%Point zeroinitializer,
+		%Point zeroinitializer
+	]
+}
 @points2 = internal global [3 x %Point] [
 	%Point {
 		%Nat32 0,
@@ -264,15 +297,32 @@ declare void @perror(%ConstCharStr* %str)
 ]
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-	%2 = alloca [3 x %Point], align 1
-	%3 = load [3 x %Point], [3 x %Point]* @points
-	%4 = zext i8 3 to %Nat32
-	store [3 x %Point] %3, [3 x %Point]* %2
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 42)
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), %Int32 42)
+	%2 = alloca %X, align 32
+	%3 = insertvalue %Point zeroinitializer, %Nat32 10, 0
+	%4 = insertvalue %Point %3, %Nat32 20, 1
+	%5 = insertvalue %X zeroinitializer, %Point %4, 0
+	%6 = insertvalue %Point zeroinitializer, %Nat32 20, 0
+	%7 = insertvalue %Point %6, %Nat32 30, 1
+	%8 = insertvalue %Point zeroinitializer, %Nat32 20, 0
+	%9 = insertvalue %Point %8, %Nat32 30, 1
+	%10 = insertvalue [3 x %Point] zeroinitializer, %Point %9, 0
+	%11 = insertvalue %X %5, [3 x %Point] %10, 1
+	store %X %11, %X* %2
+	%12 = alloca [3 x %Point], align 1
+	%13 = load [3 x %Point], [3 x %Point]* @points
+	%14 = zext i8 3 to %Nat32
+	store [3 x %Point] %13, [3 x %Point]* %12
+	%15 = alloca %Point
+	store %Point zeroinitializer, %Point* %15
+	%16 = insertvalue %Point zeroinitializer, %Nat32 1, 0
+	%17 = insertvalue %Point %16, %Nat32 1, 1
+	%18 = alloca %Point
+	store %Point %17, %Point* %18
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 42)
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), %Int32 42)
 
 	;	printf("genericStringConst = %s\n", genericStringConst)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*))
+	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*))
 	ret %Int 0
 }
 

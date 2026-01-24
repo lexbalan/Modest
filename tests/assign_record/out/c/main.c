@@ -13,8 +13,8 @@ struct Point {
 };
 typedef struct Point Point;
 
-static Point globalPoint0 = {.x = 10, .y = 20};
-static Point globalPoint1 = {0};
+static Point globalPoint0 = (Point){.x = 10, .y = 20};
+static Point globalPoint1 = (Point){0};
 
 int main(void) {
 	printf("test assign_array\n");

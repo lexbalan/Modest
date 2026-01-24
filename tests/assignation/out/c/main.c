@@ -18,8 +18,8 @@ typedef struct Point Point;
 static int32_t glb_i0 = 0;
 static int32_t glb_i1 = 321;
 
-static Point glb_r0 = {0};
-static Point glb_r1 = {.x = 20, .y = 10};
+static Point glb_r0 = (Point){0};
+static Point glb_r1 = (Point){.x = 20, .y = 10};
 
 static int32_t glb_a0[10] = {0};
 static int32_t glb_a1[10] = {64, 53, 42};

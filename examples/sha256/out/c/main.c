@@ -21,7 +21,7 @@ struct SHA256_TestCase {
 };
 typedef struct SHA256_TestCase SHA256_TestCase;
 
-static SHA256_TestCase test0 = {
+static SHA256_TestCase test0 = (SHA256_TestCase){
 	.inputData = "abc",
 	.inputDataLen = 3,
 	.expectedResult = {
@@ -32,7 +32,7 @@ static SHA256_TestCase test0 = {
 	}
 };
 
-static SHA256_TestCase test1 = {
+static SHA256_TestCase test1 = (SHA256_TestCase){
 	.inputData = "Hello World!",
 	.inputDataLen = 12,
 	.expectedResult = {

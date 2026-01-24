@@ -90,7 +90,8 @@ def print_common_message(mg, color, s, ti):
 	mti = ti.getMidTokenInfo()
 	rti = ti.getRightTokenInfo()
 	start_pos = lti.spaces + lti.tabs * TABSTOP
-	end_pos = rti.spaces + rti.tabs * TABSTOP + rti.length
+	end_pos = start_pos + (rti.fpos - lti.fpos) + rti.length
+	#end_pos = rti.spaces + rti.tabs * TABSTOP + rti.length
 
 	pre = ''
 	if mti != None:
@@ -101,7 +102,7 @@ def print_common_message(mg, color, s, ti):
 
 	if mti != None:
 		margin = "%d |" % lti.line
-		line = read_line(lti.source, lti.fpos)
+		line = read_line(lti.source, lti.lpos)
 		line = line.replace('\t', ' ' * TABSTOP)
 		line = markline(line, start_pos, end_pos)
 		print(margin + line)

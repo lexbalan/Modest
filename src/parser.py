@@ -1144,11 +1144,12 @@ class Parser:
 
 
 	def parse_value_array(self, ti):
-		array_ti = self.textInfo()
+		ti_start = self.tokenInfo()
 		items = []
 		nl_cnt = 0
 		item_id = 0
 		self.need("[")
+		ti_end = self.tokenInfo()
 		while not self.match("]"):
 			#self.skip_tokens_class(['nl'])
 			nl_cnt = self.skip_blanks()
@@ -1159,7 +1160,9 @@ class Parser:
 				items.append(comm)
 				continue
 
-			if self.match("]"):
+			if self.look("]"):
+				ti_end = self.tokenInfo()
+				self.match("]")
 				break
 
 			item_value = self.expr_value()
@@ -1178,20 +1181,26 @@ class Parser:
 
 			item_id += 1
 
+			if self.look("]"):
+				ti_end = self.tokenInfo()
+				self.match("]")
+				break
+
 		return {
 			'isa': 'ast_value',
 			'kind': 'array',
 			'items': items,
 			'anno': [],
-			'ti': array_ti
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_end)
 		}
 
 
 	def parse_value_record(self, ti):
-		record_ti = self.textInfo()
+		ti_start = self.textInfo()
 		items = []
 		nl_cnt = 0
 		self.need("{")
+		ti_end = self.textInfo()
 		while not self.match("}"):
 			#self.skip_tokens_class(['nl'])
 			nl_cnt = self.skip_blanks()
@@ -1202,7 +1211,9 @@ class Parser:
 				items.append(comm)
 				continue
 
-			if self.match("}"):
+			if self.look("}"):
+				ti_end = self.textInfo()
+				self.match("}")
 				break
 
 			item_ti = self.textInfo()
@@ -1222,12 +1233,19 @@ class Parser:
 			}
 			items.append(item)
 
+			if self.look("}"):
+				ti_end = self.textInfo()
+				self.match("}")
+				break
+
+		ti = TextInfo(start=ti_start, mid=ti_start, end=ti_end)
+		#info("here", ti)
 		return {
 			'isa': 'ast_value',
 			'kind': 'record',
 			'items': items,
 			'anno': [],
-			'ti': record_ti
+			'ti': ti
 		}
 
 
@@ -1648,7 +1666,7 @@ class Parser:
 					stmts.append(s)
 
 			elif comment != None:
-				print("STANDALONE COMMENT")
+				#print("STANDALONE COMMENT")
 				stmts.append(comment)
 				comment = None
 

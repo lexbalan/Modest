@@ -654,7 +654,7 @@ def str_value_index(x, ctx):
 
 	left_str = ''
 
-	if left.is_global_flag and left.type.is_generic_array():
+	if left.is_global_flag and left.isValueConst(): #left.type.is_generic_array():
 		ts = str_type(left.type)
 		vs = str_value(left, ctx=ctx, parent_expr=x)
 		left_str = '((%s)%s)' % (ts, vs)
@@ -690,6 +690,7 @@ def str_value_access(x, ctx):
 			return str_value_literal(x, ctx)
 
 	if value_is_generic_immediate_const(left):
+	#if left.is_global_flag:
 		ts = str_type(left.type)
 		vs = str_value(left, ctx=ctx, parent_expr=x)
 		sstr += '((%s)%s)' % (ts, vs)
@@ -726,7 +727,8 @@ def str_value_cons_record(x, ctx):
 	from_type = value.type
 
 	if from_type.is_generic_record():
-		if is_global_context():
+		#if is_global_context():
+		if to_type.is_generic_record():
 			return str_value(value, ctx=ctx)
 
 		# Local Context:
@@ -768,33 +770,37 @@ def str_value_cons_array(x, ctx):
 	# печатаем как есть, иначе ошибка (о Боже C это нечто!):
 	# {0, 1, 2, 3}
 	#if is_global_context():
-	if from_type.is_generic_array():
+	if from_type.is_generic_array(): #and ('in_initializer' in ctx):
 		# если это литеральная (и не глобальная) константа-массив
 		# то мы должны ее привести к требуемому типу
 		#is_const = value['kind'] in ['const', 'literal', HLIR_VALUE_OP_ADD]
 
-		if is_global_context():
-			if value.isValueRuntime() or value.isValueLinktime():
-				return str_value(value, ctx=ctx)
+		# mass
+		#if is_global_context():
+		return str_value(value, ctx=ctx)
 
-		is_const = value.isValueLiteral() or value.isValueConst() or (value.isValueBin() and value.op == HLIR_VALUE_OP_ADD)
-
-		if is_const:
-			ctx=['array_as_array']
-
-			if to_type.of.is_char():
-				if from_type.of.is_string():
-					chars = []
-					for item in value.asset:
-						ch = item.asset
-						chars.append(ch)
-
-					char_width = to_type.of.width
-					return print_utf32codes_as_string(chars, width=char_width, quote='"')
-
-			return str_cast(to_type, value, ctx=ctx)
-		else:
-			return str_value(value, ctx=ctx)
+#		if is_global_context():
+#			if value.isValueRuntime() or value.isValueLinktime():
+#				return str_value(value, ctx=ctx)
+#
+#		is_const = value.isValueLiteral() or value.isValueConst() or (value.isValueBin() and value.op == HLIR_VALUE_OP_ADD)
+#
+#		if is_const:
+#			ctx=['array_as_array']
+#
+#			if to_type.of.is_char():
+#				if from_type.of.is_string():
+#					chars = []
+#					for item in value.asset:
+#						ch = item.asset
+#						chars.append(ch)
+#
+#					char_width = to_type.of.width
+#					return print_utf32codes_as_string(chars, width=char_width, quote='"')
+#
+#			return str_cast(to_type, value, ctx=ctx)
+#		else:
+#			return str_value(value, ctx=ctx)
 
 
 	if from_type.is_string():
@@ -1541,7 +1547,7 @@ def print_stmt_var(x):
 
 	out(" = ")
 	if init_value.type.is_closed_array():
-		out(str_static_initializer(init_value))
+		out(str_initializer(init_value))
 	else:
 		print_value(init_value)
 	out(";")
@@ -2041,48 +2047,112 @@ def print_def_var(x, isdecl=False, as_extern=False):
 
 	if not (init_value.isValueUndef() or is_extern):
 		out(" = ")
-		out(str_static_initializer(init_value))
+		out(str_initializer(init_value))
 	out(";")
 
 
+
+
+def str_initializer_record(v):
+	sstr = ''
+	sstr += '{'
+	indent_up()
+	i = 0
+	nl_end = 0
+	while i < len(v.asset):
+		ini = v.asset[i]
+		if ini.nl > 0:
+			nl_end = 1
+		sstr += str_nl_indent(ini.nl)
+		sstr += '.%s = %s' % (ini.id.str, str_initializer(ini.value))
+		if i < len(v.asset) - 1:
+			sstr += ','
+			if v.asset[i+1].nl == 0:
+				sstr += ' '
+		i += 1
+	indent_down()
+	sstr += str_nl_indent(nl_end) + '}'
+	return sstr
+
+
+def str_initializer_array(v):
+	sstr = ''
+	sstr += '{'
+	indent_up()
+	i = 0
+	nl_end = 0
+	while i < len(v.asset):
+		item = v.asset[i]
+		if item.nl > 0:
+			nl_end = 1
+		sstr += str_nl_indent(item.nl)
+		sstr += str_initializer(item)
+		if i < len(v.asset) - 1:
+			sstr += ','
+			if v.asset[i+1].nl == 0:
+				sstr += ' '
+		i += 1
+	indent_down()
+	sstr += str_nl_indent(nl_end) + '}'
+	return sstr
 
 
 # В C нельзя присвоить глобальной переменной/константе композитное значение
 # но можно присвоить литерал композитного значения который не приведен к конкр. типу:
 # .arr = (uint8_t [3]){1, 2, 3}  // not worked
 # .arr = {1, 2, 3}  // worked
-def str_static_initializer(v):
-	if v.type.is_char():
-		return str_value(v, [])
-	if v.type.is_pointer_to_str():
-		return str_value(v, [])
+def str_initializer(v):
+	#mass
 
-	if v.isValueCons():
+	return str_value(v, ['in_initializer'])
+
+
+	if not v.isValueImmediate():
+		return str_value(v)
+
+	sstr = ''
+	if v.type.is_array():
+		return str_initializer_array(v)
+	elif v.type.is_record():
+		return str_initializer_record(v)
+	else:
 		root = get_root_value(v)
-		if root.type.is_string():
-			# just string literal
-			return str_value(v, [])
+		sstr += str_value(v, [])
 
-	root = get_root_value(v)
+	return sstr
 
-	if value_is_generic_immediate_const(root):
-		return str_value(root, [])
 
-	if root.isValueImmediate():
-		if v.type.is_composite():
-			s = str_value(root, [])
-			if root.type.is_string():
-				left_char_width = 0
-				if v.type.is_array():
-					left_char_width = v.type.of.width
-				elif v.type.is_str():
-					left_char_width = v.type.width
-
-				#if not s[0] in ['u', 'U']:
-				#	s = string_literal_prefix(left_char_width) + s
-			return s
-
-	return str_value(v)
+#	if v.type.is_char():
+#		return str_value(v, [])
+#	if v.type.is_pointer_to_str():
+#		return str_value(v, [])
+#
+#	if v.isValueCons():
+#		root = get_root_value(v)
+#		if root.type.is_string():
+#			# just string literal
+#			return str_value(v, [])
+#
+#	root = get_root_value(v)
+#
+#	if value_is_generic_immediate_const(root):
+#		return str_value(root, [])
+#
+#	if root.isValueImmediate():
+#		if v.type.is_composite():
+#			s = str_value(root, [])
+#			if root.type.is_string():
+#				left_char_width = 0
+#				if v.type.is_array():
+#					left_char_width = v.type.of.width
+#				elif v.type.is_str():
+#					left_char_width = v.type.width
+#
+#				#if not s[0] in ['u', 'U']:
+#				#	s = string_literal_prefix(left_char_width) + s
+#			return s
+#
+#	return str_value(v)
 
 
 def print_def_const(x):

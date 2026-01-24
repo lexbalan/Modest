@@ -160,7 +160,7 @@ struct AnimationPoint {
 };
 typedef struct AnimationPoint AnimationPoint;
 
-static AnimationPoint ap = {
+static AnimationPoint ap = (AnimationPoint){
 	.color = {
 		.red = 200,
 		.green = 0,
@@ -242,7 +242,7 @@ struct Wrap {
 };
 typedef struct Wrap Wrap;
 
-static Wrap wrap0 = {
+static Wrap wrap0 = (Wrap){
 	.fhi = &hi,
 	.fop = &add
 };

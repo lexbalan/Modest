@@ -24,25 +24,25 @@ struct Line {
 typedef struct Line Line;
 
 #define ZERO  0
-#define POINT_ZERO  {.x = ZERO, .y = ZERO}
-#define POINT_ONE  {.x = 1.0, .y = 1.0}
+#define POINT_ZERO  (Point){.x = ZERO, .y = ZERO}
+#define POINT_ONE  (Point){.x = 1.0, .y = 1.0}
 
-#define LINE0  { \
+#define LINE0  (Line){ \
 	.a = POINT_ZERO, \
 	.b = POINT_ONE \
 }
 
-#define LINE1  { \
+#define LINE1  (Line){ \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
 
-#define LINE2  { \
+#define LINE2  (Line){ \
 	.a = POINT_ZERO, \
 	.b = POINT_ONE \
 }
 
-#define LINE3  { \
+#define LINE3  (Line){ \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
@@ -55,7 +55,7 @@ struct WrappedArray {
 };
 typedef struct WrappedArray WrappedArray;
 
-#define WA  {0}
+#define WA  (WrappedArray){0}
 
 
 // Pythagorean theorem

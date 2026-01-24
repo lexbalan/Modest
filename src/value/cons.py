@@ -19,6 +19,7 @@ import type as htype
 
 # can be implicitly constructed value with type a from type b?
 def cons_can(to, from_type, method, ti):
+	#info("cons can?", ti)
 	assert(isinstance(to, Type))
 	assert(isinstance(from_type, Type))
 
@@ -69,7 +70,9 @@ def cons_can(to, from_type, method, ti):
 # 3. *[n]T -> *[]T
 # 4. AnyPointer -> FreePointer
 # 5. FreePointer -> AnyPointer
-def value_cons_implicit(t, v, ti=None):
+def value_cons_implicit(t, v):
+	ti = v.ti
+	#info("value_cons_implicit", ti)
 	assert(isinstance(t, Type))
 	assert(isinstance(v, Value))
 
@@ -77,14 +80,12 @@ def value_cons_implicit(t, v, ti=None):
 		return value_cons(t, v, 'implicit', ti)
 
 	if v.isValueBad() or t.is_bad():
-		return ValueBad(v.ti)
-
-	ti = v.ti
+		return ValueBad(ti)
 
 	from_type = v.type
 
 	if not cons_can(t, from_type, 'implicit', ti):
-		#info("cannot implicitly construct value", v.ti)
+		#info("cannot implicitly construct value", ti)
 		return v
 
 	# (!) потому что в C номинальные типы, а у нас - структурные
@@ -155,7 +156,7 @@ def value_cons_default(v):
 
 	t = _select_default_type_for(v.type)
 	if t != None:
-		nv = value_cons_implicit(t, v, v.ti)
+		nv = value_cons_implicit(t, v)
 		nv.method = 'default'
 		return nv
 
