@@ -26,9 +26,9 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/fsm -mbackend=c $(C_OPTIONS) $(INDIR)/fsm.m
-	mcc -o $(CPREFIX)/main -mbackend=c $(C_OPTIONS) $(INDIR)/main.m
-	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/fsm.c
+	mcc -o $(CPREFIX)/fsm -mbackend=c11 $(C_OPTIONS) $(INDIR)/fsm.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 $(C_OPTIONS) $(INDIR)/main.m
+	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/fsm.c
 
 
 clean:

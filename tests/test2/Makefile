@@ -23,9 +23,9 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
-	mcc -o $(CPREFIX)/datetime $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/lightfood/datetime.m
-	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/datetime.c
+	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.m
+	mcc -o $(CPREFIX)/datetime $(C_OPTIONS) -mbackend=c11 -funsafe ${MODEST_LIB}/lightfood/datetime.m
+	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/datetime.c
 
 
 clean:

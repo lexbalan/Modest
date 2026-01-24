@@ -21,8 +21,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
-	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c #$(CPREFIX)/utf.c
+	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
+	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c #$(CPREFIX)/utf.c
 
 
 clean:

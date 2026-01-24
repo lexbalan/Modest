@@ -27,11 +27,11 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main --config=config.toml -mbackend=c -funsafe $(INDIR)/main.m
-	mcc -o $(CPREFIX)/lib --config=config.toml -mbackend=c -funsafe $(INDIR)/lib.m
-	mcc -o $(CPREFIX)/lib2 --config=config.toml -mbackend=c -funsafe $(INDIR)/lib2.m
-	mcc -o $(CPREFIX)/fixed32 --config=config.toml -mbackend=c -funsafe $(INDIR)/fixed32.m
-	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/lib.c $(CPREFIX)/fixed32.c
+	mcc -o $(CPREFIX)/main --config=config.toml -mbackend=c11 -funsafe $(INDIR)/main.m
+	mcc -o $(CPREFIX)/lib --config=config.toml -mbackend=c11 -funsafe $(INDIR)/lib.m
+	mcc -o $(CPREFIX)/lib2 --config=config.toml -mbackend=c11 -funsafe $(INDIR)/lib2.m
+	mcc -o $(CPREFIX)/fixed32 --config=config.toml -mbackend=c11 -funsafe $(INDIR)/fixed32.m
+	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/lib.c $(CPREFIX)/fixed32.c
 
 
 clean:

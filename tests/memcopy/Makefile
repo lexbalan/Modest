@@ -24,11 +24,11 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
-	#mcc -o $(CPREFIX)/memory -mbackend=c -funsafe ${MODEST_LIB}/lightfood/memory.m
-	mcc -o ./out/c/memory -mbackend=c -funsafe ${MODEST_LIB}/lightfood/memory.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
+	#mcc -o $(CPREFIX)/memory -mbackend=c11 -funsafe ${MODEST_LIB}/lightfood/memory.m
+	mcc -o ./out/c/memory -mbackend=c11 -funsafe ${MODEST_LIB}/lightfood/memory.m
 
-	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/memory.c
+	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/memory.c
 
 
 clean:

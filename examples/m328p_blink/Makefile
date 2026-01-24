@@ -24,8 +24,8 @@ all:
 
 
 C:
-	mcc -o out/c/main -funsafe -mbackend=c src/main.m
-	mcc -o out/c/delay -funsafe -mbackend=c src/avr/delay.m
+	mcc -o out/c/main -funsafe -mbackend=c11 src/main.m
+	mcc -o out/c/delay -funsafe -mbackend=c11 src/avr/delay.m
 	avr-gcc $(ALL_CFLAGS) -o $(BIN)/main.o out/c/main.c
 	avr-gcc $(ALL_CFLAGS) -o $(BIN)/avr.o out/c/avr.c
 	avr-gcc $(ALL_CFLAGS) -o $(BIN)/m328p.o out/c/m328p.c

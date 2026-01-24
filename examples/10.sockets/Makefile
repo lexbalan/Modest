@@ -26,10 +26,10 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/client -funsafe -mbackend=c $(INDIR)/client.m
-	mcc -o $(CPREFIX)/server -funsafe -mbackend=c $(INDIR)/server.m
-	clang -Wall -Wextra -pedantic -Wno-unused-variable -oclient $(CPREFIX)/client.c
-	clang -Wall -Wextra -pedantic -Wno-unused-variable -oserver $(CPREFIX)/server.c
+	mcc -o $(CPREFIX)/client -funsafe -mbackend=c11 $(INDIR)/client.m
+	mcc -o $(CPREFIX)/server -funsafe -mbackend=c11 $(INDIR)/server.m
+	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable -oclient $(CPREFIX)/client.c
+	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable -oserver $(CPREFIX)/server.c
 
 
 clean:

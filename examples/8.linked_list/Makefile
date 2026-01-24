@@ -25,16 +25,16 @@ LLVM:
 	#clang -c $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/linked_list.ll
 	
 	# 3. *.o -> a.out
-	#clang -Wall -Wextra -pedantic -Wno-unused-variable main.o linked_list.o -o a.out
+	#clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable main.o linked_list.o -o a.out
 	
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/list.ll
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c -funsafe -mint=64 $(INDIR)/main.m
-	mcc -o $(CPREFIX)/list -mbackend=c -mint=64 $(INDIR)/list.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe -mint=64 $(INDIR)/main.m
+	mcc -o $(CPREFIX)/list -mbackend=c11 -mint=64 $(INDIR)/list.m
 	
-	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/list.c
+	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/list.c
 
 
 clean:

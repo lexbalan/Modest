@@ -28,12 +28,12 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/queue -mbackend=c $(INDIR)/queue.m
-	mcc -o $(CPREFIX)/queueWord8 -mbackend=c $(INDIR)/queueWord8.m
-	mcc -o $(CPREFIX)/ringWord8 -mbackend=c $(INDIR)/ringWord8.m
-	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
-	#mcc -o $(CPREFIX)/mutex -mbackend=c $(INDIR)/mutex.m
-	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/queue.c $(CPREFIX)/queueWord8.c $(CPREFIX)/ringWord8.c 
+	mcc -o $(CPREFIX)/queue -mbackend=c11 $(INDIR)/queue.m
+	mcc -o $(CPREFIX)/queueWord8 -mbackend=c11 $(INDIR)/queueWord8.m
+	mcc -o $(CPREFIX)/ringWord8 -mbackend=c11 $(INDIR)/ringWord8.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.m
+	#mcc -o $(CPREFIX)/mutex -mbackend=c11 $(INDIR)/mutex.m
+	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/queue.c $(CPREFIX)/queueWord8.c $(CPREFIX)/ringWord8.c 
 
 
 clean:

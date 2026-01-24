@@ -25,10 +25,10 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
-	mcc -o $(CPREFIX)/type -mbackend=c -funsafe $(INDIR)/type.m
-	mcc -o $(CPREFIX)/value -mbackend=c -funsafe $(INDIR)/value.m
-	clang -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/type.c $(CPREFIX)/value.c
+	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.m
+	mcc -o $(CPREFIX)/type -mbackend=c11 -funsafe $(INDIR)/type.m
+	mcc -o $(CPREFIX)/value -mbackend=c11 -funsafe $(INDIR)/value.m
+	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/type.c $(CPREFIX)/value.c
 
 
 clean:
