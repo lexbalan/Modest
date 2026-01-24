@@ -6,6 +6,8 @@ OUTDIR=./out
 CMPREFIX=$(OUTDIR)/cm
 CPREFIX=$(OUTDIR)/c
 LLVMPREFIX = $(OUTDIR)/llvm
+C_OPTIONS = -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable
+
 
 .PHONY: all, clean, CM, LLVM, C
 
@@ -24,7 +26,7 @@ LLVM:
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
-	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c #$(CPREFIX)/utf.c
+	clang $(C_OPTIONS) $(CPREFIX)/main.c #$(CPREFIX)/utf.c
 
 
 clean:

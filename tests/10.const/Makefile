@@ -6,6 +6,7 @@ OUTDIR=./out
 CMPREFIX=$(OUTDIR)/cm
 CPREFIX=$(OUTDIR)/c
 LLVMPREFIX = $(OUTDIR)/llvm
+C_OPTIONS = -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable
 
 LIBS = -lm
 
@@ -17,19 +18,16 @@ CM:
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/minmax $(C_OPTIONS) -mbackend=llvm -funsafe ${MODEST_LIB}/misc/minmax.m
+	mcc -o $(LLVMPREFIX)/minmax -mbackend=llvm -funsafe ${MODEST_LIB}/misc/minmax.m
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
-	
+
 	clang $(LIBS) $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/minmax.ll
-    
 
 
 C:
-	mcc -o $(CPREFIX)/minmax $(C_OPTIONS) -mbackend=c11 -funsafe ${MODEST_LIB}/misc/minmax.m
+	mcc -o $(CPREFIX)/minmax -mbackend=c11 -funsafe ${MODEST_LIB}/misc/minmax.m
 	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
-	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(LIBS) $(CPREFIX)/main.c $(CPREFIX)/minmax.c
-	
-	
+	clang $(C_OPTIONS) $(LIBS) $(CPREFIX)/main.c $(CPREFIX)/minmax.c
 
 
 clean:

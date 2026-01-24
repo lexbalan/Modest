@@ -22,7 +22,7 @@ LLVM:
 
 C:
 	mcc -funsafe -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
-	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c
+	clang $(C_OPTIONS) $(CPREFIX)/main.c
 
 
 clean:

@@ -6,6 +6,7 @@ OUTDIR=./out
 CMPREFIX=$(OUTDIR)/cm
 CPREFIX=$(OUTDIR)/c
 LLVMPREFIX = $(OUTDIR)/llvm
+C_OPTIONS = -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable
 
 test: CM LLVM C
 
@@ -24,10 +25,10 @@ LLVM:
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.m
-	mcc -o $(CPREFIX)/sha256 -mbackend=c11 $(C_OPTIONS) -funsafe ${MODEST_LIB}/misc/sha256.m
-
-	clang -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable $(CPREFIX)/main.c $(CPREFIX)/sha256.c
+	mcc -o $(CPREFIX)/sha256 -mbackend=c11 -funsafe ${MODEST_LIB}/misc/sha256.m
+	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/sha256.c
 
 
 clean:
 	rm *.o
+
