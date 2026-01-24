@@ -616,7 +616,10 @@ def str_value_call(v, ctx, sret=None):
 		if param != None:
 			p_type = param.type
 
-		sstr += incast(p_type, a) #, ('needx',))
+		if a.isValueCons() and a.value.type.is_generic_array():
+			sstr += "(%s)%s" % (str_type(p_type), str_value(a))
+		else:
+			sstr += incast(p_type, a)
 
 		i = i + 1
 
@@ -984,7 +987,7 @@ def print_literal_array_items(values, item_type):
 		if a.type.is_closed_array():
 			sstr += '{' + print_literal_array_items(a.asset, item_type.of) + '}'
 		else:
-			sstr += str_value(a) #incast(item_type, a)
+			sstr += str_value(a)
 
 		i = i + 1
 
@@ -2051,50 +2054,50 @@ def print_def_var(x, isdecl=False, as_extern=False):
 	out(";")
 
 
-
-
-def str_initializer_record(v):
-	sstr = ''
-	sstr += '{'
-	indent_up()
-	i = 0
-	nl_end = 0
-	while i < len(v.asset):
-		ini = v.asset[i]
-		if ini.nl > 0:
-			nl_end = 1
-		sstr += str_nl_indent(ini.nl)
-		sstr += '.%s = %s' % (ini.id.str, str_initializer(ini.value))
-		if i < len(v.asset) - 1:
-			sstr += ','
-			if v.asset[i+1].nl == 0:
-				sstr += ' '
-		i += 1
-	indent_down()
-	sstr += str_nl_indent(nl_end) + '}'
-	return sstr
-
-
-def str_initializer_array(v):
-	sstr = ''
-	sstr += '{'
-	indent_up()
-	i = 0
-	nl_end = 0
-	while i < len(v.asset):
-		item = v.asset[i]
-		if item.nl > 0:
-			nl_end = 1
-		sstr += str_nl_indent(item.nl)
-		sstr += str_initializer(item)
-		if i < len(v.asset) - 1:
-			sstr += ','
-			if v.asset[i+1].nl == 0:
-				sstr += ' '
-		i += 1
-	indent_down()
-	sstr += str_nl_indent(nl_end) + '}'
-	return sstr
+#
+#
+#def str_initializer_record(v):
+#	sstr = ''
+#	sstr += '{'
+#	indent_up()
+#	i = 0
+#	nl_end = 0
+#	while i < len(v.asset):
+#		ini = v.asset[i]
+#		if ini.nl > 0:
+#			nl_end = 1
+#		sstr += str_nl_indent(ini.nl)
+#		sstr += '.%s = %s' % (ini.id.str, str_initializer(ini.value))
+#		if i < len(v.asset) - 1:
+#			sstr += ','
+#			if v.asset[i+1].nl == 0:
+#				sstr += ' '
+#		i += 1
+#	indent_down()
+#	sstr += str_nl_indent(nl_end) + '}'
+#	return sstr
+#
+#
+#def str_initializer_array(v):
+#	sstr = ''
+#	sstr += '{'
+#	indent_up()
+#	i = 0
+#	nl_end = 0
+#	while i < len(v.asset):
+#		item = v.asset[i]
+#		if item.nl > 0:
+#			nl_end = 1
+#		sstr += str_nl_indent(item.nl)
+#		sstr += str_initializer(item)
+#		if i < len(v.asset) - 1:
+#			sstr += ','
+#			if v.asset[i+1].nl == 0:
+#				sstr += ' '
+#		i += 1
+#	indent_down()
+#	sstr += str_nl_indent(nl_end) + '}'
+#	return sstr
 
 
 # В C нельзя присвоить глобальной переменной/константе композитное значение
@@ -2102,57 +2105,8 @@ def str_initializer_array(v):
 # .arr = (uint8_t [3]){1, 2, 3}  // not worked
 # .arr = {1, 2, 3}  // worked
 def str_initializer(v):
-	#mass
+	return str_value(v, [])
 
-	return str_value(v, ['in_initializer'])
-
-
-	if not v.isValueImmediate():
-		return str_value(v)
-
-	sstr = ''
-	if v.type.is_array():
-		return str_initializer_array(v)
-	elif v.type.is_record():
-		return str_initializer_record(v)
-	else:
-		root = get_root_value(v)
-		sstr += str_value(v, [])
-
-	return sstr
-
-
-#	if v.type.is_char():
-#		return str_value(v, [])
-#	if v.type.is_pointer_to_str():
-#		return str_value(v, [])
-#
-#	if v.isValueCons():
-#		root = get_root_value(v)
-#		if root.type.is_string():
-#			# just string literal
-#			return str_value(v, [])
-#
-#	root = get_root_value(v)
-#
-#	if value_is_generic_immediate_const(root):
-#		return str_value(root, [])
-#
-#	if root.isValueImmediate():
-#		if v.type.is_composite():
-#			s = str_value(root, [])
-#			if root.type.is_string():
-#				left_char_width = 0
-#				if v.type.is_array():
-#					left_char_width = v.type.of.width
-#				elif v.type.is_str():
-#					left_char_width = v.type.width
-#
-#				#if not s[0] in ['u', 'U']:
-#				#	s = string_literal_prefix(left_char_width) + s
-#			return s
-#
-#	return str_value(v)
 
 
 def print_def_const(x):
