@@ -23,7 +23,7 @@ typedef struct Point Point;
 
 struct X {
 	Point p;
-	Point a[3];
+	Point a[1];
 };
 typedef struct X X;
 
