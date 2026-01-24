@@ -210,7 +210,7 @@ declare void @perror(%ConstCharStr* %str)
 
 %X = type {
 	%Point,
-	[3 x %Point]
+	[1 x %Point]
 };
 
 @ps = constant [3 x {
@@ -272,13 +272,11 @@ declare void @perror(%ConstCharStr* %str)
 		%Nat32 10,
 		%Nat32 20
 	},
-	[3 x %Point] [
+	[1 x %Point] [
 		%Point {
 			%Nat32 20,
 			%Nat32 30
-		},
-		%Point zeroinitializer,
-		%Point zeroinitializer
+		}
 	]
 }
 @points2 = internal global [3 x %Point] [
@@ -297,7 +295,7 @@ declare void @perror(%ConstCharStr* %str)
 ]
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-	%2 = alloca %X, align 32
+	%2 = alloca %X, align 16
 	%3 = insertvalue %Point zeroinitializer, %Nat32 10, 0
 	%4 = insertvalue %Point %3, %Nat32 20, 1
 	%5 = insertvalue %X zeroinitializer, %Point %4, 0
@@ -305,8 +303,8 @@ define %Int @main() {
 	%7 = insertvalue %Point %6, %Nat32 30, 1
 	%8 = insertvalue %Point zeroinitializer, %Nat32 20, 0
 	%9 = insertvalue %Point %8, %Nat32 30, 1
-	%10 = insertvalue [3 x %Point] zeroinitializer, %Point %9, 0
-	%11 = insertvalue %X %5, [3 x %Point] %10, 1
+	%10 = insertvalue [1 x %Point] zeroinitializer, %Point %9, 0
+	%11 = insertvalue %X %5, [1 x %Point] %10, 1
 	store %X %11, %X* %2
 	%12 = alloca [3 x %Point], align 1
 	%13 = load [3 x %Point], [3 x %Point]* @points

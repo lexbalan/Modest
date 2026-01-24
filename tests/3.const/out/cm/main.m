@@ -18,7 +18,7 @@ type Point = record {
 
 type X = record {
 	p: Point
-	a: [3]Point
+	a: [1]Point
 }
 
 
