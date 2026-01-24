@@ -43,5 +43,3 @@ cd unicode && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd array && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd prefix && printf "\nBUILD: $PWD\n" && make -j7 test && cd ..
 
-#cd 24.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
-#cd asm && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
