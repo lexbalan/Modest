@@ -1399,6 +1399,7 @@ def do_value_string(x):
 # Сейчас не знаю правильно ли, но вроде так хоть работает
 
 def do_value_array(x):
+	#info("do_value_array", x['ti'])
 	items = []
 	for item in x['items']:
 		# skip comments
@@ -1408,7 +1409,6 @@ def do_value_array(x):
 			item_value = do_rvalue(item['value'])
 			item_value.nl = item['nl']
 			items.append(item_value)
-
 	v = value_array_create(items, ti=x['ti'])
 	return v
 
@@ -1416,6 +1416,7 @@ def do_value_array(x):
 # Создает value с типом GenericRecord
 # которое далее уже можно привести к конкретной записи
 def do_value_record(x):
+	#info("do_value_record", x['ti'])
 	initializers = []
 	for item in x['items']:
 		# skip comments
@@ -2159,7 +2160,6 @@ def def_var_common(x):
 			iv = value_cons_default(iv)
 
 		t = Type.reborn(iv.type)
-
 
 	# Переменная может быть типа []X если она внешняя
 	is_not_extern = getAnno(x, 'extern') == None

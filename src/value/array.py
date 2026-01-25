@@ -78,10 +78,6 @@ def array_can(to, from_type, method, ti):
 		n_from = from_type.volume.asset
 		n_to = to.volume.asset
 
-		if method == 'implicit':
-			if n_from > 0 and n_from < n_to:
-				warning("implicit cons biggest array from smaller", ti)
-
 		# (нельзя неявно построить меньший массив из большего)
 		return n_from <= n_to
 
@@ -113,6 +109,17 @@ def value_array_cons(t, v, method, ti):
 		t.volume = volume
 		t.size = t.of.size * volume.asset
 
+	if method == 'implicit':
+		n_to = t.volume.asset
+		n_from = 0
+		if v.type.is_string():
+			# Пока Разрешаем конструировать массив из более короткой строки
+			n_from = n_to #v.type.length
+		else:
+			n_from = v.type.volume.asset
+
+		if n_from > 0 and n_from < n_to:
+			warning("implicit cons biggest array from smaller", ti)
 
 	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 	nv.stage = v.stage

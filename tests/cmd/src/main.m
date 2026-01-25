@@ -13,7 +13,7 @@ var tokensBuf: [4*1024]Char8
 
 
 func showPrompt() -> Unit {
-	var _prompt: [32]Char8 = prompt
+	var _prompt = [32]Char8 prompt
 	write(0, &_prompt, SizeT lengthof(prompt))
 }
 

@@ -13,7 +13,7 @@ const c5 = Int32 32
 
 var arr0: [10]Int32
 var arr1: [10]Int32 = c0
-var arr2: [10]Char32 = c1
+var arr2: [10]Char32 = [10]Char32 c1
 
 
 //func f0 (x: []Int32) -> []Int32 {

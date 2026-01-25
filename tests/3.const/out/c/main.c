@@ -23,7 +23,7 @@ typedef struct Point Point;
 
 struct X {
 	Point p;
-	Point a[1];
+	Point a[2];
 };
 typedef struct X X;
 
@@ -40,7 +40,7 @@ typedef struct X X;
 
 static X x = (X){
 	.p = (Point){.x = 10, .y = 20},
-	.a = {{.x = 20, .y = 30}}
+	.a = {(Point){.x = 20, .y = 30}, (Point){.x = 20, .y = 30}}
 };
 
 __attribute__((used))
@@ -53,7 +53,7 @@ int main(void) {
 
 	X y = (X){
 		.p = (Point){.x = 10, .y = 20},
-		.a = {{.x = 20, .y = 30}}
+		.a = {(Point){.x = 20, .y = 30}}
 	};
 
 	Point points3[3] = POINTS;

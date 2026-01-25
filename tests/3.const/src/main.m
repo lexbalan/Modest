@@ -19,7 +19,7 @@ type Point = record {
 
 type X = record {
 	p: Point
-	a: [1]Point
+	a: [2]Point
 }
 
 
@@ -36,7 +36,7 @@ const zeroPoints = [3]Point [pointZero, pointZero, pointZero]
 
 var x: X = {
 	p=Point{x=10, y=20}
-	a=[{x=20, y=30}]
+	a=[Point{x=20, y=30}, Point{x=20, y=30}]
 }
 
 @used
@@ -49,7 +49,7 @@ public func main () -> Int {
 
 	var y: X = {
 		p=Point{x=10, y=20}
-		a=[{x=20, y=30}]
+		a=[Point{x=20, y=30}]
 	}
 
 	var points3 = points
