@@ -2166,7 +2166,6 @@ def def_var_common(x):
 	if t.is_forbidden_var(open_array_forbidden=is_not_extern):
 		error("unsuitable variable type", x['type']['ti'])
 
-	iv.att.append("c_initializer")
 	var_value = ValueVar(t, id, init_value=iv, ti=id.ti)
 	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 	ctx_value_add(id.str, var_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)

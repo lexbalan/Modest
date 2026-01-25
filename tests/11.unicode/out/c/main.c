@@ -36,9 +36,9 @@ static uint16_t ratSymbolUTF16[3] = {0xD83D, 0xDC00, 0x0};
 static uint32_t ratSymbolUTF32[3] = {0x1F400, 0x0};
 static uint32_t ratSymbolUTF322[3] = {0x0};
 
-#define ARR_PARTYCORN  (char[4]){'ð', '', '', ''}
-#define ARR_UNICORN  (char[4]){'ð', '', '¦', ''}
-#define ARR_RAT  (char[4]){'ð', '', '', ''}
+#define ARR_PARTYCORN  {'ð', '', '', ''}
+#define ARR_UNICORN  {'ð', '', '¦', ''}
+#define ARR_RAT  {'ð', '', '', ''}
 
 #define GENERIC_STRING_CONST  "S-t-r-i-n-g-Ω 🐀🎉🦄"
 #define STRING8_CONST  (GENERIC_STRING_CONST)

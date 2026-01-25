@@ -50,7 +50,7 @@ int main(void) {
 	// by ptr
 	//
 
-	int32_t *const pa = &a[0];
+	int32_t *const pa = &a;
 	int32_t s2[8 - 5];
 	memcpy(&s2, (int32_t(*)[8 - 5])&pa[5], sizeof(int32_t[8 - 5]));
 	i = 0;

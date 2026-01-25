@@ -476,7 +476,7 @@ def str_value_bin(x, ctx):
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 		if left.type.is_record(): return str_value_eq_composite(x, ctx)
 		elif left.type.is_array(): return str_value_eq_composite(x, ctx)
-		elif left.type.is_string(): return str_value_bool(x.asset)
+		elif left.type.is_string(): return str_value_bool(x.asset, ctx)
 
 	if op == HLIR_VALUE_OP_ADD:
 		if left.type.is_array(): return str_value_array(x, ctx)
@@ -519,7 +519,7 @@ def str_value_eq_composite(x, ctx):
 	right = x.right
 
 	if x.isValueImmediate():
-		return str_value_bool(x.asset)
+		return str_value_bool(x.asset, ctx)
 
 	# если сравниваем строки (Str8, Str16, Str32)
 	if left.type.is_str() and right.type.is_str():
@@ -569,7 +569,7 @@ def str_value_call(v, ctx, sret=None):
 	if v.isValueImmediate():
 		# Если результат call вычислен в CT - просто распечатаем его значение
 		# Так как вызов функции в глобальных выражениях си невозможен
-		return str_value_with_type(v, v.type)
+		return str_value_with_type(v, v.type, ctx=ctx)
 
 	left = v.func
 
@@ -616,10 +616,10 @@ def str_value_call(v, ctx, sret=None):
 		if param != None:
 			p_type = param.type
 
-		if a.isValueCons() and a.value.type.is_generic_array():
-			sstr += "(%s)%s" % (str_type(p_type), str_value(a))
-		else:
-			sstr += incast(p_type, a)
+		#if a.isValueCons() and a.value.type.is_generic_array():
+		#	sstr += "(%s)%s" % (str_type(p_type), str_value(a))
+		#else:
+		sstr += incast(p_type, a)
 
 		i = i + 1
 
@@ -745,7 +745,7 @@ def str_value_cons_record(x, ctx):
 		# Point p = (Point){.x = 5, .y = 10};
 		if len(x.asset) != len(value.asset):
 			return "(" + str_type(x.type) + ")" + str_value_record2(x.type, x.asset)
-		return str_cast(to_type, value)
+		return str_cast(to_type, value, ctx=ctx)
 
 
 	# RecordA -> RecordB
@@ -756,7 +756,7 @@ def str_value_cons_record(x, ctx):
 			# и приведение не требуется
 			return str_value(value, ctx=ctx)
 		# C cannot cast struct to struct (!)
-		return str_cast(to_type, value, hard_cast=True)
+		return str_cast(to_type, value, hard_cast=True, ctx=ctx)
 
 
 
@@ -766,17 +766,16 @@ def str_value_cons_array(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	if from_type.is_generic_array():
+	if from_type.is_generic_array() or from_type.is_string():
 		# C не позволяет приводить литерал массива к типу массива в инициализаторах(!)
 		# Вот все можно приводить, все ок, а массив - нет.
-		return str_value(value, ctx=ctx)
-
-	if from_type.is_string():
-		sstr = ""
-		# Из за идиотии СИ приходится делать так!
-		if not 'c_initializer' in x.att:
+		if not 'initializer_context' in ctx:
 			sstr += '(' + str_type(to_type) + ')'
-		sstr += '{' + print_literal_array_items(x.asset, to_type.of) + '}'
+
+		if from_type.is_string():
+			sstr += '{' + print_literal_array_items(x.asset, to_type.of) + '}'
+		else:
+			sstr += str_value(value, ctx=ctx)
 		return sstr
 
 	# for:
@@ -784,7 +783,7 @@ def str_value_cons_array(x, ctx):
 	if value.type.is_string():
 		return str_value(value, ctx=ctx)
 
-	return str_cast(to_type, value, ctx)
+	return str_cast(to_type, value, ctx=ctx)
 
 
 
@@ -800,9 +799,9 @@ def cstr(value, sz):
 # Выводит строковой литерал C и превращает его в char
 # В случае когда размер символа больше 8 бит,
 # оборачивает его макросом _CHR<X>()
-def cchr(value, sz):
+def cchr(value, sz, ctx):
 	if value.isValueLiteral() and value.type.is_string():
-		return str_value_char(ord(value.asset[0]), sz)
+		return str_value_char(ord(value.asset[0]), sz, ctx)
 	return "_CHR%d(%s)" % (sz, str_value(value))
 
 
@@ -836,16 +835,15 @@ def str_value_cons(x, ctx):
 		return str_value_cons_record(x, ctx)
 
 	if type.is_branded():
-		return str_cast(type, value, ctx)
+		return str_cast(type, value, ctx=ctx)
 
 	if type.is_char() and from_type.is_string():
-		return cchr(value, type.width)
+		return cchr(value, type.width, ctx)
 
 
 	if value.isValueLiteral() and from_type.is_generic():
 		if x.asset != None:
-			as_hex = type.is_word() or value.hasAttribute2('hexadecimal')
-			return str_value_with_type(value, type, as_hex=as_hex)
+			return str_value_with_type(value, type, ctx=ctx)
 
 
 	# *RecordA -> *RecordB
@@ -854,7 +852,7 @@ def str_value_cons(x, ctx):
 	# - их нужно жестко приводить
 	if type.is_pointer_to_record() and from_type.is_pointer_to_record():
 		if (from_type.to.definition != type.to.definition):
-			return str_cast(type, value, ctx)
+			return str_cast(type, value, ctx=ctx)
 
 	elif type.is_pointer_to_array():
 		if from_type.is_string():
@@ -873,7 +871,7 @@ def str_value_cons(x, ctx):
 			# Для C явно приводим указатель на массив к указателю на его элемент
 			# В случае когда происходит НЕЯВНОЕ приведение;
 			if value.type.is_pointer_to_array():
-				return str_cast(type, value, ctx)
+				return str_cast(type, value, ctx=ctx)
 
 		return str_value(value)
 
@@ -903,7 +901,7 @@ def str_value_cons(x, ctx):
 			elif type.is_word():
 				if from_type.size < type.size:
 					nat_same_sz = type_select_nat(from_type.width)
-					return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx)
+					return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx=ctx)
 
 	# for: (uint32_t *)(void *)&i;
 	# remove (void *)  ^^^^^^^^
@@ -971,7 +969,7 @@ def str_value_string(v, ctx):
 	return print_utf32codes_as_string(utf32_codes, width=width, quote='"')
 
 
-def str_value_char(cc, width):
+def str_value_char(cc, width, ctx):
 	return print_utf32codes_as_string([cc], width, quote="'")
 
 
@@ -1024,7 +1022,7 @@ def str_value_array(x, ctx):
 
 
 
-def str_value_record(x):
+def str_value_record(x, ctx):
 	items = x.asset
 	type = x.type
 	return str_value_record2(type, items)
@@ -1067,7 +1065,7 @@ def str_value_record2(type, items):
 		elif item_printed:
 			sstr += " "
 
-		sstr += ".%s = %s" % (field_id_str, str_value(ini.value))
+		sstr += ".%s = %s" % (field_id_str, str_initializer(ini.value))
 		ocnt += 1
 
 		#if i < (nitems - 1):
@@ -1129,7 +1127,7 @@ def print_utf32codes_as_string(utf32_codes, width, quote):
 
 
 
-def str_value_bool(num):
+def str_value_bool(num, ctx):
 	return csettings['true_literal'] if num else csettings['false_literal']
 
 
@@ -1150,7 +1148,7 @@ def str_value_suffix(req_bits, is_unsigned):
 	return sstr
 
 
-def str_value_number(type, num, nsigns=0, is_big=False, is_hex=False):
+def str_value_number(type, num, nsigns=0, is_big=False, as_hex=False):
 	global need_big_int
 	sstr = ''
 	# Big Number?
@@ -1165,7 +1163,7 @@ def str_value_number(type, num, nsigns=0, is_big=False, is_hex=False):
 			a2 = (num >> 128) & 0xFFFFFFFFFFFFFFFF
 			return "BIG_INT256(0x%XULL, 0x%XULL, 0x%XULL, 0x%XULL)" % (a3, a2, a1, a0)
 
-	if is_hex:
+	if as_hex:
 		fmt = "0x%%0%dX" % nsigns
 		sstr += (fmt % num)
 	else:
@@ -1177,34 +1175,34 @@ def str_value_number(type, num, nsigns=0, is_big=False, is_hex=False):
 
 
 
-def str_value_float(v, t):
+def str_value_float(v, t, ctx):
 	return '{0:f}'.format(v.asset)
 
 
-def str_value_pointer(type, num):
+def str_value_pointer(type, num, ctx):
 	if num == 0:
 		return "NULL"
 	return "((" + str_type(type) + ")0x%08X)" % num
 
 
 def str_value_literal(x, ctx):
-	return str_value_with_type(x, x.type)
+	return str_value_with_type(x, x.type, ctx=ctx)
 
 
-def str_value_with_type(v, t, as_hex=False):
+def str_value_with_type(v, t, ctx=[]):
 	asset = v.asset
 
 	if t.is_arithmetical() or t.is_number() or t.is_word():
-		as_hex = as_hex or v.type.is_word() or v.hasAttribute2('hexadecimal')
-		return str_value_number(t, asset, is_hex=as_hex)
+		as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
+		return str_value_number(t, asset, as_hex=as_hex)
 
-	elif t.is_float(): return str_value_float(v, t)
-	elif t.is_string(): return str_value_string(v, ctx=[])
-	elif t.is_record(): return str_value_record(v)
-	elif t.is_bool(): return str_value_bool(asset)
-	elif t.is_char(): return str_value_char(asset, t.width)
-	elif t.is_pointer(): return str_value_pointer(t, asset)
-	elif t.is_array(): return str_value_array(v, ctx=[])
+	elif t.is_float(): return str_value_float(v, t, ctx)
+	elif t.is_string(): return str_value_string(v, ctx)
+	elif t.is_record(): return str_value_record(v, ctx)
+	elif t.is_bool(): return str_value_bool(asset, ctx)
+	elif t.is_char(): return str_value_char(asset, t.width, ctx)
+	elif t.is_pointer(): return str_value_pointer(t, asset, ctx)
+	elif t.is_array(): return str_value_array(v, ctx)
 	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
 	1/0
 
@@ -1343,7 +1341,7 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 	elif x.isValueArray():
 		sstr += str_value_array(x, ctx)
 	elif x.isValueRecord():
-		sstr += str_value_record(x)
+		sstr += str_value_record(x, ctx)
 	elif x.isValueBin():
 		sstr += str_value_bin(x, ctx)
 	elif x.isValueShl():
@@ -1507,10 +1505,11 @@ def print_stmt_var(x):
 			return
 
 	out(" = ")
-	if init_value.type.is_closed_array():
-		out(str_initializer(init_value))
-	else:
-		print_value(init_value)
+	out(str_initializer(init_value))
+	#if init_value.type.is_closed_array():
+	#	out(str_initializer(init_value))
+	#else:
+	#	print_value(init_value)
 	out(";")
 	return
 
@@ -1537,7 +1536,11 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 		need_wrap = precedence(value) < precedenceMax
 
 	set_nl_symbol(" \\\n")
-	out(str_value(value, wrapped=need_wrap))
+	#out(str_value(value, wrapped=need_wrap))
+	if need_wrap:
+		out('(' + str_initializer(value) + ')')
+	else:
+		out(str_initializer(value))
 
 	#out("/*%s*/" % str_type(value.type))
 	set_nl_symbol("\n")
@@ -1577,7 +1580,8 @@ def print_stmt_const(x):
 	# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
 	print_variable(get_id_str(x), const_value.type)
 	out(" = ")
-	out(incast(const_value.type, init_value))
+	out(str_initializer(init_value))
+	#out(incast(const_value.type, init_value))
 	#print_value(init_value)
 	out(";")
 	return
@@ -2063,7 +2067,7 @@ def print_def_var(x, isdecl=False, as_extern=False):
 # .arr = (uint8_t [3]){1, 2, 3}  // not worked
 # .arr = {1, 2, 3}  // worked
 def str_initializer(v):
-	return str_value(v, [])
+	return str_value(v, ctx=['initializer_context'])
 
 
 

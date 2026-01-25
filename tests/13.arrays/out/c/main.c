@@ -285,8 +285,8 @@ int main(void) {
 	printf("d[5] = %i\n", d[5]);
 
 	// check equality between two arrays (by pointer)
-	int32_t *const pa = &a[0];
-	int32_t *const pb = &b[0];
+	int32_t *const pa = &a;
+	int32_t *const pb = &b;
 
 	if (memcmp(pa, pb, sizeof(int32_t[3])) == 0) {
 		printf("*pa == *pb\n");
