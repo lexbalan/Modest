@@ -766,45 +766,10 @@ def str_value_cons_array(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	# Local:
-	# В C мы не можем просто напечатать {0, 1, 2, 3} и получить массив
-	# Но мы можем сделать так: (<item_type>[4]){0, 1, 2, 3}
-	# But in Global:
-	# печатаем как есть, иначе ошибка (о Боже C это нечто!):
-	# {0, 1, 2, 3}
-	#if is_global_context():
-	if from_type.is_generic_array(): #and ('in_initializer' in ctx):
-		# если это литеральная (и не глобальная) константа-массив
-		# то мы должны ее привести к требуемому типу
-		#is_const = value['kind'] in ['const', 'literal', HLIR_VALUE_OP_ADD]
-
-		# mass
-		#if is_global_context():
+	if from_type.is_generic_array():
+		# C не позволяет приводить литерал массива к типу массива в инициализаторах(!)
+		# Вот все можно приводить, все ок, а массив - нет.
 		return str_value(value, ctx=ctx)
-
-#		if is_global_context():
-#			if value.isValueRuntime() or value.isValueLinktime():
-#				return str_value(value, ctx=ctx)
-#
-#		is_const = value.isValueLiteral() or value.isValueConst() or (value.isValueBin() and value.op == HLIR_VALUE_OP_ADD)
-#
-#		if is_const:
-#			ctx=['array_as_array']
-#
-#			if to_type.of.is_char():
-#				if from_type.of.is_string():
-#					chars = []
-#					for item in value.asset:
-#						ch = item.asset
-#						chars.append(ch)
-#
-#					char_width = to_type.of.width
-#					return print_utf32codes_as_string(chars, width=char_width, quote='"')
-#
-#			return str_cast(to_type, value, ctx=ctx)
-#		else:
-#			return str_value(value, ctx=ctx)
-
 
 	if from_type.is_string():
 		sstr = ""
@@ -813,13 +778,6 @@ def str_value_cons_array(x, ctx):
 			sstr += '(' + str_type(to_type) + ')'
 		sstr += '{' + print_literal_array_items(x.asset, to_type.of) + '}'
 		return sstr
-
-#			# cast <string literal> to <array of chars>:
-#			if to_type.of.width == from_type.width:
-#				return str_value(value, ctx=ctx)
-#			else:
-#				return cstr(value, to_type.of.width)
-#			return '<???>'
 
 	# for:
 	#    var x: [10]Word8 = "0123456789"
