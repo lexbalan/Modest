@@ -1,5 +1,6 @@
 # error.py
-
+import os
+import sys
 from common import features
 from hlir import TokenInfo, TextInfo
 
@@ -62,14 +63,13 @@ def colorize(text, color):
 
 
 def mark(pos, len, color):
-	print(" " * pos, end='')
-	print(colorize('^'*len, color))
+	return " " * pos + colorize('^'*len, color)
 
 
 def highlight(ti, color, offset):
 	offset += ti.spaces + ti.tabs * TABSTOP
 	length = 1 #ti.length
-	mark(offset, length, color)
+	return mark(offset, length, color)
 
 
 
@@ -80,7 +80,7 @@ def markline(line, begin, end):
 
 
 
-def print_common_message(mg, color, s, ti):
+def str_common_message(mg, color, s, ti):
 	if ti == None:
 		print(colorize(mg, color) + s)
 		return
@@ -98,16 +98,16 @@ def print_common_message(mg, color, s, ti):
 		npos = mti.spaces + mti.tabs + 1
 		pre = '\n%s:%d:%d:\n' % (lti.source, lti.line, npos)
 
-	print(colorize(pre, BOLD) + colorize(mg, color) + s)
+	estr = colorize(pre, BOLD) + colorize(mg, color) + s + '\n'
 
 	if mti != None:
 		margin = "%d |" % lti.line
 		line = read_line(lti.source, lti.lpos)
 		line = line.replace('\t', ' ' * TABSTOP)
-		line = markline(line, start_pos, end_pos)
-		print(margin + line)
-		highlight(mti, color, offset=len(margin))
-
+		line = markline(line, start_pos, end_pos) + '\n'
+		estr += margin + line
+		estr += highlight(mti, color, offset=len(margin)) + '\n'
+	return estr
 
 
 log_ind = 0
@@ -127,7 +127,11 @@ def log(s):
 
 
 def note(s, ti=None):
-	print_common_message('note: ', COLOR_NOTE, s, ti)
+	str_common_message('note: ', COLOR_NOTE, s, ti)
+
+
+def puterr(s):
+	os.write(sys.stderr.fileno(), s.encode("utf-8"))
 
 
 def info(s, ti=None):
@@ -136,7 +140,8 @@ def info(s, ti=None):
 		return
 	if not show_info:
 		return
-	print_common_message('info: ', COLOR_INFO, s, ti)
+	estr = str_common_message('info: ', COLOR_INFO, s, ti)
+	puterr(estr)
 
 
 def warning(s, ti=None):
@@ -145,19 +150,22 @@ def warning(s, ti=None):
 		return
 	global warncnt
 	warncnt = warncnt + 1
-	print_common_message('warning: ', COLOR_WARNING, s, ti)
+	estr = str_common_message('warning: ', COLOR_WARNING, s, ti)
+	puterr(estr)
 
 
 def error(s, ti=None):
 	global errcnt
 	errcnt = errcnt + 1
-	print_common_message('error: ', COLOR_ERROR, s, ti)
+	estr = str_common_message('error: ', COLOR_ERROR, s, ti)
+	puterr(estr)
 	if errcnt >= MAX_ERRORS:
 		exit(1)
 
 
 def fatal(s, ti=None):
-	print_common_message('fatal error: ', 91, s, ti)
+	estr = str_common_message('fatal error: ', 91, s, ti)
+	puterr(estr)
 	exit(1)
 
 
