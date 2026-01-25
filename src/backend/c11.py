@@ -476,7 +476,7 @@ def str_value_bin(x, ctx):
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 		if left.type.is_record(): return str_value_eq_composite(x, ctx)
 		elif left.type.is_array(): return str_value_eq_composite(x, ctx)
-		elif left.type.is_string(): return str_value_bool(x.asset, ctx)
+		elif left.type.is_string(): return str_value_bool2(x.asset)
 
 	if op == HLIR_VALUE_OP_ADD:
 		if left.type.is_array(): return str_value_array(x, ctx)
@@ -519,7 +519,7 @@ def str_value_eq_composite(x, ctx):
 	right = x.right
 
 	if x.isValueImmediate():
-		return str_value_bool(x.asset, ctx)
+		return str_value_bool2(x.asset)
 
 	# если сравниваем строки (Str8, Str16, Str32)
 	if left.type.is_str() and right.type.is_str():
@@ -781,7 +781,7 @@ def str_value_cons_array(x, ctx):
 	# for:
 	#    var x: [10]Word8 = "0123456789"
 	if value.type.is_string():
-		return str_value(value, ctx=ctx)
+		return str_value_string(value, ctx=ctx)
 
 	return str_cast(to_type, value, ctx=ctx)
 
@@ -801,7 +801,7 @@ def cstr(value, sz):
 # оборачивает его макросом _CHR<X>()
 def cchr(value, sz, ctx):
 	if value.isValueLiteral() and value.type.is_string():
-		return str_value_char(ord(value.asset[0]), sz, ctx)
+		return str_value_char2(ord(value.asset[0]), sz, ctx)
 	return "_CHR%d(%s)" % (sz, str_value(value))
 
 
@@ -969,8 +969,10 @@ def str_value_string(v, ctx):
 	return print_utf32codes_as_string(utf32_codes, width=width, quote='"')
 
 
-def str_value_char(cc, width, ctx):
+def str_value_char2(cc, width, ctx):
 	return print_utf32codes_as_string([cc], width, quote="'")
+
+
 
 
 def str_value_array(x, ctx):
@@ -1127,8 +1129,13 @@ def print_utf32codes_as_string(utf32_codes, width, quote):
 
 
 
-def str_value_bool(num, ctx):
+def str_value_bool2(num):
 	return csettings['true_literal'] if num else csettings['false_literal']
+
+
+def str_value_bool(v, ctx):
+	num = v.asset
+	return str_value_bool2(num)
 
 
 
@@ -1199,8 +1206,9 @@ def str_value_with_type(v, t, ctx=[]):
 	elif t.is_float(): return str_value_float(v, t, ctx)
 	elif t.is_string(): return str_value_string(v, ctx)
 	elif t.is_record(): return str_value_record(v, ctx)
-	elif t.is_bool(): return str_value_bool(asset, ctx)
-	elif t.is_char(): return str_value_char(asset, t.width, ctx)
+	elif t.is_bool(): return str_value_bool(v, ctx)
+	elif t.is_char(): return str_value_char2(asset, t.width, ctx)
+	#elif t.is_char(): return str_value_char(v, ctx)
 	elif t.is_pointer(): return str_value_pointer(t, asset, ctx)
 	elif t.is_array(): return str_value_array(v, ctx)
 	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
