@@ -33,8 +33,8 @@ typedef struct Line Line;
 }
 
 #define LINE1  (Line){ \
-	.a = (Point){.x = 10.000000, .y = 20.000000}, \
-	.b = (Point){.x = 30.000000, .y = 40.000000} \
+	.a = (Point){.x = 10.0, .y = 20.0}, \
+	.b = (Point){.x = 30.0, .y = 40.0} \
 }
 
 #define LINE2  (Line){ \
@@ -43,8 +43,8 @@ typedef struct Line Line;
 }
 
 #define LINE3  (Line){ \
-	.a = (Point){.x = 10.000000, .y = 20.000000}, \
-	.b = (Point){.x = 30.000000, .y = 40.000000} \
+	.a = (Point){.x = 10.0, .y = 20.0}, \
+	.b = (Point){.x = 30.0, .y = 40.0} \
 }
 
 #define LINES  {LINE0, LINE1, LINE2, LINE3}
@@ -62,8 +62,8 @@ typedef struct WrappedArray WrappedArray;
 static float distance(Point a, Point b) {
 	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
 	const double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
-	const double dx2 = pow(dx, 2.000000);
-	const double dy2 = pow(dy, 2.000000);
+	const double dx2 = pow(dx, 2.0);
+	const double dy2 = pow(dy, 2.0);
 	return sqrt(dx2 + dy2);
 }
 

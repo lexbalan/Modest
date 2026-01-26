@@ -8,7 +8,7 @@ from .common import *
 from error import info, warning, error, fatal
 from type import select_common_type, type_print
 from unicode import chars_to_utf32
-
+from decimal import Decimal
 
 import re
 
@@ -1159,8 +1159,23 @@ def str_literal_number(type, num, nsigns=0, is_big=False, as_hex=False):
 
 
 
+def str_literal_decimal(d: Decimal, max_frac=None):
+	s = format(d, 'f')
+	# remove zero tail
+	i = len(s) - 1
+	while True:
+		if s[i] == '0':
+			i -= 1
+		else:
+			i += 2
+			break
+	return s[0:i]
+
+
 def str_literal_float(t, v, ctx):
-	return '{0:f}'.format(v.asset)
+	max_digits = 32
+	return str_literal_decimal(v.asset)
+
 
 
 def str_literal_pointer(type, num, ctx):

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 
 #ifndef __STR_UNICODE__
 #if __has_include(<uchar.h>)
@@ -122,7 +123,7 @@ static bool test_generic_integer(void) {
 
 static bool test_generic_float(void) {
 	// Any float literal have GenericFloat type
-	#define pi  3.141592653589793238462643383279502884
+	#define pi  3.1415926535897932384626433832795028841971693993751058209749445923
 
 	// value with GenericFloat type
 	// can be implicit casted to any Float type

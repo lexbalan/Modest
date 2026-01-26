@@ -2,6 +2,7 @@
 
 include "libc/ctypes64"
 include "libc/stdio"
+include "libc/math"
 
 
 public func main () -> Int {
@@ -79,7 +80,7 @@ func test_generic_integer () -> Bool {
 
 func test_generic_float () -> Bool {
 	// Any float literal have GenericFloat type
-	let pi = 3.141592653589793238462643383279502884
+	let pi = 3.1415926535897932384626433832795028841971693993751058209749445923
 
 	// value with GenericFloat type
 	// can be implicit casted to any Float type
