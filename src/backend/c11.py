@@ -744,7 +744,7 @@ def str_value_cons_record(x, ctx):
 		# а так:
 		# Point p = (Point){.x = 5, .y = 10};
 		if len(x.asset) != len(value.asset):
-			return "(" + str_type(x.type) + ")" + str_literal_record2(x.type, x.asset)
+			return "(" + str_type(x.type) + ")" + str_literal_record(x, ctx=ctx)
 		return str_cast(to_type, value, ctx=ctx)
 
 
@@ -919,12 +919,12 @@ def is_zero_tail(values, i, n):
 
 
 
-def print_literal_array_items(values, item_type):
+def print_literal_array_items(items, item_type):
 	sstr = ''
 	i = 0
-	n = len(values)
+	n = len(items)
 	while i < n:
-		a = values[i]
+		a = items[i]
 
 		nl = a.nl
 		if nl > 0:
@@ -944,27 +944,13 @@ def print_literal_array_items(values, item_type):
 		# и если они тоже zero - их можно не печатать (zero tail)
 		# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
 		if a.isValueZero():
-			if is_zero_tail(values, i, n):
+			if is_zero_tail(items, i, n):
 				return sstr
 
 		if i < n:
 			sstr += ','
 
 	return sstr
-
-
-
-def str_literal_string(v, ctx):
-	utf32_codes = chars_to_utf32(v.asset)
-	width = v.type.width
-	if v.type.is_generic():
-		width=0
-	return print_utf32codes_as_string(utf32_codes, width=width, quote='"')
-
-
-def str_literal_char(type, cc, ctx):
-	return print_utf32codes_as_string([cc], type.width, quote="'")
-
 
 
 
@@ -1017,12 +1003,23 @@ def str_literal_array(x, ctx):
 
 
 
+def str_literal_string(v, ctx):
+	utf32_codes = chars_to_utf32(v.asset)
+	width = v.type.width
+	if v.type.is_generic():
+		width=0
+	return print_utf32codes_as_string(utf32_codes, width=width, quote='"')
+
+
+def str_literal_char(type, cc, ctx):
+	return print_utf32codes_as_string([cc], type.width, quote="'")
+
+
+
+
 def str_literal_record(x, ctx):
 	items = x.asset
 	type = x.type
-	return str_literal_record2(type, items)
-
-def str_literal_record2(type, items):
 	nitems = len(items)
 #	if nitems == 0:
 #		print("???")
