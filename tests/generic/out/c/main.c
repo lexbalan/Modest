@@ -235,7 +235,7 @@ static bool test_generic_record(void) {
 	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32}
 	Point2D point_2d;
-	point_2d = (Point2D)p;
+	point_2d = (Point2D){.x = 10, .y = 20};
 	(void)point_2d;
 
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})

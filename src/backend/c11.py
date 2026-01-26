@@ -724,7 +724,6 @@ def str_cast(t, v, hard_cast=False, ctx=[]):
 
 
 def str_value_cons_record(x, ctx):
-	sstr = ''
 	to_type = x.type
 	value = x.value
 	from_type = value.type
@@ -734,30 +733,17 @@ def str_value_cons_record(x, ctx):
 		if to_type.is_generic_record():
 			return str_value(value, ctx=ctx)
 
-		# Local Context:
-		# !
-		# type Point = record {x: Int32 = 10, y: Int32 = 10}
-		# const p1 = {x=5}
-		# var p: Point = p1
-		# Тогда в си придется напечатать не так:
-		# Point p = p1;
-		# а так:
-		# Point p = (Point){.x = 5, .y = 10};
-		if len(x.asset) != len(value.asset):
-			return "(" + str_type(x.type) + ")" + str_literal_record(x, ctx=ctx)
-		return str_cast(to_type, value, ctx=ctx)
-
-
 	# RecordA -> RecordB
 	#if to_type.is_record():
-	if from_type.is_record():
+	if from_type.is_record() and not from_type.is_generic():
 		if to_type.uid == from_type.uid:
 			# это реально одна и та же структура (просто возм ее копия)
 			# и приведение не требуется
 			return str_value(value, ctx=ctx)
-		# C cannot cast struct to struct (!)
+		# C cannot just cast struct to struct (!)
 		return str_cast(to_type, value, hard_cast=True, ctx=ctx)
 
+	return '(' + str_type(to_type) + ')' + str_literal_record(x, ctx=ctx)
 
 
 def str_value_cons_array(x, ctx):
@@ -1057,6 +1043,7 @@ def str_literal_record(x, ctx):
 		elif item_printed:
 			sstr += " "
 
+		#print(ini.value)
 		sstr += ".%s = %s" % (field_id_str, str_initializer(ini.value))
 		ocnt += 1
 
@@ -2010,53 +1997,8 @@ def print_def_var(x, isdecl=False, as_extern=False):
 	if not (init_value.isValueUndef() or is_extern):
 		out(" = ")
 		out(str_initializer(init_value))
+
 	out(";")
-
-
-#
-#
-#def str_initializer_record(v):
-#	sstr = ''
-#	sstr += '{'
-#	indent_up()
-#	i = 0
-#	nl_end = 0
-#	while i < len(v.asset):
-#		ini = v.asset[i]
-#		if ini.nl > 0:
-#			nl_end = 1
-#		sstr += str_nl_indent(ini.nl)
-#		sstr += '.%s = %s' % (ini.id.str, str_initializer(ini.value))
-#		if i < len(v.asset) - 1:
-#			sstr += ','
-#			if v.asset[i+1].nl == 0:
-#				sstr += ' '
-#		i += 1
-#	indent_down()
-#	sstr += str_nl_indent(nl_end) + '}'
-#	return sstr
-#
-#
-#def str_initializer_array(v):
-#	sstr = ''
-#	sstr += '{'
-#	indent_up()
-#	i = 0
-#	nl_end = 0
-#	while i < len(v.asset):
-#		item = v.asset[i]
-#		if item.nl > 0:
-#			nl_end = 1
-#		sstr += str_nl_indent(item.nl)
-#		sstr += str_initializer(item)
-#		if i < len(v.asset) - 1:
-#			sstr += ','
-#			if v.asset[i+1].nl == 0:
-#				sstr += ' '
-#		i += 1
-#	indent_down()
-#	sstr += str_nl_indent(nl_end) + '}'
-#	return sstr
 
 
 # В C нельзя присвоить глобальной переменной/константе композитное значение

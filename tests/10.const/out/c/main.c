@@ -33,8 +33,8 @@ typedef struct Line Line;
 }
 
 #define LINE1  (Line){ \
-	.a = {.x = 10, .y = 20}, \
-	.b = {.x = 30, .y = 40} \
+	.a = (Point){.x = 10.000000, .y = 20.000000}, \
+	.b = (Point){.x = 30.000000, .y = 40.000000} \
 }
 
 #define LINE2  (Line){ \
@@ -43,8 +43,8 @@ typedef struct Line Line;
 }
 
 #define LINE3  (Line){ \
-	.a = {.x = 10, .y = 20}, \
-	.b = {.x = 30, .y = 40} \
+	.a = (Point){.x = 10.000000, .y = 20.000000}, \
+	.b = (Point){.x = 30.000000, .y = 40.000000} \
 }
 
 #define LINES  {LINE0, LINE1, LINE2, LINE3}

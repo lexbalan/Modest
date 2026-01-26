@@ -598,6 +598,7 @@ class Type(Entity):
 		self.incomplete = True
 		self.definition = None
 		self.is_global_flag = True
+		self.uid = 0
 		#self.id = id
 
 		self.parent_type = None

@@ -23,8 +23,8 @@ int main(void) {
 	Object o2;
 
 	o1 = (Object){
-		.firstname = "John",
-		.lastname = "Doe",
+		.firstname = {'J', 'o', 'h', 'n'},
+		.lastname = {'D', 'o', 'e'},
 		.age = 30
 	};
 

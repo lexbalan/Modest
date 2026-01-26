@@ -22,7 +22,7 @@ struct SHA256_TestCase {
 typedef struct SHA256_TestCase SHA256_TestCase;
 
 static SHA256_TestCase test0 = (SHA256_TestCase){
-	.inputData = "abc",
+	.inputData = {'a', 'b', 'c'},
 	.inputDataLen = 3,
 	.expectedResult = {
 		0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x1, 0xCF, 0xEA,
@@ -33,7 +33,7 @@ static SHA256_TestCase test0 = (SHA256_TestCase){
 };
 
 static SHA256_TestCase test1 = (SHA256_TestCase){
-	.inputData = "Hello World!",
+	.inputData = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'},
 	.inputDataLen = 12,
 	.expectedResult = {
 		0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53,
