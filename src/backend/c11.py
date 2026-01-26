@@ -863,25 +863,26 @@ def str_value_cons(x, ctx):
 
 
 	if x.method in ['implicit', 'default']:
+		sstr = ''
 		if value.isValueRef():
-		#if value.type.is_pointer_to_array():
-			# Для C явно приводим указатель на массив к указателю на его элемент
-			# В случае когда происходит НЕЯВНОЕ приведение;
-			if value.type.is_pointer_to_array():
-				#type_print(type.to); print()
+			if type.is_pointer_to_array() and value.type.is_pointer_to_array():
+				# Для C явно приводим указатель на массив к указателю на его элемент
+				# В случае когда происходит НЕЯВНОЕ приведение;
+				#type_print(type.to.of); print()
 				#type_print(value.type.to.of); print()
 				#mass
-				if not Type.eq(type.to, value.type.to.of):
-					from backend.cm import str_type as sstr_type
+				if not Type.eq(type.to.of, value.type.to.of):
 					sstr = ''
-					#sstr += '/*' + sstr_type(type.to) + ', ' + sstr_type(value.type.to.of) + '*/'
 					sstr += "(" + str_type(type) + ")"
 					sstr += '&' + str_value(value.value, ctx=ctx)
 					return sstr
 				return '&' + str_value(value.value, ctx=ctx) + '[0]'
 				#return str_cast(type, value, ctx=ctx)
 
-		return str_value(value)
+			if not Type.eq(type.to, value.type.to):
+				sstr += "(" + str_type(type) + ")"
+		sstr += str_value(value)
+		return sstr
 
 
 	if value.isValueLiteral():

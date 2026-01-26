@@ -70,26 +70,26 @@ void table_print(table_Table *table) {
 	//
 
 	// top border
-	separator((uint32_t *)&sz, table->nCols);
+	separator(&sz[0], table->nCols);
 
 	if (table->header != NULL) {
-		printRow(table->header, (uint32_t *)&sz, table->nCols);
-		separator((uint32_t *)&sz, table->nCols);
+		printRow(table->header, &sz[0], table->nCols);
+		separator(&sz[0], table->nCols);
 	}
 
 	i = 0;
 	while (i < table->nRows) {
-		printRow((char *(*)[])&(*data)[i], (uint32_t *)&sz, table->nCols);
+		printRow(&(*data)[i][0], &sz[0], table->nCols);
 
 		if (table->separate && i < table->nRows - 1) {
-			separator((uint32_t *)&sz, table->nCols);
+			separator(&sz[0], table->nCols);
 		}
 
 		i = i + 1;
 	}
 
 	// bottom border
-	separator((uint32_t *)&sz, table->nCols);
+	separator(&sz[0], table->nCols);
 }
 
 

@@ -130,7 +130,7 @@ int main(void) {
 	int32_t k = 4;
 	int32_t j = 7;
 	memset((int32_t(*)[j - k])&ss[k], 0, sizeof(int32_t[j - k]));
-	array_print((int32_t *)&ss, 10);
+	array_print(&ss[0], 10);
 
 	printf("--------------------------------------------\n");
 	printf("copy slice by var\n");
@@ -143,7 +143,7 @@ int main(void) {
 	#define j1  8
 	ARRCPY((int32_t(*)[j1 - i1])&dst[i1], &((int8_t[5]){11, 22, 33, 44, 55}), j1 - i1);
 
-	array_print((int32_t *)&dst, 10);
+	array_print(&dst[0], 10);
 
 	//	printf("--------------------------------------------\n")
 	//

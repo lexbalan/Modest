@@ -24,7 +24,7 @@
 static bool sendFile(FILE *fp, int sockFd) {
 	char data[BUF_SIZE];
 
-	while (fgets((char *)&data, LENGTHOF(data), fp) != NULL) {
+	while (fgets(&data[0], LENGTHOF(data), fp) != NULL) {
 		if (send(sockFd, (void *)&data, sizeof data, 0) == -1) {
 			return false;
 		}

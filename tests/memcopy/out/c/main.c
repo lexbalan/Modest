@@ -31,7 +31,7 @@ int main(void) {
 	const size_t len = sizeof(Object);
 	printf("LEN = %zu\n", len);
 
-	memory_copy(&o2, &o1, len);
+	memory_copy((void *)&o2, (void *)&o1, len);
 
 	printf("firstname = '%s'\n", &o2.firstname[0]);
 	printf("lastname = '%s'\n", &o2.lastname[0]);

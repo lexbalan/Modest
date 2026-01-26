@@ -91,7 +91,7 @@ static void tokenize(Tokenizer *tokenizer) {
 		char token[max_toklen];
 
 		char *p = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		const uint16_t toklen = gettok(tokenizer, (char *)&token, max_toklen);
+		const uint16_t toklen = gettok(tokenizer, &token[0], max_toklen);
 		if (toklen == 0) {
 			break;
 		}
@@ -133,15 +133,15 @@ int32_t main(void) {
 
 	while (true) {
 		showPrompt();
-		fgets((char *)&inbuf, (int)sizeof inbuf, stdin);
+		fgets(&inbuf[0], (int)sizeof inbuf, stdin);
 
 		char *tokens[64] = {0};
 
 		// Токенизируем строку
 		Tokenizer tokenizer = (Tokenizer){
-			.input = (char *)&inbuf,
-			.tokensBuf = (char *)&tokensBuf,
-			.tokens = (char *(*)[])&tokens
+			.input = &inbuf[0],
+			.tokensBuf = &tokensBuf[0],
+			.tokens = &tokens[0]
 		};
 		tokenize(&tokenizer);
 

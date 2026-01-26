@@ -29,13 +29,23 @@ func returnPoint () -> Point {
 //	return 0
 //}
 
+func fa (a: *[]Int32) -> Unit {
+	Unit a
+}
+
 public func main () -> Int32 {
 	printf("Hello World!\n")
+
+	var a: [3]Int32 = [1, 2, 3]
+	fa(&a)
+
 	var p: Point = unit
 	// Конструируем Point из записи в которой нет ни одного поля
 	// 1. implicit cons Point from {} (здесь мы создаем ValueCons Point с default полями)
 	p = p00
 	p = p01
+
+	Unit p
 
 	type MyInt = Int32
 	var myInt32: MyInt

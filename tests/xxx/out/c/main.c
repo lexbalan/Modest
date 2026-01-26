@@ -34,18 +34,29 @@ static Point returnPoint(void) {
 //	return 0
 //}
 
+static void fa(int32_t *a) {
+	(void)a;
+}
+
+
 int32_t main(void) {
 	printf("Hello World!\n");
+
+	int32_t a[3] = {1, 2, 3};
+	fa(&a[0]);
+
 	Point p = (Point){
 		.x = 32,
 		.y = 32
 	};
 	// Конструируем Point из записи в которой нет ни одного поля
 	// 1. implicit cons Point from {} (здесь мы создаем ValueCons Point с default полями)
-	p = (Point)P00;
+	p = (Point){.x = 5, .y = 5};
 	p = (Point){.x = 5,
 		.y = 32
 	};
+
+	(void)p;
 
 	typedef int32_t MyInt;
 	MyInt myInt32;

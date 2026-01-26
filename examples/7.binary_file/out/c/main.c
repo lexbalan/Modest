@@ -30,7 +30,7 @@ static void writeExample(void) {
 	};
 
 	// write chunk to file
-	fwrite(&chunk, sizeof(Chunk), 1, fp);
+	fwrite((void *)&chunk, sizeof(Chunk), 1, fp);
 
 	fclose(fp);
 }
@@ -46,7 +46,7 @@ static void readExample(void) {
 	}
 
 	Chunk chunk;
-	fread(&chunk, sizeof(Chunk), 1, fp);
+	fread((void *)&chunk, sizeof(Chunk), 1, fp);
 
 	printf("file \"%s\" contains:\n", FILENAME);
 	printf("chunk.id: \"%s\"\n", &chunk.id[0]);

@@ -41,11 +41,11 @@ static void handleRequest(int32_t clientSocket) {
 	printf("Received request:\n%s\n", (char *)&buffer);
 
 	char response[SEND_BUFFER_SIZE];
-	sprintf((char *)&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>",
+	sprintf(&response[0], "%s<html><body><h1>Hello, World! (%d)</h1></body></html>",
 		HTTP_HEADER, pageCounter
 	);
 
-	write(clientSocket, (void *)&response, strlen((const char *)&response));
+	write(clientSocket, (void *)&response, strlen(&response[0]));
 	close(clientSocket);
 }
 

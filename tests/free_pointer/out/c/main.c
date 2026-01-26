@@ -16,9 +16,9 @@ int32_t main(void) {
 	void *freePointer;
 
 	// free pointer can points to value of any type
-	freePointer = &a;// it's ok (just for demonstration)
-	freePointer = &b;// it's also ok
-	freePointer = &c;// after all it will be points to value c (with type Int64)
+	freePointer = (void *)&a;// it's ok (just for demonstration)
+	freePointer = (void *)&b;// it's also ok
+	freePointer = (void *)&c;// after all it will be points to value c (with type Int64)
 
 	// you can't do dereference operation with Free pointer
 	// (because runtime doesn't have any idea about value type it pointee),
