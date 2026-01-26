@@ -212,7 +212,7 @@ def get_type_id(t):
 
 
 
-def str_type_record(t, tag=''):
+def str_type_record(t, tag='', ctx=[]):
 	s = "struct"
 
 	atts_line = print_gcc_attributes_for(t)
@@ -273,7 +273,7 @@ def is_type_named(t):
 	return get_type_id(t) != None
 
 
-def str_type_array(t, core='', need_close=False):
+def str_type_array(t, core='', need_close=False, ctx=[]):
 	# handle array of array .. case
 	right = ''
 	i = 0
@@ -298,7 +298,7 @@ def str_type_array(t, core='', need_close=False):
 	if need_close:
 		core += ')'
 
-	return str_type(t2, core=core+right)
+	return str_type(t2, core=core+right, ctx=ctx)
 
 
 
@@ -345,7 +345,7 @@ def strFuncParamlist(params, va_arg):
 	return s
 
 
-def str_type_func(t, core='', need_close=False):
+def str_type_func(t, core='', need_close=False, ctx=[]):
 	fparams = t.params
 	fto = t.to
 	if t.to.is_array():
@@ -365,11 +365,11 @@ def str_type_func(t, core='', need_close=False):
 	if need_close:
 		core += ')'
 
-	return str_type(fto, core=core+paramlist)
+	return str_type(fto, core=core+paramlist, ctx=ctx)
 
 
 
-def str_pointer_chain(t):
+def str_pointer_chain(t, ctx=[]):
 	s = '*'
 	if t.hasAttribute2('const'):
 		s += 'const '
@@ -379,15 +379,15 @@ def str_pointer_chain(t):
 		s += 'restrict '
 
 	if t.to.is_pointer():
-		s = str_pointer_chain(t.to) + s
+		s = str_pointer_chain(t.to, ctx=ctx) + s
 
 	return s
 
 
-def str_type_pointer(t, core='', as_ptr_to_array=False):
+def str_type_pointer(t, core='', as_ptr_to_array=False, ctx=[]):
 
 	left = ''
-	left = str_pointer_chain(t)
+	left = str_pointer_chain(t, ctx=ctx)
 
 	root_type = t
 	while root_type.is_pointer():
@@ -411,7 +411,7 @@ def str_type_pointer(t, core='', as_ptr_to_array=False):
 		if core[0] == ' ':
 			nc = left+core[1:]
 
-	return str_type(root_type, core=nc, need_close=need_close)
+	return str_type(root_type, core=nc, need_close=need_close, ctx=ctx)
 
 
 
@@ -421,7 +421,7 @@ def is_sim_sim(t):
 	return False
 
 
-def str_named(t, core=''):
+def str_named(t, core='', ctx=[]):
 	aka = get_type_id(t)
 	if aka == None:
 		return None
@@ -433,17 +433,17 @@ def str_named(t, core=''):
 	return pre + aka + core
 
 
-def str_type(t, core='', need_close=False):
-	if is_type_named(t): return str_named(t, core)
-	elif t.is_pointer(): return str_type_pointer(t, core)
-	elif t.is_func(): return str_type_func(t, core, need_close=need_close)
-	elif t.is_array(): return str_type_array(t, core, need_close=need_close)
-	elif t.is_record(): return str_type_record(t) + core
+def str_type(t, core='', need_close=False, ctx=[]):
+	if is_type_named(t): return str_named(t, core, ctx=ctx)
+	elif t.is_pointer(): return str_type_pointer(t, core, ctx=ctx)
+	elif t.is_func(): return str_type_func(t, core, need_close=need_close, ctx=ctx)
+	elif t.is_array(): return str_type_array(t, core, need_close=need_close, ctx=ctx)
+	elif t.is_record(): return str_type_record(t, ctx=ctx) + core
 	return str(t)
 
 
-def str_var(t, id_str):
-	return str_type(t, core=' ' + id_str)
+def str_var(t, id_str, ctx=[]):
+	return str_type(t, core=' ' + id_str, ctx=ctx)
 
 
 bin_ops = {
@@ -1830,8 +1830,8 @@ def print_func_paramlist(ftype):
 	return
 
 
-def print_func_signature(id_str, ftype):
-	out(str_var(ftype, id_str=id_str))
+def print_func_signature(id_str, ftype, ctx=[]):
+	out(str_var(ftype, id_str=id_str, ctx=ctx))
 
 
 
