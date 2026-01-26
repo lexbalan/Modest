@@ -723,6 +723,19 @@ def str_cast(t, v, hard_cast=False, ctx=[]):
 	return sstr
 
 
+def initializers_are_different(a, b):
+	if len(a) != len(b):
+		return True
+	i = 0
+	while i < len(a):
+		ini_left = a[i]
+		ini_right = b[i]
+		if not Type.eq(ini_left.value.type, ini_right.value.type):
+			return True
+		i += 1
+	return False
+
+
 def str_value_cons_record(x, ctx):
 	to_type = x.type
 	value = x.value
@@ -743,7 +756,12 @@ def str_value_cons_record(x, ctx):
 		# C cannot just cast struct to struct (!)
 		return str_cast(to_type, value, hard_cast=True, ctx=ctx)
 
-	return '(' + str_type(to_type) + ')' + str_literal_record(x, ctx=ctx)
+	if initializers_are_different(x.asset, value.asset):
+		# Если у нас в ValueCons asset отличается от asset в ValueCons#value
+		# То печатаем литерал структуры из нашего asset
+		return '(' + str_type(to_type) + ')' + str_literal_record(x, ctx=ctx)
+
+	return '(' + str_type(to_type) + ')' + str_value(x.value, ctx=ctx)
 
 
 def str_value_cons_array(x, ctx):
@@ -850,7 +868,18 @@ def str_value_cons(x, ctx):
 			# Для C явно приводим указатель на массив к указателю на его элемент
 			# В случае когда происходит НЕЯВНОЕ приведение;
 			if value.type.is_pointer_to_array():
-				return str_cast(type, value, ctx=ctx)
+				#type_print(type.to); print()
+				#type_print(value.type.to.of); print()
+				#mass
+				if not Type.eq(type.to, value.type.to.of):
+					from backend.cm import str_type as sstr_type
+					sstr = ''
+					#sstr += '/*' + sstr_type(type.to) + ', ' + sstr_type(value.type.to.of) + '*/'
+					sstr += "(" + str_type(type) + ")"
+					sstr += '&' + str_value(value.value, ctx=ctx)
+					return sstr
+				return '&' + str_value(value.value, ctx=ctx) + '[0]'
+				#return str_cast(type, value, ctx=ctx)
 
 		return str_value(value)
 
@@ -1173,7 +1202,6 @@ def str_literal_decimal(d: Decimal, max_frac=None):
 
 
 def str_literal_float(t, v, ctx):
-	max_digits = 32
 	return str_literal_decimal(v.asset)
 
 
