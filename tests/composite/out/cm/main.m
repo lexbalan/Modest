@@ -206,7 +206,7 @@ func he (x: *He) -> Unit {
 }
 
 func hi (x: *Str8) -> Unit {
-	printf("Hi %s!\n", x)
+	printf("Hi %s!\n", *Str8 x)
 }
 
 var hiarr: [10]*(x: *Str8) -> Unit = [
@@ -246,16 +246,16 @@ public func main () -> Int32 {
 	while i < 3 {
 		var j: Nat32 = 0
 		while j < 3 {
-			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
+			printf("arrr[%d][%d] = %d\n", Nat32 i, Nat32 j, Int32 arrr[i][j])
 			j = j + 1
 		}
 		i = i + 1
 	}
 
 	let _add: Int32 = farr[0](5, 7)
-	printf("farr[0](5, 7) = %d\n", _add)
+	printf("farr[0](5, 7) = %d\n", Int32 _add)
 	let _sub: Int32 = farr[1](5, 7)
-	printf("farr[1](5, 7) = %d\n", _sub)
+	printf("farr[1](5, 7) = %d\n", Int32 _sub)
 
 	i = 0
 	while i < 10 {

@@ -20,11 +20,11 @@ public func main () -> Int {
 	console.print("Это строка записанная кириллицей.\n")
 
 	console.print("{{c}}\n")// {{c}}
-	console.print("c = \"{c}\"\n", c)// c = "🐀"
-	console.print("s = \"{s}\"\n", s)// s = "Hi!"
-	console.print("i = {i}\n", i)// i = -1
-	console.print("n = {n}\n", n)// n = 123
-	console.print("x = 0x{x}\n", x)// x = 0x1234567F
+	console.print("c = \"{c}\"\n", Char32 c)// c = "🐀"
+	console.print("s = \"{s}\"\n", *Str8 s)// s = "Hi!"
+	console.print("i = {i}\n", Int32 i)// i = -1
+	console.print("n = {n}\n", Nat32 n)// n = 123
+	console.print("x = 0x{x}\n", Nat32 x)// x = 0x1234567F
 
 	return 0
 }

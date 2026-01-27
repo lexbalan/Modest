@@ -47,8 +47,8 @@ static char32_t arr2[10] = {U'H', U'e', U'l', U'l', U'o', U'!'};
 //}
 
 
-static void printArrayOf10Char32(char32_t *_a);
-static void sum10IntArrays(int32_t *_a, int32_t *_b, int32_t *sret_);
+static void printArrayOf10Char32(char32_t(*_a)[10]);
+static void sum10IntArrays(int32_t(*_a)[10], int32_t(*_b)[10], int32_t(*sret_)[10]);
 
 int main(void) {
 	printf("array test\n");
@@ -71,18 +71,18 @@ int main(void) {
 }
 
 
-static void printArrayOf10Char32(char32_t *_a) {
+static void printArrayOf10Char32(char32_t(*_a)[10]) {
 	char32_t a[10];
 	memcpy(a, _a, sizeof(char32_t[10]));
 	uint32_t i = 0;
 	while (i < LENGTHOF(a)) {
-		printf("a[%d] = '%c'\n", i, a[i]);
+		printf("a[%d] = '%c'\n", i, (char32_t)a[i]);
 		i = i + 1;
 	}
 }
 
 
-static void sum10IntArrays(int32_t *_a, int32_t *_b, int32_t *sret_) {
+static void sum10IntArrays(int32_t(*_a)[10], int32_t(*_b)[10], int32_t(*sret_)[10]) {
 	int32_t a[10];
 	memcpy(a, _a, sizeof(int32_t[10]));
 	int32_t b[10];

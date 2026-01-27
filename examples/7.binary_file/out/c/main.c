@@ -20,7 +20,7 @@ static void writeExample(void) {
 
 	FILE *const fp = fopen(FILENAME, "wb");
 	if (fp == NULL) {
-		printf("error: cannot create file '%s'", FILENAME);
+		printf("error: cannot create file '%s'", (char*)FILENAME);
 		return;
 	}
 
@@ -41,16 +41,16 @@ static void readExample(void) {
 
 	FILE *const fp = fopen(FILENAME, "rb");
 	if (fp == NULL) {
-		printf("error: cannot open file '%s'", FILENAME);
+		printf("error: cannot open file '%s'", (char*)FILENAME);
 		return;
 	}
 
 	Chunk chunk;
 	fread((void *)&chunk, sizeof(Chunk), 1, fp);
 
-	printf("file \"%s\" contains:\n", FILENAME);
-	printf("chunk.id: \"%s\"\n", chunk.id);
-	printf("chunk.data: \"%s\"\n", chunk.data);
+	printf("file \"%s\" contains:\n", (char*)FILENAME);
+	printf("chunk.id: \"%s\"\n", (char*)&chunk.id);
+	printf("chunk.data: \"%s\"\n", (char*)&chunk.data);
 
 	fclose(fp);
 }

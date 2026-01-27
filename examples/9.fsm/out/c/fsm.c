@@ -30,14 +30,14 @@ void fsm_task(fsm_FSM *self) {
 		self->timer_expired = false;
 		self->next_state = fsm_cmdNextStage(self);
 		const uint32_t top = 0;
-		printf("[%s] fsm timeout (%u) occured, switch_to_stage(%d)\n", self->id, top, self->next_state.stage);
+		printf("[%s] fsm timeout (%u) occured, switch_to_stage(%d)\n", (char*)self->id, top, (fsm_StageId)self->next_state.stage);
 	}
 
 	// Есть запрос на смену состояния?
 	if (memcmp(&self->next_state, &self->state, sizeof(fsm_ComplexState)) != 0) {
 		const fsm_ComplexState state = self->state;
 		const fsm_ComplexState next_state = self->next_state;
-		printf("[%s] #%s_%u -> #%s_%u\n", self->id, state.state->id, state.stage, next_state.state->id, next_state.stage);
+		printf("[%s] #%s_%u -> #%s_%u\n", (char*)self->id, (char*)state.state->id, (fsm_StageId)state.stage, (char*)next_state.state->id, (fsm_StageId)next_state.stage);
 		self->state = self->next_state;
 	}
 

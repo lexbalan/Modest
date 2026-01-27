@@ -17,7 +17,7 @@ public func main () -> Int {
 	i = 0
 	while i < 10 {
 		let v: Int32 = globalArray1[i]
-		printf("globalArray1[%d] = %d\n", i, v)
+		printf("globalArray1[%d] = %d\n", Int32 i, Int32 v)
 		i = i + 1
 	}
 
@@ -39,7 +39,7 @@ public func main () -> Int {
 	i = 0
 	while i < 10 {
 		let v: Int32 = localArray1[i]
-		printf("localArray1[%d] = %d\n", i, v)
+		printf("localArray1[%d] = %d\n", Int32 i, Int32 v)
 		i = i + 1
 	}
 

@@ -31,7 +31,7 @@ static bool writeFile(int sockFd) {
 		if (n <= 0) {
 			break;
 		}
-		fprintf(fp, "%s", buffer);
+		fprintf(fp, "%s", (char*)&buffer);
 		memset(&buffer, 0, sizeof(char[BUF_SIZE]));
 	}
 

@@ -43,7 +43,7 @@ public func main () -> Int32 {
 
 	var i: Nat32 = 0
 	while i < 10 {
-		printf("d[%i] = %i\n", i, d[i])
+		printf("d[%i] = %i\n", Nat32 i, Int32 d[i])
 		i = i + 1
 	}
 

@@ -18,7 +18,7 @@ int main(void) {
 		kind = "big";
 	}
 
-	printf("%s-endian\n", kind);
+	printf("%s-endian\n", (char*)kind);
 
 	return 0;
 }

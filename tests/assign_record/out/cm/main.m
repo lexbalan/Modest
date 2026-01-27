@@ -17,8 +17,8 @@ public func main () -> Int {
 
 	globalPoint1 = globalPoint0
 
-	printf("globalPoint1.x = %d\n", globalPoint1.x)
-	printf("globalPoint1.x = %d\n", globalPoint1.y)
+	printf("globalPoint1.x = %d\n", Int32 globalPoint1.x)
+	printf("globalPoint1.x = %d\n", Int32 globalPoint1.y)
 
 	if globalPoint0 == globalPoint1 {
 		printf("globalPoint test passed\n")
@@ -33,8 +33,8 @@ public func main () -> Int {
 
 	localPoint1 = localPoint0
 
-	printf("localPoint1.x = %d\n", localPoint1.x)
-	printf("localPoint1.x = %d\n", localPoint1.y)
+	printf("localPoint1.x = %d\n", Int32 localPoint1.x)
+	printf("localPoint1.x = %d\n", Int32 localPoint1.y)
 
 	if localPoint0 == localPoint1 {
 		printf("localPoint test passed\n")

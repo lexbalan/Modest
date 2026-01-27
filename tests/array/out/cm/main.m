@@ -33,7 +33,7 @@ public func main () -> Int {
 	lar0 = sum10IntArrays(arr1, lar1)
 	var i = Nat32 0
 	while i < 10 {
-		printf("a[%d] = %d\n", i, lar0[i])
+		printf("a[%d] = %d\n", Nat32 i, Int32 lar0[i])
 		i = i + 1
 	}
 
@@ -44,7 +44,7 @@ public func main () -> Int {
 func printArrayOf10Char32 (a: [10]Char32) -> Unit {
 	var i = Nat32 0
 	while i < lengthof(a) {
-		printf("a[%d] = '%c'\n", i, a[i])
+		printf("a[%d] = '%c'\n", Nat32 i, Char32 a[i])
 		i = i + 1
 	}
 }

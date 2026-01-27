@@ -23,8 +23,8 @@ func sumsub64 (a: Int64, b: Int64) -> Unit {
 
 	__asm("add %0, %2, %3\nsub %1, %2, %3\n", [["=&r", sum]["=&r", sub]], [["r", a]["r", b]], ["cc"])
 
-	printf("sumsub64 sum = %lld\n", sum)
-	printf("sumsub64 sub = %lld\n", sub)
+	printf("sumsub64 sum = %lld\n", Int64 sum)
+	printf("sumsub64 sub = %lld\n", Int64 sub)
 }
 
 
@@ -37,8 +37,8 @@ public func main () -> Int {
 	let sum: Int64 = sum64(a, b)
 	let sub: Int64 = sub64(a, b)
 
-	printf("sum(%lld, %lld) = %lld\n", a, b, sum)
-	printf("sub(%lld, %lld) = %lld\n", a, b, sub)
+	printf("sum(%lld, %lld) = %lld\n", Int64 a, Int64 b, Int64 sum)
+	printf("sub(%lld, %lld) = %lld\n", Int64 a, Int64 b, Int64 sub)
 
 	sumsub64(a, b)
 

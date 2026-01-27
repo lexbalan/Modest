@@ -15,8 +15,8 @@
 // but we can receive pointer to open array
 // and after construct pointer to closed array with required dimensions
 
-static void separator(uint32_t *sz, uint32_t n);
-static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols);
+static void separator(uint32_t(*sz)[], uint32_t n);
+static void printRow(char *(*raw_row)[], uint32_t(*sz)[], uint32_t nCols);
 
 void table_print(table_Table *table) {
 	uint32_t i;
@@ -70,30 +70,30 @@ void table_print(table_Table *table) {
 	//
 
 	// top border
-	separator(sz, table->nCols);
+	separator(&sz, table->nCols);
 
 	if (table->header != NULL) {
-		printRow(table->header, sz, table->nCols);
-		separator(sz, table->nCols);
+		printRow(table->header, &sz, table->nCols);
+		separator(&sz, table->nCols);
 	}
 
 	i = 0;
 	while (i < table->nRows) {
-		printRow((*data)[i], sz, table->nCols);
+		printRow(&(*data)[i], &sz, table->nCols);
 
 		if (table->separate && i < table->nRows - 1) {
-			separator(sz, table->nCols);
+			separator(&sz, table->nCols);
 		}
 
 		i = i + 1;
 	}
 
 	// bottom border
-	separator(sz, table->nCols);
+	separator(&sz, table->nCols);
 }
 
 
-static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols) {
+static void printRow(char *(*raw_row)[], uint32_t(*sz)[], uint32_t nCols) {
 	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
 	uint32_t j = 0;
 	while (j < nCols) {
@@ -102,11 +102,11 @@ static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols) {
 		uint32_t len = (uint32_t)strlen(s);
 		if (s[0] != '\x0') {
 			len = len + 1;
-			printf(" %s", s);
+			printf(" %s", (char*)s);
 		}
 
 		uint32_t k = 0;
-		while (k < (sz[j] - len)) {
+		while (k < ((*sz)[j] - len)) {
 			printf(" ");
 			k = k + 1;
 		}
@@ -120,12 +120,12 @@ static void printRow(char *(*raw_row)[], uint32_t *sz, uint32_t nCols) {
 // печатает строку +---+---+ отделяющую записи таблицы
 // получает указатель на массив с размерами колонок
 // и количество элементов в ней
-static void separator(uint32_t *sz, uint32_t n) {
+static void separator(uint32_t(*sz)[], uint32_t n) {
 	uint32_t i = 0;
 	while (i < n) {
 		printf("+");
 		uint32_t j = 0;
-		while (j < sz[i]) {
+		while (j < (*sz)[i]) {
 			printf("-");
 			j = j + 1;
 		}

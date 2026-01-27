@@ -384,7 +384,7 @@ def str_pointer_chain(t, ctx=[]):
 	return s
 
 
-def str_type_pointer(t, core='', as_ptr_to_array=False, ctx=[]):
+def str_type_pointer(t, core='', as_ptr_to_array=True, ctx=[]):
 
 	left = ''
 	left = str_pointer_chain(t, ctx=ctx)
@@ -394,7 +394,8 @@ def str_type_pointer(t, core='', as_ptr_to_array=False, ctx=[]):
 		root_type = root_type.to
 
 	# (!) Печатать указатель на массив как указатель на его элемент (!)
-	if not as_ptr_to_array:
+	#if not as_ptr_to_array:
+	if 'z-string' in t.to.att:
 		if is_sim_sim(t):
 			root_type = root_type.of
 
@@ -668,7 +669,7 @@ def str_value_index(x, ctx):
 	else:
 		left_str = str_value(left, ctx=ctx, parent_expr=x)
 
-	if left.type.is_pointer() and not is_sim_sim(left.type):
+	if left.type.is_pointer() and not 'z-string' in left.type.to.att: #and not is_sim_sim(left.type):
 		left_str = "(*%s)" % left_str
 
 	return left_str + '[' + str_value(x.index) + ']'
@@ -804,16 +805,16 @@ def cstr(value, sz):
 # Дополнительная чисто сишная надстройка:
 # если у нас тут указатель на массив - приводим к указателю на его элемент
 def incast(type, value, ctx=[]):
-	if value.type.is_pointer_to_closed_array():
-		# Это аргумент с типом указатель на массив
-		# приведем его по месту к указателю на элемент этого массива
-		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
-		if value.isValueRef():
-			if value.value.isValueIndex() or value.value.isValueSlice():
-				return "&" + str_value(value.value, ctx)
-			else:
-				return str_value(value.value, ctx)
-				#return "&" + str_value(value.value, ctx) + '[0]'
+#	if value.type.is_pointer_to_closed_array():
+#		# Это аргумент с типом указатель на массив
+#		# приведем его по месту к указателю на элемент этого массива
+#		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
+#		if value.isValueRef():
+#			if value.value.isValueIndex() or value.value.isValueSlice():
+#				return "&" + str_value(value.value, ctx)
+#			else:
+#				return str_value(value.value, ctx)
+#				#return "&" + str_value(value.value, ctx) + '[0]'
 
 	return str_value(value, ctx)
 
@@ -823,6 +824,10 @@ def str_value_cons(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
+
+	if x.method == 'extra_arg':
+		if value.type.is_pointer_to_array():
+			return "(" + str_type(type.to.of) + "*)" + str_value(value, ctx=ctx)
 
 	if type.is_array():
 		return str_value_cons_array(x, ctx)
@@ -872,12 +877,11 @@ def str_value_cons(x, ctx):
 				if not Type.eq(type.to.of, value.type.to.of):
 					return "(" + str_type(type) + ")" + '&' + str_value(value.value, ctx=ctx)
 				else:
-					return str_value(value.value, ctx=ctx)
+					return '&' + str_value(value.value, ctx=ctx)
 					#return '&' + str_value(value.value, ctx=ctx) + '[0]'
 
 			if not Type.eq(type.to, value.type.to):
 				sstr += "(" + str_type(type) + ")"
-
 
 		sstr += str_value(value)
 		return sstr

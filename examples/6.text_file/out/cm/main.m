@@ -11,7 +11,7 @@ func write_example () -> Unit {
 	let fp: *File = fopen(filename, "w")
 
 	if fp == nil {
-		printf("error: cannot create file '%s'", filename)
+		printf("error: cannot create file '%s'", *Str8 filename)
 		return
 	}
 
@@ -27,11 +27,11 @@ func read_example () -> Unit {
 	let fp: *File = fopen(filename, "r")
 
 	if fp == nil {
-		printf("error: cannot open file '%s'", filename)
+		printf("error: cannot open file '%s'", *Str8 filename)
 		return
 	}
 
-	printf("file '%s' contains: ", filename)
+	printf("file '%s' contains: ", *Str8 filename)
 	while true {
 		let ch: Int = fgetc(fp)
 		if ch == c_EOF {

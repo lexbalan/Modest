@@ -36,7 +36,7 @@ static int32_t get_number(int32_t min, int32_t max) {
 
 	while (true) {
 		printf("enter a number (%i .. %i): ", min, max);
-		scanf("%d", &number);
+		scanf("%d", (int32_t *)&number);
 
 		if (number < min) {
 			printf("number must be greater than %i, try again\n", min);

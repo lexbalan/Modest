@@ -9,7 +9,7 @@
 
 
 
-uint32_t crc32_run(uint8_t *buf, uint32_t len) {
+uint32_t crc32_run(uint8_t(*buf)[], uint32_t len) {
 	#define tableSize  256
 	uint32_t crc_table[tableSize];
 	uint32_t crc;
@@ -44,7 +44,7 @@ uint32_t crc32_run(uint8_t *buf, uint32_t len) {
 	i = 0;
 	while (i < len) {
 		// 1
-		const uint32_t x = (uint32_t)buf[i];
+		const uint32_t x = (uint32_t)(*buf)[i];
 		const uint32_t y = (crc ^ x) & 0xFF;
 		// 2
 		const uint8_t yy = (uint8_t)y;

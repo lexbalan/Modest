@@ -58,11 +58,11 @@ public func main () -> Int {
 	let ppp: Point = zeroPoints[0]
 	let z: Nat32 = pointZero.x
 
-	printf("genericIntConst = %d\n", Int32 genericIntConst)
-	printf("int32Const = %d\n", int32Const)
+	printf("genericIntConst = %d\n", Int32 Int32 genericIntConst)
+	printf("int32Const = %d\n", Int32 int32Const)
 
 	//	printf("genericStringConst = %s\n", genericStringConst)
-	printf("string8Const = %s\n", string8Const)
+	printf("string8Const = %s\n", *Str8 string8Const)
 
 	return 0
 }

@@ -14,9 +14,9 @@ int main(void) {
 	int32_t b;
 
 	printf("enter a: ");
-	scanf("%d", &a);
+	scanf("%d", (int32_t *)&a);
 	printf("enter b: ");
-	scanf("%d", &b);
+	scanf("%d", (int32_t *)&b);
 
 	if (a > b) {
 		printf("a > b\n");

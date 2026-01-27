@@ -6,7 +6,7 @@ include "stdio"
 func array_print (pa: *[]Int32, len: Nat32) -> Unit {
 	var i: Nat32 = 0
 	while i < len {
-		printf("a[%d] = %d\n", i, pa[i])
+		printf("a[%d] = %d\n", Nat32 i, Int32 pa[i])
 		i = i + 1
 	}
 }
@@ -24,7 +24,7 @@ public func main () -> Int {
 	let s1: [2 - 1]Int32 = a[1:2]
 	var i: Nat32 = 0
 	while i < lengthof(s1) {
-		printf("s1[%d] = %d\n", i, s1[i])
+		printf("s1[%d] = %d\n", Nat32 i, Int32 s1[i])
 		i = i + 1
 	}
 
@@ -38,7 +38,7 @@ public func main () -> Int {
 	let s2: [8 - 5]Int32 = pa[5:8]
 	i = 0
 	while i < lengthof(s2) {
-		printf("s2[%d] = %d\n", i, s2[i])
+		printf("s2[%d] = %d\n", Nat32 i, Int32 s2[i])
 		i = i + 1
 	}
 
@@ -53,7 +53,7 @@ public func main () -> Int {
 
 	i = 0
 	while i < lengthof(a) {
-		printf("a[%d] = %d\n", i, a[i])
+		printf("a[%d] = %d\n", Nat32 i, Int32 a[i])
 		i = i + 1
 	}
 
@@ -65,7 +65,7 @@ public func main () -> Int {
 
 	i = 0
 	while i < lengthof(s) {
-		printf("s[%d] = %d\n", i, Nat32 s[i])
+		printf("s[%d] = %d\n", Nat32 i, Nat32 Nat32 s[i])
 		i = i + 1
 	}
 

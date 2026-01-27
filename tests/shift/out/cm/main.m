@@ -12,10 +12,10 @@ public func main () -> Int {
 	var c: Word32
 
 	c = Word32 1 << 31
-	printf("1 << 31 = 0x%x\n", c)
+	printf("1 << 31 = 0x%x\n", Word32 c)
 
 	c = Word32 0x80000000 >> 31
-	printf("0x80000000 >> 31 = 0x%x\n", c)
+	printf("0x80000000 >> 31 = 0x%x\n", Word32 c)
 
 	return 0
 }

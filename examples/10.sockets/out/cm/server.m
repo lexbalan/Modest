@@ -26,7 +26,7 @@ func writeFile (sockFd: Int) -> Bool {
 		if n <= 0 {
 			break
 		}
-		fprintf(fp, "%s", &buffer)
+		fprintf(fp, "%s", *[bufSize]Char8 &buffer)
 		buffer = []
 	}
 

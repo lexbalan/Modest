@@ -17,7 +17,7 @@ public func main () -> Int {
 
 	let crc: Word32 = crc32.run(&data, lengthof(data))
 
-	printf("crc32.doHash(\"%s\") = %08X\n", *Str8 datastring, crc)
+	printf("crc32.doHash(\"%s\") = %08X\n", *Str8 *Str8 datastring, Word32 crc)
 
 	if crc == expected_hash {
 		printf("test passed\n")

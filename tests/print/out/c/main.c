@@ -46,8 +46,8 @@ int main(void) {
 	console_print("Это строка записанная кириллицей.\n");
 
 	console_print("{{c}}\n");// {{c}}
-	console_print("c = \"{c}\"\n", c);// c = "🐀"
-	console_print("s = \"{s}\"\n", s);// s = "Hi!"
+	console_print("c = \"{c}\"\n", (const char32_t)c);// c = "🐀"
+	console_print("s = \"{s}\"\n", (char*)s);// s = "Hi!"
 	console_print("i = {i}\n", i);// i = -1
 	console_print("n = {n}\n", n);// n = 123
 	console_print("x = 0x{x}\n", x);// x = 0x1234567F

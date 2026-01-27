@@ -75,10 +75,10 @@ public func main () -> Int {
 	let lines_2_len: Float = lineLength(lines[2])
 	let lines_3_len: Float = lineLength(lines[3])
 
-	printf("lines_0_len = %f\n", lines_0_len)
-	printf("lines_1_len = %f\n", lines_1_len)
-	printf("lines_2_len = %f\n", lines_2_len)
-	printf("lines_3_len = %f\n", lines_3_len)
+	printf("lines_0_len = %f\n", Float lines_0_len)
+	printf("lines_1_len = %f\n", Float lines_1_len)
+	printf("lines_2_len = %f\n", Float lines_2_len)
+	printf("lines_3_len = %f\n", Float lines_3_len)
 
 	//	let y = wa.x
 

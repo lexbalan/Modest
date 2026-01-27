@@ -36,15 +36,15 @@ static char *tableData1[4][4] = {
 
 static table_Table table00 = (table_Table){
 	.header = NULL,
-	.data = (table_Row *)&tableData0,
+	.data = (char *(*)[])&tableData0,
 	.nRows = LENGTHOF(tableData0),
 	.nCols = LENGTHOF(tableData0[0]),
 	.separate = false
 };
 
 static table_Table table01 = (table_Table){
-	.header = table_header0,
-	.data = (table_Row *)&tableData0,
+	.header = &table_header0,
+	.data = (char *(*)[])&tableData0,
 	.nRows = LENGTHOF(tableData0),
 	.nCols = LENGTHOF(tableData0[0]),
 	.separate = false
@@ -52,23 +52,23 @@ static table_Table table01 = (table_Table){
 
 static table_Table table02 = (table_Table){
 	.header = NULL,
-	.data = (table_Row *)&tableData0,
+	.data = (char *(*)[])&tableData0,
 	.nRows = LENGTHOF(tableData0),
 	.nCols = LENGTHOF(tableData0[0]),
 	.separate = true
 };
 
 static table_Table table03 = (table_Table){
-	.header = table_header0,
-	.data = (table_Row *)&tableData0,
+	.header = &table_header0,
+	.data = (char *(*)[])&tableData0,
 	.nRows = LENGTHOF(tableData0),
 	.nCols = LENGTHOF(tableData0[0]),
 	.separate = true
 };
 
 static table_Table table10 = (table_Table){
-	.header = table_header1,
-	.data = (table_Row *)&tableData1,
+	.header = &table_header1,
+	.data = (char *(*)[])&tableData1,
 	.nRows = LENGTHOF(tableData1),
 	.nCols = LENGTHOF(tableData1[0]),
 	.separate = true
