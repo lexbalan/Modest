@@ -965,6 +965,9 @@ def do_value_call(x):
 
 
 	def do_arg(param, arg, named=False):
+		#mass
+		#if param.type.annotations != {}:
+		#info("%s" % param.type.annotations, arg.ti)
 		arg = transmission(param.type, arg, arg.ti)
 		ini = Initializer(param.id, arg, named=named, ti=arg.ti, nl=arg.nl)
 		return ini

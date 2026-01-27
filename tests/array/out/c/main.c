@@ -58,9 +58,9 @@ int main(void) {
 	char32_t lar2[10];
 	memcpy(&lar2, &arr2, sizeof(char32_t[10]));
 
-	printArrayOf10Char32(lar2);
+	printArrayOf10Char32(/*!*/&lar2);
 
-	sum10IntArrays(arr1, lar1, (int32_t *)&lar0);
+	sum10IntArrays(/*!*/&arr1, /*!*/&lar1, &lar0);
 	uint32_t i = 0;
 	while (i < 10) {
 		printf("a[%d] = %d\n", i, lar0[i]);

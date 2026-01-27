@@ -165,6 +165,15 @@ def is_global_public(x):
 	return False
 
 
+def ptr_to_arr_as_ptr(t):
+	if 'cstring' in t.annotations:
+		print("lmnlkmlkmlkmlkmlkmlkmklmkllmlkmlkmlmlkmlkkkmkmkmkmkmkmkmkmkmk")
+		return True
+	if t.is_pointer_to_array():
+		return 'z-string' in t.to.att
+	return False
+
+
 
 def get_id_str(x):
 	if not hasattr(x, 'id'):
@@ -395,7 +404,8 @@ def str_type_pointer(t, core='', as_ptr_to_array=True, ctx=[]):
 
 	# (!) Печатать указатель на массив как указатель на его элемент (!)
 	#if not as_ptr_to_array:
-	if 'z-string' in t.to.att:
+	if ptr_to_arr_as_ptr(t):
+		#left += '/*asptr*/'
 		if is_sim_sim(t):
 			root_type = root_type.of
 
@@ -620,18 +630,27 @@ def str_value_call(v, ctx, sret=None):
 		#if a.isValueCons() and a.value.type.is_generic_array():
 		#	sstr += "(%s)%s" % (str_type(p_type), str_value(a))
 		#else:
-		sstr += incast(p_type, a)
+		#sstr += incast(p_type, a)
+		#sstr += str_value(a, ctx=ctx+['argument_context'])
+		astr = str_value(a, ctx=ctx)
+		if a.type.is_array():
+			# Если в функцию передается массив по значению - передаем его адрес
+			# тк на самом деле функции си не могут получать массивы по значению
+			# и здесь под капотом на самом деле передается указатель на массив!
+			astr = '/*!*/&' + astr
+		sstr += astr
 
 		i = i + 1
 
 
 	if sret != None:
+		# SRET - возврат массива из функции (через указатель)
 		if i > 0:
 			sstr += ", "
 
 		# приводим указатель на массив к указателю на его элемент
-		to = TypePointer(sret.type.of)
-		sstr += "(%s)" % str_type(to)
+		#to = TypePointer(sret.type.of)
+		#sstr += "(%s)" % str_type(to)
 		sstr += str_value_as_ptr(sret)
 
 	if nl_after:
@@ -653,6 +672,7 @@ def str_value_new(x, ctx):
 
 
 
+
 def str_value_index(x, ctx):
 	left = x.left
 
@@ -669,7 +689,7 @@ def str_value_index(x, ctx):
 	else:
 		left_str = str_value(left, ctx=ctx, parent_expr=x)
 
-	if left.type.is_pointer() and not 'z-string' in left.type.to.att: #and not is_sim_sim(left.type):
+	if left.type.is_pointer() and not ptr_to_arr_as_ptr(left.type): #and not is_sim_sim(left.type):
 		left_str = "(*%s)" % left_str
 
 	return left_str + '[' + str_value(x.index) + ']'
@@ -821,6 +841,9 @@ def incast(type, value, ctx=[]):
 
 
 def str_value_cons(x, ctx):
+	return str_value_cons2(x, ctx)
+
+def str_value_cons2(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
@@ -877,6 +900,8 @@ def str_value_cons(x, ctx):
 				if not Type.eq(type.to.of, value.type.to.of):
 					return "(" + str_type(type) + ")" + '&' + str_value(value.value, ctx=ctx)
 				else:
+					if ptr_to_arr_as_ptr(type):
+						return '&' + str_value(value.value, ctx=ctx) + '[0]'
 					return '&' + str_value(value.value, ctx=ctx)
 					#return '&' + str_value(value.value, ctx=ctx) + '[0]'
 
@@ -1353,6 +1378,7 @@ def str_value_subexpr(x, ctx):
 
 def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 	sstr = ''
+	#sstr = '/*%s*/' % str(x)
 	need_wrap = False
 	if wrapped:
 		need_wrap = True

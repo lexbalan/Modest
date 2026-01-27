@@ -133,7 +133,7 @@ int32_t main(void) {
 
 	while (true) {
 		showPrompt();
-		fgets(&inbuf, (int)sizeof inbuf, stdin);
+		fgets(&inbuf[0], (int)sizeof inbuf, stdin);
 
 		char(*tokens[64])[] = {0};
 

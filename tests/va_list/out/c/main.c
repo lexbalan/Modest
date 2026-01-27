@@ -23,7 +23,7 @@ static ssize_t my_printf(char *format, ...) {
 
 	#define strMaxLen  (127 + 1)
 	char buf[strMaxLen];
-	const int n = vsnprintf(&buf, (size_t)strMaxLen, format, va2);
+	const int n = vsnprintf(&buf[0], (size_t)strMaxLen, format, va2);
 
 	va_end(va2);
 

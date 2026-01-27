@@ -6,7 +6,7 @@ OUTDIR=./out
 CMPREFIX=$(OUTDIR)/cm
 CPREFIX=$(OUTDIR)/c
 LLVMPREFIX = $(OUTDIR)/llvm
-C_OPTIONS = -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable
+C_OPTIONS = -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable -Wno-unused-parameter
 
 test: CM LLVM C
 

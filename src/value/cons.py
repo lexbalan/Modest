@@ -82,6 +82,9 @@ def value_cons_implicit(t, v):
 	if v.isValueBad() or t.is_bad():
 		return ValueBad(ti)
 
+	#if t.annotations != {}:
+	#	print(t.annotations)
+
 	from_type = v.type
 
 	if not cons_can(t, from_type, 'implicit', ti):
