@@ -33,8 +33,8 @@ int main(void) {
 
 	memory_copy((void *)&o2, (void *)&o1, len);
 
-	printf("firstname = '%s'\n", &o2.firstname[0]);
-	printf("lastname = '%s'\n", &o2.lastname[0]);
+	printf("firstname = '%s'\n", o2.firstname);
+	printf("lastname = '%s'\n", o2.lastname);
 	printf("age = %d\n", o2.age);
 
 	return 0;

@@ -57,11 +57,11 @@ int main(void) {
 
 	printf("\n");
 
-	console_puts8(&string8[0]);
+	console_puts8(string8);
 	printf("\n");
-	console_puts16(&string16[0]);
+	console_puts16(string16);
 	printf("\n");
-	console_puts32(&string32[0]);
+	console_puts32(string32);
 	printf("\n");
 
 	printf("\n");

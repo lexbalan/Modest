@@ -53,7 +53,7 @@ static void fetch(uint32_t n) {
 static uint8_t qbuf[QSIZE];
 
 int main(void) {
-	queueWord8_init(&bq0, &qbuf[0], QSIZE);
+	queueWord8_init(&bq0, qbuf, QSIZE);
 
 	fill(3);
 	fetch(7);

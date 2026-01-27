@@ -70,26 +70,26 @@ void table_print(table_Table *table) {
 	//
 
 	// top border
-	separator(&sz[0], table->nCols);
+	separator(sz, table->nCols);
 
 	if (table->header != NULL) {
-		printRow(table->header, &sz[0], table->nCols);
-		separator(&sz[0], table->nCols);
+		printRow(table->header, sz, table->nCols);
+		separator(sz, table->nCols);
 	}
 
 	i = 0;
 	while (i < table->nRows) {
-		printRow(&(*data)[i][0], &sz[0], table->nCols);
+		printRow((*data)[i], sz, table->nCols);
 
 		if (table->separate && i < table->nRows - 1) {
-			separator(&sz[0], table->nCols);
+			separator(sz, table->nCols);
 		}
 
 		i = i + 1;
 	}
 
 	// bottom border
-	separator(&sz[0], table->nCols);
+	separator(sz, table->nCols);
 }
 
 

@@ -43,7 +43,7 @@ static table_Table table00 = (table_Table){
 };
 
 static table_Table table01 = (table_Table){
-	.header = &table_header0[0],
+	.header = table_header0,
 	.data = (table_Row *)&tableData0,
 	.nRows = LENGTHOF(tableData0),
 	.nCols = LENGTHOF(tableData0[0]),
@@ -59,7 +59,7 @@ static table_Table table02 = (table_Table){
 };
 
 static table_Table table03 = (table_Table){
-	.header = &table_header0[0],
+	.header = table_header0,
 	.data = (table_Row *)&tableData0,
 	.nRows = LENGTHOF(tableData0),
 	.nCols = LENGTHOF(tableData0[0]),
@@ -67,7 +67,7 @@ static table_Table table03 = (table_Table){
 };
 
 static table_Table table10 = (table_Table){
-	.header = &table_header1[0],
+	.header = table_header1,
 	.data = (table_Row *)&tableData1,
 	.nRows = LENGTHOF(tableData1),
 	.nCols = LENGTHOF(tableData1[0]),

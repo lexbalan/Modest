@@ -24,13 +24,13 @@ int main(void) {
 
 	// current control terminal
 	char cterm[128];
-	ctermid(&cterm[0]);
-	printf("ctermid = %s\n", &cterm[0]);
+	ctermid(cterm);
+	printf("ctermid = %s\n", cterm);
 
 	// current working directory
 	char cwd[128];
-	getcwd(&cwd[0], (size_t)LENGTHOF(cwd));
-	printf("cwd = %s\n", &cwd[0]);
+	getcwd(cwd, (size_t)LENGTHOF(cwd));
+	printf("cwd = %s\n", cwd);
 
 	char *const tty = ttyname(0);
 	printf("ttyname = %s\n", tty);

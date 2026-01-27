@@ -812,7 +812,8 @@ def incast(type, value, ctx=[]):
 			if value.value.isValueIndex() or value.value.isValueSlice():
 				return "&" + str_value(value.value, ctx)
 			else:
-				return "&" + str_value(value.value, ctx) + "[0]"
+				return str_value(value.value, ctx)
+				#return "&" + str_value(value.value, ctx) + '[0]'
 
 	return str_value(value, ctx)
 
@@ -871,7 +872,8 @@ def str_value_cons(x, ctx):
 				if not Type.eq(type.to.of, value.type.to.of):
 					return "(" + str_type(type) + ")" + '&' + str_value(value.value, ctx=ctx)
 				else:
-					return '&' + str_value(value.value, ctx=ctx) + '[0]'
+					return str_value(value.value, ctx=ctx)
+					#return '&' + str_value(value.value, ctx=ctx) + '[0]'
 
 			if not Type.eq(type.to, value.type.to):
 				sstr += "(" + str_type(type) + ")"

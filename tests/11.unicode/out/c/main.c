@@ -68,9 +68,9 @@ int32_t main(void) {
 	console_puts32(str32);
 	console_puts32(_STR32("\n"));
 
-	console_puts8(&arr_utf8[0]);
-	console_puts16(&arr_utf16[0]);
-	console_puts32(&arr_utf32[0]);
+	console_puts8(arr_utf8);
+	console_puts16(arr_utf16);
+	console_puts32(arr_utf32);
 
 	console_puts8((char *)&ratSymbolUTF8);
 	console_puts16((char16_t *)&ratSymbolUTF16);

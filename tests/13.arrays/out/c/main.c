@@ -45,14 +45,14 @@ static void f0(char *_x, char *sret_) {
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
 	memcpy(&local_copy_of_x, &x, sizeof(char[20]));
-	printf("f0(\"%s\")\n", &local_copy_of_x[0]);
+	printf("f0(\"%s\")\n", local_copy_of_x);
 
 	// truncate array
 	char mic[6];
 	memcpy(&mic, (char(*)[6 - 0])&x[0], sizeof(char[6]));
 	mic[5] = '\x0';
 
-	printf("f0 mic = \"%s\"\n", &mic[0]);
+	printf("f0 mic = \"%s\"\n", mic);
 
 	// extend array
 	char res[30];
@@ -202,7 +202,7 @@ int main(void) {
 
 	char em[30];
 	f0((char[20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'}, (char *)&em);
-	printf("em = %s\n", &em[0]);
+	printf("em = %s\n", em);
 
 	uint32_t i = 0;
 	while (i < 10) {
@@ -225,7 +225,7 @@ int main(void) {
 	printf("------------------------------------\n");
 
 	int32_t *globalArrayPtr;
-	globalArrayPtr = &globalArray[0];
+	globalArrayPtr = globalArray;
 
 	i = 0;
 	while (i < 3) {
@@ -237,7 +237,7 @@ int main(void) {
 	printf("------------------------------------\n");
 
 	int32_t *localArrayPtr;
-	localArrayPtr = &localArray[0];
+	localArrayPtr = localArray;
 
 	i = 0;
 	while (i < 3) {

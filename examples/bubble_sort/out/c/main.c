@@ -47,14 +47,14 @@ static void print_array(int32_t *array, uint32_t len);
 
 int32_t main(void) {
 	printf("array before:\n");
-	print_array(&testArray[0], LENGTHOF(testArray));
+	print_array(testArray, LENGTHOF(testArray));
 	printf("\n");
 
 	// do sort
-	bubble_sort32(&testArray[0], LENGTHOF(testArray));
+	bubble_sort32(testArray, LENGTHOF(testArray));
 
 	printf("array after:\n");
-	print_array(&testArray[0], LENGTHOF(testArray));
+	print_array(testArray, LENGTHOF(testArray));
 	printf("\n");
 
 	return 0;
