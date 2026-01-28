@@ -191,7 +191,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 
 		i = i + 2;
 
-		char *const sptr = &buf[j];
+		char *const sptr = /*7*/(char *)&/*SLICE*/buf[j];
 
 		if (c == 'i' || c == 'd') {
 			//

@@ -97,8 +97,8 @@ static void tokenize(Tokenizer *tokenizer) {
 		}
 
 		// save token in tokens buffer
-		char *const pbuf = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		memcpy((char *)&pbuf[0], (char *)&token[0], sizeof(char[toklen - 0]));
+		char *const pbuf = /*7*/(char *)&/*SLICE*/tokenizer->tokensBuf[tokenizer->tokensBufPos];
+		memcpy((char *)&/*SLICE*/pbuf[0], (char *)&/*SLICE*/token[0], sizeof(char[toklen - 0]));
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + toklen;
 		pbuf[tokenizer->tokensBufPos] = '\x0';
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + 1;
@@ -151,7 +151,7 @@ int32_t main(void) {
 		if (argc > 0) {
 			argc = argc - 1;
 		}
-		char *(*const argv)[] = &(*tokenizer.tokens)[1];
+		char *(*const argv)[] = /*7*/(char *(*)[])&/*SLICE*/(*tokenizer.tokens)[1];
 		execute(/*4*/cmd, argc, /*ParamIsPtr2Arr*/argv);
 	}
 

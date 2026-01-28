@@ -564,6 +564,8 @@ def str_value_ref(x, ctx):
 	if x.value.type.is_array_of_array():
 		sstr += "(void *)"
 
+	if x.value.isValueSlice():
+		sstr += '/*7*/(' + str_type(x.type) + ')'
 	sstr += '&'
 	sstr += str_value(x.value, parent_expr=x)
 	return sstr
@@ -673,7 +675,8 @@ def str_value_call(v, ctx, sret=None):
 
 def str_value_slice(x, ctx):
 	y = ValueIndex(x.type, x.left, x.index_from, ti=None)
-	return str_value_index(y, ctx)
+	ind = str_value_index(y, ctx)
+	return '/*SLICE*/' + ind
 
 
 def str_value_new(x, ctx):

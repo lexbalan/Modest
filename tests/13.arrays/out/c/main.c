@@ -49,15 +49,15 @@ static void f0(char *_x, char *_sret_) {
 
 	// truncate array
 	char mic[6];
-	memcpy(&mic, (char *)&x[0], sizeof(char[6]));
+	memcpy(&mic, (char *)&/*SLICE*/x[0], sizeof(char[6]));
 	mic[5] = '\x0';
 
 	printf(/*4*/"f0 mic = \"%s\"\n", /*4*/(char*)&mic);
 
 	// extend array
 	char res[30];
-	memcpy((char *)&res[0], &x, sizeof(char[20 - 0]));
-	memset((char *)&res[20], 0, sizeof(char[30 - 20]));
+	memcpy((char *)&/*SLICE*/res[0], &x, sizeof(char[20 - 0]));
+	memset((char *)&/*SLICE*/res[20], 0, sizeof(char[30 - 20]));
 
 	res[6] = 'M';
 	res[7] = 'o';
@@ -274,8 +274,8 @@ int main(void) {
 	int32_t c[3] = {10, 20, 30};
 
 	int32_t d[6];
-	memcpy((int32_t(*)[3 - 0])&d[0], &c, sizeof(int32_t[3 - 0]));
-	memset((int32_t(*)[6 - 3])&d[3], 0, sizeof(int32_t[6 - 3]));
+	memcpy((int32_t(*)[3 - 0])&/*SLICE*/d[0], &c, sizeof(int32_t[3 - 0]));
+	memset((int32_t(*)[6 - 3])&/*SLICE*/d[3], 0, sizeof(int32_t[6 - 3]));
 
 	printf(/*4*/"d[0] = %i\n", d[0]);
 	printf(/*4*/"d[1] = %i\n", d[1]);
