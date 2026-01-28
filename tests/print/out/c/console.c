@@ -47,14 +47,14 @@ void console_putchar_utf16(char16_t c) {
 	char16_t cc[2];
 	memcpy(&cc, &(char16_t[2]){c, u'\x0'}, sizeof(char16_t[2]));
 	char32_t char32;
-	const uint8_t n = utf_utf16_to_utf32(&cc[0], &char32);
+	const uint8_t n = utf_utf16_to_utf32(/*4*/&cc[0], &char32);
 	console_putchar_utf32(char32);
 }
 
 
 void console_putchar_utf32(char32_t c) {
 	char decoded_buf[4];
-	const int32_t n = (int32_t)utf_utf32_to_utf8(c, &decoded_buf);
+	const int32_t n = (int32_t)utf_utf32_to_utf8(c, /*4*/&decoded_buf[0]);
 
 	int32_t i = 0;
 	while (i < n) {
@@ -94,7 +94,7 @@ void console_puts16(char16_t *s) {
 		}
 
 		char32_t char32;
-		const uint8_t n = utf_utf16_to_utf32((char16_t *)&s[i], &char32);
+		const uint8_t n = utf_utf16_to_utf32(/*4*/(char16_t *)&s[i], &char32);
 		if (n == 0) {
 			break;
 		}
@@ -125,7 +125,7 @@ int32_t console_vfprint(int32_t fd, char *form, va_list va);
 void console_print(char *form, ...) {
 	va_list va;
 	va_start(va, form);
-	console_vfprint(STDOUT_FILENO, form, va);
+	console_vfprint(STDOUT_FILENO, /*4*/form, va);
 	va_end(va);
 }
 
@@ -135,7 +135,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va);
 
 int32_t console_vfprint(int32_t fd, char *form, va_list va) {
 	char strbuf[256];
-	const int32_t n = console_vsprint(&strbuf[0], form, va);
+	const int32_t n = console_vsprint(/*4*/&strbuf[0], /*4*/form, va);
 	strbuf[n] = '\x0';
 	write(fd, (void *)&strbuf, (size_t)abs((int)n));
 	return n;
@@ -198,14 +198,14 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 			// %i & %d for signed integer (Int)
 			//
 			const int32_t x = va_arg(va, int32_t);
-			const int32_t n = sprint_dec_int32(sptr, x);
+			const int32_t n = sprint_dec_int32(/*4*/sptr, x);
 			j = j + n;
 		} else if (c == 'n') {
 			//
 			// %n for unsigned integer (Nat)
 			//
 			const uint32_t x = va_arg(va, uint32_t);
-			const int32_t n = sprint_dec_n32(sptr, x);
+			const int32_t n = sprint_dec_n32(/*4*/sptr, x);
 			j = j + n;
 		} else if (c == 'x' || c == 'p') {
 			//
@@ -213,21 +213,21 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 			// %p for pointers
 			//
 			const uint32_t x = va_arg(va, uint32_t);
-			const int32_t n = sprint_hex_nat32(sptr, x);
+			const int32_t n = sprint_hex_nat32(/*4*/sptr, x);
 			j = j + n;
 		} else if (c == 's') {
 			//
 			// %s pointer to string
 			//
 			char *const s = va_arg(va, char *);
-			strcpy(sptr, s);
-			j = j + (int32_t)strlen(s);
+			strcpy(/*4*/sptr, /*4*/s);
+			j = j + (int32_t)strlen(/*4*/s);
 		} else if (c == 'c') {
 			//
 			// %c for char
 			//
 			const char32_t c = va_arg(va, char32_t);
-			const uint8_t n = utf_utf32_to_utf8(c, (char *)sptr);
+			const uint8_t n = utf_utf32_to_utf8(c, /*4*/(char *)sptr);
 			j = j + (int32_t)n;
 		}
 	}

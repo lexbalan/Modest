@@ -8,13 +8,13 @@
 
 
 int main(void) {
-	printf("while statement test\n");
+	printf(/*4*/"while statement test\n");
 
 	uint32_t a = 0;
 	const uint32_t b = 10;
 
 	while (a < b) {
-		printf("a = %d\n", a);
+		printf(/*4*/"a = %d\n", a);
 		a = a + 1;
 	}
 

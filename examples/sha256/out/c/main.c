@@ -52,23 +52,23 @@ static bool doTest(SHA256_TestCase *test) {
 
 	sha256_hash(/*ParamIsPtr2Arr*/msg, msgLen, /*ParamIsPtr2Arr*/&test_hash);
 
-	printf("'%s'", (char*)&test->inputData);
-	printf(" -> ");
+	printf(/*4*/"'%s'", /*4*/(char*)&test->inputData);
+	printf(/*4*/" -> ");
 
 	uint32_t i = 0;
 	while (i < SHA256_HASH_SIZE) {
-		printf("%02X", test_hash[i]);
+		printf(/*4*/"%02X", test_hash[i]);
 		i = i + 1;
 	}
 
-	printf("\n");
+	printf(/*4*/"\n");
 
 	return memcmp(&test_hash, &test->expectedResult, sizeof(sha256_Hash)) == 0;
 }
 
 
 int main(void) {
-	printf("test SHA256\n");
+	printf(/*4*/"test SHA256\n");
 
 	uint32_t i = 0;
 	while (i < LENGTHOF(((SHA256_TestCase *[2])TESTS))) {
@@ -80,7 +80,7 @@ int main(void) {
 			res = "passed";
 		}
 
-		printf("test #%i: %s\n", i, (char*)res);
+		printf(/*4*/"test #%i: %s\n", i, /*4*/(char*)res);
 
 		i = i + 1;
 	}

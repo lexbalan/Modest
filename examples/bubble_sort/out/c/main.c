@@ -46,26 +46,26 @@ static void bubble_sort32(int32_t(*array)[], uint32_t len) {
 static void print_array(int32_t(*array)[], uint32_t len);
 
 int32_t main(void) {
-	printf("array before:\n");
+	printf(/*4*/"array before:\n");
 	print_array(/*ParamIsPtr2Arr*/&testArray, LENGTHOF(testArray));
-	printf("\n");
+	printf(/*4*/"\n");
 
 	// do sort
 	bubble_sort32(/*ParamIsPtr2Arr*/&testArray, LENGTHOF(testArray));
 
-	printf("array after:\n");
+	printf(/*4*/"array after:\n");
 	print_array(/*ParamIsPtr2Arr*/&testArray, LENGTHOF(testArray));
-	printf("\n");
+	printf(/*4*/"\n");
 
 	return 0;
 }
 
 
 static void print_array(int32_t(*array)[], uint32_t len) {
-	printf("\n");
+	printf(/*4*/"\n");
 	uint32_t i = 0;
 	while (i < len) {
-		printf("array[%i] = %i\n", i, (*array)[i]);
+		printf(/*4*/"array[%i] = %i\n", i, (*array)[i]);
 		i = i + 1;
 	}
 }

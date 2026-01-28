@@ -20,9 +20,9 @@
 static bool writeFile(int sockFd) {
 	char buffer[BUF_SIZE];
 
-	FILE *const fp = fopen(FILENAME, "w");
+	FILE *const fp = fopen(/*4*/FILENAME, /*4*/"w");
 	if (fp == NULL) {
-		perror("[-] Error in creating file");
+		perror(/*4*/"[-] Error in creating file");
 		return false;
 	}
 
@@ -31,7 +31,7 @@ static bool writeFile(int sockFd) {
 		if (n <= 0) {
 			break;
 		}
-		fprintf(fp, "%s", (char*)&buffer);
+		fprintf(fp, /*4*/"%s", /*4*/(char*)&buffer);
 		memset(&buffer, 0, sizeof(char[BUF_SIZE]));
 	}
 
@@ -42,36 +42,36 @@ static bool writeFile(int sockFd) {
 int main(void) {
 	const int sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd < 0) {
-		perror("[-] Error in socket");
+		perror(/*4*/"[-] Error in socket");
 		exit(1);
 	}
 
-	printf("[+] Server socket created\n");
+	printf(/*4*/"[+] Server socket created\n");
 
 	struct sockaddr_in serverAddr = (struct sockaddr_in){
 		.sin_family = AF_INET,
 		.sin_port = PORT,
 		.sin_addr = (struct in_addr){
-			.s_addr = inet_addr(IP_ADDRESS)
+			.s_addr = inet_addr(/*4*/IP_ADDRESS)
 		}
 	};
 
 	struct sockaddr *const sockAddr = (struct sockaddr *)&serverAddr;
 	int e = bind(sockFd, sockAddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
-		perror("[-] Error in Binding");
+		perror(/*4*/"[-] Error in Binding");
 		exit(1);
 	}
 
-	printf("[+] Binding Successfull\n");
+	printf(/*4*/"[+] Binding Successfull\n");
 
 	e = listen(sockFd, 10);
 	if (e != 0) {
-		perror("[-] Error in Binding");
+		perror(/*4*/"[-] Error in Binding");
 		exit(1);
 	}
 
-	printf("[+] Listening...\n");
+	printf(/*4*/"[+] Listening...\n");
 
 	socklen_t addrSize = (socklen_t)sizeof(struct sockaddr_in);
 	struct sockaddr_in newAddr;
@@ -80,9 +80,9 @@ int main(void) {
 
 	const bool suc = writeFile(newSock);
 	if (suc) {
-		printf("[+] Data written in the text file");
+		printf(/*4*/"[+] Data written in the text file");
 	} else {
-		perror("[-] Cannot write file");
+		perror(/*4*/"[-] Cannot write file");
 	}
 
 	return 0;

@@ -40,19 +40,19 @@ static char arrayFromString[3] = {'a', 'b', 'c'};
 
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
-static void f0(char *_x, char *sret_) {
+static void f0(char *_x, char *_sret_) {
 	char x[20];
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
 	memcpy(&local_copy_of_x, &x, sizeof(char[20]));
-	printf("f0(\"%s\")\n", (char*)&local_copy_of_x);
+	printf(/*4*/"f0(\"%s\")\n", /*4*/(char*)&local_copy_of_x);
 
 	// truncate array
 	char mic[6];
 	memcpy(&mic, (char *)&x[0], sizeof(char[6]));
 	mic[5] = '\x0';
 
-	printf("f0 mic = \"%s\"\n", (char*)&mic);
+	printf(/*4*/"f0 mic = \"%s\"\n", /*4*/(char*)&mic);
 
 	// extend array
 	char res[30];
@@ -67,7 +67,7 @@ static void f0(char *_x, char *sret_) {
 	res[11] = 't';
 	res[12] = '!';
 	res[13] = '\x0';
-	memcpy(sret_, &res, sizeof(char[30]));
+	memcpy(_sret_, &res, sizeof(char[30]));
 }
 
 
@@ -80,7 +80,7 @@ static void test(void) {
 	uint32_t i = 0;
 	while (i < LENGTHOF(yy)) {
 		const uint8_t y = yy[i];
-		printf("yy[%i] = %u\n", i, (uint32_t)y);
+		printf(/*4*/"yy[%i] = %u\n", i, (uint32_t)y);
 		i = i + 1;
 	}
 }
@@ -133,7 +133,7 @@ static void test_arrays(void) {
 	while (i < 10) {
 		j = 0;
 		while (j < 10) {
-			printf("a10[%d][%d] = %d\n", i, j, a10[i][j]);
+			printf(/*4*/"a10[%d][%d] = %d\n", i, j, a10[i][j]);
 			j = j + 1;
 		}
 		i = i + 1;
@@ -145,7 +145,7 @@ static void test_arrays(void) {
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k]);
+				printf(/*4*/"a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -158,7 +158,7 @@ static void test_arrays(void) {
 	while (i < 2) {
 		j = 0;
 		while (j < 5) {
-			printf("a3[%d][%d] = %d\n", i, j, (*a3[i])[j]);
+			printf(/*4*/"a3[%d][%d] = %d\n", i, j, (*a3[i])[j]);
 			j = j + 1;
 		}
 		i = i + 1;
@@ -171,7 +171,7 @@ static void test_arrays(void) {
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, (*(*a4[i])[j])[k]);
+				printf(/*4*/"a3[%d][%d][%d] = %d\n", i, j, k, (*(*a4[i])[j])[k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -185,7 +185,7 @@ static void test_arrays(void) {
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("p0[%d][%d][%d] = %d\n", i, j, k, (*(*(*p0)[i])[j])[k]);
+				printf(/*4*/"p0[%d][%d][%d] = %d\n", i, j, k, (*(*(*p0)[i])[j])[k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -201,28 +201,28 @@ int main(void) {
 	test();
 
 	char em[30];
-	f0(/*ArrByVal*/&(char[20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'}, &em);
-	printf("em = %s\n", (char*)&em);
+	f0(/*ArrByVal2*/&((char[20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'})[0], /*2*/&em[0]);
+	printf(/*4*/"em = %s\n", /*4*/(char*)&em);
 
 	uint32_t i = 0;
 	while (i < 10) {
 		const int32_t a = globalArray[i];
-		printf("globalArray[%i] = %i\n", i, a);
+		printf(/*4*/"globalArray[%i] = %i\n", i, a);
 		i = i + 1;
 	}
 
-	printf("------------------------------------\n");
+	printf(/*4*/"------------------------------------\n");
 
 	int32_t localArray[3] = {4, 5, 6};
 
 	i = 0;
 	while (i < 3) {
 		const int32_t a = localArray[i];
-		printf("localArray[%i] = %i\n", i, a);
+		printf(/*4*/"localArray[%i] = %i\n", i, a);
 		i = i + 1;
 	}
 
-	printf("------------------------------------\n");
+	printf(/*4*/"------------------------------------\n");
 
 	int32_t(*globalArrayPtr)[];
 	globalArrayPtr = &globalArray;
@@ -230,11 +230,11 @@ int main(void) {
 	i = 0;
 	while (i < 3) {
 		const int32_t a = (*globalArrayPtr)[i];
-		printf("globalArrayPtr[%i] = %i\n", i, a);
+		printf(/*4*/"globalArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
 
-	printf("------------------------------------\n");
+	printf(/*4*/"------------------------------------\n");
 
 	int32_t(*localArrayPtr)[];
 	localArrayPtr = &localArray;
@@ -242,31 +242,31 @@ int main(void) {
 	i = 0;
 	while (i < 3) {
 		const int32_t a = (*localArrayPtr)[i];
-		printf("localArrayPtr[%i] = %i\n", i, a);
+		printf(/*4*/"localArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
 
 	// assign array to array 1
 	// (with equal types)
 	int32_t a[3] = {1, 2, 3};
-	printf("a[0] = %i\n", a[0]);
-	printf("a[1] = %i\n", a[1]);
-	printf("a[2] = %i\n", a[2]);
+	printf(/*4*/"a[0] = %i\n", a[0]);
+	printf(/*4*/"a[1] = %i\n", a[1]);
+	printf(/*4*/"a[2] = %i\n", a[2]);
 
 	// create (and initialize) new variable b
 	// (with type [3]Int32)
 	// this variable are copy of array a
 	int32_t b[3];
 	memcpy(&b, &a, sizeof(int32_t[3]));
-	printf("b[0] = %i\n", b[0]);
-	printf("b[1] = %i\n", b[1]);
-	printf("b[2] = %i\n", b[2]);
+	printf(/*4*/"b[0] = %i\n", b[0]);
+	printf(/*4*/"b[1] = %i\n", b[1]);
+	printf(/*4*/"b[2] = %i\n", b[2]);
 
 	// check equality between two arrays (by value)
 	if (memcmp(&a, &b, sizeof(int32_t[3])) == 0) {
-		printf("a == b\n");
+		printf(/*4*/"a == b\n");
 	} else {
-		printf("a != b\n");
+		printf(/*4*/"a != b\n");
 	}
 
 	// assign array to array 2
@@ -277,21 +277,21 @@ int main(void) {
 	memcpy((int32_t(*)[3 - 0])&d[0], &c, sizeof(int32_t[3 - 0]));
 	memset((int32_t(*)[6 - 3])&d[3], 0, sizeof(int32_t[6 - 3]));
 
-	printf("d[0] = %i\n", d[0]);
-	printf("d[1] = %i\n", d[1]);
-	printf("d[2] = %i\n", d[2]);
-	printf("d[3] = %i\n", d[3]);
-	printf("d[4] = %i\n", d[4]);
-	printf("d[5] = %i\n", d[5]);
+	printf(/*4*/"d[0] = %i\n", d[0]);
+	printf(/*4*/"d[1] = %i\n", d[1]);
+	printf(/*4*/"d[2] = %i\n", d[2]);
+	printf(/*4*/"d[3] = %i\n", d[3]);
+	printf(/*4*/"d[4] = %i\n", d[4]);
+	printf(/*4*/"d[5] = %i\n", d[5]);
 
 	// check equality between two arrays (by pointer)
 	int32_t(*const pa)[3] = &a;
 	int32_t(*const pb)[3] = &b;
 
 	if (memcmp(pa, pb, sizeof(int32_t[3])) == 0) {
-		printf("*pa == *pb\n");
+		printf(/*4*/"*pa == *pb\n");
 	} else {
-		printf("*pa != *pb\n");
+		printf(/*4*/"*pa != *pb\n");
 	}
 
 
@@ -312,15 +312,15 @@ int main(void) {
 	// check local literal array assignation to local array
 	int32_t e[4];
 	memcpy(&e, &init_array, sizeof(int32_t[4]));
-	printf("e[0] = %i\n", e[0]);
-	printf("e[1] = %i\n", e[1]);
-	printf("e[2] = %i\n", e[2]);
+	printf(/*4*/"e[0] = %i\n", e[0]);
+	printf(/*4*/"e[1] = %i\n", e[1]);
+	printf(/*4*/"e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
 	memcpy(&globalArray, &init_array, sizeof(int32_t[10]));
-	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
-	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
-	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
+	printf(/*4*/"globalArray[%i] = %i\n", 0, globalArray[0]);
+	printf(/*4*/"globalArray[%i] = %i\n", 1, globalArray[1]);
+	printf(/*4*/"globalArray[%i] = %i\n", 2, globalArray[2]);
 
 
 	memset(&globalArray, 0, sizeof(int32_t[10]));
@@ -341,15 +341,15 @@ int main(void) {
 	bx = 222;
 	cx = 333;
 
-	printf("y[%i] = %i (must be 10)\n", 0, y[0]);
-	printf("y[%i] = %i (must be 20)\n", 1, y[1]);
-	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
-	printf("y[%i] = %i (must be 40)\n", 3, y[3]);
+	printf(/*4*/"y[%i] = %i (must be 10)\n", 0, y[0]);
+	printf(/*4*/"y[%i] = %i (must be 20)\n", 1, y[1]);
+	printf(/*4*/"y[%i] = %i (must be 30)\n", 2, y[2]);
+	printf(/*4*/"y[%i] = %i (must be 40)\n", 3, y[3]);
 
 	if (memcmp(&y, &((int32_t[4]){10, 20, 30, 40}), sizeof(int32_t[4])) == 0) {
-		printf("test passed\n");
+		printf(/*4*/"test passed\n");
 	} else {
-		printf("test failed\n");
+		printf(/*4*/"test failed\n");
 	}
 
 

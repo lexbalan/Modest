@@ -21,7 +21,7 @@ var pstr1: *Str16 = hello
 var pstr2: *Str32 = hello
 
 
-func puts8 (s: @cstring *Str8) -> Unit {
+func puts8 (s: *Str8) -> Unit {
 }
 
 func puts16 (s: *Str16) -> Unit {

@@ -32,7 +32,7 @@ typedef uint32_t char32_t;
 #define UTF32_CHAR  "🐀"
 
 int main(void) {
-	printf("test/char\n");
+	printf(/*4*/"test/char\n");
 
 	char ch08;
 	char16_t ch16;
@@ -42,9 +42,9 @@ int main(void) {
 	ch16 = _CHR16(UTF16_CHAR);
 	ch32 = _CHR32(UTF32_CHAR);
 
-	printf("ch08 = 0x%x (%c)\n", (uint32_t)(uint8_t)ch08, (char)ch08);
-	printf("ch16 = 0x%x (%c)\n", (uint32_t)(uint16_t)ch16, (char16_t)ch16);
-	printf("ch32 = 0x%x (%c)\n", (uint32_t)ch32, (char32_t)ch32);
+	printf(/*4*/"ch08 = 0x%x (%c)\n", (uint32_t)(uint8_t)ch08, (char)ch08);
+	printf(/*4*/"ch16 = 0x%x (%c)\n", (uint32_t)(uint16_t)ch16, (char16_t)ch16);
+	printf(/*4*/"ch32 = 0x%x (%c)\n", (uint32_t)ch32, (char32_t)ch32);
 
 	return 0;
 }

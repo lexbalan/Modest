@@ -41,15 +41,15 @@ static int32_t *f3(void) {
 }
 
 
-static void f4(int32_t x, int32_t(*sret_)[10]) {
-	memcpy(sret_, &((int32_t[10]){1, 2, 3}), sizeof(int32_t[10]));
+static void f4(int32_t x, int32_t(*_sret_)[10]) {
+	memcpy(_sret_, &((int32_t[10]){1, 2, 3}), sizeof(int32_t[10]));
 }
 
 
-static void f5(int32_t(*_a)[32], int32_t(*sret_)[32]) {
+static void f5(int32_t(*_a)[32], int32_t(*_sret_)[32]) {
 	int32_t a[32];
 	memcpy(a, _a, sizeof(int32_t[32]));
-	memcpy(sret_, &a, sizeof(int32_t[32]));
+	memcpy(_sret_, &a, sizeof(int32_t[32]));
 }
 
 
@@ -99,8 +99,8 @@ static void(*pf0)(void) = &f0;
 static int32_t(*pf1)(int32_t x) = &f1;
 static int32_t(*pf2)(int32_t a, int32_t b) = &f2;
 static int32_t *(*pf3)(void) = &f3;
-static void(*pf4)(int32_t x, int32_t(*sret_)[10]) = &f4;
-static void(*pf5)(int32_t(*_a)[32], int32_t(*sret_)[32]) = &f5;
+static void(*pf4)(int32_t x, int32_t(*_sret_)[10]) = &f4;
+static void(*pf5)(int32_t(*_a)[32], int32_t(*_sret_)[32]) = &f5;
 static int32_t(*(*pf6)(int32_t(*a)[32]))[32] = &f6;
 static void(*pf7)(void(*f)(void)) = &f7;
 static void(*(*pf8)(void(*f)(void)))(void) = &f8;
@@ -228,7 +228,7 @@ static void he(He *x) {
 
 
 static void hi(char *x) {
-	printf("Hi %s!\n", (char*)x);
+	printf(/*4*/"Hi %s!\n", /*4*/(char*)x);
 }
 
 
@@ -252,42 +252,42 @@ static Wrap *awrap[2] = {&wrap0, &wrap0};
 int32_t main(void) {
 	xy((struct __anonymous_struct_3){.x = 10, .y = 20});
 
-	printf("test1 (eq): ");
+	printf(/*4*/"test1 (eq): ");
 	if (memcmp(&animation0_points, &animation1_points, sizeof(AnimationPoint[5])) == 0) {
-		printf("eq\n");
+		printf(/*4*/"eq\n");
 	} else {
-		printf("ne\n");
+		printf(/*4*/"ne\n");
 	}
 
-	printf("test2 (ne): ");
+	printf(/*4*/"test2 (ne): ");
 	if (memcmp(&animation1_points, &animation2_points, sizeof(AnimationPoint[5])) == 0) {
-		printf("eq\n");
+		printf(/*4*/"eq\n");
 	} else {
-		printf("ne\n");
+		printf(/*4*/"ne\n");
 	}
 
 	uint32_t i = 0;
 	while (i < 3) {
 		uint32_t j = 0;
 		while (j < 3) {
-			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j]);
+			printf(/*4*/"arrr[%d][%d] = %d\n", i, j, arrr[i][j]);
 			j = j + 1;
 		}
 		i = i + 1;
 	}
 
 	const int32_t _add = farr[0](5, 7);
-	printf("farr[0](5, 7) = %d\n", _add);
+	printf(/*4*/"farr[0](5, 7) = %d\n", _add);
 	const int32_t _sub = farr[1](5, 7);
-	printf("farr[1](5, 7) = %d\n", _sub);
+	printf(/*4*/"farr[1](5, 7) = %d\n", _sub);
 
 	i = 0;
 	while (i < 10) {
-		hiarr[i]("LOL");
+		hiarr[i](/*4*/"LOL");
 		i = i + 1;
 	}
 
-	awrap[0]->fhi("World");
+	awrap[0]->fhi(/*4*/"World");
 	//let y = awrap[0]
 	//y.fhi("World")
 

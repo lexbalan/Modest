@@ -91,7 +91,7 @@ static void tokenize(Tokenizer *tokenizer) {
 		char token[max_toklen];
 
 		char *p = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		const uint16_t toklen = gettok(tokenizer, &token[0], max_toklen);
+		const uint16_t toklen = gettok(tokenizer, /*4*/&token[0], max_toklen);
 		if (toklen == 0) {
 			break;
 		}
@@ -111,29 +111,29 @@ static void tokenize(Tokenizer *tokenizer) {
 
 
 static void execute(char *cmd, uint16_t argc, char *(*argv)[]) {
-	printf("%s (n=%d)", (char*)cmd, argc);
-	printf(" [");
+	printf(/*4*/"%s (n=%d)", /*4*/(char*)cmd, argc);
+	printf(/*4*/" [");
 	uint32_t i = 0;
 	while (true) {
 		char *const ptok = (*argv)[i];
 		if (ptok == NULL) {
 			break;
 		}
-		printf("'%s'", (char*)ptok);
+		printf(/*4*/"'%s'", /*4*/(char*)ptok);
 		i = i + 1;
 	}
-	printf("]\n");
+	printf(/*4*/"]\n");
 }
 
 
 int32_t main(void) {
-	printf("HARSH v0.1\n");
+	printf(/*4*/"HARSH v0.1\n");
 
 	char inbuf[1024];
 
 	while (true) {
 		showPrompt();
-		fgets(&inbuf[0], (int)sizeof inbuf, stdin);
+		fgets(/*4*/&inbuf[0], (int)sizeof inbuf, stdin);
 
 		char *tokens[64] = {0};
 
@@ -152,7 +152,7 @@ int32_t main(void) {
 			argc = argc - 1;
 		}
 		char *(*const argv)[] = &(*tokenizer.tokens)[1];
-		execute(cmd, argc, /*ParamIsPtr2Arr*/argv);
+		execute(/*4*/cmd, argc, /*ParamIsPtr2Arr*/argv);
 	}
 
 	return 0;

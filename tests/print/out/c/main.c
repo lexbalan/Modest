@@ -30,7 +30,7 @@ typedef uint32_t char32_t;
 
 
 int main(void) {
-	console_print("test console print\n");
+	console_print(/*4*/"test console print\n");
 
 	const char32_t c = U'🐀';
 	char *const s = "Hi!";
@@ -38,19 +38,19 @@ int main(void) {
 	const uint32_t n = 123;
 	const uint32_t x = 0x1234567F;
 
-	console_print("\\\n");// "\\" = "\"
-	console_print("@\n");// "\64" = "@"
-	console_print("#AA#\n");// "\x23AA\x23" = "#AA#"
-	console_print("🎉A\n");// "\u0001F389A" = "🎉A"
+	console_print(/*4*/"\\\n");// "\\" = "\"
+	console_print(/*4*/"@\n");// "\64" = "@"
+	console_print(/*4*/"#AA#\n");// "\x23AA\x23" = "#AA#"
+	console_print(/*4*/"🎉A\n");// "\u0001F389A" = "🎉A"
 
-	console_print("Это строка записанная кириллицей.\n");
+	console_print(/*4*/"Это строка записанная кириллицей.\n");
 
-	console_print("{{c}}\n");// {{c}}
-	console_print("c = \"{c}\"\n", (const char32_t)c);// c = "🐀"
-	console_print("s = \"{s}\"\n", (char*)s);// s = "Hi!"
-	console_print("i = {i}\n", i);// i = -1
-	console_print("n = {n}\n", n);// n = 123
-	console_print("x = 0x{x}\n", x);// x = 0x1234567F
+	console_print(/*4*/"{{c}}\n");// {{c}}
+	console_print(/*4*/"c = \"{c}\"\n", (const char32_t)c);// c = "🐀"
+	console_print(/*4*/"s = \"{s}\"\n", /*4*/(char*)s);// s = "Hi!"
+	console_print(/*4*/"i = {i}\n", i);// i = -1
+	console_print(/*4*/"n = {n}\n", n);// n = 123
+	console_print(/*4*/"x = 0x{x}\n", x);// x = 0x1234567F
 
 	return 0;
 }

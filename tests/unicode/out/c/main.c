@@ -64,23 +64,23 @@ static void puts32(char32_t *s);
 
 int32_t main(void)
 {
-	printf("test unicode\n");
+	printf(/*4*/"test unicode\n");
 
 	putc8(_CHR8(A));
 	putc16(_CHR16(A));
 	putc32(_CHR32(A));
 
-	puts8(A);
-	puts16(_STR16(A));
-	puts32(_STR32(A));
+	puts8(/*4*/A);
+	puts16(/*4*/_STR16(A));
+	puts32(/*4*/_STR32(A));
 
 	putc8('A');
 	putc16(u'A');
 	putc32(U'A');
 
-	puts8("A");
-	puts16(_STR16("A"));
-	puts32(_STR32("A"));
+	puts8(/*4*/"A");
+	puts16(/*4*/_STR16("A"));
+	puts32(/*4*/_STR32("A"));
 
 	return 0;
 }

@@ -364,7 +364,8 @@ def str_type_func(t, core='', need_close=False, ctx=[]):
 		# а сам массив пойдет через указатель sret_
 		# который функция получит своим самым последним параметром
 		# (sret = structure return)
-		sret_param = Field(Id('sret_'), TypePointer(t.to), init_value=ValueUndef(t.to))
+		sret_param = Field(Id('sret_'), t.to, init_value=ValueUndef(t.to))
+		#sret_param = Field(Id('sret_'), TypePointer(t.to), init_value=ValueUndef(t.to))
 
 		fparams = t.params + [sret_param]
 		fto = typeUnit
@@ -636,10 +637,15 @@ def str_value_call(v, ctx, sret=None):
 		if p_type.is_array():
 			# Если в функцию передается массив по значению - передаем указатель на него (!)
 			# тк функции си не умеют получать массивы по значению
-			astr = '/*ArrByVal*/&' + astr
+			if p_type.is_array_of_char():
+				astr = '/*ArrByVal2*/&(%s)[0]' % astr
+			else:
+				astr = '/*ArrByVal*/&' + astr
 
 		if p_type.is_pointer_to_str():
-			astr = str_value(a, ctx=ctx+['arr_as_ptr'])
+			astr = '/*4*/' + str_value(a, ctx=ctx+['arr_as_ptr'])
+			if a.isValueRef():
+				astr = astr + '[0]'
 		sstr += astr
 
 		i = i + 1
@@ -653,7 +659,9 @@ def str_value_call(v, ctx, sret=None):
 		# приводим указатель на массив к указателю на его элемент
 		#to = TypePointer(sret.type.of)
 		#sstr += "(%s)" % str_type(to)
-		sstr += str_value_as_ptr(sret)
+		sstr += '/*2*/'+str_value_as_ptr(sret) #+ '[0]'
+		if sret.type.is_array_of_char():
+			sstr = sstr + '[0]'
 
 	if nl_after:
 		sstr += str_nl_indent()
@@ -1529,7 +1537,7 @@ def print_stmt_return(x):
 	global cfunc
 
 	if isSretFunc(cfunc.type):
-		out("memcpy(sret_, ")
+		out("memcpy(_sret_, ")
 		out(str_value_as_ptr(x.value))
 		out(", sizeof(")
 		out(str_type(x.value.type))

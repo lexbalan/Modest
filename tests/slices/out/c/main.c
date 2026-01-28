@@ -21,14 +21,14 @@
 static void array_print(int32_t(*pa)[], uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
-		printf("a[%d] = %d\n", i, (*pa)[i]);
+		printf(/*4*/"a[%d] = %d\n", i, (*pa)[i]);
 		i = i + 1;
 	}
 }
 
 
 int main(void) {
-	printf("test slices\n");
+	printf(/*4*/"test slices\n");
 
 	//
 	// by value
@@ -40,11 +40,11 @@ int main(void) {
 	memcpy(&s1, (int32_t(*)[2 - 1])&a[1], sizeof(int32_t[2 - 1]));
 	uint32_t i = 0;
 	while (i < LENGTHOF(s1)) {
-		printf("s1[%d] = %d\n", i, s1[i]);
+		printf(/*4*/"s1[%d] = %d\n", i, s1[i]);
 		i = i + 1;
 	}
 
-	printf("--------------------------------------------\n");
+	printf(/*4*/"--------------------------------------------\n");
 
 	//
 	// by ptr
@@ -55,11 +55,11 @@ int main(void) {
 	memcpy(&s2, (int32_t(*)[8 - 5])&(*pa)[5], sizeof(int32_t[8 - 5]));
 	i = 0;
 	while (i < LENGTHOF(s2)) {
-		printf("s2[%d] = %d\n", i, s2[i]);
+		printf(/*4*/"s2[%d] = %d\n", i, s2[i]);
 		i = i + 1;
 	}
 
-	printf("--------------------------------------------\n");
+	printf(/*4*/"--------------------------------------------\n");
 
 	int32_t vs1[2 - 1];
 	memcpy(&vs1, &s1, sizeof(int32_t[2 - 1]));
@@ -72,11 +72,11 @@ int main(void) {
 
 	i = 0;
 	while (i < LENGTHOF(a)) {
-		printf("a[%d] = %d\n", i, a[i]);
+		printf(/*4*/"a[%d] = %d\n", i, a[i]);
 		i = i + 1;
 	}
 
-	printf("--------------------------------------------\n");
+	printf(/*4*/"--------------------------------------------\n");
 
 	int32_t s[10] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
@@ -84,12 +84,12 @@ int main(void) {
 
 	i = 0;
 	while (i < LENGTHOF(s)) {
-		printf("s[%d] = %d\n", i, (uint32_t)abs((int)s[i]));
+		printf(/*4*/"s[%d] = %d\n", i, (uint32_t)abs((int)s[i]));
 		i = i + 1;
 	}
 
-	printf("--------------------------------------------\n");
-	printf("test pointer to slice\n");
+	printf(/*4*/"--------------------------------------------\n");
+	printf(/*4*/"test pointer to slice\n");
 
 	#define aa  2
 	#define bb  8
@@ -97,32 +97,32 @@ int main(void) {
 	int32_t(*const p)[bb - aa] = &s[aa];
 	array_print(/*ParamIsPtr2Arr*/p, bb - aa);
 
-	printf("--------------------------------------------\n");
+	printf(/*4*/"--------------------------------------------\n");
 
 	(*p)[0] = 123;
 
 	array_print(/*ParamIsPtr2Arr*/p, bb - aa);
 
-	printf("--------------------------------------------\n");
-	printf("slice of pointer to open array\n");
+	printf(/*4*/"--------------------------------------------\n");
+	printf(/*4*/"slice of pointer to open array\n");
 
 	// за каким то хером это работает, то что мне сейчас нужно
 	// но тут еще куча работы впереди
 
 	int32_t(*pw)[] = (int32_t(*)[])&s;
 
-	printf("before\n");
+	printf(/*4*/"before\n");
 	array_print(/*ParamIsPtr2Arr*/pw, 10);
 
 	int32_t ind = 1;
 
 	pw = &(*pw)[ind];
 
-	printf("after\n");
+	printf(/*4*/"after\n");
 	array_print(/*ParamIsPtr2Arr*/pw, 10);
 
-	printf("--------------------------------------------\n");
-	printf("zero slice by var\n");
+	printf(/*4*/"--------------------------------------------\n");
+	printf(/*4*/"zero slice by var\n");
 	// NOT WORKED NOW
 
 	int32_t ss[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -132,8 +132,8 @@ int main(void) {
 	memset((int32_t(*)[j - k])&ss[k], 0, sizeof(int32_t[j - k]));
 	array_print(/*ParamIsPtr2Arr*/&ss, 10);
 
-	printf("--------------------------------------------\n");
-	printf("copy slice by var\n");
+	printf(/*4*/"--------------------------------------------\n");
+	printf(/*4*/"copy slice by var\n");
 
 	int32_t src[5] = {10, 20, 30, 40, 50};
 	int32_t dst[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};

@@ -36,7 +36,7 @@ void table_print(table_Table *table) {
 	if (table->header != NULL) {
 		i = 0;
 		while (i < table->nCols) {
-			const uint32_t len = (uint32_t)strlen((*table->header)[i]);
+			const uint32_t len = (uint32_t)strlen(/*4*/(*table->header)[i]);
 			if (len > sz[i]) {
 				sz[i] = len;
 			}
@@ -48,7 +48,7 @@ void table_print(table_Table *table) {
 	while (i < table->nRows) {
 		j = 0;
 		while (j < table->nCols) {
-			const uint32_t len = (uint32_t)strlen((*data)[i][j]);
+			const uint32_t len = (uint32_t)strlen(/*4*/(*data)[i][j]);
 			if (len > sz[j]) {
 				sz[j] = len;
 			}
@@ -97,22 +97,22 @@ static void printRow(char *(*raw_row)[], uint32_t(*sz)[], uint32_t nCols) {
 	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
 	uint32_t j = 0;
 	while (j < nCols) {
-		printf("|");
+		printf(/*4*/"|");
 		char *const s = (*row)[j];
-		uint32_t len = (uint32_t)strlen(s);
+		uint32_t len = (uint32_t)strlen(/*4*/s);
 		if (s[0] != '\x0') {
 			len = len + 1;
-			printf(" %s", (char*)s);
+			printf(/*4*/" %s", /*4*/(char*)s);
 		}
 
 		uint32_t k = 0;
 		while (k < ((*sz)[j] - len)) {
-			printf(" ");
+			printf(/*4*/" ");
 			k = k + 1;
 		}
 		j = j + 1;
 	}
-	printf("|\n");
+	printf(/*4*/"|\n");
 }
 
 
@@ -123,15 +123,15 @@ static void printRow(char *(*raw_row)[], uint32_t(*sz)[], uint32_t nCols) {
 static void separator(uint32_t(*sz)[], uint32_t n) {
 	uint32_t i = 0;
 	while (i < n) {
-		printf("+");
+		printf(/*4*/"+");
 		uint32_t j = 0;
 		while (j < (*sz)[i]) {
-			printf("-");
+			printf(/*4*/"-");
 			j = j + 1;
 		}
 		i = i + 1;
 	}
-	printf("+\n");
+	printf(/*4*/"+\n");
 }
 
 

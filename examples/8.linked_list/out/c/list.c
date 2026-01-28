@@ -105,7 +105,7 @@ void *list_node_data_get(list_Node *node) {
 
 
 void list_node_insert_right(list_Node *left, list_Node *new_right) {
-	printf("node_insert_right\n");
+	printf(/*4*/"node_insert_right\n");
 
 	list_Node *const old_right = left->next;
 	left->next = new_right;
@@ -128,7 +128,7 @@ list_Node *list_node_get(list_List *list, int32_t pos) {
 		return NULL;
 	}
 
-	printf("node_get(%d)\n", pos);
+	printf(/*4*/"node_get(%d)\n", pos);
 	list_Node *node;
 
 	if (pos >= 0) {
@@ -170,7 +170,7 @@ list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node) {
 		return NULL;
 	}
 
-	printf("node_insert(%d)\n", pos);
+	printf(/*4*/"node_insert(%d)\n", pos);
 
 
 	list_Node *const n = list_node_get(list, pos);

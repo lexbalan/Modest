@@ -67,14 +67,14 @@ static void ptr_example(void) {
 	ptr_p->x = 10.0;
 	ptr_p->y = 20.0;
 
-	printf("point(%f, %f)\n", (float)ptr_p->x, (float)ptr_p->y);
+	printf(/*4*/"point(%f, %f)\n", (float)ptr_p->x, (float)ptr_p->y);
 }
 
 
 int main(void) {
 	// by value
 	const float len = lineLength(line);
-	printf("line length = %f\n", (const float)len);
+	printf(/*4*/"line length = %f\n", (const float)len);
 
 	ptr_example();
 
