@@ -108,7 +108,7 @@ func tokenize (tokenizer: *Tokenizer) -> Unit {
 
 
 func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
-	printf("%s (n=%d)", cmd, argc)
+	printf("%s (n=%d)", *Str8 cmd, Nat16 argc)
 	printf(" [")
 	var i: Nat32 = 0
 	while true {
@@ -116,7 +116,7 @@ func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
 		if ptok == nil {
 			break
 		}
-		printf("'%s'", ptok)
+		printf("'%s'", *Str8 ptok)
 		i = i + 1
 	}
 	printf("]\n")

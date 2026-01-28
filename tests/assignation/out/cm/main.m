@@ -28,22 +28,22 @@ public func main () -> Int {
 
 	// copy integers by value
 	glb_i0 = glb_i1
-	printf("glb_i0 = %i\n", glb_i0)
+	printf("glb_i0 = %i\n", Int32 glb_i0)
 
 
 	// copy arrays by value
 	glb_a0 = glb_a1
 
-	printf("glb_a0[0] = %i\n", glb_a0[0])
-	printf("glb_a0[1] = %i\n", glb_a0[1])
-	printf("glb_a0[2] = %i\n", glb_a0[2])
+	printf("glb_a0[0] = %i\n", Int32 glb_a0[0])
+	printf("glb_a0[1] = %i\n", Int32 glb_a0[1])
+	printf("glb_a0[2] = %i\n", Int32 glb_a0[2])
 
 
 	// copy records by value
 	glb_r0 = glb_r1
 
-	printf("glb_r0.x = %i\n", glb_r0.x)
-	printf("glb_r0.y = %i\n", glb_r0.y)
+	printf("glb_r0.x = %i\n", Int32 glb_r0.x)
+	printf("glb_r0.y = %i\n", Int32 glb_r0.y)
 
 
 	// -----------------------------------
@@ -55,7 +55,7 @@ public func main () -> Int {
 
 	loc_i0 = loc_i1
 
-	printf("loc_i0 = %i\n", loc_i0)
+	printf("loc_i0 = %i\n", Int32 loc_i0)
 
 	// copy arrays by value
 	// C backend will be use memcpy()
@@ -64,9 +64,9 @@ public func main () -> Int {
 
 	loc_a0 = loc_a1
 
-	printf("loc_a0[0] = %i\n", loc_a0[0])
-	printf("loc_a0[1] = %i\n", loc_a0[1])
-	printf("loc_a0[2] = %i\n", loc_a0[2])
+	printf("loc_a0[0] = %i\n", Int32 loc_a0[0])
+	printf("loc_a0[1] = %i\n", Int32 loc_a0[1])
+	printf("loc_a0[2] = %i\n", Int32 loc_a0[2])
 
 
 	// copy records by value
@@ -76,8 +76,8 @@ public func main () -> Int {
 
 	loc_r0 = loc_r1
 
-	printf("loc_r0.x = %i\n", loc_r0.x)
-	printf("loc_r0.y = %i\n", loc_r0.y)
+	printf("loc_r0.x = %i\n", Int32 loc_r0.x)
+	printf("loc_r0.y = %i\n", Int32 loc_r0.y)
 
 
 	// error: closed arrays of closed arrays are denied

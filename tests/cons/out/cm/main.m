@@ -18,8 +18,8 @@ public func main () -> Int {
 
 	let a = Nat8 0xFF
 	let b = Nat32 a
-	printf("a = %u\n", a)
-	printf("b = %u\n", b)
+	printf("a = %u\n", Nat8 a)
+	printf("b = %u\n", Nat32 b)
 
 	//	let c = Int32 a
 	//	let d = Int32 Int8 -1

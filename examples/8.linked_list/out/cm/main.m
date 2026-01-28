@@ -21,7 +21,7 @@ func list_print_forward (lst: *List) -> Unit {
 	var pn: *Node = list.first_node_get(lst)
 	while pn != nil {
 		let x = *Nat32 list.node_data_get(pn)
-		printf("v = %u\n", *x)
+		printf("v = %u\n", Nat32 *x)
 		pn = list.node_next_get(pn)
 	}
 }
@@ -33,7 +33,7 @@ func list_print_backward (lst: *List) -> Unit {
 	var pn: *Node = list.last_node_get(lst)
 	while pn != nil {
 		let x = *Nat32 list.node_data_get(pn)
-		printf("v = %u\n", *x)
+		printf("v = %u\n", Nat32 *x)
 		pn = list.node_prev_get(pn)
 	}
 }
@@ -66,7 +66,7 @@ public func main () -> Int {
 
 	// print list size
 	let list_size: Nat32 = list.size_get(list0)
-	printf("linked list size: %u\n", list_size)
+	printf("linked list size: %u\n", Nat32 list_size)
 
 	// print list forward
 	list_print_forward(list0)
@@ -83,13 +83,13 @@ public func main () -> Int {
 		let node: *Node = list.node_get(list0, i)
 
 		if node == nil {
-			printf("node %i not exist\n", i)
+			printf("node %i not exist\n", Int32 i)
 			i = i - 1
 			again
 		}
 
 		let px = *Nat32 list.node_data_get(node)
-		printf("list(%i) = %i\n", i, *px)
+		printf("list(%i) = %i\n", Int32 i, Nat32 *px)
 		i = i - 1
 	}
 
@@ -100,13 +100,13 @@ public func main () -> Int {
 		let node: *Node = list.node_get(list0, i)
 
 		if node == nil {
-			printf("node %i not exist\n", i)
+			printf("node %i not exist\n", Int32 i)
 			i = i + 1
 			again
 		}
 
 		let px = *Nat32 list.node_data_get(node)
-		printf("list(%i) = %i\n", i, *px)
+		printf("list(%i) = %i\n", Int32 i, Nat32 *px)
 		i = i + 1
 	}
 

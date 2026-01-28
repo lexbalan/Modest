@@ -91,14 +91,14 @@ static void tokenize(Tokenizer *tokenizer) {
 		char token[max_toklen];
 
 		char *p = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		const uint16_t toklen = gettok(tokenizer, token, max_toklen);
+		const uint16_t toklen = gettok(tokenizer, /*4*/&token[0], max_toklen);
 		if (toklen == 0) {
 			break;
 		}
 
 		// save token in tokens buffer
-		char *const pbuf = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		memcpy((char(*)[toklen - 0])&pbuf[0], (char(*)[toklen - 0])&token[0], sizeof(char[toklen - 0]));
+		char *const pbuf = /*7*/(char *)&/*SLICE*/tokenizer->tokensBuf[tokenizer->tokensBufPos];
+		memcpy((char *)&/*SLICE*/pbuf[0], (char *)&/*SLICE*/token[0], sizeof(char[toklen - 0]));
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + toklen;
 		pbuf[tokenizer->tokensBufPos] = '\x0';
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + 1;
@@ -111,37 +111,37 @@ static void tokenize(Tokenizer *tokenizer) {
 
 
 static void execute(char *cmd, uint16_t argc, char *(*argv)[]) {
-	printf("%s (n=%d)", cmd, argc);
-	printf(" [");
+	printf(/*4*/"%s (n=%d)", /*4*/(char*)cmd, argc);
+	printf(/*4*/" [");
 	uint32_t i = 0;
 	while (true) {
 		char *const ptok = (*argv)[i];
 		if (ptok == NULL) {
 			break;
 		}
-		printf("'%s'", ptok);
+		printf(/*4*/"'%s'", /*4*/(char*)ptok);
 		i = i + 1;
 	}
-	printf("]\n");
+	printf(/*4*/"]\n");
 }
 
 
 int32_t main(void) {
-	printf("HARSH v0.1\n");
+	printf(/*4*/"HARSH v0.1\n");
 
 	char inbuf[1024];
 
 	while (true) {
 		showPrompt();
-		fgets(inbuf, (int)sizeof inbuf, stdin);
+		fgets(/*4*/&inbuf[0], (int)sizeof inbuf, stdin);
 
 		char *tokens[64] = {0};
 
 		// Токенизируем строку
 		Tokenizer tokenizer = (Tokenizer){
-			.input = inbuf,
-			.tokensBuf = tokensBuf,
-			.tokens = tokens
+			.input = &inbuf[0],
+			.tokensBuf = &tokensBuf[0],
+			.tokens = &tokens
 		};
 		tokenize(&tokenizer);
 
@@ -151,8 +151,8 @@ int32_t main(void) {
 		if (argc > 0) {
 			argc = argc - 1;
 		}
-		char *(*const argv)[] = &(*tokenizer.tokens)[1];
-		execute(cmd, argc, argv);
+		char *(*const argv)[] = /*7*/(char *(*)[])&/*SLICE*/(*tokenizer.tokens)[1];
+		execute(/*4*/cmd, argc, /*ParamIsPtr2Arr*/argv);
 	}
 
 	return 0;

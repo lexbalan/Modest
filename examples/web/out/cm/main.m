@@ -35,11 +35,11 @@ func handleRequest (clientSocket: Int32) -> Unit {
 	}
 	buffer[bytesReceived] = 0
 
-	printf("Received request:\n%s\n", unsafe *Str8 &buffer)
+	printf("Received request:\n%s\n", *Str8 unsafe *Str8 &buffer)
 
 	var response: [sendBufferSize]Char8
 	sprintf(&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>"
-		httpHeader, pageCounter
+		*Str8 httpHeader, Nat32 pageCounter
 	)
 
 	write(clientSocket, &response, strlen(&response))
@@ -79,7 +79,7 @@ public func main () -> Int32 {
 		exit(1)
 	}
 
-	printf("Server listening on port %d...\n", Nat32 port)
+	printf("Server listening on port %d...\n", Nat32 Nat32 port)
 
 	// Handle input connections
 	while true {

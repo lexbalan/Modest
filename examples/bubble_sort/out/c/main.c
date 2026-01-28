@@ -17,15 +17,15 @@ static int32_t testArray[21] = {
 
 
 // returns true if was swap
-static bool bubble_sort32_iter(int32_t *array, uint32_t len) {
+static bool bubble_sort32_iter(int32_t(*array)[], uint32_t len) {
 	uint32_t i = 0;
 	while (i < (len - 1)) {
-		const int32_t left = array[i];
-		const int32_t right = array[i + 1];
+		const int32_t left = (*array)[i];
+		const int32_t right = (*array)[i + 1];
 		if (left > right) {
 			// swap
-			array[i] = right;
-			array[i + 1] = left;
+			(*array)[i] = right;
+			(*array)[i + 1] = left;
 			return true;
 		}
 		i = i + 1;
@@ -35,37 +35,37 @@ static bool bubble_sort32_iter(int32_t *array, uint32_t len) {
 
 
 __attribute__((noinline))
-static void bubble_sort32(int32_t *array, uint32_t len) {
-	while (bubble_sort32_iter(array, len)) {
+static void bubble_sort32(int32_t(*array)[], uint32_t len) {
+	while (bubble_sort32_iter(/*ParamIsPtr2Arr*/array, len)) {
 		// continue iterations while is's necessary
 	}
 }
 
 
 
-static void print_array(int32_t *array, uint32_t len);
+static void print_array(int32_t(*array)[], uint32_t len);
 
 int32_t main(void) {
-	printf("array before:\n");
-	print_array(testArray, LENGTHOF(testArray));
-	printf("\n");
+	printf(/*4*/"array before:\n");
+	print_array(/*ParamIsPtr2Arr*/&testArray, LENGTHOF(testArray));
+	printf(/*4*/"\n");
 
 	// do sort
-	bubble_sort32(testArray, LENGTHOF(testArray));
+	bubble_sort32(/*ParamIsPtr2Arr*/&testArray, LENGTHOF(testArray));
 
-	printf("array after:\n");
-	print_array(testArray, LENGTHOF(testArray));
-	printf("\n");
+	printf(/*4*/"array after:\n");
+	print_array(/*ParamIsPtr2Arr*/&testArray, LENGTHOF(testArray));
+	printf(/*4*/"\n");
 
 	return 0;
 }
 
 
-static void print_array(int32_t *array, uint32_t len) {
-	printf("\n");
+static void print_array(int32_t(*array)[], uint32_t len) {
+	printf(/*4*/"\n");
 	uint32_t i = 0;
 	while (i < len) {
-		printf("array[%i] = %i\n", i, array[i]);
+		printf(/*4*/"array[%i] = %i\n", i, (*array)[i]);
 		i = i + 1;
 	}
 }

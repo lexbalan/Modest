@@ -5,70 +5,74 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifndef __STR_UNICODE__
+#if __has_include(<uchar.h>)
+#include "uchar.h"
+#else
+typedef uint16_t char16_t;
+typedef uint32_t char32_t;
+#endif
+#define __STR_UNICODE__
+#define __STR8(x)  x
+#define __STR16(x) u##x
+#define __STR32(x) U##x
+#define _STR8(x)  __STR8(x)
+#define _STR16(x) __STR16(x)
+#define _STR32(x) __STR32(x)
+#define _CHR8(x)  (__STR8(x)[0])
+#define _CHR16(x) (__STR16(x)[0])
+#define _CHR32(x) (__STR32(x)[0])
+#endif /* __STR_UNICODE__ */
 
 
-#define UNIT  {0}
 
-/*@deprecated*/
+
 struct Point {
 	int32_t x;
 	int32_t y;
 };
 typedef struct Point Point;
 
-#define P00  {.x = 5, .y = 5}
-#define P01  {.x = 5}
+#define HELLO  "Hello"
 
-#define M_Y  5
+static char str0[5] = {'H', 'e', 'l', 'l', 'o'};
+static char16_t str1[5] = {u'H', u'e', u'l', u'l', u'o'};
+static char32_t str2[5] = {U'H', U'e', U'l', U'l', U'o'};
 
-__attribute__((used))
-static Point returnPoint(void) {
-	Point p;
-	p.x = 10;
-	return p;
+static char *pstr0 = HELLO;
+static char16_t *pstr1 = _STR16(HELLO);
+static char32_t *pstr2 = _STR32(HELLO);
+
+static void puts8(char *s) {
 }
 
 
-// Двойная инициализация (!) ??
-//func main() -> Int32 {
-//	return 0
-//}
+static void puts16(char16_t *s) {
+}
 
-static void fa(int32_t *a) {
-	(void)a;
+
+static void puts32(char32_t *s) {
 }
 
 
 int32_t main(void) {
 	printf("Hello World!\n");
 
-	int32_t a[3] = {1, 2, 3};
-	fa(&a[0]);
+	char s1[32] = {'H', 'e', 'l', 'l', 'o', '!'};
+	char s2[32] = {'W', 'o', 'r', 'l', 'd'};
 
-	Point p = (Point){
-		.x = 32,
-		.y = 32
-	};
-	// Конструируем Point из записи в которой нет ни одного поля
-	// 1. implicit cons Point from {} (здесь мы создаем ValueCons Point с default полями)
-	p = (Point){.x = 5, .y = 5};
-	p = (Point){.x = 5,
-		.y = 32
-	};
+	puts8(/*!*/(char *)&s1[0]);
 
-	(void)p;
+	const size_t length = strlen(/*!*/(const char *)&s1[0]);
+	strcpy(/*!*/(char *)&s2[0], /*!*/(const char *)&s1[0]);
+	strncpy(/*!*/(char *)&s2[0], /*!*/(const char *)&s1[0], 5);
 
-	typedef int32_t MyInt;
-	MyInt myInt32;
+	puts8(/*!*/(char *)&str0[0]);
+	puts8(/*!*/(char *)pstr0);
 
-	//var a: []record {a: Int32}
-	int64_t b;
-	int32_t c;
-	//a = a * b + c
-	//offsetof(Point.y)
-	//p.z
-	//a = (2 + 2)
-	//var j: jey.Jey
+	puts16(&str1[0]);
+	puts32(pstr2);
+
 	return 0;
 }
 

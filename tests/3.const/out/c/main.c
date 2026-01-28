@@ -5,6 +5,26 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifndef __STR_UNICODE__
+#if __has_include(<uchar.h>)
+#include <uchar.h>
+#else
+typedef uint16_t char16_t;
+typedef uint32_t char32_t;
+#endif
+#define __STR_UNICODE__
+#define __STR8(x)  x
+#define __STR16(x) u##x
+#define __STR32(x) U##x
+#define _STR8(x)  __STR8(x)
+#define _STR16(x) __STR16(x)
+#define _STR32(x) __STR32(x)
+#define _CHR8(x)  (__STR8(x)[0])
+#define _CHR16(x) (__STR16(x)[0])
+#define _CHR32(x) (__STR32(x)[0])
+#endif /* __STR_UNICODE__ */
+
+
 
 
 #define GENERIC_INT_CONST  42
@@ -49,7 +69,7 @@ static Point points2[3] = POINTS;
 
 // define function main
 int main(void) {
-	printf("test const\n");
+	printf(/*4*/"test const\n");
 
 	X y = (X){
 		.p = (Point){.x = 10, .y = 20},
@@ -62,11 +82,11 @@ int main(void) {
 	const Point ppp = ((Point[3])ZERO_POINTS)[0];
 	const uint32_t z = POINT_ZERO.x;
 
-	printf("genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);
-	printf("int32Const = %d\n", INT32_CONST);
+	printf(/*4*/"genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);
+	printf(/*4*/"int32Const = %d\n", INT32_CONST);
 
 	//	printf("genericStringConst = %s\n", genericStringConst)
-	printf("string8Const = %s\n", STRING8_CONST);
+	printf(/*4*/"string8Const = %s\n", /*4*/(char*)STRING8_CONST);
 
 	return 0;
 }

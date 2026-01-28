@@ -19,11 +19,11 @@ static void fill(uint32_t n) {
 	uint32_t i = 0;
 	while (i < n) {
 		if (queueWord8_isFull(&bq0)) {
-			printf("<queue is full>\n");
+			printf(/*4*/"<queue is full>\n");
 			break;
 		}
 
-		printf("bq.put(%d)\n", ii);
+		printf(/*4*/"bq.put(%d)\n", ii);
 		queueWord8_put(&bq0, (uint8_t)ii);
 		i = i + 1;
 		ii = ii + 1;
@@ -37,13 +37,13 @@ static void fetch(uint32_t n) {
 	uint32_t i = 0;
 	while (i < n) {
 		if (queueWord8_isEmpty(&bq0)) {
-			printf("<queue is empty>\n");
+			printf(/*4*/"<queue is empty>\n");
 			break;
 		}
 
 		uint8_t x;
 		const bool res = queueWord8_get(&bq0, &x);
-		printf("bq.get = %d\n", (int)x);
+		printf(/*4*/"bq.get = %d\n", (int)x);
 		i = i + 1;
 	}
 }
@@ -53,7 +53,7 @@ static void fetch(uint32_t n) {
 static uint8_t qbuf[QSIZE];
 
 int main(void) {
-	queueWord8_init(&bq0, qbuf, QSIZE);
+	queueWord8_init(&bq0, /*ParamIsPtr2Arr*/&qbuf, QSIZE);
 
 	fill(3);
 	fetch(7);

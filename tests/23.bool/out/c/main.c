@@ -8,7 +8,7 @@
 
 
 int main(void) {
-	printf("bool check\nm");
+	printf(/*4*/"bool check\nm");
 
 	uint8_t x;
 	bool b;
@@ -16,20 +16,20 @@ int main(void) {
 	x = 1;
 	//b = Bool x
 	b = x != 0;
-	printf("x = %u\n", (uint32_t)x);
-	printf("x to Bool = %u\n", (uint32_t)b);
+	printf(/*4*/"x = %u\n", (uint32_t)x);
+	printf(/*4*/"x to Bool = %u\n", (uint32_t)b);
 
 	x = 2;
 	//b = Bool x
 	b = x != 0;
-	printf("x = %u\n", (uint32_t)x);
-	printf("x to Bool = %u\n", (uint32_t)b);
+	printf(/*4*/"x = %u\n", (uint32_t)x);
+	printf(/*4*/"x to Bool = %u\n", (uint32_t)b);
 
 	x = 3;
 	//b = Bool x
 	b = x != 0;
-	printf("x = %u\n", (uint32_t)x);
-	printf("x to Bool = %u\n", (uint32_t)b);
+	printf(/*4*/"x = %u\n", (uint32_t)x);
+	printf(/*4*/"x to Bool = %u\n", (uint32_t)b);
 
 	return 0;
 }

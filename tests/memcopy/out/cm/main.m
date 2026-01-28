@@ -25,13 +25,13 @@ public func main () -> Int {
 	}
 
 	let len: Size = sizeof(Object)
-	printf("LEN = %zu\n", len)
+	printf("LEN = %zu\n", Size len)
 
 	mem.copy(&o2, &o1, len)
 
-	printf("firstname = '%s'\n", &o2.firstname)
-	printf("lastname = '%s'\n", &o2.lastname)
-	printf("age = %d\n", o2.age)
+	printf("firstname = '%s'\n", *[32]Char8 &o2.firstname)
+	printf("lastname = '%s'\n", *[32]Char8 &o2.lastname)
+	printf("age = %d\n", Int32 o2.age)
 
 	return 0
 }

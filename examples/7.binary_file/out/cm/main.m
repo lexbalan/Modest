@@ -18,7 +18,7 @@ func writeExample () -> Unit {
 
 	let fp: *File = fopen(filename, "wb")
 	if fp == nil {
-		printf("error: cannot create file '%s'", filename)
+		printf("error: cannot create file '%s'", *Str8 filename)
 		return
 	}
 
@@ -39,16 +39,16 @@ func readExample () -> Unit {
 
 	let fp: *File = fopen(filename, "rb")
 	if fp == nil {
-		printf("error: cannot open file '%s'", filename)
+		printf("error: cannot open file '%s'", *Str8 filename)
 		return
 	}
 
 	var chunk: Chunk
 	fread(&chunk, sizeof(Chunk), 1, fp)
 
-	printf("file \"%s\" contains:\n", filename)
-	printf("chunk.id: \"%s\"\n", &chunk.id)
-	printf("chunk.data: \"%s\"\n", &chunk.data)
+	printf("file \"%s\" contains:\n", *Str8 filename)
+	printf("chunk.id: \"%s\"\n", *[100]Char &chunk.id)
+	printf("chunk.data: \"%s\"\n", *[1024]Char &chunk.data)
 
 	fclose(fp)
 }

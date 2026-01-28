@@ -14,33 +14,33 @@
   // getenv
 
 int main(void) {
-	printf("unistd test\n");
+	printf(/*4*/"unistd test\n");
 
 	const pid_t pid = getpid();
-	printf("pid = %d\n", pid);
+	printf(/*4*/"pid = %d\n", pid);
 
 	const long hid = gethostid();
-	printf("hostid = %ld\n", hid);
+	printf(/*4*/"hostid = %ld\n", hid);
 
 	// current control terminal
 	char cterm[128];
-	ctermid(cterm);
-	printf("ctermid = %s\n", cterm);
+	ctermid(/*4*/&cterm[0]);
+	printf(/*4*/"ctermid = %s\n", /*4*/(char*)&cterm);
 
 	// current working directory
 	char cwd[128];
-	getcwd(cwd, (size_t)LENGTHOF(cwd));
-	printf("cwd = %s\n", cwd);
+	getcwd(/*4*/&cwd[0], (size_t)LENGTHOF(cwd));
+	printf(/*4*/"cwd = %s\n", /*4*/(char*)&cwd);
 
 	char *const tty = ttyname(0);
-	printf("ttyname = %s\n", tty);
+	printf(/*4*/"ttyname = %s\n", /*4*/(char*)tty);
 
 
-	char *const s = getenv("PATH");
-	printf("PATH = %s\n", s);
+	char *const s = getenv(/*4*/"PATH");
+	printf(/*4*/"PATH = %s\n", /*4*/(char*)s);
 
 	while (true) {
-		printf("- hi\n");
+		printf(/*4*/"- hi\n");
 		sleep(1);// time in seconds
 	}
 

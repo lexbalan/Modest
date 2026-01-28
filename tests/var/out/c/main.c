@@ -17,12 +17,12 @@ int main(void) {
 	int32_t x = 127;
 	int32_t y = x + 1;
 
-	printf("y = %i\n", y);
+	printf(/*4*/"y = %i\n", y);
 
 	if (y == 128) {
-		printf("test passed\n");
+		printf(/*4*/"test passed\n");
 	} else {
-		printf("test failed\n");
+		printf(/*4*/"test failed\n");
 	}
 
 	return 0;

@@ -63,14 +63,14 @@ func ptr_example () -> Unit {
 	ptr_p.x = 10
 	ptr_p.y = 20
 
-	printf("point(%f, %f)\n", ptr_p.x, ptr_p.y)
+	printf("point(%f, %f)\n", Float ptr_p.x, Float ptr_p.y)
 }
 
 
 public func main () -> Int {
 	// by value
 	let len: Float = lineLength(line)
-	printf("line length = %f\n", len)
+	printf("line length = %f\n", Float len)
 
 	ptr_example()
 

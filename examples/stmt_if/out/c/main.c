@@ -8,22 +8,22 @@
 
 
 int main(void) {
-	printf("if statement example\n");
+	printf(/*4*/"if statement example\n");
 
 	int32_t a;
 	int32_t b;
 
-	printf("enter a: ");
-	scanf("%d", &a);
-	printf("enter b: ");
-	scanf("%d", &b);
+	printf(/*4*/"enter a: ");
+	scanf(/*4*/"%d", (int32_t *)&a);
+	printf(/*4*/"enter b: ");
+	scanf(/*4*/"%d", (int32_t *)&b);
 
 	if (a > b) {
-		printf("a > b\n");
+		printf(/*4*/"a > b\n");
 	} else if (a < b) {
-		printf("a < b\n");
+		printf(/*4*/"a < b\n");
 	} else {
-		printf("a == b\n");
+		printf(/*4*/"a == b\n");
 	}
 
 	return 0;

@@ -21,7 +21,7 @@ func fill (n: Nat32) -> Unit {
 			break
 		}
 
-		printf("bq.put(%d)\n", ii)
+		printf("bq.put(%d)\n", Int32 ii)
 		bq.put(&bq0, unsafe Word8 ii)
 		i = i + 1
 		ii = ii + 1
@@ -40,7 +40,7 @@ func fetch (n: Nat32) -> Unit {
 
 		var x: Word8
 		let res: Bool = bq.get(&bq0, &x)
-		printf("bq.get = %d\n", Int x)
+		printf("bq.get = %d\n", Int Int x)
 		i = i + 1
 	}
 }

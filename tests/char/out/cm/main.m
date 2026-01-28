@@ -20,9 +20,9 @@ public func main () -> Int {
 	ch16 = utf16Char
 	ch32 = utf32Char
 
-	printf("ch08 = 0x%x (%c)\n", unsafe Nat32 unsafe Word32 unsafe Word8 ch08, ch08)
-	printf("ch16 = 0x%x (%c)\n", unsafe Nat32 unsafe Word32 unsafe Word16 ch16, ch16)
-	printf("ch32 = 0x%x (%c)\n", unsafe Nat32 unsafe Word32 ch32, ch32)
+	printf("ch08 = 0x%x (%c)\n", Nat32 unsafe Nat32 unsafe Word32 unsafe Word8 ch08, Char8 ch08)
+	printf("ch16 = 0x%x (%c)\n", Nat32 unsafe Nat32 unsafe Word32 unsafe Word16 ch16, Char16 ch16)
+	printf("ch32 = 0x%x (%c)\n", Nat32 unsafe Nat32 unsafe Word32 ch32, Char32 ch32)
 
 	return 0
 }

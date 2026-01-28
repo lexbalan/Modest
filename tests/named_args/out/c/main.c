@@ -13,7 +13,7 @@ static int32_t named_args_test(int32_t a, int32_t b, int32_t c) {
 
 
 int main(void) {
-	printf("test named_args\n");
+	printf(/*4*/"test named_args\n");
 
 	#define a  25
 	#define b  15
@@ -24,9 +24,9 @@ int main(void) {
 	const int32_t x1 = named_args_test(a, b, c);
 
 	if (x0 == x1) {
-		printf("test passed\n");
+		printf(/*4*/"test passed\n");
 	} else {
-		printf("test failed\n");
+		printf(/*4*/"test failed\n");
 	}
 
 	return 0;

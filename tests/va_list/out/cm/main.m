@@ -26,7 +26,7 @@ func my_printf (format: *Str8, ...) -> SSizeT {
 
 public func main () -> Int {
 	var k: Nat32 = 10
-	my_printf("My Printf Test %u\n", k)
+	my_printf("My Printf Test %u\n", Nat32 k)
 
 	let c = Char8 "$"
 	let s = *Str8 "Hi!"
@@ -35,11 +35,11 @@ public func main () -> Int {
 	let x = Nat32 0x1234567F
 
 	my_printf("\x0\x0\n")
-	my_printf("c = '%c'\n", c)
-	my_printf("s = \"%s\"\n", s)
-	my_printf("i = %i\n", i)
-	my_printf("n = %i\n", n)
-	my_printf("x = 0x%x\n", x)
+	my_printf("c = '%c'\n", Char8 c)
+	my_printf("s = \"%s\"\n", *Str8 s)
+	my_printf("i = %i\n", Int32 i)
+	my_printf("n = %i\n", Nat32 n)
+	my_printf("x = 0x%x\n", Nat32 x)
 
 	return 0
 }

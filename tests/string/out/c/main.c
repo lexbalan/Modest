@@ -7,7 +7,7 @@
 
 #ifndef __STR_UNICODE__
 #if __has_include(<uchar.h>)
-#include "uchar.h"
+#include <uchar.h>
 #else
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
@@ -49,29 +49,29 @@ static char32_t *ptr_to_string32 = _STR32(STR32_EXAMPLE);
 
 int main(void) {
 	console_putchar_utf8('A');
-	printf("\n");
+	printf(/*4*/"\n");
 	console_putchar_utf16(u'Ω');
-	printf("\n");
+	printf(/*4*/"\n");
 	console_putchar_utf32(U'🦄');
-	printf("\n");
+	printf(/*4*/"\n");
 
-	printf("\n");
+	printf(/*4*/"\n");
 
-	console_puts8(string8);
-	printf("\n");
-	console_puts16(string16);
-	printf("\n");
-	console_puts32(string32);
-	printf("\n");
+	console_puts8(/*4*/&string8[0]);
+	printf(/*4*/"\n");
+	console_puts16(/*4*/&string16[0]);
+	printf(/*4*/"\n");
+	console_puts32(/*4*/&string32[0]);
+	printf(/*4*/"\n");
 
-	printf("\n");
+	printf(/*4*/"\n");
 
-	console_puts8(ptr_to_string8);
-	printf("\n");
-	console_puts16(ptr_to_string16);
-	printf("\n");
-	console_puts32(ptr_to_string32);
-	printf("\n");
+	console_puts8(/*4*/ptr_to_string8);
+	printf(/*4*/"\n");
+	console_puts16(/*4*/ptr_to_string16);
+	printf(/*4*/"\n");
+	console_puts32(/*4*/ptr_to_string32);
+	printf(/*4*/"\n");
 
 	return 0;
 }

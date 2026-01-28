@@ -1539,7 +1539,7 @@ class ValueCons(Value):
 	def __init__(self, type, value, method, rawMode, ti):
 		assert(isinstance(type, Type))
 		assert(isinstance(value, Value))
-		assert(method in ['implicit', 'explicit', 'unsafe'])
+		assert(method in ['implicit', 'explicit', 'unsafe', 'default', 'extra_arg'])
 		super().__init__(type=type, ti=ti)
 		self.value = value
 		self.method = method

@@ -19,11 +19,11 @@ int32_t main(void) {
 	const int32_t n = 5;
 
 	if (number < n) {
-		printf("entered number (%i) is less than %i\n", number, n);
+		printf(/*4*/"entered number (%i) is less than %i\n", number, n);
 	} else if (number > n) {
-		printf("entered number (%i) is greater than %i\n", number, n);
+		printf(/*4*/"entered number (%i) is greater than %i\n", number, n);
 	} else {
-		printf("entered number (%i) is equal with %i\n", number, n);
+		printf(/*4*/"entered number (%i) is equal with %i\n", number, n);
 	}
 
 	return 0;
@@ -35,14 +35,14 @@ static int32_t get_number(int32_t min, int32_t max) {
 	number = 0;
 
 	while (true) {
-		printf("enter a number (%i .. %i): ", min, max);
-		scanf("%d", &number);
+		printf(/*4*/"enter a number (%i .. %i): ", min, max);
+		scanf(/*4*/"%d", (int32_t *)&number);
 
 		if (number < min) {
-			printf("number must be greater than %i, try again\n", min);
+			printf(/*4*/"number must be greater than %i, try again\n", min);
 			continue;
 		} else if (number > max) {
-			printf("number must be less than %i, try again\n", max);
+			printf(/*4*/"number must be less than %i, try again\n", max);
 			continue;
 		} else {
 			break;

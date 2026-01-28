@@ -10,7 +10,7 @@
 
 
 
-void ringWord8_init(ringWord8_RingWord8 *q, uint8_t *buf, uint32_t capacity) {
+void ringWord8_init(ringWord8_RingWord8 *q, uint8_t(*buf)[], uint32_t capacity) {
 	queue_init(&q->queue, capacity);
 	q->data = buf;
 }
@@ -44,7 +44,7 @@ bool ringWord8_put(ringWord8_RingWord8 *q, uint8_t b) {
 	*/
 
 	const uint32_t p = queue_getPutPosition(&q->queue);
-	q->data[p] = b;
+	(*q->data)[p] = b;
 
 	return true;
 }
@@ -56,7 +56,7 @@ bool ringWord8_get(ringWord8_RingWord8 *q, uint8_t *b) {
 	}
 
 	const uint32_t g = queue_getGetPosition(&q->queue);
-	*b = q->data[g];
+	*b = (*q->data)[g];
 
 	return true;
 }

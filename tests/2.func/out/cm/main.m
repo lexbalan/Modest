@@ -9,7 +9,7 @@ func func1 () -> Unit {
 
 
 func print_ab (a: Int32, b: Int32) -> Unit {
-	printf("print_ab(a=%i, b=%i)\n", a, b)
+	printf("print_ab(a=%i, b=%i)\n", Int32 a, Int32 b)
 }
 
 
@@ -33,7 +33,7 @@ public func main () -> Int {
 	let arg_a = Int32 1
 	let arg_b = Int32 2
 	let sum_result: Int32 = sum(arg_a, arg_b)
-	printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result)
+	printf("sum(%i, %i) == %i\n", Int32 arg_a, Int32 arg_b, Int32 sum_result)
 
 
 	var fptr: *(a: Int32, b: Int32) -> Int32 = &sum
@@ -41,7 +41,7 @@ public func main () -> Int {
 	let arg_a2 = Int32 1
 	let arg_b2 = Int32 2
 	let fptr_result: Int32 = fptr(arg_a2, arg_b2)
-	printf("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result)
+	printf("fptr(%i, %i) == %i\n", Int32 arg_a2, Int32 arg_b2, Int32 fptr_result)
 
 	return 0
 }

@@ -32,7 +32,7 @@ var test_key: [key_length + 1]Char8 = "abc"
 func print_bytes (buf: *[]Word8, len: Nat32) -> Unit {
 	var i = Nat32 0
 	while i < len {
-		printf("0x%02X ", buf[i])
+		printf("0x%02X ", Word8 buf[i])
 		i = i + 1
 	}
 	printf("\n")

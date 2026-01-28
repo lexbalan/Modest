@@ -50,14 +50,14 @@ public func task (self: *FSM) -> Unit {
 		self.timer_expired = false
 		self.next_state = cmdNextStage(self)
 		let top = Nat32 0
-		printf("[%s] fsm timeout (%u) occured, switch_to_stage(%d)\n", self.id, top, self.next_state.stage)
+		printf("[%s] fsm timeout (%u) occured, switch_to_stage(%d)\n", *Str8 self.id, Nat32 top, StageId self.next_state.stage)
 	}
 
 	// Есть запрос на смену состояния?
 	if self.next_state != self.state {
 		let state: ComplexState = self.state
 		let next_state: ComplexState = self.next_state
-		printf("[%s] #%s_%u -> #%s_%u\n", self.id, state.state.id, state.stage, next_state.state.id, next_state.stage)
+		printf("[%s] #%s_%u -> #%s_%u\n", *Str8 self.id, *Str8 state.state.id, StageId state.stage, *Str8 next_state.state.id, StageId next_state.stage)
 		self.state = self.next_state
 	}
 

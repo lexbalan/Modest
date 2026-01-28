@@ -17,16 +17,16 @@
 static uint8_t data[9] = {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
 
 int main(void) {
-	printf("CRC32 test\n");
+	printf(/*4*/"CRC32 test\n");
 
-	const uint32_t crc = crc32_run(data, LENGTHOF(data));
+	const uint32_t crc = crc32_run(/*ParamIsPtr2Arr*/&data, LENGTHOF(data));
 
-	printf("crc32.doHash(\"%s\") = %08X\n", DATASTRING, crc);
+	printf(/*4*/"crc32.doHash(\"%s\") = %08X\n", /*4*/(char*)DATASTRING, crc);
 
 	if (crc == EXPECTED_HASH) {
-		printf("test passed\n");
+		printf(/*4*/"test passed\n");
 	} else {
-		printf("test failed\n");
+		printf(/*4*/"test failed\n");
 	}
 
 	return 0;

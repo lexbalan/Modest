@@ -67,32 +67,32 @@ func test_records () -> Unit {
 	//	var localRecord: LocalRecord
 	//	Unit localRecord
 
-	printf("line.a.x = %d\n", line.a.x)
-	printf("line.a.y = %d\n", line.a.y)
+	printf("line.a.x = %d\n", Int32 line.a.x)
+	printf("line.a.y = %d\n", Int32 line.a.y)
 
-	printf("line.b.x = %d\n", line.b.x)
-	printf("line.b.y = %d\n", line.b.y)
+	printf("line.b.x = %d\n", Int32 line.b.x)
+	printf("line.b.y = %d\n", Int32 line.b.y)
 
-	printf("pLines[0].a.x = %d\n", pLines[0].a.x)
-	printf("pLines[0].a.y = %d\n", pLines[0].a.y)
+	printf("pLines[0].a.x = %d\n", Int32 pLines[0].a.x)
+	printf("pLines[0].a.y = %d\n", Int32 pLines[0].a.y)
 
-	printf("pLines[0].b.x = %d\n", pLines[0].b.x)
-	printf("pLines[0].b.y = %d\n", pLines[0].b.y)
+	printf("pLines[0].b.x = %d\n", Int32 pLines[0].b.x)
+	printf("pLines[0].b.y = %d\n", Int32 pLines[0].b.y)
 
-	printf("s.x.a.x = %d\n", s.x.a.x)
-	printf("s.x.a.y = %d\n", s.x.a.y)
+	printf("s.x.a.x = %d\n", Int32 s.x.a.x)
+	printf("s.x.a.y = %d\n", Int32 s.x.a.y)
 
-	printf("s.x.b.x = %d\n", s.x.b.x)
-	printf("s.x.b.y = %d\n", s.x.b.y)
+	printf("s.x.b.x = %d\n", Int32 s.x.b.x)
+	printf("s.x.b.y = %d\n", Int32 s.x.b.y)
 
 
 	let x: Struct = s
 
-	printf("x.x.a.x = %d\n", x.x.a.x)
-	printf("x.x.a.y = %d\n", x.x.a.y)
+	printf("x.x.a.x = %d\n", Int32 x.x.a.x)
+	printf("x.x.a.y = %d\n", Int32 x.x.a.y)
 
-	printf("x.x.b.x = %d\n", x.x.b.x)
-	printf("x.x.b.y = %d\n", x.x.b.y)
+	printf("x.x.b.x = %d\n", Int32 x.x.b.x)
+	printf("x.x.b.y = %d\n", Int32 x.x.b.y)
 }
 
 
@@ -200,8 +200,8 @@ public func main () -> Int {
 	ax = 111
 	bx = 222
 
-	printf("px.x = %i (must be 10)\n", px.x)
-	printf("px.y = %i (must be 20)\n", px.y)
+	printf("px.x = %i (must be 10)\n", Int32 px.x)
+	printf("px.y = %i (must be 20)\n", Int32 px.y)
 
 	if px == {x = 10, y = 20} {
 		printf("test passed\n")

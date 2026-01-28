@@ -13,7 +13,7 @@ const test = "test"
 
 
 public func main () -> Int {
-	printf("%s\n", *Str8 greeting)
+	printf("%s\n", *Str8 *Str8 greeting)
 
 	if test == "test" {
 		printf("test ok.\n")

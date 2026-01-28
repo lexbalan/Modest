@@ -9,7 +9,7 @@ func mtab (n: Nat32) -> Unit {
 	//var m = 1   // by default integer var get system int type (-mint option)
 	while m < 10 {
 		let nm: Nat32 = n * m
-		printf("%u * %u = %u\n", n, m, nm)
+		printf("%u * %u = %u\n", Nat32 n, Nat32 m, Nat32 nm)
 		m = m + 1
 	}
 }
@@ -17,7 +17,7 @@ func mtab (n: Nat32) -> Unit {
 
 public func main () -> Int {
 	let n = 2 * 2
-	printf("multiply table for %d\n", Int32 n)
+	printf("multiply table for %d\n", Int32 Int32 n)
 	mtab(n)
 	return 0
 }

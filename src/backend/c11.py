@@ -165,6 +165,14 @@ def is_global_public(x):
 	return False
 
 
+# Печатаем указатель на массив как указатель на его элемент
+# ТОЛЬКО когда это указатель на строку!
+def ptr_to_arr_as_ptr(t):
+	if t.is_pointer_to_str():
+		return True
+	return False
+
+
 
 def get_id_str(x):
 	if not hasattr(x, 'id'):
@@ -302,7 +310,7 @@ def str_type_array(t, core='', need_close=False, ctx=[]):
 
 
 
-def strFuncParamlist(params, va_arg):
+def strFuncParamlist(params, va_arg, ctx):
 	s = '('
 	i = 0
 	while i < len(params):
@@ -323,7 +331,8 @@ def strFuncParamlist(params, va_arg):
 				ptype = TypePointer(ptype)
 				pstr = '_' + pstr
 
-		s += str_var(ptype, id_str=pstr)
+		# print function parameter
+		s += str_var(ptype, id_str=pstr, ctx=ctx+['+as_array'])
 
 		if param.init_value != None:
 			# BUG: None прилетает в случае когда функция возвращает массив,
@@ -355,12 +364,13 @@ def str_type_func(t, core='', need_close=False, ctx=[]):
 		# а сам массив пойдет через указатель sret_
 		# который функция получит своим самым последним параметром
 		# (sret = structure return)
-		sret_param = Field(Id('sret_'), TypePointer(t.to), init_value=ValueUndef(t.to))
+		sret_param = Field(Id('sret_'), t.to, init_value=ValueUndef(t.to))
+		#sret_param = Field(Id('sret_'), TypePointer(t.to), init_value=ValueUndef(t.to))
 
 		fparams = t.params + [sret_param]
 		fto = typeUnit
 
-	paramlist = strFuncParamlist(fparams, t.extra_args)
+	paramlist = strFuncParamlist(fparams, t.extra_args, ctx=ctx)
 
 	if need_close:
 		core += ')'
@@ -384,8 +394,7 @@ def str_pointer_chain(t, ctx=[]):
 	return s
 
 
-def str_type_pointer(t, core='', as_ptr_to_array=False, ctx=[]):
-
+def str_type_pointer(t, core='', as_ptr_to_array=True, ctx=[]):
 	left = ''
 	left = str_pointer_chain(t, ctx=ctx)
 
@@ -394,7 +403,8 @@ def str_type_pointer(t, core='', as_ptr_to_array=False, ctx=[]):
 		root_type = root_type.to
 
 	# (!) Печатать указатель на массив как указатель на его элемент (!)
-	if not as_ptr_to_array:
+	#if not as_ptr_to_array:
+	if ptr_to_arr_as_ptr(t):
 		if is_sim_sim(t):
 			root_type = root_type.of
 
@@ -554,6 +564,8 @@ def str_value_ref(x, ctx):
 	if x.value.type.is_array_of_array():
 		sstr += "(void *)"
 
+	if x.value.isValueSlice():
+		sstr += '/*7*/(' + str_type(x.type) + ')'
 	sstr += '&'
 	sstr += str_value(x.value, parent_expr=x)
 	return sstr
@@ -616,22 +628,42 @@ def str_value_call(v, ctx, sret=None):
 		if param != None:
 			p_type = param.type
 
-		#if a.isValueCons() and a.value.type.is_generic_array():
-		#	sstr += "(%s)%s" % (str_type(p_type), str_value(a))
-		#else:
-		sstr += incast(p_type, a)
+		astr = ''
+
+		if p_type.is_pointer_to_array():
+			# Передаем указатель на массив в функцию
+			astr += '/*ParamIsPtr2Arr*/' #+ str_value(a, ctx=ctx+['no_ptr_to_item'])
+
+		astr += str_value(a, ctx=ctx)
+
+		if p_type.is_array():
+			# Если в функцию передается массив по значению - передаем указатель на него (!)
+			# тк функции си не умеют получать массивы по значению
+			if p_type.is_array_of_char():
+				astr = '/*ArrByVal2*/&(%s)[0]' % astr
+			else:
+				astr = '/*ArrByVal*/&' + astr
+
+		if p_type.is_pointer_to_str():
+			astr = '/*4*/' + str_value(a, ctx=ctx+['arr_as_ptr'])
+			if a.isValueRef():
+				astr = astr + '[0]'
+		sstr += astr
 
 		i = i + 1
 
 
 	if sret != None:
+		# SRET - возврат массива из функции (через указатель)
 		if i > 0:
 			sstr += ", "
 
 		# приводим указатель на массив к указателю на его элемент
-		to = TypePointer(sret.type.of)
-		sstr += "(%s)" % str_type(to)
-		sstr += str_value_as_ptr(sret)
+		#to = TypePointer(sret.type.of)
+		#sstr += "(%s)" % str_type(to)
+		sstr += '/*2*/'+str_value_as_ptr(sret) #+ '[0]'
+		if sret.type.is_array_of_char():
+			sstr = sstr + '[0]'
 
 	if nl_after:
 		sstr += str_nl_indent()
@@ -643,7 +675,8 @@ def str_value_call(v, ctx, sret=None):
 
 def str_value_slice(x, ctx):
 	y = ValueIndex(x.type, x.left, x.index_from, ti=None)
-	return str_value_index(y, ctx)
+	ind = str_value_index(y, ctx)
+	return '/*SLICE*/' + ind
 
 
 def str_value_new(x, ctx):
@@ -652,23 +685,30 @@ def str_value_new(x, ctx):
 
 
 
+
 def str_value_index(x, ctx):
 	left = x.left
 
 	left_str = ''
 
+	#if left.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM:
+		# Параметр массив или указатель на массив по любому будет просто указателем на массив в си!
+		#if left.type.is_array():
+		#print("LNLKJNKJNJKNJKNJKNJKNJKNJKNJKJNJKNKJNKNKNKNKJNKNKNJKNKNKJNKJNKJ")
+	#	return "/*??*/(*%s)" % str_value(left, ctx=ctx, parent_expr=x) + '[' + str_value(x.index) + ']'
+
 	if left.is_global_flag and left.isValueConst(): #left.type.is_generic_array():
 		ts = str_type(left.type)
 		vs = str_value(left, ctx=ctx, parent_expr=x)
-		left_str = '((%s)%s)' % (ts, vs)
+		left_str += '((%s)%s)' % (ts, vs)
 	elif value_is_generic_immediate_const(left):
 		ts = str_type(left.type)
 		vs = str_value(left, ctx=ctx, parent_expr=x)
-		left_str = '((%s)%s)' % (ts, vs)
+		left_str += '((%s)%s)' % (ts, vs)
 	else:
-		left_str = str_value(left, ctx=ctx, parent_expr=x)
+		left_str += str_value(left, ctx=ctx, parent_expr=x)
 
-	if left.type.is_pointer() and not is_sim_sim(left.type):
+	if left.type.is_pointer() and not ptr_to_arr_as_ptr(left.type): #and not is_sim_sim(left.type):
 		left_str = "(*%s)" % left_str
 
 	return left_str + '[' + str_value(x.index) + ']'
@@ -804,25 +844,32 @@ def cstr(value, sz):
 # Дополнительная чисто сишная надстройка:
 # если у нас тут указатель на массив - приводим к указателю на его элемент
 def incast(type, value, ctx=[]):
-	if value.type.is_pointer_to_closed_array():
-		# Это аргумент с типом указатель на массив
-		# приведем его по месту к указателю на элемент этого массива
-		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
-		if value.isValueRef():
-			if value.value.isValueIndex() or value.value.isValueSlice():
-				return "&" + str_value(value.value, ctx)
-			else:
-				return str_value(value.value, ctx)
-				#return "&" + str_value(value.value, ctx) + '[0]'
+#	if value.type.is_pointer_to_closed_array():
+#		# Это аргумент с типом указатель на массив
+#		# приведем его по месту к указателю на элемент этого массива
+#		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
+#		if value.isValueRef():
+#			if value.value.isValueIndex() or value.value.isValueSlice():
+#				return "&" + str_value(value.value, ctx)
+#			else:
+#				return str_value(value.value, ctx)
+#				#return "&" + str_value(value.value, ctx) + '[0]'
 
 	return str_value(value, ctx)
 
 
 
 def str_value_cons(x, ctx):
+	return str_value_cons2(x, ctx)
+
+def str_value_cons2(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
+
+	if x.method == 'extra_arg':
+		if value.type.is_pointer_to_array():
+			return "(" + str_type(type.to.of) + "*)" + str_value(value, ctx=ctx)
 
 	if type.is_array():
 		return str_value_cons_array(x, ctx)
@@ -872,12 +919,13 @@ def str_value_cons(x, ctx):
 				if not Type.eq(type.to.of, value.type.to.of):
 					return "(" + str_type(type) + ")" + '&' + str_value(value.value, ctx=ctx)
 				else:
-					return str_value(value.value, ctx=ctx)
+					if ptr_to_arr_as_ptr(type) and not 'no_ptr_to_item' in ctx:
+						return '&' + str_value(value.value, ctx=ctx) + '[0]'
+					return '&' + str_value(value.value, ctx=ctx)
 					#return '&' + str_value(value.value, ctx=ctx) + '[0]'
 
 			if not Type.eq(type.to, value.type.to):
 				sstr += "(" + str_type(type) + ")"
-
 
 		sstr += str_value(value)
 		return sstr
@@ -1349,6 +1397,7 @@ def str_value_subexpr(x, ctx):
 
 def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 	sstr = ''
+	#sstr = '/*%s*/' % str(x)
 	need_wrap = False
 	if wrapped:
 		need_wrap = True
@@ -1491,7 +1540,7 @@ def print_stmt_return(x):
 	global cfunc
 
 	if isSretFunc(cfunc.type):
-		out("memcpy(sret_, ")
+		out("memcpy(_sret_, ")
 		out(str_value_as_ptr(x.value))
 		out(", sizeof(")
 		out(str_type(x.value.type))
@@ -1804,32 +1853,35 @@ def print_func_return_type(ftype):
 	return
 
 
-def print_func_paramlist(ftype):
-	params = ftype.params
-	extra_args = ftype.extra_args
-
-	out("(")
-
-	if isSretFunc(ftype):
-		print_variable("sret_", ftype.to)
-		if len(params) > 0:
-			out(", ")
-
-	i = 0
-	for param in params:
-		if i > 0: out(", ")
-
-		paramId = get_id_str(param)
-		if param.type.is_closed_array():
-			paramId = '_' + paramId
-		print_variable(paramId, param.type)
-		i = i + 1
-
-	if extra_args:
-		out(", ...")
-
-	out(")")
-	return
+#def print_func_paramlist(ftype):
+#	params = ftype.params
+#	extra_args = ftype.extra_args
+#
+#	out("(")
+#
+#	if isSretFunc(ftype):
+#		print_variable("sret_", ftype.to)
+#		if len(params) > 0:
+#			out(", ")
+#
+#	i = 0
+#	for param in params:
+#		if i > 0: out(", ")
+#
+#		paramId = get_id_str(param)
+#		if param.type.is_closed_array():
+#			paramId = '_' + paramId
+#		tt = TypePointer(of=param.type)
+#		#mass
+#		print("WDAMLMWLKMLKDWMLKWMLMDLmdkl")
+#		print_variable(paramId, tt, ctx=ctx+['+as_array'])
+#		i = i + 1
+#
+#	if extra_args:
+#		out(", ...")
+#
+#	out(")")
+#	return
 
 
 def print_func_signature(id_str, ftype, ctx=[]):
@@ -2009,12 +2061,12 @@ def print_def_type(x):
 
 
 # Указатель, массив и функция образуют пиздецовый заговор
-def print_variable(id_str, t, init_value=None, prefix=''):
+def print_variable(id_str, t, init_value=None, prefix='', ctx=[]):
 	assert (t != None)
-	out(str_var(t, id_str=(prefix + id_str)))
+	out(str_var(t, id_str=(prefix + id_str), ctx=ctx))
 	if init_value != None:
 		out(" = ")
-		print_value(init_value)
+		print_value(init_value, ctx=ctx)
 
 
 def print_def_var(x, isdecl=False, as_extern=False):
@@ -2164,7 +2216,7 @@ def print_helpers(module):
 		out("\n")
 		out("\n#ifndef __STR_UNICODE__")
 		out("\n#if __has_include(<uchar.h>)")
-		include("uchar.h")
+		include("uchar.h", local=False)
 		out("\n#else")
 		out("\ntypedef uint16_t char16_t;")
 		out("\ntypedef uint32_t char32_t;")

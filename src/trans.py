@@ -50,7 +50,7 @@ def is_local_context():
 
 
 from value.value import *
-from value.cons import value_cons_implicit, value_cons_implicit_check, value_cons_explicit, value_cons_default
+from value.cons import value_cons_implicit, value_cons_implicit_check, value_cons_explicit, value_cons_default, value_cons_extra_arg
 
 
 from symtab import Symtab
@@ -133,7 +133,7 @@ def ctx_type_add(id_str, t, is_public):
 
 def ctx_type_get(id_str):
 	global context
-	if (id_str == 'Char16') or (id_str == 'Char32'):
+	if id_str in ['Char16', 'Char32', 'Str16', 'Str32']:
 		# включаем в модуле поддержку unicode
 		cmodule_use('use_unicode')
 
@@ -965,6 +965,9 @@ def do_value_call(x):
 
 
 	def do_arg(param, arg, named=False):
+		#mass
+		#if param.type.annotations != {}:
+		#info("%s" % param.type.annotations, arg.ti)
 		arg = transmission(param.type, arg, arg.ti)
 		ini = Initializer(param.id, arg, named=named, ti=arg.ti, nl=arg.nl)
 		return ini
@@ -1064,7 +1067,7 @@ def do_value_call(x):
 		if not arg.isValueBad():
 			if arg.type.is_generic():
 				warning("extra argument with generic type", a['ti'])
-			arg = value_cons_default(arg)
+			arg = value_cons_extra_arg(arg)
 
 			if arg.isValueRuntime():
 				imm_args = False

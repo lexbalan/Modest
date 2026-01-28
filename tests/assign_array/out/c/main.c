@@ -11,7 +11,7 @@ static int32_t globalArray0[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 static int32_t globalArray1[10] = {0};
 
 int main(void) {
-	printf("test assign_array\n");
+	printf(/*4*/"test assign_array\n");
 
 	memcpy(&globalArray1, &globalArray0, sizeof(int32_t[10]));
 
@@ -20,14 +20,14 @@ int main(void) {
 	i = 0;
 	while (i < 10) {
 		const int32_t v = globalArray1[i];
-		printf("globalArray1[%d] = %d\n", i, v);
+		printf(/*4*/"globalArray1[%d] = %d\n", i, v);
 		i = i + 1;
 	}
 
 	if (memcmp(&globalArray0, &globalArray1, sizeof(int32_t[10])) == 0) {
-		printf("globalArray test passed\n");
+		printf(/*4*/"globalArray test passed\n");
 	} else {
-		printf("globalArray test failed\n");
+		printf(/*4*/"globalArray test failed\n");
 	}
 
 
@@ -42,14 +42,14 @@ int main(void) {
 	i = 0;
 	while (i < 10) {
 		const int32_t v = localArray1[i];
-		printf("localArray1[%d] = %d\n", i, v);
+		printf(/*4*/"localArray1[%d] = %d\n", i, v);
 		i = i + 1;
 	}
 
 	if (memcmp(&localArray0, &localArray1, sizeof(int32_t[10])) == 0) {
-		printf("localArray test passed\n");
+		printf(/*4*/"localArray test passed\n");
 	} else {
-		printf("localArray test failed\n");
+		printf(/*4*/"localArray test failed\n");
 	}
 
 	return 0;

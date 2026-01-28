@@ -23,7 +23,7 @@ static ssize_t my_printf(char *format, ...) {
 
 	#define strMaxLen  (127 + 1)
 	char buf[strMaxLen];
-	const int n = vsnprintf(buf, (size_t)strMaxLen, format, va2);
+	const int n = vsnprintf(/*4*/&buf[0], (size_t)strMaxLen, /*4*/format, va2);
 
 	va_end(va2);
 
@@ -35,7 +35,7 @@ static ssize_t my_printf(char *format, ...) {
 
 int main(void) {
 	uint32_t k = 10;
-	my_printf("My Printf Test %u\n", k);
+	my_printf(/*4*/"My Printf Test %u\n", k);
 
 	const char c = '$';
 	char *const s = "Hi!";
@@ -43,12 +43,12 @@ int main(void) {
 	const uint32_t n = 123;
 	const uint32_t x = 0x1234567F;
 
-	my_printf("\x0\x0\n");
-	my_printf("c = '%c'\n", c);
-	my_printf("s = \"%s\"\n", s);
-	my_printf("i = %i\n", i);
-	my_printf("n = %i\n", n);
-	my_printf("x = 0x%x\n", x);
+	my_printf(/*4*/"\x0\x0\n");
+	my_printf(/*4*/"c = '%c'\n", (const char)c);
+	my_printf(/*4*/"s = \"%s\"\n", /*4*/(char*)s);
+	my_printf(/*4*/"i = %i\n", i);
+	my_printf(/*4*/"n = %i\n", n);
+	my_printf(/*4*/"x = 0x%x\n", x);
 
 	return 0;
 }

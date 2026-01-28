@@ -10,9 +10,9 @@ public func main () -> Int {
 	var b: Int32
 
 	printf("enter a: ")
-	scanf("%d", &a)
+	scanf("%d", *Int32 &a)
 	printf("enter b: ")
-	scanf("%d", &b)
+	scanf("%d", *Int32 &b)
 
 	if a > b {
 		printf("a > b\n")

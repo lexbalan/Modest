@@ -82,6 +82,9 @@ def value_cons_implicit(t, v):
 	if v.isValueBad() or t.is_bad():
 		return ValueBad(ti)
 
+	#if t.annotations != {}:
+	#	print(t.annotations)
+
 	from_type = v.type
 
 	if not cons_can(t, from_type, 'implicit', ti):
@@ -148,6 +151,11 @@ def value_cons_explicit(t, v, ti):
 
 	return value_cons(t, v, 'explicit', ti)
 
+
+
+def value_cons_extra_arg(v):
+	t = v.type
+	return value_cons(t, v, 'extra_arg', v.ti)
 
 
 def value_cons_default(v):
@@ -270,7 +278,7 @@ def value_cons(t, v, method, ti):
 # привести и взять себе; Таким образом мы идем как литерал нода
 # и в то же время как cons нода
 def value_cons_immediate(t, v, method, ti):
-	assert method in ['implicit', 'explicit', 'unsafe']
+	assert method in ['implicit', 'explicit', 'unsafe', 'default', 'extra_arg']
 	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
 
 	nv.asset = v.asset

@@ -135,7 +135,7 @@ public func node_get (list: *List, pos: Int32) -> *Node {
 		return nil
 	}
 
-	printf("node_get(%d)\n", pos)
+	printf("node_get(%d)\n", Int32 pos)
 	var node: *Node
 
 	if pos >= 0 {
@@ -177,7 +177,7 @@ public func node_insert (list: *List, pos: Int32, new_node: *Node) -> *Node {
 		return nil
 	}
 
-	printf("node_insert(%d)\n", pos)
+	printf("node_insert(%d)\n", Int32 pos)
 
 
 	let n: *Node = node_get(list, pos)
