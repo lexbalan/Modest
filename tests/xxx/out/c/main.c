@@ -7,7 +7,7 @@
 
 #ifndef __STR_UNICODE__
 #if __has_include(<uchar.h>)
-#include "uchar.h"
+#include <uchar.h>
 #else
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
@@ -55,20 +55,29 @@ static void puts32(char32_t *s) {
 }
 
 
+static void ss(char *_s, char *_sret_) {
+	char s[10];
+	memcpy(s, _s, sizeof(char[10]));
+	char ks[5 - 2];
+	memcpy(&ks, (char *)&s[2], sizeof(char[5 - 2]));
+	memcpy(_sret_, &s, sizeof(char[10]));
+}
+
+
 int32_t main(void) {
 	printf("Hello World!\n");
 
 	char s1[32] = {'H', 'e', 'l', 'l', 'o', '!'};
 	char s2[32] = {'W', 'o', 'r', 'l', 'd'};
 
-	puts8(/*!*/(char *)&s1[0]);
+	puts8(&s1[0]);
 
-	const size_t length = strlen(/*!*/(const char *)&s1[0]);
-	strcpy(/*!*/(char *)&s2[0], /*!*/(const char *)&s1[0]);
-	strncpy(/*!*/(char *)&s2[0], /*!*/(const char *)&s1[0], 5);
+	const size_t length = strlen(&s1[0]);
+	strcpy(&s2[0], &s1[0]);
+	strncpy(&s2[0], &s1[0], 5);
 
-	puts8(/*!*/(char *)&str0[0]);
-	puts8(/*!*/(char *)pstr0);
+	puts8(&str0[0]);
+	puts8(pstr0);
 
 	puts16(&str1[0]);
 	puts32(pstr2);

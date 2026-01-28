@@ -1319,6 +1319,7 @@ def str_value_offsetof(x, ctx):
 	sstr += ", "
 	sstr += x.field.str
 	sstr += ")"
+	return sstr
 
 
 def str_value_lengthof(x, ctx):
@@ -1340,6 +1341,7 @@ def str_value_lengthof(x, ctx):
 		sstr = '((%s)%s)' % (ts, vs)
 	else:
 		sstr += str_value(value)
+
 	return "LENGTHOF(%s)" % sstr
 
 

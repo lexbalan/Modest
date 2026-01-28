@@ -31,6 +31,11 @@ func puts32 (s: *Str32) -> Unit {
 }
 
 
+func ss (s: [10]Char8) -> [10]Char8 {
+	let ks = s[2:5]
+	return s
+}
+
 
 public func main () -> Int32 {
 	printf("Hello World!\n")
