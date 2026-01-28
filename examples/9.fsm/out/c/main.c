@@ -69,7 +69,7 @@ static fsm_ComplexState routine2(fsm_ComplexState state, void *payload) {
 static uint32_t timecnt;
 
 int main(void) {
-	fsm_init(&fsm0, /*4*/"FSM_0", &state0, NULL);
+	fsm_init(&fsm0, "FSM_0", &state0, NULL);
 
 	while (true) {
 		if (timecnt > 55555) {

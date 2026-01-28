@@ -25,29 +25,29 @@ static int32_t glb_a0[10] = {0};
 static int32_t glb_a1[10] = {64, 53, 42};
 
 int main(void) {
-	printf(/*4*/"test assignation\n");
+	printf("test assignation\n");
 
 	// -----------------------------------
 	// Global
 
 	// copy integers by value
 	glb_i0 = glb_i1;
-	printf(/*4*/"glb_i0 = %i\n", glb_i0);
+	printf("glb_i0 = %i\n", glb_i0);
 
 
 	// copy arrays by value
 	memcpy(&glb_a0, &glb_a1, sizeof(int32_t[10]));
 
-	printf(/*4*/"glb_a0[0] = %i\n", glb_a0[0]);
-	printf(/*4*/"glb_a0[1] = %i\n", glb_a0[1]);
-	printf(/*4*/"glb_a0[2] = %i\n", glb_a0[2]);
+	printf("glb_a0[0] = %i\n", glb_a0[0]);
+	printf("glb_a0[1] = %i\n", glb_a0[1]);
+	printf("glb_a0[2] = %i\n", glb_a0[2]);
 
 
 	// copy records by value
 	glb_r0 = glb_r1;
 
-	printf(/*4*/"glb_r0.x = %i\n", glb_r0.x);
-	printf(/*4*/"glb_r0.y = %i\n", glb_r0.y);
+	printf("glb_r0.x = %i\n", glb_r0.x);
+	printf("glb_r0.y = %i\n", glb_r0.y);
 
 
 	// -----------------------------------
@@ -59,7 +59,7 @@ int main(void) {
 
 	loc_i0 = loc_i1;
 
-	printf(/*4*/"loc_i0 = %i\n", loc_i0);
+	printf("loc_i0 = %i\n", loc_i0);
 
 	// copy arrays by value
 	// C backend will be use memcpy()
@@ -68,9 +68,9 @@ int main(void) {
 
 	memcpy(&loc_a0, &loc_a1, sizeof(int32_t[10]));
 
-	printf(/*4*/"loc_a0[0] = %i\n", loc_a0[0]);
-	printf(/*4*/"loc_a0[1] = %i\n", loc_a0[1]);
-	printf(/*4*/"loc_a0[2] = %i\n", loc_a0[2]);
+	printf("loc_a0[0] = %i\n", loc_a0[0]);
+	printf("loc_a0[1] = %i\n", loc_a0[1]);
+	printf("loc_a0[2] = %i\n", loc_a0[2]);
 
 
 	// copy records by value
@@ -80,8 +80,8 @@ int main(void) {
 
 	loc_r0 = loc_r1;
 
-	printf(/*4*/"loc_r0.x = %i\n", loc_r0.x);
-	printf(/*4*/"loc_r0.y = %i\n", loc_r0.y);
+	printf("loc_r0.x = %i\n", loc_r0.x);
+	printf("loc_r0.y = %i\n", loc_r0.y);
 
 
 	// error: closed arrays of closed arrays are denied

@@ -13,7 +13,7 @@ static void mtab(uint32_t n) {
 	//var m = 1   // by default integer var get system int type (-mint option)
 	while (m < 10) {
 		const uint32_t nm = n * m;
-		printf(/*4*/"%u * %u = %u\n", n, m, nm);
+		printf("%u * %u = %u\n", n, m, nm);
 		m = m + 1;
 	}
 }
@@ -21,7 +21,7 @@ static void mtab(uint32_t n) {
 
 int main(void) {
 	#define n  (2 * 2)
-	printf(/*4*/"multiply table for %d\n", (int32_t)n);
+	printf("multiply table for %d\n", (int32_t)n);
 	mtab(n);
 	return 0;
 

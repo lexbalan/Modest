@@ -13,7 +13,7 @@
 #define HELLO_WORLD  HELLO " " WORLD
 
 int main(void) {
-	printf(/*4*/"%s\n", /*4*/(char*)HELLO_WORLD);
+	printf("%s\n", (char*)HELLO_WORLD);
 	return 0;
 }
 

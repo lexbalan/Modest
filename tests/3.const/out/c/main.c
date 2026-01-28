@@ -69,7 +69,7 @@ static Point points2[3] = POINTS;
 
 // define function main
 int main(void) {
-	printf(/*4*/"test const\n");
+	printf("test const\n");
 
 	X y = (X){
 		.p = (Point){.x = 10, .y = 20},
@@ -82,11 +82,11 @@ int main(void) {
 	const Point ppp = ((Point[3])ZERO_POINTS)[0];
 	const uint32_t z = POINT_ZERO.x;
 
-	printf(/*4*/"genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);
-	printf(/*4*/"int32Const = %d\n", INT32_CONST);
+	printf("genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);
+	printf("int32Const = %d\n", INT32_CONST);
 
 	//	printf("genericStringConst = %s\n", genericStringConst)
-	printf(/*4*/"string8Const = %s\n", /*4*/(char*)STRING8_CONST);
+	printf("string8Const = %s\n", (char*)STRING8_CONST);
 
 	return 0;
 }

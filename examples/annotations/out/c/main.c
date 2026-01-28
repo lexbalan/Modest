@@ -77,13 +77,13 @@ typedef struct Point2D Point2D;
 
 // переопределение f не вызвало ошибку!
 static void hello(void) {
-	printf(/*4*/"hi!\n");
+	printf("hi!\n");
 }
 
 
 int32_t main(void) {
 	hello();
-	printf(/*4*/"Attributes example\n");
+	printf("Attributes example\n");
 	(void)staticInlineFunc(0);
 	(void)staticNoinlineFunc(0);
 	(void)staticInlineHintFunc(0);

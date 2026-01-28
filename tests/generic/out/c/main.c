@@ -46,41 +46,41 @@ static bool test_generic_array(void);
 static bool test_generic_record(void);
 
 int main(void) {
-	printf(/*4*/"generic types test\n");
+	printf("generic types test\n");
 
 	const bool t1 = test_generic_integer();
 	if (t1) {
-		printf(/*4*/"test_generic_integer passed\n");
+		printf("test_generic_integer passed\n");
 	} else {
-		printf(/*4*/"test_generic_integer failed\n");
+		printf("test_generic_integer failed\n");
 	}
 
 	const bool t2 = test_generic_float();
 	if (t2) {
-		printf(/*4*/"test_generic_float passed\n");
+		printf("test_generic_float passed\n");
 	} else {
-		printf(/*4*/"test_generic_float failed\n");
+		printf("test_generic_float failed\n");
 	}
 
 	const bool t3 = test_generic_char();
 	if (t3) {
-		printf(/*4*/"test_generic_char passed\n");
+		printf("test_generic_char passed\n");
 	} else {
-		printf(/*4*/"test_generic_char failed\n");
+		printf("test_generic_char failed\n");
 	}
 
 	const bool t4 = test_generic_array();
 	if (t4) {
-		printf(/*4*/"test_generic_array passed\n");
+		printf("test_generic_array passed\n");
 	} else {
-		printf(/*4*/"test_generic_array failed\n");
+		printf("test_generic_array failed\n");
 	}
 
 	const bool t5 = test_generic_record();
 	if (t5) {
-		printf(/*4*/"test_generic_record passed\n");
+		printf("test_generic_record passed\n");
 	} else {
-		printf(/*4*/"test_generic_integer failed\n");
+		printf("test_generic_integer failed\n");
 	}
 
 	return 0;
@@ -167,12 +167,12 @@ static bool test_generic_array(void) {
 
 	uint32_t i = 0;
 	while (i < 4) {
-		printf(/*4*/"a[%i] = %i\n", i, (uint32_t)((int8_t[4])a)[i]);
+		printf("a[%i] = %i\n", i, (uint32_t)((int8_t[4])a)[i]);
 		i = i + 1;
 	}
 
 	if (false) {
-		printf(/*4*/"error: a != [0, 1, 2, 3]\n");
+		printf("error: a != [0, 1, 2, 3]\n");
 		return false;
 	}
 
@@ -184,7 +184,7 @@ static bool test_generic_array(void) {
 	ARRCPY(&b, &((int8_t[4])a), LENGTHOF(b));
 
 	if (memcmp(&b, &((int32_t[4]){0, 1, 2, 3}), sizeof(int32_t[4])) != 0) {
-		printf(/*4*/"b != [0, 1, 2, 3]\n");
+		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
 
@@ -193,7 +193,7 @@ static bool test_generic_array(void) {
 	ARRCPY(&c, &((int8_t[4])a), LENGTHOF(c));
 
 	if (memcmp(&c, &((int64_t[4]){0, 1, 2, 3}), sizeof(int64_t[4])) != 0) {
-		printf(/*4*/"c != [0, 1, 2, 3]\n");
+		printf("c != [0, 1, 2, 3]\n");
 		return false;
 	}
 
@@ -201,7 +201,7 @@ static bool test_generic_array(void) {
 	int32_t d[10] = a;
 
 	if (memcmp(&d, &((int32_t[10]){0, 1, 2, 3, 0}), sizeof(int32_t[10])) != 0) {
-		printf(/*4*/"d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
+		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
 		return false;
 	}
 

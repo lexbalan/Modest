@@ -42,13 +42,13 @@ static void sumsub64(int64_t a, int64_t b) {
 		: "cc"
 	);
 
-	printf(/*4*/"sumsub64 sum = %lld\n", sum);
-	printf(/*4*/"sumsub64 sub = %lld\n", sub);
+	printf("sumsub64 sum = %lld\n", sum);
+	printf("sumsub64 sub = %lld\n", sub);
 }
 
 
 int main(void) {
-	printf(/*4*/"inline asm test\n");
+	printf("inline asm test\n");
 
 	int64_t a = 10;
 	int64_t b = 20;
@@ -56,8 +56,8 @@ int main(void) {
 	const int64_t sum = sum64(a, b);
 	const int64_t sub = sub64(a, b);
 
-	printf(/*4*/"sum(%lld, %lld) = %lld\n", a, b, sum);
-	printf(/*4*/"sub(%lld, %lld) = %lld\n", a, b, sub);
+	printf("sum(%lld, %lld) = %lld\n", a, b, sum);
+	printf("sub(%lld, %lld) = %lld\n", a, b, sub);
 
 	sumsub64(a, b);
 

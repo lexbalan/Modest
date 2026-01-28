@@ -36,33 +36,33 @@ static char test_key[KEY_LENGTH + 1] = {'a', 'b', 'c'};
 static void print_bytes(uint8_t(*buf)[], uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
-		printf(/*4*/"0x%02X ", (*buf)[i]);
+		printf("0x%02X ", (*buf)[i]);
 		i = i + 1;
 	}
-	printf(/*4*/"\n");
+	printf("\n");
 }
 
 
 int main(void) {
-	printf(/*4*/"test xor encrypting\n");
+	printf("test xor encrypting\n");
 
 	uint8_t(*const tmsg)[] = (uint8_t(*)[])&test_msg;
 	uint8_t(*const tkey)[] = (uint8_t(*)[])&test_key;
 
-	printf(/*4*/"before encrypt test_msg: \n");
-	print_bytes(/*ParamIsPtr2Arr*/tmsg, MSG_LENGTH);
+	printf("before encrypt test_msg: \n");
+	print_bytes(tmsg, MSG_LENGTH);
 
 	// encrypt test data
-	xor_encrypter(/*ParamIsPtr2Arr*/tmsg, MSG_LENGTH, /*ParamIsPtr2Arr*/tkey, KEY_LENGTH);
+	xor_encrypter(tmsg, MSG_LENGTH, tkey, KEY_LENGTH);
 
-	printf(/*4*/"after encrypt test_msg: \n");
-	print_bytes(/*ParamIsPtr2Arr*/tmsg, MSG_LENGTH);
+	printf("after encrypt test_msg: \n");
+	print_bytes(tmsg, MSG_LENGTH);
 
 	// decrypt test data
-	xor_encrypter(/*ParamIsPtr2Arr*/tmsg, MSG_LENGTH, /*ParamIsPtr2Arr*/tkey, KEY_LENGTH);
+	xor_encrypter(tmsg, MSG_LENGTH, tkey, KEY_LENGTH);
 
-	printf(/*4*/"after decrypt test_msg: \n");
-	print_bytes(/*ParamIsPtr2Arr*/tmsg, MSG_LENGTH);
+	printf("after decrypt test_msg: \n");
+	print_bytes(tmsg, MSG_LENGTH);
 
 	return 0;
 }

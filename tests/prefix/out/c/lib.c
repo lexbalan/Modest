@@ -12,7 +12,7 @@
 int32_t loo_spam = 4;
 
 void loo_foo(uint32_t x) {
-	printf(/*4*/"foo(%d)\n", x);
+	printf("foo(%d)\n", x);
 }
 
 

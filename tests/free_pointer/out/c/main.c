@@ -26,7 +26,7 @@ int32_t main(void) {
 	// and use it as usualy
 	*((int64_t *)freePointer) = 123456789123456789L;
 
-	printf(/*4*/"c = 0x%llX\n", c);
+	printf("c = 0x%llX\n", c);
 
 	// Let's create new pointer to *Int64 from freePointer
 	int64_t *const px = (int64_t *)freePointer;
@@ -35,7 +35,7 @@ int32_t main(void) {
 	const int64_t x = *px;
 
 	// for pointer mechanics checking
-	printf(/*4*/"x = 0x%llX\n", x);
+	printf("x = 0x%llX\n", x);
 
 	return 0;
 }

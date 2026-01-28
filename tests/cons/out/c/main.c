@@ -8,7 +8,7 @@
 
 
 int main(void) {
-	printf(/*4*/"test cons operation\n");
+	printf("test cons operation\n");
 
 	/*let x0 = Int32 -1
 	let x1 = Int64 -1
@@ -22,8 +22,8 @@ int main(void) {
 
 	const uint8_t a = 0xFF;
 	const uint32_t b = (uint32_t)a;
-	printf(/*4*/"a = %u\n", a);
-	printf(/*4*/"b = %u\n", b);
+	printf("a = %u\n", a);
+	printf("b = %u\n", b);
 
 	//	let c = Int32 a
 	//	let d = Int32 Int8 -1

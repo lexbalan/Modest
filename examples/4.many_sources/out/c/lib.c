@@ -10,7 +10,7 @@
 
 
 void lib_foo(void) {
-	printf(/*4*/"hello from lib.foo\n");
+	printf("hello from lib.foo\n");
 }
 
 

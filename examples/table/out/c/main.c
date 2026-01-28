@@ -76,19 +76,19 @@ static table_Table table10 = (table_Table){
 
 int32_t main(void) {
 	table_print(&table00);
-	printf(/*4*/"\n");
+	printf("\n");
 
 	table_print(&table01);
-	printf(/*4*/"\n");
+	printf("\n");
 
 	table_print(&table02);
-	printf(/*4*/"\n");
+	printf("\n");
 
 	table_print(&table03);
-	printf(/*4*/"\n");
+	printf("\n");
 
 	table_print(&table10);
-	printf(/*4*/"\n");
+	printf("\n");
 
 	return 0;
 }

@@ -14,32 +14,32 @@
 #define FILENAME  ("file.txt")
 
 static void write_example(void) {
-	printf(/*4*/"run write_example\n");
+	printf("run write_example\n");
 
-	FILE *const fp = fopen(/*4*/FILENAME, /*4*/"w");
+	FILE *const fp = fopen(FILENAME, "w");
 
 	if (fp == NULL) {
-		printf(/*4*/"error: cannot create file '%s'", /*4*/(char*)FILENAME);
+		printf("error: cannot create file '%s'", (char*)FILENAME);
 		return;
 	}
 
-	fprintf(fp, /*4*/"some text.\n");
+	fprintf(fp, "some text.\n");
 
 	fclose(fp);
 }
 
 
 static void read_example(void) {
-	printf(/*4*/"run read_example\n");
+	printf("run read_example\n");
 
-	FILE *const fp = fopen(/*4*/FILENAME, /*4*/"r");
+	FILE *const fp = fopen(FILENAME, "r");
 
 	if (fp == NULL) {
-		printf(/*4*/"error: cannot open file '%s'", /*4*/(char*)FILENAME);
+		printf("error: cannot open file '%s'", (char*)FILENAME);
 		return;
 	}
 
-	printf(/*4*/"file '%s' contains: ", /*4*/(char*)FILENAME);
+	printf("file '%s' contains: ", (char*)FILENAME);
 	while (true) {
 		const int ch = fgetc(fp);
 		if (ch == EOF) {
@@ -53,7 +53,7 @@ static void read_example(void) {
 
 
 int main(void) {
-	printf(/*4*/"text_file example\n");
+	printf("text_file example\n");
 	write_example();
 	read_example();
 	return 0;

@@ -59,29 +59,29 @@ int32_t main(void) {
 	char16_t *str16 = STRING16_CONST;
 	char32_t *str32 = STRING32_CONST;
 
-	console_puts8(/*4*/str8);
-	console_puts8(/*4*/"\n");
+	console_puts8(str8);
+	console_puts8("\n");
 
-	console_puts16(/*4*/str16);
-	console_puts16(/*4*/_STR16("\n"));
+	console_puts16(str16);
+	console_puts16(_STR16("\n"));
 
-	console_puts32(/*4*/str32);
-	console_puts32(/*4*/_STR32("\n"));
+	console_puts32(str32);
+	console_puts32(_STR32("\n"));
 
-	console_puts8(/*4*/&arr_utf8[0]);
-	console_puts16(/*4*/&arr_utf16[0]);
-	console_puts32(/*4*/&arr_utf32[0]);
+	console_puts8(&arr_utf8[0]);
+	console_puts16(&arr_utf16[0]);
+	console_puts32(&arr_utf32[0]);
 
-	console_puts8(/*4*/(char *)&ratSymbolUTF8);
-	console_puts16(/*4*/(char16_t *)&ratSymbolUTF16);
-	console_puts32(/*4*/(char32_t *)&ratSymbolUTF32);
-	console_puts32(/*4*/_STR32("\n"));
+	console_puts8((char *)&ratSymbolUTF8);
+	console_puts16((char16_t *)&ratSymbolUTF16);
+	console_puts32((char32_t *)&ratSymbolUTF32);
+	console_puts32(_STR32("\n"));
 
 	console_putchar8('A');
 	console_putchar16(u'Ω');
 	console_putchar32(U'🦄');
 
-	console_puts16(/*4*/_STR16("\n"));
+	console_puts16(_STR16("\n"));
 
 	return 0;
 }

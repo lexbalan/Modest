@@ -32,20 +32,20 @@ static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[RECEIVE_BUFFER_SIZE];
 	const ssize_t bytesReceived = read(clientSocket, (void *)&buffer, LENGTHOF(buffer) - 1);
 	if (bytesReceived < 0) {
-		perror(/*4*/"cannot read socket");
+		perror("cannot read socket");
 		close(clientSocket);
 		return;
 	}
 	buffer[bytesReceived] = 0x0;
 
-	printf(/*4*/"Received request:\n%s\n", /*4*/(char*)(char *)&buffer);
+	printf("Received request:\n%s\n", (char*)(char *)&buffer);
 
 	char response[SEND_BUFFER_SIZE];
-	sprintf(/*4*/&response[0], /*4*/"%s<html><body><h1>Hello, World! (%d)</h1></body></html>",
-		/*4*/(char*)HTTP_HEADER, pageCounter
+	sprintf(&response[0], "%s<html><body><h1>Hello, World! (%d)</h1></body></html>",
+		(char*)HTTP_HEADER, pageCounter
 	);
 
-	write(clientSocket, (void *)&response, strlen(/*4*/&response[0]));
+	write(clientSocket, (void *)&response, strlen(&response[0]));
 	close(clientSocket);
 }
 
@@ -53,7 +53,7 @@ static void handleRequest(int32_t clientSocket) {
 int32_t main(void) {
 	const int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (serverSocket < 0) {
-		perror(/*4*/"cannot create socket");
+		perror("cannot create socket");
 		exit(1);
 	}
 
@@ -69,7 +69,7 @@ int32_t main(void) {
 	struct sockaddr *const socadr = (struct sockaddr *)&serverAddr;
 	int rc = bind(serverSocket, socadr, (socklen_t)sizeof serverAddr);
 	if (rc < 0) {
-		perror(/*4*/"cannot bind socket");
+		perror("cannot bind socket");
 		close(serverSocket);
 		exit(1);
 	}
@@ -77,12 +77,12 @@ int32_t main(void) {
 	// Starting listen to connection
 	rc = listen(serverSocket, 5);
 	if (rc < 0) {
-		perror(/*4*/"cannot listen socket");
+		perror("cannot listen socket");
 		close(serverSocket);
 		exit(1);
 	}
 
-	printf(/*4*/"Server listening on port %d...\n", (uint32_t)PORT);
+	printf("Server listening on port %d...\n", (uint32_t)PORT);
 
 	// Handle input connections
 	while (true) {
@@ -91,7 +91,7 @@ int32_t main(void) {
 		socklen_t clientAdrLen = (socklen_t)sizeof clientAddr;
 		const int clientSocket = accept(serverSocket, socadr, &clientAdrLen);
 		if (clientSocket < 0) {
-			perror(/*4*/"cannot accept connection");
+			perror("cannot accept connection");
 			continue;
 		}
 		handleRequest(clientSocket);

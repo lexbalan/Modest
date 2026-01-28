@@ -36,7 +36,7 @@ void table_print(table_Table *table) {
 	if (table->header != NULL) {
 		i = 0;
 		while (i < table->nCols) {
-			const uint32_t len = (uint32_t)strlen(/*4*/(*table->header)[i]);
+			const uint32_t len = (uint32_t)strlen((*table->header)[i]);
 			if (len > sz[i]) {
 				sz[i] = len;
 			}
@@ -48,7 +48,7 @@ void table_print(table_Table *table) {
 	while (i < table->nRows) {
 		j = 0;
 		while (j < table->nCols) {
-			const uint32_t len = (uint32_t)strlen(/*4*/(*data)[i][j]);
+			const uint32_t len = (uint32_t)strlen((*data)[i][j]);
 			if (len > sz[j]) {
 				sz[j] = len;
 			}
@@ -70,26 +70,26 @@ void table_print(table_Table *table) {
 	//
 
 	// top border
-	separator(/*ParamIsPtr2Arr*/&sz, table->nCols);
+	separator(&sz, table->nCols);
 
 	if (table->header != NULL) {
-		printRow(/*ParamIsPtr2Arr*/table->header, /*ParamIsPtr2Arr*/&sz, table->nCols);
-		separator(/*ParamIsPtr2Arr*/&sz, table->nCols);
+		printRow(table->header, &sz, table->nCols);
+		separator(&sz, table->nCols);
 	}
 
 	i = 0;
 	while (i < table->nRows) {
-		printRow(/*ParamIsPtr2Arr*/&(*data)[i], /*ParamIsPtr2Arr*/&sz, table->nCols);
+		printRow(&(*data)[i], &sz, table->nCols);
 
 		if (table->separate && i < table->nRows - 1) {
-			separator(/*ParamIsPtr2Arr*/&sz, table->nCols);
+			separator(&sz, table->nCols);
 		}
 
 		i = i + 1;
 	}
 
 	// bottom border
-	separator(/*ParamIsPtr2Arr*/&sz, table->nCols);
+	separator(&sz, table->nCols);
 }
 
 
@@ -97,22 +97,22 @@ static void printRow(char *(*raw_row)[], uint32_t(*sz)[], uint32_t nCols) {
 	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
 	uint32_t j = 0;
 	while (j < nCols) {
-		printf(/*4*/"|");
+		printf("|");
 		char *const s = (*row)[j];
-		uint32_t len = (uint32_t)strlen(/*4*/s);
+		uint32_t len = (uint32_t)strlen(s);
 		if (s[0] != '\x0') {
 			len = len + 1;
-			printf(/*4*/" %s", /*4*/(char*)s);
+			printf(" %s", (char*)s);
 		}
 
 		uint32_t k = 0;
 		while (k < ((*sz)[j] - len)) {
-			printf(/*4*/" ");
+			printf(" ");
 			k = k + 1;
 		}
 		j = j + 1;
 	}
-	printf(/*4*/"|\n");
+	printf("|\n");
 }
 
 
@@ -123,15 +123,15 @@ static void printRow(char *(*raw_row)[], uint32_t(*sz)[], uint32_t nCols) {
 static void separator(uint32_t(*sz)[], uint32_t n) {
 	uint32_t i = 0;
 	while (i < n) {
-		printf(/*4*/"+");
+		printf("+");
 		uint32_t j = 0;
 		while (j < (*sz)[i]) {
-			printf(/*4*/"-");
+			printf("-");
 			j = j + 1;
 		}
 		i = i + 1;
 	}
-	printf(/*4*/"+\n");
+	printf("+\n");
 }
 
 

@@ -16,12 +16,12 @@
 #define TEST  "test"
 
 int main(void) {
-	printf(/*4*/"%s\n", /*4*/(char*)GREETING);
+	printf("%s\n", (char*)GREETING);
 
 	if (true) {
-		printf(/*4*/"test ok.\n");
+		printf("test ok.\n");
 	} else {
-		printf(/*4*/"test failed.\n");
+		printf("test failed.\n");
 	}
 
 	return 0;

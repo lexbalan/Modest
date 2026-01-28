@@ -84,44 +84,44 @@ static void test_records(void) {
 	//	var localRecord: LocalRecord
 	//	Unit localRecord
 
-	printf(/*4*/"line.a.x = %d\n", line.a.x);
-	printf(/*4*/"line.a.y = %d\n", line.a.y);
+	printf("line.a.x = %d\n", line.a.x);
+	printf("line.a.y = %d\n", line.a.y);
 
-	printf(/*4*/"line.b.x = %d\n", line.b.x);
-	printf(/*4*/"line.b.y = %d\n", line.b.y);
+	printf("line.b.x = %d\n", line.b.x);
+	printf("line.b.y = %d\n", line.b.y);
 
-	printf(/*4*/"pLines[0].a.x = %d\n", pLines[0]->a.x);
-	printf(/*4*/"pLines[0].a.y = %d\n", pLines[0]->a.y);
+	printf("pLines[0].a.x = %d\n", pLines[0]->a.x);
+	printf("pLines[0].a.y = %d\n", pLines[0]->a.y);
 
-	printf(/*4*/"pLines[0].b.x = %d\n", pLines[0]->b.x);
-	printf(/*4*/"pLines[0].b.y = %d\n", pLines[0]->b.y);
+	printf("pLines[0].b.x = %d\n", pLines[0]->b.x);
+	printf("pLines[0].b.y = %d\n", pLines[0]->b.y);
 
-	printf(/*4*/"s.x.a.x = %d\n", s.x->a.x);
-	printf(/*4*/"s.x.a.y = %d\n", s.x->a.y);
+	printf("s.x.a.x = %d\n", s.x->a.x);
+	printf("s.x.a.y = %d\n", s.x->a.y);
 
-	printf(/*4*/"s.x.b.x = %d\n", s.x->b.x);
-	printf(/*4*/"s.x.b.y = %d\n", s.x->b.y);
+	printf("s.x.b.x = %d\n", s.x->b.x);
+	printf("s.x.b.y = %d\n", s.x->b.y);
 
 
 	const Struct x = s;
 
-	printf(/*4*/"x.x.a.x = %d\n", x.x->a.x);
-	printf(/*4*/"x.x.a.y = %d\n", x.x->a.y);
+	printf("x.x.a.x = %d\n", x.x->a.x);
+	printf("x.x.a.y = %d\n", x.x->a.y);
 
-	printf(/*4*/"x.x.b.x = %d\n", x.x->b.x);
-	printf(/*4*/"x.x.b.y = %d\n", x.x->b.y);
+	printf("x.x.b.x = %d\n", x.x->b.x);
+	printf("x.x.b.y = %d\n", x.x->b.y);
 }
 
 
 int main(void) {
-	printf(/*4*/"records test\n");
+	printf("records test\n");
 
 	// check value_record_eq for immediate values
 	#define ver  {.major = 0, .minor = 7}
 	if (true) {
-		printf(/*4*/"version 0.7\n");
+		printf("version 0.7\n");
 	} else {
-		printf(/*4*/"version not 0.7\n");
+		printf("version not 0.7\n");
 	}
 
 	// compare two Point2D records
@@ -129,9 +129,9 @@ int main(void) {
 	Point2D p2d1 = (Point2D){.x = 10, .y = 20};
 
 	if (memcmp(&p2d0, &p2d1, sizeof(Point2D)) == 0) {
-		printf(/*4*/"p2d0 == p2d1\n");
+		printf("p2d0 == p2d1\n");
 	} else {
-		printf(/*4*/"p2d0 != p2d1\n");
+		printf("p2d0 != p2d1\n");
 	}
 
 
@@ -140,9 +140,9 @@ int main(void) {
 	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6){.x = 1, .y = 2};
 
 	if (memcmp(&p2d2, &p2d3, sizeof(Point2D)) == 0) {
-		printf(/*4*/"p2d2 == p2d3\n");
+		printf("p2d2 == p2d3\n");
 	} else {
-		printf(/*4*/"p2d2 != p2d3\n");
+		printf("p2d2 != p2d3\n");
 	}
 
 
@@ -150,9 +150,9 @@ int main(void) {
 	struct __anonymous_struct_7 p2d4 = (struct __anonymous_struct_7){.x = 1, .y = 2};
 
 	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_6)) == 0) {
-		printf(/*4*/"p2d3 == p2d4\n");
+		printf("p2d3 == p2d4\n");
 	} else {
-		printf(/*4*/"p2d3 != p2d4\n");
+		printf("p2d3 != p2d4\n");
 	}
 
 	// comparison between two record (by pointer)
@@ -160,9 +160,9 @@ int main(void) {
 	struct __anonymous_struct_6 *const pr3 = &p2d3;
 
 	if (memcmp(pr2, pr3, sizeof(Point2D)) == 0) {
-		printf(/*4*/"*pr2 == *pr3\n");
+		printf("*pr2 == *pr3\n");
 	} else {
-		printf(/*4*/"*pr2 != *pr3\n");
+		printf("*pr2 != *pr3\n");
 	}
 
 	/*
@@ -202,13 +202,13 @@ int main(void) {
 	ax = 111;
 	bx = 222;
 
-	printf(/*4*/"px.x = %i (must be 10)\n", px.x);
-	printf(/*4*/"px.y = %i (must be 20)\n", px.y);
+	printf("px.x = %i (must be 10)\n", px.x);
+	printf("px.y = %i (must be 20)\n", px.y);
 
 	if (memcmp(&px, &((struct {int32_t x; int32_t y;}){.x = 10, .y = 20}), sizeof(struct {int32_t x; int32_t y;})) == 0) {
-		printf(/*4*/"test passed\n");
+		printf("test passed\n");
 	} else {
-		printf(/*4*/"test failed\n");
+		printf("test failed\n");
 	}
 
 	test_records();

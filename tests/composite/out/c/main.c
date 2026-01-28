@@ -228,7 +228,7 @@ static void he(He *x) {
 
 
 static void hi(char *x) {
-	printf(/*4*/"Hi %s!\n", /*4*/(char*)x);
+	printf("Hi %s!\n", (char*)x);
 }
 
 
@@ -252,42 +252,42 @@ static Wrap *awrap[2] = {&wrap0, &wrap0};
 int32_t main(void) {
 	xy((struct __anonymous_struct_3){.x = 10, .y = 20});
 
-	printf(/*4*/"test1 (eq): ");
+	printf("test1 (eq): ");
 	if (memcmp(&animation0_points, &animation1_points, sizeof(AnimationPoint[5])) == 0) {
-		printf(/*4*/"eq\n");
+		printf("eq\n");
 	} else {
-		printf(/*4*/"ne\n");
+		printf("ne\n");
 	}
 
-	printf(/*4*/"test2 (ne): ");
+	printf("test2 (ne): ");
 	if (memcmp(&animation1_points, &animation2_points, sizeof(AnimationPoint[5])) == 0) {
-		printf(/*4*/"eq\n");
+		printf("eq\n");
 	} else {
-		printf(/*4*/"ne\n");
+		printf("ne\n");
 	}
 
 	uint32_t i = 0;
 	while (i < 3) {
 		uint32_t j = 0;
 		while (j < 3) {
-			printf(/*4*/"arrr[%d][%d] = %d\n", i, j, arrr[i][j]);
+			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j]);
 			j = j + 1;
 		}
 		i = i + 1;
 	}
 
 	const int32_t _add = farr[0](5, 7);
-	printf(/*4*/"farr[0](5, 7) = %d\n", _add);
+	printf("farr[0](5, 7) = %d\n", _add);
 	const int32_t _sub = farr[1](5, 7);
-	printf(/*4*/"farr[1](5, 7) = %d\n", _sub);
+	printf("farr[1](5, 7) = %d\n", _sub);
 
 	i = 0;
 	while (i < 10) {
-		hiarr[i](/*4*/"LOL");
+		hiarr[i]("LOL");
 		i = i + 1;
 	}
 
-	awrap[0]->fhi(/*4*/"World");
+	awrap[0]->fhi("World");
 	//let y = awrap[0]
 	//y.fhi("World")
 

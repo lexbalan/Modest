@@ -11,15 +11,15 @@
 // right must be Nat
 
 int main(void) {
-	printf(/*4*/"test shift\n");
+	printf("test shift\n");
 
 	uint32_t c;
 
 	c = 0x1 << 31;
-	printf(/*4*/"1 << 31 = 0x%x\n", c);
+	printf("1 << 31 = 0x%x\n", c);
 
 	c = 0x80000000UL >> 31;
-	printf(/*4*/"0x80000000 >> 31 = 0x%x\n", c);
+	printf("0x80000000 >> 31 = 0x%x\n", c);
 
 	return 0;
 }

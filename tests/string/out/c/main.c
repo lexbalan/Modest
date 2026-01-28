@@ -49,29 +49,29 @@ static char32_t *ptr_to_string32 = _STR32(STR32_EXAMPLE);
 
 int main(void) {
 	console_putchar_utf8('A');
-	printf(/*4*/"\n");
+	printf("\n");
 	console_putchar_utf16(u'Ω');
-	printf(/*4*/"\n");
+	printf("\n");
 	console_putchar_utf32(U'🦄');
-	printf(/*4*/"\n");
+	printf("\n");
 
-	printf(/*4*/"\n");
+	printf("\n");
 
-	console_puts8(/*4*/&string8[0]);
-	printf(/*4*/"\n");
-	console_puts16(/*4*/&string16[0]);
-	printf(/*4*/"\n");
-	console_puts32(/*4*/&string32[0]);
-	printf(/*4*/"\n");
+	console_puts8(&string8[0]);
+	printf("\n");
+	console_puts16(&string16[0]);
+	printf("\n");
+	console_puts32(&string32[0]);
+	printf("\n");
 
-	printf(/*4*/"\n");
+	printf("\n");
 
-	console_puts8(/*4*/ptr_to_string8);
-	printf(/*4*/"\n");
-	console_puts16(/*4*/ptr_to_string16);
-	printf(/*4*/"\n");
-	console_puts32(/*4*/ptr_to_string32);
-	printf(/*4*/"\n");
+	console_puts8(ptr_to_string8);
+	printf("\n");
+	console_puts16(ptr_to_string16);
+	printf("\n");
+	console_puts32(ptr_to_string32);
+	printf("\n");
 
 	return 0;
 }

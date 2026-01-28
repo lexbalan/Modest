@@ -33,31 +33,31 @@ static void arraysAdd(int32_t(*_a)[10], int32_t(*_b)[10], int32_t(*_sret_)[10]) 
 
 int32_t main(void) {
 	int32_t a[10];
-	getarr10(/*2*/&a);
+	getarr10(&a);
 
 	if (memcmp(&a, &((int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), sizeof(int32_t[10])) == 0) {
-		printf(/*4*/"test1 passed!\n");
+		printf("test1 passed!\n");
 	}
 
 	#define b  {0, 10, 20, 30, 40, 50, 60, 70, 80, 90}
 
 	int32_t c[10];
-	arraysAdd(/*ArrByVal*/&a, /*ArrByVal*/&(int32_t[10])b, /*2*/&c);
+	arraysAdd(&a, &(int32_t[10])b, &c);
 
 	if (memcmp(&c, &((int32_t[10]){0, 11, 22, 33, 44, 55, 66, 77, 88, 99}), sizeof(int32_t[10])) == 0) {
-		printf(/*4*/"test2 passed!\n");
+		printf("test2 passed!\n");
 	}
 
 	int32_t d[10];
-	arraysAdd(/*ArrByVal*/&a, /*ArrByVal*/&a, /*2*/&d);
+	arraysAdd(&a, &a, &d);
 
 	if (memcmp(&d, &((int32_t[10]){0, 2, 4, 6, 8, 10, 12, 14, 16, 18}), sizeof(int32_t[10])) == 0) {
-		printf(/*4*/"test3 passed!\n");
+		printf("test3 passed!\n");
 	}
 
 	uint32_t i = 0;
 	while (i < 10) {
-		printf(/*4*/"d[%i] = %i\n", i, d[i]);
+		printf("d[%i] = %i\n", i, d[i]);
 		i = i + 1;
 	}
 

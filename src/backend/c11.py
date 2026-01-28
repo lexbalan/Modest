@@ -565,7 +565,7 @@ def str_value_ref(x, ctx):
 		sstr += "(void *)"
 
 	if x.value.isValueSlice():
-		sstr += '/*7*/(' + str_type(x.type) + ')'
+		sstr += '(' + str_type(x.type) + ')'
 	sstr += '&'
 	sstr += str_value(x.value, parent_expr=x)
 	return sstr
@@ -630,22 +630,18 @@ def str_value_call(v, ctx, sret=None):
 
 		astr = ''
 
-		if p_type.is_pointer_to_array():
-			# Передаем указатель на массив в функцию
-			astr += '/*ParamIsPtr2Arr*/' #+ str_value(a, ctx=ctx+['no_ptr_to_item'])
-
 		astr += str_value(a, ctx=ctx)
 
 		if p_type.is_array():
 			# Если в функцию передается массив по значению - передаем указатель на него (!)
 			# тк функции си не умеют получать массивы по значению
 			if p_type.is_array_of_char():
-				astr = '/*ArrByVal2*/&(%s)[0]' % astr
+				astr = '&(%s)[0]' % astr
 			else:
-				astr = '/*ArrByVal*/&' + astr
+				astr = '&' + astr
 
 		if p_type.is_pointer_to_str():
-			astr = '/*4*/' + str_value(a, ctx=ctx+['arr_as_ptr'])
+			astr = str_value(a, ctx=ctx+['arr_as_ptr'])
 			if a.isValueRef():
 				astr = astr + '[0]'
 		sstr += astr
@@ -661,7 +657,7 @@ def str_value_call(v, ctx, sret=None):
 		# приводим указатель на массив к указателю на его элемент
 		#to = TypePointer(sret.type.of)
 		#sstr += "(%s)" % str_type(to)
-		sstr += '/*2*/'+str_value_as_ptr(sret) #+ '[0]'
+		sstr += str_value_as_ptr(sret) #+ '[0]'
 		if sret.type.is_array_of_char():
 			sstr = sstr + '[0]'
 
@@ -676,7 +672,7 @@ def str_value_call(v, ctx, sret=None):
 def str_value_slice(x, ctx):
 	y = ValueIndex(x.type, x.left, x.index_from, ti=None)
 	ind = str_value_index(y, ctx)
-	return '/*SLICE*/' + ind
+	return ind
 
 
 def str_value_new(x, ctx):
@@ -690,12 +686,6 @@ def str_value_index(x, ctx):
 	left = x.left
 
 	left_str = ''
-
-	#if left.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM:
-		# Параметр массив или указатель на массив по любому будет просто указателем на массив в си!
-		#if left.type.is_array():
-		#print("LNLKJNKJNJKNJKNJKNJKNJKNJKNJKJNJKNKJNKNKNKNKJNKNKNJKNKNKJNKJNKJ")
-	#	return "/*??*/(*%s)" % str_value(left, ctx=ctx, parent_expr=x) + '[' + str_value(x.index) + ']'
 
 	if left.is_global_flag and left.isValueConst(): #left.type.is_generic_array():
 		ts = str_type(left.type)
@@ -1397,7 +1387,6 @@ def str_value_subexpr(x, ctx):
 
 def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 	sstr = ''
-	#sstr = '/*%s*/' % str(x)
 	need_wrap = False
 	if wrapped:
 		need_wrap = True
@@ -1617,7 +1606,6 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	else:
 		out(str_initializer(value))
 
-	#out("/*%s*/" % str_type(value.type))
 	set_nl_symbol("\n")
 
 

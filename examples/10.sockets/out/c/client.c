@@ -24,7 +24,7 @@
 static bool sendFile(FILE *fp, int sockFd) {
 	char data[BUF_SIZE];
 
-	while (fgets(/*4*/&data[0], LENGTHOF(data), fp) != NULL) {
+	while (fgets(&data[0], LENGTHOF(data), fp) != NULL) {
 		if (send(sockFd, (void *)&data, sizeof data, 0) == -1) {
 			return false;
 		}
@@ -38,44 +38,44 @@ static bool sendFile(FILE *fp, int sockFd) {
 int main(void) {
 	const int sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd < 0) {
-		perror(/*4*/"[-] Error in socket");
+		perror("[-] Error in socket");
 		exit(1);
 	}
 
-	printf(/*4*/"[+] Server socket created\n");
+	printf("[+] Server socket created\n");
 
 	struct sockaddr_in server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
 		.sin_port = PORT,
 		.sin_addr = (struct in_addr){
-			.s_addr = inet_addr(/*4*/IP_ADDRESS)
+			.s_addr = inet_addr(IP_ADDRESS)
 		}
 	};
 
 	struct sockaddr *const sockaddr = (struct sockaddr *)&server_addr;
 	int e = connect(sockFd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
-		perror(/*4*/"[-] Error in Connecting");
+		perror("[-] Error in Connecting");
 		exit(1);
 	}
 
-	printf(/*4*/"[+] Connected to server\n");
+	printf("[+] Connected to server\n");
 
-	FILE *const fp = fopen(/*4*/FILENAME, /*4*/"r");
+	FILE *const fp = fopen(FILENAME, "r");
 	if (fp == NULL) {
-		perror(/*4*/"[-] Error in reading file");
+		perror("[-] Error in reading file");
 		exit(1);
 	}
 
 	const bool suc = sendFile(fp, sockFd);
 	if (suc) {
-		printf(/*4*/"[+] File data send successfully\n");
+		printf("[+] File data send successfully\n");
 	} else {
-		perror(/*4*/"[-] Error in sendung data");
+		perror("[-] Error in sendung data");
 	}
 
 	close(sockFd);
-	printf(/*4*/"[+] Disconnected from the server\n");
+	printf("[+] Disconnected from the server\n");
 
 	return 0;
 }

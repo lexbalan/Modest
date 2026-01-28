@@ -28,42 +28,42 @@ typedef struct Type2 Type2;
 typedef Type1 Type3;
 
 static void f0_val(Type1 x) {
-	printf(/*4*/"f0 x.x = %d\n", x.x);
+	printf("f0 x.x = %d\n", x.x);
 }
 
 
 static void f1_val(Type2 x) {
-	printf(/*4*/"f1 x.x = %d\n", x.x);
+	printf("f1 x.x = %d\n", x.x);
 }
 
 
 static void f2_val(Type3 x) {
-	printf(/*4*/"f2 x.x = %d\n", x.x);
+	printf("f2 x.x = %d\n", x.x);
 }
 
 
 static void f3_val(struct __anonymous_struct_3 x) {
-	printf(/*4*/"f3 x.x = %d\n", x.x);
+	printf("f3 x.x = %d\n", x.x);
 }
 
 
 static void f0_ptr(Type1 *x) {
-	printf(/*4*/"f0p x.x = %d\n", x->x);
+	printf("f0p x.x = %d\n", x->x);
 }
 
 
 static void f1_ptr(Type2 *x) {
-	printf(/*4*/"f1p x.x = %d\n", x->x);
+	printf("f1p x.x = %d\n", x->x);
 }
 
 
 static void f2_ptr(Type3 *x) {
-	printf(/*4*/"f2p x.x = %d\n", x->x);
+	printf("f2p x.x = %d\n", x->x);
 }
 
 
 static void f3_ptr(struct __anonymous_struct_4 *x) {
-	printf(/*4*/"f3p x.x = %d\n", x->x);
+	printf("f3p x.x = %d\n", x->x);
 }
 
 
