@@ -36,7 +36,7 @@ static bool bubble_sort32_iter(int32_t(*array)[], uint32_t len) {
 
 __attribute__((noinline))
 static void bubble_sort32(int32_t(*array)[], uint32_t len) {
-	while (bubble_sort32_iter(array, len)) {
+	while (bubble_sort32_iter(/*ParamIsPtr2Arr*/array, len)) {
 		// continue iterations while is's necessary
 	}
 }
@@ -47,14 +47,14 @@ static void print_array(int32_t(*array)[], uint32_t len);
 
 int32_t main(void) {
 	printf("array before:\n");
-	print_array(&testArray, LENGTHOF(testArray));
+	print_array(/*ParamIsPtr2Arr*/&testArray, LENGTHOF(testArray));
 	printf("\n");
 
 	// do sort
-	bubble_sort32(&testArray, LENGTHOF(testArray));
+	bubble_sort32(/*ParamIsPtr2Arr*/&testArray, LENGTHOF(testArray));
 
 	printf("array after:\n");
-	print_array(&testArray, LENGTHOF(testArray));
+	print_array(/*ParamIsPtr2Arr*/&testArray, LENGTHOF(testArray));
 	printf("\n");
 
 	return 0;

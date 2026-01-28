@@ -7,7 +7,7 @@
 
 #ifndef __STR_UNICODE__
 #if __has_include(<uchar.h>)
-#include "uchar.h"
+#include <uchar.h>
 #else
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
@@ -47,7 +47,7 @@ static char32_t arr2[10] = {U'H', U'e', U'l', U'l', U'o', U'!'};
 //}
 
 
-static void printArrayOf10Char32(char32_t(*_a)[10]);
+static void printArrayOf10Char32(char32_t *_a);
 static void sum10IntArrays(int32_t(*_a)[10], int32_t(*_b)[10], int32_t(*sret_)[10]);
 
 int main(void) {
@@ -58,9 +58,9 @@ int main(void) {
 	char32_t lar2[10];
 	memcpy(&lar2, &arr2, sizeof(char32_t[10]));
 
-	printArrayOf10Char32(/*!*/&lar2);
+	printArrayOf10Char32(/*ArrByVal*/&lar2);
 
-	sum10IntArrays(/*!*/&arr1, /*!*/&lar1, &lar0);
+	sum10IntArrays(/*ArrByVal*/&arr1, /*ArrByVal*/&lar1, &lar0);
 	uint32_t i = 0;
 	while (i < 10) {
 		printf("a[%d] = %d\n", i, lar0[i]);
@@ -71,7 +71,7 @@ int main(void) {
 }
 
 
-static void printArrayOf10Char32(char32_t(*_a)[10]) {
+static void printArrayOf10Char32(char32_t *_a) {
 	char32_t a[10];
 	memcpy(a, _a, sizeof(char32_t[10]));
 	uint32_t i = 0;

@@ -15,7 +15,7 @@
 
 #ifndef __STR_UNICODE__
 #if __has_include(<uchar.h>)
-#include "uchar.h"
+#include <uchar.h>
 #else
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
@@ -43,6 +43,6 @@ void console_puts16(char16_t *s);
 void console_puts32(char32_t *s);
 void console_print(char *form, ...);
 int32_t console_vfprint(int32_t fd, char *form, va_list va);
-int32_t console_vsprint(char(*buf)[], char *form, va_list va);
+int32_t console_vsprint(char *buf, char *form, va_list va);
 
 #endif /* CONSOLE_H */

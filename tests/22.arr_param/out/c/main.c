@@ -42,14 +42,14 @@ int32_t main(void) {
 	#define b  {0, 10, 20, 30, 40, 50, 60, 70, 80, 90}
 
 	int32_t c[10];
-	arraysAdd(/*!*/&a, /*!*/&(int32_t[10])b, &c);
+	arraysAdd(/*ArrByVal*/&a, /*ArrByVal*/&(int32_t[10])b, &c);
 
 	if (memcmp(&c, &((int32_t[10]){0, 11, 22, 33, 44, 55, 66, 77, 88, 99}), sizeof(int32_t[10])) == 0) {
 		printf("test2 passed!\n");
 	}
 
 	int32_t d[10];
-	arraysAdd(/*!*/&a, /*!*/&a, &d);
+	arraysAdd(/*ArrByVal*/&a, /*ArrByVal*/&a, &d);
 
 	if (memcmp(&d, &((int32_t[10]){0, 2, 4, 6, 8, 10, 12, 14, 16, 18}), sizeof(int32_t[10])) == 0) {
 		printf("test3 passed!\n");

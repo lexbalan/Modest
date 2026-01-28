@@ -9,7 +9,7 @@
 
 #ifndef __STR_UNICODE__
 #if __has_include(<uchar.h>)
-#include "uchar.h"
+#include <uchar.h>
 #else
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
@@ -26,7 +26,7 @@ typedef uint32_t char32_t;
 #define _CHR32(x) (__STR32(x)[0])
 #endif /* __STR_UNICODE__ */
 
-uint8_t utf_utf32_to_utf8(char32_t c, char(*buf)[4]);
-uint8_t utf_utf16_to_utf32(char16_t(*c)[], char32_t *result);
+uint8_t utf_utf32_to_utf8(char32_t c, char *buf);
+uint8_t utf_utf16_to_utf32(char16_t *c, char32_t *result);
 
 #endif /* UTF_H */

@@ -329,7 +329,7 @@ public func confstr (name: Int, buf: *[]Char, len: SizeT) -> SizeT
 public func crypt (key: *[]ConstChar, salt: *[]ConstChar) -> *[]Char
 
 // ctermid - generate a pathname for the controlling terminal
-public func ctermid (s: *[]Char) -> @unused *[]Char
+public func ctermid (s: @cstring *[]Char) -> @unused *[]Char
 
 // cuserid - character login name of the user (LEGACY)
 // not implemented on MacOS!
@@ -377,7 +377,7 @@ public func fsync (fildes: Int) -> Int
 public func ftruncate (fildes: Int, length: OffT) -> Int
 
 // getcwd - get the pathname of the current working directory
-public func getcwd (buf: *[]Char, size: SizeT) -> @unused *[]Char
+public func getcwd (buf: @cstring *[]Char, size: SizeT) -> @unused *[]Char
 
 // getdtablesize - get the file descriptor table size (LEGACY)
 public func getdtablesize () -> Int

@@ -95,13 +95,13 @@ int main(void) {
 	#define bb  8
 
 	int32_t(*const p)[bb - aa] = &s[aa];
-	array_print(p, bb - aa);
+	array_print(/*ParamIsPtr2Arr*/p, bb - aa);
 
 	printf("--------------------------------------------\n");
 
 	(*p)[0] = 123;
 
-	array_print(p, bb - aa);
+	array_print(/*ParamIsPtr2Arr*/p, bb - aa);
 
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
@@ -112,14 +112,14 @@ int main(void) {
 	int32_t(*pw)[] = (int32_t(*)[])&s;
 
 	printf("before\n");
-	array_print(pw, 10);
+	array_print(/*ParamIsPtr2Arr*/pw, 10);
 
 	int32_t ind = 1;
 
 	pw = &(*pw)[ind];
 
 	printf("after\n");
-	array_print(pw, 10);
+	array_print(/*ParamIsPtr2Arr*/pw, 10);
 
 	printf("--------------------------------------------\n");
 	printf("zero slice by var\n");
@@ -130,7 +130,7 @@ int main(void) {
 	int32_t k = 4;
 	int32_t j = 7;
 	memset((int32_t(*)[j - k])&ss[k], 0, sizeof(int32_t[j - k]));
-	array_print(&ss, 10);
+	array_print(/*ParamIsPtr2Arr*/&ss, 10);
 
 	printf("--------------------------------------------\n");
 	printf("copy slice by var\n");
@@ -143,7 +143,7 @@ int main(void) {
 	#define j1  8
 	ARRCPY((int32_t(*)[j1 - i1])&dst[i1], &((int8_t[5]){11, 22, 33, 44, 55}), j1 - i1);
 
-	array_print(&dst, 10);
+	array_print(/*ParamIsPtr2Arr*/&dst, 10);
 
 	//	printf("--------------------------------------------\n")
 	//

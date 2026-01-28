@@ -1,63 +1,55 @@
 // tests/xxx/src/main.m
 
 include "libc/stdio"
+include "libc/string"
 
 
-const unit = {}
-
-/*@deprecated*/
 type Point = record {
 	x: Int32 = 32
 	y: Int32 = 32
 }
 
-const p00 = {x=5, y=5}
-const p01 = {x=5}
 
-@deprecated
-const mY = 5
+const hello = "Hello"
 
-@used
-func returnPoint () -> Point {
-	var p: Point
-	p.x = 10
-	return p
+var str0: Str8 = hello
+var str1: Str16 = hello
+var str2: Str32 = hello
+
+var pstr0: *Str8 = hello
+var pstr1: *Str16 = hello
+var pstr2: *Str32 = hello
+
+
+func puts8 (s: @cstring *Str8) -> Unit {
 }
 
-// Двойная инициализация (!) ??
-//func main() -> Int32 {
-//	return 0
-//}
-
-func fa (a: *[]Int32) -> Unit {
-	Unit a
+func puts16 (s: *Str16) -> Unit {
 }
+
+func puts32 (s: *Str32) -> Unit {
+}
+
+
 
 public func main () -> Int32 {
 	printf("Hello World!\n")
 
-	var a: [3]Int32 = [1, 2, 3]
-	fa(&a)
+	var s1: [32]Char8 = "Hello!"
+	var s2: [32]Char8 = "World"
 
-	var p: Point = unit
-	// Конструируем Point из записи в которой нет ни одного поля
-	// 1. implicit cons Point from {} (здесь мы создаем ValueCons Point с default полями)
-	p = p00
-	p = p01
+	puts8(&s1)
 
-	Unit p
+	let length = strlen(&s1)
+	strcpy(&s2, &s1)
+	strncpy(&s2, &s1, 5)
 
-	type MyInt = Int32
-	var myInt32: MyInt
+	puts8(&str0)
+	puts8(pstr0)
 
-	//var a: []record {a: Int32}
-	var b: Int64
-	var c: Int32
-	//a = a * b + c
-	//offsetof(Point.y)
-	//p.z
-	//a = (2 + 2)
-	//var j: jey.Jey
+	puts16(&str1)
+	puts32(pstr2)
+
 	return 0
 }
 

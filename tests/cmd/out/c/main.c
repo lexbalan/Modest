@@ -29,13 +29,13 @@ static inline int char8ToInt(char c) {
 
 
 struct Tokenizer {
-	char(*input)[];
+	char *input;
 	uint32_t position;
 	uint16_t tokensBufPos;
 	uint16_t tokensPos;
 
-	char(*tokensBuf)[];
-	char(*(*tokens)[])[];
+	char *tokensBuf;
+	char *(*tokens)[];
 };
 typedef struct Tokenizer Tokenizer;
 
@@ -44,13 +44,13 @@ static bool is_blank(char c) {
 }
 
 
-static uint16_t gettok(Tokenizer *t, char(*output)[], uint16_t lim) {
+static uint16_t gettok(Tokenizer *t, char *output, uint16_t lim) {
 	(void)lim;
-	char c = (*t->input)[t->position];
+	char c = t->input[t->position];
 
 	// skip blanks
 	while (true) {
-		c = (*t->input)[t->position];
+		c = t->input[t->position];
 		if (c != ' ' && c != '\t') {
 			break;
 		}
@@ -65,18 +65,18 @@ static uint16_t gettok(Tokenizer *t, char(*output)[], uint16_t lim) {
 	// handle token
 	uint16_t outpos = 0;
 
-	c = (*t->input)[t->position];
+	c = t->input[t->position];
 	//if isalnum(char8ToInt(c)) {
 	if (!is_blank(c)) {
 		while (!is_blank(c)) {
-			(*output)[outpos] = c;
+			output[outpos] = c;
 			t->position = t->position + 1;
 			outpos = outpos + 1;
-			c = (*t->input)[t->position];
+			c = t->input[t->position];
 		}
-		(*output)[outpos] = '\x0';
+		output[outpos] = '\x0';
 	} else {
-		(*output)[outpos] = c;
+		output[outpos] = c;
 		t->position = t->position + 1;
 		outpos = outpos + 1;
 	}
@@ -90,17 +90,17 @@ static void tokenize(Tokenizer *tokenizer) {
 		const uint16_t max_toklen = 128;
 		char token[max_toklen];
 
-		char *p = &(*tokenizer->tokensBuf)[tokenizer->tokensBufPos];
-		const uint16_t toklen = gettok(tokenizer, &token, max_toklen);
+		char *p = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
+		const uint16_t toklen = gettok(tokenizer, &token[0], max_toklen);
 		if (toklen == 0) {
 			break;
 		}
 
 		// save token in tokens buffer
-		char(*const pbuf)[] = &(*tokenizer->tokensBuf)[tokenizer->tokensBufPos];
-		memcpy((char(*)[toklen - 0])&(*pbuf)[0], (char(*)[toklen - 0])&token[0], sizeof(char[toklen - 0]));
+		char *const pbuf = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
+		memcpy((char *)&pbuf[0], (char *)&token[0], sizeof(char[toklen - 0]));
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + toklen;
-		(*pbuf)[tokenizer->tokensBufPos] = '\x0';
+		pbuf[tokenizer->tokensBufPos] = '\x0';
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + 1;
 		// save pointer to token
 		(*tokenizer->tokens)[tokenizer->tokensPos] = pbuf;
@@ -135,24 +135,24 @@ int32_t main(void) {
 		showPrompt();
 		fgets(&inbuf[0], (int)sizeof inbuf, stdin);
 
-		char(*tokens[64])[] = {0};
+		char *tokens[64] = {0};
 
 		// Токенизируем строку
 		Tokenizer tokenizer = (Tokenizer){
-			.input = &inbuf,
-			.tokensBuf = &tokensBuf,
+			.input = &inbuf[0],
+			.tokensBuf = &tokensBuf[0],
 			.tokens = &tokens
 		};
 		tokenize(&tokenizer);
 
 		// "выполняем" команду
-		char(*const cmd)[] = (*tokenizer.tokens)[0];
+		char *const cmd = (*tokenizer.tokens)[0];
 		uint16_t argc = tokenizer.tokensPos;
 		if (argc > 0) {
 			argc = argc - 1;
 		}
-		char(*(*const argv)[])[] = &(*tokenizer.tokens)[1];
-		execute(cmd, argc, argv);
+		char *(*const argv)[] = &(*tokenizer.tokens)[1];
+		execute(cmd, argc, /*ParamIsPtr2Arr*/argv);
 	}
 
 	return 0;

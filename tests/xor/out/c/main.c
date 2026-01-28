@@ -50,19 +50,19 @@ int main(void) {
 	uint8_t(*const tkey)[] = (uint8_t(*)[])&test_key;
 
 	printf("before encrypt test_msg: \n");
-	print_bytes(tmsg, MSG_LENGTH);
+	print_bytes(/*ParamIsPtr2Arr*/tmsg, MSG_LENGTH);
 
 	// encrypt test data
-	xor_encrypter(tmsg, MSG_LENGTH, tkey, KEY_LENGTH);
+	xor_encrypter(/*ParamIsPtr2Arr*/tmsg, MSG_LENGTH, /*ParamIsPtr2Arr*/tkey, KEY_LENGTH);
 
 	printf("after encrypt test_msg: \n");
-	print_bytes(tmsg, MSG_LENGTH);
+	print_bytes(/*ParamIsPtr2Arr*/tmsg, MSG_LENGTH);
 
 	// decrypt test data
-	xor_encrypter(tmsg, MSG_LENGTH, tkey, KEY_LENGTH);
+	xor_encrypter(/*ParamIsPtr2Arr*/tmsg, MSG_LENGTH, /*ParamIsPtr2Arr*/tkey, KEY_LENGTH);
 
 	printf("after decrypt test_msg: \n");
-	print_bytes(tmsg, MSG_LENGTH);
+	print_bytes(/*ParamIsPtr2Arr*/tmsg, MSG_LENGTH);
 
 	return 0;
 }

@@ -40,7 +40,7 @@ static char arrayFromString[3] = {'a', 'b', 'c'};
 
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
-static void f0(char(*_x)[20], char(*sret_)[30]) {
+static void f0(char *_x, char *sret_) {
 	char x[20];
 	memcpy(x, _x, sizeof(char[20]));
 	char local_copy_of_x[20];
@@ -49,15 +49,15 @@ static void f0(char(*_x)[20], char(*sret_)[30]) {
 
 	// truncate array
 	char mic[6];
-	memcpy(&mic, (char(*)[6 - 0])&x[0], sizeof(char[6]));
+	memcpy(&mic, (char *)&x[0], sizeof(char[6]));
 	mic[5] = '\x0';
 
 	printf("f0 mic = \"%s\"\n", (char*)&mic);
 
 	// extend array
 	char res[30];
-	memcpy((char(*)[20 - 0])&res[0], &x, sizeof(char[20 - 0]));
-	memset((char(*)[30 - 20])&res[20], 0, sizeof(char[30 - 20]));
+	memcpy((char *)&res[0], &x, sizeof(char[20 - 0]));
+	memset((char *)&res[20], 0, sizeof(char[30 - 20]));
 
 	res[6] = 'M';
 	res[7] = 'o';
@@ -201,7 +201,7 @@ int main(void) {
 	test();
 
 	char em[30];
-	f0(/*!*/&(char[20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'}, &em);
+	f0(/*ArrByVal*/&(char[20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'}, &em);
 	printf("em = %s\n", (char*)&em);
 
 	uint32_t i = 0;
