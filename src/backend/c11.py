@@ -165,14 +165,11 @@ def is_global_public(x):
 	return False
 
 
+# Печатаем указатель на массив как указатель на его элемент
+# ТОЛЬКО когда это указатель на строку!
 def ptr_to_arr_as_ptr(t):
-	if 'cstring' in t.annotations:
-		print("lmnlkmlkmlkmlkmlkmlkmklmkllmlkmlkmlmlkmlkkkmkmkmkmkmkmkmkmkmk")
-		return True
 	if t.is_pointer_to_str():
 		return True
-	if t.is_pointer_to_array():
-		return 'z-string' in t.to.att
 	return False
 
 
@@ -629,10 +626,6 @@ def str_value_call(v, ctx, sret=None):
 			p_type = param.type
 
 		astr = ''
-
-
-		if 'cstring' in p_type.annotations:
-			astr += '/*!*/' + '(' + str_type(p_type) + ')'
 
 		if p_type.is_pointer_to_array():
 			# Передаем указатель на массив в функцию
