@@ -635,9 +635,7 @@ def str_value_call(v, ctx, sret=None):
 		if p_type.is_array():
 			# Если в функцию передается массив по значению - передаем указатель на него (!)
 			# тк функции си не умеют получать массивы по значению
-			if p_type.is_array_of_char():
-				astr = '&(%s)[0]' % astr
-			else:
+			if not p_type.is_array_of_char():
 				astr = '&' + astr
 
 		if p_type.is_pointer_to_str():

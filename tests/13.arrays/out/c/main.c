@@ -201,7 +201,7 @@ int main(void) {
 	test();
 
 	char em[30];
-	f0(&((char[20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'})[0], &em[0]);
+	f0((char[20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'}, &em[0]);
 	printf("em = %s\n", (char*)&em);
 
 	uint32_t i = 0;
