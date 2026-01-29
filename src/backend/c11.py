@@ -402,8 +402,7 @@ def str_type_pointer(t, core='', ctx=[]):
 
 	# (!) Печатать указатель на массив как указатель на его элемент (!)
 	if decize(t.to):
-		if is_sim_sim(t):
-			root_type = root_type.of
+		root_type = root_type.of
 
 	need_close = not is_type_named(root_type) and (root_type.is_array() or root_type.is_func())
 	if need_close:
@@ -420,12 +419,6 @@ def str_type_pointer(t, core='', ctx=[]):
 
 	return str_type(root_type, core=nc, need_close=need_close, ctx=ctx)
 
-
-
-def is_sim_sim(t):
-	if t.is_pointer_to_array():
-		return is_type_named(t.to.of)
-	return False
 
 
 def str_named(t, core='', ctx=[]):
@@ -695,7 +688,7 @@ def str_value_index(x, ctx):
 	else:
 		left_str += str_value(left, ctx=ctx, parent_expr=x)
 
-	if left.type.is_pointer() and not decize(left.type.to): #and not is_sim_sim(left.type):
+	if left.type.is_pointer() and not decize(left.type.to):
 		left_str = "(*%s)" % left_str
 
 	return left_str + '[' + str_value(x.index) + ']'
