@@ -46,8 +46,8 @@ static void print_bytes(uint8_t(*buf)[], uint32_t len) {
 int main(void) {
 	printf("test xor encrypting\n");
 
-	uint8_t(*const tmsg)[] = (uint8_t(*)[])&test_msg;
-	uint8_t(*const tkey)[] = (uint8_t(*)[])&test_key;
+	uint8_t(*const tmsg)[] = (uint8_t(*)[])test_msg;
+	uint8_t(*const tkey)[] = (uint8_t(*)[])test_key;
 
 	printf("before encrypt test_msg: \n");
 	print_bytes(tmsg, MSG_LENGTH);

@@ -18,7 +18,7 @@ static char tokensBuf[4 * 1024];
 
 static void showPrompt(void) {
 	char _prompt[32] = {'#', ' '};
-	write(0, (void *)&_prompt, (size_t)LENGTHOF(PROMPT));
+	write(0, (void *)_prompt, (size_t)LENGTHOF(PROMPT));
 }
 
 
@@ -97,7 +97,7 @@ static void tokenize(Tokenizer *tokenizer) {
 		}
 
 		// save token in tokens buffer
-		char *const pbuf = (char *)&tokenizer->tokensBuf[tokenizer->tokensBufPos];
+		char *const pbuf = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
 		memcpy((char *)&pbuf[0], (char *)&token[0], sizeof(char[toklen - 0]));
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + toklen;
 		pbuf[tokenizer->tokensBufPos] = '\x0';

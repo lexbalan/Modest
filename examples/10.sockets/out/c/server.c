@@ -27,11 +27,11 @@ static bool writeFile(int sockFd) {
 	}
 
 	while (true) {
-		const ssize_t n = recv(sockFd, (void *)&buffer, BUF_SIZE, 0);
+		const ssize_t n = recv(sockFd, (void *)buffer, BUF_SIZE, 0);
 		if (n <= 0) {
 			break;
 		}
-		fprintf(fp, "%s", (char*)&buffer);
+		fprintf(fp, "%s", (char*)buffer);
 		memset(&buffer, 0, sizeof(char[BUF_SIZE]));
 	}
 

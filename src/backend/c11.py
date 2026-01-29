@@ -557,15 +557,27 @@ def str_value_pos(x, ctx):
 
 def str_value_ref(x, ctx):
 	sstr = ''
+	value = x.value
+
 	# Если берем указатель на массив массивов, то приводим его к void *
 	# Т.к. в C нет указателя на массив массивов
-	if x.value.type.is_array_of_array():
+	if value.type.is_array_of_array():
 		sstr += "(void *)"
 
-	if x.value.isValueSlice():
+	if value.isValueSlice():
 		sstr += '(' + str_type(x.type) + ')'
+
+	if decize(x.type.to):
+		if value.isValueIndex() or value.isValueSlice():
+			return '&' + str_value(value, ctx=ctx)
+		# просто печатаем массив чаров как есть тк он автоматом decay to pointer
+		return str_value(value, ctx=ctx)
+	#else:
+	#	# печатаем указатель на массив
+	#	return '&' + str_value(value, ctx=ctx)
+
 	sstr += '&'
-	sstr += str_value(x.value, parent_expr=x)
+	sstr += str_value(value, parent_expr=x)
 	return sstr
 
 
@@ -638,8 +650,8 @@ def str_value_call(v, ctx, sret=None):
 
 		if p_type.is_pointer_to_str():
 			astr = str_value(a, ctx=ctx+['arr_as_ptr'])
-			if a.isValueRef():
-				astr = astr + '[0]'
+			#if a.isValueRef():
+			#	astr = astr + '[0]' + '/**/'
 		sstr += astr
 
 		i = i + 1
@@ -900,15 +912,21 @@ def str_value_cons2(x, ctx):
 			if type.is_pointer_to_array() and value.type.is_pointer_to_array():
 				# Конструируем *[]T из *[]T
 
+#				if not Type.eq(type, value.type):
+#					info('here', x.ti)
+#					print(type.to.att)
+#					print(value.type.to.att)
+
 				# Для C явно приводим указатель на массив к указателю на его элемент
 				# В случае когда происходит НЕЯВНОЕ приведение;
 				if Type.eq(type.to.of, value.type.to.of):
-					if decize(type.to):
+					return str_value(value, ctx=ctx)
+					"""if decize(type.to):
 						# просто печатаем массив как есть тк он автоматом decay to pointer
 						return str_value(value.value, ctx=ctx)
 					else:
 						# печатаем указатель на массив
-						return '&' + str_value(value.value, ctx=ctx)
+						return '&' + str_value(value.value, ctx=ctx)"""
 				else:
 					# Конструируемый тип-указатель не равен типу-указателю на ориг. массив (!)
 					return "(" + str_type(type) + ")" + '&' + str_value(value.value, ctx=ctx)

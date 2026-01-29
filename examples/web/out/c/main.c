@@ -45,7 +45,7 @@ static void handleRequest(int32_t clientSocket) {
 		(char*)HTTP_HEADER, pageCounter
 	);
 
-	write(clientSocket, (void *)&response, strlen(response));
+	write(clientSocket, (void *)response, strlen(response));
 	close(clientSocket);
 }
 
