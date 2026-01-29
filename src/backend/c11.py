@@ -167,10 +167,8 @@ def is_global_public(x):
 
 # Печатаем указатель на массив как указатель на его элемент
 # ТОЛЬКО когда это указатель на строку!
-def ptr_to_arr_as_ptr(t):
-	if t.is_pointer_to_str():
-		return True
-	return False
+def decize(t):
+	return t.is_array_of_char()
 
 
 
@@ -404,7 +402,7 @@ def str_type_pointer(t, core='', as_ptr_to_array=True, ctx=[]):
 
 	# (!) Печатать указатель на массив как указатель на его элемент (!)
 	#if not as_ptr_to_array:
-	if ptr_to_arr_as_ptr(t):
+	if decize(t.to):
 		if is_sim_sim(t):
 			root_type = root_type.of
 
@@ -652,10 +650,8 @@ def str_value_call(v, ctx, sret=None):
 		if i > 0:
 			sstr += ", "
 
-		# приводим указатель на массив к указателю на его элемент
-		#to = TypePointer(sret.type.of)
-		#sstr += "(%s)" % str_type(to)
-		sstr += str_value_as_ptr(sret) #+ '[0]'
+		# превращаем указатель на массив к указателю на его элемент
+		sstr += str_value_as_ptr(sret)
 		if sret.type.is_array_of_char():
 			sstr = sstr + '[0]'
 
@@ -696,7 +692,7 @@ def str_value_index(x, ctx):
 	else:
 		left_str += str_value(left, ctx=ctx, parent_expr=x)
 
-	if left.type.is_pointer() and not ptr_to_arr_as_ptr(left.type): #and not is_sim_sim(left.type):
+	if left.type.is_pointer() and not decize(left.type.to): #and not is_sim_sim(left.type):
 		left_str = "(*%s)" % left_str
 
 	return left_str + '[' + str_value(x.index) + ']'
@@ -907,8 +903,10 @@ def str_value_cons2(x, ctx):
 				if not Type.eq(type.to.of, value.type.to.of):
 					return "(" + str_type(type) + ")" + '&' + str_value(value.value, ctx=ctx)
 				else:
-					if ptr_to_arr_as_ptr(type) and not 'no_ptr_to_item' in ctx:
-						return '&' + str_value(value.value, ctx=ctx) + '[0]'
+					if decize(type.to) and not 'no_ptr_to_item' in ctx:
+						# просто возвращаем массив как есть тк он автоматом decay to pointer
+						return str_value(value.value, ctx=ctx)
+						#return '&' + str_value(value.value, ctx=ctx) + '[0]'
 					return '&' + str_value(value.value, ctx=ctx)
 					#return '&' + str_value(value.value, ctx=ctx) + '[0]'
 

@@ -47,7 +47,7 @@ void console_putchar_utf16(char16_t c) {
 	char16_t cc[2];
 	memcpy(&cc, &(char16_t[2]){c, u'\x0'}, sizeof(char16_t[2]));
 	char32_t char32;
-	const uint8_t n = utf_utf16_to_utf32(&cc[0], &char32);
+	const uint8_t n = utf_utf16_to_utf32(cc, &char32);
 	console_putchar_utf32(char32);
 }
 
@@ -135,7 +135,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va);
 
 int32_t console_vfprint(int32_t fd, char *form, va_list va) {
 	char strbuf[256];
-	const int32_t n = console_vsprint(&strbuf[0], form, va);
+	const int32_t n = console_vsprint(strbuf, form, va);
 	strbuf[n] = '\x0';
 	write(fd, (void *)&strbuf, (size_t)abs((int)n));
 	return n;
