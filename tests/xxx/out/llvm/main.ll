@@ -190,56 +190,125 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
+; from included string
+declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
+declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
+declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
+declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
+declare %SizeT @strlen([0 x %ConstChar]* %s)
+declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
+declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
+declare [0 x %Char]* @strncpy([0 x %Char]* %dst, [0 x %ConstChar]* %src, %SizeT %n)
+declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare [0 x %Char]* @strerror(%Int %error)
+declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
+@str1 = private constant [6 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 0]
+@str2 = private constant [6 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 0]
+@str3 = private constant [6 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 0]
+@str4 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
 ; -- endstrings --
 %Point = type {
 	%Int32,
 	%Int32
 };
 
-define internal %Point @returnPoint() {
-	%1 = alloca %Point, align 8
-	%2 = getelementptr %Point, %Point* %1, %Int32 0, %Int32 0
-	store %Int32 10, %Int32* %2
-	%3 = load %Point, %Point* %1
-	ret %Point %3
+@str0 = internal global [5 x %Char8] [
+	%Char8 72,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 111
+]
+@str1 = internal global [5 x %Char16] [
+	%Char16 72,
+	%Char16 101,
+	%Char16 108,
+	%Char16 108,
+	%Char16 111
+]
+@str2 = internal global [5 x %Char32] [
+	%Char32 72,
+	%Char32 101,
+	%Char32 108,
+	%Char32 108,
+	%Char32 111
+]
+@pstr0 = internal global %Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*)
+@pstr1 = internal global %Str16* bitcast ([6 x i16]* @str2 to [0 x i16]*)
+@pstr2 = internal global %Str32* bitcast ([6 x i32]* @str3 to [0 x i32]*)
+define internal void @puts8(%Str8* %s) {
+	ret void
 }
 
+define internal void @puts16(%Str16* %s) {
+	ret void
+}
 
-; Двойная инициализация (!) ??
-;func main() -> Int32 {
-;	return 0
-;}
-%main.MyInt = type %Int32;
+define internal void @puts32(%Str32* %s) {
+	ret void
+}
+
+define internal void @ss([10 x %Char8]* %0, [10 x %Char8] %__s) {
+	%s = alloca [10 x %Char8]
+	%2 = zext i8 10 to %Nat32
+	store [10 x %Char8] %__s, [10 x %Char8]* %s
+	%3 = zext i8 2 to %Nat32
+	%4 = getelementptr [10 x %Char8], [10 x %Char8]* %s, %Int32 0, %Nat32 %3
+	%5 = bitcast %Char8* %4 to [3 x %Char8]*
+	%6 = load [3 x %Char8], [3 x %Char8]* %5
+	%7 = alloca [3 x %Char8]
+	%8 = zext i8 3 to %Nat32
+	store [3 x %Char8] %6, [3 x %Char8]* %7
+	%9 = load [10 x %Char8], [10 x %Char8]* %s
+	%10 = zext i8 10 to %Nat32
+	store [10 x %Char8] %9, [10 x %Char8]* %0
+	ret void
+}
+
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca %Point, align 8
-	%3 = insertvalue %Point zeroinitializer, %Int32 32, 0
-	%4 = insertvalue %Point %3, %Int32 32, 1
-	store %Point %4, %Point* %2
-	; Конструируем Point из записи в которой нет ни одного поля
-	; 1. implicit cons Point from {} (здесь мы создаем ValueCons Point с default полями)
-	%5 = insertvalue %Point zeroinitializer, %Int32 5, 0
-	%6 = insertvalue %Point %5, %Int32 5, 1
-	store %Point %6, %Point* %2
-	%7 = insertvalue %Point zeroinitializer, %Int32 5, 0
-	%8 = insertvalue %Point %7, %Int32 32, 1
-	store %Point %8, %Point* %2
-	%9 = alloca %main.MyInt, align 4
-
-	;var a: []record {a: Int32}
-	%10 = alloca %Int64, align 8
-	%11 = alloca %Int32, align 4
-	;a = a * b + c
-	;offsetof(Point.y)
-	;p.z
-	;a = (2 + 2)
-	;var j: jey.Jey
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
+	%2 = alloca [32 x %Char8], align 1
+	%3 = insertvalue [32 x %Char8] zeroinitializer, %Char8 72, 0
+	%4 = insertvalue [32 x %Char8] %3, %Char8 101, 1
+	%5 = insertvalue [32 x %Char8] %4, %Char8 108, 2
+	%6 = insertvalue [32 x %Char8] %5, %Char8 108, 3
+	%7 = insertvalue [32 x %Char8] %6, %Char8 111, 4
+	%8 = insertvalue [32 x %Char8] %7, %Char8 33, 5
+	%9 = zext i8 32 to %Nat32
+	store [32 x %Char8] %8, [32 x %Char8]* %2
+	%10 = alloca [32 x %Char8], align 1
+	%11 = insertvalue [32 x %Char8] zeroinitializer, %Char8 87, 0
+	%12 = insertvalue [32 x %Char8] %11, %Char8 111, 1
+	%13 = insertvalue [32 x %Char8] %12, %Char8 114, 2
+	%14 = insertvalue [32 x %Char8] %13, %Char8 108, 3
+	%15 = insertvalue [32 x %Char8] %14, %Char8 100, 4
+	%16 = zext i8 32 to %Nat32
+	store [32 x %Char8] %15, [32 x %Char8]* %10
+	%17 = bitcast [32 x %Char8]* %2 to %Str8*
+	call void @puts8(%Str8* %17)
+	%18 = bitcast [32 x %Char8]* %2 to [0 x %ConstChar]*
+	%19 = call %SizeT @strlen([0 x %ConstChar]* %18)
+	%20 = bitcast [32 x %Char8]* %10 to [0 x %Char]*
+	%21 = bitcast [32 x %Char8]* %2 to [0 x %ConstChar]*
+	%22 = call [0 x %Char]* @strcpy([0 x %Char]* %20, [0 x %ConstChar]* %21)
+	%23 = bitcast [32 x %Char8]* %10 to [0 x %Char]*
+	%24 = bitcast [32 x %Char8]* %2 to [0 x %ConstChar]*
+	%25 = call [0 x %Char]* @strncpy([0 x %Char]* %23, [0 x %ConstChar]* %24, %SizeT 5)
+	%26 = bitcast [5 x %Char8]* @str0 to %Str8*
+	call void @puts8(%Str8* %26)
+	%27 = load %Str8*, %Str8** @pstr0
+	call void @puts8(%Str8* %27)
+	%28 = bitcast [5 x %Char16]* @str1 to %Str16*
+	call void @puts16(%Str16* %28)
+	%29 = load %Str32*, %Str32** @pstr2
+	call void @puts32(%Str32* %29)
 	ret %Int32 0
 }
 

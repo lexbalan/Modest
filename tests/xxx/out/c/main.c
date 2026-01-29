@@ -70,16 +70,16 @@ int32_t main(void) {
 	char s1[32] = {'H', 'e', 'l', 'l', 'o', '!'};
 	char s2[32] = {'W', 'o', 'r', 'l', 'd'};
 
-	puts8(&s1[0]);
+	puts8(s1);
 
-	const size_t length = strlen(&s1[0]);
-	strcpy(&s2[0], &s1[0]);
-	strncpy(&s2[0], &s1[0], 5);
+	const size_t length = strlen(s1);
+	strcpy(s2, s1);
+	strncpy(s2, s1, 5);
 
-	puts8(&str0[0]);
+	puts8(str0);
 	puts8(pstr0);
 
-	puts16(&str1[0]);
+	puts16(str1);
 	puts32(pstr2);
 
 	return 0;
