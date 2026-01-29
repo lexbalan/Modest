@@ -12,7 +12,7 @@
 #define MATH_PI  3.141592653589793238462643383279502884
 
 static double squareOfCircle(double radius) {
-	return pow(radius, 2.0) * MATH_PI;
+	return pow(radius, 2.0) * (double)MATH_PI;
 }
 
 
@@ -38,7 +38,7 @@ int main(void) {
 	printf("2/3 = %f\n", (double)(double)(2.0 / 3.0));
 
 	#define r  10
-	const double s = squareOfCircle(r);
+	const double s = squareOfCircle((double)r);
 	printf("s = %f\n", (const double)s);
 
 	#define k  (1.0 / 8.0)

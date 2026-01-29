@@ -21,9 +21,9 @@ int main(void) {
 
 	#define x0  ((a - b) * c)
 
-	const int32_t x1 = named_args_test(a, b, c);
+	const int32_t x1 = named_args_test((int32_t)a, (int32_t)b, (int32_t)c);
 
-	if (x0 == x1) {
+	if ((const int32_t)x0 == x1) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

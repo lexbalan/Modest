@@ -27,7 +27,7 @@ static bool writeFile(int sockFd) {
 	}
 
 	while (true) {
-		const ssize_t n = recv(sockFd, (void *)buffer, BUF_SIZE, 0);
+		const ssize_t n = recv(sockFd, (void *)buffer, (size_t)BUF_SIZE, 0);
 		if (n <= 0) {
 			break;
 		}
@@ -40,7 +40,7 @@ static bool writeFile(int sockFd) {
 
 
 int main(void) {
-	const int sockFd = socket(AF_INET, SOCK_STREAM, 0);
+	const int sockFd = socket((int)AF_INET, (int)SOCK_STREAM, 0);
 	if (sockFd < 0) {
 		perror("[-] Error in socket");
 		exit(1);
@@ -49,8 +49,8 @@ int main(void) {
 	printf("[+] Server socket created\n");
 
 	struct sockaddr_in serverAddr = (struct sockaddr_in){
-		.sin_family = AF_INET,
-		.sin_port = PORT,
+		.sin_family = (uint8_t)AF_INET,
+		.sin_port = (unsigned short)PORT,
 		.sin_addr = (struct in_addr){
 			.s_addr = inet_addr(IP_ADDRESS)
 		}

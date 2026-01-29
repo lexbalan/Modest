@@ -42,7 +42,7 @@ static void read_example(void) {
 	printf("file '%s' contains: ", (char*)FILENAME);
 	while (true) {
 		const int ch = fgetc(fp);
-		if (ch == EOF) {
+		if (ch == (const int)EOF) {
 			break;
 		}
 		putchar(ch);

@@ -24,7 +24,7 @@ struct Line {
 typedef struct Line Line;
 
 #define ZERO  0
-#define POINT_ZERO  (Point){.x = ZERO, .y = ZERO}
+#define POINT_ZERO  (Point){.x = (double)ZERO, .y = (double)ZERO}
 #define POINT_ONE  (Point){.x = 1.0, .y = 1.0}
 
 #define LINE0  (Line){ \

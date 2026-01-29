@@ -908,11 +908,13 @@ def str_value_cons2(x, ctx):
 				# Для C явно приводим указатель на массив к указателю на его элемент
 				# В случае когда происходит НЕЯВНОЕ приведение;
 				if not Type.eq(type.to.of, value.type.to.of):
+					# приведение указателя на размерный массив к указателю на безразмерный массив
 					return "(" + str_type(type) + ")" + sstr
 
 				return sstr
 
-			if not Type.eq(type.to, value.type.to):
+		if not Type.eq(type, value.type):
+			if not value.isValueLiteral():
 				sstr += "(" + str_type(type) + ")"
 
 		sstr += str_value(value)

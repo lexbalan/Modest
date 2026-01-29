@@ -240,7 +240,7 @@ list_Node *list_append(list_List *list, void *data) {
 	list_Node *const node = list_node_append(list, new_node);
 
 	if (node == NULL) {
-		free(new_node);
+		free((void *)new_node);
 	}
 
 	return node;

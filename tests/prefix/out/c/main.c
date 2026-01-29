@@ -11,7 +11,7 @@
 
 int main(void) {
 	loo_Nothing nothing;
-	loo_foo(LOO_BAR);
+	loo_foo((uint32_t)LOO_BAR);
 	(void)loo_spam;
 	return 0;
 }

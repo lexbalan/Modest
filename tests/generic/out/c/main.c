@@ -95,15 +95,15 @@ static bool test_generic_integer(void) {
 	#define two  (1 + one)
 
 	// GenericInteger value can be implicitly casted to any Integer type
-	int32_t a = one;// implicit cast GenericInteger value to Int32
-	uint64_t b = one;// implicit cast GenericInteger value to INat64
+	int32_t a = (int32_t)one;// implicit cast GenericInteger value to Int32
+	uint64_t b = (uint64_t)one;// implicit cast GenericInteger value to INat64
 
 	// to Float
-	float f = one;// implicit cast GenericInteger value to Float32
-	double g = one;// implicit cast GenericInteger value to Float64
+	float f = (float)one;// implicit cast GenericInteger value to Float32
+	double g = (double)one;// implicit cast GenericInteger value to Float64
 
 	// and to Word8
-	uint8_t x = one;// implicit cast GenericInteger value to Word8
+	uint8_t x = (uint8_t)one;// implicit cast GenericInteger value to Word8
 
 
 	// explicit cast GenericInteger value
@@ -128,8 +128,8 @@ static bool test_generic_float(void) {
 	// value with GenericFloat type
 	// can be implicit casted to any Float type
 	// (in this case value may lose precision)
-	float f = pi;// implicit cast GenericFloat value to Float32
-	double g = pi;// implicit cast GenericFloat value to Float64
+	float f = (float)pi;// implicit cast GenericFloat value to Float32
+	double g = (double)pi;// implicit cast GenericFloat value to Float64
 
 	// explicit cast GenericFloat value to Int32
 	int32_t x = (int32_t)pi;

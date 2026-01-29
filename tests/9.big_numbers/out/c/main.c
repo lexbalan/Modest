@@ -52,7 +52,7 @@ int main(void) {
 	// signed big int test
 	#define sig0  (-1)
 
-	__int128 sig1 = sig0;
+	__int128 sig1 = (__int128)sig0;
 
 	sig1 = sig1 + BIG_INT128(0x0ULL, 0x1ULL);
 

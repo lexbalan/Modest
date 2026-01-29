@@ -78,7 +78,7 @@ static void test(void) {
 	// тестируем работу с локальным generic массивом
 	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
 	uint32_t i = 0;
-	while (i < LENGTHOF(yy)) {
+	while (i < (uint32_t)LENGTHOF(yy)) {
 		const uint8_t y = yy[i];
 		printf("yy[%i] = %u\n", i, (uint32_t)y);
 		i = i + 1;

@@ -75,7 +75,7 @@ static void printArrayOf10Char32(char32_t *_a) {
 	char32_t a[10];
 	memcpy(a, _a, sizeof(char32_t[10]));
 	uint32_t i = 0;
-	while (i < LENGTHOF(a)) {
+	while (i < (uint32_t)LENGTHOF(a)) {
 		printf("a[%d] = '%c'\n", i, (char32_t)a[i]);
 		i = i + 1;
 	}

@@ -30,7 +30,7 @@ static uint32_t pageCounter;
 
 static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[RECEIVE_BUFFER_SIZE];
-	const ssize_t bytesReceived = read(clientSocket, (void *)&buffer, LENGTHOF(buffer) - 1);
+	const ssize_t bytesReceived = read(clientSocket, (void *)&buffer, (size_t)LENGTHOF(buffer) - 1);
 	if (bytesReceived < 0) {
 		perror("cannot read socket");
 		close(clientSocket);
@@ -51,17 +51,17 @@ static void handleRequest(int32_t clientSocket) {
 
 
 int32_t main(void) {
-	const int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+	const int serverSocket = socket((int)AF_INET, (int)SOCK_STREAM, 0);
 	if (serverSocket < 0) {
 		perror("cannot create socket");
 		exit(1);
 	}
 
 	struct sockaddr_in serverAddr = (struct sockaddr_in){
-		.sin_family = AF_INET,
-		.sin_port = (unsigned short)htons(PORT),
+		.sin_family = (uint8_t)AF_INET,
+		.sin_port = (unsigned short)htons((uint16_t)PORT),
 		.sin_addr = (struct in_addr){
-			.s_addr = INADDR_ANY
+			.s_addr = (in_addr_t)INADDR_ANY
 		}
 	};
 

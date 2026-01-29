@@ -125,7 +125,7 @@ int32_t console_vfprint(int32_t fd, char *form, va_list va);
 void console_print(char *form, ...) {
 	va_list va;
 	va_start(va, form);
-	console_vfprint(STDOUT_FILENO, form, va);
+	console_vfprint((int32_t)STDOUT_FILENO, form, va);
 	va_end(va);
 }
 

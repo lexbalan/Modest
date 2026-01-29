@@ -16,7 +16,7 @@ static void nat32_list_insert(list_List *lst, uint32_t x) {
 	// alloc memory for Nat32 value
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
-	list_append(lst, p_nat32);
+	list_append(lst, (void *)p_nat32);
 }
 
 
@@ -86,7 +86,7 @@ int main(void) {
 
 	// test list.node_get
 	int32_t i = 0;
-	while (i >= -12) {
+	while (i >= (int32_t)-12) {
 		list_Node *const node = list_node_get(list0, i);
 
 		if (node == NULL) {
@@ -122,7 +122,7 @@ int main(void) {
 
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = 1234;
-	list_insert(list0, 4, p_nat32);
+	list_insert(list0, 4, (void *)p_nat32);
 
 	list_print_forward(list0);
 

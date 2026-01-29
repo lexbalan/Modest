@@ -22,7 +22,7 @@ typedef uint64_t Nat;
 #define MEMORY_ALIGNMENT  (SYSTEM_WIDTH / 8)
 
 void memory_zero(void *mem, uint64_t len) {
-	const Nat z = (Nat)mem % MEMORY_ALIGNMENT;
+	const Nat z = (Nat)mem % (Nat)MEMORY_ALIGNMENT;
 
 	uint8_t(*const memptr)[] = (uint8_t(*)[])mem;
 

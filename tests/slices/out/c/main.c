@@ -39,7 +39,7 @@ int main(void) {
 	int32_t s1[2 - 1];
 	memcpy(&s1, (int32_t(*)[2 - 1])&a[1], sizeof(int32_t[2 - 1]));
 	uint32_t i = 0;
-	while (i < LENGTHOF(s1)) {
+	while (i < (uint32_t)LENGTHOF(s1)) {
 		printf("s1[%d] = %d\n", i, s1[i]);
 		i = i + 1;
 	}
@@ -54,7 +54,7 @@ int main(void) {
 	int32_t s2[8 - 5];
 	memcpy(&s2, (int32_t(*)[8 - 5])&(*pa)[5], sizeof(int32_t[8 - 5]));
 	i = 0;
-	while (i < LENGTHOF(s2)) {
+	while (i < (uint32_t)LENGTHOF(s2)) {
 		printf("s2[%d] = %d\n", i, s2[i]);
 		i = i + 1;
 	}
@@ -71,7 +71,7 @@ int main(void) {
 	ARRCPY((int32_t(*)[bx - ax])&a[ax], &((int8_t[4]){10, 20, 30, 40}), bx - ax);
 
 	i = 0;
-	while (i < LENGTHOF(a)) {
+	while (i < (uint32_t)LENGTHOF(a)) {
 		printf("a[%d] = %d\n", i, a[i]);
 		i = i + 1;
 	}
@@ -83,7 +83,7 @@ int main(void) {
 	memset((int32_t(*)[5 - 2])&s[2], 0, sizeof(int32_t[5 - 2]));
 
 	i = 0;
-	while (i < LENGTHOF(s)) {
+	while (i < (uint32_t)LENGTHOF(s)) {
 		printf("s[%d] = %d\n", i, (uint32_t)abs((int)s[i]));
 		i = i + 1;
 	}
@@ -95,13 +95,13 @@ int main(void) {
 	#define bb  8
 
 	int32_t(*const p)[bb - aa] = (int32_t(*)[bb - aa])&s[aa];
-	array_print(p, bb - aa);
+	array_print((int32_t(*)[])p, (uint32_t)bb - aa);
 
 	printf("--------------------------------------------\n");
 
 	(*p)[0] = 123;
 
-	array_print(p, bb - aa);
+	array_print((int32_t(*)[])p, (uint32_t)bb - aa);
 
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
