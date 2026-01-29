@@ -559,11 +559,6 @@ def str_value_ref(x, ctx):
 	sstr = ''
 	value = x.value
 
-	# Если берем указатель на массив массивов, то приводим его к void *
-	# Т.к. в C нет указателя на массив массивов
-	if value.type.is_array_of_array():
-		sstr += "(void *)"
-
 	if value.isValueSlice():
 		sstr += '(' + str_type(x.type) + ')'
 
@@ -572,9 +567,6 @@ def str_value_ref(x, ctx):
 			return '&' + str_value(value, ctx=ctx)
 		# просто печатаем массив чаров как есть тк он автоматом decay to pointer
 		return str_value(value, ctx=ctx)
-	#else:
-	#	# печатаем указатель на массив
-	#	return '&' + str_value(value, ctx=ctx)
 
 	sstr += '&'
 	sstr += str_value(value, parent_expr=x)
@@ -911,25 +903,14 @@ def str_value_cons2(x, ctx):
 		if value.isValueRef():
 			if type.is_pointer_to_array() and value.type.is_pointer_to_array():
 				# Конструируем *[]T из *[]T
-
-#				if not Type.eq(type, value.type):
-#					info('here', x.ti)
-#					print(type.to.att)
-#					print(value.type.to.att)
+				sstr = str_value(value, ctx=ctx)
 
 				# Для C явно приводим указатель на массив к указателю на его элемент
 				# В случае когда происходит НЕЯВНОЕ приведение;
-				if Type.eq(type.to.of, value.type.to.of):
-					return str_value(value, ctx=ctx)
-					"""if decize(type.to):
-						# просто печатаем массив как есть тк он автоматом decay to pointer
-						return str_value(value.value, ctx=ctx)
-					else:
-						# печатаем указатель на массив
-						return '&' + str_value(value.value, ctx=ctx)"""
-				else:
-					# Конструируемый тип-указатель не равен типу-указателю на ориг. массив (!)
-					return "(" + str_type(type) + ")" + '&' + str_value(value.value, ctx=ctx)
+				if not Type.eq(type.to.of, value.type.to.of):
+					return "(" + str_type(type) + ")" + sstr
+
+				return sstr
 
 			if not Type.eq(type.to, value.type.to):
 				sstr += "(" + str_type(type) + ")"

@@ -131,8 +131,8 @@ static int(*a7[2][5])[5] = {
 };
 
 static int(*(*a8[2][5])[2][5])[5] = {
-	{(void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7},
-	{(void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7, (void *)&a7}
+	{&a7, &a7, &a7, &a7, &a7},
+	{&a7, &a7, &a7, &a7, &a7}
 };
 
 static int(*(*(*a9[5])[10])[2])(int a);

@@ -11,9 +11,9 @@ var table_header0: []*Str8 = [
 ]
 
 var tableData0: [][]*Str8 = [
-	["0", "Alef",    "Betha"]
-	["1", "Clock",   "Depth"]
-	["2", "Earth",   "Fight"]
+	["0",  "Alef",   "Betha"]
+	["1",  "Clock",  "Depth"]
+	["2",  "Earth",  "Fight"]
 ]
 
 
@@ -22,10 +22,10 @@ var table_header1: []*Str8 = [
 ]
 
 var tableData1: [][]*Str8 = [
-	["0",  "Alef",    "Betha",   "Clock"]
-	["1",  "Depth",   "Emma",    "Free"]
-	["2",  "Ink",     "Julia",   "Keyword"]
-	["3",  "Ultra",   "Video",   "Word"]
+	["0",  "Alef",   "Betha",  "Clock"]
+	["1",  "Depth",  "Emma",   "Free"]
+	["2",  "Ink",    "Julia",  "Keyword"]
+	["3",  "Ultra",  "Video",  "Word"]
 ]
 
 
