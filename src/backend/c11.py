@@ -2599,8 +2599,7 @@ def str_value_as_ptr(x):
 
 	if root.isValueSlice():
 		ptr2slice = TypePointer(x.type)
-		sptr = str_type_pointer(ptr2slice, as_ptr_to_array=True)
-		sstr += '(%s)' % sptr
+		sstr += "(" + str_type_pointer(ptr2slice, as_ptr_to_array=True) + ")"
 
 	if root.isValueDeref():
 		return str_value(root.value)
