@@ -898,17 +898,20 @@ def str_value_cons2(x, ctx):
 		sstr = ''
 		if value.isValueRef():
 			if type.is_pointer_to_array() and value.type.is_pointer_to_array():
+				# Конструируем *[]T из *[]T
+
 				# Для C явно приводим указатель на массив к указателю на его элемент
 				# В случае когда происходит НЕЯВНОЕ приведение;
-				if not Type.eq(type.to.of, value.type.to.of):
-					return "(" + str_type(type) + ")" + '&' + str_value(value.value, ctx=ctx)
-				else:
-					if decize(type.to) and not 'no_ptr_to_item' in ctx:
-						# просто возвращаем массив как есть тк он автоматом decay to pointer
+				if Type.eq(type.to.of, value.type.to.of):
+					if decize(type.to):
+						# просто печатаем массив как есть тк он автоматом decay to pointer
 						return str_value(value.value, ctx=ctx)
-						#return '&' + str_value(value.value, ctx=ctx) + '[0]'
-					return '&' + str_value(value.value, ctx=ctx)
-					#return '&' + str_value(value.value, ctx=ctx) + '[0]'
+					else:
+						# печатаем указатель на массив
+						return '&' + str_value(value.value, ctx=ctx)
+				else:
+					# Конструируемый тип-указатель не равен типу-указателю на ориг. массив (!)
+					return "(" + str_type(type) + ")" + '&' + str_value(value.value, ctx=ctx)
 
 			if not Type.eq(type.to, value.type.to):
 				sstr += "(" + str_type(type) + ")"
