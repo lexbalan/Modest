@@ -95,13 +95,13 @@ int main(void) {
 	#define bb  8
 
 	int32_t(*const p)[bb - aa] = (int32_t(*)[bb - aa])&s[aa];
-	array_print((int32_t(*)[])p, (uint32_t)bb - aa);
+	array_print(p, (uint32_t)bb - aa);
 
 	printf("--------------------------------------------\n");
 
 	(*p)[0] = 123;
 
-	array_print((int32_t(*)[])p, (uint32_t)bb - aa);
+	array_print(p, (uint32_t)bb - aa);
 
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");

@@ -846,9 +846,25 @@ def incast(type, value, ctx=[]):
 	return str_value(value, ctx)
 
 
+def is_the_same_in_c(t0, t1):
+	if t0.is_pointer_to_array() and t1.is_pointer_to_array():
+		if t0.to.is_array_of_char() and t1.to.is_array_of_char():
+			#info("the same?", t0.ti)
+			return True
+		if Type.eq(t0.to.of, t1.to.of):
+			if t0.to.volume.asset == t1.to.volume.asset:
+				# *[x]T <- *[x]T
+				return True
+			if t0.to.volume.asset == None and t1.to.volume.asset != None:
+				# *[]T <- *[x]T
+				return True
+	return False
+
+
 
 def str_value_cons(x, ctx):
 	return str_value_cons2(x, ctx)
+
 
 def str_value_cons2(x, ctx):
 	type = x.type
@@ -899,25 +915,12 @@ def str_value_cons2(x, ctx):
 
 
 	if x.method in ['implicit', 'default']:
-		sstr = ''
-		if value.isValueRef():
-			if type.is_pointer_to_array() and value.type.is_pointer_to_array():
-				# Конструируем *[]T из *[]T
-				sstr = str_value(value, ctx=ctx)
-
-				# Для C явно приводим указатель на массив к указателю на его элемент
-				# В случае когда происходит НЕЯВНОЕ приведение;
-				if not Type.eq(type.to.of, value.type.to.of):
-					# приведение указателя на размерный массив к указателю на безразмерный массив
-					return "(" + str_type(type) + ")" + sstr
-
-				return sstr
+		sstr = str_value(value)
 
 		if not Type.eq(type, value.type):
-			if not value.isValueLiteral():
-				sstr += "(" + str_type(type) + ")"
+			if not value.isValueLiteral() and not is_the_same_in_c(type, value.type):
+				sstr = "(" + str_type(type) + ")" + sstr
 
-		sstr += str_value(value)
 		return sstr
 
 
