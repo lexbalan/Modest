@@ -392,7 +392,7 @@ def str_pointer_chain(t, ctx=[]):
 	return s
 
 
-def str_type_pointer(t, core='', as_ptr_to_array=True, ctx=[]):
+def str_type_pointer(t, core='', ctx=[]):
 	left = ''
 	left = str_pointer_chain(t, ctx=ctx)
 
@@ -401,7 +401,6 @@ def str_type_pointer(t, core='', as_ptr_to_array=True, ctx=[]):
 		root_type = root_type.to
 
 	# (!) Печатать указатель на массив как указатель на его элемент (!)
-	#if not as_ptr_to_array:
 	if decize(t.to):
 		if is_sim_sim(t):
 			root_type = root_type.of
@@ -2599,7 +2598,7 @@ def str_value_as_ptr(x):
 
 	if root.isValueSlice():
 		ptr2slice = TypePointer(x.type)
-		sstr += "(" + str_type_pointer(ptr2slice, as_ptr_to_array=True) + ")"
+		sstr += "(" + str_type_pointer(ptr2slice) + ")"
 
 	if root.isValueDeref():
 		return str_value(root.value)
