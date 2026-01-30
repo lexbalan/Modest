@@ -256,7 +256,7 @@ def str_type_record(t, tag='', ctx=[]):
 		s += str_nl_indent(field.nl)
 		prev_nl = field.nl
 
-		s += str_var(field.type, id_str=get_id_str(field))
+		s += str_field(field.type, id_str=get_id_str(field))
 		s += ";"
 
 		if field.line_comment:
@@ -330,7 +330,7 @@ def strFuncParamlist(params, va_arg, ctx):
 				pstr = '_' + pstr
 
 		# print function parameter
-		s += str_var(ptype, id_str=pstr, ctx=ctx+['+as_array'])
+		s += str_field(ptype, id_str=pstr, ctx=ctx+['+as_array'])
 
 		if param.init_value != None:
 			# BUG: None прилетает в случае когда функция возвращает массив,
@@ -442,7 +442,7 @@ def str_type(t, core='', need_close=False, ctx=[]):
 	return str(t)
 
 
-def str_var(t, id_str, ctx=[]):
+def str_field(t, id_str, ctx=[]):
 	return str_type(t, core=' ' + id_str, ctx=ctx)
 
 
@@ -1870,7 +1870,7 @@ def print_func_return_type(ftype):
 
 
 def print_func_signature(id_str, ftype, ctx=[]):
-	out(str_var(ftype, id_str=id_str, ctx=ctx))
+	out(str_field(ftype, id_str=id_str, ctx=ctx))
 
 
 
@@ -2040,7 +2040,7 @@ def print_def_type(x):
 		return
 
 	out("typedef ")
-	out(str_var(otype, id_str=id_str))
+	out(str_field(otype, id_str=id_str))
 	out(";")
 
 
@@ -2048,7 +2048,7 @@ def print_def_type(x):
 # Указатель, массив и функция образуют пиздецовый заговор
 def print_variable(id_str, t, init_value=None, prefix='', ctx=[]):
 	assert (t != None)
-	out(str_var(t, id_str=(prefix + id_str), ctx=ctx))
+	out(str_field(t, id_str=(prefix + id_str), ctx=ctx))
 	if init_value != None:
 		out(" = ")
 		print_value(init_value, ctx=ctx)
