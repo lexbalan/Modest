@@ -481,9 +481,7 @@ def plusSpace(s):
 
 
 def str_ctype_named(t, text):
-	sstr = str_specs(t['specs']) + t['id_str']
-	sstr += plusSpace(text)
-	return sstr
+	return str_specs(t['specs']) + t['id_str'] + plusSpace(text)
 
 
 def str_ctype_pointer(t, text):
@@ -531,19 +529,21 @@ def str_ctype_struct(t, text):
 	sstr = 'struct%s {' % plusSpace(t['tag'])
 	indent_up()
 	i = 0
-	while i < len(t['fields']):
-		field = t['fields'][i]
-		if field['nl'] > 0:
-			nl_end = 1
-		sstr += str_nl_indent(field['nl'])
-		sstr += str_ctype(field['type'], text=field['id_str']) + ';'
-		if field['nl'] == 0:
-			sstr += ' '
-		i = i + 1
+	nfields = len(t['fields'])
+	if nfields > 0:
+		while i < nfields:
+			field = t['fields'][i]
+			if field['nl'] > 0:
+				nl_end = 1
+			sstr += str_nl_indent(field['nl'])
+			sstr += str_ctype(field['type'], text=field['id_str']) + ';'
+			if field['nl'] == 0:
+				sstr += ' '
+			i = i + 1
+	else:
+		sstr += 'uint8_t __placeholder;'
 	indent_down()
-	sstr += str_nl_indent(nl_end)
-	sstr += '}'
-	sstr += plusSpace(text)
+	sstr += str_nl_indent(nl_end) + '}' + plusSpace(text)
 	return sstr
 
 

@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 
-struct loo_Nothing {};
+struct loo_Nothing {uint8_t __placeholder;};
 typedef struct loo_Nothing loo_Nothing;
 
 #define LOO_BAR  4
