@@ -453,98 +453,112 @@ def ctype_struct(fields, tag, specs=[]):
 	return {'isa': 'ctype_struct', 'fields': fields, 'tag': tag}
 
 
+
+tprio = {
+	'ctype_named': 0,
+	'ctype_pointer': 1,
+	'ctype_array': 2,
+	'ctype_func': 3,
+	'ctype_struct': 4, #?
+}
+
+
+def wrap_if(x, cond):
+	return "(%s)" % x if cond else x
+
+
+def str_specs(specs):
+	s = ''
+	for opt in specs:
+		s += opt + ' '
+	return s
+
+
+def plusSpace(s):
+	if s != '':
+		return ' ' + s
+	return s
+
+
+def str_ctype_named(t, text):
+	sstr = str_specs(t['specs']) + t['id_str']
+	sstr += plusSpace(text)
+	return sstr
+
+
+def str_ctype_pointer(t, text):
+	text = '*%s' % str_specs(t['specs']) + text
+	text = wrap_if(text, tprio[t['to']['isa']] > tprio['ctype_pointer'])
+	text = str_ctype(t['to'], text)
+	return text
+
+
+def str_ctype_array(t, text):
+	text = text + '['
+	if t['volume'] != None and not t['volume'].isValueUndef():
+		text += str_value(t['volume'])
+	text += ']'
+	text = wrap_if(text, tprio[t['of']['isa']] > tprio['ctype_array'])
+	text = str_ctype(t['of'], text)
+	return text
+
+
+def str_ctype_func(t, text):
+	params_text = ''
+	i = 0
+	params = t['params']
+	while i < len(params):
+		param = params[i]
+		p = str_ctype(param['type'], text=param['id_str'])
+		if i > 0:
+			params_text += ', ' + p
+		else:
+			params_text += p
+		i = i + 1
+	if t['extra_args']:
+		params_text += ', ...'
+
+	if params_text == '':
+		params_text = 'void'
+
+	text = text + '(%s)' % params_text
+	text = str_ctype(t['to'], text)
+	return text
+
+
+def str_ctype_struct(t, text):
+	nl_end = 0
+	sstr = 'struct%s {' % plusSpace(t['tag'])
+	indent_up()
+	i = 0
+	while i < len(t['fields']):
+		field = t['fields'][i]
+		if field['nl'] > 0:
+			nl_end = 1
+		sstr += str_nl_indent(field['nl'])
+		sstr += str_ctype(field['type'], text=field['id_str']) + ';'
+		if field['nl'] == 0:
+			sstr += ' '
+		i = i + 1
+	indent_down()
+	sstr += str_nl_indent(nl_end)
+	sstr += '}'
+	sstr += plusSpace(text)
+	return sstr
+
+
 def str_ctype(t, text=''):
 	assert(isinstance(t, dict))
 	assert(text != None)
 
-	tprio = {
-		'ctype_named': 0,
-		'ctype_pointer': 1,
-		'ctype_array': 2,
-		'ctype_func': 3,
-		'ctype_struct': 4, #?
-	}
-
-	def wrap_if(x, cond):
-		return "(%s)" % x if cond else x
-
-	def str_specs(specs):
-		s = ''
-		for opt in specs:
-			s += opt + ' '
-		return s
-
-	def str_paramlist(params, extra_args):
-		ptext = ''
-		i = 0
-		while i < len(params):
-			param = params[i]
-			p = str_ctype(param['type'], text=param['id_str'])
-			if i > 0:
-				ptext += ', ' + p
-			else:
-				ptext += p
-			i = i + 1
-		if extra_args:
-			ptext += ', ...'
-		return ptext
-
-
-
-	def plusSpace(s):
-		if s != '':
-			return ' ' + s
-		return s
-
-	if t['isa'] == 'ctype_named':
-		sstr = str_specs(t['specs']) + t['id_str']
-		sstr += plusSpace(text)
-		return sstr
-
-	if t['isa'] == 'ctype_pointer':
-		text = '*%s' % str_specs(t['specs']) + text
-		text = wrap_if(text, tprio[t['to']['isa']] > tprio['ctype_pointer'])
-		text = str_ctype(t['to'], text)
-		return text
-
-	if t['isa'] == 'ctype_array':
-		text = text + '['
-		if t['volume'] != None and not t['volume'].isValueUndef():
-			text += str_value(t['volume'])
-		text += ']'
-		text = wrap_if(text, tprio[t['of']['isa']] > tprio['ctype_array'])
-		text = str_ctype(t['of'], text)
-		return text
-
-	if t['isa'] == 'ctype_func':
-		params = str_paramlist(t['params'], t['extra_args'])
-		if params == '':
-			params = 'void'
-		text = text + '(%s)' % params
-		text = str_ctype(t['to'], text)
-		return text
-
-	if t['isa'] == 'ctype_struct':
-		nl_end = 0
-		sstr = 'struct%s {' % plusSpace(t['tag'])
-		indent_up()
-		i = 0
-		while i < len(t['fields']):
-			field = t['fields'][i]
-			if field['nl'] > 0:
-				nl_end = 1
-			sstr += str_nl_indent(field['nl'])
-			sstr += str_ctype(field['type'], text=field['id_str']) + ';'
-			if field['nl'] == 0:
-				sstr += ' '
-			i = i + 1
-		indent_down()
-		sstr += str_nl_indent(nl_end)
-		sstr += '}'
-		sstr += plusSpace(text)
-		return sstr
+	if t['isa'] == 'ctype_named': return str_ctype_named(t, text)
+	if t['isa'] == 'ctype_pointer': return str_ctype_pointer(t, text)
+	if t['isa'] == 'ctype_array': return str_ctype_array(t, text)
+	if t['isa'] == 'ctype_func': return str_ctype_func(t, text)
+	if t['isa'] == 'ctype_struct': return str_ctype_struct(t, text)
 
 	return '<unknown ctype>'
+
 
 
 # преобразуем Modest TypePointer -> CIR TypePointer
