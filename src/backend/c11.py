@@ -217,220 +217,8 @@ def get_type_id(t):
 	return None
 
 
-"""
-def str_type_record(t, tag='', ctx=[]):
-	s = "struct"
-
-	atts_line = print_gcc_attributes_for(t)
-	if atts_line != "":
-		s += ' ' + atts_line
-
-
-	if tag != "":
-		s += ' ' + tag
-
-	if styleguide['LINE_BREAK_BEFORE_STRUCT_BRACE']:
-		s += str_newline(1)
-	else:
-		s += ' '
-
-	s += "{"
-	indent_up()
-
-	nl_end = 0
-
-	prev_nl = 1
-	for field in t.fields:
-
-		if prev_nl == 0:
-			s += ' '
-
-		if field.comments:
-			for comment in field.comments:
-				s += str_nl_indent(comment.nl)
-				s += str_stmt_comment(comment)
-
-		if field.nl > 0:
-			nl_end = 1
-
-		s += str_nl_indent(field.nl)
-		prev_nl = field.nl
-
-		s += str_field(field.type, id_str=get_id_str(field))
-		s += ";"
-
-		if field.line_comment:
-			s += '  ' + str_stmt_comment(field.line_comment)
-
-	if len(t.fields) == 0:
-		s += str_nl_indent(nl_end)
-		s += "char _; /* empty record placeholder */"
-
-
-	indent_down()
-	s += str_nl_indent(nl_end)
-	s += "}"
-	return s
-
-
-
-def str_type_array(t, core='', need_close=False, ctx=[]):
-	# handle array of array .. case
-	right = ''
-	i = 0
-	t2 = t
-	while True:
-		right += '['
-		if t2.volume:
-			if t2.volume.isValueUndef():
-				# В Си не можем печатать такое a[][], или такое a[][10], etc.
-				# А печатаем просто a[] (пропускаем все после пустых скобок)
-				while t2.of.is_array():
-					t2 = t2.of
-			else:
-				right += str_value(t2.volume)
-
-		right += ']'
-		t2 = t2.of
-		if not t2.is_array():
-			break
-		i += 1
-
-	if need_close:
-		core += ')'
-
-	return str_type(t2, core=core+right, ctx=ctx)
-
-
-
-def strFuncParamlist(params, va_arg, ctx):
-	s = '('
-	i = 0
-	while i < len(params):
-		param = params[i]
-		if i > 0:
-			s += ', '
-
-		ptype = param.type
-
-		pstr = get_id_str(param)
-		if pstr == None:
-			pstr = ''
-		else:
-			# HACK
-			# В C параметр не может быть массивом, а у нас - может
-			# но реализован как указатель на массив
-			if ptype.is_array():
-				ptype = TypePointer(ptype)
-				pstr = '_' + pstr
-
-		# print function parameter
-		s += str_field(ptype, id_str=pstr, ctx=ctx+['+as_array'])
-
-		if param.init_value != None:
-			# BUG: None прилетает в случае когда функция возвращает массив,
-			# У него нет init_value - это какой то косяк но непросто разобраться
-			if not param.init_value.isValueUndef():
-				s += " /* default=" + str_value(param.init_value) + " */"
-
-		i += 1
-
-	if va_arg:
-		if i > 0:
-			s += ', '
-		s += '...'
-
-	if len(params) == 0:
-		s += EMPTY_FUNC_PARAM
-
-	s += ')'
-	return s
-
-
-def str_type_func(t, core='', need_close=False, ctx=[]):
-	fparams = t.params
-	fto = t.to
-	if t.to.is_array():
-		# (!) HACK (!)
-		# C не умеет возвращать массивы по значению,
-		# поэтому если возвращаем массив вернем void
-		# а сам массив пойдет через указатель sret_
-		# который функция получит своим самым последним параметром
-		# (sret = structure return)
-		sret_param = Field(Id('sret_'), t.to, init_value=ValueUndef(t.to))
-		#sret_param = Field(Id('sret_'), TypePointer(t.to), init_value=ValueUndef(t.to))
-
-		fparams = t.params + [sret_param]
-		fto = typeUnit
-
-	paramlist = strFuncParamlist(fparams, t.extra_args, ctx=ctx)
-
-	if need_close:
-		core += ')'
-
-	return str_type(fto, core=core+paramlist, ctx=ctx)
-
-
-
-def str_pointer_chain(t, ctx=[]):
-	s = '*'
-	if t.hasAttribute2('const'):
-		s += 'const '
-	if t.hasAttribute2('volatile'):
-		s += 'volatile '
-	if t.hasAttribute2('restrict'):
-		s += 'restrict '
-
-	if t.to.is_pointer():
-		s = str_pointer_chain(t.to, ctx=ctx) + s
-
-	return s
-
-
-def str_type_pointer(t, core='', ctx=[]):
-	left = ''
-	left = str_pointer_chain(t, ctx=ctx)
-
-	root_type = t
-	while root_type.is_pointer():
-		root_type = root_type.to
-
-	# (!) Печатать указатель на массив как указатель на его элемент (!)
-	if decize(t.to):
-		root_type = root_type.of
-
-	need_close = not is_type_named(root_type) and (root_type.is_array() or root_type.is_func())
-	if need_close:
-		left = '(' + left
-	else:
-		left = ' ' + left
-
-	# К идентификатору вначале прибавляется пробел слева
-	# но в случае * он лишний, так уж повелось в СИ
-	nc = left+core
-	if len(core) > 0:
-		if core[0] == ' ':
-			nc = left+core[1:]
-
-	return str_type(root_type, core=nc, need_close=need_close, ctx=ctx)
-
-
-
-def str_named(t, core='', ctx=[]):
-	aka = get_type_id(t)
-	if aka == None:
-		return None
-	pre = ''
-	if t.hasAttribute2('const'):
-		pre += 'const '
-	if t.hasAttribute2('volatile'):
-		pre += 'volatile '
-	return pre + aka + core
-"""
-
 def is_type_named(t):
 	return get_type_id(t) != None
-
 
 
 
@@ -481,10 +269,12 @@ def plusSpace(s):
 
 
 def str_ctype_named(t, text):
+	# "const int a"
 	return str_specs(t['specs']) + t['id_str'] + plusSpace(text)
 
 
 def str_ctype_pointer(t, text):
+	# "*volatile p"
 	text = '*%s' % str_specs(t['specs']) + text
 	text = wrap_if(text, tprio[t['to']['isa']] > tprio['ctype_pointer'])
 	text = str_ctype(t['to'], text)
@@ -513,6 +303,7 @@ def str_ctype_func(t, text):
 		else:
 			params_text += p
 		i = i + 1
+
 	if t['extra_args']:
 		params_text += ', ...'
 
@@ -564,6 +355,7 @@ def str_ctype(t, text=''):
 # преобразуем Modest TypePointer -> CIR TypePointer
 def do_ctype_pointer(t, specs=[]):
 	to = t.to
+
 	if decize(to):
 		return ctype_pointer(to=mtype2ctype(to.of), specs=specs)
 
