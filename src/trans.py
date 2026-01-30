@@ -457,7 +457,11 @@ def do_type_array(x):
 			else:
 				error("non local VLA", t.size.ti)
 
-	return TypeArray(of, volume, ti=x['ti'])
+	nt = TypeArray(of, volume, ti=x['ti'])
+	# [][] разрешено создавать, но они отольются в [] в backend, и чтобы снмим работать нужно привести явно к [n][m] (!)
+	#if nt.is_open_array() and of.is_open_array():
+	#	error("open arrays of open arrays are forbidden", of.ti)
+	return nt
 
 
 # Нужен для анонимных структур
@@ -1136,18 +1140,18 @@ def do_value_index(x):
 	left_type = left.type
 	via_pointer = left_type.is_pointer()
 
-	array_typ = left_type
+	array_type = left_type
 	if via_pointer:
-		array_typ = left_type.to
+		array_type = left_type.to
 
-	if not array_typ.is_array():
+	if not array_type.is_array():
 		error("expected array or pointer to array", left.ti)
 		return ValueBad(x['ti'])
 
 	# Can index *[]AnyNonArrayType
 	# Can't index *[][]AnyType
-	if array_typ.is_array_of_open_array():
-		error("cannot index array of open array", x['ti'])
+	if array_type.is_array_of_open_array():
+		error("cannot index array of an open array", x['ti'])
 		return ValueBad(x['ti'])
 
 	index = do_rvalue(x[HLIR_VALUE_OP_INDEX])
@@ -1163,23 +1167,23 @@ def do_value_index(x):
 	if index.type.is_generic():
 		index = value_cons_implicit_check(typeSysInt, index)
 
-	nv = ValueIndex(array_typ.of, left, index, ti=x['ti'])
+	nv = ValueIndex(array_type.of, left, index, ti=x['ti'])
 
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
-		array_typ = left.type
+		array_type = left.type
 
 		if left.isValueImmediate() and index.isValueImmediate():
 			index_imm = index.asset
 
-			if index_imm >= array_typ.volume.asset:
+			if index_imm >= array_type.volume.asset:
 				error("array index out of bounds", x['ti'])
 				return ValueBad(x['ti'])
 
 			if index_imm < len(left.asset):
 				item = left.asset[index_imm]
 			else:
-				item = create_zero_literal(array_typ.of)
+				item = create_zero_literal(array_type.of)
 
 			cp_immediate(nv, item)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
@@ -1219,6 +1223,13 @@ def do_value_slice(x):
 
 	if not array_type.is_array():
 		error("expected array or pointer to array", left.ti)
+		return ValueBad(x['ti'])
+
+
+	# Can slice *[]AnyNonArrayType
+	# Can't slice *[][]AnyType
+	if array_type.is_array_of_open_array():
+		error("cannot slice array of an open array", x['ti'])
 		return ValueBad(x['ti'])
 
 

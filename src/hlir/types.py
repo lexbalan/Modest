@@ -805,9 +805,15 @@ class Type(Entity):
 
 	# [10][]Int32, [][]Int32, [][][]Int64, etc..
 	def is_array_of_open_array(self):
-		if not self.is_array():
-			return False
-		return self.of.is_open_array()
+		if self.is_array():
+			return self.of.is_open_array()
+		return False
+
+	# [][]Int32, [][][]Int64, etc..
+	def is_open_array_of_open_array(self):
+		if self.is_open_array():
+			return self.of.is_open_array()
+		return False
 
 
 	def is_generic_pointer(self):

@@ -24,9 +24,9 @@ typedef uint64_t Nat;
 void memory_zero(void *mem, uint64_t len) {
 	const Nat z = (Nat)mem % (Nat)MEMORY_ALIGNMENT;
 
-	uint8_t(*const memptr)[] = (uint8_t(*)[])mem;
+	uint8_t (*const memptr)[] = (uint8_t (*)[])mem;
 
-	uint8_t(*const dst_byte0)[] = memptr;
+	uint8_t (*const dst_byte0)[] = memptr;
 
 	// align the pointer
 	uint64_t i = 0;
@@ -38,7 +38,7 @@ void memory_zero(void *mem, uint64_t len) {
 	// word operation
 
 	const uint64_t len_words = (len - z) / sizeof(Word);
-	Word(*const dst_word)[] = (Word(*)[])&(*memptr)[i];
+	Word (*const dst_word)[] = (Word (*)[])&(*memptr)[i];
 
 	i = 0;
 	while (i < len_words) {
@@ -49,7 +49,7 @@ void memory_zero(void *mem, uint64_t len) {
 	// byte operation
 
 	const uint64_t len_bytes = (len - z) % sizeof(Word);
-	uint8_t(*const dst_byte1)[] = (uint8_t(*)[])&(*dst_word)[i];
+	uint8_t (*const dst_byte1)[] = (uint8_t (*)[])&(*dst_word)[i];
 
 	i = 0;
 	while (i < len_bytes) {
@@ -61,8 +61,8 @@ void memory_zero(void *mem, uint64_t len) {
 
 void memory_copy(void *dst, void *src, uint64_t len) {
 	const uint64_t len_words = len / sizeof(Word);
-	Word(*const src_w)[] = (Word(*)[])src;
-	Word(*const dst_w)[] = (Word(*)[])dst;
+	Word (*const src_w)[] = (Word (*)[])src;
+	Word (*const dst_w)[] = (Word (*)[])dst;
 
 	uint64_t i = 0;
 	while (i < len_words) {
@@ -71,8 +71,8 @@ void memory_copy(void *dst, void *src, uint64_t len) {
 	}
 
 	const uint64_t len_bytes = len % sizeof(Word);
-	uint8_t(*const src_b)[] = (uint8_t(*)[])&(*src_w)[i];
-	uint8_t(*const dst_b)[] = (uint8_t(*)[])&(*dst_w)[i];
+	uint8_t (*const src_b)[] = (uint8_t (*)[])&(*src_w)[i];
+	uint8_t (*const dst_b)[] = (uint8_t (*)[])&(*dst_w)[i];
 
 	i = 0;
 	while (i < len_bytes) {
@@ -84,8 +84,8 @@ void memory_copy(void *dst, void *src, uint64_t len) {
 
 bool memory_eq(void *mem0, void *mem1, uint64_t len) {
 	const uint64_t len_words = len / sizeof(Word);
-	Word(*const mem0_w)[] = (Word(*)[])mem0;
-	Word(*const mem1_w)[] = (Word(*)[])mem1;
+	Word (*const mem0_w)[] = (Word (*)[])mem0;
+	Word (*const mem1_w)[] = (Word (*)[])mem1;
 
 	uint64_t i = 0;
 	while (i < len_words) {
@@ -96,8 +96,8 @@ bool memory_eq(void *mem0, void *mem1, uint64_t len) {
 	}
 
 	const uint64_t len_bytes = len % sizeof(Word);
-	uint8_t(*const mem0_b)[] = (uint8_t(*)[])&(*mem0_w)[i];
-	uint8_t(*const mem1_b)[] = (uint8_t(*)[])&(*mem1_w)[i];
+	uint8_t (*const mem0_b)[] = (uint8_t (*)[])&(*mem0_w)[i];
+	uint8_t (*const mem1_b)[] = (uint8_t (*)[])&(*mem1_w)[i];
 
 	i = 0;
 	while (i < len_bytes) {

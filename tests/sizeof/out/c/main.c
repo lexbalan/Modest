@@ -157,10 +157,10 @@ int main(void) {
 	printf("alignof(*Str8) = %zu\n", __alignof(char *));
 
 	// array size
-	printf("sizeof([10]Int32) = %zu\n", sizeof(int32_t[10]));
-	printf("alignof([10]Int32) = %zu\n", __alignof(int32_t[10]));
+	printf("sizeof([10]Int32) = %zu\n", sizeof(int32_t [10]));
+	printf("alignof([10]Int32) = %zu\n", __alignof(int32_t [10]));
 
-	printf("> alignof([3]Point) = %zu\n", __alignof(Point[3]));
+	printf("> alignof([3]Point) = %zu\n", __alignof(Point [3]));
 
 
 	// record size

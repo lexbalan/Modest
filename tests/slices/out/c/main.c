@@ -18,7 +18,7 @@
 #include <stdlib.h>
 
 
-static void array_print(int32_t(*pa)[], uint32_t len) {
+static void array_print(int32_t (*pa)[], uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
 		printf("a[%d] = %d\n", i, (*pa)[i]);
@@ -37,7 +37,7 @@ int main(void) {
 	int32_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 	int32_t s1[2 - 1];
-	memcpy(&s1, (int32_t(*)[2 - 1])&a[1], sizeof(int32_t[2 - 1]));
+	memcpy(&s1, (int32_t (*)[2 - 1])&a[1], sizeof(int32_t [2 - 1]));
 	uint32_t i = 0;
 	while (i < (uint32_t)LENGTHOF(s1)) {
 		printf("s1[%d] = %d\n", i, s1[i]);
@@ -50,9 +50,9 @@ int main(void) {
 	// by ptr
 	//
 
-	int32_t(*const pa)[10] = &a;
+	int32_t (*const pa)[10] = &a;
 	int32_t s2[8 - 5];
-	memcpy(&s2, (int32_t(*)[8 - 5])&(*pa)[5], sizeof(int32_t[8 - 5]));
+	memcpy(&s2, (int32_t (*)[8 - 5])&(*pa)[5], sizeof(int32_t [8 - 5]));
 	i = 0;
 	while (i < (uint32_t)LENGTHOF(s2)) {
 		printf("s2[%d] = %d\n", i, s2[i]);
@@ -62,13 +62,13 @@ int main(void) {
 	printf("--------------------------------------------\n");
 
 	int32_t vs1[2 - 1];
-	memcpy(&vs1, &s1, sizeof(int32_t[2 - 1]));
+	memcpy(&vs1, &s1, sizeof(int32_t [2 - 1]));
 	int32_t vs2[8 - 5];
-	memcpy(&vs2, &s2, sizeof(int32_t[8 - 5]));
+	memcpy(&vs2, &s2, sizeof(int32_t [8 - 5]));
 
 	#define ax  2
 	#define bx  6
-	ARRCPY((int32_t(*)[bx - ax])&a[ax], &((int8_t[4]){10, 20, 30, 40}), bx - ax);
+	ARRCPY((int32_t (*)[bx - ax])&a[ax], &((int8_t [4]){10, 20, 30, 40}), bx - ax);
 
 	i = 0;
 	while (i < (uint32_t)LENGTHOF(a)) {
@@ -80,7 +80,7 @@ int main(void) {
 
 	int32_t s[10] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
-	memset((int32_t(*)[5 - 2])&s[2], 0, sizeof(int32_t[5 - 2]));
+	memset((int32_t (*)[5 - 2])&s[2], 0, sizeof(int32_t [5 - 2]));
 
 	i = 0;
 	while (i < (uint32_t)LENGTHOF(s)) {
@@ -94,7 +94,7 @@ int main(void) {
 	#define aa  2
 	#define bb  8
 
-	int32_t(*const p)[bb - aa] = (int32_t(*)[bb - aa])&s[aa];
+	int32_t (*const p)[bb - aa] = (int32_t (*)[bb - aa])&s[aa];
 	array_print(p, (uint32_t)bb - aa);
 
 	printf("--------------------------------------------\n");
@@ -109,14 +109,14 @@ int main(void) {
 	// за каким то хером это работает, то что мне сейчас нужно
 	// но тут еще куча работы впереди
 
-	int32_t(*pw)[] = (int32_t(*)[])&s;
+	int32_t (*pw)[] = (int32_t (*)[])&s;
 
 	printf("before\n");
 	array_print(pw, 10);
 
 	int32_t ind = 1;
 
-	pw = (int32_t(*)[])&(*pw)[ind];
+	pw = (int32_t (*)[])&(*pw)[ind];
 
 	printf("after\n");
 	array_print(pw, 10);
@@ -129,7 +129,7 @@ int main(void) {
 
 	int32_t k = 4;
 	int32_t j = 7;
-	memset((int32_t(*)[j - k])&ss[k], 0, sizeof(int32_t[j - k]));
+	memset((int32_t (*)[j - k])&ss[k], 0, sizeof(int32_t [j - k]));
 	array_print(&ss, 10);
 
 	printf("--------------------------------------------\n");
@@ -141,7 +141,7 @@ int main(void) {
 	// test with let
 	#define i1  3
 	#define j1  8
-	ARRCPY((int32_t(*)[j1 - i1])&dst[i1], &((int8_t[5]){11, 22, 33, 44, 55}), j1 - i1);
+	ARRCPY((int32_t (*)[j1 - i1])&dst[i1], &((int8_t [5]){11, 22, 33, 44, 55}), j1 - i1);
 
 	array_print(&dst, 10);
 

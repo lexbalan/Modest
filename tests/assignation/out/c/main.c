@@ -36,7 +36,7 @@ int main(void) {
 
 
 	// copy arrays by value
-	memcpy(&glb_a0, &glb_a1, sizeof(int32_t[10]));
+	memcpy(&glb_a0, &glb_a1, sizeof(int32_t [10]));
 
 	printf("glb_a0[0] = %i\n", glb_a0[0]);
 	printf("glb_a0[1] = %i\n", glb_a0[1]);
@@ -66,7 +66,7 @@ int main(void) {
 	int32_t loc_a0[10] = {0};
 	int32_t loc_a1[10] = {42, 53, 64};
 
-	memcpy(&loc_a0, &loc_a1, sizeof(int32_t[10]));
+	memcpy(&loc_a0, &loc_a1, sizeof(int32_t [10]));
 
 	printf("loc_a0[0] = %i\n", loc_a0[0]);
 	printf("loc_a0[1] = %i\n", loc_a0[1]);

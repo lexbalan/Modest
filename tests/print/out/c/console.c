@@ -45,7 +45,7 @@ void console_putchar_utf8(char c) {
 
 void console_putchar_utf16(char16_t c) {
 	char16_t cc[2];
-	memcpy(&cc, &(char16_t[2]){c, u'\x0'}, sizeof(char16_t[2]));
+	memcpy(&cc, &(char16_t [2]){c, u'\x0'}, sizeof(char16_t [2]));
 	char32_t char32;
 	const uint8_t n = utf_utf16_to_utf32(cc, &char32);
 	console_putchar_utf32(char32);

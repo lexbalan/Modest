@@ -13,7 +13,7 @@ static int32_t globalArray1[10] = {0};
 int main(void) {
 	printf("test assign_array\n");
 
-	memcpy(&globalArray1, &globalArray0, sizeof(int32_t[10]));
+	memcpy(&globalArray1, &globalArray0, sizeof(int32_t [10]));
 
 	int32_t i;
 
@@ -24,7 +24,7 @@ int main(void) {
 		i = i + 1;
 	}
 
-	if (memcmp(&globalArray0, &globalArray1, sizeof(int32_t[10])) == 0) {
+	if (memcmp(&globalArray0, &globalArray1, sizeof(int32_t [10])) == 0) {
 		printf("globalArray test passed\n");
 	} else {
 		printf("globalArray test failed\n");
@@ -37,7 +37,7 @@ int main(void) {
 	int32_t localArray1[10] = {0};
 
 
-	memcpy(&localArray1, &localArray0, sizeof(int32_t[10]));
+	memcpy(&localArray1, &localArray0, sizeof(int32_t [10]));
 
 	i = 0;
 	while (i < 10) {
@@ -46,7 +46,7 @@ int main(void) {
 		i = i + 1;
 	}
 
-	if (memcmp(&localArray0, &localArray1, sizeof(int32_t[10])) == 0) {
+	if (memcmp(&localArray0, &localArray1, sizeof(int32_t [10])) == 0) {
 		printf("localArray test passed\n");
 	} else {
 		printf("localArray test failed\n");

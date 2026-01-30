@@ -69,7 +69,7 @@ static inline uint32_t sig1(uint32_t x) {
 }
 
 static void contextInit(Context *ctx) {
-	memcpy(&ctx->state, &((uint32_t[8])INITAL_STATE), sizeof(uint32_t[8]));
+	memcpy(&ctx->state, &((uint32_t [8])INITAL_STATE), sizeof(uint32_t [8]));
 }
 
 
@@ -92,7 +92,7 @@ static void contextInit(Context *ctx) {
 	0x90BEFFFAUL, 0xA4506CEBUL, 0xBEF9A3F7UL, 0xC67178F2UL \
 }
 
-static void transform(Context *ctx, uint8_t(*data)[]) {
+static void transform(Context *ctx, uint8_t (*data)[]) {
 	uint32_t m[64] = {0};
 
 	uint32_t i = 0;
@@ -112,11 +112,11 @@ static void transform(Context *ctx, uint8_t(*data)[]) {
 	}
 
 	uint32_t x[8];
-	memcpy(&x, &ctx->state, sizeof(uint32_t[8]));
+	memcpy(&x, &ctx->state, sizeof(uint32_t [8]));
 
 	i = 0;
 	while (i < 64) {
-		const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + ((uint32_t[64])K)[i] + m[i];
+		const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + ((uint32_t [64])K)[i] + m[i];
 		const uint32_t t2 = ep0(x[0]) + maj(x[0], x[1], x[2]);
 
 		x[7] = x[6];
@@ -139,7 +139,7 @@ static void transform(Context *ctx, uint8_t(*data)[]) {
 }
 
 
-static void update(Context *ctx, uint8_t(*msg)[], uint32_t msgLen) {
+static void update(Context *ctx, uint8_t (*msg)[], uint32_t msgLen) {
 	uint32_t i = 0;
 	while (i < msgLen) {
 		ctx->data[ctx->datalen] = (*msg)[i];
@@ -211,7 +211,7 @@ static void final(Context *ctx, sha256_Hash *outHash) {
 }
 
 
-void sha256_hash(uint8_t(*msg)[], uint32_t msgLen, sha256_Hash *outHash) {
+void sha256_hash(uint8_t (*msg)[], uint32_t msgLen, sha256_Hash *outHash) {
 	Context ctx = (Context){0};
 	contextInit(&ctx);
 	update(&ctx, msg, msgLen);

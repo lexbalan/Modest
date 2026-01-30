@@ -7,12 +7,12 @@
 
 
 
-static int32_t func1(int32_t x /* default=10 */) {
+static int32_t func1(int32_t x) {
 	return x;
 }
 
 
-static int32_t func2(int32_t a /* default=10 */, int32_t b /* default=20 */) {
+static int32_t func2(int32_t a, int32_t b) {
 	return a + b;
 }
 

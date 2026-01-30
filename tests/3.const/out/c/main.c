@@ -78,8 +78,8 @@ int main(void) {
 
 	Point points3[3] = POINTS;
 
-	const Point pp = ((Point[3])POINTS)[0];
-	const Point ppp = ((Point[3])ZERO_POINTS)[0];
+	const Point pp = ((Point [3])POINTS)[0];
+	const Point ppp = ((Point [3])ZERO_POINTS)[0];
 	const uint32_t z = POINT_ZERO.x;
 
 	printf("genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);

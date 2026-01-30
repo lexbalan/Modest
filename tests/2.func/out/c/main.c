@@ -44,7 +44,7 @@ int main(void) {
 	printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result);
 
 
-	int32_t(*fptr)(int32_t a, int32_t b) = &sum;
+	int32_t (*fptr)(int32_t a, int32_t b) = &sum;
 	// call function with two arguments and return value
 	const int32_t arg_a2 = 1;
 	const int32_t arg_b2 = 2;

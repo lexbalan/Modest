@@ -9,7 +9,7 @@
 
 
 
-uint32_t crc32_run(uint8_t(*buf)[], uint32_t len) {
+uint32_t crc32_run(uint8_t (*buf)[], uint32_t len) {
 	#define tableSize  256
 	uint32_t crc_table[tableSize];
 	uint32_t crc;

@@ -55,17 +55,25 @@ static void puts32(char32_t *s) {
 }
 
 
-static void ss(char *_s, char *_sret_) {
+static void ss(char (*_s)[10], char (*_sret_)[10]) {
 	char s[10];
-	memcpy(s, _s, sizeof(char[10]));
+	memcpy(s, _s, sizeof(char [10]));
 	char ks[5 - 2];
-	memcpy(&ks, (char *)&s[2], sizeof(char[5 - 2]));
-	memcpy(_sret_, &s, sizeof(char[10]));
+	memcpy(&ks, (char *)&s[2], sizeof(char [5 - 2]));
+	memcpy(_sret_, &s, sizeof(char [10]));
 }
 
 
+static int32_t (arr2d[10])[10];
+
 int32_t main(void) {
 	printf("Hello World!\n");
+
+	int32_t (*p_arr2d)[];
+	p_arr2d = (int32_t (*)[])&arr2d;
+
+	//let xx = p_arr2d[0]
+	//let yy = p_arr2d[0:2]
 
 	char s1[32] = {'H', 'e', 'l', 'l', 'o', '!'};
 	char s2[32] = {'W', 'o', 'r', 'l', 'd'};

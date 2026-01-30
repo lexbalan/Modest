@@ -50,7 +50,6 @@ typedef struct Line Line;
 #define LINES  {LINE0, LINE1, LINE2, LINE3}
 
 struct WrappedArray {
-	//array: [10]Int32
 	int32_t x;
 };
 typedef struct WrappedArray WrappedArray;
@@ -74,10 +73,10 @@ static float lineLength(Line line) {
 
 
 int main(void) {
-	const float lines_0_len = lineLength(((const Line[4])LINES)[0]);
-	const float lines_1_len = lineLength(((const Line[4])LINES)[1]);
-	const float lines_2_len = lineLength(((const Line[4])LINES)[2]);
-	const float lines_3_len = lineLength(((const Line[4])LINES)[3]);
+	const float lines_0_len = lineLength(((const Line [4])LINES)[0]);
+	const float lines_1_len = lineLength(((const Line [4])LINES)[1]);
+	const float lines_2_len = lineLength(((const Line [4])LINES)[2]);
+	const float lines_3_len = lineLength(((const Line [4])LINES)[3]);
 
 	printf("lines_0_len = %f\n", (const float)lines_0_len);
 	printf("lines_1_len = %f\n", (const float)lines_1_len);

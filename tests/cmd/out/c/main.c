@@ -98,7 +98,7 @@ static void tokenize(Tokenizer *tokenizer) {
 
 		// save token in tokens buffer
 		char *const pbuf = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		memcpy((char *)&pbuf[0], (char *)&token[0], sizeof(char[toklen - 0]));
+		memcpy((char *)&pbuf[0], (char *)&token[0], sizeof(char [toklen - 0]));
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + toklen;
 		pbuf[tokenizer->tokensBufPos] = '\x0';
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + 1;

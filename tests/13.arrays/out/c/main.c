@@ -40,24 +40,24 @@ static char arrayFromString[3] = {'a', 'b', 'c'};
 
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
-static void f0(char *_x, char *_sret_) {
+static void f0(char (*_x)[20], char (*_sret_)[30]) {
 	char x[20];
-	memcpy(x, _x, sizeof(char[20]));
+	memcpy(x, _x, sizeof(char [20]));
 	char local_copy_of_x[20];
-	memcpy(&local_copy_of_x, &x, sizeof(char[20]));
+	memcpy(&local_copy_of_x, &x, sizeof(char [20]));
 	printf("f0(\"%s\")\n", (char*)local_copy_of_x);
 
 	// truncate array
 	char mic[6];
-	memcpy(&mic, (char *)&x[0], sizeof(char[6]));
+	memcpy(&mic, (char *)&x[0], sizeof(char [6]));
 	mic[5] = '\x0';
 
 	printf("f0 mic = \"%s\"\n", (char*)mic);
 
 	// extend array
 	char res[30];
-	memcpy((char *)&res[0], &x, sizeof(char[20 - 0]));
-	memset((char *)&res[20], 0, sizeof(char[30 - 20]));
+	memcpy((char *)&res[0], &x, sizeof(char [20 - 0]));
+	memset((char *)&res[20], 0, sizeof(char [30 - 20]));
 
 	res[6] = 'M';
 	res[7] = 'o';
@@ -67,7 +67,7 @@ static void f0(char *_x, char *_sret_) {
 	res[11] = 't';
 	res[12] = '!';
 	res[13] = '\x0';
-	memcpy(_sret_, &res, sizeof(char[30]));
+	memcpy(_sret_, &res, sizeof(char [30]));
 }
 
 
@@ -97,9 +97,9 @@ static int32_t a0[2][2][5] = {
 
 static int32_t a1[5] = {0, 1, 2, 3, 4};
 static int32_t a2[5] = {5, 6, 7, 8, 9};
-static int32_t(*a3[2])[5] = {&a1, &a2};
-static int32_t(*(*a4[2])[2])[5] = {&a3, &a3};
-static int32_t(*(*(*p0)[2])[2])[5] = &a4;
+static int32_t (*a3[2])[5] = {&a1, &a2};
+static int32_t (*(*a4[2])[2])[5] = {&a3, &a3};
+static int32_t (*(*(*p0)[2])[2])[5] = &a4;
 
 static int32_t a10[10][10] = {
 	{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
@@ -201,7 +201,7 @@ int main(void) {
 	test();
 
 	char em[30];
-	f0((char[20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'}, &em[0]);
+	f0((char [20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'}, &em[0]);
 	printf("em = %s\n", (char*)em);
 
 	uint32_t i = 0;
@@ -224,7 +224,7 @@ int main(void) {
 
 	printf("------------------------------------\n");
 
-	int32_t(*globalArrayPtr)[];
+	int32_t (*globalArrayPtr)[];
 	globalArrayPtr = &globalArray;
 
 	i = 0;
@@ -236,7 +236,7 @@ int main(void) {
 
 	printf("------------------------------------\n");
 
-	int32_t(*localArrayPtr)[];
+	int32_t (*localArrayPtr)[];
 	localArrayPtr = &localArray;
 
 	i = 0;
@@ -257,13 +257,13 @@ int main(void) {
 	// (with type [3]Int32)
 	// this variable are copy of array a
 	int32_t b[3];
-	memcpy(&b, &a, sizeof(int32_t[3]));
+	memcpy(&b, &a, sizeof(int32_t [3]));
 	printf("b[0] = %i\n", b[0]);
 	printf("b[1] = %i\n", b[1]);
 	printf("b[2] = %i\n", b[2]);
 
 	// check equality between two arrays (by value)
-	if (memcmp(&a, &b, sizeof(int32_t[3])) == 0) {
+	if (memcmp(&a, &b, sizeof(int32_t [3])) == 0) {
 		printf("a == b\n");
 	} else {
 		printf("a != b\n");
@@ -274,8 +274,8 @@ int main(void) {
 	int32_t c[3] = {10, 20, 30};
 
 	int32_t d[6];
-	memcpy((int32_t(*)[3 - 0])&d[0], &c, sizeof(int32_t[3 - 0]));
-	memset((int32_t(*)[6 - 3])&d[3], 0, sizeof(int32_t[6 - 3]));
+	memcpy((int32_t (*)[3 - 0])&d[0], &c, sizeof(int32_t [3 - 0]));
+	memset((int32_t (*)[6 - 3])&d[3], 0, sizeof(int32_t [6 - 3]));
 
 	printf("d[0] = %i\n", d[0]);
 	printf("d[1] = %i\n", d[1]);
@@ -285,10 +285,10 @@ int main(void) {
 	printf("d[5] = %i\n", d[5]);
 
 	// check equality between two arrays (by pointer)
-	int32_t(*const pa)[3] = &a;
-	int32_t(*const pb)[3] = &b;
+	int32_t (*const pa)[3] = &a;
+	int32_t (*const pb)[3] = &b;
 
-	if (memcmp(pa, pb, sizeof(int32_t[3])) == 0) {
+	if (memcmp(pa, pb, sizeof(int32_t [3])) == 0) {
 		printf("*pa == *pb\n");
 	} else {
 		printf("*pa != *pb\n");
@@ -307,23 +307,23 @@ int main(void) {
 	int int300 = 300;
 	// immutable, non immediate value (array)
 	int init_array[3];
-	memcpy(&init_array, &(int[3]){int100, int200, int300}, sizeof(int[3]));
+	memcpy(&init_array, &(int [3]){int100, int200, int300}, sizeof(int [3]));
 
 	// check local literal array assignation to local array
 	int32_t e[4];
-	memcpy(&e, &init_array, sizeof(int32_t[4]));
+	memcpy(&e, &init_array, sizeof(int32_t [4]));
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	memcpy(&globalArray, &init_array, sizeof(int32_t[10]));
+	memcpy(&globalArray, &init_array, sizeof(int32_t [10]));
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
 
 
-	memset(&globalArray, 0, sizeof(int32_t[10]));
+	memset(&globalArray, 0, sizeof(int32_t [10]));
 
 
 	// проверка того как локальная константа-массив
@@ -335,7 +335,7 @@ int main(void) {
 	const int32_t dx = 40;
 
 	int32_t y[4];
-	memcpy(&y, &(int32_t[4]){ax, bx, cx, dx}, sizeof(int32_t[4]));
+	memcpy(&y, &(int32_t [4]){ax, bx, cx, dx}, sizeof(int32_t [4]));
 
 	ax = 111;
 	bx = 222;
@@ -346,7 +346,7 @@ int main(void) {
 	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
 	printf("y[%i] = %i (must be 40)\n", 3, y[3]);
 
-	if (memcmp(&y, &((int32_t[4]){10, 20, 30, 40}), sizeof(int32_t[4])) == 0) {
+	if (memcmp(&y, &((int32_t [4]){10, 20, 30, 40}), sizeof(int32_t [4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
@@ -369,7 +369,7 @@ int main(void) {
 	int32_t va = 5;
 	int32_t vb = 7;
 	int32_t varr[4];
-	memcpy(&varr, &(int32_t[4]){1, 2, va, vb}, sizeof(int32_t[4]));
+	memcpy(&varr, &(int32_t [4]){1, 2, va, vb}, sizeof(int32_t [4]));
 
 	return 0;
 }

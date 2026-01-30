@@ -217,7 +217,7 @@ def get_type_id(t):
 	return None
 
 
-
+"""
 def str_type_record(t, tag='', ctx=[]):
 	s = "struct"
 
@@ -272,11 +272,6 @@ def str_type_record(t, tag='', ctx=[]):
 	s += "}"
 	return s
 
-
-
-
-def is_type_named(t):
-	return get_type_id(t) != None
 
 
 def str_type_array(t, core='', need_close=False, ctx=[]):
@@ -431,19 +426,213 @@ def str_named(t, core='', ctx=[]):
 	if t.hasAttribute2('volatile'):
 		pre += 'volatile '
 	return pre + aka + core
+"""
+
+def is_type_named(t):
+	return get_type_id(t) != None
 
 
-def str_type(t, core='', need_close=False, ctx=[]):
-	if is_type_named(t): return str_named(t, core, ctx=ctx)
-	elif t.is_pointer(): return str_type_pointer(t, core, ctx=ctx)
-	elif t.is_func(): return str_type_func(t, core, need_close=need_close, ctx=ctx)
-	elif t.is_array(): return str_type_array(t, core, need_close=need_close, ctx=ctx)
-	elif t.is_record(): return str_type_record(t, ctx=ctx) + core
-	return str(t)
+
+
+def ctype_named(id_str, specs=[]):
+	return {'isa': 'ctype_named', 'id_str': id_str, 'specs': specs}
+
+def ctype_pointer(to, specs=[]):
+	return {'isa': 'ctype_pointer', 'to': to, 'specs': specs}
+
+def ctype_array(of, volume=None, specs=[]):
+	return {'isa': 'ctype_array', 'of': of, 'volume': volume}
+
+def ctype_func(to, params, specs=[], extra_args=False):
+	return {'isa': 'ctype_func', 'to': to, 'params': params, 'extra_args': extra_args}
+
+def ctype_field(id_str, ctype, specs=[], nl=0):
+	return {'isa': 'ctype_par', 'id_str': id_str, 'type': ctype, 'nl': nl}
+
+def ctype_struct(fields, tag, specs=[]):
+	return {'isa': 'ctype_struct', 'fields': fields, 'tag': tag}
+
+
+def str_ctype(t, text=''):
+	assert(isinstance(t, dict))
+	assert(text != None)
+
+	tprio = {
+		'ctype_named': 0,
+		'ctype_pointer': 1,
+		'ctype_array': 2,
+		'ctype_func': 3,
+		'ctype_struct': 4, #?
+	}
+
+	def wrap_if(x, cond):
+		return "(%s)" % x if cond else x
+
+	def str_specs(specs):
+		s = ''
+		for opt in specs:
+			s += opt + ' '
+		return s
+
+	def str_paramlist(params, extra_args):
+		ptext = ''
+		i = 0
+		while i < len(params):
+			param = params[i]
+			p = str_ctype(param['type'], text=param['id_str'])
+			if i > 0:
+				ptext += ', ' + p
+			else:
+				ptext += p
+			i = i + 1
+		if extra_args:
+			ptext += ', ...'
+		return ptext
+
+
+
+	def plusSpace(s):
+		if s != '':
+			return ' ' + s
+		return s
+
+	if t['isa'] == 'ctype_named':
+		sstr = str_specs(t['specs']) + t['id_str']
+		sstr += plusSpace(text)
+		return sstr
+
+	if t['isa'] == 'ctype_pointer':
+		text = '*%s' % str_specs(t['specs']) + text
+		text = wrap_if(text, tprio[t['to']['isa']] > tprio['ctype_pointer'])
+		text = str_ctype(t['to'], text)
+		return text
+
+	if t['isa'] == 'ctype_array':
+		text = text + '['
+		if t['volume'] != None and not t['volume'].isValueUndef():
+			text += str_value(t['volume'])
+		text += ']'
+		text = wrap_if(text, tprio[t['of']['isa']] > tprio['ctype_array'])
+		text = str_ctype(t['of'], text)
+		return text
+
+	if t['isa'] == 'ctype_func':
+		params = str_paramlist(t['params'], t['extra_args'])
+		if params == '':
+			params = 'void'
+		text = text + '(%s)' % params
+		text = str_ctype(t['to'], text)
+		return text
+
+	if t['isa'] == 'ctype_struct':
+		nl_end = 0
+		sstr = 'struct%s {' % plusSpace(t['tag'])
+		indent_up()
+		i = 0
+		while i < len(t['fields']):
+			field = t['fields'][i]
+			if field['nl'] > 0:
+				nl_end = 1
+			sstr += str_nl_indent(field['nl'])
+			sstr += str_ctype(field['type'], text=field['id_str']) + ';'
+			if field['nl'] == 0:
+				sstr += ' '
+			i = i + 1
+		indent_down()
+		sstr += str_nl_indent(nl_end)
+		sstr += '}'
+		sstr += plusSpace(text)
+		return sstr
+
+	return '<unknown ctype>'
+
+
+# преобразуем Modest TypePointer -> CIR TypePointer
+def do_ctype_pointer(t, specs=[]):
+	to = t.to
+	if decize(to):
+		return ctype_pointer(to=mtype2ctype(to.of), specs=specs)
+
+	# IMPORTANT:
+	# *[][]...([])T -> *[]T
+	# В си нельзя создать указатель на массив вида *[][]
+	# Но Modest это позволяет (!) НО при этом нельзя индексировать по такому указателю
+	# Для работы нужно его сперва привести к типу *[n][m]...([k]) и тогда уже можно индексировать
+	while to.is_open_array_of_open_array():
+		to = to.of
+
+	return ctype_pointer(to=mtype2ctype(to), specs=specs)
+
+
+# преобразуем Modest TypeFunc -> CIR TypeFunc
+def do_ctype_func(t, specs=[]):
+	params = []
+	for p in t.params:
+		id_str = p.id.str
+		arg_ctype=mtype2ctype(p.type)
+		if p.type.is_array():
+			id_str = '_' + id_str
+			arg_ctype = ctype_pointer(arg_ctype)
+		params.append(ctype_field(id_str=id_str, ctype=arg_ctype, specs=[]))
+
+	if not t.to.is_array():
+		to=mtype2ctype(t.to)
+	else:
+		# Если f возвращает массив по значению, вернем void и добавим _sret_ - pointer to array
+		to=ctype_named('void')
+		sret_ctype = ctype_pointer(to=mtype2ctype(t.to))
+		params.append(ctype_field(id_str='_sret_', ctype=sret_ctype, specs=[]))
+
+	return ctype_func(to=to, params=params, specs=specs, extra_args=t.extra_args)
+
+
+# преобразуем Modest TypeArray -> CIR TypeArray
+def do_ctype_array(t, specs=[]):
+	# сливаем *[][] в *[]
+	# такой укзаатель на массив массивов можно будет использовать только после приведения к *[n][m] (!)
+	return ctype_array(of=mtype2ctype(t.of), volume=t.volume, specs=specs)
+
+
+# преобразуем Modest TypeRecord -> CIR TypeStruct
+def do_ctype_struct(t, tag='', specs=[]):
+	assert(isinstance(t, Type))
+	fields = []
+	for p in t.fields:
+		fields.append(ctype_field(id_str=p.id.str, ctype=mtype2ctype(p.type), specs=[], nl=p.nl))
+	return ctype_struct(fields, specs=specs, tag=tag)
+
+
+# преобразуем Modest Type -> CIR Type
+def mtype2ctype(t):
+	assert(isinstance(t, Type))
+
+	specs = []
+	if t.hasAttribute2('const'):
+		specs.append('const')
+	if t.hasAttribute2('volatile'):
+		specs.append('volatile')
+	if t.hasAttribute2('restrict'):
+		specs.append('restrict')
+
+	if is_type_named(t): return ctype_named(get_type_id(t), specs=specs)
+	if t.is_pointer(): return do_ctype_pointer(t, specs=specs)
+	if t.is_func(): return do_ctype_func(t, specs=specs)
+	if t.is_array(): return do_ctype_array(t, specs=specs)
+	if t.is_record(): return do_ctype_struct(t, specs=specs)
+	return None
+
+
+# Переводим представление о типе в Modest в представление о типе C backend
+def str_type(t, ctx=[]):
+	return str_ctype(t=mtype2ctype(t))
+
+
+def str_type_record(t, tag='', ctx=[]):
+	return str_ctype(do_ctype_struct(t, tag=tag))
 
 
 def str_field(t, id_str, ctx=[]):
-	return str_type(t, core=' ' + id_str, ctx=ctx)
+	return str_ctype(t=mtype2ctype(t), text=id_str)
 
 
 bin_ops = {
@@ -2591,7 +2780,8 @@ def str_value_as_ptr(x):
 
 	if root.isValueSlice():
 		ptr2slice = TypePointer(x.type)
-		sstr += "(" + str_type_pointer(ptr2slice) + ")"
+		sstr += "(" + str_type(ptr2slice) + ")"
+		#sstr += "(" + str_type_pointer(ptr2slice) + ")"
 
 	if root.isValueDeref():
 		return str_value(root.value)

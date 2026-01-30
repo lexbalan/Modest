@@ -8,10 +8,10 @@
 
 
 struct queue_Queue {
-	uint32_t capacity;  // Number of items queue can hold up
-	uint32_t size;  // Number of items in queue now
-	uint32_t p;  // put index
-	uint32_t g;  // get index
+	uint32_t capacity;
+	uint32_t size;
+	uint32_t p;
+	uint32_t g;
 };
 typedef struct queue_Queue queue_Queue;
 void queue_init(queue_Queue *q, uint32_t capacity);

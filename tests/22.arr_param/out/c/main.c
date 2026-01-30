@@ -9,25 +9,25 @@
 
 
 // returns array by value
-static void getarr10(int32_t(*_sret_)[10]) {
-	memcpy(_sret_, &((int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), sizeof(int32_t[10]));
+static void getarr10(int32_t (*_sret_)[10]) {
+	memcpy(_sret_, &((int32_t [10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), sizeof(int32_t [10]));
 }
 
 
 
 // receive & returns array by value
-static void arraysAdd(int32_t(*_a)[10], int32_t(*_b)[10], int32_t(*_sret_)[10]) {
+static void arraysAdd(int32_t (*_a)[10], int32_t (*_b)[10], int32_t (*_sret_)[10]) {
 	int32_t a[10];
-	memcpy(a, _a, sizeof(int32_t[10]));
+	memcpy(a, _a, sizeof(int32_t [10]));
 	int32_t b[10];
-	memcpy(b, _b, sizeof(int32_t[10]));
+	memcpy(b, _b, sizeof(int32_t [10]));
 	int32_t c[10];
 	uint32_t i = 0;
 	while (i < 10) {
 		c[i] = a[i] + b[i];
 		i = i + 1;
 	}
-	memcpy(_sret_, &c, sizeof(int32_t[10]));
+	memcpy(_sret_, &c, sizeof(int32_t [10]));
 }
 
 
@@ -35,23 +35,23 @@ int32_t main(void) {
 	int32_t a[10];
 	getarr10(&a);
 
-	if (memcmp(&a, &((int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), sizeof(int32_t[10])) == 0) {
+	if (memcmp(&a, &((int32_t [10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), sizeof(int32_t [10])) == 0) {
 		printf("test1 passed!\n");
 	}
 
 	#define b  {0, 10, 20, 30, 40, 50, 60, 70, 80, 90}
 
 	int32_t c[10];
-	arraysAdd(&a, &(int32_t[10])b, &c);
+	arraysAdd(&a, &(int32_t [10])b, &c);
 
-	if (memcmp(&c, &((int32_t[10]){0, 11, 22, 33, 44, 55, 66, 77, 88, 99}), sizeof(int32_t[10])) == 0) {
+	if (memcmp(&c, &((int32_t [10]){0, 11, 22, 33, 44, 55, 66, 77, 88, 99}), sizeof(int32_t [10])) == 0) {
 		printf("test2 passed!\n");
 	}
 
 	int32_t d[10];
 	arraysAdd(&a, &a, &d);
 
-	if (memcmp(&d, &((int32_t[10]){0, 2, 4, 6, 8, 10, 12, 14, 16, 18}), sizeof(int32_t[10])) == 0) {
+	if (memcmp(&d, &((int32_t [10]){0, 2, 4, 6, 8, 10, 12, 14, 16, 18}), sizeof(int32_t [10])) == 0) {
 		printf("test3 passed!\n");
 	}
 

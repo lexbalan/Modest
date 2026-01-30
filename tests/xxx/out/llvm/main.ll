@@ -272,43 +272,47 @@ define internal void @ss([10 x %Char8]* %0, [10 x %Char8] %__s) {
 	ret void
 }
 
+@arr2d = internal global [10 x [10 x %Int32]] zeroinitializer
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
-	%2 = alloca [32 x %Char8], align 1
-	%3 = insertvalue [32 x %Char8] zeroinitializer, %Char8 72, 0
-	%4 = insertvalue [32 x %Char8] %3, %Char8 101, 1
-	%5 = insertvalue [32 x %Char8] %4, %Char8 108, 2
-	%6 = insertvalue [32 x %Char8] %5, %Char8 108, 3
-	%7 = insertvalue [32 x %Char8] %6, %Char8 111, 4
-	%8 = insertvalue [32 x %Char8] %7, %Char8 33, 5
-	%9 = zext i8 32 to %Nat32
-	store [32 x %Char8] %8, [32 x %Char8]* %2
-	%10 = alloca [32 x %Char8], align 1
-	%11 = insertvalue [32 x %Char8] zeroinitializer, %Char8 87, 0
-	%12 = insertvalue [32 x %Char8] %11, %Char8 111, 1
-	%13 = insertvalue [32 x %Char8] %12, %Char8 114, 2
-	%14 = insertvalue [32 x %Char8] %13, %Char8 108, 3
-	%15 = insertvalue [32 x %Char8] %14, %Char8 100, 4
-	%16 = zext i8 32 to %Nat32
-	store [32 x %Char8] %15, [32 x %Char8]* %10
-	%17 = bitcast [32 x %Char8]* %2 to %Str8*
-	call void @puts8(%Str8* %17)
-	%18 = bitcast [32 x %Char8]* %2 to [0 x %ConstChar]*
-	%19 = call %SizeT @strlen([0 x %ConstChar]* %18)
-	%20 = bitcast [32 x %Char8]* %10 to [0 x %Char]*
-	%21 = bitcast [32 x %Char8]* %2 to [0 x %ConstChar]*
-	%22 = call [0 x %Char]* @strcpy([0 x %Char]* %20, [0 x %ConstChar]* %21)
-	%23 = bitcast [32 x %Char8]* %10 to [0 x %Char]*
-	%24 = bitcast [32 x %Char8]* %2 to [0 x %ConstChar]*
-	%25 = call [0 x %Char]* @strncpy([0 x %Char]* %23, [0 x %ConstChar]* %24, %SizeT 5)
-	%26 = bitcast [5 x %Char8]* @str0 to %Str8*
-	call void @puts8(%Str8* %26)
-	%27 = load %Str8*, %Str8** @pstr0
-	call void @puts8(%Str8* %27)
-	%28 = bitcast [5 x %Char16]* @str1 to %Str16*
-	call void @puts16(%Str16* %28)
-	%29 = load %Str32*, %Str32** @pstr2
-	call void @puts32(%Str32* %29)
+	%2 = alloca [0 x [0 x %Int32]]*, align 8
+	%3 = bitcast [10 x [10 x %Int32]]* @arr2d to [0 x [0 x %Int32]]*
+	store [0 x [0 x %Int32]]* %3, [0 x [0 x %Int32]]** %2
+	%4 = alloca [32 x %Char8], align 1
+	%5 = insertvalue [32 x %Char8] zeroinitializer, %Char8 72, 0
+	%6 = insertvalue [32 x %Char8] %5, %Char8 101, 1
+	%7 = insertvalue [32 x %Char8] %6, %Char8 108, 2
+	%8 = insertvalue [32 x %Char8] %7, %Char8 108, 3
+	%9 = insertvalue [32 x %Char8] %8, %Char8 111, 4
+	%10 = insertvalue [32 x %Char8] %9, %Char8 33, 5
+	%11 = zext i8 32 to %Nat32
+	store [32 x %Char8] %10, [32 x %Char8]* %4
+	%12 = alloca [32 x %Char8], align 1
+	%13 = insertvalue [32 x %Char8] zeroinitializer, %Char8 87, 0
+	%14 = insertvalue [32 x %Char8] %13, %Char8 111, 1
+	%15 = insertvalue [32 x %Char8] %14, %Char8 114, 2
+	%16 = insertvalue [32 x %Char8] %15, %Char8 108, 3
+	%17 = insertvalue [32 x %Char8] %16, %Char8 100, 4
+	%18 = zext i8 32 to %Nat32
+	store [32 x %Char8] %17, [32 x %Char8]* %12
+	%19 = bitcast [32 x %Char8]* %4 to %Str8*
+	call void @puts8(%Str8* %19)
+	%20 = bitcast [32 x %Char8]* %4 to [0 x %ConstChar]*
+	%21 = call %SizeT @strlen([0 x %ConstChar]* %20)
+	%22 = bitcast [32 x %Char8]* %12 to [0 x %Char]*
+	%23 = bitcast [32 x %Char8]* %4 to [0 x %ConstChar]*
+	%24 = call [0 x %Char]* @strcpy([0 x %Char]* %22, [0 x %ConstChar]* %23)
+	%25 = bitcast [32 x %Char8]* %12 to [0 x %Char]*
+	%26 = bitcast [32 x %Char8]* %4 to [0 x %ConstChar]*
+	%27 = call [0 x %Char]* @strncpy([0 x %Char]* %25, [0 x %ConstChar]* %26, %SizeT 5)
+	%28 = bitcast [5 x %Char8]* @str0 to %Str8*
+	call void @puts8(%Str8* %28)
+	%29 = load %Str8*, %Str8** @pstr0
+	call void @puts8(%Str8* %29)
+	%30 = bitcast [5 x %Char16]* @str1 to %Str16*
+	call void @puts16(%Str16* %30)
+	%31 = load %Str32*, %Str32** @pstr2
+	call void @puts32(%Str32* %31)
 	ret %Int32 0
 }
 
