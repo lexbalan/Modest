@@ -35,3 +35,7 @@ public func main () -> Unit {
 	[ ] <#type_expression#>
 ```
 
+
+```
+	*[][]...([])T разрешен для создания но не для index/slice (!) нужно приводить явно
+```
