@@ -357,7 +357,7 @@ def do_ctype_pointer(t, specs=[]):
 	to = t.to
 
 	if decize(to):
-		return ctype_pointer(to=mtype2ctype(to.of), specs=specs)
+		return ctype_pointer(to=do_ctype(to.of), specs=specs)
 
 	# IMPORTANT:
 	# *[][]...([])T -> *[]T
@@ -367,7 +367,7 @@ def do_ctype_pointer(t, specs=[]):
 	while to.is_open_array_of_open_array():
 		to = to.of
 
-	return ctype_pointer(to=mtype2ctype(to), specs=specs)
+	return ctype_pointer(to=do_ctype(to), specs=specs)
 
 
 # преобразуем Modest TypeFunc -> CIR TypeFunc
@@ -375,18 +375,18 @@ def do_ctype_func(t, specs=[]):
 	params = []
 	for p in t.params:
 		id_str = p.id.str
-		arg_ctype=mtype2ctype(p.type)
+		arg_ctype=do_ctype(p.type)
 		if p.type.is_array():
 			id_str = '_' + id_str
-			arg_ctype = ctype_pointer(arg_ctype)
+			arg_ctype = do_ctype(TypePointer(p.type))
 		params.append(ctype_field(id_str=id_str, ctype=arg_ctype, specs=[]))
 
 	if not t.to.is_array():
-		to=mtype2ctype(t.to)
+		to=do_ctype(t.to)
 	else:
 		# Если f возвращает массив по значению, вернем void и добавим _sret_ - pointer to array
 		to=ctype_named('void')
-		sret_ctype = ctype_pointer(to=mtype2ctype(t.to))
+		sret_ctype = do_ctype(TypePointer(t.to))
 		params.append(ctype_field(id_str='_sret_', ctype=sret_ctype, specs=[]))
 
 	return ctype_func(to=to, params=params, specs=specs, extra_args=t.extra_args)
@@ -396,7 +396,7 @@ def do_ctype_func(t, specs=[]):
 def do_ctype_array(t, specs=[]):
 	# сливаем *[][] в *[]
 	# такой укзаатель на массив массивов можно будет использовать только после приведения к *[n][m] (!)
-	return ctype_array(of=mtype2ctype(t.of), volume=t.volume, specs=specs)
+	return ctype_array(of=do_ctype(t.of), volume=t.volume, specs=specs)
 
 
 # преобразуем Modest TypeRecord -> CIR TypeStruct
@@ -404,12 +404,12 @@ def do_ctype_struct(t, tag='', specs=[]):
 	assert(isinstance(t, Type))
 	fields = []
 	for p in t.fields:
-		fields.append(ctype_field(id_str=p.id.str, ctype=mtype2ctype(p.type), specs=[], nl=p.nl))
+		fields.append(ctype_field(id_str=p.id.str, ctype=do_ctype(p.type), specs=[], nl=p.nl))
 	return ctype_struct(fields, specs=specs, tag=tag)
 
 
 # преобразуем Modest Type -> CIR Type
-def mtype2ctype(t):
+def do_ctype(t):
 	assert(isinstance(t, Type))
 
 	specs = []
@@ -430,7 +430,7 @@ def mtype2ctype(t):
 
 # Переводим представление о типе в Modest в представление о типе C backend
 def str_type(t, ctx=[]):
-	return str_ctype(t=mtype2ctype(t))
+	return str_ctype(t=do_ctype(t))
 
 
 def str_type_record(t, tag='', ctx=[]):
@@ -438,7 +438,7 @@ def str_type_record(t, tag='', ctx=[]):
 
 
 def str_field(t, id_str, ctx=[]):
-	return str_ctype(t=mtype2ctype(t), text=id_str)
+	return str_ctype(t=do_ctype(t), text=id_str)
 
 
 bin_ops = {

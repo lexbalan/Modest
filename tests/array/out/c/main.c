@@ -47,7 +47,7 @@ static char32_t arr2[10] = {U'H', U'e', U'l', U'l', U'o', U'!'};
 //}
 
 
-static void printArrayOf10Char32(char32_t (*_a)[10]);
+static void printArrayOf10Char32(char32_t *_a);
 static void sum10IntArrays(int32_t (*_a)[10], int32_t (*_b)[10], int32_t (*_sret_)[10]);
 
 int main(void) {
@@ -71,7 +71,7 @@ int main(void) {
 }
 
 
-static void printArrayOf10Char32(char32_t (*_a)[10]) {
+static void printArrayOf10Char32(char32_t *_a) {
 	char32_t a[10];
 	memcpy(a, _a, sizeof(char32_t [10]));
 	uint32_t i = 0;

@@ -40,7 +40,7 @@ static char arrayFromString[3] = {'a', 'b', 'c'};
 
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
-static void f0(char (*_x)[20], char (*_sret_)[30]) {
+static void f0(char *_x, char *_sret_) {
 	char x[20];
 	memcpy(x, _x, sizeof(char [20]));
 	char local_copy_of_x[20];
