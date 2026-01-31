@@ -840,7 +840,7 @@ class Type(Entity):
 		return False
 
 
-	# array of char not always is Str (!) (z-string) see is_str
+	# array of char not always is Str (!) see zarray att
 	def is_pointer_to_str(self):
 		if self.is_pointer():
 			return self.to.is_array_of_char()
@@ -850,14 +850,14 @@ class Type(Entity):
 	# Str8, Str16, Str32
 	def is_str(self):
 		if self.is_array_of_char():
-			return 'z-string' in self.att
+			return 'zarray' in self.att
 		return False
 
 
-	def is_pointer_to_zstr(self):
-		if self.is_pointer():
-			return self.to.is_str()
-		return False
+#	def is_pointer_to_zstr(self):
+#		if self.is_pointer():
+#			return self.to.is_str()
+#		return False
 
 
 	def is_pointer_to_func(self):

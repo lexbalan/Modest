@@ -113,17 +113,22 @@ undefinedVolume = ValueUndef(typeSysNat, ti=None)
 typeStr8 = TypeArray(typeChar8, undefinedVolume, ti=None)
 typeStr8.id = Id('Str8')
 typeStr8.id.c = None
-typeStr8.att.append("z-string")
+typeStr8.att.append("zarray")
 
 typeStr16 = TypeArray(typeChar16, undefinedVolume, ti=None)
 typeStr16.id = Id('Str16')
 typeStr16.id.c = None
-typeStr16.att.append("z-string")
+typeStr16.att.append("zarray")
 
 typeStr32 = TypeArray(typeChar32, undefinedVolume, ti=None)
 typeStr32.id = Id('Str32')
 typeStr32.id.c = None
-typeStr32.att.append("z-string")
+typeStr32.att.append("zarray")
+
+typeByte = typeWord8.copy()
+typeByte.id = Id('Byte')
+typeByte.id.c = 'char'
+
 
 type__VA_List = TypeVaList()
 
