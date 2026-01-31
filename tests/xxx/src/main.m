@@ -45,7 +45,7 @@ public func main () -> Int32 {
 	var p_arr2d: *[][]Int32
 	p_arr2d = &arr2d
 
-	var a: [10]Byte
+	var a: @zstring [10]Byte
 
 	//let xx = p_arr2d[0]
 	//let yy = p_arr2d[0:2]

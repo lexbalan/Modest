@@ -197,6 +197,7 @@ def init():
 
 	root_symtab.type_add('Unit', typeUnit)
 	root_symtab.type_add('Bool', typeBool)
+
 	root_symtab.type_add('Byte', typeByte)
 
 	root_symtab.type_add('Word8', typeWord8)
@@ -246,19 +247,9 @@ def init():
 	valueTrue = value_bool_create(1)
 	valueFalse = value_bool_create(0)
 
-#	trueId = Id('true')
-#	valueTrue.id = trueId
-#	valueTrue.id.c = trueId
-#	valueTrue.id.llvm = trueId
-#	falseId = Id('false')
-#	valueFalse.id = falseId
-#	valueFalse.id.c = falseId
-#	valueFalse.id.llvm = falseId
-
 	root_symtab.value_add('nil', valueNil)
 	root_symtab.value_add('true', valueTrue)
 	root_symtab.value_add('false', valueFalse)
-
 
 	word_width = int(settings['word_width'])
 	char_width = int(settings['char_width'])
@@ -531,7 +522,11 @@ def add_spices_type(t, atts):
 
 	for a in atts:
 		k = a['kind']
+		#print("SPICE: " + str(a))
 		nt.annotations[k] = {}
+
+		if k == 'zstring':
+			nt.att.append(k)
 
 		if k == 'brand':
 			brand_cnt += 1
