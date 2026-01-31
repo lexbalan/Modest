@@ -78,7 +78,7 @@ def value_pointer_cons(t, v, method, ti):
 			nv.stage = HLIR_VALUE_STAGE_LINKTIME
 			char_type = t.to.of
 			nv.strdata = utf32_chars_to_utfx_char_values(v.asset, char_type, ti)
-			#nv.addAttribute3('zstring')
+			#nv.addAttribute3('zarray')
 
 			# регистрируем строку в модуле
 			from trans import cmodule_strings_add

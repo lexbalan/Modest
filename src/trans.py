@@ -525,7 +525,7 @@ def add_spices_type(t, atts):
 		#print("SPICE: " + str(a))
 		nt.annotations[k] = {}
 
-		if k == 'zstring':
+		if k == 'zarray':
 			nt.att.append(k)
 
 		if k == 'brand':
