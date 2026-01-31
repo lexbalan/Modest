@@ -61,8 +61,8 @@ def word_can(to, from_type, method, ti):
 def value_word_cons(t, v, method, ti):
 	if v.isValueImmediate():
 		return _value_word_cons_immediate(t, v, method, ti)
-	rawMode=v.type.is_float()
-	nv = ValueCons(t, v, method, rawMode=rawMode, ti=ti)
+	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	nv.rawMode = v.type.is_float()
 	return nv
 

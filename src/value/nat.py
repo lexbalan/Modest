@@ -96,20 +96,19 @@ def value_natural_cons(t, v, method, ti):
 	if v.isValueImmediate():
 		_check_width(v.type, t, method, ti)
 		if method != 'implicit':
-			nv = ValueCons(t, v, method, rawMode=False, ti=ti)
+			nv = ValueCons(t, v, method, ti=ti)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-
-			if v.type.is_signed():
-				if v.asset < 0:
-					nv.asset = -v.asset
-			else:
-				nv.asset = int(v.asset)  # here can be float
-
+			if v.asset != None:  # asset can be None in case of undefined value (!)
+				if v.type.is_signed():
+					if v.asset < 0:
+						nv.asset = -v.asset
+				else:
+					nv.asset = int(v.asset)  # here can be float
 			return nv
 
 		return _value_natural_cons_immediate(t, v, method, ti)
 
-	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
+	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 

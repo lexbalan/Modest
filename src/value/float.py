@@ -44,7 +44,7 @@ def float_can(to, from_type, method, ti):
 def value_float_cons(t, v, method, ti):
 	if v.isValueImmediate():
 		return _value_float_cons_immediate(t, v, method, ti)
-	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
+	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 

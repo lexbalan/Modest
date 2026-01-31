@@ -74,7 +74,7 @@ def pointer_can(to, from_type, method, ti):
 def value_pointer_cons(t, v, method, ti):
 	if v.isValueImmediate():
 		if v.type.is_string():
-			nv = ValueCons(t, v, method, rawMode=False, ti=ti)
+			nv = ValueCons(t, v, method, ti=ti)
 			nv.stage = HLIR_VALUE_STAGE_LINKTIME
 			char_type = t.to.of
 			nv.strdata = utf32_chars_to_utfx_char_values(v.asset, char_type, ti)
@@ -90,7 +90,7 @@ def value_pointer_cons(t, v, method, ti):
 			from .cons import value_cons_immediate
 			return value_cons_immediate(t, v, method, ti)
 
-	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
+	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 

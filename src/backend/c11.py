@@ -1084,7 +1084,7 @@ def str_literal_record(x, ctx):
 		field_id_str = get_id_str(item)
 		ini = get_item_by_id(items, field_id_str)
 
-		if ini.value.isValueUndef():
+		if ini.value.is_value_undefined():
 			# skip undefined field values
 			i = i + 1
 			continue

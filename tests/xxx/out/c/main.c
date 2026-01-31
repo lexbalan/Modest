@@ -66,6 +66,10 @@ static void ss(char *_s, char *_sret_) {
 
 static int32_t arr2d[10][10];
 
+#define CC1  <hlir.types.ValueBad object at 0x104cad220>
+
+static int32_t ax[CC1];
+
 int32_t main(void) {
 	printf("Hello World!\n");
 
@@ -73,6 +77,8 @@ int32_t main(void) {
 	p_arr2d = (int32_t (*)[])&arr2d;
 
 	char a[10];
+
+	//var b = Int32 cc1
 
 	//let xx = p_arr2d[0]
 	//let yy = p_arr2d[0:2]

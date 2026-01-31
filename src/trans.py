@@ -354,7 +354,7 @@ def do_field(x):
 
 	iv = do_value_immediate(x['init_value'])
 
-	if not iv.isValueUndef():
+	if not iv.is_value_undefined():
 		# у поля есть инициализатор
 		pass
 
@@ -441,7 +441,7 @@ def do_type_array(x):
 	if volume.isValueBad():
 		return TypeArray(of, volume, ti=x['ti'])
 
-	if not volume.isValueUndef():
+	if not volume.is_value_undefined():
 		if volume.isValueRuntime():
 			if is_local_context():
 				global cfunc
@@ -593,14 +593,16 @@ def do_value_shift(x):
 	if op == HLIR_VALUE_OP_SHL:
 		nv = ValueShl(left.type, left, right, ti=x['ti'])
 		if left.isValueImmediate() and right.isValueImmediate():
-			nv.asset = int(left.asset << right.asset)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+			if left.asset != None and right.asset != None:
+				nv.asset = int(left.asset << right.asset)
 
 	else: #if op == HLIR_VALUE_OP_SHR:
 		nv = ValueShr(left.type, left, right, ti=x['ti'])
 		if left.isValueImmediate() and right.isValueImmediate():
-			nv.asset = int(left.asset >> right.asset)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+			if left.asset != None and right.asset != None:
+				nv.asset = int(left.asset >> right.asset)
 
 	return nv
 
@@ -616,7 +618,7 @@ def do_value_bin_op(op, l, r, ti):
 	if l.isValueBad() or r.isValueBad():
 		return ValueBad(ti)
 
-	if l.isValueUndef() or r.isValueUndef():
+	if l.is_value_undefined() or r.is_value_undefined():
 		t = htype.select_common_type(l.type, r.type, ti)
 		return ValueUndef(t)
 
@@ -686,36 +688,37 @@ def do_value_bin_op(op, l, r, ti):
 	# if left & right are immediate, we can fold const
 	# and append field .asset to bin_value
 	if l.isValueImmediate() and r.isValueImmediate():
-		ops = {
-			HLIR_VALUE_OP_LOGIC_OR: lambda a, b: a or b,
-			HLIR_VALUE_OP_LOGIC_AND: lambda a, b: a and b,
-			HLIR_VALUE_OP_OR: lambda a, b: a | b,
-			HLIR_VALUE_OP_AND: lambda a, b: a & b,
-			HLIR_VALUE_OP_XOR: lambda a, b: a ^ b,
-			HLIR_VALUE_OP_LT: lambda a, b: a < b,
-			HLIR_VALUE_OP_GT: lambda a, b: a > b,
-			HLIR_VALUE_OP_LE: lambda a, b: a <= b,
-			HLIR_VALUE_OP_GE: lambda a, b: a >= b,
-			HLIR_VALUE_OP_ADD: lambda a, b: a + b,
-			HLIR_VALUE_OP_SUB: lambda a, b: a - b,
-			HLIR_VALUE_OP_MUL: lambda a, b: a * b,
-			HLIR_VALUE_OP_DIV: lambda a, b: l.asset // r.asset,
-			HLIR_VALUE_OP_REM: lambda a, b: a % b,
-			HLIR_VALUE_OP_EQ:  lambda a, b: a == b,
-			HLIR_VALUE_OP_NE:  lambda a, b: a != b
-		}
-
-		asset = None
-		if op == HLIR_VALUE_OP_DIV and t.is_float():
-			asset = l.asset / r.asset
-		else:
-			asset = ops[op](l.asset, r.asset)
-
-		if t.is_number():
-			nv.type = type_number_for(asset, ti=ti)
-
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-		nv.asset = asset
+		if l.asset != None and r.asset != None:  # for case ValueUndef
+			ops = {
+				HLIR_VALUE_OP_LOGIC_OR: lambda a, b: a or b,
+				HLIR_VALUE_OP_LOGIC_AND: lambda a, b: a and b,
+				HLIR_VALUE_OP_OR: lambda a, b: a | b,
+				HLIR_VALUE_OP_AND: lambda a, b: a & b,
+				HLIR_VALUE_OP_XOR: lambda a, b: a ^ b,
+				HLIR_VALUE_OP_LT: lambda a, b: a < b,
+				HLIR_VALUE_OP_GT: lambda a, b: a > b,
+				HLIR_VALUE_OP_LE: lambda a, b: a <= b,
+				HLIR_VALUE_OP_GE: lambda a, b: a >= b,
+				HLIR_VALUE_OP_ADD: lambda a, b: a + b,
+				HLIR_VALUE_OP_SUB: lambda a, b: a - b,
+				HLIR_VALUE_OP_MUL: lambda a, b: a * b,
+				HLIR_VALUE_OP_DIV: lambda a, b: l.asset // r.asset,
+				HLIR_VALUE_OP_REM: lambda a, b: a % b,
+				HLIR_VALUE_OP_EQ:  lambda a, b: a == b,
+				HLIR_VALUE_OP_NE:  lambda a, b: a != b
+			}
+
+			asset = None
+			if op == HLIR_VALUE_OP_DIV and t.is_float():
+				asset = l.asset / r.asset
+			else:
+				asset = ops[op](l.asset, r.asset)
+
+			if t.is_number():
+				nv.type = type_number_for(asset, ti=ti)
+
+			nv.asset = asset
 
 	return nv
 
@@ -723,7 +726,7 @@ def do_value_bin_op(op, l, r, ti):
 def do_value_not(x):
 	v = do_rvalue(x['value'])
 
-	if v.isValueBad() or v.isValueUndef():
+	if v.isValueBad() or v.is_value_undefined():
 		return v
 
 	vtype = v.type
@@ -739,13 +742,14 @@ def do_value_not(x):
 	nv = ValueNot(vtype, v, ti=x['ti'])
 
 	if v.isValueImmediate():
-		# because: ~(1) = -1 (not 0) !
-		if v.type.is_bool():
-			nv.asset = not v.asset
-		else:
-			nv.asset = ~v.asset
-
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+		if v.asset != None:  # for ValueUndef
+			# because: ~(1) = -1 (not 0) !
+			if v.type.is_bool():
+				nv.asset = not v.asset
+			else:
+				nv.asset = ~v.asset
+
 
 	return nv
 
@@ -754,7 +758,7 @@ def do_value_not(x):
 def do_value_neg(x):
 	v = do_rvalue(x['value'])
 
-	if v.isValueBad() or v.isValueUndef():
+	if v.isValueBad() or v.is_value_undefined():
 		return v
 
 	vtype = v.type
@@ -770,8 +774,9 @@ def do_value_neg(x):
 	nv = ValueNeg(vtype, v, ti=x['ti'])
 
 	if v.isValueImmediate():
-		nv.asset = -v.asset
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+		if v.asset != None:  # for ValueUndef
+			nv.asset = -v.asset
 
 		if nv.type.is_generic():
 			nv.type = type_number_for(v.asset, ti=v.ti)
@@ -782,7 +787,7 @@ def do_value_neg(x):
 def do_value_pos(x):
 	v = do_rvalue(x['value'])
 
-	if v.isValueBad() or v.isValueUndef():
+	if v.isValueBad() or v.is_value_undefined():
 		return v
 
 	vtype = v.type
@@ -794,7 +799,8 @@ def do_value_pos(x):
 
 	if v.isValueImmediate():
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-		nv.asset = +v.asset
+		if v.asset != None:  # for ValueUndef
+			nv.asset = +v.asset
 
 	if nv.type.is_generic():
 		nv.type = type_number_for(v.asset, ti=v.ti)
@@ -809,7 +815,7 @@ def do_value_ref(x):
 	# что конечно неверно, но пока так. Однажды нужно придумать как проверить судьбу этого указателя.
 	v.is_initialized = True
 
-	if v.isValueBad() or v.isValueUndef():
+	if v.isValueBad() or v.is_value_undefined():
 		return v
 
 	ti = x['ti']
@@ -830,7 +836,7 @@ def do_value_ref(x):
 def do_value_new(x):
 	v = do_value(x['value'])
 
-	if v.isValueBad() or v.isValueUndef():
+	if v.isValueBad() or v.is_value_undefined():
 		return v
 
 	nv = ValueNew(v)
@@ -840,7 +846,7 @@ def do_value_new(x):
 def do_value_deref(x):
 	v = do_rvalue(x['value'])
 
-	if v.isValueBad() or v.isValueUndef():
+	if v.isValueBad() or v.is_value_undefined():
 		return v
 
 	vtype = v.type
@@ -870,7 +876,7 @@ def do_value_lengthof_value(x):
 	ti = x['ti']
 	arg = do_rvalue(x['value'])
 
-	if arg.isValueBad() or arg.isValueUndef():
+	if arg.isValueBad() or arg.is_value_undefined():
 		return arg
 
 	if not (arg.type.is_array() or arg.type.is_string()):
@@ -936,7 +942,7 @@ def transmission(to_type, value, ti):
 def do_value_call(x):
 	fn = do_rvalue(x['left'])
 
-	if fn.isValueBad() or fn.isValueUndef():
+	if fn.isValueBad() or fn.is_value_undefined():
 		return fn
 
 	if fn.isValueBad():
@@ -1038,7 +1044,7 @@ def do_value_call(x):
 			if vx.stage != HLIR_VALUE_STAGE_COMPILETIME:
 				args_is_ct = False
 		else:
-			if vx.isValueUndef():
+			if vx.is_value_undefined():
 				error("unspecified parameter '%s'" % p_id_str, x['ti'])
 		arg = do_arg(param, vx, named=True)
 		sorted_args.append(arg)
@@ -1130,7 +1136,7 @@ def do_value_index(x):
 	if left.isValueBad():
 		return ValueBad(x['ti'])
 
-	if left.isValueUndef():
+	if left.is_value_undefined():
 		return ValueUndef(Type(x['ti']), x['ti'])
 
 	left_type = left.type
@@ -1235,7 +1241,7 @@ def do_value_slice(x):
 	# а для слайса [a:b] это (b - a)
 	slice_volume = do_value_bin_op(HLIR_VALUE_OP_SUB, index_to, index_from, x['ti'])
 
-	if not (slice_volume.isValueUndef() or slice_volume.isValueUndef()):
+	if not (slice_volume.is_value_undefined() or slice_volume.is_value_undefined()):
 		if slice_volume.isValueImmediate():
 			if slice_volume.asset < 0:
 				error("wrong slice direction", x['ti'])
@@ -1576,15 +1582,15 @@ def do_value_bad(x):
 
 
 def do_value_undefined(x):
-	t = htype.TypeBad(x['ti'])
-	#t = htype.TypeUndefined(x['ti'])
+	#t = htype.TypeBad(x['ti'])
+	t = htype.TypeUndefined(x['ti'])
 	return ValueUndef(t, x['ti'])
 
 
 def do_rvalue(x):
 	v = do_value(x)
 	if not v.is_initialized:
-		warning("attempt to use an uninitialized variable", x['ti'])
+		warning("attempt to use an uninitialized value", x['ti'])
 	return v
 
 
@@ -1672,7 +1678,7 @@ def do_stmt_var(x):
 
 	df = def_var_common(x)
 
-	if not df.init_value.isValueUndef():
+	if not df.init_value.is_value_undefined():
 		df.value.is_initialized = True
 
 	df.id.prefix = None
@@ -2048,6 +2054,7 @@ def def_const_common(x):
 		error("redefinition of '%s'" % id.str, id.ti)
 
 	iv = do_rvalue(x['init_value'])
+	is_initialized = not iv.is_value_undefined()
 
 	t = None
 	if x['type'] != None:
@@ -2058,6 +2065,7 @@ def def_const_common(x):
 		t = Type.reborn(iv.type)
 
 	const_value = ValueConst(t, id, init_value=iv, ti=id.ti)
+	const_value.is_initialized = is_initialized
 
 	const_value.stage = iv.stage
 	if iv.isValueImmediate():
@@ -2094,9 +2102,10 @@ def def_const_global(x):
 	df.id.prefix = global_prefix
 
 	iv = df.init_value
-	if not iv.isValueUndef():
+	if not iv.is_value_undefined():
 		if iv.isValueRuntime():
 			#print(iv.stage)
+			print(iv)
 			error("expected immediate value", iv.ti)
 
 	df = add_spices_def(df, x['anno'])
@@ -2130,7 +2139,7 @@ def def_var_common(x):
 	iv = do_rvalue(x['init_value'])
 
 	tu = t == None
-	vu = iv.isValueUndef()
+	vu = iv.is_value_undefined()
 
 	# error: no type, no init valuetu = type_is_incompleted(t)
 	if tu == True and vu == True:
@@ -2163,7 +2172,7 @@ def def_var_common(x):
 
 	# type & init value present
 	if t != None:
-		if not iv.isValueUndef():
+		if not iv.is_value_undefined():
 			iv = value_cons_implicit_check(t, iv)
 	else:
 		if iv.type.is_generic():
@@ -2774,6 +2783,7 @@ def setObjAttrByPath(x, path, value):
 def add_spices_def(x, ast_atts):
 	for a in ast_atts:
 		kind = a['kind']
+		#print(kind)
 		annotation = {}
 
 		if len(a['args']) == 1:

@@ -11,6 +11,10 @@ def align_to(x, y):
 
 
 def nbits_for_num(x):
+	if x == None:
+		# case when we works with asset from value with TypeUndef
+		return 0
+
 	n = 1
 	if x < 0:
 		x = -x

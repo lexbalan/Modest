@@ -25,29 +25,29 @@ public type SocklenT = Nat32
 
 
 @alias("c", "struct sockaddr")
-public type SockAddr = record {
-	public sa_family: UnsignedShort  // address family
-	public sa_data: [14]Char8        // up to 14 bytes of direct address
+public type SockAddr = @public record {
+	sa_family: UnsignedShort  // address family
+	sa_data: [14]Char8        // up to 14 bytes of direct address
 }
 
 
 @alias("c", "struct in_addr")
-public type Struct_in_addr = record {
-	public s_addr: InAddrT
+public type Struct_in_addr = @public record {
+	s_addr: InAddrT
 }
 
 
 @alias("c", "struct sockaddr_in")
-public type SockAddrIn = record {
+public type SockAddrIn = @public record {
 // $if APPLE
-	public sin_len: Nat8
-	public sin_family: Nat8
+	sin_len: Nat8
+	sin_family: Nat8
 // $else
-//public sin_family: Short
+//sin_family: Short
 // $endif APPLE
-	public sin_port: UnsignedShort
-	public sin_addr: Struct_in_addr
-	public sin_zero: [8]Nat8
+	sin_port: UnsignedShort
+	sin_addr: Struct_in_addr
+	sin_zero: [8]Nat8
 }
 
 

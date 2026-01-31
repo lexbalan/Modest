@@ -20,11 +20,11 @@ public type CharStr = Str
 public type ConstCharStr = CharStr
 
 @alias("c", "stdin")
-public const stdin: *File
+@extern public const stdin: *File
 @alias("c", "stdout")
-public const stdout: *File
+@extern public const stdout: *File
 @alias("c", "stderr")
-public const stderr: *File
+@extern public const stderr: *File
 
 
 @alias("c", "EOF")

@@ -37,12 +37,22 @@ func ss (s: [10]Char8) -> [10]Char8 {
 
 var arr2d: [10][10]Int32
 
+const cc1: Nat32 = <undef>
+
+var ax: [cc1]Int32
 
 public func main () -> Int32 {
 	printf("Hello World!\n")
 
 	var p_arr2d: *[][]Int32
 	p_arr2d = &arr2d
+
+	var a: [10]Byte
+
+	//var b = Int32 cc1
+
+	//let xx = p_arr2d[0]
+	//let yy = p_arr2d[0:2]
 
 	var s1: [32]Char8 = "Hello!"
 	var s2: [32]Char8 = "World"

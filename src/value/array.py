@@ -110,6 +110,9 @@ def value_array_cons(t, v, method, ti):
 		t.size = t.of.size * volume.asset
 
 	if method == 'implicit':
+		if v.type.is_undefined():
+			warning("????", t.ti)
+
 		n_to = t.volume.asset
 		n_from = 0
 		if v.type.is_string():
@@ -121,7 +124,7 @@ def value_array_cons(t, v, method, ti):
 		if n_from > 0 and n_from < n_to:
 			warning("implicit cons biggest array from smaller", ti)
 
-	nv = ValueCons(t, v, method, rawMode=False, ti=ti)
+	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = v.stage
 
 	if Type.is_string(v.type):

@@ -107,6 +107,9 @@ def do_file(src_name, outname, settings):
 	backend.init(settings)
 	backend.run(module, outname)
 
+	#if error.errcnt > 0:
+	#	exit(1)
+
 
 
 # применяет конфигурационный файл поверх существующей конфигурации

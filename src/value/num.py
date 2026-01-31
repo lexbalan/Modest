@@ -22,7 +22,7 @@ def number_can(to, from_type, method, ti):
 def value_number_cons(t, v, method, ti):
 	from_type = v.type
 	if number_can(t, from_type, method, ti):
-		nv = ValueCons(t, v, method, rawMode=False, ti=ti)
+		nv = ValueCons(t, v, method, ti=ti)
 		nv.stage = v.stage
 		nv.asset = v.asset
 		return nv

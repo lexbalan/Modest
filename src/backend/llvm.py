@@ -149,11 +149,12 @@ def get_type_id(t):
 	return '%' + id_str
 
 
-def llvm_value_undef(type):
+def llvm_value_undef(x):
+	error("undefined value in llvm backend", x.ti)
 	return {
 		'isa': 'll_value',
 		'kind': 'undef',
-		'type': type,
+		'type': x.type,
 		'is_adr': False
 	}
 
@@ -825,7 +826,7 @@ def print_type_array(t):
 	sz = 0
 	if not t.is_vla():
 		array_size = t.volume
-		if not array_size.isValueUndef():
+		if not array_size.is_value_undefined():
 			if not array_size.type.is_incompleted():
 				if array_size.isValueImmediate():
 					sz = array_size.asset
@@ -1347,8 +1348,9 @@ def select_cast_operator(a, b):
 	elif a.is_bool():
 		return 'zext'
 
+	print('backend:llvm:cast <%s -> %s>' % (str(a), str(b)))
+	return 'cast'
 
-	return 'cast <%s -> %s>' % (str(a), str(b))
 
 
 
@@ -1650,7 +1652,7 @@ def do_eval_record(v):
 	if is_global_context():
 		items = []
 		for initializer in v.asset:
-			if not initializer.value.isValueUndef():
+			if not initializer.value.is_value_undefined():
 				iv = do_reval(initializer.value)
 				items.append({'id': initializer.id, 'value': iv})
 		return llvm_value_record(items, rec_type)
@@ -1663,7 +1665,7 @@ def do_eval_record(v):
 	for initializer in v.asset:
 		# нет смысла засовывать в структуру по значению нулевые элементы
 		# тк она порождается из zeroinitializer и по умолчанию заполнена нулями
-		if not (initializer.value.isValueZero() or initializer.value.isValueUndef()):
+		if not (initializer.value.isValueZero() or initializer.value.is_value_undefined()):
 			iv = do_reval(initializer.value)
 			field = htype.record_field_get(rec_type, get_id_str(initializer))
 			xv = insertvalue(xv, iv, field.field_no)
@@ -1811,7 +1813,8 @@ def do_eval(x):
 	assert(isinstance(x, Value))
 
 	y = None
-	if x.isValueLiteral(): y = do_eval_literal(x)
+	if x.is_value_undefined(): y = llvm_value_undef(x)
+	elif x.isValueLiteral(): y = do_eval_literal(x)
 	elif x.isValueArray(): y = do_eval_array(x)
 	elif x.isValueRecord(): y = do_eval_record(x)
 	elif x.isValueBin(): y = do_eval_bin(x)
@@ -1843,7 +1846,6 @@ def do_eval(x):
 	elif x.isValueVaArg(): y = do_eval_va_arg(x)
 	elif x.isValueVaEnd(): y = do_eval_va_end(x)
 	elif x.isValueVaCopy(): y = do_eval_va_copy(x)
-	elif x.isValueUndef(): y = llvm_value_undef(x.type)
 	else:
 		out("<??>")
 
@@ -1994,7 +1996,7 @@ def print_stmt_var(x):
 	locals_add(id_str, left)
 
 	init_value = x.init_value
-	if not init_value.isValueUndef():
+	if not init_value.is_value_undefined():
 		iv = do_reval(init_value)
 		llvm_store(left, iv)
 
@@ -2467,7 +2469,7 @@ def print_def_var(x, as_extern=False):
 	print_type(var.type)
 
 	if not is_extern:
-		if not x.init_value.isValueUndef():
+		if not x.init_value.is_value_undefined():
 			out(" ")
 			llvm_print_value(do_eval(x.init_value))
 		else:
@@ -2503,14 +2505,14 @@ def print_def_const(x, as_extern=False):
 
 def code_to_char(cc):
 	if cc < 0x20:
-		if cc == 0x07: return "\\07"   # bell
-		elif cc == 0x08: return "\\08" # backspace
-		elif cc == 0x09: return "\\09" # horizontal tab
-		elif cc == 0x0A: return "\\0A" # line feed
-		elif cc == 0x0B: return "\\0B" # vertical tab
-		elif cc == 0x0C: return "\\0C" # form feed
-		elif cc == 0x0D: return "\\0D" # carriage return
-		elif cc == 0x1B: return "\\1B" # escape
+		if cc == 0x07: return "\\07"    # bell
+		elif cc == 0x08: return "\\08"  # backspace
+		elif cc == 0x09: return "\\09"  # horizontal tab
+		elif cc == 0x0A: return "\\0A"  # line feed
+		elif cc == 0x0B: return "\\0B"  # vertical tab
+		elif cc == 0x0C: return "\\0C"  # form feed
+		elif cc == 0x0D: return "\\0D"  # carriage return
+		elif cc == 0x1B: return "\\1B"  # escape
 		else: return "\\%02X" % cc
 
 	elif cc <= 0x7E :
