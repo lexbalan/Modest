@@ -1272,11 +1272,10 @@ class Value(Entity):
 	# stub создал тк ValueUndefined теряется по цепочке после cons, etc. но они все по сути undefined
 	# это poison проблема, которую нужно переосмыслить, может вообще убрать ValueUndef и ввести яд
 	def is_value_undefined(self):
+		if self.isValueImmediate() and self.asset == None:
+			return True
 		if self.isValueUndef():
 			return True
-		if self.isValueImmediate():
-			if self.asset == None:
-				return True
 		if self.type.is_undefined():
 			return True
 		return False
