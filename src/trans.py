@@ -2022,6 +2022,8 @@ def def_type_common(x, nt):
 	Type.update(nt, ty)
 	nt.deps = deps
 	nt.id = id
+	if nt.is_record():
+		nt.id.c_tag = id.str
 	nt.definition = definition
 	nt.parent = cmodule  # добавляем заново тк очистили его выше!
 	nt.ti_def = id.ti

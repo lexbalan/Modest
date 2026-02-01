@@ -176,6 +176,9 @@ def get_id_str(x):
 	if not hasattr(x, 'id'):
 		return None
 
+	if hasattr(x.id, 'c_tag'):
+		return x.id.c_tag
+
 	id = x.id
 	if id == None:
 		return None
@@ -408,6 +411,13 @@ def do_ctype_struct(t, tag='', specs=[]):
 	return ctype_struct(fields, specs=specs, tag=tag)
 
 
+def do_ctype_named(t, specs):
+	id_str = get_type_id(t)
+	if hasattr(t.id, 'c_tag'):
+		id_str = 'struct ' + t.id.c_tag
+	return ctype_named(id_str, specs=specs)
+
+
 # преобразуем Modest Type -> CIR Type
 def do_ctype(t):
 	assert(isinstance(t, Type))
@@ -420,7 +430,7 @@ def do_ctype(t):
 	if t.hasAttribute2('restrict'):
 		specs.append('restrict')
 
-	if is_type_named(t): return ctype_named(get_type_id(t), specs=specs)
+	if is_type_named(t): return do_ctype_named(t, specs=specs)
 	if t.is_pointer(): return do_ctype_pointer(t, specs=specs)
 	if t.is_func(): return do_ctype_func(t, specs=specs)
 	if t.is_array(): return do_ctype_array(t, specs=specs)

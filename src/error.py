@@ -82,8 +82,7 @@ def markline(line, begin, end):
 
 def str_common_message(mg, color, s, ti):
 	if ti == None:
-		print(colorize(mg, color) + s)
-		return
+		return colorize(mg, color) + s
 
 	assert(isinstance(ti, TextInfo))
 	lti = ti.getLeftTokenInfo()

@@ -32,6 +32,8 @@ typedef struct Point {
 	int32_t y;
 } Point;
 
+static struct Point p0;
+
 #define HELLO  "Hello"
 
 static char str0[5] = {'H', 'e', 'l', 'l', 'o'};
@@ -65,7 +67,7 @@ static void ss(char *_s, char *_sret_) {
 
 static int32_t arr2d[10][10];
 
-#define CC1  <hlir.types.ValueBad object at 0x100f19220>
+#define CC1  <hlir.types.ValueBad object at 0x103581e00>
 
 static int32_t ax[CC1];
 

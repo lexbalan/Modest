@@ -9,6 +9,7 @@ type Point = record {
 	y: Int32 = 32
 }
 
+var p0: Point
 
 const hello = "Hello"
 
