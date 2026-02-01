@@ -11,17 +11,15 @@
 
 #define CARR  {0, 10, 15, 20, 25, 30}
 
-struct Point {
+typedef struct Point {
 	double x;
 	double y;
-};
-typedef struct Point Point;
+} Point;
 
-struct Line {
+typedef struct Line {
 	Point a;
 	Point b;
-};
-typedef struct Line Line;
+} Line;
 
 #define ZERO  0
 #define POINT_ZERO  (Point){.x = (double)ZERO, .y = (double)ZERO}
@@ -49,10 +47,9 @@ typedef struct Line Line;
 
 #define LINES  {LINE0, LINE1, LINE2, LINE3}
 
-struct WrappedArray {
+typedef struct WrappedArray {
 	int32_t x;
-};
-typedef struct WrappedArray WrappedArray;
+} WrappedArray;
 
 #define WA  (WrappedArray){0}
 

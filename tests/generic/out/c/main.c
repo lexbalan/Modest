@@ -211,18 +211,16 @@ static bool test_generic_array(void) {
 }
 
 
-struct Point2D {
+typedef struct Point2D {
 	int32_t x;
 	int32_t y;
-};
-typedef struct Point2D Point2D;
+} Point2D;
 
-struct Point3D {
+typedef struct Point3D {
 	int32_t x;
 	int32_t y;
 	int32_t z;
-};
-typedef struct Point3D Point3D;
+} Point3D;
 
 static bool test_generic_record(void) {
 	// Any record expression have GenericRecord type

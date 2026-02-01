@@ -16,11 +16,10 @@ static double squareOfCircle(double radius) {
 }
 
 
-struct Point2D {
+typedef struct Point2D {
 	int x;
 	int y;
-};
-typedef struct Point2D Point2D;
+} Point2D;
 
 static float slope(Point2D a, Point2D b) {
 	const int dx = abs(a.x - b.x);

@@ -15,21 +15,20 @@ typedef uint16_t fsm_StageId;
 
 struct fsm_StateDesc;
 typedef struct fsm_StateDesc fsm_StateDesc;
-struct fsm_ComplexState {
+typedef struct fsm_ComplexState {
 	fsm_StateDesc *state;
 	fsm_StageId stage;
-};
-typedef struct fsm_ComplexState fsm_ComplexState;
+} fsm_ComplexState;
 
 typedef fsm_ComplexState fsm_StateServiceRoutine(fsm_ComplexState state, void *payload);
 
-struct fsm_StateDesc {
+typedef struct fsm_StateDesc {
 	char *id;
 	uint16_t nstages;
 	fsm_StateServiceRoutine *handler;
-};
+} fsm_StateDesc;
 
-struct fsm_FSM {
+typedef struct fsm_FSM {
 	char *id;
 	fsm_ComplexState state;
 	fsm_ComplexState next_state;
@@ -37,8 +36,7 @@ struct fsm_FSM {
 
 	uint32_t timer;
 	bool timer_expired;
-};
-typedef struct fsm_FSM fsm_FSM;
+} fsm_FSM;
 void fsm_init(fsm_FSM *self, char *id, fsm_StateDesc *initState, void *payload);
 void fsm_task(fsm_FSM *self);
 void fsm_tick(fsm_FSM *self);

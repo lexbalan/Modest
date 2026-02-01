@@ -9,17 +9,15 @@
 
 
 
-struct Point {
+typedef struct Point {
 	float x;
 	float y;
-};
-typedef struct Point Point;
+} Point;
 
-struct Line {
+typedef struct Line {
 	Point a;
 	Point b;
-};
-typedef struct Line Line;
+} Line;
 
 static Line line = (Line){
 	.a = (Point){.x = 0.0, .y = 0.0},

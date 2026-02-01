@@ -8,13 +8,12 @@
 
 
 
-struct Context {
+typedef struct Context {
 	uint8_t data[64];
 	uint32_t datalen;
 	uint64_t bitlen;
 	uint32_t state[8];
-};
-typedef struct Context Context;
+} Context;
 
 //@inline
 //func rotleft (a: Word32, b: Nat32) -> Word32 {

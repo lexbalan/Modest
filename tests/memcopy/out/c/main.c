@@ -9,12 +9,11 @@
 
 
 
-struct Object {
+typedef struct Object {
 	char firstname[32];
 	char lastname[32];
 	int32_t age;
-};
-typedef struct Object Object;
+} Object;
 
 int main(void) {
 	printf("memcopy test\n");

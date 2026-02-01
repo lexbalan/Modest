@@ -22,11 +22,10 @@ typedef MyInt32 MyInt32_3;
 #define CVB  (0)
 static int32_t vvb = 1;
 
-struct ProtocolHeader {
+typedef struct ProtocolHeader {
 	uint16_t start;
 	uint16_t len;
-};
-typedef struct ProtocolHeader ProtocolHeader;
+} ProtocolHeader;
 
 static bool name2;
 
@@ -67,11 +66,10 @@ static inline int32_t staticInlineHintFunc(int32_t x) {
 }
 
 
-struct Point2D {
+typedef struct Point2D {
 	double x;
 	double y;
-};
-typedef struct Point2D Point2D;
+} Point2D;
 
 
 

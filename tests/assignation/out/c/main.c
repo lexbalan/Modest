@@ -9,11 +9,10 @@
 
 
 // Simply record for records assignation test
-struct Point {
+typedef struct Point {
 	int32_t x;
 	int32_t y;
-};
-typedef struct Point Point;
+} Point;
 
 static int32_t glb_i0 = 0;
 static int32_t glb_i1 = 321;

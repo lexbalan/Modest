@@ -28,7 +28,7 @@ static inline int char8ToInt(char c) {
 }
 
 
-struct Tokenizer {
+typedef struct Tokenizer {
 	char *input;
 	uint32_t position;
 	uint16_t tokensBufPos;
@@ -36,8 +36,7 @@ struct Tokenizer {
 
 	char *tokensBuf;
 	char *(*tokens)[];
-};
-typedef struct Tokenizer Tokenizer;
+} Tokenizer;
 
 static bool is_blank(char c) {
 	return c == ' ' || c == '\n';

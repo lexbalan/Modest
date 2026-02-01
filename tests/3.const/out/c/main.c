@@ -35,17 +35,15 @@ typedef uint32_t char32_t;
 #define STRING16_CONST  (_STR16(GENERIC_STRING_CONST))
 #define STRING32_CONST  (_STR32(GENERIC_STRING_CONST))
 
-struct Point {
+typedef struct Point {
 	uint32_t x;
 	uint32_t y;
-};
-typedef struct Point Point;
+} Point;
 
-struct X {
+typedef struct X {
 	Point p;
 	Point a[2];
-};
-typedef struct X X;
+} X;
 
 #define PS  { \
 	{.x = 0, .y = 0}, \

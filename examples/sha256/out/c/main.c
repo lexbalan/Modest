@@ -13,13 +13,12 @@
 
 #define INPUT_DATA_LENGTH  32
 
-struct SHA256_TestCase {
+typedef struct SHA256_TestCase {
 	char inputData[INPUT_DATA_LENGTH];
 	uint32_t inputDataLen;
 
 	sha256_Hash expectedResult;
-};
-typedef struct SHA256_TestCase SHA256_TestCase;
+} SHA256_TestCase;
 
 static SHA256_TestCase test0 = (SHA256_TestCase){
 	.inputData = {'a', 'b', 'c'},

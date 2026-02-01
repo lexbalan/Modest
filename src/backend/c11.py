@@ -2020,23 +2020,37 @@ def print_decl_type(x):
 		out("\ntypedef struct %s %s;" % (id_str, id_str))
 
 
+
+def declare_struct(t, tag):
+	# struct Tag {}
+	out(str_type_record(t, tag=tag))
+
+
+def declare_struct_typedef(t, id_str):
+	out("typedef ")
+	declare_struct(t, id_str)
+	out(" " + id_str)
+	out(";")
+
+
+def declare_struct_typedef2(t, id_str):
+	# typedef <struct_id> ID
+	out("typedef ")
+	out(str_field(t, id_str))
+	out(";")
+
+
 def print_def_type(x):
 	global declared
 
 	id_str = get_id_str(x.type)
-	otype = x.original_type
+	orig_type = x.original_type
 
-	if otype.is_record() and otype.is_anonymous():
-		out(str_type_record(otype, tag=id_str))
-		out(";")
-		if not id_str in declared:
-			nl_indent()
-			out("typedef struct %s %s;" % (id_str, id_str))
-		return
+	if orig_type.is_record() and orig_type.is_anonymous():
+		declare_struct_typedef(orig_type, id_str)
+	else:
+		declare_struct_typedef2(orig_type, id_str)
 
-	out("typedef ")
-	out(str_field(otype, id_str=id_str))
-	out(";")
 
 
 

@@ -15,15 +15,13 @@ struct __anonymous_struct_4 {
 	int32_t x;
 };
 
-struct Type1 {
+typedef struct Type1 {
 	int32_t x;
-};
-typedef struct Type1 Type1;
+} Type1;
 
-struct Type2 {
+typedef struct Type2 {
 	int32_t x;
-};
-typedef struct Type2 Type2;
+} Type2;
 
 typedef Type1 Type3;
 

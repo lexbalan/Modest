@@ -9,11 +9,10 @@
 
 #define FILENAME  ("file.bin")
 
-struct Chunk {
+typedef struct Chunk {
 	char id[100];
 	char data[1024];
-};
-typedef struct Chunk Chunk;
+} Chunk;
 
 static void writeExample(void) {
 	printf("run writeExample()\n");

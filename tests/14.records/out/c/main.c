@@ -17,33 +17,29 @@ struct __anonymous_struct_7 {
 	uint32_t y;
 };
 
-struct Point2D {
+typedef struct Point2D {
 	uint32_t x;
 	uint32_t y;
-};
-typedef struct Point2D Point2D;
+} Point2D;
 
-struct Point3D {
+typedef struct Point3D {
 	uint32_t x;
 	uint32_t y;
 	uint32_t z;
-};
-typedef struct Point3D Point3D;
+} Point3D;
 
 #define XX  {.x = 1, .y = 2}
 #define YY  (Point2D){.x = 1, .y = 2}
 
-struct Point {
+typedef struct Point {
 	int32_t x;
 	int32_t y;
-};
-typedef struct Point Point;
+} Point;
 
-struct Line {
+typedef struct Line {
 	Point a;
 	Point b;
-};
-typedef struct Line Line;
+} Line;
 
 static Line line = (Line){
 	.a = (Point){.x = 10, .y = 11},
@@ -67,10 +63,9 @@ static Line lines[3] = {
 
 static Line *pLines[3] = {&lines[0], &lines[1], &lines[2]};
 
-struct Struct {
+typedef struct Struct {
 	Line *x;
-};
-typedef struct Struct Struct;
+} Struct;
 
 static Struct s = (Struct){.x = &lines[0]};
 

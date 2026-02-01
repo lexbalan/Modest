@@ -7,11 +7,10 @@
 
 
 
-struct Point {
+typedef struct Point {
 	int32_t x;
 	int32_t y;
-};
-typedef struct Point Point;
+} Point;
 
 static Point globalPoint0 = (Point){.x = 10, .y = 20};
 static Point globalPoint1 = (Point){0};
