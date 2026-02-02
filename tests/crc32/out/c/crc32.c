@@ -7,7 +7,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 uint32_t crc32_run(uint8_t (*buf)[], uint32_t len) {

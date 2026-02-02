@@ -70,6 +70,10 @@ def value_record_cons(t, v, method, ti):
 	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = v.stage
 
+	if not v.type.is_generic():
+		from trans import cmodule_use
+		cmodule_use('use_hard_cast')
+
 	# литерал записи всегда имеет тип Generic(Array)
 	# это позволяет конструировать из него разные записи
 

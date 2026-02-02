@@ -9,7 +9,6 @@
 #include <unistd.h>
 #include <math.h>
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 #define FILENAME  ("file.txt")

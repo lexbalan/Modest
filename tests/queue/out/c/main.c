@@ -9,7 +9,6 @@
 #include "queueWord8.h"
 #include "ringWord8.h"
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 static struct queue_word8 bq0;

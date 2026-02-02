@@ -7,7 +7,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 void lib_foo(void) {

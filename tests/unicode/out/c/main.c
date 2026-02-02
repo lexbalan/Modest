@@ -26,7 +26,6 @@ typedef uint32_t char32_t;
 #endif /* __STR_UNICODE__ */
 
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 #define A  "A"

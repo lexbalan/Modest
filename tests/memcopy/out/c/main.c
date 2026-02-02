@@ -7,7 +7,6 @@
 
 #include "memory.h"
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 struct object {

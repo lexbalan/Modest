@@ -27,7 +27,6 @@ typedef uint32_t char32_t;
 
 #include "console.h"
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 int main(void) {

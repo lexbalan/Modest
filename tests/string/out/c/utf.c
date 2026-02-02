@@ -6,7 +6,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 // декодирует символ UTF-32 в последовательность UTF-8

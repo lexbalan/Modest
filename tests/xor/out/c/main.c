@@ -5,7 +5,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 static void xor_encrypter(uint8_t (*buf)[], uint32_t buflen, uint8_t (*key)[], uint32_t keylen) {

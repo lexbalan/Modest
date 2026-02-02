@@ -8,7 +8,6 @@
 
 #include "queue.h"
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 void queueWord8_init(struct queue_word8 *q, uint8_t (*buf)[], uint32_t capacity) {

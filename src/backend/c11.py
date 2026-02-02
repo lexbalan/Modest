@@ -2442,6 +2442,7 @@ c_helpers = {
 	'use_lengthof': helper_use_lengthof,
 	'use_arrcpy': helper_use_arrcpy,
 	'use_va_arg': helper_use_va_arg,
+	'use_hard_cast': helper_use_hardcast,
 }
 
 c_include_helpers = {
@@ -2538,7 +2539,7 @@ def print_cfile(module, _outname):
 		newline()
 
 	# Пока просто жестко добавляю HARD_CAST_UNSAFE(type, expr)
-	helper_use_hardcast()
+	#helper_use_hardcast()
 
 	for use in module.att:
 		if use in c_helpers:

@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 #include <stdarg.h>
 #include <stdlib.h>
 

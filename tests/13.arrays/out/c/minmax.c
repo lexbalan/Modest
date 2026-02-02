@@ -6,7 +6,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 int32_t minmax_minInt32(int32_t a, int32_t b) {
