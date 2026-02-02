@@ -51,11 +51,11 @@ var lines = [
 
 var pLines = [&lines[0], &lines[1], &lines[2]]
 
-type Struct = record {
+type Structx = record {
 	x: *Line
 }
 
-var s: Struct = {x=&lines[0]}
+var s: Structx = {x=&lines[0]}
 
 
 func test_records () -> Unit {

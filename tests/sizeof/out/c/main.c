@@ -27,42 +27,42 @@ typedef uint32_t char32_t;
 
 
 
-typedef struct Point {
+struct point {
 	uint32_t x;
 	uint32_t y;
-} Point;
+};
 
-typedef struct Mixed1 {
+struct mixed1 {
 	char c;
 	int32_t i;
 	double f;
-} Mixed1;
+};
 
-typedef struct Mixed2 {
+struct mixed2 {
 	int32_t i;
 	char c;
 	double f;
 	char c2[3];
-	Mixed1 m;
-} Mixed2;
+	struct mixed1 m;
+};
 
-typedef struct Mixed3 {
+struct mixed3 {
 	char c;
 	int32_t i;
 	double f;
 	char c2[9];
-} Mixed3;
+};
 
-typedef struct Mixed4 {
-	Mixed2 s;
+struct mixed4 {
+	struct mixed2 s;
 	char c;
 	int32_t i;
 	double f;
 	char c2[9];
 	int16_t i2;
-	Point p[3];
-	Mixed3 s2;
-} Mixed4;
+	struct point p[3];
+	struct mixed3 s2;
+};
 
 
 //var s: Mixed2
@@ -70,19 +70,19 @@ static char c;
 static int32_t i;
 static double f;
 static int16_t i2;
-static Point p[3];
+static struct point p[3];
 static bool g;
 
-typedef struct X {
+struct x {
 	char c;
 	int32_t i;
 	double f;
 	int16_t i2;
-	Point p[3];
+	struct point p[3];
 	bool g;
-} X;
+};
 
-static X x;
+static struct x x;
 
 int main(void) {
 	printf("test cast operation\n");
@@ -154,22 +154,22 @@ int main(void) {
 	printf("sizeof([10]Int32) = %zu\n", sizeof(int32_t [10]));
 	printf("alignof([10]Int32) = %zu\n", __alignof(int32_t [10]));
 
-	printf("> alignof([3]Point) = %zu\n", __alignof(Point [3]));
+	printf("> alignof([3]Point) = %zu\n", __alignof(struct point [3]));
 
 
 	// record size
-	printf("sizeof(Point) = %zu\n", sizeof(Point));
-	printf("alignof(Point) = %zu\n", __alignof(Point));
+	printf("sizeof(Point) = %zu\n", sizeof(struct point));
+	printf("alignof(Point) = %zu\n", __alignof(struct point));
 
 	//	printf("offsetof(Point.x) = %llu\n", Nat64 offsetof(Point.x))
 	//	printf("offsetof(Point.y) = %llu\n", Nat64 offsetof(Point.y))
 
 
-	printf("sizeof(Mixed1) = %zu\n", sizeof(Mixed1));
-	printf("alignof(Mixed1) = %zu\n", __alignof(Mixed1));
+	printf("sizeof(Mixed1) = %zu\n", sizeof(struct mixed1));
+	printf("alignof(Mixed1) = %zu\n", __alignof(struct mixed1));
 
-	printf("sizeof(Mixed2) = %zu\n", sizeof(Mixed2));
-	printf("alignof(Mixed2) = %zu\n", __alignof(Mixed2));
+	printf("sizeof(Mixed2) = %zu\n", sizeof(struct mixed2));
+	printf("alignof(Mixed2) = %zu\n", __alignof(struct mixed2));
 
 
 	//	printf("offsetof(Mixed2.i) = %llu\n", Nat64 offsetof(Mixed2.i))
@@ -179,11 +179,11 @@ int main(void) {
 	//	printf("offsetof(Mixed2.m) = %llu\n", Nat64 offsetof(Mixed2.m))
 
 
-	printf("sizeof(Mixed3) = %zu\n", sizeof(Mixed3));
-	printf("alignof(Mixed3) = %zu\n", __alignof(Mixed3));
+	printf("sizeof(Mixed3) = %zu\n", sizeof(struct mixed3));
+	printf("alignof(Mixed3) = %zu\n", __alignof(struct mixed3));
 
-	printf("sizeof(Mixed4) = %zu\n", sizeof(Mixed4));
-	printf("alignof(Mixed4) = %zu\n", __alignof(Mixed4));
+	printf("sizeof(Mixed4) = %zu\n", sizeof(struct mixed4));
+	printf("alignof(Mixed4) = %zu\n", __alignof(struct mixed4));
 
 	//	printf("offsetof(Mixed4.s) = %llu\n", Nat64 offsetof(Mixed4.s))
 	//	printf("offsetof(Mixed4.c) = %llu\n", Nat64 offsetof(Mixed4.c))

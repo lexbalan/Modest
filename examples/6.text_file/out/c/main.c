@@ -16,7 +16,7 @@
 static void write_example(void) {
 	printf("run write_example\n");
 
-	FILE *const fp = fopen(FILENAME, "w");
+	struct file *const fp = fopen(FILENAME, "w");
 
 	if (fp == NULL) {
 		printf("error: cannot create file '%s'", (char*)FILENAME);
@@ -32,7 +32,7 @@ static void write_example(void) {
 static void read_example(void) {
 	printf("run read_example\n");
 
-	FILE *const fp = fopen(FILENAME, "r");
+	struct file *const fp = fopen(FILENAME, "r");
 
 	if (fp == NULL) {
 		printf("error: cannot open file '%s'", (char*)FILENAME);

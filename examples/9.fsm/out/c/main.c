@@ -9,17 +9,17 @@
 
 
 
-static fsm_FSM fsm0;
+static struct fsm fsm0;
 
 
 static fsm_ComplexState routine0(fsm_ComplexState state, void *payload);
-static fsm_StateDesc state0 = (fsm_StateDesc){.id = "state0", .nstages = 4, .handler = &routine0};
+static struct state_desc state0 = (struct state_desc){.id = "state0", .nstages = 4, .handler = &routine0};
 
 static fsm_ComplexState routine1(fsm_ComplexState state, void *payload);
-static fsm_StateDesc state1 = (fsm_StateDesc){.id = "state1", .nstages = 4, .handler = &routine1};
+static struct state_desc state1 = (struct state_desc){.id = "state1", .nstages = 4, .handler = &routine1};
 
 static fsm_ComplexState routine2(fsm_ComplexState state, void *payload);
-static fsm_StateDesc state2 = (fsm_StateDesc){.id = "state2", .nstages = 4, .handler = &routine2};
+static struct state_desc state2 = (struct state_desc){.id = "state2", .nstages = 4, .handler = &routine2};
 
 static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 	(void)payload;

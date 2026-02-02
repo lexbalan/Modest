@@ -20,7 +20,7 @@
 static bool writeFile(int sockFd) {
 	char buffer[BUF_SIZE];
 
-	FILE *const fp = fopen(FILENAME, "w");
+	struct file *const fp = fopen(FILENAME, "w");
 	if (fp == NULL) {
 		perror("[-] Error in creating file");
 		return false;

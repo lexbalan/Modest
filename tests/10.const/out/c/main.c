@@ -11,51 +11,51 @@
 
 #define CARR  {0, 10, 15, 20, 25, 30}
 
-typedef struct Point {
+struct point {
 	double x;
 	double y;
-} Point;
+};
 
-typedef struct Line {
-	Point a;
-	Point b;
-} Line;
+struct line {
+	struct point a;
+	struct point b;
+};
 
 #define ZERO  0
-#define POINT_ZERO  (Point){.x = (double)ZERO, .y = (double)ZERO}
-#define POINT_ONE  (Point){.x = 1.0, .y = 1.0}
+#define POINT_ZERO  (struct point){.x = (double)ZERO, .y = (double)ZERO}
+#define POINT_ONE  (struct point){.x = 1.0, .y = 1.0}
 
-#define LINE0  (Line){ \
+#define LINE0  (struct line){ \
 	.a = POINT_ZERO, \
 	.b = POINT_ONE \
 }
 
-#define LINE1  (Line){ \
-	.a = (Point){.x = 10.0, .y = 20.0}, \
-	.b = (Point){.x = 30.0, .y = 40.0} \
+#define LINE1  (struct line){ \
+	.a = (struct point){.x = 10.0, .y = 20.0}, \
+	.b = (struct point){.x = 30.0, .y = 40.0} \
 }
 
-#define LINE2  (Line){ \
+#define LINE2  (struct line){ \
 	.a = POINT_ZERO, \
 	.b = POINT_ONE \
 }
 
-#define LINE3  (Line){ \
-	.a = (Point){.x = 10.0, .y = 20.0}, \
-	.b = (Point){.x = 30.0, .y = 40.0} \
+#define LINE3  (struct line){ \
+	.a = (struct point){.x = 10.0, .y = 20.0}, \
+	.b = (struct point){.x = 30.0, .y = 40.0} \
 }
 
 #define LINES  {LINE0, LINE1, LINE2, LINE3}
 
-typedef struct WrappedArray {
+struct wrapped_array {
 	int32_t x;
-} WrappedArray;
+};
 
-#define WA  (WrappedArray){0}
+#define WA  (struct wrapped_array){0}
 
 
 // Pythagorean theorem
-static float distance(Point a, Point b) {
+static float distance(struct point a, struct point b) {
 	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
 	const double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
 	const double dx2 = pow(dx, 2.0);
@@ -64,16 +64,16 @@ static float distance(Point a, Point b) {
 }
 
 
-static float lineLength(Line line) {
+static float lineLength(struct line line) {
 	return distance(line.a, line.b);
 }
 
 
 int main(void) {
-	const float lines_0_len = lineLength(((const Line [4])LINES)[0]);
-	const float lines_1_len = lineLength(((const Line [4])LINES)[1]);
-	const float lines_2_len = lineLength(((const Line [4])LINES)[2]);
-	const float lines_3_len = lineLength(((const Line [4])LINES)[3]);
+	const float lines_0_len = lineLength(((const struct line [4])LINES)[0]);
+	const float lines_1_len = lineLength(((const struct line [4])LINES)[1]);
+	const float lines_2_len = lineLength(((const struct line [4])LINES)[2]);
+	const float lines_3_len = lineLength(((const struct line [4])LINES)[3]);
 
 	printf("lines_0_len = %f\n", (const float)lines_0_len);
 	printf("lines_1_len = %f\n", (const float)lines_1_len);

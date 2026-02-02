@@ -142,24 +142,24 @@ static int (*(*(*a9[5])[10])[2])(int a);
 static int32_t (*p2)[5] = &a0;
 static int32_t (**p3)[5] = &p2;
 
-typedef struct RGB24 {
+struct rgb24 {
 	uint8_t red;
 	uint8_t green;
 	uint8_t blue;
-} RGB24;
+};
 
-static RGB24 rgb0[2] = {
+static struct rgb24 rgb0[2] = {
 	{.red = 200, .green = 0, .blue = 0},
 	{.red = 200, .green = 0, .blue = 0}
 };
 
-typedef struct AnimationPoint {
-	RGB24 color;
+struct animation_point {
+	struct rgb24 color;
 	uint32_t time;
-} AnimationPoint;
+};
 
-static AnimationPoint ap = (AnimationPoint){
-	.color = (RGB24){
+static struct animation_point ap = (struct animation_point){
+	.color = (struct rgb24){
 		.red = 200,
 		.green = 0,
 		.blue = 0
@@ -167,7 +167,7 @@ static AnimationPoint ap = (AnimationPoint){
 	.time = 3000
 };
 
-static AnimationPoint animation0_points[5] = {
+static struct animation_point animation0_points[5] = {
 	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
 	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
 	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
@@ -175,7 +175,7 @@ static AnimationPoint animation0_points[5] = {
 	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 
-static AnimationPoint animation1_points[5] = {
+static struct animation_point animation1_points[5] = {
 	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
 	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
 	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
@@ -183,7 +183,7 @@ static AnimationPoint animation1_points[5] = {
 	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 
-static AnimationPoint animation2_points[5] = {
+static struct animation_point animation2_points[5] = {
 	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
 	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
 	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
@@ -234,30 +234,30 @@ static void (*hiarr[10])(char *x) = {
 	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
 };
 
-typedef struct Wrap {
+struct wrap {
 	void (*fhi)(char *x);
 	int32_t (*fop)(int32_t a, int32_t b);
-} Wrap;
+};
 
-static Wrap wrap0 = (Wrap){
+static struct wrap wrap0 = (struct wrap){
 	.fhi = &hi,
 	.fop = &add
 };
 
-static Wrap *awrap[2] = {&wrap0, &wrap0};
+static struct wrap *awrap[2] = {&wrap0, &wrap0};
 
 int32_t main(void) {
 	xy((struct __anonymous_struct_3){.x = 10, .y = 20});
 
 	printf("test1 (eq): ");
-	if (memcmp(&animation0_points, &animation1_points, sizeof(AnimationPoint [5])) == 0) {
+	if (memcmp(&animation0_points, &animation1_points, sizeof(struct animation_point [5])) == 0) {
 		printf("eq\n");
 	} else {
 		printf("ne\n");
 	}
 
 	printf("test2 (ne): ");
-	if (memcmp(&animation1_points, &animation2_points, sizeof(AnimationPoint [5])) == 0) {
+	if (memcmp(&animation1_points, &animation2_points, sizeof(struct animation_point [5])) == 0) {
 		printf("eq\n");
 	} else {
 		printf("ne\n");

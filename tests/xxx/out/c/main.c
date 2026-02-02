@@ -27,12 +27,18 @@ typedef uint32_t char32_t;
 
 
 
-typedef struct Point {
+struct context {
+	int32_t x;
+	int32_t y;
+};
+
+typedef struct {
 	int32_t x;
 	int32_t y;
 } Point;
 
-static struct Point p0;
+static Point p0;
+static struct context ctx;
 
 #define HELLO  "Hello"
 
@@ -56,6 +62,7 @@ static void puts32(char32_t *s) {
 }
 
 
+__attribute__((used))
 static void ss(char *_s, char *_sret_) {
 	char s[10];
 	memcpy(s, _s, sizeof(char [10]));
@@ -67,15 +74,20 @@ static void ss(char *_s, char *_sret_) {
 
 static int32_t arr2d[10][10];
 
-#define CC1  <hlir.types.ValueBad object at 0x103581e00>
+#define CC1  <hlir.types.ValueBad object at 0x102cf50f0>
 
-static int32_t ax[CC1];
+//var ax: [cc1]Int32
 
 int32_t main(void) {
 	printf("Hello World!\n");
 
+	Point p0;
+	struct context ctx;
+
+
 	int32_t (*p_arr2d)[];
 	p_arr2d = (int32_t (*)[])&arr2d;
+	(void)p_arr2d;
 
 	char a[10];
 

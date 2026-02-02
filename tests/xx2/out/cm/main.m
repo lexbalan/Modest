@@ -1,29 +1,19 @@
-// tests/xxx/src/main.m
-
-include "libc/stdio"
-include "libc/string"
+include "stdio"
+include "string"
 
 
-type Context = record {
+
+type Point = record {
 	x: Int32 = 32
 	y: Int32 = 32
 }
 
-type Point = record {
-	public x: Int32 = 32
-	y: Int32 = 32
-}
-
-var p0: Point
-var ctx: Context
-
-
 
 const hello = "Hello"
 
-var str0: Str8 = hello
-var str1: Str16 = hello
-var str2: Str32 = hello
+var str0: [5]Char8 = hello
+var str1: [5]Char16 = hello
+var str2: [5]Char32 = hello
 
 var pstr0: *Str8 = hello
 var pstr1: *Str16 = hello
@@ -40,30 +30,24 @@ func puts32 (s: *Str32) -> Unit {
 }
 
 
-@used
 func ss (s: [10]Char8) -> [10]Char8 {
-	let ks = s[2:5]
+	let ks: [5 - 2]Char8 = s[2:5]
 	return s
 }
 
 var arr2d: [10][10]Int32
 
-const cc1: Nat32
+const cc1: Nat32 = <undef>
 
-//var ax: [cc1]Int32
+var ax: [cc1]Int32
 
 public func main () -> Int32 {
 	printf("Hello World!\n")
 
-	var p0: Point
-	var ctx: Context
-
-
 	var p_arr2d: *[][]Int32
 	p_arr2d = &arr2d
-	Unit p_arr2d
 
-	var a: @zarray [10]Byte
+	var a: [10]Byte
 
 	//var b = Int32 cc1
 
@@ -75,7 +59,7 @@ public func main () -> Int32 {
 
 	puts8(&s1)
 
-	let length = strlen(&s1)
+	let length: SizeT = strlen(&s1)
 	strcpy(&s2, &s1)
 	strncpy(&s2, &s1, 5)
 
@@ -93,5 +77,4 @@ public func main () -> Int32 {
 //public func xxx () -> record {} {
 //	return {}
 //}
-
 

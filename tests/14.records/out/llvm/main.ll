@@ -295,11 +295,11 @@ declare void @perror(%ConstCharStr* %str)
 	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 1),
 	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 2)
 ]
-%Struct = type {
+%Structx = type {
 	%Line*
 };
 
-@s = internal global %Struct {
+@s = internal global %Structx {
 	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 0)
 }
 define internal void @test_records() {
@@ -343,45 +343,45 @@ define internal void @test_records() {
 	%30 = getelementptr %Line, %Line* %29, %Int32 0, %Int32 1, %Int32 1
 	%31 = load %Int32, %Int32* %30
 	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str8 to [0 x i8]*), %Int32 %31)
-	%33 = getelementptr %Struct, %Struct* @s, %Int32 0, %Int32 0
+	%33 = getelementptr %Structx, %Structx* @s, %Int32 0, %Int32 0
 	%34 = load %Line*, %Line** %33
 	%35 = getelementptr %Line, %Line* %34, %Int32 0, %Int32 0, %Int32 0
 	%36 = load %Int32, %Int32* %35
 	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str9 to [0 x i8]*), %Int32 %36)
-	%38 = getelementptr %Struct, %Struct* @s, %Int32 0, %Int32 0
+	%38 = getelementptr %Structx, %Structx* @s, %Int32 0, %Int32 0
 	%39 = load %Line*, %Line** %38
 	%40 = getelementptr %Line, %Line* %39, %Int32 0, %Int32 0, %Int32 1
 	%41 = load %Int32, %Int32* %40
 	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str10 to [0 x i8]*), %Int32 %41)
-	%43 = getelementptr %Struct, %Struct* @s, %Int32 0, %Int32 0
+	%43 = getelementptr %Structx, %Structx* @s, %Int32 0, %Int32 0
 	%44 = load %Line*, %Line** %43
 	%45 = getelementptr %Line, %Line* %44, %Int32 0, %Int32 1, %Int32 0
 	%46 = load %Int32, %Int32* %45
 	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str11 to [0 x i8]*), %Int32 %46)
-	%48 = getelementptr %Struct, %Struct* @s, %Int32 0, %Int32 0
+	%48 = getelementptr %Structx, %Structx* @s, %Int32 0, %Int32 0
 	%49 = load %Line*, %Line** %48
 	%50 = getelementptr %Line, %Line* %49, %Int32 0, %Int32 1, %Int32 1
 	%51 = load %Int32, %Int32* %50
 	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str12 to [0 x i8]*), %Int32 %51)
-	%53 = load %Struct, %Struct* @s
-	%54 = alloca %Struct
-	store %Struct %53, %Struct* %54
-	%55 = getelementptr %Struct, %Struct* %54, %Int32 0, %Int32 0
+	%53 = load %Structx, %Structx* @s
+	%54 = alloca %Structx
+	store %Structx %53, %Structx* %54
+	%55 = getelementptr %Structx, %Structx* %54, %Int32 0, %Int32 0
 	%56 = load %Line*, %Line** %55
 	%57 = getelementptr %Line, %Line* %56, %Int32 0, %Int32 0, %Int32 0
 	%58 = load %Int32, %Int32* %57
 	%59 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str13 to [0 x i8]*), %Int32 %58)
-	%60 = getelementptr %Struct, %Struct* %54, %Int32 0, %Int32 0
+	%60 = getelementptr %Structx, %Structx* %54, %Int32 0, %Int32 0
 	%61 = load %Line*, %Line** %60
 	%62 = getelementptr %Line, %Line* %61, %Int32 0, %Int32 0, %Int32 1
 	%63 = load %Int32, %Int32* %62
 	%64 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str14 to [0 x i8]*), %Int32 %63)
-	%65 = getelementptr %Struct, %Struct* %54, %Int32 0, %Int32 0
+	%65 = getelementptr %Structx, %Structx* %54, %Int32 0, %Int32 0
 	%66 = load %Line*, %Line** %65
 	%67 = getelementptr %Line, %Line* %66, %Int32 0, %Int32 1, %Int32 0
 	%68 = load %Int32, %Int32* %67
 	%69 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str15 to [0 x i8]*), %Int32 %68)
-	%70 = getelementptr %Struct, %Struct* %54, %Int32 0, %Int32 0
+	%70 = getelementptr %Structx, %Structx* %54, %Int32 0, %Int32 0
 	%71 = load %Line*, %Line** %70
 	%72 = getelementptr %Line, %Line* %71, %Int32 0, %Int32 1, %Int32 1
 	%73 = load %Int32, %Int32* %72

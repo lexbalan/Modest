@@ -9,16 +9,16 @@
 #include "queue.h"
 
 
-typedef struct ringWord8_RingWord8 {
-	queue_Queue queue;
+struct ring_word8 {
+	struct queue queue;
 	uint8_t (*data)[];
-} ringWord8_RingWord8;
-void ringWord8_init(ringWord8_RingWord8 *q, uint8_t (*buf)[], uint32_t capacity);
-uint32_t ringWord8_capacity(ringWord8_RingWord8 *q);
-uint32_t ringWord8_size(ringWord8_RingWord8 *q);
-bool ringWord8_isFull(ringWord8_RingWord8 *q);
-bool ringWord8_isEmpty(ringWord8_RingWord8 *q);
-bool ringWord8_put(ringWord8_RingWord8 *q, uint8_t b);
-bool ringWord8_get(ringWord8_RingWord8 *q, uint8_t *b);
+};
+void ringWord8_init(struct ring_word8 *q, uint8_t (*buf)[], uint32_t capacity);
+uint32_t ringWord8_capacity(struct ring_word8 *q);
+uint32_t ringWord8_size(struct ring_word8 *q);
+bool ringWord8_isFull(struct ring_word8 *q);
+bool ringWord8_isEmpty(struct ring_word8 *q);
+bool ringWord8_put(struct ring_word8 *q, uint8_t b);
+bool ringWord8_get(struct ring_word8 *q, uint8_t *b);
 
 #endif /* RINGWORD8_H */

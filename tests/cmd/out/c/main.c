@@ -28,7 +28,7 @@ static inline int char8ToInt(char c) {
 }
 
 
-typedef struct Tokenizer {
+struct tokenizer {
 	char *input;
 	uint32_t position;
 	uint16_t tokensBufPos;
@@ -36,14 +36,14 @@ typedef struct Tokenizer {
 
 	char *tokensBuf;
 	char *(*tokens)[];
-} Tokenizer;
+};
 
 static bool is_blank(char c) {
 	return c == ' ' || c == '\n';
 }
 
 
-static uint16_t gettok(Tokenizer *t, char *output, uint16_t lim) {
+static uint16_t gettok(struct tokenizer *t, char *output, uint16_t lim) {
 	(void)lim;
 	char c = t->input[t->position];
 
@@ -84,7 +84,7 @@ static uint16_t gettok(Tokenizer *t, char *output, uint16_t lim) {
 }
 
 
-static void tokenize(Tokenizer *tokenizer) {
+static void tokenize(struct tokenizer *tokenizer) {
 	while (true) {
 		const uint16_t max_toklen = 128;
 		char token[max_toklen];
@@ -137,7 +137,7 @@ int32_t main(void) {
 		char *tokens[64] = {0};
 
 		// Токенизируем строку
-		Tokenizer tokenizer = (Tokenizer){
+		struct tokenizer tokenizer = (struct tokenizer){
 			.input = inbuf,
 			.tokensBuf = tokensBuf,
 			.tokens = &tokens

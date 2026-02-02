@@ -35,15 +35,15 @@ typedef uint32_t char32_t;
 #define STRING16_CONST  (_STR16(GENERIC_STRING_CONST))
 #define STRING32_CONST  (_STR32(GENERIC_STRING_CONST))
 
-typedef struct Point {
+struct point {
 	uint32_t x;
 	uint32_t y;
-} Point;
+};
 
-typedef struct X {
-	Point p;
-	Point a[2];
-} X;
+struct x {
+	struct point p;
+	struct point a[2];
+};
 
 #define PS  { \
 	{.x = 0, .y = 0}, \
@@ -53,31 +53,31 @@ typedef struct X {
 
 #define POINTS  PS
 
-#define POINT_ZERO  (Point){.x = 1, .y = 1}
+#define POINT_ZERO  (struct point){.x = 1, .y = 1}
 #define ZERO_POINTS  {POINT_ZERO, POINT_ZERO, POINT_ZERO}
 
-static X x = (X){
-	.p = (Point){.x = 10, .y = 20},
-	.a = {(Point){.x = 20, .y = 30}, (Point){.x = 20, .y = 30}}
+static struct x x = (struct x){
+	.p = (struct point){.x = 10, .y = 20},
+	.a = {(struct point){.x = 20, .y = 30}, (struct point){.x = 20, .y = 30}}
 };
 
 __attribute__((used))
-static Point points2[3] = POINTS;
+static struct point points2[3] = POINTS;
 
 
 // define function main
 int main(void) {
 	printf("test const\n");
 
-	X y = (X){
-		.p = (Point){.x = 10, .y = 20},
-		.a = {(Point){.x = 20, .y = 30}}
+	struct x y = (struct x){
+		.p = (struct point){.x = 10, .y = 20},
+		.a = {(struct point){.x = 20, .y = 30}}
 	};
 
-	Point points3[3] = POINTS;
+	struct point points3[3] = POINTS;
 
-	const Point pp = ((Point [3])POINTS)[0];
-	const Point ppp = ((Point [3])ZERO_POINTS)[0];
+	const struct point pp = ((struct point [3])POINTS)[0];
+	const struct point ppp = ((struct point [3])ZERO_POINTS)[0];
 	const uint32_t z = POINT_ZERO.x;
 
 	printf("genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);

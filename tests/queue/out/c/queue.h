@@ -7,18 +7,18 @@
 #include <stdbool.h>
 
 
-typedef struct queue_Queue {
+struct queue {
 	uint32_t capacity;
 	uint32_t size;
 	uint32_t p;
 	uint32_t g;
-} queue_Queue;
-void queue_init(queue_Queue *q, uint32_t capacity);
-uint32_t queue_capacity(queue_Queue *q);
-uint32_t queue_size(queue_Queue *q);
-bool queue_isEmpty(queue_Queue *q);
-bool queue_isFull(queue_Queue *q);
-uint32_t queue_getPutPosition(queue_Queue *q);
-uint32_t queue_getGetPosition(queue_Queue *q);
+};
+void queue_init(struct queue *q, uint32_t capacity);
+uint32_t queue_capacity(struct queue *q);
+uint32_t queue_size(struct queue *q);
+bool queue_isEmpty(struct queue *q);
+bool queue_isFull(struct queue *q);
+uint32_t queue_getPutPosition(struct queue *q);
+uint32_t queue_getGetPosition(struct queue *q);
 
 #endif /* QUEUE_H */

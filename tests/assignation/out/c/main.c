@@ -9,16 +9,16 @@
 
 
 // Simply record for records assignation test
-typedef struct Point {
+struct point {
 	int32_t x;
 	int32_t y;
-} Point;
+};
 
 static int32_t glb_i0 = 0;
 static int32_t glb_i1 = 321;
 
-static Point glb_r0 = (Point){0};
-static Point glb_r1 = (Point){.x = 20, .y = 10};
+static struct point glb_r0 = (struct point){0};
+static struct point glb_r1 = (struct point){.x = 20, .y = 10};
 
 static int32_t glb_a0[10] = {0};
 static int32_t glb_a1[10] = {64, 53, 42};
@@ -74,8 +74,8 @@ int main(void) {
 
 	// copy records by value
 	// C backend will be use memcpy()
-	Point loc_r0 = (Point){0};
-	Point loc_r1 = (Point){.x = 10, .y = 20};
+	struct point loc_r0 = (struct point){0};
+	struct point loc_r1 = (struct point){.x = 10, .y = 20};
 
 	loc_r0 = loc_r1;
 

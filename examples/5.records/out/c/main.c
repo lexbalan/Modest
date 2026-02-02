@@ -9,19 +9,19 @@
 
 
 
-typedef struct Point {
+struct point {
 	float x;
 	float y;
-} Point;
+};
 
-typedef struct Line {
-	Point a;
-	Point b;
-} Line;
+struct line {
+	struct point a;
+	struct point b;
+};
 
-static Line line = (Line){
-	.a = (Point){.x = 0.0, .y = 0.0},
-	.b = (Point){.x = 1.0, .y = 1.0}
+static struct line line = (struct line){
+	.a = (struct point){.x = 0.0, .y = 0.0},
+	.b = (struct point){.x = 1.0, .y = 1.0}
 };
 
 __attribute__((always_inline))
@@ -44,7 +44,7 @@ static inline float min(float a, float b) {
 
 
 // Pythagorean theorem
-static float distance(Point a, Point b) {
+static float distance(struct point a, struct point b) {
 	const float dx = max(a.x, b.x) - min(a.x, b.x);
 	const float dy = max(a.y, b.y) - min(a.y, b.y);
 	const double dx2 = pow(dx, 2.0);
@@ -53,13 +53,13 @@ static float distance(Point a, Point b) {
 }
 
 
-static float lineLength(Line line) {
+static float lineLength(struct line line) {
 	return distance(line.a, line.b);
 }
 
 
 static void ptr_example(void) {
-	Point *const ptr_p = (Point *)malloc(sizeof(Point));
+	struct point *const ptr_p = (struct point *)malloc(sizeof(struct point));
 
 	// access by pointer
 	ptr_p->x = 10.0;

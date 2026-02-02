@@ -10,7 +10,7 @@
 
 
 
-void fsm_init(fsm_FSM *self, char *id, fsm_StateDesc *initState, void *payload) {
+void fsm_init(struct fsm *self, char *id, struct state_desc *initState, void *payload) {
 	self->id = id;
 	self->state = (fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
 	self->next_state = (fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
@@ -21,9 +21,9 @@ void fsm_init(fsm_FSM *self, char *id, fsm_StateDesc *initState, void *payload) 
 
 
 
-fsm_ComplexState fsm_cmdNextStage(fsm_FSM *self);
+fsm_ComplexState fsm_cmdNextStage(struct fsm *self);
 
-void fsm_task(fsm_FSM *self) {
+void fsm_task(struct fsm *self) {
 	// Сработал таймер-ограничитель времени нахождения в стадии?
 	if (self->timer_expired) {
 		// Clear timer & Switch to next stage
@@ -47,7 +47,7 @@ void fsm_task(fsm_FSM *self) {
 }
 
 
-void fsm_tick(fsm_FSM *self) {
+void fsm_tick(struct fsm *self) {
 	if (self->timer > 0) {
 		self->timer = self->timer - 1;
 		if (self->timer == 0) {
@@ -57,14 +57,14 @@ void fsm_tick(fsm_FSM *self) {
 }
 
 
-fsm_ComplexState fsm_cmdSwitchState(fsm_FSM *self, fsm_StateDesc *state) {
+fsm_ComplexState fsm_cmdSwitchState(struct fsm *self, struct state_desc *state) {
 	self->timer = 0;
 	self->timer_expired = false;
 	return (fsm_ComplexState){.state = state, .stage = (fsm_StageId)0};
 }
 
 
-fsm_ComplexState fsm_cmdSwitchStage(fsm_FSM *self, uint16_t stage) {
+fsm_ComplexState fsm_cmdSwitchStage(struct fsm *self, uint16_t stage) {
 	self->timer = 0;
 	self->timer_expired = false;
 	fsm_ComplexState newState = self->state;
@@ -73,7 +73,7 @@ fsm_ComplexState fsm_cmdSwitchStage(fsm_FSM *self, uint16_t stage) {
 }
 
 
-fsm_ComplexState fsm_cmdNextStage(fsm_FSM *self) {
+fsm_ComplexState fsm_cmdNextStage(struct fsm *self) {
 	self->timer = 0;
 	self->timer_expired = false;
 	const fsm_ComplexState state = self->state;
@@ -85,7 +85,7 @@ fsm_ComplexState fsm_cmdNextStage(fsm_FSM *self) {
 }
 
 
-fsm_ComplexState fsm_cmdNextStageLimited(fsm_FSM *self, uint32_t t) {
+fsm_ComplexState fsm_cmdNextStageLimited(struct fsm *self, uint32_t t) {
 	self->timer = t;
 	const fsm_ComplexState state = self->state;
 	const uint16_t nextStageIndex = (uint16_t)(state.stage) + 1;
@@ -96,22 +96,22 @@ fsm_ComplexState fsm_cmdNextStageLimited(fsm_FSM *self, uint32_t t) {
 }
 
 
-fsm_ComplexState fsm_getComplexState(fsm_FSM fsm) {
+fsm_ComplexState fsm_getComplexState(struct fsm fsm) {
 	return fsm.state;
 }
 
 
-fsm_StateDesc *fsm_getState(fsm_FSM fsm) {
+struct state_desc *fsm_getState(struct fsm fsm) {
 	return fsm.state.state;
 }
 
 
-fsm_StageId fsm_getStage(fsm_FSM fsm) {
+fsm_StageId fsm_getStage(struct fsm fsm) {
 	return fsm.state.stage;
 }
 
 
-char *fsm_getStateName(fsm_FSM *fsm) {
+char *fsm_getStateName(struct fsm *fsm) {
 	if (fsm->state.state == NULL) {
 		return "<null>";
 	}

@@ -1,0 +1,28 @@
+// tests/xxx/src/main.m
+
+include "libc/stdio"
+include "libc/string"
+
+
+type Context = record {
+	x: Int32 = 32
+	y: Int32 = 32
+}
+
+type Context2 = Context
+
+func f0(c: Context) -> Unit {
+	Unit c
+}
+
+func f1(c: Context2) -> Unit {
+	Unit c
+}
+
+public func main () -> Int32 {
+	f0({x=0, y=0})
+	f1({x=0, y=0})
+	return 0
+}
+
+

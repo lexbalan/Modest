@@ -8,12 +8,12 @@
 
 
 
-typedef struct Context {
+struct context {
 	uint8_t data[64];
 	uint32_t datalen;
 	uint64_t bitlen;
 	uint32_t state[8];
-} Context;
+};
 
 //@inline
 //func rotleft (a: Word32, b: Nat32) -> Word32 {
@@ -67,7 +67,7 @@ static inline uint32_t sig1(uint32_t x) {
 	0x510E527F, 0x9B05688CUL, 0x1F83D9AB, 0x5BE0CD19 \
 }
 
-static void contextInit(Context *ctx) {
+static void contextInit(struct context *ctx) {
 	memcpy(&ctx->state, &((uint32_t [8])INITAL_STATE), sizeof(uint32_t [8]));
 }
 
@@ -91,7 +91,7 @@ static void contextInit(Context *ctx) {
 	0x90BEFFFAUL, 0xA4506CEBUL, 0xBEF9A3F7UL, 0xC67178F2UL \
 }
 
-static void transform(Context *ctx, uint8_t (*data)[]) {
+static void transform(struct context *ctx, uint8_t (*data)[]) {
 	uint32_t m[64] = {0};
 
 	uint32_t i = 0;
@@ -138,7 +138,7 @@ static void transform(Context *ctx, uint8_t (*data)[]) {
 }
 
 
-static void update(Context *ctx, uint8_t (*msg)[], uint32_t msgLen) {
+static void update(struct context *ctx, uint8_t (*msg)[], uint32_t msgLen) {
 	uint32_t i = 0;
 	while (i < msgLen) {
 		ctx->data[ctx->datalen] = (*msg)[i];
@@ -153,7 +153,7 @@ static void update(Context *ctx, uint8_t (*msg)[], uint32_t msgLen) {
 }
 
 
-static void final(Context *ctx, sha256_Hash *outHash) {
+static void final(struct context *ctx, sha256_Hash *outHash) {
 	uint32_t i = ctx->datalen;
 
 	// Pad whatever data is left in the buffer.
@@ -211,7 +211,7 @@ static void final(Context *ctx, sha256_Hash *outHash) {
 
 
 void sha256_hash(uint8_t (*msg)[], uint32_t msgLen, sha256_Hash *outHash) {
-	Context ctx = (Context){0};
+	struct context ctx = (struct context){0};
 	contextInit(&ctx);
 	update(&ctx, msg, msgLen);
 	final(&ctx, outHash);

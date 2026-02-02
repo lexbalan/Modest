@@ -9,19 +9,19 @@
 #include "queue.h"
 
 
-typedef struct queueWord8_QueueWord8 {
-	queue_Queue queue;
+struct queue_word8 {
+	struct queue queue;
 	uint8_t (*data)[];
-} queueWord8_QueueWord8;
-void queueWord8_init(queueWord8_QueueWord8 *q, uint8_t (*buf)[], uint32_t capacity);
-uint32_t queueWord8_capacity(queueWord8_QueueWord8 *q);
-uint32_t queueWord8_size(queueWord8_QueueWord8 *q);
-bool queueWord8_isFull(queueWord8_QueueWord8 *q);
-bool queueWord8_isEmpty(queueWord8_QueueWord8 *q);
-bool queueWord8_put(queueWord8_QueueWord8 *q, uint8_t b);
-bool queueWord8_get(queueWord8_QueueWord8 *q, uint8_t *b);
-uint32_t queueWord8_read(queueWord8_QueueWord8 *q, uint8_t (*data)[], uint32_t len);
-uint32_t queueWord8_write(queueWord8_QueueWord8 *q, uint8_t (*data)[], uint32_t len);
-void queueWord8_clear(queueWord8_QueueWord8 *q);
+};
+void queueWord8_init(struct queue_word8 *q, uint8_t (*buf)[], uint32_t capacity);
+uint32_t queueWord8_capacity(struct queue_word8 *q);
+uint32_t queueWord8_size(struct queue_word8 *q);
+bool queueWord8_isFull(struct queue_word8 *q);
+bool queueWord8_isEmpty(struct queue_word8 *q);
+bool queueWord8_put(struct queue_word8 *q, uint8_t b);
+bool queueWord8_get(struct queue_word8 *q, uint8_t *b);
+uint32_t queueWord8_read(struct queue_word8 *q, uint8_t (*data)[], uint32_t len);
+uint32_t queueWord8_write(struct queue_word8 *q, uint8_t (*data)[], uint32_t len);
+void queueWord8_clear(struct queue_word8 *q);
 
 #endif /* QUEUEWORD8_H */

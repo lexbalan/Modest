@@ -16,12 +16,12 @@ static double squareOfCircle(double radius) {
 }
 
 
-typedef struct Point2D {
+struct point2_d {
 	int x;
 	int y;
-} Point2D;
+};
 
-static float slope(Point2D a, Point2D b) {
+static float slope(struct point2_d a, struct point2_d b) {
 	const int dx = abs(a.x - b.x);
 	const int dy = abs(a.y - b.y);
 	printf("dx = %d\n", dx);
@@ -47,7 +47,7 @@ int main(void) {
 	printf("sizeof(Float64) = %zu\n", sizeof(double));
 
 	// printf %f ожидает получить double а не float!
-	const float sl = slope((Point2D){.x = 10, .y = 20}, (Point2D){.x = 30, .y = 50});
+	const float sl = slope((struct point2_d){.x = 10, .y = 20}, (struct point2_d){.x = 30, .y = 50});
 	printf("slope = %f\n", (double)(double)sl);
 
 	return 0;

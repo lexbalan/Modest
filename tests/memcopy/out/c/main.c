@@ -9,25 +9,25 @@
 
 
 
-typedef struct Object {
+struct object {
 	char firstname[32];
 	char lastname[32];
 	int32_t age;
-} Object;
+};
 
 int main(void) {
 	printf("memcopy test\n");
 
-	Object o1;
-	Object o2;
+	struct object o1;
+	struct object o2;
 
-	o1 = (Object){
+	o1 = (struct object){
 		.firstname = {'J', 'o', 'h', 'n'},
 		.lastname = {'D', 'o', 'e'},
 		.age = 30
 	};
 
-	const size_t len = sizeof(Object);
+	const size_t len = sizeof(struct object);
 	printf("LEN = %zu\n", len);
 
 	memory_copy((void *)&o2, (void *)&o1, len);

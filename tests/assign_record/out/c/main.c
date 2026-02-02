@@ -7,13 +7,13 @@
 
 
 
-typedef struct Point {
+struct point {
 	int32_t x;
 	int32_t y;
-} Point;
+};
 
-static Point globalPoint0 = (Point){.x = 10, .y = 20};
-static Point globalPoint1 = (Point){0};
+static struct point globalPoint0 = (struct point){.x = 10, .y = 20};
+static struct point globalPoint1 = (struct point){0};
 
 int main(void) {
 	printf("test assign_array\n");
@@ -23,7 +23,7 @@ int main(void) {
 	printf("globalPoint1.x = %d\n", globalPoint1.x);
 	printf("globalPoint1.x = %d\n", globalPoint1.y);
 
-	if (memcmp(&globalPoint0, &globalPoint1, sizeof(Point)) == 0) {
+	if (memcmp(&globalPoint0, &globalPoint1, sizeof(struct point)) == 0) {
 		printf("globalPoint test passed\n");
 	} else {
 		printf("globalPoint test failed\n");
@@ -31,15 +31,15 @@ int main(void) {
 
 	// local
 
-	Point localPoint0 = (Point){.x = 10, .y = 20};
-	Point localPoint1 = (Point){0};
+	struct point localPoint0 = (struct point){.x = 10, .y = 20};
+	struct point localPoint1 = (struct point){0};
 
 	localPoint1 = localPoint0;
 
 	printf("localPoint1.x = %d\n", localPoint1.x);
 	printf("localPoint1.x = %d\n", localPoint1.y);
 
-	if (memcmp(&localPoint0, &localPoint1, sizeof(Point)) == 0) {
+	if (memcmp(&localPoint0, &localPoint1, sizeof(struct point)) == 0) {
 		printf("localPoint test passed\n");
 	} else {
 		printf("localPoint test failed\n");

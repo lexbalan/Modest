@@ -10,20 +10,20 @@
 
 
 
-list_List *list_create(void) {
-	list_List *const list = (list_List *)malloc(sizeof(list_List));
+struct list *list_create(void) {
+	struct list *const list = (struct list *)malloc(sizeof(struct list));
 
 	if (list == NULL) {
 		return NULL;
 	}
 
-	*list = (list_List){0};
+	*list = (struct list){0};
 
 	return list;
 }
 
 
-uint32_t list_size_get(list_List *list) {
+uint32_t list_size_get(struct list *list) {
 	if (list == NULL) {
 		return 0;
 	}
@@ -32,7 +32,7 @@ uint32_t list_size_get(list_List *list) {
 }
 
 
-list_Node *list_first_node_get(list_List *list) {
+struct node *list_first_node_get(struct list *list) {
 	if (list == NULL) {
 		return NULL;
 	}
@@ -41,7 +41,7 @@ list_Node *list_first_node_get(list_List *list) {
 }
 
 
-list_Node *list_last_node_get(list_List *list) {
+struct node *list_last_node_get(struct list *list) {
 	if (list == NULL) {
 		return NULL;
 	}
@@ -50,7 +50,7 @@ list_Node *list_last_node_get(list_List *list) {
 }
 
 
-list_Node *list_node_first(list_List *list, list_Node *new_node) {
+struct node *list_node_first(struct list *list, struct node *new_node) {
 	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
@@ -64,20 +64,20 @@ list_Node *list_node_first(list_List *list, list_Node *new_node) {
 }
 
 
-list_Node *list_node_create(void) {
-	list_Node *const node = (list_Node *)malloc(sizeof(list_Node));
+struct node *list_node_create(void) {
+	struct node *const node = (struct node *)malloc(sizeof(struct node));
 
 	if (node == NULL) {
 		return NULL;
 	}
 
-	*node = (list_Node){0};
+	*node = (struct node){0};
 
 	return node;
 }
 
 
-list_Node *list_node_next_get(list_Node *node) {
+struct node *list_node_next_get(struct node *node) {
 	if (node == NULL) {
 		return NULL;
 	}
@@ -86,7 +86,7 @@ list_Node *list_node_next_get(list_Node *node) {
 }
 
 
-list_Node *list_node_prev_get(list_Node *node) {
+struct node *list_node_prev_get(struct node *node) {
 	if (node == NULL) {
 		return NULL;
 	}
@@ -95,7 +95,7 @@ list_Node *list_node_prev_get(list_Node *node) {
 }
 
 
-void *list_node_data_get(list_Node *node) {
+void *list_node_data_get(struct node *node) {
 	if (node == NULL) {
 		return NULL;
 	}
@@ -104,10 +104,10 @@ void *list_node_data_get(list_Node *node) {
 }
 
 
-void list_node_insert_right(list_Node *left, list_Node *new_right) {
+void list_node_insert_right(struct node *left, struct node *new_right) {
 	printf("node_insert_right\n");
 
-	list_Node *const old_right = left->next;
+	struct node *const old_right = left->next;
 	left->next = new_right;
 
 	if (old_right != NULL) {
@@ -123,13 +123,13 @@ void list_node_insert_right(list_Node *left, list_Node *new_right) {
 // get list node by number
 // if number is out of range returns nil
 // if number < 0 - go backward
-list_Node *list_node_get(list_List *list, int32_t pos) {
+struct node *list_node_get(struct list *list, int32_t pos) {
 	if (list == NULL || list->size == 0) {
 		return NULL;
 	}
 
 	printf("node_get(%d)\n", pos);
-	list_Node *node;
+	struct node *node;
 
 	if (pos >= 0) {
 		// go forward
@@ -165,7 +165,7 @@ list_Node *list_node_get(list_List *list, int32_t pos) {
 }
 
 
-list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node) {
+struct node *list_node_insert(struct list *list, int32_t pos, struct node *new_node) {
 	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
@@ -173,13 +173,13 @@ list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node) {
 	printf("node_insert(%d)\n", pos);
 
 
-	list_Node *const n = list_node_get(list, pos);
+	struct node *const n = list_node_get(list, pos);
 
 	if (n == NULL) {
 		return NULL;
 	}
 
-	list_Node *const nod = list_node_prev_get(n);
+	struct node *const nod = list_node_prev_get(n);
 
 	if (nod == NULL) {
 		return NULL;
@@ -192,7 +192,7 @@ list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node) {
 }
 
 
-list_Node *list_node_append(list_List *list, list_Node *new_node) {
+struct node *list_node_append(struct list *list, struct node *new_node) {
 	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
@@ -211,8 +211,8 @@ list_Node *list_node_append(list_List *list, list_Node *new_node) {
 }
 
 
-list_Node *list_insert(list_List *list, int32_t pos, void *data) {
-	list_Node *const new_node = list_node_create();
+struct node *list_insert(struct list *list, int32_t pos, void *data) {
+	struct node *const new_node = list_node_create();
 
 	if (new_node == NULL) {
 		return NULL;
@@ -224,12 +224,12 @@ list_Node *list_insert(list_List *list, int32_t pos, void *data) {
 }
 
 
-list_Node *list_append(list_List *list, void *data) {
+struct node *list_append(struct list *list, void *data) {
 	if (list == NULL) {
 		return NULL;
 	}
 
-	list_Node *const new_node = list_node_create();
+	struct node *const new_node = list_node_create();
 
 	if (new_node == NULL) {
 		return NULL;
@@ -237,7 +237,7 @@ list_Node *list_append(list_List *list, void *data) {
 
 	new_node->data = data;
 
-	list_Node *const node = list_node_append(list, new_node);
+	struct node *const node = list_node_append(list, new_node);
 
 	if (node == NULL) {
 		free((void *)new_node);

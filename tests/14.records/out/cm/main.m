@@ -50,11 +50,11 @@ var lines: [3]Line = [
 
 var pLines: [3]*Line = [&lines[0], &lines[1], &lines[2]]
 
-type Struct = record {
+type Structx = record {
 	x: *Line
 }
 
-var s: Struct = {x = &lines[0]}
+var s: Structx = {x = &lines[0]}
 
 
 func test_records () -> Unit {
@@ -86,7 +86,7 @@ func test_records () -> Unit {
 	printf("s.x.b.y = %d\n", Int32 s.x.b.y)
 
 
-	let x: Struct = s
+	let x: Structx = s
 
 	printf("x.x.a.x = %d\n", Int32 x.x.a.x)
 	printf("x.x.a.y = %d\n", Int32 x.x.a.y)

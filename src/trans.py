@@ -464,7 +464,7 @@ def do_type_record(x):
 	fields = []
 
 	uid = rec_uid
-	rec_uid = rec_uid + 1
+	rec_uid += 1
 
 	for ast_field in x['fields']:
 		field = do_field(ast_field)
@@ -1996,13 +1996,17 @@ def def_type_common(x, nt):
 
 	ty = do_type(x['type'])
 
+	is_open_record = False
 	if ty.is_record():
 		# 'default' -> 'private' &
 		# 'default' -> 'public' for @public record
 		for f in ty.fields:
-			if f.access_level == HLIR_ACCESS_LEVEL_UNDEFINED:
+			if f.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
+				is_open_record = True
+			elif f.access_level == HLIR_ACCESS_LEVEL_UNDEFINED:
 				if ty.hasAttribute2("public"):
 					f.access_level = HLIR_ACCESS_LEVEL_PUBLIC
+					is_open_record = True
 				else:
 					f.access_level = HLIR_ACCESS_LEVEL_PRIVATE
 
@@ -2022,8 +2026,18 @@ def def_type_common(x, nt):
 	Type.update(nt, ty)
 	nt.deps = deps
 	nt.id = id
-	if nt.is_record():
-		nt.id.c_tag = id.str
+
+	if nt.is_record() and not is_open_record:
+		#if mass(ty):
+		if hasattr(ty, 'id') and ty.id.c != None:
+			# ориг тип именованный, значит идем через typedef, значит для этого типа
+			nt.id.c_tag = None #!
+			pass
+		else:
+			nt.id.c_tag = id.str
+			pass
+		#nt.is_open_record = is_open_record
+
 	nt.definition = definition
 	nt.parent = cmodule  # добавляем заново тк очистили его выше!
 	nt.ti_def = id.ti

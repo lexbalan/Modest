@@ -211,16 +211,16 @@ static bool test_generic_array(void) {
 }
 
 
-typedef struct Point2D {
+struct point2_d {
 	int32_t x;
 	int32_t y;
-} Point2D;
+};
 
-typedef struct Point3D {
+struct point3_d {
 	int32_t x;
 	int32_t y;
 	int32_t z;
-} Point3D;
+};
 
 static bool test_generic_record(void) {
 	// Any record expression have GenericRecord type
@@ -233,14 +233,14 @@ static bool test_generic_record(void) {
 
 	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32}
-	Point2D point_2d;
-	point_2d = (Point2D){.x = 10, .y = 20};
+	struct point2_d point_2d;
+	point_2d = (struct point2_d){.x = 10, .y = 20};
 	(void)point_2d;
 
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32, z: Int32}
-	Point3D point_3d;
-	point_3d = (Point3D){.x = 10, .y = 20};
+	struct point3_d point_3d;
+	point_3d = (struct point3_d){.x = 10, .y = 20};
 	(void)point_3d;
 
 	return true;

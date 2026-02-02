@@ -11,8 +11,8 @@
 
 
 
-static queueWord8_QueueWord8 bq0;
-static ringWord8_RingWord8 br0;
+static struct queue_word8 bq0;
+static struct ring_word8 br0;
 
 static int32_t ii;
 static void fill(uint32_t n) {

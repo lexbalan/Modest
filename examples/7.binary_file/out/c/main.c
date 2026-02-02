@@ -9,27 +9,27 @@
 
 #define FILENAME  ("file.bin")
 
-typedef struct Chunk {
+struct chunk {
 	char id[100];
 	char data[1024];
-} Chunk;
+};
 
 static void writeExample(void) {
 	printf("run writeExample()\n");
 
-	FILE *const fp = fopen(FILENAME, "wb");
+	struct file *const fp = fopen(FILENAME, "wb");
 	if (fp == NULL) {
 		printf("error: cannot create file '%s'", (char*)FILENAME);
 		return;
 	}
 
-	Chunk chunk = (Chunk){
+	struct chunk chunk = (struct chunk){
 		.id = {'i', 'd'},
 		.data = {'d', 'a', 't', 'a'}
 	};
 
 	// write chunk to file
-	fwrite((void *)&chunk, sizeof(Chunk), 1, fp);
+	fwrite((void *)&chunk, sizeof(struct chunk), 1, fp);
 
 	fclose(fp);
 }
@@ -38,14 +38,14 @@ static void writeExample(void) {
 static void readExample(void) {
 	printf("run readExample()\n");
 
-	FILE *const fp = fopen(FILENAME, "rb");
+	struct file *const fp = fopen(FILENAME, "rb");
 	if (fp == NULL) {
 		printf("error: cannot open file '%s'", (char*)FILENAME);
 		return;
 	}
 
-	Chunk chunk;
-	fread((void *)&chunk, sizeof(Chunk), 1, fp);
+	struct chunk chunk;
+	fread((void *)&chunk, sizeof(struct chunk), 1, fp);
 
 	printf("file \"%s\" contains:\n", (char*)FILENAME);
 	printf("chunk.id: \"%s\"\n", (char*)chunk.id);

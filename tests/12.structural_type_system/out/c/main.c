@@ -15,93 +15,93 @@ struct __anonymous_struct_4 {
 	int32_t x;
 };
 
-typedef struct Type1 {
+struct type1 {
 	int32_t x;
-} Type1;
+};
 
-typedef struct Type2 {
+struct type2 {
 	int32_t x;
-} Type2;
+};
 
-typedef Type1 Type3;
+typedef struct type1 Type3;
 
-static void f0_val(Type1 x) {
-	printf("f0 x.x = %d\n", x.x);
-}
-
-
-static void f1_val(Type2 x) {
+static void f1_val(struct type1 x) {
 	printf("f1 x.x = %d\n", x.x);
 }
 
 
-static void f2_val(Type3 x) {
+static void f2_val(struct type2 x) {
 	printf("f2 x.x = %d\n", x.x);
 }
 
 
-static void f3_val(struct __anonymous_struct_3 x) {
+static void f3_val(Type3 x) {
 	printf("f3 x.x = %d\n", x.x);
 }
 
 
-static void f0_ptr(Type1 *x) {
-	printf("f0p x.x = %d\n", x->x);
+static void f4_val(struct __anonymous_struct_3 x) {
+	printf("f4 x.x = %d\n", x.x);
 }
 
 
-static void f1_ptr(Type2 *x) {
+static void f1_ptr(struct type1 *x) {
 	printf("f1p x.x = %d\n", x->x);
 }
 
 
-static void f2_ptr(Type3 *x) {
+static void f2_ptr(struct type2 *x) {
 	printf("f2p x.x = %d\n", x->x);
 }
 
 
-static void f3_ptr(struct __anonymous_struct_4 *x) {
+static void f3_ptr(Type3 *x) {
 	printf("f3p x.x = %d\n", x->x);
 }
 
 
-static Type1 a = (Type1){.x = 1};
-static Type2 b = (Type2){.x = 2};
+static void f4_ptr(struct __anonymous_struct_4 *x) {
+	printf("f4p x.x = %d\n", x->x);
+}
+
+
+static struct type1 a = (struct type1){.x = 1};
+static struct type2 b = (struct type2){.x = 2};
 static Type3 c = (Type3){.x = 3};
 
 static void test_by_value(void) {
-	f0_val(a);
-	f1_val(*(Type2*)&a);
-	f2_val(a);
-	f3_val(*(struct __anonymous_struct_3*)&a);
+	f1_val(a);
+	f2_val(*(struct type2*)&a);
+	f3_val(a);
+	f4_val(*(struct __anonymous_struct_3*)&a);
 
-	f0_val(*(Type1*)&b);
-	f1_val(b);
-	f2_val(*(Type3*)&b);
-	f3_val(*(struct __anonymous_struct_3*)&b);
+	f1_val(*(struct type1*)&b);
+	f2_val(b);
+	f3_val(*(Type3*)&b);
+	f4_val(*(struct __anonymous_struct_3*)&b);
 
-	f0_val(c);
-	f1_val(*(Type2*)&c);
-	f2_val(c);
-	f3_val(*(struct __anonymous_struct_3*)&c);
+	f1_val(c);
+	f2_val(*(struct type2*)&c);
+	f3_val(c);
+	f4_val(*(struct __anonymous_struct_3*)&c);
 }
 
 
 static void test_by_pointer(void) {
-	f0_ptr(&a);
-	f1_ptr((Type2 *)&a);
-	f2_ptr((Type3 *)&a);
-	f3_ptr((struct __anonymous_struct_4 *)&a);
+	f1_ptr(&a);
+	f2_ptr((struct type2 *)&a);
+	f3_ptr((Type3 *)&a);
+	f4_ptr((struct __anonymous_struct_4 *)&a);
 
-	f0_ptr((Type1 *)&b);
-	f1_ptr(&b);
-	f2_ptr((Type3 *)&b);
-	f3_ptr((struct __anonymous_struct_4 *)&b);
+	f1_ptr((struct type1 *)&b);
+	f2_ptr(&b);
+	f3_ptr((Type3 *)&b);
+	f4_ptr((struct __anonymous_struct_4 *)&b);
 
-	f0_ptr((Type1 *)&c);
-	f1_ptr((Type2 *)&c);
-	f2_ptr(&c);
-	f3_ptr((struct __anonymous_struct_4 *)&c);
+	f1_ptr((struct type1 *)&c);
+	f2_ptr((struct type2 *)&c);
+	f3_ptr(&c);
+	f4_ptr((struct __anonymous_struct_4 *)&c);
 }
 
 

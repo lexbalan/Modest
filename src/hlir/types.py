@@ -263,6 +263,7 @@ class Id(Entity):
 		# Такой алиас может быть переопределен без вреда для других принтеров и фронтенда
 		self.str = id_str
 		self.c = id_str
+		self.c_tag = None  # For opaque records only
 		self.llvm = id_str
 		self.cm = id_str
 
@@ -1026,6 +1027,8 @@ class Type(Entity):
 		# Это даже как то работает, ок, пока сойдет
 		dst.__dict__.clear()
 		dst.__dict__.update(src.__dict__)
+		if hasattr(src, 'id'):
+			dst.id = copy.copy(src.id)
 		dst.att = copy.copy(src.att)
 		dst.annotations = copy.copy(src.annotations)
 		dst.__class__ = src.__class__

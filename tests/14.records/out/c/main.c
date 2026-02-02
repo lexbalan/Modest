@@ -17,57 +17,57 @@ struct __anonymous_struct_7 {
 	uint32_t y;
 };
 
-typedef struct Point2D {
+struct point2_d {
 	uint32_t x;
 	uint32_t y;
-} Point2D;
+};
 
-typedef struct Point3D {
+struct point3_d {
 	uint32_t x;
 	uint32_t y;
 	uint32_t z;
-} Point3D;
-
-#define XX  {.x = 1, .y = 2}
-#define YY  (Point2D){.x = 1, .y = 2}
-
-typedef struct Point {
-	int32_t x;
-	int32_t y;
-} Point;
-
-typedef struct Line {
-	Point a;
-	Point b;
-} Line;
-
-static Line line = (Line){
-	.a = (Point){.x = 10, .y = 11},
-	.b = (Point){.x = 12, .y = 13}
 };
 
-static Line lines[3] = {
-	(Line){
-		.a = (Point){.x = 1, .y = 2},
-		.b = (Point){.x = 3, .y = 4}
+#define XX  {.x = 1, .y = 2}
+#define YY  (struct point2_d){.x = 1, .y = 2}
+
+struct point {
+	int32_t x;
+	int32_t y;
+};
+
+struct line {
+	struct point a;
+	struct point b;
+};
+
+static struct line line = (struct line){
+	.a = (struct point){.x = 10, .y = 11},
+	.b = (struct point){.x = 12, .y = 13}
+};
+
+static struct line lines[3] = {
+	(struct line){
+		.a = (struct point){.x = 1, .y = 2},
+		.b = (struct point){.x = 3, .y = 4}
 	},
-	(Line){
-		.a = (Point){.x = 5, .y = 6},
-		.b = (Point){.x = 7, .y = 8}
+	(struct line){
+		.a = (struct point){.x = 5, .y = 6},
+		.b = (struct point){.x = 7, .y = 8}
 	},
-	(Line){
-		.a = (Point){.x = 9, .y = 10},
-		.b = (Point){.x = 11, .y = 12}
+	(struct line){
+		.a = (struct point){.x = 9, .y = 10},
+		.b = (struct point){.x = 11, .y = 12}
 	}
 };
 
-static Line *pLines[3] = {&lines[0], &lines[1], &lines[2]};
+static struct line *pLines[3] = {&lines[0], &lines[1], &lines[2]};
 
-typedef struct Struct {
-	Line *x;
-} Struct;
+struct structx {
+	struct line *x;
+};
 
-static Struct s = (Struct){.x = &lines[0]};
+static struct structx s = (struct structx){.x = &lines[0]};
 
 static void test_records(void) {
 
@@ -98,7 +98,7 @@ static void test_records(void) {
 	printf("s.x.b.y = %d\n", s.x->b.y);
 
 
-	const Struct x = s;
+	const struct structx x = s;
 
 	printf("x.x.a.x = %d\n", x.x->a.x);
 	printf("x.x.a.y = %d\n", x.x->a.y);
@@ -120,10 +120,10 @@ int main(void) {
 	}
 
 	// compare two Point2D records
-	Point2D p2d0 = (Point2D){.x = 1, .y = 2};
-	Point2D p2d1 = (Point2D){.x = 10, .y = 20};
+	struct point2_d p2d0 = (struct point2_d){.x = 1, .y = 2};
+	struct point2_d p2d1 = (struct point2_d){.x = 10, .y = 20};
 
-	if (memcmp(&p2d0, &p2d1, sizeof(Point2D)) == 0) {
+	if (memcmp(&p2d0, &p2d1, sizeof(struct point2_d)) == 0) {
 		printf("p2d0 == p2d1\n");
 	} else {
 		printf("p2d0 != p2d1\n");
@@ -131,10 +131,10 @@ int main(void) {
 
 
 	// compare Point2D with anonymous record
-	Point2D p2d2 = p2d0;// record assignation
+	struct point2_d p2d2 = p2d0;// record assignation
 	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6){.x = 1, .y = 2};
 
-	if (memcmp(&p2d2, &p2d3, sizeof(Point2D)) == 0) {
+	if (memcmp(&p2d2, &p2d3, sizeof(struct point2_d)) == 0) {
 		printf("p2d2 == p2d3\n");
 	} else {
 		printf("p2d2 != p2d3\n");
@@ -151,10 +151,10 @@ int main(void) {
 	}
 
 	// comparison between two record (by pointer)
-	Point2D *const pr2 = &p2d2;
+	struct point2_d *const pr2 = &p2d2;
 	struct __anonymous_struct_6 *const pr3 = &p2d3;
 
-	if (memcmp(pr2, pr3, sizeof(Point2D)) == 0) {
+	if (memcmp(pr2, pr3, sizeof(struct point2_d)) == 0) {
 		printf("*pr2 == *pr3\n");
 	} else {
 		printf("*pr2 != *pr3\n");
@@ -173,7 +173,7 @@ int main(void) {
 */
 
 	// assign record by pointer
-	*pr2 = (Point2D){.x = 100, .y = 200};
+	*pr2 = (struct point2_d){.x = 100, .y = 200};
 	*pr3 = (struct __anonymous_struct_6){0};
 
 	// cons Point3D from Point2D (record extension)

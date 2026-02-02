@@ -12,7 +12,13 @@ from decimal import Decimal
 
 import re
 
-def camel_to_snake(name: str) -> str:
+
+def camel_to_lower_snake(name: str) -> str:
+    # Вставляем подчёркивание перед заглавной буквой, если перед ней — строчная или цифра
+    s = re.sub(r'(?<=[a-z0-9])([A-Z])', r'_\1', name)
+    return s.lower()
+
+def camel_to_upper_snake(name: str) -> str:
     # Вставляем подчёркивание перед заглавной буквой, если перед ней — строчная или цифра
     s = re.sub(r'(?<=[a-z0-9])([A-Z])', r'_\1', name)
     return s.upper()
@@ -172,25 +178,13 @@ def decize(t):
 
 
 
-def get_id_str(x):
-	if not hasattr(x, 'id'):
-		return None
-
-	if hasattr(x.id, 'c_tag'):
-		return x.id.c_tag
-
-	id = x.id
-	if id == None:
-		return None
+def get_id_c(x, id, nodecorate):
 	id_str = id.c
 
 	if id.prefix != None:
 		id_str = id.prefix + id_str
 
-	if x.id.hasAttribute('nodecorate'):
-		return id_str
-
-	if not is_global_public(x):
+	if nodecorate:
 		return id_str
 
 	module = x.getModule()
@@ -200,6 +194,26 @@ def get_id_str(x):
 			return "%s_%s" % (module.prefix, id_str)
 
 	return id_str
+
+
+
+def get_id_str(x):
+	if not hasattr(x, 'id'):
+		return None
+
+	id = x.id
+	if id == None:
+		return ''
+
+	if isinstance(x, Type):
+		if x.is_record() and type_have_tag(x):
+			return 'struct ' + camel_to_lower_snake(id.c_tag)
+
+	if id.c != None:
+		nodecorate = x.id.hasAttribute('nodecorate') or not is_global_public(x)
+		return get_id_c(x, x.id, nodecorate=nodecorate)
+
+	return ''
 
 
 
@@ -268,7 +282,7 @@ def str_specs(specs):
 def plusSpace(s):
 	if s != '':
 		return ' ' + s
-	return s
+	return ''
 
 
 def str_ctype_named(t, text):
@@ -320,7 +334,7 @@ def str_ctype_func(t, text):
 
 def str_ctype_struct(t, text):
 	nl_end = 0
-	sstr = 'struct%s {' % plusSpace(t['tag'])
+	sstr = 'struct%s {' % t['tag']
 	indent_up()
 	i = 0
 	nfields = len(t['fields'])
@@ -342,8 +356,9 @@ def str_ctype_struct(t, text):
 
 
 def str_ctype(t, text=''):
-	assert(isinstance(t, dict))
+	assert(t != None)
 	assert(text != None)
+	assert(isinstance(t, dict))
 
 	if t['isa'] == 'ctype_named': return str_ctype_named(t, text)
 	if t['isa'] == 'ctype_pointer': return str_ctype_pointer(t, text)
@@ -408,13 +423,15 @@ def do_ctype_struct(t, tag='', specs=[]):
 	fields = []
 	for p in t.fields:
 		fields.append(ctype_field(id_str=p.id.str, ctype=do_ctype(p.type), specs=[], nl=p.nl))
+	tag = camel_to_lower_snake(plusSpace(tag))
 	return ctype_struct(fields, specs=specs, tag=tag)
 
 
 def do_ctype_named(t, specs):
 	id_str = get_type_id(t)
-	if hasattr(t.id, 'c_tag'):
-		id_str = 'struct ' + t.id.c_tag
+	#print(id_str)
+	#if hasattr(t, 'id') and hasattr(t.id, 'c_tag') and t.id.c_tag != None:
+	#	id_str = 'struct ' + camel_to_lower_snake(t.id.c_tag)
 	return ctype_named(id_str, specs=specs)
 
 
@@ -435,6 +452,8 @@ def do_ctype(t):
 	if t.is_func(): return do_ctype_func(t, specs=specs)
 	if t.is_array(): return do_ctype_array(t, specs=specs)
 	if t.is_record(): return do_ctype_struct(t, specs=specs)
+	print("NAMED? = " + str(is_type_named(t)))
+	print("UNKNOWN TYPE = " + str(t.id.str))
 	return None
 
 
@@ -1277,7 +1296,7 @@ def str_value_with_type(v, t, ctx=[]):
 def str_value_const(x, ctx):
 	id_str = get_id_str(x)
 	if x.is_global_flag and not x.id.hasAttribute('nodecorate'):
-		return camel_to_snake(id_str)
+		return camel_to_upper_snake(id_str)
 	return id_str
 
 
@@ -2031,23 +2050,37 @@ def print_decl_type(x):
 
 
 
-def declare_struct(t, tag):
-	# struct Tag {}
+def define_struct(t, tag):
+	# struct Tag {};
 	out(str_type_record(t, tag=tag))
+	out(";")
 
 
-def declare_struct_typedef(t, id_str):
+def define_struct_typedef(t, id_str):
+	# typedef struct {} TypeId;
 	out("typedef ")
-	declare_struct(t, id_str)
+	out(str_type_record(t, tag=''))
 	out(" " + id_str)
 	out(";")
 
 
-def declare_struct_typedef2(t, id_str):
-	# typedef <struct_id> ID
+def define_struct_typedef2(t, id_str):
+	# typedef <struct_id> TypeId;
 	out("typedef ")
 	out(str_field(t, id_str))
 	out(";")
+
+
+# returns '' if not have tag (!)
+def type_get_tag(t):
+	if hasattr(t, 'id'):
+		if hasattr(t.id, 'c_tag'):
+			if t.id.c_tag != None:
+				return t.id.c_tag
+	return ''
+
+def type_have_tag(t):
+	return type_get_tag(t) != ''
 
 
 def print_def_type(x):
@@ -2056,11 +2089,22 @@ def print_def_type(x):
 	id_str = get_id_str(x.type)
 	orig_type = x.original_type
 
-	if orig_type.is_record() and orig_type.is_anonymous():
-		declare_struct_typedef(orig_type, id_str)
-	else:
-		declare_struct_typedef2(orig_type, id_str)
+#	if is_type_named(orig_type) and not orig_type.is_anonymous():
+#		out('/*%s*/typedef ' % str(orig_type.id.c_tag) + str_field(orig_type, id_str) + ';')
+#		return
 
+	if orig_type.is_record():
+		if type_have_tag(x.type):
+			define_struct(orig_type, x.type.id.c_tag)
+			return
+		if orig_type.is_anonymous():
+			define_struct_typedef(orig_type, id_str)
+			return
+		else:
+			define_struct_typedef2(orig_type, id_str)
+			return
+
+	out('typedef ' + str_field(orig_type, id_str) + ';')
 
 
 
@@ -2111,7 +2155,7 @@ def str_initializer(v):
 
 
 def print_def_const(x):
-	id_str = camel_to_snake(get_id_str(x.value))
+	id_str = camel_to_upper_snake(get_id_str(x.value))
 	print_macro_definition(id_str, x.init_value, val_ctx=[])
 	module_undef_list.append(id_str)
 	return
@@ -2322,7 +2366,7 @@ def print_header(module, outname):
 			print_def_var(x, as_extern=True)
 		elif x.is_stmt_def_type():
 			nnl(x.nl)
-			print_deps(x.deps)
+#			print_deps(x.deps)
 			print_def_type(x)
 		elif x.is_stmt_def_const():
 			nnl(x.nl)
@@ -2516,7 +2560,7 @@ def print_cfile(module, _outname):
 			print_def_const(x)
 		elif x.is_stmt_def_type() and is_private(x):
 			nnl(x.nl)
-			print_deps(x.deps)
+#			print_deps(x.deps)
 			print_def_type(x)
 		elif x.is_stmt_def_var():
 			nnl(x.nl)
