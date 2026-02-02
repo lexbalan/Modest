@@ -21,7 +21,7 @@ struct sha256_test_case {
 };
 
 static struct sha256_test_case test0 = (struct sha256_test_case){
-	.inputData = {'a', 'b', 'c'},
+	.inputData = "abc",
 	.inputDataLen = 3,
 	.expectedResult = {
 		0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x1, 0xCF, 0xEA,
@@ -32,7 +32,7 @@ static struct sha256_test_case test0 = (struct sha256_test_case){
 };
 
 static struct sha256_test_case test1 = (struct sha256_test_case){
-	.inputData = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'},
+	.inputData = "Hello World!",
 	.inputDataLen = 12,
 	.expectedResult = {
 		0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53,

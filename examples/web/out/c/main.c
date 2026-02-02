@@ -61,7 +61,7 @@ int32_t main(void) {
 		.sin_family = (uint8_t)AF_INET,
 		.sin_port = (unsigned short)htons((uint16_t)PORT),
 		.sin_addr = (struct in_addr){
-			.s_addr = (in_addr_t)INADDR_ANY
+			.s_addr = INADDR_ANY
 		}
 	};
 

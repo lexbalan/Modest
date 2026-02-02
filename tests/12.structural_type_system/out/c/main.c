@@ -78,10 +78,10 @@ static void test_by_value(void) {
 	f3_val((Type3){.x = 0});
 	f4_val((struct __anonymous_struct_3){.x = 0});
 
-	f1_val((struct type1){.x = 0});
-	f2_val((struct type2){.x = 0});
-	f3_val((Type3){.x = 0});
-	f4_val((struct __anonymous_struct_3){.x = 0});
+	f1_val((struct type1)ZERO);
+	f2_val((struct type2)ZERO);
+	f3_val((Type3)ZERO);
+	f4_val((struct __anonymous_struct_3)ZERO);
 
 	f1_val(a);
 	f2_val(RAWCAST(struct type2, struct type1, a));

@@ -54,9 +54,6 @@ modern_style = {
 styles = {
 	'legacy': legacy_style,
 	'modern': modern_style,
-
-	'KnR': legacy_style,
-	'Allman': modern_style,
 }
 
 
@@ -519,10 +516,10 @@ def str_value_bin(x, ctx):
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 		if left.type.is_record(): return str_value_eq_composite(x, ctx)
 		elif left.type.is_array(): return str_value_eq_composite(x, ctx)
-		elif left.type.is_string(): return str_literal_bool2(x.asset)
+		elif left.type.is_string(): return str_value_literal_bool2(x.asset)
 
 	if op == HLIR_VALUE_OP_ADD:
-		if left.type.is_array(): return str_literal_array(x, ctx)
+		if left.type.is_array(): return str_value_literal_array(x, ctx)
 		if left.type.is_string(): return str_string_add(x)
 
 	return '%s %s %s' % (str_value(left, parent_expr=x), bin_ops[op], str_value(right, parent_expr=x))
@@ -562,7 +559,7 @@ def str_value_eq_composite(x, ctx):
 	right = x.right
 
 	if x.isValueImmediate():
-		return str_literal_bool2(x.asset)
+		return str_value_literal_bool2(x.asset)
 
 	# если сравниваем строки (Str8, Str16, Str32)
 	if left.type.is_str() and right.type.is_str():
@@ -789,13 +786,18 @@ def str_cast(t, v, raw_cast=False, ctx=[]):
 def initializers_are_different(a, b):
 	if len(a) != len(b):
 		return True
+
 	i = 0
 	while i < len(a):
 		ini_left = a[i]
 		ini_right = b[i]
-		if not Type.eq(ini_left.value.type, ini_right.value.type):
-			return True
+
+		if not ini_right.value.type.is_generic():
+			if not Type.eq(ini_left.value.type, ini_right.value.type):
+				return True
+
 		i += 1
+
 	return False
 
 
@@ -822,7 +824,8 @@ def str_value_cons_record(x, ctx):
 	if initializers_are_different(x.asset, value.asset):
 		# Если у нас в ValueCons asset отличается от asset в ValueCons#value
 		# То печатаем литерал структуры из нашего asset
-		return '(' + str_type(to_type) + ')' + str_literal_record(x, ctx=ctx)
+		#return '(' + str_type(to_type) + ')' + str_value(x., ctx=ctx)
+		return '(' + str_type(to_type) + ')' + str_value_literal_record(x, ctx=ctx)
 
 	return '(' + str_type(to_type) + ')' + str_value(x.value, ctx=ctx)
 
@@ -848,7 +851,7 @@ def str_value_cons_array(x, ctx):
 	# for:
 	#    var x: [10]Word8 = "0123456789"
 	if value.type.is_string():
-		return str_literal_string(value, ctx=ctx)
+		return str_value_literal_string(value, ctx=ctx)
 
 	return str_cast(to_type, value, ctx=ctx)
 
@@ -921,7 +924,7 @@ def str_value_cons2(x, ctx):
 
 	if type.is_char() and from_type.is_string():
 		if value.isValueLiteral() and value.type.is_string():
-			return str_literal_char(type, ord(value.asset[0]), ctx)
+			return str_value_literal_char(type, ord(value.asset[0]), ctx)
 		return "_CHR%d(%s)" % (type.width, str_value(value))
 
 
@@ -1044,7 +1047,7 @@ def print_literal_array_items(items, item_type):
 
 
 
-def str_literal_array(x, ctx):
+def str_value_literal_array(x, ctx):
 	type = x.type
 	items = x.asset
 	nl_end = 1
@@ -1090,7 +1093,7 @@ def str_literal_array(x, ctx):
 
 
 
-def str_literal_string(v, ctx):
+def str_value_literal_string(v, ctx):
 	utf32_codes = chars_to_utf32(v.asset)
 	width = v.type.width
 	if v.type.is_generic():
@@ -1098,13 +1101,13 @@ def str_literal_string(v, ctx):
 	return print_utf32codes_as_string(utf32_codes, width=width, quote='"')
 
 
-def str_literal_char(type, cc, ctx):
+def str_value_literal_char(type, cc, ctx):
 	return print_utf32codes_as_string([cc], type.width, quote="'")
 
 
 
 
-def str_literal_record(x, ctx):
+def str_value_literal_record(x, ctx):
 	items = x.asset
 	type = x.type
 	nitems = len(items)
@@ -1207,13 +1210,13 @@ def print_utf32codes_as_string(utf32_codes, width, quote):
 
 
 
-def str_literal_bool2(num):
+def str_value_literal_bool2(num):
 	return csettings['true_literal'] if num else csettings['false_literal']
 
 
-def str_literal_bool(v, ctx):
+def str_value_literal_bool(v, ctx):
 	num = v.asset
-	return str_literal_bool2(num)
+	return str_value_literal_bool2(num)
 
 
 
@@ -1233,7 +1236,7 @@ def str_value_suffix(req_bits, is_unsigned):
 	return sstr
 
 
-def str_literal_number(type, num, nsigns=0, is_big=False, as_hex=False):
+def str_value_literal_number(type, num, nsigns=0, is_big=False, as_hex=False):
 	global need_big_int
 	sstr = ''
 	# Big Number?
@@ -1260,7 +1263,7 @@ def str_literal_number(type, num, nsigns=0, is_big=False, as_hex=False):
 
 
 
-def str_literal_decimal(d: Decimal, max_frac=None):
+def str_value_literal_decimal(d: Decimal, max_frac=None):
 	s = format(d, 'f')
 	# remove zero tail
 	i = len(s) - 1
@@ -1273,12 +1276,12 @@ def str_literal_decimal(d: Decimal, max_frac=None):
 	return s[0:i]
 
 
-def str_literal_float(t, v, ctx):
-	return str_literal_decimal(v.asset)
+def str_value_literal_float(t, v, ctx):
+	return str_value_literal_decimal(v.asset)
 
 
 
-def str_literal_pointer(type, num, ctx):
+def str_value_literal_pointer(type, num, ctx):
 	if num == 0:
 		return "NULL"
 	return "((" + str_type(type) + ")0x%08X)" % num
@@ -1293,15 +1296,15 @@ def str_value_with_type(v, t, ctx=[]):
 
 	if t.is_arithmetical() or t.is_number() or t.is_word():
 		as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
-		return str_literal_number(t, asset, as_hex=as_hex)
+		return str_value_literal_number(t, asset, as_hex=as_hex)
 
-	elif t.is_float(): return str_literal_float(t, v, ctx)
-	elif t.is_string(): return str_literal_string(v, ctx)
-	elif t.is_bool(): return str_literal_bool(v, ctx)
-	elif t.is_char(): return str_literal_char(t, asset, ctx)
-	elif t.is_array(): return str_literal_array(v, ctx)
-	elif t.is_record(): return str_literal_record(v, ctx)
-	elif t.is_pointer(): return str_literal_pointer(t, asset, ctx)
+	elif t.is_float(): return str_value_literal_float(t, v, ctx)
+	elif t.is_string(): return str_value_literal_string(v, ctx)
+	elif t.is_bool(): return str_value_literal_bool(v, ctx)
+	elif t.is_char(): return str_value_literal_char(t, asset, ctx)
+	elif t.is_array(): return str_value_literal_array(v, ctx)
+	elif t.is_record(): return str_value_literal_record(v, ctx)
+	elif t.is_pointer(): return str_value_literal_pointer(t, asset, ctx)
 	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
 	1/0
 
@@ -1440,9 +1443,9 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 	if x.isValueLiteral():
 		sstr += str_value_literal(x, ctx)
 	elif x.isValueArray():
-		sstr += str_literal_array(x, ctx)
+		sstr += str_value_literal_array(x, ctx)
 	elif x.isValueRecord():
-		sstr += str_literal_record(x, ctx)
+		sstr += str_value_literal_record(x, ctx)
 	elif x.isValueBin():
 		sstr += str_value_bin(x, ctx)
 	elif x.isValueShl():

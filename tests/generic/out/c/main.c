@@ -234,7 +234,7 @@ static bool test_generic_record(void) {
 	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32}
 	struct point2_d point_2d;
-	point_2d = (struct point2_d){.x = 10, .y = 20};
+	point_2d = (struct point2_d)p;
 	(void)point_2d;
 
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})

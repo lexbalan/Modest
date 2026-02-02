@@ -22,7 +22,7 @@ struct line {
 };
 
 #define ZERO  0
-#define POINT_ZERO  (struct point){.x = (double)ZERO, .y = (double)ZERO}
+#define POINT_ZERO  (struct point){.x = ZERO, .y = ZERO}
 #define POINT_ONE  (struct point){.x = 1.0, .y = 1.0}
 
 #define LINE0  (struct line){ \
@@ -31,8 +31,8 @@ struct line {
 }
 
 #define LINE1  (struct line){ \
-	.a = (struct point){.x = 10.0, .y = 20.0}, \
-	.b = (struct point){.x = 30.0, .y = 40.0} \
+	.a = {.x = 10, .y = 20}, \
+	.b = {.x = 30, .y = 40} \
 }
 
 #define LINE2  (struct line){ \
@@ -41,8 +41,8 @@ struct line {
 }
 
 #define LINE3  (struct line){ \
-	.a = (struct point){.x = 10.0, .y = 20.0}, \
-	.b = (struct point){.x = 30.0, .y = 40.0} \
+	.a = {.x = 10, .y = 20}, \
+	.b = {.x = 30, .y = 40} \
 }
 
 #define LINES  {LINE0, LINE1, LINE2, LINE3}

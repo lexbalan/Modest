@@ -20,8 +20,8 @@ struct line {
 };
 
 static struct line line = (struct line){
-	.a = (struct point){.x = 0.0, .y = 0.0},
-	.b = (struct point){.x = 1.0, .y = 1.0}
+	.a = {.x = 0, .y = 0},
+	.b = {.x = 1.0, .y = 1.0}
 };
 
 __attribute__((always_inline))

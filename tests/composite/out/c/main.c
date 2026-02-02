@@ -159,7 +159,7 @@ struct animation_point {
 };
 
 static struct animation_point ap = (struct animation_point){
-	.color = (struct rgb24){
+	.color = {
 		.red = 200,
 		.green = 0,
 		.blue = 0

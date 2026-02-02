@@ -22,8 +22,8 @@ int main(void) {
 	struct object o2;
 
 	o1 = (struct object){
-		.firstname = {'J', 'o', 'h', 'n'},
-		.lastname = {'D', 'o', 'e'},
+		.firstname = "John",
+		.lastname = "Doe",
 		.age = 30
 	};
 

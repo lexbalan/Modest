@@ -43,22 +43,22 @@ struct line {
 };
 
 static struct line line = (struct line){
-	.a = (struct point){.x = 10, .y = 11},
-	.b = (struct point){.x = 12, .y = 13}
+	.a = {.x = 10, .y = 11},
+	.b = {.x = 12, .y = 13}
 };
 
 static struct line lines[3] = {
 	(struct line){
-		.a = (struct point){.x = 1, .y = 2},
-		.b = (struct point){.x = 3, .y = 4}
+		.a = {.x = 1, .y = 2},
+		.b = {.x = 3, .y = 4}
 	},
 	(struct line){
-		.a = (struct point){.x = 5, .y = 6},
-		.b = (struct point){.x = 7, .y = 8}
+		.a = {.x = 5, .y = 6},
+		.b = {.x = 7, .y = 8}
 	},
 	(struct line){
-		.a = (struct point){.x = 9, .y = 10},
-		.b = (struct point){.x = 11, .y = 12}
+		.a = {.x = 9, .y = 10},
+		.b = {.x = 11, .y = 12}
 	}
 };
 
@@ -133,7 +133,7 @@ int main(void) {
 
 	// compare Point2D with anonymous record
 	struct point2_d p2d2 = p2d0;// record assignation
-	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6){.x = 1, .y = 2};
+	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6)XX;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(struct point2_d)) == 0) {
 		printf("p2d2 == p2d3\n");
