@@ -28,6 +28,8 @@ typedef struct type1 Type3;
 
 #define ZERO  {.x = 0}
 
+// Check by value
+
 static void f1_val(struct type1 x) {
 	printf("f1 x.x = %d\n", x.x);
 }
@@ -47,6 +49,8 @@ static void f4_val(struct __anonymous_struct_3 x) {
 	printf("f4 x.x = %d\n", x.x);
 }
 
+
+// Check by pointer
 
 static void f1_ptr(struct type1 *x) {
 	printf("f1p x.x = %d\n", x->x);

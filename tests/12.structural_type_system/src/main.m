@@ -14,7 +14,11 @@ type Type2 = record {
 
 type Type3 = Type1
 
-const zero = {x=0}
+
+const zero = {x = 0}
+
+
+// Check by value
 
 func f1_val (x: Type1) -> Unit {
 	printf("f1 x.x = %d\n", x.x)
@@ -32,6 +36,8 @@ func f4_val (x: record {x: Int32}) -> Unit {
 	printf("f4 x.x = %d\n", x.x)
 }
 
+
+// Check by pointer
 
 func f1_ptr (x: *Type1) -> Unit {
 	printf("f1p x.x = %d\n", x.x)

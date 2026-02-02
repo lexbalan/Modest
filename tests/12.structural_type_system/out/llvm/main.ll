@@ -216,6 +216,9 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32
 };
 
+
+
+; Check by value
 define internal void @f1_val(%Type1 %x) {
 	%1 = extractvalue %Type1 %x, 0
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), %Int32 %1)
@@ -240,6 +243,9 @@ define internal void @f4_val({%Int32} %x) {
 	ret void
 }
 
+
+
+; Check by pointer
 define internal void @f1_ptr(%Type1* %x) {
 	%1 = getelementptr %Type1, %Type1* %x, %Int32 0, %Int32 0
 	%2 = load %Int32, %Int32* %1
