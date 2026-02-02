@@ -13,6 +13,7 @@ type Type2 = record {
 
 type Type3 = Type1
 
+const zero = {x = 0}
 
 func f1_val (x: Type1) -> Unit {
 	printf("f1 x.x = %d\n", Int32 x.x)
@@ -58,6 +59,16 @@ var c: Type3 = {x = 3}
 
 
 func test_by_value () -> Unit {
+	f1_val({x = 0})
+	f2_val({x = 0})
+	f3_val({x = 0})
+	f4_val({x = 0})
+
+	f1_val(zero)
+	f2_val(zero)
+	f3_val(zero)
+	f4_val(zero)
+
 	f1_val(a)
 	f2_val(a)
 	f3_val(a)

@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
+#define RAWCAST(type_dst, type_src, value) (((union { type_src src; type_dst dst; }){ .src = (value) }).dst)
 
 
 /* anonymous records */

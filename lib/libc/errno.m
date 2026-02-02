@@ -2,7 +2,19 @@
  * libc/errno.m
  */
 
-pragma module_nodecorate
+//pragma module_nodecorate
+
+
+import "errno_abi"
+
+
+public func get () -> Int32 {
+    return *errno_abi.__errno_location()
+}
+
+public func set (value: Int32) -> Unit {
+    *errno_abi.__errno_location() = value
+}
 
 
 /*
@@ -81,7 +93,7 @@ public const c_ERANGE = 34   // Result too large
 @alias("c", "EAGAIN")
 public const c_EAGAIN = 35           // Resource temporarily unavailable
 @alias("c", "EWOULDBLOCK")
-public const c_EWOULDBLOCK = eAGAIN  // Operation would block
+public const c_EWOULDBLOCK = c_EAGAIN  // Operation would block
 @alias("c", "EINPROGRESS")
 public const c_EINPROGRESS = 36      // Operation now in progress
 @alias("c", "EALREADY")

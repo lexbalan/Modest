@@ -772,13 +772,12 @@ def str_value_access(x, ctx):
 	return sstr
 
 
-def str_cast(t, v, hard_cast=False, ctx=[]):
+def str_cast(t, v, raw_cast=False, ctx=[]):
 	sstr = ''
 
-	if hard_cast:
+	if raw_cast:
 		assert(is_local_context())
-		#sstr += "*(" + str_type(t) + "*)&"
-		return "HARD_CAST_UNSAFE(%s, %s)" % (str_type(t), str_value(v, ctx=ctx, wrapped=False))
+		return "RAWCAST(%s, %s, %s)" % (str_type(t), str_type(v.type), str_value(v, ctx=ctx, wrapped=False))
 	else:
 		sstr += "(" + str_type(t) + ")"
 
@@ -818,7 +817,7 @@ def str_value_cons_record(x, ctx):
 			# и приведение не требуется
 			return str_value(value, ctx=ctx)
 		# C cannot just cast struct to struct (!)
-		return str_cast(to_type, value, hard_cast=True, ctx=ctx)
+		return str_cast(to_type, value, raw_cast=True, ctx=ctx)
 
 	if initializers_are_different(x.asset, value.asset):
 		# Если у нас в ValueCons asset отличается от asset в ValueCons#value
@@ -993,7 +992,7 @@ def str_value_cons2(x, ctx):
 		if value.type.is_free_pointer():
 			value = value.value
 
-	return str_cast(type, value, hard_cast=x.rawMode, ctx=ctx)
+	return str_cast(type, value, raw_cast=x.rawMode, ctx=ctx)
 
 
 
@@ -2082,7 +2081,7 @@ def define_struct_typedef(t, id_str):
 
 def define_struct_typedef2(t, id_str):
 	# typedef <struct_id> TypeId;
-	out("/**/typedef ")
+	out("typedef ")
 	out(str_field(t, id_str))
 	out(";")
 
@@ -2116,7 +2115,6 @@ def print_def_type(x):
 			define_struct_typedef(orig_type, id_str)
 			return
 		else:
-			print("CC " + id_str)
 			define_struct_typedef2(orig_type, id_str)
 			return
 
@@ -2415,8 +2413,10 @@ def helper_use_lengthof():
 	module_undef_list.append("LENGTHOF")
 
 
-def helper_use_hardcast():
-	out("\n#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))")
+def helper_use_rawcast():
+	# из-за strict aliasing в C трюк с укзаателями не гарантирует что мы не словим UB при оптимизациях
+	# union же гарантирует нам преобразование и данный трюк сработает на стандартах начиная с C99 и выше
+	out("\n#define RAWCAST(type_dst, type_src, value) (((union { type_src src; type_dst dst; }){ .src = (value) }).dst)")
 	module_undef_list.append("LENGTHOF")
 
 def helper_use_bigint():
@@ -2455,7 +2455,7 @@ c_helpers = {
 	'use_lengthof': helper_use_lengthof,
 	'use_arrcpy': helper_use_arrcpy,
 	'use_va_arg': helper_use_va_arg,
-	'use_hard_cast': helper_use_hardcast,
+	'use_raw_cast': helper_use_rawcast,
 }
 
 c_include_helpers = {
@@ -2550,9 +2550,6 @@ def print_cfile(module, _outname):
 
 	if xx2:
 		newline()
-
-	# Пока просто жестко добавляю HARD_CAST_UNSAFE(type, expr)
-	#helper_use_hardcast()
 
 	for use in module.att:
 		if use in c_helpers:

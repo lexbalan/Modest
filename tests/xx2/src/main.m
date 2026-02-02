@@ -2,7 +2,10 @@
 
 include "libc/stdio"
 include "libc/string"
+import "libc/errno"
 
+
+func mod (x: *Context) -> *Context
 
 type Context = record {
 	x: Int32 = 32
@@ -20,6 +23,7 @@ func f1(c: Context2) -> Unit {
 }
 
 public func main () -> Int32 {
+	let e = errno.get()
 	f0({x=0, y=0})
 	f1({x=0, y=0})
 	return 0

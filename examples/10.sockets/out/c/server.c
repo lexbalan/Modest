@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 #define FILENAME  "file2.txt"

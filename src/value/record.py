@@ -70,9 +70,11 @@ def value_record_cons(t, v, method, ti):
 	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = v.stage
 
-	if not v.type.is_generic():
-		from trans import cmodule_use
-		cmodule_use('use_hard_cast')
+	if not v.type.is_generic(): #and not v.isValueImmediate():
+		if t.uid != v.type.uid:
+			# Если это реально разные типы-записи то да нужен будет raw cast (по крайней мере в C)
+			from trans import cmodule_use
+			cmodule_use('use_raw_cast')
 
 	# литерал записи всегда имеет тип Generic(Array)
 	# это позволяет конструировать из него разные записи

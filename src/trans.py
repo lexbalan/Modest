@@ -419,7 +419,7 @@ def do_type_named(x):
 	# если дело происходит не в определении типа и пришел undefined тип
 	if t.is_incompleted():
 		if not cdef.is_stmt_def_type():
-			error("forward references to non-struct type", x['ti'])
+			warning("forward references to non-struct type", x['ti'])
 		cdef.deps.append(t)
 
 	if t.hasAttribute2("deprecated"):

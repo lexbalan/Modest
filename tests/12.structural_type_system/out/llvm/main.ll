@@ -278,6 +278,14 @@ define internal void @f4_ptr({%Int32}* %x) {
 	%Int32 3
 }
 define internal void @test_by_value() {
+	call void @f1_val(%Type1 zeroinitializer)
+	call void @f2_val(%Type2 zeroinitializer)
+	call void @f3_val(%Type3 zeroinitializer)
+	call void @f4_val({%Int32} zeroinitializer)
+	call void @f1_val(%Type1 zeroinitializer)
+	call void @f2_val(%Type2 zeroinitializer)
+	call void @f3_val(%Type3 zeroinitializer)
+	call void @f4_val({%Int32} zeroinitializer)
 	%1 = load %Type1, %Type1* @a
 	call void @f1_val(%Type1 %1)
 ; -- cons_composite_from_composite_by_adr --

@@ -74,7 +74,7 @@ static void ss(char *_s, char *_sret_) {
 
 static int32_t arr2d[10][10];
 
-#define CC1  <hlir.types.ValueBad object at 0x102cf50f0>
+#define CC1  <hlir.types.ValueBad object at 0x103005350>
 
 //var ax: [cc1]Int32
 

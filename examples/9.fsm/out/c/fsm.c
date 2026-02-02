@@ -8,7 +8,6 @@
 #include <assert.h>
 #include <stdio.h>
 
-#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 void fsm_init(struct fsm_fsm *self, char *id, struct fsm_state_desc *initState, void *payload) {
