@@ -200,6 +200,17 @@ def get_id_prefix(x):
 
 def get_id_str(x):
 	if not hasattr(x, 'id'):
+		if isinstance(x, Type):
+			t = x
+			if t.is_number():
+				s = 'int%d_t' % t.width
+				if t.is_unsigned():
+					s = 'u' + s
+				return s
+
+			if hasattr(t, 'c_anon_id'):
+				return 'struct ' + t.c_anon_id
+
 		return None
 
 	id = x.id
@@ -223,25 +234,8 @@ def get_id_str(x):
 
 
 
-def get_type_id_str(t):
-	s = get_id_str(t)
-	if s != None:
-		return s
-
-	if t.is_number():
-		s = 'int%d_t' % t.width
-		if t.is_unsigned():
-			s = 'u' + s
-		return s
-
-	if hasattr(t, 'c_anon_id'):
-		return 'struct ' + t.c_anon_id
-
-	return None
-
-
 def is_type_named(t):
-	return get_type_id_str(t) != None
+	return get_id_str(t) != None
 
 
 
@@ -434,7 +428,7 @@ def do_ctype_struct(t, tag='', specs=[]):
 
 
 def do_ctype_named(t, specs):
-	id_str = get_type_id_str(t)
+	id_str = get_id_str(t)
 	return ctype_named(id_str, specs=specs)
 
 
@@ -455,8 +449,6 @@ def do_ctype(t):
 	if t.is_func(): return do_ctype_func(t, specs=specs)
 	if t.is_array(): return do_ctype_array(t, specs=specs)
 	if t.is_record(): return do_ctype_struct(t, specs=specs)
-	print("NAMED? = " + str(is_type_named(t)))
-	print("UNKNOWN TYPE = " + str(t.id.str))
 	return None
 
 
