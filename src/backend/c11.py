@@ -776,17 +776,11 @@ def str_value_access(x, ctx):
 
 
 def str_cast(t, v, raw_cast=False, ctx=[]):
-	sstr = ''
-
 	if raw_cast:
 		assert(is_local_context())
 		return "RAWCAST(%s, %s, %s)" % (str_type(t), str_type(v.type), str_value(v, ctx=ctx))
-	else:
-		sstr += "(" + str_type(t) + ")"
 
-	need_wrap = precedence(v) < CONS_PRECEDENCE
-	sstr += wrapp(str_value(v, ctx=ctx), need_wrap)
-	return sstr
+	return "(" + str_type(t) + ")" + wrapp(str_value(v, ctx=ctx), cond=(precedence(v) < CONS_PRECEDENCE))
 
 
 def initializers_are_different(a, b):
