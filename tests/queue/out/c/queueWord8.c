@@ -10,33 +10,33 @@
 
 
 
-void queueWord8_init(struct queue_word8 *q, uint8_t (*buf)[], uint32_t capacity) {
+void queueWord8_init(struct queue_word8_queue_word8 *q, uint8_t (*buf)[], uint32_t capacity) {
 	queue_init(&q->queue, capacity);
 	q->data = buf;
 }
 
 
-uint32_t queueWord8_capacity(struct queue_word8 *q) {
+uint32_t queueWord8_capacity(struct queue_word8_queue_word8 *q) {
 	return queue_capacity(&q->queue);
 }
 
 
-uint32_t queueWord8_size(struct queue_word8 *q) {
+uint32_t queueWord8_size(struct queue_word8_queue_word8 *q) {
 	return queue_size(&q->queue);
 }
 
 
-bool queueWord8_isFull(struct queue_word8 *q) {
+bool queueWord8_isFull(struct queue_word8_queue_word8 *q) {
 	return queue_isFull(&q->queue);
 }
 
 
-bool queueWord8_isEmpty(struct queue_word8 *q) {
+bool queueWord8_isEmpty(struct queue_word8_queue_word8 *q) {
 	return queue_isEmpty(&q->queue);
 }
 
 
-bool queueWord8_put(struct queue_word8 *q, uint8_t b) {
+bool queueWord8_put(struct queue_word8_queue_word8 *q, uint8_t b) {
 	if (queue_isFull(&q->queue)) {
 		return false;
 	}
@@ -48,7 +48,7 @@ bool queueWord8_put(struct queue_word8 *q, uint8_t b) {
 }
 
 
-bool queueWord8_get(struct queue_word8 *q, uint8_t *b) {
+bool queueWord8_get(struct queue_word8_queue_word8 *q, uint8_t *b) {
 	if (queue_isEmpty(&q->queue)) {
 		return false;
 	}
@@ -60,7 +60,7 @@ bool queueWord8_get(struct queue_word8 *q, uint8_t *b) {
 }
 
 
-uint32_t queueWord8_read(struct queue_word8 *q, uint8_t (*data)[], uint32_t len) {
+uint32_t queueWord8_read(struct queue_word8_queue_word8 *q, uint8_t (*data)[], uint32_t len) {
 	uint32_t n = 0;
 	while (n < len) {
 		uint8_t x;
@@ -74,7 +74,7 @@ uint32_t queueWord8_read(struct queue_word8 *q, uint8_t (*data)[], uint32_t len)
 }
 
 
-uint32_t queueWord8_write(struct queue_word8 *q, uint8_t (*data)[], uint32_t len) {
+uint32_t queueWord8_write(struct queue_word8_queue_word8 *q, uint8_t (*data)[], uint32_t len) {
 	uint32_t n = 0;
 	while (n < len) {
 		const uint8_t x = (*data)[n];
@@ -87,7 +87,7 @@ uint32_t queueWord8_write(struct queue_word8 *q, uint8_t (*data)[], uint32_t len
 }
 
 
-void queueWord8_clear(struct queue_word8 *q) {
+void queueWord8_clear(struct queue_word8_queue_word8 *q) {
 	uint8_t (*const pdata)[queue_capacity(&q->queue)] = (uint8_t (*)[queue_capacity(&q->queue)])q->data;
 	memset(pdata, 0, sizeof(uint8_t [queue_capacity(&q->queue)]));
 }

@@ -24,7 +24,7 @@ struct type2 {
 	int32_t x;
 };
 
-typedef struct type1 Type3;
+/**/typedef struct type1 Type3;
 
 static void f1_val(struct type1 x) {
 	printf("f1 x.x = %d\n", x.x);

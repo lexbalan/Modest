@@ -10,31 +10,31 @@
 #include <stdio.h>
 
 
-struct node {
-	struct node *next;
-	struct node *prev;
+struct list_node {
+	struct list_node *next;
+	struct list_node *prev;
 	void *data;
 };
 
-struct list {
-	struct node *head;
-	struct node *tail;
+struct list_list {
+	struct list_node *head;
+	struct list_node *tail;
 	uint32_t size;
 };
-struct list *list_create(void);
-uint32_t list_size_get(struct list *list);
-struct node *list_first_node_get(struct list *list);
-struct node *list_last_node_get(struct list *list);
-struct node *list_node_first(struct list *list, struct node *new_node);
-struct node *list_node_create(void);
-struct node *list_node_next_get(struct node *node);
-struct node *list_node_prev_get(struct node *node);
-void *list_node_data_get(struct node *node);
-void list_node_insert_right(struct node *left, struct node *new_right);
-struct node *list_node_get(struct list *list, int32_t pos);
-struct node *list_node_insert(struct list *list, int32_t pos, struct node *new_node);
-struct node *list_node_append(struct list *list, struct node *new_node);
-struct node *list_insert(struct list *list, int32_t pos, void *data);
-struct node *list_append(struct list *list, void *data);
+struct list_list *list_create(void);
+uint32_t list_size_get(struct list_list *list);
+struct list_node *list_first_node_get(struct list_list *list);
+struct list_node *list_last_node_get(struct list_list *list);
+struct list_node *list_node_first(struct list_list *list, struct list_node *new_node);
+struct list_node *list_node_create(void);
+struct list_node *list_node_next_get(struct list_node *node);
+struct list_node *list_node_prev_get(struct list_node *node);
+void *list_node_data_get(struct list_node *node);
+void list_node_insert_right(struct list_node *left, struct list_node *new_right);
+struct list_node *list_node_get(struct list_list *list, int32_t pos);
+struct list_node *list_node_insert(struct list_list *list, int32_t pos, struct list_node *new_node);
+struct list_node *list_node_append(struct list_list *list, struct list_node *new_node);
+struct list_node *list_insert(struct list_list *list, int32_t pos, void *data);
+struct list_node *list_append(struct list_list *list, void *data);
 
 #endif /* LIST_H */

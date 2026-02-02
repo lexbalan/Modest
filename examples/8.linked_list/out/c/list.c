@@ -10,20 +10,20 @@
 
 
 
-struct list *list_create(void) {
-	struct list *const list = (struct list *)malloc(sizeof(struct list));
+struct list_list *list_create(void) {
+	struct list_list *const list = (struct list_list *)malloc(sizeof(struct list_list));
 
 	if (list == NULL) {
 		return NULL;
 	}
 
-	*list = (struct list){0};
+	*list = (struct list_list){0};
 
 	return list;
 }
 
 
-uint32_t list_size_get(struct list *list) {
+uint32_t list_size_get(struct list_list *list) {
 	if (list == NULL) {
 		return 0;
 	}
@@ -32,7 +32,7 @@ uint32_t list_size_get(struct list *list) {
 }
 
 
-struct node *list_first_node_get(struct list *list) {
+struct list_node *list_first_node_get(struct list_list *list) {
 	if (list == NULL) {
 		return NULL;
 	}
@@ -41,7 +41,7 @@ struct node *list_first_node_get(struct list *list) {
 }
 
 
-struct node *list_last_node_get(struct list *list) {
+struct list_node *list_last_node_get(struct list_list *list) {
 	if (list == NULL) {
 		return NULL;
 	}
@@ -50,7 +50,7 @@ struct node *list_last_node_get(struct list *list) {
 }
 
 
-struct node *list_node_first(struct list *list, struct node *new_node) {
+struct list_node *list_node_first(struct list_list *list, struct list_node *new_node) {
 	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
@@ -64,20 +64,20 @@ struct node *list_node_first(struct list *list, struct node *new_node) {
 }
 
 
-struct node *list_node_create(void) {
-	struct node *const node = (struct node *)malloc(sizeof(struct node));
+struct list_node *list_node_create(void) {
+	struct list_node *const node = (struct list_node *)malloc(sizeof(struct list_node));
 
 	if (node == NULL) {
 		return NULL;
 	}
 
-	*node = (struct node){0};
+	*node = (struct list_node){0};
 
 	return node;
 }
 
 
-struct node *list_node_next_get(struct node *node) {
+struct list_node *list_node_next_get(struct list_node *node) {
 	if (node == NULL) {
 		return NULL;
 	}
@@ -86,7 +86,7 @@ struct node *list_node_next_get(struct node *node) {
 }
 
 
-struct node *list_node_prev_get(struct node *node) {
+struct list_node *list_node_prev_get(struct list_node *node) {
 	if (node == NULL) {
 		return NULL;
 	}
@@ -95,7 +95,7 @@ struct node *list_node_prev_get(struct node *node) {
 }
 
 
-void *list_node_data_get(struct node *node) {
+void *list_node_data_get(struct list_node *node) {
 	if (node == NULL) {
 		return NULL;
 	}
@@ -104,10 +104,10 @@ void *list_node_data_get(struct node *node) {
 }
 
 
-void list_node_insert_right(struct node *left, struct node *new_right) {
+void list_node_insert_right(struct list_node *left, struct list_node *new_right) {
 	printf("node_insert_right\n");
 
-	struct node *const old_right = left->next;
+	struct list_node *const old_right = left->next;
 	left->next = new_right;
 
 	if (old_right != NULL) {
@@ -123,13 +123,13 @@ void list_node_insert_right(struct node *left, struct node *new_right) {
 // get list node by number
 // if number is out of range returns nil
 // if number < 0 - go backward
-struct node *list_node_get(struct list *list, int32_t pos) {
+struct list_node *list_node_get(struct list_list *list, int32_t pos) {
 	if (list == NULL || list->size == 0) {
 		return NULL;
 	}
 
 	printf("node_get(%d)\n", pos);
-	struct node *node;
+	struct list_node *node;
 
 	if (pos >= 0) {
 		// go forward
@@ -165,7 +165,7 @@ struct node *list_node_get(struct list *list, int32_t pos) {
 }
 
 
-struct node *list_node_insert(struct list *list, int32_t pos, struct node *new_node) {
+struct list_node *list_node_insert(struct list_list *list, int32_t pos, struct list_node *new_node) {
 	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
@@ -173,13 +173,13 @@ struct node *list_node_insert(struct list *list, int32_t pos, struct node *new_n
 	printf("node_insert(%d)\n", pos);
 
 
-	struct node *const n = list_node_get(list, pos);
+	struct list_node *const n = list_node_get(list, pos);
 
 	if (n == NULL) {
 		return NULL;
 	}
 
-	struct node *const nod = list_node_prev_get(n);
+	struct list_node *const nod = list_node_prev_get(n);
 
 	if (nod == NULL) {
 		return NULL;
@@ -192,7 +192,7 @@ struct node *list_node_insert(struct list *list, int32_t pos, struct node *new_n
 }
 
 
-struct node *list_node_append(struct list *list, struct node *new_node) {
+struct list_node *list_node_append(struct list_list *list, struct list_node *new_node) {
 	if (list == NULL || new_node == NULL) {
 		return NULL;
 	}
@@ -211,8 +211,8 @@ struct node *list_node_append(struct list *list, struct node *new_node) {
 }
 
 
-struct node *list_insert(struct list *list, int32_t pos, void *data) {
-	struct node *const new_node = list_node_create();
+struct list_node *list_insert(struct list_list *list, int32_t pos, void *data) {
+	struct list_node *const new_node = list_node_create();
 
 	if (new_node == NULL) {
 		return NULL;
@@ -224,12 +224,12 @@ struct node *list_insert(struct list *list, int32_t pos, void *data) {
 }
 
 
-struct node *list_append(struct list *list, void *data) {
+struct list_node *list_append(struct list_list *list, void *data) {
 	if (list == NULL) {
 		return NULL;
 	}
 
-	struct node *const new_node = list_node_create();
+	struct list_node *const new_node = list_node_create();
 
 	if (new_node == NULL) {
 		return NULL;
@@ -237,7 +237,7 @@ struct node *list_append(struct list *list, void *data) {
 
 	new_node->data = data;
 
-	struct node *const node = list_node_append(list, new_node);
+	struct list_node *const node = list_node_append(list, new_node);
 
 	if (node == NULL) {
 		free((void *)new_node);

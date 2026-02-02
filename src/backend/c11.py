@@ -198,9 +198,35 @@ def get_id_prefix(x):
 	return prefix
 
 
+
+def get_record_tag(t):
+	if hasattr(t, 'id'):
+		if t.is_record() and type_have_tag(t):
+			return camel_to_lower_snake(get_id_prefix(t) + t.id.c_tag)
+	else:
+		if hasattr(t, 'c_anon_id'):
+			return t.c_anon_id
+	return ''
+
+
 def get_id_str(x):
-	if not hasattr(x, 'id'):
-		if isinstance(x, Type):
+
+	if isinstance(x, Type):
+		if isinstance(x, TypeRecord):
+			if hasattr(x, 'id'):
+				if hasattr(x.id, 'c_type'):
+					return x.id.c_type
+			tag = get_record_tag(x)
+			if tag != '':
+				return 'struct ' + tag
+		if hasattr(x, 'id'):
+			id = x.id
+			id_str = id.c
+			pref = get_id_prefix(x)
+			if pref != '':
+				id_str = pref + id_str
+			return id_str
+		else:
 			t = x
 			if t.is_number():
 				s = 'int%d_t' % t.width
@@ -208,20 +234,18 @@ def get_id_str(x):
 					s = 'u' + s
 				return s
 
-			if hasattr(t, 'c_anon_id'):
-				return 'struct ' + t.c_anon_id
-
+	if not hasattr(x, 'id'):
 		return None
 
 	id = x.id
+
 	if id == None:
-		return ''
+		return ""
 
 	if isinstance(x, Type):
-		if hasattr(x.id, 'c_type'):
-			return x.id.c_type
 		if x.is_record() and type_have_tag(x):
-			return 'struct ' + camel_to_lower_snake(id.c_tag)
+			pref = get_id_prefix(x)
+			return 'struct ' + camel_to_lower_snake(pref + id.c_tag)
 
 	if id.c != None:
 		id_str = id.c
@@ -2062,7 +2086,7 @@ def define_struct_typedef(t, id_str):
 
 def define_struct_typedef2(t, id_str):
 	# typedef <struct_id> TypeId;
-	out("typedef ")
+	out("/**/typedef ")
 	out(str_field(t, id_str))
 	out(";")
 
@@ -2089,12 +2113,14 @@ def print_def_type(x):
 
 	if orig_type.is_record():
 		if type_have_tag(x.type):
-			define_struct(orig_type, x.type.id.c_tag)
+			tagg = get_record_tag(x.type)
+			define_struct(orig_type, tagg)
 			return
 		if orig_type.is_anonymous():
 			define_struct_typedef(orig_type, id_str)
 			return
 		else:
+			print("CC " + id_str)
 			define_struct_typedef2(orig_type, id_str)
 			return
 
@@ -2296,7 +2322,7 @@ def print_header(module, outname):
 
 	#guardsymbol = outname.split("/")[-1]
 	#guardsymbol = guardsymbol[:-2].upper() + '_H'
-	guardsymbol = module.prefix.upper() + '_H'
+	guardsymbol = camel_to_upper_snake(module.prefix) + '_H'
 	newline()
 	out("#ifndef %s\n" % guardsymbol)
 	out("#define %s\n" % guardsymbol)

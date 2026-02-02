@@ -12,7 +12,7 @@
 
 
 // wrap around linked list for list.List Nat32
-static void nat32_list_insert(struct list *lst, uint32_t x) {
+static void nat32_list_insert(struct list_list *lst, uint32_t x) {
 	// alloc memory for Nat32 value
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
@@ -22,9 +22,9 @@ static void nat32_list_insert(struct list *lst, uint32_t x) {
 
 
 // show list conent from first item to last
-static void list_print_forward(struct list *lst) {
+static void list_print_forward(struct list_list *lst) {
 	printf("list_print_forward:\n");
-	struct node *pn = list_first_node_get(lst);
+	struct list_node *pn = list_first_node_get(lst);
 	while (pn != NULL) {
 		uint32_t *const x = (uint32_t *)list_node_data_get(pn);
 		printf("v = %u\n", *x);
@@ -35,9 +35,9 @@ static void list_print_forward(struct list *lst) {
 
 
 // show list conent from last item to first
-static void list_print_backward(struct list *lst) {
+static void list_print_backward(struct list_list *lst) {
 	printf("list_print_backward:\n");
-	struct node *pn = list_last_node_get(lst);
+	struct list_node *pn = list_last_node_get(lst);
 	while (pn != NULL) {
 		uint32_t *const x = (uint32_t *)list_node_data_get(pn);
 		printf("v = %u\n", *x);
@@ -49,7 +49,7 @@ static void list_print_backward(struct list *lst) {
 int main(void) {
 	printf("linked list example\n");
 
-	struct list *const list0 = list_create();
+	struct list_list *const list0 = list_create();
 
 	//list0.size  // access to private field of record
 
@@ -87,7 +87,7 @@ int main(void) {
 	// test list.node_get
 	int32_t i = 0;
 	while (i >= (int32_t)-12) {
-		struct node *const node = list_node_get(list0, i);
+		struct list_node *const node = list_node_get(list0, i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
@@ -104,7 +104,7 @@ int main(void) {
 
 	i = 0;
 	while (i <= 12) {
-		struct node *const node = list_node_get(list0, i);
+		struct list_node *const node = list_node_get(list0, i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);

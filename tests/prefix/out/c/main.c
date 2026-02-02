@@ -10,7 +10,7 @@
 
 
 int main(void) {
-	struct nothing nothing;
+	struct loo_nothing nothing;
 	loo_foo((uint32_t)LOO_BAR);
 	(void)loo_spam;
 	return 0;
