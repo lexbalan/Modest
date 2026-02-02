@@ -24,6 +24,12 @@ def camel_to_upper_snake(name: str) -> str:
     return s.upper()
 
 
+def wrapp(s, cond):
+	if cond:
+		return '(' + s + ')'
+	return s
+
+
 
 cmodule = None
 
@@ -522,11 +528,11 @@ def str_value_bin(x, ctx):
 		if left.type.is_array(): return str_value_literal_array(x, ctx)
 		if left.type.is_string(): return str_string_add(x)
 
-	return '%s %s %s' % (str_value(left, parent_expr=x), bin_ops[op], str_value(right, parent_expr=x))
+	return '%s %s %s' % (str_value(left), bin_ops[op], str_value(right))
 
 
 def str_string_add(x):
-	return '%s %s' % (str_value(x.left, parent_expr=x), str_value(x.right, parent_expr=x))
+	return '%s %s' % (str_value(x.left), str_value(x.right))
 
 
 
@@ -536,19 +542,19 @@ def str_string_add(x):
 
 def str_value_shl(x, ctx):
 	sstr = ''
-	sstr += str_value(x.left, parent_expr=x)
+	sstr += str_value(x.left)
 	sstr += ' << '
-	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar]
-	sstr += str_value(x.right, parent_expr=x, wrapped=need_wrap_right)
+	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar, ValueSubexpr]
+	sstr += wrapp(str_value(x.right), need_wrap_right)
 	return sstr
 
 
 def str_value_shr(x, ctx):
 	sstr = ''
-	sstr += str_value(x.left, parent_expr=x)
+	sstr += str_value(x.left)
 	sstr += ' >> '
-	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar]
-	sstr += str_value(x.right, parent_expr=x, wrapped=need_wrap_right)
+	need_wrap_right = not x.right.__class__ in [ValueLiteral, ValueConst, ValueVar, ValueSubexpr]
+	sstr += wrapp(str_value(x.right), need_wrap_right)
 	return sstr
 
 
@@ -575,16 +581,16 @@ def str_value_not(x, ctx):
 		sstr += '!'
 	else:
 		sstr += '~'
-	sstr += str_value(x.value, parent_expr=x)
+	sstr += str_value(x.value)
 	return sstr
 
 
 def str_value_neg(x, ctx):
-	return '-' + str_value(x.value, parent_expr=x)
+	return '-' + str_value(x.value)
 
 
 def str_value_pos(x, ctx):
-	return '+' + str_value(x.value, parent_expr=x)
+	return '+' + str_value(x.value)
 
 
 def str_value_ref(x, ctx):
@@ -601,12 +607,12 @@ def str_value_ref(x, ctx):
 		return str_value(value, ctx=ctx)
 
 	sstr += '&'
-	sstr += str_value(value, parent_expr=x)
+	sstr += str_value(value)
 	return sstr
 
 
 def str_value_deref(x, ctx):
-	return '*' + str_value(x.value, parent_expr=x)
+	return '*' + str_value(x.value)
 
 
 def str_value_call(v, ctx, sret=None):
@@ -719,14 +725,14 @@ def str_value_index(x, ctx):
 
 	if left.is_global_flag and left.isValueConst(): #left.type.is_generic_array():
 		ts = str_type(left.type)
-		vs = str_value(left, ctx=ctx, parent_expr=x)
+		vs = str_value(left, ctx=ctx)
 		left_str += '((%s)%s)' % (ts, vs)
 	elif value_is_generic_immediate_const(left):
 		ts = str_type(left.type)
-		vs = str_value(left, ctx=ctx, parent_expr=x)
+		vs = str_value(left, ctx=ctx)
 		left_str += '((%s)%s)' % (ts, vs)
 	else:
-		left_str += str_value(left, ctx=ctx, parent_expr=x)
+		left_str += str_value(left, ctx=ctx)
 
 	if left.type.is_pointer() and not decize(left.type.to):
 		left_str = "(*%s)" % left_str
@@ -755,10 +761,10 @@ def str_value_access(x, ctx):
 	if value_is_generic_immediate_const(left):
 	#if left.is_global_flag:
 		ts = str_type(left.type)
-		vs = str_value(left, ctx=ctx, parent_expr=x)
+		vs = str_value(left, ctx=ctx)
 		sstr += '((%s)%s)' % (ts, vs)
 	else:
-		sstr += str_value(left, parent_expr=x)
+		sstr += str_value(left)
 
 	if left.type.is_pointer():
 		sstr += '->'
@@ -774,12 +780,12 @@ def str_cast(t, v, raw_cast=False, ctx=[]):
 
 	if raw_cast:
 		assert(is_local_context())
-		return "RAWCAST(%s, %s, %s)" % (str_type(t), str_type(v.type), str_value(v, ctx=ctx, wrapped=False))
+		return "RAWCAST(%s, %s, %s)" % (str_type(t), str_type(v.type), str_value(v, ctx=ctx))
 	else:
 		sstr += "(" + str_type(t) + ")"
 
 	need_wrap = precedence(v) < CONS_PRECEDENCE
-	sstr += str_value(v, ctx=ctx, wrapped=need_wrap)
+	sstr += wrapp(str_value(v, ctx=ctx), need_wrap)
 	return sstr
 
 
@@ -1375,7 +1381,7 @@ def str_value_lengthof(x, ctx):
 	sstr = ""
 	if value.type.is_generic_array():
 		ts = str_type(value.type)
-		vs = str_value(value, ctx=ctx, parent_expr=x)
+		vs = str_value(value, ctx=ctx)
 		sstr = '((%s)%s)' % (ts, vs)
 	else:
 		sstr += str_value(value)
@@ -1425,21 +1431,9 @@ def str_value_subexpr(x, ctx):
 	return sstr
 
 
-def str_value(x, ctx=[], parent_expr=None, wrapped=False):
+def str_value(x, ctx=[], parent_expr=None):
 	sstr = ''
-	need_wrap = False
-	if wrapped:
-		need_wrap = True
-	if parent_expr != None:
-		need_wrap = precedence(x) < precedence(parent_expr)
 
-	if need_wrap:
-		sstr += "("
-
-	#if hasattr(x, 'id'):
-	#if x.id != None:
-	#	print(x)
-	#	sstr += get_id_str(x)
 	if x.isValueLiteral():
 		sstr += str_value_literal(x, ctx)
 	elif x.isValueArray():
@@ -1504,9 +1498,6 @@ def str_value(x, ctx=[], parent_expr=None, wrapped=False):
 		sstr += str_value_va_copy(x, ctx)
 	else:
 		sstr += str(x)
-
-	if need_wrap:
-		sstr += ")"
 
 	return sstr
 
@@ -1640,7 +1631,6 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 		need_wrap = precedence(value) < precedenceMax
 
 	set_nl_symbol(" \\\n")
-	#out(str_value(value, wrapped=need_wrap))
 	if need_wrap:
 		out('(' + str_initializer(value) + ')')
 	else:
