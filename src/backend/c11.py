@@ -178,23 +178,24 @@ def decize(t):
 
 
 
-def get_id_c(x, id, nodecorate):
-	id_str = id.c
+def get_id_prefix(x):
+	prefix = ''
+	id = x.id
 
 	if id.prefix != None:
-		id_str = id.prefix + id_str
+		prefix = id.prefix
 
+	nodecorate = not is_global_public(x) or id.hasAttribute('nodecorate')
 	if nodecorate:
-		return id_str
+		return prefix
 
 	module = x.getModule()
 	if module != None:
 		if not module.hasAttribute('nodecorate'):
 			#if x.access_level != HLIR_ACCESS_LEVEL_PRIVATE:
-			return "%s_%s" % (module.prefix, id_str)
+			return "%s_%s" % (module.prefix, prefix)
 
-	return id_str
-
+	return prefix
 
 
 def get_id_str(x):
@@ -212,14 +213,17 @@ def get_id_str(x):
 			return 'struct ' + camel_to_lower_snake(id.c_tag)
 
 	if id.c != None:
-		nodecorate = x.id.hasAttribute('nodecorate') or not is_global_public(x)
-		return get_id_c(x, x.id, nodecorate=nodecorate)
+		id_str = id.c
+		pref = get_id_prefix(x)
+		if pref != '':
+			id_str = pref + id_str
+		return id_str
 
 	return ''
 
 
 
-def get_type_id(t):
+def get_type_id_str(t):
 	s = get_id_str(t)
 	if s != None:
 		return s
@@ -237,7 +241,7 @@ def get_type_id(t):
 
 
 def is_type_named(t):
-	return get_type_id(t) != None
+	return get_type_id_str(t) != None
 
 
 
@@ -430,10 +434,7 @@ def do_ctype_struct(t, tag='', specs=[]):
 
 
 def do_ctype_named(t, specs):
-	id_str = get_type_id(t)
-	#print(id_str)
-	#if hasattr(t, 'id') and hasattr(t.id, 'c_tag') and t.id.c_tag != None:
-	#	id_str = 'struct ' + camel_to_lower_snake(t.id.c_tag)
+	id_str = get_type_id_str(t)
 	return ctype_named(id_str, specs=specs)
 
 
@@ -2082,6 +2083,7 @@ def type_get_tag(t):
 				return t.id.c_tag
 	return ''
 
+
 def type_have_tag(t):
 	return type_get_tag(t) != ''
 
@@ -2092,9 +2094,6 @@ def print_def_type(x):
 	id_str = get_id_str(x.type)
 	orig_type = x.original_type
 
-#	if is_type_named(orig_type) and not orig_type.is_anonymous():
-#		out('/*%s*/typedef ' % str(orig_type.id.c_tag) + str_field(orig_type, id_str) + ';')
-#		return
 
 	if orig_type.is_record():
 		if type_have_tag(x.type):
