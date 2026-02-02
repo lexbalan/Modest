@@ -1079,9 +1079,6 @@ def str_literal_array(x, ctx):
 		if item.nl > 0:
 			nl_end_e = 1
 
-	if len(items) == 0:
-		return EMPTY_ARRAY_LITERAL
-
 	sstr += "{"
 	indent_up()
 	sstr += print_literal_array_items(items, type.of)
