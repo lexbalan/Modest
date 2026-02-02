@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 int32_t loo_spam = 4;

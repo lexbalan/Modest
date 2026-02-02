@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
@@ -21,7 +22,7 @@
 #define PORT  8080
 #define BUF_SIZE  1024
 
-static bool sendFile(struct file *fp, int sockFd) {
+static bool sendFile(FILE *fp, int sockFd) {
 	char data[BUF_SIZE];
 
 	while (fgets(data, (int)LENGTHOF(data), fp) != NULL) {
@@ -61,7 +62,7 @@ int main(void) {
 
 	printf("[+] Connected to server\n");
 
-	struct file *const fp = fopen(FILENAME, "r");
+	FILE *const fp = fopen(FILENAME, "r");
 	if (fp == NULL) {
 		perror("[-] Error in reading file");
 		exit(1);

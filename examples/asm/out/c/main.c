@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 static int64_t sum64(int64_t a, int64_t b) {

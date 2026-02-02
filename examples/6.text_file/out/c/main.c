@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <math.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 #define FILENAME  ("file.txt")
@@ -16,7 +17,7 @@
 static void write_example(void) {
 	printf("run write_example\n");
 
-	struct file *const fp = fopen(FILENAME, "w");
+	FILE *const fp = fopen(FILENAME, "w");
 
 	if (fp == NULL) {
 		printf("error: cannot create file '%s'", (char*)FILENAME);
@@ -32,7 +33,7 @@ static void write_example(void) {
 static void read_example(void) {
 	printf("run read_example\n");
 
-	struct file *const fp = fopen(FILENAME, "r");
+	FILE *const fp = fopen(FILENAME, "r");
 
 	if (fp == NULL) {
 		printf("error: cannot open file '%s'", (char*)FILENAME);

@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 #define MATH_PI  3.141592653589793238462643383279502884

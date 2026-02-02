@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 /* anonymous records */
@@ -71,19 +72,19 @@ static Type3 c = (Type3){.x = 3};
 
 static void test_by_value(void) {
 	f1_val(a);
-	f2_val(*(struct type2*)&a);
+	f2_val(HARD_CAST_UNSAFE(struct type2, a));
 	f3_val(a);
-	f4_val(*(struct __anonymous_struct_3*)&a);
+	f4_val(HARD_CAST_UNSAFE(struct __anonymous_struct_3, a));
 
-	f1_val(*(struct type1*)&b);
+	f1_val(HARD_CAST_UNSAFE(struct type1, b));
 	f2_val(b);
-	f3_val(*(Type3*)&b);
-	f4_val(*(struct __anonymous_struct_3*)&b);
+	f3_val(HARD_CAST_UNSAFE(Type3, b));
+	f4_val(HARD_CAST_UNSAFE(struct __anonymous_struct_3, b));
 
 	f1_val(c);
-	f2_val(*(struct type2*)&c);
+	f2_val(HARD_CAST_UNSAFE(struct type2, c));
 	f3_val(c);
-	f4_val(*(struct __anonymous_struct_3*)&c);
+	f4_val(HARD_CAST_UNSAFE(struct __anonymous_struct_3, c));
 }
 
 

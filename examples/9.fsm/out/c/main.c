@@ -7,6 +7,7 @@
 
 #include "fsm.h"
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 static struct fsm fsm0;

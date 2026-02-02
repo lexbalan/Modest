@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 static int32_t named_args_test(int32_t a, int32_t b, int32_t c) {

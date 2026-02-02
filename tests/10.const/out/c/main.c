@@ -7,6 +7,7 @@
 #include <math.h>
 #include "./minmax.h"
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 #define CARR  {0, 10, 15, 20, 25, 30}

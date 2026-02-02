@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 #define FILENAME  "file2.txt"
@@ -20,7 +21,7 @@
 static bool writeFile(int sockFd) {
 	char buffer[BUF_SIZE];
 
-	struct file *const fp = fopen(FILENAME, "w");
+	FILE *const fp = fopen(FILENAME, "w");
 	if (fp == NULL) {
 		perror("[-] Error in creating file");
 		return false;

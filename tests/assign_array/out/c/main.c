@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 static int32_t globalArray0[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};

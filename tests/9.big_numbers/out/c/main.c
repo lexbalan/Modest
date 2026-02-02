@@ -16,6 +16,7 @@ static inline __int128 abs128(__int128 x) {
 #define BIG_INT256(a, b, c, d)
 #endif  /* __BIG_INT256__ */
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 #include <stdlib.h>
 
 

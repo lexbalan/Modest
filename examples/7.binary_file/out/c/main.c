@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 #define FILENAME  ("file.bin")
@@ -17,7 +18,7 @@ struct chunk {
 static void writeExample(void) {
 	printf("run writeExample()\n");
 
-	struct file *const fp = fopen(FILENAME, "wb");
+	FILE *const fp = fopen(FILENAME, "wb");
 	if (fp == NULL) {
 		printf("error: cannot create file '%s'", (char*)FILENAME);
 		return;
@@ -38,7 +39,7 @@ static void writeExample(void) {
 static void readExample(void) {
 	printf("run readExample()\n");
 
-	struct file *const fp = fopen(FILENAME, "rb");
+	FILE *const fp = fopen(FILENAME, "rb");
 	if (fp == NULL) {
 		printf("error: cannot open file '%s'", (char*)FILENAME);
 		return;

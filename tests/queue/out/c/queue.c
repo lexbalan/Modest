@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 void queue_init(struct queue *q, uint32_t capacity) {

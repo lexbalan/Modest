@@ -206,6 +206,8 @@ def get_id_str(x):
 		return ''
 
 	if isinstance(x, Type):
+		if hasattr(x.id, 'c_type'):
+			return x.id.c_type
 		if x.is_record() and type_have_tag(x):
 			return 'struct ' + camel_to_lower_snake(id.c_tag)
 
@@ -758,7 +760,8 @@ def str_cast(t, v, hard_cast=False, ctx=[]):
 
 	if hard_cast:
 		assert(is_local_context())
-		sstr += "*(" + str_type(t) + "*)&"
+		#sstr += "*(" + str_type(t) + "*)&"
+		return "HARD_CAST_UNSAFE(%s, %s)" % (str_type(t), str_value(v, ctx=ctx, wrapped=False))
 	else:
 		sstr += "(" + str_type(t) + ")"
 
@@ -2399,6 +2402,10 @@ def helper_use_lengthof():
 	module_undef_list.append("LENGTHOF")
 
 
+def helper_use_hardcast():
+	out("\n#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))")
+	module_undef_list.append("LENGTHOF")
+
 def helper_use_bigint():
 	out("\n#ifndef __BIG_INT128__")
 	out("\n#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))")
@@ -2529,6 +2536,9 @@ def print_cfile(module, _outname):
 
 	if xx2:
 		newline()
+
+	# Пока просто жестко добавляю HARD_CAST_UNSAFE(type, expr)
+	helper_use_hardcast()
 
 	for use in module.att:
 		if use in c_helpers:

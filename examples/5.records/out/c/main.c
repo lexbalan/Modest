@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define HARD_CAST_UNSAFE(type, expr) (*(type*)(void*)&(expr))
 
 
 struct point {
