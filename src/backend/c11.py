@@ -2061,10 +2061,9 @@ def print_def_func(x):
 
 def print_decl_type(x):
 	id_str = get_id_str(x.type)
-	out("struct %s;" % id_str)
-	if not NO_TYPEDEF_STRUCTS:
-		out("\ntypedef struct %s %s;" % (id_str, id_str))
-
+	out("%s;" % id_str)
+	#if not NO_TYPEDEF_STRUCTS:
+	#	out("\ntypedef struct %s %s;" % (id_str, id_str))
 
 
 def define_struct(t, tag):
@@ -2383,7 +2382,7 @@ def print_header(module, outname):
 			print_def_var(x, as_extern=True)
 		elif x.is_stmt_def_type():
 			nnl(x.nl)
-#			print_deps(x.deps)
+			print_deps(x.deps)
 			print_def_type(x)
 		elif x.is_stmt_def_const():
 			nnl(x.nl)

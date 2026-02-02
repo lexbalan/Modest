@@ -12,6 +12,8 @@
 
 typedef uint16_t fsm_StageId;
 
+
+struct fsm_state_desc;
 typedef struct {
 	struct fsm_state_desc *state;
 	fsm_StageId stage;

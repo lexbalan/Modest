@@ -10,10 +10,7 @@
 #endif /* LENGTHOF */
 
 
-static int32_t testArray[21] = {
-	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4,
-	11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
-};
+static int32_t testArray[21] = {-3, -5, 2, 1, -1, 0, -2, 3, -4, 4, 11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9};
 
 
 // returns true if was swap
