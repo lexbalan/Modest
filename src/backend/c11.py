@@ -1617,11 +1617,11 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	is_var = value.isValueVar()
 	is_const = value.isValueConst()
 	is_literal = value.isValueLiteral()
-	is_comp = value.type.is_composite()
+	is_agg = value.type.is_aggregate()
 
 	is_str = value.type.is_string()
 
-	if not (is_literal or is_comp or is_str or is_const or is_var or is_func):
+	if not (is_literal or is_agg or is_str or is_const or is_var or is_func):
 		need_wrap = precedence(value) < precedenceMax
 
 	set_nl_symbol(" \\\n")
@@ -1644,7 +1644,6 @@ def print_stmt_const(x):
 
 	# print generic constant as C macro
 	if value_is_generic_immediate(const_value):
-		#if const_value.type.is_composite() or const_value.type.is_string():
 		id_str = get_id_str(const_value)
 		# если точный тип константы неизвестен - печатаем ее как макро
 		print_macro_definition(id_str, init_value)
@@ -2647,7 +2646,7 @@ def str_value_as_ptr(x):
 
 
 	if root.isValueImmediate():
-		if x.type.is_composite() or value_is_generic_immediate_const(root):
+		if x.type.is_aggregate() or value_is_generic_immediate_const(root):
 			# generic immediate const is just a macro!
 			vs = str_value(root)
 			ts = str_type(x.type)

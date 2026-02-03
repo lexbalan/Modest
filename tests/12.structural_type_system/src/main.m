@@ -56,16 +56,17 @@ func f4_ptr (x: *record {x: Int32}) -> Unit {
 }
 
 
-var a: Type1 = {x=1}
-var b: Type2 = {x=2}
-var c: Type3 = {x=3}
+var x = {x = Int32 5}
+var a: Type1 = {x = 1}
+var b: Type2 = {x = 2}
+var c: Type3 = {x = 3}
 
 
 func test_by_value () -> Unit {
-	f1_val({x=0})
-	f2_val({x=0})
-	f3_val({x=0})
-	f4_val({x=0})
+	f1_val({x = 0})
+	f2_val({x = 0})
+	f3_val({x = 0})
+	f4_val({x = 0})
 
 	f1_val(zero)
 	f2_val(zero)

@@ -59,6 +59,7 @@ func f4_ptr (x: *record {
 }
 
 
+var x = {x = Int32 5}
 var a: Type1 = {x = 1}
 var b: Type2 = {x = 2}
 var c: Type3 = {x = 3}

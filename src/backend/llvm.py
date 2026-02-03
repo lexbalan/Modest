@@ -455,7 +455,7 @@ def llvm_print_value_inline_getelemantptr(x):
 
 
 def llvm_print_ValueZero(x):
-	if x['type'].is_composite():
+	if x['type'].is_aggregate():
 		out("zeroinitializer")
 	elif x['type'].is_pointer():
 		out("null")
@@ -926,7 +926,7 @@ def do_eval_bin(x):
 	l = do_eval(x.left)
 	r = do_eval(x.right)
 
-	if x.left.type.is_composite():
+	if x.left.type.is_aggregate():
 		if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 			# Composite objects comparison
 			# (eq/ne between composite types)
@@ -2490,7 +2490,6 @@ def print_def_var(x, as_extern=False):
 def print_def_const(x, as_extern=False):
 	init_value = x.init_value
 
-	#if Type.is_composite(const_value.type):
 	# В LLVM мы не печатаем константы, но массивы - вынуждены
 	# тк доступ к ним может идти в рантайме по индексу;
 	# НО! В константной записи может быть массив! (хз как быть пока)

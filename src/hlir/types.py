@@ -1,5 +1,4 @@
 
-
 import copy
 from util import *
 
@@ -602,11 +601,16 @@ class Type(Entity):
 		self.uid = 0
 		#self.id = id
 
-		self.parent_type = None
+		#self.parent_type = None
 		# особое поле - если оно ненулевое значит это brand тип
 		# такие типы будут признаны неравными если их поля dictinct отличны
 		# 0 - зарезервирован для не brand типов (см. @brand аттрибут)
 		self.brand = 0
+
+
+	# Получить список типов от которых данный тип зависит напрямую
+	def get_dir_deps(self, deps):
+		return deps
 
 
 	def is_bad(self):
@@ -730,15 +734,19 @@ class Type(Entity):
 		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_number()
 
 
-	def is_composite(self):
+	def is_aggregate(self):
 		return self.is_array() or self.is_record()
 
+	def is_composite(self):
+		return self.is_array() or self.is_record() or self.is_func() or self.is_pointer()
 
-	def is_simple2(self):
-		return isinstance(self, TypeSimple)
+	def is_composite2(self):
+		return self.is_aggregate()
+		#return not (self.is_simple() or self.is_pointer())
+		#return self.is_array() or self.is_record() or self.is_func()
 
 	def is_simple(self):
-		return not (self.is_composite() or self.is_func() or self.is_pointer())
+		return isinstance(self, TypeSimple)
 
 
 	def is_nil(self):
@@ -998,6 +1006,7 @@ class Type(Entity):
 
 		# usual checking
 		if a.is_simple(): return Type.eq_simple(a, b, opt)
+		elif a.is_number(): return Type.eq_simple(a, b, opt)
 		elif a.is_func(): return Type.eq_func(a, b, opt)
 		elif a.is_record(): return Type.eq_record(a, b, opt)
 		elif a.is_array(): return Type.eq_array(a, b, opt)
@@ -1149,6 +1158,34 @@ class TypeFunc(Type):
 		self.extra_args = va_args
 
 
+	# Получить список типов от которых данный тип зависит напрямую
+#	def get_dir_deps(self):
+#		deps = []
+#		if self.to.is_composite2():
+#			if not self.to in deps:
+#				deps.append(self.to)
+#				#deps.extend(self.to.get_dir_deps())
+#		for p in self.params:
+#			if p.type.is_composite2():
+#				if not p.type in deps:
+#					deps.append(p.type)
+#					#deps.extend(p.type.get_dir_deps())
+#		return deps
+
+	def get_dir_deps(self, deps):
+		if self.to.is_composite2():
+			if not self.to in deps:
+				deps.append(self.to)
+				self.to.get_dir_deps(deps)
+		for p in self.params:
+			if p.type.is_composite2():
+				if not p.type in deps:
+					deps.append(p.type)
+					p.type.get_dir_deps(deps)
+		return deps
+
+
+
 class TypeArray(Type):
 	def __init__(self, of, volume, generic=False, ti=None):
 		item_size = 0
@@ -1169,6 +1206,14 @@ class TypeArray(Type):
 		self.of = of
 		self.volume = volume
 		self.size = array_size
+
+	# Получить список типов от которых данный тип зависит напрямую
+	def get_dir_deps(self, deps):
+		if self.of.is_composite2():
+			if not self.of in deps:
+				deps.append(self.of)
+				self.of.get_dir_deps(deps)
+		return deps
 
 
 class TypeRecord(Type):
@@ -1199,6 +1244,15 @@ class TypeRecord(Type):
 		super().__init__(generic=generic, width=(record_size * 8), ops=REC_OPS, ti=ti)
 		self.incomplete = False
 		self.fields = fields
+
+	# Получить список типов от которых данный тип зависит напрямую
+	def get_dir_deps(self, deps):
+		for f in self.fields:
+			if f.type.is_composite2():
+				if not f.type in deps:
+					deps.append(f.type)
+					f.type.get_dir_deps(deps)
+		return deps
 
 
 class TypePointer(Type):
@@ -1555,7 +1609,7 @@ class ValueRecord(Value):
 
 
 def create_zero_literal(t, ti=None):
-	if t.is_composite():
+	if t.is_aggregate():
 		if t.is_array():
 			return ValueArray(t, items=[], ti=ti)
 		if t.is_record():

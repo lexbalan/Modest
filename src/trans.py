@@ -1092,7 +1092,7 @@ def do_value_call(x):
 			# Для композитных пока не делаем! Чет в принтере ломается
 			if not nv.type.is_unit():
 				nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-				if nv.type.is_composite():
+				if nv.type.is_aggregate():
 					nv.asset = []
 				else:
 					nv.asset = 0
@@ -2027,6 +2027,7 @@ def def_type_common(x, nt):
 	nt.deps = deps
 	nt.id = id
 
+
 	if nt.is_record() and not is_open_record:
 		#if mass(ty):
 		if hasattr(ty, 'id') and ty.id.c != None:
@@ -2036,11 +2037,23 @@ def def_type_common(x, nt):
 		else:
 			nt.id.c_tag = id.str
 			pass
-		#nt.is_open_record = is_open_record
+
 
 	nt.definition = definition
 	nt.parent = cmodule  # добавляем заново тк очистили его выше!
 	nt.ti_def = id.ti
+
+
+	# Проверяем если наши прямые зависимости не зависят от нас напрямую
+	# Это ошибочная ситуация, так как сложные типы не могут взаимно напрямую включать друг друга
+	xdeps = nt.get_dir_deps([])
+
+	if nt in xdeps:
+		error("rec dep!", nt.ti)
+
+	for dep in xdeps:
+		if dep.is_incompleted():
+			error("is_incompleted", dep.ti)
 
 	cdef = prev_cdef
 	return definition
