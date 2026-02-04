@@ -1171,7 +1171,7 @@ def do_value_index(x):
 	if index.type.is_bad():
 		return ValueBad(x['ti'])
 
-	if not (index.type.is_arithmetical() or index.type.is_integer()):
+	if not (index.type.is_int() or index.type.is_nat() or index.type.is_integer()):
 		error("expected integer value", index.ti)
 		return ValueBad(x['ti'])
 
@@ -1842,7 +1842,7 @@ def do_stmt_incdec(x, op=HLIR_VALUE_OP_ADD):
 		error("expected mutable value", v.ti)
 		return StmtBad(x['ti'])
 
-	if not v.type.is_arithmetical():
+	if not (v.type.is_int() or v.type.is_nat()):
 		error("expected value with integer type", v.ti)
 		return StmtBad(x['ti'])
 

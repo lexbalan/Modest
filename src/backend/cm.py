@@ -588,7 +588,7 @@ def str_value_literal(x, ctx):
 	t = x.type
 	if Type.is_integer(t):
 		return str_value_integer(x, ctx)
-	elif Type.is_arithmetical(t):
+	elif Type.is_int(t) or Type.is_nat(t):
 		return str_value_integer(x, ctx)
 	elif Type.is_float(t):
 		return str_value_float(x, ctx)

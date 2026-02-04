@@ -1287,7 +1287,7 @@ def str_value_literal(x, ctx):
 def str_value_with_type(v, t, ctx=[]):
 	asset = v.asset
 
-	if t.is_arithmetical() or t.is_integer() or t.is_word():
+	if t.is_integer() or t.is_int() or t.is_nat() or t.is_word():
 		as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
 		return str_value_literal_number(t, asset, as_hex=as_hex)
 

@@ -1294,12 +1294,12 @@ def do_eval_access(x):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-	if a.is_integer() or a.is_arithmetical() or a.is_char() or a.is_word():
+	if a.is_integer() or a.is_int() or a.is_nat() or a.is_char() or a.is_word():
 
 		if Type.is_pointer(b):
 			return 'bitcast'
 
-		if b.is_integer() or b.is_rational() or b.is_arithmetical() or b.is_char() or b.is_bool() or b.is_word():
+		if b.is_integer() or b.is_rational() or b.is_int() or b.is_nat() or b.is_char() or b.is_bool() or b.is_word():
 			signed = Type.is_signed(b)
 
 			# Это плохо тк не работает в некоторых особых ситуациях
@@ -1329,12 +1329,12 @@ def select_cast_operator(a, b):
 	elif Type.is_pointer(a):
 		if Type.is_pointer(b):
 			return 'bitcast'
-		elif Type.is_arithmetical(b) or Type.is_word(b):
+		elif Type.is_int(b) or Type.is_nat(b) or Type.is_word(b):
 			return 'ptrtoint'
 
 	elif Type.is_float(a):
 		# Float -> Integer
-		if Type.is_arithmetical(b):
+		if Type.is_int(b) or Type.is_nat(b):
 			return 'fptosi' if Type.is_signed(b) else 'fptoui'
 
 		# Float -> Float
@@ -1718,7 +1718,7 @@ def do_eval_literal(x):
 	xt = x.type
 	if xt.is_integer(): return llvm_value_num(xt, x.asset)
 	elif xt.is_rational(): return llvm_value_num(xt, x.asset)  #TODO: FIXIT!
-	elif xt.is_arithmetical(): return llvm_value_num(xt, x.asset)
+	elif xt.is_int() or xt.is_nat(): return llvm_value_num(xt, x.asset)
 	elif xt.is_float(): return llvm_value_num(xt, x.asset)
 	elif xt.is_record(): return do_eval_record(x)
 	elif xt.is_array(): return do_eval_array(x)

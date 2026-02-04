@@ -43,13 +43,14 @@ def word_can(to, from_type, method, ti):
 
 	c0 = from_type.is_integer()
 	c1 = from_type.is_word()
-	c2 = from_type.is_arithmetical()
+	c2 = from_type.is_int()
 	c3 = from_type.is_char()
 	c4 = from_type.is_bool()
 	c5 = from_type.is_pointer()
 	c6 = from_type.is_float()
+	c7 = from_type.is_nat()
 
-	if c0 or c1 or c2 or c3 or c4 or c5 or c6:
+	if c0 or c1 or c2 or c3 or c4 or c5 or c6 or c7:
 		if method == 'unsafe':
 			return True
 		return from_type.width <= to.width

@@ -253,12 +253,12 @@ def select_common_type(a, b, ti):
 				return b
 
 		if a.is_word():
-			if b.is_arithmetical() and b.generic:
+			if b.generic and (b.is_int() or b.is_nat()):
 				return a
 
 
 		if b.is_word():
-			if a.is_arithmetical() and a.generic:
+			if a.generic and (a.is_int() or a.is_nat()):
 				return b
 
 		# array && string | string && array
@@ -294,18 +294,18 @@ def select_common_type(a, b, ti):
 			return a
 
 		if a.is_float():
-			if b.is_arithmetical():
+			if b.is_int() or b.is_nat():
 				return a
 
 		if b.is_float():
-			if a.is_arithmetical():
+			if a.is_int() or a.is_nat():
 				return b
 
 		if a.is_integer() or a.is_rational():
-			if b.is_arithmetical() or b.is_word() or b.is_float():
+			if b.is_int() or b.is_nat() or b.is_word() or b.is_float():
 				return b
 
-		if a.is_arithmetical() or a.is_word() or a.is_float():
+		if a.is_int() or a.is_nat() or a.is_word() or a.is_float():
 			if b.is_integer() or b.is_rational():
 				return a
 
