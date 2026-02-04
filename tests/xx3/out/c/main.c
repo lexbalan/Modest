@@ -9,6 +9,19 @@
 
 typedef struct context *ContextHandler(struct context *x);
 
+struct x {
+	struct context *c;
+};
+
+//type A = *[1]Context
+
+
+struct context;
+static struct context (*a)[1];
+
+
+static struct context *p;
+
 struct context {
 	int32_t x;
 	int32_t y;

@@ -1,10 +1,18 @@
-// tests/xxx/src/main.m
+// tests/xx3/src/main.m
 
 include "libc/stdio"
 include "libc/string"
 
 
 type ContextHandler = (x: *Context) -> *Context
+
+
+type X = record {c: *Context}
+
+//type A = *[1]Context
+
+var a: *[1]Context
+var p: *Context
 
 
 type Context = record {

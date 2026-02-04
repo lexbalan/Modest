@@ -418,8 +418,8 @@ def do_type_named(x):
 
 	# если дело происходит не в определении типа и пришел undefined тип
 	if t.is_incompleted():
-		if not cdef.is_stmt_def_type():
-			warning("forward references to non-struct type", x['ti'])
+		#if not cdef.is_stmt_def_type():
+		#	warning("forward references to non-struct type", x['ti'])
 		cdef.deps.append(t)
 
 	if t.hasAttribute2("deprecated"):
@@ -430,12 +430,12 @@ def do_type_named(x):
 
 
 def do_type_pointer(x):
-	to = do_type(x['to'])
+	to = do_type_internal(x['to'])
 	return TypePointer(to, ti=x['ti'])
 
 
 def do_type_array(x):
-	of = do_type(x['of'])
+	of = do_type_internal(x['of'])
 	volume = do_value(x['size'])
 
 	if volume.isValueBad():
@@ -502,7 +502,7 @@ def do_type_func(x, func_id="_"):
 
 	to = typeUnit
 	if x['to'] != None:
-		to = do_type(x['to'])
+		to = do_type_internal(x['to'])
 
 	if to.is_forbidden_retval():
 		error("forbidden retval type", to.ti)
@@ -547,7 +547,7 @@ def add_spices_type(t, atts):
 	return nt
 
 
-def do_type(x):
+def do_type_internal(x):
 	t = None
 	k = x['kind']
 	if k == 'named': t = do_type_named(x)
@@ -570,6 +570,20 @@ def do_type(x):
 
 	return tt
 
+
+def do_type(x):
+	t = do_type_internal(x)
+
+	if t.is_record():
+		for f in t.fields:
+			if f.type.is_incompleted():
+				error("using of an incompleted type", f.type.ti)
+
+	if t.is_array():
+		if t.of.is_incompleted():
+			error("using of an incompleted type", t.of.ti)
+
+	return t
 
 
 def do_value_shift(x):
