@@ -236,31 +236,20 @@ def get_type_id_str(x):
 
 
 def get_id_str(x):
-
 	if isinstance(x, Type):
 		return get_type_id_str(x)
 
-	if not hasattr(x, 'id'):
-		return None
+	if hasattr(x, 'id'):
+		id = x.id
+		if id != None:
+			if id.c != None:
+				id_str = id.c
+				pref = get_id_prefix(x)
+				if pref != '':
+					id_str = pref + id_str
+				return id_str
 
-	id = x.id
-
-	if id == None:
-		return ""
-
-	if isinstance(x, Type):
-		if x.is_record() and type_have_tag(x):
-			pref = get_id_prefix(x)
-			return 'struct ' + camel_to_lower_snake(pref + id.c_tag)
-
-	if id.c != None:
-		id_str = id.c
-		pref = get_id_prefix(x)
-		if pref != '':
-			id_str = pref + id_str
-		return id_str
-
-	return ''
+	return None
 
 
 
