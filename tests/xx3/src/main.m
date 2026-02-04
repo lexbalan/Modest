@@ -16,13 +16,11 @@ type X = record {c: *Context}
 
 var p: *Context
 
-
 type Context = record {
 	x: Int32 = 32
 	y: Int32 = 32
 	f: *ContextHandler
 }
-
 
 type ZX = record {
 	x: Int32

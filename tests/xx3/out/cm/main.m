@@ -3,17 +3,30 @@ include "string"
 
 
 
-//type ContextHandler = (x: Context) -> Context
+type ContextHandler = (x: *Context) -> *Context
 
-type ZX = record {
-	x: Int32
-	c: Context
+
+type X = record {
+	c: *Context
 }
+
+// си не позволяет создавать укзаатель на массив с элементами неполного типа
+// вообще странно - но вот так
+//type A = *[1]Context
+//var a: *[1]Context
+
+var p: *Context
 
 type Context = record {
 	x: Int32 = 32
 	y: Int32 = 32
-	z: *ZX
+	f: *ContextHandler
+}
+
+type ZX = record {
+	x: Int32
+	c: Context
+	f: *ContextHandler
 }
 
 

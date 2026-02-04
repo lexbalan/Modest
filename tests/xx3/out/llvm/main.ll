@@ -209,68 +209,32 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [6 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 0]
-@str2 = private constant [6 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 0]
-@str3 = private constant [6 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 0]
-@str4 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
 ; -- endstrings --
-%Point = type {
-	%Int32,
-	%Int32
+%ContextHandler = type %Context* (%Context*);
+%X = type {
+	%Context*
 };
 
-@str0 = internal global [5 x %Char8] [
-	%Char8 72,
-	%Char8 101,
-	%Char8 108,
-	%Char8 108,
-	%Char8 111
-]
-@str1 = internal global [5 x %Char16] [
-	%Char16 72,
-	%Char16 101,
-	%Char16 108,
-	%Char16 108,
-	%Char16 111
-]
-@str2 = internal global [5 x %Char32] [
-	%Char32 72,
-	%Char32 101,
-	%Char32 108,
-	%Char32 108,
-	%Char32 111
-]
-@pstr0 = internal global %Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*)
-@pstr1 = internal global %Str16* bitcast ([6 x i16]* @str2 to [0 x i16]*)
-@pstr2 = internal global %Str32* bitcast ([6 x i32]* @str3 to [0 x i32]*)
-define internal void @puts8(%Str8* %s) {
-	ret void
+
+; си не позволяет создавать укзаатель на массив с элементами неполного типа
+; вообще странно - но вот так
+;type A = *[1]Context
+;var a: *[1]Context
+@p = internal global %Context* zeroinitializer
+%Context = type {
+	%Int32,
+	%Int32,
+	%ContextHandler*
+};
+
+%ZX = type {
+	%Int32,
+	%Context,
+	%ContextHandler*
+};
+
+define %Int32 @main() {
+	ret %Int32 0
 }
 
-define internal void @puts16(%Str16* %s) {
-	ret void
-}
 
-define internal void @puts32(%Str32* %s) {
-	ret void
-}
-
-define internal void @ss([10 x %Char8]* %0, [10 x %Char8] %__s) {
-	%s = alloca [10 x %Char8]
-	%2 = zext i8 10 to %Nat32
-	store [10 x %Char8] %__s, [10 x %Char8]* %s
-	%3 = zext i8 2 to %Nat32
-	%4 = getelementptr [10 x %Char8], [10 x %Char8]* %s, %Int32 0, %Nat32 %3
-	%5 = bitcast %Char8* %4 to [3 x %Char8]*
-	%6 = load [3 x %Char8], [3 x %Char8]* %5
-	%7 = alloca [3 x %Char8]
-	%8 = zext i8 3 to %Nat32
-	store [3 x %Char8] %6, [3 x %Char8]* %7
-	%9 = load [10 x %Char8], [10 x %Char8]* %s
-	%10 = zext i8 10 to %Nat32
-	store [10 x %Char8] %9, [10 x %Char8]* %0
-	ret void
-}
-
-@arr2d = internal global [10 x [10 x %Int32]] zeroinitializer
-@ax = internal global [
