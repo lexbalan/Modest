@@ -9,6 +9,18 @@ def type_number_create(width=0, ti=None):
 	return nt
 
 
+def type_integer_create(width=0, ti=None):
+	nt = TypeSimple(width, id=Id("Integer"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_INTEGER, ti=ti)
+	nt.generic = True
+	return nt
+
+
+def type_rational_create(ti=None):
+	nt = TypeSimple(width=0, id=Id("Rational"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_RATIONAL, ti=ti)
+	nt.generic = True
+	return nt
+
+
 def type_word_create(width, ti=None):
 	width = align_bits_up(width)
 	id = Id('Word%d' % width)

@@ -586,7 +586,7 @@ def str_value_string(x, ctx):
 
 def str_value_literal(x, ctx):
 	t = x.type
-	if Type.is_number(t):
+	if Type.is_integer(t):
 		return str_value_integer(x, ctx)
 	elif Type.is_arithmetical(t):
 		return str_value_integer(x, ctx)

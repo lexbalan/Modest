@@ -20,7 +20,7 @@ def pointer_can(to, from_type, method, ti):
 	# implicit region
 
 	if method == 'unsafe':
-		if from_type.is_pointer() or from_type.is_int() or from_type.is_number():
+		if from_type.is_pointer() or from_type.is_int() or from_type.is_integer():
 			# UNSAFE: cons ANY pointer from ANY pointer or integer
 			return True
 

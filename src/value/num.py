@@ -10,13 +10,16 @@ def value_number_create(num, ti=None):
 	#signed = HLIR_TYPE_SIGNEDNESS_UNSIGNED
 	#if num < 0:
 	#	signed = HLIR_TYPE_SIGNEDNESS_SIGNED
-	t = htype.type_number_for(num, ti=ti)
+	if isinstance(num, int):
+		t = htype.type_integer_for(num, ti=ti)
+	else:
+		t = htype.type_rational_create(ti=ti)
 	v = value_imm_literal_create(t, asset=num, ti=ti)
 	return v
 
 
 def number_can(to, from_type, method, ti):
-	return from_type.is_number()
+	return from_type.is_integer() or from_type.is_rational()
 
 
 def value_number_cons(t, v, method, ti):

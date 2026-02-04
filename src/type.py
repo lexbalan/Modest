@@ -301,12 +301,12 @@ def select_common_type(a, b, ti):
 			if a.is_arithmetical():
 				return b
 
-		if a.is_number():
+		if a.is_integer() or a.is_rational():
 			if b.is_arithmetical() or b.is_word() or b.is_float():
 				return b
 
 		if a.is_arithmetical() or a.is_word() or a.is_float():
-			if b.is_number():
+			if b.is_integer() or b.is_rational():
 				return a
 
 	print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))

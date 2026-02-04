@@ -689,12 +689,18 @@ class Type(Entity):
 
 	# numeric type supports arithmetical operations
 	def is_numeric(self):
-		return self.is_int() or self.is_number() or self.is_float()
+		return self.is_int() or self.is_integer() or self.is_rational() or self.is_float()
 
 
-	def is_number(self):
+	def is_integer(self):
 		if isinstance(self, TypeSimple):
-			return self.kind == HLIR_TYPE_KIND_NUMBER
+			return self.kind == HLIR_TYPE_KIND_INTEGER
+		return False
+
+
+	def is_rational(self):
+		if isinstance(self, TypeSimple):
+			return self.kind == HLIR_TYPE_KIND_RATIONAL
 		return False
 
 
@@ -733,7 +739,7 @@ class Type(Entity):
 
 
 	def is_scalar_type(t):
-		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_number()
+		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_integer() or t.is_rational()
 
 
 	def is_aggregate(self):
@@ -1867,13 +1873,13 @@ class ValueLengthof(Value):
 			from trans import typeSysInt
 			type = typeSysInt
 		else:
-			from type import type_number_for
+			from type import type_integer_for
 			length = 0
 			if value.type.is_array():
 				length = value.type.volume.asset
 			elif value.type.is_string():
 				length = len(value.asset)
-			type = type_number_for(length, ti=ti)
+			type = type_integer_for(length, ti=ti)
 		super().__init__(type=type, ti=ti)
 		if not value.type.is_vla():
 			self.asset = length
@@ -1903,8 +1909,8 @@ class ValueOffsetof(Value):
 			return ValueBad({'ti': ti})
 
 		offset = field.offset
-		from type import type_number_for
-		type = type_number_for(offset, ti=ti)
+		from type import type_integer_for
+		type = type_integer_for(offset, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.field = field_id
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME

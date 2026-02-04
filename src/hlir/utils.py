@@ -35,8 +35,8 @@ def type_select_nat(sz):
 	return t
 
 
-def type_number_for(num, ti=None):
+def type_integer_for(num, ti=None):
 	required_width = align_bits_up(nbits_for_num(num))
-	return type_number_create(width=required_width, ti=ti)
+	return type_integer_create(width=required_width, ti=ti)
 
 

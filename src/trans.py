@@ -180,7 +180,7 @@ valueFalse = None
 
 
 def valueZeroNumber(ti=None):
-	gt = type_number_create(ti=ti)
+	gt = type_integer_create(ti=ti)
 	return value_imm_literal_create(gt, asset=0, ti=ti)
 
 
@@ -577,7 +577,7 @@ def do_value_shift(x):
 	left = do_rvalue(x['left'])
 	right = do_rvalue(x['right'])
 
-	if not (left.type.is_word() or left.type.is_number()):
+	if not (left.type.is_word() or left.type.is_integer()):
 		error("expected word value", x['left']['ti'])
 		return ValueBad(x['ti'])
 
@@ -715,8 +715,11 @@ def do_value_bin_op(op, l, r, ti):
 			else:
 				asset = ops[op](l.asset, r.asset)
 
-			if t.is_number():
-				nv.type = type_number_for(asset, ti=ti)
+			if t.is_integer() or t.is_rational():
+				if isinstance(asset, int):
+					nv.type = type_integer_for(asset, ti=ti)
+				else:
+					nv.type = type_rational_create(ti=ti)
 
 			nv.asset = asset
 
@@ -779,7 +782,10 @@ def do_value_neg(x):
 			nv.asset = -v.asset
 
 		if nv.type.is_generic():
-			nv.type = type_number_for(v.asset, ti=v.ti)
+			if isinstance(v.asset, int):
+				nv.type = type_integer_for(v.asset, ti=v.ti)
+			else:
+				nv.type = type_rational_create(v.asset, ti=v.ti)
 
 	return nv
 
@@ -803,7 +809,10 @@ def do_value_pos(x):
 			nv.asset = +v.asset
 
 	if nv.type.is_generic():
-		nv.type = type_number_for(v.asset, ti=v.ti)
+		if isinstance(v.asset, int):
+			nv.type = type_integer_for(v.asset, ti=v.ti)
+		else:
+			nv.type = type_rational_create(v.asset, ti=v.ti)
 
 	return nv
 
@@ -1162,7 +1171,7 @@ def do_value_index(x):
 	if index.type.is_bad():
 		return ValueBad(x['ti'])
 
-	if not (index.type.is_arithmetical() or index.type.is_number()):
+	if not (index.type.is_arithmetical() or index.type.is_integer()):
 		error("expected integer value", index.ti)
 		return ValueBad(x['ti'])
 
@@ -1216,7 +1225,7 @@ def do_value_slice(x):
 		if index_to.isValueBad():
 			return ValueBad(ti)
 	else:
-		index_to = ValueUndef(type_number_create(ti=x['ti']))
+		index_to = ValueUndef(type_integer_create(ti=x['ti']))
 
 	via_pointer = left.type.is_pointer()
 	array_type = left.type

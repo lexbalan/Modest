@@ -213,7 +213,7 @@ def get_record_tag(t):
 
 
 def get_type_id_str(x):
-	if x.is_number():
+	if x.is_integer():
 		s = 'int%d_t' % x.width
 		if x.is_unsigned():
 			s = 'u' + s
@@ -964,7 +964,7 @@ def str_value_cons2(x, ctx):
 	# - in Cm Int32(-1) -> Nat64 => 1
 	# required: (uint64_t)((uint32)int32_value)
 	#if type.is_int():
-	if from_type.is_int() or from_type.is_number():
+	if from_type.is_int() or from_type.is_integer():
 		if from_type.is_signed():
 			if type.is_nat():
 				if value.type.width <= 32:
@@ -1287,7 +1287,7 @@ def str_value_literal(x, ctx):
 def str_value_with_type(v, t, ctx=[]):
 	asset = v.asset
 
-	if t.is_arithmetical() or t.is_number() or t.is_word():
+	if t.is_arithmetical() or t.is_integer() or t.is_word():
 		as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
 		return str_value_literal_number(t, asset, as_hex=as_hex)
 

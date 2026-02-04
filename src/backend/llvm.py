@@ -860,7 +860,7 @@ def print_type(t):
 
 	# иногда сюда залетают дженерики например в to левое:
 	# let p = 0x12345678 to *Nat32
-	if t.is_number():
+	if t.is_integer():
 		print_int_type_for(t.width)
 		return
 
@@ -1294,12 +1294,12 @@ def do_eval_access(x):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-	if a.is_number() or a.is_arithmetical() or a.is_char() or a.is_word():
+	if a.is_integer() or a.is_arithmetical() or a.is_char() or a.is_word():
 
 		if Type.is_pointer(b):
 			return 'bitcast'
 
-		if b.is_number() or b.is_arithmetical() or b.is_char() or b.is_bool() or b.is_word():
+		if b.is_integer() or b.is_rational() or b.is_arithmetical() or b.is_char() or b.is_bool() or b.is_word():
 			signed = Type.is_signed(b)
 
 			# Это плохо тк не работает в некоторых особых ситуациях
@@ -1500,14 +1500,13 @@ def do_eval_cons(x):
 	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
 	# required: (uint64_t)((uint32)int32_value)
 	if type.is_word():
-		#if from_type.is_int() or from_type.is_number():
-		if from_type.is_int() or from_type.is_number():
+		if from_type.is_int() or from_type.is_integer():
 			v = do_reval(value)
 			return docast(v, type)
 
 
 	if type.is_scalar_type():
-		if from_type.is_number():
+		if from_type.is_integer() or from_type.is_rational():
 			if type.width == from_type.width:
 				return do_reval(value)
 
@@ -1717,7 +1716,8 @@ def do_eval_bool(x):
 
 def do_eval_literal(x):
 	xt = x.type
-	if xt.is_number(): return llvm_value_num(xt, x.asset)
+	if xt.is_integer(): return llvm_value_num(xt, x.asset)
+	elif xt.is_rational(): return llvm_value_num(xt, x.asset)  #TODO: FIXIT!
 	elif xt.is_arithmetical(): return llvm_value_num(xt, x.asset)
 	elif xt.is_float(): return llvm_value_num(xt, x.asset)
 	elif xt.is_record(): return do_eval_record(x)
