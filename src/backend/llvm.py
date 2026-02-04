@@ -858,6 +858,12 @@ def print_type(t):
 	assert(isinstance(t, Type))
 	print_aka=True
 
+	# иногда сюда залетают дженерики например в to левое:
+	# let p = 0x12345678 to *Nat32
+	if t.is_number():
+		print_int_type_for(t.width)
+		return
+
 	id_str = get_type_id(t)
 	if id_str != None:
 		out(id_str)
@@ -877,11 +883,6 @@ def print_type(t):
 			out(t_id)
 			return
 
-		# иногда сюда залетают дженерики например в to левое:
-		# let p = 0x12345678 to *Nat32
-		if t.is_number():
-			print_int_type_for(t.width)
-			return
 
 	if t.is_func(): print_type_func(t)
 	elif t.is_record(): print_type_record(t)

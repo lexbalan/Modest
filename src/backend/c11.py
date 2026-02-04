@@ -212,30 +212,33 @@ def get_record_tag(t):
 	return ''
 
 
+def get_type_id_str(x):
+	if x.is_number():
+		s = 'int%d_t' % x.width
+		if x.is_unsigned():
+			s = 'u' + s
+		return s
+
+	if isinstance(x, TypeRecord):
+		if hasattr(x, 'id'):
+			if hasattr(x.id, 'c_type'):
+				return x.id.c_type
+		tag = get_record_tag(x)
+		if tag != '':
+			return 'struct ' + tag
+	if hasattr(x, 'id'):
+		id = x.id
+		id_str = id.c
+		pref = get_id_prefix(x)
+		if pref != '':
+			id_str = pref + id_str
+		return id_str
+
+
 def get_id_str(x):
 
 	if isinstance(x, Type):
-		if isinstance(x, TypeRecord):
-			if hasattr(x, 'id'):
-				if hasattr(x.id, 'c_type'):
-					return x.id.c_type
-			tag = get_record_tag(x)
-			if tag != '':
-				return 'struct ' + tag
-		if hasattr(x, 'id'):
-			id = x.id
-			id_str = id.c
-			pref = get_id_prefix(x)
-			if pref != '':
-				id_str = pref + id_str
-			return id_str
-		else:
-			t = x
-			if t.is_number():
-				s = 'int%d_t' % t.width
-				if t.is_unsigned():
-					s = 'u' + s
-				return s
+		return get_type_id_str(x)
 
 	if not hasattr(x, 'id'):
 		return None

@@ -180,7 +180,7 @@ valueFalse = None
 
 
 def valueZeroNumber(ti=None):
-	gt = TypeNumber(ti=ti)
+	gt = type_number_create(ti=ti)
 	return value_imm_literal_create(gt, asset=0, ti=ti)
 
 
@@ -1216,7 +1216,7 @@ def do_value_slice(x):
 		if index_to.isValueBad():
 			return ValueBad(ti)
 	else:
-		index_to = ValueUndef(TypeNumber(ti=x['ti']))
+		index_to = ValueUndef(type_number_create(ti=x['ti']))
 
 	via_pointer = left.type.is_pointer()
 	array_type = left.type

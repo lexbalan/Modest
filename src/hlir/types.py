@@ -569,12 +569,15 @@ def init(pwidth):
 
 
 HLIR_TYPE_KIND_UNKNOWN = 0
-HLIR_TYPE_KIND_WORD = 1
-HLIR_TYPE_KIND_INT = 2
-HLIR_TYPE_KIND_NAT = 3
-HLIR_TYPE_KIND_CHAR = 4
-HLIR_TYPE_KIND_BOOL = 5
-HLIR_TYPE_KIND_FLOAT = 6
+HLIR_TYPE_KIND_INTEGER = 1
+HLIR_TYPE_KIND_RATIONAL = 2
+HLIR_TYPE_KIND_WORD = 3
+HLIR_TYPE_KIND_INT = 4
+HLIR_TYPE_KIND_NAT = 5
+HLIR_TYPE_KIND_CHAR = 6
+HLIR_TYPE_KIND_BOOL = 7
+HLIR_TYPE_KIND_FLOAT = 8
+HLIR_TYPE_KIND_NUMBER = 10 # tmp
 
 
 
@@ -691,7 +694,9 @@ class Type(Entity):
 
 
 	def is_number(self):
-		return isinstance(self, TypeNumber)
+		if isinstance(self, TypeSimple):
+			return self.kind == HLIR_TYPE_KIND_NUMBER
+		return False
 
 
 	def is_func(self):
@@ -704,8 +709,6 @@ class Type(Entity):
 	# word, nat, int
 	def is_xword(self):
 		return self.is_word() or self.is_int() or self.is_nat()
-
-
 
 
 	# (this) type is VLA - variable langth array
@@ -1006,7 +1009,6 @@ class Type(Entity):
 
 		# usual checking
 		if a.is_simple(): return Type.eq_simple(a, b, opt)
-		elif a.is_number(): return Type.eq_simple(a, b, opt)
 		elif a.is_func(): return Type.eq_func(a, b, opt)
 		elif a.is_record(): return Type.eq_record(a, b, opt)
 		elif a.is_array(): return Type.eq_array(a, b, opt)
@@ -1125,12 +1127,6 @@ class TypeUnit(Type):
 		self.incomplete = False
 
 
-class TypeNumber(Type):
-	def __init__(self, width=0, ti=None):
-		super().__init__(width=width, ops=NUMBER_OPS, ti=ti)
-		self.incomplete = False
-		self.generic = True
-
 
 class TypeString(Type):
 	def __init__(self, char_width, length, ti=None):
@@ -1146,6 +1142,7 @@ class TypeSimple(Type):
 		self.kind = kind
 		self.incomplete = False
 		self.id = id
+
 
 
 class TypeFunc(Type):

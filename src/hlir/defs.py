@@ -3,6 +3,12 @@ from .types import *
 
 
 
+def type_number_create(width=0, ti=None):
+	nt = TypeSimple(width, id=Id("Number"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_NUMBER, ti=ti)
+	nt.generic = True
+	return nt
+
+
 def type_word_create(width, ti=None):
 	width = align_bits_up(width)
 	id = Id('Word%d' % width)
