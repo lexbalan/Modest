@@ -708,11 +708,6 @@ class Type(Entity):
 		return isinstance(self, TypeFunc)
 
 
-	# word, nat, int
-	def is_xword(self):
-		return self.is_word() or self.is_int() or self.is_nat()
-
-
 	# (this) type is VLA - variable langth array
 	# [n]Int32 -> True, [][n]Int32 -> False
 	def is_vla(self):

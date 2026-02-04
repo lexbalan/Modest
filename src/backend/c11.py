@@ -938,11 +938,12 @@ def str_value_cons2(x, ctx):
 		if from_type.is_string():
 			return cstr(value, type.to.of.width)
 
-	elif type.is_xword() and from_type.is_xword():
-		if from_type.is_generic():
-			return str_value(value)
-		if get_id_str(type) == get_id_str(from_type):
-			return str_value(value)
+	elif type.is_word() or type.is_int() or type.is_nat():
+		if from_type.is_word() or from_type.is_int() or from_type.is_nat():
+			if from_type.is_generic():
+				return str_value(value)
+			if get_id_str(type) == get_id_str(from_type):
+				return str_value(value)
 
 
 	if x.method in ['implicit', 'default']:
