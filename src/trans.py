@@ -572,7 +572,11 @@ def do_type_internal(x):
 
 
 def do_type(x):
+	#info("do_type", x['ti'])
 	t = do_type_internal(x)
+
+	if t.is_incompleted():
+		error("using of an incompleted type", t.ti)
 
 	if t.is_record():
 		for f in t.fields:

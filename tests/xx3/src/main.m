@@ -9,9 +9,11 @@ type ContextHandler = (x: *Context) -> *Context
 
 type X = record {c: *Context}
 
+// си не позволяет создавать укзаатель на массив с элементами неполного типа
+// вообще странно - но вот так
 //type A = *[1]Context
+//var a: *[1]Context
 
-var a: *[1]Context
 var p: *Context
 
 
