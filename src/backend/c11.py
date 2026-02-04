@@ -226,6 +226,7 @@ def get_type_id_str(x):
 		tag = get_record_tag(x)
 		if tag != '':
 			return 'struct ' + tag
+
 	if hasattr(x, 'id'):
 		id = x.id
 		id_str = id.c
