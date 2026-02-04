@@ -655,7 +655,6 @@ class Type(Entity):
 		return self.kind == HLIR_TYPE_KIND_BOOL
 
 
-	# Special type for StringLiteral (!)
 	def is_string(self):
 		return isinstance(self, TypeString)
 
@@ -1127,7 +1126,9 @@ class TypeUnit(Type):
 		self.incomplete = False
 
 
-
+# Special type for StringLiteral (!)
+# Есть вариант сделать GenericArray of GenericChar и в этом есть плюсы (например индексирование)
+# НО есть и значительный минус - непонятно что делать при сравнении строк - тк типы зависят от длины строки
 class TypeString(Type):
 	def __init__(self, char_width, length, ti=None):
 		super().__init__(width=char_width, ops=STRING_OPS, ti=ti)
