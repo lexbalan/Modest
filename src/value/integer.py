@@ -1,30 +1,28 @@
 
 from hlir import *
-from error import error
+from error import info, error
 import type as htype
 from util import nbits_for_num
 from value.value import value_imm_literal_create
 
 
-def value_number_create(num, ti=None):
+def value_integer_create(num, ti=None):
 	#signed = HLIR_TYPE_SIGNEDNESS_UNSIGNED
 	#if num < 0:
 	#	signed = HLIR_TYPE_SIGNEDNESS_SIGNED
-	if isinstance(num, int):
-		t = htype.type_integer_for(num, ti=ti)
-	else:
-		t = htype.type_rational_create(ti=ti)
+	t = htype.type_integer_for(num, ti=ti)
 	v = value_imm_literal_create(t, asset=num, ti=ti)
 	return v
 
 
-def number_can(to, from_type, method, ti):
+def integer_can(to, from_type, method, ti):
 	return from_type.is_integer() or from_type.is_rational()
 
 
-def value_number_cons(t, v, method, ti):
+def value_integer_cons(t, v, method, ti):
+	info("value_integer_cons", ti)
 	from_type = v.type
-	if number_can(t, from_type, method, ti):
+	if integer_can(t, from_type, method, ti):
 		nv = ValueCons(t, v, method, ti=ti)
 		nv.stage = v.stage
 		nv.asset = v.asset

@@ -28,8 +28,8 @@ def value_array_create(items, ti):
 
 	items = implicit_cons_list(items, item_type)
 
-	from .num import value_number_create
-	array_volume = value_number_create(length)
+	from .integer import value_integer_create
+	array_volume = value_integer_create(length)
 	array_type = TypeArray(item_type, volume=array_volume, ti=ti)
 	array_type.generic = True
 	nv = ValueArray(array_type, items, ti)
@@ -101,8 +101,8 @@ def value_array_cons(t, v, method, ti):
 			volume = v.type.volume
 		elif Type.is_string(v.type):
 			srtlen = v.type.length
-			from .num import value_number_create
-			volume = value_number_create(srtlen)
+			from .integer import value_integer_create
+			volume = value_integer_create(srtlen)
 		else:
 			assert(False)
 
@@ -166,8 +166,8 @@ def value_array_cons(t, v, method, ti):
 def value_array_add(l, r, ti):
 	items = l.asset + r.asset
 	length = len(items)
-	from .num import value_number_create
-	str_array_volume = value_number_create(length)
+	from .integer import value_integer_create
+	str_array_volume = value_integer_create(length)
 	item_type = select_common_type(l.type.of, r.type.of, ti)
 
 	# неявно приводим все элементы к общему типу

@@ -588,12 +588,12 @@ def str_value_literal(x, ctx):
 	t = x.type
 	if Type.is_integer(t):
 		return str_value_integer(x, ctx)
-	elif Type.is_int(t) or Type.is_nat(t):
-		return str_value_integer(x, ctx)
-	elif Type.is_float(t):
+	elif Type.is_rational(t):
 		return str_value_float(x, ctx)
 	elif Type.is_string(t):
 		return str_value_string(x, ctx)
+	elif Type.is_int(t) or Type.is_nat(t):
+		return str_value_integer(x, ctx)
 	elif Type.is_record(t):
 		return str_value_record(x, ctx)
 	elif Type.is_pointer(t):
@@ -603,8 +603,6 @@ def str_value_literal(x, ctx):
 	elif Type.is_char(t):
 		return str_value_char_create(x, ctx)
 	elif Type.is_word(t):
-		return str_value_integer(x, ctx)
-	elif Type.is_enum(t):
 		return str_value_integer(x, ctx)
 	return "<str_value_literal:%s>" % str(x)
 

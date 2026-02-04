@@ -64,12 +64,10 @@ def natural_can(to, from_type, method, ti):
 	c1 = Type.is_nat(from_type)
 	c2 = Type.is_word(from_type)
 	c3 = Type.is_int(from_type)
-	#c2 = Type.is_char(from_type)
-	#c4 = Type.is_bool(from_type)
-	#if c3:
-	#	info("cons Nat from Int", ti)
+	c4 = Type.is_float(from_type)
+	c5 = Type.is_rational(from_type)
 
-	if c0 or c1 or c2 or c3:
+	if c0 or c1 or c2 or c3 or c4 or c5:
 		if method == 'unsafe':
 			return True
 		return to.width >= from_type.width

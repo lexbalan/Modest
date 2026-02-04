@@ -7,14 +7,14 @@ from error import info, warning, error
 import type as type
 
 
-
+"""
 def value_float_create(num, ti=None):
 	#info("value_float_create", ti)
 	flt_width = int(settings['float_width'])
 	typ = type_float_create(width=flt_width, ti=ti)
 	typ.generic = True
 	return ValueLiteral(typ, num, ti)
-
+"""
 
 def _value_float_cons_immediate(t, v, method, ti):
 	#info("_value_float_cons_immediate", ti)
@@ -35,9 +35,10 @@ def float_can(to, from_type, method, ti):
 
 	c0 = from_type.is_nat()
 	c1 = from_type.is_int()
-	c2 = from_type.is_float()
+	c2 = from_type.is_rational()
+	c3 = from_type.is_float()
 
-	return c0, c1, c2
+	return c0 or c1 or c2 or c3
 
 
 

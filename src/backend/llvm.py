@@ -402,6 +402,14 @@ def llvm_print_value_str(x):
 
 
 
+def print_rational(x):
+	# число сперва нужно причесать,
+	# так, чтобы оно могло быть четко представлено в LLVM float/double
+	# иначе LLVM не примет его и сгенерирует ошибку
+	packed_float = _float_value_pack(x['asset'], x['type'].width)
+	return out("%.16f" % packed_float)
+
+
 def llvm_print_value_num(x):
 	num = x['asset']
 
@@ -413,12 +421,8 @@ def llvm_print_value_num(x):
 			llvm_inline_cast('inttoptr', x['type'])
 		return
 
-	if x['type'].is_float():
-		# число сперва нужно причесать,
-		# так, чтобы оно могло быть четко представлено в LLVM float/double
-		# иначе LLVM не примет его и сгенерирует ошибку
-		packed_float = _float_value_pack(num, x['type'].width)
-		return out("%.16f" % packed_float)
+	if x['type'].is_rational() or x['type'].is_float():
+		return print_rational(x)
 
 	out(str(num))
 
@@ -432,6 +436,8 @@ def llvm_print_value_inline_cast(x):
 	if v['kind'] in ['num']:
 		if t.is_pointer():
 			out("null")
+		elif t.is_rational() or t.is_float():
+			print_rational(v)
 		else:
 			out("%d" % v['asset'])
 		return
@@ -459,6 +465,8 @@ def llvm_print_ValueZero(x):
 		out("zeroinitializer")
 	elif x['type'].is_pointer():
 		out("null")
+	elif x['type'].is_rational():
+		out("0.0")
 	else:
 		out("0")
 
@@ -468,6 +476,7 @@ def llvm_print_value(x):
 	assert(x['isa'] == 'll_value')
 
 	k = x['kind']
+	#out("/*%s*/" % k)
 	if k == 'reg': out('%%%s' % x['reg'])
 	elif k == 'id': out('@%s' % x['id'])
 	elif k == 'num': llvm_print_value_num(x)
@@ -2920,12 +2929,12 @@ def stacksave(sptr):
 def _float_value_pack(f_num, width):
 	import struct
 	z = 0
-	if width == 32:
+	if width <= 32:
 		z = struct.unpack('<f', struct.pack('<f', f_num))[0]
-	elif width == 64:
+	elif width <= 64:
 		z = struct.unpack('<d', struct.pack('<d', f_num))[0]
 	else:
-		fatal("too big float, _float_value_pack not implemented")
+		fatal("too big float(%d), _float_value_pack not implemented" % width)
 
 	return z
 

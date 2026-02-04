@@ -214,6 +214,13 @@ def select_common_type(a, b, ti):
 				# not implemented!
 				return a
 
+			elif a.is_rational():
+				if b.is_integer():
+					return a
+			elif b.is_rational():
+				if a.is_integer():
+					return b
+
 			else:
 				if a.width > b.width:
 					return a

@@ -209,6 +209,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
+@str1 = private constant [4 x i8] [i8 37, i8 102, i8 10, i8 0]
 ; -- endstrings --
 %ContextHandler = type %Context* (%Context*);
 %X = type {
@@ -234,7 +235,15 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 };
 
 define %Int32 @main() {
-	ret %Int32 0
+	%1 = alloca %Float64, align 8
+	store %Float64 /*num*/3.1400000000000001, %Float64* /*reg*/%1
+	store %Float64 /*num*/1.0000000000000000, %Float64* /*reg*/%1
+	store %Float64 /*num*/6.2800000000000002, %Float64* /*reg*/%1
+	%2 = alloca %Float64, align 8
+	store %Float64 /*inline_cast*/0.0000000000000000, %Float64* /*reg*/%2
+	%3 = load %Float64, %Float64* /*reg*/%2
+	%4 = call %Int (%ConstCharStr*, ...) /*id*/@printf(%ConstCharStr* /*str*/bitcast ([4 x i8]* @str1 to [0 x i8]*), %Float64 /*reg*/%3)
+	ret %Int32 /*inline_cast*/0
 }
 
 

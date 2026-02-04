@@ -1270,7 +1270,7 @@ def str_value_literal_decimal(d: Decimal, max_frac=None):
 	return s[0:i]
 
 
-def str_value_literal_float(t, v, ctx):
+def str_value_literal_rational(t, v, ctx):
 	return str_value_literal_decimal(v.asset)
 
 
@@ -1291,14 +1291,14 @@ def str_value_with_type(v, t, ctx=[]):
 	if t.is_integer() or t.is_int() or t.is_nat() or t.is_word():
 		as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
 		return str_value_literal_number(t, asset, as_hex=as_hex)
-
-	elif t.is_float(): return str_value_literal_float(t, v, ctx)
 	elif t.is_string(): return str_value_literal_string(v, ctx)
 	elif t.is_bool(): return str_value_literal_bool(v, ctx)
 	elif t.is_char(): return str_value_literal_char(t, asset, ctx)
 	elif t.is_array(): return str_value_literal_array(v, ctx)
 	elif t.is_record(): return str_value_literal_record(v, ctx)
 	elif t.is_pointer(): return str_value_literal_pointer(t, asset, ctx)
+	elif t.is_float(): return str_value_literal_rational(t, v, ctx)
+	elif t.is_rational(): return str_value_literal_rational(t, v, ctx)
 	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
 	1/0
 

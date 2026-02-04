@@ -11,10 +11,10 @@ from common import settings
 import type as htype
 
 from value.bool import value_bool_create
-from value.num import value_number_create
-from value.float import value_float_create
-from value.array import value_array_create, value_array_add
+from value.integer import value_integer_create
+from value.rational import value_rational_create
 from value.string import value_string_create, value_string_add
+from value.array import value_array_create, value_array_add
 from value.record import value_record_create
 from value.value import value_imm_literal_create
 from value.word import value_word_create
@@ -1513,7 +1513,7 @@ def do_value_integer(x):
 	if nbits_for_num(num) > 64:
 		cmodule_use('use_bigint')
 
-	v = value_number_create(num, ti=x['ti'])
+	v = value_integer_create(num, ti=x['ti'])
 	v.nsigns = num_string_len
 
 	if base == 16:
@@ -1526,7 +1526,7 @@ def do_value_integer(x):
 def do_value_float(x):
 	# in compile time floats stores as decimal (!)
 	fval = decimal.Decimal(x['str'])
-	fv = value_float_create(fval, ti=x['ti'])
+	fv = value_rational_create(fval, ti=x['ti'])
 	return fv
 
 
@@ -2218,12 +2218,12 @@ def def_var_common(x):
 				# for case:
 				# var arrayFromString: []Char8 = "abc"
 				str_length = len(iv.asset)
-				volume = value_number_create(str_length)
+				volume = value_integer_create(str_length)
 				t = TypeArray(t.of, volume, ti=x['ti'])
 			elif iv.type.is_array():
 				# for case:
 				# var a: []*Str8 = ["Ab", "aB", "AAb"]
-				volume = value_number_create(iv.type.volume.asset)
+				volume = value_integer_create(iv.type.volume.asset)
 				t = TypeArray(t.of, volume, ti=x['ti'])
 
 	# type & init value present

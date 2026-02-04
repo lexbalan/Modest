@@ -30,6 +30,12 @@ type ZX = record {
 
 
 public func main () -> Int32 {
+	let f = 3.14
+	var fx: Float64 = f
+	fx = f / 3
+	fx = f * 2
+	var k = Float64 (2.0 / 3)
+	printf("%f\n", k)
 	return 0
 }
 

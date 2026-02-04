@@ -35,7 +35,15 @@ struct zx {
 };
 
 int32_t main(void) {
+	#define f  3.14
+	double fx = (double)f;
+	fx = (double)f / 3.0;
+	fx = (double)f * 2.0;
+	double k = (double)(2.0 / 3.0);
+	printf("%f\n", (double)k);
 	return 0;
+
+#undef f
 }
 
 
