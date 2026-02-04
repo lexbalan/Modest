@@ -737,13 +737,16 @@ class Type(Entity):
 	def is_aggregate(self):
 		return self.is_array() or self.is_record()
 
+
 	def is_composite(self):
 		return self.is_array() or self.is_record() or self.is_func() or self.is_pointer()
+
 
 	def is_composite2(self):
 		return self.is_aggregate()
 		#return not (self.is_simple() or self.is_pointer())
 		#return self.is_array() or self.is_record() or self.is_func()
+
 
 	def is_simple(self):
 		return isinstance(self, TypeSimple)
@@ -793,7 +796,6 @@ class Type(Entity):
 		return False
 
 
-
 	def is_closed_array(self):
 		if self.is_array():
 			return not self.volume.isValueUndef()
@@ -817,11 +819,13 @@ class Type(Entity):
 			return self.of.is_array()
 		return False
 
+
 	# [10][]Int32, [][]Int32, [][][]Int64, etc..
 	def is_array_of_open_array(self):
 		if self.is_array():
 			return self.of.is_open_array()
 		return False
+
 
 	# [][]Int32, [][][]Int64, etc..
 	def is_open_array_of_open_array(self):
@@ -866,12 +870,6 @@ class Type(Entity):
 		if self.is_array_of_char():
 			return 'zarray' in self.att
 		return False
-
-
-#	def is_pointer_to_zstr(self):
-#		if self.is_pointer():
-#			return self.to.is_str()
-#		return False
 
 
 	def is_pointer_to_func(self):
