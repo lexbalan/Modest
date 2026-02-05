@@ -39,6 +39,7 @@ int32_t main(void) {
 	double fx = (double)f;
 	fx = (double)f / 3.0;
 	fx = (double)f * 2.0;
+	fx = 2.0;
 	double k = (double)(2.0 / 3.0);
 	printf("%f\n", (double)k);
 	return 0;

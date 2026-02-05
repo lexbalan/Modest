@@ -4,11 +4,12 @@ from error import info, error
 import type as htype
 from util import nbits_for_num
 from value.value import value_imm_literal_create
+from decimal import Decimal
 
 
-def value_rational_create(num, ti=None):
+def value_rational_create(x, ti=None):
 	t = htype.type_rational_create(ti=ti)
-	v = value_imm_literal_create(t, asset=num, ti=ti)
+	v = value_imm_literal_create(t, asset=Decimal(x), ti=ti)
 	return v
 
 

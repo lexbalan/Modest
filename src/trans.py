@@ -1190,7 +1190,7 @@ def do_value_index(x):
 		return ValueBad(x['ti'])
 
 	if not (index.type.is_int() or index.type.is_nat() or index.type.is_integer()):
-		error("expected integer value", index.ti)
+		error("expected integral value", index.ti)
 		return ValueBad(x['ti'])
 
 	if index.type.is_generic():
@@ -1483,7 +1483,7 @@ def do_value_record(x):
 
 def do_value_number(x):
 	if '.' in x['str']:
-		return do_value_float(x)
+		return do_value_rational(x)
 
 	return do_value_integer(x)
 
@@ -1523,11 +1523,8 @@ def do_value_integer(x):
 
 
 
-def do_value_float(x):
-	# in compile time floats stores as decimal (!)
-	fval = decimal.Decimal(x['str'])
-	fv = value_rational_create(fval, ti=x['ti'])
-	return fv
+def do_value_rational(x):
+	return value_rational_create(x['str'], ti=x['ti'])
 
 
 def do_value_sizeof_type(x):

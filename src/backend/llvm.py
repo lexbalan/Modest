@@ -9,7 +9,7 @@ import type as htype
 from type import type_print
 from util import align_bits_up
 from pprint import pprint
-from util import dec_to_float
+from util import val_to_float
 
 
 cmodule = None
@@ -410,7 +410,7 @@ def print_rational(x):
 	value = x['asset']
 	type = x['type']
 	if type.is_rational():
-		value = dec_to_float(value, type.width)
+		value = val_to_float(value, type.width)
 		out("%.16f" % packed_float)
 	out("%.16f" % value)
 
