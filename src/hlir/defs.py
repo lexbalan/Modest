@@ -15,6 +15,12 @@ def type_rational_create(ti=None):
 	return nt
 
 
+def type_string_create(char_width, length, ti=None):
+	nt = TypeString(char_width, length, ti)
+	nt.generic = True
+	return nt
+
+
 def type_word_create(width, ti=None):
 	width = align_bits_up(width)
 	id = Id('Word%d' % width)
