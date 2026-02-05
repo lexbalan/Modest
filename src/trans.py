@@ -721,23 +721,23 @@ def do_value_bin_op(op, l, r, ti):
 				HLIR_VALUE_OP_ADD: lambda a, b: a + b,
 				HLIR_VALUE_OP_SUB: lambda a, b: a - b,
 				HLIR_VALUE_OP_MUL: lambda a, b: a * b,
-				HLIR_VALUE_OP_DIV: lambda a, b: l.asset // r.asset,
+				HLIR_VALUE_OP_DIV: lambda a, b: l.asset / r.asset,
 				HLIR_VALUE_OP_REM: lambda a, b: a % b,
 				HLIR_VALUE_OP_EQ:  lambda a, b: a == b,
 				HLIR_VALUE_OP_NE:  lambda a, b: a != b
 			}
 
-			asset = None
-			if op == HLIR_VALUE_OP_DIV and t.is_float() or t.is_rational():
-				asset = l.asset / r.asset
-			else:
-				asset = ops[op](l.asset, r.asset)
+#			asset = None
+#			if op == HLIR_VALUE_OP_DIV and (t.is_float() or t.is_rational()):
+#				asset = l.asset / r.asset
+#			else:
+			asset = ops[op](l.asset, r.asset)
+			if not (t.is_float() or t.is_rational()):
+				asset = int(asset)
 
-			if t.is_integer(): #or t.is_rational():
+			if t.is_integer():
 				if isinstance(asset, int):
 					nv.type = type_integer_for(asset, ti=ti)
-				#else:
-				#	nv.type = type_rational_create(ti=ti)
 
 			nv.asset = asset
 

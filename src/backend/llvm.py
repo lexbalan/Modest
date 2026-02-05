@@ -411,7 +411,6 @@ def print_rational(x):
 	type = x['type']
 	if type.is_rational():
 		value = val_to_float(value, type.width)
-		out("%.16f" % packed_float)
 	out("%.16f" % value)
 
 
