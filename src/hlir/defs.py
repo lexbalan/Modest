@@ -3,12 +3,6 @@ from .types import *
 
 
 
-def type_number_create(width=0, ti=None):
-	nt = TypeSimple(width, id=Id("Number"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_NUMBER, ti=ti)
-	nt.generic = True
-	return nt
-
-
 def type_integer_create(width=0, ti=None):
 	nt = TypeSimple(width, id=Id("Integer"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_INTEGER, ti=ti)
 	nt.generic = True
