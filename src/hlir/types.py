@@ -571,13 +571,13 @@ def init(pwidth):
 HLIR_TYPE_KIND_UNKNOWN = 0
 HLIR_TYPE_KIND_INTEGER = 1
 HLIR_TYPE_KIND_RATIONAL = 2
-HLIR_TYPE_KIND_WORD = 3
-HLIR_TYPE_KIND_INT = 4
-HLIR_TYPE_KIND_NAT = 5
-HLIR_TYPE_KIND_CHAR = 6
-HLIR_TYPE_KIND_BOOL = 7
-HLIR_TYPE_KIND_FLOAT = 8
-HLIR_TYPE_KIND_NUMBER = 10 # tmp
+HLIR_TYPE_KIND_STRING = 3
+HLIR_TYPE_KIND_WORD = 10
+HLIR_TYPE_KIND_INT = 11
+HLIR_TYPE_KIND_NAT = 12
+HLIR_TYPE_KIND_CHAR = 13
+HLIR_TYPE_KIND_BOOL = 14
+HLIR_TYPE_KIND_FLOAT = 15
 
 
 
@@ -656,7 +656,7 @@ class Type(Entity):
 
 
 	def is_string(self):
-		return isinstance(self, TypeString)
+		return isinstance(self, TypeSimple) and self.kind == HLIR_TYPE_KIND_STRING
 
 
 	def is_record(self):
@@ -1121,16 +1121,6 @@ class TypeUnit(Type):
 		super().__init__(ti=ti)
 		self.incomplete = False
 
-
-# Special type for StringLiteral (!)
-# Есть вариант сделать GenericArray of GenericChar и в этом есть плюсы (например индексирование)
-# НО есть и значительный минус - непонятно что делать при сравнении строк - тк типы зависят от длины строки
-class TypeString(Type):
-	def __init__(self, char_width, length, ti=None):
-		super().__init__(width=char_width, ops=STRING_OPS, ti=ti)
-		self.incomplete = False
-		self.generic = True
-		self.length = length
 
 
 class TypeSimple(Type):

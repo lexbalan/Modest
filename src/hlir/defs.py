@@ -16,7 +16,11 @@ def type_rational_create(ti=None):
 
 
 def type_string_create(char_width, length, ti=None):
-	nt = TypeString(char_width, length, ti)
+	# Есть вариант сделать GenericArray of GenericChar и в этом есть плюсы (например индексирование)
+	# НО есть и значительный минус - непонятно что делать при сравнении строк - тк типы зависят от длины строки
+	nt = TypeSimple(width=0, id=Id("String"), ops=STRING_OPS, kind=HLIR_TYPE_KIND_STRING, ti=ti)
+	nt.length = length
+	nt.width=char_width
 	nt.generic = True
 	return nt
 
