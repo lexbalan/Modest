@@ -44,8 +44,10 @@ def _value_integer_cons_immediate(t, v, method, ti):
 	if need_width > width:
 		error("integer overflow", ti)
 
-	from .cons import value_cons_immediate
-	return value_cons_immediate(t, v, method, ti)
+	nv = ValueCons(t, v, method, ti=ti)
+	nv.asset = v.asset
+	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+	return nv
 
 
 
@@ -93,6 +95,7 @@ def value_integer_cons(t, v, method, ti):
 		if method != 'implicit':
 			nv = ValueCons(t, v, method, ti=ti)
 			if v.asset != None:  # asset can be None in case of undefined value (!)
+				##################### ???????? !!!!!! Float, Generic float, need better cast!!!!
 				nv.asset = int(v.asset)  # here can be float
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			return nv

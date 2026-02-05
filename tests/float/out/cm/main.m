@@ -32,13 +32,13 @@ public func main () -> Int {
 	printf("float test\n")
 
 	printf("2 = %d\n", Int32 Int32 2)
-	printf("2/3 = %f\n", Float64 Float64 (2.0 / 3))
+	printf("2/3 = %f\n", Float64 Float64 (2 / 3))
 
 	let r = 10
 	let s: Float64 = squareOfCircle(r)
 	printf("s = %f\n", Float64 s)
 
-	let k = 1.0 / 8
+	let k = 1 / 8
 	printf("k = %f\n", Float64 Float64 k)
 
 	printf("sizeof(Float32) = %zu\n", Size sizeof(Float32))

@@ -277,21 +277,3 @@ def value_cons(t, v, method, ti):
 	return nv
 
 
-
-
-# cons immediate такой же cons
-# но поскольку у него value immediate, мы можем его asset
-# привести и взять себе; Таким образом мы идем как литерал нода
-# и в то же время как cons нода
-def value_cons_immediate(t, v, method, ti):
-	assert method in ['implicit', 'explicit', 'unsafe', 'default', 'extra_arg']
-	nv = ValueCons(t, v, method, ti=ti)
-
-	nv.asset = v.asset
-	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-
-	if v.hasAttribute('hexadecimal'):
-		nv.addAttribute('hexadecimal')
-
-	return nv
-

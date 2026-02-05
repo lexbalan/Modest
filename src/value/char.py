@@ -38,24 +38,25 @@ def char_can(to, from_type, method, ti):
 
 
 def value_char_cons(t, v, method, ti):
-	from .cons import value_cons_immediate
 	# String -> Char
 	# ex: var c: Char8 = "A"
+	nv = ValueCons(t, v, method, ti=ti)
+
 	if v.type.is_string():
 		c = '\0'
 		if len(v.asset) > 0:
 			c = v.asset[0]
 		else:
 			error("expected not empty string", ti)
-		cc = ord(c)
-		nv = value_cons_immediate(t, v, method, ti)
-		nv.asset = cc
+		nv.asset = ord(c)  # char code
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
 
 	if v.isValueImmediate():
-		return value_cons_immediate(t, v, method, ti)
+		nv.asset = v.asset
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+		return nv
 
-	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 

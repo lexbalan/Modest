@@ -9,7 +9,6 @@ import type as htype
 from type import type_print
 from util import align_bits_up
 from pprint import pprint
-from util import val_to_float
 
 
 cmodule = None
@@ -407,11 +406,11 @@ def print_rational(x):
 	# число сперва нужно причесать,
 	# так, чтобы оно могло быть четко представлено в LLVM float/double
 	# иначе LLVM не примет его и сгенерирует ошибку
-	value = x['asset']
+	asset = x['asset']
 	type = x['type']
 	if type.is_rational():
-		value = val_to_float(value, type.width)
-	out("%.16f" % value)
+		return out(decimal_to_str(fractional_to_decimal(asset)))
+	out("%.16f" % asset)
 
 
 def llvm_print_value_num(x):

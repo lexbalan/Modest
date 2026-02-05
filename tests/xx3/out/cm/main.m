@@ -30,12 +30,17 @@ type ZX = record {
 }
 
 
+const xx = (1 / 3) * 3
+
+
 public func main () -> Int32 {
-	let f = 3.14
-	var fx: Float64 = f
+	//3.1415926535897932384626433832795028841971693993751058209749445923
+	let f = 3.1415926535897932384626433832795028841971693993751058209749445923
+	var fx: Float64 = (1 / 7) * 7
 	fx = f / 3
 	fx = f * 2
-	var k = Float64 (2.0 / 3)
+	fx = 2
+	var k = Float64 (2 / 3)
 	printf("%f\n", Float64 k)
 	return 0
 }

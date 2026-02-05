@@ -19,13 +19,13 @@ def value_float_create(val, ti=None):
 
 def _value_float_cons_immediate(t, v, method, ti):
 	assert(t.is_float())
-	from .cons import value_cons_immediate
-	nv = value_cons_immediate(t, v, method, ti)
 	# приводим asset к FloatXX
-	a = val_to_float(nv.asset, width=t.width)
+	a = val_to_float(v.asset, width=t.width)
 	if a == None:
 		a = val_to_float(nv.asset, width=64)
 		warning("float value with width=%d not implemented" % t.width, ti)
+
+	nv = ValueCons(t, v, method, ti=ti)
 	nv.asset = a
 	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 	return nv

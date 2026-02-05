@@ -39,13 +39,16 @@ def _check_width(from_type, t, method, ti):
 def _value_natural_cons_immediate(t, v, method, ti):
 	#info("value_cons_int_immediate", ti)
 	width = t.width
-	need_width = nbits_for_num(v.asset)
+	a = abs(int(v.asset))
+	need_width = nbits_for_num(a)
 
 	if need_width > width:
 		error("natural overflow", ti)
 
-	from .cons import value_cons_immediate
-	return value_cons_immediate(t, v, method, ti)
+	nv = ValueCons(t, v, method, ti=ti)
+	nv.asset = a
+	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+	return nv
 
 
 
@@ -97,11 +100,7 @@ def value_natural_cons(t, v, method, ti):
 			nv = ValueCons(t, v, method, ti=ti)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			if v.asset != None:  # asset can be None in case of undefined value (!)
-				if v.type.is_signed():
-					if v.asset < 0:
-						nv.asset = -v.asset
-				else:
-					nv.asset = int(v.asset)  # here can be float
+				nv.asset = abs(int(v.asset))  # here can be float
 			return nv
 
 		return _value_natural_cons_immediate(t, v, method, ti)

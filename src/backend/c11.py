@@ -8,7 +8,7 @@ from .common import *
 from error import info, warning, error, fatal
 from type import select_common_type, type_print
 from unicode import chars_to_utf32
-from decimal import Decimal
+from util import fractional_to_decimal, decimal_to_str
 
 import re
 
@@ -1257,22 +1257,8 @@ def str_value_literal_number(type, num, nsigns=0, is_big=False, as_hex=False):
 
 
 
-def str_value_literal_decimal(d: Decimal, max_frac=None):
-	s = format(d, 'f')
-	# remove zero tail
-	i = len(s) - 1
-	while True:
-		if s[i] == '0':
-			i -= 1
-		else:
-			i += 2
-			break
-	return s[0:i]
-
-
 def str_value_literal_rational(t, v, ctx):
-	return str_value_literal_decimal(v.asset)
-
+	return decimal_to_str(fractional_to_decimal(v.asset))
 
 
 def str_value_literal_pointer(type, num, ctx):

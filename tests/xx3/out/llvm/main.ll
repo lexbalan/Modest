@@ -235,10 +235,11 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 };
 
 define %Int32 @main() {
+	;3.1415926535897932384626433832795028841971693993751058209749445923
 	%1 = alloca %Float64, align 8
 	store %Float64 1.0000000000000000, %Float64* %1
-	store %Float64 1.0466666666666666, %Float64* %1
-	store %Float64 6.2800000000000002, %Float64* %1
+	store %Float64 1.0471975511965979, %Float64* %1
+	store %Float64 6.2831853071795862, %Float64* %1
 	store %Float64 2.0000000000000000, %Float64* %1
 	%2 = alloca %Float64, align 8
 	store %Float64 0.6666666666666666, %Float64* %2

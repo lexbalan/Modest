@@ -1,5 +1,7 @@
 
 
+from decimal import Decimal
+
 
 def align_to(x, y):
 	assert(y != 0)
@@ -94,6 +96,27 @@ def val_to_float(val, width):
 		z = struct.unpack('<d', struct.pack('<d', val))[0]
 	return z
 
+
+def fractional_to_decimal(f):
+	#print(f.__class__)
+	#print(f.numerator)
+	#print(f.denominator)
+	from fractions import Fraction
+	assert(isinstance(f, Fraction) or isinstance(f, int))
+	return Decimal(f.numerator) / Decimal(f.denominator)
+
+
+def decimal_to_str(d: Decimal, max_frac=None):
+	s = format(d, 'f')
+	# remove zero tail
+	i = len(s) - 1
+	while True:
+		if s[i] == '0':
+			i -= 1
+		else:
+			i += 2
+			break
+	return s[0:i]
 
 
 
