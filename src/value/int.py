@@ -90,10 +90,10 @@ def value_integer_cons(t, v, method, ti):
 	#info("value_integer_cons()", ti)
 	_check_width(v.type, t, method, ti)
 
+	nv = ValueCons(t, v, method, ti=ti)
 	if v.isValueImmediate():
 		_check_width(v.type, t, method, ti)
 		if method != 'implicit':
-			nv = ValueCons(t, v, method, ti=ti)
 			if v.asset != None:  # asset can be None in case of undefined value (!)
 				##################### ???????? !!!!!! Float, Generic float, need better cast!!!!
 				nv.asset = int(v.asset)  # here can be float
@@ -101,7 +101,6 @@ def value_integer_cons(t, v, method, ti):
 			return nv
 		return _value_integer_cons_immediate(t, v, method, ti)
 
-	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 

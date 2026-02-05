@@ -94,10 +94,10 @@ def value_natural_cons(t, v, method, ti):
 		from trans import cmodule_use
 		cmodule_use('use_abs')
 
+	nv = ValueCons(t, v, method, ti=ti)
 	if v.isValueImmediate():
 		_check_width(v.type, t, method, ti)
 		if method != 'implicit':
-			nv = ValueCons(t, v, method, ti=ti)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			if v.asset != None:  # asset can be None in case of undefined value (!)
 				nv.asset = abs(int(v.asset))  # here can be float
@@ -105,7 +105,6 @@ def value_natural_cons(t, v, method, ti):
 
 		return _value_natural_cons_immediate(t, v, method, ti)
 
-	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
