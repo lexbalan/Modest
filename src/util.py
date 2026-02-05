@@ -83,6 +83,21 @@ def int_zext(x, width_from, width_to):
 
 
 
+# принимает на вход Decimal
+# возвращает 32 или 64 битное представление float числа
+def dec_to_float(dec, width):
+	import struct
+	z = 0
+	if width <= 32:
+		z = struct.unpack('<f', struct.pack('<f', dec))[0]
+	elif width <= 64:
+		z = struct.unpack('<d', struct.pack('<d', dec))[0]
+	else:
+		return None
+	return z
+
+
+
 
 """
 def utf16_to_utf32(c):

@@ -236,14 +236,14 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 
 define %Int32 @main() {
 	%1 = alloca %Float64, align 8
-	store %Float64 /*num*/3.1400000000000001, %Float64* /*reg*/%1
-	store %Float64 /*num*/1.0000000000000000, %Float64* /*reg*/%1
-	store %Float64 /*num*/6.2800000000000002, %Float64* /*reg*/%1
+	store %Float64 3.14, %Float64* %1
+	store %Float64 1.0466666666666666, %Float64* %1
+	store %Float64 1.57, %Float64* %1
 	%2 = alloca %Float64, align 8
-	store %Float64 /*inline_cast*/0.0000000000000000, %Float64* /*reg*/%2
-	%3 = load %Float64, %Float64* /*reg*/%2
-	%4 = call %Int (%ConstCharStr*, ...) /*id*/@printf(%ConstCharStr* /*str*/bitcast ([4 x i8]* @str1 to [0 x i8]*), %Float64 /*reg*/%3)
-	ret %Int32 /*inline_cast*/0
+	store %Float64 0.6666666666666666, %Float64* %2
+	%3 = load %Float64, %Float64* %2
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), %Float64 %3)
+	ret %Int32 0
 }
 
 

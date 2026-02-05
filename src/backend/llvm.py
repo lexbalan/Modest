@@ -9,6 +9,7 @@ import type as htype
 from type import type_print
 from util import align_bits_up
 from pprint import pprint
+from util import dec_to_float
 
 
 cmodule = None
@@ -406,8 +407,12 @@ def print_rational(x):
 	# число сперва нужно причесать,
 	# так, чтобы оно могло быть четко представлено в LLVM float/double
 	# иначе LLVM не примет его и сгенерирует ошибку
-	packed_float = _float_value_pack(x['asset'], x['type'].width)
-	return out("%.16f" % packed_float)
+	value = x['asset']
+	type = x['type']
+	if type.is_rational():
+		value = dec_to_float(value, type.width)
+		out("%.16f" % packed_float)
+	out("%.16f" % value)
 
 
 def llvm_print_value_num(x):
@@ -1500,6 +1505,7 @@ def do_eval_cons_pointer_to_array(x):
 
 
 def do_eval_cons(x):
+	#info("do_eval_cons", x.ti)
 	value = x.value
 	from_type = value.type
 	type = x.type
@@ -2922,21 +2928,6 @@ def stacksave(sptr):
 	r = ll_reg_operation("call i8* @llvm.stacksave()", type=sptr['type'])
 	llvm_store(sptr, r)
 	return sptr
-
-
-
-# получаем 32 или 64 битное представление float числа
-def _float_value_pack(f_num, width):
-	import struct
-	z = 0
-	if width <= 32:
-		z = struct.unpack('<f', struct.pack('<f', f_num))[0]
-	elif width <= 64:
-		z = struct.unpack('<d', struct.pack('<d', f_num))[0]
-	else:
-		fatal("too big float(%d), _float_value_pack not implemented" % width)
-
-	return z
 
 
 
