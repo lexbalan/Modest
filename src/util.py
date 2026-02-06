@@ -120,6 +120,16 @@ def decimal_to_str(d: Decimal, max_frac=None):
 
 
 
+def str_always_float(s):
+	if not '.' in s:
+		return s + '.0'
+	return s
+
+
+def str_fractional(x):
+	return str_always_float(decimal_to_str(fractional_to_decimal(x)))
+
+
 """
 def utf16_to_utf32(c):
 	leading = c[0]

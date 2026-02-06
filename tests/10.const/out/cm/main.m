@@ -21,7 +21,7 @@ type Line = record {
 
 const zero = 0
 const pointZero = Point {x = zero, y = zero}
-const pointOne = Point {x = 1, y = 1}
+const pointOne = Point {x = 1.0, y = 1.0}
 
 const line0 = Line {
 	a = pointZero

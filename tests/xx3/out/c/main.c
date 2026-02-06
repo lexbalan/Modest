@@ -34,16 +34,19 @@ struct zx {
 	ContextHandler *f;
 };
 
-#define XX  ((1 / 3) * 3)
+#define XX  ((1.0 / 333333.0) * 333333.0)
 
 int32_t main(void) {
-	//3.1415926535897932384626433832795028841971693993751058209749445923
+	printf("xx = %f\n", (double)XX);
+	printf("xx = %d\n", 1);
+
+	// 3.1415926535897932384626433832795028841971693993751058209749445923
 	#define f  3.1415926535897932384626433832795028841971693993751058209749445923
-	double fx = (double)(1 / 7) * 7;
-	fx = (double)f / 3;
-	fx = (double)f * 2;
-	fx = 2;
-	double k = (double)(2 / 3);
+	double fx = (double)(1.0 / 7.0) * 7.0;
+	fx = (double)f / 3.0;
+	fx = (double)f * 2.0;
+	fx = 2.0;
+	double k = (double)(2.0 / 3.0);
 	printf("%f\n", (double)k);
 	return 0;
 

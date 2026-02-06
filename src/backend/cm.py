@@ -3,7 +3,7 @@ from hlir import *
 import type as htype
 from error import info
 from .common import *
-from util import fractional_to_decimal, decimal_to_str
+from util import str_fractional
 
 
 def get_id_str(x):
@@ -551,7 +551,7 @@ def str_value_integer(x, ctx):
 
 
 def str_value_rational(v, ctx):
-	return decimal_to_str(fractional_to_decimal(v.asset))
+	return str_fractional(v.asset)
 
 
 # print Pointer literal

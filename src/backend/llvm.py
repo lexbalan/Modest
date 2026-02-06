@@ -9,7 +9,7 @@ import type as htype
 from type import type_print
 from util import align_bits_up
 from pprint import pprint
-
+from util import str_fractional
 
 cmodule = None
 
@@ -409,7 +409,7 @@ def print_rational(x):
 	asset = x['asset']
 	type = x['type']
 	if type.is_rational():
-		return out(decimal_to_str(fractional_to_decimal(asset)))
+		return out(str_fractional(asset))
 	out("%.16f" % asset)
 
 

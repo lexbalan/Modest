@@ -160,6 +160,8 @@ def value_cons_explicit(t, v, ti):
 
 def value_cons_extra_arg(v):
 	t = v.type
+	if t.is_generic():
+		t = _select_default_type_for(t)
 	return value_cons(t, v, 'extra_arg', v.ti)
 
 
@@ -201,6 +203,9 @@ def _select_default_type_for(t):
 
 	elif t.is_word():
 		return typeSysWord
+
+	elif t.is_rational():
+		return typeSysFloat
 
 	elif t.is_array():
 		item_type = t.of

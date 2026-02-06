@@ -18,7 +18,7 @@ type Line = record {
 
 var line: Line = {
 	a = {x = 0, y = 0}
-	b = {x = 1, y = 1}
+	b = {x = 1.0, y = 1.0}
 }
 
 

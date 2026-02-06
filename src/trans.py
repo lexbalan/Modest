@@ -728,6 +728,9 @@ def do_value_bin_op(op, l, r, ti):
 			}
 
 			asset = ops[op](l.asset, r.asset)
+#			if op == HLIR_VALUE_OP_DIV:
+#				if not (t.is_rational() or t.is_float()):
+#					asset = l.asset // r.asset
 
 			if l.type.is_generic() and r.type.is_generic():
 				if t.is_integer():
@@ -2134,6 +2137,10 @@ def def_const_common(x):
 def def_const_global(x):
 	global global_prefix
 	df = def_const_common(x)
+
+	if hasattr(df.value.type, 'kind'):
+		if df.value.type.kind == HLIR_TYPE_KIND_RATIONAL:
+			info("rat", x['ti'])
 
 	#if df.value.isValueRuntime():
 	#	error("runtime!", x['ti'])
