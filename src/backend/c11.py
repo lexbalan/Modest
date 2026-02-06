@@ -201,24 +201,20 @@ def get_id_prefix(x):
 	return prefix
 
 
-def type_get_tag2(t):
-	if hasattr(t, 'id'):
-		if hasattr(t.id, 'c') and t.id.c != None:
-			id_str = t.id.c
-			pref = get_id_prefix(t)
-			if pref != '':
-				id_str = pref + id_str
-			return id_str
-	#else:
-	if hasattr(t, 'c_anon_id'):
-		return t.c_anon_id
-	return None
-
 
 def get_record_tag(x):
-	tag = type_get_tag2(x)
-	if tag != None:
-		return camel_to_lower_snake(tag)
+	tag = None
+	if hasattr(x, 'id'):
+		if hasattr(x.id, 'c') and x.id.c != None:
+			id_str = x.id.c
+			pref = get_id_prefix(x)
+			if pref != '':
+				id_str = pref + id_str
+			return camel_to_lower_snake(id_str)
+	else:
+		if hasattr(x, 'c_anon_id'):
+			return x.c_anon_id
+
 	return None
 
 
