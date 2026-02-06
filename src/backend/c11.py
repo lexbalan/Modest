@@ -232,25 +232,14 @@ def get_type_id_str(x):
 				return x.id.c_type
 
 			if x.is_open_access:
-				#if hasattr(x, 'id'):
-				#return x.id.c
-				id_str = x.id.c
-				pref = get_id_prefix(x)
-				if pref != '':
-					id_str = pref + id_str
-				return id_str
+				return get_id_prefix(x) + x.id.c
 
 		tag = get_record_tag(x)
 		if tag != None:
 			return 'struct ' + tag
 
 	if hasattr(x, 'id'):
-		id = x.id
-		id_str = id.c
-		pref = get_id_prefix(x)
-		if pref != '':
-			id_str = pref + id_str
-		return id_str
+		return get_id_prefix(x) + x.id.c
 
 
 def get_id_str(x):
@@ -258,14 +247,8 @@ def get_id_str(x):
 		return get_type_id_str(x)
 
 	if hasattr(x, 'id'):
-		id = x.id
-		if id != None:
-			if id.c != None:
-				id_str = id.c
-				pref = get_id_prefix(x)
-				if pref != '':
-					id_str = pref + id_str
-				return id_str
+		if x.id != None and x.id.c != None:
+			return get_id_prefix(x) + x.id.c
 
 	return None
 
