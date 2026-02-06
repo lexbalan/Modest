@@ -27,16 +27,19 @@ typedef uint32_t char32_t;
 
 
 
+
 struct point {
 	uint32_t x;
 	uint32_t y;
 };
+
 
 struct mixed1 {
 	char c;
 	int32_t i;
 	double f;
 };
+
 
 struct mixed2 {
 	int32_t i;
@@ -46,12 +49,14 @@ struct mixed2 {
 	struct mixed1 m;
 };
 
+
 struct mixed3 {
 	char c;
 	int32_t i;
 	double f;
 	char c2[9];
 };
+
 
 struct mixed4 {
 	struct mixed2 s;
@@ -72,6 +77,7 @@ static double f;
 static int16_t i2;
 static struct point p[3];
 static bool g;
+
 
 struct x {
 	char c;

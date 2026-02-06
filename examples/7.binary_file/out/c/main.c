@@ -9,6 +9,7 @@
 
 #define FILENAME  ("file.bin")
 
+
 struct chunk {
 	char id[100];
 	char data[1024];

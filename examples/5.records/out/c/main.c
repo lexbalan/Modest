@@ -9,10 +9,12 @@
 
 
 
+
 struct point {
 	float x;
 	float y;
 };
+
 
 struct line {
 	struct point a;

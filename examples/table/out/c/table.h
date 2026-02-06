@@ -13,13 +13,15 @@
 
 typedef char *table_Row[];
 
-typedef struct {
+
+typedef struct table_table table_Table;
+struct table_table {
 	char *(*header)[];
 	table_Row *data;
 	uint32_t nRows;
 	uint32_t nCols;
 	bool separate;
-} table_Table;
+};
 void table_print(table_Table *table);
 
 #endif /* TABLE_H */

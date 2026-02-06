@@ -13,6 +13,7 @@
 
 #define INPUT_DATA_LENGTH  32
 
+
 struct sha256_test_case {
 	char inputData[INPUT_DATA_LENGTH];
 	uint32_t inputDataLen;

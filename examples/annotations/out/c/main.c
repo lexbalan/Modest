@@ -22,6 +22,7 @@ typedef MyInt32 MyInt32_3;
 #define CVB  (0)
 static int32_t vvb = 1;
 
+
 struct protocol_header {
 	uint16_t start;
 	uint16_t len;
@@ -64,6 +65,7 @@ static int32_t staticNoinlineFunc(int32_t x) {
 static inline int32_t staticInlineHintFunc(int32_t x) {
 	return x + 1;
 }
+
 
 
 struct point2_d {

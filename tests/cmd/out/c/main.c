@@ -28,6 +28,7 @@ static inline int char8ToInt(char c) {
 }
 
 
+
 struct tokenizer {
 	char *input;
 	uint32_t position;

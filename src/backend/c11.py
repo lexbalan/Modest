@@ -201,15 +201,25 @@ def get_id_prefix(x):
 	return prefix
 
 
-
-def get_record_tag(t):
+def type_get_tag2(t):
 	if hasattr(t, 'id'):
-		if t.is_record() and type_have_tag(t):
-			return camel_to_lower_snake(get_id_prefix(t) + t.id.c_tag)
-	else:
-		if hasattr(t, 'c_anon_id'):
-			return t.c_anon_id
-	return ''
+		if hasattr(t.id, 'c') and t.id.c != None:
+			id_str = t.id.c
+			pref = get_id_prefix(t)
+			if pref != '':
+				id_str = pref + id_str
+			return id_str
+	#else:
+	if hasattr(t, 'c_anon_id'):
+		return t.c_anon_id
+	return None
+
+
+def get_record_tag(x):
+	tag = type_get_tag2(x)
+	if tag != None:
+		return camel_to_lower_snake(tag)
+	return None
 
 
 def get_type_id_str(x):
@@ -227,8 +237,18 @@ def get_type_id_str(x):
 		if hasattr(x, 'id'):
 			if hasattr(x.id, 'c_type'):
 				return x.id.c_type
+
+			if x.is_open_access:
+				#if hasattr(x, 'id'):
+				#return x.id.c
+				id_str = x.id.c
+				pref = get_id_prefix(x)
+				if pref != '':
+					id_str = pref + id_str
+				return id_str
+
 		tag = get_record_tag(x)
-		if tag != '':
+		if tag != None:
 			return 'struct ' + tag
 
 	if hasattr(x, 'id'):
@@ -259,7 +279,8 @@ def get_id_str(x):
 
 
 def is_type_named(t):
-	return get_id_str(t) != None
+	return hasattr(t, 'id') or (hasattr(t, 'c_anon_id') and t.c_anon_id != None)
+	#return get_type_id_str(t) != None
 
 
 
@@ -2028,67 +2049,43 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-	id_str = get_id_str(x.type)
-	out("%s;" % id_str)
-	#if not NO_TYPEDEF_STRUCTS:
-	#	out("\ntypedef struct %s %s;" % (id_str, id_str))
+	if x.type.is_record():
+		print_decl_type_record(x)
 
 
-def define_struct(t, tag):
-	# struct Tag {};
-	out(str_type_record(t, tag=tag))
-	out(";")
-
-
-def define_struct_typedef(t, id_str):
-	# typedef struct {} TypeId;
-	out("typedef ")
-	out(str_type_record(t, tag=''))
-	out(" " + id_str)
-	out(";")
-
-
-def define_struct_typedef2(t, id_str):
-	# typedef <struct_id> TypeId;
-	out("typedef ")
-	out(str_field(t, id_str))
-	out(";")
-
-
-# returns '' if not have tag (!)
-def type_get_tag(t):
-	if hasattr(t, 'id'):
-		if hasattr(t.id, 'c_tag'):
-			if t.id.c_tag != None:
-				return t.id.c_tag
-	return ''
-
-
-def type_have_tag(t):
-	return type_get_tag(t) != ''
+def print_decl_type_record(x):
+	tag = get_record_tag(x.type)
+	out("struct %s;\n" % tag)
+	if x.type.is_open_record:
+		out("typedef struct %s %s;\n" % (tag, get_id_str(x.type)))
 
 
 def print_def_type(x):
 	global declared
+	print_deps(x.deps)
 
 	id_str = get_id_str(x.type)
 	orig_type = x.original_type
 
-
-	if orig_type.is_record():
-		if type_have_tag(x.type):
-			tagg = get_record_tag(x.type)
-			define_struct(orig_type, tagg)
-			return
-		if orig_type.is_anonymous():
-			define_struct_typedef(orig_type, id_str)
-			return
-		else:
-			define_struct_typedef2(orig_type, id_str)
-			return
+	if not is_type_named(orig_type):
+		if orig_type.is_record():
+			return print_def_type_record(x)
 
 	out('typedef ' + str_field(orig_type, id_str) + ';')
 
+
+def print_def_type_record(x):
+	id_str = get_id_str(x.type)
+
+	# Если структура open & не задекларирована ранее - печатаем для нее typedef
+	if (not id_str in declared) and x.type.is_open_record:
+		tag = get_record_tag(x.type)
+		out("\ntypedef struct %s %s;" % (tag, get_id_str(x.type)))
+
+	out("\n")
+	tag = get_record_tag(x.type)
+	out(str_type_record(x.type, tag=tag))
+	out(";")
 
 
 # Указатель, массив и функция образуют пиздецовый заговор

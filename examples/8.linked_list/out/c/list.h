@@ -13,11 +13,17 @@
 
 struct list_node;
 
+
+
+
+
+
 struct list_node {
 	struct list_node *next;
 	struct list_node *prev;
 	void *data;
 };
+
 
 struct list_list {
 	struct list_node *head;

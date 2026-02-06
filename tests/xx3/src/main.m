@@ -16,17 +16,22 @@ type X = record {c: *Context}
 
 var p: *Context
 
-type Context = record {
+
+type Context = @public record {
 	x: Int32 = 32
 	y: Int32 = 32
 	f: *ContextHandler
+	pz: *ZX
 }
 
 type ZX = record {
 	x: Int32
 	c: Context
 	f: *ContextHandler
+	pz: *ZX
 }
+
+type ZZ = ZX
 
 
 const x = 1.5
@@ -34,6 +39,10 @@ const xx = (x / 333333) * 333333
 const y = Integer x
 
 public func main () -> Int32 {
+	var c: Context
+	var x: ZX
+	var z: ZZ
+
 	printf("xx = %f\n", xx)
 	printf("y = %d\n", y)
 

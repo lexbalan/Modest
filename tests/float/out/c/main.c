@@ -16,6 +16,7 @@ static double squareOfCircle(double radius) {
 }
 
 
+
 struct point2_d {
 	int x;
 	int y;

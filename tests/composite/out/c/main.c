@@ -142,6 +142,7 @@ static int (*(*(*a9[5])[10])[2])(int a);
 static int32_t (*p2)[5] = &a0;
 static int32_t (**p3)[5] = &p2;
 
+
 struct rgb24 {
 	uint8_t red;
 	uint8_t green;
@@ -152,6 +153,7 @@ static struct rgb24 rgb0[2] = {
 	{.red = 200, .green = 0, .blue = 0},
 	{.red = 200, .green = 0, .blue = 0}
 };
+
 
 struct animation_point {
 	struct rgb24 color;
@@ -233,6 +235,7 @@ static void hi(char *x) {
 static void (*hiarr[10])(char *x) = {
 	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
 };
+
 
 struct wrap {
 	void (*fhi)(char *x);

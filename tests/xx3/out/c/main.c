@@ -7,10 +7,18 @@
 
 
 
-typedef struct context *ContextHandler(struct context *x);
+
+struct context;
+typedef struct context Context;
+
+
+typedef Context *ContextHandler(Context *x);
+
+
+
 
 struct x {
-	struct context *c;
+	Context *c;
 };
 
 // си не позволяет создавать укзаатель на массив с элементами неполного типа
@@ -19,26 +27,41 @@ struct x {
 //var a: *[1]Context
 
 
-struct context;
-static struct context *p;
+
+static Context *p;
+
+
+struct zx;
+
 
 struct context {
 	int32_t x;
 	int32_t y;
 	ContextHandler *f;
+	struct zx *pz;
 };
+
+
+
 
 struct zx {
 	int32_t x;
-	struct context c;
+	Context c;
 	ContextHandler *f;
+	struct zx *pz;
 };
+
+typedef struct zx ZZ;
 
 #define X  1.5
 #define XX  ((X / 333333.0) * 333333.0)
 #define Y  ((int)X)
 
 int32_t main(void) {
+	Context c;
+	struct zx x;
+	ZZ z;
+
 	printf("xx = %f\n", (double)XX);
 	printf("y = %d\n", (int32_t)Y);
 

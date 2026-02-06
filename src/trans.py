@@ -2043,6 +2043,7 @@ def def_type_common(x, nt):
 	# он уже не анонимный
 	if ty in cmodule.anon_recs:
 		cmodule.anon_recs.remove(ty)
+	ty.c_anon_id = None
 
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое
@@ -2051,22 +2052,13 @@ def def_type_common(x, nt):
 	nt.deps = deps
 	nt.id = id
 
-
-	if nt.is_record() and not is_open_record:
-		#if mass(ty):
-		if hasattr(ty, 'id') and ty.id.c != None:
-			# ориг тип именованный, значит идем через typedef, значит для этого типа
-			nt.id.c_tag = None #!
-			pass
-		else:
-			nt.id.c_tag = id.str
-			pass
-
+	#info("?%d?" % hasattr(ty, 'id'), x['ti'])
 
 	nt.definition = definition
 	nt.parent = cmodule  # добавляем заново тк очистили его выше!
 	nt.ti_def = id.ti
-
+	nt.is_open_record = is_open_record
+	nt.is_open_access = is_open_record or hasattr(ty, 'id')
 
 	# Проверяем если наши прямые зависимости не зависят от нас напрямую
 	# Это ошибочная ситуация, так как сложные типы не могут взаимно напрямую включать друг друга

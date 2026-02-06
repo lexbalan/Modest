@@ -35,10 +35,12 @@ typedef uint32_t char32_t;
 #define STRING16_CONST  (_STR16(GENERIC_STRING_CONST))
 #define STRING32_CONST  (_STR32(GENERIC_STRING_CONST))
 
+
 struct point {
 	uint32_t x;
 	uint32_t y;
 };
+
 
 struct x {
 	struct point p;

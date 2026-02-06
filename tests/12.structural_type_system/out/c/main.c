@@ -16,9 +16,11 @@ struct __anonymous_struct_4 {
 	int32_t x;
 };
 
+
 struct type1 {
 	int32_t x;
 };
+
 
 struct type2 {
 	int32_t x;

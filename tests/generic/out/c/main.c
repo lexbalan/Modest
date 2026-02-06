@@ -211,10 +211,12 @@ static bool test_generic_array(void) {
 }
 
 
+
 struct point2_d {
 	int32_t x;
 	int32_t y;
 };
+
 
 struct point3_d {
 	int32_t x;

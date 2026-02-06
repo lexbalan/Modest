@@ -1236,6 +1236,11 @@ class TypeRecord(Type):
 		self.incomplete = False
 		self.fields = fields
 
+		# это структура с открытыми полями -> она идет через typedef в C backend
+		self.is_open_record = False
+		self.is_open_access = False
+
+
 	# Получить список типов от которых данный тип зависит напрямую
 	def get_dir_deps(self, deps):
 		for f in self.fields:

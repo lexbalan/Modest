@@ -11,10 +11,12 @@
 
 #define CARR  {0, 10, 15, 20, 25, 30}
 
+
 struct point {
 	double x;
 	double y;
 };
+
 
 struct line {
 	struct point a;
@@ -46,6 +48,7 @@ struct line {
 }
 
 #define LINES  {LINE0, LINE1, LINE2, LINE3}
+
 
 struct wrapped_array {
 	int32_t x;

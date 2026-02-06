@@ -274,11 +274,6 @@ define internal void @f4_ptr({%Int32}* %x) {
 	ret void
 }
 
-@x = internal global {
-	%Int32
-} {
-	%Int32 5
-}
 @a = internal global %Type1 {
 	%Int32 1
 }
@@ -289,10 +284,10 @@ define internal void @f4_ptr({%Int32}* %x) {
 	%Int32 3
 }
 define internal void @test_by_value() {
-	call void @f1_val(%Type1 zeroinitializer)
-	call void @f2_val(%Type2 zeroinitializer)
-	call void @f3_val(%Type3 zeroinitializer)
-	call void @f4_val({%Int32} zeroinitializer)
+	;	f1_val({x = 0})
+	;	f2_val({x = 0})
+	;	f3_val({x = 0})
+	;	f4_val({x = 0})
 	call void @f1_val(%Type1 zeroinitializer)
 	call void @f2_val(%Type2 zeroinitializer)
 	call void @f3_val(%Type3 zeroinitializer)

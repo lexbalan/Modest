@@ -18,10 +18,12 @@ struct __anonymous_struct_7 {
 	uint32_t y;
 };
 
+
 struct point2_d {
 	uint32_t x;
 	uint32_t y;
 };
+
 
 struct point3_d {
 	uint32_t x;
@@ -32,10 +34,12 @@ struct point3_d {
 #define XX  {.x = 1, .y = 2}
 #define YY  (struct point2_d){.x = 1, .y = 2}
 
+
 struct point {
 	int32_t x;
 	int32_t y;
 };
+
 
 struct line {
 	struct point a;
@@ -63,6 +67,7 @@ static struct line lines[3] = {
 };
 
 static struct line *pLines[3] = {&lines[0], &lines[1], &lines[2]};
+
 
 struct structx {
 	struct line *x;
