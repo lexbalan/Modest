@@ -7,8 +7,8 @@ from .integer import integer_can, value_integer_cons
 from .rational import rational_can, value_rational_cons
 from .word import word_can, value_word_cons
 from .char import char_can, value_char_cons
-from .int import integer_can, value_integer_cons
-from .nat import natural_can, value_natural_cons
+from .int import int_can, value_int_cons
+from .nat import nat_can, value_nat_cons
 from .float import float_can, value_float_cons
 from .record import record_can, value_record_cons
 from .array import array_can, value_array_cons
@@ -47,8 +47,8 @@ def cons_can(to, from_type, method, ti):
 	checker = None
 	if to.is_integer(): checker = integer_can
 	elif to.is_rational(): checker = rational_can
-	elif to.is_int(): checker = integer_can
-	elif to.is_nat(): checker = natural_can
+	elif to.is_int(): checker = int_can
+	elif to.is_nat(): checker = nat_can
 	elif to.is_unit(): checker = unit_can
 	elif to.is_bool(): checker = bool_can
 	elif to.is_word(): checker = word_can
@@ -162,7 +162,10 @@ def value_cons_extra_arg(v):
 	t = v.type
 	if t.is_generic():
 		t = _select_default_type_for(t)
-	return value_cons(t, v, 'extra_arg', v.ti)
+	nv = value_cons(t, v, 'extra_arg', v.ti)
+	if nv == None:
+		return ValueBad(v.ti)
+	return nv
 
 
 def value_cons_default(v):
@@ -250,12 +253,11 @@ def value_cons(t, v, method, ti):
 		if is_unsafe_mode():
 			method = 'unsafe'
 
-
 	constructor = None
 	if t.is_integer(): constructor = value_integer_cons
 	elif t.is_rational(): constructor = value_rational_cons
-	elif t.is_int(): constructor = value_integer_cons
-	elif t.is_nat(): constructor = value_natural_cons
+	elif t.is_int(): constructor = value_int_cons
+	elif t.is_nat(): constructor = value_nat_cons
 	elif t.is_float(): constructor = value_float_cons
 	elif t.is_array(): constructor = value_array_cons
 	elif t.is_record(): constructor = value_record_cons

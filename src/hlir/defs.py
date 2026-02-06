@@ -4,15 +4,17 @@ from .types import *
 
 
 def type_integer_create(width=0, ti=None):
-	nt = TypeSimple(width, id=Id("Integer"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_INTEGER, ti=ti)
-	nt.generic = True
-	return nt
+	return TypeInteger(width, ti)
+	#nt = TypeSimple(width, id=Id("Integer"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_INTEGER, ti=ti)
+	#nt.generic = True
+	#return nt
 
 
 def type_rational_create(ti=None):
-	nt = TypeSimple(width=0, id=Id("Rational"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_RATIONAL, ti=ti)
-	nt.generic = True
-	return nt
+	return TypeRational(ti=ti)
+#	nt = TypeSimple(width=0, id=Id("Rational"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_RATIONAL, ti=ti)
+#	nt.generic = True
+#	return nt
 
 
 def type_string_create(char_width, length, ti=None):
@@ -91,6 +93,10 @@ bool_id = Id('Bool')
 bool_id.c = 'bool'
 bool_id.llvm = 'Bool'
 typeBool = TypeSimple(8, HLIR_TYPE_KIND_BOOL, bool_id, BOOL_OPS)
+
+# generic built-in types
+typeInteger = TypeInteger()
+typeRational = TypeRational()
 
 typeWord8 = type_word_create(width=8)
 typeWord16 = type_word_create(width=16)

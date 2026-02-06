@@ -200,6 +200,12 @@ def select_common_type(a, b, ti):
 	if Type.eq(a, b):
 		return a
 
+	if a.is_generic() and b.is_generic():
+		if a.is_rational() and b.is_integer():
+			return a
+		if b.is_rational() and a.is_integer():
+			return b
+
 	if a.__class__.__name__ == b.__class__.__name__:
 		if a.is_generic() and b.is_generic():
 			if a.is_record():
@@ -214,12 +220,12 @@ def select_common_type(a, b, ti):
 				# not implemented!
 				return a
 
-			elif a.is_rational():
-				if b.is_integer():
-					return a
-			elif b.is_rational():
-				if a.is_integer():
-					return b
+#			elif a.is_rational():
+#				if b.is_integer():
+#					return a
+#			elif b.is_rational():
+#				if a.is_integer():
+#					return b
 
 			else:
 				if a.width > b.width:
@@ -234,6 +240,13 @@ def select_common_type(a, b, ti):
 						return a
 					else:
 						return b
+
+			if a.is_rational():
+				if b.is_integer():
+					return a
+			if b.is_rational():
+				if a.is_integer():
+					return b
 
 			if a.is_generic():
 				return b

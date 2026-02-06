@@ -15,6 +15,7 @@ def value_integer_create(num, ti=None):
 
 
 def integer_can(to, from_type, method, ti):
+	print("CAN?", ti)
 	return from_type.is_integer() or from_type.is_rational()
 
 

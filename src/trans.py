@@ -198,6 +198,9 @@ def init():
 	root_symtab.type_add('Unit', typeUnit)
 	root_symtab.type_add('Bool', typeBool)
 
+	root_symtab.type_add('Integer', typeInteger)
+	root_symtab.type_add('Rational', typeRational)
+
 	root_symtab.type_add('Byte', typeByte)
 
 	root_symtab.type_add('Word8', typeWord8)

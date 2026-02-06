@@ -36,7 +36,7 @@ def _check_width(from_type, t, method, ti):
 
 
 
-def _value_natural_cons_immediate(t, v, method, ti):
+def _value_nat_cons_immediate(t, v, method, ti):
 	#info("value_cons_int_immediate", ti)
 	width = t.width
 	a = abs(int(v.asset))
@@ -52,7 +52,7 @@ def _value_natural_cons_immediate(t, v, method, ti):
 
 
 
-def natural_can(to, from_type, method, ti):
+def nat_can(to, from_type, method, ti):
 	if Type.is_integer(from_type):
 		return from_type.width <= to.width
 
@@ -86,8 +86,8 @@ def natural_can(to, from_type, method, ti):
 
 
 
-def value_natural_cons(t, v, method, ti):
-	#info("value_natural_cons()", ti)
+def value_nat_cons(t, v, method, ti):
+	#info("value_nat_cons()", ti)
 	_check_width(v.type, t, method, ti)
 
 	if v.type.is_signed():
@@ -103,7 +103,7 @@ def value_natural_cons(t, v, method, ti):
 				nv.asset = abs(int(v.asset))  # here can be float
 			return nv
 
-		return _value_natural_cons_immediate(t, v, method, ti)
+		return _value_nat_cons_immediate(t, v, method, ti)
 
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv

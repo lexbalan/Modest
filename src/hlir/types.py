@@ -693,15 +693,11 @@ class Type(Entity):
 
 
 	def is_integer(self):
-		if isinstance(self, TypeSimple):
-			return self.kind == HLIR_TYPE_KIND_INTEGER
-		return False
+		return isinstance(self, TypeInteger)
 
 
 	def is_rational(self):
-		if isinstance(self, TypeSimple):
-			return self.kind == HLIR_TYPE_KIND_RATIONAL
-		return False
+		return isinstance(self, TypeRational)
 
 
 	def is_func(self):
@@ -1130,6 +1126,17 @@ class TypeSimple(Type):
 		self.incomplete = False
 		self.id = id
 
+
+class TypeInteger(TypeSimple):
+	def __init__(self, width=0, ti=None):
+		super().__init__(width=width, kind=HLIR_TYPE_KIND_INTEGER, id=Id("Integer"), ops=NUMBER_OPS, ti=ti)
+		self.generic = True
+
+
+class TypeRational(TypeSimple):
+	def __init__(self, ti=None):
+		super().__init__(width=0, kind=HLIR_TYPE_KIND_INTEGER, id=Id("Rational"), ops=NUMBER_OPS, ti=ti)
+		self.generic = True
 
 
 class TypeFunc(Type):

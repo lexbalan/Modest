@@ -29,16 +29,17 @@ type ZX = record {
 }
 
 
-const xx = (1.0 / 333333) * 333333
+const x = Rational 1
+const xx = (x / 333333) * 333333
 
 
 public func main () -> Int32 {
 	printf("xx = %f\n", xx)
-	printf("xx = %d\n", 1)
 
 	// 3.1415926535897932384626433832795028841971693993751058209749445923
 	let f = 3.1415926535897932384626433832795028841971693993751058209749445923
 	var fx: Float64 = (1.0 / 7) * 7
+	printf("fx = %f\n", fx)
 	fx = f / 3
 	fx = f * 2
 	fx = 2

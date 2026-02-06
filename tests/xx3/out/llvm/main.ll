@@ -210,7 +210,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [9 x i8] [i8 120, i8 120, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str2 = private constant [9 x i8] [i8 120, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [9 x i8] [i8 102, i8 120, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 @str3 = private constant [4 x i8] [i8 37, i8 102, i8 10, i8 0]
 ; -- endstrings --
 %ContextHandler = type %Context* (%Context*);
@@ -238,18 +238,19 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*), %Float64 1.0000000000000000)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), %Int32 1)
 
 	; 3.1415926535897932384626433832795028841971693993751058209749445923
-	%3 = alloca %Float64, align 8
-	store %Float64 1.0000000000000000, %Float64* %3
-	store %Float64 1.0471975511965979, %Float64* %3
-	store %Float64 6.2831853071795862, %Float64* %3
-	store %Float64 2.0000000000000000, %Float64* %3
-	%4 = alloca %Float64, align 8
-	store %Float64 0.6666666666666666, %Float64* %4
-	%5 = load %Float64, %Float64* %4
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str3 to [0 x i8]*), %Float64 %5)
+	%2 = alloca %Float64, align 8
+	store %Float64 1.0000000000000000, %Float64* %2
+	%3 = load %Float64, %Float64* %2
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), %Float64 %3)
+	store %Float64 1.0471975511965979, %Float64* %2
+	store %Float64 6.2831853071795862, %Float64* %2
+	store %Float64 2.0000000000000000, %Float64* %2
+	%5 = alloca %Float64, align 8
+	store %Float64 0.6666666666666666, %Float64* %5
+	%6 = load %Float64, %Float64* %5
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str3 to [0 x i8]*), %Float64 %6)
 	ret %Int32 0
 }
 
