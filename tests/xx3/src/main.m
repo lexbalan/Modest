@@ -16,7 +16,6 @@ type X = record {c: *Context}
 
 var p: *Context
 
-
 type Context = @public record {
 	x: Int32 = 32
 	y: Int32 = 32

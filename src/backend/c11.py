@@ -214,31 +214,32 @@ def get_record_tag(x):
 	return None
 
 
-def get_type_id_str(x):
-	if x.is_integer():
-		if x.width == 0:
-			if x.is_unsigned():
+def get_type_id_str(t):
+	if t.is_integer():
+		if t.width == 0:
+			if t.is_unsigned():
 				return 'unsigned int'
 			return 'int'
-		s = 'int%d_t' % x.width
-		if x.is_unsigned():
+		s = 'int%d_t' % t.width
+		if t.is_unsigned():
 			s = 'u' + s
 		return s
 
-	if isinstance(x, TypeRecord):
-		if hasattr(x, 'id'):
-			if hasattr(x.id, 'c_type'):
-				return x.id.c_type
+	if isinstance(t, TypeRecord):
+		if hasattr(t, 'id'):
+			if hasattr(t.id, 'c_type'):
+				return t.id.c_type
 
-			if x.is_open_access:
-				return get_id_prefix(x) + x.id.c
+			if t.is_open_access:
+				return get_id_prefix(t) + t.id.c
 
-		tag = get_record_tag(x)
+		tag = get_record_tag(t)
 		if tag != None:
-			return 'struct ' + tag
+			isa = 'struct' if not t.hasAttribute2('union') else 'union'
+			return isa + ' ' + tag
 
-	if hasattr(x, 'id'):
-		return get_id_prefix(x) + x.id.c
+	if hasattr(t, 'id'):
+		return get_id_prefix(t) + t.id.c
 
 
 def get_id_str(x):
@@ -354,7 +355,7 @@ def str_ctype_func(t, text):
 
 def str_ctype_struct(t, text):
 	nl_end = 0
-	sstr = 'struct%s {' % t['tag']
+	sstr = '%s {' % (t['tag'])
 	indent_up()
 	i = 0
 	nfields = len(t['fields'])
@@ -444,7 +445,8 @@ def do_ctype_struct(t, tag='', specs=[]):
 	for p in t.fields:
 		fields.append(ctype_field(id_str=p.id.str, ctype=do_ctype(p.type), specs=[], nl=p.nl))
 	tag = camel_to_lower_snake(plusSpace(tag))
-	return ctype_struct(fields, specs=specs, tag=tag)
+	isa = 'struct' if not t.hasAttribute2('union') else 'union'
+	return ctype_struct(fields, specs=specs, tag=isa+tag)
 
 
 def do_ctype_named(t, specs):
@@ -2029,10 +2031,12 @@ def print_decl_type(x):
 
 
 def print_decl_type_record(x):
-	tag = get_record_tag(x.type)
-	out("struct %s;\n" % tag)
-	if x.type.is_open_record:
-		out("typedef struct %s %s;\n" % (tag, get_id_str(x.type)))
+	t = x.type
+	tag = get_record_tag(t)
+	isa = 'struct' if not t.hasAttribute2('union') else 'union'
+	out('%s %s;\n' % (isa, tag))
+	if t.is_open_record:
+		out("typedef %s %s %s;\n" % (isa, tag, get_id_str(t)))
 
 
 def print_def_type(x):
@@ -2050,16 +2054,18 @@ def print_def_type(x):
 
 
 def print_def_type_record(x):
-	id_str = get_id_str(x.type)
+	t = x.type
+	id_str = get_id_str(t)
 
 	# Если структура open & не задекларирована ранее - печатаем для нее typedef
-	if (not id_str in declared) and x.type.is_open_record:
-		tag = get_record_tag(x.type)
-		out("\ntypedef struct %s %s;" % (tag, get_id_str(x.type)))
+	if (not id_str in declared) and t.is_open_record:
+		tag = get_record_tag(t)
+		isa = 'struct' if not t.hasAttribute2('union') else 'union'
+		out("\ntypedef %s %s %s;" % (isa, tag, get_id_str(t)))
 
 	out("\n")
-	tag = get_record_tag(x.type)
-	out(str_type_record(x.type, tag=tag))
+	tag = get_record_tag(t)
+	out(str_type_record(t, tag=tag))
 	out(";")
 
 
