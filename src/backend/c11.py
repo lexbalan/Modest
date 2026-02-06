@@ -206,10 +206,7 @@ def get_record_tag(x):
 	tag = None
 	if hasattr(x, 'id'):
 		if hasattr(x.id, 'c') and x.id.c != None:
-			id_str = x.id.c
-			pref = get_id_prefix(x)
-			if pref != '':
-				id_str = pref + id_str
+			id_str = get_id_prefix(x) + x.id.c
 			return camel_to_lower_snake(id_str)
 	else:
 		if hasattr(x, 'c_anon_id'):
