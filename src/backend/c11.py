@@ -214,6 +214,10 @@ def get_record_tag(t):
 
 def get_type_id_str(x):
 	if x.is_integer():
+		if x.width == 0:
+			if x.is_unsigned():
+				return 'unsigned int'
+			return 'int'
 		s = 'int%d_t' % x.width
 		if x.is_unsigned():
 			s = 'u' + s
@@ -1589,9 +1593,7 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	global nl_str
 	out("#define %s%s  " % (prefix, id_str))
 
-	# нельзя оборачивать круглыми скобками литерал массива или структуры
-	# иначе при его прведении по месту к конкретному типу си сойдет с ума
-	need_wrap = False
+
 
 	# Не берем в скобки литералы, композитные значения и строки
 	is_func = value.isValueFunc()
@@ -1602,16 +1604,16 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 
 	is_str = value.type.is_string()
 
+	# нельзя оборачивать круглыми скобками литерал массива или структуры
+	need_wrap = False
 	if not (is_literal or is_agg or is_str or is_const or is_var or is_func):
 		need_wrap = precedence(value) < precedenceMax
 
-	set_nl_symbol(" \\\n")
-	if need_wrap:
-		out('(' + str_initializer(value) + ')')
-	else:
-		out(str_initializer(value))
 
+	set_nl_symbol(" \\\n")
+	out(wrapp(str_initializer(value), cond=need_wrap))
 	set_nl_symbol("\n")
+	#out("/*%s*/" % str(value))
 
 
 def undef(identifier):
