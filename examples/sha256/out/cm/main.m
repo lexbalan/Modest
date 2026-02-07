@@ -48,12 +48,12 @@ func doTest (test: *SHA256_TestCase) -> Bool {
 
 	sha256.hash(msg, msgLen, &test_hash)
 
-	printf("'%s'", *[inputDataLength]Char8 &test.inputData)
+	printf("'%s'", &test.inputData)
 	printf(" -> ")
 
 	var i: Nat32 = 0
 	while i < sha256.hashSize {
-		printf("%02X", Word8 test_hash[i])
+		printf("%02X", test_hash[i])
 		i = i + 1
 	}
 
@@ -76,7 +76,7 @@ public func main () -> Int {
 			res = "passed"
 		}
 
-		printf("test #%i: %s\n", Nat32 i, *Str8 res)
+		printf("test #%i: %s\n", i, res)
 
 		i = i + 1
 	}

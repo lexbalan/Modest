@@ -299,7 +299,7 @@ declare void @perror(%ConstCharStr* %str)
 ]
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-	%2 = alloca %X, align 32
+	%2 = alloca %X, align 4
 	%3 = insertvalue %Point zeroinitializer, %Nat32 10, 0
 	%4 = insertvalue %Point %3, %Nat32 20, 1
 	%5 = insertvalue %X zeroinitializer, %Point %4, 0

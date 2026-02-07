@@ -603,7 +603,7 @@ body_1:
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %8, i8 0, %Nat32 %7, i1 0)
 
 	; Токенизируем строку
-	%9 = alloca %Tokenizer, align 32
+	%9 = alloca %Tokenizer, align 8
 	%10 = bitcast [1024 x %Char8]* %2 to [0 x %Char8]*
 	%11 = insertvalue %Tokenizer zeroinitializer, [0 x %Char8]* %10, 0
 	%12 = bitcast [4096 x %Char8]* @tokensBuf to [0 x %Char8]*

@@ -262,7 +262,6 @@ class Id(Entity):
 		# Такой алиас может быть переопределен без вреда для других принтеров и фронтенда
 		self.str = id_str
 		self.c = id_str
-		self.c_tag = None  # For opaque records only
 		self.llvm = id_str
 		self.cm = id_str
 
@@ -1207,34 +1206,40 @@ class TypeArray(Type):
 		return deps
 
 
+
+def calc_record_size_align(fields):
+	field_no = 0
+	offset = 0
+	record_align = 1
+
+	for field in fields:
+		field.field_no = field_no
+		field_no = field_no + 1
+
+		field_size = field.type.size
+		field_align = field.type.align
+
+		# смещение поля должно быть выровнено
+		# по требуемому для него шагу выравнивания
+		offset = align_to(offset, field_align)
+		field.offset = offset
+		offset = offset + field_size
+
+		# выравнивание структуры - макс выравнивание в ней
+		record_align = max(record_align, field_align)
+
+	# Afterall we need to align record_size to record_align (!)
+	record_size = align_to(offset, record_align)
+	return record_size, record_align
+
+
 class TypeRecord(Type):
 	def __init__(self, fields, generic=False, ti=None):
-		field_no = 0
-		offset = 0
-		record_align = 1
-
-		for field in fields:
-			field.field_no = field_no
-			field_no = field_no + 1
-
-			field_size = field.type.size
-			field_align = field.type.align
-
-			# смещение поля должно быть выровнено
-			# по требуемому для него шагу выравнивания
-			offset = align_to(offset, field_align)
-			field.offset = offset
-			offset = offset + field_size
-
-			# выравнивание структуры - макс выравнивание в ней
-			record_align = max(record_align, field_align)
-
-		# Afterall we need to align record_size to record_align (!)
-		record_size = align_to(offset, record_align)
-
+		record_size, record_align = calc_record_size_align(fields)
 		super().__init__(generic=generic, width=(record_size * 8), ops=REC_OPS, ti=ti)
 		self.incomplete = False
 		self.fields = fields
+		self.align = record_align
 
 		# это структура с открытыми полями -> она идет через typedef в C backend
 		self.is_open_record = False

@@ -216,8 +216,8 @@ declare %Bool @memory_eq(i8* %mem0, i8* %mem1, %Nat64 %len)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca %Object, align 128
-	%3 = alloca %Object, align 128
+	%2 = alloca %Object, align 4
+	%3 = alloca %Object, align 4
 	%4 = insertvalue [32 x %Char8] zeroinitializer, %Char8 74, 0
 	%5 = insertvalue [32 x %Char8] %4, %Char8 111, 1
 	%6 = insertvalue [32 x %Char8] %5, %Char8 104, 2

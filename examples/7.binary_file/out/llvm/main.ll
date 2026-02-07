@@ -237,7 +237,7 @@ then_0:
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = alloca %Chunk, align 2048
+	%6 = alloca %Chunk, align 1
 	%7 = insertvalue [100 x %Char] zeroinitializer, %Char 105, 0
 	%8 = insertvalue [100 x %Char] %7, %Char 100, 1
 	%9 = insertvalue %Chunk zeroinitializer, [100 x %Char] %8, 0
@@ -266,7 +266,7 @@ then_0:
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = alloca %Chunk, align 2048
+	%6 = alloca %Chunk, align 1
 	%7 = bitcast %Chunk* %6 to i8*
 	%8 = call %SizeT @fread(i8* %7, %Size 2048, %SizeT 1, %File* %2)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))

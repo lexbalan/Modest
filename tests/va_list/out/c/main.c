@@ -44,8 +44,8 @@ int main(void) {
 	const uint32_t x = 0x1234567F;
 
 	my_printf("\x0\x0\n");
-	my_printf("c = '%c'\n", (const char)c);
-	my_printf("s = \"%s\"\n", (char*)s);
+	my_printf("c = '%c'\n", c);
+	my_printf("s = \"%s\"\n", s);
 	my_printf("i = %i\n", i);
 	my_printf("n = %i\n", n);
 	my_printf("x = 0x%x\n", x);

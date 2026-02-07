@@ -561,14 +561,14 @@ define internal %Bool @test_generic_record() {
 
 	; implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32}
-	%4 = alloca %Point2D, align 8
+	%4 = alloca %Point2D, align 4
 	%5 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
 	%6 = insertvalue %Point2D %5, %Int32 20, 1
 	store %Point2D %6, %Point2D* %4
 
 	; explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32, z: Int32}
-	%7 = alloca %Point3D, align 16
+	%7 = alloca %Point3D, align 4
 	%8 = insertvalue %Point3D zeroinitializer, %Int32 10, 0
 	%9 = insertvalue %Point3D %8, %Int32 20, 1
 	store %Point3D %9, %Point3D* %7

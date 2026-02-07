@@ -407,11 +407,11 @@ else_0:
 endif_0:
 
 	; compare two Point2D records
-	%6 = alloca %Point2D, align 8
+	%6 = alloca %Point2D, align 4
 	%7 = insertvalue %Point2D zeroinitializer, %Nat32 1, 0
 	%8 = insertvalue %Point2D %7, %Nat32 2, 1
 	store %Point2D %8, %Point2D* %6
-	%9 = alloca %Point2D, align 8
+	%9 = alloca %Point2D, align 4
 	%10 = insertvalue %Point2D zeroinitializer, %Nat32 10, 0
 	%11 = insertvalue %Point2D %10, %Nat32 20, 1
 	store %Point2D %11, %Point2D* %9
@@ -431,13 +431,13 @@ endif_1:
 
 
 	; compare Point2D with anonymous record
-	%18 = alloca %Point2D, align 8
+	%18 = alloca %Point2D, align 4
 ; -- cons_composite_from_composite_by_adr --
 	%19 = bitcast %Point2D* %6 to %Point2D*
 	%20 = load %Point2D, %Point2D* %19
 ; -- end cons_composite_from_composite_by_adr --
 	store %Point2D %20, %Point2D* %18	; record assignation
-	%21 = alloca {%Nat32,%Nat32}, align 8
+	%21 = alloca {%Nat32,%Nat32}, align 4
 	%22 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
 	%23 = insertvalue {%Nat32,%Nat32} %22, %Nat32 2, 1
 	store {%Nat32,%Nat32} %23, {%Nat32,%Nat32}* %21
@@ -463,7 +463,7 @@ endif_2:
 
 
 	; comparison between two anonymous record
-	%33 = alloca {%Nat32,%Nat32}, align 8
+	%33 = alloca {%Nat32,%Nat32}, align 4
 	%34 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
 	%35 = insertvalue {%Nat32,%Nat32} %34, %Nat32 2, 1
 	store {%Nat32,%Nat32} %35, {%Nat32,%Nat32}* %33

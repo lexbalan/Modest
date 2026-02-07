@@ -358,7 +358,7 @@ define %fsm_ComplexState @fsm_cmdSwitchStage(%fsm_FSM* %self, %Word16 %stage) {
 	store %Nat32 0, %Nat32* %1
 	%2 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 5
 	store %Bool 0, %Bool* %2
-	%3 = alloca %fsm_ComplexState, align 16
+	%3 = alloca %fsm_ComplexState, align 8
 	%4 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 1
 ; -- cons_composite_from_composite_by_adr --
 	%5 = bitcast %fsm_ComplexState* %4 to %fsm_ComplexState*
@@ -392,7 +392,7 @@ define %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* %self) {
 	%9 = bitcast %fsm_StageId %8 to %Nat16
 	%10 = add %Nat16 %9, 1
 	;assert(nextStageIndex < state.state.nstages)
-	%11 = alloca %fsm_ComplexState, align 16
+	%11 = alloca %fsm_ComplexState, align 8
 ; -- cons_composite_from_composite_by_adr --
 	%12 = bitcast %fsm_ComplexState* %6 to %fsm_ComplexState*
 	%13 = load %fsm_ComplexState, %fsm_ComplexState* %12
@@ -423,7 +423,7 @@ define %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* %self, %Nat32 %t) {
 	%8 = bitcast %fsm_StageId %7 to %Nat16
 	%9 = add %Nat16 %8, 1
 	;assert(nextStageIndex < state.state.nstages)
-	%10 = alloca %fsm_ComplexState, align 16
+	%10 = alloca %fsm_ComplexState, align 8
 ; -- cons_composite_from_composite_by_adr --
 	%11 = bitcast %fsm_ComplexState* %5 to %fsm_ComplexState*
 	%12 = load %fsm_ComplexState, %fsm_ComplexState* %11

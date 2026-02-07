@@ -376,7 +376,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*))
-	%4 = alloca %SockAddrIn, align 16
+	%4 = alloca %SockAddrIn, align 4
 	%5 = insertvalue %SockAddrIn zeroinitializer, %Nat8 2, 1
 	%6 = insertvalue %SockAddrIn %5, %UnsignedShort 8080, 2
 	%7 = call %InAddrT @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str3 to [0 x i8]*))

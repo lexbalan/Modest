@@ -315,9 +315,9 @@ define %Int @main() {
 
 	; copy records by value
 	; C backend will be use memcpy()
-	%48 = alloca %Point, align 8
+	%48 = alloca %Point, align 4
 	store %Point zeroinitializer, %Point* %48
-	%49 = alloca %Point, align 8
+	%49 = alloca %Point, align 4
 	%50 = insertvalue %Point zeroinitializer, %Int32 10, 0
 	%51 = insertvalue %Point %50, %Int32 20, 1
 	store %Point %51, %Point* %49

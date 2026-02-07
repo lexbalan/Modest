@@ -25,19 +25,19 @@ int main(void) {
 	// current control terminal
 	char cterm[128];
 	ctermid(cterm);
-	printf("ctermid = %s\n", (char*)cterm);
+	printf("ctermid = %s\n", cterm);
 
 	// current working directory
 	char cwd[128];
 	getcwd(cwd, (size_t)LENGTHOF(cwd));
-	printf("cwd = %s\n", (char*)cwd);
+	printf("cwd = %s\n", cwd);
 
 	char *const tty = ttyname(0);
-	printf("ttyname = %s\n", (char*)tty);
+	printf("ttyname = %s\n", tty);
 
 
 	char *const s = getenv("PATH");
-	printf("PATH = %s\n", (char*)s);
+	printf("PATH = %s\n", s);
 
 	while (true) {
 		printf("- hi\n");

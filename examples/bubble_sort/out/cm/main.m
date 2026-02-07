@@ -53,7 +53,7 @@ func print_array (array: *[]Int32, len: Nat32) -> Unit {
 	printf("\n")
 	var i: Nat32 = 0
 	while i < len {
-		printf("array[%i] = %i\n", Nat32 i, Int32 array[i])
+		printf("array[%i] = %i\n", i, array[i])
 		i = i + 1
 	}
 }

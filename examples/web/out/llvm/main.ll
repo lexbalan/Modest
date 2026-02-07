@@ -403,7 +403,7 @@ then_0:
 	call void @exit(%Int 1)
 	br label %endif_0
 endif_0:
-	%3 = alloca %SockAddrIn, align 16
+	%3 = alloca %SockAddrIn, align 4
 	%4 = insertvalue %SockAddrIn zeroinitializer, %Nat8 2, 1
 	%5 = bitcast i16 8080 to %Word16
 	%6 = call %Word16 @htons(%Word16 %5)
@@ -448,7 +448,7 @@ endif_2:
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%20 = alloca %SockAddrIn, align 16
+	%20 = alloca %SockAddrIn, align 4
 	%21 = bitcast %SockAddrIn* %20 to %SockAddr*
 	%22 = alloca %SocklenT, align 4
 	store %SocklenT 16, %SocklenT* %22

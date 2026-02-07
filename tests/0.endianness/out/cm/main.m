@@ -15,7 +15,7 @@ public func main () -> Int {
 		kind = "big"
 	}
 
-	printf("%s-endian\n", *Str8 kind)
+	printf("%s-endian\n", kind)
 
 	return 0
 }

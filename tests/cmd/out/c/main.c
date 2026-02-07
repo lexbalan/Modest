@@ -111,7 +111,7 @@ static void tokenize(struct tokenizer *tokenizer) {
 
 
 static void execute(char *cmd, uint16_t argc, char *(*argv)[]) {
-	printf("%s (n=%d)", (char*)cmd, argc);
+	printf("%s (n=%d)", cmd, argc);
 	printf(" [");
 	uint32_t i = 0;
 	while (true) {
@@ -119,7 +119,7 @@ static void execute(char *cmd, uint16_t argc, char *(*argv)[]) {
 		if (ptok == NULL) {
 			break;
 		}
-		printf("'%s'", (char*)ptok);
+		printf("'%s'", ptok);
 		i = i + 1;
 	}
 	printf("]\n");

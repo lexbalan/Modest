@@ -16,7 +16,7 @@
 #define TEST  "test"
 
 int main(void) {
-	printf("%s\n", (char*)GREETING);
+	printf("%s\n", GREETING);
 
 	if (true) {
 		printf("test ok.\n");

@@ -78,10 +78,10 @@ int main(void) {
 	const float lines_2_len = lineLength(((const struct line [4])LINES)[2]);
 	const float lines_3_len = lineLength(((const struct line [4])LINES)[3]);
 
-	printf("lines_0_len = %f\n", (const float)lines_0_len);
-	printf("lines_1_len = %f\n", (const float)lines_1_len);
-	printf("lines_2_len = %f\n", (const float)lines_2_len);
-	printf("lines_3_len = %f\n", (const float)lines_3_len);
+	printf("lines_0_len = %f\n", lines_0_len);
+	printf("lines_1_len = %f\n", lines_1_len);
+	printf("lines_2_len = %f\n", lines_2_len);
+	printf("lines_3_len = %f\n", lines_3_len);
 
 	//	let y = wa.x
 

@@ -10,7 +10,7 @@ public func main () -> Int {
 	let b: Nat32 = 10
 
 	while a < b {
-		printf("a = %d\n", Nat32 a)
+		printf("a = %d\n", a)
 		a = a + 1
 	}
 

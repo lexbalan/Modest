@@ -52,7 +52,7 @@ static bool doTest(struct sha256_test_case *test) {
 
 	sha256_hash(msg, msgLen, &test_hash);
 
-	printf("'%s'", (char*)test->inputData);
+	printf("'%s'", test->inputData);
 	printf(" -> ");
 
 	uint32_t i = 0;
@@ -80,7 +80,7 @@ int main(void) {
 			res = "passed";
 		}
 
-		printf("test #%i: %s\n", i, (char*)res);
+		printf("test #%i: %s\n", i, res);
 
 		i = i + 1;
 	}

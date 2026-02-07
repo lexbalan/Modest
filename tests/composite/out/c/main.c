@@ -228,7 +228,7 @@ static void he(He *x) {
 
 
 static void hi(char *x) {
-	printf("Hi %s!\n", (char*)x);
+	printf("Hi %s!\n", x);
 }
 
 

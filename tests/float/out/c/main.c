@@ -35,21 +35,21 @@ int main(void) {
 	printf("float test\n");
 
 	printf("2 = %d\n", 2);
-	printf("2/3 = %f\n", (double)(double)(2.0 / 3.0));
+	printf("2/3 = %f\n", (double)(2.0 / 3.0));
 
 	#define r  10
 	const double s = squareOfCircle((double)r);
-	printf("s = %f\n", (const double)s);
+	printf("s = %f\n", s);
 
 	#define k  (1.0 / 8.0)
-	printf("k = %f\n", (double)(double)k);
+	printf("k = %f\n", (double)k);
 
 	printf("sizeof(Float32) = %zu\n", sizeof(float));
 	printf("sizeof(Float64) = %zu\n", sizeof(double));
 
 	// printf %f ожидает получить double а не float!
 	const float sl = slope((struct point2_d){.x = 10, .y = 20}, (struct point2_d){.x = 30, .y = 50});
-	printf("slope = %f\n", (double)(double)sl);
+	printf("slope = %f\n", (double)sl);
 
 	return 0;
 

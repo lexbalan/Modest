@@ -21,7 +21,7 @@ int main(void) {
 
 	const uint32_t crc = crc32_run(&data, (uint32_t)LENGTHOF(data));
 
-	printf("crc32.doHash(\"%s\") = %08X\n", (char*)DATASTRING, crc);
+	printf("crc32.doHash(\"%s\") = %08X\n", DATASTRING, crc);
 
 	if (crc == EXPECTED_HASH) {
 		printf("test passed\n");
