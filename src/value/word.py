@@ -23,9 +23,9 @@ def _value_word_cons_immediate(t, v, method, ti):
 
 	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-	nv.asset = v.asset
+	nv.set_asset(v.asset)
 	if v.type.is_signed():
-		nv.asset = int_zext(v.asset, v.type.width, t.width)
+		nv.set_asset(int_zext(v.asset, v.type.width, t.width))
 
 	return nv
 

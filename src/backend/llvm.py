@@ -410,7 +410,10 @@ def print_rational(x):
 	type = x['type']
 	if type.is_rational():
 		return out(str_fractional(asset))
-	out("%.16f" % asset)
+	# LLVM имеет дурацкую особенность - даже если создаешь float32,
+	# ты должен передать ему float64 константу, которую он сам обрежет
+	# а float32 литерал он не принимает принципиально
+	out("%.16f" % float(asset))
 
 
 def llvm_print_value_num(x):

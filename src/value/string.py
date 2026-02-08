@@ -23,7 +23,7 @@ def value_string_add(l, r, ti):
 	#type_result = type_string_create(max_char_width, len(asset), ti)
 	type_result = type_string_create(max_char_width, len(asset), ti)
 	nv = ValueBin(type_result, HLIR_VALUE_OP_ADD, l, r, ti=ti)
-	nv.asset = asset
+	nv.set_asset(asset)
 	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 	return nv
 

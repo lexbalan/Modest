@@ -617,14 +617,14 @@ def do_value_shift(x):
 		if left.isValueImmediate() and right.isValueImmediate():
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			if left.asset != None and right.asset != None:
-				nv.asset = int(left.asset << right.asset)
+				nv.set_asset(int(left.asset << right.asset))
 
 	else: #if op == HLIR_VALUE_OP_SHR:
 		nv = ValueShr(left.type, left, right, ti=x['ti'])
 		if left.isValueImmediate() and right.isValueImmediate():
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			if left.asset != None and right.asset != None:
-				nv.asset = int(left.asset >> right.asset)
+				nv.set_asset(int(left.asset >> right.asset))
 
 	return nv
 
@@ -736,11 +736,11 @@ def do_value_bin_op(op, l, r, ti):
 #				if not (t.is_rational() or t.is_float()):
 #					asset = l.asset // r.asset
 
-			if l.type.is_generic() and r.type.is_generic():
-				if t.is_integer():
-					nv.type = type_integer_for(int(asset), ti=ti)
+			if t.is_integer():
+				# generic тип, обновим тк разрядность могла измениться
+				nv.type = type_integer_for(int(asset), ti=ti)
 
-			nv.asset = asset
+			nv.set_asset(asset)
 
 	return nv
 
@@ -768,9 +768,9 @@ def do_value_not(x):
 		if v.asset != None:  # for ValueUndef
 			# because: ~(1) = -1 (not 0) !
 			if v.type.is_bool():
-				nv.asset = not v.asset
+				nv.set_asset(not v.asset)
 			else:
-				nv.asset = ~v.asset
+				nv.set_asset(~v.asset)
 
 
 	return nv
@@ -798,13 +798,13 @@ def do_value_neg(x):
 	if v.isValueImmediate():
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		if v.asset != None:  # for ValueUndef
-			nv.asset = -v.asset
+			nv.set_asset(-v.asset)
 
 		if nv.type.is_generic():
 			if isinstance(v.asset, int):
 				nv.type = type_integer_for(v.asset, ti=v.ti)
 			else:
-				nv.type = type_rational_create(v.asset, ti=v.ti)
+				nv.type = type_rational_create(ti=v.ti)
 
 	return nv
 
@@ -825,7 +825,7 @@ def do_value_pos(x):
 	if v.isValueImmediate():
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		if v.asset != None:  # for ValueUndef
-			nv.asset = +v.asset
+			nv.set_asset(+v.asset)
 
 	if nv.type.is_generic():
 		if isinstance(v.asset, int):
@@ -1121,9 +1121,9 @@ def do_value_call(x):
 			if not nv.type.is_unit():
 				nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 				if nv.type.is_aggregate():
-					nv.asset = []
+					nv.set_asset([])
 				else:
-					nv.asset = 0
+					nv.set_asset(0)
 
 
 	# (!) Вызов функцией нечистой функции делает ее так же нечистой (!)
@@ -1145,7 +1145,7 @@ def ct_call(fn, args, ti):
 		param = params[i]
 		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
 		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
-		param_value.asset = args[i].value.asset  # (!)
+		param_value.set_asset(args[i].value.asset)  # (!)
 		ctx_value_add(param.id.str, param_value, is_public=False)
 		i += 1
 
@@ -2992,7 +2992,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 
 def cp_immediate(to, _from):
 	if _from.asset != None:
-		to.asset = _from.asset
+		to.set_asset(_from.asset)
 
 	to.is_immutable = _from.is_immutable
 	to.stage = _from.stage

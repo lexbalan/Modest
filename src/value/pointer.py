@@ -88,7 +88,7 @@ def value_pointer_cons(t, v, method, ti):
 			return nv
 
 		else:
-			nv.asset = v.asset
+			nv.set_asset(v.asset)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			return nv
 

@@ -9,16 +9,16 @@
 
 
 struct context;
-typedef struct context Context;
+typedef struct context CTX;
 
 
-typedef Context *ContextHandler(Context *x);
+typedef CTX *ContextHandler(CTX *x);
 
 
 
 
 struct x {
-	Context *c;
+	CTX *c;
 };
 
 // си не позволяет создавать укзаатель на массив с элементами неполного типа
@@ -28,7 +28,7 @@ struct x {
 
 
 
-static Context *p;
+static CTX *p;
 
 
 struct zx;
@@ -46,19 +46,25 @@ struct context {
 
 struct zx {
 	int32_t x;
-	Context c;
+	CTX c;
 	ContextHandler *f;
 	struct zx *pz;
 };
 
 typedef struct zx ZZ;
 
+static DIR *dir;
+
+void main_init(DIR *d) {
+}
+
+
 #define X  1.5
 #define XX  ((X / 333333.0) * 333333.0)
 #define Y  ((int)X)
 
 int32_t main(void) {
-	Context c;
+	CTX c;
 	struct zx x;
 	ZZ z;
 
@@ -68,12 +74,12 @@ int32_t main(void) {
 	// 3.1415926535897932384626433832795028841971693993751058209749445923
 	#define f  3.1415926535897932384626433832795028841971693993751058209749445923
 	double fx = (double)(1.0 / 7.0) * 7.0;
-	printf("fx = %f\n", (double)fx);
+	printf("fx = %f\n", fx);
 	fx = (double)f / 3.0;
 	fx = (double)f * 2.0;
 	fx = 2.0;
 	double k = (double)(2.0 / 3.0);
-	printf("%f\n", (double)k);
+	printf("%f\n", k);
 	return 0;
 
 #undef f

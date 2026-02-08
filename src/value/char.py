@@ -48,12 +48,12 @@ def value_char_cons(t, v, method, ti):
 			c = v.asset[0]
 		else:
 			error("expected not empty string", ti)
-		nv.asset = ord(c)  # char code
+		nv.set_asset(ord(c))  # char code
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
 
 	if v.isValueImmediate():
-		nv.asset = v.asset
+		nv.set_asset(v.asset)
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
 

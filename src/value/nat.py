@@ -2,7 +2,7 @@
 from hlir import *
 from error import info, warning, error
 from type import type_print
-from util import nbits_for_num, int_zext
+from util import nbits_for_num
 
 
 warning_cast_data_loss = True
@@ -17,7 +17,7 @@ def _check_width(from_type, t, method, ti):
 	if from_type.width > t.width:
 		#info("%s" % method, ti)
 		if method != 'unsafe':
-			error("value cons with potential data loss", ti)
+			warning("value cons with potential data loss", ti)
 			rv = False
 
 		elif warning_cast_data_loss:
@@ -46,7 +46,7 @@ def _value_nat_cons_immediate(t, v, method, ti):
 		error("natural overflow", ti)
 
 	nv = ValueCons(t, v, method, ti=ti)
-	nv.asset = a
+	nv.set_asset(a)
 	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 	return nv
 
@@ -54,13 +54,14 @@ def _value_nat_cons_immediate(t, v, method, ti):
 
 def nat_can(to, from_type, method, ti):
 	if Type.is_integer(from_type):
-		return from_type.width <= to.width
+		return True
+#		return from_type.width <= to.width
 
 	if method == 'implicit':
 		return False
 
-	if Type.is_float(from_type):
-		return True
+	#if Type.is_float(from_type):
+	#	return True
 
 	# explicit or unsafe cons method
 	c0 = Type.is_integer(from_type)
@@ -73,6 +74,7 @@ def nat_can(to, from_type, method, ti):
 	if c0 or c1 or c2 or c3 or c4 or c5:
 		if method == 'unsafe':
 			return True
+		return True
 		return to.width >= from_type.width
 
 	if method != 'unsafe':
@@ -96,11 +98,11 @@ def value_nat_cons(t, v, method, ti):
 
 	nv = ValueCons(t, v, method, ti=ti)
 	if v.isValueImmediate():
-		_check_width(v.type, t, method, ti)
 		if method != 'implicit':
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			if v.asset != None:  # asset can be None in case of undefined value (!)
-				nv.asset = abs(int(v.asset))  # here can be float
+				a = abs(int(v.asset))
+				nv.set_asset(a)  # here can be float
 			return nv
 
 		return _value_nat_cons_immediate(t, v, method, ti)

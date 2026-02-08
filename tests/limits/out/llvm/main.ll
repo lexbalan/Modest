@@ -140,6 +140,21 @@ break_2:
 %PIDT = type %Int32;
 %UIDT = type %Nat32;
 %GIDT = type %Nat32;
+; from included stdlib
+declare void @abort()
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
+declare i8* @calloc(%SizeT %num, %SizeT %size)
+declare void @exit(%Int %x)
+declare void @free(i8* %ptr)
+declare %Str* @getenv(%Str* %name)
+declare %LongInt @labs(%LongInt %x)
+declare %Str* @secure_getenv(%Str* %name)
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
 ; from included stdio
 %File = type {
 };
@@ -195,71 +210,191 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [19 x i8] [i8 98, i8 105, i8 103, i8 48, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
-@str2 = private constant [19 x i8] [i8 98, i8 105, i8 103, i8 49, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
-@str3 = private constant [19 x i8] [i8 98, i8 105, i8 103, i8 51, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
-@str4 = private constant [22 x i8] [i8 98, i8 105, i8 103, i8 95, i8 115, i8 117, i8 109, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
-@str5 = private constant [13 x i8] [i8 115, i8 105, i8 103, i8 49, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
+@str1 = private constant [24 x i8] [i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 115, i8 10, i8 0]
 ; -- endstrings --
-@big0 = internal global %Word128 1512366075204170947332355369683137040
-define internal %Word64 @high_128(%Word128 %x) {
-	%1 = zext i8 64 to %Word128
-	%2 = lshr %Word128 %x, %1
-	%3 = trunc %Word128 %2 to %Word64
-	ret %Word64 %3
-}
-
-define internal %Word64 @low_128(%Word128 %x) {
-	%1 = and %Word128 %x, 18446744073709551615
-	%2 = trunc %Word128 %1 to %Word64
-	ret %Word64 %2
-}
-
-define %Int @main() {
-	%1 = alloca %Word128, align 16
-	store %Word128 1, %Word128* %1
-	%2 = alloca %Nat32, align 4
-	store %Nat32 1, %Nat32* %2
-	%3 = alloca %Nat128, align 16
-	%4 = load %Nat32, %Nat32* %2
-	%5 = zext %Nat32 %4 to %Nat128
-	%6 = add %Nat128 340282366920938463463374607431768211455, %5
-	%7 = add %Nat128 340282366920938463463374607431768211455, %6
-	store %Nat128 %7, %Nat128* %3
-	%8 = load %Word128, %Word128* @big0
-	%9 = call %Word64 @high_128(%Word128 %8)
-	%10 = load %Word128, %Word128* @big0
-	%11 = call %Word64 @low_128(%Word128 %10)
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*), %Word64 %9, %Word64 %11)
-	%13 = call %Word64 @high_128(%Word128 340282366920938463463374607431768211455)
-	%14 = call %Word64 @low_128(%Word128 340282366920938463463374607431768211455)
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*), %Word64 %13, %Word64 %14)
-	;printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2))
-	%16 = load %Word128, %Word128* %1
-	%17 = call %Word64 @high_128(%Word128 %16)
-	%18 = load %Word128, %Word128* %1
-	%19 = call %Word64 @low_128(%Word128 %18)
-	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str3 to [0 x i8]*), %Word64 %17, %Word64 %19)
-	%21 = load %Nat128, %Nat128* %3
-	%22 = bitcast %Nat128 %21 to %Word128
-	%23 = call %Word64 @high_128(%Word128 %22)
-	%24 = load %Nat128, %Nat128* %3
-	%25 = bitcast %Nat128 %24 to %Word128
-	%26 = call %Word64 @low_128(%Word128 %25)
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str4 to [0 x i8]*), %Word64 %23, %Word64 %26)
 
 
-	; signed big int test
-	%28 = sub i8 0, 1
-	%29 = alloca %Int128, align 16
-	store %Int128 -1, %Int128* %29
-	%30 = load %Int128, %Int128* %29
-	%31 = add %Int128 %30, 1
-	store %Int128 %31, %Int128* %29
-	%32 = load %Int128, %Int128* %29
-	%33 = trunc %Int128 %32 to %Nat64
-	%34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*), %Nat64 %33)
-	ret %Int 0
+;const float32Max       = Float32 3.4028234663852886e+38
+;const float32MinNormal = Float32 1.1754943508222875e-38
+;const float32MinSub    = Float32 1.401298464324817e-45
+;const float32Epsilon   = Float32 1.1920928955078125e-7
+;
+;const float32PosInf    = Float32 (1.0 / 0.0)
+;const float32NaN       = Float32 (0.0 / 0.0)
+;const float32NegInf    = Float32 (-1.0 / 0.0)
+
+;
+;
+;func assert(cond: Bool, msg: *Str8) {
+;    if not cond {
+;        printf("ASSERT FAILED: %s\n", msg)
+;        abort()
+;    }
+;}
+;
+;
+;// ------------------------------------------------------------
+;// Signed integers
+;// ------------------------------------------------------------
+;
+;func test_Int8 () -> Unit {
+;    let min = Int8 -128
+;    let max = Int8 127
+;
+;    assert(min < Int8 0, "Int8 min < 0")
+;    assert(max > Int8 0, "Int8 max > 0")
+;
+;    assert(Int8 -1 < Int8 0, "Int8 sign")
+;    assert(Int8 1 > Int8 0, "Int8 positive")
+;
+;    // wrap tests (если у тебя defined wrap semantics)
+;//	printf("?? = %lld\n", Int64 (max + Int8 1))
+;    assert(Int8 (max + Int8 1) == min, "Int8 overflow up")
+;    assert(Int8 (min - Int8 1) == max, "Int8 overflow down")
+;}
+;
+;
+;func test_Int16 () -> Unit {
+;    let min = Int16 -32768
+;    let max = Int16 32767
+;
+;    assert(Int16 (max + Int16 1) == min, "Int16 overflow up")
+;    assert(Int16 (min - Int16 1) == max, "Int16 overflow down")
+;}
+;
+;
+;func test_Int32 () -> Unit {
+;    let min = Int32 -2147483648
+;    let max = Int32 2147483647
+;
+;    assert(Int32 (max + Int32 1) == min, "Int32 overflow up")
+;    assert(Int32 (min - Int32 1) == max, "Int32 overflow down")
+;}
+;
+;
+;func test_Int64 () -> Unit {
+;    let min = Int64 -9223372036854775808
+;    let max = Int64 9223372036854775807
+;
+;    assert(Int64 (max + Int64 1) == min, "Int64 overflow up")
+;    assert(Int64 (min - Int64 1) == max, "Int64 overflow down")
+;}
+;
+;
+;// ------------------------------------------------------------
+;// Unsigned integers
+;// ------------------------------------------------------------
+;
+;func test_Nat8 () -> Unit {
+;    let max = Nat8 255
+;
+;    assert(Nat8 0 == Nat8 (max + Nat8 1), "Nat8 overflow up")
+;}
+;
+;func test_Nat16 () -> Unit {
+;    let max = Nat16 65535
+;
+;    assert(Nat16 0 == Nat16 (max + Nat16 1), "Nat16 overflow up")
+;}
+;
+;func test_Nat32 () -> Unit {
+;    let max = Nat32 4294967295
+;
+;    assert(Nat32 0 == Nat32 (max + Nat32 1), "Nat32 overflow up")
+;}
+;
+;func test_Nat64 () -> Unit {
+;    let max = Nat64 18446744073709551615
+;
+;    assert(Nat64 0 == Nat64 (max + Nat64 1), "Nat64 overflow up")
+;}
+;
+;
+;// ------------------------------------------------------------
+;// Float32
+;// ------------------------------------------------------------
+;
+;func test_Float32 () -> Unit {
+;
+;    let zero = Float32 0.0
+;    let one = Float32 1.0
+;    let minus_one = Float32 -1.0
+;
+;    assert(one > zero, "Float32 positive")
+;    assert(minus_one < zero, "Float32 negative")
+;
+;    // Проверка деления
+;    assert(one / one == one, "Float32 division")
+;
+;    // Infinity
+;//    let inf = one / zero
+;//    assert(inf > one, "Float32 +inf")
+;//
+;//    // NaN
+;//    let nan = zero / zero
+;//    assert(not(nan == nan), "Float32 NaN")
+;}
+;
+;
+;// ------------------------------------------------------------
+;// Float64
+;// ------------------------------------------------------------
+;
+;func test_Float64 () -> Unit {
+;
+;    let zero = Float64 0.0
+;    let one = Float64 1.0
+;
+;//    let inf = one / zero
+;//    assert(inf > one, "Float64 +inf")
+;//
+;//    let nan = zero / zero
+;//    assert(not(nan == nan), "Float64 NaN")
+;}
+;
+;
+
+; ------------------------------------------------------------
+; Entry
+; ------------------------------------------------------------
+define %Int32 @main() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str1 to [0 x i8]*))
+	%2 = alloca %Float32, align 4
+	store %Float32 3.1415927410125732, %Float32* %2
+	%3 = alloca %Float64, align 8
+	store %Float64 3.1415926535897931, %Float64* %3
+
+	;	let n8 = Nat8 (_nat8Max + 1)
+	;	printf("n8 = %i\n", Word32 n8)
+	;
+	;	let n16 = Nat16 (_nat16Max + 1)
+	;	printf("n16 = %u\n", Word32 n16)
+	;
+	;	let n32 = Nat32 (_nat32Max + 1)
+	;	printf("n32 = %u\n", Word32 n32)
+	;
+	;	let n64 = Nat64 (_nat64Max + 1)
+	;	printf("n64 = %llu\n", Word64 n64)
+
+
+	;	let i8 = Nat8 (127 + 1)
+	;	printf("i8 = %i\n", i8)
+
+	;    test_Int8()
+	;    test_Int16()
+	;    test_Int32()
+	;    test_Int64()
+	;
+	;    test_Nat8()
+	;    test_Nat16()
+	;    test_Nat32()
+	;    test_Nat64()
+	;
+	;    test_Float32()
+	;    test_Float64()
+	;
+	;    printf("OK\n")
+	ret %Int32 0
 }
 
 

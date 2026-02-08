@@ -101,7 +101,7 @@ def value_record_cons(t, v, method, ti):
 			ni.nl = nl
 			items.append(ni)
 
-		nv.asset = items
+		nv.set_asset(items)
 
 	return nv
 
@@ -124,7 +124,7 @@ def value_record_eq(l, r, op, ti):
 		if op == HLIR_VALUE_OP_NE:
 			eq_result = not eq_result
 
-		nv.asset = int(eq_result)
+		nv.set_asset(int(eq_result))
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	return nv

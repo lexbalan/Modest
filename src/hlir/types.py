@@ -3,6 +3,20 @@ import copy
 from util import *
 
 
+#
+# Проблема - numpy единственный кто может обеспечить должные float32 & float64
+# но он грузится чертовски медленно, и приходиться делать вот так, чтобы лишний раз его не загружать
+#
+_np_cache = None
+
+# numpy() only by request (because it is too heavy)
+def get_np():
+    global _np_cache
+    if _np_cache is None:
+        import numpy as _np_cache
+    return _np_cache
+
+
 
 class TokenInfo:
 	def __init__(self, source, fpos, line, lpos, spaces, tabs, length):
@@ -1310,6 +1324,26 @@ class Value(Entity):
 		self.nl = 0
 
 
+	# Нормализует и присваивает asset (согласно типу значения)
+	def set_asset(self, a):
+		t = self.type
+		if not t.is_generic():
+			#print("WIDTH=%d" % t.width)
+			if t.is_int():
+				a = pack_int(a, width=t.width, signed=True)
+			elif t.is_nat() or t.is_word():
+				a = pack_int(a, width=t.width, signed=False)
+			elif t.is_float():
+				# numpy капец как замедляет компиляцию своей долгой загрузкой
+				# но он пока лучший в плвне создания floatXX
+				if t.width == 32:
+					a = get_np().float32(a)
+				elif t.width == 64:
+					a = get_np().float64(a)
+			#print("A = %s" % str(a))
+		self.asset = a
+
+
 	def hasAttribute(self, a):
 		return a in self.att or self.type.hasAttribute2(a)
 
@@ -1586,7 +1620,7 @@ class ValueLiteral(Value):
 		if type.is_array():
 			1/0
 		super().__init__(type=type, ti=ti)
-		self.asset = asset
+		self.set_asset(asset)
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.nsigns = 0
 
@@ -1595,7 +1629,7 @@ class ValueArray(Value):
 	def __init__(self, type, items, ti=None):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
-		self.asset = items
+		self.set_asset(items)
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.nsigns = 0
 
@@ -1604,7 +1638,7 @@ class ValueRecord(Value):
 	def __init__(self, type, initializers, ti=None):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
-		self.asset = initializers
+		self.set_asset(initializers)
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.nsigns = 0
 
@@ -1842,7 +1876,7 @@ class ValueSizeofType(Value):
 		self.of = of
 		if not of.is_vla():
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
-			self.asset = of.size
+			self.set_asset(of.size)
 		else:
 			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
@@ -1855,7 +1889,7 @@ class ValueSizeofValue(Value):
 		self.of = value
 		if not value.type.is_vla():
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
-			self.asset = value.type.size
+			self.set_asset(value.type.size)
 		else:
 			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
@@ -1879,7 +1913,7 @@ class ValueLengthof(Value):
 			type = type_integer_for(length, ti=ti)
 		super().__init__(type=type, ti=ti)
 		if not value.type.is_vla():
-			self.asset = length
+			self.set_asset(length)
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 		self.value = value
@@ -1893,7 +1927,7 @@ class ValueAlignof(Value):
 		super().__init__(type=typeSysSize, ti=ti)
 		self.of = of
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
-		self.asset = align
+		self.set_asset(align)
 
 
 
@@ -1911,7 +1945,7 @@ class ValueOffsetof(Value):
 		super().__init__(type=type, ti=ti)
 		self.field = field_id
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
-		self.asset = offset
+		self.set_asset(offset)
 
 
 

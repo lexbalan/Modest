@@ -1,6 +1,7 @@
 
-
+import struct
 from decimal import Decimal
+from fractions import Fraction
 
 
 def align_to(x, y):
@@ -85,39 +86,6 @@ def int_zext(x, width_from, width_to):
 
 
 
-# принимает на вход Decimal, int, etc.
-# возвращает 32 или 64 битное представление float числа
-def val_to_float(val, width):
-	import struct
-	z = None
-	if width <= 32:
-		z = struct.unpack('<f', struct.pack('<f', val))[0]
-	elif width <= 64:
-		z = struct.unpack('<d', struct.pack('<d', val))[0]
-	return z
-
-
-def fractional_to_decimal(f):
-	#print(f.__class__)
-	#print(f.numerator)
-	#print(f.denominator)
-	from fractions import Fraction
-	assert(isinstance(f, Fraction) or isinstance(f, int))
-	return Decimal(f.numerator) / Decimal(f.denominator)
-
-
-def decimal_to_str(d: Decimal, max_frac=None):
-	s = format(d, 'f')
-	# remove zero tail
-	i = len(s) - 1
-	while True:
-		if s[i] == '0':
-			i -= 1
-		else:
-			i += 2
-			break
-	return s[0:i]
-
 
 
 def str_always_float(s):
@@ -128,6 +96,77 @@ def str_always_float(s):
 
 def str_fractional(x):
 	return str_always_float(decimal_to_str(fractional_to_decimal(x)))
+
+
+
+
+def pack_int(value, width, signed=False):
+    """
+    Эмулирует поведение целых чисел фиксированной разрядности.
+    :param value: Исходное число
+    :param width: Битность (8, 16, 32, 64, 128, 256 и т.д.)
+    :param signed: Флаг знакового числа (True - int, False - uint)
+    """
+    # 1. Применяем маску для беззнакового переполнения
+    # (1 << 8) - 1  => 255 (0xFF)
+    # (1 << 128) - 1 => огромная маска из 128 единиц
+    mask = (1 << width) - 1
+    truncated = value & mask
+
+    if not signed:
+        return truncated
+
+    # 2. Логика знакового числа (двухдополнительный код)
+    # Проверяем, установлен ли самый левый (знаковый) бит
+    msb_check = 1 << (width - 1)
+
+    if truncated >= msb_check:
+        # Если бит установлен, превращаем в отрицательное
+        return truncated - (1 << width)
+
+    return truncated
+
+
+## принимает на вход Decimal, int, etc.
+## возвращает 32 или 64 битное представление float числа
+#def pack_float(val, width):
+#	z = None
+#	if width <= 16:
+#		z = struct.unpack('<e', struct.pack('<e', val))[0]
+#	elif width <= 32:
+#		z = struct.unpack('<f', struct.pack('<f', val))[0]
+#	elif width <= 64:
+#		z = struct.unpack('<d', struct.pack('<d', val))[0]
+#	return z
+
+
+#def unpak_float_to_hex(fval, width):
+#	if width == 32:
+#		return '0x%X' % (struct.unpack('<i', struct.pack('<f', fval))[0])
+#	elif width == 64:
+#		return '0x%X' % (struct.unpack('<Q', struct.pack('<d', fval))[0])
+
+
+def fractional_to_decimal(f):
+	#print(f.__class__)
+	#print(f.numerator)
+	#print(f.denominator)
+	assert(isinstance(f, Fraction) or isinstance(f, int))
+	return Decimal(f.numerator) / Decimal(f.denominator)
+
+
+def decimal_to_str(d: Decimal, max_frac=None):
+	s = format(d, 'f')
+	# remove zero tail
+	i = len(s) - 1
+	while i >= 0:
+		if s[i] == '0':
+			i -= 1
+		else:
+			i += 2
+			break
+	return s[0:i]
+
 
 
 """

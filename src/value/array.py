@@ -130,7 +130,7 @@ def value_array_cons(t, v, method, ti):
 	if Type.is_string(v.type):
 		char_type = t.of
 		items = utf32_chars_to_utfx_char_values(v.asset, char_type, ti)
-		nv.asset = items
+		nv.set_asset(items)
 		return nv
 
 	# литерал массива всегда имеет тип Generic(Array)
@@ -156,7 +156,7 @@ def value_array_cons(t, v, method, ti):
 			casted_item.nl = item.nl
 			size += casted_item.type.size
 			items.append(casted_item)
-		nv.asset = items
+		nv.set_asset(items)
 
 	nv.type.size = size
 	return nv
@@ -178,7 +178,7 @@ def value_array_add(l, r, ti):
 	type_result.generic = True  # FIXIT!
 
 	nv = ValueBin(type_result, HLIR_VALUE_OP_ADD, l, r, ti=ti)
-	nv.asset = items
+	nv.set_asset(items)
 	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 	return nv
 
@@ -208,7 +208,7 @@ def value_array_eq(l, r, op, ti):
 		if op == HLIR_VALUE_OP_NE:
 			eq_result = not eq_result
 
-		nv.asset = int(eq_result)
+		nv.set_asset(int(eq_result))
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	return nv

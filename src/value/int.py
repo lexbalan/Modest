@@ -45,7 +45,7 @@ def _value_int_cons_immediate(t, v, method, ti):
 		error("integer overflow", ti)
 
 	nv = ValueCons(t, v, method, ti=ti)
-	nv.asset = v.asset
+	nv.set_asset(v.asset)
 	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 	return nv
 
@@ -96,7 +96,7 @@ def value_int_cons(t, v, method, ti):
 		if method != 'implicit':
 			if v.asset != None:  # asset can be None in case of undefined value (!)
 				##################### ???????? !!!!!! Float, Generic float, need better cast!!!!
-				nv.asset = int(v.asset)  # here can be float
+				nv.set_asset(int(v.asset))  # here can be float
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			return nv
 		return _value_int_cons_immediate(t, v, method, ti)

@@ -3,6 +3,7 @@
 include "libc/stdio"
 include "libc/string"
 
+include "ext"
 
 type ContextHandler = (x: *Context) -> *Context
 
@@ -16,6 +17,7 @@ type X = record {c: *Context}
 
 var p: *Context
 
+@alias("c_type", "CTX")
 type Context = @public record {
 	x: Int32 = 32
 	y: Int32 = 32
@@ -32,6 +34,12 @@ type ZX = record {
 
 type ZZ = ZX
 
+
+var dir: *Dir
+
+public func init (d: *Dir) -> Unit {
+	//
+}
 
 const x = 1.5
 const xx = (x / 333333) * 333333
