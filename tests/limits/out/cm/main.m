@@ -32,61 +32,68 @@ const _nat64Max = 18446744073709551615
 //const float32NaN       = Float32 (0.0 / 0.0)
 //const float32NegInf    = Float32 (-1.0 / 0.0)
 
-/*
 
-func assert(cond: Bool, msg: *Str8) {
-    if not cond {
-        printf("ASSERT FAILED: %s\n", msg)
-        abort()
-    }
+func assert (cond: Bool, msg: *Str8) -> Unit {
+	if not cond {
+		printf("ASSERT FAILED: %s\n", msg)
+		abort()
+	}
 }
+
 
 
 // ------------------------------------------------------------
 // Signed integers
 // ------------------------------------------------------------
 
-func test_Int8 () -> Unit {
-    let min = Int8 -128
-    let max = Int8 127
+func testInt8 () -> Unit {
+	let min = Int8 -128
+	let max = Int8 127
 
-    assert(min < Int8 0, "Int8 min < 0")
-    assert(max > Int8 0, "Int8 max > 0")
+	assert(min < 0, "Int8 min < 0")
+	assert(max > 0, "Int8 max > 0")
 
-    assert(Int8 -1 < Int8 0, "Int8 sign")
-    assert(Int8 1 > Int8 0, "Int8 positive")
+	assert(Int8 -1 < Int8 0, "Int8 sign")
+	assert(Int8 1 > Int8 0, "Int8 positive")
 
-    // wrap tests (если у тебя defined wrap semantics)
-//	printf("?? = %lld\n", Int64 (max + Int8 1))
-    assert(Int8 (max + Int8 1) == min, "Int8 overflow up")
-    assert(Int8 (min - Int8 1) == max, "Int8 overflow down")
+	assert((max + 1) == min, "Int8 overflow up")
+	assert((min - 1) == max, "Int8 overflow down")
 }
 
 
-func test_Int16 () -> Unit {
-    let min = Int16 -32768
-    let max = Int16 32767
+func testInt16 () -> Unit {
+	let min = Int16 -32768
+	let max = Int16 32767
 
-    assert(Int16 (max + Int16 1) == min, "Int16 overflow up")
-    assert(Int16 (min - Int16 1) == max, "Int16 overflow down")
+	assert(min < 0, "Int16 min < 0")
+	assert(max > 0, "Int16 max > 0")
+
+	assert((max + 1) == min, "Int16 overflow up")
+	assert((min - 1) == max, "Int16 overflow down")
 }
 
 
-func test_Int32 () -> Unit {
-    let min = Int32 -2147483648
-    let max = Int32 2147483647
+func testInt32 () -> Unit {
+	let min = Int32 -2147483648
+	let max = Int32 2147483647
 
-    assert(Int32 (max + Int32 1) == min, "Int32 overflow up")
-    assert(Int32 (min - Int32 1) == max, "Int32 overflow down")
+	assert(min < 0, "Int32 min < 0")
+	assert(max > 0, "Int32 max > 0")
+
+	assert((max + 1) == min, "Int32 overflow up")
+	assert((min - 1) == max, "Int32 overflow down")
 }
 
 
-func test_Int64 () -> Unit {
-    let min = Int64 -9223372036854775808
-    let max = Int64 9223372036854775807
+func testInt64 () -> Unit {
+	let min = Int64 -9223372036854775808
+	let max = Int64 9223372036854775807
 
-    assert(Int64 (max + Int64 1) == min, "Int64 overflow up")
-    assert(Int64 (min - Int64 1) == max, "Int64 overflow down")
+	assert(min < 0, "Int64 min < 0")
+	assert(max > 0, "Int64 max > 0")
+
+	assert((max + 1) == min, "Int64 overflow up")
+	assert((min - 1) == max, "Int64 overflow down")
 }
 
 
@@ -94,36 +101,39 @@ func test_Int64 () -> Unit {
 // Unsigned integers
 // ------------------------------------------------------------
 
-func test_Nat8 () -> Unit {
-    let max = Nat8 255
+func testNat8 () -> Unit {
+	let max = Nat8 255
 
-    assert(Nat8 0 == Nat8 (max + Nat8 1), "Nat8 overflow up")
-}
-
-func test_Nat16 () -> Unit {
-    let max = Nat16 65535
-
-    assert(Nat16 0 == Nat16 (max + Nat16 1), "Nat16 overflow up")
-}
-
-func test_Nat32 () -> Unit {
-    let max = Nat32 4294967295
-
-    assert(Nat32 0 == Nat32 (max + Nat32 1), "Nat32 overflow up")
-}
-
-func test_Nat64 () -> Unit {
-    let max = Nat64 18446744073709551615
-
-    assert(Nat64 0 == Nat64 (max + Nat64 1), "Nat64 overflow up")
+	assert((max + 1) == 0, "Nat8 overflow up")
 }
 
 
+func testNat16 () -> Unit {
+	let max = Nat16 65535
+
+	assert((max + 1) == 0, "Nat16 overflow up")
+}
+
+
+func testNat32 () -> Unit {
+	let max = Nat32 4294967295
+
+	assert((max + 1) == 0, "Nat32 overflow up")
+}
+
+
+func testNat64 () -> Unit {
+	let max = Nat64 18446744073709551615
+
+	assert((max + 1) == 0, "Nat64 overflow up")
+}
+
+/*
 // ------------------------------------------------------------
 // Float32
 // ------------------------------------------------------------
 
-func test_Float32 () -> Unit {
+func testFloat32 () -> Unit {
 
     let zero = Float32 0.0
     let one = Float32 1.0
@@ -149,7 +159,7 @@ func test_Float32 () -> Unit {
 // Float64
 // ------------------------------------------------------------
 
-func test_Float64 () -> Unit {
+func testFloat64 () -> Unit {
 
     let zero = Float64 0.0
     let one = Float64 1.0
@@ -163,6 +173,8 @@ func test_Float64 () -> Unit {
 
 */
 
+
+
 // ------------------------------------------------------------
 // Entry
 // ------------------------------------------------------------
@@ -170,9 +182,22 @@ func test_Float64 () -> Unit {
 public func main () -> Int32 {
 	printf("numeric boundary tests\n")
 
-	let f = 3.1415926535897932384626433832795028841971693993751058209749445923
-	var f32 = Float32 f
-	var f64 = Float64 f
+
+	//
+	//	let f = 3.1415926535897932384626433832795028841971693993751058209749445923
+	//	var f32 = Float32 f
+	//	var f64 = Float64 f
+	//
+	//	printf("f32 = %.9g\n", f32)
+	//	printf("f64 = %.17g\n", f64)
+	//
+	////	if f32 == 3.14 {
+	////		printf("ok1\n")
+	////	}
+	//
+	//	if f64 == 3.1415926535897931 {
+	//		printf("ok2\n")
+	//	}
 
 	//	let n8 = Nat8 (_nat8Max + 1)
 	//	printf("n8 = %i\n", Word32 n8)
@@ -190,18 +215,18 @@ public func main () -> Int32 {
 	//	let i8 = Nat8 (127 + 1)
 	//	printf("i8 = %i\n", i8)
 
-	//    test_Int8()
-	//    test_Int16()
-	//    test_Int32()
-	//    test_Int64()
-	//
-	//    test_Nat8()
-	//    test_Nat16()
-	//    test_Nat32()
-	//    test_Nat64()
-	//
-	//    test_Float32()
-	//    test_Float64()
+	testInt8()
+	testInt16()
+	testInt32()
+	testInt64()
+
+	testNat8()
+	testNat16()
+	testNat32()
+	testNat64()
+
+	//    testFloat32()
+	//    testFloat64()
 	//
 	//    printf("OK\n")
 	return 0

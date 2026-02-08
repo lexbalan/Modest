@@ -29,6 +29,10 @@ def wrapp(s, cond):
 		return '(' + s + ')'
 	return s
 
+def cons_if(s, t, cond):
+	if cond:
+		return '(' + str_type(t, ctx=[]) + ')(' + s + ')'
+	return s
 
 
 cmodule = None
@@ -523,7 +527,12 @@ def str_value_bin(x, ctx):
 		if left.type.is_array(): return str_value_literal_array(x, ctx)
 		if left.type.is_string(): return str_string_add(x)
 
-	return '%s %s %s' % (str_value(left), bin_ops[op], str_value(right))
+	text = '%s %s %s' % (str_value(left), bin_ops[op], str_value(right))
+
+	# Поскольку в си все вычисления происходят как минимум в int
+	# приходится приводить результат к требуемому меньшему типу
+	need_cast = x.type.width < 32 and (x.type.is_int() or x.type.is_nat() or x.type.is_word())
+	return cons_if(text, x.type, cond=need_cast)
 
 
 def str_string_add(x):
@@ -1408,7 +1417,7 @@ def str_value_subexpr(x, ctx):
 	return sstr
 
 
-def str_value(x, ctx=[], parent_expr=None):
+def str_value(x, ctx=[]):
 	sstr = ''
 
 	if x.isValueLiteral():
@@ -1479,8 +1488,8 @@ def str_value(x, ctx=[], parent_expr=None):
 	return sstr
 
 
-def print_value(x, ctx=[], parent_expr=None):
-	out(str_value(x, ctx=ctx, parent_expr=parent_expr))
+def print_value(x, ctx=[]):
+	out(str_value(x, ctx=ctx))
 
 
 #

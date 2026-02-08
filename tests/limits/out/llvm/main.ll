@@ -210,7 +210,30 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [24 x i8] [i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 115, i8 10, i8 0]
+@str1 = private constant [19 x i8] [i8 65, i8 83, i8 83, i8 69, i8 82, i8 84, i8 32, i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str2 = private constant [13 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 109, i8 105, i8 110, i8 32, i8 60, i8 32, i8 48, i8 0]
+@str3 = private constant [13 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 109, i8 97, i8 120, i8 32, i8 62, i8 32, i8 48, i8 0]
+@str4 = private constant [10 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 115, i8 105, i8 103, i8 110, i8 0]
+@str5 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 112, i8 111, i8 115, i8 105, i8 116, i8 105, i8 118, i8 101, i8 0]
+@str6 = private constant [17 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
+@str7 = private constant [19 x i8] [i8 73, i8 110, i8 116, i8 56, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 100, i8 111, i8 119, i8 110, i8 0]
+@str8 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 49, i8 54, i8 32, i8 109, i8 105, i8 110, i8 32, i8 60, i8 32, i8 48, i8 0]
+@str9 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 49, i8 54, i8 32, i8 109, i8 97, i8 120, i8 32, i8 62, i8 32, i8 48, i8 0]
+@str10 = private constant [18 x i8] [i8 73, i8 110, i8 116, i8 49, i8 54, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
+@str11 = private constant [20 x i8] [i8 73, i8 110, i8 116, i8 49, i8 54, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 100, i8 111, i8 119, i8 110, i8 0]
+@str12 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 109, i8 105, i8 110, i8 32, i8 60, i8 32, i8 48, i8 0]
+@str13 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 109, i8 97, i8 120, i8 32, i8 62, i8 32, i8 48, i8 0]
+@str14 = private constant [18 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
+@str15 = private constant [20 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 100, i8 111, i8 119, i8 110, i8 0]
+@str16 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 54, i8 52, i8 32, i8 109, i8 105, i8 110, i8 32, i8 60, i8 32, i8 48, i8 0]
+@str17 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 54, i8 52, i8 32, i8 109, i8 97, i8 120, i8 32, i8 62, i8 32, i8 48, i8 0]
+@str18 = private constant [18 x i8] [i8 73, i8 110, i8 116, i8 54, i8 52, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
+@str19 = private constant [20 x i8] [i8 73, i8 110, i8 116, i8 54, i8 52, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 100, i8 111, i8 119, i8 110, i8 0]
+@str20 = private constant [17 x i8] [i8 78, i8 97, i8 116, i8 56, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
+@str21 = private constant [18 x i8] [i8 78, i8 97, i8 116, i8 49, i8 54, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
+@str22 = private constant [18 x i8] [i8 78, i8 97, i8 116, i8 51, i8 50, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
+@str23 = private constant [18 x i8] [i8 78, i8 97, i8 116, i8 54, i8 52, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
+@str24 = private constant [24 x i8] [i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 115, i8 10, i8 0]
 ; -- endstrings --
 
 
@@ -222,99 +245,94 @@ declare void @perror(%ConstCharStr* %str)
 ;const float32PosInf    = Float32 (1.0 / 0.0)
 ;const float32NaN       = Float32 (0.0 / 0.0)
 ;const float32NegInf    = Float32 (-1.0 / 0.0)
+define internal void @assert(%Bool %cond, %Str8* %msg) {
+; if_0
+	%1 = xor %Bool %cond, 1
+	br %Bool %1 , label %then_0, label %endif_0
+then_0:
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*), %Str8* %msg)
+	call void @abort()
+	br label %endif_0
+endif_0:
+	ret void
+}
 
-;
-;
-;func assert(cond: Bool, msg: *Str8) {
-;    if not cond {
-;        printf("ASSERT FAILED: %s\n", msg)
-;        abort()
-;    }
-;}
-;
-;
-;// ------------------------------------------------------------
-;// Signed integers
-;// ------------------------------------------------------------
-;
-;func test_Int8 () -> Unit {
-;    let min = Int8 -128
-;    let max = Int8 127
-;
-;    assert(min < Int8 0, "Int8 min < 0")
-;    assert(max > Int8 0, "Int8 max > 0")
-;
-;    assert(Int8 -1 < Int8 0, "Int8 sign")
-;    assert(Int8 1 > Int8 0, "Int8 positive")
-;
-;    // wrap tests (если у тебя defined wrap semantics)
-;//	printf("?? = %lld\n", Int64 (max + Int8 1))
-;    assert(Int8 (max + Int8 1) == min, "Int8 overflow up")
-;    assert(Int8 (min - Int8 1) == max, "Int8 overflow down")
-;}
-;
-;
-;func test_Int16 () -> Unit {
-;    let min = Int16 -32768
-;    let max = Int16 32767
-;
-;    assert(Int16 (max + Int16 1) == min, "Int16 overflow up")
-;    assert(Int16 (min - Int16 1) == max, "Int16 overflow down")
-;}
-;
-;
-;func test_Int32 () -> Unit {
-;    let min = Int32 -2147483648
-;    let max = Int32 2147483647
-;
-;    assert(Int32 (max + Int32 1) == min, "Int32 overflow up")
-;    assert(Int32 (min - Int32 1) == max, "Int32 overflow down")
-;}
-;
-;
-;func test_Int64 () -> Unit {
-;    let min = Int64 -9223372036854775808
-;    let max = Int64 9223372036854775807
-;
-;    assert(Int64 (max + Int64 1) == min, "Int64 overflow up")
-;    assert(Int64 (min - Int64 1) == max, "Int64 overflow down")
-;}
-;
-;
-;// ------------------------------------------------------------
-;// Unsigned integers
-;// ------------------------------------------------------------
-;
-;func test_Nat8 () -> Unit {
-;    let max = Nat8 255
-;
-;    assert(Nat8 0 == Nat8 (max + Nat8 1), "Nat8 overflow up")
-;}
-;
-;func test_Nat16 () -> Unit {
-;    let max = Nat16 65535
-;
-;    assert(Nat16 0 == Nat16 (max + Nat16 1), "Nat16 overflow up")
-;}
-;
-;func test_Nat32 () -> Unit {
-;    let max = Nat32 4294967295
-;
-;    assert(Nat32 0 == Nat32 (max + Nat32 1), "Nat32 overflow up")
-;}
-;
-;func test_Nat64 () -> Unit {
-;    let max = Nat64 18446744073709551615
-;
-;    assert(Nat64 0 == Nat64 (max + Nat64 1), "Nat64 overflow up")
-;}
-;
+
+
+
+; ------------------------------------------------------------
+; Signed integers
+; ------------------------------------------------------------
+define internal void @testInt8() {
+	%1 = sub i8 0, 128
+	call void @assert(%Bool 1, %Str8* bitcast ([13 x i8]* @str2 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([13 x i8]* @str3 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([10 x i8]* @str4 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([14 x i8]* @str5 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([17 x i8]* @str6 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([19 x i8]* @str7 to [0 x i8]*))
+	ret void
+}
+
+define internal void @testInt16() {
+	%1 = sub i16 0, 32768
+	call void @assert(%Bool 1, %Str8* bitcast ([14 x i8]* @str8 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([14 x i8]* @str9 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([18 x i8]* @str10 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([20 x i8]* @str11 to [0 x i8]*))
+	ret void
+}
+
+define internal void @testInt32() {
+	%1 = sub i32 0, 2147483648
+	call void @assert(%Bool 1, %Str8* bitcast ([14 x i8]* @str12 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([14 x i8]* @str13 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([18 x i8]* @str14 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([20 x i8]* @str15 to [0 x i8]*))
+	ret void
+}
+
+define internal void @testInt64() {
+	%1 = sub i64 0, 9223372036854775808
+	call void @assert(%Bool 1, %Str8* bitcast ([14 x i8]* @str16 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([14 x i8]* @str17 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([18 x i8]* @str18 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([20 x i8]* @str19 to [0 x i8]*))
+	ret void
+}
+
+
+
+; ------------------------------------------------------------
+; Unsigned integers
+; ------------------------------------------------------------
+define internal void @testNat8() {
+	call void @assert(%Bool 1, %Str8* bitcast ([17 x i8]* @str20 to [0 x i8]*))
+	ret void
+}
+
+define internal void @testNat16() {
+	call void @assert(%Bool 1, %Str8* bitcast ([18 x i8]* @str21 to [0 x i8]*))
+	ret void
+}
+
+define internal void @testNat32() {
+	call void @assert(%Bool 1, %Str8* bitcast ([18 x i8]* @str22 to [0 x i8]*))
+	ret void
+}
+
+define internal void @testNat64() {
+	call void @assert(%Bool 1, %Str8* bitcast ([18 x i8]* @str23 to [0 x i8]*))
+	ret void
+}
+
+
 ;
 ;// ------------------------------------------------------------
 ;// Float32
 ;// ------------------------------------------------------------
 ;
-;func test_Float32 () -> Unit {
+;func testFloat32 () -> Unit {
 ;
 ;    let zero = Float32 0.0
 ;    let one = Float32 1.0
@@ -340,7 +358,7 @@ declare void @perror(%ConstCharStr* %str)
 ;// Float64
 ;// ------------------------------------------------------------
 ;
-;func test_Float64 () -> Unit {
+;func testFloat64 () -> Unit {
 ;
 ;    let zero = Float64 0.0
 ;    let one = Float64 1.0
@@ -354,15 +372,30 @@ declare void @perror(%ConstCharStr* %str)
 ;
 ;
 
+
+
 ; ------------------------------------------------------------
 ; Entry
 ; ------------------------------------------------------------
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca %Float32, align 4
-	store %Float32 3.1415927410125732, %Float32* %2
-	%3 = alloca %Float64, align 8
-	store %Float64 3.1415926535897931, %Float64* %3
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str24 to [0 x i8]*))
+
+
+	;
+	;	let f = 3.1415926535897932384626433832795028841971693993751058209749445923
+	;	var f32 = Float32 f
+	;	var f64 = Float64 f
+	;
+	;	printf("f32 = %.9g\n", f32)
+	;	printf("f64 = %.17g\n", f64)
+	;
+	;//	if f32 == 3.14 {
+	;//		printf("ok1\n")
+	;//	}
+	;
+	;	if f64 == 3.1415926535897931 {
+	;		printf("ok2\n")
+	;	}
 
 	;	let n8 = Nat8 (_nat8Max + 1)
 	;	printf("n8 = %i\n", Word32 n8)
@@ -379,19 +412,17 @@ define %Int32 @main() {
 
 	;	let i8 = Nat8 (127 + 1)
 	;	printf("i8 = %i\n", i8)
+	call void @testInt8()
+	call void @testInt16()
+	call void @testInt32()
+	call void @testInt64()
+	call void @testNat8()
+	call void @testNat16()
+	call void @testNat32()
+	call void @testNat64()
 
-	;    test_Int8()
-	;    test_Int16()
-	;    test_Int32()
-	;    test_Int64()
-	;
-	;    test_Nat8()
-	;    test_Nat16()
-	;    test_Nat32()
-	;    test_Nat64()
-	;
-	;    test_Float32()
-	;    test_Float64()
+	;    testFloat32()
+	;    testFloat64()
 	;
 	;    printf("OK\n")
 	ret %Int32 0
