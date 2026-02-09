@@ -731,7 +731,12 @@ def do_value_bin_op(op, l, r, ti):
 				HLIR_VALUE_OP_NE:  lambda a, b: a != b
 			}
 
+			if (op == HLIR_VALUE_OP_DIV) and t.is_rational() and (r.asset == 0):
+				error("division by zero", r.ti)
+				return ValueBad(ti)
+
 			asset = ops[op](l.asset, r.asset)
+
 #			if op == HLIR_VALUE_OP_DIV:
 #				if not (t.is_rational() or t.is_float()):
 #					asset = l.asset // r.asset

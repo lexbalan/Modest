@@ -30,9 +30,13 @@
 //const float32MinSub    = Float32 1.401298464324817e-45
 //const float32Epsilon   = Float32 1.1920928955078125e-7
 //
-//const float32PosInf    = Float32 (1.0 / 0.0)
-//const float32NaN       = Float32 (0.0 / 0.0)
-//const float32NegInf    = Float32 (-1.0 / 0.0)
+//const float32PosInf    = Float32 1.0 / 0.0
+//const float32NaN       = Float32 0.0 / 0.0
+//const float32NegInf    = Float32 -1.0 / 0.0
+//
+//const float64PosInf    = Float64 1.0 / 0.0
+//const float64NaN       = Float64 0.0 / 0.0
+//const float64NegInf    = Float64 -1.0 / 0.0
 
 static void assert(bool cond, char *msg) {
 	if (!cond) {
@@ -129,30 +133,29 @@ static void testNat64(void) {
 }
 
 
-/*
 // ------------------------------------------------------------
 // Float32
 // ------------------------------------------------------------
 
-func testFloat32 () -> Unit {
+static void testFloat32(void) {
 
-    let zero = Float32 0.0
-    let one = Float32 1.0
-    let minus_one = Float32 -1.0
+	const float zero = .0;
+	const float one = 1.0;
+	const float minus_one = (float)-1.0;
 
-    assert(one > zero, "Float32 positive")
-    assert(minus_one < zero, "Float32 negative")
+	assert(one > zero, "Float32 positive");
+	assert(minus_one < zero, "Float32 negative");
 
-    // Проверка деления
-    assert(one / one == one, "Float32 division")
+	// Проверка деления
+	assert(one / one == one, "Float32 division");
 
-    // Infinity
-//    let inf = one / zero
-//    assert(inf > one, "Float32 +inf")
-//
-//    // NaN
-//    let nan = zero / zero
-//    assert(not(nan == nan), "Float32 NaN")
+	// Infinity
+	const float inf = one / zero;
+	assert(inf > one, "Float32 +inf");
+
+	// NaN
+	const float nan = zero / zero;
+	assert(!(nan == nan), "Float32 NaN");
 }
 
 
@@ -160,19 +163,18 @@ func testFloat32 () -> Unit {
 // Float64
 // ------------------------------------------------------------
 
-func testFloat64 () -> Unit {
+static void testFloat64(void) {
 
-    let zero = Float64 0.0
-    let one = Float64 1.0
+	const double zero = .0;
+	const double one = 1.0;
 
-//    let inf = one / zero
-//    assert(inf > one, "Float64 +inf")
-//
-//    let nan = zero / zero
-//    assert(not(nan == nan), "Float64 NaN")
+	const double inf = one / zero;
+	assert(inf > one, "Float64 +inf");
+
+	const double nan = zero / zero;
+	assert(!(nan == nan), "Float64 NaN");
 }
 
-*/
 
 // ------------------------------------------------------------
 // Entry
@@ -180,7 +182,6 @@ func testFloat64 () -> Unit {
 
 int32_t main(void) {
 	printf("numeric boundary tests\n");
-
 
 	//
 	//	let f = 3.1415926535897932384626433832795028841971693993751058209749445923
@@ -224,10 +225,11 @@ int32_t main(void) {
 	testNat32();
 	testNat64();
 
-	//    testFloat32()
-	//    testFloat64()
-	//
-	//    printf("OK\n")
+	testFloat32();
+	testFloat64();
+
+	printf("OK\n");
+
 	return 0;
 }
 

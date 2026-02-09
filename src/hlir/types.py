@@ -11,10 +11,11 @@ _np_cache = None
 
 # numpy() only by request (because it is too heavy)
 def get_np():
-    global _np_cache
-    if _np_cache is None:
-        import numpy as _np_cache
-    return _np_cache
+	global _np_cache
+	if _np_cache is None:
+		import numpy as _np_cache
+		_np_cache.seterr(divide='ignore', invalid='ignore')
+	return _np_cache
 
 
 

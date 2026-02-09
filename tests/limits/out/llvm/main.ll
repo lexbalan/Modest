@@ -233,7 +233,15 @@ declare void @perror(%ConstCharStr* %str)
 @str21 = private constant [18 x i8] [i8 78, i8 97, i8 116, i8 49, i8 54, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
 @str22 = private constant [18 x i8] [i8 78, i8 97, i8 116, i8 51, i8 50, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
 @str23 = private constant [18 x i8] [i8 78, i8 97, i8 116, i8 54, i8 52, i8 32, i8 111, i8 118, i8 101, i8 114, i8 102, i8 108, i8 111, i8 119, i8 32, i8 117, i8 112, i8 0]
-@str24 = private constant [24 x i8] [i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 115, i8 10, i8 0]
+@str24 = private constant [17 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 112, i8 111, i8 115, i8 105, i8 116, i8 105, i8 118, i8 101, i8 0]
+@str25 = private constant [17 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 110, i8 101, i8 103, i8 97, i8 116, i8 105, i8 118, i8 101, i8 0]
+@str26 = private constant [17 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 100, i8 105, i8 118, i8 105, i8 115, i8 105, i8 111, i8 110, i8 0]
+@str27 = private constant [13 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 43, i8 105, i8 110, i8 102, i8 0]
+@str28 = private constant [12 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 78, i8 97, i8 78, i8 0]
+@str29 = private constant [13 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 54, i8 52, i8 32, i8 43, i8 105, i8 110, i8 102, i8 0]
+@str30 = private constant [12 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 54, i8 52, i8 32, i8 78, i8 97, i8 78, i8 0]
+@str31 = private constant [24 x i8] [i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 115, i8 10, i8 0]
+@str32 = private constant [4 x i8] [i8 79, i8 75, i8 10, i8 0]
 ; -- endstrings --
 
 
@@ -242,9 +250,13 @@ declare void @perror(%ConstCharStr* %str)
 ;const float32MinSub    = Float32 1.401298464324817e-45
 ;const float32Epsilon   = Float32 1.1920928955078125e-7
 ;
-;const float32PosInf    = Float32 (1.0 / 0.0)
-;const float32NaN       = Float32 (0.0 / 0.0)
-;const float32NegInf    = Float32 (-1.0 / 0.0)
+;const float32PosInf    = Float32 1.0 / 0.0
+;const float32NaN       = Float32 0.0 / 0.0
+;const float32NegInf    = Float32 -1.0 / 0.0
+;
+;const float64PosInf    = Float64 1.0 / 0.0
+;const float64NaN       = Float64 0.0 / 0.0
+;const float64NegInf    = Float64 -1.0 / 0.0
 define internal void @assert(%Bool %cond, %Str8* %msg) {
 ; if_0
 	%1 = xor %Bool %cond, 1
@@ -256,7 +268,6 @@ then_0:
 endif_0:
 	ret void
 }
-
 
 
 
@@ -327,50 +338,37 @@ define internal void @testNat64() {
 }
 
 
-;
-;// ------------------------------------------------------------
-;// Float32
-;// ------------------------------------------------------------
-;
-;func testFloat32 () -> Unit {
-;
-;    let zero = Float32 0.0
-;    let one = Float32 1.0
-;    let minus_one = Float32 -1.0
-;
-;    assert(one > zero, "Float32 positive")
-;    assert(minus_one < zero, "Float32 negative")
-;
-;    // Проверка деления
-;    assert(one / one == one, "Float32 division")
-;
-;    // Infinity
-;//    let inf = one / zero
-;//    assert(inf > one, "Float32 +inf")
-;//
-;//    // NaN
-;//    let nan = zero / zero
-;//    assert(not(nan == nan), "Float32 NaN")
-;}
-;
-;
-;// ------------------------------------------------------------
-;// Float64
-;// ------------------------------------------------------------
-;
-;func testFloat64 () -> Unit {
-;
-;    let zero = Float64 0.0
-;    let one = Float64 1.0
-;
-;//    let inf = one / zero
-;//    assert(inf > one, "Float64 +inf")
-;//
-;//    let nan = zero / zero
-;//    assert(not(nan == nan), "Float64 NaN")
-;}
-;
-;
+
+; ------------------------------------------------------------
+; Float32
+; ------------------------------------------------------------
+define internal void @testFloat32() {
+	call void @assert(%Bool 1, %Str8* bitcast ([17 x i8]* @str24 to [0 x i8]*))
+	call void @assert(%Bool 1, %Str8* bitcast ([17 x i8]* @str25 to [0 x i8]*))
+
+	; Проверка деления
+	call void @assert(%Bool 1, %Str8* bitcast ([17 x i8]* @str26 to [0 x i8]*))
+
+	; Infinity
+	call void @assert(%Bool 1, %Str8* bitcast ([13 x i8]* @str27 to [0 x i8]*))
+
+	; NaN
+	%1 = xor %Bool 0, 1
+	call void @assert(%Bool %1, %Str8* bitcast ([12 x i8]* @str28 to [0 x i8]*))
+	ret void
+}
+
+
+
+; ------------------------------------------------------------
+; Float64
+; ------------------------------------------------------------
+define internal void @testFloat64() {
+	call void @assert(%Bool 1, %Str8* bitcast ([13 x i8]* @str29 to [0 x i8]*))
+	%1 = xor %Bool 0, 1
+	call void @assert(%Bool %1, %Str8* bitcast ([12 x i8]* @str30 to [0 x i8]*))
+	ret void
+}
 
 
 
@@ -378,8 +376,7 @@ define internal void @testNat64() {
 ; Entry
 ; ------------------------------------------------------------
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str24 to [0 x i8]*))
-
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str31 to [0 x i8]*))
 
 	;
 	;	let f = 3.1415926535897932384626433832795028841971693993751058209749445923
@@ -420,11 +417,9 @@ define %Int32 @main() {
 	call void @testNat16()
 	call void @testNat32()
 	call void @testNat64()
-
-	;    testFloat32()
-	;    testFloat64()
-	;
-	;    printf("OK\n")
+	call void @testFloat32()
+	call void @testFloat64()
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str32 to [0 x i8]*))
 	ret %Int32 0
 }
 

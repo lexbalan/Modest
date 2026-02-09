@@ -29,9 +29,13 @@ const _nat64Max = 18446744073709551615
 //const float32MinSub    = Float32 1.401298464324817e-45
 //const float32Epsilon   = Float32 1.1920928955078125e-7
 //
-//const float32PosInf    = Float32 (1.0 / 0.0)
-//const float32NaN       = Float32 (0.0 / 0.0)
-//const float32NegInf    = Float32 (-1.0 / 0.0)
+//const float32PosInf    = Float32 1.0 / 0.0
+//const float32NaN       = Float32 0.0 / 0.0
+//const float32NegInf    = Float32 -1.0 / 0.0
+//
+//const float64PosInf    = Float64 1.0 / 0.0
+//const float64NaN       = Float64 0.0 / 0.0
+//const float64NegInf    = Float64 -1.0 / 0.0
 
 
 func assert(cond: Bool, msg: *Str8) {
@@ -40,7 +44,6 @@ func assert(cond: Bool, msg: *Str8) {
         abort()
     }
 }
-
 
 
 // ------------------------------------------------------------
@@ -129,7 +132,7 @@ func testNat64 () -> Unit {
     assert((max + 1) == 0, "Nat64 overflow up")
 }
 
-/*
+
 // ------------------------------------------------------------
 // Float32
 // ------------------------------------------------------------
@@ -147,12 +150,12 @@ func testFloat32 () -> Unit {
     assert(one / one == one, "Float32 division")
 
     // Infinity
-//    let inf = one / zero
-//    assert(inf > one, "Float32 +inf")
-//
-//    // NaN
-//    let nan = zero / zero
-//    assert(not(nan == nan), "Float32 NaN")
+    let inf = one / zero
+    assert(inf > one, "Float32 +inf")
+
+    // NaN
+    let nan = zero / zero
+    assert(not(nan == nan), "Float32 NaN")
 }
 
 
@@ -165,15 +168,12 @@ func testFloat64 () -> Unit {
     let zero = Float64 0.0
     let one = Float64 1.0
 
-//    let inf = one / zero
-//    assert(inf > one, "Float64 +inf")
-//
-//    let nan = zero / zero
-//    assert(not(nan == nan), "Float64 NaN")
+    let inf = one / zero
+    assert(inf > one, "Float64 +inf")
+
+    let nan = zero / zero
+    assert(not(nan == nan), "Float64 NaN")
 }
-
-*/
-
 
 
 // ------------------------------------------------------------
@@ -182,7 +182,6 @@ func testFloat64 () -> Unit {
 
 public func main () -> Int32 {
     printf("numeric boundary tests\n")
-
 
 //
 //	let f = 3.1415926535897932384626433832795028841971693993751058209749445923
@@ -226,10 +225,11 @@ public func main () -> Int32 {
     testNat32()
     testNat64()
 
-//    testFloat32()
-//    testFloat64()
-//
-//    printf("OK\n")
+    testFloat32()
+    testFloat64()
+
+    printf("OK\n")
+
     return 0
 }
 
