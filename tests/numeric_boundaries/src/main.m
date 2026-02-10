@@ -3,39 +3,7 @@
 include "libc/ctypes64"
 include "libc/stdlib"
 include "libc/stdio"
-
-
-const int8MinValue  = -128
-const int8MaxValue  = 127
-
-const int16MinValue = -32768
-const int16MaxValue = 32767
-
-const int32MinValue = -2147483648
-const int32MaxValue = 2147483647
-
-const int64MinValue = -9223372036854775808
-const int64MaxValue = 9223372036854775807
-
-const int128MinValue = -170141183460469231731687303715884105728
-const int128MaxValue = 170141183460469231731687303715884105727
-
-
-const nat8MinValue  = 0
-const nat8MaxValue  = 255
-
-const nat16MinValue = 0
-const nat16MaxValue = 65535
-
-const nat32MinValue = 0
-const nat32MaxValue = 4294967295
-
-const nat64MinValue = 0
-const nat64MaxValue = 18446744073709551615
-
-const nat128MinValue = 0
-const nat128MaxValue = 340282366920938463463374607431768211455
-
+include "limits"
 
 //const float32MaxValue       = Float32 3.4028234663852886e+38
 //const float32MinValueNormal = Float32 1.1754943508222875e-38

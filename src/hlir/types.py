@@ -178,7 +178,8 @@ class Entity():
 		self.is_global_flag = False
 
 	def addAttribute(self, a):
-		self.att.append(a)
+		if not a in self.att:
+			self.att.append(a)
 
 	def hasAttribute(self, a):
 		return a in self.att

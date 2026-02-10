@@ -517,8 +517,8 @@ def needd(x):
 	rv = get_root_value(x)
 	return (x.type.width < 32) and rv.isValueBin()
 
-def str_value_2(v):
-	return cons_if(str_value(v), v.type, cond=needd(v))
+def str_value_2(v, ctx=[]):
+	return cons_if(str_value(v, ctx), v.type, cond=needd(v))
 
 def str_value_bin(x, ctx):
 	op = x.op
@@ -597,6 +597,18 @@ def str_value_not(x, ctx):
 
 
 def str_value_neg(x, ctx):
+	if x.value.isValueImmediate():
+		# В си нельзя сделать -INT_MAX тк INT_MAX не влезает в int литерал и тот становится unsigned
+		# а unsigned не меняет знак. Короче тут полный мрак и это тупо костыль
+		if x.type.width == 32:
+			if x.value.asset == 0x80000000:
+				n = str_value_literal_number(x.value.type, (x.value.asset - 1))
+				return '(-%s - 1)' % n
+		elif x.type.width == 64:
+			if x.value.asset == 0x8000000000000000:
+				n = str_value_literal_number(x.value.type, (x.value.asset - 1))
+				return '(-%s - 1)' % n
+
 	return '-' + str_value(x.value)
 
 
@@ -1232,11 +1244,11 @@ def str_value_literal_bool(v, ctx):
 
 
 
-def str_value_suffix(req_bits, is_unsigned):
+def str_number_suffix(req_bits, is_unsigned):
 	sstr = ""
 	if req_bits >= csettings['int_width']:
-		if is_unsigned:
-			sstr += "U"   # unsigned
+		#if is_unsigned:
+		#	sstr += "U"   # unsigned
 
 		if req_bits <= csettings['long_width']:
 			sstr += "L"   # long int
@@ -1246,6 +1258,7 @@ def str_value_suffix(req_bits, is_unsigned):
 			sstr += "XL"  # extra long int (not defined in C)
 
 	return sstr
+
 
 
 def str_value_literal_number(type, num, nsigns=0, is_big=False, as_hex=False):
@@ -1269,8 +1282,7 @@ def str_value_literal_number(type, num, nsigns=0, is_big=False, as_hex=False):
 	else:
 		sstr += str(num)
 
-	sstr += str_value_suffix(req_bits=nbits_for_num(num), is_unsigned=not type.is_signed())
-
+	sstr += str_number_suffix(req_bits=nbits_for_num(num), is_unsigned=not type.is_signed())
 	return sstr
 
 
@@ -1312,6 +1324,10 @@ def str_value_with_type(v, t, ctx=[]):
 
 
 def str_value_const(x, ctx):
+	if x.hasAttribute('cbyvalue'):
+		# есть атрибут говорящий о том что следует печатать значение константы (а не ее id)
+		return str_value_literal(x, ctx=ctx)
+
 	id_str = get_id_str(x)
 	if x.is_global_flag and not x.id.hasAttribute('nodecorate'):
 		return camel_to_upper_snake(id_str)
@@ -2127,7 +2143,7 @@ def str_initializer(v):
 	# .arr = (uint8_t [3]){1, 2, 3}  // error
 	# .arr = {1, 2, 3}               // ok
 	# .arr = (struct point){.x=1, .y=2, .z=3}  // ok
-	return str_value(v, ctx=['initializer_context'])
+	return str_value_2(v, ctx=['initializer_context'])
 
 
 

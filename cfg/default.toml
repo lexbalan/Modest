@@ -33,7 +33,7 @@ target_triple = "arm64-apple-macosx12.0.0"
 
 #[backend.c]
 int_width = 32
-long_width = 64
+long_width = 32
 long_long_width = 64
 true_literal = "true"
 false_literal = "false"

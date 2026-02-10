@@ -205,6 +205,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
+; from included limits
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 0
@@ -253,7 +254,6 @@ declare void @perror(%ConstCharStr* %str)
 @str41 = private constant [24 x i8] [i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 115, i8 10, i8 0]
 @str42 = private constant [4 x i8] [i8 79, i8 75, i8 10, i8 0]
 ; -- endstrings --
-
 
 ;const float32MaxValue       = Float32 3.4028234663852886e+38
 ;const float32MinValueNormal = Float32 1.1754943508222875e-38

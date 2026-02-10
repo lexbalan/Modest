@@ -2892,6 +2892,10 @@ def add_spices_def(x, ast_atts):
 		elif kind == 'deprecated':
 			add_att(x, "deprecated")
 
+		elif kind == 'cbyvalue':
+			add_att(x, "cbyvalue")
+			x.value.addAttribute("cbyvalue")
+
 		else:
 			print(a)
 			exit(1)
