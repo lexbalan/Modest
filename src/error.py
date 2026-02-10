@@ -4,6 +4,14 @@ import sys
 from common import features
 from hlir import TokenInfo, TextInfo
 
+# error codes:
+# first number:
+#   0 = system/compiler error
+#   1 = lexer error
+#   2 = parser error
+#   3 = translation error
+#   4 = backend error
+
 warncnt = 0
 errcnt = 0
 
