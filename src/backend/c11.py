@@ -513,6 +513,13 @@ bin_ops = {
 }
 
 
+def needd(x):
+	rv = get_root_value(x)
+	return (x.type.width < 32) and rv.isValueBin()
+
+def str_value_2(v):
+	return cons_if(str_value(v), v.type, cond=needd(v))
+
 def str_value_bin(x, ctx):
 	op = x.op
 	left = x.left
@@ -527,7 +534,7 @@ def str_value_bin(x, ctx):
 		if left.type.is_array(): return str_value_literal_array(x, ctx)
 		if left.type.is_string(): return str_string_add(x)
 
-	text = '%s %s %s' % (str_value(left), bin_ops[op], str_value(right))
+	return '%s %s %s' % (str_value_2(left), bin_ops[op], str_value_2(right))
 
 	# Поскольку в си все вычисления происходят как минимум в int
 	# приходится приводить результат к требуемому меньшему типу
@@ -2378,9 +2385,7 @@ def helper_use_rawcast():
 def helper_use_bigint():
 	out("\n#ifndef __BIG_INT128__")
 	out("\n#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))")
-	out("\nstatic inline __int128 abs128(__int128 x) {")
-	out("\n	return x < 0 ? -x : x;")
-	out("\n}")
+	out("\nstatic inline __int128 abs128(__int128 x) {return x < 0 ? -x : x;}")
 	out("\n#endif  /* __BIG_INT128__ */")
 	out("\n")
 	out("\n#ifndef __BIG_INT256__")
@@ -2586,9 +2591,12 @@ def run(module, _outname):
 
 
 
-# возвращает корневое значение из цепочки ValueCons
+# возвращает корневое значение из цепочки ValueCons & ValueSubexpr
+# Костыль конечно, но пока C backend не разделен на два слоя, это хоть как то помогает
 def get_root_value(x):
 	if x.isValueCons():
+		return get_root_value(x.value)
+	if x.isValueSubexpr():
 		return get_root_value(x.value)
 	return x
 

@@ -77,7 +77,7 @@ fsm_ComplexState fsm_cmdNextStage(struct fsm_fsm *self) {
 	self->timer = 0;
 	self->timer_expired = false;
 	const fsm_ComplexState state = self->state;
-	const uint16_t nextStageIndex = (uint16_t)(state.stage) + 1;
+	const uint16_t nextStageIndex = (uint16_t)((uint16_t)(state.stage) + 1);
 	//assert(nextStageIndex < state.state.nstages)
 	fsm_ComplexState newState = state;
 	newState.stage = (fsm_StageId)nextStageIndex;
@@ -88,7 +88,7 @@ fsm_ComplexState fsm_cmdNextStage(struct fsm_fsm *self) {
 fsm_ComplexState fsm_cmdNextStageLimited(struct fsm_fsm *self, uint32_t t) {
 	self->timer = t;
 	const fsm_ComplexState state = self->state;
-	const uint16_t nextStageIndex = (uint16_t)(state.stage) + 1;
+	const uint16_t nextStageIndex = (uint16_t)((uint16_t)(state.stage) + 1);
 	//assert(nextStageIndex < state.state.nstages)
 	fsm_ComplexState newState = state;
 	newState.stage = (fsm_StageId)nextStageIndex;

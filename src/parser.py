@@ -817,7 +817,7 @@ class Parser:
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
 			}
 
-		elif self.match("-"):
+		elif self.match("-"): #or self.match("−"):
 			v = self.expr_value_11()
 			return {
 				'isa': 'ast_value',
@@ -1413,7 +1413,7 @@ class Parser:
 			elif tokstr == '':
 				tokstr = 'end-of-file'
 
-			error("unexpected token '%s'" % tokstr, self.textInfo())
+			error("unexpected token1 '%s'" % tokstr, self.textInfo())
 			self.skip1()
 			return {
 				'isa': 'ast_value',

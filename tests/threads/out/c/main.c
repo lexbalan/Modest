@@ -1,7 +1,3 @@
-// tests/threads/src/main.m
-// valgrind --leak-check=full ./easy.run
-
-#include "main.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -22,14 +18,14 @@ static void *thread0(void *param) {
 
 	while (global_counter < 32) {
 		// increment global counter
-		pthread_mutex_lock(&mutex);
+		mutex_lock(&mutex);
 		global_counter = global_counter + 1;
-		pthread_mutex_unlock(&mutex);
+		mutex_unlock(&mutex);
 
 		usleep(500000);
 	}
 
-	pthread_exit(NULL);
+	exit(NULL);
 	return NULL;
 }
 
@@ -42,9 +38,9 @@ static void *thread1(void *param) {
 
 	while (global_counter_value < 32) {
 		// fast read global counter
-		pthread_mutex_lock(&mutex);
+		mutex_lock(&mutex);
 		global_counter_value = global_counter;
-		pthread_mutex_unlock(&mutex);
+		mutex_unlock(&mutex);
 
 		if (global_counter_prev != global_counter_value) {
 			global_counter_prev = global_counter_value;
@@ -52,7 +48,7 @@ static void *thread1(void *param) {
 		}
 	}
 
-	pthread_exit(NULL);
+	exit(NULL);
 	return NULL;
 }
 
@@ -65,16 +61,16 @@ int main(void) {
 	pthread_t pthread0;
 	pthread_t pthread1;
 
-	rc = pthread_create(&pthread0, NULL, &thread0, NULL);
-	rc = pthread_create(&pthread1, NULL, &thread1, NULL);
+	rc = create(&pthread0, NULL, &thread0, NULL);
+	rc = create(&pthread1, NULL, &thread1, NULL);
 
 	//pthread.detach(pthread0)
 	void *rc0;
 	void *rc1;
-	rc = pthread_join(pthread0, &rc0);
-	rc = pthread_join(pthread1, &rc1);
+	rc = join(pthread0, &rc0);
+	rc = join(pthread1, &rc1);
 
-	pthread_exit(NULL);
+	exit(NULL);
 
 	return 0;
 }

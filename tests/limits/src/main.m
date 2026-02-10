@@ -18,9 +18,13 @@ const _int64Min = -9223372036854775808
 const _int64Max = 9223372036854775807
 
 
+const _nat8Min  = 0
 const _nat8Max  = 255
+const _nat16Min = 0
 const _nat16Max = 65535
+const _nat32Min = 0
 const _nat32Max = 4294967295
+const _nat64Min = 0
 const _nat64Max = 18446744073709551615
 
 
@@ -180,8 +184,77 @@ func testFloat64 () -> Unit {
 // Entry
 // ------------------------------------------------------------
 
+const nat8MaxPlusOne = Nat8 _nat8Max + 1
+const nat8MinMinusOne = Nat8 _nat8Min - 1
+const nat16MaxPlusOne = Nat16 _nat16Max + 1
+const nat16MinMinusOne = Nat16 _nat16Min - 1
+const nat32MaxPlusOne = Nat32 _nat32Max + 1
+const nat32MinMinusOne = Nat32 _nat32Min - 1
+const nat64MaxPlusOne = Nat64 _nat64Max + 1
+const nat64MinMinusOne = Nat64 _nat64Min - 1
+
+func testNat8Static () -> Bool {
+	if nat8MaxPlusOne != _nat8Min {
+		printf("error: nat8MaxPlusOne != _nat8Min\n")
+		return false
+	}
+	if nat8MinMinusOne != _nat8Max {
+		printf("error: nat8MinMinusOne != _nat8Max\n")
+		return false
+	}
+	printf("passed: Nat8 test\n")
+	return true
+}
+
+func testNat16Static () -> Bool {
+	if nat16MaxPlusOne != _nat16Min {
+		printf("error: nat16MaxPlusOne != _nat16Min\n")
+		return false
+	}
+	if nat16MinMinusOne != _nat16Max {
+		printf("error: nat16MinMinusOne != _nat16Max\n")
+		return false
+	}
+	printf("passed: Nat16 test\n")
+	return true
+}
+
+func testNat32Static () -> Bool {
+	if nat32MaxPlusOne != _nat32Min {
+		printf("error: nat32MaxPlusOne != _nat32Min\n")
+		return false
+	}
+	if nat32MinMinusOne != _nat32Max {
+		printf("error: nat32MinMinusOne != _nat32Max\n")
+		return false
+	}
+	printf("passed: Nat32 test\n")
+	return true
+}
+
+func testNat64Static () -> Bool {
+	if nat64MaxPlusOne != _nat64Min {
+		printf("error: nat64MaxPlusOne != _nat64Min\n")
+		return false
+	}
+	if nat64MinMinusOne != _nat64Max {
+		printf("error: nat64MinMinusOne != _nat64Max\n")
+		return false
+	}
+	printf("passed: Nat64 test\n")
+	return true
+}
+
 public func main () -> Int32 {
     printf("numeric boundary tests\n")
+	printf("nat8MaxPlusOne = %llu\n", Nat64 nat8MaxPlusOne)
+	printf("nat8MinMinusOne = %llu\n", Nat64 nat8MinMinusOne)
+	testNat8Static()
+	testNat16Static()
+	testNat32Static()
+	testNat64Static()
+//	printf("cC = %llu\n", Nat64 cC)
+//	printf("dD = %lli\n", Nat64 dD)
 
 //
 //	let f = 3.1415926535897932384626433832795028841971693993751058209749445923

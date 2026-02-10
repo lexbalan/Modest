@@ -307,55 +307,150 @@ declare %Int @unlink([0 x %ConstChar]* %path)
 declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
+; from included ctypes
+; from included time
+%TimeT = type %Int32;
+%ClockT = type %UnsignedLong;
+%StructTM = type {
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%LongInt,
+	%ConstChar*
+};
+
+declare %ClockT @clock()
+declare %Double @difftime(%TimeT %end, %TimeT %beginning)
+declare %TimeT @mktime(%StructTM* %timeptr)
+declare %TimeT @time(%TimeT* %timer)
+declare %Char* @asctime(%StructTM* %timeptr)
+declare %Char* @ctime(%TimeT* %timer)
+declare %StructTM* @gmtime(%TimeT* %timer)
+declare %StructTM* @localtime(%TimeT* %timer)
+declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
+declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
+declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
+; from included stat
+%DevT = type %Nat32;
+%InoT = type %Nat64;
+%ModeT = type %Word16;
+%NLinkT = type %Nat16;
+%UIDT = type %Nat32;
+%GIDT = type %Nat32;
+%BlkSizeT = type %Nat32;
+%BlkCntT = type %Nat64;
+%DarwinIno64T = type %Nat64;
+%DarwinTimeT = type %Nat64;
+%Timespec = type {
+	%DarwinTimeT,
+	%Long
+};
+
+%Stat = type {
+	%DevT,
+	%ModeT,
+	%NLinkT,
+	%DarwinIno64T,
+	%UIDT,
+	%GIDT,
+	%DevT,
+	%Timespec,
+	%Timespec,
+	%Timespec,
+	%Timespec,
+	%OffT,
+	%BlkCntT,
+	%BlkSizeT,
+	%Nat32,
+	%Nat32,
+	%Int32,
+	[2 x %Int64]
+};
+
+declare %Int @\01_stat([0 x %ConstChar]* %path, %Stat* %stat)
+declare %Bool @c_S_ISDIR(%ModeT %m)
+declare %Bool @c_S_ISCHR(%ModeT %m)
+declare %Bool @c_S_ISBLK(%ModeT %m)
+declare %Bool @c_S_ISREG(%ModeT %m)
+declare %Bool @c_S_ISFIFO(%ModeT %m)
+declare %Bool @c_S_ISLNK(%ModeT %m)
+declare %Bool @c_S_ISSOCK(%ModeT %m)
+declare %Bool @c_S_ISWHT(%ModeT %m)
+; from included fcntl
+declare %Int @open([0 x %ConstChar]* %fname, %Word32 %opt, ...)
+declare %Int @creat([0 x %ConstChar]* %fname, %ModeT %mode)
+declare %Int @fcntl(%Int %fd, %Int %op, ...)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [16 x i8] [i8 0, i8 91, i8 51, i8 49, i8 109, i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 0, i8 91, i8 48, i8 109, i8 0]
-@str2 = private constant [15 x i8] [i8 101, i8 120, i8 112, i8 101, i8 99, i8 116, i8 101, i8 100, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
-@str3 = private constant [3 x i8] [i8 37, i8 105, i8 0]
-@str4 = private constant [3 x i8] [i8 37, i8 100, i8 0]
-@str5 = private constant [24 x i8] [i8 116, i8 111, i8 111, i8 32, i8 98, i8 105, i8 103, i8 32, i8 105, i8 109, i8 109, i8 101, i8 100, i8 105, i8 97, i8 116, i8 101, i8 32, i8 118, i8 97, i8 108, i8 117, i8 101, i8 0]
+@str1 = private constant [22 x i8] [i8 37, i8 100, i8 32, i8 58, i8 32, i8 27, i8 91, i8 51, i8 49, i8 109, i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 27, i8 91, i8 48, i8 109, i8 0]
+@str2 = private constant [1 x i8] [i8 0]
+@str3 = private constant [15 x i8] [i8 101, i8 120, i8 112, i8 101, i8 99, i8 116, i8 101, i8 100, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
+@str4 = private constant [3 x i8] [i8 37, i8 105, i8 0]
+@str5 = private constant [3 x i8] [i8 37, i8 100, i8 0]
 @str6 = private constant [12 x i8] [i8 60, i8 60, i8 32, i8 39, i8 37, i8 115, i8 39, i8 32, i8 62, i8 62, i8 10, i8 0]
-@str7 = private constant [7 x i8] [i8 118, i8 97, i8 114, i8 32, i8 37, i8 115, i8 0]
-@str8 = private constant [2 x i8] [i8 58, i8 0]
-@str9 = private constant [13 x i8] [i8 44, i8 32, i8 116, i8 121, i8 112, i8 101, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str10 = private constant [9 x i8] [i8 102, i8 117, i8 110, i8 99, i8 32, i8 37, i8 115, i8 32, i8 0]
-@str11 = private constant [2 x i8] [i8 40, i8 0]
-@str12 = private constant [2 x i8] [i8 41, i8 0]
-@str13 = private constant [3 x i8] [i8 37, i8 115, i8 0]
-@str14 = private constant [2 x i8] [i8 44, i8 0]
-@str15 = private constant [2 x i8] [i8 41, i8 0]
-@str16 = private constant [2 x i8] [i8 10, i8 0]
-@str17 = private constant [2 x i8] [i8 114, i8 0]
-@str18 = private constant [17 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0]
-@str19 = private constant [5 x i8] [i8 102, i8 117, i8 110, i8 99, i8 0]
-@str20 = private constant [4 x i8] [i8 118, i8 97, i8 114, i8 0]
-@str21 = private constant [2 x i8] [i8 114, i8 0]
-@str22 = private constant [17 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0]
-@str23 = private constant [5 x i8] [i8 116, i8 101, i8 120, i8 116, i8 0]
-@str24 = private constant [6 x i8] [i8 84, i8 69, i8 88, i8 84, i8 10, i8 0]
-@str25 = private constant [5 x i8] [i8 112, i8 114, i8 111, i8 99, i8 0]
-@str26 = private constant [10 x i8] [i8 80, i8 82, i8 79, i8 67, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str27 = private constant [3 x i8] [i8 108, i8 105, i8 0]
-@str28 = private constant [2 x i8] [i8 44, i8 0]
-@str29 = private constant [3 x i8] [i8 108, i8 105, i8 0]
-@str30 = private constant [4 x i8] [i8 97, i8 100, i8 100, i8 0]
-@str31 = private constant [2 x i8] [i8 44, i8 0]
-@str32 = private constant [2 x i8] [i8 44, i8 0]
-@str33 = private constant [4 x i8] [i8 65, i8 68, i8 68, i8 0]
-@str34 = private constant [4 x i8] [i8 115, i8 117, i8 98, i8 0]
-@str35 = private constant [2 x i8] [i8 44, i8 0]
-@str36 = private constant [2 x i8] [i8 44, i8 0]
-@str37 = private constant [4 x i8] [i8 83, i8 85, i8 66, i8 0]
-@str38 = private constant [4 x i8] [i8 114, i8 101, i8 116, i8 0]
-@str39 = private constant [18 x i8] [i8 37, i8 115, i8 32, i8 114, i8 37, i8 100, i8 44, i8 32, i8 114, i8 37, i8 100, i8 44, i8 32, i8 114, i8 37, i8 100, i8 10, i8 0]
-@str40 = private constant [12 x i8] [i8 37, i8 115, i8 32, i8 114, i8 37, i8 100, i8 44, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str41 = private constant [5 x i8] [i8 82, i8 69, i8 84, i8 10, i8 0]
-@str42 = private constant [8 x i8] [i8 109, i8 97, i8 105, i8 110, i8 50, i8 46, i8 120, i8 0]
+@str7 = private constant [14 x i8] [i8 101, i8 120, i8 112, i8 114, i8 46, i8 105, i8 100, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str8 = private constant [3 x i8] [i8 37, i8 105, i8 0]
+@str9 = private constant [15 x i8] [i8 101, i8 120, i8 112, i8 114, i8 46, i8 110, i8 117, i8 109, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str10 = private constant [11 x i8] [i8 116, i8 121, i8 112, i8 101, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str11 = private constant [6 x i8] [i8 99, i8 111, i8 110, i8 115, i8 116, i8 0]
+@str12 = private constant [10 x i8] [i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str13 = private constant [10 x i8] [i8 46, i8 101, i8 113, i8 117, i8 32, i8 37, i8 115, i8 44, i8 32, i8 0]
+@str14 = private constant [2 x i8] [i8 58, i8 0]
+@str15 = private constant [2 x i8] [i8 61, i8 0]
+@str16 = private constant [4 x i8] [i8 37, i8 115, i8 10, i8 0]
+@str17 = private constant [7 x i8] [i8 46, i8 100, i8 97, i8 116, i8 97, i8 10, i8 0]
+@str18 = private constant [4 x i8] [i8 118, i8 97, i8 114, i8 0]
+@str19 = private constant [8 x i8] [i8 118, i8 97, i8 114, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str20 = private constant [12 x i8] [i8 37, i8 115, i8 58, i8 32, i8 119, i8 111, i8 114, i8 100, i8 32, i8 48, i8 10, i8 0]
+@str21 = private constant [2 x i8] [i8 58, i8 0]
+@str22 = private constant [2 x i8] [i8 61, i8 0]
+@str23 = private constant [2 x i8] [i8 123, i8 0]
+@str24 = private constant [2 x i8] [i8 125, i8 0]
+@str25 = private constant [2 x i8] [i8 125, i8 0]
+@str26 = private constant [7 x i8] [i8 114, i8 101, i8 116, i8 117, i8 114, i8 110, i8 0]
+@str27 = private constant [5 x i8] [i8 114, i8 101, i8 116, i8 10, i8 0]
+@str28 = private constant [3 x i8] [i8 105, i8 102, i8 0]
+@str29 = private constant [4 x i8] [i8 105, i8 102, i8 10, i8 0]
+@str30 = private constant [5 x i8] [i8 101, i8 108, i8 115, i8 101, i8 0]
+@str31 = private constant [3 x i8] [i8 105, i8 102, i8 0]
+@str32 = private constant [2 x i8] [i8 123, i8 0]
+@str33 = private constant [3 x i8] [i8 105, i8 102, i8 0]
+@str34 = private constant [7 x i8] [i8 114, i8 101, i8 116, i8 117, i8 114, i8 110, i8 0]
+@str35 = private constant [5 x i8] [i8 102, i8 117, i8 110, i8 99, i8 0]
+@str36 = private constant [7 x i8] [i8 46, i8 116, i8 101, i8 120, i8 116, i8 10, i8 0]
+@str37 = private constant [9 x i8] [i8 102, i8 117, i8 110, i8 99, i8 32, i8 37, i8 115, i8 32, i8 0]
+@str38 = private constant [5 x i8] [i8 37, i8 115, i8 58, i8 10, i8 0]
+@str39 = private constant [2 x i8] [i8 40, i8 0]
+@str40 = private constant [2 x i8] [i8 41, i8 0]
+@str41 = private constant [4 x i8] [i8 37, i8 115, i8 44, i8 0]
+@str42 = private constant [2 x i8] [i8 44, i8 0]
+@str43 = private constant [2 x i8] [i8 10, i8 0]
+@str44 = private constant [2 x i8] [i8 41, i8 0]
+@str45 = private constant [2 x i8] [i8 10, i8 0]
+@str46 = private constant [2 x i8] [i8 114, i8 0]
+@str47 = private constant [28 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 105, i8 110, i8 112, i8 117, i8 116, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
+@str48 = private constant [29 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 111, i8 117, i8 116, i8 112, i8 117, i8 116, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
+@str49 = private constant [5 x i8] [i8 102, i8 117, i8 110, i8 99, i8 0]
+@str50 = private constant [6 x i8] [i8 99, i8 111, i8 110, i8 115, i8 116, i8 0]
+@str51 = private constant [4 x i8] [i8 118, i8 97, i8 114, i8 0]
+@str52 = private constant [22 x i8] [i8 117, i8 110, i8 101, i8 120, i8 112, i8 101, i8 99, i8 116, i8 101, i8 100, i8 32, i8 116, i8 111, i8 107, i8 101, i8 110, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
+@str53 = private constant [7 x i8] [i8 109, i8 97, i8 105, i8 110, i8 46, i8 120, i8 0]
+@str54 = private constant [6 x i8] [i8 111, i8 117, i8 116, i8 46, i8 115, i8 0]
+@str55 = private constant [9 x i8] [i8 112, i8 114, i8 111, i8 108, i8 111, i8 103, i8 59, i8 10, i8 0]
+@str56 = private constant [9 x i8] [i8 101, i8 112, i8 105, i8 108, i8 111, i8 103, i8 59, i8 10, i8 0]
 ; -- endstrings --
-@fp = internal global %File* zeroinitializer
+@errcnt = internal global %Nat32 zeroinitializer
+@fsrc = internal global %File* zeroinitializer
+@fout = internal global %Int zeroinitializer
 @eof = internal global %Bool zeroinitializer
 @ch = internal global %Char8 zeroinitializer
 @lineno = internal global %Nat32 zeroinitializer
@@ -363,20 +458,79 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 %TokenType = type %Word8;
 @tokenType = internal global %TokenType zeroinitializer
 @tokenLen = internal global %Nat32 zeroinitializer
+%TypeKind = type %Word8;
+%Type = type {
+	%TypeKind
+};
+
 define internal void @error(%Str8* %format, ...) {
 	%1 = alloca %__VA_List, align 1
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str1 to [0 x i8]*))
-	%3 = bitcast %__VA_List* %1 to i8*
-	call void @llvm.va_start(i8* %3)
-	%4 = alloca [256 x %Char8], align 1
-	%5 = bitcast [256 x %Char8]* %4 to %CharStr*
-	%6 = load %__VA_List, %__VA_List* %1
-	%7 = call %Int @vsnprintf(%CharStr* %5, %SizeT 255, %Str8* %format, %__VA_List %6)
-	%8 = bitcast %__VA_List* %1 to i8*
-	call void @llvm.va_end(i8* %8)
-	%9 = bitcast [256 x %Char8]* %4 to i8*
-	%10 = zext %Int %7 to %SizeT
-	%11 = call %SSizeT @write(%Int 1, i8* %9, %SizeT %10)
+	%2 = load %Nat32, %Nat32* @lineno
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*), %Nat32 %2)
+	%4 = call %Int @fflush(%File* undef)
+	%5 = bitcast %__VA_List* %1 to i8*
+	call void @llvm.va_start(i8* %5)
+	%6 = alloca [256 x %Char8], align 1
+	%7 = bitcast [256 x %Char8]* %6 to %CharStr*
+	%8 = load %__VA_List, %__VA_List* %1
+	%9 = call %Int @vsnprintf(%CharStr* %7, %SizeT 255, %Str8* %format, %__VA_List %8)
+	%10 = bitcast %__VA_List* %1 to i8*
+	call void @llvm.va_end(i8* %10)
+	%11 = bitcast [256 x %Char8]* %6 to i8*
+	%12 = zext %Int %9 to %SizeT
+	%13 = call %SSizeT @write(%Int 1, i8* %11, %SizeT %12)
+	%14 = call %Int @puts(%ConstCharStr* bitcast ([1 x i8]* @str2 to [0 x i8]*))
+	%15 = load %Nat32, %Nat32* @errcnt
+	%16 = add %Nat32 %15, 1
+	store %Nat32 %16, %Nat32* @errcnt
+; if_0
+	%17 = load %Nat32, %Nat32* @errcnt
+	%18 = icmp ugt %Nat32 %17, 10
+	br %Bool %18 , label %then_0, label %endif_0
+then_0:
+	call void @exit(%Int 1)
+	br label %endif_0
+endif_0:
+	ret void
+}
+
+define internal void @gen(%Str8* %format, ...) {
+	%1 = alloca %__VA_List, align 1
+	%2 = bitcast %__VA_List* %1 to i8*
+	call void @llvm.va_start(i8* %2)
+	%3 = alloca [513 x %Char8], align 1
+	%4 = bitcast [513 x %Char8]* %3 to %CharStr*
+	%5 = load %__VA_List, %__VA_List* %1
+	%6 = call %Int @vsnprintf(%CharStr* %4, %SizeT 512, %Str8* %format, %__VA_List %5)
+	%7 = load %Int, %Int* @fout
+	%8 = bitcast [513 x %Char8]* %3 to i8*
+	%9 = zext %Int %6 to %SizeT
+	%10 = call %SSizeT @write(%Int %7, i8* %8, %SizeT %9)
+	%11 = bitcast %__VA_List* %1 to i8*
+	call void @llvm.va_end(i8* %11)
+	ret void
+}
+
+define internal void @op(%Str8* %format, ...) {
+	%1 = alloca %__VA_List, align 1
+	%2 = bitcast %__VA_List* %1 to i8*
+	call void @llvm.va_start(i8* %2)
+	%3 = alloca [513 x %Char8], align 1
+	%4 = insertvalue [513 x %Char8] zeroinitializer, %Char8 9, 0
+	%5 = zext i16 513 to %Nat32
+	store [513 x %Char8] %4, [513 x %Char8]* %3
+	%6 = zext i8 1 to %Nat32
+	%7 = getelementptr [513 x %Char8], [513 x %Char8]* %3, %Int32 0, %Nat32 %6
+	%8 = bitcast %Char8* %7 to [0 x %Char8]*
+	%9 = load %__VA_List, %__VA_List* %1
+	%10 = call %Int @vsnprintf([0 x %Char8]* %8, %SizeT 511, %Str8* %format, %__VA_List %9)
+	%11 = load %Int, %Int* @fout
+	%12 = bitcast [513 x %Char8]* %3 to i8*
+	%13 = zext %Int %10 to %SizeT
+	%14 = add %SizeT %13, 1
+	%15 = call %SSizeT @write(%Int %11, i8* %12, %SizeT %14)
+	%16 = bitcast %__VA_List* %1 to i8*
+	call void @llvm.va_end(i8* %16)
 	ret void
 }
 
@@ -427,7 +581,7 @@ define internal %Bool @isdigit(%Char8 %x) {
 }
 
 define internal void @nexch() {
-	%1 = load %File*, %File** @fp
+	%1 = load %File*, %File** @fsrc
 	%2 = call %Int @fgetc(%File* %1)
 ; if_0
 	%3 = icmp eq %Int %2, -1
@@ -601,7 +755,7 @@ then_0:
 	ret %Bool 1
 	br label %endif_0
 endif_0:
-	call void (%Str8*, ...) @error(%Str8* bitcast ([15 x i8]* @str2 to [0 x i8]*), %Str8* %s)
+	call void (%Str8*, ...) @error(%Str8* bitcast ([15 x i8]* @str3 to [0 x i8]*), %Str8* %s)
 	ret %Bool 0
 }
 
@@ -647,7 +801,7 @@ define internal %Nat32 @scan_num() {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
 	%2 = bitcast [128 x %Char8]* @token to %ConstCharStr*
-	%3 = call %Int (%ConstCharStr*, %ConstCharStr*, ...) @sscanf(%ConstCharStr* %2, %ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*), %Nat32* %1)
+	%3 = call %Int (%ConstCharStr*, %ConstCharStr*, ...) @sscanf(%ConstCharStr* %2, %ConstCharStr* bitcast ([3 x i8]* @str4 to [0 x i8]*), %Nat32* %1)
 	call void @skip()
 	%4 = load %Nat32, %Nat32* %1
 	ret %Nat32 %4
@@ -659,28 +813,11 @@ define internal %Nat8 @scan_reg() {
 	%2 = zext i8 1 to %Nat32
 	%3 = getelementptr [128 x %Char8], [128 x %Char8]* @token, %Int32 0, %Nat32 %2
 	%4 = bitcast %Char8* %3 to [0 x %Char8]*
-	%5 = call %Int (%ConstCharStr*, %ConstCharStr*, ...) @sscanf([0 x %Char8]* %4, %ConstCharStr* bitcast ([3 x i8]* @str4 to [0 x i8]*), %Nat32* %1)
+	%5 = call %Int (%ConstCharStr*, %ConstCharStr*, ...) @sscanf([0 x %Char8]* %4, %ConstCharStr* bitcast ([3 x i8]* @str5 to [0 x i8]*), %Nat32* %1)
 	call void @skip()
 	%6 = load %Nat32, %Nat32* %1
 	%7 = trunc %Nat32 %6 to %Nat8
 	ret %Nat8 %7
-}
-
-define internal %Nat32 @scan_imm() {
-	%1 = alloca %Nat32, align 4
-	%2 = call %Nat32 @scan_num()
-	store %Nat32 %2, %Nat32* %1
-; if_0
-	%3 = load %Nat32, %Nat32* %1
-	%4 = icmp uge %Nat32 %3, 16777215
-	br %Bool %4 , label %then_0, label %endif_0
-then_0:
-	store %Nat32 0, %Nat32* %1
-	call void (%Str8*, ...) @error(%Str8* bitcast ([24 x i8]* @str5 to [0 x i8]*))
-	br label %endif_0
-endif_0:
-	%5 = load %Nat32, %Nat32* %1
-	ret %Nat32 %5
 }
 
 define internal void @show() {
@@ -688,221 +825,295 @@ define internal void @show() {
 	ret void
 }
 
-define internal void @do_var() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str7 to [0 x i8]*), [128 x %Char8]* @token)
-	call void @next()
-	%2 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str8 to [0 x i8]*))
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str9 to [0 x i8]*), [128 x %Char8]* @token)
-	call void @next()
+define internal void @do_value() {
+	call void @h1()
 	ret void
 }
 
-define internal void @do_func() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str10 to [0 x i8]*), [128 x %Char8]* @token)
-	call void @next()
-	%2 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str11 to [0 x i8]*))
-; while_1
-	br label %again_1
-again_1:
-	%3 = call %Bool @looks(%Str8* bitcast ([2 x i8]* @str12 to [0 x i8]*))
-	%4 = xor %Bool %3, 1
-	br %Bool %4 , label %body_1, label %break_1
-body_1:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str13 to [0 x i8]*), [128 x %Char8]* @token)
-	call void @next()
-	%6 = call %Bool @match(%Str8* bitcast ([2 x i8]* @str14 to [0 x i8]*))
-	br label %again_1
-break_1:
-	%7 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str15 to [0 x i8]*))
-	;printf(", type = %s\n", &token)
-	;next()
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str16 to [0 x i8]*))
+define internal void @h1() {
+	call void @h0()
 	ret void
 }
 
-define internal void @cc(%Str* %filename) {
-	%1 = call %File* @fopen(%Str* %filename, %ConstCharStr* bitcast ([2 x i8]* @str17 to [0 x i8]*))
-	store %File* %1, %File** @fp
+define internal void @h0() {
 ; if_0
-	%2 = load %File*, %File** @fp
-	%3 = icmp eq %File* %2, null
-	br %Bool %3 , label %then_0, label %endif_0
+	%1 = bitcast i8 1 to %TokenType
+	%2 = load %TokenType, %TokenType* @tokenType
+	%3 = icmp eq %TokenType %2, %1
+	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	call void (%Str8*, ...) @error(%Str8* bitcast ([17 x i8]* @str18 to [0 x i8]*), %Str* %filename)
-	ret void
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), [128 x %Char8]* @token)
+	call void @skip()
+	br label %endif_0
+else_0:
+; if_1
+	%5 = bitcast i8 2 to %TokenType
+	%6 = load %TokenType, %TokenType* @tokenType
+	%7 = icmp eq %TokenType %6, %5
+	br %Bool %7 , label %then_1, label %endif_1
+then_1:
+	%8 = alloca %Int, align 4
+	%9 = bitcast [128 x %Char8]* @token to %ConstCharStr*
+	%10 = call %Int (%ConstCharStr*, %ConstCharStr*, ...) @sscanf(%ConstCharStr* %9, %ConstCharStr* bitcast ([3 x i8]* @str8 to [0 x i8]*), %Int* %8)
+	%11 = load %Int, %Int* %8
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str9 to [0 x i8]*), %Int %11)
+	call void @skip()
+	br label %endif_1
+endif_1:
 	br label %endif_0
 endif_0:
-	call void @nexch()	; загружаем первый символ в ch буфер
-	call void @next()	; загружаем первый токен в token буфер
+	ret void
+}
+
+define internal void @do_type() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str10 to [0 x i8]*), [128 x %Char8]* @token)
+	call void @skip()
+	ret void
+}
+
+define internal void @do_const() {
+	%1 = call %Bool @need(%Str8* bitcast ([6 x i8]* @str11 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str12 to [0 x i8]*), [128 x %Char8]* @token)
+	call void (%Str8*, ...) @gen(%Str8* bitcast ([10 x i8]* @str13 to [0 x i8]*), [128 x %Char8]* @token)
+	call void @skip()
+; if_0
+	%3 = call %Bool @match(%Str8* bitcast ([2 x i8]* @str14 to [0 x i8]*))
+	br %Bool %3 , label %then_0, label %endif_0
+then_0:
+	call void @do_type()
+	br label %endif_0
+endif_0:
+; if_1
+	%4 = call %Bool @match(%Str8* bitcast ([2 x i8]* @str15 to [0 x i8]*))
+	br %Bool %4 , label %then_1, label %endif_1
+then_1:
+	call void (%Str8*, ...) @gen(%Str8* bitcast ([4 x i8]* @str16 to [0 x i8]*), [128 x %Char8]* @token)
+	call void @do_value()
+	br label %endif_1
+endif_1:
+	ret void
+}
+
+define internal void @do_var() {
+	call void (%Str8*, ...) @gen(%Str8* bitcast ([7 x i8]* @str17 to [0 x i8]*))
+	%1 = call %Bool @need(%Str8* bitcast ([4 x i8]* @str18 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str19 to [0 x i8]*), [128 x %Char8]* @token)
+	call void (%Str8*, ...) @gen(%Str8* bitcast ([12 x i8]* @str20 to [0 x i8]*), [128 x %Char8]* @token)
+	call void @skip()
+; if_0
+	%3 = call %Bool @match(%Str8* bitcast ([2 x i8]* @str21 to [0 x i8]*))
+	br %Bool %3 , label %then_0, label %endif_0
+then_0:
+	call void @do_type()
+	br label %endif_0
+endif_0:
+; if_1
+	%4 = call %Bool @match(%Str8* bitcast ([2 x i8]* @str22 to [0 x i8]*))
+	br %Bool %4 , label %then_1, label %endif_1
+then_1:
+	call void @do_value()
+	br label %endif_1
+endif_1:
+	ret void
+}
+
+define internal void @do_stmt_block() {
+	%1 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str23 to [0 x i8]*))
 ; while_1
 	br label %again_1
 again_1:
-	%5 = bitcast i8 0 to %TokenType
-	%6 = load %TokenType, %TokenType* @tokenType
-	%7 = icmp ne %TokenType %6, %5
-	br %Bool %7 , label %body_1, label %break_1
+	%2 = call %Bool @looks(%Str8* bitcast ([2 x i8]* @str24 to [0 x i8]*))
+	%3 = load %Bool, %Bool* @eof
+	%4 = or %Bool %2, %3
+	%5 = xor %Bool %4, 1
+	br %Bool %5 , label %body_1, label %break_1
 body_1:
+	call void @do_stmt()
+	br label %again_1
+break_1:
+	%6 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str25 to [0 x i8]*))
+	ret void
+}
+
+define internal void @do_stmt_return() {
+	%1 = call %Bool @need(%Str8* bitcast ([7 x i8]* @str26 to [0 x i8]*))
+	call void (%Str8*, ...) @op(%Str8* bitcast ([5 x i8]* @str27 to [0 x i8]*))
+	ret void
+}
+
+define internal void @do_stmt_if() {
+	%1 = call %Bool @need(%Str8* bitcast ([3 x i8]* @str28 to [0 x i8]*))
+	call void (%Str8*, ...) @op(%Str8* bitcast ([4 x i8]* @str29 to [0 x i8]*))
+	call void @do_value()
+	call void @do_stmt_block()
+; if_0
+	%2 = call %Bool @match(%Str8* bitcast ([5 x i8]* @str30 to [0 x i8]*))
+	br %Bool %2 , label %then_0, label %endif_0
+then_0:
 ; if_1
-	%8 = call %Bool @matchId(%Str8* bitcast ([5 x i8]* @str19 to [0 x i8]*))
-	br %Bool %8 , label %then_1, label %else_1
+	%3 = call %Bool @looks(%Str8* bitcast ([3 x i8]* @str31 to [0 x i8]*))
+	br %Bool %3 , label %then_1, label %else_1
 then_1:
-	call void @do_func()
+	call void @do_stmt_if()
+	br label %endif_1
+else_1:
+	call void @do_stmt_block()
+	br label %endif_1
+endif_1:
+	br label %endif_0
+endif_0:
+	ret void
+}
+
+define internal void @do_stmt() {
+; if_0
+	%1 = call %Bool @looks(%Str8* bitcast ([2 x i8]* @str32 to [0 x i8]*))
+	br %Bool %1 , label %then_0, label %else_0
+then_0:
+	call void @do_stmt_block()
+	br label %endif_0
+else_0:
+; if_1
+	%2 = call %Bool @looks(%Str8* bitcast ([3 x i8]* @str33 to [0 x i8]*))
+	br %Bool %2 , label %then_1, label %else_1
+then_1:
+	call void @do_stmt_if()
 	br label %endif_1
 else_1:
 ; if_2
-	%9 = call %Bool @matchId(%Str8* bitcast ([4 x i8]* @str20 to [0 x i8]*))
-	br %Bool %9 , label %then_2, label %endif_2
+	%3 = call %Bool @looks(%Str8* bitcast ([7 x i8]* @str34 to [0 x i8]*))
+	br %Bool %3 , label %then_2, label %endif_2
 then_2:
-	call void @do_var()
+	call void @do_stmt_return()
 	br label %endif_2
 endif_2:
 	br label %endif_1
 endif_1:
-	br label %again_1
-break_1:
-	%10 = load %File*, %File** @fp
-	%11 = call %Int @fclose(%File* %10)
+	br label %endif_0
+endif_0:
 	ret void
 }
 
-define internal void @parseAsm(%Str* %filename) {
-	%1 = call %File* @fopen(%Str* %filename, %ConstCharStr* bitcast ([2 x i8]* @str21 to [0 x i8]*))
-	store %File* %1, %File** @fp
+declare internal void @do_arg()
+define internal void @do_func() {
+	%1 = call %Bool @need(%Str8* bitcast ([5 x i8]* @str35 to [0 x i8]*))
+	call void (%Str8*, ...) @gen(%Str8* bitcast ([7 x i8]* @str36 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str37 to [0 x i8]*), [128 x %Char8]* @token)
+	call void (%Str8*, ...) @gen(%Str8* bitcast ([5 x i8]* @str38 to [0 x i8]*), [128 x %Char8]* @token)
+	call void @prolog()
+	call void @next()
+	%3 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str39 to [0 x i8]*))
+; while_1
+	br label %again_1
+again_1:
+	%4 = call %Bool @looks(%Str8* bitcast ([2 x i8]* @str40 to [0 x i8]*))
+	%5 = load %Bool, %Bool* @eof
+	%6 = or %Bool %4, %5
+	%7 = xor %Bool %6, 1
+	br %Bool %7 , label %body_1, label %break_1
+body_1:
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str41 to [0 x i8]*), [128 x %Char8]* @token)
+	call void @next()
+	%9 = call %Bool @match(%Str8* bitcast ([2 x i8]* @str42 to [0 x i8]*))
+	br label %again_1
+break_1:
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str43 to [0 x i8]*))
+	%11 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str44 to [0 x i8]*))
+	call void @do_stmt_block()
+	call void @epilog()
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str45 to [0 x i8]*))
+	ret void
+}
+
+define internal void @cc(%Str* %input, %Str* %output) {
+	%1 = call %File* @fopen(%Str* %input, %ConstCharStr* bitcast ([2 x i8]* @str46 to [0 x i8]*))
+	store %File* %1, %File** @fsrc
 ; if_0
-	%2 = load %File*, %File** @fp
+	%2 = load %File*, %File** @fsrc
 	%3 = icmp eq %File* %2, null
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
-	call void (%Str8*, ...) @error(%Str8* bitcast ([17 x i8]* @str22 to [0 x i8]*))
+	call void (%Str8*, ...) @error(%Str8* bitcast ([28 x i8]* @str47 to [0 x i8]*), %Str* %input)
 	ret void
 	br label %endif_0
 endif_0:
+
+	;fout = creat(output, 0x1BC)
+	%5 = call %Int ([0 x %ConstChar]*, %Word32, ...) @open(%Str* %output, %Word32 1)
+	store %Int %5, %Int* @fout
+; if_1
+	%6 = load %Int, %Int* @fout
+	%7 = icmp slt %Int %6, 0
+	br %Bool %7 , label %then_1, label %endif_1
+then_1:
+	call void (%Str8*, ...) @error(%Str8* bitcast ([29 x i8]* @str48 to [0 x i8]*), %Str* %output)
+	ret void
+	br label %endif_1
+endif_1:
 	call void @nexch()	; загружаем первый символ в ch буфер
 	call void @next()	; загружаем первый токен в token буфер
 ; while_1
 	br label %again_1
 again_1:
-	%5 = bitcast i8 0 to %TokenType
-	%6 = load %TokenType, %TokenType* @tokenType
-	%7 = icmp ne %TokenType %6, %5
-	br %Bool %7 , label %body_1, label %break_1
+	%9 = load %Bool, %Bool* @eof
+	%10 = xor %Bool %9, 1
+	br %Bool %10 , label %body_1, label %break_1
 body_1:
-; if_1
-	%8 = call %Bool @matchId(%Str8* bitcast ([5 x i8]* @str23 to [0 x i8]*))
-	br %Bool %8 , label %then_1, label %endif_1
-then_1:
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str24 to [0 x i8]*))
-	br label %endif_1
-endif_1:
 ; if_2
-	%10 = call %Bool @matchId(%Str8* bitcast ([5 x i8]* @str25 to [0 x i8]*))
-	br %Bool %10 , label %then_2, label %endif_2
+	%11 = call %Bool @looks(%Str8* bitcast ([5 x i8]* @str49 to [0 x i8]*))
+	br %Bool %11 , label %then_2, label %else_2
 then_2:
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str26 to [0 x i8]*), [128 x %Char8]* @token)
-	call void @next()
+	call void @do_func()
 	br label %endif_2
-endif_2:
+else_2:
 ; if_3
-	%12 = call %Bool @matchId(%Str8* bitcast ([3 x i8]* @str27 to [0 x i8]*))
+	%12 = call %Bool @looks(%Str8* bitcast ([6 x i8]* @str50 to [0 x i8]*))
 	br %Bool %12 , label %then_3, label %else_3
 then_3:
-	%13 = alloca %Nat8, align 1
-	%14 = alloca %Nat32, align 4
-	%15 = call %Nat8 @scan_reg()
-	store %Nat8 %15, %Nat8* %13
-	%16 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str28 to [0 x i8]*))
-	%17 = call %Nat32 @scan_imm()
-	store %Nat32 %17, %Nat32* %14
-	%18 = load %Nat8, %Nat8* %13
-	%19 = load %Nat32, %Nat32* %14
-	call void @emit_ri(%Str8* bitcast ([3 x i8]* @str29 to [0 x i8]*), %Nat8 %18, %Nat32 %19)
+	call void @do_const()
 	br label %endif_3
 else_3:
 ; if_4
-	%20 = call %Bool @matchId(%Str8* bitcast ([4 x i8]* @str30 to [0 x i8]*))
-	br %Bool %20 , label %then_4, label %else_4
+	%13 = call %Bool @looks(%Str8* bitcast ([4 x i8]* @str51 to [0 x i8]*))
+	br %Bool %13 , label %then_4, label %else_4
 then_4:
-	%21 = alloca %Nat8, align 1
-	%22 = alloca %Nat8, align 1
-	%23 = alloca %Nat8, align 1
-	%24 = call %Nat8 @scan_reg()
-	store %Nat8 %24, %Nat8* %21
-	%25 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str31 to [0 x i8]*))
-	%26 = call %Nat8 @scan_reg()
-	store %Nat8 %26, %Nat8* %22
-	%27 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str32 to [0 x i8]*))
-	%28 = call %Nat8 @scan_reg()
-	store %Nat8 %28, %Nat8* %23
-	%29 = load %Nat8, %Nat8* %21
-	%30 = load %Nat8, %Nat8* %22
-	%31 = load %Nat8, %Nat8* %23
-	call void @emit_rrr(%Str8* bitcast ([4 x i8]* @str33 to [0 x i8]*), %Nat8 %29, %Nat8 %30, %Nat8 %31)
+	call void @do_var()
 	br label %endif_4
 else_4:
-; if_5
-	%32 = call %Bool @matchId(%Str8* bitcast ([4 x i8]* @str34 to [0 x i8]*))
-	br %Bool %32 , label %then_5, label %else_5
-then_5:
-	%33 = alloca %Nat8, align 1
-	%34 = alloca %Nat8, align 1
-	%35 = alloca %Nat8, align 1
-	%36 = call %Nat8 @scan_reg()
-	store %Nat8 %36, %Nat8* %33
-	%37 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str35 to [0 x i8]*))
-	%38 = call %Nat8 @scan_reg()
-	store %Nat8 %38, %Nat8* %34
-	%39 = call %Bool @need(%Str8* bitcast ([2 x i8]* @str36 to [0 x i8]*))
-	%40 = call %Nat8 @scan_reg()
-	store %Nat8 %40, %Nat8* %35
-	%41 = load %Nat8, %Nat8* %33
-	%42 = load %Nat8, %Nat8* %34
-	%43 = load %Nat8, %Nat8* %35
-	call void @emit_rrr(%Str8* bitcast ([4 x i8]* @str37 to [0 x i8]*), %Nat8 %41, %Nat8 %42, %Nat8 %43)
-	br label %endif_5
-else_5:
-; if_6
-	%44 = call %Bool @matchId(%Str8* bitcast ([4 x i8]* @str38 to [0 x i8]*))
-	br %Bool %44 , label %then_6, label %endif_6
-then_6:
-	call void @emit_ret()
-	br label %endif_6
-endif_6:
-	br label %endif_5
-endif_5:
+	call void (%Str8*, ...) @error(%Str8* bitcast ([22 x i8]* @str52 to [0 x i8]*), [128 x %Char8]* @token)
+	call void @skip()
 	br label %endif_4
 endif_4:
 	br label %endif_3
 endif_3:
+	br label %endif_2
+endif_2:
 	br label %again_1
 break_1:
-	%45 = load %File*, %File** @fp
-	%46 = call %Int @fclose(%File* %45)
-	ret void
-}
-
-define internal void @emit_rrr(%Str8* %op, %Nat8 %r0, %Nat8 %r1, %Nat8 %r2) {
-	%1 = zext %Nat8 %r0 to %Nat32
-	%2 = zext %Nat8 %r1 to %Nat32
-	%3 = zext %Nat8 %r2 to %Nat32
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str39 to [0 x i8]*), %Str8* %op, %Nat32 %1, %Nat32 %2, %Nat32 %3)
-	ret void
-}
-
-define internal void @emit_ri(%Str8* %op, %Nat8 %reg, %Nat32 %imm) {
-	%1 = zext %Nat8 %reg to %Nat32
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str40 to [0 x i8]*), %Str8* %op, %Nat32 %1, %Nat32 %imm)
-	ret void
-}
-
-define internal void @emit_ret() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str41 to [0 x i8]*))
+	%14 = load %File*, %File** @fsrc
+	%15 = call %Int @fclose(%File* %14)
+	%16 = load %Int, %Int* @fout
+	%17 = call %Int @close(%Int %16)
 	ret void
 }
 
 define %Int @main() {
-	;parseAsm("example.s")
-	call void @cc(%Str* bitcast ([8 x i8]* @str42 to [0 x i8]*))
-	ret %Int 0
+	call void @cc(%Str* bitcast ([7 x i8]* @str53 to [0 x i8]*), %Str* bitcast ([6 x i8]* @str54 to [0 x i8]*))
+	%1 = load %Nat32, %Nat32* @errcnt
+	%2 = icmp ugt %Nat32 %1, 0
+	%3 = zext %Bool %2 to %Word8
+	%4 = sext %Word8 %3 to %Int
+	ret %Int %4
+}
+
+define internal void @prolog() {
+	call void (%Str8*, ...) @op(%Str8* bitcast ([9 x i8]* @str55 to [0 x i8]*))
+	ret void
+}
+
+define internal void @epilog() {
+	call void (%Str8*, ...) @op(%Str8* bitcast ([9 x i8]* @str56 to [0 x i8]*))
+	ret void
 }
 
 

@@ -20,9 +20,13 @@
 #define _INT64_MIN  (-9223372036854775808UL)
 #define _INT64_MAX  9223372036854775807UL
 
+#define _NAT8_MIN  0
 #define _NAT8_MAX  255
+#define _NAT16_MIN  0
 #define _NAT16_MAX  65535
+#define _NAT32_MIN  0
 #define _NAT32_MAX  4294967295UL
+#define _NAT64_MIN  0
 #define _NAT64_MAX  18446744073709551615UL
 
 //const float32Max       = Float32 3.4028234663852886e+38
@@ -60,8 +64,8 @@ static void testInt8(void) {
 	assert((int8_t)-1 < 0, "Int8 sign");
 	assert(1 > 0, "Int8 positive");
 
-	assert(((const int8_t)(max + 1)) == min, "Int8 overflow up");
-	assert(((const int8_t)(min - 1)) == max, "Int8 overflow down");
+	assert((const int8_t)((max + 1)) == min, "Int8 overflow up");
+	assert((const int8_t)((min - 1)) == max, "Int8 overflow down");
 }
 
 
@@ -72,8 +76,8 @@ static void testInt16(void) {
 	assert(min < 0, "Int16 min < 0");
 	assert(max > 0, "Int16 max > 0");
 
-	assert(((const int16_t)(max + 1)) == min, "Int16 overflow up");
-	assert(((const int16_t)(min - 1)) == max, "Int16 overflow down");
+	assert((const int16_t)((max + 1)) == min, "Int16 overflow up");
+	assert((const int16_t)((min - 1)) == max, "Int16 overflow down");
 }
 
 
@@ -108,14 +112,14 @@ static void testInt64(void) {
 static void testNat8(void) {
 	const uint8_t max = 255;
 
-	assert(((const uint8_t)(max + 1)) == 0, "Nat8 overflow up");
+	assert((const uint8_t)((max + 1)) == 0, "Nat8 overflow up");
 }
 
 
 static void testNat16(void) {
 	const uint16_t max = 65535;
 
-	assert(((const uint16_t)(max + 1)) == 0, "Nat16 overflow up");
+	assert((const uint16_t)((max + 1)) == 0, "Nat16 overflow up");
 }
 
 
@@ -180,8 +184,81 @@ static void testFloat64(void) {
 // Entry
 // ------------------------------------------------------------
 
+#define NAT8_MAX_PLUS_ONE  ((uint8_t)_NAT8_MAX + 1)
+#define NAT8_MIN_MINUS_ONE  ((uint8_t)_NAT8_MIN - 1)
+#define NAT16_MAX_PLUS_ONE  ((uint16_t)_NAT16_MAX + 1)
+#define NAT16_MIN_MINUS_ONE  ((uint16_t)_NAT16_MIN - 1)
+#define NAT32_MAX_PLUS_ONE  ((uint32_t)_NAT32_MAX + 1)
+#define NAT32_MIN_MINUS_ONE  ((uint32_t)_NAT32_MIN - 1)
+#define NAT64_MAX_PLUS_ONE  ((uint64_t)_NAT64_MAX + 1)
+#define NAT64_MIN_MINUS_ONE  ((uint64_t)_NAT64_MIN - 1)
+
+static bool testNat8Static(void) {
+	if (NAT8_MAX_PLUS_ONE != (const uint8_t)_NAT8_MIN) {
+		printf("error: nat8MaxPlusOne != _nat8Min\n");
+		return false;
+	}
+	if (NAT8_MIN_MINUS_ONE != (const uint8_t)_NAT8_MAX) {
+		printf("error: nat8MinMinusOne != _nat8Max\n");
+		return false;
+	}
+	printf("passed: Nat8 test\n");
+	return true;
+}
+
+
+static bool testNat16Static(void) {
+	if (NAT16_MAX_PLUS_ONE != (const uint16_t)_NAT16_MIN) {
+		printf("error: nat16MaxPlusOne != _nat16Min\n");
+		return false;
+	}
+	if (NAT16_MIN_MINUS_ONE != (const uint16_t)_NAT16_MAX) {
+		printf("error: nat16MinMinusOne != _nat16Max\n");
+		return false;
+	}
+	printf("passed: Nat16 test\n");
+	return true;
+}
+
+
+static bool testNat32Static(void) {
+	if (NAT32_MAX_PLUS_ONE != (const uint32_t)_NAT32_MIN) {
+		printf("error: nat32MaxPlusOne != _nat32Min\n");
+		return false;
+	}
+	if (NAT32_MIN_MINUS_ONE != (const uint32_t)_NAT32_MAX) {
+		printf("error: nat32MinMinusOne != _nat32Max\n");
+		return false;
+	}
+	printf("passed: Nat32 test\n");
+	return true;
+}
+
+
+static bool testNat64Static(void) {
+	if (NAT64_MAX_PLUS_ONE != (const uint64_t)_NAT64_MIN) {
+		printf("error: nat64MaxPlusOne != _nat64Min\n");
+		return false;
+	}
+	if (NAT64_MIN_MINUS_ONE != (const uint64_t)_NAT64_MAX) {
+		printf("error: nat64MinMinusOne != _nat64Max\n");
+		return false;
+	}
+	printf("passed: Nat64 test\n");
+	return true;
+}
+
+
 int32_t main(void) {
 	printf("numeric boundary tests\n");
+	printf("nat8MaxPlusOne = %llu\n", (uint64_t)NAT8_MAX_PLUS_ONE);
+	printf("nat8MinMinusOne = %llu\n", (uint64_t)NAT8_MIN_MINUS_ONE);
+	testNat8Static();
+	testNat16Static();
+	testNat32Static();
+	testNat64Static();
+	//	printf("cC = %llu\n", Nat64 cC)
+	//	printf("dD = %lli\n", Nat64 dD)
 
 	//
 	//	let f = 3.1415926535897932384626433832795028841971693993751058209749445923

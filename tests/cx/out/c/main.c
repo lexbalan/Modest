@@ -1,6 +1,4 @@
 
-#include "main.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -10,6 +8,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <time.h>
+#include "fcntl.h"
 
 #include <stdarg.h>
 
@@ -39,10 +38,10 @@ typedef uint8_t TypeKind;
 #define TYPE_ARRAY  ((TypeKind)10)
 #define TYPE_POINTER  ((TypeKind)10)
 
-struct Type {
+
+struct type {
 	TypeKind kind;
 };
-typedef struct Type Type;
 
 static void error(char *format, ...) {
 	va_list va;
@@ -54,11 +53,11 @@ static void error(char *format, ...) {
 
 	#define strMaxLen  255
 	char buf[strMaxLen + 1];
-	const int n = vsnprintf((char *)&buf, strMaxLen, format, va);
+	const int n = vsnprintf(buf, (size_t)strMaxLen, format, va);
 
 	va_end(va);
 
-	write(STDOUT_FILENO, (void *)&buf, (size_t)abs((int)n));
+	write((int)STDOUT_FILENO, (void *)buf, (size_t)abs((int)n));
 	puts("");
 
 	errcnt = errcnt + 1;
@@ -75,8 +74,8 @@ static void gen(char *format, ...) {
 	va_start(va, format);
 	#define strMaxLen  512
 	char buf[strMaxLen + 1];
-	const int n = vsnprintf((char *)&buf, strMaxLen, format, va);
-	write(fout, (void *)&buf, (size_t)abs((int)n));
+	const int n = vsnprintf(buf, (size_t)strMaxLen, format, va);
+	write(fout, (void *)buf, (size_t)abs((int)n));
 	va_end(va);
 
 #undef strMaxLen
@@ -88,8 +87,8 @@ static void op(char *format, ...) {
 	va_start(va, format);
 	#define strMaxLen  512
 	char buf[strMaxLen + 1] = {"\t"};
-	const int n = vsnprintf(&buf[1], strMaxLen - 1, format, va);
-	write(fout, (void *)&buf, (size_t)abs((int)n) + 1);
+	const int n = vsnprintf(&buf[1], (size_t)strMaxLen - 1, format, va);
+	write(fout, (void *)buf, (size_t)abs((int)n) + 1);
 	va_end(va);
 
 #undef strMaxLen
@@ -123,7 +122,7 @@ static bool isdigit(char x) {
 
 static void nexch(void) {
 	const int c = fgetc(fsrc);
-	if (c == EOF) {
+	if (c == (const int)EOF) {
 		eof = true;
 	}
 	ch = (char)c;
@@ -131,7 +130,7 @@ static void nexch(void) {
 
 
 static void skipBlanks(void) {
-	while (ch == '\n' || ch == ' ' || ch == '\t') {
+	while ((bool)(ch == '\n') || (bool)((bool)(ch == ' ') || (bool)(ch == '\t'))) {
 		if (ch == '\n') {
 			lineno = lineno + 1;
 		}
@@ -142,7 +141,7 @@ static void skipBlanks(void) {
 
 static uint32_t sweep(void) {
 	uint32_t n = 0;
-	while (isalpha(ch) || isdigit(ch) || ch == '_') {
+	while (isalpha(ch) || (bool)(isdigit(ch) || (bool)(ch == '_'))) {
 		token[n] = ch;
 		nexch();
 		n = n + 1;
@@ -157,7 +156,7 @@ static void next(void) {
 
 	uint32_t n = 0;
 
-	if (isalpha(ch) || ch == '_') {
+	if (isalpha(ch) || (bool)(ch == '_')) {
 		tokenType = TOKEN_TYPE_ID;
 		n = sweep();
 	} else if (isdigit(ch)) {
@@ -186,7 +185,7 @@ static bool looks(char *s) {
 	if ((uint32_t)strlen(s) != tokenLen) {
 		return false;
 	}
-	return memcmp((char(*)[tokenLen - 0])&token[0], (char(*)[tokenLen - 0])&s[0], sizeof(char[tokenLen - 0])) == 0;
+	return memcmp((char *)&token[0], (char *)&s[0], sizeof(char [tokenLen - 0])) == 0;
 }
 
 
@@ -228,7 +227,7 @@ static bool match(char *s) {
 
 static uint32_t scan_num(void) {
 	uint32_t x = 0;
-	sscanf((char *)&token, "%i", &x);
+	sscanf(token, "%i", &x);
 	skip();
 	return x;
 }
@@ -242,18 +241,8 @@ static uint8_t scan_reg(void) {
 }
 
 
-static uint32_t scan_imm(void) {
-	uint32_t x = scan_num();
-	if (x >= 0xFFFFFF) {
-		x = 0;
-		error("too big immediate value");
-	}
-	return x;
-}
-
-
 static void show(void) {
-	printf("<< '%s' >>\n", (char *)&token);
+	printf("<< '%s' >>\n", token);
 }
 
 
@@ -275,11 +264,11 @@ static void h1(void) {
 
 static void h0(void) {
 	if (tokenType == TOKEN_TYPE_ID) {
-		printf("expr.id = %s\n", (char *)&token);
+		printf("expr.id = %s\n", token);
 		skip();
 	} else if (tokenType == TOKEN_TYPE_NUMBER) {
 		int value;
-		sscanf((char *)&token, "%i", &value);
+		sscanf(token, "%i", &value);
 		printf("expr.num = %d\n", value);
 		skip();
 	}
@@ -287,21 +276,21 @@ static void h0(void) {
 
 
 static void do_type(void) {
-	printf("type = %s\n", (char *)&token);
+	printf("type = %s\n", token);
 	skip();
 }
 
 
 static void do_const(void) {
 	need("const");
-	printf("const %s\n", (char *)&token);
-	gen(".equ %s, ", (char *)&token);
+	printf("const %s\n", token);
+	gen(".equ %s, ", token);
 	skip();
 	if (match(":")) {
 		do_type();
 	}
 	if (match("=")) {
-		gen("%s\n", (char *)&token);
+		gen("%s\n", token);
 		do_value();
 	}
 }
@@ -311,8 +300,8 @@ static void do_var(void) {
 	gen(".data\n");
 
 	need("var");
-	printf("var %s\n", (char *)&token);
-	gen("%s: word 0\n", (char *)&token);
+	printf("var %s\n", token);
+	gen("%s: word 0\n", token);
 	skip();
 	if (match(":")) {
 		do_type();
@@ -376,13 +365,13 @@ static void epilog(void);
 static void do_func(void) {
 	need("func");
 	gen(".text\n");
-	printf("func %s ", (char *)&token);
-	gen("%s:\n", (char *)&token);
+	printf("func %s ", token);
+	gen("%s:\n", token);
 	prolog();
 	next();
 	need("(");
 	while (!(looks(")") || eof)) {
-		printf("%s,", (char *)&token);next();
+		printf("%s,", token);next();
 		match(",");
 	}
 	printf("\n");
@@ -420,7 +409,7 @@ static void cc(char *input, char *output) {
 		} else if (looks("var")) {
 			do_var();
 		} else {
-			error("unexpected token '%s'", (char *)&token);
+			error("unexpected token '%s'", token);
 			skip();
 		}
 	}
