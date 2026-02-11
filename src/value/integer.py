@@ -22,7 +22,9 @@ def value_integer_cons(t, v, method, ti):
 	#info("value_integer_cons", ti)
 	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = v.stage
-	nv.set_asset(v.asset)
+	#print(v.asset)
+	#print(int(v.asset))
+	nv.set_asset(int(v.asset))
 	return nv
 
 

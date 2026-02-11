@@ -252,13 +252,34 @@ func testInt64Static () -> Bool {
 
 
 
+func testRational () -> Bool {
+	let pi = Rational 3.14
+	if pi != 3.14 {
+		printf("error: pi != 3.14\n")
+		return false
+	}
+
+	let npi = Integer pi
+	if npi != 3 {
+		printf("%f", npi)
+		printf("error: npi != 3\n")
+		return false
+	}
+
+	printf("passed: Rational test\n")
+	return true
+}
+
 
 func assert (x: Bool) -> Unit {
 	//
 }
 
+
 public func main () -> Int32 {
     printf("numeric boundary tests\n")
+
+	assert(testRational())
 
 	assert(testNat8Static())
 	assert(testNat16Static())

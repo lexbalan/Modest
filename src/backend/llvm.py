@@ -2753,6 +2753,7 @@ def run(module, outname):
 
 	lo("%Unit = type i1")
 	lo("%Bool = type i1")
+	lo("%Byte = type i8")
 	lo("%Word8 = type i8")
 	lo("%Word16 = type i16")
 	lo("%Word32 = type i32")

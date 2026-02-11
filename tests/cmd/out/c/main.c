@@ -71,14 +71,14 @@ static uint16_t gettok(struct tokenizer *t, char *output, uint16_t lim) {
 		while (!is_blank(c)) {
 			output[outpos] = c;
 			t->position = t->position + 1;
-			outpos = (uint16_t)(outpos + 1);
+			outpos = outpos + 1;
 			c = t->input[t->position];
 		}
 		output[outpos] = '\x0';
 	} else {
 		output[outpos] = c;
 		t->position = t->position + 1;
-		outpos = (uint16_t)(outpos + 1);
+		outpos = outpos + 1;
 	}
 
 	return outpos;
@@ -98,13 +98,13 @@ static void tokenize(struct tokenizer *tokenizer) {
 
 		// save token in tokens buffer
 		char *const pbuf = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		memcpy((char *)&pbuf[0], (char *)&token[0], sizeof(char [(const uint16_t)(toklen - 0)]));
-		tokenizer->tokensBufPos = (uint16_t)(tokenizer->tokensBufPos + toklen);
+		memcpy((char *)&pbuf[0], (char *)&token[0], sizeof(char [toklen - 0]));
+		tokenizer->tokensBufPos = tokenizer->tokensBufPos + toklen;
 		pbuf[tokenizer->tokensBufPos] = '\x0';
-		tokenizer->tokensBufPos = (uint16_t)(tokenizer->tokensBufPos + 1);
+		tokenizer->tokensBufPos = tokenizer->tokensBufPos + 1;
 		// save pointer to token
 		(*tokenizer->tokens)[tokenizer->tokensPos] = pbuf;
-		tokenizer->tokensPos = (uint16_t)(tokenizer->tokensPos + 1);
+		tokenizer->tokensPos = tokenizer->tokensPos + 1;
 		(*tokenizer->tokens)[tokenizer->tokensPos] = NULL;
 	}
 }
@@ -149,7 +149,7 @@ int32_t main(void) {
 		char *const cmd = (*tokenizer.tokens)[0];
 		uint16_t argc = tokenizer.tokensPos;
 		if (argc > 0) {
-			argc = (uint16_t)(argc - 1);
+			argc = argc - 1;
 		}
 		char *(*const argv)[] = (char *(*)[])&(*tokenizer.tokens)[1];
 		execute(cmd, argc, argv);

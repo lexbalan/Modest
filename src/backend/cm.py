@@ -888,7 +888,10 @@ def print_stmt(x):
 		out(str_nl_indent(x.comment.nl))
 		print_stmt_comment(x.comment)
 
-	out(str_nl_indent(x.nl))
+	if x.nl > 0:
+		out(str_nl_indent(x.nl))
+	else:
+		out("; ")
 
 	if x.is_stmt_block(): print_stmt_block(x)
 	elif x.is_stmt_value_expr(): print_stmt_value(x)

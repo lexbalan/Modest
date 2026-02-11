@@ -515,7 +515,7 @@ bin_ops = {
 
 def needd(x):
 	rv = get_root_value(x)
-	return (x.type.width < 32) and rv.isValueBin()
+	return (x.type.is_int() or x.type.is_nat()) and (x.type.width < 32) and rv.isValueBin()
 
 def str_value_2(v, ctx=[]):
 	return cons_if(str_value(v, ctx), v.type, cond=needd(v))
@@ -923,14 +923,14 @@ def is_the_same_in_c(t0, t1):
 
 
 
+
 def str_value_cons(x, ctx):
-	return str_value_cons2(x, ctx)
-
-
-def str_value_cons2(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
+
+#	if type.is_generic():
+#		return str_value(value, ctx=ctx)
 
 	if x.method == 'extra_arg':
 		if value.type.is_pointer_to_array():

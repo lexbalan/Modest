@@ -248,6 +248,28 @@ static bool testInt64Static(void) {
 }
 
 
+static bool testRational(void) {
+	#define pi  (3.14)
+	if (pi != 3.14) {
+		printf("error: pi != 3.14\n");
+		return false;
+	}
+
+	#define npi  ((int)pi)
+	if ((int8_t)npi != 3) {
+		printf("%f", (int32_t)npi);
+		printf("error: npi != 3\n");
+		return false;
+	}
+
+	printf("passed: Rational test\n");
+	return true;
+
+#undef pi
+#undef npi
+}
+
+
 static void assert(bool x) {
 	//
 }
@@ -255,6 +277,8 @@ static void assert(bool x) {
 
 int32_t main(void) {
 	printf("numeric boundary tests\n");
+
+	assert(testRational());
 
 	assert(testNat8Static());
 	assert(testNat16Static());

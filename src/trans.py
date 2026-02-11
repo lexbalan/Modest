@@ -1700,6 +1700,7 @@ def do_stmt_const(x):
 
 
 def do_stmt_var(x):
+	#info("do_stmt_var", x['ti'])
 	global cfunc
 
 	already = ctx_value_get(x['id']['str'], shallow=True)
@@ -1707,6 +1708,10 @@ def do_stmt_var(x):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
 	df = def_var_common(x)
+
+	if df.is_stmt_bad():
+		# hmm
+		return df
 
 	if not df.init_value.is_value_undefined():
 		df.value.is_initialized = True

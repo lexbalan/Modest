@@ -18,7 +18,7 @@ int main(void) {
 	c = 0x1 << 31;
 	printf("1 << 31 = 0x%x\n", c);
 
-	c = 0x80000000UL >> 31;
+	c = 0x80000000L >> 31;
 	printf("0x80000000 >> 31 = 0x%x\n", c);
 
 	return 0;
