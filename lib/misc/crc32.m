@@ -23,10 +23,9 @@ var table: [tableSize]Word32
 
 // initialize table
 public func init () -> Unit {
-	var crc: Word32
 	var i = Nat32 0
 	while i < tableSize {
-		crc = Word32 i
+		var crc = Word32 i
 		var j = Nat32 0
 		while j < 8 {
 			if (crc and 1) != 0 {

@@ -16,10 +16,10 @@ static uint32_t table[TABLE_SIZE];
 
 // initialize table
 void crc32_init(void) {
-	uint32_t crc;
+	//var crc: Word32
 	uint32_t i = 0;
 	while (i < (uint32_t)TABLE_SIZE) {
-		crc = i;
+		uint32_t crc = i;
 		uint32_t j = 0;
 		while (j < 8) {
 			if ((crc & 0x1) != 0x0) {

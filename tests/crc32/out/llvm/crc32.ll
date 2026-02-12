@@ -199,19 +199,20 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 @table = internal global [256 x %Word32] zeroinitializer
 define void @crc32_init() {
-	%1 = alloca %Word32, align 4
-	%2 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %2
+	;var crc: Word32
+	%1 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %1
 ; while_1
 	br label %again_1
 again_1:
-	%3 = load %Nat32, %Nat32* %2
-	%4 = icmp ult %Nat32 %3, 256
-	br %Bool %4 , label %body_1, label %break_1
+	%2 = load %Nat32, %Nat32* %1
+	%3 = icmp ult %Nat32 %2, 256
+	br %Bool %3 , label %body_1, label %break_1
 body_1:
-	%5 = load %Nat32, %Nat32* %2
+	%4 = alloca %Word32, align 4
+	%5 = load %Nat32, %Nat32* %1
 	%6 = bitcast %Nat32 %5 to %Word32
-	store %Word32 %6, %Word32* %1
+	store %Word32 %6, %Word32* %4
 	%7 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %7
 ; while_2
@@ -223,23 +224,23 @@ again_2:
 body_2:
 ; if_0
 	%10 = zext i8 1 to %Word32
-	%11 = load %Word32, %Word32* %1
+	%11 = load %Word32, %Word32* %4
 	%12 = and %Word32 %11, %10
 	%13 = zext i8 0 to %Word32
 	%14 = icmp ne %Word32 %12, %13
 	br %Bool %14 , label %then_0, label %else_0
 then_0:
-	%15 = load %Word32, %Word32* %1
+	%15 = load %Word32, %Word32* %4
 	%16 = zext i8 1 to %Word32
 	%17 = lshr %Word32 %15, %16
 	%18 = xor %Word32 %17, 3988292384
-	store %Word32 %18, %Word32* %1
+	store %Word32 %18, %Word32* %4
 	br label %endif_0
 else_0:
-	%19 = load %Word32, %Word32* %1
+	%19 = load %Word32, %Word32* %4
 	%20 = zext i8 1 to %Word32
 	%21 = lshr %Word32 %19, %20
-	store %Word32 %21, %Word32* %1
+	store %Word32 %21, %Word32* %4
 	br label %endif_0
 endif_0:
 	%22 = load %Nat32, %Nat32* %7
@@ -247,14 +248,14 @@ endif_0:
 	store %Nat32 %23, %Nat32* %7
 	br label %again_2
 break_2:
-	%24 = load %Nat32, %Nat32* %2
+	%24 = load %Nat32, %Nat32* %1
 	%25 = bitcast %Nat32 %24 to %Nat32
 	%26 = getelementptr [256 x %Word32], [256 x %Word32]* @table, %Int32 0, %Nat32 %25
-	%27 = load %Word32, %Word32* %1
+	%27 = load %Word32, %Word32* %4
 	store %Word32 %27, %Word32* %26
-	%28 = load %Nat32, %Nat32* %2
+	%28 = load %Nat32, %Nat32* %1
 	%29 = add %Nat32 %28, 1
-	store %Nat32 %29, %Nat32* %2
+	store %Nat32 %29, %Nat32* %1
 	br label %again_1
 break_1:
 	ret void
