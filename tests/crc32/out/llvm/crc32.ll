@@ -197,110 +197,108 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports 'crc32' --
 ; -- strings --
 ; -- endstrings --
-define %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len) {
-	%1 = alloca [256 x %Word32], align 1
-	%2 = alloca %Word32, align 4
-
-	;
-	; create table before
-	;
-	%3 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %3
+@table = internal global [256 x %Word32] zeroinitializer
+define void @crc32_init() {
+	%1 = alloca %Word32, align 4
+	%2 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %2
 ; while_1
 	br label %again_1
 again_1:
-	%4 = load %Nat32, %Nat32* %3
-	%5 = icmp ult %Nat32 %4, 256
-	br %Bool %5 , label %body_1, label %break_1
+	%3 = load %Nat32, %Nat32* %2
+	%4 = icmp ult %Nat32 %3, 256
+	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	%6 = load %Nat32, %Nat32* %3
-	%7 = bitcast %Nat32 %6 to %Word32
-	store %Word32 %7, %Word32* %2
-	%8 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %8
+	%5 = load %Nat32, %Nat32* %2
+	%6 = bitcast %Nat32 %5 to %Word32
+	store %Word32 %6, %Word32* %1
+	%7 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %7
 ; while_2
 	br label %again_2
 again_2:
-	%9 = load %Nat32, %Nat32* %8
-	%10 = icmp ult %Nat32 %9, 8
-	br %Bool %10 , label %body_2, label %break_2
+	%8 = load %Nat32, %Nat32* %7
+	%9 = icmp ult %Nat32 %8, 8
+	br %Bool %9 , label %body_2, label %break_2
 body_2:
 ; if_0
-	%11 = zext i8 1 to %Word32
-	%12 = load %Word32, %Word32* %2
-	%13 = and %Word32 %12, %11
-	%14 = zext i8 0 to %Word32
-	%15 = icmp ne %Word32 %13, %14
-	br %Bool %15 , label %then_0, label %else_0
+	%10 = zext i8 1 to %Word32
+	%11 = load %Word32, %Word32* %1
+	%12 = and %Word32 %11, %10
+	%13 = zext i8 0 to %Word32
+	%14 = icmp ne %Word32 %12, %13
+	br %Bool %14 , label %then_0, label %else_0
 then_0:
-	%16 = load %Word32, %Word32* %2
-	%17 = zext i8 1 to %Word32
-	%18 = lshr %Word32 %16, %17
-	%19 = xor %Word32 %18, 3988292384
-	store %Word32 %19, %Word32* %2
+	%15 = load %Word32, %Word32* %1
+	%16 = zext i8 1 to %Word32
+	%17 = lshr %Word32 %15, %16
+	%18 = xor %Word32 %17, 3988292384
+	store %Word32 %18, %Word32* %1
 	br label %endif_0
 else_0:
-	%20 = load %Word32, %Word32* %2
-	%21 = zext i8 1 to %Word32
-	%22 = lshr %Word32 %20, %21
-	store %Word32 %22, %Word32* %2
+	%19 = load %Word32, %Word32* %1
+	%20 = zext i8 1 to %Word32
+	%21 = lshr %Word32 %19, %20
+	store %Word32 %21, %Word32* %1
 	br label %endif_0
 endif_0:
-	%23 = load %Nat32, %Nat32* %8
-	%24 = add %Nat32 %23, 1
-	store %Nat32 %24, %Nat32* %8
+	%22 = load %Nat32, %Nat32* %7
+	%23 = add %Nat32 %22, 1
+	store %Nat32 %23, %Nat32* %7
 	br label %again_2
 break_2:
-	%25 = load %Nat32, %Nat32* %3
-	%26 = bitcast %Nat32 %25 to %Nat32
-	%27 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Nat32 %26
-	%28 = load %Word32, %Word32* %2
-	store %Word32 %28, %Word32* %27
-	%29 = load %Nat32, %Nat32* %3
-	%30 = add %Nat32 %29, 1
-	store %Nat32 %30, %Nat32* %3
+	%24 = load %Nat32, %Nat32* %2
+	%25 = bitcast %Nat32 %24 to %Nat32
+	%26 = getelementptr [256 x %Word32], [256 x %Word32]* @table, %Int32 0, %Nat32 %25
+	%27 = load %Word32, %Word32* %1
+	store %Word32 %27, %Word32* %26
+	%28 = load %Nat32, %Nat32* %2
+	%29 = add %Nat32 %28, 1
+	store %Nat32 %29, %Nat32* %2
 	br label %again_1
 break_1:
+	ret void
+}
 
-	;
-	; calculate CRC32
-	;
-	store %Word32 4294967295, %Word32* %2
-	store %Nat32 0, %Nat32* %3
-; while_3
-	br label %again_3
-again_3:
-	%31 = load %Nat32, %Nat32* %3
-	%32 = icmp ult %Nat32 %31, %len
-	br %Bool %32 , label %body_3, label %break_3
-body_3:
+define %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len) {
+	%1 = alloca %Word32, align 4
+	store %Word32 4294967295, %Word32* %1
+	%2 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %2
+; while_1
+	br label %again_1
+again_1:
+	%3 = load %Nat32, %Nat32* %2
+	%4 = icmp ult %Nat32 %3, %len
+	br %Bool %4 , label %body_1, label %break_1
+body_1:
 	; 1
-	%33 = load %Nat32, %Nat32* %3
-	%34 = bitcast %Nat32 %33 to %Nat32
-	%35 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Nat32 %34
-	%36 = load %Word8, %Word8* %35
-	%37 = zext %Word8 %36 to %Word32
-	%38 = load %Word32, %Word32* %2
-	%39 = xor %Word32 %38, %37
-	%40 = and %Word32 %39, 255
+	%5 = load %Nat32, %Nat32* %2
+	%6 = bitcast %Nat32 %5 to %Nat32
+	%7 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Nat32 %6
+	%8 = load %Word8, %Word8* %7
+	%9 = zext %Word8 %8 to %Word32
+	%10 = load %Word32, %Word32* %1
+	%11 = xor %Word32 %10, %9
+	%12 = and %Word32 %11, 255
 	; 2
-	%41 = trunc %Word32 %40 to %Nat8
-	%42 = zext %Nat8 %41 to %Nat32
-	%43 = getelementptr [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Nat32 %42
-	%44 = load %Word32, %Word32* %2
-	%45 = zext i8 8 to %Word32
-	%46 = lshr %Word32 %44, %45
-	%47 = load %Word32, %Word32* %43
-	%48 = xor %Word32 %47, %46
-	store %Word32 %48, %Word32* %2
-	%49 = load %Nat32, %Nat32* %3
-	%50 = add %Nat32 %49, 1
-	store %Nat32 %50, %Nat32* %3
-	br label %again_3
-break_3:
-	%51 = load %Word32, %Word32* %2
-	%52 = xor %Word32 %51, 4294967295
-	ret %Word32 %52
+	%13 = trunc %Word32 %12 to %Nat8
+	%14 = zext %Nat8 %13 to %Nat32
+	%15 = getelementptr [256 x %Word32], [256 x %Word32]* @table, %Int32 0, %Nat32 %14
+	%16 = load %Word32, %Word32* %1
+	%17 = zext i8 8 to %Word32
+	%18 = lshr %Word32 %16, %17
+	%19 = load %Word32, %Word32* %15
+	%20 = xor %Word32 %19, %18
+	store %Word32 %20, %Word32* %1
+	%21 = load %Nat32, %Nat32* %2
+	%22 = add %Nat32 %21, 1
+	store %Nat32 %22, %Nat32* %2
+	br label %again_1
+break_1:
+	%23 = load %Word32, %Word32* %1
+	%24 = xor %Word32 %23, 4294967295
+	ret %Word32 %24
 }
 
 

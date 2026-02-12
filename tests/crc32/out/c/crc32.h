@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+void crc32_init(void);
 uint32_t crc32_run(uint8_t (*buf)[], uint32_t len);
 
 #endif /* CRC32_H */

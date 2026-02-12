@@ -32,6 +32,9 @@ func runTest (test: *Test) -> Bool {
 public func main () -> Int {
 	printf("test CRC32\n")
 
+	// (!)
+	crc32.init()
+
 	var success = true
 
 	var i = Nat32 0

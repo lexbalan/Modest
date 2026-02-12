@@ -1,7 +1,7 @@
 /*
   Name  : CRC-32
-  Poly  : 0x04C11DB7    xxor32 + xxor26 + xxor23 + xxor22 + xxor16 + xxor12 + xxor11
-                       + xxor10 + xxor8 + xxor7 + xxor5 + xxor4 + xxor2 + x + 1
+  Poly  : 0x04C11DB7  xxor32 + xxor26 + xxor23 + xxor22 + xxor16 + xxor12 + xxor11
+                      + xxor10 + xxor8 + xxor7 + xxor5 + xxor4 + xxor2 + x + 1
   Init  : 0xFFFFFFFF
   Revert: true
   XorOut: 0xFFFFFFFF
@@ -15,15 +15,15 @@ pragma unsafe
 include "libc/stdio"
 
 
-public func run (buf: *[]Word8, len: Nat32) -> Word32 {
-	let tableSize = 256
-	var crc_table: [tableSize]Word32
+const tableSize = 256
+
+
+var table: [tableSize]Word32
+
+
+// initialize table
+public func init () -> Unit {
 	var crc: Word32
-
-	//
-	// create table before
-	//
-
 	var i = Nat32 0
 	while i < tableSize {
 		crc = Word32 i
@@ -37,24 +37,23 @@ public func run (buf: *[]Word8, len: Nat32) -> Word32 {
 
 			++j
 		}
-		crc_table[i] = crc
+		table[i] = crc
 		++i
     }
+}
 
-	//
-	// calculate CRC32
-	//
 
-    crc = 0xFFFFFFFF
-
-	i = 0
+// calculate CRC32
+public func run (buf: *[]Word8, len: Nat32) -> Word32 {
+	var crc: Word32 = 0xFFFFFFFF
+	var i = Nat32 0
 	while i < len {
 		// 1
 		let x = Word32 buf[i]
 		let y = (crc xor x) and 0xFF
 		// 2
 		let yy = unsafe Nat8 y
-		crc = crc_table[yy] xor (crc >> 8)
+		crc = table[yy] xor (crc >> 8)
 		++i
 	}
 

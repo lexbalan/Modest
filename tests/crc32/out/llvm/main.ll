@@ -211,6 +211,7 @@ declare %Int @system([0 x %ConstChar]* %string)
 ; -- 1
 
 ; from import "crc32"
+declare void @crc32_init()
 declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
 
 ; end from import "crc32"
@@ -647,6 +648,9 @@ define internal %Bool @runTest(%Test* %test) {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
+
+	; (!)
+	call void @crc32_init()
 	%2 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %2
 	%3 = alloca %Nat32, align 4
