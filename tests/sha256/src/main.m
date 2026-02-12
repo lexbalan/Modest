@@ -3,6 +3,7 @@
 pragma unsafe
 
 include "libc/ctypes64"
+include "libc/stdlib"
 include "libc/stdio"
 
 
@@ -77,10 +78,14 @@ func doTest (test: *SHA256_TestCase) -> Bool {
 public func main () -> Int {
 	printf("test SHA256\n")
 
+	var success = true
+
 	var i: Nat32 = 0
 	while i < lengthof(tests) {
 		let test = tests[i]
 		let testResult = doTest(test)
+
+		success = success and testResult
 
 		var res = *Str8 "failed"
 		if testResult {
@@ -92,7 +97,14 @@ public func main () -> Int {
 		++i
 	}
 
-	return 0
+	printf("test ")
+	if not success {
+		printf("failed\n")
+    	return exitFailure
+	}
+
+	printf("passed\n")
+	return exitSuccess
 }
 
 

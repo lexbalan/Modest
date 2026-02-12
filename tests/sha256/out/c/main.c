@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include "./sha256.h"
 
@@ -70,10 +71,14 @@ static bool doTest(struct sha256_test_case *test) {
 int main(void) {
 	printf("test SHA256\n");
 
+	bool success = true;
+
 	uint32_t i = 0;
 	while (i < (uint32_t)LENGTHOF(((struct sha256_test_case *[2])TESTS))) {
 		struct sha256_test_case *const test = ((struct sha256_test_case *[2])TESTS)[i];
 		const bool testResult = doTest(test);
+
+		success = success && testResult;
 
 		char *res = "failed";
 		if (testResult) {
@@ -85,7 +90,14 @@ int main(void) {
 		i = i + 1;
 	}
 
-	return 0;
+	printf("test ");
+	if (!success) {
+		printf("failed\n");
+		return EXIT_FAILURE;
+	}
+
+	printf("passed\n");
+	return EXIT_SUCCESS;
 }
 
 

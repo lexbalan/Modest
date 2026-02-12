@@ -1,5 +1,6 @@
 import "misc/sha256"
 include "ctypes64"
+include "stdlib"
 include "stdio"
 
 import "misc/sha256" as sha256
@@ -66,10 +67,14 @@ func doTest (test: *SHA256_TestCase) -> Bool {
 public func main () -> Int {
 	printf("test SHA256\n")
 
+	var success: Bool = true
+
 	var i: Nat32 = 0
 	while i < lengthof(tests) {
 		let test: *SHA256_TestCase = tests[i]
 		let testResult: Bool = doTest(test)
+
+		success = success and testResult
 
 		var res = *Str8 "failed"
 		if testResult {
@@ -81,6 +86,13 @@ public func main () -> Int {
 		i = i + 1
 	}
 
-	return 0
+	printf("test ")
+	if not success {
+		printf("failed\n")
+		return exitFailure
+	}
+
+	printf("passed\n")
+	return exitSuccess
 }
 
