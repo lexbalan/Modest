@@ -12,10 +12,11 @@
 #endif /* LENGTHOF */
 
 
-#define DATA_LENGTH  128
+#define DATA_BUFFER_LENGTH  128
+
 
 struct test {
-	uint8_t data[DATA_LENGTH];
+	uint8_t data[DATA_BUFFER_LENGTH];
 	uint32_t len;
 	uint32_t hash;
 };

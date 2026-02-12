@@ -6,18 +6,19 @@ include "stdlib"
 import "misc/crc32" as crc32
 
 
-const dataLength = 128
+const dataBufferLength = 128
+
 type Test = record {
-	data: [dataLength]Byte
+	data: [dataBufferLength]Byte
 	len: Nat32
 	hash: Word32
 }
 
 
 var tests: [3]Test = [
-	{data = [dataLength]Byte "123456789", len = 9, hash = 0xCBF43926}
-	{data = [dataLength]Byte "The quick brown fox jumps over the lazy dog", len = 43, hash = 0x414FA339}
-	{data = [dataLength]Byte "Test vector from febooti.com", len = 28, hash = 0x0C877F61}
+	{data = [dataBufferLength]Byte "123456789", len = 9, hash = 0xCBF43926}
+	{data = [dataBufferLength]Byte "The quick brown fox jumps over the lazy dog", len = 43, hash = 0x414FA339}
+	{data = [dataBufferLength]Byte "Test vector from febooti.com", len = 28, hash = 0x0C877F61}
 ]
 
 
