@@ -14,13 +14,12 @@ type OffT = Nat32
 
 
 @alias("c", "struct dirent")
-public type Dirent = record {
-	public d_ino: InoT         /* inode number */
-	public d_off: OffT         /* offset to the next dirent */
-	public d_reclen: Nat16     /* length of this record */
-	public d_type: Nat8        /* type of file;
-                                  (!) not supported by all file system types */
-	public d_name: [256]Char8  /* filename */
+public type Dirent = @public record {
+	d_ino: InoT         /* inode number */
+	d_off: OffT         /* offset to the next dirent */
+	d_reclen: Nat16     /* length of this record */
+	d_type: Nat8        /* type of file; (!) not supported by all file system types */
+	d_name: [256]Char8  /* filename */
 }
 
 
