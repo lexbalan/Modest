@@ -8,6 +8,8 @@ pragma unsafe
 
 
 type Key = [8]Word32
+type State = [16]Word32
+type Block = [16]Word32
 
 
 func rotl32 (x: Word32, n: Nat32) -> Word32 {
@@ -37,8 +39,7 @@ func quarterRound (a: Word32, b: Word32, c: Word32, d: Word32) -> [4]Word32 {
 }
 
 
-func chacha20Block (state: [16]Word32) -> [16]Word32 {
-
+func chacha20Block (state: State) -> Block {
 	var x = state  // working copy
 
 	var i: Int32 = 0
@@ -68,12 +69,12 @@ func chacha20Block (state: [16]Word32) -> [16]Word32 {
 		x[1] = r[0]; x[6] = r[1]; x[11] = r[2]; x[12] = r[3];
 
 		r = quarterRound(x[2], x[7], x[8],  x[13])
-		x[2] = r[0]; x[7] = r[1]; x[8] = r[2];  x[13] = r[3];
+		x[2] = r[0]; x[7] = r[1]; x[8] = r[2]; x[13] = r[3];
 
 		r = quarterRound(x[3], x[4], x[9],  x[14])
-		x[3] = r[0]; x[4] = r[1]; x[9] = r[2];  x[14] = r[3];
+		x[3] = r[0]; x[4] = r[1]; x[9] = r[2]; x[14] = r[3];
 
-		i = i + 1
+		++i
 	}
 
 	// add original state
@@ -100,31 +101,85 @@ func chacha20Block (state: [16]Word32) -> [16]Word32 {
 // Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
 
 // counter он говорит алгоритму - какой блок keystream генерировать
-func makeState (key: *Key, counter: Word32, nonce: *[3]Word32) -> [16]Word32 {
+func makeState (key: *Key, counter: Word32, nonce: *[3]Word32) -> State {
 	return [
 		0x61707865, 0x3320646e, 0x79622d32, 0x6b206574,
-		key[0], key[1], key[2], key[3],
-		key[4], key[5], key[6], key[7],
-		counter, nonce[0], nonce[1], nonce[2]
+		key[0],     key[1],     key[2],     key[3],
+		key[4],     key[5],     key[6],     key[7],
+		counter,    nonce[0],   nonce[1],   nonce[2]
 	]
 }
 
 
+type Context = record {
+	key: *[32]Byte
+	nonce: [3]Word32
+	blockCounter: Nat32
+	block: Block
+	blockOffset: Nat32
+}
 
-const testKey = [
+
+func init (key: *[32]Byte, nonce: [3]Word32) -> Context {
+	return {
+		key = key
+		nonce = [nonce[0], nonce[1], nonce[2]]
+		blockCounter = 0
+		blockOffset = unsafe Nat32 sizeof(Block)
+	}
+}
+
+
+func cipher (ctx: *Context, data: *[]Byte, len: Nat32) -> Unit {
+	var i = Nat32 0
+	var bptr = *[]Byte nil
+	while i < len {
+		// Нужно сгенерировать новый блок?
+		if ctx.blockOffset == unsafe Nat32 sizeof(Block) {
+			//printf("UH!\n")
+			var state = makeState(
+				key = unsafe *Key ctx.key
+				counter = Word32 ctx.blockCounter
+				nonce = &ctx.nonce
+			)
+			state[13:16] = ctx.nonce[0:3]
+			//state[13] = ctx.nonce[0]
+			//state[14] = ctx.nonce[1]
+			//state[15] = ctx.nonce[2]
+
+			ctx.block = chacha20Block(state)
+			ctx.blockOffset = 0
+			bptr = unsafe *[]Byte &ctx.block
+		}
+
+		data[i] = data[i] xor bptr[ctx.blockOffset]
+
+		++ctx.blockOffset
+		++i
+	}
+}
+
+
+var testKey = []Byte [
 	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 	0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
 	0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
 	0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,
 ]
 
-const testNonce = [
+var testNonce = []Byte [
 	0x00, 0x00, 0x00, 0x09,
 	0x00, 0x00, 0x00, 0x4a,
 	0x00, 0x00, 0x00, 0x00,
 ]
 
-const testResult = [
+var testNonce2 = []Word32 [
+	0x00000009,
+	0x0000004a,
+	0x00000000,
+]
+
+const testResult = []Byte [
 	0x10, 0xf1, 0xe7, 0xe4, 0xd1, 0x3b, 0x59, 0x15,
 	0x50, 0x0f, 0xdd, 0x1f, 0xa3, 0x20, 0x71, 0xc4,
 	0xc7, 0xd1, 0xf4, 0xc7, 0x33, 0xc0, 0x68, 0x03,
@@ -137,9 +192,41 @@ const testResult = [
 
 
 
+const lorem1024 = [1024]Char8 "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit ve"
+
+var xlorem1024 = lorem1024
+
+
 public func main () -> Int {
 	//printf("%s\n", *Str8 hello_world)
+	//var data = []Byte [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+	var ctx = init(&testKey, testNonce2)
+	let dptr = unsafe *[]Byte &xlorem1024
+	cipher(&ctx, dptr, 1024)
 
+	var i = 0
+	while i < 10 {
+		printf("%c", xlorem1024[i])
+		printf("%x\n", Nat32 Word32 Word8 xlorem1024[i])
+		++i
+	}
+
+	var ctx2 = init(&testKey, testNonce2)
+	cipher(&ctx2, dptr, 1024)
+
+	i = 0
+	while i < 1024 {
+		printf("%c", xlorem1024[i])
+		++i
+	}
+
+	test0()
+
+	return 0
+}
+
+
+func test0 () -> Unit {
 	var key: [32]Byte = testKey
 	var counter: Word32 = 1
 	var nonce: [12]Byte = testNonce
@@ -160,8 +247,6 @@ public func main () -> Int {
 	} else {
 		printf("test failed\n")
 	}
-
-
-	return 0
 }
+
 

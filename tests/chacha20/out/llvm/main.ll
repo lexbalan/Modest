@@ -196,11 +196,16 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [6 x i8] [i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
-@str2 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str3 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str1 = private constant [3 x i8] [i8 37, i8 99, i8 0]
+@str2 = private constant [4 x i8] [i8 37, i8 120, i8 10, i8 0]
+@str3 = private constant [3 x i8] [i8 37, i8 99, i8 0]
+@str4 = private constant [6 x i8] [i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
+@str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str6 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 %Key = type [8 x %Word32];
+%State = type [16 x %Word32];
+%Block = type [16 x %Word32];
 define internal %Word32 @rotl32(%Word32 %x, %Nat32 %n) {
 	%1 = bitcast %Nat32 %n to %Word32
 	%2 = shl %Word32 %x, %1
@@ -292,14 +297,14 @@ define internal void @quarterRound([4 x %Word32]* %0, %Word32 %a, %Word32 %b, %W
 	ret void
 }
 
-define internal void @chacha20Block([16 x %Word32]* %0, [16 x %Word32] %__state) {
-	%state = alloca [16 x %Word32]
+define internal void @chacha20Block(%Block* %0, %State %__state) {
+	%state = alloca %State
 	%2 = zext i8 16 to %Nat32
-	store [16 x %Word32] %__state, [16 x %Word32]* %state
-	%3 = alloca [16 x %Word32], align 1
-	%4 = load [16 x %Word32], [16 x %Word32]* %state
+	store %State %__state, %State* %state
+	%3 = alloca %State, align 1
+	%4 = load %State, %State* %state
 	%5 = zext i8 16 to %Nat32
-	store [16 x %Word32] %4, [16 x %Word32]* %3	; working copy
+	store %State %4, %State* %3	; working copy
 	%6 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %6
 ; while_1
@@ -312,238 +317,238 @@ body_1:
 	%9 = alloca [4 x %Word32], align 1
 
 	; column rounds
-	%10 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 0
+	%10 = getelementptr %State, %State* %3, %Int32 0, %Int32 0
 	%11 = load %Word32, %Word32* %10
-	%12 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 4
+	%12 = getelementptr %State, %State* %3, %Int32 0, %Int32 4
 	%13 = load %Word32, %Word32* %12
-	%14 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 8
+	%14 = getelementptr %State, %State* %3, %Int32 0, %Int32 8
 	%15 = load %Word32, %Word32* %14
-	%16 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 12
+	%16 = getelementptr %State, %State* %3, %Int32 0, %Int32 12
 	%17 = load %Word32, %Word32* %16; alloca memory for return value
 	%18 = alloca [4 x %Word32]
 	call void @quarterRound([4 x %Word32]* %18, %Word32 %11, %Word32 %13, %Word32 %15, %Word32 %17)
 	%19 = load [4 x %Word32], [4 x %Word32]* %18
 	%20 = zext i8 4 to %Nat32
 	store [4 x %Word32] %19, [4 x %Word32]* %9
-	%21 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 0
+	%21 = getelementptr %State, %State* %3, %Int32 0, %Int32 0
 	%22 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%23 = load %Word32, %Word32* %22
 	store %Word32 %23, %Word32* %21
-	%24 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 4
+	%24 = getelementptr %State, %State* %3, %Int32 0, %Int32 4
 	%25 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%26 = load %Word32, %Word32* %25
 	store %Word32 %26, %Word32* %24
-	%27 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 8
+	%27 = getelementptr %State, %State* %3, %Int32 0, %Int32 8
 	%28 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%29 = load %Word32, %Word32* %28
 	store %Word32 %29, %Word32* %27
-	%30 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 12
+	%30 = getelementptr %State, %State* %3, %Int32 0, %Int32 12
 	%31 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
 	%32 = load %Word32, %Word32* %31
 	store %Word32 %32, %Word32* %30
-	%33 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 1
+	%33 = getelementptr %State, %State* %3, %Int32 0, %Int32 1
 	%34 = load %Word32, %Word32* %33
-	%35 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 5
+	%35 = getelementptr %State, %State* %3, %Int32 0, %Int32 5
 	%36 = load %Word32, %Word32* %35
-	%37 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 9
+	%37 = getelementptr %State, %State* %3, %Int32 0, %Int32 9
 	%38 = load %Word32, %Word32* %37
-	%39 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 13
+	%39 = getelementptr %State, %State* %3, %Int32 0, %Int32 13
 	%40 = load %Word32, %Word32* %39; alloca memory for return value
 	%41 = alloca [4 x %Word32]
 	call void @quarterRound([4 x %Word32]* %41, %Word32 %34, %Word32 %36, %Word32 %38, %Word32 %40)
 	%42 = load [4 x %Word32], [4 x %Word32]* %41
 	%43 = zext i8 4 to %Nat32
 	store [4 x %Word32] %42, [4 x %Word32]* %9
-	%44 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 1
+	%44 = getelementptr %State, %State* %3, %Int32 0, %Int32 1
 	%45 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%46 = load %Word32, %Word32* %45
 	store %Word32 %46, %Word32* %44
-	%47 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 5
+	%47 = getelementptr %State, %State* %3, %Int32 0, %Int32 5
 	%48 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%49 = load %Word32, %Word32* %48
 	store %Word32 %49, %Word32* %47
-	%50 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 9
+	%50 = getelementptr %State, %State* %3, %Int32 0, %Int32 9
 	%51 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%52 = load %Word32, %Word32* %51
 	store %Word32 %52, %Word32* %50
-	%53 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 13
+	%53 = getelementptr %State, %State* %3, %Int32 0, %Int32 13
 	%54 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
 	%55 = load %Word32, %Word32* %54
 	store %Word32 %55, %Word32* %53
-	%56 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 2
+	%56 = getelementptr %State, %State* %3, %Int32 0, %Int32 2
 	%57 = load %Word32, %Word32* %56
-	%58 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 6
+	%58 = getelementptr %State, %State* %3, %Int32 0, %Int32 6
 	%59 = load %Word32, %Word32* %58
-	%60 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 10
+	%60 = getelementptr %State, %State* %3, %Int32 0, %Int32 10
 	%61 = load %Word32, %Word32* %60
-	%62 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 14
+	%62 = getelementptr %State, %State* %3, %Int32 0, %Int32 14
 	%63 = load %Word32, %Word32* %62; alloca memory for return value
 	%64 = alloca [4 x %Word32]
 	call void @quarterRound([4 x %Word32]* %64, %Word32 %57, %Word32 %59, %Word32 %61, %Word32 %63)
 	%65 = load [4 x %Word32], [4 x %Word32]* %64
 	%66 = zext i8 4 to %Nat32
 	store [4 x %Word32] %65, [4 x %Word32]* %9
-	%67 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 2
+	%67 = getelementptr %State, %State* %3, %Int32 0, %Int32 2
 	%68 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%69 = load %Word32, %Word32* %68
 	store %Word32 %69, %Word32* %67
-	%70 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 6
+	%70 = getelementptr %State, %State* %3, %Int32 0, %Int32 6
 	%71 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%72 = load %Word32, %Word32* %71
 	store %Word32 %72, %Word32* %70
-	%73 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 10
+	%73 = getelementptr %State, %State* %3, %Int32 0, %Int32 10
 	%74 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%75 = load %Word32, %Word32* %74
 	store %Word32 %75, %Word32* %73
-	%76 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 14
+	%76 = getelementptr %State, %State* %3, %Int32 0, %Int32 14
 	%77 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
 	%78 = load %Word32, %Word32* %77
 	store %Word32 %78, %Word32* %76
-	%79 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 3
+	%79 = getelementptr %State, %State* %3, %Int32 0, %Int32 3
 	%80 = load %Word32, %Word32* %79
-	%81 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 7
+	%81 = getelementptr %State, %State* %3, %Int32 0, %Int32 7
 	%82 = load %Word32, %Word32* %81
-	%83 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 11
+	%83 = getelementptr %State, %State* %3, %Int32 0, %Int32 11
 	%84 = load %Word32, %Word32* %83
-	%85 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 15
+	%85 = getelementptr %State, %State* %3, %Int32 0, %Int32 15
 	%86 = load %Word32, %Word32* %85; alloca memory for return value
 	%87 = alloca [4 x %Word32]
 	call void @quarterRound([4 x %Word32]* %87, %Word32 %80, %Word32 %82, %Word32 %84, %Word32 %86)
 	%88 = load [4 x %Word32], [4 x %Word32]* %87
 	%89 = zext i8 4 to %Nat32
 	store [4 x %Word32] %88, [4 x %Word32]* %9
-	%90 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 3
+	%90 = getelementptr %State, %State* %3, %Int32 0, %Int32 3
 	%91 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%92 = load %Word32, %Word32* %91
 	store %Word32 %92, %Word32* %90
-	%93 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 7
+	%93 = getelementptr %State, %State* %3, %Int32 0, %Int32 7
 	%94 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%95 = load %Word32, %Word32* %94
 	store %Word32 %95, %Word32* %93
-	%96 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 11
+	%96 = getelementptr %State, %State* %3, %Int32 0, %Int32 11
 	%97 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%98 = load %Word32, %Word32* %97
 	store %Word32 %98, %Word32* %96
-	%99 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 15
+	%99 = getelementptr %State, %State* %3, %Int32 0, %Int32 15
 	%100 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
 	%101 = load %Word32, %Word32* %100
 	store %Word32 %101, %Word32* %99
 
 
 	; diagonal rounds
-	%102 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 0
+	%102 = getelementptr %State, %State* %3, %Int32 0, %Int32 0
 	%103 = load %Word32, %Word32* %102
-	%104 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 5
+	%104 = getelementptr %State, %State* %3, %Int32 0, %Int32 5
 	%105 = load %Word32, %Word32* %104
-	%106 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 10
+	%106 = getelementptr %State, %State* %3, %Int32 0, %Int32 10
 	%107 = load %Word32, %Word32* %106
-	%108 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 15
+	%108 = getelementptr %State, %State* %3, %Int32 0, %Int32 15
 	%109 = load %Word32, %Word32* %108; alloca memory for return value
 	%110 = alloca [4 x %Word32]
 	call void @quarterRound([4 x %Word32]* %110, %Word32 %103, %Word32 %105, %Word32 %107, %Word32 %109)
 	%111 = load [4 x %Word32], [4 x %Word32]* %110
 	%112 = zext i8 4 to %Nat32
 	store [4 x %Word32] %111, [4 x %Word32]* %9
-	%113 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 0
+	%113 = getelementptr %State, %State* %3, %Int32 0, %Int32 0
 	%114 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%115 = load %Word32, %Word32* %114
 	store %Word32 %115, %Word32* %113
-	%116 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 5
+	%116 = getelementptr %State, %State* %3, %Int32 0, %Int32 5
 	%117 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%118 = load %Word32, %Word32* %117
 	store %Word32 %118, %Word32* %116
-	%119 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 10
+	%119 = getelementptr %State, %State* %3, %Int32 0, %Int32 10
 	%120 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%121 = load %Word32, %Word32* %120
 	store %Word32 %121, %Word32* %119
-	%122 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 15
+	%122 = getelementptr %State, %State* %3, %Int32 0, %Int32 15
 	%123 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
 	%124 = load %Word32, %Word32* %123
 	store %Word32 %124, %Word32* %122
-	%125 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 1
+	%125 = getelementptr %State, %State* %3, %Int32 0, %Int32 1
 	%126 = load %Word32, %Word32* %125
-	%127 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 6
+	%127 = getelementptr %State, %State* %3, %Int32 0, %Int32 6
 	%128 = load %Word32, %Word32* %127
-	%129 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 11
+	%129 = getelementptr %State, %State* %3, %Int32 0, %Int32 11
 	%130 = load %Word32, %Word32* %129
-	%131 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 12
+	%131 = getelementptr %State, %State* %3, %Int32 0, %Int32 12
 	%132 = load %Word32, %Word32* %131; alloca memory for return value
 	%133 = alloca [4 x %Word32]
 	call void @quarterRound([4 x %Word32]* %133, %Word32 %126, %Word32 %128, %Word32 %130, %Word32 %132)
 	%134 = load [4 x %Word32], [4 x %Word32]* %133
 	%135 = zext i8 4 to %Nat32
 	store [4 x %Word32] %134, [4 x %Word32]* %9
-	%136 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 1
+	%136 = getelementptr %State, %State* %3, %Int32 0, %Int32 1
 	%137 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%138 = load %Word32, %Word32* %137
 	store %Word32 %138, %Word32* %136
-	%139 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 6
+	%139 = getelementptr %State, %State* %3, %Int32 0, %Int32 6
 	%140 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%141 = load %Word32, %Word32* %140
 	store %Word32 %141, %Word32* %139
-	%142 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 11
+	%142 = getelementptr %State, %State* %3, %Int32 0, %Int32 11
 	%143 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%144 = load %Word32, %Word32* %143
 	store %Word32 %144, %Word32* %142
-	%145 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 12
+	%145 = getelementptr %State, %State* %3, %Int32 0, %Int32 12
 	%146 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
 	%147 = load %Word32, %Word32* %146
 	store %Word32 %147, %Word32* %145
-	%148 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 2
+	%148 = getelementptr %State, %State* %3, %Int32 0, %Int32 2
 	%149 = load %Word32, %Word32* %148
-	%150 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 7
+	%150 = getelementptr %State, %State* %3, %Int32 0, %Int32 7
 	%151 = load %Word32, %Word32* %150
-	%152 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 8
+	%152 = getelementptr %State, %State* %3, %Int32 0, %Int32 8
 	%153 = load %Word32, %Word32* %152
-	%154 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 13
+	%154 = getelementptr %State, %State* %3, %Int32 0, %Int32 13
 	%155 = load %Word32, %Word32* %154; alloca memory for return value
 	%156 = alloca [4 x %Word32]
 	call void @quarterRound([4 x %Word32]* %156, %Word32 %149, %Word32 %151, %Word32 %153, %Word32 %155)
 	%157 = load [4 x %Word32], [4 x %Word32]* %156
 	%158 = zext i8 4 to %Nat32
 	store [4 x %Word32] %157, [4 x %Word32]* %9
-	%159 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 2
+	%159 = getelementptr %State, %State* %3, %Int32 0, %Int32 2
 	%160 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%161 = load %Word32, %Word32* %160
 	store %Word32 %161, %Word32* %159
-	%162 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 7
+	%162 = getelementptr %State, %State* %3, %Int32 0, %Int32 7
 	%163 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%164 = load %Word32, %Word32* %163
 	store %Word32 %164, %Word32* %162
-	%165 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 8
+	%165 = getelementptr %State, %State* %3, %Int32 0, %Int32 8
 	%166 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%167 = load %Word32, %Word32* %166
 	store %Word32 %167, %Word32* %165
-	%168 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 13
+	%168 = getelementptr %State, %State* %3, %Int32 0, %Int32 13
 	%169 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
 	%170 = load %Word32, %Word32* %169
 	store %Word32 %170, %Word32* %168
-	%171 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 3
+	%171 = getelementptr %State, %State* %3, %Int32 0, %Int32 3
 	%172 = load %Word32, %Word32* %171
-	%173 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 4
+	%173 = getelementptr %State, %State* %3, %Int32 0, %Int32 4
 	%174 = load %Word32, %Word32* %173
-	%175 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 9
+	%175 = getelementptr %State, %State* %3, %Int32 0, %Int32 9
 	%176 = load %Word32, %Word32* %175
-	%177 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 14
+	%177 = getelementptr %State, %State* %3, %Int32 0, %Int32 14
 	%178 = load %Word32, %Word32* %177; alloca memory for return value
 	%179 = alloca [4 x %Word32]
 	call void @quarterRound([4 x %Word32]* %179, %Word32 %172, %Word32 %174, %Word32 %176, %Word32 %178)
 	%180 = load [4 x %Word32], [4 x %Word32]* %179
 	%181 = zext i8 4 to %Nat32
 	store [4 x %Word32] %180, [4 x %Word32]* %9
-	%182 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 3
+	%182 = getelementptr %State, %State* %3, %Int32 0, %Int32 3
 	%183 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%184 = load %Word32, %Word32* %183
 	store %Word32 %184, %Word32* %182
-	%185 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 4
+	%185 = getelementptr %State, %State* %3, %Int32 0, %Int32 4
 	%186 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%187 = load %Word32, %Word32* %186
 	store %Word32 %187, %Word32* %185
-	%188 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 9
+	%188 = getelementptr %State, %State* %3, %Int32 0, %Int32 9
 	%189 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%190 = load %Word32, %Word32* %189
 	store %Word32 %190, %Word32* %188
-	%191 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 14
+	%191 = getelementptr %State, %State* %3, %Int32 0, %Int32 14
 	%192 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
 	%193 = load %Word32, %Word32* %192
 	store %Word32 %193, %Word32* %191
@@ -567,11 +572,11 @@ body_2:
 	%200 = load %Int32, %Int32* %197
 	%201 = getelementptr [16 x %Word32], [16 x %Word32]* %196, %Int32 0, %Int32 %200
 	%202 = load %Int32, %Int32* %197
-	%203 = getelementptr [16 x %Word32], [16 x %Word32]* %3, %Int32 0, %Int32 %202
+	%203 = getelementptr %State, %State* %3, %Int32 0, %Int32 %202
 	%204 = load %Word32, %Word32* %203
 	%205 = bitcast %Word32 %204 to %Nat32
 	%206 = load %Int32, %Int32* %197
-	%207 = getelementptr [16 x %Word32], [16 x %Word32]* %state, %Int32 0, %Int32 %206
+	%207 = getelementptr %State, %State* %state, %Int32 0, %Int32 %206
 	%208 = load %Word32, %Word32* %207
 	%209 = bitcast %Word32 %208 to %Nat32
 	%210 = add %Nat32 %205, %209
@@ -584,7 +589,7 @@ body_2:
 break_2:
 	%214 = load [16 x %Word32], [16 x %Word32]* %196
 	%215 = zext i8 16 to %Nat32
-	store [16 x %Word32] %214, [16 x %Word32]* %0
+	store [16 x %Word32] %214, %Block* %0
 	ret void
 }
 
@@ -600,7 +605,7 @@ break_2:
 ; Чтобы расшифровать файл, тебе понадобятся твой секретный ключ (который в голове или в сейфе) и этот Nonce
 ; (который прикреплен к файлу).
 ; Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
-define internal void @makeState([16 x %Word32]* %0, %Key* %key, %Word32 %counter, [3 x %Word32]* %nonce) {
+define internal void @makeState(%State* %0, %Key* %key, %Word32 %counter, [3 x %Word32]* %nonce) {
 	%2 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 0
 	%3 = load %Word32, %Word32* %2
 	%4 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 1
@@ -665,288 +670,2448 @@ define internal void @makeState([16 x %Word32]* %0, %Key* %key, %Word32 %counter
 	%62 = alloca [16 x %Word32]
 	%63 = zext i8 16 to %Nat32
 	store [16 x %Word32] %61, [16 x %Word32]* %62
-	%64 = bitcast [16 x %Word32]* %62 to [16 x %Word32]*
+	%64 = bitcast [16 x %Word32]* %62 to %State*
 ; -- end cons_composite_from_composite_by_value --
-	%65 = load [16 x %Word32], [16 x %Word32]* %64
+	%65 = load %State, %State* %64
 	%66 = zext i8 16 to %Nat32
-	store [16 x %Word32] %65, [16 x %Word32]* %0
+	store %State %65, %State* %0
 	ret void
 }
 
-@testKey = constant [32 x %Word8] [
-	%Word8 0,
-	%Word8 1,
-	%Word8 2,
-	%Word8 3,
-	%Word8 4,
-	%Word8 5,
-	%Word8 6,
-	%Word8 7,
-	%Word8 8,
-	%Word8 9,
-	%Word8 10,
-	%Word8 11,
-	%Word8 12,
-	%Word8 13,
-	%Word8 14,
-	%Word8 15,
-	%Word8 16,
-	%Word8 17,
-	%Word8 18,
-	%Word8 19,
-	%Word8 20,
-	%Word8 21,
-	%Word8 22,
-	%Word8 23,
-	%Word8 24,
-	%Word8 25,
-	%Word8 26,
-	%Word8 27,
-	%Word8 28,
-	%Word8 29,
-	%Word8 30,
-	%Word8 31
-]
-@testNonce = constant [12 x %Word8] [
-	%Word8 0,
-	%Word8 0,
-	%Word8 0,
-	%Word8 9,
-	%Word8 0,
-	%Word8 0,
-	%Word8 0,
-	%Word8 74,
-	%Word8 0,
-	%Word8 0,
-	%Word8 0,
-	%Word8 0
-]
-@testResult = constant [64 x %Word8] [
-	%Word8 16,
-	%Word8 241,
-	%Word8 231,
-	%Word8 228,
-	%Word8 209,
-	%Word8 59,
-	%Word8 89,
-	%Word8 21,
-	%Word8 80,
-	%Word8 15,
-	%Word8 221,
-	%Word8 31,
-	%Word8 163,
-	%Word8 32,
-	%Word8 113,
-	%Word8 196,
-	%Word8 199,
-	%Word8 209,
-	%Word8 244,
-	%Word8 199,
-	%Word8 51,
-	%Word8 192,
-	%Word8 104,
-	%Word8 3,
-	%Word8 4,
-	%Word8 34,
-	%Word8 170,
-	%Word8 154,
-	%Word8 195,
-	%Word8 212,
-	%Word8 108,
-	%Word8 78,
-	%Word8 210,
-	%Word8 130,
-	%Word8 100,
-	%Word8 70,
-	%Word8 7,
-	%Word8 159,
-	%Word8 170,
-	%Word8 9,
-	%Word8 20,
-	%Word8 194,
-	%Word8 215,
-	%Word8 5,
-	%Word8 217,
-	%Word8 139,
-	%Word8 2,
-	%Word8 162,
-	%Word8 181,
-	%Word8 18,
-	%Word8 156,
-	%Word8 209,
-	%Word8 222,
-	%Word8 22,
-	%Word8 78,
-	%Word8 185,
-	%Word8 203,
-	%Word8 208,
-	%Word8 131,
-	%Word8 232,
-	%Word8 162,
-	%Word8 80,
-	%Word8 60,
-	%Word8 78
-]
-define %Int @main() {
-	;printf("%s\n", *Str8 hello_world)
-	%1 = alloca [32 x %Byte], align 1
-	%2 = insertvalue [32 x %Byte] zeroinitializer, %Byte 1, 1
-	%3 = insertvalue [32 x %Byte] %2, %Byte 2, 2
-	%4 = insertvalue [32 x %Byte] %3, %Byte 3, 3
-	%5 = insertvalue [32 x %Byte] %4, %Byte 4, 4
-	%6 = insertvalue [32 x %Byte] %5, %Byte 5, 5
-	%7 = insertvalue [32 x %Byte] %6, %Byte 6, 6
-	%8 = insertvalue [32 x %Byte] %7, %Byte 7, 7
-	%9 = insertvalue [32 x %Byte] %8, %Byte 8, 8
-	%10 = insertvalue [32 x %Byte] %9, %Byte 9, 9
-	%11 = insertvalue [32 x %Byte] %10, %Byte 10, 10
-	%12 = insertvalue [32 x %Byte] %11, %Byte 11, 11
-	%13 = insertvalue [32 x %Byte] %12, %Byte 12, 12
-	%14 = insertvalue [32 x %Byte] %13, %Byte 13, 13
-	%15 = insertvalue [32 x %Byte] %14, %Byte 14, 14
-	%16 = insertvalue [32 x %Byte] %15, %Byte 15, 15
-	%17 = insertvalue [32 x %Byte] %16, %Byte 16, 16
-	%18 = insertvalue [32 x %Byte] %17, %Byte 17, 17
-	%19 = insertvalue [32 x %Byte] %18, %Byte 18, 18
-	%20 = insertvalue [32 x %Byte] %19, %Byte 19, 19
-	%21 = insertvalue [32 x %Byte] %20, %Byte 20, 20
-	%22 = insertvalue [32 x %Byte] %21, %Byte 21, 21
-	%23 = insertvalue [32 x %Byte] %22, %Byte 22, 22
-	%24 = insertvalue [32 x %Byte] %23, %Byte 23, 23
-	%25 = insertvalue [32 x %Byte] %24, %Byte 24, 24
-	%26 = insertvalue [32 x %Byte] %25, %Byte 25, 25
-	%27 = insertvalue [32 x %Byte] %26, %Byte 26, 26
-	%28 = insertvalue [32 x %Byte] %27, %Byte 27, 27
-	%29 = insertvalue [32 x %Byte] %28, %Byte 28, 28
-	%30 = insertvalue [32 x %Byte] %29, %Byte 29, 29
-	%31 = insertvalue [32 x %Byte] %30, %Byte 30, 30
-	%32 = insertvalue [32 x %Byte] %31, %Byte 31, 31
-	%33 = zext i8 32 to %Nat32
-	store [32 x %Byte] %32, [32 x %Byte]* %1
-	%34 = alloca %Word32, align 4
-	%35 = zext i8 1 to %Word32
-	store %Word32 %35, %Word32* %34
-	%36 = alloca [12 x %Byte], align 1
-	%37 = insertvalue [12 x %Byte] zeroinitializer, %Byte 9, 3
-	%38 = insertvalue [12 x %Byte] %37, %Byte 74, 7
-	%39 = zext i8 12 to %Nat32
-	store [12 x %Byte] %38, [12 x %Byte]* %36
-	%40 = alloca [16 x %Word32], align 1
-	%41 = bitcast [32 x %Byte]* %1 to %Key*
-	%42 = load %Word32, %Word32* %34
-	%43 = bitcast [12 x %Byte]* %36 to [3 x %Word32]*; alloca memory for return value
-	%44 = alloca [16 x %Word32]
-	call void @makeState([16 x %Word32]* %44, %Key* %41, %Word32 %42, [3 x %Word32]* %43)
-	%45 = load [16 x %Word32], [16 x %Word32]* %44
-	%46 = zext i8 16 to %Nat32
-	store [16 x %Word32] %45, [16 x %Word32]* %40
-	%47 = alloca [16 x %Word32], align 1
-	%48 = load [16 x %Word32], [16 x %Word32]* %40; alloca memory for return value
-	%49 = alloca [16 x %Word32]
-	call void @chacha20Block([16 x %Word32]* %49, [16 x %Word32] %48)
-	%50 = load [16 x %Word32], [16 x %Word32]* %49
-	%51 = zext i8 16 to %Nat32
-	store [16 x %Word32] %50, [16 x %Word32]* %47
-	%52 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %52
+%Context = type {
+	[32 x %Byte]*,
+	[3 x %Word32],
+	%Nat32,
+	%Block,
+	%Nat32
+};
+
+define internal %Context @init([32 x %Byte]* %key, [3 x %Word32] %__nonce) {
+	%nonce = alloca [3 x %Word32]
+	%1 = zext i8 3 to %Nat32
+	store [3 x %Word32] %__nonce, [3 x %Word32]* %nonce
+	%2 = insertvalue %Context zeroinitializer, [32 x %Byte]* %key, 0
+	%3 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 0
+	%4 = load %Word32, %Word32* %3
+	%5 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
+	%6 = load %Word32, %Word32* %5
+	%7 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
+	%8 = load %Word32, %Word32* %7
+	%9 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 0
+	%10 = load %Word32, %Word32* %9
+	%11 = insertvalue [3 x %Word32] zeroinitializer, %Word32 %10, 0
+	%12 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
+	%13 = load %Word32, %Word32* %12
+	%14 = insertvalue [3 x %Word32] %11, %Word32 %13, 1
+	%15 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
+	%16 = load %Word32, %Word32* %15
+	%17 = insertvalue [3 x %Word32] %14, %Word32 %16, 2
+; -- cons_composite_from_composite_by_value --
+	%18 = alloca [3 x %Word32]
+	%19 = zext i8 3 to %Nat32
+	store [3 x %Word32] %17, [3 x %Word32]* %18
+	%20 = bitcast [3 x %Word32]* %18 to [3 x %Word32]*
+; -- end cons_composite_from_composite_by_value --
+	%21 = load [3 x %Word32], [3 x %Word32]* %20
+	%22 = insertvalue %Context %2, [3 x %Word32] %21, 1
+	%23 = insertvalue %Context %22, %Nat32 64, 4
+	ret %Context %23
+}
+
+define internal void @cipher(%Context* %ctx, [0 x %Byte]* %data, %Nat32 %len) {
+	%1 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %1
+	%2 = alloca [0 x %Byte]*, align 8
+	store [0 x %Byte]* null, [0 x %Byte]** %2
 ; while_1
 	br label %again_1
 again_1:
-	%53 = load %Int32, %Int32* %52
-	%54 = icmp slt %Int32 %53, 16
-	br %Bool %54 , label %body_1, label %break_1
+	%3 = load %Nat32, %Nat32* %1
+	%4 = icmp ult %Nat32 %3, %len
+	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	%55 = load %Int32, %Int32* %52
-	%56 = getelementptr [16 x %Word32], [16 x %Word32]* %47, %Int32 0, %Int32 %55
-	%57 = load %Word32, %Word32* %56
-	%58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str1 to [0 x i8]*), %Word32 %57)
-	%59 = load %Int32, %Int32* %52
-	%60 = add %Int32 %59, 1
-	store %Int32 %60, %Int32* %52
-	br label %again_1
-break_1:
-	%61 = bitcast [16 x %Word32]* %47 to [64 x %Byte]*
+	; Нужно сгенерировать новый блок?
 ; if_0
-	%62 = insertvalue [64 x %Byte] zeroinitializer, %Byte 16, 0
-	%63 = insertvalue [64 x %Byte] %62, %Byte 241, 1
-	%64 = insertvalue [64 x %Byte] %63, %Byte 231, 2
-	%65 = insertvalue [64 x %Byte] %64, %Byte 228, 3
-	%66 = insertvalue [64 x %Byte] %65, %Byte 209, 4
-	%67 = insertvalue [64 x %Byte] %66, %Byte 59, 5
-	%68 = insertvalue [64 x %Byte] %67, %Byte 89, 6
-	%69 = insertvalue [64 x %Byte] %68, %Byte 21, 7
-	%70 = insertvalue [64 x %Byte] %69, %Byte 80, 8
-	%71 = insertvalue [64 x %Byte] %70, %Byte 15, 9
-	%72 = insertvalue [64 x %Byte] %71, %Byte 221, 10
-	%73 = insertvalue [64 x %Byte] %72, %Byte 31, 11
-	%74 = insertvalue [64 x %Byte] %73, %Byte 163, 12
-	%75 = insertvalue [64 x %Byte] %74, %Byte 32, 13
-	%76 = insertvalue [64 x %Byte] %75, %Byte 113, 14
-	%77 = insertvalue [64 x %Byte] %76, %Byte 196, 15
-	%78 = insertvalue [64 x %Byte] %77, %Byte 199, 16
-	%79 = insertvalue [64 x %Byte] %78, %Byte 209, 17
-	%80 = insertvalue [64 x %Byte] %79, %Byte 244, 18
-	%81 = insertvalue [64 x %Byte] %80, %Byte 199, 19
-	%82 = insertvalue [64 x %Byte] %81, %Byte 51, 20
-	%83 = insertvalue [64 x %Byte] %82, %Byte 192, 21
-	%84 = insertvalue [64 x %Byte] %83, %Byte 104, 22
-	%85 = insertvalue [64 x %Byte] %84, %Byte 3, 23
-	%86 = insertvalue [64 x %Byte] %85, %Byte 4, 24
-	%87 = insertvalue [64 x %Byte] %86, %Byte 34, 25
-	%88 = insertvalue [64 x %Byte] %87, %Byte 170, 26
-	%89 = insertvalue [64 x %Byte] %88, %Byte 154, 27
-	%90 = insertvalue [64 x %Byte] %89, %Byte 195, 28
-	%91 = insertvalue [64 x %Byte] %90, %Byte 212, 29
-	%92 = insertvalue [64 x %Byte] %91, %Byte 108, 30
-	%93 = insertvalue [64 x %Byte] %92, %Byte 78, 31
-	%94 = insertvalue [64 x %Byte] %93, %Byte 210, 32
-	%95 = insertvalue [64 x %Byte] %94, %Byte 130, 33
-	%96 = insertvalue [64 x %Byte] %95, %Byte 100, 34
-	%97 = insertvalue [64 x %Byte] %96, %Byte 70, 35
-	%98 = insertvalue [64 x %Byte] %97, %Byte 7, 36
-	%99 = insertvalue [64 x %Byte] %98, %Byte 159, 37
-	%100 = insertvalue [64 x %Byte] %99, %Byte 170, 38
-	%101 = insertvalue [64 x %Byte] %100, %Byte 9, 39
-	%102 = insertvalue [64 x %Byte] %101, %Byte 20, 40
-	%103 = insertvalue [64 x %Byte] %102, %Byte 194, 41
-	%104 = insertvalue [64 x %Byte] %103, %Byte 215, 42
-	%105 = insertvalue [64 x %Byte] %104, %Byte 5, 43
-	%106 = insertvalue [64 x %Byte] %105, %Byte 217, 44
-	%107 = insertvalue [64 x %Byte] %106, %Byte 139, 45
-	%108 = insertvalue [64 x %Byte] %107, %Byte 2, 46
-	%109 = insertvalue [64 x %Byte] %108, %Byte 162, 47
-	%110 = insertvalue [64 x %Byte] %109, %Byte 181, 48
-	%111 = insertvalue [64 x %Byte] %110, %Byte 18, 49
-	%112 = insertvalue [64 x %Byte] %111, %Byte 156, 50
-	%113 = insertvalue [64 x %Byte] %112, %Byte 209, 51
-	%114 = insertvalue [64 x %Byte] %113, %Byte 222, 52
-	%115 = insertvalue [64 x %Byte] %114, %Byte 22, 53
-	%116 = insertvalue [64 x %Byte] %115, %Byte 78, 54
-	%117 = insertvalue [64 x %Byte] %116, %Byte 185, 55
-	%118 = insertvalue [64 x %Byte] %117, %Byte 203, 56
-	%119 = insertvalue [64 x %Byte] %118, %Byte 208, 57
-	%120 = insertvalue [64 x %Byte] %119, %Byte 131, 58
-	%121 = insertvalue [64 x %Byte] %120, %Byte 232, 59
-	%122 = insertvalue [64 x %Byte] %121, %Byte 162, 60
-	%123 = insertvalue [64 x %Byte] %122, %Byte 80, 61
-	%124 = insertvalue [64 x %Byte] %123, %Byte 60, 62
-	%125 = insertvalue [64 x %Byte] %124, %Byte 78, 63
-	%126 = alloca [64 x %Byte]
-	%127 = zext i8 64 to %Nat32
-	store [64 x %Byte] %125, [64 x %Byte]* %126
-	%128 = bitcast [64 x %Byte]* %61 to i8*
-	%129 = bitcast [64 x %Byte]* %126 to i8*
-	%130 = call i1 (i8*, i8*, i64) @memeq(i8* %128, i8* %129, %Int64 64)
-	%131 = icmp ne %Bool %130, 0
-	br %Bool %131 , label %then_0, label %else_0
+	%5 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
+	%6 = load %Nat32, %Nat32* %5
+	%7 = icmp eq %Nat32 %6, 64
+	br %Bool %7 , label %then_0, label %endif_0
 then_0:
-	%132 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
-	br label %endif_0
-else_0:
-	%133 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*))
+	;printf("UH!\n")
+	%8 = alloca %State, align 1
+	%9 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%10 = load [32 x %Byte]*, [32 x %Byte]** %9
+	%11 = bitcast [32 x %Byte]* %10 to %Key*
+	%12 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%13 = load %Nat32, %Nat32* %12
+	%14 = bitcast %Nat32 %13 to %Word32
+	%15 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1; alloca memory for return value
+	%16 = alloca %State
+	call void @makeState(%State* %16, %Key* %11, %Word32 %14, [3 x %Word32]* %15)
+	%17 = load %State, %State* %16
+	%18 = zext i8 16 to %Nat32
+	store %State %17, %State* %8
+	%19 = zext i8 13 to %Nat32
+	%20 = getelementptr %State, %State* %8, %Int32 0, %Nat32 %19
+	%21 = bitcast %Word32* %20 to [3 x %Word32]*
+	%22 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%23 = zext i8 0 to %Nat32
+	%24 = getelementptr [3 x %Word32], [3 x %Word32]* %22, %Int32 0, %Nat32 %23
+	%25 = bitcast %Word32* %24 to [3 x %Word32]*
+	%26 = load [3 x %Word32], [3 x %Word32]* %25
+	%27 = zext i8 3 to %Nat32
+	store [3 x %Word32] %26, [3 x %Word32]* %21
+	;state[13] = ctx.nonce[0]
+	;state[14] = ctx.nonce[1]
+	;state[15] = ctx.nonce[2]
+	%28 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%29 = load %State, %State* %8; alloca memory for return value
+	%30 = alloca %Block
+	call void @chacha20Block(%Block* %30, %State %29)
+	%31 = load %Block, %Block* %30
+	%32 = zext i8 16 to %Nat32
+	store %Block %31, %Block* %28
+	%33 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
+	store %Nat32 0, %Nat32* %33
+	%34 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%35 = bitcast %Block* %34 to [0 x %Byte]*
+	store [0 x %Byte]* %35, [0 x %Byte]** %2
 	br label %endif_0
 endif_0:
+	%36 = load %Nat32, %Nat32* %1
+	%37 = bitcast %Nat32 %36 to %Nat32
+	%38 = getelementptr [0 x %Byte], [0 x %Byte]* %data, %Int32 0, %Nat32 %37
+	%39 = load %Nat32, %Nat32* %1
+	%40 = bitcast %Nat32 %39 to %Nat32
+	%41 = getelementptr [0 x %Byte], [0 x %Byte]* %data, %Int32 0, %Nat32 %40
+	%42 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
+	%43 = load %Nat32, %Nat32* %42
+	%44 = load [0 x %Byte]*, [0 x %Byte]** %2
+	%45 = bitcast %Nat32 %43 to %Nat32
+	%46 = getelementptr [0 x %Byte], [0 x %Byte]* %44, %Int32 0, %Nat32 %45
+	%47 = load %Byte, %Byte* %41
+	%48 = load %Byte, %Byte* %46
+	%49 = xor %Byte %47, %48
+	store %Byte %49, %Byte* %38
+	%50 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
+	%51 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
+	%52 = load %Nat32, %Nat32* %51
+	%53 = add %Nat32 %52, 1
+	store %Nat32 %53, %Nat32* %50
+	%54 = load %Nat32, %Nat32* %1
+	%55 = add %Nat32 %54, 1
+	store %Nat32 %55, %Nat32* %1
+	br label %again_1
+break_1:
+	ret void
+}
+
+@testKey = internal global [32 x %Byte] [
+	%Byte 0,
+	%Byte 1,
+	%Byte 2,
+	%Byte 3,
+	%Byte 4,
+	%Byte 5,
+	%Byte 6,
+	%Byte 7,
+	%Byte 8,
+	%Byte 9,
+	%Byte 10,
+	%Byte 11,
+	%Byte 12,
+	%Byte 13,
+	%Byte 14,
+	%Byte 15,
+	%Byte 16,
+	%Byte 17,
+	%Byte 18,
+	%Byte 19,
+	%Byte 20,
+	%Byte 21,
+	%Byte 22,
+	%Byte 23,
+	%Byte 24,
+	%Byte 25,
+	%Byte 26,
+	%Byte 27,
+	%Byte 28,
+	%Byte 29,
+	%Byte 30,
+	%Byte 31
+]
+@testNonce = internal global [12 x %Byte] [
+	%Byte 0,
+	%Byte 0,
+	%Byte 0,
+	%Byte 9,
+	%Byte 0,
+	%Byte 0,
+	%Byte 0,
+	%Byte 74,
+	%Byte 0,
+	%Byte 0,
+	%Byte 0,
+	%Byte 0
+]
+@testNonce2 = internal global [3 x %Word32] [
+	%Word32 9,
+	%Word32 74,
+	%Word32 0
+]
+@testResult = constant [64 x %Byte] [
+	%Byte 16,
+	%Byte 241,
+	%Byte 231,
+	%Byte 228,
+	%Byte 209,
+	%Byte 59,
+	%Byte 89,
+	%Byte 21,
+	%Byte 80,
+	%Byte 15,
+	%Byte 221,
+	%Byte 31,
+	%Byte 163,
+	%Byte 32,
+	%Byte 113,
+	%Byte 196,
+	%Byte 199,
+	%Byte 209,
+	%Byte 244,
+	%Byte 199,
+	%Byte 51,
+	%Byte 192,
+	%Byte 104,
+	%Byte 3,
+	%Byte 4,
+	%Byte 34,
+	%Byte 170,
+	%Byte 154,
+	%Byte 195,
+	%Byte 212,
+	%Byte 108,
+	%Byte 78,
+	%Byte 210,
+	%Byte 130,
+	%Byte 100,
+	%Byte 70,
+	%Byte 7,
+	%Byte 159,
+	%Byte 170,
+	%Byte 9,
+	%Byte 20,
+	%Byte 194,
+	%Byte 215,
+	%Byte 5,
+	%Byte 217,
+	%Byte 139,
+	%Byte 2,
+	%Byte 162,
+	%Byte 181,
+	%Byte 18,
+	%Byte 156,
+	%Byte 209,
+	%Byte 222,
+	%Byte 22,
+	%Byte 78,
+	%Byte 185,
+	%Byte 203,
+	%Byte 208,
+	%Byte 131,
+	%Byte 232,
+	%Byte 162,
+	%Byte 80,
+	%Byte 60,
+	%Byte 78
+]
+@lorem1024 = constant [1024 x %Char8] [
+	%Char8 76,
+	%Char8 111,
+	%Char8 114,
+	%Char8 101,
+	%Char8 109,
+	%Char8 32,
+	%Char8 105,
+	%Char8 112,
+	%Char8 115,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 100,
+	%Char8 111,
+	%Char8 108,
+	%Char8 111,
+	%Char8 114,
+	%Char8 32,
+	%Char8 115,
+	%Char8 105,
+	%Char8 116,
+	%Char8 32,
+	%Char8 97,
+	%Char8 109,
+	%Char8 101,
+	%Char8 116,
+	%Char8 44,
+	%Char8 32,
+	%Char8 99,
+	%Char8 111,
+	%Char8 110,
+	%Char8 115,
+	%Char8 101,
+	%Char8 99,
+	%Char8 116,
+	%Char8 101,
+	%Char8 116,
+	%Char8 117,
+	%Char8 101,
+	%Char8 114,
+	%Char8 32,
+	%Char8 97,
+	%Char8 100,
+	%Char8 105,
+	%Char8 112,
+	%Char8 105,
+	%Char8 115,
+	%Char8 99,
+	%Char8 105,
+	%Char8 110,
+	%Char8 103,
+	%Char8 32,
+	%Char8 101,
+	%Char8 108,
+	%Char8 105,
+	%Char8 116,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 97,
+	%Char8 110,
+	%Char8 32,
+	%Char8 99,
+	%Char8 111,
+	%Char8 109,
+	%Char8 109,
+	%Char8 111,
+	%Char8 100,
+	%Char8 111,
+	%Char8 32,
+	%Char8 108,
+	%Char8 105,
+	%Char8 103,
+	%Char8 117,
+	%Char8 108,
+	%Char8 97,
+	%Char8 32,
+	%Char8 101,
+	%Char8 103,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 100,
+	%Char8 111,
+	%Char8 108,
+	%Char8 111,
+	%Char8 114,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 97,
+	%Char8 110,
+	%Char8 32,
+	%Char8 109,
+	%Char8 97,
+	%Char8 115,
+	%Char8 115,
+	%Char8 97,
+	%Char8 46,
+	%Char8 32,
+	%Char8 67,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 115,
+	%Char8 111,
+	%Char8 99,
+	%Char8 105,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 110,
+	%Char8 97,
+	%Char8 116,
+	%Char8 111,
+	%Char8 113,
+	%Char8 117,
+	%Char8 101,
+	%Char8 32,
+	%Char8 112,
+	%Char8 101,
+	%Char8 110,
+	%Char8 97,
+	%Char8 116,
+	%Char8 105,
+	%Char8 98,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 109,
+	%Char8 97,
+	%Char8 103,
+	%Char8 110,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 100,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 112,
+	%Char8 97,
+	%Char8 114,
+	%Char8 116,
+	%Char8 117,
+	%Char8 114,
+	%Char8 105,
+	%Char8 101,
+	%Char8 110,
+	%Char8 116,
+	%Char8 32,
+	%Char8 109,
+	%Char8 111,
+	%Char8 110,
+	%Char8 116,
+	%Char8 101,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 110,
+	%Char8 97,
+	%Char8 115,
+	%Char8 99,
+	%Char8 101,
+	%Char8 116,
+	%Char8 117,
+	%Char8 114,
+	%Char8 32,
+	%Char8 114,
+	%Char8 105,
+	%Char8 100,
+	%Char8 105,
+	%Char8 99,
+	%Char8 117,
+	%Char8 108,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 109,
+	%Char8 117,
+	%Char8 115,
+	%Char8 46,
+	%Char8 32,
+	%Char8 68,
+	%Char8 111,
+	%Char8 110,
+	%Char8 101,
+	%Char8 99,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 102,
+	%Char8 101,
+	%Char8 108,
+	%Char8 105,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 117,
+	%Char8 108,
+	%Char8 116,
+	%Char8 114,
+	%Char8 105,
+	%Char8 99,
+	%Char8 105,
+	%Char8 101,
+	%Char8 115,
+	%Char8 32,
+	%Char8 110,
+	%Char8 101,
+	%Char8 99,
+	%Char8 44,
+	%Char8 32,
+	%Char8 112,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 101,
+	%Char8 110,
+	%Char8 116,
+	%Char8 101,
+	%Char8 115,
+	%Char8 113,
+	%Char8 117,
+	%Char8 101,
+	%Char8 32,
+	%Char8 101,
+	%Char8 117,
+	%Char8 44,
+	%Char8 32,
+	%Char8 112,
+	%Char8 114,
+	%Char8 101,
+	%Char8 116,
+	%Char8 105,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 105,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 78,
+	%Char8 117,
+	%Char8 108,
+	%Char8 108,
+	%Char8 97,
+	%Char8 32,
+	%Char8 99,
+	%Char8 111,
+	%Char8 110,
+	%Char8 115,
+	%Char8 101,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 116,
+	%Char8 32,
+	%Char8 109,
+	%Char8 97,
+	%Char8 115,
+	%Char8 115,
+	%Char8 97,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 101,
+	%Char8 110,
+	%Char8 105,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 68,
+	%Char8 111,
+	%Char8 110,
+	%Char8 101,
+	%Char8 99,
+	%Char8 32,
+	%Char8 112,
+	%Char8 101,
+	%Char8 100,
+	%Char8 101,
+	%Char8 32,
+	%Char8 106,
+	%Char8 117,
+	%Char8 115,
+	%Char8 116,
+	%Char8 111,
+	%Char8 44,
+	%Char8 32,
+	%Char8 102,
+	%Char8 114,
+	%Char8 105,
+	%Char8 110,
+	%Char8 103,
+	%Char8 105,
+	%Char8 108,
+	%Char8 108,
+	%Char8 97,
+	%Char8 32,
+	%Char8 118,
+	%Char8 101,
+	%Char8 108,
+	%Char8 44,
+	%Char8 32,
+	%Char8 97,
+	%Char8 108,
+	%Char8 105,
+	%Char8 113,
+	%Char8 117,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 110,
+	%Char8 101,
+	%Char8 99,
+	%Char8 44,
+	%Char8 32,
+	%Char8 118,
+	%Char8 117,
+	%Char8 108,
+	%Char8 112,
+	%Char8 117,
+	%Char8 116,
+	%Char8 97,
+	%Char8 116,
+	%Char8 101,
+	%Char8 32,
+	%Char8 101,
+	%Char8 103,
+	%Char8 101,
+	%Char8 116,
+	%Char8 44,
+	%Char8 32,
+	%Char8 97,
+	%Char8 114,
+	%Char8 99,
+	%Char8 117,
+	%Char8 46,
+	%Char8 32,
+	%Char8 73,
+	%Char8 110,
+	%Char8 32,
+	%Char8 101,
+	%Char8 110,
+	%Char8 105,
+	%Char8 109,
+	%Char8 32,
+	%Char8 106,
+	%Char8 117,
+	%Char8 115,
+	%Char8 116,
+	%Char8 111,
+	%Char8 44,
+	%Char8 32,
+	%Char8 114,
+	%Char8 104,
+	%Char8 111,
+	%Char8 110,
+	%Char8 99,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 117,
+	%Char8 116,
+	%Char8 44,
+	%Char8 32,
+	%Char8 105,
+	%Char8 109,
+	%Char8 112,
+	%Char8 101,
+	%Char8 114,
+	%Char8 100,
+	%Char8 105,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 97,
+	%Char8 44,
+	%Char8 32,
+	%Char8 118,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 110,
+	%Char8 97,
+	%Char8 116,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 118,
+	%Char8 105,
+	%Char8 116,
+	%Char8 97,
+	%Char8 101,
+	%Char8 44,
+	%Char8 32,
+	%Char8 106,
+	%Char8 117,
+	%Char8 115,
+	%Char8 116,
+	%Char8 111,
+	%Char8 46,
+	%Char8 32,
+	%Char8 78,
+	%Char8 117,
+	%Char8 108,
+	%Char8 108,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 100,
+	%Char8 105,
+	%Char8 99,
+	%Char8 116,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 102,
+	%Char8 101,
+	%Char8 108,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 101,
+	%Char8 117,
+	%Char8 32,
+	%Char8 112,
+	%Char8 101,
+	%Char8 100,
+	%Char8 101,
+	%Char8 32,
+	%Char8 109,
+	%Char8 111,
+	%Char8 108,
+	%Char8 108,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 112,
+	%Char8 114,
+	%Char8 101,
+	%Char8 116,
+	%Char8 105,
+	%Char8 117,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 73,
+	%Char8 110,
+	%Char8 116,
+	%Char8 101,
+	%Char8 103,
+	%Char8 101,
+	%Char8 114,
+	%Char8 32,
+	%Char8 116,
+	%Char8 105,
+	%Char8 110,
+	%Char8 99,
+	%Char8 105,
+	%Char8 100,
+	%Char8 117,
+	%Char8 110,
+	%Char8 116,
+	%Char8 46,
+	%Char8 32,
+	%Char8 67,
+	%Char8 114,
+	%Char8 97,
+	%Char8 115,
+	%Char8 32,
+	%Char8 100,
+	%Char8 97,
+	%Char8 112,
+	%Char8 105,
+	%Char8 98,
+	%Char8 117,
+	%Char8 115,
+	%Char8 46,
+	%Char8 32,
+	%Char8 86,
+	%Char8 105,
+	%Char8 118,
+	%Char8 97,
+	%Char8 109,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 101,
+	%Char8 108,
+	%Char8 101,
+	%Char8 109,
+	%Char8 101,
+	%Char8 110,
+	%Char8 116,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 109,
+	%Char8 112,
+	%Char8 101,
+	%Char8 114,
+	%Char8 32,
+	%Char8 110,
+	%Char8 105,
+	%Char8 115,
+	%Char8 105,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 97,
+	%Char8 110,
+	%Char8 32,
+	%Char8 118,
+	%Char8 117,
+	%Char8 108,
+	%Char8 112,
+	%Char8 117,
+	%Char8 116,
+	%Char8 97,
+	%Char8 116,
+	%Char8 101,
+	%Char8 32,
+	%Char8 101,
+	%Char8 108,
+	%Char8 101,
+	%Char8 105,
+	%Char8 102,
+	%Char8 101,
+	%Char8 110,
+	%Char8 100,
+	%Char8 32,
+	%Char8 116,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 117,
+	%Char8 115,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 97,
+	%Char8 110,
+	%Char8 32,
+	%Char8 108,
+	%Char8 101,
+	%Char8 111,
+	%Char8 32,
+	%Char8 108,
+	%Char8 105,
+	%Char8 103,
+	%Char8 117,
+	%Char8 108,
+	%Char8 97,
+	%Char8 44,
+	%Char8 32,
+	%Char8 112,
+	%Char8 111,
+	%Char8 114,
+	%Char8 116,
+	%Char8 116,
+	%Char8 105,
+	%Char8 116,
+	%Char8 111,
+	%Char8 114,
+	%Char8 32,
+	%Char8 101,
+	%Char8 117,
+	%Char8 44,
+	%Char8 32,
+	%Char8 99,
+	%Char8 111,
+	%Char8 110,
+	%Char8 115,
+	%Char8 101,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 116,
+	%Char8 32,
+	%Char8 118,
+	%Char8 105,
+	%Char8 116,
+	%Char8 97,
+	%Char8 101,
+	%Char8 44,
+	%Char8 32,
+	%Char8 101,
+	%Char8 108,
+	%Char8 101,
+	%Char8 105,
+	%Char8 102,
+	%Char8 101,
+	%Char8 110,
+	%Char8 100,
+	%Char8 32,
+	%Char8 97,
+	%Char8 99,
+	%Char8 44,
+	%Char8 32,
+	%Char8 101,
+	%Char8 110,
+	%Char8 105,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 108,
+	%Char8 105,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 108,
+	%Char8 111,
+	%Char8 114,
+	%Char8 101,
+	%Char8 109,
+	%Char8 32,
+	%Char8 97,
+	%Char8 110,
+	%Char8 116,
+	%Char8 101,
+	%Char8 44,
+	%Char8 32,
+	%Char8 100,
+	%Char8 97,
+	%Char8 112,
+	%Char8 105,
+	%Char8 98,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 105,
+	%Char8 110,
+	%Char8 44,
+	%Char8 32,
+	%Char8 118,
+	%Char8 105,
+	%Char8 118,
+	%Char8 101,
+	%Char8 114,
+	%Char8 114,
+	%Char8 97,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 105,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 102,
+	%Char8 101,
+	%Char8 117,
+	%Char8 103,
+	%Char8 105,
+	%Char8 97,
+	%Char8 116,
+	%Char8 32,
+	%Char8 97,
+	%Char8 44,
+	%Char8 32,
+	%Char8 116,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 117,
+	%Char8 115,
+	%Char8 46,
+	%Char8 32,
+	%Char8 80,
+	%Char8 104,
+	%Char8 97,
+	%Char8 115,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 118,
+	%Char8 105,
+	%Char8 118,
+	%Char8 101,
+	%Char8 114,
+	%Char8 114,
+	%Char8 97,
+	%Char8 32,
+	%Char8 110,
+	%Char8 117,
+	%Char8 108,
+	%Char8 108,
+	%Char8 97,
+	%Char8 32,
+	%Char8 117,
+	%Char8 116,
+	%Char8 32,
+	%Char8 109,
+	%Char8 101,
+	%Char8 116,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 118,
+	%Char8 97,
+	%Char8 114,
+	%Char8 105,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 108,
+	%Char8 97,
+	%Char8 111,
+	%Char8 114,
+	%Char8 101,
+	%Char8 101,
+	%Char8 116,
+	%Char8 46,
+	%Char8 32,
+	%Char8 81,
+	%Char8 117,
+	%Char8 105,
+	%Char8 115,
+	%Char8 113,
+	%Char8 117,
+	%Char8 101,
+	%Char8 32,
+	%Char8 114,
+	%Char8 117,
+	%Char8 116,
+	%Char8 114,
+	%Char8 117,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 97,
+	%Char8 110,
+	%Char8 32,
+	%Char8 105,
+	%Char8 109,
+	%Char8 112,
+	%Char8 101,
+	%Char8 114,
+	%Char8 100,
+	%Char8 105,
+	%Char8 101,
+	%Char8 116,
+	%Char8 46,
+	%Char8 32,
+	%Char8 69,
+	%Char8 116,
+	%Char8 105,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 117,
+	%Char8 108,
+	%Char8 116,
+	%Char8 114,
+	%Char8 105,
+	%Char8 99,
+	%Char8 105,
+	%Char8 101,
+	%Char8 115,
+	%Char8 32,
+	%Char8 110,
+	%Char8 105,
+	%Char8 115,
+	%Char8 105,
+	%Char8 32,
+	%Char8 118,
+	%Char8 101,
+	%Char8 108,
+	%Char8 32,
+	%Char8 97,
+	%Char8 117,
+	%Char8 103,
+	%Char8 117,
+	%Char8 101,
+	%Char8 46,
+	%Char8 32,
+	%Char8 67,
+	%Char8 117,
+	%Char8 114,
+	%Char8 97,
+	%Char8 98,
+	%Char8 105,
+	%Char8 116,
+	%Char8 117,
+	%Char8 114,
+	%Char8 32,
+	%Char8 117,
+	%Char8 108,
+	%Char8 108,
+	%Char8 97,
+	%Char8 109,
+	%Char8 99,
+	%Char8 111,
+	%Char8 114,
+	%Char8 112,
+	%Char8 101,
+	%Char8 114,
+	%Char8 32,
+	%Char8 117,
+	%Char8 108,
+	%Char8 116,
+	%Char8 114,
+	%Char8 105,
+	%Char8 99,
+	%Char8 105,
+	%Char8 101,
+	%Char8 115,
+	%Char8 32,
+	%Char8 110,
+	%Char8 105,
+	%Char8 115,
+	%Char8 105,
+	%Char8 46,
+	%Char8 32,
+	%Char8 78,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 101,
+	%Char8 103,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 100,
+	%Char8 117,
+	%Char8 105,
+	%Char8 46,
+	%Char8 32,
+	%Char8 69,
+	%Char8 116,
+	%Char8 105,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 114,
+	%Char8 104,
+	%Char8 111,
+	%Char8 110,
+	%Char8 99,
+	%Char8 117,
+	%Char8 115,
+	%Char8 46,
+	%Char8 32,
+	%Char8 77,
+	%Char8 97,
+	%Char8 101,
+	%Char8 99,
+	%Char8 101,
+	%Char8 110,
+	%Char8 97,
+	%Char8 115,
+	%Char8 32,
+	%Char8 116,
+	%Char8 101,
+	%Char8 109,
+	%Char8 112,
+	%Char8 117,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 116,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 101,
+	%Char8 103,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 99,
+	%Char8 111,
+	%Char8 110,
+	%Char8 100,
+	%Char8 105,
+	%Char8 109,
+	%Char8 101,
+	%Char8 110,
+	%Char8 116,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 114,
+	%Char8 104,
+	%Char8 111,
+	%Char8 110,
+	%Char8 99,
+	%Char8 117,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 109,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 109,
+	%Char8 112,
+	%Char8 101,
+	%Char8 114,
+	%Char8 32,
+	%Char8 108,
+	%Char8 105,
+	%Char8 98,
+	%Char8 101,
+	%Char8 114,
+	%Char8 111,
+	%Char8 44,
+	%Char8 32,
+	%Char8 115,
+	%Char8 105,
+	%Char8 116,
+	%Char8 32,
+	%Char8 97,
+	%Char8 109,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 97,
+	%Char8 100,
+	%Char8 105,
+	%Char8 112,
+	%Char8 105,
+	%Char8 115,
+	%Char8 99,
+	%Char8 105,
+	%Char8 110,
+	%Char8 103,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 109,
+	%Char8 32,
+	%Char8 110,
+	%Char8 101,
+	%Char8 113,
+	%Char8 117,
+	%Char8 101,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 100,
+	%Char8 32,
+	%Char8 105,
+	%Char8 112,
+	%Char8 115,
+	%Char8 117,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 78,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 110,
+	%Char8 117,
+	%Char8 110,
+	%Char8 99,
+	%Char8 44,
+	%Char8 32,
+	%Char8 98,
+	%Char8 108,
+	%Char8 97,
+	%Char8 110,
+	%Char8 100,
+	%Char8 105,
+	%Char8 116,
+	%Char8 32,
+	%Char8 118,
+	%Char8 101
+]
+@xlorem1024 = internal global [1024 x %Char8] [
+	%Char8 76,
+	%Char8 111,
+	%Char8 114,
+	%Char8 101,
+	%Char8 109,
+	%Char8 32,
+	%Char8 105,
+	%Char8 112,
+	%Char8 115,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 100,
+	%Char8 111,
+	%Char8 108,
+	%Char8 111,
+	%Char8 114,
+	%Char8 32,
+	%Char8 115,
+	%Char8 105,
+	%Char8 116,
+	%Char8 32,
+	%Char8 97,
+	%Char8 109,
+	%Char8 101,
+	%Char8 116,
+	%Char8 44,
+	%Char8 32,
+	%Char8 99,
+	%Char8 111,
+	%Char8 110,
+	%Char8 115,
+	%Char8 101,
+	%Char8 99,
+	%Char8 116,
+	%Char8 101,
+	%Char8 116,
+	%Char8 117,
+	%Char8 101,
+	%Char8 114,
+	%Char8 32,
+	%Char8 97,
+	%Char8 100,
+	%Char8 105,
+	%Char8 112,
+	%Char8 105,
+	%Char8 115,
+	%Char8 99,
+	%Char8 105,
+	%Char8 110,
+	%Char8 103,
+	%Char8 32,
+	%Char8 101,
+	%Char8 108,
+	%Char8 105,
+	%Char8 116,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 97,
+	%Char8 110,
+	%Char8 32,
+	%Char8 99,
+	%Char8 111,
+	%Char8 109,
+	%Char8 109,
+	%Char8 111,
+	%Char8 100,
+	%Char8 111,
+	%Char8 32,
+	%Char8 108,
+	%Char8 105,
+	%Char8 103,
+	%Char8 117,
+	%Char8 108,
+	%Char8 97,
+	%Char8 32,
+	%Char8 101,
+	%Char8 103,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 100,
+	%Char8 111,
+	%Char8 108,
+	%Char8 111,
+	%Char8 114,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 97,
+	%Char8 110,
+	%Char8 32,
+	%Char8 109,
+	%Char8 97,
+	%Char8 115,
+	%Char8 115,
+	%Char8 97,
+	%Char8 46,
+	%Char8 32,
+	%Char8 67,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 115,
+	%Char8 111,
+	%Char8 99,
+	%Char8 105,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 110,
+	%Char8 97,
+	%Char8 116,
+	%Char8 111,
+	%Char8 113,
+	%Char8 117,
+	%Char8 101,
+	%Char8 32,
+	%Char8 112,
+	%Char8 101,
+	%Char8 110,
+	%Char8 97,
+	%Char8 116,
+	%Char8 105,
+	%Char8 98,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 109,
+	%Char8 97,
+	%Char8 103,
+	%Char8 110,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 100,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 112,
+	%Char8 97,
+	%Char8 114,
+	%Char8 116,
+	%Char8 117,
+	%Char8 114,
+	%Char8 105,
+	%Char8 101,
+	%Char8 110,
+	%Char8 116,
+	%Char8 32,
+	%Char8 109,
+	%Char8 111,
+	%Char8 110,
+	%Char8 116,
+	%Char8 101,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 110,
+	%Char8 97,
+	%Char8 115,
+	%Char8 99,
+	%Char8 101,
+	%Char8 116,
+	%Char8 117,
+	%Char8 114,
+	%Char8 32,
+	%Char8 114,
+	%Char8 105,
+	%Char8 100,
+	%Char8 105,
+	%Char8 99,
+	%Char8 117,
+	%Char8 108,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 109,
+	%Char8 117,
+	%Char8 115,
+	%Char8 46,
+	%Char8 32,
+	%Char8 68,
+	%Char8 111,
+	%Char8 110,
+	%Char8 101,
+	%Char8 99,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 102,
+	%Char8 101,
+	%Char8 108,
+	%Char8 105,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 117,
+	%Char8 108,
+	%Char8 116,
+	%Char8 114,
+	%Char8 105,
+	%Char8 99,
+	%Char8 105,
+	%Char8 101,
+	%Char8 115,
+	%Char8 32,
+	%Char8 110,
+	%Char8 101,
+	%Char8 99,
+	%Char8 44,
+	%Char8 32,
+	%Char8 112,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 101,
+	%Char8 110,
+	%Char8 116,
+	%Char8 101,
+	%Char8 115,
+	%Char8 113,
+	%Char8 117,
+	%Char8 101,
+	%Char8 32,
+	%Char8 101,
+	%Char8 117,
+	%Char8 44,
+	%Char8 32,
+	%Char8 112,
+	%Char8 114,
+	%Char8 101,
+	%Char8 116,
+	%Char8 105,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 105,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 78,
+	%Char8 117,
+	%Char8 108,
+	%Char8 108,
+	%Char8 97,
+	%Char8 32,
+	%Char8 99,
+	%Char8 111,
+	%Char8 110,
+	%Char8 115,
+	%Char8 101,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 116,
+	%Char8 32,
+	%Char8 109,
+	%Char8 97,
+	%Char8 115,
+	%Char8 115,
+	%Char8 97,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 101,
+	%Char8 110,
+	%Char8 105,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 68,
+	%Char8 111,
+	%Char8 110,
+	%Char8 101,
+	%Char8 99,
+	%Char8 32,
+	%Char8 112,
+	%Char8 101,
+	%Char8 100,
+	%Char8 101,
+	%Char8 32,
+	%Char8 106,
+	%Char8 117,
+	%Char8 115,
+	%Char8 116,
+	%Char8 111,
+	%Char8 44,
+	%Char8 32,
+	%Char8 102,
+	%Char8 114,
+	%Char8 105,
+	%Char8 110,
+	%Char8 103,
+	%Char8 105,
+	%Char8 108,
+	%Char8 108,
+	%Char8 97,
+	%Char8 32,
+	%Char8 118,
+	%Char8 101,
+	%Char8 108,
+	%Char8 44,
+	%Char8 32,
+	%Char8 97,
+	%Char8 108,
+	%Char8 105,
+	%Char8 113,
+	%Char8 117,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 110,
+	%Char8 101,
+	%Char8 99,
+	%Char8 44,
+	%Char8 32,
+	%Char8 118,
+	%Char8 117,
+	%Char8 108,
+	%Char8 112,
+	%Char8 117,
+	%Char8 116,
+	%Char8 97,
+	%Char8 116,
+	%Char8 101,
+	%Char8 32,
+	%Char8 101,
+	%Char8 103,
+	%Char8 101,
+	%Char8 116,
+	%Char8 44,
+	%Char8 32,
+	%Char8 97,
+	%Char8 114,
+	%Char8 99,
+	%Char8 117,
+	%Char8 46,
+	%Char8 32,
+	%Char8 73,
+	%Char8 110,
+	%Char8 32,
+	%Char8 101,
+	%Char8 110,
+	%Char8 105,
+	%Char8 109,
+	%Char8 32,
+	%Char8 106,
+	%Char8 117,
+	%Char8 115,
+	%Char8 116,
+	%Char8 111,
+	%Char8 44,
+	%Char8 32,
+	%Char8 114,
+	%Char8 104,
+	%Char8 111,
+	%Char8 110,
+	%Char8 99,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 117,
+	%Char8 116,
+	%Char8 44,
+	%Char8 32,
+	%Char8 105,
+	%Char8 109,
+	%Char8 112,
+	%Char8 101,
+	%Char8 114,
+	%Char8 100,
+	%Char8 105,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 97,
+	%Char8 44,
+	%Char8 32,
+	%Char8 118,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 110,
+	%Char8 97,
+	%Char8 116,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 118,
+	%Char8 105,
+	%Char8 116,
+	%Char8 97,
+	%Char8 101,
+	%Char8 44,
+	%Char8 32,
+	%Char8 106,
+	%Char8 117,
+	%Char8 115,
+	%Char8 116,
+	%Char8 111,
+	%Char8 46,
+	%Char8 32,
+	%Char8 78,
+	%Char8 117,
+	%Char8 108,
+	%Char8 108,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 100,
+	%Char8 105,
+	%Char8 99,
+	%Char8 116,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 102,
+	%Char8 101,
+	%Char8 108,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 101,
+	%Char8 117,
+	%Char8 32,
+	%Char8 112,
+	%Char8 101,
+	%Char8 100,
+	%Char8 101,
+	%Char8 32,
+	%Char8 109,
+	%Char8 111,
+	%Char8 108,
+	%Char8 108,
+	%Char8 105,
+	%Char8 115,
+	%Char8 32,
+	%Char8 112,
+	%Char8 114,
+	%Char8 101,
+	%Char8 116,
+	%Char8 105,
+	%Char8 117,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 73,
+	%Char8 110,
+	%Char8 116,
+	%Char8 101,
+	%Char8 103,
+	%Char8 101,
+	%Char8 114,
+	%Char8 32,
+	%Char8 116,
+	%Char8 105,
+	%Char8 110,
+	%Char8 99,
+	%Char8 105,
+	%Char8 100,
+	%Char8 117,
+	%Char8 110,
+	%Char8 116,
+	%Char8 46,
+	%Char8 32,
+	%Char8 67,
+	%Char8 114,
+	%Char8 97,
+	%Char8 115,
+	%Char8 32,
+	%Char8 100,
+	%Char8 97,
+	%Char8 112,
+	%Char8 105,
+	%Char8 98,
+	%Char8 117,
+	%Char8 115,
+	%Char8 46,
+	%Char8 32,
+	%Char8 86,
+	%Char8 105,
+	%Char8 118,
+	%Char8 97,
+	%Char8 109,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 101,
+	%Char8 108,
+	%Char8 101,
+	%Char8 109,
+	%Char8 101,
+	%Char8 110,
+	%Char8 116,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 109,
+	%Char8 112,
+	%Char8 101,
+	%Char8 114,
+	%Char8 32,
+	%Char8 110,
+	%Char8 105,
+	%Char8 115,
+	%Char8 105,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 97,
+	%Char8 110,
+	%Char8 32,
+	%Char8 118,
+	%Char8 117,
+	%Char8 108,
+	%Char8 112,
+	%Char8 117,
+	%Char8 116,
+	%Char8 97,
+	%Char8 116,
+	%Char8 101,
+	%Char8 32,
+	%Char8 101,
+	%Char8 108,
+	%Char8 101,
+	%Char8 105,
+	%Char8 102,
+	%Char8 101,
+	%Char8 110,
+	%Char8 100,
+	%Char8 32,
+	%Char8 116,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 117,
+	%Char8 115,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 97,
+	%Char8 110,
+	%Char8 32,
+	%Char8 108,
+	%Char8 101,
+	%Char8 111,
+	%Char8 32,
+	%Char8 108,
+	%Char8 105,
+	%Char8 103,
+	%Char8 117,
+	%Char8 108,
+	%Char8 97,
+	%Char8 44,
+	%Char8 32,
+	%Char8 112,
+	%Char8 111,
+	%Char8 114,
+	%Char8 116,
+	%Char8 116,
+	%Char8 105,
+	%Char8 116,
+	%Char8 111,
+	%Char8 114,
+	%Char8 32,
+	%Char8 101,
+	%Char8 117,
+	%Char8 44,
+	%Char8 32,
+	%Char8 99,
+	%Char8 111,
+	%Char8 110,
+	%Char8 115,
+	%Char8 101,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 116,
+	%Char8 32,
+	%Char8 118,
+	%Char8 105,
+	%Char8 116,
+	%Char8 97,
+	%Char8 101,
+	%Char8 44,
+	%Char8 32,
+	%Char8 101,
+	%Char8 108,
+	%Char8 101,
+	%Char8 105,
+	%Char8 102,
+	%Char8 101,
+	%Char8 110,
+	%Char8 100,
+	%Char8 32,
+	%Char8 97,
+	%Char8 99,
+	%Char8 44,
+	%Char8 32,
+	%Char8 101,
+	%Char8 110,
+	%Char8 105,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 108,
+	%Char8 105,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 108,
+	%Char8 111,
+	%Char8 114,
+	%Char8 101,
+	%Char8 109,
+	%Char8 32,
+	%Char8 97,
+	%Char8 110,
+	%Char8 116,
+	%Char8 101,
+	%Char8 44,
+	%Char8 32,
+	%Char8 100,
+	%Char8 97,
+	%Char8 112,
+	%Char8 105,
+	%Char8 98,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 105,
+	%Char8 110,
+	%Char8 44,
+	%Char8 32,
+	%Char8 118,
+	%Char8 105,
+	%Char8 118,
+	%Char8 101,
+	%Char8 114,
+	%Char8 114,
+	%Char8 97,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 105,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 102,
+	%Char8 101,
+	%Char8 117,
+	%Char8 103,
+	%Char8 105,
+	%Char8 97,
+	%Char8 116,
+	%Char8 32,
+	%Char8 97,
+	%Char8 44,
+	%Char8 32,
+	%Char8 116,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 117,
+	%Char8 115,
+	%Char8 46,
+	%Char8 32,
+	%Char8 80,
+	%Char8 104,
+	%Char8 97,
+	%Char8 115,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 118,
+	%Char8 105,
+	%Char8 118,
+	%Char8 101,
+	%Char8 114,
+	%Char8 114,
+	%Char8 97,
+	%Char8 32,
+	%Char8 110,
+	%Char8 117,
+	%Char8 108,
+	%Char8 108,
+	%Char8 97,
+	%Char8 32,
+	%Char8 117,
+	%Char8 116,
+	%Char8 32,
+	%Char8 109,
+	%Char8 101,
+	%Char8 116,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 118,
+	%Char8 97,
+	%Char8 114,
+	%Char8 105,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 108,
+	%Char8 97,
+	%Char8 111,
+	%Char8 114,
+	%Char8 101,
+	%Char8 101,
+	%Char8 116,
+	%Char8 46,
+	%Char8 32,
+	%Char8 81,
+	%Char8 117,
+	%Char8 105,
+	%Char8 115,
+	%Char8 113,
+	%Char8 117,
+	%Char8 101,
+	%Char8 32,
+	%Char8 114,
+	%Char8 117,
+	%Char8 116,
+	%Char8 114,
+	%Char8 117,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 65,
+	%Char8 101,
+	%Char8 110,
+	%Char8 101,
+	%Char8 97,
+	%Char8 110,
+	%Char8 32,
+	%Char8 105,
+	%Char8 109,
+	%Char8 112,
+	%Char8 101,
+	%Char8 114,
+	%Char8 100,
+	%Char8 105,
+	%Char8 101,
+	%Char8 116,
+	%Char8 46,
+	%Char8 32,
+	%Char8 69,
+	%Char8 116,
+	%Char8 105,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 117,
+	%Char8 108,
+	%Char8 116,
+	%Char8 114,
+	%Char8 105,
+	%Char8 99,
+	%Char8 105,
+	%Char8 101,
+	%Char8 115,
+	%Char8 32,
+	%Char8 110,
+	%Char8 105,
+	%Char8 115,
+	%Char8 105,
+	%Char8 32,
+	%Char8 118,
+	%Char8 101,
+	%Char8 108,
+	%Char8 32,
+	%Char8 97,
+	%Char8 117,
+	%Char8 103,
+	%Char8 117,
+	%Char8 101,
+	%Char8 46,
+	%Char8 32,
+	%Char8 67,
+	%Char8 117,
+	%Char8 114,
+	%Char8 97,
+	%Char8 98,
+	%Char8 105,
+	%Char8 116,
+	%Char8 117,
+	%Char8 114,
+	%Char8 32,
+	%Char8 117,
+	%Char8 108,
+	%Char8 108,
+	%Char8 97,
+	%Char8 109,
+	%Char8 99,
+	%Char8 111,
+	%Char8 114,
+	%Char8 112,
+	%Char8 101,
+	%Char8 114,
+	%Char8 32,
+	%Char8 117,
+	%Char8 108,
+	%Char8 116,
+	%Char8 114,
+	%Char8 105,
+	%Char8 99,
+	%Char8 105,
+	%Char8 101,
+	%Char8 115,
+	%Char8 32,
+	%Char8 110,
+	%Char8 105,
+	%Char8 115,
+	%Char8 105,
+	%Char8 46,
+	%Char8 32,
+	%Char8 78,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 101,
+	%Char8 103,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 100,
+	%Char8 117,
+	%Char8 105,
+	%Char8 46,
+	%Char8 32,
+	%Char8 69,
+	%Char8 116,
+	%Char8 105,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 114,
+	%Char8 104,
+	%Char8 111,
+	%Char8 110,
+	%Char8 99,
+	%Char8 117,
+	%Char8 115,
+	%Char8 46,
+	%Char8 32,
+	%Char8 77,
+	%Char8 97,
+	%Char8 101,
+	%Char8 99,
+	%Char8 101,
+	%Char8 110,
+	%Char8 97,
+	%Char8 115,
+	%Char8 32,
+	%Char8 116,
+	%Char8 101,
+	%Char8 109,
+	%Char8 112,
+	%Char8 117,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 116,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 117,
+	%Char8 115,
+	%Char8 32,
+	%Char8 101,
+	%Char8 103,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 99,
+	%Char8 111,
+	%Char8 110,
+	%Char8 100,
+	%Char8 105,
+	%Char8 109,
+	%Char8 101,
+	%Char8 110,
+	%Char8 116,
+	%Char8 117,
+	%Char8 109,
+	%Char8 32,
+	%Char8 114,
+	%Char8 104,
+	%Char8 111,
+	%Char8 110,
+	%Char8 99,
+	%Char8 117,
+	%Char8 115,
+	%Char8 44,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 109,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 109,
+	%Char8 112,
+	%Char8 101,
+	%Char8 114,
+	%Char8 32,
+	%Char8 108,
+	%Char8 105,
+	%Char8 98,
+	%Char8 101,
+	%Char8 114,
+	%Char8 111,
+	%Char8 44,
+	%Char8 32,
+	%Char8 115,
+	%Char8 105,
+	%Char8 116,
+	%Char8 32,
+	%Char8 97,
+	%Char8 109,
+	%Char8 101,
+	%Char8 116,
+	%Char8 32,
+	%Char8 97,
+	%Char8 100,
+	%Char8 105,
+	%Char8 112,
+	%Char8 105,
+	%Char8 115,
+	%Char8 99,
+	%Char8 105,
+	%Char8 110,
+	%Char8 103,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 109,
+	%Char8 32,
+	%Char8 110,
+	%Char8 101,
+	%Char8 113,
+	%Char8 117,
+	%Char8 101,
+	%Char8 32,
+	%Char8 115,
+	%Char8 101,
+	%Char8 100,
+	%Char8 32,
+	%Char8 105,
+	%Char8 112,
+	%Char8 115,
+	%Char8 117,
+	%Char8 109,
+	%Char8 46,
+	%Char8 32,
+	%Char8 78,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 113,
+	%Char8 117,
+	%Char8 97,
+	%Char8 109,
+	%Char8 32,
+	%Char8 110,
+	%Char8 117,
+	%Char8 110,
+	%Char8 99,
+	%Char8 44,
+	%Char8 32,
+	%Char8 98,
+	%Char8 108,
+	%Char8 97,
+	%Char8 110,
+	%Char8 100,
+	%Char8 105,
+	%Char8 116,
+	%Char8 32,
+	%Char8 118,
+	%Char8 101
+]
+define %Int @main() {
+	;printf("%s\n", *Str8 hello_world)
+	;var data = []Byte [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+	%1 = alloca %Context, align 8
+	%2 = load [3 x %Word32], [3 x %Word32]* @testNonce2
+	%3 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %2)
+; -- cons_composite_from_composite_by_value --
+	%4 = alloca %Context
+	store %Context %3, %Context* %4
+	%5 = bitcast %Context* %4 to %Context*
+; -- end cons_composite_from_composite_by_value --
+	%6 = load %Context, %Context* %5
+	store %Context %6, %Context* %1
+	%7 = bitcast [1024 x %Char8]* @xlorem1024 to [0 x %Byte]*
+	%8 = bitcast %Context* %1 to %Context*
+	call void @cipher(%Context* %8, [0 x %Byte]* %7, %Nat32 1024)
+	%9 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %9
+; while_1
+	br label %again_1
+again_1:
+	%10 = load %Int32, %Int32* %9
+	%11 = icmp slt %Int32 %10, 10
+	br %Bool %11 , label %body_1, label %break_1
+body_1:
+	%12 = load %Int32, %Int32* %9
+	%13 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %12
+	%14 = load %Char8, %Char8* %13
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str1 to [0 x i8]*), %Char8 %14)
+	%16 = load %Int32, %Int32* %9
+	%17 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %16
+	%18 = load %Char8, %Char8* %17
+	%19 = bitcast %Char8 %18 to %Word8
+	%20 = zext %Word8 %19 to %Word32
+	%21 = bitcast %Word32 %20 to %Nat32
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Nat32 %21)
+	%23 = load %Int32, %Int32* %9
+	%24 = add %Int32 %23, 1
+	store %Int32 %24, %Int32* %9
+	br label %again_1
+break_1:
+	%25 = alloca %Context, align 8
+	%26 = load [3 x %Word32], [3 x %Word32]* @testNonce2
+	%27 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %26)
+; -- cons_composite_from_composite_by_value --
+	%28 = alloca %Context
+	store %Context %27, %Context* %28
+	%29 = bitcast %Context* %28 to %Context*
+; -- end cons_composite_from_composite_by_value --
+	%30 = load %Context, %Context* %29
+	store %Context %30, %Context* %25
+	%31 = bitcast %Context* %25 to %Context*
+	call void @cipher(%Context* %31, [0 x %Byte]* %7, %Nat32 1024)
+	store %Int32 0, %Int32* %9
+; while_2
+	br label %again_2
+again_2:
+	%32 = load %Int32, %Int32* %9
+	%33 = icmp slt %Int32 %32, 1024
+	br %Bool %33 , label %body_2, label %break_2
+body_2:
+	%34 = load %Int32, %Int32* %9
+	%35 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %34
+	%36 = load %Char8, %Char8* %35
+	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*), %Char8 %36)
+	%38 = load %Int32, %Int32* %9
+	%39 = add %Int32 %38, 1
+	store %Int32 %39, %Int32* %9
+	br label %again_2
+break_2:
+	call void @test0()
 	ret %Int 0
+}
+
+define internal void @test0() {
+	%1 = alloca [32 x %Byte], align 1
+	%2 = load [32 x %Byte], [32 x %Byte]* @testKey
+	%3 = zext i8 32 to %Nat32
+	store [32 x %Byte] %2, [32 x %Byte]* %1
+	%4 = alloca %Word32, align 4
+	%5 = zext i8 1 to %Word32
+	store %Word32 %5, %Word32* %4
+	%6 = alloca [12 x %Byte], align 1
+	%7 = load [12 x %Byte], [12 x %Byte]* @testNonce
+	%8 = zext i8 12 to %Nat32
+	store [12 x %Byte] %7, [12 x %Byte]* %6
+	%9 = alloca %State, align 1
+	%10 = bitcast [32 x %Byte]* %1 to %Key*
+	%11 = load %Word32, %Word32* %4
+	%12 = bitcast [12 x %Byte]* %6 to [3 x %Word32]*; alloca memory for return value
+	%13 = alloca %State
+	call void @makeState(%State* %13, %Key* %10, %Word32 %11, [3 x %Word32]* %12)
+	%14 = load %State, %State* %13
+	%15 = zext i8 16 to %Nat32
+	store %State %14, %State* %9
+	%16 = alloca %Block, align 1
+	%17 = load %State, %State* %9; alloca memory for return value
+	%18 = alloca %Block
+	call void @chacha20Block(%Block* %18, %State %17)
+	%19 = load %Block, %Block* %18
+	%20 = zext i8 16 to %Nat32
+	store %Block %19, %Block* %16
+	%21 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %21
+; while_1
+	br label %again_1
+again_1:
+	%22 = load %Int32, %Int32* %21
+	%23 = icmp slt %Int32 %22, 16
+	br %Bool %23 , label %body_1, label %break_1
+body_1:
+	%24 = load %Int32, %Int32* %21
+	%25 = getelementptr %Block, %Block* %16, %Int32 0, %Int32 %24
+	%26 = load %Word32, %Word32* %25
+	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str4 to [0 x i8]*), %Word32 %26)
+	%28 = load %Int32, %Int32* %21
+	%29 = add %Int32 %28, 1
+	store %Int32 %29, %Int32* %21
+	br label %again_1
+break_1:
+	%30 = bitcast %Block* %16 to [64 x %Byte]*
+; if_0
+	%31 = bitcast [64 x %Byte]* %30 to i8*
+	%32 = bitcast [64 x %Byte]* @testResult to i8*
+	%33 = call i1 (i8*, i8*, i64) @memeq(i8* %31, i8* %32, %Int64 64)
+	%34 = icmp ne %Bool %33, 0
+	br %Bool %34 , label %then_0, label %else_0
+then_0:
+	%35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
+	br label %endif_0
+else_0:
+	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str6 to [0 x i8]*))
+	br label %endif_0
+endif_0:
+	ret void
 }
 
 
