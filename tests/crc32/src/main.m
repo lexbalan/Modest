@@ -2,6 +2,7 @@
 
 include "libc/ctypes64"
 include "libc/stdio"
+include "libc/stdlib"
 
 pragma c_include "./crc32.h"
 import "misc/crc32"
@@ -35,12 +36,12 @@ public func main () -> Int {
 	while i < lengthof(tests) {
 		if not runTest(&tests[i]) {
 			printf("#%d failed\n", i)
-			return 1
+			return exitFailure
 		}
 		++i
 	}
 
 	printf("passed\n")
-	return 0
+	return exitSuccess
 }
 

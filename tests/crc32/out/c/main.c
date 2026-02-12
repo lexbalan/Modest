@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "./crc32.h"
 
 #ifndef LENGTHOF
@@ -38,13 +39,13 @@ int main(void) {
 	while (i < (uint32_t)LENGTHOF(tests)) {
 		if (!runTest(&tests[i])) {
 			printf("#%d failed\n", i);
-			return 1;
+			return EXIT_FAILURE;
 		}
 		i = i + 1;
 	}
 
 	printf("passed\n");
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 

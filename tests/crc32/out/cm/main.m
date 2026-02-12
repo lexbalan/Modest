@@ -1,6 +1,7 @@
 import "misc/crc32"
 include "ctypes64"
 include "stdio"
+include "stdlib"
 
 import "misc/crc32" as crc32
 
@@ -33,12 +34,12 @@ public func main () -> Int {
 	while i < lengthof(tests) {
 		if not runTest(&tests[i]) {
 			printf("#%d failed\n", i)
-			return 1
+			return exitFailure
 		}
 		i = i + 1
 	}
 
 	printf("passed\n")
-	return 0
+	return exitSuccess
 }
 
