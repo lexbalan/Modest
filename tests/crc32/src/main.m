@@ -4,7 +4,6 @@ include "libc/ctypes64"
 include "libc/stdio"
 include "libc/stdlib"
 
-pragma c_include "./crc32.h"
 import "misc/crc32"
 
 
