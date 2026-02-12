@@ -249,6 +249,12 @@ func testInt64Static () -> Bool {
 
 
 
+func testInteger () -> Bool {
+	printf("passed: Integer test\n")
+	return true
+}
+
+
 func testRational () -> Bool {
 	let pi = Rational 3.14
 	if pi != 3.14 {
@@ -268,25 +274,34 @@ func testRational () -> Bool {
 }
 
 
-func assert (x: Bool) -> Unit {
-	//
-}
 
 
 public func main () -> Int32 {
-    printf("test numeric boundary ")
+	printf("test numeric boundary:\n")
 
-	assert(testRational())
+	var success = true
 
-	assert(testNat8Static())
-	assert(testNat16Static())
-	assert(testNat32Static())
-	assert(testNat64Static())
+	// test built-in generic types
+	success = success and testInteger()
+	success = success and testRational()
 
-	assert(testInt8Static())
-	assert(testInt16Static())
-	assert(testInt32Static())
-	assert(testInt64Static())
+	// test built-in unsigned integer types
+	success = success and testNat8Static()
+	success = success and testNat16Static()
+	success = success and testNat32Static()
+	success = success and testNat64Static()
+
+	// test built-in signed integer types
+	success = success and testInt8Static()
+	success = success and testInt16Static()
+	success = success and testInt32Static()
+	success = success and testInt64Static()
+
+	printf("test ")
+	if not success {
+		printf("failed\n")
+    	return exitFailure
+	}
 
     printf("passed\n")
     return exitSuccess

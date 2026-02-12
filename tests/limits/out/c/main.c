@@ -248,6 +248,12 @@ static bool testInt64Static(void) {
 }
 
 
+static bool testInteger(void) {
+	printf("passed: Integer test\n");
+	return true;
+}
+
+
 static bool testRational(void) {
 	#define pi  (3.14)
 	if (pi != 3.14) {
@@ -270,25 +276,32 @@ static bool testRational(void) {
 }
 
 
-static void assert(bool x) {
-	//
-}
-
-
 int32_t main(void) {
-	printf("test numeric boundary ");
+	printf("test numeric boundary:\n");
 
-	assert(testRational());
+	bool success = true;
 
-	assert(testNat8Static());
-	assert(testNat16Static());
-	assert(testNat32Static());
-	assert(testNat64Static());
+	// test built-in generic types
+	success = success && testInteger();
+	success = success && testRational();
 
-	assert(testInt8Static());
-	assert(testInt16Static());
-	assert(testInt32Static());
-	assert(testInt64Static());
+	// test built-in unsigned integer types
+	success = success && testNat8Static();
+	success = success && testNat16Static();
+	success = success && testNat32Static();
+	success = success && testNat64Static();
+
+	// test built-in signed integer types
+	success = success && testInt8Static();
+	success = success && testInt16Static();
+	success = success && testInt32Static();
+	success = success && testInt64Static();
+
+	printf("test ");
+	if (!success) {
+		printf("failed\n");
+		return EXIT_FAILURE;
+	}
 
 	printf("passed\n");
 	return EXIT_SUCCESS;

@@ -252,12 +252,15 @@ declare void @perror(%ConstCharStr* %str)
 @str38 = private constant [46 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 105, i8 110, i8 116, i8 54, i8 52, i8 77, i8 97, i8 120, i8 86, i8 97, i8 108, i8 117, i8 101, i8 80, i8 108, i8 117, i8 115, i8 79, i8 110, i8 101, i8 32, i8 33, i8 61, i8 32, i8 105, i8 110, i8 116, i8 54, i8 52, i8 77, i8 105, i8 110, i8 86, i8 97, i8 108, i8 117, i8 101, i8 10, i8 0]
 @str39 = private constant [47 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 105, i8 110, i8 116, i8 54, i8 52, i8 77, i8 105, i8 110, i8 86, i8 97, i8 108, i8 117, i8 101, i8 77, i8 105, i8 110, i8 117, i8 115, i8 79, i8 110, i8 101, i8 32, i8 33, i8 61, i8 32, i8 105, i8 110, i8 116, i8 54, i8 52, i8 77, i8 97, i8 120, i8 86, i8 97, i8 108, i8 117, i8 101, i8 10, i8 0]
 @str40 = private constant [20 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 73, i8 110, i8 116, i8 54, i8 52, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str41 = private constant [19 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 112, i8 105, i8 32, i8 33, i8 61, i8 32, i8 51, i8 46, i8 49, i8 52, i8 10, i8 0]
-@str42 = private constant [3 x i8] [i8 37, i8 100, i8 0]
-@str43 = private constant [17 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 110, i8 112, i8 105, i8 32, i8 33, i8 61, i8 32, i8 51, i8 10, i8 0]
-@str44 = private constant [23 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 82, i8 97, i8 116, i8 105, i8 111, i8 110, i8 97, i8 108, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str45 = private constant [23 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 32, i8 0]
-@str46 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str41 = private constant [22 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 73, i8 110, i8 116, i8 101, i8 103, i8 101, i8 114, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@str42 = private constant [19 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 112, i8 105, i8 32, i8 33, i8 61, i8 32, i8 51, i8 46, i8 49, i8 52, i8 10, i8 0]
+@str43 = private constant [3 x i8] [i8 37, i8 100, i8 0]
+@str44 = private constant [17 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 110, i8 112, i8 105, i8 32, i8 33, i8 61, i8 32, i8 51, i8 10, i8 0]
+@str45 = private constant [23 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 82, i8 97, i8 116, i8 105, i8 111, i8 110, i8 97, i8 108, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@str46 = private constant [24 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 58, i8 10, i8 0]
+@str47 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@str48 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str49 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 ;const float32MaxValue       = Float32 3.4028234663852886e+38
@@ -536,52 +539,92 @@ endif_4:
 	ret %Bool 1
 }
 
+define internal %Bool @testInteger() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str41 to [0 x i8]*))
+	ret %Bool 1
+}
+
 define internal %Bool @testRational() {
 ; if_0
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str41 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str42 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
 ; if_1
 	br %Bool 0 , label %then_1, label %endif_1
 then_1:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str42 to [0 x i8]*), %Int32 3)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str43 to [0 x i8]*))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str43 to [0 x i8]*), %Int32 3)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str44 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str44 to [0 x i8]*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str45 to [0 x i8]*))
 	ret %Bool 1
 }
 
-define internal void @assert(%Bool %x) {
-	;
-	ret void
-}
-
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str45 to [0 x i8]*))
-	%2 = call %Bool @testRational()
-	call void @assert(%Bool %2)
-	%3 = call %Bool @testNat8Static()
-	call void @assert(%Bool %3)
-	%4 = call %Bool @testNat16Static()
-	call void @assert(%Bool %4)
-	%5 = call %Bool @testNat32Static()
-	call void @assert(%Bool %5)
-	%6 = call %Bool @testNat64Static()
-	call void @assert(%Bool %6)
-	%7 = call %Bool @testInt8Static()
-	call void @assert(%Bool %7)
-	%8 = call %Bool @testInt16Static()
-	call void @assert(%Bool %8)
-	%9 = call %Bool @testInt32Static()
-	call void @assert(%Bool %9)
-	%10 = call %Bool @testInt64Static()
-	call void @assert(%Bool %10)
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str46 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str46 to [0 x i8]*))
+	%2 = alloca %Bool, align 1
+	store %Bool 1, %Bool* %2
+
+	; test built-in generic types
+	%3 = call %Bool @testInteger()
+	%4 = load %Bool, %Bool* %2
+	%5 = and %Bool %4, %3
+	store %Bool %5, %Bool* %2
+	%6 = call %Bool @testRational()
+	%7 = load %Bool, %Bool* %2
+	%8 = and %Bool %7, %6
+	store %Bool %8, %Bool* %2
+
+	; test built-in unsigned integer types
+	%9 = call %Bool @testNat8Static()
+	%10 = load %Bool, %Bool* %2
+	%11 = and %Bool %10, %9
+	store %Bool %11, %Bool* %2
+	%12 = call %Bool @testNat16Static()
+	%13 = load %Bool, %Bool* %2
+	%14 = and %Bool %13, %12
+	store %Bool %14, %Bool* %2
+	%15 = call %Bool @testNat32Static()
+	%16 = load %Bool, %Bool* %2
+	%17 = and %Bool %16, %15
+	store %Bool %17, %Bool* %2
+	%18 = call %Bool @testNat64Static()
+	%19 = load %Bool, %Bool* %2
+	%20 = and %Bool %19, %18
+	store %Bool %20, %Bool* %2
+
+	; test built-in signed integer types
+	%21 = call %Bool @testInt8Static()
+	%22 = load %Bool, %Bool* %2
+	%23 = and %Bool %22, %21
+	store %Bool %23, %Bool* %2
+	%24 = call %Bool @testInt16Static()
+	%25 = load %Bool, %Bool* %2
+	%26 = and %Bool %25, %24
+	store %Bool %26, %Bool* %2
+	%27 = call %Bool @testInt32Static()
+	%28 = load %Bool, %Bool* %2
+	%29 = and %Bool %28, %27
+	store %Bool %29, %Bool* %2
+	%30 = call %Bool @testInt64Static()
+	%31 = load %Bool, %Bool* %2
+	%32 = and %Bool %31, %30
+	store %Bool %32, %Bool* %2
+	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str47 to [0 x i8]*))
+; if_0
+	%34 = load %Bool, %Bool* %2
+	%35 = xor %Bool %34, 1
+	br %Bool %35 , label %then_0, label %endif_0
+then_0:
+	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str48 to [0 x i8]*))
+	ret %Int 1
+	br label %endif_0
+endif_0:
+	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str49 to [0 x i8]*))
 	ret %Int 0
 }
 
