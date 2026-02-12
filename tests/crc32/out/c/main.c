@@ -34,15 +34,25 @@ static bool runTest(struct test *test) {
 
 
 int main(void) {
-	printf("test CRC32 ");
+	printf("test CRC32\n");
+
+	bool success = true;
 
 	uint32_t i = 0;
 	while (i < (uint32_t)LENGTHOF(tests)) {
 		if (!runTest(&tests[i])) {
-			printf("#%d failed\n", i);
-			return EXIT_FAILURE;
+			printf("test #%d failed\n", i);
+			success = false;
+		} else {
+			printf("test #%d passed\n", i);
 		}
 		i = i + 1;
+	}
+
+	printf("test ");
+	if (!success) {
+		printf("failed\n");
+		return EXIT_FAILURE;
 	}
 
 	printf("passed\n");

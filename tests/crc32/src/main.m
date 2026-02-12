@@ -31,15 +31,25 @@ func runTest (test: *Test) -> Bool {
 
 
 public func main () -> Int {
-	printf("test CRC32 ")
+	printf("test CRC32\n")
+
+	var success = true
 
 	var i = Nat32 0
 	while i < lengthof(tests) {
 		if not runTest(&tests[i]) {
-			printf("#%d failed\n", i)
-			return exitFailure
+			printf("test #%d failed\n", i)
+			success = false
+		} else {
+			printf("test #%d passed\n", i)
 		}
 		++i
+	}
+
+	printf("test ")
+	if not success {
+		printf("failed\n")
+    	return exitFailure
 	}
 
 	printf("passed\n")

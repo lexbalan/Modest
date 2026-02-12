@@ -216,9 +216,12 @@ declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
 ; end from import "crc32"
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 67, i8 82, i8 67, i8 51, i8 50, i8 32, i8 0]
-@str2 = private constant [12 x i8] [i8 35, i8 37, i8 100, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str3 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str1 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 67, i8 82, i8 67, i8 51, i8 50, i8 10, i8 0]
+@str2 = private constant [17 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 100, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str3 = private constant [17 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 100, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str4 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@str5 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str6 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 %Test = type {
 	[128 x %Byte],
@@ -644,34 +647,50 @@ define internal %Bool @runTest(%Test* %test) {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %2
+	%2 = alloca %Bool, align 1
+	store %Bool 1, %Bool* %2
+	%3 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %3
 ; while_1
 	br label %again_1
 again_1:
-	%3 = load %Nat32, %Nat32* %2
-	%4 = icmp ult %Nat32 %3, 3
-	br %Bool %4 , label %body_1, label %break_1
+	%4 = load %Nat32, %Nat32* %3
+	%5 = icmp ult %Nat32 %4, 3
+	br %Bool %5 , label %body_1, label %break_1
 body_1:
 ; if_0
-	%5 = load %Nat32, %Nat32* %2
-	%6 = bitcast %Nat32 %5 to %Nat32
-	%7 = getelementptr [3 x %Test], [3 x %Test]* @tests, %Int32 0, %Nat32 %6
-	%8 = call %Bool @runTest(%Test* %7)
-	%9 = xor %Bool %8, 1
-	br %Bool %9 , label %then_0, label %endif_0
+	%6 = load %Nat32, %Nat32* %3
+	%7 = bitcast %Nat32 %6 to %Nat32
+	%8 = getelementptr [3 x %Test], [3 x %Test]* @tests, %Int32 0, %Nat32 %7
+	%9 = call %Bool @runTest(%Test* %8)
+	%10 = xor %Bool %9, 1
+	br %Bool %10 , label %then_0, label %else_0
 then_0:
-	%10 = load %Nat32, %Nat32* %2
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), %Nat32 %10)
-	ret %Int 1
+	%11 = load %Nat32, %Nat32* %3
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*), %Nat32 %11)
+	store %Bool 0, %Bool* %2
+	br label %endif_0
+else_0:
+	%13 = load %Nat32, %Nat32* %3
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str3 to [0 x i8]*), %Nat32 %13)
 	br label %endif_0
 endif_0:
-	%13 = load %Nat32, %Nat32* %2
-	%14 = add %Nat32 %13, 1
-	store %Nat32 %14, %Nat32* %2
+	%15 = load %Nat32, %Nat32* %3
+	%16 = add %Nat32 %15, 1
+	store %Nat32 %16, %Nat32* %3
 	br label %again_1
 break_1:
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str4 to [0 x i8]*))
+; if_1
+	%18 = load %Bool, %Bool* %2
+	%19 = xor %Bool %18, 1
+	br %Bool %19 , label %then_1, label %endif_1
+then_1:
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str5 to [0 x i8]*))
+	ret %Int 1
+	br label %endif_1
+endif_1:
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*))
 	ret %Int 0
 }
 
