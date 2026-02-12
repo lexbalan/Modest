@@ -7,26 +7,40 @@ pragma c_include "./crc32.h"
 import "misc/crc32"
 
 
-const datastring = "123456789"
-const expected_hash = 0xCBF43926
+const dataLength = 128
+type Test = record {
+	data: [dataLength]Byte
+	len: Nat32
+	hash: Word32
+}
 
 
-var data = []Word8 datastring
+var tests: []Test = [
+	{data = [dataLength]Byte "123456789", len = 9, hash = 0xCBF43926}
+	{data = [dataLength]Byte "The quick brown fox jumps over the lazy dog", len = 43, hash = 0x414fa339}
+	{data = [dataLength]Byte "Test vector from febooti.com", len = 28, hash = 0x0c877f61}
+]
+
+
+func runTest (test: *Test) -> Bool {
+	let crc = crc32.run(*[]Byte &test.data, test.len)
+	return crc == test.hash
+}
 
 
 public func main () -> Int {
-	printf("CRC32 test\n")
+	printf("CRC32 test ")
 
-	let crc = crc32.run(&data, lengthof(data))
-
-	printf("crc32.doHash(\"%s\") = %08X\n", *Str8 datastring, crc)
-
-	if crc == expected_hash {
-		printf("test passed\n")
-	} else {
-		printf("test failed\n")
+	var i = Nat32 0
+	while i < lengthof(tests) {
+		if not runTest(&tests[i]) {
+			printf("#%d failed\n", i)
+			return 1
+		}
+		++i
 	}
 
+	printf("passed\n")
 	return 0
 }
 

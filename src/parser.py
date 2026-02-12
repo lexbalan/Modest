@@ -296,9 +296,17 @@ class Parser:
 
 			elif token == '[':
 				# maybe it is array?
-				while not self.match(']'):
-					self.skip1()
-				return self.is_type_expr()
+				# FIXIT: очень тупо все это, но пока для начальных тестов канает
+				cc = 1
+				while cc > 0:
+					if self.match('['):
+						cc += 1
+					elif self.match(']'):
+						cc -= 1
+					else:
+						self.skip1()
+				rc = self.is_type_expr()
+				return rc
 
 			elif token == '(':
 				self.skip_tokens_class(['nl'])

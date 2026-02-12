@@ -20,12 +20,13 @@ LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
 	mcc -o $(LLVMPREFIX)/crc32 -mbackend=llvm -funsafe ${MODEST_LIB}/misc/crc32.m
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/crc32.ll
-
+	./a.out
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
 	mcc -o $(CPREFIX)/crc32 -mbackend=c11 -funsafe ${MODEST_LIB}/misc/crc32.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/crc32.c
+	./a.out
 
 
 clean:

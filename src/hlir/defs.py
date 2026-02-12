@@ -155,7 +155,7 @@ typeStr32.att.append("zarray")
 
 typeByte = typeWord8.copy()
 typeByte.id = Id('Byte')
-typeByte.id.c = 'char'
+typeByte.id.c = 'uint8_t'
 
 
 type__VA_List = TypeVaList()

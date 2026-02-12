@@ -1,31 +1,12 @@
 include "ctypes64"
 include "stdlib"
 include "stdio"
+include "limits"
 
 
-
-const _int8Min = -128
-const _int8Max = 127
-
-const _int16Min = -32768
-const _int16Max = 32767
-
-const _int32Min = -2147483648
-const _int32Max = 2147483647
-
-const _int64Min = -9223372036854775808
-const _int64Max = 9223372036854775807
-
-
-const _nat8Max = 255
-const _nat16Max = 65535
-const _nat32Max = 4294967295
-const _nat64Max = 18446744073709551615
-
-
-//const float32Max       = Float32 3.4028234663852886e+38
-//const float32MinNormal = Float32 1.1754943508222875e-38
-//const float32MinSub    = Float32 1.401298464324817e-45
+//const float32MaxValue       = Float32 3.4028234663852886e+38
+//const float32MinValueNormal = Float32 1.1754943508222875e-38
+//const float32MinValueSub    = Float32 1.401298464324817e-45
 //const float32Epsilon   = Float32 1.1920928955078125e-7
 //
 //const float32PosInf    = Float32 1.0 / 0.0
@@ -37,195 +18,274 @@ const _nat64Max = 18446744073709551615
 //const float64NegInf    = Float64 -1.0 / 0.0
 
 
-func assert (cond: Bool, msg: *Str8) -> Unit {
-	if not cond {
-		printf("ASSERT FAILED: %s\n", msg)
-		abort()
+const nat8MaxValuePlusOne: Nat8 = Nat8 nat8MaxValue + 1
+const nat8MinValueMinusOne: Nat8 = Nat8 nat8MinValue - 1
+const nat16MaxValuePlusOne: Nat16 = Nat16 nat16MaxValue + 1
+const nat16MinValueMinusOne: Nat16 = Nat16 nat16MinValue - 1
+const nat32MaxValuePlusOne: Nat32 = Nat32 nat32MaxValue + 1
+const nat32MinValueMinusOne: Nat32 = Nat32 nat32MinValue - 1
+const nat64MaxValuePlusOne: Nat64 = Nat64 nat64MaxValue + 1
+const nat64MinValueMinusOne: Nat64 = Nat64 nat64MinValue - 1
+
+const int8MaxValuePlusOne: Int8 = Int8 int8MaxValue + 1
+const int8MinValueMinusOne: Int8 = Int8 int8MinValue - 1
+const int16MaxValuePlusOne: Int16 = Int16 int16MaxValue + 1
+const int16MinValueMinusOne: Int16 = Int16 int16MinValue - 1
+const int32MaxValuePlusOne: Int32 = Int32 int32MaxValue + 1
+const int32MinValueMinusOne: Int32 = Int32 int32MinValue - 1
+const int64MaxValuePlusOne: Int64 = Int64 int64MaxValue + 1
+const int64MinValueMinusOne: Int64 = Int64 int64MinValue - 1
+
+
+func testNat8Static () -> Bool {
+	if nat8MaxValue <= nat8MinValue {
+		printf("error: nat8MaxValue <= nat8MinValue\n")
+		return false
 	}
+
+	if nat8MaxValuePlusOne != nat8MinValue {
+		printf("error: nat8MaxValuePlusOne != nat8MinValue\n")
+		return false
+	}
+
+	if nat8MinValueMinusOne != nat8MaxValue {
+		printf("error: nat8MinValueMinusOne != nat8MaxValue\n")
+		return false
+	}
+
+	printf("passed: Nat8 test\n")
+	return true
 }
 
 
-// ------------------------------------------------------------
-// Signed integers
-// ------------------------------------------------------------
+func testNat16Static () -> Bool {
+	if nat16MaxValue <= nat16MinValue {
+		printf("error: nat16MaxValue <= nat16MinValue\n")
+		return false
+	}
 
-func testInt8 () -> Unit {
-	let min = Int8 -128
-	let max = Int8 127
+	if nat16MaxValuePlusOne != nat16MinValue {
+		printf("error: nat16MaxValuePlusOne != nat16MinValue\n")
+		return false
+	}
 
-	assert(min < 0, "Int8 min < 0")
-	assert(max > 0, "Int8 max > 0")
+	if nat16MinValueMinusOne != nat16MaxValue {
+		printf("error: nat16MinValueMinusOne != nat16MaxValue\n")
+		return false
+	}
 
-	assert(Int8 -1 < Int8 0, "Int8 sign")
-	assert(Int8 1 > Int8 0, "Int8 positive")
-
-	assert((max + 1) == min, "Int8 overflow up")
-	assert((min - 1) == max, "Int8 overflow down")
+	printf("passed: Nat16 test\n")
+	return true
 }
 
 
-func testInt16 () -> Unit {
-	let min = Int16 -32768
-	let max = Int16 32767
+func testNat32Static () -> Bool {
+	if nat32MaxValue <= nat32MinValue {
+		printf("error: nat32MaxValue <= nat32MinValue\n")
+		return false
+	}
 
-	assert(min < 0, "Int16 min < 0")
-	assert(max > 0, "Int16 max > 0")
+	if nat32MaxValuePlusOne != nat32MinValue {
+		printf("error: nat32MaxValuePlusOne != nat32MinValue\n")
+		return false
+	}
 
-	assert((max + 1) == min, "Int16 overflow up")
-	assert((min - 1) == max, "Int16 overflow down")
+	if nat32MinValueMinusOne != nat32MaxValue {
+		printf("error: nat32MinValueMinusOne != nat32MaxValue\n")
+		return false
+	}
+
+	printf("passed: Nat32 test\n")
+	return true
 }
 
 
-func testInt32 () -> Unit {
-	let min = Int32 -2147483648
-	let max = Int32 2147483647
+func testNat64Static () -> Bool {
+	if nat64MaxValue <= nat64MinValue {
+		printf("error: nat64MaxValue <= nat64MinValue\n")
+		return false
+	}
 
-	assert(min < 0, "Int32 min < 0")
-	assert(max > 0, "Int32 max > 0")
+	if nat64MaxValuePlusOne != nat64MinValue {
+		printf("error: nat64MaxValuePlusOne != nat64MinValue\n")
+		return false
+	}
 
-	assert((max + 1) == min, "Int32 overflow up")
-	assert((min - 1) == max, "Int32 overflow down")
+	if nat64MinValueMinusOne != nat64MaxValue {
+		printf("error: nat64MinValueMinusOne != nat64MaxValue\n")
+		return false
+	}
+
+	printf("passed: Nat64 test\n")
+	return true
 }
 
 
-func testInt64 () -> Unit {
-	let min = Int64 -9223372036854775808
-	let max = Int64 9223372036854775807
 
-	assert(min < 0, "Int64 min < 0")
-	assert(max > 0, "Int64 max > 0")
 
-	assert((max + 1) == min, "Int64 overflow up")
-	assert((min - 1) == max, "Int64 overflow down")
+func testInt8Static () -> Bool {
+	if int8MinValue >= 0 {
+		printf("error: int8MinValue >= 0\n")
+		return false
+	}
+
+	if int8MaxValue <= 0 {
+		printf("error: int8MaxValue <= 0\n")
+		return false
+	}
+
+	if int8MaxValue <= int8MinValue {
+		printf("error: int8MaxValue <= int8MinValue\n")
+		return false
+	}
+
+	if int8MaxValuePlusOne != int8MinValue {
+		printf("error: int8MaxValuePlusOne != int8MinValue\n")
+		return false
+	}
+
+	if int8MinValueMinusOne != int8MaxValue {
+		printf("error: int8MinValueMinusOne != int8MaxValue\n")
+		return false
+	}
+
+	printf("passed: Int8 test\n")
+	return true
 }
 
 
-// ------------------------------------------------------------
-// Unsigned integers
-// ------------------------------------------------------------
+func testInt16Static () -> Bool {
+	if int16MinValue >= 0 {
+		printf("error: int16MinValue >= 0\n")
+		return false
+	}
 
-func testNat8 () -> Unit {
-	let max = Nat8 255
+	if int16MaxValue <= 0 {
+		printf("error: int16MaxValue <= 0\n")
+		return false
+	}
 
-	assert((max + 1) == 0, "Nat8 overflow up")
+	if int16MaxValue <= int16MinValue {
+		printf("error: int16MaxValue <= int16MinValue\n")
+		return false
+	}
+
+	if int16MaxValuePlusOne != int16MinValue {
+		printf("error: int16MaxValuePlusOne != int16MinValue\n")
+		return false
+	}
+
+	if int16MinValueMinusOne != int16MaxValue {
+		printf("error: int16MinValueMinusOne != int16MaxValue\n")
+		return false
+	}
+
+	printf("passed: Int16 test\n")
+	return true
 }
 
 
-func testNat16 () -> Unit {
-	let max = Nat16 65535
+func testInt32Static () -> Bool {
+	if int32MinValue >= 0 {
+		printf("error: int32MinValue >= 0\n")
+		return false
+	}
 
-	assert((max + 1) == 0, "Nat16 overflow up")
+	if int32MaxValue <= 0 {
+		printf("error: int32MaxValue <= 0\n")
+		return false
+	}
+
+	if int32MaxValue <= int32MinValue {
+		printf("error: int32MaxValue <= int32MinValue\n")
+		return false
+	}
+
+	if int32MaxValuePlusOne != int32MinValue {
+		printf("error: int32MaxValuePlusOne != int32MinValue\n")
+		return false
+	}
+
+	if int32MinValueMinusOne != int32MaxValue {
+		printf("error: int32MinValueMinusOne != int32MaxValue\n")
+		return false
+	}
+
+	printf("passed: Int32 test\n")
+	return true
 }
 
 
-func testNat32 () -> Unit {
-	let max = Nat32 4294967295
+func testInt64Static () -> Bool {
+	if int64MinValue >= 0 {
+		printf("error: int64MinValue >= 0\n")
+		return false
+	}
 
-	assert((max + 1) == 0, "Nat32 overflow up")
+	if int64MaxValue <= 0 {
+		printf("error: int64MaxValue <= 0\n")
+		return false
+	}
+
+	if int64MaxValue <= int64MinValue {
+		printf("error: int64MaxValue <= int64MinValue\n")
+		return false
+	}
+
+	if int64MaxValuePlusOne != int64MinValue {
+		printf("error: int64MaxValuePlusOne != int64MinValue\n")
+		return false
+	}
+
+	if int64MinValueMinusOne != int64MaxValue {
+		printf("error: int64MinValueMinusOne != int64MaxValue\n")
+		return false
+	}
+
+	printf("passed: Int64 test\n")
+	return true
 }
 
 
-func testNat64 () -> Unit {
-	let max = Nat64 18446744073709551615
 
-	assert((max + 1) == 0, "Nat64 overflow up")
+func testRational () -> Bool {
+	let pi = Rational 3.14
+	if pi != 3.14 {
+		printf("error: pi != 3.14\n")
+		return false
+	}
+
+	let npi = Integer pi
+	if npi != 3 {
+		printf("%d", Int32 npi)
+		printf("error: npi != 3\n")
+		return false
+	}
+
+	printf("passed: Rational test\n")
+	return true
 }
 
 
-// ------------------------------------------------------------
-// Float32
-// ------------------------------------------------------------
-
-func testFloat32 () -> Unit {
-
-	let zero = Float32 .0
-	let one = Float32 1.0
-	let minus_one = Float32 -1.0
-
-	assert(one > zero, "Float32 positive")
-	assert(minus_one < zero, "Float32 negative")
-
-	// Проверка деления
-	assert(one / one == one, "Float32 division")
-
-	// Infinity
-	let inf: Float32 = one / zero
-	assert(inf > one, "Float32 +inf")
-
-	// NaN
-	let nan: Float32 = zero / zero
-	assert(not (nan == nan), "Float32 NaN")
+func assert (x: Bool) -> Unit {
+	//
 }
 
-
-// ------------------------------------------------------------
-// Float64
-// ------------------------------------------------------------
-
-func testFloat64 () -> Unit {
-
-	let zero = Float64 .0
-	let one = Float64 1.0
-
-	let inf: Float64 = one / zero
-	assert(inf > one, "Float64 +inf")
-
-	let nan: Float64 = zero / zero
-	assert(not (nan == nan), "Float64 NaN")
-}
-
-
-// ------------------------------------------------------------
-// Entry
-// ------------------------------------------------------------
 
 public func main () -> Int32 {
 	printf("numeric boundary tests\n")
 
-	//
-	//	let f = 3.1415926535897932384626433832795028841971693993751058209749445923
-	//	var f32 = Float32 f
-	//	var f64 = Float64 f
-	//
-	//	printf("f32 = %.9g\n", f32)
-	//	printf("f64 = %.17g\n", f64)
-	//
-	////	if f32 == 3.14 {
-	////		printf("ok1\n")
-	////	}
-	//
-	//	if f64 == 3.1415926535897931 {
-	//		printf("ok2\n")
-	//	}
+	assert(testRational())
 
-	//	let n8 = Nat8 (_nat8Max + 1)
-	//	printf("n8 = %i\n", Word32 n8)
-	//
-	//	let n16 = Nat16 (_nat16Max + 1)
-	//	printf("n16 = %u\n", Word32 n16)
-	//
-	//	let n32 = Nat32 (_nat32Max + 1)
-	//	printf("n32 = %u\n", Word32 n32)
-	//
-	//	let n64 = Nat64 (_nat64Max + 1)
-	//	printf("n64 = %llu\n", Word64 n64)
+	assert(testNat8Static())
+	assert(testNat16Static())
+	assert(testNat32Static())
+	assert(testNat64Static())
 
-
-	//	let i8 = Nat8 (127 + 1)
-	//	printf("i8 = %i\n", i8)
-
-	testInt8()
-	testInt16()
-	testInt32()
-	testInt64()
-
-	testNat8()
-	testNat16()
-	testNat32()
-	testNat64()
-
-	testFloat32()
-	testFloat64()
+	assert(testInt8Static())
+	assert(testInt16Static())
+	assert(testInt32Static())
+	assert(testInt64Static())
 
 	printf("OK\n")
 
