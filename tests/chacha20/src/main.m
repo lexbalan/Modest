@@ -1,121 +1,19 @@
 // tests/chacha20/src/main.m
 
-include "libc/ctypes64"
-include "libc/stdio"
-
-
 pragma unsafe
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
 
-type Key = [8]Word32
-type State = [16]Word32
-type Block = [16]Word32
-
-
-func rotl32 (x: Word32, n: Nat32) -> Word32 {
-	return (x << n) or (x >> (32 - n))
-}
-
-
-func quarterRound (a: Word32, b: Word32, c: Word32, d: Word32) -> [4]Word32 {
-	var a0 = a
-	var b0 = b
-	var c0 = c
-	var d0 = d
-
-	a0 = Word32 (Nat32 a0 + Nat32 b0)
-	d0 = rotl32(d0 xor a0, 16)
-
-	c0 = Word32 (Nat32 c0 + Nat32 d0)
-	b0 = rotl32(b0 xor c0, 12)
-
-	a0 = Word32 (Nat32 a0 + Nat32 b0)
-	d0 = rotl32(d0 xor a0, 8)
-
-	c0 = Word32 (Nat32 c0 + Nat32 d0)
-	b0 = rotl32(b0 xor c0, 7)
-
-	return [a0, b0, c0, d0]
-}
-
-
-func chacha20Block (state: State) -> Block {
-	var x = state  // working copy
-
-	var i: Int32 = 0
-	while i < 10 {
-
-		var r: [4]Word32
-
-		// column rounds
-		r = quarterRound(x[0], x[4], x[8],  x[12])
-		x[0] = r[0]; x[4] = r[1]; x[8] = r[2]; x[12] = r[3];
-
-		r = quarterRound(x[1], x[5], x[9],  x[13])
-		x[1] = r[0]; x[5] = r[1]; x[9] = r[2]; x[13] = r[3];
-
-		r = quarterRound(x[2], x[6], x[10], x[14])
-		x[2] = r[0]; x[6] = r[1]; x[10] = r[2]; x[14] = r[3];
-
-		r = quarterRound(x[3], x[7], x[11], x[15])
-		x[3] = r[0]; x[7] = r[1]; x[11] = r[2]; x[15] = r[3];
-
-
-		// diagonal rounds
-		r = quarterRound(x[0], x[5], x[10], x[15])
-		x[0] = r[0]; x[5] = r[1]; x[10] = r[2]; x[15] = r[3];
-
-		r = quarterRound(x[1], x[6], x[11], x[12])
-		x[1] = r[0]; x[6] = r[1]; x[11] = r[2]; x[12] = r[3];
-
-		r = quarterRound(x[2], x[7], x[8],  x[13])
-		x[2] = r[0]; x[7] = r[1]; x[8] = r[2]; x[13] = r[3];
-
-		r = quarterRound(x[3], x[4], x[9],  x[14])
-		x[3] = r[0]; x[4] = r[1]; x[9] = r[2]; x[14] = r[3];
-
-		++i
-	}
-
-	// add original state
-	var out: [16]Word32
-	var j: Int32 = 0
-	while j < 16 {
-		out[j] = Word32 (Nat32 x[j] + Nat32 state[j])
-		j = j + 1
-	}
-
-	return out
-}
-
-
-// nonce = number used once
-// Чтобы один и тот же ключ можно было использовать много раз.
-// Если шифровать два сообщения одним ключом keystream будет одинаковым - это катастрофа
-// Он НЕ секретный. Его обычно: передают вместе с сообщением
-// кладут в заголовок пакета хранят рядом с ciphertext
-// ⚠️ Самое важное правило: Nonce нельзя повторять с тем же ключом. Никогда.
-// Важное правило: Nonce не нужно секретить. Ты можешь просто записать его в самое начало зашифрованного файла (первые 12 байт).
-// Чтобы расшифровать файл, тебе понадобятся твой секретный ключ (который в голове или в сейфе) и этот Nonce
-// (который прикреплен к файлу).
-// Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
-
-// counter он говорит алгоритму - какой блок keystream генерировать
-func makeState (key: *Key, counter: Word32, nonce: *[3]Word32) -> State {
-	return [
-		0x61707865, 0x3320646e, 0x79622d32, 0x6b206574,
-		key[0],     key[1],     key[2],     key[3],
-		key[4],     key[5],     key[6],     key[7],
-		counter,    nonce[0],   nonce[1],   nonce[2]
-	]
-}
+import "misc/chacha20" as cc
 
 
 type Context = record {
 	key: *[32]Byte
 	nonce: [3]Word32
 	blockCounter: Nat32
-	block: Block
+	block: cc.Block
 	blockOffset: Nat32
 }
 
@@ -125,7 +23,7 @@ func init (key: *[32]Byte, nonce: [3]Word32) -> Context {
 		key = key
 		nonce = [nonce[0], nonce[1], nonce[2]]
 		blockCounter = 0
-		blockOffset = unsafe Nat32 sizeof(Block)
+		blockOffset = unsafe Nat32 sizeof(cc.Block)
 	}
 }
 
@@ -135,10 +33,10 @@ func cipher (ctx: *Context, data: *[]Byte, len: Nat32) -> Unit {
 	var bptr = *[]Byte nil
 	while i < len {
 		// Нужно сгенерировать новый блок?
-		if ctx.blockOffset == unsafe Nat32 sizeof(Block) {
+		if ctx.blockOffset == unsafe Nat32 sizeof(cc.Block) {
 			//printf("UH!\n")
-			var state = makeState(
-				key = unsafe *Key ctx.key
+			var state = cc.makeState(
+				key = unsafe *cc.Key ctx.key
 				counter = Word32 ctx.blockCounter
 				nonce = &ctx.nonce
 			)
@@ -147,7 +45,7 @@ func cipher (ctx: *Context, data: *[]Byte, len: Nat32) -> Unit {
 			//state[14] = ctx.nonce[1]
 			//state[15] = ctx.nonce[2]
 
-			ctx.block = chacha20Block(state)
+			ctx.block = cc.chacha20Block(state)
 			ctx.blockOffset = 0
 			bptr = unsafe *[]Byte &ctx.block
 		}
@@ -198,6 +96,7 @@ var xlorem1024 = lorem1024
 
 
 public func main () -> Int {
+	printf("test ChaCha20 ")
 	//printf("%s\n", *Str8 hello_world)
 	//var data = []Byte [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 	var ctx = init(&testKey, testNonce2)
@@ -220,19 +119,22 @@ public func main () -> Int {
 		++i
 	}
 
-	test0()
+	if not test0() {
+		printf("fail\n")
+		return exitFailure
+	}
 
-	return 0
+	printf("success\n")
+	return exitSuccess
 }
 
 
-func test0 () -> Unit {
+func test0 () -> Bool {
 	var key: [32]Byte = testKey
 	var counter: Word32 = 1
 	var nonce: [12]Byte = testNonce
-	var state = makeState(unsafe *Key &key, counter, unsafe *[3]Word32 &nonce)
-
-	var block = chacha20Block(state)
+	var state = cc.makeState(unsafe *cc.Key &key, counter, unsafe *[3]Word32 &nonce)
+	var block = cc.chacha20Block(state)
 
 	var i = 0
 	while i < 16 {
@@ -242,11 +144,7 @@ func test0 () -> Unit {
 
 	let bptr = unsafe *[64]Byte &block
 
-	if *bptr == testResult {
-		printf("test passed\n")
-	} else {
-		printf("test failed\n")
-	}
+	return *bptr == testResult
 }
 
 

@@ -13,9 +13,9 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.m
-	mcc -o $(CMPREFIX)/type -funsafe -mbackend=cm $(INDIR)/type.m
-	mcc -o $(CMPREFIX)/value -funsafe -mbackend=cm $(INDIR)/value.m
+	mcc -o $(CMPREFIX)/main -funsafe -mbackend=modest $(INDIR)/main.m
+	mcc -o $(CMPREFIX)/type -funsafe -mbackend=modest $(INDIR)/type.m
+	mcc -o $(CMPREFIX)/value -funsafe -mbackend=modest $(INDIR)/value.m
 
 
 LLVM:

@@ -13,8 +13,8 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=cm -funsafe -mint=64 $(INDIR)/main.m
-	mcc -o $(CMPREFIX)/list -mbackend=cm -mint=64 $(INDIR)/list.m
+	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe -mint=64 $(INDIR)/main.m
+	mcc -o $(CMPREFIX)/list -mbackend=modest -mint=64 $(INDIR)/list.m
 
 
 LLVM:

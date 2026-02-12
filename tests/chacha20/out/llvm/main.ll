@@ -191,498 +191,48 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
+; from included stdlib
+declare void @abort()
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
+declare i8* @calloc(%SizeT %num, %SizeT %size)
+declare void @exit(%Int %x)
+declare void @free(i8* %ptr)
+declare %Str* @getenv(%Str* %name)
+declare %LongInt @labs(%LongInt %x)
+declare %Str* @secure_getenv(%Str* %name)
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "cc"
+%chacha20_Key = type [8 x %Word32];
+%chacha20_State = type [16 x %Word32];
+%chacha20_Block = type [16 x %Word32];
+declare void @chacha20_chacha20Block(%chacha20_Block* %0, %chacha20_State %__state)
+declare void @chacha20_makeState(%chacha20_State* %0, %chacha20_Key* %key, %Word32 %counter, [3 x %Word32]* %nonce)
+
+; end from import "cc"
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [3 x i8] [i8 37, i8 99, i8 0]
-@str2 = private constant [4 x i8] [i8 37, i8 120, i8 10, i8 0]
-@str3 = private constant [3 x i8] [i8 37, i8 99, i8 0]
-@str4 = private constant [6 x i8] [i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
-@str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str6 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str1 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 67, i8 104, i8 97, i8 67, i8 104, i8 97, i8 50, i8 48, i8 32, i8 0]
+@str2 = private constant [3 x i8] [i8 37, i8 99, i8 0]
+@str3 = private constant [4 x i8] [i8 37, i8 120, i8 10, i8 0]
+@str4 = private constant [3 x i8] [i8 37, i8 99, i8 0]
+@str5 = private constant [6 x i8] [i8 102, i8 97, i8 105, i8 108, i8 10, i8 0]
+@str6 = private constant [9 x i8] [i8 115, i8 117, i8 99, i8 99, i8 101, i8 115, i8 115, i8 10, i8 0]
+@str7 = private constant [6 x i8] [i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
 ; -- endstrings --
-%Key = type [8 x %Word32];
-%State = type [16 x %Word32];
-%Block = type [16 x %Word32];
-define internal %Word32 @rotl32(%Word32 %x, %Nat32 %n) {
-	%1 = bitcast %Nat32 %n to %Word32
-	%2 = shl %Word32 %x, %1
-	%3 = sub %Nat32 32, %n
-	%4 = bitcast %Nat32 %3 to %Word32
-	%5 = lshr %Word32 %x, %4
-	%6 = or %Word32 %2, %5
-	ret %Word32 %6
-}
-
-define internal void @quarterRound([4 x %Word32]* %0, %Word32 %a, %Word32 %b, %Word32 %c, %Word32 %d) {
-	%2 = alloca %Word32, align 4
-	store %Word32 %a, %Word32* %2
-	%3 = alloca %Word32, align 4
-	store %Word32 %b, %Word32* %3
-	%4 = alloca %Word32, align 4
-	store %Word32 %c, %Word32* %4
-	%5 = alloca %Word32, align 4
-	store %Word32 %d, %Word32* %5
-	%6 = load %Word32, %Word32* %2
-	%7 = bitcast %Word32 %6 to %Nat32
-	%8 = load %Word32, %Word32* %3
-	%9 = bitcast %Word32 %8 to %Nat32
-	%10 = add %Nat32 %7, %9
-	%11 = bitcast %Nat32 %10 to %Word32
-	store %Word32 %11, %Word32* %2
-	%12 = load %Word32, %Word32* %5
-	%13 = load %Word32, %Word32* %2
-	%14 = xor %Word32 %12, %13
-	%15 = call %Word32 @rotl32(%Word32 %14, %Nat32 16)
-	store %Word32 %15, %Word32* %5
-	%16 = load %Word32, %Word32* %4
-	%17 = bitcast %Word32 %16 to %Nat32
-	%18 = load %Word32, %Word32* %5
-	%19 = bitcast %Word32 %18 to %Nat32
-	%20 = add %Nat32 %17, %19
-	%21 = bitcast %Nat32 %20 to %Word32
-	store %Word32 %21, %Word32* %4
-	%22 = load %Word32, %Word32* %3
-	%23 = load %Word32, %Word32* %4
-	%24 = xor %Word32 %22, %23
-	%25 = call %Word32 @rotl32(%Word32 %24, %Nat32 12)
-	store %Word32 %25, %Word32* %3
-	%26 = load %Word32, %Word32* %2
-	%27 = bitcast %Word32 %26 to %Nat32
-	%28 = load %Word32, %Word32* %3
-	%29 = bitcast %Word32 %28 to %Nat32
-	%30 = add %Nat32 %27, %29
-	%31 = bitcast %Nat32 %30 to %Word32
-	store %Word32 %31, %Word32* %2
-	%32 = load %Word32, %Word32* %5
-	%33 = load %Word32, %Word32* %2
-	%34 = xor %Word32 %32, %33
-	%35 = call %Word32 @rotl32(%Word32 %34, %Nat32 8)
-	store %Word32 %35, %Word32* %5
-	%36 = load %Word32, %Word32* %4
-	%37 = bitcast %Word32 %36 to %Nat32
-	%38 = load %Word32, %Word32* %5
-	%39 = bitcast %Word32 %38 to %Nat32
-	%40 = add %Nat32 %37, %39
-	%41 = bitcast %Nat32 %40 to %Word32
-	store %Word32 %41, %Word32* %4
-	%42 = load %Word32, %Word32* %3
-	%43 = load %Word32, %Word32* %4
-	%44 = xor %Word32 %42, %43
-	%45 = call %Word32 @rotl32(%Word32 %44, %Nat32 7)
-	store %Word32 %45, %Word32* %3
-	%46 = load %Word32, %Word32* %2
-	%47 = load %Word32, %Word32* %3
-	%48 = load %Word32, %Word32* %4
-	%49 = load %Word32, %Word32* %5
-	%50 = load %Word32, %Word32* %2
-	%51 = insertvalue [4 x %Word32] zeroinitializer, %Word32 %50, 0
-	%52 = load %Word32, %Word32* %3
-	%53 = insertvalue [4 x %Word32] %51, %Word32 %52, 1
-	%54 = load %Word32, %Word32* %4
-	%55 = insertvalue [4 x %Word32] %53, %Word32 %54, 2
-	%56 = load %Word32, %Word32* %5
-	%57 = insertvalue [4 x %Word32] %55, %Word32 %56, 3
-; -- cons_composite_from_composite_by_value --
-	%58 = alloca [4 x %Word32]
-	%59 = zext i8 4 to %Nat32
-	store [4 x %Word32] %57, [4 x %Word32]* %58
-	%60 = bitcast [4 x %Word32]* %58 to [4 x %Word32]*
-; -- end cons_composite_from_composite_by_value --
-	%61 = load [4 x %Word32], [4 x %Word32]* %60
-	%62 = zext i8 4 to %Nat32
-	store [4 x %Word32] %61, [4 x %Word32]* %0
-	ret void
-}
-
-define internal void @chacha20Block(%Block* %0, %State %__state) {
-	%state = alloca %State
-	%2 = zext i8 16 to %Nat32
-	store %State %__state, %State* %state
-	%3 = alloca %State, align 1
-	%4 = load %State, %State* %state
-	%5 = zext i8 16 to %Nat32
-	store %State %4, %State* %3	; working copy
-	%6 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %6
-; while_1
-	br label %again_1
-again_1:
-	%7 = load %Int32, %Int32* %6
-	%8 = icmp slt %Int32 %7, 10
-	br %Bool %8 , label %body_1, label %break_1
-body_1:
-	%9 = alloca [4 x %Word32], align 1
-
-	; column rounds
-	%10 = getelementptr %State, %State* %3, %Int32 0, %Int32 0
-	%11 = load %Word32, %Word32* %10
-	%12 = getelementptr %State, %State* %3, %Int32 0, %Int32 4
-	%13 = load %Word32, %Word32* %12
-	%14 = getelementptr %State, %State* %3, %Int32 0, %Int32 8
-	%15 = load %Word32, %Word32* %14
-	%16 = getelementptr %State, %State* %3, %Int32 0, %Int32 12
-	%17 = load %Word32, %Word32* %16; alloca memory for return value
-	%18 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %18, %Word32 %11, %Word32 %13, %Word32 %15, %Word32 %17)
-	%19 = load [4 x %Word32], [4 x %Word32]* %18
-	%20 = zext i8 4 to %Nat32
-	store [4 x %Word32] %19, [4 x %Word32]* %9
-	%21 = getelementptr %State, %State* %3, %Int32 0, %Int32 0
-	%22 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%23 = load %Word32, %Word32* %22
-	store %Word32 %23, %Word32* %21
-	%24 = getelementptr %State, %State* %3, %Int32 0, %Int32 4
-	%25 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
-	%26 = load %Word32, %Word32* %25
-	store %Word32 %26, %Word32* %24
-	%27 = getelementptr %State, %State* %3, %Int32 0, %Int32 8
-	%28 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
-	%29 = load %Word32, %Word32* %28
-	store %Word32 %29, %Word32* %27
-	%30 = getelementptr %State, %State* %3, %Int32 0, %Int32 12
-	%31 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
-	%32 = load %Word32, %Word32* %31
-	store %Word32 %32, %Word32* %30
-	%33 = getelementptr %State, %State* %3, %Int32 0, %Int32 1
-	%34 = load %Word32, %Word32* %33
-	%35 = getelementptr %State, %State* %3, %Int32 0, %Int32 5
-	%36 = load %Word32, %Word32* %35
-	%37 = getelementptr %State, %State* %3, %Int32 0, %Int32 9
-	%38 = load %Word32, %Word32* %37
-	%39 = getelementptr %State, %State* %3, %Int32 0, %Int32 13
-	%40 = load %Word32, %Word32* %39; alloca memory for return value
-	%41 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %41, %Word32 %34, %Word32 %36, %Word32 %38, %Word32 %40)
-	%42 = load [4 x %Word32], [4 x %Word32]* %41
-	%43 = zext i8 4 to %Nat32
-	store [4 x %Word32] %42, [4 x %Word32]* %9
-	%44 = getelementptr %State, %State* %3, %Int32 0, %Int32 1
-	%45 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%46 = load %Word32, %Word32* %45
-	store %Word32 %46, %Word32* %44
-	%47 = getelementptr %State, %State* %3, %Int32 0, %Int32 5
-	%48 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
-	%49 = load %Word32, %Word32* %48
-	store %Word32 %49, %Word32* %47
-	%50 = getelementptr %State, %State* %3, %Int32 0, %Int32 9
-	%51 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
-	%52 = load %Word32, %Word32* %51
-	store %Word32 %52, %Word32* %50
-	%53 = getelementptr %State, %State* %3, %Int32 0, %Int32 13
-	%54 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
-	%55 = load %Word32, %Word32* %54
-	store %Word32 %55, %Word32* %53
-	%56 = getelementptr %State, %State* %3, %Int32 0, %Int32 2
-	%57 = load %Word32, %Word32* %56
-	%58 = getelementptr %State, %State* %3, %Int32 0, %Int32 6
-	%59 = load %Word32, %Word32* %58
-	%60 = getelementptr %State, %State* %3, %Int32 0, %Int32 10
-	%61 = load %Word32, %Word32* %60
-	%62 = getelementptr %State, %State* %3, %Int32 0, %Int32 14
-	%63 = load %Word32, %Word32* %62; alloca memory for return value
-	%64 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %64, %Word32 %57, %Word32 %59, %Word32 %61, %Word32 %63)
-	%65 = load [4 x %Word32], [4 x %Word32]* %64
-	%66 = zext i8 4 to %Nat32
-	store [4 x %Word32] %65, [4 x %Word32]* %9
-	%67 = getelementptr %State, %State* %3, %Int32 0, %Int32 2
-	%68 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%69 = load %Word32, %Word32* %68
-	store %Word32 %69, %Word32* %67
-	%70 = getelementptr %State, %State* %3, %Int32 0, %Int32 6
-	%71 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
-	%72 = load %Word32, %Word32* %71
-	store %Word32 %72, %Word32* %70
-	%73 = getelementptr %State, %State* %3, %Int32 0, %Int32 10
-	%74 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
-	%75 = load %Word32, %Word32* %74
-	store %Word32 %75, %Word32* %73
-	%76 = getelementptr %State, %State* %3, %Int32 0, %Int32 14
-	%77 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
-	%78 = load %Word32, %Word32* %77
-	store %Word32 %78, %Word32* %76
-	%79 = getelementptr %State, %State* %3, %Int32 0, %Int32 3
-	%80 = load %Word32, %Word32* %79
-	%81 = getelementptr %State, %State* %3, %Int32 0, %Int32 7
-	%82 = load %Word32, %Word32* %81
-	%83 = getelementptr %State, %State* %3, %Int32 0, %Int32 11
-	%84 = load %Word32, %Word32* %83
-	%85 = getelementptr %State, %State* %3, %Int32 0, %Int32 15
-	%86 = load %Word32, %Word32* %85; alloca memory for return value
-	%87 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %87, %Word32 %80, %Word32 %82, %Word32 %84, %Word32 %86)
-	%88 = load [4 x %Word32], [4 x %Word32]* %87
-	%89 = zext i8 4 to %Nat32
-	store [4 x %Word32] %88, [4 x %Word32]* %9
-	%90 = getelementptr %State, %State* %3, %Int32 0, %Int32 3
-	%91 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%92 = load %Word32, %Word32* %91
-	store %Word32 %92, %Word32* %90
-	%93 = getelementptr %State, %State* %3, %Int32 0, %Int32 7
-	%94 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
-	%95 = load %Word32, %Word32* %94
-	store %Word32 %95, %Word32* %93
-	%96 = getelementptr %State, %State* %3, %Int32 0, %Int32 11
-	%97 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
-	%98 = load %Word32, %Word32* %97
-	store %Word32 %98, %Word32* %96
-	%99 = getelementptr %State, %State* %3, %Int32 0, %Int32 15
-	%100 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
-	%101 = load %Word32, %Word32* %100
-	store %Word32 %101, %Word32* %99
-
-
-	; diagonal rounds
-	%102 = getelementptr %State, %State* %3, %Int32 0, %Int32 0
-	%103 = load %Word32, %Word32* %102
-	%104 = getelementptr %State, %State* %3, %Int32 0, %Int32 5
-	%105 = load %Word32, %Word32* %104
-	%106 = getelementptr %State, %State* %3, %Int32 0, %Int32 10
-	%107 = load %Word32, %Word32* %106
-	%108 = getelementptr %State, %State* %3, %Int32 0, %Int32 15
-	%109 = load %Word32, %Word32* %108; alloca memory for return value
-	%110 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %110, %Word32 %103, %Word32 %105, %Word32 %107, %Word32 %109)
-	%111 = load [4 x %Word32], [4 x %Word32]* %110
-	%112 = zext i8 4 to %Nat32
-	store [4 x %Word32] %111, [4 x %Word32]* %9
-	%113 = getelementptr %State, %State* %3, %Int32 0, %Int32 0
-	%114 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%115 = load %Word32, %Word32* %114
-	store %Word32 %115, %Word32* %113
-	%116 = getelementptr %State, %State* %3, %Int32 0, %Int32 5
-	%117 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
-	%118 = load %Word32, %Word32* %117
-	store %Word32 %118, %Word32* %116
-	%119 = getelementptr %State, %State* %3, %Int32 0, %Int32 10
-	%120 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
-	%121 = load %Word32, %Word32* %120
-	store %Word32 %121, %Word32* %119
-	%122 = getelementptr %State, %State* %3, %Int32 0, %Int32 15
-	%123 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
-	%124 = load %Word32, %Word32* %123
-	store %Word32 %124, %Word32* %122
-	%125 = getelementptr %State, %State* %3, %Int32 0, %Int32 1
-	%126 = load %Word32, %Word32* %125
-	%127 = getelementptr %State, %State* %3, %Int32 0, %Int32 6
-	%128 = load %Word32, %Word32* %127
-	%129 = getelementptr %State, %State* %3, %Int32 0, %Int32 11
-	%130 = load %Word32, %Word32* %129
-	%131 = getelementptr %State, %State* %3, %Int32 0, %Int32 12
-	%132 = load %Word32, %Word32* %131; alloca memory for return value
-	%133 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %133, %Word32 %126, %Word32 %128, %Word32 %130, %Word32 %132)
-	%134 = load [4 x %Word32], [4 x %Word32]* %133
-	%135 = zext i8 4 to %Nat32
-	store [4 x %Word32] %134, [4 x %Word32]* %9
-	%136 = getelementptr %State, %State* %3, %Int32 0, %Int32 1
-	%137 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%138 = load %Word32, %Word32* %137
-	store %Word32 %138, %Word32* %136
-	%139 = getelementptr %State, %State* %3, %Int32 0, %Int32 6
-	%140 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
-	%141 = load %Word32, %Word32* %140
-	store %Word32 %141, %Word32* %139
-	%142 = getelementptr %State, %State* %3, %Int32 0, %Int32 11
-	%143 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
-	%144 = load %Word32, %Word32* %143
-	store %Word32 %144, %Word32* %142
-	%145 = getelementptr %State, %State* %3, %Int32 0, %Int32 12
-	%146 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
-	%147 = load %Word32, %Word32* %146
-	store %Word32 %147, %Word32* %145
-	%148 = getelementptr %State, %State* %3, %Int32 0, %Int32 2
-	%149 = load %Word32, %Word32* %148
-	%150 = getelementptr %State, %State* %3, %Int32 0, %Int32 7
-	%151 = load %Word32, %Word32* %150
-	%152 = getelementptr %State, %State* %3, %Int32 0, %Int32 8
-	%153 = load %Word32, %Word32* %152
-	%154 = getelementptr %State, %State* %3, %Int32 0, %Int32 13
-	%155 = load %Word32, %Word32* %154; alloca memory for return value
-	%156 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %156, %Word32 %149, %Word32 %151, %Word32 %153, %Word32 %155)
-	%157 = load [4 x %Word32], [4 x %Word32]* %156
-	%158 = zext i8 4 to %Nat32
-	store [4 x %Word32] %157, [4 x %Word32]* %9
-	%159 = getelementptr %State, %State* %3, %Int32 0, %Int32 2
-	%160 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%161 = load %Word32, %Word32* %160
-	store %Word32 %161, %Word32* %159
-	%162 = getelementptr %State, %State* %3, %Int32 0, %Int32 7
-	%163 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
-	%164 = load %Word32, %Word32* %163
-	store %Word32 %164, %Word32* %162
-	%165 = getelementptr %State, %State* %3, %Int32 0, %Int32 8
-	%166 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
-	%167 = load %Word32, %Word32* %166
-	store %Word32 %167, %Word32* %165
-	%168 = getelementptr %State, %State* %3, %Int32 0, %Int32 13
-	%169 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
-	%170 = load %Word32, %Word32* %169
-	store %Word32 %170, %Word32* %168
-	%171 = getelementptr %State, %State* %3, %Int32 0, %Int32 3
-	%172 = load %Word32, %Word32* %171
-	%173 = getelementptr %State, %State* %3, %Int32 0, %Int32 4
-	%174 = load %Word32, %Word32* %173
-	%175 = getelementptr %State, %State* %3, %Int32 0, %Int32 9
-	%176 = load %Word32, %Word32* %175
-	%177 = getelementptr %State, %State* %3, %Int32 0, %Int32 14
-	%178 = load %Word32, %Word32* %177; alloca memory for return value
-	%179 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %179, %Word32 %172, %Word32 %174, %Word32 %176, %Word32 %178)
-	%180 = load [4 x %Word32], [4 x %Word32]* %179
-	%181 = zext i8 4 to %Nat32
-	store [4 x %Word32] %180, [4 x %Word32]* %9
-	%182 = getelementptr %State, %State* %3, %Int32 0, %Int32 3
-	%183 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%184 = load %Word32, %Word32* %183
-	store %Word32 %184, %Word32* %182
-	%185 = getelementptr %State, %State* %3, %Int32 0, %Int32 4
-	%186 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
-	%187 = load %Word32, %Word32* %186
-	store %Word32 %187, %Word32* %185
-	%188 = getelementptr %State, %State* %3, %Int32 0, %Int32 9
-	%189 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
-	%190 = load %Word32, %Word32* %189
-	store %Word32 %190, %Word32* %188
-	%191 = getelementptr %State, %State* %3, %Int32 0, %Int32 14
-	%192 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
-	%193 = load %Word32, %Word32* %192
-	store %Word32 %193, %Word32* %191
-	%194 = load %Int32, %Int32* %6
-	%195 = add %Int32 %194, 1
-	store %Int32 %195, %Int32* %6
-	br label %again_1
-break_1:
-
-	; add original state
-	%196 = alloca [16 x %Word32], align 1
-	%197 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %197
-; while_2
-	br label %again_2
-again_2:
-	%198 = load %Int32, %Int32* %197
-	%199 = icmp slt %Int32 %198, 16
-	br %Bool %199 , label %body_2, label %break_2
-body_2:
-	%200 = load %Int32, %Int32* %197
-	%201 = getelementptr [16 x %Word32], [16 x %Word32]* %196, %Int32 0, %Int32 %200
-	%202 = load %Int32, %Int32* %197
-	%203 = getelementptr %State, %State* %3, %Int32 0, %Int32 %202
-	%204 = load %Word32, %Word32* %203
-	%205 = bitcast %Word32 %204 to %Nat32
-	%206 = load %Int32, %Int32* %197
-	%207 = getelementptr %State, %State* %state, %Int32 0, %Int32 %206
-	%208 = load %Word32, %Word32* %207
-	%209 = bitcast %Word32 %208 to %Nat32
-	%210 = add %Nat32 %205, %209
-	%211 = bitcast %Nat32 %210 to %Word32
-	store %Word32 %211, %Word32* %201
-	%212 = load %Int32, %Int32* %197
-	%213 = add %Int32 %212, 1
-	store %Int32 %213, %Int32* %197
-	br label %again_2
-break_2:
-	%214 = load [16 x %Word32], [16 x %Word32]* %196
-	%215 = zext i8 16 to %Nat32
-	store [16 x %Word32] %214, %Block* %0
-	ret void
-}
-
-
-
-; nonce = number used once
-; Чтобы один и тот же ключ можно было использовать много раз.
-; Если шифровать два сообщения одним ключом keystream будет одинаковым - это катастрофа
-; Он НЕ секретный. Его обычно: передают вместе с сообщением
-; кладут в заголовок пакета хранят рядом с ciphertext
-; ⚠️ Самое важное правило: Nonce нельзя повторять с тем же ключом. Никогда.
-; Важное правило: Nonce не нужно секретить. Ты можешь просто записать его в самое начало зашифрованного файла (первые 12 байт).
-; Чтобы расшифровать файл, тебе понадобятся твой секретный ключ (который в голове или в сейфе) и этот Nonce
-; (который прикреплен к файлу).
-; Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
-define internal void @makeState(%State* %0, %Key* %key, %Word32 %counter, [3 x %Word32]* %nonce) {
-	%2 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 0
-	%3 = load %Word32, %Word32* %2
-	%4 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 1
-	%5 = load %Word32, %Word32* %4
-	%6 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 2
-	%7 = load %Word32, %Word32* %6
-	%8 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 3
-	%9 = load %Word32, %Word32* %8
-	%10 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 4
-	%11 = load %Word32, %Word32* %10
-	%12 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 5
-	%13 = load %Word32, %Word32* %12
-	%14 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 6
-	%15 = load %Word32, %Word32* %14
-	%16 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 7
-	%17 = load %Word32, %Word32* %16
-	%18 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 0
-	%19 = load %Word32, %Word32* %18
-	%20 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
-	%21 = load %Word32, %Word32* %20
-	%22 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
-	%23 = load %Word32, %Word32* %22
-	%24 = insertvalue [16 x %Word32] zeroinitializer, %Word32 1634760805, 0
-	%25 = insertvalue [16 x %Word32] %24, %Word32 857760878, 1
-	%26 = insertvalue [16 x %Word32] %25, %Word32 2036477234, 2
-	%27 = insertvalue [16 x %Word32] %26, %Word32 1797285236, 3
-	%28 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 0
-	%29 = load %Word32, %Word32* %28
-	%30 = insertvalue [16 x %Word32] %27, %Word32 %29, 4
-	%31 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 1
-	%32 = load %Word32, %Word32* %31
-	%33 = insertvalue [16 x %Word32] %30, %Word32 %32, 5
-	%34 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 2
-	%35 = load %Word32, %Word32* %34
-	%36 = insertvalue [16 x %Word32] %33, %Word32 %35, 6
-	%37 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 3
-	%38 = load %Word32, %Word32* %37
-	%39 = insertvalue [16 x %Word32] %36, %Word32 %38, 7
-	%40 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 4
-	%41 = load %Word32, %Word32* %40
-	%42 = insertvalue [16 x %Word32] %39, %Word32 %41, 8
-	%43 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 5
-	%44 = load %Word32, %Word32* %43
-	%45 = insertvalue [16 x %Word32] %42, %Word32 %44, 9
-	%46 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 6
-	%47 = load %Word32, %Word32* %46
-	%48 = insertvalue [16 x %Word32] %45, %Word32 %47, 10
-	%49 = getelementptr %Key, %Key* %key, %Int32 0, %Int32 7
-	%50 = load %Word32, %Word32* %49
-	%51 = insertvalue [16 x %Word32] %48, %Word32 %50, 11
-	%52 = insertvalue [16 x %Word32] %51, %Word32 %counter, 12
-	%53 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 0
-	%54 = load %Word32, %Word32* %53
-	%55 = insertvalue [16 x %Word32] %52, %Word32 %54, 13
-	%56 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
-	%57 = load %Word32, %Word32* %56
-	%58 = insertvalue [16 x %Word32] %55, %Word32 %57, 14
-	%59 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
-	%60 = load %Word32, %Word32* %59
-	%61 = insertvalue [16 x %Word32] %58, %Word32 %60, 15
-; -- cons_composite_from_composite_by_value --
-	%62 = alloca [16 x %Word32]
-	%63 = zext i8 16 to %Nat32
-	store [16 x %Word32] %61, [16 x %Word32]* %62
-	%64 = bitcast [16 x %Word32]* %62 to %State*
-; -- end cons_composite_from_composite_by_value --
-	%65 = load %State, %State* %64
-	%66 = zext i8 16 to %Nat32
-	store %State %65, %State* %0
-	ret void
-}
-
 %Context = type {
 	[32 x %Byte]*,
 	[3 x %Word32],
 	%Nat32,
-	%Block,
+	%chacha20_Block,
 	%Nat32
 };
 
@@ -738,21 +288,21 @@ body_1:
 	br %Bool %7 , label %then_0, label %endif_0
 then_0:
 	;printf("UH!\n")
-	%8 = alloca %State, align 1
+	%8 = alloca %chacha20_State, align 1
 	%9 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%10 = load [32 x %Byte]*, [32 x %Byte]** %9
-	%11 = bitcast [32 x %Byte]* %10 to %Key*
+	%11 = bitcast [32 x %Byte]* %10 to %chacha20_Key*
 	%12 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%13 = load %Nat32, %Nat32* %12
 	%14 = bitcast %Nat32 %13 to %Word32
 	%15 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1; alloca memory for return value
-	%16 = alloca %State
-	call void @makeState(%State* %16, %Key* %11, %Word32 %14, [3 x %Word32]* %15)
-	%17 = load %State, %State* %16
+	%16 = alloca %chacha20_State
+	call void @chacha20_makeState(%chacha20_State* %16, %chacha20_Key* %11, %Word32 %14, [3 x %Word32]* %15)
+	%17 = load %chacha20_State, %chacha20_State* %16
 	%18 = zext i8 16 to %Nat32
-	store %State %17, %State* %8
+	store %chacha20_State %17, %chacha20_State* %8
 	%19 = zext i8 13 to %Nat32
-	%20 = getelementptr %State, %State* %8, %Int32 0, %Nat32 %19
+	%20 = getelementptr %chacha20_State, %chacha20_State* %8, %Int32 0, %Nat32 %19
 	%21 = bitcast %Word32* %20 to [3 x %Word32]*
 	%22 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%23 = zext i8 0 to %Nat32
@@ -765,16 +315,16 @@ then_0:
 	;state[14] = ctx.nonce[1]
 	;state[15] = ctx.nonce[2]
 	%28 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%29 = load %State, %State* %8; alloca memory for return value
-	%30 = alloca %Block
-	call void @chacha20Block(%Block* %30, %State %29)
-	%31 = load %Block, %Block* %30
+	%29 = load %chacha20_State, %chacha20_State* %8; alloca memory for return value
+	%30 = alloca %chacha20_Block
+	call void @chacha20_chacha20Block(%chacha20_Block* %30, %chacha20_State %29)
+	%31 = load %chacha20_Block, %chacha20_Block* %30
 	%32 = zext i8 16 to %Nat32
-	store %Block %31, %Block* %28
+	store %chacha20_Block %31, %chacha20_Block* %28
 	%33 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
 	store %Nat32 0, %Nat32* %33
 	%34 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%35 = bitcast %Block* %34 to [0 x %Byte]*
+	%35 = bitcast %chacha20_Block* %34 to [0 x %Byte]*
 	store [0 x %Byte]* %35, [0 x %Byte]** %2
 	br label %endif_0
 endif_0:
@@ -2978,80 +2528,90 @@ break_1:
 	%Char8 101
 ]
 define %Int @main() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
 	;printf("%s\n", *Str8 hello_world)
 	;var data = []Byte [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-	%1 = alloca %Context, align 8
-	%2 = load [3 x %Word32], [3 x %Word32]* @testNonce2
-	%3 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %2)
+	%2 = alloca %Context, align 8
+	%3 = load [3 x %Word32], [3 x %Word32]* @testNonce2
+	%4 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %3)
 ; -- cons_composite_from_composite_by_value --
-	%4 = alloca %Context
-	store %Context %3, %Context* %4
-	%5 = bitcast %Context* %4 to %Context*
+	%5 = alloca %Context
+	store %Context %4, %Context* %5
+	%6 = bitcast %Context* %5 to %Context*
 ; -- end cons_composite_from_composite_by_value --
-	%6 = load %Context, %Context* %5
-	store %Context %6, %Context* %1
-	%7 = bitcast [1024 x %Char8]* @xlorem1024 to [0 x %Byte]*
-	%8 = bitcast %Context* %1 to %Context*
-	call void @cipher(%Context* %8, [0 x %Byte]* %7, %Nat32 1024)
-	%9 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %9
+	%7 = load %Context, %Context* %6
+	store %Context %7, %Context* %2
+	%8 = bitcast [1024 x %Char8]* @xlorem1024 to [0 x %Byte]*
+	%9 = bitcast %Context* %2 to %Context*
+	call void @cipher(%Context* %9, [0 x %Byte]* %8, %Nat32 1024)
+	%10 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %10
 ; while_1
 	br label %again_1
 again_1:
-	%10 = load %Int32, %Int32* %9
-	%11 = icmp slt %Int32 %10, 10
-	br %Bool %11 , label %body_1, label %break_1
+	%11 = load %Int32, %Int32* %10
+	%12 = icmp slt %Int32 %11, 10
+	br %Bool %12 , label %body_1, label %break_1
 body_1:
-	%12 = load %Int32, %Int32* %9
-	%13 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %12
-	%14 = load %Char8, %Char8* %13
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str1 to [0 x i8]*), %Char8 %14)
-	%16 = load %Int32, %Int32* %9
-	%17 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %16
-	%18 = load %Char8, %Char8* %17
-	%19 = bitcast %Char8 %18 to %Word8
-	%20 = zext %Word8 %19 to %Word32
-	%21 = bitcast %Word32 %20 to %Nat32
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Nat32 %21)
-	%23 = load %Int32, %Int32* %9
-	%24 = add %Int32 %23, 1
-	store %Int32 %24, %Int32* %9
+	%13 = load %Int32, %Int32* %10
+	%14 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %13
+	%15 = load %Char8, %Char8* %14
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str2 to [0 x i8]*), %Char8 %15)
+	%17 = load %Int32, %Int32* %10
+	%18 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %17
+	%19 = load %Char8, %Char8* %18
+	%20 = bitcast %Char8 %19 to %Word8
+	%21 = zext %Word8 %20 to %Word32
+	%22 = bitcast %Word32 %21 to %Nat32
+	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str3 to [0 x i8]*), %Nat32 %22)
+	%24 = load %Int32, %Int32* %10
+	%25 = add %Int32 %24, 1
+	store %Int32 %25, %Int32* %10
 	br label %again_1
 break_1:
-	%25 = alloca %Context, align 8
-	%26 = load [3 x %Word32], [3 x %Word32]* @testNonce2
-	%27 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %26)
+	%26 = alloca %Context, align 8
+	%27 = load [3 x %Word32], [3 x %Word32]* @testNonce2
+	%28 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %27)
 ; -- cons_composite_from_composite_by_value --
-	%28 = alloca %Context
-	store %Context %27, %Context* %28
-	%29 = bitcast %Context* %28 to %Context*
+	%29 = alloca %Context
+	store %Context %28, %Context* %29
+	%30 = bitcast %Context* %29 to %Context*
 ; -- end cons_composite_from_composite_by_value --
-	%30 = load %Context, %Context* %29
-	store %Context %30, %Context* %25
-	%31 = bitcast %Context* %25 to %Context*
-	call void @cipher(%Context* %31, [0 x %Byte]* %7, %Nat32 1024)
-	store %Int32 0, %Int32* %9
+	%31 = load %Context, %Context* %30
+	store %Context %31, %Context* %26
+	%32 = bitcast %Context* %26 to %Context*
+	call void @cipher(%Context* %32, [0 x %Byte]* %8, %Nat32 1024)
+	store %Int32 0, %Int32* %10
 ; while_2
 	br label %again_2
 again_2:
-	%32 = load %Int32, %Int32* %9
-	%33 = icmp slt %Int32 %32, 1024
-	br %Bool %33 , label %body_2, label %break_2
+	%33 = load %Int32, %Int32* %10
+	%34 = icmp slt %Int32 %33, 1024
+	br %Bool %34 , label %body_2, label %break_2
 body_2:
-	%34 = load %Int32, %Int32* %9
-	%35 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %34
-	%36 = load %Char8, %Char8* %35
-	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*), %Char8 %36)
-	%38 = load %Int32, %Int32* %9
-	%39 = add %Int32 %38, 1
-	store %Int32 %39, %Int32* %9
+	%35 = load %Int32, %Int32* %10
+	%36 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %35
+	%37 = load %Char8, %Char8* %36
+	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str4 to [0 x i8]*), %Char8 %37)
+	%39 = load %Int32, %Int32* %10
+	%40 = add %Int32 %39, 1
+	store %Int32 %40, %Int32* %10
 	br label %again_2
 break_2:
-	call void @test0()
+; if_0
+	%41 = call %Bool @test0()
+	%42 = xor %Bool %41, 1
+	br %Bool %42 , label %then_0, label %endif_0
+then_0:
+	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str5 to [0 x i8]*))
+	ret %Int 1
+	br label %endif_0
+endif_0:
+	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str6 to [0 x i8]*))
 	ret %Int 0
 }
 
-define internal void @test0() {
+define internal %Bool @test0() {
 	%1 = alloca [32 x %Byte], align 1
 	%2 = load [32 x %Byte], [32 x %Byte]* @testKey
 	%3 = zext i8 32 to %Nat32
@@ -3063,22 +2623,22 @@ define internal void @test0() {
 	%7 = load [12 x %Byte], [12 x %Byte]* @testNonce
 	%8 = zext i8 12 to %Nat32
 	store [12 x %Byte] %7, [12 x %Byte]* %6
-	%9 = alloca %State, align 1
-	%10 = bitcast [32 x %Byte]* %1 to %Key*
+	%9 = alloca %chacha20_State, align 1
+	%10 = bitcast [32 x %Byte]* %1 to %chacha20_Key*
 	%11 = load %Word32, %Word32* %4
 	%12 = bitcast [12 x %Byte]* %6 to [3 x %Word32]*; alloca memory for return value
-	%13 = alloca %State
-	call void @makeState(%State* %13, %Key* %10, %Word32 %11, [3 x %Word32]* %12)
-	%14 = load %State, %State* %13
+	%13 = alloca %chacha20_State
+	call void @chacha20_makeState(%chacha20_State* %13, %chacha20_Key* %10, %Word32 %11, [3 x %Word32]* %12)
+	%14 = load %chacha20_State, %chacha20_State* %13
 	%15 = zext i8 16 to %Nat32
-	store %State %14, %State* %9
-	%16 = alloca %Block, align 1
-	%17 = load %State, %State* %9; alloca memory for return value
-	%18 = alloca %Block
-	call void @chacha20Block(%Block* %18, %State %17)
-	%19 = load %Block, %Block* %18
+	store %chacha20_State %14, %chacha20_State* %9
+	%16 = alloca %chacha20_Block, align 1
+	%17 = load %chacha20_State, %chacha20_State* %9; alloca memory for return value
+	%18 = alloca %chacha20_Block
+	call void @chacha20_chacha20Block(%chacha20_Block* %18, %chacha20_State %17)
+	%19 = load %chacha20_Block, %chacha20_Block* %18
 	%20 = zext i8 16 to %Nat32
-	store %Block %19, %Block* %16
+	store %chacha20_Block %19, %chacha20_Block* %16
 	%21 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %21
 ; while_1
@@ -3089,29 +2649,20 @@ again_1:
 	br %Bool %23 , label %body_1, label %break_1
 body_1:
 	%24 = load %Int32, %Int32* %21
-	%25 = getelementptr %Block, %Block* %16, %Int32 0, %Int32 %24
+	%25 = getelementptr %chacha20_Block, %chacha20_Block* %16, %Int32 0, %Int32 %24
 	%26 = load %Word32, %Word32* %25
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str4 to [0 x i8]*), %Word32 %26)
+	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), %Word32 %26)
 	%28 = load %Int32, %Int32* %21
 	%29 = add %Int32 %28, 1
 	store %Int32 %29, %Int32* %21
 	br label %again_1
 break_1:
-	%30 = bitcast %Block* %16 to [64 x %Byte]*
-; if_0
+	%30 = bitcast %chacha20_Block* %16 to [64 x %Byte]*
 	%31 = bitcast [64 x %Byte]* %30 to i8*
 	%32 = bitcast [64 x %Byte]* @testResult to i8*
 	%33 = call i1 (i8*, i8*, i64) @memeq(i8* %31, i8* %32, %Int64 64)
 	%34 = icmp ne %Bool %33, 0
-	br %Bool %34 , label %then_0, label %else_0
-then_0:
-	%35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
-	br label %endif_0
-else_0:
-	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str6 to [0 x i8]*))
-	br label %endif_0
-endif_0:
-	ret void
+	ret %Bool %34
 }
 
 

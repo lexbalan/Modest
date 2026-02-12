@@ -13,8 +13,8 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=cm -funsafe $(INDIR)/main.m
-	#mcc -o $(CMPREFIX)/utf -mbackend=cm -funsafe ${MODEST_LIB}/misc/utf.m
+	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.m
+	#mcc -o $(CMPREFIX)/utf -mbackend=modest -funsafe ${MODEST_LIB}/misc/utf.m
 
 
 LLVM:

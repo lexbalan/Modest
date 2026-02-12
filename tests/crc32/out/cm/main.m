@@ -29,7 +29,7 @@ func runTest (test: *Test) -> Bool {
 
 
 public func main () -> Int {
-	printf("CRC32 test ")
+	printf("test CRC32 ")
 
 	var i = Nat32 0
 	while i < lengthof(tests) {

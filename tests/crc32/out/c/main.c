@@ -34,7 +34,7 @@ static bool runTest(struct test *test) {
 
 
 int main(void) {
-	printf("CRC32 test ");
+	printf("test CRC32 ");
 
 	uint32_t i = 0;
 	while (i < (uint32_t)LENGTHOF(tests)) {

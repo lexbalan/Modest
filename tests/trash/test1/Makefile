@@ -13,10 +13,10 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.m
-	mcc -o $(CMPREFIX)/lib -funsafe -mbackend=cm $(INDIR)/lib.m
-	mcc -o $(CMPREFIX)/lib2 -funsafe -mbackend=cm $(INDIR)/lib2.m
-	mcc -o $(CMPREFIX)/fixed32 -funsafe -mbackend=cm $(INDIR)/fixed32.m
+	mcc -o $(CMPREFIX)/main -funsafe -mbackend=modest $(INDIR)/main.m
+	mcc -o $(CMPREFIX)/lib -funsafe -mbackend=modest $(INDIR)/lib.m
+	mcc -o $(CMPREFIX)/lib2 -funsafe -mbackend=modest $(INDIR)/lib2.m
+	mcc -o $(CMPREFIX)/fixed32 -funsafe -mbackend=modest $(INDIR)/fixed32.m
 
 
 LLVM:

@@ -13,8 +13,8 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.m
-	mcc -o $(CMPREFIX)/table -funsafe -mbackend=cm $(INDIR)/table.m
+	mcc -o $(CMPREFIX)/main -funsafe -mbackend=modest $(INDIR)/main.m
+	mcc -o $(CMPREFIX)/table -funsafe -mbackend=modest $(INDIR)/table.m
 
 
 LLVM:

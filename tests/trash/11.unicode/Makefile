@@ -13,8 +13,8 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=cm -funsafe $(INDIR)/main.m
-	mcc -o $(CMPREFIX)/console -mbackend=cm -funsafe ${MODEST_LIB}/lightfood/console.m
+	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.m
+	mcc -o $(CMPREFIX)/console -mbackend=modest -funsafe ${MODEST_LIB}/lightfood/console.m
 
 
 LLVM:

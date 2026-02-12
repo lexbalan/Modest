@@ -4,153 +4,50 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
+#include "chacha20.h"
 
-
-typedef uint32_t Key[8];
-typedef uint32_t State[16];
-typedef uint32_t Block[16];
-
-static uint32_t rotl32(uint32_t x, uint32_t n) {
-	return (x << n) | (x >> (32 - n));
-}
-
-
-static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t (*_sret_)[4]) {
-	uint32_t a0 = a;
-	uint32_t b0 = b;
-	uint32_t c0 = c;
-	uint32_t d0 = d;
-
-	a0 = (a0 + b0);
-	d0 = rotl32(d0 ^ a0, 16);
-
-	c0 = (c0 + d0);
-	b0 = rotl32(b0 ^ c0, 12);
-
-	a0 = (a0 + b0);
-	d0 = rotl32(d0 ^ a0, 8);
-
-	c0 = (c0 + d0);
-	b0 = rotl32(b0 ^ c0, 7);
-
-	memcpy(_sret_, &(uint32_t [4]){a0, b0, c0, d0}, sizeof(uint32_t [4]));
-}
-
-
-static void chacha20Block(State *_state, Block *_sret_) {
-	State state;
-	memcpy(state, _state, sizeof(State));
-	State x;
-	memcpy(&x, &state, sizeof(State));// working copy
-
-	int32_t i = 0;
-	while (i < 10) {
-
-		uint32_t r[4];
-
-		// column rounds
-		quarterRound(x[0], x[4], x[8], x[12], &r);
-		x[0] = r[0];x[4] = r[1];x[8] = r[2];x[12] = r[3];
-
-		quarterRound(x[1], x[5], x[9], x[13], &r);
-		x[1] = r[0];x[5] = r[1];x[9] = r[2];x[13] = r[3];
-
-		quarterRound(x[2], x[6], x[10], x[14], &r);
-		x[2] = r[0];x[6] = r[1];x[10] = r[2];x[14] = r[3];
-
-		quarterRound(x[3], x[7], x[11], x[15], &r);
-		x[3] = r[0];x[7] = r[1];x[11] = r[2];x[15] = r[3];
-
-
-		// diagonal rounds
-		quarterRound(x[0], x[5], x[10], x[15], &r);
-		x[0] = r[0];x[5] = r[1];x[10] = r[2];x[15] = r[3];
-
-		quarterRound(x[1], x[6], x[11], x[12], &r);
-		x[1] = r[0];x[6] = r[1];x[11] = r[2];x[12] = r[3];
-
-		quarterRound(x[2], x[7], x[8], x[13], &r);
-		x[2] = r[0];x[7] = r[1];x[8] = r[2];x[13] = r[3];
-
-		quarterRound(x[3], x[4], x[9], x[14], &r);
-		x[3] = r[0];x[4] = r[1];x[9] = r[2];x[14] = r[3];
-
-		i = i + 1;
-	}
-
-	// add original state
-	uint32_t out[16];
-	int32_t j = 0;
-	while (j < 16) {
-		out[j] = (x[j] + state[j]);
-		j = j + 1;
-	}
-
-	memcpy(_sret_, &out, sizeof(uint32_t [16]));
-}
-
-
-// nonce = number used once
-// Чтобы один и тот же ключ можно было использовать много раз.
-// Если шифровать два сообщения одним ключом keystream будет одинаковым - это катастрофа
-// Он НЕ секретный. Его обычно: передают вместе с сообщением
-// кладут в заголовок пакета хранят рядом с ciphertext
-// ⚠️ Самое важное правило: Nonce нельзя повторять с тем же ключом. Никогда.
-// Важное правило: Nonce не нужно секретить. Ты можешь просто записать его в самое начало зашифрованного файла (первые 12 байт).
-// Чтобы расшифровать файл, тебе понадобятся твой секретный ключ (который в голове или в сейфе) и этот Nonce
-// (который прикреплен к файлу).
-// Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
-
-// counter он говорит алгоритму - какой блок keystream генерировать
-static void makeState(Key *key, uint32_t counter, uint32_t (*nonce)[3], State *_sret_) {
-	memcpy(_sret_, &(State){
-		0x61707865, 0x3320646E, 0x79622D32, 0x6B206574,
-		(*key)[0], (*key)[1], (*key)[2], (*key)[3],
-		(*key)[4], (*key)[5], (*key)[6], (*key)[7],
-		counter, (*nonce)[0], (*nonce)[1], (*nonce)[2]
-	}, sizeof(State));
-}
 
 
 
 struct context {
-	char (*key)[32];
+	uint8_t (*key)[32];
 	uint32_t nonce[3];
 	uint32_t blockCounter;
-	Block block;
+	chacha20_Block block;
 	uint32_t blockOffset;
 };
 
-static struct context init(char (*key)[32], uint32_t (*_nonce)[3]) {
+static struct context init(uint8_t (*key)[32], uint32_t (*_nonce)[3]) {
 	uint32_t nonce[3];
 	memcpy(nonce, _nonce, sizeof(uint32_t [3]));
 	return (struct context){
 		.key = key,
 		.nonce = {nonce[0], nonce[1], nonce[2]},
 		.blockCounter = 0,
-		.blockOffset = (uint32_t)sizeof(Block)
+		.blockOffset = (uint32_t)sizeof(chacha20_Block)
 	};
 }
 
 
-static void cipher(struct context *ctx, char (*data)[], uint32_t len) {
+static void cipher(struct context *ctx, uint8_t (*data)[], uint32_t len) {
 	uint32_t i = 0;
-	char (*bptr)[] = NULL;
+	uint8_t (*bptr)[] = NULL;
 	while (i < len) {
 		// Нужно сгенерировать новый блок?
-		if (ctx->blockOffset == (uint32_t)sizeof(Block)) {
+		if (ctx->blockOffset == (uint32_t)sizeof(chacha20_Block)) {
 			//printf("UH!\n")
-			State state;
-			makeState((Key *)ctx->key, ctx->blockCounter, &ctx->nonce, &state);
+			chacha20_State state;
+			chacha20_makeState((chacha20_Key *)ctx->key, ctx->blockCounter, &ctx->nonce, &state);
 			memcpy((uint32_t (*)[16 - 13])&state[13], (uint32_t (*)[3 - 0])&ctx->nonce[0], sizeof(uint32_t [16 - 13]));
 			//state[13] = ctx.nonce[0]
 			//state[14] = ctx.nonce[1]
 			//state[15] = ctx.nonce[2]
 
-			chacha20Block(&state, &ctx->block);
+			chacha20_chacha20Block(&state, &ctx->block);
 			ctx->blockOffset = 0;
-			bptr = (char (*)[])&ctx->block;
+			bptr = (uint8_t (*)[])&ctx->block;
 		}
 
 		(*data)[i] = (*data)[i] ^ (*bptr)[ctx->blockOffset];
@@ -161,14 +58,14 @@ static void cipher(struct context *ctx, char (*data)[], uint32_t len) {
 }
 
 
-static char testKey[32] = {
+static uint8_t testKey[32] = {
 	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
 	0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF,
 	0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
 	0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F
 };
 
-static char testNonce[12] = {
+static uint8_t testNonce[12] = {
 	0x0, 0x0, 0x0, 0x9,
 	0x0, 0x0, 0x0, 0x4A,
 	0x0
@@ -196,13 +93,14 @@ static uint32_t testNonce2[3] = {
 static char xlorem1024[1024] = LOREM1024;
 
 
-static void test0(void);
+static bool test0(void);
 
 int main(void) {
+	printf("test ChaCha20 ");
 	//printf("%s\n", *Str8 hello_world)
 	//var data = []Byte [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 	struct context ctx = init(&testKey, &testNonce2);
-	char (*const dptr)[] = (char (*)[])xlorem1024;
+	uint8_t (*const dptr)[] = (uint8_t (*)[])xlorem1024;
 	cipher(&ctx, dptr, 1024);
 
 	int32_t i = 0;
@@ -221,23 +119,26 @@ int main(void) {
 		i = i + 1;
 	}
 
-	test0();
+	if (!test0()) {
+		printf("fail\n");
+		return EXIT_FAILURE;
+	}
 
-	return 0;
+	printf("success\n");
+	return EXIT_SUCCESS;
 }
 
 
-static void test0(void) {
-	char key[32];
-	memcpy(&key, &testKey, sizeof(char [32]));
+static bool test0(void) {
+	uint8_t key[32];
+	memcpy(&key, &testKey, sizeof(uint8_t [32]));
 	uint32_t counter = 0x1;
-	char nonce[12];
-	memcpy(&nonce, &testNonce, sizeof(char [12]));
-	State state;
-	makeState((Key *)&key, counter, (uint32_t (*)[3])&nonce, &state);
-
-	Block block;
-	chacha20Block(&state, &block);
+	uint8_t nonce[12];
+	memcpy(&nonce, &testNonce, sizeof(uint8_t [12]));
+	chacha20_State state;
+	chacha20_makeState((chacha20_Key *)&key, counter, (uint32_t (*)[3])&nonce, &state);
+	chacha20_Block block;
+	chacha20_chacha20Block(&state, &block);
 
 	int32_t i = 0;
 	while (i < 16) {
@@ -245,13 +146,9 @@ static void test0(void) {
 		i = i + 1;
 	}
 
-	char (*const bptr)[64] = (char (*)[64])&block;
+	uint8_t (*const bptr)[64] = (uint8_t (*)[64])&block;
 
-	if (memcmp(bptr, &((char [64])TEST_RESULT), sizeof(char [64])) == 0) {
-		printf("test passed\n");
-	} else {
-		printf("test failed\n");
-	}
+	return memcmp(bptr, &((uint8_t [64])TEST_RESULT), sizeof(uint8_t [64])) == 0;
 }
 
 

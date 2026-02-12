@@ -13,8 +13,8 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.m
-	mcc -o $(CMPREFIX)/datetime -mbackend=cm -funsafe ${MODEST_LIB}/lightfood/datetime.m
+	mcc -o $(CMPREFIX)/main -funsafe -mbackend=modest $(INDIR)/main.m
+	mcc -o $(CMPREFIX)/datetime -mbackend=modest -funsafe ${MODEST_LIB}/lightfood/datetime.m
 
 
 LLVM:

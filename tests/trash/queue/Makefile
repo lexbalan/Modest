@@ -13,11 +13,11 @@ test: CM LLVM C
 
 
 CM:
-	#mcc -o $(CMPREFIX)/mutex -mbackend=cm $(INDIR)/mutex.m
-	mcc -o $(CMPREFIX)/queue -mbackend=cm $(INDIR)/queue.m
-	mcc -o $(CMPREFIX)/queueWord8 -mbackend=cm $(INDIR)/queueWord8.m
-	mcc -o $(CMPREFIX)/ringWord8 -mbackend=cm $(INDIR)/ringWord8.m
-	mcc -o $(CMPREFIX)/main -mbackend=cm -funsafe $(INDIR)/main.m
+	#mcc -o $(CMPREFIX)/mutex -mbackend=modest $(INDIR)/mutex.m
+	mcc -o $(CMPREFIX)/queue -mbackend=modest $(INDIR)/queue.m
+	mcc -o $(CMPREFIX)/queueWord8 -mbackend=modest $(INDIR)/queueWord8.m
+	mcc -o $(CMPREFIX)/ringWord8 -mbackend=modest $(INDIR)/ringWord8.m
+	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.m
 
 
 LLVM:

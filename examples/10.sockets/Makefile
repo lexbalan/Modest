@@ -15,8 +15,8 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/client -mbackend=cm $(INDIR)/client.m
-	mcc -o $(CMPREFIX)/server -mbackend=cm $(INDIR)/server.m
+	mcc -o $(CMPREFIX)/client -mbackend=modest $(INDIR)/client.m
+	mcc -o $(CMPREFIX)/server -mbackend=modest $(INDIR)/server.m
 
 
 LLVM:

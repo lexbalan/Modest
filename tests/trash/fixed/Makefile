@@ -13,9 +13,9 @@ test: CM LLVM C
 
 
 CM:
-	mcc -funsafe -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.m
-	mcc -funsafe -o $(CMPREFIX)/fixed32 -mbackend=cm $(INDIR)/fixed32.m
-	mcc -funsafe -o $(CMPREFIX)/fixed64 -mbackend=cm $(INDIR)/fixed64.m
+	mcc -funsafe -o $(CMPREFIX)/main -mbackend=modest $(INDIR)/main.m
+	mcc -funsafe -o $(CMPREFIX)/fixed32 -mbackend=modest $(INDIR)/fixed32.m
+	mcc -funsafe -o $(CMPREFIX)/fixed64 -mbackend=modest $(INDIR)/fixed64.m
 
 
 LLVM:

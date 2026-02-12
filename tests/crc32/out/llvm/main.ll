@@ -216,7 +216,7 @@ declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
 ; end from import "crc32"
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [12 x i8] [i8 67, i8 82, i8 67, i8 51, i8 50, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@str1 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 67, i8 82, i8 67, i8 51, i8 50, i8 32, i8 0]
 @str2 = private constant [12 x i8] [i8 35, i8 37, i8 100, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 @str3 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --

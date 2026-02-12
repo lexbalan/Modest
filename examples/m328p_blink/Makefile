@@ -35,10 +35,10 @@ C:
 
 
 CM:
-	mcc -o out/cm/main -funsafe -mbackend=cm src/main.m
-	mcc -o out/cm/avr -funsafe -mbackend=cm src/avr/avr.m
-	mcc -o out/cm/m328p -funsafe -mbackend=cm src/avr/m328p.m
-	mcc -o out/cm/delay -funsafe -mbackend=cm src/avr/delay.m
+	mcc -o out/cm/main -funsafe -mbackend=modest src/main.m
+	mcc -o out/cm/avr -funsafe -mbackend=modest src/avr/avr.m
+	mcc -o out/cm/m328p -funsafe -mbackend=modest src/avr/m328p.m
+	mcc -o out/cm/delay -funsafe -mbackend=modest src/avr/delay.m
 
 
 flash:

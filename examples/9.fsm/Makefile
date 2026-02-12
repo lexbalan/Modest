@@ -14,8 +14,8 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/fsm -mbackend=cm $(INDIR)/fsm.m
-	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.m
+	mcc -o $(CMPREFIX)/fsm -mbackend=modest $(INDIR)/fsm.m
+	mcc -o $(CMPREFIX)/main -mbackend=modest $(INDIR)/main.m
 
 
 LLVM:
