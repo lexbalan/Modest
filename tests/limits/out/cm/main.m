@@ -273,7 +273,7 @@ func assert (x: Bool) -> Unit {
 
 
 public func main () -> Int32 {
-	printf("numeric boundary tests\n")
+	printf("test numeric boundary ")
 
 	assert(testRational())
 
@@ -287,8 +287,7 @@ public func main () -> Int32 {
 	assert(testInt32Static())
 	assert(testInt64Static())
 
-	printf("OK\n")
-
-	return 0
+	printf("passed\n")
+	return exitSuccess
 }
 

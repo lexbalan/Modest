@@ -280,14 +280,12 @@ again_1:
 	%4 = icmp ult %Nat32 %3, %len
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	; Нужно сгенерировать новый блок?
 ; if_0
 	%5 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
 	%6 = load %Nat32, %Nat32* %5
 	%7 = icmp eq %Nat32 %6, 64
 	br %Bool %7 , label %then_0, label %endif_0
 then_0:
-	;printf("UH!\n")
 	%8 = alloca %chacha20_State, align 1
 	%9 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%10 = load [32 x %Byte]*, [32 x %Byte]** %9
@@ -311,9 +309,6 @@ then_0:
 	%26 = load [3 x %Word32], [3 x %Word32]* %25
 	%27 = zext i8 3 to %Nat32
 	store [3 x %Word32] %26, [3 x %Word32]* %21
-	;state[13] = ctx.nonce[0]
-	;state[14] = ctx.nonce[1]
-	;state[15] = ctx.nonce[2]
 	%28 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%29 = load %chacha20_State, %chacha20_State* %8; alloca memory for return value
 	%30 = alloca %chacha20_Block

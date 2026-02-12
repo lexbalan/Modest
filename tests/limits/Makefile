@@ -19,11 +19,13 @@ CM:
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
 	clang $(LLVMPREFIX)/main.ll
+	./a.out
 
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c
+	./a.out
 
 
 clean:

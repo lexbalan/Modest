@@ -35,15 +35,10 @@ static void cipher(struct context *ctx, uint8_t (*data)[], uint32_t len) {
 	uint32_t i = 0;
 	uint8_t (*bptr)[] = NULL;
 	while (i < len) {
-		// Нужно сгенерировать новый блок?
 		if (ctx->blockOffset == (uint32_t)sizeof(chacha20_Block)) {
-			//printf("UH!\n")
 			chacha20_State state;
 			chacha20_makeState((chacha20_Key *)ctx->key, ctx->blockCounter, &ctx->nonce, &state);
 			memcpy((uint32_t (*)[16 - 13])&state[13], (uint32_t (*)[3 - 0])&ctx->nonce[0], sizeof(uint32_t [16 - 13]));
-			//state[13] = ctx.nonce[0]
-			//state[14] = ctx.nonce[1]
-			//state[15] = ctx.nonce[2]
 
 			chacha20_chacha20Block(&state, &ctx->block);
 			ctx->blockOffset = 0;

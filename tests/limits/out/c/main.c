@@ -276,7 +276,7 @@ static void assert(bool x) {
 
 
 int32_t main(void) {
-	printf("numeric boundary tests\n");
+	printf("test numeric boundary ");
 
 	assert(testRational());
 
@@ -290,9 +290,8 @@ int32_t main(void) {
 	assert(testInt32Static());
 	assert(testInt64Static());
 
-	printf("OK\n");
-
-	return 0;
+	printf("passed\n");
+	return EXIT_SUCCESS;
 }
 
 

@@ -32,18 +32,13 @@ func cipher (ctx: *Context, data: *[]Byte, len: Nat32) -> Unit {
 	var i = Nat32 0
 	var bptr = *[]Byte nil
 	while i < len {
-		// Нужно сгенерировать новый блок?
 		if ctx.blockOffset == unsafe Nat32 sizeof(cc.Block) {
-			//printf("UH!\n")
 			var state = cc.makeState(
 				key = unsafe *cc.Key ctx.key
 				counter = Word32 ctx.blockCounter
 				nonce = &ctx.nonce
 			)
 			state[13:16] = ctx.nonce[0:3]
-			//state[13] = ctx.nonce[0]
-			//state[14] = ctx.nonce[1]
-			//state[15] = ctx.nonce[2]
 
 			ctx.block = cc.chacha20Block(state)
 			ctx.blockOffset = 0

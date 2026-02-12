@@ -256,8 +256,8 @@ declare void @perror(%ConstCharStr* %str)
 @str42 = private constant [3 x i8] [i8 37, i8 100, i8 0]
 @str43 = private constant [17 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 110, i8 112, i8 105, i8 32, i8 33, i8 61, i8 32, i8 51, i8 10, i8 0]
 @str44 = private constant [23 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 82, i8 97, i8 116, i8 105, i8 111, i8 110, i8 97, i8 108, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str45 = private constant [24 x i8] [i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 115, i8 10, i8 0]
-@str46 = private constant [4 x i8] [i8 79, i8 75, i8 10, i8 0]
+@str45 = private constant [23 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 32, i8 0]
+@str46 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 ;const float32MaxValue       = Float32 3.4028234663852886e+38
@@ -562,7 +562,7 @@ define internal void @assert(%Bool %x) {
 }
 
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str45 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str45 to [0 x i8]*))
 	%2 = call %Bool @testRational()
 	call void @assert(%Bool %2)
 	%3 = call %Bool @testNat8Static()
@@ -581,8 +581,8 @@ define %Int32 @main() {
 	call void @assert(%Bool %9)
 	%10 = call %Bool @testInt64Static()
 	call void @assert(%Bool %10)
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str46 to [0 x i8]*))
-	ret %Int32 0
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str46 to [0 x i8]*))
+	ret %Int 0
 }
 
 
