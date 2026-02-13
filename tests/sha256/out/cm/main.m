@@ -72,12 +72,11 @@ public func main () -> Int {
 	var i: Nat32 = 0
 	while i < lengthof(tests) {
 		let test: *SHA256_TestCase = tests[i]
-		let testResult: Bool = doTest(test)
-
-		success = success and testResult
+		let rc: Bool = doTest(test)
+		success = success and rc
 
 		var res = *Str8 "failed"
-		if testResult {
+		if rc {
 			res = "passed"
 		}
 

@@ -279,23 +279,34 @@ static bool testRational(void) {
 int32_t main(void) {
 	printf("test numeric boundary:\n");
 
+	bool rc;
 	bool success = true;
 
 	// test built-in generic types
-	success = success && testInteger();
-	success = success && testRational();
+	rc = testInteger();
+	success = success && rc;
+	rc = testRational();
+	success = success && rc;
 
 	// test built-in unsigned integer types
-	success = success && testNat8Static();
-	success = success && testNat16Static();
-	success = success && testNat32Static();
-	success = success && testNat64Static();
+	rc = testNat8Static();
+	success = success && rc;
+	rc = testNat16Static();
+	success = success && rc;
+	rc = testNat32Static();
+	success = success && rc;
+	rc = testNat64Static();
+	success = success && rc;
 
 	// test built-in signed integer types
-	success = success && testInt8Static();
-	success = success && testInt16Static();
-	success = success && testInt32Static();
-	success = success && testInt64Static();
+	rc = testInt8Static();
+	success = success && rc;
+	rc = testInt16Static();
+	success = success && rc;
+	rc = testInt32Static();
+	success = success && rc;
+	rc = testInt64Static();
+	success = success && rc;
 
 	printf("test ");
 	if (!success) {

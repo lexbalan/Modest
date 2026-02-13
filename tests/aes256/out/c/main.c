@@ -91,6 +91,9 @@ static bool runTest(struct test_case *test) {
 
 	aes256_init(&ctx, &test->key);
 
+	aes256_Block ptBefore;
+	memcpy(&ptBefore, &test->pt, sizeof(aes256_Block));
+
 	aes256_encrypt_ecb(&ctx, &test->pt);
 
 	if (memcmp(&test->pt, &test->ct, sizeof(aes256_Block)) != 0) {
@@ -100,7 +103,7 @@ static bool runTest(struct test_case *test) {
 
 	aes256_decrypt_ecb(&ctx, &test->pt);
 
-	if (memcmp(&test->pt, &test->pt, sizeof(aes256_Block)) != 0) {
+	if (memcmp(&test->pt, &ptBefore, sizeof(aes256_Block)) != 0) {
 		printf("FAILED (decrypt)");
 		return false;
 	}
@@ -120,7 +123,8 @@ int32_t main(void) {
 	uint8_t i = 0;
 	while (i < (uint8_t)LENGTHOF(tests)) {
 		printf("run test #%d ", i);
-		success = success && runTest(&tests[i]);
+		const bool rc = runTest(&tests[i]);
+		success = success && rc;
 		printf("\n");
 		i = i + 1;
 	}

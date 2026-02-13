@@ -826,38 +826,42 @@ define internal %Bool @runTest(%TestCase* %test) {
 	%1 = alloca %aes256_Context, align 1
 	%2 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 0
 	%3 = call %aes256_Result @aes256_init(%aes256_Context* %1, %aes256_Key* %2)
-	%4 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
-	%5 = call %aes256_Result @aes256_encrypt_ecb(%aes256_Context* %1, %aes256_Block* %4)
+	%4 = alloca %aes256_Block, align 1
+	%5 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
+	%6 = load %aes256_Block, %aes256_Block* %5
+	%7 = zext i8 16 to %Nat32
+	store %aes256_Block %6, %aes256_Block* %4
+	%8 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
+	%9 = call %aes256_Result @aes256_encrypt_ecb(%aes256_Context* %1, %aes256_Block* %8)
 ; if_0
-	%6 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
-	%7 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 2
-	%8 = bitcast %aes256_Block* %6 to i8*
-	%9 = bitcast %aes256_Block* %7 to i8*
-	%10 = call i1 (i8*, i8*, i64) @memeq(i8* %8, i8* %9, %Int64 16)
-	%11 = icmp eq %Bool %10, 0
-	br %Bool %11 , label %then_0, label %endif_0
+	%10 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
+	%11 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 2
+	%12 = bitcast %aes256_Block* %10 to i8*
+	%13 = bitcast %aes256_Block* %11 to i8*
+	%14 = call i1 (i8*, i8*, i64) @memeq(i8* %12, i8* %13, %Int64 16)
+	%15 = icmp eq %Bool %14, 0
+	br %Bool %15 , label %then_0, label %endif_0
 then_0:
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%14 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
-	%15 = call %aes256_Result @aes256_decrypt_ecb(%aes256_Context* %1, %aes256_Block* %14)
+	%18 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
+	%19 = call %aes256_Result @aes256_decrypt_ecb(%aes256_Context* %1, %aes256_Block* %18)
 ; if_1
-	%16 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
-	%17 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
-	%18 = bitcast %aes256_Block* %16 to i8*
-	%19 = bitcast %aes256_Block* %17 to i8*
-	%20 = call i1 (i8*, i8*, i64) @memeq(i8* %18, i8* %19, %Int64 16)
-	%21 = icmp eq %Bool %20, 0
-	br %Bool %21 , label %then_1, label %endif_1
+	%20 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
+	%21 = bitcast %aes256_Block* %20 to i8*
+	%22 = bitcast %aes256_Block* %4 to i8*
+	%23 = call i1 (i8*, i8*, i64) @memeq(i8* %21, i8* %22, %Int64 16)
+	%24 = icmp eq %Bool %23, 0
+	br %Bool %24 , label %then_1, label %endif_1
 then_1:
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*))
+	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-	%24 = call %aes256_Result @aes256_deinit(%aes256_Context* %1)
-	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str3 to [0 x i8]*))
+	%27 = call %aes256_Result @aes256_deinit(%aes256_Context* %1)
+	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str3 to [0 x i8]*))
 	ret %Bool 1
 }
 

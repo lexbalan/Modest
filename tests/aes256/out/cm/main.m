@@ -85,6 +85,8 @@ func runTest (test: *TestCase) -> Bool {
 
 	aes.init(&ctx, &test.key)
 
+	var ptBefore: Block = test.pt
+
 	aes.encrypt_ecb(&ctx, &test.pt)
 
 	if test.pt != test.ct {
@@ -94,7 +96,7 @@ func runTest (test: *TestCase) -> Bool {
 
 	aes.decrypt_ecb(&ctx, &test.pt)
 
-	if test.pt != test.pt {
+	if test.pt != ptBefore {
 		printf("FAILED (decrypt)")
 		return false
 	}
@@ -114,7 +116,8 @@ public func main () -> Int32 {
 	var i: Nat8 = 0
 	while i < lengthof(tests) {
 		printf("run test #%d ", i)
-		success = success and runTest(&tests[i])
+		let rc: Bool = runTest(&tests[i])
+		success = success and rc
 		printf("\n")
 		i = i + 1
 	}

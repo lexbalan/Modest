@@ -567,64 +567,85 @@ endif_1:
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str46 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
-	store %Bool 1, %Bool* %2
+	%3 = alloca %Bool, align 1
+	store %Bool 1, %Bool* %3
 
 	; test built-in generic types
-	%3 = call %Bool @testInteger()
-	%4 = load %Bool, %Bool* %2
-	%5 = and %Bool %4, %3
-	store %Bool %5, %Bool* %2
-	%6 = call %Bool @testRational()
-	%7 = load %Bool, %Bool* %2
-	%8 = and %Bool %7, %6
+	%4 = call %Bool @testInteger()
+	store %Bool %4, %Bool* %2
+	%5 = load %Bool, %Bool* %3
+	%6 = load %Bool, %Bool* %2
+	%7 = and %Bool %5, %6
+	store %Bool %7, %Bool* %3
+	%8 = call %Bool @testRational()
 	store %Bool %8, %Bool* %2
+	%9 = load %Bool, %Bool* %3
+	%10 = load %Bool, %Bool* %2
+	%11 = and %Bool %9, %10
+	store %Bool %11, %Bool* %3
 
 	; test built-in unsigned integer types
-	%9 = call %Bool @testNat8Static()
-	%10 = load %Bool, %Bool* %2
-	%11 = and %Bool %10, %9
-	store %Bool %11, %Bool* %2
-	%12 = call %Bool @testNat16Static()
-	%13 = load %Bool, %Bool* %2
-	%14 = and %Bool %13, %12
-	store %Bool %14, %Bool* %2
-	%15 = call %Bool @testNat32Static()
-	%16 = load %Bool, %Bool* %2
-	%17 = and %Bool %16, %15
-	store %Bool %17, %Bool* %2
-	%18 = call %Bool @testNat64Static()
-	%19 = load %Bool, %Bool* %2
-	%20 = and %Bool %19, %18
+	%12 = call %Bool @testNat8Static()
+	store %Bool %12, %Bool* %2
+	%13 = load %Bool, %Bool* %3
+	%14 = load %Bool, %Bool* %2
+	%15 = and %Bool %13, %14
+	store %Bool %15, %Bool* %3
+	%16 = call %Bool @testNat16Static()
+	store %Bool %16, %Bool* %2
+	%17 = load %Bool, %Bool* %3
+	%18 = load %Bool, %Bool* %2
+	%19 = and %Bool %17, %18
+	store %Bool %19, %Bool* %3
+	%20 = call %Bool @testNat32Static()
 	store %Bool %20, %Bool* %2
+	%21 = load %Bool, %Bool* %3
+	%22 = load %Bool, %Bool* %2
+	%23 = and %Bool %21, %22
+	store %Bool %23, %Bool* %3
+	%24 = call %Bool @testNat64Static()
+	store %Bool %24, %Bool* %2
+	%25 = load %Bool, %Bool* %3
+	%26 = load %Bool, %Bool* %2
+	%27 = and %Bool %25, %26
+	store %Bool %27, %Bool* %3
 
 	; test built-in signed integer types
-	%21 = call %Bool @testInt8Static()
-	%22 = load %Bool, %Bool* %2
-	%23 = and %Bool %22, %21
-	store %Bool %23, %Bool* %2
-	%24 = call %Bool @testInt16Static()
-	%25 = load %Bool, %Bool* %2
-	%26 = and %Bool %25, %24
-	store %Bool %26, %Bool* %2
-	%27 = call %Bool @testInt32Static()
-	%28 = load %Bool, %Bool* %2
-	%29 = and %Bool %28, %27
-	store %Bool %29, %Bool* %2
-	%30 = call %Bool @testInt64Static()
-	%31 = load %Bool, %Bool* %2
-	%32 = and %Bool %31, %30
+	%28 = call %Bool @testInt8Static()
+	store %Bool %28, %Bool* %2
+	%29 = load %Bool, %Bool* %3
+	%30 = load %Bool, %Bool* %2
+	%31 = and %Bool %29, %30
+	store %Bool %31, %Bool* %3
+	%32 = call %Bool @testInt16Static()
 	store %Bool %32, %Bool* %2
-	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str47 to [0 x i8]*))
-; if_0
+	%33 = load %Bool, %Bool* %3
 	%34 = load %Bool, %Bool* %2
-	%35 = xor %Bool %34, 1
-	br %Bool %35 , label %then_0, label %endif_0
+	%35 = and %Bool %33, %34
+	store %Bool %35, %Bool* %3
+	%36 = call %Bool @testInt32Static()
+	store %Bool %36, %Bool* %2
+	%37 = load %Bool, %Bool* %3
+	%38 = load %Bool, %Bool* %2
+	%39 = and %Bool %37, %38
+	store %Bool %39, %Bool* %3
+	%40 = call %Bool @testInt64Static()
+	store %Bool %40, %Bool* %2
+	%41 = load %Bool, %Bool* %3
+	%42 = load %Bool, %Bool* %2
+	%43 = and %Bool %41, %42
+	store %Bool %43, %Bool* %3
+	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str47 to [0 x i8]*))
+; if_0
+	%45 = load %Bool, %Bool* %3
+	%46 = xor %Bool %45, 1
+	br %Bool %46 , label %then_0, label %endif_0
 then_0:
-	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str48 to [0 x i8]*))
+	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str48 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str49 to [0 x i8]*))
+	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str49 to [0 x i8]*))
 	ret %Int 0
 }
 

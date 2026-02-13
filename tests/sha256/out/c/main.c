@@ -76,12 +76,11 @@ int main(void) {
 	uint32_t i = 0;
 	while (i < (uint32_t)LENGTHOF(((struct sha256_test_case *[2])TESTS))) {
 		struct sha256_test_case *const test = ((struct sha256_test_case *[2])TESTS)[i];
-		const bool testResult = doTest(test);
-
-		success = success && testResult;
+		const bool rc = doTest(test);
+		success = success && rc;
 
 		char *res = "failed";
-		if (testResult) {
+		if (rc) {
 			res = "passed";
 		}
 
