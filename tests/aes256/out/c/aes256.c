@@ -109,7 +109,7 @@ static inline uint8_t rj_sboxInv(uint8_t x) {
 
 static void subBytes(aes256_Block *block) {
 	uint8_t i = 0;
-	while (i < 16) {
+	while (i < (uint8_t)16) {
 		(*block)[i] = rj_sbox((*block)[i]);
 		i = i + 1;
 	}
@@ -118,7 +118,7 @@ static void subBytes(aes256_Block *block) {
 
 static void subBytesInv(aes256_Block *block) {
 	uint8_t i = 0;
-	while (i < 16) {
+	while (i < (uint8_t)16) {
 		(*block)[i] = rj_sboxInv((*block)[i]);
 		i = i + 1;
 	}
@@ -134,9 +134,9 @@ static void addRoundKey(aes256_Block *block, uint8_t (*k)[16]) {
 }
 
 
-static void addRoundKey_cpy(aes256_Block *block, aes256_Key *key, aes256_Key *cpk) {
+static void addRoundKeyCpy(aes256_Block *block, aes256_Key *key, aes256_Key *cpk) {
 	uint8_t i = 0;
-	while (i < 16) {
+	while (i < (uint8_t)16) {
 		const uint8_t yy = (*key)[i];
 		(*cpk)[i] = yy;
 		(*block)[i] = (*block)[i] ^ yy;
@@ -206,7 +206,7 @@ static void mixColumns(aes256_Block *block) {
 	uint8_t e;
 
 	uint8_t i = 0;
-	while (i < 16) {
+	while (i < (uint8_t)16) {
 		a = (*block)[i + 0];
 		b = (*block)[i + 1];
 		c = (*block)[i + 2];
@@ -232,7 +232,7 @@ static void mixColumnsInv(aes256_Block *block) {
 	uint8_t z;
 
 	uint8_t i = 0;
-	while (i < 16) {
+	while (i < (uint8_t)16) {
 		a = (*block)[i + 0];
 		b = (*block)[i + 1];
 		c = (*block)[i + 2];
@@ -349,7 +349,7 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 	}
 
 	uint8_t rcon = 0x1;
-	addRoundKey_cpy(block, &ctx->enckey, &ctx->key);
+	addRoundKeyCpy(block, &ctx->enckey, &ctx->key);
 
 	uint8_t i = 0;
 	while (i < 13) {
@@ -379,7 +379,7 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 		return AES256_RESULT_ERROR;
 	}
 
-	addRoundKey_cpy(block, &ctx->deckey, &ctx->key);
+	addRoundKeyCpy(block, &ctx->deckey, &ctx->key);
 	shiftRowsInv(block);
 	subBytesInv(block);
 

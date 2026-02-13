@@ -913,17 +913,29 @@ class Parser:
 
 		elif self.match("lengthof"):
 			mid_ti = self.textInfo()
-			self.match("(")
-			v = self.expr_value()
-			end_ti = self.tokenInfo()
-			self.need(")")
-			return {
-				'isa': 'ast_value',
-				'kind': 'lengthof_value',
-				'value': v,
-				'anno': [],
-				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
-			}
+			self.need("(")
+			if self.is_type_expr():
+				t = self.expr_type()
+				end_ti = self.tokenInfo()
+				self.need(")")
+				return {
+					'isa': 'ast_value',
+					'kind': 'lengthof_type',
+					'type': t,
+					'anno': [],
+					'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
+				}
+			else:
+				v = self.expr_value()
+				end_ti = self.tokenInfo()
+				self.need(")")
+				return {
+					'isa': 'ast_value',
+					'kind': 'lengthof_value',
+					'value': v,
+					'anno': [],
+					'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
+				}
 
 		elif self.match("__va_start"):
 			mid_ti = self.textInfo()

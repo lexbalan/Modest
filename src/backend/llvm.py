@@ -1856,7 +1856,8 @@ def do_eval(x):
 	elif x.isValueZero(): y = do_eval_literal(x)
 	elif x.isValueSizeofValue(): y = do_eval_sizeof_value(x)
 	elif x.isValueSizeofType(): y = do_eval_sizeof_type(x)
-	elif x.isValueLengthof(): y = do_eval_lengthof(x)
+	elif x.isValueLengthofValue(): y = do_eval_lengthof_value(x)
+	elif x.isValueLengthofType(): y = do_eval_lengthof_type(x)
 	elif x.isValueAlignof(): y = do_eval_literal(x)
 	elif x.isValueOffsetof(): y = do_eval_literal(x)
 	elif x.isValueVaStart(): y = do_eval_va_start(x)
@@ -1880,13 +1881,24 @@ def do_eval(x):
 	return y
 
 
-def do_eval_lengthof(x):
+
+def do_eval_lengthof_type(x):
+	t = x.oftype
+	if t.is_vla():
+		handleVLA(t)
+		return t.runtimeVolume
+
+	return llvm_value_num(typeInt32, t.volume.asset)
+
+
+def do_eval_lengthof_value(x):
 	t = x.value.type
 	if t.is_vla():
 		handleVLA(t)
 		return t.runtimeVolume
 
 	return llvm_value_num(typeInt32, t.volume.asset)
+
 
 
 

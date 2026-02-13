@@ -1375,7 +1375,12 @@ def str_value_offsetof(x, ctx):
 	return sstr
 
 
-def str_value_lengthof(x, ctx):
+
+def str_value_lengthof_type(x, ctx):
+	return str(x.oftype.volume.asset)
+
+
+def str_value_lengthof_value(x, ctx):
 	if value_is_generic_immediate_const(x.value):
 		if not x.value.type.is_string():
 			return str(x.value.type.volume.asset)
@@ -1495,8 +1500,10 @@ def str_value(x, ctx=[]):
 		sstr += str_value_alignof(x, ctx)
 	elif x.isValueOffsetof():
 		sstr += str_value_offsetof(x, ctx)
-	elif x.isValueLengthof():
-		sstr += str_value_lengthof(x, ctx)
+	elif x.isValueLengthofValue():
+		sstr += str_value_lengthof_value(x, ctx)
+	elif x.isValueLengthofType():
+		sstr += str_value_lengthof_type(x, ctx)
 	elif x.isValueVaArg():
 		sstr += str_value_va_arg(x, ctx)
 	elif x.isValueVaStart():

@@ -762,7 +762,7 @@ break_1:
 	ret void
 }
 
-define internal void @addRoundKey_cpy(%aes256_Block* %block, %aes256_Key* %key, %aes256_Key* %cpk) {
+define internal void @addRoundKeyCpy(%aes256_Block* %block, %aes256_Key* %key, %aes256_Key* %cpk) {
 	%1 = alloca %Nat8, align 1
 	store %Nat8 0, %Nat8* %1
 ; while_1
@@ -1731,7 +1731,7 @@ endif_0:
 	store %Byte %6, %Byte* %5
 	%7 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 1
 	%8 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	call void @addRoundKey_cpy(%aes256_Block* %block, %aes256_Key* %7, %aes256_Key* %8)
+	call void @addRoundKeyCpy(%aes256_Block* %block, %aes256_Key* %7, %aes256_Key* %8)
 	%9 = alloca %Nat8, align 1
 	store %Nat8 0, %Nat8* %9
 ; while_1
@@ -1798,7 +1798,7 @@ then_0:
 endif_0:
 	%5 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 2
 	%6 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	call void @addRoundKey_cpy(%aes256_Block* %block, %aes256_Key* %5, %aes256_Key* %6)
+	call void @addRoundKeyCpy(%aes256_Block* %block, %aes256_Key* %5, %aes256_Key* %6)
 	call void @shiftRowsInv(%aes256_Block* %block)
 	call void @subBytesInv(%aes256_Block* %block)
 	%7 = alloca %Byte, align 1

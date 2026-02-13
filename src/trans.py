@@ -914,12 +914,29 @@ def do_value_lengthof_value(x):
 
 	if not (arg.type.is_array() or arg.type.is_string()):
 		error("expected value with array type", x['value']['ti'])
-		return ValueBad({'ti': ti})
+		return ValueBad(ti)
 
 	# for C backend, because C cannot do lengthof(x)
 	cmodule_use('use_lengthof')
 
-	return ValueLengthof(arg, ti)
+	return ValueLengthofValue(arg, ti)
+
+
+def do_value_lengthof_type(x):
+	ti = x['ti']
+	t = do_type(x['type'])
+
+	if t.is_bad(): #or arg.is_value_undefined():
+		return ValueBad(ti)
+
+	if not t.is_array():
+		error("expected array type", x['type']['ti'])
+		return ValueBad(ti)
+
+	# for C backend, because C cannot do lengthof(x)
+	cmodule_use('use_lengthof')
+
+	return ValueLengthofType(t, ti)
 
 
 def do_value_va_start(x):
@@ -1671,6 +1688,7 @@ def do_value(x):
 	elif k == HLIR_VALUE_OP_ALIGNOF: v = do_value_alignof(x)
 	elif k == HLIR_VALUE_OP_OFFSETOF: v = do_value_offsetof(x)
 	elif k == 'lengthof_value': v = do_value_lengthof_value(x)
+	elif k == 'lengthof_type': v = do_value_lengthof_type(x)
 	elif k == '__va_arg': v = do_value_va_arg(x)
 	elif k == '__va_start': v = do_value_va_start(x)
 	elif k == '__va_copy': v = do_value_va_copy(x)

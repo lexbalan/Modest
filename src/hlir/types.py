@@ -1528,8 +1528,11 @@ class Value(Entity):
 	def isValueOffsetof(self):
 		return isinstance(self, ValueOffsetof)
 
-	def isValueLengthof(self):
-		return isinstance(self, ValueLengthof)
+	def isValueLengthofValue(self):
+		return isinstance(self, ValueLengthofValue)
+
+	def isValueLengthofType(self):
+		return isinstance(self, ValueLengthofType)
 
 	def isValueAccessModule(self):
 		return isinstance(self, ValueAccessModule)
@@ -1897,7 +1900,7 @@ class ValueSizeofValue(Value):
 
 
 
-class ValueLengthof(Value):
+class ValueLengthofValue(Value):
 	def __init__(self, value, ti=None):
 
 		type = None
@@ -1920,6 +1923,29 @@ class ValueLengthof(Value):
 
 		self.value = value
 
+
+class ValueLengthofType(Value):
+	def __init__(self, t, ti=None):
+
+		type = None
+		if t.is_vla():
+			# is a VLA
+			from trans import typeSysInt
+			type = typeSysInt
+		else:
+			from type import type_integer_for
+			length = 0
+			if t.is_array():
+				length = t.volume.asset
+			elif t.is_string():
+				length = len(value.asset)
+			type = type_integer_for(length, ti=ti)
+		super().__init__(type=type, ti=ti)
+		if not t.is_vla():
+			self.set_asset(length)
+			self.stage = HLIR_VALUE_STAGE_COMPILETIME
+
+		self.oftype = t
 
 
 class ValueAlignof(Value):

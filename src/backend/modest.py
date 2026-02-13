@@ -615,7 +615,10 @@ def str_value_sizeof_type(x, ctx):
 def str_value_alignof(x, ctx):
 	return "alignof(" + str_type(x.of) + ")"
 
-def str_value_lengthof(x, ctx):
+def str_value_lengthof_type(x, ctx):
+	return "lengthof(" + str_type(x.oftype) + ")"
+
+def str_value_lengthof_value(x, ctx):
 	return "lengthof(" + str_value(x.value) + ")"
 
 def str_value_offsetof(x, ctx):
@@ -686,7 +689,8 @@ def str_value(x, ctx=[], parent_expr=None):
 	elif x.isValueSizeofType(): return str_value_sizeof_type(x, ctx)
 	elif x.isValueAlignof(): return str_value_alignof(x, ctx)
 	elif x.isValueOffsetof(): return str_value_offsetof(x, ctx)
-	elif x.isValueLengthof(): return str_value_lengthof(x, ctx)
+	elif x.isValueLengthofValue(): return str_value_lengthof_value(x, ctx)
+	elif x.isValueLengthofType(): return str_value_lengthof_type(x, ctx)
 	elif x.isValueVaArg(): return str_value_va_arg(x, ctx)
 	elif x.isValueVaStart(): return str_value_va_start(x, ctx)
 	elif x.isValueVaEnd(): return str_value_va_end(x, ctx)
