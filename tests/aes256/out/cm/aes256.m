@@ -112,13 +112,11 @@ func rj_sbox (x: Word8) -> Byte {
 
 
 @inline
-func rj_sbox_inv (x: Word8) -> Byte {
+func rj_sboxInv (x: Word8) -> Byte {
 	return sboxinv[Nat8 x]
 }
 
 
-
-//@notnullargs
 func subBytes (block: *Block) -> Unit {
 	var i = Nat8 0
 	while i < 16 {
@@ -128,17 +126,15 @@ func subBytes (block: *Block) -> Unit {
 }
 
 
-//@notnullargs
-func subBytes_inv (block: *Block) -> Unit {
+func subBytesInv (block: *Block) -> Unit {
 	var i = Nat8 0
 	while i < 16 {
-		block[i] = rj_sbox_inv(block[i])
+		block[i] = rj_sboxInv(block[i])
 		i = i + 1
 	}
 }
 
 
-//@notnullargs
 func addRoundKey (block: *Block, k: *[16]Byte) -> Unit {
 	var i = Nat8 0
 	while i < lengthof(*k) {
@@ -148,7 +144,6 @@ func addRoundKey (block: *Block, k: *[16]Byte) -> Unit {
 }
 
 
-//@notnullargs
 func addRoundKey_cpy (block: *Block, key: *Key, cpk: *Key) -> Unit {
 	var i = Nat8 0
 	while i < 16 {
@@ -161,7 +156,6 @@ func addRoundKey_cpy (block: *Block, key: *Key, cpk: *Key) -> Unit {
 }
 
 
-//@notnullargs
 func shiftRows (block: *Block) -> Unit {
 	var i: Word8
 	var j: Word8; // to make it potentially parallelable :)
@@ -188,8 +182,7 @@ func shiftRows (block: *Block) -> Unit {
 }
 
 
-//@notnullargs
-func shiftRows_inv (block: *Block) -> Unit {
+func shiftRowsInv (block: *Block) -> Unit {
 	var i: Word8
 	var j: Word8; // similar to shiftRows :)
 
@@ -215,7 +208,6 @@ func shiftRows_inv (block: *Block) -> Unit {
 }
 
 
-//@notnullargs
 func mixColumns (block: *Block) -> Unit {
 	var a: Word8
 	var b: Word8
@@ -239,8 +231,7 @@ func mixColumns (block: *Block) -> Unit {
 }
 
 
-//@notnullargs
-func mixColumns_inv (block: *Block) -> Unit {
+func mixColumnsInv (block: *Block) -> Unit {
 	var a: Word8
 	var b: Word8
 	var c: Word8
@@ -269,7 +260,6 @@ func mixColumns_inv (block: *Block) -> Unit {
 }
 
 
-//@notnullargs
 func expandEncKey (k: *Key, rc: *Byte) -> Unit {
 	var i: Nat8
 
@@ -304,7 +294,6 @@ func expandEncKey (k: *Key, rc: *Byte) -> Unit {
 }
 
 
-//@notnullargs
 func expandDecKey (k: *Key, rc: *Byte) -> Unit {
 	var i: Nat8
 
@@ -402,28 +391,24 @@ public func decrypt_ecb (ctx: *Context, block: *Block) -> Result {
 	}
 
 	addRoundKey_cpy(block, &ctx.deckey, &ctx.key)
-	shiftRows_inv(block)
-	subBytes_inv(block)
+	shiftRowsInv(block)
+	subBytesInv(block)
 
 	var rcon: Byte = 0x80
 	var i: Nat8
-	i = 14
-	while true {
-		i = i - 1
-		if i == 0 {
-			break
-		}
-
-		if ((Word8 i) and 1) == 1 {
+	i = 13
+	while i > 0 {
+		if (Word8 i and 1) == 1 {
 			expandDecKey(&ctx.key, &rcon)
 			addRoundKey(block, &ctx.key[16:32])
 		} else {
 			addRoundKey(block, &ctx.key[0:16])
 		}
 
-		mixColumns_inv(block)
-		shiftRows_inv(block)
-		subBytes_inv(block)
+		mixColumnsInv(block)
+		shiftRowsInv(block)
+		subBytesInv(block)
+		i = i - 1
 	}
 
 	addRoundKey(block, &ctx.key[0:16])

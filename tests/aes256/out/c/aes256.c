@@ -102,14 +102,11 @@ static inline uint8_t rj_sbox(uint8_t x) {
 
 
 __attribute__((always_inline))
-static inline uint8_t rj_sbox_inv(uint8_t x) {
+static inline uint8_t rj_sboxInv(uint8_t x) {
 	return ((uint8_t [256])SBOXINV)[x];
 }
 
 
-
-
-//@notnullargs
 static void subBytes(aes256_Block *block) {
 	uint8_t i = 0;
 	while (i < 16) {
@@ -119,19 +116,15 @@ static void subBytes(aes256_Block *block) {
 }
 
 
-
-//@notnullargs
-static void subBytes_inv(aes256_Block *block) {
+static void subBytesInv(aes256_Block *block) {
 	uint8_t i = 0;
 	while (i < 16) {
-		(*block)[i] = rj_sbox_inv((*block)[i]);
+		(*block)[i] = rj_sboxInv((*block)[i]);
 		i = i + 1;
 	}
 }
 
 
-
-//@notnullargs
 static void addRoundKey(aes256_Block *block, uint8_t (*k)[16]) {
 	uint8_t i = 0;
 	while (i < (uint8_t)16) {
@@ -141,8 +134,6 @@ static void addRoundKey(aes256_Block *block, uint8_t (*k)[16]) {
 }
 
 
-
-//@notnullargs
 static void addRoundKey_cpy(aes256_Block *block, aes256_Key *key, aes256_Key *cpk) {
 	uint8_t i = 0;
 	while (i < 16) {
@@ -155,8 +146,6 @@ static void addRoundKey_cpy(aes256_Block *block, aes256_Key *key, aes256_Key *cp
 }
 
 
-
-//@notnullargs
 static void shiftRows(aes256_Block *block) {
 	uint8_t i;
 	uint8_t j;// to make it potentially parallelable :)
@@ -183,9 +172,7 @@ static void shiftRows(aes256_Block *block) {
 }
 
 
-
-//@notnullargs
-static void shiftRows_inv(aes256_Block *block) {
+static void shiftRowsInv(aes256_Block *block) {
 	uint8_t i;
 	uint8_t j;// similar to shiftRows :)
 
@@ -211,8 +198,6 @@ static void shiftRows_inv(aes256_Block *block) {
 }
 
 
-
-//@notnullargs
 static void mixColumns(aes256_Block *block) {
 	uint8_t a;
 	uint8_t b;
@@ -236,9 +221,7 @@ static void mixColumns(aes256_Block *block) {
 }
 
 
-
-//@notnullargs
-static void mixColumns_inv(aes256_Block *block) {
+static void mixColumnsInv(aes256_Block *block) {
 	uint8_t a;
 	uint8_t b;
 	uint8_t c;
@@ -267,8 +250,6 @@ static void mixColumns_inv(aes256_Block *block) {
 }
 
 
-
-//@notnullargs
 static void expandEncKey(aes256_Key *k, uint8_t *rc) {
 	uint8_t i;
 
@@ -303,8 +284,6 @@ static void expandEncKey(aes256_Key *k, uint8_t *rc) {
 }
 
 
-
-//@notnullargs
 static void expandDecKey(aes256_Key *k, uint8_t *rc) {
 	uint8_t i;
 
@@ -402,28 +381,24 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 	}
 
 	addRoundKey_cpy(block, &ctx->deckey, &ctx->key);
-	shiftRows_inv(block);
-	subBytes_inv(block);
+	shiftRowsInv(block);
+	subBytesInv(block);
 
 	uint8_t rcon = 0x80;
 	uint8_t i;
-	i = 14;
-	while (true) {
-		i = i - 1;
-		if (i == 0) {
-			break;
-		}
-
-		if (((i) & 0x1) == 0x1) {
+	i = 13;
+	while (i > 0) {
+		if ((i & 0x1) == 0x1) {
 			expandDecKey(&ctx->key, &rcon);
 			addRoundKey(block, (uint8_t (*)[32 - 16])&ctx->key[16]);
 		} else {
 			addRoundKey(block, (uint8_t (*)[16 - 0])&ctx->key[0]);
 		}
 
-		mixColumns_inv(block);
-		shiftRows_inv(block);
-		subBytes_inv(block);
+		mixColumnsInv(block);
+		shiftRowsInv(block);
+		subBytesInv(block);
+		i = i - 1;
 	}
 
 	addRoundKey(block, (uint8_t (*)[16 - 0])&ctx->key[0]);
