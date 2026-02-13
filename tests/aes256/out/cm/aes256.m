@@ -361,19 +361,18 @@ public func encrypt_ecb (ctx: *Context, block: *Block) -> Result {
 	var rcon: Byte = 1
 	addRoundKey_cpy(block, &ctx.enckey, &ctx.key)
 
-	var i: Nat8
-	i = 1
-	while i < 14 {
+	var i: Nat8 = 0
+	while i < 13 {
+		i = i + 1
 		subBytes(block)
 		shiftRows(block)
 		mixColumns(block)
-		if ((Word8 i) and 1) == 1 {
+		if (Word8 i and 1) == 1 {
 			addRoundKey(block, &ctx.key[16:32])
 		} else {
 			expandEncKey(&ctx.key, &rcon)
 			addRoundKey(block, &ctx.key[0:16])
 		}
-		i = i + 1
 	}
 
 	subBytes(block)
@@ -395,8 +394,7 @@ public func decrypt_ecb (ctx: *Context, block: *Block) -> Result {
 	subBytesInv(block)
 
 	var rcon: Byte = 0x80
-	var i: Nat8
-	i = 13
+	var i: Nat8 = 13
 	while i > 0 {
 		if (Word8 i and 1) == 1 {
 			expandDecKey(&ctx.key, &rcon)
