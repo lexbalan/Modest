@@ -101,98 +101,98 @@ static inline uint8_t rj_sbox_inv(uint8_t x) {
 }
 
 
-static void subBytes(uint8_t (*buf)[]) {
+static void subBytes(uint8_t (*block)[]) {
 	uint8_t i = 0;
 	while (i < 16) {
-		(*buf)[i] = rj_sbox((*buf)[i]);
+		(*block)[i] = rj_sbox((*block)[i]);
 		i = i + 1;
 	}
 }
 
 
-static void subBytes_inv(uint8_t (*buf)[]) {
+static void subBytes_inv(uint8_t (*block)[]) {
 	uint8_t i = 0;
 	while (i < 16) {
-		(*buf)[i] = rj_sbox_inv((*buf)[i]);
+		(*block)[i] = rj_sbox_inv((*block)[i]);
 		i = i + 1;
 	}
 }
 
 
-static void addRoundKey(uint8_t (*buf)[], uint8_t (*key)[]) {
+static void addRoundKey(uint8_t (*block)[], uint8_t (*key)[]) {
 	uint8_t i = 0;
 	while (i < 16) {
-		(*buf)[i] = (*buf)[i] ^ (*key)[i];
+		(*block)[i] = (*block)[i] ^ (*key)[i];
 		i = i + 1;
 	}
 }
 
 
-static void addRoundKey_cpy(uint8_t (*buf)[], uint8_t (*key)[], uint8_t (*cpk)[]) {
+static void addRoundKey_cpy(uint8_t (*block)[], uint8_t (*key)[], uint8_t (*cpk)[]) {
 	uint8_t i = 0;
 	while (i < 16) {
 		const uint8_t yy = (*key)[i];
 		(*cpk)[i] = yy;
-		(*buf)[i] = (*buf)[i] ^ yy;
+		(*block)[i] = (*block)[i] ^ yy;
 		(*cpk)[16 + i] = (*key)[16 + i];
 		i = i + 1;
 	}
 }
 
 
-static void shiftRows(uint8_t (*buf)[]) {
+static void shiftRows(uint8_t (*block)[]) {
 	uint8_t i;
 	uint8_t j;// to make it potentially parallelable :)
 
-	i = (*buf)[1];
-	(*buf)[1] = (*buf)[5];
-	(*buf)[5] = (*buf)[9];
-	(*buf)[9] = (*buf)[13];
-	(*buf)[13] = i;
+	i = (*block)[1];
+	(*block)[1] = (*block)[5];
+	(*block)[5] = (*block)[9];
+	(*block)[9] = (*block)[13];
+	(*block)[13] = i;
 
-	i = (*buf)[10];
-	(*buf)[10] = (*buf)[2];
-	(*buf)[2] = i;
+	i = (*block)[10];
+	(*block)[10] = (*block)[2];
+	(*block)[2] = i;
 
-	j = (*buf)[3];
-	(*buf)[3] = (*buf)[15];
-	(*buf)[15] = (*buf)[11];
-	(*buf)[11] = (*buf)[7];
-	(*buf)[7] = j;
+	j = (*block)[3];
+	(*block)[3] = (*block)[15];
+	(*block)[15] = (*block)[11];
+	(*block)[11] = (*block)[7];
+	(*block)[7] = j;
 
-	j = (*buf)[14];
-	(*buf)[14] = (*buf)[6];
-	(*buf)[6] = j;
+	j = (*block)[14];
+	(*block)[14] = (*block)[6];
+	(*block)[6] = j;
 }
 
 
-static void shiftRows_inv(uint8_t (*buf)[]) {
+static void shiftRows_inv(uint8_t (*block)[]) {
 	uint8_t i;
 	uint8_t j;// similar to shiftRows :)
 
-	i = (*buf)[1];
-	(*buf)[1] = (*buf)[13];
-	(*buf)[13] = (*buf)[9];
-	(*buf)[9] = (*buf)[5];
-	(*buf)[5] = i;
+	i = (*block)[1];
+	(*block)[1] = (*block)[13];
+	(*block)[13] = (*block)[9];
+	(*block)[9] = (*block)[5];
+	(*block)[5] = i;
 
-	i = (*buf)[2];
-	(*buf)[2] = (*buf)[10];
-	(*buf)[10] = i;
+	i = (*block)[2];
+	(*block)[2] = (*block)[10];
+	(*block)[10] = i;
 
-	j = (*buf)[3];
-	(*buf)[3] = (*buf)[7];
-	(*buf)[7] = (*buf)[11];
-	(*buf)[11] = (*buf)[15];
-	(*buf)[15] = j;
+	j = (*block)[3];
+	(*block)[3] = (*block)[7];
+	(*block)[7] = (*block)[11];
+	(*block)[11] = (*block)[15];
+	(*block)[15] = j;
 
-	j = (*buf)[6];
-	(*buf)[6] = (*buf)[14];
-	(*buf)[14] = j;
+	j = (*block)[6];
+	(*block)[6] = (*block)[14];
+	(*block)[14] = j;
 }
 
 
-static void mixColumns(uint8_t (*buf)[]) {
+static void mixColumns(uint8_t (*block)[]) {
 	uint8_t a;
 	uint8_t b;
 	uint8_t c;
@@ -201,21 +201,21 @@ static void mixColumns(uint8_t (*buf)[]) {
 
 	uint8_t i = 0;
 	while (i < 16) {
-		a = (*buf)[i + 0];
-		b = (*buf)[i + 1];
-		c = (*buf)[i + 2];
-		d = (*buf)[i + 3];
+		a = (*block)[i + 0];
+		b = (*block)[i + 1];
+		c = (*block)[i + 2];
+		d = (*block)[i + 3];
 		e = a ^ b ^ c ^ d;
-		(*buf)[i + 0] = (*buf)[i + 0] ^ e ^ rj_xtime(a ^ b);
-		(*buf)[i + 1] = (*buf)[i + 1] ^ e ^ rj_xtime(b ^ c);
-		(*buf)[i + 2] = (*buf)[i + 2] ^ e ^ rj_xtime(c ^ d);
-		(*buf)[i + 3] = (*buf)[i + 3] ^ e ^ rj_xtime(d ^ a);
+		(*block)[i + 0] = (*block)[i + 0] ^ e ^ rj_xtime(a ^ b);
+		(*block)[i + 1] = (*block)[i + 1] ^ e ^ rj_xtime(b ^ c);
+		(*block)[i + 2] = (*block)[i + 2] ^ e ^ rj_xtime(c ^ d);
+		(*block)[i + 3] = (*block)[i + 3] ^ e ^ rj_xtime(d ^ a);
 		i = i + 4;
 	}
 }
 
 
-static void mixColumns_inv(uint8_t (*buf)[]) {
+static void mixColumns_inv(uint8_t (*block)[]) {
 	uint8_t a;
 	uint8_t b;
 	uint8_t c;
@@ -227,18 +227,18 @@ static void mixColumns_inv(uint8_t (*buf)[]) {
 
 	uint8_t i = 0;
 	while (i < 16) {
-		a = (*buf)[i + 0];
-		b = (*buf)[i + 1];
-		c = (*buf)[i + 2];
-		d = (*buf)[i + 3];
+		a = (*block)[i + 0];
+		b = (*block)[i + 1];
+		c = (*block)[i + 2];
+		d = (*block)[i + 3];
 		e = a ^ b ^ c ^ d;
 		z = rj_xtime(e);
 		x = e ^ rj_xtime(rj_xtime(z ^ a ^ c));
 		y = e ^ rj_xtime(rj_xtime(z ^ b ^ d));
-		(*buf)[i + 0] = (*buf)[i + 0] ^ x ^ rj_xtime(a ^ b);
-		(*buf)[i + 1] = (*buf)[i + 1] ^ y ^ rj_xtime(b ^ c);
-		(*buf)[i + 2] = (*buf)[i + 2] ^ x ^ rj_xtime(c ^ d);
-		(*buf)[i + 3] = (*buf)[i + 3] ^ y ^ rj_xtime(d ^ a);
+		(*block)[i + 0] = (*block)[i + 0] ^ x ^ rj_xtime(a ^ b);
+		(*block)[i + 1] = (*block)[i + 1] ^ y ^ rj_xtime(b ^ c);
+		(*block)[i + 2] = (*block)[i + 2] ^ x ^ rj_xtime(c ^ d);
+		(*block)[i + 3] = (*block)[i + 3] ^ y ^ rj_xtime(d ^ a);
 		i = i + 4;
 	}
 }
@@ -323,13 +323,13 @@ aes256_Result aes256_init(aes256_Context *ctx, aes256_Key *key) {
 		return AES256_RESULT_ERROR;
 	}
 
-	ctx->deckey = *key;
-	ctx->enckey = *key;
+	memcpy(&ctx->deckey, key, sizeof(aes256_Key));
+	memcpy(&ctx->enckey, key, sizeof(aes256_Key));
 
 	uint8_t rcon = 0x1;
 	uint8_t i = 0;
 	while (i < 7) {
-		expandEncKey(&ctx->deckey.raw, &rcon);
+		expandEncKey(&ctx->deckey, &rcon);
 		i = i + 1;
 	}
 
@@ -342,55 +342,57 @@ aes256_Result aes256_deinit(aes256_Context *ctx) {
 		return AES256_RESULT_ERROR;
 	}
 
-	const aes256_Key zeroKey = (aes256_Key){0};
-	ctx->key = zeroKey;
-	ctx->enckey = zeroKey;
-	ctx->deckey = zeroKey;
+	// TODO: const array with memset(!) in C backend
+	//let zeroKey = Key []
+	aes256_Key zeroKey = {0};
+	memcpy(&ctx->key, &zeroKey, sizeof(aes256_Key));
+	memcpy(&ctx->enckey, &zeroKey, sizeof(aes256_Key));
+	memcpy(&ctx->deckey, &zeroKey, sizeof(aes256_Key));
 
 	return AES256_RESULT_SUCCESS;
 }
 
 
-aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, aes256_Block *buf) {
-	if (ctx == NULL || buf == NULL) {
+aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
+	if (ctx == NULL || block == NULL) {
 		return AES256_RESULT_ERROR;
 	}
 
 	uint8_t rcon = 0x1;
-	addRoundKey_cpy(&buf->raw, &ctx->enckey.raw, &ctx->key.raw);
+	addRoundKey_cpy(block, &ctx->enckey, &ctx->key);
 
 	uint8_t i;
 	i = 1;
 	while (i < 14) {
-		subBytes(&buf->raw);
-		shiftRows(&buf->raw);
-		mixColumns(&buf->raw);
+		subBytes(block);
+		shiftRows(block);
+		mixColumns(block);
 		if (((i) & 0x1) == 0x1) {
-			addRoundKey(&buf->raw, (uint8_t (*)[])&ctx->key.raw[16]);
+			addRoundKey(block, (uint8_t (*)[])&ctx->key[16]);
 		} else {
-			expandEncKey(&ctx->key.raw, &rcon);
-			addRoundKey(&buf->raw, &ctx->key.raw);
+			expandEncKey(&ctx->key, &rcon);
+			addRoundKey(block, &ctx->key);
 		}
 		i = i + 1;
 	}
 
-	subBytes(&buf->raw);
-	shiftRows(&buf->raw);
-	expandEncKey(&ctx->key.raw, &rcon);
-	addRoundKey(&buf->raw, &ctx->key.raw);
+	subBytes(block);
+	shiftRows(block);
+	expandEncKey(&ctx->key, &rcon);
+	addRoundKey(block, &ctx->key);
 
 	return AES256_RESULT_SUCCESS;
 }
 
 
-aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, aes256_Block *buf) {
-	if (ctx == NULL || buf == NULL) {
+aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
+	if (ctx == NULL || block == NULL) {
 		return AES256_RESULT_ERROR;
 	}
 
-	addRoundKey_cpy(&buf->raw, &ctx->deckey.raw, &ctx->key.raw);
-	shiftRows_inv(&buf->raw);
-	subBytes_inv(&buf->raw);
+	addRoundKey_cpy(block, &ctx->deckey, &ctx->key);
+	shiftRows_inv(block);
+	subBytes_inv(block);
 
 	uint8_t rcon = 0x80;
 	uint8_t i;
@@ -402,18 +404,18 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, aes256_Block *buf) {
 		}
 
 		if (((i) & 0x1) == 0x1) {
-			expandDecKey(&ctx->key.raw, &rcon);
-			addRoundKey(&buf->raw, (uint8_t (*)[])&ctx->key.raw[16]);
+			expandDecKey(&ctx->key, &rcon);
+			addRoundKey(block, (uint8_t (*)[])&ctx->key[16]);
 		} else {
-			addRoundKey(&buf->raw, &ctx->key.raw);
+			addRoundKey(block, &ctx->key);
 		}
 
-		mixColumns_inv(&buf->raw);
-		shiftRows_inv(&buf->raw);
-		subBytes_inv(&buf->raw);
+		mixColumns_inv(block);
+		shiftRows_inv(block);
+		subBytes_inv(block);
 	}
 
-	addRoundKey(&buf->raw, &ctx->key.raw);
+	addRoundKey(block, &ctx->key);
 
 	return AES256_RESULT_SUCCESS;
 }

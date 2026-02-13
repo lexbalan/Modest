@@ -2243,7 +2243,7 @@ def def_var_common(x):
 	# Переменная может быть типа []X если она внешняя
 	is_not_extern = getAnno(x, 'extern') == None
 	if t.is_forbidden_var(open_array_forbidden=is_not_extern):
-		error("unsuitable variable type", x['type']['ti'])
+		error("unsuitable variable type", x['id']['ti'])
 
 	var_value = ValueVar(t, id, init_value=iv, ti=id.ti)
 	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
