@@ -4,7 +4,7 @@
 
 
 
-public type Result = @brand Nat8
+public type Result = @brand Word8
 
 public const resultSuccess = Result 0
 public const resultError = Result 1

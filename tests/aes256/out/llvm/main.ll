@@ -211,7 +211,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- 1
 
 ; from import "aes"
-%aes256_Result = type %Nat8;
+%aes256_Result = type %Word8;
 %aes256_Key = type [32 x %Byte];
 %aes256_Block = type [16 x %Byte];
 %aes256_Context = type {

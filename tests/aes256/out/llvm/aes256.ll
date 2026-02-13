@@ -119,7 +119,7 @@ break_2:
 ; -- endstrings --
 
 ; thx: https://github.com/ilvn/aes256/tree/main
-%aes256_Result = type %Nat8;
+%aes256_Result = type %Word8;
 %aes256_Key = type [32 x %Byte];
 %aes256_Block = type [16 x %Byte];
 %aes256_Context = type {
@@ -1683,37 +1683,39 @@ define %aes256_Result @aes256_init(%aes256_Context* %ctx, %aes256_Key* %key) {
 	%3 = or %Bool %1, %2
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
-	ret %aes256_Result 1
+	%4 = bitcast i8 1 to %aes256_Result
+	ret %aes256_Result %4
 	br label %endif_0
 endif_0:
-	%5 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 2
-	%6 = load %aes256_Key, %aes256_Key* %key
-	%7 = zext i8 32 to %Nat32
-	store %aes256_Key %6, %aes256_Key* %5
-	%8 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 1
-	%9 = load %aes256_Key, %aes256_Key* %key
-	%10 = zext i8 32 to %Nat32
-	store %aes256_Key %9, %aes256_Key* %8
-	%11 = alloca %Byte, align 1
-	%12 = bitcast i8 1 to %Byte
-	store %Byte %12, %Byte* %11
-	%13 = alloca %Nat8, align 1
-	store %Nat8 0, %Nat8* %13
+	%6 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 2
+	%7 = load %aes256_Key, %aes256_Key* %key
+	%8 = zext i8 32 to %Nat32
+	store %aes256_Key %7, %aes256_Key* %6
+	%9 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 1
+	%10 = load %aes256_Key, %aes256_Key* %key
+	%11 = zext i8 32 to %Nat32
+	store %aes256_Key %10, %aes256_Key* %9
+	%12 = alloca %Byte, align 1
+	%13 = bitcast i8 1 to %Byte
+	store %Byte %13, %Byte* %12
+	%14 = alloca %Nat8, align 1
+	store %Nat8 0, %Nat8* %14
 ; while_1
 	br label %again_1
 again_1:
-	%14 = load %Nat8, %Nat8* %13
-	%15 = icmp ult %Nat8 %14, 7
-	br %Bool %15 , label %body_1, label %break_1
+	%15 = load %Nat8, %Nat8* %14
+	%16 = icmp ult %Nat8 %15, 7
+	br %Bool %16 , label %body_1, label %break_1
 body_1:
-	%16 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 2
-	call void @expandEncKey(%aes256_Key* %16, %Byte* %11)
-	%17 = load %Nat8, %Nat8* %13
-	%18 = add %Nat8 %17, 1
-	store %Nat8 %18, %Nat8* %13
+	%17 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 2
+	call void @expandEncKey(%aes256_Key* %17, %Byte* %12)
+	%18 = load %Nat8, %Nat8* %14
+	%19 = add %Nat8 %18, 1
+	store %Nat8 %19, %Nat8* %14
 	br label %again_1
 break_1:
-	ret %aes256_Result 0
+	%20 = bitcast i8 0 to %aes256_Result
+	ret %aes256_Result %20
 }
 
 define %aes256_Result @aes256_encrypt_ecb(%aes256_Context* %ctx, %aes256_Block* %block) {
@@ -1723,67 +1725,69 @@ define %aes256_Result @aes256_encrypt_ecb(%aes256_Context* %ctx, %aes256_Block* 
 	%3 = or %Bool %1, %2
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
-	ret %aes256_Result 1
+	%4 = bitcast i8 1 to %aes256_Result
+	ret %aes256_Result %4
 	br label %endif_0
 endif_0:
-	%5 = alloca %Byte, align 1
-	%6 = bitcast i8 1 to %Byte
-	store %Byte %6, %Byte* %5
-	%7 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 1
-	%8 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	call void @addRoundKeyCpy(%aes256_Block* %block, %aes256_Key* %7, %aes256_Key* %8)
-	%9 = alloca %Nat8, align 1
-	store %Nat8 0, %Nat8* %9
+	%6 = alloca %Byte, align 1
+	%7 = bitcast i8 1 to %Byte
+	store %Byte %7, %Byte* %6
+	%8 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 1
+	%9 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	call void @addRoundKeyCpy(%aes256_Block* %block, %aes256_Key* %8, %aes256_Key* %9)
+	%10 = alloca %Nat8, align 1
+	store %Nat8 0, %Nat8* %10
 ; while_1
 	br label %again_1
 again_1:
-	%10 = load %Nat8, %Nat8* %9
-	%11 = icmp ult %Nat8 %10, 13
-	br %Bool %11 , label %body_1, label %break_1
+	%11 = load %Nat8, %Nat8* %10
+	%12 = icmp ult %Nat8 %11, 13
+	br %Bool %12 , label %body_1, label %break_1
 body_1:
-	%12 = load %Nat8, %Nat8* %9
-	%13 = add %Nat8 %12, 1
-	store %Nat8 %13, %Nat8* %9
+	%13 = load %Nat8, %Nat8* %10
+	%14 = add %Nat8 %13, 1
+	store %Nat8 %14, %Nat8* %10
 	call void @subBytes(%aes256_Block* %block)
 	call void @shiftRows(%aes256_Block* %block)
 	call void @mixColumns(%aes256_Block* %block)
 ; if_1
-	%14 = load %Nat8, %Nat8* %9
-	%15 = bitcast %Nat8 %14 to %Word8
-	%16 = bitcast i8 1 to %Word8
-	%17 = and %Word8 %15, %16
-	%18 = bitcast i8 1 to %Word8
-	%19 = icmp eq %Word8 %17, %18
-	br %Bool %19 , label %then_1, label %else_1
+	%15 = load %Nat8, %Nat8* %10
+	%16 = bitcast %Nat8 %15 to %Word8
+	%17 = bitcast i8 1 to %Word8
+	%18 = and %Word8 %16, %17
+	%19 = bitcast i8 1 to %Word8
+	%20 = icmp eq %Word8 %18, %19
+	br %Bool %20 , label %then_1, label %else_1
 then_1:
-	%20 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	%21 = zext i8 16 to %Nat32
-	%22 = getelementptr %aes256_Key, %aes256_Key* %20, %Int32 0, %Nat32 %21
-	%23 = bitcast %Byte* %22 to [16 x %Byte]*
-	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %23)
+	%21 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	%22 = zext i8 16 to %Nat32
+	%23 = getelementptr %aes256_Key, %aes256_Key* %21, %Int32 0, %Nat32 %22
+	%24 = bitcast %Byte* %23 to [16 x %Byte]*
+	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %24)
 	br label %endif_1
 else_1:
-	%24 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	call void @expandEncKey(%aes256_Key* %24, %Byte* %5)
 	%25 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	%26 = zext i8 0 to %Nat32
-	%27 = getelementptr %aes256_Key, %aes256_Key* %25, %Int32 0, %Nat32 %26
-	%28 = bitcast %Byte* %27 to [16 x %Byte]*
-	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %28)
+	call void @expandEncKey(%aes256_Key* %25, %Byte* %6)
+	%26 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	%27 = zext i8 0 to %Nat32
+	%28 = getelementptr %aes256_Key, %aes256_Key* %26, %Int32 0, %Nat32 %27
+	%29 = bitcast %Byte* %28 to [16 x %Byte]*
+	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %29)
 	br label %endif_1
 endif_1:
 	br label %again_1
 break_1:
 	call void @subBytes(%aes256_Block* %block)
 	call void @shiftRows(%aes256_Block* %block)
-	%29 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	call void @expandEncKey(%aes256_Key* %29, %Byte* %5)
 	%30 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	%31 = zext i8 0 to %Nat32
-	%32 = getelementptr %aes256_Key, %aes256_Key* %30, %Int32 0, %Nat32 %31
-	%33 = bitcast %Byte* %32 to [16 x %Byte]*
-	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %33)
-	ret %aes256_Result 0
+	call void @expandEncKey(%aes256_Key* %30, %Byte* %6)
+	%31 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	%32 = zext i8 0 to %Nat32
+	%33 = getelementptr %aes256_Key, %aes256_Key* %31, %Int32 0, %Nat32 %32
+	%34 = bitcast %Byte* %33 to [16 x %Byte]*
+	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %34)
+	%35 = bitcast i8 0 to %aes256_Result
+	ret %aes256_Result %35
 }
 
 define %aes256_Result @aes256_decrypt_ecb(%aes256_Context* %ctx, %aes256_Block* %block) {
@@ -1793,64 +1797,66 @@ define %aes256_Result @aes256_decrypt_ecb(%aes256_Context* %ctx, %aes256_Block* 
 	%3 = or %Bool %1, %2
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
-	ret %aes256_Result 1
+	%4 = bitcast i8 1 to %aes256_Result
+	ret %aes256_Result %4
 	br label %endif_0
 endif_0:
-	%5 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 2
-	%6 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	call void @addRoundKeyCpy(%aes256_Block* %block, %aes256_Key* %5, %aes256_Key* %6)
+	%6 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 2
+	%7 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	call void @addRoundKeyCpy(%aes256_Block* %block, %aes256_Key* %6, %aes256_Key* %7)
 	call void @shiftRowsInv(%aes256_Block* %block)
 	call void @subBytesInv(%aes256_Block* %block)
-	%7 = alloca %Byte, align 1
-	store %Byte 128, %Byte* %7
-	%8 = alloca %Nat8, align 1
-	store %Nat8 13, %Nat8* %8
+	%8 = alloca %Byte, align 1
+	store %Byte 128, %Byte* %8
+	%9 = alloca %Nat8, align 1
+	store %Nat8 13, %Nat8* %9
 ; while_1
 	br label %again_1
 again_1:
-	%9 = load %Nat8, %Nat8* %8
-	%10 = icmp ugt %Nat8 %9, 0
-	br %Bool %10 , label %body_1, label %break_1
+	%10 = load %Nat8, %Nat8* %9
+	%11 = icmp ugt %Nat8 %10, 0
+	br %Bool %11 , label %body_1, label %break_1
 body_1:
 ; if_1
-	%11 = load %Nat8, %Nat8* %8
-	%12 = bitcast %Nat8 %11 to %Word8
-	%13 = bitcast i8 1 to %Word8
-	%14 = and %Word8 %12, %13
-	%15 = bitcast i8 1 to %Word8
-	%16 = icmp eq %Word8 %14, %15
-	br %Bool %16 , label %then_1, label %else_1
+	%12 = load %Nat8, %Nat8* %9
+	%13 = bitcast %Nat8 %12 to %Word8
+	%14 = bitcast i8 1 to %Word8
+	%15 = and %Word8 %13, %14
+	%16 = bitcast i8 1 to %Word8
+	%17 = icmp eq %Word8 %15, %16
+	br %Bool %17 , label %then_1, label %else_1
 then_1:
-	%17 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	call void @expandDecKey(%aes256_Key* %17, %Byte* %7)
 	%18 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	%19 = zext i8 16 to %Nat32
-	%20 = getelementptr %aes256_Key, %aes256_Key* %18, %Int32 0, %Nat32 %19
-	%21 = bitcast %Byte* %20 to [16 x %Byte]*
-	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %21)
+	call void @expandDecKey(%aes256_Key* %18, %Byte* %8)
+	%19 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	%20 = zext i8 16 to %Nat32
+	%21 = getelementptr %aes256_Key, %aes256_Key* %19, %Int32 0, %Nat32 %20
+	%22 = bitcast %Byte* %21 to [16 x %Byte]*
+	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %22)
 	br label %endif_1
 else_1:
-	%22 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	%23 = zext i8 0 to %Nat32
-	%24 = getelementptr %aes256_Key, %aes256_Key* %22, %Int32 0, %Nat32 %23
-	%25 = bitcast %Byte* %24 to [16 x %Byte]*
-	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %25)
+	%23 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	%24 = zext i8 0 to %Nat32
+	%25 = getelementptr %aes256_Key, %aes256_Key* %23, %Int32 0, %Nat32 %24
+	%26 = bitcast %Byte* %25 to [16 x %Byte]*
+	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %26)
 	br label %endif_1
 endif_1:
 	call void @mixColumnsInv(%aes256_Block* %block)
 	call void @shiftRowsInv(%aes256_Block* %block)
 	call void @subBytesInv(%aes256_Block* %block)
-	%26 = load %Nat8, %Nat8* %8
-	%27 = sub %Nat8 %26, 1
-	store %Nat8 %27, %Nat8* %8
+	%27 = load %Nat8, %Nat8* %9
+	%28 = sub %Nat8 %27, 1
+	store %Nat8 %28, %Nat8* %9
 	br label %again_1
 break_1:
-	%28 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	%29 = zext i8 0 to %Nat32
-	%30 = getelementptr %aes256_Key, %aes256_Key* %28, %Int32 0, %Nat32 %29
-	%31 = bitcast %Byte* %30 to [16 x %Byte]*
-	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %31)
-	ret %aes256_Result 0
+	%29 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	%30 = zext i8 0 to %Nat32
+	%31 = getelementptr %aes256_Key, %aes256_Key* %29, %Int32 0, %Nat32 %30
+	%32 = bitcast %Byte* %31 to [16 x %Byte]*
+	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %32)
+	%33 = bitcast i8 0 to %aes256_Result
+	ret %aes256_Result %33
 }
 
 define %aes256_Result @aes256_deinit(%aes256_Context* %ctx) {
@@ -1858,30 +1864,32 @@ define %aes256_Result @aes256_deinit(%aes256_Context* %ctx) {
 	%1 = icmp eq %aes256_Context* %ctx, null
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret %aes256_Result 1
+	%2 = bitcast i8 1 to %aes256_Result
+	ret %aes256_Result %2
 	br label %endif_0
 endif_0:
 
 	; TODO: const array with memset(!) in C backend
 	;let zeroKey = Key []
-	%3 = alloca %aes256_Key, align 1
-	%4 = zext i8 32 to %Nat32
-	%5 = mul %Nat32 %4, 1
-	%6 = bitcast %aes256_Key* %3 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %6, i8 0, %Nat32 %5, i1 0)
-	%7 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	%8 = load %aes256_Key, %aes256_Key* %3
-	%9 = zext i8 32 to %Nat32
-	store %aes256_Key %8, %aes256_Key* %7
-	%10 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 1
-	%11 = load %aes256_Key, %aes256_Key* %3
-	%12 = zext i8 32 to %Nat32
-	store %aes256_Key %11, %aes256_Key* %10
-	%13 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 2
-	%14 = load %aes256_Key, %aes256_Key* %3
-	%15 = zext i8 32 to %Nat32
-	store %aes256_Key %14, %aes256_Key* %13
-	ret %aes256_Result 0
+	%4 = alloca %aes256_Key, align 1
+	%5 = zext i8 32 to %Nat32
+	%6 = mul %Nat32 %5, 1
+	%7 = bitcast %aes256_Key* %4 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %7, i8 0, %Nat32 %6, i1 0)
+	%8 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	%9 = load %aes256_Key, %aes256_Key* %4
+	%10 = zext i8 32 to %Nat32
+	store %aes256_Key %9, %aes256_Key* %8
+	%11 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 1
+	%12 = load %aes256_Key, %aes256_Key* %4
+	%13 = zext i8 32 to %Nat32
+	store %aes256_Key %12, %aes256_Key* %11
+	%14 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 2
+	%15 = load %aes256_Key, %aes256_Key* %4
+	%16 = zext i8 32 to %Nat32
+	store %aes256_Key %15, %aes256_Key* %14
+	%17 = bitcast i8 0 to %aes256_Result
+	ret %aes256_Result %17
 }
 
 
