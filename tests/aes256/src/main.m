@@ -110,14 +110,14 @@ func runTest (test: *TestCase) -> Bool {
 	aes.encrypt_ecb(&ctx, &test.pt)
 
 	if test.pt != test.ct {
-		printf("encrypt FAILED")
+		printf("FAILED (encrypt)")
 		return false
 	}
 
 	aes.decrypt_ecb(&ctx, &test.pt)
 
 	if test.pt != test.pt {
-		printf("decrypt FAILED")
+		printf("FAILED (decrypt)")
 		return false
 	}
 

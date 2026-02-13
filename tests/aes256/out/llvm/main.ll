@@ -228,8 +228,8 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 ; end from import "aes"
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [15 x i8] [i8 101, i8 110, i8 99, i8 114, i8 121, i8 112, i8 116, i8 32, i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 0]
-@str2 = private constant [15 x i8] [i8 100, i8 101, i8 99, i8 114, i8 121, i8 112, i8 116, i8 32, i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 0]
+@str1 = private constant [17 x i8] [i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 32, i8 40, i8 101, i8 110, i8 99, i8 114, i8 121, i8 112, i8 116, i8 41, i8 0]
+@str2 = private constant [17 x i8] [i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 32, i8 40, i8 100, i8 101, i8 99, i8 114, i8 121, i8 112, i8 116, i8 41, i8 0]
 @str3 = private constant [7 x i8] [i8 80, i8 65, i8 83, i8 83, i8 69, i8 68, i8 0]
 @str4 = private constant [18 x i8] [i8 114, i8 117, i8 110, i8 32, i8 65, i8 69, i8 83, i8 45, i8 50, i8 53, i8 54, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str5 = private constant [14 x i8] [i8 114, i8 117, i8 110, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 100, i8 32, i8 0]
@@ -837,7 +837,7 @@ define internal %Bool @runTest(%TestCase* %test) {
 	%11 = icmp eq %Bool %10, 0
 	br %Bool %11 , label %then_0, label %endif_0
 then_0:
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
@@ -852,7 +852,7 @@ endif_0:
 	%21 = icmp eq %Bool %20, 0
 	br %Bool %21 , label %then_1, label %endif_1
 then_1:
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*))
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:

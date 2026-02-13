@@ -94,14 +94,14 @@ static bool runTest(struct test_case *test) {
 	aes256_encrypt_ecb(&ctx, &test->pt);
 
 	if (memcmp(&test->pt, &test->ct, sizeof(aes256_Block)) != 0) {
-		printf("encrypt FAILED");
+		printf("FAILED (encrypt)");
 		return false;
 	}
 
 	aes256_decrypt_ecb(&ctx, &test->pt);
 
 	if (memcmp(&test->pt, &test->pt, sizeof(aes256_Block)) != 0) {
-		printf("decrypt FAILED");
+		printf("FAILED (decrypt)");
 		return false;
 	}
 
