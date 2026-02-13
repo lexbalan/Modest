@@ -10,7 +10,6 @@ var table: [tableSize]Word32
 
 // initialize table
 public func init () -> Unit {
-	//var crc: Word32
 	var i = Nat32 0
 	while i < tableSize {
 		var crc = Word32 i

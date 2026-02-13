@@ -199,7 +199,6 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 @table = internal global [256 x %Word32] zeroinitializer
 define void @crc32_init() {
-	;var crc: Word32
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
 ; while_1

@@ -2902,11 +2902,11 @@ def add_spices_def(x, ast_atts):
 			x.value.addAttribute("cbyvalue")
 
 		else:
-			print(a)
-			exit(1)
-			key = a['args'][0]['value']['str']
-			print(key)
-			add_att(x, key)
+			warning("unsupported annotation", a['ti'])
+#			exit(1)
+#			key = a['args'][0]['value']['str']
+#			print(key)
+#			add_att(x, key)
 	return x
 
 

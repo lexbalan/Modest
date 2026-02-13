@@ -91,7 +91,7 @@ def type_print_func(t, print_aka=True):
 
 def type_print(t, print_aka=True):
 	assert isinstance(t, Type)
-	from backend.cm import str_type
+	from backend.modest import str_type
 	print(str_type(t), end='')
 	return
 

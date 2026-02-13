@@ -1782,6 +1782,7 @@ class Parser:
 
 	def parse_def_func(self):
 		ti_start = self.textInfo()
+		#info("??", TextInfo(start=ti_start, mid=ti_start, end=ti_start))
 		self.match("func")
 		id = self.parse_identifier()
 		ftyp = self.expr_type()

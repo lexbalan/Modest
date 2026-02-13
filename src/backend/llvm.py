@@ -1886,7 +1886,8 @@ def do_eval_lengthof(x):
 		handleVLA(t)
 		return t.runtimeVolume
 
-	return llvm_value_num(typeInt32, t.length)
+	return llvm_value_num(typeInt32, t.volume.asset)
+
 
 
 #
