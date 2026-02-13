@@ -6,10 +6,16 @@
 #include <stdbool.h>
 #include <string.h>
 
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 
 
 // thx: https://github.com/ilvn/aes256/tree/main
 
+
+
+//@pure
 static uint8_t rj_xtime(uint8_t x) {
 	const uint8_t y = 0xFF & (x << 1);
 	if ((x & 0x80) != 0x0) {
@@ -101,7 +107,10 @@ static inline uint8_t rj_sbox_inv(uint8_t x) {
 }
 
 
-static void subBytes(uint8_t (*block)[]) {
+
+
+//@notnullargs
+static void subBytes(aes256_Block *block) {
 	uint8_t i = 0;
 	while (i < 16) {
 		(*block)[i] = rj_sbox((*block)[i]);
@@ -110,7 +119,9 @@ static void subBytes(uint8_t (*block)[]) {
 }
 
 
-static void subBytes_inv(uint8_t (*block)[]) {
+
+//@notnullargs
+static void subBytes_inv(aes256_Block *block) {
 	uint8_t i = 0;
 	while (i < 16) {
 		(*block)[i] = rj_sbox_inv((*block)[i]);
@@ -119,16 +130,20 @@ static void subBytes_inv(uint8_t (*block)[]) {
 }
 
 
-static void addRoundKey(uint8_t (*block)[], uint8_t (*key)[]) {
+
+//@notnullargs
+static void addRoundKey(aes256_Block *block, uint8_t (*k)[16]) {
 	uint8_t i = 0;
-	while (i < 16) {
-		(*block)[i] = (*block)[i] ^ (*key)[i];
+	while (i < (uint8_t)16) {
+		(*block)[i] = (*block)[i] ^ (*k)[i];
 		i = i + 1;
 	}
 }
 
 
-static void addRoundKey_cpy(uint8_t (*block)[], uint8_t (*key)[], uint8_t (*cpk)[]) {
+
+//@notnullargs
+static void addRoundKey_cpy(aes256_Block *block, aes256_Key *key, aes256_Key *cpk) {
 	uint8_t i = 0;
 	while (i < 16) {
 		const uint8_t yy = (*key)[i];
@@ -140,7 +155,9 @@ static void addRoundKey_cpy(uint8_t (*block)[], uint8_t (*key)[], uint8_t (*cpk)
 }
 
 
-static void shiftRows(uint8_t (*block)[]) {
+
+//@notnullargs
+static void shiftRows(aes256_Block *block) {
 	uint8_t i;
 	uint8_t j;// to make it potentially parallelable :)
 
@@ -166,7 +183,9 @@ static void shiftRows(uint8_t (*block)[]) {
 }
 
 
-static void shiftRows_inv(uint8_t (*block)[]) {
+
+//@notnullargs
+static void shiftRows_inv(aes256_Block *block) {
 	uint8_t i;
 	uint8_t j;// similar to shiftRows :)
 
@@ -192,7 +211,9 @@ static void shiftRows_inv(uint8_t (*block)[]) {
 }
 
 
-static void mixColumns(uint8_t (*block)[]) {
+
+//@notnullargs
+static void mixColumns(aes256_Block *block) {
 	uint8_t a;
 	uint8_t b;
 	uint8_t c;
@@ -215,7 +236,9 @@ static void mixColumns(uint8_t (*block)[]) {
 }
 
 
-static void mixColumns_inv(uint8_t (*block)[]) {
+
+//@notnullargs
+static void mixColumns_inv(aes256_Block *block) {
 	uint8_t a;
 	uint8_t b;
 	uint8_t c;
@@ -244,7 +267,9 @@ static void mixColumns_inv(uint8_t (*block)[]) {
 }
 
 
-static void expandEncKey(uint8_t (*k)[], uint8_t *rc) {
+
+//@notnullargs
+static void expandEncKey(aes256_Key *k, uint8_t *rc) {
 	uint8_t i;
 
 	(*k)[0] = (*k)[0] ^ rj_sbox((*k)[29]) ^ *rc;
@@ -278,7 +303,9 @@ static void expandEncKey(uint8_t (*k)[], uint8_t *rc) {
 }
 
 
-static void expandDecKey(uint8_t (*k)[], uint8_t *rc) {
+
+//@notnullargs
+static void expandDecKey(aes256_Key *k, uint8_t *rc) {
 	uint8_t i;
 
 	i = 28;
@@ -337,22 +364,6 @@ aes256_Result aes256_init(aes256_Context *ctx, aes256_Key *key) {
 }
 
 
-aes256_Result aes256_deinit(aes256_Context *ctx) {
-	if (ctx == NULL) {
-		return AES256_RESULT_ERROR;
-	}
-
-	// TODO: const array with memset(!) in C backend
-	//let zeroKey = Key []
-	aes256_Key zeroKey = {0};
-	memcpy(&ctx->key, &zeroKey, sizeof(aes256_Key));
-	memcpy(&ctx->enckey, &zeroKey, sizeof(aes256_Key));
-	memcpy(&ctx->deckey, &zeroKey, sizeof(aes256_Key));
-
-	return AES256_RESULT_SUCCESS;
-}
-
-
 aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 	if (ctx == NULL || block == NULL) {
 		return AES256_RESULT_ERROR;
@@ -368,10 +379,10 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 		shiftRows(block);
 		mixColumns(block);
 		if (((i) & 0x1) == 0x1) {
-			addRoundKey(block, (uint8_t (*)[])&ctx->key[16]);
+			addRoundKey(block, (uint8_t (*)[32 - 16])&ctx->key[16]);
 		} else {
 			expandEncKey(&ctx->key, &rcon);
-			addRoundKey(block, &ctx->key);
+			addRoundKey(block, (uint8_t (*)[16 - 0])&ctx->key[0]);
 		}
 		i = i + 1;
 	}
@@ -379,7 +390,7 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 	subBytes(block);
 	shiftRows(block);
 	expandEncKey(&ctx->key, &rcon);
-	addRoundKey(block, &ctx->key);
+	addRoundKey(block, (uint8_t (*)[16 - 0])&ctx->key[0]);
 
 	return AES256_RESULT_SUCCESS;
 }
@@ -405,9 +416,9 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 
 		if (((i) & 0x1) == 0x1) {
 			expandDecKey(&ctx->key, &rcon);
-			addRoundKey(block, (uint8_t (*)[])&ctx->key[16]);
+			addRoundKey(block, (uint8_t (*)[32 - 16])&ctx->key[16]);
 		} else {
-			addRoundKey(block, &ctx->key);
+			addRoundKey(block, (uint8_t (*)[16 - 0])&ctx->key[0]);
 		}
 
 		mixColumns_inv(block);
@@ -415,7 +426,23 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 		subBytes_inv(block);
 	}
 
-	addRoundKey(block, &ctx->key);
+	addRoundKey(block, (uint8_t (*)[16 - 0])&ctx->key[0]);
+
+	return AES256_RESULT_SUCCESS;
+}
+
+
+aes256_Result aes256_deinit(aes256_Context *ctx) {
+	if (ctx == NULL) {
+		return AES256_RESULT_ERROR;
+	}
+
+	// TODO: const array with memset(!) in C backend
+	//let zeroKey = Key []
+	aes256_Key zeroKey = {0};
+	memcpy(&ctx->key, &zeroKey, sizeof(aes256_Key));
+	memcpy(&ctx->enckey, &zeroKey, sizeof(aes256_Key));
+	memcpy(&ctx->deckey, &zeroKey, sizeof(aes256_Key));
 
 	return AES256_RESULT_SUCCESS;
 }

@@ -21,8 +21,7 @@ public type Context = @public record {
 
 
 
-
-@pure
+//@pure
 func rj_xtime (x: Word8) -> Word8 {
 	let y: Word8 = 0xFF and (x << 1)
 	if (x and 0x80) != 0 {
@@ -119,9 +118,8 @@ func rj_sbox_inv (x: Word8) -> Byte {
 
 
 
-
-@notnullargs
-func subBytes (block: *[]Byte) -> Unit {
+//@notnullargs
+func subBytes (block: *Block) -> Unit {
 	var i = Nat8 0
 	while i < 16 {
 		block[i] = rj_sbox(block[i])
@@ -130,9 +128,8 @@ func subBytes (block: *[]Byte) -> Unit {
 }
 
 
-
-@notnullargs
-func subBytes_inv (block: *[]Byte) -> Unit {
+//@notnullargs
+func subBytes_inv (block: *Block) -> Unit {
 	var i = Nat8 0
 	while i < 16 {
 		block[i] = rj_sbox_inv(block[i])
@@ -141,20 +138,18 @@ func subBytes_inv (block: *[]Byte) -> Unit {
 }
 
 
-
-@notnullargs
-func addRoundKey (block: *[]Byte, key: *[]Byte) -> Unit {
+//@notnullargs
+func addRoundKey (block: *Block, k: *[16]Byte) -> Unit {
 	var i = Nat8 0
-	while i < 16 {
-		block[i] = block[i] xor key[i]
+	while i < lengthof(*k) {
+		block[i] = block[i] xor k[i]
 		i = i + 1
 	}
 }
 
 
-
-@notnullargs
-func addRoundKey_cpy (block: *[]Byte, key: *[]Byte, cpk: *[]Byte) -> Unit {
+//@notnullargs
+func addRoundKey_cpy (block: *Block, key: *Key, cpk: *Key) -> Unit {
 	var i = Nat8 0
 	while i < 16 {
 		let yy: Byte = key[i]
@@ -166,9 +161,8 @@ func addRoundKey_cpy (block: *[]Byte, key: *[]Byte, cpk: *[]Byte) -> Unit {
 }
 
 
-
-@notnullargs
-func shiftRows (block: *[]Byte) -> Unit {
+//@notnullargs
+func shiftRows (block: *Block) -> Unit {
 	var i: Word8
 	var j: Word8; // to make it potentially parallelable :)
 
@@ -194,9 +188,8 @@ func shiftRows (block: *[]Byte) -> Unit {
 }
 
 
-
-@notnullargs
-func shiftRows_inv (block: *[]Byte) -> Unit {
+//@notnullargs
+func shiftRows_inv (block: *Block) -> Unit {
 	var i: Word8
 	var j: Word8; // similar to shiftRows :)
 
@@ -222,9 +215,8 @@ func shiftRows_inv (block: *[]Byte) -> Unit {
 }
 
 
-
-@notnullargs
-func mixColumns (block: *[]Byte) -> Unit {
+//@notnullargs
+func mixColumns (block: *Block) -> Unit {
 	var a: Word8
 	var b: Word8
 	var c: Word8
@@ -247,9 +239,8 @@ func mixColumns (block: *[]Byte) -> Unit {
 }
 
 
-
-@notnullargs
-func mixColumns_inv (block: *[]Byte) -> Unit {
+//@notnullargs
+func mixColumns_inv (block: *Block) -> Unit {
 	var a: Word8
 	var b: Word8
 	var c: Word8
@@ -278,9 +269,8 @@ func mixColumns_inv (block: *[]Byte) -> Unit {
 }
 
 
-
-@notnullargs
-func expandEncKey (k: *[]Byte, rc: *Byte) -> Unit {
+//@notnullargs
+func expandEncKey (k: *Key, rc: *Byte) -> Unit {
 	var i: Nat8
 
 	k[0] = k[0] xor rj_sbox(k[29]) xor *rc
@@ -314,9 +304,8 @@ func expandEncKey (k: *[]Byte, rc: *Byte) -> Unit {
 }
 
 
-
-@notnullargs
-func expandDecKey (k: *[]Byte, rc: *Byte) -> Unit {
+//@notnullargs
+func expandDecKey (k: *Key, rc: *Byte) -> Unit {
 	var i: Nat8
 
 	i = 28
@@ -375,22 +364,6 @@ public func init (ctx: *Context, key: *Key) -> Result {
 }
 
 
-public func deinit (ctx: *Context) -> Result {
-	if ctx == nil {
-		return resultError
-	}
-
-	// TODO: const array with memset(!) in C backend
-	//let zeroKey = Key []
-	var zeroKey = Key []
-	ctx.key = zeroKey
-	ctx.enckey = zeroKey
-	ctx.deckey = zeroKey
-
-	return resultSuccess
-}
-
-
 public func encrypt_ecb (ctx: *Context, block: *Block) -> Result {
 	if ctx == nil or block == nil {
 		return resultError
@@ -406,10 +379,10 @@ public func encrypt_ecb (ctx: *Context, block: *Block) -> Result {
 		shiftRows(block)
 		mixColumns(block)
 		if ((Word8 i) and 1) == 1 {
-			addRoundKey(block, &ctx.key[16:])
+			addRoundKey(block, &ctx.key[16:32])
 		} else {
 			expandEncKey(&ctx.key, &rcon)
-			addRoundKey(block, &ctx.key)
+			addRoundKey(block, &ctx.key[0:16])
 		}
 		i = i + 1
 	}
@@ -417,7 +390,7 @@ public func encrypt_ecb (ctx: *Context, block: *Block) -> Result {
 	subBytes(block)
 	shiftRows(block)
 	expandEncKey(&ctx.key, &rcon)
-	addRoundKey(block, &ctx.key)
+	addRoundKey(block, &ctx.key[0:16])
 
 	return resultSuccess
 }
@@ -443,9 +416,9 @@ public func decrypt_ecb (ctx: *Context, block: *Block) -> Result {
 
 		if ((Word8 i) and 1) == 1 {
 			expandDecKey(&ctx.key, &rcon)
-			addRoundKey(block, &ctx.key[16:])
+			addRoundKey(block, &ctx.key[16:32])
 		} else {
-			addRoundKey(block, &ctx.key)
+			addRoundKey(block, &ctx.key[0:16])
 		}
 
 		mixColumns_inv(block)
@@ -453,7 +426,23 @@ public func decrypt_ecb (ctx: *Context, block: *Block) -> Result {
 		subBytes_inv(block)
 	}
 
-	addRoundKey(block, &ctx.key)
+	addRoundKey(block, &ctx.key[0:16])
+
+	return resultSuccess
+}
+
+
+public func deinit (ctx: *Context) -> Result {
+	if ctx == nil {
+		return resultError
+	}
+
+	// TODO: const array with memset(!) in C backend
+	//let zeroKey = Key []
+	var zeroKey = Key []
+	ctx.key = zeroKey
+	ctx.enckey = zeroKey
+	ctx.deckey = zeroKey
 
 	return resultSuccess
 }
