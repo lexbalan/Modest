@@ -151,6 +151,7 @@ def get_type_id(t):
 
 def llvm_value_undef(x):
 	error("undefined value in llvm backend", x.ti)
+	#1/0
 	return {
 		'isa': 'll_value',
 		'kind': 'undef',
@@ -1986,7 +1987,7 @@ def print_stmt_return(x):
 	if fctx['stackptr'] != None:
 		stackrestore(fctx['stackptr'])
 
-	if x.value != None:
+	if x.value != None and not x.value.type.is_unit():
 		v = do_reval(x.value)
 		if not need_sret(fctx['func'].type):
 			lo("ret ")

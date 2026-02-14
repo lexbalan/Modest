@@ -13,7 +13,7 @@ const port = 8080
 const bufSize = 1024
 
 
-func sendFile (fp: *File, sockFd: Int) -> Bool {
+func sendFile (fp: Ptr, sockFd: Int) -> Bool {
 	var data: [bufSize]Char8
 
 	while fgets(&data, lengthof(data), fp) != nil {
@@ -53,7 +53,7 @@ public func main () -> Int {
 
 	printf("[+] Connected to server\n")
 
-	let fp: *File = fopen(filename, "r")
+	let fp: Ptr = fopen(filename, "r")
 	if fp == nil {
 		perror("[-] Error in reading file")
 		exit(1)

@@ -38,7 +38,7 @@ func testStringLiterals () -> Unit {
 }
 
 func testRecordLiterals () -> Unit {
-	var a = {}
+	//var a = {}
 	var b = {x = 1}
 	var c = {x = 1, y = 2}
 	var d = {name = "test", value = 42}

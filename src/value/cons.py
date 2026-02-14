@@ -1,7 +1,6 @@
 
 from hlir import *
 from error import info, warning, error
-from .unit import unit_can, ValueUnit_cons
 from .bool import bool_can, value_bool_cons
 from .integer import integer_can, value_integer_cons
 from .rational import rational_can, value_rational_cons
@@ -49,7 +48,7 @@ def cons_can(to, from_type, method, ti):
 	elif to.is_rational(): checker = rational_can
 	elif to.is_int(): checker = int_can
 	elif to.is_nat(): checker = nat_can
-	elif to.is_unit(): checker = unit_can
+	#elif to.is_unit(): checker = unit_can
 	elif to.is_bool(): checker = bool_can
 	elif to.is_word(): checker = word_can
 	elif to.is_record(): checker = record_can
@@ -93,7 +92,7 @@ def value_cons_implicit(t, v):
 	from_type = v.type
 
 	if not cons_can(t, from_type, 'implicit', ti):
-		#info("cannot implicitly construct value", ti)
+		info("cannot implicitly construct value", ti)
 		return v
 
 	# (!) потому что в C номинальные типы, а у нас - структурные
@@ -117,6 +116,7 @@ def value_cons_implicit(t, v):
 
 
 def value_cons_implicit_check(t, v):
+	#info("value_cons_implicit_check", v.ti)
 	nv = value_cons_implicit(t, v)
 	if not Type.eq(t, nv.type):
 		error("type error", v.ti)

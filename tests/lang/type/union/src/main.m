@@ -16,18 +16,26 @@ type Union1 = @union {
 var u1: Union1
 
 
+func max (a: Nat64, b: Nat64) -> Nat64 {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+
 public func main () -> Int32 {
 	printf("union test\n")
 
 	var success = true
 
-//	if sizeof(Union1) != max(sizeof(Union._nat), sizeof(Union._float)) {
-//		success = false
-//	}
-//
-//	if alignof(Union1) != max(alignof(Union._nat), alignof(Union._float)) {
-//		success = false
-//	}
+	if sizeof(Union1) != max(sizeof(Nat64), sizeof(Float64)) {
+		success = false
+	}
+
+	if alignof(Union1) != max(alignof(Nat64), alignof(Float64)) {
+		success = false
+	}
 
 	if sizeof(Union1) != sizeof(u1) {
 		success = false

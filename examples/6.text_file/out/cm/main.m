@@ -8,7 +8,7 @@ const filename = *Str8 "file.txt"
 func write_example () -> Unit {
 	printf("run write_example\n")
 
-	let fp: *File = fopen(filename, "w")
+	let fp: Ptr = fopen(filename, "w")
 
 	if fp == nil {
 		printf("error: cannot create file '%s'", filename)
@@ -24,7 +24,7 @@ func write_example () -> Unit {
 func read_example () -> Unit {
 	printf("run read_example\n")
 
-	let fp: *File = fopen(filename, "r")
+	let fp: Ptr = fopen(filename, "r")
 
 	if fp == nil {
 		printf("error: cannot open file '%s'", filename)

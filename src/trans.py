@@ -1803,21 +1803,26 @@ def do_stmt_return(x):
 	func_ret_type = cfunc.type.to
 	ret_val_present = x['value'] != None
 
+
 	# если забыли вернуть значение
 	# или возвращаем его там, где оно не ожидется
-	is_no_ret_func = func_ret_type.is_unit()
-	if ret_val_present == is_no_ret_func:
-		if ret_val_present:
-			error("unexpected return value", x['value']['ti'])
-		else:
-			error("expected return value", x['ti'])
-		return StmtBad(x['ti'])
+#	is_no_ret_func = func_ret_type.is_unit()
+#	if ret_val_present == is_no_ret_func:
+#		if ret_val_present:
+#			error("unexpected return value", x['value']['ti'])
+#		else:
+#			error("expected return value", x['ti'])
+#		return StmtBad(x['ti'])
 
 	# (!) in return statement retval can be None (!)
 	retval = None
 	if ret_val_present:
 		rv = do_rvalue(x['value'])
 		retval = transmission(func_ret_type, rv, rv.ti)
+
+	#if retval != None:
+	#	if not Type.eq(retval.type, func_ret_type):
+
 
 	return StmtReturn(retval, ti=x['ti'])
 

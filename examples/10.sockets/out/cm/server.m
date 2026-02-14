@@ -15,7 +15,7 @@ const bufSize = 1024
 func writeFile (sockFd: Int) -> Bool {
 	var buffer: [bufSize]Char8
 
-	let fp: *File = fopen(filename, "w")
+	let fp: Ptr = fopen(filename, "w")
 	if fp == nil {
 		perror("[-] Error in creating file")
 		return false

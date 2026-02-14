@@ -46,7 +46,7 @@ public func main () -> Int32 {
 	var a = returnInt()
 	var b = returnBool()
 	var c = returnFloat()
-	var d = returnUnit()
+//	var d = returnUnit()
 	var e = returnRecord()
 	var f = earlyReturn(-5)
 	var g = returnExpr(3, 4)

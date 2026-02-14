@@ -829,6 +829,9 @@ def str_value_cons_record(x, ctx):
 	value = x.value
 	from_type = value.type
 
+	if to_type.is_unit():
+		return '(' + str_type(to_type) + ')' + str_value(x.value, ctx=ctx)
+
 	if from_type.is_generic_record():
 		#if is_global_context():
 		if to_type.is_generic_record():

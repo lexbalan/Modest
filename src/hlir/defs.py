@@ -84,10 +84,13 @@ def type_float_create(width, ti=None):
 
 
 
-typeUnit = TypeUnit()
+typeUnit = TypeRecord(fields=[])
 typeUnit.id = Id('Unit')
 typeUnit.id.c = 'void'
 typeUnit.id.llvm = 'void'
+typeUnit.id.c_type = 'void'
+
+
 
 bool_id = Id('Bool')
 bool_id.c = 'bool'

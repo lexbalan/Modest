@@ -163,48 +163,48 @@ declare %Int @system([0 x %ConstChar]* %string)
 %FposT = type %Nat8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-declare %Int @fclose(%File* %f)
-declare %Int @feof(%File* %f)
-declare %Int @ferror(%File* %f)
-declare %Int @fflush(%File* %f)
-declare %Int @fgetpos(%File* %f, %FposT* %pos)
-declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
-declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
-declare %Int @fsetpos(%File* %f, %FposT* %pos)
-declare %LongInt @ftell(%File* %f)
+declare %Int @fclose(i8* %f)
+declare %Int @feof(i8* %f)
+declare %Int @ferror(i8* %f)
+declare %Int @fflush(i8* %f)
+declare %Int @fgetpos(i8* %f, %FposT* %pos)
+declare i8* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, i8* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, i8* %f)
+declare i8* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, i8* %f)
+declare %Int @fseek(i8* %f, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(i8* %f, %FposT* %pos)
+declare %LongInt @ftell(i8* %f)
 declare %Int @remove(%ConstCharStr* %fname)
 declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
-declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buf)
-declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
-declare %File* @tmpfile()
+declare void @rewind(i8* %f)
+declare void @setbuf(i8* %f, %CharStr* %buf)
+declare %Int @setvbuf(i8* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
+declare i8* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
 declare %Int @printf(%ConstCharStr* %str, ...)
 declare %Int @scanf(%ConstCharStr* %str, ...)
-declare %Int @fprintf(%File* %f, %Str* %format, ...)
-declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @fprintf(i8* %f, %Str* %format, ...)
+declare %Int @fscanf(i8* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @snprintf(%CharStr* %buf, %SizeT %size, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %__VA_List %args)
+declare %Int @vfprintf(i8* %f, %ConstCharStr* %format, %__VA_List %args)
 declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
 declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
 declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
 declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
-declare %Int @fgetc(%File* %f)
-declare %Int @fputc(%Int %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
-declare %Int @fputs(%ConstCharStr* %str, %File* %f)
-declare %Int @getc(%File* %f)
+declare %Int @fgetc(i8* %f)
+declare %Int @fputc(%Int %char, i8* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
+declare %Int @fputs(%ConstCharStr* %str, i8* %f)
+declare %Int @getc(i8* %f)
 declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
-declare %Int @ungetc(%Int %char, %File* %f)
+declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
@@ -222,50 +222,69 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 @u1 = internal global %Union1 zeroinitializer
+define internal %Nat64 @max(%Nat64 %a, %Nat64 %b) {
+; if_0
+	%1 = icmp ugt %Nat64 %a, %b
+	br %Bool %1 , label %then_0, label %endif_0
+then_0:
+	ret %Nat64 %a
+	br label %endif_0
+endif_0:
+	ret %Nat64 %b
+}
+
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %2
-
-	;	if sizeof(Union1) != max(sizeof(Union._nat), sizeof(Union._float)) {
-	;		success = false
-	;	}
-	;
-	;	if alignof(Union1) != max(alignof(Union._nat), alignof(Union._float)) {
-	;		success = false
-	;	}
 ; if_0
-	br %Bool 0 , label %then_0, label %endif_0
+	%3 = call %Nat64 @max(%Size 8, %Size 8)
+	%4 = icmp ne %Size 16, %3
+	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	store %Bool 0, %Bool* %2
 	br label %endif_0
 endif_0:
 ; if_1
-	br %Bool 0 , label %then_1, label %endif_1
+	%5 = call %Nat64 @max(%Size 8, %Size 8)
+	%6 = icmp ne %Size 8, %5
+	br %Bool %6 , label %then_1, label %endif_1
 then_1:
 	store %Bool 0, %Bool* %2
 	br label %endif_1
 endif_1:
 ; if_2
-	br %Bool 1 , label %then_2, label %endif_2
+	br %Bool 0 , label %then_2, label %endif_2
 then_2:
 	store %Bool 0, %Bool* %2
 	br label %endif_2
 endif_2:
+; if_3
+	br %Bool 0 , label %then_3, label %endif_3
+then_3:
+	store %Bool 0, %Bool* %2
+	br label %endif_3
+endif_3:
+; if_4
+	br %Bool 1 , label %then_4, label %endif_4
+then_4:
+	store %Bool 0, %Bool* %2
+	br label %endif_4
+endif_4:
 
 	;printf("sizeof(Union1) = %lu\n", sizeof(Union1))
 	;printf("sizeof(u1) = %lu\n", sizeof(u1))
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str2 to [0 x i8]*))
-; if_3
-	%4 = load %Bool, %Bool* %2
-	%5 = xor %Bool %4, 1
-	br %Bool %5 , label %then_3, label %endif_3
-then_3:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str2 to [0 x i8]*))
+; if_5
+	%8 = load %Bool, %Bool* %2
+	%9 = xor %Bool %8, 1
+	br %Bool %9 , label %then_5, label %endif_5
+then_5:
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*))
 	ret %Int 1
-	br label %endif_3
-endif_3:
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*))
+	br label %endif_5
+endif_5:
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*))
 	ret %Int 0
 }
 

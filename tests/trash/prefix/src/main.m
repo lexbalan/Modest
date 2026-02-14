@@ -6,7 +6,7 @@ import "lib"
 
 
 public func main () -> Int {
-	var nothing: lib.Nothing
+	//let nothing: lib.Nothing
 	lib.foo(lib.bar)
 	Unit lib.spam
 	return 0

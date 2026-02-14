@@ -10,25 +10,20 @@ func abs (x: Int32) -> Int32 {
 func clamp (x: Int32, lo: Int32, hi: Int32) -> Int32 {
 	if x < lo {
 		return lo
-	} else {
-		if x > hi {
-			return hi
-		} else {
-			return x
-		}
+	} else if x > hi {
+		return hi
 	}
+
+	return x
 }
 
 func sign (x: Int32) -> Int32 {
 	if x > 0 {
 		return 1
-	} else {
-		if x < 0 {
-			return -1
-		} else {
-			return 0
-		}
+	} else if x < 0 {
+		return -1
 	}
+	return 0
 }
 
 func testNested () -> Int32 {

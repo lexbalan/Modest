@@ -43,6 +43,9 @@ def value_record_create(initializers, ti):
 
 
 def record_can(to, from_type, method, ti):
+	if to.is_unit():
+		return (from_type.is_unit()) or method != 'implicit'
+
 	if not from_type.is_record():
 		return False
 
@@ -69,6 +72,11 @@ def value_record_cons(t, v, method, ti):
 	#info("value_record_cons", ti)
 	nv = ValueCons(t, v, method, ti=ti)
 	nv.stage = v.stage
+
+	if t.is_unit():
+		nv.asset = []
+		stage = HLIR_VALUE_STAGE_COMPILETIME
+		return nv
 
 	if not v.type.is_generic(): #and not v.isValueImmediate():
 		if t.uid != v.type.uid:

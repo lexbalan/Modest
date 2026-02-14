@@ -663,7 +663,7 @@ class Type(Entity):
 
 
 	def is_unit(self):
-		return isinstance(self, TypeUnit)
+		return  isinstance(self, TypeRecord) and (len(self.fields) == 0)
 
 
 	def is_bool(self):
@@ -984,6 +984,7 @@ class Type(Entity):
 
 	@staticmethod
 	def eq(a, b, opt=[]):
+		#print("eq!")
 		assert (a != None) and isinstance(a, Type)
 		assert (b != None) and isinstance(b, Type)
 
@@ -999,7 +1000,6 @@ class Type(Entity):
 		if a.brand !=  b.brand:
 			return False
 
-
 		# проверять аттрибуты (volatile, const)
 		# использую для C чтобы можно было более строго проверить типы
 		# напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
@@ -1011,6 +1011,7 @@ class Type(Entity):
 		# это важно для конструирования записей из джененрков
 		# (в противном случае конструирование будет скипнуто тк они типа уже равны)
 		if a.is_generic() != b.is_generic():
+			#print("%d %d" % (a.is_generic(), b.is_generic()))
 			return False
 
 		# usual checking
@@ -1125,13 +1126,6 @@ class TypeUndefined(Type):
 	def __init__(self, ti=None):
 		super().__init__(ti=ti)
 		self.incomplete = False
-
-
-class TypeUnit(Type):
-	def __init__(self, ti=None):
-		super().__init__(ti=ti)
-		self.incomplete = False
-
 
 
 class TypeSimple(Type):

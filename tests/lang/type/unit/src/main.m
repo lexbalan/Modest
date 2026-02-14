@@ -9,7 +9,7 @@ const unit = {}
 
 
 func unitFunc () -> {} {
-	var xunit = {}
+	//var xunit = {}  // cannot create var with Unit type
 	let unit = {}
 	return unit
 }

@@ -10,7 +10,7 @@
 
 
 int main(void) {
-	struct loo_nothing nothing;
+	//let nothing: lib.Nothing
 	loo_foo((uint32_t)LOO_BAR);
 	(void)loo_spam;
 	return 0;
