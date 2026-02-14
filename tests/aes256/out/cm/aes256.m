@@ -117,7 +117,7 @@ func rj_sboxInv (x: Word8) -> Byte {
 }
 
 
-func subBytes (block: *Block) -> Unit {
+func subBytes (block: *Block) -> {} {
 	var i = Nat8 0
 	while i < lengthof(Block) {
 		block[i] = rj_sbox(block[i])
@@ -126,7 +126,7 @@ func subBytes (block: *Block) -> Unit {
 }
 
 
-func subBytesInv (block: *Block) -> Unit {
+func subBytesInv (block: *Block) -> {} {
 	var i = Nat8 0
 	while i < lengthof(Block) {
 		block[i] = rj_sboxInv(block[i])
@@ -135,7 +135,7 @@ func subBytesInv (block: *Block) -> Unit {
 }
 
 
-func addRoundKey (block: *Block, k: *[16]Byte) -> Unit {
+func addRoundKey (block: *Block, k: *[16]Byte) -> {} {
 	var i = Nat8 0
 	while i < lengthof(Block) {
 		block[i] = block[i] xor k[i]
@@ -144,7 +144,7 @@ func addRoundKey (block: *Block, k: *[16]Byte) -> Unit {
 }
 
 
-func addRoundKeyCpy (block: *Block, key: *Key, cpk: *Key) -> Unit {
+func addRoundKeyCpy (block: *Block, key: *Key, cpk: *Key) -> {} {
 	var i = Nat8 0
 	while i < lengthof(Block) {
 		let yy: Byte = key[i]
@@ -156,7 +156,7 @@ func addRoundKeyCpy (block: *Block, key: *Key, cpk: *Key) -> Unit {
 }
 
 
-func shiftRows (block: *Block) -> Unit {
+func shiftRows (block: *Block) -> {} {
 	var i: Word8
 	var j: Word8; // to make it potentially parallelable :)
 
@@ -182,7 +182,7 @@ func shiftRows (block: *Block) -> Unit {
 }
 
 
-func shiftRowsInv (block: *Block) -> Unit {
+func shiftRowsInv (block: *Block) -> {} {
 	var i: Word8
 	var j: Word8; // similar to shiftRows :)
 
@@ -208,7 +208,7 @@ func shiftRowsInv (block: *Block) -> Unit {
 }
 
 
-func mixColumns (block: *Block) -> Unit {
+func mixColumns (block: *Block) -> {} {
 	var a: Word8
 	var b: Word8
 	var c: Word8
@@ -231,7 +231,7 @@ func mixColumns (block: *Block) -> Unit {
 }
 
 
-func mixColumnsInv (block: *Block) -> Unit {
+func mixColumnsInv (block: *Block) -> {} {
 	var a: Word8
 	var b: Word8
 	var c: Word8
@@ -260,7 +260,7 @@ func mixColumnsInv (block: *Block) -> Unit {
 }
 
 
-func expandEncKey (k: *Key, rc: *Byte) -> Unit {
+func expandEncKey (k: *Key, rc: *Byte) -> {} {
 	var i: Nat8
 
 	k[0] = k[0] xor rj_sbox(k[29]) xor *rc
@@ -294,7 +294,7 @@ func expandEncKey (k: *Key, rc: *Byte) -> Unit {
 }
 
 
-func expandDecKey (k: *Key, rc: *Byte) -> Unit {
+func expandDecKey (k: *Key, rc: *Byte) -> {} {
 	var i: Nat8
 
 	i = 28

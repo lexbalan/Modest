@@ -569,7 +569,7 @@ def do_type_internal(x):
 	t.ti = x['ti']
 	tt = add_spices_type(t, x['anno'])
 
-	if k == 'record':
+	if k == 'record' and not t.is_unit():
 		# кароч прикол такой:
 		# тк add_spices_type вызывается здесь и создает НОВЫЙ тип то в таблице cmodule.anon_recs
 		# оказывается оригинальная структура, а при поиске для удаления ее оттуда ищется новая (обернутая)

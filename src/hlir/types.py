@@ -662,8 +662,12 @@ class Type(Entity):
 		return isinstance(self, TypeUndefined)
 
 
+	def is_empty_record(self):
+		return isinstance(self, TypeRecord) and (len(self.fields) == 0)
+
+
 	def is_unit(self):
-		return  isinstance(self, TypeRecord) and (len(self.fields) == 0)
+		return self.is_empty_record()
 
 
 	def is_bool(self):

@@ -425,7 +425,10 @@ def do_ctype_func(t, specs=[]):
 		params.append(ctype_field(id_str=id_str, ctype=arg_ctype, specs=[]))
 
 	if not t.to.is_array():
-		to=do_ctype(t.to)
+		if t.to.is_unit():
+			to=ctype_named('void')
+		else:
+			to=do_ctype(t.to)
 	else:
 		# Если f возвращает массив по значению, вернем void и добавим _sret_ - pointer to array
 		to=ctype_named('void')
