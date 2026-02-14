@@ -531,7 +531,7 @@ def add_spices_type(t, atts):
 		if k == 'zarray':
 			nt.att.append(k)
 
-		if k == 'brand':
+		if k == 'branded' or k == 'nominal':
 			brand_cnt += 1
 			nt.brand = brand_cnt
 

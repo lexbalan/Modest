@@ -4,13 +4,14 @@ include "stdio"
 
 
 
-public type Node = record {
+public type Node = @nominal record {
 	next: *Node
 	prev: *Node
 	data: Ptr
 }
 
-public type List = record {
+
+public type List = @nominal record {
 	head: *Node
 	tail: *Node
 	size: Nat32
@@ -24,7 +25,7 @@ public func create () -> *List {
 		return nil
 	}
 
-	*list = {}
+	*list = List {}
 
 	return list
 }
@@ -79,7 +80,7 @@ public func node_create () -> *Node {
 		return nil
 	}
 
-	*node = {}
+	*node = Node {}
 
 	return node
 }

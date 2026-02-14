@@ -68,12 +68,17 @@ class Parser:
 	def setpos(self, pos):
 		self.ctoken = pos
 
+	# вернет ТОКЕН отстоящий на n от текущей позиции (или Null если там ничего нет)
+	def get_ntok(self, n):
+		if self.ctoken + n > len(self.tokens):
+			return None
+		return self.tokens[self.ctoken + n]
 
 	def nextok(self):
-		if self.ctoken + 1 > len(self.tokens):
-			print("cannot get nextok")
-			pass # TODO
-		return self.tokens[self.ctoken + 1][1]
+		t = self.get_ntok(1)
+		if t == None:
+			return None
+		return t[1]
 
 
 	def tokenInfo(self):
@@ -286,7 +291,7 @@ class Parser:
 				if self.is_Identifier():
 					return True
 			token = self.gettok()
-			return token in ['record', 'enum']
+			return token in ['record']
 
 		elif self.is_operator():
 			token = self.gettok()
@@ -325,6 +330,17 @@ class Parser:
 
 				return False
 
+			elif token == '{':
+				# record {} / {id: ...}
+				if self.match('}'):
+					return True
+				self.skip_tokens_class(['nl'])
+				if self.is_identifier():
+					self.skip1()
+					if self.match(":"):
+						return True
+
+
 			return False
 
 		elif self.is_annotation():
@@ -347,6 +363,8 @@ class Parser:
 	def is_type_expr(self):
 		return self.check(self.check_is_type)
 
+	def is_value_expr(self):
+		return not self.is_type_expr()
 
 	def parse_type_func(self):
 		ti = self.textInfo()
@@ -423,7 +441,7 @@ class Parser:
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=t['ti'])
 			}
 
-		elif self.match("record"):
+		elif self.look("{") or self.match("record"):
 			t = self.parse_type_record(start_ti)
 
 		elif self.match("["):
@@ -763,9 +781,23 @@ class Parser:
 		return v
 
 
+	def is_type_before_value(self):
+		if not self.is_type_expr():
+			return False
+		if self.look("{"):
+			if self.nextok() == "}":
+				# Встретили в выражении значения {} и не понимаем это тип {} или значение {} ?
+				# считаем что если дальше None | NL | ';' - то это литерал пустой записи
+				nex = self.get_ntok(2)
+				if nex == None:
+					return False
+				if (nex[0] == 'nl') or (nex[1] == ';'):
+					return False
+		return True
+
 	# cons
 	def expr_value_9(self):
-		if self.is_type_expr():
+		if self.is_type_before_value():
 			ti = self.textInfo()
 			t = self.expr_type()
 			v = self.expr_value_9()

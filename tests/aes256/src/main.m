@@ -26,7 +26,7 @@ include "libc/stdio"
 import "misc/aes256" as aes
 
 
-type TestCase = record {
+type TestCase = {
 	key: aes.Key
 	plaintext: aes.Block
 	ciphertext: aes.Block
