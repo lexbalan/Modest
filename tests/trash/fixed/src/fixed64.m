@@ -2,7 +2,7 @@
 include "libc/stdio"
 
 
-public type Fixed64 = @brand Word64
+public type Fixed64 = @branded Word64
 
 
 // FIXIT! (Word64 Int64 1)

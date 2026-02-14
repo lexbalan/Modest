@@ -369,7 +369,7 @@ define internal void @testFixed() {
 }
 
 %NewType = type %Int32;
-define internal void @brandCheck() {
+define internal void @brandedCheck() {
 	%1 = alloca %NewType, align 4
 	%2 = alloca %NewType, align 4
 	%3 = load %NewType, %NewType* %1

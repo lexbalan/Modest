@@ -3,7 +3,7 @@ include "stdio"
 
 
 
-public type StageId = @brand Word16
+public type StageId = @branded Word16
 
 public type ComplexState = @public record {
 	state: *StateDesc

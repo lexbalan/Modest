@@ -4,14 +4,14 @@
 
 
 
-public type Result = @brand Word8
+public type Result = @branded Word8
 
 public const resultSuccess = Result 0
 public const resultError = Result 1
 
 
-public type Key = @brand [32]Byte
-public type Block = @brand [16]Byte
+public type Key = @branded [32]Byte
+public type Block = @branded [16]Byte
 
 public type Context = @public record {
 	key: Key

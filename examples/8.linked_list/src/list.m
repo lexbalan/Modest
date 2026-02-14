@@ -5,14 +5,14 @@ include "libc/stdlib"
 include "libc/stdio"
 
 
-public type Node = @nominal {
+public type Node = @branded {
 	next: *Node
 	prev: *Node
 	data: Ptr
 }
 
 
-public type List = @nominal {
+public type List = @branded {
 	head: *Node
 	tail: *Node
 	size: Nat32

@@ -22,7 +22,7 @@ var ch: Char8
 var lineno: Nat32
 
 var token: [128]Char8
-type TokenType = @brand Word8
+type TokenType = @branded Word8
 const tokenTypeEof = TokenType 0
 const tokenTypeId = TokenType 1
 const tokenTypeNumber = TokenType 2
@@ -31,7 +31,7 @@ var tokenType: TokenType
 var tokenLen: Nat32
 
 
-type TypeKind = @brand Word8
+type TypeKind = @branded Word8
 const typeUnknown = TypeKind 0
 const typeChar = TypeKind 1
 const typeInt = TypeKind 2

@@ -80,7 +80,7 @@ context = None  # current context (symtab)
 cdef = None
 
 
-# for @brand types
+# for @branded types
 brand_cnt = 0
 
 
@@ -529,9 +529,16 @@ def add_spices_type(t, atts):
 		nt.annotations[k] = {}
 
 		if k == 'zarray':
+			# zero terminated array
+			nt.att.append(k)
+		if k == 'exact':
+			# exact layout
+			nt.att.append(k)
+		if k == 'packed':
+			# packed layout
 			nt.att.append(k)
 
-		if k == 'branded' or k == 'nominal':
+		if k == 'branded':
 			brand_cnt += 1
 			nt.brand = brand_cnt
 
