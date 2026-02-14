@@ -1,7 +1,7 @@
 include "stdio"
 
 
-public type Nothing = record {}
+public type Nothing = {}
 
 public const bar = 4
 

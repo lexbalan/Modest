@@ -8,7 +8,7 @@ include "ext"
 type ContextHandler = (x: *Context) -> *Context
 
 
-type X = record {c: *Context}
+type X = {c: *Context}
 
 // си не позволяет создавать укзаатель на массив с элементами неполного типа
 // вообще странно - но вот так
@@ -18,14 +18,14 @@ type X = record {c: *Context}
 var p: *Context
 
 @alias("c_type", "CTX")
-type Context = @public record {
+type Context = @public {
 	x: Int32 = 32
 	y: Int32 = 32
 	f: *ContextHandler
 	pz: *ZX
 }
 
-type ZX = record {
+type ZX = {
 	x: Int32
 	c: Context
 	f: *ContextHandler

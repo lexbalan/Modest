@@ -14,8 +14,8 @@
 ```swift
 type AxisType = Int64
 type MyArray = [10]Int32
-type MyPoint2D = record {x: AxisType, y: AxisType}
-type MyPoint3D = record {
+type MyPoint2D = {x: AxisType, y: AxisType}
+type MyPoint3D = {
 	x: AxisType
 	y: AxisType
 	z: AxisType

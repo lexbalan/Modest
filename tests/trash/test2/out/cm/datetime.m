@@ -5,20 +5,20 @@ include "stdio"
 
 
 
-public type Date = @public record {
+public type Date = @public {
 	year: Nat32
 	month: Nat8
 	day: Nat8
 }
 
-public type Time = @public record {
+public type Time = @public {
 	hour: Nat8
 	minute: Nat8
 	second: Nat8
 }
 
 
-public type DateTime = @public record {
+public type DateTime = @public {
 	date: Date
 	time: Time
 }

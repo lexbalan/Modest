@@ -78,7 +78,7 @@ static struct structx s = (struct structx){.x = &lines[0]};
 static void test_records(void) {
 
 	// Now local types not works
-	//	type LocalRecord = record {
+	//	type LocalRecord = {
 	//		x: Int32
 	//	}
 	//

@@ -16,7 +16,7 @@ public type ClockT = UnsignedLong
 
 
 @alias("c", "struct tm")
-public type StructTM = @public record {
+public type StructTM = @public {
 	tm_sec: Int	   // Seconds [0-60]
 	tm_min: Int	   // Minutes [0-59]
 	tm_hour: Int   // Hours	[0-23]

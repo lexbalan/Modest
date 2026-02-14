@@ -1,6 +1,6 @@
 
 
-public type Queue = record {
+public type Queue = {
 	capacity: Nat32  // Number of items queue can hold up
 	size: Nat32  // Number of items in queue now
 	p: Nat32  // put index

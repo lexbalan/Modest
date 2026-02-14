@@ -25,7 +25,7 @@ func char8ToInt (c: Char8) -> Int {
 }
 
 
-type Tokenizer = record {
+type Tokenizer = {
 	input: *[]Char8
 	position: Nat32
 	tokensBufPos: Nat16

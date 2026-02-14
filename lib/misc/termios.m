@@ -73,7 +73,7 @@ public const c_NOFLSH = 0x80000000  // don't flush after interrupt
 
 const c_NCCS = 20
 
-public type Termios record {
+public type Termios {
 	public c_iflag:  TCFlagT       // input flags
 	public c_oflag:  TCFlagT       // output flags
 	public c_cflag:  TCFlagT       // control flags

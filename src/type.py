@@ -37,7 +37,7 @@ def type_print_record(t, print_aka=True):
 #			print("}")
 #			return
 
-	print("record {")
+	print("{")
 	fields = t.fields
 	i = 0
 	while i < len(fields):

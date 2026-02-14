@@ -117,7 +117,7 @@ var p2: *[5]Int32 = &a0
 var p3: **[5]Int32 = &p2
 
 
-type RGB24 = record {
+type RGB24 = {
 	red: Nat8
 	green: Nat8
 	blue: Nat8
@@ -128,7 +128,7 @@ var rgb0 = [2]RGB24 [
 	{red = 200, green = 0, blue = 0}
 ]
 
-type AnimationPoint = record {
+type AnimationPoint = {
 	color: RGB24
 	time: Nat32
 }
@@ -171,7 +171,7 @@ var animation2_points = []AnimationPoint [
 ]
 
 
-func xy (x: record {x: Int32, y: Int32}) -> Unit {
+func xy (x: {x: Int32, y: Int32}) -> Unit {
 
 }
 
@@ -215,7 +215,7 @@ var hiarr: [10]*(x: *Str8) -> Unit = [
 	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
 ]
 
-type Wrap = record {
+type Wrap = {
 	fhi: *(x: *Str8) -> Unit
 	fop: *(a: Int32, b: Int32) -> Int32
 }

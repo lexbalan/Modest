@@ -3,11 +3,11 @@ import "libc/stdio"
 
 
 
-public type Rec0 record {
+public type Rec0 {
 	p: *Rec1
 }
 
-public type Rec1 record {
+public type Rec1 {
 	p: *Rec0
 }
 var ss: [10]Char8 = "abcdefghkj"

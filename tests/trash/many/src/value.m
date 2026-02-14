@@ -1,7 +1,7 @@
 
 //import "type"
 
-public type Value record {
+public type Value {
 	//type: *type.Type
 }
 

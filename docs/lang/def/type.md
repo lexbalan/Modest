@@ -36,7 +36,7 @@ type <#identifier#>
 // type declared, but not defined!
 type MyRecord
 
-type MyRecord = record {
+type MyRecord = {
 	self: *MyRecord
 }
 ```

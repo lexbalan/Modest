@@ -4,12 +4,12 @@ include "libc/stdio"
 include "libc/string"
 
 
-type Context = record {
+type Context = {
 	x: Int32 = 32
 	y: Int32 = 32
 }
 
-type Point = record {
+type Point = {
 	public x: Int32 = 32
 	y: Int32 = 32
 }
@@ -90,7 +90,7 @@ public func main () -> Int32 {
 
 
 // Unit
-//public func xxx () -> record {} {
+//public func xxx () -> {} {
 //	return {}
 //}
 

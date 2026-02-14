@@ -132,7 +132,7 @@ def str_type_record(t):
 
 	is_public = t.hasAttribute2('public')
 
-	s += "record {"
+	s += "{"
 	indent_up()
 
 	prev_nl = 1

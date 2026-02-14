@@ -227,20 +227,20 @@ struct point3_d {
 static bool test_generic_record(void) {
 	// Any record expression have GenericRecord type
 	// this record expression have type:
-	// Generic(record {x: GenericInteger, y: GenericInteger})
+	// Generic({x: GenericInteger, y: GenericInteger})
 	#define p  {.x = 10, .y = 20}
 
 	// value with GenericRecord type
 	// can be implicit casted to Record with same fields.
 
-	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
-	// to record {x: Int32, y: Int32}
+	// implicit cast Generic({x: GenericInteger, y: GenericInteger})
+	// to {x: Int32, y: Int32}
 	struct point2_d point_2d;
 	point_2d = (struct point2_d)p;
 	(void)point_2d;
 
-	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
-	// to record {x: Int32, y: Int32, z: Int32}
+	// explicit cast Generic({x: GenericInteger, y: GenericInteger})
+	// to {x: Int32, y: Int32, z: Int32}
 	struct point3_d point_3d;
 	point_3d = (struct point3_d){.x = 10, .y = 20};
 	(void)point_3d;

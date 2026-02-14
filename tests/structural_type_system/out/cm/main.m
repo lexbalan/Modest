@@ -3,11 +3,11 @@ include "stdio"
 
 
 
-type Type1 = record {
+type Type1 = {
 	x: Int32
 }
 
-type Type2 = record {
+type Type2 = {
 	x: Int32
 }
 
@@ -31,7 +31,7 @@ func f3_val (x: Type3) -> Unit {
 	printf("f3 x.x = %d\n", x.x)
 }
 
-func f4_val (x: record {
+func f4_val (x: {
 	x: Int32
 }) -> Unit {
 	printf("f4 x.x = %d\n", x.x)
@@ -52,7 +52,7 @@ func f3_ptr (x: *Type3) -> Unit {
 	printf("f3p x.x = %d\n", x.x)
 }
 
-func f4_ptr (x: *record {
+func f4_ptr (x: *{
 	x: Int32
 }) -> Unit {
 	printf("f4p x.x = %d\n", x.x)

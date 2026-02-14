@@ -7,7 +7,7 @@ import "libc/errno"
 
 func mod (x: *Context) -> *Context
 
-type Context = record {
+type Context = {
 	x: Int32 = 32
 	y: Int32 = 32
 }

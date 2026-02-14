@@ -517,7 +517,7 @@ break_1:
 declare external %Int32 @ma()
 
 
-;func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
+;func ab_ret (a: Int32, b: Int32) -> {a: Int32, b: Int32} {
 ;	return {a=a, b=b}
 ;}
 ;

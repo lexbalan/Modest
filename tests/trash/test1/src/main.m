@@ -115,7 +115,7 @@ func add (a: Int32, b: Int32) -> Int32 {
 
 //const yx = add(2, 2)
 
-public type Point = @packed record {
+public type Point = @packed {
 	x: Int32  // hi!
 	y: Int32  // lo?
 }
@@ -186,7 +186,7 @@ var yy: @volatile[10]Int
 func ma () -> Int32
 
 
-//func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
+//func ab_ret (a: Int32, b: Int32) -> {a: Int32, b: Int32} {
 //	return {a=a, b=b}
 //}
 //

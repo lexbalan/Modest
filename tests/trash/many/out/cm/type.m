@@ -5,11 +5,11 @@ include "libc/stdio"
 //import "value"
 
 
-public type Type record {
+public type Type {
 }
 
 
-public type TypeArray record {
+public type TypeArray {
 }
 
 

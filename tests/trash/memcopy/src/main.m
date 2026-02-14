@@ -6,7 +6,7 @@ include "libc/stdio"
 import "lightfood/memory" as mem
 
 
-type Object = record {
+type Object = {
 	firstname: [32]Char8
 	lastname: [32]Char8
 	age: Int32

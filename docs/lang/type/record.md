@@ -5,19 +5,19 @@
 #### Common view
 
 ```
-record { <#fields#> }
+{ <#fields#> }
 ```
 
 
 #### Examples
 
 ```swift
-record {x: Int32, y: Int32}  // type 'record with two fields x & y with type Int32'
+{x: Int32, y: Int32}  // type 'record with two fields x & y with type Int32'
 ```
 
 
 ```swift
-type Point = record {
+type Point = {
 	x: Int32
 	y: Int32
 }

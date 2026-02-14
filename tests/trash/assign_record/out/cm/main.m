@@ -3,7 +3,7 @@ include "stdio"
 
 
 
-type Point = record {
+type Point = {
 	x: Int32
 	y: Int32
 }

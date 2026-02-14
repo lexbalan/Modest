@@ -12,15 +12,15 @@ type Nat = Nat64
 type ClockIdT = Int
 
 @alias("c", "struct timespec")
-type StructTimespec = record {}
+type StructTimespec = {}
 
 @alias("c", "struct sched_param")
-type StructSchedParam = record {}
+type StructSchedParam = {}
 
 
 //typedef struct	pthread			*pthread_t;
 @alias("c", "struct pthread")
-public type PThread = record {}
+public type PThread = {}
 
 @alias("c", "pthread_t")
 public type PThreadT = Ptr

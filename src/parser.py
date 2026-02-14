@@ -99,8 +99,11 @@ class Parser:
 
 	#skip_tokens_class(['nl'])
 	def skip_tokens_class(self, classes):
+		res = False
 		while self.ctok_class() in classes:
 			self.skip1()
+			res = True
+		return res
 
 
 	def skip_tokens(self, tokens):
@@ -331,7 +334,9 @@ class Parser:
 				return False
 
 			elif token == '{':
-				# record {} / {id: ...}
+				# {} / {id: ...}
+				while self.skip_tokens_class(['nl']) or self.skip_tokens_class(['comment-line']) or self.skip_tokens_class(['comment-block']):
+					pass
 				if self.match('}'):
 					return True
 				self.skip_tokens_class(['nl'])

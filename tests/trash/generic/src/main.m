@@ -163,12 +163,12 @@ func test_generic_array () -> Bool {
 
 
 
-type Point2D = record {
+type Point2D = {
 	x: Int32
 	y: Int32
 }
 
-type Point3D = record {
+type Point3D = {
 	x: Int32
 	y: Int32
 	z: Int32
@@ -178,20 +178,20 @@ type Point3D = record {
 func test_generic_record () -> Bool {
 	// Any record expression have GenericRecord type
 	// this record expression have type:
-	// Generic(record {x: GenericInteger, y: GenericInteger})
+	// Generic({x: GenericInteger, y: GenericInteger})
 	let p = {x = 10, y = 20}
 
 	// value with GenericRecord type
 	// can be implicit casted to Record with same fields.
 
-	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
-	// to record {x: Int32, y: Int32}
+	// implicit cast Generic({x: GenericInteger, y: GenericInteger})
+	// to {x: Int32, y: Int32}
 	var point_2d: Point2D
 	point_2d = p
 	Unit point_2d
 
-	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
-	// to record {x: Int32, y: Int32, z: Int32}
+	// explicit cast Generic({x: GenericInteger, y: GenericInteger})
+	// to {x: Int32, y: Int32, z: Int32}
 	var point_3d: Point3D
 	point_3d = Point3D p
 	Unit point_3d

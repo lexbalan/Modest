@@ -12,7 +12,7 @@ include "libc/assert"
 const blockSize = 4096
 const nblocks = 1024
 
-type Block = record {data: [blockSize]Word8}
+type Block = {data: [blockSize]Word8}
 var disk: [nblocks]Block
 
 func dread (n: Nat32, block: *Block) -> @unused Int {
@@ -32,7 +32,7 @@ const fblocks = 16
 
 
 @alignment(blockSize)
-type Inode = record {
+type Inode = {
 	typ: Word32
 	size: Nat32
 	blocks: [fblocks]Nat32

@@ -8,7 +8,7 @@ import "misc/crc32" as crc32
 
 const dataBufferLength = 128
 
-type Test = record {
+type Test = {
 	data: [dataBufferLength]Byte
 	len: Nat32
 	hash: Word32

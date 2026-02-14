@@ -9,12 +9,12 @@ import "misc/minmax" as minmax
 const carr = [0, 10, 15] + [20, 25, 30]
 
 
-type Point = record {
+type Point = {
 	x: Float64
 	y: Float64
 }
 
-type Line = record {
+type Line = {
 	a: Point
 	b: Point
 }
@@ -46,7 +46,7 @@ const line3 = Line {
 const lines = [line0, line1, line2, line3]
 
 
-type WrappedArray = record {
+type WrappedArray = {
 	//array: [10]Int32
 	x: Int32
 }

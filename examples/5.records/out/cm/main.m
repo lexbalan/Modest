@@ -5,12 +5,12 @@ include "stdio"
 
 
 
-type Point = record {
+type Point = {
 	x: Float
 	y: Float
 }
 
-type Line = record {
+type Line = {
 	a: Point
 	b: Point
 }

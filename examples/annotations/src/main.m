@@ -21,7 +21,7 @@ const cvb = @volatile Int32 0
 var vvb = @volatile Int32 1
 
 
-type ProtocolHeader = @packed record {
+type ProtocolHeader = @packed {
 	start: Word16
 	len: Nat16
 }
@@ -80,7 +80,7 @@ func staticInlineHintFunc (x: Int32) -> Int32 {
 }
 
 
-type Point2D = record {
+type Point2D = {
 	x: Float64 = 0
 	y: Float64 = 0
 }

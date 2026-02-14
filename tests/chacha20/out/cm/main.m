@@ -6,7 +6,7 @@ include "stdlib"
 import "misc/chacha20" as cc
 
 
-type Context = record {
+type Context = {
 	key: *[32]Byte
 	nonce: [3]Word32
 	blockCounter: Nat32

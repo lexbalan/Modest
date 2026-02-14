@@ -306,7 +306,7 @@ declare void @perror(%ConstCharStr* %str)
 define internal void @test_records() {
 
 	; Now local types not works
-	;	type LocalRecord = record {
+	;	type LocalRecord = {
 	;		x: Int32
 	;	}
 	;

@@ -8,7 +8,7 @@ include "libc/ctypes64"
 
 
 @alias("c_type", "FILE")
-public type File = record {}
+public type File = {}
 
 @alias("c", "fpos_t")
 public type FposT = Nat8

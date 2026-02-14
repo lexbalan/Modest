@@ -25,20 +25,20 @@ public type SocklenT = Nat32
 
 
 @alias("c", "struct sockaddr")
-public type SockAddr = @public record {
+public type SockAddr = @public {
 	sa_family: UnsignedShort  // address family
 	sa_data: [14]Char8        // up to 14 bytes of direct address
 }
 
 
 @alias("c", "struct in_addr")
-public type Struct_in_addr = @public record {
+public type Struct_in_addr = @public {
 	s_addr: InAddrT
 }
 
 
 @alias("c", "struct sockaddr_in")
-public type SockAddrIn = @public record {
+public type SockAddrIn = @public {
 // $if APPLE
 	sin_len: Nat8
 	sin_family: Nat8

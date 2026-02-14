@@ -5,7 +5,7 @@ include "libc/stdio"
 
 
 // Not implemented in LLVM (!)
-type Union1 = @union record {
+type Union1 = @union {
 	_nat: Nat64
 	_float: Float64
 }

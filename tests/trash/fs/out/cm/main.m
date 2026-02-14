@@ -7,7 +7,7 @@ include "assert"
 const blockSize = 4096
 const nblocks = 1024
 
-type Block = record {
+type Block = {
 	data: [blockSize]Word8
 }
 var disk: [nblocks]Block
@@ -29,13 +29,13 @@ const fblocks = 16
 
 
 @alignment(blockSize)
-type Super = record {
+type Super = {
 	root: Nat32
 }
 
 
 @alignment(blockSize)
-type Inode = record {
+type Inode = {
 	size: Nat32
 	blocks: [fblocks]Nat32
 }

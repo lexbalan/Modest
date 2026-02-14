@@ -3,7 +3,7 @@
 pragma module_nodecorate
 
 @alias("c", "DIR")
-public type Dir = record {}
+public type Dir = {}
 
 @alias("c", "int")
 type Int = Int32
@@ -14,7 +14,7 @@ type OffT = Nat32
 
 
 @alias("c", "struct dirent")
-public type Dirent = @public record {
+public type Dirent = @public {
 	d_ino: InoT         /* inode number */
 	d_off: OffT         /* offset to the next dirent */
 	d_reclen: Nat16     /* length of this record */

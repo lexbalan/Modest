@@ -551,7 +551,7 @@ endif_3:
 define internal %Bool @test_generic_record() {
 	; Any record expression have GenericRecord type
 	; this record expression have type:
-	; Generic(record {x: GenericInteger, y: GenericInteger})
+	; Generic({x: GenericInteger, y: GenericInteger})
 	%1 = insertvalue {i8,i8} zeroinitializer, i8 10, 0
 	%2 = insertvalue {i8,i8} %1, i8 20, 1
 	%3 = alloca {i8,i8}
@@ -560,15 +560,15 @@ define internal %Bool @test_generic_record() {
 	; value with GenericRecord type
 	; can be implicit casted to Record with same fields.
 
-	; implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
-	; to record {x: Int32, y: Int32}
+	; implicit cast Generic({x: GenericInteger, y: GenericInteger})
+	; to {x: Int32, y: Int32}
 	%4 = alloca %Point2D, align 4
 	%5 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
 	%6 = insertvalue %Point2D %5, %Int32 20, 1
 	store %Point2D %6, %Point2D* %4
 
-	; explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
-	; to record {x: Int32, y: Int32, z: Int32}
+	; explicit cast Generic({x: GenericInteger, y: GenericInteger})
+	; to {x: Int32, y: Int32, z: Int32}
 	%7 = alloca %Point3D, align 4
 	%8 = insertvalue %Point3D zeroinitializer, %Int32 10, 0
 	%9 = insertvalue %Point3D %8, %Int32 20, 1

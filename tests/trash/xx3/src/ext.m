@@ -4,7 +4,7 @@ pragma module_nodecorate
 
 
 @alias("c_type", "DIR")
-public type Dir = record {}
+public type Dir = {}
 
 
 // sofia danik

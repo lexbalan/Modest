@@ -7,7 +7,7 @@ include "stdio"
 const filename = *Str8 "file.bin"
 
 
-type Chunk = record {
+type Chunk = {
 	id: [100]Char
 	data: [1024]Char
 }

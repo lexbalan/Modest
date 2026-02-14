@@ -116,7 +116,7 @@ int32_t main(void) {
 
 
 // Unit
-//public func xxx () -> record {} {
+//public func xxx () -> {} {
 //	return {}
 //}
 

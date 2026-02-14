@@ -11,12 +11,12 @@ const string16Const = *Str16 genericStringConst
 const string32Const = *Str32 genericStringConst
 
 
-type Point = record {
+type Point = {
 	x: Nat32
 	y: Nat32
 }
 
-type X = record {
+type X = {
 	p: Point
 	a: [2]Point
 }

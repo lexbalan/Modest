@@ -14,7 +14,7 @@ func squareOfCircle (radius: Float64) -> Float64 {
 }
 
 
-type Point2D = record {
+type Point2D = {
 	x: Int
 	y: Int
 }

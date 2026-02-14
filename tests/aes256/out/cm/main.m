@@ -5,7 +5,7 @@ include "stdio"
 import "misc/aes256" as aes
 
 
-type TestCase = record {
+type TestCase = {
 	key: Key
 	plaintext: Block
 	ciphertext: Block

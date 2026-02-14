@@ -283,14 +283,14 @@ printf(s)
 ### Record type
 Record type is a composite type, that can contain inside values of any *another* type.
 ```zig
-record {x: Float64, y: Float64}
+{x: Float64, y: Float64}
 ```
 
 *Usage example:*
 ```zig
 // it is good idea to use type definition statement
 // for bind identifier to record type
-type Point = record {
+type Point = {
 	x: Float64
 	y: Float64
 }

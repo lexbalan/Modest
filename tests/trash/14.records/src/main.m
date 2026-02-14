@@ -3,12 +3,12 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-type Point2D = record {
+type Point2D = {
 	x: Nat32
 	y: Nat32
 }
 
-type Point3D = record {
+type Point3D = {
 	x: Nat32
 	y: Nat32
 	z: Nat32
@@ -19,12 +19,12 @@ const xx = {x=1, y=2}
 const yy = Point2D {x=1, y=2}
 
 
-type Point = record {
+type Point = {
 	x: Int32
 	y: Int32
 }
 
-type Line = record {
+type Line = {
 	a: Point
 	b: Point
 }
@@ -51,7 +51,7 @@ var lines = [
 
 var pLines = [&lines[0], &lines[1], &lines[2]]
 
-type Structx = record {
+type Structx = {
 	x: *Line
 }
 
@@ -61,7 +61,7 @@ var s: Structx = {x=&lines[0]}
 func test_records () -> Unit {
 
 // Now local types not works
-//	type LocalRecord = record {
+//	type LocalRecord = {
 //		x: Int32
 //	}
 //
@@ -121,7 +121,7 @@ public func main () -> Int {
 
 	// compare Point2D with anonymous record
 	var p2d2 = p2d0  // record assignation
-	var p2d3 = record {x: Nat32, y: Nat32} xx
+	var p2d3 = {x: Nat32, y: Nat32} xx
 
 	if p2d2 == p2d3 {
 		printf("p2d2 == p2d3\n")
@@ -131,7 +131,7 @@ public func main () -> Int {
 
 
 	// comparison between two anonymous record
-	var p2d4 = record {x: Nat32, y: Nat32} {x=1, y=2}
+	var p2d4 = {x: Nat32, y: Nat32} {x=1, y=2}
 
 	if p2d3 == p2d4 {
 		printf("p2d3 == p2d4\n")

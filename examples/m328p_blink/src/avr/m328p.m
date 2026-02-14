@@ -3,7 +3,7 @@
 include "avr"
 
 
-public type GPIO = @public @packed record {
+public type GPIO = @public @packed {
 	in: IO8
 	dir: IO8
 	out: IO8

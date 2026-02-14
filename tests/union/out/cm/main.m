@@ -4,7 +4,7 @@ include "stdio"
 
 
 // Not implemented in LLVM (!)
-type Union1 = @union record {
+type Union1 = @union {
 	_int: Int64
 	_float: Float64
 }

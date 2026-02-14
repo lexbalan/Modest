@@ -6,7 +6,7 @@ include "ext"
 type ContextHandler = (x: *Context) -> *Context
 
 
-type X = record {
+type X = {
 	c: *Context
 }
 
@@ -19,14 +19,14 @@ var p: *Context
 
 
 @alias()
-type Context = @public record {
+type Context = @public {
 	x: Int32 = 32
 	y: Int32 = 32
 	f: *ContextHandler
 	pz: *ZX
 }
 
-type ZX = record {
+type ZX = {
 	x: Int32
 	c: Context
 	f: *ContextHandler

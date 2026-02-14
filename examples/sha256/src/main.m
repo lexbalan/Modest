@@ -13,7 +13,7 @@ pragma c_include "./sha256.h"
 const inputDataLength = 32
 
 
-type SHA256_TestCase = record {
+type SHA256_TestCase = {
 	inputData: [inputDataLength]Char8
 	inputDataLen: Nat32
 

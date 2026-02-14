@@ -39,7 +39,7 @@ const typeArray = TypeKind 10
 const typePointer = TypeKind 10
 
 
-type Type = record {
+type Type = {
 	kind: TypeKind
 }
 

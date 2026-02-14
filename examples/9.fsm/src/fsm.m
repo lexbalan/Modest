@@ -6,7 +6,7 @@ include "libc/stdio"
 
 public type StageId = @branded Word16
 
-public type ComplexState = @public record {
+public type ComplexState = @public {
 	state: *StateDesc
 	stage: StageId
 }
@@ -14,14 +14,14 @@ public type ComplexState = @public record {
 public type StateServiceRoutine = (state: ComplexState, payload: *Unit) -> ComplexState
 
 
-public type StateDesc = record {
+public type StateDesc = {
     id: *Str8
     nstages: Nat16
     handler: *StateServiceRoutine
 }
 
 
-public type FSM = record {
+public type FSM = {
     id: *Str8
 	state: ComplexState
 	next_state: ComplexState

@@ -21,7 +21,7 @@ public type DarwinIno64T = Nat64
 
 //
 //@alias("c", "struct stat")
-//type Stat record {
+//type Stat {
 //	st_dev: DevT			/* номер устройства */
 //	st_ino: InoT			/* inode */
 //	st_mode: ModeT			/* режим доступа */
@@ -41,7 +41,7 @@ public type DarwinIno64T = Nat64
 public type DarwinTimeT = Nat64
 
 @alias("c", "struct timespec")
-public type Timespec = record {
+public type Timespec = {
 	public tv_sec: DarwinTimeT
 	public tv_nsec: Long
 }
@@ -51,7 +51,7 @@ public type Timespec = record {
 	*/
 
 @alias("c", "struct stat")
-public type Stat = record {
+public type Stat = {
 	public st_dev: DevT             // [XSI] ID of device containing file
 	public st_mode: ModeT           // [XSI] Mode of file (see below)
 	public st_nlink: NLinkT         // [XSI] Number of hard links

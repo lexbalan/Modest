@@ -10,7 +10,7 @@ const tokenId = 1
 const tokenNum = 2
 const tokenSym = 3
 
-type Lexer record {
+type Lexer {
 	fd: *File
 	cc: [2]Char8
 	nback: Nat8

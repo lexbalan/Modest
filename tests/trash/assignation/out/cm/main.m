@@ -4,7 +4,7 @@ include "stdio"
 
 
 // Simply record for records assignation test
-type Point = record {
+type Point = {
 	x: Int32
 	y: Int32
 }

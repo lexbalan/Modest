@@ -3,18 +3,18 @@ include "stdio"
 
 
 
-type Point = record {
+type Point = {
 	x: Nat32
 	y: Nat32
 }
 
-type Mixed1 = record {
+type Mixed1 = {
 	c: Char8
 	i: Int32
 	f: Float64
 }
 
-type Mixed2 = record {
+type Mixed2 = {
 	i: Int32
 	c: Char8
 	f: Float64
@@ -22,14 +22,14 @@ type Mixed2 = record {
 	m: Mixed1
 }
 
-type Mixed3 = record {
+type Mixed3 = {
 	c: Char8
 	i: Int32
 	f: Float64
 	c2: [9]Char8
 }
 
-type Mixed4 = record {
+type Mixed4 = {
 	s: Mixed2
 	c: Char8
 	i: Int32
@@ -49,7 +49,7 @@ var i2: Int16
 var p: [3]Point
 var g: Bool
 
-type X = record {
+type X = {
 	c: Char8
 	i: Int32
 	f: Float64

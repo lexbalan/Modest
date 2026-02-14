@@ -49,10 +49,10 @@ a = [10]Int32 [1, 2, 3]
 ```swift
 // example: explicit cons record from incomplete record
 
-type Point3D record {x: Int32, y: Int32, z: Int32}
+type Point3D {x: Int32, y: Int32, z: Int32}
 
 var r: Point3D
-// you can't implicitly cons record {x: Int32, y: Int32, z: Int32} 
+// you can't implicitly cons {x: Int32, y: Int32, z: Int32} 
 // from {x: GenericInteger} but you can do it explicitly
 // (all rest fields will be filled with zeros)
 r = Point3D {x=10}
@@ -115,9 +115,9 @@ a = [1, 2, 3]
 ```swift
 // example: cons Record from GenericRecord
 
-var r: record {x: Int32, y: Int32}
+var r: {x: Int32, y: Int32}
 
-// implicit cons value with type record {x: Int32, y: Int32}
+// implicit cons value with type {x: Int32, y: Int32}
 // from literal record value {x=0, y=0}
 // with type GenericRecord {x: Int32, y: Int32}
 r = {x = 0, y = 0}

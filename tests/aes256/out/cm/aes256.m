@@ -13,7 +13,7 @@ public const resultError = Result 1
 public type Key = @branded [32]Byte
 public type Block = @branded [16]Byte
 
-public type Context = @public record {
+public type Context = @public {
 	key: Key
 	enckey: Key
 	deckey: Key

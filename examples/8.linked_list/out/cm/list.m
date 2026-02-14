@@ -4,14 +4,14 @@ include "stdio"
 
 
 
-public type Node = @branded record {
+public type Node = @branded {
 	next: *Node
 	prev: *Node
 	data: Ptr
 }
 
 
-public type List = @branded record {
+public type List = @branded {
 	head: *Node
 	tail: *Node
 	size: Nat32

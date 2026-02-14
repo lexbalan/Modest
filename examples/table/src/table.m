@@ -11,7 +11,7 @@ include "libc/string"
 
 public type Row = []*Str8
 
-public type Table = @public record {
+public type Table = @public {
 	header: *[]*Str8
 	data: *[]Row
 	nRows: Nat32

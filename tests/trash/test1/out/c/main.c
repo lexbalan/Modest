@@ -196,7 +196,7 @@ static volatile int yy[10];
 
 extern int32_t ma();
 
-//func ab_ret (a: Int32, b: Int32) -> record {a: Int32, b: Int32} {
+//func ab_ret (a: Int32, b: Int32) -> {a: Int32, b: Int32} {
 //	return {a=a, b=b}
 //}
 //

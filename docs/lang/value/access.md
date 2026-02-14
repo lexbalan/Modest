@@ -15,7 +15,7 @@
 ```zig
 import "libc/stdio"
 
-type Point = record {
+type Point = {
 	x: Int32
 	y: Int32
 }
@@ -49,7 +49,7 @@ public func main() -> Int32 {
 ```zig
 import "libc/stdio"
 
-type Point = record {
+type Point = {
 	x: Int32
 	y: Int32
 }

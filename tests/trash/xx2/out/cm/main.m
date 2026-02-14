@@ -3,7 +3,7 @@ include "string"
 
 
 
-type Point = record {
+type Point = {
 	x: Int32 = 32
 	y: Int32 = 32
 }
@@ -74,7 +74,7 @@ public func main () -> Int32 {
 
 
 // Unit
-//public func xxx () -> record {} {
+//public func xxx () -> {} {
 //	return {}
 //}
 
