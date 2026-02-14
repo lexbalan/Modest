@@ -1591,7 +1591,7 @@ def print_stmt_return(x):
 
 	out("return")
 
-	if x.value != None:
+	if (x.value != None) and not x.value.type.is_unit():
 		out(" ")
 		out(incast(cfunc.type.to, x.value))
 
