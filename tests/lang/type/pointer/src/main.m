@@ -1,4 +1,4 @@
-// test: pointer types
+// tests/lang/type/pointer/src/main.m
 
 type IntPtr = *Int32
 type CharPtr = *Char8

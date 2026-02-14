@@ -1,4 +1,4 @@
-// test: branded (nominal) types
+// tests/lang/type/branded/src/main.m
 
 type UserId = @branded Nat32
 type GroupId = @branded Nat32

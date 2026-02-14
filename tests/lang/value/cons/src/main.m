@@ -1,4 +1,4 @@
-// test: type cast expressions
+// tests/lang/value/cons/src/main.m
 
 func testIntToFloat () -> Float64 {
 	var x: Int32 = 42

@@ -6,6 +6,7 @@ include "stdio"
 
 const unit = {}
 
+
 func unitFunc () -> {} {
 	var xunit = {}
 	let unit = {}
@@ -18,7 +19,6 @@ public func main () -> Int32 {
 
 	var rc: Bool
 	var success: Bool = true
-
 
 	printf("test ")
 	if not success {

@@ -1,4 +1,4 @@
-// tests/lang/value/arith/src/main.m
+
 
 func testAdd () -> Int32 {
 	return 1 + 2
@@ -36,11 +36,11 @@ func testNeg () -> Int32 {
 func testVarArith () -> Int32 {
 	var a: Int32 = 10
 	var b: Int32 = 3
-	var c = a + b
-	var d = a - b
-	var e = a * b
-	var f = a / b
-	var g = a % b
+	var c: Int32 = a + b
+	var d: Int32 = a - b
+	var e: Int32 = a * b
+	var f: Int32 = a / b
+	var g: Int32 = a % b
 	return c + d + e + f + g
 }
 
@@ -52,15 +52,16 @@ func testFloatArith () -> Float64 {
 }
 
 public func main () -> Int32 {
-	var a = testAdd()
-	var b = testSub()
-	var c = testMul()
-	var d = testDiv()
-	var e = testMod()
-	var f = testComplex()
-	var g = testPrecedence()
-	var h = testNeg()
-	var i = testVarArith()
-	var j = testFloatArith()
+	var a: Int32 = testAdd()
+	var b: Int32 = testSub()
+	var c: Int32 = testMul()
+	var d: Int32 = testDiv()
+	var e: Int32 = testMod()
+	var f: Int32 = testComplex()
+	var g: Int32 = testPrecedence()
+	var h: Int32 = testNeg()
+	var i: Int32 = testVarArith()
+	var j: Float64 = testFloatArith()
 	return 0
 }
+

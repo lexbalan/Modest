@@ -1,4 +1,4 @@
-// test: function definitions
+// tests/lang/def/func/src/main.m
 
 // simple function no args
 func nop () -> Unit {

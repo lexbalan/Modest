@@ -1,4 +1,4 @@
-// test: return statement
+// tests/lang/stmt/return/src/main.m
 
 func returnInt () -> Int32 {
 	return 42

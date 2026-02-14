@@ -1,4 +1,4 @@
-// test: array types
+// tests/lang/type/array/src/main.m
 
 type Vec3 = [3]Float32
 type Matrix2x2 = [2][2]Int32

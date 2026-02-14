@@ -1,4 +1,4 @@
-// test: let bindings (immutable locals)
+// tests/lang/stmt/let/src/main.m
 
 func testLetInt () -> Int32 {
 	let x = 42

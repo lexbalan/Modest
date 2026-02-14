@@ -1330,11 +1330,10 @@ class Value(Entity):
 	def set_asset(self, a):
 		t = self.type
 		if not t.is_generic():
-			#print("WIDTH=%d" % t.width)
 			if t.is_int():
-				a = pack_int(a, width=t.width, signed=True)
+				a = pack_int(int(a), width=t.width, signed=True)
 			elif t.is_nat() or t.is_word():
-				a = pack_int(a, width=t.width, signed=False)
+				a = pack_int(int(a), width=t.width, signed=False)
 			elif t.is_float():
 				# numpy капец как замедляет компиляцию своей долгой загрузкой
 				# но он пока лучший в плвне создания floatXX
@@ -1342,7 +1341,6 @@ class Value(Entity):
 					a = get_np().float32(a)
 				elif t.width == 64:
 					a = get_np().float64(a)
-			#print("A = %s" % str(a))
 		self.asset = a
 
 
@@ -1962,7 +1960,7 @@ class ValueAlignof(Value):
 class ValueOffsetof(Value):
 	def __init__(self, record, field_id, ti=None):
 		from type import record_field_get
-		field = record_field_get(record, field_id['str'])
+		field = record_field_get(record, field_id.str)
 		if field == None:
 			error("undefined field '%s'" % field_id['str'], field_id.ti)
 			return ValueBad({'ti': ti})
@@ -1971,9 +1969,10 @@ class ValueOffsetof(Value):
 		from type import type_integer_for
 		type = type_integer_for(offset, ti=ti)
 		super().__init__(type=type, ti=ti)
-		self.field = field_id
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.set_asset(offset)
+		self.oftype = record
+		self.field = field_id
 
 
 

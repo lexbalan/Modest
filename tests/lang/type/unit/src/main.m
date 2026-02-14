@@ -1,4 +1,4 @@
-// tests/limits/src/main.m
+// tests/lang/type/unit/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdlib"

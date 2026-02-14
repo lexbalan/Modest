@@ -1,4 +1,4 @@
-// test: record types
+// tests/lang/type/record/src/main.m
 
 type Empty = {}
 

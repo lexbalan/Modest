@@ -1,4 +1,4 @@
-// test: while statement
+// tests/lang/stmt/while/src/main.m
 
 func sum (n: Int32) -> Int32 {
 	var s: Int32 = 0

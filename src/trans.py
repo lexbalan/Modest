@@ -1575,7 +1575,7 @@ def do_value_alignof(x):
 
 def do_value_offsetof(x):
 	of = do_type(x['type'])
-	field_id = x['field']
+	field_id = do_id(x['field'])
 	return ValueOffsetof(of, field_id, ti=x['ti'])
 
 

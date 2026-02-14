@@ -1,4 +1,4 @@
-// test: constant definitions
+// tests/lang/def/const/src/main.m
 
 // integer constants
 const zero = 0

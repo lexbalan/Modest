@@ -1,4 +1,4 @@
-// test: array index expressions
+// tests/lang/value/index/src/main.m
 
 var arr = [10, 20, 30, 40, 50]
 

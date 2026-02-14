@@ -622,7 +622,7 @@ def str_value_lengthof_value(x, ctx):
 	return "lengthof(" + str_value(x.value) + ")"
 
 def str_value_offsetof(x, ctx):
-	return "offsetof(" + str_type(x.of) + '.' + x.field.str + ')'
+	return "offsetof(" + str_type(x.oftype) + '.' + x.field.str + ')'
 
 
 def str_value_va_start(x, ctx):

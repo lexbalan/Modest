@@ -1,4 +1,4 @@
-// test: assignment statements
+// tests/lang/stmt/assign/src/main.m
 
 var g: Int32 = 0
 

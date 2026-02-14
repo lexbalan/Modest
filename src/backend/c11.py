@@ -1368,7 +1368,7 @@ def str_value_alignof(x, ctx):
 
 def str_value_offsetof(x, ctx):
 	sstr = "__offsetof("
-	sstr += str_type(x.of)
+	sstr += str_type(x.oftype)
 	sstr += ", "
 	sstr += x.field.str
 	sstr += ")"

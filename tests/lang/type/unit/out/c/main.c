@@ -28,7 +28,6 @@ int32_t main(void) {
 	bool rc;
 	bool success = true;
 
-
 	printf("test ");
 	if (!success) {
 		printf("failed\n");

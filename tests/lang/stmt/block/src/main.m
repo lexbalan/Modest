@@ -1,4 +1,4 @@
-// test: block scoping (via if/while)
+// tests/lang/stmt/block/src/main.m
 
 func testIfScope () -> Int32 {
 	var x: Int32 = 1

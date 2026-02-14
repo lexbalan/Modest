@@ -1,4 +1,4 @@
-// test: logical expressions
+// tests/lang/value/logical/src/main.m
 
 func testAnd () -> Bool {
 	return true and true

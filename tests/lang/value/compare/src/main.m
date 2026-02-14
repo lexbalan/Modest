@@ -1,4 +1,4 @@
-// test: comparison expressions
+// tests/lang/value/compare/src/main.m
 
 func testEq () -> Bool {
 	return 1 == 1

@@ -1,46 +1,46 @@
 
 
 // integer constants
-const ZERO = 0
-const ONE = 1
-const MAX8 = 255
-const NEGATIVE = -42
+const zero = 0
+const one = 1
+const max8 = 255
+const negative = -42
 
 // typed constants
-const TYPED_NAT: Nat32 = 100
-const TYPED_INT: Int32 = -100
-const TYPED_FLOAT: Float64 = 3.14
+const typedNat: Nat32 = 100
+const typedInt: Int32 = -100
+const typedFloat: Float64 = 3.14
 
 // float constants
-const PI = 3.14159265
-const E = 2.71828
+const pi = 3.14159265
+const e = 2.71828
 
 // bool constants
-const YES: Bool = true
-const NO: Bool = false
+const yes: Bool = true
+const no: Bool = false
 
 // string constant
-const HELLO = "hello"
-const EMPTY = ""
+const hello = "hello"
+const empty = ""
 
 // char constant
-const CH = "A"
+const ch = "A"
 
 // expression constants
-const SUM = 1 + 2
-const PRODUCT = 3 * 4
-const DIFF = 10 - 3
+const sum = 1 + 2
+const product = 3 * 4
+const diff = 10 - 3
 
 // record constant
-const ORIGIN = {x = 0, y = 0}
-const UNIT_X = {x = 1, y = 0}
+const origin = {x = 0, y = 0}
+const unitX = {x = 1, y = 0}
 
 // array constant
-const NUMS = [1, 2, 3]
-const FLAGS = [true, false, true]
+const nums = [1, 2, 3]
+const flags = [true, false, true]
 
 // unit constant
-const UNIT = {}
+const unit = {}
 
 public func main () -> Int32 {
 	return 0

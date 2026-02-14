@@ -1,4 +1,4 @@
-// test: packed record types
+// tests/lang/type/packed/src/main.m
 
 type PackedHeader = @packed {
 	magic: Nat8

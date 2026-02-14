@@ -1,4 +1,4 @@
-// test: field access expressions
+// tests/lang/value/field/src/main.m
 
 type Point = {x: Int32, y: Int32}
 type Line = {a: Point, b: Point}

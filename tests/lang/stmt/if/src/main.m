@@ -1,4 +1,4 @@
-// test: if statement
+// tests/lang/stmt/if/src/main.m
 
 func abs (x: Int32) -> Int32 {
 	if x < 0 {

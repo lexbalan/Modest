@@ -1,4 +1,4 @@
-// test: unary expressions
+// tests/lang/value/unary/src/main.m
 
 func testNeg () -> Int32 {
 	var x: Int32 = 5

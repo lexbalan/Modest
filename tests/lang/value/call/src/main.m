@@ -1,4 +1,4 @@
-// test: function call expressions
+// tests/lang/value/call/src/main.m
 
 func identity (x: Int32) -> Int32 {
 	return x

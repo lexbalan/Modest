@@ -1,4 +1,4 @@
-// test: literal values
+// tests/lang/value/literal/src/main.m
 
 func testIntLiterals () -> Unit {
 	var a = 0

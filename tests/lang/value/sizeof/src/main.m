@@ -1,4 +1,4 @@
-// test: sizeof, alignof, offsetof, lengthof
+// tests/lang/value/sizeof/src/main.m
 
 type Point = {x: Int32, y: Int32}
 type Packed = @packed {a: Nat8, b: Nat32}
@@ -29,7 +29,7 @@ func testAlignof () -> Nat64 {
 
 func testOffsetof () -> Nat64 {
 	var a = offsetof(Point.x)
-	return a
+	return Nat64 a
 }
 
 func testLengthof () -> Int32 {

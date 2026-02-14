@@ -1,4 +1,4 @@
-// test: variable definitions
+// tests/lang/def/var/src/main.m
 
 // typed variables with init
 var a: Int32 = 0

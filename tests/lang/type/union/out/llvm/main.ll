@@ -141,6 +141,21 @@ break_2:
 %PIDT = type %Int32;
 %UIDT = type %Nat32;
 %GIDT = type %Nat32;
+; from included stdlib
+declare void @abort()
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
+declare i8* @calloc(%SizeT %num, %SizeT %size)
+declare void @exit(%Int %x)
+declare void @free(i8* %ptr)
+declare %Str* @getenv(%Str* %name)
+declare %LongInt @labs(%LongInt %x)
+declare %Str* @secure_getenv(%Str* %name)
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
 ; from included stdio
 %File = type {
 };
@@ -197,20 +212,61 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 117, i8 110, i8 105, i8 111, i8 110, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [22 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 85, i8 110, i8 105, i8 111, i8 110, i8 49, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
-@str3 = private constant [18 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 117, i8 49, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
+@str2 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@str3 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str4 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 %Union1 = type {
-	%Int64,
+	%Nat64,
 	%Float64
 };
 
 @u1 = internal global %Union1 zeroinitializer
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), %Size 16)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), %Size 16)
-	ret %Int32 0
+	%2 = alloca %Bool, align 1
+	store %Bool 1, %Bool* %2
+
+	;	if sizeof(Union1) != max(sizeof(Union._nat), sizeof(Union._float)) {
+	;		success = false
+	;	}
+	;
+	;	if alignof(Union1) != max(alignof(Union._nat), alignof(Union._float)) {
+	;		success = false
+	;	}
+; if_0
+	br %Bool 0 , label %then_0, label %endif_0
+then_0:
+	store %Bool 0, %Bool* %2
+	br label %endif_0
+endif_0:
+; if_1
+	br %Bool 0 , label %then_1, label %endif_1
+then_1:
+	store %Bool 0, %Bool* %2
+	br label %endif_1
+endif_1:
+; if_2
+	br %Bool 1 , label %then_2, label %endif_2
+then_2:
+	store %Bool 0, %Bool* %2
+	br label %endif_2
+endif_2:
+
+	;printf("sizeof(Union1) = %lu\n", sizeof(Union1))
+	;printf("sizeof(u1) = %lu\n", sizeof(u1))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str2 to [0 x i8]*))
+; if_3
+	%4 = load %Bool, %Bool* %2
+	%5 = xor %Bool %4, 1
+	br %Bool %5 , label %then_3, label %endif_3
+then_3:
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*))
+	ret %Int 1
+	br label %endif_3
+endif_3:
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*))
+	ret %Int 0
 }
 
 

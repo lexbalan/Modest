@@ -1,4 +1,4 @@
-// test: type definitions
+// tests/lang/def/type/src/main.m
 
 // alias
 type Size = Nat64
