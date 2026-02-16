@@ -335,37 +335,36 @@ static bool testRational(void) {
 int32_t main(void) {
 	printf("test numeric boundary:\n");
 
-	bool rc;
+	bool result;
 	bool success = true;
 
 	// test built-in generic types
-	rc = testInteger();
-	success = success && rc;
-	rc = testNatural();
-	success = success && rc;
-	rc = testRational();
-	success = success && rc;
+	result = testInteger();
+	success = success && result;
+	result = testNatural();
+	success = success && result;
+	result = testRational();
+	success = success && result;
 
 	// test built-in unsigned integer types
-	rc = testNat8Static();
-	success = success && rc;
-	rc = testNat16Static();
-	success = success && rc;
-	rc = testNat32Static();
-	success = success && rc;
-	rc = testNat64Static();
-	success = success && rc;
+	result = testNat8Static();
+	success = success && result;
+	result = testNat16Static();
+	success = success && result;
+	result = testNat32Static();
+	success = success && result;
+	result = testNat64Static();
+	success = success && result;
 
 	// test built-in signed integer types
-	rc = testInt8Static();
-	success = success && rc;
-	rc = testInt16Static();
-	success = success && rc;
-	rc = testInt32Static();
-	success = success && rc;
-	rc = testInt64Static();
-	success = success && rc;
-
+	result = testInt8Static();
+	success = success && result;
+	result = testInt16Static();
+	success = success && result;
+	result = testInt32Static();
+	success = success && result;
+	result = testInt64Static();
+	success = success && result;
 
 
 	printf("test ");

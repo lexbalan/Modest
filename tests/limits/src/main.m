@@ -334,37 +334,36 @@ func testRational () -> Bool {
 public func main () -> Int32 {
 	printf("test numeric boundary:\n")
 
-	var rc: Bool
+	var result: Bool
 	var success = true
 
 	// test built-in generic types
-	rc = testInteger()
-	success = success and rc
-	rc = testNatural()
-	success = success and rc
-	rc = testRational()
-	success = success and rc
+	result = testInteger()
+	success = success and result
+	result = testNatural()
+	success = success and result
+	result = testRational()
+	success = success and result
 
 	// test built-in unsigned integer types
-	rc = testNat8Static()
-	success = success and rc
-	rc = testNat16Static()
-	success = success and rc
-	rc = testNat32Static()
-	success = success and rc
-	rc = testNat64Static()
-	success = success and rc
+	result = testNat8Static()
+	success = success and result
+	result = testNat16Static()
+	success = success and result
+	result = testNat32Static()
+	success = success and result
+	result = testNat64Static()
+	success = success and result
 
 	// test built-in signed integer types
-	rc = testInt8Static()
-	success = success and rc
-	rc = testInt16Static()
-	success = success and rc
-	rc = testInt32Static()
-	success = success and rc
-	rc = testInt64Static()
-	success = success and rc
-
+	result = testInt8Static()
+	success = success and result
+	result = testInt16Static()
+	success = success and result
+	result = testInt32Static()
+	success = success and result
+	result = testInt64Static()
+	success = success and result
 
 
 	printf("test ")
