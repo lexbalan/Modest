@@ -39,10 +39,10 @@ def _check_width(from_type, t, method, ti):
 def _value_int_cons_immediate(t, v, method, ti):
 	#info("value_cons_int_immediate", ti)
 	width = t.width
-	need_width = nbits_for_num(v.asset)
+	need_width = nbits_for_num(v.asset, signed=True)
 
+	#info("(%d %d %d)" % (v.asset, need_width, width), ti)
 	if need_width > width:
-		#print("(%d %d %d)" % (v.asset, need_width, width))
 		error("integer overflow", ti)
 
 	nv = ValueCons(t, v, method, ti=ti)

@@ -92,7 +92,7 @@ def value_cons_implicit(t, v):
 	from_type = v.type
 
 	if not cons_can(t, from_type, 'implicit', ti):
-		info("cannot implicitly construct value", ti)
+		#info("cannot implicitly construct value", ti)
 		return v
 
 	# (!) потому что в C номинальные типы, а у нас - структурные

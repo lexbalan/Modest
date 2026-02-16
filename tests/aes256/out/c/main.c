@@ -118,6 +118,8 @@ static bool runTest(struct test_case *test) {
 int32_t main(void) {
 	printf("run AES-256 test\n");
 
+	int8_t x = 128;
+
 	bool success = true;
 
 	uint8_t i = 0;

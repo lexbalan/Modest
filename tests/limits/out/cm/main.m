@@ -307,6 +307,30 @@ public func main () -> Int32 {
 	rc = testInt64Static()
 	success = success and rc
 
+	var int8: Int8
+	int8 = int8MaxValue; // ok
+	int8 = int8MinValue; // ok
+	//int8 = int8MaxValue + 1  // error: integer overflow
+	//int8 = int8MinValue - 1  // error: integer overflow
+
+	var int16: Int16
+	int16 = int16MaxValue; // ok
+	int16 = int16MinValue; // ok
+	//int16 = int16MaxValue + 1  // error: integer overflow
+	//int16 = int16MinValue - 1  // error: integer overflow
+
+	var int32: Int32
+	int32 = int32MaxValue; // ok
+	int32 = int32MinValue; // ok
+	//int32 = int32MaxValue + 1  // error: integer overflow
+	//int32 = int32MinValue - 1  // error: integer overflow
+
+	var int64: Int64
+	int64 = int64MaxValue; // ok
+	int64 = int64MinValue; // ok
+	//int64 = int64MaxValue + 1  // error: integer overflow
+	//int64 = int64MinValue - 1  // error: integer overflow
+
 	printf("test ")
 	if not success {
 		printf("failed\n")

@@ -13,21 +13,25 @@ def align_to(x, y):
 	return x
 
 
-def nbits_for_num(x):
+def nbits_for_num(x, signed=False):
 	if x == None:
-		# case when we works with asset from value with TypeUndef
-		return 0
+		return 0  # case when we works with asset from value with TypeUndef
+
+	x = int(x)
+
+	i = 0
 
 	if x < 0:
 		x = -x
+		x -= 1
 
-	y = 1
-	n = 1
-	while x > y:
-		y = (y << 1) | 1
-		n = n + 1
+	while x != 0:
+		x = x // 2
+		i = i + 1
+	if signed:
+		i += 1
+	return i
 
-	return n
 
 
 # 7 -> 8, 12 -> 16, 17 -> 32, etc.
