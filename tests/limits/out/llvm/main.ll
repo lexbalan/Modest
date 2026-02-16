@@ -253,14 +253,15 @@ declare void @perror(%ConstCharStr* %str)
 @str39 = private constant [47 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 105, i8 110, i8 116, i8 54, i8 52, i8 77, i8 105, i8 110, i8 86, i8 97, i8 108, i8 117, i8 101, i8 77, i8 105, i8 110, i8 117, i8 115, i8 79, i8 110, i8 101, i8 32, i8 33, i8 61, i8 32, i8 105, i8 110, i8 116, i8 54, i8 52, i8 77, i8 97, i8 120, i8 86, i8 97, i8 108, i8 117, i8 101, i8 10, i8 0]
 @str40 = private constant [20 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 73, i8 110, i8 116, i8 54, i8 52, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str41 = private constant [22 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 73, i8 110, i8 116, i8 101, i8 103, i8 101, i8 114, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str42 = private constant [19 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 112, i8 105, i8 32, i8 33, i8 61, i8 32, i8 51, i8 46, i8 49, i8 52, i8 10, i8 0]
-@str43 = private constant [3 x i8] [i8 37, i8 100, i8 0]
-@str44 = private constant [17 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 110, i8 112, i8 105, i8 32, i8 33, i8 61, i8 32, i8 51, i8 10, i8 0]
-@str45 = private constant [23 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 82, i8 97, i8 116, i8 105, i8 111, i8 110, i8 97, i8 108, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str46 = private constant [24 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 58, i8 10, i8 0]
-@str47 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
-@str48 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str49 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str42 = private constant [22 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 78, i8 97, i8 116, i8 117, i8 114, i8 97, i8 108, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@str43 = private constant [19 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 112, i8 105, i8 32, i8 33, i8 61, i8 32, i8 51, i8 46, i8 49, i8 52, i8 10, i8 0]
+@str44 = private constant [3 x i8] [i8 37, i8 100, i8 0]
+@str45 = private constant [17 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 110, i8 112, i8 105, i8 32, i8 33, i8 61, i8 32, i8 51, i8 10, i8 0]
+@str46 = private constant [23 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 82, i8 97, i8 116, i8 105, i8 111, i8 110, i8 97, i8 108, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@str47 = private constant [24 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 110, i8 117, i8 109, i8 101, i8 114, i8 105, i8 99, i8 32, i8 98, i8 111, i8 117, i8 110, i8 100, i8 97, i8 114, i8 121, i8 58, i8 10, i8 0]
+@str48 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@str49 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str50 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 ;const float32MaxValue       = Float32 3.4028234663852886e+38
@@ -541,6 +542,55 @@ endif_4:
 
 define internal %Bool @testInteger() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str41 to [0 x i8]*))
+	%2 = alloca %Int8, align 1
+	store %Int8 127, %Int8* %2	; ok
+	%3 = sub i8 0, 128
+	store %Int8 %3, %Int8* %2	; ok
+	store %Int8 128, %Int8* %2	; error: integer overflow
+	store %Int8 -129, %Int8* %2	; error: integer overflow
+	%4 = alloca %Int16, align 2
+	store %Int16 32767, %Int16* %4	; ok
+	%5 = sub i16 0, 32768
+	store %Int16 %5, %Int16* %4	; ok
+	;int16 = int16MaxValue + 1  // error: integer overflow
+	;int16 = int16MinValue - 1  // error: integer overflow
+	%6 = alloca %Int32, align 4
+	store %Int32 2147483647, %Int32* %6	; ok
+	%7 = sub i32 0, 2147483648
+	store %Int32 %7, %Int32* %6	; ok
+	;int32 = int32MaxValue + 1  // error: integer overflow
+	;int32 = int32MinValue - 1  // error: integer overflow
+	%8 = alloca %Int64, align 8
+	store %Int64 9223372036854775807, %Int64* %8	; ok
+	%9 = sub i64 0, 9223372036854775808
+	store %Int64 %9, %Int64* %8	; ok
+	;int64 = int64MaxValue + 1  // error: integer overflow
+	;int64 = int64MinValue - 1  // error: integer overflow
+	ret %Bool 1
+}
+
+define internal %Bool @testNatural() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str42 to [0 x i8]*))
+	%2 = alloca %Nat8, align 1
+	store %Nat8 255, %Nat8* %2	; ok
+	store %Nat8 0, %Nat8* %2	; ok
+	;nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
+	;nat8 = nat8MinValue - 1  // error: unsigned integer overflow
+	%3 = alloca %Nat16, align 2
+	store %Nat16 65535, %Nat16* %3	; ok
+	store %Nat16 0, %Nat16* %3	; ok
+	;nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
+	;nat16 = nat16MinValue - 1  // error: unsigned integer overflow
+	%4 = alloca %Nat32, align 4
+	store %Nat32 4294967295, %Nat32* %4	; ok
+	store %Nat32 0, %Nat32* %4	; ok
+	;nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
+	;nat32 = nat32MinValue - 1  // error: unsigned integer overflow
+	%5 = alloca %Nat64, align 8
+	store %Nat64 18446744073709551615, %Nat64* %5	; ok
+	store %Nat64 0, %Nat64* %5	; ok
+	;nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
+	;nat64 = nat64MinValue - 1  // error: unsigned integer overflow
 	ret %Bool 1
 }
 
@@ -548,24 +598,24 @@ define internal %Bool @testRational() {
 ; if_0
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str42 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str43 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
 ; if_1
 	br %Bool 0 , label %then_1, label %endif_1
 then_1:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str43 to [0 x i8]*), %Int32 3)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str44 to [0 x i8]*))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str44 to [0 x i8]*), %Int32 3)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str45 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str45 to [0 x i8]*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str46 to [0 x i8]*))
 	ret %Bool 1
 }
 
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str46 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str47 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
 	%3 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %3
@@ -577,75 +627,81 @@ define %Int32 @main() {
 	%6 = load %Bool, %Bool* %2
 	%7 = and %Bool %5, %6
 	store %Bool %7, %Bool* %3
-	%8 = call %Bool @testRational()
+	%8 = call %Bool @testNatural()
 	store %Bool %8, %Bool* %2
 	%9 = load %Bool, %Bool* %3
 	%10 = load %Bool, %Bool* %2
 	%11 = and %Bool %9, %10
 	store %Bool %11, %Bool* %3
-
-	; test built-in unsigned integer types
-	%12 = call %Bool @testNat8Static()
+	%12 = call %Bool @testRational()
 	store %Bool %12, %Bool* %2
 	%13 = load %Bool, %Bool* %3
 	%14 = load %Bool, %Bool* %2
 	%15 = and %Bool %13, %14
 	store %Bool %15, %Bool* %3
-	%16 = call %Bool @testNat16Static()
+
+	; test built-in unsigned integer types
+	%16 = call %Bool @testNat8Static()
 	store %Bool %16, %Bool* %2
 	%17 = load %Bool, %Bool* %3
 	%18 = load %Bool, %Bool* %2
 	%19 = and %Bool %17, %18
 	store %Bool %19, %Bool* %3
-	%20 = call %Bool @testNat32Static()
+	%20 = call %Bool @testNat16Static()
 	store %Bool %20, %Bool* %2
 	%21 = load %Bool, %Bool* %3
 	%22 = load %Bool, %Bool* %2
 	%23 = and %Bool %21, %22
 	store %Bool %23, %Bool* %3
-	%24 = call %Bool @testNat64Static()
+	%24 = call %Bool @testNat32Static()
 	store %Bool %24, %Bool* %2
 	%25 = load %Bool, %Bool* %3
 	%26 = load %Bool, %Bool* %2
 	%27 = and %Bool %25, %26
 	store %Bool %27, %Bool* %3
-
-	; test built-in signed integer types
-	%28 = call %Bool @testInt8Static()
+	%28 = call %Bool @testNat64Static()
 	store %Bool %28, %Bool* %2
 	%29 = load %Bool, %Bool* %3
 	%30 = load %Bool, %Bool* %2
 	%31 = and %Bool %29, %30
 	store %Bool %31, %Bool* %3
-	%32 = call %Bool @testInt16Static()
+
+	; test built-in signed integer types
+	%32 = call %Bool @testInt8Static()
 	store %Bool %32, %Bool* %2
 	%33 = load %Bool, %Bool* %3
 	%34 = load %Bool, %Bool* %2
 	%35 = and %Bool %33, %34
 	store %Bool %35, %Bool* %3
-	%36 = call %Bool @testInt32Static()
+	%36 = call %Bool @testInt16Static()
 	store %Bool %36, %Bool* %2
 	%37 = load %Bool, %Bool* %3
 	%38 = load %Bool, %Bool* %2
 	%39 = and %Bool %37, %38
 	store %Bool %39, %Bool* %3
-	%40 = call %Bool @testInt64Static()
+	%40 = call %Bool @testInt32Static()
 	store %Bool %40, %Bool* %2
 	%41 = load %Bool, %Bool* %3
 	%42 = load %Bool, %Bool* %2
 	%43 = and %Bool %41, %42
 	store %Bool %43, %Bool* %3
-	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str47 to [0 x i8]*))
-; if_0
+	%44 = call %Bool @testInt64Static()
+	store %Bool %44, %Bool* %2
 	%45 = load %Bool, %Bool* %3
-	%46 = xor %Bool %45, 1
-	br %Bool %46 , label %then_0, label %endif_0
+	%46 = load %Bool, %Bool* %2
+	%47 = and %Bool %45, %46
+	store %Bool %47, %Bool* %3
+	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str48 to [0 x i8]*))
+; if_0
+	%49 = load %Bool, %Bool* %3
+	%50 = xor %Bool %49, 1
+	br %Bool %50 , label %then_0, label %endif_0
 then_0:
-	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str48 to [0 x i8]*))
+	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str49 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str49 to [0 x i8]*))
+	%53 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str50 to [0 x i8]*))
 	ret %Int 0
 }
 

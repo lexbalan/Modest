@@ -246,11 +246,67 @@ func testInt64Static () -> Bool {
 }
 
 
-
 func testInteger () -> Bool {
 	printf("passed: Integer test\n")
+
+	var int8: Int8
+	int8 = int8MaxValue; // ok
+	int8 = int8MinValue; // ok
+	int8 = int8MaxValue + 1; // error: integer overflow
+	int8 = int8MinValue - 1; // error: integer overflow
+
+	var int16: Int16
+	int16 = int16MaxValue; // ok
+	int16 = int16MinValue; // ok
+	//int16 = int16MaxValue + 1  // error: integer overflow
+	//int16 = int16MinValue - 1  // error: integer overflow
+
+	var int32: Int32
+	int32 = int32MaxValue; // ok
+	int32 = int32MinValue; // ok
+	//int32 = int32MaxValue + 1  // error: integer overflow
+	//int32 = int32MinValue - 1  // error: integer overflow
+
+	var int64: Int64
+	int64 = int64MaxValue; // ok
+	int64 = int64MinValue; // ok
+	//int64 = int64MaxValue + 1  // error: integer overflow
+	//int64 = int64MinValue - 1  // error: integer overflow
+
 	return true
 }
+
+
+func testNatural () -> Bool {
+	printf("passed: Natural test\n")
+
+	var nat8: Nat8
+	nat8 = nat8MaxValue; // ok
+	nat8 = nat8MinValue; // ok
+	//nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
+	//nat8 = nat8MinValue - 1  // error: unsigned integer overflow
+
+	var nat16: Nat16
+	nat16 = nat16MaxValue; // ok
+	nat16 = nat16MinValue; // ok
+	//nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
+	//nat16 = nat16MinValue - 1  // error: unsigned integer overflow
+
+	var nat32: Nat32
+	nat32 = nat32MaxValue; // ok
+	nat32 = nat32MinValue; // ok
+	//nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
+	//nat32 = nat32MinValue - 1  // error: unsigned integer overflow
+
+	var nat64: Nat64
+	nat64 = nat64MaxValue; // ok
+	nat64 = nat64MinValue; // ok
+	//nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
+	//nat64 = nat64MinValue - 1  // error: unsigned integer overflow
+
+	return true
+}
+
 
 
 func testRational () -> Bool {
@@ -283,6 +339,8 @@ public func main () -> Int32 {
 	// test built-in generic types
 	rc = testInteger()
 	success = success and rc
+	rc = testNatural()
+	success = success and rc
 	rc = testRational()
 	success = success and rc
 
@@ -306,55 +364,6 @@ public func main () -> Int32 {
 	rc = testInt64Static()
 	success = success and rc
 
-
-	var int8: Int8
-	int8 = int8MaxValue; // ok
-	int8 = int8MinValue; // ok
-	int8 = int8MaxValue + 1; // error: integer overflow
-	int8 = int8MinValue - 1; // error: integer overflow
-
-	var int16: Int16
-	int16 = int16MaxValue; // ok
-	int16 = int16MinValue; // ok
-	//int16 = int16MaxValue + 1  // error: integer overflow
-	//int16 = int16MinValue - 1  // error: integer overflow
-
-	var int32: Int32
-	int32 = int32MaxValue; // ok
-	int32 = int32MinValue; // ok
-	//int32 = int32MaxValue + 1  // error: integer overflow
-	//int32 = int32MinValue - 1  // error: integer overflow
-
-	var int64: Int64
-	int64 = int64MaxValue; // ok
-	int64 = int64MinValue; // ok
-	//int64 = int64MaxValue + 1  // error: integer overflow
-	//int64 = int64MinValue - 1  // error: integer overflow
-
-
-	var nat8: Nat8
-	nat8 = nat8MaxValue; // ok
-	nat8 = nat8MinValue; // ok
-	//nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
-	//nat8 = nat8MinValue - 1  // error: unsigned integer overflow
-
-	var nat16: Nat16
-	nat16 = nat16MaxValue; // ok
-	nat16 = nat16MinValue; // ok
-	//nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
-	//nat16 = nat16MinValue - 1  // error: unsigned integer overflow
-
-	var nat32: Nat32
-	nat32 = nat32MaxValue; // ok
-	nat32 = nat32MinValue; // ok
-	//nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
-	//nat32 = nat32MinValue - 1  // error: unsigned integer overflow
-
-	var nat64: Nat64
-	nat64 = nat64MaxValue; // ok
-	nat64 = nat64MinValue; // ok
-	//nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
-	//nat64 = nat64MinValue - 1  // error: unsigned integer overflow
 
 
 	printf("test ")

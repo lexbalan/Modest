@@ -250,6 +250,62 @@ static bool testInt64Static(void) {
 
 static bool testInteger(void) {
 	printf("passed: Integer test\n");
+
+	int8_t int8;
+	int8 = (int8_t)INT8_MAX;// ok
+	int8 = (int8_t)INT8_MIN;// ok
+	int8 = (int8_t)INT8_MAX + 1;// error: integer overflow
+	int8 = (int8_t)INT8_MIN - 1;// error: integer overflow
+
+	int16_t int16;
+	int16 = (int16_t)INT16_MAX;// ok
+	int16 = (int16_t)INT16_MIN;// ok
+	//int16 = int16MaxValue + 1  // error: integer overflow
+	//int16 = int16MinValue - 1  // error: integer overflow
+
+	int32_t int32;
+	int32 = (int32_t)INT32_MAX;// ok
+	int32 = (int32_t)INT32_MIN;// ok
+	//int32 = int32MaxValue + 1  // error: integer overflow
+	//int32 = int32MinValue - 1  // error: integer overflow
+
+	int64_t int64;
+	int64 = (int64_t)INT64_MAX;// ok
+	int64 = (int64_t)INT64_MIN;// ok
+	//int64 = int64MaxValue + 1  // error: integer overflow
+	//int64 = int64MinValue - 1  // error: integer overflow
+
+	return true;
+}
+
+
+static bool testNatural(void) {
+	printf("passed: Natural test\n");
+
+	uint8_t nat8;
+	nat8 = (uint8_t)UINT8_MAX;// ok
+	nat8 = (uint8_t)0;// ok
+	//nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
+	//nat8 = nat8MinValue - 1  // error: unsigned integer overflow
+
+	uint16_t nat16;
+	nat16 = (uint16_t)UINT16_MAX;// ok
+	nat16 = (uint16_t)0;// ok
+	//nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
+	//nat16 = nat16MinValue - 1  // error: unsigned integer overflow
+
+	uint32_t nat32;
+	nat32 = (uint32_t)UINT32_MAX;// ok
+	nat32 = (uint32_t)0;// ok
+	//nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
+	//nat32 = nat32MinValue - 1  // error: unsigned integer overflow
+
+	uint64_t nat64;
+	nat64 = (uint64_t)UINT64_MAX;// ok
+	nat64 = (uint64_t)0;// ok
+	//nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
+	//nat64 = nat64MinValue - 1  // error: unsigned integer overflow
+
 	return true;
 }
 
@@ -285,6 +341,8 @@ int32_t main(void) {
 	// test built-in generic types
 	rc = testInteger();
 	success = success && rc;
+	rc = testNatural();
+	success = success && rc;
 	rc = testRational();
 	success = success && rc;
 
@@ -307,6 +365,8 @@ int32_t main(void) {
 	success = success && rc;
 	rc = testInt64Static();
 	success = success && rc;
+
+
 
 	printf("test ");
 	if (!success) {
