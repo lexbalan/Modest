@@ -41,39 +41,38 @@ public type DarwinIno64T = Nat64
 public type DarwinTimeT = Nat64
 
 @alias("c", "struct timespec")
-public type Timespec = {
-	public tv_sec: DarwinTimeT
-	public tv_nsec: Long
+public type Timespec = @public {
+	tv_sec: DarwinTimeT
+	tv_nsec: Long
 }
 
 
-	/* for MACOS see: /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys
-	*/
+/* for MACOS see: /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys */
 
 @alias("c", "struct stat")
-public type Stat = {
-	public st_dev: DevT             // [XSI] ID of device containing file
-	public st_mode: ModeT           // [XSI] Mode of file (see below)
-	public st_nlink: NLinkT         // [XSI] Number of hard links
-	public st_ino: DarwinIno64T     // [XSI] File serial number
-	public st_uid: UIDT             // [XSI] User ID of the file
-	public st_gid: GIDT             // [XSI] Group ID of the file
-	public st_rdev: DevT            // [XSI] Device ID
+public type Stat = @public {
+	st_dev: DevT             // [XSI] ID of device containing file
+	st_mode: ModeT           // [XSI] Mode of file (see below)
+	st_nlink: NLinkT         // [XSI] Number of hard links
+	st_ino: DarwinIno64T     // [XSI] File serial number
+	st_uid: UIDT             // [XSI] User ID of the file
+	st_gid: GIDT             // [XSI] Group ID of the file
+	st_rdev: DevT            // [XSI] Device ID
 
 	//__DARWIN_STRUCT_STAT64_TIMES:
 	//+spec ->st_mtimespec
-	public st_atime: Timespec       // time of last access
-	public st_mtime: Timespec       // time of last data modification
-	public st_ctime: Timespec       // time of last status change
-	public st_birthtime: Timespec   // time of file creation(birth)
+	st_atime: Timespec       // time of last access
+	st_mtime: Timespec       // time of last data modification
+	st_ctime: Timespec       // time of last status change
+	st_birthtime: Timespec   // time of file creation(birth)
 
-	public st_size: OffT            // [XSI] file size, in bytes
-	public st_blocks: BlkCntT       // [XSI] blocks allocated for file
-	public st_blksize: BlkSizeT     // [XSI] optimal blocksize for I/O
-	public st_flags: Nat32          // user defined flags for file
-	public st_gen: Nat32            // file generation number
-	public st_lspare: Int32         // RESERVED: DO NOT USE!
-	public st_qspare: [2]Int64      // RESERVED: DO NOT USE!
+	st_size: OffT            // [XSI] file size, in bytes
+	st_blocks: BlkCntT       // [XSI] blocks allocated for file
+	st_blksize: BlkSizeT     // [XSI] optimal blocksize for I/O
+	st_flags: Nat32          // user defined flags for file
+	st_gen: Nat32            // file generation number
+	st_lspare: Int32         // RESERVED: DO NOT USE!
+	st_qspare: [2]Int64      // RESERVED: DO NOT USE!
 }
 
 
