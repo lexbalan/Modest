@@ -8,15 +8,12 @@
 
 
 
-/* anonymous records */
-struct __anonymous_struct_1 {uint8_t __placeholder;};
-
 #define UNIT  {0}
 
-static struct __anonymous_struct_1 unitFunc(void) {
+static void unitFunc(void) {
 	//var xunit = {}  // cannot create var with Unit type
 	#define unit  {0}
-	return (struct __anonymous_struct_1)unit;
+	return;
 
 #undef unit
 }

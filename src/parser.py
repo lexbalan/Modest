@@ -340,6 +340,7 @@ class Parser:
 				if self.match('}'):
 					return True
 				self.skip_tokens_class(['nl'])
+				self.match("public") or self.match("private")
 				if self.is_identifier():
 					self.skip1()
 					if self.match(":"):
