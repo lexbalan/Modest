@@ -5,15 +5,20 @@ type Size = Nat64
 type Index = Int32
 
 // record
-type Point = {
+type Point = @public {
 	x: Int32
 	y: Int32
 }
-type Color = {
+type Color = @public {
 	r: Nat8
 	g: Nat8
 	b: Nat8
 	a: Nat8
+}
+
+type X = {
+	public a: Int32
+	b: Int32
 }
 
 // nested record

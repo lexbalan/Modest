@@ -10,6 +10,7 @@
 
 #define UNIT  {0}
 
+__attribute__((used))
 static void unitFunc(void) {
 	//var xunit = {}  // cannot create var with Unit type
 	#define unit  {0}
