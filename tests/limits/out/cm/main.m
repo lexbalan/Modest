@@ -307,6 +307,7 @@ public func main () -> Int32 {
 	rc = testInt64Static()
 	success = success and rc
 
+
 	var int8: Int8
 	int8 = int8MaxValue; // ok
 	int8 = int8MinValue; // ok
@@ -330,6 +331,32 @@ public func main () -> Int32 {
 	int64 = int64MinValue; // ok
 	//int64 = int64MaxValue + 1  // error: integer overflow
 	//int64 = int64MinValue - 1  // error: integer overflow
+
+
+	var nat8: Nat8
+	nat8 = nat8MaxValue; // ok
+	nat8 = nat8MinValue; // ok
+	//nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
+	//nat8 = nat8MinValue - 1  // error: unsigned integer overflow
+
+	var nat16: Nat16
+	nat16 = nat16MaxValue; // ok
+	nat16 = nat16MinValue; // ok
+	//nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
+	//nat16 = nat16MinValue - 1  // error: unsigned integer overflow
+
+	var nat32: Nat32
+	nat32 = nat32MaxValue; // ok
+	nat32 = nat32MinValue; // ok
+	//nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
+	//nat32 = nat32MinValue - 1  // error: unsigned integer overflow
+
+	var nat64: Nat64
+	nat64 = nat64MaxValue; // ok
+	nat64 = nat64MinValue; // ok
+	//nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
+	//nat64 = nat64MinValue - 1  // error: unsigned integer overflow
+
 
 	printf("test ")
 	if not success {
