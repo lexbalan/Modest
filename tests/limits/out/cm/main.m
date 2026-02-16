@@ -17,7 +17,6 @@ include "limits"
 //const float64NaN       = Float64 0.0 / 0.0
 //const float64NegInf    = Float64 -1.0 / 0.0
 
-
 const nat8MaxValuePlusOne: Nat8 = Nat8 nat8MaxValue + 1
 const nat8MinValueMinusOne: Nat8 = Nat8 nat8MinValue - 1
 const nat16MaxValuePlusOne: Nat16 = Nat16 nat16MaxValue + 1
@@ -311,8 +310,8 @@ public func main () -> Int32 {
 	var int8: Int8
 	int8 = int8MaxValue; // ok
 	int8 = int8MinValue; // ok
-	//int8 = int8MaxValue + 1  // error: integer overflow
-	//int8 = int8MinValue - 1  // error: integer overflow
+	int8 = int8MaxValue + 1; // error: integer overflow
+	int8 = int8MinValue - 1; // error: integer overflow
 
 	var int16: Int16
 	int16 = int16MaxValue; // ok

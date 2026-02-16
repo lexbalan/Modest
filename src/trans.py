@@ -744,13 +744,12 @@ def do_value_bin_op(op, l, r, ti):
 
 			asset = ops[op](l.asset, r.asset)
 
-#			if op == HLIR_VALUE_OP_DIV:
-#				if not (t.is_rational() or t.is_float()):
-#					asset = l.asset // r.asset
-
+			need_width = nbits_for_num(asset, signed=t.is_signed())
 			if t.is_integer():
-				# generic тип, обновим тк разрядность могла измениться
-				nv.type = type_integer_for(int(asset), ti=ti)
+				nv.type = type_integer_create(width=need_width, ti=ti)
+			else:
+				if need_width > t.width or (not t.is_signed() and asset < 0):
+					warning("integer overflow", ti)
 
 			nv.set_asset(asset)
 

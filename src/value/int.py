@@ -43,8 +43,7 @@ def _value_int_cons_immediate(t, v, method, ti):
 
 	#info("(%d %d %d)" % (v.asset, need_width, width), ti)
 	if need_width > width:
-		type_print(t)
-		error("integer overflow", ti)
+		warning("integer overflow", ti)
 
 	nv = ValueCons(t, v, method, ti=ti)
 	nv.set_asset(v.asset)
