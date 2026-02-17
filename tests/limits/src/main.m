@@ -19,7 +19,26 @@ include "limits"
 //const float64NegInf    = Float64 -1.0 / 0.0
 
 
-// error:
+// constants check (ok)
+const _nat8MaxValue = Nat8 nat8MaxValue
+const _nat8MinValue = Nat8 nat8MinValue
+const _nat16MaxValue = Nat16 nat16MaxValue
+const _nat16MinValue = Nat16 nat16MinValue
+const _nat32MaxValue = Nat32 nat32MaxValue
+const _nat32MinValue = Nat32 nat32MinValue
+const _nat64MaxValue = Nat64 nat64MaxValue
+const _nat64MinValue = Nat64 nat64MinValue
+
+const _int8MaxValue = Int8 int8MaxValue
+const _int8MinValue = Int8 int8MinValue
+const _int16MaxValue = Int16 int16MaxValue
+const _int16MinValue = Int16 int16MinValue
+const _int32MaxValue = Int32 int32MaxValue
+const _int32MinValue = Int32 int32MinValue
+const _int64MaxValue = Int64 int64MaxValue
+const _int64MinValue = Int64 int64MinValue
+
+// constants check (error)
 //const nat8MaxValuePlusOne = Nat8 nat8MaxValue + 1
 //const nat8MinValueMinusOne = Nat8 nat8MinValue - 1
 //const nat16MaxValuePlusOne = Nat16 nat16MaxValue + 1
@@ -290,7 +309,6 @@ func testInt64Static () -> Bool {
 	int64 = int64MinValue      // ok
 	//int64 = int64MaxValue + 1  // error: integer overflow
 	//int64 = int64MinValue - 1  // error: integer overflow
-
 
 	if _int64MinValue >= 0 {
 		printf("error: int64MinValue >= 0\n")

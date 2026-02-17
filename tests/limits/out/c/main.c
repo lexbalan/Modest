@@ -22,7 +22,27 @@
 //const float64NaN       = Float64 0.0 / 0.0
 //const float64NegInf    = Float64 -1.0 / 0.0
 
-// error:
+
+// constants check (ok)
+#define _NAT8_MAX_VALUE  ((uint8_t)UINT8_MAX)
+#define _NAT8_MIN_VALUE  ((uint8_t)0)
+#define _NAT16_MAX_VALUE  ((uint16_t)UINT16_MAX)
+#define _NAT16_MIN_VALUE  ((uint16_t)0)
+#define _NAT32_MAX_VALUE  ((uint32_t)UINT32_MAX)
+#define _NAT32_MIN_VALUE  ((uint32_t)0)
+#define _NAT64_MAX_VALUE  ((uint64_t)UINT64_MAX)
+#define _NAT64_MIN_VALUE  ((uint64_t)0)
+
+#define _INT8_MAX_VALUE  ((int8_t)INT8_MAX)
+#define _INT8_MIN_VALUE  ((int8_t)INT8_MIN)
+#define _INT16_MAX_VALUE  ((int16_t)INT16_MAX)
+#define _INT16_MIN_VALUE  ((int16_t)INT16_MIN)
+#define _INT32_MAX_VALUE  ((int32_t)INT32_MAX)
+#define _INT32_MIN_VALUE  ((int32_t)INT32_MIN)
+#define _INT64_MAX_VALUE  ((int64_t)INT64_MAX)
+#define _INT64_MIN_VALUE  ((int64_t)INT64_MIN)
+
+// constants check (error)
 //const nat8MaxValuePlusOne = Nat8 nat8MaxValue + 1
 //const nat8MinValueMinusOne = Nat8 nat8MinValue - 1
 //const nat16MaxValuePlusOne = Nat16 nat16MaxValue + 1
@@ -291,7 +311,6 @@ static bool testInt64Static(void) {
 	//int64 = int64MaxValue + 1  // error: integer overflow
 	//int64 = int64MinValue - 1  // error: integer overflow
 
-
 	if (_int64MinValue >= 0) {
 		printf("error: int64MinValue >= 0\n");
 		return false;
@@ -328,13 +347,6 @@ static bool testInteger(void) {
 }
 
 
-static bool testNatural(void) {
-	printf("passed: Natural test\n");
-
-	return true;
-}
-
-
 static bool testRational(void) {
 	#define pi  (3.14)
 	if (pi != 3.14) {
@@ -365,8 +377,6 @@ int32_t main(void) {
 
 	// test built-in generic types
 	result = testInteger();
-	success = success && result;
-	result = testNatural();
 	success = success && result;
 	result = testRational();
 	success = success && result;
