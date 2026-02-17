@@ -26,7 +26,9 @@ public const int64MinValue = -9223372036854775808
 @alias("c", "INT64_MAX")
 public const int64MaxValue = 9223372036854775807
 
+@cbyvalue
 public const int128MinValue = -170141183460469231731687303715884105728
+@cbyvalue
 public const int128MaxValue = 170141183460469231731687303715884105727
 
 
