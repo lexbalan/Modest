@@ -22,36 +22,46 @@
 //const float64NaN       = Float64 0.0 / 0.0
 //const float64NegInf    = Float64 -1.0 / 0.0
 
-#define NAT8_MAX_VALUE_PLUS_ONE  ((uint8_t)((uint8_t)UINT8_MAX + 1))
-#define NAT8_MIN_VALUE_MINUS_ONE  ((uint8_t)((uint8_t)0 - 1))
-#define NAT16_MAX_VALUE_PLUS_ONE  ((uint16_t)((uint16_t)UINT16_MAX + 1))
-#define NAT16_MIN_VALUE_MINUS_ONE  ((uint16_t)((uint16_t)0 - 1))
-#define NAT32_MAX_VALUE_PLUS_ONE  ((uint32_t)UINT32_MAX + 1)
-#define NAT32_MIN_VALUE_MINUS_ONE  ((uint32_t)0 - 1)
-#define NAT64_MAX_VALUE_PLUS_ONE  ((uint64_t)UINT64_MAX + 1)
-#define NAT64_MIN_VALUE_MINUS_ONE  ((uint64_t)0 - 1)
-
-#define INT8_MAX_VALUE_PLUS_ONE  ((int8_t)((int8_t)INT8_MAX + 1))
-#define INT8_MIN_VALUE_MINUS_ONE  ((int8_t)((int8_t)INT8_MIN - 1))
-#define INT16_MAX_VALUE_PLUS_ONE  ((int16_t)((int16_t)INT16_MAX + 1))
-#define INT16_MIN_VALUE_MINUS_ONE  ((int16_t)((int16_t)INT16_MIN - 1))
-#define INT32_MAX_VALUE_PLUS_ONE  ((int32_t)INT32_MAX + 1)
-#define INT32_MIN_VALUE_MINUS_ONE  ((int32_t)INT32_MIN - 1)
-#define INT64_MAX_VALUE_PLUS_ONE  ((int64_t)INT64_MAX + 1)
-#define INT64_MIN_VALUE_MINUS_ONE  ((int64_t)INT64_MIN - 1)
+// error:
+//const nat8MaxValuePlusOne = Nat8 nat8MaxValue + 1
+//const nat8MinValueMinusOne = Nat8 nat8MinValue - 1
+//const nat16MaxValuePlusOne = Nat16 nat16MaxValue + 1
+//const nat16MinValueMinusOne = Nat16 nat16MinValue - 1
+//const nat32MaxValuePlusOne = Nat32 nat32MaxValue + 1
+//const nat32MinValueMinusOne = Nat32 nat32MinValue - 1
+//const nat64MaxValuePlusOne = Nat64 nat64MaxValue + 1
+//const nat64MinValueMinusOne = Nat64 nat64MinValue - 1
+//
+//const int8MaxValuePlusOne = Int8 int8MaxValue + 1
+//const int8MinValueMinusOne = Int8 int8MinValue - 1
+//const int16MaxValuePlusOne = Int16 int16MaxValue + 1
+//const int16MinValueMinusOne = Int16 int16MinValue - 1
+//const int32MaxValuePlusOne = Int32 int32MaxValue + 1
+//const int32MinValueMinusOne = Int32 int32MinValue - 1
+//const int64MaxValuePlusOne = Int64 int64MaxValue + 1
+//const int64MinValueMinusOne = Int64 int64MinValue - 1
 
 static bool testNat8Static(void) {
-	if (UINT8_MAX <= 0) {
+	uint8_t nat8;
+	nat8 = (uint8_t)UINT8_MAX;// ok
+	nat8 = (uint8_t)0;// ok
+	//nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
+	//nat8 = nat8MinValue - 1  // error: unsigned integer overflow
+
+	uint8_t _nat8MaxValue = (uint8_t)UINT8_MAX;
+	uint8_t _nat8MinValue = (uint8_t)0;
+
+	if (_nat8MaxValue <= _nat8MinValue) {
 		printf("error: nat8MaxValue <= nat8MinValue\n");
 		return false;
 	}
 
-	if (NAT8_MAX_VALUE_PLUS_ONE != (const uint8_t)0) {
+	if ((uint8_t)(_nat8MaxValue + 1) != _nat8MinValue) {
 		printf("error: nat8MaxValuePlusOne != nat8MinValue\n");
 		return false;
 	}
 
-	if (NAT8_MIN_VALUE_MINUS_ONE != (const uint8_t)UINT8_MAX) {
+	if ((uint8_t)(_nat8MinValue - 1) != _nat8MaxValue) {
 		printf("error: nat8MinValueMinusOne != nat8MaxValue\n");
 		return false;
 	}
@@ -62,17 +72,26 @@ static bool testNat8Static(void) {
 
 
 static bool testNat16Static(void) {
-	if (UINT16_MAX <= (const int16_t)0) {
+	uint16_t nat16;
+	nat16 = (uint16_t)UINT16_MAX;// ok
+	nat16 = (uint16_t)0;// ok
+	//nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
+	//nat16 = nat16MinValue - 1  // error: unsigned integer overflow
+
+	uint16_t _nat16MinValue = (uint16_t)0;
+	uint16_t _nat16MaxValue = (uint16_t)UINT16_MAX;
+
+	if (_nat16MaxValue <= _nat16MinValue) {
 		printf("error: nat16MaxValue <= nat16MinValue\n");
 		return false;
 	}
 
-	if (NAT16_MAX_VALUE_PLUS_ONE != (const uint16_t)0) {
+	if ((uint16_t)(_nat16MaxValue + 1) != _nat16MinValue) {
 		printf("error: nat16MaxValuePlusOne != nat16MinValue\n");
 		return false;
 	}
 
-	if (NAT16_MIN_VALUE_MINUS_ONE != (const uint16_t)UINT16_MAX) {
+	if ((uint16_t)(_nat16MinValue - 1) != _nat16MaxValue) {
 		printf("error: nat16MinValueMinusOne != nat16MaxValue\n");
 		return false;
 	}
@@ -83,17 +102,26 @@ static bool testNat16Static(void) {
 
 
 static bool testNat32Static(void) {
-	if (UINT32_MAX <= (const int32_t)0) {
+	uint32_t nat32;
+	nat32 = (uint32_t)UINT32_MAX;// ok
+	nat32 = (uint32_t)0;// ok
+	//nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
+	//nat32 = nat32MinValue - 1  // error: unsigned integer overflow
+
+	uint32_t _nat32MaxValue = (uint32_t)UINT32_MAX;
+	uint32_t _nat32MinValue = (uint32_t)0;
+
+	if (_nat32MaxValue <= _nat32MinValue) {
 		printf("error: nat32MaxValue <= nat32MinValue\n");
 		return false;
 	}
 
-	if (NAT32_MAX_VALUE_PLUS_ONE != (const uint32_t)0) {
+	if (_nat32MaxValue + 1 != _nat32MinValue) {
 		printf("error: nat32MaxValuePlusOne != nat32MinValue\n");
 		return false;
 	}
 
-	if (NAT32_MIN_VALUE_MINUS_ONE != (const uint32_t)UINT32_MAX) {
+	if (_nat32MinValue - 1 != _nat32MaxValue) {
 		printf("error: nat32MinValueMinusOne != nat32MaxValue\n");
 		return false;
 	}
@@ -104,17 +132,26 @@ static bool testNat32Static(void) {
 
 
 static bool testNat64Static(void) {
-	if (UINT64_MAX <= (const int64_t)0) {
+	uint64_t nat64;
+	nat64 = (uint64_t)UINT64_MAX;// ok
+	nat64 = (uint64_t)0;// ok
+	//nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
+	//nat64 = nat64MinValue - 1  // error: unsigned integer overflow
+
+	uint64_t _nat64MaxValue = (uint64_t)UINT64_MAX;
+	uint64_t _nat64MinValue = (uint64_t)0;
+
+	if (_nat64MaxValue <= _nat64MinValue) {
 		printf("error: nat64MaxValue <= nat64MinValue\n");
 		return false;
 	}
 
-	if (NAT64_MAX_VALUE_PLUS_ONE != (const uint64_t)0) {
+	if (_nat64MaxValue + 1 != _nat64MinValue) {
 		printf("error: nat64MaxValuePlusOne != nat64MinValue\n");
 		return false;
 	}
 
-	if (NAT64_MIN_VALUE_MINUS_ONE != (const uint64_t)UINT64_MAX) {
+	if (_nat64MinValue - 1 != _nat64MaxValue) {
 		printf("error: nat64MinValueMinusOne != nat64MaxValue\n");
 		return false;
 	}
@@ -125,27 +162,36 @@ static bool testNat64Static(void) {
 
 
 static bool testInt8Static(void) {
-	if (INT8_MIN >= 0) {
+	int8_t int8;
+	int8 = (int8_t)INT8_MAX;// ok
+	int8 = (int8_t)INT8_MIN;// ok
+	//int8 = int8MaxValue + 1  // error: integer overflow
+	//int8 = int8MinValue - 1  // error: integer overflow
+
+	int8_t _int8MinValue = (int8_t)INT8_MIN;
+	int8_t _int8MaxValue = (int8_t)INT8_MAX;
+
+	if (_int8MinValue >= 0) {
 		printf("error: int8MinValue >= 0\n");
 		return false;
 	}
 
-	if (INT8_MAX <= 0) {
+	if (_int8MaxValue <= 0) {
 		printf("error: int8MaxValue <= 0\n");
 		return false;
 	}
 
-	if (INT8_MAX <= INT8_MIN) {
+	if (_int8MaxValue <= _int8MinValue) {
 		printf("error: int8MaxValue <= int8MinValue\n");
 		return false;
 	}
 
-	if (INT8_MAX_VALUE_PLUS_ONE != (const int8_t)INT8_MIN) {
+	if ((int8_t)(_int8MaxValue + 1) != _int8MinValue) {
 		printf("error: int8MaxValuePlusOne != int8MinValue\n");
 		return false;
 	}
 
-	if (INT8_MIN_VALUE_MINUS_ONE != (const int8_t)INT8_MAX) {
+	if ((int8_t)(_int8MinValue - 1) != _int8MaxValue) {
 		printf("error: int8MinValueMinusOne != int8MaxValue\n");
 		return false;
 	}
@@ -156,27 +202,36 @@ static bool testInt8Static(void) {
 
 
 static bool testInt16Static(void) {
-	if (INT16_MIN >= 0) {
+	int16_t int16;
+	int16 = (int16_t)INT16_MAX;// ok
+	int16 = (int16_t)INT16_MIN;// ok
+	//int16 = int16MaxValue + 1  // error: integer overflow
+	//int16 = int16MinValue - 1  // error: integer overflow
+
+	int16_t _int16MinValue = (int16_t)INT16_MIN;
+	int16_t _int16MaxValue = (int16_t)INT16_MAX;
+
+	if (_int16MinValue >= 0) {
 		printf("error: int16MinValue >= 0\n");
 		return false;
 	}
 
-	if (INT16_MAX <= 0) {
+	if (_int16MaxValue <= 0) {
 		printf("error: int16MaxValue <= 0\n");
 		return false;
 	}
 
-	if (INT16_MAX <= INT16_MIN) {
+	if (_int16MaxValue <= _int16MinValue) {
 		printf("error: int16MaxValue <= int16MinValue\n");
 		return false;
 	}
 
-	if (INT16_MAX_VALUE_PLUS_ONE != (const int16_t)INT16_MIN) {
+	if ((int16_t)(_int16MaxValue + 1) != _int16MinValue) {
 		printf("error: int16MaxValuePlusOne != int16MinValue\n");
 		return false;
 	}
 
-	if (INT16_MIN_VALUE_MINUS_ONE != (const int16_t)INT16_MAX) {
+	if ((int16_t)(_int16MinValue - 1) != _int16MaxValue) {
 		printf("error: int16MinValueMinusOne != int16MaxValue\n");
 		return false;
 	}
@@ -187,27 +242,36 @@ static bool testInt16Static(void) {
 
 
 static bool testInt32Static(void) {
-	if (INT32_MIN >= 0) {
+	int32_t int32;
+	int32 = (int32_t)INT32_MAX;// ok
+	int32 = (int32_t)INT32_MIN;// ok
+	//int32 = int32MaxValue + 1  // error: integer overflow
+	//int32 = int32MinValue - 1  // error: integer overflow
+
+	int32_t _int32MinValue = (int32_t)INT32_MIN;
+	int32_t _int32MaxValue = (int32_t)INT32_MAX;
+
+	if (_int32MinValue >= 0) {
 		printf("error: int32MinValue >= 0\n");
 		return false;
 	}
 
-	if (INT32_MAX <= 0) {
+	if (_int32MaxValue <= 0) {
 		printf("error: int32MaxValue <= 0\n");
 		return false;
 	}
 
-	if (INT32_MAX <= INT32_MIN) {
+	if (_int32MaxValue <= _int32MinValue) {
 		printf("error: int32MaxValue <= int32MinValue\n");
 		return false;
 	}
 
-	if (INT32_MAX_VALUE_PLUS_ONE != (const int32_t)INT32_MIN) {
+	if (_int32MaxValue + 1 != _int32MinValue) {
 		printf("error: int32MaxValuePlusOne != int32MinValue\n");
 		return false;
 	}
 
-	if (INT32_MIN_VALUE_MINUS_ONE != (const int32_t)INT32_MAX) {
+	if (_int32MinValue - 1 != _int32MaxValue) {
 		printf("error: int32MinValueMinusOne != int32MaxValue\n");
 		return false;
 	}
@@ -218,27 +282,37 @@ static bool testInt32Static(void) {
 
 
 static bool testInt64Static(void) {
-	if (INT64_MIN >= 0) {
+	int64_t _int64MinValue = (int64_t)INT64_MIN;
+	int64_t _int64MaxValue = (int64_t)INT64_MAX;
+
+	int64_t int64;
+	int64 = (int64_t)INT64_MAX;// ok
+	int64 = (int64_t)INT64_MIN;// ok
+	//int64 = int64MaxValue + 1  // error: integer overflow
+	//int64 = int64MinValue - 1  // error: integer overflow
+
+
+	if (_int64MinValue >= 0) {
 		printf("error: int64MinValue >= 0\n");
 		return false;
 	}
 
-	if (INT64_MAX <= 0) {
+	if (_int64MaxValue <= 0) {
 		printf("error: int64MaxValue <= 0\n");
 		return false;
 	}
 
-	if (INT64_MAX <= INT64_MIN) {
+	if (_int64MaxValue <= _int64MinValue) {
 		printf("error: int64MaxValue <= int64MinValue\n");
 		return false;
 	}
 
-	if (INT64_MAX_VALUE_PLUS_ONE != (const int64_t)INT64_MIN) {
+	if (_int64MaxValue + 1 != _int64MinValue) {
 		printf("error: int64MaxValuePlusOne != int64MinValue\n");
 		return false;
 	}
 
-	if (INT64_MIN_VALUE_MINUS_ONE != (const int64_t)INT64_MAX) {
+	if (_int64MinValue - 1 != _int64MaxValue) {
 		printf("error: int64MinValueMinusOne != int64MaxValue\n");
 		return false;
 	}
@@ -250,61 +324,12 @@ static bool testInt64Static(void) {
 
 static bool testInteger(void) {
 	printf("passed: Integer test\n");
-
-	int8_t int8;
-	int8 = (int8_t)INT8_MAX;// ok
-	int8 = (int8_t)INT8_MIN;// ok
-	int8 = (int8_t)INT8_MAX + 1;// error: integer overflow
-	int8 = (int8_t)INT8_MIN - 1;// error: integer overflow
-
-	int16_t int16;
-	int16 = (int16_t)INT16_MAX;// ok
-	int16 = (int16_t)INT16_MIN;// ok
-	//int16 = int16MaxValue + 1  // error: integer overflow
-	//int16 = int16MinValue - 1  // error: integer overflow
-
-	int32_t int32;
-	int32 = (int32_t)INT32_MAX;// ok
-	int32 = (int32_t)INT32_MIN;// ok
-	//int32 = int32MaxValue + 1  // error: integer overflow
-	//int32 = int32MinValue - 1  // error: integer overflow
-
-	int64_t int64;
-	int64 = (int64_t)INT64_MAX;// ok
-	int64 = (int64_t)INT64_MIN;// ok
-	//int64 = int64MaxValue + 1  // error: integer overflow
-	//int64 = int64MinValue - 1  // error: integer overflow
-
 	return true;
 }
 
 
 static bool testNatural(void) {
 	printf("passed: Natural test\n");
-
-	uint8_t nat8;
-	nat8 = (uint8_t)UINT8_MAX;// ok
-	nat8 = (uint8_t)0;// ok
-	//nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
-	//nat8 = nat8MinValue - 1  // error: unsigned integer overflow
-
-	uint16_t nat16;
-	nat16 = (uint16_t)UINT16_MAX;// ok
-	nat16 = (uint16_t)0;// ok
-	//nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
-	//nat16 = nat16MinValue - 1  // error: unsigned integer overflow
-
-	uint32_t nat32;
-	nat32 = (uint32_t)UINT32_MAX;// ok
-	nat32 = (uint32_t)0;// ok
-	//nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
-	//nat32 = nat32MinValue - 1  // error: unsigned integer overflow
-
-	uint64_t nat64;
-	nat64 = (uint64_t)UINT64_MAX;// ok
-	nat64 = (uint64_t)0;// ok
-	//nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
-	//nat64 = nat64MinValue - 1  // error: unsigned integer overflow
 
 	return true;
 }

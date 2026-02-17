@@ -19,7 +19,7 @@ int main(void) {
 	#define b  15
 	#define c  3
 
-	#define x0  ((a - b) * c)
+	#define x0  ((const int8_t)(a - b) * c)
 
 	const int32_t x1 = named_args_test((int32_t)a, (int32_t)b, (int32_t)c);
 

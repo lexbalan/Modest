@@ -17,37 +17,48 @@ include "limits"
 //const float64NaN       = Float64 0.0 / 0.0
 //const float64NegInf    = Float64 -1.0 / 0.0
 
-const nat8MaxValuePlusOne: Nat8 = Nat8 nat8MaxValue + 1
-const nat8MinValueMinusOne: Nat8 = Nat8 nat8MinValue - 1
-const nat16MaxValuePlusOne: Nat16 = Nat16 nat16MaxValue + 1
-const nat16MinValueMinusOne: Nat16 = Nat16 nat16MinValue - 1
-const nat32MaxValuePlusOne: Nat32 = Nat32 nat32MaxValue + 1
-const nat32MinValueMinusOne: Nat32 = Nat32 nat32MinValue - 1
-const nat64MaxValuePlusOne: Nat64 = Nat64 nat64MaxValue + 1
-const nat64MinValueMinusOne: Nat64 = Nat64 nat64MinValue - 1
 
-const int8MaxValuePlusOne: Int8 = Int8 int8MaxValue + 1
-const int8MinValueMinusOne: Int8 = Int8 int8MinValue - 1
-const int16MaxValuePlusOne: Int16 = Int16 int16MaxValue + 1
-const int16MinValueMinusOne: Int16 = Int16 int16MinValue - 1
-const int32MaxValuePlusOne: Int32 = Int32 int32MaxValue + 1
-const int32MinValueMinusOne: Int32 = Int32 int32MinValue - 1
-const int64MaxValuePlusOne: Int64 = Int64 int64MaxValue + 1
-const int64MinValueMinusOne: Int64 = Int64 int64MinValue - 1
+// error:
+//const nat8MaxValuePlusOne = Nat8 nat8MaxValue + 1
+//const nat8MinValueMinusOne = Nat8 nat8MinValue - 1
+//const nat16MaxValuePlusOne = Nat16 nat16MaxValue + 1
+//const nat16MinValueMinusOne = Nat16 nat16MinValue - 1
+//const nat32MaxValuePlusOne = Nat32 nat32MaxValue + 1
+//const nat32MinValueMinusOne = Nat32 nat32MinValue - 1
+//const nat64MaxValuePlusOne = Nat64 nat64MaxValue + 1
+//const nat64MinValueMinusOne = Nat64 nat64MinValue - 1
+//
+//const int8MaxValuePlusOne = Int8 int8MaxValue + 1
+//const int8MinValueMinusOne = Int8 int8MinValue - 1
+//const int16MaxValuePlusOne = Int16 int16MaxValue + 1
+//const int16MinValueMinusOne = Int16 int16MinValue - 1
+//const int32MaxValuePlusOne = Int32 int32MaxValue + 1
+//const int32MinValueMinusOne = Int32 int32MinValue - 1
+//const int64MaxValuePlusOne = Int64 int64MaxValue + 1
+//const int64MinValueMinusOne = Int64 int64MinValue - 1
 
 
 func testNat8Static () -> Bool {
-	if nat8MaxValue <= nat8MinValue {
+	var nat8: Nat8
+	nat8 = nat8MaxValue; // ok
+	nat8 = nat8MinValue; // ok
+	//nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
+	//nat8 = nat8MinValue - 1  // error: unsigned integer overflow
+
+	var _nat8MaxValue: Nat8 = nat8MaxValue
+	var _nat8MinValue: Nat8 = nat8MinValue
+
+	if _nat8MaxValue <= _nat8MinValue {
 		printf("error: nat8MaxValue <= nat8MinValue\n")
 		return false
 	}
 
-	if nat8MaxValuePlusOne != nat8MinValue {
+	if _nat8MaxValue + 1 != _nat8MinValue {
 		printf("error: nat8MaxValuePlusOne != nat8MinValue\n")
 		return false
 	}
 
-	if nat8MinValueMinusOne != nat8MaxValue {
+	if _nat8MinValue - 1 != _nat8MaxValue {
 		printf("error: nat8MinValueMinusOne != nat8MaxValue\n")
 		return false
 	}
@@ -58,17 +69,26 @@ func testNat8Static () -> Bool {
 
 
 func testNat16Static () -> Bool {
-	if nat16MaxValue <= nat16MinValue {
+	var nat16: Nat16
+	nat16 = nat16MaxValue; // ok
+	nat16 = nat16MinValue; // ok
+	//nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
+	//nat16 = nat16MinValue - 1  // error: unsigned integer overflow
+
+	var _nat16MinValue: Nat16 = nat16MinValue
+	var _nat16MaxValue: Nat16 = nat16MaxValue
+
+	if _nat16MaxValue <= _nat16MinValue {
 		printf("error: nat16MaxValue <= nat16MinValue\n")
 		return false
 	}
 
-	if nat16MaxValuePlusOne != nat16MinValue {
+	if _nat16MaxValue + 1 != _nat16MinValue {
 		printf("error: nat16MaxValuePlusOne != nat16MinValue\n")
 		return false
 	}
 
-	if nat16MinValueMinusOne != nat16MaxValue {
+	if _nat16MinValue - 1 != _nat16MaxValue {
 		printf("error: nat16MinValueMinusOne != nat16MaxValue\n")
 		return false
 	}
@@ -79,17 +99,26 @@ func testNat16Static () -> Bool {
 
 
 func testNat32Static () -> Bool {
-	if nat32MaxValue <= nat32MinValue {
+	var nat32: Nat32
+	nat32 = nat32MaxValue; // ok
+	nat32 = nat32MinValue; // ok
+	//nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
+	//nat32 = nat32MinValue - 1  // error: unsigned integer overflow
+
+	var _nat32MaxValue: Nat32 = nat32MaxValue
+	var _nat32MinValue: Nat32 = nat32MinValue
+
+	if _nat32MaxValue <= _nat32MinValue {
 		printf("error: nat32MaxValue <= nat32MinValue\n")
 		return false
 	}
 
-	if nat32MaxValuePlusOne != nat32MinValue {
+	if _nat32MaxValue + 1 != _nat32MinValue {
 		printf("error: nat32MaxValuePlusOne != nat32MinValue\n")
 		return false
 	}
 
-	if nat32MinValueMinusOne != nat32MaxValue {
+	if _nat32MinValue - 1 != _nat32MaxValue {
 		printf("error: nat32MinValueMinusOne != nat32MaxValue\n")
 		return false
 	}
@@ -100,17 +129,26 @@ func testNat32Static () -> Bool {
 
 
 func testNat64Static () -> Bool {
-	if nat64MaxValue <= nat64MinValue {
+	var nat64: Nat64
+	nat64 = nat64MaxValue; // ok
+	nat64 = nat64MinValue; // ok
+	//nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
+	//nat64 = nat64MinValue - 1  // error: unsigned integer overflow
+
+	var _nat64MaxValue: Nat64 = nat64MaxValue
+	var _nat64MinValue: Nat64 = nat64MinValue
+
+	if _nat64MaxValue <= _nat64MinValue {
 		printf("error: nat64MaxValue <= nat64MinValue\n")
 		return false
 	}
 
-	if nat64MaxValuePlusOne != nat64MinValue {
+	if _nat64MaxValue + 1 != _nat64MinValue {
 		printf("error: nat64MaxValuePlusOne != nat64MinValue\n")
 		return false
 	}
 
-	if nat64MinValueMinusOne != nat64MaxValue {
+	if _nat64MinValue - 1 != _nat64MaxValue {
 		printf("error: nat64MinValueMinusOne != nat64MaxValue\n")
 		return false
 	}
@@ -123,27 +161,36 @@ func testNat64Static () -> Bool {
 
 
 func testInt8Static () -> Bool {
-	if int8MinValue >= 0 {
+	var int8: Int8
+	int8 = int8MaxValue; // ok
+	int8 = int8MinValue; // ok
+	//int8 = int8MaxValue + 1  // error: integer overflow
+	//int8 = int8MinValue - 1  // error: integer overflow
+
+	var _int8MinValue: Int8 = int8MinValue
+	var _int8MaxValue: Int8 = int8MaxValue
+
+	if _int8MinValue >= 0 {
 		printf("error: int8MinValue >= 0\n")
 		return false
 	}
 
-	if int8MaxValue <= 0 {
+	if _int8MaxValue <= 0 {
 		printf("error: int8MaxValue <= 0\n")
 		return false
 	}
 
-	if int8MaxValue <= int8MinValue {
+	if _int8MaxValue <= _int8MinValue {
 		printf("error: int8MaxValue <= int8MinValue\n")
 		return false
 	}
 
-	if int8MaxValuePlusOne != int8MinValue {
+	if _int8MaxValue + 1 != _int8MinValue {
 		printf("error: int8MaxValuePlusOne != int8MinValue\n")
 		return false
 	}
 
-	if int8MinValueMinusOne != int8MaxValue {
+	if _int8MinValue - 1 != _int8MaxValue {
 		printf("error: int8MinValueMinusOne != int8MaxValue\n")
 		return false
 	}
@@ -154,27 +201,36 @@ func testInt8Static () -> Bool {
 
 
 func testInt16Static () -> Bool {
-	if int16MinValue >= 0 {
+	var int16: Int16
+	int16 = int16MaxValue; // ok
+	int16 = int16MinValue; // ok
+	//int16 = int16MaxValue + 1  // error: integer overflow
+	//int16 = int16MinValue - 1  // error: integer overflow
+
+	var _int16MinValue: Int16 = int16MinValue
+	var _int16MaxValue: Int16 = int16MaxValue
+
+	if _int16MinValue >= 0 {
 		printf("error: int16MinValue >= 0\n")
 		return false
 	}
 
-	if int16MaxValue <= 0 {
+	if _int16MaxValue <= 0 {
 		printf("error: int16MaxValue <= 0\n")
 		return false
 	}
 
-	if int16MaxValue <= int16MinValue {
+	if _int16MaxValue <= _int16MinValue {
 		printf("error: int16MaxValue <= int16MinValue\n")
 		return false
 	}
 
-	if int16MaxValuePlusOne != int16MinValue {
+	if _int16MaxValue + 1 != _int16MinValue {
 		printf("error: int16MaxValuePlusOne != int16MinValue\n")
 		return false
 	}
 
-	if int16MinValueMinusOne != int16MaxValue {
+	if _int16MinValue - 1 != _int16MaxValue {
 		printf("error: int16MinValueMinusOne != int16MaxValue\n")
 		return false
 	}
@@ -185,27 +241,36 @@ func testInt16Static () -> Bool {
 
 
 func testInt32Static () -> Bool {
-	if int32MinValue >= 0 {
+	var int32: Int32
+	int32 = int32MaxValue; // ok
+	int32 = int32MinValue; // ok
+	//int32 = int32MaxValue + 1  // error: integer overflow
+	//int32 = int32MinValue - 1  // error: integer overflow
+
+	var _int32MinValue: Int32 = int32MinValue
+	var _int32MaxValue: Int32 = int32MaxValue
+
+	if _int32MinValue >= 0 {
 		printf("error: int32MinValue >= 0\n")
 		return false
 	}
 
-	if int32MaxValue <= 0 {
+	if _int32MaxValue <= 0 {
 		printf("error: int32MaxValue <= 0\n")
 		return false
 	}
 
-	if int32MaxValue <= int32MinValue {
+	if _int32MaxValue <= _int32MinValue {
 		printf("error: int32MaxValue <= int32MinValue\n")
 		return false
 	}
 
-	if int32MaxValuePlusOne != int32MinValue {
+	if _int32MaxValue + 1 != _int32MinValue {
 		printf("error: int32MaxValuePlusOne != int32MinValue\n")
 		return false
 	}
 
-	if int32MinValueMinusOne != int32MaxValue {
+	if _int32MinValue - 1 != _int32MaxValue {
 		printf("error: int32MinValueMinusOne != int32MaxValue\n")
 		return false
 	}
@@ -216,27 +281,37 @@ func testInt32Static () -> Bool {
 
 
 func testInt64Static () -> Bool {
-	if int64MinValue >= 0 {
+	var _int64MinValue: Int64 = int64MinValue
+	var _int64MaxValue: Int64 = int64MaxValue
+
+	var int64: Int64
+	int64 = int64MaxValue; // ok
+	int64 = int64MinValue; // ok
+	//int64 = int64MaxValue + 1  // error: integer overflow
+	//int64 = int64MinValue - 1  // error: integer overflow
+
+
+	if _int64MinValue >= 0 {
 		printf("error: int64MinValue >= 0\n")
 		return false
 	}
 
-	if int64MaxValue <= 0 {
+	if _int64MaxValue <= 0 {
 		printf("error: int64MaxValue <= 0\n")
 		return false
 	}
 
-	if int64MaxValue <= int64MinValue {
+	if _int64MaxValue <= _int64MinValue {
 		printf("error: int64MaxValue <= int64MinValue\n")
 		return false
 	}
 
-	if int64MaxValuePlusOne != int64MinValue {
+	if _int64MaxValue + 1 != _int64MinValue {
 		printf("error: int64MaxValuePlusOne != int64MinValue\n")
 		return false
 	}
 
-	if int64MinValueMinusOne != int64MaxValue {
+	if _int64MinValue - 1 != _int64MaxValue {
 		printf("error: int64MinValueMinusOne != int64MaxValue\n")
 		return false
 	}
@@ -248,61 +323,12 @@ func testInt64Static () -> Bool {
 
 func testInteger () -> Bool {
 	printf("passed: Integer test\n")
-
-	var int8: Int8
-	int8 = int8MaxValue; // ok
-	int8 = int8MinValue; // ok
-	int8 = int8MaxValue + 1; // error: integer overflow
-	int8 = int8MinValue - 1; // error: integer overflow
-
-	var int16: Int16
-	int16 = int16MaxValue; // ok
-	int16 = int16MinValue; // ok
-	//int16 = int16MaxValue + 1  // error: integer overflow
-	//int16 = int16MinValue - 1  // error: integer overflow
-
-	var int32: Int32
-	int32 = int32MaxValue; // ok
-	int32 = int32MinValue; // ok
-	//int32 = int32MaxValue + 1  // error: integer overflow
-	//int32 = int32MinValue - 1  // error: integer overflow
-
-	var int64: Int64
-	int64 = int64MaxValue; // ok
-	int64 = int64MinValue; // ok
-	//int64 = int64MaxValue + 1  // error: integer overflow
-	//int64 = int64MinValue - 1  // error: integer overflow
-
 	return true
 }
 
 
 func testNatural () -> Bool {
 	printf("passed: Natural test\n")
-
-	var nat8: Nat8
-	nat8 = nat8MaxValue; // ok
-	nat8 = nat8MinValue; // ok
-	//nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
-	//nat8 = nat8MinValue - 1  // error: unsigned integer overflow
-
-	var nat16: Nat16
-	nat16 = nat16MaxValue; // ok
-	nat16 = nat16MinValue; // ok
-	//nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
-	//nat16 = nat16MinValue - 1  // error: unsigned integer overflow
-
-	var nat32: Nat32
-	nat32 = nat32MaxValue; // ok
-	nat32 = nat32MinValue; // ok
-	//nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
-	//nat32 = nat32MinValue - 1  // error: unsigned integer overflow
-
-	var nat64: Nat64
-	nat64 = nat64MaxValue; // ok
-	nat64 = nat64MinValue; // ok
-	//nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
-	//nat64 = nat64MinValue - 1  // error: unsigned integer overflow
 
 	return true
 }

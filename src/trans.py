@@ -749,7 +749,7 @@ def do_value_bin_op(op, l, r, ti):
 				nv.type = type_integer_create(width=need_width, ti=ti)
 			else:
 				if need_width > t.width or (not t.is_signed() and asset < 0):
-					warning("integer overflow", ti)
+					error("integer overflow", ti)
 
 			nv.set_asset(asset)
 
