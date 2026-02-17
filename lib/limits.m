@@ -50,7 +50,9 @@ public const nat64MinValue = 0
 @alias("c", "UINT64_MAX")
 public const nat64MaxValue = 18446744073709551615
 
+@cbyvalue
 public const nat128MinValue = 0
+@cbyvalue
 public const nat128MaxValue = 340282366920938463463374607431768211455
 
 
