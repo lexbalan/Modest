@@ -263,19 +263,6 @@ declare void @perror(%ConstCharStr* %str)
 @str49 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
-;const float32MaxValue       = Float32 3.4028234663852886e+38
-;const float32MinValueNormal = Float32 1.1754943508222875e-38
-;const float32MinValueSub    = Float32 1.401298464324817e-45
-;const float32Epsilon   = Float32 1.1920928955078125e-7
-;
-;const float32PosInf    = Float32 1.0 / 0.0
-;const float32NaN       = Float32 0.0 / 0.0
-;const float32NegInf    = Float32 -1.0 / 0.0
-;
-;const float64PosInf    = Float64 1.0 / 0.0
-;const float64NaN       = Float64 0.0 / 0.0
-;const float64NegInf    = Float64 -1.0 / 0.0
-
 ; constants check (error)
 ;const nat8MaxValuePlusOne = Nat8 nat8MaxValue + 1
 ;const nat8MinValueMinusOne = Nat8 nat8MinValue - 1
@@ -294,6 +281,20 @@ declare void @perror(%ConstCharStr* %str)
 ;const int32MinValueMinusOne = Int32 int32MinValue - 1
 ;const int64MaxValuePlusOne = Int64 int64MaxValue + 1
 ;const int64MinValueMinusOne = Int64 int64MinValue - 1
+
+
+;const float32MaxValue       = Float32 3.4028234663852886e+38
+;const float32MinValueNormal = Float32 1.1754943508222875e-38
+;const float32MinValueSub    = Float32 1.401298464324817e-45
+;const float32Epsilon   = Float32 1.1920928955078125e-7
+;
+;const float32PosInf    = Float32 1.0 / 0.0
+;const float32NaN       = Float32 0.0 / 0.0
+;const float32NegInf    = Float32 -1.0 / 0.0
+;
+;const float64PosInf    = Float64 1.0 / 0.0
+;const float64NaN       = Float64 0.0 / 0.0
+;const float64NegInf    = Float64 -1.0 / 0.0
 define internal %Bool @testNat8Static() {
 	%1 = alloca %Nat8, align 1
 	store %Nat8 255, %Nat8* %1	; ok

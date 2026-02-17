@@ -4,19 +4,6 @@ include "stdio"
 include "limits"
 
 
-//const float32MaxValue       = Float32 3.4028234663852886e+38
-//const float32MinValueNormal = Float32 1.1754943508222875e-38
-//const float32MinValueSub    = Float32 1.401298464324817e-45
-//const float32Epsilon   = Float32 1.1920928955078125e-7
-//
-//const float32PosInf    = Float32 1.0 / 0.0
-//const float32NaN       = Float32 0.0 / 0.0
-//const float32NegInf    = Float32 -1.0 / 0.0
-//
-//const float64PosInf    = Float64 1.0 / 0.0
-//const float64NaN       = Float64 0.0 / 0.0
-//const float64NegInf    = Float64 -1.0 / 0.0
-
 
 // constants check (ok)
 const _nat8MaxValue = Nat8 nat8MaxValue
@@ -55,6 +42,21 @@ const _int64MinValue = Int64 int64MinValue
 //const int32MinValueMinusOne = Int32 int32MinValue - 1
 //const int64MaxValuePlusOne = Int64 int64MaxValue + 1
 //const int64MinValueMinusOne = Int64 int64MinValue - 1
+
+
+//const float32MaxValue       = Float32 3.4028234663852886e+38
+//const float32MinValueNormal = Float32 1.1754943508222875e-38
+//const float32MinValueSub    = Float32 1.401298464324817e-45
+//const float32Epsilon   = Float32 1.1920928955078125e-7
+//
+//const float32PosInf    = Float32 1.0 / 0.0
+//const float32NaN       = Float32 0.0 / 0.0
+//const float32NegInf    = Float32 -1.0 / 0.0
+//
+//const float64PosInf    = Float64 1.0 / 0.0
+//const float64NaN       = Float64 0.0 / 0.0
+//const float64NegInf    = Float64 -1.0 / 0.0
+
 
 
 func testNat8Static () -> Bool {
