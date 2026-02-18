@@ -222,11 +222,8 @@ declare void @chacha20_makeState(%chacha20_State* %0, %chacha20_Key* %key, %Word
 ; -- strings --
 @str1 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 67, i8 104, i8 97, i8 67, i8 104, i8 97, i8 50, i8 48, i8 32, i8 0]
 @str2 = private constant [3 x i8] [i8 37, i8 99, i8 0]
-@str3 = private constant [4 x i8] [i8 37, i8 120, i8 10, i8 0]
-@str4 = private constant [3 x i8] [i8 37, i8 99, i8 0]
-@str5 = private constant [6 x i8] [i8 102, i8 97, i8 105, i8 108, i8 10, i8 0]
-@str6 = private constant [9 x i8] [i8 115, i8 117, i8 99, i8 99, i8 101, i8 115, i8 115, i8 10, i8 0]
-@str7 = private constant [6 x i8] [i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
+@str3 = private constant [6 x i8] [i8 102, i8 97, i8 105, i8 108, i8 10, i8 0]
+@str4 = private constant [9 x i8] [i8 115, i8 117, i8 99, i8 99, i8 101, i8 115, i8 115, i8 10, i8 0]
 ; -- endstrings --
 %Context = type {
 	[32 x %Byte]*,
@@ -2541,68 +2538,50 @@ define %Int @main() {
 	call void @cipher(%Context* %9, [0 x %Byte]* %8, %Nat32 1024)
 	%10 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %10
+	;	while i < 10 {
+	;		printf("%c", xlorem1024[i])
+	;		printf("%x\n", Nat32 Word32 Word8 xlorem1024[i])
+	;		++i
+	;	}
+	%11 = alloca %Context, align 8
+	%12 = load [3 x %Word32], [3 x %Word32]* @testNonce2
+	%13 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %12)
+; -- cons_composite_from_composite_by_value --
+	%14 = alloca %Context
+	store %Context %13, %Context* %14
+	%15 = bitcast %Context* %14 to %Context*
+; -- end cons_composite_from_composite_by_value --
+	%16 = load %Context, %Context* %15
+	store %Context %16, %Context* %11
+	%17 = bitcast %Context* %11 to %Context*
+	call void @cipher(%Context* %17, [0 x %Byte]* %8, %Nat32 1024)
+	store %Int32 0, %Int32* %10
 ; while_1
 	br label %again_1
 again_1:
-	%11 = load %Int32, %Int32* %10
-	%12 = icmp slt %Int32 %11, 10
-	br %Bool %12 , label %body_1, label %break_1
+	%18 = load %Int32, %Int32* %10
+	%19 = icmp slt %Int32 %18, 1024
+	br %Bool %19 , label %body_1, label %break_1
 body_1:
-	%13 = load %Int32, %Int32* %10
-	%14 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %13
-	%15 = load %Char8, %Char8* %14
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str2 to [0 x i8]*), %Char8 %15)
-	%17 = load %Int32, %Int32* %10
-	%18 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %17
-	%19 = load %Char8, %Char8* %18
-	%20 = bitcast %Char8 %19 to %Word8
-	%21 = zext %Word8 %20 to %Word32
-	%22 = bitcast %Word32 %21 to %Nat32
-	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str3 to [0 x i8]*), %Nat32 %22)
+	%20 = load %Int32, %Int32* %10
+	%21 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %20
+	%22 = load %Char8, %Char8* %21
+	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str2 to [0 x i8]*), %Char8 %22)
 	%24 = load %Int32, %Int32* %10
 	%25 = add %Int32 %24, 1
 	store %Int32 %25, %Int32* %10
 	br label %again_1
 break_1:
-	%26 = alloca %Context, align 8
-	%27 = load [3 x %Word32], [3 x %Word32]* @testNonce2
-	%28 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %27)
-; -- cons_composite_from_composite_by_value --
-	%29 = alloca %Context
-	store %Context %28, %Context* %29
-	%30 = bitcast %Context* %29 to %Context*
-; -- end cons_composite_from_composite_by_value --
-	%31 = load %Context, %Context* %30
-	store %Context %31, %Context* %26
-	%32 = bitcast %Context* %26 to %Context*
-	call void @cipher(%Context* %32, [0 x %Byte]* %8, %Nat32 1024)
-	store %Int32 0, %Int32* %10
-; while_2
-	br label %again_2
-again_2:
-	%33 = load %Int32, %Int32* %10
-	%34 = icmp slt %Int32 %33, 1024
-	br %Bool %34 , label %body_2, label %break_2
-body_2:
-	%35 = load %Int32, %Int32* %10
-	%36 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %35
-	%37 = load %Char8, %Char8* %36
-	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str4 to [0 x i8]*), %Char8 %37)
-	%39 = load %Int32, %Int32* %10
-	%40 = add %Int32 %39, 1
-	store %Int32 %40, %Int32* %10
-	br label %again_2
-break_2:
 ; if_0
-	%41 = call %Bool @test0()
-	%42 = xor %Bool %41, 1
-	br %Bool %42 , label %then_0, label %endif_0
+	%26 = call %Bool @test0()
+	%27 = xor %Bool %26, 1
+	br %Bool %27 , label %then_0, label %endif_0
 then_0:
-	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str5 to [0 x i8]*))
+	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str3 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str6 to [0 x i8]*))
+	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str4 to [0 x i8]*))
 	ret %Int 0
 }
 
@@ -2634,30 +2613,18 @@ define internal %Bool @test0() {
 	%19 = load %chacha20_Block, %chacha20_Block* %18
 	%20 = zext i8 16 to %Nat32
 	store %chacha20_Block %19, %chacha20_Block* %16
-	%21 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %21
-; while_1
-	br label %again_1
-again_1:
-	%22 = load %Int32, %Int32* %21
-	%23 = icmp slt %Int32 %22, 16
-	br %Bool %23 , label %body_1, label %break_1
-body_1:
-	%24 = load %Int32, %Int32* %21
-	%25 = getelementptr %chacha20_Block, %chacha20_Block* %16, %Int32 0, %Int32 %24
-	%26 = load %Word32, %Word32* %25
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), %Word32 %26)
-	%28 = load %Int32, %Int32* %21
-	%29 = add %Int32 %28, 1
-	store %Int32 %29, %Int32* %21
-	br label %again_1
-break_1:
-	%30 = bitcast %chacha20_Block* %16 to [64 x %Byte]*
-	%31 = bitcast [64 x %Byte]* %30 to i8*
-	%32 = bitcast [64 x %Byte]* @testResult to i8*
-	%33 = call i1 (i8*, i8*, i64) @memeq(i8* %31, i8* %32, %Int64 64)
-	%34 = icmp ne %Bool %33, 0
-	ret %Bool %34
+
+	;	var i = 0
+	;	while i < 16 {
+	;		printf("%08x\n", block[i])
+	;		++i
+	;	}
+	%21 = bitcast %chacha20_Block* %16 to [64 x %Byte]*
+	%22 = bitcast [64 x %Byte]* %21 to i8*
+	%23 = bitcast [64 x %Byte]* @testResult to i8*
+	%24 = call i1 (i8*, i8*, i64) @memeq(i8* %22, i8* %23, %Int64 64)
+	%25 = icmp ne %Bool %24, 0
+	ret %Bool %25
 }
 
 

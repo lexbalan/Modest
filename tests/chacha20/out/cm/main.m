@@ -90,11 +90,11 @@ public func main () -> Int {
 	cipher(&ctx, dptr, 1024)
 
 	var i: Int32 = 0
-	while i < 10 {
-		printf("%c", xlorem1024[i])
-		printf("%x\n", Nat32 Word32 Word8 xlorem1024[i])
-		i = i + 1
-	}
+	//	while i < 10 {
+	//		printf("%c", xlorem1024[i])
+	//		printf("%x\n", Nat32 Word32 Word8 xlorem1024[i])
+	//		++i
+	//	}
 
 	var ctx2: Context = init(&testKey, testNonce2)
 	cipher(&ctx2, dptr, 1024)
@@ -122,11 +122,11 @@ func test0 () -> Bool {
 	var state: State = cc.makeState(unsafe *Key &key, counter, unsafe *[3]Word32 &nonce)
 	var block: Block = cc.chacha20Block(state)
 
-	var i: Int32 = 0
-	while i < 16 {
-		printf("%08x\n", block[i])
-		i = i + 1
-	}
+	//	var i = 0
+	//	while i < 16 {
+	//		printf("%08x\n", block[i])
+	//		++i
+	//	}
 
 	let bptr: *[64]Byte = unsafe *[64]Byte &block
 

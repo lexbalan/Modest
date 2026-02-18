@@ -105,8 +105,6 @@ Implements compile-time and runtime value handling per type:
 | `pointer.py` | Pointer | Pointer dereference and conversions |
 | `unit.py` | Unit | Unit (void) value |
 | `cons.py` | Cons | Value constructors |
-| `tag.py` | Tag | Tagged values |
-| `tor.py` | Tor | Tagged union constructors |
 | `bad.py` | Bad | Error/bad value representation |
 
 

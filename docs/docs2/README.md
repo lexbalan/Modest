@@ -23,7 +23,6 @@
 - [packed](type/packed/) - Packed record types
 - [pointer](type/pointer/) - Pointer types
 - [record](type/record/) - Record (struct) types
-- [union](type/union/) - Union types
 - [unit](type/unit/) - Unit type
 
 ## Values (Expressions)

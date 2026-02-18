@@ -620,6 +620,7 @@ class Type(Entity):
 		self.definition = None
 		self.is_global_flag = True
 		self.uid = 0
+		self.layout = 'default'
 		#self.id = id
 
 		#self.parent_type = None
@@ -640,6 +641,12 @@ class Type(Entity):
 			k = a['kind']
 			#print("SPICE: " + str(a))
 			nt.annotations[k] = {}
+
+			# handle record layout annotations
+			if k == 'union':
+				nt.layout = 'union'
+			elif k == 'record':
+				nt.layout = 'record'
 
 			if k == 'zarray':
 				# zero terminated array
@@ -1297,6 +1304,7 @@ class TypeRecord(Type):
 		self.incomplete = False
 		self.fields = fields
 		self.align = record_align
+		self.layout = 'record'
 
 		# это структура с открытыми полями -> она идет через typedef в C backend
 		self.is_open_record = False

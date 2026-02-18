@@ -239,7 +239,7 @@ def get_type_id_str(t):
 
 		tag = get_record_tag(t)
 		if tag != None:
-			isa = 'struct' if not t.hasAttribute2('union') else 'union'
+			isa = 'struct' if not t.layout == 'union' else 'union'
 			return isa + ' ' + tag
 
 	if hasattr(t, 'id'):
@@ -452,7 +452,7 @@ def do_ctype_struct(t, tag='', specs=[]):
 	for p in t.fields:
 		fields.append(ctype_field(id_str=p.id.str, ctype=do_ctype(p.type), specs=[], nl=p.nl))
 	tag = camel_to_lower_snake(plusSpace(tag))
-	isa = 'struct' if not t.hasAttribute2('union') else 'union'
+	isa = 'struct' if not t.layout == 'union' else 'union'
 	return ctype_struct(fields, specs=specs, tag=isa+tag)
 
 
@@ -2078,7 +2078,7 @@ def print_decl_type(x):
 def print_decl_type_record(x):
 	t = x.type
 	tag = get_record_tag(t)
-	isa = 'struct' if not t.hasAttribute2('union') else 'union'
+	isa = 'struct' if not t.layout == 'union' else 'union'
 	out('%s %s;\n' % (isa, tag))
 	if t.is_open_record:
 		out("typedef %s %s %s;\n" % (isa, tag, get_id_str(t)))
@@ -2105,7 +2105,7 @@ def print_def_type_record(x):
 	# Если структура open & не задекларирована ранее - печатаем для нее typedef
 	if (not id_str in declared) and t.is_open_record:
 		tag = get_record_tag(t)
-		isa = 'struct' if not t.hasAttribute2('union') else 'union'
+		isa = 'struct' if not t.layout == 'union' else 'union'
 		out("\ntypedef %s %s %s;" % (isa, tag, get_id_str(t)))
 
 	out("\n")

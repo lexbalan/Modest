@@ -99,11 +99,11 @@ int main(void) {
 	cipher(&ctx, dptr, 1024);
 
 	int32_t i = 0;
-	while (i < 10) {
-		printf("%c", xlorem1024[i]);
-		printf("%x\n", (uint32_t)(uint8_t)xlorem1024[i]);
-		i = i + 1;
-	}
+	//	while i < 10 {
+	//		printf("%c", xlorem1024[i])
+	//		printf("%x\n", Nat32 Word32 Word8 xlorem1024[i])
+	//		++i
+	//	}
 
 	struct context ctx2 = init(&testKey, &testNonce2);
 	cipher(&ctx2, dptr, 1024);
@@ -135,11 +135,11 @@ static bool test0(void) {
 	chacha20_Block block;
 	chacha20_chacha20Block(&state, &block);
 
-	int32_t i = 0;
-	while (i < 16) {
-		printf("%08x\n", block[i]);
-		i = i + 1;
-	}
+	//	var i = 0
+	//	while i < 16 {
+	//		printf("%08x\n", block[i])
+	//		++i
+	//	}
 
 	uint8_t (*const bptr)[64] = (uint8_t (*)[64])&block;
 
