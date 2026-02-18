@@ -647,11 +647,11 @@ class Type(Entity):
 				nt.layout = 'union'
 			elif k == 'record':
 				nt.layout = 'record'
+			elif k == 'exact':
+				nt.layout = 'exact'
 			elif k == 'packed':
 				nt.layout = 'packed'
 				nt.att.append(k)
-			elif k == 'exact':
-				nt.layout = 'exact'
 
 
 			if k == 'zarray':
