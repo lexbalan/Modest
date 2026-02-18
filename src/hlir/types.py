@@ -1311,6 +1311,7 @@ class TypeRecord(Type):
 		self.is_open_access = False
 
 
+
 	# Получить список типов от которых данный тип зависит напрямую
 	def get_dir_deps(self, deps):
 		for f in self.fields:
@@ -1407,11 +1408,9 @@ class Value(Entity):
 		assert(isinstance(r, Value))
 
 		if l.type.is_array():
-			from value.array import value_array_eq
-			return value_array_eq(l, r, ti)
+			return ValueArray.eq(l, r, ti)
 		elif l.type.is_record():
-			from value.record import value_record_eq
-			return value_record_eq(l, r, ti)
+			return ValueRecord.eq(l, r, ti)
 
 		return l.asset == r.asset
 
@@ -1708,6 +1707,28 @@ class ValueArray(Value):
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.nsigns = 0
 
+	# FIXIT: it is generic arrays EQ!
+	def eq(l, r, ti):
+		#info("value_array_eq", ti)
+
+		if not (l.isValueImmediate() and r.isValueImmediate()):
+			return False
+
+		lvolume = l.type.volume
+		rvolume = r.type.volume
+		if not (lvolume.isValueImmediate() and rvolume.isValueImmediate()):
+			return False
+
+		if lvolume.asset != rvolume.asset:
+			return False
+
+		for lx, rx in zip(l.asset, r.asset):
+			if not Value.eq(lx, rx, ti):
+				return False
+
+		return True
+
+
 
 class ValueRecord(Value):
 	def __init__(self, type, initializers, ti=None):
@@ -1716,6 +1737,23 @@ class ValueRecord(Value):
 		self.set_asset(initializers)
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.nsigns = 0
+
+
+	def eq(l, r, ti):
+		#info("value_record_eq()", ti)
+
+		if not (l.isValueImmediate() and r.isValueImmediate()):
+			return False
+
+		if len(l.asset) != len(r.asset):
+			return False
+
+		for lx, rx in zip(l.asset, r.asset):
+			if not Value.eq(lx.value, rx.value, ti):
+				return False
+
+		return True
+
 
 
 def create_zero_literal(t, ti=None):

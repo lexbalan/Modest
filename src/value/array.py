@@ -184,29 +184,6 @@ def value_array_add(l, r, ti):
 
 
 
-# FIXIT: it is generic arrays EQ!
-def value_array_eq(l, r, ti):
-	#info("value_array_eq", ti)
-
-	if not (l.isValueImmediate() and r.isValueImmediate()):
-		return False
-
-	lvolume = l.type.volume
-	rvolume = r.type.volume
-	if not (lvolume.isValueImmediate() and rvolume.isValueImmediate()):
-		return False
-
-	if lvolume.asset != rvolume.asset:
-		return False
-
-	for lx, rx in zip(l.asset, r.asset):
-		if not Value.eq(lx, rx, ti):
-			return False
-
-	return True
-
-
-
 def implicit_cons_list(items, to_type):
 	new_items = []
 	from .cons import value_cons_implicit

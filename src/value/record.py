@@ -115,20 +115,3 @@ def value_record_cons(t, v, method, ti):
 
 
 
-def value_record_eq(l, r, ti):
-	#info("value_record_eq()", ti)
-
-	if not (l.isValueImmediate() and r.isValueImmediate()):
-		return False
-
-	if len(l.asset) != len(r.asset):
-		return False
-
-	for lx, rx in zip(l.asset, r.asset):
-		if not Value.eq(lx.value, rx.value, ti):
-			return False
-
-	return True
-
-
-
