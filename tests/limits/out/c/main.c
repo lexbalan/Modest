@@ -341,6 +341,34 @@ static bool testInt64Static(void) {
 }
 
 
+static bool testFloat32Static(void) {
+	float a = 3.0;
+	float b = 2.0;
+
+	if (a + b != 5.0) {
+		printf("3.0 + 2.0 != 5.0 (=%f)\n", a + b);
+		return false;
+	}
+
+	if (a - b != 1.0) {
+		printf("3.0 - 2.0 != 1.0 (=%f)\n", a - b);
+		return false;
+	}
+
+	if (a * b != 6.0) {
+		printf("3.0 * 2.0 != 6.0 (=%f)\n", a * b);
+		return false;
+	}
+
+	if (a / b != 1.5) {
+		printf("3.0 / 2.0 != 1.5 (=%f)\n", a / b);
+		return false;
+	}
+
+	return true;
+}
+
+
 static bool testInteger(void) {
 	printf("passed: Integer test\n");
 	return true;
@@ -399,6 +427,10 @@ int32_t main(void) {
 	result = testInt32Static();
 	success = success && result;
 	result = testInt64Static();
+	success = success && result;
+
+	//
+	result = testFloat32Static();
 	success = success && result;
 
 

@@ -595,6 +595,9 @@ HLIR_TYPE_KIND_BOOL = 14
 HLIR_TYPE_KIND_FLOAT = 15
 
 
+# for @branded types
+brand_cnt = 0
+
 
 class Type(Entity):
 	def __init__(self, generic=False, width=0, ops=[], ti=None):
@@ -624,6 +627,46 @@ class Type(Entity):
 		# такие типы будут признаны неравными если их поля dictinct отличны
 		# 0 - зарезервирован для не brand типов (см. @branded аттрибут)
 		self.brand = 0
+
+
+	def add_atts(self, atts):
+		global brand_cnt
+		if atts == []:
+			return self
+
+		nt = Type.copy(self)
+
+		for a in atts:
+			k = a['kind']
+			#print("SPICE: " + str(a))
+			nt.annotations[k] = {}
+
+			if k == 'zarray':
+				# zero terminated array
+				nt.att.append(k)
+			if k == 'exact':
+				# exact layout
+				nt.att.append(k)
+			if k == 'packed':
+				# packed layout
+				nt.att.append(k)
+
+			if k == 'branded':
+				brand_cnt += 1
+				nt.brand = brand_cnt
+
+			# Для C некоторые атрибуты типа массива -
+			# это атрибуты типа его элементов
+			if nt.is_array():
+				if k in ['const', 'volatile', 'restrict']:
+					nt.of = Type.copy(nt.of)
+					if k == 'const':
+						nt.of.addAnnotation('const', {})
+					if k == 'volatile':
+						nt.of.addAnnotation('volatile', {})
+					if k == 'restrict':
+						nt.of.addAnnotation('restrict', {})
+		return nt
 
 
 	# Получить список типов от которых данный тип зависит напрямую
@@ -1322,6 +1365,15 @@ class Value(Entity):
 		self.asset = None
 
 		self.nl = 0
+
+
+	def add_atts(self, atts):
+		if atts == []:
+			return self
+		nv = Value.copy(self)
+		for a in atts:
+			nv.att.append(a['kind'])
+		return nv
 
 
 	# Нормализует и присваивает asset (согласно типу значения)

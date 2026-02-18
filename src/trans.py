@@ -80,8 +80,6 @@ context = None  # current context (symtab)
 cdef = None
 
 
-# for @branded types
-brand_cnt = 0
 
 
 
@@ -374,10 +372,6 @@ def do_field(x):
 		f.nl = 1
 
 	f.access_level = x['access_modifier']
-
-	#f.access_level = get_access_level(x)
-
-	#add_spices_any(f, x['anno'])
 	return f
 
 
@@ -514,49 +508,6 @@ def do_type_func(x, func_id="_"):
 
 
 
-
-def add_spices_type(t, atts):
-	global brand_cnt
-
-	if atts == []:
-		return t
-
-	nt = Type.copy(t)
-
-	for a in atts:
-		k = a['kind']
-		#print("SPICE: " + str(a))
-		nt.annotations[k] = {}
-
-		if k == 'zarray':
-			# zero terminated array
-			nt.att.append(k)
-		if k == 'exact':
-			# exact layout
-			nt.att.append(k)
-		if k == 'packed':
-			# packed layout
-			nt.att.append(k)
-
-		if k == 'branded':
-			brand_cnt += 1
-			nt.brand = brand_cnt
-
-		# Для C некоторые атрибуты типа массива -
-		# это атрибуты типа его элементов
-		if nt.is_array():
-			if k in ['const', 'volatile', 'restrict']:
-				nt.of = Type.copy(nt.of)
-				if k == 'const':
-					nt.of.addAnnotation('const', {})
-				if k == 'volatile':
-					nt.of.addAnnotation('volatile', {})
-				if k == 'restrict':
-					nt.of.addAnnotation('restrict', {})
-
-	return nt
-
-
 def do_type_internal(x):
 	t = None
 	k = x['kind']
@@ -567,11 +518,11 @@ def do_type_internal(x):
 	elif k == 'record': t = do_type_record(x)
 	else: t = bad_type(x['ti'])
 	t.ti = x['ti']
-	tt = add_spices_type(t, x['anno'])
+	tt = t.add_atts(x['anno'])
 
 	if k == 'record' and not t.is_unit():
 		# кароч прикол такой:
-		# тк add_spices_type вызывается здесь и создает НОВЫЙ тип то в таблице cmodule.anon_recs
+		# тк t.add_atts вызывается здесь и создает НОВЫЙ тип то в таблице cmodule.anon_recs
 		# оказывается оригинальная структура, а при поиске для удаления ее оттуда ищется новая (обернутая)
 		# поэтому этот костыль тут а не в do_type_record где ему казалось бы - место
 		anon_tag = '__anonymous_struct_%d' % tt.uid
@@ -1655,13 +1606,6 @@ def do_value_subexpr(x):
 
 
 
-def add_spices_value(v, atts):
-	if atts != []:
-		v = Value.copy(v)
-	for a in atts:
-		v.att.append(a['kind'])
-	return v
-
 
 def do_value(x):
 	assert(x['isa'] == 'ast_value')
@@ -1706,7 +1650,7 @@ def do_value(x):
 
 	assert(v != None)
 	v.ti = x['ti']
-	return add_spices_value(v, x['anno'])
+	return v.add_atts(x['anno'])
 
 
 #
@@ -2123,7 +2067,7 @@ def def_type_global(x):
 		error("type redefinition", x['ti'])
 		return None
 	df = def_type_common(x, nt)
-	df = add_spices_def(df, x['anno'])
+	df = def_add_annotations(df, x['anno'])
 	return df
 
 
@@ -2197,7 +2141,7 @@ def def_const_global(x):
 			print(iv)
 			error("expected immediate value", iv.ti)
 
-	df = add_spices_def(df, x['anno'])
+	df = def_add_annotations(df, x['anno'])
 	return df
 
 
@@ -2297,7 +2241,7 @@ def def_var_global(x):
 
 	df = def_var_common(x)
 	df.value.is_initialized = True
-	df = add_spices_def(df, x['anno'])
+	df = def_add_annotations(df, x['anno'])
 	return df
 
 
@@ -2352,7 +2296,7 @@ def def_func(x):
 		fn.id.addAttribute('entrypoint')
 
 	if x['stmt'] == None:
-		df = add_spices_def(fn.definition, x['anno'])
+		df = def_add_annotations(fn.definition, x['anno'])
 		return df
 
 	# not above (!)
@@ -2409,7 +2353,7 @@ def def_func(x):
 #	if fn.is_pure:
 #		info("pure function", x['ti'])
 
-	df = add_spices_def(fn.definition, x['anno'])
+	df = def_add_annotations(fn.definition, x['anno'])
 	return df
 
 
@@ -2869,7 +2813,7 @@ def setObjAttrByPath(x, path, value):
 
 
 
-def add_spices_def(x, ast_atts):
+def def_add_annotations(x, ast_atts):
 	for a in ast_atts:
 		kind = a['kind']
 		#print(kind)
