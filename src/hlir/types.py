@@ -1402,6 +1402,20 @@ class Value(Entity):
 		self.asset = a
 
 
+	def eq(l, r, ti):
+		assert(isinstance(l, Value))
+		assert(isinstance(r, Value))
+
+		if l.type.is_array():
+			from value.array import value_array_eq
+			return value_array_eq(l, r, ti)
+		elif l.type.is_record():
+			from value.record import value_record_eq
+			return value_record_eq(l, r, ti)
+
+		return l.asset == r.asset
+
+
 	def hasAttribute(self, a):
 		return a in self.att or self.type.hasAttribute2(a)
 

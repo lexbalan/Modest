@@ -48,7 +48,6 @@ def is_local_context():
 	return cfunc != None
 
 
-from value.value import *
 from value.cons import value_cons_implicit, value_cons_implicit_check, value_cons_explicit, value_cons_default, value_cons_extra_arg
 
 
@@ -649,8 +648,15 @@ def do_value_bin_op(op, l, r, ti):
 		print("\n")
 		return ValueBad(ti)
 
-	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
-		return value_eq(l, r, op, ti)
+#	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
+#		iseq = Value.eq(l, r, ti)
+#
+#		nv = ValueBin(typeBool, op, l, r, ti=ti)
+#		nv.stage = HLIR_VALUE_STAGE_RUNTIME
+#		nv.set_asset(int(eq_result))
+#		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+#
+#		return iseq if op == HLIR_VALUE_OP_EQ else not iseq
 
 	if Type.eq(t, typeBool):
 		if op == HLIR_VALUE_OP_OR: op = HLIR_VALUE_OP_LOGIC_OR
@@ -684,15 +690,21 @@ def do_value_bin_op(op, l, r, ti):
 				HLIR_VALUE_OP_MUL: lambda a, b: a * b,
 				HLIR_VALUE_OP_DIV: lambda a, b: l.asset / r.asset,
 				HLIR_VALUE_OP_REM: lambda a, b: a % b,
-				HLIR_VALUE_OP_EQ:  lambda a, b: a == b,
-				HLIR_VALUE_OP_NE:  lambda a, b: a != b
+				#HLIR_VALUE_OP_EQ:  lambda a, b: a == b,
+				#HLIR_VALUE_OP_NE:  lambda a, b: a != b
 			}
 
 			if (op == HLIR_VALUE_OP_DIV) and t.is_rational() and (r.asset == 0):
 				error("division by zero", r.ti)
 				return ValueBad(ti)
 
-			asset = ops[op](l.asset, r.asset)
+			asset = None
+			if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
+				asset = Value.eq(l, r, ti)
+				if op == HLIR_VALUE_OP_NE:
+					asset = not asset
+			else:
+				asset = ops[op](l.asset, r.asset)
 
 			need_width = nbits_for_num(asset, signed=t.is_signed())
 			if t.is_integer():

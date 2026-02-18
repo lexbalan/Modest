@@ -115,27 +115,20 @@ def value_record_cons(t, v, method, ti):
 
 
 
-def value_record_eq(l, r, op, ti):
+def value_record_eq(l, r, ti):
 	#info("value_record_eq()", ti)
-	nv = ValueBin(typeBool, op, l, r, ti=ti)
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
-	if l.isValueImmediate() and r.isValueImmediate():
-		eq_result = True
+	if not (l.isValueImmediate() and r.isValueImmediate()):
+		return False
 
-		for lx, rx in zip(l.asset, r.asset):
-			from .value import value_eq
-			if not value_eq(lx.value, rx.value, op, ti):
-				eq_result = False
-				break
+	if len(l.asset) != len(r.asset):
+		return False
 
-		if op == HLIR_VALUE_OP_NE:
-			eq_result = not eq_result
+	for lx, rx in zip(l.asset, r.asset):
+		if not Value.eq(lx.value, rx.value, ti):
+			return False
 
-		nv.set_asset(int(eq_result))
-		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-
-	return nv
+	return True
 
 
 

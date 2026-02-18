@@ -185,33 +185,25 @@ def value_array_add(l, r, ti):
 
 
 # FIXIT: it is generic arrays EQ!
-def value_array_eq(l, r, op, ti):
-	nv = ValueBin(typeBool, op, l, r, ti=ti)
-	nv.stage = HLIR_VALUE_STAGE_RUNTIME
+def value_array_eq(l, r, ti):
+	#info("value_array_eq", ti)
 
-	if l.isValueImmediate() and r.isValueImmediate():
-		eq_result = True
-		lvolume = l.type.volume
-		rvolume = r.type.volume
-		if lvolume.isValueImmediate() and rvolume.isValueImmediate():
-			if lvolume.asset != rvolume.asset:
-				eq_result = False
-		else:
-			fatal("dynamic immediate array volume not implemented", ti)
+	if not (l.isValueImmediate() and r.isValueImmediate()):
+		return False
 
-		for lx, rx in zip(l.asset, r.asset):
-			from .value import value_eq
-			if not value_eq(lx, rx, op, ti):
-				eq_result = False
-				break
+	lvolume = l.type.volume
+	rvolume = r.type.volume
+	if not (lvolume.isValueImmediate() and rvolume.isValueImmediate()):
+		return False
 
-		if op == HLIR_VALUE_OP_NE:
-			eq_result = not eq_result
+	if lvolume.asset != rvolume.asset:
+		return False
 
-		nv.set_asset(int(eq_result))
-		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+	for lx, rx in zip(l.asset, r.asset):
+		if not Value.eq(lx, rx, ti):
+			return False
 
-	return nv
+	return True
 
 
 

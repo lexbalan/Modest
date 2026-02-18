@@ -3,7 +3,6 @@ import copy
 
 from hlir import *
 from .common import *
-from value.value import *
 from error import info, warning, error, fatal
 import type as htype
 from type import type_print

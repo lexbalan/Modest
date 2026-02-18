@@ -90,7 +90,6 @@ Implements compile-time and runtime value handling per type:
 
 | File | Type | Purpose |
 |------|------|---------|
-| `value.py` | Base | Core value class hierarchy |
 | `bool.py` | Bool | Boolean value operations |
 | `integer.py` | Integer | Integer value creation and conversion |
 | `int.py` | Int | Signed integer operations |
