@@ -2,7 +2,6 @@
 from hlir import *
 from error import info, warning, error
 import type as type
-from value.value import value_imm_literal_create
 from util import nbits_for_num, int_zext
 
 
@@ -10,7 +9,7 @@ def value_word_create(num, ti=None):
 	required_width = nbits_for_num(num)
 	t = type_word_create(required_width, ti=ti)
 	t.generic = True
-	v = value_imm_literal_create(t, asset=num, ti=ti)
+	v = ValueLiteral(t, asset=num, ti=ti)
 	return v
 
 

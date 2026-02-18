@@ -3,14 +3,13 @@ from hlir import *
 from error import info, error
 import type as htype
 from util import nbits_for_num
-from value.value import value_imm_literal_create
 from fractions import Fraction
 
 
 
 def value_integer_create(num, ti=None):
 	t = htype.type_integer_for(Fraction(num), ti=ti)
-	v = value_imm_literal_create(t, asset=num, ti=ti)
+	v = ValueLiteral(t, asset=num, ti=ti)
 	return v
 
 

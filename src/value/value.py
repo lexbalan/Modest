@@ -4,10 +4,6 @@ from value.array import value_array_eq
 from value.record import value_record_eq
 
 
-def value_imm_literal_create(type, asset=None, ti=None):
-	return ValueLiteral(type, asset, ti)
-
-
 
 def value_eq(l, r, op, ti):
 	assert(isinstance(l, Value))
