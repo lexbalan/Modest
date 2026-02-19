@@ -622,7 +622,8 @@ class Type(Entity):
 		self.definition = None
 		self.is_global_flag = True
 		self.uid = 0
-		self.layout = 'default'
+		self.layout = 'exact'
+		self.fraction = 0  # for Fixed types (here for faster Type.eq(!))
 		#self.id = id
 
 		#self.parent_type = None
@@ -988,7 +989,7 @@ class Type(Entity):
 
 	@staticmethod
 	def eq_simple(a, b, opt):
-		return (a.kind == b.kind) and (a.width == b.width) and (a.generic == b.generic)
+		return (a.kind == b.kind) and (a.width == b.width) and (a.generic == b.generic) and (a.fraction == b.fraction) and (a.layout == b.layout)
 
 
 	@staticmethod
