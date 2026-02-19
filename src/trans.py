@@ -651,21 +651,11 @@ def do_value_bin_op(op, l, r, ti):
 		print("\n")
 		return ValueBad(ti)
 
-#	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
-#		iseq = Value.eq(l, r, ti)
-#
-#		nv = ValueBin(typeBool, op, l, r, ti=ti)
-#		nv.stage = HLIR_VALUE_STAGE_RUNTIME
-#		nv.set_asset(int(eq_result))
-#		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-#
-#		return iseq if op == HLIR_VALUE_OP_EQ else not iseq
-
 	if Type.eq(t, typeBool):
 		if op == HLIR_VALUE_OP_OR: op = HLIR_VALUE_OP_LOGIC_OR
 		elif op == HLIR_VALUE_OP_AND: op = HLIR_VALUE_OP_LOGIC_AND
 
-	if op in (htype.EQ_OPS + htype.RELATIONAL_OPS):
+	if op in htype.EQ_OPS or op in htype.RELATIONAL_OPS:
 		t = typeBool
 
 	if l.isValueBad() or r.isValueBad():
@@ -676,49 +666,55 @@ def do_value_bin_op(op, l, r, ti):
 	# if left & right are immediate, we can fold const
 	# and append field .asset to bin_value
 	if l.isValueImmediate() and r.isValueImmediate():
-		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+		asset = None
 		if l.asset != None and r.asset != None:  # for case ValueUndef
-			ops = {
-				HLIR_VALUE_OP_LOGIC_OR: lambda a, b: a or b,
-				HLIR_VALUE_OP_LOGIC_AND: lambda a, b: a and b,
-				HLIR_VALUE_OP_OR: lambda a, b: a | b,
-				HLIR_VALUE_OP_AND: lambda a, b: a & b,
-				HLIR_VALUE_OP_XOR: lambda a, b: a ^ b,
-				HLIR_VALUE_OP_LT: lambda a, b: a < b,
-				HLIR_VALUE_OP_GT: lambda a, b: a > b,
-				HLIR_VALUE_OP_LE: lambda a, b: a <= b,
-				HLIR_VALUE_OP_GE: lambda a, b: a >= b,
-				HLIR_VALUE_OP_ADD: lambda a, b: a + b,
-				HLIR_VALUE_OP_SUB: lambda a, b: a - b,
-				HLIR_VALUE_OP_MUL: lambda a, b: a * b,
-				HLIR_VALUE_OP_DIV: lambda a, b: l.asset / r.asset,
-				HLIR_VALUE_OP_REM: lambda a, b: a % b,
-				#HLIR_VALUE_OP_EQ:  lambda a, b: a == b,
-				#HLIR_VALUE_OP_NE:  lambda a, b: a != b
-			}
+			asset = do_bin_immediate(op, l, r, asset)
 
-			if (op == HLIR_VALUE_OP_DIV) and t.is_rational() and (r.asset == 0):
-				error("division by zero", r.ti)
-				return ValueBad(ti)
+		need_width = nbits_for_num(asset, signed=t.is_signed())
+		if t.is_integer():
+			nv.type = type_integer_create(width=need_width, ti=ti)
+		else:
+			if need_width > t.width or (not t.is_signed() and asset < 0):
+				error("integer overflow", ti)
 
-			asset = None
-			if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
-				asset = Value.eq(l, r, ti)
-				if op == HLIR_VALUE_OP_NE:
-					asset = not asset
-			else:
-				asset = ops[op](l.asset, r.asset)
-
-			need_width = nbits_for_num(asset, signed=t.is_signed())
-			if t.is_integer():
-				nv.type = type_integer_create(width=need_width, ti=ti)
-			else:
-				if need_width > t.width or (not t.is_signed() and asset < 0):
-					error("integer overflow", ti)
-
-			nv.set_asset(asset)
+		nv.set_asset(asset)
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	return nv
+
+
+def do_bin_immediate(op, l, r, ti):
+	ops = {
+		HLIR_VALUE_OP_LOGIC_OR: lambda a, b: a or b,
+		HLIR_VALUE_OP_LOGIC_AND: lambda a, b: a and b,
+		HLIR_VALUE_OP_OR: lambda a, b: a | b,
+		HLIR_VALUE_OP_AND: lambda a, b: a & b,
+		HLIR_VALUE_OP_XOR: lambda a, b: a ^ b,
+		HLIR_VALUE_OP_LT: lambda a, b: a < b,
+		HLIR_VALUE_OP_GT: lambda a, b: a > b,
+		HLIR_VALUE_OP_LE: lambda a, b: a <= b,
+		HLIR_VALUE_OP_GE: lambda a, b: a >= b,
+		HLIR_VALUE_OP_ADD: lambda a, b: a + b,
+		HLIR_VALUE_OP_SUB: lambda a, b: a - b,
+		HLIR_VALUE_OP_MUL: lambda a, b: a * b,
+		HLIR_VALUE_OP_DIV: lambda a, b: l.asset / r.asset,
+		HLIR_VALUE_OP_REM: lambda a, b: a % b,
+	}
+
+	if (op == HLIR_VALUE_OP_DIV) and l.type.is_rational() and (r.asset == 0):
+		error("division by zero", ti)
+		return ValueBad(ti)
+
+	asset = None
+	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
+		asset = Value.eq(l, r, ti)
+		if op == HLIR_VALUE_OP_NE:
+			asset = not asset
+	else:
+		asset = ops[op](l.asset, r.asset)
+
+	return asset
+
 
 
 def do_value_not(x):
