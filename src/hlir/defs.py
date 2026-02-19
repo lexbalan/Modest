@@ -82,6 +82,17 @@ def type_float_create(width, ti=None):
 	return TypeSimple(width, HLIR_TYPE_KIND_FLOAT, id, FLOAT_OPS, ti)
 
 
+def type_fixed_create(width, ti=None):
+	width = align_bits_up(width)
+	id = Id('Fixed%d' % width)
+	if width == 32:
+		id.c = 'int32_t'
+	else:
+		id.c = 'int64_t'
+	id.llvm = 'Fixed%d' % width
+	return TypeSimple(width, HLIR_TYPE_KIND_FIXED, id, FLOAT_OPS, ti)
+
+
 
 
 typeUnit = TypeRecord(fields=[])
@@ -128,6 +139,10 @@ typeChar32 = type_char_create(width=32)
 
 typeFloat32 = type_float_create(width=32)
 typeFloat64 = type_float_create(width=64)
+
+typeFixed32 = type_fixed_create(width=32)
+typeFixed64 = type_fixed_create(width=64)
+
 
 
 # type Nil = Generic(*Unit)

@@ -9,6 +9,7 @@ from .char import char_can, value_char_cons
 from .int import int_can, value_int_cons
 from .nat import nat_can, value_nat_cons
 from .float import float_can, value_float_cons
+from .fixed import fixed_can, value_fixed_cons
 from .record import record_can, value_record_cons
 from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons
@@ -48,13 +49,13 @@ def cons_can(to, from_type, method, ti):
 	elif to.is_rational(): checker = rational_can
 	elif to.is_int(): checker = int_can
 	elif to.is_nat(): checker = nat_can
-	#elif to.is_unit(): checker = unit_can
 	elif to.is_bool(): checker = bool_can
 	elif to.is_word(): checker = word_can
 	elif to.is_record(): checker = record_can
 	elif to.is_pointer(): checker = pointer_can
 	elif to.is_array(): checker = array_can
 	elif to.is_float(): checker = float_can
+	elif to.is_fixed(): checker = fixed_can
 	elif to.is_char(): checker = char_can
 	elif to.is_bad(): checker = bad_can
 	else:
@@ -260,14 +261,14 @@ def value_cons(t, v, method, ti):
 	elif t.is_rational(): constructor = value_rational_cons
 	elif t.is_int(): constructor = value_int_cons
 	elif t.is_nat(): constructor = value_nat_cons
-	elif t.is_float(): constructor = value_float_cons
 	elif t.is_array(): constructor = value_array_cons
 	elif t.is_record(): constructor = value_record_cons
 	elif t.is_char(): constructor = value_char_cons
 	elif t.is_word(): constructor = value_word_cons
 	elif t.is_bool(): constructor = value_bool_cons
 	elif t.is_pointer(): constructor = value_pointer_cons
-	elif t.is_unit(): constructor = ValueUnit_cons
+	elif t.is_fixed(): constructor = value_fixed_cons
+	elif t.is_float(): constructor = value_float_cons
 	elif t.is_bad(): constructor = ValueBad_cons
 	else:
 		assert False, "unknown type kind '%s'" % t['kind']

@@ -371,6 +371,12 @@ func testFloat32Static () -> Bool {
 }
 
 
+func testFixed32Static () -> Bool {
+	var fx0: Fixed32
+	//fx0 = 3.14
+	return true
+}
+
 
 func testInteger () -> Bool {
 	printf("passed: Integer test\n")

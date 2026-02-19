@@ -1321,6 +1321,7 @@ def str_value_with_type(v, t, ctx=[]):
 	elif t.is_record(): return str_value_literal_record(v, ctx)
 	elif t.is_pointer(): return str_value_literal_pointer(t, asset, ctx)
 	elif t.is_float(): return str_value_literal_rational(t, v, ctx)
+	elif t.is_fixed(): return str_value_literal_number(t, asset, as_hex=True)
 	elif t.is_rational(): return str_value_literal_rational(t, v, ctx)
 	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
 	1/0

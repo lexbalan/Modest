@@ -224,6 +224,9 @@ def init():
 	root_symtab.type_add('Float32', typeFloat32)
 	root_symtab.type_add('Float64', typeFloat64)
 
+	root_symtab.type_add('Fixed32', typeFixed32)
+	root_symtab.type_add('Fixed64', typeFixed64)
+
 	#root_symtab.type_add('Decimal32', typeDecimal32)
 	#root_symtab.type_add('Decimal64', typeDecimal64)
 	#root_symtab.type_add('Decimal128', typeDecimal128)

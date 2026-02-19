@@ -369,6 +369,13 @@ static bool testFloat32Static(void) {
 }
 
 
+static bool testFixed32Static(void) {
+	int32_t fx0;
+	//fx0 = 3.14
+	return true;
+}
+
+
 static bool testInteger(void) {
 	printf("passed: Integer test\n");
 	return true;

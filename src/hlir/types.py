@@ -594,6 +594,7 @@ HLIR_TYPE_KIND_NAT = 12
 HLIR_TYPE_KIND_CHAR = 13
 HLIR_TYPE_KIND_BOOL = 14
 HLIR_TYPE_KIND_FLOAT = 15
+HLIR_TYPE_KIND_FIXED = 16
 
 
 # for @branded types
@@ -751,6 +752,10 @@ class Type(Entity):
 
 	def is_float(self):
 		return self.kind == HLIR_TYPE_KIND_FLOAT
+
+
+	def is_fixed(self):
+		return self.kind == HLIR_TYPE_KIND_FIXED
 
 
 	def is_char(self):

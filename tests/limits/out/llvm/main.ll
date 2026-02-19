@@ -29,6 +29,8 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Fixed32 = type i32
+%Fixed64 = type i64
 %Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
@@ -808,6 +810,12 @@ then_3:
 	ret %Bool 0
 	br label %endif_3
 endif_3:
+	ret %Bool 1
+}
+
+define internal %Bool @testFixed32Static() {
+	%1 = alloca %Fixed32, align 4
+	;fx0 = 3.14
 	ret %Bool 1
 }
 
