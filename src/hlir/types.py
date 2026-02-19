@@ -1406,12 +1406,6 @@ class Value(Entity):
 	def eq(l, r, ti):
 		assert(isinstance(l, Value))
 		assert(isinstance(r, Value))
-
-		if l.type.is_array():
-			return ValueArray.eq(l, r, ti)
-		elif l.type.is_record():
-			return ValueRecord.eq(l, r, ti)
-
 		return l.asset == r.asset
 
 
@@ -1707,8 +1701,10 @@ class ValueArray(Value):
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.nsigns = 0
 
-	# FIXIT: it is generic arrays EQ!
+
 	def eq(l, r, ti):
+		assert(isinstance(l, Value))
+		assert(isinstance(r, Value))
 		#info("value_array_eq", ti)
 
 		if not (l.isValueImmediate() and r.isValueImmediate()):
@@ -1740,6 +1736,8 @@ class ValueRecord(Value):
 
 
 	def eq(l, r, ti):
+		assert(isinstance(l, Value))
+		assert(isinstance(r, Value))
 		#info("value_record_eq()", ti)
 
 		if not (l.isValueImmediate() and r.isValueImmediate()):
