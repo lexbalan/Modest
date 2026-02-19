@@ -527,6 +527,16 @@ def str_value_bin(x, ctx):
 	op = x.op
 	left = x.left
 	right = x.right
+	type = x.type
+
+
+	if type.is_fixed():
+		# Special cases for fixed point arithmetics
+		if op == HLIR_VALUE_OP_MUL:
+			return "(((int64_t)(%s) * (int64_t)(%s)) >> %d)" % (str_value_2(left), str_value_2(right), type.fraction)
+		if op == HLIR_VALUE_OP_DIV:
+			return "(((int64_t)(%s) << %d) / (%s))" % (str_value_2(left), type.fraction, str_value_2(right))
+
 
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 		if left.type.is_record(): return str_value_eq_composite(x, ctx)
@@ -541,8 +551,8 @@ def str_value_bin(x, ctx):
 
 	# Поскольку в си все вычисления происходят как минимум в int
 	# приходится приводить результат к требуемому меньшему типу
-	need_cast = x.type.width < 32 and (x.type.is_int() or x.type.is_nat() or x.type.is_word())
-	return cons_if(text, x.type, cond=need_cast)
+	need_cast = type.width < 32 and (type.is_int() or type.is_nat() or type.is_word())
+	return cons_if(text, type, cond=need_cast)
 
 
 def str_string_add(x):
@@ -956,6 +966,16 @@ def str_value_cons(x, ctx):
 			return str_value_literal_char(type, ord(value.asset[0]), ctx)
 		return "_CHR%d(%s)" % (type.width, str_value(value))
 
+	if from_type.is_fixed():
+		if type.is_int():
+			return "(%s) >> %d" % (str_value(value, ctx), from_type.fraction)
+		if type.is_float():
+			return "((float)(%s)) / (1 << %d)" % (str_value(value, ctx), from_type.fraction)
+
+	if type.is_fixed():
+		#multiplier = 1 << type.fraction
+		return "(1 << %d) * %s" % (type.fraction, str_value(value, ctx))
+
 
 	if value.isValueLiteral() and from_type.is_generic():
 		if x.asset != None:
@@ -1308,6 +1328,11 @@ def str_value_literal(x, ctx):
 	return str_value_with_type(x, x.type, ctx=ctx)
 
 
+def str_value_fixed(t, v, ctx):
+	return str_value_literal_number(t, v.asset, as_hex=True)
+	return "FIXED"
+
+
 def str_value_with_type(v, t, ctx=[]):
 	asset = v.asset
 
@@ -1321,7 +1346,7 @@ def str_value_with_type(v, t, ctx=[]):
 	elif t.is_record(): return str_value_literal_record(v, ctx)
 	elif t.is_pointer(): return str_value_literal_pointer(t, asset, ctx)
 	elif t.is_float(): return str_value_literal_rational(t, v, ctx)
-	elif t.is_fixed(): return str_value_literal_number(t, asset, as_hex=True)
+	elif t.is_fixed(): return str_value_fixed(t, v, ctx)
 	elif t.is_rational(): return str_value_literal_rational(t, v, ctx)
 	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
 	1/0

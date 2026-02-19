@@ -321,11 +321,19 @@ def select_common_type(a, b, ti):
 			if a.is_int() or a.is_nat():
 				return b
 
-		if a.is_integer() or a.is_rational():
-			if b.is_int() or b.is_nat() or b.is_word() or b.is_float():
+		if a.is_fixed():
+			if b.is_int() or b.is_nat():
+				return a
+
+		if b.is_fixed():
+			if a.is_int() or a.is_nat():
 				return b
 
-		if a.is_int() or a.is_nat() or a.is_word() or a.is_float():
+		if a.is_integer() or a.is_rational():
+			if b.is_int() or b.is_nat() or b.is_word() or b.is_float() or b.is_fixed():
+				return b
+
+		if a.is_int() or a.is_nat() or a.is_word() or a.is_float() or a.is_fixed():
 			if b.is_integer() or b.is_rational():
 				return a
 

@@ -654,6 +654,10 @@ class Type(Entity):
 				if layout == 'packed':
 					nt.att.append(k)
 
+			if k == 'fraction':
+				fraction = int(a['args'][0]['value']['str'])
+				print(fraction)
+				nt.fraction = fraction
 
 			if k == 'zarray':
 				# zero terminated array

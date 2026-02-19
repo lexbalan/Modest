@@ -1,10 +1,9 @@
 
-import decimal
-
 from hlir import *
 from common import settings
 from error import info, warning, error
 import type as type
+
 
 
 def value_float_create(val, ti=None):
@@ -35,8 +34,9 @@ def float_can(to, from_type, method, ti):
 	c1 = from_type.is_int()
 	c2 = from_type.is_nat()
 	c3 = from_type.is_float()
-	c4 = from_type.is_word() and (method == 'unsafe')
-	return c0 or c1 or c2 or c3 or c4
+	c4 = from_type.is_fixed()
+	c5 = from_type.is_word() and (method == 'unsafe')
+	return c0 or c1 or c2 or c3 or c4 or c5
 
 
 
