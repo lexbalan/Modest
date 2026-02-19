@@ -17,9 +17,9 @@ def value_fixed_create(val, ti=None):
 
 def _value_fixed_cons_immediate(t, v, method, ti):
 	assert(t.is_fixed())
-	info("??", ti)
 	nv = ValueCons(t, v, method, ti=ti)
 	a = v.asset
+	# TODO
 	#a = 1
 	#nv.set_asset(a)
 	nv.asset = 1

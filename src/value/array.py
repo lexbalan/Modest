@@ -110,9 +110,6 @@ def value_array_cons(t, v, method, ti):
 		t.size = t.of.size * volume.asset
 
 	if method == 'implicit':
-		if v.type.is_undefined():
-			warning("????", t.ti)
-
 		n_to = t.volume.asset
 		n_from = 0
 		if v.type.is_string():

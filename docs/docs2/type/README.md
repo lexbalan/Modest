@@ -1,5 +1,6 @@
 # Types
 
+- [simple](simple/) - Simple types
 - [array](array/) - Array types
 - [branded](branded/) - Branded (nominal) types
 - [packed](packed/) - Packed record types

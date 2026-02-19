@@ -1161,9 +1161,6 @@ def str_value_literal_record(x, ctx):
 	items = x.asset
 	type = x.type
 	nitems = len(items)
-#	if nitems == 0:
-#		print("???")
-#		return EMPTY_RECORD_LITERAL
 
 	sstr = "{"
 

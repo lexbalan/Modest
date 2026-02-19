@@ -18,6 +18,7 @@
 - [while](stmt/while/) - While loops
 
 ## Types
+- [simple](type/simple/) - Simple types
 - [array](type/array/) - Array types
 - [branded](type/branded/) - Branded (nominal) types
 - [packed](type/packed/) - Packed record types
