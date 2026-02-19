@@ -17,10 +17,10 @@ public type X = {
 type Rect = {origin: Point, size: {w: Int32, h: Int32}}
 
 // packed record
-type Header = @packed {tag: Nat8, len: Nat16}
+type Header = @layout("packed") {tag: Nat8, len: Nat16}
 
 // union
-type Value = @union {i: Int64, f: Float64}
+type Value = @layout("union") {i: Int64, f: Float64}
 
 // branded
 type UserId = @branded Nat32

@@ -1,18 +1,18 @@
 
 
-type PackedHeader = @packed {
+type PackedHeader = @layout {
 	magic: Nat8
 	version: Nat8
 	length: Nat16
 }
 
-type PackedData = @packed {
+type PackedData = @layout {
 	flags: Nat8
 	id: Nat32
 	value: Nat64
 }
 
-type PackedNested = @packed {
+type PackedNested = @layout {
 	header: PackedHeader
 	payload: Nat32
 }

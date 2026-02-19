@@ -641,19 +641,18 @@ class Type(Entity):
 
 		for a in atts:
 			k = a['kind']
-			#print("SPICE: " + str(a))
 			nt.annotations[k] = {}
 
 			# handle record layout annotations
-			if k == 'union':
-				nt.layout = 'union'
-			elif k == 'record':
-				nt.layout = 'record'
-			elif k == 'exact':
-				nt.layout = 'exact'
-			elif k == 'packed':
-				nt.layout = 'packed'
-				nt.att.append(k)
+			if k == 'layout':
+				layout = a['args'][0]['value']['str']
+				from error import info, error
+				if not layout in ['exact', 'packed', 'union']:
+					error("unsupported layout", a['ti'])
+				#info("set layout '%s'" % layout, a['ti'])
+				nt.layout = layout
+				if layout == 'packed':
+					nt.att.append(k)
 
 
 			if k == 'zarray':

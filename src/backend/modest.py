@@ -128,7 +128,7 @@ def str_type_record(t):
 	s = ""
 
 	#if t.hasAttribute2('packed'):
-	#	s += "@packed "
+	#	s += "@layout("packed") "
 
 	is_public = t.hasAttribute2('public')
 

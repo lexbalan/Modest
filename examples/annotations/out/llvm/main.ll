@@ -205,10 +205,10 @@ declare void @perror(%ConstCharStr* %str)
 %MyInt32_2 = type %MyInt32;
 %MyInt32_3 = type %MyInt32;
 @vvb = internal global %Int32 1
-%ProtocolHeader = type <{
+%ProtocolHeader = type {
 	%Word16,
 	%Nat16
-}>;
+};
 
 @name2 = internal global %Bool zeroinitializer
 @name11 = internal global %Bool zeroinitializer

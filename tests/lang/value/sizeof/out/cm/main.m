@@ -4,7 +4,7 @@ type Point = {
 	x: Int32
 	y: Int32
 }
-type Packed = @packed {
+type Packed = @layout {
 	a: Nat8
 	b: Nat32
 }

@@ -22,7 +22,7 @@ const cvb = Int32 0
 var vvb = Int32 1
 
 
-type ProtocolHeader = @packed {
+type ProtocolHeader = @layout {
 	start: Word16
 	len: Nat16
 }

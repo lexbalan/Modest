@@ -1,7 +1,7 @@
 // tests/lang/value/sizeof/src/main.m
 
 type Point = {x: Int32, y: Int32}
-type Packed = @packed {a: Nat8, b: Nat32}
+type Packed = @layout("packed") {a: Nat8, b: Nat32}
 
 var sizeInt = sizeof(Int32)
 var sizePoint = sizeof(Point)

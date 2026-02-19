@@ -25,7 +25,7 @@ type WithArray = {
 
 // record with 'union' layout
 // Not implemented in LLVM backend (!)
-type Union = @union {
+type Union = @layout("union") {
 	_nat: Nat64
 	_float: Float64
 }

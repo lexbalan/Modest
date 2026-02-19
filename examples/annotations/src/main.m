@@ -21,7 +21,7 @@ const cvb = @volatile Int32 0
 var vvb = @volatile Int32 1
 
 
-type ProtocolHeader = @packed {
+type ProtocolHeader = @layout("packed") {
 	start: Word16
 	len: Nat16
 }

@@ -115,7 +115,7 @@ func add (a: Int32, b: Int32) -> Int32 {
 
 //const yx = add(2, 2)
 
-public type Point = @packed {
+public type Point = @layout("packed") {
 	x: Int32  // hi!
 	y: Int32  // lo?
 }

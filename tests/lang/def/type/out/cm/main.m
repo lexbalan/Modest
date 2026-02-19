@@ -31,13 +31,13 @@ type Rect = {
 }
 
 // packed record
-type Header = @packed {
+type Header = @layout {
 	tag: Nat8
 	len: Nat16
 }
 
 // union
-type Value = @union {
+type Value = @layout {
 	i: Int64
 	f: Float64
 }
