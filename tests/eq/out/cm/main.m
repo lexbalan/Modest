@@ -6,7 +6,6 @@ include "limits"
 
 
 
-
 const point0 = {x = 0, y = 0}
 const point1 = {x = 1, y = 0}
 const point12 = {x = 1, y = 1}
