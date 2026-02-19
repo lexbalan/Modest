@@ -397,7 +397,6 @@ func testRational () -> Bool {
 
 
 
-
 public func main () -> Int32 {
 	printf("test numeric boundary:\n")
 

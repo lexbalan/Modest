@@ -3,6 +3,7 @@ import copy
 from util import *
 
 
+
 #
 # Проблема - numpy единственный кто может обеспечить должные float32 & float64
 # но он грузится чертовски медленно, и приходиться делать вот так, чтобы лишний раз его не загружать
@@ -1404,8 +1405,14 @@ class Value(Entity):
 
 
 	def eq(l, r, ti):
+		#from error import info
+		#info("value_eq", ti)
 		assert(isinstance(l, Value))
 		assert(isinstance(r, Value))
+		if l.type.is_array():
+			return ValueArray.eq(l, r, ti)
+		if l.type.is_record():
+			return ValueRecord.eq(l, r, ti)
 		return l.asset == r.asset
 
 
@@ -1705,6 +1712,9 @@ class ValueArray(Value):
 	def eq(l, r, ti):
 		assert(isinstance(l, Value))
 		assert(isinstance(r, Value))
+		assert(isinstance(l.type, TypeArray))
+		assert(isinstance(r.type, TypeArray))
+		#from error import info
 		#info("value_array_eq", ti)
 
 		if not (l.isValueImmediate() and r.isValueImmediate()):
@@ -1738,6 +1748,9 @@ class ValueRecord(Value):
 	def eq(l, r, ti):
 		assert(isinstance(l, Value))
 		assert(isinstance(r, Value))
+		assert(isinstance(l.type, TypeRecord))
+		assert(isinstance(r.type, TypeRecord))
+		#from error import info
 		#info("value_record_eq()", ti)
 
 		if not (l.isValueImmediate() and r.isValueImmediate()):
