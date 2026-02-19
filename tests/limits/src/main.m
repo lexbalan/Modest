@@ -373,8 +373,11 @@ func testFloat32Static () -> Bool {
 
 
 func testFixed32Static () -> Bool {
+
 	var fx: @fraction(24) Fixed32
+
 	fx = 3.14
+
 	let a = fx + 1
 	let b = fx - 1
 	let c = fx * 2
@@ -400,6 +403,7 @@ func testFixed32Static () -> Bool {
 
 	return true
 }
+
 
 
 func testInteger () -> Bool {

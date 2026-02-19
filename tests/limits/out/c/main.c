@@ -370,8 +370,11 @@ static bool testFloat32Static(void) {
 
 
 static bool testFixed32Static(void) {
+
 	int32_t fx;
+
 	fx = (1 << 24) * 3.14;
+
 	const int32_t a = fx + (1 << 24) * 1;
 	const int32_t b = fx - (1 << 24) * 1;
 	const int32_t c = (((int64_t)(fx) * (int64_t)((1 << 24) * 2)) >> 24);
