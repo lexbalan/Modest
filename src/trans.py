@@ -2099,6 +2099,8 @@ def def_const_common(x):
 	if x['type'] != None:
 		t = Type.copy(do_type(x['type']))
 		iv = value_cons_implicit_check(t, iv)
+	else:
+		iv = value_cons_default(iv)
 
 	if t == None:
 		t = Type.reborn(iv.type)

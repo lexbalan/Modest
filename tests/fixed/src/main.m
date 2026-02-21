@@ -6,29 +6,29 @@ include "libc/stdlib"
 
 func testFixed32Static () -> Bool {
 
-	//var fx: @fraction(20) Fixed32
-	var fx: Fixed32
+	var f: @fraction(18) Fixed32
+	//var f: Fixed32
 
-	fx = 3.1415
+	f = 3.1415
 
-	let a = fx + 1
-	let b = fx - 1
-	let c = fx * 2
-	let d = fx / 2
+	let a = f + 1
+	let b = f - 1
+	let c = f * 2
+	let d = f / 2
 
-	printf("Raw fx = %d\n", fx)
+	printf("Raw f = %d\n", f)
 	printf("Raw a = %d\n", a)
 	printf("Raw b = %d\n", b)
 	printf("Raw c = %d\n", c)
 	printf("Raw d = %d\n", d)
 
-	printf("Int32 fx = %d\n", Int32 fx)
+	printf("Int32 f = %d\n", Int32 f)
 	printf("Int32 a = %d\n", Int32 a)
 	printf("Int32 b = %d\n", Int32 b)
 	printf("Int32 c = %d\n", Int32 c)
 	printf("Int32 d = %d\n", Int32 d)
 
-	printf("Float32 fx = %f\n", Float32 fx)
+	printf("Float32 f = %f\n", Float32 f)
 	printf("Float32 a = %f\n", Float32 a)
 	printf("Float32 b = %f\n", Float32 b)
 	printf("Float32 c = %f\n", Float32 c)

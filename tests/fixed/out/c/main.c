@@ -32,33 +32,33 @@ static inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction
 
 static bool testFixed32Static(void) {
 
-	//var fx: @fraction(20) Fixed32
-	int32_t fx;
+	int32_t f;
+	//var f: Fixed32
 
-	fx = __fixed32_from_float64(3.1415, 16);
+	f = __fixed32_from_float64(3.1415, 18);
 
-	const int32_t a = fx + __fixed32_from_int32(1, 16);
-	const int32_t b = fx - __fixed32_from_int32(1, 16);
-	const int32_t c = __fixed32_mul(fx, __fixed32_from_int32(2, 16), 16);
-	const int32_t d = __fixed32_div(fx, __fixed32_from_int32(2, 16), 16);
+	const int32_t a = f + __fixed32_from_int32(1, 18);
+	const int32_t b = f - __fixed32_from_int32(1, 18);
+	const int32_t c = __fixed32_mul(f, __fixed32_from_int32(2, 18), 18);
+	const int32_t d = __fixed32_div(f, __fixed32_from_int32(2, 18), 18);
 
-	printf("Raw fx = %d\n", fx);
+	printf("Raw f = %d\n", f);
 	printf("Raw a = %d\n", a);
 	printf("Raw b = %d\n", b);
 	printf("Raw c = %d\n", c);
 	printf("Raw d = %d\n", d);
 
-	printf("Int32 fx = %d\n", __fixed32_to_int32(fx, 16));
-	printf("Int32 a = %d\n", __fixed32_to_int32(a, 16));
-	printf("Int32 b = %d\n", __fixed32_to_int32(b, 16));
-	printf("Int32 c = %d\n", __fixed32_to_int32(c, 16));
-	printf("Int32 d = %d\n", __fixed32_to_int32(d, 16));
+	printf("Int32 f = %d\n", __fixed32_to_int32(f, 18));
+	printf("Int32 a = %d\n", __fixed32_to_int32(a, 18));
+	printf("Int32 b = %d\n", __fixed32_to_int32(b, 18));
+	printf("Int32 c = %d\n", __fixed32_to_int32(c, 18));
+	printf("Int32 d = %d\n", __fixed32_to_int32(d, 18));
 
-	printf("Float32 fx = %f\n", __fixed32_to_float64(fx, 16));
-	printf("Float32 a = %f\n", __fixed32_to_float64(a, 16));
-	printf("Float32 b = %f\n", __fixed32_to_float64(b, 16));
-	printf("Float32 c = %f\n", __fixed32_to_float64(c, 16));
-	printf("Float32 d = %f\n", __fixed32_to_float64(d, 16));
+	printf("Float32 f = %f\n", __fixed32_to_float64(f, 18));
+	printf("Float32 a = %f\n", __fixed32_to_float64(a, 18));
+	printf("Float32 b = %f\n", __fixed32_to_float64(b, 18));
+	printf("Float32 c = %f\n", __fixed32_to_float64(c, 18));
+	printf("Float32 d = %f\n", __fixed32_to_float64(d, 18));
 
 	return true;
 }

@@ -172,6 +172,8 @@ def value_cons_extra_arg(v):
 
 
 def value_cons_default(v):
+	#info("value_cons_default", v.ti)
+
 	if not v.type.is_generic():
 		return v
 
@@ -180,6 +182,8 @@ def value_cons_default(v):
 		nv = value_cons_implicit(t, v)
 		nv.method = 'default'
 		return nv
+	else:
+		error("cannot select default type for value with generic type", v.ti)
 
 	return v
 
