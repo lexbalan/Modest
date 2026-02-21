@@ -2482,15 +2482,15 @@ def helper_use_fixed_point():
 	out("\n}")
 
 	out("\nstatic inline double __fixed32_to_float64(__fixed32 a, uint8_t fraction) {")
-	out("\n	return (float)a / (1 << fraction);")
+	out("\n	return (double)a / (1 << fraction);")
 	out("\n}")
 
 	out("\nstatic inline __fixed32 __fixed32_mul(__fixed32 a, __fixed32 b, uint8_t fraction) {")
-	out("\n	return ((int64_t)a * (int64_t)b) >> fraction;")
+	out("\n	return (__fixed32)(((int64_t)a * (int64_t)b) >> fraction);")
 	out("\n}")
 
 	out("\nstatic inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction) {")
-	out("\n	return ((int64_t)a << fraction) / (int64_t)b;")
+	out("\n	return (__fixed32)(((int64_t)a << fraction) / (int64_t)b);")
 	out("\n}")
 
 	out("\n#endif /* __FIXED_POINT__ */")

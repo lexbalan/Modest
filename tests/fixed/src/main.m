@@ -6,10 +6,10 @@ include "libc/stdlib"
 
 func testFixed32Static () -> Bool {
 
-	var f: @fraction(18) Fixed32
+	var f: @fraction(20) Fixed32
 	//var f: Fixed32
 
-	f = 3.1415
+	f = 3.1415926535897932384626433832795028841971693993751058209749445923
 
 	let a = f + 1
 	let b = f - 1
