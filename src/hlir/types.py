@@ -1652,6 +1652,7 @@ class Value(Entity):
 
 		# can be 'ti_def', but no 'ti'!
 		#if 'ti' in x:
+		from error import info
 		info(msg, x.ti)
 		#if 'def_ti' in x:
 		#	info(msg, x['def_ti'])

@@ -533,9 +533,9 @@ def str_value_bin(x, ctx):
 	if type.is_fixed():
 		# Special cases for fixed point arithmetics
 		if op == HLIR_VALUE_OP_MUL:
-			return "(((int64_t)(%s) * (int64_t)(%s)) >> %d)" % (str_value_2(left), str_value_2(right), type.fraction)
+			return "__fixed32_mul(%s, %s, %d)" % (str_value_2(left), str_value_2(right), type.fraction)
 		if op == HLIR_VALUE_OP_DIV:
-			return "(((int64_t)(%s) << %d) / (%s))" % (str_value_2(left), type.fraction, str_value_2(right))
+			return "__fixed32_div(%s, %s, %d)" % (str_value_2(left), str_value_2(right), type.fraction)
 
 
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
@@ -967,14 +967,16 @@ def str_value_cons(x, ctx):
 		return "_CHR%d(%s)" % (type.width, str_value(value))
 
 	if from_type.is_fixed():
-		if type.is_int():
-			return "(%s) >> %d" % (str_value(value, ctx), from_type.fraction)
-		if type.is_float():
-			return "((float)(%s)) / (1 << %d)" % (str_value(value, ctx), from_type.fraction)
+		if type.is_integer() or type.is_int():
+			return "__fixed32_to_int32(%s, %d)" % (str_value(value, ctx), from_type.fraction)
+		if type.is_rational() or type.is_float():
+			return "__fixed32_to_float64(%s, %d)" % (str_value(value, ctx), from_type.fraction)
 
 	if type.is_fixed():
-		#multiplier = 1 << type.fraction
-		return "(1 << %d) * %s" % (type.fraction, str_value(value, ctx))
+		if from_type.is_integer() or from_type.is_int():
+			return "__fixed32_from_int32(%s, %d)" % (str_value(value, ctx), type.fraction)
+		if from_type.is_rational() or from_type.is_float():
+			return "__fixed32_from_float64(%s, %d)" % (str_value(value, ctx), type.fraction)
 
 
 	if value.isValueLiteral() and from_type.is_generic():
@@ -1410,17 +1412,18 @@ def str_value_lengthof_type(x, ctx):
 
 
 def str_value_lengthof_value(x, ctx):
-	if value_is_generic_immediate_const(x.value):
-		if not x.value.type.is_string():
-			return str(x.value.type.volume.asset)
+	value = x.value
+
+	if value_is_generic_immediate_const(value):
+		if not value.type.is_string():
+			return str(value.type.volume.asset)
 
 	# generic array в си это просто макрос вида {1, 2, 3}
 	# и его нельзя подставить в LENGTHOF (!)
-	if x.value.isValueDeref() or x.type.is_generic_array():
+	if value.isValueDeref() or x.type.is_generic_array():
 		# решает проблему когда массив представлен указателем на элемент
-		return str_value(x.value.type.volume)
+		return str_value(value.type.volume)
 
-	value = x.value
 	sstr = ""
 	if value.type.is_generic_array():
 		ts = str_type(value.type)
@@ -2459,6 +2462,40 @@ def helper_use_arrcpy():
 
 
 
+def helper_use_fixed_point():
+	out("\n#ifndef __FIXED_POINT__")
+
+	out("\ntypedef int32_t __fixed32;")
+	out("\ntypedef int64_t __fixed64;")
+
+	# (1 << 16) * 3.1415
+	out("\nstatic inline __fixed32 __fixed32_from_int32(int32_t a, uint8_t fraction) {")
+	out("\n	return a * (1 << fraction);")
+	out("\n}")
+
+	out("\nstatic inline __fixed32 __fixed32_from_float64(double a, uint8_t fraction) {")
+	out("\n	return (__fixed32)(a * (1 << fraction));")
+	out("\n}")
+
+	out("\nstatic inline int32_t __fixed32_to_int32(__fixed32 a, uint8_t fraction) {")
+	out("\n	return a / (1 << fraction);")
+	out("\n}")
+
+	out("\nstatic inline double __fixed32_to_float64(__fixed32 a, uint8_t fraction) {")
+	out("\n	return (float)a / (1 << fraction);")
+	out("\n}")
+
+	out("\nstatic inline __fixed32 __fixed32_mul(__fixed32 a, __fixed32 b, uint8_t fraction) {")
+	out("\n	return ((int64_t)a * (int64_t)b) >> fraction;")
+	out("\n}")
+
+	out("\nstatic inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction) {")
+	out("\n	return ((int64_t)a << fraction) / (int64_t)b;")
+	out("\n}")
+
+	out("\n#endif /* __FIXED_POINT__ */")
+
+
 h_helpers = {
 	'use_bigint': helper_use_bigint,
 }
@@ -2469,6 +2506,7 @@ c_helpers = {
 	'use_arrcpy': helper_use_arrcpy,
 	'use_va_arg': helper_use_va_arg,
 	'use_raw_cast': helper_use_rawcast,
+	'use_fixed_point': helper_use_fixed_point,
 }
 
 c_include_helpers = {

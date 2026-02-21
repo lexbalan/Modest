@@ -369,40 +369,6 @@ static bool testFloat32Static(void) {
 }
 
 
-static bool testFixed32Static(void) {
-
-	//var fx: @fraction(20) Fixed32
-	int32_t fx;
-
-	fx = (1 << 16) * 3.1415;
-
-	const int32_t a = fx + (1 << 16) * 1;
-	const int32_t b = fx - (1 << 16) * 1;
-	const int32_t c = (((int64_t)(fx) * (int64_t)((1 << 16) * 2)) >> 16);
-	const int32_t d = (((int64_t)(fx) << 16) / ((1 << 16) * 2));
-
-	printf("Raw fx = %d\n", fx);
-	printf("Raw a = %d\n", a);
-	printf("Raw b = %d\n", b);
-	printf("Raw c = %d\n", c);
-	printf("Raw d = %d\n", d);
-
-	printf("Int32 fx = %d\n", (fx) >> 16);
-	printf("Int32 a = %d\n", (a) >> 16);
-	printf("Int32 b = %d\n", (b) >> 16);
-	printf("Int32 c = %d\n", (c) >> 16);
-	printf("Int32 d = %d\n", (d) >> 16);
-
-	printf("Float32 fx = %f\n", ((float)(fx)) / (1 << 16));
-	printf("Float32 a = %f\n", ((float)(a)) / (1 << 16));
-	printf("Float32 b = %f\n", ((float)(b)) / (1 << 16));
-	printf("Float32 c = %f\n", ((float)(c)) / (1 << 16));
-	printf("Float32 d = %f\n", ((float)(d)) / (1 << 16));
-
-	return true;
-}
-
-
 static bool testInteger(void) {
 	printf("passed: Integer test\n");
 	return true;
@@ -436,8 +402,6 @@ int32_t main(void) {
 
 	bool result;
 	bool success = true;
-
-	testFixed32Static();
 
 	// test built-in generic types
 	result = testInteger();

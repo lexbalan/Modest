@@ -14,22 +14,6 @@ def value_word_create(num, ti=None):
 
 
 
-def _value_word_cons_immediate(t, v, method, ti):
-	#info("_value_word_cons_immediate", ti)
-	if method == 'implicit':
-		if v.type.width > t.width:
-			error("word overflow", ti)
-
-	nv = ValueCons(t, v, method, ti=ti)
-	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-	nv.set_asset(v.asset)
-	if v.type.is_signed():
-		nv.set_asset(int_zext(v.asset, v.type.width, t.width))
-
-	return nv
-
-
-
 def word_can(to, from_type, method, ti):
 	if from_type.is_integer():
 		return from_type.width <= to.width
@@ -59,9 +43,18 @@ def word_can(to, from_type, method, ti):
 
 
 def value_word_cons(t, v, method, ti):
-	if v.isValueImmediate():
-		return _value_word_cons_immediate(t, v, method, ti)
 	nv = ValueCons(t, v, method, ti=ti)
+	if v.isValueImmediate():
+		if method == 'implicit':
+			if v.type.width > t.width:
+				error("word overflow", ti)
+
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+		nv.set_asset(v.asset)
+		if v.type.is_signed():
+			nv.set_asset(int_zext(v.asset, v.type.width, t.width))
+		return nv
+
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	nv.rawMode = v.type.is_float()
 	return nv

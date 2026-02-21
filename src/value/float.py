@@ -15,14 +15,6 @@ def value_float_create(val, ti=None):
 
 
 
-def _value_float_cons_immediate(t, v, method, ti):
-	assert(t.is_float())
-	nv = ValueCons(t, v, method, ti=ti)
-	nv.set_asset(v.asset)
-	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-	return nv
-
-
 def float_can(to, from_type, method, ti):
 	if from_type.is_generic():
 		return from_type.is_int() or from_type.is_float() or from_type.is_integer() or from_type.is_rational()
@@ -41,9 +33,12 @@ def float_can(to, from_type, method, ti):
 
 
 def value_float_cons(t, v, method, ti):
-	if v.isValueImmediate():
-		return _value_float_cons_immediate(t, v, method, ti)
+	assert(t.is_float())
 	nv = ValueCons(t, v, method, ti=ti)
+	if v.isValueImmediate():
+		nv.set_asset(v.asset)
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+		return nv
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 

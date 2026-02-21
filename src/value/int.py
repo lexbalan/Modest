@@ -36,19 +36,6 @@ def _check_width(from_type, t, method, ti):
 
 
 
-def _value_int_cons_immediate(t, v, method, ti):
-	#info("value_cons_int_immediate", ti)
-	width = t.width
-	need_width = nbits_for_num(v.asset, signed=t.is_signed())
-
-	#info("(%d %d %d)" % (v.asset, need_width, width), ti)
-	if need_width > width:
-		error("integer overflow", ti)
-
-	nv = ValueCons(t, v, method, ti=ti)
-	nv.set_asset(v.asset)
-	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-	return nv
 
 
 
@@ -101,7 +88,17 @@ def value_int_cons(t, v, method, ti):
 				nv.set_asset(int(v.asset))  # here can be float
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			return nv
-		return _value_int_cons_immediate(t, v, method, ti)
+		width = t.width
+
+		need_width = nbits_for_num(v.asset, signed=t.is_signed())
+
+		#info("(%d %d %d)" % (v.asset, need_width, width), ti)
+		if need_width > width:
+			error("integer overflow", ti)
+
+		nv.set_asset(v.asset)
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+		return nv
 
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv

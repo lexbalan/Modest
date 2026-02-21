@@ -8,23 +8,14 @@ import type as type
 
 def value_fixed_create(val, ti=None):
 	#info("value_fixed_create", ti)
+	from trans import cmodule_use
+	cmodule_use('use_fixed_point')
+
 	flt_width = int(settings['fixed_width'])
 	typ = type_fixed_create(width=flt_width, ti=ti)
 	typ.generic = True
 	return ValueLiteral(typ, val, ti)
 
-
-
-def _value_fixed_cons_immediate(t, v, method, ti):
-	assert(t.is_fixed())
-	nv = ValueCons(t, v, method, ti=ti)
-	a = v.asset
-	# TODO
-	#a = 1
-	#nv.set_asset(a)
-	nv.asset = 1
-	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-	return nv
 
 
 def fixed_can(to, from_type, method, ti):
@@ -45,9 +36,20 @@ def fixed_can(to, from_type, method, ti):
 
 
 def value_fixed_cons(t, v, method, ti):
-	if v.isValueImmediate():
-		return _value_fixed_cons_immediate(t, v, method, ti)
+	#info("value_fixed_cons", ti)
+	from trans import cmodule_use
+	cmodule_use('use_fixed_point')
 	nv = ValueCons(t, v, method, ti=ti)
+
+	if v.isValueImmediate():
+		a = v.asset
+		# TODO
+		#a = 1
+		#nv.set_asset(a)
+		nv.asset = 1
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+		return nv
+
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
