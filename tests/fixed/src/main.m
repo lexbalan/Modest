@@ -6,9 +6,10 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func packFixed32 (n: Nat32, m: Nat32, base: Nat32 fraction: Nat8) -> Fixed32 {
-	let tail = Nat64 m * (Nat64(Word32 1 << fraction) - 1) / Nat64 base
-	return unsafe Fixed32 ((Word32 n << fraction) or unsafe Word32 tail)
+// fx = i + m/n
+func packFixed32 (i: Nat32, m: Nat32, n: Nat32 fraction: Nat8) -> Fixed32 {
+	let tail = Nat64 m * (Nat64(Word32 1 << fraction) - 1) / Nat64 n
+	return unsafe Fixed32 ((Word32 i << fraction) or unsafe Word32 tail)
 }
 
 
@@ -51,9 +52,9 @@ func testFixed32Static () -> Bool {
 	printFixed32(Word32 f, 18, 1000000)
 	printf("\n")
 
-	let f2 = packFixed32(3, 141592, 1000000, 20)
+	let f2 = packFixed32(3, 1415926, 10000000, 20)
 	printf("f2 = ")
-	printFixed32(Word32 f2, 20, 1000000)
+	printFixed32(Word32 f2, 20, 10000000)
 	printf("\n")
 
 	printf("Raw f = %d\n", f)

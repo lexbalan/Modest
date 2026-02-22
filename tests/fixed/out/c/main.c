@@ -75,9 +75,9 @@ static bool testFixed32Static(void) {
 	printFixed32((uint32_t)f, 18, 1000000);
 	printf("\n");
 
-	const int32_t f2 = packFixed32(3, 141592, 1000000, 20);
+	const int32_t f2 = packFixed32(3, 1415926, 10000000, 20);
 	printf("f2 = ");
-	printFixed32((uint32_t)f2, 20, 1000000);
+	printFixed32((uint32_t)f2, 20, 10000000);
 	printf("\n");
 
 	printf("Raw f = %d\n", f);
