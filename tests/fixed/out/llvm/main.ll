@@ -143,21 +143,6 @@ break_2:
 %PIDT = type %Int32;
 %UIDT = type %Nat32;
 %GIDT = type %Nat32;
-; from included stdlib
-declare void @abort()
-declare %Int @abs(%Int %x)
-declare %Int @atexit(void ()* %x)
-declare %Double @atof([0 x %ConstChar]* %nptr)
-declare %Int @atoi([0 x %ConstChar]* %nptr)
-declare %LongInt @atol([0 x %ConstChar]* %nptr)
-declare i8* @calloc(%SizeT %num, %SizeT %size)
-declare void @exit(%Int %x)
-declare void @free(i8* %ptr)
-declare %Str* @getenv(%Str* %name)
-declare %LongInt @labs(%LongInt %x)
-declare %Str* @secure_getenv(%Str* %name)
-declare i8* @malloc(%SizeT %size)
-declare %Int @system([0 x %ConstChar]* %string)
 ; from included stdio
 %File = type {
 };
@@ -208,268 +193,46 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
-; from included limits
+; from included stdlib
+declare void @abort()
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
+declare i8* @calloc(%SizeT %num, %SizeT %size)
+declare void @exit(%Int %x)
+declare void @free(i8* %ptr)
+declare %Str* @getenv(%Str* %name)
+declare %LongInt @labs(%LongInt %x)
+declare %Str* @secure_getenv(%Str* %name)
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
 ; -- print imports 'main' --
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [18 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 32, i8 33, i8 61, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 10, i8 0]
-@str2 = private constant [18 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 49, i8 32, i8 33, i8 61, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 49, i8 10, i8 0]
-@str3 = private constant [18 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 32, i8 33, i8 61, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 10, i8 0]
-@str4 = private constant [18 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 32, i8 61, i8 61, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 49, i8 10, i8 0]
-@str5 = private constant [18 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 49, i8 32, i8 61, i8 61, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 10, i8 0]
-@str6 = private constant [19 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 32, i8 61, i8 61, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 49, i8 50, i8 10, i8 0]
-@str7 = private constant [24 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 114, i8 101, i8 99, i8 111, i8 114, i8 100, i8 32, i8 101, i8 113, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str8 = private constant [18 x i8] [i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 32, i8 33, i8 61, i8 32, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 10, i8 0]
-@str9 = private constant [18 x i8] [i8 97, i8 114, i8 114, i8 51, i8 50, i8 49, i8 32, i8 33, i8 61, i8 32, i8 97, i8 114, i8 114, i8 51, i8 50, i8 49, i8 10, i8 0]
-@str10 = private constant [19 x i8] [i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 32, i8 33, i8 61, i8 32, i8 99, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 10, i8 0]
-@str11 = private constant [19 x i8] [i8 99, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 32, i8 33, i8 61, i8 32, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 10, i8 0]
-@str12 = private constant [18 x i8] [i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 32, i8 61, i8 61, i8 32, i8 97, i8 114, i8 114, i8 51, i8 50, i8 49, i8 10, i8 0]
-@str13 = private constant [20 x i8] [i8 99, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 32, i8 61, i8 61, i8 32, i8 99, i8 97, i8 114, i8 114, i8 51, i8 50, i8 49, i8 10, i8 0]
-@str14 = private constant [20 x i8] [i8 118, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 32, i8 33, i8 61, i8 32, i8 118, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 10, i8 0]
-@str15 = private constant [20 x i8] [i8 118, i8 97, i8 114, i8 114, i8 51, i8 50, i8 49, i8 32, i8 33, i8 61, i8 32, i8 118, i8 97, i8 114, i8 114, i8 51, i8 50, i8 49, i8 10, i8 0]
-@str16 = private constant [19 x i8] [i8 118, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 32, i8 33, i8 61, i8 32, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 10, i8 0]
-@str17 = private constant [20 x i8] [i8 118, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 32, i8 33, i8 61, i8 32, i8 99, i8 97, i8 114, i8 114, i8 49, i8 50, i8 51, i8 10, i8 0]
-@str18 = private constant [19 x i8] [i8 118, i8 97, i8 114, i8 114, i8 51, i8 50, i8 49, i8 32, i8 33, i8 61, i8 32, i8 97, i8 114, i8 114, i8 51, i8 50, i8 49, i8 10, i8 0]
-@str19 = private constant [20 x i8] [i8 118, i8 97, i8 114, i8 114, i8 51, i8 50, i8 49, i8 32, i8 33, i8 61, i8 32, i8 99, i8 97, i8 114, i8 114, i8 51, i8 50, i8 49, i8 10, i8 0]
-@str20 = private constant [23 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 101, i8 113, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str21 = private constant [9 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 101, i8 113, i8 10, i8 0]
-@str22 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
-@str23 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str24 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str1 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 102, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 97, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 98, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str4 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 99, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str5 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str6 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 102, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str7 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 97, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str8 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 98, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str9 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 99, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str10 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str11 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 102, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str12 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 97, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str13 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 98, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str14 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 99, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str15 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 100, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str16 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 105, i8 120, i8 101, i8 100, i8 10, i8 0]
+@str17 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@str18 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str19 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define %Bool @main_testRecordsEq() {
-; if_0
-	br %Bool 0 , label %then_0, label %endif_0
-then_0:
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_0
-endif_0:
-; if_1
-	br %Bool 0 , label %then_1, label %endif_1
-then_1:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_1
-endif_1:
-; if_2
-	br %Bool 0 , label %then_2, label %endif_2
-then_2:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_2
-endif_2:
-; if_3
-	br %Bool 0 , label %then_3, label %endif_3
-then_3:
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str4 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_3
-endif_3:
-; if_4
-	br %Bool 0 , label %then_4, label %endif_4
-then_4:
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str5 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_4
-endif_4:
-; if_5
-	br %Bool 0 , label %then_5, label %endif_5
-then_5:
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str6 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_5
-endif_5:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str7 to [0 x i8]*))
-	ret %Bool 1
-}
-
-@arr123 = constant [3 x i8] [
-	i8 1,
-	i8 2,
-	i8 3
-]
-@arr321 = constant [3 x i8] [
-	i8 3,
-	i8 2,
-	i8 1
-]
-@carr123 = constant [3 x %Int32] [
-	%Int32 1,
-	%Int32 2,
-	%Int32 3
-]
-@carr321 = constant [3 x %Int32] [
-	%Int32 3,
-	%Int32 2,
-	%Int32 1
-]
-@varr123 = internal global [3 x %Int32] [
-	%Int32 1,
-	%Int32 2,
-	%Int32 3
-]
-@varr321 = internal global [3 x %Int32] [
-	%Int32 3,
-	%Int32 2,
-	%Int32 1
-]
-define %Bool @main_testArraysEq() {
-; if_0
-	br %Bool 0 , label %then_0, label %endif_0
-then_0:
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str8 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_0
-endif_0:
-; if_1
-	br %Bool 0 , label %then_1, label %endif_1
-then_1:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str9 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_1
-endif_1:
-; if_2
-	br %Bool 0 , label %then_2, label %endif_2
-then_2:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_2
-endif_2:
-; if_3
-	br %Bool 0 , label %then_3, label %endif_3
-then_3:
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str11 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_3
-endif_3:
-; if_4
-	br %Bool 0 , label %then_4, label %endif_4
-then_4:
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str12 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_4
-endif_4:
-; if_5
-	br %Bool 0 , label %then_5, label %endif_5
-then_5:
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str13 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_5
-endif_5:
-; if_6
-	%13 = bitcast [3 x %Int32]* @varr123 to i8*
-	%14 = bitcast [3 x %Int32]* @varr123 to i8*
-	%15 = call i1 (i8*, i8*, i64) @memeq(i8* %13, i8* %14, %Int64 12)
-	%16 = icmp eq %Bool %15, 0
-	br %Bool %16 , label %then_6, label %endif_6
-then_6:
-	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str14 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_6
-endif_6:
-; if_7
-	%19 = bitcast [3 x %Int32]* @varr321 to i8*
-	%20 = bitcast [3 x %Int32]* @varr321 to i8*
-	%21 = call i1 (i8*, i8*, i64) @memeq(i8* %19, i8* %20, %Int64 12)
-	%22 = icmp eq %Bool %21, 0
-	br %Bool %22 , label %then_7, label %endif_7
-then_7:
-	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str15 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_7
-endif_7:
-; if_8
-	%25 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
-	%26 = insertvalue [3 x %Int32] %25, %Int32 2, 1
-	%27 = insertvalue [3 x %Int32] %26, %Int32 3, 2
-	%28 = alloca [3 x %Int32]
-	%29 = zext i8 3 to %Nat32
-	store [3 x %Int32] %27, [3 x %Int32]* %28
-	%30 = bitcast [3 x %Int32]* @varr123 to i8*
-	%31 = bitcast [3 x %Int32]* %28 to i8*
-	%32 = call i1 (i8*, i8*, i64) @memeq(i8* %30, i8* %31, %Int64 12)
-	%33 = icmp eq %Bool %32, 0
-	br %Bool %33 , label %then_8, label %endif_8
-then_8:
-	%34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str16 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_8
-endif_8:
-; if_9
-	%36 = bitcast [3 x %Int32]* @varr123 to i8*
-	%37 = bitcast [3 x %Int32]* @carr123 to i8*
-	%38 = call i1 (i8*, i8*, i64) @memeq(i8* %36, i8* %37, %Int64 12)
-	%39 = icmp eq %Bool %38, 0
-	br %Bool %39 , label %then_9, label %endif_9
-then_9:
-	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str17 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_9
-endif_9:
-; if_10
-	%42 = insertvalue [3 x %Int32] zeroinitializer, %Int32 3, 0
-	%43 = insertvalue [3 x %Int32] %42, %Int32 2, 1
-	%44 = insertvalue [3 x %Int32] %43, %Int32 1, 2
-	%45 = alloca [3 x %Int32]
-	%46 = zext i8 3 to %Nat32
-	store [3 x %Int32] %44, [3 x %Int32]* %45
-	%47 = bitcast [3 x %Int32]* @varr321 to i8*
-	%48 = bitcast [3 x %Int32]* %45 to i8*
-	%49 = call i1 (i8*, i8*, i64) @memeq(i8* %47, i8* %48, %Int64 12)
-	%50 = icmp eq %Bool %49, 0
-	br %Bool %50 , label %then_10, label %endif_10
-then_10:
-	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str18 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_10
-endif_10:
-; if_11
-	%53 = bitcast [3 x %Int32]* @varr321 to i8*
-	%54 = bitcast [3 x %Int32]* @carr321 to i8*
-	%55 = call i1 (i8*, i8*, i64) @memeq(i8* %53, i8* %54, %Int64 12)
-	%56 = icmp eq %Bool %55, 0
-	br %Bool %56 , label %then_11, label %endif_11
-then_11:
-	%57 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str19 to [0 x i8]*))
-	ret %Bool 0
-	br label %endif_11
-endif_11:
-	%59 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str20 to [0 x i8]*))
-	ret %Bool 1
-}
-
-define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str21 to [0 x i8]*))
-	%2 = alloca %Bool, align 1
-	%3 = alloca %Bool, align 1
-	store %Bool 1, %Bool* %3
-	%4 = call %Bool @main_testRecordsEq()
-	store %Bool %4, %Bool* %2
-	%5 = load %Bool, %Bool* %3
-	%6 = load %Bool, %Bool* %2
-	%7 = and %Bool %5, %6
-	store %Bool %7, %Bool* %3
-	%8 = call %Bool @main_testArraysEq()
-	store %Bool %8, %Bool* %2
-	%9 = load %Bool, %Bool* %3
-	%10 = load %Bool, %Bool* %2
-	%11 = and %Bool %9, %10
-	store %Bool %11, %Bool* %3
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str22 to [0 x i8]*))
-; if_0
-	%13 = load %Bool, %Bool* %3
-	%14 = xor %Bool %13, 1
-	br %Bool %14 , label %then_0, label %endif_0
-then_0:
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str23 to [0 x i8]*))
-	ret %Int 1
-	br label %endif_0
-endif_0:
-	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str24 to [0 x i8]*))
-	ret %Int 0
-}
-
-
+define internal %Bool @testFixed32Static() {
+	%1 = alloca %Fixed32, align 4
+	;var f: Fixed32

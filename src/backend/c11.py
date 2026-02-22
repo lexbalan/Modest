@@ -1629,6 +1629,9 @@ def print_stmt_var(x):
 	var_value = x.value
 	init_value = x.init_value
 
+	if x.hasAttribute('static'):
+		out("static ")
+
 	print_variable(get_id_str(var_value), var_value.type)
 
 	if init_value.isValueUndef():

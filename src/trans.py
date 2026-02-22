@@ -1688,7 +1688,6 @@ def do_stmt_var(x):
 	df = def_var_common(x)
 
 	if df.is_stmt_bad():
-		# hmm
 		return df
 
 	if not df.init_value.is_value_undefined():
@@ -1696,12 +1695,15 @@ def do_stmt_var(x):
 
 	df.id.prefix = None
 	df.value.id.prefix = None
-	#df.module = None
-	#df.access_level = mass
 
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
 	df.value.is_global_flag = False
 	df.parent = cfunc
+
+	for a in x['anno']:
+		if a['kind'] == 'static':
+			df.att.append('static')
+
 	return df
 
 
@@ -1965,6 +1967,10 @@ def do_stmt(x):
 
 	if 'comment' in x and x['comment'] != None:
 		s.comment = do_stmt_comment(x['comment'])
+
+
+	#for a in x['anno']:
+	#	if x['kind'] == 'static':
 
 	return s
 

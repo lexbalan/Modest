@@ -31,10 +31,9 @@ static inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction
 
 
 static bool testFixed32Static(void) {
+	static uint32_t st;
 
 	int32_t f;
-	//var f: Fixed32
-
 	f = __fixed32_from_float64(3.1415926535897932384626433832795028841971693993751058209749445923, 20);
 
 	const int32_t a = f + __fixed32_from_int32(1, 20);

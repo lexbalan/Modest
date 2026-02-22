@@ -5,6 +5,7 @@ include "libc/stdlib"
 
 
 func testFixed32Static () -> Bool {
+	@static var st: Nat32
 
 	var f: @fraction(20) Fixed32
 	//var f: Fixed32

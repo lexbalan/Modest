@@ -1526,6 +1526,7 @@ class Parser:
 			'cond': c,
 			'then': t,
 			'else': e,
+			'anno': [],
 			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_start),
 			'nl': 0
 		}
@@ -1541,6 +1542,7 @@ class Parser:
 			'kind': 'while',
 			'cond': cond,
 			'stmt': stmt,
+			'anno': [],
 			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_start),
 			'nl': 0
 		}
@@ -1560,6 +1562,7 @@ class Parser:
 			'isa': 'ast_stmt',
 			'kind': 'return',
 			'value': v,
+			'anno': [],
 			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_end),
 		}
 
@@ -1570,6 +1573,7 @@ class Parser:
 		return {
 			'isa': 'ast_stmt',
 			'kind': 'again',
+			'anno': [],
 			'ti': TextInfo(start=ti, mid=ti, end=ti),
 		}
 
@@ -1580,6 +1584,7 @@ class Parser:
 		return {
 			'isa': 'ast_stmt',
 			'kind': 'break',
+			'anno': [],
 			'ti': TextInfo(start=ti, mid=ti, end=ti),
 		}
 
@@ -1592,6 +1597,7 @@ class Parser:
 			'isa': 'ast_stmt',
 			'kind': 'inc',
 			'value': v,
+			'anno': [],
 			'ti': TextInfo(start=ti_start, mid=ti_start, end=v['ti'].end),
 		}
 
@@ -1604,13 +1610,19 @@ class Parser:
 			'isa': 'ast_stmt',
 			'kind': 'dec',
 			'value': v,
+			'anno': [],
 			'ti': TextInfo(start=ti_start, mid=ti_start, end=v['ti'].end),
 		}
 
 
 	def stmt_asm(self):
 		v = self.expr_value()
-		return {'isa': 'ast_stmt', 'kind': 'asm', 'args': v['args']}
+		return {
+			'isa': 'ast_stmt',
+			'kind': 'asm',
+			'args': v['args'],
+			'anno': [],
+		}
 
 
 	def stmt_expr_value(self):
@@ -1622,12 +1634,20 @@ class Parser:
 			self.skip1() # skip assign operator
 			self.skipn("\n")
 			r = self.expr_value()
-			return {'isa': 'ast_stmt', 'kind': 'assign', 'left': v, 'right': r, 'ti': assign_ti}
+			return {
+				'isa': 'ast_stmt',
+				'kind': 'assign',
+				'left': v,
+				'right': r,
+				'anno': [],
+				'ti': assign_ti
+			}
 
 		return {
 			'isa': 'ast_stmt',
 			'kind': 'value',
 			'value': v,
+			'anno': [],
 			'ti': v['ti'],
 		}
 
@@ -1673,6 +1693,10 @@ class Parser:
 
 			s = None
 
+			ca = self.parse_comments_annotations(nl_cnt=0)
+			#if ca[1] != []:
+			#	print(ca[1])
+
 			if self.look('let'):
 				s = self.stmt_let()
 			elif self.look('if'):
@@ -1717,10 +1741,12 @@ class Parser:
 				if isinstance(s, list):
 					s[0]['nl'] = spaceline_cnt
 					s[0]['comment'] = comment
+					s[0]['anno'] = ca[1]
 					stmts.extend(s)
 				else:
 					s['nl'] = spaceline_cnt
 					s['comment'] = comment
+					s['anno'] = ca[1]
 					stmts.append(s)
 
 			elif comment != None:
@@ -1735,6 +1761,7 @@ class Parser:
 			'isa': 'ast_stmt',
 			'kind': 'block',
 			'stmts': stmts,
+			'anno': [],
 			'nl': 0,
 			'ti': ti
 		}
