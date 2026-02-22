@@ -30,16 +30,55 @@ static inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction
 #endif /* __FIXED_POINT__ */
 
 
+static int32_t packFixed32(uint32_t n, uint32_t m, uint32_t base, uint8_t fraction) {
+	const uint64_t tail = (uint64_t)m * ((uint64_t)(0x1 << fraction) - 1) / (uint64_t)base;
+	return (int32_t)((n << fraction) | (uint32_t)tail);
+}
+
+
+
+// just returns head as is
+static uint32_t headFixed32(uint32_t f, uint8_t fraction) {
+	return (f >> fraction);
+}
+
+
+// just returns tail as is
+static uint32_t tailFixed32(uint32_t f, uint8_t fraction) {
+	const uint32_t mask = ((0x1 << fraction) - 1);
+	return (f & mask);
+}
+
+
+
+// precision = 10 ... 1000000 - number of zeroes = number of digits in output value
+static uint32_t printFixed32(uint32_t f, uint8_t fraction, uint32_t precision) {
+	const uint32_t h = headFixed32(f, fraction);
+	const uint32_t t = tailFixed32(f, fraction);
+	const uint32_t tail = (uint32_t)((uint64_t)t * (uint64_t)precision / (uint64_t)(0x1 << fraction));
+	printf("%d.%d", h, tail);
+}
+
+
 static bool testFixed32Static(void) {
 	static uint32_t st;
 
 	int32_t f;
-	f = __fixed32_from_float64(3.1415926535897932384626433832795028841971693993751058209749445923, 20);
+	f = __fixed32_from_float64(3.1415926535897932384626433832795028841971693993751058209749445923, 18);
 
-	const int32_t a = f + __fixed32_from_int32(1, 20);
-	const int32_t b = f - __fixed32_from_int32(1, 20);
-	const int32_t c = __fixed32_mul(f, __fixed32_from_int32(2, 20), 20);
-	const int32_t d = __fixed32_div(f, __fixed32_from_int32(2, 20), 20);
+	const int32_t a = f + __fixed32_from_int32(1, 18);
+	const int32_t b = f - __fixed32_from_int32(1, 18);
+	const int32_t c = __fixed32_mul(f, __fixed32_from_int32(2, 18), 18);
+	const int32_t d = __fixed32_div(f, __fixed32_from_int32(2, 18), 18);
+
+	printf("fx = ");
+	printFixed32((uint32_t)f, 18, 1000000);
+	printf("\n");
+
+	const int32_t f2 = packFixed32(3, 141592, 1000000, 20);
+	printf("f2 = ");
+	printFixed32((uint32_t)f2, 20, 1000000);
+	printf("\n");
 
 	printf("Raw f = %d\n", f);
 	printf("Raw a = %d\n", a);
@@ -47,17 +86,17 @@ static bool testFixed32Static(void) {
 	printf("Raw c = %d\n", c);
 	printf("Raw d = %d\n", d);
 
-	printf("Int32 f = %d\n", __fixed32_to_int32(f, 20));
-	printf("Int32 a = %d\n", __fixed32_to_int32(a, 20));
-	printf("Int32 b = %d\n", __fixed32_to_int32(b, 20));
-	printf("Int32 c = %d\n", __fixed32_to_int32(c, 20));
-	printf("Int32 d = %d\n", __fixed32_to_int32(d, 20));
+	printf("Int32 f = %d\n", __fixed32_to_int32(f, 18));
+	printf("Int32 a = %d\n", __fixed32_to_int32(a, 18));
+	printf("Int32 b = %d\n", __fixed32_to_int32(b, 18));
+	printf("Int32 c = %d\n", __fixed32_to_int32(c, 18));
+	printf("Int32 d = %d\n", __fixed32_to_int32(d, 18));
 
-	printf("Float32 f = %f\n", __fixed32_to_float64(f, 20));
-	printf("Float32 a = %f\n", __fixed32_to_float64(a, 20));
-	printf("Float32 b = %f\n", __fixed32_to_float64(b, 20));
-	printf("Float32 c = %f\n", __fixed32_to_float64(c, 20));
-	printf("Float32 d = %f\n", __fixed32_to_float64(d, 20));
+	printf("Float32 f = %f\n", __fixed32_to_float64(f, 18));
+	printf("Float32 a = %f\n", __fixed32_to_float64(a, 18));
+	printf("Float32 b = %f\n", __fixed32_to_float64(b, 18));
+	printf("Float32 c = %f\n", __fixed32_to_float64(c, 18));
+	printf("Float32 d = %f\n", __fixed32_to_float64(d, 18));
 
 	return true;
 }

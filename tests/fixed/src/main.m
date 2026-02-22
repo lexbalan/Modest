@@ -1,13 +1,43 @@
 // tests/eq/src/main.m
 
+pragma unsafe
+
 include "libc/stdio"
 include "libc/stdlib"
 
 
-func testFixed32Static () -> Bool {
-	@static var st: Nat32
+func packFixed32 (n: Nat32, m: Nat32, base: Nat32 fraction: Nat8) -> Fixed32 {
+	let tail = Nat64 m * (Nat64(Word32 1 << fraction) - 1) / Nat64 base
+	return unsafe Fixed32 ((Word32 n << fraction) or unsafe Word32 tail)
+}
 
-	var f: @fraction(20) Fixed32
+
+// just returns head as is
+func headFixed32 (f: Word32, fraction: Nat8) -> Nat32 {
+	return unsafe Nat32 (f >> fraction)
+}
+
+// just returns tail as is
+func tailFixed32 (f: Word32, fraction: Nat8) -> Nat32 {
+	let mask = Word32(Nat32(Word32 1 << fraction) - 1)
+	return Nat32(f and mask)
+}
+
+
+// precision = 10 ... 1000000 - number of zeroes = number of digits in output value
+func printFixed32 (f: Word32, fraction: Nat8, precision: Nat32) -> Nat32 {
+	let h = headFixed32(f, fraction)
+	let t = tailFixed32(f, fraction)
+	let tail = unsafe Nat32 (Nat64 t * Nat64 precision / Nat64(Word32 1 << fraction))
+	printf("%d.%d", h, tail)
+}
+
+
+func testFixed32Static () -> Bool {
+	@static
+	var st: Nat32
+
+	var f: @fraction(18) Fixed32
 	//var f: Fixed32
 
 	f = 3.1415926535897932384626433832795028841971693993751058209749445923
@@ -16,6 +46,15 @@ func testFixed32Static () -> Bool {
 	let b = f - 1
 	let c = f * 2
 	let d = f / 2
+
+	printf("fx = ")
+	printFixed32(Word32 f, 18, 1000000)
+	printf("\n")
+
+	let f2 = packFixed32(3, 141592, 1000000, 20)
+	printf("f2 = ")
+	printFixed32(Word32 f2, 20, 1000000)
+	printf("\n")
 
 	printf("Raw f = %d\n", f)
 	printf("Raw a = %d\n", a)

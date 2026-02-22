@@ -601,7 +601,7 @@ def do_value_bin_op(op, l, r, ti):
 
 	if l.is_value_undefined() or r.is_value_undefined():
 		t = htype.select_common_type(l.type, r.type, ti)
-		return ValueUndef(t)
+		return ValueUndef(l.type)
 
 	# Ops with different types
 	if op == HLIR_VALUE_OP_ADD:
