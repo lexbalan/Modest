@@ -144,7 +144,7 @@ class Parser:
 
 
 	def is_assign_operator(self):
-		return self.look("=") or self.look("<-") or self.look(":=")
+		return self.look("=")  #or self.look("<-") or self.look(":=")
 
 	def is_number(self):
 		return self.ctok_class() == 'num'
