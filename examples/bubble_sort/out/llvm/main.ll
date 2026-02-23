@@ -229,50 +229,53 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 -9
 ]
 define internal %Bool @bubble_sort32_iter([0 x %Int32]* %array, %Nat32 %len) {
-	%1 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %1
+	%1 = alloca %Bool, align 1
+	store %Bool 0, %Bool* %1
+	%2 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %2
 ; while_1
 	br label %again_1
 again_1:
-	%2 = sub %Nat32 %len, 1
-	%3 = load %Nat32, %Nat32* %1
-	%4 = icmp ult %Nat32 %3, %2
-	br %Bool %4 , label %body_1, label %break_1
+	%3 = sub %Nat32 %len, 1
+	%4 = load %Nat32, %Nat32* %2
+	%5 = icmp ult %Nat32 %4, %3
+	br %Bool %5 , label %body_1, label %break_1
 body_1:
-	%5 = load %Nat32, %Nat32* %1
-	%6 = bitcast %Nat32 %5 to %Nat32
-	%7 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %6
-	%8 = load %Int32, %Int32* %7
-	%9 = load %Nat32, %Nat32* %1
-	%10 = add %Nat32 %9, 1
-	%11 = bitcast %Nat32 %10 to %Nat32
-	%12 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %11
-	%13 = load %Int32, %Int32* %12
+	%6 = load %Nat32, %Nat32* %2
+	%7 = bitcast %Nat32 %6 to %Nat32
+	%8 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %7
+	%9 = load %Int32, %Int32* %8
+	%10 = load %Nat32, %Nat32* %2
+	%11 = add %Nat32 %10, 1
+	%12 = bitcast %Nat32 %11 to %Nat32
+	%13 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %12
+	%14 = load %Int32, %Int32* %13
 ; if_0
-	%14 = icmp sgt %Int32 %8, %13
-	br %Bool %14 , label %then_0, label %endif_0
+	%15 = icmp sgt %Int32 %9, %14
+	br %Bool %15 , label %then_0, label %endif_0
 then_0:
-	%15 = load %Nat32, %Nat32* %1
-	%16 = bitcast %Nat32 %15 to %Nat32
-	%17 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %16
-	store %Int32 %13, %Int32* %17
-	%18 = load %Nat32, %Nat32* %1
-	%19 = add %Nat32 %18, 1
-	%20 = bitcast %Nat32 %19 to %Nat32
-	%21 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %20
-	store %Int32 %8, %Int32* %21
-	ret %Bool 1
+	%16 = load %Nat32, %Nat32* %2
+	%17 = bitcast %Nat32 %16 to %Nat32
+	%18 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %17
+	store %Int32 %14, %Int32* %18
+	%19 = load %Nat32, %Nat32* %2
+	%20 = add %Nat32 %19, 1
+	%21 = bitcast %Nat32 %20 to %Nat32
+	%22 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %21
+	store %Int32 %9, %Int32* %22
+	store %Bool 1, %Bool* %1
 	br label %endif_0
 endif_0:
-	%23 = load %Nat32, %Nat32* %1
+	%23 = load %Nat32, %Nat32* %2
 	%24 = add %Nat32 %23, 1
-	store %Nat32 %24, %Nat32* %1
+	store %Nat32 %24, %Nat32* %2
 	br label %again_1
 break_1:
-	ret %Bool 0
+	%25 = load %Bool, %Bool* %1
+	ret %Bool %25
 }
 
-define internal void @bubble_sort32([0 x %Int32]* %array, %Nat32 %len) noinline {
+define internal void @bubble_sort32([0 x %Int32]* %array, %Nat32 %len) {
 ; while_1
 	br label %again_1
 again_1:

@@ -8,6 +8,8 @@ var testArray: [21]Int32 = [-3, -5, 2, 1, -1, 0, -2, 3, -4, 4, 11, 9, 6, -7, -8,
 
 // returns true if was swap
 func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
+	var wasSwap: Bool = false
+
 	var i: Nat32 = 0
 	while i < (len - 1) {
 		let left: Int32 = array[i]
@@ -15,16 +17,15 @@ func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
 		if left > right {
 			array[i] = right
 			array[i + 1] = left
-			return true
+			wasSwap = true
 		}
 		i = i + 1
 	}
-	return false
+
+	return wasSwap
 }
 
 
-
-@noinline
 func bubble_sort32 (array: *[]Int32, len: Nat32) -> Unit {
 	while bubble_sort32_iter(array, len) {
 	}

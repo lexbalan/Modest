@@ -15,6 +15,8 @@ static int32_t testArray[21] = {-3, -5, 2, 1, -1, 0, -2, 3, -4, 4, 11, 9, 6, -7,
 
 // returns true if was swap
 static bool bubble_sort32_iter(int32_t (*array)[], uint32_t len) {
+	bool wasSwap = false;
+
 	uint32_t i = 0;
 	while (i < (len - 1)) {
 		const int32_t left = (*array)[i];
@@ -22,15 +24,15 @@ static bool bubble_sort32_iter(int32_t (*array)[], uint32_t len) {
 		if (left > right) {
 			(*array)[i] = right;
 			(*array)[i + 1] = left;
-			return true;
+			wasSwap = true;
 		}
 		i = i + 1;
 	}
-	return false;
+
+	return wasSwap;
 }
 
 
-__attribute__((noinline))
 static void bubble_sort32(int32_t (*array)[], uint32_t len) {
 	while (bubble_sort32_iter(array, len)) {
 	}
