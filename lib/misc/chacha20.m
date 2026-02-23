@@ -100,7 +100,7 @@ public func chacha20Block (state: State) -> Block {
 	var j: Int32 = 0
 	while j < 16 {
 		out[j] = Word32 (Nat32 x[j] + Nat32 state[j])
-		j = j + 1
+		++j
 	}
 
 	return out
