@@ -64,8 +64,6 @@ int32_t main(void) {
 			.s_addr = INADDR_ANY
 		}
 	};
-
-	// Bind socket to address
 	struct sockaddr *const socadr = (struct sockaddr *)&serverAddr;
 	int rc = bind(serverSocket, socadr, (socklen_t)sizeof serverAddr);
 	if (rc < 0) {
@@ -73,8 +71,6 @@ int32_t main(void) {
 		close(serverSocket);
 		exit(1);
 	}
-
-	// Starting listen to connection
 	rc = listen(serverSocket, 5);
 	if (rc < 0) {
 		perror("cannot listen socket");
@@ -83,8 +79,6 @@ int32_t main(void) {
 	}
 
 	printf("Server listening on port %d...\n", (uint32_t)PORT);
-
-	// Handle input connections
 	while (true) {
 		struct sockaddr_in clientAddr;
 		struct sockaddr *const socadr = (struct sockaddr *)&clientAddr;

@@ -92,18 +92,11 @@ static bool test0(void);
 
 int main(void) {
 	printf("test ChaCha20 ");
-	//printf("%s\n", *Str8 hello_world)
-	//var data = []Byte [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 	struct context ctx = init(&testKey, &testNonce2);
 	uint8_t (*const dptr)[] = (uint8_t (*)[])xlorem1024;
 	cipher(&ctx, dptr, 1024);
 
 	int32_t i = 0;
-	//	while i < 10 {
-	//		printf("%c", xlorem1024[i])
-	//		printf("%x\n", Nat32 Word32 Word8 xlorem1024[i])
-	//		++i
-	//	}
 
 	struct context ctx2 = init(&testKey, &testNonce2);
 	cipher(&ctx2, dptr, 1024);
@@ -134,12 +127,6 @@ static bool test0(void) {
 	chacha20_makeState((chacha20_Key *)&key, counter, (uint32_t (*)[3])&nonce, &state);
 	chacha20_Block block;
 	chacha20_chacha20Block(&state, &block);
-
-	//	var i = 0
-	//	while i < 16 {
-	//		printf("%08x\n", block[i])
-	//		++i
-	//	}
 
 	uint8_t (*const bptr)[64] = (uint8_t (*)[64])&block;
 

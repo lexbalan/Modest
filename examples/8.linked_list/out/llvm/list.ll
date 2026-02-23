@@ -396,7 +396,6 @@ endif_0:
 	%9 = icmp sge %Int32 %pos, 0
 	br %Bool %9 , label %then_1, label %else_1
 then_1:
-	; go forward
 	%10 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 0
 	%11 = load %list_Node*, %list_Node** %10
 	store %list_Node* %11, %list_Node** %8
@@ -430,7 +429,6 @@ body_1:
 break_1:
 	br label %endif_1
 else_1:
-	; go backward
 	%25 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
 	%26 = load %list_Node*, %list_Node** %25
 	store %list_Node* %26, %list_Node** %8

@@ -288,8 +288,6 @@ int32_t main(void) {
 	}
 
 	awrap[0]->fhi("World");
-	//let y = awrap[0]
-	//y.fhi("World")
 
 	return 0;
 }

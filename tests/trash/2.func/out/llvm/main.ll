@@ -222,20 +222,13 @@ define internal %Int32 @sum(%Int32 %a, %Int32 %b) {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*))
-
-	; call declared & defined functions
 	call void @func0()
 	call void @func1()
-
-	; call function with two arguments
 	call void @print_ab(%Int32 10, %Int32 20)
-
-	; call function with two arguments and return value
 	%2 = call %Int32 @sum(%Int32 1, %Int32 2)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), %Int32 1, %Int32 2, %Int32 %2)
 	%4 = alloca %Int32 (%Int32, %Int32)*, align 8
 	store %Int32 (%Int32, %Int32)* @sum, %Int32 (%Int32, %Int32)** %4
-	; call function with two arguments and return value
 	%5 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %4
 	%6 = call %Int32 %5(%Int32 1, %Int32 2)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*), %Int32 1, %Int32 2, %Int32 %6)

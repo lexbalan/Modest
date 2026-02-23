@@ -51,14 +51,10 @@ int main(void) {
 
 	printf("before encrypt test_msg: \n");
 	print_bytes(tmsg, (uint32_t)MSG_LENGTH);
-
-	// encrypt test data
 	xor_encrypter(tmsg, (uint32_t)MSG_LENGTH, tkey, (uint32_t)KEY_LENGTH);
 
 	printf("after encrypt test_msg: \n");
 	print_bytes(tmsg, (uint32_t)MSG_LENGTH);
-
-	// decrypt test data
 	xor_encrypter(tmsg, (uint32_t)MSG_LENGTH, tkey, (uint32_t)KEY_LENGTH);
 
 	printf("after decrypt test_msg: \n");

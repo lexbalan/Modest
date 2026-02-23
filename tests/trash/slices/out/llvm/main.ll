@@ -245,10 +245,6 @@ break_1:
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
-
-	;
-	; by value
-	;
 	%2 = alloca [10 x %Int32], align 1
 	%3 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%4 = insertvalue [10 x %Int32] %3, %Int32 2, 2
@@ -289,10 +285,6 @@ body_1:
 	br label %again_1
 break_1:
 	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str4 to [0 x i8]*))
-
-	;
-	; by ptr
-	;
 	%31 = zext i8 5 to %Nat32
 	%32 = getelementptr [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Nat32 %31
 ;
@@ -412,9 +404,6 @@ break_4:
 	call void @array_print([0 x %Int32]* %110, %Nat32 6)
 	%111 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str13 to [0 x i8]*))
 	%112 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str14 to [0 x i8]*))
-
-	; за каким то хером это работает, то что мне сейчас нужно
-	; но тут еще куча работы впереди
 	%113 = alloca [0 x %Int32]*, align 8
 	%114 = bitcast [10 x %Int32]* %73 to [0 x %Int32]*
 	store [0 x %Int32]* %114, [0 x %Int32]** %113
@@ -434,7 +423,6 @@ break_4:
 	call void @array_print([0 x %Int32]* %123, %Nat32 10)
 	%124 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str17 to [0 x i8]*))
 	%125 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str18 to [0 x i8]*))
-	; NOT WORKED NOW
 	%126 = alloca [10 x %Int32], align 1
 	%127 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%128 = insertvalue [10 x %Int32] %127, %Int32 2, 2
@@ -484,8 +472,6 @@ break_4:
 	%166 = insertvalue [10 x %Int32] %165, %Int32 9, 9
 	%167 = zext i8 10 to %Nat32
 	store [10 x %Int32] %166, [10 x %Int32]* %157
-
-	; test with let
 	%168 = zext i8 3 to %Nat32
 	%169 = getelementptr [10 x %Int32], [10 x %Int32]* %157, %Int32 0, %Nat32 %168
 	%170 = bitcast %Int32* %169 to [5 x %Int32]*
@@ -498,21 +484,6 @@ break_4:
 	store [5 x %Int32] %175, [5 x %Int32]* %170
 	%177 = bitcast [10 x %Int32]* %157 to [0 x %Int32]*
 	call void @array_print([0 x %Int32]* %177, %Nat32 10)
-
-	;	printf("--------------------------------------------\n")
-	;
-	;	var dst2 = []Int32 [00, 10, 20, 30, 40, 50, 60, 70, 80, 90]
-	;
-	;	var axx = Nat8 111
-	;	var bxx = Nat8 222
-	;
-	;	// FIXIT: test with var
-	;	// ARRCPY не умеет копировать generic массив, исправь это
-	;	var i2: Int32 = 3
-	;	var j2: Int32 = 5
-	;	dst2[i2:j2] = [Int32 axx, Int32 bxx]
-	;
-	;	array_print(&dst2, 10)
 	ret %Int 0
 }
 

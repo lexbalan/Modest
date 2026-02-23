@@ -82,6 +82,8 @@ static void hello(void) {
 
 
 int32_t main(void) {
+	static uint32_t staticCounter = 0;
+
 	hello();
 	printf("Attributes example\n");
 	(void)staticInlineFunc(0);

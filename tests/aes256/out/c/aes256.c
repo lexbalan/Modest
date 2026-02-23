@@ -148,7 +148,7 @@ static void addRoundKeyCpy(aes256_Block *block, aes256_Key *key, aes256_Key *cpk
 
 static void shiftRows(aes256_Block *block) {
 	uint8_t i;
-	uint8_t j;// to make it potentially parallelable :)
+	uint8_t j;
 
 	i = (*block)[1];
 	(*block)[1] = (*block)[5];
@@ -174,7 +174,7 @@ static void shiftRows(aes256_Block *block) {
 
 static void shiftRowsInv(aes256_Block *block) {
 	uint8_t i;
-	uint8_t j;// similar to shiftRows :)
+	uint8_t j;
 
 	i = (*block)[1];
 	(*block)[1] = (*block)[13];
@@ -409,9 +409,6 @@ aes256_Result aes256_deinit(aes256_Context *ctx) {
 	if (ctx == NULL) {
 		return AES256_RESULT_ERROR;
 	}
-
-	// TODO: const array with memset(!) in C backend
-	//let zeroKey = Key []
 	aes256_Key zeroKey = {0};
 	memcpy(&ctx->key, &zeroKey, sizeof(aes256_Key));
 	memcpy(&ctx->enckey, &zeroKey, sizeof(aes256_Key));

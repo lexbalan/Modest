@@ -419,15 +419,6 @@ define %Int @main() {
 	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %11)
 	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), %Float %15)
 	%26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str4 to [0 x i8]*), %Float %22)
-
-	;	let y = wa.x
-
-	;	var i: Nat32 = 0
-	;	while i < 10 {
-	;		let x = wa.array[i]
-	;		printf("x[%d]=%d\n", i, x)
-	;		++i
-	;	}
 	ret %Int 0
 }
 

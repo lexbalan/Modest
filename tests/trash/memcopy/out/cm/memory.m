@@ -21,15 +21,11 @@ public func zero (mem: Ptr, len: Nat64) -> Unit {
 	let memptr: *[]Word8 = unsafe *[]Word8 mem
 
 	let dst_byte0: *[]Word8 = memptr
-
-	// align the pointer
 	var i = Nat64 0
 	while i < z {
 		dst_byte0[i] = 0
 		i = i + 1
 	}
-
-	// word operation
 
 	let len_words: Nat64 = (len - z) / sizeof(Word)
 	let dst_word: *[]Word = unsafe *[]Word &memptr[i]
@@ -39,8 +35,6 @@ public func zero (mem: Ptr, len: Nat64) -> Unit {
 		dst_word[i] = 0
 		i = i + 1
 	}
-
-	// byte operation
 
 	let len_bytes: Nat64 = (len - z) % sizeof(Word)
 	let dst_byte1: *[]Word8 = unsafe *[]Word8 &dst_word[i]

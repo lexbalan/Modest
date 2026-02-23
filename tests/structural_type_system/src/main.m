@@ -56,7 +56,7 @@ func f4_ptr (x: *{x: Int32}) -> Unit {
 }
 
 
-var x = {x = Int32 5}
+//var x = {x = Int32 5}
 var a: Type1 = {x = 1}
 var b: Type2 = {x = 2}
 var c: Type3 = {x = 3}
@@ -113,4 +113,5 @@ public func main () -> Int {
 	test_by_pointer()
 	return 0
 }
+
 

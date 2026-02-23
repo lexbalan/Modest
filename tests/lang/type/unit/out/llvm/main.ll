@@ -219,7 +219,6 @@ declare void @perror(%ConstCharStr* %str)
 @str4 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 define internal void @unitFunc() {
-	;var xunit = {}  // cannot create var with Unit type
 	%1 = alloca {}
 	store {} zeroinitializer, {}* %1
 	ret void

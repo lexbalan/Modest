@@ -59,14 +59,6 @@ var s: Structx = {x = &lines[0]}
 
 func test_records () -> Unit {
 
-	// Now local types not works
-	//	type LocalRecord = {
-	//		x: Int32
-	//	}
-	//
-	//	var localRecord: LocalRecord
-	//	Unit localRecord
-
 	printf("line.a.x = %d\n", line.a.x)
 	printf("line.a.y = %d\n", line.a.y)
 
@@ -98,16 +90,12 @@ func test_records () -> Unit {
 
 public func main () -> Int {
 	printf("records test\n")
-
-	// check value_record_eq for immediate values
 	let ver = {name = "m2", version = {major = 0, minor = 7}}.version
 	if ver == {major = 0, minor = 7} {
 		printf("version 0.7\n")
 	} else {
 		printf("version not 0.7\n")
 	}
-
-	// compare two Point2D records
 	var p2d0: Point2D = {x = 1, y = 2}
 	var p2d1: Point2D = {x = 10, y = 20}
 
@@ -116,10 +104,7 @@ public func main () -> Int {
 	} else {
 		printf("p2d0 != p2d1\n")
 	}
-
-
-	// compare Point2D with anonymous record
-	var p2d2: Point2D = p2d0; // record assignation
+	var p2d2: Point2D = p2d0
 	var p2d3: {
 		x: Nat32
 		y: Nat32
@@ -133,9 +118,6 @@ public func main () -> Int {
 	} else {
 		printf("p2d2 != p2d3\n")
 	}
-
-
-	// comparison between two anonymous record
 	var p2d4: {
 		x: Nat32
 		y: Nat32
@@ -149,8 +131,6 @@ public func main () -> Int {
 	} else {
 		printf("p2d3 != p2d4\n")
 	}
-
-	// comparison between two record (by pointer)
 	let pr2: *Point2D = &p2d2
 	let pr3: *{
 		x: Nat32
@@ -162,35 +142,8 @@ public func main () -> Int {
 	} else {
 		printf("*pr2 != *pr3\n")
 	}
-
-	/*
-	var prx = &p2d2
-	var prx2 = &prx
-	var pry = &p2d3
-
-	if **prx2 == *pry {
-		printf("**prx2 == *pry\n")
-	} else {
-		printf("**prx2 != *pry\n")
-	}
-*/
-
-	// assign record by pointer
 	*pr2 = {x = 100, y = 200}
 	*pr3 = {}
-
-	// cons Point3D from Point2D (record extension)
-	// (it is possible if dst record contained all fields from src record
-	// and their types are equal)  ((EXPERIMENTAL))
-	//
-	// Сейчас нельзя конструировать запись не из generic (!)
-	//var p3d: Point3D
-	//p3d = Point3D p2d2
-	//Unit p3d
-
-
-	// проверка того как локальная константа-массив
-	// "замораживает" свои элементы
 
 	var ax = Int32 10
 	var bx = Int32 20

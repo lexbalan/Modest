@@ -415,8 +415,6 @@ define void @console_puts16(%Str16* %s) {
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	; нельзя просто так взять и вызвать putchar_utf16
-	; тк в строке может быть суррогатная пара UTF_16 символов
 	%2 = load %Nat32, %Nat32* %1
 	%3 = bitcast %Nat32 %2 to %Nat32
 	%4 = getelementptr %Str16, %Str16* %s, %Int32 0, %Nat32 %3
@@ -510,9 +508,9 @@ define %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va)
 	%1 = alloca i8*
 	store %__VA_List %va, i8** %1
 	%2 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %2	; form index
+	store %Nat32 0, %Nat32* %2
 	%3 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %3	; out buf index
+	store %Int32 0, %Int32* %3
 ; while_1
 	br label %again_1
 again_1:
@@ -583,8 +581,6 @@ endif_2:
 	br label %again_1
 	br label %endif_1
 endif_1:
-
-	; c == '{'
 	%40 = load %Nat32, %Nat32* %2
 	%41 = add %Nat32 %40, 1
 	store %Nat32 %41, %Nat32* %2
@@ -625,9 +621,6 @@ endif_4:
 	%64 = or %Bool %61, %63
 	br %Bool %64 , label %then_5, label %else_5
 then_5:
-	;
-	; %i & %d for signed integer (Int)
-	;
 	%65 = va_arg %__VA_List* %1, %Int32
 	%66 = call %Int32 @sprint_dec_int32([0 x %Char8]* %59, %Int32 %65)
 	%67 = load %Int32, %Int32* %3
@@ -640,9 +633,6 @@ else_5:
 	%70 = icmp eq %Char8 %69, 110
 	br %Bool %70 , label %then_6, label %else_6
 then_6:
-	;
-	; %n for unsigned integer (Nat)
-	;
 	%71 = va_arg %__VA_List* %1, %Nat32
 	%72 = call %Int32 @sprint_dec_n32([0 x %Char8]* %59, %Nat32 %71)
 	%73 = load %Int32, %Int32* %3
@@ -658,10 +648,6 @@ else_6:
 	%79 = or %Bool %76, %78
 	br %Bool %79 , label %then_7, label %else_7
 then_7:
-	;
-	; %x for unsigned integer (Nat)
-	; %p for pointers
-	;
 	%80 = va_arg %__VA_List* %1, %Nat32
 	%81 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %59, %Nat32 %80)
 	%82 = load %Int32, %Int32* %3
@@ -674,9 +660,6 @@ else_7:
 	%85 = icmp eq %Char8 %84, 115
 	br %Bool %85 , label %then_8, label %else_8
 then_8:
-	;
-	; %s pointer to string
-	;
 	%86 = va_arg %__VA_List* %1, %Str8*
 	%87 = call [0 x %Char]* @strcpy([0 x %Char8]* %59, %Str8* %86)
 	%88 = call %SizeT @strlen(%Str8* %86)
@@ -691,9 +674,6 @@ else_8:
 	%93 = icmp eq %Char8 %92, 99
 	br %Bool %93 , label %then_9, label %endif_9
 then_9:
-	;
-	; %c for char
-	;
 	%94 = va_arg %__VA_List* %1, %Char32
 	%95 = bitcast [0 x %Char8]* %59 to [4 x %Char8]*
 	%96 = call %Nat8 @utf_utf32_to_utf8(%Char32 %94, [4 x %Char8]* %95)
@@ -775,8 +755,6 @@ then_0:
 endif_0:
 	br label %again_1
 break_1:
-
-	; mirroring into buffer
 	%18 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %18
 ; while_2

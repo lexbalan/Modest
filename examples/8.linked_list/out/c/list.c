@@ -132,7 +132,6 @@ struct list_node *list_node_get(struct list_list *list, int32_t pos) {
 	struct list_node *node;
 
 	if (pos >= 0) {
-		// go forward
 		node = list->head;
 		const uint32_t n = (uint32_t)abs((int)pos);
 
@@ -146,7 +145,6 @@ struct list_node *list_node_get(struct list_list *list, int32_t pos) {
 			i = i + 1;
 		}
 	} else {
-		// go backward
 		node = list->tail;
 		const uint32_t n = ((uint32_t)abs((int)-pos)) - 1;
 

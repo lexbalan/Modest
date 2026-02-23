@@ -264,8 +264,6 @@ public func main () -> Int32 {
 	}
 
 	awrap[0].fhi("World")
-	//let y = awrap[0]
-	//y.fhi("World")
 
 	return 0
 }

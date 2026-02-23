@@ -17,7 +17,8 @@ def value_string_create(string, ti=None):
 	return ValueLiteral(string_type, string, ti)
 
 
-def value_string_add(l, r, ti):
+
+def value_string_concat(l, r, ti):
 	asset = l.asset + r.asset
 	max_char_width = max(l.type.width, r.type.width)
 	#type_result = type_string_create(max_char_width, len(asset), ti)

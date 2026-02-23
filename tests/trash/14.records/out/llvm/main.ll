@@ -306,14 +306,6 @@ declare void @perror(%ConstCharStr* %str)
 	%Line* getelementptr ([3 x %Line], [3 x %Line]* @lines, %Int32 0, %Int32 0)
 }
 define internal void @test_records() {
-
-	; Now local types not works
-	;	type LocalRecord = {
-	;		x: Int32
-	;	}
-	;
-	;	var localRecord: LocalRecord
-	;	Unit localRecord
 	%1 = getelementptr %Line, %Line* @line, %Int32 0, %Int32 0, %Int32 0
 	%2 = load %Int32, %Int32* %1
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Int32 %2)
@@ -394,8 +386,6 @@ define internal void @test_records() {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str17 to [0 x i8]*))
-
-	; check value_record_eq for immediate values
 	%2 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 7, 1
 	%3 = alloca {%Nat32,%Nat32}
 	store {%Nat32,%Nat32} %2, {%Nat32,%Nat32}* %3
@@ -408,8 +398,6 @@ else_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str19 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-
-	; compare two Point2D records
 	%6 = alloca %Point2D, align 4
 	%7 = insertvalue %Point2D zeroinitializer, %Nat32 1, 0
 	%8 = insertvalue %Point2D %7, %Nat32 2, 1
@@ -431,15 +419,12 @@ else_1:
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str21 to [0 x i8]*))
 	br label %endif_1
 endif_1:
-
-
-	; compare Point2D with anonymous record
 	%18 = alloca %Point2D, align 4
 ; -- cons_composite_from_composite_by_adr --
 	%19 = bitcast %Point2D* %6 to %Point2D*
 	%20 = load %Point2D, %Point2D* %19
 ; -- end cons_composite_from_composite_by_adr --
-	store %Point2D %20, %Point2D* %18	; record assignation
+	store %Point2D %20, %Point2D* %18
 	%21 = alloca {%Nat32,%Nat32}, align 4
 	%22 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
 	%23 = insertvalue {%Nat32,%Nat32} %22, %Nat32 2, 1
@@ -463,9 +448,6 @@ else_2:
 	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str23 to [0 x i8]*))
 	br label %endif_2
 endif_2:
-
-
-	; comparison between two anonymous record
 	%33 = alloca {%Nat32,%Nat32}, align 4
 	%34 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
 	%35 = insertvalue {%Nat32,%Nat32} %34, %Nat32 2, 1
@@ -489,8 +471,6 @@ else_3:
 	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str25 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-
-	; comparison between two record (by pointer)
 ; if_4
 ; -- cons_composite_from_composite_by_adr --
 	%45 = bitcast {%Nat32,%Nat32}* %21 to %Point2D*
@@ -510,37 +490,10 @@ else_4:
 	%53 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str27 to [0 x i8]*))
 	br label %endif_4
 endif_4:
-
-;
-;	var prx = &p2d2
-;	var prx2 = &prx
-;	var pry = &p2d3
-;
-;	if **prx2 == *pry {
-;		printf("**prx2 == *pry\n")
-;	} else {
-;		printf("**prx2 != *pry\n")
-;	}
-;
-
-	; assign record by pointer
 	%54 = insertvalue %Point2D zeroinitializer, %Nat32 100, 0
 	%55 = insertvalue %Point2D %54, %Nat32 200, 1
 	store %Point2D %55, %Point2D* %18
 	store {%Nat32,%Nat32} zeroinitializer, {%Nat32,%Nat32}* %21
-
-	; cons Point3D from Point2D (record extension)
-	; (it is possible if dst record contained all fields from src record
-	; and their types are equal)  ((EXPERIMENTAL))
-	;
-	; Сейчас нельзя конструировать запись не из generic (!)
-	;var p3d: Point3D
-	;p3d = Point3D p2d2
-	;Unit p3d
-
-
-	; проверка того как локальная константа-массив
-	; "замораживает" свои элементы
 	%56 = alloca %Int32, align 4
 	store %Int32 10, %Int32* %56
 	%57 = alloca %Int32, align 4

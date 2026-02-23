@@ -160,7 +160,7 @@ def value_array_cons(t, v, method, ti):
 
 
 # Concat two immediate arrays
-def value_array_add(l, r, ti):
+def value_array_concat(l, r, ti):
 	items = l.asset + r.asset
 	length = len(items)
 	from .integer import value_integer_create

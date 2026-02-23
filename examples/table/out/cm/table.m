@@ -21,16 +21,8 @@ public type Table = @public {
 public func print (table: *Table) -> Unit {
 	var i: Nat32
 	var j: Nat32
-
-	// construct pointer to closed VLA array
 	let data = *[table.nRows][table.nCols]*Str8 table.data
-
-	// array of size of columns (in characters)
 	var sz: [table.nCols]Nat32 = []
-
-	//
-	// calculate max length (in chars) of column
-	//
 
 	if table.header != nil {
 		i = 0
@@ -58,17 +50,9 @@ public func print (table: *Table) -> Unit {
 
 	i = 0
 	while i < table.nCols {
-		// добавляем по пробелу слева и справа
-		// (для красивого отступа)
 		sz[i] = sz[i] + 2
 		i = i + 1
 	}
-
-	//
-	// print table
-	//
-
-	// top border
 	separator(&sz, table.nCols)
 
 	if table.header != nil {
@@ -86,8 +70,6 @@ public func print (table: *Table) -> Unit {
 
 		i = i + 1
 	}
-
-	// bottom border
 	separator(&sz, table.nCols)
 }
 

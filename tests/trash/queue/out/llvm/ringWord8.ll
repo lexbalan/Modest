@@ -175,11 +175,6 @@ define %Bool @ringWord8_isEmpty(%ringWord8_RingWord8* %q) {
 }
 
 define %Bool @ringWord8_put(%ringWord8_RingWord8* %q, %Word8 %b) {
-;
-;	if queue.isFull(&q.queue) {
-;		return false
-;	}
-;	
 	%1 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 0
 	%2 = call %Nat32 @queue_getPutPosition(%queue_Queue* %1)
 	%3 = getelementptr %ringWord8_RingWord8, %ringWord8_RingWord8* %q, %Int32 0, %Int32 1

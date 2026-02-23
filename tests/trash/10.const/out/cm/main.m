@@ -80,15 +80,6 @@ public func main () -> Int {
 	printf("lines_2_len = %f\n", lines_2_len)
 	printf("lines_3_len = %f\n", lines_3_len)
 
-	//	let y = wa.x
-
-	//	var i: Nat32 = 0
-	//	while i < 10 {
-	//		let x = wa.array[i]
-	//		printf("x[%d]=%d\n", i, x)
-	//		++i
-	//	}
-
 	return 0
 }
 

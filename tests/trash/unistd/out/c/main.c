@@ -21,13 +21,9 @@ int main(void) {
 
 	const long hid = gethostid();
 	printf("hostid = %ld\n", hid);
-
-	// current control terminal
 	char cterm[128];
 	ctermid(cterm);
 	printf("ctermid = %s\n", cterm);
-
-	// current working directory
 	char cwd[128];
 	getcwd(cwd, (size_t)LENGTHOF(cwd));
 	printf("cwd = %s\n", cwd);
@@ -41,7 +37,7 @@ int main(void) {
 
 	while (true) {
 		printf("- hi\n");
-		sleep(1);// time in seconds
+		sleep(1);
 	}
 
 	return 0;

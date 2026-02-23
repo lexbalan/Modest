@@ -30,8 +30,6 @@ int main(void) {
 		printf("globalPoint test failed\n");
 	}
 
-	// local
-
 	struct point localPoint0 = (struct point){.x = 10, .y = 20};
 	struct point localPoint1 = (struct point){0};
 

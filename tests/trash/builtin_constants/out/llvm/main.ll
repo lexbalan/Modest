@@ -212,8 +212,6 @@ declare void @perror(%ConstCharStr* %str)
 @str12 = private constant [26 x i8] [i8 95, i8 95, i8 116, i8 97, i8 114, i8 103, i8 101, i8 116, i8 46, i8 102, i8 108, i8 111, i8 97, i8 116, i8 87, i8 105, i8 100, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 ; -- endstrings --
 define %Int @main() {
-
-	; __compiler
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*), %Str8* bitcast ([3 x i8]* @str2 to [0 x i8]*))
 	%2 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 7, 1
 	%3 = alloca {%Nat32,%Nat32}
@@ -222,8 +220,6 @@ define %Int @main() {
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Nat32 7)
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str5 to [0 x i8]*), %Nat32 0)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str6 to [0 x i8]*), %Nat32 7)
-
-	; __target
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), %Str* bitcast ([8 x i8]* @str8 to [0 x i8]*))
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str9 to [0 x i8]*), %Nat32 64)
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str10 to [0 x i8]*), %Nat32 8)

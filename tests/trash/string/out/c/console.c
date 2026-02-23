@@ -85,8 +85,6 @@ void console_puts8(char *s) {
 void console_puts16(char16_t *s) {
 	uint32_t i = 0;
 	while (true) {
-		// нельзя просто так взять и вызвать putchar_utf16
-		// тк в строке может быть суррогатная пара UTF_16 символов
 
 		const char16_t cc16 = s[i];
 		if (cc16 == u'\x0') {
@@ -148,8 +146,8 @@ static int32_t sprint_dec_n32(char *buf, uint32_t x);
 static int32_t sprint_hex_nat32(char *buf, uint32_t x);
 
 int32_t console_vsprint(char *buf, char *form, va_list va) {
-	uint32_t i = 0;// form index
-	int32_t j = 0;// out buf index
+	uint32_t i = 0;
+	int32_t j = 0;
 
 	while (true) {
 		char c = form[i];
@@ -177,8 +175,6 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 			continue;
 		}
 
-		// c == '{'
-
 		i = i + 1;
 		c = form[i];
 
@@ -194,38 +190,22 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 		char *const sptr = &buf[j];
 
 		if (c == 'i' || c == 'd') {
-			//
-			// %i & %d for signed integer (Int)
-			//
 			const int32_t x = va_arg(va, int32_t);
 			const int32_t n = sprint_dec_int32(sptr, x);
 			j = j + n;
 		} else if (c == 'n') {
-			//
-			// %n for unsigned integer (Nat)
-			//
 			const uint32_t x = va_arg(va, uint32_t);
 			const int32_t n = sprint_dec_n32(sptr, x);
 			j = j + n;
 		} else if (c == 'x' || c == 'p') {
-			//
-			// %x for unsigned integer (Nat)
-			// %p for pointers
-			//
 			const uint32_t x = va_arg(va, uint32_t);
 			const int32_t n = sprint_hex_nat32(sptr, x);
 			j = j + n;
 		} else if (c == 's') {
-			//
-			// %s pointer to string
-			//
 			char *const s = va_arg(va, char *);
 			strcpy(sptr, s);
 			j = j + (int32_t)strlen(s);
 		} else if (c == 'c') {
-			//
-			// %c for char
-			//
 			const char32_t c = va_arg(va, char32_t);
 			const uint8_t n = utf_utf32_to_utf8(c, (char *)sptr);
 			j = j + (int32_t)n;
@@ -266,8 +246,6 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
 			break;
 		}
 	}
-
-	// mirroring into buffer
 	int32_t j = 0;
 	while (i > 0) {
 		i = i - 1;

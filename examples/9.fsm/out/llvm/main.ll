@@ -285,7 +285,6 @@ else_1:
 	%13 = icmp eq %fsm_StageId %11, %12
 	br %Bool %13 , label %then_2, label %else_2
 then_2:
-	; just stay
 	br label %endif_2
 else_2:
 ; if_3
@@ -335,7 +334,6 @@ else_1:
 	%13 = icmp eq %fsm_StageId %11, %12
 	br %Bool %13 , label %then_2, label %else_2
 then_2:
-	; just stay
 	br label %endif_2
 else_2:
 ; if_3
@@ -385,7 +383,6 @@ else_1:
 	%13 = icmp eq %fsm_StageId %11, %12
 	br %Bool %13 , label %then_2, label %else_2
 then_2:
-	; just stay
 	br label %endif_2
 else_2:
 ; if_3

@@ -28,8 +28,6 @@ static void writeExample(void) {
 		.id = {'i', 'd'},
 		.data = {'d', 'a', 't', 'a'}
 	};
-
-	// write chunk to file
 	fwrite((void *)&chunk, sizeof(struct chunk), 1, fp);
 
 	fclose(fp);

@@ -277,11 +277,6 @@ define internal void @f4_ptr({%Int32}* %x) {
 	ret void
 }
 
-@x = internal global {
-	%Int32
-} {
-	%Int32 5
-}
 @a = internal global %Type1 {
 	%Int32 1
 }

@@ -60,8 +60,6 @@ public func main () -> Int {
 
 	printf("genericIntConst = %d\n", Int32 genericIntConst)
 	printf("int32Const = %d\n", int32Const)
-
-	//	printf("genericStringConst = %s\n", genericStringConst)
 	printf("string8Const = %s\n", string8Const)
 
 	return 0

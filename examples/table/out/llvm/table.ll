@@ -250,8 +250,6 @@ define void @table_print(%table_Table* %table) {
 	store i8* %2, i8** %1
 	%3 = alloca %Nat32, align 4
 	%4 = alloca %Nat32, align 4
-
-	; construct pointer to closed VLA array
 	%5 = mul %Int32 1, 1
 	%6 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%7 = load %Nat32, %Nat32* %6
@@ -264,8 +262,6 @@ define void @table_print(%table_Table* %table) {
 	%14 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 1
 	%15 = load [0 x %table_Row]*, [0 x %table_Row]** %14
 	%16 = bitcast [0 x %table_Row]* %15 to [0 x [0 x %Str8*]]*
-
-	; array of size of columns (in characters)
 	%17 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%18 = load %Nat32, %Nat32* %17
 	%19 = mul %Nat32 %18, 1
@@ -276,10 +272,6 @@ define void @table_print(%table_Table* %table) {
 	%24 = mul %Nat32 %23, 4
 	%25 = bitcast %Nat32* %21 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %25, i8 0, %Nat32 %24, i1 0)
-
-	;
-	; calculate max length (in chars) of column
-	;
 ; if_0
 	%26 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
 	%27 = load [0 x %Str8*]*, [0 x %Str8*]** %26
@@ -393,8 +385,6 @@ again_4:
 	%88 = icmp ult %Nat32 %86, %87
 	br %Bool %88 , label %body_4, label %break_4
 body_4:
-	; добавляем по пробелу слева и справа
-	; (для красивого отступа)
 	%89 = load %Nat32, %Nat32* %3
 	%90 = mul %Nat32 %89, 1
 	%91 = add %Int32 0, %90
@@ -411,12 +401,6 @@ body_4:
 	store %Nat32 %100, %Nat32* %3
 	br label %again_4
 break_4:
-
-	;
-	; print table
-	;
-
-	; top border
 	%101 = bitcast [0 x %Nat32]* %21 to [0 x %Nat32]*
 	%102 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%103 = load %Nat32, %Nat32* %102
@@ -480,8 +464,6 @@ endif_4:
 	store %Nat32 %139, %Nat32* %3
 	br label %again_5
 break_5:
-
-	; bottom border
 	%140 = bitcast [0 x %Nat32]* %21 to [0 x %Nat32]*
 	%141 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%142 = load %Nat32, %Nat32* %141

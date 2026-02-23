@@ -37,11 +37,6 @@ public func isEmpty (q: *RingWord8) -> Bool {
 
 
 public func put (q: *RingWord8, b: Word8) -> Bool {
-	/*
-	if queue.isFull(&q.queue) {
-		return false
-	}
-	*/
 
 	let p: Nat32 = queue.getPutPosition(&q.queue)
 	q.data[p] = b

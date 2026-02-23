@@ -208,7 +208,6 @@ declare void @loo_foo(%Nat32 %x)
 ; -- strings --
 ; -- endstrings --
 define %Int @main() {
-	;let nothing: lib.Nothing
 	call void @loo_foo(%Nat32 4)
 	ret %Int 0
 }

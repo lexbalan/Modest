@@ -39,14 +39,12 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 	chacha20_State state;
 	memcpy(state, _state, sizeof(chacha20_State));
 	chacha20_State x;
-	memcpy(&x, &state, sizeof(chacha20_State));// working copy
+	memcpy(&x, &state, sizeof(chacha20_State));
 
 	int32_t i = 0;
 	while (i < 10) {
 
 		uint32_t r[4];
-
-		// column rounds
 		quarterRound(x[0], x[4], x[8], x[12], &r);
 		x[0] = r[0];x[4] = r[1];x[8] = r[2];x[12] = r[3];
 
@@ -58,9 +56,6 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 
 		quarterRound(x[3], x[7], x[11], x[15], &r);
 		x[3] = r[0];x[7] = r[1];x[11] = r[2];x[15] = r[3];
-
-
-		// diagonal rounds
 		quarterRound(x[0], x[5], x[10], x[15], &r);
 		x[0] = r[0];x[5] = r[1];x[10] = r[2];x[15] = r[3];
 
@@ -75,8 +70,6 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 
 		i = i + 1;
 	}
-
-	// add original state
 	uint32_t out[16];
 	int32_t j = 0;
 	while (j < 16) {

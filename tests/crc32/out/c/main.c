@@ -36,8 +36,6 @@ static bool runTest(struct test *test) {
 
 int main(void) {
 	printf("test CRC32\n");
-
-	// (!)
 	crc32_init();
 
 	bool success = true;

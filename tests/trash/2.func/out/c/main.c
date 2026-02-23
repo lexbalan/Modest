@@ -29,15 +29,9 @@ static void func0(void);
 
 int main(void) {
 	printf("test func\n");
-
-	// call declared & defined functions
 	func0();
 	func1();
-
-	// call function with two arguments
 	print_ab(10, 20);
-
-	// call function with two arguments and return value
 	const int32_t arg_a = 1;
 	const int32_t arg_b = 2;
 	const int32_t sum_result = sum(arg_a, arg_b);
@@ -45,7 +39,6 @@ int main(void) {
 
 
 	int32_t (*fptr)(int32_t a, int32_t b) = &sum;
-	// call function with two arguments and return value
 	const int32_t arg_a2 = 1;
 	const int32_t arg_b2 = 2;
 	const int32_t fptr_result = fptr(arg_a2, arg_b2);

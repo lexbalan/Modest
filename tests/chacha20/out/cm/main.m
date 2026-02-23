@@ -83,18 +83,11 @@ var xlorem1024: [1024]Char8 = lorem1024
 
 public func main () -> Int {
 	printf("test ChaCha20 ")
-	//printf("%s\n", *Str8 hello_world)
-	//var data = []Byte [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 	var ctx: Context = init(&testKey, testNonce2)
 	let dptr: *[]Byte = unsafe *[]Byte &xlorem1024
 	cipher(&ctx, dptr, 1024)
 
 	var i: Int32 = 0
-	//	while i < 10 {
-	//		printf("%c", xlorem1024[i])
-	//		printf("%x\n", Nat32 Word32 Word8 xlorem1024[i])
-	//		++i
-	//	}
 
 	var ctx2: Context = init(&testKey, testNonce2)
 	cipher(&ctx2, dptr, 1024)
@@ -121,12 +114,6 @@ func test0 () -> Bool {
 	var nonce: [12]Byte = testNonce
 	var state: State = cc.makeState(unsafe *Key &key, counter, unsafe *[3]Word32 &nonce)
 	var block: Block = cc.chacha20Block(state)
-
-	//	var i = 0
-	//	while i < 16 {
-	//		printf("%08x\n", block[i])
-	//		++i
-	//	}
 
 	let bptr: *[64]Byte = unsafe *[64]Byte &block
 

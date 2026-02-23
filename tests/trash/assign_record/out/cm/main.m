@@ -26,8 +26,6 @@ public func main () -> Int {
 		printf("globalPoint test failed\n")
 	}
 
-	// local
-
 	var localPoint0: Point = {x = 10, y = 20}
 	var localPoint1: Point = {}
 

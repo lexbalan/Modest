@@ -21,15 +21,9 @@ func sum (a: Int32, b: Int32) -> Int32 {
 // define function main
 public func main () -> Int {
 	printf("test func\n")
-
-	// call declared & defined functions
 	func0()
 	func1()
-
-	// call function with two arguments
 	print_ab(10, 20)
-
-	// call function with two arguments and return value
 	let arg_a = Int32 1
 	let arg_b = Int32 2
 	let sum_result: Int32 = sum(arg_a, arg_b)
@@ -37,7 +31,6 @@ public func main () -> Int {
 
 
 	var fptr: *(a: Int32, b: Int32) -> Int32 = &sum
-	// call function with two arguments and return value
 	let arg_a2 = Int32 1
 	let arg_b2 = Int32 2
 	let fptr_result: Int32 = fptr(arg_a2, arg_b2)

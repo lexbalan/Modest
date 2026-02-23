@@ -61,10 +61,8 @@ const _int64MinValue = Int64 int64MinValue
 
 func testNat8Static () -> Bool {
 	var nat8: Nat8
-	nat8 = nat8MaxValue; // ok
-	nat8 = nat8MinValue; // ok
-	//nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
-	//nat8 = nat8MinValue - 1  // error: unsigned integer overflow
+	nat8 = nat8MaxValue
+	nat8 = nat8MinValue
 
 	var _nat8MaxValue: Nat8 = nat8MaxValue
 	var _nat8MinValue: Nat8 = nat8MinValue
@@ -91,10 +89,8 @@ func testNat8Static () -> Bool {
 
 func testNat16Static () -> Bool {
 	var nat16: Nat16
-	nat16 = nat16MaxValue; // ok
-	nat16 = nat16MinValue; // ok
-	//nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
-	//nat16 = nat16MinValue - 1  // error: unsigned integer overflow
+	nat16 = nat16MaxValue
+	nat16 = nat16MinValue
 
 	var _nat16MinValue: Nat16 = nat16MinValue
 	var _nat16MaxValue: Nat16 = nat16MaxValue
@@ -121,10 +117,8 @@ func testNat16Static () -> Bool {
 
 func testNat32Static () -> Bool {
 	var nat32: Nat32
-	nat32 = nat32MaxValue; // ok
-	nat32 = nat32MinValue; // ok
-	//nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
-	//nat32 = nat32MinValue - 1  // error: unsigned integer overflow
+	nat32 = nat32MaxValue
+	nat32 = nat32MinValue
 
 	var _nat32MaxValue: Nat32 = nat32MaxValue
 	var _nat32MinValue: Nat32 = nat32MinValue
@@ -151,10 +145,8 @@ func testNat32Static () -> Bool {
 
 func testNat64Static () -> Bool {
 	var nat64: Nat64
-	nat64 = nat64MaxValue; // ok
-	nat64 = nat64MinValue; // ok
-	//nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
-	//nat64 = nat64MinValue - 1  // error: unsigned integer overflow
+	nat64 = nat64MaxValue
+	nat64 = nat64MinValue
 
 	var _nat64MaxValue: Nat64 = nat64MaxValue
 	var _nat64MinValue: Nat64 = nat64MinValue
@@ -183,10 +175,8 @@ func testNat64Static () -> Bool {
 
 func testInt8Static () -> Bool {
 	var int8: Int8
-	int8 = int8MaxValue; // ok
-	int8 = int8MinValue; // ok
-	//int8 = int8MaxValue + 1  // error: integer overflow
-	//int8 = int8MinValue - 1  // error: integer overflow
+	int8 = int8MaxValue
+	int8 = int8MinValue
 
 	var _int8MinValue: Int8 = int8MinValue
 	var _int8MaxValue: Int8 = int8MaxValue
@@ -223,10 +213,8 @@ func testInt8Static () -> Bool {
 
 func testInt16Static () -> Bool {
 	var int16: Int16
-	int16 = int16MaxValue; // ok
-	int16 = int16MinValue; // ok
-	//int16 = int16MaxValue + 1  // error: integer overflow
-	//int16 = int16MinValue - 1  // error: integer overflow
+	int16 = int16MaxValue
+	int16 = int16MinValue
 
 	var _int16MinValue: Int16 = int16MinValue
 	var _int16MaxValue: Int16 = int16MaxValue
@@ -263,10 +251,8 @@ func testInt16Static () -> Bool {
 
 func testInt32Static () -> Bool {
 	var int32: Int32
-	int32 = int32MaxValue; // ok
-	int32 = int32MinValue; // ok
-	//int32 = int32MaxValue + 1  // error: integer overflow
-	//int32 = int32MinValue - 1  // error: integer overflow
+	int32 = int32MaxValue
+	int32 = int32MinValue
 
 	var _int32MinValue: Int32 = int32MinValue
 	var _int32MaxValue: Int32 = int32MaxValue
@@ -306,10 +292,8 @@ func testInt64Static () -> Bool {
 	var _int64MaxValue: Int64 = int64MaxValue
 
 	var int64: Int64
-	int64 = int64MaxValue; // ok
-	int64 = int64MinValue; // ok
-	//int64 = int64MaxValue + 1  // error: integer overflow
-	//int64 = int64MinValue - 1  // error: integer overflow
+	int64 = int64MaxValue
+	int64 = int64MinValue
 
 	if _int64MinValue >= 0 {
 		printf("error: int64MinValue >= 0\n")
@@ -403,14 +387,10 @@ public func main () -> Int32 {
 
 	var result: Bool
 	var success: Bool = true
-
-	// test built-in generic types
 	result = testInteger()
 	success = success and result
 	result = testRational()
 	success = success and result
-
-	// test built-in unsigned integer types
 	result = testNat8Static()
 	success = success and result
 	result = testNat16Static()
@@ -419,8 +399,6 @@ public func main () -> Int32 {
 	success = success and result
 	result = testNat64Static()
 	success = success and result
-
-	// test built-in signed integer types
 	result = testInt8Static()
 	success = success and result
 	result = testInt16Static()
@@ -429,8 +407,6 @@ public func main () -> Int32 {
 	success = success and result
 	result = testInt64Static()
 	success = success and result
-
-	//
 	result = testFloat32Static()
 	success = success and result
 

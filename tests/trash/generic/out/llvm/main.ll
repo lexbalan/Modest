@@ -351,79 +351,51 @@ endif_4:
 }
 
 define internal %Bool @test_generic_integer() {
-	; Any integer literal have GenericInteger type
-
-	; result of such expressions also have generic type
-
-	; GenericInteger value can be implicitly casted to any Integer type
 	%1 = alloca %Int32, align 4
-	store %Int32 1, %Int32* %1	; implicit cast GenericInteger value to Int32
+	store %Int32 1, %Int32* %1
 	%2 = alloca %Nat64, align 8
-	store %Nat64 1, %Nat64* %2	; implicit cast GenericInteger value to INat64
-
-	; to Float
+	store %Nat64 1, %Nat64* %2
 	%3 = alloca %Float32, align 4
-	store %Float32 1.0000000000000000, %Float32* %3	; implicit cast GenericInteger value to Float32
+	store %Float32 1.0000000000000000, %Float32* %3
 	%4 = alloca %Float64, align 8
-	store %Float64 1.0000000000000000, %Float64* %4	; implicit cast GenericInteger value to Float64
-
-	; and to Word8
+	store %Float64 1.0000000000000000, %Float64* %4
 	%5 = alloca %Word8, align 1
 	%6 = bitcast i8 1 to %Word8
-	store %Word8 %6, %Word8* %5	; implicit cast GenericInteger value to Word8
-
-
-	; explicit cast GenericInteger value
+	store %Word8 %6, %Word8* %5
 	%7 = alloca %Char8, align 1
-	store %Char8 1, %Char8* %7	; explicit cast GenericInteger value to Char8
+	store %Char8 1, %Char8* %7
 	%8 = alloca %Char16, align 2
-	store %Char16 1, %Char16* %8	; explicit cast GenericInteger value to Char16
+	store %Char16 1, %Char16* %8
 	%9 = alloca %Char32, align 4
-	store %Char32 1, %Char32* %9	; explicit cast GenericInteger value to Char32
+	store %Char32 1, %Char32* %9
 	%10 = alloca %Bool, align 1
-	store %Bool 1, %Bool* %10	; explicit cast GenericInteger value to Bool
+	store %Bool 1, %Bool* %10
 	ret %Bool 1
 }
 
 define internal %Bool @test_generic_float() {
-	; Any float literal have GenericFloat type
-
-	; value with GenericFloat type
-	; can be implicit casted to any Float type
-	; (in this case value may lose precision)
 	%1 = alloca %Float32, align 4
-	store %Float32 3.1415927410125732, %Float32* %1	; implicit cast GenericFloat value to Float32
+	store %Float32 3.1415927410125732, %Float32* %1
 	%2 = alloca %Float64, align 8
-	store %Float64 3.1415926535897931, %Float64* %2	; implicit cast GenericFloat value to Float64
-
-	; explicit cast GenericFloat value to Int32
+	store %Float64 3.1415926535897931, %Float64* %2
 	%3 = alloca %Int32, align 4
 	store %Int32 3, %Int32* %3
 	ret %Bool 1
 }
 
 define internal %Bool @test_generic_char() {
-	; Any char value expression have GenericChar type
-	; (you can pick GenericChar value by index of GenericString value)
-
-	; value with GenericChar type
-	; can be implicit casted to any Char type
 	%1 = alloca %Char8, align 1
-	store %Char8 65, %Char8* %1	; implicit cast GenericChar value to Char8
+	store %Char8 65, %Char8* %1
 	%2 = alloca %Char16, align 2
-	store %Char16 65, %Char16* %2	; implicit cast GenericChar value to Char16
+	store %Char16 65, %Char16* %2
 	%3 = alloca %Char32, align 4
-	store %Char32 65, %Char32* %3	; implicit cast GenericChar value to Char32
-
-	; explicit cast GenericChar value to Int32
+	store %Char32 65, %Char32* %3
 	%4 = alloca %Int32, align 4
 	store %Int32 65, %Int32* %4
 	ret %Bool 1
 }
 
 define internal %Bool @test_generic_array() {
-	; Any array expression have GenericArray type
-	; this array expression (GenericArray of four GenericInteger items)
 	%1 = insertvalue [4 x i8] zeroinitializer, i8 1, 1
 	%2 = insertvalue [4 x i8] %1, i8 2, 2
 	%3 = insertvalue [4 x i8] %2, i8 3, 3
@@ -458,11 +430,6 @@ then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-
-	; value with GenericArray type
-	; can be implicit casted to Array with compatible type and same size
-
-	; implicit cast Generic([4]GenericInteger) value to [4]Int32
 	%20 = alloca [4 x %Int32], align 1
 	%21 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
 	%22 = insertvalue [4 x %Int32] %21, %Int32 2, 2
@@ -486,8 +453,6 @@ then_1:
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-
-	; implicit cast Generic([4]GenericInteger) value to [4]Nat64
 	%36 = alloca [4 x %Int64], align 1
 	%37 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
 	%38 = insertvalue [4 x %Int64] %37, %Int64 2, 2
@@ -511,8 +476,6 @@ then_2:
 	ret %Bool 0
 	br label %endif_2
 endif_2:
-
-	; explicit cast Generic([4]GenericInteger) value to [10]Int32
 	%52 = alloca [10 x %Int32], align 1
 	%53 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%54 = insertvalue [10 x %Int32] %53, %Int32 2, 2
@@ -551,26 +514,14 @@ endif_3:
 };
 
 define internal %Bool @test_generic_record() {
-	; Any record expression have GenericRecord type
-	; this record expression have type:
-	; Generic({x: GenericInteger, y: GenericInteger})
 	%1 = insertvalue {i8,i8} zeroinitializer, i8 10, 0
 	%2 = insertvalue {i8,i8} %1, i8 20, 1
 	%3 = alloca {i8,i8}
 	store {i8,i8} %2, {i8,i8}* %3
-
-	; value with GenericRecord type
-	; can be implicit casted to Record with same fields.
-
-	; implicit cast Generic({x: GenericInteger, y: GenericInteger})
-	; to {x: Int32, y: Int32}
 	%4 = alloca %Point2D, align 4
 	%5 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
 	%6 = insertvalue %Point2D %5, %Int32 20, 1
 	store %Point2D %6, %Point2D* %4
-
-	; explicit cast Generic({x: GenericInteger, y: GenericInteger})
-	; to {x: Int32, y: Int32, z: Int32}
 	%7 = alloca %Point3D, align 4
 	%8 = insertvalue %Point3D zeroinitializer, %Int32 10, 0
 	%9 = insertvalue %Point3D %8, %Int32 20, 1

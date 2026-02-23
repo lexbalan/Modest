@@ -15,10 +15,6 @@ func array_print (pa: *[]Int32, len: Nat32) -> Unit {
 public func main () -> Int {
 	printf("test slices\n")
 
-	//
-	// by value
-	//
-
 	var a: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 	let s1: [2 - 1]Int32 = a[1:2]
@@ -29,10 +25,6 @@ public func main () -> Int {
 	}
 
 	printf("--------------------------------------------\n")
-
-	//
-	// by ptr
-	//
 
 	let pa: *[10]Int32 = &a
 	let s2: [8 - 5]Int32 = pa[5:8]
@@ -87,9 +79,6 @@ public func main () -> Int {
 	printf("--------------------------------------------\n")
 	printf("slice of pointer to open array\n")
 
-	// за каким то хером это работает, то что мне сейчас нужно
-	// но тут еще куча работы впереди
-
 	var pw = *[]Int32 &s
 
 	printf("before\n")
@@ -104,7 +93,6 @@ public func main () -> Int {
 
 	printf("--------------------------------------------\n")
 	printf("zero slice by var\n")
-	// NOT WORKED NOW
 
 	var ss = [10]Int32 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -118,28 +106,11 @@ public func main () -> Int {
 
 	var src = [5]Int32 [10, 20, 30, 40, 50]
 	var dst = [10]Int32 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-	// test with let
 	let i1 = 3
 	let j1 = 8
 	dst[i1:j1] = [11, 22, 33, 44, 55]
 
 	array_print(&dst, 10)
-
-	//	printf("--------------------------------------------\n")
-	//
-	//	var dst2 = []Int32 [00, 10, 20, 30, 40, 50, 60, 70, 80, 90]
-	//
-	//	var axx = Nat8 111
-	//	var bxx = Nat8 222
-	//
-	//	// FIXIT: test with var
-	//	// ARRCPY не умеет копировать generic массив, исправь это
-	//	var i2: Int32 = 3
-	//	var j2: Int32 = 5
-	//	dst2[i2:j2] = [Int32 axx, Int32 bxx]
-	//
-	//	array_print(&dst2, 10)
 
 	return 0
 }

@@ -26,8 +26,6 @@ func writeExample () -> Unit {
 		id = [100]Char "id"
 		data = [1024]Char "data"
 	}
-
-	// write chunk to file
 	fwrite(&chunk, sizeof(Chunk), 1, fp)
 
 	fclose(fp)

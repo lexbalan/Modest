@@ -158,7 +158,7 @@ func addRoundKeyCpy (block: *Block, key: *Key, cpk: *Key) -> {} {
 
 func shiftRows (block: *Block) -> {} {
 	var i: Word8
-	var j: Word8; // to make it potentially parallelable :)
+	var j: Word8
 
 	i = block[1]
 	block[1] = block[5]
@@ -184,7 +184,7 @@ func shiftRows (block: *Block) -> {} {
 
 func shiftRowsInv (block: *Block) -> {} {
 	var i: Word8
-	var j: Word8; // similar to shiftRows :)
+	var j: Word8
 
 	i = block[1]
 	block[1] = block[13]
@@ -419,9 +419,6 @@ public func deinit (ctx: *Context) -> Result {
 	if ctx == nil {
 		return resultError
 	}
-
-	// TODO: const array with memset(!) in C backend
-	//let zeroKey = Key []
 	var zeroKey = Key []
 	ctx.key = zeroKey
 	ctx.enckey = zeroKey

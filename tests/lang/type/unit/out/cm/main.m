@@ -9,7 +9,6 @@ const unit = {}
 
 @used
 func unitFunc () -> {} {
-	//var xunit = {}  // cannot create var with Unit type
 	let unit = {}
 	return unit
 }

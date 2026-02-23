@@ -13,7 +13,6 @@ func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
 		let left: Int32 = array[i]
 		let right: Int32 = array[i + 1]
 		if left > right {
-			// swap
 			array[i] = right
 			array[i + 1] = left
 			return true
@@ -28,7 +27,6 @@ func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
 @noinline
 func bubble_sort32 (array: *[]Int32, len: Nat32) -> Unit {
 	while bubble_sort32_iter(array, len) {
-		// continue iterations while is's necessary
 	}
 }
 
@@ -37,8 +35,6 @@ public func main () -> Int32 {
 	printf("array before:\n")
 	print_array(&testArray, lengthof(testArray))
 	printf("\n")
-
-	// do sort
 	bubble_sort32(&testArray, lengthof(testArray))
 
 	printf("array after:\n")

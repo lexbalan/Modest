@@ -811,7 +811,7 @@ break_1:
 
 define internal void @shiftRows(%aes256_Block* %block) {
 	%1 = alloca %Word8, align 1
-	%2 = alloca %Word8, align 1	; to make it potentially parallelable :)
+	%2 = alloca %Word8, align 1
 	%3 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Int32 1
 	%4 = load %Byte, %Byte* %3
 	store %Byte %4, %Word8* %1
@@ -873,7 +873,7 @@ define internal void @shiftRows(%aes256_Block* %block) {
 
 define internal void @shiftRowsInv(%aes256_Block* %block) {
 	%1 = alloca %Word8, align 1
-	%2 = alloca %Word8, align 1	; similar to shiftRows :)
+	%2 = alloca %Word8, align 1
 	%3 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Int32 1
 	%4 = load %Byte, %Byte* %3
 	store %Byte %4, %Word8* %1
@@ -1870,9 +1870,6 @@ then_0:
 	ret %aes256_Result %2
 	br label %endif_0
 endif_0:
-
-	; TODO: const array with memset(!) in C backend
-	;let zeroKey = Key []
 	%4 = alloca %aes256_Key, align 1
 	%5 = zext i8 32 to %Nat32
 	%6 = mul %Nat32 %5, 1

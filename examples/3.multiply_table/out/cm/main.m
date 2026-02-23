@@ -5,8 +5,6 @@ include "stdio"
 
 func mtab (n: Nat32) -> Unit {
 	var m: Nat32 = 1
-	// or
-	//var m = 1   // by default integer var get system int type (-mint option)
 	while m < 10 {
 		let nm: Nat32 = n * m
 		printf("%u * %u = %u\n", n, m, nm)

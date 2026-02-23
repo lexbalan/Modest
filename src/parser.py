@@ -1201,6 +1201,12 @@ class Parser:
 		return None
 
 
+	def parse_if_annotation(self):
+		if self.token_class_is('annotation'):
+			return self.parse_annotation()
+		return None
+
+
 	def parse_value_array(self, ti):
 		ti_start = self.tokenInfo()
 		items = []
@@ -1678,12 +1684,26 @@ class Parser:
 		while True:
 			#self.skip_tokens_class(['nl'])
 
-			spaceline_cnt = self.skip_blanks()
+#			spaceline_cnt = self.skip_blanks()
 
-			if spaceline_cnt > 0:
-				if comment:
-					stmts.append(comment)
-					comment = None
+#			if spaceline_cnt > 0:
+#				if comment:
+#					stmts.append(comment)
+#					comment = None
+#
+#			if self.match('}'):
+#				if comment != None:
+#					stmts.append(comment)
+#					comment = None
+#				break
+
+			s = None
+
+			ca = self.parse_comments_annotations()
+			#if ca[1] != []:
+			#	print(ca[1])
+			#comment = ca[0]
+			spaceline_cnt = ca[2]
 
 			if self.match('}'):
 				if comment != None:
@@ -1691,11 +1711,6 @@ class Parser:
 					comment = None
 				break
 
-			s = None
-
-			ca = self.parse_comments_annotations(nl_cnt=0)
-			#if ca[1] != []:
-			#	print(ca[1])
 
 			if self.look('let'):
 				s = self.stmt_let()
@@ -1775,26 +1790,29 @@ class Parser:
 		return 'undefined'
 
 
-	def parse_comments_annotations(self, nl_cnt=0):
+	def parse_comments_annotations(self):
 		comments = []
-		anno = []
+		annotations  = []
+		nl_cnt = 0
+
 		while not self.is_end():
+			nl_cnt = self.skip_blanks()
+
 			comm = self.parse_if_comment()
 			if comm != None:
 				comm['nl'] = nl_cnt
-				nl_cnt = 0
 				comments.append(comm)
-			elif self.token_class_is('annotation'):
-				x = self.parse_annotation()
-				x['nl'] = nl_cnt
-				anno.append(x)
-			#elif self.match("\n"):
-			#	pass
-			else:
-				break
-			nl_cnt += self.skip_blanks()
+				continue
 
-		return (comments, anno, nl_cnt)
+			anno = self.parse_if_annotation()
+			if anno != None:
+				anno['nl'] = nl_cnt
+				annotations.append(anno)
+				continue
+
+			break
+
+		return (comments, annotations, nl_cnt)
 
 
 	def parse_annotations(self, nl_cnt=0):

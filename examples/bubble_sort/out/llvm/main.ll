@@ -252,7 +252,6 @@ body_1:
 	%14 = icmp sgt %Int32 %8, %13
 	br %Bool %14 , label %then_0, label %endif_0
 then_0:
-	; swap
 	%15 = load %Nat32, %Nat32* %1
 	%16 = bitcast %Nat32 %15 to %Nat32
 	%17 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %16
@@ -280,7 +279,6 @@ again_1:
 	%1 = call %Bool @bubble_sort32_iter([0 x %Int32]* %array, %Nat32 %len)
 	br %Bool %1 , label %body_1, label %break_1
 body_1:
-	; continue iterations while is's necessary
 	br label %again_1
 break_1:
 	ret void
@@ -291,8 +289,6 @@ define %Int32 @main() {
 	%2 = bitcast [21 x %Int32]* @testArray to [0 x %Int32]*
 	call void @print_array([0 x %Int32]* %2, %Nat32 21)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-
-	; do sort
 	%4 = bitcast [21 x %Int32]* @testArray to [0 x %Int32]*
 	call void @bubble_sort32([0 x %Int32]* %4, %Nat32 21)
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))

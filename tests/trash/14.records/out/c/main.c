@@ -77,14 +77,6 @@ static struct structx s = (struct structx){.x = &lines[0]};
 
 static void test_records(void) {
 
-	// Now local types not works
-	//	type LocalRecord = {
-	//		x: Int32
-	//	}
-	//
-	//	var localRecord: LocalRecord
-	//	Unit localRecord
-
 	printf("line.a.x = %d\n", line.a.x);
 	printf("line.a.y = %d\n", line.a.y);
 
@@ -116,16 +108,12 @@ static void test_records(void) {
 
 int main(void) {
 	printf("records test\n");
-
-	// check value_record_eq for immediate values
 	#define ver  {.major = 0, .minor = 7}
 	if (true) {
 		printf("version 0.7\n");
 	} else {
 		printf("version not 0.7\n");
 	}
-
-	// compare two Point2D records
 	struct point2_d p2d0 = (struct point2_d){.x = 1, .y = 2};
 	struct point2_d p2d1 = (struct point2_d){.x = 10, .y = 20};
 
@@ -134,10 +122,7 @@ int main(void) {
 	} else {
 		printf("p2d0 != p2d1\n");
 	}
-
-
-	// compare Point2D with anonymous record
-	struct point2_d p2d2 = p2d0;// record assignation
+	struct point2_d p2d2 = p2d0;
 	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6)XX;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(struct point2_d)) == 0) {
@@ -145,9 +130,6 @@ int main(void) {
 	} else {
 		printf("p2d2 != p2d3\n");
 	}
-
-
-	// comparison between two anonymous record
 	struct __anonymous_struct_7 p2d4 = (struct __anonymous_struct_7){.x = 1, .y = 2};
 
 	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_6)) == 0) {
@@ -155,8 +137,6 @@ int main(void) {
 	} else {
 		printf("p2d3 != p2d4\n");
 	}
-
-	// comparison between two record (by pointer)
 	struct point2_d *const pr2 = &p2d2;
 	struct __anonymous_struct_6 *const pr3 = &p2d3;
 
@@ -165,35 +145,8 @@ int main(void) {
 	} else {
 		printf("*pr2 != *pr3\n");
 	}
-
-	/*
-	var prx = &p2d2
-	var prx2 = &prx
-	var pry = &p2d3
-
-	if **prx2 == *pry {
-		printf("**prx2 == *pry\n")
-	} else {
-		printf("**prx2 != *pry\n")
-	}
-*/
-
-	// assign record by pointer
 	*pr2 = (struct point2_d){.x = 100, .y = 200};
 	*pr3 = (struct __anonymous_struct_6){0};
-
-	// cons Point3D from Point2D (record extension)
-	// (it is possible if dst record contained all fields from src record
-	// and their types are equal)  ((EXPERIMENTAL))
-	//
-	// Сейчас нельзя конструировать запись не из generic (!)
-	//var p3d: Point3D
-	//p3d = Point3D p2d2
-	//Unit p3d
-
-
-	// проверка того как локальная константа-массив
-	// "замораживает" свои элементы
 
 	int32_t ax = 10;
 	int32_t bx = 20;

@@ -650,8 +650,6 @@ define internal %Bool @runTest(%Test* %test) {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-
-	; (!)
 	call void @crc32_init()
 	%2 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %2

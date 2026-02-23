@@ -2523,8 +2523,6 @@ break_1:
 ]
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
-	;printf("%s\n", *Str8 hello_world)
-	;var data = []Byte [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 	%2 = alloca %Context, align 8
 	%3 = load [3 x %Word32], [3 x %Word32]* @testNonce2
 	%4 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %3)
@@ -2540,11 +2538,6 @@ define %Int @main() {
 	call void @cipher(%Context* %9, [0 x %Byte]* %8, %Nat32 1024)
 	%10 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %10
-	;	while i < 10 {
-	;		printf("%c", xlorem1024[i])
-	;		printf("%x\n", Nat32 Word32 Word8 xlorem1024[i])
-	;		++i
-	;	}
 	%11 = alloca %Context, align 8
 	%12 = load [3 x %Word32], [3 x %Word32]* @testNonce2
 	%13 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %12)
@@ -2615,12 +2608,6 @@ define internal %Bool @test0() {
 	%19 = load %chacha20_Block, %chacha20_Block* %18
 	%20 = zext i8 16 to %Nat32
 	store %chacha20_Block %19, %chacha20_Block* %16
-
-	;	var i = 0
-	;	while i < 16 {
-	;		printf("%08x\n", block[i])
-	;		++i
-	;	}
 	%21 = bitcast %chacha20_Block* %16 to [64 x %Byte]*
 	%22 = bitcast [64 x %Byte]* %21 to i8*
 	%23 = bitcast [64 x %Byte]* @testResult to i8*

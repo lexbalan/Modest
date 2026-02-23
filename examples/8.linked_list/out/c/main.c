@@ -13,7 +13,6 @@
 
 // wrap around linked list for list.List Nat32
 static void nat32_list_insert(struct list_list *lst, uint32_t x) {
-	// alloc memory for Nat32 value
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
 	list_append(lst, (void *)p_nat32);
@@ -51,14 +50,10 @@ int main(void) {
 
 	struct list_list *const list0 = list_create();
 
-	//list0.size  // access to private field of record
-
 	if (list0 == NULL) {
 		printf("error: cannot create list");
 		return 1;
 	}
-
-	// add some Nat32 values to list
 	nat32_list_insert(list0, 0);
 	nat32_list_insert(list0, 10);
 	nat32_list_insert(list0, 20);
@@ -70,21 +65,13 @@ int main(void) {
 	nat32_list_insert(list0, 80);
 	nat32_list_insert(list0, 90);
 	nat32_list_insert(list0, 100);
-
-	// print list size
 	const uint32_t list_size = list_size_get(list0);
 	printf("linked list size: %u\n", list_size);
-
-	// print list forward
 	list_print_forward(list0);
-
-	// print list backward
 	list_print_backward(list0);
 
 
 	printf("\nlist.node_get(list, n) test\n");
-
-	// test list.node_get
 	int32_t i = 0;
 	while (i >= (int32_t)-12) {
 		struct list_node *const node = list_node_get(list0, i);

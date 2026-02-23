@@ -44,24 +44,18 @@ public func init (self: *FSM, id: *Str8, initState: *StateDesc, payload: Ptr) ->
 
 
 public func task (self: *FSM) -> Unit {
-	// Сработал таймер-ограничитель времени нахождения в стадии?
 	if self.timer_expired {
-		// Clear timer & Switch to next stage
 		self.timer_expired = false
 		self.next_state = cmdNextStage(self)
 		let top = Nat32 0
 		printf("[%s] fsm timeout (%u) occured, switch_to_stage(%d)\n", self.id, top, self.next_state.stage)
 	}
-
-	// Есть запрос на смену состояния?
 	if self.next_state != self.state {
 		let state: ComplexState = self.state
 		let next_state: ComplexState = self.next_state
 		printf("[%s] #%s_%u -> #%s_%u\n", self.id, state.state.id, state.stage, next_state.state.id, next_state.stage)
 		self.state = self.next_state
 	}
-
-	// Usual routine
 	let handler: *StateServiceRoutine = self.state.state.handler
 	self.next_state = handler(self.state, self.payload)
 }
@@ -100,7 +94,6 @@ public func cmdNextStage (self: *FSM) -> ComplexState {
 	self.timer_expired = false
 	let state: ComplexState = self.state
 	let nextStageIndex: Nat16 = Nat16 (state.stage) + 1
-	//assert(nextStageIndex < state.state.nstages)
 	var newState: ComplexState = state
 	newState.stage = StageId nextStageIndex
 	return newState
@@ -111,7 +104,6 @@ public func cmdNextStageLimited (self: *FSM, t: Nat32) -> ComplexState {
 	self.timer = t
 	let state: ComplexState = self.state
 	let nextStageIndex: Nat16 = Nat16 (state.stage) + 1
-	//assert(nextStageIndex < state.state.nstages)
 	var newState: ComplexState = state
 	newState.stage = StageId nextStageIndex
 	return newState

@@ -40,14 +40,10 @@ var arrayFromString: [3]Char8 = "abc"
 func f0 (x: [20]Char8) -> [30]Char8 {
 	var local_copy_of_x: [20]Char8 = x
 	printf("f0(\"%s\")\n", &local_copy_of_x)
-
-	// truncate array
 	var mic: [6]Char8 = x[0:6]
 	mic[5] = "\x0"
 
 	printf("f0 mic = \"%s\"\n", &mic)
-
-	// extend array
 	var res: [30]Char8
 	res[0:20] = x
 	res[20:30] = []
@@ -69,7 +65,6 @@ const stopSequence = [0x16]
 
 
 func test () -> Unit {
-	// тестируем работу с локальным generic массивом
 	var yy: [6]Word8 = startSequence + [] + stopSequence
 	var i: Nat32 = 0
 	while i < lengthof(yy) {
@@ -150,8 +145,6 @@ func test_arrays () -> Unit {
 		}
 		i = i + 1
 	}
-	//
-	//
 	i = 0
 	while i < 2 {
 		j = 0
@@ -161,8 +154,6 @@ func test_arrays () -> Unit {
 		}
 		i = i + 1
 	}
-	//
-	//
 	i = 0
 	while i < 2 {
 		j = 0
@@ -195,7 +186,6 @@ func test_arrays () -> Unit {
 
 
 public func main () -> Int {
-	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	test()
 
@@ -243,31 +233,19 @@ public func main () -> Int {
 		printf("localArrayPtr[%i] = %i\n", i, a)
 		i = i + 1
 	}
-
-	// assign array to array 1
-	// (with equal types)
 	var a: [3]Int32 = [1, 2, 3]
 	printf("a[0] = %i\n", a[0])
 	printf("a[1] = %i\n", a[1])
 	printf("a[2] = %i\n", a[2])
-
-	// create (and initialize) new variable b
-	// (with type [3]Int32)
-	// this variable are copy of array a
 	var b: [3]Int32 = a
 	printf("b[0] = %i\n", b[0])
 	printf("b[1] = %i\n", b[1])
 	printf("b[2] = %i\n", b[2])
-
-	// check equality between two arrays (by value)
 	if a == b {
 		printf("a == b\n")
 	} else {
 		printf("a != b\n")
 	}
-
-	// assign array to array 2
-	// (with array extending)
 	var c: [3]Int32 = [10, 20, 30]
 
 	var d: [6]Int32
@@ -280,8 +258,6 @@ public func main () -> Int {
 	printf("d[3] = %i\n", d[3])
 	printf("d[4] = %i\n", d[4])
 	printf("d[5] = %i\n", d[5])
-
-	// check equality between two arrays (by pointer)
 	let pa: *[3]Int32 = &a
 	let pb: *[3]Int32 = &b
 
@@ -290,29 +266,15 @@ public func main () -> Int {
 	} else {
 		printf("*pa != *pb\n")
 	}
-
-
-	//
-	// Check assination local literal array
-	//
-
-
-	//let aa = [111] + [222] + [333]
-	// cons literal array from var items
 	var int100: Int = 100
 	var int200: Int = 200
 	var int300: Int = 300
-	// immutable, non immediate value (array)
 	let init_array = [int100, int200, int300]
-
-	// check local literal array assignation to local array
 	var e: [4]Int32
 	e = [4]Int32 init_array
 	printf("e[0] = %i\n", e[0])
 	printf("e[1] = %i\n", e[1])
 	printf("e[2] = %i\n", e[2])
-
-	// check local literal array assignation to global array
 	globalArray = [10]Int32 init_array
 	printf("globalArray[%i] = %i\n", Int32 0, globalArray[0])
 	printf("globalArray[%i] = %i\n", Int32 1, globalArray[1])
@@ -320,10 +282,6 @@ public func main () -> Int {
 
 
 	globalArray = []
-
-
-	// проверка того как локальная константа-массив
-	// "замораживает" свои элементы
 
 	var ax = Int32 10
 	var bx = Int32 20
@@ -347,20 +305,7 @@ public func main () -> Int {
 		printf("test failed\n")
 	}
 
-
-	// BUG: НЕ РАБОТАЕТ!
-	//	let sa = []Char8 ['L', 'o', 'H', 'i', '!']
-	//
-	//	if sa[2:4] == "Hi" {
-	//		printf("test passed\n")
-	//	} else {
-	//		printf("test failed\n")
-	//	}
-
 	test_arrays()
-
-
-	// not immediate local array literal test
 	var va: Int32 = 5
 	var vb = Int32 7
 	var varr = [4]Int32 [1, 2, va, vb]

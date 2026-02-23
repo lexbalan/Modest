@@ -20,7 +20,6 @@ func routine0 (state: ComplexState, payload: Ptr) -> ComplexState {
 	} else if state.stage == StageId 1 {
 		return fsm.cmdNextStageLimited(&fsm0, t=2000)
 	} else if state.stage == StageId 2 {
-		// just stay
 	} else if state.stage == StageId 3 {
 		return fsm.cmdSwitchState(&fsm0, &state1)
 	}
@@ -35,7 +34,6 @@ func routine1 (state: ComplexState, payload: Ptr) -> ComplexState {
 	} else if state.stage == StageId 1 {
 		return fsm.cmdNextStageLimited(&fsm0, t=2000)
 	} else if state.stage == StageId 2 {
-		// just stay
 	} else if state.stage == StageId 3 {
 		return fsm.cmdSwitchState(&fsm0, &state2)
 	}
@@ -50,7 +48,6 @@ func routine2 (state: ComplexState, payload: Ptr) -> ComplexState {
 	} else if state.stage == StageId 1 {
 		return fsm.cmdNextStageLimited(&fsm0, t=2000)
 	} else if state.stage == StageId 2 {
-		// just stay
 	} else if state.stage == StageId 3 {
 		return fsm.cmdSwitchState(&fsm0, &state0)
 	}

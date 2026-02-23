@@ -260,7 +260,6 @@ declare %list_Node* @list_append(%list_List* %list, i8* %data)
 @str14 = private constant [43 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 ; -- endstrings --
 define internal void @nat32_list_insert(%list_List* %lst, %Nat32 %x) {
-	; alloc memory for Nat32 value
 	%1 = call i8* @malloc(%Size 4)
 	%2 = bitcast i8* %1 to %Nat32*
 	store %Nat32 %x, %Nat32* %2
@@ -322,8 +321,6 @@ break_1:
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str5 to [0 x i8]*))
 	%2 = call %list_List* @list_create()
-
-	;list0.size  // access to private field of record
 ; if_0
 	%3 = icmp eq %list_List* %2, null
 	br %Bool %3 , label %then_0, label %endif_0
@@ -332,8 +329,6 @@ then_0:
 	ret %Int 1
 	br label %endif_0
 endif_0:
-
-	; add some Nat32 values to list
 	call void @nat32_list_insert(%list_List* %2, %Nat32 0)
 	call void @nat32_list_insert(%list_List* %2, %Nat32 10)
 	call void @nat32_list_insert(%list_List* %2, %Nat32 20)
@@ -345,19 +340,11 @@ endif_0:
 	call void @nat32_list_insert(%list_List* %2, %Nat32 80)
 	call void @nat32_list_insert(%list_List* %2, %Nat32 90)
 	call void @nat32_list_insert(%list_List* %2, %Nat32 100)
-
-	; print list size
 	%6 = call %Nat32 @list_size_get(%list_List* %2)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str7 to [0 x i8]*), %Nat32 %6)
-
-	; print list forward
 	call void @list_print_forward(%list_List* %2)
-
-	; print list backward
 	call void @list_print_backward(%list_List* %2)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str8 to [0 x i8]*))
-
-	; test list.node_get
 	%9 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %9
 ; while_1

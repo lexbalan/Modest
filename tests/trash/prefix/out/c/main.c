@@ -10,7 +10,6 @@
 
 
 int main(void) {
-	//let nothing: lib.Nothing
 	loo_foo((uint32_t)LOO_BAR);
 	(void)loo_spam;
 	return 0;

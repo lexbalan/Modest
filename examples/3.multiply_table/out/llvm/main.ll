@@ -204,8 +204,6 @@ declare void @perror(%ConstCharStr* %str)
 define internal void @mtab(%Nat32 %n) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 1, %Nat32* %1
-	; or
-	;var m = 1   // by default integer var get system int type (-mint option)
 ; while_1
 	br label %again_1
 again_1:

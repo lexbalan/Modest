@@ -27,15 +27,11 @@ void memory_zero(void *mem, uint64_t len) {
 	uint8_t (*const memptr)[] = (uint8_t (*)[])mem;
 
 	uint8_t (*const dst_byte0)[] = memptr;
-
-	// align the pointer
 	uint64_t i = 0;
 	while (i < z) {
 		(*dst_byte0)[i] = 0x0;
 		i = i + 1;
 	}
-
-	// word operation
 
 	const uint64_t len_words = (len - z) / sizeof(Word);
 	Word (*const dst_word)[] = (Word (*)[])&(*memptr)[i];
@@ -45,8 +41,6 @@ void memory_zero(void *mem, uint64_t len) {
 		(*dst_word)[i] = 0x0;
 		i = i + 1;
 	}
-
-	// byte operation
 
 	const uint64_t len_bytes = (len - z) % sizeof(Word);
 	uint8_t (*const dst_byte1)[] = (uint8_t (*)[])&(*dst_word)[i];

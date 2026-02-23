@@ -61,8 +61,6 @@ public func main () -> Int32 {
 		}
 		sin_port = UnsignedShort htons(port)
 	}
-
-	// Bind socket to address
 	let socadr: *SockAddr = unsafe *SockAddr &serverAddr
 	var rc: Int = bind(serverSocket, socadr, unsafe SocklenT sizeof serverAddr)
 	if rc < 0 {
@@ -70,8 +68,6 @@ public func main () -> Int32 {
 		close(serverSocket)
 		exit(1)
 	}
-
-	// Starting listen to connection
 	rc = listen(socket=serverSocket, backlog=5)
 	if rc < 0 {
 		perror("cannot listen socket")
@@ -80,8 +76,6 @@ public func main () -> Int32 {
 	}
 
 	printf("Server listening on port %d...\n", Nat32 port)
-
-	// Handle input connections
 	while true {
 		var clientAddr: SockAddrIn
 		let socadr: *SockAddr = unsafe *SockAddr &clientAddr

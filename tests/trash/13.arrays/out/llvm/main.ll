@@ -386,8 +386,6 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%5 = zext i8 20 to %Nat32
 	store [20 x %Char8] %4, [20 x %Char8]* %3
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), [20 x %Char8]* %3)
-
-	; truncate array
 	%7 = alloca [6 x %Char8], align 1
 	%8 = zext i8 0 to %Nat32
 	%9 = getelementptr [20 x %Char8], [20 x %Char8]* %x, %Int32 0, %Nat32 %8
@@ -398,8 +396,6 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%13 = getelementptr [6 x %Char8], [6 x %Char8]* %7, %Int32 0, %Int32 5
 	store %Char8 0, %Char8* %13
 	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), [6 x %Char8]* %7)
-
-	; extend array
 	%15 = alloca [30 x %Char8], align 1
 	%16 = zext i8 0 to %Nat32
 	%17 = getelementptr [30 x %Char8], [30 x %Char8]* %15, %Int32 0, %Nat32 %16
@@ -445,7 +441,6 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	%Word8 22
 ]
 define internal void @test() {
-	; тестируем работу с локальным generic массивом
 	%1 = alloca [6 x %Word8], align 1
 	%2 = insertvalue [6 x %Word8] zeroinitializer, %Word8 170, 0
 	%3 = insertvalue [6 x %Word8] %2, %Word8 85, 1
@@ -776,8 +771,6 @@ break_6:
 	store %Int32 %55, %Int32* %1
 	br label %again_5
 break_5:
-	;
-	;
 	store %Int32 0, %Int32* %1
 ; while_8
 	br label %again_8
@@ -813,8 +806,6 @@ break_9:
 	store %Int32 %72, %Int32* %1
 	br label %again_8
 break_8:
-	;
-	;
 	store %Int32 0, %Int32* %1
 ; while_10
 	br label %again_10
@@ -924,7 +915,6 @@ break_13:
 }
 
 define %Int @main() {
-	; generic array [4]Char8 will be implicit casted to [10]Char8
 	call void @test()
 	%1 = alloca [30 x %Char8], align 1
 	%2 = insertvalue [20 x %Char8] zeroinitializer, %Char8 72, 0
@@ -1039,9 +1029,6 @@ body_4:
 	store %Nat32 %72, %Nat32* %18
 	br label %again_4
 break_4:
-
-	; assign array to array 1
-	; (with equal types)
 	%73 = alloca [3 x %Int32], align 1
 	%74 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
 	%75 = insertvalue [3 x %Int32] %74, %Int32 2, 1
@@ -1057,10 +1044,6 @@ break_4:
 	%84 = getelementptr [3 x %Int32], [3 x %Int32]* %73, %Int32 0, %Int32 2
 	%85 = load %Int32, %Int32* %84
 	%86 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str19 to [0 x i8]*), %Int32 %85)
-
-	; create (and initialize) new variable b
-	; (with type [3]Int32)
-	; this variable are copy of array a
 	%87 = alloca [3 x %Int32], align 1
 	%88 = load [3 x %Int32], [3 x %Int32]* %73
 	%89 = zext i8 3 to %Nat32
@@ -1074,8 +1057,6 @@ break_4:
 	%96 = getelementptr [3 x %Int32], [3 x %Int32]* %87, %Int32 0, %Int32 2
 	%97 = load %Int32, %Int32* %96
 	%98 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str22 to [0 x i8]*), %Int32 %97)
-
-	; check equality between two arrays (by value)
 ; if_0
 	%99 = bitcast [3 x %Int32]* %73 to i8*
 	%100 = bitcast [3 x %Int32]* %87 to i8*
@@ -1089,9 +1070,6 @@ else_0:
 	%104 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str24 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-
-	; assign array to array 2
-	; (with array extending)
 	%105 = alloca [3 x %Int32], align 1
 	%106 = insertvalue [3 x %Int32] zeroinitializer, %Int32 10, 0
 	%107 = insertvalue [3 x %Int32] %106, %Int32 20, 1
@@ -1130,8 +1108,6 @@ endif_0:
 	%137 = getelementptr [6 x %Int32], [6 x %Int32]* %110, %Int32 0, %Int32 5
 	%138 = load %Int32, %Int32* %137
 	%139 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str30 to [0 x i8]*), %Int32 %138)
-
-	; check equality between two arrays (by pointer)
 ; if_1
 	%140 = bitcast [3 x %Int32]* %73 to i8*
 	%141 = bitcast [3 x %Int32]* %87 to i8*
@@ -1145,22 +1121,12 @@ else_1:
 	%145 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str32 to [0 x i8]*))
 	br label %endif_1
 endif_1:
-
-
-	;
-	; Check assination local literal array
-	;
-
-
-	;let aa = [111] + [222] + [333]
-	; cons literal array from var items
 	%146 = alloca %Int, align 4
 	store %Int 100, %Int* %146
 	%147 = alloca %Int, align 4
 	store %Int 200, %Int* %147
 	%148 = alloca %Int, align 4
 	store %Int 300, %Int* %148
-	; immutable, non immediate value (array)
 	%149 = load %Int, %Int* %146
 	%150 = load %Int, %Int* %147
 	%151 = load %Int, %Int* %148
@@ -1173,8 +1139,6 @@ endif_1:
 	%158 = alloca [3 x %Int]
 	%159 = zext i8 3 to %Nat32
 	store [3 x %Int] %157, [3 x %Int]* %158
-
-	; check local literal array assignation to local array
 	%160 = alloca [4 x %Int32], align 1
 ; -- cons_composite_from_composite_by_adr --
 	%161 = bitcast [3 x %Int]* %158 to [4 x %Int32]*
@@ -1191,8 +1155,6 @@ endif_1:
 	%170 = getelementptr [4 x %Int32], [4 x %Int32]* %160, %Int32 0, %Int32 2
 	%171 = load %Int32, %Int32* %170
 	%172 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str35 to [0 x i8]*), %Int32 %171)
-
-	; check local literal array assignation to global array
 ; -- cons_composite_from_composite_by_adr --
 	%173 = bitcast [3 x %Int]* %158 to [10 x %Int32]*
 	%174 = load [10 x %Int32], [10 x %Int32]* %173
@@ -1212,10 +1174,6 @@ endif_1:
 	%186 = mul %Nat32 %185, 4
 	%187 = bitcast [10 x %Int32]* @globalArray to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %187, i8 0, %Nat32 %186, i1 0)
-
-
-	; проверка того как локальная константа-массив
-	; "замораживает" свои элементы
 	%188 = alloca %Int32, align 4
 	store %Int32 10, %Int32* %188
 	%189 = alloca %Int32, align 4
@@ -1270,20 +1228,7 @@ else_2:
 	%226 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str44 to [0 x i8]*))
 	br label %endif_2
 endif_2:
-
-
-	; BUG: НЕ РАБОТАЕТ!
-	;	let sa = []Char8 ['L', 'o', 'H', 'i', '!']
-	;
-	;	if sa[2:4] == "Hi" {
-	;		printf("test passed\n")
-	;	} else {
-	;		printf("test failed\n")
-	;	}
 	call void @test_arrays()
-
-
-	; not immediate local array literal test
 	%227 = alloca %Int32, align 4
 	store %Int32 5, %Int32* %227
 	%228 = alloca %Int32, align 4

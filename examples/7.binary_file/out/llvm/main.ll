@@ -250,8 +250,6 @@ endif_0:
 	%13 = insertvalue [1024 x %Char] %12, %Char 97, 3
 	%14 = insertvalue %Chunk %9, [1024 x %Char] %13, 1
 	store %Chunk %14, %Chunk* %6
-
-	; write chunk to file
 	%15 = bitcast %Chunk* %6 to i8*
 	%16 = call %SizeT @fwrite(i8* %15, %Size 2048, %SizeT 1, i8* %2)
 	%17 = call %Int @fclose(i8* %2)

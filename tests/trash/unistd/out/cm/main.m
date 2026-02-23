@@ -14,13 +14,9 @@ public func main () -> Int {
 
 	let hid: Long = gethostid()
 	printf("hostid = %ld\n", hid)
-
-	// current control terminal
 	var cterm: [128]Char8
 	ctermid(&cterm)
 	printf("ctermid = %s\n", &cterm)
-
-	// current working directory
 	var cwd: [128]Char8
 	getcwd(&cwd, SizeT lengthof(cwd))
 	printf("cwd = %s\n", &cwd)
@@ -34,7 +30,7 @@ public func main () -> Int {
 
 	while true {
 		printf("- hi\n")
-		sleep(1); // time in seconds
+		sleep(1)
 	}
 
 	return 0

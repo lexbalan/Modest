@@ -246,8 +246,10 @@ define internal void @hello() {
 }
 
 define %Int32 @main() {
+	%1 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %1
 	call void @hello()
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str2 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str2 to [0 x i8]*))
 	ret %Int32 0
 }
 

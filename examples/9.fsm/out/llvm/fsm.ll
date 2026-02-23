@@ -245,13 +245,11 @@ define void @fsm_init(%fsm_FSM* %self, %Str8* %id, %fsm_StateDesc* %initState, i
 }
 
 define void @fsm_task(%fsm_FSM* %self) {
-	; Сработал таймер-ограничитель времени нахождения в стадии?
 ; if_0
 	%1 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 5
 	%2 = load %Bool, %Bool* %1
 	br %Bool %2 , label %then_0, label %endif_0
 then_0:
-	; Clear timer & Switch to next stage
 	%3 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 5
 	store %Bool 0, %Bool* %3
 	%4 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 2
@@ -264,8 +262,6 @@ then_0:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([52 x i8]* @str1 to [0 x i8]*), %Str8* %7, %Nat32 0, %fsm_StageId %9)
 	br label %endif_0
 endif_0:
-
-	; Есть запрос на смену состояния?
 ; if_1
 	%11 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 2
 	%12 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 1
@@ -304,8 +300,6 @@ then_1:
 	store %fsm_ComplexState %40, %fsm_ComplexState* %38
 	br label %endif_1
 endif_1:
-
-	; Usual routine
 	%41 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 1, %Int32 0
 	%42 = load %fsm_StateDesc*, %fsm_StateDesc** %41
 	%43 = getelementptr %fsm_StateDesc, %fsm_StateDesc* %42, %Int32 0, %Int32 2
@@ -394,7 +388,6 @@ define %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* %self) {
 	%8 = load %fsm_StageId, %fsm_StageId* %7
 	%9 = bitcast %fsm_StageId %8 to %Nat16
 	%10 = add %Nat16 %9, 1
-	;assert(nextStageIndex < state.state.nstages)
 	%11 = alloca %fsm_ComplexState, align 8
 ; -- cons_composite_from_composite_by_adr --
 	%12 = bitcast %fsm_ComplexState* %6 to %fsm_ComplexState*
@@ -425,7 +418,6 @@ define %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* %self, %Nat32 %t) {
 	%7 = load %fsm_StageId, %fsm_StageId* %6
 	%8 = bitcast %fsm_StageId %7 to %Nat16
 	%9 = add %Nat16 %8, 1
-	;assert(nextStageIndex < state.state.nstages)
 	%10 = alloca %fsm_ComplexState, align 8
 ; -- cons_composite_from_composite_by_adr --
 	%11 = bitcast %fsm_ComplexState* %5 to %fsm_ComplexState*

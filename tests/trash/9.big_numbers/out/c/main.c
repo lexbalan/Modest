@@ -42,12 +42,8 @@ int main(void) {
 
 	printf("big0 = 0x%llX%llX\n", high_128(big0), low_128(big0));
 	printf("big1 = 0x%llX%llX\n", high_128(big1), low_128(big1));
-	//printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2))
 	printf("big3 = 0x%llX%llX\n", high_128(big3), low_128(big3));
 	printf("big_sum = 0x%llX%llX\n", high_128(big_sum), low_128(big_sum));
-
-
-	// signed big int test
 	#define sig0  (-1)
 
 	__int128 sig1 = (__int128)sig0;

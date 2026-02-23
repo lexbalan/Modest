@@ -262,9 +262,6 @@ define internal %Bool @test2() {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str1 to [0 x i8]*))
-
-	;func2(b=10, 10)  // error: positional argument follows keyword argument
-	;func3(4)         // error: undefined parameter 'b'
 	%2 = call %Bool @test1()
 ; if_0
 	br %Bool %2 , label %then_0, label %else_0

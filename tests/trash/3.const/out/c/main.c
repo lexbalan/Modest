@@ -84,8 +84,6 @@ int main(void) {
 
 	printf("genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);
 	printf("int32Const = %d\n", INT32_CONST);
-
-	//	printf("genericStringConst = %s\n", genericStringConst)
 	printf("string8Const = %s\n", STRING8_CONST);
 
 	return 0;

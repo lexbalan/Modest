@@ -211,7 +211,6 @@ define %Int @main() {
 	%2 = alloca %Nat8, align 1
 	%3 = alloca %Bool, align 1
 	store %Nat8 1, %Nat8* %2
-	;b = Bool x
 	%4 = load %Nat8, %Nat8* %2
 	%5 = icmp ne %Nat8 %4, 0
 	store %Bool %5, %Bool* %3
@@ -222,7 +221,6 @@ define %Int @main() {
 	%10 = zext %Bool %9 to %Word32
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Word32 %10)
 	store %Nat8 2, %Nat8* %2
-	;b = Bool x
 	%12 = load %Nat8, %Nat8* %2
 	%13 = icmp ne %Nat8 %12, 0
 	store %Bool %13, %Bool* %3
@@ -233,7 +231,6 @@ define %Int @main() {
 	%18 = zext %Bool %17 to %Word32
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Word32 %18)
 	store %Nat8 3, %Nat8* %2
-	;b = Bool x
 	%20 = load %Nat8, %Nat8* %2
 	%21 = icmp ne %Nat8 %20, 0
 	store %Bool %21, %Bool* %3

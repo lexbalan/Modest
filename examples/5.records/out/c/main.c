@@ -62,8 +62,6 @@ static float lineLength(struct line line) {
 
 static void ptr_example(void) {
 	struct point *const ptr_p = (struct point *)malloc(sizeof(struct point));
-
-	// access by pointer
 	ptr_p->x = 10.0;
 	ptr_p->y = 20.0;
 
@@ -72,7 +70,6 @@ static void ptr_example(void) {
 
 
 int main(void) {
-	// by value
 	const float len = lineLength(line);
 	printf("line length = %f\n", len);
 

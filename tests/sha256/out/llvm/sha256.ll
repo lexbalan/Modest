@@ -628,8 +628,6 @@ define internal void @final(%Context* %ctx, %sha256_Hash* %outHash) {
 	%2 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%3 = load %Nat32, %Nat32* %2
 	store %Nat32 %3, %Nat32* %1
-
-	; Pad whatever data is left in the buffer.
 	%4 = alloca %Nat32, align 4
 	store %Nat32 64, %Nat32* %4
 ; if_0
@@ -659,7 +657,6 @@ endif_0:
 	%21 = sub %Nat32 %19, %20
 	%22 = zext %Nat32 %21 to %SizeT
 	%23 = call i8* @memset(i8* %18, %Int 0, %SizeT %22)
-	;ctx.data[i:n-i] = []
 ; if_1
 	%24 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
 	%25 = load %Nat32, %Nat32* %24
@@ -672,11 +669,8 @@ then_1:
 	%29 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%30 = bitcast [64 x %Word8]* %29 to i8*
 	%31 = call i8* @memset(i8* %30, %Int 0, %SizeT 56)
-	;ctx.data[0:56] = []
 	br label %endif_1
 endif_1:
-
-	; Append to the padding the total message's length in bits and transform.
 	%32 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%33 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%34 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
@@ -761,10 +755,6 @@ endif_1:
 	%104 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%105 = bitcast [64 x %Word8]* %104 to [0 x %Word8]*
 	call void @transform(%Context* %ctx, [0 x %Word8]* %105)
-
-	; Since this implementation uses little endian byte ordering
-	; and SHA uses big endian, reverse all the bytes
-	; when copying the final state to the output hash.
 	store %Nat32 0, %Nat32* %1
 ; while_1
 	br label %again_1

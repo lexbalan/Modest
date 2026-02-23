@@ -140,7 +140,6 @@ public func node_get (list: *List, pos: Int32) -> *Node {
 	var node: *Node
 
 	if pos >= 0 {
-		// go forward
 		node = list.head
 		let n = Nat32 pos
 
@@ -154,7 +153,6 @@ public func node_get (list: *List, pos: Int32) -> *Node {
 			i = i + 1
 		}
 	} else {
-		// go backward
 		node = list.tail
 		let n: Nat32 = (Nat32 -pos) - 1
 

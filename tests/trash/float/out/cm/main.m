@@ -43,8 +43,6 @@ public func main () -> Int {
 
 	printf("sizeof(Float32) = %zu\n", sizeof(Float32))
 	printf("sizeof(Float64) = %zu\n", sizeof(Float64))
-
-	// printf %f ожидает получить double а не float!
 	let sl: Float32 = slope({x = 10, y = 20}, {x = 30, y = 50})
 	printf("slope = %f\n", Float64 sl)
 

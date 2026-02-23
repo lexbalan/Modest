@@ -30,9 +30,13 @@ static inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction
 #endif /* __FIXED_POINT__ */
 
 
-static int32_t packFixed32(uint32_t n, uint32_t m, uint32_t base, uint8_t fraction) {
-	const uint64_t tail = (uint64_t)m * ((uint64_t)(0x1 << fraction) - 1) / (uint64_t)base;
-	return (int32_t)((n << fraction) | (uint32_t)tail);
+
+
+
+// fx = i + m/n
+static int32_t packFixed32(uint32_t i, uint32_t m, uint32_t n, uint8_t fraction) {
+	const uint64_t tail = (uint64_t)m * ((uint64_t)(0x1 << fraction) - 1) / (uint64_t)n;
+	return (int32_t)((i << fraction) | (uint32_t)tail);
 }
 
 

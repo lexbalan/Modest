@@ -12,7 +12,6 @@
 
 __attribute__((used))
 static void unitFunc(void) {
-	//var xunit = {}  // cannot create var with Unit type
 	#define unit  {0}
 	return;
 

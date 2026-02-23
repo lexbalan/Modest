@@ -24,24 +24,18 @@ void fsm_init(struct fsm_fsm *self, char *id, struct fsm_state_desc *initState, 
 fsm_ComplexState fsm_cmdNextStage(struct fsm_fsm *self);
 
 void fsm_task(struct fsm_fsm *self) {
-	// Сработал таймер-ограничитель времени нахождения в стадии?
 	if (self->timer_expired) {
-		// Clear timer & Switch to next stage
 		self->timer_expired = false;
 		self->next_state = fsm_cmdNextStage(self);
 		const uint32_t top = 0;
 		printf("[%s] fsm timeout (%u) occured, switch_to_stage(%d)\n", self->id, top, self->next_state.stage);
 	}
-
-	// Есть запрос на смену состояния?
 	if (memcmp(&self->next_state, &self->state, sizeof(fsm_ComplexState)) != 0) {
 		const fsm_ComplexState state = self->state;
 		const fsm_ComplexState next_state = self->next_state;
 		printf("[%s] #%s_%u -> #%s_%u\n", self->id, state.state->id, state.stage, next_state.state->id, next_state.stage);
 		self->state = self->next_state;
 	}
-
-	// Usual routine
 	fsm_StateServiceRoutine *const handler = self->state.state->handler;
 	self->next_state = handler(self->state, self->payload);
 }
@@ -78,7 +72,6 @@ fsm_ComplexState fsm_cmdNextStage(struct fsm_fsm *self) {
 	self->timer_expired = false;
 	const fsm_ComplexState state = self->state;
 	const uint16_t nextStageIndex = (uint16_t)((uint16_t)(state.stage) + 1);
-	//assert(nextStageIndex < state.state.nstages)
 	fsm_ComplexState newState = state;
 	newState.stage = (fsm_StageId)nextStageIndex;
 	return newState;
@@ -89,7 +82,6 @@ fsm_ComplexState fsm_cmdNextStageLimited(struct fsm_fsm *self, uint32_t t) {
 	self->timer = t;
 	const fsm_ComplexState state = self->state;
 	const uint16_t nextStageIndex = (uint16_t)((uint16_t)(state.stage) + 1);
-	//assert(nextStageIndex < state.state.nstages)
 	fsm_ComplexState newState = state;
 	newState.stage = (fsm_StageId)nextStageIndex;
 	return newState;

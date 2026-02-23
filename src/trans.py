@@ -13,8 +13,8 @@ import type as htype
 from value.bool import value_bool_create
 from value.integer import value_integer_create
 from value.rational import value_rational_create
-from value.string import value_string_create, value_string_add
-from value.array import value_array_create, value_array_add
+from value.string import value_string_create, value_string_concat
+from value.array import value_array_create, value_array_concat
 from value.record import value_record_create
 from value.word import value_word_create
 
@@ -606,9 +606,9 @@ def do_value_bin_op(op, l, r, ti):
 	# Ops with different types
 	if op == HLIR_VALUE_OP_ADD:
 		if l.type.is_array() and r.type.is_array():
-			return value_array_add(l, r, ti)
+			return value_array_concat(l, r, ti)
 		elif l.type.is_string() and r.type.is_string():
-			return value_string_add(l, r, ti)
+			return value_string_concat(l, r, ti)
 
 	# Check type is valid for the operation
 
@@ -2105,8 +2105,8 @@ def def_const_common(x):
 	if x['type'] != None:
 		t = Type.copy(do_type(x['type']))
 		iv = value_cons_implicit_check(t, iv)
-	else:
-		iv = value_cons_default(iv)
+	#else:
+	#	iv = value_cons_default(iv)
 
 	if t == None:
 		t = Type.reborn(iv.type)

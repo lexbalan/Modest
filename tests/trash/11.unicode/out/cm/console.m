@@ -71,8 +71,6 @@ public func puts8 (s: *Str8) -> Unit {
 public func puts16 (s: *Str16) -> Unit {
 	var i: Nat32 = 0
 	while true {
-		// нельзя просто так взять и вызвать putchar_utf16
-		// тк в строке может быть суррогатная пара UTF_16 символов
 
 		let cc16: Char16 = s[i]
 		if cc16 == "\x0" {
@@ -125,8 +123,8 @@ public func vfprint (fd: Int32, form: *Str8, va: va_list) -> Int32 {
 
 
 public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
-	var i: Nat32 = 0; // form index
-	var j: Int32 = 0; // out buf index
+	var i: Nat32 = 0
+	var j: Int32 = 0
 
 	while true {
 		var c: Char8 = form[i]
@@ -154,8 +152,6 @@ public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			again
 		}
 
-		// c == '{'
-
 		i = i + 1
 		c = form[i]
 
@@ -171,38 +167,22 @@ public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 		let sptr: *[]Char8 = &buf[j:]
 
 		if c == "i" or c == "d" {
-			//
-			// %i & %d for signed integer (Int)
-			//
 			let x: Int32 = __va_arg(va, Int32)
 			let n: Int32 = sprint_dec_int32(sptr, x)
 			j = j + n
 		} else if c == "n" {
-			//
-			// %n for unsigned integer (Nat)
-			//
 			let x: Nat32 = __va_arg(va, Nat32)
 			let n: Int32 = sprint_dec_n32(sptr, x)
 			j = j + n
 		} else if c == "x" or c == "p" {
-			//
-			// %x for unsigned integer (Nat)
-			// %p for pointers
-			//
 			let x: Nat32 = __va_arg(va, Nat32)
 			let n: Int32 = sprint_hex_nat32(sptr, x)
 			j = j + n
 		} else if c == "s" {
-			//
-			// %s pointer to string
-			//
 			let s: *Str8 = __va_arg(va, *Str8)
 			strcpy(sptr, s)
 			j = j + unsafe Int32 strlen(s)
 		} else if c == "c" {
-			//
-			// %c for char
-			//
 			let c: Char32 = __va_arg(va, Char32)
 			let n: Nat8 = utf.utf32_to_utf8(c, unsafe *[4]Char8 sptr)
 			j = j + Int32 n
@@ -244,8 +224,6 @@ func sprint_hex_nat32 (buf: *[]Char8, x: Nat32) -> Int32 {
 			break
 		}
 	}
-
-	// mirroring into buffer
 	var j: Int32 = 0
 	while i > 0 {
 		i = i - 1

@@ -220,7 +220,7 @@ define void @chacha20_chacha20Block(%chacha20_Block* %0, %chacha20_State %__stat
 	%3 = alloca %chacha20_State, align 1
 	%4 = load %chacha20_State, %chacha20_State* %state
 	%5 = zext i8 16 to %Nat32
-	store %chacha20_State %4, %chacha20_State* %3	; working copy
+	store %chacha20_State %4, %chacha20_State* %3
 	%6 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %6
 ; while_1
@@ -231,8 +231,6 @@ again_1:
 	br %Bool %8 , label %body_1, label %break_1
 body_1:
 	%9 = alloca [4 x %Word32], align 1
-
-	; column rounds
 	%10 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
 	%11 = load %Word32, %Word32* %10
 	%12 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 4
@@ -349,9 +347,6 @@ body_1:
 	%100 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
 	%101 = load %Word32, %Word32* %100
 	store %Word32 %101, %Word32* %99
-
-
-	; diagonal rounds
 	%102 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
 	%103 = load %Word32, %Word32* %102
 	%104 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 5
@@ -473,8 +468,6 @@ body_1:
 	store %Int32 %195, %Int32* %6
 	br label %again_1
 break_1:
-
-	; add original state
 	%196 = alloca [16 x %Word32], align 1
 	%197 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %197

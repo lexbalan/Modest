@@ -129,8 +129,6 @@ define void @memory_zero(i8* %mem, %Nat64 %len) {
 	%1 = ptrtoint i8* %mem to %Nat
 	%2 = urem %Nat %1, 8
 	%3 = bitcast i8* %mem to [0 x %Word8]*
-
-	; align the pointer
 	%4 = alloca %Nat64, align 8
 	store %Nat64 0, %Nat64* %4
 ; while_1
@@ -150,8 +148,6 @@ body_1:
 	store %Nat64 %12, %Nat64* %4
 	br label %again_1
 break_1:
-
-	; word operation
 	%13 = sub %Nat64 %len, %2
 	%14 = udiv %Nat64 %13, 8
 	%15 = load %Nat64, %Nat64* %4
@@ -176,8 +172,6 @@ body_2:
 	store %Nat64 %26, %Nat64* %4
 	br label %again_2
 break_2:
-
-	; byte operation
 	%27 = sub %Nat64 %len, %2
 	%28 = urem %Nat64 %27, 8
 	%29 = load %Nat64, %Nat64* %4

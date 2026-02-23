@@ -157,8 +157,6 @@ static void update(struct context *ctx, uint8_t (*msg)[], uint32_t msgLen) {
 static void final(struct context *ctx, sha256_Hash *outHash) {
 	uint32_t i = ctx->datalen;
 
-	// Pad whatever data is left in the buffer.
-
 	uint32_t n = 64;
 	if (ctx->datalen < 56) {
 		n = 56;
@@ -169,15 +167,11 @@ static void final(struct context *ctx, sha256_Hash *outHash) {
 	i = i + 1;
 
 	memset((void *)&ctx->data[i], 0, (size_t)(n - i));
-	//ctx.data[i:n-i] = []
 
 	if (ctx->datalen >= 56) {
 		transform(ctx, &ctx->data);
 		memset((void *)&ctx->data, 0, 56);
-		//ctx.data[0:56] = []
 	}
-
-	// Append to the padding the total message's length in bits and transform.
 	ctx->bitlen = ctx->bitlen + (uint64_t)ctx->datalen * 8;
 
 	ctx->data[63] = (uint8_t)(ctx->bitlen >> 0);
@@ -190,10 +184,6 @@ static void final(struct context *ctx, sha256_Hash *outHash) {
 	ctx->data[56] = (uint8_t)(ctx->bitlen >> 56);
 
 	transform(ctx, &ctx->data);
-
-	// Since this implementation uses little endian byte ordering
-	// and SHA uses big endian, reverse all the bytes
-	// when copying the final state to the output hash.
 
 	i = 0;
 	while (i < 4) {

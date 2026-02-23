@@ -20,8 +20,9 @@ var l: Nat8
 var m: Float32
 var n: Bool
 
+
 // record variables
-var p = {x = 1, y = 2}
+//var p = {x = 1, y = 2}
 var q: {
 	a: Int32
 	b: Int32

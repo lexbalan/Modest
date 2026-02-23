@@ -413,8 +413,6 @@ endif_0:
 	%7 = bitcast %Word16 %6 to %UnsignedShort
 	%8 = insertvalue %SockAddrIn %4, %UnsignedShort %7, 2
 	store %SockAddrIn %8, %SockAddrIn* %3
-
-	; Bind socket to address
 	%9 = bitcast %SockAddrIn* %3 to %SockAddr*
 	%10 = alloca %Int, align 4
 	%11 = call %Int @bind(%Int %1, %SockAddr* %9, %SocklenT 16)
@@ -429,8 +427,6 @@ then_1:
 	call void @exit(%Int 1)
 	br label %endif_1
 endif_1:
-
-	; Starting listen to connection
 	%15 = call %Int @listen(%Int %1, %Int 5)
 	store %Int %15, %Int* %10
 ; if_2
@@ -444,8 +440,6 @@ then_2:
 	br label %endif_2
 endif_2:
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str8 to [0 x i8]*), %Nat32 8080)
-
-	; Handle input connections
 ; while_1
 	br label %again_1
 again_1:

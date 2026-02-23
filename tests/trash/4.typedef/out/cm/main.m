@@ -11,10 +11,6 @@ public func main () -> Int {
 	newInt32 = NewInt32 0
 	Unit newInt32
 
-	//type NewInt16 Int16
-	//var newInt16: NewInt16
-	//newInt16 = NewInt16 0
-
 	return 0
 }
 

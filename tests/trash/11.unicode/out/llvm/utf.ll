@@ -250,7 +250,6 @@ else_0:
 	%12 = icmp uge %Nat32 %11, 56320
 	br %Bool %12 , label %then_1, label %else_1
 then_1:
-	;error("Illegal code sequence")
 	br label %endif_1
 else_1:
 	%13 = alloca %Word32, align 4
@@ -269,7 +268,6 @@ else_1:
 	%24 = or %Bool %21, %23
 	br %Bool %24 , label %then_2, label %else_2
 then_2:
-	;error("Illegal code sequence")
 	br label %endif_2
 else_2:
 	%25 = and %Word32 %19, 1023

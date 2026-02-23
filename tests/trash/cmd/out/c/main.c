@@ -47,8 +47,6 @@ static bool is_blank(char c) {
 static uint16_t gettok(struct tokenizer *t, char *output, uint16_t lim) {
 	(void)lim;
 	char c = t->input[t->position];
-
-	// skip blanks
 	while (true) {
 		c = t->input[t->position];
 		if (c != ' ' && c != '\t') {
@@ -56,17 +54,12 @@ static uint16_t gettok(struct tokenizer *t, char *output, uint16_t lim) {
 		}
 		t->position = t->position + 1;
 	}
-
-	// check if not EOS
 	if (c == '\n' || c == '\x0') {
 		return 0;
 	}
-
-	// handle token
 	uint16_t outpos = 0;
 
 	c = t->input[t->position];
-	//if isalnum(char8ToInt(c)) {
 	if (!is_blank(c)) {
 		while (!is_blank(c)) {
 			output[outpos] = c;
@@ -95,14 +88,11 @@ static void tokenize(struct tokenizer *tokenizer) {
 		if (toklen == 0) {
 			break;
 		}
-
-		// save token in tokens buffer
 		char *const pbuf = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
 		memcpy((char *)&pbuf[0], (char *)&token[0], sizeof(char [toklen - 0]));
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + toklen;
 		pbuf[tokenizer->tokensBufPos] = '\x0';
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + 1;
-		// save pointer to token
 		(*tokenizer->tokens)[tokenizer->tokensPos] = pbuf;
 		tokenizer->tokensPos = tokenizer->tokensPos + 1;
 		(*tokenizer->tokens)[tokenizer->tokensPos] = NULL;
@@ -136,16 +126,12 @@ int32_t main(void) {
 		fgets(inbuf, (int)sizeof inbuf, stdin);
 
 		char *tokens[64] = {0};
-
-		// Токенизируем строку
 		struct tokenizer tokenizer = (struct tokenizer){
 			.input = inbuf,
 			.tokensBuf = tokensBuf,
 			.tokens = &tokens
 		};
 		tokenize(&tokenizer);
-
-		// "выполняем" команду
 		char *const cmd = (*tokenizer.tokens)[0];
 		uint16_t argc = tokenizer.tokensPos;
 		if (argc > 0) {

@@ -49,7 +49,6 @@ public func main () -> Int32 {
 	var a: Int32 = returnInt()
 	var b: Bool = returnBool()
 	var c: Float64 = returnFloat()
-	//	var d = returnUnit()
 	var e: {
 		x: Int32
 		y: Int32

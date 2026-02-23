@@ -716,8 +716,6 @@ break_3:
 	%54 = getelementptr %Wrap, %Wrap* %53, %Int32 0, %Int32 0
 	%55 = load void (%Str8*)*, void (%Str8*)** %54
 	call void %55(%Str8* bitcast ([6 x i8]* @str12 to [0 x i8]*))
-	;let y = awrap[0]
-	;y.fhi("World")
 	ret %Int32 0
 }
 

@@ -27,9 +27,6 @@ public func main () -> Int {
 		printf("globalArray test failed\n")
 	}
 
-
-	// local
-
 	var localArray0: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 	var localArray1: [10]Int32 = []
 

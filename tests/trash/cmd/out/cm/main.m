@@ -44,8 +44,6 @@ func is_blank (c: Char8) -> Bool {
 func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 	Unit lim
 	var c: Char8 = t.input[t.position]
-
-	// skip blanks
 	while true {
 		c = t.input[t.position]
 		if c != " " and c != "\t" {
@@ -53,17 +51,12 @@ func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 		}
 		t.position = t.position + 1
 	}
-
-	// check if not EOS
 	if c == "\n" or c == "\x0" {
 		return 0
 	}
-
-	// handle token
 	var outpos: Nat16 = 0
 
 	c = t.input[t.position]
-	//if isalnum(char8ToInt(c)) {
 	if not is_blank(c) {
 		while not is_blank(c) {
 			output[outpos] = c
@@ -92,14 +85,11 @@ func tokenize (tokenizer: *Tokenizer) -> Unit {
 		if toklen == 0 {
 			break
 		}
-
-		// save token in tokens buffer
 		let pbuf: *[]Char8 = &tokenizer.tokensBuf[tokenizer.tokensBufPos:]
 		pbuf[0:toklen] = token[0:toklen]
 		tokenizer.tokensBufPos = tokenizer.tokensBufPos + toklen
 		pbuf[tokenizer.tokensBufPos] = "\x0"
 		tokenizer.tokensBufPos = tokenizer.tokensBufPos + 1
-		// save pointer to token
 		tokenizer.tokens[tokenizer.tokensPos] = pbuf
 		tokenizer.tokensPos = tokenizer.tokensPos + 1
 		tokenizer.tokens[tokenizer.tokensPos] = nil
@@ -133,16 +123,12 @@ public func main () -> Int32 {
 		fgets(&inbuf, unsafe Int sizeof inbuf, stdin)
 
 		var tokens: [64]*[]Char8 = []
-
-		// Токенизируем строку
 		var tokenizer: Tokenizer = Tokenizer {
 			input = &inbuf
 			tokensBuf = &tokensBuf
 			tokens = &tokens
 		}
 		tokenize(&tokenizer)
-
-		// "выполняем" команду
 		let cmd: *[]Char8 = tokenizer.tokens[0]
 		var argc: Nat16 = tokenizer.tokensPos
 		if argc > 0 {

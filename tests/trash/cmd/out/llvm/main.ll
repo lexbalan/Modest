@@ -351,8 +351,6 @@ define internal %Nat16 @gettok(%Tokenizer* %t, [0 x %Char8]* %output, %Nat16 %li
 	%7 = getelementptr [0 x %Char8], [0 x %Char8]* %5, %Int32 0, %Nat32 %6
 	%8 = load %Char8, %Char8* %7
 	store %Char8 %8, %Char8* %1
-
-	; skip blanks
 ; while_1
 	br label %again_1
 again_1:
@@ -384,8 +382,6 @@ endif_0:
 	store %Nat32 %25, %Nat32* %22
 	br label %again_1
 break_1:
-
-	; check if not EOS
 ; if_1
 	%26 = load %Char8, %Char8* %1
 	%27 = icmp eq %Char8 %26, 10
@@ -397,8 +393,6 @@ then_1:
 	ret %Nat16 0
 	br label %endif_1
 endif_1:
-
-	; handle token
 	%32 = alloca %Nat16, align 2
 	store %Nat16 0, %Nat16* %32
 	%33 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
@@ -409,7 +403,6 @@ endif_1:
 	%38 = getelementptr [0 x %Char8], [0 x %Char8]* %36, %Int32 0, %Nat32 %37
 	%39 = load %Char8, %Char8* %38
 	store %Char8 %39, %Char8* %1
-	;if isalnum(char8ToInt(c)) {
 ; if_2
 	%40 = load %Char8, %Char8* %1
 	%41 = call %Bool @is_blank(%Char8 %40)
@@ -496,8 +489,6 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-
-	; save token in tokens buffer
 	%13 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 4
 	%14 = load [0 x %Char8]*, [0 x %Char8]** %13
 	%15 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 2
@@ -532,7 +523,6 @@ endif_0:
 	%39 = load %Nat16, %Nat16* %38
 	%40 = add %Nat16 %39, 1
 	store %Nat16 %40, %Nat16* %37
-	; save pointer to token
 	%41 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 3
 	%42 = load %Nat16, %Nat16* %41
 	%43 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 5
@@ -604,8 +594,6 @@ body_1:
 	%7 = mul %Nat32 %6, 8
 	%8 = bitcast [64 x [0 x %Char8]*]* %5 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %8, i8 0, %Nat32 %7, i1 0)
-
-	; Токенизируем строку
 	%9 = alloca %Tokenizer, align 8
 	%10 = bitcast [1024 x %Char8]* %2 to [0 x %Char8]*
 	%11 = insertvalue %Tokenizer zeroinitializer, [0 x %Char8]* %10, 0
@@ -616,8 +604,6 @@ body_1:
 	store %Tokenizer %15, %Tokenizer* %9
 	%16 = bitcast %Tokenizer* %9 to %Tokenizer*
 	call void @tokenize(%Tokenizer* %16)
-
-	; "выполняем" команду
 	%17 = getelementptr %Tokenizer, %Tokenizer* %9, %Int32 0, %Int32 5
 	%18 = load [0 x [0 x %Char8]*]*, [0 x [0 x %Char8]*]** %17
 	%19 = getelementptr [0 x [0 x %Char8]*], [0 x [0 x %Char8]*]* %18, %Int32 0, %Int32 0

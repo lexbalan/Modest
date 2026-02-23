@@ -74,7 +74,8 @@ static void f4_ptr(struct __anonymous_struct_4 *x) {
 }
 
 
-static struct {int32_t x; } x = {.x = 5};
+
+//var x = {x = Int32 5}
 static struct type1 a = (struct type1){.x = 1};
 static struct type2 b = (struct type2){.x = 2};
 static Type3 c = (Type3){.x = 3};

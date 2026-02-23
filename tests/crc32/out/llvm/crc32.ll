@@ -274,7 +274,6 @@ again_1:
 	%4 = icmp ult %Nat32 %3, %len
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
-	; 1
 	%5 = load %Nat32, %Nat32* %2
 	%6 = bitcast %Nat32 %5 to %Nat32
 	%7 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Nat32 %6
@@ -283,7 +282,6 @@ body_1:
 	%10 = load %Word32, %Word32* %1
 	%11 = xor %Word32 %10, %9
 	%12 = and %Word32 %11, 255
-	; 2
 	%13 = trunc %Word32 %12 to %Nat8
 	%14 = zext %Nat8 %13 to %Nat32
 	%15 = getelementptr [256 x %Word32], [256 x %Word32]* @table, %Int32 0, %Nat32 %14

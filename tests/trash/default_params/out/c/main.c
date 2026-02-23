@@ -46,9 +46,6 @@ static bool test2(void) {
 int main(void) {
 	printf("test default parameters\n");
 
-	//func2(b=10, 10)  // error: positional argument follows keyword argument
-	//func3(4)         // error: undefined parameter 'b'
-
 	const bool test1_passed = test1();
 	if (test1_passed) {
 		printf("test1 passed\n");

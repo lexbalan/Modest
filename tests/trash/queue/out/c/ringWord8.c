@@ -37,11 +37,6 @@ bool ringWord8_isEmpty(struct ring_word8_ring_word8 *q) {
 
 
 bool ringWord8_put(struct ring_word8_ring_word8 *q, uint8_t b) {
-	/*
-	if queue.isFull(&q.queue) {
-		return false
-	}
-	*/
 
 	const uint32_t p = queue_getPutPosition(&q->queue);
 	(*q->data)[p] = b;

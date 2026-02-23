@@ -30,10 +30,6 @@ static void array_print(int32_t (*pa)[], uint32_t len) {
 int main(void) {
 	printf("test slices\n");
 
-	//
-	// by value
-	//
-
 	int32_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 	int32_t s1[2 - 1];
@@ -45,10 +41,6 @@ int main(void) {
 	}
 
 	printf("--------------------------------------------\n");
-
-	//
-	// by ptr
-	//
 
 	int32_t (*const pa)[10] = &a;
 	int32_t s2[8 - 5];
@@ -106,9 +98,6 @@ int main(void) {
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
 
-	// за каким то хером это работает, то что мне сейчас нужно
-	// но тут еще куча работы впереди
-
 	int32_t (*pw)[] = (int32_t (*)[])&s;
 
 	printf("before\n");
@@ -123,7 +112,6 @@ int main(void) {
 
 	printf("--------------------------------------------\n");
 	printf("zero slice by var\n");
-	// NOT WORKED NOW
 
 	int32_t ss[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
@@ -137,28 +125,11 @@ int main(void) {
 
 	int32_t src[5] = {10, 20, 30, 40, 50};
 	int32_t dst[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-
-	// test with let
 	#define i1  3
 	#define j1  8
 	ARRCPY((int32_t (*)[j1 - i1])&dst[i1], &((int8_t [5]){11, 22, 33, 44, 55}), j1 - i1);
 
 	array_print(&dst, 10);
-
-	//	printf("--------------------------------------------\n")
-	//
-	//	var dst2 = []Int32 [00, 10, 20, 30, 40, 50, 60, 70, 80, 90]
-	//
-	//	var axx = Nat8 111
-	//	var bxx = Nat8 222
-	//
-	//	// FIXIT: test with var
-	//	// ARRCPY не умеет копировать generic массив, исправь это
-	//	var i2: Int32 = 3
-	//	var j2: Int32 = 5
-	//	dst2[i2:j2] = [Int32 axx, Int32 bxx]
-	//
-	//	array_print(&dst2, 10)
 
 	return 0;
 

@@ -20,7 +20,6 @@ static bool bubble_sort32_iter(int32_t (*array)[], uint32_t len) {
 		const int32_t left = (*array)[i];
 		const int32_t right = (*array)[i + 1];
 		if (left > right) {
-			// swap
 			(*array)[i] = right;
 			(*array)[i + 1] = left;
 			return true;
@@ -34,7 +33,6 @@ static bool bubble_sort32_iter(int32_t (*array)[], uint32_t len) {
 __attribute__((noinline))
 static void bubble_sort32(int32_t (*array)[], uint32_t len) {
 	while (bubble_sort32_iter(array, len)) {
-		// continue iterations while is's necessary
 	}
 }
 
@@ -46,8 +44,6 @@ int32_t main(void) {
 	printf("array before:\n");
 	print_array(&testArray, (uint32_t)LENGTHOF(testArray));
 	printf("\n");
-
-	// do sort
 	bubble_sort32(&testArray, (uint32_t)LENGTHOF(testArray));
 
 	printf("array after:\n");

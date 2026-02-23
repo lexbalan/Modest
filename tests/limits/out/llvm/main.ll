@@ -303,10 +303,8 @@ declare void @perror(%ConstCharStr* %str)
 ;const float64NegInf    = Float64 -1.0 / 0.0
 define internal %Bool @testNat8Static() {
 	%1 = alloca %Nat8, align 1
-	store %Nat8 255, %Nat8* %1	; ok
-	store %Nat8 0, %Nat8* %1	; ok
-	;nat8 = nat8MaxValue + 1  // error: unsigned integer overflow
-	;nat8 = nat8MinValue - 1  // error: unsigned integer overflow
+	store %Nat8 255, %Nat8* %1
+	store %Nat8 0, %Nat8* %1
 	%2 = alloca %Nat8, align 1
 	store %Nat8 255, %Nat8* %2
 	%3 = alloca %Nat8, align 1
@@ -349,10 +347,8 @@ endif_2:
 
 define internal %Bool @testNat16Static() {
 	%1 = alloca %Nat16, align 2
-	store %Nat16 65535, %Nat16* %1	; ok
-	store %Nat16 0, %Nat16* %1	; ok
-	;nat16 = nat16MaxValue + 1  // error: unsigned integer overflow
-	;nat16 = nat16MinValue - 1  // error: unsigned integer overflow
+	store %Nat16 65535, %Nat16* %1
+	store %Nat16 0, %Nat16* %1
 	%2 = alloca %Nat16, align 2
 	store %Nat16 0, %Nat16* %2
 	%3 = alloca %Nat16, align 2
@@ -395,10 +391,8 @@ endif_2:
 
 define internal %Bool @testNat32Static() {
 	%1 = alloca %Nat32, align 4
-	store %Nat32 4294967295, %Nat32* %1	; ok
-	store %Nat32 0, %Nat32* %1	; ok
-	;nat32 = nat32MaxValue + 1  // error: unsigned integer overflow
-	;nat32 = nat32MinValue - 1  // error: unsigned integer overflow
+	store %Nat32 4294967295, %Nat32* %1
+	store %Nat32 0, %Nat32* %1
 	%2 = alloca %Nat32, align 4
 	store %Nat32 4294967295, %Nat32* %2
 	%3 = alloca %Nat32, align 4
@@ -441,10 +435,8 @@ endif_2:
 
 define internal %Bool @testNat64Static() {
 	%1 = alloca %Nat64, align 8
-	store %Nat64 18446744073709551615, %Nat64* %1	; ok
-	store %Nat64 0, %Nat64* %1	; ok
-	;nat64 = nat64MaxValue + 1  // error: unsigned integer overflow
-	;nat64 = nat64MinValue - 1  // error: unsigned integer overflow
+	store %Nat64 18446744073709551615, %Nat64* %1
+	store %Nat64 0, %Nat64* %1
 	%2 = alloca %Nat64, align 8
 	store %Nat64 18446744073709551615, %Nat64* %2
 	%3 = alloca %Nat64, align 8
@@ -487,11 +479,9 @@ endif_2:
 
 define internal %Bool @testInt8Static() {
 	%1 = alloca %Int8, align 1
-	store %Int8 127, %Int8* %1	; ok
+	store %Int8 127, %Int8* %1
 	%2 = sub i8 0, 128
-	store %Int8 %2, %Int8* %1	; ok
-	;int8 = int8MaxValue + 1  // error: integer overflow
-	;int8 = int8MinValue - 1  // error: integer overflow
+	store %Int8 %2, %Int8* %1
 	%3 = alloca %Int8, align 1
 	%4 = sub i8 0, 128
 	store %Int8 %4, %Int8* %3
@@ -553,11 +543,9 @@ endif_4:
 
 define internal %Bool @testInt16Static() {
 	%1 = alloca %Int16, align 2
-	store %Int16 32767, %Int16* %1	; ok
+	store %Int16 32767, %Int16* %1
 	%2 = sub i16 0, 32768
-	store %Int16 %2, %Int16* %1	; ok
-	;int16 = int16MaxValue + 1  // error: integer overflow
-	;int16 = int16MinValue - 1  // error: integer overflow
+	store %Int16 %2, %Int16* %1
 	%3 = alloca %Int16, align 2
 	%4 = sub i16 0, 32768
 	store %Int16 %4, %Int16* %3
@@ -619,11 +607,9 @@ endif_4:
 
 define internal %Bool @testInt32Static() {
 	%1 = alloca %Int32, align 4
-	store %Int32 2147483647, %Int32* %1	; ok
+	store %Int32 2147483647, %Int32* %1
 	%2 = sub i32 0, 2147483648
-	store %Int32 %2, %Int32* %1	; ok
-	;int32 = int32MaxValue + 1  // error: integer overflow
-	;int32 = int32MinValue - 1  // error: integer overflow
+	store %Int32 %2, %Int32* %1
 	%3 = alloca %Int32, align 4
 	%4 = sub i32 0, 2147483648
 	store %Int32 %4, %Int32* %3
@@ -690,11 +676,9 @@ define internal %Bool @testInt64Static() {
 	%3 = alloca %Int64, align 8
 	store %Int64 9223372036854775807, %Int64* %3
 	%4 = alloca %Int64, align 8
-	store %Int64 9223372036854775807, %Int64* %4	; ok
+	store %Int64 9223372036854775807, %Int64* %4
 	%5 = sub i64 0, 9223372036854775808
-	store %Int64 %5, %Int64* %4	; ok
-	;int64 = int64MaxValue + 1  // error: integer overflow
-	;int64 = int64MinValue - 1  // error: integer overflow
+	store %Int64 %5, %Int64* %4
 ; if_0
 	%6 = load %Int64, %Int64* %1
 	%7 = icmp sge %Int64 %6, 0
@@ -843,8 +827,6 @@ define %Int32 @main() {
 	%2 = alloca %Bool, align 1
 	%3 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %3
-
-	; test built-in generic types
 	%4 = call %Bool @testInteger()
 	store %Bool %4, %Bool* %2
 	%5 = load %Bool, %Bool* %3
@@ -857,8 +839,6 @@ define %Int32 @main() {
 	%10 = load %Bool, %Bool* %2
 	%11 = and %Bool %9, %10
 	store %Bool %11, %Bool* %3
-
-	; test built-in unsigned integer types
 	%12 = call %Bool @testNat8Static()
 	store %Bool %12, %Bool* %2
 	%13 = load %Bool, %Bool* %3
@@ -883,8 +863,6 @@ define %Int32 @main() {
 	%26 = load %Bool, %Bool* %2
 	%27 = and %Bool %25, %26
 	store %Bool %27, %Bool* %3
-
-	; test built-in signed integer types
 	%28 = call %Bool @testInt8Static()
 	store %Bool %28, %Bool* %2
 	%29 = load %Bool, %Bool* %3
@@ -909,8 +887,6 @@ define %Int32 @main() {
 	%42 = load %Bool, %Bool* %2
 	%43 = and %Bool %41, %42
 	store %Bool %43, %Bool* %3
-
-	;
 	%44 = call %Bool @testFloat32Static()
 	store %Bool %44, %Bool* %2
 	%45 = load %Bool, %Bool* %3

@@ -1,6 +1,8 @@
 
 
+
 var g: Int32 = 0
+
 
 func testSimple () -> Unit {
 	var x: Int32 = 0
@@ -8,6 +10,7 @@ func testSimple () -> Unit {
 	x = 2 + 3
 	x = x + 1
 }
+
 
 func testExpandedCompound () -> Unit {
 	var x: Int32 = 10
@@ -18,6 +21,7 @@ func testExpandedCompound () -> Unit {
 	x = x % 3
 }
 
+
 func testIncDec () -> Unit {
 	var x: Int32 = 0
 	x = x + 1
@@ -25,17 +29,26 @@ func testIncDec () -> Unit {
 	x = x - 1
 }
 
+
 func testPointerAssign () -> Unit {
 	var x: Int32 = 0
 	var p: *Int32 = &x
 	*p = 42
 }
 
+
 func testRecordAssign () -> Unit {
-	var p = {x = 0, y = 0}
+	var p: {
+		x: Int32
+		y: Int32
+	} = {
+		x: Int32
+		y: Int32
+	} {x = 0, y = 0}
 	p.x = 10
 	p.y = 20
 }
+
 
 func testArrayAssign () -> Unit {
 	var arr: [3]Int32
@@ -44,9 +57,11 @@ func testArrayAssign () -> Unit {
 	arr[2] = 3
 }
 
+
 func testGlobalAssign () -> Unit {
 	g = 42
 }
+
 
 public func main () -> Int32 {
 	testSimple()

@@ -21,17 +21,9 @@ static void printRow(char *(*raw_row)[], uint32_t (*sz)[], uint32_t nCols);
 void table_print(table_Table *table) {
 	uint32_t i;
 	uint32_t j;
-
-	// construct pointer to closed VLA array
 	char *(*const data)[table->nRows][table->nCols] = (char *(*)[table->nRows][table->nCols])table->data;
-
-	// array of size of columns (in characters)
 	uint32_t sz[table->nCols];
 	memset(&sz, 0, sizeof(uint32_t [table->nCols]));
-
-	//
-	// calculate max length (in chars) of column
-	//
 
 	if (table->header != NULL) {
 		i = 0;
@@ -59,17 +51,9 @@ void table_print(table_Table *table) {
 
 	i = 0;
 	while (i < table->nCols) {
-		// добавляем по пробелу слева и справа
-		// (для красивого отступа)
 		sz[i] = sz[i] + 2;
 		i = i + 1;
 	}
-
-	//
-	// print table
-	//
-
-	// top border
 	separator(&sz, table->nCols);
 
 	if (table->header != NULL) {
@@ -87,8 +71,6 @@ void table_print(table_Table *table) {
 
 		i = i + 1;
 	}
-
-	// bottom border
 	separator(&sz, table->nCols);
 }
 

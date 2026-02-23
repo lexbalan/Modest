@@ -5,13 +5,13 @@ import type as type
 from util import nbits_for_num, int_zext
 
 
+
 def value_word_create(num, ti=None):
 	required_width = nbits_for_num(num)
 	t = type_word_create(required_width, ti=ti)
 	t.generic = True
 	v = ValueLiteral(t, asset=num, ti=ti)
 	return v
-
 
 
 def word_can(to, from_type, method, ti):
@@ -42,7 +42,6 @@ def word_can(to, from_type, method, ti):
 	return False
 
 
-
 def value_word_cons(t, v, method, ti):
 	nv = ValueCons(t, v, method, ti=ti)
 	if v.isValueImmediate():
@@ -59,4 +58,5 @@ def value_word_cons(t, v, method, ti):
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	nv.rawMode = v.type.is_float()
 	return nv
+
 

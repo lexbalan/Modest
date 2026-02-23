@@ -47,14 +47,10 @@ public func main () -> Int {
 
 	printf("before encrypt test_msg: \n")
 	print_bytes(tmsg, msg_length)
-
-	// encrypt test data
 	xor_encrypter(tmsg, msg_length, tkey, key_length)
 
 	printf("after encrypt test_msg: \n")
 	print_bytes(tmsg, msg_length)
-
-	// decrypt test data
 	xor_encrypter(tmsg, msg_length, tkey, key_length)
 
 	printf("after decrypt test_msg: \n")

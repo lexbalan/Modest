@@ -13,7 +13,7 @@ from .fixed import fixed_can, value_fixed_cons
 from .record import record_can, value_record_cons
 from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons
-from .bad import bad_can, ValueBad_cons
+from .bad import bad_can, value_bad_cons
 
 from util import align_bits_up
 import type as htype
@@ -237,7 +237,6 @@ def _select_default_type_for(t):
 
 
 
-
 # данная локальная функция пытается привести v к t
 # возвращает None если не может привести (!)
 # не принтует ошибку (но может выдать info)
@@ -273,7 +272,7 @@ def value_cons(t, v, method, ti):
 	elif t.is_pointer(): constructor = value_pointer_cons
 	elif t.is_fixed(): constructor = value_fixed_cons
 	elif t.is_float(): constructor = value_float_cons
-	elif t.is_bad(): constructor = ValueBad_cons
+	elif t.is_bad(): constructor = value_bad_cons
 	else:
 		assert False, "unknown type kind '%s'" % t['kind']
 

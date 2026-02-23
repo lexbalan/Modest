@@ -12,19 +12,19 @@ public func main () -> Int {
 	let n = Nat32 123
 	let x = Nat32 0x1234567F
 
-	console.print("\\\n"); // "\\" = "\"
-	console.print("@\n"); // "\64" = "@"
-	console.print("#AA#\n"); // "\x23AA\x23" = "#AA#"
-	console.print("🎉A\n"); // "\u0001F389A" = "🎉A"
+	console.print("\\\n")
+	console.print("@\n")
+	console.print("#AA#\n")
+	console.print("🎉A\n")
 
 	console.print("Это строка записанная кириллицей.\n")
 
-	console.print("{{c}}\n"); // {{c}}
-	console.print("c = \"{c}\"\n", c); // c = "🐀"
-	console.print("s = \"{s}\"\n", s); // s = "Hi!"
-	console.print("i = {i}\n", i); // i = -1
-	console.print("n = {n}\n", n); // n = 123
-	console.print("x = 0x{x}\n", x); // x = 0x1234567F
+	console.print("{{c}}\n")
+	console.print("c = \"{c}\"\n", c)
+	console.print("s = \"{s}\"\n", s)
+	console.print("i = {i}\n", i)
+	console.print("n = {n}\n", n)
+	console.print("x = 0x{x}\n", x)
 
 	return 0
 }

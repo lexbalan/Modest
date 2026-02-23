@@ -370,8 +370,6 @@ define internal %Float @lineLength(%Line %line) {
 define internal void @ptr_example() {
 	%1 = call i8* @malloc(%Size 16)
 	%2 = bitcast i8* %1 to %Point*
-
-	; access by pointer
 	%3 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
 	store %Float 10.0000000000000000, %Float* %3
 	%4 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1
@@ -385,7 +383,6 @@ define internal void @ptr_example() {
 }
 
 define %Int @main() {
-	; by value
 	%1 = load %Line, %Line* @line
 	%2 = call %Float @lineLength(%Line %1)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %2)

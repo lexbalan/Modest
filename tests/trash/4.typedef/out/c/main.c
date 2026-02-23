@@ -16,10 +16,6 @@ int main(void) {
 	newInt32 = 0;
 	(void)newInt32;
 
-	//type NewInt16 Int16
-	//var newInt16: NewInt16
-	//newInt16 = NewInt16 0
-
 	return 0;
 }
 

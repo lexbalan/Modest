@@ -237,7 +237,6 @@ define %Int @main() {
 	%13 = call %Word64 @high_128(%Word128 340282366920938463463374607431768211455)
 	%14 = call %Word64 @low_128(%Word128 340282366920938463463374607431768211455)
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*), %Word64 %13, %Word64 %14)
-	;printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2))
 	%16 = load %Word128, %Word128* %1
 	%17 = call %Word64 @high_128(%Word128 %16)
 	%18 = load %Word128, %Word128* %1
@@ -250,9 +249,6 @@ define %Int @main() {
 	%25 = bitcast %Nat128 %24 to %Word128
 	%26 = call %Word64 @low_128(%Word128 %25)
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str4 to [0 x i8]*), %Word64 %23, %Word64 %26)
-
-
-	; signed big int test
 	%28 = sub i8 0, 1
 	%29 = alloca %Int128, align 16
 	store %Int128 -1, %Int128* %29

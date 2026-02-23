@@ -166,8 +166,6 @@ func update (ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
 func final (ctx: *Context, outHash: *Hash) -> Unit {
 	var i: Nat32 = ctx.datalen
 
-	// Pad whatever data is left in the buffer.
-
 	var n = Nat32 64
 	if ctx.datalen < 56 {
 		n = 56
@@ -178,15 +176,11 @@ func final (ctx: *Context, outHash: *Hash) -> Unit {
 	i = i + 1
 
 	memset(&ctx.data[i], 0, SizeT (n - i))
-	//ctx.data[i:n-i] = []
 
 	if ctx.datalen >= 56 {
 		transform(ctx, &ctx.data)
 		memset(&ctx.data, 0, 56)
-		//ctx.data[0:56] = []
 	}
-
-	// Append to the padding the total message's length in bits and transform.
 	ctx.bitlen = ctx.bitlen + Nat64 ctx.datalen * 8
 
 	ctx.data[63] = unsafe Word8 (unsafe Word64 ctx.bitlen >> 00)
@@ -199,10 +193,6 @@ func final (ctx: *Context, outHash: *Hash) -> Unit {
 	ctx.data[56] = unsafe Word8 (unsafe Word64 ctx.bitlen >> 56)
 
 	transform(ctx, &ctx.data)
-
-	// Since this implementation uses little endian byte ordering
-	// and SHA uses big endian, reverse all the bytes
-	// when copying the final state to the output hash.
 
 	i = 0
 	while i < 4 {

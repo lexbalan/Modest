@@ -28,7 +28,6 @@ static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 	} else if (state.stage == (fsm_StageId)1) {
 		return fsm_cmdNextStageLimited(&fsm0, 2000);
 	} else if (state.stage == (fsm_StageId)2) {
-		// just stay
 	} else if (state.stage == (fsm_StageId)3) {
 		return fsm_cmdSwitchState(&fsm0, &state1);
 	}
@@ -43,7 +42,6 @@ static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
 	} else if (state.stage == (fsm_StageId)1) {
 		return fsm_cmdNextStageLimited(&fsm0, 2000);
 	} else if (state.stage == (fsm_StageId)2) {
-		// just stay
 	} else if (state.stage == (fsm_StageId)3) {
 		return fsm_cmdSwitchState(&fsm0, &state2);
 	}
@@ -58,7 +56,6 @@ static fsm_ComplexState routine2(fsm_ComplexState state, void *payload) {
 	} else if (state.stage == (fsm_StageId)1) {
 		return fsm_cmdNextStageLimited(&fsm0, 2000);
 	} else if (state.stage == (fsm_StageId)2) {
-		// just stay
 	} else if (state.stage == (fsm_StageId)3) {
 		return fsm_cmdSwitchState(&fsm0, &state0);
 	}

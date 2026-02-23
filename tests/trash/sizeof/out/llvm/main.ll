@@ -325,19 +325,6 @@ define %Int @main() {
 	%18 = ptrtoint %Bool* @g to %Nat64
 	%19 = sub %Nat64 %18, %2
 	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Nat64 %19)
-
-	; дженерики в с явно не приводятся, но нектороые нужно!
-	;	printf("offsetof(x.c) = %llu\n", Nat64 offsetof(X.c))
-	;	printf("offsetof(x.i) = %llu\n", Nat64 offsetof(X.i))
-	;	printf("offsetof(x.f) = %llu\n", Nat64 offsetof(X.f))
-	;	printf("offsetof(x.i2) = %llu\n", Nat64 offsetof(X.i2))
-	;	printf("offsetof(x.p) = %llu\n", Nat64 offsetof(X.p))
-	;	printf("offsetof(x.g) = %llu\n", Nat64 offsetof(X.g))
-
-
-	; sizeof(void) in C  == 1
-	; sizeof(Unit) in CM == 0
-	; TODO: here is a broblem
 	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str8 to [0 x i8]*), %Size 1)
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str9 to [0 x i8]*), %Size 1)
 	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str10 to [0 x i8]*), %Size 1)
@@ -352,8 +339,6 @@ define %Int @main() {
 	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str19 to [0 x i8]*), %Size 8)
 	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str20 to [0 x i8]*), %Size 16)
 	%34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str21 to [0 x i8]*), %Size 16)
-	; type Nat256 not implemented
-	;printf("sizeof(Nat256) = %zu\n", sizeof(Nat256))
 	%35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str22 to [0 x i8]*), %Size 1)
 	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str23 to [0 x i8]*), %Size 1)
 	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str24 to [0 x i8]*), %Size 2)
@@ -364,55 +349,27 @@ define %Int @main() {
 	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str29 to [0 x i8]*), %Size 8)
 	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str30 to [0 x i8]*), %Size 16)
 	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str31 to [0 x i8]*), %Size 16)
-	; type Int256 not implemented
-	;printf("sizeof(Int256) = %zu\n", sizeof(Int256))
 	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str32 to [0 x i8]*), %Size 1)
 	%46 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str33 to [0 x i8]*), %Size 1)
 	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str34 to [0 x i8]*), %Size 2)
 	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str35 to [0 x i8]*), %Size 2)
 	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str36 to [0 x i8]*), %Size 4)
 	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str37 to [0 x i8]*), %Size 4)
-
-	; pointer size (for example pointer to []Char8)
 	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str38 to [0 x i8]*), %Size 8)
 	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str39 to [0 x i8]*), %Size 8)
-
-	; array size
 	%53 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str40 to [0 x i8]*), %Size 40)
 	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str41 to [0 x i8]*), %Size 1)
 	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str42 to [0 x i8]*), %Size 1)
-
-
-	; record size
 	%56 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str43 to [0 x i8]*), %Size 8)
 	%57 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str44 to [0 x i8]*), %Size 4)
-
-	;	printf("offsetof(Point.x) = %llu\n", Nat64 offsetof(Point.x))
-	;	printf("offsetof(Point.y) = %llu\n", Nat64 offsetof(Point.y))
 	%58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str45 to [0 x i8]*), %Size 16)
 	%59 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str46 to [0 x i8]*), %Size 8)
 	%60 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str47 to [0 x i8]*), %Size 64)
 	%61 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str48 to [0 x i8]*), %Size 8)
-
-
-	;	printf("offsetof(Mixed2.i) = %llu\n", Nat64 offsetof(Mixed2.i))
-	;	printf("offsetof(Mixed2.c) = %llu\n", Nat64 offsetof(Mixed2.c))
-	;	printf("offsetof(Mixed2.f) = %llu\n", Nat64 offsetof(Mixed2.f))
-	;	printf("offsetof(Mixed2.c2) = %llu\n", Nat64 offsetof(Mixed2.c2))
-	;	printf("offsetof(Mixed2.m) = %llu\n", Nat64 offsetof(Mixed2.m))
 	%62 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str49 to [0 x i8]*), %Size 32)
 	%63 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str50 to [0 x i8]*), %Size 8)
 	%64 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str51 to [0 x i8]*), %Size 256)
 	%65 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str52 to [0 x i8]*), %Size 8)
-
-	;	printf("offsetof(Mixed4.s) = %llu\n", Nat64 offsetof(Mixed4.s))
-	;	printf("offsetof(Mixed4.c) = %llu\n", Nat64 offsetof(Mixed4.c))
-	;	printf("offsetof(Mixed4.i) = %llu\n", Nat64 offsetof(Mixed4.i))
-	;	printf("offsetof(Mixed4.f) = %llu\n", Nat64 offsetof(Mixed4.f))
-	;	printf("offsetof(Mixed4.c2) = %llu\n", Nat64 offsetof(Mixed4.c2))
-	;	printf("offsetof(Mixed4.i2) = %llu\n", Nat64 offsetof(Mixed4.i2))
-	;	printf("offsetof(Mixed4.p) = %llu\n", Nat64 offsetof(Mixed4.p))
-	;	printf("offsetof(Mixed4.s2) = %llu\n", Nat64 offsetof(Mixed4.s2))
 	ret %Int 0
 }
 

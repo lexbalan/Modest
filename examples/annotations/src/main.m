@@ -96,6 +96,9 @@ func hello () -> Unit {
 
 
 public func main () -> Int32 {
+	@static
+	var staticCounter: Nat32 = 0
+
 	hello()
 	printf("Attributes example\n")
 	Unit staticInlineFunc(0)
