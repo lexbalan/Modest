@@ -9,9 +9,13 @@
 #ifndef __FIXED_POINT__
 typedef int32_t __fixed32;
 typedef int64_t __fixed64;
+static inline __fixed64 __fixed64_create(int64_t i, uint64_t m, uint64_t n, uint8_t fraction) {
+	return (i << fraction) | (m * (1 << fraction) / n);
+}
 static inline __fixed32 __fixed32_from_int32(int32_t a, uint8_t fraction) {
 	return a * (1 << fraction);
 }
+__attribute__((used))
 static inline __fixed32 __fixed32_from_float64(double a, uint8_t fraction) {
 	return (__fixed32)(a * (1 << fraction));
 }
@@ -31,8 +35,6 @@ static inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction
 
 
 
-
-
 // fx = i + m/n
 static int32_t packFixed32(uint32_t i, uint32_t m, uint32_t n, uint8_t fraction) {
 	const uint64_t tail = (uint64_t)m * ((uint64_t)(0x1 << fraction) - 1) / (uint64_t)n;
@@ -47,6 +49,7 @@ static uint32_t headFixed32(uint32_t f, uint8_t fraction) {
 }
 
 
+
 // just returns tail as is
 static uint32_t tailFixed32(uint32_t f, uint8_t fraction) {
 	const uint32_t mask = ((0x1 << fraction) - 1);
@@ -56,7 +59,7 @@ static uint32_t tailFixed32(uint32_t f, uint8_t fraction) {
 
 
 // precision = 10 ... 1000000 - number of zeroes = number of digits in output value
-static uint32_t printFixed32(uint32_t f, uint8_t fraction, uint32_t precision) {
+static void printFixed32(uint32_t f, uint8_t fraction, uint32_t precision) {
 	const uint32_t h = headFixed32(f, fraction);
 	const uint32_t t = tailFixed32(f, fraction);
 	const uint32_t tail = (uint32_t)((uint64_t)t * (uint64_t)precision / (uint64_t)(0x1 << fraction));
@@ -68,7 +71,8 @@ static bool testFixed32Static(void) {
 	static uint32_t st;
 
 	int32_t f;
-	f = __fixed32_from_float64(3.1415926535897932384626433832795028841971693993751058209749445923, 18);
+
+	f = __fixed64_create(3, 141592, 1000000, 18);
 
 	const int32_t a = f + __fixed32_from_int32(1, 18);
 	const int32_t b = f - __fixed32_from_int32(1, 18);

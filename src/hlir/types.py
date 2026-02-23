@@ -656,9 +656,7 @@ class Type(Entity):
 					nt.att.append(k)
 
 			if k == 'fraction':
-				fraction = int(a['args'][0]['value']['str'])
-				print(fraction)
-				nt.fraction = fraction
+				nt.fraction = int(a['args'][0]['value']['str'])
 
 			if k == 'zarray':
 				# zero terminated array

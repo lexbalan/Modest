@@ -18,6 +18,7 @@ func headFixed32 (f: Word32, fraction: Nat8) -> Nat32 {
 	return unsafe Nat32 (f >> fraction)
 }
 
+
 // just returns tail as is
 func tailFixed32 (f: Word32, fraction: Nat8) -> Nat32 {
 	let mask = Word32(Nat32(Word32 1 << fraction) - 1)
@@ -26,7 +27,7 @@ func tailFixed32 (f: Word32, fraction: Nat8) -> Nat32 {
 
 
 // precision = 10 ... 1000000 - number of zeroes = number of digits in output value
-func printFixed32 (f: Word32, fraction: Nat8, precision: Nat32) -> Nat32 {
+func printFixed32 (f: Word32, fraction: Nat8, precision: Nat32) -> Unit {
 	let h = headFixed32(f, fraction)
 	let t = tailFixed32(f, fraction)
 	let tail = unsafe Nat32 (Nat64 t * Nat64 precision / Nat64(Word32 1 << fraction))

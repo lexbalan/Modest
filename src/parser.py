@@ -506,8 +506,6 @@ class Parser:
 
 
 	def expr_value(self):
-
-		#anno = self.parse_annotations()
 		ca = self.parse_comments_annotations()
 		#comments.extend(ca[0])
 		anno = ca[1]

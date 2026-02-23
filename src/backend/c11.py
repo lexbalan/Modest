@@ -969,13 +969,23 @@ def str_value_cons(x, ctx):
 	if from_type.is_fixed():
 		if type.is_integer() or type.is_int():
 			return "__fixed32_to_int32(%s, %d)" % (str_value(value, ctx), from_type.fraction)
+
 		if type.is_rational() or type.is_float():
 			return "__fixed32_to_float64(%s, %d)" % (str_value(value, ctx), from_type.fraction)
 
 	if type.is_fixed():
 		if from_type.is_integer() or from_type.is_int():
 			return "__fixed32_from_int32(%s, %d)" % (str_value(value, ctx), type.fraction)
-		if from_type.is_rational() or from_type.is_float():
+
+		if from_type.is_rational():
+			numerator = value.asset.numerator
+			denominator = value.asset.denominator
+			i = numerator // denominator
+			n = 1000000
+			m = ((numerator / denominator) - i) * n
+			return "__fixed64_create(%d, %d, %d, %d)" % (i, m, n, type.fraction)
+
+		if from_type.is_float():
 			return "__fixed32_from_float64(%s, %d)" % (str_value(value, ctx), type.fraction)
 
 
@@ -1327,9 +1337,10 @@ def str_value_literal(x, ctx):
 	return str_value_with_type(x, x.type, ctx=ctx)
 
 
-def str_value_fixed(t, v, ctx):
-	return str_value_literal_number(t, v.asset, as_hex=True)
-	return "FIXED"
+#def str_value_fixed(t, v, ctx):
+	#return "FIXED"
+	#return "__fixed64_create(%s, %s, %s, %d)"
+	#return str_value_literal_number(t, v.asset, as_hex=True)
 
 
 def str_value_with_type(v, t, ctx=[]):
@@ -1345,7 +1356,7 @@ def str_value_with_type(v, t, ctx=[]):
 	elif t.is_record(): return str_value_literal_record(v, ctx)
 	elif t.is_pointer(): return str_value_literal_pointer(t, asset, ctx)
 	elif t.is_float(): return str_value_literal_rational(t, v, ctx)
-	elif t.is_fixed(): return str_value_fixed(t, v, ctx)
+	#elif t.is_fixed(): return str_value_fixed(t, v, ctx)
 	elif t.is_rational(): return str_value_literal_rational(t, v, ctx)
 	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
 	1/0
@@ -1919,40 +1930,9 @@ def print_func_return_type(ftype):
 	return
 
 
-#def print_func_paramlist(ftype):
-#	params = ftype.params
-#	extra_args = ftype.extra_args
-#
-#	out("(")
-#
-#	if isSretFunc(ftype):
-#		print_variable("sret_", ftype.to)
-#		if len(params) > 0:
-#			out(", ")
-#
-#	i = 0
-#	for param in params:
-#		if i > 0: out(", ")
-#
-#		paramId = get_id_str(param)
-#		if param.type.is_closed_array():
-#			paramId = '_' + paramId
-#		tt = TypePointer(of=param.type)
-#		#mass
-#		print("WDAMLMWLKMLKDWMLKWMLMDLmdkl")
-#		print_variable(paramId, tt, ctx=ctx+['+as_array'])
-#		i = i + 1
-#
-#	if extra_args:
-#		out(", ...")
-#
-#	out(")")
-#	return
-
 
 def print_func_signature(id_str, ftype, ctx=[]):
 	out(str_field(ftype, id_str=id_str, ctx=ctx))
-
 
 
 
@@ -2464,6 +2444,10 @@ def helper_use_arrcpy():
 	module_undef_list.append("ARRCPY")
 
 
+#func packFixed32 (i: Nat32, m: Nat32, n: Nat32 fraction: Nat8) -> Fixed32 {
+#	let tail = Nat64 m * (Nat64(Word32 1 << fraction) - 1) / Nat64 n
+#	return unsafe Fixed32 ((Word32 i << fraction) or unsafe Word32 tail)
+#}
 
 def helper_use_fixed_point():
 	out("\n#ifndef __FIXED_POINT__")
@@ -2471,11 +2455,15 @@ def helper_use_fixed_point():
 	out("\ntypedef int32_t __fixed32;")
 	out("\ntypedef int64_t __fixed64;")
 
-	# (1 << 16) * 3.1415
+	out("\nstatic inline __fixed64 __fixed64_create(int64_t i, uint64_t m, uint64_t n, uint8_t fraction) {")
+	out("\n	return (i << fraction) | (m * (1 << fraction) / n);")
+	out("\n}")
+
 	out("\nstatic inline __fixed32 __fixed32_from_int32(int32_t a, uint8_t fraction) {")
 	out("\n	return a * (1 << fraction);")
 	out("\n}")
 
+	out("\n__attribute__((used))")
 	out("\nstatic inline __fixed32 __fixed32_from_float64(double a, uint8_t fraction) {")
 	out("\n	return (__fixed32)(a * (1 << fraction));")
 	out("\n}")
