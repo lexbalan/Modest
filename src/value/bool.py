@@ -1,7 +1,6 @@
 
 from hlir import *
 from error import info, warning, error
-import type
 
 
 def value_bool_create(val, ti=None):

@@ -1178,6 +1178,188 @@ class Type(Entity):
 
 
 
+	# получает на вход два типа GenericRecord
+	# и создает третий тип который является общим для двух входных
+	# (тк в случае записей ни один из двух может не подходить как общий)
+	@staticmethod
+	def select_common_record_type(a, b, ti):
+		#print("select_common_record_type")
+		if len(a.fields) != len(b.fields):
+			return None
+
+		fields = []
+		for fieldA, fieldB in zip(a.fields, b.fields):
+			if fieldA.id.str != fieldB.id.str:
+				return None
+
+			fieldId = fieldA.id
+			fieldType = Type.select_common_type(fieldA.type, fieldB.type, ti)
+			newField = Field(fieldId, fieldType, init_value=ValueUndef(fieldType), ti=fieldId.ti)
+			fields.append(newField)
+
+		newRecord = TypeRecord(fields, ti=a.ti)
+		newRecord.generic = True
+		return newRecord
+
+
+	# выбирает общий тип для двух входных
+	# CAN RETURN NONE!
+	@staticmethod
+	def select_common_type(a, b, ti):
+
+		if Type.eq(a, b):
+			return a
+
+		if a.is_generic() and b.is_generic():
+			if a.is_rational() and b.is_integer():
+				return a
+			if b.is_rational() and a.is_integer():
+				return b
+
+		if a.__class__.__name__ == b.__class__.__name__:
+			if a.is_generic() and b.is_generic():
+				if a.is_record():
+					return Type.select_common_record_type(a, b, ti)
+				elif a.is_array():
+					# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
+					if a.of.is_generic():
+						return b
+					if b.of.is_generic():
+						return a
+
+					# not implemented!
+					return a
+
+	#			elif a.is_rational():
+	#				if b.is_integer():
+	#					return a
+	#			elif b.is_rational():
+	#				if a.is_integer():
+	#					return b
+
+				else:
+					if a.width > b.width:
+						return a
+					else:
+						return b
+
+			elif a.is_generic() or b.is_generic():
+				if a.is_string():
+					if b.is_string():
+						if a.width > b.width:
+							return a
+						else:
+							return b
+
+				if a.is_rational():
+					if b.is_integer():
+						return a
+				if b.is_rational():
+					if a.is_integer():
+						return b
+
+				if a.is_generic():
+					return b
+
+				if b.is_generic():
+					return a
+
+			else:
+				return None
+
+
+		if a.__class__.__name__ != b.__class__.__name__:
+			# вид типа обычно должен совпадать
+			# но есть и исключения
+
+			# c == "A"
+			if a.is_char():
+				if b.is_string():
+					return a
+
+			# "A" == c
+			if b.is_char():
+				if a.is_string():
+					return b
+
+			if a.is_word():
+				if b.generic and (b.is_int() or b.is_nat()):
+					return a
+
+
+			if b.is_word():
+				if a.generic and (a.is_int() or a.is_nat()):
+					return b
+
+			# array && string | string && array
+			if a.is_array():
+				if b.is_string():
+					return a
+
+			if b.is_array():
+				if a.is_string():
+					return b
+
+
+			# array && string | string && array
+			if a.is_pointer():
+				if b.is_string():
+					return a
+
+			if b.is_pointer():
+				if a.is_string():
+					return b
+
+
+			if a.is_unit():
+				return b
+
+			if b.is_unit():
+				return a
+
+			if a.is_bad():
+				return b
+
+			if b.is_bad():
+				return a
+
+			if a.is_float():
+				if b.is_int() or b.is_nat():
+					return a
+
+			if b.is_float():
+				if a.is_int() or a.is_nat():
+					return b
+
+			if a.is_fixed():
+				if b.is_int() or b.is_nat():
+					return a
+
+			if b.is_fixed():
+				if a.is_int() or a.is_nat():
+					return b
+
+			if a.is_integer() or a.is_rational():
+				if b.is_int() or b.is_nat() or b.is_word() or b.is_float() or b.is_fixed():
+					return b
+
+			if a.is_int() or a.is_nat() or a.is_word() or a.is_float() or a.is_fixed():
+				if b.is_integer() or b.is_rational():
+					return a
+
+		print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))
+		return None
+
+	@staticmethod
+	def print(t, print_aka=True):
+		assert isinstance(t, Type)
+		from backend.modest import str_type
+		print(str_type(t), end='')
+		return
+
+
+
+
 class TypeBad(Type):
 	def __init__(self, ti=None):
 		super().__init__(ti=ti)
@@ -1317,6 +1499,13 @@ class TypeRecord(Type):
 		# это структура с открытыми полями -> она идет через typedef в C backend
 		self.is_open_record = False
 		self.is_open_access = False
+
+
+	# ищем поле с таким id в типе record
+	def record_field_get(t, id):
+		return get_item_by_id(t.fields, id)
+
+
 
 
 
@@ -1658,8 +1847,7 @@ class Value(Entity):
 		#print("isa: " + str(x['isa']))
 		print("kind: " + str(x.__class__.__name__))
 		print("type: ", end="");
-		from type import type_print
-		type_print(x.type); print()
+		Type.print(x.type); print()
 		print("att: " + str(x.att))
 
 		print('stage = ' + str(x.stage))
@@ -2036,7 +2224,7 @@ class ValueLengthofValue(Value):
 			from trans import typeSysInt
 			type = typeSysInt
 		else:
-			from type import type_integer_for
+			from .utils import type_integer_for
 			length = 0
 			if value.type.is_array():
 				length = value.type.volume.asset
@@ -2060,7 +2248,7 @@ class ValueLengthofType(Value):
 			from trans import typeSysInt
 			type = typeSysInt
 		else:
-			from type import type_integer_for
+			from .utils import type_integer_for
 			length = 0
 			if t.is_array():
 				length = t.volume.asset
@@ -2088,14 +2276,13 @@ class ValueAlignof(Value):
 
 class ValueOffsetof(Value):
 	def __init__(self, record, field_id, ti=None):
-		from type import record_field_get
-		field = record_field_get(record, field_id.str)
+		field = TypeRecord.record_field_get(record, field_id.str)
 		if field == None:
 			error("undefined field '%s'" % field_id['str'], field_id.ti)
 			return ValueBad({'ti': ti})
 
 		offset = field.offset
-		from type import type_integer_for
+		from .utils import type_integer_for
 		type = type_integer_for(offset, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME

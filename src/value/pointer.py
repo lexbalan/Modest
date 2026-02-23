@@ -2,7 +2,6 @@
 from hlir import *
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_char_values
-import type
 
 
 def array_can2(a, b):

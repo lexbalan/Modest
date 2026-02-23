@@ -1,14 +1,14 @@
 
 from hlir import *
 from error import info, error
-import type as htype
 from util import nbits_for_num
+from hlir.utils import type_integer_for
 from fractions import Fraction
 
 
 
 def value_integer_create(num, ti=None):
-	t = htype.type_integer_for(Fraction(num), ti=ti)
+	t = type_integer_for(Fraction(num), ti=ti)
 	v = ValueLiteral(t, asset=num, ti=ti)
 	return v
 

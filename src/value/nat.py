@@ -1,7 +1,6 @@
 
 from hlir import *
 from error import info, warning, error
-from type import type_print
 from util import nbits_for_num
 
 
@@ -27,9 +26,9 @@ def _check_width(from_type, t, method, ti):
 
 	if not rv:
 		print("attempt to construct ", end='')
-		type_print(t)
+		Type.print(t)
 		print(" from ", end='')
-		type_print(from_type)
+		Type.print(from_type)
 		print()
 
 	return rv

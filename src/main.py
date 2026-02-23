@@ -3,7 +3,7 @@ import os
 import argparse
 import importlib
 import tomllib
-import type
+import hlir.types as types
 
 import error
 import trans
@@ -56,7 +56,7 @@ def main():
 	if settings['lib'] == None:
 		error.fatal("required path to library")
 
-	type.init(settings['pointer_width'])
+	types.init(settings['pointer_width'])
 
 	# parse features (ex. -funsafe)
 	if args.feature != None:

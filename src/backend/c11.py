@@ -6,7 +6,6 @@ import copy
 from hlir import *
 from .common import *
 from error import info, warning, error, fatal
-from type import select_common_type, type_print
 from unicode import chars_to_utf32
 from util import str_fractional
 
@@ -2805,7 +2804,7 @@ def eq_by_memcmp(left, right, op=HLIR_VALUE_OP_EQ):
 	sstr += ', '
 	sstr += str_value_as_ptr(right)
 	sstr += ", sizeof("
-	common_type = select_common_type(left.type, right.type, ti=None)
+	common_type = Type.select_common_type(left.type, right.type, ti=None)
 	sstr += str_type(common_type)
 	sstr += ")"
 	if op == HLIR_VALUE_OP_EQ:

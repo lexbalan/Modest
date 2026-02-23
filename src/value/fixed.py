@@ -2,7 +2,6 @@
 from hlir import *
 from common import settings
 from error import info, warning, error
-import type as type
 
 
 

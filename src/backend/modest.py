@@ -1,6 +1,5 @@
 
 from hlir import *
-import type as htype
 from error import info
 from .common import *
 from util import str_fractional

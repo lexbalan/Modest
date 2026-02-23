@@ -1,8 +1,7 @@
 
 from hlir import *
 from error import info, warning, error
-import type as type
-from type import type_print, record_field_get
+
 
 
 # получает на вход список инициализаторов
@@ -56,7 +55,7 @@ def record_can(to, from_type, method, ti):
 	# check if all fields present in t
 	# and their types are correct
 	for field_src in from_type.fields:
-		field_dst = record_field_get(to, field_src.id.str)
+		field_dst = TypeRecord.record_field_get(to, field_src.id.str)
 		if field_dst == None:
 			return False  # No field with that name
 

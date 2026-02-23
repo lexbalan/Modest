@@ -1,7 +1,5 @@
 
 from hlir import *
-import type as htype
-from type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_char_values
 
@@ -17,7 +15,7 @@ def value_array_create(items, ti):
 		# Получаем наиболее подходящий общий тип элементов массива
 		item_type = items[0].type
 		for item in items:
-			item_type = select_common_type(item_type, item.type, item.ti)
+			item_type = Type.select_common_type(item_type, item.type, item.ti)
 			if item_type == None or item_type.is_bad():
 				error("value with unsuitable type", item.ti)
 				return ValueBad({'ti': ti})
@@ -58,7 +56,7 @@ def array_can(to, from_type, method, ti):
 	# проверяем может ли тип элемента из v
 	# быть приведен к типу элемента t
 	# (это обязательное требование к типу v)
-	ct = select_common_type(to.of, from_type.of, ti)
+	ct = Type.select_common_type(to.of, from_type.of, ti)
 
 	if ct == None:
 		return False
@@ -165,7 +163,7 @@ def value_array_concat(l, r, ti):
 	length = len(items)
 	from .integer import value_integer_create
 	str_array_volume = value_integer_create(length)
-	item_type = select_common_type(l.type.of, r.type.of, ti)
+	item_type = Type.select_common_type(l.type.of, r.type.of, ti)
 
 	# неявно приводим все элементы к общему типу
 	items = implicit_cons_list(items, item_type)

@@ -4,8 +4,6 @@ import copy
 from hlir import *
 from .common import *
 from error import info, warning, error, fatal
-import type as htype
-from type import type_print
 from util import align_bits_up
 from pprint import pprint
 from util import str_fractional
@@ -1683,7 +1681,7 @@ def do_eval_record(v):
 		# тк она порождается из zeroinitializer и по умолчанию заполнена нулями
 		if not (initializer.value.isValueZero() or initializer.value.is_value_undefined()):
 			iv = do_reval(initializer.value)
-			field = htype.record_field_get(rec_type, get_id_str(initializer))
+			field = TypeRecord.record_field_get(rec_type, get_id_str(initializer))
 			xv = insertvalue(xv, iv, field.field_no)
 
 	return xv
@@ -1871,7 +1869,7 @@ def do_eval(x):
 		error("llvm do_eval cannot eval (%s) value" % 'k', x.ti)
 		print(x)
 		Value.print(x)
-		type_print(x.type)
+		Type.print(x.type)
 		1 / 0
 		return llvm_value_zero(x.type)
 

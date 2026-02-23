@@ -3,7 +3,7 @@ from hlir import *
 from error import info, warning, error
 from util import nbits_for_num
 from unicode import utf32_chars_to_utfx_cc
-import type
+
 
 
 def value_char_create(char_code, _type=None, ti=None):

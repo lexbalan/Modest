@@ -16,7 +16,6 @@ from .pointer import pointer_can, value_pointer_cons
 from .bad import bad_can, value_bad_cons
 
 from util import align_bits_up
-import type as htype
 
 
 # can be implicitly constructed value with type a from type b?
@@ -122,9 +121,9 @@ def value_cons_implicit_check(t, v):
 	if not Type.eq(t, nv.type):
 		error("type error", v.ti)
 		print("expected: ", end='')
-		htype.type_print(t)
+		Type.print(t)
 		print("\nreceived: ", end='')
-		htype.type_print(v.type)
+		Type.print(v.type)
 		print("\n")
 	return nv
 
@@ -150,9 +149,9 @@ def value_cons_explicit(t, v, ti):
 
 	if not cons_can(t, from_type, 'explicit', ti):
 		error("cannot construct value", ti)
-		htype.type_print(t)
+		Type.print(t)
 		print(" from ", end='')
-		htype.type_print(from_type)
+		Type.print(from_type)
 		print()
 		return ValueBad(v.ti)
 
@@ -284,8 +283,8 @@ def value_cons(t, v, method, ti):
 		nv.nl = v.nl
 	else:
 		print(t)
-		htype.type_print(t)
-		htype.type_print(v.type)
+		Type.print(t)
+		Type.print(v.type)
 
 	return nv
 

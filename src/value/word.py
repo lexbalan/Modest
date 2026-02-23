@@ -1,7 +1,6 @@
 
 from hlir import *
 from error import info, warning, error
-import type as type
 from util import nbits_for_num, int_zext
 
 

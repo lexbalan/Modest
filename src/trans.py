@@ -8,7 +8,6 @@ from error import *
 from lexer import CmLexer
 from parser import Parser
 from common import settings
-import type as htype
 
 from value.bool import value_bool_create
 from value.integer import value_integer_create
@@ -600,7 +599,7 @@ def do_value_bin_op(op, l, r, ti):
 		return ValueBad(ti)
 
 	if l.is_value_undefined() or r.is_value_undefined():
-		t = htype.select_common_type(l.type, r.type, ti)
+		t = Type.select_common_type(l.type, r.type, ti)
 		return ValueUndef(l.type)
 
 	# Ops with different types
@@ -624,14 +623,14 @@ def do_value_bin_op(op, l, r, ti):
 	# Now and further types must be equal (!)
 	#
 
-	t = htype.select_common_type(l.type, r.type, ti)
+	t = Type.select_common_type(l.type, r.type, ti)
 	if t == None:
 		error("different types in operation", ti)
 		print("left type  = ", end='')
-		htype.type_print(l.type)
+		Type.print(l.type)
 		print()
 		print("right type = ", end='')
-		htype.type_print(r.type)
+		Type.print(r.type)
 		print()
 		return ValueBad(ti)
 
@@ -643,9 +642,9 @@ def do_value_bin_op(op, l, r, ti):
 		# print: @@ <left_type> & <right_type> @@
 		print(color_code(CYAN), end='')
 		print('@@ ', end='')
-		htype.type_print(l.type)
+		Type.print(l.type)
 		print(" & ", end='')
-		htype.type_print(r.type)
+		Type.print(r.type)
 		print(' @@', end='')
 		print(color_code(ENDC), end='')
 		print("\n")
@@ -655,7 +654,7 @@ def do_value_bin_op(op, l, r, ti):
 		if op == HLIR_VALUE_OP_OR: op = HLIR_VALUE_OP_LOGIC_OR
 		elif op == HLIR_VALUE_OP_AND: op = HLIR_VALUE_OP_LOGIC_AND
 
-	if op in htype.EQ_OPS or op in htype.RELATIONAL_OPS:
+	if op in EQ_OPS or op in RELATIONAL_OPS:
 		t = typeBool
 
 	if l.isValueBad() or r.isValueBad():
@@ -1338,7 +1337,7 @@ def do_value_access(x):
 		error("expected record or pointer to record", x['left']['ti'])
 		return ValueBad(x['ti'])
 
-	field = htype.record_field_get(record_type, field_id.str)
+	field = TypeRecord.record_field_get(record_type, field_id.str)
 
 	# if field not found
 	if field == None:
@@ -1596,8 +1595,8 @@ def do_value_bad(x):
 
 
 def do_value_undefined(x):
-	#t = htype.TypeBad(x['ti'])
-	t = htype.TypeUndefined(x['ti'])
+	#t = TypeBad(x['ti'])
+	t = TypeUndefined(x['ti'])
 	return ValueUndef(t, x['ti'])
 
 
