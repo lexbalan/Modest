@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-var testArray: []Int32 = [-3, -5, 2, 1, -1, 0, -2, 3, -4, 4, 11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9]
+var testArray: []Int32 = [-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9]
 
 
 // returns true if was swap
@@ -14,11 +14,11 @@ func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
 	var i: Nat32 = 0
 	while i < (len - 1) {
 		let left = array[i]
-		let right = array[i+1]
+		let right = array[i + 1]
 		if left > right {
 			// swap
 			array[i] = right
-			array[i+1] = left
+			array[i + 1] = left
 			wasSwap = true
 		}
 		++i

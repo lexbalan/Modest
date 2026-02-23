@@ -205,10 +205,11 @@ declare void @perror(%ConstCharStr* %str)
 @str5 = private constant [2 x i8] [i8 10, i8 0]
 @str6 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 ; -- endstrings --
-@testArray = internal global [21 x %Int32] [
+@testArray = internal global [23 x %Int32] [
 	%Int32 -3,
 	%Int32 -5,
 	%Int32 2,
+	%Int32 -11,
 	%Int32 1,
 	%Int32 -1,
 	%Int32 0,
@@ -217,6 +218,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 -4,
 	%Int32 4,
 	%Int32 11,
+	%Int32 -10,
 	%Int32 9,
 	%Int32 6,
 	%Int32 -7,
@@ -289,14 +291,14 @@ break_1:
 
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
-	%2 = bitcast [21 x %Int32]* @testArray to [0 x %Int32]*
-	call void @print_array([0 x %Int32]* %2, %Nat32 21)
+	%2 = bitcast [23 x %Int32]* @testArray to [0 x %Int32]*
+	call void @print_array([0 x %Int32]* %2, %Nat32 23)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-	%4 = bitcast [21 x %Int32]* @testArray to [0 x %Int32]*
-	call void @bubble_sort32([0 x %Int32]* %4, %Nat32 21)
+	%4 = bitcast [23 x %Int32]* @testArray to [0 x %Int32]*
+	call void @bubble_sort32([0 x %Int32]* %4, %Nat32 23)
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
-	%6 = bitcast [21 x %Int32]* @testArray to [0 x %Int32]*
-	call void @print_array([0 x %Int32]* %6, %Nat32 21)
+	%6 = bitcast [23 x %Int32]* @testArray to [0 x %Int32]*
+	call void @print_array([0 x %Int32]* %6, %Nat32 23)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
 	ret %Int32 0
 }
