@@ -122,7 +122,7 @@ break_2:
 %chacha20_Key = type [8 x %Word32];
 %chacha20_State = type [16 x %Word32];
 %chacha20_Block = type [16 x %Word32];
-define internal %Word32 @rotl32(%Word32 %x, %Nat32 %n) inlinehint {
+define internal %Word32 @rotl32(%Word32 %x, %Nat32 %n) {
 	%1 = bitcast %Nat32 %n to %Word32
 	%2 = shl %Word32 %x, %1
 	%3 = sub %Nat32 32, %n

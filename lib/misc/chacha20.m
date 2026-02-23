@@ -5,7 +5,7 @@ public type State = [16]Word32
 public type Block = [16]Word32
 
 
-@inlinehint
+
 func rotl32 (x: Word32, n: Nat32) -> Word32 {
 	return (x << n) or (x >> (32 - n))
 }

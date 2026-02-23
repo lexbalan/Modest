@@ -8,7 +8,7 @@
 
 
 
-static inline uint32_t rotl32(uint32_t x, uint32_t n) {
+static uint32_t rotl32(uint32_t x, uint32_t n) {
 	return (x << n) | (x >> (32 - n));
 }
 
