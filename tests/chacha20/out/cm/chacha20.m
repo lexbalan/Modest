@@ -66,27 +66,27 @@ public func chacha20Block (state: State) -> Block {
 		x[15] = r[03]
 		r = quarterRound(x[0], x[5], x[10], x[15])
 		x[00] = r[00]
-		x[5] = r[01]
+		x[05] = r[01]
 		x[10] = r[02]
-		x[15] = r[3]
+		x[15] = r[03]
 
 		r = quarterRound(x[1], x[6], x[11], x[12])
 		x[01] = r[00]
-		x[6] = r[01]
+		x[06] = r[01]
 		x[11] = r[02]
-		x[12] = r[3]
+		x[12] = r[03]
 
 		r = quarterRound(x[2], x[7], x[8], x[13])
 		x[02] = r[00]
-		x[7] = r[01]
+		x[07] = r[01]
 		x[08] = r[02]
-		x[13] = r[3]
+		x[13] = r[03]
 
 		r = quarterRound(x[3], x[4], x[9], x[14])
-		x[3] = r[00]
+		x[03] = r[00]
 		x[04] = r[01]
-		x[9] = r[02]
-		x[14] = r[3]
+		x[09] = r[02]
+		x[14] = r[03]
 
 		i = i + 1
 	}
