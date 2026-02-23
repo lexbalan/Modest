@@ -58,7 +58,7 @@ public func chacha20Block (state: State) -> Block {
 		x[02] = r[00]
 		x[06] = r[01]
 		x[10] = r[02]
-		x[14] = r[3]
+		x[14] = r[03]
 
 		r = quarterRound(x[3], x[7], x[11], x[15])
 		x[03] = r[00]
