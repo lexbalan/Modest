@@ -2,5 +2,4 @@
 
 from .types import *
 from .defs import *
-from .utils import *
 

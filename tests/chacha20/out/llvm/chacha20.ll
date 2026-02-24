@@ -469,36 +469,39 @@ body_1:
 	br label %again_1
 break_1:
 	%196 = alloca [16 x %Word32], align 1
-	%197 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %197
+	%197 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %197
 ; while_2
 	br label %again_2
 again_2:
-	%198 = load %Int32, %Int32* %197
-	%199 = icmp slt %Int32 %198, 16
+	%198 = load %Nat32, %Nat32* %197
+	%199 = icmp ult %Nat32 %198, 16
 	br %Bool %199 , label %body_2, label %break_2
 body_2:
-	%200 = load %Int32, %Int32* %197
-	%201 = getelementptr [16 x %Word32], [16 x %Word32]* %196, %Int32 0, %Int32 %200
-	%202 = load %Int32, %Int32* %197
-	%203 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 %202
-	%204 = load %Word32, %Word32* %203
-	%205 = bitcast %Word32 %204 to %Nat32
-	%206 = load %Int32, %Int32* %197
-	%207 = getelementptr %chacha20_State, %chacha20_State* %state, %Int32 0, %Int32 %206
-	%208 = load %Word32, %Word32* %207
-	%209 = bitcast %Word32 %208 to %Nat32
-	%210 = add %Nat32 %205, %209
-	%211 = bitcast %Nat32 %210 to %Word32
-	store %Word32 %211, %Word32* %201
-	%212 = load %Int32, %Int32* %197
-	%213 = add %Int32 %212, 1
-	store %Int32 %213, %Int32* %197
+	%200 = load %Nat32, %Nat32* %197
+	%201 = bitcast %Nat32 %200 to %Nat32
+	%202 = getelementptr [16 x %Word32], [16 x %Word32]* %196, %Int32 0, %Nat32 %201
+	%203 = load %Nat32, %Nat32* %197
+	%204 = bitcast %Nat32 %203 to %Nat32
+	%205 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Nat32 %204
+	%206 = load %Word32, %Word32* %205
+	%207 = bitcast %Word32 %206 to %Nat32
+	%208 = load %Nat32, %Nat32* %197
+	%209 = bitcast %Nat32 %208 to %Nat32
+	%210 = getelementptr %chacha20_State, %chacha20_State* %state, %Int32 0, %Nat32 %209
+	%211 = load %Word32, %Word32* %210
+	%212 = bitcast %Word32 %211 to %Nat32
+	%213 = add %Nat32 %207, %212
+	%214 = bitcast %Nat32 %213 to %Word32
+	store %Word32 %214, %Word32* %202
+	%215 = load %Nat32, %Nat32* %197
+	%216 = add %Nat32 %215, 1
+	store %Nat32 %216, %Nat32* %197
 	br label %again_2
 break_2:
-	%214 = load [16 x %Word32], [16 x %Word32]* %196
-	%215 = zext i8 16 to %Nat32
-	store [16 x %Word32] %214, %chacha20_Block* %0
+	%217 = load [16 x %Word32], [16 x %Word32]* %196
+	%218 = zext i8 16 to %Nat32
+	store [16 x %Word32] %217, %chacha20_Block* %0
 	ret void
 }
 

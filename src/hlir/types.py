@@ -2224,7 +2224,7 @@ class ValueLengthofValue(Value):
 			from trans import typeSysInt
 			type = typeSysInt
 		else:
-			from .utils import type_integer_for
+			from .defs import type_integer_for
 			length = 0
 			if value.type.is_array():
 				length = value.type.volume.asset
@@ -2248,7 +2248,7 @@ class ValueLengthofType(Value):
 			from trans import typeSysInt
 			type = typeSysInt
 		else:
-			from .utils import type_integer_for
+			from .defs import type_integer_for
 			length = 0
 			if t.is_array():
 				length = t.volume.asset
@@ -2282,7 +2282,7 @@ class ValueOffsetof(Value):
 			return ValueBad({'ti': ti})
 
 		offset = field.offset
-		from .utils import type_integer_for
+		from .defs import type_integer_for
 		type = type_integer_for(offset, ti=ti)
 		super().__init__(type=type, ti=ti)
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME

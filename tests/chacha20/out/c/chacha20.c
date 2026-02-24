@@ -95,7 +95,7 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 		i = i + 1;
 	}
 	uint32_t out[16];
-	int32_t j = 0;
+	uint32_t j = 0;
 	while (j < 16) {
 		out[j] = (x[j] + state[j]);
 		j = j + 1;

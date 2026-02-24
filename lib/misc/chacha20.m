@@ -97,7 +97,7 @@ public func chacha20Block (state: State) -> Block {
 
 	// add original state
 	var out: [16]Word32
-	var j: Int32 = 0
+	var j: Nat32 = 0
 	while j < 16 {
 		out[j] = Word32 (Nat32 x[j] + Nat32 state[j])
 		++j

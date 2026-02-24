@@ -2,7 +2,7 @@
 from hlir import *
 from error import info, error
 from util import nbits_for_num
-from hlir.utils import type_integer_for
+from hlir.defs import type_integer_for
 from fractions import Fraction
 
 
