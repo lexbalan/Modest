@@ -1429,6 +1429,18 @@ class TypeFunc(Type):
 		return deps
 
 
+	# Чистый тип функции не принимает и не возвращает указатели
+	def is_pure_func(t):
+		if t.to.is_pointer():
+			return False
+		for param in t.params:
+			if param.type.is_pointer():
+				return False
+		return True
+
+
+
+
 
 class TypeArray(Type):
 	def __init__(self, of, volume, generic=False, ti=None):
@@ -1598,6 +1610,15 @@ class Value(Entity):
 				elif t.width == 64:
 					a = get_np().float64(a)
 		self.asset = a
+
+
+	def cp_immediate(to, _from):
+		if _from.asset != None:
+			to.set_asset(_from.asset)
+
+		to.is_immutable = _from.is_immutable
+		to.stage = _from.stage
+		return
 
 
 	def eq(l, r, ti):

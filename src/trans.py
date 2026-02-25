@@ -55,8 +55,6 @@ from util import nbits_for_num, nbytes_for_bits
 
 
 
-production = True
-
 global_prefix = None
 
 # current file directory
@@ -1203,7 +1201,7 @@ def do_value_index(x):
 			else:
 				item = create_zero_literal(array_type.of)
 
-			cp_immediate(nv, item)
+			Value.cp_immediate(nv, item)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			return nv
 
@@ -1361,7 +1359,7 @@ def do_value_access(x):
 
 		if left.isValueImmediate():
 			initializer = get_item_by_id(left.asset, field.id.str)
-			cp_immediate(nv, initializer.value)
+			Value.cp_immediate(nv, initializer.value)
 
 	return nv
 
@@ -1580,16 +1578,13 @@ def do_value_immediate_string(x):
 
 
 def do_value_unsafe(x):
-	ti = x['ti']
 	if not 'unsafe' in cmodule.att:
-		error("for use 'unsafe' operator required -funsafe option", ti)
+		error("for use 'unsafe' operator required -funsafe option", x['ti'])
 
 	global unsafe_mode
 	prev_unsafe_mode = unsafe_mode
 	unsafe_mode = True
-
 	rv = do_rvalue(x['value'])
-
 	unsafe_mode = prev_unsafe_mode
 	return rv
 
@@ -1616,7 +1611,7 @@ def do_value_subexpr(x):
 	if v.isValueBad():
 		return ValueBad(x['ti'])
 	nv = ValueSubexpr(v, ti=x['ti'])
-	cp_immediate(nv, v)
+	Value.cp_immediate(nv, v)
 	return nv
 
 
@@ -2121,7 +2116,7 @@ def def_const_common(x):
 
 	const_value.stage = iv.stage
 	if iv.isValueImmediate():
-		cp_immediate(const_value, iv)
+		Value.cp_immediate(const_value, iv)
 
 	const_value.type.addAnnotation('const', {})
 
@@ -2269,17 +2264,6 @@ def def_var_global(x):
 
 
 
-# Чистый тип функции не принимает и не возвращает указатели
-def is_pure_type(t):
-	if t.to.is_pointer():
-		return False
-	for param in t.params:
-		if param.type.is_pointer():
-			return False
-	return True
-
-
-
 def create_params(fn):
 	params = fn.type.params
 
@@ -2323,7 +2307,7 @@ def def_func(x):
 		return df
 
 	# not above (!)
-	fn.is_pure = is_pure_type(fn.type)
+	fn.is_pure = fn.type.is_pure_func()
 
 	context_push()  # create params context
 
@@ -2420,11 +2404,6 @@ def check_stmt(stmt):
 
 
 
-
-# пропускать остальные ветви (elseif & else) условной директивы
-# тк основная ветвь была выполнена
-#skipp = False
-#prev_skipp = False
 
 import_stack = []
 
@@ -2602,8 +2581,6 @@ def translate(abspath, is_include=False):
 
 
 def process_module(idStr, sourcename, ast, is_include):
-	global skipp, production
-
 	global cmodule
 	prev_module = cmodule
 
@@ -2782,7 +2759,6 @@ def def_phase2(ast, is_include=False):
 			comment = do_stmt_comment(x)
 			cmodule.defs.append(comment)
 
-
 	return
 
 
@@ -2921,91 +2897,82 @@ def add_att(x, att):
 # for check print/scanf params
 # returns list of specifiers
 # ex: "%s = %d" -> ['c', 'd']
-def get_cspecs(s):
-	specs = []
-	i = 0
-	while i < len(s):
-		c = s[i]
-		if c == '%':
-			i += 1
-			c = s[i]
-			specs.append(c)
-		i += 1
-	return specs
+#def get_cspecs(s):
+#	specs = []
+#	i = 0
+#	while i < len(s):
+#		c = s[i]
+#		if c == '%':
+#			i += 1
+#			c = s[i]
+#			specs.append(c)
+#		i += 1
+#	return specs
 
 
 # check extra arguments of print, scanf, etc.
 # requires specs from get_cspecs & extra_args list
 # expected_pointers for case of scanf("%d", &x)
-def extra_args_check(specs, extra_args, expected_pointers):
-	i = 0
-	# extra_args rest args
-	nargs = len(extra_args)
-	nspec = len(specs)
-	while i < nargs and i < nspec:
-		arg = extra_args[i]
-		arg_type = arg.type
+#def extra_args_check(specs, extra_args, expected_pointers):
+#	i = 0
+#	# extra_args rest args
+#	nargs = len(extra_args)
+#	nspec = len(specs)
+#	while i < nargs and i < nspec:
+#		arg = extra_args[i]
+#		arg_type = arg.type
+#
+#		if arg.isValueBad():
+#			i += 1
+#			continue
+#
+#		spec = specs[i]
+#
+#		if expected_pointers:
+#			if not arg_type.is_pointer():
+#				warning("expected pointer", arg.ti)
+#				i += 1
+#				continue
+#
+#			arg_type = arg_type.to
+#
+#
+#		if spec in ['i', 'd']:
+#			if arg_type.is_int():
+#				if arg_type.is_unsigned():
+#					warning("expected signed integer value", arg.ti)
+#			else:
+#				warning("expected integer value2", arg.ti)
+#
+#		elif spec == 'x':
+#			if not arg_type.is_int():
+#				warning("expected integer value3", arg.ti)
+#
+#		elif spec == 'u':
+#			if arg_type.is_int():
+#				if arg_type.is_signed():
+#					warning("expected unsigned integer value", arg.ti)
+#			else:
+#				warning("expected integer value4", arg.ti)
+#
+#		elif spec == 's':
+#			if not arg_type.is_pointer_to_str():
+#				warning("expected pointer to string", arg.ti)
+#
+#		elif spec == 'f':
+#			if not arg_type.is_float():
+#				warning("expected float value", arg.ti)
+#
+#		elif spec == 'c':
+#			if not arg_type.is_char():
+#				warning("expected char value", arg.ti)
+#
+#		elif spec == 'p':
+#			if not arg_type.is_pointer():
+#				warning("expected pointer value", arg.ti)
+#
+#		i += 1
+#	return
 
-		if arg.isValueBad():
-			i += 1
-			continue
-
-		spec = specs[i]
-
-		if expected_pointers:
-			if not arg_type.is_pointer():
-				warning("expected pointer", arg.ti)
-				i += 1
-				continue
-
-			arg_type = arg_type.to
-
-
-		if spec in ['i', 'd']:
-			if arg_type.is_int():
-				if arg_type.is_unsigned():
-					warning("expected signed integer value", arg.ti)
-			else:
-				warning("expected integer value2", arg.ti)
-
-		elif spec == 'x':
-			if not arg_type.is_int():
-				warning("expected integer value3", arg.ti)
-
-		elif spec == 'u':
-			if arg_type.is_int():
-				if arg_type.is_signed():
-					warning("expected unsigned integer value", arg.ti)
-			else:
-				warning("expected integer value4", arg.ti)
-
-		elif spec == 's':
-			if not arg_type.is_pointer_to_str():
-				warning("expected pointer to string", arg.ti)
-
-		elif spec == 'f':
-			if not arg_type.is_float():
-				warning("expected float value", arg.ti)
-
-		elif spec == 'c':
-			if not arg_type.is_char():
-				warning("expected char value", arg.ti)
-
-		elif spec == 'p':
-			if not arg_type.is_pointer():
-				warning("expected pointer value", arg.ti)
-
-		i += 1
-	return
-
-
-
-def cp_immediate(to, _from):
-	if _from.asset != None:
-		to.set_asset(_from.asset)
-
-	to.is_immutable = _from.is_immutable
-	to.stage = _from.stage
-	return
 
 
