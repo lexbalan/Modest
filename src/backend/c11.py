@@ -179,7 +179,7 @@ def is_global_public(x):
 
 # Печатаем указатель на массив как указатель на его элемент
 # ТОЛЬКО когда это указатель на строку!
-def decize(t):
+def p2i_instead_p2a(t):
 	return t.is_array_of_char()
 
 
@@ -398,7 +398,7 @@ def str_ctype(t, text=''):
 def do_ctype_pointer(t, specs=[]):
 	to = t.to
 
-	if decize(to):
+	if p2i_instead_p2a(to):
 		return ctype_pointer(to=do_ctype(to.of), specs=specs)
 
 	# IMPORTANT:
@@ -633,7 +633,7 @@ def str_value_ref(x, ctx):
 	if value.isValueSlice():
 		sstr += '(' + str_type(x.type) + ')'
 
-	if decize(x.type.to):
+	if p2i_instead_p2a(x.type.to):
 		if value.isValueIndex() or value.isValueSlice():
 			return '&' + str_value(value, ctx=ctx)
 		# просто печатаем массив чаров как есть тк он автоматом decay to pointer
@@ -767,7 +767,7 @@ def str_value_index(x, ctx):
 	else:
 		left_str += str_value(left, ctx=ctx)
 
-	if left.type.is_pointer() and not decize(left.type.to):
+	if left.type.is_pointer() and not p2i_instead_p2a(left.type.to):
 		left_str = "(*%s)" % left_str
 
 	return left_str + '[' + str_value(x.index) + ']'
