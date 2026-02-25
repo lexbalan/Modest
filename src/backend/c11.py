@@ -36,9 +36,6 @@ def cons_if(s, t, cond):
 
 cmodule = None
 
-NO_TYPEDEF_STRUCTS = False
-DONT_PRINT_UNUSED = True
-
 
 # идетнифиаторы декларированных (или определенных) сущностей
 declared = []
@@ -81,14 +78,14 @@ def nl_indent(nl=1):
 	out(str_nl_indent(nl))
 
 
-def is_local_context():
-	global cfunc
-	return cfunc != None
-
-
 def is_global_context():
 	global cfunc
 	return cfunc == None
+
+
+def is_local_context():
+	return not is_global_context()
+
 
 
 csettings = {}
@@ -806,7 +803,7 @@ def str_value_access(x, ctx):
 
 def str_cast(t, v, raw_cast=False, ctx=[]):
 	if raw_cast:
-		assert(is_local_context())
+		#assert(is_local_context())
 		return "RAWCAST(%s, %s, %s)" % (str_type(t), str_type(v.type), str_value(v, ctx=ctx))
 
 	return "(" + str_type(t) + ")" + wrapp(str_value(v, ctx=ctx), cond=(precedence(v) < CONS_PRECEDENCE))
@@ -839,7 +836,6 @@ def str_value_cons_record(x, ctx):
 		return '(' + str_type(to_type) + ')' + str_value(x.value, ctx=ctx)
 
 	if from_type.is_generic_record():
-		#if is_global_context():
 		if to_type.is_generic_record():
 			return str_value(value, ctx=ctx)
 
@@ -2232,6 +2228,7 @@ def is_private(x):
 	if isinstance(x, StmtDef):
 		return x.access_level == HLIR_ACCESS_LEVEL_PRIVATE
 	return False
+
 
 
 def print_deps(deps):
