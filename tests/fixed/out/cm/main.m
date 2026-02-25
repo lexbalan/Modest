@@ -1,138 +1,84 @@
-include "ctypes64"
-include "stdlib"
 include "stdio"
-include "limits"
+include "stdlib"
 
 
 
-
-const point0 = {x = 0, y = 0}
-const point1 = {x = 1, y = 0}
-const point12 = {x = 1, y = 1}
-
-
-public func testRecordsEq () -> Bool {
-
-	if point0 != point0 {
-		printf("point0 != point0\n")
-		return false
-	}
-	if point1 != point1 {
-		printf("point1 != point1\n")
-		return false
-	}
-	if point12 != point12 {
-		printf("point0 != point0\n")
-		return false
-	}
-
-	if point0 == point1 {
-		printf("point0 == point1\n")
-		return false
-	}
-	if point1 == point0 {
-		printf("point1 == point0\n")
-		return false
-	}
-	if point0 == point12 {
-		printf("point0 == point12\n")
-		return false
-	}
-
-	printf("passed: record eq test\n")
-	return true
+// fx = i + m/n
+func packFixed32 (i: Nat32, m: Nat32, n: Nat32, fraction: Nat8) -> Fixed32 {
+	let tail: Nat64 = Nat64 m * (Nat64 (Word32 1 << fraction) - 1) / Nat64 n
+	return unsafe Fixed32 ((unsafe Word32 i << fraction) or unsafe Word32 tail)
 }
 
 
-
-const arr123 = [1, 2, 3]
-const arr321 = [3, 2, 1]
-
-const carr123 = [3]Int32 [1, 2, 3]
-const carr321 = [3]Int32 [3, 2, 1]
-
-var varr123: [3]Int32 = [1, 2, 3]
-var varr321: [3]Int32 = [3, 2, 1]
-
-public func testArraysEq () -> Bool {
-
-	if arr123 != arr123 {
-		printf("arr123 != arr123\n")
-		return false
-	}
-
-	if arr321 != arr321 {
-		printf("arr321 != arr321\n")
-		return false
-	}
-
-	if arr123 != carr123 {
-		printf("arr123 != carr123\n")
-		return false
-	}
-
-	if carr123 != arr123 {
-		printf("carr123 != arr123\n")
-		return false
-	}
-
-	if arr123 == arr321 {
-		printf("arr123 == arr321\n")
-		return false
-	}
-
-	if carr123 == carr321 {
-		printf("carr123 == carr321\n")
-		return false
-	}
-
-	if varr123 != varr123 {
-		printf("varr123 != varr123\n")
-		return false
-	}
-
-	if varr321 != varr321 {
-		printf("varr321 != varr321\n")
-		return false
-	}
-
-	if varr123 != arr123 {
-		printf("varr123 != arr123\n")
-		return false
-	}
-
-	if varr123 != carr123 {
-		printf("varr123 != carr123\n")
-		return false
-	}
-
-	if varr321 != arr321 {
-		printf("varr321 != arr321\n")
-		return false
-	}
-
-	if varr321 != carr321 {
-		printf("varr321 != carr321\n")
-		return false
-	}
-
-
-	printf("passed: array eq test\n")
-	return true
+// just returns head as is
+func headFixed32 (f: Word32, fraction: Nat8) -> Nat32 {
+	return unsafe Nat32 (f >> fraction)
 }
 
+
+// just returns tail as is
+func tailFixed32 (f: Word32, fraction: Nat8) -> Nat32 {
+	let mask = Word32 (Nat32 (Word32 1 << fraction) - 1)
+	return Nat32 (f and mask)
+}
+
+
+// precision = 10 ... 1000000 - number of zeroes = number of digits in output value
+func printFixed32 (f: Word32, fraction: Nat8, precision: Nat32) -> Unit {
+	let h: Nat32 = headFixed32(f, fraction)
+	let t: Nat32 = tailFixed32(f, fraction)
+	let tail: Nat32 = unsafe Nat32 (unsafe Nat64 t * unsafe Nat64 precision / unsafe Nat64 (unsafe Word32 1 << fraction))
+	printf("%d.%d", h, tail)
+}
+
+
+func testFixed32Static () -> Bool {
+	var st: Nat32
+
+	var f: Fixed32
+
+	f = 3.1415926535897932384626433832795028841971693993751058209749445923
+
+	let a: Fixed32 = f + 1
+	let b: Fixed32 = f - 1
+	let c: Fixed32 = f * 2
+	let d: Fixed32 = f / 2
+
+	printf("fx = ")
+	printFixed32(Word32 f, 18, 1000000)
+	printf("\n")
+
+	let f2: Fixed32 = packFixed32(3, 1415926, 10000000, 20)
+	printf("f2 = ")
+	printFixed32(Word32 f2, 20, 10000000)
+	printf("\n")
+
+	printf("Raw f = %d\n", f)
+	printf("Raw a = %d\n", a)
+	printf("Raw b = %d\n", b)
+	printf("Raw c = %d\n", c)
+	printf("Raw d = %d\n", d)
+
+	printf("Int32 f = %d\n", Int32 f)
+	printf("Int32 a = %d\n", Int32 a)
+	printf("Int32 b = %d\n", Int32 b)
+	printf("Int32 c = %d\n", Int32 c)
+	printf("Int32 d = %d\n", Int32 d)
+
+	printf("Float32 f = %f\n", Float32 f)
+	printf("Float32 a = %f\n", Float32 a)
+	printf("Float32 b = %f\n", Float32 b)
+	printf("Float32 c = %f\n", Float32 c)
+	printf("Float32 d = %f\n", Float32 d)
+
+	return true
+}
 
 
 public func main () -> Int32 {
-	printf("test eq\n")
+	printf("test fixed\n")
 
-	var result: Bool
-	var success: Bool = true
-
-	result = testRecordsEq()
-	success = success and result
-	result = testArraysEq()
-	success = success and result
+	let success: Bool = testFixed32Static()
 
 	printf("test ")
 	if not success {

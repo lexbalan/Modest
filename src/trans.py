@@ -1368,9 +1368,13 @@ def do_value_access(x):
 
 def do_value_cons(x):
 	v = do_rvalue(x['value'])
-	t = do_type(x['type'])
-	if v.isValueBad() or t.is_bad():
+	if v.isValueBad():
 		return ValueBad(x['ti'])
+
+	t = do_type(x['type'])
+	if t.is_bad():
+		return ValueBad(x['ti'])
+
 	return value_cons_explicit(t, v, x['ti'])
 
 
@@ -1609,6 +1613,8 @@ def do_rvalue(x):
 
 def do_value_subexpr(x):
 	v = do_value(x['value'])
+	if v.isValueBad():
+		return ValueBad(x['ti'])
 	nv = ValueSubexpr(v, ti=x['ti'])
 	cp_immediate(nv, v)
 	return nv

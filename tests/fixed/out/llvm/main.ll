@@ -213,26 +213,85 @@ declare %Int @system([0 x %ConstChar]* %string)
 ; -- 0
 ; -- end print imports 'main' --
 ; -- strings --
-@str1 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 102, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str2 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 97, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str3 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 98, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str4 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 99, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str5 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str6 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 102, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str7 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 97, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str8 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 98, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str9 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 99, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str10 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str11 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 102, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str12 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 97, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str13 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 98, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str14 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 99, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str15 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 100, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str16 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 105, i8 120, i8 101, i8 100, i8 10, i8 0]
-@str17 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
-@str18 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str19 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str1 = private constant [6 x i8] [i8 37, i8 100, i8 46, i8 37, i8 100, i8 0]
+@str2 = private constant [6 x i8] [i8 102, i8 120, i8 32, i8 61, i8 32, i8 0]
+@str3 = private constant [2 x i8] [i8 10, i8 0]
+@str4 = private constant [6 x i8] [i8 102, i8 50, i8 32, i8 61, i8 32, i8 0]
+@str5 = private constant [2 x i8] [i8 10, i8 0]
+@str6 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 102, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str7 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 97, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str8 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 98, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str9 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 99, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str10 = private constant [12 x i8] [i8 82, i8 97, i8 119, i8 32, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str11 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 102, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str12 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 97, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str13 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 98, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str14 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 99, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str15 = private constant [14 x i8] [i8 73, i8 110, i8 116, i8 51, i8 50, i8 32, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str16 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 102, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str17 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 97, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str18 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 98, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str19 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 99, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str20 = private constant [16 x i8] [i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 32, i8 100, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str21 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 105, i8 120, i8 101, i8 100, i8 10, i8 0]
+@str22 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@str23 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str24 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
+define internal %Fixed32 @packFixed32(%Nat32 %i, %Nat32 %m, %Nat32 %n, %Nat8 %fraction) {
+	%1 = zext %Nat32 %m to %Nat64
+	%2 = zext i8 1 to %Word32
+	%3 = zext %Nat8 %fraction to %Word32
+	%4 = shl %Word32 %2, %3
+	%5 = zext %Word32 %4 to %Nat64
+	%6 = sub %Nat64 %5, 1
+	%7 = mul %Nat64 %1, %6
+	%8 = zext %Nat32 %n to %Nat64
+	%9 = udiv %Nat64 %7, %8
+	%10 = bitcast %Nat32 %i to %Word32
+	%11 = zext %Nat8 %fraction to %Word32
+	%12 = shl %Word32 %10, %11
+	%13 = trunc %Nat64 %9 to %Word32
+	%14 = or %Word32 %12, %13
+	%15 = cast %Word32 %14 to %Fixed32
+	ret %Fixed32 %15
+}
+
+define internal %Nat32 @headFixed32(%Word32 %f, %Nat8 %fraction) {
+	%1 = zext %Nat8 %fraction to %Word32
+	%2 = lshr %Word32 %f, %1
+	%3 = bitcast %Word32 %2 to %Nat32
+	ret %Nat32 %3
+}
+
+define internal %Nat32 @tailFixed32(%Word32 %f, %Nat8 %fraction) {
+	%1 = zext i8 1 to %Word32
+	%2 = zext %Nat8 %fraction to %Word32
+	%3 = shl %Word32 %1, %2
+	%4 = bitcast %Word32 %3 to %Nat32
+	%5 = sub %Nat32 %4, 1
+	%6 = bitcast %Nat32 %5 to %Word32
+	%7 = and %Word32 %f, %6
+	%8 = bitcast %Word32 %7 to %Nat32
+	ret %Nat32 %8
+}
+
+define internal void @printFixed32(%Word32 %f, %Nat8 %fraction, %Nat32 %precision) {
+	%1 = call %Nat32 @headFixed32(%Word32 %f, %Nat8 %fraction)
+	%2 = call %Nat32 @tailFixed32(%Word32 %f, %Nat8 %fraction)
+	%3 = zext %Nat32 %2 to %Nat64
+	%4 = zext %Nat32 %precision to %Nat64
+	%5 = mul %Nat64 %3, %4
+	%6 = zext i8 1 to %Word32
+	%7 = zext %Nat8 %fraction to %Word32
+	%8 = shl %Word32 %6, %7
+	%9 = zext %Word32 %8 to %Nat64
+	%10 = udiv %Nat64 %5, %9
+	%11 = trunc %Nat64 %10 to %Nat32
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str1 to [0 x i8]*), %Nat32 %1, %Nat32 %11)
+	ret void
+}
+
 define internal %Bool @testFixed32Static() {
-	%1 = alloca %Fixed32, align 4
-	;var f: Fixed32
+	%1 = alloca %Nat32, align 4
+	%2 = alloca %Fixed32, align 4
