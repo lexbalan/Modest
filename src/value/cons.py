@@ -160,14 +160,15 @@ def value_cons_explicit(t, v, ti):
 
 
 def value_cons_extra_arg(v):
-	t = v.type
-	if not t.is_generic():
-		return v
-	t = _select_default_type_for(t)
-	nv = value_cons(t, v, 'extra_arg', v.ti)
-	if nv == None:
-		return ValueBad(v.ti)
-	return nv
+	return value_cons_default(v)
+#	t = v.type
+#	if not t.is_generic():
+#		return v
+#	t = _select_default_type_for(t)
+#	nv = value_cons(t, v, 'extra_arg', v.ti)
+#	if nv == None:
+#		return ValueBad(v.ti)
+#	return nv
 
 
 def value_cons_default(v):

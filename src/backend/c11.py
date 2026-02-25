@@ -947,9 +947,9 @@ def str_value_cons(x, ctx):
 #	if type.is_generic():
 #		return str_value(value, ctx=ctx)
 
-	if x.method == 'extra_arg':
-		if value.type.is_pointer_to_array():
-			return "(" + str_type(type.to.of) + "*)" + str_value(value, ctx=ctx)
+#	if x.method == 'extra_arg':
+#		if value.type.is_pointer_to_array():
+#			return "(" + str_type(type.to.of) + "*)" + str_value(value, ctx=ctx)
 
 	if type.is_array():
 		return str_value_cons_array(x, ctx)
@@ -998,7 +998,7 @@ def str_value_cons(x, ctx):
 	# поэтому даже если структуры одинаковы, но имена разные
 	# - их нужно жестко приводить
 	if type.is_pointer_to_record() and from_type.is_pointer_to_record():
-		if (from_type.to.definition != type.to.definition):
+		if from_type.to.definition != type.to.definition:
 			return str_cast(type, value, ctx=ctx)
 
 	elif type.is_pointer_to_array():
@@ -1850,6 +1850,8 @@ def do_assign(left, right, ti):
 	else:
 		print_value(left)
 		out(" = ")
+		#if right.isValueCons():
+			#print(right.method)
 		print_value(right)
 	out(";")
 	return
