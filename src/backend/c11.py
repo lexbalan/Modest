@@ -528,14 +528,12 @@ def str_value_bin(x, ctx):
 	right = x.right
 	type = x.type
 
-
 	if type.is_fixed():
 		# Special cases for fixed point arithmetics
 		if op == HLIR_VALUE_OP_MUL:
-			return "__fixed32_mul(%s, %s, %d)" % (str_value_2(left), str_value_2(right), type.fraction)
+			return "__fixed32_mul(%s, %s, %d)" % (str_value(left), str_value(right), type.fraction)
 		if op == HLIR_VALUE_OP_DIV:
-			return "__fixed32_div(%s, %s, %d)" % (str_value_2(left), str_value_2(right), type.fraction)
-
+			return "__fixed32_div(%s, %s, %d)" % (str_value(left), str_value(right), type.fraction)
 
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 		if left.type.is_record(): return str_value_eq_composite(x, ctx)
