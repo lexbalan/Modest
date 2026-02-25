@@ -69,10 +69,6 @@ styles = {
 # default style is legacy
 styleguide = legacy_style
 
-EMPTY_ARRAY_LITERAL = "{0}"
-EMPTY_RECORD_LITERAL = "{0}"
-
-EMPTY_FUNC_PARAM = "void"
 
 cfunc = None
 
@@ -1113,7 +1109,7 @@ def str_value_literal_array(x, ctx):
 	sstr = ''
 
 	if len(items) == 0:
-		return EMPTY_ARRAY_LITERAL
+		return "{0}"
 
 	if type.is_array_of_char() and x.isValueImmediate():
 		char_type = type.of
