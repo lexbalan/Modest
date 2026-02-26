@@ -347,29 +347,16 @@ def do_field(x):
 		error("field id must starts with small letter", id.ti)
 
 	t = do_type(x['type'])
-
-	#if t.is_forbidden_field():
-	#	error("unsuitable type", t.ti)
+	if t.is_forbidden_field():
+		error("unsuitable type", t.ti)
 
 	iv = do_value_immediate(x['init_value'])
+	f = Field(id, t, init_value=iv, access_level = x['access_modifier'], ti=x['ti'])
 
-	if not iv.is_value_undefined():
-		# у поля есть инициализатор
-		pass
-
-	iv = None
-	if x['init_value'] != None:
-		iv = do_value(x['init_value'])
-	else:
-		iv = ValueUndef(t)
-
-	f = Field(id, t, init_value=iv, ti=x['ti'])
 	f.nl = x['nl']
-
 	if f.nl == 0:
 		f.nl = 1
 
-	f.access_level = x['access_modifier']
 	return f
 
 

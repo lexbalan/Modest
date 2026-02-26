@@ -285,7 +285,7 @@ class Id(Entity):
 
 
 class Field(Entity):
-	def __init__(self, _id, _type, init_value, ti=None):
+	def __init__(self, _id, _type, init_value, access_level=HLIR_ACCESS_LEVEL_UNDEFINED, ti=None):
 		assert(init_value!=None)
 		super().__init__(ti)
 		self.id = _id
@@ -293,7 +293,7 @@ class Field(Entity):
 		self.init_value = init_value
 		self.field_no = 0
 		self.offset = 0
-		self.access_level = HLIR_ACCESS_LEVEL_PRIVATE
+		self.access_level = access_level
 		self.att = []
 		self.nl = 0
 		self.comments = []
