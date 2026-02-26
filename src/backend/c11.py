@@ -360,10 +360,11 @@ def str_ctype_struct(t, text):
 			field = t['fields'][i]
 			if field['nl'] > 0:
 				nl_end = 1
+			if i > 0:
+				if t['fields'][i-1]['nl'] == 0:
+					sstr += ' '
 			sstr += str_nl_indent(field['nl'])
 			sstr += str_ctype(field['type'], text=field['id_str']) + ';'
-			if field['nl'] == 0:
-				sstr += ' '
 			i = i + 1
 	else:
 		sstr += 'uint8_t __placeholder;'
