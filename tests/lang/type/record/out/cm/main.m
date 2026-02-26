@@ -2,21 +2,11 @@
 
 type Empty = {}
 
-type Simple = {
-	x: Int32
-}
+type Simple = {x: Int32}
 
-type Point = {
-	x: Int32
-	y: Int32
-}
+type Point = {x: Int32, y: Int32}
 
-type Color = {
-	r: Nat8
-	g: Nat8
-	b: Nat8
-	a: Nat8
-}
+type Color = {r: Nat8, g: Nat8, b: Nat8, a: Nat8}
 
 type Nested = {
 	pos: Point

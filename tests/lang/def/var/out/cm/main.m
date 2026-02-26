@@ -23,10 +23,7 @@ var n: Bool
 
 // record variables
 //var p = {x = 1, y = 2}
-var q: {
-	a: Int32
-	b: Int32
-} = {a = 0, b = 0}
+var q: {a: Int32, b: Int32} = {a = 0, b = 0}
 
 // array variables
 var arr1: [5]Int32

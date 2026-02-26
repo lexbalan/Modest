@@ -8,10 +8,7 @@
 
 
 /* anonymous records */
-struct __anonymous_struct_3 {
-	int32_t x;
-	int32_t y;
-};
+struct __anonymous_struct_3 {int32_t x; int32_t y; };
 
 // Test for composite types
 

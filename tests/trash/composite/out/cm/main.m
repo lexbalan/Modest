@@ -166,10 +166,7 @@ var animation2_points = [5]AnimationPoint [
 ]
 
 
-func xy (x: {
-	x: Int32
-	y: Int32
-}) -> Unit {
+func xy (x: {x: Int32, y: Int32}) -> Unit {
 }
 
 

@@ -31,9 +31,7 @@ func f3_val (x: Type3) -> Unit {
 	printf("f3 x.x = %d\n", x.x)
 }
 
-func f4_val (x: {
-	x: Int32
-}) -> Unit {
+func f4_val (x: {x: Int32}) -> Unit {
 	printf("f4 x.x = %d\n", x.x)
 }
 
@@ -52,9 +50,7 @@ func f3_ptr (x: *Type3) -> Unit {
 	printf("f3p x.x = %d\n", x.x)
 }
 
-func f4_ptr (x: *{
-	x: Int32
-}) -> Unit {
+func f4_ptr (x: *{x: Int32}) -> Unit {
 	printf("f4p x.x = %d\n", x.x)
 }
 

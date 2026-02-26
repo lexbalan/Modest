@@ -1,14 +1,8 @@
 
 
 
-type Point = {
-	x: Int32
-	y: Int32
-}
-type Line = {
-	a: Point
-	b: Point
-}
+type Point = {x: Int32, y: Int32}
+type Line = {a: Point, b: Point}
 
 
 var origin: Point = {x = 0, y = 0}

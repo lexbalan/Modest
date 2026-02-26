@@ -29,18 +29,12 @@ func greet (name: *Str8 = "World") -> Unit {
 }
 
 // function with record arg
-func getX (p: {
-	x: Int32
-	y: Int32
-}) -> Int32 {
+func getX (p: {x: Int32, y: Int32}) -> Int32 {
 	return p.x
 }
 
 // function with record return
-func makePoint (x: Int32, y: Int32) -> {
-	x: Int32
-	y: Int32
-} {
+func makePoint (x: Int32, y: Int32) -> {x: Int32, y: Int32} {
 	return {x = x, y = y}
 }
 
@@ -67,10 +61,7 @@ public func main () -> Int32 {
 	inc(&x)
 	greet(name="World")
 	greet("Alex")
-	var p: {
-		x: Int32
-		y: Int32
-	} = makePoint(1, 2)
+	var p: {x: Int32, y: Int32} = makePoint(1, 2)
 	var z: Int32 = getX(p)
 	z = quadruple(3)
 	return 0

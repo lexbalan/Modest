@@ -16,10 +16,7 @@ func returnUnit () -> {} {
 	return {}
 }
 
-func returnRecord () -> {
-	x: Int32
-	y: Int32
-} {
+func returnRecord () -> {x: Int32, y: Int32} {
 	return {x = 1, y = 2}
 }
 
@@ -49,10 +46,7 @@ public func main () -> Int32 {
 	var a: Int32 = returnInt()
 	var b: Bool = returnBool()
 	var c: Float64 = returnFloat()
-	var e: {
-		x: Int32
-		y: Int32
-	} = returnRecord()
+	var e: {x: Int32, y: Int32} = returnRecord()
 	var f: Int32 = earlyReturn(-5)
 	var g: Int32 = returnExpr(3, 4)
 	var h: Int32 = returnFromWhile()

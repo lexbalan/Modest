@@ -5,16 +5,8 @@ type Size = Nat64
 type Index = Int32
 
 // record
-type Point = {
-	x: Int32
-	y: Int32
-}
-type Color = {
-	r: Nat8
-	g: Nat8
-	b: Nat8
-	a: Nat8
-}
+type Point = {x: Int32, y: Int32}
+type Color = {r: Nat8, g: Nat8, b: Nat8, a: Nat8}
 
 public type X = {
 	public a: Int32
@@ -22,25 +14,13 @@ public type X = {
 }
 
 // nested record
-type Rect = {
-	origin: Point
-	size: {
-		w: Int32
-		h: Int32
-	}
-}
+type Rect = {origin: Point, size: {w: Int32, h: Int32}}
 
 // packed record
-type Header = @layout {
-	tag: Nat8
-	len: Nat16
-}
+type Header = @layout {tag: Nat8, len: Nat16}
 
 // union
-type Value = @layout {
-	i: Int64
-	f: Float64
-}
+type Value = @layout {i: Int64, f: Float64}
 
 // branded
 type UserId = @branded Nat32

@@ -38,13 +38,7 @@ func testPointerAssign () -> Unit {
 
 
 func testRecordAssign () -> Unit {
-	var p: {
-		x: Int32
-		y: Int32
-	} = {
-		x: Int32
-		y: Int32
-	} {x = 0, y = 0}
+	var p: {x: Int32, y: Int32} = {x: Int32, y: Int32} {x = 0, y = 0}
 	p.x = 10
 	p.y = 20
 }

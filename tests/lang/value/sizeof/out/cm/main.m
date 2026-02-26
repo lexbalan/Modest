@@ -1,13 +1,7 @@
 
 
-type Point = {
-	x: Int32
-	y: Int32
-}
-type Packed = @layout {
-	a: Nat8
-	b: Nat32
-}
+type Point = {x: Int32, y: Int32}
+type Packed = @layout {a: Nat8, b: Nat32}
 
 var sizeInt: Size = sizeof(Int32)
 var sizePoint: Size = sizeof(Point)

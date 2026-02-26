@@ -354,9 +354,6 @@ def do_field(x):
 	f = Field(id, t, init_value=iv, access_level = x['access_modifier'], ti=x['ti'])
 
 	f.nl = x['nl']
-	if f.nl == 0:
-		f.nl = 1
-
 	return f
 
 

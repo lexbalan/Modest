@@ -105,26 +105,14 @@ public func main () -> Int {
 		printf("p2d0 != p2d1\n")
 	}
 	var p2d2: Point2D = p2d0
-	var p2d3: {
-		x: Nat32
-		y: Nat32
-	} = {
-		x: Nat32
-		y: Nat32
-	} xx
+	var p2d3: {x: Nat32, y: Nat32} = {x: Nat32, y: Nat32} xx
 
 	if p2d2 == p2d3 {
 		printf("p2d2 == p2d3\n")
 	} else {
 		printf("p2d2 != p2d3\n")
 	}
-	var p2d4: {
-		x: Nat32
-		y: Nat32
-	} = {
-		x: Nat32
-		y: Nat32
-	} {x = 1, y = 2}
+	var p2d4: {x: Nat32, y: Nat32} = {x: Nat32, y: Nat32} {x = 1, y = 2}
 
 	if p2d3 == p2d4 {
 		printf("p2d3 == p2d4\n")
@@ -132,10 +120,7 @@ public func main () -> Int {
 		printf("p2d3 != p2d4\n")
 	}
 	let pr2: *Point2D = &p2d2
-	let pr3: *{
-		x: Nat32
-		y: Nat32
-	} = &p2d3
+	let pr3: *{x: Nat32, y: Nat32} = &p2d3
 
 	if *pr2 == *pr3 {
 		printf("*pr2 == *pr3\n")
