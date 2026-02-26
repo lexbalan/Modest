@@ -255,34 +255,59 @@ def is_type_named(t):
 	#return get_type_id_str(t) != None
 
 
+#class CType():
+#	def __init__(self, id_str=None, specs=None):
+#		self.id_str = id_str
+#		self.specs = specs if specs != None else []
 
-def ctype_named(id_str, specs=[]):
-	return {'isa': 'ctype_named', 'id_str': id_str, 'specs': specs}
-
-def ctype_pointer(to, specs=[]):
-	return {'isa': 'ctype_pointer', 'to': to, 'specs': specs}
-
-def ctype_array(of, volume=None, specs=[]):
-	return {'isa': 'ctype_array', 'of': of, 'volume': volume}
-
-def ctype_func(to, params, specs=[], extra_args=False):
-	return {'isa': 'ctype_func', 'to': to, 'params': params, 'extra_args': extra_args}
-
-def ctype_field(id_str, ctype, specs=[], nl=0):
-	return {'isa': 'ctype_par', 'id_str': id_str, 'type': ctype, 'nl': nl}
-
-def ctype_struct(fields, tag, specs=[]):
-	return {'isa': 'ctype_struct', 'fields': fields, 'tag': tag}
+class CField():
+	def __init__(self, id_str, type, specs=None, nl=0):
+		#assert(isinstance(type, CType))
+		self.id_str = id_str
+		self.type = type
+		self.specs = specs if specs != None else []
+		self.nl = nl
 
 
+class CTypeNamed():
+	def __init__(self, id_str, specs=None):
+		self.id_str = id_str
+		self.specs = specs if specs != None else []
+		self.priority = 0
 
-tprio = {
-	'ctype_named': 0,
-	'ctype_pointer': 1,
-	'ctype_array': 2,
-	'ctype_func': 3,
-	'ctype_struct': 4, #?
-}
+
+class CTypePointer():
+	def __init__(self, to, specs=None):
+		self.to = to
+		self.specs = specs if specs != None else []
+		self.priority = 1
+
+
+class CTypeArray():
+	def __init__(self, of, volume=None, specs=None):
+		self.of = of
+		self.volume = volume
+		self.specs = specs if specs != None else []
+		self.priority = 2
+
+
+class CTypeFunc():
+	def __init__(self, params, to, volume=None, extra_args=False, specs=None):
+		self.params = params
+		self.to = to
+		self.extra_args = extra_args
+		self.specs = specs if specs != None else []
+		self.priority = 3
+
+
+class CTypeStruct():
+	def __init__(self, fields, tag, specs=None):
+		self.fields = fields
+		self.tag = tag
+		self.specs = specs if specs != None else []
+		self.priority = 0
+
+
 
 
 def wrap_if(x, cond):
@@ -296,7 +321,7 @@ def str_specs(specs):
 	return s
 
 
-def plusSpace(s):
+def with_space(s):
 	if s != '':
 		return ' ' + s
 	return ''
@@ -304,87 +329,87 @@ def plusSpace(s):
 
 def str_ctype_named(t, text):
 	# "const int a"
-	return str_specs(t['specs']) + t['id_str'] + plusSpace(text)
+	return str_specs(t.specs) + t.id_str + with_space(text)
 
 
 def str_ctype_pointer(t, text):
 	# "*volatile p"
-	text = '*%s' % str_specs(t['specs']) + text
-	text = wrap_if(text, tprio[t['to']['isa']] > tprio['ctype_pointer'])
-	text = str_ctype(t['to'], text)
+	text = '*%s' % str_specs(t.specs) + text
+	text = wrap_if(text, t.to.priority > t.priority)
+	text = str_ctype(t.to, text)
 	return text
 
 
 def str_ctype_array(t, text):
 	text = text + '['
-	if t['volume'] != None and not t['volume'].isValueUndef():
-		text += str_value(t['volume'])
+	if t.volume != None and not t.volume.isValueUndef():
+		text += str_value(t.volume)
 	text += ']'
-	text = wrap_if(text, tprio[t['of']['isa']] > tprio['ctype_array'])
-	text = str_ctype(t['of'], text)
+	text = wrap_if(text, t.of.priority > t.priority)
+	text = str_ctype(t.of, text)
 	return text
 
 
 def str_ctype_func(t, text):
 	params_text = ''
 	i = 0
-	params = t['params']
+	params = t.params
 	while i < len(params):
 		param = params[i]
-		p = str_ctype(param['type'], text=param['id_str'])
+		p = str_ctype(param.type, text=param.id_str)
 		if i > 0:
 			params_text += ', ' + p
 		else:
 			params_text += p
 		i = i + 1
 
-	if t['extra_args']:
+	if t.extra_args:
 		params_text += ', ...'
 
 	if params_text == '':
 		params_text = 'void'
 
 	text = text + '(%s)' % params_text
-	text = str_ctype(t['to'], text)
+	text = str_ctype(t.to, text)
 	return text
 
 
 def str_ctype_struct(t, text):
 	nl_end = 0
-	sstr = '%s {' % (t['tag'])
+	sstr = '%s {' % (t.tag)
 	indent_up()
 	i = 0
-	nfields = len(t['fields'])
+	nfields = len(t.fields)
 	if nfields > 0:
 		while i < nfields:
-			field = t['fields'][i]
-			if field['nl'] > 0:
+			field = t.fields[i]
+			if field.nl > 0:
 				nl_end = 1
 
-			if i > 0 and field['nl'] == 0:
-				if t['fields'][i-1]['nl'] == 0:
+			if i > 0 and field.nl == 0:
+				if t.fields[i-1].nl == 0:
 					sstr += ' '
 
-			sstr += str_nl_indent(field['nl'])
-			sstr += str_ctype(field['type'], text=field['id_str']) + ';'
+			sstr += str_nl_indent(field.nl)
+			sstr += str_ctype(field.type, text=field.id_str) + ';'
 			i = i + 1
 	else:
 		sstr += 'uint8_t __placeholder;'
 	indent_down()
-	sstr += str_nl_indent(nl_end) + '}' + plusSpace(text)
+	sstr += str_nl_indent(nl_end) + '}' + with_space(text)
 	return sstr
 
 
 def str_ctype(t, text=''):
 	assert(t != None)
 	assert(text != None)
-	assert(isinstance(t, dict))
+	#assert(isinstance(t, dict))
 
-	if t['isa'] == 'ctype_named': return str_ctype_named(t, text)
-	if t['isa'] == 'ctype_pointer': return str_ctype_pointer(t, text)
-	if t['isa'] == 'ctype_array': return str_ctype_array(t, text)
-	if t['isa'] == 'ctype_func': return str_ctype_func(t, text)
-	if t['isa'] == 'ctype_struct': return str_ctype_struct(t, text)
+	if isinstance(t, CTypeNamed): return str_ctype_named(t, text)
+	if isinstance(t, CTypePointer): return str_ctype_pointer(t, text)
+	if isinstance(t, CTypeArray): return str_ctype_array(t, text)
+	if isinstance(t, CTypeFunc): return str_ctype_func(t, text)
+	if isinstance(t, CTypeStruct): return str_ctype_struct(t, text)
 
 	return '<unknown ctype>'
 
@@ -395,7 +420,7 @@ def do_ctype_pointer(t, specs=[]):
 	to = t.to
 
 	if p2i_instead_p2a(to):
-		return ctype_pointer(to=do_ctype(to.of), specs=specs)
+		return CTypePointer(to=do_ctype(to.of), specs=specs)
 
 	# IMPORTANT:
 	# *[][]...([])T -> *[]T
@@ -405,7 +430,7 @@ def do_ctype_pointer(t, specs=[]):
 	while to.is_open_array_of_open_array():
 		to = to.of
 
-	return ctype_pointer(to=do_ctype(to), specs=specs)
+	return CTypePointer(to=do_ctype(to), specs=specs)
 
 
 # преобразуем Modest TypeFunc -> CIR TypeFunc
@@ -417,27 +442,27 @@ def do_ctype_func(t, specs=[]):
 		if p.type.is_array():
 			id_str = '_' + id_str
 			arg_ctype = do_ctype(TypePointer(p.type))
-		params.append(ctype_field(id_str=id_str, ctype=arg_ctype, specs=[]))
+		params.append(CField(id_str=id_str, type=arg_ctype, specs=[]))
 
 	if not t.to.is_array():
 		if t.to.is_unit():
-			to=ctype_named('void')
+			to=CTypeNamed('void')
 		else:
 			to=do_ctype(t.to)
 	else:
 		# Если f возвращает массив по значению, вернем void и добавим _sret_ - pointer to array
-		to=ctype_named('void')
+		to=CTypeNamed('void')
 		sret_ctype = do_ctype(TypePointer(t.to))
-		params.append(ctype_field(id_str='_sret_', ctype=sret_ctype, specs=[]))
+		params.append(CField(id_str='_sret_', type=sret_ctype, specs=[]))
 
-	return ctype_func(to=to, params=params, specs=specs, extra_args=t.extra_args)
+	return CTypeFunc(to=to, params=params, specs=specs, extra_args=t.extra_args)
 
 
 # преобразуем Modest TypeArray -> CIR TypeArray
 def do_ctype_array(t, specs=[]):
 	# сливаем *[][] в *[]
 	# такой укзаатель на массив массивов можно будет использовать только после приведения к *[n][m] (!)
-	return ctype_array(of=do_ctype(t.of), volume=t.volume, specs=specs)
+	return CTypeArray(of=do_ctype(t.of), volume=t.volume, specs=specs)
 
 
 # преобразуем Modest TypeRecord -> CIR TypeStruct
@@ -445,15 +470,15 @@ def do_ctype_struct(t, tag='', specs=[]):
 	assert(isinstance(t, Type))
 	fields = []
 	for p in t.fields:
-		fields.append(ctype_field(id_str=p.id.str, ctype=do_ctype(p.type), specs=[], nl=p.nl))
-	tag = camel_to_lower_snake(plusSpace(tag))
+		fields.append(CField(id_str=p.id.str, type=do_ctype(p.type), specs=[], nl=p.nl))
+	tag = camel_to_lower_snake(with_space(tag))
 	isa = 'struct' if not t.layout == 'union' else 'union'
-	return ctype_struct(fields, specs=specs, tag=isa+tag)
+	return CTypeStruct(fields, specs=specs, tag=isa+tag)
 
 
 def do_ctype_named(t, specs):
 	id_str = get_id_str(t)
-	return ctype_named(id_str, specs=specs)
+	return CTypeNamed(id_str, specs=specs)
 
 
 # преобразуем Modest Type -> CIR Type
