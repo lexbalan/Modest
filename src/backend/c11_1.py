@@ -1,55 +1,5 @@
 
 
-indent = 0
-
-class CField():
-	def __init__(self, id_str, type, specs=None, nl=0):
-		#assert(isinstance(type, CType))
-		self.id_str = id_str
-		self.type = type
-		self.specs = specs if specs != None else []
-		self.nl = nl
-
-
-class CTypeNamed():
-	def __init__(self, id_str, specs=None):
-		self.id_str = id_str
-		self.specs = specs if specs != None else []
-		self.priority = 0
-
-
-class CTypePointer():
-	def __init__(self, to, specs=None):
-		self.to = to
-		self.specs = specs if specs != None else []
-		self.priority = 1
-
-
-class CTypeArray():
-	def __init__(self, of, volume=None, specs=None):
-		self.of = of
-		self.volume = volume
-		self.specs = specs if specs != None else []
-		self.priority = 2
-
-
-class CTypeFunc():
-	def __init__(self, params, to, volume=None, extra_args=False, specs=None):
-		self.params = params
-		self.to = to
-		self.extra_args = extra_args
-		self.specs = specs if specs != None else []
-		self.priority = 3
-
-
-class CTypeStruct():
-	def __init__(self, fields, tag, specs=None):
-		self.fields = fields
-		self.tag = tag
-		self.specs = specs if specs != None else []
-		self.priority = 0
-
-
 
 
 def wrap_if(x, cond):
@@ -69,79 +19,152 @@ def with_space(s):
 	return ''
 
 
-def str_ctype_named(t, text):
-	# "const int a"
-	return str_specs(t.specs) + t.id_str + with_space(text)
 
 
-def str_ctype_pointer(t, text):
-	# "*volatile p"
-	text = '*%s' % str_specs(t.specs) + text
-	text = wrap_if(text, t.to.priority > t.priority)
-	text = str_ctype(t.to, text)
-	return text
+class CField():
+	def __init__(self, id_str, type, specs=None, nl=0):
+		#assert(isinstance(type, CType))
+		self.id_str = id_str
+		self.type = type
+		self.specs = specs if specs != None else []
+		self.nl = nl
 
 
-def str_ctype_array(t, text):
-	text = text + '['
-	if t.volume != None and not t.volume.isValueUndef():
-		from .c11 import str_value
-		text += str_value(t.volume)
-	text += ']'
-	text = wrap_if(text, t.of.priority > t.priority)
-	text = str_ctype(t.of, text)
-	return text
+
+class CType():
+	def __init__(self):
+		pass
+
+	def to_str(self, text):
+		return "<type> " + text
+
+	def __str__(self):
+		return self.to_str(text='')
 
 
-def str_ctype_func(t, text):
-	params_text = ''
-	i = 0
-	params = t.params
-	while i < len(params):
-		param = params[i]
-		p = str_ctype(param.type, text=param.id_str)
-		if i > 0:
-			params_text += ', ' + p
-		else:
-			params_text += p
-		i = i + 1
+class CTypeNamed(CType):
+	def __init__(self, id_str, specs=None):
+		self.id_str = id_str
+		self.specs = specs if specs != None else []
+		self.priority = 0
 
-	if t.extra_args:
-		params_text += ', ...'
+	def to_str(self, text):
+		# "const int a"
+		return str_specs(self.specs) + self.id_str + with_space(text)
 
-	if params_text == '':
-		params_text = 'void'
-
-	text = text + '(%s)' % params_text
-	text = str_ctype(t.to, text)
-	return text
+	def __str__(self):
+		return self.to_str(text='')
 
 
-def str_ctype_struct(t, text):
-	nl_end = 0
-	sstr = '%s {' % (t.tag)
-	from .c11 import indent_up, indent_down, str_nl_indent
-	indent_up()
-	i = 0
-	nfields = len(t.fields)
-	if nfields > 0:
-		while i < nfields:
-			field = t.fields[i]
-			if field.nl > 0:
-				nl_end = 1
+class CTypePointer(CType):
+	def __init__(self, to, specs=None):
+		self.to = to
+		self.specs = specs if specs != None else []
+		self.priority = 1
 
-			if i > 0 and field.nl == 0:
-				if t.fields[i-1].nl == 0:
-					sstr += ' '
+	def to_str(self, text):
+		# "*volatile p"
+		text = '*%s' % str_specs(self.specs) + text
+		text = wrap_if(text, self.to.priority > self.priority)
+		text = str_ctype(self.to, text)
+		return text
 
-			sstr += str_nl_indent(field.nl)
-			sstr += str_ctype(field.type, text=field.id_str) + ';'
+	def __str__(self):
+		return self.to_str(text='')
+
+
+class CTypeArray(CType):
+	def __init__(self, of, volume=None, specs=None):
+		self.of = of
+		self.volume = volume
+		self.specs = specs if specs != None else []
+		self.priority = 2
+
+	def to_str(self, text):
+		text = text + '['
+		if self.volume != None and not self.volume.isValueUndef():
+			from .c11 import str_value
+			text += str_value(self.volume)
+		text += ']'
+		text = wrap_if(text, self.of.priority > self.priority)
+		text = str_ctype(self.of, text)
+		return text
+
+	def __str__(self):
+		return self.to_str(text='')
+
+
+class CTypeFunc(CType):
+	def __init__(self, params, to, volume=None, extra_args=False, specs=None):
+		self.params = params
+		self.to = to
+		self.extra_args = extra_args
+		self.specs = specs if specs != None else []
+		self.priority = 3
+
+	def to_str(self, text):
+		params_text = ''
+		i = 0
+		params = self.params
+		while i < len(params):
+			param = params[i]
+			p = str_ctype(param.type, text=param.id_str)
+			if i > 0:
+				params_text += ', ' + p
+			else:
+				params_text += p
 			i = i + 1
-	else:
-		sstr += 'uint8_t __placeholder;'
-	indent_down()
-	sstr += str_nl_indent(nl_end) + '}' + with_space(text)
-	return sstr
+
+		if self.extra_args:
+			params_text += ', ...'
+
+		if params_text == '':
+			params_text = 'void'
+
+		text = text + '(%s)' % params_text
+		text = str_ctype(self.to, text)
+		return text
+
+	def __str__(self):
+		return self.to_str(text='')
+
+
+class CTypeStruct(CType):
+	def __init__(self, fields, tag, specs=None):
+		self.fields = fields
+		self.tag = tag
+		self.specs = specs if specs != None else []
+		self.priority = 0
+
+	def to_str(self, text):
+		nl_end = 0
+		sstr = '%s {' % (self.tag)
+		from .c11 import indent_up, indent_down, str_nl_indent
+		indent_up()
+		i = 0
+		nfields = len(self.fields)
+		if nfields > 0:
+			while i < nfields:
+				field = self.fields[i]
+				if field.nl > 0:
+					nl_end = 1
+
+				if i > 0 and field.nl == 0:
+					if self.fields[i-1].nl == 0:
+						sstr += ' '
+
+				sstr += str_nl_indent(field.nl)
+				sstr += str_ctype(field.type, text=field.id_str) + ';'
+				i = i + 1
+		else:
+			sstr += 'uint8_t __placeholder;'
+		indent_down()
+		sstr += str_nl_indent(nl_end) + '}' + with_space(text)
+		return sstr
+
+	def __str__(self):
+		return self.to_str(text='')
+
 
 
 def str_ctype(t, text=''):
@@ -149,13 +172,8 @@ def str_ctype(t, text=''):
 	assert(text != None)
 	#assert(isinstance(t, dict))
 
-	if isinstance(t, CTypeNamed): return str_ctype_named(t, text)
-	if isinstance(t, CTypePointer): return str_ctype_pointer(t, text)
-	if isinstance(t, CTypeArray): return str_ctype_array(t, text)
-	if isinstance(t, CTypeFunc): return str_ctype_func(t, text)
-	if isinstance(t, CTypeStruct): return str_ctype_struct(t, text)
+	return t.to_str(text)
 
-	return '<unknown ctype>'
 
 
 

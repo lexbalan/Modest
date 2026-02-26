@@ -334,12 +334,9 @@ def do_ctype(t):
 	assert(isinstance(t, Type))
 
 	specs = []
-	if t.hasAttribute2('const'):
-		specs.append('const')
-	if t.hasAttribute2('volatile'):
-		specs.append('volatile')
-	if t.hasAttribute2('restrict'):
-		specs.append('restrict')
+	if t.hasAttribute2('const'):    specs.append('const')
+	if t.hasAttribute2('volatile'): specs.append('volatile')
+	if t.hasAttribute2('restrict'): specs.append('restrict')
 
 	if is_type_named(t): return do_ctype_named(t, specs=specs)
 	if t.is_pointer(): return do_ctype_pointer(t, specs=specs)
@@ -351,15 +348,15 @@ def do_ctype(t):
 
 # Переводим представление о типе в Modest в представление о типе C backend
 def str_type(t, ctx=[]):
-	return str_ctype(t=do_ctype(t))
+	return str(do_ctype(t))
 
 
 def str_type_record(t, tag='', ctx=[]):
-	return str_ctype(do_ctype_struct(t, tag=tag))
+	return str(do_ctype_struct(t, tag=tag))
 
 
 def str_field(t, id_str, ctx=[]):
-	return str_ctype(t=do_ctype(t), text=id_str)
+	return do_ctype(t).to_str(text=id_str)
 
 
 
