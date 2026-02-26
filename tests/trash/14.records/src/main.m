@@ -19,12 +19,12 @@ const xx = {x=1, y=2}
 const yy = Point2D {x=1, y=2}
 
 
-type Point = {
+type Point = @public {
 	x: Int32
 	y: Int32
 }
 
-type Line = {
+type Line = @public {
 	a: Point
 	b: Point
 }

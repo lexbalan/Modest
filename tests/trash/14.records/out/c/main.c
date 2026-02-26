@@ -29,42 +29,44 @@ struct point3_d {
 #define YY  (struct point2_d){.x = 1, .y = 2}
 
 
+typedef struct point Point;
 struct point {
 	int32_t x;
 	int32_t y;
 };
 
 
+typedef struct line Line;
 struct line {
-	struct point a;
-	struct point b;
+	Point a;
+	Point b;
 };
 
-static struct line line = (struct line){
+static Line line = (Line){
 	.a = {.x = 10, .y = 11},
 	.b = {.x = 12, .y = 13}
 };
 
-static struct line lines[3] = {
-	(struct line){
+static Line lines[3] = {
+	(Line){
 		.a = {.x = 1, .y = 2},
 		.b = {.x = 3, .y = 4}
 	},
-	(struct line){
+	(Line){
 		.a = {.x = 5, .y = 6},
 		.b = {.x = 7, .y = 8}
 	},
-	(struct line){
+	(Line){
 		.a = {.x = 9, .y = 10},
 		.b = {.x = 11, .y = 12}
 	}
 };
 
-static struct line *pLines[3] = {&lines[0], &lines[1], &lines[2]};
+static Line *pLines[3] = {&lines[0], &lines[1], &lines[2]};
 
 
 struct structx {
-	struct line *x;
+	Line *x;
 };
 
 static struct structx s = (struct structx){.x = &lines[0]};
