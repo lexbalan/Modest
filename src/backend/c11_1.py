@@ -83,7 +83,7 @@ class CTypeArray(CType):
 	def to_str(self, text):
 		text = text + '['
 		if self.volume != None and not self.volume.isValueUndef():
-			from .c11 import str_value
+			from .c12 import str_value
 			text += str_value(self.volume)
 		text += ']'
 		text = wrap_if(text, self.of.precedence > self.precedence)
@@ -139,7 +139,7 @@ class CTypeStruct(CType):
 	def to_str(self, text):
 		nl_end = 0
 		sstr = '%s {' % (self.tag)
-		from .c11 import indent_up, indent_down, str_nl_indent
+		from .c12 import indent_up, indent_down, str_nl_indent
 		indent_up()
 		i = 0
 		nfields = len(self.fields)
@@ -182,8 +182,22 @@ def str_ctype(t, text=''):
 
 
 
+def print_list_items(_list, method):
+	sstr = ''
+	i = 0
+	while i < len(_list):
+		arg = _list[i]
+		if i > 0:
+			sstr += ", "
+		sstr += method(arg)
+		i = i + 1
+	return sstr
 
 
+def str_kv(x):
+	sstr = ''
+
+	return sstr
 
 
 
@@ -211,6 +225,25 @@ class CValueNumber(CValue):
 		return str(self.number)
 
 
+class CValueArray(CValue):
+	def __init__(self, items):
+		self.items = items
+		self.precedence = 15
+
+	def __str__(self):
+		return '{' + print_list_items(self.items, str_cvalue) + '}'
+
+
+class CValueStruct(CValue):
+	def __init__(self, items):
+		self.items = items
+		self.precedence = 15
+
+	def __str__(self):
+		return '{' + print_list_items(self.items, str_kv) + '}'
+
+
+
 class CValueString(CValue):
 	def __init__(self, string):
 		assert(isinstance(string, str))
@@ -219,6 +252,17 @@ class CValueString(CValue):
 
 	def __str__(self):
 		return '"%s"' % self.string
+
+
+class CValueSubexpr(CValue):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		self.value = value
+		self.precedence = 15
+
+	def __str__(self):
+		return '(%s)' % str_cvalue(self.value)
+
 
 
 class CValueCall(CValue):
@@ -231,15 +275,7 @@ class CValueCall(CValue):
 
 	def __str__(self):
 		sstr = str_cvalue(self.left)
-		sstr += '('
-		i = 0
-		while i < len(self.args):
-			arg = self.args[i]
-			if i > 0:
-				sstr += ", "
-			sstr += str_cvalue(arg)
-			i = i + 1
-		sstr += ')'
+		sstr += '(' + print_list_items(self.args, str_cvalue) + ')'
 		return sstr
 
 
@@ -535,6 +571,65 @@ class CValueNe(CValue):
 	def __str__(self):
 		return '%s != %s' % (str_cvalue(self.left), str_cvalue(self.right))
 
+
+class CValueAndBitwise(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 7
+
+	def __str__(self):
+		return '%s & %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueXorBitwise(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 6
+
+	def __str__(self):
+		return '%s ^ %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueOrBitwise(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 5
+
+	def __str__(self):
+		return '%s | %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueAndLogical(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 4
+
+	def __str__(self):
+		return '%s && %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueOrLogical(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 3
+
+	def __str__(self):
+		return '%s || %s' % (str_cvalue(self.left), str_cvalue(self.right))
 
 
 
