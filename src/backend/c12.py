@@ -503,13 +503,17 @@ def str_value_ref(x, ctx):
 
 	if p2i_instead_p2a(x.type.to):
 		if value.isValueIndex() or value.isValueSlice():
-			return '&' + str_value(value, ctx=ctx)
+			#return '&' + str_value(value, ctx=ctx)
+			cv = CValueRef(value)
+			return str(cv)
 		# просто печатаем массив чаров как есть тк он автоматом decay to pointer
 		return str_value(value, ctx=ctx)
 
-	sstr += '&'
-	sstr += str_value(value)
-	return sstr
+	cv = CValueRef(value)
+	return str(cv)
+#	sstr += '&'
+#	sstr += str_value(value)
+#	return sstr
 
 
 def str_value_deref(x, ctx):
@@ -1241,7 +1245,9 @@ def str_value_const(x, ctx):
 
 
 def str_value_var(x, ctx):
-	return get_id_str(x)
+	cv = CValueNamed(get_id_str(x))
+	return str(cv)
+	#return get_id_str(x)
 
 
 def str_value_func(x, ctx):
@@ -1352,7 +1358,154 @@ def str_value_subexpr(x, ctx):
 	return sstr
 
 
+
+
 def str_value(x, ctx=[]):
+	cv = do_cvalue(x, ctx)
+	return str(cv)
+
+
+
+def do_cvalue_with_type(v, t, ctx=[]):
+	asset = v.asset
+
+	if t.is_integer() or t.is_int() or t.is_nat() or t.is_word():
+		as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
+		#return str_value_literal_number(t, asset, as_hex=as_hex)
+		return CValueNumber(asset)
+#	elif t.is_string(): return str_value_literal_string(v, ctx)
+#	elif t.is_bool(): return str_value_literal_bool(v, ctx)
+#	elif t.is_char(): return str_value_literal_char(t, asset, ctx)
+#	elif t.is_array(): return str_value_literal_array(v, ctx)
+#	elif t.is_record(): return str_value_literal_record(v, ctx)
+#	elif t.is_pointer(): return str_value_literal_pointer(t, asset, ctx)
+#	elif t.is_float(): return str_value_literal_rational(t, v, ctx)
+#	#elif t.is_fixed(): return str_value_fixed(t, v, ctx)
+#	elif t.is_rational(): return str_value_literal_rational(t, v, ctx)
+#	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
+#	1/0
+
+	return None
+
+
+def do_cvalue_cons(x, ctx):
+	ctype = do_ctype(x.type)
+	cvalue = do_cvalue(x.value)
+	return CValueCast(ctype, cvalue)
+
+
+def do_cvalue_call(x, ctx):
+	left = do_cvalue(x.func)
+	args = []
+	for arg in x.args:
+		a = do_cvalue(arg.value)
+		args.append(a)
+	return CValueCall(left, args)
+
+
+def do_cvalue_bin(x, ctx):
+	left = do_cvalue(x.left)
+	right = do_cvalue(x.right)
+	op = bin_ops[x.op]
+	if x.op == HLIR_VALUE_OP_ADD: return CValueAdd(left, right)
+	if x.op == HLIR_VALUE_OP_SUB: return CValueSub(left, right)
+	if x.op == HLIR_VALUE_OP_MUL: return CValueMul(left, right)
+	if x.op == HLIR_VALUE_OP_DIV: return CValueDiv(left, right)
+	if x.op == HLIR_VALUE_OP_SHL: return CValueShl(left, right)
+	if x.op == HLIR_VALUE_OP_SHR: return CValueShr(left, right)
+	if x.op == HLIR_VALUE_OP_LE: return CValueLE(left, right)
+	if x.op == HLIR_VALUE_OP_GE: return CValueGE(left, right)
+	if x.op == HLIR_VALUE_OP_LT: return CValueLt(left, right)
+	if x.op == HLIR_VALUE_OP_GT: return CValueGt(left, right)
+	if x.op == HLIR_VALUE_OP_EQ: return CValueEq(left, right)
+	if x.op == HLIR_VALUE_OP_NE: return CValueNe(left, right)
+	#if x.op == HLIR_VALUE_OP_: return CValue(left, right)
+	#if x.op == HLIR_VALUE_OP_: return CValue(left, right)
+
+#mass
+def do_cvalue(x, ctx=[]):
+	sstr = ''
+
+	if x.isValueCons(): return do_cvalue_cons(x, ctx)
+	elif x.isValueLiteral(): return do_cvalue_with_type(x, x.type, ctx)
+	elif x.isValueVar(): return CValueNamed(get_id_str(x))
+	elif x.isValueFunc(): return CValueNamed(get_id_str(x))
+	elif x.isValueBin(): return do_cvalue_bin(x, ctx)
+	elif x.isValueCall(): return do_cvalue_call(x, ctx)
+
+
+	print(x)
+	assert(False)
+
+#	elif x.isValueArray():
+#		sstr += str_value_literal_array(x, ctx)
+#	elif x.isValueRecord():
+#		sstr += str_value_literal_record(x, ctx)
+#	elif x.isValueBin():
+#		sstr += str_value_bin(x, ctx)
+#	elif x.isValueShl():
+#		sstr += str_value_shl(x, ctx)
+#	elif x.isValueShr():
+#		sstr += str_value_shr(x, ctx)
+#	elif x.isValueRef():
+#		sstr += str_value_ref(x, ctx)
+#	elif x.isValueDeref():
+#		sstr += str_value_deref(x, ctx)
+#	elif x.isValueCons():
+#		sstr += str_value_cons(x, ctx)
+#	elif x.isValueFunc():
+#		sstr += str_value_func(x, ctx)
+#	elif x.isValueVar():
+#		sstr += str_value_var(x, ctx)
+#	elif x.isValueConst():
+#		sstr += str_value_const(x, ctx)
+#	elif x.isValueCall():
+#		sstr += str_value_call(x, ctx)
+#	elif x.isValueIndex():
+#		sstr += str_value_index(x, ctx)
+#	elif x.isValueAccessModule():
+#		return str_value_access_module(x, ctx)
+#	elif x.isValueAccessRecord():
+#		sstr += str_value_access(x, ctx)
+#	elif x.isValueSlice():
+#		sstr += str_value_slice(x, ctx)
+#	elif x.isValueSubexpr():
+#		sstr += str_value_subexpr(x, ctx)
+#	elif x.isValueNot():
+#		sstr += str_value_not(x, ctx)
+#	elif x.isValueNeg():
+#		sstr += str_value_neg(x, ctx)
+#	elif x.isValuePos():
+#		sstr += str_value_pos(x, ctx)
+#	elif x.isValueNew():
+#		sstr += str_value_new(x, ctx)
+#	elif x.isValueSizeofValue():
+#		sstr += str_value_sizeof_value(x, ctx)
+#	elif x.isValueSizeofType():
+#		sstr += str_value_sizeof_type(x, ctx)
+#	elif x.isValueAlignof():
+#		sstr += str_value_alignof(x, ctx)
+#	elif x.isValueOffsetof():
+#		sstr += str_value_offsetof(x, ctx)
+#	elif x.isValueLengthofValue():
+#		sstr += str_value_lengthof_value(x, ctx)
+#	elif x.isValueLengthofType():
+#		sstr += str_value_lengthof_type(x, ctx)
+#	elif x.isValueVaArg():
+#		sstr += str_value_va_arg(x, ctx)
+#	elif x.isValueVaStart():
+#		sstr += str_value_va_start(x, ctx)
+#	elif x.isValueVaEnd():
+#		sstr += str_value_va_end(x, ctx)
+#	elif x.isValueVaCopy():
+#		sstr += str_value_va_copy(x, ctx)
+#	else:
+#		sstr += str(x)
+
+	return None
+
+
+def str_value3(x, ctx=[]):
 	sstr = ''
 
 	if x.isValueLiteral():
@@ -1494,7 +1647,8 @@ def print_stmt_return(x):
 
 	if (x.value != None) and not x.value.type.is_unit():
 		out(" ")
-		out(incast(cfunc.type.to, x.value))
+		#out(incast(cfunc.type.to, x.value))
+		out(str_value(x.value))
 
 	out(";")
 

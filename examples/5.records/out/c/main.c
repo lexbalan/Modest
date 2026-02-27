@@ -70,7 +70,7 @@ static void ptr_example(void) {
 
 
 int main(void) {
-	const float len = lineLength(line);
+	const float len = lineLength(/*?*/line);
 	printf("line length = %f\n", len);
 
 	ptr_example();

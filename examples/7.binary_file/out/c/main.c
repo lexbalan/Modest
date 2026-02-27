@@ -28,7 +28,7 @@ static void writeExample(void) {
 		.id = {'i', 'd'},
 		.data = {'d', 'a', 't', 'a'}
 	};
-	fwrite((void *)&chunk, sizeof(struct chunk), 1, fp);
+	fwrite((void *)&<hlir.types.ValueVar object at 0x1031c0980>, sizeof(struct chunk), 1, fp);
 
 	fclose(fp);
 }
@@ -44,11 +44,11 @@ static void readExample(void) {
 	}
 
 	struct chunk chunk;
-	fread((void *)&chunk, sizeof(struct chunk), 1, fp);
+	fread((void *)&<hlir.types.ValueVar object at 0x10308a350>, sizeof(struct chunk), 1, fp);
 
 	printf("file \"%s\" contains:\n", FILENAME);
-	printf("chunk.id: \"%s\"\n", chunk.id);
-	printf("chunk.data: \"%s\"\n", chunk.data);
+	printf("chunk.id: \"%s\"\n", /*?*/chunk.id);
+	printf("chunk.data: \"%s\"\n", /*?*/chunk.data);
 
 	fclose(fp);
 }

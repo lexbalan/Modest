@@ -46,7 +46,7 @@ class CTypeNamed(CType):
 	def __init__(self, id_str, specs=None):
 		self.id_str = id_str
 		self.specs = specs if specs != None else []
-		self.priority = 0
+		self.precedence = 0
 
 	def to_str(self, text):
 		# "const int a"
@@ -60,12 +60,12 @@ class CTypePointer(CType):
 	def __init__(self, to, specs=None):
 		self.to = to
 		self.specs = specs if specs != None else []
-		self.priority = 1
+		self.precedence = 1
 
 	def to_str(self, text):
 		# "*volatile p"
 		text = '*%s' % str_specs(self.specs) + text
-		text = wrap_if(text, self.to.priority > self.priority)
+		text = wrap_if(text, self.to.precedence > self.precedence)
 		text = str_ctype(self.to, text)
 		return text
 
@@ -78,7 +78,7 @@ class CTypeArray(CType):
 		self.of = of
 		self.volume = volume
 		self.specs = specs if specs != None else []
-		self.priority = 2
+		self.precedence = 2
 
 	def to_str(self, text):
 		text = text + '['
@@ -86,7 +86,7 @@ class CTypeArray(CType):
 			from .c11 import str_value
 			text += str_value(self.volume)
 		text += ']'
-		text = wrap_if(text, self.of.priority > self.priority)
+		text = wrap_if(text, self.of.precedence > self.precedence)
 		text = str_ctype(self.of, text)
 		return text
 
@@ -100,7 +100,7 @@ class CTypeFunc(CType):
 		self.to = to
 		self.extra_args = extra_args
 		self.specs = specs if specs != None else []
-		self.priority = 3
+		self.precedence = 3
 
 	def to_str(self, text):
 		params_text = ''
@@ -134,7 +134,7 @@ class CTypeStruct(CType):
 		self.fields = fields
 		self.tag = tag
 		self.specs = specs if specs != None else []
-		self.priority = 0
+		self.precedence = 0
 
 	def to_str(self, text):
 		nl_end = 0
@@ -177,129 +177,372 @@ def str_ctype(t, text=''):
 
 
 
-class CValueNamed():
+
+
+
+
+
+
+
+
+
+
+
+class CValue():
+	def __init__(self):
+		pass
+
+
+class CValueNamed(CValue):
 	def __init__(self, id_str):
 		self.id_str = id_str
-		self.priority = 0
+		self.precedence = 15
 
-class CValueNumber():
+	def __str__(self):
+		return self.id_str
+
+
+class CValueNumber(CValue):
 	def __init__(self, number):
 		self.number = number
-		self.priority = 0
+		self.precedence = 15
 
-class CValueString():
+	def __str__(self):
+		return str(self.number)
+
+
+class CValueString(CValue):
 	def __init__(self, string):
+		assert(isinstance(string, str))
 		self.string = string
-		self.priority = 0
+		self.precedence = 15
+
+	def __str__(self):
+		return '"%s"' % self.string
 
 
-class CValueUnary():
-	def __init__(self, op, value):
-		self.op = op
-		self.value = value
-		self.priority = 0
-
-class CValueBinary():
-	def __init__(self, op, left, right):
-		self.op = op
-		self.left = left
-		self.right = right
-		self.priority = 0
-
-class CValueCall():
+class CValueCall(CValue):
 	def __init__(self, left, args):
+		assert(isinstance(left, CValue))
+		assert(isinstance(args, list))
 		self.left = left
 		self.args = args
-		self.priority = 0
+		self.precedence = 14
 
-class CValueAccess():
+	def __str__(self):
+		sstr = str_cvalue(self.left)
+		sstr += '('
+		i = 0
+		while i < len(self.args):
+			arg = self.args[i]
+			if i > 0:
+				sstr += ", "
+			sstr += str_cvalue(arg)
+			i = i + 1
+		sstr += ')'
+		return sstr
+
+
+class CValueAccess(CValue):
 	def __init__(self, left, field_id_str):
+		assert(isinstance(field_id_str, str))
+		assert(isinstance(left, CValue))
 		self.left = left
 		self.field_id_str = field_id_str
-		self.priority = 0
+		self.precedence = 14
 
-class CValueAccessPtr():
+	def __str__(self):
+		return '%s.%s' % (str_cvalue(self.left), self.field_id_str)
+
+
+class CValueAccessPtr(CValue):
 	def __init__(self, left, field_id_str):
+		assert(isinstance(field_id_str, str))
+		assert(isinstance(left, CValue))
 		self.left = left
 		self.field_id_str = field_id_str
-		self.priority = 0
+		self.precedence = 14
 
-class CValueIndex():
+	def __str__(self):
+		return '%s->%s' % (str_cvalue(self.left), self.field_id_str)
+
+
+class CValueIndex(CValue):
 	def __init__(self, left, index):
+		assert(isinstance(left, CValue))
+		assert(isinstance(index, CValue))
 		self.left = left
 		self.index = index
-		self.priority = 0
+		self.precedence = 14
 
-class CValueRef():
-	def __init__(self, value):
+	def __str__(self):
+		return '%s[%s]' % (str_cvalue(self.left), str_cvalue(self.index))
+
+
+class CValueCast(CValue):
+	def __init__(self, type, value):
+		assert(isinstance(type, CType))
+		assert(isinstance(value, CValue))
+		self.type = type
 		self.value = value
-		self.priority = 0
+		self.precedence = 13
 
-class CValueDeref():
+	def __str__(self):
+		vstr = wrap_if(str(self.value), self.value.precedence < self.precedence)
+		return '(%s)%s' % (str_ctype(self.type), vstr)
+
+
+class CValueRef(CValue):
 	def __init__(self, value):
+		assert(isinstance(value, CValue))
 		self.value = value
-		self.priority = 0
+		self.precedence = 13
+
+	def __str__(self):
+		return '&%s' % str_cvalue(self.value)
 
 
-def str_cvalue_named(v):
-	return v.id_str
+class CValueDeref(CValue):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		self.value = value
+		self.precedence = 13
 
-def str_cvalue_number(v):
-	return str(v.number)
+	def __str__(self):
+		return '*%s' % str_cvalue(self.value)
 
-def str_cvalue_string(v):
-	return '"%s"' % v.string
 
-def str_cvalue_cast(v):
-	return '(%s)%s' % (str_ctype(v.type), str_cvalue(v.value))
+class CValueInc(CValue):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		self.value = value
+		self.precedence = 13
 
-def str_cvalue_unary(v):
-	return '%s%s' % (op, str_cvalue(v.value))
+	def __str__(self):
+		return '++%s' % (str_cvalue(self.value))
 
-def str_cvalue_binary(v):
-	return '%s %s %s' % (str_cvalue(v.left), op, str_cvalue(v.right))
 
-def str_cvalue_call(v):
-	sstr = str_cvalue(v.left)
-	sstr += '('
-	i = 0
-	while i < len(v.args):
-		arg = v.args[i]
-		if i > 0:
-			out(", ")
-		sstr += str_cvalue(arg)
-		i = i + 1
-	sstr += ')'
-	return sstr
+class CValueDec(CValue):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		self.value = value
+		self.precedence = 13
 
-def str_cvalue_access(v):
-	return '%s.%s' % (str_cvalue(v.left), v.field_id_str)
+	def __str__(self):
+		return '--%s%s' % (str_cvalue(self.value))
 
-def str_cvalue_access_ptr(v):
-	return '%s->%s' % (str_cvalue(v.left), v.field_id_str)
 
-def str_cvalue_index(v):
-	return '%s[%s]' % (str_cvalue(v.left), str_cvalue(v.index))
+class CValuePositive(CValue):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		self.value = value
+		self.precedence = 13
 
-def str_cvalue_ref(v):
-	return '&%s' % str_cvalue(v.value)
+	def __str__(self):
+		return '+%s' % (str_cvalue(self.value))
 
-def str_cvalue_deref(v):
-	return '*%s' % str_cvalue(v.value)
+
+class CValueNegative(CValue):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		self.value = value
+		self.precedence = 13
+
+	def __str__(self):
+		return '-%s' % (str_cvalue(self.value))
+
+
+class CValueNotLogical(CValue):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		self.value = value
+		self.precedence = 13
+
+	def __str__(self):
+		return '!%s' % (str_cvalue(self.value))
+
+
+class CValueNotBitwise(CValue):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		self.value = value
+		self.precedence = 13
+
+	def __str__(self):
+		return '~%s' % (str_cvalue(self.value))
+
+
+class CValueSizeof(CValue):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		self.value = value
+		self.precedence = 13
+
+	def __str__(self):
+		return 'sizeof(%s)' % (str_cvalue(self.value))
+
+
+class CValueMul(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 12
+
+	def __str__(self):
+		return '%s * %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueDiv(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 12
+
+	def __str__(self):
+		return '%s / %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueMod(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 12
+
+	def __str__(self):
+		return '%s % %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueAdd(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 11
+
+	def __str__(self):
+		return '%s + %s' % ((self.left), (self.right))
+
+
+class CValueSub(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 11
+
+	def __str__(self):
+		return '%s - %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+class CValueShl(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 10
+
+	def __str__(self):
+		return '%s << %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+class CValueShr(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 10
+
+	def __str__(self):
+		return '%s >> %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueLt(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 9
+
+	def __str__(self):
+		return '%s < %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueGt(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 9
+
+	def __str__(self):
+		return '%s > %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueLE(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 9
+
+	def __str__(self):
+		return '%s <= %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueGE(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 9
+
+	def __str__(self):
+		return '%s >= %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueEq(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 8
+
+	def __str__(self):
+		return '%s == %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+class CValueNe(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		self.left = left
+		self.right = right
+		self.precedence = 8
+
+	def __str__(self):
+		return '%s != %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+
+
 
 
 def str_cvalue(v):
-	if isinstance(v, CValueNamed): return str_cvalue_named(v)
-	if isinstance(v, CValueNumber): return str_cvalue_number(v)
-	if isinstance(v, CValueString): return str_cvalue_string(v)
-	if isinstance(v, CValueUnary): return str_cvalue_unary(v)
-	if isinstance(v, CValueBinary): return str_cvalue_binary(v)
-	if isinstance(v, CValueCall): return str_cvalue_call(v)
-	if isinstance(v, CValueAccess): return str_cvalue_access(v)
-	if isinstance(v, CValueAccessPtr): return str_cvalue_access_ptr(v)
-	if isinstance(v, CValueIndex): return str_cvalue_index(v)
-	if isinstance(v, CValueRef): return str_cvalue_ref(v)
-	if isinstance(v, CValueDeef): return str_cvalue_deref(v)
+	return str(v)
+
+
 
 
 
