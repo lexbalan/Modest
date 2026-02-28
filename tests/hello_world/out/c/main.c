@@ -25,6 +25,9 @@ typedef uint32_t char32_t;
 #endif /* __STR_UNICODE__ */
 
 
+#ifndef LENGTHOF
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif /* LENGTHOF */
 #include <stdlib.h>
 
 
@@ -72,6 +75,7 @@ int main(void) {
 
 	int32_t arr[3] = {1, 2, 3};
 
+	LENGTHOF(arr);
 
 	printf("Hello World!\n");
 
@@ -92,6 +96,8 @@ int main(void) {
 
 	arr[1];
 	struct point p0 = (struct point){};
+	p0.x;
+	p0.y;
 	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)) {
 		uint32_t u;
 		uint32_t v;

@@ -46,6 +46,7 @@ public func main () -> Int {
 
 	var arr = [3]Int32 [1, 2, 3]
 
+	lengthof(arr)
 
 	printf("Hello World!\n")
 
@@ -66,6 +67,8 @@ public func main () -> Int {
 
 	arr[1]
 	var p0 = Point {}
+	p0.x
+	p0.y
 	if a < 1 and b > 12 or c <= 5 and not (1 < 0) {
 		var u: Word32
 		var v: Word32

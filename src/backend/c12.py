@@ -1545,8 +1545,30 @@ def do_cvalue_call(x, ctx):
 
 def do_cvalue_index(x, ctx):
 	left = do_cvalue(x.left)
+	if x.left.type.is_pointer_to_array():
+		left = CValueSubexpr(CValueDeref(left))
 	index = do_cvalue(x.index)
 	return CValueIndex(left, index)
+
+
+def do_cvalue_access(x, ctx):
+	left = x.left
+
+	# если имеем дело c константной записью (глоб константа)
+	# и результат операции доступа - константа которая уже тут
+#	if not left.isValueConst():
+#		if value_is_generic_immediate(left):
+#			return str_value_literal(x, ctx)
+
+	lx = do_cvalue(left, ctx=ctx)
+	if value_is_generic_immediate_const(left):
+		lx = CValueCast(do_ctype(left.type), lx)
+
+	field_id_str = get_id_str(x.field)
+	if left.type.is_pointer():
+		return CValueAccessPtr(lx, field_id_str)
+	return CValueAccess(lx, field_id_str)
+
 
 
 def do_cvalue_shl(x, ctx):
@@ -1600,6 +1622,14 @@ def do_cvalue_const(x, ctx):
 	return CValueNamed(id_str)
 
 
+def do_cvalue_access_module(x, ctx):
+	return do_cvalue(x.value, ctx)
+
+
+def do_cvalue_lengthof_value(x, ctx):
+	return CValueCall(left=CValueNamed("LENGTHOF"), args=[do_cvalue(x.value)])
+
+
 def do_cvalue_bin(x, ctx):
 	left = do_cvalue(x.left)
 	right = do_cvalue(x.right)
@@ -1632,6 +1662,7 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueFunc(): return CValueNamed(get_id_str(x))
 	elif x.isValueBin(): return do_cvalue_bin(x, ctx)
 	elif x.isValueCall(): return do_cvalue_call(x, ctx)
+	elif x.isValueAccessRecord(): return do_cvalue_access(x, ctx)
 	elif x.isValueArray(): return do_cvalue_literal_array(x, ctx)
 	elif x.isValueRecord(): return do_cvalue_literal_record(x, ctx)
 	elif x.isValueIndex(): return do_cvalue_index(x, ctx)
@@ -1643,6 +1674,8 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueNot(): return do_cvalue_not(x, ctx)
 	elif x.isValueNeg(): return do_cvalue_neg(x, ctx)
 	elif x.isValuePos(): return do_cvalue_pos(x, ctx)
+	elif x.isValueAccessModule(): return do_cvalue_access_module(x, ctx)
+	elif x.isValueLengthofValue(): return do_cvalue_lengthof_value(x, ctx)
 	elif x.isValueUndef(): 1/0
 	elif x.isValueBad():
 		error("value bad in C backend", x.ti)
