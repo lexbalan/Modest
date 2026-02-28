@@ -1846,9 +1846,10 @@ class Value(Entity):
 			return self.asset == 0 or self.asset == []
 
 		if self.type.is_array():
-			for item in self.asset:
-				if not item.isValueZero():
-					return False
+			if self.asset != None:
+				for item in self.asset:
+					if not item.isValueZero():
+						return False
 			return True
 
 		if self.type.is_record():
@@ -2220,7 +2221,7 @@ class ValueSizeofType(Value):
 	def __init__(self, of, ti=None):
 		from trans import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
-		self.of = of
+		self.oftype = of
 		if not of.is_vla():
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			self.set_asset(of.size)
@@ -2233,7 +2234,7 @@ class ValueSizeofValue(Value):
 	def __init__(self, value, ti=None):
 		from trans import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
-		self.of = value
+		self.ofvalue = value
 		if not value.type.is_vla():
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			self.set_asset(value.type.size)

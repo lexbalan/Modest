@@ -1403,7 +1403,7 @@ def str_value_func(x, ctx):
 
 def str_value_sizeof_value(x, ctx):
 	sstr = "sizeof "
-	sstr += str_value(x.of)
+	sstr += str_value(x.ofvalue)
 	return sstr
 
 

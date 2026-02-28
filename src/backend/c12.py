@@ -636,10 +636,6 @@ def str_value_literal_number(type, num, nsigns=0, is_big=False, as_hex=False):
 
 
 
-def str_value_sizeof_value(x, ctx):
-	sstr = "sizeof "
-	sstr += str_value(x.of)
-	return sstr
 
 
 def str_value_sizeof_type(x, ctx):
@@ -674,28 +670,6 @@ def str_value_lengthof_type(x, ctx):
 	return str(x.oftype.volume.asset)
 
 
-def str_value_lengthof_value(x, ctx):
-	value = x.value
-
-	if value_is_generic_immediate_const(value):
-		if not value.type.is_string():
-			return str(value.type.volume.asset)
-
-	# generic array в си это просто макрос вида {1, 2, 3}
-	# и его нельзя подставить в LENGTHOF (!)
-	if value.isValueDeref() or x.type.is_generic_array():
-		# решает проблему когда массив представлен указателем на элемент
-		return str_value(value.type.volume)
-
-	sstr = ""
-	if value.type.is_generic_array():
-		ts = str_type(value.type)
-		vs = str_value(value, ctx=ctx)
-		sstr = '((%s)%s)' % (ts, vs)
-	else:
-		sstr += str_value(value)
-
-	return "LENGTHOF(%s)" % sstr
 
 
 
@@ -1175,8 +1149,34 @@ def do_cvalue_access_module(x, ctx):
 	return do_cvalue(x.value, ctx)
 
 
+
+
 def do_cvalue_lengthof_value(x, ctx):
+	value = x.value
+
+	if value_is_generic_immediate_const(value):
+		if not value.type.is_string():
+			return CValueNumber(value.type.volume.asset)
+
+	# generic array в си это просто макрос вида {1, 2, 3}
+	# и его нельзя подставить в LENGTHOF (!)
+	if value.isValueDeref() or x.type.is_generic_array():
+		# решает проблему когда массив представлен указателем на элемент
+		return do_cvalue(value.type.volume)
+
+#	if value.type.is_generic_array():
+#		ts = str_type(value.type)
+#		vs = str_value(value, ctx=ctx)
+#		sstr = '((%s)%s)' % (ts, vs)
+
 	return CValueCall(left=CValueNamed("LENGTHOF"), args=[do_cvalue(x.value)])
+
+
+def do_cvalue_sizeof_value(x, ctx):
+	return CValueSizeofValue(do_cvalue(x.ofvalue))
+
+def do_cvalue_sizeof_type(x, ctx):
+	return CValueSizeofType(do_ctype(x.oftype))
 
 
 def do_cvalue_bin(x, ctx):
@@ -1225,6 +1225,8 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValuePos(): return do_cvalue_pos(x, ctx)
 	elif x.isValueAccessModule(): return do_cvalue_access_module(x, ctx)
 	elif x.isValueLengthofValue(): return do_cvalue_lengthof_value(x, ctx)
+	elif x.isValueSizeofType(): return do_cvalue_sizeof_type(x, ctx)
+	elif x.isValueSizeofValue(): return do_cvalue_sizeof_value(x, ctx)
 	elif x.isValueUndef(): 1/0
 	elif x.isValueBad():
 		error("value bad in C backend", x.ti)
@@ -1235,11 +1237,9 @@ def do_cvalue(x, ctx=[]):
 #	elif x.isValueSlice(): sstr += str_value_slice(x, ctx)
 #	elif x.isValueSubexpr(): sstr += str_value_subexpr(x, ctx)
 #	elif x.isValueNew(): sstr += str_value_new(x, ctx)
-#	elif x.isValueSizeofValue(): sstr += str_value_sizeof_value(x, ctx)
 #	elif x.isValueSizeofType(): sstr += str_value_sizeof_type(x, ctx)
 #	elif x.isValueAlignof(): sstr += str_value_alignof(x, ctx)
 #	elif x.isValueOffsetof(): sstr += str_value_offsetof(x, ctx)
-#	elif x.isValueLengthofValue(): sstr += str_value_lengthof_value(x, ctx)
 #	elif x.isValueLengthofType(): sstr += str_value_lengthof_type(x, ctx)
 #	elif x.isValueVaArg(): sstr += str_value_va_arg(x, ctx)
 #	elif x.isValueVaStart(): sstr += str_value_va_start(x, ctx)

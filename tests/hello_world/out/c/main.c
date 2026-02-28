@@ -94,6 +94,9 @@ int main(void) {
 	(uint32_t)abs(a);
 	(uint64_t)llabs(b);
 
+	sizeof a;
+	sizeof(uint32_t);
+
 	arr[1];
 	struct point p0 = (struct point){};
 	p0.x;

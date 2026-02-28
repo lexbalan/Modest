@@ -65,6 +65,9 @@ public func main () -> Int {
 	Nat32 a
 	Nat64 b
 
+	sizeof(a)
+	sizeof(Nat32)
+
 	arr[1]
 	var p0 = Point {}
 	p0.x

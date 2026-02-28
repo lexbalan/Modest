@@ -123,25 +123,3 @@ int32_t main(void) {
 
 	while (true) {
 		showPrompt();
-		fgets(inbuf, (int)sizeof inbuf, stdin);
-
-		char *tokens[64] = {0};
-		struct tokenizer tokenizer = (struct tokenizer){
-			.input = inbuf,
-			.tokensBuf = tokensBuf,
-			.tokens = &tokens
-		};
-		tokenize(&tokenizer);
-		char *const cmd = (*tokenizer.tokens)[0];
-		uint16_t argc = tokenizer.tokensPos;
-		if (argc > 0) {
-			argc = argc - 1;
-		}
-		char *(*const argv)[] = (char *(*)[])&(*tokenizer.tokens)[1];
-		execute(cmd, argc, argv);
-	}
-
-	return 0;
-}
-
-

@@ -447,15 +447,26 @@ class CValueNotBitwise(CValue):
 		return '~%s' % (str_cvalue(self.value))
 
 
-class CValueSizeof(CValue):
-	def __init__(self, value):
-		assert(isinstance(value, CValue))
+class CValueSizeofValue(CValue):
+	def __init__(self, ofvalue):
+		assert(isinstance(ofvalue, CValue))
 		super().__init__()
-		self.value = value
+		self.ofvalue = ofvalue
 		self.precedence = 13
 
 	def __str__(self):
-		return 'sizeof(%s)' % (str_cvalue(self.value))
+		return 'sizeof %s' % (str_cvalue(self.ofvalue))
+
+
+class CValueSizeofType(CValue):
+	def __init__(self, oftype):
+		assert(isinstance(oftype, CType))
+		super().__init__()
+		self.oftype = oftype
+		self.precedence = 13
+
+	def __str__(self):
+		return 'sizeof(%s)' % (str_ctype(self.oftype))
 
 
 class CValueMul(CValue):

@@ -606,7 +606,7 @@ def str_value_literal(x, ctx):
 
 
 def str_value_sizeof_value(x, ctx):
-	return "sizeof " + str_value(x.of)
+	return "sizeof " + str_value(x.ofvalue)
 
 def str_value_sizeof_type(x, ctx):
 	return "sizeof(" + str_type(x.of) + ')'
