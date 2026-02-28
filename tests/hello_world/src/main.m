@@ -21,26 +21,28 @@ public func main () -> Int {
 	let xc2: Char16 = "A"
 	let xc3: Char32 = "A"
 
-	let xs1: *Str8 = "A"
-	let xs2: *Str16 = "A"
-	let xs3: *Str32 = "A"
-
 	let xcs1: []Char8 = "A"
 	let xcs2: []Char16 = "A"
 	let xcs3: []Char32 = "A"
+
+	let xs1: *Str8 = "A"
+	let xs2: *Str16 = "A"
+	let xs3: *Str32 = "A"
 
 
 	var c1: Char8 = "B"
 	var c2: Char16 = "B"
 	var c3: Char32 = "B"
 
+	var cs1: []Char8 = "B"
+	var cs2: []Char16 = "B"
+	var cs3: []Char32 = "B"
+
 	var s1: *Str8 = "B"
 	var s2: *Str16 = "B"
 	var s3: *Str32 = "B"
 
-	var cs1: []Char8 = "B"
-	var cs2: []Char16 = "B"
-	var cs3: []Char32 = "B"
+	var arr = [3]Int32 [1, 2, 3]
 
 
 	printf("Hello World!\n")
@@ -55,9 +57,9 @@ public func main () -> Int {
 	foo(1, 2)
 	foo(a + 1, b - c)
 	1 + 2 - 3 * 4
-	var arr = [3]Int32 [1, 2, 3]
+
 	arr[1]
-	var p0 = Point {}
+	//var p0 = Point {}
 	if a < 1 and b > 12 or c <= 5 and not (1 < 0) {
 		var u: Word32
 		var v: Word32

@@ -46,44 +46,45 @@ int main(void) {
 	const char16_t xc2 = u'A';
 	const char32_t xc3 = U'A';
 
-	char *const xs1 = "A";
-	char16_t *const xs2 = u"A";
-	char32_t *const xs3 = U"A";
-
 	char xcs1[1] = "A";
 	char16_t xcs2[1] = u"A";
 	char32_t xcs3[1] = U"A";
+
+	char *const xs1 = "A";
+	char16_t *const xs2 = u"A";
+	char32_t *const xs3 = U"A";
 
 
 	char c1 = 'B';
 	char16_t c2 = u'B';
 	char32_t c3 = U'B';
 
+	char cs1[1] = "B";
+	char16_t cs2[1] = u"B";
+	char32_t cs3[1] = U"B";
+
 	char *s1 = "B";
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
 
-	char cs1[1] = "B";
-	char16_t cs2[1] = u"B";
-	char32_t cs3[1] = U"B";
+	int32_t arr[3] = {1, 2, 3};
 
 
 	printf("Hello World!\n");
 
 	int32_t a;
 	int64_t b;
-	a + (int32_t)2;
-	a - (int32_t)2;
-	a * (int32_t)2;
-	a / (int32_t)2;
-	a % (int32_t)2;
-	foo((int32_t)1, (int64_t)2);
-	foo(a + (int32_t)1, b - (int64_t)c);
+	a + 2;
+	a - 2;
+	a * 2;
+	a / 2;
+	a % 2;
+	foo(1, 2);
+	foo(a + 1, b - (int64_t)c);
 	(int4_t)(1 + 2) - 3 * 4;
-	int32_t arr[3] = {1, 2, 3};
-	arr[(int32_t)1];
-	struct point p0 = (struct point)(struct point){};
-	if (a < (int32_t)1 && b > (int64_t)12 || c <= 5 && !(1 < 0)) {
+
+	arr[1];
+	if (a < 1 && b > 12 || c <= 5 && !(1 < 0)) {
 		uint32_t u;
 		uint32_t v;
 		u | v & u ^ ~v;
@@ -104,7 +105,7 @@ int main(void) {
 	float f;
 	f = (float)pi;
 
-	return (int)0;
+	return 0;
 
 #undef pi
 }

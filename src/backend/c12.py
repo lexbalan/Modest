@@ -505,12 +505,12 @@ def str_value_ref(x, ctx):
 		if value.isValueIndex() or value.isValueSlice():
 			#return '&' + str_value(value, ctx=ctx)
 			cv = CValueRef(value)
-			return str(cv)
+			return str_cvalue(cv)
 		# просто печатаем массив чаров как есть тк он автоматом decay to pointer
 		return str_value(value, ctx=ctx)
 
 	cv = CValueRef(value)
-	return str(cv)
+	return str_cvalue(cv)
 #	sstr += '&'
 #	sstr += str_value(value)
 #	return sstr
@@ -736,31 +736,6 @@ def str_value_cons_record(x, ctx):
 
 	return '(' + str_type(to_type) + ')' + str_value(x.value, ctx=ctx)
 
-
-def str_value_cons_array(x, ctx):
-	sstr = ''
-	to_type = x.type
-	value = x.value
-	from_type = value.type
-
-	if from_type.is_generic_array() or from_type.is_string():
-		# C не позволяет приводить литерал массива к типу массива в инициализаторах(!)
-		# Вот все можно приводить, все ок, а массив - нет.
-		if not 'initializer_context' in ctx:
-			sstr += '(' + str_type(to_type) + ')'
-
-		if from_type.is_string():
-			sstr += '{' + print_literal_array_items(x.asset, to_type.of) + '}'
-		else:
-			sstr += str_value(value, ctx=ctx)
-		return sstr
-
-	# for:
-	#    var x: [10]Word8 = "0123456789"
-	if value.type.is_string():
-		return str_value_literal_string(value, ctx=ctx)
-
-	return str_cast(to_type, value, ctx=ctx)
 
 
 
@@ -1128,7 +1103,7 @@ def str_value_const(x, ctx):
 
 def str_value_var(x, ctx):
 	cv = CValueNamed(get_id_str(x))
-	return str(cv)
+	return str_cvalue(cv)
 	#return get_id_str(x)
 
 
@@ -1255,7 +1230,9 @@ def str_initializer(v):
 
 def str_value(x, ctx=[]):
 	cv = do_cvalue(x, ctx)
-	return str(cv)
+	if not cv:
+		print(x.type)
+	return str_cvalue(cv)
 
 
 def do_cvalue_literal_bool(v, ctx):
@@ -1282,6 +1259,13 @@ def do_cvalue_literal_char(t, v, ctx):
 	sstr = code_to_char(cc)
 	return CValueChar(sstr, width=t.width)
 
+def do_cvalue_literal_array(v, ctx):
+	items = v.asset
+	cvalues = []
+	for item in items:
+		cv = do_cvalue(item, ctx=ctx)
+		cvalues.append(cv)
+	return CValueArray(cvalues)
 
 def do_cvalue_with_type(v, t, ctx=[]):
 	asset = v.asset
@@ -1290,13 +1274,17 @@ def do_cvalue_with_type(v, t, ctx=[]):
 		as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
 		#return str_value_literal_number(t, asset, as_hex=as_hex)
 		return CValueNumber(asset)
-	#elif t.is_string(): return do_cvalue_literal_string(v.type, v, ctx)
+	elif t.is_string():
+		return do_cvalue_literal_string(v.asset, width=v.type.width)
+
 	elif t.is_bool(): return do_cvalue_literal_bool(v, ctx)
 	elif t.is_rational(): return do_cvalue_literal_rational(v, ctx)
 	elif t.is_float(): return do_cvalue_literal_rational(v, ctx)
 	elif t.is_char(): return do_cvalue_literal_char(t, v, ctx)
+	elif t.is_array(): return do_cvalue_literal_array(v, ctx)
 
-
+	print(t)
+	1/0
 #	elif t.is_char(): return str_value_literal_char(t, asset, ctx)
 #	elif t.is_array(): return str_value_literal_array(v, ctx)
 #	elif t.is_record(): return str_value_literal_record(v, ctx)
@@ -1310,37 +1298,126 @@ def do_cvalue_with_type(v, t, ctx=[]):
 	return None
 
 
+def do_cvalue_cons_array(x, ctx):
+	to_type = x.type
+	value = x.value
+	from_type = value.type
+
+	if from_type.is_generic_array() or from_type.is_string():
+		# C не позволяет приводить литерал массива к типу массива в инициализаторах(!)
+		# Вот все можно приводить, все ок, а массив - нет.
+		if 'initializer_context' in ctx:
+			if from_type.is_string():
+				width = 0
+				if not to_type.is_generic():
+					width = to_type.of.width
+				cv = do_cvalue_literal_string(x.value.asset, width)
+				return cv
+
+			cv = do_cvalue(x.value)
+			return cv
+
+		if from_type.is_string():
+			#sstr += '{' + print_literal_array_items(x.asset, to_type.of) + '}'
+			width = 0
+			if not to_type.is_generic():
+				width = to_type.of.width
+			print("width = " + str(width))
+			cv = do_cvalue_literal_string(x.value.asset, width)
+			return cv
+		else:
+			cv = do_cvalue(value, ctx=ctx)
+			return cv
+
+	# for:
+	#    var x: [10]Word8 = "0123456789"
+	# if from_type.is_string():
+	# 	width = 0
+	# 	if not type.is_generic():
+	#  		width = type.to.of.width
+	# 	return do_cvalue_literal_string(value, width=width)
+
+	return do_cvalue_cast(to_type, x.value, ctx)
+
+
+
 def do_cvalue_cons(x, ctx):
 	type = x.type
-	_from = x.value.type
-
-
-	if _from.is_string():
-		if type.is_char():
-			return do_cvalue_literal_char(type, x.value, [])
-
-		if type.is_array_of_char():
-			width = 0
-			if not type.is_generic():
-				width = type.of.width
-			return do_cvalue_literal_string(x.value.asset, width)
-
-		if type.is_pointer_to_array_of_char():
-			width = 0
-			if not type.is_generic():
-				width = type.to.of.width
-			return do_cvalue_literal_string(x.value.asset, width)
-
+	value = x.value
+	from_type = value.type
 
 	if type.is_array():
-		if 'initializer_context' in ctx:
-			return do_cvalue(x.value)
+		cv = do_cvalue_cons_array(x, ctx)
+		return cv
 
-	#mass
+	if type.is_record():
+		#cv = do_cvalue_cons_record(x, ctx)
+		cv = None
+		return cv
 
-	ctype = do_ctype(x.type)
-	cvalue = do_cvalue(x.value)
-	return CValueCast(ctype, cvalue)
+	if type.is_branded():
+		return do_cvalue_cast(x.type, x.value, ctx)
+
+	if type.is_char() and from_type.is_string():
+		if value.isValueLiteral():
+			cv= do_cvalue_literal_char(type, value, ctx)
+			return cv
+
+	if value.isValueLiteral() and from_type.is_generic():
+		if x.asset != None:
+			return do_cvalue_with_type(value, type, ctx=ctx)
+
+
+	# *RecordA -> *RecordB
+	# у нас типы структурные, а в си - номинальные
+	# поэтому даже если структуры одинаковы, но имена разные
+	# - их нужно жестко приводить
+	if type.is_pointer_to_record() and from_type.is_pointer_to_record():
+		if from_type.to.definition != type.to.definition:
+			#return str_cast(type, value, ctx=ctx)
+			return do_cvalue_cast(type, value, ctx)
+
+	elif type.is_pointer_to_array():
+		if from_type.is_string():
+			return do_cvalue_literal_string(value.asset, width=type.to.of.width)
+
+	elif type.is_word() or type.is_int() or type.is_nat():
+		if from_type.is_word() or from_type.is_int() or from_type.is_nat():
+			if from_type.is_generic():
+				return do_cvalue(value, ctx=ctx)
+			if get_id_str(type) == get_id_str(from_type):
+				return do_cvalue(value, ctx=ctx)
+
+
+	# if from_type.is_string():
+	# 	if type.is_char():
+	# 		return do_cvalue_literal_char(type, value, [])
+
+	# 	if type.is_array_of_char():
+	# 		width = 0
+	# 		if not type.is_generic():
+	# 			width = type.of.width
+	# 		return do_cvalue_literal_string(value.asset, width)
+
+	# 	if type.is_pointer_to_array_of_char():
+	# 		width = 0
+	# 		if not type.is_generic():
+	# 			width = type.to.of.width
+	# 		return do_cvalue_literal_string(value.asset, width)
+
+
+	# if type.is_array():
+	# 	if 'initializer_context' in ctx:
+	# 		return do_cvalue(x.value)
+
+	return do_cvalue_cast(type, value, ctx=ctx)
+
+
+def do_cvalue_cast(type, value, ctx):
+	ctype = do_ctype(type)
+	cvalue = do_cvalue(value, ctx=ctx)
+	cv = CValueCast(ctype, cvalue)
+	return cv
 
 
 def do_cvalue_call(x, ctx):
@@ -1443,8 +1520,6 @@ def do_cvalue_bin(x, ctx):
 
 #mass
 def do_cvalue(x, ctx=[]):
-	sstr = ''
-
 	if x.isValueCons(): return do_cvalue_cons(x, ctx)
 	elif x.isValueLiteral(): return do_cvalue_with_type(x, x.type, ctx)
 	elif x.isValueConst(): return CValueNamed(get_id_str(x))

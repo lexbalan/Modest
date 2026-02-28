@@ -1585,8 +1585,8 @@ def do_value_undefined(x):
 
 def do_rvalue(x):
 	v = do_value(x)
-	if not v.is_initialized:
-		warning("attempt to use an uninitialized value", x['ti'])
+#	if not v.is_initialized:
+#		warning("attempt to use an uninitialized value", x['ti'])
 	return v
 
 
@@ -1855,7 +1855,8 @@ def do_stmt_value(x):
 
 	if not v.type.is_unit():
 		if not v.type.hasAttribute2('unused'):
-			warning("unused result of %s expression" % x['value']['kind'], v.ti)
+			#warning("unused result of %s expression" % x['value']['kind'], v.ti)
+			pass
 
 	return StmtValueExpression(v, ti=x['ti'])
 

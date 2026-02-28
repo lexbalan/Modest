@@ -209,11 +209,12 @@ def string_literal_prefix(width):
 
 class CValue():
 	def __init__(self):
-		pass
+		self.mark = None
 
 
 class CValueNamed(CValue):
 	def __init__(self, id_str):
+		super().__init__()
 		self.id_str = id_str
 		self.precedence = 15
 
@@ -223,6 +224,7 @@ class CValueNamed(CValue):
 
 class CValueNumber(CValue):
 	def __init__(self, number):
+		super().__init__()
 		self.number = number
 		self.precedence = 15
 
@@ -234,6 +236,7 @@ class CValueNumber(CValue):
 class CValueString(CValue):
 	def __init__(self, string, width):
 		assert(isinstance(string, str))
+		super().__init__()
 		self.string = string
 		self.width = width
 		self.precedence = 15
@@ -245,6 +248,7 @@ class CValueString(CValue):
 class CValueChar(CValue):
 	def __init__(self, char, width=8):
 		assert(isinstance(char, str))
+		super().__init__()
 		self.char = char
 		self.width = width
 		self.precedence = 15
@@ -256,6 +260,7 @@ class CValueChar(CValue):
 
 class CValueArray(CValue):
 	def __init__(self, items):
+		super().__init__()
 		self.items = items
 		self.precedence = 15
 
@@ -265,6 +270,7 @@ class CValueArray(CValue):
 
 class CValueStruct(CValue):
 	def __init__(self, items):
+		super().__init__()
 		self.items = items
 		self.precedence = 15
 
@@ -278,6 +284,7 @@ class CValueStruct(CValue):
 class CValueSubexpr(CValue):
 	def __init__(self, value):
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.value = value
 		self.precedence = 15
 
@@ -290,6 +297,7 @@ class CValueCall(CValue):
 	def __init__(self, left, args):
 		assert(isinstance(left, CValue))
 		assert(isinstance(args, list))
+		super().__init__()
 		self.left = left
 		self.args = args
 		self.precedence = 14
@@ -304,6 +312,7 @@ class CValueAccess(CValue):
 	def __init__(self, left, field_id_str):
 		assert(isinstance(field_id_str, str))
 		assert(isinstance(left, CValue))
+		super().__init__()
 		self.left = left
 		self.field_id_str = field_id_str
 		self.precedence = 14
@@ -316,6 +325,7 @@ class CValueAccessPtr(CValue):
 	def __init__(self, left, field_id_str):
 		assert(isinstance(field_id_str, str))
 		assert(isinstance(left, CValue))
+		super().__init__()
 		self.left = left
 		self.field_id_str = field_id_str
 		self.precedence = 14
@@ -328,6 +338,7 @@ class CValueIndex(CValue):
 	def __init__(self, left, index):
 		assert(isinstance(left, CValue))
 		assert(isinstance(index, CValue))
+		super().__init__()
 		self.left = left
 		self.index = index
 		self.precedence = 14
@@ -340,6 +351,7 @@ class CValueCast(CValue):
 	def __init__(self, type, value):
 		assert(isinstance(type, CType))
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.type = type
 		self.value = value
 		self.precedence = 13
@@ -352,6 +364,7 @@ class CValueCast(CValue):
 class CValueRef(CValue):
 	def __init__(self, value):
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.value = value
 		self.precedence = 13
 
@@ -362,6 +375,7 @@ class CValueRef(CValue):
 class CValueDeref(CValue):
 	def __init__(self, value):
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.value = value
 		self.precedence = 13
 
@@ -372,6 +386,7 @@ class CValueDeref(CValue):
 class CValueInc(CValue):
 	def __init__(self, value):
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.value = value
 		self.precedence = 13
 
@@ -382,6 +397,7 @@ class CValueInc(CValue):
 class CValueDec(CValue):
 	def __init__(self, value):
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.value = value
 		self.precedence = 13
 
@@ -392,6 +408,7 @@ class CValueDec(CValue):
 class CValuePositive(CValue):
 	def __init__(self, value):
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.value = value
 		self.precedence = 13
 
@@ -402,6 +419,7 @@ class CValuePositive(CValue):
 class CValueNegative(CValue):
 	def __init__(self, value):
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.value = value
 		self.precedence = 13
 
@@ -412,6 +430,7 @@ class CValueNegative(CValue):
 class CValueNotLogical(CValue):
 	def __init__(self, value):
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.value = value
 		self.precedence = 13
 
@@ -422,6 +441,7 @@ class CValueNotLogical(CValue):
 class CValueNotBitwise(CValue):
 	def __init__(self, value):
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.value = value
 		self.precedence = 13
 
@@ -432,6 +452,7 @@ class CValueNotBitwise(CValue):
 class CValueSizeof(CValue):
 	def __init__(self, value):
 		assert(isinstance(value, CValue))
+		super().__init__()
 		self.value = value
 		self.precedence = 13
 
@@ -443,6 +464,7 @@ class CValueMul(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 12
@@ -455,6 +477,7 @@ class CValueDiv(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 12
@@ -467,6 +490,7 @@ class CValueRem(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 12
@@ -479,6 +503,7 @@ class CValueAdd(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 11
@@ -491,6 +516,7 @@ class CValueSub(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 11
@@ -502,6 +528,7 @@ class CValueShl(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 10
@@ -513,6 +540,7 @@ class CValueShr(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 10
@@ -525,6 +553,7 @@ class CValueLt(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 9
@@ -537,6 +566,7 @@ class CValueGt(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 9
@@ -549,6 +579,7 @@ class CValueLE(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 9
@@ -561,6 +592,7 @@ class CValueGE(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 9
@@ -573,6 +605,7 @@ class CValueEq(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 8
@@ -585,6 +618,7 @@ class CValueNe(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 8
@@ -597,6 +631,7 @@ class CValueAndBitwise(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 7
@@ -609,6 +644,7 @@ class CValueXorBitwise(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 6
@@ -621,6 +657,7 @@ class CValueOrBitwise(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 5
@@ -633,6 +670,7 @@ class CValueAndLogical(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 4
@@ -645,6 +683,7 @@ class CValueOrLogical(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
+		super().__init__()
 		self.left = left
 		self.right = right
 		self.precedence = 3
@@ -656,6 +695,9 @@ class CValueOrLogical(CValue):
 
 
 def str_cvalue(v):
+	assert(v != None)
+	if v.mark != None:
+		return '/*mark=%s*/' % v.mark + str(v)
 	return str(v)
 
 
