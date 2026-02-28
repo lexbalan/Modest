@@ -200,6 +200,11 @@ def str_kv(x):
 	return sstr
 
 
+def string_literal_prefix(width):
+	if width > 16: return "U"
+	if width > 8: return "u"
+	return ""
+
 
 
 class CValue():
@@ -225,6 +230,30 @@ class CValueNumber(CValue):
 		return str(self.number)
 
 
+
+class CValueString(CValue):
+	def __init__(self, string, width):
+		assert(isinstance(string, str))
+		self.string = string
+		self.width = width
+		self.precedence = 15
+
+	def __str__(self):
+		return '%s"%s"' % (string_literal_prefix(self.width), self.string)
+
+
+class CValueChar(CValue):
+	def __init__(self, char, width=8):
+		assert(isinstance(char, str))
+		self.char = char
+		self.width = width
+		self.precedence = 15
+
+	def __str__(self):
+		return "%s'%s'" % (string_literal_prefix(self.width), self.char)
+
+
+
 class CValueArray(CValue):
 	def __init__(self, items):
 		self.items = items
@@ -244,14 +273,6 @@ class CValueStruct(CValue):
 
 
 
-class CValueString(CValue):
-	def __init__(self, string):
-		assert(isinstance(string, str))
-		self.string = string
-		self.precedence = 15
-
-	def __str__(self):
-		return '"%s"' % self.string
 
 
 class CValueSubexpr(CValue):

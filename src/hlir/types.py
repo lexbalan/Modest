@@ -931,6 +931,12 @@ class Type(Entity):
 		return False
 
 
+	def is_pointer_to_array_of_char(self):
+		if self.is_pointer_to_array():
+			return self.to.of.is_char()
+		return False
+
+
 	# array of char not always is Str (!) see zarray att
 	def is_pointer_to_str(self):
 		if self.is_pointer():

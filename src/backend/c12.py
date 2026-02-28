@@ -1004,7 +1004,7 @@ def str_value_literal_array(x, ctx):
 						break
 
 				i = i + 1
-			return print_utf32codes_as_string(utf32_codes, width=char_width, quote='"')
+			return str_utf32codes_as_string(utf32_codes, width=char_width, quote='"')
 
 	nl_end_e = 0
 	for item in items:
@@ -1028,11 +1028,11 @@ def str_value_literal_string(v, ctx):
 	width = v.type.width
 	if v.type.is_generic():
 		width=0
-	return print_utf32codes_as_string(utf32_codes, width=width, quote='"')
+	return str_utf32codes_as_string(utf32_codes, width=width, quote='"')
 
 
 def str_value_literal_char(type, cc, ctx):
-	return print_utf32codes_as_string([cc], type.width, quote="'")
+	return str_utf32codes_as_string([cc], type.width, quote="'")
 
 
 
@@ -1126,7 +1126,7 @@ def string_literal_prefix(width):
 	return ""
 
 
-def print_utf32codes_as_string(utf32_codes, width, quote):
+def str_utf32codes_as_string(utf32_codes, width, quote):
 	sstr = ""
 	sstr += string_literal_prefix(width)
 	sstr += quote
@@ -1365,6 +1365,30 @@ def str_value(x, ctx=[]):
 	return str(cv)
 
 
+def do_cvalue_literal_bool(v, ctx):
+	if v.asset:
+		return CValueNamed('true')
+	return CValueNamed('false')
+
+
+def do_cvalue_literal_string(chars, width):
+	utf32_codes = chars_to_utf32(chars)
+	sstr = ""
+	for cc in utf32_codes:
+		sstr += code_to_char(cc)
+	return CValueString(sstr, width=width)
+
+
+def do_cvalue_literal_rational(v, ctx):
+	sstr = str_fractional(v.asset)
+	return CValueNamed(sstr)
+
+
+def do_cvalue_literal_char(t, v, ctx):
+	cc = ord(v.asset[0])
+	sstr = code_to_char(cc)
+	return CValueChar(sstr, width=t.width)
+
 
 def do_cvalue_with_type(v, t, ctx=[]):
 	asset = v.asset
@@ -1373,8 +1397,13 @@ def do_cvalue_with_type(v, t, ctx=[]):
 		as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
 		#return str_value_literal_number(t, asset, as_hex=as_hex)
 		return CValueNumber(asset)
-#	elif t.is_string(): return str_value_literal_string(v, ctx)
-#	elif t.is_bool(): return str_value_literal_bool(v, ctx)
+	#elif t.is_string(): return do_cvalue_literal_string(v.type, v, ctx)
+	elif t.is_bool(): return do_cvalue_literal_bool(v, ctx)
+	elif t.is_rational(): return do_cvalue_literal_rational(v, ctx)
+	elif t.is_float(): return do_cvalue_literal_rational(v, ctx)
+	elif t.is_char(): return do_cvalue_literal_char(t, v, ctx)
+
+
 #	elif t.is_char(): return str_value_literal_char(t, asset, ctx)
 #	elif t.is_array(): return str_value_literal_array(v, ctx)
 #	elif t.is_record(): return str_value_literal_record(v, ctx)
@@ -1389,6 +1418,25 @@ def do_cvalue_with_type(v, t, ctx=[]):
 
 
 def do_cvalue_cons(x, ctx):
+	type = x.type
+	_from = x.value.type
+
+	if _from.is_string():
+		if type.is_char():
+			return do_cvalue_literal_char(type, x.value, [])
+
+		if type.is_array_of_char():
+			width = 0
+			if not type.is_generic():
+				width = type.of.width
+			return do_cvalue_literal_string(x.value.asset, width)
+
+		if type.is_pointer_to_array_of_char():
+			width = 0
+			if not type.is_generic():
+				width = type.to.of.width
+			return do_cvalue_literal_string(x.value.asset, width)
+
 	ctype = do_ctype(x.type)
 	cvalue = do_cvalue(x.value)
 	return CValueCast(ctype, cvalue)

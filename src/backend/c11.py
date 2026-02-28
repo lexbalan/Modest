@@ -1153,7 +1153,7 @@ def str_value_literal_array(x, ctx):
 						break
 
 				i = i + 1
-			return print_utf32codes_as_string(utf32_codes, width=char_width, quote='"')
+			return str_utf32codes_as_string(utf32_codes, width=char_width, quote='"')
 
 	nl_end_e = 0
 	for item in items:
@@ -1177,11 +1177,11 @@ def str_value_literal_string(v, ctx):
 	width = v.type.width
 	if v.type.is_generic():
 		width=0
-	return print_utf32codes_as_string(utf32_codes, width=width, quote='"')
+	return str_utf32codes_as_string(utf32_codes, width=width, quote='"')
 
 
 def str_value_literal_char(type, cc, ctx):
-	return print_utf32codes_as_string([cc], type.width, quote="'")
+	return str_utf32codes_as_string([cc], type.width, quote="'")
 
 
 
@@ -1275,7 +1275,7 @@ def string_literal_prefix(width):
 	return ""
 
 
-def print_utf32codes_as_string(utf32_codes, width, quote):
+def str_utf32codes_as_string(utf32_codes, width, quote):
 	sstr = ""
 	sstr += string_literal_prefix(width)
 	sstr += quote
