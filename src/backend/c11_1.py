@@ -269,7 +269,7 @@ class CValueStruct(CValue):
 		self.precedence = 15
 
 	def __str__(self):
-		return '{' + print_list_items(self.items, str_kv) + '}'
+		return '{}' #+ print_list_items(self.items, str_kv) + '}'
 
 
 

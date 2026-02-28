@@ -3,6 +3,7 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
+type Point = {x:Int64, y:Int64}
 
 func foo (a: Int32, b: Int64) -> {} {
 	return {}
@@ -12,7 +13,7 @@ func foo (a: Int32, b: Int64) -> {} {
 const c = 15
 
 //var a: Int32 = 5
-//var k: [3]Int32 = [1, 2, 3]
+var k: [3]Int32 = [1, 2, 3]
 
 public func main () -> Int {
 
@@ -56,6 +57,7 @@ public func main () -> Int {
 	1 + 2 - 3 * 4
 	var arr = [3]Int32 [1, 2, 3]
 	arr[1]
+	var p0 = Point {}
 	if a < 1 and b > 12 or c <= 5 and not (1 < 0) {
 		var u: Word32
 		var v: Word32
@@ -79,4 +81,5 @@ public func main () -> Int {
 
 	return 0
 }
+
 

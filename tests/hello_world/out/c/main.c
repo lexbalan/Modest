@@ -27,6 +27,9 @@ typedef uint32_t char32_t;
 
 
 
+
+struct point {int64_t x; int64_t y;};
+
 static void foo(int32_t a, int64_t b) {
 	return;
 }
@@ -35,7 +38,7 @@ static void foo(int32_t a, int64_t b) {
 #define C  15
 
 //var a: Int32 = 5
-//var k: [3]Int32 = [1, 2, 3]
+static int32_t k[3] = {1, 2, 3};
 
 int main(void) {
 
@@ -77,8 +80,9 @@ int main(void) {
 	foo((int32_t)1, (int64_t)2);
 	foo(a + (int32_t)1, b - (int64_t)c);
 	(int4_t)(1 + 2) - 3 * 4;
-	int32_t arr[3] = (int32_t [3]){1, 2, 3};
+	int32_t arr[3] = {1, 2, 3};
 	arr[(int32_t)1];
+	struct point p0 = (struct point)(struct point){};
 	if (a < (int32_t)1 && b > (int64_t)12 || c <= 5 && !(1 < 0)) {
 		uint32_t u;
 		uint32_t v;

@@ -808,124 +808,6 @@ def is_the_same_in_c(t0, t1):
 
 
 
-def str_value_cons(x, ctx):
-	type = x.type
-	value = x.value
-	from_type = value.type
-
-#	if type.is_generic():
-#		return str_value(value, ctx=ctx)
-
-#	if x.method == 'extra_arg':
-#		if value.type.is_pointer_to_array():
-#			return "(" + str_type(type.to.of) + "*)" + str_value(value, ctx=ctx)
-
-	if type.is_array():
-		return str_value_cons_array(x, ctx)
-
-	if type.is_record():
-		return str_value_cons_record(x, ctx)
-
-	if type.is_branded():
-		return str_cast(type, value, ctx=ctx)
-
-	if type.is_char() and from_type.is_string():
-		if value.isValueLiteral() and value.type.is_string():
-			return str_value_literal_char(type, ord(value.asset[0]), ctx)
-		return "_CHR%d(%s)" % (type.width, str_value(value))
-
-	if from_type.is_fixed():
-		if type.is_integer() or type.is_int():
-			return "__fixed32_to_int32(%s, %d)" % (str_value(value, ctx), from_type.fraction)
-
-		if type.is_rational() or type.is_float():
-			return "__fixed32_to_float64(%s, %d)" % (str_value(value, ctx), from_type.fraction)
-
-	if type.is_fixed():
-		if from_type.is_integer() or from_type.is_int():
-			return "__fixed32_from_int32(%s, %d)" % (str_value(value, ctx), type.fraction)
-
-		if from_type.is_rational():
-			numerator = value.asset.numerator
-			denominator = value.asset.denominator
-			i = numerator // denominator
-			n = 1000000
-			m = ((numerator / denominator) - i) * n
-			return "__fixed64_create(%d, %d, %d, %d)" % (i, m, n, type.fraction)
-
-		if from_type.is_float():
-			return "__fixed32_from_float64(%s, %d)" % (str_value(value, ctx), type.fraction)
-
-
-	if value.isValueLiteral() and from_type.is_generic():
-		if x.asset != None:
-			return str_value_with_type(value, type, ctx=ctx)
-
-
-	# *RecordA -> *RecordB
-	# у нас типы структурные, а в си - номинальные
-	# поэтому даже если структуры одинаковы, но имена разные
-	# - их нужно жестко приводить
-	if type.is_pointer_to_record() and from_type.is_pointer_to_record():
-		if from_type.to.definition != type.to.definition:
-			return str_cast(type, value, ctx=ctx)
-
-	elif type.is_pointer_to_array():
-		if from_type.is_string():
-			return cstr(value, type.to.of.width)
-
-	elif type.is_word() or type.is_int() or type.is_nat():
-		if from_type.is_word() or from_type.is_int() or from_type.is_nat():
-			if from_type.is_generic():
-				return str_value(value)
-			if get_id_str(type) == get_id_str(from_type):
-				return str_value(value)
-
-
-	if x.method in ['implicit', 'default']:
-		sstr = str_value(value)
-
-		if not Type.eq(type, value.type):
-			if not value.isValueLiteral() and not is_the_same_in_c(type, value.type):
-				sstr = "(" + str_type(type) + ")" + sstr
-
-		return sstr
-
-
-	if value.isValueLiteral():
-		return str_value(value)
-
-	# (!) WARNING (!)
-	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
-	# - in Cm Int32(-1) -> Word64 => 0x00000000ffffffff
-	# - in Cm Int32(-1) -> Nat64 => 1
-	# required: (uint64_t)((uint32)int32_value)
-	#if type.is_int():
-	if from_type.is_int() or from_type.is_integer():
-		if from_type.is_signed():
-			if type.is_nat():
-				if value.type.width <= 32:
-					return "(" + str_type(type) + ")" + "abs((int)" + str_value(value) + ")"
-				elif value.type.width <= 64:
-					return "(" + str_type(type) + ")" + "llabs((long long int)" + str_value(value) + ")"
-				elif value.type.width <= 128:
-					return "(" + str_type(type) + ")" + "abs128(" + str_value(value) + ")"
-				else:
-					return "<ABS_TOO_BIG>"
-
-
-			elif type.is_word():
-				if from_type.size < type.size:
-					nat_same_sz = type_select_nat(from_type.width)
-					return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx=ctx)
-
-	# for: (uint32_t *)(void *)&i;
-	# remove (void *)  ^^^^^^^^
-	if value.isValueCons():
-		if value.type.is_free_pointer():
-			value = value.value
-
-	return str_cast(type, value, raw_cast=x.rawMode, ctx=ctx)
 
 
 
@@ -1360,6 +1242,17 @@ def str_value_subexpr(x, ctx):
 
 
 
+def str_initializer(v):
+	# В C выражение значения и выражение-инициализатор - это разные вещи!
+	# В выражениях-инициализаторах C нельзя приводить массивы
+	# А все остальное (например структуры) - можно:
+	# .arr = (uint8_t [3]){1, 2, 3}  // error
+	# .arr = {1, 2, 3}               // ok
+	# .arr = (struct point){.x=1, .y=2, .z=3}  // ok
+	return str_value(v, ctx=['initializer_context'])
+
+
+
 def str_value(x, ctx=[]):
 	cv = do_cvalue(x, ctx)
 	return str(cv)
@@ -1421,6 +1314,7 @@ def do_cvalue_cons(x, ctx):
 	type = x.type
 	_from = x.value.type
 
+
 	if _from.is_string():
 		if type.is_char():
 			return do_cvalue_literal_char(type, x.value, [])
@@ -1436,6 +1330,13 @@ def do_cvalue_cons(x, ctx):
 			if not type.is_generic():
 				width = type.to.of.width
 			return do_cvalue_literal_string(x.value.asset, width)
+
+
+	if type.is_array():
+		if 'initializer_context' in ctx:
+			return do_cvalue(x.value)
+
+	#mass
 
 	ctype = do_ctype(x.type)
 	cvalue = do_cvalue(x.value)
@@ -1454,12 +1355,16 @@ def do_cvalue_call(x, ctx):
 def do_cvalue_array(x, ctx):
 	return CValueArray(list(map(do_cvalue, x.asset)))
 
-#def do_cvalue_record(x, ctx):
-#	args = []
-#	for arg in x.args:
-#		a = do_cvalue(arg.value)
-#		args.append(a)
-#	return CValueStruct()
+
+def do_cvalue_record(x, ctx):
+	items = []
+
+	for ini in x.asset:
+		print(ini)
+		a = do_cvalue(ini.value)
+		items.append(a)
+
+	return CValueStruct(items)
 
 
 def do_cvalue_index(x, ctx):
@@ -1548,7 +1453,7 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueBin(): return do_cvalue_bin(x, ctx)
 	elif x.isValueCall(): return do_cvalue_call(x, ctx)
 	elif x.isValueArray(): return do_cvalue_array(x, ctx)
-	#elif x.isValueRecord(): return do_cvalue_record(x, ctx)
+	elif x.isValueRecord(): return do_cvalue_record(x, ctx)
 	elif x.isValueIndex(): return do_cvalue_index(x, ctx)
 	elif x.isValueShl(): return do_cvalue_shl(x, ctx)
 	elif x.isValueShr(): return do_cvalue_shr(x, ctx)
@@ -1558,7 +1463,6 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueNot(): return do_cvalue_not(x, ctx)
 	elif x.isValueNeg(): return do_cvalue_neg(x, ctx)
 	elif x.isValuePos(): return do_cvalue_pos(x, ctx)
-
 
 	print(x)
 	assert(False)
@@ -2199,15 +2103,6 @@ def print_def_var(x, isdecl=False, as_extern=False):
 
 	out(";")
 
-
-def str_initializer(v):
-	# В C выражение значения и выражение-инициализатор - это разные вещи!
-	# В выражениях-инициализаторах C нельзя приводить массивы
-	# А все остальное (например структуры) - можно:
-	# .arr = (uint8_t [3]){1, 2, 3}  // error
-	# .arr = {1, 2, 3}               // ok
-	# .arr = (struct point){.x=1, .y=2, .z=3}  // ok
-	return str_value_2(v, ctx=['initializer_context'])
 
 
 
