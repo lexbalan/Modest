@@ -463,7 +463,7 @@ class CValueDiv(CValue):
 		return '%s / %s' % (str_cvalue(self.left), str_cvalue(self.right))
 
 
-class CValueMod(CValue):
+class CValueRem(CValue):
 	def __init__(self, left, right):
 		assert(isinstance(left, CValue))
 		assert(isinstance(right, CValue))
@@ -472,7 +472,7 @@ class CValueMod(CValue):
 		self.precedence = 12
 
 	def __str__(self):
-		return '%s % %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		return '%s %% %s' % (str_cvalue(self.left), str_cvalue(self.right))
 
 
 class CValueAdd(CValue):

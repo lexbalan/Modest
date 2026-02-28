@@ -1521,6 +1521,7 @@ def do_cvalue_bin(x, ctx):
 	if x.op == HLIR_VALUE_OP_SUB: return CValueSub(left, right)
 	if x.op == HLIR_VALUE_OP_MUL: return CValueMul(left, right)
 	if x.op == HLIR_VALUE_OP_DIV: return CValueDiv(left, right)
+	if x.op == HLIR_VALUE_OP_REM: return CValueRem(left, right)
 	if x.op == HLIR_VALUE_OP_SHL: return CValueShl(left, right)
 	if x.op == HLIR_VALUE_OP_SHR: return CValueShr(left, right)
 	if x.op == HLIR_VALUE_OP_LE: return CValueLE(left, right)

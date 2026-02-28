@@ -28,6 +28,11 @@ public func main () -> Int {
 
 	var a: Int32
 	var b: Int64
+	a + 2
+	a - 2
+	a * 2
+	a / 2
+	a % 2
 	foo(1, 2)
 	foo(a + 1, b - c)
 	1 + 2 - 3 * 4

@@ -51,6 +51,11 @@ int main(void) {
 
 	int32_t a;
 	int64_t b;
+	a + (int32_t)2;
+	a - (int32_t)2;
+	a * (int32_t)2;
+	a / (int32_t)2;
+	a % (int32_t)2;
 	foo((int32_t)1, (int64_t)2);
 	foo(a + (int32_t)1, b - (int64_t)c);
 	(int4_t)(1 + 2) - 3 * 4;
