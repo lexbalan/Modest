@@ -15,6 +15,8 @@ const c = 15
 //var a: Int32 = 5
 var k: [3]Int32 = [1, 2, 3]
 
+var p0: Point = {x=1, y=2}
+
 public func main () -> Int {
 
 	let xc1: Char8 = "A"
@@ -58,11 +60,12 @@ public func main () -> Int {
 	foo(a + 1, b - c)
 	let kk = 1 + 2 - 3 * 4
 
+	{} a
 	Nat32 a
 	Nat64 b
 
 	arr[1]
-	//var p0 = Point {}
+	var p0 = Point {}
 	if a < 1 and b > 12 or c <= 5 and not (1 < 0) {
 		var u: Word32
 		var v: Word32

@@ -41,6 +41,8 @@ static void foo(int32_t a, int64_t b) {
 //var a: Int32 = 5
 static int32_t k[3] = {1, 2, 3};
 
+static struct point p0 = (struct point){.x = 1, .y = 2};
+
 int main(void) {
 
 	const char xc1 = 'A';
@@ -84,10 +86,12 @@ int main(void) {
 	foo(a + 1, b - C);
 	#define kk  (1 + 2 - 3 * 4)
 
+	(void)a;
 	(uint32_t)abs(a);
 	(uint64_t)llabs(b);
 
 	arr[1];
+	struct point p0 = (struct point){};
 	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)) {
 		uint32_t u;
 		uint32_t v;

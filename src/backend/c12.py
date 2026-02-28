@@ -1232,6 +1232,7 @@ def str_value(x, ctx=[]):
 	cv = do_cvalue(x, ctx)
 	if not cv:
 		print(x.type)
+		1/0
 	return str_cvalue(cv)
 
 
@@ -1267,6 +1268,16 @@ def do_cvalue_literal_array(v, ctx):
 		cvalues.append(cv)
 	return CValueArray(cvalues)
 
+
+def do_cvalue_literal_record(v, ctx):
+	items = []
+	for kv in v.asset:
+		if not kv.value.isValueUndef():
+			items.append((kv.id.str, do_cvalue(kv.value)))
+	return CValueStruct(items)
+
+
+
 def do_cvalue_with_type(v, t, ctx=[]):
 	asset = v.asset
 
@@ -1282,6 +1293,7 @@ def do_cvalue_with_type(v, t, ctx=[]):
 	elif t.is_float(): return do_cvalue_literal_rational(v, ctx)
 	elif t.is_char(): return do_cvalue_literal_char(t, v, ctx)
 	elif t.is_array(): return do_cvalue_literal_array(v, ctx)
+	elif t.is_record(): return do_cvalue_literal_record(v, ctx)
 
 	print(t)
 	1/0
@@ -1341,6 +1353,42 @@ def do_cvalue_cons_array(x, ctx):
 
 
 
+def do_cvalue_cons_record(x, ctx):
+	to_type = x.type
+	value = x.value
+	from_type = value.type
+
+	if to_type.is_unit():
+		return CValueCast(CTypeNamed("void"), do_cvalue(value))
+
+	if from_type.is_generic_record():
+		if to_type.is_generic_record():
+			return do_cvalue(value, ctx=ctx)
+
+	# RecordA -> RecordB
+	#if to_type.is_record():
+	if from_type.is_record() and not from_type.is_generic():
+		if to_type.uid == from_type.uid:
+			# это одна и та же структура и приведение не требуется
+			return do_cvalue(value, ctx=ctx)
+		# C cannot just cast struct to struct (!)
+		#return str_cast(to_type, value, raw_cast=True, ctx=ctx)
+		return do_cvalue_cast(to_type, x.value, ctx)
+
+	tt = do_ctype(to_type)
+
+	if initializers_are_different(x.asset, value.asset):
+		# Если у нас в ValueCons asset отличается от asset в ValueCons#value
+		# То печатаем литерал структуры из нашего asset
+		#return '(' + str_type(to_type) + ')' + str_value_literal_record(x, ctx=ctx)
+		return CValueCast(tt, do_cvalue_literal_record(x, ctx=ctx))
+
+	return CValueCast(tt, do_cvalue(value, ctx=ctx))
+	#return '(' + str_type(to_type) + ')' + str_value(x.value, ctx=ctx)
+
+
+
+
 def do_cvalue_cons(x, ctx):
 	type = x.type
 	value = x.value
@@ -1348,11 +1396,12 @@ def do_cvalue_cons(x, ctx):
 
 	if type.is_array():
 		cv = do_cvalue_cons_array(x, ctx)
+		#cv.mark = 'do_cvalue_cons_array'
 		return cv
 
 	if type.is_record():
-		#cv = do_cvalue_cons_record(x, ctx)
-		cv = None
+		cv = do_cvalue_cons_record(x, ctx)
+		#cv.mark = 'do_cvalue_cons_record'
 		return cv
 
 	if type.is_branded():
@@ -1391,7 +1440,6 @@ def do_cvalue_cons(x, ctx):
 	if x.method in ['implicit', 'default']:
 		#sstr = str_value(value)
 
-		print("?????????")
 		if not Type.eq(type, value.type):
 			#if not (value.isValueLiteral() or is_the_same_in_c(type, value.type)):
 			if not (from_type.is_generic() or is_the_same_in_c(type, value.type)):
@@ -1494,20 +1542,6 @@ def do_cvalue_call(x, ctx):
 	return CValueCall(left, args)
 
 
-def do_cvalue_array(x, ctx):
-	return CValueArray(list(map(do_cvalue, x.asset)))
-
-
-def do_cvalue_record(x, ctx):
-	items = []
-
-	for ini in x.asset:
-		print(ini)
-		a = do_cvalue(ini.value)
-		items.append(a)
-
-	return CValueStruct(items)
-
 
 def do_cvalue_index(x, ctx):
 	left = do_cvalue(x.left)
@@ -1589,7 +1623,7 @@ def do_cvalue_bin(x, ctx):
 	if x.op == HLIR_VALUE_OP_LOGIC_OR: return CValueOrLogical(left, right)
 	if x.op == HLIR_VALUE_OP_LOGIC_AND: return CValueAndLogical(left, right)
 
-#mass
+
 def do_cvalue(x, ctx=[]):
 	if x.isValueCons(): return do_cvalue_cons(x, ctx)
 	elif x.isValueLiteral(): return do_cvalue_with_type(x, x.type, ctx)
@@ -1598,8 +1632,8 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueFunc(): return CValueNamed(get_id_str(x))
 	elif x.isValueBin(): return do_cvalue_bin(x, ctx)
 	elif x.isValueCall(): return do_cvalue_call(x, ctx)
-	elif x.isValueArray(): return do_cvalue_array(x, ctx)
-	elif x.isValueRecord(): return do_cvalue_record(x, ctx)
+	elif x.isValueArray(): return do_cvalue_literal_array(x, ctx)
+	elif x.isValueRecord(): return do_cvalue_literal_record(x, ctx)
 	elif x.isValueIndex(): return do_cvalue_index(x, ctx)
 	elif x.isValueShl(): return do_cvalue_shl(x, ctx)
 	elif x.isValueShr(): return do_cvalue_shr(x, ctx)
@@ -1609,6 +1643,9 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueNot(): return do_cvalue_not(x, ctx)
 	elif x.isValueNeg(): return do_cvalue_neg(x, ctx)
 	elif x.isValuePos(): return do_cvalue_pos(x, ctx)
+	elif x.isValueUndef(): 1/0
+	elif x.isValueBad():
+		error("value bad in C backend", x.ti)
 
 	print(x)
 	assert(False)

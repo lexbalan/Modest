@@ -195,9 +195,7 @@ def print_list_items(_list, method):
 
 
 def str_kv(x):
-	sstr = ''
-
-	return sstr
+	return ".%s = %s" % (x[0], str_cvalue(x[1]))
 
 
 def string_literal_prefix(width):
@@ -275,7 +273,7 @@ class CValueStruct(CValue):
 		self.precedence = 15
 
 	def __str__(self):
-		return '{}' #+ print_list_items(self.items, str_kv) + '}'
+		return '{%s}' % print_list_items(self.items, str_kv)
 
 
 
