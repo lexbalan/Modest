@@ -56,16 +56,18 @@ int main(void) {
 	(int4_t)(1 + 2) - 3 * 4;
 	int32_t arr[3] = (int32_t [3]){1, 2, 3};
 	arr[(int32_t)1];
-	if (a < (int32_t)1 && b > (int64_t)12 || c <= 5 && !1 < 0) {
+	if (a < (int32_t)1 && b > (int64_t)12 || c <= 5 && !(1 < 0)) {
 		uint32_t u;
 		uint32_t v;
-		u | v & u ^ v;
+		u | v & u ^ ~v;
 		u << 10;v >> 20;
 		int32_t *const pa = &a;
 		*pa;
 		((int64_t)a + b);
 		+a;
 		-a;
+		a = a + 1;
+		a = a - 1;
 	}
 
 	true || false;
@@ -74,8 +76,6 @@ int main(void) {
 
 	float f;
 	f = (float)pi;
-
-
 
 	return (int)0;
 

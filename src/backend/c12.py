@@ -1498,8 +1498,8 @@ def do_cvalue_subexpr(x, ctx):
 def do_cvalue_not(x, ctx):
 	v = do_cvalue(x.value)
 	if x.value.type.is_bool():
-		return CValueNotBitwise(v)
-	return CValueNotLogical(v)
+		return CValueNotLogical(v)
+	return CValueNotBitwise(v)
 
 
 def do_cvalue_neg(x, ctx):

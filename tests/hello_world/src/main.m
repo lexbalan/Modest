@@ -33,16 +33,18 @@ public func main () -> Int {
 	1 + 2 - 3 * 4
 	var arr = [3]Int32 [1, 2, 3]
 	arr[1]
-	if a < 1 and b > 12 or c <= 5 and not 1 < 0 {
+	if a < 1 and b > 12 or c <= 5 and not (1 < 0) {
 		var u: Word32
 		var v: Word32
-		u or v and u xor v
+		u or v and u xor not v
 		u << 10; v >> 20;
 		let pa = &a
 		*pa
 		(Int64 a + b)
 		+a
 		-a
+		++a
+		--a
 	}
 
 	true or false
@@ -51,8 +53,6 @@ public func main () -> Int {
 
 	var f: Float32
 	f = pi
-
-
 
 	return 0
 }
