@@ -11,20 +11,38 @@ func foo (a: Int32, b: Int64) -> {} {
 
 const c = 15
 
+//var a: Int32 = 5
+//var k: [3]Int32 = [1, 2, 3]
+
 public func main () -> Int {
+
+	let xc1: Char8 = "A"
+	let xc2: Char16 = "A"
+	let xc3: Char32 = "A"
+
+	let xs1: *Str8 = "A"
+	let xs2: *Str16 = "A"
+	let xs3: *Str32 = "A"
+
+	let xcs1: []Char8 = "A"
+	let xcs2: []Char16 = "A"
+	let xcs3: []Char32 = "A"
+
+
+	var c1: Char8 = "B"
+	var c2: Char16 = "B"
+	var c3: Char32 = "B"
+
+	var s1: *Str8 = "B"
+	var s2: *Str16 = "B"
+	var s3: *Str32 = "B"
+
+	var cs1: []Char8 = "B"
+	var cs2: []Char16 = "B"
+	var cs3: []Char32 = "B"
+
+
 	printf("Hello World!\n")
-
-	var c1: Char8 = 'A'
-	var c2: Char16 = 'A'
-	var c3: Char32 = 'A'
-
-	var s1: *Str8 = "Hi!"
-	var s2: *Str16 = "Hi!∆"
-	var s3: *Str32 = "Hi!∆"
-
-	var cs1: []Char8 = "Hi!"
-	var cs2: []Char16 = "Hi!∆"
-	var cs3: []Char32 = "Hi!∆"
 
 	var a: Int32
 	var b: Int64

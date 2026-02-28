@@ -1759,8 +1759,9 @@ def print_stmt_const(x):
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
 	if init_value.type.is_array():
-		runtimeLiteral = init_value.isValueLiteral() and init_value.isValueRuntime()
-		if not runtimeLiteral:
+		#runtimeLiteral = init_value.isValueLiteral() and init_value.isValueRuntime()
+		#if not runtimeLiteral:
+		if init_value.isValueRuntime():
 			print_variable(get_id_str(x), const_value.type)
 			out(";")
 			nl_indent()

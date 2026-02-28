@@ -34,20 +34,38 @@ static void foo(int32_t a, int64_t b) {
 
 #define C  15
 
+//var a: Int32 = 5
+//var k: [3]Int32 = [1, 2, 3]
+
 int main(void) {
+
+	const char xc1 = 'A';
+	const char16_t xc2 = u'A';
+	const char32_t xc3 = U'A';
+
+	char *const xs1 = "A";
+	char16_t *const xs2 = u"A";
+	char32_t *const xs3 = U"A";
+
+	char xcs1[1] = "A";
+	char16_t xcs2[1] = u"A";
+	char32_t xcs3[1] = U"A";
+
+
+	char c1 = 'B';
+	char16_t c2 = u'B';
+	char32_t c3 = U'B';
+
+	char *s1 = "B";
+	char16_t *s2 = u"B";
+	char32_t *s3 = U"B";
+
+	char cs1[1] = "B";
+	char16_t cs2[1] = u"B";
+	char32_t cs3[1] = U"B";
+
+
 	printf("Hello World!\n");
-
-	char c1 = 'A';
-	char16_t c2 = u'A';
-	char32_t c3 = U'A';
-
-	char *s1 = "Hi!";
-	char16_t *s2 = u"Hi!∆";
-	char32_t *s3 = U"Hi!∆";
-
-	char cs1[3] = "Hi!";
-	char16_t cs2[4] = u"Hi!∆";
-	char32_t cs3[4] = U"Hi!∆";
 
 	int32_t a;
 	int64_t b;
