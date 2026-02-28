@@ -56,7 +56,10 @@ public func main () -> Int {
 	a % 2
 	foo(1, 2)
 	foo(a + 1, b - c)
-	1 + 2 - 3 * 4
+	let kk = 1 + 2 - 3 * 4
+
+	Nat32 a
+	Nat64 b
 
 	arr[1]
 	//var p0 = Point {}

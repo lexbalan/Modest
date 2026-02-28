@@ -1360,8 +1360,7 @@ def do_cvalue_cons(x, ctx):
 
 	if type.is_char() and from_type.is_string():
 		if value.isValueLiteral():
-			cv= do_cvalue_literal_char(type, value, ctx)
-			return cv
+			return do_cvalue_literal_char(type, value, ctx)
 
 	if value.isValueLiteral() and from_type.is_generic():
 		if x.asset != None:
@@ -1389,6 +1388,65 @@ def do_cvalue_cons(x, ctx):
 				return do_cvalue(value, ctx=ctx)
 
 
+	if x.method in ['implicit', 'default']:
+		#sstr = str_value(value)
+
+		print("?????????")
+		if not Type.eq(type, value.type):
+			#if not (value.isValueLiteral() or is_the_same_in_c(type, value.type)):
+			if not (from_type.is_generic() or is_the_same_in_c(type, value.type)):
+				#sstr = "(" + str_type(type) + ")" + sstr
+				cv = do_cvalue_cast(type, value, ctx=ctx)
+				#cv.mark = '?+?'
+				return cv
+
+		cv = do_cvalue(value, ctx=ctx)
+		#cv.mark = '???'
+		return cv
+
+	if value.isValueLiteral():
+		return do_cvalue(value, ctx=ctx)
+
+
+	# (!) WARNING (!)
+	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
+	# - in Cm Int32(-1) -> Word64 => 0x00000000ffffffff
+	# - in Cm Int32(-1) -> Nat64 => 1
+	# required: (uint64_t)((uint32)int32_value)
+	#if type.is_int():
+	if from_type.is_int() or from_type.is_integer():
+		if from_type.is_signed():
+			if type.is_nat():
+				arg = do_cvalue(value, ctx=ctx)
+
+				acall = None
+				if value.type.width <= 32:
+					# TODO: see
+					#return "(" + str_type(type) + ")" + "abs((int)" + str_value(value) + ")"
+					acall = CValueCall(left=CValueNamed("abs"), args=[arg])
+				elif value.type.width <= 64:
+					# TODO: see
+					#return "(" + str_type(type) + ")" + "llabs((long long int)" + str_value(value) + ")"
+					acall = CValueCall(left=CValueNamed("llabs"), args=[arg])
+				elif value.type.width <= 128:
+					# TODO: see
+					#return "(" + str_type(type) + ")" + "abs128(" + str_value(value) + ")"
+					acall = CValueCall(left=CValueNamed("llabs"), args=[arg])
+				else:
+					1/0
+					#return "<ABS_TOO_BIG>"
+
+				ctype = do_ctype(type)
+				return CValueCast(ctype, acall)
+
+			elif type.is_word():
+				if from_type.size < type.size:
+					nat_same_sz = type_select_nat(from_type.width)
+					#return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx=ctx)
+					return CValueCast
+
+
+
 	# if from_type.is_string():
 	# 	if type.is_char():
 	# 		return do_cvalue_literal_char(type, value, [])
@@ -1409,6 +1467,13 @@ def do_cvalue_cons(x, ctx):
 	# if type.is_array():
 	# 	if 'initializer_context' in ctx:
 	# 		return do_cvalue(x.value)
+
+
+	# for: (uint32_t *)(void *)&i;
+	# remove (void *)  ^^^^^^^^
+	if value.isValueCons():
+		if value.type.is_free_pointer():
+			value = value.value
 
 	return do_cvalue_cast(type, value, ctx=ctx)
 
@@ -1494,6 +1559,12 @@ def do_cvalue_pos(x, ctx):
 	return CValuePositive(v)
 
 
+def do_cvalue_const(x, ctx):
+	id_str = get_id_str(x)
+	if x.is_global_flag and not x.id.hasAttribute('nodecorate'):
+		id_str = camel_to_upper_snake(id_str)
+	return CValueNamed(id_str)
+
 
 def do_cvalue_bin(x, ctx):
 	left = do_cvalue(x.left)
@@ -1522,7 +1593,7 @@ def do_cvalue_bin(x, ctx):
 def do_cvalue(x, ctx=[]):
 	if x.isValueCons(): return do_cvalue_cons(x, ctx)
 	elif x.isValueLiteral(): return do_cvalue_with_type(x, x.type, ctx)
-	elif x.isValueConst(): return CValueNamed(get_id_str(x))
+	elif x.isValueConst(): return do_cvalue_const(x, ctx)
 	elif x.isValueVar(): return CValueNamed(get_id_str(x))
 	elif x.isValueFunc(): return CValueNamed(get_id_str(x))
 	elif x.isValueBin(): return do_cvalue_bin(x, ctx)

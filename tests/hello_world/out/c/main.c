@@ -25,6 +25,7 @@ typedef uint32_t char32_t;
 #endif /* __STR_UNICODE__ */
 
 
+#include <stdlib.h>
 
 
 
@@ -80,11 +81,14 @@ int main(void) {
 	a / 2;
 	a % 2;
 	foo(1, 2);
-	foo(a + 1, b - (int64_t)c);
-	(int4_t)(1 + 2) - 3 * 4;
+	foo(a + 1, b - C);
+	#define kk  (1 + 2 - 3 * 4)
+
+	(uint32_t)abs(a);
+	(uint64_t)llabs(b);
 
 	arr[1];
-	if (a < 1 && b > 12 || c <= 5 && !(1 < 0)) {
+	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)) {
 		uint32_t u;
 		uint32_t v;
 		u | v & u ^ ~v;
@@ -103,10 +107,11 @@ int main(void) {
 	#define pi  3.1415
 
 	float f;
-	f = (float)pi;
+	f = pi;
 
 	return 0;
 
+#undef kk
 #undef pi
 }
 
