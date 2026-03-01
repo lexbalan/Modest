@@ -18,7 +18,7 @@
 #define RECEIVE_BUFFER_SIZE  1024
 #define SEND_BUFFER_SIZE  1024
 
-#define HTTP_HEADER  (("HTTP/1.1 200 OK\r\n" "Content-Type: text/html\r\n" "Connection: close\r\n" "\r\n"))
+#define HTTP_HEADER  ("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n")
 
 static uint32_t pageCounter;
 
@@ -30,20 +30,18 @@ static uint32_t pageCounter;
 
 static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[RECEIVE_BUFFER_SIZE];
-	const ssize_t bytesReceived = read(clientSocket, (void *)&buffer, (size_t)LENGTHOF(buffer) - 1);
+	const ssize_t bytesReceived = read(clientSocket, (void *)&buffer, LENGTHOF(buffer) - 1);
 	if (bytesReceived < 0) {
 		perror("cannot read socket");
 		close(clientSocket);
 		return;
 	}
-	buffer[bytesReceived] = 0x0;
+	buffer[bytesReceived] = 0;
 
 	printf("Received request:\n%s\n", (char *)&buffer);
 
 	char response[SEND_BUFFER_SIZE];
-	sprintf(response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>",
-		HTTP_HEADER, pageCounter
-	);
+	sprintf(response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", HTTP_HEADER, pageCounter);
 
 	write(clientSocket, (void *)response, strlen(response));
 	close(clientSocket);
@@ -51,19 +49,13 @@ static void handleRequest(int32_t clientSocket) {
 
 
 int32_t main(void) {
-	const int serverSocket = socket((int)AF_INET, (int)SOCK_STREAM, 0);
+	const int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (serverSocket < 0) {
 		perror("cannot create socket");
 		exit(1);
 	}
 
-	struct sockaddr_in serverAddr = (struct sockaddr_in){
-		.sin_family = (uint8_t)AF_INET,
-		.sin_port = (unsigned short)htons((uint16_t)PORT),
-		.sin_addr = (struct in_addr){
-			.s_addr = INADDR_ANY
-		}
-	};
+	struct sockaddr_in serverAddr = /*mark=CR4*/(struct sockaddr_in){.sin_family = AF_INET, .sin_port = (unsigned short)htons(PORT), .sin_addr = /*mark=CR5*/(struct in_addr){.s_addr = INADDR_ANY}};
 	struct sockaddr *const socadr = (struct sockaddr *)&serverAddr;
 	int rc = bind(serverSocket, socadr, (socklen_t)sizeof serverAddr);
 	if (rc < 0) {

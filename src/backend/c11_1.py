@@ -1,4 +1,5 @@
 
+from util import nbits_for_num
 
 
 
@@ -205,6 +206,26 @@ def string_literal_prefix(width):
 
 
 
+def str_number_suffix(req_bits, is_unsigned):
+	sstr = ""
+	if req_bits >= 32: #csettings['int_width']:
+		if is_unsigned:
+			sstr += "U"   # unsigned
+
+		if req_bits <= 32: #csettings['long_width']:
+			sstr += "L"   # long int
+		elif req_bits <= 64: #csettings['long_long_width']:
+			sstr += "LL"  # long long int
+		else:
+			sstr += "XL"  # extra long int (not defined in C)
+
+	return sstr
+
+
+
+
+
+
 class CValue():
 	def __init__(self):
 		self.mark = None
@@ -224,10 +245,11 @@ class CValueNumber(CValue):
 	def __init__(self, number):
 		super().__init__()
 		self.number = number
+		self.is_unsigned = False
 		self.precedence = 15
 
 	def __str__(self):
-		return str(self.number)
+		return str(self.number) + str_number_suffix(nbits_for_num(self.number), self.is_unsigned)
 
 
 
@@ -263,7 +285,10 @@ class CValueArray(CValue):
 		self.precedence = 15
 
 	def __str__(self):
-		return '{' + print_list_items(self.items, str_cvalue) + '}'
+		items = print_list_items(self.items, str_cvalue)
+		if items == '':
+			items = '0'
+		return '{%s}' % items
 
 
 class CValueStruct(CValue):
@@ -273,7 +298,10 @@ class CValueStruct(CValue):
 		self.precedence = 15
 
 	def __str__(self):
-		return '{%s}' % print_list_items(self.items, str_kv)
+		items = print_list_items(self.items, str_kv)
+		if items == '':
+			items = '0'
+		return '{%s}' % items
 
 
 
@@ -301,9 +329,7 @@ class CValueCall(CValue):
 		self.precedence = 14
 
 	def __str__(self):
-		sstr = str_cvalue(self.left)
-		sstr += '(' + print_list_items(self.args, str_cvalue) + ')'
-		return sstr
+		return '%s(%s)' % (str_cvalue(self.left), print_list_items(self.args, str_cvalue))
 
 
 class CValueAccess(CValue):
@@ -342,7 +368,8 @@ class CValueIndex(CValue):
 		self.precedence = 14
 
 	def __str__(self):
-		return '%s[%s]' % (str_cvalue(self.left), str_cvalue(self.index))
+		lstr = wrap_if(str_cvalue(self.left), self.left.precedence < self.precedence)
+		return '%s[%s]' % (lstr, str_cvalue(self.index))
 
 
 class CValueCast(CValue):
@@ -355,7 +382,7 @@ class CValueCast(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		vstr = wrap_if(str(self.value), self.value.precedence < self.precedence)
+		vstr = wrap_if(str_cvalue(self.value), self.value.precedence < self.precedence)
 		return '(%s)%s' % (str_ctype(self.type), vstr)
 
 
@@ -700,6 +727,56 @@ class CValueOrLogical(CValue):
 	def __str__(self):
 		return '%s || %s' % (str_cvalue(self.left), str_cvalue(self.right))
 
+
+
+class CValueVaStart(CValue):
+	def __init__(self, va_list, last_param):
+		assert(isinstance(va_list, CValue))
+		assert(isinstance(last_param, CValue))
+		super().__init__()
+		self.va_list = va_list
+		self.last_param = last_param
+		self.precedence = 14
+
+	def __str__(self):
+		return 'va_start(%s, %s)' % (str_cvalue(self.va_list), str_cvalue(self.last_param))
+
+
+class CValueVaArg(CValue):
+	def __init__(self, va_list, xtype):
+		assert(isinstance(va_list, CValue))
+		assert(isinstance(xtype, CType))
+		super().__init__()
+		self.va_list = va_list
+		self.xtype = xtype
+		self.precedence = 14
+
+	def __str__(self):
+		return 'va_arg(%s, %s)' % (str_cvalue(self.va_list), str_ctype(self.xtype))
+
+
+class CValueVaEnd(CValue):
+	def __init__(self, va_list):
+		assert(isinstance(va_list, CValue))
+		super().__init__()
+		self.va_list = va_list
+		self.precedence = 14
+
+	def __str__(self):
+		return 'va_end(%s)' % (str_cvalue(self.va_list))
+
+
+class CValueVaCopy(CValue):
+	def __init__(self, va_dst, va_src):
+		assert(isinstance(va_dst, CValue))
+		assert(isinstance(va_src, CValue))
+		super().__init__()
+		self.va_dst = va_dst
+		self.va_src = va_src
+		self.precedence = 14
+
+	def __str__(self):
+		return 'va_copy(%s)' % (str_cvalue(self.va_dst), str_cvalue(self.va_src))
 
 
 

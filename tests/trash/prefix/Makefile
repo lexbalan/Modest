@@ -24,8 +24,8 @@ LLVM:
 
 
 C:
-	mcc -funsafe -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
-	mcc -funsafe -o $(CPREFIX)/lib -mbackend=c11 $(INDIR)/lib.m
+	mcc -funsafe -o $(CPREFIX)/main -mbackend=c12 $(INDIR)/main.m
+	mcc -funsafe -o $(CPREFIX)/lib -mbackend=c12 $(INDIR)/lib.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/lib.c
 
 

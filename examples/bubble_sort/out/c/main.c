@@ -10,7 +10,7 @@
 #endif /* LENGTHOF */
 
 
-static int32_t testArray[23] = {-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9};
+static int32_t testArray[23] = /*mark=CA2*/{-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9};
 
 
 // returns true if was swap
@@ -44,12 +44,12 @@ static void print_array(int32_t (*array)[], uint32_t len);
 
 int32_t main(void) {
 	printf("array before:\n");
-	print_array(&testArray, (uint32_t)LENGTHOF(testArray));
+	print_array(&testArray, LENGTHOF(testArray));
 	printf("\n");
-	bubble_sort32(&testArray, (uint32_t)LENGTHOF(testArray));
+	bubble_sort32(&testArray, LENGTHOF(testArray));
 
 	printf("array after:\n");
-	print_array(&testArray, (uint32_t)LENGTHOF(testArray));
+	print_array(&testArray, LENGTHOF(testArray));
 	printf("\n");
 
 	return 0;

@@ -17,7 +17,7 @@ struct list_list *list_create(void) {
 		return NULL;
 	}
 
-	*list = (struct list_list){0};
+	*list = /*mark=CR4*/(struct list_list){0};
 
 	return list;
 }
@@ -71,7 +71,7 @@ struct list_node *list_node_create(void) {
 		return NULL;
 	}
 
-	*node = (struct list_node){0};
+	*node = /*mark=CR4*/(struct list_node){0};
 
 	return node;
 }
@@ -133,7 +133,7 @@ struct list_node *list_node_get(struct list_list *list, int32_t pos) {
 
 	if (pos >= 0) {
 		node = list->head;
-		const uint32_t n = (uint32_t)abs((int)pos);
+		const uint32_t n = (uint32_t)abs(pos);
 
 		if (n > list->size) {
 			return NULL;
@@ -146,7 +146,7 @@ struct list_node *list_node_get(struct list_list *list, int32_t pos) {
 		}
 	} else {
 		node = list->tail;
-		const uint32_t n = ((uint32_t)abs((int)-pos)) - 1;
+		const uint32_t n = ((uint32_t)abs(-pos)) - 1;
 
 		if (n > list->size) {
 			return NULL;

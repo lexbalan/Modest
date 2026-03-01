@@ -12,8 +12,8 @@
 
 void fsm_init(struct fsm_fsm *self, char *id, struct fsm_state_desc *initState, void *payload) {
 	self->id = id;
-	self->state = (fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
-	self->next_state = (fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
+	self->state = /*mark=CR5*/(fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
+	self->next_state = /*mark=CR5*/(fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
 	self->payload = payload;
 	self->timer = 0;
 	self->timer_expired = false;
@@ -54,7 +54,7 @@ void fsm_tick(struct fsm_fsm *self) {
 fsm_ComplexState fsm_cmdSwitchState(struct fsm_fsm *self, struct fsm_state_desc *state) {
 	self->timer = 0;
 	self->timer_expired = false;
-	return (fsm_ComplexState){.state = state, .stage = (fsm_StageId)0};
+	return /*mark=CR5*/(fsm_ComplexState){.state = state, .stage = (fsm_StageId)0};
 }
 
 
@@ -71,7 +71,7 @@ fsm_ComplexState fsm_cmdNextStage(struct fsm_fsm *self) {
 	self->timer = 0;
 	self->timer_expired = false;
 	const fsm_ComplexState state = self->state;
-	const uint16_t nextStageIndex = (uint16_t)((uint16_t)(state.stage) + 1);
+	const uint16_t nextStageIndex = (uint16_t)(state.stage) + 1;
 	fsm_ComplexState newState = state;
 	newState.stage = (fsm_StageId)nextStageIndex;
 	return newState;
@@ -81,7 +81,7 @@ fsm_ComplexState fsm_cmdNextStage(struct fsm_fsm *self) {
 fsm_ComplexState fsm_cmdNextStageLimited(struct fsm_fsm *self, uint32_t t) {
 	self->timer = t;
 	const fsm_ComplexState state = self->state;
-	const uint16_t nextStageIndex = (uint16_t)((uint16_t)(state.stage) + 1);
+	const uint16_t nextStageIndex = (uint16_t)(state.stage) + 1;
 	fsm_ComplexState newState = state;
 	newState.stage = (fsm_StageId)nextStageIndex;
 	return newState;

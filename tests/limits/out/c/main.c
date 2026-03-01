@@ -63,23 +63,23 @@
 
 static bool testNat8Static(void) {
 	uint8_t nat8;
-	nat8 = (uint8_t)UINT8_MAX;
-	nat8 = (uint8_t)0;
+	nat8 = UINT8_MAX;
+	nat8 = 0;
 
-	uint8_t _nat8MaxValue = (uint8_t)UINT8_MAX;
-	uint8_t _nat8MinValue = (uint8_t)0;
+	uint8_t _nat8MaxValue = UINT8_MAX;
+	uint8_t _nat8MinValue = 0;
 
 	if (_nat8MaxValue <= _nat8MinValue) {
 		printf("error: nat8MaxValue <= nat8MinValue\n");
 		return false;
 	}
 
-	if ((uint8_t)(_nat8MaxValue + 1) != _nat8MinValue) {
+	if (_nat8MaxValue + 1 != _nat8MinValue) {
 		printf("error: nat8MaxValuePlusOne != nat8MinValue\n");
 		return false;
 	}
 
-	if ((uint8_t)(_nat8MinValue - 1) != _nat8MaxValue) {
+	if (_nat8MinValue - 1 != _nat8MaxValue) {
 		printf("error: nat8MinValueMinusOne != nat8MaxValue\n");
 		return false;
 	}
@@ -91,23 +91,23 @@ static bool testNat8Static(void) {
 
 static bool testNat16Static(void) {
 	uint16_t nat16;
-	nat16 = (uint16_t)UINT16_MAX;
-	nat16 = (uint16_t)0;
+	nat16 = UINT16_MAX;
+	nat16 = 0;
 
-	uint16_t _nat16MinValue = (uint16_t)0;
-	uint16_t _nat16MaxValue = (uint16_t)UINT16_MAX;
+	uint16_t _nat16MinValue = 0;
+	uint16_t _nat16MaxValue = UINT16_MAX;
 
 	if (_nat16MaxValue <= _nat16MinValue) {
 		printf("error: nat16MaxValue <= nat16MinValue\n");
 		return false;
 	}
 
-	if ((uint16_t)(_nat16MaxValue + 1) != _nat16MinValue) {
+	if (_nat16MaxValue + 1 != _nat16MinValue) {
 		printf("error: nat16MaxValuePlusOne != nat16MinValue\n");
 		return false;
 	}
 
-	if ((uint16_t)(_nat16MinValue - 1) != _nat16MaxValue) {
+	if (_nat16MinValue - 1 != _nat16MaxValue) {
 		printf("error: nat16MinValueMinusOne != nat16MaxValue\n");
 		return false;
 	}
@@ -119,11 +119,11 @@ static bool testNat16Static(void) {
 
 static bool testNat32Static(void) {
 	uint32_t nat32;
-	nat32 = (uint32_t)UINT32_MAX;
-	nat32 = (uint32_t)0;
+	nat32 = UINT32_MAX;
+	nat32 = 0;
 
-	uint32_t _nat32MaxValue = (uint32_t)UINT32_MAX;
-	uint32_t _nat32MinValue = (uint32_t)0;
+	uint32_t _nat32MaxValue = UINT32_MAX;
+	uint32_t _nat32MinValue = 0;
 
 	if (_nat32MaxValue <= _nat32MinValue) {
 		printf("error: nat32MaxValue <= nat32MinValue\n");
@@ -147,11 +147,11 @@ static bool testNat32Static(void) {
 
 static bool testNat64Static(void) {
 	uint64_t nat64;
-	nat64 = (uint64_t)UINT64_MAX;
-	nat64 = (uint64_t)0;
+	nat64 = UINT64_MAX;
+	nat64 = 0;
 
-	uint64_t _nat64MaxValue = (uint64_t)UINT64_MAX;
-	uint64_t _nat64MinValue = (uint64_t)0;
+	uint64_t _nat64MaxValue = UINT64_MAX;
+	uint64_t _nat64MinValue = 0;
 
 	if (_nat64MaxValue <= _nat64MinValue) {
 		printf("error: nat64MaxValue <= nat64MinValue\n");
@@ -175,11 +175,11 @@ static bool testNat64Static(void) {
 
 static bool testInt8Static(void) {
 	int8_t int8;
-	int8 = (int8_t)INT8_MAX;
-	int8 = (int8_t)INT8_MIN;
+	int8 = INT8_MAX;
+	int8 = INT8_MIN;
 
-	int8_t _int8MinValue = (int8_t)INT8_MIN;
-	int8_t _int8MaxValue = (int8_t)INT8_MAX;
+	int8_t _int8MinValue = INT8_MIN;
+	int8_t _int8MaxValue = INT8_MAX;
 
 	if (_int8MinValue >= 0) {
 		printf("error: int8MinValue >= 0\n");
@@ -196,12 +196,12 @@ static bool testInt8Static(void) {
 		return false;
 	}
 
-	if ((int8_t)(_int8MaxValue + 1) != _int8MinValue) {
+	if (_int8MaxValue + 1 != _int8MinValue) {
 		printf("error: int8MaxValuePlusOne != int8MinValue\n");
 		return false;
 	}
 
-	if ((int8_t)(_int8MinValue - 1) != _int8MaxValue) {
+	if (_int8MinValue - 1 != _int8MaxValue) {
 		printf("error: int8MinValueMinusOne != int8MaxValue\n");
 		return false;
 	}
@@ -213,11 +213,11 @@ static bool testInt8Static(void) {
 
 static bool testInt16Static(void) {
 	int16_t int16;
-	int16 = (int16_t)INT16_MAX;
-	int16 = (int16_t)INT16_MIN;
+	int16 = INT16_MAX;
+	int16 = INT16_MIN;
 
-	int16_t _int16MinValue = (int16_t)INT16_MIN;
-	int16_t _int16MaxValue = (int16_t)INT16_MAX;
+	int16_t _int16MinValue = INT16_MIN;
+	int16_t _int16MaxValue = INT16_MAX;
 
 	if (_int16MinValue >= 0) {
 		printf("error: int16MinValue >= 0\n");
@@ -234,12 +234,12 @@ static bool testInt16Static(void) {
 		return false;
 	}
 
-	if ((int16_t)(_int16MaxValue + 1) != _int16MinValue) {
+	if (_int16MaxValue + 1 != _int16MinValue) {
 		printf("error: int16MaxValuePlusOne != int16MinValue\n");
 		return false;
 	}
 
-	if ((int16_t)(_int16MinValue - 1) != _int16MaxValue) {
+	if (_int16MinValue - 1 != _int16MaxValue) {
 		printf("error: int16MinValueMinusOne != int16MaxValue\n");
 		return false;
 	}
@@ -251,11 +251,11 @@ static bool testInt16Static(void) {
 
 static bool testInt32Static(void) {
 	int32_t int32;
-	int32 = (int32_t)INT32_MAX;
-	int32 = (int32_t)INT32_MIN;
+	int32 = INT32_MAX;
+	int32 = INT32_MIN;
 
-	int32_t _int32MinValue = (int32_t)INT32_MIN;
-	int32_t _int32MaxValue = (int32_t)INT32_MAX;
+	int32_t _int32MinValue = INT32_MIN;
+	int32_t _int32MaxValue = INT32_MAX;
 
 	if (_int32MinValue >= 0) {
 		printf("error: int32MinValue >= 0\n");
@@ -288,12 +288,12 @@ static bool testInt32Static(void) {
 
 
 static bool testInt64Static(void) {
-	int64_t _int64MinValue = (int64_t)INT64_MIN;
-	int64_t _int64MaxValue = (int64_t)INT64_MAX;
+	int64_t _int64MinValue = INT64_MIN;
+	int64_t _int64MaxValue = INT64_MAX;
 
 	int64_t int64;
-	int64 = (int64_t)INT64_MAX;
-	int64 = (int64_t)INT64_MIN;
+	int64 = INT64_MAX;
+	int64 = INT64_MIN;
 
 	if (_int64MinValue >= 0) {
 		printf("error: int64MinValue >= 0\n");
@@ -367,7 +367,7 @@ static bool testRational(void) {
 	}
 
 	#define npi  ((int)pi)
-	if ((int8_t)npi != 3) {
+	if (npi != 3) {
 		printf("%d", (int32_t)npi);
 		printf("error: npi != 3\n");
 		return false;

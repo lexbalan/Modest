@@ -29,6 +29,7 @@ typedef uint32_t char32_t;
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
 #include <stdlib.h>
+#include <stdarg.h>
 
 
 
@@ -126,6 +127,13 @@ int main(void) {
 
 #undef kk
 #undef pi
+}
+
+
+void main_print(char *form, ...) {
+	va_list va;
+	va_start(va, form);
+	va_end(va);
 }
 
 

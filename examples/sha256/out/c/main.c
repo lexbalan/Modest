@@ -21,27 +21,9 @@ struct sha256_test_case {
 	sha256_Hash expectedResult;
 };
 
-static struct sha256_test_case test0 = (struct sha256_test_case){
-	.inputData = "abc",
-	.inputDataLen = 3,
-	.expectedResult = {
-		0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x1, 0xCF, 0xEA,
-		0x41, 0x41, 0x40, 0xDE, 0x5D, 0xAE, 0x22, 0x23,
-		0xB0, 0x3, 0x61, 0xA3, 0x96, 0x17, 0x7A, 0x9C,
-		0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x0, 0x15, 0xAD
-	}
-};
+static struct sha256_test_case test0 = /*mark=CR5*/(struct sha256_test_case){.inputData = "abc", .inputDataLen = 3, .expectedResult = {186, 120, 22, 191, 143, 1, 207, 234, 65, 65, 64, 222, 93, 174, 34, 35, 176, 3, 97, 163, 150, 23, 122, 156, 180, 16, 255, 97, 242, 0, 21, 173}};
 
-static struct sha256_test_case test1 = (struct sha256_test_case){
-	.inputData = "Hello World!",
-	.inputDataLen = 12,
-	.expectedResult = {
-		0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53,
-		0xB9, 0x2D, 0xC1, 0x81, 0x48, 0xA1, 0xD6, 0x5D,
-		0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6, 0x77, 0x28,
-		0x4A, 0xDD, 0xD2, 0x0, 0x12, 0x6D, 0x90, 0x69
-	}
-};
+static struct sha256_test_case test1 = /*mark=CR5*/(struct sha256_test_case){.inputData = "Hello World!", .inputDataLen = 12, .expectedResult = {127, 131, 177, 101, 127, 241, 252, 83, 185, 45, 193, 129, 72, 161, 214, 93, 252, 45, 75, 31, 163, 214, 119, 40, 74, 221, 210, 0, 18, 109, 144, 105}};
 
 #define TESTS  {&test0, &test1}
 
@@ -56,7 +38,7 @@ static bool doTest(struct sha256_test_case *test) {
 	printf(" -> ");
 
 	uint32_t i = 0;
-	while (i < (uint32_t)SHA256_HASH_SIZE) {
+	while (i < SHA256_HASH_SIZE) {
 		printf("%02X", test_hash[i]);
 		i = i + 1;
 	}
@@ -71,7 +53,7 @@ int main(void) {
 	printf("test SHA256\n");
 
 	uint32_t i = 0;
-	while (i < (uint32_t)LENGTHOF(((struct sha256_test_case *[2])TESTS))) {
+	while (i < 2) {
 		struct sha256_test_case *const test = ((struct sha256_test_case *[2])TESTS)[i];
 		const bool testResult = doTest(test);
 

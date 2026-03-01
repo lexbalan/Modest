@@ -1408,10 +1408,10 @@ def str_value_sizeof_value(x, ctx):
 
 
 def str_value_sizeof_type(x, ctx):
-	if x.of.is_unit():
+	if x.oftype.is_unit():
 		return "(/*sizeof(void)*/(size_t)0)"
 	sstr = "sizeof("
-	sstr += str_type(x.of)
+	sstr += str_type(x.oftype)
 	sstr += ")"
 	return sstr
 

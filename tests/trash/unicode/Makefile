@@ -22,7 +22,7 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main --config=config.toml -mbackend=c11 -funsafe $(INDIR)/main.m
+	mcc -o $(CPREFIX)/main --config=config.toml -mbackend=c12 -funsafe $(INDIR)/main.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c
 
 

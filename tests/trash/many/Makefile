@@ -26,9 +26,9 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.m
-	mcc -o $(CPREFIX)/type -mbackend=c11 -funsafe $(INDIR)/type.m
-	mcc -o $(CPREFIX)/value -mbackend=c11 -funsafe $(INDIR)/value.m
+	mcc -o $(CPREFIX)/main -mbackend=c12 -funsafe $(INDIR)/main.m
+	mcc -o $(CPREFIX)/type -mbackend=c12 -funsafe $(INDIR)/type.m
+	mcc -o $(CPREFIX)/value -mbackend=c12 -funsafe $(INDIR)/value.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/type.c $(CPREFIX)/value.c
 
 

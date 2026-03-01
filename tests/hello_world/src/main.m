@@ -97,3 +97,10 @@ public func main () -> Int {
 }
 
 
+public func print (form: *Str8, ...) -> Unit {
+	var va: __VA_List
+	__va_start(va, form)
+	//vfprint(c_STDOUT_FILENO, form, va)
+	__va_end(va)
+}
+

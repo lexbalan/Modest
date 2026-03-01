@@ -9,10 +9,10 @@
 
 static void mtab(uint32_t n) {
 	uint32_t m = 1;
-	while (/*?*/m < 10) {
-		const uint32_t nm = n * /*?*/m;
-		printf("%u * %u = %u\n", n, /*?*/m, nm);
-		/*?*/m = /*?*/m + 1;
+	while (m < 10) {
+		const uint32_t nm = n * m;
+		printf("%u * %u = %u\n", n, m, nm);
+		m = m + 1;
 	}
 }
 
@@ -20,7 +20,7 @@ static void mtab(uint32_t n) {
 int main(void) {
 	#define n  (2 * 2)
 	printf("multiply table for %d\n", (int32_t)n);
-	mtab((uint32_t)n);
+	mtab(n);
 	return 0;
 
 #undef n

@@ -24,8 +24,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.m
-	mcc -o $(CPREFIX)/table -mbackend=c11 -funsafe $(INDIR)/table.m
+	mcc -o $(CPREFIX)/main -mbackend=c12 -funsafe $(INDIR)/main.m
+	mcc -o $(CPREFIX)/table -mbackend=c12 -funsafe $(INDIR)/table.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/table.c
 
 

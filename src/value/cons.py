@@ -98,7 +98,9 @@ def value_cons_implicit(t, v):
 
 	# for structural type system support
 	if t.is_record() and from_type.is_record():
-		if id(t) != id(from_type):
+		# Конструируем запись из записи
+		# если типы записей разные или если оба типа - Generic (!)
+		if id(t) != id(from_type): #or (t.is_generic() and from_type.is_generic()):
 			# Если структуры разные (номинативно!) то генерим cons операцию
 			# для C и LLVM это важно (их не волнует то что структура может быть одинакова)
 			return value_record_cons(t, v, 'implicit', ti=ti)

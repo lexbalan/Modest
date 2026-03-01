@@ -21,10 +21,7 @@ struct line {
 	struct point b;
 };
 
-static struct line line = (struct line){
-	.a = {.x = 0, .y = 0},
-	.b = {.x = 1.0, .y = 1.0}
-};
+static struct line line = /*mark=CR5*/(struct line){.a = {.x = 0, .y = 0}, .b = {.x = 1.0, .y = 1.0}};
 
 __attribute__((always_inline))
 static inline float max(float a, float b) {
@@ -70,7 +67,7 @@ static void ptr_example(void) {
 
 
 int main(void) {
-	const float len = lineLength(/*?*/line);
+	const float len = lineLength(line);
 	printf("line length = %f\n", len);
 
 	ptr_example();

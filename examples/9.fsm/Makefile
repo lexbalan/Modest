@@ -25,8 +25,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/fsm -mbackend=c11 $(INDIR)/fsm.m
-	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
+	mcc -o $(CPREFIX)/fsm -mbackend=c12 $(INDIR)/fsm.m
+	mcc -o $(CPREFIX)/main -mbackend=c12 $(INDIR)/main.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/fsm.c
 
 

@@ -73,7 +73,7 @@ int main(void) {
 
 	printf("\nlist.node_get(list, n) test\n");
 	int32_t i = 0;
-	while (i >= (int32_t)-12) {
+	while (i >= -12) {
 		struct list_node *const node = list_node_get(list0, i);
 
 		if (node == NULL) {

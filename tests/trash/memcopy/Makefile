@@ -25,9 +25,9 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
-	#mcc -o $(CPREFIX)/memory -mbackend=c11 -funsafe ${MODEST_LIB}/lightfood/memory.m
-	mcc -o ./out/c/memory -mbackend=c11 -funsafe ${MODEST_LIB}/lightfood/memory.m
+	mcc -o $(CPREFIX)/main -mbackend=c12 $(INDIR)/main.m
+	#mcc -o $(CPREFIX)/memory -mbackend=c12 -funsafe ${MODEST_LIB}/lightfood/memory.m
+	mcc -o ./out/c/memory -mbackend=c12 -funsafe ${MODEST_LIB}/lightfood/memory.m
 
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/memory.c
 

@@ -24,7 +24,7 @@ LLVM:
 
 
 C:
-	mcc $(MCC_OPTIONS) -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
+	mcc $(MCC_OPTIONS) -o $(CPREFIX)/main -mbackend=c12 $(INDIR)/main.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c
 
 

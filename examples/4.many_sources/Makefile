@@ -30,8 +30,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
-	mcc -o $(CPREFIX)/lib -mbackend=c11 $(INDIR)/lib.m
+	mcc -o $(CPREFIX)/main -mbackend=c12 $(INDIR)/main.m
+	mcc -o $(CPREFIX)/lib -mbackend=c12 $(INDIR)/lib.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/lib.c
 
 

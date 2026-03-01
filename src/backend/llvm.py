@@ -1816,10 +1816,10 @@ def _eval_sizeof_type(t):
 
 
 def do_eval_sizeof_value(x):
-	return _eval_sizeof_type(x.of.type)
+	return _eval_sizeof_type(x.ofvalue.type)
 
 def do_eval_sizeof_type(x):
-	return _eval_sizeof_type(x.of)
+	return _eval_sizeof_type(x.oftype)
 
 
 
