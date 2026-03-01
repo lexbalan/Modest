@@ -1,6 +1,6 @@
 
 from util import nbits_for_num
-
+from .common import str_nl_indent, indent_up, indent_down
 
 
 def wrap_if(x, cond):
@@ -84,8 +84,8 @@ class CTypeArray(CType):
 	def to_str(self, text):
 		text = text + '['
 		if self.volume != None and not self.volume.isValueUndef():
-			from .c12 import str_value
-			text += str_value(self.volume)
+			from .c12 import do_cvalue
+			text += str_cvalue(do_cvalue(self.volume))
 		text += ']'
 		text = wrap_if(text, self.of.precedence > self.precedence)
 		text = str_ctype(self.of, text)
@@ -140,7 +140,6 @@ class CTypeStruct(CType):
 	def to_str(self, text):
 		nl_end = 0
 		sstr = '%s {' % (self.tag)
-		from .c12 import indent_up, indent_down, str_nl_indent
 		indent_up()
 		i = 0
 		nfields = len(self.fields)
@@ -195,8 +194,6 @@ def print_list_items(_list, method):
 	return sstr
 
 
-def str_kv(x):
-	return ".%s = %s" % (x[0], str_cvalue(x[1]))
 
 
 def string_literal_prefix(width):
@@ -224,6 +221,12 @@ def str_number_suffix(req_bits, is_unsigned):
 
 
 
+
+class KV():
+	def __init__(self, key, value, nl):
+		self.key = key
+		self.value = value
+		self.nl = nl
 
 
 class CValue():
@@ -298,10 +301,27 @@ class CValueStruct(CValue):
 		self.precedence = 15
 
 	def __str__(self):
-		items = print_list_items(self.items, str_kv)
-		if items == '':
-			items = '0'
-		return '{%s}' % items
+		sitems = ''
+		#print_list_items(self.items, str_kv)
+		indent_up()
+		i = 0
+		kv = None
+		while i < len(self.items):
+			kv = self.items[i]
+			if i > 0 and kv.nl == 0:
+				sitems += ' '
+			sitems += str_nl_indent(kv.nl) + ".%s = %s" % (kv.key, str_cvalue(kv.value))
+			if i < len(self.items) - 1:
+				sitems += ','
+			i += 1
+
+		if kv != None and kv.nl > 0:
+			sitems += '\n'
+		indent_down()
+
+		if sitems == '':
+			sitems = '0'
+		return '{%s}' % sitems
 
 
 
@@ -780,12 +800,93 @@ class CValueVaCopy(CValue):
 
 
 
+
 def str_cvalue(v):
 	assert(v != None)
 	if v.mark != None:
 		return '/*mark=%s*/' % v.mark + str(v)
 	return str(v)
 
+
+
+
+class CStmt():
+	def __init__(self):
+		pass
+
+
+class CStmtCommentLine(CStmt):
+	def __init__(self, text):
+		assert(isinstance(stmts, list))
+		self.text = text
+
+
+class CStmtCommentBlock(CStmt):
+	def __init__(self, text):
+		assert(isinstance(stmts, list))
+		self.text = text
+
+
+class CStmtBlock(CStmt):
+	def __init__(self, stmts):
+		assert(isinstance(stmts, list))
+		self.stmts = stmts
+
+
+
+class CStmtDefVar(CStmt):
+	def __init__(self, id_str, type, init_value):
+		assert(isinstance(id_str, str))
+		assert(isinstance(type, CType))
+		if init_value != None:
+			assert(isinstance(init_value, CValue))
+		self.id_str = id_str
+		self.type = type
+		self.init_value = init_value
+
+	def __str__(self):
+		sstr = self.type.to_str(text=self.id_str)
+		if self.init_value != None:
+			sstr += ' = %s' % str_cvalue(self.init_value)
+		return sstr + ';'
+
+
+
+class CStmtDefConst(CStmt):
+	def __init__(self, id, init_value):
+		assert(isinstance(id, str))
+		assert(isinstance(init_value, CValue))
+		self.id = id
+		self.init_value = init_value
+
+
+
+class CStmtIf(CStmt):
+	def __init__(self, value_cond, block_then, block_else):
+		assert(isinstance(value_cond, CValue))
+		assert(isinstance(block_then, CStmtBlock))
+		assert(isinstance(block_else, CStmtBlock))
+		self.value_cond = value_cond
+		self.block_then = block_then
+		self.block_else = block_else
+
+	def __str__(self):
+		sstr = "if(%s)" % str_cvalue(self.init_value)
+		sstr += str(block_then)
+		return sstr
+
+class CStmtWhile(CStmt):
+	def __init__(self, value_cond, block):
+		assert(isinstance(value_cond, CValue))
+		assert(isinstance(block, CStmtBlock))
+		self.value_cond = value_cond
+		self.block = block
+
+
+class CStmtReturn(CStmt):
+	def __init__(self, value_retval, block_then, block_else):
+		assert(isinstance(value_retval, CValue))
+		self.value_retval = value_retval
 
 
 

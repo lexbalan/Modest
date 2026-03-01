@@ -651,7 +651,7 @@ def do_cvalue_literal_record(v, ctx):
 	items = []
 	for kv in v.asset:
 		if not kv.value.isValueUndef():
-			items.append((kv.id.str, do_cvalue(kv.value)))
+			items.append(KV(kv.id.str, do_cvalue(kv.value), kv.nl))
 	return CValueStruct(items)
 
 
@@ -1400,32 +1400,39 @@ def print_stmt_var(x):
 	if x.hasAttribute('static'):
 		out("static ")
 
-	print_variable(get_id_str(var_value), var_value.type)
+#	print_variable(get_id_str(var_value), var_value.type)
+#
+#	if init_value.isValueUndef():
+#		# инициализация неопределенным значением
+#		# (отсутствие явной инициализации)
+#		out(";")
+#		return
+#
+#	if var_value.type.is_array():
+#		if init_value.isValueRuntime() or var_value.type.is_vla():
+#			# нельзя присваивать VLA значение при создании...
+#			# только после можно уже что то туда загрузить
+#			out(";")
+#			nl_indent()
+#			assign_array(var_value, init_value, x.ti)
+#			out(";")
+#			return
+#
+#	out(" = ")
+#	out(str_initializer(init_value))
+#	#if init_value.type.is_closed_array():
+#	#	out(str_initializer(init_value))
+#	#else:
+#	#	print_value(init_value)
+#	out(";")
 
-	if init_value.isValueUndef():
-		# инициализация неопределенным значением
-		# (отсутствие явной инициализации)
-		out(";")
-		return
+	civ = None
+	if not init_value.isValueUndef():
+		civ = do_cvalue(init_value, ctx=['initializer_context'])
 
-	if var_value.type.is_array():
-		if init_value.isValueRuntime() or var_value.type.is_vla():
-			# нельзя присваивать VLA значение при создании...
-			# только после можно уже что то туда загрузить
-			out(";")
-			nl_indent()
-			assign_array(var_value, init_value, x.ti)
-			out(";")
-			return
-
-	out(" = ")
-	out(str_initializer(init_value))
-	#if init_value.type.is_closed_array():
-	#	out(str_initializer(init_value))
-	#else:
-	#	print_value(init_value)
-	out(";")
-	return
+	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), civ)
+	out(str(dv))
+	return#
 
 
 

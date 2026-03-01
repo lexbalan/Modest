@@ -15,28 +15,28 @@
 
 bool main_testRecordsEq(void) {
 
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT0, &(struct {int8_t x; int8_t y;})POINT0, sizeof(struct {int8_t x; int8_t y;})) != 0) {
+	if (memcmp(&POINT0, &POINT0, sizeof(struct {int8_t x; int8_t y;})) != 0) {
 		printf("point0 != point0\n");
 		return false;
 	}
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT1, &(struct {int8_t x; int8_t y;})POINT1, sizeof(struct {int8_t x; int8_t y;})) != 0) {
+	if (memcmp(&POINT1, &POINT1, sizeof(struct {int8_t x; int8_t y;})) != 0) {
 		printf("point1 != point1\n");
 		return false;
 	}
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT12, &(struct {int8_t x; int8_t y;})POINT12, sizeof(struct {int8_t x; int8_t y;})) != 0) {
+	if (memcmp(&POINT12, &POINT12, sizeof(struct {int8_t x; int8_t y;})) != 0) {
 		printf("point0 != point0\n");
 		return false;
 	}
 
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT0, &POINT1, sizeof(struct {int8_t x; int8_t y;})) == 0) {
+	if (memcmp(&POINT0, &POINT1, sizeof(struct {int8_t x; int8_t y;})) == 0) {
 		printf("point0 == point1\n");
 		return false;
 	}
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT1, &POINT0, sizeof(struct {int8_t x; int8_t y;})) == 0) {
+	if (memcmp(&POINT1, &POINT0, sizeof(struct {int8_t x; int8_t y;})) == 0) {
 		printf("point1 == point0\n");
 		return false;
 	}
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT0, &POINT12, sizeof(struct {int8_t x; int8_t y;})) == 0) {
+	if (memcmp(&POINT0, &POINT12, sizeof(struct {int8_t x; int8_t y;})) == 0) {
 		printf("point0 == point12\n");
 		return false;
 	}

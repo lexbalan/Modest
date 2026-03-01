@@ -33,7 +33,10 @@ typedef uint32_t char32_t;
 
 
 
-struct point {int64_t x; int64_t y;};
+struct point {
+	int64_t x;
+	int64_t y;
+};
 
 static void foo(int32_t a, int64_t b) {
 	return;
@@ -43,9 +46,12 @@ static void foo(int32_t a, int64_t b) {
 #define C  15
 
 //var a: Int32 = 5
-static int32_t k[3] = {1, 2, 3};
+static int32_t k[3] = /*mark=CA2*/{1, 2, 3};
 
-static struct point p0 = (struct point){.x = 1, .y = 2};
+static struct point p0 = /*mark=CR5*/(struct point){
+	.x = 1,
+	.y = 2
+};
 
 int main(void) {
 
@@ -53,9 +59,9 @@ int main(void) {
 	const char16_t xc2 = u'A';
 	const char32_t xc3 = U'A';
 
-	char xcs1[1] = "A";
-	char16_t xcs2[1] = u"A";
-	char32_t xcs3[1] = U"A";
+	char xcs1[1] = /*mark=CA1*/"A";
+	char16_t xcs2[1] = /*mark=CA1*/u"A";
+	char32_t xcs3[1] = /*mark=CA1*/U"A";
 
 	char *const xs1 = "A";
 	char16_t *const xs2 = u"A";
@@ -66,15 +72,15 @@ int main(void) {
 	char16_t c2 = u'B';
 	char32_t c3 = U'B';
 
-	char cs1[1] = "B";
-	char16_t cs2[1] = u"B";
-	char32_t cs3[1] = U"B";
+	char cs1[1] = /*mark=CA1*/"B";
+	char16_t cs2[1] = /*mark=CA1*/u"B";
+	char32_t cs3[1] = /*mark=CA1*/U"B";
 
 	char *s1 = "B";
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
 
-	int32_t arr[3] = {1, 2, 3};
+	int32_t arr[3] = /*mark=CA2*/{1, 2, 3};
 
 	LENGTHOF(arr);
 
@@ -99,7 +105,7 @@ int main(void) {
 	sizeof(uint32_t);
 
 	arr[1];
-	struct point p0 = (struct point){};
+	struct point p0 = /*mark=CR4*/(struct point){0};
 	p0.x;
 	p0.y;
 	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)) {

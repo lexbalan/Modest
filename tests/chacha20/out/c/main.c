@@ -22,7 +22,7 @@ struct context {
 static struct context init(uint8_t (*key)[32], uint32_t (*_nonce)[3]) {
 	uint32_t nonce[3];
 	memcpy(nonce, _nonce, sizeof(uint32_t [3]));
-	return (struct context){.key = key, .nonce = {nonce[0], nonce[1], nonce[2]}, .blockCounter = 0, .blockOffset = (uint32_t)sizeof(chacha20_Block)};
+	return /*mark=CR4*/(struct context){.key = key, .nonce = /*mark=CA4*/(uint32_t [3]){nonce[0], nonce[1], nonce[2]}, .blockCounter = 0, .blockOffset = (uint32_t)sizeof(chacha20_Block)};
 }
 
 
@@ -31,4 +31,4 @@ static void cipher(struct context *ctx, uint8_t (*data)[], uint32_t len) {
 	uint8_t (*bptr)[] = NULL;
 	while (i < len) {
 		if (ctx->blockOffset == (uint32_t)sizeof(chacha20_Block)) {
-			chacha20_State state;
+			chacha20_State state = chacha20_makeState((chacha20_Key *)ctx->key, ctx->blockCounter, &ctx->nonce);

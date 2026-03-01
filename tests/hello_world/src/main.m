@@ -3,7 +3,10 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-type Point = {x:Int64, y:Int64}
+type Point = {
+	x: Int64
+	y: Int64
+}
 
 func foo (a: Int32, b: Int64) -> {} {
 	return {}
@@ -15,7 +18,10 @@ const c = 15
 //var a: Int32 = 5
 var k: [3]Int32 = [1, 2, 3]
 
-var p0: Point = {x=1, y=2}
+var p0: Point = {
+	x = 1
+ 	y = 2
+}
 
 public func main () -> Int {
 

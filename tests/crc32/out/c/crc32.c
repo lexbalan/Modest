@@ -22,7 +22,7 @@ void crc32_init(void) {
 		uint32_t j = 0;
 		while (j < 8) {
 			if ((crc & 1) != 0) {
-				crc = (crc >> 1) ^ 3988292384;
+				crc = (crc >> 1) ^ 3988292384L;
 			} else {
 				crc = crc >> 1;
 			}
@@ -38,7 +38,7 @@ void crc32_init(void) {
 
 // calculate CRC32
 uint32_t crc32_run(uint8_t (*buf)[], uint32_t len) {
-	uint32_t crc = 4294967295;
+	uint32_t crc = 4294967295L;
 	uint32_t i = 0;
 	while (i < len) {
 		const uint32_t x = (uint32_t)(*buf)[i];
@@ -48,7 +48,7 @@ uint32_t crc32_run(uint8_t (*buf)[], uint32_t len) {
 		i = i + 1;
 	}
 
-	return crc ^ 4294967295;
+	return crc ^ 4294967295L;
 }
 
 
