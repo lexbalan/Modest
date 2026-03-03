@@ -1046,7 +1046,14 @@ def do_cvalue_ref(x, ctx):
 			# просто печатаем массив чаров как есть тк он автоматом decay to pointer
 			return cv
 
-	return CValueRef(cv)
+	cv = CValueRef(cv)
+
+	if value.isValueSlice():
+		# ref to slice returns pointer to array item (!)
+		# now we need to cast it to pointer to slice type array
+		cv = CValueCast(do_ctype(x.type), cv)
+
+	return cv
 
 
 def do_cvalue_deref(x, ctx):

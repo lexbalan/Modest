@@ -292,17 +292,17 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 		shiftRows(block);
 		mixColumns(block);
 		if ((i & 0x1) == 0x1) {
-			addRoundKey(block, &ctx->key[16]);
+			addRoundKey(block, (uint8_t (*)[32 - 16])&ctx->key[16]);
 		} else {
 			expandEncKey(&ctx->key, &rcon);
-			addRoundKey(block, &ctx->key[0]);
+			addRoundKey(block, (uint8_t (*)[16 - 0])&ctx->key[0]);
 		}
 	}
 
 	subBytes(block);
 	shiftRows(block);
 	expandEncKey(&ctx->key, &rcon);
-	addRoundKey(block, &ctx->key[0]);
+	addRoundKey(block, (uint8_t (*)[16 - 0])&ctx->key[0]);
 
 	return AES256_RESULT_SUCCESS;
 }
@@ -322,9 +322,9 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 	while (i > 0) {
 		if ((i & 0x1) == 0x1) {
 			expandDecKey(&ctx->key, &rcon);
-			addRoundKey(block, &ctx->key[16]);
+			addRoundKey(block, (uint8_t (*)[32 - 16])&ctx->key[16]);
 		} else {
-			addRoundKey(block, &ctx->key[0]);
+			addRoundKey(block, (uint8_t (*)[16 - 0])&ctx->key[0]);
 		}
 
 		mixColumnsInv(block);
@@ -333,7 +333,7 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, aes256_Block *block) {
 		i = i - 1;
 	}
 
-	addRoundKey(block, &ctx->key[0]);
+	addRoundKey(block, (uint8_t (*)[16 - 0])&ctx->key[0]);
 
 	return AES256_RESULT_SUCCESS;
 }
