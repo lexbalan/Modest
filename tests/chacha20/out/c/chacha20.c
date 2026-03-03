@@ -45,48 +45,48 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 	while (i < 10) {
 
 		uint32_t r[4];
-		quarterRound(x[0], x[4], x[8], x[12], &r);
+		;
 		x[0] = r[0];
 		x[4] = r[1];
 		x[8] = r[2];
 		x[12] = r[3];
 
-		quarterRound(x[1], x[5], x[9], x[13], &r);
+		;
 		x[1] = r[0];
 		x[5] = r[1];
 		x[9] = r[2];
 		x[13] = r[3];
 
-		quarterRound(x[2], x[6], x[10], x[14], &r);
+		;
 		x[2] = r[0];
 		x[6] = r[1];
 		x[10] = r[2];
 		x[14] = r[3];
 
-		quarterRound(x[3], x[7], x[11], x[15], &r);
+		;
 		x[3] = r[0];
 		x[7] = r[1];
 		x[11] = r[2];
 		x[15] = r[3];
-		quarterRound(x[0], x[5], x[10], x[15], &r);
+		;
 		x[0] = r[0];
 		x[5] = r[1];
 		x[10] = r[2];
 		x[15] = r[3];
 
-		quarterRound(x[1], x[6], x[11], x[12], &r);
+		;
 		x[1] = r[0];
 		x[6] = r[1];
 		x[11] = r[2];
 		x[12] = r[3];
 
-		quarterRound(x[2], x[7], x[8], x[13], &r);
+		;
 		x[2] = r[0];
 		x[7] = r[1];
 		x[8] = r[2];
 		x[13] = r[3];
 
-		quarterRound(x[3], x[4], x[9], x[14], &r);
+		;
 		x[3] = r[0];
 		x[4] = r[1];
 		x[9] = r[2];
@@ -118,12 +118,7 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 
 // counter он говорит алгоритму - какой блок keystream генерировать
 void chacha20_makeState(chacha20_Key *key, uint32_t counter, uint32_t (*nonce)[3], chacha20_State *_sret_) {
-	memcpy(_sret_, &(chacha20_State){
-		0x61707865, 0x3320646E, 0x79622D32, 0x6B206574,
-		(*key)[0], (*key)[1], (*key)[2], (*key)[3],
-		(*key)[4], (*key)[5], (*key)[6], (*key)[7],
-		counter, (*nonce)[0], (*nonce)[1], (*nonce)[2]
-	}, sizeof(chacha20_State));
+	memcpy(_sret_, &(chacha20_State){0x61707865, 0x3320646E, 0x79622D32, 0x6B206574, (*key)[0], (*key)[1], (*key)[2], (*key)[3], (*key)[4], (*key)[5], (*key)[6], (*key)[7], counter, (*nonce)[0], (*nonce)[1], (*nonce)[2]}, sizeof(chacha20_State));
 }
 
 

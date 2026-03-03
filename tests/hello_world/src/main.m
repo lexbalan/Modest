@@ -4,8 +4,8 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 type Point = {
-	x: Int64
-	y: Int64
+	x: Word64
+	y: Word64
 }
 
 func foo (a: Int32, b: Int64) -> {} {
@@ -16,7 +16,7 @@ func foo (a: Int32, b: Int64) -> {} {
 const c = 15
 
 //var a: Int32 = 5
-var k: [3]Int32 = [1, 2, 3]
+var k: [3]Word32 = [1, 2, 3]
 
 var p0: Point = {
 	x = 1
@@ -105,7 +105,9 @@ public func main () -> Int {
 
 public func print (form: *Str8, ...) -> Unit {
 	var va: __VA_List
+	var va2: __VA_List
 	__va_start(va, form)
+	__va_copy(va2, va)
 	//vfprint(c_STDOUT_FILENO, form, va)
 	__va_end(va)
 }

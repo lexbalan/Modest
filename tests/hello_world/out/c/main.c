@@ -34,8 +34,8 @@ typedef uint32_t char32_t;
 
 
 struct point {
-	int64_t x;
-	int64_t y;
+	uint64_t x;
+	uint64_t y;
 };
 
 static void foo(int32_t a, int64_t b) {
@@ -46,11 +46,11 @@ static void foo(int32_t a, int64_t b) {
 #define C  15
 
 //var a: Int32 = 5
-static int32_t k[3] = /*mark=CA2*/{1, 2, 3};
+static uint32_t k[3] = /*mark=CA2*/{0x1, 0x2, 0x3};
 
-static struct point p0 = /*mark=CR5*/(struct point){
-	.x = 1,
-	.y = 2
+static struct point p0 = /*mark=CR2*/{
+	.x = 0x1,
+	.y = 0x2
 };
 
 int main(void) {
@@ -105,7 +105,7 @@ int main(void) {
 	sizeof(uint32_t);
 
 	arr[1];
-	struct point p0 = /*mark=CR4*/(struct point){0};
+	struct point p0 = /*mark=CR2*/{0};
 	p0.x;
 	p0.y;
 	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)) {
@@ -138,7 +138,9 @@ int main(void) {
 
 void main_print(char *form, ...) {
 	va_list va;
+	va_list va2;
 	va_start(va, form);
+	va_copy(va2, va);
 	va_end(va);
 }
 

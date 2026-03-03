@@ -221,7 +221,6 @@ def str_number_suffix(req_bits, is_unsigned):
 
 
 
-
 class KV():
 	def __init__(self, key, value, nl):
 		self.key = key
@@ -244,15 +243,41 @@ class CValueNamed(CValue):
 		return self.id_str
 
 
-class CValueNumber(CValue):
-	def __init__(self, number):
+class CValueInteger(CValue):
+	def __init__(self, number, is_unsigned=False, as_hex=False):
 		super().__init__()
 		self.number = number
-		self.is_unsigned = False
+		self.is_unsigned = is_unsigned
+		self.as_hex = as_hex
+		self.nsigns = 0
 		self.precedence = 15
 
 	def __str__(self):
-		return str(self.number) + str_number_suffix(nbits_for_num(self.number), self.is_unsigned)
+		#return str(self.number) + str_number_suffix(nbits_for_num(self.number), self.is_unsigned)
+		#def str_value_literal_number(num, nsigns=0, is_unsigned=False, as_hex=False):
+		num = self.number
+		width = nbits_for_num(num, signed=not self.is_unsigned)
+		sstr = ''
+		# Big Number?
+		if width > 64:
+			# print Big Numbers
+			a1 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
+			a0 = (num >> 0)  & 0xFFFFFFFFFFFFFFFF
+			if width == 128:
+				return "BIG_INT128(0x%XULL, 0x%XULL)" % (a1, a0)
+			elif width == 256:
+				a3 = (num >> 192) & 0xFFFFFFFFFFFFFFFF
+				a2 = (num >> 128) & 0xFFFFFFFFFFFFFFFF
+				return "BIG_INT256(0x%XULL, 0x%XULL, 0x%XULL, 0x%XULL)" % (a3, a2, a1, a0)
+
+		if self.as_hex:
+			fmt = "0x%%0%dX" % self.nsigns
+			sstr += (fmt % num)
+		else:
+			sstr += str(num)
+
+		sstr += str_number_suffix(req_bits=nbits_for_num(num), is_unsigned=self.is_unsigned)
+		return sstr
 
 
 
@@ -796,7 +821,7 @@ class CValueVaCopy(CValue):
 		self.precedence = 14
 
 	def __str__(self):
-		return 'va_copy(%s)' % (str_cvalue(self.va_dst), str_cvalue(self.va_src))
+		return 'va_copy(%s, %s)' % (str_cvalue(self.va_dst), str_cvalue(self.va_src))
 
 
 
