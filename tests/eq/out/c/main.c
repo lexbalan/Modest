@@ -57,32 +57,32 @@ static int32_t varr321[3] = /*mark=CA2*/{3, 2, 1};
 
 bool main_testArraysEq(void) {
 
-	if (memcmp(&(int8_t [3])ARR123, &(int8_t [3])ARR123, sizeof(int8_t [3])) != 0) {
+	if (memcmp(/*mark=?*/&(int8_t [3])ARR123, /*mark=?*/&(int8_t [3])ARR123, sizeof(int8_t [3])) != 0) {
 		printf("arr123 != arr123\n");
 		return false;
 	}
 
-	if (memcmp(&(int8_t [3])ARR321, &(int8_t [3])ARR321, sizeof(int8_t [3])) != 0) {
+	if (memcmp(/*mark=?*/&(int8_t [3])ARR321, /*mark=?*/&(int8_t [3])ARR321, sizeof(int8_t [3])) != 0) {
 		printf("arr321 != arr321\n");
 		return false;
 	}
 
-	if (memcmp(&/*mark=CA4*/(int32_t [3])ARR123, &CARR123, sizeof(int32_t [3])) != 0) {
+	if (memcmp(/*mark=?*/&(int8_t [3])ARR123, /*mark=?*/&(int32_t [3])CARR123, sizeof(int32_t [3])) != 0) {
 		printf("arr123 != carr123\n");
 		return false;
 	}
 
-	if (memcmp(&CARR123, &/*mark=CA4*/(int32_t [3])ARR123, sizeof(int32_t [3])) != 0) {
+	if (memcmp(/*mark=?*/&(int32_t [3])CARR123, /*mark=?*/&(int8_t [3])ARR123, sizeof(int32_t [3])) != 0) {
 		printf("carr123 != arr123\n");
 		return false;
 	}
 
-	if (memcmp(&(int8_t [3])ARR123, &(int8_t [3])ARR321, sizeof(int8_t [3])) == 0) {
+	if (memcmp(/*mark=?*/&(int8_t [3])ARR123, /*mark=?*/&(int8_t [3])ARR321, sizeof(int8_t [3])) == 0) {
 		printf("arr123 == arr321\n");
 		return false;
 	}
 
-	if (memcmp(&CARR123, &CARR321, sizeof(int32_t [3])) == 0) {
+	if (memcmp(/*mark=?*/&(int32_t [3])CARR123, /*mark=?*/&(int32_t [3])CARR321, sizeof(int32_t [3])) == 0) {
 		printf("carr123 == carr321\n");
 		return false;
 	}
@@ -97,22 +97,22 @@ bool main_testArraysEq(void) {
 		return false;
 	}
 
-	if (memcmp(&varr123, &/*mark=CA4*/(int32_t [3])ARR123, sizeof(int32_t [3])) != 0) {
+	if (memcmp(&varr123, /*mark=?*/&(int8_t [3])ARR123, sizeof(int32_t [3])) != 0) {
 		printf("varr123 != arr123\n");
 		return false;
 	}
 
-	if (memcmp(&varr123, &CARR123, sizeof(int32_t [3])) != 0) {
+	if (memcmp(&varr123, /*mark=?*/&(int32_t [3])CARR123, sizeof(int32_t [3])) != 0) {
 		printf("varr123 != carr123\n");
 		return false;
 	}
 
-	if (memcmp(&varr321, &/*mark=CA4*/(int32_t [3])ARR321, sizeof(int32_t [3])) != 0) {
+	if (memcmp(&varr321, /*mark=?*/&(int8_t [3])ARR321, sizeof(int32_t [3])) != 0) {
 		printf("varr321 != arr321\n");
 		return false;
 	}
 
-	if (memcmp(&varr321, &CARR321, sizeof(int32_t [3])) != 0) {
+	if (memcmp(&varr321, /*mark=?*/&(int32_t [3])CARR321, sizeof(int32_t [3])) != 0) {
 		printf("varr321 != carr321\n");
 		return false;
 	}

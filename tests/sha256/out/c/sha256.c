@@ -91,7 +91,8 @@ static void transform(struct context *ctx, uint8_t (*data)[]) {
 		i = i + 1;
 	}
 
-	uint32_t x[8];memcpy(&x, &ctx->state, sizeof(uint32_t [8]));;
+	uint32_t x[8];
+	memcpy(&x, &ctx->state, sizeof(uint32_t [8]));;
 
 	i = 0;
 	while (i < 64) {

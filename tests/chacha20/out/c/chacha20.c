@@ -38,7 +38,8 @@ static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_
 void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 	chacha20_State state;
 	memcpy(state, _state, sizeof(chacha20_State));
-	chacha20_State x;memcpy(&x, &state, sizeof(chacha20_State));;
+	chacha20_State x;
+	memcpy(&x, &state, sizeof(chacha20_State));;
 
 	int32_t i = 0;
 	while (i < 10) {

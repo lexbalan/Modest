@@ -36,7 +36,8 @@ static void cipher(struct context *ctx, uint8_t (*data)[], uint32_t len) {
 	uint8_t (*bptr)[] = NULL;
 	while (i < len) {
 		if (ctx->blockOffset == (uint32_t)sizeof(chacha20_Block)) {
-			chacha20_State state;chacha20_makeState((chacha20_Key *)ctx->key, ctx->blockCounter, &ctx->nonce, &state);
+			chacha20_State state;
+			chacha20_makeState((chacha20_Key *)ctx->key, ctx->blockCounter, &ctx->nonce, &state);
 			memcpy((uint32_t (*)[16 - 13])&state[13], (uint32_t (*)[3 - 0])&ctx->nonce[0], sizeof(uint32_t [16 - 13]));;
 
 			chacha20_chacha20Block(&state, &ctx->block);
@@ -95,11 +96,15 @@ int main(void) {
 
 
 static bool test0(void) {
-	uint8_t key[32];memcpy(&key, &testKey, sizeof(uint8_t [32]));;
+	uint8_t key[32];
+	memcpy(&key, &testKey, sizeof(uint8_t [32]));;
 	uint32_t counter = 0x1;
-	uint8_t nonce[12];memcpy(&nonce, &testNonce, sizeof(uint8_t [12]));;
-	chacha20_State state;chacha20_makeState((chacha20_Key *)&key, counter, (uint32_t (*)[3])&nonce, &state);
-	chacha20_Block block;chacha20_chacha20Block(&state, &block);
+	uint8_t nonce[12];
+	memcpy(&nonce, &testNonce, sizeof(uint8_t [12]));;
+	chacha20_State state;
+	chacha20_makeState((chacha20_Key *)&key, counter, (uint32_t (*)[3])&nonce, &state);
+	chacha20_Block block;
+	chacha20_chacha20Block(&state, &block);
 
 	uint8_t (*const bptr)[64] = (uint8_t (*)[64])&block;
 

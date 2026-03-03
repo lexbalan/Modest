@@ -1467,6 +1467,7 @@ def print_stmt_var(x):
 	out(str(dv))
 
 	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
+		nl_indent()
 		assign_array(var_value, init_value, x.ti)
 		out(";")
 

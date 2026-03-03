@@ -59,7 +59,8 @@ static bool runTest(struct test_case *test) {
 
 	aes256_init(&ctx, &test->key);
 
-	aes256_Block plaintextBefore;memcpy(&plaintextBefore, &test->plaintext, sizeof(aes256_Block));;
+	aes256_Block plaintextBefore;
+	memcpy(&plaintextBefore, &test->plaintext, sizeof(aes256_Block));;
 
 	aes256_encrypt_ecb(&ctx, &test->plaintext);
 
