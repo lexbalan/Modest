@@ -1127,6 +1127,9 @@ def do_cvalue_sizeof_value(x, ctx):
 def do_cvalue_sizeof_type(x, ctx):
 	return CValueSizeofType(do_ctype(x.oftype))
 
+def do_cvalue_lengthof_type(x, ctx):
+	return CValueInteger(x.oftype.volume.asset, is_unsigned=True)
+
 
 #
 #def str_value_alignof(x, ctx):
@@ -1272,6 +1275,7 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueLengthofValue(): return do_cvalue_lengthof_value(x, ctx)
 	elif x.isValueSizeofType(): return do_cvalue_sizeof_type(x, ctx)
 	elif x.isValueSizeofValue(): return do_cvalue_sizeof_value(x, ctx)
+	elif x.isValueLengthofType(): return do_cvalue_lengthof_type(x, ctx)
 	elif x.isValueVaStart(): return do_cvalue_va_start(x, ctx)
 	elif x.isValueVaEnd(): return do_cvalue_va_end(x, ctx)
 	elif x.isValueVaCopy(): return do_cvalue_va_copy(x, ctx)
@@ -1286,7 +1290,6 @@ def do_cvalue(x, ctx=[]):
 #	elif x.isValueNew(): sstr += str_value_new(x, ctx)
 #	elif x.isValueAlignof(): sstr += str_value_alignof(x, ctx)
 #	elif x.isValueOffsetof(): sstr += str_value_offsetof(x, ctx)
-#	elif x.isValueLengthofType(): sstr += str_value_lengthof_type(x, ctx)
 #	else: sstr += str(x)
 
 	return None
