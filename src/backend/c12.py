@@ -569,7 +569,6 @@ def str_value_literal_bool(v, ctx):
 
 
 
-
 def str_initializer(v):
 	# В C выражение значения и выражение-инициализатор - это разные вещи!
 	# В выражениях-инициализаторах C нельзя приводить массивы
@@ -617,7 +616,7 @@ def do_cvalue_literal_array(v, ctx):
 	items = v.asset
 	cvalues = []
 	for item in items:
-		cv = do_cvalue(item, ctx=ctx)
+		cv = do_cinitializer(item, ctx=ctx)
 		cvalues.append(cv)
 	return CValueArray(cvalues)
 
@@ -626,7 +625,7 @@ def do_cvalue_literal_record(v, ctx):
 	items = []
 	for kv in v.asset:
 		if not kv.value.isValueUndef():
-			items.append(KV(kv.id.str, do_cvalue(kv.value), kv.nl))
+			items.append(KV(kv.id.str, do_cinitializer(kv.value), kv.nl))
 	return CValueStruct(items)
 
 
@@ -680,24 +679,24 @@ def do_cvalue_cons_array(x, ctx):
 				cv.mark = 'CA1'
 				return cv
 
-
-			cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
-			cv.mark = 'CA2'
-			return cv
+			if x.asset:
+				cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
+				cv.mark = 'CA2'
+				return cv
 
 		if from_type.is_string():
 			#sstr += '{' + print_literal_array_items(x.asset, to_type.of) + '}'
 			width = 0
 			if not to_type.is_generic():
 				width = to_type.of.width
-			print("width = " + str(width))
+			#print("width = " + str(width))
 			cv = do_cvalue_literal_string(x.value.asset, width)
 			cv.mark = 'CA3'
 			return cv
-#		else:
-#			cv = do_cvalue(value, ctx=ctx)
-#			cv.mark = '+'
-#			return cv
+		else:
+			cv = do_cvalue(value, ctx=ctx)
+			#cv.mark = '+'
+			return cv
 
 	# for:
 	#    var x: [10]Word8 = "0123456789"
@@ -707,11 +706,11 @@ def do_cvalue_cons_array(x, ctx):
 	#  		width = type.to.of.width
 	# 	return do_cvalue_literal_string(value, width=width)
 
-	cv = None
-	if x.isValueLiteral():
-		cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
-	else:
-		cv = do_cvalue_cast(to_type, x.value, ctx)
+#	cv = None
+#	if x.isValueLiteral():
+#		cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
+#	else:
+	cv = do_cvalue_cast(to_type, x.value, ctx)
 	cv.mark = 'CA4'
 	return cv
 
@@ -726,12 +725,18 @@ def do_cvalue_cons_record(x, ctx):
 		return CValueCast(CTypeNamed("void"), do_cvalue(value))
 
 	if from_type.is_generic_record():
-		#if to_type.is_generic_record():
-			#return do_cvalue_cast(to_type, x.value, ctx)
-		cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
-		#cv = do_cvalue(value, ctx=ctx)
-		cv.mark = 'CR2'
-		return cv
+		if to_type.is_generic_record():
+			return do_cvalue(value, ctx=ctx)
+
+	if from_type.is_generic_record():
+		if to_type.is_generic_record():
+			return do_cvalue(value, ctx=ctx)
+#		cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
+#		cv = CValueCast(do_ctype(x.type), cv)
+#		#cv = do_cvalue(value, ctx=ctx)
+#		cv.mark = 'CR2'
+#		return cv
+
 
 	# RecordA -> RecordB
 	#if to_type.is_record():
@@ -755,7 +760,8 @@ def do_cvalue_cons_record(x, ctx):
 		cv.mark = 'CR4'
 		return cv
 
-	cv = CValueCast(tt, do_cvalue(value, ctx=ctx))
+	cv = do_cvalue(value, ctx=ctx)
+	cv = CValueCast(tt, cv)
 	cv.mark = 'CR5'
 	return cv
 	#return '(' + str_type(to_type) + ')' + str_value(x.value, ctx=ctx)
@@ -773,6 +779,12 @@ def do_cvalue_cons_record(x, ctx):
 
 
 def do_cvalue_cons(x, ctx):
+	cv = do_cvalue_cons2(x, ctx)
+	if isinstance(cv, str):
+		print(x.type)
+		1/0
+	return cv
+def do_cvalue_cons2(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
@@ -915,12 +927,23 @@ def do_cvalue_cast(type, value, ctx):
 
 
 def do_cvalue_call(x, ctx):
-	left = do_cvalue(x.func)
-	args = []
-	for arg in x.args:
-		a = do_cvalue(arg.value)
-		args.append(a)
-	return CValueCall(left, args)
+	return doo_call(x.func, x.args)
+
+def doo_call(func, args):
+	left = do_cvalue(func)
+	xargs = []
+	for arg in args:
+		av = arg.value
+		a = do_cvalue(av)
+
+		if av.type.is_array() and not av.type.is_array_of_char():
+			# Если в функцию передается массив по значению - передаем указатель на него (!)
+			# тк функции си не умеют получать массивы по значению
+			a = CValueRef(a)
+
+		xargs.append(a)
+
+	return CValueCall(left, xargs)
 
 
 
@@ -1167,6 +1190,14 @@ def get_cvalue_pointer_to(type, value):
 		#cv.mark = '$+'
 		return cv  # is already pointer
 
+	root = get_root_value(value)
+
+	if root.isValueConst() and root.type.is_array():
+		cv = CValueRef(CValueCast(do_ctype(root.type), cv))
+		cv.mark = '?'
+		return cv
+
+
 	if value.type.is_generic():
 		if not value.isValueCons():
 			# is generic aggregate
@@ -1261,10 +1292,14 @@ def do_cvalue(x, ctx=[]):
 	return None
 
 
+def do_cinitializer(x, ctx=[]):
+	cv = do_cvalue(x, ctx=ctx+['initializer_context'])
+	return cv
+
+
+
 def print_value(x, ctx=[]):
 	out(str_value(x, ctx=ctx))
-
-
 
 
 
@@ -1415,18 +1450,19 @@ def print_stmt_var(x):
 
 	civ = None
 	if not init_value.isValueUndef():
-		if not init_value.type.is_array():
-			civ = do_cvalue(init_value, ctx=['initializer_context'])
+		if not (init_value.type.is_array() and init_value.isValueRuntime()):
+			civ = do_cinitializer(init_value)
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), civ)
 	out(str(dv))
 
-	if init_value.type.is_array():
-		nl_indent()
+	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
 		assign_array(var_value, init_value, x.ti)
 		out(";")
 
 	return#
+
+
 
 
 
@@ -1564,14 +1600,19 @@ def assign_array(left, right, ti):
 	# (для того чтобы в C вернуть массив из функции
 	# его нужно 'обернуть' в структуру)
 	if right.isValueCall():
-		fx = do_cvalue(right.func)
-		args = []
-		for arg in right.args:
-			a = do_cvalue(arg.value)
-			args.append(a)
-		args.append(do_cvalue(left))  # + last arg - array
-		cv = CValueCall(fx, args)
-		return str_cvalue(cv)
+		xx = doo_call(right.func, right.args + [Initializer(Id("sret"), left)])
+		out(str_cvalue(xx))
+		return
+
+#		fx = do_cvalue(right.func)
+#		args = []
+#		for arg in right.args:
+#			a = do_cvalue(arg.value)
+#			args.append(a)
+#		args.append(do_cvalue(left))  # + last arg - array
+#		cv = CValueCall(fx, args)
+#		out(str_cvalue(cv))
+#		return
 
 	rv = get_root_value(right)
 	if rv.isValueZero():
@@ -1582,10 +1623,8 @@ def assign_array(left, right, ti):
 		# Если справа приведенный к левому массив (более короткий? Generic)
 		right = get_root_value(right)
 
-
 	sleft = str_value_as_ptr(left)
 	sright = str_value_as_ptr(right)
-
 
 	slen = None
 	if left.isValueVar() or left.isValueConst():
@@ -1597,6 +1636,10 @@ def assign_array(left, right, ti):
 	r_root = get_root_value(right)
 
 	#if Type.eq(l_root.type, r_root.type):
+	if r_root.type.is_string():
+		assign_by_memcopy(left, right)
+		return
+
 	if l_root.type.of.size == r_root.type.of.size:
 		assign_by_memcopy(left, right)
 		return
@@ -2528,7 +2571,7 @@ def assign_by_memcopy(left, right):
 	out(str_value_as_ptr(right))
 	out(", sizeof(")
 	out(str_type(left.type))
-	out("))")
+	out("));")
 
 
 def memzero(value):

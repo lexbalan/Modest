@@ -22,7 +22,7 @@ struct test {
 	uint32_t hash;
 };
 
-static struct test tests[3] = /*mark=CA2*/{{.data = /*mark=CA3*/"123456789", .len = 9, .hash = 3421780262L}, {.data = /*mark=CA3*/"The quick brown fox jumps over the lazy dog", .len = 43, .hash = 1095738169}, {.data = /*mark=CA3*/"Test vector from febooti.com", .len = 28, .hash = 210206561}};
+static struct test tests[3] = /*mark=CA2*/{/*mark=CR5*/(struct test){.data = /*mark=CA1*/"123456789", .len = 9, .hash = 0xCBF43926L}, /*mark=CR5*/(struct test){.data = /*mark=CA1*/"The quick brown fox jumps over the lazy dog", .len = 43, .hash = 0x414FA339}, /*mark=CR5*/(struct test){.data = /*mark=CA1*/"Test vector from febooti.com", .len = 28, .hash = 0xC877F61}};
 
 static bool runTest(struct test *test) {
 	const uint32_t crc = crc32_run((uint8_t (*)[])&test->data, test->len);

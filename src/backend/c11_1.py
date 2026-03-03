@@ -834,7 +834,6 @@ def str_cvalue(v):
 
 
 
-
 class CStmt():
 	def __init__(self):
 		pass

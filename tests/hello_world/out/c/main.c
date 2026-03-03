@@ -48,9 +48,9 @@ static void foo(int32_t a, int64_t b) {
 //var a: Int32 = 5
 static uint32_t k[3] = /*mark=CA2*/{0x1, 0x2, 0x3};
 
-static struct point p0 = /*mark=CR2*/{
-	.x = 0x1,
-	.y = 0x2
+static struct point p0 = /*mark=CR5*/(struct point){
+	.x = 1,
+	.y = 2
 };
 
 int main(void) {
@@ -105,7 +105,7 @@ int main(void) {
 	sizeof(uint32_t);
 
 	arr[1];
-	struct point p0 = /*mark=CR2*/{0};
+	struct point p0 = /*mark=CR4*/(struct point){0};
 	p0.x;
 	p0.y;
 	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)) {
