@@ -1485,8 +1485,6 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	global nl_str
 	out("#define %s%s  " % (prefix, id_str))
 
-
-
 	# Не берем в скобки литералы, композитные значения и строки
 	is_func = value.isValueFunc()
 	is_var = value.isValueVar()
@@ -1526,26 +1524,20 @@ def print_stmt_const(x):
 		func_undef_list.append(id_str)
 		return
 
+	civ = None
+	if not (init_value.type.is_array() and init_value.isValueRuntime()):
+		civ = do_cvalue(init_value)
+
+	dv = CStmtDefVar(get_id_str(x), do_ctype(const_value.type), storage_class=None, init_value=civ)
+	out(str(dv))
+
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
-	if init_value.type.is_array():
-		#runtimeLiteral = init_value.isValueLiteral() and init_value.isValueRuntime()
-		#if not runtimeLiteral:
-		if init_value.isValueRuntime():
-			print_variable(get_id_str(x), const_value.type)
-			out(";")
-			nl_indent()
-			do_assign(const_value, init_value, x.ti)
-			return
+	if init_value.type.is_array() and init_value.isValueRuntime():
+		nl_indent()
+		assign_array(const_value, init_value, x.ti)
+		out(";")
 
-	# Локальные константы (втч. композитные) печатаем как переменные
-	# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
-	print_variable(get_id_str(x), const_value.type)
-	out(" = ")
-	out(str_initializer(init_value))
-	#out(incast(const_value.type, init_value))
-	#print_value(init_value)
-	out(";")
 	return
 
 

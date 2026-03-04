@@ -922,7 +922,7 @@ class CStmtDefVar(CStmt):
 	def __str__(self):
 		sstr = ''
 		sstr += str_gcc_attributes(self.annotations)
-		if self.storage != '':
+		if self.storage not in (None, ''):
 			sstr += self.storage + ' '
 		sstr += self.type.to_str(text=self.id_str)
 		if self.init_value != None:
@@ -931,12 +931,21 @@ class CStmtDefVar(CStmt):
 
 
 
-class CStmtDefConst(CStmt):
+class CStmtDefFunc(CStmt):
 	def __init__(self, id, init_value):
 		assert(isinstance(id, str))
 		assert(isinstance(init_value, CValue))
 		self.id = id
 		self.init_value = init_value
+
+
+
+#class CStmtDefConst(CStmt):
+#	def __init__(self, id, init_value):
+#		assert(isinstance(id, str))
+#		assert(isinstance(init_value, CValue))
+#		self.id = id
+#		self.init_value = init_value
 
 
 
@@ -951,7 +960,10 @@ class CStmtIf(CStmt):
 
 	def __str__(self):
 		sstr = "if(%s)" % str_cvalue(self.init_value)
-		sstr += str(block_then)
+		sstr += str(self.block_then)
+		if self.block_else != None:
+			sstr += ' else '
+			sstr += str(self.block_then)
 		return sstr
 
 class CStmtWhile(CStmt):
