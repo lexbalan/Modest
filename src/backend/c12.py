@@ -1449,12 +1449,7 @@ def print_stmt_var(x):
 
 
 
-
-
-def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
-	global nl_str
-	out("#define %s%s  " % (prefix, id_str))
-
+def str_macro_value(value):
 	# Не берем в скобки литералы, композитные значения и строки
 	is_func = value.isValueFunc()
 	is_var = value.isValueVar()
@@ -1471,9 +1466,10 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 
 
 	set_nl_symbol(" \\\n")
-	out(wrapp(str_initializer(value), cond=need_wrap))
+	sstr = wrapp(str_initializer(value), cond=need_wrap)
 	set_nl_symbol("\n")
 	#out("/*%s*/" % str(value))
+	return sstr
 
 
 def undef(identifier):
@@ -1489,7 +1485,8 @@ def print_stmt_const(x):
 	if value_is_generic_immediate(const_value):
 		id_str = get_id_str(const_value)
 		# если точный тип константы неизвестен - печатаем ее как макро
-		print_macro_definition(id_str, init_value)
+		macro = CMacrodefinition(id_str, str_macro_value(init_value))
+		out(str(macro))
 		global func_undef_list
 		func_undef_list.append(id_str)
 		return
@@ -1905,7 +1902,8 @@ def print_def_var(x, isdecl=False, is_extern=False):
 
 def print_def_const(x):
 	id_str = camel_to_upper_snake(get_id_str(x.value))
-	print_macro_definition(id_str, x.init_value, val_ctx=[])
+	macro = CMacrodefinition(id_str, str_macro_value(x.init_value))
+	out(str(macro))
 	module_undef_list.append(id_str)
 	return
 

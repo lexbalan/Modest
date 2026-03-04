@@ -982,3 +982,17 @@ class CStmtReturn(CStmt):
 
 
 
+
+
+class CMacrodefinition():
+	def __init__(self, id, text):
+		assert(isinstance(id, str))
+		assert(isinstance(text, str))
+		self.id = id
+		self.text = text
+
+	def __str__(self):
+		return "#define %s %s" % (self.id, self.text)
+
+
+
