@@ -1447,7 +1447,6 @@ def print_stmt_var(x):
 #			out(";")
 #			nl_indent()
 #			assign_array(var_value, init_value, x.ti)
-#			out(";")
 #			return
 #
 #	out(" = ")
@@ -1473,7 +1472,6 @@ def print_stmt_var(x):
 	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
 		nl_indent()
 		assign_array(var_value, init_value, x.ti)
-		out(";")
 
 	return
 
@@ -1536,7 +1534,6 @@ def print_stmt_const(x):
 	if init_value.type.is_array() and init_value.isValueRuntime():
 		nl_indent()
 		assign_array(const_value, init_value, x.ti)
-		out(";")
 
 	return
 
@@ -1609,6 +1606,7 @@ def assign_array(left, right, ti):
 	if right.isValueCall():
 		xx = doo_call(right.func, right.args + [Initializer(Id("sret"), left)])
 		out(str_cvalue(xx))
+		out(";")
 		return
 
 #		fx = do_cvalue(right.func)
@@ -1624,6 +1622,7 @@ def assign_array(left, right, ti):
 	rv = get_root_value(right)
 	if rv.isValueZero():
 		memzero(left)
+		out(";")
 		return
 
 	if right.isValueCons():
@@ -1645,10 +1644,12 @@ def assign_array(left, right, ti):
 	#if Type.eq(l_root.type, r_root.type):
 	if r_root.type.is_string():
 		assign_by_memcopy(left, right)
+		out(";")
 		return
 
 	if l_root.type.of.size == r_root.type.of.size:
 		assign_by_memcopy(left, right)
+		out(";")
 		return
 
 #	if right.isValueConst():
@@ -1656,19 +1657,20 @@ def assign_array(left, right, ti):
 #		assign_by_memcopy(left, right)
 #		return
 
-	out("ARRCPY(%s, %s, %s)" % (sleft, sright, slen))
+	out("ARRCPY(%s, %s, %s);" % (sleft, sright, slen))
 	return
 
 
 def do_assign(left, right, ti):
 	if right.type.is_array():
 		assign_array(left, right, ti)
-	else:
-		print_value(left)
-		out(" = ")
-		#if right.isValueCons():
-			#print(right.method)
-		print_value(right)
+		return
+
+	print_value(left)
+	out(" = ")
+	#if right.isValueCons():
+		#print(right.method)
+	print_value(right)
 	out(";")
 	return
 
