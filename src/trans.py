@@ -2815,11 +2815,8 @@ def def_add_annotations(x, ast_atts):
 
 		x.annotations.update({kind: annotation})
 
-		if kind in [
-			'used', 'unused', 'inline',
-			'inlinehint', 'noinline', 'alignment',
-			'section', 'nonstatic'
-		]:
+		# ['inline', 'used', 'unused', 'inlinehint', 'noinline', 'nonstatic']
+		if kind in ['alignment', 'section', 'inline', 'used', 'unused', 'inlinehint', 'noinline', 'nonstatic']:
 			pass
 		elif kind == 'alias':
 			# 1. @alias("alias")
@@ -2857,6 +2854,11 @@ def def_add_annotations(x, ast_atts):
 		elif kind == 'cbyvalue':
 			add_att(x, "cbyvalue")
 			x.value.addAttribute("cbyvalue")
+
+		elif kind == 'inline':
+			#print("WALDAMLWMALDWMKLMKLDWMALKMDLMALWDMLAMWLDKMALKWMDLKAMWLKDMAL")
+			#add_att(x, "inline")
+			pass
 
 		else:
 			warning("unsupported annotation", a['ti'])

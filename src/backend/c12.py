@@ -1460,10 +1460,14 @@ def print_stmt_var(x):
 
 	civ = None
 	if not init_value.isValueUndef():
-		if not (init_value.type.is_array() and init_value.isValueRuntime()):
+		if not (init_value.type.is_array() and (init_value.isValueRuntime() or var_value.type.is_vla())):
 			civ = do_cinitializer(init_value)
 
-	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), civ)
+	storage_class = ''
+	if x.hasAttribute('static'):
+		storage_class = 'static'
+
+	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), storage_class=storage_class, init_value=civ)
 	out(str(dv))
 
 	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
@@ -1471,7 +1475,7 @@ def print_stmt_var(x):
 		assign_array(var_value, init_value, x.ti)
 		out(";")
 
-	return#
+	return
 
 
 
@@ -1758,7 +1762,7 @@ def print_func_signature(id_str, ftype, ctx=[]):
 
 
 def print_decl_func(x):
-	out(str_add_nl(print_gcc_attributes_for(x)))
+	out(str_add_nl(str_gcc_attributes(x.annotations)))
 
 	if not x.hasAttribute2('extern'):
 		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
@@ -1775,47 +1779,6 @@ def print_decl_func(x):
 
 
 
-def print_gcc_attributes_for(x):
-	# Modest attribute -> GCC attribute
-	possible_attributes = {
-		# attributes with no parameters
-		'inline': 'always_inline',
-		'noinline': 'noinline',
-		'used': 'used',
-		'unused': 'unused',
-		'packed': 'packed',
-		'deprecated': 'deprecated',  # can be with string parameter
-		'weak': 'weak',
-
-		# attributes with one parameter
-		'section': 'section',
-		'alignment': 'aligned',
-		'optimize': 'optimize',
-	}
-
-	atts = []
-	for att in possible_attributes:
-		if x.hasAttribute2(att):
-			gcc_att_name = possible_attributes[att]
-			satt = "<attribute>"
-			anno = x.getAnnotation(att)
-			if anno == {}:
-				satt = gcc_att_name
-			else:
-				asset = anno.asset
-				att_arg = ""
-				if isinstance(asset, str):
-					att_arg = '"%s"' % asset
-				else:
-					att_arg = str(asset)
-				satt = "%s(%s)" % (gcc_att_name, att_arg)
-			atts.append(satt)
-
-	if atts != []:
-		return "__attribute__((" + ", ".join(atts) + "))"
-
-	return ""
-
 
 def str_add_nl(x):
 	if x != "":
@@ -1831,7 +1794,7 @@ def print_def_func(x):
 	global cfunc
 	cfunc = func
 
-	out(str_add_nl(print_gcc_attributes_for(x)))
+	out(str_add_nl(str_gcc_attributes(x.annotations)))
 
 
 	if not x.hasAttribute2('extern'):
@@ -1953,32 +1916,27 @@ def print_variable(id_str, t, init_value=None, prefix='', ctx=[]):
 		print_value(init_value, ctx=ctx)
 
 
-def print_def_var(x, isdecl=False, as_extern=False):
-	out(str_add_nl(print_gcc_attributes_for(x)))
+
+def print_def_var(x, isdecl=False, is_extern=False):
+	var_value = x.value
 
 	# TODO: Почему-то атрибут 'extern' не работает, и накостылил через as_extern
-	is_extern = x.hasAttribute2('extern') or as_extern
+	is_extern = is_extern or x.hasAttribute2('extern')
 
-	var = x.value
-
+	storage_class = ''
 	if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 		if not (is_extern or x.hasAttribute2('nonstatic')):
-			out("static ")
+			storage_class = "static"
 
 	if is_extern:
-		out("extern ")
+		storage_class = "extern"
 
-	print_variable(get_id_str(x.value), var.type)
+	civ = None
+	if not (x.init_value.isValueUndef() or is_extern):
+		civ = do_cinitializer(x.init_value)
 
-	init_value = x.init_value
-
-	if not (init_value.isValueUndef() or is_extern):
-		out(" = ")
-		out(str_initializer(init_value))
-
-	out(";")
-
-
+	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), storage_class=storage_class, init_value=civ, annotations=x.annotations)
+	out(str(dv))
 
 
 

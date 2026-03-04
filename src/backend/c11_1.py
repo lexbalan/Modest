@@ -22,6 +22,55 @@ def with_space(s):
 
 
 
+def str_gcc_attributes(annotations):
+	if annotations == None:
+		return ''
+
+	# Modest attribute -> GCC attribute
+	gcc_attributes = {
+		# attributes with no parameters
+		'inline': 'always_inline',
+		'noinline': 'noinline',
+		'used': 'used',
+		'unused': 'unused',
+		'packed': 'packed',
+		'deprecated': 'deprecated',  # can be with string parameter
+		'weak': 'weak',
+
+		# attributes with one parameter
+		'section': 'section',
+		'alignment': 'aligned',
+		'optimize': 'optimize',
+	}
+
+	atts = []
+	for anno_name in annotations:
+		print("::" + anno_name)
+		asset = annotations[anno_name]
+		if anno_name in gcc_attributes:
+			gcc_att_name = gcc_attributes[anno_name]
+
+			att_arg = ""
+			if asset != {}:
+				att_arg = str(asset.asset)
+				if isinstance(att_arg, str):
+					att_arg = '"%s"' % att_arg
+				att_arg = '(' + att_arg + ')'
+
+			atts.append("%s%s" % (gcc_att_name, att_arg))
+
+	if atts != []:
+		return "__attribute__((" + ", ".join(atts) + "))\n"
+
+	return ""
+
+
+
+
+
+
+
+
 class CField():
 	def __init__(self, id_str, type, specs=None, nl=0):
 		#assert(isinstance(type, CType))
@@ -859,17 +908,23 @@ class CStmtBlock(CStmt):
 
 
 class CStmtDefVar(CStmt):
-	def __init__(self, id_str, type, init_value):
+	def __init__(self, id_str, type, storage_class='', init_value=None, annotations=None):
 		assert(isinstance(id_str, str))
 		assert(isinstance(type, CType))
 		if init_value != None:
 			assert(isinstance(init_value, CValue))
 		self.id_str = id_str
 		self.type = type
+		self.storage = storage_class
 		self.init_value = init_value
+		self.annotations = annotations
 
 	def __str__(self):
-		sstr = self.type.to_str(text=self.id_str)
+		sstr = ''
+		sstr += str_gcc_attributes(self.annotations)
+		if self.storage != '':
+			sstr += self.storage + ' '
+		sstr += self.type.to_str(text=self.id_str)
 		if self.init_value != None:
 			sstr += ' = %s' % str_cvalue(self.init_value)
 		return sstr + ';'
