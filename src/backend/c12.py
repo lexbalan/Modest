@@ -1429,34 +1429,6 @@ def print_stmt_var(x):
 	var_value = x.value
 	init_value = x.init_value
 
-	if x.hasAttribute('static'):
-		out("static ")
-
-#	print_variable(get_id_str(var_value), var_value.type)
-#
-#	if init_value.isValueUndef():
-#		# инициализация неопределенным значением
-#		# (отсутствие явной инициализации)
-#		out(";")
-#		return
-#
-#	if var_value.type.is_array():
-#		if init_value.isValueRuntime() or var_value.type.is_vla():
-#			# нельзя присваивать VLA значение при создании...
-#			# только после можно уже что то туда загрузить
-#			out(";")
-#			nl_indent()
-#			assign_array(var_value, init_value, x.ti)
-#			return
-#
-#	out(" = ")
-#	out(str_initializer(init_value))
-#	#if init_value.type.is_closed_array():
-#	#	out(str_initializer(init_value))
-#	#else:
-#	#	print_value(init_value)
-#	out(";")
-
 	civ = None
 	if not init_value.isValueUndef():
 		if not (init_value.type.is_array() and (init_value.isValueRuntime() or var_value.type.is_vla())):
@@ -1598,7 +1570,6 @@ def str_array_len(array_value):
 	return slen
 
 
-#mass
 def assign_array(left, right, ti):
 	# если справа 'обернутое' значение
 	# (для того чтобы в C вернуть массив из функции
@@ -1668,8 +1639,6 @@ def do_assign(left, right, ti):
 
 	print_value(left)
 	out(" = ")
-	#if right.isValueCons():
-		#print(right.method)
 	print_value(right)
 	out(";")
 	return
