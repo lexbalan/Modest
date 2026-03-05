@@ -1740,15 +1740,13 @@ def print_def_func(x):
 
 	out(str_gcc_attributes(x.annotations))
 
-	if not x.hasAttribute2('extern'):
-		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
-			out("static ")
+	if x.hasAttribute2('extern'):
+		out("extern ")
+	elif x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
+		out("static ")
 
 	if x.hasAttribute2('inline') or x.hasAttribute2('inlinehint'):
 		out("inline ")
-
-	if x.hasAttribute2('extern'):
-		out("extern ")
 
 	ftype = func.type
 
