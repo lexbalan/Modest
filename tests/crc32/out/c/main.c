@@ -13,7 +13,7 @@
 #endif /* LENGTHOF */
 
 
-#define DATA_BUFFER_LENGTH  128
+#define DATA_BUFFER_LENGTH 128
 
 
 struct test {

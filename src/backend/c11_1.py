@@ -45,7 +45,7 @@ def str_gcc_attributes(annotations):
 
 	atts = []
 	for anno_name in annotations:
-		print("::" + anno_name)
+		#print(":anno:" + anno_name)
 		asset = annotations[anno_name]
 		if anno_name in gcc_attributes:
 			gcc_att_name = gcc_attributes[anno_name]

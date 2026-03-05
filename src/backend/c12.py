@@ -1716,34 +1716,18 @@ def print_func_return_type(ftype):
 
 
 
-def print_func_signature(id_str, ftype, ctx=[]):
-	out(str_field(ftype, id_str=id_str, ctx=ctx))
-
-
-
 def print_decl_func(x):
-	out(str_add_nl(str_gcc_attributes(x.annotations)))
-
-	if not x.hasAttribute2('extern'):
-		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
-			out("static ")
+	storage_class = ''
+	if x.hasAttribute2('extern'):
+		storage_class = 'extern'
+	elif (x.access_level == HLIR_ACCESS_LEVEL_PRIVATE) or x.hasAttribute2('static'):
+		storage_class = 'static'
 
 	if x.hasAttribute2('inline'):
-		out("inline ")
+		storage_class = storage_class + with_space(' inline')
 
-	ftype = x.value.type
-	id_str = get_id_str(x.value)
-	print_func_signature(id_str, ftype)
-	out(";")
-
-
-
-
-
-def str_add_nl(x):
-	if x != "":
-		return x + '\n'
-	return x
+	dv = CStmtDefVar(get_id_str(x.value), do_ctype(x.value.type), storage_class=storage_class, annotations=x.annotations)
+	out(str(dv))
 
 
 def print_def_func(x):
@@ -1754,8 +1738,7 @@ def print_def_func(x):
 	global cfunc
 	cfunc = func
 
-	out(str_add_nl(str_gcc_attributes(x.annotations)))
-
+	out(str_gcc_attributes(x.annotations))
 
 	if not x.hasAttribute2('extern'):
 		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
@@ -1769,10 +1752,7 @@ def print_def_func(x):
 
 	ftype = func.type
 
-	# если функция уже была определена, то обертки над ее типами
-	# уже были напечатаны (если они были), и их нельзя печатать еще раз
-	#print_wrappers = not 'declared' in func['att']
-	print_func_signature(get_id_str(func), ftype)
+	out(str_field(ftype, get_id_str(func)))
 
 	if x.stmt == None:
 		cfunc = None
@@ -1844,9 +1824,8 @@ def print_def_type(x):
 	id_str = get_id_str(x.type)
 	orig_type = x.original_type
 
-	if not is_type_named(orig_type):
-		if orig_type.is_record():
-			return print_def_type_record(x)
+	if orig_type.is_record() and not is_type_named(orig_type):
+		return print_def_type_record(x)
 
 	out('typedef ' + str_field(orig_type, id_str) + ';')
 

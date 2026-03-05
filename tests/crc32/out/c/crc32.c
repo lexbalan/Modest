@@ -9,7 +9,7 @@
 
 
 
-#define TABLE_SIZE  256
+#define TABLE_SIZE 256
 
 static uint32_t table[TABLE_SIZE];
 
