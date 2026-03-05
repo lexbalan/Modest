@@ -1724,7 +1724,10 @@ def print_decl_func(x):
 		storage_class = 'static'
 
 	if x.hasAttribute2('inline'):
-		storage_class = storage_class + with_space(' inline')
+		if storage_class != '':
+			storage_class = storage_class + ' inline'
+		else:
+			storage_class = 'inline'
 
 	dv = CStmtDefVar(get_id_str(x.value), do_ctype(x.value.type), storage_class=storage_class, annotations=x.annotations)
 	out(str(dv))
@@ -1740,17 +1743,22 @@ def print_def_func(x):
 
 	out(str_gcc_attributes(x.annotations))
 
+	storage_class = ''
 	if x.hasAttribute2('extern'):
-		out("extern ")
-	elif x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
-		out("static ")
+		storage_class = 'extern'
+	elif (x.access_level == HLIR_ACCESS_LEVEL_PRIVATE) or x.hasAttribute2('static'):
+		storage_class = 'static'
 
-	if x.hasAttribute2('inline') or x.hasAttribute2('inlinehint'):
-		out("inline ")
+	if x.hasAttribute2('inline'):
+		if storage_class != '':
+			storage_class = storage_class + ' inline'
+		else:
+			storage_class = 'inline'
 
-	ftype = func.type
+	if storage_class != '':
+		out(storage_class + ' ')
 
-	out(str_field(ftype, get_id_str(func)))
+	out(str_field(func.type, get_id_str(func)))
 
 	if x.stmt == None:
 		cfunc = None
@@ -1767,7 +1775,7 @@ def print_def_func(x):
 
 
 	# for any array parameter print local holder value
-	for param in ftype.params:
+	for param in func.type.params:
 		if param.type.is_closed_array():
 			nl_indent(1)
 			paramId = get_id_str(param)
