@@ -1668,16 +1668,12 @@ def print_stmt_again(x):
 	out(str(ccontinue))
 
 
-def print_stmts(stmts):
-	for stmt in stmts:
-		print_stmt(stmt)
-
-
 def print_stmt_block(s):
 	out("{")
 	nl_end_e = 1
 	indent_up()
-	print_stmts(s.stmts)
+	for stmt in s.stmts:
+		print_stmt(stmt)
 	indent_down()
 
 	nl_indent(nl=nl_end_e)
@@ -1774,7 +1770,8 @@ def print_def_func(x):
 			out("));")
 
 	stmts = x.stmt.stmts
-	print_stmts(stmts)
+	for stmt in stmts:
+		print_stmt(stmt)
 
 	indent_down()
 
