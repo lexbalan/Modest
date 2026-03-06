@@ -966,6 +966,7 @@ class CStmtIf(CStmt):
 			sstr += str(self.block_then)
 		return sstr
 
+
 class CStmtWhile(CStmt):
 	def __init__(self, value_cond, block):
 		assert(isinstance(value_cond, CValue))
@@ -975,9 +976,14 @@ class CStmtWhile(CStmt):
 
 
 class CStmtReturn(CStmt):
-	def __init__(self, value_retval, block_then, block_else):
+	def __init__(self, value_retval):
 		assert(isinstance(value_retval, CValue))
 		self.value_retval = value_retval
+
+	def __str__(self):
+		if self.value_retval != None:
+			return "return %s;" % str_cvalue(self.value_retval)
+		return "return;"
 
 
 

@@ -1222,16 +1222,6 @@ def get_cvalue_size_for(a, b, ti):
 	ct = Type.select_common_type(a.type, b.type, ti=ti)
 	return CValueSizeofType(do_ctype(ct))
 
-	if not a.type.is_pointer():
-		cv = do_cvalue(a)
-		return CValueSizeofValue(cv)
-	if not b.type.is_pointer():
-		cv = do_cvalue(b)
-		return CValueSizeofValue(cv)
-
-	cv = CValueSizeofValue(CValueDeref(do_cvalue(a, ctx=[])))
-	return cv
-
 
 def do_cvalue_bin(x, ctx):
 	left = do_cvalue(x.left)
@@ -1293,7 +1283,6 @@ def do_cvalue(x, ctx=[]):
 	print(x)
 	assert(False)
 
-#	elif x.isValueSlice(): sstr += str_value_slice(x, ctx)
 #	elif x.isValueNew(): sstr += str_value_new(x, ctx)
 #	elif x.isValueAlignof(): sstr += str_value_alignof(x, ctx)
 #	elif x.isValueOffsetof(): sstr += str_value_offsetof(x, ctx)
@@ -1346,9 +1335,6 @@ def eq_by_memcmp(left, right, op=HLIR_VALUE_OP_EQ):
 	else:
 		sstr += ') != 0'
 	return sstr
-
-
-
 
 
 
@@ -1406,7 +1392,8 @@ def print_stmt_while(x):
 def print_stmt_return(x):
 	global cfunc
 
-	if isSretFunc(cfunc.type):
+	if cfunc.type.to.is_closed_array():
+		#memcpy = CValueNamed("memcpy")
 		out("memcpy(_sret_, ")
 		out(str_value_as_ptr(x.value))
 		out(", sizeof(")
@@ -1414,14 +1401,12 @@ def print_stmt_return(x):
 		out("));")
 		return
 
-	out("return")
+	cretval = None
+	if x.value != None and not x.value.type.is_unit():
+		cretval = do_cvalue(x.value)
+	cstmt_return = CStmtReturn(cretval)
 
-	if (x.value != None) and not x.value.type.is_unit():
-		out(" ")
-		#out(incast(cfunc.type.to, x.value))
-		out(str_value(x.value))
-
-	out(";")
+	out(cstmt_return)
 
 
 
@@ -1773,7 +1758,6 @@ def print_def_func(x):
 	out("{")
 	indent_up()
 
-
 	# for any array parameter print local holder value
 	for param in func.type.params:
 		if param.type.is_closed_array():
@@ -1786,7 +1770,6 @@ def print_def_func(x):
 			out(", sizeof(")
 			out(str_type(param.type))
 			out("));")
-
 
 	stmts = x.stmt.stmts
 	print_stmts(stmts)

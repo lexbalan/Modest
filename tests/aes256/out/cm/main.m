@@ -12,6 +12,8 @@ type TestCase = {
 }
 
 
+
+@used
 var tests: [8]TestCase = [
 	TestCase {
 		key = Key [
@@ -82,7 +84,6 @@ var tests: [8]TestCase = [
 
 func runTest (test: *TestCase) -> Bool {
 	var ctx: Context
-
 	aes.init(&ctx, &test.key)
 
 	var plaintextBefore: Block = test.plaintext
