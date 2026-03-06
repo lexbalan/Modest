@@ -1659,11 +1659,13 @@ def print_stmt(x):
 
 
 def print_stmt_break(x):
-	out('break;')
+	cbreak = CStmtBreak()
+	out(str(cbreak))
 
 
 def print_stmt_again(x):
-	out('continue;')
+	ccontinue = CStmtContinue()
+	out(str(ccontinue))
 
 
 def print_stmts(stmts):

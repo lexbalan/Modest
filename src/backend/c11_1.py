@@ -986,8 +986,20 @@ class CStmtReturn(CStmt):
 		return "return;"
 
 
+class CStmtBreak(CStmt):
+	def __init__(self):
+		pass
+
+	def __str__(self):
+		return "break;"
 
 
+class CStmtContinue(CStmt):
+	def __init__(self):
+		pass
+
+	def __str__(self):
+		return "continue;"
 
 
 class CMacrodefinition():
