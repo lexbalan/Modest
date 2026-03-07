@@ -883,28 +883,77 @@ def str_cvalue(v):
 
 
 
+
+def str_cstmt(x):
+	assert(x != None)
+	sstr = ''
+	#if x.comment != None:
+	#	sstr += str_nl_indent(x.comment.nl)
+	#	print_comment(x.comment)
+	sstr += str_nl_indent(x.nl)
+	sstr += str(x)
+	return sstr
+
+
 class CStmt():
 	def __init__(self):
+		self.comment = None
+		self.nl = 1
 		pass
 
 
 class CStmtCommentLine(CStmt):
 	def __init__(self, text):
 		assert(isinstance(stmts, list))
+		super().__init__()
 		self.text = text
 
 
 class CStmtCommentBlock(CStmt):
 	def __init__(self, text):
 		assert(isinstance(stmts, list))
+		super().__init__()
 		self.text = text
 
 
 class CStmtBlock(CStmt):
 	def __init__(self, stmts):
 		assert(isinstance(stmts, list))
+		super().__init__()
 		self.stmts = stmts
 
+	def __str__(self):
+		sstr = "{"
+		nl_end_e = 1
+		indent_up()
+		for stmt in self.stmts:
+			sstr += str_cstmt(stmt)
+		indent_down()
+		sstr += str_nl_indent(nl=nl_end_e)
+		sstr += "}"
+		return sstr
+
+
+class CStmtValueExpr(CStmt):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		super().__init__()
+		self.value = value
+
+	def __str__(self):
+		return "%s;" % str_cvalue(self.value)
+
+
+class CStmtValueAssign(CStmt):
+	def __init__(self, lvalue, rvalue):
+		assert(isinstance(lvalue, CValue))
+		assert(isinstance(rvalue, CValue))
+		super().__init__()
+		self.lvalue = lvalue
+		self.rvalue = rvalue
+
+	def __str__(self):
+		return "%s = %s;" % (str_cvalue(self.lvalue), str_cvalue(self.rvalue))
 
 
 class CStmtDefVar(CStmt):
@@ -913,6 +962,7 @@ class CStmtDefVar(CStmt):
 		assert(isinstance(type, CType))
 		if init_value != None:
 			assert(isinstance(init_value, CValue))
+		super().__init__()
 		self.id_str = id_str
 		self.type = type
 		self.storage = storage_class
@@ -935,6 +985,7 @@ class CStmtDefFunc(CStmt):
 	def __init__(self, id, init_value):
 		assert(isinstance(id, str))
 		assert(isinstance(init_value, CValue))
+		super().__init__()
 		self.id = id
 		self.init_value = init_value
 
@@ -953,13 +1004,15 @@ class CStmtIf(CStmt):
 	def __init__(self, value_cond, block_then, block_else):
 		assert(isinstance(value_cond, CValue))
 		assert(isinstance(block_then, CStmtBlock))
-		assert(isinstance(block_else, CStmtBlock))
+		if block_else:
+			assert(isinstance(block_else, CStmtBlock))
+		super().__init__()
 		self.value_cond = value_cond
 		self.block_then = block_then
 		self.block_else = block_else
 
 	def __str__(self):
-		sstr = "if(%s)" % str_cvalue(self.init_value)
+		sstr = "if(%s)" % str_cvalue(self.value_cond)
 		sstr += str(self.block_then)
 		if self.block_else != None:
 			sstr += ' else '
@@ -971,13 +1024,16 @@ class CStmtWhile(CStmt):
 	def __init__(self, value_cond, block):
 		assert(isinstance(value_cond, CValue))
 		assert(isinstance(block, CStmtBlock))
+		super().__init__()
 		self.value_cond = value_cond
 		self.block = block
 
 
 class CStmtReturn(CStmt):
 	def __init__(self, value_retval):
-		assert(isinstance(value_retval, CValue))
+		if value_retval != None:
+			assert(isinstance(value_retval, CValue))
+		super().__init__()
 		self.value_retval = value_retval
 
 	def __str__(self):
@@ -988,6 +1044,7 @@ class CStmtReturn(CStmt):
 
 class CStmtBreak(CStmt):
 	def __init__(self):
+		super().__init__()
 		pass
 
 	def __str__(self):
@@ -996,6 +1053,7 @@ class CStmtBreak(CStmt):
 
 class CStmtContinue(CStmt):
 	def __init__(self):
+		super().__init__()
 		pass
 
 	def __str__(self):
@@ -1006,6 +1064,8 @@ class CMacrodefinition():
 	def __init__(self, id, text):
 		assert(isinstance(id, str))
 		assert(isinstance(text, str))
+		self.nl = 1  #!!! (because it is not CStmt...)
+		super().__init__()
 		self.id = id
 		self.text = text
 

@@ -1344,94 +1344,6 @@ def eq_by_memcmp(left, right, op=HLIR_VALUE_OP_EQ):
 #
 
 
-def print_stmt_if(x, need_else_branch):
-	out("if (")
-	print_value(x.cond)
-	out(")")
-
-	if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-		nl_indent()
-	else:
-		out(" ")
-
-	print_stmt_block(x.then)
-
-	e = x.els
-	if e != None:
-		if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-			nl_indent()
-		else:
-			out(" ")
-
-		if e.is_stmt_if():
-			out("else ")
-			print_stmt_if(e, need_else_branch=True)
-		else:
-			out("else")
-			if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-				nl_indent()
-			else:
-				out(" ")
-			print_stmt_block(e)
-
-
-def print_stmt_while(x):
-	out("while (")
-	print_value(x.cond)
-	out(")")
-
-	if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-		nl_indent()
-	else:
-		out(" ")
-
-	print_stmt_block(x.stmt)
-
-
-
-def print_stmt_return(x):
-	global cfunc
-
-	if cfunc.type.to.is_closed_array():
-		#memcpy = CValueNamed("memcpy")
-		out("memcpy(_sret_, ")
-		out(str_value_as_ptr(x.value))
-		out(", sizeof(")
-		out(str_type(x.value.type))
-		out("));")
-		return
-
-	cretval = None
-	if x.value != None and not x.value.type.is_unit():
-		cretval = do_cvalue(x.value)
-	cstmt_return = CStmtReturn(cretval)
-
-	out(cstmt_return)
-
-
-
-def print_stmt_var(x):
-	var_value = x.value
-	init_value = x.init_value
-
-	civ = None
-	if not init_value.isValueUndef():
-		if not (init_value.type.is_array() and (init_value.isValueRuntime() or var_value.type.is_vla())):
-			civ = do_cinitializer(init_value)
-
-	storage_class = ''
-	if x.hasAttribute('static'):
-		storage_class = 'static'
-
-	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), storage_class=storage_class, init_value=civ)
-	out(str(dv))
-
-	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
-		nl_indent()
-		assign_array(var_value, init_value, x.ti)
-
-	return
-
 
 
 def str_macro_value(value):
@@ -1460,36 +1372,6 @@ def str_macro_value(value):
 def undef(identifier):
 	out("\n#undef %s" % identifier)
 
-
-def print_stmt_const(x):
-	id = x.id
-	const_value = x.value
-	init_value = x.init_value
-
-	# print generic constant as C macro
-	if value_is_generic_immediate(const_value):
-		id_str = get_id_str(const_value)
-		# если точный тип константы неизвестен - печатаем ее как макро
-		macro = CMacrodefinition(id_str, str_macro_value(init_value))
-		out(str(macro))
-		global func_undef_list
-		func_undef_list.append(id_str)
-		return
-
-	civ = None
-	if not (init_value.type.is_array() and init_value.isValueRuntime()):
-		civ = do_cvalue(init_value)
-
-	dv = CStmtDefVar(get_id_str(x), do_ctype(const_value.type), storage_class=None, init_value=civ)
-	out(str(dv))
-
-	# print constant as 'variable'
-	# литерал массива включающий в себя переменные печатаем отдельно
-	if init_value.type.is_array() and init_value.isValueRuntime():
-		nl_indent()
-		assign_array(const_value, init_value, x.ti)
-
-	return
 
 
 
@@ -1614,88 +1496,129 @@ def assign_array(left, right, ti):
 	return
 
 
-def do_assign(left, right, ti):
-	if right.type.is_array():
-		assign_array(left, right, ti)
-		return
 
-	print_value(left)
-	out(" = ")
-	print_value(right)
-	out(";")
+
+def do_cstmt_block(x):
+	cstmts = []
+	for stmt in x.stmts:
+		cstmts.append(do_cstmt(stmt))
+	return CStmtBlock(cstmts)
+
+
+def do_cstmt_value_expr(x):
+	return CStmtValueExpr(do_cvalue(x.value))
+
+
+def do_cstmt_assign(x):
+	return CStmtValueAssign(do_cvalue(x.left), do_cvalue(x.right))
+
+
+def do_cstmt_return(x):
+	global cfunc
+
+	if cfunc.type.to.is_closed_array():
+		#memcpy = CValueNamed("memcpy")
+#		out("memcpy(_sret_, ")
+#		out(str_value_as_ptr(x.value))
+#		out(", sizeof(")
+#		out(str_type(x.value.type))
+#		out("));")
+		return None
+
+	cretval = None
+	if x.value != None and not x.value.type.is_unit():
+		cretval = do_cvalue(x.value)
+	cstmt_return = CStmtReturn(cretval)
+	return cstmt_return
+	#out(cstmt_return)
+
+
+def do_cstmt_if(x):
+	ccond = do_cvalue(x.cond)
+	cthen = do_cstmt(x.then)
+	cels = None
+	if x.els:
+		cels = do_cstmt(x.els)
+	return CStmtIf(ccond, cthen, cels)
+
+
+def do_cstmt_while(x):
+	ccond = do_cvalue(x.cond)
+	cblock = do_cstmt(x.block)
+	return CStmtWhile(ccond, cblock)
+
+
+def do_cstmt_var(x):
+	var_value = x.value
+	init_value = x.init_value
+
+	civ = None
+	if not init_value.isValueUndef():
+		if not (init_value.type.is_array() and (init_value.isValueRuntime() or var_value.type.is_vla())):
+			civ = do_cinitializer(init_value)
+
+	storage_class = ''
+	if x.hasAttribute('static'):
+		storage_class = 'static'
+
+	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), storage_class=storage_class, init_value=civ)
+	return dv
+
+#	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
+#		nl_indent()
+#		assign_array(var_value, init_value, x.ti)
+
 	return
 
 
-def print_stmt_assign(x):
-	do_assign(x.left, x.right, x.ti)
+def do_cstmt_const(x):
+	id = x.id
+	const_value = x.value
+	init_value = x.init_value
 
+	# print generic constant as C macro
+	if value_is_generic_immediate(const_value):
+		id_str = get_id_str(const_value)
+		global func_undef_list
+		func_undef_list.append(id_str)
+		# если точный тип константы неизвестен - печатаем ее как макро
+		macro = CMacrodefinition(id_str, str_macro_value(init_value))
+		return macro
 
-def print_stmt_value(x):
-	print_value(x.value); out(";")
+	civ = None
+	if not (init_value.type.is_array() and init_value.isValueRuntime()):
+		civ = do_cvalue(init_value)
 
+	dv = CStmtDefVar(get_id_str(x), do_ctype(const_value.type), storage_class=None, init_value=civ)
+	return dv
+	#out(str(dv))
 
-def print_stmt(x):
-	assert(isinstance(x, Stmt))
-
-	if x.comment != None:
-		out(str_nl_indent(x.comment.nl))
-		print_comment(x.comment)
-
-	nl_indent(x.nl)
-	if x.is_stmt_block(): print_stmt_block(x)
-	elif x.is_stmt_value_expr(): print_stmt_value(x)
-	elif x.is_stmt_assign(): print_stmt_assign(x)
-	elif x.is_stmt_return(): print_stmt_return(x)
-	elif x.is_stmt_if(): print_stmt_if(x, need_else_branch=False)
-	elif x.is_stmt_while(): print_stmt_while(x)
-	elif x.is_stmt_def_var(): print_stmt_var(x)
-	elif x.is_stmt_def_const(): print_stmt_const(x)
-	elif x.is_stmt_break(): print_stmt_break(x)
-	elif x.is_stmt_again(): print_stmt_again(x)
-	elif x.is_stmt_comment(): print_comment(x)
-	elif x.is_stmt_def_type(): print_def_type(x)
-	elif x.is_stmt_asm(): print_stmt_asm(x)
-	else: lo("<stmt %s>" % str(x))
-
-
-def print_stmt_break(x):
-	cbreak = CStmtBreak()
-	out(str(cbreak))
-
-
-def print_stmt_again(x):
-	ccontinue = CStmtContinue()
-	out(str(ccontinue))
-
-
-def print_stmt_block(s):
-	out("{")
-	nl_end_e = 1
-	indent_up()
-	for stmt in s.stmts:
-		print_stmt(stmt)
-	indent_down()
-
-	nl_indent(nl=nl_end_e)
-	#newline(n=nl_end_e)
-	#if nl_end_e > 0:
-	#	indent()
-	out("}")
+	# print constant as 'variable'
+	# литерал массива включающий в себя переменные печатаем отдельно
+#	if init_value.type.is_array() and init_value.isValueRuntime():
+#		nl_indent()
+#		assign_array(const_value, init_value, x.ti)
 
 
 
-# Функция возвращает массив по значению?
-def isSretFunc(ftype):
-	return ftype.to.is_closed_array()
+def do_cstmt(x):
+	if x.is_stmt_block(): return do_cstmt_block(x)
+	elif x.is_stmt_value_expr(): return do_cstmt_value_expr(x)
+	elif x.is_stmt_assign(): return do_cstmt_assign(x)
+	elif x.is_stmt_return(): return do_cstmt_return(x)
+	elif x.is_stmt_if(): return do_cstmt_if(x)
+	elif x.is_stmt_while(): return do_cstmt_while(x)
+	elif x.is_stmt_def_var(): return do_cstmt_var(x)
+	elif x.is_stmt_def_const(): return do_cstmt_const(x)
+	elif x.is_stmt_break(): return CStmtBreak()
+	elif x.is_stmt_again(): return CStmtBreak()
+#	elif x.is_stmt_comment(): do_ccomment(x)
+#	elif x.is_stmt_def_type(): do_cdef_type(x)
+#	elif x.is_stmt_asm(): return do_cstmt_asm(x)
+#	else: lo("<stmt %s>" % str(x))
 
 
-def print_func_return_type(ftype):
-	if not isSretFunc(ftype):
-		out(str_type(ftype.to))
-		return
 
-	out("void")
-	return
 
 
 
@@ -1771,7 +1694,8 @@ def print_def_func(x):
 
 	stmts = x.stmt.stmts
 	for stmt in stmts:
-		print_stmt(stmt)
+		#print_stmt(stmt)
+		out(str_cstmt(do_cstmt(stmt)))
 
 	indent_down()
 
