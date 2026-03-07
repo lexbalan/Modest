@@ -32,8 +32,15 @@ typedef uint32_t char32_t;
 #include <stdarg.h>
 
 
-
+typedef int32_t MyInt;
 struct point {
+	uint64_t x;
+	uint64_t y;
+};
+
+
+typedef struct open_point OpenPoint;
+struct open_point {
 	uint64_t x;
 	uint64_t y;
 };

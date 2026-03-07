@@ -3,7 +3,14 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
+
+type MyInt = Int32
 type Point = {
+	x: Word64
+	y: Word64
+}
+
+type OpenPoint = @public {
 	x: Word64
 	y: Word64
 }

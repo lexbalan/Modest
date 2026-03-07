@@ -957,6 +957,24 @@ class CStmtValueAssign(CStmt):
 		return "%s = %s;" % (str_cvalue(self.lvalue), str_cvalue(self.rvalue))
 
 
+
+class CStmtDefType(CStmt):
+	def __init__(self, id_str, type, annotations=None):
+		assert(isinstance(id_str, str))
+		assert(isinstance(type, CType))
+		super().__init__()
+		self.id_str = id_str
+		self.type = type
+		self.annotations = annotations
+
+	def __str__(self):
+		sstr = ''
+		sstr += str_gcc_attributes(self.annotations)
+		xv = CStmtDefVar(self.id_str, self.type)
+		sstr += 'typedef %s' % str(xv)
+		return sstr
+
+
 class CStmtDefVar(CStmt):
 	def __init__(self, id_str, type, init_value=None, storage_class='', annotations=None):
 		assert(isinstance(id_str, str))

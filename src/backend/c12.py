@@ -1717,7 +1717,7 @@ def print_decl_type_record(x):
 		out("typedef %s %s %s;\n" % (isa, tag, get_id_str(t)))
 
 
-def print_def_type(x):
+def do_def_type(x):
 	global declared
 	print_deps(x.deps)
 
@@ -1727,23 +1727,28 @@ def print_def_type(x):
 	if orig_type.is_record() and not is_type_named(orig_type):
 		return print_def_type_record(x)
 
-	out('typedef ' + str_field(orig_type, id_str) + ';')
+	return CStmtDefType(id_str, do_ctype(orig_type))
+
+	#out('typedef ' + str_field(orig_type, id_str) + ';')
 
 
 def print_def_type_record(x):
 	t = x.type
 	id_str = get_id_str(t)
 
+	sstr = ''
+
 	# Если структура open & не задекларирована ранее - печатаем для нее typedef
 	if (not id_str in declared) and t.is_open_record:
 		tag = get_record_tag(t)
 		isa = 'struct' if not t.layout == 'union' else 'union'
-		out("\ntypedef %s %s %s;" % (isa, tag, get_id_str(t)))
+		kisa = isa + ' ' + tag
+		sstr += "\ntypedef %s %s;\n" % (kisa, get_id_str(t))
 
-	out("\n")
-	tag = get_record_tag(t)
-	out(str_type_record(t, tag=tag))
-	out(";")
+	dv = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
+	sstr += str(dv) + ';'
+	return sstr
+
 
 
 # Указатель, массив и функция образуют пиздецовый заговор
@@ -1995,7 +2000,7 @@ def print_header(module, outname):
 		elif x.is_stmt_def_type():
 			nnl(x.nl)
 			print_deps(x.deps)
-			print_def_type(x)
+			out(str(do_def_type(x)))
 		elif x.is_stmt_def_const():
 			nnl(x.nl)
 			print_deps(x.deps)
@@ -2237,7 +2242,8 @@ def print_cfile(module, _outname):
 		elif x.is_stmt_def_type() and is_private(x):
 			nnl(x.nl)
 #			print_deps(x.deps)
-			print_def_type(x)
+			out(str(do_def_type(x)))
+
 		elif x.is_stmt_def_var():
 			nnl(x.nl)
 			print_deps(x.deps)
