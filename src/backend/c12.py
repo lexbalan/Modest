@@ -1996,7 +1996,7 @@ def print_header(module, outname):
 			out(str(do_decl_func(x)))
 		elif x.is_stmt_def_var():
 			nnl(x.nl)
-			out(str(print_def_var(x, as_extern=True)))
+			out(str(do_def_var(x, as_extern=True)))
 		elif x.is_stmt_def_type():
 			nnl(x.nl)
 			print_deps(x.deps)
