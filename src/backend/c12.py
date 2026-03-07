@@ -784,6 +784,7 @@ def do_cvalue_cons(x, ctx):
 		print(x.type)
 		1/0
 	return cv
+
 def do_cvalue_cons2(x, ctx):
 	type = x.type
 	value = x.value
@@ -886,8 +887,6 @@ def do_cvalue_cons2(x, ctx):
 					#return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx=ctx)
 					return CValueCast
 
-
-
 	# if from_type.is_string():
 	# 	if type.is_char():
 	# 		return do_cvalue_literal_char(type, value, [])
@@ -945,30 +944,6 @@ def doo_call(func, args):
 
 	return CValueCall(left, xargs)
 
-
-
-
-
-#def str_value_index(x, ctx):
-#	left = x.left
-#
-#	left_str = ''
-#
-#	if left.is_global_flag and left.isValueConst(): #left.type.is_generic_array():
-#		ts = str_type(left.type)
-#		vs = str_value(left, ctx=ctx)
-#		left_str += '((%s)%s)' % (ts, vs)
-#	elif value_is_generic_immediate_const(left):
-#		ts = str_type(left.type)
-#		vs = str_value(left, ctx=ctx)
-#		left_str += '((%s)%s)' % (ts, vs)
-#	else:
-#		left_str += str_value(left, ctx=ctx)
-#
-#	if left.type.is_pointer() and not p2i_instead_p2a(left.type.to):
-#		left_str = "(*%s)" % left_str
-#
-#	return left_str + '[' + str_value(x.index) + ']'
 
 
 def do_cvalue_index(x, ctx):
@@ -1561,7 +1536,7 @@ def do_cstmt_var(x):
 	if x.hasAttribute('static'):
 		storage_class = 'static'
 
-	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), storage_class=storage_class, init_value=civ)
+	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class)
 	return dv
 
 #	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
@@ -1589,15 +1564,16 @@ def do_cstmt_const(x):
 	if not (init_value.type.is_array() and init_value.isValueRuntime()):
 		civ = do_cvalue(init_value)
 
-	dv = CStmtDefVar(get_id_str(x), do_ctype(const_value.type), storage_class=None, init_value=civ)
-	return dv
-	#out(str(dv))
+	dv = CStmtDefVar(get_id_str(x), do_ctype(const_value.type), init_value=civ, storage_class=None)
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
 #	if init_value.type.is_array() and init_value.isValueRuntime():
 #		nl_indent()
 #		assign_array(const_value, init_value, x.ti)
+
+	return dv
+
 
 
 
@@ -1622,7 +1598,8 @@ def do_cstmt(x):
 
 
 
-def print_decl_func(x):
+def do_decl_func(x):
+	func = x.value
 	storage_class = ''
 	if x.hasAttribute2('extern'):
 		storage_class = 'extern'
@@ -1635,11 +1612,12 @@ def print_decl_func(x):
 		else:
 			storage_class = 'inline'
 
-	dv = CStmtDefVar(get_id_str(x.value), do_ctype(x.value.type), storage_class=storage_class, annotations=x.annotations)
-	out(str(dv))
+	dv = CStmtDefVar(get_id_str(func), do_ctype(func.type), storage_class=storage_class, annotations=x.annotations)
+	return dv
+	#out(str(dv))
 
 
-def print_def_func(x):
+def do_def_func(x):
 	global declared
 
 	func = x.value
@@ -1661,9 +1639,19 @@ def print_def_func(x):
 		else:
 			storage_class = 'inline'
 
-	if storage_class != '':
-		out(storage_class + ' ')
+	#if storage_class != '':
+	#	out(storage_class + ' ')
 
+	cblock = do_cstmt_block(x.stmt)
+
+	dv = CStmtDefFunc(get_id_str(func), do_ctype(func.type), cblock, storage_class=storage_class, annotations=x.annotations)
+	#out(dv)
+
+	cfunc = None
+	return dv
+
+
+######## -----------
 	out(str_field(func.type, get_id_str(func)))
 
 	if x.stmt == None:
@@ -1768,7 +1756,7 @@ def print_variable(id_str, t, init_value=None, prefix='', ctx=[]):
 
 
 
-def print_def_var(x, isdecl=False, is_extern=False):
+def do_def_var(x, isdecl=False, is_extern=False):
 	var_value = x.value
 
 	# TODO: Почему-то атрибут 'extern' не работает, и накостылил через as_extern
@@ -1786,17 +1774,18 @@ def print_def_var(x, isdecl=False, is_extern=False):
 	if not (x.init_value.isValueUndef() or is_extern):
 		civ = do_cinitializer(x.init_value)
 
-	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), storage_class=storage_class, init_value=civ, annotations=x.annotations)
-	out(str(dv))
+	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, annotations=x.annotations)
+	#out(str(dv))
+	return dv
 
 
 
-def print_def_const(x):
+def do_def_const(x):
 	id_str = camel_to_upper_snake(get_id_str(x.value))
 	macro = CMacrodefinition(id_str, str_macro_value(x.init_value))
-	out(str(macro))
+	#out(str(macro))
 	module_undef_list.append(id_str)
-	return
+	return macro
 
 
 already_included = []
@@ -1880,7 +1869,7 @@ def print_deps(deps):
 			declared.append(id_str)
 
 			if isinstance(dep, Value):
-				print_decl_func(dep.definition)
+				out(str(do_decl_func(dep.definition)))
 			else:
 				print_decl_type(dep.definition)
 
@@ -1996,13 +1985,13 @@ def print_header(module, outname):
 			#nnl(x.nl)
 			nnl(1)
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
-				out("static ")
-				print_def_func(x)
+				#out("static ")
+				out(str_cstmt(do_def_func(x)))
 				continue
-			print_decl_func(x)
+			out(str(do_decl_func(x)))
 		elif x.is_stmt_def_var():
 			nnl(x.nl)
-			print_def_var(x, as_extern=True)
+			out(str(print_def_var(x, as_extern=True)))
 		elif x.is_stmt_def_type():
 			nnl(x.nl)
 			print_deps(x.deps)
@@ -2010,7 +1999,7 @@ def print_header(module, outname):
 		elif x.is_stmt_def_const():
 			nnl(x.nl)
 			print_deps(x.deps)
-			print_def_const(x)
+			out(str(do_def_const(x)))
 		#elif x.is_stmt_comment():
 		#	nnl(x.nl)
 		#	print_comment(x)
@@ -2244,7 +2233,7 @@ def print_cfile(module, _outname):
 		if x.is_stmt_def_const() and is_private(x):
 			nnl(x.nl)
 			print_deps(x.deps)
-			print_def_const(x)
+			out(str(do_def_const(x)))
 		elif x.is_stmt_def_type() and is_private(x):
 			nnl(x.nl)
 #			print_deps(x.deps)
@@ -2252,7 +2241,7 @@ def print_cfile(module, _outname):
 		elif x.is_stmt_def_var():
 			nnl(x.nl)
 			print_deps(x.deps)
-			print_def_var(x)
+			out(str(do_def_var(x)))
 		elif x.is_stmt_def_func():
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
 				continue
@@ -2260,7 +2249,7 @@ def print_cfile(module, _outname):
 			print_deps(x.deps)
 			if x.deps != []:
 				newline()
-			print_def_func(x)
+			out(str_cstmt(do_def_func(x)))
 		elif x.is_stmt_comment():
 			nnl(x.nl)
 			if x.nl == 0:

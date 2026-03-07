@@ -38,10 +38,10 @@ struct point {
 	uint64_t y;
 };
 
-static void foo(int32_t a, int64_t b) {
+
+static void foo(int32_t a, int64_t b){
 	return;
 }
-
 
 #define C 15
 
@@ -53,7 +53,8 @@ static struct point p0 = /*mark=CR5*/(struct point){
 	.y = 2
 };
 
-int main(void) {
+
+int main(void){
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';
 	const char32_t xc3 = U'A';
@@ -94,7 +95,7 @@ int main(void) {
 	struct point p0 = /*mark=CR4*/(struct point){0};
 	p0.x;
 	p0.y;
-	if(a < 1 && b > 12 || C <= 5 && !(1 < 0)){
+	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)){
 		uint32_t u;
 		uint32_t v;
 		u | v & u ^ ~v;
@@ -113,18 +114,14 @@ int main(void) {
 	float f;
 	f = pi;
 	return 0;
-
-#undef kk
-#undef pi
 }
 
 
-void main_print(char *form, ...) {
+void main_print(char *form, ...){
 	va_list va;
 	va_list va2;
 	va_start(va, form);
 	va_copy(va2, va);
 	va_end(va);
 }
-
 

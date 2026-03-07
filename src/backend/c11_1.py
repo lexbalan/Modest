@@ -920,6 +920,7 @@ class CStmtBlock(CStmt):
 	def __init__(self, stmts):
 		assert(isinstance(stmts, list))
 		super().__init__()
+		self.nl = 0
 		self.stmts = stmts
 
 	def __str__(self):
@@ -957,7 +958,7 @@ class CStmtValueAssign(CStmt):
 
 
 class CStmtDefVar(CStmt):
-	def __init__(self, id_str, type, storage_class='', init_value=None, annotations=None):
+	def __init__(self, id_str, type, init_value=None, storage_class='', annotations=None):
 		assert(isinstance(id_str, str))
 		assert(isinstance(type, CType))
 		if init_value != None:
@@ -982,12 +983,27 @@ class CStmtDefVar(CStmt):
 
 
 class CStmtDefFunc(CStmt):
-	def __init__(self, id, init_value):
-		assert(isinstance(id, str))
-		assert(isinstance(init_value, CValue))
+	def __init__(self, id_str, type, block, storage_class='', annotations=None):
+		assert(isinstance(id_str, str))
+		assert(isinstance(type, CType))
+		assert(isinstance(block, CStmtBlock))
+		#if init_value != None:
+		#	assert(isinstance(init_value, CValue))
 		super().__init__()
-		self.id = id
-		self.init_value = init_value
+		self.id_str = id_str
+		self.type = type
+		self.storage = storage_class
+		self.block = block
+		self.annotations = annotations
+
+	def __str__(self):
+		sstr = ''
+		sstr += str_gcc_attributes(self.annotations)
+		if self.storage not in (None, ''):
+			sstr += self.storage + ' '
+		sstr += self.type.to_str(text=self.id_str)
+		sstr += str_cstmt(self.block)
+		return sstr
 
 
 
@@ -1012,7 +1028,7 @@ class CStmtIf(CStmt):
 		self.block_else = block_else
 
 	def __str__(self):
-		sstr = "if(%s)" % str_cvalue(self.value_cond)
+		sstr = "if (%s)" % str_cvalue(self.value_cond)
 		sstr += str(self.block_then)
 		if self.block_else != None:
 			sstr += ' else '
