@@ -1706,22 +1706,6 @@ def do_def_func(x):
 
 
 
-def print_decl_type(x):
-	if x.type.is_record():
-		do_decl_type_record(x)
-
-
-def do_decl_type_record(x):
-	out("/*do_decl_type_record*/\n")
-	t = x.type
-	tag = get_record_tag(t)
-	isa = 'struct' if not t.layout == 'union' else 'union'
-	kisa = isa + ' ' + tag
-	out(str(CTypeNamed(kisa)) + ';')
-	#out('%s %s;\n' % (isa, tag))
-	if t.is_open_record:
-		#out("typedef %s %s %s;\n" % (isa, tag, get_id_str(t)))
-		out('\n' + str(CStmtDefType(get_id_str(t), CTypeNamed(kisa))) + '\n')
 
 
 def do_def_type(x):
@@ -1886,10 +1870,23 @@ def print_deps(deps):
 
 			if isinstance(dep, Value):
 				out(str(do_decl_func(dep.definition)))
-			else:
-				print_decl_type(dep.definition)
+			elif isinstance(dep, Type):
+				if dep.is_record():
+					do_decl_type_record(dep.definition)
 
 	out("\n")
+
+
+def do_decl_type_record(x):
+	t = x.type
+	tag = get_record_tag(t)
+	isa = 'struct' if not t.layout == 'union' else 'union'
+	kisa = isa + ' ' + tag
+	out(str(CStmtDeclType(CTypeNamed(kisa))))
+	if t.is_open_record:
+		df = CStmtDefType(get_id_str(t), CTypeNamed(kisa))
+		out('\n' + str(df))
+
 
 
 def nnl(nl):

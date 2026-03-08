@@ -958,6 +958,20 @@ class CStmtValueAssign(CStmt):
 
 
 
+class CStmtDeclType(CStmt):
+	def __init__(self, type, annotations=None):
+		assert(isinstance(type, CTypeNamed))
+		super().__init__()
+		self.type = type
+		self.annotations = annotations
+
+	def __str__(self):
+		sstr = "/* do_decl_type_record */\n"
+		sstr += str_gcc_attributes(self.annotations)
+		sstr += str_ctype(self.type) + ';'
+		return sstr
+
+
 class CStmtDefType(CStmt):
 	def __init__(self, id_str, type, annotations=None):
 		assert(isinstance(id_str, str))
