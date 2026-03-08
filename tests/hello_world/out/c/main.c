@@ -45,6 +45,17 @@ struct open_point {
 };
 
 
+/*do_decl_type_record*/
+struct list_header;
+typedef struct list_header ListHeader;
+
+
+struct list_header {
+	ListHeader *next;
+	ListHeader *prev;
+};
+
+
 static void foo(int32_t a, int64_t b){
 	return;
 }

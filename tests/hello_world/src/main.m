@@ -15,6 +15,11 @@ type OpenPoint = @public {
 	y: Word64
 }
 
+type ListHeader = @public {
+	next: *ListHeader
+	prev: *ListHeader
+}
+
 func foo (a: Int32, b: Int64) -> {} {
 	return {}
 }

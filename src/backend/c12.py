@@ -229,7 +229,8 @@ def get_type_id_str(t):
 		tag = get_record_tag(t)
 		if tag != None:
 			isa = 'struct' if not t.layout == 'union' else 'union'
-			return isa + ' ' + tag
+			kisa = isa + ' ' + tag
+			return kisa
 
 	if hasattr(t, 'id'):
 		return get_id_prefix(t) + t.id.c
@@ -308,15 +309,17 @@ def do_ctype_array(t, specs=[]):
 	return CTypeArray(of=do_ctype(t.of), volume=t.volume, specs=specs)
 
 
+
 # преобразуем Modest TypeRecord -> CIR TypeStruct
 def do_ctype_struct(t, tag='', specs=[]):
 	assert(isinstance(t, Type))
 	fields = []
 	for p in t.fields:
 		fields.append(CField(id_str=p.id.str, type=do_ctype(p.type), specs=[], nl=p.nl))
-	tag = camel_to_lower_snake(with_space(tag))
+	tag = camel_to_lower_snake(tag)
 	isa = 'struct' if not t.layout == 'union' else 'union'
-	return CTypeStruct(fields, specs=specs, tag=isa+tag)
+	kisa = isa + ' ' + tag
+	return CTypeStruct(fields, specs=specs, tag=kisa)
 
 
 def do_ctype_named(t, specs):
@@ -1705,16 +1708,20 @@ def do_def_func(x):
 
 def print_decl_type(x):
 	if x.type.is_record():
-		print_decl_type_record(x)
+		do_decl_type_record(x)
 
 
-def print_decl_type_record(x):
+def do_decl_type_record(x):
+	out("/*do_decl_type_record*/\n")
 	t = x.type
 	tag = get_record_tag(t)
 	isa = 'struct' if not t.layout == 'union' else 'union'
-	out('%s %s;\n' % (isa, tag))
+	kisa = isa + ' ' + tag
+	out(str(CTypeNamed(kisa)) + ';')
+	#out('%s %s;\n' % (isa, tag))
 	if t.is_open_record:
-		out("typedef %s %s %s;\n" % (isa, tag, get_id_str(t)))
+		#out("typedef %s %s %s;\n" % (isa, tag, get_id_str(t)))
+		out('\n' + str(CStmtDefType(get_id_str(t), CTypeNamed(kisa))) + '\n')
 
 
 def do_def_type(x):
