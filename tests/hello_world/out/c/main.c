@@ -38,7 +38,6 @@ struct point {
 	uint64_t y;
 };
 
-
 typedef struct open_point OpenPoint;
 struct open_point {
 	uint64_t x;

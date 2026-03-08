@@ -1743,7 +1743,7 @@ def print_def_type_record(x):
 		tag = get_record_tag(t)
 		isa = 'struct' if not t.layout == 'union' else 'union'
 		kisa = isa + ' ' + tag
-		sstr += "\ntypedef %s %s;\n" % (kisa, get_id_str(t))
+		sstr += str(CStmtDefType(get_id_str(t), CTypeNamed(kisa))) + '\n'
 
 	dv = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
 	sstr += str(dv) + ';'
