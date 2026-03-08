@@ -74,9 +74,9 @@ int main(void){
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';
 	const char32_t xc3 = U'A';
-	char xcs1[1] = /*mark=CA3*/"A";
-	char16_t xcs2[1] = /*mark=CA3*/u"A";
-	char32_t xcs3[1] = /*mark=CA3*/U"A";
+	const char xcs1[1] = /*mark=CA3*/"A";
+	const char16_t xcs2[1] = /*mark=CA3*/u"A";
+	const char32_t xcs3[1] = /*mark=CA3*/U"A";
 	char *const xs1 = "A";
 	char16_t *const xs2 = u"A";
 	char32_t *const xs3 = U"A";
@@ -89,6 +89,8 @@ int main(void){
 	char *s1 = "B";
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
+	#define c00 10
+	int32_t v00 = 10;
 	int32_t arr[3] = /*mark=CA2*/{1, 2, 3};
 	LENGTHOF(arr);
 	printf("Hello World!\n");

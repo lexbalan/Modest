@@ -1550,7 +1550,6 @@ def do_cstmt_var(x):
 
 
 def do_cstmt_const(x):
-	id = x.id
 	const_value = x.value
 	init_value = x.init_value
 

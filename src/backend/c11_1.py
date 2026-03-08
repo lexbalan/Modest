@@ -125,6 +125,7 @@ class CTypePointer(CType):
 
 class CTypeArray(CType):
 	def __init__(self, of, volume=None, specs=None):
+		of.specs = specs  # array specs is array item specs (!)
 		self.of = of
 		self.volume = volume
 		self.specs = specs if specs != None else []
@@ -1036,15 +1037,6 @@ class CStmtDefFunc(CStmt):
 		sstr += self.type.to_str(text=self.id_str)
 		sstr += str_cstmt(self.block)
 		return sstr
-
-
-
-#class CStmtDefConst(CStmt):
-#	def __init__(self, id, init_value):
-#		assert(isinstance(id, str))
-#		assert(isinstance(init_value, CValue))
-#		self.id = id
-#		self.init_value = init_value
 
 
 

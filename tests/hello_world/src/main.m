@@ -62,6 +62,9 @@ public func main () -> Int {
 	var s2: *Str16 = "B"
 	var s3: *Str32 = "B"
 
+	let c00 = 10
+	var v00 = Int32 10
+
 	var arr = [3]Int32 [1, 2, 3]
 
 	lengthof(arr)
