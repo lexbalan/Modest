@@ -1725,18 +1725,19 @@ def do_def_type(x):
 	orig_type = x.original_type
 
 	if orig_type.is_record() and not is_type_named(orig_type):
-		return print_def_type_record(x)
+		return do_def_type_record(x)
 
 	return CStmtDefType(id_str, do_ctype(orig_type))
 
 	#out('typedef ' + str_field(orig_type, id_str) + ';')
 
 
-def print_def_type_record(x):
+def do_def_type_record(x):
 	t = x.type
 	id_str = get_id_str(t)
 
 	sstr = ''
+	#defs = []
 
 	# Если структура open & не задекларирована ранее - печатаем для нее typedef
 	if (not id_str in declared) and t.is_open_record:
@@ -1744,10 +1745,13 @@ def print_def_type_record(x):
 		isa = 'struct' if not t.layout == 'union' else 'union'
 		kisa = isa + ' ' + tag
 		sstr += str(CStmtDefType(get_id_str(t), CTypeNamed(kisa))) + '\n'
+		#defs.append(CStmtDefType(get_id_str(t), CTypeNamed(kisa)))
 
 	dv = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
+	#defs.append(dv)
 	sstr += str(dv) + ';'
 	return sstr
+	#return defs
 
 
 
