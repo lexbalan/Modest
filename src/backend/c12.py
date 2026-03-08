@@ -1792,14 +1792,9 @@ already_included = []
 def include(path, local=True):
 	if path in already_included:
 		return
-
-	if local:
-		include_text = "\n#include \"%s\"" % path
-	else:
-		include_text = "\n#include <%s>" % path
-
 	already_included.append(path)
-	out(include_text)
+	dv = CInclude(path, isglobal=not local)
+	out(str(dv))
 
 
 

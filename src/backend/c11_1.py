@@ -1121,4 +1121,18 @@ class CMacrodefinition():
 		return "#define %s %s" % (self.id, self.text)
 
 
+class CInclude():
+	def __init__(self, text, isglobal):
+		assert(isinstance(text, str))
+		assert(isinstance(isglobal, bool))
+		self.nl = 1  #!!! (because it is not CStmt...)
+		super().__init__()
+		self.text = text
+		self.isglobal = isglobal
+
+	def __str__(self):
+		if self.isglobal:
+			return "\n#include <%s>" % self.text
+		return "\n#include \"%s\"" % self.text
+
 
