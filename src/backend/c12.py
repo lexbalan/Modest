@@ -7,7 +7,7 @@ from hlir import *
 from .common import *
 from error import info, warning, error, fatal
 from unicode import chars_to_utf32
-from util import str_fractional
+from util import str_fractional, align_bits_up
 
 from .c11_1 import *
 
@@ -213,7 +213,7 @@ def get_type_id_str(t):
 			if t.is_unsigned():
 				return 'unsigned int'
 			return 'int'
-		s = 'int%d_t' % t.width
+		s = 'int%d_t' % align_bits_up(t.width)
 		if t.is_unsigned():
 			s = 'u' + s
 		return s
@@ -1551,22 +1551,24 @@ def do_cstmt_var(x):
 
 def do_cstmt_const(x):
 	const_value = x.value
+	type = const_value.type
 	init_value = x.init_value
 
 	# print generic constant as C macro
 	if value_is_generic_immediate(const_value):
-		id_str = get_id_str(const_value)
-		global func_undef_list
-		func_undef_list.append(id_str)
-		# если точный тип константы неизвестен - печатаем ее как макро
-		macro = CMacrodefinition(id_str, str_macro_value(init_value))
-		return macro
+		if not type.is_integer():
+			id_str = get_id_str(const_value)
+			global func_undef_list
+			func_undef_list.append(id_str)
+			# если точный тип константы неизвестен - печатаем ее как макро
+			macro = CMacrodefinition(id_str, str_macro_value(init_value))
+			return macro
 
 	civ = None
 	if not (init_value.type.is_array() and init_value.isValueRuntime()):
 		civ = do_cvalue(init_value)
 
-	dv = CStmtDefVar(get_id_str(x), do_ctype(const_value.type), init_value=civ, storage_class=None)
+	dv = CStmtDefVar(get_id_str(x), do_ctype(type), init_value=civ, storage_class=None)
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно

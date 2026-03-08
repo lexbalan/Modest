@@ -1101,16 +1101,19 @@ class CStmtContinue(CStmt):
 
 
 class CMacrodefinition():
-	def __init__(self, id, text):
+	def __init__(self, id, text=None):
 		assert(isinstance(id, str))
-		assert(isinstance(text, str))
+		if text:
+			assert(isinstance(text, str))
 		self.nl = 1  #!!! (because it is not CStmt...)
 		super().__init__()
 		self.id = id
 		self.text = text
 
 	def __str__(self):
-		return "#define %s %s" % (self.id, self.text)
+		if self.text:
+			return "#define %s %s" % (self.id, self.text)
+		return "#define %s %s" % (self.id)
 
 
 class CInclude():

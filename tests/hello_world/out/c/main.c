@@ -71,7 +71,7 @@ static struct point p0 = /*mark=CR5*/(struct point){
 
 
 int main(void){
-	#define c00 10
+	const int8_t c00 = 10;
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';
 	const char32_t xc3 = U'A';
@@ -103,7 +103,7 @@ int main(void){
 	a % 2;
 	foo(1, 2);
 	foo(a + 1, b - C);
-	#define kk (1 + 2 - 3 * 4)
+	const int8_t kk = 1 + 2 - 3 * 4;
 	(void)a;
 	(uint32_t)abs(a);
 	(uint64_t)llabs(b);
