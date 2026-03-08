@@ -36,6 +36,8 @@ var p0: Point = {
 }
 
 public func main () -> Int {
+	// constants
+	let c00 = 10
 
 	let xc1: Char8 = "A"
 	let xc2: Char16 = "A"
@@ -49,6 +51,8 @@ public func main () -> Int {
 	let xs2: *Str16 = "A"
 	let xs3: *Str32 = "A"
 
+	// vars
+	var v00 = Int32 10
 
 	var c1: Char8 = "B"
 	var c2: Char16 = "B"
@@ -62,8 +66,6 @@ public func main () -> Int {
 	var s2: *Str16 = "B"
 	var s3: *Str32 = "B"
 
-	let c00 = 10
-	var v00 = Int32 10
 
 	var arr = [3]Int32 [1, 2, 3]
 

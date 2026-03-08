@@ -71,6 +71,7 @@ static struct point p0 = /*mark=CR5*/(struct point){
 
 
 int main(void){
+	#define c00 10
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';
 	const char32_t xc3 = U'A';
@@ -80,6 +81,7 @@ int main(void){
 	char *const xs1 = "A";
 	char16_t *const xs2 = u"A";
 	char32_t *const xs3 = U"A";
+	int32_t v00 = 10;
 	char c1 = 'B';
 	char16_t c2 = u'B';
 	char32_t c3 = U'B';
@@ -89,8 +91,6 @@ int main(void){
 	char *s1 = "B";
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
-	#define c00 10
-	int32_t v00 = 10;
 	int32_t arr[3] = /*mark=CA2*/{1, 2, 3};
 	LENGTHOF(arr);
 	printf("Hello World!\n");
