@@ -1073,11 +1073,11 @@ def do_cvalue_const(x, ctx):
 	id_str = get_id_str(x)
 	if x.is_global_flag and not x.id.hasAttribute('nodecorate'):
 		id_str = camel_to_upper_snake(id_str)
+
 	cv = CValueNamed(id_str)
 
-	if x.type.is_array() and not x.type.is_generic():
+	if x.is_global_flag and x.type.is_array() and not x.type.is_generic():
 		cv = CValueCast(do_ctype(x.type), cv)
-		#cv.mark = '???'
 
 	return cv
 
@@ -1630,8 +1630,35 @@ def do_def_func(x):
 
 	cblock = do_cstmt_block(x.stmt)
 
+	# for any array parameter print local holder value
+	for param in func.type.params:
+		if param.type.is_closed_array():
+			#nl_indent(1)
+			#paramId = get_id_str(param)
+			#print_variable(paramId, param.type)
+			#out(";")
+			#nl_indent(1)
+#			out("memcpy(%s, %s" % (paramId, '_' + paramId))
+#			out(", sizeof(")
+#			out(str_type(param.type))
+#			out("));")
+
+			paramId = get_id_str(param)
+			dv = CStmtDefVar(paramId, do_ctype(param.type))
+			mx = CStmtValueExpr(
+				CValueCall(
+					CValueNamed("memcpy"),
+					[
+						CValueNamed(paramId),
+						CValueNamed('_' + paramId),
+						CValueSizeofType(do_ctype(param.type))
+					]
+				)
+			)
+
+			cblock.stmts = [dv, mx] + cblock.stmts
+
 	dv = CStmtDefFunc(get_id_str(func), do_ctype(func.type), cblock, storage_class=storage_class, annotations=x.annotations)
-	#out(dv)
 
 	cfunc = None
 	return dv

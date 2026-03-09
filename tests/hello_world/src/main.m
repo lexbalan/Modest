@@ -42,7 +42,7 @@ func farr () -> [3]Int32 {
 
 
 func facc (a: [3]Int32) -> {} {
-	// a[0] = 4  //TODO: Now it not works properly!
+	//a[0] = 4  //TODO: error - assign to constant (!)
 }
 
 public func main () -> Int {

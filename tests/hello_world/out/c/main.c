@@ -76,6 +76,9 @@ static void farr(int32_t (*_sret_)[3]){
 
 
 static void facc(int32_t (*_a)[3]){
+	int32_t a[3];
+	memcpy(a, _a, sizeof(int32_t [3]));
+	a[0] = 4;
 }
 
 
