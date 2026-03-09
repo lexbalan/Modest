@@ -218,6 +218,9 @@ def get_type_id_str(t):
 			s = 'u' + s
 		return s
 
+	if t.is_rational():
+		return "double"
+
 	if isinstance(t, TypeRecord):
 		if hasattr(t, 'id'):
 			if hasattr(t.id, 'c_type'):
@@ -250,7 +253,6 @@ def get_id_str(x):
 
 def is_type_named(t):
 	return hasattr(t, 'id') or (hasattr(t, 'c_anon_id') and t.c_anon_id != None)
-	#return get_type_id_str(t) != None
 
 
 #class CType():
@@ -323,7 +325,7 @@ def do_ctype_struct(t, tag='', specs=[]):
 
 
 def do_ctype_named(t, specs):
-	id_str = get_id_str(t)
+	id_str = get_type_id_str(t)
 	return CTypeNamed(id_str, specs=specs)
 
 
@@ -831,7 +833,7 @@ def do_cvalue_cons2(x, ctx):
 		if from_type.is_word() or from_type.is_int() or from_type.is_nat():
 			if from_type.is_generic():
 				return do_cvalue(value, ctx=ctx)
-			if get_id_str(type) == get_id_str(from_type):
+			if get_type_id_str(type) == get_type_id_str(from_type):
 				return do_cvalue(value, ctx=ctx)
 
 
@@ -1556,7 +1558,7 @@ def do_cstmt_const(x):
 
 	# print generic constant as C macro
 	if value_is_generic_immediate(const_value):
-		if not type.is_integer():
+		if not (type.is_integer() or type.is_rational()):
 			id_str = get_id_str(const_value)
 			global func_undef_list
 			func_undef_list.append(id_str)
@@ -1713,7 +1715,7 @@ def do_def_type(x):
 	global declared
 	print_deps(x.deps)
 
-	id_str = get_id_str(x.type)
+	id_str = get_type_id_str(x.type)
 	orig_type = x.original_type
 
 	if orig_type.is_record() and not is_type_named(orig_type):
@@ -1726,7 +1728,7 @@ def do_def_type(x):
 
 def do_def_type_record(x):
 	t = x.type
-	id_str = get_id_str(t)
+	id_str = get_type_id_str(t)
 
 	sstr = ''
 	#defs = []
@@ -1736,8 +1738,8 @@ def do_def_type_record(x):
 		tag = get_record_tag(t)
 		isa = 'struct' if not t.layout == 'union' else 'union'
 		kisa = isa + ' ' + tag
-		sstr += str(CStmtDefType(get_id_str(t), CTypeNamed(kisa))) + '\n'
-		#defs.append(CStmtDefType(get_id_str(t), CTypeNamed(kisa)))
+		sstr += str(CStmtDefType(get_type_id_str(t), CTypeNamed(kisa))) + '\n'
+		#defs.append(CStmtDefType(get_type_id_str(t), CTypeNamed(kisa)))
 
 	dv = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
 	#defs.append(dv)
@@ -1880,7 +1882,7 @@ def do_decl_type_record(x):
 	kisa = isa + ' ' + tag
 	out(str(CStmtDeclType(CTypeNamed(kisa))))
 	if t.is_open_record:
-		df = CStmtDefType(get_id_str(t), CTypeNamed(kisa))
+		df = CStmtDefType(get_type_id_str(t), CTypeNamed(kisa))
 		out('\n' + str(df))
 
 

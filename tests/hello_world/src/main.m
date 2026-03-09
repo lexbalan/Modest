@@ -83,6 +83,7 @@ public func main () -> Int {
 	foo(1, 2)
 	foo(a + 1, b - c)
 	let kk = 1 + 2 - 3 * 4
+	let pp = 3.1415
 
 	{} a
 	Nat32 a

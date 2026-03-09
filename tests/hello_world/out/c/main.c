@@ -104,6 +104,7 @@ int main(void){
 	foo(1, 2);
 	foo(a + 1, b - C);
 	const int8_t kk = 1 + 2 - 3 * 4;
+	const double pp = 3.1415;
 	(void)a;
 	(uint32_t)abs(a);
 	(uint64_t)llabs(b);
@@ -128,7 +129,7 @@ int main(void){
 		a = a - 1;
 	}
 	true || false;
-	#define pi 3.1415
+	const double pi = 3.1415;
 	float f;
 	f = pi;
 	return 0;
