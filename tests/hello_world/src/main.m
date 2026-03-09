@@ -35,6 +35,12 @@ var p0: Point = {
  	y = 2
 }
 
+
+func farr () -> [3]Int32 {
+	return [1, 2, 3]
+}
+
+
 public func main () -> Int {
 	// constants
 	let c00 = 10
@@ -68,6 +74,10 @@ public func main () -> Int {
 
 
 	var arr = [3]Int32 [1, 2, 3]
+	var arr2: [3]Int32
+	arr2 = farr()
+	arr2 = []
+	arr2 = arr
 
 	lengthof(arr)
 

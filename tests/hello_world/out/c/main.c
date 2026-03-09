@@ -70,6 +70,11 @@ static struct point p0 = /*mark=CR5*/(struct point){
 };
 
 
+static void farr(int32_t (*_sret_)[3]){
+	memcpy(_sret_, &(int32_t [3]){1, 2, 3}, sizeof(int32_t [3]));
+}
+
+
 int main(void){
 	const int8_t c00 = 10;
 	const char xc1 = 'A';
@@ -92,6 +97,10 @@ int main(void){
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
 	int32_t arr[3] = /*mark=CA2*/{1, 2, 3};
+	int32_t arr2[3];
+	farr(&arr2);
+	memset(&arr2, 0, sizeof(int32_t [3]));
+	memcpy(&arr2, &arr, sizeof(int32_t [3]));
 	LENGTHOF(arr);
 	printf("Hello World!\n");
 	int32_t a;

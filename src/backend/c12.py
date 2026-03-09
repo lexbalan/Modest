@@ -956,6 +956,7 @@ def do_cvalue_index(x, ctx):
 	lx = do_cvalue(left)
 	index = do_cvalue(x.index)
 
+	"""
 	if left.is_global_flag and left.isValueConst(): #left.type.is_generic_array():
 		ts = do_ctype(left.type)
 		vs = do_cvalue(left, ctx=ctx)
@@ -966,6 +967,7 @@ def do_cvalue_index(x, ctx):
 		vs = do_cvalue(left, ctx=ctx)
 		#left_str += '((%s)%s)' % (ts, vs)
 		lx = CValueCast(ts, vs)
+	"""
 	#else:
 	#	left_str += str_value(left, ctx=ctx)
 
@@ -1073,9 +1075,9 @@ def do_cvalue_const(x, ctx):
 		id_str = camel_to_upper_snake(id_str)
 	cv = CValueNamed(id_str)
 
-	#if x.type.is_aggregate() and not x.type.is_generic():
-	#	cv = CValueCast(do_ctype(x.type), cv)
-		#cv.mark = '??'
+	if x.type.is_array() and not x.type.is_generic():
+		cv = CValueCast(do_ctype(x.type), cv)
+		#cv.mark = '???'
 
 	return cv
 
@@ -1403,77 +1405,52 @@ def print_stmt_asm(x):
 
 
 
-def str_array_len(array_value):
-	slen = "<slen>"
+def do_array_len(array_value):
 	if array_value.isValueImmediate():
-		slen = str(array_value.type.volume.asset)
+		return CValueInteger(array_value.type.volume.asset)
 	elif array_value.isValueSlice():
-		slen = str_value(array_value.type.volume)
-	else:
-		slen = "LENGTHOF(" + str_value(array_value) + ')'
-	return slen
+		return CValueInteger(array_value.type.volume)
+
+	return CValueCall(CValueNamed("LENGTHOF"), [do_cvalue(array_value)])
 
 
-def assign_array(left, right, ti):
-	# если справа 'обернутое' значение
-	# (для того чтобы в C вернуть массив из функции
-	# его нужно 'обернуть' в структуру)
+
+def do_assign_array(left, right, ti):
+
+	# array = function()
 	if right.isValueCall():
-		xx = doo_call(right.func, right.args + [Initializer(Id("sret"), left)])
-		out(str_cvalue(xx))
-		out(";")
-		return
-
-#		fx = do_cvalue(right.func)
-#		args = []
-#		for arg in right.args:
-#			a = do_cvalue(arg.value)
-#			args.append(a)
-#		args.append(do_cvalue(left))  # + last arg - array
-#		cv = CValueCall(fx, args)
-#		out(str_cvalue(cv))
-#		return
+		return CStmtValueExpr(doo_call(right.func, right.args + [Initializer(Id("sret"), left)]))
 
 	rv = get_root_value(right)
 	if rv.isValueZero():
-		memzero(left)
-		out(";")
-		return
+		return do_memzero(left)
+
+	#warning("LWANFDLMWDKLMAWLKMDELKAMWDLMAWLMDLKAMWLKDMALKWMDLAMWlDMLAKWMDLKAWMlKDMAWLKMDLKMAWLDKMWAlMKWDL", ti)
 
 	if right.isValueCons():
 		# Если справа приведенный к левому массив (более короткий? Generic)
 		right = get_root_value(right)
 
-	sleft = str_value_as_ptr(left)
-	sright = str_value_as_ptr(right)
+	cleft = cvalue_as_ptr(left)
+	cright = cvalue_as_ptr(right)
 
 	slen = None
 	if left.isValueVar() or left.isValueConst():
-		slen = str_array_len(left)
+		slen = do_array_len(left)
 	else:
-		slen = str_value(left.type.volume)
+		slen = do_cvalue(left.type.volume)
 
 	l_root = get_root_value(left)
 	r_root = get_root_value(right)
 
 	#if Type.eq(l_root.type, r_root.type):
 	if r_root.type.is_string():
-		assign_by_memcopy(left, right)
-		out(";")
-		return
+		return assign_by_memcopy(left, right)
 
 	if l_root.type.of.size == r_root.type.of.size:
-		assign_by_memcopy(left, right)
-		out(";")
-		return
+		return assign_by_memcopy(left, right)
 
-#	if right.isValueConst():
-#		out("/*CONST*/")
-#		assign_by_memcopy(left, right)
-#		return
-
-	out("ARRCPY(%s, %s, %s);" % (sleft, sright, slen))
-	return
+	return CStmtValueExpr(CValueCall(CValueNamed("ARRCPY"), [cleft, cright, slen]))
 
 
 
@@ -1490,20 +1467,23 @@ def do_cstmt_value_expr(x):
 
 
 def do_cstmt_assign(x):
+	if x.left.type.is_array():
+		return do_assign_array(x.left, x.right, x.ti)
+
 	return CStmtValueAssign(do_cvalue(x.left), do_cvalue(x.right))
+
+
 
 
 def do_cstmt_return(x):
 	global cfunc
 
 	if cfunc.type.to.is_closed_array():
-		#memcpy = CValueNamed("memcpy")
-#		out("memcpy(_sret_, ")
-#		out(str_value_as_ptr(x.value))
-#		out(", sizeof(")
-#		out(str_type(x.value.type))
-#		out("));")
-		return None
+		return CStmtValueExpr(
+			CValueCall(
+				CValueNamed("memcpy"), [CValueNamed("_sret_"), cvalue_as_ptr(x.value), CValueSizeofType(do_ctype(x.value.type))]
+			)
+		)
 
 	cretval = None
 	if x.value != None and not x.value.type.is_unit():
@@ -1631,7 +1611,7 @@ def do_def_func(x):
 	global cfunc
 	cfunc = func
 
-	out(str_gcc_attributes(x.annotations))
+	#out(str_gcc_attributes(x.annotations))
 
 	storage_class = ''
 	if x.hasAttribute2('extern'):
@@ -2317,6 +2297,57 @@ def cons_vla_from_literal_array(x):
 	return False
 
 
+
+def cvalue_as_ptr(x):
+	t = x.type
+	root = get_root_value(x)
+
+	cv = None
+
+	#root.type.is_str() or
+	if root.type.is_string():
+		return CValueRef(do_cvalue(root))
+
+	if root.isValueImmediate():
+		if x.type.is_aggregate() or value_is_generic_immediate_const(root):
+			# generic immediate const is just a macro!
+			vs = do_cvalue(root)
+			ts = do_ctype(x.type)
+			#return "&((%s)%s)" % (ts, vs)
+			return CValueRef(CValueCast(ts, vs))
+
+	if x.isValueCons():
+		# for *s == "Hi!"
+		# string literal will be implicitly casted to StrX
+		# and for getting pointer to this string
+		# we need to print just string literal,
+		# because in C string literal is pointer to c-string
+		if x.value.type.is_string():
+			return do_cvalue(x.value)
+
+
+	if root.isValueDeref():
+		return do_cvalue(root.value)
+
+	if root.isValueLiteral():
+		if root.type.is_string():
+			return do_cvalue(root)
+
+
+	###
+
+	cv = do_cvalue(root)
+	cv = CValueRef(cv)
+
+	if root.isValueSlice():
+		ptr2slice = TypePointer(x.type)
+		#sstr += "(" + str_type(ptr2slice) + ")"
+		cv = CValueCast(do_type(ptr2slice), cv)
+
+	return cv
+
+
+
 # получает значение, печатает указатель на его корневое значение
 def str_value_as_ptr(x):
 	sstr = ''
@@ -2381,19 +2412,27 @@ def str_value_as_ptr(x):
 
 
 
-def assign_by_memcopy(left, right):
-	rv = get_root_value(right)
-	if rv.isValueZero():
-		memzero(left)
-		return
 
-	out("memcpy(")
-	out(str_value_as_ptr(left))
-	out(", ")
-	out(str_value_as_ptr(right))
-	out(", sizeof(")
-	out(str_type(left.type))
-	out("));")
+def assign_by_memcopy(left, right):
+	# TODO: improve it
+	if get_root_value(right).isValueZero():
+		return do_memzero(left)
+
+	return CStmtValueExpr(
+		CValueCall(
+			CValueNamed("memcpy"), [cvalue_as_ptr(left), cvalue_as_ptr(right), CValueSizeofType(do_ctype(left.type))]
+		)
+	)
+
+
+def do_memzero(value):
+	return CStmtValueExpr(
+		CValueCall(
+			CValueNamed("memset"), [
+				cvalue_as_ptr(value), CValueInteger(0), CValueSizeofType(do_ctype(value.type))
+			]
+		)
+	)
 
 
 def memzero(value):
