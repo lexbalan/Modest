@@ -82,6 +82,7 @@ public func main () -> Int {
 	a % 2
 	foo(1, 2)
 	foo(a + 1, b - c)
+
 	let kk = 1 + 2 - 3 * 4
 	let pp = 3.1415
 
@@ -108,6 +109,18 @@ public func main () -> Int {
 		-a
 		++a
 		--a
+	}
+
+	while 1 > 0 {
+		let u = 129
+	}
+
+	if 1 < 2 {
+
+	} else if 2 > 3 {
+
+	} else {
+
 	}
 
 	true or false

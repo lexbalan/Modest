@@ -128,6 +128,13 @@ int main(void){
 		a = a + 1;
 		a = a - 1;
 	}
+	while (1 > 0){
+		const int8_t u = 129;
+	}
+	if (1 < 2){
+	} else if (2 > 3){
+	} else {
+	}
 	true || false;
 	const double pi = 3.1415;
 	float f;

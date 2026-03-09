@@ -1045,7 +1045,7 @@ class CStmtIf(CStmt):
 		assert(isinstance(value_cond, CValue))
 		assert(isinstance(block_then, CStmtBlock))
 		if block_else:
-			assert(isinstance(block_else, CStmtBlock))
+			assert((isinstance(block_else, CStmtBlock) or isinstance(block_else, CStmtIf)))
 		super().__init__()
 		self.value_cond = value_cond
 		self.block_then = block_then
@@ -1056,7 +1056,7 @@ class CStmtIf(CStmt):
 		sstr += str(self.block_then)
 		if self.block_else != None:
 			sstr += ' else '
-			sstr += str(self.block_then)
+			sstr += str(self.block_else)
 		return sstr
 
 
@@ -1067,6 +1067,11 @@ class CStmtWhile(CStmt):
 		super().__init__()
 		self.value_cond = value_cond
 		self.block = block
+
+	def __str__(self):
+		sstr = "while (%s)" % str_cvalue(self.value_cond)
+		sstr += str(self.block)
+		return sstr
 
 
 class CStmtReturn(CStmt):

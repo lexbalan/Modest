@@ -1524,7 +1524,7 @@ def do_cstmt_if(x):
 
 def do_cstmt_while(x):
 	ccond = do_cvalue(x.cond)
-	cblock = do_cstmt(x.block)
+	cblock = do_cstmt(x.stmt)
 	return CStmtWhile(ccond, cblock)
 
 
