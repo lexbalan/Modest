@@ -956,7 +956,7 @@ def do_cvalue_index(x, ctx):
 	lx = do_cvalue(left)
 	index = do_cvalue(x.index)
 
-	"""
+
 	if left.is_global_flag and left.isValueConst(): #left.type.is_generic_array():
 		ts = do_ctype(left.type)
 		vs = do_cvalue(left, ctx=ctx)
@@ -967,7 +967,7 @@ def do_cvalue_index(x, ctx):
 		vs = do_cvalue(left, ctx=ctx)
 		#left_str += '((%s)%s)' % (ts, vs)
 		lx = CValueCast(ts, vs)
-	"""
+
 	#else:
 	#	left_str += str_value(left, ctx=ctx)
 
@@ -2342,7 +2342,7 @@ def cvalue_as_ptr(x):
 	if root.isValueSlice():
 		ptr2slice = TypePointer(x.type)
 		#sstr += "(" + str_type(ptr2slice) + ")"
-		cv = CValueCast(do_type(ptr2slice), cv)
+		cv = CValueCast(do_ctype(ptr2slice), cv)
 
 	return cv
 

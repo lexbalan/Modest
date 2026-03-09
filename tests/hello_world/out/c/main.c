@@ -75,6 +75,10 @@ static void farr(int32_t (*_sret_)[3]){
 }
 
 
+static void facc(int32_t (*_a)[3]){
+}
+
+
 int main(void){
 	const int8_t c00 = 10;
 	const char xc1 = 'A';
@@ -101,6 +105,11 @@ int main(void){
 	farr(&arr2);
 	memset(&arr2, 0, sizeof(int32_t [3]));
 	memcpy(&arr2, &arr, sizeof(int32_t [3]));
+	facc(&arr2);
+	struct point rec = /*mark=CR5*/(struct point){.x = 0, .y = 0};
+	struct point rec2;
+	rec2 = /*mark=CR4*/(struct point){0};
+	rec2 = rec;
 	LENGTHOF(arr);
 	printf("Hello World!\n");
 	int32_t a;

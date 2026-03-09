@@ -41,6 +41,10 @@ func farr () -> [3]Int32 {
 }
 
 
+func facc (a: [3]Int32) -> {} {
+	// a[0] = 4  //TODO: Now it not works properly!
+}
+
 public func main () -> Int {
 	// constants
 	let c00 = 10
@@ -78,6 +82,13 @@ public func main () -> Int {
 	arr2 = farr()
 	arr2 = []
 	arr2 = arr
+	facc(arr2)
+	//facc(farr())  // TODO: not works properly
+
+	var rec = Point {x=0, y=0}
+	var rec2 : Point
+	rec2 = {}
+	rec2 = rec
 
 	lengthof(arr)
 
