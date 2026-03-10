@@ -45,6 +45,7 @@ func facc (a: [3]Int32) -> {} {
 	//a[0] = 4  //TODO: error - assign to constant (!)
 }
 
+
 public func main () -> Int {
 	// constants
 	let c00 = 10
@@ -78,7 +79,9 @@ public func main () -> Int {
 
 
 	var arr = [3]Int32 [1, 2, 3]
-	var arr2: [3]Int32
+	var arr2 = arr // !
+	let arr4 = arr // !
+	var arr3: [3]Int32
 	arr2 = farr()
 	arr2 = []
 	arr2 = arr

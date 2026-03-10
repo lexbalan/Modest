@@ -891,7 +891,7 @@ def str_cstmt(x):
 	#if x.comment != None:
 	#	sstr += str_nl_indent(x.comment.nl)
 	#	print_comment(x.comment)
-	sstr += str_nl_indent(x.nl)
+	#sstr += str_nl_indent(x.nl)
 	sstr += str(x)
 	return sstr
 
@@ -941,9 +941,11 @@ class CStmtValueExpr(CStmt):
 		assert(isinstance(value, CValue))
 		super().__init__()
 		self.value = value
+		self.nl = 1
 
 	def __str__(self):
-		return "%s;" % str_cvalue(self.value)
+		sstr = str_nl_indent(self.nl)
+		return sstr + str_cvalue(self.value) + ';'
 
 
 class CStmtValueAssign(CStmt):
@@ -955,7 +957,8 @@ class CStmtValueAssign(CStmt):
 		self.rvalue = rvalue
 
 	def __str__(self):
-		return "%s = %s;" % (str_cvalue(self.lvalue), str_cvalue(self.rvalue))
+		sstr = str_nl_indent(self.nl)
+		return sstr + "%s = %s;" % (str_cvalue(self.lvalue), str_cvalue(self.rvalue))
 
 
 
@@ -967,7 +970,7 @@ class CStmtDeclType(CStmt):
 		self.annotations = annotations
 
 	def __str__(self):
-		sstr = "/* do_decl_type_record */\n"
+		sstr = str_nl_indent(self.nl)
 		sstr += str_gcc_attributes(self.annotations)
 		sstr += str_ctype(self.type) + ';'
 		return sstr
@@ -983,7 +986,7 @@ class CStmtDefType(CStmt):
 		self.annotations = annotations
 
 	def __str__(self):
-		sstr = ''
+		sstr = str_nl_indent(self.nl)
 		sstr += str_gcc_attributes(self.annotations)
 		xv = CStmtDefVar(self.id_str, self.type)
 		sstr += 'typedef %s' % str(xv)
@@ -1004,7 +1007,7 @@ class CStmtDefVar(CStmt):
 		self.annotations = annotations
 
 	def __str__(self):
-		sstr = ''
+		sstr = str_nl_indent(self.nl)
 		sstr += str_gcc_attributes(self.annotations)
 		if self.storage not in (None, ''):
 			sstr += self.storage + ' '
@@ -1028,9 +1031,10 @@ class CStmtDefFunc(CStmt):
 		self.storage = storage_class
 		self.block = block
 		self.annotations = annotations
+		self.nl = 2
 
 	def __str__(self):
-		sstr = ''
+		sstr = str_nl_indent(self.nl)
 		sstr += str_gcc_attributes(self.annotations)
 		if self.storage not in (None, ''):
 			sstr += self.storage + ' '
@@ -1052,7 +1056,8 @@ class CStmtIf(CStmt):
 		self.block_else = block_else
 
 	def __str__(self):
-		sstr = "if (%s)" % str_cvalue(self.value_cond)
+		sstr = str_nl_indent(self.nl)
+		sstr += "if (%s)" % str_cvalue(self.value_cond)
 		sstr += str(self.block_then)
 		if self.block_else != None:
 			sstr += ' else '
@@ -1069,7 +1074,8 @@ class CStmtWhile(CStmt):
 		self.block = block
 
 	def __str__(self):
-		sstr = "while (%s)" % str_cvalue(self.value_cond)
+		sstr = str_nl_indent(self.nl)
+		sstr += "while (%s)" % str_cvalue(self.value_cond)
 		sstr += str(self.block)
 		return sstr
 
@@ -1082,9 +1088,11 @@ class CStmtReturn(CStmt):
 		self.value_retval = value_retval
 
 	def __str__(self):
+		sstr = str_nl_indent(self.nl)
+		sstr += 'return'
 		if self.value_retval != None:
-			return "return %s;" % str_cvalue(self.value_retval)
-		return "return;"
+			sstr += ' ' + str_cvalue(self.value_retval)
+		return sstr + ";"
 
 
 class CStmtBreak(CStmt):
@@ -1093,7 +1101,9 @@ class CStmtBreak(CStmt):
 		pass
 
 	def __str__(self):
-		return "break;"
+		sstr = str_nl_indent(self.nl)
+		sstr += "break;"
+		return sstr
 
 
 class CStmtContinue(CStmt):
@@ -1102,7 +1112,9 @@ class CStmtContinue(CStmt):
 		pass
 
 	def __str__(self):
-		return "continue;"
+		sstr = str_nl_indent(self.nl)
+		sstr += "continue;"
+		return sstr
 
 
 class CMacrodefinition():
@@ -1116,9 +1128,11 @@ class CMacrodefinition():
 		self.text = text
 
 	def __str__(self):
+		sstr = str_nl_indent(self.nl)
+		sstr += "#define %s" % (self.id)
 		if self.text:
-			return "#define %s %s" % (self.id, self.text)
-		return "#define %s %s" % (self.id)
+			sstr += ' ' + self.text
+		return sstr
 
 
 class CInclude():
@@ -1131,6 +1145,7 @@ class CInclude():
 		self.isglobal = isglobal
 
 	def __str__(self):
+		#sstr = str_nl_indent(self.nl)
 		if self.isglobal:
 			return "\n#include <%s>" % self.text
 		return "\n#include \"%s\"" % self.text

@@ -31,56 +31,41 @@ typedef uint32_t char32_t;
 #include <stdlib.h>
 #include <stdarg.h>
 
-
-typedef int32_t MyInt;
-struct point {
+typedef
+int32_t MyInt;struct point {
 	uint64_t x;
 	uint64_t y;
-};
-
-typedef struct open_point OpenPoint;
-struct open_point {
+}
+typedef
+struct open_point OpenPoint;struct open_point {
 	uint64_t x;
 	uint64_t y;
-};
-
-
-/* do_decl_type_record */
+}
 struct list_header;
-typedef struct list_header ListHeader;
-
-struct list_header {
+typedef
+struct list_header ListHeader;struct list_header {
 	ListHeader *next;
 	ListHeader *prev;
-};
-
+}
 
 static void foo(int32_t a, int64_t b){
 	return;
 }
-
 #define C 15
-
-//var a: Int32 = 5
 static uint32_t k[3] = /*mark=CA2*/{0x1, 0x2, 0x3};
-
 static struct point p0 = /*mark=CR5*/(struct point){
 	.x = 1,
 	.y = 2
 };
 
-
 static void farr(int32_t (*_sret_)[3]){
 	memcpy(_sret_, &(int32_t [3]){1, 2, 3}, sizeof(int32_t [3]));
 }
 
-
 static void facc(int32_t (*_a)[3]){
 	int32_t a[3];
 	memcpy(a, _a, sizeof(int32_t [3]));
-	a[0] = 4;
 }
-
 
 int main(void){
 	const int8_t c00 = 10;
@@ -105,6 +90,10 @@ int main(void){
 	char32_t *s3 = U"B";
 	int32_t arr[3] = /*mark=CA2*/{1, 2, 3};
 	int32_t arr2[3];
+	memcpy(&arr2, &arr, sizeof(int32_t [3]));
+	const int32_t arr4[3];
+	memcpy(&arr4, &arr, sizeof(const int32_t [3]));
+	int32_t arr3[3];
 	farr(&arr2);
 	memset(&arr2, 0, sizeof(int32_t [3]));
 	memcpy(&arr2, &arr, sizeof(int32_t [3]));
@@ -162,7 +151,6 @@ int main(void){
 	f = pi;
 	return 0;
 }
-
 
 void main_print(char *form, ...){
 	va_list va;

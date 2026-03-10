@@ -1458,7 +1458,11 @@ def do_assign_array(left, right, ti):
 def do_cstmt_block(x):
 	cstmts = []
 	for stmt in x.stmts:
-		cstmts.append(do_cstmt(stmt))
+		xx = do_cstmt(stmt)
+		if isinstance(xx, tuple):
+			cstmts.extend(xx)
+		else:
+			cstmts.append(xx)
 	return CStmtBlock(cstmts)
 
 
@@ -1495,16 +1499,17 @@ def do_cstmt_return(x):
 
 def do_cstmt_if(x):
 	ccond = do_cvalue(x.cond)
-	cthen = do_cstmt(x.then)
+	cthen = do_cstmt_block(x.then)
 	cels = None
 	if x.els:
 		cels = do_cstmt(x.els)
+		cels.nl = 0
 	return CStmtIf(ccond, cthen, cels)
 
 
 def do_cstmt_while(x):
 	ccond = do_cvalue(x.cond)
-	cblock = do_cstmt(x.stmt)
+	cblock = do_cstmt_block(x.stmt)
 	return CStmtWhile(ccond, cblock)
 
 
@@ -1522,13 +1527,11 @@ def do_cstmt_var(x):
 		storage_class = 'static'
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class)
+
+	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
+		return (dv, do_assign_array(var_value, init_value, x.ti))
+
 	return dv
-
-#	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
-#		nl_indent()
-#		assign_array(var_value, init_value, x.ti)
-
-	return
 
 
 def do_cstmt_const(x):
@@ -1554,9 +1557,8 @@ def do_cstmt_const(x):
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
-#	if init_value.type.is_array() and init_value.isValueRuntime():
-#		nl_indent()
-#		assign_array(const_value, init_value, x.ti)
+	if init_value.type.is_array() and init_value.isValueRuntime():
+		return (dv, do_assign_array(const_value, init_value, x.ti))
 
 	return dv
 
@@ -1599,7 +1601,7 @@ def do_decl_func(x):
 			storage_class = 'inline'
 
 	dv = CStmtDefVar(get_id_str(func), do_ctype(func.type), storage_class=storage_class, annotations=x.annotations)
-	return dv
+	return (dv,)
 	#out(str(dv))
 
 
@@ -1661,10 +1663,11 @@ def do_def_func(x):
 	dv = CStmtDefFunc(get_id_str(func), do_ctype(func.type), cblock, storage_class=storage_class, annotations=x.annotations)
 
 	cfunc = None
-	return dv
+	return (dv,)
 
 
 ######## -----------
+"""
 	out(str_field(func.type, get_id_str(func)))
 
 	if x.stmt == None:
@@ -1713,7 +1716,7 @@ def do_def_func(x):
 		declared.append(func.id.str)
 
 	cfunc = None
-
+"""
 
 
 
@@ -1728,7 +1731,8 @@ def do_def_type(x):
 	if orig_type.is_record() and not is_type_named(orig_type):
 		return do_def_type_record(x)
 
-	return CStmtDefType(id_str, do_ctype(orig_type))
+	dt = CStmtDefType(id_str, do_ctype(orig_type))
+	return (dt,)
 
 	#out('typedef ' + str_field(orig_type, id_str) + ';')
 
@@ -1737,32 +1741,29 @@ def do_def_type_record(x):
 	t = x.type
 	id_str = get_type_id_str(t)
 
-	sstr = ''
-	#defs = []
+	defs = []
 
 	# Если структура open & не задекларирована ранее - печатаем для нее typedef
 	if (not id_str in declared) and t.is_open_record:
 		tag = get_record_tag(t)
 		isa = 'struct' if not t.layout == 'union' else 'union'
 		kisa = isa + ' ' + tag
-		sstr += str(CStmtDefType(get_type_id_str(t), CTypeNamed(kisa))) + '\n'
-		#defs.append(CStmtDefType(get_type_id_str(t), CTypeNamed(kisa)))
+		dt = CStmtDefType(get_type_id_str(t), CTypeNamed(kisa))
+		defs.append(dt)
 
 	dv = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
-	#defs.append(dv)
-	sstr += str(dv) + ';'
-	return sstr
-	#return defs
+	defs.append(dv)
+	return defs
 
 
 
-# Указатель, массив и функция образуют пиздецовый заговор
-def print_variable(id_str, t, init_value=None, prefix='', ctx=[]):
-	assert (t != None)
-	out(str_field(t, id_str=(prefix + id_str), ctx=ctx))
-	if init_value != None:
-		out(" = ")
-		print_value(init_value, ctx=ctx)
+## Указатель, массив и функция образуют пиздецовый заговор
+#def print_variable(id_str, t, init_value=None, prefix='', ctx=[]):
+#	assert (t != None)
+#	out(str_field(t, id_str=(prefix + id_str), ctx=ctx))
+#	if init_value != None:
+#		out(" = ")
+#		print_value(init_value, ctx=ctx)
 
 
 
@@ -1786,7 +1787,7 @@ def do_def_var(x, isdecl=False, is_extern=False):
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, annotations=x.annotations)
 	#out(str(dv))
-	return dv
+	return (dv,)
 
 
 
@@ -1795,7 +1796,7 @@ def do_def_const(x):
 	macro = CMacrodefinition(id_str, str_macro_value(x.init_value))
 	#out(str(macro))
 	module_undef_list.append(id_str)
-	return macro
+	return (macro,)
 
 
 already_included = []
@@ -1859,27 +1860,35 @@ def is_private(x):
 
 def print_deps(deps):
 	global declared
+
+	xdeps = []
+
 	if len(deps) == 0:
-		return
+		return xdeps
 
 	# печатаем декларации для типов от которых зависит этот тип
 	for dep in deps:
-		if dep.id == None:
-			error("undefined", dep.ti)
-			return
+#		if dep.id == None:
+#			error("undefined", dep.ti)
+#			return xdeps
 
-		out("\n")
 		id_str = get_id_str(dep)
 		if not id_str in declared:
 			declared.append(id_str)
 
 			if isinstance(dep, Value):
-				out(str(do_decl_func(dep.definition)))
+				xx = do_decl_func(dep.definition)
+				xdeps.append(xx)
+
 			elif isinstance(dep, Type):
 				if dep.is_record():
-					do_decl_type_record(dep.definition)
+					xx = do_decl_type_record(dep.definition)
+					if isinstance(xx, tuple):
+						xdeps.extend(xx)
+					else:
+						xdeps.append(xx)
 
-	out("\n")
+	return xdeps
 
 
 def do_decl_type_record(x):
@@ -1887,10 +1896,11 @@ def do_decl_type_record(x):
 	tag = get_record_tag(t)
 	isa = 'struct' if not t.layout == 'union' else 'union'
 	kisa = isa + ' ' + tag
-	out(str(CStmtDeclType(CTypeNamed(kisa))))
+	dt = CStmtDeclType(CTypeNamed(kisa))
 	if t.is_open_record:
 		df = CStmtDefType(get_type_id_str(t), CTypeNamed(kisa))
-		out('\n' + str(df))
+		return (dt, df)
+	return dt
 
 
 
@@ -1987,6 +1997,8 @@ def print_header(module, outname):
 
 	print_helpers(module)
 
+	xdefs = []
+
 	for x in defs:
 		if is_private(x):
 			continue
@@ -2001,26 +2013,30 @@ def print_header(module, outname):
 
 		if x.is_stmt_def_func():
 			#nnl(x.nl)
-			nnl(1)
+			#nnl(1)
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
 				#out("static ")
-				out(str_cstmt(do_def_func(x)))
+				xdefs.extend(do_def_func(x))
 				continue
-			out(str(do_decl_func(x)))
+			xdefs.extend(do_decl_func(x))
 		elif x.is_stmt_def_var():
-			nnl(x.nl)
-			out(str(do_def_var(x, as_extern=True)))
+			#nnl(x.nl)
+			xdefs.extend(do_def_var(x, as_extern=True))
 		elif x.is_stmt_def_type():
-			nnl(x.nl)
-			print_deps(x.deps)
-			out(str(do_def_type(x)))
+			#nnl(x.nl)
+			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_def_type(x))
 		elif x.is_stmt_def_const():
-			nnl(x.nl)
-			print_deps(x.deps)
-			out(str(do_def_const(x)))
+			#nnl(x.nl)
+			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_def_const(x))
 		#elif x.is_stmt_comment():
 		#	nnl(x.nl)
 		#	print_comment(x)
+
+
+	for xd in xdefs:
+		out(str(xd))
 
 	newline(2)
 	out("#endif /* %s */" % guardsymbol)
@@ -2237,6 +2253,8 @@ def print_cfile(module, _outname):
 			out(str_type_record(anon_rec, tag=anon_rec.c_anon_id))
 			out(";")
 
+	xdefs = []
+
 	for x in defs:
 		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
@@ -2245,37 +2263,46 @@ def print_cfile(module, _outname):
 			continue
 
 		if x.comment != None:
-			out(str_newline(n=x.comment.nl))
-			print_comment(x.comment)
+			#out(str_newline(n=x.comment.nl))
+			#print_comment(x.comment)
+			pass
 
 		if x.is_stmt_def_const() and is_private(x):
-			nnl(x.nl)
-			print_deps(x.deps)
-			out(str(do_def_const(x)))
+			#nnl(x.nl)
+			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_def_const(x))
+
 		elif x.is_stmt_def_type() and is_private(x):
-			nnl(x.nl)
-#			print_deps(x.deps)
-			out(str(do_def_type(x)))
+			#nnl(x.nl)
+			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_def_type(x))
 
 		elif x.is_stmt_def_var():
-			nnl(x.nl)
-			print_deps(x.deps)
-			out(str(do_def_var(x)))
+			#nnl(x.nl)
+			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_def_var(x))
+
 		elif x.is_stmt_def_func():
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
 				continue
-			nnl(x.nl)
-			print_deps(x.deps)
-			if x.deps != []:
-				newline()
-			out(str_cstmt(do_def_func(x)))
+			#nnl(x.nl)
+			xdefs.extend(print_deps(x.deps))
+			#if x.deps != []:
+			#	newline()
+			xdefs.extend(do_def_func(x))
 		elif x.is_stmt_comment():
-			nnl(x.nl)
-			if x.nl == 0:
-				out("  ")
-			print_comment(x)
+			#nnl(x.nl)
+			#if x.nl == 0:
+			#	out("  ")
+			#print_comment(x)
+			pass
 		elif x.is_stmt_directive():
-			print_directive(x)
+#			print_directive(x)
+			pass
+
+
+	for xd in xdefs:
+		out(str(xd))
 
 	#if len(module_undef_list) > 0:
 	#	newline(1)
