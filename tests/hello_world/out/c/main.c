@@ -31,22 +31,22 @@ typedef uint32_t char32_t;
 #include <stdlib.h>
 #include <stdarg.h>
 
-typedef
-int32_t MyInt;struct point {
+typedef int32_t MyInt;
+struct point {
 	uint64_t x;
 	uint64_t y;
-}
-typedef
-struct open_point OpenPoint;struct open_point {
+};
+typedef struct open_point OpenPoint;
+struct open_point {
 	uint64_t x;
 	uint64_t y;
-}
+};
 struct list_header;
-typedef
-struct list_header ListHeader;struct list_header {
+typedef struct list_header ListHeader;
+struct list_header {
 	ListHeader *next;
 	ListHeader *prev;
-}
+};
 
 static void foo(int32_t a, int64_t b){
 	return;

@@ -1751,7 +1751,9 @@ def do_def_type_record(x):
 		dt = CStmtDefType(get_type_id_str(t), CTypeNamed(kisa))
 		defs.append(dt)
 
-	dv = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
+	dt = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
+
+	dv = CStmtDefVar('', dt, storage_class='', annotations=x.annotations)
 	defs.append(dv)
 	return defs
 

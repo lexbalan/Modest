@@ -988,9 +988,9 @@ class CStmtDefType(CStmt):
 	def __str__(self):
 		sstr = str_nl_indent(self.nl)
 		sstr += str_gcc_attributes(self.annotations)
-		xv = CStmtDefVar(self.id_str, self.type)
-		sstr += 'typedef %s' % str(xv)
+		sstr += 'typedef %s;' % self.type.to_str(text=self.id_str)
 		return sstr
+
 
 
 class CStmtDefVar(CStmt):
