@@ -12,8 +12,8 @@
 
 void fsm_init(struct fsm_fsm *self, char *id, struct fsm_state_desc *initState, void *payload) {
 	self->id = id;
-	self->state = /*CR5*/(fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
-	self->next_state = /*CR5*/(fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
+	self->state = (fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
+	self->next_state = (fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
 	self->payload = payload;
 	self->timer = 0;
 	self->timer_expired = false;
@@ -49,7 +49,7 @@ void fsm_tick(struct fsm_fsm *self) {
 fsm_ComplexState fsm_cmdSwitchState(struct fsm_fsm *self, struct fsm_state_desc *state) {
 	self->timer = 0;
 	self->timer_expired = false;
-	return /*CR5*/(fsm_ComplexState){.state = state, .stage = (fsm_StageId)0};
+	return (fsm_ComplexState){.state = state, .stage = (fsm_StageId)0};
 }
 
 fsm_ComplexState fsm_cmdSwitchStage(struct fsm_fsm *self, uint16_t stage) {

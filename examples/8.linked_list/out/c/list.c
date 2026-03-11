@@ -15,7 +15,7 @@ struct list_list *list_create(void) {
 	if (list == NULL) {
 		return NULL;
 	}
-	*list = /*CR4*/(struct list_list){0};
+	*list = (struct list_list){0};
 	return list;
 }
 
@@ -55,7 +55,7 @@ struct list_node *list_node_create(void) {
 	if (node == NULL) {
 		return NULL;
 	}
-	*node = /*CR4*/(struct list_node){0};
+	*node = (struct list_node){0};
 	return node;
 }
 

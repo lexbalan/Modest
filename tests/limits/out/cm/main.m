@@ -407,8 +407,6 @@ public func main () -> Int32 {
 	success = success and result
 	result = testInt64Static()
 	success = success and result
-	result = testFloat32Static()
-	success = success and result
 
 
 	printf("test ")

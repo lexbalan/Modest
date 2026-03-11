@@ -19,9 +19,9 @@ static void writeExample(void) {
 		printf("error: cannot create file '%s'", FILENAME);
 		return;
 	}
-	struct chunk chunk = /*CR5*/(struct chunk){
-		.id = /*CA1*/"id",
-		.data = /*CA1*/"data"
+	struct chunk chunk = (struct chunk){
+		.id = "id",
+		.data = "data"
 };
 	fwrite((void *)&chunk, sizeof(struct chunk), 1, fp);
 	fclose(fp);

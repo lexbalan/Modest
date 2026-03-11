@@ -145,7 +145,7 @@ static void final(struct context *ctx, sha256_Hash *outHash) {
 }
 
 void sha256_hash(uint8_t (*msg)[], uint32_t msgLen, sha256_Hash *outHash) {
-	struct context ctx = /*CR4*/(struct context){0};
+	struct context ctx = (struct context){0};
 	contextInit(&ctx);
 	update(&ctx, msg, msgLen);
 	final(&ctx, outHash);

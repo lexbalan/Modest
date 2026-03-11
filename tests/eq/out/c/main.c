@@ -42,10 +42,10 @@ bool main_testRecordsEq(void) {
 }
 #define ARR123 {1, 2, 3}
 #define ARR321 {3, 2, 1}
-#define CARR123 /*CA2*/{1, 2, 3}
-#define CARR321 /*CA2*/{3, 2, 1}
-static int32_t varr123[3] = /*CA2*/{1, 2, 3};
-static int32_t varr321[3] = /*CA2*/{3, 2, 1};
+#define CARR123 {1, 2, 3}
+#define CARR321 {3, 2, 1}
+static int32_t varr123[3] = {1, 2, 3};
+static int32_t varr321[3] = {3, 2, 1};
 
 bool main_testArraysEq(void) {
 	if (memcmp(&(const int8_t [3])ARR123, &(const int8_t [3])ARR123, sizeof(const int8_t [3])) != 0) {

@@ -399,28 +399,13 @@ def initializers_are_different(a, b):
 
 
 
-def cstr(value, sz):
-	if sz > 8:
-		return "_STR%d(%s)" % (sz, str_value(value))
-	return str_value(value)
+#def cstr(value, sz):
+#	if sz > 8:
+#		return "_STR%d(%s)" % (sz, str_value(value))
+#	return str_value(value)
+#
 
 
-
-# Дополнительная чисто сишная надстройка:
-# если у нас тут указатель на массив - приводим к указателю на его элемент
-def incast(type, value, ctx=[]):
-#	if value.type.is_pointer_to_closed_array():
-#		# Это аргумент с типом указатель на массив
-#		# приведем его по месту к указателю на элемент этого массива
-#		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
-#		if value.isValueRef():
-#			if value.value.isValueIndex() or value.value.isValueSlice():
-#				return "&" + str_value(value.value, ctx)
-#			else:
-#				return str_value(value.value, ctx)
-#				#return "&" + str_value(value.value, ctx) + '[0]'
-
-	return str_value(value, ctx)
 
 
 def is_the_same_in_c(t0, t1):
@@ -453,42 +438,6 @@ def is_zero_tail(values, i, n):
 			return False
 		i = i + 1
 	return True
-
-
-
-def print_literal_array_items(items, item_type):
-	sstr = ''
-	i = 0
-	n = len(items)
-	while i < n:
-		a = items[i]
-
-		nl = a.nl
-		if nl > 0:
-			sstr += str_nl_indent(nl=nl)
-		else:
-			if i > 0:
-				sstr += " "
-
-		if a.type.is_closed_array():
-			sstr += '{' + print_literal_array_items(a.asset, item_type.of) + '}'
-		else:
-			sstr += str_value(a)
-
-		i = i + 1
-
-		# если это значание - zero, проверим все остальные справа
-		# и если они тоже zero - их можно не печатать (zero tail)
-		# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
-		if a.isValueZero():
-			if is_zero_tail(items, i, n):
-				return sstr
-
-		if i < n:
-			sstr += ','
-
-	return sstr
-
 
 
 
@@ -660,26 +609,24 @@ def do_cvalue_cons_array(x, ctx):
 				if not to_type.is_generic():
 					width = to_type.of.width
 				cv = do_cvalue_literal_string(x.value.asset, width)
-				cv.mark = 'CA1'
+				#cv.mark = 'CA1'
 				return cv
 
 			if x.asset:
 				cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
-				cv.mark = 'CA2'
+				#cv.mark = 'CA2'
 				return cv
 
 		if from_type.is_string():
-			#sstr += '{' + print_literal_array_items(x.asset, to_type.of) + '}'
 			width = 0
 			if not to_type.is_generic():
 				width = to_type.of.width
-			#print("width = " + str(width))
 			cv = do_cvalue_literal_string(x.value.asset, width)
-			cv.mark = 'CA3'
+			#cv.mark = 'CA3'
 			return cv
 		else:
 			cv = do_cvalue(value, ctx=ctx)
-			#cv.mark = '+'
+			#cv.mark = 'CA4'
 			return cv
 
 	# for:
@@ -695,7 +642,7 @@ def do_cvalue_cons_array(x, ctx):
 #		cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
 #	else:
 	cv = do_cvalue_cast(to_type, x.value, ctx)
-	cv.mark = 'CA4'
+	cv.mark = 'CA5'
 	return cv
 
 
@@ -731,7 +678,7 @@ def do_cvalue_cons_record(x, ctx):
 		# C cannot just cast struct to struct (!)
 		#return str_cast(to_type, value, raw_cast=True, ctx=ctx)
 		cv = do_cvalue_cast(to_type, x.value, ctx)
-		cv.mark = 'CR3'
+		#cv.mark = 'CR3'
 		return cv
 
 	tt = do_ctype(to_type)
@@ -741,14 +688,13 @@ def do_cvalue_cons_record(x, ctx):
 		# То печатаем литерал структуры из нашего asset
 		#return '(' + str_type(to_type) + ')' + str_value_literal_record(x, ctx=ctx)
 		cv = CValueCast(tt, do_cvalue_literal_record(x, ctx=ctx))
-		cv.mark = 'CR4'
+		#cv.mark = 'CR4'
 		return cv
 
 	cv = do_cvalue(value, ctx=ctx)
 	cv = CValueCast(tt, cv)
-	cv.mark = 'CR5'
+	#cv.mark = 'CR5'
 	return cv
-	#return '(' + str_type(to_type) + ')' + str_value(x.value, ctx=ctx)
 
 
 
@@ -849,15 +795,15 @@ def do_cvalue_cons2(x, ctx):
 				if value.type.width <= 32:
 					# TODO: see
 					#return "(" + str_type(type) + ")" + "abs((int)" + str_value(value) + ")"
-					acall = CValueCall(left=CValueNamed("abs"), args=[arg])
+					acall = CValueCall(CValueNamed("abs"), [arg])
 				elif value.type.width <= 64:
 					# TODO: see
 					#return "(" + str_type(type) + ")" + "llabs((long long int)" + str_value(value) + ")"
-					acall = CValueCall(left=CValueNamed("llabs"), args=[arg])
+					acall = CValueCall(CValueNamed("llabs"), [arg])
 				elif value.type.width <= 128:
 					# TODO: see
 					#return "(" + str_type(type) + ")" + "abs128(" + str_value(value) + ")"
-					acall = CValueCall(left=CValueNamed("llabs"), args=[arg])
+					acall = CValueCall(CValueNamed("llabs"), [arg])
 				else:
 					1/0
 					#return "<ABS_TOO_BIG>"
@@ -1083,7 +1029,7 @@ def do_cvalue_lengthof_value(x, ctx):
 #		vs = str_value(value, ctx=ctx)
 #		sstr = '((%s)%s)' % (ts, vs)
 
-	return CValueCall(left=CValueNamed("LENGTHOF"), args=[do_cvalue(x.value)])
+	return CValueCall(CValueNamed("LENGTHOF"), [do_cvalue(x.value)])
 
 
 def do_cvalue_sizeof_value(x, ctx):
@@ -1134,14 +1080,28 @@ def do_cvalue_eq(x, logic, ctx):
 	left = x.left
 	right = x.right
 
+	#if x.isValueImmediate():
+	#	return str_value_literal_bool2(x.asset)
+
 	lx = None
 	rx = None
 	if left.type.is_aggregate():
-		lc = do_cvalue_as_ptr(left)
-		rc = do_cvalue_as_ptr(right)
-		sc = get_cvalue_size_for(left, right, ti=x.ti)
-		lx = CValueCall(CValueNamed("memcmp"), [lc, rc, sc])
+		# сравниваем массивы / записи
+		lx = CValueCall(CValueNamed("memcmp"), [
+			do_cvalue_as_ptr(left),
+			do_cvalue_as_ptr(right),
+			get_cvalue_size_for(left, right, ti=x.ti)
+		])
 		rx = CValueInteger(0)
+
+	elif left.type.is_str() and right.type.is_str():
+		# сравниваем строки (Str8, Str16, Str32)
+		lx = CValueCall(CValueNamed("strcmp"), [
+			do_cvalue_as_ptr(left),
+			do_cvalue_as_ptr(right)
+		])
+		rx = CValueInteger(0)
+
 	else:
 		lx = do_cvalue(left)
 		rx = do_cvalue(right)
@@ -1237,49 +1197,9 @@ def print_value(x, ctx=[]):
 
 
 
-
-def str_value_eq_composite(x, ctx):
-	op = x.op
-	left = x.left
-	right = x.right
-
-	if x.isValueImmediate():
-		return str_value_literal_bool2(x.asset)
-
-	# если сравниваем строки (Str8, Str16, Str32)
-	if left.type.is_str() and right.type.is_str():
-		return eq_str_by_strcmp(left, right, op=op)
-
-	return eq_by_memcmp(left, right, op=op)
-
-
-
-def eq_by_memcmp(left, right, op=HLIR_VALUE_OP_EQ):
-	# не берем все в скобки все тк это eq операция
-	# и ее приоритет не нарушается (!)
-	sstr = 'memcmp('
-	sstr += str_value_as_ptr(left)
-	sstr += ', '
-	sstr += str_value_as_ptr(right)
-	sstr += ", sizeof("
-	common_type = Type.select_common_type(left.type, right.type, ti=None)
-	sstr += str_type(common_type)
-	sstr += ")"
-	if op == HLIR_VALUE_OP_EQ:
-		sstr += ') == 0'
-	else:
-		sstr += ') != 0'
-	return sstr
-
-
-
-
 #
 # Stmt
 #
-
-
-
 
 def str_macro_value(value):
 	# Не берем в скобки литералы, композитные значения и строки
@@ -1671,7 +1591,7 @@ def do_def_func(x):
 
 def do_def_type(x):
 	global declared
-	print_deps(x.deps)
+	do_deps(x.deps)
 
 	id_str = get_type_id_str(x.type)
 	orig_type = x.original_type
@@ -1705,15 +1625,6 @@ def do_def_type_record(x):
 	defs.append(dv)
 	return defs
 
-
-
-## Указатель, массив и функция образуют пиздецовый заговор
-#def print_variable(id_str, t, init_value=None, prefix='', ctx=[]):
-#	assert (t != None)
-#	out(str_field(t, id_str=(prefix + id_str), ctx=ctx))
-#	if init_value != None:
-#		out(" = ")
-#		print_value(init_value, ctx=ctx)
 
 
 
@@ -1807,7 +1718,7 @@ def is_private(x):
 
 
 
-def print_deps(deps):
+def do_deps(deps):
 	global declared
 
 	xdeps = []
@@ -1973,11 +1884,11 @@ def print_header(module, outname):
 			xdefs.extend(do_def_var(x, as_extern=True))
 		elif x.is_stmt_def_type():
 			#nnl(x.nl)
-			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_type(x))
 		elif x.is_stmt_def_const():
 			#nnl(x.nl)
-			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_const(x))
 
 
@@ -2215,24 +2126,24 @@ def print_cfile(module, _outname):
 
 		if x.is_stmt_def_const() and is_private(x):
 			#nnl(x.nl)
-			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_const(x))
 
 		elif x.is_stmt_def_type() and is_private(x):
 			#nnl(x.nl)
-			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_type(x))
 
 		elif x.is_stmt_def_var():
 			#nnl(x.nl)
-			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_var(x))
 
 		elif x.is_stmt_def_func():
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
 				continue
 			#nnl(x.nl)
-			xdefs.extend(print_deps(x.deps))
+			xdefs.extend(do_deps(x.deps))
 			#if x.deps != []:
 			#	newline()
 			xdefs.extend(do_def_func(x))
@@ -2352,67 +2263,67 @@ def do_cvalue_as_ptr(x):
 
 
 
-# получает значение, печатает указатель на его корневое значение
-def str_value_as_ptr(x):
-	sstr = ''
-
-	t = x.type
-	root = get_root_value(x)
-
-	#root.type.is_str() or
-	if root.type.is_string():
-		return "&" + str_value(root)
-
-
-	if root.isValueImmediate():
-		if x.type.is_aggregate() or value_is_generic_immediate_const(root):
-			# generic immediate const is just a macro!
-			vs = str_value(root)
-			ts = str_type(x.type)
-			return "&((%s)%s)" % (ts, vs)
-
-	if x.isValueCons():
-		# for *s == "Hi!"
-		# string literal will be implicitly casted to StrX
-		# and for getting pointer to this string
-		# we need to print just string literal,
-		# because in C string literal is pointer to c-string
-		if x.value.type.is_string():
-			return str_value(x.value)
-
-	if root.isValueSlice():
-		ptr2slice = TypePointer(x.type)
-		sstr += "(" + str_type(ptr2slice) + ")"
-		#sstr += "(" + str_type_pointer(ptr2slice) + ")"
-
-	if root.isValueDeref():
-		return str_value(root.value)
-
-	if root.isValueLiteral():
-		if root.type.is_string():
-			return str_value(root)
-
-	sstr += "&"
-
-	if root.isValueBin() and root.op in ['literal', HLIR_VALUE_OP_ADD]:
-		sstr += '(' + str_type(t) + ')'
-
-	#elif root.isValueLiteral() and (not root.isValueImmediate()):
-	elif root.isValueArray() and (not root.isValueImmediate()):
-		# for non immediate literals  {1, 2, var_a, var_b, ...}
-		sstr += '(' + str_type(t) + ')'
-
-	elif cons_vla_from_literal_array(root):
-		# we need to print:
-		#  &(uint32_t[]){1, 2, 3, 4, 5}
-		# instead of:
-		#  &(uint32_t[len]){1, 2, 3, 4, 5}
-		sstr += '(' + str_type(t) + ')'
-		sstr += str_value(x.value)
-		return sstr
-
-	sstr += str_value(root)
-	return sstr
+## получает значение, печатает указатель на его корневое значение
+#def str_value_as_ptr(x):
+#	sstr = ''
+#
+#	t = x.type
+#	root = get_root_value(x)
+#
+#	#root.type.is_str() or
+#	if root.type.is_string():
+#		return "&" + str_value(root)
+#
+#
+#	if root.isValueImmediate():
+#		if x.type.is_aggregate() or value_is_generic_immediate_const(root):
+#			# generic immediate const is just a macro!
+#			vs = str_value(root)
+#			ts = str_type(x.type)
+#			return "&((%s)%s)" % (ts, vs)
+#
+#	if x.isValueCons():
+#		# for *s == "Hi!"
+#		# string literal will be implicitly casted to StrX
+#		# and for getting pointer to this string
+#		# we need to print just string literal,
+#		# because in C string literal is pointer to c-string
+#		if x.value.type.is_string():
+#			return str_value(x.value)
+#
+#	if root.isValueSlice():
+#		ptr2slice = TypePointer(x.type)
+#		sstr += "(" + str_type(ptr2slice) + ")"
+#		#sstr += "(" + str_type_pointer(ptr2slice) + ")"
+#
+#	if root.isValueDeref():
+#		return str_value(root.value)
+#
+#	if root.isValueLiteral():
+#		if root.type.is_string():
+#			return str_value(root)
+#
+#	sstr += "&"
+#
+#	if root.isValueBin() and root.op in ['literal', HLIR_VALUE_OP_ADD]:
+#		sstr += '(' + str_type(t) + ')'
+#
+#	#elif root.isValueLiteral() and (not root.isValueImmediate()):
+#	elif root.isValueArray() and (not root.isValueImmediate()):
+#		# for non immediate literals  {1, 2, var_a, var_b, ...}
+#		sstr += '(' + str_type(t) + ')'
+#
+#	elif cons_vla_from_literal_array(root):
+#		# we need to print:
+#		#  &(uint32_t[]){1, 2, 3, 4, 5}
+#		# instead of:
+#		#  &(uint32_t[len]){1, 2, 3, 4, 5}
+#		sstr += '(' + str_type(t) + ')'
+#		sstr += str_value(x.value)
+#		return sstr
+#
+#	sstr += str_value(root)
+#	return sstr
 
 
 
@@ -2437,34 +2348,6 @@ def do_memzero(value):
 			]
 		)
 	)
-
-
-def memzero(value):
-	out("memset(")
-	out(str_value_as_ptr(value))
-	out(", 0, sizeof(")
-	out(str_type(value.type))
-	out("))")
-
-
-#def eq_by_memcmp(left, right, op=HLIR_VALUE_OP_EQ):
-#	return eq_by_memcmp(left, right, op=op)
-
-
-def eq_str_by_strcmp(left, right, op=HLIR_VALUE_OP_EQ):
-	# не берем все в скобки все тк это eq операция
-	# и ее приоритет не нарушается (!)
-	sstr = 'strcmp('
-	sstr += str_value_as_ptr(left)
-	sstr += ', '
-	sstr += str_value_as_ptr(right)
-	if op == HLIR_VALUE_OP_EQ:
-		sstr += ') == 0'
-	else:
-		sstr += ') != 0'
-	return sstr
-
-
 
 
 

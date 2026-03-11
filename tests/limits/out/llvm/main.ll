@@ -887,23 +887,17 @@ define %Int32 @main() {
 	%42 = load %Bool, %Bool* %2
 	%43 = and %Bool %41, %42
 	store %Bool %43, %Bool* %3
-	%44 = call %Bool @testFloat32Static()
-	store %Bool %44, %Bool* %2
-	%45 = load %Bool, %Bool* %3
-	%46 = load %Bool, %Bool* %2
-	%47 = and %Bool %45, %46
-	store %Bool %47, %Bool* %3
-	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str51 to [0 x i8]*))
+	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str51 to [0 x i8]*))
 ; if_0
-	%49 = load %Bool, %Bool* %3
-	%50 = xor %Bool %49, 1
-	br %Bool %50 , label %then_0, label %endif_0
+	%45 = load %Bool, %Bool* %3
+	%46 = xor %Bool %45, 1
+	br %Bool %46 , label %then_0, label %endif_0
 then_0:
-	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str52 to [0 x i8]*))
+	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str52 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%53 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str53 to [0 x i8]*))
+	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str53 to [0 x i8]*))
 	ret %Int 0
 }
 

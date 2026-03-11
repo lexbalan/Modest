@@ -16,7 +16,7 @@ struct line {
 	struct point a;
 	struct point b;
 };
-static struct line line = /*CR5*/(struct line){
+static struct line line = (struct line){
 	.a = {.x = 0, .y = 0},
 	.b = {.x = 1.0, .y = 1.0}
 };

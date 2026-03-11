@@ -40,10 +40,10 @@ int32_t main(void) {
 		perror("cannot create socket");
 		exit(1);
 	}
-	struct sockaddr_in serverAddr = /*CR4*/(struct sockaddr_in){
+	struct sockaddr_in serverAddr = (struct sockaddr_in){
 		.sin_family = AF_INET,
 		.sin_port = (unsigned short)htons(PORT),
-		.sin_addr = /*CR5*/(struct in_addr){
+		.sin_addr = (struct in_addr){
 			.s_addr = INADDR_ANY
 }
 };

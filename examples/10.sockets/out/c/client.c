@@ -37,10 +37,10 @@ int main(void) {
 		exit(1);
 	}
 	printf("[+] Server socket created\n");
-	struct sockaddr_in server_addr = /*CR4*/(struct sockaddr_in){
+	struct sockaddr_in server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
 		.sin_port = PORT,
-		.sin_addr = /*CR5*/(struct in_addr){
+		.sin_addr = (struct in_addr){
 			.s_addr = inet_addr(IP_ADDRESS)
 }
 };
