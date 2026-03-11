@@ -2030,9 +2030,6 @@ def print_header(module, outname):
 			#nnl(x.nl)
 			xdefs.extend(print_deps(x.deps))
 			xdefs.extend(do_def_const(x))
-		#elif x.is_stmt_comment():
-		#	nnl(x.nl)
-		#	print_comment(x)
 
 
 	for xd in xdefs:
