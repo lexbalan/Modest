@@ -2036,19 +2036,13 @@ def print_header(module, outname):
 
 
 	for xd in xdefs:
-		str_cdef(xd)
+		out(str_cdef(xd))
 
 	newline(2)
 	out("#endif /* %s */" % guardsymbol)
 	newline()
 	output_close()
 	return
-
-
-def str_cdef(x):
-	if x.mark:
-		out('/*%s*/' % x.mark)
-	out(str(x))
 
 
 
@@ -2308,7 +2302,7 @@ def print_cfile(module, _outname):
 
 
 	for xd in xdefs:
-		str_cdef(xd)
+		out(str_cdef(xd))
 
 	#if len(module_undef_list) > 0:
 	#	newline(1)

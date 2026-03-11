@@ -1153,3 +1153,9 @@ class CInclude():
 		return "\n#include \"%s\"" % self.text
 
 
+def str_cdef(x):
+	if x.mark:
+		out('/*%s*/' % x.mark)
+	return str(x)
+
+
