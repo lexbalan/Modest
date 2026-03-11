@@ -158,6 +158,12 @@ public func main () -> Int {
 }
 
 
+//func sum64 (a: Int64, b: Int64) -> Int64 {
+//	var sum: Int64
+//	__asm("add %0, %1, %2", [["=r", sum]], [["r", a]["r", b]], ["cc"])
+//	return sum
+//}
+
 public func print (form: *Str8, ...) -> Unit {
 	var va: __VA_List
 	var va2: __VA_List

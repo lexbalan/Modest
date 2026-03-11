@@ -13,4 +13,3 @@ void lib_foo(void) {
 	printf("hello from lib.foo\n");
 }
 
-

@@ -12,21 +12,11 @@
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
 
-
-#define PORT  8080
-
-#define RECEIVE_BUFFER_SIZE  1024
-#define SEND_BUFFER_SIZE  1024
-
-#define HTTP_HEADER  ("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n")
-
+#define PORT 8080
+#define RECEIVE_BUFFER_SIZE 1024
+#define SEND_BUFFER_SIZE 1024
+#define HTTP_HEADER ("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n")
 static uint32_t pageCounter;
-
-//@extern
-//@c_no_print
-//func htons(x: Word16) -> Word16 {
-//	return (x << 8) or (x >> 8)
-//}
 
 static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[RECEIVE_BUFFER_SIZE];
@@ -36,17 +26,13 @@ static void handleRequest(int32_t clientSocket) {
 		close(clientSocket);
 		return;
 	}
-	buffer[bytesReceived] = 0;
-
+	buffer[bytesReceived] = 0x0;
 	printf("Received request:\n%s\n", (char *)&buffer);
-
 	char response[SEND_BUFFER_SIZE];
 	sprintf(response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", HTTP_HEADER, pageCounter);
-
 	write(clientSocket, (void *)response, strlen(response));
 	close(clientSocket);
 }
-
 
 int32_t main(void) {
 	const int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -54,8 +40,13 @@ int32_t main(void) {
 		perror("cannot create socket");
 		exit(1);
 	}
-
-	struct sockaddr_in serverAddr = /*mark=CR4*/(struct sockaddr_in){.sin_family = AF_INET, .sin_port = (unsigned short)htons(PORT), .sin_addr = /*mark=CR5*/(struct in_addr){.s_addr = INADDR_ANY}};
+	struct sockaddr_in serverAddr = /*CR4*/(struct sockaddr_in){
+		.sin_family = AF_INET,
+		.sin_port = (unsigned short)htons(PORT),
+		.sin_addr = /*CR5*/(struct in_addr){
+			.s_addr = INADDR_ANY
+}
+};
 	struct sockaddr *const socadr = (struct sockaddr *)&serverAddr;
 	int rc = bind(serverSocket, socadr, (socklen_t)sizeof serverAddr);
 	if (rc < 0) {
@@ -69,7 +60,6 @@ int32_t main(void) {
 		close(serverSocket);
 		exit(1);
 	}
-
 	printf("Server listening on port %d...\n", (uint32_t)PORT);
 	while (true) {
 		struct sockaddr_in clientAddr;
@@ -83,9 +73,7 @@ int32_t main(void) {
 		handleRequest(clientSocket);
 		pageCounter = pageCounter + 1;
 	}
-
 	close(serverSocket);
 	return 0;
 }
-
 

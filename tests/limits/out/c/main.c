@@ -300,8 +300,6 @@ int32_t main(void) {
 	success = success && result;
 	result = testInt64Static();
 	success = success && result;
-	result = testFloat32Static();
-	success = success && result;
 	printf("test ");
 	if (!success) {
 		printf("failed\n");

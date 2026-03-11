@@ -10,17 +10,12 @@
 
 
 
-
-// wrap around linked list for list.List Nat32
 static void nat32_list_insert(struct list_list *lst, uint32_t x) {
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
 	list_append(lst, (void *)p_nat32);
 }
 
-
-
-// show list conent from first item to last
 static void list_print_forward(struct list_list *lst) {
 	printf("list_print_forward:\n");
 	struct list_node *pn = list_first_node_get(lst);
@@ -31,9 +26,6 @@ static void list_print_forward(struct list_list *lst) {
 	}
 }
 
-
-
-// show list conent from last item to first
 static void list_print_backward(struct list_list *lst) {
 	printf("list_print_backward:\n");
 	struct list_node *pn = list_last_node_get(lst);
@@ -44,12 +36,9 @@ static void list_print_backward(struct list_list *lst) {
 	}
 }
 
-
 int main(void) {
 	printf("linked list example\n");
-
 	struct list_list *const list0 = list_create();
-
 	if (list0 == NULL) {
 		printf("error: cannot create list");
 		return 1;
@@ -69,51 +58,37 @@ int main(void) {
 	printf("linked list size: %u\n", list_size);
 	list_print_forward(list0);
 	list_print_backward(list0);
-
-
 	printf("\nlist.node_get(list, n) test\n");
 	int32_t i = 0;
 	while (i >= -12) {
 		struct list_node *const node = list_node_get(list0, i);
-
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
 			i = i - 1;
 			continue;
 		}
-
 		uint32_t *const px = (uint32_t *)list_node_data_get(node);
 		printf("list(%i) = %i\n", i, *px);
 		i = i - 1;
 	}
-
 	printf("-----------------------------------------\n");
-
 	i = 0;
 	while (i <= 12) {
 		struct list_node *const node = list_node_get(list0, i);
-
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
 			i = i + 1;
 			continue;
 		}
-
 		uint32_t *const px = (uint32_t *)list_node_data_get(node);
 		printf("list(%i) = %i\n", i, *px);
 		i = i + 1;
 	}
-
 	printf("-----------------------------------------\n");
-
-
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = 1234;
 	list_insert(list0, 4, (void *)p_nat32);
-
 	list_print_forward(list0);
-
 	return 0;
 }
-
 

@@ -1528,7 +1528,7 @@ def do_cstmt(x):
 	elif x.is_stmt_def_var(): return do_cstmt_var(x)
 	elif x.is_stmt_def_const(): return do_cstmt_const(x)
 	elif x.is_stmt_break(): return CStmtBreak()
-	elif x.is_stmt_again(): return CStmtBreak()
+	elif x.is_stmt_again(): return CStmtContinue()
 #	elif x.is_stmt_comment(): do_ccomment(x)
 #	elif x.is_stmt_def_type(): do_cdef_type(x)
 #	elif x.is_stmt_asm(): return do_cstmt_asm(x)

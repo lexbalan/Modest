@@ -8,18 +8,13 @@
 #include "fsm.h"
 
 
-
 static struct fsm_fsm fsm0;
-
-
 static fsm_ComplexState routine0(fsm_ComplexState state, void *payload);
-static struct fsm_state_desc state0 = /*mark=CR5*/(struct fsm_state_desc){.id = "state0", .nstages = 4, .handler = &routine0};
-
+static struct fsm_state_desc state0 = /*CR5*/(struct fsm_state_desc){.id = "state0", .nstages = 4, .handler = &routine0};
 static fsm_ComplexState routine1(fsm_ComplexState state, void *payload);
-static struct fsm_state_desc state1 = /*mark=CR5*/(struct fsm_state_desc){.id = "state1", .nstages = 4, .handler = &routine1};
-
+static struct fsm_state_desc state1 = /*CR5*/(struct fsm_state_desc){.id = "state1", .nstages = 4, .handler = &routine1};
 static fsm_ComplexState routine2(fsm_ComplexState state, void *payload);
-static struct fsm_state_desc state2 = /*mark=CR5*/(struct fsm_state_desc){.id = "state2", .nstages = 4, .handler = &routine2};
+static struct fsm_state_desc state2 = /*CR5*/(struct fsm_state_desc){.id = "state2", .nstages = 4, .handler = &routine2};
 
 static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 	(void)payload;
@@ -34,7 +29,6 @@ static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 	return state;
 }
 
-
 static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
 	(void)payload;
 	if (state.stage == (fsm_StageId)0) {
@@ -48,7 +42,6 @@ static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
 	return state;
 }
 
-
 static fsm_ComplexState routine2(fsm_ComplexState state, void *payload) {
 	(void)payload;
 	if (state.stage == (fsm_StageId)0) {
@@ -61,13 +54,10 @@ static fsm_ComplexState routine2(fsm_ComplexState state, void *payload) {
 	}
 	return state;
 }
-
-
 static uint32_t timecnt;
 
 int main(void) {
 	fsm_init(&fsm0, "FSM_0", &state0, NULL);
-
 	while (true) {
 		if (timecnt > 55555) {
 			timecnt = 0;
@@ -75,11 +65,8 @@ int main(void) {
 		} else {
 			timecnt = timecnt + 1;
 		}
-
 		fsm_task(&fsm0);
 	}
-
 	return 0;
 }
-
 

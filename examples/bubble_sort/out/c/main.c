@@ -9,16 +9,12 @@
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
 
+static int32_t testArray[23] = /*CA2*/{-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9};
 
-static int32_t testArray[23] = /*mark=CA2*/{-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9};
-
-
-// returns true if was swap
 static bool bubble_sort32_iter(int32_t (*array)[], uint32_t len) {
 	bool wasSwap = false;
-
 	uint32_t i = 0;
-	while (i < (len - 1)) {
+	while (i < len - 1) {
 		const int32_t left = (*array)[i];
 		const int32_t right = (*array)[i + 1];
 		if (left > right) {
@@ -28,18 +24,13 @@ static bool bubble_sort32_iter(int32_t (*array)[], uint32_t len) {
 		}
 		i = i + 1;
 	}
-
 	return wasSwap;
 }
-
 
 static void bubble_sort32(int32_t (*array)[], uint32_t len) {
 	while (bubble_sort32_iter(array, len)) {
 	}
 }
-
-
-
 static void print_array(int32_t (*array)[], uint32_t len);
 
 int32_t main(void) {
@@ -47,14 +38,11 @@ int32_t main(void) {
 	print_array(&testArray, LENGTHOF(testArray));
 	printf("\n");
 	bubble_sort32(&testArray, LENGTHOF(testArray));
-
 	printf("array after:\n");
 	print_array(&testArray, LENGTHOF(testArray));
 	printf("\n");
-
 	return 0;
 }
-
 
 static void print_array(int32_t (*array)[], uint32_t len) {
 	printf("\n");
@@ -64,5 +52,4 @@ static void print_array(int32_t (*array)[], uint32_t len) {
 		i = i + 1;
 	}
 }
-
 

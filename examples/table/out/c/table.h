@@ -10,10 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 typedef char *table_Row[];
-
-
 typedef struct table_table table_Table;
 struct table_table {
 	char *(*header)[];

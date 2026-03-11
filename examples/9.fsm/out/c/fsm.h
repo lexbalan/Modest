@@ -9,31 +9,19 @@
 #include <assert.h>
 #include <stdio.h>
 
-
 typedef uint16_t fsm_StageId;
-
-
 struct fsm_state_desc;
-
-
-
-
 typedef struct fsm_complex_state fsm_ComplexState;
 struct fsm_complex_state {
 	struct fsm_state_desc *state;
 	fsm_StageId stage;
 };
-
 typedef fsm_ComplexState fsm_StateServiceRoutine(fsm_ComplexState state, void *payload);
-
-
 struct fsm_state_desc {
 	char *id;
 	uint16_t nstages;
 	fsm_StateServiceRoutine *handler;
 };
-
-
 struct fsm_fsm {
 	char *id;
 	fsm_ComplexState state;

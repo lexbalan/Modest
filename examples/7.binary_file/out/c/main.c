@@ -6,10 +6,7 @@
 #include <stdio.h>
 
 
-
-#define FILENAME  ("file.bin")
-
-
+#define FILENAME ("file.bin")
 struct chunk {
 	char id[100];
 	char data[1024];
@@ -17,39 +14,33 @@ struct chunk {
 
 static void writeExample(void) {
 	printf("run writeExample()\n");
-
 	FILE *const fp = fopen(FILENAME, "wb");
 	if (fp == NULL) {
 		printf("error: cannot create file '%s'", FILENAME);
 		return;
 	}
-
-	struct chunk chunk = /*mark=CR5*/(struct chunk){.id = /*mark=CA3*/"id", .data = /*mark=CA3*/"data"};
+	struct chunk chunk = /*CR5*/(struct chunk){
+		.id = /*CA1*/"id",
+		.data = /*CA1*/"data"
+};
 	fwrite((void *)&chunk, sizeof(struct chunk), 1, fp);
-
 	fclose(fp);
 }
 
-
 static void readExample(void) {
 	printf("run readExample()\n");
-
 	FILE *const fp = fopen(FILENAME, "rb");
 	if (fp == NULL) {
 		printf("error: cannot open file '%s'", FILENAME);
 		return;
 	}
-
 	struct chunk chunk;
 	fread((void *)&chunk, sizeof(struct chunk), 1, fp);
-
 	printf("file \"%s\" contains:\n", FILENAME);
 	printf("chunk.id: \"%s\"\n", chunk.id);
 	printf("chunk.data: \"%s\"\n", chunk.data);
-
 	fclose(fp);
 }
-
 
 int main(void) {
 	printf("binary file example\n");
@@ -57,5 +48,4 @@ int main(void) {
 	readExample();
 	return 0;
 }
-
 

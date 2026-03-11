@@ -77,12 +77,12 @@ def str_gcc_attributes(annotations):
 
 			att_arg = ""
 			if asset != {}:
-				att_arg = str(asset.asset)
+				att_arg = asset.asset
 				if isinstance(att_arg, str):
 					att_arg = '"%s"' % att_arg
-				att_arg = '(' + att_arg + ')'
+				att_arg = '(' + str(att_arg) + ')'
 
-			atts.append("%s%s" % (gcc_att_name, att_arg))
+			atts.append("%s%s" % (gcc_att_name, str(att_arg)))
 
 	if atts != []:
 		return "__attribute__((" + ", ".join(atts) + "))\n"
