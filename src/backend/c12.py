@@ -76,7 +76,6 @@ def init(settings):
 
 
 
-
 CONS_PRECEDENCE = 10
 aprecedence = [
 	[HLIR_VALUE_OP_LOGIC_OR], #0
@@ -1653,11 +1652,6 @@ def do_def_func(x):
 		cfunc = None
 		out(";")
 		return
-
-	if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
-		newline()
-	else:
-		out(" ")
 
 	out("{")
 	indent_up()

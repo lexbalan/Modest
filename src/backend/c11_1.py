@@ -28,7 +28,6 @@ styleguide = modern_style #legacy_style
 
 
 
-
 def wrap_if(x, cond):
 	return "(%s)" % x if cond else x
 
