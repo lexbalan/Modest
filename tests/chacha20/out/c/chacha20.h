@@ -6,7 +6,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 typedef uint32_t chacha20_Key[8];
 typedef uint32_t chacha20_State[16];
 typedef uint32_t chacha20_Block[16];

@@ -900,6 +900,7 @@ class CStmt():
 	def __init__(self):
 		self.comment = None
 		self.nl = 1
+		self.mark = None
 		pass
 
 
@@ -1126,6 +1127,7 @@ class CMacrodefinition():
 		super().__init__()
 		self.id = id
 		self.text = text
+		self.mark = None
 
 	def __str__(self):
 		sstr = str_nl_indent(self.nl)

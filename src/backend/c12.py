@@ -1531,7 +1531,7 @@ def do_cstmt_var(x):
 	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
 		return (dv, do_assign_array(var_value, init_value, x.ti))
 
-	return dv
+	return (dv,)
 
 
 def do_cstmt_const(x):
@@ -1560,7 +1560,7 @@ def do_cstmt_const(x):
 	if init_value.type.is_array() and init_value.isValueRuntime():
 		return (dv, do_assign_array(const_value, init_value, x.ti))
 
-	return dv
+	return (dv,)
 
 
 
@@ -1788,6 +1788,7 @@ def do_def_var(x, isdecl=False, is_extern=False):
 		civ = do_cinitializer(x.init_value)
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, annotations=x.annotations)
+	dv.mark = '??'
 	#out(str(dv))
 	return (dv,)
 
@@ -1880,7 +1881,7 @@ def print_deps(deps):
 
 			if isinstance(dep, Value):
 				xx = do_decl_func(dep.definition)
-				xdeps.append(xx)
+				xdeps.extend(xx)
 
 			elif isinstance(dep, Type):
 				if dep.is_record():
@@ -2038,6 +2039,8 @@ def print_header(module, outname):
 
 
 	for xd in xdefs:
+		if xd.mark:
+			out('/*%s*/' % xd.mark)
 		out(str(xd))
 
 	newline(2)
@@ -2304,6 +2307,10 @@ def print_cfile(module, _outname):
 
 
 	for xd in xdefs:
+		if isinstance(xd, tuple):
+			print('??' + str(xd[0]))
+		if xd.mark:
+			out('/*%s*/' % xd.mark)
 		out(str(xd))
 
 	#if len(module_undef_list) > 0:
