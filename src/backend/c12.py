@@ -1137,9 +1137,8 @@ def do_cvalue_eq(x, logic, ctx):
 	lx = None
 	rx = None
 	if left.type.is_aggregate():
-		ct = Type.select_common_type(left.type, right.type, ti=x.ti)
-		lc = get_cvalue_pointer_to(ct, left)
-		rc = get_cvalue_pointer_to(ct, right)
+		lc = do_cvalue_as_ptr(left)
+		rc = do_cvalue_as_ptr(right)
 		sc = get_cvalue_size_for(left, right, ti=x.ti)
 		lx = CValueCall(CValueNamed("memcmp"), [lc, rc, sc])
 		rx = CValueInteger(0)
@@ -1149,30 +1148,9 @@ def do_cvalue_eq(x, logic, ctx):
 
 	if logic:
 		return CValueEq(lx, rx)
+
 	return CValueNe(lx, rx)
 
-
-def get_cvalue_pointer_to(type, value):
-	cv = do_cvalue(value)
-	if value.type.is_pointer():
-		#cv.mark = '$+'
-		return cv  # is already pointer
-
-	root = get_root_value(value)
-
-	if root.isValueConst() and root.type.is_array():
-		cv = CValueRef(CValueCast(do_ctype(root.type), cv))
-		return cv
-
-
-	if value.type.is_generic():
-		if not value.isValueCons():
-			# is generic aggregate
-			cv = CValueCast(do_ctype(type), cv)
-
-	cv = CValueRef(cv)
-	#cv.mark = '$%s' % str(value.type)
-	return cv
 
 
 def get_cvalue_size_for(a, b, ti):
