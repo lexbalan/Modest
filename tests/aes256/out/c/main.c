@@ -12,14 +12,11 @@
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
 
-
-
 struct test_case {
 	aes256_Key key;
 	aes256_Block plaintext;
 	aes256_Block ciphertext;
 };
-
 __attribute__((used))
 static struct test_case tests[8] = /*mark=CA2*/{/*mark=CR5*/(struct test_case){
 	.key = /*mark=CA2*/{0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F},
@@ -55,56 +52,43 @@ static struct test_case tests[8] = /*mark=CA2*/{/*mark=CR5*/(struct test_case){
 	.ciphertext = /*mark=CA2*/{0x9C, 0xF4, 0x89, 0x3E, 0xCA, 0xFA, 0xA, 0x2, 0x47, 0xA8, 0x98, 0xE0, 0x40, 0x69, 0x15, 0x59}
 }};
 
-static bool runTest(struct test_case *test) {
+static bool runTest(struct test_case *test){
 	aes256_Context ctx;
 	aes256_init(&ctx, &test->key);
-
 	aes256_Block plaintextBefore;
-	memcpy(&plaintextBefore, &test->plaintext, sizeof(aes256_Block));;
-
+	memcpy(&plaintextBefore, &test->plaintext, sizeof(aes256_Block));
 	aes256_encrypt_ecb(&ctx, &test->plaintext);
-
-	if (memcmp(&test->plaintext, &test->ciphertext, sizeof(aes256_Block)) != 0) {
+	if (memcmp(&test->plaintext, &test->ciphertext, sizeof(aes256_Block)) != 0){
 		printf("FAILED (encrypt)");
 		return false;
 	}
-
 	aes256_decrypt_ecb(&ctx, &test->plaintext);
-
-	if (memcmp(&test->plaintext, &plaintextBefore, sizeof(aes256_Block)) != 0) {
+	if (memcmp(&test->plaintext, &plaintextBefore, sizeof(aes256_Block)) != 0){
 		printf("FAILED (decrypt)");
 		return false;
 	}
-
 	aes256_deinit(&ctx);
-
 	printf("PASSED");
 	return true;
 }
 
-
-int32_t main(void) {
+int32_t main(void){
 	printf("run AES-256 test\n");
-
 	bool success = true;
-
 	uint8_t i = 0;
-	while (i < LENGTHOF(tests)) {
+	while (i < LENGTHOF(tests)){
 		printf("run test #%d ", i);
 		const bool rc = runTest(&tests[i]);
 		success = success && rc;
 		printf("\n");
 		i = i + 1;
 	}
-
 	printf("AES-256 test ");
-	if (!success) {
+	if (!success){
 		printf("failed\n");
 		return EXIT_FAILURE;
 	}
-
 	printf("passed\n");
 	return EXIT_SUCCESS;
 }
-
 

@@ -1076,8 +1076,8 @@ def do_cvalue_const(x, ctx):
 
 	cv = CValueNamed(id_str)
 
-	if x.is_global_flag and x.type.is_array() and not x.type.is_generic():
-		cv = CValueCast(do_ctype(x.type), cv)
+#	if x.is_global_flag and x.type.is_array() and not x.type.is_generic():
+#		cv = CValueCast(do_ctype(x.type), cv)
 
 	return cv
 
@@ -1186,7 +1186,6 @@ def get_cvalue_pointer_to(type, value):
 
 	if root.isValueConst() and root.type.is_array():
 		cv = CValueRef(CValueCast(do_ctype(root.type), cv))
-		cv.mark = '?'
 		return cv
 
 
@@ -1431,8 +1430,8 @@ def do_assign_array(left, right, ti):
 		# Если справа приведенный к левому массив (более короткий? Generic)
 		right = get_root_value(right)
 
-	cleft = cvalue_as_ptr(left)
-	cright = cvalue_as_ptr(right)
+	cleft = do_cvalue_as_ptr(left)
+	cright = do_cvalue_as_ptr(right)
 
 	slen = None
 	if left.isValueVar() or left.isValueConst():
@@ -1485,7 +1484,7 @@ def do_cstmt_return(x):
 	if cfunc.type.to.is_closed_array():
 		return CStmtValueExpr(
 			CValueCall(
-				CValueNamed("memcpy"), [CValueNamed("_sret_"), cvalue_as_ptr(x.value), CValueSizeofType(do_ctype(x.value.type))]
+				CValueNamed("memcpy"), [CValueNamed("_sret_"), do_cvalue_as_ptr(x.value), CValueSizeofType(do_ctype(x.value.type))]
 			)
 		)
 
@@ -1788,8 +1787,6 @@ def do_def_var(x, isdecl=False, is_extern=False):
 		civ = do_cinitializer(x.init_value)
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, annotations=x.annotations)
-	dv.mark = '??'
-	#out(str(dv))
 	return (dv,)
 
 
@@ -2361,7 +2358,7 @@ def cons_vla_from_literal_array(x):
 
 
 
-def cvalue_as_ptr(x):
+def do_cvalue_as_ptr(x):
 	t = x.type
 	root = get_root_value(x)
 
@@ -2400,6 +2397,11 @@ def cvalue_as_ptr(x):
 	###
 
 	cv = do_cvalue(root)
+
+	if root.type.is_generic():
+		cv = CValueCast(do_ctype(root.type), cv)
+		#cv.mark = '$$$'
+
 	cv = CValueRef(cv)
 
 	if root.isValueSlice():
@@ -2483,7 +2485,7 @@ def assign_by_memcopy(left, right):
 
 	return CStmtValueExpr(
 		CValueCall(
-			CValueNamed("memcpy"), [cvalue_as_ptr(left), cvalue_as_ptr(right), CValueSizeofType(do_ctype(left.type))]
+			CValueNamed("memcpy"), [do_cvalue_as_ptr(left), do_cvalue_as_ptr(right), CValueSizeofType(do_ctype(left.type))]
 		)
 	)
 
@@ -2492,7 +2494,7 @@ def do_memzero(value):
 	return CStmtValueExpr(
 		CValueCall(
 			CValueNamed("memset"), [
-				cvalue_as_ptr(value), CValueInteger(0), CValueSizeofType(do_ctype(value.type))
+				do_cvalue_as_ptr(value), CValueInteger(0), CValueSizeofType(do_ctype(value.type))
 			]
 		)
 	)
