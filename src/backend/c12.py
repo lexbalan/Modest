@@ -2036,15 +2036,19 @@ def print_header(module, outname):
 
 
 	for xd in xdefs:
-		if xd.mark:
-			out('/*%s*/' % xd.mark)
-		out(str(xd))
+		str_cdef(xd)
 
 	newline(2)
 	out("#endif /* %s */" % guardsymbol)
 	newline()
 	output_close()
 	return
+
+
+def str_cdef(x):
+	if x.mark:
+		out('/*%s*/' % x.mark)
+	out(str(x))
 
 
 
@@ -2304,11 +2308,7 @@ def print_cfile(module, _outname):
 
 
 	for xd in xdefs:
-		if isinstance(xd, tuple):
-			print('??' + str(xd[0]))
-		if xd.mark:
-			out('/*%s*/' % xd.mark)
-		out(str(xd))
+		str_cdef(xd)
 
 	#if len(module_undef_list) > 0:
 	#	newline(1)
@@ -2406,7 +2406,6 @@ def do_cvalue_as_ptr(x):
 
 	if root.isValueSlice():
 		ptr2slice = TypePointer(x.type)
-		#sstr += "(" + str_type(ptr2slice) + ")"
 		cv = CValueCast(do_ctype(ptr2slice), cv)
 
 	return cv
