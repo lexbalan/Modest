@@ -32,23 +32,27 @@ typedef uint32_t char32_t;
 #include <stdarg.h>
 
 typedef int32_t MyInt;
-struct point {
+struct point
+{
 	uint64_t x;
 	uint64_t y;
 };
 typedef struct open_point OpenPoint;
-struct open_point {
+struct open_point
+{
 	uint64_t x;
 	uint64_t y;
 };
 struct list_header;
 typedef struct list_header ListHeader;
-struct list_header {
+struct list_header
+{
 	ListHeader *next;
 	ListHeader *prev;
 };
 
-static void foo(int32_t a, int64_t b){
+static void foo(int32_t a, int64_t b)
+{
 	return;
 }
 #define C 15
@@ -58,16 +62,19 @@ static struct point p0 = /*mark=CR5*/(struct point){
 	.y = 2
 };
 
-static void farr(int32_t (*_sret_)[3]){
+static void farr(int32_t (*_sret_)[3])
+{
 	memcpy(_sret_, &(int32_t [3]){1, 2, 3}, sizeof(int32_t [3]));
 }
 
-static void facc(int32_t (*_a)[3]){
+static void facc(int32_t (*_a)[3])
+{
 	int32_t a[3];
 	memcpy(a, _a, sizeof(int32_t [3]));
 }
 
-int main(void){
+int main(void)
+{
 	const int8_t c00 = 10;
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';
@@ -124,7 +131,8 @@ int main(void){
 	struct point p0 = /*mark=CR4*/(struct point){0};
 	p0.x;
 	p0.y;
-	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)){
+	if (a < 1 && b > 12 || C <= 5 && !(1 < 0))
+	{
 		uint32_t u;
 		uint32_t v;
 		u | v & u ^ ~v;
@@ -138,12 +146,18 @@ int main(void){
 		a = a + 1;
 		a = a - 1;
 	}
-	while (1 > 0){
+	while (1 > 0)
+	{
 		const int8_t u = 129;
 	}
-	if (1 < 2){
-	} else if (2 > 3){
-	} else {
+	if (1 < 2)
+	{
+	}
+	else if (2 > 3)
+	{
+	}
+	else
+	{
 	}
 	true || false;
 	const double pi = 3.1415;
@@ -152,7 +166,8 @@ int main(void){
 	return 0;
 }
 
-void main_print(char *form, ...){
+void main_print(char *form, ...)
+{
 	va_list va;
 	va_list va2;
 	va_start(va, form);

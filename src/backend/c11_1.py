@@ -3,6 +3,32 @@ from util import nbits_for_num
 from .common import str_nl_indent, indent_up, indent_down
 
 
+
+
+legacy_style = {
+	'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
+	'LINE_BREAK_BEFORE_FUNC_BRACE': False,
+	'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
+}
+
+modern_style = {
+	'LINE_BREAK_BEFORE_STRUCT_BRACE': True,
+	'LINE_BREAK_BEFORE_FUNC_BRACE': True,
+	'LINE_BREAK_BEFORE_BLOCK_BRACE': True,
+}
+
+styles = {
+	'legacy': legacy_style,
+	'modern': modern_style,
+}
+
+
+# default style is legacy
+styleguide = modern_style #legacy_style
+
+
+
+
 def wrap_if(x, cond):
 	return "(%s)" % x if cond else x
 
@@ -189,7 +215,12 @@ class CTypeStruct(CType):
 
 	def to_str(self, text):
 		nl_end = 0
-		sstr = '%s {' % (self.tag)
+		sstr = '%s' % (self.tag)
+		if styleguide['LINE_BREAK_BEFORE_STRUCT_BRACE']:
+			sstr += '\n'
+		else:
+			sstr += ' '
+		sstr += '{'
 		indent_up()
 		i = 0
 		nfields = len(self.fields)
@@ -926,7 +957,8 @@ class CStmtBlock(CStmt):
 		self.stmts = stmts
 
 	def __str__(self):
-		sstr = "{"
+		sstr = ''
+		sstr += "{"
 		nl_end_e = 1
 		indent_up()
 		for stmt in self.stmts:
@@ -1040,6 +1072,12 @@ class CStmtDefFunc(CStmt):
 		if self.storage not in (None, ''):
 			sstr += self.storage + ' '
 		sstr += self.type.to_str(text=self.id_str)
+
+		if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
+			sstr += str_nl_indent()
+		else:
+			sstr += ' '
+
 		sstr += str_cstmt(self.block)
 		return sstr
 
@@ -1059,9 +1097,21 @@ class CStmtIf(CStmt):
 	def __str__(self):
 		sstr = str_nl_indent(self.nl)
 		sstr += "if (%s)" % str_cvalue(self.value_cond)
+		if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
+			sstr += str_nl_indent()
+		else:
+			sstr += ' '
 		sstr += str(self.block_then)
 		if self.block_else != None:
-			sstr += ' else '
+			if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
+				sstr += str_nl_indent()
+			else:
+				sstr += ' '
+			sstr += 'else'
+			if isinstance(self.block_else, CStmtBlock) and styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
+				sstr += str_nl_indent()
+			else:
+				sstr += ' '
 			sstr += str(self.block_else)
 		return sstr
 
@@ -1077,6 +1127,10 @@ class CStmtWhile(CStmt):
 	def __str__(self):
 		sstr = str_nl_indent(self.nl)
 		sstr += "while (%s)" % str_cvalue(self.value_cond)
+		if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
+			sstr += str_nl_indent()
+		else:
+			sstr += ' '
 		sstr += str(self.block)
 		return sstr
 

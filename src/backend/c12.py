@@ -42,27 +42,6 @@ func_undef_list = []
 module_undef_list = []
 
 
-legacy_style = {
-	'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
-	'LINE_BREAK_BEFORE_FUNC_BRACE': False,
-	'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
-}
-
-modern_style = {
-	'LINE_BREAK_BEFORE_STRUCT_BRACE': True,
-	'LINE_BREAK_BEFORE_FUNC_BRACE': True,
-	'LINE_BREAK_BEFORE_BLOCK_BRACE': True,
-}
-
-styles = {
-	'legacy': legacy_style,
-	'modern': modern_style,
-}
-
-
-# default style is legacy
-styleguide = legacy_style
-
 
 cfunc = None
 
@@ -87,12 +66,13 @@ def is_local_context():
 
 csettings = {}
 def init(settings):
-	global styleguide, csettings
-	csettings = settings
-	stylename = settings['output_style']
-	if stylename != None:
-		if stylename in styles:
-			styleguide = styles[stylename]
+	pass
+#	global styleguide, csettings
+#	csettings = settings
+#	stylename = settings['output_style']
+#	if stylename != None:
+#		if stylename in styles:
+#			styleguide = styles[stylename]
 
 
 
