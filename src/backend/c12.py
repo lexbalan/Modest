@@ -935,16 +935,13 @@ def do_cvalue_index(x, ctx):
 	lx = do_cvalue(left)
 	index = do_cvalue(x.index)
 
-
 	if left.is_global_flag and left.isValueConst(): #left.type.is_generic_array():
 		ts = do_ctype(left.type)
 		vs = do_cvalue(left, ctx=ctx)
-		#left_str += '((%s)%s)' % (ts, vs)
 		lx = CValueCast(ts, vs)
 	elif value_is_generic_immediate_const(left):
 		ts = do_ctype(left.type)
 		vs = do_cvalue(left, ctx=ctx)
-		#left_str += '((%s)%s)' % (ts, vs)
 		lx = CValueCast(ts, vs)
 
 	#else:
@@ -954,8 +951,8 @@ def do_cvalue_index(x, ctx):
 #		left_str = "(*%s)" % left_str
 
 	if left.type.is_pointer_to_array() and not p2i_instead_p2a(left.type.to):
-		lx = CValueSubexpr(CValueDeref(lx))
-
+		#lx = CValueSubexpr(CValueDeref(lx))
+		lx = CValueDeref(lx)
 
 	return CValueIndex(lx, index)
 
@@ -1024,7 +1021,7 @@ def do_cvalue_deref(x, ctx):
 
 def do_cvalue_subexpr(x, ctx):
 	v = do_cvalue(x.value)
-	return CValueSubexpr(v)
+	return v #CValueSubexpr(v)
 
 
 def do_cvalue_not(x, ctx):

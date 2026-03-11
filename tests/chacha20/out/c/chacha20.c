@@ -8,33 +8,33 @@
 
 
 
-static uint32_t rotl32(uint32_t x, uint32_t n){
-	return (x << n) | (x >> (32 - n));
+static uint32_t rotl32(uint32_t x, uint32_t n) {
+	return x << n | x >> (32 - n);
 }
 
-static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t (*_sret_)[4]){
+static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t (*_sret_)[4]) {
 	uint32_t a0 = a;
 	uint32_t b0 = b;
 	uint32_t c0 = c;
 	uint32_t d0 = d;
-	a0 = (a0 + b0);
+	a0 = a0 + b0;
 	d0 = rotl32(d0 ^ a0, 16);
-	c0 = (c0 + d0);
+	c0 = c0 + d0;
 	b0 = rotl32(b0 ^ c0, 12);
-	a0 = (a0 + b0);
+	a0 = a0 + b0;
 	d0 = rotl32(d0 ^ a0, 8);
-	c0 = (c0 + d0);
+	c0 = c0 + d0;
 	b0 = rotl32(b0 ^ c0, 7);
 	memcpy(_sret_, &(uint32_t [4]){a0, b0, c0, d0}, sizeof(uint32_t [4]));
 }
 
-void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_){
+void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 	chacha20_State state;
 	memcpy(state, _state, sizeof(chacha20_State));
 	chacha20_State x;
 	memcpy(&x, &state, sizeof(chacha20_State));
 	int32_t i = 0;
-	while (i < 10){
+	while (i < 10) {
 		uint32_t r[4];
 		quarterRound(x[0], x[4], x[8], x[12], &r);
 		x[0] = r[0];
@@ -80,14 +80,14 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_){
 	}
 	uint32_t out[16];
 	uint32_t j = 0;
-	while (j < 16){
-		out[j] = (x[j] + state[j]);
+	while (j < 16) {
+		out[j] = x[j] + state[j];
 		j = j + 1;
 	}
 	memcpy(_sret_, &out, sizeof(uint32_t [16]));
 }
 
-void chacha20_makeState(chacha20_Key *key, uint32_t counter, uint32_t (*nonce)[3], chacha20_State *_sret_){
+void chacha20_makeState(chacha20_Key *key, uint32_t counter, uint32_t (*nonce)[3], chacha20_State *_sret_) {
 	memcpy(_sret_, &(uint32_t [16]){0x61707865, 0x3320646E, 0x79622D32, 0x6B206574, (*key)[0], (*key)[1], (*key)[2], (*key)[3], (*key)[4], (*key)[5], (*key)[6], (*key)[7], counter, (*nonce)[0], (*nonce)[1], (*nonce)[2]}, sizeof(chacha20_State));
 }
 

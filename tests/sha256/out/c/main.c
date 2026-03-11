@@ -18,19 +18,19 @@ struct sha256_test_case {
 
 	sha256_Hash expectedResult;
 };
-static struct sha256_test_case test0 = /*mark=CR5*/(struct sha256_test_case){
+static struct sha256_test_case test0 = /*CR5*/(struct sha256_test_case){
 	.inputData = "abc",
 	.inputDataLen = 3,
 	.expectedResult = {0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x1, 0xCF, 0xEA, 0x41, 0x41, 0x40, 0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x3, 0x61, 0xA3, 0x96, 0x17, 0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x0, 0x15, 0xAD}
 };
-static struct sha256_test_case test1 = /*mark=CR5*/(struct sha256_test_case){
+static struct sha256_test_case test1 = /*CR5*/(struct sha256_test_case){
 	.inputData = "Hello World!",
 	.inputDataLen = 12,
 	.expectedResult = {0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53, 0xB9, 0x2D, 0xC1, 0x81, 0x48, 0xA1, 0xD6, 0x5D, 0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6, 0x77, 0x28, 0x4A, 0xDD, 0xD2, 0x0, 0x12, 0x6D, 0x90, 0x69}
 };
 #define TESTS {&test0, &test1}
 
-static bool doTest(struct sha256_test_case *test){
+static bool doTest(struct sha256_test_case *test) {
 	sha256_Hash test_hash;
 	uint8_t (*const msg)[] = (uint8_t (*)[])test->inputData;
 	const uint32_t msgLen = test->inputDataLen;
@@ -38,7 +38,7 @@ static bool doTest(struct sha256_test_case *test){
 	printf("'%s'", test->inputData);
 	printf(" -> ");
 	uint32_t i = 0;
-	while (i < SHA256_HASH_SIZE){
+	while (i < SHA256_HASH_SIZE) {
 		printf("%02X", test_hash[i]);
 		i = i + 1;
 	}
@@ -46,23 +46,23 @@ static bool doTest(struct sha256_test_case *test){
 	return memcmp(&test_hash, &test->expectedResult, sizeof(sha256_Hash)) == 0;
 }
 
-int main(void){
+int main(void) {
 	printf("test SHA256\n");
 	bool success = true;
 	uint32_t i = 0;
-	while (i < 2){
+	while (i < 2) {
 		struct sha256_test_case *const test = ((struct sha256_test_case *const [2])TESTS)[i];
 		const bool rc = doTest(test);
 		success = success && rc;
 		char *res = "failed";
-		if (rc){
+		if (rc) {
 			res = "passed";
 		}
 		printf("test #%i: %s\n", i, res);
 		i = i + 1;
 	}
 	printf("test ");
-	if (!success){
+	if (!success) {
 		printf("failed\n");
 		return EXIT_FAILURE;
 	}

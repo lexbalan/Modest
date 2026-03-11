@@ -56,8 +56,8 @@ static void foo(int32_t a, int64_t b)
 	return;
 }
 #define C 15
-static uint32_t k[3] = /*mark=CA2*/{0x1, 0x2, 0x3};
-static struct point p0 = /*mark=CR5*/(struct point){
+static uint32_t k[3] = /*CA2*/{0x1, 0x2, 0x3};
+static struct point p0 = /*CR5*/(struct point){
 	.x = 1,
 	.y = 2
 };
@@ -79,9 +79,9 @@ int main(void)
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';
 	const char32_t xc3 = U'A';
-	const char xcs1[1] = /*mark=CA3*/"A";
-	const char16_t xcs2[1] = /*mark=CA3*/u"A";
-	const char32_t xcs3[1] = /*mark=CA3*/U"A";
+	const char xcs1[1] = /*CA3*/"A";
+	const char16_t xcs2[1] = /*CA3*/u"A";
+	const char32_t xcs3[1] = /*CA3*/U"A";
 	char *const xs1 = "A";
 	char16_t *const xs2 = u"A";
 	char32_t *const xs3 = U"A";
@@ -89,13 +89,13 @@ int main(void)
 	char c1 = 'B';
 	char16_t c2 = u'B';
 	char32_t c3 = U'B';
-	char cs1[1] = /*mark=CA1*/"B";
-	char16_t cs2[1] = /*mark=CA1*/u"B";
-	char32_t cs3[1] = /*mark=CA1*/U"B";
+	char cs1[1] = /*CA1*/"B";
+	char16_t cs2[1] = /*CA1*/u"B";
+	char32_t cs3[1] = /*CA1*/U"B";
 	char *s1 = "B";
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
-	int32_t arr[3] = /*mark=CA2*/{1, 2, 3};
+	int32_t arr[3] = /*CA2*/{1, 2, 3};
 	int32_t arr2[3];
 	memcpy(&arr2, &arr, sizeof(int32_t [3]));
 	const int32_t arr4[3];
@@ -105,9 +105,9 @@ int main(void)
 	memset(&arr2, 0, sizeof(int32_t [3]));
 	memcpy(&arr2, &arr, sizeof(int32_t [3]));
 	facc(&arr2);
-	struct point rec = /*mark=CR5*/(struct point){.x = 0, .y = 0};
+	struct point rec = /*CR5*/(struct point){.x = 0, .y = 0};
 	struct point rec2;
-	rec2 = /*mark=CR4*/(struct point){0};
+	rec2 = /*CR4*/(struct point){0};
 	rec2 = rec;
 	LENGTHOF(arr);
 	printf("Hello World!\n");
@@ -128,7 +128,7 @@ int main(void)
 	sizeof a;
 	sizeof(uint32_t);
 	arr[1];
-	struct point p0 = /*mark=CR4*/(struct point){0};
+	struct point p0 = /*CR4*/(struct point){0};
 	p0.x;
 	p0.y;
 	if (a < 1 && b > 12 || C <= 5 && !(1 < 0))
@@ -140,7 +140,7 @@ int main(void)
 		v >> 20;
 		int32_t *const pa = &a;
 		*pa;
-		((int64_t)a + b);
+		(int64_t)a + b;
 		+a;
 		-a;
 		a = a + 1;

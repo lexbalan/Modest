@@ -24,7 +24,7 @@ styles = {
 
 
 # default style is legacy
-styleguide = modern_style #legacy_style
+styleguide = legacy_style
 
 
 
@@ -300,6 +300,8 @@ def str_number_suffix(req_bits, is_unsigned):
 
 
 
+valuePrecedenceMax = 15
+
 
 class KV():
 	def __init__(self, key, value, nl):
@@ -440,7 +442,7 @@ class CValueSubexpr(CValue):
 		self.precedence = 15
 
 	def __str__(self):
-		return '(%s)' % str_cvalue(self.value)
+		return '(%s)' % str_cvalue(self.value, ext_precedence=self.precedence)
 
 
 
@@ -454,7 +456,7 @@ class CValueCall(CValue):
 		self.precedence = 14
 
 	def __str__(self):
-		return '%s(%s)' % (str_cvalue(self.left), print_list_items(self.args, str_cvalue))
+		return '%s(%s)' % (str_cvalue(self.left, ext_precedence=self.precedence), print_list_items(self.args, str_cvalue))
 
 
 class CValueAccess(CValue):
@@ -467,7 +469,7 @@ class CValueAccess(CValue):
 		self.precedence = 14
 
 	def __str__(self):
-		return '%s.%s' % (str_cvalue(self.left), self.field_id_str)
+		return '%s.%s' % (str_cvalue(self.left, ext_precedence=self.precedence), self.field_id_str)
 
 
 class CValueAccessPtr(CValue):
@@ -480,7 +482,7 @@ class CValueAccessPtr(CValue):
 		self.precedence = 14
 
 	def __str__(self):
-		return '%s->%s' % (str_cvalue(self.left), self.field_id_str)
+		return '%s->%s' % (str_cvalue(self.left, ext_precedence=self.precedence), self.field_id_str)
 
 
 class CValueIndex(CValue):
@@ -493,7 +495,7 @@ class CValueIndex(CValue):
 		self.precedence = 14
 
 	def __str__(self):
-		lstr = wrap_if(str_cvalue(self.left), self.left.precedence < self.precedence)
+		lstr = str_cvalue(self.left, ext_precedence=self.precedence)
 		return '%s[%s]' % (lstr, str_cvalue(self.index))
 
 
@@ -507,7 +509,7 @@ class CValueCast(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		vstr = wrap_if(str_cvalue(self.value), self.value.precedence < self.precedence)
+		vstr = str_cvalue(self.value, ext_precedence=self.precedence)
 		return '(%s)%s' % (str_ctype(self.type), vstr)
 
 
@@ -519,7 +521,7 @@ class CValueRef(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		return '&%s' % str_cvalue(self.value)
+		return '&%s' % str_cvalue(self.value, ext_precedence=self.precedence)
 
 
 class CValueDeref(CValue):
@@ -530,7 +532,7 @@ class CValueDeref(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		return '*%s' % str_cvalue(self.value)
+		return '*%s' % str_cvalue(self.value, ext_precedence=self.precedence)
 
 
 class CValueInc(CValue):
@@ -541,7 +543,7 @@ class CValueInc(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		return '++%s' % (str_cvalue(self.value))
+		return '++%s' % (str_cvalue(self.value, ext_precedence=self.precedence))
 
 
 class CValueDec(CValue):
@@ -552,7 +554,7 @@ class CValueDec(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		return '--%s%s' % (str_cvalue(self.value))
+		return '--%s%s' % (str_cvalue(self.value, ext_precedence=self.precedence))
 
 
 class CValuePositive(CValue):
@@ -563,7 +565,7 @@ class CValuePositive(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		return '+%s' % (str_cvalue(self.value))
+		return '+%s' % (str_cvalue(self.value, ext_precedence=self.precedence))
 
 
 class CValueNegative(CValue):
@@ -574,7 +576,7 @@ class CValueNegative(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		return '-%s' % (str_cvalue(self.value))
+		return '-%s' % (str_cvalue(self.value, ext_precedence=self.precedence))
 
 
 class CValueNotLogical(CValue):
@@ -585,7 +587,7 @@ class CValueNotLogical(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		return '!%s' % (str_cvalue(self.value))
+		return '!%s' % (str_cvalue(self.value, ext_precedence=self.precedence))
 
 
 class CValueNotBitwise(CValue):
@@ -596,7 +598,7 @@ class CValueNotBitwise(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		return '~%s' % (str_cvalue(self.value))
+		return '~%s' % (str_cvalue(self.value, ext_precedence=self.precedence))
 
 
 class CValueSizeofValue(CValue):
@@ -631,7 +633,9 @@ class CValueMul(CValue):
 		self.precedence = 12
 
 	def __str__(self):
-		return '%s * %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s * %s' % (lx, rx)
 
 
 class CValueDiv(CValue):
@@ -644,7 +648,9 @@ class CValueDiv(CValue):
 		self.precedence = 12
 
 	def __str__(self):
-		return '%s / %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s / %s' % (lx, rx)
 
 
 class CValueRem(CValue):
@@ -657,7 +663,9 @@ class CValueRem(CValue):
 		self.precedence = 12
 
 	def __str__(self):
-		return '%s %% %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s %% %s' % (lx, rx)
 
 
 class CValueAdd(CValue):
@@ -670,7 +678,9 @@ class CValueAdd(CValue):
 		self.precedence = 11
 
 	def __str__(self):
-		return '%s + %s' % ((self.left), (self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s + %s' % (lx, rx)
 
 
 class CValueSub(CValue):
@@ -683,7 +693,10 @@ class CValueSub(CValue):
 		self.precedence = 11
 
 	def __str__(self):
-		return '%s - %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s - %s' % (lx, rx)
+
 
 class CValueShl(CValue):
 	def __init__(self, left, right):
@@ -695,7 +708,19 @@ class CValueShl(CValue):
 		self.precedence = 10
 
 	def __str__(self):
-		return '%s << %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+		# -Wbitwise-op-parentheses supressing
+		lprec = self.precedence
+		if self.left.precedence == self.precedence + 1:
+			lprec = valuePrecedenceMax
+		rprec = self.precedence
+		if self.right.precedence == self.precedence + 1:
+			rprec = valuePrecedenceMax
+
+		lx = str_cvalue(self.left, ext_precedence=lprec)
+		rx = str_cvalue(self.right, ext_precedence=rprec)
+		return '%s << %s' % (lx, rx)
+
 
 class CValueShr(CValue):
 	def __init__(self, left, right):
@@ -707,7 +732,18 @@ class CValueShr(CValue):
 		self.precedence = 10
 
 	def __str__(self):
-		return '%s >> %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+		# -Wbitwise-op-parentheses supressing
+		lprec = self.precedence
+		if self.left.precedence == self.precedence + 1:
+			lprec = valuePrecedenceMax
+		rprec = self.precedence
+		if self.right.precedence == self.precedence + 1:
+			rprec = valuePrecedenceMax
+
+		lx = str_cvalue(self.left, ext_precedence=lprec)
+		rx = str_cvalue(self.right, ext_precedence=rprec)
+		return '%s >> %s' % (lx, rx)
 
 
 class CValueLt(CValue):
@@ -720,7 +756,9 @@ class CValueLt(CValue):
 		self.precedence = 9
 
 	def __str__(self):
-		return '%s < %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s < %s' % (lx, rx)
 
 
 class CValueGt(CValue):
@@ -733,7 +771,9 @@ class CValueGt(CValue):
 		self.precedence = 9
 
 	def __str__(self):
-		return '%s > %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s > %s' % (lx, rx)
 
 
 class CValueLE(CValue):
@@ -746,7 +786,9 @@ class CValueLE(CValue):
 		self.precedence = 9
 
 	def __str__(self):
-		return '%s <= %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s <= %s' % (lx, rx)
 
 
 class CValueGE(CValue):
@@ -759,7 +801,9 @@ class CValueGE(CValue):
 		self.precedence = 9
 
 	def __str__(self):
-		return '%s >= %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s >= %s' % (lx, rx)
 
 
 class CValueEq(CValue):
@@ -772,7 +816,9 @@ class CValueEq(CValue):
 		self.precedence = 8
 
 	def __str__(self):
-		return '%s == %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s == %s' % (lx, rx)
 
 
 class CValueNe(CValue):
@@ -785,7 +831,9 @@ class CValueNe(CValue):
 		self.precedence = 8
 
 	def __str__(self):
-		return '%s != %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s != %s' % (lx, rx)
 
 
 class CValueAndBitwise(CValue):
@@ -798,7 +846,18 @@ class CValueAndBitwise(CValue):
 		self.precedence = 7
 
 	def __str__(self):
-		return '%s & %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+		# -Wbitwise-op-parentheses supressing
+		lprec = self.precedence
+		if self.left.precedence == self.precedence + 1:
+			lprec = valuePrecedenceMax
+		rprec = self.precedence
+		if self.right.precedence == self.precedence + 1:
+			rprec = valuePrecedenceMax
+
+		lx = str_cvalue(self.left, ext_precedence=lprec)
+		rx = str_cvalue(self.right, ext_precedence=rprec)
+		return '%s & %s' % (lx, rx)
 
 
 class CValueXorBitwise(CValue):
@@ -811,7 +870,18 @@ class CValueXorBitwise(CValue):
 		self.precedence = 6
 
 	def __str__(self):
-		return '%s ^ %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+		# -Wbitwise-op-parentheses supressing
+		lprec = self.precedence
+		if self.left.precedence == self.precedence + 1:
+			lprec = valuePrecedenceMax
+		rprec = self.precedence
+		if self.right.precedence == self.precedence + 1:
+			rprec = valuePrecedenceMax
+
+		lx = str_cvalue(self.left, ext_precedence=lprec)
+		rx = str_cvalue(self.right, ext_precedence=rprec)
+		return '%s ^ %s' % (lx, rx)
 
 
 class CValueOrBitwise(CValue):
@@ -824,7 +894,18 @@ class CValueOrBitwise(CValue):
 		self.precedence = 5
 
 	def __str__(self):
-		return '%s | %s' % (str_cvalue(self.left), str_cvalue(self.right))
+
+		# -Wbitwise-op-parentheses supressing
+		lprec = self.precedence
+		if self.left.precedence == self.precedence + 1:
+			lprec = valuePrecedenceMax
+		rprec = self.precedence
+		if self.right.precedence == self.precedence + 1:
+			rprec = valuePrecedenceMax
+
+		lx = str_cvalue(self.left, ext_precedence=lprec)
+		rx = str_cvalue(self.right, ext_precedence=rprec)
+		return '%s | %s' % (lx, rx)
 
 
 class CValueAndLogical(CValue):
@@ -837,7 +918,9 @@ class CValueAndLogical(CValue):
 		self.precedence = 4
 
 	def __str__(self):
-		return '%s && %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s && %s' % (lx, rx)
 
 
 class CValueOrLogical(CValue):
@@ -850,7 +933,9 @@ class CValueOrLogical(CValue):
 		self.precedence = 3
 
 	def __str__(self):
-		return '%s || %s' % (str_cvalue(self.left), str_cvalue(self.right))
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s || %s' % (lx, rx)
 
 
 
@@ -906,11 +991,15 @@ class CValueVaCopy(CValue):
 
 
 
-def str_cvalue(v):
+def str_cvalue(v, ext_precedence=0):
 	assert(v != None)
+	sstr = ''
 	if v.mark != None:
-		return '/*mark=%s*/' % v.mark + str(v)
-	return str(v)
+		sstr += '/*%s*/' % v.mark
+
+	sstr += wrap_if(str(v), v.precedence < ext_precedence)
+	return sstr
+
 
 
 
