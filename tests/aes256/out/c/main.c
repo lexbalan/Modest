@@ -5,13 +5,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "aes256.h"
-
-#ifndef LENGTHOF
+#if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
+#endif
 struct test_case {
 	aes256_Key key;
 	aes256_Block plaintext;
@@ -91,4 +88,3 @@ int32_t main(void) {
 	printf("passed\n");
 	return EXIT_SUCCESS;
 }
-

@@ -6,11 +6,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "./sha256.h"
-
-#ifndef LENGTHOF
+#if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
+#endif
 #define INPUT_DATA_LENGTH 32
 struct sha256_test_case {
 	char inputData[INPUT_DATA_LENGTH];
@@ -69,4 +67,3 @@ int main(void) {
 	printf("passed\n");
 	return EXIT_SUCCESS;
 }
-

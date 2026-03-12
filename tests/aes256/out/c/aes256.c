@@ -1,15 +1,12 @@
 
 #include "aes256.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
-#ifndef LENGTHOF
+#if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
+#endif
 
 static uint8_t rj_xtime(uint8_t x) {
 	const uint8_t y = 0xFF & x << 1;
@@ -294,4 +291,3 @@ aes256_Result aes256_deinit(aes256_Context *ctx) {
 	memcpy(&ctx->deckey, &zeroKey, sizeof(aes256_Key));
 	return AES256_RESULT_SUCCESS;
 }
-

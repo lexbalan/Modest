@@ -5,10 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "chacha20.h"
-
-
 struct context {
 	uint8_t (*key)[32];
 	uint32_t nonce[3];
@@ -87,4 +84,3 @@ static bool test0(void) {
 	uint8_t (*const bptr)[64] = (uint8_t (*)[64])&block;
 	return memcmp(bptr, &(const uint8_t [64])TEST_RESULT, sizeof(uint8_t [64])) == 0;
 }
-

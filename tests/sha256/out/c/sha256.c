@@ -1,12 +1,9 @@
 
 #include "sha256.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-
-
 struct context {
 	uint8_t data[64];
 	uint32_t datalen;
@@ -150,4 +147,3 @@ void sha256_hash(uint8_t (*msg)[], uint32_t msgLen, sha256_Hash *outHash) {
 	update(&ctx, msg, msgLen);
 	final(&ctx, outHash);
 }
-

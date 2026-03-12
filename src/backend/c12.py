@@ -31,9 +31,6 @@ def wrapp(s, cond):
 	return s
 
 
-cmodule = None
-
-
 # идетнифиаторы декларированных (или определенных) сущностей
 declared = []
 
@@ -1663,10 +1660,10 @@ def do_def_const(x):
 already_included = []
 def include(path, local=True):
 	if path in already_included:
-		return None
+		return ()
 	already_included.append(path)
 	dv = CInclude(path, isglobal=not local)
-	return dv
+	return (dv,)
 
 
 
@@ -1822,92 +1819,28 @@ def do_helpers(module):
 
 
 
-def do_header(module):
-	defs = module.defs
-
-	global already_included
-	already_included = []
-
-	xdefs = []
-
-	guardsymbol = camel_to_upper_snake(module.prefix) + '_H'
-	xdefs.append(CMacrodefinition(guardsymbol, None))
-
-	if defs != []:
-		for x in defs:
-			if x.is_stmt_directive() and isinstance(x, StmtDirectiveCInclude):
-				xdefs.append(include(x.c_name, local=x.is_local))
-
-	# add C include directive for included modules
-	for inc in module.included_modules:
-		if not inc.hasAttribute('do_not_include'):
-			xdefs.append(include(inc.id + '.h', local=True))
-
-	for x in defs:
-		if x.is_stmt_import() and not x.module.hasAttribute('do_not_include'):
-			s = os.path.basename(x.impline) + '.h'
-			xdefs.append(include(s, local=True))
-
-	xdefs.append(include("stddef.h", local=False))
-	xdefs.append(include("stdint.h", local=False))
-	xdefs.append(include("stdbool.h", local=False))
-	xdefs.extend(do_helpers(module))
-
-	for x in defs:
-		if is_private(x):
-			continue
-
-		if x.hasAttribute2('c_no_print') or x.hasAttribute2('no_print'):
-			continue
-
-		#if x.is_stmt_directive():
-		#	if isinstance(x, StmtDirectiveCInclude):
-		#		continue
-
-		if x.is_stmt_def_func():
-			#nnl(x.nl)
-			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
-				#out("static ")
-				xdefs.extend(do_def_func(x))
-				continue
-			xdefs.extend(do_decl_func(x))
-		elif x.is_stmt_def_var():
-			#nnl(x.nl)
-			xdefs.extend(do_def_var(x, as_extern=True))
-		elif x.is_stmt_def_type():
-			#nnl(x.nl)
-			xdefs.extend(do_deps(x.deps))
-			xdefs.extend(do_def_type(x))
-		elif x.is_stmt_def_const():
-			#nnl(x.nl)
-			xdefs.extend(do_deps(x.deps))
-			xdefs.extend(do_def_const(x))
-
-	dv = CIfdefRegion(pairs=[("!defined(%s)" % guardsymbol, xdefs)])
-	return (dv,)
-
 
 
 def helper_use_abs():
-	include("stdlib.h", local=False)
+	return include("stdlib.h", local=False)
 
 
 def helper_use_va_arg():
-	include("stdarg.h", local=False)
+	return include("stdarg.h", local=False)
 
 
 def helper_use_lengthof():
-	out("\n#ifndef LENGTHOF")
-	out("\n#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))")
-	out("\n#endif /* LENGTHOF */")
-	module_undef_list.append("LENGTHOF")
+	#module_undef_list.append("LENGTHOF")
+	df = CIfdefRegion([("!defined(LENGTHOF)", [CMacrodefinition("LENGTHOF(x)", "(sizeof(x) / sizeof((x)[0]))")])])
+	return (df,)
 
 
 def helper_use_rawcast():
 	# из-за strict aliasing в C трюк с укзаателями не гарантирует что мы не словим UB при оптимизациях
 	# union же гарантирует нам преобразование и данный трюк сработает на стандартах начиная с C99 и выше
-	out("\n#define RAWCAST(type_dst, type_src, value) (((union { type_src src; type_dst dst; }){ .src = (value) }).dst)")
-	module_undef_list.append("LENGTHOF")
+	df = CMacrodefinition("RAWCAST(type_dst, type_src, value)", "(((union { type_src src; type_dst dst; }){ .src = (value) }).dst)")
+	return (df,)
+
 
 def helper_use_bigint():
 	out("\n#ifndef __BIG_INT128__")
@@ -1996,110 +1929,121 @@ c_include_helpers = {
 
 
 
-def print_include(x, local=True):
-	inc = include(x, local=local)
-	if inc:
-		out(str(inc))
 
-
-def print_cfile(module, _outname):
-	outname = _outname + '.c'
-
-	output_open(outname)
-
-	if module.hasAttribute('c_no_print'):
-		output_close()
-		return
-
-
+def do_header(module):
 	defs = module.defs
-
-
-	# Печатаем первые комментарии
-#	if len(defs) > 0:
-#		def0 = defs[0]
-#		if def0.is_stmt_comment():
-#			nnl(def0.nl)
-#			print_comment(def0)
-#			newline()
-#			defs = defs[1:]
-
 
 	global already_included
 	already_included = []
-	if module.id != 'main':
-		print_include(module.id + '.h')
-		newline()
 
+	xdefs = []
 
-	dirs = [
-		StmtDirectiveCInclude("stddef.h"),
-		StmtDirectiveCInclude("stdint.h"),
-		StmtDirectiveCInclude("stdbool.h"),
-		StmtDirectiveCInclude("string.h"),
-	]
-	defs = dirs + defs
+	guardsymbol = camel_to_upper_snake(module.prefix) + '_H'
+	xdefs.append(CMacrodefinition(guardsymbol, None))
 
-	for x in defs:
-		if isinstance(x, StmtDirectiveCInclude):
-			if not x.is_local and x.c_name in STD_HEADERS:
-				print_include(x.c_name, local=x.is_local)
-
-
-	nl_after_incs = False
 	if defs != []:
-		#newline()
 		for x in defs:
-			if x.is_stmt_directive():
-				if isinstance(x, StmtDirectiveCInclude):
-					print_include(x.c_name, local=x.is_local)
-					nl_after_incs = True
+			if x.is_stmt_directive() and isinstance(x, StmtDirectiveCInclude):
+				xdefs.extend(include(x.c_name, local=x.is_local))
 
-	# print C `#include ""` directive for included modules
+	# add C include directive for included modules
 	for inc in module.included_modules:
 		if not inc.hasAttribute('do_not_include'):
-			print_include(inc.id + '.h', local=True)
-			nl_after_incs = True
+			xdefs.extend(include(inc.id + '.h', local=True))
 
-	sss = True
 	for x in defs:
-		if x.is_stmt_import():
+		if x.is_stmt_import() and not x.module.hasAttribute('do_not_include'):
+			s = os.path.basename(x.impline) + '.h'
+			xdefs.extend(include(s, local=True))
+
+	xdefs.extend(include("stddef.h", local=False))
+	xdefs.extend(include("stdint.h", local=False))
+	xdefs.extend(include("stdbool.h", local=False))
+	xdefs.extend(do_helpers(module))
+
+	for x in defs:
+		if is_private(x):
+			continue
+
+		if x.hasAttribute2('c_no_print') or x.hasAttribute2('no_print'):
+			continue
+
+		#if x.is_stmt_directive():
+		#	if isinstance(x, StmtDirectiveCInclude):
+		#		continue
+
+		if x.is_stmt_def_func():
 			#nnl(x.nl)
-			if not x.module.hasAttribute('do_not_include'):
-				if sss:
-					sss = False
-					newline()
-				s = os.path.basename(x.impline)
-				print_include(s + '.h', local=True)
-				nl_after_incs = True
+			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
+				#out("static ")
+				xdefs.extend(do_def_func(x))
+				continue
+			xdefs.extend(do_decl_func(x))
+		elif x.is_stmt_def_var():
+			#nnl(x.nl)
+			xdefs.extend(do_def_var(x, as_extern=True))
+		elif x.is_stmt_def_type():
+			#nnl(x.nl)
+			xdefs.extend(do_deps(x.deps))
+			xdefs.extend(do_def_type(x))
+		elif x.is_stmt_def_const():
+			#nnl(x.nl)
+			xdefs.extend(do_deps(x.deps))
+			xdefs.extend(do_def_const(x))
 
-	#if nl_after_incs:
-	#	newline()
+	dv = CIfdefRegion(pairs=[("!defined(%s)" % guardsymbol, xdefs)])
+	return (dv,)
 
 
-	xx2 = False
+def do_cfile(module):
+	defs = module.defs
+
+	global already_included
+	already_included = []
+
+	xdefs = []
+
+	if module.id != 'main':
+		xdefs.extend(include(module.id + '.h'))
+
+	xdefs.extend(include("stddef.h", local=False))
+	xdefs.extend(include("stdint.h", local=False))
+	xdefs.extend(include("stdbool.h", local=False))
+	xdefs.extend(include("string.h", local=False))
+
+	for x in defs:
+		if isinstance(x, StmtDirectiveCInclude) and (not x.is_local and x.c_name in STD_HEADERS):
+			xdefs.extend(include(x.c_name, local=x.is_local))
+
+	for x in defs:
+		if x.is_stmt_directive() and isinstance(x, StmtDirectiveCInclude):
+			xdefs.extend(include(x.c_name, local=x.is_local))
+
+	# print C include for included modules
+	for inc in module.included_modules:
+		if not inc.hasAttribute('do_not_include'):
+			xdefs.extend(include(inc.id + '.h', local=True))
+
+	for x in defs:
+		if x.is_stmt_import() and not x.module.hasAttribute('do_not_include'):
+			s = os.path.basename(x.impline)
+			xdefs.extend(include(s + '.h', local=True))
+
 	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude):
-			print_include(x.c_name, local=x.is_local)
-			xx2 = True
+			xdefs.extend(include(x.c_name, local=x.is_local))
 
-	if xx2:
-		newline()
 
 	for use in module.att:
 		if use in c_helpers:
-			c_helpers[use]()
+			xdefs.extend(c_helpers[use]())
 
-	newline()
 
-	if len(module.anon_recs) > 0:
-		out("\n\n/* anonymous records */")
-		for anon_rec in module.anon_recs:
-			nl_indent()
-			out(str_type_record(anon_rec, tag=anon_rec.c_anon_id))
-			out(";")
-
-	xdefs = []
+#	if len(module.anon_recs) > 0:
+#		out("\n\n/* anonymous records */")
+#		for anon_rec in module.anon_recs:
+#			out(str_type_record(anon_rec, tag=anon_rec.c_anon_id))
+#			out(";")
 
 	xdefs.extend(do_helpers(module))
 
@@ -2148,23 +2092,23 @@ def print_cfile(module, _outname):
 #			print_directive(x)
 			pass
 
+	return xdefs
 
-	for xd in xdefs:
-		out(str_cdef(xd))
 
-	#if len(module_undef_list) > 0:
-	#	newline(1)
-	#	for u in module_undef_list:
-	#		undef(u)
 
-	newline(2)
+
+def dump(filename, defs):
+	output_open(filename)
+	for d in defs:
+		out(str(d))
 	output_close()
 
 
-
 def run(module, _outname):
-	global cmodule, csettings
-	cmodule = module
+	global csettings
+
+	if module.hasAttribute('c_no_print'):
+		return
 
 	hpath = _outname
 	if 'include_dir' in csettings:
@@ -2174,15 +2118,12 @@ def run(module, _outname):
 
 	if module.id != 'main':
 		hh = do_header(module)
-		#!
-		outname = hpath + '.h'
-		output_open(outname)
-		for h in hh:
-			out(str(h))
-		output_close()
+		dump(hpath + '.h', hh)
 
-	print_cfile(module, _outname)
-	return
+
+
+	cc = do_cfile(module)
+	dump(_outname + '.c', cc)
 
 
 

@@ -5,13 +5,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "crc32.h"
-
-#ifndef LENGTHOF
+#if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
+#endif
 #define DATA_BUFFER_LENGTH 128
 struct test {
 	uint8_t data[DATA_BUFFER_LENGTH];
@@ -47,4 +44,3 @@ int main(void) {
 	printf("passed\n");
 	return EXIT_SUCCESS;
 }
-

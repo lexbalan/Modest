@@ -1,13 +1,10 @@
 
 #include "crc32.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-
 #define TABLE_SIZE 256
 static uint32_t table[TABLE_SIZE];
 
@@ -41,4 +38,3 @@ uint32_t crc32_run(uint8_t (*buf)[], uint32_t len) {
 	}
 	return crc ^ 0xFFFFFFFFL;
 }
-
