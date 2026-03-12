@@ -1287,6 +1287,7 @@ class CInclude():
 		super().__init__()
 		self.text = text
 		self.isglobal = isglobal
+		self.mark = None
 
 	def __str__(self):
 		#sstr = str_nl_indent(self.nl)
@@ -1299,5 +1300,35 @@ def str_cdef(x):
 	if x.mark:
 		out('/*%s*/' % x.mark)
 	return str(x)
+
+
+# pairs = ("macro text", [<defs>])
+class CIfdefRegion():
+	def __init__(self, pairs, _else=None):
+		self.pairs = pairs
+		self._else = _else
+		self.mark = None
+
+	def __str__(self):
+		sstr = ''
+		directive = '#if'
+		for pair in self.pairs:
+			sstr += "\n%s %s" % (directive, pair[0])
+			for xd in pair[1]:
+				#print(":" + str(xd))
+				sstr += str_cdef(xd)
+			directive = '#elif'
+
+		if self._else != None:
+			sstr += '\n#else'
+			for xd in self._else:
+				sstr += str_cdef(xd)
+
+		sstr += "\n#endif"
+		return sstr
+
+
+
+
 
 

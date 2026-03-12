@@ -5,32 +5,21 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifndef __STR_UNICODE__
-#if __has_include(<uchar.h>)
-#include <uchar.h>
-#else
-typedef uint16_t char16_t;
-typedef uint32_t char32_t;
-#endif
-#define __STR_UNICODE__
-#define __STR8(x)  x
-#define __STR16(x) u##x
-#define __STR32(x) U##x
-#define _STR8(x)  __STR8(x)
-#define _STR16(x) __STR16(x)
-#define _STR32(x) __STR32(x)
-#define _CHR8(x)  (__STR8(x)[0])
-#define _CHR16(x) (__STR16(x)[0])
-#define _CHR32(x) (__STR32(x)[0])
-#endif /* __STR_UNICODE__ */
-
-
 #ifndef LENGTHOF
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif /* LENGTHOF */
 #include <stdlib.h>
 #include <stdarg.h>
 
+#if !defined(__STR_UNICODE__)
+#define __STR_UNICODE__
+typedef uint16_t char16_t;
+typedef uint32_t char32_t;
+#define __STR16(x) u##x
+#define __STR32(x) U##x
+#define _STR16(x) __STR16(x)
+#define _STR32(x) __STR32(x)
+#endif
 typedef int32_t MyInt;
 struct point {
 	uint64_t x;
@@ -52,8 +41,8 @@ static void foo(int32_t a, int64_t b) {
 	return;
 }
 #define C 15
-static uint32_t k[3] = /*CA2*/{0x1, 0x2, 0x3};
-static struct point p0 = /*CR5*/(struct point){
+static uint32_t k[3] = {0x1, 0x2, 0x3};
+static struct point p0 = (struct point){
 	.x = 1,
 	.y = 2
 };
@@ -72,9 +61,9 @@ int main(void) {
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';
 	const char32_t xc3 = U'A';
-	const char xcs1[1] = /*CA3*/"A";
-	const char16_t xcs2[1] = /*CA3*/u"A";
-	const char32_t xcs3[1] = /*CA3*/U"A";
+	const char xcs1[1] = "A";
+	const char16_t xcs2[1] = u"A";
+	const char32_t xcs3[1] = U"A";
 	char *const xs1 = "A";
 	char16_t *const xs2 = u"A";
 	char32_t *const xs3 = U"A";
@@ -82,13 +71,13 @@ int main(void) {
 	char c1 = 'B';
 	char16_t c2 = u'B';
 	char32_t c3 = U'B';
-	char cs1[1] = /*CA1*/"B";
-	char16_t cs2[1] = /*CA1*/u"B";
-	char32_t cs3[1] = /*CA1*/U"B";
+	char cs1[1] = "B";
+	char16_t cs2[1] = u"B";
+	char32_t cs3[1] = U"B";
 	char *s1 = "B";
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
-	int32_t arr[3] = /*CA2*/{1, 2, 3};
+	int32_t arr[3] = {1, 2, 3};
 	int32_t arr2[3];
 	memcpy(&arr2, &arr, sizeof(int32_t [3]));
 	const int32_t arr4[3];
@@ -98,9 +87,9 @@ int main(void) {
 	memset(&arr2, 0, sizeof(int32_t [3]));
 	memcpy(&arr2, &arr, sizeof(int32_t [3]));
 	facc(&arr2);
-	struct point rec = /*CR5*/(struct point){.x = 0, .y = 0};
+	struct point rec = (struct point){.x = 0, .y = 0};
 	struct point rec2;
-	rec2 = /*CR4*/(struct point){0};
+	rec2 = (struct point){0};
 	rec2 = rec;
 	LENGTHOF(arr);
 	printf("Hello World!\n");
@@ -121,7 +110,7 @@ int main(void) {
 	sizeof a;
 	sizeof(uint32_t);
 	arr[1];
-	struct point p0 = /*CR4*/(struct point){0};
+	struct point p0 = (struct point){0};
 	p0.x;
 	p0.y;
 	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)) {

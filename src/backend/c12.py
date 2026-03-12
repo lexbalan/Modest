@@ -913,9 +913,9 @@ def do_cvalue_access(x, ctx):
 
 	# если имеем дело c константной записью (глоб константа)
 	# и результат операции доступа - константа которая уже тут
-#	if not left.isValueConst():
-#		if value_is_generic_immediate(left):
-#			return str_value_literal(x, ctx)
+	if not left.isValueConst():
+		if value_is_generic_immediate(left):
+			return do_cvalue_literal(x, ctx)
 
 	lx = do_cvalue(left, ctx=ctx)
 	if value_is_generic_immediate_const(left):
@@ -924,6 +924,7 @@ def do_cvalue_access(x, ctx):
 	field_id_str = get_id_str(x.field)
 	if left.type.is_pointer():
 		return CValueAccessPtr(lx, field_id_str)
+
 	return CValueAccess(lx, field_id_str)
 
 
@@ -953,8 +954,8 @@ def do_cvalue_ref(x, ctx):
 	cv = CValueRef(cv)
 
 	if value.isValueSlice():
-		# ref to slice returns pointer to array item (!)
-		# now we need to cast it to pointer to slice type array
+		# "ref to slice" in C is just pointer to array item,
+		# therefore we need cast it to pointer to result array
 		cv = CValueCast(do_ctype(x.type), cv)
 
 	return cv
@@ -1662,10 +1663,10 @@ def do_def_const(x):
 already_included = []
 def include(path, local=True):
 	if path in already_included:
-		return
+		return None
 	already_included.append(path)
 	dv = CInclude(path, isglobal=not local)
-	out(str(dv))
+	return dv
 
 
 
@@ -1772,92 +1773,85 @@ def nnl(nl):
 
 
 
-def print_helpers(module):
-	for use in module.att:
-		if use in h_helpers:
-			newline()
-			h_helpers[use]()
+
+#ifndef __STR_UNICODE__
+#if __has_include(<uchar.h>)
+#include <uchar.h>
+#else
+#typedef uint16_t char16_t;
+#typedef uint32_t char32_t;
+#endif
+#define __STR_UNICODE__
+#define __STR8(x)  x
+#define __STR16(x) u##x
+#define __STR32(x) U##x
+#define _STR8(x)  __STR8(x)
+#define _STR16(x) __STR16(x)
+#define _STR32(x) __STR32(x)
+#define _CHR8(x)  (__STR8(x)[0])
+#define _CHR16(x) (__STR16(x)[0])
+#define _CHR32(x) (__STR32(x)[0])
+#endif /* __STR_UNICODE__ */
+
+
+
+def do_helpers(module):
+#	for use in module.att:
+#		if use in h_helpers:
+#			newline()
+#			h_helpers[use]()
 
 	if module.hasAttribute('use_unicode'):
-		out("\n")
-		out("\n#ifndef __STR_UNICODE__")
-		out("\n#if __has_include(<uchar.h>)")
-		include("uchar.h", local=False)
-		out("\n#else")
-		out("\ntypedef uint16_t char16_t;")
-		out("\ntypedef uint32_t char32_t;")
-		out("\n#endif")
-		out("\n#define __STR_UNICODE__")
-		out("\n#define __STR8(x)  x")
-		out("\n#define __STR16(x) u##x")
-		out("\n#define __STR32(x) U##x")
-		out("\n#define _STR8(x)  __STR8(x)")
-		out("\n#define _STR16(x) __STR16(x)")
-		out("\n#define _STR32(x) __STR32(x)")
-		out("\n#define _CHR8(x)  (__STR8(x)[0])")
-		out("\n#define _CHR16(x) (__STR16(x)[0])")
-		out("\n#define _CHR32(x) (__STR32(x)[0])")
-		out("\n#endif /* __STR_UNICODE__ */")
-		out("\n")
+		pairs = [
+			(
+				"!defined(__STR_UNICODE__)",
+				[
+					CMacrodefinition("__STR_UNICODE__", None),
+					CStmtDefType("char16_t", CTypeNamed("uint16_t")),
+					CStmtDefType("char32_t", CTypeNamed("uint32_t")),
+					CMacrodefinition("__STR16(x)", "u##x"),
+					CMacrodefinition("__STR32(x)", "U##x"),
+					CMacrodefinition("_STR16(x)", "__STR16(x)"),
+					CMacrodefinition("_STR32(x)", "__STR32(x)"),
+				]
+			)
+		]
+
+		return [CIfdefRegion(pairs)]
+	return []
 
 
-def print_header(module, outname):
-	outname = outname + '.h'
-	output_open(outname)
 
+def do_header(module):
 	defs = module.defs
-
-	# Печатаем первые комментарии
-#	if len(defs) > 0:
-#		def0 = defs[0]
-#		if def0.is_stmt_comment():
-#			nnl(def0.nl)
-#			print_comment(def0)
-#			newline()
-#			defs = module.defs[1:]
-
-	#guardsymbol = outname.split("/")[-1]
-	#guardsymbol = guardsymbol[:-2].upper() + '_H'
-	guardsymbol = camel_to_upper_snake(module.prefix) + '_H'
-	newline()
-	out("#ifndef %s\n" % guardsymbol)
-	out("#define %s\n" % guardsymbol)
 
 	global already_included
 	already_included = []
-	include("stddef.h", local=False)
-	include("stdint.h", local=False)
-	include("stdbool.h", local=False)
-
-	nl_after_incs = False
-	if defs != []:
-		newline()
-		for x in defs:
-			if x.is_stmt_directive():
-				if isinstance(x, StmtDirectiveCInclude):
-					include(x.c_name, local=x.is_local)
-					nl_after_incs = True
-
-	# print C `#include ""` directive for included modules
-	for inc in module.included_modules:
-		if not inc.hasAttribute('do_not_include'):
-			include(inc.id + '.h', local=True)
-			nl_after_incs = True
-
-	for x in defs:
-		if x.is_stmt_import():
-			#nnl(x.nl)
-			if not x.module.hasAttribute('do_not_include'):
-				s = os.path.basename(x.impline)
-				include(s + '.h', local=True)
-				nl_after_incs = True
-
-	if nl_after_incs:
-		newline()
-
-	print_helpers(module)
 
 	xdefs = []
+
+	guardsymbol = camel_to_upper_snake(module.prefix) + '_H'
+	xdefs.append(CMacrodefinition(guardsymbol, None))
+
+	if defs != []:
+		for x in defs:
+			if x.is_stmt_directive() and isinstance(x, StmtDirectiveCInclude):
+				xdefs.append(include(x.c_name, local=x.is_local))
+
+	# add C include directive for included modules
+	for inc in module.included_modules:
+		if not inc.hasAttribute('do_not_include'):
+			xdefs.append(include(inc.id + '.h', local=True))
+
+	for x in defs:
+		if x.is_stmt_import() and not x.module.hasAttribute('do_not_include'):
+			s = os.path.basename(x.impline) + '.h'
+			xdefs.append(include(s, local=True))
+
+	xdefs.append(include("stddef.h", local=False))
+	xdefs.append(include("stdint.h", local=False))
+	xdefs.append(include("stdbool.h", local=False))
+	xdefs.extend(do_helpers(module))
 
 	for x in defs:
 		if is_private(x):
@@ -1870,10 +1864,8 @@ def print_header(module, outname):
 		#	if isinstance(x, StmtDirectiveCInclude):
 		#		continue
 
-
 		if x.is_stmt_def_func():
 			#nnl(x.nl)
-			#nnl(1)
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute2('inline'):
 				#out("static ")
 				xdefs.extend(do_def_func(x))
@@ -1891,15 +1883,8 @@ def print_header(module, outname):
 			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_const(x))
 
-
-	for xd in xdefs:
-		out(str_cdef(xd))
-
-	newline(2)
-	out("#endif /* %s */" % guardsymbol)
-	newline()
-	output_close()
-	return
+	dv = CIfdefRegion(pairs=[("!defined(%s)" % guardsymbol, xdefs)])
+	return (dv,)
 
 
 
@@ -2010,6 +1995,13 @@ c_include_helpers = {
 }
 
 
+
+def print_include(x, local=True):
+	inc = include(x, local=local)
+	if inc:
+		out(str(inc))
+
+
 def print_cfile(module, _outname):
 	outname = _outname + '.c'
 
@@ -2036,7 +2028,7 @@ def print_cfile(module, _outname):
 	global already_included
 	already_included = []
 	if module.id != 'main':
-		include(module.id + '.h')
+		print_include(module.id + '.h')
 		newline()
 
 
@@ -2051,10 +2043,7 @@ def print_cfile(module, _outname):
 	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude):
 			if not x.is_local and x.c_name in STD_HEADERS:
-				include(x.c_name, local=x.is_local)
-
-	if module.id == 'main':
-		print_helpers(module)
+				print_include(x.c_name, local=x.is_local)
 
 
 	nl_after_incs = False
@@ -2063,13 +2052,13 @@ def print_cfile(module, _outname):
 		for x in defs:
 			if x.is_stmt_directive():
 				if isinstance(x, StmtDirectiveCInclude):
-					include(x.c_name, local=x.is_local)
+					print_include(x.c_name, local=x.is_local)
 					nl_after_incs = True
 
 	# print C `#include ""` directive for included modules
 	for inc in module.included_modules:
 		if not inc.hasAttribute('do_not_include'):
-			include(inc.id + '.h', local=True)
+			print_include(inc.id + '.h', local=True)
 			nl_after_incs = True
 
 	sss = True
@@ -2081,7 +2070,7 @@ def print_cfile(module, _outname):
 					sss = False
 					newline()
 				s = os.path.basename(x.impline)
-				include(s + '.h', local=True)
+				print_include(s + '.h', local=True)
 				nl_after_incs = True
 
 	#if nl_after_incs:
@@ -2091,7 +2080,7 @@ def print_cfile(module, _outname):
 	xx2 = False
 	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude):
-			include(x.c_name, local=x.is_local)
+			print_include(x.c_name, local=x.is_local)
 			xx2 = True
 
 	if xx2:
@@ -2111,6 +2100,8 @@ def print_cfile(module, _outname):
 			out(";")
 
 	xdefs = []
+
+	xdefs.extend(do_helpers(module))
 
 	for x in defs:
 		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
@@ -2182,7 +2173,14 @@ def run(module, _outname):
 		hpath = inc_dir + '/' + hname
 
 	if module.id != 'main':
-		print_header(module, hpath)
+		hh = do_header(module)
+		#!
+		outname = hpath + '.h'
+		output_open(outname)
+		for h in hh:
+			out(str(h))
+		output_close()
+
 	print_cfile(module, _outname)
 	return
 
