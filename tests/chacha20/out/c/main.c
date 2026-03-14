@@ -21,7 +21,7 @@ static struct context init(uint8_t (*key)[32], uint32_t (*_nonce)[3]) {
 		.key = key,
 		.nonce = {nonce[0], nonce[1], nonce[2]},
 		.blockCounter = 0,
-		.blockOffset = (uint32_t)sizeof(chacha20_Block)
+		.blockOffset = /*$*/((uint32_t)sizeof(chacha20_Block))
 };
 }
 
@@ -29,13 +29,13 @@ static void cipher(struct context *ctx, uint8_t (*data)[], uint32_t len) {
 	uint32_t i = 0;
 	uint8_t (*bptr)[] = NULL;
 	while (i < len) {
-		if (ctx->blockOffset == (uint32_t)sizeof(chacha20_Block)) {
+		if (ctx->blockOffset == /*$*/((uint32_t)sizeof(chacha20_Block))) {
 			chacha20_State state;
-			chacha20_makeState((chacha20_Key *)ctx->key, ctx->blockCounter, &ctx->nonce, &state);
+			chacha20_makeState(/*$*/((chacha20_Key *)ctx->key), ctx->blockCounter, &ctx->nonce, &state);
 			memcpy((uint32_t (*)[16 - 13])&state[13], (uint32_t (*)[3 - 0])&ctx->nonce[0], sizeof(uint32_t [16 - 13]));
 			chacha20_chacha20Block(&state, &ctx->block);
 			ctx->blockOffset = 0;
-			bptr = (uint8_t (*)[])&ctx->block;
+			bptr = /*$*/((uint8_t (*)[])&ctx->block);
 		}
 		(*data)[i] = (*data)[i] ^ (*bptr)[ctx->blockOffset];
 		ctx->blockOffset = ctx->blockOffset + 1;
@@ -53,7 +53,7 @@ static bool test0(void);
 int main(void) {
 	printf("test ChaCha20 ");
 	struct context ctx = init(&testKey, &testNonce2);
-	uint8_t (*const dptr)[] = (uint8_t (*)[])xlorem1024;
+	uint8_t (*const dptr)[] = /*$*/((uint8_t (*)[])xlorem1024);
 	cipher(&ctx, dptr, 1024);
 	int32_t i = 0;
 	struct context ctx2 = init(&testKey, &testNonce2);
@@ -78,9 +78,9 @@ static bool test0(void) {
 	uint8_t nonce[12];
 	memcpy(&nonce, &testNonce, sizeof(uint8_t [12]));
 	chacha20_State state;
-	chacha20_makeState((chacha20_Key *)&key, counter, (uint32_t (*)[3])&nonce, &state);
+	chacha20_makeState(/*$*/((chacha20_Key *)&key), counter, /*$*/((uint32_t (*)[3])&nonce), &state);
 	chacha20_Block block;
 	chacha20_chacha20Block(&state, &block);
-	uint8_t (*const bptr)[64] = (uint8_t (*)[64])&block;
+	uint8_t (*const bptr)[64] = /*$*/((uint8_t (*)[64])&block);
 	return memcmp(bptr, &(const uint8_t [64])TEST_RESULT, sizeof(uint8_t [64])) == 0;
 }

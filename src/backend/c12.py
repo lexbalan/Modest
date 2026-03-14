@@ -1131,29 +1131,6 @@ def get_cvalue_size_for(a, b, ti):
 	return CValueSizeofType(do_ctype(ct))
 
 
-def do_cvalue_bin(x, ctx):
-	left = do_cvalue(x.left)
-	right = do_cvalue(x.right)
-	op = bin_ops[x.op]
-	if x.op == HLIR_VALUE_OP_ADD: return CValueAdd(left, right)
-	if x.op == HLIR_VALUE_OP_SUB: return CValueSub(left, right)
-	if x.op == HLIR_VALUE_OP_MUL: return CValueMul(left, right)
-	if x.op == HLIR_VALUE_OP_DIV: return CValueDiv(left, right)
-	if x.op == HLIR_VALUE_OP_REM: return CValueRem(left, right)
-	if x.op == HLIR_VALUE_OP_SHL: return CValueShl(left, right)
-	if x.op == HLIR_VALUE_OP_SHR: return CValueShr(left, right)
-	if x.op == HLIR_VALUE_OP_LE: return CValueLE(left, right)
-	if x.op == HLIR_VALUE_OP_GE: return CValueGE(left, right)
-	if x.op == HLIR_VALUE_OP_LT: return CValueLt(left, right)
-	if x.op == HLIR_VALUE_OP_GT: return CValueGt(left, right)
-	if x.op == HLIR_VALUE_OP_EQ: return do_cvalue_eq(x, logic=True, ctx=ctx)
-	if x.op == HLIR_VALUE_OP_NE: return do_cvalue_eq(x, logic=False, ctx=ctx)
-	if x.op == HLIR_VALUE_OP_OR: return CValueOrBitwise(left, right)
-	if x.op == HLIR_VALUE_OP_XOR: return CValueXorBitwise(left, right)
-	if x.op == HLIR_VALUE_OP_AND: return CValueAndBitwise(left, right)
-	if x.op == HLIR_VALUE_OP_LOGIC_OR: return CValueOrLogical(left, right)
-	if x.op == HLIR_VALUE_OP_LOGIC_AND: return CValueAndLogical(left, right)
-
 
 def do_cvalue(x, ctx=[]):
 	if x.isValueCons(): return do_cvalue_cons(x, ctx)
@@ -1197,6 +1174,33 @@ def do_cvalue(x, ctx=[]):
 #	else: sstr += str(x)
 
 	return None
+
+
+def do_cvalue_bin(x, ctx):
+	left = do_cvalue(x.left)
+	right = do_cvalue(x.right)
+	op = bin_ops[x.op]
+	if x.op == HLIR_VALUE_OP_ADD: return CValueAdd(left, right)
+	if x.op == HLIR_VALUE_OP_SUB: return CValueSub(left, right)
+	if x.op == HLIR_VALUE_OP_MUL: return CValueMul(left, right)
+	if x.op == HLIR_VALUE_OP_DIV: return CValueDiv(left, right)
+	if x.op == HLIR_VALUE_OP_REM: return CValueRem(left, right)
+	if x.op == HLIR_VALUE_OP_SHL: return CValueShl(left, right)
+	if x.op == HLIR_VALUE_OP_SHR: return CValueShr(left, right)
+	if x.op == HLIR_VALUE_OP_LE: return CValueLE(left, right)
+	if x.op == HLIR_VALUE_OP_GE: return CValueGE(left, right)
+	if x.op == HLIR_VALUE_OP_LT: return CValueLt(left, right)
+	if x.op == HLIR_VALUE_OP_GT: return CValueGt(left, right)
+	if x.op == HLIR_VALUE_OP_EQ: return do_cvalue_eq(x, logic=True, ctx=ctx)
+	if x.op == HLIR_VALUE_OP_NE: return do_cvalue_eq(x, logic=False, ctx=ctx)
+	if x.op == HLIR_VALUE_OP_OR: return CValueOrBitwise(left, right)
+	if x.op == HLIR_VALUE_OP_XOR: return CValueXorBitwise(left, right)
+	if x.op == HLIR_VALUE_OP_AND: return CValueAndBitwise(left, right)
+	if x.op == HLIR_VALUE_OP_LOGIC_OR: return CValueOrLogical(left, right)
+	if x.op == HLIR_VALUE_OP_LOGIC_AND: return CValueAndLogical(left, right)
+
+
+
 
 
 def do_cinitializer(x, ctx=[]):
