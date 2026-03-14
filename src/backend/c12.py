@@ -1721,15 +1721,8 @@ def do_deps(deps):
 
 	xdeps = []
 
-	if len(deps) == 0:
-		return xdeps
-
 	# печатаем декларации для типов от которых зависит этот тип
 	for dep in deps:
-#		if dep.id == None:
-#			error("undefined", dep.ti)
-#			return xdeps
-
 		id_str = get_id_str(dep)
 		if not id_str in declared:
 			declared.append(id_str)
@@ -1738,13 +1731,9 @@ def do_deps(deps):
 				xx = do_decl_func(dep.definition)
 				xdeps.extend(xx)
 
-			elif isinstance(dep, Type):
-				if dep.is_record():
-					xx = do_decl_type_record(dep.definition)
-					if isinstance(xx, tuple):
-						xdeps.extend(xx)
-					else:
-						xdeps.append(xx)
+			elif isinstance(dep, TypeRecord):
+				xx = do_decl_type_record(dep.definition)
+				xdeps.extend(xx)
 
 	return xdeps
 
@@ -1758,7 +1747,7 @@ def do_decl_type_record(x):
 	if t.is_open_record:
 		df = CStmtDefType(get_type_id_str(t), CTypeNamed(kisa))
 		return (dt, df)
-	return dt
+	return (dt,)
 
 
 
@@ -2096,7 +2085,6 @@ def do_cfile(module):
 
 
 
-
 def dump(filename, defs):
 	output_open(filename)
 	for d in defs:
@@ -2119,8 +2107,6 @@ def run(module, _outname):
 	if module.id != 'main':
 		hh = do_header(module)
 		dump(hpath + '.h', hh)
-
-
 
 	cc = do_cfile(module)
 	dump(_outname + '.c', cc)
@@ -2199,6 +2185,33 @@ def do_cvalue_as_ptr(x):
 		cv = CValueCast(do_ctype(ptr2slice), cv)
 
 	return cv
+
+
+
+#	sstr += "&"
+#
+#	if root.isValueBin() and root.op in ['literal', HLIR_VALUE_OP_ADD]:
+#		sstr += '(' + str_type(t) + ')'
+#
+#	#elif root.isValueLiteral() and (not root.isValueImmediate()):
+#	elif root.isValueArray() and (not root.isValueImmediate()):
+#		# for non immediate literals  {1, 2, var_a, var_b, ...}
+#		sstr += '(' + str_type(t) + ')'
+#
+#	elif cons_vla_from_literal_array(root):
+#		# we need to print:
+#		#  &(uint32_t[]){1, 2, 3, 4, 5}
+#		# instead of:
+#		#  &(uint32_t[len]){1, 2, 3, 4, 5}
+#		sstr += '(' + str_type(t) + ')'
+#		sstr += str_value(x.value)
+#		return sstr
+#
+#	sstr += str_value(root)
+#	return sstr
+
+
+
 
 
 

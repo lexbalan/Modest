@@ -993,11 +993,9 @@ class CValueVaCopy(CValue):
 
 def str_cvalue(v, ext_precedence=0):
 	assert(v != None)
-	sstr = ''
+	sstr = wrap_if(str(v), (v.precedence < ext_precedence) or v.mark)
 	if v.mark != None:
-		sstr += '/*%s*/' % v.mark
-
-	sstr += wrap_if(str(v), v.precedence < ext_precedence)
+		sstr = '/*%s*/' % v.mark + sstr
 	return sstr
 
 
