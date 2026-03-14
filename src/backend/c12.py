@@ -927,7 +927,7 @@ def do_cvalue_access(x, ctx):
 	# и результат операции доступа - константа которая уже тут
 	if not left.isValueConst():
 		if value_is_generic_immediate(left):
-			return do_cvalue_literal(x, ctx)
+			return do_cvalue_literal_with_type(x, x.type, ctx)
 
 	lx = do_cvalue(left, ctx=ctx)
 	if value_is_generic_immediate_const(left):
@@ -1158,6 +1158,7 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueSizeofType(): return do_cvalue_sizeof_type(x, ctx)
 	elif x.isValueSizeofValue(): return do_cvalue_sizeof_value(x, ctx)
 	elif x.isValueLengthofType(): return do_cvalue_lengthof_type(x, ctx)
+	elif x.isValueVaArg(): return do_cvalue_va_arg(x, ctx)
 	elif x.isValueVaStart(): return do_cvalue_va_start(x, ctx)
 	elif x.isValueVaEnd(): return do_cvalue_va_end(x, ctx)
 	elif x.isValueVaCopy(): return do_cvalue_va_copy(x, ctx)
