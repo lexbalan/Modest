@@ -6,8 +6,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
-
-
 #define _NAT8_MAX_VALUE ((uint8_t)UINT8_MAX)
 #define _NAT8_MIN_VALUE ((uint8_t)0)
 #define _NAT16_MAX_VALUE ((uint16_t)UINT16_MAX)
@@ -308,4 +306,3 @@ int32_t main(void) {
 	printf("passed\n");
 	return EXIT_SUCCESS;
 }
-

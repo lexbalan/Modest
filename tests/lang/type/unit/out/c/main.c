@@ -5,8 +5,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-
 #define UNIT {0}
 
 __attribute__((used))
@@ -27,4 +25,3 @@ int32_t main(void) {
 	printf("passed\n");
 	return EXIT_SUCCESS;
 }
-

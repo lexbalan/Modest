@@ -674,7 +674,7 @@ def do_cvalue_cons_record(x, ctx):
 			return do_cvalue(value, ctx=ctx)
 		# C cannot just cast struct to struct (!)
 		#return str_cast(to_type, value, raw_cast=True, ctx=ctx)
-		cv = do_cvalue_cast(to_type, x.value, ctx)
+		cv = do_cvalue_cast(to_type, x.value, ctx, raw_cast=True)
 		#cv.mark = 'CR3'
 		return cv
 
@@ -704,15 +704,16 @@ def do_cvalue_cons_record(x, ctx):
 #
 #	return "(" + str_type(t) + ")" + wrapp(str_value(v, ctx=ctx), cond=(precedence(v) < CONS_PRECEDENCE))
 
+#
+#def do_cvalue_cons(x, ctx):
+#	cv = do_cvalue_cons2(x, ctx)
+#	if isinstance(cv, str):
+#		print(x.type)
+#		1/0
+#	return cv
+
 
 def do_cvalue_cons(x, ctx):
-	cv = do_cvalue_cons2(x, ctx)
-	if isinstance(cv, str):
-		print(x.type)
-		1/0
-	return cv
-
-def do_cvalue_cons2(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
@@ -842,13 +843,27 @@ def do_cvalue_cons2(x, ctx):
 		if value.type.is_free_pointer():
 			value = value.value
 
-	return do_cvalue_cast(type, value, ctx=ctx)
+	df = do_cvalue_cast(type, value, ctx=ctx)
+	return df
 
 
-def do_cvalue_cast(type, value, ctx):
+
+def do_cvalue_cast(type, value, ctx, raw_cast=False):
+	if raw_cast:
+		#return "RAWCAST(%s, %s, %s)" % (str_type(t), str_type(v.type), str_value(v, ctx=ctx))
+		return CValueCall(
+			CValueNamed("RAWCAST"),
+			[
+				CValueNamed(str_type(type)),
+				CValueNamed(str_type(value.type)),
+				do_cvalue(value, ctx=ctx)
+			]
+		)
+
 	ctype = do_ctype(type)
 	cvalue = do_cvalue(value, ctx=ctx)
 	cv = CValueCast(ctype, cvalue)
+	cv.mark = '$'
 	return cv
 
 
@@ -1595,7 +1610,7 @@ def do_def_type(x):
 	orig_type = x.original_type
 
 	if orig_type.is_record() and not is_type_named(orig_type):
-		return do_def_type_record(x)
+		return do_def_type_record(x.type)
 
 	dt = CStmtDefType(id_str, do_ctype(orig_type))
 	return (dt,)
@@ -1603,8 +1618,7 @@ def do_def_type(x):
 	#out('typedef ' + str_field(orig_type, id_str) + ';')
 
 
-def do_def_type_record(x):
-	t = x.type
+def do_def_type_record(t):
 	id_str = get_type_id_str(t)
 
 	defs = []
@@ -1619,7 +1633,7 @@ def do_def_type_record(x):
 
 	dt = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
 
-	dv = CStmtDefVar('', dt, storage_class='', annotations=x.annotations)
+	dv = CStmtDefVar('', dt, storage_class='', annotations=t.annotations)
 	defs.append(dv)
 	return defs
 
@@ -1740,6 +1754,9 @@ def do_deps(deps):
 
 def do_decl_type_record(x):
 	t = x.type
+	return do_decl_type_record2(x)
+
+def do_decl_type_record2(t):
 	tag = get_record_tag(t)
 	isa = 'struct' if not t.layout == 'union' else 'union'
 	kisa = isa + ' ' + tag
@@ -2028,11 +2045,10 @@ def do_cfile(module):
 			xdefs.extend(c_helpers[use]())
 
 
-#	if len(module.anon_recs) > 0:
-#		out("\n\n/* anonymous records */")
-#		for anon_rec in module.anon_recs:
-#			out(str_type_record(anon_rec, tag=anon_rec.c_anon_id))
-#			out(";")
+	if len(module.anon_recs) > 0:
+		#out("\n\n/* anonymous records */")
+		for t in module.anon_recs:
+			xdefs.extend(do_def_type_record(t))
 
 	xdefs.extend(do_helpers(module))
 

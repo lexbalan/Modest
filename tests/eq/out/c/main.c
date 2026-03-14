@@ -6,8 +6,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
-
-
 #define POINT0 {.x = 0, .y = 0}
 #define POINT1 {.x = 1, .y = 0}
 #define POINT12 {.x = 1, .y = 1}
@@ -116,4 +114,3 @@ int32_t main(void) {
 	printf("passed\n");
 	return EXIT_SUCCESS;
 }
-
