@@ -1022,17 +1022,37 @@ class CStmt():
 
 
 class CStmtCommentLine(CStmt):
-	def __init__(self, text):
-		assert(isinstance(stmts, list))
+	def __init__(self, lines):
+		assert(isinstance(lines, list))
 		super().__init__()
-		self.text = text
+		self.lines = lines
+		self.nl = 1
+
+	def __str__(self):
+		sstr = ''
+		sstr += str_nl_indent(self.nl)
+		n = len(self.lines)
+		i = 0
+		while i < n:
+			line = self.lines[i]
+			sstr += "//%s" % line
+			i = i + 1
+			if i < n:
+				sstr += str_nl_indent()
+		return sstr
 
 
 class CStmtCommentBlock(CStmt):
 	def __init__(self, text):
-		assert(isinstance(stmts, list))
+		assert(isinstance(text, str))
 		super().__init__()
 		self.text = text
+		self.nl = 1
+
+	def __str__(self):
+		sstr += str_nl_indent(self.nl)
+		sstr += "/*%s*/" % self.text
+		return sstr
 
 
 class CStmtBlock(CStmt):

@@ -1467,7 +1467,7 @@ def do_cstmt(x):
 	elif x.is_stmt_def_const(): return do_cstmt_const(x)
 	elif x.is_stmt_break(): return CStmtBreak()
 	elif x.is_stmt_again(): return CStmtContinue()
-#	elif x.is_stmt_comment(): do_ccomment(x)
+	elif x.is_stmt_comment(): return do_stmt_comment(x)
 #	elif x.is_stmt_def_type(): do_cdef_type(x)
 #	elif x.is_stmt_asm(): return do_cstmt_asm(x)
 #	else: lo("<stmt %s>" % str(x))
@@ -1688,37 +1688,6 @@ def include(path, local=True):
 
 def print_insert(x):
 	out(x['str'])
-
-
-def print_comment(x):
-	out(str_stmt_comment(x))
-
-
-def str_stmt_comment(x):
-	if isinstance(x, StmtCommentLine):
-		return str_comment_line(x)
-	elif isinstance(x, StmtCommentBlock):
-		return str_comment_block(x)
-	return None
-
-
-def str_comment_block(x):
-	return "/*%s*/" % x.text
-
-
-def str_comment_line(x):
-	lines = x.lines
-	i = 0
-	n = len(lines)
-	s = ''
-	while i < n:
-		line = lines[i]
-		s += "//%s" % line
-		i = i + 1
-		if i < n:
-			s += str_nl_indent()
-	return s
-
 
 
 def print_directive(x):
@@ -2001,9 +1970,23 @@ def do_header(module):
 			#nnl(x.nl)
 			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_const(x))
+		elif x.is_stmt_comment():
+			xdefs.extend(do_stmt_comment(x))
 
 	dv = CIfdefRegion(pairs=[("!defined(%s)" % guardsymbol, xdefs)])
 	return (dv,)
+
+
+
+
+def do_stmt_comment(x):
+	if isinstance(x, StmtCommentLine):
+		return (CStmtCommentLine(x.lines),)
+	elif isinstance(x, StmtCommentBlock):
+		return (CStmtCommentBlock(x.text),)
+	return ()
+
+
 
 
 def do_cfile(module):
@@ -2093,6 +2076,7 @@ def do_cfile(module):
 			#	newline()
 			xdefs.extend(do_def_func(x))
 		elif x.is_stmt_comment():
+			xdefs.extend(do_stmt_comment(x))
 			#nnl(x.nl)
 			#if x.nl == 0:
 			#	out("  ")

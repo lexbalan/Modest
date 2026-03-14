@@ -7,6 +7,7 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
+// thx: https://github.com/ilvn/aes256/tree/main
 
 static uint8_t rj_xtime(uint8_t x) {
 	const uint8_t y = 0xFF & x << 1;

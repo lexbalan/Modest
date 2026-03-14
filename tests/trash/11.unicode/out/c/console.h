@@ -24,6 +24,9 @@ void console_putchar32(char32_t c);
 void console_putchar_utf8(char c);
 void console_putchar_utf16(char16_t c);
 void console_putchar_utf32(char32_t c);
+//
+// puts
+//
 void console_puts8(char *s);
 void console_puts16(char16_t *s);
 void console_puts32(char32_t *s);

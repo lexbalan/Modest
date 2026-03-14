@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+// thx: https://github.com/ilvn/aes256/tree/main
 typedef uint8_t aes256_Result;
 #define AES256_RESULT_SUCCESS (/*$*/((aes256_Result)0))
 #define AES256_RESULT_ERROR (/*$*/((aes256_Result)1))

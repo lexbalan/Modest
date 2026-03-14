@@ -57,6 +57,9 @@ void console_putchar_utf32(char32_t c) {
 		i = i + 1;
 	}
 }
+//
+// puts
+//
 
 void console_puts8(char *s) {
 	uint32_t i = 0;
