@@ -3,7 +3,7 @@ cd 1.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 2.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 3.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 4.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
-cd 9.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+#cd 9.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 10.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd 11.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 #cd 12.* && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \

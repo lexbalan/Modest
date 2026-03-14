@@ -1,6 +1,6 @@
 
 from util import nbits_for_num
-from .common import str_nl_indent, indent_up, indent_down
+from .common import str_newline, str_nl_indent, indent_up, indent_down
 
 
 
@@ -423,7 +423,7 @@ class CValueStruct(CValue):
 			i += 1
 
 		if kv != None and kv.nl > 0:
-			sitems += '\n'
+			sitems += str_newline()
 		indent_down()
 
 		if sitems == '':

@@ -4,89 +4,52 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#ifndef __STR_UNICODE__
-#if __has_include(<uchar.h>)
-#include <uchar.h>
-#else
+#if !defined(__STR_UNICODE__)
+#define __STR_UNICODE__
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
-#endif
-#define __STR_UNICODE__
-#define __STR8(x)  x
 #define __STR16(x) u##x
 #define __STR32(x) U##x
-#define _STR8(x)  __STR8(x)
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
-#define _CHR8(x)  (__STR8(x)[0])
-#define _CHR16(x) (__STR16(x)[0])
-#define _CHR32(x) (__STR32(x)[0])
-#endif /* __STR_UNICODE__ */
-
-
-
-
-#define GENERIC_INT_CONST  42
-#define INT32_CONST  ((int32_t)GENERIC_INT_CONST)
-
-#define GENERIC_STRING_CONST  "Hello!"
-#define STRING8_CONST  (GENERIC_STRING_CONST)
-#define STRING16_CONST  (_STR16(GENERIC_STRING_CONST))
-#define STRING32_CONST  (_STR32(GENERIC_STRING_CONST))
-
-
+#endif
+#define GENERIC_INT_CONST 42
+#define INT32_CONST (/*$*/((int32_t)GENERIC_INT_CONST))
+#define GENERIC_STRING_CONST "Hello!"
+#define STRING8_CONST (/*$*/((char *)GENERIC_STRING_CONST))
+#define STRING16_CONST (/*$*/((char16_t *)GENERIC_STRING_CONST))
+#define STRING32_CONST (/*$*/((char32_t *)GENERIC_STRING_CONST))
 struct point {
 	uint32_t x;
 	uint32_t y;
 };
-
-
 struct x {
 	struct point p;
 	struct point a[2];
 };
-
-#define PS  { \
-	{.x = 0, .y = 0}, \
-	{.x = 1, .y = 1}, \
-	{.x = 2, .y = 2} \
-}
-
-#define POINTS  PS
-
-#define POINT_ZERO  (struct point){.x = 1, .y = 1}
-#define ZERO_POINTS  {POINT_ZERO, POINT_ZERO, POINT_ZERO}
-
+#define PS {{.x = 0, .y = 0}, {.x = 1, .y = 1}, {.x = 2, .y = 2}}
+#define POINTS {(struct point){.x = 0, .y = 0}, (struct point){.x = 1, .y = 1}, (struct point){.x = 2, .y = 2}}
+#define POINT_ZERO (struct point){.x = 1, .y = 1}
+#define ZERO_POINTS {POINT_ZERO, POINT_ZERO, POINT_ZERO}
 static struct x x = (struct x){
 	.p = (struct point){.x = 10, .y = 20},
 	.a = {(struct point){.x = 20, .y = 30}, (struct point){.x = 20, .y = 30}}
 };
-
 __attribute__((used))
 static struct point points2[3] = POINTS;
 
-
-// define function main
 int main(void) {
 	printf("test const\n");
-
 	struct x y = (struct x){
 		.p = (struct point){.x = 10, .y = 20},
 		.a = {(struct point){.x = 20, .y = 30}}
-	};
-
+};
 	struct point points3[3] = POINTS;
-
-	const struct point pp = ((struct point [3])POINTS)[0];
-	const struct point ppp = ((struct point [3])ZERO_POINTS)[0];
+	const struct point pp = ((const struct point [3])POINTS)[0];
+	const struct point ppp = ((const struct point [3])ZERO_POINTS)[0];
 	const uint32_t z = POINT_ZERO.x;
-
-	printf("genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);
+	printf("genericIntConst = %d\n", /*$*/((int32_t)GENERIC_INT_CONST));
 	printf("int32Const = %d\n", INT32_CONST);
 	printf("string8Const = %s\n", STRING8_CONST);
-
 	return 0;
 }
-
-

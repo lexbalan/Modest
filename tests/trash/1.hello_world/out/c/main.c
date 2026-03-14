@@ -6,7 +6,7 @@
 #include <stdio.h>
 #define HELLO "Hello"
 #define WORLD "World!"
-#define HELLO_WORLD HELLO + " " + WORLD
+#define HELLO_WORLD "Hello World!"
 
 int main(void) {
 	printf("%s\n", /*$*/((char *)HELLO_WORLD));
