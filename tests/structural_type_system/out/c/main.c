@@ -96,3 +96,4 @@ int main(void) {
 	test_by_pointer();
 	return 0;
 }
+

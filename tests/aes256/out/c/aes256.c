@@ -292,3 +292,4 @@ aes256_Result aes256_deinit(aes256_Context *ctx) {
 	memcpy(&ctx->deckey, &zeroKey, sizeof(aes256_Key));
 	return AES256_RESULT_SUCCESS;
 }
+

@@ -97,3 +97,4 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 void chacha20_makeState(chacha20_Key *key, uint32_t counter, uint32_t (*nonce)[3], chacha20_State *_sret_) {
 	memcpy(_sret_, &(uint32_t [16]){0x61707865, 0x3320646E, 0x79622D32, 0x6B206574, (*key)[0], (*key)[1], (*key)[2], (*key)[3], (*key)[4], (*key)[5], (*key)[6], (*key)[7], counter, (*nonce)[0], (*nonce)[1], (*nonce)[2]}, sizeof(chacha20_State));
 }
+

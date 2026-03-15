@@ -20,3 +20,4 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_);
 // Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
 void chacha20_makeState(chacha20_Key *key, uint32_t counter, uint32_t (*nonce)[3], chacha20_State *_sret_);
 #endif
+

@@ -21,3 +21,4 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, aes256_Block *block);
 aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, aes256_Block *block);
 aes256_Result aes256_deinit(aes256_Context *ctx);
 #endif
+

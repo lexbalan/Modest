@@ -25,3 +25,4 @@ int32_t main(void) {
 	printf("passed\n");
 	return EXIT_SUCCESS;
 }
+

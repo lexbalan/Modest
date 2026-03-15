@@ -13,3 +13,4 @@ typedef uint8_t sha256_Hash[SHA256_HASH_SIZE];
 //}
 void sha256_hash(uint8_t (*msg)[], uint32_t msgLen, sha256_Hash *outHash);
 #endif
+

@@ -151,3 +151,4 @@ void sha256_hash(uint8_t (*msg)[], uint32_t msgLen, sha256_Hash *outHash) {
 	update(&ctx, msg, msgLen);
 	final(&ctx, outHash);
 }
+

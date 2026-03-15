@@ -44,3 +44,4 @@ int main(void) {
 	printf("passed\n");
 	return EXIT_SUCCESS;
 }
+
