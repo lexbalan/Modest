@@ -417,11 +417,13 @@ class CValueStruct(CValue):
 		self.precedence = 15
 
 	def __str__(self):
-		sitems = ''
-		#print_list_items(self.items, str_kv)
+
 		indent_up()
+
+		sitems = ''
 		i = 0
 		kv = None
+		need_nl = 0
 		while i < len(self.items):
 			kv = self.items[i]
 			if i > 0 and kv.nl == 0:
@@ -431,15 +433,16 @@ class CValueStruct(CValue):
 				sitems += ','
 			i += 1
 
-		if kv != None and kv.nl > 0:
-			sitems += str_newline()
 		indent_down()
+
+		if kv != None and kv.nl > 0:
+			need_nl = 1
 
 		if sitems == '':
 			sitems = '0'
 		sstr = '{'
 		sstr += sitems
-		sstr += str_nl_indent(0) + '}'
+		sstr += str_nl_indent(need_nl) + '}'
 		return sstr
 
 

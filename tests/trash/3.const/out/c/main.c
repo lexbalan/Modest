@@ -43,7 +43,7 @@ int main(void) {
 	struct x y = (struct x){
 		.p = (struct point){.x = 10, .y = 20},
 		.a = {(struct point){.x = 20, .y = 30}}
-};
+	};
 	struct point points3[3] = POINTS;
 	const struct point pp = ((const struct point [3])POINTS)[0];
 	const struct point ppp = ((const struct point [3])ZERO_POINTS)[0];

@@ -112,7 +112,7 @@ static struct animation_point ap = (struct animation_point){
 		.red = 200,
 		.green = 0,
 		.blue = 0
-},
+	},
 	.time = 3000
 };
 static struct animation_point animation0_points[5] = {(struct animation_point){.color = {.red = 200, .green = 0, .blue = 0}, .time = 3}, (struct animation_point){.color = {.red = 0, .green = 200, .blue = 0}, .time = 30}, (struct animation_point){.color = {.red = 100, .green = 100, .blue = 0}, .time = 300}, (struct animation_point){.color = {.red = 254, .green = 254, .blue = 0}, .time = 20}, (struct animation_point){.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}};

@@ -22,7 +22,7 @@ static struct context init(uint8_t (*key)[32], uint32_t (*_nonce)[3]) {
 		.nonce = {nonce[0], nonce[1], nonce[2]},
 		.blockCounter = 0,
 		.blockOffset = /*$*/((uint32_t)sizeof(chacha20_Block))
-};
+	};
 }
 
 static void cipher(struct context *ctx, uint8_t (*data)[], uint32_t len) {
