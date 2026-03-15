@@ -264,6 +264,8 @@ def do_ctype_func(t, specs=[]):
 		if p.type.is_array():
 			id_str = '_' + id_str
 			arg_ctype = do_ctype(TypePointer(p.type))
+			#arg_ctype.to.of.specs = ['const']
+			#arg_ctype.mark = '$'
 		params.append(CField(id_str=id_str, type=arg_ctype, specs=[]))
 
 	if not t.to.is_array():
@@ -877,12 +879,14 @@ def doo_call(func, args):
 	xargs = []
 	for arg in args:
 		av = arg.value
-		a = do_cvalue(av)
+		a = None
 
 		if av.type.is_array() and not av.type.is_array_of_char():
 			# Если в функцию передается массив по значению - передаем указатель на него (!)
 			# тк функции си не умеют получать массивы по значению
-			a = CValueRef(a)
+			a = do_cvalue_as_ptr(av)
+		else:
+			a = do_cvalue(av)
 
 		xargs.append(a)
 
@@ -2162,7 +2166,7 @@ def do_cvalue_as_ptr(x):
 			vs = do_cvalue(root)
 			ts = do_ctype(x.type)
 			xx = CValueRef(CValueCast(ts, vs))
-			#xx.mark = 'AP2'
+			xx.mark = 'AP2'
 			return xx
 
 	if x.isValueCons():
@@ -2188,10 +2192,12 @@ def do_cvalue_as_ptr(x):
 
 	cv = do_cvalue(root)
 
-	if root.type.is_generic() and (root.storage_class == HLIR_VALUE_STORAGE_CLASS_LOCAL):
-		# глобальные generic реализованы как macrodefinition и нуждаются в приведении по месту использования
+
+	if value_is_generic_immediate(root):
 		cv = CValueCast(do_ctype(root.type), cv)
 		#cv.mark = '$$$'
+	elif root.type.is_generic() and root.storage_class == HLIR_VALUE_STORAGE_CLASS_REGISTER:
+		cv = CValueCast(do_ctype(root.type), cv)
 
 	cv = CValueRef(cv)
 
@@ -2199,7 +2205,7 @@ def do_cvalue_as_ptr(x):
 		ptr2slice = TypePointer(x.type)
 		cv = CValueCast(do_ctype(ptr2slice), cv)
 
-	cv.mark = 'K'
+	#cv.mark = 'K'
 	return cv
 
 

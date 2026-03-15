@@ -220,8 +220,8 @@ aes256_Result aes256_init(aes256_Context *ctx, aes256_Key *key) {
 	if (ctx == NULL || key == NULL) {
 		return AES256_RESULT_ERROR;
 	}
-	memcpy(/*K*/(&ctx->deckey), key, sizeof(aes256_Key));
-	memcpy(/*K*/(&ctx->enckey), key, sizeof(aes256_Key));
+	memcpy(&ctx->deckey, key, sizeof(aes256_Key));
+	memcpy(&ctx->enckey, key, sizeof(aes256_Key));
 	uint8_t rcon = 0x1;
 	uint8_t i = 0;
 	while (i < 7) {
@@ -287,8 +287,8 @@ aes256_Result aes256_deinit(aes256_Context *ctx) {
 		return AES256_RESULT_ERROR;
 	}
 	aes256_Key zeroKey = {0};
-	memcpy(/*K*/(&ctx->key), /*K*/(&zeroKey), sizeof(aes256_Key));
-	memcpy(/*K*/(&ctx->enckey), /*K*/(&zeroKey), sizeof(aes256_Key));
-	memcpy(/*K*/(&ctx->deckey), /*K*/(&zeroKey), sizeof(aes256_Key));
+	memcpy(&ctx->key, &zeroKey, sizeof(aes256_Key));
+	memcpy(&ctx->enckey, &zeroKey, sizeof(aes256_Key));
+	memcpy(&ctx->deckey, &zeroKey, sizeof(aes256_Key));
 	return AES256_RESULT_SUCCESS;
 }

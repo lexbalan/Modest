@@ -22,14 +22,14 @@ static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_
 	d0 = rotl32(d0 ^ a0, 8);
 	c0 = c0 + d0;
 	b0 = rotl32(b0 ^ c0, 7);
-	memcpy(_sret_, /*K*/(&(uint32_t [4]){a0, b0, c0, d0}), sizeof(uint32_t [4]));
+	memcpy(_sret_, &(uint32_t [4]){a0, b0, c0, d0}, sizeof(uint32_t [4]));
 }
 
 void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 	chacha20_State state;
 	memcpy(state, _state, sizeof(chacha20_State));
 	chacha20_State x;
-	memcpy(/*K*/(&x), /*K*/(&state), sizeof(chacha20_State));
+	memcpy(&x, &state, sizeof(chacha20_State));
 	int32_t i = 0;
 	while (i < 10) {
 		uint32_t r[4];
@@ -81,7 +81,7 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 		out[j] = x[j] + state[j];
 		j = j + 1;
 	}
-	memcpy(_sret_, /*K*/(&out), sizeof(uint32_t [16]));
+	memcpy(_sret_, &out, sizeof(uint32_t [16]));
 }
 // nonce = number used once
 // Чтобы один и тот же ключ можно было использовать много раз.
@@ -95,5 +95,5 @@ void chacha20_chacha20Block(chacha20_State *_state, chacha20_Block *_sret_) {
 // Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
 
 void chacha20_makeState(chacha20_Key *key, uint32_t counter, uint32_t (*nonce)[3], chacha20_State *_sret_) {
-	memcpy(_sret_, /*K*/(&(uint32_t [16]){0x61707865, 0x3320646E, 0x79622D32, 0x6B206574, (*key)[0], (*key)[1], (*key)[2], (*key)[3], (*key)[4], (*key)[5], (*key)[6], (*key)[7], counter, (*nonce)[0], (*nonce)[1], (*nonce)[2]}), sizeof(chacha20_State));
+	memcpy(_sret_, &(uint32_t [16]){0x61707865, 0x3320646E, 0x79622D32, 0x6B206574, (*key)[0], (*key)[1], (*key)[2], (*key)[3], (*key)[4], (*key)[5], (*key)[6], (*key)[7], counter, (*nonce)[0], (*nonce)[1], (*nonce)[2]}, sizeof(chacha20_State));
 }

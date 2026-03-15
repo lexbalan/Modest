@@ -108,6 +108,7 @@ class CField():
 
 class CType():
 	def __init__(self):
+		self.mark = None
 		pass
 
 	def to_str(self, text):
@@ -119,6 +120,7 @@ class CType():
 
 class CTypeNamed(CType):
 	def __init__(self, id_str, specs=None):
+		super().__init__()
 		self.id_str = id_str
 		self.specs = specs if specs != None else []
 		self.precedence = 0
@@ -133,6 +135,7 @@ class CTypeNamed(CType):
 
 class CTypePointer(CType):
 	def __init__(self, to, specs=None):
+		super().__init__()
 		self.to = to
 		self.specs = specs if specs != None else []
 		self.precedence = 1
@@ -150,6 +153,7 @@ class CTypePointer(CType):
 
 class CTypeArray(CType):
 	def __init__(self, of, volume=None, specs=None):
+		super().__init__()
 		of.specs = specs  # array specs is array item specs (!)
 		self.of = of
 		self.volume = volume
@@ -172,6 +176,7 @@ class CTypeArray(CType):
 
 class CTypeFunc(CType):
 	def __init__(self, params, to, volume=None, extra_args=False, specs=None):
+		super().__init__()
 		self.params = params
 		self.to = to
 		self.extra_args = extra_args
@@ -207,6 +212,7 @@ class CTypeFunc(CType):
 
 class CTypeStruct(CType):
 	def __init__(self, fields, tag, specs=None):
+		super().__init__()
 		self.fields = fields
 		self.tag = tag
 		self.specs = specs if specs != None else []
@@ -252,7 +258,10 @@ def str_ctype(t, text=''):
 	assert(text != None)
 	#assert(isinstance(t, dict))
 
-	return t.to_str(text)
+	sstr = t.to_str(text)
+	if t.mark:
+		sstr = '/*%s*/' % t.mark + sstr
+	return sstr
 
 
 
