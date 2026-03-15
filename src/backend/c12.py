@@ -1312,7 +1312,6 @@ def do_array_len(array_value):
 
 
 def do_assign_array(left, right, ti):
-
 	# array = function()
 	if right.isValueCall():
 		return CStmtValueExpr(doo_call(right.func, right.args + [Initializer(Id("sret"), left)]))
@@ -1320,8 +1319,6 @@ def do_assign_array(left, right, ti):
 	rv = get_root_value(right)
 	if rv.isValueZero():
 		return do_memzero(left)
-
-	#warning("LWANFDLMWDKLMAWLKMDELKAMWDLMAWLMDLKAMWLKDMALKWMDLAMWlDMLAKWMDLKAWMlKDMAWLKMDLKMAWLDKMWAlMKWDL", ti)
 
 	if right.isValueCons():
 		# Если справа приведенный к левому массив (более короткий? Generic)
@@ -1810,49 +1807,53 @@ def do_helpers(module):
 
 
 
-def helper_use_abs():
+def do_helper_use_abs():
 	return include("stdlib.h", local=False)
 
 
-def helper_use_va_arg():
+def do_helper_use_va_arg():
 	return include("stdarg.h", local=False)
 
 
-def helper_use_lengthof():
+def do_helper_use_lengthof():
 	#module_undef_list.append("LENGTHOF")
 	df = CIfdefRegion([("!defined(LENGTHOF)", [CMacrodefinition("LENGTHOF(x)", "(sizeof(x) / sizeof((x)[0]))")])])
 	return (df,)
 
 
-def helper_use_rawcast():
+def do_helper_use_rawcast():
 	# из-за strict aliasing в C трюк с укзаателями не гарантирует что мы не словим UB при оптимизациях
 	# union же гарантирует нам преобразование и данный трюк сработает на стандартах начиная с C99 и выше
 	df = CMacrodefinition("RAWCAST(type_dst, type_src, value)", "(((union { type_src src; type_dst dst; }){ .src = (value) }).dst)")
 	return (df,)
 
 
-def helper_use_bigint():
-	out("\n#ifndef __BIG_INT128__")
-	out("\n#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))")
-	out("\nstatic inline __int128 abs128(__int128 x) {return x < 0 ? -x : x;}")
-	out("\n#endif  /* __BIG_INT128__ */")
-	out("\n")
-	out("\n#ifndef __BIG_INT256__")
-	out("\n#define BIG_INT256(a, b, c, d)")
-	out("\n#endif  /* __BIG_INT256__ */")
+def do_helper_use_bigint():
+	sstr = ''
+	sstr += ("\n#ifndef __BIG_INT128__")
+	sstr += ("\n#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))")
+	sstr += ("\nstatic inline __int128 abs128(__int128 x) {return x < 0 ? -x : x;}")
+	sstr += ("\n#endif  /* __BIG_INT128__ */")
+	sstr += ("\n")
+	sstr += ("\n#ifndef __BIG_INT256__")
+	sstr += ("\n#define BIG_INT256(a, b, c, d)")
+	sstr += ("\n#endif  /* __BIG_INT256__ */")
 	module_undef_list.append("__BIG_INT128__")
 	module_undef_list.append("__BIG_INT256__")
+	return (CInsert(sstr),)
 
 
-def helper_use_arrcpy():
-	out("\n#define ARRCPY(dst, src, len) \\")
-	out("\n	do { \\")
-	out("\n		uint32_t _len = (uint32_t)(len); \\")
-	out("\n		for (uint32_t _i = 0; _i < _len; _i++) { \\")
-	out("\n			(*(dst))[_i] = (*(src))[_i]; \\")
-	out("\n		} \\")
-	out("\n	} while (0)")
+def do_helper_use_arrcpy():
+	sstr = ''
+	sstr += ("\n#define ARRCPY(dst, src, len) \\")
+	sstr += ("\n	do { \\")
+	sstr += ("\n		uint32_t _len = (uint32_t)(len); \\")
+	sstr += ("\n		for (uint32_t _i = 0; _i < _len; _i++) { \\")
+	sstr += ("\n			(*(dst))[_i] = (*(src))[_i]; \\")
+	sstr += ("\n		} \\")
+	sstr += ("\n	} while (0)")
 	module_undef_list.append("ARRCPY")
+	return (CInsert(sstr),)
 
 
 #func packFixed32 (i: Nat32, m: Nat32, n: Nat32 fraction: Nat8) -> Fixed32 {
@@ -1860,60 +1861,62 @@ def helper_use_arrcpy():
 #	return unsafe Fixed32 ((Word32 i << fraction) or unsafe Word32 tail)
 #}
 
-def helper_use_fixed_point():
-	out("\n#ifndef __FIXED_POINT__")
+def do_helper_use_fixed_point():
+	sstr = ''
+	sstr += ("\n#ifndef __FIXED_POINT__")
 
-	out("\ntypedef int32_t __fixed32;")
-	out("\ntypedef int64_t __fixed64;")
+	sstr += ("\ntypedef int32_t __fixed32;")
+	sstr += ("\ntypedef int64_t __fixed64;")
 
-	out("\nstatic inline __fixed64 __fixed64_create(int64_t i, uint64_t m, uint64_t n, uint8_t fraction) {")
-	out("\n	return (i << fraction) | (m * (1 << fraction) / n);")
-	out("\n}")
+	sstr += ("\nstatic inline __fixed64 __fixed64_create(int64_t i, uint64_t m, uint64_t n, uint8_t fraction) {")
+	sstr += ("\n	return (i << fraction) | (m * (1 << fraction) / n);")
+	sstr += ("\n}")
 
-	out("\nstatic inline __fixed32 __fixed32_from_int32(int32_t a, uint8_t fraction) {")
-	out("\n	return a * (1 << fraction);")
-	out("\n}")
+	sstr += ("\nstatic inline __fixed32 __fixed32_from_int32(int32_t a, uint8_t fraction) {")
+	sstr += ("\n	return a * (1 << fraction);")
+	sstr += ("\n}")
 
-	out("\n__attribute__((used))")
-	out("\nstatic inline __fixed32 __fixed32_from_float64(double a, uint8_t fraction) {")
-	out("\n	return (__fixed32)(a * (1 << fraction));")
-	out("\n}")
+	sstr += ("\n__attribute__((used))")
+	sstr += ("\nstatic inline __fixed32 __fixed32_from_float64(double a, uint8_t fraction) {")
+	sstr += ("\n	return (__fixed32)(a * (1 << fraction));")
+	sstr += ("\n}")
 
-	out("\nstatic inline int32_t __fixed32_to_int32(__fixed32 a, uint8_t fraction) {")
-	out("\n	return a / (1 << fraction);")
-	out("\n}")
+	sstr += ("\nstatic inline int32_t __fixed32_to_int32(__fixed32 a, uint8_t fraction) {")
+	sstr += ("\n	return a / (1 << fraction);")
+	sstr += ("\n}")
 
-	out("\nstatic inline double __fixed32_to_float64(__fixed32 a, uint8_t fraction) {")
-	out("\n	return (double)a / (1 << fraction);")
-	out("\n}")
+	sstr += ("\nstatic inline double __fixed32_to_float64(__fixed32 a, uint8_t fraction) {")
+	sstr += ("\n	return (double)a / (1 << fraction);")
+	sstr += ("\n}")
 
-	out("\nstatic inline __fixed32 __fixed32_mul(__fixed32 a, __fixed32 b, uint8_t fraction) {")
-	out("\n	return (__fixed32)(((int64_t)a * (int64_t)b) >> fraction);")
-	out("\n}")
+	sstr += ("\nstatic inline __fixed32 __fixed32_mul(__fixed32 a, __fixed32 b, uint8_t fraction) {")
+	sstr += ("\n	return (__fixed32)(((int64_t)a * (int64_t)b) >> fraction);")
+	sstr += ("\n}")
 
-	out("\nstatic inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction) {")
-	out("\n	return (__fixed32)(((int64_t)a << fraction) / (int64_t)b);")
-	out("\n}")
+	sstr += ("\nstatic inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction) {")
+	sstr += ("\n	return (__fixed32)(((int64_t)a << fraction) / (int64_t)b);")
+	sstr += ("\n}")
 
-	out("\n#endif /* __FIXED_POINT__ */")
+	sstr += ("\n#endif /* __FIXED_POINT__ */")
+	return (CInsert(sstr),)
 
 
 h_helpers = {
-	'use_bigint': helper_use_bigint,
+	'use_bigint': do_helper_use_bigint,
 }
 
 c_helpers = {
-	'use_abs': helper_use_abs,
-	'use_lengthof': helper_use_lengthof,
-	'use_arrcpy': helper_use_arrcpy,
-	'use_va_arg': helper_use_va_arg,
-	'use_raw_cast': helper_use_rawcast,
-	'use_fixed_point': helper_use_fixed_point,
+	'use_abs': do_helper_use_abs,
+	'use_lengthof': do_helper_use_lengthof,
+	'use_arrcpy': do_helper_use_arrcpy,
+	'use_va_arg': do_helper_use_va_arg,
+	'use_raw_cast': do_helper_use_rawcast,
+	'use_fixed_point': do_helper_use_fixed_point,
 }
 
 c_include_helpers = {
-	'use_abs': helper_use_abs,
-	'use_va_arg': helper_use_va_arg,
+	'use_abs': do_helper_use_abs,
+	'use_va_arg': do_helper_use_va_arg,
 }
 
 

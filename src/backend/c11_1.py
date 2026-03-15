@@ -1286,6 +1286,16 @@ class CStmtContinue(CStmt):
 		return sstr
 
 
+class CInsert(CStmt):
+	def __init__(self, text):
+		super().__init__()
+		self.text = text
+		pass
+
+	def __str__(self):
+		return self.text
+
+
 class CMacrodefinition():
 	def __init__(self, id, text=None):
 		assert(isinstance(id, str))
