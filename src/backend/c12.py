@@ -1914,13 +1914,6 @@ c_helpers = {
 	'use_fixed_point': do_helper_use_fixed_point,
 }
 
-c_include_helpers = {
-	'use_abs': do_helper_use_abs,
-	'use_va_arg': do_helper_use_va_arg,
-}
-
-
-
 
 def do_header(module):
 	defs = module.defs
