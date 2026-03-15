@@ -58,7 +58,7 @@ uint8_t utf_utf16_to_utf32(char16_t *c, char32_t *result) {
 		const uint32_t trailing = /*$*/((uint32_t)c[1]);
 		if (trailing < 56320 || trailing > 57343) {
 		} else {
-			code = code | trailing & 0x3FF;
+			code = code | (trailing & 0x3FF);
 			*result = /*$*/((char32_t)(code + 65536));
 			return 2;
 		}

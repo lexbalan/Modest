@@ -296,7 +296,9 @@ def do_ctype_struct(t, tag='', specs=[]):
 		fields.append(CField(id_str=p.id.str, type=do_ctype(p.type), specs=[], nl=p.nl))
 	tag = camel_to_lower_snake(tag)
 	isa = 'struct' if not t.layout == 'union' else 'union'
-	kisa = isa + ' ' + tag
+	kisa = isa
+	if tag:
+		kisa = kisa + ' ' + tag
 	return CTypeStruct(fields, specs=specs, tag=kisa)
 
 
@@ -1100,11 +1102,10 @@ def do_cvalue_eq(x, logic, ctx):
 	rx = None
 	if left.type.is_aggregate():
 		# сравниваем массивы / записи
-		lx = CValueCall(CValueNamed("memcmp"), [
-			do_cvalue_as_ptr(left),
-			do_cvalue_as_ptr(right),
-			get_cvalue_size_for(left, right, ti=x.ti)
-		])
+		a0 = do_cvalue_as_ptr(left)
+		a1 = do_cvalue_as_ptr(right)
+		a2 = get_cvalue_size_for(left, right, ti=x.ti)
+		lx = CValueCall(CValueNamed("memcmp"), [a0, a1, a2])
 		rx = CValueInteger(0)
 
 	elif left.type.is_str() and right.type.is_str():
@@ -2147,15 +2148,18 @@ def do_cvalue_as_ptr(x):
 
 	#root.type.is_str() or
 	if root.type.is_string():
-		return CValueRef(do_cvalue(root))
+		xx = CValueRef(do_cvalue(root))
+		#xx.mark = 'AP1'
+		return xx
 
 	if root.isValueImmediate():
 		if x.type.is_aggregate() or value_is_generic_immediate_const(root):
 			# generic immediate const is just a macro!
 			vs = do_cvalue(root)
 			ts = do_ctype(x.type)
-			#return "&((%s)%s)" % (ts, vs)
-			return CValueRef(CValueCast(ts, vs))
+			xx = CValueRef(CValueCast(ts, vs))
+			#xx.mark = 'AP2'
+			return xx
 
 	if x.isValueCons():
 		# for *s == "Hi!"
@@ -2164,7 +2168,9 @@ def do_cvalue_as_ptr(x):
 		# we need to print just string literal,
 		# because in C string literal is pointer to c-string
 		if x.value.type.is_string():
-			return do_cvalue(x.value)
+			xx = do_cvalue(x.value)
+			#xx.mark = 'AP3'
+			return xx
 
 
 	if root.isValueDeref():
@@ -2174,12 +2180,12 @@ def do_cvalue_as_ptr(x):
 		if root.type.is_string():
 			return do_cvalue(root)
 
-
 	###
 
 	cv = do_cvalue(root)
 
-	if root.type.is_generic():
+	if root.type.is_generic():# and root.is_local():
+		# глобальные generic реализованы как macrodefinition и нуждаются в приведении по месту использования
 		cv = CValueCast(do_ctype(root.type), cv)
 		#cv.mark = '$$$'
 
@@ -2189,6 +2195,7 @@ def do_cvalue_as_ptr(x):
 		ptr2slice = TypePointer(x.type)
 		cv = CValueCast(do_ctype(ptr2slice), cv)
 
+	cv.mark = 'K'
 	return cv
 
 

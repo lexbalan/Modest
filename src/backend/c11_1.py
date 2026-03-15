@@ -846,7 +846,6 @@ class CValueAndBitwise(CValue):
 		self.precedence = 7
 
 	def __str__(self):
-
 		# -Wbitwise-op-parentheses supressing
 		lprec = self.precedence
 		if self.left.precedence == self.precedence + 1:
@@ -897,10 +896,10 @@ class CValueOrBitwise(CValue):
 
 		# -Wbitwise-op-parentheses supressing
 		lprec = self.precedence
-		if self.left.precedence == self.precedence + 1:
+		if self.left.precedence == self.precedence + 2:
 			lprec = valuePrecedenceMax
 		rprec = self.precedence
-		if self.right.precedence == self.precedence + 1:
+		if self.right.precedence == self.precedence + 2:
 			rprec = valuePrecedenceMax
 
 		lx = str_cvalue(self.left, ext_precedence=lprec)

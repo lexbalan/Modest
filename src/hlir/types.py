@@ -198,8 +198,8 @@ class Entity():
 		a = self.getAnnotation(a)
 		return a != None
 
-	def is_global(self):
-		return self.is_global_flag
+	#def is_global(self):
+	#	return self.is_global_flag
 
 
 	# возвращает модуль в котором сущность определена (или None)
@@ -1591,6 +1591,12 @@ class Value(Entity):
 		self.nl = 0
 
 
+	def is_local(self):
+		if self.definition == None:
+			return False
+		return not self.definition.is_global_flag
+
+
 	def add_atts(self, atts):
 		if atts == []:
 			return self
@@ -2088,10 +2094,10 @@ class ValueRef(Value):
 		super().__init__(type=type, ti=ti)
 		self.value = value
 
-		if value.is_global():
+		if value.is_global_flag:
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			# не можно поставить 0 тк иначе значение будет трактоваться как zero
-			# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
+			# и LLVM printer его не всунет в композитный тип (пропустит insertelement)
 			# поэтому временно заткнул единицей, но вообще нужно будет обдумать
 			self.asset = 1
 

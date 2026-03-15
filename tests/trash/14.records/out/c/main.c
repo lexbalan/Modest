@@ -71,7 +71,7 @@ static void test_records(void) {
 int main(void) {
 	printf("records test\n");
 	#define ver {.major = 0, .minor = 7}
-	if (memcmp(&(struct  {uint32_t major; uint32_t minor;})ver, &(struct  {uint32_t major; uint32_t minor;}){.major = 0, .minor = 7}, sizeof(struct  {uint32_t major; uint32_t minor;})) == 0) {
+	if (memcmp(&(struct {uint32_t major; uint32_t minor;})ver, &(struct {uint32_t major; uint32_t minor;}){.major = 0, .minor = 7}, sizeof(struct {uint32_t major; uint32_t minor;})) == 0) {
 		printf("version 0.7\n");
 	} else {
 		printf("version not 0.7\n");
@@ -107,12 +107,12 @@ int main(void) {
 	*pr3 = (struct __anonymous_struct_6){0};
 	int32_t ax = 10;
 	int32_t bx = 20;
-	struct  {int32_t x; int32_t y;} px = {.x = ax, .y = bx};
+	struct {int32_t x; int32_t y;} px = {.x = ax, .y = bx};
 	ax = 111;
 	bx = 222;
 	printf("px.x = %i (must be 10)\n", px.x);
 	printf("px.y = %i (must be 20)\n", px.y);
-	if (memcmp(&(struct  {int32_t x; int32_t y;})px, &(struct  {int32_t x; int32_t y;}){.x = 10, .y = 20}, sizeof(struct  {int32_t x; int32_t y;})) == 0) {
+	if (memcmp(&px, &(struct {int32_t x; int32_t y;}){.x = 10, .y = 20}, sizeof(struct {int32_t x; int32_t y;})) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
