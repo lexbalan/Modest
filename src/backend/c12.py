@@ -1670,8 +1670,10 @@ def do_def_var(x, isdecl=False, is_extern=False):
 
 
 def do_def_const(x):
-	#mass
-	#if x.value.type.is_concretic()
+	#if x.value.type.is_concretic():
+	#	if x.value.type.is_aggregate():
+	#		return do_def_var(x)
+
 	id_str = camel_to_upper_snake(get_id_str(x.value))
 	macro = CMacrodefinition(id_str, str_macro_value(x.init_value))
 	#out(str(macro))
@@ -2186,7 +2188,7 @@ def do_cvalue_as_ptr(x):
 
 	cv = do_cvalue(root)
 
-	if root.type.is_generic():# and root.is_local():
+	if root.type.is_generic() and (root.storage_class == HLIR_VALUE_STORAGE_CLASS_LOCAL):
 		# глобальные generic реализованы как macrodefinition и нуждаются в приведении по месту использования
 		cv = CValueCast(do_ctype(root.type), cv)
 		#cv.mark = '$$$'

@@ -78,20 +78,20 @@ int main(void) {
 	}
 	struct point2_d p2d0 = (struct point2_d){.x = 1, .y = 2};
 	struct point2_d p2d1 = (struct point2_d){.x = 10, .y = 20};
-	if (memcmp(&p2d0, &p2d1, sizeof(struct point2_d)) == 0) {
+	if (memcmp(/*K*/(&p2d0), /*K*/(&p2d1), sizeof(struct point2_d)) == 0) {
 		printf("p2d0 == p2d1\n");
 	} else {
 		printf("p2d0 != p2d1\n");
 	}
 	struct point2_d p2d2 = p2d0;
 	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6)XX;
-	if (memcmp(&p2d2, &p2d3, sizeof(struct point2_d)) == 0) {
+	if (memcmp(/*K*/(&p2d2), /*K*/(&p2d3), sizeof(struct point2_d)) == 0) {
 		printf("p2d2 == p2d3\n");
 	} else {
 		printf("p2d2 != p2d3\n");
 	}
 	struct __anonymous_struct_7 p2d4 = (struct __anonymous_struct_7){.x = 1, .y = 2};
-	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_6)) == 0) {
+	if (memcmp(/*K*/(&p2d3), /*K*/(&p2d4), sizeof(struct __anonymous_struct_6)) == 0) {
 		printf("p2d3 == p2d4\n");
 	} else {
 		printf("p2d3 != p2d4\n");
@@ -112,7 +112,7 @@ int main(void) {
 	bx = 222;
 	printf("px.x = %i (must be 10)\n", px.x);
 	printf("px.y = %i (must be 20)\n", px.y);
-	if (memcmp(&px, &(struct {int32_t x; int32_t y;}){.x = 10, .y = 20}, sizeof(struct {int32_t x; int32_t y;})) == 0) {
+	if (memcmp(/*K*/(&(struct {int32_t x; int32_t y;})px), &(struct {int32_t x; int32_t y;}){.x = 10, .y = 20}, sizeof(struct {int32_t x; int32_t y;})) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

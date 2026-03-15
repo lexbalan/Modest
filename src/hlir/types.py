@@ -1595,11 +1595,6 @@ class Value(Entity):
 		self.nl = 0
 
 
-	def is_local(self):
-		if self.definition == None:
-			return False
-		return not self.definition.is_global_flag
-
 
 	def add_atts(self, atts):
 		if atts == []:
