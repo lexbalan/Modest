@@ -437,7 +437,10 @@ class CValueStruct(CValue):
 
 		if sitems == '':
 			sitems = '0'
-		return '{%s}' % sitems
+		sstr = '{'
+		sstr += sitems
+		sstr += str_nl_indent(0) + '}'
+		return sstr
 
 
 

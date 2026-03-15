@@ -57,3 +57,4 @@ int32_t main(void) {
 	console_puts16(u"\n");
 	return 0;
 }
+

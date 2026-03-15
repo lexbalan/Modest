@@ -38,3 +38,4 @@ int main(void) {
 static void func0(void) {
 	printf("func0 was called\n");
 }
+

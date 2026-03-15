@@ -16,3 +16,4 @@ typedef uint32_t char32_t;
 uint8_t utf_utf32_to_utf8(char32_t c, char *buf);
 uint8_t utf_utf16_to_utf32(char16_t *c, char32_t *result);
 #endif
+

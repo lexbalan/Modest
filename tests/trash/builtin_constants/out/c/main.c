@@ -19,3 +19,4 @@ int main(void) {
 	printf("__target.floatWidth = %u\n", 64);
 	return 0;
 }
+

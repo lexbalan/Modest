@@ -53,3 +53,4 @@ int main(void) {
 	printf("string8Const = %s\n", STRING8_CONST);
 	return 0;
 }
+

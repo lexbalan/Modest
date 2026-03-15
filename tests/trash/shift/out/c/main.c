@@ -16,3 +16,4 @@ int main(void) {
 	printf("0x80000000 >> 31 = 0x%x\n", c);
 	return 0;
 }
+

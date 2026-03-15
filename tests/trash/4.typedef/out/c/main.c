@@ -13,3 +13,4 @@ int main(void) {
 	(void)newInt32;
 	return 0;
 }
+

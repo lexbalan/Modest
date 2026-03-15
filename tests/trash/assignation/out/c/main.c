@@ -43,3 +43,4 @@ int main(void) {
 	printf("loc_r0.y = %i\n", loc_r0.y);
 	return 0;
 }
+

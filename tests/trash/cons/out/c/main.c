@@ -13,3 +13,4 @@ int main(void) {
 	printf("b = %u\n", b);
 	return 0;
 }
+

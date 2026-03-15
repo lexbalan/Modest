@@ -88,3 +88,4 @@ double minmax_max_float64(double a, double b) {
 	}
 	return b;
 }
+

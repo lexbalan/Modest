@@ -147,3 +147,4 @@ static bool test_generic_record(void) {
 	(void)point_3d;
 	return true;
 }
+

@@ -17,3 +17,4 @@ int main(void) {
 	printf("%s-endian\n", kind);
 	return 0;
 }
+

@@ -23,3 +23,4 @@ int main(void) {
 	printf("x to Bool = %u\n", /*$*/((uint32_t)b));
 	return 0;
 }
+

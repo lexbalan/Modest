@@ -65,3 +65,4 @@ uint8_t utf_utf16_to_utf32(char16_t *c, char32_t *result) {
 	}
 	return 0;
 }
+

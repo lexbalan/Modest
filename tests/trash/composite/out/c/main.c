@@ -188,3 +188,4 @@ int32_t main(void) {
 	awrap[0]->fhi("World");
 	return 0;
 }
+

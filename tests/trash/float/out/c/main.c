@@ -39,3 +39,4 @@ int main(void) {
 	printf("slope = %f\n", /*$*/((double)sl));
 	return 0;
 }
+

@@ -2099,6 +2099,7 @@ def dump(filename, defs):
 	output_open(filename)
 	for d in defs:
 		out(str(d))
+	out("\n\n")
 	output_close()
 
 

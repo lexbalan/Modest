@@ -17,3 +17,4 @@ float minmax_max_float32(float a, float b);
 double minmax_min_float64(double a, double b);
 double minmax_max_float64(double a, double b);
 #endif
+

@@ -34,3 +34,4 @@ void console_print(char *form, ...);
 int32_t console_vfprint(int32_t fd, char *form, va_list va);
 int32_t console_vsprint(char *buf, char *form, va_list va);
 #endif
+

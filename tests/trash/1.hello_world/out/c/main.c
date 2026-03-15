@@ -12,3 +12,4 @@ int main(void) {
 	printf("%s\n", /*$*/((char *)HELLO_WORLD));
 	return 0;
 }
+
