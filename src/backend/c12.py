@@ -388,7 +388,7 @@ def initializers_are_different(a, b):
 		ini_left = a[i]
 		ini_right = b[i]
 
-		if not ini_right.value.type.is_generic():
+		if ini_right.value.type.is_concretic():
 			if not Type.eq(ini_left.value.type, ini_right.value.type):
 				return True
 
@@ -605,7 +605,7 @@ def do_cvalue_cons_array(x, ctx):
 		if 'initializer_context' in ctx:
 			if from_type.is_string():
 				width = 0
-				if not to_type.is_generic():
+				if to_type.is_concretic():
 					width = to_type.of.width
 				cv = do_cvalue_literal_string(x.value.asset, width)
 				#cv.mark = 'CA1'
@@ -618,7 +618,7 @@ def do_cvalue_cons_array(x, ctx):
 
 		if from_type.is_string():
 			width = 0
-			if not to_type.is_generic():
+			if to_type.is_concretic():
 				width = to_type.of.width
 			cv = do_cvalue_literal_string(x.value.asset, width)
 			#cv.mark = 'CA3'
@@ -632,7 +632,7 @@ def do_cvalue_cons_array(x, ctx):
 	#    var x: [10]Word8 = "0123456789"
 	# if from_type.is_string():
 	# 	width = 0
-	# 	if not type.is_generic():
+	# 	if type.is_concretic():
 	#  		width = type.to.of.width
 	# 	return do_cvalue_literal_string(value, width=width)
 
@@ -670,7 +670,7 @@ def do_cvalue_cons_record(x, ctx):
 
 	# RecordA -> RecordB
 	#if to_type.is_record():
-	if from_type.is_record() and not from_type.is_generic():
+	if from_type.is_record() and from_type.is_concretic():
 		if to_type.uid == from_type.uid:
 			# это одна и та же структура и приведение не требуется
 			return do_cvalue(value, ctx=ctx)
@@ -1670,6 +1670,8 @@ def do_def_var(x, isdecl=False, is_extern=False):
 
 
 def do_def_const(x):
+	#mass
+	#if x.value.type.is_concretic()
 	id_str = camel_to_upper_snake(get_id_str(x.value))
 	macro = CMacrodefinition(id_str, str_macro_value(x.init_value))
 	#out(str(macro))

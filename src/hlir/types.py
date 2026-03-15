@@ -707,6 +707,10 @@ class Type(Entity):
 		return self.generic
 
 
+	def is_concretic(self):
+		return not self.is_generic()
+
+
 	def is_branded(self):
 		return self.brand != 0
 
