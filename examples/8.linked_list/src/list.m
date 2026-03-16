@@ -8,6 +8,7 @@ include "libc/stdio"
 public type Node = @branded {
 	next: *Node
 	prev: *Node
+	//data: @layout("union") {ptr: Ptr, nat64: Nat64}
 	data: Ptr
 }
 
