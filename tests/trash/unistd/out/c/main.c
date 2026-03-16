@@ -22,7 +22,7 @@ int main(void) {
 	ctermid(cterm);
 	printf("ctermid = %s\n", cterm);
 	char cwd[128];
-	getcwd(cwd, /*$*/((size_t)LENGTHOF(cwd)));
+	getcwd(cwd, (size_t)LENGTHOF(cwd));
 	printf("cwd = %s\n", cwd);
 	char *const tty = ttyname(0);
 	printf("ttyname = %s\n", tty);

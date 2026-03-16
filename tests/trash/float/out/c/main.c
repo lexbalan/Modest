@@ -21,22 +21,22 @@ static float slope(struct point2_d a, struct point2_d b) {
 	const int dy = abs(a.y - b.y);
 	printf("dx = %d\n", dx);
 	printf("dy = %d\n", dy);
-	return /*$*/((float)dy) / /*$*/((float)dx);
+	return (float)dy / (float)dx;
 }
 
 int main(void) {
 	printf("float test\n");
 	printf("2 = %d\n", 2);
-	printf("2/3 = %f\n", /*$*/((double)(2.0 / 3.0)));
+	printf("2/3 = %f\n", (double)(2.0 / 3.0));
 	const int8_t r = 10;
 	const double s = squareOfCircle(r);
 	printf("s = %f\n", s);
 	const double k = 1.0 / 8.0;
-	printf("k = %f\n", /*$*/((double)k));
+	printf("k = %f\n", (double)k);
 	printf("sizeof(Float32) = %zu\n", sizeof(float));
 	printf("sizeof(Float64) = %zu\n", sizeof(double));
 	const float sl = slope((struct point2_d){.x = 10, .y = 20}, (struct point2_d){.x = 30, .y = 50});
-	printf("slope = %f\n", /*$*/((double)sl));
+	printf("slope = %f\n", (double)sl);
 	return 0;
 }
 

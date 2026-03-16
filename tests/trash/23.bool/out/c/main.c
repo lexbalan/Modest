@@ -11,16 +11,16 @@ int main(void) {
 	bool b;
 	x = 1;
 	b = x != 0;
-	printf("x = %u\n", /*$*/((uint32_t)x));
-	printf("x to Bool = %u\n", /*$*/((uint32_t)b));
+	printf("x = %u\n", (uint32_t)x);
+	printf("x to Bool = %u\n", (uint32_t)b);
 	x = 2;
 	b = x != 0;
-	printf("x = %u\n", /*$*/((uint32_t)x));
-	printf("x to Bool = %u\n", /*$*/((uint32_t)b));
+	printf("x = %u\n", (uint32_t)x);
+	printf("x to Bool = %u\n", (uint32_t)b);
 	x = 3;
 	b = x != 0;
-	printf("x = %u\n", /*$*/((uint32_t)x));
-	printf("x to Bool = %u\n", /*$*/((uint32_t)b));
+	printf("x = %u\n", (uint32_t)x);
+	printf("x to Bool = %u\n", (uint32_t)b);
 	return 0;
 }
 

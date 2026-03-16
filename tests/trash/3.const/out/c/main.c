@@ -14,11 +14,11 @@ typedef uint32_t char32_t;
 #define _STR32(x) __STR32(x)
 #endif
 #define GENERIC_INT_CONST 42
-#define INT32_CONST (/*$*/((int32_t)GENERIC_INT_CONST))
+#define INT32_CONST ((int32_t)GENERIC_INT_CONST)
 #define GENERIC_STRING_CONST "Hello!"
-#define STRING8_CONST (/*$*/((char *)GENERIC_STRING_CONST))
-#define STRING16_CONST (/*$*/((char16_t *)GENERIC_STRING_CONST))
-#define STRING32_CONST (/*$*/((char32_t *)GENERIC_STRING_CONST))
+#define STRING8_CONST ((char *)GENERIC_STRING_CONST)
+#define STRING16_CONST ((char16_t *)GENERIC_STRING_CONST)
+#define STRING32_CONST ((char32_t *)GENERIC_STRING_CONST)
 struct point {
 	uint32_t x;
 	uint32_t y;
@@ -48,7 +48,7 @@ int main(void) {
 	const struct point pp = ((const struct point [3])POINTS)[0];
 	const struct point ppp = ((const struct point [3])ZERO_POINTS)[0];
 	const uint32_t z = POINT_ZERO.x;
-	printf("genericIntConst = %d\n", /*$*/((int32_t)GENERIC_INT_CONST));
+	printf("genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);
 	printf("int32Const = %d\n", INT32_CONST);
 	printf("string8Const = %s\n", STRING8_CONST);
 	return 0;

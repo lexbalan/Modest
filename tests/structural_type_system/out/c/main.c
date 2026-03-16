@@ -78,17 +78,17 @@ static void test_by_value(void) {
 
 static void test_by_pointer(void) {
 	f1_ptr(&a);
-	f2_ptr(/*$*/((struct type2 *)&a));
-	f3_ptr(/*$*/((Type3 *)&a));
-	f4_ptr(/*$*/((struct __anonymous_struct_4 *)&a));
-	f1_ptr(/*$*/((struct type1 *)&b));
+	f2_ptr((struct type2 *)&a);
+	f3_ptr((Type3 *)&a);
+	f4_ptr((struct __anonymous_struct_4 *)&a);
+	f1_ptr((struct type1 *)&b);
 	f2_ptr(&b);
-	f3_ptr(/*$*/((Type3 *)&b));
-	f4_ptr(/*$*/((struct __anonymous_struct_4 *)&b));
-	f1_ptr(/*$*/((struct type1 *)&c));
-	f2_ptr(/*$*/((struct type2 *)&c));
+	f3_ptr((Type3 *)&b);
+	f4_ptr((struct __anonymous_struct_4 *)&b);
+	f1_ptr((struct type1 *)&c);
+	f2_ptr((struct type2 *)&c);
 	f3_ptr(&c);
-	f4_ptr(/*$*/((struct __anonymous_struct_4 *)&c));
+	f4_ptr((struct __anonymous_struct_4 *)&c);
 }
 
 int main(void) {

@@ -17,9 +17,9 @@ static ssize_t my_printf(char *format, ...) {
 	va_start(va2, format);
 	const int8_t strMaxLen = 127 + 1;
 	char buf[strMaxLen];
-	const int n = vsnprintf(buf, /*$*/((size_t)strMaxLen), format, va2);
+	const int n = vsnprintf(buf, (size_t)strMaxLen, format, va2);
 	va_end(va2);
-	return write(STDOUT_FILENO, /*$*/((void *)buf), (size_t)abs(n));
+	return write(STDOUT_FILENO, (void *)buf, (size_t)abs(n));
 }
 
 int main(void) {
@@ -27,7 +27,7 @@ int main(void) {
 	my_printf("My Printf Test %u\n", k);
 	const char c = '$';
 	char *const s = "Hi!";
-	const int32_t i = /*$*/((int32_t)-1);
+	const int32_t i = (int32_t)-1;
 	const uint32_t n = 123;
 	const uint32_t x = 305419903;
 	my_printf("\x0\x0\n");

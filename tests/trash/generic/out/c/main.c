@@ -73,9 +73,9 @@ static bool test_generic_integer(void) {
 	float f = one;
 	double g = one;
 	uint8_t x = one;
-	char c = /*$*/((char)one);
-	char16_t d = /*$*/((char16_t)one);
-	char32_t e = /*$*/((char32_t)one);
+	char c = (char)one;
+	char16_t d = (char16_t)one;
+	char32_t e = (char32_t)one;
 	bool k = one != 0;
 	return true;
 }
@@ -84,7 +84,7 @@ static bool test_generic_float(void) {
 	const double pi = 3.1415926535897932384626433832795028841971693993751058209749445923;
 	float f = pi;
 	double g = pi;
-	int32_t x = /*$*/((int32_t)pi);
+	int32_t x = (int32_t)pi;
 	return true;
 }
 
@@ -93,7 +93,7 @@ static bool test_generic_char(void) {
 	char b = a;
 	char16_t c = a;
 	char32_t d = a;
-	int32_t char_code = /*$*/((int32_t)/*$*/((uint32_t)/*$*/((char32_t)a)));
+	int32_t char_code = (int32_t)(uint32_t)(char32_t)a;
 	return true;
 }
 
@@ -101,7 +101,7 @@ static bool test_generic_array(void) {
 	#define a {0, 1, 2, 3}
 	uint32_t i = 0;
 	while (i < 4) {
-		printf("a[%i] = %i\n", i, /*$*/((uint32_t)((const int8_t [4])a)[i]));
+		printf("a[%i] = %i\n", i, (uint32_t)((const int8_t [4])a)[i]);
 		i = i + 1;
 	}
 	if (memcmp(/*AP2*/(&(const int8_t [4])a), /*AP2*/(&(int8_t [4]){0, 1, 2, 3}), sizeof(const int8_t [4])) != 0) {
