@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-
 #define MIN_NUMBER 0
 #define MAX_NUMBER 10
 static int32_t get_number(int32_t min, int32_t max);

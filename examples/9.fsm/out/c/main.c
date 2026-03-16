@@ -4,10 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
 #include "fsm.h"
-
-
 static struct fsm_fsm fsm0;
 static fsm_ComplexState routine0(fsm_ComplexState state, void *payload);
 static struct fsm_state_desc state0 = (struct fsm_state_desc){.id = "state0", .nstages = 4, .handler = &routine0};

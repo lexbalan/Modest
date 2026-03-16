@@ -1,16 +1,13 @@
 
-#ifndef CLIENT_H
+#if !defined(CLIENT_H)
 #define CLIENT_H
-
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
 int main(void);
+#endif
 
-#endif /* CLIENT_H */

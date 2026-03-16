@@ -1,6 +1,5 @@
 
 #include "client.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -9,11 +8,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-
-#ifndef LENGTHOF
+#if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
+#endif
 #define FILENAME "file.txt"
 #define IP_ADDRESS "127.0.0.1"
 #define PORT 8080
@@ -42,8 +39,8 @@ int main(void) {
 		.sin_port = PORT,
 		.sin_addr = (struct in_addr){
 			.s_addr = inet_addr(IP_ADDRESS)
-}
-};
+		}
+	};
 	struct sockaddr *const sockaddr = (struct sockaddr *)(void *)&server_addr;
 	int e = connect(sockFd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {

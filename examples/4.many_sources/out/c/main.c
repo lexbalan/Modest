@@ -4,10 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
 #include "lib.h"
-
-
 
 int main(void) {
 	printf("hello from main\n");

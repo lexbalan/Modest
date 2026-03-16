@@ -5,8 +5,6 @@
 #include <string.h>
 #include <stdio.h>
 
-
-
 int main(void) {
 	printf("while statement test\n");
 	uint32_t a = 0;

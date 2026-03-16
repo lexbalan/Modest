@@ -1,15 +1,12 @@
 
-#ifndef TABLE_H
+#if !defined(TABLE_H)
 #define TABLE_H
-
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
 typedef char *table_Row[];
 typedef struct table_table table_Table;
 struct table_table {
@@ -20,5 +17,5 @@ struct table_table {
 	bool separate;
 };
 void table_print(table_Table *table);
+#endif
 
-#endif /* TABLE_H */

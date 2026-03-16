@@ -867,7 +867,7 @@ def do_cvalue_cast(type, value, ctx, raw_cast=False):
 	ctype = do_ctype(type)
 	cvalue = do_cvalue(value, ctx=ctx)
 	cv = CValueCast(ctype, cvalue)
-	cv.mark = '$'
+	#cv.mark = '$'
 	return cv
 
 
@@ -1734,7 +1734,7 @@ def do_deps(deps):
 
 def do_decl_type_record(x):
 	t = x.type
-	return do_decl_type_record2(x)
+	return do_decl_type_record2(t)
 
 def do_decl_type_record2(t):
 	tag = get_record_tag(t)

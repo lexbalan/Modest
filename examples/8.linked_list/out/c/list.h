@@ -1,14 +1,11 @@
 
-#ifndef LIST_H
+#if !defined(LIST_H)
 #define LIST_H
-
+#include <stdlib.h>
+#include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-
-#include <stdlib.h>
-#include <stdio.h>
-
 struct list_node;
 struct list_node {
 	struct list_node *next;
@@ -35,5 +32,5 @@ struct list_node *list_node_insert(struct list_list *list, int32_t pos, struct l
 struct list_node *list_node_append(struct list_list *list, struct list_node *new_node);
 struct list_node *list_insert(struct list_list *list, int32_t pos, void *data);
 struct list_node *list_append(struct list_list *list, void *data);
+#endif
 
-#endif /* LIST_H */

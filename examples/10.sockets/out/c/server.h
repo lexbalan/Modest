@@ -1,15 +1,12 @@
 
-#ifndef SERVER_H
+#if !defined(SERVER_H)
 #define SERVER_H
-
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
-
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
 int main(void);
+#endif
 
-#endif /* SERVER_H */

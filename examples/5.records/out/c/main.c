@@ -6,8 +6,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-
 struct point {
 	float x;
 	float y;

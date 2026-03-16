@@ -4,11 +4,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#ifndef LENGTHOF
+#if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
+#endif
 static int32_t testArray[23] = {-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9};
 
 static bool bubble_sort32_iter(int32_t (*array)[], uint32_t len) {

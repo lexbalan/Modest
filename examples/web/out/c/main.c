@@ -7,16 +7,19 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-
-#ifndef LENGTHOF
+#if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
+#endif
 #define PORT 8080
 #define RECEIVE_BUFFER_SIZE 1024
 #define SEND_BUFFER_SIZE 1024
 #define HTTP_HEADER ("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n")
 static uint32_t pageCounter;
+//@extern
+//@c_no_print
+//func htons(x: Word16) -> Word16 {
+//	return (x << 8) or (x >> 8)
+//}
 
 static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[RECEIVE_BUFFER_SIZE];
@@ -45,8 +48,8 @@ int32_t main(void) {
 		.sin_port = (unsigned short)htons(PORT),
 		.sin_addr = (struct in_addr){
 			.s_addr = INADDR_ANY
-}
-};
+		}
+	};
 	struct sockaddr *const socadr = (struct sockaddr *)&serverAddr;
 	int rc = bind(serverSocket, socadr, (socklen_t)sizeof serverAddr);
 	if (rc < 0) {

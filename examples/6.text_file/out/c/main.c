@@ -8,8 +8,6 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
-
-
 #define FILENAME ("file.txt")
 
 static void write_example(void) {

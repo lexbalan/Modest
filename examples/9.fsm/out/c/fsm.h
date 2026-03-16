@@ -1,14 +1,11 @@
 
-#ifndef FSM_H
+#if !defined(FSM_H)
 #define FSM_H
-
+#include <assert.h>
+#include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-
-#include <assert.h>
-#include <stdio.h>
-
 typedef uint16_t fsm_StageId;
 struct fsm_state_desc;
 typedef struct fsm_complex_state fsm_ComplexState;
@@ -42,5 +39,5 @@ fsm_ComplexState fsm_getComplexState(struct fsm_fsm fsm);
 struct fsm_state_desc *fsm_getState(struct fsm_fsm fsm);
 fsm_StageId fsm_getStage(struct fsm_fsm fsm);
 char *fsm_getStateName(struct fsm_fsm *fsm);
+#endif
 
-#endif /* FSM_H */

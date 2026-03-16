@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-
 typedef int32_t MyInt32;
 #define MY_ZERO ((MyInt32)0)
 #define MY_ONE ((MyInt32)1)

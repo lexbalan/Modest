@@ -1,14 +1,11 @@
 
 #include "list.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-
 
 struct list_list *list_create(void) {
 	struct list_list *const list = (struct list_list *)malloc(sizeof(struct list_list));

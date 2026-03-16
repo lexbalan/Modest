@@ -5,8 +5,6 @@
 #include <string.h>
 #include <stdio.h>
 
-
-
 int main(void) {
 	printf("if statement example\n");
 	int32_t a;

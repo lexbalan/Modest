@@ -1,6 +1,5 @@
 
 #include "server.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -8,8 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
-
-
 #define FILENAME "file2.txt"
 #define IP_ADDRESS "127.0.0.1"
 #define PORT 8080
@@ -45,8 +42,8 @@ int main(void) {
 		.sin_port = PORT,
 		.sin_addr = (struct in_addr){
 			.s_addr = inet_addr(IP_ADDRESS)
-}
-};
+		}
+	};
 	struct sockaddr *const sockAddr = (struct sockaddr *)(void *)&serverAddr;
 	int e = bind(sockFd, sockAddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {

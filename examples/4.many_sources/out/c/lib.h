@@ -1,13 +1,10 @@
 
-#ifndef LIB_H
+#if !defined(LIB_H)
 #define LIB_H
-
+#include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-
-#include <stdio.h>
-
 void lib_foo(void);
+#endif
 
-#endif /* LIB_H */

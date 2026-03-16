@@ -5,13 +5,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "table.h"
-
-#ifndef LENGTHOF
+#if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
+#endif
 static char *table_header0[3] = {"#", "Header0", "Header1"};
 static char *tableData0[3][3] = {{"0", "Alef", "Betha"}, {"1", "Clock", "Depth"}, {"2", "Earth", "Fight"}};
 static char *table_header1[4] = {"#", "Header0", "Header1", "Header2"};

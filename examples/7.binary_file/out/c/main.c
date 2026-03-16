@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-
 #define FILENAME ("file.bin")
 struct chunk {
 	char id[100];
@@ -22,7 +20,7 @@ static void writeExample(void) {
 	struct chunk chunk = (struct chunk){
 		.id = "id",
 		.data = "data"
-};
+	};
 	fwrite((void *)&chunk, sizeof(struct chunk), 1, fp);
 	fclose(fp);
 }

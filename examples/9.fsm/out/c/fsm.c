@@ -1,14 +1,11 @@
 
 #include "fsm.h"
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
 #include <stdio.h>
-
-
 
 void fsm_init(struct fsm_fsm *self, char *id, struct fsm_state_desc *initState, void *payload) {
 	self->id = id;
