@@ -6,8 +6,8 @@
 #include <stdbool.h>
 // thx: https://github.com/ilvn/aes256/tree/main
 typedef uint8_t aes256_Result;
-#define AES256_RESULT_SUCCESS (/*$*/((aes256_Result)0))
-#define AES256_RESULT_ERROR (/*$*/((aes256_Result)1))
+#define AES256_RESULT_SUCCESS ((aes256_Result)0)
+#define AES256_RESULT_ERROR ((aes256_Result)1)
 typedef uint8_t aes256_Key[32];
 typedef uint8_t aes256_Block[16];
 typedef struct aes256_context aes256_Context;
