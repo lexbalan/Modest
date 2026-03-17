@@ -1,15 +1,10 @@
 
-#ifndef RING_WORD8_H
+#if !defined(RING_WORD8_H)
 #define RING_WORD8_H
-
+#include "queue.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-
-#include "queue.h"
-
-
-
 struct ring_word8_ring_word8 {
 	struct queue_queue queue;
 	uint8_t (*data)[];
@@ -21,5 +16,5 @@ bool ringWord8_isFull(struct ring_word8_ring_word8 *q);
 bool ringWord8_isEmpty(struct ring_word8_ring_word8 *q);
 bool ringWord8_put(struct ring_word8_ring_word8 *q, uint8_t b);
 bool ringWord8_get(struct ring_word8_ring_word8 *q, uint8_t *b);
+#endif
 
-#endif /* RING_WORD8_H */

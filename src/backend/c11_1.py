@@ -152,7 +152,7 @@ class CTypePointer(CType):
 
 
 class CTypeArray(CType):
-	def __init__(self, of, volume=None, specs=None):
+	def __init__(self, of, volume=None, specs=[]):
 		super().__init__()
 		of.specs = specs  # array specs is array item specs (!)
 		self.of = of

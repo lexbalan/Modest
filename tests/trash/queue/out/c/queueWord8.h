@@ -1,15 +1,10 @@
 
-#ifndef QUEUE_WORD8_H
+#if !defined(QUEUE_WORD8_H)
 #define QUEUE_WORD8_H
-
+#include "queue.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-
-#include "queue.h"
-
-
-
 struct queue_word8_queue_word8 {
 	struct queue_queue queue;
 	uint8_t (*data)[];
@@ -24,5 +19,5 @@ bool queueWord8_get(struct queue_word8_queue_word8 *q, uint8_t *b);
 uint32_t queueWord8_read(struct queue_word8_queue_word8 *q, uint8_t (*data)[], uint32_t len);
 uint32_t queueWord8_write(struct queue_word8_queue_word8 *q, uint8_t (*data)[], uint32_t len);
 void queueWord8_clear(struct queue_word8_queue_word8 *q);
+#endif
 
-#endif /* QUEUE_WORD8_H */

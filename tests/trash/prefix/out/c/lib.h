@@ -1,20 +1,13 @@
 
-#ifndef LOO_H
+#if !defined(LOO_H)
 #define LOO_H
-
+#include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-
-#include <stdio.h>
-
-
-
 struct loo_nothing {uint8_t __placeholder;};
-
-#define LOO_BAR  4
-
+#define LOO_BAR 4
 extern int32_t loo_spam;
 void loo_foo(uint32_t x);
+#endif
 
-#endif /* LOO_H */

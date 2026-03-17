@@ -4,15 +4,11 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
 #include "lib.h"
 
-
-
 int main(void) {
-	loo_foo((uint32_t)LOO_BAR);
+	loo_foo(LOO_BAR);
 	(void)loo_spam;
 	return 0;
 }
-
 

@@ -237,9 +237,17 @@ def is_type_named(t):
 #		self.specs = specs if specs != None else []
 
 
+# Только для параметров функции!
+#def pointer_to_array_relax(t):
+#	return t.is_pointer_to_array()
+
+
 # преобразуем Modest TypePointer -> CIR TypePointer
 def do_ctype_pointer(t, specs=[]):
 	to = t.to
+
+	#if pointer_to_array_relax(t):
+	#	return CTypeArray(of=do_ctype(to.of))
 
 	if p2i_instead_p2a(to):
 		return CTypePointer(to=do_ctype(to.of), specs=specs)
@@ -1353,15 +1361,6 @@ def do_assign_array(left, right, ti):
 		# Если справа приведенный к левому массив (более короткий? Generic)
 		right = get_root_value(right)
 
-	cleft = do_cvalue_as_ptr(left)
-	cright = do_cvalue_as_ptr(right)
-
-	slen = None
-	if left.isValueVar() or left.isValueConst():
-		slen = do_array_len(left)
-	else:
-		slen = do_cvalue(left.type.volume)
-
 	l_root = get_root_value(left)
 	r_root = get_root_value(right)
 
@@ -1372,7 +1371,14 @@ def do_assign_array(left, right, ti):
 	if l_root.type.of.size == r_root.type.of.size:
 		return assign_by_memcopy(left, right)
 
-	return CStmtValueExpr(CValueCall(CValueNamed("ARRCPY"), [cleft, cright, slen]))
+	cleft = do_cvalue_as_ptr(left)
+	cright = do_cvalue_as_ptr(right)
+	slen = None
+	if left.isValueVar() or left.isValueConst():
+		slen = do_array_len(left)
+	else:
+		slen = do_cvalue(left.type.volume)
+	return CStmtValueExpr(CValueCall(CValueNamed("ARRCPY"), [cleft, CValueSubexpr(cright), slen]))
 
 
 
@@ -1688,7 +1694,7 @@ def do_def_type_record(t):
 def do_def_var(x, isdecl=False, is_extern=False):
 	var_value = x.value
 
-	# TODO: Почему-то атрибут 'extern' не работает, и накостылил через as_extern
+	# TODO: Почему-то атрибут 'extern' не работает, и накостылил через is_extern
 	is_extern = is_extern or x.hasAttribute2('extern')
 
 	storage_class = ''
@@ -2004,7 +2010,7 @@ def do_header(module):
 			xdefs.extend(do_decl_func(x))
 		elif x.is_stmt_def_var():
 			#nnl(x.nl)
-			xdefs.extend(do_def_var(x, as_extern=True))
+			xdefs.extend(do_def_var(x, is_extern=True))
 		elif x.is_stmt_def_type():
 			#nnl(x.nl)
 			xdefs.extend(do_deps(x.deps))

@@ -110,13 +110,13 @@ static bool test_generic_array(void) {
 		return false;
 	}
 	int32_t b[4];
-	ARRCPY(&b, &(const int8_t [4])a, LENGTHOF(b));
+	ARRCPY(&b, ((&(const int8_t [4])a)), LENGTHOF(b));
 	if (memcmp(&b, &(int32_t [4]){0, 1, 2, 3}, sizeof(int32_t [4])) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
 	int64_t c[4];
-	ARRCPY(&c, &(const int8_t [4])a, LENGTHOF(c));
+	ARRCPY(&c, ((&(const int8_t [4])a)), LENGTHOF(c));
 	if (memcmp(&c, &(int64_t [4]){0, 1, 2, 3}, sizeof(int64_t [4])) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;

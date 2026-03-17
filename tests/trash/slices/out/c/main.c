@@ -50,7 +50,7 @@ int main(void) {
 	memcpy(&vs2, &s2, sizeof(int32_t [8 - 5]));
 	const int8_t ax = 2;
 	const int8_t bx = 6;
-	ARRCPY((int32_t (*)[bx - ax])&a[ax], &(int8_t [4]){10, 20, 30, 40}, bx - ax);
+	ARRCPY((int32_t (*)[bx - ax])&a[ax], ((&(int8_t [4]){10, 20, 30, 40})), bx - ax);
 	i = 0;
 	while (i < LENGTHOF(a)) {
 		printf("a[%d] = %d\n", i, a[i]);
@@ -95,7 +95,7 @@ int main(void) {
 	int32_t dst[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	const int8_t i1 = 3;
 	const int8_t j1 = 8;
-	ARRCPY((int32_t (*)[j1 - i1])&dst[i1], &(int8_t [5]){11, 22, 33, 44, 55}, j1 - i1);
+	ARRCPY((int32_t (*)[j1 - i1])&dst[i1], ((&(int8_t [5]){11, 22, 33, 44, 55})), j1 - i1);
 	array_print(&dst, 10);
 	return 0;
 }
