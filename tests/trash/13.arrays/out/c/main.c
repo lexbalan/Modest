@@ -5,12 +5,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
-
-#ifndef LENGTHOF
+#if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
-
-
+#endif
 // Что можно делать с массивом
 //   1.1 Создать без инициализации
 //   1.2 Создать и проинициализировать пустым литералом
@@ -31,13 +28,9 @@
 //   5.2 Получить размер массива (в байтах)
 //
 //   6.1 Создать VLA массив
-
-#define CONSTANT_ARRAY  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-
-static int32_t globalArray[10] = CONSTANT_ARRAY;
-
+#define CONSTANT_ARRAY {1, 2, 3, 4, 5} + {6, 7, 8, 9, 10}
+static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 static char arrayFromString[3] = {'a', 'b', 'c'};
-
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
 static void f0(char *_x, char *_sret_) {
@@ -49,12 +42,10 @@ static void f0(char *_x, char *_sret_) {
 	char mic[6];
 	memcpy(&mic, (char *)&x[0], sizeof(char [6]));
 	mic[5] = '\x0';
-
 	printf("f0 mic = \"%s\"\n", mic);
 	char res[30];
 	memcpy((char *)&res[0], &x, sizeof(char [20 - 0]));
 	memset((char *)&res[20], 0, sizeof(char [30 - 20]));
-
 	res[6] = 'M';
 	res[7] = 'o';
 	res[8] = 'd';
@@ -65,55 +56,30 @@ static void f0(char *_x, char *_sret_) {
 	res[13] = '\x0';
 	memcpy(_sret_, &res, sizeof(char [30]));
 }
-
-
-#define START_SEQUENCE  {0xAA, 0x55, 0x2}
-#define STOP_SEQUENCE  {0x16}
+#define START_SEQUENCE {0xAA, 0x55, 0x2}
+#define STOP_SEQUENCE {0x16}
 
 static void test(void) {
 	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
 	uint32_t i = 0;
-	while (i < (uint32_t)LENGTHOF(yy)) {
+	while (i < LENGTHOF(yy)) {
 		const uint8_t y = yy[i];
 		printf("yy[%i] = %u\n", i, (uint32_t)y);
 		i = i + 1;
 	}
 }
-
-
-static int32_t a0[2][2][5] = {
-	{
-	{0, 1, 2, 3, 4},
-	{5, 6, 7, 8, 9}},
-	{
-	{10, 11, 12, 13, 14},
-	{15, 16, 17, 18, 19}}
-};
-
+static int32_t a0[2][2][5] = {{{0, 1, 2, 3, 4}, {5, 6, 7, 8, 9}}, {{10, 11, 12, 13, 14}, {15, 16, 17, 18, 19}}};
 static int32_t a1[5] = {0, 1, 2, 3, 4};
 static int32_t a2[5] = {5, 6, 7, 8, 9};
 static int32_t (*a3[2])[5] = {&a1, &a2};
 static int32_t (*(*a4[2])[2])[5] = {&a3, &a3};
 static int32_t (*(*(*p0)[2])[2])[5] = &a4;
-
-static int32_t a10[10][10] = {
-	{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-	{11, 12, 13, 14, 15, 16, 17, 18, 19, 20},
-	{21, 22, 23, 24, 25, 26, 27, 28, 29, 30},
-	{31, 32, 33, 34, 35, 36, 37, 38, 39, 40},
-	{41, 42, 43, 44, 45, 46, 47, 48, 49, 50},
-	{51, 52, 53, 54, 55, 56, 57, 58, 59, 60},
-	{61, 62, 63, 64, 65, 66, 67, 68, 69, 70},
-	{71, 72, 73, 74, 75, 76, 77, 78, 79, 80},
-	{81, 82, 83, 84, 85, 86, 87, 88, 89, 90},
-	{91, 92, 93, 94, 95, 96, 97, 98, 99, 100}
-};
+static int32_t a10[10][10] = {{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {21, 22, 23, 24, 25, 26, 27, 28, 29, 30}, {31, 32, 33, 34, 35, 36, 37, 38, 39, 40}, {41, 42, 43, 44, 45, 46, 47, 48, 49, 50}, {51, 52, 53, 54, 55, 56, 57, 58, 59, 60}, {61, 62, 63, 64, 65, 66, 67, 68, 69, 70}, {71, 72, 73, 74, 75, 76, 77, 78, 79, 80}, {81, 82, 83, 84, 85, 86, 87, 88, 89, 90}, {91, 92, 93, 94, 95, 96, 97, 98, 99, 100}};
 
 static void test_arrays(void) {
 	int32_t i;
 	int32_t j;
 	int32_t k;
-
 	i = 0;
 	while (i < 10) {
 		j = 0;
@@ -123,7 +89,6 @@ static void test_arrays(void) {
 		}
 		i = i + 1;
 	}
-
 	i = 0;
 	while (i < 10) {
 		j = 0;
@@ -133,7 +98,6 @@ static void test_arrays(void) {
 		}
 		i = i + 1;
 	}
-
 	i = 0;
 	while (i < 2) {
 		j = 0;
@@ -169,7 +133,6 @@ static void test_arrays(void) {
 		}
 		i = i + 1;
 	}
-
 	i = 0;
 	while (i < 2) {
 		j = 0;
@@ -185,50 +148,37 @@ static void test_arrays(void) {
 	}
 }
 
-
 int main(void) {
-
 	test();
-
 	char em[30];
-	f0((char [20]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'}, &em[0]);
+	f0("Hello World!", em);
 	printf("em = %s\n", em);
-
 	uint32_t i = 0;
 	while (i < 10) {
 		const int32_t a = globalArray[i];
 		printf("globalArray[%i] = %i\n", i, a);
 		i = i + 1;
 	}
-
 	printf("------------------------------------\n");
-
 	int32_t localArray[3] = {4, 5, 6};
-
 	i = 0;
 	while (i < 3) {
 		const int32_t a = localArray[i];
 		printf("localArray[%i] = %i\n", i, a);
 		i = i + 1;
 	}
-
 	printf("------------------------------------\n");
-
 	int32_t (*globalArrayPtr)[];
 	globalArrayPtr = &globalArray;
-
 	i = 0;
 	while (i < 3) {
 		const int32_t a = (*globalArrayPtr)[i];
 		printf("globalArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
-
 	printf("------------------------------------\n");
-
 	int32_t (*localArrayPtr)[];
 	localArrayPtr = &localArray;
-
 	i = 0;
 	while (i < 3) {
 		const int32_t a = (*localArrayPtr)[i];
@@ -250,11 +200,9 @@ int main(void) {
 		printf("a != b\n");
 	}
 	int32_t c[3] = {10, 20, 30};
-
 	int32_t d[6];
 	memcpy((int32_t (*)[3 - 0])&d[0], &c, sizeof(int32_t [3 - 0]));
 	memset((int32_t (*)[6 - 3])&d[3], 0, sizeof(int32_t [6 - 3]));
-
 	printf("d[0] = %i\n", d[0]);
 	printf("d[1] = %i\n", d[1]);
 	printf("d[2] = %i\n", d[2]);
@@ -263,7 +211,6 @@ int main(void) {
 	printf("d[5] = %i\n", d[5]);
 	int32_t (*const pa)[3] = &a;
 	int32_t (*const pb)[3] = &b;
-
 	if (memcmp(pa, pb, sizeof(int32_t [3])) == 0) {
 		printf("*pa == *pb\n");
 	} else {
@@ -273,7 +220,7 @@ int main(void) {
 	int int200 = 200;
 	int int300 = 300;
 	int init_array[3];
-	memcpy(&init_array, &(int [3]){int100, int200, int300}, sizeof(int [3]));
+	memcpy(&init_array, &(int [3]){int100, int200, int300}, sizeof(const int [3]));
 	int32_t e[4];
 	memcpy(&e, &init_array, sizeof(int32_t [4]));
 	printf("e[0] = %i\n", e[0]);
@@ -283,40 +230,30 @@ int main(void) {
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
-
-
 	memset(&globalArray, 0, sizeof(int32_t [10]));
-
 	int32_t ax = 10;
 	int32_t bx = 20;
 	int32_t cx = 30;
 	const int32_t dx = 40;
-
 	int32_t y[4];
-	memcpy(&y, &(int32_t [4]){ax, bx, cx, dx}, sizeof(int32_t [4]));
-
+	memcpy(&y, &(int32_t [4]){ax, bx, cx, dx}, sizeof(const int32_t [4]));
 	ax = 111;
 	bx = 222;
 	cx = 333;
-
 	printf("y[%i] = %i (must be 10)\n", 0, y[0]);
 	printf("y[%i] = %i (must be 20)\n", 1, y[1]);
 	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
 	printf("y[%i] = %i (must be 40)\n", 3, y[3]);
-
-	if (memcmp(&y, &((int32_t [4]){10, 20, 30, 40}), sizeof(int32_t [4])) == 0) {
+	if (memcmp(&y, &(const int32_t [4]){10, 20, 30, 40}, sizeof(const int32_t [4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
 	}
-
 	test_arrays();
 	int32_t va = 5;
 	int32_t vb = 7;
 	int32_t varr[4];
 	memcpy(&varr, &(int32_t [4]){1, 2, va, vb}, sizeof(int32_t [4]));
-
 	return 0;
 }
-
 

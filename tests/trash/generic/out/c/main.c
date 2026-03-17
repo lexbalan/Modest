@@ -90,10 +90,10 @@ static bool test_generic_float(void) {
 
 static bool test_generic_char(void) {
 	#define a "A"
-	char b = a;
-	char16_t c = a;
-	char32_t d = a;
-	int32_t char_code = (int32_t)(uint32_t)(char32_t)a;
+	char b = a[0];
+	char16_t c = a[0];
+	char32_t d = a[0];
+	int32_t char_code = (int32_t)(uint32_t)a[0];
 	return true;
 	#undef a
 }

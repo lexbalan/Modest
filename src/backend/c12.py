@@ -751,8 +751,12 @@ def do_cvalue_cons(x, ctx):
 		return do_cvalue_cast(x.type, x.value, ctx)
 
 	if type.is_char() and from_type.is_string():
+		cv = None
 		if value.isValueLiteral():
-			return do_cvalue_literal_char(type, value, ctx)
+			cv = do_cvalue_literal_char(type, value, ctx)
+		else:
+			cv = CValueIndex(do_cvalue(value), CValueInteger(0))
+		return cv
 
 	if value.isValueLiteral() and from_type.is_generic():
 		if x.asset != None:
@@ -1463,7 +1467,10 @@ def do_cstmt_const(x):
 	if not (init_value.type.is_array() and init_value.isValueRuntime()):
 		civ = do_cvalue(init_value)
 
-	dv = CStmtDefVar(get_id_str(x), do_ctype(type), init_value=civ, storage_class=None)
+	t = do_ctype(type)
+	if type.is_array() and not init_value.isValueImmediate():
+		t.specs.remove('const')
+	dv = CStmtDefVar(get_id_str(x), t, init_value=civ, storage_class=None)
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
