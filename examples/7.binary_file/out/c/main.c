@@ -18,8 +18,8 @@ static void writeExample(void) {
 		return;
 	}
 	struct chunk chunk = (struct chunk){
-		.id = "id",
-		.data = "data"
+		.id = {'i', 'd'},
+		.data = {'d', 'a', 't', 'a'}
 	};
 	fwrite((void *)&chunk, sizeof(struct chunk), 1, fp);
 	fclose(fp);
