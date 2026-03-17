@@ -1391,7 +1391,6 @@ class Parser:
 					elif sym == 'v': code = ord("\v")   # VT
 					elif sym == 'f': code = ord("\f")   # FF
 
-
 					if is_unicode:
 						sym = utf32cc_to_utf8_str(code)
 					else:

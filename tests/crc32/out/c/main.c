@@ -15,7 +15,7 @@ struct test {
 	uint32_t len;
 	uint32_t hash;
 };
-static struct test tests[3] = {(struct test){.data = "123456789", .len = 9, .hash = 0xCBF43926L}, (struct test){.data = "The quick brown fox jumps over the lazy dog", .len = 43, .hash = 0x414FA339}, (struct test){.data = "Test vector from febooti.com", .len = 28, .hash = 0xC877F61}};
+static struct test tests[3] = {(struct test){.data = {'1', '2', '3', '4', '5', '6', '7', '8', '9'}, .len = 9, .hash = 0xCBF43926L}, (struct test){.data = {'T', 'h', 'e', ' ', 'q', 'u', 'i', 'c', 'k', ' ', 'b', 'r', 'o', 'w', 'n', ' ', 'f', 'o', 'x', ' ', 'j', 'u', 'm', 'p', 's', ' ', 'o', 'v', 'e', 'r', ' ', 't', 'h', 'e', ' ', 'l', 'a', 'z', 'y', ' ', 'd', 'o', 'g'}, .len = 43, .hash = 0x414FA339}, (struct test){.data = {'T', 'e', 's', 't', ' ', 'v', 'e', 'c', 't', 'o', 'r', ' ', 'f', 'r', 'o', 'm', ' ', 'f', 'e', 'b', 'o', 'o', 't', 'i', '.', 'c', 'o', 'm'}, .len = 28, .hash = 0xC877F61}};
 
 static bool runTest(struct test *test) {
 	const uint32_t crc = crc32_run((uint8_t (*)[])&test->data, test->len);

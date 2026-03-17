@@ -384,6 +384,28 @@ class CValueString(CValue):
 		return '%s"%s"' % (string_literal_prefix(self.width), self.string)
 
 
+
+def code_to_char(cc):
+	if cc < 0x20:
+		if cc == 0x07: return "\\a"    # bell
+		elif cc == 0x08: return "\\b"  # backspace
+		elif cc == 0x09: return "\\t"  # horizontal tab
+		elif cc == 0x0A: return "\\n"  # line feed
+		elif cc == 0x0B: return "\\v"  # vertical tab
+		elif cc == 0x0C: return "\\f"  # form feed
+		elif cc == 0x0D: return "\\r"  # carriage return
+		elif cc == 0x1B: return "\\e"  # escape
+		else: return "\\x%X" % cc
+
+	elif cc <= 0x7E :
+		sym = chr(cc)
+		if sym == '\\': return '\\\\'
+		elif sym == '"': return '\\"'
+		else: return sym
+
+	elif cc != 0:
+		return chr(cc)
+
 class CValueChar(CValue):
 	def __init__(self, char, width=8):
 		assert(isinstance(char, str))
@@ -393,7 +415,10 @@ class CValueChar(CValue):
 		self.precedence = 15
 
 	def __str__(self):
-		return "%s'%s'" % (string_literal_prefix(self.width), self.char)
+		if len(self.char) > 1:
+			print(self.char)
+			exit(1)
+		return "%s'%s'" % (string_literal_prefix(self.width), code_to_char(ord(self.char)))
 
 
 

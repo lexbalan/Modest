@@ -542,9 +542,10 @@ def do_cvalue_literal_rational(v, ctx):
 
 
 def do_cvalue_literal_char(t, v, ctx):
-	cc = ord(v.asset[0])
-	sstr = code_to_char(cc)
-	return CValueChar(sstr, width=t.width)
+	#cc = ord(v.asset[0])
+	#sstr = code_to_char(cc)
+	#print("?? " + sstr)
+	return CValueChar(v.asset[0], width=t.width)
 
 
 def do_cvalue_literal_array(v, ctx):
@@ -613,8 +614,8 @@ def do_cvalue_cons_array(x, ctx):
 				#cv = do_cvalue_literal_string(x.value.asset, width)
 				items = x.value.asset
 				cvalues = []
-				for cc in items:
-					cv = CValueChar(cc, width=width)
+				for char in items:
+					cv = CValueChar(char, width=width)
 					cvalues.append(cv)
 				cv = CValueArray(cvalues)
 				cv.mark = 'CA1'
