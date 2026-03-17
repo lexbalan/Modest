@@ -11,6 +11,7 @@ __attribute__((used))
 static void unitFunc(void) {
 	#define unit {0}
 	return;
+	#undef unit
 }
 
 int32_t main(void) {

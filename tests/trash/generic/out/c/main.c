@@ -95,6 +95,7 @@ static bool test_generic_char(void) {
 	char32_t d = a;
 	int32_t char_code = (int32_t)(uint32_t)(char32_t)a;
 	return true;
+	#undef a
 }
 
 static bool test_generic_array(void) {
@@ -126,6 +127,7 @@ static bool test_generic_array(void) {
 		return false;
 	}
 	return true;
+	#undef a
 }
 struct point2_d {
 	int32_t x;
@@ -146,5 +148,6 @@ static bool test_generic_record(void) {
 	point_3d = (struct point3_d){.x = 10, .y = 20};
 	(void)point_3d;
 	return true;
+	#undef p
 }
 

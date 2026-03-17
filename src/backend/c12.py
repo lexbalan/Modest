@@ -1570,6 +1570,12 @@ def do_def_func(x):
 
 			cblock.stmts = [dv, mx] + cblock.stmts
 
+
+	global func_undef_list
+	for id_str in func_undef_list:
+		cblock.stmts.append(CMacroUndef(id_str))
+	func_undef_list = []
+
 	dv = CStmtDefFunc(get_id_str(func), do_ctype(func.type), cblock, storage_class=storage_class, annotations=x.annotations)
 
 	cfunc = None

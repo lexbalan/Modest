@@ -46,5 +46,6 @@ int32_t main(void) {
 		i = i + 1;
 	}
 	return 0;
+	#undef b
 }
 

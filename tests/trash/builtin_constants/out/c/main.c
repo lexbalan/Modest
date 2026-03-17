@@ -18,5 +18,6 @@ int main(void) {
 	printf("__target.intWidth = %u\n", 32);
 	printf("__target.floatWidth = %u\n", 64);
 	return 0;
+	#undef ver
 }
 

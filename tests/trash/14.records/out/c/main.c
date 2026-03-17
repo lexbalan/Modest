@@ -119,5 +119,6 @@ int main(void) {
 	}
 	test_records();
 	return 0;
+	#undef ver
 }
 

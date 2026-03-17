@@ -1346,6 +1346,19 @@ class CMacrodefinition():
 		return sstr
 
 
+class CMacroUndef():
+	def __init__(self, text):
+		assert(isinstance(text, str))
+		self.nl = 1  #!!! (because it is not CStmt...)
+		super().__init__()
+		self.text = text
+
+	def __str__(self):
+		sstr = str_nl_indent(self.nl)
+		sstr += "#undef %s" % (self.text)
+		return sstr
+
+
 class CInclude():
 	def __init__(self, text, isglobal):
 		assert(isinstance(text, str))
