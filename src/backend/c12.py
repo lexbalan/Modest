@@ -1076,10 +1076,17 @@ def do_cvalue_sizeof_value(x, ctx):
 	return CValueSizeofValue(do_cvalue(x.ofvalue))
 
 def do_cvalue_sizeof_type(x, ctx):
+	if x.oftype.is_unit():
+		return CValueCast(CTypeNamed("size_t"), CValueInteger(0))
 	return CValueSizeofType(do_ctype(x.oftype))
 
 def do_cvalue_lengthof_type(x, ctx):
 	return CValueInteger(x.oftype.volume.asset, is_unsigned=True)
+
+def do_cvalue_alignof(x, ctx):
+	if x.oftype.is_unit():
+		return CValueCast(CTypeNamed("size_t"), CValueInteger(1))
+	return CValueCall(CValueNamed("__alignof"), [CValueNamed(str_type(x.oftype))])
 
 
 #
@@ -1184,6 +1191,7 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueSizeofType(): return do_cvalue_sizeof_type(x, ctx)
 	elif x.isValueSizeofValue(): return do_cvalue_sizeof_value(x, ctx)
 	elif x.isValueLengthofType(): return do_cvalue_lengthof_type(x, ctx)
+	elif x.isValueAlignof(): return do_cvalue_alignof(x, ctx)
 	elif x.isValueVaArg(): return do_cvalue_va_arg(x, ctx)
 	elif x.isValueVaStart(): return do_cvalue_va_start(x, ctx)
 	elif x.isValueVaEnd(): return do_cvalue_va_end(x, ctx)

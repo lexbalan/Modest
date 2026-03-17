@@ -2302,7 +2302,7 @@ class ValueAlignof(Value):
 		align = of.align
 		from trans import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
-		self.of = of
+		self.oftype = of
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.set_asset(align)
 

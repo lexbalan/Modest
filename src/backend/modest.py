@@ -612,7 +612,7 @@ def str_value_sizeof_type(x, ctx):
 	return "sizeof(" + str_type(x.oftype) + ')'
 
 def str_value_alignof(x, ctx):
-	return "alignof(" + str_type(x.of) + ")"
+	return "alignof(" + str_type(x.oftype) + ")"
 
 def str_value_lengthof_type(x, ctx):
 	return "lengthof(" + str_type(x.oftype) + ")"
