@@ -4,13 +4,11 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-
-#ifndef LENGTHOF
+#if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
-#endif /* LENGTHOF */
+#endif
 #include <stdlib.h>
 #include <stdarg.h>
-
 #if !defined(__STR_UNICODE__)
 #define __STR_UNICODE__
 typedef uint16_t char16_t;
@@ -48,7 +46,7 @@ static struct point p0 = (struct point){
 };
 
 static void farr(int32_t (*_sret_)[3]) {
-	memcpy(_sret_, &(int32_t [3]){1, 2, 3}, sizeof(int32_t [3]));
+	memcpy(_sret_, /*AP2*/(&(int32_t [3]){1, 2, 3}), sizeof(int32_t [3]));
 }
 
 static void facc(int32_t (*_a)[3]) {
@@ -116,7 +114,7 @@ int main(void) {
 	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)) {
 		uint32_t u;
 		uint32_t v;
-		u | ((v & u) ^ ~v);
+		u | (v & u) ^ ~v;
 		u << 10;
 		v >> 20;
 		int32_t *const pa = &a;
@@ -140,6 +138,11 @@ int main(void) {
 	f = pi;
 	return 0;
 }
+//func sum64 (a: Int64, b: Int64) -> Int64 {
+//	var sum: Int64
+//	__asm("add %0, %1, %2", [["=r", sum]], [["r", a]["r", b]], ["cc"])
+//	return sum
+//}
 
 void main_print(char *form, ...) {
 	va_list va;

@@ -546,6 +546,7 @@ def do_cvalue_literal_char(t, v, ctx):
 	sstr = code_to_char(cc)
 	return CValueChar(sstr, width=t.width)
 
+
 def do_cvalue_literal_array(v, ctx):
 	items = v.asset
 	cvalues = []
@@ -609,13 +610,19 @@ def do_cvalue_cons_array(x, ctx):
 				width = 0
 				if to_type.is_concretic():
 					width = to_type.of.width
-				cv = do_cvalue_literal_string(x.value.asset, width)
-				#cv.mark = 'CA1'
+				#cv = do_cvalue_literal_string(x.value.asset, width)
+				items = x.value.asset
+				cvalues = []
+				for cc in items:
+					cv = CValueChar(cc, width=width)
+					cvalues.append(cv)
+				cv = CValueArray(cvalues)
+				cv.mark = 'CA1'
 				return cv
 
 			if x.asset:
 				cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
-				#cv.mark = 'CA2'
+				cv.mark = 'CA2'
 				return cv
 
 		if from_type.is_string():
@@ -623,12 +630,11 @@ def do_cvalue_cons_array(x, ctx):
 			if to_type.is_concretic():
 				width = to_type.of.width
 			cv = do_cvalue_literal_string(x.value.asset, width)
-			#cv.mark = 'CA3'
-			return cv
+			cv.mark = 'CA3'
 		else:
 			cv = do_cvalue(value, ctx=ctx)
-			#cv.mark = 'CA4'
-			return cv
+			cv.mark = 'CA4'
+		return cv
 
 	# for:
 	#    var x: [10]Word8 = "0123456789"
@@ -654,15 +660,21 @@ def do_cvalue_cons_record(x, ctx):
 	from_type = value.type
 
 	if to_type.is_unit():
-		return CValueCast(CTypeNamed("void"), do_cvalue(value))
+		cv = CValueCast(CTypeNamed("void"), do_cvalue(value))
+		cv.mark = 'CR1'
+		return cv
 
 	if from_type.is_generic_record():
 		if to_type.is_generic_record():
-			return do_cvalue(value, ctx=ctx)
+			cv = do_cvalue(value, ctx=ctx)
+			cv.mark = 'CR2'
+			return cv
 
 	if from_type.is_generic_record():
 		if to_type.is_generic_record():
-			return do_cvalue(value, ctx=ctx)
+			cv = do_cvalue(value, ctx=ctx)
+			cv.mark = 'CR3'
+			return cv
 #		cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
 #		cv = CValueCast(do_ctype(x.type), cv)
 #		#cv = do_cvalue(value, ctx=ctx)
@@ -675,11 +687,13 @@ def do_cvalue_cons_record(x, ctx):
 	if from_type.is_record() and from_type.is_concretic():
 		if to_type.uid == from_type.uid:
 			# это одна и та же структура и приведение не требуется
-			return do_cvalue(value, ctx=ctx)
+			cv = do_cvalue(value, ctx=ctx)
+			cv.mark = 'CR4'
+			return cv
 		# C cannot just cast struct to struct (!)
 		#return str_cast(to_type, value, raw_cast=True, ctx=ctx)
 		cv = do_cvalue_cast(to_type, x.value, ctx, raw_cast=True)
-		#cv.mark = 'CR3'
+		cv.mark = 'CR5'
 		return cv
 
 	tt = do_ctype(to_type)
@@ -689,12 +703,12 @@ def do_cvalue_cons_record(x, ctx):
 		# То печатаем литерал структуры из нашего asset
 		#return '(' + str_type(to_type) + ')' + str_value_literal_record(x, ctx=ctx)
 		cv = CValueCast(tt, do_cvalue_literal_record(x, ctx=ctx))
-		#cv.mark = 'CR4'
+		cv.mark = 'CR6'
 		return cv
 
 	cv = do_cvalue(value, ctx=ctx)
 	cv = CValueCast(tt, cv)
-	#cv.mark = 'CR5'
+	cv.mark = 'CR7'
 	return cv
 
 
@@ -724,10 +738,12 @@ def do_cvalue_cons(x, ctx):
 
 	if type.is_array():
 		cv = do_cvalue_cons_array(x, ctx)
+		cv.mark = None
 		return cv
 
 	if type.is_record():
 		cv = do_cvalue_cons_record(x, ctx)
+		cv.mark = None
 		return cv
 
 	if type.is_branded():
