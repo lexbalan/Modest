@@ -2186,7 +2186,7 @@ def do_cvalue_as_ptr(x):
 			vs = do_cvalue(root)
 			ts = do_ctype(x.type)
 			xx = CValueRef(CValueCast(ts, vs))
-			xx.mark = 'AP2'
+			#xx.mark = 'AP2'
 			return xx
 
 	if x.isValueCons():

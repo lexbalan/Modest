@@ -26,7 +26,7 @@ static int32_t *f3(void) {
 }
 
 static void f4(int32_t x, int32_t (*_sret_)[10]) {
-	memcpy(_sret_, /*AP2*/(&(int32_t [10]){1, 2, 3}), sizeof(int32_t [10]));
+	memcpy(_sret_, &(int32_t [10]){1, 2, 3}, sizeof(int32_t [10]));
 }
 
 static void f5(int32_t (*_a)[32], int32_t (*_sret_)[32]) {

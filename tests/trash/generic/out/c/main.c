@@ -105,24 +105,24 @@ static bool test_generic_array(void) {
 		printf("a[%i] = %i\n", i, (uint32_t)((const int8_t [4])a)[i]);
 		i = i + 1;
 	}
-	if (memcmp(/*AP2*/(&(const int8_t [4])a), /*AP2*/(&(int8_t [4]){0, 1, 2, 3}), sizeof(const int8_t [4])) != 0) {
+	if (memcmp(&(const int8_t [4])a, &(int8_t [4]){0, 1, 2, 3}, sizeof(const int8_t [4])) != 0) {
 		printf("error: a != [0, 1, 2, 3]\n");
 		return false;
 	}
 	int32_t b[4];
-	ARRCPY(&b, /*AP2*/(&(const int8_t [4])a), LENGTHOF(b));
-	if (memcmp(&b, /*AP2*/(&(int32_t [4]){0, 1, 2, 3}), sizeof(int32_t [4])) != 0) {
+	ARRCPY(&b, &(const int8_t [4])a, LENGTHOF(b));
+	if (memcmp(&b, &(int32_t [4]){0, 1, 2, 3}, sizeof(int32_t [4])) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
 	int64_t c[4];
-	ARRCPY(&c, /*AP2*/(&(const int8_t [4])a), LENGTHOF(c));
-	if (memcmp(&c, /*AP2*/(&(int64_t [4]){0, 1, 2, 3}), sizeof(int64_t [4])) != 0) {
+	ARRCPY(&c, &(const int8_t [4])a, LENGTHOF(c));
+	if (memcmp(&c, &(int64_t [4]){0, 1, 2, 3}, sizeof(int64_t [4])) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;
 	}
 	int32_t d[10] = {0, 1, 2, 3};
-	if (memcmp(&d, /*AP2*/(&(int32_t [10]){0, 1, 2, 3, 0, 0, 0, 0, 0, 0}), sizeof(int32_t [10])) != 0) {
+	if (memcmp(&d, &(int32_t [10]){0, 1, 2, 3, 0, 0, 0, 0, 0, 0}, sizeof(int32_t [10])) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
 		return false;
 	}

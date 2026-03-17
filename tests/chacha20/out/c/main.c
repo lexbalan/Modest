@@ -82,6 +82,6 @@ static bool test0(void) {
 	chacha20_Block block;
 	chacha20_chacha20Block(&state, &block);
 	uint8_t (*const bptr)[64] = (uint8_t (*)[64])&block;
-	return memcmp(bptr, /*AP2*/(&(const uint8_t [64])TEST_RESULT), sizeof(uint8_t [64])) == 0;
+	return memcmp(bptr, &(const uint8_t [64])TEST_RESULT, sizeof(uint8_t [64])) == 0;
 }
 
