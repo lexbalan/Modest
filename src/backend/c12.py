@@ -588,7 +588,7 @@ def do_cvalue_literal_with_type(v, t, ctx=[]):
 		#return str_value_literal_number(t, asset, as_hex=as_hex)
 		return CValueInteger(asset, is_unsigned=t.is_unsigned(), as_hex=t.is_word())
 	elif t.is_string():
-		return do_cvalue_literal_string(v.asset, width=v.type.width)
+		return do_cvalue_literal_string(v.asset, width=0)#v.type.width)
 
 	elif t.is_bool(): return do_cvalue_literal_bool(v, ctx)
 	elif t.is_rational(): return do_cvalue_literal_rational(v, ctx)
@@ -732,15 +732,15 @@ def do_cvalue_cons_record(x, ctx):
 #	return "(" + str_type(t) + ")" + wrapp(str_value(v, ctx=ctx), cond=(precedence(v) < CONS_PRECEDENCE))
 
 #
-#def do_cvalue_cons(x, ctx):
-#	cv = do_cvalue_cons2(x, ctx)
-#	if isinstance(cv, str):
-#		print(x.type)
-#		1/0
-#	return cv
-
-
 def do_cvalue_cons(x, ctx):
+	cv = do_cvalue_cons2(x, ctx)
+	#cv.mark = '?'
+	#if x.type.is_pointer_to_array():
+	#	cv.mark = '$'
+	return cv
+
+
+def do_cvalue_cons2(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
@@ -781,8 +781,14 @@ def do_cvalue_cons(x, ctx):
 			return do_cvalue_cast(type, value, ctx)
 
 	elif type.is_pointer_to_array():
-		if from_type.is_string() and not value.isValueConst():
-			cv = do_cvalue_literal_string(value.asset, width=type.to.of.width)
+		if type.is_pointer_to_array_of_char() and from_type.is_string():
+			cv = None
+			if not value.isValueConst():
+				cv = do_cvalue_literal_string(value.asset, width=type.to.of.width)
+			elif type.to.of.width > 8:
+				cv = CValueCall(CValueNamed("_STR%d" % type.to.of.width), [do_cvalue(value)])
+			else:
+				cv = do_cvalue(value)
 			return cv
 
 	elif type.is_word() or type.is_int() or type.is_nat():
@@ -1834,10 +1840,13 @@ def do_helpers(module):
 				"!defined(__STR_UNICODE__)",
 				[
 					CMacrodefinition("__STR_UNICODE__", None),
+					CStmtDefType("char8_t", CTypeNamed("uint8_t")),
 					CStmtDefType("char16_t", CTypeNamed("uint16_t")),
 					CStmtDefType("char32_t", CTypeNamed("uint32_t")),
+					CMacrodefinition("__STR8(x)", "x"),
 					CMacrodefinition("__STR16(x)", "u##x"),
 					CMacrodefinition("__STR32(x)", "U##x"),
+					CMacrodefinition("_STR8(x)", "__STR8(x)"),
 					CMacrodefinition("_STR16(x)", "__STR16(x)"),
 					CMacrodefinition("_STR32(x)", "__STR32(x)"),
 				]

@@ -7,10 +7,13 @@
 #include <stdlib.h>
 #if !defined(__STR_UNICODE__)
 #define __STR_UNICODE__
+typedef uint8_t char8_t;
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
+#define __STR8(x) x
 #define __STR16(x) u##x
 #define __STR32(x) U##x
+#define _STR8(x) __STR8(x)
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
 #endif
@@ -22,8 +25,8 @@ static char b8[1] = {'A'};
 static char16_t b16[1] = {u'A'};
 static char32_t b32[1] = {U'A'};
 static char *s8 = A;
-static char16_t *s16 = A;
-static char32_t *s32 = A;
+static char16_t *s16 = _STR16(A);
+static char32_t *s32 = _STR32(A);
 static char cc8 = 'A';
 static char16_t cc16 = u'A';
 static char32_t cc32 = U'A';
@@ -46,8 +49,8 @@ int32_t main(void) {
 	putc16(A[0]);
 	putc32(A[0]);
 	puts8(A);
-	puts16(A);
-	puts32(A);
+	puts16(_STR16(A));
+	puts32(_STR32(A));
 	putc8('A');
 	putc16(u'A');
 	putc32(U'A');

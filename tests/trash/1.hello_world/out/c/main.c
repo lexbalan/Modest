@@ -9,7 +9,7 @@
 #define HELLO_WORLD "Hello World!"
 
 int main(void) {
-	printf("%s\n", (char *)HELLO_WORLD);
+	printf("%s\n", HELLO_WORLD);
 	return 0;
 }
 

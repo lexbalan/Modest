@@ -588,7 +588,7 @@ again_1:
 body_1:
 	call void @showPrompt()
 	%3 = bitcast [1024 x %Char8]* %2 to %CharStr*
-	%4 = call %CharStr* @fgets(%CharStr* %3, %Int 1024, i8* undef)
+	%4 = call %CharStr* @fgets(%CharStr* %3, %Int 1024, i8* null)
 	%5 = alloca [64 x [0 x %Char8]*], align 1
 	%6 = zext i8 64 to %Nat32
 	%7 = mul %Nat32 %6, 8
