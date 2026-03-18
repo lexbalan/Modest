@@ -28,7 +28,7 @@
 //   5.2 Получить размер массива (в байтах)
 //
 //   6.1 Создать VLA массив
-#define CONSTANT_ARRAY {1, 2, 3, 4, 5} + {6, 7, 8, 9, 10}
+#define CONSTANT_ARRAY ({1, 2, 3, 4, 5} + {6, 7, 8, 9, 10})
 static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 static char arrayFromString[3] = {'a', 'b', 'c'};
 //var arrayOfChars = [Char8 "a", 'b', 'c']

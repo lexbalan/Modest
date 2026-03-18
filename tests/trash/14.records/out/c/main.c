@@ -17,7 +17,7 @@ struct point3_d {
 	uint32_t z;
 };
 #define XX {.x = 1, .y = 2}
-#define YY (struct point2_d){.x = 1, .y = 2}
+#define YY ((struct point2_d){.x = 1, .y = 2})
 typedef struct point Point;
 struct point {
 	int32_t x;

@@ -510,16 +510,16 @@ def str_value_literal_bool(v, ctx):
 
 
 
-
-def str_initializer(v):
-	# В C выражение значения и выражение-инициализатор - это разные вещи!
-	# В выражениях-инициализаторах C нельзя приводить массивы
-	# А все остальное (например структуры) - можно:
-	# .arr = (uint8_t [3]){1, 2, 3}  // error
-	# .arr = {1, 2, 3}               // ok
-	# .arr = (struct point){.x=1, .y=2, .z=3}  // ok
-	return str_value(v, ctx=['initializer_context'])
-
+#
+#def str_initializer(v):
+#	# В C выражение значения и выражение-инициализатор - это разные вещи!
+#	# В выражениях-инициализаторах C нельзя приводить массивы
+#	# А все остальное (например структуры) - можно:
+#	# .arr = (uint8_t [3]){1, 2, 3}  // error
+#	# .arr = {1, 2, 3}               // ok
+#	# .arr = (struct point){.x=1, .y=2, .z=3}  // ok
+#	return str_value(v, ctx=['initializer_context'])
+#
 
 
 def str_value(x, ctx=[]):
@@ -1258,42 +1258,15 @@ def do_cinitializer(x, ctx=[]):
 
 
 
-def print_value(x, ctx=[]):
-	out(str_value(x, ctx=ctx))
-
 
 
 #
 # Stmt
 #
 
-def str_macro_value(value):
-	# Не берем в скобки литералы, композитные значения и строки
-	is_func = value.isValueFunc()
-	is_var = value.isValueVar()
-	is_const = value.isValueConst()
-	is_literal = value.isValueLiteral()
-	is_agg = value.type.is_aggregate()
 
-	is_str = value.type.is_string()
-
-	# нельзя оборачивать круглыми скобками литерал массива или структуры
-	need_wrap = False
-	if not (is_literal or is_agg or is_str or is_const or is_var or is_func):
-		need_wrap = precedence(value) < precedenceMax
-
-
-	set_nl_symbol(" \\\n")
-	sstr = wrapp(str_initializer(value), cond=need_wrap)
-	set_nl_symbol("\n")
-	#out("/*%s*/" % str(value))
-	return sstr
-
-
-def undef(identifier):
-	out("\n#undef %s" % identifier)
-
-
+def print_value(x, ctx=[]):
+	out(str_value(x, ctx=ctx))
 
 
 # prints pair: <specifier> (<value>)
@@ -1480,7 +1453,7 @@ def do_cstmt_const(x):
 			global func_undef_list
 			func_undef_list.append(id_str)
 			# если точный тип константы неизвестен - печатаем ее как макро
-			macro = CMacrodefinition(id_str, str_macro_value(init_value))
+			macro = CMacrodefinitionValue(id_str, do_cinitializer(init_value))
 			return macro
 
 	civ = None
@@ -1726,7 +1699,7 @@ def do_def_const(x):
 	#		return do_def_var(x)
 
 	id_str = camel_to_upper_snake(get_id_str(x.value))
-	macro = CMacrodefinition(id_str, str_macro_value(x.init_value))
+	macro = CMacrodefinitionValue(id_str, do_cinitializer(x.init_value))
 	#out(str(macro))
 	module_undef_list.append(id_str)
 	return (macro,)

@@ -19,7 +19,7 @@ typedef uint32_t char32_t;
 #define GENERIC_INT_CONST 42
 #define INT32_CONST ((int32_t)GENERIC_INT_CONST)
 #define GENERIC_STRING_CONST "Hello!"
-#define STRING8_CONST (GENERIC_STRING_CONST)
+#define STRING8_CONST GENERIC_STRING_CONST
 #define STRING16_CONST (_STR16(GENERIC_STRING_CONST))
 #define STRING32_CONST (_STR32(GENERIC_STRING_CONST))
 struct point {
@@ -32,7 +32,7 @@ struct x {
 };
 #define PS {{.x = 0, .y = 0}, {.x = 1, .y = 1}, {.x = 2, .y = 2}}
 #define POINTS {(struct point){.x = 0, .y = 0}, (struct point){.x = 1, .y = 1}, (struct point){.x = 2, .y = 2}}
-#define POINT_ZERO (struct point){.x = 1, .y = 1}
+#define POINT_ZERO ((struct point){.x = 1, .y = 1})
 #define ZERO_POINTS {POINT_ZERO, POINT_ZERO, POINT_ZERO}
 static struct x x = (struct x){
 	.p = (struct point){.x = 10, .y = 20},

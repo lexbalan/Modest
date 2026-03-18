@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "./minmax.h"
-#define CARR {0, 10, 15} + {20, 25, 30}
+#define CARR ({0, 10, 15} + {20, 25, 30})
 struct point {
 	double x;
 	double y;
@@ -16,29 +16,29 @@ struct line {
 	struct point b;
 };
 #define ZERO 0
-#define POINT_ZERO (struct point){.x = ZERO, .y = ZERO}
-#define POINT_ONE (struct point){.x = 1.0, .y = 1.0}
-#define LINE0 (struct line){ \
+#define POINT_ZERO ((struct point){.x = ZERO, .y = ZERO})
+#define POINT_ONE ((struct point){.x = 1.0, .y = 1.0})
+#define LINE0 ((struct line){ \
 	.a = POINT_ZERO, \
 	.b = POINT_ONE \
-}
-#define LINE1 (struct line){ \
+})
+#define LINE1 ((struct line){ \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
-}
-#define LINE2 (struct line){ \
+})
+#define LINE2 ((struct line){ \
 	.a = POINT_ZERO, \
 	.b = POINT_ONE \
-}
-#define LINE3 (struct line){ \
+})
+#define LINE3 ((struct line){ \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
-}
+})
 #define LINES {LINE0, LINE1, LINE2, LINE3}
 struct wrapped_array {
 	int32_t x;
 };
-#define WA (struct wrapped_array){0}
+#define WA ((struct wrapped_array){0})
 
 static float distance(struct point a, struct point b) {
 	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);

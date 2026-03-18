@@ -1,6 +1,6 @@
 
 from util import nbits_for_num
-from .common import str_newline, str_nl_indent, indent_up, indent_down
+from .common import str_newline, str_nl_indent, indent_up, indent_down, set_nl_symbol
 
 
 
@@ -1343,6 +1343,24 @@ class CMacrodefinition():
 		sstr += "#define %s" % (self.id)
 		if self.text:
 			sstr += ' ' + self.text
+		return sstr
+
+
+class CMacrodefinitionValue():
+	def __init__(self, id, value):
+		assert(isinstance(id, str))
+		assert(isinstance(value, CValue))
+		self.nl = 1  #!!! (because it is not CStmt...)
+		super().__init__()
+		self.id = id
+		self.value = value
+		self.mark = None
+
+	def __str__(self):
+		sstr = str_nl_indent(self.nl)
+		set_nl_symbol(" \\\n")
+		sstr += "#define %s %s" % (self.id, str_cvalue(self.value, ext_precedence=valuePrecedenceMax))
+		set_nl_symbol("\n")
 		return sstr
 
 
