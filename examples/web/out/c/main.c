@@ -13,7 +13,7 @@
 #define PORT 8080
 #define RECEIVE_BUFFER_SIZE 1024
 #define SEND_BUFFER_SIZE 1024
-#define HTTP_HEADER ("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n")
+#define HTTP_HEADER "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n"
 static uint32_t pageCounter;
 //@extern
 //@c_no_print
