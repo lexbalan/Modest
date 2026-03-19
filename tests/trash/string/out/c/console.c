@@ -12,10 +12,13 @@
 #include <stdlib.h>
 #if !defined(__STR_UNICODE__)
 #define __STR_UNICODE__
+typedef uint8_t char8_t;
 typedef uint16_t char16_t;
 typedef uint32_t char32_t;
+#define __STR8(x) x
 #define __STR16(x) u##x
 #define __STR32(x) U##x
+#define _STR8(x) __STR8(x)
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
 #endif
@@ -36,7 +39,7 @@ void console_putchar32(char32_t c) {
 }
 
 void console_putchar_utf8(char c) {
-	putchar(/*$*/((int32_t)/*$*/((uint32_t)c)));
+	putchar((int32_t)(uint32_t)c);
 }
 
 void console_putchar_utf16(char16_t c) {
@@ -49,7 +52,7 @@ void console_putchar_utf16(char16_t c) {
 
 void console_putchar_utf32(char32_t c) {
 	char decoded_buf[4];
-	const int32_t n = /*$*/((int32_t)utf_utf32_to_utf8(c, decoded_buf));
+	const int32_t n = (int32_t)utf_utf32_to_utf8(c, decoded_buf);
 	int32_t i = 0;
 	while (i < n) {
 		const char c = decoded_buf[i];
@@ -81,12 +84,12 @@ void console_puts16(char16_t *s) {
 			break;
 		}
 		char32_t char32;
-		const uint8_t n = utf_utf16_to_utf32(/*$*/((char16_t *)&s[i]), &char32);
+		const uint8_t n = utf_utf16_to_utf32((char16_t *)&s[i], &char32);
 		if (n == 0) {
 			break;
 		}
 		console_putchar_utf32(char32);
-		i = i + /*$*/((uint32_t)n);
+		i = i + (uint32_t)n;
 	}
 }
 
@@ -115,7 +118,7 @@ int32_t console_vfprint(int32_t fd, char *form, va_list va) {
 	char strbuf[256];
 	const int32_t n = console_vsprint(strbuf, form, va);
 	strbuf[n] = '\x0';
-	write(fd, /*$*/((void *)strbuf), (size_t)abs(n));
+	write(fd, (void *)strbuf, (size_t)abs(n));
 	return n;
 }
 static int32_t sprint_dec_int32(char *buf, int32_t x);
@@ -171,11 +174,11 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 		} else if (c == 's') {
 			char *const s = va_arg(va, char *);
 			strcpy(sptr, s);
-			j = j + /*$*/((int32_t)strlen(s));
+			j = j + (int32_t)strlen(s);
 		} else if (c == 'c') {
 			const char32_t c = va_arg(va, char32_t);
-			const uint8_t n = utf_utf32_to_utf8(c, /*$*/((char *)sptr));
-			j = j + /*$*/((int32_t)n);
+			const uint8_t n = utf_utf32_to_utf8(c, (char *)sptr);
+			j = j + (int32_t)n;
 		}
 	}
 	return j;
@@ -183,14 +186,14 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 
 __attribute__((always_inline))
 static inline char n_to_dec_sym(uint8_t n) {
-	return /*$*/((char)(/*$*/((uint8_t)'0') + n));
+	return (char)((uint8_t)'0' + n);
 }
 
 static char n_to_hex_sym(uint8_t n) {
 	if (n < 10) {
 		return n_to_dec_sym(n);
 	}
-	return /*$*/((char)(/*$*/((uint8_t)'A') + n - 10));
+	return (char)((uint8_t)'A' + n - 10);
 }
 
 static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
@@ -200,7 +203,7 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
 	while (true) {
 		const uint32_t n = d % 16;
 		d = d / 16;
-		tmpbuf[i] = n_to_hex_sym(/*$*/((uint8_t)n));
+		tmpbuf[i] = n_to_hex_sym((uint8_t)n);
 		i = i + 1;
 		if (d == 0) {
 			break;
@@ -254,7 +257,7 @@ static int32_t sprint_dec_n32(char *buf, uint32_t x) {
 	while (true) {
 		const uint32_t n = d % 10;
 		d = d / 10;
-		tmpbuf[i] = n_to_dec_sym(/*$*/((uint8_t)n));
+		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
 		i = i + 1;
 		if (d == 0) {
 			break;
@@ -269,3 +272,4 @@ static int32_t sprint_dec_n32(char *buf, uint32_t x) {
 	buf[j] = '\x0';
 	return j;
 }
+

@@ -1229,7 +1229,10 @@ def do_cvalue_bin(x, ctx):
 	left = do_cvalue(x.left)
 	right = do_cvalue(x.right)
 	op = bin_ops[x.op]
-	if x.op == HLIR_VALUE_OP_ADD: return CValueAdd(left, right)
+	if x.op == HLIR_VALUE_OP_ADD:
+		if x.left.type.is_string():
+			return CValueCat(left, right)
+		return CValueAdd(left, right)
 	if x.op == HLIR_VALUE_OP_SUB: return CValueSub(left, right)
 	if x.op == HLIR_VALUE_OP_MUL: return CValueMul(left, right)
 	if x.op == HLIR_VALUE_OP_DIV: return CValueDiv(left, right)

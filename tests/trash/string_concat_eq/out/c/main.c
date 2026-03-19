@@ -6,13 +6,13 @@
 #include <stdio.h>
 #define HELLO "Hello"
 #define WORLD "World"
-#define PARTY_CORN U"🎉"
-#define GREETING HELLO + " " + WORLD
+#define PARTY_CORN "🎉"
+#define GREETING HELLO " " WORLD
 //+ " " + party_corn
 #define TEST "test"
 
 int main(void) {
-	printf("%s\n", /*$*/((char *)GREETING));
+	printf("%s\n", GREETING);
 	if (TEST == "test") {
 		printf("test ok.\n");
 	} else {
@@ -20,3 +20,4 @@ int main(void) {
 	}
 	return 0;
 }
+

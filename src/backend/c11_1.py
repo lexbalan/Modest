@@ -1028,6 +1028,21 @@ class CValueVaCopy(CValue):
 		return 'va_copy(%s, %s)' % (str_cvalue(self.va_dst), str_cvalue(self.va_src))
 
 
+# string concat
+class CValueCat(CValue):
+	def __init__(self, left, right):
+		assert(isinstance(left, CValue))
+		assert(isinstance(right, CValue))
+		super().__init__()
+		self.left = left
+		self.right = right
+		self.precedence = 15
+
+	def __str__(self):
+		lx = str_cvalue(self.left, ext_precedence=self.precedence)
+		rx = str_cvalue(self.right, ext_precedence=self.precedence)
+		return '%s %s' % (lx, rx)
+
 
 
 def str_cvalue(v, ext_precedence=0):
