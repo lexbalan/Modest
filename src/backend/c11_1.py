@@ -1104,7 +1104,7 @@ class CStmtCommentBlock(CStmt):
 		self.nl = 1
 
 	def __str__(self):
-		sstr += str_nl_indent(self.nl)
+		sstr = str_nl_indent(self.nl)
 		sstr += "/*%s*/" % self.text
 		return sstr
 

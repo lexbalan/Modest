@@ -1451,7 +1451,8 @@ def do_cstmt_const(x):
 
 	# print generic constant as C macro
 	if value_is_generic_immediate(const_value):
-		if not (type.is_integer() or type.is_rational()):
+		# константа как размер массива дает VLA если она не define
+		#if not (type.is_integer() or type.is_rational()):
 			id_str = get_id_str(const_value)
 			global func_undef_list
 			func_undef_list.append(id_str)
