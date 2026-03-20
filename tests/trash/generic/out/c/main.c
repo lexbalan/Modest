@@ -69,8 +69,8 @@ int main(void) {
 }
 
 static bool test_generic_integer(void) {
-	const int8_t one = 1;
-	const int8_t two = 1 + one;
+	#define one 1
+	#define two (1 + one)
 	int32_t a = one;
 	uint64_t b = one;
 	float f = one;
@@ -81,14 +81,17 @@ static bool test_generic_integer(void) {
 	char32_t e = (char32_t)one;
 	bool k = one != 0;
 	return true;
+	#undef one
+	#undef two
 }
 
 static bool test_generic_float(void) {
-	const double pi = 3.1415926535897932384626433832795028841971693993751058209749445923;
+	#define pi 3.1415926535897932384626433832795028841971693993751058209749445923
 	float f = pi;
 	double g = pi;
 	int32_t x = (int32_t)pi;
 	return true;
+	#undef pi
 }
 
 static bool test_generic_char(void) {

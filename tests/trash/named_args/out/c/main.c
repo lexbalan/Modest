@@ -11,10 +11,10 @@ static int32_t named_args_test(int32_t a, int32_t b, int32_t c) {
 
 int main(void) {
 	printf("test named_args\n");
-	const int8_t a = 25;
-	const int8_t b = 15;
-	const int8_t c = 3;
-	const int8_t x0 = (a - b) * c;
+	#define a 25
+	#define b 15
+	#define c 3
+	#define x0 ((a - b) * c)
 	const int32_t x1 = named_args_test(a, b, c);
 	if (x0 == x1) {
 		printf("test passed\n");
@@ -22,5 +22,9 @@ int main(void) {
 		printf("test failed\n");
 	}
 	return 0;
+	#undef a
+	#undef b
+	#undef c
+	#undef x0
 }
 

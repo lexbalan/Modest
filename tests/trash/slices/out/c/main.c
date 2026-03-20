@@ -48,8 +48,8 @@ int main(void) {
 	memcpy(&vs1, &s1, sizeof(int32_t [2 - 1]));
 	int32_t vs2[8 - 5];
 	memcpy(&vs2, &s2, sizeof(int32_t [8 - 5]));
-	const int8_t ax = 2;
-	const int8_t bx = 6;
+	#define ax 2
+	#define bx 6
 	ARRCPY((int32_t (*)[bx - ax])&a[ax], ((&(int8_t [4]){10, 20, 30, 40})), bx - ax);
 	i = 0;
 	while (i < LENGTHOF(a)) {
@@ -66,8 +66,8 @@ int main(void) {
 	}
 	printf("--------------------------------------------\n");
 	printf("test pointer to slice\n");
-	const int8_t aa = 2;
-	const int8_t bb = 8;
+	#define aa 2
+	#define bb 8
 	int32_t (*const p)[bb - aa] = (int32_t (*)[bb - aa])&s[aa];
 	array_print(p, bb - aa);
 	printf("--------------------------------------------\n");
@@ -93,10 +93,16 @@ int main(void) {
 	printf("copy slice by var\n");
 	int32_t src[5] = {10, 20, 30, 40, 50};
 	int32_t dst[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-	const int8_t i1 = 3;
-	const int8_t j1 = 8;
+	#define i1 3
+	#define j1 8
 	ARRCPY((int32_t (*)[j1 - i1])&dst[i1], ((&(int8_t [5]){11, 22, 33, 44, 55})), j1 - i1);
 	array_print(&dst, 10);
 	return 0;
+	#undef ax
+	#undef bx
+	#undef aa
+	#undef bb
+	#undef i1
+	#undef j1
 }
 

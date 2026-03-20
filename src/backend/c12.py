@@ -1449,16 +1449,19 @@ def do_cstmt_const(x):
 	type = const_value.type
 	init_value = x.init_value
 
-	# print generic constant as C macro
+#	if type.is_integer():
+#		dt = CTypeEnum([CTypeEnumItem(get_id_str(x), do_cvalue(init_value))])
+#		dv = CStmtDefVar('', dt, storage_class='')#, annotations=x.annotations)
+#		return (dv,)
+
+	# print only generic constant as C macrodefinition
 	if value_is_generic_immediate(const_value):
-		# константа как размер массива дает VLA если она не define
-		#if not (type.is_integer() or type.is_rational()):
-			id_str = get_id_str(const_value)
-			global func_undef_list
-			func_undef_list.append(id_str)
-			# если точный тип константы неизвестен - печатаем ее как макро
-			macro = CMacrodefinitionValue(id_str, do_cinitializer(init_value))
-			return macro
+		id_str = get_id_str(const_value)
+		global func_undef_list
+		func_undef_list.append(id_str)
+		# если точный тип константы неизвестен - печатаем ее как макро
+		macro = CMacrodefinitionValue(id_str, do_cinitializer(init_value))
+		return macro
 
 	civ = None
 	if not (init_value.type.is_array() and init_value.isValueRuntime()):
@@ -1474,7 +1477,7 @@ def do_cstmt_const(x):
 	if init_value.type.is_array() and init_value.isValueRuntime():
 		return (dv, do_assign_array(const_value, init_value, x.ti))
 
-	return (dv,)
+	return dv
 
 
 
@@ -1762,6 +1765,7 @@ def do_deps(deps):
 def do_decl_type_record(x):
 	t = x.type
 	return do_decl_type_record2(t)
+
 
 def do_decl_type_record2(t):
 	tag = get_record_tag(t)

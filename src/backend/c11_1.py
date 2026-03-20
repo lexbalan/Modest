@@ -232,6 +232,7 @@ class CTypeStruct(CType):
 		if nfields > 0:
 			while i < nfields:
 				field = self.fields[i]
+				assert(isinstance(field, CField))
 				if field.nl > 0:
 					nl_end = 1
 
@@ -244,6 +245,64 @@ class CTypeStruct(CType):
 				i = i + 1
 		else:
 			sstr += 'uint8_t __placeholder;'
+		indent_down()
+		sstr += str_nl_indent(nl_end) + '}' + with_space(text)
+		return sstr
+
+	def __str__(self):
+		return self.to_str(text='')
+
+
+
+class CTypeEnumItem():
+	def __init__(self, id, value=None):
+		assert(isinstance(id, str))
+		assert(value == None or isinstance(value, CValue))
+		self.id = id
+		self.value = value
+		self.nl = 1
+
+	def __str__(self):
+		sstr = self.id
+		if self.value != None:
+			sstr += ' = ' + str_cvalue(self.value)
+		return sstr
+
+
+class CTypeEnum(CType):
+	def __init__(self, items, tag='', specs=None):
+		super().__init__()
+		self.items = items
+		self.tag = tag
+		self.specs = specs if specs != None else []
+		self.precedence = 0
+
+	def to_str(self, text):
+		nl_end = 0
+		sstr = 'enum %s' % (self.tag)
+		if styleguide['LINE_BREAK_BEFORE_STRUCT_BRACE']:
+			sstr += '\n'
+		else:
+			sstr += ' '
+		sstr += '{'
+		indent_up()
+		i = 0
+		nitems = len(self.items)
+
+		while i < nitems:
+			item = self.items[i]
+			assert(isinstance(item, CTypeEnumItem))
+			if item.nl > 0:
+				nl_end = 1
+
+			if i > 0 and item.nl == 0:
+				if self.items[i-1].nl == 0:
+					sstr += ' '
+
+			sstr += str_nl_indent(item.nl)
+			sstr += str(item)
+			i = i + 1
+
 		indent_down()
 		sstr += str_nl_indent(nl_end) + '}' + with_space(text)
 		return sstr
