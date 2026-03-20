@@ -26,13 +26,13 @@ static int32_t *f3(void) {
 }
 
 static void f4(int32_t x, int32_t (*_sret_)[10]) {
-	memcpy(_sret_, &(int32_t [10]){1, 2, 3}, sizeof(int32_t [10]));
+	__builtin_memcpy(_sret_, &(int32_t [10]){1, 2, 3}, sizeof(int32_t [10]));
 }
 
 static void f5(int32_t (*_a)[32], int32_t (*_sret_)[32]) {
 	int32_t a[32];
-	memcpy(a, _a, sizeof(int32_t [32]));
-	memcpy(_sret_, &a, sizeof(int32_t [32]));
+	__builtin_memcpy(a, _a, sizeof(int32_t [32]));
+	__builtin_memcpy(_sret_, &a, sizeof(int32_t [32]));
 }
 
 static int32_t (*f6(int32_t (*a)[32]))[32] {
@@ -156,13 +156,13 @@ static struct wrap *awrap[2] = {&wrap0, &wrap0};
 int32_t main(void) {
 	xy((struct __anonymous_struct_3){.x = 10, .y = 20});
 	printf("test1 (eq): ");
-	if (memcmp(&animation0_points, &animation1_points, sizeof(struct animation_point [5])) == 0) {
+	if (__builtin_memcmp(&animation0_points, &animation1_points, sizeof(struct animation_point [5])) == 0) {
 		printf("eq\n");
 	} else {
 		printf("ne\n");
 	}
 	printf("test2 (ne): ");
-	if (memcmp(&animation1_points, &animation2_points, sizeof(struct animation_point [5])) == 0) {
+	if (__builtin_memcmp(&animation1_points, &animation2_points, sizeof(struct animation_point [5])) == 0) {
 		printf("eq\n");
 	} else {
 		printf("ne\n");

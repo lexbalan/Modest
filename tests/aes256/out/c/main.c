@@ -53,14 +53,14 @@ static bool runTest(struct test_case *test) {
 	aes256_Context ctx;
 	aes256_init(&ctx, &test->key);
 	aes256_Block plaintextBefore;
-	memcpy(&plaintextBefore, &test->plaintext, sizeof(aes256_Block));
+	__builtin_memcpy(&plaintextBefore, &test->plaintext, sizeof(aes256_Block));
 	aes256_encrypt_ecb(&ctx, &test->plaintext);
-	if (memcmp(&test->plaintext, &test->ciphertext, sizeof(aes256_Block)) != 0) {
+	if (__builtin_memcmp(&test->plaintext, &test->ciphertext, sizeof(aes256_Block)) != 0) {
 		printf("FAILED (encrypt)");
 		return false;
 	}
 	aes256_decrypt_ecb(&ctx, &test->plaintext);
-	if (memcmp(&test->plaintext, &plaintextBefore, sizeof(aes256_Block)) != 0) {
+	if (__builtin_memcmp(&test->plaintext, &plaintextBefore, sizeof(aes256_Block)) != 0) {
 		printf("FAILED (decrypt)");
 		return false;
 	}

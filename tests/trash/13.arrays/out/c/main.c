@@ -35,17 +35,17 @@ static char arrayFromString[3] = {'a', 'b', 'c'};
 
 static void f0(char *_x, char *_sret_) {
 	char x[20];
-	memcpy(x, _x, sizeof(char [20]));
+	__builtin_memcpy(x, _x, sizeof(char [20]));
 	char local_copy_of_x[20];
-	memcpy(&local_copy_of_x, &x, sizeof(char [20]));
+	__builtin_memcpy(&local_copy_of_x, &x, sizeof(char [20]));
 	printf("f0(\"%s\")\n", local_copy_of_x);
 	char mic[6];
-	memcpy(&mic, (char *)&x[0], sizeof(char [6]));
+	__builtin_memcpy(&mic, (char *)&x[0], sizeof(char [6]));
 	mic[5] = '\x0';
 	printf("f0 mic = \"%s\"\n", mic);
 	char res[30];
-	memcpy((char *)&res[0], &x, sizeof(char [20 - 0]));
-	memset((char *)&res[20], 0, sizeof(char [30 - 20]));
+	__builtin_memcpy((char *)&res[0], &x, sizeof(char [20 - 0]));
+	__builtin_memset((char *)&res[20], 0, sizeof(char [30 - 20]));
 	res[6] = 'M';
 	res[7] = 'o';
 	res[8] = 'd';
@@ -54,7 +54,7 @@ static void f0(char *_x, char *_sret_) {
 	res[11] = 't';
 	res[12] = '!';
 	res[13] = '\x0';
-	memcpy(_sret_, &res, sizeof(char [30]));
+	__builtin_memcpy(_sret_, &res, sizeof(char [30]));
 }
 #define START_SEQUENCE {0xAA, 0x55, 0x2}
 #define STOP_SEQUENCE {0x16}
@@ -190,19 +190,19 @@ int main(void) {
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
 	int32_t b[3];
-	memcpy(&b, &a, sizeof(int32_t [3]));
+	__builtin_memcpy(&b, &a, sizeof(int32_t [3]));
 	printf("b[0] = %i\n", b[0]);
 	printf("b[1] = %i\n", b[1]);
 	printf("b[2] = %i\n", b[2]);
-	if (memcmp(&a, &b, sizeof(int32_t [3])) == 0) {
+	if (__builtin_memcmp(&a, &b, sizeof(int32_t [3])) == 0) {
 		printf("a == b\n");
 	} else {
 		printf("a != b\n");
 	}
 	int32_t c[3] = {10, 20, 30};
 	int32_t d[6];
-	memcpy((int32_t (*)[3 - 0])&d[0], &c, sizeof(int32_t [3 - 0]));
-	memset((int32_t (*)[6 - 3])&d[3], 0, sizeof(int32_t [6 - 3]));
+	__builtin_memcpy((int32_t (*)[3 - 0])&d[0], &c, sizeof(int32_t [3 - 0]));
+	__builtin_memset((int32_t (*)[6 - 3])&d[3], 0, sizeof(int32_t [6 - 3]));
 	printf("d[0] = %i\n", d[0]);
 	printf("d[1] = %i\n", d[1]);
 	printf("d[2] = %i\n", d[2]);
@@ -211,7 +211,7 @@ int main(void) {
 	printf("d[5] = %i\n", d[5]);
 	int32_t (*const pa)[3] = &a;
 	int32_t (*const pb)[3] = &b;
-	if (memcmp(pa, pb, sizeof(int32_t [3])) == 0) {
+	if (__builtin_memcmp(pa, pb, sizeof(int32_t [3])) == 0) {
 		printf("*pa == *pb\n");
 	} else {
 		printf("*pa != *pb\n");
@@ -220,23 +220,23 @@ int main(void) {
 	int int200 = 200;
 	int int300 = 300;
 	int init_array[3];
-	memcpy(&init_array, &(int [3]){int100, int200, int300}, sizeof(const int [3]));
+	__builtin_memcpy(&init_array, &(int [3]){int100, int200, int300}, sizeof(const int [3]));
 	int32_t e[4];
-	memcpy(&e, &init_array, sizeof(int32_t [4]));
+	__builtin_memcpy(&e, &init_array, sizeof(int32_t [4]));
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
-	memcpy(&globalArray, &init_array, sizeof(int32_t [10]));
+	__builtin_memcpy(&globalArray, &init_array, sizeof(int32_t [10]));
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
-	memset(&globalArray, 0, sizeof(int32_t [10]));
+	__builtin_memset(&globalArray, 0, sizeof(int32_t [10]));
 	int32_t ax = 10;
 	int32_t bx = 20;
 	int32_t cx = 30;
 	const int32_t dx = 40;
 	int32_t y[4];
-	memcpy(&y, &(int32_t [4]){ax, bx, cx, dx}, sizeof(const int32_t [4]));
+	__builtin_memcpy(&y, &(int32_t [4]){ax, bx, cx, dx}, sizeof(const int32_t [4]));
 	ax = 111;
 	bx = 222;
 	cx = 333;
@@ -244,7 +244,7 @@ int main(void) {
 	printf("y[%i] = %i (must be 20)\n", 1, y[1]);
 	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
 	printf("y[%i] = %i (must be 40)\n", 3, y[3]);
-	if (memcmp(&y, &(const int32_t [4]){10, 20, 30, 40}, sizeof(const int32_t [4])) == 0) {
+	if (__builtin_memcmp(&y, &(const int32_t [4]){10, 20, 30, 40}, sizeof(const int32_t [4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
@@ -253,7 +253,7 @@ int main(void) {
 	int32_t va = 5;
 	int32_t vb = 7;
 	int32_t varr[4];
-	memcpy(&varr, &(int32_t [4]){1, 2, va, vb}, sizeof(int32_t [4]));
+	__builtin_memcpy(&varr, &(int32_t [4]){1, 2, va, vb}, sizeof(int32_t [4]));
 	return 0;
 }
 

@@ -40,7 +40,7 @@ static bool doTest(struct sha256_test_case *test) {
 		i = i + 1;
 	}
 	printf("\n");
-	return memcmp(&test_hash, &test->expectedResult, sizeof(sha256_Hash)) == 0;
+	return __builtin_memcmp(&test_hash, &test->expectedResult, sizeof(sha256_Hash)) == 0;
 }
 
 int main(void) {

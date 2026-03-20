@@ -1151,12 +1151,12 @@ def do_cvalue_eq(x, logic, ctx):
 		a0 = do_cvalue_as_ptr(left)
 		a1 = do_cvalue_as_ptr(right)
 		a2 = get_cvalue_size_for(left, right, ti=x.ti)
-		lx = CValueCall(CValueNamed("memcmp"), [a0, a1, a2])
+		lx = CValueCall(CValueNamed("__builtin_memcmp"), [a0, a1, a2])
 		rx = CValueInteger(0)
 
 	elif left.type.is_str() and right.type.is_str():
 		# сравниваем строки (Str8, Str16, Str32)
-		lx = CValueCall(CValueNamed("strcmp"), [
+		lx = CValueCall(CValueNamed("__builtin_strcmp"), [
 			do_cvalue_as_ptr(left),
 			do_cvalue_as_ptr(right)
 		])
@@ -1395,7 +1395,7 @@ def do_cstmt_return(x):
 	if cfunc.type.to.is_closed_array():
 		return CStmtValueExpr(
 			CValueCall(
-				CValueNamed("memcpy"), [CValueNamed("_sret_"), do_cvalue_as_ptr(x.value), CValueSizeofType(do_ctype(x.value.type))]
+				CValueNamed("__builtin_memcpy"), [CValueNamed("_sret_"), do_cvalue_as_ptr(x.value), CValueSizeofType(do_ctype(x.value.type))]
 			)
 		)
 
@@ -1566,7 +1566,7 @@ def do_def_func(x):
 			dv = CStmtDefVar(paramId, do_ctype(param.type))
 			mx = CStmtValueExpr(
 				CValueCall(
-					CValueNamed("memcpy"),
+					CValueNamed("__builtin_memcpy"),
 					[
 						CValueNamed(paramId),
 						CValueNamed('_' + paramId),
@@ -2340,7 +2340,7 @@ def assign_by_memcopy(left, right):
 
 	return CStmtValueExpr(
 		CValueCall(
-			CValueNamed("memcpy"), [do_cvalue_as_ptr(left), do_cvalue_as_ptr(right), CValueSizeofType(do_ctype(left.type))]
+			CValueNamed("__builtin_memcpy"), [do_cvalue_as_ptr(left), do_cvalue_as_ptr(right), CValueSizeofType(do_ctype(left.type))]
 		)
 	)
 
@@ -2348,7 +2348,7 @@ def assign_by_memcopy(left, right):
 def do_memzero(value):
 	return CStmtValueExpr(
 		CValueCall(
-			CValueNamed("memset"), [
+			CValueNamed("__builtin_memset"), [
 				do_cvalue_as_ptr(value), CValueInteger(0), CValueSizeofType(do_ctype(value.type))
 			]
 		)

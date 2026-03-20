@@ -22,7 +22,7 @@ static bool sendFile(FILE *fp, int sockFd) {
 		if (send(sockFd, (void *)data, sizeof data, 0) == -1) {
 			return false;
 		}
-		memset(&data, 0, sizeof(char [BUF_SIZE]));
+		__builtin_memset(&data, 0, sizeof(char [BUF_SIZE]));
 	}
 	return true;
 }

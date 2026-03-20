@@ -72,6 +72,6 @@ uint32_t queueWord8_write(struct queue_word8_queue_word8 *q, uint8_t (*data)[], 
 
 void queueWord8_clear(struct queue_word8_queue_word8 *q) {
 	uint8_t (*const pdata)[queue_capacity(&q->queue)] = (uint8_t (*)[queue_capacity(&q->queue)])q->data;
-	memset(pdata, 0, sizeof(uint8_t [queue_capacity(&q->queue)]));
+	__builtin_memset(pdata, 0, sizeof(uint8_t [queue_capacity(&q->queue)]));
 }
 

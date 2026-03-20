@@ -11,27 +11,27 @@
 #define POINT12 {.x = 1, .y = 1}
 
 bool main_testRecordsEq(void) {
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT0, &(struct {int8_t x; int8_t y;})POINT0, sizeof(struct {int8_t x; int8_t y;})) != 0) {
+	if (__builtin_memcmp(&(struct {int8_t x; int8_t y;})POINT0, &(struct {int8_t x; int8_t y;})POINT0, sizeof(struct {int8_t x; int8_t y;})) != 0) {
 		printf("point0 != point0\n");
 		return false;
 	}
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT1, &(struct {int8_t x; int8_t y;})POINT1, sizeof(struct {int8_t x; int8_t y;})) != 0) {
+	if (__builtin_memcmp(&(struct {int8_t x; int8_t y;})POINT1, &(struct {int8_t x; int8_t y;})POINT1, sizeof(struct {int8_t x; int8_t y;})) != 0) {
 		printf("point1 != point1\n");
 		return false;
 	}
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT12, &(struct {int8_t x; int8_t y;})POINT12, sizeof(struct {int8_t x; int8_t y;})) != 0) {
+	if (__builtin_memcmp(&(struct {int8_t x; int8_t y;})POINT12, &(struct {int8_t x; int8_t y;})POINT12, sizeof(struct {int8_t x; int8_t y;})) != 0) {
 		printf("point0 != point0\n");
 		return false;
 	}
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT0, &(struct {int8_t x; int8_t y;})POINT1, sizeof(struct {int8_t x; int8_t y;})) == 0) {
+	if (__builtin_memcmp(&(struct {int8_t x; int8_t y;})POINT0, &(struct {int8_t x; int8_t y;})POINT1, sizeof(struct {int8_t x; int8_t y;})) == 0) {
 		printf("point0 == point1\n");
 		return false;
 	}
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT1, &(struct {int8_t x; int8_t y;})POINT0, sizeof(struct {int8_t x; int8_t y;})) == 0) {
+	if (__builtin_memcmp(&(struct {int8_t x; int8_t y;})POINT1, &(struct {int8_t x; int8_t y;})POINT0, sizeof(struct {int8_t x; int8_t y;})) == 0) {
 		printf("point1 == point0\n");
 		return false;
 	}
-	if (memcmp(&(struct {int8_t x; int8_t y;})POINT0, &(struct {int8_t x; int8_t y;})POINT12, sizeof(struct {int8_t x; int8_t y;})) == 0) {
+	if (__builtin_memcmp(&(struct {int8_t x; int8_t y;})POINT0, &(struct {int8_t x; int8_t y;})POINT12, sizeof(struct {int8_t x; int8_t y;})) == 0) {
 		printf("point0 == point12\n");
 		return false;
 	}
@@ -46,51 +46,51 @@ static int32_t varr123[3] = {1, 2, 3};
 static int32_t varr321[3] = {3, 2, 1};
 
 bool main_testArraysEq(void) {
-	if (memcmp(&(const int8_t [3])ARR123, &(const int8_t [3])ARR123, sizeof(const int8_t [3])) != 0) {
+	if (__builtin_memcmp(&(const int8_t [3])ARR123, &(const int8_t [3])ARR123, sizeof(const int8_t [3])) != 0) {
 		printf("arr123 != arr123\n");
 		return false;
 	}
-	if (memcmp(&(const int8_t [3])ARR321, &(const int8_t [3])ARR321, sizeof(const int8_t [3])) != 0) {
+	if (__builtin_memcmp(&(const int8_t [3])ARR321, &(const int8_t [3])ARR321, sizeof(const int8_t [3])) != 0) {
 		printf("arr321 != arr321\n");
 		return false;
 	}
-	if (memcmp(&(const int32_t [3])ARR123, &(const int32_t [3])CARR123, sizeof(const int32_t [3])) != 0) {
+	if (__builtin_memcmp(&(const int32_t [3])ARR123, &(const int32_t [3])CARR123, sizeof(const int32_t [3])) != 0) {
 		printf("arr123 != carr123\n");
 		return false;
 	}
-	if (memcmp(&(const int32_t [3])CARR123, &(const int32_t [3])ARR123, sizeof(const int32_t [3])) != 0) {
+	if (__builtin_memcmp(&(const int32_t [3])CARR123, &(const int32_t [3])ARR123, sizeof(const int32_t [3])) != 0) {
 		printf("carr123 != arr123\n");
 		return false;
 	}
-	if (memcmp(&(const int8_t [3])ARR123, &(const int8_t [3])ARR321, sizeof(const int8_t [3])) == 0) {
+	if (__builtin_memcmp(&(const int8_t [3])ARR123, &(const int8_t [3])ARR321, sizeof(const int8_t [3])) == 0) {
 		printf("arr123 == arr321\n");
 		return false;
 	}
-	if (memcmp(&(const int32_t [3])CARR123, &(const int32_t [3])CARR321, sizeof(const int32_t [3])) == 0) {
+	if (__builtin_memcmp(&(const int32_t [3])CARR123, &(const int32_t [3])CARR321, sizeof(const int32_t [3])) == 0) {
 		printf("carr123 == carr321\n");
 		return false;
 	}
-	if (memcmp(&varr123, &varr123, sizeof(int32_t [3])) != 0) {
+	if (__builtin_memcmp(&varr123, &varr123, sizeof(int32_t [3])) != 0) {
 		printf("varr123 != varr123\n");
 		return false;
 	}
-	if (memcmp(&varr321, &varr321, sizeof(int32_t [3])) != 0) {
+	if (__builtin_memcmp(&varr321, &varr321, sizeof(int32_t [3])) != 0) {
 		printf("varr321 != varr321\n");
 		return false;
 	}
-	if (memcmp(&varr123, &(int32_t [3])ARR123, sizeof(int32_t [3])) != 0) {
+	if (__builtin_memcmp(&varr123, &(int32_t [3])ARR123, sizeof(int32_t [3])) != 0) {
 		printf("varr123 != arr123\n");
 		return false;
 	}
-	if (memcmp(&varr123, &(const int32_t [3])CARR123, sizeof(int32_t [3])) != 0) {
+	if (__builtin_memcmp(&varr123, &(const int32_t [3])CARR123, sizeof(int32_t [3])) != 0) {
 		printf("varr123 != carr123\n");
 		return false;
 	}
-	if (memcmp(&varr321, &(int32_t [3])ARR321, sizeof(int32_t [3])) != 0) {
+	if (__builtin_memcmp(&varr321, &(int32_t [3])ARR321, sizeof(int32_t [3])) != 0) {
 		printf("varr321 != arr321\n");
 		return false;
 	}
-	if (memcmp(&varr321, &(const int32_t [3])CARR321, sizeof(int32_t [3])) != 0) {
+	if (__builtin_memcmp(&varr321, &(const int32_t [3])CARR321, sizeof(int32_t [3])) != 0) {
 		printf("varr321 != carr321\n");
 		return false;
 	}

@@ -25,7 +25,7 @@ static bool writeFile(int sockFd) {
 			break;
 		}
 		fprintf(fp, "%s", buffer);
-		memset(&buffer, 0, sizeof(char [BUF_SIZE]));
+		__builtin_memset(&buffer, 0, sizeof(char [BUF_SIZE]));
 	}
 	return true;
 }
