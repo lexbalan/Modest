@@ -88,10 +88,11 @@ public func main () -> Int {
 	facc(arr2)
 	//facc(farr())  // TODO: not works properly
 
-	var rec = Point {x=0, y=0}
+	let rec0 = {x=0, y=0}
+	var rec1 = Point rec0
 	var rec2 : Point
 	rec2 = {}
-	rec2 = rec
+	rec2 = rec1
 
 	lengthof(arr)
 
