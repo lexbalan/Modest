@@ -119,10 +119,10 @@ func test_generic_array () -> Bool {
 	let a = [0, 1, 2, 3]
 
 	var i: Nat32 = 0
-	while i < 4 {
-		printf("a[%i] = %i\n", i, Nat32 a[i])
-		++i
-	}
+//	while i < 4 {
+//		printf("a[%i] = %i\n", i, a[i])
+//		++i
+//	}
 
 	if a != [0, 1, 2, 3] {
 		printf("error: a != [0, 1, 2, 3]\n")

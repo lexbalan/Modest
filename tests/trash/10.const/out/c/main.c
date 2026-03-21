@@ -43,8 +43,8 @@ struct wrapped_array {
 static float distance(struct point a, struct point b) {
 	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
 	const double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
-	const double dx2 = pow(dx, 2.0);
-	const double dy2 = pow(dy, 2.0);
+	const double dx2 = pow(dx, 2);
+	const double dy2 = pow(dy, 2);
 	return sqrt(dx2 + dy2);
 }
 

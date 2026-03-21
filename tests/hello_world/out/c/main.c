@@ -42,7 +42,7 @@ static void foo(int32_t a, int64_t b) {
 	return;
 }
 #define C 15
-static uint32_t k[3] = {0x1, 0x2, 0x3};
+static uint32_t k[3] = {1, 2, 3};
 static struct point p0 = (struct point){
 	.x = 1,
 	.y = 2
@@ -78,6 +78,8 @@ int main(void) {
 	char *s1 = "B";
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
+	uint64_t w = (uint64_t)1 << 63;
+	printf("w = %llx\n", w);
 	int32_t arr[3] = {1, 2, 3};
 	int32_t arr2[3];
 	__builtin_memcpy(&arr2, &arr, sizeof(int32_t [3]));
@@ -131,6 +133,7 @@ int main(void) {
 	}
 	while (1 > 0) {
 		#define u 129
+		break;
 	}
 	if (1 < 2) {
 	} else if (2 > 3) {

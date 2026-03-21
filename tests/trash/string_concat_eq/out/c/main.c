@@ -13,7 +13,7 @@
 
 int main(void) {
 	printf("%s\n", GREETING);
-	if (TEST == "test") {
+	if (__builtin_strcmp((char *const )&TEST, (char *const )&"test") == 0) {
 		printf("test ok.\n");
 	} else {
 		printf("test failed.\n");

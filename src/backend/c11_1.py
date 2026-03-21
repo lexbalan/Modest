@@ -396,6 +396,9 @@ class CValueNamed(CValue):
 class CValueInteger(CValue):
 	def __init__(self, number, is_unsigned=False, as_hex=False):
 		super().__init__()
+		assert(isinstance(number, int))
+		assert(isinstance(is_unsigned, bool))
+		assert(isinstance(as_hex, bool))
 		self.number = number
 		self.is_unsigned = is_unsigned
 		self.as_hex = as_hex
@@ -1106,7 +1109,10 @@ class CValueCat(CValue):
 
 def str_cvalue(v, ext_precedence=0):
 	assert(v != None)
-	sstr = wrap_if(str(v), (v.precedence < ext_precedence) or v.mark and (v.precedence < valuePrecedenceMax))
+	if str(v) == "None":
+		print(v.__class__)
+	y = str(v)
+	sstr = wrap_if(y, (v.precedence < ext_precedence) or v.mark and (v.precedence < valuePrecedenceMax))
 	if v.mark != None:
 		sstr = '/*%s*/' % v.mark + sstr
 	return sstr

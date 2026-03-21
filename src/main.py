@@ -98,7 +98,7 @@ def do_file(src_name, outname, settings):
 	trans.init()
 	module = trans.translate(src_name)
 
-	if error.errcnt > 0 or module == None:
+	if error.get_errcnt() > 0 or module == None:
 		exit(1)
 
 	# select & run backend
@@ -107,7 +107,7 @@ def do_file(src_name, outname, settings):
 	backend.init(settings)
 	backend.run(module, outname)
 
-	if error.errcnt > 0:
+	if error.get_errcnt() > 0:
 		exit(1)
 
 

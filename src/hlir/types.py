@@ -829,10 +829,6 @@ class Type(Entity):
 		return isinstance(self, TypeSimple)
 
 
-	def is_nil(self):
-		return False
-
-
 	def is_pointer(self):
 		return isinstance(self, TypePointer)
 
@@ -1610,17 +1606,20 @@ class Value(Entity):
 	def set_asset(self, a):
 		t = self.type
 		if not t.is_generic():
-			if t.is_int():
-				a = pack_int(int(a), width=t.width, signed=True)
-			elif t.is_nat() or t.is_word():
-				a = pack_int(int(a), width=t.width, signed=False)
-			elif t.is_float():
-				# numpy капец как замедляет компиляцию своей долгой загрузкой
-				# но он пока лучший в плвне создания floatXX
-				if t.width == 32:
-					a = get_np().float32(a)
-				elif t.width == 64:
-					a = get_np().float64(a)
+			try:
+				if t.is_int():
+					a = pack_int(int(a), width=t.width, signed=True)
+				elif t.is_nat() or t.is_word():
+					a = pack_int(int(a), width=t.width, signed=False)
+				elif t.is_float():
+					# numpy капец как замедляет компиляцию своей долгой загрузкой
+					# но он пока лучший в плвне создания floatXX
+					if t.width == 32:
+						a = get_np().float32(a)
+					elif t.width == 64:
+						a = get_np().float64(a)
+			except:
+				pass
 		self.asset = a
 
 

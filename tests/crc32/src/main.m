@@ -17,9 +17,21 @@ type Test = {
 
 
 var tests: []Test = [
-	{data = [dataBufferLength]Byte "123456789", len = 9, hash = 0xcbf43926}
-	{data = [dataBufferLength]Byte "The quick brown fox jumps over the lazy dog", len = 43, hash = 0x414fa339}
-	{data = [dataBufferLength]Byte "Test vector from febooti.com", len = 28, hash = 0x0c877f61}
+	{
+		data = [dataBufferLength]Byte "123456789"
+		len = 9
+		hash = 0xcbf43926
+	}
+	{
+		data = [dataBufferLength]Byte "The quick brown fox jumps over the lazy dog"
+		len = 43
+		hash = 0x414fa339
+	}
+	{
+		data = [dataBufferLength]Byte "Test vector from febooti.com"
+		len = 28
+		hash = 0x0c877f61
+	}
 ]
 
 

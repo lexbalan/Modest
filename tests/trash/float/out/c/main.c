@@ -9,7 +9,7 @@
 #define MATH_PI 3.141592653589793238462643383279502884
 
 static double squareOfCircle(double radius) {
-	return pow(radius, 2.0) * MATH_PI;
+	return pow(radius, 2) * MATH_PI;
 }
 struct point2_d {
 	int x;
@@ -27,11 +27,11 @@ static float slope(struct point2_d a, struct point2_d b) {
 int main(void) {
 	printf("float test\n");
 	printf("2 = %d\n", 2);
-	printf("2/3 = %f\n", (double)(2.0 / 3.0));
+	printf("2/3 = %f\n", (double)(2.0 / 3));
 	#define r 10
 	const double s = squareOfCircle(r);
 	printf("s = %f\n", s);
-	#define k (1.0 / 8.0)
+	#define k (1.0 / 8)
 	printf("k = %f\n", (double)k);
 	printf("sizeof(Float32) = %zu\n", sizeof(float));
 	printf("sizeof(Float64) = %zu\n", sizeof(double));

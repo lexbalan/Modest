@@ -14,12 +14,12 @@ static char tokensBuf[4 * 1024];
 
 static void showPrompt(void) {
 	char _prompt[32] = {'#', ' '};
-	write(0, (void *)_prompt, (size_t)LENGTHOF(PROMPT));
+	write(0, _prompt, (size_t)2);
 }
 
 __attribute__((unused, always_inline))
 static inline int char8ToInt(char c) {
-	return (int)(uint32_t)(uint8_t)c;
+	return (uint32_t)(uint8_t)c;
 }
 struct tokenizer {
 	char *input;

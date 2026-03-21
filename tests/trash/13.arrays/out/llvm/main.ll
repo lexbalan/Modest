@@ -432,41 +432,51 @@ define internal void @f0([30 x %Char8]* %0, [20 x %Char8] %__x) {
 	ret void
 }
 
-@startSequence = constant [3 x %Word8] [
-	%Word8 170,
-	%Word8 85,
-	%Word8 2
+@startSequence = constant [3 x i8] [
+	i8 170,
+	i8 85,
+	i8 2
 ]
-@stopSequence = constant [1 x %Word8] [
-	%Word8 22
+@stopSequence = constant [1 x i8] [
+	i8 22
 ]
 define internal void @test() {
 	%1 = alloca [6 x %Word8], align 1
-	%2 = insertvalue [6 x %Word8] zeroinitializer, %Word8 170, 0
-	%3 = insertvalue [6 x %Word8] %2, %Word8 85, 1
-	%4 = insertvalue [6 x %Word8] %3, %Word8 2, 2
-	%5 = insertvalue [6 x %Word8] %4, %Word8 22, 5
-	%6 = zext i8 6 to %Nat32
-	store [6 x %Word8] %5, [6 x %Word8]* %1
-	%7 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %7
+	%2 = bitcast i8 170 to %Word8
+	%3 = bitcast i8 85 to %Word8
+	%4 = bitcast i8 2 to %Word8
+	%5 = bitcast i8 0 to %Word8
+	%6 = bitcast i8 0 to %Word8
+	%7 = bitcast i8 22 to %Word8
+	%8 = bitcast i8 170 to %Word8
+	%9 = insertvalue [6 x %Word8] zeroinitializer, %Word8 %8, 0
+	%10 = bitcast i8 85 to %Word8
+	%11 = insertvalue [6 x %Word8] %9, %Word8 %10, 1
+	%12 = bitcast i8 2 to %Word8
+	%13 = insertvalue [6 x %Word8] %11, %Word8 %12, 2
+	%14 = bitcast i8 22 to %Word8
+	%15 = insertvalue [6 x %Word8] %13, %Word8 %14, 5
+	%16 = zext i8 6 to %Nat32
+	store [6 x %Word8] %15, [6 x %Word8]* %1
+	%17 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %17
 ; while_1
 	br label %again_1
 again_1:
-	%8 = load %Nat32, %Nat32* %7
-	%9 = icmp ult %Nat32 %8, 6
-	br %Bool %9 , label %body_1, label %break_1
+	%18 = load %Nat32, %Nat32* %17
+	%19 = icmp ult %Nat32 %18, 6
+	br %Bool %19 , label %body_1, label %break_1
 body_1:
-	%10 = load %Nat32, %Nat32* %7
-	%11 = bitcast %Nat32 %10 to %Nat32
-	%12 = getelementptr [6 x %Word8], [6 x %Word8]* %1, %Int32 0, %Nat32 %11
-	%13 = load %Word8, %Word8* %12
-	%14 = load %Nat32, %Nat32* %7
-	%15 = zext %Word8 %13 to %Word32
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Nat32 %14, %Word32 %15)
-	%17 = load %Nat32, %Nat32* %7
-	%18 = add %Nat32 %17, 1
-	store %Nat32 %18, %Nat32* %7
+	%20 = load %Nat32, %Nat32* %17
+	%21 = bitcast %Nat32 %20 to %Nat32
+	%22 = getelementptr [6 x %Word8], [6 x %Word8]* %1, %Int32 0, %Nat32 %21
+	%23 = load %Word8, %Word8* %22
+	%24 = load %Nat32, %Nat32* %17
+	%25 = zext %Word8 %23 to %Word32
+	%26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Nat32 %24, %Word32 %25)
+	%27 = load %Nat32, %Nat32* %17
+	%28 = add %Nat32 %27, 1
+	store %Nat32 %28, %Nat32* %17
 	br label %again_1
 break_1:
 	ret void

@@ -77,6 +77,8 @@ public func main () -> Int {
 	var s2: *Str16 = "B"
 	var s3: *Str32 = "B"
 
+	var w: Word64 = Word64 1 << 63
+	printf("w = %llx\n", w)
 
 	var arr = [3]Int32 [1, 2, 3]
 	var arr2 = arr // !
@@ -138,6 +140,7 @@ public func main () -> Int {
 
 	while 1 > 0 {
 		let u = 129
+		break
 	}
 
 	if 1 < 2 {

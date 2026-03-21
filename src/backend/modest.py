@@ -533,6 +533,7 @@ def str_value_char_create(x, ctx):
 # print Int literal
 def str_value_integer(x, ctx):
 	num = x.asset
+	as_hex = x.hasAttribute2('hexadecimal')
 
 	nsigns = 0
 	if hasattr(x, 'nsigns'):
@@ -540,7 +541,7 @@ def str_value_integer(x, ctx):
 
 	spec = 'd'
 	pre = ''
-	if x.hasAttribute('hexadecimal'):
+	if as_hex:
 		spec = 'X'
 		pre = '0x'
 

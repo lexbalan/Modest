@@ -39,7 +39,7 @@ void console_putchar32(char32_t c) {
 }
 
 void console_putchar_utf8(char c) {
-	putchar((int32_t)(uint32_t)c);
+	putchar((uint32_t)c);
 }
 
 void console_putchar_utf16(char16_t c) {
@@ -118,7 +118,7 @@ int32_t console_vfprint(int32_t fd, char *form, va_list va) {
 	char strbuf[256];
 	const int32_t n = console_vsprint(strbuf, form, va);
 	strbuf[n] = '\x0';
-	write(fd, (void *)strbuf, (size_t)abs(n));
+	write(fd, strbuf, (size_t)abs(n));
 	return n;
 }
 static int32_t sprint_dec_int32(char *buf, int32_t x);

@@ -1599,6 +1599,9 @@ def do_eval_cons(x):
 
 
 def docast(v, to_type):
+	if is_global_context():
+		return llvm_value_inline_cast(to_type, v)
+
 	from_type = v['type']
 	opcode = select_cast_operator(from_type, to_type)
 	return llvm_cast(opcode, v, to_type)
@@ -1875,6 +1878,7 @@ def do_eval(x):
 
 	y['proto'] = x
 	y['type'] = x.type
+	y['ti'] = x.ti
 
 	return y
 

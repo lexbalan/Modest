@@ -131,20 +131,23 @@ break_2:
 };
 
 define internal %Word8 @rj_xtime(%Word8 %x) {
-	%1 = bitcast i8 1 to %Word8
-	%2 = shl %Word8 %x, %1
-	%3 = and %Word8 255, %2
+	%1 = bitcast i8 255 to %Word8
+	%2 = bitcast i8 1 to %Word8
+	%3 = shl %Word8 %x, %2
+	%4 = and %Word8 %1, %3
 ; if_0
-	%4 = and %Word8 %x, 128
-	%5 = bitcast i8 0 to %Word8
-	%6 = icmp ne %Word8 %4, %5
-	br %Bool %6 , label %then_0, label %endif_0
+	%5 = bitcast i8 128 to %Word8
+	%6 = and %Word8 %x, %5
+	%7 = bitcast i8 0 to %Word8
+	%8 = icmp ne %Word8 %6, %7
+	br %Bool %8 , label %then_0, label %endif_0
 then_0:
-	%7 = xor %Word8 %3, 27
-	ret %Word8 %7
+	%9 = bitcast i8 27 to %Word8
+	%10 = xor %Word8 %4, %9
+	ret %Word8 %10
 	br label %endif_0
 endif_0:
-	ret %Word8 %3
+	ret %Word8 %4
 }
 
 @sbox = constant [256 x %Byte] [
@@ -1632,49 +1635,50 @@ break_2:
 	%164 = icmp ne %Byte %162, %163
 	br %Bool %164 , label %then_0, label %endif_0
 then_0:
-	store %Word8 141, %Word8* %158
+	%165 = bitcast i8 141 to %Word8
+	store %Word8 %165, %Word8* %158
 	br label %endif_0
 endif_0:
-	%165 = load %Byte, %Byte* %rc
-	%166 = bitcast i8 1 to %Byte
-	%167 = lshr %Byte %165, %166
-	%168 = load %Word8, %Word8* %158
-	%169 = xor %Byte %167, %168
-	store %Byte %169, %Byte* %rc
-	%170 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 0
+	%166 = load %Byte, %Byte* %rc
+	%167 = bitcast i8 1 to %Byte
+	%168 = lshr %Byte %166, %167
+	%169 = load %Word8, %Word8* %158
+	%170 = xor %Byte %168, %169
+	store %Byte %170, %Byte* %rc
 	%171 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 0
-	%172 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 29
-	%173 = load %Byte, %Byte* %172
-	%174 = call %Byte @rj_sbox(%Byte %173)
-	%175 = load %Byte, %Byte* %rc
-	%176 = xor %Byte %174, %175
-	%177 = load %Byte, %Byte* %171
-	%178 = xor %Byte %177, %176
-	store %Byte %178, %Byte* %170
-	%179 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 1
+	%172 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 0
+	%173 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 29
+	%174 = load %Byte, %Byte* %173
+	%175 = call %Byte @rj_sbox(%Byte %174)
+	%176 = load %Byte, %Byte* %rc
+	%177 = xor %Byte %175, %176
+	%178 = load %Byte, %Byte* %172
+	%179 = xor %Byte %178, %177
+	store %Byte %179, %Byte* %171
 	%180 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 1
-	%181 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 30
-	%182 = load %Byte, %Byte* %181
-	%183 = call %Byte @rj_sbox(%Byte %182)
-	%184 = load %Byte, %Byte* %180
-	%185 = xor %Byte %184, %183
-	store %Byte %185, %Byte* %179
-	%186 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 2
+	%181 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 1
+	%182 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 30
+	%183 = load %Byte, %Byte* %182
+	%184 = call %Byte @rj_sbox(%Byte %183)
+	%185 = load %Byte, %Byte* %181
+	%186 = xor %Byte %185, %184
+	store %Byte %186, %Byte* %180
 	%187 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 2
-	%188 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 31
-	%189 = load %Byte, %Byte* %188
-	%190 = call %Byte @rj_sbox(%Byte %189)
-	%191 = load %Byte, %Byte* %187
-	%192 = xor %Byte %191, %190
-	store %Byte %192, %Byte* %186
-	%193 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 3
+	%188 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 2
+	%189 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 31
+	%190 = load %Byte, %Byte* %189
+	%191 = call %Byte @rj_sbox(%Byte %190)
+	%192 = load %Byte, %Byte* %188
+	%193 = xor %Byte %192, %191
+	store %Byte %193, %Byte* %187
 	%194 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 3
-	%195 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 28
-	%196 = load %Byte, %Byte* %195
-	%197 = call %Byte @rj_sbox(%Byte %196)
-	%198 = load %Byte, %Byte* %194
-	%199 = xor %Byte %198, %197
-	store %Byte %199, %Byte* %193
+	%195 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 3
+	%196 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 28
+	%197 = load %Byte, %Byte* %196
+	%198 = call %Byte @rj_sbox(%Byte %197)
+	%199 = load %Byte, %Byte* %195
+	%200 = xor %Byte %199, %198
+	store %Byte %200, %Byte* %194
 	ret void
 }
 
@@ -1809,56 +1813,57 @@ endif_0:
 	call void @shiftRowsInv(%aes256_Block* %block)
 	call void @subBytesInv(%aes256_Block* %block)
 	%8 = alloca %Byte, align 1
-	store %Byte 128, %Byte* %8
-	%9 = alloca %Nat8, align 1
-	store %Nat8 13, %Nat8* %9
+	%9 = bitcast i8 128 to %Byte
+	store %Byte %9, %Byte* %8
+	%10 = alloca %Nat8, align 1
+	store %Nat8 13, %Nat8* %10
 ; while_1
 	br label %again_1
 again_1:
-	%10 = load %Nat8, %Nat8* %9
-	%11 = icmp ugt %Nat8 %10, 0
-	br %Bool %11 , label %body_1, label %break_1
+	%11 = load %Nat8, %Nat8* %10
+	%12 = icmp ugt %Nat8 %11, 0
+	br %Bool %12 , label %body_1, label %break_1
 body_1:
 ; if_1
-	%12 = load %Nat8, %Nat8* %9
-	%13 = bitcast %Nat8 %12 to %Word8
-	%14 = bitcast i8 1 to %Word8
-	%15 = and %Word8 %13, %14
-	%16 = bitcast i8 1 to %Word8
-	%17 = icmp eq %Word8 %15, %16
-	br %Bool %17 , label %then_1, label %else_1
+	%13 = load %Nat8, %Nat8* %10
+	%14 = bitcast %Nat8 %13 to %Word8
+	%15 = bitcast i8 1 to %Word8
+	%16 = and %Word8 %14, %15
+	%17 = bitcast i8 1 to %Word8
+	%18 = icmp eq %Word8 %16, %17
+	br %Bool %18 , label %then_1, label %else_1
 then_1:
-	%18 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	call void @expandDecKey(%aes256_Key* %18, %Byte* %8)
 	%19 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	%20 = zext i8 16 to %Nat32
-	%21 = getelementptr %aes256_Key, %aes256_Key* %19, %Int32 0, %Nat32 %20
-	%22 = bitcast %Byte* %21 to [16 x %Byte]*
-	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %22)
+	call void @expandDecKey(%aes256_Key* %19, %Byte* %8)
+	%20 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	%21 = zext i8 16 to %Nat32
+	%22 = getelementptr %aes256_Key, %aes256_Key* %20, %Int32 0, %Nat32 %21
+	%23 = bitcast %Byte* %22 to [16 x %Byte]*
+	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %23)
 	br label %endif_1
 else_1:
-	%23 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	%24 = zext i8 0 to %Nat32
-	%25 = getelementptr %aes256_Key, %aes256_Key* %23, %Int32 0, %Nat32 %24
-	%26 = bitcast %Byte* %25 to [16 x %Byte]*
-	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %26)
+	%24 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	%25 = zext i8 0 to %Nat32
+	%26 = getelementptr %aes256_Key, %aes256_Key* %24, %Int32 0, %Nat32 %25
+	%27 = bitcast %Byte* %26 to [16 x %Byte]*
+	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %27)
 	br label %endif_1
 endif_1:
 	call void @mixColumnsInv(%aes256_Block* %block)
 	call void @shiftRowsInv(%aes256_Block* %block)
 	call void @subBytesInv(%aes256_Block* %block)
-	%27 = load %Nat8, %Nat8* %9
-	%28 = sub %Nat8 %27, 1
-	store %Nat8 %28, %Nat8* %9
+	%28 = load %Nat8, %Nat8* %10
+	%29 = sub %Nat8 %28, 1
+	store %Nat8 %29, %Nat8* %10
 	br label %again_1
 break_1:
-	%29 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
-	%30 = zext i8 0 to %Nat32
-	%31 = getelementptr %aes256_Key, %aes256_Key* %29, %Int32 0, %Nat32 %30
-	%32 = bitcast %Byte* %31 to [16 x %Byte]*
-	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %32)
-	%33 = bitcast i8 0 to %aes256_Result
-	ret %aes256_Result %33
+	%30 = getelementptr %aes256_Context, %aes256_Context* %ctx, %Int32 0, %Int32 0
+	%31 = zext i8 0 to %Nat32
+	%32 = getelementptr %aes256_Key, %aes256_Key* %30, %Int32 0, %Nat32 %31
+	%33 = bitcast %Byte* %32 to [16 x %Byte]*
+	call void @addRoundKey(%aes256_Block* %block, [16 x %Byte]* %33)
+	%34 = bitcast i8 0 to %aes256_Result
+	ret %aes256_Result %34
 }
 
 define %aes256_Result @aes256_deinit(%aes256_Context* %ctx) {

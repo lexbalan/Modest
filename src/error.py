@@ -163,7 +163,7 @@ def warning(s, ti=None):
 
 def error(s, ti=None):
 	global errcnt
-	errcnt = errcnt + 1
+	errcnt += 1
 	estr = str_common_message('error: ', COLOR_ERROR, s, ti)
 	puterr(estr)
 	if errcnt >= MAX_ERRORS:
@@ -175,4 +175,8 @@ def fatal(s, ti=None):
 	puterr(estr)
 	exit(1)
 
+
+def get_errcnt():
+	global errcnt
+	return errcnt
 

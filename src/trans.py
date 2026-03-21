@@ -1154,7 +1154,10 @@ def do_value_index(x):
 		error("cannot index array of an open array", x['ti'])
 		return ValueBad(x['ti'])
 
-	index = do_rvalue(x[HLIR_VALUE_OP_INDEX])
+	index = do_rvalue(x['index'])
+
+	if array_type.is_generic() and index.isValueRuntime():
+		error("cannot index array with generic type in runtime", x['ti'])
 
 	#if index.isValueBad():
 	if index.type.is_bad():
@@ -1465,30 +1468,23 @@ def do_value_number(x):
 
 
 def do_value_integer(x):
-	num_string_len = len(x['str'])
 	base = 10
-	if num_string_len > 2:
-		if x['str'][0] == '0':
-			if x['str'][1] == 'x':
-				num_string_len = num_string_len - 2
-				base = 16
-				num = int(x['str'], base)
+	s = x['str']
+	num_string_len = len(s)
+	if num_string_len > 2 and x['str'][0:2] == '0x':
+		num_string_len -= 2
+		base = 16
 
-				if nbits_for_num(num) > 64:
-					cmodule_use('use_bigint')
-
-				v = value_word_create(num, x['ti'])
-				v.nsigns = num_string_len
-				v.addAttribute('hexadecimal')
-				return v
-
-
-	num = int(x['str'], base)
-
+	num = int(s, base)
 	if nbits_for_num(num) > 64:
 		cmodule_use('use_bigint')
 
 	v = value_integer_create(num, ti=x['ti'])
+#	if base == 10:
+#		v = value_integer_create(num, ti=x['ti'])
+#	else:
+#		v = value_word_create(num, x['ti'])
+
 	v.nsigns = num_string_len
 
 	if base == 16:
@@ -2101,6 +2097,7 @@ def def_const_common(x):
 
 	const_value.stage = iv.stage
 	if iv.isValueImmediate():
+		#info("???", x['ti'])
 		Value.cp_immediate(const_value, iv)
 
 	const_value.type.addAnnotation('const', {})

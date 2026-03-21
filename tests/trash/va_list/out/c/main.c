@@ -19,7 +19,7 @@ static ssize_t my_printf(char *format, ...) {
 	char buf[strMaxLen];
 	const int n = vsnprintf(buf, (size_t)strMaxLen, format, va2);
 	va_end(va2);
-	return write(STDOUT_FILENO, (void *)buf, (size_t)abs(n));
+	return write(STDOUT_FILENO, buf, (size_t)abs(n));
 	#undef strMaxLen
 }
 
@@ -30,7 +30,7 @@ int main(void) {
 	char *const s = "Hi!";
 	const int32_t i = (int32_t)-1;
 	const uint32_t n = 123;
-	const uint32_t x = 305419903;
+	const uint32_t x = 0x1234567F;
 	my_printf("\x0\x0\n");
 	my_printf("c = '%c'\n", c);
 	my_printf("s = \"%s\"\n", s);

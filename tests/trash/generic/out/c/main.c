@@ -99,7 +99,7 @@ static bool test_generic_char(void) {
 	char b = a[0];
 	char16_t c = a[0];
 	char32_t d = a[0];
-	int32_t char_code = (int32_t)(uint32_t)a[0];
+	int32_t char_code = (uint32_t)a[0];
 	return true;
 	#undef a
 }
@@ -107,10 +107,6 @@ static bool test_generic_char(void) {
 static bool test_generic_array(void) {
 	#define a {0, 1, 2, 3}
 	uint32_t i = 0;
-	while (i < 4) {
-		printf("a[%i] = %i\n", i, (uint32_t)((const int8_t [4])a)[i]);
-		i = i + 1;
-	}
 	if (__builtin_memcmp(&(const int8_t [4])a, &(int8_t [4]){0, 1, 2, 3}, sizeof(const int8_t [4])) != 0) {
 		printf("error: a != [0, 1, 2, 3]\n");
 		return false;

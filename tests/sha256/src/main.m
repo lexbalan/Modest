@@ -50,7 +50,7 @@ var test1 = SHA256_TestCase {
 }
 
 
-const tests = [&test0, &test1]
+const tests: []*SHA256_TestCase = [&test0, &test1]
 
 
 func doTest (test: *SHA256_TestCase) -> Bool {

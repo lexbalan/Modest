@@ -69,10 +69,10 @@ int main(void) {
 	#define aa 2
 	#define bb 8
 	int32_t (*const p)[bb - aa] = (int32_t (*)[bb - aa])&s[aa];
-	array_print(p, bb - aa);
+	array_print(p, LENGTHOF(*p));
 	printf("--------------------------------------------\n");
 	(*p)[0] = 123;
-	array_print(p, bb - aa);
+	array_print(p, LENGTHOF(*p));
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
 	int32_t (*pw)[] = (int32_t (*)[])&s;

@@ -10,9 +10,9 @@ int32_t main(void) {
 	int32_t b;
 	int64_t c;
 	void *freePointer;
-	freePointer = (void *)&a;
-	freePointer = (void *)&b;
-	freePointer = (void *)&c;
+	freePointer = &a;
+	freePointer = &b;
+	freePointer = &c;
 	*(int64_t *)freePointer = 123456789123456789LL;
 	printf("c = 0x%llX\n", c);
 	int64_t *const px = (int64_t *)freePointer;

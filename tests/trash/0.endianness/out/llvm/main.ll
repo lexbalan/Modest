@@ -204,23 +204,24 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 define %Int @main() {
 	%1 = alloca %Word16, align 2
-	store %Word16 1, %Word16* %1
-	%2 = bitcast %Word16* %1 to %Word8*
-	%3 = bitcast i8 1 to %Word8
-	%4 = load %Word8, %Word8* %2
-	%5 = icmp eq %Word8 %4, %3
-	%6 = alloca %Str8*, align 8
+	%2 = zext i8 1 to %Word16
+	store %Word16 %2, %Word16* %1
+	%3 = bitcast %Word16* %1 to %Word8*
+	%4 = bitcast i8 1 to %Word8
+	%5 = load %Word8, %Word8* %3
+	%6 = icmp eq %Word8 %5, %4
+	%7 = alloca %Str8*, align 8
 ; if_0
-	br %Bool %5 , label %then_0, label %else_0
+	br %Bool %6 , label %then_0, label %else_0
 then_0:
-	store %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*), %Str8** %6
+	store %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*), %Str8** %7
 	br label %endif_0
 else_0:
-	store %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8** %6
+	store %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8** %7
 	br label %endif_0
 endif_0:
-	%7 = load %Str8*, %Str8** %6
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), %Str8* %7)
+	%8 = load %Str8*, %Str8** %7
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), %Str8* %8)
 	ret %Int 0
 }
 
