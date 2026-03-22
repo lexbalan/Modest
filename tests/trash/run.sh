@@ -16,7 +16,6 @@ cd composite && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd xor && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd named_args && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd let && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
-cd shift && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd string_concat_eq && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd assign_array && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd assign_record && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \

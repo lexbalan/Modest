@@ -8,7 +8,9 @@ CPREFIX=$(OUTDIR)/c
 LLVMPREFIX = $(OUTDIR)/llvm
 C_OPTIONS = -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable -Wno-unused-parameter
 
-test: CM LLVM C
+.PHONY: CM C LLVM test clean
+
+all: CM C LLVM
 
 
 CM:
@@ -20,15 +22,19 @@ LLVM:
 	mcc -o $(LLVMPREFIX)/sha256 -mbackend=llvm -funsafe ${MODEST_LIB}/misc/sha256.m
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.m
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/sha256.ll
-	./a.out
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c12 -funsafe $(INDIR)/main.m
 	mcc -o $(CPREFIX)/sha256 -mbackend=c12 -funsafe ${MODEST_LIB}/misc/sha256.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/sha256.c
-	./a.out
 
 
 clean:
-	rm *.o
+	rm *.o a.out
+
+
+test:
+	$(MAKE) CM
+	$(MAKE) C && ./a.out
+	$(MAKE) LLVM && ./a.out
 

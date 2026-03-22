@@ -80,6 +80,13 @@ public func main () -> Int {
 	var w: Word64 = Word64 1 << 63
 	printf("w = %llx\n", w)
 
+	var x1: Int16 = -1
+	var x2 = Word32 x1
+	printf("x2 = %llx\n", x2)
+	if x2 != 0x0000ffff {
+		//error
+	}
+
 	var arr = [3]Int32 [1, 2, 3]
 	var arr2 = arr // !
 	let arr4 = arr // !

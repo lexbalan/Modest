@@ -80,6 +80,11 @@ int main(void) {
 	char32_t *s3 = U"B";
 	uint64_t w = (uint64_t)1 << 63;
 	printf("w = %llx\n", w);
+	int16_t x1 = -1;
+	uint32_t x2 = (uint32_t)(uint16_t)x1;
+	printf("x2 = %llx\n", x2);
+	if (x2 != 0xFFFF) {
+	}
 	int32_t arr[3] = {1, 2, 3};
 	int32_t arr2[3];
 	__builtin_memcpy(&arr2, &arr, sizeof(int32_t [3]));

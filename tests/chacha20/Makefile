@@ -8,8 +8,10 @@ CPREFIX=$(OUTDIR)/c
 LLVMPREFIX = $(OUTDIR)/llvm
 C_OPTIONS = -std=c11 -Wall -Wextra -pedantic -Wno-unused-variable -Wno-unused-parameter
 
+.PHONY: CM C LLVM test clean
 
-test: CM LLVM C
+
+all: CM LLVM C
 
 
 CM:
@@ -32,5 +34,11 @@ C:
 
 
 clean:
-	rm *.o
+	rm *.o a.out
+
+
+test:
+	$(MAKE) CM
+	$(MAKE) C && ./a.out
+	$(MAKE) LLVM && ./a.out
 

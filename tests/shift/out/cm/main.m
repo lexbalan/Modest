@@ -1,0 +1,91 @@
+include "ctypes64"
+include "stdio"
+include "stdlib"
+
+
+
+
+func testShift32 () -> Bool {
+	var x: Word32
+
+	x = Word32 1 << 31
+	if x != 0x80000000 {
+		printf("error: Word32 1 << 31 != 0x80000000\n")
+		return false
+	}
+
+	x = Word32 0x80000000 >> 31
+	if x != 0x00000001 {
+		printf("error: Word32 0x80000000 >> 31 != 0x00000001\n")
+		return false
+	}
+
+	x = 1 << 31
+	if x != 0x80000000 {
+		printf("error: 1 << 31 != 0x80000000\n")
+		return false
+	}
+
+	x = 0x80000000 >> 31
+	if x != 0x00000001 {
+		printf("error: 0x80000000 >> 31 != 0x00000001\n")
+		return false
+	}
+
+	printf("passed: Shift32 test\n")
+	return true
+}
+
+
+func testShift64 () -> Bool {
+	var x: Word64
+
+	x = Word64 1 << 63
+	if x != 0x8000000000000000 {
+		printf("error: Word64 1 << 63 != 0x8000000000000000\n")
+		return false
+	}
+
+	x = Word64 0x8000000000000000 >> 63
+	if x != 0x0000000000000001 {
+		printf("error: Word64 0x8000000000000000 >> 63 != 0x0000000000000001\n")
+		return false
+	}
+
+	x = 1 << 63
+	if x != 0x8000000000000000 {
+		printf("error: Word64 1 << 63 != 0x8000000000000000\n")
+		return false
+	}
+
+	x = 0x8000000000000000 >> 63
+	if x != 0x0000000000000001 {
+		printf("error: Word64 0x8000000000000000 >> 63 != 0x0000000000000001\n")
+		return false
+	}
+
+	printf("passed: Shift64 test\n")
+	return true
+}
+
+
+public func main () -> Int {
+	printf("test shift\n")
+
+	var result: Bool
+	var success: Bool = true
+	result = testShift32()
+	success = success and result
+	result = testShift64()
+	success = success and result
+
+	printf("test ")
+	if not success {
+		printf("failed\n")
+		return exitFailure
+	}
+
+	printf("passed\n")
+	return exitSuccess
+}
+

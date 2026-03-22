@@ -14,7 +14,7 @@ void crc32_init(void) {
 		uint32_t crc = i;
 		uint32_t j = 0;
 		while (j < 8) {
-			if ((crc & 0x1) != 0x0) {
+			if ((crc & 1) != 0) {
 				crc = crc >> 1 ^ 0xEDB88320L;
 			} else {
 				crc = crc >> 1;

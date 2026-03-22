@@ -763,25 +763,6 @@ def do_cvalue_cons2(x, ctx):
 	if type.is_nat(): return do_cvalue_cons_nat(x, ctx)
 	if type.is_word(): return do_cvalue_cons_word(x, ctx)
 
-#	if type.is_word() or type.is_int() or type.is_nat():
-#		if from_type.is_integer() or from_type.is_word() or from_type.is_int() or from_type.is_nat():
-#			#info("HERE", x.ti)
-#
-#			if get_type_id_str(type) == get_type_id_str(from_type):
-#				cv = do_cvalue(value, ctx=ctx)
-#				return cv
-#
-#			if x.method in ['explicit', 'unsafe']:
-#				cv = do_cvalue_cast(type, value, ctx=ctx)
-#				#cv.mark = '@'
-#				return cv
-#			if type.width <= intWidth:
-#				if from_type.is_generic():
-#					cv = do_cvalue(value, ctx=ctx)
-#					return cv
-#
-##			elif value.isValueLiteral():
-
 
 	if x.method in ['implicit', 'default']:
 		#sstr = str_value(value)
@@ -809,6 +790,7 @@ def do_cvalue_cons2(x, ctx):
 	# - in Cm Int32(-1) -> Nat64 => 1
 	# required: (uint64_t)((uint32)int32_value)
 	#if type.is_int():
+	"""
 	if from_type.is_int() or from_type.is_integer():
 		if from_type.is_signed():
 			if type.is_nat():
@@ -833,7 +815,7 @@ def do_cvalue_cons2(x, ctx):
 					nat_same_sz = type_select_nat(from_type.width)
 					#return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx=ctx)
 					return CValueCast
-
+	"""
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	#cv.mark = '$'
@@ -847,9 +829,9 @@ def do_cvalue_cons_word(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	if value.isValueImmediate() and value.isValueLiteral():
-		if from_type.is_integer():
-			return do_cvalue_literal_number(type, value, ctx)
+	#if value.isValueImmediate() and value.isValueLiteral():
+	#	if from_type.is_integer():
+	#		return do_cvalue_literal_number(type, value, ctx)
 
 	if from_type.is_nat() and type.width == from_type.width:
 		cv = do_cvalue(value, ctx=ctx)
@@ -858,6 +840,15 @@ def do_cvalue_cons_word(x, ctx):
 	if x.method in ['implicit', 'default']:
 		if from_type.width <= 32:
 			cv = do_cvalue(value, ctx=ctx)
+			#cv.mark = '$2'
+			return cv
+
+	if from_type.is_int():
+		if from_type.width < type.width:
+			cv = do_cvalue(value, ctx=ctx)
+			nat_same_sz = do_ctype(type_select_nat(from_type.width))
+			cv = CValueCast(nat_same_sz, cv)
+			cv = CValueCast(do_ctype(type), cv)
 			return cv
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
