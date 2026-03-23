@@ -1314,7 +1314,6 @@ def str_number_suffix(req_bits, is_unsigned):
 
 
 def str_value_literal_number(type, num, nsigns=0, is_big=False, as_hex=False):
-	global need_big_int
 	sstr = ''
 	# Big Number?
 	if type.width > 64:

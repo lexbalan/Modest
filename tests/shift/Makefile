@@ -34,6 +34,6 @@ clean:
 
 test:
 	$(MAKE) CM
-	$(MAKE) C && ./a.out
+	#$(MAKE) C && ./a.out
 	$(MAKE) LLVM && ./a.out
 

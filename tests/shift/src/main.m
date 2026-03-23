@@ -53,15 +53,15 @@ func testShift64 () -> Bool {
 		return false
 	}
 
-	x = 1 << 63
+	x = Word64 1 << 63
 	if x != 0x8000000000000000 {
-		printf("error: Word64 1 << 63 != 0x8000000000000000\n")
+		printf("error: 1 << 63 != 0x8000000000000000\n")
 		return false
 	}
 
-	x = 0x8000000000000000 >> 63
+	x = Word64 0x8000000000000000 >> 63
 	if x != 0x0000000000000001 {
-		printf("error: Word64 0x8000000000000000 >> 63 != 0x0000000000000001\n")
+		printf("error: 0x8000000000000000 >> 63 != 0x0000000000000001\n")
 		return false
 	}
 
@@ -70,16 +70,50 @@ func testShift64 () -> Bool {
 }
 
 
+func testShift128 () -> Bool {
+	var x: Word128
+
+	x = Word128 1 << 127
+	if x != 0x80000000000000000000000000000000 {
+		printf("error: Word128 1 << 127 != 0x80000000000000000000000000000000\n")
+		return false
+	}
+
+	x = Word128 0x80000000000000000000000000000000 >> 127
+	if x != 0x00000000000000000000000000000001 {
+		printf("error: Word128 0x80000000000000000000000000000000 >> 127 != 0x00000000000000000000000000000001\n")
+		return false
+	}
+
+	x = Word128 1 << 127
+	if x != 0x80000000000000000000000000000000 {
+		printf("error: 1 << 127 != 0x80000000000000000000000000000000\n")
+		return false
+	}
+
+	x = Word128 0x80000000000000000000000000000000 >> 127
+	if x != 0x00000000000000000000000000000001 {
+		printf("error: 0x80000000000000000000000000000000 >> 127 != 0x00000000000000000000000000000001\n")
+		return false
+	}
+
+	printf("passed: Shift128 test\n")
+	return true
+}
+
+
+
 public func main () -> Int {
 	printf("test shift\n")
 
 	var result: Bool
 	var success = true
 
-	// test built-in generic types
 	result = testShift32()
 	success = success and result
 	result = testShift64()
+	success = success and result
+	result = testShift128()
 	success = success and result
 
 	printf("test ")

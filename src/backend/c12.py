@@ -584,6 +584,11 @@ def do_cvalue_literal_pointer(v, ctx):
 
 # сам заботится о том чтобы литерал соответствовал типу (int/longlong)
 def do_cvalue_literal_number(t, v, ctx):
+	if t.width > 64:
+		high = CValueInteger(int(v.asset) >> 64, is_unsigned=t.is_unsigned(), as_hex=True)
+		low = CValueInteger(int(v.asset) & 0xffffffffffffffff, is_unsigned=t.is_unsigned(), as_hex=True)
+		return CValueCall(CValueNamed("BIG_INT128"), [high, low])
+
 	as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
 	return CValueInteger(int(v.asset), is_unsigned=t.is_unsigned(), as_hex=as_hex)
 
@@ -2044,6 +2049,7 @@ c_helpers = {
 	'use_va_arg': do_helper_use_va_arg,
 	'use_raw_cast': do_helper_use_rawcast,
 	'use_fixed_point': do_helper_use_fixed_point,
+	'use_bigint': do_helper_use_bigint,
 }
 
 
