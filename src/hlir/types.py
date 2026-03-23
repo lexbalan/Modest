@@ -1623,6 +1623,10 @@ class Value(Entity):
 		self.asset = a
 
 
+	def change_type(self, t):
+		self.type = t
+
+
 	def cp_immediate(to, _from):
 		if _from.asset != None:
 			to.set_asset(_from.asset)

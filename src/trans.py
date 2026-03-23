@@ -557,14 +557,32 @@ def do_value_shift(x):
 		if left.isValueImmediate() and right.isValueImmediate():
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			if left.asset != None and right.asset != None:
-				nv.set_asset(int(left.asset << right.asset))
+				a = int(left.asset << right.asset)
+
+				# mass
+				need_width = nbits_for_num(a, signed=False)
+				nt = type_word_create(width=need_width, ti=x['ti'])
+				nt.generic = True
+				nv.change_type(nt)
+				left.change_type(nt)
+
+				nv.set_asset(a)
 
 	else: #if op == HLIR_VALUE_OP_SHR:
 		nv = ValueShr(left.type, left, right, ti=x['ti'])
 		if left.isValueImmediate() and right.isValueImmediate():
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 			if left.asset != None and right.asset != None:
-				nv.set_asset(int(left.asset >> right.asset))
+				a = int(left.asset >> right.asset)
+
+				# mass
+				need_width = nbits_for_num(a, signed=False)
+				nt = type_word_create(width=need_width, ti=x['ti'])
+				nv.change_type(nt)
+				nv.type.generic = True
+				#left.change_type(nv.type)
+
+				nv.set_asset(a)
 
 	return nv
 
@@ -653,7 +671,8 @@ def do_value_bin_op(op, l, r, ti):
 
 		need_width = nbits_for_num(asset, signed=t.is_signed())
 		if t.is_integer():
-			nv.type = type_integer_create(width=need_width, ti=ti)
+			nt = type_integer_create(width=need_width, ti=ti)
+			nv.change_type(nt)
 		else:
 			if need_width > t.width or (not t.is_signed() and asset < 0):
 				error("integer overflow", ti)
@@ -755,9 +774,10 @@ def do_value_neg(x):
 
 		if nv.type.is_generic():
 			if isinstance(v.asset, int):
-				nv.type = type_integer_for(v.asset, ti=v.ti)
+				nt = type_integer_for(v.asset, ti=v.ti)
 			else:
-				nv.type = type_rational_create(ti=v.ti)
+				nt = type_rational_create(ti=v.ti)
+			nv.change_type(nt)
 
 	return nv
 
@@ -782,9 +802,10 @@ def do_value_pos(x):
 
 	if nv.type.is_generic():
 		if isinstance(v.asset, int):
-			nv.type = type_integer_for(v.asset, ti=v.ti)
+			nt = type_integer_for(v.asset, ti=v.ti)
 		else:
-			nv.type = type_rational_create(v.asset, ti=v.ti)
+			nt = type_rational_create(v.asset, ti=v.ti)
+		nv.change_type(nt)
 
 	return nv
 
@@ -2273,7 +2294,8 @@ def def_func(x):
 	cdef = fn.definition
 
 	if fn.type.is_incompleted():
-		fn.type = do_type_func(x['type'])
+		ft = do_type_func(x['type'])
+		fn.change_type(ft)
 		if fn.type.is_incompleted():
 			return None
 

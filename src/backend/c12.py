@@ -590,7 +590,7 @@ def do_cvalue_literal_number(t, v, ctx):
 		return CValueCall(CValueNamed("BIG_INT128"), [high, low])
 
 	as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
-	return CValueInteger(int(v.asset), is_unsigned=t.is_unsigned(), as_hex=as_hex)
+	return CValueInteger(int(v.asset), is_unsigned=t.is_unsigned() or t.is_word(), as_hex=as_hex)
 
 
 def do_cvalue_literal_with_type(v, t, ctx=[]):
