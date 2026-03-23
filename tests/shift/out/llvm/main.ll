@@ -227,7 +227,7 @@ declare %Int @system([0 x %ConstChar]* %string)
 @str12 = private constant [96 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 87, i8 111, i8 114, i8 100, i8 49, i8 50, i8 56, i8 32, i8 48, i8 120, i8 56, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 32, i8 62, i8 62, i8 32, i8 49, i8 50, i8 55, i8 32, i8 33, i8 61, i8 32, i8 48, i8 120, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 49, i8 10, i8 0]
 @str13 = private constant [55 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 49, i8 32, i8 60, i8 60, i8 32, i8 49, i8 50, i8 55, i8 32, i8 33, i8 61, i8 32, i8 48, i8 120, i8 56, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 10, i8 0]
 @str14 = private constant [88 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 48, i8 120, i8 56, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 32, i8 62, i8 62, i8 32, i8 49, i8 50, i8 55, i8 32, i8 33, i8 61, i8 32, i8 48, i8 120, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 49, i8 10, i8 0]
-@str15 = private constant [22 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 83, i8 104, i8 105, i8 102, i8 116, i8 54, i8 52, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@str15 = private constant [23 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 83, i8 104, i8 105, i8 102, i8 116, i8 49, i8 50, i8 56, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str16 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 115, i8 104, i8 105, i8 102, i8 116, i8 10, i8 0]
 @str17 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
 @str18 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
@@ -257,31 +257,29 @@ then_1:
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-	%12 = zext i8 2147483648 to %Word32
-	store %Word32 %12, %Word32* %1
+	store %Word32 2147483648, %Word32* %1
 ; if_2
-	%13 = bitcast i32 2147483648 to %Word32
-	%14 = load %Word32, %Word32* %1
-	%15 = icmp ne %Word32 %14, %13
-	br %Bool %15 , label %then_2, label %endif_2
+	%12 = bitcast i32 2147483648 to %Word32
+	%13 = load %Word32, %Word32* %1
+	%14 = icmp ne %Word32 %13, %12
+	br %Bool %14 , label %then_2, label %endif_2
 then_2:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str3 to [0 x i8]*))
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @str3 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_2
 endif_2:
-	%18 = bitcast i32 1 to %Word32
-	store %Word32 %18, %Word32* %1
+	store %Word32 1, %Word32* %1
 ; if_3
-	%19 = zext i8 1 to %Word32
-	%20 = load %Word32, %Word32* %1
-	%21 = icmp ne %Word32 %20, %19
-	br %Bool %21 , label %then_3, label %endif_3
+	%17 = zext i8 1 to %Word32
+	%18 = load %Word32, %Word32* %1
+	%19 = icmp ne %Word32 %18, %17
+	br %Bool %19 , label %then_3, label %endif_3
 then_3:
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([39 x i8]* @str4 to [0 x i8]*))
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([39 x i8]* @str4 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_3
 endif_3:
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*))
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*))
 	ret %Bool 1
 }
 
@@ -309,31 +307,29 @@ then_1:
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-	%12 = zext i8 9223372036854775808 to %Word64
-	store %Word64 %12, %Word64* %1
+	store %Word64 9223372036854775808, %Word64* %1
 ; if_2
-	%13 = bitcast i64 9223372036854775808 to %Word64
-	%14 = load %Word64, %Word64* %1
-	%15 = icmp ne %Word64 %14, %13
-	br %Bool %15 , label %then_2, label %endif_2
+	%12 = bitcast i64 9223372036854775808 to %Word64
+	%13 = load %Word64, %Word64* %1
+	%14 = icmp ne %Word64 %13, %12
+	br %Bool %14 , label %then_2, label %endif_2
 then_2:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str8 to [0 x i8]*))
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str8 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_2
 endif_2:
-	%18 = bitcast i64 1 to %Word64
-	store %Word64 %18, %Word64* %1
+	store %Word64 1, %Word64* %1
 ; if_3
-	%19 = zext i8 1 to %Word64
-	%20 = load %Word64, %Word64* %1
-	%21 = icmp ne %Word64 %20, %19
-	br %Bool %21 , label %then_3, label %endif_3
+	%17 = zext i8 1 to %Word64
+	%18 = load %Word64, %Word64* %1
+	%19 = icmp ne %Word64 %18, %17
+	br %Bool %19 , label %then_3, label %endif_3
 then_3:
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([55 x i8]* @str9 to [0 x i8]*))
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([55 x i8]* @str9 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_3
 endif_3:
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str10 to [0 x i8]*))
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str10 to [0 x i8]*))
 	ret %Bool 1
 }
 
@@ -361,31 +357,29 @@ then_1:
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-	%12 = zext i8 170141183460469231731687303715884105728 to %Word128
-	store %Word128 %12, %Word128* %1
+	store %Word128 170141183460469231731687303715884105728, %Word128* %1
 ; if_2
-	%13 = bitcast i128 170141183460469231731687303715884105728 to %Word128
-	%14 = load %Word128, %Word128* %1
-	%15 = icmp ne %Word128 %14, %13
-	br %Bool %15 , label %then_2, label %endif_2
+	%12 = bitcast i128 170141183460469231731687303715884105728 to %Word128
+	%13 = load %Word128, %Word128* %1
+	%14 = icmp ne %Word128 %13, %12
+	br %Bool %14 , label %then_2, label %endif_2
 then_2:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([55 x i8]* @str13 to [0 x i8]*))
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([55 x i8]* @str13 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_2
 endif_2:
-	%18 = bitcast i128 1 to %Word128
-	store %Word128 %18, %Word128* %1
+	store %Word128 1, %Word128* %1
 ; if_3
-	%19 = zext i8 1 to %Word128
-	%20 = load %Word128, %Word128* %1
-	%21 = icmp ne %Word128 %20, %19
-	br %Bool %21 , label %then_3, label %endif_3
+	%17 = zext i8 1 to %Word128
+	%18 = load %Word128, %Word128* %1
+	%19 = icmp ne %Word128 %18, %17
+	br %Bool %19 , label %then_3, label %endif_3
 then_3:
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([88 x i8]* @str14 to [0 x i8]*))
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([88 x i8]* @str14 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_3
 endif_3:
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str15 to [0 x i8]*))
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str15 to [0 x i8]*))
 	ret %Bool 1
 }
 

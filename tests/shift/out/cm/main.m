@@ -20,13 +20,13 @@ func testShift32 () -> Bool {
 		return false
 	}
 
-	x = 1 << 31
+	x = Word32 1 << 31
 	if x != 0x80000000 {
 		printf("error: 1 << 31 != 0x80000000\n")
 		return false
 	}
 
-	x = 0x80000000 >> 31
+	x = Word32 0x80000000 >> 31
 	if x != 0x00000001 {
 		printf("error: 0x80000000 >> 31 != 0x00000001\n")
 		return false
@@ -52,13 +52,13 @@ func testShift64 () -> Bool {
 		return false
 	}
 
-	x = 1 << 63
+	x = Word64 1 << 63
 	if x != 0x8000000000000000 {
 		printf("error: 1 << 63 != 0x8000000000000000\n")
 		return false
 	}
 
-	x = 0x8000000000000000 >> 63
+	x = Word64 0x8000000000000000 >> 63
 	if x != 0x0000000000000001 {
 		printf("error: 0x8000000000000000 >> 63 != 0x0000000000000001\n")
 		return false
@@ -84,19 +84,19 @@ func testShift128 () -> Bool {
 		return false
 	}
 
-	x = 1 << 127
+	x = Word128 1 << 127
 	if x != 0x80000000000000000000000000000000 {
 		printf("error: 1 << 127 != 0x80000000000000000000000000000000\n")
 		return false
 	}
 
-	x = 0x80000000000000000000000000000000 >> 127
+	x = Word128 0x80000000000000000000000000000000 >> 127
 	if x != 0x00000000000000000000000000000001 {
 		printf("error: 0x80000000000000000000000000000000 >> 127 != 0x00000000000000000000000000000001\n")
 		return false
 	}
 
-	printf("passed: Shift64 test\n")
+	printf("passed: Shift128 test\n")
 	return true
 }
 

@@ -58,7 +58,7 @@ int main(void) {
 	}
 	printf("--------------------------------------------\n");
 	int32_t s[10] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-	__builtin_memset((int32_t (*)[5 - 2])&s[2], 0, sizeof(int32_t [5 - 2]));
+	__builtin_bzero((int32_t (*)[5 - 2])&s[2], sizeof(int32_t [5 - 2]));
 	i = 0;
 	while (i < LENGTHOF(s)) {
 		printf("s[%d] = %d\n", i, (uint32_t)abs(s[i]));
@@ -87,7 +87,7 @@ int main(void) {
 	int32_t ss[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	int32_t k = 4;
 	int32_t j = 7;
-	__builtin_memset((int32_t (*)[j - k])&ss[k], 0, sizeof(int32_t [j - k]));
+	__builtin_bzero((int32_t (*)[j - k])&ss[k], sizeof(int32_t [j - k]));
 	array_print(&ss, 10);
 	printf("--------------------------------------------\n");
 	printf("copy slice by var\n");

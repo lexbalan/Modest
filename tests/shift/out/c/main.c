@@ -52,12 +52,12 @@ static bool testShift64(void) {
 		printf("error: Word64 0x8000000000000000 >> 63 != 0x0000000000000001\n");
 		return false;
 	}
-	x = (uint64_t)1 << 63;
+	x = 1 << 63;
 	if (x != (uint64_t)0x8000000000000000LL) {
 		printf("error: 1 << 63 != 0x8000000000000000\n");
 		return false;
 	}
-	x = (uint64_t)0x8000000000000000LL >> 63;
+	x = (uint64_t)(0x8000000000000000LL >> 63);
 	if (x != 0x1) {
 		printf("error: 0x8000000000000000 >> 63 != 0x0000000000000001\n");
 		return false;
@@ -78,12 +78,12 @@ static bool testShift128(void) {
 		printf("error: Word128 0x80000000000000000000000000000000 >> 127 != 0x00000000000000000000000000000001\n");
 		return false;
 	}
-	x = (unsigned __int128)1 << 127;
+	x = 1 << 127;
 	if (x != (unsigned __int128)BIG_INT128(0x8000000000000000LL, 0x0)) {
 		printf("error: 1 << 127 != 0x80000000000000000000000000000000\n");
 		return false;
 	}
-	x = (unsigned __int128)BIG_INT128(0x8000000000000000LL, 0x0) >> 127;
+	x = (unsigned __int128)(BIG_INT128(0x8000000000000000LL, 0x0) >> 127);
 	if (x != 0x1) {
 		printf("error: 0x80000000000000000000000000000000 >> 127 != 0x00000000000000000000000000000001\n");
 		return false;

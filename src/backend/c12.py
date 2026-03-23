@@ -2452,8 +2452,8 @@ def assign_by_memcopy(left, right):
 def do_memzero(value):
 	return CStmtValueExpr(
 		CValueCall(
-			CValueNamed("__builtin_memset"), [
-				do_cvalue_as_ptr(value), CValueInteger(0), CValueSizeofType(do_ctype(value.type))
+			CValueNamed("__builtin_bzero"), [
+				do_cvalue_as_ptr(value), CValueSizeofType(do_ctype(value.type))
 			]
 		)
 	)

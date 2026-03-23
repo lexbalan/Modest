@@ -45,7 +45,7 @@ static void f0(char *_x, char *_sret_) {
 	printf("f0 mic = \"%s\"\n", mic);
 	char res[30];
 	__builtin_memcpy((char *)&res[0], &x, sizeof(char [20 - 0]));
-	__builtin_memset((char *)&res[20], 0, sizeof(char [30 - 20]));
+	__builtin_bzero((char *)&res[20], sizeof(char [30 - 20]));
 	res[6] = 'M';
 	res[7] = 'o';
 	res[8] = 'd';
@@ -202,7 +202,7 @@ int main(void) {
 	int32_t c[3] = {10, 20, 30};
 	int32_t d[6];
 	__builtin_memcpy((int32_t (*)[3 - 0])&d[0], &c, sizeof(int32_t [3 - 0]));
-	__builtin_memset((int32_t (*)[6 - 3])&d[3], 0, sizeof(int32_t [6 - 3]));
+	__builtin_bzero((int32_t (*)[6 - 3])&d[3], sizeof(int32_t [6 - 3]));
 	printf("d[0] = %i\n", d[0]);
 	printf("d[1] = %i\n", d[1]);
 	printf("d[2] = %i\n", d[2]);
@@ -230,7 +230,7 @@ int main(void) {
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
-	__builtin_memset(&globalArray, 0, sizeof(int32_t [10]));
+	__builtin_bzero(&globalArray, sizeof(int32_t [10]));
 	int32_t ax = 10;
 	int32_t bx = 20;
 	int32_t cx = 30;
