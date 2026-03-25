@@ -11,6 +11,58 @@ __attribute__((unused)) static inline __int128 abs128(__int128 x) {return x < 0 
 #endif  /* __BIG_INT128__ */
 
 
+static bool testShift8(void) {
+	uint8_t x;
+	x = 0x1 << 7;
+	if (x != 0x80) {
+		printf("error: Word8 1 << 7 != 0x80\n");
+		return false;
+	}
+	x = 0x80 >> 7;
+	if (x != 0x1) {
+		printf("error: Word8 0x80 >> 7 != 1\n");
+		return false;
+	}
+	x = 0x1 << 7;
+	if (x != 0x80) {
+		printf("error: 1 << 7 != 0x80\n");
+		return false;
+	}
+	x = 0x80 >> 7;
+	if (x != 0x1) {
+		printf("error: 0x80 >> 7 != 1\n");
+		return false;
+	}
+	printf("passed: Shift8 test\n");
+	return true;
+}
+
+static bool testShift16(void) {
+	uint16_t x;
+	x = 0x1 << 15;
+	if (x != 0x8000) {
+		printf("error: Word16 1 << 15 != 0x8000\n");
+		return false;
+	}
+	x = 0x8000 >> 15;
+	if (x != 0x1) {
+		printf("error: Word16 0x8000 >> 15 != 1\n");
+		return false;
+	}
+	x = 0x1 << 15;
+	if (x != 0x8000) {
+		printf("error: 1 << 15 != 0x8000\n");
+		return false;
+	}
+	x = 0x8000 >> 15;
+	if (x != 0x1) {
+		printf("error: 0x8000 >> 15 != 1\n");
+		return false;
+	}
+	printf("passed: Shift16 test\n");
+	return true;
+}
+
 static bool testShift32(void) {
 	uint32_t x;
 	x = 0x1 << 31;
@@ -93,6 +145,10 @@ int main(void) {
 	printf("test shift\n");
 	bool result;
 	bool success = true;
+	result = testShift8();
+	success = success && result;
+	result = testShift16();
+	success = success && result;
 	result = testShift32();
 	success = success && result;
 	result = testShift64();

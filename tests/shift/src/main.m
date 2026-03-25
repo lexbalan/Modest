@@ -4,7 +4,72 @@ include "libc/ctypes64"
 include "libc/stdio"
 include "libc/stdlib"
 
+func testShift8 () -> Bool {
+	var x: Word8
 
+	x = Word8 1 << 7
+	if x != 0x80 {
+		printf("error: Word8 1 << 7 != 0x80\n")
+		return false
+	}
+
+	x = Word8 0x80 >> 7
+	if x != 1 {
+		printf("error: Word8 0x80 >> 7 != 1\n")
+		return false
+	}
+
+	// Raw literal shift check
+
+	x = 1 << 7
+	if x != 0x80 {
+		printf("error: 1 << 7 != 0x80\n")
+		return false
+	}
+
+	x = 0x80 >> 7
+	if x != 1 {
+		printf("error: 0x80 >> 7 != 1\n")
+		return false
+	}
+
+	printf("passed: Shift8 test\n")
+	return true
+}
+
+
+func testShift16 () -> Bool {
+	var x: Word16
+
+	x = Word16 1 << 15
+	if x != 0x8000 {
+		printf("error: Word16 1 << 15 != 0x8000\n")
+		return false
+	}
+
+	x = Word16 0x8000 >> 15
+	if x != 1 {
+		printf("error: Word16 0x8000 >> 15 != 1\n")
+		return false
+	}
+
+	// Raw literal shift check
+
+	x = 1 << 15
+	if x != 0x8000 {
+		printf("error: 1 << 15 != 0x8000\n")
+		return false
+	}
+
+	x = 0x8000 >> 15
+	if x != 1 {
+		printf("error: 0x8000 >> 15 != 1\n")
+		return false
+	}
+
+	printf("passed: Shift16 test\n")
+	return true
+}
 
 func testShift32 () -> Bool {
 	var x: Word32
@@ -115,6 +180,10 @@ public func main () -> Int {
 	var result: Bool
 	var success = true
 
+	result = testShift8()
+	success = success and result
+	result = testShift16()
+	success = success and result
 	result = testShift32()
 	success = success and result
 	result = testShift64()
