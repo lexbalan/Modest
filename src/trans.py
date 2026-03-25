@@ -539,51 +539,56 @@ def do_value_shift(x):
 	left = do_rvalue(x['left'])
 	right = do_rvalue(x['right'])
 
+	# Слева может быть только word или integer !
 	if not (left.type.is_word() or left.type.is_integer()):
 		error("expected word value", x['left']['ti'])
 		return ValueBad(x['ti'])
 
-	if left.type.is_generic() and not right.type.is_generic():
-		error("expected non-generic value", left.ti)
-		return ValueBad(x['ti'])
+	if left.type.is_generic():
+		if not right.type.is_generic():
+			error("expected non-generic value", left.ti)
+			return ValueBad(x['ti'])
+
 
 	if right.type.is_signed():
 		error("expected natural value", x['right']['ti'])
 		return ValueBad(x['ti'])
 
 	nv = None
+	asset = None
+	stage = HLIR_VALUE_STAGE_RUNTIME
+
 	if op == HLIR_VALUE_OP_SHL:
-		nv = ValueShl(left.type, left, right, ti=x['ti'])
 		if left.isValueImmediate() and right.isValueImmediate():
-			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+			stage = HLIR_VALUE_STAGE_COMPILETIME
 			if left.asset != None and right.asset != None:
-				a = int(left.asset << right.asset)
+				asset = int(left.asset << right.asset)
 
-				# mass
-				need_width = nbits_for_num(a, signed=False)
-				nt = type_word_create(width=need_width, ti=x['ti'])
-				nt.generic = True
-				nv.change_type(nt)
-				left.change_type(nt)
+				if left.type.is_generic(): # or left.type.is_integer():
+					need_width = nbits_for_num(asset, signed=False)
+					left_nt = type_word_create(width=need_width, ti=x['ti'])
+					left_nt.generic = True
+					left = value_cons_implicit(left_nt, left)
 
-				nv.set_asset(a)
+		nv = ValueShl(left.type, left, right, ti=x['ti'])
+
 
 	else: #if op == HLIR_VALUE_OP_SHR:
-		nv = ValueShr(left.type, left, right, ti=x['ti'])
 		if left.isValueImmediate() and right.isValueImmediate():
-			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+			stage = HLIR_VALUE_STAGE_COMPILETIME
 			if left.asset != None and right.asset != None:
-				a = int(left.asset >> right.asset)
+				asset = int(left.asset >> right.asset)
 
-				# mass
-				need_width = nbits_for_num(a, signed=False)
-				nt = type_word_create(width=need_width, ti=x['ti'])
-				nv.change_type(nt)
-				nv.type.generic = True
-				#left.change_type(nv.type)
+				if left.type.is_generic():
+					need_width = nbits_for_num(left.asset, signed=False)
+					left_nt = type_word_create(width=need_width, ti=x['ti'])
+					left_nt.generic = True
+					left = value_cons_implicit(left_nt, left)
 
-				nv.set_asset(a)
+		nv = ValueShr(left.type, left, right, ti=x['ti'])
 
+	nv.set_asset(asset)
+	nv.stage = stage
 	return nv
 
 

@@ -351,14 +351,15 @@ def string_literal_prefix(width):
 
 
 
-def str_number_suffix(req_bits, is_unsigned):
+def str_number_suffix(num, req_bits, is_unsigned):
 	sstr = ""
 	if req_bits >= 32: #csettings['int_width']:
-		if is_unsigned:
+		if is_unsigned and nbits_for_num(num, signed=not is_unsigned) == req_bits:
 			sstr += "U"   # unsigned
 
 		if req_bits <= 32: #csettings['long_width']:
-			sstr += "L"   # long int
+			#sstr += "L"   # long int
+			sstr += ""   # long int
 		elif req_bits <= 64: #csettings['long_long_width']:
 			sstr += "LL"  # long long int
 		else:
@@ -394,42 +395,33 @@ class CValueNamed(CValue):
 
 
 class CValueInteger(CValue):
-	def __init__(self, number, is_unsigned=False, as_hex=False):
+	def __init__(self, number, width=32, is_unsigned=True, as_hex=False):
 		super().__init__()
 		assert(isinstance(number, int))
 		assert(isinstance(is_unsigned, bool))
 		assert(isinstance(as_hex, bool))
 		self.number = number
+		self.width = width
 		self.is_unsigned = is_unsigned
 		self.as_hex = as_hex
 		self.nsigns = 0
 		self.precedence = 15
 
 	def __str__(self):
-		#return str(self.number) + str_number_suffix(nbits_for_num(self.number), self.is_unsigned)
-		#def str_value_literal_number(num, nsigns=0, is_unsigned=False, as_hex=False):
 		num = self.number
-		width = nbits_for_num(num, signed=not self.is_unsigned)
+		width = max(self.width, nbits_for_num(num, signed=not self.is_unsigned))
 		sstr = ''
-		# Big Number?
-		if width > 64:
-			# print Big Numbers
-			a1 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
-			a0 = (num >> 0)  & 0xFFFFFFFFFFFFFFFF
-			if width == 128:
-				return "BIG_INT128(0x%XULL, 0x%XULL)" % (a1, a0)
-			elif width == 256:
-				a3 = (num >> 192) & 0xFFFFFFFFFFFFFFFF
-				a2 = (num >> 128) & 0xFFFFFFFFFFFFFFFF
-				return "BIG_INT256(0x%XULL, 0x%XULL, 0x%XULL, 0x%XULL)" % (a3, a2, a1, a0)
-
 		if self.as_hex:
 			fmt = "0x%%0%dX" % self.nsigns
 			sstr += (fmt % num)
 		else:
 			sstr += str(num)
 
-		sstr += str_number_suffix(req_bits=nbits_for_num(num), is_unsigned=self.is_unsigned)
+		#if width > 64:
+		#	n = nbits_for_num(num, signed=not self.is_unsigned)
+		#	print("nbits_for_num(%x, signed=not self.is_unsigned) = %d" % (num, n))
+		sstr += str_number_suffix(num, req_bits=width, is_unsigned=self.is_unsigned)
+		#sstr += '/*%s*/' % str(self.is_unsigned)
 		return sstr
 
 

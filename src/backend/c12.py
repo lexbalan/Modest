@@ -585,12 +585,15 @@ def do_cvalue_literal_pointer(v, ctx):
 # сам заботится о том чтобы литерал соответствовал типу (int/longlong)
 def do_cvalue_literal_number(t, v, ctx):
 	if t.width > 64:
-		high = CValueInteger(int(v.asset) >> 64, is_unsigned=t.is_unsigned(), as_hex=True)
-		low = CValueInteger(int(v.asset) & 0xffffffffffffffff, is_unsigned=t.is_unsigned(), as_hex=True)
+		high = CValueInteger(int(v.asset) >> 64, width=64, is_unsigned=not t.is_signed(), as_hex=True)
+		low = CValueInteger(int(v.asset) & 0xffffffffffffffff, width=64, is_unsigned=not t.is_signed(), as_hex=True)
 		return CValueCall(CValueNamed("BIG_INT128"), [high, low])
 
-	as_hex = t.is_word() or v.type.is_word() or v.hasAttribute2('hexadecimal')
-	return CValueInteger(int(v.asset), is_unsigned=t.is_unsigned() or t.is_word(), as_hex=as_hex)
+	is_unsigned = t.is_nat() or t.is_word() or (t.is_integer() and v.asset >= 0)
+
+	cv = CValueInteger(int(v.asset), width=t.width, is_unsigned=is_unsigned, as_hex=t.is_word())
+	#cv.mark = str(t.is_word())
+	return cv
 
 
 def do_cvalue_literal_with_type(v, t, ctx=[]):
@@ -755,7 +758,6 @@ def do_cvalue_cons2(x, ctx):
 	value = x.value
 	from_type = value.type
 
-
 	if type.is_array(): return do_cvalue_cons_array(x, ctx)
 	if type.is_record(): return do_cvalue_cons_record(x, ctx)
 	if type.is_branded():
@@ -838,15 +840,17 @@ def do_cvalue_cons_word(x, ctx):
 	#	if from_type.is_integer():
 	#		return do_cvalue_literal_number(type, value, ctx)
 
-	if from_type.is_nat() and type.width == from_type.width:
-		cv = do_cvalue(value, ctx=ctx)
+	if value.isValueImmediate() and value.isValueLiteral():
+		#if from_type.is_nat() and type.width == from_type.width:
+		cv = do_cvalue_literal_with_type(value, type, ctx=ctx)
+		cv.mark = '$$1'
 		return cv
 
-	if x.method in ['implicit', 'default']:
-		if from_type.width <= 32:
-			cv = do_cvalue(value, ctx=ctx)
-			#cv.mark = '$2'
-			return cv
+#	if x.method in ['implicit', 'default']:
+#		if from_type.width <= 32:
+#			cv = do_cvalue(value, ctx=ctx)
+#			cv.mark = '$$2'
+#			return cv
 
 	if from_type.is_int():
 		if from_type.width < type.width:
@@ -854,10 +858,18 @@ def do_cvalue_cons_word(x, ctx):
 			nat_same_sz = do_ctype(type_select_nat(from_type.width))
 			cv = CValueCast(nat_same_sz, cv)
 			cv = CValueCast(do_ctype(type), cv)
+			cv.mark = '$$3'
 			return cv
 
+#	if value.isValueLiteral():
+#		#cv = do_cvalue_cast(type, value, ctx=ctx)
+#		cv = do_cvalue_literal_with_type(value, type, ctx=ctx)
+#		cv = CValueCast(do_ctype(type), cv)
+#		cv.mark = '$4'
+#		return cv
+
 	cv = do_cvalue_cast(type, value, ctx=ctx)
-	#cv.mark = '$1'
+	cv.mark = '$$'
 	return cv
 
 
@@ -892,7 +904,9 @@ def do_cvalue_cons_nat(x, ctx):
 
 	if value.isValueImmediate() and value.isValueLiteral():
 		if from_type.is_integer():
-			return do_cvalue_literal_number(type, value, ctx)
+			cv = do_cvalue_literal_number(type, value, ctx)
+			cv.mark = '??'
+			return cv
 
 	if from_type.is_word() and type.width == from_type.width:
 		cv = do_cvalue(value, ctx=ctx)
@@ -1484,10 +1498,19 @@ def do_cstmt_value_expr(x):
 
 
 def do_cstmt_assign(x):
-	if x.left.type.is_array():
-		return do_assign_array(x.left, x.right, x.ti)
+	left =x.left
+	right= x.right
 
-	return CStmtValueAssign(do_cvalue(x.left), do_cvalue(x.right))
+	if left.type.is_array():
+		return do_assign_array(left, right, x.ti)
+
+	if right.isValueCons():
+		if not right.value.isValueLiteral():
+			if right.type.is_int() or right.type.is_nat() or right.type.is_word():
+				if right.value.type.width <= 32:
+					right = right.value
+
+	return CStmtValueAssign(do_cvalue(left), do_cvalue(right))
 
 
 
@@ -1968,15 +1991,15 @@ def do_helper_use_rawcast():
 def do_helper_use_bigint():
 	sstr = ''
 	sstr += ("\n#ifndef __BIG_INT128__")
-	sstr += ("\n#define BIG_INT128(hi64, lo64) (((__int128)(hi64) << 64) | ((__int128)(lo64)))")
-	sstr += ("\nstatic inline __int128 abs128(__int128 x) {return x < 0 ? -x : x;}")
+	sstr += ("\n#define BIG_INT128(hi64, lo64) (((unsigned __int128)(hi64) << 64) | ((unsigned __int128)(lo64)))")
+	sstr += ("\n__attribute__((unused)) static inline __int128 abs128(__int128 x) {return x < 0 ? -x : x;}")
 	sstr += ("\n#endif  /* __BIG_INT128__ */")
 	sstr += ("\n")
-	sstr += ("\n#ifndef __BIG_INT256__")
-	sstr += ("\n#define BIG_INT256(a, b, c, d)")
-	sstr += ("\n#endif  /* __BIG_INT256__ */")
+	#sstr += ("\n#ifndef __BIG_INT256__")
+	#sstr += ("\n#define BIG_INT256(a, b, c, d)")
+	#sstr += ("\n#endif  /* __BIG_INT256__ */")
 	module_undef_list.append("__BIG_INT128__")
-	module_undef_list.append("__BIG_INT256__")
+	#module_undef_list.append("__BIG_INT256__")
 	return (CInsert(sstr),)
 
 

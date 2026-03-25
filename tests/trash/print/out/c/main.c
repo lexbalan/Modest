@@ -24,7 +24,7 @@ int main(void) {
 	char *const s = "Hi!";
 	const int32_t i = (int32_t)-1;
 	const uint32_t n = 123;
-	const uint32_t x = 0x1234567F;
+	const uint32_t x = 305419903;
 	console_print("\\\n");
 	console_print("@\n");
 	console_print("#AA#\n");

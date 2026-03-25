@@ -16,10 +16,12 @@ func testShift32 () -> Bool {
 	}
 
 	x = Word32 0x80000000 >> 31
-	if x != 0x00000001 {
-		printf("error: Word32 0x80000000 >> 31 != 0x00000001\n")
+	if x != 1 {
+		printf("error: Word32 0x80000000 >> 31 != 1\n")
 		return false
 	}
+
+	// Raw literal shift check
 
 	x = 1 << 31
 	if x != 0x80000000 {
@@ -28,8 +30,8 @@ func testShift32 () -> Bool {
 	}
 
 	x = 0x80000000 >> 31
-	if x != 0x00000001 {
-		printf("error: 0x80000000 >> 31 != 0x00000001\n")
+	if x != 1 {
+		printf("error: 0x80000000 >> 31 != 1\n")
 		return false
 	}
 
@@ -48,10 +50,12 @@ func testShift64 () -> Bool {
 	}
 
 	x = Word64 0x8000000000000000 >> 63
-	if x != 0x0000000000000001 {
-		printf("error: Word64 0x8000000000000000 >> 63 != 0x0000000000000001\n")
+	if x != 1 {
+		printf("error: Word64 0x8000000000000000 >> 63 != 1\n")
 		return false
 	}
+
+	// Raw literal shift check
 
 	x = 1 << 63
 	if x != 0x8000000000000000 {
@@ -60,8 +64,8 @@ func testShift64 () -> Bool {
 	}
 
 	x = 0x8000000000000000 >> 63
-	if x != 0x0000000000000001 {
-		printf("error: 0x8000000000000000 >> 63 != 0x0000000000000001\n")
+	if x != 1 {
+		printf("error: 0x8000000000000000 >> 63 != 1\n")
 		return false
 	}
 
@@ -80,20 +84,22 @@ func testShift128 () -> Bool {
 	}
 
 	x = Word128 0x80000000000000000000000000000000 >> 127
-	if x != 0x00000000000000000000000000000001 {
-		printf("error: Word128 0x80000000000000000000000000000000 >> 127 != 0x00000000000000000000000000000001\n")
+	if x != 1 {
+		printf("error: Word128 0x80000000000000000000000000000000 >> 127 != 1\n")
 		return false
 	}
 
-	x = Word128 1 << 127
+	// Raw literal shift check
+
+	x = 1 << 127
 	if x != 0x80000000000000000000000000000000 {
 		printf("error: 1 << 127 != 0x80000000000000000000000000000000\n")
 		return false
 	}
 
-	x = Word128 0x80000000000000000000000000000000 >> 127
-	if x != 0x00000000000000000000000000000001 {
-		printf("error: 0x80000000000000000000000000000000 >> 127 != 0x00000000000000000000000000000001\n")
+	x = 0x80000000000000000000000000000000 >> 127
+	if x != 1 {
+		printf("error: 0x80000000000000000000000000000000 >> 127 != 1\n")
 		return false
 	}
 

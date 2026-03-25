@@ -56,8 +56,8 @@ static void f0(char *_x, char *_sret_) {
 	res[13] = '\x0';
 	__builtin_memcpy(_sret_, &res, sizeof(char [30]));
 }
-#define START_SEQUENCE {0xAA, 0x55, 0x2}
-#define STOP_SEQUENCE {0x16}
+#define START_SEQUENCE {170, 85, 2}
+#define STOP_SEQUENCE {22}
 
 static void test(void) {
 	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
