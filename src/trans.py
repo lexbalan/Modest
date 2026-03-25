@@ -672,7 +672,7 @@ def do_value_bin_op(op, l, r, ti):
 	if l.isValueImmediate() and r.isValueImmediate():
 		asset = None
 		if l.asset != None and r.asset != None:  # for case ValueUndef
-			asset = do_bin_immediate(op, l, r, asset)
+			asset = do_bin_immediate(op, l, r, ti)
 
 		need_width = nbits_for_num(asset, signed=t.is_signed())
 		if t.is_integer():
@@ -689,6 +689,10 @@ def do_value_bin_op(op, l, r, ti):
 
 
 def do_bin_immediate(op, l, r, ti):
+	if op == HLIR_VALUE_OP_DIV and r.asset == 0:
+		error("division by zero", ti)
+		return 0
+
 	ops = {
 		HLIR_VALUE_OP_LOGIC_OR: lambda a, b: a or b,
 		HLIR_VALUE_OP_LOGIC_AND: lambda a, b: a and b,

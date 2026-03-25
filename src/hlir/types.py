@@ -88,34 +88,6 @@ def get_item_by_id(_list, id):
 
 
 
-#def _get_int_alias(width, signed):
-#	width = align_bits_up(width)
-#
-#	if signed:
-#		aka = 'Int%d' % width
-#
-#		if width == 128:
-#			calias = '__int128'
-#		else:
-#			calias = 'int%d_t' % width
-#
-#		llvm_alias = 'Int%d' % width
-#
-#	else:
-#		aka = 'Nat%d' % width
-#		if width == 128:
-#			calias = 'unsigned __int128'
-#		else:
-#			calias = 'uint%d_t' % width
-#
-#		llvm_alias = 'Nat%d' % width
-#
-#	return {'c': calias, 'llvm': llvm_alias, 'cm': aka}
-#
-
-
-
-
 
 HLIR_VALUE_OP_LOGIC_OR = 'lor'
 HLIR_VALUE_OP_LOGIC_XOR = 'lxor'
