@@ -344,29 +344,6 @@ def print_list_items(_list, method):
 
 
 
-def string_literal_prefix(width):
-	if width > 16: return "U"
-	if width > 8: return "u"
-	return ""
-
-
-
-def str_number_suffix(num, req_bits, is_unsigned):
-	sstr = ""
-	if req_bits >= 32: #csettings['int_width']:
-		if is_unsigned and nbits_for_num(num, signed=not is_unsigned) == req_bits:
-			sstr += "U"   # unsigned
-
-		if req_bits <= 32: #csettings['long_width']:
-			#sstr += "L"   # long int
-			sstr += ""   # long int
-		elif req_bits <= 64: #csettings['long_long_width']:
-			sstr += "LL"  # long long int
-		else:
-			sstr += "XL"  # extra long int (not defined in C)
-
-	return sstr
-
 
 
 valuePrecedenceMax = 15
@@ -392,6 +369,28 @@ class CValueNamed(CValue):
 
 	def __str__(self):
 		return self.id_str
+
+
+
+
+
+def str_number_suffix(num, req_bits, is_unsigned):
+	sstr = ""
+	nn = nbits_for_num(num, signed=not is_unsigned)
+	if req_bits >= 32: #csettings['int_width']:
+		if is_unsigned and nn == req_bits:
+			sstr += "U"   # unsigned
+
+		if req_bits <= 32: #csettings['long_width']:
+			#sstr += "L"   # long int
+			sstr += ""   # long int
+		elif req_bits <= 64: #csettings['long_long_width']:
+			sstr += "LL"  # long long int
+		else:
+			sstr += "XL"  # extra long int (not defined in C)
+
+	return sstr
+
 
 
 class CValueInteger(CValue):
@@ -424,6 +423,13 @@ class CValueInteger(CValue):
 		#sstr += '/*%s*/' % str(self.is_unsigned)
 		return sstr
 
+
+
+
+def string_literal_prefix(width):
+	if width > 16: return "U"
+	if width > 8: return "u"
+	return ""
 
 
 class CValueString(CValue):

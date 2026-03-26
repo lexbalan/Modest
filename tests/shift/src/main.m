@@ -191,6 +191,9 @@ public func main () -> Int {
 	result = testShift128()
 	success = success and result
 
+	var s: Nat64 = 0xffffffff + 1
+	printf("s = %lld\n", s)
+
 	printf("test ")
 	if not success {
 		printf("failed\n")

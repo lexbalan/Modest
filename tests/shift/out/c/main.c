@@ -155,6 +155,8 @@ int main(void) {
 	success = success && result;
 	result = testShift128();
 	success = success && result;
+	uint64_t s = (uint64_t)(4294967295U + 1);
+	printf("s = %lld\n", s);
 	printf("test ");
 	if (!success) {
 		printf("failed\n");
