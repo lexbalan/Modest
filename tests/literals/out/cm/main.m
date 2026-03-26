@@ -5,114 +5,41 @@ include "stdlib"
 
 
 
-func testShift32 () -> Bool {
-	var x: Word32
-
-	x = Word32 1 << 31
-	if x != 0x80000000 {
-		printf("error: Word32 1 << 31 != 0x80000000\n")
+func test1 () -> Bool {
+	if 0xFFFFFFFF + 1 != 0x100000000 {
+		printf("error: 0xffffffff + 1 != 0x100000000\n")
 		return false
 	}
 
-	x = Word32 0x80000000 >> 31
-	if x != 1 {
-		printf("error: Word32 0x80000000 >> 31 != 1\n")
+	if 0xFFFFFFFFFFFFFFFF + 1 != 0x10000000000000000 {
+		printf("error: 0xffffffffffffffff + 1 != 0x10000000000000000\n")
 		return false
 	}
 
-	x = 1 << 31
-	if x != 0x80000000 {
-		printf("error: 1 << 31 != 0x80000000\n")
+	let x32 = 0xFFFFFFFF
+	if x32 + 1 != 0x100000000 {
+		printf("error: x32 + 1 != 0x100000000\n")
 		return false
 	}
 
-	x = 0x80000000 >> 31
-	if x != 1 {
-		printf("error: 0x80000000 >> 31 != 1\n")
+	let x64 = 0xFFFFFFFFFFFFFFFF
+	if x64 + 1 != 0x10000000000000000 {
+		printf("error: x64 + 1 != 0x10000000000000000\n")
 		return false
 	}
 
-	printf("passed: Shift32 test\n")
+	printf("passed: test1\n")
 	return true
 }
-
-
-func testShift64 () -> Bool {
-	var x: Word64
-
-	x = Word64 1 << 63
-	if x != 0x8000000000000000 {
-		printf("error: Word64 1 << 63 != 0x8000000000000000\n")
-		return false
-	}
-
-	x = Word64 0x8000000000000000 >> 63
-	if x != 1 {
-		printf("error: Word64 0x8000000000000000 >> 63 != 1\n")
-		return false
-	}
-
-	x = 1 << 63
-	if x != 0x8000000000000000 {
-		printf("error: 1 << 63 != 0x8000000000000000\n")
-		return false
-	}
-
-	x = 0x8000000000000000 >> 63
-	if x != 1 {
-		printf("error: 0x8000000000000000 >> 63 != 1\n")
-		return false
-	}
-
-	printf("passed: Shift64 test\n")
-	return true
-}
-
-
-func testShift128 () -> Bool {
-	var x: Word128
-
-	x = Word128 1 << 127
-	if x != 0x80000000000000000000000000000000 {
-		printf("error: Word128 1 << 127 != 0x80000000000000000000000000000000\n")
-		return false
-	}
-
-	x = Word128 0x80000000000000000000000000000000 >> 127
-	if x != 1 {
-		printf("error: Word128 0x80000000000000000000000000000000 >> 127 != 1\n")
-		return false
-	}
-
-	x = 1 << 127
-	if x != 0x80000000000000000000000000000000 {
-		printf("error: 1 << 127 != 0x80000000000000000000000000000000\n")
-		return false
-	}
-
-	x = 0x80000000000000000000000000000000 >> 127
-	if x != 1 {
-		printf("error: 0x80000000000000000000000000000000 >> 127 != 1\n")
-		return false
-	}
-
-	printf("passed: Shift128 test\n")
-	return true
-}
-
 
 
 public func main () -> Int {
-	printf("test shift\n")
+	printf("test literals\n")
 
 	var result: Bool
 	var success: Bool = true
 
-	result = testShift32()
-	success = success and result
-	result = testShift64()
-	success = success and result
-	result = testShift128()
+	result = test1()
 	success = success and result
 
 	printf("test ")

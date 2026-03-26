@@ -191,6 +191,12 @@ def get_type_id_str(t):
 			if t.is_unsigned():
 				return 'unsigned int'
 			return 'int'
+		elif t.width > 64:
+			s = '__int%d_t' % align_bits_up(t.width)
+			if t.is_unsigned():
+				s = 'unsigned ' + s
+			return s
+
 		s = 'int%d_t' % align_bits_up(t.width)
 		if t.is_unsigned():
 			s = 'u' + s
@@ -1356,11 +1362,12 @@ def do_cvalue_bin(x, ctx):
 	op = bin_ops[x.op]
 
 
-	if x.left.type.width < x.type.width:
-		left = CValueCast(do_ctype(x.type), left)
+	if not x.type.is_string():
+		if x.left.type.width < x.type.width:
+			left = CValueCast(do_ctype(x.type), left)
 
-	if x.right.type.width < x.type.width:
-		right = CValueCast(do_ctype(x.type), right)
+		if x.right.type.width < x.type.width:
+			right = CValueCast(do_ctype(x.type), right)
 
 
 	if x.op == HLIR_VALUE_OP_ADD:

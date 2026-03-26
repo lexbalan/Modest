@@ -12,9 +12,20 @@ func test1 () -> Bool {
 		return false
 	}
 
-	let a = 0xffffffff
-	if a + 1 != 0x100000000 {
-		printf("error: a + 1 != 0x100000000\n")
+	if 0xffffffffffffffff + 1 != 0x10000000000000000 {
+		printf("error: 0xffffffffffffffff + 1 != 0x10000000000000000\n")
+		return false
+	}
+
+	let x32 = 0xffffffff
+	if x32 + 1 != 0x100000000 {
+		printf("error: x32 + 1 != 0x100000000\n")
+		return false
+	}
+
+	let x64 = 0xffffffffffffffff
+	if x64 + 1 != 0x10000000000000000 {
+		printf("error: x64 + 1 != 0x10000000000000000\n")
 		return false
 	}
 
