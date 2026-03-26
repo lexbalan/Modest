@@ -683,7 +683,6 @@ def do_value_bin_op(op, l, r, ti):
 				l = value_cons_explicit(t, l, l.ti)
 			if need_width > r.type.width:
 				r = value_cons_explicit(t, r, r.ti)
-			info("HERE", ti)
 		else:
 			if need_width > t.width or (not t.is_signed() and asset < 0):
 				error("integer overflow", ti)

@@ -18,13 +18,13 @@ func test1 () -> Bool {
 		return false
 	}
 
-	printf("passed: test1 test\n")
+	printf("passed: test1\n")
 	return true
 }
 
 
 public func main () -> Int {
-	printf("test shift\n")
+	printf("test literals\n")
 
 	var result: Bool
 	var success = true

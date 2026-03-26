@@ -22,7 +22,7 @@ static bool test1(void) {
 }
 
 int main(void) {
-	printf("test shift\n");
+	printf("test literals\n");
 	bool result;
 	bool success = true;
 	result = test1();
