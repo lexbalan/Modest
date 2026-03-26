@@ -16,7 +16,7 @@ static bool test1(void) {
 		printf("error: a + 1 != 0x100000000\n");
 		return false;
 	}
-	printf("passed: test1 test\n");
+	printf("passed: test1\n");
 	return true;
 	#undef a
 }

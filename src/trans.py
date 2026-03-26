@@ -624,6 +624,8 @@ def do_value_bin_op(op, l, r, ti):
 		error("unsuitable value type for '%s' operation" % op, r.ti)
 		return ValueBad(ti)
 
+
+
 	#
 	# Now and further types must be equal (!)
 	#
@@ -639,8 +641,12 @@ def do_value_bin_op(op, l, r, ti):
 		print()
 		return ValueBad(ti)
 
+
 	l = value_cons_implicit(t, l)
 	r = value_cons_implicit(t, r)
+
+	if l.isValueBad() or r.isValueBad():
+		return ValueBad(ti)
 
 	if not Type.eq(l.type, r.type, []):
 		error("different types in binary operation", ti)
@@ -662,8 +668,6 @@ def do_value_bin_op(op, l, r, ti):
 	if op in EQ_OPS or op in RELATIONAL_OPS:
 		t = typeBool
 
-	if l.isValueBad() or r.isValueBad():
-		return ValueBad(ti)
 
 
 	asset = None
@@ -679,13 +683,10 @@ def do_value_bin_op(op, l, r, ti):
 
 		if t.is_integer():
 			t = type_integer_create(width=need_width, ti=ti)
-			if need_width > l.type.width:
-				l = value_cons_explicit(t, l, l.ti)
-			if need_width > r.type.width:
-				r = value_cons_explicit(t, r, r.ti)
 		else:
 			if need_width > t.width or (not t.is_signed() and asset < 0):
 				error("integer overflow", ti)
+
 
 	nv = ValueBin(t, op, l, r, ti=ti)
 	nv.set_asset(asset)

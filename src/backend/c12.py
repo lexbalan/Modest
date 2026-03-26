@@ -783,7 +783,7 @@ def do_cvalue_cons2(x, ctx):
 				return cv
 
 		cv = do_cvalue(value, ctx=ctx)
-		cv.mark = ';;'
+		#cv.mark = ';;'
 		return cv
 
 #	if value.isValueLiteral():
@@ -1354,6 +1354,14 @@ def do_cvalue_bin(x, ctx):
 	left = do_cvalue(x.left)
 	right = do_cvalue(x.right)
 	op = bin_ops[x.op]
+
+
+	if x.left.type.width < x.type.width:
+		left = CValueCast(do_ctype(x.type), left)
+
+	if x.right.type.width < x.type.width:
+		right = CValueCast(do_ctype(x.type), right)
+
 
 	if x.op == HLIR_VALUE_OP_ADD:
 		if x.left.type.is_string():
