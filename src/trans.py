@@ -665,25 +665,32 @@ def do_value_bin_op(op, l, r, ti):
 	if l.isValueBad() or r.isValueBad():
 		return ValueBad(ti)
 
-	nv = ValueBin(t, op, l, r, ti=ti)
 
+	asset = None
+	stage = HLIR_VALUE_STAGE_RUNTIME
 	# if left & right are immediate, we can fold const
 	# and append field .asset to bin_value
 	if l.isValueImmediate() and r.isValueImmediate():
-		asset = None
-		if l.asset != None and r.asset != None:  # for case ValueUndef
+		stage = HLIR_VALUE_STAGE_COMPILETIME
+		if l.asset != None and r.asset != None:  # protection from ValueUndef
 			asset = do_bin_immediate(op, l, r, ti)
 
 		need_width = nbits_for_num(asset, signed=t.is_signed())
+
 		if t.is_integer():
-			nt = type_integer_create(width=need_width, ti=ti)
-			nv.change_type(nt)
+			t = type_integer_create(width=need_width, ti=ti)
+			if need_width > l.type.width:
+				l = value_cons_explicit(t, l, l.ti)
+			if need_width > r.type.width:
+				r = value_cons_explicit(t, r, r.ti)
+			info("HERE", ti)
 		else:
 			if need_width > t.width or (not t.is_signed() and asset < 0):
 				error("integer overflow", ti)
 
-		nv.set_asset(asset)
-		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+	nv = ValueBin(t, op, l, r, ti=ti)
+	nv.set_asset(asset)
+	nv.stage = stage
 
 	return nv
 

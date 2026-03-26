@@ -1354,6 +1354,7 @@ def do_cvalue_bin(x, ctx):
 	left = do_cvalue(x.left)
 	right = do_cvalue(x.right)
 	op = bin_ops[x.op]
+
 	if x.op == HLIR_VALUE_OP_ADD:
 		if x.left.type.is_string():
 			return CValueCat(left, right)
