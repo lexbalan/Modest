@@ -42,7 +42,7 @@ static void foo(int32_t a, int64_t b) {
 	return;
 }
 #define C 15
-static uint32_t k[3] = {1, 2, 3};
+static uint32_t k[3] = {0x1, 0x2, 0x3};
 static struct point p0 = (struct point){
 	.x = 1,
 	.y = 2
@@ -58,6 +58,7 @@ static void facc(int32_t (*_a)[3]) {
 }
 
 int main(void) {
+	typedef int32_t LocalInt;
 	#define c00 10
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';
@@ -78,7 +79,7 @@ int main(void) {
 	char *s1 = "B";
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
-	uint64_t w = (uint64_t)1 << 63;
+	uint64_t w = 0x1LL << 63;
 	printf("w = %llx\n", w);
 	int16_t x1 = -1;
 	uint32_t x2 = (uint32_t)(uint16_t)x1;
@@ -92,7 +93,7 @@ int main(void) {
 	__builtin_memcpy(&arr4, &arr, sizeof(const int32_t [3]));
 	int32_t arr3[3];
 	farr(&arr2);
-	__builtin_memset(&arr2, 0, sizeof(int32_t [3]));
+	__builtin_bzero(&arr2, sizeof(int32_t [3]));
 	__builtin_memcpy(&arr2, &arr, sizeof(int32_t [3]));
 	facc(&arr2);
 	#define rec0 {.x = 0, .y = 0}
@@ -109,7 +110,7 @@ int main(void) {
 	a * 2;
 	a / 2;
 	a % 2;
-	foo(1, 2);
+	foo(1, 2LL);
 	foo(a + 1, b - C);
 	#define kk (1 + 2 - 3 * 4)
 	#define pp 3.1415
@@ -122,7 +123,7 @@ int main(void) {
 	struct point p0 = (struct point){0};
 	p0.x;
 	p0.y;
-	if (a < 1 && b > 12 || C <= 5 && !(1 < 0)) {
+	if (a < 1 && b > 12LL || C <= 5 && !(1 < 0)) {
 		uint32_t u;
 		uint32_t v;
 		u | (v & u) ^ ~v;

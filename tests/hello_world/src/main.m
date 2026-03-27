@@ -47,6 +47,8 @@ func facc (a: [3]Int32) -> {} {
 
 
 public func main () -> Int {
+	type LocalInt = Int32
+
 	// constants
 	let c00 = 10
 

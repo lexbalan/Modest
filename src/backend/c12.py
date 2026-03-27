@@ -1615,11 +1615,8 @@ def do_cstmt(x):
 	elif x.is_stmt_again(): return CStmtContinue()
 	elif x.is_stmt_comment(): return do_stmt_comment(x)
 	elif x.is_stmt_asm(): return do_stmt_asm(x)
-#	elif x.is_stmt_def_type(): do_cdef_type(x)
-#	else: lo("<stmt %s>" % str(x))
-
-
-
+	elif x.is_stmt_def_type(): return do_def_type(x)
+	1/0
 
 
 
