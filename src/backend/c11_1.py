@@ -447,7 +447,7 @@ class CValueString(CValue):
 
 def code_to_char(cc):
 	if cc < 0x20:
-		if cc == 0x07: return "\\a"    # bell
+		if cc == 0x07: return "\\a"	# bell
 		elif cc == 0x08: return "\\b"  # backspace
 		elif cc == 0x09: return "\\t"  # horizontal tab
 		elif cc == 0x0A: return "\\n"  # line feed
@@ -1393,6 +1393,45 @@ class CStmtContinue(CStmt):
 		sstr = str_nl_indent(self.nl)
 		sstr += "continue;"
 		return sstr
+
+
+#__asm__ volatile (
+#	"assembly code template"
+#	: output operands /* optional */
+#	: input operands /* optional */
+#	: clobbered registers/memory /* optional */
+#);
+
+class CStmtAsm(CStmt):
+	def __init__(self, text, outputs, inputs, clobbers):
+		super().__init__()
+		assert(isinstance(text, str))
+		self.text = text
+		self.outputs = outputs
+		self.inputs = inputs
+		self.clobbers = clobbers
+
+
+	def __str__(self):
+		sstr = str_nl_indent(self.nl)
+		sstr += "__asm__ volatile ("
+		sstr += '"%s"' % self.text.replace('\n', '\\n\\\n')
+
+		items = ("%s (%s)" % (str(xx[0]), str(xx[1])) for xx in self.outputs)
+		if items != []:
+			sstr += " : " + ", ".join(items)
+
+		items = ("%s (%s)" % (str(xx[0]), str(xx[1])) for xx in self.inputs)
+		if items != []:
+			sstr += " : " + ", ".join(items)
+
+		items = (str(xx) for xx in self.clobbers)
+		if items != []:
+			sstr += " : " + ", ".join(items)
+
+		sstr += ");"
+		return sstr
+
 
 
 class CInsert(CStmt):

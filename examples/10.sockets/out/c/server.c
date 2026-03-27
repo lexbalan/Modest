@@ -20,12 +20,12 @@ static bool writeFile(int sockFd) {
 		return false;
 	}
 	while (true) {
-		const ssize_t n = recv(sockFd, (void *)buffer, BUF_SIZE, 0);
-		if (n <= 0) {
+		const ssize_t n = recv(sockFd, buffer, BUF_SIZE, 0);
+		if (n <= 0LL) {
 			break;
 		}
 		fprintf(fp, "%s", buffer);
-		__builtin_memset(&buffer, 0, sizeof(char [BUF_SIZE]));
+		__builtin_bzero(&buffer, sizeof(char [BUF_SIZE]));
 	}
 	return true;
 }

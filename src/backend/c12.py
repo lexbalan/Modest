@@ -1423,55 +1423,6 @@ def print_value(x, ctx=[]):
 	out(str_value(x, ctx=ctx))
 
 
-# prints pair: <specifier> (<value>)
-def print_asm_pair(pair):
-	print_value(pair[0])
-	out(' (')
-	print_value(pair[1])
-	out(')')
-
-
-def print_stmt_asm(x):
-	out('__asm__ volatile (')
-	indent_up()
-	nl_indent(1)
-	s = x.text.asset
-	s = s.replace('\n', '\\n')
-	out('"' + s + '"')
-
-	# print 'out' pairs
-	args1 = x.outputs
-	if len(args1) > 0:
-		nl_indent(1)
-		out(': ')
-		print_list_by(args1, print_asm_pair)
-	else:
-		out(':')
-
-	# print 'in' pairs
-	args2 = x.inputs
-	if len(args2) > 0:
-		nl_indent(1)
-		out(': ')
-		print_list_by(args2, print_asm_pair)
-	else:
-		out(':')
-
-	# print clobber list
-	if len(x.clobbers) > 0:
-		nl_indent(1)
-		out(': ')
-		print_list_by(x.clobbers, print_value)
-
-
-	indent_down()
-	nl_indent(1)
-	out(");")
-	return
-
-
-
-
 
 def do_assign_array(left, right, ti):
 	# array = function()
@@ -1634,6 +1585,72 @@ def do_cstmt_const(x):
 
 
 
+"""
+# prints pair: <specifier> (<value>)
+def print_asm_pair(pair):
+	print_value(pair[0])
+	out(' (')
+	print_value(pair[1])
+	out(')')
+
+
+def print_stmt_asm2(x):
+	out('__asm__ volatile (')
+	indent_up()
+	nl_indent(1)
+	s = x.text.asset
+	s = s.replace('\n', '\\n')
+	out('"' + s + '"')
+
+	# print 'out' pairs
+	args1 = x.outputs
+	if len(args1) > 0:
+		nl_indent(1)
+		out(': ')
+		print_list_by(args1, print_asm_pair)
+	else:
+		out(':')
+
+	# print 'in' pairs
+	args2 = x.inputs
+	if len(args2) > 0:
+		nl_indent(1)
+		out(': ')
+		print_list_by(args2, print_asm_pair)
+	else:
+		out(':')
+
+	# print clobber list
+	if len(x.clobbers) > 0:
+		nl_indent(1)
+		out(': ')
+		print_list_by(x.clobbers, print_value)
+
+	indent_down()
+	nl_indent(1)
+	out(");")
+	return
+"""
+
+
+def do_stmt_asm(x):
+	text = x.text.asset
+
+	outputs = []
+	for output in x.outputs:
+		outputs.append((do_cvalue(output[0]), do_cvalue(output[1])))
+
+	inputs = []
+	for _input in x.inputs:
+		inputs.append((do_cvalue(_input[0]), do_cvalue(_input[1])))
+
+	clobbers = []
+	for clobber in x.clobbers:
+		clobbers.append(do_cvalue(clobber))
+
+	return CStmtAsm(text, outputs, inputs, clobbers)
+
+
 def do_cstmt(x):
 	if x.is_stmt_block(): return do_cstmt_block(x)
 	elif x.is_stmt_value_expr(): return do_cstmt_value_expr(x)
@@ -1646,8 +1663,8 @@ def do_cstmt(x):
 	elif x.is_stmt_break(): return CStmtBreak()
 	elif x.is_stmt_again(): return CStmtContinue()
 	elif x.is_stmt_comment(): return do_stmt_comment(x)
+	elif x.is_stmt_asm(): return do_stmt_asm(x)
 #	elif x.is_stmt_def_type(): do_cdef_type(x)
-#	elif x.is_stmt_asm(): return do_cstmt_asm(x)
 #	else: lo("<stmt %s>" % str(x))
 
 

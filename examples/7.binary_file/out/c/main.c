@@ -21,7 +21,7 @@ static void writeExample(void) {
 		.id = {'i', 'd'},
 		.data = {'d', 'a', 't', 'a'}
 	};
-	fwrite((void *)&chunk, sizeof(struct chunk), 1, fp);
+	fwrite((void *)&chunk, sizeof(struct chunk), 1LL, fp);
 	fclose(fp);
 }
 
@@ -33,7 +33,7 @@ static void readExample(void) {
 		return;
 	}
 	struct chunk chunk;
-	fread((void *)&chunk, sizeof(struct chunk), 1, fp);
+	fread((void *)&chunk, sizeof(struct chunk), 1LL, fp);
 	printf("file \"%s\" contains:\n", FILENAME);
 	printf("chunk.id: \"%s\"\n", chunk.id);
 	printf("chunk.data: \"%s\"\n", chunk.data);

@@ -49,12 +49,12 @@ __attribute__((always_inline))
 static inline uint32_t sig1(uint32_t x) {
 	return rotright(x, 17) ^ rotright(x, 19) ^ x >> 10;
 }
-#define INITAL_STATE {0x6A09E667, 0xBB67AE85L, 0x3C6EF372, 0xA54FF53AL, 0x510E527F, 0x9B05688CL, 0x1F83D9AB, 0x5BE0CD19}
+#define INITAL_STATE {1779033703, 3144134277U, 1013904242, 2773480762U, 1359893119, 2600822924U, 528734635, 1541459225}
 
 static void contextInit(struct context *ctx) {
-	__builtin_memcpy(&ctx->state, &(const uint32_t [8])INITAL_STATE, sizeof(uint32_t [8]));
+	__builtin_memcpy(&ctx->state, &(const int32_t [8])INITAL_STATE, sizeof(uint32_t [8]));
 }
-#define K {0x428A2F98, 0x71374491, 0xB5C0FBCFL, 0xE9B5DBA5L, 0x3956C25B, 0x59F111F1, 0x923F82A4L, 0xAB1C5ED5L, 0xD807AA98L, 0x12835B01, 0x243185BE, 0x550C7DC3, 0x72BE5D74, 0x80DEB1FEL, 0x9BDC06A7L, 0xC19BF174L, 0xE49B69C1L, 0xEFBE4786L, 0xFC19DC6, 0x240CA1CC, 0x2DE92C6F, 0x4A7484AA, 0x5CB0A9DC, 0x76F988DA, 0x983E5152L, 0xA831C66DL, 0xB00327C8L, 0xBF597FC7L, 0xC6E00BF3L, 0xD5A79147L, 0x6CA6351, 0x14292967, 0x27B70A85, 0x2E1B2138, 0x4D2C6DFC, 0x53380D13, 0x650A7354, 0x766A0ABB, 0x81C2C92EL, 0x92722C85L, 0xA2BFE8A1L, 0xA81A664BL, 0xC24B8B70L, 0xC76C51A3L, 0xD192E819L, 0xD6990624L, 0xF40E3585L, 0x106AA070, 0x19A4C116, 0x1E376C08, 0x2748774C, 0x34B0BCB5, 0x391C0CB3, 0x4ED8AA4A, 0x5B9CCA4F, 0x682E6FF3, 0x748F82EE, 0x78A5636F, 0x84C87814L, 0x8CC70208L, 0x90BEFFFAL, 0xA4506CEBL, 0xBEF9A3F7L, 0xC67178F2L}
+#define K {0x428A2F98, 0x71374491, 0xB5C0FBCFU, 0xE9B5DBA5U, 0x3956C25B, 0x59F111F1, 0x923F82A4U, 0xAB1C5ED5U, 0xD807AA98U, 0x12835B01, 0x243185BE, 0x550C7DC3, 0x72BE5D74, 0x80DEB1FEU, 0x9BDC06A7U, 0xC19BF174U, 0xE49B69C1U, 0xEFBE4786U, 0xFC19DC6, 0x240CA1CC, 0x2DE92C6F, 0x4A7484AA, 0x5CB0A9DC, 0x76F988DA, 0x983E5152U, 0xA831C66DU, 0xB00327C8U, 0xBF597FC7U, 0xC6E00BF3U, 0xD5A79147U, 0x6CA6351, 0x14292967, 0x27B70A85, 0x2E1B2138, 0x4D2C6DFC, 0x53380D13, 0x650A7354, 0x766A0ABB, 0x81C2C92EU, 0x92722C85U, 0xA2BFE8A1U, 0xA81A664BU, 0xC24B8B70U, 0xC76C51A3U, 0xD192E819U, 0xD6990624U, 0xF40E3585U, 0x106AA070, 0x19A4C116, 0x1E376C08, 0x2748774C, 0x34B0BCB5, 0x391C0CB3, 0x4ED8AA4A, 0x5B9CCA4F, 0x682E6FF3, 0x748F82EE, 0x78A5636F, 0x84C87814U, 0x8CC70208U, 0x90BEFFFAU, 0xA4506CEBU, 0xBEF9A3F7U, 0xC67178F2U}
 
 static void transform(struct context *ctx, uint8_t (*data)[]) {
 	uint32_t m[64] = {0};
@@ -100,7 +100,7 @@ static void update(struct context *ctx, uint8_t (*msg)[], uint32_t msgLen) {
 		ctx->datalen = ctx->datalen + 1;
 		if (ctx->datalen == 64) {
 			transform(ctx, &ctx->data);
-			ctx->bitlen = ctx->bitlen + 512;
+			ctx->bitlen = ctx->bitlen + 512LL;
 			ctx->datalen = 0;
 		}
 		i = i + 1;
@@ -115,32 +115,32 @@ static void final(struct context *ctx, sha256_Hash *outHash) {
 	}
 	ctx->data[i] = 0x80;
 	i = i + 1;
-	memset((void *)&ctx->data[i], 0, (size_t)(n - i));
+	memset(&ctx->data[i], 0, (size_t)(n - i));
 	if (ctx->datalen >= 56) {
 		transform(ctx, &ctx->data);
-		memset((void *)&ctx->data, 0, 56);
+		memset(&ctx->data, 0, 56LL);
 	}
-	ctx->bitlen = ctx->bitlen + (uint64_t)ctx->datalen * 8;
-	ctx->data[63] = (uint8_t)(ctx->bitlen >> 0);
-	ctx->data[62] = (uint8_t)(ctx->bitlen >> 8);
-	ctx->data[61] = (uint8_t)(ctx->bitlen >> 16);
-	ctx->data[60] = (uint8_t)(ctx->bitlen >> 24);
-	ctx->data[59] = (uint8_t)(ctx->bitlen >> 32);
-	ctx->data[58] = (uint8_t)(ctx->bitlen >> 40);
-	ctx->data[57] = (uint8_t)(ctx->bitlen >> 48);
-	ctx->data[56] = (uint8_t)(ctx->bitlen >> 56);
+	ctx->bitlen = ctx->bitlen + (uint64_t)ctx->datalen * 8LL;
+	ctx->data[63] = (uint8_t)((uint64_t)ctx->bitlen >> 0);
+	ctx->data[62] = (uint8_t)((uint64_t)ctx->bitlen >> 8);
+	ctx->data[61] = (uint8_t)((uint64_t)ctx->bitlen >> 16);
+	ctx->data[60] = (uint8_t)((uint64_t)ctx->bitlen >> 24);
+	ctx->data[59] = (uint8_t)((uint64_t)ctx->bitlen >> 32);
+	ctx->data[58] = (uint8_t)((uint64_t)ctx->bitlen >> 40);
+	ctx->data[57] = (uint8_t)((uint64_t)ctx->bitlen >> 48);
+	ctx->data[56] = (uint8_t)((uint64_t)ctx->bitlen >> 56);
 	transform(ctx, &ctx->data);
 	i = 0;
 	while (i < 4) {
 		const uint32_t sh = 24 - i * 8;
-		(*outHash)[i + 0] = (uint8_t)(ctx->state[0] >> sh);
-		(*outHash)[i + 4] = (uint8_t)(ctx->state[1] >> sh);
-		(*outHash)[i + 8] = (uint8_t)(ctx->state[2] >> sh);
-		(*outHash)[i + 12] = (uint8_t)(ctx->state[3] >> sh);
-		(*outHash)[i + 16] = (uint8_t)(ctx->state[4] >> sh);
-		(*outHash)[i + 20] = (uint8_t)(ctx->state[5] >> sh);
-		(*outHash)[i + 24] = (uint8_t)(ctx->state[6] >> sh);
-		(*outHash)[i + 28] = (uint8_t)(ctx->state[7] >> sh);
+		(*outHash)[i + 0] = ctx->state[0] >> sh;
+		(*outHash)[i + 4] = ctx->state[1] >> sh;
+		(*outHash)[i + 8] = ctx->state[2] >> sh;
+		(*outHash)[i + 12] = ctx->state[3] >> sh;
+		(*outHash)[i + 16] = ctx->state[4] >> sh;
+		(*outHash)[i + 20] = ctx->state[5] >> sh;
+		(*outHash)[i + 24] = ctx->state[6] >> sh;
+		(*outHash)[i + 28] = ctx->state[7] >> sh;
 		i = i + 1;
 	}
 }

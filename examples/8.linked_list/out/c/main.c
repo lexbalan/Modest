@@ -10,7 +10,7 @@
 static void nat32_list_insert(struct list_list *lst, uint32_t x) {
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
-	list_append(lst, (void *)p_nat32);
+	list_append(lst, p_nat32);
 }
 
 static void list_print_forward(struct list_list *lst) {
@@ -84,7 +84,7 @@ int main(void) {
 	printf("-----------------------------------------\n");
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = 1234;
-	list_insert(list0, 4, (void *)p_nat32);
+	list_insert(list0, 4, p_nat32);
 	list_print_forward(list0);
 	return 0;
 }
