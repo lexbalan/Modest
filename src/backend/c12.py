@@ -1583,56 +1583,6 @@ def do_cstmt_const(x):
 	return dv
 
 
-
-
-"""
-# prints pair: <specifier> (<value>)
-def print_asm_pair(pair):
-	print_value(pair[0])
-	out(' (')
-	print_value(pair[1])
-	out(')')
-
-
-def print_stmt_asm2(x):
-	out('__asm__ volatile (')
-	indent_up()
-	nl_indent(1)
-	s = x.text.asset
-	s = s.replace('\n', '\\n')
-	out('"' + s + '"')
-
-	# print 'out' pairs
-	args1 = x.outputs
-	if len(args1) > 0:
-		nl_indent(1)
-		out(': ')
-		print_list_by(args1, print_asm_pair)
-	else:
-		out(':')
-
-	# print 'in' pairs
-	args2 = x.inputs
-	if len(args2) > 0:
-		nl_indent(1)
-		out(': ')
-		print_list_by(args2, print_asm_pair)
-	else:
-		out(':')
-
-	# print clobber list
-	if len(x.clobbers) > 0:
-		nl_indent(1)
-		out(': ')
-		print_list_by(x.clobbers, print_value)
-
-	indent_down()
-	nl_indent(1)
-	out(");")
-	return
-"""
-
-
 def do_stmt_asm(x):
 	text = x.text.asset
 
@@ -1649,6 +1599,7 @@ def do_stmt_asm(x):
 		clobbers.append(do_cvalue(clobber))
 
 	return CStmtAsm(text, outputs, inputs, clobbers)
+
 
 
 def do_cstmt(x):
