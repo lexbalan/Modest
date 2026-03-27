@@ -23,12 +23,12 @@ static bool testShift8(void) {
 		printf("error: Word8 0x80 >> 7 != 1\n");
 		return false;
 	}
-	x = 0x1 << 7;
+	x = 1 << 7;
 	if (x != 0x80) {
 		printf("error: 1 << 7 != 0x80\n");
 		return false;
 	}
-	x = 0x80 >> 7;
+	x = 128 >> 7;
 	if (x != 0x1) {
 		printf("error: 0x80 >> 7 != 1\n");
 		return false;
@@ -49,12 +49,12 @@ static bool testShift16(void) {
 		printf("error: Word16 0x8000 >> 15 != 1\n");
 		return false;
 	}
-	x = 0x1 << 15;
+	x = 1 << 15;
 	if (x != 0x8000) {
 		printf("error: 1 << 15 != 0x8000\n");
 		return false;
 	}
-	x = 0x8000 >> 15;
+	x = 32768 >> 15;
 	if (x != 0x1) {
 		printf("error: 0x8000 >> 15 != 1\n");
 		return false;
@@ -75,12 +75,12 @@ static bool testShift32(void) {
 		printf("error: Word32 0x80000000 >> 31 != 1\n");
 		return false;
 	}
-	x = 0x1 << 31;
+	x = 1 << 31;
 	if (x != 0x80000000U) {
 		printf("error: 1 << 31 != 0x80000000\n");
 		return false;
 	}
-	x = 0x80000000U >> 31;
+	x = 2147483648U >> 31;
 	if (x != 0x1) {
 		printf("error: 0x80000000 >> 31 != 1\n");
 		return false;
@@ -101,12 +101,12 @@ static bool testShift64(void) {
 		printf("error: Word64 0x8000000000000000 >> 63 != 1\n");
 		return false;
 	}
-	x = (uint64_t)(0x1LL << 63);
+	x = (uint64_t)((uint64_t)1 << 63);
 	if (x != 0x8000000000000000ULL) {
 		printf("error: 1 << 63 != 0x8000000000000000\n");
 		return false;
 	}
-	x = (uint64_t)(0x8000000000000000ULL >> 63);
+	x = 9223372036854775808ULL >> 63;
 	if (x != 0x1LL) {
 		printf("error: 0x8000000000000000 >> 63 != 1\n");
 		return false;
@@ -127,12 +127,12 @@ static bool testShift128(void) {
 		printf("error: Word128 0x80000000000000000000000000000000 >> 127 != 1\n");
 		return false;
 	}
-	x = (unsigned __int128)(BIG_INT128(0x0LL, 0x1LL) << 127);
+	x = (unsigned __int128)((unsigned __int128)1 << 127);
 	if (x != BIG_INT128(0x8000000000000000ULL, 0x0LL)) {
 		printf("error: 1 << 127 != 0x80000000000000000000000000000000\n");
 		return false;
 	}
-	x = (unsigned __int128)(BIG_INT128(0x8000000000000000ULL, 0x0LL) >> 127);
+	x = BIG_INT128(0x8000000000000000ULL, 0x0LL) >> 127;
 	if (x != BIG_INT128(0x0LL, 0x1LL)) {
 		printf("error: 0x80000000000000000000000000000000 >> 127 != 1\n");
 		return false;
@@ -155,8 +155,6 @@ int main(void) {
 	success = success && result;
 	result = testShift128();
 	success = success && result;
-	uint64_t s = (uint64_t)(4294967295U + 1);
-	printf("s = %lld\n", s);
 	printf("test ");
 	if (!success) {
 		printf("failed\n");

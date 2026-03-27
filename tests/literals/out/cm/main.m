@@ -5,9 +5,21 @@ include "stdlib"
 
 
 
+// Проверки правильности работы арифметики для больших литералов
+// Особенно актуальны для C бекенда, тк там 0xffffffff + 1 == 0 (!), etc.
 func test1 () -> Bool {
 	if 0xFFFFFFFF + 1 != 0x100000000 {
 		printf("error: 0xffffffff + 1 != 0x100000000\n")
+		return false
+	}
+
+	if 0xFFFFFFFF * 2 != 0x1FFFFFFFE {
+		printf("error: 0xffffffff * 2 != 0x1fffffffe\n")
+		return false
+	}
+
+	if 0xFFFFFFFF * 2 != 0xFFFFFFFF + 0xFFFFFFFF {
+		printf("error: 0xffffffff * 2 != 0xffffffff + 0xffffffff\n")
 		return false
 	}
 

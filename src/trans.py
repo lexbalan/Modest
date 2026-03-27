@@ -558,19 +558,20 @@ def do_value_shift(x):
 	asset = None
 	stage = HLIR_VALUE_STAGE_RUNTIME
 
+	type = left.type
+
 	if op == HLIR_VALUE_OP_SHL:
 		if left.isValueImmediate() and right.isValueImmediate():
 			stage = HLIR_VALUE_STAGE_COMPILETIME
 			if left.asset != None and right.asset != None:
 				asset = int(left.asset << right.asset)
 
-				if left.type.is_generic(): # or left.type.is_integer():
-					need_width = nbits_for_num(asset, signed=False)
-					left_nt = type_word_create(width=need_width, ti=x['ti'])
-					left_nt.generic = True
-					left = value_cons_implicit(left_nt, left)
+		if type.is_generic():
+			need_width = nbits_for_num(asset, signed=False)
+			type = type_word_create(width=need_width, ti=x['ti'])
+			type.generic = True
 
-		nv = ValueShl(left.type, left, right, ti=x['ti'])
+		nv = ValueShl(type, left, right, ti=x['ti'])
 
 
 	else: #if op == HLIR_VALUE_OP_SHR:
@@ -579,13 +580,12 @@ def do_value_shift(x):
 			if left.asset != None and right.asset != None:
 				asset = int(left.asset >> right.asset)
 
-				if left.type.is_generic():
-					need_width = nbits_for_num(left.asset, signed=False)
-					left_nt = type_word_create(width=need_width, ti=x['ti'])
-					left_nt.generic = True
-					left = value_cons_implicit(left_nt, left)
+		if type.is_generic():
+			need_width = nbits_for_num(asset, signed=False)
+			type = type_word_create(width=need_width, ti=x['ti'])
+			type.generic = True
 
-		nv = ValueShr(left.type, left, right, ti=x['ti'])
+		nv = ValueShr(type, left, right, ti=x['ti'])
 
 	nv.set_asset(asset)
 	nv.stage = stage

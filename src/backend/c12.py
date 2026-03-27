@@ -1115,14 +1115,24 @@ def do_cvalue_access(x, ctx):
 
 def do_cvalue_shl(x, ctx):
 	left = do_cvalue(x.left)
+
+	if x.type.width > 32 and x.left.type.width < x.type.width:
+		left = CValueCast(do_ctype(x.type), left)
+
 	right = do_cvalue(x.right)
-	return CValueShl(left, right)
+	cv = CValueShl(left, right)
+	return cv
 
 
 def do_cvalue_shr(x, ctx):
 	left = do_cvalue(x.left)
+
+	if x.type.width > 32 and x.left.type.width < x.type.width:
+		left = CValueCast(do_ctype(x.type), left)
+
 	right = do_cvalue(x.right)
-	return CValueShr(left, right)
+	cv = CValueShr(left, right)
+	return cv
 
 
 def do_cvalue_ref(x, ctx):

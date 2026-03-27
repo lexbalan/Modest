@@ -16,6 +16,14 @@ static bool test1(void) {
 		printf("error: 0xffffffff + 1 != 0x100000000\n");
 		return false;
 	}
+	if ((int64_t)4294967295U * (int64_t)2 != 8589934590LL) {
+		printf("error: 0xffffffff * 2 != 0x1fffffffe\n");
+		return false;
+	}
+	if ((int64_t)4294967295U * (int64_t)2 != (int64_t)4294967295U + (int64_t)4294967295U) {
+		printf("error: 0xffffffff * 2 != 0xffffffff + 0xffffffff\n");
+		return false;
+	}
 	if ((__int128_t)18446744073709551615ULL + (__int128_t)1 != BIG_INT128(0x1LL, 0x0LL)) {
 		printf("error: 0xffffffffffffffff + 1 != 0x10000000000000000\n");
 		return false;
