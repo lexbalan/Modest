@@ -1415,19 +1415,26 @@ class CStmtAsm(CStmt):
 	def __str__(self):
 		sstr = str_nl_indent(self.nl)
 		sstr += "__asm__ volatile ("
-		sstr += '"%s"' % self.text.replace('\n', '\\n\\\n')
+		sstr += '"%s" ' % self.text.replace('\n', '\\n\\\n')
 
+		sstr += ":"
 		items = ("%s (%s)" % (str(xx[0]), str(xx[1])) for xx in self.outputs)
-		if items != []:
-			sstr += " : " + ", ".join(items)
+		if len(self.outputs) > 0:
+			sstr += " " + ", ".join(items)
 
+		if self.outputs != []:
+			sstr += " "
+		sstr += ":"
 		items = ("%s (%s)" % (str(xx[0]), str(xx[1])) for xx in self.inputs)
-		if items != []:
-			sstr += " : " + ", ".join(items)
+		if len(self.inputs) > 0:
+			sstr += " " + ", ".join(items)
 
+		if self.inputs != []:
+			sstr += " "
+		sstr += ":"
 		items = (str(xx) for xx in self.clobbers)
-		if items != []:
-			sstr += " : " + ", ".join(items)
+		if len(self.clobbers) > 0:
+			sstr += " " + ", ".join(items)
 
 		sstr += ");"
 		return sstr

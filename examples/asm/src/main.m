@@ -4,6 +4,13 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
+@used
+func memoryBarrier () -> Unit {
+	//__asm("", [[], [], ["memory"]])
+	__asm("", [], [], ["memory"])
+}
+
+
 func sum64 (a: Int64, b: Int64) -> Int64 {
 	var sum: Int64
 	__asm("add %0, %1, %2", [["=r", sum]], [["r", a], ["r", b]], ["cc"])
