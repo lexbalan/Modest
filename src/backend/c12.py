@@ -254,19 +254,20 @@ def is_type_named(t):
 def do_ctype_pointer(t, specs=[]):
 	to = t.to
 
-	#if pointer_to_array_relax(t):
-	#	return CTypeArray(of=do_ctype(to.of))
-
-	if p2i_instead_p2a(to):
-		return CTypePointer(to=do_ctype(to.of), specs=specs)
-
 	# IMPORTANT:
 	# *[][]...([])T -> *[]T
 	# В си нельзя создать указатель на массив вида *[][]
 	# Но Modest это позволяет (!) НО при этом нельзя индексировать по такому указателю
 	# Для работы нужно его сперва привести к типу *[n][m]...([k]) и тогда уже можно индексировать
-	while to.is_open_array_of_open_array():
-		to = to.of
+	# Реализуется это в си через void * - (это лучший вариант)
+	if to.is_open_array_of_open_array():
+		return CTypePointer(to=CTypeNamed("void"), specs=specs)
+
+	#if pointer_to_array_relax(t):
+	#	return CTypeArray(of=do_ctype(to.of))
+
+	if p2i_instead_p2a(to):
+		return CTypePointer(to=do_ctype(to.of), specs=specs)
 
 	return CTypePointer(to=do_ctype(to), specs=specs)
 
