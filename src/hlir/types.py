@@ -576,9 +576,10 @@ brand_cnt = 0
 class Type(Entity):
 	def __init__(self, generic=False, width=0, ops=[], ti=None):
 		super().__init__(ti)
-		size = nbytes_for_bits(width)
+		size = 0
 		align = 1
-		if size > 0:
+		if width > 0:
+			size = nbytes_for_bits(width)
 			align = size
 		self.kind = HLIR_TYPE_KIND_UNKNOWN
 		self.generic = generic

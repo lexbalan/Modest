@@ -270,7 +270,7 @@ declare %Int @system([0 x %ConstChar]* %string)
 ; -- endstrings --
 define internal %Bool @testUnit() {
 ; if_0
-	br %Bool 1 , label %then_0, label %endif_0
+	br %Bool 0 , label %then_0, label %endif_0
 then_0:
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str1 to [0 x i8]*))
 	ret %Bool 0
