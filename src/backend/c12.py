@@ -147,7 +147,7 @@ def is_global_public(x):
 
 # Печатаем указатель на массив как указатель на его элемент
 # ТОЛЬКО когда это указатель на строку!
-def p2i_instead_p2a(t):
+def need_ptr_to_item_instead_of_ptr_to_array(t):
 	return t.is_array_of_char()
 
 
@@ -239,17 +239,6 @@ def is_type_named(t):
 	return hasattr(t, 'id') or (hasattr(t, 'c_anon_id') and t.c_anon_id != None)
 
 
-#class CType():
-#	def __init__(self, id_str=None, specs=None):
-#		self.id_str = id_str
-#		self.specs = specs if specs != None else []
-
-
-# Только для параметров функции!
-#def pointer_to_array_relax(t):
-#	return t.is_pointer_to_array()
-
-
 # преобразуем Modest TypePointer -> CIR TypePointer
 def do_ctype_pointer(t, specs=[]):
 	to = t.to
@@ -263,10 +252,7 @@ def do_ctype_pointer(t, specs=[]):
 	if to.is_open_array_of_open_array():
 		return CTypePointer(to=CTypeNamed("void"), specs=specs)
 
-	#if pointer_to_array_relax(t):
-	#	return CTypeArray(of=do_ctype(to.of))
-
-	if p2i_instead_p2a(to):
+	if need_ptr_to_item_instead_of_ptr_to_array(to):
 		return CTypePointer(to=do_ctype(to.of), specs=specs)
 
 	return CTypePointer(to=do_ctype(to), specs=specs)
@@ -326,9 +312,16 @@ def do_ctype_named(t, specs):
 	return CTypeNamed(id_str, specs=specs)
 
 
+xxx = False
+
 # преобразуем Modest Type -> CIR Type
 def do_ctype(t):
 	assert(isinstance(t, Type))
+
+	# Только для параметров функции!
+	if xxx:
+		if t.is_pointer_to_array():
+			return CTypeArray(of=do_ctype(t.to.of))
 
 	specs = []
 	if t.hasAttribute2('const'):    specs.append('const')
@@ -1075,15 +1068,12 @@ def do_cvalue_index(x, ctx):
 		vs = do_cvalue(left, ctx=ctx)
 		lx = CValueCast(ts, vs)
 
-	#else:
-	#	left_str += str_value(left, ctx=ctx)
+	if left.type.is_pointer_to_array():
+		if left.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM:
+			return CValueIndex(lx, index)
 
-#	if left.type.is_pointer() and not p2i_instead_p2a(left.type.to):
-#		left_str = "(*%s)" % left_str
-
-	if left.type.is_pointer_to_array() and not p2i_instead_p2a(left.type.to):
-		#lx = CValueSubexpr(CValueDeref(lx))
-		lx = CValueDeref(lx)
+		if not need_ptr_to_item_instead_of_ptr_to_array(left.type.to):
+			lx = CValueDeref(lx)
 
 	return CValueIndex(lx, index)
 
@@ -1140,7 +1130,7 @@ def do_cvalue_ref(x, ctx):
 	value = x.value
 	cv = do_cvalue(value, ctx=ctx)
 
-	if p2i_instead_p2a(x.type.to):
+	if need_ptr_to_item_instead_of_ptr_to_array(x.type.to):
 		if not (value.isValueIndex() or value.isValueSlice()):
 			#return CValueRef(cv)
 			# просто печатаем массив чаров как есть тк он автоматом decay to pointer
@@ -1635,7 +1625,10 @@ def do_decl_func(x):
 		else:
 			storage_class = 'inline'
 
+	global xxx
+	xxx = True
 	dv = CStmtDefVar(get_id_str(func), do_ctype(func.type), storage_class=storage_class, annotations=x.annotations)
+	xxx = False
 	return (dv,)
 	#out(str(dv))
 
@@ -1667,19 +1660,9 @@ def do_def_func(x):
 
 	cblock = do_cstmt_block(x.stmt)
 
-	# for any array parameter print local holder value
+	#create local copy for array parameters
 	for param in func.type.params:
 		if param.type.is_closed_array():
-			#nl_indent(1)
-			#paramId = get_id_str(param)
-			#print_variable(paramId, param.type)
-			#out(";")
-			#nl_indent(1)
-#			out("memcpy(%s, %s" % (paramId, '_' + paramId))
-#			out(", sizeof(")
-#			out(str_type(param.type))
-#			out("));")
-
 			paramId = get_id_str(param)
 			dv = CStmtDefVar(paramId, do_ctype(param.type))
 			mx = CStmtValueExpr(
@@ -1701,7 +1684,10 @@ def do_def_func(x):
 		cblock.stmts.append(CMacroUndef(id_str))
 	func_undef_list = []
 
+	global xxx
+	xxx = True
 	dv = CStmtDefFunc(get_id_str(func), do_ctype(func.type), cblock, storage_class=storage_class, annotations=x.annotations)
+	xxx = False
 
 	cfunc = None
 	return (dv,)

@@ -45,6 +45,13 @@ func facc (a: [3]Int32) -> {} {
 	//a[0] = 4  //TODO: error - assign to constant (!)
 }
 
+func fpacc (a: *[3]Int32) -> {} {
+	a[1] = 1
+}
+
+func fpacc2 (argv: *[]*Char8) -> {} {
+	//a[1] = 1
+}
 
 public func main () -> Int {
 	type LocalInt = Int32

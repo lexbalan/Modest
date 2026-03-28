@@ -48,13 +48,20 @@ static struct point p0 = (struct point){
 	.y = 2
 };
 
-static void farr(int32_t (*_sret_)[3]) {
+static void farr(int32_t _sret_[]) {
 	__builtin_memcpy(_sret_, &(int32_t [3]){1, 2, 3}, sizeof(int32_t [3]));
 }
 
-static void facc(int32_t (*_a)[3]) {
+static void facc(int32_t _a[]) {
 	int32_t a[3];
 	__builtin_memcpy(a, _a, sizeof(int32_t [3]));
+}
+
+static void fpacc(int32_t a[]) {
+	a[1] = 1;
+}
+
+static void fpacc2(char *argv[]) {
 }
 
 int main(void) {
@@ -163,7 +170,7 @@ int main(void) {
 //	return sum
 //}
 
-void main_print(char *form, ...) {
+void main_print(char form[], ...) {
 	va_list va;
 	va_list va2;
 	va_start(va, form);
