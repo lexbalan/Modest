@@ -31,7 +31,7 @@ static bool doTest(struct sha256_test_case *test) {
 	sha256_Hash test_hash;
 	uint8_t (*const msg)[] = (uint8_t (*)[])test->inputData;
 	const uint32_t msgLen = test->inputDataLen;
-	sha256_hash(msg, msgLen, &test_hash);
+	sha256_hash((uint8_t *)msg, msgLen, test_hash);
 	printf("'%s'", test->inputData);
 	printf(" -> ");
 	uint32_t i = 0;

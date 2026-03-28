@@ -6,7 +6,7 @@
 #include <string.h>
 #include "queue.h"
 
-void ringWord8_init(struct ring_word8_ring_word8 *q, uint8_t (*buf)[], uint32_t capacity) {
+void ringWord8_init(struct ring_word8_ring_word8 *q, uint8_t buf[], uint32_t capacity) {
 	queue_init(&q->queue, capacity);
 	q->data = buf;
 }

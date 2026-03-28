@@ -45,7 +45,7 @@ module_undef_list = []
 cfunc = None
 
 
-POINTER_TO_ARRAY_RELAX = False
+POINTER_TO_ARRAY_RELAX = True
 
 
 
@@ -326,7 +326,8 @@ def do_ctype(t, is_param=False):
 		if is_param:
 			# Только для параметров функции!
 			if t.is_pointer_to_array():
-				return CTypeArray(of=do_ctype(t.to.of), volume=t.to.volume)
+				if not need_ptr_to_item_instead_of_ptr_to_array(t.to):
+					return CTypeArray(of=do_ctype(t.to.of), volume=t.to.volume)
 
 	specs = []
 	if t.hasAttribute2('const'):    specs.append('const')

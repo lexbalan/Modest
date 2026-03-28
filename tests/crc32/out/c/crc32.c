@@ -26,11 +26,11 @@ void crc32_init(void) {
 	}
 }
 
-uint32_t crc32_run(uint8_t (*buf)[], uint32_t len) {
+uint32_t crc32_run(uint8_t buf[], uint32_t len) {
 	uint32_t crc = 0xFFFFFFFFU;
 	uint32_t i = 0;
 	while (i < len) {
-		const uint32_t x = (uint32_t)(*buf)[i];
+		const uint32_t x = (uint32_t)buf[i];
 		const uint32_t y = (crc ^ x) & 0xFF;
 		const uint8_t yy = (uint8_t)y;
 		crc = table[yy] ^ crc >> 8;

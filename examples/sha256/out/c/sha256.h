@@ -11,6 +11,6 @@ typedef uint8_t sha256_Hash[SHA256_HASH_SIZE];
 //func rotleft (a: Word32, b: Nat32) -> Word32 {
 //	return (a << b) or (a >> (32 - b))
 //}
-void sha256_hash(uint8_t (*msg)[], uint32_t msgLen, sha256_Hash *outHash);
+void sha256_hash(uint8_t msg[], uint32_t msgLen, uint8_t outHash[SHA256_HASH_SIZE]);
 #endif
 

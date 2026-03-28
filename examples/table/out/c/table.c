@@ -6,8 +6,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-static void separator(uint32_t (*sz)[], uint32_t n);
-static void printRow(char *(*raw_row)[], uint32_t (*sz)[], uint32_t nCols);
+static void separator(uint32_t sz[], uint32_t n);
+static void printRow(char *raw_row[], uint32_t sz[], uint32_t nCols);
 
 void table_print(table_Table *table) {
 	uint32_t i;
@@ -41,23 +41,23 @@ void table_print(table_Table *table) {
 		sz[i] = sz[i] + 2;
 		i = i + 1;
 	}
-	separator(&sz, table->nCols);
+	separator((uint32_t *)&sz, table->nCols);
 	if (table->header != NULL) {
-		printRow(table->header, &sz, table->nCols);
-		separator(&sz, table->nCols);
+		printRow((char **)table->header, (uint32_t *)&sz, table->nCols);
+		separator((uint32_t *)&sz, table->nCols);
 	}
 	i = 0;
 	while (i < table->nRows) {
-		printRow(&(*data)[i], &sz, table->nCols);
+		printRow((char **)&(*data)[i], (uint32_t *)&sz, table->nCols);
 		if (table->separate && i < table->nRows - 1) {
-			separator(&sz, table->nCols);
+			separator((uint32_t *)&sz, table->nCols);
 		}
 		i = i + 1;
 	}
-	separator(&sz, table->nCols);
+	separator((uint32_t *)&sz, table->nCols);
 }
 
-static void printRow(char *(*raw_row)[], uint32_t (*sz)[], uint32_t nCols) {
+static void printRow(char *raw_row[], uint32_t sz[], uint32_t nCols) {
 	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
 	uint32_t j = 0;
 	while (j < nCols) {
@@ -69,7 +69,7 @@ static void printRow(char *(*raw_row)[], uint32_t (*sz)[], uint32_t nCols) {
 			printf(" %s", s);
 		}
 		uint32_t k = 0;
-		while (k < (*sz)[j] - len) {
+		while (k < sz[j] - len) {
 			printf(" ");
 			k = k + 1;
 		}
@@ -78,12 +78,12 @@ static void printRow(char *(*raw_row)[], uint32_t (*sz)[], uint32_t nCols) {
 	printf("|\n");
 }
 
-static void separator(uint32_t (*sz)[], uint32_t n) {
+static void separator(uint32_t sz[], uint32_t n) {
 	uint32_t i = 0;
 	while (i < n) {
 		printf("+");
 		uint32_t j = 0;
-		while (j < (*sz)[i]) {
+		while (j < sz[i]) {
 			printf("-");
 			j = j + 1;
 		}

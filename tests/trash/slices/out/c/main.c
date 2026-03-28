@@ -16,10 +16,10 @@
 	} while (0)
 #include <stdlib.h>
 
-static void array_print(int32_t (*pa)[], uint32_t len) {
+static void array_print(int32_t pa[], uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
-		printf("a[%d] = %d\n", i, (*pa)[i]);
+		printf("a[%d] = %d\n", i, pa[i]);
 		i = i + 1;
 	}
 }
@@ -69,26 +69,26 @@ int main(void) {
 	#define aa 2
 	#define bb 8
 	int32_t (*const p)[bb - aa] = (int32_t (*)[bb - aa])&s[aa];
-	array_print(p, LENGTHOF(*p));
+	array_print((int32_t *)p, LENGTHOF(*p));
 	printf("--------------------------------------------\n");
 	(*p)[0] = 123;
-	array_print(p, LENGTHOF(*p));
+	array_print((int32_t *)p, LENGTHOF(*p));
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
 	int32_t (*pw)[] = (int32_t (*)[])&s;
 	printf("before\n");
-	array_print(pw, 10);
+	array_print((int32_t *)pw, 10);
 	int32_t ind = 1;
 	pw = (int32_t (*)[])&(*pw)[ind];
 	printf("after\n");
-	array_print(pw, 10);
+	array_print((int32_t *)pw, 10);
 	printf("--------------------------------------------\n");
 	printf("zero slice by var\n");
 	int32_t ss[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	int32_t k = 4;
 	int32_t j = 7;
 	__builtin_bzero((int32_t (*)[j - k])&ss[k], sizeof(int32_t [j - k]));
-	array_print(&ss, 10);
+	array_print((int32_t *)&ss, 10);
 	printf("--------------------------------------------\n");
 	printf("copy slice by var\n");
 	int32_t src[5] = {10, 20, 30, 40, 50};
@@ -96,7 +96,7 @@ int main(void) {
 	#define i1 3
 	#define j1 8
 	ARRCPY((int32_t (*)[j1 - i1])&dst[i1], ((&(int8_t [5]){11, 22, 33, 44, 55})), j1 - i1);
-	array_print(&dst, 10);
+	array_print((int32_t *)&dst, 10);
 	return 0;
 	#undef ax
 	#undef bx
