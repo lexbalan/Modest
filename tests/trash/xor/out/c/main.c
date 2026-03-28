@@ -6,16 +6,16 @@
 #include <stdio.h>
 
 static void xor_encrypter(uint8_t buf[], uint32_t buflen, uint8_t key[], uint32_t keylen) {
-	uint32_t i = 0;
-	uint32_t j = 0;
+	uint32_t i = 0U;
+	uint32_t j = 0U;
 	while (i < buflen) {
 		buf[i] = buf[i] ^ key[j];
-		if (j < keylen - 1) {
-			j = j + 1;
+		if (j < keylen - 1U) {
+			j = j + 1U;
 		} else {
-			j = 0;
+			j = 0U;
 		}
-		i = i + 1;
+		i = i + 1U;
 	}
 }
 //xor_encrypt = xor_encrypter
@@ -26,10 +26,10 @@ static char test_msg[MSG_LENGTH + 1] = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 
 static char test_key[KEY_LENGTH + 1] = {'a', 'b', 'c'};
 
 static void print_bytes(uint8_t buf[], uint32_t len) {
-	uint32_t i = 0;
+	uint32_t i = 0U;
 	while (i < len) {
 		printf("0x%02X ", buf[i]);
-		i = i + 1;
+		i = i + 1U;
 	}
 	printf("\n");
 }

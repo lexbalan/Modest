@@ -19,11 +19,11 @@ typedef uint32_t char32_t;
 #endif
 
 static bool testUnit(void) {
-	if ((size_t)0 != 0LL) {
+	if ((size_t)0 != 0ULL) {
 		printf("error: sizeof(Unit) != 0\n");
 		return false;
 	}
-	if ((size_t)1 != 1LL) {
+	if ((size_t)1 != 1ULL) {
 		printf("error: alignof(Unit) != 1\n");
 		return false;
 	}
@@ -32,11 +32,11 @@ static bool testUnit(void) {
 }
 
 static bool testBool(void) {
-	if (sizeof(bool) != 1LL) {
+	if (sizeof(bool) != 1ULL) {
 		printf("error: sizeof(Bool) != 1\n");
 		return false;
 	}
-	if (__alignof(bool) != 1LL) {
+	if (__alignof(bool) != 1ULL) {
 		printf("error: alignof(Bool) != 1\n");
 		return false;
 	}
@@ -45,35 +45,35 @@ static bool testBool(void) {
 }
 
 static bool testWord(void) {
-	if (sizeof(uint8_t) != 1LL) {
+	if (sizeof(uint8_t) != 1ULL) {
 		printf("error: sizeof(Word8) != 1\n");
 		return false;
 	}
-	if (sizeof(uint16_t) != 2LL) {
+	if (sizeof(uint16_t) != 2ULL) {
 		printf("error: sizeof(Word16) != 2\n");
 		return false;
 	}
-	if (sizeof(uint32_t) != 4LL) {
+	if (sizeof(uint32_t) != 4ULL) {
 		printf("error: sizeof(Word32) != 4\n");
 		return false;
 	}
-	if (sizeof(uint64_t) != 8LL) {
+	if (sizeof(uint64_t) != 8ULL) {
 		printf("error: sizeof(Word64) != 8\n");
 		return false;
 	}
-	if (__alignof(uint8_t) != 1LL) {
+	if (__alignof(uint8_t) != 1ULL) {
 		printf("error: alignof(Word8) != 1\n");
 		return false;
 	}
-	if (__alignof(uint16_t) != 2LL) {
+	if (__alignof(uint16_t) != 2ULL) {
 		printf("error: alignof(Word16) != 2\n");
 		return false;
 	}
-	if (__alignof(uint32_t) != 4LL) {
+	if (__alignof(uint32_t) != 4ULL) {
 		printf("error: alignof(Word32) != 4\n");
 		return false;
 	}
-	if (__alignof(uint64_t) != 8LL) {
+	if (__alignof(uint64_t) != 8ULL) {
 		printf("error: alignof(Word64) != 8\n");
 		return false;
 	}
@@ -82,35 +82,35 @@ static bool testWord(void) {
 }
 
 static bool testInt(void) {
-	if (sizeof(int8_t) != 1LL) {
+	if (sizeof(int8_t) != 1ULL) {
 		printf("error: sizeof(Int8) != 1\n");
 		return false;
 	}
-	if (sizeof(int16_t) != 2LL) {
+	if (sizeof(int16_t) != 2ULL) {
 		printf("error: sizeof(Int16) != 2\n");
 		return false;
 	}
-	if (sizeof(int32_t) != 4LL) {
+	if (sizeof(int32_t) != 4ULL) {
 		printf("error: sizeof(Int32) != 4\n");
 		return false;
 	}
-	if (sizeof(int64_t) != 8LL) {
+	if (sizeof(int64_t) != 8ULL) {
 		printf("error: sizeof(Int64) != 8\n");
 		return false;
 	}
-	if (__alignof(int8_t) != 1LL) {
+	if (__alignof(int8_t) != 1ULL) {
 		printf("error: alignof(Int8) != 1\n");
 		return false;
 	}
-	if (__alignof(int16_t) != 2LL) {
+	if (__alignof(int16_t) != 2ULL) {
 		printf("error: alignof(Int16) != 2\n");
 		return false;
 	}
-	if (__alignof(int32_t) != 4LL) {
+	if (__alignof(int32_t) != 4ULL) {
 		printf("error: alignof(Int32) != 4\n");
 		return false;
 	}
-	if (__alignof(int64_t) != 8LL) {
+	if (__alignof(int64_t) != 8ULL) {
 		printf("error: alignof(Int64) != 8\n");
 		return false;
 	}
@@ -119,35 +119,35 @@ static bool testInt(void) {
 }
 
 static bool testNat(void) {
-	if (sizeof(uint8_t) != 1LL) {
+	if (sizeof(uint8_t) != 1ULL) {
 		printf("error: sizeof(Nat8) != 1\n");
 		return false;
 	}
-	if (sizeof(uint16_t) != 2LL) {
+	if (sizeof(uint16_t) != 2ULL) {
 		printf("error: sizeof(Nat16) != 2\n");
 		return false;
 	}
-	if (sizeof(uint32_t) != 4LL) {
+	if (sizeof(uint32_t) != 4ULL) {
 		printf("error: sizeof(Nat32) != 4\n");
 		return false;
 	}
-	if (sizeof(uint64_t) != 8LL) {
+	if (sizeof(uint64_t) != 8ULL) {
 		printf("error: sizeof(Nat64) != 8\n");
 		return false;
 	}
-	if (__alignof(uint8_t) != 1LL) {
+	if (__alignof(uint8_t) != 1ULL) {
 		printf("error: alignof(Nat8) != 1\n");
 		return false;
 	}
-	if (__alignof(uint16_t) != 2LL) {
+	if (__alignof(uint16_t) != 2ULL) {
 		printf("error: alignof(Nat16) != 2\n");
 		return false;
 	}
-	if (__alignof(uint32_t) != 4LL) {
+	if (__alignof(uint32_t) != 4ULL) {
 		printf("error: alignof(Nat32) != 4\n");
 		return false;
 	}
-	if (__alignof(uint64_t) != 8LL) {
+	if (__alignof(uint64_t) != 8ULL) {
 		printf("error: alignof(Nat64) != 8\n");
 		return false;
 	}
@@ -156,27 +156,27 @@ static bool testNat(void) {
 }
 
 static bool testChar(void) {
-	if (sizeof(char) != 1LL) {
+	if (sizeof(char) != 1ULL) {
 		printf("error: sizeof(Char8) != 1\n");
 		return false;
 	}
-	if (sizeof(char16_t) != 2LL) {
+	if (sizeof(char16_t) != 2ULL) {
 		printf("error: sizeof(Char16) != 2\n");
 		return false;
 	}
-	if (sizeof(char32_t) != 4LL) {
+	if (sizeof(char32_t) != 4ULL) {
 		printf("error: sizeof(Char32) != 4\n");
 		return false;
 	}
-	if (__alignof(char) != 1LL) {
+	if (__alignof(char) != 1ULL) {
 		printf("error: alignof(Char8) != 1\n");
 		return false;
 	}
-	if (__alignof(char16_t) != 2LL) {
+	if (__alignof(char16_t) != 2ULL) {
 		printf("error: alignof(Char16) != 2\n");
 		return false;
 	}
-	if (__alignof(char32_t) != 4LL) {
+	if (__alignof(char32_t) != 4ULL) {
 		printf("error: alignof(Char32) != 4\n");
 		return false;
 	}
@@ -185,19 +185,19 @@ static bool testChar(void) {
 }
 
 static bool testFloat(void) {
-	if (sizeof(float) != 4LL) {
+	if (sizeof(float) != 4ULL) {
 		printf("error: sizeof(Float32) != 4\n");
 		return false;
 	}
-	if (sizeof(double) != 8LL) {
+	if (sizeof(double) != 8ULL) {
 		printf("error: sizeof(Float64) != 8\n");
 		return false;
 	}
-	if (__alignof(float) != 4LL) {
+	if (__alignof(float) != 4ULL) {
 		printf("error: alignof(Float32) != 4\n");
 		return false;
 	}
-	if (__alignof(double) != 8LL) {
+	if (__alignof(double) != 8ULL) {
 		printf("error: alignof(Float64) != 8\n");
 		return false;
 	}
@@ -206,19 +206,19 @@ static bool testFloat(void) {
 }
 
 static bool testFixed(void) {
-	if (sizeof(int32_t) != 4LL) {
+	if (sizeof(int32_t) != 4ULL) {
 		printf("error: sizeof(Fixed32) != 4\n");
 		return false;
 	}
-	if (sizeof(int64_t) != 8LL) {
+	if (sizeof(int64_t) != 8ULL) {
 		printf("error: sizeof(Fixed64) != 8\n");
 		return false;
 	}
-	if (__alignof(int32_t) != 4LL) {
+	if (__alignof(int32_t) != 4ULL) {
 		printf("error: alignof(Fixed32) != 4\n");
 		return false;
 	}
-	if (__alignof(int64_t) != 8LL) {
+	if (__alignof(int64_t) != 8ULL) {
 		printf("error: alignof(Fixed64) != 8\n");
 		return false;
 	}

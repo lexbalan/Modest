@@ -21,8 +21,8 @@ typedef uint32_t char32_t;
 #endif
 static uint8_t ratSymbolUTF8[5] = {0xF0, 0x9F, 0x90, 0x80, 0x0};
 static uint16_t ratSymbolUTF16[3] = {0xD83D, 0xDC00, (uint16_t)0};
-static uint32_t ratSymbolUTF32[3] = {0x1F400, (uint32_t)0, (uint32_t)0};
-static uint32_t ratSymbolUTF322[3] = {0x0, 0x0, 0x0};
+static uint32_t ratSymbolUTF32[3] = {0x1F400U, (uint32_t)0, (uint32_t)0};
+static uint32_t ratSymbolUTF322[3] = {0x0U, 0x0U, 0x0U};
 #define ARR_PARTYCORN {'🎉'}
 #define ARR_UNICORN {'🦄'}
 #define ARR_RAT {'🐀'}

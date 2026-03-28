@@ -70,7 +70,7 @@ static void test_records(void) {
 
 int main(void) {
 	printf("records test\n");
-	#define ver {.major = 0, .minor = 7}
+	#define ver {.major = 0U, .minor = 7U}
 	if (__builtin_memcmp(&(struct {uint32_t major; uint32_t minor;})ver, &(struct {uint32_t major; uint32_t minor;}){.major = 0, .minor = 7}, sizeof(struct {uint32_t major; uint32_t minor;})) == 0) {
 		printf("version 0.7\n");
 	} else {

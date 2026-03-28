@@ -23,8 +23,8 @@ int main(void) {
 	const char32_t c = U'🐀';
 	char *const s = "Hi!";
 	const int32_t i = (int32_t)-1;
-	const uint32_t n = 123;
-	const uint32_t x = 305419903;
+	const uint32_t n = 123U;
+	const uint32_t x = 305419903U;
 	console_print("\\\n");
 	console_print("@\n");
 	console_print("#AA#\n");

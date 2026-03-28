@@ -22,11 +22,11 @@ static struct test tests[3] = {(struct test){
 }, (struct test){
 	.data = {'T', 'h', 'e', ' ', 'q', 'u', 'i', 'c', 'k', ' ', 'b', 'r', 'o', 'w', 'n', ' ', 'f', 'o', 'x', ' ', 'j', 'u', 'm', 'p', 's', ' ', 'o', 'v', 'e', 'r', ' ', 't', 'h', 'e', ' ', 'l', 'a', 'z', 'y', ' ', 'd', 'o', 'g'},
 	.len = 43,
-	.hash = 1095738169
+	.hash = 1095738169U
 }, (struct test){
 	.data = {'T', 'e', 's', 't', ' ', 'v', 'e', 'c', 't', 'o', 'r', ' ', 'f', 'r', 'o', 'm', ' ', 'f', 'e', 'b', 'o', 'o', 't', 'i', '.', 'c', 'o', 'm'},
 	.len = 28,
-	.hash = 210206561
+	.hash = 210206561U
 }};
 
 static bool runTest(struct test *test) {
@@ -38,7 +38,7 @@ int main(void) {
 	printf("test CRC32\n");
 	crc32_init();
 	bool success = true;
-	uint32_t i = 0;
+	uint32_t i = 0U;
 	while (i < LENGTHOF(tests)) {
 		if (!runTest(&tests[i])) {
 			printf("test #%d failed\n", i);
@@ -46,7 +46,7 @@ int main(void) {
 		} else {
 			printf("test #%d passed\n", i);
 		}
-		i = i + 1;
+		i = i + 1U;
 	}
 	printf("test ");
 	if (!success) {

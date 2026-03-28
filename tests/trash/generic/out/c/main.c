@@ -106,7 +106,7 @@ static bool test_generic_char(void) {
 
 static bool test_generic_array(void) {
 	#define a {0, 1, 2, 3}
-	uint32_t i = 0;
+	uint32_t i = 0U;
 	if (__builtin_memcmp(&(const int8_t [4])a, &(int8_t [4]){0, 1, 2, 3}, sizeof(const int8_t [4])) != 0) {
 		printf("error: a != [0, 1, 2, 3]\n");
 		return false;

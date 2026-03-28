@@ -40,17 +40,17 @@ int main(void) {
 		printf("error: cannot create list");
 		return 1;
 	}
-	nat32_list_insert(list0, 0);
-	nat32_list_insert(list0, 10);
-	nat32_list_insert(list0, 20);
-	nat32_list_insert(list0, 30);
-	nat32_list_insert(list0, 40);
-	nat32_list_insert(list0, 50);
-	nat32_list_insert(list0, 60);
-	nat32_list_insert(list0, 70);
-	nat32_list_insert(list0, 80);
-	nat32_list_insert(list0, 90);
-	nat32_list_insert(list0, 100);
+	nat32_list_insert(list0, 0U);
+	nat32_list_insert(list0, 10U);
+	nat32_list_insert(list0, 20U);
+	nat32_list_insert(list0, 30U);
+	nat32_list_insert(list0, 40U);
+	nat32_list_insert(list0, 50U);
+	nat32_list_insert(list0, 60U);
+	nat32_list_insert(list0, 70U);
+	nat32_list_insert(list0, 80U);
+	nat32_list_insert(list0, 90U);
+	nat32_list_insert(list0, 100U);
 	const uint32_t list_size = list_size_get(list0);
 	printf("linked list size: %u\n", list_size);
 	list_print_forward(list0);
@@ -83,7 +83,7 @@ int main(void) {
 	}
 	printf("-----------------------------------------\n");
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
-	*p_nat32 = 1234;
+	*p_nat32 = 1234U;
 	list_insert(list0, 4, p_nat32);
 	list_print_forward(list0);
 	return 0;

@@ -43,7 +43,7 @@ static uint16_t gettok(struct tokenizer *t, char *output, uint16_t lim) {
 		if (c != ' ' && c != '\t') {
 			break;
 		}
-		t->position = t->position + 1;
+		t->position = t->position + 1U;
 	}
 	if (c == '\n' || c == '\x0') {
 		return 0;
@@ -53,14 +53,14 @@ static uint16_t gettok(struct tokenizer *t, char *output, uint16_t lim) {
 	if (!is_blank(c)) {
 		while (!is_blank(c)) {
 			output[outpos] = c;
-			t->position = t->position + 1;
+			t->position = t->position + 1U;
 			outpos = outpos + 1;
 			c = t->input[t->position];
 		}
 		output[outpos] = '\x0';
 	} else {
 		output[outpos] = c;
-		t->position = t->position + 1;
+		t->position = t->position + 1U;
 		outpos = outpos + 1;
 	}
 	return outpos;
@@ -89,14 +89,14 @@ static void tokenize(struct tokenizer *tokenizer) {
 static void execute(char *cmd, uint16_t argc, char *argv[]) {
 	printf("%s (n=%d)", cmd, argc);
 	printf(" [");
-	uint32_t i = 0;
+	uint32_t i = 0U;
 	while (true) {
 		char *const ptok = argv[i];
 		if (ptok == NULL) {
 			break;
 		}
 		printf("'%s'", ptok);
-		i = i + 1;
+		i = i + 1U;
 	}
 	printf("]\n");
 }

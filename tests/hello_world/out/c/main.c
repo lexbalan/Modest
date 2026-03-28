@@ -42,7 +42,7 @@ static void foo(int32_t a, int64_t b) {
 	return;
 }
 #define C 15
-static uint32_t k[3] = {0x1, 0x2, 0x3};
+static uint32_t k[3] = {0x1U, 0x2U, 0x3U};
 static struct point p0 = (struct point){
 	.x = 1,
 	.y = 2
@@ -57,17 +57,17 @@ static void facc(int32_t (*_a)[3]) {
 	__builtin_memcpy(a, _a, sizeof(int32_t [3]));
 }
 
-static void fpacc(int32_t (*a)[3]) {
-	(*a)[1] = 1;
+static void fpacc(int32_t a[3]) {
+	a[1] = 1;
 	int32_t slice[1 - 0];
-	__builtin_memcpy(&slice, (int32_t (*)[1 - 0])&(*a)[0], sizeof(const int32_t [1 - 0]));
+	__builtin_memcpy(&slice, (int32_t (*)[1 - 0])&a[0], sizeof(const int32_t [1 - 0]));
 }
 
-static void fpacc2(char *(*argv)[]) {
+static void fpacc2(char *argv[]) {
 }
 
-static void fpacc3(int32_t (*a)[3][3]) {
-	(*a)[0][0] = 1;
+static void fpacc3(int32_t a[3][3]) {
+	a[0][0] = 1;
 }
 
 int main(void) {
@@ -92,12 +92,12 @@ int main(void) {
 	char *s1 = "B";
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
-	uint64_t w = 0x1LL << 63;
+	uint64_t w = 0x1ULL << 63;
 	printf("w = %llx\n", w);
 	int16_t x1 = -1;
 	uint32_t x2 = (uint32_t)(uint16_t)x1;
 	printf("x2 = %llx\n", x2);
-	if (x2 != 0xFFFF) {
+	if (x2 != 0xFFFFU) {
 	}
 	int32_t arr[3] = {1, 2, 3};
 	int32_t arr2[3];

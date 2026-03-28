@@ -24,13 +24,13 @@ static ssize_t my_printf(char *format, ...) {
 }
 
 int main(void) {
-	uint32_t k = 10;
+	uint32_t k = 10U;
 	my_printf("My Printf Test %u\n", k);
 	const char c = '$';
 	char *const s = "Hi!";
 	const int32_t i = (int32_t)-1;
-	const uint32_t n = 123;
-	const uint32_t x = 305419903;
+	const uint32_t n = 123U;
+	const uint32_t x = 305419903U;
 	my_printf("\x0\x0\n");
 	my_printf("c = '%c'\n", c);
 	my_printf("s = \"%s\"\n", s);
