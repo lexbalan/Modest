@@ -103,8 +103,6 @@ typeUnit.id.c = 'void'
 typeUnit.id.llvm = 'void'
 typeUnit.id.c_type = 'void'
 
-
-
 bool_id = Id('Bool')
 bool_id.c = 'bool'
 bool_id.llvm = 'Bool'
