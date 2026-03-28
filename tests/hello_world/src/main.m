@@ -47,10 +47,15 @@ func facc (a: [3]Int32) -> {} {
 
 func fpacc (a: *[3]Int32) -> {} {
 	a[1] = 1
+	let slice = a[0:1]
 }
 
 func fpacc2 (argv: *[]*Char8) -> {} {
 	//a[1] = 1
+}
+
+func fpacc3 (a: *[3][3]Int32) -> {} {
+	a[0][0] = 1
 }
 
 public func main () -> Int {

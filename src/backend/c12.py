@@ -317,20 +317,15 @@ def do_ctype_named(t, specs):
 	return CTypeNamed(id_str, specs=specs)
 
 
-# Это указатель на массив который можно записать просто как int a[] (а не как int (*)[] - упростить)
-# (это упрощение работает только для параметров функций)
-def is_xxx(t):
-	return t.is_pointer_to_array() and not t.to.of.is_array()
-
 
 # преобразуем Modest Type -> CIR Type
 def do_ctype(t, is_param=False):
 	assert(isinstance(t, Type))
 
-	# Только для параметров функции!
 	if POINTER_TO_ARRAY_RELAX:
 		if is_param:
-			if is_xxx(t):
+			# Только для параметров функции!
+			if t.is_pointer_to_array():
 				return CTypeArray(of=do_ctype(t.to.of), volume=t.to.volume)
 
 	specs = []
@@ -1061,8 +1056,7 @@ def doo_call(func, args, ctx):
 				# Если это передача аргумента в параметр функции с типом *[]X, то тут особые правила
 				# Тк указатели на массив передаваемые в функцию как параметры могут быть записаны
 				# как int a[] вместо int (*a)[]; Это облегчает чтение кода и мы используем этот сахар
-				if is_xxx(av.type):
-					# mass
+				if av.type.is_pointer_to_array():
 					if not av.type.to.is_array_of_char():
 						if av.isValueRef() and not (av.value.isValueIndex() or av.value.isValueSlice()):
 							av = av.value
@@ -1094,7 +1088,7 @@ def do_cvalue_index(x, ctx):
 	if left.type.is_pointer_to_array():
 		if POINTER_TO_ARRAY_RELAX:
 			if left.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM:
-				if is_xxx(left.type):
+				if left.type.is_pointer_to_array():
 					return CValueIndex(lx, index)
 
 		if not need_ptr_to_item_instead_of_ptr_to_array(left.type.to):
