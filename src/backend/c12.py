@@ -45,6 +45,10 @@ module_undef_list = []
 cfunc = None
 
 
+POINTER_TO_ARRAY_RELAX = False
+
+
+
 def newline(n=1):
 	out(str_newline(n))
 
@@ -263,13 +267,14 @@ def do_ctype_func(t, specs=[]):
 	params = []
 	for p in t.params:
 		id_str = p.id.str
-		arg_ctype=do_ctype(p.type)
+		arg_ctype=do_ctype(p.type, is_param=True)
 		if p.type.is_array():
 			id_str = '_' + id_str
 			arg_ctype = do_ctype(TypePointer(p.type))
 			#arg_ctype.to.of.specs = ['const']
 			#arg_ctype.mark = '$'
 		params.append(CField(id_str=id_str, type=arg_ctype, specs=[]))
+
 
 	if not t.to.is_array():
 		if t.to.is_unit():
@@ -312,16 +317,21 @@ def do_ctype_named(t, specs):
 	return CTypeNamed(id_str, specs=specs)
 
 
-xxx = False
+# Это указатель на массив который можно записать просто как int a[] (а не как int (*)[] - упростить)
+# (это упрощение работает только для параметров функций)
+def is_xxx(t):
+	return t.is_pointer_to_array() and not t.to.of.is_array()
+
 
 # преобразуем Modest Type -> CIR Type
-def do_ctype(t):
+def do_ctype(t, is_param=False):
 	assert(isinstance(t, Type))
 
 	# Только для параметров функции!
-	if xxx:
-		if t.is_pointer_to_array():
-			return CTypeArray(of=do_ctype(t.to.of))
+	if POINTER_TO_ARRAY_RELAX:
+		if is_param:
+			if is_xxx(t):
+				return CTypeArray(of=do_ctype(t.to.of), volume=t.to.volume)
 
 	specs = []
 	if t.hasAttribute2('const'):    specs.append('const')
@@ -1032,9 +1042,9 @@ def do_cvalue_cast(type, value, ctx, raw_cast=False):
 
 
 def do_cvalue_call(x, ctx):
-	return doo_call(x.func, x.args)
+	return doo_call(x.func, x.args, ctx)
 
-def doo_call(func, args):
+def doo_call(func, args, ctx):
 	left = do_cvalue(func)
 	xargs = []
 	for arg in args:
@@ -1046,6 +1056,19 @@ def doo_call(func, args):
 			# тк функции си не умеют получать массивы по значению
 			a = do_cvalue_as_ptr(av)
 		else:
+
+			if POINTER_TO_ARRAY_RELAX:
+				# Если это передача аргумента в параметр функции с типом *[]X, то тут особые правила
+				# Тк указатели на массив передаваемые в функцию как параметры могут быть записаны
+				# как int a[] вместо int (*a)[]; Это облегчает чтение кода и мы используем этот сахар
+				if is_xxx(av.type):
+					# mass
+					if not av.type.to.is_array_of_char():
+						if av.isValueRef() and not (av.value.isValueIndex() or av.value.isValueSlice()):
+							av = av.value
+						else:
+							av = ValueCons(TypePointer(av.type.to.of), av, 'explicit', av.ti)
+
 			a = do_cvalue(av)
 
 		xargs.append(a)
@@ -1069,8 +1092,10 @@ def do_cvalue_index(x, ctx):
 		lx = CValueCast(ts, vs)
 
 	if left.type.is_pointer_to_array():
-		if left.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM:
-			return CValueIndex(lx, index)
+		if POINTER_TO_ARRAY_RELAX:
+			if left.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM:
+				if is_xxx(left.type):
+					return CValueIndex(lx, index)
 
 		if not need_ptr_to_item_instead_of_ptr_to_array(left.type.to):
 			lx = CValueDeref(lx)
@@ -1418,7 +1443,7 @@ def print_value(x, ctx=[]):
 def do_assign_array(left, right, ti):
 	# array = function()
 	if right.isValueCall():
-		return CStmtValueExpr(doo_call(right.func, right.args + [Initializer(Id("sret"), left)]))
+		return CStmtValueExpr(doo_call(right.func, right.args + [Initializer(Id("sret"), left)], ctx=[]))
 
 	rv = get_root_value(right)
 	if rv.isValueZero():
@@ -1625,10 +1650,8 @@ def do_decl_func(x):
 		else:
 			storage_class = 'inline'
 
-	global xxx
-	xxx = True
-	dv = CStmtDefVar(get_id_str(func), do_ctype(func.type), storage_class=storage_class, annotations=x.annotations)
-	xxx = False
+	ftype = do_ctype(func.type)
+	dv = CStmtDefVar(get_id_str(func), ftype, storage_class=storage_class, annotations=x.annotations)
 	return (dv,)
 	#out(str(dv))
 
@@ -1684,10 +1707,8 @@ def do_def_func(x):
 		cblock.stmts.append(CMacroUndef(id_str))
 	func_undef_list = []
 
-	global xxx
-	xxx = True
-	dv = CStmtDefFunc(get_id_str(func), do_ctype(func.type), cblock, storage_class=storage_class, annotations=x.annotations)
-	xxx = False
+	ftype = do_ctype(func.type)
+	dv = CStmtDefFunc(get_id_str(func), ftype, cblock, storage_class=storage_class, annotations=x.annotations)
 
 	cfunc = None
 	return (dv,)
