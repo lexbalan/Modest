@@ -911,7 +911,6 @@ def do_cvalue_cons_nat(x, ctx):
 	if value.isValueImmediate() and value.isValueLiteral():
 		if from_type.is_integer():
 			cv = do_cvalue_literal_number(type, value, ctx)
-			cv.mark = '??'
 			return cv
 
 	if from_type.is_word() and type.width == from_type.width:
@@ -1037,6 +1036,7 @@ def do_cvalue_cast(type, value, ctx, raw_cast=False):
 	return cv
 
 
+
 def do_cvalue_call(x, ctx):
 	return doo_call(x.func, x.args, ctx)
 
@@ -1050,7 +1050,8 @@ def doo_call(func, args, ctx):
 		if av.type.is_array() and not av.type.is_array_of_char():
 			# Если в функцию передается массив по значению - передаем указатель на него (!)
 			# тк функции си не умеют получать массивы по значению
-			a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
+			#a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
+			a = get_cvalue_ptr_to_array(av, parr_relax=True)
 		else:
 
 			if POINTER_TO_ARRAY_RELAX:
@@ -1297,8 +1298,8 @@ def do_cvalue_eq(x, logic, ctx):
 	rx = None
 	if left.type.is_aggregate():
 		# сравниваем массивы / записи
-		a0 = do_cvalue_as_ptr(left)
-		a1 = do_cvalue_as_ptr(right)
+		a0 = do_cvalue_as_ptr(left)#, parr_relax=True)
+		a1 = do_cvalue_as_ptr(right)#, parr_relax=True)
 		a2 = get_cvalue_size_for(left, right, ti=x.ti)
 		lx = CValueCall(CValueNamed("__builtin_memcmp"), [a0, a1, a2])
 		rx = CValueInteger(0)
@@ -1309,8 +1310,8 @@ def do_cvalue_eq(x, logic, ctx):
 		ctype_pointer_to_chars = CTypePointer(CTypeNamed("char"))
 		ctype_pointer_to_chars.specs = ['const']
 		lx = CValueCall(CValueNamed("__builtin_strcmp"), [
-			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(left)),
-			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(right))
+			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(left, parr_relax=True)),
+			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(right, parr_relax=True))
 		])
 		rx = CValueInteger(0)
 
@@ -1559,6 +1560,13 @@ def do_cstmt_var(x):
 	return (dv,)
 
 
+def const_as_macro(v):
+	if v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
+		return True
+	if v.storage_class == HLIR_VALUE_STORAGE_CLASS_LOCAL:
+		return value_is_generic_immediate(v)
+	return False
+
 def do_cstmt_const(x):
 	const_value = x.value
 	type = const_value.type
@@ -1570,7 +1578,7 @@ def do_cstmt_const(x):
 #		return (dv,)
 
 	# print only generic constant as C macrodefinition
-	if value_is_generic_immediate(const_value):
+	if const_as_macro(const_value):
 		id_str = get_id_str(const_value)
 		global func_undef_list
 		func_undef_list.append(id_str)
@@ -2301,6 +2309,58 @@ def cons_vla_from_literal_array(x):
 
 
 
+
+
+
+
+
+def get_cvalue_ptr_to_array(x, parr_relax):
+	cv = None
+	if x.isValueArray():
+		cv = do_cvalue(x)
+		ts = do_ctype(x.type)
+		cv = CValueCast(ts, cv)
+	elif x.isValueConst():
+		cv = do_cvalue(x)
+		if const_as_macro(x):
+			ts = do_ctype(x.type)
+			cv = CValueCast(ts, cv)
+	elif x.isValueVar():
+		cv = do_cvalue(x)
+	elif x.isValueCons():
+		cv = do_cvalue(x.value)
+		ts = do_ctype(x.type)
+		cv = CValueCast(ts, cv)
+	elif x.isValueDeref():
+		cv = do_cvalue(x.value)
+		if x.value.type.is_pointer_to_array():
+			return cv
+		if x.value.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM:
+			# Если это взятие адреса у параметра-массива (который передается как указатель на элемент массива)
+			# Просто вернем этот параметр как есть - тк он уже является указателем
+			return cv
+	elif x.isValueAccessRecord():
+		cv = do_cvalue(x)
+	elif x.isValueSlice():
+		cv = do_cvalue(x)
+		cv = CValueRef(cv)
+		if parr_relax:
+			return cv
+		ts = CTypePointer(do_ctype(x.type))
+		cv = CValueCast(ts, cv)
+		return cv
+
+	if cv == None:
+		print(x)
+
+	if POINTER_TO_ARRAY_RELAX and parr_relax:
+		return cv
+
+	cv = CValueRef(cv)
+	#cv.mark = '!%s!' % str(x)
+	return cv
+
+
 def do_cvalue_as_ptr(x, parr_relax=False):
 	t = x.type
 
@@ -2313,16 +2373,20 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 		#xx.mark = 'AP1'
 		return xx
 
+	if x.type.is_array():
+		return get_cvalue_ptr_to_array(x, parr_relax=parr_relax)
+
 	if root.isValueImmediate():
 		if x.type.is_aggregate() or value_is_generic_immediate_const(root):
 			# generic immediate const is just a macro!
 			vs = do_cvalue(root)
 			ts = do_ctype(x.type)
 			# mass
+			# if const_as_macro(x): todo
 			xx = CValueCast(ts, vs)
-			if parr_relax:
+			#if parr_relax:
 				#xx.mark = 'AP$2'
-				return xx
+			#	return xx
 			xx = CValueRef(xx)
 			#xx.mark = 'AP2'
 			return xx
@@ -2335,7 +2399,7 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 		# because in C string literal is pointer to c-string
 		if x.value.type.is_string():
 			xx = do_cvalue(x.value)
-			xx.mark = 'AP3'
+			#xx.mark = 'AP3'
 			return xx
 
 
@@ -2356,10 +2420,6 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 		#cv.mark = '$$$'
 	elif root.type.is_generic() and root.storage_class == HLIR_VALUE_STORAGE_CLASS_REGISTER:
 		cv = CValueCast(do_ctype(root.type), cv)
-
-
-	if parr_relax and x.type.is_array():
-		return cv
 
 
 	cv = CValueRef(cv)

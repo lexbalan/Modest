@@ -40,12 +40,12 @@ static void f0(char *_x, char *__out) {
 	__builtin_memcpy(&local_copy_of_x, &x, sizeof(char [20]));
 	printf("f0(\"%s\")\n", local_copy_of_x);
 	char mic[6];
-	__builtin_memcpy(&mic, (char *)&x[0], sizeof(char [6]));
+	__builtin_memcpy(&mic, (char (*)[6 - 0])&x[0], sizeof(char [6]));
 	mic[5] = '\x0';
 	printf("f0 mic = \"%s\"\n", mic);
 	char res[30];
-	__builtin_memcpy((char *)&res[0], &x, sizeof(char [20 - 0]));
-	__builtin_bzero((char *)&res[20], sizeof(char [30 - 20]));
+	__builtin_memcpy((char (*)[20 - 0])&res[0], &x, sizeof(char [20 - 0]));
+	__builtin_bzero((char (*)[30 - 20])&res[20], sizeof(char [30 - 20]));
 	res[6] = 'M';
 	res[7] = 'o';
 	res[8] = 'd';

@@ -76,7 +76,7 @@ static void tokenize(struct tokenizer *tokenizer) {
 			break;
 		}
 		char *const pbuf = (char *)&tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		__builtin_memcpy((char *)&pbuf[0], (char *)&token[0], sizeof(char [toklen - 0]));
+		__builtin_memcpy((char (*)[toklen - 0])&pbuf[0], (char (*)[toklen - 0])&token[0], sizeof(char [toklen - 0]));
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + toklen;
 		pbuf[tokenizer->tokensBufPos] = '\x0';
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + 1;
