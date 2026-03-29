@@ -48,26 +48,10 @@ static struct point p0 = (struct point){
 	.y = 2
 };
 
-static void farr(int32_t (*_sret_)[3]) {
-	__builtin_memcpy(_sret_, &(int32_t [3]){1, 2, 3}, sizeof(int32_t [3]));
-}
-
-static void facc(int32_t (*_a)[3]) {
-	int32_t a[3];
-	__builtin_memcpy(a, _a, sizeof(int32_t [3]));
-}
-
-static void fpacc(int32_t a[3]) {
-	a[1] = 1;
-	int32_t slice[1 - 0];
-	__builtin_memcpy(&slice, (int32_t (*)[1 - 0])&a[0], sizeof(const int32_t [1 - 0]));
-}
-
-static void fpacc2(char *argv[]) {
-}
-
-static void fpacc3(int32_t a[3][3]) {
-	a[0][0] = 1;
+static void farr(int32_t _x[3], int32_t _sret_[3]) {
+	int32_t x[3];
+	__builtin_memcpy(x, _x, sizeof(int32_t [3]));
+	__builtin_memcpy(_sret_, &(int32_t [3]){x[0] + 1, x[1] + 2, x[2] + 3}, sizeof(int32_t [3]));
 }
 
 int main(void) {
@@ -105,10 +89,9 @@ int main(void) {
 	int32_t arr4[3];
 	__builtin_memcpy(&arr4, &arr, sizeof(const int32_t [3]));
 	int32_t arr3[3];
-	farr(&arr2);
+	farr(&arr, &arr2);
 	__builtin_bzero(&arr2, sizeof(int32_t [3]));
 	__builtin_memcpy(&arr2, &arr, sizeof(int32_t [3]));
-	facc(&arr2);
 	#define rec0 {.x = 0, .y = 0}
 	struct point rec1 = (struct point)rec0;
 	struct point rec2;

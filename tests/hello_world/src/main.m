@@ -36,26 +36,8 @@ var p0: Point = {
 }
 
 
-func farr () -> [3]Int32 {
-	return [1, 2, 3]
-}
-
-
-func facc (a: [3]Int32) -> {} {
-	//a[0] = 4  //TODO: error - assign to constant (!)
-}
-
-func fpacc (a: *[3]Int32) -> {} {
-	a[1] = 1
-	let slice = a[0:1]
-}
-
-func fpacc2 (argv: *[]*Char8) -> {} {
-	//a[1] = 1
-}
-
-func fpacc3 (a: *[3][3]Int32) -> {} {
-	a[0][0] = 1
+func farr (x: [3]Int32) -> [3]Int32 {
+	return [x[0]+1, x[1]+2, x[2]+3]
 }
 
 public func main () -> Int {
@@ -105,11 +87,9 @@ public func main () -> Int {
 	var arr2 = arr // !
 	let arr4 = arr // !
 	var arr3: [3]Int32
-	arr2 = farr()
+	arr2 = farr(arr)
 	arr2 = []
 	arr2 = arr
-	facc(arr2)
-	//facc(farr())  // TODO: not works properly
 
 	let rec0 = {x=0, y=0}
 	var rec1 = Point rec0

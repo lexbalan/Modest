@@ -25,14 +25,14 @@ static int32_t *f3(void) {
 	return NULL;
 }
 
-static void f4(int32_t x, int32_t (*_sret_)[10]) {
-	__builtin_memcpy(_sret_, &(int32_t [10]){1, 2, 3}, sizeof(int32_t [10]));
+static void f4(int32_t x, int32_t __out[10]) {
+	__builtin_memcpy(__out, &(int32_t [10]){1, 2, 3}, sizeof(int32_t [10]));
 }
 
-static void f5(int32_t (*_a)[32], int32_t (*_sret_)[32]) {
+static void f5(int32_t _a[32], int32_t __out[32]) {
 	int32_t a[32];
 	__builtin_memcpy(a, _a, sizeof(int32_t [32]));
-	__builtin_memcpy(_sret_, &a, sizeof(int32_t [32]));
+	__builtin_memcpy(__out, &a, sizeof(int32_t [32]));
 }
 
 static int32_t (*f6(int32_t a[32]))[32] {
@@ -70,8 +70,8 @@ static void (*pf0)(void) = &f0;
 static int32_t (*pf1)(int32_t x) = &f1;
 static int32_t (*pf2)(int32_t a, int32_t b) = &f2;
 static int32_t *(*pf3)(void) = &f3;
-static void (*pf4)(int32_t x, int32_t (*_sret_)[10]) = &f4;
-static void (*pf5)(int32_t (*_a)[32], int32_t (*_sret_)[32]) = &f5;
+static void (*pf4)(int32_t x, int32_t __out[10]) = &f4;
+static void (*pf5)(int32_t _a[32], int32_t __out[32]) = &f5;
 static int32_t (*(*pf6)(int32_t a[32]))[32] = &f6;
 static void (*pf7)(void (*f)(void)) = &f7;
 static void (*(*pf8)(void (*f)(void)))(void) = &f8;

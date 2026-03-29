@@ -33,7 +33,7 @@ static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 static char arrayFromString[3] = {'a', 'b', 'c'};
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
-static void f0(char *_x, char *_sret_) {
+static void f0(char *_x, char *__out) {
 	char x[20];
 	__builtin_memcpy(x, _x, sizeof(char [20]));
 	char local_copy_of_x[20];
@@ -54,7 +54,7 @@ static void f0(char *_x, char *_sret_) {
 	res[11] = 't';
 	res[12] = '!';
 	res[13] = '\x0';
-	__builtin_memcpy(_sret_, &res, sizeof(char [30]));
+	__builtin_memcpy(__out, &res, sizeof(char [30]));
 }
 #define START_SEQUENCE {170, 85, 2}
 #define STOP_SEQUENCE {22}

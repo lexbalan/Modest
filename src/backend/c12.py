@@ -270,7 +270,7 @@ def do_ctype_func(t, specs=[]):
 		arg_ctype=do_ctype(p.type, is_param=True)
 		if p.type.is_array():
 			id_str = '_' + id_str
-			arg_ctype = do_ctype(TypePointer(p.type))
+			arg_ctype = do_ctype(TypePointer(p.type), is_param=True)
 			#arg_ctype.to.of.specs = ['const']
 			#arg_ctype.mark = '$'
 		params.append(CField(id_str=id_str, type=arg_ctype, specs=[]))
@@ -282,10 +282,10 @@ def do_ctype_func(t, specs=[]):
 		else:
 			to=do_ctype(t.to)
 	else:
-		# Если f возвращает массив по значению, вернем void и добавим _sret_ - pointer to array
+		# Если f возвращает массив по значению, вернем void и добавим __out - pointer to array
 		to=CTypeNamed('void')
-		sret_ctype = do_ctype(TypePointer(t.to))
-		params.append(CField(id_str='_sret_', type=sret_ctype, specs=[]))
+		sret_ctype = do_ctype(TypePointer(t.to), is_param=True)
+		params.append(CField(id_str='__out', type=sret_ctype, specs=[]))
 
 	return CTypeFunc(to=to, params=params, specs=specs, extra_args=t.extra_args)
 
@@ -1050,7 +1050,7 @@ def doo_call(func, args, ctx):
 		if av.type.is_array() and not av.type.is_array_of_char():
 			# Если в функцию передается массив по значению - передаем указатель на него (!)
 			# тк функции си не умеют получать массивы по значению
-			a = do_cvalue_as_ptr(av)
+			a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
 		else:
 
 			if POINTER_TO_ARRAY_RELAX:
@@ -1438,7 +1438,8 @@ def print_value(x, ctx=[]):
 def do_assign_array(left, right, ti):
 	# array = function()
 	if right.isValueCall():
-		return CStmtValueExpr(doo_call(right.func, right.args + [Initializer(Id("sret"), left)], ctx=[]))
+		rv = Initializer(Id("sret"), left)
+		return CStmtValueExpr(doo_call(right.func, right.args + [rv], ctx=[]))
 
 	rv = get_root_value(right)
 	if rv.isValueZero():
@@ -1509,7 +1510,7 @@ def do_cstmt_return(x):
 	if cfunc.type.to.is_closed_array():
 		return CStmtValueExpr(
 			CValueCall(
-				CValueNamed("__builtin_memcpy"), [CValueNamed("_sret_"), do_cvalue_as_ptr(x.value), CValueSizeofType(do_ctype(x.value.type))]
+				CValueNamed("__builtin_memcpy"), [CValueNamed("__out"), do_cvalue_as_ptr(x.value), CValueSizeofType(do_ctype(x.value.type))]
 			)
 		)
 
@@ -2300,13 +2301,13 @@ def cons_vla_from_literal_array(x):
 
 
 
-def do_cvalue_as_ptr(x):
+def do_cvalue_as_ptr(x, parr_relax=False):
 	t = x.type
+
 	root = get_root_value(x)
 
 	cv = None
 
-	#root.type.is_str() or
 	if root.type.is_string():
 		xx = CValueRef(do_cvalue(root))
 		#xx.mark = 'AP1'
@@ -2317,7 +2318,12 @@ def do_cvalue_as_ptr(x):
 			# generic immediate const is just a macro!
 			vs = do_cvalue(root)
 			ts = do_ctype(x.type)
-			xx = CValueRef(CValueCast(ts, vs))
+			# mass
+			xx = CValueCast(ts, vs)
+			if parr_relax:
+				#xx.mark = 'AP$2'
+				return xx
+			xx = CValueRef(xx)
 			#xx.mark = 'AP2'
 			return xx
 
@@ -2329,7 +2335,7 @@ def do_cvalue_as_ptr(x):
 		# because in C string literal is pointer to c-string
 		if x.value.type.is_string():
 			xx = do_cvalue(x.value)
-			#xx.mark = 'AP3'
+			xx.mark = 'AP3'
 			return xx
 
 
@@ -2351,106 +2357,19 @@ def do_cvalue_as_ptr(x):
 	elif root.type.is_generic() and root.storage_class == HLIR_VALUE_STORAGE_CLASS_REGISTER:
 		cv = CValueCast(do_ctype(root.type), cv)
 
+
+	if parr_relax and x.type.is_array():
+		return cv
+
+
 	cv = CValueRef(cv)
 
 	if root.isValueSlice():
 		ptr2slice = TypePointer(x.type)
 		cv = CValueCast(do_ctype(ptr2slice), cv)
 
-	#cv.mark = 'K'
+	#cv.mark = '@@'
 	return cv
-
-
-
-#	sstr += "&"
-#
-#	if root.isValueBin() and root.op in ['literal', HLIR_VALUE_OP_ADD]:
-#		sstr += '(' + str_type(t) + ')'
-#
-#	#elif root.isValueLiteral() and (not root.isValueImmediate()):
-#	elif root.isValueArray() and (not root.isValueImmediate()):
-#		# for non immediate literals  {1, 2, var_a, var_b, ...}
-#		sstr += '(' + str_type(t) + ')'
-#
-#	elif cons_vla_from_literal_array(root):
-#		# we need to print:
-#		#  &(uint32_t[]){1, 2, 3, 4, 5}
-#		# instead of:
-#		#  &(uint32_t[len]){1, 2, 3, 4, 5}
-#		sstr += '(' + str_type(t) + ')'
-#		sstr += str_value(x.value)
-#		return sstr
-#
-#	sstr += str_value(root)
-#	return sstr
-
-
-
-
-
-
-## получает значение, печатает указатель на его корневое значение
-#def str_value_as_ptr(x):
-#	sstr = ''
-#
-#	t = x.type
-#	root = get_root_value(x)
-#
-#	#root.type.is_str() or
-#	if root.type.is_string():
-#		return "&" + str_value(root)
-#
-#
-#	if root.isValueImmediate():
-#		if x.type.is_aggregate() or value_is_generic_immediate_const(root):
-#			# generic immediate const is just a macro!
-#			vs = str_value(root)
-#			ts = str_type(x.type)
-#			return "&((%s)%s)" % (ts, vs)
-#
-#	if x.isValueCons():
-#		# for *s == "Hi!"
-#		# string literal will be implicitly casted to StrX
-#		# and for getting pointer to this string
-#		# we need to print just string literal,
-#		# because in C string literal is pointer to c-string
-#		if x.value.type.is_string():
-#			return str_value(x.value)
-#
-#	if root.isValueSlice():
-#		ptr2slice = TypePointer(x.type)
-#		sstr += "(" + str_type(ptr2slice) + ")"
-#		#sstr += "(" + str_type_pointer(ptr2slice) + ")"
-#
-#	if root.isValueDeref():
-#		return str_value(root.value)
-#
-#	if root.isValueLiteral():
-#		if root.type.is_string():
-#			return str_value(root)
-#
-#	sstr += "&"
-#
-#	if root.isValueBin() and root.op in ['literal', HLIR_VALUE_OP_ADD]:
-#		sstr += '(' + str_type(t) + ')'
-#
-#	#elif root.isValueLiteral() and (not root.isValueImmediate()):
-#	elif root.isValueArray() and (not root.isValueImmediate()):
-#		# for non immediate literals  {1, 2, var_a, var_b, ...}
-#		sstr += '(' + str_type(t) + ')'
-#
-#	elif cons_vla_from_literal_array(root):
-#		# we need to print:
-#		#  &(uint32_t[]){1, 2, 3, 4, 5}
-#		# instead of:
-#		#  &(uint32_t[len]){1, 2, 3, 4, 5}
-#		sstr += '(' + str_type(t) + ')'
-#		sstr += str_value(x.value)
-#		return sstr
-#
-#	sstr += str_value(root)
-#	return sstr
-
 
 
 

@@ -33,7 +33,7 @@ static char32_t arr2[10] = {U'H', U'e', U'l', U'l', U'o', U'!'};
 //	var ab: [0]Int32
 //}
 static void printArrayOf10Char32(char32_t *_a);
-static void sum10IntArrays(int32_t (*_a)[10], int32_t (*_b)[10], int32_t (*_sret_)[10]);
+static void sum10IntArrays(int32_t _a[10], int32_t _b[10], int32_t __out[10]);
 
 int main(void) {
 	printf("array test\n");
@@ -42,7 +42,7 @@ int main(void) {
 	char32_t lar2[10];
 	__builtin_memcpy(&lar2, &arr2, sizeof(char32_t [10]));
 	printArrayOf10Char32(lar2);
-	sum10IntArrays(&arr1, &lar1, &lar0);
+	sum10IntArrays(arr1, lar1, lar0);
 	uint32_t i = 0U;
 	while (i < 10U) {
 		printf("a[%d] = %d\n", i, lar0[i]);
@@ -61,7 +61,7 @@ static void printArrayOf10Char32(char32_t *_a) {
 	}
 }
 
-static void sum10IntArrays(int32_t (*_a)[10], int32_t (*_b)[10], int32_t (*_sret_)[10]) {
+static void sum10IntArrays(int32_t _a[10], int32_t _b[10], int32_t __out[10]) {
 	int32_t b[10];
 	__builtin_memcpy(b, _b, sizeof(int32_t [10]));
 	int32_t a[10];
@@ -72,6 +72,6 @@ static void sum10IntArrays(int32_t (*_a)[10], int32_t (*_b)[10], int32_t (*_sret
 		result[i] = a[i] + b[i];
 		i = i + 1U;
 	}
-	__builtin_memcpy(_sret_, &result, sizeof(int32_t [10]));
+	__builtin_memcpy(__out, &result, sizeof(int32_t [10]));
 }
 
