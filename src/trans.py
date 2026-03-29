@@ -855,7 +855,11 @@ def do_value_new(x):
 	v = do_value(x['value'])
 
 	if v.isValueBad() or v.is_value_undefined():
-		return v
+		return ValueBad(x['ti'])
+
+	if not v.type.is_aggregate():
+		error("operation new requires value with aggregate type", v.ti)
+		return ValueBad(x['ti'])
 
 	nv = ValueNew(v)
 	return nv
@@ -1975,7 +1979,9 @@ def do_stmt(x):
 	elif k == 'inc': s = do_stmt_incdec(x, HLIR_VALUE_OP_ADD)
 	elif k == 'dec': s = do_stmt_incdec(x, HLIR_VALUE_OP_SUB)
 	elif k == 'type': s = do_stmt_type(x)
-	elif k == 'comment-line': s = do_stmt_comment_line(x)
+	elif k == 'comment-line':
+		print("------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+		s = do_stmt_comment_line(x)
 	elif k == 'comment-block': s = do_stmt_comment_block(x)
 	elif k == 'asm': s = do_stmt_asm(x)
 	else: s = StmtBad(x['ti'])

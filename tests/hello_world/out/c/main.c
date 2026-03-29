@@ -56,6 +56,7 @@ static void farr(int32_t _x[3], int32_t __out[3]) {
 
 int main(void) {
 	typedef int32_t LocalInt;
+	struct point *const x = (struct point *)__builtin_memcpy(malloc(sizeof(struct point)), &(struct point){.x = 10, .y = 10}, sizeof(struct point));
 	#define c00 10
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';

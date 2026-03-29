@@ -1098,8 +1098,6 @@ class CValueCat(CValue):
 
 def str_cvalue(v, ext_precedence=0):
 	assert(v != None)
-	if str(v) == "None":
-		print(v.__class__)
 	y = str(v)
 	sstr = wrap_if(y, (v.precedence < ext_precedence) or v.mark and (v.precedence < valuePrecedenceMax))
 	if v.mark != None:

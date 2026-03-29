@@ -387,11 +387,6 @@ def needd(x):
 
 
 
-def str_value_new(x, ctx):
-	t_str = str_type(x.value.type)
-	return '(%s *)calloc(1, sizeof(%s))' % (t_str, t_str)
-
-
 
 
 
@@ -1253,26 +1248,6 @@ def do_cvalue_alignof(x, ctx):
 	return CValueCall(CValueNamed("__alignof"), [CValueNamed(str_type(x.oftype))])
 
 
-#
-#def str_value_alignof(x, ctx):
-#	if x.of.is_unit():
-#		return "(/*alignof(void)*/(size_t)1)"
-#	sstr = "__alignof("
-#	sstr += str_type(x.of)
-#	sstr += ")"
-#	return sstr
-#
-#
-#def str_value_offsetof(x, ctx):
-#	sstr = "__offsetof("
-#	sstr += str_type(x.oftype)
-#	sstr += ", "
-#	sstr += x.field.str
-#	sstr += ")"
-#	return sstr
-#
-
-
 
 def do_cvalue_va_start(x, ctx):
 	return CValueVaStart(do_cvalue(x.va_list), do_cvalue(x.last_param))
@@ -1298,10 +1273,10 @@ def do_cvalue_eq(x, logic, ctx):
 	rx = None
 	if left.type.is_aggregate():
 		# сравниваем массивы / записи
-		a0 = do_cvalue_as_ptr(left)#, parr_relax=True)
-		a1 = do_cvalue_as_ptr(right)#, parr_relax=True)
-		a2 = get_cvalue_size_for(left, right, ti=x.ti)
-		lx = CValueCall(CValueNamed("__builtin_memcmp"), [a0, a1, a2])
+		a = do_cvalue_as_ptr(left)#, parr_relax=True)
+		b = do_cvalue_as_ptr(right)#, parr_relax=True)
+		sz = get_cvalue_size_for(left, right, ti=x.ti)
+		lx = cvalue_memcmp(a, b, sz)
 		rx = CValueInteger(0)
 
 	#elif left.type.is_str() and right.type.is_str():
@@ -1330,6 +1305,51 @@ def get_cvalue_size_for(a, b, ti):
 	ct = Type.select_common_type(a.type, b.type, ti=ti)
 	return CValueSizeofType(do_ctype(ct))
 
+
+
+
+
+def cvalue_memcpy(dst, src, size):
+	assert(isinstance(dst, CValue))
+	assert(isinstance(src, CValue))
+	assert(isinstance(size, CValue))
+	return CValueCall(CValueNamed("__builtin_memcpy"), [dst, src, size])
+
+
+def cvalue_memcmp(a, b, size):
+	assert(isinstance(a, CValue))
+	assert(isinstance(b, CValue))
+	assert(isinstance(size, CValue))
+	return CValueCall(CValueNamed("__builtin_memcmp"), [a, b, size])
+
+
+def cvalue_memzero(ptr, size):
+	assert(isinstance(ptr, CValue))
+	assert(isinstance(size, CValue))
+	return CValueCall(CValueNamed("__builtin_bzero"), [ptr, size])
+
+
+def cvalue_malloc(size):
+	assert(isinstance(size, CValue))
+	return CValueCall(CValueNamed("malloc"), [size])
+
+
+
+def do_cvalue_new(x, ctx):
+	sizeof = CValueSizeofType(do_ctype(x.value.type))
+	xvalue = do_cvalue_as_ptr(x.value)
+	return CValueCast(do_ctype(x.type), cvalue_memcpy(cvalue_malloc(sizeof), xvalue, sizeof))
+
+
+#
+#def str_value_offsetof(x, ctx):
+#	sstr = "__offsetof("
+#	sstr += str_type(x.oftype)
+#	sstr += ", "
+#	sstr += x.field.str
+#	sstr += ")"
+#	return sstr
+#
 
 
 def do_cvalue(x, ctx=[]):
@@ -1363,6 +1383,7 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueVaStart(): return do_cvalue_va_start(x, ctx)
 	elif x.isValueVaEnd(): return do_cvalue_va_end(x, ctx)
 	elif x.isValueVaCopy(): return do_cvalue_va_copy(x, ctx)
+	elif x.isValueNew(): return do_cvalue_new(x, ctx)
 	elif x.isValueUndef(): 1/0
 	elif x.isValueBad():
 		error("value bad in C backend", x.ti)
@@ -1371,7 +1392,6 @@ def do_cvalue(x, ctx=[]):
 	assert(False)
 
 #	elif x.isValueNew(): sstr += str_value_new(x, ctx)
-#	elif x.isValueAlignof(): sstr += str_value_alignof(x, ctx)
 #	elif x.isValueOffsetof(): sstr += str_value_offsetof(x, ctx)
 #	else: sstr += str(x)
 
@@ -1504,14 +1524,15 @@ def do_cstmt_assign(x):
 
 
 
-
 def do_cstmt_return(x):
 	global cfunc
 
 	if cfunc.type.to.is_closed_array():
 		return CStmtValueExpr(
-			CValueCall(
-				CValueNamed("__builtin_memcpy"), [CValueNamed("__out"), do_cvalue_as_ptr(x.value), CValueSizeofType(do_ctype(x.value.type))]
+			cvalue_memcpy(
+				CValueNamed("__out"),
+				do_cvalue_as_ptr(x.value),
+				CValueSizeofType(do_ctype(x.value.type))
 			)
 		)
 
@@ -1693,13 +1714,10 @@ def do_def_func(x):
 			paramId = get_id_str(param)
 			dv = CStmtDefVar(paramId, do_ctype(param.type))
 			mx = CStmtValueExpr(
-				CValueCall(
-					CValueNamed("__builtin_memcpy"),
-					[
-						CValueNamed(paramId),
-						CValueNamed('_' + paramId),
-						CValueSizeofType(do_ctype(param.type))
-					]
+				cvalue_memcpy(
+					CValueNamed(paramId),
+					CValueNamed('_' + paramId),
+					CValueSizeofType(do_ctype(param.type))
 				)
 			)
 
@@ -2439,20 +2457,18 @@ def assign_by_memcopy(left, right):
 		return do_memzero(left)
 
 	return CStmtValueExpr(
-		CValueCall(
-			CValueNamed("__builtin_memcpy"), [do_cvalue_as_ptr(left), do_cvalue_as_ptr(right), CValueSizeofType(do_ctype(left.type))]
+		cvalue_memcpy(
+			do_cvalue_as_ptr(left),
+			do_cvalue_as_ptr(right),
+			CValueSizeofType(do_ctype(left.type))
 		)
 	)
+
+
 
 
 def do_memzero(value):
-	return CStmtValueExpr(
-		CValueCall(
-			CValueNamed("__builtin_bzero"), [
-				do_cvalue_as_ptr(value), CValueSizeofType(do_ctype(value.type))
-			]
-		)
-	)
+	return CStmtValueExpr(cvalue_memzero(do_cvalue_as_ptr(value), CValueSizeofType(do_ctype(value.type))))
 
 
 

@@ -1720,15 +1720,18 @@ class Parser:
 			elif self.look('var'):
 				s = self.stmt_var()
 			elif self.token_class_is('comment-block'):
-				comment = self.parse_comment_block()
-				comment['nl'] = spaceline_cnt
-				spaceline_cnt = 0
-				continue
+				s = self.parse_comment_block()
+#				comment = self.parse_comment_block()
+#				comment['nl'] = spaceline_cnt
+#				spaceline_cnt = 0
+#				continue
 			elif self.token_class_is('comment-line'):
-				comment = self.parse_comment_line()
-				comment['nl'] = spaceline_cnt
-				spaceline_cnt = 0
-				continue
+				print("<><><><><<><><>><><><><><><><>><><><><>")
+				s = self.parse_comment_line()
+#				comment = self.parse_comment_line()
+#				comment['nl'] = spaceline_cnt
+#				spaceline_cnt = 0
+#				continue
 			elif self.look('again'):
 				s = self.stmt_again()
 			elif self.look('break'):

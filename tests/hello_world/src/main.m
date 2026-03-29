@@ -43,7 +43,10 @@ func farr (x: [3]Int32) -> [3]Int32 {
 public func main () -> Int {
 	type LocalInt = Int32
 
+	let x = new Point {x=10, y=10}
+
 	// constants
+
 	let c00 = 10
 
 	let xc1: Char8 = "A"
