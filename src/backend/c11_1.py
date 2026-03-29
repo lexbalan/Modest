@@ -373,26 +373,6 @@ class CValueNamed(CValue):
 
 
 
-
-def str_number_suffix(num, req_bits, is_unsigned):
-	sstr = ""
-	#nn = nbits_for_num(num, signed=not is_unsigned)
-	if req_bits >= 32: #csettings['int_width']:
-		if is_unsigned: #and nn == req_bits:
-			sstr += "U"   # unsigned
-
-		if req_bits <= 32: #csettings['long_width']:
-			#sstr += "L"   # long int
-			sstr += ""   # long int
-		elif req_bits <= 64: #csettings['long_long_width']:
-			sstr += "LL"  # long long int
-		else:
-			sstr += "XL"  # extra long int (not defined in C)
-
-	return sstr
-
-
-
 class CValueInteger(CValue):
 	def __init__(self, number, width=0, is_unsigned=True, as_hex=False):
 		super().__init__()
@@ -417,11 +397,21 @@ class CValueInteger(CValue):
 		else:
 			sstr += str(num)
 
-		#if width > 64:
-		#	n = nbits_for_num(num, signed=not self.is_unsigned)
-		#	print("nbits_for_num(%x, signed=not self.is_unsigned) = %d" % (num, n))
-		sstr += str_number_suffix(num, req_bits=self.width, is_unsigned=self.is_unsigned)
-		#sstr += '/*%s*/' % str(self.is_unsigned)
+		req_bits=self.width
+		is_unsigned=self.is_unsigned
+
+		if req_bits >= 32: #csettings['int_width']:
+			if is_unsigned: #and nn == req_bits:
+				sstr += "U"   # unsigned
+
+			if req_bits <= 32: #csettings['long_width']:
+				#sstr += "L"   # long int
+				sstr += ""   # long int
+			elif req_bits <= 64: #csettings['long_long_width']:
+				sstr += "LL"  # long long int
+			else:
+				sstr += "XL"  # extra long int (not defined in C)
+
 		return sstr
 
 
