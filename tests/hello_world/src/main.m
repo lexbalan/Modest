@@ -43,7 +43,9 @@ func farr (x: [3]Int32) -> [3]Int32 {
 public func main () -> Int {
 	type LocalInt = Int32
 
-	let x = new Point {x=10, y=10}
+	let p = new Point {x=10, y=10}
+	printf("p.x = %d\n", p.x)
+	printf("p.y = %d\n", p.y)
 
 	// constants
 
