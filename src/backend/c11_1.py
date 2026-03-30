@@ -163,7 +163,7 @@ class CTypeArray(CType):
 	def to_str(self, text):
 		text = text + '['
 		if self.volume != None and not self.volume.isValueUndef():
-			from .c12 import do_cvalue
+			from .c11 import do_cvalue
 			text += str_cvalue(do_cvalue(self.volume))
 		text += ']'
 		text = wrap_if(text, self.of.precedence > self.precedence)

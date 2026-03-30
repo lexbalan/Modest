@@ -32,8 +32,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c12 -funsafe -mint=64 $(INDIR)/main.m
-	mcc -o $(CPREFIX)/list -mbackend=c12 -mint=64 $(INDIR)/list.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe -mint=64 $(INDIR)/main.m
+	mcc -o $(CPREFIX)/list -mbackend=c11 -mint=64 $(INDIR)/list.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/list.c
 
 

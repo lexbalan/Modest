@@ -26,8 +26,8 @@ LLVM:
 	./a.out
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c12 $(INDIR)/main.m
-	mcc -o $(CPREFIX)/crc32 -mbackend=c12 -funsafe ${MODEST_LIB}/misc/crc32.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
+	mcc -o $(CPREFIX)/crc32 -mbackend=c11 -funsafe ${MODEST_LIB}/misc/crc32.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/crc32.c
 	./a.out
 

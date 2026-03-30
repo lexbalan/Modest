@@ -29,11 +29,11 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/queue -mbackend=c12 $(INDIR)/queue.m
-	mcc -o $(CPREFIX)/queueWord8 -mbackend=c12 $(INDIR)/queueWord8.m
-	mcc -o $(CPREFIX)/ringWord8 -mbackend=c12 $(INDIR)/ringWord8.m
-	mcc -o $(CPREFIX)/main -mbackend=c12 -funsafe $(INDIR)/main.m
-	#mcc -o $(CPREFIX)/mutex -mbackend=c12 $(INDIR)/mutex.m
+	mcc -o $(CPREFIX)/queue -mbackend=c11 $(INDIR)/queue.m
+	mcc -o $(CPREFIX)/queueWord8 -mbackend=c11 $(INDIR)/queueWord8.m
+	mcc -o $(CPREFIX)/ringWord8 -mbackend=c11 $(INDIR)/ringWord8.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.m
+	#mcc -o $(CPREFIX)/mutex -mbackend=c11 $(INDIR)/mutex.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/queue.c $(CPREFIX)/queueWord8.c $(CPREFIX)/ringWord8.c 
 
 

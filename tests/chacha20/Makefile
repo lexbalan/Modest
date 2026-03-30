@@ -27,8 +27,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c12 $(INDIR)/main.m
-	mcc -o $(CPREFIX)/chacha20 -mbackend=c12 ${MODEST_LIB}/misc/chacha20.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
+	mcc -o $(CPREFIX)/chacha20 -mbackend=c11 ${MODEST_LIB}/misc/chacha20.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/chacha20.c
 	./a.out
 

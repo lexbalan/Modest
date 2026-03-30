@@ -25,8 +25,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/minmax -mbackend=c12 -funsafe ${MODEST_LIB}/misc/minmax.m
-	mcc -o $(CPREFIX)/main -mbackend=c12 $(INDIR)/main.m
+	mcc -o $(CPREFIX)/minmax -mbackend=c11 -funsafe ${MODEST_LIB}/misc/minmax.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
 	clang $(C_OPTIONS) $(LIBS) $(CPREFIX)/main.c $(CPREFIX)/minmax.c
 
 

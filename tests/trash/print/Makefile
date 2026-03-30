@@ -24,9 +24,9 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c12 $(INDIR)/main.m
-	mcc -o $(CPREFIX)/console -mbackend=c12 -funsafe ${MODEST_LIB}/lightfood/console.m
-	mcc -o $(CPREFIX)/utf -mbackend=c12 -funsafe ${MODEST_LIB}/misc/utf.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
+	mcc -o $(CPREFIX)/console -mbackend=c11 -funsafe ${MODEST_LIB}/lightfood/console.m
+	mcc -o $(CPREFIX)/utf -mbackend=c11 -funsafe ${MODEST_LIB}/misc/utf.m
 
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/console.c $(CPREFIX)/utf.c
 

@@ -27,10 +27,10 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c12 -funsafe $(INDIR)/main.m
-	mcc -o $(CPREFIX)/utf -mbackend=c12 -funsafe ${MODEST_LIB}/misc/utf.m
-	#mcc -o $(CPREFIX)/console -mbackend=c12 -funsafe ${MODEST_LIB}/lightfood/console.m
-	#mcc -o $(CPREFIX)/print -mbackend=c12 -funsafe ${MODEST_LIB}/lightfood/print.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.m
+	mcc -o $(CPREFIX)/utf -mbackend=c11 -funsafe ${MODEST_LIB}/misc/utf.m
+	#mcc -o $(CPREFIX)/console -mbackend=c11 -funsafe ${MODEST_LIB}/lightfood/console.m
+	#mcc -o $(CPREFIX)/print -mbackend=c11 -funsafe ${MODEST_LIB}/lightfood/print.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/utf.c # $(CPREFIX)/console.c $(CPREFIX)/print.c
 
 clean:

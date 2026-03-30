@@ -27,8 +27,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/client -funsafe -mbackend=c12 $(INDIR)/client.m
-	mcc -o $(CPREFIX)/server -funsafe -mbackend=c12 $(INDIR)/server.m
+	mcc -o $(CPREFIX)/client -funsafe -mbackend=c11 $(INDIR)/client.m
+	mcc -o $(CPREFIX)/server -funsafe -mbackend=c11 $(INDIR)/server.m
 	clang $(C_OPTIONS) -oclient $(CPREFIX)/client.c
 	clang $(C_OPTIONS) -oserver $(CPREFIX)/server.c
 

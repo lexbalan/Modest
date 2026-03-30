@@ -24,8 +24,8 @@ LLVM:
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/sha256.ll
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c12 -funsafe $(INDIR)/main.m
-	mcc -o $(CPREFIX)/sha256 -mbackend=c12 -funsafe ${MODEST_LIB}/misc/sha256.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.m
+	mcc -o $(CPREFIX)/sha256 -mbackend=c11 -funsafe ${MODEST_LIB}/misc/sha256.m
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/sha256.c
 
 
