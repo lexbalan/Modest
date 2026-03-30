@@ -285,10 +285,10 @@ func testArray () -> Bool {
 		return false
 	}
 
-//	if alignof(array) != alignof(ArrayItemType) {
-//		printf("error: alignof(array) != alignof(ArrayItemType)\n")
-//		return false
-//	}
+	if alignof(array) != alignof(ArrayItemType) {
+		printf("error: alignof(array) != alignof(ArrayItemType)\n")
+		return false
+	}
 
 	printf("passed: testArray\n")
 	return true

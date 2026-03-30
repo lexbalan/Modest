@@ -234,7 +234,7 @@ static bool testArray(void) {
 		printf("error: sizeof(array) != arraySize * sizeof(ArrayItemType)\n");
 		return false;
 	}
-	if (/*alignof_value*/1 != __alignof(ArrayItemType)) {
+	if (/*alignof_value*/4 != __alignof(ArrayItemType)) {
 		printf("error: alignof(array) != alignof(ArrayItemType)\n");
 		return false;
 	}

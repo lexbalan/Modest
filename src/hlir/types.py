@@ -1459,6 +1459,7 @@ class TypeArray(Type):
 		self.of = of
 		self.volume = volume
 		self.size = array_size
+		self.align = of.align
 
 	# Получить список типов от которых данный тип зависит напрямую
 	def get_dir_deps(self, deps):
