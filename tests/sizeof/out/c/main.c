@@ -246,7 +246,7 @@ static bool testRecord(void) {
 		printf("error: sizeof(record) != 2 * sizeof(Int32)\n");
 		return false;
 	}
-	printf("passed: testArray\n");
+	printf("passed: testRecord\n");
 	return true;
 }
 
@@ -271,6 +271,8 @@ int main(void) {
 	result = testFixed();
 	success = success && result;
 	result = testArray();
+	success = success && result;
+	result = testRecord();
 	success = success && result;
 	printf("test ");
 	if (!success) {

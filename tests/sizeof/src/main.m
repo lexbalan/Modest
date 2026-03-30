@@ -309,7 +309,7 @@ func testRecord () -> Bool {
 //		return false
 //	}
 
-	printf("passed: testArray\n")
+	printf("passed: testRecord\n")
 	return true
 }
 
@@ -337,6 +337,8 @@ public func main () -> Int {
 	result = testFixed()
 	success = success and result
 	result = testArray()
+	success = success and result
+	result = testRecord()
 	success = success and result
 
 	printf("test ")
