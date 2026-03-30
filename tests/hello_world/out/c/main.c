@@ -38,7 +38,12 @@ static int32_t arrays[4][4] = {
 	{0, 1, 2, 3},
 	{4, 5, 6, 7},
 	{8, 9, 10, 11},
-	{12, 13, 14, 15}
+	{
+		12,
+		13,
+		14,
+		15
+	}
 };
 typedef struct open_point OpenPoint;
 struct open_point {
