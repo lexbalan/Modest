@@ -958,12 +958,12 @@ def do_value_va_copy(x):
 	return nv
 
 
-def do_value___defined_type(x):
+def do_value_defined_type(x):
 	t = ctx_type_get(x['type']['id'].str)
 	return t != None
 
 
-def do_value___defined_value(x):
+def do_value_defined_value(x):
 	v = ctx_value_get(x['value']['id'].str)
 	return v != None
 
@@ -1550,9 +1550,14 @@ def do_value_sizeof_value(x):
 
 
 
-def do_value_alignof(x):
+def do_value_alignof_type(x):
 	of = do_type(x['type'])
-	return ValueAlignof(of, ti=x['ti'])
+	return ValueAlignofType(of, ti=x['ti'])
+
+
+def do_value_alignof_value(x):
+	of = do_value(x['value'])
+	return ValueAlignofValue(of, ti=x['ti'])
 
 
 def do_value_offsetof(x):
@@ -1655,27 +1660,28 @@ def do_value(x):
 	elif k == HLIR_VALUE_OP_NOT: v = do_value_not(x)
 	elif k == HLIR_VALUE_OP_DEREF: v = do_value_deref(x)
 	elif k == HLIR_VALUE_OP_INDEX: v = do_value_index(x)
-	elif k == 'slice': v = do_value_slice(x)
+	elif k == HLIR_VALUE_OP_SLICE: v = do_value_slice(x)
 	elif k == HLIR_VALUE_OP_ACCESS: v = do_value_access(x)
 	elif k == HLIR_VALUE_OP_NEG: v = do_value_neg(x)
 	elif k == HLIR_VALUE_OP_POS: v = do_value_pos(x)
 	elif k == HLIR_VALUE_OP_SHL: v = do_value_shift(x)
 	elif k == HLIR_VALUE_OP_SHR: v = do_value_shift(x)
-	elif k == 'new': v = do_value_new(x)
-	elif k == 'unsafe': v = do_value_unsafe(x)
-	elif k == 'subexpr': v = do_value_subexpr(x)
-	elif k == 'sizeof_value': v = do_value_sizeof_value(x)
-	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
-	elif k == HLIR_VALUE_OP_ALIGNOF: v = do_value_alignof(x)
+	elif k == HLIR_VALUE_OP_NEW: v = do_value_new(x)  # just experimental
+	elif k == HLIR_VALUE_OP_UNSAFE: v = do_value_unsafe(x)
+	elif k == HLIR_VALUE_OP_SUBEXPR: v = do_value_subexpr(x)
+	elif k == HLIR_VALUE_OP_SIZEOF_TYPE: v = do_value_sizeof_type(x)
+	elif k == HLIR_VALUE_OP_SIZEOF_VALUE: v = do_value_sizeof_value(x)
+	elif k == HLIR_VALUE_OP_ALIGNOF_TYPE: v = do_value_alignof_type(x)
+	elif k == HLIR_VALUE_OP_ALIGNOF_VALUE: v = do_value_alignof_value(x)
 	elif k == HLIR_VALUE_OP_OFFSETOF: v = do_value_offsetof(x)
-	elif k == 'lengthof_value': v = do_value_lengthof_value(x)
-	elif k == 'lengthof_type': v = do_value_lengthof_type(x)
-	elif k == '__va_arg': v = do_value_va_arg(x)
-	elif k == '__va_start': v = do_value_va_start(x)
-	elif k == '__va_copy': v = do_value_va_copy(x)
-	elif k == '__va_end': v = do_value_va_end(x)
-	elif k == '__defined_type': v = do_value___defined_type(x)
-	elif k == '__defined_value': v = do_value___defined_value(x)
+	elif k == HLIR_VALUE_OP_LENGTHOF_VALUE: v = do_value_lengthof_value(x)
+	elif k == HLIR_VALUE_OP_LENGTHOF_TYPE: v = do_value_lengthof_type(x)
+	elif k == HLIR_VALUE_OP_VA_ARG: v = do_value_va_arg(x)
+	elif k == HLIR_VALUE_OP_VA_START: v = do_value_va_start(x)
+	elif k == HLIR_VALUE_OP_VA_END: v = do_value_va_end(x)
+	elif k == HLIR_VALUE_OP_VA_COPY: v = do_value_va_copy(x)
+	elif k == HLIR_VALUE_OP_DEFINED_TYPE: v = do_value_defined_type(x)
+	elif k == HLIR_VALUE_OP_DEFINED_VALUE: v = do_value_defined_value(x)
 	elif k == 'undefined': v = do_value_undefined(x)
 	elif k == 'bad': v = do_value_bad(x)
 

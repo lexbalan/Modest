@@ -298,6 +298,11 @@ func testRecord () -> Bool {
 		return false
 	}
 
+	if alignof(_record) != alignof(Record) {
+		printf("error: alignof(_record) != alignof(Record)\n")
+		return false
+	}
+
 	printf("passed: testRecord\n")
 	return true
 }

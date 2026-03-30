@@ -121,13 +121,31 @@ HLIR_VALUE_OP_CALL = 'call'
 HLIR_VALUE_OP_REF = 'ref'
 HLIR_VALUE_OP_DEREF = 'deref'
 HLIR_VALUE_OP_INDEX = 'index'
+HLIR_VALUE_OP_SLICE = 'slice'
 HLIR_VALUE_OP_ACCESS = 'access'
 
-HLIR_VALUE_OP_SIZEOF = 'sizeof'
-HLIR_VALUE_OP_ALIGNOF = 'alignof'
+HLIR_VALUE_OP_SUBEXPR = 'subexpr'
+
+HLIR_VALUE_OP_NEW = 'new'
+HLIR_VALUE_OP_UNSAFE = 'unsafe'
+
+HLIR_VALUE_OP_SIZEOF_TYPE = 'sizeof_type'
+HLIR_VALUE_OP_SIZEOF_VALUE = 'sizeof_value'
+HLIR_VALUE_OP_ALIGNOF_TYPE = 'alignof_type'
+HLIR_VALUE_OP_ALIGNOF_VALUE = 'alignof_value'
+HLIR_VALUE_OP_LENGTHOF_TYPE = 'lengthof_type'
+HLIR_VALUE_OP_LENGTHOF_VALUE = 'lengthof_value'
 HLIR_VALUE_OP_OFFSETOF = 'offsetof'
-HLIR_VALUE_OP_LENGTHOF = 'lengthof'
 HLIR_VALUE_OP_ACCESS_MODULE = 'access_module'
+HLIR_VALUE_OP_DEFINED_TYPE = 'defined_type'
+HLIR_VALUE_OP_DEFINED_VALUE = 'defined_value'
+
+
+HLIR_VALUE_OP_VA_START = 'va_start'
+HLIR_VALUE_OP_VA_ARG = 'va_arg'
+HLIR_VALUE_OP_VA_COPY = 'va_copy'
+HLIR_VALUE_OP_VA_END = 'va_end'
+
 
 
 HLIR_ACCESS_LEVEL_UNDEFINED = 'undefined'
@@ -1791,14 +1809,17 @@ class Value(Entity):
 	def isValueAccessRecord(self):
 		return isinstance(self, ValueAccessRecord)
 
-	def isValueSizeofValue(self):
-		return isinstance(self, ValueSizeofValue)
-
 	def isValueSizeofType(self):
 		return isinstance(self, ValueSizeofType)
 
-	def isValueAlignof(self):
-		return isinstance(self, ValueAlignof)
+	def isValueSizeofValue(self):
+		return isinstance(self, ValueSizeofValue)
+
+	def isValueAlignofType(self):
+		return isinstance(self, ValueAlignofType)
+
+	def isValueAlignofValue(self):
+		return isinstance(self, ValueAlignofValue)
 
 	def isValueOffsetof(self):
 		return isinstance(self, ValueOffsetof)
@@ -2273,7 +2294,7 @@ class ValueLengthofType(Value):
 		self.oftype = t
 
 
-class ValueAlignof(Value):
+class ValueAlignofType(Value):
 	def __init__(self, of, ti=None):
 		align = of.align
 		from trans import typeSysSize
@@ -2282,6 +2303,15 @@ class ValueAlignof(Value):
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.set_asset(align)
 
+
+class ValueAlignofValue(Value):
+	def __init__(self, of, ti=None):
+		align = of.type.align
+		from trans import typeSysSize
+		super().__init__(type=typeSysSize, ti=ti)
+		self.value = of
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.set_asset(align)
 
 
 class ValueOffsetof(Value):

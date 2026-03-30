@@ -79,56 +79,6 @@ def init(settings):
 
 
 
-CONS_PRECEDENCE = 10
-aprecedence = [
-	[HLIR_VALUE_OP_LOGIC_OR], #0
-	[HLIR_VALUE_OP_LOGIC_AND], #1
-	[HLIR_VALUE_OP_OR], #2
-	[HLIR_VALUE_OP_XOR], #3
-	[HLIR_VALUE_OP_AND], #4
-	[HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE], #5
-	[HLIR_VALUE_OP_LT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_GE], #6
-	[HLIR_VALUE_OP_SHL, HLIR_VALUE_OP_SHR], #7
-	[HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_SUB], #8
-	[HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM], #9
-	[HLIR_VALUE_OP_POS, HLIR_VALUE_OP_NEG, HLIR_VALUE_OP_NOT, HLIR_VALUE_OP_LOGIC_NOT, HLIR_VALUE_OP_CONS, HLIR_VALUE_OP_REF, HLIR_VALUE_OP_DEREF, HLIR_VALUE_OP_SIZEOF, HLIR_VALUE_OP_ALIGNOF, HLIR_VALUE_OP_OFFSETOF, HLIR_VALUE_OP_LENGTHOF], #10
-	[HLIR_VALUE_OP_CALL, HLIR_VALUE_OP_INDEX, HLIR_VALUE_OP_ACCESS, HLIR_VALUE_OP_ACCESS_MODULE], #11
-	#['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
-]
-
-precedenceMax = len(aprecedence) - 1
-
-
-# приоритет операции
-def precedence(x):
-	i = 0
-	if x.isValueBin():
-		k = x.op
-		if x.op == HLIR_VALUE_OP_ADD and x.type.is_array():
-			return 12
-		while i < precedenceMax + 1:
-			if k in aprecedence[i]:
-				break
-			i += 1
-	else:
-		if x.isValueCons(): i = 10
-		elif x.isValueSizeofValue(): i = 10
-		elif x.isValueRef(): i = 10
-		elif x.isValueCall(): i = 11
-		elif x.isValueIndex(): i = 11
-		elif x.isValueAccessRecord(): i = 11
-		elif x.isValueShl(): i = 7
-		elif x.isValueShr(): i = 7
-		elif x.isValuePos(): i = 10
-		elif x.isValueNeg(): i = 10
-		elif x.isValueNot(): i = 10
-		else: i = 12
-
-	return i
-
-
-
-
 
 def value_is_generic_immediate(v):
 	return v.isValueImmediate() and v.type.is_generic()
@@ -1244,10 +1194,15 @@ def do_cvalue_sizeof_type(x, ctx):
 def do_cvalue_lengthof_type(x, ctx):
 	return CValueInteger(x.oftype.volume.asset, is_unsigned=True)
 
-def do_cvalue_alignof(x, ctx):
+def do_cvalue_alignof_type(x, ctx):
 	if x.oftype.is_unit():
 		return CValueCast(CTypeNamed("size_t"), CValueInteger(1))
 	return CValueCall(CValueNamed("__alignof"), [CValueNamed(str_type(x.oftype))])
+
+def do_cvalue_alignof_value(x, ctx):
+	cv = CValueInteger(x.asset)
+	cv.mark = 'alignof_value'
+	return cv
 
 
 
@@ -1380,7 +1335,8 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueSizeofType(): return do_cvalue_sizeof_type(x, ctx)
 	elif x.isValueSizeofValue(): return do_cvalue_sizeof_value(x, ctx)
 	elif x.isValueLengthofType(): return do_cvalue_lengthof_type(x, ctx)
-	elif x.isValueAlignof(): return do_cvalue_alignof(x, ctx)
+	elif x.isValueAlignofType(): return do_cvalue_alignof_type(x, ctx)
+	elif x.isValueAlignofValue(): return do_cvalue_alignof_value(x, ctx)
 	elif x.isValueVaArg(): return do_cvalue_va_arg(x, ctx)
 	elif x.isValueVaStart(): return do_cvalue_va_start(x, ctx)
 	elif x.isValueVaEnd(): return do_cvalue_va_end(x, ctx)

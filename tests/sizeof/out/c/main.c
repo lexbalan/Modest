@@ -234,6 +234,10 @@ static bool testArray(void) {
 		printf("error: sizeof(array) != arraySize * sizeof(ArrayItemType)\n");
 		return false;
 	}
+	if (/*alignof_value*/1 != __alignof(ArrayItemType)) {
+		printf("error: alignof(array) != alignof(ArrayItemType)\n");
+		return false;
+	}
 	printf("passed: testArray\n");
 	return true;
 	#undef arraySize
@@ -244,6 +248,10 @@ static bool testRecord(void) {
 	struct record _record;
 	if (sizeof _record != 2ULL * sizeof(int32_t)) {
 		printf("error: sizeof(record) != 2 * sizeof(Int32)\n");
+		return false;
+	}
+	if (/*alignof_value*/4 != __alignof(struct record)) {
+		printf("error: alignof(_record) != alignof(Record)\n");
 		return false;
 	}
 	printf("passed: testRecord\n");

@@ -15,48 +15,6 @@ def get_id_str(x):
 	return x.id.cm
 
 
-aprecedence = [
-	[HLIR_VALUE_OP_LOGIC_OR], #0
-	[HLIR_VALUE_OP_LOGIC_AND], #1
-	[HLIR_VALUE_OP_OR], #2
-	[HLIR_VALUE_OP_XOR], #3
-	[HLIR_VALUE_OP_AND], #4
-	[HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE], #5
-	[HLIR_VALUE_OP_LT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_GE], #6
-	[HLIR_VALUE_OP_SHL, HLIR_VALUE_OP_SHR], #7
-	[HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_SUB], #8
-	[HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM], #9
-	[HLIR_VALUE_OP_POS, HLIR_VALUE_OP_NEG, HLIR_VALUE_OP_NOT, HLIR_VALUE_OP_LOGIC_NOT, HLIR_VALUE_OP_CONS, HLIR_VALUE_OP_REF, HLIR_VALUE_OP_DEREF, HLIR_VALUE_OP_SIZEOF, HLIR_VALUE_OP_ALIGNOF, HLIR_VALUE_OP_OFFSETOF, HLIR_VALUE_OP_LENGTHOF], #10
-	[HLIR_VALUE_OP_CALL, HLIR_VALUE_OP_INDEX, HLIR_VALUE_OP_ACCESS, HLIR_VALUE_OP_ACCESS_MODULE], #11
-	#['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
-]
-
-precedenceMax = len(aprecedence) - 1
-
-
-# приоритет операции
-def precedence(x):
-	i = 0
-	if x.isValueBin():
-		k = x.op
-		while i < precedenceMax + 1:
-			if k in aprecedence[i]:
-				break
-			i = i + 1
-	else:
-		if x.isValueSizeofValue(): i = 10
-		elif x.isValueCall(): i = 11
-		elif x.isValueIndex(): i = 11
-		elif x.isValueAccessRecord(): i = 11
-		elif x.isValueShl(): i = 7
-		elif x.isValueShr(): i = 7
-		elif x.isValuePos(): i = 10
-		elif x.isValueNeg(): i = 10
-		elif x.isValueNot(): i = 10
-		else: i = 12
-	return i
-
-
 cmodule = None
 
 
@@ -612,8 +570,11 @@ def str_value_sizeof_value(x, ctx):
 def str_value_sizeof_type(x, ctx):
 	return "sizeof(" + str_type(x.oftype) + ')'
 
-def str_value_alignof(x, ctx):
+def str_value_alignof_type(x, ctx):
 	return "alignof(" + str_type(x.oftype) + ")"
+
+def str_value_alignof_value(x, ctx):
+	return "alignof(" + str_value(x.value) + ")"
 
 def str_value_lengthof_type(x, ctx):
 	return "lengthof(" + str_type(x.oftype) + ")"
@@ -687,7 +648,8 @@ def str_value(x, ctx=[], parent_expr=None):
 	elif x.isValueNew(): return str_value_new(x, ctx)
 	elif x.isValueSizeofValue(): return str_value_sizeof_value(x, ctx)
 	elif x.isValueSizeofType(): return str_value_sizeof_type(x, ctx)
-	elif x.isValueAlignof(): return str_value_alignof(x, ctx)
+	elif x.isValueAlignofType(): return str_value_alignof_type(x, ctx)
+	elif x.isValueAlignofValue(): return str_value_alignof_value(x, ctx)
 	elif x.isValueOffsetof(): return str_value_offsetof(x, ctx)
 	elif x.isValueLengthofValue(): return str_value_lengthof_value(x, ctx)
 	elif x.isValueLengthofType(): return str_value_lengthof_type(x, ctx)

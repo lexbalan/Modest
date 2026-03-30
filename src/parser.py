@@ -527,7 +527,7 @@ class Parser:
 			ti.end = r['ti']
 			return {
 				'isa': 'ast_value',
-				'kind': 'or',
+				'kind': HLIR_VALUE_OP_OR,
 				'left': v,
 				'right': r,
 				'anno': [],
@@ -547,7 +547,7 @@ class Parser:
 			ti.end = r['ti']
 			return {
 				'isa': 'ast_value',
-				'kind': 'xor',
+				'kind': HLIR_VALUE_OP_XOR,
 				'left': v,
 				'right': r,
 				'anno': [],
@@ -567,7 +567,7 @@ class Parser:
 			ti.end = r['ti']
 			return {
 				'isa': 'ast_value',
-				'kind': 'and',
+				'kind': HLIR_VALUE_OP_AND,
 				'left': v,
 				'right': r,
 				'anno': [],
@@ -588,7 +588,7 @@ class Parser:
 				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
-					'kind': 'eq',
+					'kind': HLIR_VALUE_OP_EQ,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -601,7 +601,7 @@ class Parser:
 				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
-					'kind': 'ne',
+					'kind': HLIR_VALUE_OP_NE,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -623,7 +623,7 @@ class Parser:
 				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
-					'kind': 'lt',
+					'kind': HLIR_VALUE_OP_LT,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -636,7 +636,7 @@ class Parser:
 				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
-					'kind': 'gt',
+					'kind': HLIR_VALUE_OP_GT,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -649,7 +649,7 @@ class Parser:
 				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
-					'kind': 'le',
+					'kind': HLIR_VALUE_OP_LE,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -662,7 +662,7 @@ class Parser:
 				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
-					'kind': 'ge',
+					'kind': HLIR_VALUE_OP_GE,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -685,7 +685,7 @@ class Parser:
 				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
-					'kind': 'shl',
+					'kind': HLIR_VALUE_OP_SHL,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -699,7 +699,7 @@ class Parser:
 				ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
-					'kind': 'shr',
+					'kind': HLIR_VALUE_OP_SHR,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -721,7 +721,7 @@ class Parser:
 				#ti.end = r['ti']
 				v = {
 					'isa': 'ast_value',
-					'kind': 'add',
+					'kind': HLIR_VALUE_OP_ADD,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -732,7 +732,7 @@ class Parser:
 				r = self.expr_value_8()
 				v = {
 					'isa': 'ast_value',
-					'kind': 'sub',
+					'kind': HLIR_VALUE_OP_SUB,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -752,7 +752,7 @@ class Parser:
 				r = self.expr_value_9()
 				v = {
 					'isa': 'ast_value',
-					'kind': 'mul',
+					'kind': HLIR_VALUE_OP_MUL,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -763,7 +763,7 @@ class Parser:
 				r = self.expr_value_9()
 				v = {
 					'isa': 'ast_value',
-					'kind': 'div',
+					'kind': HLIR_VALUE_OP_DIV,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -774,7 +774,7 @@ class Parser:
 				r = self.expr_value_9()
 				v = {
 					'isa': 'ast_value',
-					'kind': 'rem',
+					'kind': HLIR_VALUE_OP_REM,
 					'left': v,
 					'right': r,
 					'anno': [],
@@ -807,7 +807,7 @@ class Parser:
 			v = self.expr_value_9()
 			return {
 				'isa': 'ast_value',
-				'kind': 'cons',
+				'kind': HLIR_VALUE_OP_CONS,
 				'value': v,
 				'type': t,
 				'anno': [],
@@ -825,7 +825,7 @@ class Parser:
 			v = self.expr_value_10()
 			return {
 				'isa': 'ast_value',
-				'kind': 'deref',
+				'kind': HLIR_VALUE_OP_DEREF,
 				'value': v,
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
@@ -835,7 +835,7 @@ class Parser:
 			v = self.expr_value_11()
 			return {
 				'isa': 'ast_value',
-				'kind': 'ref',
+				'kind': HLIR_VALUE_OP_REF,
 				'value': v,
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
@@ -845,7 +845,7 @@ class Parser:
 			v = self.expr_value_11()
 			return {
 				'isa': 'ast_value',
-				'kind': 'not',
+				'kind': HLIR_VALUE_OP_NOT,
 				'value': v,
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
@@ -855,7 +855,7 @@ class Parser:
 			v = self.expr_value_11()
 			return {
 				'isa': 'ast_value',
-				'kind': 'pos',
+				'kind': HLIR_VALUE_OP_POS,
 				'value': v,
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
@@ -865,7 +865,7 @@ class Parser:
 			v = self.expr_value_11()
 			return {
 				'isa': 'ast_value',
-				'kind': 'neg',
+				'kind': HLIR_VALUE_OP_NEG,
 				'value': v,
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
@@ -875,7 +875,7 @@ class Parser:
 			v = self.expr_value()
 			return {
 				'isa': 'ast_value',
-				'kind': 'new',
+				'kind': HLIR_VALUE_OP_NEW,
 				'value': v,
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
@@ -885,7 +885,7 @@ class Parser:
 			v = self.expr_value()
 			return {
 				'isa': 'ast_value',
-				'kind': 'unsafe',
+				'kind': HLIR_VALUE_OP_UNSAFE,
 				'value': v,
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
@@ -899,7 +899,7 @@ class Parser:
 				t = self.expr_type()
 				rv = {
 					'isa': 'ast_value',
-					'kind': 'sizeof_type',
+					'kind': HLIR_VALUE_OP_SIZEOF_TYPE,
 					'type': t,
 					'anno': [],
 				}
@@ -907,7 +907,7 @@ class Parser:
 				v = self.expr_value()
 				rv = {
 					'isa': 'ast_value',
-					'kind': 'sizeof_value',
+					'kind': HLIR_VALUE_OP_SIZEOF_VALUE,
 					'value': v,
 					'anno': [],
 				}
@@ -919,16 +919,27 @@ class Parser:
 		elif self.match("alignof"):
 			mid_ti = self.textInfo()
 			self.match("(")
-			t = self.expr_type()
+			rv = None
+			if self.is_type_expr():
+				t = self.expr_type()
+				rv = {
+					'isa': 'ast_value',
+					'kind': HLIR_VALUE_OP_ALIGNOF_TYPE,
+					'type': t,
+					'anno': [],
+				}
+			else:
+				v = self.expr_value()
+				rv = {
+					'isa': 'ast_value',
+					'kind': HLIR_VALUE_OP_ALIGNOF_VALUE,
+					'value': v,
+					'anno': [],
+				}
 			end_ti = self.tokenInfo()
 			self.need(")")
-			return {
-				'isa': 'ast_value',
-				'kind': 'alignof',
-				'type': t,
-				'anno': [],
-				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
-			}
+			rv['ti'] = TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
+			return rv
 
 		elif self.match("offsetof"):
 			mid_ti = self.textInfo()
@@ -940,7 +951,7 @@ class Parser:
 			self.need(")")
 			return {
 				'isa': 'ast_value',
-				'kind': 'offsetof',
+				'kind': HLIR_VALUE_OP_OFFSETOF,
 				'type': t,
 				'field': f,
 				'anno': [],
@@ -956,7 +967,7 @@ class Parser:
 				self.need(")")
 				return {
 					'isa': 'ast_value',
-					'kind': 'lengthof_type',
+					'kind': HLIR_VALUE_OP_LENGTHOF_TYPE,
 					'type': t,
 					'anno': [],
 					'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
@@ -967,7 +978,7 @@ class Parser:
 				self.need(")")
 				return {
 					'isa': 'ast_value',
-					'kind': 'lengthof_value',
+					'kind': HLIR_VALUE_OP_LENGTHOF_VALUE,
 					'value': v,
 					'anno': [],
 					'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
@@ -983,7 +994,7 @@ class Parser:
 			self.need(")")
 			return {
 				'isa': 'ast_value',
-				'kind': '__va_start',
+				'kind': HLIR_VALUE_OP_VA_START,
 				'values': [v0, v1],
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
@@ -999,7 +1010,7 @@ class Parser:
 			self.need(")")
 			return {
 				'isa': 'ast_value',
-				'kind': '__va_copy',
+				'kind': HLIR_VALUE_OP_VA_COPY,
 				'values': [v0, v1],
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
@@ -1013,7 +1024,7 @@ class Parser:
 			self.need(")")
 			return {
 				'isa': 'ast_value',
-				'kind': '__va_end',
+				'kind': HLIR_VALUE_OP_VA_END,
 				'value': v,
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=mid_ti, end=end_ti)
@@ -1029,7 +1040,7 @@ class Parser:
 			self.need(")")
 			return {
 				'isa': 'ast_value',
-				'kind': '__va_arg',
+				'kind': HLIR_VALUE_OP_VA_ARG,
 				'va_list': v,
 				'type': t,
 				'anno': [],
@@ -1044,7 +1055,7 @@ class Parser:
 				t = self.expr_type()
 				rv = {
 					'isa': 'ast_value',
-					'kind': '__defined_type',
+					'kind': HLIR_VALUE_OP_DEFINED_TYPE,
 					'type': t,
 					'anno': [],
 				}
@@ -1052,7 +1063,7 @@ class Parser:
 				v = self.expr_value()
 				rv = {
 					'isa': 'ast_value',
-					'kind': '__defined_value',
+					'kind': HLIR_VALUE_OP_DEFINED_VALUE,
 					'value': v,
 					'anno': [],
 				}
@@ -1126,7 +1137,7 @@ class Parser:
 				self.match(")")
 				v = {
 					'isa': 'ast_value',
-					'kind': 'call',
+					'kind': HLIR_VALUE_OP_CALL,
 					'left': v,
 					'args': args,
 					'anno': [],
@@ -1138,7 +1149,7 @@ class Parser:
 				field_id = self.parse_identifier()
 				v = {
 					'isa': 'ast_value',
-					'kind': 'access',
+					'kind': HLIR_VALUE_OP_ACCESS,
 					'left': v,
 					'right': field_id,
 					'anno': [],
@@ -1170,7 +1181,7 @@ class Parser:
 				if is_slicing:
 					v = {
 						'isa': 'ast_value',
-						'kind': 'slice',
+						'kind': HLIR_VALUE_OP_SLICE,
 						'left': v,
 						'index_from': i,
 						'index_to': j,
@@ -1181,7 +1192,7 @@ class Parser:
 
 				v = {
 					'isa': 'ast_value',
-					'kind': 'index',
+					'kind': HLIR_VALUE_OP_INDEX,
 					'left': v,
 					'index': i,
 					'anno': [],
@@ -1422,7 +1433,7 @@ class Parser:
 			self.need(")")
 			return {
 				'isa': 'ast_value',
-				'kind': 'subexpr',
+				'kind': HLIR_VALUE_OP_SUBEXPR,
 				'value': v,
 				'anno': [],
 				'ti': TextInfo(start=ti_start, mid=v['ti'].mid, end=ti_end)
