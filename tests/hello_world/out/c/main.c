@@ -29,7 +29,16 @@ struct point {
 static struct point points[3] = {
 	(struct point){.x = 0, .y = 10},
 	(struct point){.x = 10, .y = 20},
-	(struct point){.x = 30, .y = 40}
+	(struct point){
+		.x = 30,
+		.y = 40
+	}
+};
+static int32_t arrays[4][4] = {
+	{0, 1, 2, 3},
+	{4, 5, 6, 7},
+	{8, 9, 10, 11},
+	{12, 13, 14, 15}
 };
 typedef struct open_point OpenPoint;
 struct open_point {
@@ -47,7 +56,7 @@ static void foo(int32_t a, int64_t b) {
 	return;
 }
 #define C 15
-static uint32_t k[3] = { 0x1U, 0x2U, 0x3U};
+static uint32_t k[3] = {0x1U, 0x2U, 0x3U};
 static struct point p0 = (struct point){
 	.x = 1,
 	.y = 2
@@ -56,7 +65,7 @@ static struct point p0 = (struct point){
 static void farr(int32_t _x[3], int32_t __out[3]) {
 	int32_t x[3];
 	__builtin_memcpy(x, _x, sizeof(int32_t [3]));
-	__builtin_memcpy(__out, &(int32_t [3]){ x[0] + 1, x[1] + 2, x[2] + 3}, sizeof(int32_t [3]));
+	__builtin_memcpy(__out, &(int32_t [3]){x[0] + 1, x[1] + 2, x[2] + 3}, sizeof(int32_t [3]));
 }
 
 int main(void) {
@@ -78,9 +87,9 @@ int main(void) {
 	char c1 = 'B';
 	char16_t c2 = u'B';
 	char32_t c3 = U'B';
-	char cs1[1] = { 'B'};
-	char16_t cs2[1] = { u'B'};
-	char32_t cs3[1] = { U'B'};
+	char cs1[1] = {'B'};
+	char16_t cs2[1] = {u'B'};
+	char32_t cs3[1] = {U'B'};
 	char *s1 = "B";
 	char16_t *s2 = u"B";
 	char32_t *s3 = U"B";
@@ -91,7 +100,7 @@ int main(void) {
 	printf("x2 = %llx\n", x2);
 	if (x2 != 0xFFFFU) {
 	}
-	int32_t arr[3] = { 1, 2, 3};
+	int32_t arr[3] = {1, 2, 3};
 	int32_t arr2[3];
 	__builtin_memcpy(&arr2, &arr, sizeof(int32_t [3]));
 	int32_t arr4[3];

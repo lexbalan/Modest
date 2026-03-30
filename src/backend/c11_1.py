@@ -488,8 +488,8 @@ class CValueArray(CValue):
 			item = self.items[i]
 			if i > 0:
 				s_items += ","
-			if item.nl == 0:
-				s_items += " "
+				if item.nl == 0:
+					s_items += " "
 			s_items += str_nl_indent(item.nl)
 			s_items += str_cvalue(item)
 			i = i + 1
@@ -515,28 +515,29 @@ class CValueStruct(CValue):
 
 		indent_up()
 
-		sitems = ''
+		s_items = ''
 		i = 0
-		kv = None
+		item = None
 		need_nl = 0
 		while i < len(self.items):
-			kv = self.items[i]
-			if i > 0 and kv.nl == 0:
-				sitems += ' '
-			sitems += str_nl_indent(kv.nl) + ".%s = %s" % (kv.key, str_cvalue(kv.value))
-			if i < len(self.items) - 1:
-				sitems += ','
+			item = self.items[i]
+			if i > 0:
+				s_items += ","
+				if item.nl == 0:
+					s_items += " "
+			s_items += str_nl_indent(item.nl)
+			s_items += ".%s = %s" % (item.key, str_cvalue(item.value))
 			i += 1
 
 		indent_down()
 
-		if kv != None and kv.nl > 0:
+		if item != None and item.nl > 0:
 			need_nl = 1
 
-		if sitems == '':
-			sitems = '0'
+		if s_items == '':
+			s_items = '0'
 		sstr = '{'
-		sstr += sitems
+		sstr += s_items
 		sstr += str_nl_indent(need_nl) + '}'
 		return sstr
 
