@@ -1,5 +1,7 @@
 // tests/shift/src/main.m
 
+pragma unsafe
+
 include "libc/ctypes64"
 include "libc/stdio"
 include "libc/stdlib"
@@ -280,6 +282,11 @@ func testArray () -> Bool {
 	type ArrayItemType = Int32
 	var array: [arraySize]ArrayItemType
 
+	if lengthof(array) != arraySize {
+		printf("error: lengthof(array) != arraySize\n")
+		return false
+	}
+
 	if sizeof(array) != arraySize * sizeof(ArrayItemType) {
 		printf("error: sizeof(array) != arraySize * sizeof(ArrayItemType)\n")
 		return false
@@ -314,6 +321,24 @@ func testRecord () -> Bool {
 }
 
 
+func testPointer () -> Bool {
+	var pointer: *{}
+
+	if unsafe Nat32 sizeof(pointer) != __target.pointerWidth / 8 {
+		printf("error: sizeof(pointer) != __target.pointerWidth / 8\n")
+		return false
+	}
+
+	if alignof(pointer) != sizeof(pointer) {
+		printf("error: alignof(pointer) != sizeof(pointer)\n")
+		return false
+	}
+
+	printf("passed: testPointer\n")
+	return true
+}
+
+
 public func main () -> Int {
 	printf("test sizeof\n")
 
@@ -339,6 +364,8 @@ public func main () -> Int {
 	result = testArray()
 	success = success and result
 	result = testRecord()
+	success = success and result
+	result = testPointer()
 	success = success and result
 
 	printf("test ")

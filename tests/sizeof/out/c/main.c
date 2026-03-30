@@ -5,6 +5,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#if !defined(LENGTHOF)
+#define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
+#endif
 #if !defined(__STR_UNICODE__)
 #define __STR_UNICODE__
 typedef uint8_t char8_t;
@@ -230,6 +233,10 @@ static bool testArray(void) {
 	#define arraySize 10
 	typedef int32_t ArrayItemType;
 	ArrayItemType array[arraySize];
+	if (LENGTHOF(array) != arraySize) {
+		printf("error: lengthof(array) != arraySize\n");
+		return false;
+	}
 	if (sizeof array != arraySize * sizeof(ArrayItemType)) {
 		printf("error: sizeof(array) != arraySize * sizeof(ArrayItemType)\n");
 		return false;
@@ -258,6 +265,20 @@ static bool testRecord(void) {
 	return true;
 }
 
+static bool testPointer(void) {
+	struct {uint8_t __placeholder;} *pointer;
+	if ((uint32_t)sizeof pointer != 64U / 8U) {
+		printf("error: sizeof(pointer) != __target.pointerWidth / 8\n");
+		return false;
+	}
+	if (__alignof(__typeof__(pointer)) != sizeof pointer) {
+		printf("error: alignof(pointer) != sizeof(pointer)\n");
+		return false;
+	}
+	printf("passed: testPointer\n");
+	return true;
+}
+
 int main(void) {
 	printf("test sizeof\n");
 	bool result;
@@ -281,6 +302,8 @@ int main(void) {
 	result = testArray();
 	success = success && result;
 	result = testRecord();
+	success = success && result;
+	result = testPointer();
 	success = success && result;
 	printf("test ");
 	if (!success) {
