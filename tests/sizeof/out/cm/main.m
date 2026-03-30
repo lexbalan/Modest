@@ -321,7 +321,7 @@ func testRecord () -> Bool {
 func testPointer () -> Bool {
 	var pointer: Ptr
 
-	if unsafe Nat32 sizeof pointer != {name = "Default", charWidth = 8, intWidth = 32, floatWidth = 64, pointerWidth = 64}.pointerWidth / 8 {
+	if unsafe Nat32 sizeof pointer != __target.pointerWidth / 8 {
 		printf("error: sizeof(pointer) != __target.pointerWidth / 8\n")
 		return false
 	}

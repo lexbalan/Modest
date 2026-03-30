@@ -316,24 +316,17 @@ def init_builtin_values():
 	flt_width = int(settings['float_width'])
 	pointer_width = int(settings['pointer_width'])
 
-
-	__targetName = value_string_create(settings['target_name'])
-	__targetCharWidth = ValueLiteral(typeNat32, char_width)
-	__targetIntWidth = ValueLiteral(typeNat32, int_width)
-	__targetFloatWidth = ValueLiteral(typeNat32, flt_width)
-	__targetPointerWidth = ValueLiteral(typeNat32, pointer_width)
-
-	# '__target' record
+	# create '__target' record
 	target_initializers = [
-		Initializer(Id('name'), __targetName),
-		Initializer(Id('charWidth'), __targetCharWidth),
-		Initializer(Id('intWidth'), __targetIntWidth),
-		Initializer(Id('floatWidth'), __targetFloatWidth),
-		Initializer(Id('pointerWidth'), __targetPointerWidth),
+		Initializer(Id('name'), value_string_create(settings['target_name'])),
+		Initializer(Id('charWidth'), ValueLiteral(typeNat32, char_width)),
+		Initializer(Id('intWidth'), ValueLiteral(typeNat32, int_width)),
+		Initializer(Id('floatWidth'), ValueLiteral(typeNat32, flt_width)),
+		Initializer(Id('pointerWidth'), ValueLiteral(typeNat32, pointer_width)),
 	]
-	target = value_record_create(target_initializers, ti=None)
-	root_symtab.value_add('__target', target)
-
+	target_iv = value_record_create(target_initializers, ti=None)
+	const_target = ValueConst(target_iv.type, Id("__target"), init_value=target_iv, ti=None)
+	root_symtab.value_add('__target', const_target)
 
 
 # last fiels of record can be zero size array (!)
