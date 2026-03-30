@@ -10,6 +10,12 @@ type Point = {
 	y: Word64
 }
 
+var points: []Point = [
+	{x=00, y=10}
+	{x=10, y=20}
+	{x=30, y=40}
+]
+
 type OpenPoint = @public {
 	x: Word64
 	y: Word64

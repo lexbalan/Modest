@@ -561,11 +561,12 @@ def do_cvalue_literal_char(t, v, ctx):
 
 def do_cvalue_literal_array(v, ctx):
 	items = v.asset
-	cvalues = []
+	initializers = []
 	for item in items:
-		cv = do_cinitializer(item, ctx=ctx)
-		cvalues.append(cv)
-	return CValueArray(cvalues)
+		ini = do_cinitializer(item, ctx=ctx)
+		ini.nl = item.nl
+		initializers.append(ini)
+	return CValueArray(initializers)
 
 
 def do_cvalue_literal_record(v, ctx):
@@ -640,6 +641,7 @@ def do_cvalue_cons_array(x, ctx):
 				cvalues = []
 				for char in items:
 					cv = CValueChar(char, width=width)
+					cv.nl = 0
 					cvalues.append(cv)
 				cv = CValueArray(cvalues)
 				cv.mark = 'CA1'

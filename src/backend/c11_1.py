@@ -480,10 +480,29 @@ class CValueArray(CValue):
 		self.precedence = 15
 
 	def __str__(self):
-		items = print_list_items(self.items, str_cvalue)
-		if items == '':
-			items = '0'
-		return '{%s}' % items
+		indent_up()
+		s_items = '' #print_list_items(self.items, str_cvalue)
+
+		i = 0
+		while i < len(self.items):
+			item = self.items[i]
+			if i > 0:
+				s_items += ","
+			if item.nl == 0:
+				s_items += " "
+			s_items += str_nl_indent(item.nl)
+			s_items += str_cvalue(item)
+			i = i + 1
+		indent_down()
+
+		if s_items == '':
+			s_items = '0'
+
+		if len(self.items) > 0 and self.items[-1].nl > 0:
+			s_items +=str_nl_indent(1)
+
+		#1/0
+		return '{%s}' % s_items
 
 
 class CValueStruct(CValue):
