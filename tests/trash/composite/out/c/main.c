@@ -92,8 +92,14 @@ static int (*a5[2])[5] = {&a4[0], &a4[1]};
 //	[&a4[0][0], &a4[0][1], &a4[0][2], &a4[0][3], &a4[0][4]]
 //	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
 //]
-static int (*a7[2][5])[5] = {{&a0, &a0, &a0, &a0, &a0}, {&a0, &a0, &a0, &a0, &a0}};
-static int (*(*a8[2][5])[2][5])[5] = {{&a7, &a7, &a7, &a7, &a7}, {&a7, &a7, &a7, &a7, &a7}};
+static int (*a7[2][5])[5] = {
+	{&a0, &a0, &a0, &a0, &a0},
+	{&a0, &a0, &a0, &a0, &a0}
+};
+static int (*(*a8[2][5])[2][5])[5] = {
+	{&a7, &a7, &a7, &a7, &a7},
+	{&a7, &a7, &a7, &a7, &a7}
+};
 static int (*(*(*a9[5])[10])[2])(int a);
 static int32_t (*p2)[5] = &a0;
 static int32_t (**p3)[5] = &p2;
@@ -102,7 +108,10 @@ struct rgb24 {
 	uint8_t green;
 	uint8_t blue;
 };
-static struct rgb24 rgb0[2] = {(struct rgb24){.red = 200, .green = 0, .blue = 0}, (struct rgb24){.red = 200, .green = 0, .blue = 0}};
+static struct rgb24 rgb0[2] = {
+	(struct rgb24){.red = 200, .green = 0, .blue = 0},
+	(struct rgb24){.red = 200, .green = 0, .blue = 0}
+};
 struct animation_point {
 	struct rgb24 color;
 	uint32_t time;
@@ -115,13 +124,35 @@ static struct animation_point ap = (struct animation_point){
 	},
 	.time = 3000
 };
-static struct animation_point animation0_points[5] = {(struct animation_point){.color = {.red = 200, .green = 0, .blue = 0}, .time = 3}, (struct animation_point){.color = {.red = 0, .green = 200, .blue = 0}, .time = 30}, (struct animation_point){.color = {.red = 100, .green = 100, .blue = 0}, .time = 300}, (struct animation_point){.color = {.red = 254, .green = 254, .blue = 0}, .time = 20}, (struct animation_point){.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}};
-static struct animation_point animation1_points[5] = {(struct animation_point){.color = {.red = 200, .green = 0, .blue = 0}, .time = 3}, (struct animation_point){.color = {.red = 0, .green = 200, .blue = 0}, .time = 30}, (struct animation_point){.color = {.red = 100, .green = 100, .blue = 0}, .time = 300}, (struct animation_point){.color = {.red = 254, .green = 254, .blue = 0}, .time = 20}, (struct animation_point){.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}};
-static struct animation_point animation2_points[5] = {(struct animation_point){.color = {.red = 200, .green = 0, .blue = 0}, .time = 3}, (struct animation_point){.color = {.red = 0, .green = 200, .blue = 0}, .time = 30}, (struct animation_point){.color = {.red = 100, .green = 100, .blue = 0}, .time = 300}, (struct animation_point){.color = {.red = 255, .green = 254, .blue = 0}, .time = 20}, (struct animation_point){.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}};
+static struct animation_point animation0_points[5] = {
+	(struct animation_point){.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	(struct animation_point){.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	(struct animation_point){.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	(struct animation_point){.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
+	(struct animation_point){.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
+};
+static struct animation_point animation1_points[5] = {
+	(struct animation_point){.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	(struct animation_point){.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	(struct animation_point){.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	(struct animation_point){.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
+	(struct animation_point){.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
+};
+static struct animation_point animation2_points[5] = {
+	(struct animation_point){.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	(struct animation_point){.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	(struct animation_point){.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	(struct animation_point){.color = {.red = 255, .green = 254, .blue = 0}, .time = 20},
+	(struct animation_point){.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
+};
 
 static void xy(struct __anonymous_struct_3 x) {
 }
-static int32_t arrr[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+static int32_t arrr[3][3] = {
+	{1, 2, 3},
+	{4, 5, 6},
+	{7, 8, 9}
+};
 static void (*arry[3][3])(void);
 
 static int32_t add(int32_t a, int32_t b) {
@@ -131,7 +162,9 @@ static int32_t add(int32_t a, int32_t b) {
 static int32_t sub(int32_t a, int32_t b) {
 	return a - b;
 }
-static int32_t (*farr[2])(int32_t a, int32_t b) = {&add, &sub};
+static int32_t (*farr[2])(int32_t a, int32_t b) = {
+	&add, &sub
+};
 typedef void He(void);
 
 __attribute__((used))
@@ -142,7 +175,9 @@ static void he(He *x) {
 static void hi(char *x) {
 	printf("Hi %s!\n", x);
 }
-static void (*hiarr[10])(char *x) = {&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi};
+static void (*hiarr[10])(char *x) = {
+	&hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi, &hi
+};
 struct wrap {
 	void (*fhi)(char *x);
 	int32_t (*fop)(int32_t a, int32_t b);

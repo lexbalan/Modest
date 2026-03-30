@@ -263,10 +263,14 @@ declare %Int @system([0 x %ConstChar]* %string)
 @str48 = private constant [30 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 97, i8 108, i8 105, i8 103, i8 110, i8 111, i8 102, i8 40, i8 70, i8 105, i8 120, i8 101, i8 100, i8 51, i8 50, i8 41, i8 32, i8 33, i8 61, i8 32, i8 52, i8 10, i8 0]
 @str49 = private constant [30 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 97, i8 108, i8 105, i8 103, i8 110, i8 111, i8 102, i8 40, i8 70, i8 105, i8 120, i8 101, i8 100, i8 54, i8 52, i8 41, i8 32, i8 33, i8 61, i8 32, i8 56, i8 10, i8 0]
 @str50 = private constant [19 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 116, i8 101, i8 115, i8 116, i8 70, i8 105, i8 120, i8 101, i8 100, i8 10, i8 0]
-@str51 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 10, i8 0]
-@str52 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
-@str53 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str54 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str51 = private constant [59 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 97, i8 114, i8 114, i8 97, i8 121, i8 41, i8 32, i8 33, i8 61, i8 32, i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 105, i8 122, i8 101, i8 32, i8 42, i8 32, i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 65, i8 114, i8 114, i8 97, i8 121, i8 73, i8 116, i8 101, i8 109, i8 84, i8 121, i8 112, i8 101, i8 41, i8 10, i8 0]
+@str52 = private constant [19 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 116, i8 101, i8 115, i8 116, i8 65, i8 114, i8 114, i8 97, i8 121, i8 10, i8 0]
+@str53 = private constant [44 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 114, i8 101, i8 99, i8 111, i8 114, i8 100, i8 41, i8 32, i8 33, i8 61, i8 32, i8 50, i8 32, i8 42, i8 32, i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 73, i8 110, i8 116, i8 51, i8 50, i8 41, i8 10, i8 0]
+@str54 = private constant [19 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 116, i8 101, i8 115, i8 116, i8 65, i8 114, i8 114, i8 97, i8 121, i8 10, i8 0]
+@str55 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 10, i8 0]
+@str56 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@str57 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str58 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 define internal %Bool @testUnit() {
 ; if_0
@@ -602,8 +606,40 @@ endif_3:
 	ret %Bool 1
 }
 
+%testArray.ArrayItemType = type %Int32;
+define internal %Bool @testArray() {
+	%1 = alloca [10 x %testArray.ArrayItemType], align 1
+; if_0
+	br %Bool 0 , label %then_0, label %endif_0
+then_0:
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([59 x i8]* @str51 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_0
+endif_0:
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str52 to [0 x i8]*))
+	ret %Bool 1
+}
+
+%testRecord.Record = type {
+	%Int32,
+	%Int32
+};
+
+define internal %Bool @testRecord() {
+	%1 = alloca %testRecord.Record, align 4
+; if_0
+	br %Bool 0 , label %then_0, label %endif_0
+then_0:
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([44 x i8]* @str53 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_0
+endif_0:
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str54 to [0 x i8]*))
+	ret %Bool 1
+}
+
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str51 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str55 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
 	%3 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %3
@@ -655,17 +691,23 @@ define %Int @main() {
 	%34 = load %Bool, %Bool* %2
 	%35 = and %Bool %33, %34
 	store %Bool %35, %Bool* %3
-	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str52 to [0 x i8]*))
-; if_0
+	%36 = call %Bool @testArray()
+	store %Bool %36, %Bool* %2
 	%37 = load %Bool, %Bool* %3
-	%38 = xor %Bool %37, 1
-	br %Bool %38 , label %then_0, label %endif_0
+	%38 = load %Bool, %Bool* %2
+	%39 = and %Bool %37, %38
+	store %Bool %39, %Bool* %3
+	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str56 to [0 x i8]*))
+; if_0
+	%41 = load %Bool, %Bool* %3
+	%42 = xor %Bool %41, 1
+	br %Bool %42 , label %then_0, label %endif_0
 then_0:
-	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str53 to [0 x i8]*))
+	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str57 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str54 to [0 x i8]*))
+	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str58 to [0 x i8]*))
 	ret %Int 0
 }
 

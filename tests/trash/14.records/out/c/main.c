@@ -32,16 +32,20 @@ static Line line = (Line){
 	.a = {.x = 10, .y = 11},
 	.b = {.x = 12, .y = 13}
 };
-static Line lines[3] = {(Line){
-	.a = {.x = 1, .y = 2},
-	.b = {.x = 3, .y = 4}
-}, (Line){
-	.a = {.x = 5, .y = 6},
-	.b = {.x = 7, .y = 8}
-}, (Line){
-	.a = {.x = 9, .y = 10},
-	.b = {.x = 11, .y = 12}
-}};
+static Line lines[3] = {
+	(Line){
+		.a = {.x = 1, .y = 2},
+		.b = {.x = 3, .y = 4}
+	},
+	(Line){
+		.a = {.x = 5, .y = 6},
+		.b = {.x = 7, .y = 8}
+	},
+	(Line){
+		.a = {.x = 9, .y = 10},
+		.b = {.x = 11, .y = 12}
+	}
+};
 static Line *pLines[3] = {&lines[0], &lines[1], &lines[2]};
 struct structx {
 	Line *x;

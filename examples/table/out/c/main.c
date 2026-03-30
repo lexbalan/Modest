@@ -9,10 +9,23 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
-static char *table_header0[3] = {"#", "Header0", "Header1"};
-static char *tableData0[3][3] = {{"0", "Alef", "Betha"}, {"1", "Clock", "Depth"}, {"2", "Earth", "Fight"}};
-static char *table_header1[4] = {"#", "Header0", "Header1", "Header2"};
-static char *tableData1[4][4] = {{"0", "Alef", "Betha", "Clock"}, {"1", "Depth", "Emma", "Free"}, {"2", "Ink", "Julia", "Keyword"}, {"3", "Ultra", "Video", "Word"}};
+static char *table_header0[3] = {
+	"#", "Header0", "Header1"
+};
+static char *tableData0[3][3] = {
+	{"0", "Alef", "Betha"},
+	{"1", "Clock", "Depth"},
+	{"2", "Earth", "Fight"}
+};
+static char *table_header1[4] = {
+	"#", "Header0", "Header1", "Header2"
+};
+static char *tableData1[4][4] = {
+	{"0", "Alef", "Betha", "Clock"},
+	{"1", "Depth", "Emma", "Free"},
+	{"2", "Ink", "Julia", "Keyword"},
+	{"3", "Ultra", "Video", "Word"}
+};
 static table_Table table00 = (table_Table){
 	.header = NULL,
 	.data = &tableData0,

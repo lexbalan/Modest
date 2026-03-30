@@ -95,6 +95,11 @@ void chacha20_chacha20Block(uint32_t _state[16], uint32_t __out[16]) {
 // Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
 
 void chacha20_makeState(uint32_t key[8], uint32_t counter, uint32_t nonce[3], uint32_t __out[16]) {
-	__builtin_memcpy(__out, &(chacha20_State){0x61707865U, 0x3320646EU, 0x79622D32U, 0x6B206574U, key[0], key[1], key[2], key[3], key[4], key[5], key[6], key[7], counter, nonce[0], nonce[1], nonce[2]}, sizeof(chacha20_State));
+	__builtin_memcpy(__out, &(chacha20_State){
+		0x61707865U, 0x3320646EU, 0x79622D32U, 0x6B206574U,
+		key[0], key[1], key[2], key[3],
+		key[4], key[5], key[6], key[7],
+		counter, nonce[0], nonce[1], nonce[2]
+	}, sizeof(chacha20_State));
 }
 

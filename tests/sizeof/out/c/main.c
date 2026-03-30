@@ -226,6 +226,30 @@ static bool testFixed(void) {
 	return true;
 }
 
+static bool testArray(void) {
+	#define arraySize 10
+	typedef int32_t ArrayItemType;
+	ArrayItemType array[arraySize];
+	if (sizeof array != arraySize * sizeof(ArrayItemType)) {
+		printf("error: sizeof(array) != arraySize * sizeof(ArrayItemType)\n");
+		return false;
+	}
+	printf("passed: testArray\n");
+	return true;
+	#undef arraySize
+}
+
+static bool testRecord(void) {
+	struct record {int32_t x; int32_t y;};
+	struct record _record;
+	if (sizeof _record != 2ULL * sizeof(int32_t)) {
+		printf("error: sizeof(record) != 2 * sizeof(Int32)\n");
+		return false;
+	}
+	printf("passed: testArray\n");
+	return true;
+}
+
 int main(void) {
 	printf("test sizeof\n");
 	bool result;
@@ -245,6 +269,8 @@ int main(void) {
 	result = testFloat();
 	success = success && result;
 	result = testFixed();
+	success = success && result;
+	result = testArray();
 	success = success && result;
 	printf("test ");
 	if (!success) {

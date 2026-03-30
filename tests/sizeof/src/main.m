@@ -275,6 +275,45 @@ func testFixed () -> Bool {
 }
 
 
+func testArray () -> Bool {
+	let arraySize = 10
+	type ArrayItemType = Int32
+	var array: [arraySize]ArrayItemType
+
+	if sizeof(array) != arraySize * sizeof(ArrayItemType) {
+		printf("error: sizeof(array) != arraySize * sizeof(ArrayItemType)\n")
+		return false
+	}
+
+//	if alignof(array) != alignof(ArrayItemType) {
+//		printf("error: alignof(array) != alignof(ArrayItemType)\n")
+//		return false
+//	}
+
+	printf("passed: testArray\n")
+	return true
+}
+
+
+func testRecord () -> Bool {
+	type Record = {x: Int32, y: Int32}
+	var _record: Record
+
+	if sizeof(_record) != 2 * sizeof(Int32) {
+		printf("error: sizeof(record) != 2 * sizeof(Int32)\n")
+		return false
+	}
+
+//	if alignof(array) != alignof(ArrayItemType) {
+//		printf("error: alignof(array) != alignof(ArrayItemType)\n")
+//		return false
+//	}
+
+	printf("passed: testArray\n")
+	return true
+}
+
+
 public func main () -> Int {
 	printf("test sizeof\n")
 
@@ -296,6 +335,8 @@ public func main () -> Int {
 	result = testFloat()
 	success = success and result
 	result = testFixed()
+	success = success and result
+	result = testArray()
 	success = success and result
 
 	printf("test ")

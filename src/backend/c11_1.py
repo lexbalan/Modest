@@ -498,10 +498,10 @@ class CValueArray(CValue):
 		if s_items == '':
 			s_items = '0'
 
-		if len(self.items) > 0 and self.items[-1].nl > 0:
-			s_items +=str_nl_indent(1)
+		if len(self.items) > 0:
+			nn = 1 if len(self.items) > 0 and self.items[0].nl > 0 else 0
+			s_items += str_nl_indent(nn)
 
-		#1/0
 		return '{%s}' % s_items
 
 
@@ -538,7 +538,8 @@ class CValueStruct(CValue):
 			s_items = '0'
 		sstr = '{'
 		sstr += s_items
-		sstr += str_nl_indent(need_nl) + '}'
+		sstr += str_nl_indent(1 if len(self.items) > 0 and self.items[0].nl > 0 else 0)
+		sstr += '}'
 		return sstr
 
 

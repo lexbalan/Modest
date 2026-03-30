@@ -1807,7 +1807,7 @@ def do_def_type(x):
 def do_def_type_record(t):
 	id_str = get_type_id_str(t)
 
-	defs = []
+	defs = ()
 
 	# Если структура open & не задекларирована ранее - печатаем для нее typedef
 	if (not id_str in declared) and t.is_open_record:
@@ -1815,12 +1815,12 @@ def do_def_type_record(t):
 		isa = 'struct' if not t.layout == 'union' else 'union'
 		kisa = isa + ' ' + tag
 		dt = CStmtDefType(get_type_id_str(t), CTypeNamed(kisa))
-		defs.append(dt)
+		defs = (dt,)
 
 	dt = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
 
 	dv = CStmtDefVar('', dt, storage_class='', annotations=t.annotations)
-	defs.append(dv)
+	defs = defs + (dv,)
 	return defs
 
 
