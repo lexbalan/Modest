@@ -1200,9 +1200,13 @@ def do_cvalue_alignof_type(x, ctx):
 	return CValueCall(CValueNamed("__alignof"), [CValueNamed(str_type(x.oftype))])
 
 def do_cvalue_alignof_value(x, ctx):
-	cv = CValueInteger(x.asset)
-	cv.mark = 'alignof_value'
-	return cv
+	return CValueCall(
+		CValueNamed("__alignof"), [
+			CValueCall(
+				CValueNamed("__typeof__"), [do_cvalue(x.value)]
+			)
+		]
+	)
 
 
 
