@@ -302,20 +302,21 @@ def create_builtin_module():
 	builtin_symtab = Symtab()
 
 	#
-	# __compiler
+	# builtin.compiler
 	#
 
 	# compiler name
-	compilerNameString = "m2"
-	compilerName = value_string_create(compilerNameString, ti=None)
+	compilerName = value_string_create("m2")
 
 	# compiler version
 	compilerVersionMajor = ValueLiteral(typeNat32, 0)
 	compilerVersionMinor = ValueLiteral(typeNat32, 7)
+	compilerVersionPatch = ValueLiteral(typeNat32, 100)
 
 	compiler_version_initializers = [
 		Initializer(Id('major'), compilerVersionMajor),
-		Initializer(Id('minor'), compilerVersionMinor)
+		Initializer(Id('minor'), compilerVersionMinor),
+		Initializer(Id('patch'), compilerVersionPatch),
 	]
 	compilerVersion = value_record_create(compiler_version_initializers, ti=None)
 
@@ -331,7 +332,7 @@ def create_builtin_module():
 	builtin_symtab.value_add('compiler', const_compiler)
 
 	#
-	# __target
+	# builtin.target
 	#
 
 	def xcreate_const(symtab, id_str, value, type=None, ti=None):

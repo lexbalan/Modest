@@ -8,8 +8,8 @@
 
 int main(void) {
 	printf("test builtin\n");
-	printf("builtin.compiler.version.major = %d\n", 0U);
-	printf("builtin.compiler.version.minor = %d\n", 7U);
+	#define version {.major = 0U, .minor = 7U, .patch = 100U}
+	printf("builtin.compiler.version = %u.%u.%u\n", ((struct {uint32_t major; uint32_t minor; uint32_t patch;})version).major, ((struct {uint32_t major; uint32_t minor; uint32_t patch;})version).minor, ((struct {uint32_t major; uint32_t minor; uint32_t patch;})version).patch);
 	if (__builtin_strcmp((char *const )&"little-endian", (char *const )&"big-endian") == 0) {
 		printf("it is a big-endian system\n");
 	} else if (__builtin_strcmp((char *const )&"little-endian", (char *const )&"little-endian") == 0) {
@@ -54,14 +54,7 @@ int main(void) {
 	} else {
 		printf("it is an Unknown ABI\n");
 	}
-	bool result;
-	bool success = true;
-	printf("test ");
-	if (!success) {
-		printf("failed\n");
-		return EXIT_FAILURE;
-	}
-	printf("passed\n");
 	return EXIT_SUCCESS;
+	#undef version
 }
 

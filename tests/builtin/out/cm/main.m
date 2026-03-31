@@ -9,9 +9,8 @@ include "stdlib"
 public func main () -> Int {
 	printf("test builtin\n")
 
-	printf("builtin.compiler.version.major = %d\n", builtin.compiler.version.major)
-	printf("builtin.compiler.version.minor = %d\n", builtin.compiler.version.minor)
-
+	let version = builtin.compiler.version
+	printf("builtin.compiler.version = %u.%u.%u\n", version.major, version.minor, version.patch)
 	if builtin.target.endian == builtin.endianBig {
 		printf("it is a big-endian system\n")
 	} else if builtin.target.endian == builtin.endianLittle {
@@ -60,16 +59,6 @@ public func main () -> Int {
 		printf("it is an Unknown ABI\n")
 	}
 
-	var result: Bool
-	var success: Bool = true
-
-	printf("test ")
-	if not success {
-		printf("failed\n")
-		return exitFailure
-	}
-
-	printf("passed\n")
 	return exitSuccess
 }
 

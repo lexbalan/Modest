@@ -9,8 +9,8 @@ include "libc/stdlib"
 public func main () -> Int {
 	printf("test builtin\n")
 
-	printf("builtin.compiler.version.major = %d\n", builtin.compiler.version.major)
-	printf("builtin.compiler.version.minor = %d\n", builtin.compiler.version.minor)
+	let version = builtin.compiler.version
+	printf("builtin.compiler.version = %u.%u.%u\n", version.major, version.minor, version.patch)
 
 	// TODO: Проблема - LLVM бекенд не может сконструировать строки здесь...
 //	printf("builtin.target.name = %s\n", *Str8 builtin.target.name)
@@ -68,16 +68,6 @@ public func main () -> Int {
 		printf("it is an Unknown ABI\n")
 	}
 
-	var result: Bool
-	var success = true
-
-	printf("test ")
-	if not success {
-		printf("failed\n")
-		return exitFailure
-	}
-
-	printf("passed\n")
 	return exitSuccess
 }
 
