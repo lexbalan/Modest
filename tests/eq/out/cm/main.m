@@ -1,3 +1,4 @@
+import "builtin"
 include "ctypes64"
 include "stdlib"
 include "stdio"
@@ -126,16 +127,12 @@ public func testArraysEq () -> Bool {
 public func main () -> Int32 {
 	printf("test eq\n")
 
-	var result: Bool
-	var success: Bool = true
-
-	result = testRecordsEq()
-	success = success and result
-	result = testArraysEq()
-	success = success and result
+	var result: Bool = true
+	result = testRecordsEq() and result
+	result = testArraysEq() and result
 
 	printf("test ")
-	if not success {
+	if not result {
 		printf("failed\n")
 		return exitFailure
 	}

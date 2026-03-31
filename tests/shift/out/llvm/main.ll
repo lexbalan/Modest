@@ -210,7 +210,11 @@ declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 87, i8 111, i8 114, i8 100, i8 56, i8 32, i8 49, i8 32, i8 60, i8 60, i8 32, i8 55, i8 32, i8 33, i8 61, i8 32, i8 48, i8 120, i8 56, i8 48, i8 10, i8 0]
@@ -496,49 +500,38 @@ endif_3:
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str26 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
-	%3 = alloca %Bool, align 1
-	store %Bool 1, %Bool* %3
-	%4 = call %Bool @testShift8()
-	store %Bool %4, %Bool* %2
-	%5 = load %Bool, %Bool* %3
-	%6 = load %Bool, %Bool* %2
-	%7 = and %Bool %5, %6
-	store %Bool %7, %Bool* %3
-	%8 = call %Bool @testShift16()
+	store %Bool 1, %Bool* %2
+	%3 = call %Bool @testShift8()
+	%4 = load %Bool, %Bool* %2
+	%5 = and %Bool %3, %4
+	store %Bool %5, %Bool* %2
+	%6 = call %Bool @testShift16()
+	%7 = load %Bool, %Bool* %2
+	%8 = and %Bool %6, %7
 	store %Bool %8, %Bool* %2
-	%9 = load %Bool, %Bool* %3
+	%9 = call %Bool @testShift32()
 	%10 = load %Bool, %Bool* %2
 	%11 = and %Bool %9, %10
-	store %Bool %11, %Bool* %3
-	%12 = call %Bool @testShift32()
-	store %Bool %12, %Bool* %2
-	%13 = load %Bool, %Bool* %3
-	%14 = load %Bool, %Bool* %2
-	%15 = and %Bool %13, %14
-	store %Bool %15, %Bool* %3
-	%16 = call %Bool @testShift64()
-	store %Bool %16, %Bool* %2
-	%17 = load %Bool, %Bool* %3
-	%18 = load %Bool, %Bool* %2
-	%19 = and %Bool %17, %18
-	store %Bool %19, %Bool* %3
-	%20 = call %Bool @testShift128()
-	store %Bool %20, %Bool* %2
-	%21 = load %Bool, %Bool* %3
-	%22 = load %Bool, %Bool* %2
-	%23 = and %Bool %21, %22
-	store %Bool %23, %Bool* %3
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str27 to [0 x i8]*))
+	store %Bool %11, %Bool* %2
+	%12 = call %Bool @testShift64()
+	%13 = load %Bool, %Bool* %2
+	%14 = and %Bool %12, %13
+	store %Bool %14, %Bool* %2
+	%15 = call %Bool @testShift128()
+	%16 = load %Bool, %Bool* %2
+	%17 = and %Bool %15, %16
+	store %Bool %17, %Bool* %2
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str27 to [0 x i8]*))
 ; if_0
-	%25 = load %Bool, %Bool* %3
-	%26 = xor %Bool %25, 1
-	br %Bool %26 , label %then_0, label %endif_0
+	%19 = load %Bool, %Bool* %2
+	%20 = xor %Bool %19, 1
+	br %Bool %20 , label %then_0, label %endif_0
 then_0:
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str28 to [0 x i8]*))
+	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str28 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str29 to [0 x i8]*))
+	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str29 to [0 x i8]*))
 	ret %Int 0
 }
 

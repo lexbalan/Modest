@@ -159,7 +159,11 @@ declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
 ; -- print imports 'sha256' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'sha256' --
 ; -- strings --
 ; -- endstrings --
@@ -350,7 +354,7 @@ define internal void @contextInit(%Context* %ctx) {
 	%Word32 3329325298
 ]
 define internal void @transform(%Context* %ctx, [0 x %Word8]* %data) {
-	%1 = alloca [64 x %Word32], align 1
+	%1 = alloca [64 x %Word32], align 4
 	%2 = zext i8 64 to %Nat32
 	%3 = mul %Nat32 %2, 4
 	%4 = bitcast [64 x %Word32]* %1 to i8*
@@ -459,7 +463,7 @@ body_2:
 	store %Nat32 %87, %Nat32* %5
 	br label %again_2
 break_2:
-	%88 = alloca [8 x %Word32], align 1
+	%88 = alloca [8 x %Word32], align 4
 	%89 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%90 = load [8 x %Word32], [8 x %Word32]* %89
 	%91 = zext i8 8 to %Nat32

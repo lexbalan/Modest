@@ -1,3 +1,4 @@
+import "builtin"
 include "ctypes64"
 include "stdio"
 include "stdlib"
@@ -166,22 +167,15 @@ func testShift128 () -> Bool {
 public func main () -> Int {
 	printf("test shift\n")
 
-	var result: Bool
-	var success: Bool = true
-
-	result = testShift8()
-	success = success and result
-	result = testShift16()
-	success = success and result
-	result = testShift32()
-	success = success and result
-	result = testShift64()
-	success = success and result
-	result = testShift128()
-	success = success and result
+	var result: Bool = true
+	result = testShift8() and result
+	result = testShift16() and result
+	result = testShift32() and result
+	result = testShift64() and result
+	result = testShift128() and result
 
 	printf("test ")
-	if not success {
+	if not result {
 		printf("failed\n")
 		return exitFailure
 	}

@@ -195,7 +195,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [7 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 33, i8 0]
@@ -313,7 +317,7 @@ define %Int @main() {
 	%10 = insertvalue [2 x %Point] zeroinitializer, %Point %9, 0
 	%11 = insertvalue %X %5, [2 x %Point] %10, 1
 	store %X %11, %X* %2
-	%12 = alloca [3 x %Point], align 1
+	%12 = alloca [3 x %Point], align 4
 	%13 = load [3 x %Point], [3 x %Point]* @points
 	%14 = zext i8 3 to %Nat32
 	store [3 x %Point] %13, [3 x %Point]* %12

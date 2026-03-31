@@ -1,3 +1,4 @@
+import "builtin"
 import "misc/crc32"
 include "ctypes64"
 include "stdio"

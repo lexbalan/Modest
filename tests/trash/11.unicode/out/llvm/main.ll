@@ -195,7 +195,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 1
+; -- 2
+
+; from import "builtin"
+
+; end from import "builtin"
 ; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)

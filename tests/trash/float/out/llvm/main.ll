@@ -290,7 +290,11 @@ declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [9 x i8] [i8 100, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]

@@ -210,7 +210,11 @@ declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [38 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 48, i8 120, i8 102, i8 102, i8 102, i8 102, i8 102, i8 102, i8 102, i8 102, i8 32, i8 43, i8 32, i8 49, i8 32, i8 33, i8 61, i8 32, i8 48, i8 120, i8 49, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 10, i8 0]
@@ -275,25 +279,20 @@ endif_5:
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str8 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
-	%3 = alloca %Bool, align 1
-	store %Bool 1, %Bool* %3
-	%4 = call %Bool @test1()
-	store %Bool %4, %Bool* %2
-	%5 = load %Bool, %Bool* %3
-	%6 = load %Bool, %Bool* %2
-	%7 = and %Bool %5, %6
-	store %Bool %7, %Bool* %3
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str9 to [0 x i8]*))
+	store %Bool 1, %Bool* %2
+	%3 = call %Bool @test1()
+	store %Bool %3, %Bool* %2
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str9 to [0 x i8]*))
 ; if_0
-	%9 = load %Bool, %Bool* %3
-	%10 = xor %Bool %9, 1
-	br %Bool %10 , label %then_0, label %endif_0
+	%5 = load %Bool, %Bool* %2
+	%6 = xor %Bool %5, 1
+	br %Bool %6 , label %then_0, label %endif_0
 then_0:
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str10 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str10 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str11 to [0 x i8]*))
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str11 to [0 x i8]*))
 	ret %Int 0
 }
 

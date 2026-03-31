@@ -1,3 +1,4 @@
+import "builtin"
 include "stdio"
 include "unistd"
 include "ctype"

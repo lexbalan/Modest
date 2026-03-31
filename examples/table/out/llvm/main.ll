@@ -224,7 +224,11 @@ declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 1
+; -- 2
+
+; from import "builtin"
+
+; end from import "builtin"
 
 ; from import "table"
 %table_Row = type [0 x %Str8*];

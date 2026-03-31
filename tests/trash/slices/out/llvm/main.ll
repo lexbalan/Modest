@@ -195,7 +195,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
@@ -245,7 +249,7 @@ break_1:
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
-	%2 = alloca [10 x %Int32], align 1
+	%2 = alloca [10 x %Int32], align 4
 	%3 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%4 = insertvalue [10 x %Int32] %3, %Int32 2, 2
 	%5 = insertvalue [10 x %Int32] %4, %Int32 3, 3
@@ -313,11 +317,11 @@ body_2:
 	br label %again_2
 break_2:
 	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str6 to [0 x i8]*))
-	%48 = alloca [1 x %Int32], align 1
+	%48 = alloca [1 x %Int32], align 4
 	%49 = load [1 x %Int32], [1 x %Int32]* %17
 	%50 = zext i8 1 to %Nat32
 	store [1 x %Int32] %49, [1 x %Int32]* %48
-	%51 = alloca [3 x %Int32], align 1
+	%51 = alloca [3 x %Int32], align 4
 	%52 = load [3 x %Int32], [3 x %Int32]* %35
 	%53 = zext i8 3 to %Nat32
 	store [3 x %Int32] %52, [3 x %Int32]* %51
@@ -350,7 +354,7 @@ body_3:
 	br label %again_3
 break_3:
 	%72 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str8 to [0 x i8]*))
-	%73 = alloca [10 x %Int32], align 1
+	%73 = alloca [10 x %Int32], align 4
 	%74 = insertvalue [10 x %Int32] zeroinitializer, %Int32 10, 0
 	%75 = insertvalue [10 x %Int32] %74, %Int32 20, 1
 	%76 = insertvalue [10 x %Int32] %75, %Int32 30, 2
@@ -423,7 +427,7 @@ break_4:
 	call void @array_print([0 x %Int32]* %123, %Nat32 10)
 	%124 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str17 to [0 x i8]*))
 	%125 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str18 to [0 x i8]*))
-	%126 = alloca [10 x %Int32], align 1
+	%126 = alloca [10 x %Int32], align 4
 	%127 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%128 = insertvalue [10 x %Int32] %127, %Int32 2, 2
 	%129 = insertvalue [10 x %Int32] %128, %Int32 3, 3
@@ -452,7 +456,7 @@ break_4:
 	call void @array_print([0 x %Int32]* %147, %Nat32 10)
 	%148 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str19 to [0 x i8]*))
 	%149 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str20 to [0 x i8]*))
-	%150 = alloca [5 x %Int32], align 1
+	%150 = alloca [5 x %Int32], align 4
 	%151 = insertvalue [5 x %Int32] zeroinitializer, %Int32 10, 0
 	%152 = insertvalue [5 x %Int32] %151, %Int32 20, 1
 	%153 = insertvalue [5 x %Int32] %152, %Int32 30, 2
@@ -460,7 +464,7 @@ break_4:
 	%155 = insertvalue [5 x %Int32] %154, %Int32 50, 4
 	%156 = zext i8 5 to %Nat32
 	store [5 x %Int32] %155, [5 x %Int32]* %150
-	%157 = alloca [10 x %Int32], align 1
+	%157 = alloca [10 x %Int32], align 4
 	%158 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%159 = insertvalue [10 x %Int32] %158, %Int32 2, 2
 	%160 = insertvalue [10 x %Int32] %159, %Int32 3, 3

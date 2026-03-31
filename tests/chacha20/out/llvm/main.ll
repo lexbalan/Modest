@@ -210,7 +210,11 @@ declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 1
+; -- 2
+
+; from import "builtin"
+
+; end from import "builtin"
 
 ; from import "cc"
 %chacha20_Key = type [8 x %Word32];
@@ -285,7 +289,7 @@ body_1:
 	%7 = icmp eq %Nat32 %6, 64
 	br %Bool %7 , label %then_0, label %endif_0
 then_0:
-	%8 = alloca %chacha20_State, align 1
+	%8 = alloca %chacha20_State, align 4
 	%9 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%10 = load [32 x %Byte]*, [32 x %Byte]** %9
 	%11 = bitcast [32 x %Byte]* %10 to %chacha20_Key*
@@ -2592,7 +2596,7 @@ define internal %Bool @test0() {
 	%7 = load [12 x %Byte], [12 x %Byte]* @testNonce
 	%8 = zext i8 12 to %Nat32
 	store [12 x %Byte] %7, [12 x %Byte]* %6
-	%9 = alloca %chacha20_State, align 1
+	%9 = alloca %chacha20_State, align 4
 	%10 = bitcast [32 x %Byte]* %1 to %chacha20_Key*
 	%11 = load %Word32, %Word32* %4
 	%12 = bitcast [12 x %Byte]* %6 to [3 x %Word32]*; alloca memory for return value
@@ -2601,7 +2605,7 @@ define internal %Bool @test0() {
 	%14 = load %chacha20_State, %chacha20_State* %13
 	%15 = zext i8 16 to %Nat32
 	store %chacha20_State %14, %chacha20_State* %9
-	%16 = alloca %chacha20_Block, align 1
+	%16 = alloca %chacha20_Block, align 4
 	%17 = load %chacha20_State, %chacha20_State* %9; alloca memory for return value
 	%18 = alloca %chacha20_Block
 	call void @chacha20_chacha20Block(%chacha20_Block* %18, %chacha20_State %17)

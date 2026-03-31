@@ -1,3 +1,4 @@
+import "builtin"
 import "lightfood/console"
 include "ctypes64"
 

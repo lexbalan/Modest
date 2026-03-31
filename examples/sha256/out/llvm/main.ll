@@ -195,7 +195,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 1
+; -- 2
+
+; from import "builtin"
+
+; end from import "builtin"
 ; from included string
 declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
 declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)

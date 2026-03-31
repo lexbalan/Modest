@@ -210,7 +210,11 @@ declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 1
+; -- 2
+
+; from import "builtin"
+
+; end from import "builtin"
 
 ; from import "crc32"
 declare void @crc32_init()

@@ -197,7 +197,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'fsm' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'fsm' --
 ; -- strings --
 @str1 = private constant [52 x i8] [i8 91, i8 37, i8 115, i8 93, i8 32, i8 102, i8 115, i8 109, i8 32, i8 116, i8 105, i8 109, i8 101, i8 111, i8 117, i8 116, i8 32, i8 40, i8 37, i8 117, i8 41, i8 32, i8 111, i8 99, i8 99, i8 117, i8 114, i8 101, i8 100, i8 44, i8 32, i8 115, i8 119, i8 105, i8 116, i8 99, i8 104, i8 95, i8 116, i8 111, i8 95, i8 115, i8 116, i8 97, i8 103, i8 101, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]

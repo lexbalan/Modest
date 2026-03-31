@@ -115,7 +115,11 @@ break_2:
 ; -- print includes --
 ; -- end print includes --
 ; -- print imports 'queueWord8' --
-; -- 1
+; -- 2
+
+; from import "builtin"
+
+; end from import "builtin"
 
 ; from import "queue"
 %queue_Queue = type {

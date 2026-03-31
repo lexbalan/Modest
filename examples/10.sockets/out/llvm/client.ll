@@ -325,7 +325,11 @@ declare %SSizeT @recv(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
 declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
 ; -- end print includes --
 ; -- print imports 'client' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'client' --
 ; -- strings --
 @str1 = private constant [20 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 115, i8 111, i8 99, i8 107, i8 101, i8 116, i8 0]

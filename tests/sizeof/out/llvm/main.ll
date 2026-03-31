@@ -692,85 +692,62 @@ endif_1:
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str61 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
-	%3 = alloca %Bool, align 1
-	store %Bool 1, %Bool* %3
-	%4 = call %Bool @testUnit()
-	store %Bool %4, %Bool* %2
-	%5 = load %Bool, %Bool* %3
-	%6 = load %Bool, %Bool* %2
-	%7 = and %Bool %5, %6
-	store %Bool %7, %Bool* %3
-	%8 = call %Bool @testBool()
+	store %Bool 1, %Bool* %2
+	%3 = call %Bool @testUnit()
+	%4 = load %Bool, %Bool* %2
+	%5 = and %Bool %3, %4
+	store %Bool %5, %Bool* %2
+	%6 = call %Bool @testBool()
+	%7 = load %Bool, %Bool* %2
+	%8 = and %Bool %6, %7
 	store %Bool %8, %Bool* %2
-	%9 = load %Bool, %Bool* %3
+	%9 = call %Bool @testWord()
 	%10 = load %Bool, %Bool* %2
 	%11 = and %Bool %9, %10
-	store %Bool %11, %Bool* %3
-	%12 = call %Bool @testWord()
-	store %Bool %12, %Bool* %2
-	%13 = load %Bool, %Bool* %3
-	%14 = load %Bool, %Bool* %2
-	%15 = and %Bool %13, %14
-	store %Bool %15, %Bool* %3
-	%16 = call %Bool @testInt()
-	store %Bool %16, %Bool* %2
-	%17 = load %Bool, %Bool* %3
-	%18 = load %Bool, %Bool* %2
-	%19 = and %Bool %17, %18
-	store %Bool %19, %Bool* %3
-	%20 = call %Bool @testNat()
+	store %Bool %11, %Bool* %2
+	%12 = call %Bool @testInt()
+	%13 = load %Bool, %Bool* %2
+	%14 = and %Bool %12, %13
+	store %Bool %14, %Bool* %2
+	%15 = call %Bool @testNat()
+	%16 = load %Bool, %Bool* %2
+	%17 = and %Bool %15, %16
+	store %Bool %17, %Bool* %2
+	%18 = call %Bool @testChar()
+	%19 = load %Bool, %Bool* %2
+	%20 = and %Bool %18, %19
 	store %Bool %20, %Bool* %2
-	%21 = load %Bool, %Bool* %3
+	%21 = call %Bool @testFloat()
 	%22 = load %Bool, %Bool* %2
 	%23 = and %Bool %21, %22
-	store %Bool %23, %Bool* %3
-	%24 = call %Bool @testChar()
-	store %Bool %24, %Bool* %2
-	%25 = load %Bool, %Bool* %3
-	%26 = load %Bool, %Bool* %2
-	%27 = and %Bool %25, %26
-	store %Bool %27, %Bool* %3
-	%28 = call %Bool @testFloat()
-	store %Bool %28, %Bool* %2
-	%29 = load %Bool, %Bool* %3
-	%30 = load %Bool, %Bool* %2
-	%31 = and %Bool %29, %30
-	store %Bool %31, %Bool* %3
-	%32 = call %Bool @testFixed()
+	store %Bool %23, %Bool* %2
+	%24 = call %Bool @testFixed()
+	%25 = load %Bool, %Bool* %2
+	%26 = and %Bool %24, %25
+	store %Bool %26, %Bool* %2
+	%27 = call %Bool @testArray()
+	%28 = load %Bool, %Bool* %2
+	%29 = and %Bool %27, %28
+	store %Bool %29, %Bool* %2
+	%30 = call %Bool @testRecord()
+	%31 = load %Bool, %Bool* %2
+	%32 = and %Bool %30, %31
 	store %Bool %32, %Bool* %2
-	%33 = load %Bool, %Bool* %3
+	%33 = call %Bool @testPointer()
 	%34 = load %Bool, %Bool* %2
 	%35 = and %Bool %33, %34
-	store %Bool %35, %Bool* %3
-	%36 = call %Bool @testArray()
-	store %Bool %36, %Bool* %2
-	%37 = load %Bool, %Bool* %3
-	%38 = load %Bool, %Bool* %2
-	%39 = and %Bool %37, %38
-	store %Bool %39, %Bool* %3
-	%40 = call %Bool @testRecord()
-	store %Bool %40, %Bool* %2
-	%41 = load %Bool, %Bool* %3
-	%42 = load %Bool, %Bool* %2
-	%43 = and %Bool %41, %42
-	store %Bool %43, %Bool* %3
-	%44 = call %Bool @testPointer()
-	store %Bool %44, %Bool* %2
-	%45 = load %Bool, %Bool* %3
-	%46 = load %Bool, %Bool* %2
-	%47 = and %Bool %45, %46
-	store %Bool %47, %Bool* %3
-	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str62 to [0 x i8]*))
+	store %Bool %35, %Bool* %2
+	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str62 to [0 x i8]*))
 ; if_0
-	%49 = load %Bool, %Bool* %3
-	%50 = xor %Bool %49, 1
-	br %Bool %50 , label %then_0, label %endif_0
+	%37 = load %Bool, %Bool* %2
+	%38 = xor %Bool %37, 1
+	br %Bool %38 , label %then_0, label %endif_0
 then_0:
-	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str63 to [0 x i8]*))
+	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str63 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%53 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str64 to [0 x i8]*))
+	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str64 to [0 x i8]*))
 	ret %Int 0
 }
 

@@ -1,3 +1,4 @@
+import "builtin"
 import "misc/aes256"
 include "stdlib"
 include "stdio"

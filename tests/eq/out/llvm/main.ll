@@ -211,7 +211,11 @@ declare void @perror(%ConstCharStr* %str)
 ; from included limits
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [18 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 32, i8 33, i8 61, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 10, i8 0]
@@ -444,31 +448,26 @@ endif_11:
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str21 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
-	%3 = alloca %Bool, align 1
-	store %Bool 1, %Bool* %3
-	%4 = call %Bool @main_testRecordsEq()
-	store %Bool %4, %Bool* %2
-	%5 = load %Bool, %Bool* %3
-	%6 = load %Bool, %Bool* %2
-	%7 = and %Bool %5, %6
-	store %Bool %7, %Bool* %3
-	%8 = call %Bool @main_testArraysEq()
+	store %Bool 1, %Bool* %2
+	%3 = call %Bool @main_testRecordsEq()
+	%4 = load %Bool, %Bool* %2
+	%5 = and %Bool %3, %4
+	store %Bool %5, %Bool* %2
+	%6 = call %Bool @main_testArraysEq()
+	%7 = load %Bool, %Bool* %2
+	%8 = and %Bool %6, %7
 	store %Bool %8, %Bool* %2
-	%9 = load %Bool, %Bool* %3
-	%10 = load %Bool, %Bool* %2
-	%11 = and %Bool %9, %10
-	store %Bool %11, %Bool* %3
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str22 to [0 x i8]*))
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str22 to [0 x i8]*))
 ; if_0
-	%13 = load %Bool, %Bool* %3
-	%14 = xor %Bool %13, 1
-	br %Bool %14 , label %then_0, label %endif_0
+	%10 = load %Bool, %Bool* %2
+	%11 = xor %Bool %10, 1
+	br %Bool %11 , label %then_0, label %endif_0
 then_0:
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str23 to [0 x i8]*))
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str23 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str24 to [0 x i8]*))
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str24 to [0 x i8]*))
 	ret %Int 0
 }
 

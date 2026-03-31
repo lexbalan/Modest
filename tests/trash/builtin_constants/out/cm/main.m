@@ -1,21 +1,22 @@
+import "builtin"
 include "ctypes64"
 include "stdio"
 
 
 
 public func main () -> Int {
-	printf("__compiler.name = %s\n", *Str8 {name = "m2", version = {major = 0, minor = 7}}.name)
-	let ver = {name = "m2", version = {major = 0, minor = 7}}.version
-	printf("__compiler.version.major = %u\n", ver.major)
-	printf("__compiler.version.minor = %u\n", ver.minor)
+	printf("builtin.compiler.name = %s\n", *Str8 builtin.compiler.name)
+	let ver = builtin.compiler.version
+	printf("builtin.compiler.version.major = %u\n", ver.major)
+	printf("builtin.compiler.version.minor = %u\n", ver.minor)
 
-	printf("__compiler.version.major = %u\n", {name = "m2", version = {major = 0, minor = 7}}.version.major)
-	printf("__compiler.version.minor = %u\n", {name = "m2", version = {major = 0, minor = 7}}.version.minor)
-	printf("__target.name = %s\n", *Str {name = "Default", charWidth = 8, intWidth = 32, floatWidth = 64, pointerWidth = 64}.name)
-	printf("__target.pointerWidth = %u\n", {name = "Default", charWidth = 8, intWidth = 32, floatWidth = 64, pointerWidth = 64}.pointerWidth)
-	printf("__target.charWidth = %u\n", {name = "Default", charWidth = 8, intWidth = 32, floatWidth = 64, pointerWidth = 64}.charWidth)
-	printf("__target.intWidth = %u\n", {name = "Default", charWidth = 8, intWidth = 32, floatWidth = 64, pointerWidth = 64}.intWidth)
-	printf("__target.floatWidth = %u\n", {name = "Default", charWidth = 8, intWidth = 32, floatWidth = 64, pointerWidth = 64}.floatWidth)
+	printf("builtin.compiler.version.major = %u\n", builtin.compiler.version.major)
+	printf("builtin.compiler.version.minor = %u\n", builtin.compiler.version.minor)
+	printf("builtin.target.name = %s\n", *Str builtin.target.name)
+	printf("builtin.target.pointerWidth = %u\n", builtin.target.pointerWidth)
+	printf("builtin.target.charWidth = %u\n", builtin.target.charWidth)
+	printf("builtin.target.intWidth = %u\n", builtin.target.intWidth)
+	printf("builtin.target.floatWidth = %u\n", builtin.target.floatWidth)
 
 	return 0
 }

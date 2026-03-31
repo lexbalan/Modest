@@ -297,7 +297,11 @@ declare %Int @toupper(%Int %x)
 declare %Int @tolower(%Int %x)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [10 x i8] [i8 37, i8 115, i8 32, i8 40, i8 110, i8 61, i8 37, i8 100, i8 41, i8 0]
@@ -589,7 +593,7 @@ body_1:
 	call void @showPrompt()
 	%3 = bitcast [1024 x %Char8]* %2 to %CharStr*
 	%4 = call %CharStr* @fgets(%CharStr* %3, %Int 1024, i8* null)
-	%5 = alloca [64 x [0 x %Char8]*], align 1
+	%5 = alloca [64 x [0 x %Char8]*], align 8
 	%6 = zext i8 64 to %Nat32
 	%7 = mul %Nat32 %6, 8
 	%8 = bitcast [64 x [0 x %Char8]*]* %5 to i8*

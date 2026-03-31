@@ -31,6 +31,7 @@ static bool testUnit(void) {
 		return false;
 	}
 	printf("passed: testUnit\n");
+	return false;
 	return true;
 }
 
@@ -281,32 +282,20 @@ static bool testPointer(void) {
 
 int main(void) {
 	printf("test sizeof\n");
-	bool result;
-	bool success = true;
-	result = testUnit();
-	success = success && result;
-	result = testBool();
-	success = success && result;
-	result = testWord();
-	success = success && result;
-	result = testInt();
-	success = success && result;
-	result = testNat();
-	success = success && result;
-	result = testChar();
-	success = success && result;
-	result = testFloat();
-	success = success && result;
-	result = testFixed();
-	success = success && result;
-	result = testArray();
-	success = success && result;
-	result = testRecord();
-	success = success && result;
-	result = testPointer();
-	success = success && result;
+	bool result = true;
+	result = testUnit() && result;
+	result = testBool() && result;
+	result = testWord() && result;
+	result = testInt() && result;
+	result = testNat() && result;
+	result = testChar() && result;
+	result = testFloat() && result;
+	result = testFixed() && result;
+	result = testArray() && result;
+	result = testRecord() && result;
+	result = testPointer() && result;
 	printf("test ");
-	if (!success) {
+	if (!result) {
 		printf("failed\n");
 		return EXIT_FAILURE;
 	}

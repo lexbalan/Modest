@@ -49,14 +49,11 @@ func test1 () -> Bool {
 public func main () -> Int {
 	printf("test literals\n")
 
-	var result: Bool
-	var success = true
-
+	var result = true
 	result = test1()
-	success = success and result
 
 	printf("test ")
-	if not success {
+	if not result {
 		printf("failed\n")
 		return exitFailure
 	}

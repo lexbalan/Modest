@@ -1,3 +1,4 @@
+import "builtin"
 import "misc/chacha20"
 include "ctypes64"
 include "stdio"

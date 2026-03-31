@@ -195,7 +195,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [19 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 97, i8 115, i8 115, i8 105, i8 103, i8 110, i8 95, i8 97, i8 114, i8 114, i8 97, i8 121, i8 10, i8 0]
@@ -256,7 +260,7 @@ else_0:
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str4 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	%20 = alloca [10 x %Int32], align 1
+	%20 = alloca [10 x %Int32], align 4
 	%21 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%22 = insertvalue [10 x %Int32] %21, %Int32 2, 2
 	%23 = insertvalue [10 x %Int32] %22, %Int32 3, 3
@@ -268,7 +272,7 @@ endif_0:
 	%29 = insertvalue [10 x %Int32] %28, %Int32 9, 9
 	%30 = zext i8 10 to %Nat32
 	store [10 x %Int32] %29, [10 x %Int32]* %20
-	%31 = alloca [10 x %Int32], align 1
+	%31 = alloca [10 x %Int32], align 4
 	%32 = zext i8 10 to %Nat32
 	%33 = mul %Nat32 %32, 4
 	%34 = bitcast [10 x %Int32]* %31 to i8*

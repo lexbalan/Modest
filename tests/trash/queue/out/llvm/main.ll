@@ -275,7 +275,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 2
+; -- 3
+
+; from import "builtin"
+
+; end from import "builtin"
 
 ; from import "queue"
 %queue_Queue = type {

@@ -1,3 +1,4 @@
+import "builtin"
 import "misc/sha256"
 include "ctypes64"
 include "stdio"

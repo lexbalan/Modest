@@ -100,14 +100,11 @@ bool main_testArraysEq(void) {
 
 int32_t main(void) {
 	printf("test eq\n");
-	bool result;
-	bool success = true;
-	result = main_testRecordsEq();
-	success = success && result;
-	result = main_testArraysEq();
-	success = success && result;
+	bool result = true;
+	result = main_testRecordsEq() && result;
+	result = main_testArraysEq() && result;
 	printf("test ");
-	if (!success) {
+	if (!result) {
 		printf("failed\n");
 		return EXIT_FAILURE;
 	}

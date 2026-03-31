@@ -145,7 +145,11 @@ break_2:
 %GIDT = type %Nat32;
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 1
+; -- 2
+
+; from import "builtin"
+
+; end from import "builtin"
 ; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)

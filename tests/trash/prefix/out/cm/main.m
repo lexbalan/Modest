@@ -1,3 +1,4 @@
+import "builtin"
 import "lib"
 include "stdio"
 

@@ -402,42 +402,29 @@ func testRational () -> Bool {
 public func main () -> Int32 {
 	printf("test numeric boundary:\n")
 
-	var result: Bool
-	var success = true
+	var result = true
 
 	// test built-in generic types
-	result = testInteger()
-	success = success and result
-	result = testRational()
-	success = success and result
+	result = testInteger() and result
+	result = testRational() and result
 
 	// test built-in unsigned integer types
-	result = testNat8Static()
-	success = success and result
-	result = testNat16Static()
-	success = success and result
-	result = testNat32Static()
-	success = success and result
-	result = testNat64Static()
-	success = success and result
+	result = testNat8Static() and result
+	result = testNat16Static() and result
+	result = testNat32Static() and result
+	result = testNat64Static() and result
 
 	// test built-in signed integer types
-	result = testInt8Static()
-	success = success and result
-	result = testInt16Static()
-	success = success and result
-	result = testInt32Static()
-	success = success and result
-	result = testInt64Static()
-	success = success and result
+	result = testInt8Static() and result
+	result = testInt16Static() and result
+	result = testInt32Static() and result
+	result = testInt64Static() and result
 
 	//
-	//result = testFloat32Static()
-	//success = success and result
-
+	//result = testFloat32Static() and result
 
 	printf("test ")
-	if not success {
+	if not result {
 		printf("failed\n")
     	return exitFailure
 	}

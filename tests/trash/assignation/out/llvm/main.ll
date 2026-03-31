@@ -195,7 +195,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [18 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 97, i8 115, i8 115, i8 105, i8 103, i8 110, i8 97, i8 116, i8 105, i8 111, i8 110, i8 10, i8 0]
@@ -271,12 +275,12 @@ define %Int @main() {
 	store %Int32 %25, %Int32* %23
 	%26 = load %Int32, %Int32* %23
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), %Int32 %26)
-	%28 = alloca [10 x %Int32], align 1
+	%28 = alloca [10 x %Int32], align 4
 	%29 = zext i8 10 to %Nat32
 	%30 = mul %Nat32 %29, 4
 	%31 = bitcast [10 x %Int32]* %28 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %31, i8 0, %Nat32 %30, i1 0)
-	%32 = alloca [10 x %Int32], align 1
+	%32 = alloca [10 x %Int32], align 4
 	%33 = insertvalue [10 x %Int32] zeroinitializer, %Int32 42, 0
 	%34 = insertvalue [10 x %Int32] %33, %Int32 53, 1
 	%35 = insertvalue [10 x %Int32] %34, %Int32 64, 2

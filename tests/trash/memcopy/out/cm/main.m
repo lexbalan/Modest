@@ -1,3 +1,4 @@
+import "builtin"
 import "lightfood/memory"
 include "ctypes64"
 include "stdio"

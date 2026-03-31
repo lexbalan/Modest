@@ -1,3 +1,4 @@
+import "builtin"
 import "table"
 include "stdio"
 include "stdlib"

@@ -275,7 +275,11 @@ declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [10 x i8] [i8 102, i8 48, i8 40, i8 34, i8 37, i8 115, i8 34, i8 41, i8 10, i8 0]
@@ -966,7 +970,7 @@ body_1:
 	br label %again_1
 break_1:
 	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str11 to [0 x i8]*))
-	%30 = alloca [3 x %Int32], align 1
+	%30 = alloca [3 x %Int32], align 4
 	%31 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
 	%32 = insertvalue [3 x %Int32] %31, %Int32 5, 1
 	%33 = insertvalue [3 x %Int32] %32, %Int32 6, 2
@@ -1039,7 +1043,7 @@ body_4:
 	store %Nat32 %72, %Nat32* %18
 	br label %again_4
 break_4:
-	%73 = alloca [3 x %Int32], align 1
+	%73 = alloca [3 x %Int32], align 4
 	%74 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
 	%75 = insertvalue [3 x %Int32] %74, %Int32 2, 1
 	%76 = insertvalue [3 x %Int32] %75, %Int32 3, 2
@@ -1054,7 +1058,7 @@ break_4:
 	%84 = getelementptr [3 x %Int32], [3 x %Int32]* %73, %Int32 0, %Int32 2
 	%85 = load %Int32, %Int32* %84
 	%86 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str19 to [0 x i8]*), %Int32 %85)
-	%87 = alloca [3 x %Int32], align 1
+	%87 = alloca [3 x %Int32], align 4
 	%88 = load [3 x %Int32], [3 x %Int32]* %73
 	%89 = zext i8 3 to %Nat32
 	store [3 x %Int32] %88, [3 x %Int32]* %87
@@ -1080,13 +1084,13 @@ else_0:
 	%104 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str24 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	%105 = alloca [3 x %Int32], align 1
+	%105 = alloca [3 x %Int32], align 4
 	%106 = insertvalue [3 x %Int32] zeroinitializer, %Int32 10, 0
 	%107 = insertvalue [3 x %Int32] %106, %Int32 20, 1
 	%108 = insertvalue [3 x %Int32] %107, %Int32 30, 2
 	%109 = zext i8 3 to %Nat32
 	store [3 x %Int32] %108, [3 x %Int32]* %105
-	%110 = alloca [6 x %Int32], align 1
+	%110 = alloca [6 x %Int32], align 4
 	%111 = zext i8 0 to %Nat32
 	%112 = getelementptr [6 x %Int32], [6 x %Int32]* %110, %Int32 0, %Nat32 %111
 	%113 = bitcast %Int32* %112 to [3 x %Int32]*
@@ -1149,7 +1153,7 @@ endif_1:
 	%158 = alloca [3 x %Int]
 	%159 = zext i8 3 to %Nat32
 	store [3 x %Int] %157, [3 x %Int]* %158
-	%160 = alloca [4 x %Int32], align 1
+	%160 = alloca [4 x %Int32], align 4
 ; -- cons_composite_from_composite_by_adr --
 	%161 = bitcast [3 x %Int]* %158 to [4 x %Int32]*
 	%162 = load [4 x %Int32], [4 x %Int32]* %161
@@ -1243,7 +1247,7 @@ endif_2:
 	store %Int32 5, %Int32* %227
 	%228 = alloca %Int32, align 4
 	store %Int32 7, %Int32* %228
-	%229 = alloca [4 x %Int32], align 1
+	%229 = alloca [4 x %Int32], align 4
 	%230 = load %Int32, %Int32* %227
 	%231 = load %Int32, %Int32* %228
 	%232 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 0

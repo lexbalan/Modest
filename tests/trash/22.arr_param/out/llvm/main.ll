@@ -195,7 +195,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 49, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 33, i8 10, i8 0]
@@ -225,7 +229,7 @@ define internal void @arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %In
 	%b = alloca [10 x %Int32]
 	%3 = zext i8 10 to %Nat32
 	store [10 x %Int32] %__b, [10 x %Int32]* %b
-	%4 = alloca [10 x %Int32], align 1
+	%4 = alloca [10 x %Int32], align 4
 	%5 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %5
 ; while_1

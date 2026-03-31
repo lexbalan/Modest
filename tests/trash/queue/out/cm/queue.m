@@ -1,3 +1,4 @@
+import "builtin"
 
 
 public type Queue = {

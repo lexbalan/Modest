@@ -340,34 +340,21 @@ func testPointer () -> Bool {
 public func main () -> Int {
 	printf("test sizeof\n")
 
-	var result: Bool
-	var success: Bool = true
-
-	result = testUnit()
-	success = success and result
-	result = testBool()
-	success = success and result
-	result = testWord()
-	success = success and result
-	result = testInt()
-	success = success and result
-	result = testNat()
-	success = success and result
-	result = testChar()
-	success = success and result
-	result = testFloat()
-	success = success and result
-	result = testFixed()
-	success = success and result
-	result = testArray()
-	success = success and result
-	result = testRecord()
-	success = success and result
-	result = testPointer()
-	success = success and result
+	var result: Bool = true
+	result = testUnit() and result
+	result = testBool() and result
+	result = testWord() and result
+	result = testInt() and result
+	result = testNat() and result
+	result = testChar() and result
+	result = testFloat() and result
+	result = testFixed() and result
+	result = testArray() and result
+	result = testRecord() and result
+	result = testPointer() and result
 
 	printf("test ")
-	if not success {
+	if not result {
 		printf("failed\n")
 		return exitFailure
 	}

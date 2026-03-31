@@ -115,7 +115,11 @@ break_2:
 ; -- print includes --
 ; -- end print includes --
 ; -- print imports 'utf' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'utf' --
 ; -- strings --
 ; -- endstrings --

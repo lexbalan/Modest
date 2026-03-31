@@ -283,7 +283,11 @@ declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [19 x i8] [i8 77, i8 121, i8 32, i8 80, i8 114, i8 105, i8 110, i8 116, i8 102, i8 32, i8 84, i8 101, i8 115, i8 116, i8 32, i8 37, i8 117, i8 10, i8 0]

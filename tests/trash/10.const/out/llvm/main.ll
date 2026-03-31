@@ -275,7 +275,11 @@ declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 1
+; -- 2
+
+; from import "builtin"
+
+; end from import "builtin"
 
 ; from import "minmax"
 declare %Int32 @minmax_minInt32(%Int32 %a, %Int32 %b)

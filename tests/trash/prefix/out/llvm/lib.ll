@@ -195,7 +195,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'lib' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'lib' --
 ; -- strings --
 @str1 = private constant [9 x i8] [i8 102, i8 111, i8 111, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]

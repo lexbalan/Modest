@@ -6,21 +6,18 @@ include "libc/stdio"
 
 public func main () -> Int {
 
-	// __compiler
-	printf("__compiler.name = %s\n", *Str8 __compiler.name)
-	let ver = __compiler.version
-	printf("__compiler.version.major = %u\n", ver.major)
-	printf("__compiler.version.minor = %u\n", ver.minor)
+	// builtin.compiler
+	printf("builtin.compiler.name = %s\n", *Str8 builtin.compiler.name)
+	let ver = builtin.compiler.version
+	printf("builtin.compiler.version.major = %u\n", ver.major)
+	printf("builtin.compiler.version.minor = %u\n", ver.minor)
 
-	printf("__compiler.version.major = %u\n", __compiler.version.major)
-	printf("__compiler.version.minor = %u\n", __compiler.version.minor)
-
-	// __target
-	printf("__target.name = %s\n", *Str __target.name)
-	printf("__target.pointerWidth = %u\n", __target.pointerWidth)
-	printf("__target.charWidth = %u\n", __target.charWidth)
-	printf("__target.intWidth = %u\n", __target.intWidth)
-	printf("__target.floatWidth = %u\n", __target.floatWidth)
+	// builtin.target
+	printf("builtin.target.name = %s\n", *Str builtin.target.name)
+	printf("builtin.target.pointerWidth = %u\n", builtin.target.pointerWidth)
+	printf("builtin.target.charWidth = %u\n", builtin.target.charWidth)
+	printf("builtin.target.intWidth = %u\n", builtin.target.intWidth)
+	printf("builtin.target.floatWidth = %u\n", builtin.target.floatWidth)
 
 	return 0
 }

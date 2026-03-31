@@ -224,7 +224,11 @@ declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
 ; -- print imports 'table' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'table' --
 ; -- strings --
 @str1 = private constant [2 x i8] [i8 124, i8 0]

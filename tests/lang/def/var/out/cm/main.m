@@ -1,3 +1,4 @@
+import "builtin"
 
 
 // typed variables with init

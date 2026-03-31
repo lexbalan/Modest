@@ -115,7 +115,11 @@ break_2:
 ; -- print includes --
 ; -- end print includes --
 ; -- print imports 'chacha20' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'chacha20' --
 ; -- strings --
 ; -- endstrings --
@@ -217,7 +221,7 @@ define void @chacha20_chacha20Block(%chacha20_Block* %0, %chacha20_State %__stat
 	%state = alloca %chacha20_State
 	%2 = zext i8 16 to %Nat32
 	store %chacha20_State %__state, %chacha20_State* %state
-	%3 = alloca %chacha20_State, align 1
+	%3 = alloca %chacha20_State, align 4
 	%4 = load %chacha20_State, %chacha20_State* %state
 	%5 = zext i8 16 to %Nat32
 	store %chacha20_State %4, %chacha20_State* %3
@@ -230,7 +234,7 @@ again_1:
 	%8 = icmp slt %Int32 %7, 10
 	br %Bool %8 , label %body_1, label %break_1
 body_1:
-	%9 = alloca [4 x %Word32], align 1
+	%9 = alloca [4 x %Word32], align 4
 	%10 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
 	%11 = load %Word32, %Word32* %10
 	%12 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 4
@@ -468,7 +472,7 @@ body_1:
 	store %Int32 %195, %Int32* %6
 	br label %again_1
 break_1:
-	%196 = alloca [16 x %Word32], align 1
+	%196 = alloca [16 x %Word32], align 4
 	%197 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %197
 ; while_2

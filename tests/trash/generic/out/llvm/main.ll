@@ -275,7 +275,11 @@ declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [20 x i8] [i8 103, i8 101, i8 110, i8 101, i8 114, i8 105, i8 99, i8 32, i8 116, i8 121, i8 112, i8 101, i8 115, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
@@ -410,7 +414,7 @@ then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%9 = alloca [4 x %Int32], align 1
+	%9 = alloca [4 x %Int32], align 4
 	%10 = insertvalue [4 x %Int32] zeroinitializer, %Int32 1, 1
 	%11 = insertvalue [4 x %Int32] %10, %Int32 2, 2
 	%12 = insertvalue [4 x %Int32] %11, %Int32 3, 3
@@ -433,7 +437,7 @@ then_1:
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-	%25 = alloca [4 x %Int64], align 1
+	%25 = alloca [4 x %Int64], align 8
 	%26 = insertvalue [4 x %Int64] zeroinitializer, %Int64 1, 1
 	%27 = insertvalue [4 x %Int64] %26, %Int64 2, 2
 	%28 = insertvalue [4 x %Int64] %27, %Int64 3, 3
@@ -456,7 +460,7 @@ then_2:
 	ret %Bool 0
 	br label %endif_2
 endif_2:
-	%41 = alloca [10 x %Int32], align 1
+	%41 = alloca [10 x %Int32], align 4
 	%42 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%43 = insertvalue [10 x %Int32] %42, %Int32 2, 2
 	%44 = insertvalue [10 x %Int32] %43, %Int32 3, 3

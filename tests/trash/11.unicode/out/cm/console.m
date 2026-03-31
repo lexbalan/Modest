@@ -1,3 +1,4 @@
+import "builtin"
 import "misc/utf"
 include "ctypes64"
 include "unistd"

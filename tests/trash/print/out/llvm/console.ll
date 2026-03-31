@@ -297,7 +297,11 @@ declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
 ; -- print imports 'console' --
-; -- 1
+; -- 2
+
+; from import "builtin"
+
+; end from import "builtin"
 
 ; from import "utf"
 declare %Nat8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
@@ -330,7 +334,7 @@ define void @console_putchar_utf8(%Char8 %c) {
 }
 
 define void @console_putchar_utf16(%Char16 %c) {
-	%1 = alloca [2 x %Char16], align 1
+	%1 = alloca [2 x %Char16], align 2
 	%2 = insertvalue [2 x %Char16] zeroinitializer, %Char16 %c, 0
 ; -- cons_composite_from_composite_by_value --
 	%3 = alloca [2 x %Char16]

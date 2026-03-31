@@ -1,3 +1,4 @@
+import "builtin"
 
 
 // simple function no args

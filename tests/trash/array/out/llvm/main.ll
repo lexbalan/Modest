@@ -195,7 +195,11 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports 'main' --
-; -- 0
+; -- 1
+
+; from import "builtin"
+
+; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [7 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 33, i8 0]
@@ -250,8 +254,8 @@ declare void @perror(%ConstCharStr* %str)
 ;}
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-	%2 = alloca [10 x %Int32], align 1
-	%3 = alloca [10 x %Int32], align 1
+	%2 = alloca [10 x %Int32], align 4
+	%3 = alloca [10 x %Int32], align 4
 	%4 = insertvalue [10 x %Int32] zeroinitializer, %Int32 10, 1
 	%5 = insertvalue [10 x %Int32] %4, %Int32 20, 2
 	%6 = insertvalue [10 x %Int32] %5, %Int32 30, 3
@@ -263,7 +267,7 @@ define %Int @main() {
 	%12 = insertvalue [10 x %Int32] %11, %Int32 90, 9
 	%13 = zext i8 10 to %Nat32
 	store [10 x %Int32] %12, [10 x %Int32]* %3
-	%14 = alloca [10 x %Char32], align 1
+	%14 = alloca [10 x %Char32], align 4
 	%15 = load [10 x %Char32], [10 x %Char32]* @arr2
 	%16 = zext i8 10 to %Nat32
 	store [10 x %Char32] %15, [10 x %Char32]* %14
@@ -333,7 +337,7 @@ define internal void @sum10IntArrays([10 x %Int32]* %0, [10 x %Int32] %__a, [10 
 	%b = alloca [10 x %Int32]
 	%3 = zext i8 10 to %Nat32
 	store [10 x %Int32] %__b, [10 x %Int32]* %b
-	%4 = alloca [10 x %Int32], align 1
+	%4 = alloca [10 x %Int32], align 4
 	%5 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %5
 ; while_1
