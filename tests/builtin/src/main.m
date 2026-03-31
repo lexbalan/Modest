@@ -11,12 +11,15 @@ public func main () -> Int {
 
 	printf("builtin.compiler.version.major = %d\n", builtin.compiler.version.major)
 	printf("builtin.compiler.version.minor = %d\n", builtin.compiler.version.minor)
+
+	// TODO: Проблема - LLVM бекенд не может сконструировать строки здесь...
 //	printf("builtin.target.name = %s\n", *Str8 builtin.target.name)
 //	printf("builtin.target.arch = %s\n", *Str8 builtin.target.arch)
 //	printf("builtin.target.os = %s\n", *Str8 builtin.target.os)
 //	printf("builtin.target.abi = %s\n", *Str8 builtin.target.abi)
 //	printf("builtin.target.endian = %s\n", *Str8 builtin.target.endian)
 
+	// TODO: Проблема - результаты этих операций сравнения посему то не immediate....
 	if builtin.target.endian == builtin.endianBig {
 		printf("it is a big-endian system\n")
 	} else if builtin.target.endian == builtin.endianLittle {
