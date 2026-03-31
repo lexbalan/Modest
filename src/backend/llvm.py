@@ -1555,6 +1555,9 @@ def do_eval_cons(x):
 				string_of = type.to.of
 				char_pow = string_of.width
 				iszstr = True #x.hasAttribute3('zarray')
+				if not hasattr(x, 'strid'):
+					error("not strid?", x.ti)
+					1/0
 				return llvm_value_str(x.strid, x.strdata, x.type, isz=iszstr)
 
 	elif type.is_array():
