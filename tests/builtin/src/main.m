@@ -9,6 +9,14 @@ include "libc/stdlib"
 public func main () -> Int {
 	printf("test builtin\n")
 
+	var w: builtin.MachineWord
+	var i: builtin.MachineInt
+	var n: builtin.MachineNat
+
+	printf("sizeof(builtin.MachineWord) = %lu\n", sizeof(builtin.MachineWord))
+	printf("sizeof(builtin.MachineInt) = %lu\n", sizeof(builtin.MachineInt))
+	printf("sizeof(builtin.MachineNat) = %lu\n", sizeof(builtin.MachineNat))
+
 	let version = builtin.compiler.version
 	printf("builtin.compiler.version = %u.%u.%u\n", version.major, version.minor, version.patch)
 

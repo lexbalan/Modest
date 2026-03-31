@@ -9,6 +9,14 @@ include "stdlib"
 public func main () -> Int {
 	printf("test builtin\n")
 
+	var w: Word32
+	var i: Int32
+	var n: Nat32
+
+	printf("sizeof(builtin.MachineWord) = %lu\n", sizeof(Word32))
+	printf("sizeof(builtin.MachineInt) = %lu\n", sizeof(Int32))
+	printf("sizeof(builtin.MachineNat) = %lu\n", sizeof(Nat32))
+
 	let version = builtin.compiler.version
 	printf("builtin.compiler.version = %u.%u.%u\n", version.major, version.minor, version.patch)
 	if builtin.target.endian == builtin.endianBig {

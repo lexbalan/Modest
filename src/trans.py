@@ -376,6 +376,19 @@ def create_builtin_module():
 	endianBig = xcreate_const(builtin_symtab, "endianBig", value_string_create("big-endian"), type=typeEndian)
 	endianLittle = xcreate_const(builtin_symtab, "endianLittle", value_string_create("little-endian"), type=typeEndian)
 
+
+	mw = type_word_create(width=32)
+	mw.definition = StmtDefType("MachineWord", mw, None, ti=None)
+	builtin_symtab.type_add('MachineWord', mw)
+
+	mi = type_int_create(width=32)
+	mw.definition = StmtDefType("MachineInt", mi, None, ti=None)
+	builtin_symtab.type_add('MachineInt', mi)
+
+	mn = type_nat_create(width=32)
+	mw.definition = StmtDefType("MachineNat", mn, None, ti=None)
+	builtin_symtab.type_add('MachineNat', mn)
+
 	# create '__target' record
 	target_initializers = [
 		Initializer(Id('name'), value_string_create(target_name)),

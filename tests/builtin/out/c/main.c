@@ -8,6 +8,12 @@
 
 int main(void) {
 	printf("test builtin\n");
+	uint32_t w;
+	int32_t i;
+	uint32_t n;
+	printf("sizeof(builtin.MachineWord) = %lu\n", sizeof(uint32_t));
+	printf("sizeof(builtin.MachineInt) = %lu\n", sizeof(int32_t));
+	printf("sizeof(builtin.MachineNat) = %lu\n", sizeof(uint32_t));
 	#define version {.major = 0U, .minor = 7U, .patch = 100U}
 	printf("builtin.compiler.version = %u.%u.%u\n", ((struct {uint32_t major; uint32_t minor; uint32_t patch;})version).major, ((struct {uint32_t major; uint32_t minor; uint32_t patch;})version).minor, ((struct {uint32_t major; uint32_t minor; uint32_t patch;})version).patch);
 	if (__builtin_strcmp((char *const )&"little-endian", (char *const )&"big-endian") == 0) {
