@@ -1328,16 +1328,6 @@ def submodule_access(x):
 
 
 def do_value_access(x):
-	y = do_value_access2(x)
-	info("A", x['ti'])
-	print(y.left.isValueImmediate())
-	print(y.asset)
-	print(y.left.asset)
-	print(y.left.init_value.asset)
-	return y
-
-
-def do_value_access2(x):
 	# access to submodule?
 	if x['left']['kind'] == 'id':
 		# если нет значения с таким именем, тогда возможно это модуль
