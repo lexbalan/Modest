@@ -303,14 +303,17 @@ def init_builtin_values():
 		Initializer(Id('name'), compilerName),
 		Initializer(Id('version'), compilerVersion),
 	]
-	compiler = value_record_create(compiler_initializers, ti=None)
-	root_symtab.value_add('__compiler', compiler)
+	compiler_iv = value_record_create(compiler_initializers, ti=None)
+	const_compiler = ValueConst(compiler_iv.type, Id("__compiler"), init_value=compiler_iv, ti=None)
+	const_compiler.set_asset(compiler_iv.asset)
+	const_compiler.stage = HLIR_VALUE_STAGE_COMPILETIME
+	root_symtab.value_add('__compiler', const_compiler)
 
 	#
 	# __target
 	#
 
-	#target_name = str(settings['target_name'])
+	target_name = str(settings['target_name'])
 	char_width = int(settings['char_width'])
 	int_width = int(settings['integer_width'])
 	flt_width = int(settings['float_width'])
@@ -318,14 +321,16 @@ def init_builtin_values():
 
 	# create '__target' record
 	target_initializers = [
-		Initializer(Id('name'), value_string_create(settings['target_name'])),
-		Initializer(Id('charWidth'), ValueLiteral(typeNat32, char_width)),
-		Initializer(Id('intWidth'), ValueLiteral(typeNat32, int_width)),
-		Initializer(Id('floatWidth'), ValueLiteral(typeNat32, flt_width)),
-		Initializer(Id('pointerWidth'), ValueLiteral(typeNat32, pointer_width)),
+		Initializer(Id('name'), value_string_create(target_name)),
+		Initializer(Id('charWidth'), ValueLiteral(typeInteger, char_width)),
+		Initializer(Id('intWidth'), ValueLiteral(typeInteger, int_width)),
+		Initializer(Id('floatWidth'), ValueLiteral(typeInteger, flt_width)),
+		Initializer(Id('pointerWidth'), ValueLiteral(typeInteger, pointer_width)),
 	]
 	target_iv = value_record_create(target_initializers, ti=None)
 	const_target = ValueConst(target_iv.type, Id("__target"), init_value=target_iv, ti=None)
+	const_target.set_asset(target_iv.asset)
+	const_target.stage = HLIR_VALUE_STAGE_COMPILETIME
 	root_symtab.value_add('__target', const_target)
 
 
@@ -1323,6 +1328,16 @@ def submodule_access(x):
 
 
 def do_value_access(x):
+	y = do_value_access2(x)
+	info("A", x['ti'])
+	print(y.left.isValueImmediate())
+	print(y.asset)
+	print(y.left.asset)
+	print(y.left.init_value.asset)
+	return y
+
+
+def do_value_access2(x):
 	# access to submodule?
 	if x['left']['kind'] == 'id':
 		# если нет значения с таким именем, тогда возможно это модуль
@@ -1378,9 +1393,9 @@ def do_value_access(x):
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
 
-		if left.isValueImmediate():
-			initializer = get_item_by_id(left.asset, field.id.str)
-			Value.cp_immediate(nv, initializer.value)
+	if left.isValueImmediate():
+		initializer = get_item_by_id(left.asset, field.id.str)
+		Value.cp_immediate(nv, initializer.value)
 
 	return nv
 

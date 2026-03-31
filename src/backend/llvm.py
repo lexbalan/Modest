@@ -1275,6 +1275,7 @@ def access(x):
 
 
 def do_eval_access(x):
+	#warning("do_eval_access()", x.ti)
 	if x.isValueImmediate():
 		return do_eval_literal(x)
 

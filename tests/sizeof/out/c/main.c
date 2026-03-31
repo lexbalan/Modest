@@ -267,7 +267,7 @@ static bool testRecord(void) {
 
 static bool testPointer(void) {
 	struct {uint8_t __placeholder;} *pointer;
-	if ((uint32_t)sizeof pointer != 64U / 8U) {
+	if ((uint32_t)sizeof pointer != ((struct {String name; int charWidth; int intWidth; int floatWidth; int pointerWidth;})__target).pointerWidth / 8) {
 		printf("error: sizeof(pointer) != __target.pointerWidth / 8\n");
 		return false;
 	}

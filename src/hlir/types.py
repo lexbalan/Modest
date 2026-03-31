@@ -1920,8 +1920,6 @@ class ValueUndef(Value):
 class ValueLiteral(Value):
 	def __init__(self, type, asset, ti=None):
 		assert(isinstance(type, Type))
-		if type.is_array():
-			1/0
 		super().__init__(type=type, ti=ti)
 		self.set_asset(asset)
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
