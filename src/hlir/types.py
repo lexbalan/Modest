@@ -590,6 +590,10 @@ HLIR_TYPE_KIND_FIXED = 16
 # for @branded types
 brand_cnt = 0
 
+def get_brand():
+	global brand_cnt
+	brand_cnt += 1
+	return brand_cnt
 
 class Type(Entity):
 	def __init__(self, generic=False, width=0, ops=[], ti=None):
@@ -625,7 +629,6 @@ class Type(Entity):
 
 
 	def add_atts(self, atts):
-		global brand_cnt
 		if atts == []:
 			return self
 
@@ -654,8 +657,7 @@ class Type(Entity):
 				nt.att.append(k)
 
 			if k == 'branded':
-				brand_cnt += 1
-				nt.brand = brand_cnt
+				nt.brand = get_brand()
 
 			# Для C некоторые атрибуты типа массива -
 			# это атрибуты типа его элементов
@@ -984,6 +986,8 @@ class Type(Entity):
 
 	@staticmethod
 	def eq_simple(a, b, opt):
+		if a.kind == HLIR_TYPE_KIND_STRING and a.kind == b.kind:
+			return True
 		return (a.kind == b.kind) and (a.width == b.width) and (a.generic == b.generic) and (a.fraction == b.fraction) and (a.layout == b.layout)
 
 

@@ -170,6 +170,11 @@ valueTrue = None
 valueFalse = None
 
 
+target_name = "<unknown>"
+char_width = 0
+int_width = 0
+flt_width = 0
+pointer_width = 0
 
 
 def valueZeroNumber(ti=None):
@@ -177,8 +182,17 @@ def valueZeroNumber(ti=None):
 	return ValueLiteral(gt, asset=0, ti=ti)
 
 
+# этот модуль по умолчанию импортирован в любой другой
+# он позволяет получить данные о компиляторе, окружении и целевой платформе
+builtin_module = None
+
+
 def init():
 	#lib_path = settings['lib']
+	global target_name
+	global char_width, int_width, flt_width, pointer_width
+	global typeSysWord, typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr, typeSysSize
+	global builtin_module
 
 	# max number of signs after .
 	# decimal operation precision
@@ -256,8 +270,6 @@ def init():
 	flt_width = int(settings['float_width'])
 	pointer_width = int(settings['pointer_width'])
 
-	global typeSysWord, typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr, typeSysSize
-
 	typeSysWord = type_word_create(word_width)
 	typeSysChar = type_select_char(char_width)
 	typeSysInt = type_select_int(int_width)
@@ -273,12 +285,21 @@ def init():
 	undefinedVolume = ValueUndef(typeSysNat, ti=None)
 	typeSysStr = TypePointer(TypeArray(typeSysChar, undefinedVolume))
 
-	init_builtin_values()
+	target_name = str(settings['target_name'])
+
+	builtin_module = create_builtin_module()
 
 
-def init_builtin_values():
+def create_builtin_module():
+	global target_name
+	global char_width
+	global int_width
+	global flt_width
+	global pointer_width
 	# Set taget depended Int & Nat types
 	# (used in index, extra agrs & generic numeric var definitions)
+
+	builtin_symtab = Symtab()
 
 	#
 	# __compiler
@@ -307,31 +328,73 @@ def init_builtin_values():
 	const_compiler = ValueConst(compiler_iv.type, Id("__compiler"), init_value=compiler_iv, ti=None)
 	const_compiler.set_asset(compiler_iv.asset)
 	const_compiler.stage = HLIR_VALUE_STAGE_COMPILETIME
-	root_symtab.value_add('__compiler', const_compiler)
+	builtin_symtab.value_add('compiler', const_compiler)
 
 	#
 	# __target
 	#
 
-	target_name = str(settings['target_name'])
-	char_width = int(settings['char_width'])
-	int_width = int(settings['integer_width'])
-	flt_width = int(settings['float_width'])
-	pointer_width = int(settings['pointer_width'])
+	def xcreate_const(symtab, id_str, value, type=None, ti=None):
+		if type == None:
+			type = value.type
+		value = value_cons_implicit(type, value)
+		const_value = ValueConst(type, Id(id_str), init_value=value, ti=ti)
+		const_value.set_asset(value.asset)
+		const_value.addAttribute('cbyvalue')
+		symtab.value_add(id_str, const_value)
+		return const_value
+
+
+	typeArch = type_string_create(32, 0, ti=None)
+	typeArch.brand = get_brand()
+
+	archX86 = xcreate_const(builtin_symtab, "archX86", value_string_create("x86"), type=typeArch)
+	archX86_64 = xcreate_const(builtin_symtab, "archX86_64", value_string_create("x86_64"), type=typeArch)
+	archArm = xcreate_const(builtin_symtab, "archArm", value_string_create("arm"), type=typeArch)
+	archAarch64 = xcreate_const(builtin_symtab, "archAarch64", value_string_create("aarch64"), type=typeArch)
+	archRiscv32 = xcreate_const(builtin_symtab, "archRiscv32", value_string_create("riscv32"), type=typeArch)
+	archRiscv64 = xcreate_const(builtin_symtab, "archRiscv64", value_string_create("riscv64"), type=typeArch)
+
+	typeOs = type_string_create(32, 0, ti=None)
+	typeOs.brand = get_brand()
+	osLinux = xcreate_const(builtin_symtab, "osLinux", value_string_create("linux"), type=typeOs)
+	osWindows = xcreate_const(builtin_symtab, "osWindows", value_string_create("windows"), type=typeOs)
+	osMacos = xcreate_const(builtin_symtab, "osMacos", value_string_create("darwin"), type=typeOs)
+	osNoos = xcreate_const(builtin_symtab, "osNoos", value_string_create("noos"), type=typeOs)
+
+	typeAbi = type_string_create(32, 0, ti=None)
+	typeAbi.brand = get_brand()
+	abiSysV = xcreate_const(builtin_symtab, "abiSysV", value_string_create("sysv"), type=typeAbi)
+	abiWin32 = xcreate_const(builtin_symtab, "abiWin32", value_string_create("win32"), type=typeAbi)
+	abiWin64 = xcreate_const(builtin_symtab, "abiWin64", value_string_create("win64"), type=typeAbi)
+	abiEabi = xcreate_const(builtin_symtab, "abiEabi", value_string_create("eabi"), type=typeAbi)
+	abiUnknown = xcreate_const(builtin_symtab, "abiUnknown", value_string_create("unknown_abi"), type=typeAbi)
+
+	typeEndian = type_string_create(32, 0, ti=None)
+	typeEndian.brand = get_brand()
+	endianBig = xcreate_const(builtin_symtab, "endianBig", value_string_create("big-endian"), type=typeEndian)
+	endianLittle = xcreate_const(builtin_symtab, "endianLittle", value_string_create("little-endian"), type=typeEndian)
 
 	# create '__target' record
 	target_initializers = [
 		Initializer(Id('name'), value_string_create(target_name)),
+		Initializer(Id('arch'), archAarch64),
+		Initializer(Id('os'), osMacos),
+		Initializer(Id('abi'), abiSysV),
+		Initializer(Id('endian'), endianLittle),
 		Initializer(Id('charWidth'), ValueLiteral(typeInteger, char_width)),
 		Initializer(Id('intWidth'), ValueLiteral(typeInteger, int_width)),
 		Initializer(Id('floatWidth'), ValueLiteral(typeInteger, flt_width)),
-		Initializer(Id('pointerWidth'), ValueLiteral(typeInteger, pointer_width)),
+		Initializer(Id('pointerWidth'), ValueLiteral(typeInteger, pointer_width))
 	]
 	target_iv = value_record_create(target_initializers, ti=None)
 	const_target = ValueConst(target_iv.type, Id("__target"), init_value=target_iv, ti=None)
 	const_target.set_asset(target_iv.asset)
 	const_target.stage = HLIR_VALUE_STAGE_COMPILETIME
-	root_symtab.value_add('__target', const_target)
+
+	builtin_symtab.value_add('target', const_target)
+
+	return Module("builtin", ast=None, symtab_public=builtin_symtab, symtab_private=Symtab(), sourcename="__builtin_source__")
 
 
 # last fiels of record can be zero size array (!)
@@ -2589,7 +2652,7 @@ def translate(abspath, is_include=False):
 		return None
 
 	global env_current_file_dir
-	prev_env_current_file_dir = env_current_file_dir
+	prev_builtin_current_file_dir = env_current_file_dir
 	env_current_file_dir = os.path.dirname(abspath)
 
 	tokens = lexer.run(abspath)
@@ -2602,11 +2665,12 @@ def translate(abspath, is_include=False):
 		#m.prefix = m.id
 		m.source_abspath = abspath
 
-	env_current_file_dir = prev_env_current_file_dir
+	env_current_file_dir = prev_builtin_current_file_dir
 
 	log_pop()
 	log("")
 	return m
+
 
 
 
@@ -2625,6 +2689,9 @@ def process_module(idStr, sourcename, ast, is_include):
 	}
 
 	cmodule = Module(idStr, ast, symtab_public, symtab_private, sourcename)
+
+	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=None, include=False)
+	cmodule.imports["builtin"] = import_builtin
 
 	# 0. do imports & directives
 	i = 0

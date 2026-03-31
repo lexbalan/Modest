@@ -658,7 +658,6 @@ def do_cvalue_cons_record(x, ctx):
 #		cv.mark = 'CR2'
 #		return cv
 
-
 	# RecordA -> RecordB
 	#if to_type.is_record():
 	if from_type.is_record() and from_type.is_concretic():
@@ -713,10 +712,7 @@ def do_cvalue_cons2(x, ctx):
 
 	if type.is_array(): return do_cvalue_cons_array(x, ctx)
 	if type.is_record(): return do_cvalue_cons_record(x, ctx)
-	if type.is_branded():
-		cv = do_cvalue_cast(x.type, x.value, ctx)
-		cv.mark = '^'
-		return cv
+	if type.is_branded(): return do_cvalue_cast(x.type, x.value, ctx)
 	if type.is_char(): return do_cvalue_cons_char(x, ctx)
 	if type.is_pointer(): return do_cvalue_cons_pointer(x, ctx)
 	if type.is_int(): return do_cvalue_cons_int(x, ctx)
