@@ -58,6 +58,8 @@ struct list_header {
 };
 
 static void foo(int32_t a, int64_t b) {
+	ListHeader lh;
+	lh.next->next;
 	return;
 }
 #define C 15

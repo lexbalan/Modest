@@ -288,11 +288,15 @@ class Parser:
 			return True
 
 		elif self.is_identifier():
-			if self.nextok() == '.':
-				self.skip1()
-				self.skip1()
+			# parse type expressions like 'builtin.machine.Word'
+			while self.is_identifier():
+				self.skip1() # skip ident
+				if self.ctok() != '.':
+					return False
+				self.skip1() # skip '.'
 				if self.is_Identifier():
 					return True
+
 			token = self.gettok()
 			return token in ['record']
 
@@ -476,15 +480,20 @@ class Parser:
 			}
 
 		elif self.is_identifier():
-			left = self.parse_identifier()
+			left = [self.parse_identifier()]
 			dot_ti = self.textInfo()
-			self.need(".")
-			right = self.parse_identifier()
+			if self.look("."):
+				while self.match("."):
+					if self.is_Identifier():
+						break
+					left.append(self.parse_identifier())
 
+			right = self.parse_identifier()
+			#print(left)
 			t = {
 				'isa': 'ast_type',
 				'kind': 'named',
-				'module': left,
+				'module_path': left,
 				'id': right,
 				'ti': TextInfo(start=start_ti, mid=dot_ti, end=right['ti'])
 			}

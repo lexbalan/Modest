@@ -290,6 +290,20 @@ def init():
 	builtin_module = create_builtin_module()
 
 
+
+
+
+def xcreate_const(symtab, id_str, value, type=None, ti=None):
+	if type == None:
+		type = value.type
+	value = value_cons_implicit(type, value)
+	const_value = ValueConst(type, Id(id_str), init_value=value, ti=ti)
+	const_value.set_asset(value.asset)
+	const_value.addAttribute('cbyvalue')
+	symtab.value_add(id_str, const_value)
+	return const_value
+
+
 def create_builtin_module():
 	global target_name
 	global char_width
@@ -300,6 +314,20 @@ def create_builtin_module():
 	# (used in index, extra agrs & generic numeric var definitions)
 
 	builtin_symtab = Symtab()
+	builtin_module = Module("builtin", ast=None, symtab_public=builtin_symtab, symtab_private=Symtab(), sourcename="__builtin_source__")
+
+	target_symtab = Symtab()
+	target_module = Module("target", ast=None, symtab_public=target_symtab, symtab_private=Symtab(), sourcename="__target_source__")
+
+	import_target = StmtImport(impline="builtin/target", name="builtin", module=target_module, ti=None, include=False)
+	builtin_module.imports["target"] = import_target
+
+	compiler_symtab = Symtab()
+	compiler_module = Module("compiler", ast=None, symtab_public=compiler_symtab, symtab_private=Symtab(), sourcename="__compiler_source__")
+
+	import_compiler = StmtImport(impline="builtin/compiler", name="builtin", module=compiler_module, ti=None, include=False)
+	builtin_module.imports["compiler"] = import_compiler
+
 
 	#
 	# builtin.compiler
@@ -318,76 +346,74 @@ def create_builtin_module():
 		Initializer(Id('minor'), compilerVersionMinor),
 		Initializer(Id('patch'), compilerVersionPatch),
 	]
-	compilerVersion = value_record_create(compiler_version_initializers, ti=None)
+	compilerVersionRecord = value_record_create(compiler_version_initializers, ti=None)
+
+	compilerVersionConst = xcreate_const(compiler_symtab, "version", compilerVersionRecord)
 
 	# '__compiler' record
-	compiler_initializers = [
-		Initializer(Id('name'), compilerName),
-		Initializer(Id('version'), compilerVersion),
-	]
-	compiler_iv = value_record_create(compiler_initializers, ti=None)
-	const_compiler = ValueConst(compiler_iv.type, Id("__compiler"), init_value=compiler_iv, ti=None)
-	const_compiler.set_asset(compiler_iv.asset)
-	const_compiler.stage = HLIR_VALUE_STAGE_COMPILETIME
-	builtin_symtab.value_add('compiler', const_compiler)
+#	compiler_initializers = [
+#		Initializer(Id('name'), compilerName),
+#		Initializer(Id('version'), compilerVersion),
+#	]
+#	compiler_iv = value_record_create(compiler_initializers, ti=None)
+#	const_compiler = ValueConst(compiler_iv.type, Id("__compiler"), init_value=compiler_iv, ti=None)
+#	const_compiler.set_asset(compiler_iv.asset)
+#	const_compiler.stage = HLIR_VALUE_STAGE_COMPILETIME
+#	builtin_symtab.value_add('compiler', const_compiler)
 
 	#
 	# builtin.target
 	#
 
-	def xcreate_const(symtab, id_str, value, type=None, ti=None):
-		if type == None:
-			type = value.type
-		value = value_cons_implicit(type, value)
-		const_value = ValueConst(type, Id(id_str), init_value=value, ti=ti)
-		const_value.set_asset(value.asset)
-		const_value.addAttribute('cbyvalue')
-		symtab.value_add(id_str, const_value)
-		return const_value
-
-
 	typeArch = type_string_create(32, 0, ti=None)
 	typeArch.brand = get_brand()
 
-	archX86 = xcreate_const(builtin_symtab, "archX86", value_string_create("x86"), type=typeArch)
-	archX86_64 = xcreate_const(builtin_symtab, "archX86_64", value_string_create("x86_64"), type=typeArch)
-	archArm = xcreate_const(builtin_symtab, "archArm", value_string_create("arm"), type=typeArch)
-	archAarch64 = xcreate_const(builtin_symtab, "archAarch64", value_string_create("aarch64"), type=typeArch)
-	archRiscv32 = xcreate_const(builtin_symtab, "archRiscv32", value_string_create("riscv32"), type=typeArch)
-	archRiscv64 = xcreate_const(builtin_symtab, "archRiscv64", value_string_create("riscv64"), type=typeArch)
+	archX86 = xcreate_const(target_symtab, "archX86", value_string_create("x86"), type=typeArch)
+	archX86_64 = xcreate_const(target_symtab, "archX86_64", value_string_create("x86_64"), type=typeArch)
+	archArm = xcreate_const(target_symtab, "archArm", value_string_create("arm"), type=typeArch)
+	archAarch64 = xcreate_const(target_symtab, "archAarch64", value_string_create("aarch64"), type=typeArch)
+	archRiscv32 = xcreate_const(target_symtab, "archRiscv32", value_string_create("riscv32"), type=typeArch)
+	archRiscv64 = xcreate_const(target_symtab, "archRiscv64", value_string_create("riscv64"), type=typeArch)
 
 	typeOs = type_string_create(32, 0, ti=None)
 	typeOs.brand = get_brand()
-	osLinux = xcreate_const(builtin_symtab, "osLinux", value_string_create("linux"), type=typeOs)
-	osWindows = xcreate_const(builtin_symtab, "osWindows", value_string_create("windows"), type=typeOs)
-	osMacos = xcreate_const(builtin_symtab, "osMacos", value_string_create("darwin"), type=typeOs)
-	osNoos = xcreate_const(builtin_symtab, "osNoos", value_string_create("noos"), type=typeOs)
+	osLinux = xcreate_const(target_symtab, "osLinux", value_string_create("linux"), type=typeOs)
+	osWindows = xcreate_const(target_symtab, "osWindows", value_string_create("windows"), type=typeOs)
+	osMacos = xcreate_const(target_symtab, "osMacos", value_string_create("darwin"), type=typeOs)
+	osNoos = xcreate_const(target_symtab, "osNoos", value_string_create("noos"), type=typeOs)
 
 	typeAbi = type_string_create(32, 0, ti=None)
 	typeAbi.brand = get_brand()
-	abiSysV = xcreate_const(builtin_symtab, "abiSysV", value_string_create("sysv"), type=typeAbi)
-	abiWin32 = xcreate_const(builtin_symtab, "abiWin32", value_string_create("win32"), type=typeAbi)
-	abiWin64 = xcreate_const(builtin_symtab, "abiWin64", value_string_create("win64"), type=typeAbi)
-	abiEabi = xcreate_const(builtin_symtab, "abiEabi", value_string_create("eabi"), type=typeAbi)
-	abiUnknown = xcreate_const(builtin_symtab, "abiUnknown", value_string_create("unknown_abi"), type=typeAbi)
+	abiSysV = xcreate_const(target_symtab, "abiSysV", value_string_create("sysv"), type=typeAbi)
+	abiWin32 = xcreate_const(target_symtab, "abiWin32", value_string_create("win32"), type=typeAbi)
+	abiWin64 = xcreate_const(target_symtab, "abiWin64", value_string_create("win64"), type=typeAbi)
+	abiEabi = xcreate_const(target_symtab, "abiEabi", value_string_create("eabi"), type=typeAbi)
+	abiUnknown = xcreate_const(target_symtab, "abiUnknown", value_string_create("unknown_abi"), type=typeAbi)
 
 	typeEndian = type_string_create(32, 0, ti=None)
 	typeEndian.brand = get_brand()
-	endianBig = xcreate_const(builtin_symtab, "endianBig", value_string_create("big-endian"), type=typeEndian)
-	endianLittle = xcreate_const(builtin_symtab, "endianLittle", value_string_create("little-endian"), type=typeEndian)
+	endianBig = xcreate_const(target_symtab, "endianBig", value_string_create("big-endian"), type=typeEndian)
+	endianLittle = xcreate_const(target_symtab, "endianLittle", value_string_create("little-endian"), type=typeEndian)
+	target_endian = xcreate_const(target_symtab, "endian", endianLittle, type=typeEndian)
+	target_arch = xcreate_const(target_symtab, "arch", archAarch64, type=typeArch)
+	target_os = xcreate_const(target_symtab, "os", osMacos, type=typeOs)
+	target_abi = xcreate_const(target_symtab, "abi", abiSysV, type=typeAbi)
 
 
 	mw = type_word_create(width=32)
-	mw.definition = StmtDefType("MachineWord", mw, None, ti=None)
-	builtin_symtab.type_add('MachineWord', mw)
+	mw.definition = StmtDefType("Word", mw, None, ti=None)
+	target_symtab.type_add('Word', mw)
+	builtin_symtab.type_add('Word', mw)
 
 	mi = type_int_create(width=32)
-	mw.definition = StmtDefType("MachineInt", mi, None, ti=None)
-	builtin_symtab.type_add('MachineInt', mi)
+	mi.definition = StmtDefType("Int", mi, None, ti=None)
+	target_symtab.type_add('Int', mi)
+	builtin_symtab.type_add('Int', mi)
 
 	mn = type_nat_create(width=32)
-	mw.definition = StmtDefType("MachineNat", mn, None, ti=None)
-	builtin_symtab.type_add('MachineNat', mn)
+	mn.definition = StmtDefType("Nat", mn, None, ti=None)
+	target_symtab.type_add('Nat', mn)
+	builtin_symtab.type_add('Nat', mn)
 
 	# create '__target' record
 	target_initializers = [
@@ -408,7 +434,7 @@ def create_builtin_module():
 
 	builtin_symtab.value_add('target', const_target)
 
-	return Module("builtin", ast=None, symtab_public=builtin_symtab, symtab_private=Symtab(), sourcename="__builtin_source__")
+	return builtin_module
 
 
 # last fiels of record can be zero size array (!)
@@ -436,32 +462,44 @@ def do_field(x):
 # Do Type
 #
 
+
+def get_module_by_path(path):
+	global cmodule
+	mod = cmodule
+	for id in path:
+		module_id_str = id['str']
+		if not module_id_str in mod.imports:
+			error("module '%s' not found" % module_id_str, id['ti'])
+			return None  # not found
+		mod = mod.imports[module_id_str].module
+	return mod
+
+
 def do_type_named(x):
 	global cmodule
 	id = x['id']
 	id_str = id['str']
 
 	t = None
-	if 'module' in x:
-		module_id = x['module']['str']
+	if 'module_path' in x:
+		module = get_module_by_path(x['module_path'])
 
-		if not module_id in cmodule.imports:
+		if module == None:
 			error("unknown namespace '%s'" % module_id, x['ti'])
 			return TypeBad(x['ti'])
 
-		imp_module = cmodule.imports[module_id].module
-		t = imp_module.type_get_public(id_str)
+		t = module.type_get_public(id_str)
 
 		if t == None:
-			t = imp_module.type_get_private(id_str)
+			t = module.type_get_private(id_str)
 			if t != None:
 				error("access to private type", x['ti'])
 			else:
-				error("undefined type", x['ti'])
+				error("undefined type2", x['ti'])
 			return TypeBad(x['ti'])
 
 		if t.is_incompleted():
-			t = type_update_incompleted(imp_module, t, id_str)
+			t = type_update_incompleted(module, t, id_str)
 	else:
 		t = ctx_type_get(id_str)
 
@@ -1405,18 +1443,35 @@ def submodule_access(x):
 
 
 def do_value_access(x):
-	# access to submodule?
-	if x['left']['kind'] == 'id':
-		# если нет значения с таким именем, тогда возможно это модуль
-		# (смотрим сперва значения, чтобы они имели приоритет
-		# над одноименными модулями)
-		v = ctx_value_get(x['left']['str'])
-		if v == None:
-			if is_import_name(x['left']['str']):
-				return submodule_access(x)
+	#info("do_value_access", x['ti'])
 
 	#
-	# access to object
+	# access to module?
+	#
+
+	# Ищем самый левый 'access' и смотрим если его левая часть это id который не value
+	# Если он не value значит он может быть module, а это наш случай (!)
+	module_path = []
+	left = x['left']
+	while left['kind'] == 'access':
+		module_path = [left['right']] + module_path
+		# слева доступ - возможно к импорту
+		# приходтися делать так чтобы не вводить ValueImport или ValueModule тк это бред
+		left = left['left']
+
+	# access to submodule?
+	if left['kind'] == 'id' and is_import_name(left['str']):
+		module_path = [left] + module_path
+		mod = get_module_by_path(module_path)
+		v = mod.value_get_public(x['right']['str'])
+		if v == None:
+			error("value '%s' not found" % x['right']['str'], x['right']['ti'])
+			return ValueBad(x['ti'])
+		return v
+
+
+	#
+	# access to object!
 	#
 
 	left = do_value(x['left'])

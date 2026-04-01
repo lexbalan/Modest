@@ -42,6 +42,8 @@ type ListHeader = @public {
 }
 
 func foo (a: Int32, b: Int64) -> {} {
+	var lh: ListHeader
+	lh.next.next
 	return {}
 }
 

@@ -11,11 +11,11 @@ int main(void) {
 	uint32_t w;
 	int32_t i;
 	uint32_t n;
-	printf("sizeof(builtin.MachineWord) = %lu\n", sizeof(uint32_t));
-	printf("sizeof(builtin.MachineInt) = %lu\n", sizeof(int32_t));
-	printf("sizeof(builtin.MachineNat) = %lu\n", sizeof(uint32_t));
-	#define version {.major = 0U, .minor = 7U, .patch = 100U}
-	printf("builtin.compiler.version = %u.%u.%u\n", ((struct {uint32_t major; uint32_t minor; uint32_t patch;})version).major, ((struct {uint32_t major; uint32_t minor; uint32_t patch;})version).minor, ((struct {uint32_t major; uint32_t minor; uint32_t patch;})version).patch);
+	printf("sizeof(builtin.Word) = %lu\n", sizeof(uint32_t));
+	printf("sizeof(builtin.Int) = %lu\n", sizeof(int32_t));
+	printf("sizeof(builtin.Nat) = %lu\n", sizeof(uint32_t));
+	struct {uint32_t major; uint32_t minor; uint32_t patch;} version = {.major = 0U, .minor = 7U, .patch = 100U};
+	printf("builtin.compiler.version = %u.%u.%u\n", version.major, version.minor, version.patch);
 	if (__builtin_strcmp((char *const )&"little-endian", (char *const )&"big-endian") == 0) {
 		printf("it is a big-endian system\n");
 	} else if (__builtin_strcmp((char *const )&"little-endian", (char *const )&"little-endian") == 0) {
@@ -61,6 +61,5 @@ int main(void) {
 		printf("it is an Unknown ABI\n");
 	}
 	return EXIT_SUCCESS;
-	#undef version
 }
 

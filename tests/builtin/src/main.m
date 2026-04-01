@@ -9,13 +9,13 @@ include "libc/stdlib"
 public func main () -> Int {
 	printf("test builtin\n")
 
-	var w: builtin.MachineWord
-	var i: builtin.MachineInt
-	var n: builtin.MachineNat
+	var w: builtin.target.Word
+	var i: builtin.target.Int
+	var n: builtin.target.Nat
 
-	printf("sizeof(builtin.MachineWord) = %lu\n", sizeof(builtin.MachineWord))
-	printf("sizeof(builtin.MachineInt) = %lu\n", sizeof(builtin.MachineInt))
-	printf("sizeof(builtin.MachineNat) = %lu\n", sizeof(builtin.MachineNat))
+	printf("sizeof(builtin.Word) = %lu\n", sizeof(builtin.target.Word))
+	printf("sizeof(builtin.Int) = %lu\n", sizeof(builtin.target.Int))
+	printf("sizeof(builtin.Nat) = %lu\n", sizeof(builtin.target.Nat))
 
 	let version = builtin.compiler.version
 	printf("builtin.compiler.version = %u.%u.%u\n", version.major, version.minor, version.patch)
@@ -28,49 +28,49 @@ public func main () -> Int {
 //	printf("builtin.target.endian = %s\n", *Str8 builtin.target.endian)
 
 	// TODO: Проблема - результаты этих операций сравнения посему то не immediate....
-	if builtin.target.endian == builtin.endianBig {
+	if builtin.target.endian == builtin.target.endianBig {
 		printf("it is a big-endian system\n")
-	} else if builtin.target.endian == builtin.endianLittle {
+	} else if builtin.target.endian == builtin.target.endianLittle {
 		printf("it is a little-endian system\n")
 	} else {
 		printf("unknown endianess\n")
 	}
 
-	if builtin.target.arch == builtin.archArm {
+	if builtin.target.arch == builtin.target.archArm {
 		printf("it is an ARM (32) architecture\n")
-	} else if builtin.target.arch == builtin.archAarch64 {
+	} else if builtin.target.arch == builtin.target.archAarch64 {
 		printf("it is an ARM (64) architecture\n")
-	} else if builtin.target.arch == builtin.archRiscv32 {
+	} else if builtin.target.arch == builtin.target.archRiscv32 {
 		printf("it is an RISC-V (32) architecture\n")
-	} else if builtin.target.arch == builtin.archRiscv64 {
+	} else if builtin.target.arch == builtin.target.archRiscv64 {
 		printf("it is an RISC-V (64) architecture\n")
-	} else if builtin.target.arch == builtin.archX86 {
+	} else if builtin.target.arch == builtin.target.archX86 {
 		printf("it is an x86 (32) architecture\n")
-	} else if builtin.target.arch == builtin.archX86_64 {
+	} else if builtin.target.arch == builtin.target.archX86_64 {
 		printf("it is an x86 (64) architecture\n")
 	} else {
 		printf("it is an unknown architecture\n")
 	}
 
-	if builtin.target.os == builtin.osLinux {
+	if builtin.target.os == builtin.target.osLinux {
 		printf("it is a Linux operation system\n")
-	} else if builtin.target.os == builtin.osWindows {
+	} else if builtin.target.os == builtin.target.osWindows {
 		printf("it is a Windows operation system\n")
-	} else if builtin.target.os == builtin.osMacos {
+	} else if builtin.target.os == builtin.target.osMacos {
 		printf("it is a MacOS operation system\n")
-	} else if builtin.target.os == builtin.osNoos {
+	} else if builtin.target.os == builtin.target.osNoos {
 		printf("There is no operation system\n")
 	} else {
 		printf("it is an Unknown operation system\n")
 	}
 
-	if builtin.target.abi == builtin.abiSysV {
+	if builtin.target.abi == builtin.target.abiSysV {
 		printf("it is a System V ABI\n")
-	} else if builtin.target.abi == builtin.abiWin32 {
+	} else if builtin.target.abi == builtin.target.abiWin32 {
 		printf("it is a Win32 ABI\n")
-	} else if builtin.target.abi == builtin.abiWin64 {
+	} else if builtin.target.abi == builtin.target.abiWin64 {
 		printf("it is a Win64 ABI\n")
-	} else if builtin.target.abi == builtin.abiEabi {
+	} else if builtin.target.abi == builtin.target.abiEabi {
 		printf("it is a EABI\n")
 	} else {
 		printf("it is an Unknown ABI\n")

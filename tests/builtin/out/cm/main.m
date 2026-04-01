@@ -13,55 +13,55 @@ public func main () -> Int {
 	var i: Int32
 	var n: Nat32
 
-	printf("sizeof(builtin.MachineWord) = %lu\n", sizeof(Word32))
-	printf("sizeof(builtin.MachineInt) = %lu\n", sizeof(Int32))
-	printf("sizeof(builtin.MachineNat) = %lu\n", sizeof(Nat32))
+	printf("sizeof(builtin.Word) = %lu\n", sizeof(Word32))
+	printf("sizeof(builtin.Int) = %lu\n", sizeof(Int32))
+	printf("sizeof(builtin.Nat) = %lu\n", sizeof(Nat32))
 
-	let version = builtin.compiler.version
+	let version = version
 	printf("builtin.compiler.version = %u.%u.%u\n", version.major, version.minor, version.patch)
-	if builtin.target.endian == builtin.endianBig {
+	if endian == endianBig {
 		printf("it is a big-endian system\n")
-	} else if builtin.target.endian == builtin.endianLittle {
+	} else if endian == endianLittle {
 		printf("it is a little-endian system\n")
 	} else {
 		printf("unknown endianess\n")
 	}
 
-	if builtin.target.arch == builtin.archArm {
+	if arch == archArm {
 		printf("it is an ARM (32) architecture\n")
-	} else if builtin.target.arch == builtin.archAarch64 {
+	} else if arch == archAarch64 {
 		printf("it is an ARM (64) architecture\n")
-	} else if builtin.target.arch == builtin.archRiscv32 {
+	} else if arch == archRiscv32 {
 		printf("it is an RISC-V (32) architecture\n")
-	} else if builtin.target.arch == builtin.archRiscv64 {
+	} else if arch == archRiscv64 {
 		printf("it is an RISC-V (64) architecture\n")
-	} else if builtin.target.arch == builtin.archX86 {
+	} else if arch == archX86 {
 		printf("it is an x86 (32) architecture\n")
-	} else if builtin.target.arch == builtin.archX86_64 {
+	} else if arch == archX86_64 {
 		printf("it is an x86 (64) architecture\n")
 	} else {
 		printf("it is an unknown architecture\n")
 	}
 
-	if builtin.target.os == builtin.osLinux {
+	if os == osLinux {
 		printf("it is a Linux operation system\n")
-	} else if builtin.target.os == builtin.osWindows {
+	} else if os == osWindows {
 		printf("it is a Windows operation system\n")
-	} else if builtin.target.os == builtin.osMacos {
+	} else if os == osMacos {
 		printf("it is a MacOS operation system\n")
-	} else if builtin.target.os == builtin.osNoos {
+	} else if os == osNoos {
 		printf("There is no operation system\n")
 	} else {
 		printf("it is an Unknown operation system\n")
 	}
 
-	if builtin.target.abi == builtin.abiSysV {
+	if abi == abiSysV {
 		printf("it is a System V ABI\n")
-	} else if builtin.target.abi == builtin.abiWin32 {
+	} else if abi == abiWin32 {
 		printf("it is a Win32 ABI\n")
-	} else if builtin.target.abi == builtin.abiWin64 {
+	} else if abi == abiWin64 {
 		printf("it is a Win64 ABI\n")
-	} else if builtin.target.abi == builtin.abiEabi {
+	} else if abi == abiEabi {
 		printf("it is a EABI\n")
 	} else {
 		printf("it is an Unknown ABI\n")

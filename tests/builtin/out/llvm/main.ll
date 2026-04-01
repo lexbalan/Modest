@@ -218,9 +218,9 @@ declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print imports 'main' --
 ; -- strings --
 @str1 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 98, i8 117, i8 105, i8 108, i8 116, i8 105, i8 110, i8 10, i8 0]
-@str2 = private constant [35 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 98, i8 117, i8 105, i8 108, i8 116, i8 105, i8 110, i8 46, i8 77, i8 97, i8 99, i8 104, i8 105, i8 110, i8 101, i8 87, i8 111, i8 114, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
-@str3 = private constant [34 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 98, i8 117, i8 105, i8 108, i8 116, i8 105, i8 110, i8 46, i8 77, i8 97, i8 99, i8 104, i8 105, i8 110, i8 101, i8 73, i8 110, i8 116, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
-@str4 = private constant [34 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 98, i8 117, i8 105, i8 108, i8 116, i8 105, i8 110, i8 46, i8 77, i8 97, i8 99, i8 104, i8 105, i8 110, i8 101, i8 78, i8 97, i8 116, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
+@str2 = private constant [28 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 98, i8 117, i8 105, i8 108, i8 116, i8 105, i8 110, i8 46, i8 87, i8 111, i8 114, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
+@str3 = private constant [27 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 98, i8 117, i8 105, i8 108, i8 116, i8 105, i8 110, i8 46, i8 73, i8 110, i8 116, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
+@str4 = private constant [27 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 98, i8 117, i8 105, i8 108, i8 116, i8 105, i8 110, i8 46, i8 78, i8 97, i8 116, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
 @str5 = private constant [37 x i8] [i8 98, i8 117, i8 105, i8 108, i8 116, i8 105, i8 110, i8 46, i8 99, i8 111, i8 109, i8 112, i8 105, i8 108, i8 101, i8 114, i8 46, i8 118, i8 101, i8 114, i8 115, i8 105, i8 111, i8 110, i8 32, i8 61, i8 32, i8 37, i8 117, i8 46, i8 37, i8 117, i8 46, i8 37, i8 117, i8 10, i8 0]
 @str6 = private constant [27 x i8] [i8 105, i8 116, i8 32, i8 105, i8 115, i8 32, i8 97, i8 32, i8 98, i8 105, i8 103, i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 32, i8 115, i8 121, i8 115, i8 116, i8 101, i8 109, i8 10, i8 0]
 @str7 = private constant [30 x i8] [i8 105, i8 116, i8 32, i8 105, i8 115, i8 32, i8 97, i8 32, i8 108, i8 105, i8 116, i8 116, i8 108, i8 101, i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 32, i8 115, i8 121, i8 115, i8 116, i8 101, i8 109, i8 10, i8 0]
@@ -248,12 +248,18 @@ define %Int @main() {
 	%2 = alloca %Word32, align 4
 	%3 = alloca %Int32, align 4
 	%4 = alloca %Nat32, align 4
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @str2 to [0 x i8]*), %Size 4)
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str3 to [0 x i8]*), %Size 4)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str4 to [0 x i8]*), %Size 4)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str2 to [0 x i8]*), %Size 4)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str3 to [0 x i8]*), %Size 4)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*), %Size 4)
 	%8 = insertvalue {%Nat32,%Nat32,%Nat32} zeroinitializer, %Nat32 7, 1
 	%9 = insertvalue {%Nat32,%Nat32,%Nat32} %8, %Nat32 100, 2
 	%10 = alloca {%Nat32,%Nat32,%Nat32}
 	store {%Nat32,%Nat32,%Nat32} %9, {%Nat32,%Nat32,%Nat32}* %10
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str5 to [0 x i8]*), %Nat32 0, %Nat32 7, %Nat32 100)
+	%11 = getelementptr {%Nat32,%Nat32,%Nat32}, {%Nat32,%Nat32,%Nat32}* %10, %Int32 0, %Int32 0
+	%12 = load %Nat32, %Nat32* %11
+	%13 = getelementptr {%Nat32,%Nat32,%Nat32}, {%Nat32,%Nat32,%Nat32}* %10, %Int32 0, %Int32 1
+	%14 = load %Nat32, %Nat32* %13
+	%15 = getelementptr {%Nat32,%Nat32,%Nat32}, {%Nat32,%Nat32,%Nat32}* %10, %Int32 0, %Int32 2
+	%16 = load %Nat32, %Nat32* %15
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str5 to [0 x i8]*), %Nat32 %12, %Nat32 %14, %Nat32 %16)
 ; if_0
