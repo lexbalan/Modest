@@ -194,13 +194,14 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports 'crc32' --
-; -- 1
+; -- print imports private 'crc32' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'crc32' --
+; -- end print imports private 'crc32' --
+; -- print imports public 'crc32' --
+; -- end print imports public 'crc32' --
 ; -- strings --
 ; -- endstrings --
 @table = internal global [256 x %Word32] zeroinitializer

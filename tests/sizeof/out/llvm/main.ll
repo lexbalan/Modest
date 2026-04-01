@@ -209,13 +209,14 @@ declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 1
+; -- print imports private 'main' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'main' --
+; -- end print imports private 'main' --
+; -- print imports public 'main' --
+; -- end print imports public 'main' --
 ; -- strings --
 @str1 = private constant [26 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 85, i8 110, i8 105, i8 116, i8 41, i8 32, i8 33, i8 61, i8 32, i8 48, i8 10, i8 0]
 @str2 = private constant [27 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 97, i8 108, i8 105, i8 103, i8 110, i8 111, i8 102, i8 40, i8 85, i8 110, i8 105, i8 116, i8 41, i8 32, i8 33, i8 61, i8 32, i8 49, i8 10, i8 0]
@@ -672,20 +673,24 @@ endif_1:
 define internal %Bool @testPointer() {
 	%1 = alloca i8*, align 8
 ; if_0
-	br %Bool 0 , label %then_0, label %endif_0
+	%2 = zext i8 64 to i8
+	%3 = sdiv i8 %2, 8
+	%4 = zext i8 %3 to %Nat32
+	%5 = icmp ne %Nat32 8, %4
+	br %Bool %5 , label %then_0, label %endif_0
 then_0:
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([53 x i8]* @str58 to [0 x i8]*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([53 x i8]* @str58 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
 ; if_1
 	br %Bool 0 , label %then_1, label %endif_1
 then_1:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([44 x i8]* @str59 to [0 x i8]*))
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([44 x i8]* @str59 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str60 to [0 x i8]*))
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str60 to [0 x i8]*))
 	ret %Bool 1
 }
 

@@ -173,7 +173,7 @@ valueFalse = None
 target_name = "<unknown>"
 char_width = 0
 int_width = 0
-flt_width = 0
+float_width = 0
 pointer_width = 0
 
 
@@ -190,7 +190,7 @@ builtin_module = None
 def init():
 	#lib_path = settings['lib']
 	global target_name
-	global char_width, int_width, flt_width, pointer_width
+	global char_width, int_width, float_width, pointer_width
 	global typeSysWord, typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr, typeSysSize
 	global builtin_module
 
@@ -267,7 +267,7 @@ def init():
 	word_width = int(settings['word_width'])
 	char_width = int(settings['char_width'])
 	int_width = int(settings['integer_width'])
-	flt_width = int(settings['float_width'])
+	float_width = int(settings['float_width'])
 	pointer_width = int(settings['pointer_width'])
 
 	typeSysWord = type_word_create(word_width)
@@ -308,7 +308,7 @@ def create_builtin_module():
 	global target_name
 	global char_width
 	global int_width
-	global flt_width
+	global float_width
 	global pointer_width
 	# Set taget depended Int & Nat types
 	# (used in index, extra agrs & generic numeric var definitions)
@@ -320,13 +320,13 @@ def create_builtin_module():
 	target_module = Module("target", ast=None, symtab_public=target_symtab, symtab_private=Symtab(), sourcename="__target_source__")
 
 	import_target = StmtImport(impline="builtin/target", name="builtin", module=target_module, ti=None, include=False)
-	builtin_module.imports["target"] = import_target
+	builtin_module.imports_public["target"] = import_target
 
 	compiler_symtab = Symtab()
 	compiler_module = Module("compiler", ast=None, symtab_public=compiler_symtab, symtab_private=Symtab(), sourcename="__compiler_source__")
 
 	import_compiler = StmtImport(impline="builtin/compiler", name="builtin", module=compiler_module, ti=None, include=False)
-	builtin_module.imports["compiler"] = import_compiler
+	builtin_module.imports_public["compiler"] = import_compiler
 
 
 	#
@@ -334,7 +334,7 @@ def create_builtin_module():
 	#
 
 	# compiler name
-	compilerName = value_string_create("m2")
+	compilerNameConst = xcreate_const(compiler_symtab, "name", value_string_create("m2"))
 
 	# compiler version
 	compilerVersionMajor = ValueLiteral(typeNat32, 0)
@@ -364,6 +364,8 @@ def create_builtin_module():
 	#
 	# builtin.target
 	#
+
+	targetNameConst = xcreate_const(target_symtab, "name", value_string_create("mac"))
 
 	typeArch = type_string_create(32, 0, ti=None)
 	typeArch.brand = get_brand()
@@ -398,6 +400,10 @@ def create_builtin_module():
 	target_arch = xcreate_const(target_symtab, "arch", archAarch64, type=typeArch)
 	target_os = xcreate_const(target_symtab, "os", osMacos, type=typeOs)
 	target_abi = xcreate_const(target_symtab, "abi", abiSysV, type=typeAbi)
+	target_char_width = xcreate_const(target_symtab, "charWidth", ValueLiteral(typeInteger, char_width))
+	target_int_width = xcreate_const(target_symtab, "intWidth", ValueLiteral(typeInteger, int_width))
+	target_int_width = xcreate_const(target_symtab, "floatWidth", ValueLiteral(typeInteger, float_width))
+	target_int_width = xcreate_const(target_symtab, "pointerWidth", ValueLiteral(typeInteger, pointer_width))
 
 
 	mw = type_word_create(width=32)
@@ -416,23 +422,23 @@ def create_builtin_module():
 	builtin_symtab.type_add('Nat', mn)
 
 	# create '__target' record
-	target_initializers = [
-		Initializer(Id('name'), value_string_create(target_name)),
-		Initializer(Id('arch'), archAarch64),
-		Initializer(Id('os'), osMacos),
-		Initializer(Id('abi'), abiSysV),
-		Initializer(Id('endian'), endianLittle),
-		Initializer(Id('charWidth'), ValueLiteral(typeInteger, char_width)),
-		Initializer(Id('intWidth'), ValueLiteral(typeInteger, int_width)),
-		Initializer(Id('floatWidth'), ValueLiteral(typeInteger, flt_width)),
-		Initializer(Id('pointerWidth'), ValueLiteral(typeInteger, pointer_width))
-	]
-	target_iv = value_record_create(target_initializers, ti=None)
-	const_target = ValueConst(target_iv.type, Id("__target"), init_value=target_iv, ti=None)
-	const_target.set_asset(target_iv.asset)
-	const_target.stage = HLIR_VALUE_STAGE_COMPILETIME
-
-	builtin_symtab.value_add('target', const_target)
+#	target_initializers = [
+#		Initializer(Id('name'), value_string_create(target_name)),
+#		Initializer(Id('arch'), archAarch64),
+#		Initializer(Id('os'), osMacos),
+#		Initializer(Id('abi'), abiSysV),
+#		Initializer(Id('endian'), endianLittle),
+#		Initializer(Id('charWidth'), ValueLiteral(typeInteger, char_width)),
+#		Initializer(Id('intWidth'), ValueLiteral(typeInteger, int_width)),
+#		Initializer(Id('floatWidth'), ValueLiteral(typeInteger, float_width)),
+#		Initializer(Id('pointerWidth'), ValueLiteral(typeInteger, pointer_width))
+#	]
+#	target_iv = value_record_create(target_initializers, ti=None)
+#	const_target = ValueConst(target_iv.type, Id("__target"), init_value=target_iv, ti=None)
+#	const_target.set_asset(target_iv.asset)
+#	const_target.stage = HLIR_VALUE_STAGE_COMPILETIME
+#
+#	builtin_symtab.value_add('target', const_target)
 
 	return builtin_module
 
@@ -466,12 +472,14 @@ def do_field(x):
 def get_module_by_path(path):
 	global cmodule
 	mod = cmodule
+	with_private=True
 	for id in path:
-		module_id_str = id['str']
-		if not module_id_str in mod.imports:
-			error("module '%s' not found" % module_id_str, id['ti'])
+		imp = mod.get_import(id['str'], with_private=True)
+		with_private=False
+		if imp == None:
+			error("module '%s' not found" % id['str'], id['ti'])
 			return None  # not found
-		mod = mod.imports[module_id_str].module
+		mod = imp.module
 	return mod
 
 
@@ -485,7 +493,7 @@ def do_type_named(x):
 		module = get_module_by_path(x['module_path'])
 
 		if module == None:
-			error("unknown namespace '%s'" % module_id, x['ti'])
+			error("unknown namespace", x['ti'])
 			return TypeBad(x['ti'])
 
 		t = module.type_get_public(id_str)
@@ -1411,7 +1419,7 @@ def do_value_slice(x):
 
 
 def is_import_name(id_str):
-	return id_str in cmodule.imports
+	return id_str in cmodule.imports_private or id_str in cmodule.imports_public
 
 
 def submodule_access(x):
@@ -1421,7 +1429,7 @@ def submodule_access(x):
 	iname = x['right']['str']
 	ti = x['ti']
 
-	imp = cmodule.imports[mname]
+	imp = cmodule.imports_public[mname]
 	submodule = imp.module
 
 	v = submodule.value_get_public(iname)
@@ -2573,6 +2581,9 @@ def do_import(x):
 	global modules
 	global cmodule
 
+	access_level = get_access_level(x)
+	#print(access_level)
+
 	import_expr = do_value_immediate_string(x['expr'])
 
 	if import_expr.isValueBad():
@@ -2657,7 +2668,14 @@ def do_import(x):
 		return
 
 	y = StmtImport(impline, _as, module=m, ti=x['ti'], include=False)
-	cmodule.imports[_as] = y
+
+	if access_level == 'private':
+		cmodule.imports_private[_as] = y
+	elif access_level == 'public':
+		cmodule.imports_public[_as] = y
+	else:
+		1/0
+
 	return y
 
 
@@ -2760,7 +2778,7 @@ def process_module(idStr, sourcename, ast, is_include):
 	cmodule = Module(idStr, ast, symtab_public, symtab_private, sourcename)
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=None, include=False)
-	cmodule.imports["builtin"] = import_builtin
+	cmodule.imports_private["builtin"] = import_builtin
 
 	# 0. do imports & directives
 	i = 0

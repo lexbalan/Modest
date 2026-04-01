@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 include "assert"
 include "stdio"
 

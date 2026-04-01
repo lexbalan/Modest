@@ -114,13 +114,14 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'queue' --
-; -- 1
+; -- print imports private 'queue' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'queue' --
+; -- end print imports private 'queue' --
+; -- print imports public 'queue' --
+; -- end print imports public 'queue' --
 ; -- strings --
 ; -- endstrings --
 %queue_Queue = type {

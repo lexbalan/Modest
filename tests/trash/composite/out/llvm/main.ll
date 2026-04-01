@@ -194,13 +194,14 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 1
+; -- print imports private 'main' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'main' --
+; -- end print imports private 'main' --
+; -- print imports public 'main' --
+; -- end print imports public 'main' --
 ; -- strings --
 @str1 = private constant [8 x i8] [i8 72, i8 105, i8 32, i8 37, i8 115, i8 33, i8 10, i8 0]
 @str2 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 49, i8 32, i8 40, i8 101, i8 113, i8 41, i8 58, i8 32, i8 0]

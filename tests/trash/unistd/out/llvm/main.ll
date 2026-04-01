@@ -322,13 +322,14 @@ declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 1
+; -- print imports private 'main' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'main' --
+; -- end print imports private 'main' --
+; -- print imports public 'main' --
+; -- end print imports public 'main' --
 ; -- strings --
 @str1 = private constant [13 x i8] [i8 117, i8 110, i8 105, i8 115, i8 116, i8 100, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str2 = private constant [10 x i8] [i8 112, i8 105, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]

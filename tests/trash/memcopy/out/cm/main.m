@@ -1,5 +1,5 @@
-import "builtin"
-import "lightfood/memory"
+private import "builtin"
+private import "lightfood/memory"
 include "ctypes64"
 include "stdio"
 
@@ -28,7 +28,7 @@ public func main () -> Int {
 	let len: Size = sizeof(Object)
 	printf("LEN = %zu\n", len)
 
-	mem.copy(&o2, &o1, len)
+	copy(&o2, &o1, len)
 
 	printf("firstname = '%s'\n", &o2.firstname)
 	printf("lastname = '%s'\n", &o2.lastname)

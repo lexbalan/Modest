@@ -296,13 +296,14 @@ declare %Int @toascii(%Int %x)
 declare %Int @toupper(%Int %x)
 declare %Int @tolower(%Int %x)
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 1
+; -- print imports private 'main' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'main' --
+; -- end print imports private 'main' --
+; -- print imports public 'main' --
+; -- end print imports public 'main' --
 ; -- strings --
 @str1 = private constant [10 x i8] [i8 37, i8 115, i8 32, i8 40, i8 110, i8 61, i8 37, i8 100, i8 41, i8 0]
 @str2 = private constant [3 x i8] [i8 32, i8 91, i8 0]

@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 
 
 type Point = {x: Int32, y: Int32}

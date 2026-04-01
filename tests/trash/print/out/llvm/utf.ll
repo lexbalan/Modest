@@ -114,13 +114,14 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'utf' --
-; -- 1
+; -- print imports private 'utf' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'utf' --
+; -- end print imports private 'utf' --
+; -- print imports public 'utf' --
+; -- end print imports public 'utf' --
 ; -- strings --
 ; -- endstrings --
 define %Nat8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {

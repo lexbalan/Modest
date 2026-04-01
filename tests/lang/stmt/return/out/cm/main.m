@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 
 
 func returnInt () -> Int32 {

@@ -1,5 +1,5 @@
-import "builtin"
-import "misc/minmax"
+private import "builtin"
+private import "misc/minmax"
 include "ctypes64"
 include "stdio"
 include "math"
@@ -57,8 +57,8 @@ const wa = WrappedArray {}
 
 // Pythagorean theorem
 func distance (a: Point, b: Point) -> Float {
-	let dx: Float64 = minmax.max_float64(a.x, b.x) - minmax.min_float64(a.x, b.x)
-	let dy: Float64 = minmax.max_float64(a.y, b.y) - minmax.min_float64(a.y, b.y)
+	let dx: Float64 = max_float64(a.x, b.x) - min_float64(a.x, b.x)
+	let dy: Float64 = max_float64(a.y, b.y) - min_float64(a.y, b.y)
 	let dx2: Double = pow(dx, 2)
 	let dy2: Double = pow(dy, 2)
 	return sqrt(dx2 + dy2)

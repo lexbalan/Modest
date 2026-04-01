@@ -209,8 +209,7 @@ declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 2
+; -- print imports private 'main' --
 
 ; from import "builtin"
 
@@ -224,7 +223,9 @@ declare void @chacha20_chacha20Block(%chacha20_Block* %0, %chacha20_State %__sta
 declare void @chacha20_makeState(%chacha20_State* %0, %chacha20_Key* %key, %Word32 %counter, [3 x %Word32]* %nonce)
 
 ; end from import "cc"
-; -- end print imports 'main' --
+; -- end print imports private 'main' --
+; -- print imports public 'main' --
+; -- end print imports public 'main' --
 ; -- strings --
 @str1 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 67, i8 104, i8 97, i8 67, i8 104, i8 97, i8 50, i8 48, i8 32, i8 0]
 @str2 = private constant [3 x i8] [i8 37, i8 99, i8 0]

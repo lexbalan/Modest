@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 
 
 type UserId = @branded Nat32

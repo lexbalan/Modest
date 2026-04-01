@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 
 
 // thx: https://github.com/ilvn/aes256/tree/main

@@ -223,13 +223,14 @@ declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n
 declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
-; -- print imports 'table' --
-; -- 1
+; -- print imports private 'table' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'table' --
+; -- end print imports private 'table' --
+; -- print imports public 'table' --
+; -- end print imports public 'table' --
 ; -- strings --
 @str1 = private constant [2 x i8] [i8 124, i8 0]
 @str2 = private constant [4 x i8] [i8 32, i8 37, i8 115, i8 0]

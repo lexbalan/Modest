@@ -209,8 +209,7 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 2
+; -- print imports private 'main' --
 
 ; from import "builtin"
 
@@ -246,7 +245,9 @@ declare %list_Node* @list_insert(%list_List* %list, %Int32 %pos, i8* %data)
 declare %list_Node* @list_append(%list_List* %list, i8* %data)
 
 ; end from import "list"
-; -- end print imports 'main' --
+; -- end print imports private 'main' --
+; -- print imports public 'main' --
+; -- end print imports public 'main' --
 ; -- strings --
 @str1 = private constant [21 x i8] [i8 108, i8 105, i8 115, i8 116, i8 95, i8 112, i8 114, i8 105, i8 110, i8 116, i8 95, i8 102, i8 111, i8 114, i8 119, i8 97, i8 114, i8 100, i8 58, i8 10, i8 0]
 @str2 = private constant [8 x i8] [i8 118, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]

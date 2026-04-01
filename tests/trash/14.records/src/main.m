@@ -102,7 +102,7 @@ public func main () -> Int {
 
 	// check value_record_eq for immediate values
 	let ver = builtin.compiler.version
-	if ver == {major = 0, minor = 7} {
+	if ver == {major = 0, minor = 7, patch=100} {
 		printf("version 0.7\n")
 	} else {
 		printf("version not 0.7\n")

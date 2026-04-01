@@ -114,13 +114,14 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'minmax' --
-; -- 1
+; -- print imports private 'minmax' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'minmax' --
+; -- end print imports private 'minmax' --
+; -- print imports public 'minmax' --
+; -- end print imports public 'minmax' --
 ; -- strings --
 ; -- endstrings --
 define %Int32 @minmax_minInt32(%Int32 %a, %Int32 %b) {

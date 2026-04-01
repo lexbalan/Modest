@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 include "stdio"
 include "stdlib"
 include "string"

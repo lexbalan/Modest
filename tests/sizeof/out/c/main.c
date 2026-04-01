@@ -31,7 +31,6 @@ static bool testUnit(void) {
 		return false;
 	}
 	printf("passed: testUnit\n");
-	return false;
 	return true;
 }
 

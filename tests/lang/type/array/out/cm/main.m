@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 
 
 type Vec3 = [3]Float32

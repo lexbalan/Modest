@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 include "ctypes64"
 include "stdio"
 
@@ -91,8 +91,8 @@ func test_records () -> Unit {
 
 public func main () -> Int {
 	printf("records test\n")
-	let ver = builtin.compiler.version
-	if ver == {major = 0, minor = 7} {
+	let ver = version
+	if ver == {major = 0, minor = 7, patch = 100} {
 		printf("version 0.7\n")
 	} else {
 		printf("version not 0.7\n")

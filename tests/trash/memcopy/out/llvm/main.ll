@@ -194,8 +194,7 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 2
+; -- print imports private 'main' --
 
 ; from import "builtin"
 
@@ -207,7 +206,9 @@ declare void @memory_copy(i8* %dst, i8* %src, %Nat64 %len)
 declare %Bool @memory_eq(i8* %mem0, i8* %mem1, %Nat64 %len)
 
 ; end from import "mem"
-; -- end print imports 'main' --
+; -- end print imports private 'main' --
+; -- print imports public 'main' --
+; -- end print imports public 'main' --
 ; -- strings --
 @str1 = private constant [14 x i8] [i8 109, i8 101, i8 109, i8 99, i8 111, i8 112, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str2 = private constant [11 x i8] [i8 76, i8 69, i8 78, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]

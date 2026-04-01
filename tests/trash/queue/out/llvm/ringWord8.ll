@@ -114,8 +114,7 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'ringWord8' --
-; -- 2
+; -- print imports private 'ringWord8' --
 
 ; from import "builtin"
 
@@ -138,7 +137,9 @@ declare %Nat32 @queue_getPutPosition(%queue_Queue* %q)
 declare %Nat32 @queue_getGetPosition(%queue_Queue* %q)
 
 ; end from import "queue"
-; -- end print imports 'ringWord8' --
+; -- end print imports private 'ringWord8' --
+; -- print imports public 'ringWord8' --
+; -- end print imports public 'ringWord8' --
 ; -- strings --
 ; -- endstrings --
 %ringWord8_RingWord8 = type {

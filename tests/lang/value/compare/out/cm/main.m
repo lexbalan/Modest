@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 
 
 func testEq () -> Bool {

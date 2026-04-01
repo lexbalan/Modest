@@ -158,13 +158,14 @@ declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n
 declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
-; -- print imports 'sha256' --
-; -- 1
+; -- print imports private 'sha256' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'sha256' --
+; -- end print imports private 'sha256' --
+; -- print imports public 'sha256' --
+; -- end print imports public 'sha256' --
 ; -- strings --
 ; -- endstrings --
 %sha256_Hash = type [32 x %Word8];

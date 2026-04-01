@@ -1,5 +1,5 @@
-import "builtin"
-import "misc/crc32"
+private import "builtin"
+private import "misc/crc32"
 include "ctypes64"
 include "stdio"
 include "stdlib"
@@ -36,14 +36,14 @@ var tests: [3]Test = [
 
 
 func runTest (test: *Test) -> Bool {
-	let crc: Word32 = crc32.run(*[]Byte &test.data, test.len)
+	let crc: Word32 = run(*[]Byte &test.data, test.len)
 	return crc == test.hash
 }
 
 
 public func main () -> Int {
 	printf("test CRC32\n")
-	crc32.init()
+	init()
 
 	var success: Bool = true
 

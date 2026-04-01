@@ -1,5 +1,5 @@
-import "builtin"
-import "queue"
+private import "builtin"
+private import "queue"
 
 import "queue" as queue
 
@@ -12,37 +12,37 @@ public type QueueWord8 = {
 
 
 public func init (q: *QueueWord8, buf: *[]Word8, capacity: Nat32) -> Unit {
-	queue.init(&q.queue, capacity=capacity)
+	init(&q.queue, capacity=capacity)
 	q.data = buf
 }
 
 
 public func capacity (q: *QueueWord8) -> Nat32 {
-	return queue.capacity(&q.queue)
+	return capacity(&q.queue)
 }
 
 
 public func size (q: *QueueWord8) -> Nat32 {
-	return queue.size(&q.queue)
+	return size(&q.queue)
 }
 
 
 public func isFull (q: *QueueWord8) -> Bool {
-	return queue.isFull(&q.queue)
+	return isFull(&q.queue)
 }
 
 
 public func isEmpty (q: *QueueWord8) -> Bool {
-	return queue.isEmpty(&q.queue)
+	return isEmpty(&q.queue)
 }
 
 
 public func put (q: *QueueWord8, b: Word8) -> Bool {
-	if queue.isFull(&q.queue) {
+	if isFull(&q.queue) {
 		return false
 	}
 
-	let p: Nat32 = queue.getPutPosition(&q.queue)
+	let p: Nat32 = getPutPosition(&q.queue)
 	q.data[p] = b
 
 	return true
@@ -50,11 +50,11 @@ public func put (q: *QueueWord8, b: Word8) -> Bool {
 
 
 public func get (q: *QueueWord8, b: *Word8) -> Bool {
-	if queue.isEmpty(&q.queue) {
+	if isEmpty(&q.queue) {
 		return false
 	}
 
-	let g: Nat32 = queue.getGetPosition(&q.queue)
+	let g: Nat32 = getGetPosition(&q.queue)
 	*b = q.data[g]
 
 	return true
@@ -91,7 +91,7 @@ public func write (q: *QueueWord8, data: *[]Word8, len: Nat32) -> Nat32 {
 
 
 public func clear (q: *QueueWord8) -> Unit {
-	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
+	let pdata = *[capacity(&q.queue)]Word8 q.data
 	*pdata = []
 }
 

@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 include "ctypes64"
 include "stdio"
 include "stdlib"
@@ -322,7 +322,7 @@ func testRecord () -> Bool {
 func testPointer () -> Bool {
 	var pointer: Ptr
 
-	if unsafe Nat32 sizeof pointer != builtin.target.pointerWidth / 8 {
+	if unsafe Nat32 sizeof pointer != pointerWidth / 8 {
 		printf("error: sizeof(pointer) != __target.pointerWidth / 8\n")
 		return false
 	}

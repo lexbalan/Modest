@@ -74,8 +74,8 @@ static void test_records(void) {
 
 int main(void) {
 	printf("records test\n");
-	#define ver {.major = 0U, .minor = 7U}
-	if (__builtin_memcmp(&(struct {uint32_t major; uint32_t minor;})ver, &(struct {uint32_t major; uint32_t minor;}){.major = 0, .minor = 7}, sizeof(struct {uint32_t major; uint32_t minor;})) == 0) {
+	struct {uint32_t major; uint32_t minor; uint32_t patch;} ver = {.major = 0U, .minor = 7U, .patch = 100U};
+	if (__builtin_memcmp(&ver, &(struct {uint32_t major; uint32_t minor; uint32_t patch;}){.major = 0, .minor = 7, .patch = 100}, sizeof(struct {uint32_t major; uint32_t minor; uint32_t patch;})) == 0) {
 		printf("version 0.7\n");
 	} else {
 		printf("version not 0.7\n");
@@ -123,6 +123,5 @@ int main(void) {
 	}
 	test_records();
 	return 0;
-	#undef ver
 }
 

@@ -209,8 +209,7 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 2
+; -- print imports private 'main' --
 
 ; from import "builtin"
 
@@ -235,7 +234,9 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 declare void @sha256_hash([0 x %Word8]* %msg, %Nat32 %msgLen, %sha256_Hash* %outHash)
 
 ; end from import "sha256"
-; -- end print imports 'main' --
+; -- end print imports private 'main' --
+; -- print imports public 'main' --
+; -- end print imports public 'main' --
 ; -- strings --
 @str1 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
 @str2 = private constant [5 x i8] [i8 32, i8 45, i8 62, i8 32, i8 0]

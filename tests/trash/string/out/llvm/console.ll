@@ -296,8 +296,7 @@ declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n
 declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- end print includes --
-; -- print imports 'console' --
-; -- 2
+; -- print imports private 'console' --
 
 ; from import "builtin"
 
@@ -308,7 +307,9 @@ declare %Nat8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
 declare %Nat8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 
 ; end from import "utf"
-; -- end print imports 'console' --
+; -- end print imports private 'console' --
+; -- print imports public 'console' --
+; -- end print imports public 'console' --
 ; -- strings --
 ; -- endstrings --
 define void @console_putchar8(%Char8 %c) {

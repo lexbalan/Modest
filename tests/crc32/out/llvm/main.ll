@@ -209,8 +209,7 @@ declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 2
+; -- print imports private 'main' --
 
 ; from import "builtin"
 
@@ -221,7 +220,9 @@ declare void @crc32_init()
 declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
 
 ; end from import "crc32"
-; -- end print imports 'main' --
+; -- end print imports private 'main' --
+; -- print imports public 'main' --
+; -- end print imports public 'main' --
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 67, i8 82, i8 67, i8 51, i8 50, i8 10, i8 0]
 @str2 = private constant [17 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 100, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]

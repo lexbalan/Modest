@@ -1,4 +1,4 @@
-import "builtin"
+private import "builtin"
 
 
 // typed variables with init

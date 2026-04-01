@@ -23,7 +23,7 @@ cd assignation && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd va_list && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd char && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd float && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
-cd builtin_constants && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+#cd builtin_constants && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd string && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd float && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd free_pointer && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \

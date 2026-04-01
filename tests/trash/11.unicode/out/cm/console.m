@@ -1,5 +1,5 @@
-import "builtin"
-import "misc/utf"
+private import "builtin"
+private import "misc/utf"
 include "ctypes64"
 include "unistd"
 include "stdio"
@@ -33,14 +33,14 @@ public func putchar_utf8 (c: Char8) -> Unit {
 public func putchar_utf16 (c: Char16) -> Unit {
 	var cc: [2]Char16 = [c]
 	var char32: Char32
-	let n: Nat8 = utf.utf16_to_utf32(&cc, &char32)
+	let n: Nat8 = utf16_to_utf32(&cc, &char32)
 	putchar_utf32(char32)
 }
 
 
 public func putchar_utf32 (c: Char32) -> Unit {
 	var decoded_buf: [4]Char8
-	let n = Int32 utf.utf32_to_utf8(c, &decoded_buf)
+	let n = Int32 utf32_to_utf8(c, &decoded_buf)
 
 	var i = Int32 0
 	while i < n {
@@ -79,7 +79,7 @@ public func puts16 (s: *Str16) -> Unit {
 		}
 
 		var char32: Char32
-		let n: Nat8 = utf.utf16_to_utf32(unsafe *[]Char16 &s[i], &char32)
+		let n: Nat8 = utf16_to_utf32(unsafe *[]Char16 &s[i], &char32)
 		if n == 0 {
 			break
 		}
@@ -185,7 +185,7 @@ public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
 			j = j + unsafe Int32 strlen(s)
 		} else if c == "c" {
 			let c: Char32 = __va_arg(va, Char32)
-			let n: Nat8 = utf.utf32_to_utf8(c, unsafe *[4]Char8 sptr)
+			let n: Nat8 = utf32_to_utf8(c, unsafe *[4]Char8 sptr)
 			j = j + Int32 n
 		}
 	}

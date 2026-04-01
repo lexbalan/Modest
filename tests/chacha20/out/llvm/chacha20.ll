@@ -114,13 +114,14 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'chacha20' --
-; -- 1
+; -- print imports private 'chacha20' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports 'chacha20' --
+; -- end print imports private 'chacha20' --
+; -- print imports public 'chacha20' --
+; -- end print imports public 'chacha20' --
 ; -- strings --
 ; -- endstrings --
 %chacha20_Key = type [8 x %Word32];

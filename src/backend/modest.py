@@ -937,8 +937,12 @@ def run(module, outname):
 	cmodule = module
 	output_open(outname + '.m')
 
-	for x in module.imports:
-		stmt_import = module.imports[x]
+	for x in module.imports_private:
+		stmt_import = module.imports_private[x]
+		out('private import "%s"\n' % (stmt_import.impline))
+
+	for x in module.imports_public:
+		stmt_import = module.imports_public[x]
 		out('import "%s"\n' % (stmt_import.impline))
 
 	for x in module.included_modules:
