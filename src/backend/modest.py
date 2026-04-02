@@ -297,9 +297,10 @@ def str_value_access(x, ctx):
 
 
 def str_value_access_module(x, ctx):
-	left = x.imp['str']
-	id_str = x.id['str']
-	return "%s.%s" % (left, id_str)
+	sstr = ""
+	for p in x.imp:
+		sstr += p.str + '.'
+	return "%s%s" % (sstr, x.id.str)
 
 
 

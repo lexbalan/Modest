@@ -262,8 +262,8 @@ class Module:
 
 	def get_import(self, id_str, with_private=False):
 		imp = self.imports_public.get(id_str)
-		if imp == None and with_private == True:
-			imp = self.imports_private.get(id_str)
+		if imp == None and with_private:
+			imp = None#self.imports_private.get(id_str)
 		return imp
 
 
@@ -2187,6 +2187,10 @@ class ValueAccessRecord(Value):
 class ValueAccessModule(Value):
 	def __init__(self, type, imp, id, value, ti=None):
 		super().__init__(type=type, ti=ti)
+		assert(isinstance(type, Type))
+		assert(isinstance(imp, list))
+		assert(isinstance(id, Id))
+		assert(isinstance(value, Value))
 		self.imp = imp
 		self.id = id
 		self.value = value

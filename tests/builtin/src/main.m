@@ -13,9 +13,9 @@ public func main () -> Int {
 	var i: builtin.target.Int
 	var n: builtin.target.Nat
 
-	printf("sizeof(builtin.Word) = %lu\n", sizeof(builtin.target.Word))
-	printf("sizeof(builtin.Int) = %lu\n", sizeof(builtin.target.Int))
-	printf("sizeof(builtin.Nat) = %lu\n", sizeof(builtin.target.Nat))
+	printf("sizeof(builtin.target.Word) = %lu\n", sizeof(builtin.target.Word))
+	printf("sizeof(builtin.target.Int) = %lu\n", sizeof(builtin.target.Int))
+	printf("sizeof(builtin.target.Nat) = %lu\n", sizeof(builtin.target.Nat))
 
 	let version = builtin.compiler.version
 	printf("builtin.compiler.version = %u.%u.%u\n", version.major, version.minor, version.patch)

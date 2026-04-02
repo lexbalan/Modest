@@ -80,6 +80,8 @@ int main(void) {
 	struct point *const p = (struct point *)__builtin_memcpy(malloc(sizeof(struct point)), &(struct point){.x = 10, .y = 10}, sizeof(struct point));
 	printf("p.x = %d\n", p->x);
 	printf("p.y = %d\n", p->y);
+	printf("lib.mod1.modName = '%s'\n", "mod1");
+	printf("lib.mod2.modName = '%s'\n", "mod2");
 	#define c00 10
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';

@@ -474,10 +474,14 @@ def get_module_by_path(path):
 	mod = cmodule
 	with_private=True
 	for id in path:
-		imp = mod.get_import(id['str'], with_private=True)
+		if isinstance(id, Id):
+			id_str = id.str
+		else:
+			id_str = id['str']
+		imp = mod.get_import(id_str, with_private=True)
 		with_private=False
 		if imp == None:
-			error("module '%s' not found" % id['str'], id['ti'])
+			error("module '%s' not found" % id_str, id.ti)
 			return None  # not found
 		mod = imp.module
 	return mod
@@ -1462,20 +1466,26 @@ def do_value_access(x):
 	module_path = []
 	left = x['left']
 	while left['kind'] == 'access':
-		module_path = [left['right']] + module_path
+		id = do_id(left['right'])
+		module_path = [id] + module_path
 		# слева доступ - возможно к импорту
 		# приходтися делать так чтобы не вводить ValueImport или ValueModule тк это бред
 		left = left['left']
 
 	# access to submodule?
 	if left['kind'] == 'id' and is_import_name(left['str']):
-		module_path = [left] + module_path
+		module_path = [do_id(left)] + module_path
 		mod = get_module_by_path(module_path)
+		if mod == None:
+			return ValueBad(x['ti'])
 		v = mod.value_get_public(x['right']['str'])
 		if v == None:
 			error("value '%s' not found" % x['right']['str'], x['right']['ti'])
 			return ValueBad(x['ti'])
-		return v
+		#return v
+		nv = ValueAccessModule(v.type, module_path, do_id(x['right']), v, ti=x['ti'])
+		nv.stage = v.stage
+		return nv
 
 
 	#
