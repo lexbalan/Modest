@@ -5,5 +5,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #define MOD2_MOD_NAME "mod2"
+struct mod2_mod {
+	char *id;
+};
 #endif
 

@@ -203,10 +203,18 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 
 ; from import "mod1"
+%mod1_Mod = type {
+	%Str8*
+};
+
 
 ; end from import "mod1"
 
 ; from import "mod2"
+%mod2_Mod = type {
+	%Str8*
+};
+
 
 ; end from import "mod2"
 
@@ -226,8 +234,10 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 define %Int @main() {
 	%1 = alloca %lib_Librarian, align 8
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str1 to [0 x i8]*), [0 x %Char8]* bitcast ([5 x i8]* @str2 to [0 x i8]*))
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str3 to [0 x i8]*), [0 x %Char8]* bitcast ([5 x i8]* @str4 to [0 x i8]*))
+	%2 = alloca %mod1_Mod, align 8
+	%3 = alloca %mod2_Mod, align 8
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str1 to [0 x i8]*), [0 x %Char8]* bitcast ([5 x i8]* @str2 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str3 to [0 x i8]*), [0 x %Char8]* bitcast ([5 x i8]* @str4 to [0 x i8]*))
 	ret %Int 0
 }
 
