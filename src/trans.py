@@ -448,7 +448,11 @@ def create_builtin_module():
 # pos - position no
 # offset - real offset (address inside container struct)
 def do_field(x):
-	#info("do_field", x['ti'])
+	info("do_field", x['ti'])
+	#print(x['anno'])
+	#print()
+	#mass
+
 	id = do_id(x['id'])
 	if id.str[0].isupper():
 		error("field id must starts with small letter", id.ti)
@@ -459,6 +463,7 @@ def do_field(x):
 
 	iv = do_value_immediate(x['init_value'])
 	f = Field(id, t, init_value=iv, access_level = x['access_modifier'], ti=x['ti'])
+	f.add_atts(x['anno'])
 
 	f.nl = x['nl']
 	return f

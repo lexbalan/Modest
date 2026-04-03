@@ -216,7 +216,7 @@ def do_ctype_pointer(t, specs=[]):
 def do_ctype_func(t, specs=[]):
 	params = []
 	for p in t.params:
-		id_str = p.id.str
+		id_str = get_id_str(p)
 		arg_ctype=do_ctype(p.type, is_param=True)
 		if p.type.is_array():
 			id_str = '_' + id_str
@@ -253,7 +253,7 @@ def do_ctype_struct(t, tag='', specs=[]):
 	assert(isinstance(t, Type))
 	fields = []
 	for p in t.fields:
-		fields.append(CField(id_str=p.id.str, type=do_ctype(p.type), specs=[], nl=p.nl))
+		fields.append(CField(id_str=get_id_str(p), type=do_ctype(p.type), specs=[], nl=p.nl))
 	tag = camel_to_lower_snake(tag)
 	isa = 'struct' if not t.layout == 'union' else 'union'
 	kisa = isa
@@ -523,7 +523,7 @@ def do_cvalue_literal_record(v, ctx):
 	items = []
 	for kv in v.asset:
 		if not kv.value.isValueUndef():
-			items.append(KV(kv.id.str, do_cinitializer(kv.value), kv.nl))
+			items.append(KV(get_id_str(kv), do_cinitializer(kv.value), kv.nl))
 	return CValueStruct(items)
 
 

@@ -296,6 +296,24 @@ class Field(Entity):
 		self.comments = []
 		self.line_comment = None
 
+	def add_atts(self, atts):
+		from error import info, error
+		if atts == []:
+			return self
+		info("add atts", self.ti)
+		for a in atts:
+			self.att.append(a['kind'])
+			if a['kind'] == 'alias':
+				if len(a['args']) > 1:
+					backend_name = a['args'][0]['value']['str']
+					alias = a['args'][1]['value']['str']
+					setattr(self.id, backend_name, alias)
+				elif len(a['args']) == 1:
+					alias = a['args'][1]['value']['str']
+					self.id.common = alias
+
+		return self
+
 
 
 class Initializer(Entity):

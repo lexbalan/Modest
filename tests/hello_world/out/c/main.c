@@ -23,15 +23,18 @@ typedef uint32_t char32_t;
 #endif
 typedef int32_t MyInt;
 struct point {
-	uint64_t x;
-	uint64_t y;
+	uint32_t pad;
+
+	uint64_t xx;
+
+	uint64_t yy;
 };
 static struct point points[3] = {
-	(struct point){.x = 0, .y = 10},
-	(struct point){.x = 10, .y = 20},
+	(struct point){.xx = 0x0ULL, .yy = 0xAULL},
+	(struct point){.xx = 0xAULL, .yy = 0x14ULL},
 	(struct point){
-		.x = 30,
-		.y = 40
+		.xx = 0x1EULL,
+		.yy = 0x28ULL
 	}
 };
 static int32_t arrays[4][4] = {
@@ -65,8 +68,8 @@ static void foo(int32_t a, int64_t b) {
 #define C 15
 static uint32_t k[3] = {0x1U, 0x2U, 0x3U};
 static struct point p0 = (struct point){
-	.x = 1,
-	.y = 2
+	.xx = 0x1ULL,
+	.yy = 0x2ULL
 };
 
 static void farr(int32_t _x[3], int32_t __out[3]) {
@@ -78,10 +81,8 @@ static void farr(int32_t _x[3], int32_t __out[3]) {
 int main(void) {
 	typedef int32_t LocalInt;
 	struct point *const p = (struct point *)__builtin_memcpy(malloc(sizeof(struct point)), &(struct point){.x = 10, .y = 10}, sizeof(struct point));
-	printf("p.x = %d\n", p->x);
-	printf("p.y = %d\n", p->y);
-	printf("lib.mod1.modName = '%s'\n", "mod1");
-	printf("lib.mod2.modName = '%s'\n", "mod2");
+	printf("p.x = %d\n", p->xx);
+	printf("p.y = %d\n", p->yy);
 	#define c00 10
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';
@@ -119,7 +120,7 @@ int main(void) {
 	__builtin_bzero(&arr2, sizeof(int32_t [3]));
 	__builtin_memcpy(&arr2, &arr, sizeof(int32_t [3]));
 	#define rec0 {.x = 0, .y = 0}
-	struct point rec1 = (struct point)rec0;
+	struct point rec1 = (struct point){.xx = 0x0ULL, .yy = 0x0ULL};
 	struct point rec2;
 	rec2 = (struct point){0};
 	rec2 = rec1;
@@ -143,8 +144,8 @@ int main(void) {
 	sizeof(uint32_t);
 	arr[1];
 	struct point p0 = (struct point){0};
-	p0.x;
-	p0.y;
+	p0.xx;
+	p0.yy;
 	if (a < 1 && b > 12LL || C <= 5 && !(1 < 0)) {
 		uint32_t u;
 		uint32_t v;
