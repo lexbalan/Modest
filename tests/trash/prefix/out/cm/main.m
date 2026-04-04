@@ -6,8 +6,8 @@ import "lib" as lib
 
 
 public func main () -> Int {
-	foo(bar)
-	Unit spam
+	lib.foo(lib.bar)
+	Unit lib.spam
 	return 0
 }
 

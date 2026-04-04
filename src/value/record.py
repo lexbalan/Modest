@@ -105,6 +105,7 @@ def value_record_cons(t, v, method, ti):
 			from .cons import value_cons_implicit_check
 			iv = value_cons_implicit_check(field.type, iv)
 			ni = Initializer(field.id, iv, ti=ti)
+			#info(field.id.c, ti)
 			ni.nl = nl
 			items.append(ni)
 

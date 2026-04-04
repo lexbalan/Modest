@@ -12,37 +12,37 @@ public type QueueWord8 = {
 
 
 public func init (q: *QueueWord8, buf: *[]Word8, capacity: Nat32) -> Unit {
-	init(&q.queue, capacity=capacity)
+	queue.init(&q.queue, capacity=capacity)
 	q.data = buf
 }
 
 
 public func capacity (q: *QueueWord8) -> Nat32 {
-	return capacity(&q.queue)
+	return queue.capacity(&q.queue)
 }
 
 
 public func size (q: *QueueWord8) -> Nat32 {
-	return size(&q.queue)
+	return queue.size(&q.queue)
 }
 
 
 public func isFull (q: *QueueWord8) -> Bool {
-	return isFull(&q.queue)
+	return queue.isFull(&q.queue)
 }
 
 
 public func isEmpty (q: *QueueWord8) -> Bool {
-	return isEmpty(&q.queue)
+	return queue.isEmpty(&q.queue)
 }
 
 
 public func put (q: *QueueWord8, b: Word8) -> Bool {
-	if isFull(&q.queue) {
+	if queue.isFull(&q.queue) {
 		return false
 	}
 
-	let p: Nat32 = getPutPosition(&q.queue)
+	let p: Nat32 = queue.getPutPosition(&q.queue)
 	q.data[p] = b
 
 	return true
@@ -50,11 +50,11 @@ public func put (q: *QueueWord8, b: Word8) -> Bool {
 
 
 public func get (q: *QueueWord8, b: *Word8) -> Bool {
-	if isEmpty(&q.queue) {
+	if queue.isEmpty(&q.queue) {
 		return false
 	}
 
-	let g: Nat32 = getGetPosition(&q.queue)
+	let g: Nat32 = queue.getGetPosition(&q.queue)
 	*b = q.data[g]
 
 	return true
@@ -91,7 +91,7 @@ public func write (q: *QueueWord8, data: *[]Word8, len: Nat32) -> Nat32 {
 
 
 public func clear (q: *QueueWord8) -> Unit {
-	let pdata = *[capacity(&q.queue)]Word8 q.data
+	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
 	*pdata = []
 }
 

@@ -63,7 +63,7 @@ var p0: Point = {
 
 
 func farr (x: [3]Int32) -> [3]Int32 {
-	return [x[0]+1, x[1]+2, x[2]+3]
+	return [x[0] + 1, x[1] + 2, x[2] + 3]
 }
 
 public func main () -> Int {

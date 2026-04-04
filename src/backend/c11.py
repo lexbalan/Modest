@@ -1468,8 +1468,8 @@ def do_cstmt_value_expr(x):
 
 
 def do_cstmt_assign(x):
-	left =x.left
-	right= x.right
+	left = x.left
+	right = x.right
 
 	if left.type.is_array():
 		return do_assign_array(left, right, x.ti)
@@ -2351,25 +2351,29 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 		#xx.mark = 'AP1'
 		return xx
 
-	if x.type.is_array():
+	elif x.type.is_array():
 		return get_cvalue_ptr_to_array(x, parr_relax=parr_relax)
 
-	if root.isValueImmediate():
+	elif root.isValueDeref():
+		return do_cvalue(root.value)
+
+	elif root.isValueImmediate():
 		if x.type.is_aggregate() or value_is_generic_immediate_const(root):
 			# generic immediate const is just a macro!
+
+			if x.isValueCons() and x.value.isValueLiteral():
+				vs = do_cvalue(x)
+				xx = CValueRef(vs)
+				return xx
+
 			vs = do_cvalue(root)
 			ts = do_ctype(x.type)
-			# mass
-			# if const_as_macro(x): todo
 			xx = CValueCast(ts, vs)
-			#if parr_relax:
-				#xx.mark = 'AP$2'
-			#	return xx
 			xx = CValueRef(xx)
 			#xx.mark = 'AP2'
 			return xx
 
-	if x.isValueCons():
+	elif x.isValueCons():
 		# for *s == "Hi!"
 		# string literal will be implicitly casted to StrX
 		# and for getting pointer to this string
@@ -2380,11 +2384,7 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 			#xx.mark = 'AP3'
 			return xx
 
-
-	if root.isValueDeref():
-		return do_cvalue(root.value)
-
-	if root.isValueLiteral():
+	elif root.isValueLiteral():
 		if root.type.is_string():
 			return do_cvalue(root)
 

@@ -448,11 +448,6 @@ def create_builtin_module():
 # pos - position no
 # offset - real offset (address inside container struct)
 def do_field(x):
-	info("do_field", x['ti'])
-	#print(x['anno'])
-	#print()
-	#mass
-
 	id = do_id(x['id'])
 	if id.str[0].isupper():
 		error("field id must starts with small letter", id.ti)

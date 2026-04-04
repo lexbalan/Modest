@@ -37,29 +37,29 @@ public func main () -> Int32 {
 	var str16: *Str16 = string16Const
 	var str32: *Str32 = string32Const
 
-	puts8(str8)
-	puts8("\n")
+	console.puts8(str8)
+	console.puts8("\n")
 
-	puts16(str16)
-	puts16("\n")
+	console.puts16(str16)
+	console.puts16("\n")
 
-	puts32(str32)
-	puts32("\n")
+	console.puts32(str32)
+	console.puts32("\n")
 
-	puts8(&arr_utf8)
-	puts16(&arr_utf16)
-	puts32(&arr_utf32)
+	console.puts8(&arr_utf8)
+	console.puts16(&arr_utf16)
+	console.puts32(&arr_utf32)
 
-	puts8(unsafe *Str8 &ratSymbolUTF8)
-	puts16(unsafe *Str16 &ratSymbolUTF16)
-	puts32(unsafe *Str32 &ratSymbolUTF32)
-	puts32("\n")
+	console.puts8(unsafe *Str8 &ratSymbolUTF8)
+	console.puts16(unsafe *Str16 &ratSymbolUTF16)
+	console.puts32(unsafe *Str32 &ratSymbolUTF32)
+	console.puts32("\n")
 
-	putchar8("A")
-	putchar16("Ω")
-	putchar32("🦄")
+	console.putchar8("A")
+	console.putchar16("Ω")
+	console.putchar32("🦄")
 
-	puts16("\n")
+	console.puts16("\n")
 
 	return 0
 }

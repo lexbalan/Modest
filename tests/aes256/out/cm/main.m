@@ -85,25 +85,25 @@ var tests: [8]TestCase = [
 
 func runTest (test: *TestCase) -> Bool {
 	var ctx: Context
-	init(&ctx, &test.key)
+	aes.init(&ctx, &test.key)
 
 	var plaintextBefore: Block = test.plaintext
 
-	encrypt_ecb(&ctx, &test.plaintext)
+	aes.encrypt_ecb(&ctx, &test.plaintext)
 
 	if test.plaintext != test.ciphertext {
 		printf("FAILED (encrypt)")
 		return false
 	}
 
-	decrypt_ecb(&ctx, &test.plaintext)
+	aes.decrypt_ecb(&ctx, &test.plaintext)
 
 	if test.plaintext != plaintextBefore {
 		printf("FAILED (decrypt)")
 		return false
 	}
 
-	deinit(&ctx)
+	aes.deinit(&ctx)
 
 	printf("PASSED")
 	return true
