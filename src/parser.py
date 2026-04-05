@@ -339,7 +339,9 @@ class Parser:
 
 			elif token == '{':
 				# {} / {id: ...}
-				while self.skip_tokens_class(['nl']) or self.skip_tokens_class(['comment-line']) or self.skip_tokens_class(['comment-block']):
+				while self.skip_tokens_class(['nl']) or self.skip_tokens_class(['comment-line']) or self.skip_tokens_class(['comment-block']) or self.is_annotation():
+					if self.is_annotation():
+						self.parse_annotation()
 					pass
 				if self.match('}'):
 					return True

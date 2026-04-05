@@ -224,7 +224,6 @@ def do_ctype_func(t, specs=[]):
 			id_str = '_' + id_str
 			arg_ctype = do_ctype(TypePointer(p.type), is_param=True)
 			#arg_ctype.to.of.specs = ['const']
-			#arg_ctype.mark = '$'
 		params.append(CField(id_str=id_str, type=arg_ctype, specs=[]))
 
 
@@ -344,22 +343,29 @@ def needd(x):
 
 
 
-def initializers_are_different(a, b):
+def initializers_are_equal(a, b):
 	if len(a) != len(b):
-		return True
+		return False
 
 	i = 0
 	while i < len(a):
 		ini_left = a[i]
 		ini_right = b[i]
 
+		if ini_left.id.str != ini_right.id.str:
+			return False
+		if ini_left.id.c != ini_right.id.c:
+			return False
+		if ini_left.id.common != ini_right.id.common:
+			return False
+
 		if ini_right.value.type.is_concretic():
 			if not Type.eq(ini_left.value.type, ini_right.value.type):
-				return True
+				return False
 
 		i += 1
 
-	return False
+	return True
 
 
 
@@ -546,7 +552,6 @@ def do_cvalue_literal_number(t, v, ctx):
 	is_unsigned = t.is_nat() or t.is_word() or (t.is_integer() and v.asset >= 0)
 
 	cv = CValueInteger(int(v.asset), width=t.width, is_unsigned=is_unsigned, as_hex=t.is_word())
-	#cv.mark = str(t.is_word())
 	return cv
 
 
@@ -596,12 +601,10 @@ def do_cvalue_cons_array(x, ctx):
 					cv.nl = 0
 					cvalues.append(cv)
 				cv = CValueArray(cvalues)
-				cv.mark = 'CA1'
 				return cv
 
 			if x.asset:
 				cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
-				cv.mark = 'CA2'
 				return cv
 
 		if from_type.is_string():
@@ -609,10 +612,8 @@ def do_cvalue_cons_array(x, ctx):
 			if to_type.is_concretic():
 				width = to_type.of.width
 			cv = do_cvalue_literal_string(x.value.asset, width)
-			cv.mark = 'CA3'
 		else:
 			cv = do_cvalue(value, ctx=ctx)
-			cv.mark = 'CA4'
 		return cv
 
 	# for:
@@ -628,7 +629,6 @@ def do_cvalue_cons_array(x, ctx):
 #		cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
 #	else:
 	cv = do_cvalue_cast(to_type, x.value, ctx)
-	cv.mark = 'CA5'
 	return cv
 
 
@@ -640,25 +640,11 @@ def do_cvalue_cons_record(x, ctx):
 
 	if to_type.is_unit():
 		cv = CValueCast(CTypeNamed("void"), do_cvalue(value))
-		cv.mark = 'CR1'
 		return cv
 
-	if from_type.is_generic_record():
-		if to_type.is_generic_record():
-			cv = do_cvalue(value, ctx=ctx)
-			cv.mark = 'CR2'
-			return cv
-
-	if from_type.is_generic_record():
-		if to_type.is_generic_record():
-			cv = do_cvalue(value, ctx=ctx)
-			cv.mark = 'CR3'
-			return cv
-#		cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
-#		cv = CValueCast(do_ctype(x.type), cv)
-#		#cv = do_cvalue(value, ctx=ctx)
-#		cv.mark = 'CR2'
-#		return cv
+	if to_type.is_generic_record() and from_type.is_generic_record():
+		cv = do_cvalue(value, ctx=ctx)
+		return cv
 
 	# RecordA -> RecordB
 	#if to_type.is_record():
@@ -666,27 +652,23 @@ def do_cvalue_cons_record(x, ctx):
 		if to_type.uid == from_type.uid:
 			# это одна и та же структура и приведение не требуется
 			cv = do_cvalue(value, ctx=ctx)
-			cv.mark = 'CR4'
 			return cv
 		# C cannot just cast struct to struct (!)
 		#return str_cast(to_type, value, raw_cast=True, ctx=ctx)
 		cv = do_cvalue_cast(to_type, x.value, ctx, raw_cast=True)
-		cv.mark = 'CR5'
 		return cv
 
 	tt = do_ctype(to_type)
 
-	if initializers_are_different(x.asset, value.asset):
-		# Если у нас в ValueCons asset отличается от asset в ValueCons#value
-		# То печатаем литерал структуры из нашего asset
-		#return '(' + str_type(to_type) + ')' + str_value_literal_record(x, ctx=ctx)
-		cv = CValueCast(tt, do_cvalue_literal_record(x, ctx=ctx))
-		cv.mark = 'CR6'
-		return cv
+	if x.value.isValueImmediate():
+		if not initializers_are_equal(x.asset, value.asset):
+			# Если у нас в ValueCons asset отличается от asset в ValueCons#value
+			# То печатаем литерал структуры из нашего asset
+			cv = CValueCast(tt, do_cvalue_literal_record(x, ctx=ctx))
+			return cv
 
 	cv = do_cvalue(value, ctx=ctx)
 	cv = CValueCast(tt, cv)
-	cv.mark = 'CR7'
 	return cv
 
 
@@ -703,7 +685,6 @@ def do_cvalue_cons_record(x, ctx):
 #
 def do_cvalue_cons(x, ctx):
 	cv = do_cvalue_cons2(x, ctx)
-	cv.mark = None
 	return cv
 
 
@@ -712,11 +693,20 @@ def do_cvalue_cons2(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	if type.is_array(): return do_cvalue_cons_array(x, ctx)
-	if type.is_record(): return do_cvalue_cons_record(x, ctx)
+	if type.is_array():
+		cv = do_cvalue_cons_array(x, ctx)
+		#cv.mark = 'CA'
+		return cv
+	if type.is_record():
+		cv = do_cvalue_cons_record(x, ctx)
+		#cv.mark = 'CR'
+		return cv
 	if type.is_branded(): return do_cvalue_cast(x.type, x.value, ctx)
 	if type.is_char(): return do_cvalue_cons_char(x, ctx)
-	if type.is_pointer(): return do_cvalue_cons_pointer(x, ctx)
+	if type.is_pointer():
+		cv = do_cvalue_cons_pointer(x, ctx)
+		#cv.mark = 'CP'
+		return cv
 	if type.is_int(): return do_cvalue_cons_int(x, ctx)
 	if type.is_nat(): return do_cvalue_cons_nat(x, ctx)
 	if type.is_word(): return do_cvalue_cons_word(x, ctx)
@@ -730,11 +720,9 @@ def do_cvalue_cons2(x, ctx):
 			if not (from_type.is_generic() or is_the_same_in_c(type, value.type)):
 				#sstr = "(" + str_type(type) + ")" + sstr
 				cv = do_cvalue_cast(type, value, ctx=ctx)
-				cv.mark = ';'
 				return cv
 
 		cv = do_cvalue(value, ctx=ctx)
-		#cv.mark = ';;'
 		return cv
 
 #	if value.isValueLiteral():
@@ -776,7 +764,6 @@ def do_cvalue_cons2(x, ctx):
 	"""
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
-	#cv.mark = '$'
 	return cv
 
 
@@ -794,13 +781,11 @@ def do_cvalue_cons_word(x, ctx):
 	if value.isValueImmediate() and value.isValueLiteral():
 		#if from_type.is_nat() and type.width == from_type.width:
 		cv = do_cvalue_literal_with_type(value, type, ctx=ctx)
-		cv.mark = '$$1'
 		return cv
 
 #	if x.method in ['implicit', 'default']:
 #		if from_type.width <= 32:
 #			cv = do_cvalue(value, ctx=ctx)
-#			cv.mark = '$$2'
 #			return cv
 
 	if from_type.is_int():
@@ -809,18 +794,15 @@ def do_cvalue_cons_word(x, ctx):
 			nat_same_sz = do_ctype(type_select_nat(from_type.width))
 			cv = CValueCast(nat_same_sz, cv)
 			cv = CValueCast(do_ctype(type), cv)
-			cv.mark = '$$3'
 			return cv
 
 #	if value.isValueLiteral():
 #		#cv = do_cvalue_cast(type, value, ctx=ctx)
 #		cv = do_cvalue_literal_with_type(value, type, ctx=ctx)
 #		cv = CValueCast(do_ctype(type), cv)
-#		cv.mark = '$4'
 #		return cv
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
-	cv.mark = '$$'
 	return cv
 
 
@@ -844,7 +826,6 @@ def do_cvalue_cons_int(x, ctx):
 
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
-	#cv.mark = '$2'
 	return cv
 
 
@@ -885,7 +866,6 @@ def do_cvalue_cons_nat(x, ctx):
 			return cv
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
-	cv.mark = '$3'
 	return cv
 
 
@@ -931,7 +911,6 @@ def do_cvalue_cons_pointer(x, ctx):
 		if value.type.to.definition != type.to.definition:
 			#return str_cast(type, value, ctx=ctx)
 			cv = do_cvalue_cast(type, value, ctx)
-			cv.mark = '$'
 			return cv
 
 	elif type.is_pointer_to_array():
@@ -948,7 +927,6 @@ def do_cvalue_cons_pointer(x, ctx):
 			cv = do_cvalue_cast(type, value, ctx)
 		else:
 			cv = do_cvalue(value, ctx)
-			cv.mark = '&'
 		return cv
 
 	if x.method in ['explicit', 'unsafe']:
@@ -977,7 +955,6 @@ def do_cvalue_cast(type, value, ctx, raw_cast=False):
 	ctype = do_ctype(type)
 	cvalue = do_cvalue(value, ctx=ctx)
 	cv = CValueCast(ctype, cvalue)
-	#cv.mark = '$'
 	return cv
 
 
@@ -1046,7 +1023,8 @@ def do_cvalue_index(x, ctx):
 
 def do_cvalue_slice(x, ctx):
 	y = ValueIndex(x.type, x.left, x.index_from, ti=None)
-	return do_cvalue_index(y, ctx=ctx)
+	cv = do_cvalue_index(y, ctx=ctx)
+	return cv
 
 
 def do_cvalue_access(x, ctx):
@@ -2335,79 +2313,55 @@ def get_cvalue_ptr_to_array(x, parr_relax):
 		return cv
 
 	cv = CValueRef(cv)
-	#cv.mark = '!%s!' % str(x)
+	return cv
+
+
+
+# получает Value, возаращает такой CValue у которого можно взять ref (!)
+def do_cvalue_mem(x):
+	if x.type.is_string():
+		cv = do_cvalue(x)
+		return cv
+
+	if x.isValueCons() and x.value.isValueArray() or x.isValueArray():
+		cv = do_cvalue(x)
+		cv = CValueCast(do_ctype(x.type), cv)
+		return cv
+
+	if not x.isValueImmediate():
+		cv = do_cvalue(x)
+		return cv
+
+	if not x.type.is_aggregate():
+		error("attempt to load non aggregate", x.ti)
+		print(x)
+		exit(1)
+
+	cv = do_cvalue(x)
+	if x.type.is_generic():
+		cv = CValueCast(do_ctype(x.type), cv)
+		return cv
+
+	if x.type.is_array():
+		root = get_root_value(x)
+		if root.isValueConst() and const_as_macro(root):
+			ts = do_ctype(x.type)
+			cv = CValueCast(ts, cv)
+			return cv
+
 	return cv
 
 
 def do_cvalue_as_ptr(x, parr_relax=False):
-	t = x.type
-
-	root = get_root_value(x)
-
-	cv = None
-
-	if root.type.is_string():
-		xx = CValueRef(do_cvalue(root))
-		#xx.mark = 'AP1'
-		return xx
-
-	elif x.type.is_array():
-		return get_cvalue_ptr_to_array(x, parr_relax=parr_relax)
-
-	elif root.isValueDeref():
-		return do_cvalue(root.value)
-
-	elif root.isValueImmediate():
-		if x.type.is_aggregate() or value_is_generic_immediate_const(root):
-			# generic immediate const is just a macro!
-
-			if x.isValueCons() and x.value.isValueLiteral():
-				vs = do_cvalue(x)
-				xx = CValueRef(vs)
-				return xx
-
-			vs = do_cvalue(root)
-			ts = do_ctype(x.type)
-			xx = CValueCast(ts, vs)
-			xx = CValueRef(xx)
-			#xx.mark = 'AP2'
-			return xx
-
-	elif x.isValueCons():
-		# for *s == "Hi!"
-		# string literal will be implicitly casted to StrX
-		# and for getting pointer to this string
-		# we need to print just string literal,
-		# because in C string literal is pointer to c-string
-		if x.value.type.is_string():
-			xx = do_cvalue(x.value)
-			#xx.mark = 'AP3'
-			return xx
-
-	elif root.isValueLiteral():
-		if root.type.is_string():
-			return do_cvalue(root)
-
-	###
-
-	cv = do_cvalue(root)
-
-
-	if value_is_generic_immediate(root):
-		cv = CValueCast(do_ctype(root.type), cv)
-		#cv.mark = '$$$'
-	elif root.type.is_generic() and root.storage_class == HLIR_VALUE_STORAGE_CLASS_REGISTER:
-		cv = CValueCast(do_ctype(root.type), cv)
-
-
+	cv = do_cvalue_mem(x)
 	cv = CValueRef(cv)
 
-	if root.isValueSlice():
-		ptr2slice = TypePointer(x.type)
-		cv = CValueCast(do_ctype(ptr2slice), cv)
+	# Если взяли адрес у array item - нужно привести его к *[]
+	if x.isValueSlice():
+		cv = CValueCast(CTypePointer(do_ctype(x.type)), cv)
 
-	#cv.mark = '@@'
 	return cv
+
 
 
 

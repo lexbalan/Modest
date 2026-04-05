@@ -23,7 +23,6 @@ typedef uint32_t char32_t;
 #endif
 typedef int32_t MyInt;
 struct point {
-	uint32_t pad;
 
 	uint64_t xx;
 

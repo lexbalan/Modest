@@ -20,7 +20,7 @@ static struct context init(uint8_t key[32], uint32_t _nonce[3]) {
 	return (struct context){
 		.key = key,
 		.nonce = {nonce[0], nonce[1], nonce[2]},
-		.blockCounter = 0U,
+		.blockCounter = 0,
 		.blockOffset = (uint32_t)sizeof(chacha20_Block)
 	};
 }
@@ -104,6 +104,6 @@ static bool test0(void) {
 	chacha20_Block block;
 	chacha20_chacha20Block(state, block);
 	uint8_t (*const bptr)[64] = (uint8_t (*)[64])&block;
-	return __builtin_memcmp(bptr, &(const uint8_t [64])TEST_RESULT, sizeof(uint8_t [64])) == 0;
+	return __builtin_memcmp(&*bptr, &(const uint8_t [64])TEST_RESULT, sizeof(uint8_t [64])) == 0;
 }
 

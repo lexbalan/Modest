@@ -6,7 +6,6 @@ include "libc/stdio"
 
 type MyInt = Int32
 type Point = {
-	pad: Nat32
 	@alias("c", "xx")
 	x: Word64
 	@alias("c", "yy")

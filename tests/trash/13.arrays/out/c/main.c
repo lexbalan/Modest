@@ -231,7 +231,7 @@ int main(void) {
 	printf("d[5] = %i\n", d[5]);
 	int32_t (*const pa)[3] = &a;
 	int32_t (*const pb)[3] = &b;
-	if (__builtin_memcmp(pa, pb, sizeof(int32_t [3])) == 0) {
+	if (__builtin_memcmp(&*pa, &*pb, sizeof(int32_t [3])) == 0) {
 		printf("*pa == *pb\n");
 	} else {
 		printf("*pa != *pb\n");

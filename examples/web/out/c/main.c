@@ -45,10 +45,10 @@ int32_t main(void) {
 	}
 	struct sockaddr_in serverAddr = (struct sockaddr_in){
 		.sin_family = AF_INET,
-		.sin_port = htons((uint16_t)PORT),
-		.sin_addr = (struct in_addr){
+		.sin_addr = {
 			.s_addr = INADDR_ANY
-		}
+		},
+		.sin_port = htons((uint16_t)PORT)
 	};
 	struct sockaddr *const socadr = (struct sockaddr *)&serverAddr;
 	int rc = bind(serverSocket, socadr, (socklen_t)sizeof serverAddr);

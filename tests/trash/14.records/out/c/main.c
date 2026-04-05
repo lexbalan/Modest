@@ -89,20 +89,20 @@ int main(void) {
 	}
 	struct point2_d p2d2 = p2d0;
 	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6)XX;
-	if (__builtin_memcmp(&p2d2, &p2d3, sizeof(struct point2_d)) == 0) {
+	if (__builtin_memcmp(&p2d2, &RAWCAST(struct point2_d, struct __anonymous_struct_6, p2d3), sizeof(struct point2_d)) == 0) {
 		printf("p2d2 == p2d3\n");
 	} else {
 		printf("p2d2 != p2d3\n");
 	}
 	struct __anonymous_struct_7 p2d4 = (struct __anonymous_struct_7){.x = 1, .y = 2};
-	if (__builtin_memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_6)) == 0) {
+	if (__builtin_memcmp(&p2d3, &RAWCAST(struct __anonymous_struct_6, struct __anonymous_struct_7, p2d4), sizeof(struct __anonymous_struct_6)) == 0) {
 		printf("p2d3 == p2d4\n");
 	} else {
 		printf("p2d3 != p2d4\n");
 	}
 	struct point2_d *const pr2 = &p2d2;
 	struct __anonymous_struct_6 *const pr3 = &p2d3;
-	if (__builtin_memcmp(pr2, pr3, sizeof(struct point2_d)) == 0) {
+	if (__builtin_memcmp(&*pr2, &RAWCAST(struct point2_d, struct __anonymous_struct_6, *pr3), sizeof(struct point2_d)) == 0) {
 		printf("*pr2 == *pr3\n");
 	} else {
 		printf("*pr2 != *pr3\n");
