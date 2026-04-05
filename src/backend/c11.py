@@ -69,9 +69,9 @@ def is_local_context():
 
 csettings = {}
 def init(settings):
-	pass
-#	global styleguide, csettings
-#	csettings = settings
+	global styleguide, csettings
+	csettings = settings
+
 #	stylename = settings['output_style']
 #	if stylename != None:
 #		if stylename in styles:
