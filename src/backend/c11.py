@@ -253,8 +253,8 @@ def do_ctype_array(t, specs=[]):
 def do_ctype_struct(t, tag='', specs=[]):
 	assert(isinstance(t, Type))
 	fields = []
-	for p in t.fields:
-		fields.append(CField(id_str=get_id_str(p), type=do_ctype(p.type), specs=[], nl=p.nl))
+	for f in t.fields:
+		fields.append(CField(id_str=get_id_str(f), type=do_ctype(f.type), specs=[], nl=f.nl))
 	tag = camel_to_lower_snake(tag)
 	isa = 'struct' if not t.layout == 'union' else 'union'
 	kisa = isa

@@ -334,11 +334,11 @@ def print_list_items(_list, method):
 	sstr = ''
 	i = 0
 	while i < len(_list):
-		arg = _list[i]
+		item = _list[i]
 		if i > 0:
 			sstr += ", "
-		sstr += method(arg)
-		i = i + 1
+		sstr += method(item)
+		i += 1
 	return sstr
 
 
