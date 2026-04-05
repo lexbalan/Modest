@@ -1623,6 +1623,9 @@ def do_decl_func(x):
 def do_def_func(x):
 	global declared
 
+	if x.stmt == None:
+		return do_decl_func(x)
+
 	func = x.value
 
 	global cfunc
