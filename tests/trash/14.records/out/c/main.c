@@ -102,7 +102,7 @@ int main(void) {
 	}
 	struct point2_d *const pr2 = &p2d2;
 	struct __anonymous_struct_6 *const pr3 = &p2d3;
-	if (__builtin_memcmp(&*pr2, &RAWCAST(struct point2_d, struct __anonymous_struct_6, *pr3), sizeof(struct point2_d)) == 0) {
+	if (__builtin_memcmp(pr2, &RAWCAST(struct point2_d, struct __anonymous_struct_6, *pr3), sizeof(struct point2_d)) == 0) {
 		printf("*pr2 == *pr3\n");
 	} else {
 		printf("*pr2 != *pr3\n");

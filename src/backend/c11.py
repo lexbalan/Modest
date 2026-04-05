@@ -1526,6 +1526,7 @@ def const_as_macro(v):
 		return value_is_generic_immediate(v)
 	return False
 
+
 def do_cstmt_const(x):
 	const_value = x.value
 	type = const_value.type
@@ -2353,6 +2354,9 @@ def do_cvalue_mem(x):
 
 
 def do_cvalue_as_ptr(x, parr_relax=False):
+	if x.isValueDeref():
+		return do_cvalue(x.value)
+
 	cv = do_cvalue_mem(x)
 	cv = CValueRef(cv)
 

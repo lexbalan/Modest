@@ -286,8 +286,8 @@ aes256_Result aes256_init(aes256_Context *ctx, uint8_t key[32]) {
 	if (ctx == NULL || key == NULL) {
 		return AES256_RESULT_ERROR;
 	}
-	__builtin_memcpy(&ctx->deckey, &*key, sizeof(aes256_Key));
-	__builtin_memcpy(&ctx->enckey, &*key, sizeof(aes256_Key));
+	__builtin_memcpy(&ctx->deckey, key, sizeof(aes256_Key));
+	__builtin_memcpy(&ctx->enckey, key, sizeof(aes256_Key));
 	uint8_t rcon = 0x1;
 	uint8_t i = 0;
 	while (i < 7) {
