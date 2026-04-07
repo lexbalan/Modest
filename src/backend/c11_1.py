@@ -1546,17 +1546,26 @@ class CIfdefRegion():
 		directive = '#if'
 		for pair in self.pairs:
 			sstr += "\n%s %s" % (directive, pair[0])
+#			if len(pair[1]) > 5:
+#				sstr += "\n"
 			for xd in pair[1]:
 				#print(":" + str(xd))
 				sstr += str_cdef(xd)
+#			if len(pair[1]) > 5:
+#				sstr += "\n"
 			directive = '#elif'
 
 		if self._else != None:
 			sstr += '\n#else'
+#			if len(self._else) > 5:
+#				sstr += "\n"
 			for xd in self._else:
 				sstr += str_cdef(xd)
-
+#			if len(self._else) > 5:
+#				sstr += "\n"
 		sstr += "\n#endif"
+		#sstr = sstr.replace("#if defined", "#ifdef")
+		#sstr = sstr.replace("#if !defined", "#ifndef")
 		return sstr
 
 

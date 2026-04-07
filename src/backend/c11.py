@@ -969,24 +969,19 @@ def doo_call(func, args, ctx):
 		av = arg.value
 		a = None
 
+
 		if av.type.is_array() and not av.type.is_array_of_char():
 			# Если в функцию передается массив по значению - передаем указатель на него (!)
 			# тк функции си не умеют получать массивы по значению
-			#a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
-			a = get_cvalue_ptr_to_array(av, parr_relax=True)
+			a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
 		else:
-
-			if POINTER_TO_ARRAY_RELAX:
-				# Если это передача аргумента в параметр функции с типом *[]X, то тут особые правила
-				# Тк указатели на массив передаваемые в функцию как параметры могут быть записаны
-				# как int a[] вместо int (*a)[]; Это облегчает чтение кода и мы используем этот сахар
-				if av.type.is_pointer_to_array():
+			if av.type.is_pointer_to_array():
+				if POINTER_TO_ARRAY_RELAX:
 					if not av.type.to.is_array_of_char():
 						if av.isValueRef() and not (av.value.isValueIndex() or av.value.isValueSlice()):
 							av = av.value
 						else:
 							av = ValueCons(TypePointer(av.type.to.of), av, 'explicit', av.ti)
-
 			a = do_cvalue(av)
 
 		xargs.append(a)
@@ -1210,8 +1205,8 @@ def do_cvalue_eq(x, logic, ctx):
 	rx = None
 	if left.type.is_aggregate():
 		# сравниваем массивы / записи
-		a = do_cvalue_as_ptr(left)#, parr_relax=True)
-		b = do_cvalue_as_ptr(right)#, parr_relax=True)
+		a = do_cvalue_as_ptr(left)
+		b = do_cvalue_as_ptr(right)
 		sz = get_cvalue_size_for(left, right, ti=x.ti)
 		lx = cvalue_memcmp(a, b, sz)
 		rx = CValueInteger(0)
@@ -2070,6 +2065,8 @@ def do_header(module):
 	xdefs.extend(include("stdbool.h", local=False))
 	xdefs.extend(do_helpers(module))
 
+	#xdefs.append(CInsert("\n"))
+
 	for x in defs:
 		if is_private(x):
 			continue
@@ -2270,70 +2267,18 @@ def cons_vla_from_literal_array(x):
 
 
 
-
-
-
-
-def get_cvalue_ptr_to_array(x, parr_relax):
-	cv = None
-	if x.isValueArray():
-		cv = do_cvalue(x)
-		ts = do_ctype(x.type)
-		cv = CValueCast(ts, cv)
-	elif x.isValueConst():
-		cv = do_cvalue(x)
-		if const_as_macro(x):
-			ts = do_ctype(x.type)
-			cv = CValueCast(ts, cv)
-	elif x.isValueVar():
-		cv = do_cvalue(x)
-	elif x.isValueCons():
-		cv = do_cvalue(x.value)
-		ts = do_ctype(x.type)
-		cv = CValueCast(ts, cv)
-	elif x.isValueDeref():
-		cv = do_cvalue(x.value)
-		if x.value.type.is_pointer_to_array():
-			return cv
-		if x.value.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM:
-			# Если это взятие адреса у параметра-массива (который передается как указатель на элемент массива)
-			# Просто вернем этот параметр как есть - тк он уже является указателем
-			return cv
-	elif x.isValueAccessRecord():
-		cv = do_cvalue(x)
-	elif x.isValueSlice():
-		cv = do_cvalue(x)
-		cv = CValueRef(cv)
-		if parr_relax:
-			return cv
-		ts = CTypePointer(do_ctype(x.type))
-		cv = CValueCast(ts, cv)
-		return cv
-
-	if cv == None:
-		print(x)
-
-	if POINTER_TO_ARRAY_RELAX and parr_relax:
-		return cv
-
-	cv = CValueRef(cv)
-	return cv
-
-
-
 # получает Value, возаращает такой CValue у которого можно взять ref (!)
 def do_cvalue_mem(x):
+	cv = do_cvalue(x)
+
 	if x.type.is_string():
-		cv = do_cvalue(x)
 		return cv
 
-	if x.isValueCons() and x.value.isValueArray() or x.isValueArray():
-		cv = do_cvalue(x)
+	if x.isValueArray() or (x.isValueCons() and x.value.isValueArray()):
 		cv = CValueCast(do_ctype(x.type), cv)
 		return cv
 
-	if not x.isValueImmediate():
-		cv = do_cvalue(x)
+	if x.isValueRuntime():
 		return cv
 
 	if not x.type.is_aggregate():
@@ -2341,7 +2286,6 @@ def do_cvalue_mem(x):
 		print(x)
 		exit(1)
 
-	cv = do_cvalue(x)
 	if x.type.is_generic():
 		cv = CValueCast(do_ctype(x.type), cv)
 		return cv
@@ -2356,12 +2300,14 @@ def do_cvalue_mem(x):
 	return cv
 
 
+
 def do_cvalue_as_ptr(x, parr_relax=False):
 	if x.isValueDeref():
 		return do_cvalue(x.value)
 
 	cv = do_cvalue_mem(x)
-	cv = CValueRef(cv)
+	if not (parr_relax and x.type.is_array()):
+		cv = CValueRef(cv)
 
 	# Если взяли адрес у array item - нужно привести его к *[]
 	if x.isValueSlice():
@@ -2370,6 +2316,8 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 	return cv
 
 
+def do_memzero(value):
+	return CStmtValueExpr(cvalue_memzero(do_cvalue_as_ptr(value), CValueSizeofType(do_ctype(value.type))))
 
 
 def assign_by_memcopy(left, right):
@@ -2384,12 +2332,6 @@ def assign_by_memcopy(left, right):
 			CValueSizeofType(do_ctype(left.type))
 		)
 	)
-
-
-
-
-def do_memzero(value):
-	return CStmtValueExpr(cvalue_memzero(do_cvalue_as_ptr(value), CValueSizeofType(do_ctype(value.type))))
 
 
 
