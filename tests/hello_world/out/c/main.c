@@ -148,7 +148,7 @@ int main(int argc, char *argv[]) {
 	if ((a < 1 && b > 12LL) || (C <= 5 && !(1 < 0))) {
 		uint32_t u = 0xAU;
 		uint32_t v = 0x14U;
-		u | ((v & u) ^ ~v);
+		u | ((v & u) ^ ~v) | v;
 		u << 10;
 		v >> 20;
 		int32_t *const pa = &a;
