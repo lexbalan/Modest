@@ -1528,6 +1528,9 @@ class CIfdefRegion():
 		sstr = ''
 		directive = '#if'
 		for pair in self.pairs:
+#			if directive == '#if':
+#				ss = pair[0].split('()')
+#				print(ss)
 			sstr += "\n%s %s" % (directive, pair[0])
 #			if len(pair[1]) > 5:
 #				sstr += "\n"
