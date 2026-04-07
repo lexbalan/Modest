@@ -25,12 +25,6 @@ def camel_to_upper_snake(name: str) -> str:
     return s.upper()
 
 
-def wrapp(s, cond):
-	if cond:
-		return '(' + s + ')'
-	return s
-
-
 intWidth = 32
 
 # идетнифиаторы декларированных (или определенных) сущностей
@@ -672,15 +666,6 @@ def do_cvalue_cons_record(x, ctx):
 	return cv
 
 
-
-
-
-#def str_cast(t, v, raw_cast=False, ctx=[]):
-#	if raw_cast:
-#		#assert(is_local_context())
-#		return "RAWCAST(%s, %s, %s)" % (str_type(t), str_type(v.type), str_value(v, ctx=ctx))
-#
-#	return "(" + str_type(t) + ")" + wrapp(str_value(v, ctx=ctx), cond=(precedence(v) < CONS_PRECEDENCE))
 
 #
 def do_cvalue_cons(x, ctx):

@@ -77,11 +77,11 @@ static void farr(int32_t _x[3], int32_t __out[3]) {
 	__builtin_memcpy(__out, &(int32_t [3]){x[0] + 1, x[1] + 2, x[2] + 3}, sizeof(int32_t [3]));
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
 	typedef int32_t LocalInt;
 	struct point *const p = (struct point *)__builtin_memcpy(malloc(sizeof(struct point)), &(struct point){.xx = 0xAULL, .yy = 0xAULL}, sizeof(struct point));
-	printf("p.x = %d\n", p->xx);
-	printf("p.y = %d\n", p->yy);
+	printf("p.x = %llu\n", p->xx);
+	printf("p.y = %llu\n", p->yy);
 	#define c00 10
 	const char xc1 = 'A';
 	const char16_t xc2 = u'A';
@@ -92,7 +92,7 @@ int main(void) {
 	char *const xs1 = "A";
 	char16_t *const xs2 = u"A";
 	char32_t *const xs3 = U"A";
-	int32_t v00 = 10;
+	LocalInt v00 = 10;
 	char c1 = 'B';
 	char16_t c2 = u'B';
 	char32_t c3 = U'B';
@@ -106,7 +106,7 @@ int main(void) {
 	printf("w = %llx\n", w);
 	int16_t x1 = -1;
 	uint32_t x2 = (uint32_t)(uint16_t)x1;
-	printf("x2 = %llx\n", x2);
+	printf("x2 = %x\n", x2);
 	if (x2 != 0xFFFFU) {
 	}
 	int32_t arr[3] = {1, 2, 3};
@@ -125,8 +125,8 @@ int main(void) {
 	rec2 = rec1;
 	LENGTHOF(arr);
 	printf("Hello World!\n");
-	int32_t a;
-	int64_t b;
+	int32_t a = 0;
+	int64_t b = 1LL;
 	a + 2;
 	a - 2;
 	a * 2;
@@ -137,18 +137,18 @@ int main(void) {
 	#define kk (1 + 2 - 3 * 4)
 	#define pp 3.1415
 	(void)a;
-	(uint32_t)abs(a);
-	(uint64_t)llabs(b);
+	uint32_t j = (uint32_t)abs(a);
+	uint64_t k = (uint64_t)llabs(b);
 	sizeof a;
 	sizeof(uint32_t);
 	arr[1];
 	struct point p0 = (struct point){0};
 	p0.xx;
 	p0.yy;
-	if (a < 1 && b > 12LL || C <= 5 && !(1 < 0)) {
-		uint32_t u;
-		uint32_t v;
-		u | (v & u) ^ ~v;
+	if ((a < 1 && b > 12LL) || (C <= 5 && !(1 < 0))) {
+		uint32_t u = 0xAU;
+		uint32_t v = 0x14U;
+		u | ((v & u) ^ ~v);
 		u << 10;
 		v >> 20;
 		int32_t *const pa = &a;

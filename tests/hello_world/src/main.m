@@ -21,7 +21,7 @@ var points: []Point = [
 	}
 ]
 
-var arrays: [][4]Int32 = [
+var arrays: [][]Int32 = [
 	[00, 01, 02, 03]
 	[04, 05, 06, 07]
 	[08, 09, 10, 11]
@@ -65,12 +65,12 @@ func farr (x: [3]Int32) -> [3]Int32 {
 	return [x[0] + 1, x[1] + 2, x[2] + 3]
 }
 
-public func main () -> Int {
+public func main (argc: Int, argv: *[]*[]Char8) -> Int {
 	type LocalInt = Int32
 
 	let p = new Point {x=10, y=10}
-	printf("p.x = %d\n", p.x)
-	printf("p.y = %d\n", p.y)
+	printf("p.x = %llu\n", p.x)
+	printf("p.y = %llu\n", p.y)
 
 	// constants
 
@@ -89,7 +89,7 @@ public func main () -> Int {
 	let xs3: *Str32 = "A"
 
 	// vars
-	var v00 = Int32 10
+	var v00 = LocalInt 10
 
 	var c1: Char8 = "B"
 	var c2: Char16 = "B"
@@ -108,7 +108,7 @@ public func main () -> Int {
 
 	var x1: Int16 = -1
 	var x2 = Word32 x1
-	printf("x2 = %llx\n", x2)
+	printf("x2 = %x\n", x2)
 	if x2 != 0x0000ffff {
 		//error
 	}
@@ -131,8 +131,8 @@ public func main () -> Int {
 
 	printf("Hello World!\n")
 
-	var a: Int32
-	var b: Int64
+	var a: Int32 = 0
+	var b: Int64 = 1
 	a + 2
 	a - 2
 	a * 2
@@ -145,8 +145,8 @@ public func main () -> Int {
 	let pp = 3.1415
 
 	{} a
-	Nat32 a
-	Nat64 b
+	var j = Nat32 a
+	var k = Nat64 b
 
 	sizeof(a)
 	sizeof(Nat32)
@@ -156,8 +156,8 @@ public func main () -> Int {
 	p0.x
 	p0.y
 	if a < 1 and b > 12 or c <= 5 and not (1 < 0) {
-		var u: Word32
-		var v: Word32
+		var u: Word32 = 10
+		var v: Word32 = 20
 		u or v and u xor not v
 		u << 10; v >> 20;
 		let pa = &a
