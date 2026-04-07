@@ -967,14 +967,6 @@ class CValueAndBitwise(CValue):
 		self.precedence = 7
 
 	def __str__(self):
-		# -Wbitwise-op-parentheses supressing
-		lprec = self.precedence
-		if self.left.precedence == self.precedence + 1:
-			lprec = valuePrecedenceMax
-		rprec = self.precedence
-		if self.right.precedence == self.precedence + 1:
-			rprec = valuePrecedenceMax
-
 		lx = str_cvalue(self.left, ext_precedence=self.precedence)
 		rx = str_cvalue(self.right, ext_precedence=self.precedence)
 		return '%s & %s' % (lx, rx)
@@ -990,8 +982,6 @@ class CValueXorBitwise(CValue):
 		self.precedence = 6
 
 	def __str__(self):
-
-		# -Wbitwise-op-parentheses supressing
 		lx = str_cvalue(self.left, ext_precedence=select_prio_plus(self.precedence, self.left.precedence, n=1))
 		rx = str_cvalue(self.right, ext_precedence=select_prio_plus(self.precedence, self.right.precedence, n=1))
 		return '%s ^ %s' % (lx, rx)
@@ -1037,14 +1027,6 @@ class CValueOrLogical(CValue):
 		self.precedence = 3
 
 	def __str__(self):
-		# -Wbitwise-op-parentheses supressing
-		lprec = self.precedence
-		if self.left.precedence == self.precedence + 1:
-			lprec = valuePrecedenceMax
-		rprec = self.precedence
-		if self.right.precedence == self.precedence + 1:
-			rprec = valuePrecedenceMax
-
 		lx = str_cvalue(self.left, ext_precedence=select_prio_plus(self.precedence, self.left.precedence, n=1))
 		rx = str_cvalue(self.right, ext_precedence=select_prio_plus(self.precedence, self.right.precedence, n=1))
 		return '%s || %s' % (lx, rx)
