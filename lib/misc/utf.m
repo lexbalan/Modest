@@ -15,30 +15,30 @@ public func utf32_to_utf8 (c: Char32, buf: *[4]Char8) -> Nat8 {
 		return 1
 
 	} else if Nat32 x <= Nat32 0x000007FF {
-		let c0 = (x >> 6) and 0x1F
-		let c1 = (x >> 0) and 0x3F
-		buf[0] = unsafe Char8 (0xC0 or c0)
-		buf[1] = unsafe Char8 (0x80 or c1)
+		let c0 = (x >> 6) & 0x1F
+		let c1 = (x >> 0) & 0x3F
+		buf[0] = unsafe Char8 (0xC0 | c0)
+		buf[1] = unsafe Char8 (0x80 | c1)
 		return 2
 
 	} else if Nat32 x <= Nat32 0x0000FFFF {
-		let c0 = (x >> 12) and 0x0F
-		let c1 = (x >> 06) and 0x3F
-		let c2 = (x >> 00) and 0x3F
-		buf[0] = unsafe Char8 (0xE0 or c0)
-		buf[1] = unsafe Char8 (0x80 or c1)
-		buf[2] = unsafe Char8 (0x80 or c2)
+		let c0 = (x >> 12) & 0x0F
+		let c1 = (x >> 06) & 0x3F
+		let c2 = (x >> 00) & 0x3F
+		buf[0] = unsafe Char8 (0xE0 | c0)
+		buf[1] = unsafe Char8 (0x80 | c1)
+		buf[2] = unsafe Char8 (0x80 | c2)
 		return 3
 
 	} else if Nat32 x <= Nat32 0x0010FFFF {
-		let c0 = (x >> 18) and 0x07
-		let c1 = (x >> 12) and 0x3F
-		let c2 = (x >> 06) and 0x3F
-		let c3 = (x >> 00) and 0x3F
-		buf[0] = unsafe Char8 (0xF0 or c0)
-		buf[1] = unsafe Char8 (0x80 or c1)
-		buf[2] = unsafe Char8 (0x80 or c2)
-		buf[3] = unsafe Char8 (0x80 or c3)
+		let c0 = (x >> 18) & 0x07
+		let c1 = (x >> 12) & 0x3F
+		let c2 = (x >> 06) & 0x3F
+		let c3 = (x >> 00) & 0x3F
+		buf[0] = unsafe Char8 (0xF0 | c0)
+		buf[1] = unsafe Char8 (0x80 | c1)
+		buf[2] = unsafe Char8 (0x80 | c2)
+		buf[3] = unsafe Char8 (0x80 | c3)
 		return 4
 	}
 
@@ -56,12 +56,12 @@ public func utf16_to_utf32 (c: *[]Char16, result: *Char32) -> Nat8 {
 	} else if Nat32 leading >= Nat32 0xDC00 {
 		//error("Illegal code sequence")
 	} else {
-		var code = (leading and 0x3FF) << 10
+		var code = (leading & 0x3FF) << 10
 		let trailing = Word32 c[1]
 		if (Nat32 trailing < Nat32 0xDC00) or (Nat32 trailing > Nat32 0xDFFF) {
 			//error("Illegal code sequence")
 		} else {
-			code = code or (trailing and 0x3FF)
+			code = code | (trailing & 0x3FF)
 			*result = Char32 Word32 (Nat32 code + Nat32 0x10000)
 			return 2
 		}

@@ -28,8 +28,8 @@ public func init () -> Unit {
 		var crc = Word32 i
 		var j = Nat32 0
 		while j < 8 {
-			if (crc and 1) != 0 {
-				crc = (crc >> 1) xor 0xEDB88320
+			if crc & 1 != 0 {
+				crc = crc >> 1 ^ 0xEDB88320
 			} else {
 				crc = crc >> 1
 			}
@@ -49,14 +49,14 @@ public func run (buf: *[]Word8, len: Nat32) -> Word32 {
 	while i < len {
 		// 1
 		let x = Word32 buf[i]
-		let y = (crc xor x) and 0xFF
+		let y = crc ^ x & 0xFF
 		// 2
 		let yy = unsafe Nat8 y
-		crc = table[yy] xor (crc >> 8)
+		crc = table[yy] ^ (crc >> 8)
 		++i
 	}
 
-	return crc xor 0xFFFFFFFF
+	return crc ^ 0xFFFFFFFF
 }
 
 

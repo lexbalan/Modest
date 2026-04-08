@@ -10,7 +10,7 @@ public func ntohl(net32: Word32) -> Word32
 public func ntohs(net16: Word16) -> Word16
 
 public func htons(x: Word16) -> Word16 {
-	return (x << 8) or (x >> 8)
+	return (x << 8) | (x >> 8)
 }
 
 

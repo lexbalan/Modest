@@ -139,6 +139,7 @@ int main(int argc, char *argv[]) {
 	(void)a;
 	uint32_t j = (uint32_t)abs(a);
 	uint64_t k = (uint64_t)llabs(b);
+	a * a + a;
 	sizeof a;
 	sizeof(uint32_t);
 	arr[1];
@@ -148,7 +149,8 @@ int main(int argc, char *argv[]) {
 	if ((a < 1 && b > 12LL) || (C <= 5 && !(1 < 0))) {
 		uint32_t u = 0xAU;
 		uint32_t v = 0x14U;
-		u | ((v & u) ^ ~v) | v;
+		u | (v & u & ~(v | v));
+		(u | (v & u)) != ~(v | v);
 		u << 10;
 		v >> 20;
 		int32_t *const pa = &a;

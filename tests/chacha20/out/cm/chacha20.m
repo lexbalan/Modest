@@ -8,7 +8,7 @@ public type Block = [16]Word32
 
 
 func rotl32 (x: Word32, n: Nat32) -> Word32 {
-	return (x << n) or (x >> (32 - n))
+	return (x << n) | (x >> (32 - n))
 }
 
 
@@ -19,16 +19,16 @@ func quarterRound (a: Word32, b: Word32, c: Word32, d: Word32) -> [4]Word32 {
 	var d0: Word32 = d
 
 	a0 = Word32 (Nat32 a0 + Nat32 b0)
-	d0 = rotl32(d0 xor a0, 16)
+	d0 = rotl32(d0 ^ a0, 16)
 
 	c0 = Word32 (Nat32 c0 + Nat32 d0)
-	b0 = rotl32(b0 xor c0, 12)
+	b0 = rotl32(b0 ^ c0, 12)
 
 	a0 = Word32 (Nat32 a0 + Nat32 b0)
-	d0 = rotl32(d0 xor a0, 8)
+	d0 = rotl32(d0 ^ a0, 8)
 
 	c0 = Word32 (Nat32 c0 + Nat32 d0)
-	b0 = rotl32(b0 xor c0, 7)
+	b0 = rotl32(b0 ^ c0, 7)
 
 	return [a0, b0, c0, d0]
 }

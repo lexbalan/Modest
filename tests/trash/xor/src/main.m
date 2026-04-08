@@ -10,7 +10,7 @@ func xor_encrypter (buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) 
 	var i = Nat32 0
 	var j = Nat32 0
 	while i < buflen {
-		buf[i] = buf[i] xor key[j]
+		buf[i] = buf[i] ^ key[j]
 
 		if j < (keylen - 1) {
 			++j
@@ -43,7 +43,7 @@ func print_bytes (buf: *[]Word8, len: Nat32) -> Unit {
 
 
 public func main () -> Int {
-	printf("test xor encrypting\n")
+	printf("test ^ encrypting\n")
 
 	let tmsg = unsafe *[]Word8 &test_msg
 	let tkey = unsafe *[]Word8 &test_key

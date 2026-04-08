@@ -533,12 +533,12 @@ class Parser:
 		ti = self.textInfo()
 		if self.match("or"):
 			self.skipn("\n")
-			r = self.expr_value()
+			r = self.expr_value_1()
 			ti.start = v['ti']
 			ti.end = r['ti']
 			return {
 				'isa': 'ast_value',
-				'kind': HLIR_VALUE_OP_OR,
+				'kind': HLIR_VALUE_OP_LOGIC_OR,
 				'left': v,
 				'right': r,
 				'anno': [],
@@ -551,14 +551,14 @@ class Parser:
 	def expr_value_2(self):
 		v = self.expr_value_3()
 		ti = self.textInfo()
-		if self.match("xor"):
+		if self.match("and"):
 			self.skipn("\n")
 			r = self.expr_value_2()
 			ti.start = v['ti']
 			ti.end = r['ti']
 			return {
 				'isa': 'ast_value',
-				'kind': HLIR_VALUE_OP_XOR,
+				'kind': HLIR_VALUE_OP_LOGIC_AND,
 				'left': v,
 				'right': r,
 				'anno': [],
@@ -566,35 +566,16 @@ class Parser:
 			}
 		else:
 			return v
+
 
 
 	def expr_value_3(self):
 		v = self.expr_value_4()
-		ti = self.textInfo()
-		if self.match("and"):
-			self.skipn("\n")
-			r = self.expr_value_3()
-			ti.start = v['ti']
-			ti.end = r['ti']
-			return {
-				'isa': 'ast_value',
-				'kind': HLIR_VALUE_OP_AND,
-				'left': v,
-				'right': r,
-				'anno': [],
-				'ti': ti
-			}
-		else:
-			return v
-
-
-	def expr_value_4(self):
-		v = self.expr_value_5()
 		while True:
 			ti = self.textInfo()
 			if self.match("=="):
 				self.skipn("\n")
-				r = self.expr_value_5()
+				r = self.expr_value_4()
 				ti.start = v['ti']
 				ti.end = r['ti']
 				v = {
@@ -607,7 +588,7 @@ class Parser:
 				}
 			elif self.match("!="):
 				self.skipn("\n")
-				r = self.expr_value_5()
+				r = self.expr_value_4()
 				ti.start = v['ti']
 				ti.end = r['ti']
 				v = {
@@ -621,6 +602,67 @@ class Parser:
 			else:
 				break
 		return v
+
+
+	def expr_value_4(self):
+		v = self.expr_value_41()
+		ti = self.textInfo()
+		if self.match("|"):
+			self.skipn("\n")
+			r = self.expr_value_4()
+			ti.start = v['ti']
+			ti.end = r['ti']
+			return {
+				'isa': 'ast_value',
+				'kind': HLIR_VALUE_OP_BITWISE_OR,
+				'left': v,
+				'right': r,
+				'anno': [],
+				'ti': ti
+			}
+		else:
+			return v
+
+
+	def expr_value_41(self):
+		v = self.expr_value_42()
+		ti = self.textInfo()
+		if self.match("^"):
+			self.skipn("\n")
+			r = self.expr_value_41()
+			ti.start = v['ti']
+			ti.end = r['ti']
+			return {
+				'isa': 'ast_value',
+				'kind': HLIR_VALUE_OP_BITWISE_XOR,
+				'left': v,
+				'right': r,
+				'anno': [],
+				'ti': ti
+			}
+		else:
+			return v
+
+
+	def expr_value_42(self):
+		v = self.expr_value_5()
+		ti = self.textInfo()
+		if self.match("&"):
+			self.skipn("\n")
+			r = self.expr_value_42()
+			ti.start = v['ti']
+			ti.end = r['ti']
+			return {
+				'isa': 'ast_value',
+				'kind': HLIR_VALUE_OP_BITWISE_AND,
+				'left': v,
+				'right': r,
+				'anno': [],
+				'ti': ti
+			}
+		else:
+			return v
+
 
 
 	def expr_value_5(self):
@@ -856,7 +898,17 @@ class Parser:
 			v = self.expr_value_11()
 			return {
 				'isa': 'ast_value',
-				'kind': HLIR_VALUE_OP_NOT,
+				'kind': HLIR_VALUE_OP_LOGIC_NOT,
+				'value': v,
+				'anno': [],
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)
+			}
+
+		elif self.match("~"):
+			v = self.expr_value()
+			return {
+				'isa': 'ast_value',
+				'kind': HLIR_VALUE_OP_BITWISE_NOT,
 				'value': v,
 				'anno': [],
 				'ti': TextInfo(start=start_ti, mid=start_ti, end=v['ti'].end)

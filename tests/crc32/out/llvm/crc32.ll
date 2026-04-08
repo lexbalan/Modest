@@ -286,10 +286,10 @@ body_1:
 	%8 = getelementptr [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Nat32 %7
 	%9 = load %Word8, %Word8* %8
 	%10 = zext %Word8 %9 to %Word32
-	%11 = load %Word32, %Word32* %1
-	%12 = xor %Word32 %11, %10
-	%13 = zext i8 255 to %Word32
-	%14 = and %Word32 %12, %13
+	%11 = zext i8 255 to %Word32
+	%12 = and %Word32 %10, %11
+	%13 = load %Word32, %Word32* %1
+	%14 = xor %Word32 %13, %12
 	%15 = trunc %Word32 %14 to %Nat8
 	%16 = zext %Nat8 %15 to %Nat32
 	%17 = getelementptr [256 x %Word32], [256 x %Word32]* @table, %Int32 0, %Nat32 %16

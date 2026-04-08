@@ -12,7 +12,7 @@ struct context {
 };
 //@inline
 //func rotleft (a: Word32, b: Nat32) -> Word32 {
-//	return (a << b) or (a >> (32 - b))
+//	return (a << b) | (a >> (32 - b))
 //}
 
 __attribute__((always_inline))

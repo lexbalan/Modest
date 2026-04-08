@@ -180,7 +180,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 
 ;@inline
 ;func rotleft (a: Word32, b: Nat32) -> Word32 {
-;	return (a << b) or (a >> (32 - b))
+;	return (a << b) | (a >> (32 - b))
 ;}
 define internal %Word32 @rotright(%Word32 %a, %Nat32 %b) alwaysinline {
 	%1 = bitcast %Nat32 %b to %Word32

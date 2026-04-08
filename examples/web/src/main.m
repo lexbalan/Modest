@@ -29,7 +29,7 @@ var pageCounter: Nat32
 //@extern
 //@c_no_print
 //func htons(x: Word16) -> Word16 {
-//	return (x << 8) or (x >> 8)
+//	return (x << 8) | (x >> 8)
 //}
 
 

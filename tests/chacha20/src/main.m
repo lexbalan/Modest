@@ -45,7 +45,7 @@ func cipher (ctx: *Context, data: *[]Byte, len: Nat32) -> Unit {
 			bptr = unsafe *[]Byte &ctx.block
 		}
 
-		data[i] = data[i] xor bptr[ctx.blockOffset]
+		data[i] = data[i] ^ bptr[ctx.blockOffset]
 
 		++ctx.blockOffset
 		++i

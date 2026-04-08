@@ -368,7 +368,7 @@ declare %Word16 @htons(%Word16 %x)
 ;@extern
 ;@c_no_print
 ;func htons(x: Word16) -> Word16 {
-;	return (x << 8) or (x >> 8)
+;	return (x << 8) | (x >> 8)
 ;}
 define internal void @handleRequest(%Int32 %clientSocket) {
 	%1 = alloca [1024 x %Word8], align 1

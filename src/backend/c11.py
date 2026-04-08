@@ -303,9 +303,9 @@ def str_field(t, id_str, ctx=[]):
 
 
 bin_ops = {
-	HLIR_VALUE_OP_OR: '|',
-	HLIR_VALUE_OP_XOR: '^',
-	HLIR_VALUE_OP_AND: '&',
+	HLIR_VALUE_OP_BITWISE_OR: '|',
+	HLIR_VALUE_OP_BITWISE_XOR: '^',
+	HLIR_VALUE_OP_BITWISE_AND: '&',
 	HLIR_VALUE_OP_SHL: '<<',
 	HLIR_VALUE_OP_SHR: '>>',
 	HLIR_VALUE_OP_EQ: '==',
@@ -1346,9 +1346,9 @@ def do_cvalue_bin(x, ctx):
 	if x.op == HLIR_VALUE_OP_GT: return CValueGt(left, right)
 	if x.op == HLIR_VALUE_OP_EQ: return do_cvalue_eq(x, logic=True, ctx=ctx)
 	if x.op == HLIR_VALUE_OP_NE: return do_cvalue_eq(x, logic=False, ctx=ctx)
-	if x.op == HLIR_VALUE_OP_OR: return CValueOrBitwise(left, right)
-	if x.op == HLIR_VALUE_OP_XOR: return CValueXorBitwise(left, right)
-	if x.op == HLIR_VALUE_OP_AND: return CValueAndBitwise(left, right)
+	if x.op == HLIR_VALUE_OP_BITWISE_OR: return CValueOrBitwise(left, right)
+	if x.op == HLIR_VALUE_OP_BITWISE_XOR: return CValueXorBitwise(left, right)
+	if x.op == HLIR_VALUE_OP_BITWISE_AND: return CValueAndBitwise(left, right)
 	if x.op == HLIR_VALUE_OP_LOGIC_OR: return CValueOrLogical(left, right)
 	if x.op == HLIR_VALUE_OP_LOGIC_AND: return CValueAndLogical(left, right)
 

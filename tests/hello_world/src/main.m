@@ -148,6 +148,8 @@ public func main (argc: Int, argv: *[]*[]Char8) -> Int {
 	var j = Nat32 a
 	var k = Nat64 b
 
+	a * a + a
+
 	sizeof(a)
 	sizeof(Nat32)
 
@@ -158,7 +160,8 @@ public func main (argc: Int, argv: *[]*[]Char8) -> Int {
 	if a < 1 and b > 12 or c <= 5 and not (1 < 0) {
 		var u: Word32 = 10
 		var v: Word32 = 20
-		u or v and u xor not v or v
+		u | v & u & ~v | v
+		(u | v & u) != (~v | v)
 		u << 10; v >> 20;
 		let pa = &a
 		*pa

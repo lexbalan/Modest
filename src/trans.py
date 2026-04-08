@@ -786,9 +786,9 @@ def do_value_bin_op(op, l, r, ti):
 		print("\n")
 		return ValueBad(ti)
 
-	if Type.eq(t, typeBool):
-		if op == HLIR_VALUE_OP_OR: op = HLIR_VALUE_OP_LOGIC_OR
-		elif op == HLIR_VALUE_OP_AND: op = HLIR_VALUE_OP_LOGIC_AND
+	#if Type.eq(t, typeBool):
+	#	if op == HLIR_VALUE_OP_OR: op = HLIR_VALUE_OP_LOGIC_OR
+	#	elif op == HLIR_VALUE_OP_AND: op = HLIR_VALUE_OP_LOGIC_AND
 
 	if op in EQ_OPS or op in RELATIONAL_OPS:
 		t = typeBool
@@ -828,9 +828,9 @@ def do_bin_immediate(op, l, r, ti):
 	ops = {
 		HLIR_VALUE_OP_LOGIC_OR: lambda a, b: a or b,
 		HLIR_VALUE_OP_LOGIC_AND: lambda a, b: a and b,
-		HLIR_VALUE_OP_OR: lambda a, b: a | b,
-		HLIR_VALUE_OP_AND: lambda a, b: a & b,
-		HLIR_VALUE_OP_XOR: lambda a, b: a ^ b,
+		HLIR_VALUE_OP_BITWISE_OR: lambda a, b: a | b,
+		HLIR_VALUE_OP_BITWISE_AND: lambda a, b: a & b,
+		HLIR_VALUE_OP_BITWISE_XOR: lambda a, b: a ^ b,
 		HLIR_VALUE_OP_LT: lambda a, b: a < b,
 		HLIR_VALUE_OP_GT: lambda a, b: a > b,
 		HLIR_VALUE_OP_LE: lambda a, b: a <= b,
@@ -866,11 +866,12 @@ def do_value_not(x):
 
 	vtype = v.type
 
-	if not vtype.supports(HLIR_VALUE_OP_NOT):
-		error("unsuitable type", v.ti)
-		return ValueBad(x['ti'])
+# TODO: раздели операцию на logic&bitwise
+#	if not vtype.supports(HLIR_VALUE_OP_NOT):
+#		error("unsuitable type", v.ti)
+#		return ValueBad(x['ti'])
 
-	op = HLIR_VALUE_OP_NOT
+	op = HLIR_VALUE_OP_BITWISE_NOT
 	if vtype.is_bool():
 		op = HLIR_VALUE_OP_LOGIC_NOT
 
@@ -1716,7 +1717,8 @@ def do_value_offsetof(x):
 
 
 bin_ops = [
-	HLIR_VALUE_OP_OR, HLIR_VALUE_OP_XOR, HLIR_VALUE_OP_AND,
+	HLIR_VALUE_OP_LOGIC_OR, HLIR_VALUE_OP_LOGIC_AND,
+	HLIR_VALUE_OP_BITWISE_OR, HLIR_VALUE_OP_BITWISE_XOR, HLIR_VALUE_OP_BITWISE_AND,
 	HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE, HLIR_VALUE_OP_LT, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GE,
 	HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_SUB, HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM
 ]
@@ -1805,7 +1807,8 @@ def do_value(x):
 	elif k == HLIR_VALUE_OP_CALL: v = do_value_call(x)
 	elif k in bin_ops: v = do_value_bin(x)
 	elif k == HLIR_VALUE_OP_REF: v = do_value_ref(x)
-	elif k == HLIR_VALUE_OP_NOT: v = do_value_not(x)
+	elif k == HLIR_VALUE_OP_LOGIC_NOT: v = do_value_not(x)
+	elif k == HLIR_VALUE_OP_BITWISE_NOT: v = do_value_not(x)
 	elif k == HLIR_VALUE_OP_DEREF: v = do_value_deref(x)
 	elif k == HLIR_VALUE_OP_INDEX: v = do_value_index(x)
 	elif k == HLIR_VALUE_OP_SLICE: v = do_value_slice(x)

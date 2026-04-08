@@ -19,55 +19,55 @@ type Context = {
 
 //@inline
 //func rotleft (a: Word32, b: Nat32) -> Word32 {
-//	return (a << b) or (a >> (32 - b))
+//	return (a << b) | (a >> (32 - b))
 //}
 
 
 @inline
 func rotright (a: Word32, b: Nat32) -> Word32 {
-	return (a >> b) or (a << (32 - b))
+	return (a >> b) | (a << (32 - b))
 }
 
 
 
 @inline
 func ch (x: Word32, y: Word32, z: Word32) -> Word32 {
-	return (x and y) xor (not x and z)
+	return (x & y) ^ (not x & z)
 }
 
 
 
 @inline
 func maj (x: Word32, y: Word32, z: Word32) -> Word32 {
-	return (x and y) xor (x and z) xor (y and z)
+	return (x & y) ^ (x & z) ^ (y & z)
 }
 
 
 
 @inline
 func ep0 (x: Word32) -> Word32 {
-	return rotright(x, 2) xor rotright(x, 13) xor rotright(x, 22)
+	return rotright(x, 2) ^ rotright(x, 13) ^ rotright(x, 22)
 }
 
 
 
 @inline
 func ep1 (x: Word32) -> Word32 {
-	return rotright(x, 6) xor rotright(x, 11) xor rotright(x, 25)
+	return rotright(x, 6) ^ rotright(x, 11) ^ rotright(x, 25)
 }
 
 
 
 @inline
 func sig0 (x: Word32) -> Word32 {
-	return rotright(x, 7) xor rotright(x, 18) xor (x >> 3)
+	return rotright(x, 7) ^ rotright(x, 18) ^ (x >> 3)
 }
 
 
 
 @inline
 func sig1 (x: Word32) -> Word32 {
-	return rotright(x, 17) xor rotright(x, 19) xor (x >> 10)
+	return rotright(x, 17) ^ rotright(x, 19) ^ (x >> 10)
 }
 
 
@@ -110,7 +110,7 @@ func transform (ctx: *Context, data: *[]Word8) -> Unit {
 	var j = Nat32 0
 
 	while i < 16 {
-		let x: Word32 = (Word32 data[j + 0] << 24) or (Word32 data[j + 1] << 16) or (Word32 data[j + 2] << 08) or (Word32 data[j + 3] << 00)
+		let x: Word32 = (Word32 data[j + 0] << 24) | (Word32 data[j + 1] << 16) | (Word32 data[j + 2] << 08) | (Word32 data[j + 3] << 00)
 
 		m[i] = x
 		j = j + 4

@@ -44,9 +44,9 @@ public type Context = @public {
 
 //@pure
 func rj_xtime (x: Word8) -> Word8 {
-	let y = 0xff and (x << 1)
-	if (x and 0x80) != 0 {
-		return y xor 0x1b
+	let y = 0xff & (x << 1)
+	if x & 0x80 != 0 {
+		return y ^ 0x1b
 	}
 	return y
 }
@@ -157,7 +157,7 @@ func subBytesInv (block: *Block) -> {} {
 func addRoundKey (block: *Block, k: *[16]Byte) -> {} {
 	var i = Nat8 0
 	while i < lengthof(Block) {
-		block[i] = block[i] xor k[i]
+		block[i] = block[i] ^ k[i]
 		++i
 	}
 }
@@ -168,7 +168,7 @@ func addRoundKeyCpy (block: *Block, key: *Key, cpk: *Key) -> {} {
 	while i < lengthof(Block) {
 		let yy = key[i]
 		cpk[i] = yy
-		block[i] = block[i] xor yy
+		block[i] = block[i] ^ yy
 		cpk[16 + i] = key[16 + i]
 		++i
 	}
@@ -234,11 +234,11 @@ func mixColumns (block: *Block) -> {} {
 		b = block[i + 1]
 		c = block[i + 2]
 		d = block[i + 3]
-		e = a xor b xor c xor d
-		block[i + 0] = block[i + 0] xor e xor rj_xtime(a xor b)
-		block[i + 1] = block[i + 1] xor e xor rj_xtime(b xor c)
-		block[i + 2] = block[i + 2] xor e xor rj_xtime(c xor d)
-		block[i + 3] = block[i + 3] xor e xor rj_xtime(d xor a)
+		e = a ^ b ^ c ^ d
+		block[i + 0] = block[i + 0] ^ e ^ rj_xtime(a ^ b)
+		block[i + 1] = block[i + 1] ^ e ^ rj_xtime(b ^ c)
+		block[i + 2] = block[i + 2] ^ e ^ rj_xtime(c ^ d)
+		block[i + 3] = block[i + 3] ^ e ^ rj_xtime(d ^ a)
 		i = i + 4
 	}
 }
@@ -253,14 +253,14 @@ func mixColumnsInv (block: *Block) -> {} {
 		b = block[i + 1]
 		c = block[i + 2]
 		d = block[i + 3]
-		e = a xor b xor c xor d
+		e = a ^ b ^ c ^ d
 		z = rj_xtime(e)
-		x = e xor rj_xtime(rj_xtime(z xor a xor c))
-		y = e xor rj_xtime(rj_xtime(z xor b xor d))
-		block[i + 0] = block[i + 0] xor x xor rj_xtime(a xor b)
-		block[i + 1] = block[i + 1] xor y xor rj_xtime(b xor c)
-		block[i + 2] = block[i + 2] xor x xor rj_xtime(c xor d)
-		block[i + 3] = block[i + 3] xor y xor rj_xtime(d xor a)
+		x = e ^ rj_xtime(rj_xtime(z ^ a ^ c))
+		y = e ^ rj_xtime(rj_xtime(z ^ b ^ d))
+		block[i + 0] = block[i + 0] ^ x ^ rj_xtime(a ^ b)
+		block[i + 1] = block[i + 1] ^ y ^ rj_xtime(b ^ c)
+		block[i + 2] = block[i + 2] ^ x ^ rj_xtime(c ^ d)
+		block[i + 3] = block[i + 3] ^ y ^ rj_xtime(d ^ a)
 		i = i + 4
 	}
 }
@@ -269,32 +269,32 @@ func mixColumnsInv (block: *Block) -> {} {
 func expandEncKey (k: *Key, rc: *Byte) -> {} {
 	var i: Nat8
 
-	k[0] = k[0] xor rj_sbox(k[29]) xor *rc
-	k[1] = k[1] xor rj_sbox(k[30])
-	k[2] = k[2] xor rj_sbox(k[31])
-	k[3] = k[3] xor rj_sbox(k[28])
+	k[0] = k[0] ^ rj_sbox(k[29]) ^ *rc
+	k[1] = k[1] ^ rj_sbox(k[30])
+	k[2] = k[2] ^ rj_sbox(k[31])
+	k[3] = k[3] ^ rj_sbox(k[28])
 	*rc = rj_xtime(*rc)
 
 	i = 4
 	while i < 16 {
-		k[i + 0] = k[i + 0] xor k[i - 4]
-		k[i + 1] = k[i + 1] xor k[i - 3]
-		k[i + 2] = k[i + 2] xor k[i - 2]
-		k[i + 3] = k[i + 3] xor k[i - 1]
+		k[i + 0] = k[i + 0] ^ k[i - 4]
+		k[i + 1] = k[i + 1] ^ k[i - 3]
+		k[i + 2] = k[i + 2] ^ k[i - 2]
+		k[i + 3] = k[i + 3] ^ k[i - 1]
 		i = i + 4
 	}
 
-	k[16] = k[16] xor rj_sbox(k[12])
-	k[17] = k[17] xor rj_sbox(k[13])
-	k[18] = k[18] xor rj_sbox(k[14])
-	k[19] = k[19] xor rj_sbox(k[15])
+	k[16] = k[16] ^ rj_sbox(k[12])
+	k[17] = k[17] ^ rj_sbox(k[13])
+	k[18] = k[18] ^ rj_sbox(k[14])
+	k[19] = k[19] ^ rj_sbox(k[15])
 
 	i = 20
 	while i < 32 {
-		k[i + 0] = k[i + 0] xor k[i - 4]
-		k[i + 1] = k[i + 1] xor k[i - 3]
-		k[i + 2] = k[i + 2] xor k[i - 2]
-		k[i + 3] = k[i + 3] xor k[i - 1]
+		k[i + 0] = k[i + 0] ^ k[i - 4]
+		k[i + 1] = k[i + 1] ^ k[i - 3]
+		k[i + 2] = k[i + 2] ^ k[i - 2]
+		k[i + 3] = k[i + 3] ^ k[i - 1]
 		i = i + 4
 	}
 }
@@ -305,38 +305,38 @@ func expandDecKey (k: *Key, rc: *Byte) -> {} {
 
 	i = 28
 	while i > 16 {
-		k[i + 0] = k[i + 0] xor k[i - 4]
-		k[i + 1] = k[i + 1] xor k[i - 3]
-		k[i + 2] = k[i + 2] xor k[i - 2]
-		k[i + 3] = k[i + 3] xor k[i - 1]
+		k[i + 0] = k[i + 0] ^ k[i - 4]
+		k[i + 1] = k[i + 1] ^ k[i - 3]
+		k[i + 2] = k[i + 2] ^ k[i - 2]
+		k[i + 3] = k[i + 3] ^ k[i - 1]
 		i = i - 4
 	}
 
-	k[16] = k[16] xor rj_sbox(k[12])
-	k[17] = k[17] xor rj_sbox(k[13])
-	k[18] = k[18] xor rj_sbox(k[14])
-	k[19] = k[19] xor rj_sbox(k[15])
+	k[16] = k[16] ^ rj_sbox(k[12])
+	k[17] = k[17] ^ rj_sbox(k[13])
+	k[18] = k[18] ^ rj_sbox(k[14])
+	k[19] = k[19] ^ rj_sbox(k[15])
 
 	i = 12
 	while i > 0 {
-		k[i + 0] = k[i + 0] xor k[i - 4]
-		k[i + 1] = k[i + 1] xor k[i - 3]
-		k[i + 2] = k[i + 2] xor k[i - 2]
-		k[i + 3] = k[i + 3] xor k[i - 1]
+		k[i + 0] = k[i + 0] ^ k[i - 4]
+		k[i + 1] = k[i + 1] ^ k[i - 3]
+		k[i + 2] = k[i + 2] ^ k[i - 2]
+		k[i + 3] = k[i + 3] ^ k[i - 1]
 		i = i - 4
 	}
 
 	var y: Word8 = 0
-	if (*rc and 1) != 0 {
+	if *rc & 1 != 0 {
 		y = 0x8d
 	}
 
-	*rc = (*rc >> 1) xor y
+	*rc = (*rc >> 1) ^ y
 
-	k[0] = k[0] xor rj_sbox(k[29]) xor *rc
-	k[1] = k[1] xor rj_sbox(k[30])
-	k[2] = k[2] xor rj_sbox(k[31])
-	k[3] = k[3] xor rj_sbox(k[28])
+	k[0] = k[0] ^ rj_sbox(k[29]) ^ *rc
+	k[1] = k[1] ^ rj_sbox(k[30])
+	k[2] = k[2] ^ rj_sbox(k[31])
+	k[3] = k[3] ^ rj_sbox(k[28])
 }
 
 
@@ -373,7 +373,7 @@ public func encrypt_ecb (ctx: *Context, block: *Block) -> @unused Result {
 		subBytes(block)
 		shiftRows(block)
 		mixColumns(block)
-		if (Word8 i and 1) == 1 {
+		if Word8 i & 1 == 1 {
 			addRoundKey(block, &ctx.key[16:32])
 		} else {
 			expandEncKey(&ctx.key, &rcon)
@@ -402,7 +402,7 @@ public func decrypt_ecb (ctx: *Context, block: *Block) -> @unused Result {
 	var rcon: Byte = 0x80
 	var i: Nat8 = 13
 	while i > 0 {
-		if (Word8 i and 1) == 1 {
+		if Word8 i & 1 == 1 {
 			expandDecKey(&ctx.key, &rcon)
 			addRoundKey(block, &ctx.key[16:32])
 		} else {
