@@ -26,6 +26,7 @@ func checkParamsIo () -> Unit {
 	array_print(&a, 8)
 }
 
+
 public func main () -> Int {
 	printf("test slices\n")
 
