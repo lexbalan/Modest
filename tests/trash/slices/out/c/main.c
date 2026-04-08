@@ -24,8 +24,22 @@ static void array_print(int32_t pa[], uint32_t len) {
 	}
 }
 
+static void array4intInc(int32_t _a[4], int32_t __out[4]) {
+	int32_t a[4];
+	__builtin_memcpy(a, _a, sizeof(int32_t [4]));
+	__builtin_memcpy(__out, &(int32_t [4]){a[0] + 1, a[1] + 1, a[2] + 1, a[3] + 1}, sizeof(int32_t [4]));
+}
+
+static void checkParamsIo(void) {
+	printf("checkParamsIo\n");
+	int32_t a[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+	array4intInc((int32_t *)(int32_t (*)[4 - 0])&a[0], (int32_t *)(int32_t (*)[4 - 0])&a[0]);
+	array_print((int32_t *)&a, 8U);
+}
+
 int main(void) {
 	printf("test slices\n");
+	checkParamsIo();
 	int32_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	int32_t s1[2 - 1];
 	__builtin_memcpy(&s1, (int32_t (*)[2 - 1])&a[1], sizeof(const int32_t [2 - 1]));

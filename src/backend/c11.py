@@ -947,30 +947,31 @@ def do_cvalue_cast(type, value, ctx, raw_cast=False):
 def do_cvalue_call(x, ctx):
 	return doo_call(x.func, x.args, ctx)
 
+
+
+def do_cvalue_arg(av):
+	if av.type.is_array() and not av.type.is_array_of_char():
+		# Если в функцию передается массив по значению - передаем указатель на него (!)
+		# тк функции си не умеют получать массивы по значению
+		a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
+	else:
+		if av.type.is_pointer_to_array():
+			if POINTER_TO_ARRAY_RELAX:
+				if not av.type.to.is_array_of_char():
+					if av.isValueRef() and not (av.value.isValueIndex() or av.value.isValueSlice()):
+						av = av.value
+					else:
+						av = ValueCons(TypePointer(av.type.to.of), av, 'explicit', av.ti)
+		a = do_cvalue(av)
+
+	return a
+
+
 def doo_call(func, args, ctx):
 	left = do_cvalue(func)
 	xargs = []
 	for arg in args:
-		av = arg.value
-		a = None
-
-
-		if av.type.is_array() and not av.type.is_array_of_char():
-			# Если в функцию передается массив по значению - передаем указатель на него (!)
-			# тк функции си не умеют получать массивы по значению
-			a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
-		else:
-			if av.type.is_pointer_to_array():
-				if POINTER_TO_ARRAY_RELAX:
-					if not av.type.to.is_array_of_char():
-						if av.isValueRef() and not (av.value.isValueIndex() or av.value.isValueSlice()):
-							av = av.value
-						else:
-							av = ValueCons(TypePointer(av.type.to.of), av, 'explicit', av.ti)
-			a = do_cvalue(av)
-
-		xargs.append(a)
-
+		xargs.append(do_cvalue_arg(arg.value))
 	return CValueCall(left, xargs)
 
 
@@ -1202,8 +1203,8 @@ def do_cvalue_eq(x, logic, ctx):
 		ctype_pointer_to_chars = CTypePointer(CTypeNamed("char"))
 		ctype_pointer_to_chars.specs = ['const']
 		lx = CValueCall(CValueNamed("__builtin_strcmp"), [
-			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(left, parr_relax=True)),
-			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(right, parr_relax=True))
+			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(left)), #, parr_relax=True)),
+			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(right)) #, parr_relax=True))
 		])
 		rx = CValueInteger(0)
 
@@ -2288,15 +2289,23 @@ def do_cvalue_mem(x):
 
 def do_cvalue_as_ptr(x, parr_relax=False):
 	if x.isValueDeref():
+		# Если это взятие адреса - просто вернем значение
 		return do_cvalue(x.value)
 
+	if parr_relax and x.type.is_array():
+		root = get_root_value(x)
+		if root.isValueVar() or (root.isValueConst() and not const_as_macro(root)) or root.isValueArray() or root.isValueAccessRecord():
+			return do_cvalue(root)
+
 	cv = do_cvalue_mem(x)
-	if not (parr_relax and x.type.is_array()):
-		cv = CValueRef(cv)
+	cv = CValueRef(cv)
 
 	# Если взяли адрес у array item - нужно привести его к *[]
 	if x.isValueSlice():
 		cv = CValueCast(CTypePointer(do_ctype(x.type)), cv)
+
+	if parr_relax and x.type.is_array():
+		cv = CValueCast(CTypePointer(do_ctype(x.type.of)), cv)
 
 	return cv
 

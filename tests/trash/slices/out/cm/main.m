@@ -13,8 +13,23 @@ func array_print (pa: *[]Int32, len: Nat32) -> Unit {
 }
 
 
+func array4intInc (a: [4]Int32) -> [4]Int32 {
+	return [a[0] + 1, a[1] + 1, a[2] + 1, a[3] + 1]
+}
+
+
+func checkParamsIo () -> Unit {
+	printf("checkParamsIo\n")
+	var a: [8]Int32 = [0, 1, 2, 3, 4, 5, 6, 7]
+	a[0:4] = array4intInc(a[0:4])
+
+	array_print(&a, 8)
+}
+
 public func main () -> Int {
 	printf("test slices\n")
+
+	checkParamsIo()
 
 	var a: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 

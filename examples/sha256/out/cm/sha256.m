@@ -3,6 +3,7 @@ include "ctypes64"
 include "string"
 
 
+
 public const hashSize = 32
 
 public type Hash = [hashSize]Word8
@@ -15,10 +16,12 @@ type Context = {
 	state: [8]Word32
 }
 
+
 //@inline
 //func rotleft (a: Word32, b: Nat32) -> Word32 {
 //	return (a << b) | (a >> (32 - b))
 //}
+
 
 @inline
 func rotright (a: Word32, b: Nat32) -> Word32 {
@@ -26,10 +29,12 @@ func rotright (a: Word32, b: Nat32) -> Word32 {
 }
 
 
+
 @inline
 func ch (x: Word32, y: Word32, z: Word32) -> Word32 {
-	return (x & y) ^ (~x & z)
+	return (x & y) ^ (not x & z)
 }
+
 
 
 @inline
@@ -38,10 +43,12 @@ func maj (x: Word32, y: Word32, z: Word32) -> Word32 {
 }
 
 
+
 @inline
 func ep0 (x: Word32) -> Word32 {
 	return rotright(x, 2) ^ rotright(x, 13) ^ rotright(x, 22)
 }
+
 
 
 @inline
@@ -50,10 +57,12 @@ func ep1 (x: Word32) -> Word32 {
 }
 
 
+
 @inline
 func sig0 (x: Word32) -> Word32 {
 	return rotright(x, 7) ^ rotright(x, 18) ^ (x >> 3)
 }
+
 
 
 @inline
