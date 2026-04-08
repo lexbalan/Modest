@@ -33,7 +33,7 @@ func rotright (a: Word32, b: Nat32) -> Word32 {
 
 @inline
 func ch (x: Word32, y: Word32, z: Word32) -> Word32 {
-	return (x & y) ^ (not x & z)
+	return (x & y) ^ (~x & z)
 }
 
 

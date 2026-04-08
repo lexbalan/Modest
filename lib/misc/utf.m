@@ -50,7 +50,7 @@ public func utf32_to_utf8 (c: Char32, buf: *[4]Char8) -> Nat8 {
 public func utf16_to_utf32 (c: *[]Char16, result: *Char32) -> Nat8 {
 	let leading = Word32 c[0]
 
-	if (Nat32 leading < Nat32 0xD800) or (Nat32 leading > Nat32 0xDFFF) {
+	if Nat32 leading < Nat32 0xD800 or Nat32 leading > Nat32 0xDFFF {
 		*result = Char32 leading
 		return 1
 	} else if Nat32 leading >= Nat32 0xDC00 {
@@ -58,7 +58,7 @@ public func utf16_to_utf32 (c: *[]Char16, result: *Char32) -> Nat8 {
 	} else {
 		var code = (leading & 0x3FF) << 10
 		let trailing = Word32 c[1]
-		if (Nat32 trailing < Nat32 0xDC00) or (Nat32 trailing > Nat32 0xDFFF) {
+		if Nat32 trailing < Nat32 0xDC00 or Nat32 trailing > Nat32 0xDFFF {
 			//error("Illegal code sequence")
 		} else {
 			code = code | (trailing & 0x3FF)
