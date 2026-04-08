@@ -34,12 +34,14 @@ static void checkParamsIo(void) {
 	printf("checkParamsIo\n");
 	int32_t a[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 	array4intInc((int32_t *)(int32_t (*)[4 - 0])&a[0], (int32_t *)(int32_t (*)[4 - 0])&a[0]);
+	array4intInc((int32_t *)(int32_t (*)[8 - 4])&a[4], (int32_t *)(int32_t (*)[8 - 4])&a[4]);
 	array_print((int32_t *)&a, 8U);
 }
 
 int main(void) {
 	printf("test slices\n");
 	checkParamsIo();
+	printf("--------------------------------------------\n");
 	int32_t a[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	int32_t s1[2 - 1];
 	__builtin_memcpy(&s1, (int32_t (*)[2 - 1])&a[1], sizeof(const int32_t [2 - 1]));
