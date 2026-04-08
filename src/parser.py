@@ -905,7 +905,7 @@ class Parser:
 			}
 
 		elif self.match("~"):
-			v = self.expr_value()
+			v = self.expr_value_11()
 			return {
 				'isa': 'ast_value',
 				'kind': HLIR_VALUE_OP_BITWISE_NOT,

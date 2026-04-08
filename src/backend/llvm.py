@@ -721,7 +721,7 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
 def llvm_memcmp(op, p0, p1, size):
 	_p0 = llvm_cast('bitcast', p0, typeFreePointer)
 	_p1 = llvm_cast('bitcast', p1, typeFreePointer)
-	rv = ll_reg_operation(HLIR_VALUE_OP_CALL, typeBool)
+	rv = ll_reg_operation('call', typeBool)
 	out("i1 (i8*, i8*, i64) @memeq(")
 	llvm_print_type_value(_p0)
 	out(", ")
@@ -731,7 +731,7 @@ def llvm_memcmp(op, p0, p1, size):
 	out(")")
 
 	zero = llvm_value_num(typeBool, 0)
-	op = HLIR_VALUE_OP_NE if op == HLIR_VALUE_OP_EQ else HLIR_VALUE_OP_EQ
+	op = 'ne' if op == HLIR_VALUE_OP_EQ else 'eq'
 
 	vvv = ValueUndef(typeBool)
 	rv2 = llvm_eval_binary('icmp %s' % op, rv, zero, vvv)
@@ -1026,7 +1026,7 @@ def ll_malloc(res_type, obj_type):
 
 def ll_malloc_sz(t, llsz):
 	# %1 = call %table_Table* @malloc(%Int32 8)
-	lv = ll_reg_operation(HLIR_VALUE_OP_CALL, t)
+	lv = ll_reg_operation('call', t)
 	print_type(t)
 	out(" @malloc(")
 	llvm_print_type_value(llsz)
@@ -1091,7 +1091,7 @@ def do_eval_call(v):
 		lo("call ")
 		rv = llvm_value_zero(ftype.to)
 	else:
-		rv = ll_reg_operation(HLIR_VALUE_OP_CALL, ftype.to)
+		rv = ll_reg_operation('call', ftype.to)
 
 	if ftype.extra_args:
 		print_type_func(ftype)
@@ -2861,20 +2861,47 @@ def get_bin_opcode(op, t):
 		HLIR_VALUE_OP_SHL: 'shr',
 		HLIR_VALUE_OP_BITWISE_AND: 'and',
 		HLIR_VALUE_OP_BITWISE_OR: 'or',
-		HLIR_VALUE_OP_BITWISE_XOR: 'xor'
+		HLIR_VALUE_OP_BITWISE_XOR: 'xor',
+		HLIR_VALUE_OP_ADD: 'add',
 	}
 
 	opcode = "<unknown opcode '%s'>" % op
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
-		opcode = select_bin_opcode_f('icmp ' + op, 'fcmp o' + op, t)
+		opp = '?'
+		if op == HLIR_VALUE_OP_EQ:
+			opp = 'eq'
+		elif op == HLIR_VALUE_OP_NE:
+			opp = 'ne'
+		opcode = select_bin_opcode_f('icmp ' + opp, 'fcmp o' + opp, t)
 	elif op in [HLIR_VALUE_OP_ADD, HLIR_VALUE_OP_SUB, HLIR_VALUE_OP_MUL]:
-		opcode = select_bin_opcode_f(op, 'f' + op, t)
+		opp = '?'
+		if op == HLIR_VALUE_OP_ADD:
+			opp = 'add'
+		elif op == HLIR_VALUE_OP_SUB:
+			opp = 'sub'
+		elif op == HLIR_VALUE_OP_MUL:
+			opp = 'mul'
+		opcode = select_bin_opcode_f(opp, 'f' + opp, t)
 	elif op in [HLIR_VALUE_OP_LOGIC_AND, HLIR_VALUE_OP_LOGIC_OR, HLIR_VALUE_OP_SHL, HLIR_VALUE_OP_BITWISE_AND, HLIR_VALUE_OP_BITWISE_OR, HLIR_VALUE_OP_BITWISE_XOR]:
 		opcode = opmap[op]
 	elif op in [HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM]:
-		opcode = select_bin_opcode_suf('s' + op, 'u' + op, 'f' + op, t)
+		opp = '?'
+		if op == HLIR_VALUE_OP_DIV:
+			opp = 'div'
+		elif op == HLIR_VALUE_OP_REM:
+			opp = 'rem'
+		opcode = select_bin_opcode_suf('s' + opp, 'u' + opp, 'f' + opp, t)
 	elif op in [HLIR_VALUE_OP_LT, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GE]:
-		opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
+		opp = '?'
+		if op == HLIR_VALUE_OP_LT:
+			opp = 'lt'
+		elif op == HLIR_VALUE_OP_GT:
+			opp = 'gt'
+		elif op == HLIR_VALUE_OP_LE:
+			opp = 'le'
+		elif op == HLIR_VALUE_OP_GE:
+			opp = 'ge'
+		opcode = select_bin_opcode_suf('icmp s' + opp, 'icmp u' + opp, 'fcmp o' + opp, t)
 
 	return opcode
 

@@ -22,7 +22,7 @@ static inline uint32_t rotright(uint32_t a, uint32_t b) {
 
 __attribute__((always_inline))
 static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z) {
-	return (x & y) ^ ~(x & z);
+	return (x & y) ^ (~x & z);
 }
 
 __attribute__((always_inline))

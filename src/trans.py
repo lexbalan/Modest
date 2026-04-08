@@ -1466,7 +1466,7 @@ def do_value_access(x):
 	# Если он не value значит он может быть module, а это наш случай (!)
 	module_path = []
 	left = x['left']
-	while left['kind'] == 'access':
+	while left['kind'] == HLIR_VALUE_OP_ACCESS:
 		id = do_id(left['right'])
 		module_path = [id] + module_path
 		# слева доступ - возможно к импорту

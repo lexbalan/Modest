@@ -22,14 +22,16 @@ func checkParamsIo () -> Unit {
 	printf("checkParamsIo\n")
 	var a: [8]Int32 = [0, 1, 2, 3, 4, 5, 6, 7]
 	a[0:4] = array4intInc(a[0:4])
-
+	a[4:8] = array4intInc(a[4:8])
 	array_print(&a, 8)
 }
+
 
 public func main () -> Int {
 	printf("test slices\n")
 
 	checkParamsIo()
+	printf("--------------------------------------------\n")
 
 	var a: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
