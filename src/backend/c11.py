@@ -134,13 +134,6 @@ def get_record_tag(x):
 
 
 def get_type_id_str(t):
-	if hasattr(t, 'id'):
-		if t.id.c_alias != None:
-			return t.id.c_alias
-
-		if t.id.common != None:
-			return t.id.common
-
 	if t.is_integer():
 		if t.width == 0:
 			if t.is_unsigned():
@@ -161,11 +154,8 @@ def get_type_id_str(t):
 		return "double"
 
 	if isinstance(t, TypeRecord):
-		if hasattr(t, 'id'):
-			if hasattr(t.id, 'c_type'):
-				return t.id.c_type
-
-			if t.is_open_access:
+		if t.is_open_access:
+			if hasattr(t, 'id'):
 				return get_id_prefix(t) + t.id.c
 
 		tag = get_record_tag(t)
@@ -176,6 +166,7 @@ def get_type_id_str(t):
 
 	if hasattr(t, 'id'):
 		return get_id_prefix(t) + t.id.c
+
 
 
 def get_id_str(x):
@@ -193,8 +184,7 @@ def get_id_str(x):
 		if x.id != None:
 			if x.id.c != None:
 				return get_id_prefix(x) + x.id.c
-			if x.id.common != None:
-				return get_id_prefix(x) + x.id.common
+
 	return None
 
 
@@ -272,7 +262,7 @@ def do_ctype_struct(t, tag='', specs=[]):
 
 
 def do_ctype_named(t, specs):
-	id_str = get_type_id_str(t)
+	id_str = get_id_str(t)
 	return CTypeNamed(id_str, specs=specs)
 
 
@@ -1727,7 +1717,7 @@ def do_def_type(x):
 	global declared
 	do_deps(x.deps)
 
-	id_str = get_type_id_str(x.type)
+	id_str = get_id_str(x.type)
 	orig_type = x.original_type
 
 	if orig_type.is_record() and not is_type_named(orig_type):
@@ -1740,7 +1730,7 @@ def do_def_type(x):
 
 
 def do_def_type_record(t):
-	id_str = get_type_id_str(t)
+	id_str = get_id_str(t)
 
 	defs = ()
 
@@ -1749,7 +1739,7 @@ def do_def_type_record(t):
 		tag = get_record_tag(t)
 		isa = 'struct' if not t.layout == 'union' else 'union'
 		kisa = isa + ' ' + tag
-		dt = CStmtDefType(get_type_id_str(t), CTypeNamed(kisa))
+		dt = CStmtDefType(get_id_str(t), CTypeNamed(kisa))
 		defs = (dt,)
 
 	dt = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
@@ -1857,7 +1847,7 @@ def do_decl_type_record2(t):
 	kisa = isa + ' ' + tag
 	dt = CStmtDeclType(CTypeNamed(kisa))
 	if t.is_open_record:
-		df = CStmtDefType(get_type_id_str(t), CTypeNamed(kisa))
+		df = CStmtDefType(get_id_str(t), CTypeNamed(kisa))
 		return (dt, df)
 	return (dt,)
 

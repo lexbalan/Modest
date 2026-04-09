@@ -96,12 +96,11 @@ def type_fixed_create(width, ti=None):
 
 
 
-
 typeUnit = TypeRecord(fields=[])
 typeUnit.id = Id('Unit')
 typeUnit.id.c = 'void'
 typeUnit.id.llvm = 'void'
-typeUnit.id.c_type = 'void'
+typeUnit.id.c_alias = 'void'
 
 bool_id = Id('Bool')
 bool_id.c = 'bool'
