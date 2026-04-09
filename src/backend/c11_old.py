@@ -223,8 +223,8 @@ def get_type_id_str(t):
 
 	if isinstance(t, TypeRecord):
 		if hasattr(t, 'id'):
-			if hasattr(t.id, 'c_type'):
-				return t.id.c_type
+			if hasattr(t.id, 'c_alias'):
+				return t.id.c_alias
 
 			if t.is_open_access:
 				return get_id_prefix(t) + t.id.c
