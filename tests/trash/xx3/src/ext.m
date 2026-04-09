@@ -3,7 +3,7 @@ pragma do_not_include
 pragma module_nodecorate
 
 
-@alias("c_type", "DIR")
+@alias("c", "DIR")
 public type Dir = {}
 
 

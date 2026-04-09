@@ -136,49 +136,49 @@ public const c_S_ISVTX = 0x0200    // (0001000) save swapped text even after use
 /* is directory */
 @alias("c", "S_ISDIR")
 public func c_S_ISDIR (m: ModeT) -> Bool {
-	return (m and c_S_IFMT) == c_S_IFDIR
+	return m & c_S_IFMT == c_S_IFDIR
 }
 
 /* is char special */
 @alias("c", "S_ISCHR")
 public func c_S_ISCHR (m: ModeT) -> Bool {
-	return (m and c_S_IFMT) == c_S_IFCHR
+	return m & c_S_IFMT == c_S_IFCHR
 }
 
 /* is block special */
 @alias("c", "S_ISBLK")
 public func c_S_ISBLK (m: ModeT) -> Bool {
-	return (m and c_S_IFMT) == c_S_IFBLK
+	return m & c_S_IFMT == c_S_IFBLK
 }
 
 /* is regular file */
 @alias("c", "S_ISREG")
 public func c_S_ISREG (m: ModeT) -> Bool {
-	return (m and c_S_IFMT) == c_S_IFREG
+	return m & c_S_IFMT == c_S_IFREG
 }
 
 /* is fifo or socket */
 @alias("c", "S_ISFIFO")
 public func c_S_ISFIFO (m: ModeT) -> Bool {
-	return (m and c_S_IFMT) == c_S_IFIFO
+	return m & c_S_IFMT == c_S_IFIFO
 }
 
 /* is symbolic link */
 @alias("c", "S_ISLNK")
 public func c_S_ISLNK (m: ModeT) -> Bool {
-	return (m and c_S_IFMT) == c_S_IFLNK
+	return m & c_S_IFMT == c_S_IFLNK
 }
 
 /* is socket */
 @alias("c", "S_ISSOCK")
 public func c_S_ISSOCK (m: ModeT) -> Bool {
-	return (m and c_S_IFMT) == c_S_IFSOCK
+	return m & c_S_IFMT == c_S_IFSOCK
 }
 
 /* is whiteout */
 @alias("c", "S_ISWHT")
 public func c_S_ISWHT (m: ModeT) -> Bool {
-	return (m and c_S_IFMT) == c_S_IFWHT
+	return m & c_S_IFMT == c_S_IFWHT
 }
 
 

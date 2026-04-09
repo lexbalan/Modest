@@ -3037,12 +3037,16 @@ def def_add_annotations(x, ast_atts):
 			if len(args) == 2:
 				backend = args[0]['value']['str']
 				identifier = args[1]['value']['str']
-				setObjAttrByPath(x, "id.%s" % backend, identifier)
+
+				if backend == 'c':
+					x.id.c_alias = identifier
+				elif backend == 'llvm':
+					x.id.llvm_alias = identifier
+
 			elif len(args) == 1:
 				identifier = args[0]['value']['str']
-				setObjAttrByPath(x, "id.c", identifier)
-				setObjAttrByPath(x, "id.cm", identifier)
-				setObjAttrByPath(x, "id.llvm", identifier)
+				x.id.common = identifier
+
 			add_att(x, 'id:nodecorate')
 
 		elif kind == 'extern':

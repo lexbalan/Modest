@@ -272,12 +272,18 @@ class Id(Entity):
 	def __init__(self, id_str, ti=None):
 		super().__init__(ti)
 		self.prefix = None
+
+		self.str = id_str
+
 		# Каждый принтер всегда использует только свой алиас (!)
 		# Такой алиас может быть переопределен без вреда для других принтеров и фронтенда
-		self.str = id_str
 		self.c = id_str
 		self.llvm = id_str
 		self.cm = id_str
+
+		self.c_alias = None
+		self.llvm_alias = None
+
 		self.common = None
 
 

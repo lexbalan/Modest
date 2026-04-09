@@ -2,6 +2,7 @@
 
 include "libc/ctypes64"
 include "libc/stdio"
+include "libc/string"
 
 
 type MyInt = Int32
@@ -47,6 +48,19 @@ func foo (a: Int32, b: Int64) -> {} {
 	var lh: ListHeader
 	lh.next.next
 	return {}
+}
+
+
+type String8 = @public @branded {
+	length: Nat64
+	cstr: *[]Char8
+}
+
+func createString8 (cstr: *[]Char8) -> String8 {
+	return String8 {
+		length = strlen(cstr)
+		cstr = cstr
+	}
 }
 
 

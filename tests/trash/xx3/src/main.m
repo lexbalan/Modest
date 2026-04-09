@@ -17,7 +17,7 @@ type X = {c: *Context}
 
 var p: *Context
 
-@alias("c_type", "CTX")
+@alias("c", "CTX")
 type Context = @public {
 	x: Int32 = 32
 	y: Int32 = 32

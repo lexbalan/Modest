@@ -30,7 +30,7 @@ type ProtocolHeader = @layout {
 
 
 @alias("name2")
-var name2: Bool
+var name1: Bool
 
 
 @alias()

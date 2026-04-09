@@ -64,6 +64,18 @@ static void foo(int32_t a, int64_t b) {
 	lh.next->next;
 	return;
 }
+typedef struct string8 String8;
+struct string8 {
+	uint64_t length;
+	char *cstr;
+};
+
+static String8 createString8(char *cstr) {
+	return (String8){
+		.length = strlen(cstr),
+		.cstr = cstr
+	};
+}
 #define C 15
 static uint32_t k[3] = {0x1U, 0x2U, 0x3U};
 static struct point p0 = (struct point){
@@ -149,8 +161,8 @@ int main(int argc, char *argv[]) {
 	if ((a < 1 && b > 12LL) || (C <= 5 && !(1 < 0))) {
 		uint32_t u = 0xAU;
 		uint32_t v = 0x14U;
-		u | (v & u & ~(v | v));
-		(u | (v & u)) != ~(v | v);
+		u | (v & u & ~v) | v;
+		(u | (v & u)) != (~v | v);
 		u << 10;
 		v >> 20;
 		int32_t *const pa = &a;

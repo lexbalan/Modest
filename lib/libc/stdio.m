@@ -7,7 +7,7 @@ pragma c_include "stdio.h"
 include "libc/ctypes64"
 
 
-@alias("c_type", "FILE")
+@alias("c", "FILE")
 public type File = {}
 
 @alias("c", "fpos_t")

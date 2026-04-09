@@ -116,7 +116,6 @@ public func node_data_get (node: *Node) -> Ptr {
 
 
 public func node_insert_right (left: *Node, new_right: *Node) -> Unit {
-	printf("node_insert_right\n")
 
 	let old_right: *Node = left.next
 	left.next = new_right
@@ -239,7 +238,6 @@ public func append (list: *List, data: Ptr) -> *Node {
 	}
 
 	let new_node: *Node = node_create()
-
 	if new_node == nil {
 		return nil
 	}
@@ -247,9 +245,9 @@ public func append (list: *List, data: Ptr) -> *Node {
 	new_node.data = data
 
 	let node: *Node = node_append(list, new_node)
-
 	if node == nil {
 		free(new_node)
+		return nil
 	}
 
 	return node

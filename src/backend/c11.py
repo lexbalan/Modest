@@ -134,6 +134,13 @@ def get_record_tag(x):
 
 
 def get_type_id_str(t):
+	if hasattr(t, 'id'):
+		if t.id.c_alias != None:
+			return t.id.c_alias
+
+		if t.id.common != None:
+			return t.id.common
+
 	if t.is_integer():
 		if t.width == 0:
 			if t.is_unsigned():
@@ -172,6 +179,13 @@ def get_type_id_str(t):
 
 
 def get_id_str(x):
+	if hasattr(x, 'id'):
+		if x.id.c_alias != None:
+			return x.id.c_alias
+
+		if x.id.common != None:
+			return x.id.common
+
 	if isinstance(x, Type):
 		return get_type_id_str(x)
 

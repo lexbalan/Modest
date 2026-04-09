@@ -215,7 +215,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Nat16
 };
 
-@name2 = internal global %Bool zeroinitializer
+@name1 = internal global %Bool zeroinitializer
 @name11 = internal global %Bool zeroinitializer
 @ext = external global %Int32
 @ext_arr = external global [0 x %Int32]
