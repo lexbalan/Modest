@@ -98,39 +98,39 @@ public func stat (path: *[]ConstChar, stat: *Stat) -> Int
 };*/
 
 
-public const c_S_ISUID = 0x0800	// (0004000) set user id on execution
-public const c_S_ISGID = 0x0400	// (0002000) set group id on execution
-public const c_S_ISTXT = 0x0200	// (0001000) sticky bit
+public const c_S_ISUID = 0x0800  // (0004000) set user id on execution
+public const c_S_ISGID = 0x0400  // (0002000) set group id on execution
+public const c_S_ISTXT = 0x0200  // (0001000) sticky bit
 
-public const c_S_IRWXU = 0x01C0	// (0000700) RWX mask for owner
-public const c_S_IRUSR = 0x0100	// (0000400) R for owner
-public const c_S_IWUSR = 0x0080	// (0000200) W for owner
-public const c_S_IXUSR = 0x0040	// (0000100) X for owner
+public const c_S_IRWXU = 0x01C0  // (0000700) RWX mask for owner
+public const c_S_IRUSR = 0x0100  // (0000400) R for owner
+public const c_S_IWUSR = 0x0080  // (0000200) W for owner
+public const c_S_IXUSR = 0x0040  // (0000100) X for owner
 
 public const c_S_IREAD = c_S_IRUSR
 public const c_S_IWRITE = c_S_IWUSR
 public const c_S_IEXEC = c_S_IXUSR
 
-public const c_S_IRWXG = 0x0038    // (0000070) RWX mask for group
-public const c_S_IRGRP = 0x0020    // (0000040) R for group
-public const c_S_IWGRP = 0x0010    // (0000020) W for group
-public const c_S_IXGRP = 0x0008    // (0000010) X for group
+public const c_S_IRWXG = 0x0038   // (0000070) RWX mask for group
+public const c_S_IRGRP = 0x0020   // (0000040) R for group
+public const c_S_IWGRP = 0x0010   // (0000020) W for group
+public const c_S_IXGRP = 0x0008   // (0000010) X for group
 
-public const c_S_IRWXO = 0x0007    // (0000007) RWX mask for other
-public const c_S_IROTH = 0x0004    // (0000004) R for other
-public const c_S_IWOTH = 0x0002    // (0000002) W for other
-public const c_S_IXOTH = 0x0001    // (0000001) X for other
+public const c_S_IRWXO = 0x0007   // (0000007) RWX mask for other
+public const c_S_IROTH = 0x0004   // (0000004) R for other
+public const c_S_IWOTH = 0x0002   // (0000002) W for other
+public const c_S_IXOTH = 0x0001   // (0000001) X for other
 
-public const c_S_IFMT = 0xF000     // (0170000) type of file mask
-public const c_S_IFIFO = 0x1000    // (0010000) named pipe (fifo)
-public const c_S_IFCHR = 0x2000    // (0020000) character special
-public const c_S_IFDIR = 0x4000    // (0040000) directory
-public const c_S_IFBLK = 0x6000    // (0060000) block special
-public const c_S_IFREG = 0x8000    // (0100000) regular
-public const c_S_IFLNK = 0xA000    // (0120000) symbolic link
-public const c_S_IFSOCK = 0xC000   // (0140000) socket
-public const c_S_IFWHT = 0xE000    // (0160000) whiteout
-public const c_S_ISVTX = 0x0200    // (0001000) save swapped text even after use
+public const c_S_IFMT = 0xF000    // (0170000) type of file mask
+public const c_S_IFIFO = 0x1000   // (0010000) named pipe (fifo)
+public const c_S_IFCHR = 0x2000   // (0020000) character special
+public const c_S_IFDIR = 0x4000   // (0040000) directory
+public const c_S_IFBLK = 0x6000   // (0060000) block special
+public const c_S_IFREG = 0x8000   // (0100000) regular
+public const c_S_IFLNK = 0xA000   // (0120000) symbolic link
+public const c_S_IFSOCK = 0xC000  // (0140000) socket
+public const c_S_IFWHT = 0xE000   // (0160000) whiteout
+public const c_S_ISVTX = 0x0200   // (0001000) save swapped text even after use
 
 
 /* is directory */
