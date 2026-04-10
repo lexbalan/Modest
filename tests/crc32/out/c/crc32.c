@@ -11,7 +11,7 @@ static uint32_t table[TABLE_SIZE];
 void crc32_init(void) {
 	uint32_t i = 0U;
 	while (i < TABLE_SIZE) {
-		uint32_t crc = (uint32_t)i;
+		uint32_t crc = i;
 		uint32_t j = 0U;
 		while (j < 8U) {
 			if ((crc & 0x1U) != 0x0U) {

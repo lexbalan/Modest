@@ -31,7 +31,7 @@ static void cipher(struct context *ctx, uint8_t data[], uint32_t len) {
 	while (i < len) {
 		if (ctx->blockOffset == (uint32_t)sizeof(chacha20_Block)) {
 			chacha20_State state;
-			chacha20_makeState((uint32_t *)(chacha20_Key *)ctx->key, (uint32_t)ctx->blockCounter, ctx->nonce, state);
+			chacha20_makeState((uint32_t *)(chacha20_Key *)ctx->key, ctx->blockCounter, ctx->nonce, state);
 			__builtin_memcpy((uint32_t (*)[16 - 13])&state[13], (uint32_t (*)[3 - 0])&ctx->nonce[0], sizeof(uint32_t [16 - 13]));
 			chacha20_chacha20Block(state, ctx->block);
 			ctx->blockOffset = 0U;

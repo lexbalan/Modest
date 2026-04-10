@@ -141,14 +141,14 @@ static void final(struct context *ctx, uint8_t outHash[SHA256_HASH_SIZE]) {
 		memset(&ctx->data, 0, 56ULL);
 	}
 	ctx->bitlen = ctx->bitlen + (uint64_t)ctx->datalen * 8ULL;
-	ctx->data[63] = (uint8_t)((uint64_t)ctx->bitlen >> 0);
-	ctx->data[62] = (uint8_t)((uint64_t)ctx->bitlen >> 8);
-	ctx->data[61] = (uint8_t)((uint64_t)ctx->bitlen >> 16);
-	ctx->data[60] = (uint8_t)((uint64_t)ctx->bitlen >> 24);
-	ctx->data[59] = (uint8_t)((uint64_t)ctx->bitlen >> 32);
-	ctx->data[58] = (uint8_t)((uint64_t)ctx->bitlen >> 40);
-	ctx->data[57] = (uint8_t)((uint64_t)ctx->bitlen >> 48);
-	ctx->data[56] = (uint8_t)((uint64_t)ctx->bitlen >> 56);
+	ctx->data[63] = (uint8_t)(ctx->bitlen >> 0);
+	ctx->data[62] = (uint8_t)(ctx->bitlen >> 8);
+	ctx->data[61] = (uint8_t)(ctx->bitlen >> 16);
+	ctx->data[60] = (uint8_t)(ctx->bitlen >> 24);
+	ctx->data[59] = (uint8_t)(ctx->bitlen >> 32);
+	ctx->data[58] = (uint8_t)(ctx->bitlen >> 40);
+	ctx->data[57] = (uint8_t)(ctx->bitlen >> 48);
+	ctx->data[56] = (uint8_t)(ctx->bitlen >> 56);
 	transform(ctx, (uint8_t *)&ctx->data);
 	i = 0U;
 	while (i < 4U) {

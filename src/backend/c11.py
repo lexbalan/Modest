@@ -926,12 +926,13 @@ def do_cvalue_cons_pointer(x, ctx):
 
 
 
-
-
-
 def do_cvalue_cast(type, value, ctx, raw_cast=False):
+	if is_type_named(type):
+		if get_id_str(type) == get_id_str(value.type):
+			cv = do_cvalue(value, ctx=ctx)
+			return cv
+
 	if raw_cast:
-		#return "RAWCAST(%s, %s, %s)" % (str_type(t), str_type(v.type), str_value(v, ctx=ctx))
 		return CValueCall(
 			CValueNamed("RAWCAST"),
 			[

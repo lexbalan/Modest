@@ -309,7 +309,7 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
 		subBytes((uint8_t *)block);
 		shiftRows((uint8_t *)block);
 		mixColumns((uint8_t *)block);
-		if (((uint8_t)i & 0x1) == 0x1) {
+		if ((i & 0x1) == 0x1) {
 			addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[32 - 16])&ctx->key[16]);
 		} else {
 			expandEncKey(ctx->key, &rcon);
@@ -333,7 +333,7 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
 	uint8_t rcon = 0x80;
 	uint8_t i = 13;
 	while (i > 0) {
-		if (((uint8_t)i & 0x1) == 0x1) {
+		if ((i & 0x1) == 0x1) {
 			expandDecKey(ctx->key, &rcon);
 			addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[32 - 16])&ctx->key[16]);
 		} else {

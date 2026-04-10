@@ -62,7 +62,7 @@ uint8_t utf_utf16_to_utf32(char16_t *c, char32_t *result) {
 		if (trailing < 56320U || trailing > 57343U) {
 		} else {
 			code = code | (trailing & 0x3FFU);
-			*result = (char32_t)(uint32_t)(code + 65536U);
+			*result = (char32_t)(code + 65536U);
 			return 2;
 		}
 	}
