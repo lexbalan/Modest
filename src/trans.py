@@ -1554,17 +1554,7 @@ def do_value_access(x):
 
 	return left_val
 
-	1/0
 
-	#
-	# access to object!
-	#
-
-#	left = do_value(x['left'])
-#	if left.isValueBad():
-#		return ValueBad(x['ti'])
-#
-#	field_id = do_id(x['right'])
 
 def acc(left, field_id, ti):
 	#print("LEF = " + str(left))

@@ -4,12 +4,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-static uint32_t delayCounter = 0U;
+static volatile uint32_t delayCounter = 0U;
 
 void delay_ms(uint32_t x) {
-	uint32_t t = x;
+	volatile uint32_t t = x;
 	while (t > 0U) {
-		delayCounter = 0U;
+		volatile uint32_t delayCounter = 0U;
 		while (delayCounter < 380U) {
 			delayCounter = delayCounter + 1U;
 		}

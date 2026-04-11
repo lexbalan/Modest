@@ -43,7 +43,9 @@ CM:
 	mcc -o out/cm/delay -funsafe -mbackend=modest src/avr/delay.m
 
 
+PORT = /dev/tty.usbmodem11301
+
 flash:
-	avrdude -v -p $(MCU) -c arduino -P /dev/tty.usbserial-10 -b 57600 -D -U flash:w:bin/main.hex:i
+	avrdude -v -p $(MCU) -c arduino -P $(PORT) -b 57600 -D -U flash:w:bin/main.hex:i
 
 
