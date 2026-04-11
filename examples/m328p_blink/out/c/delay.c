@@ -1,22 +1,19 @@
-// out/c/delay.c
 
+#include "delay.h"
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+static uint32_t delayCounter = 0U;
 
-#include "delay.h"
-
-static volatile uint32_t delayCounter = 0;
-
-void delay_ms(uint32_t x)
-{
+void delay_ms(uint32_t x) {
 	uint32_t t = x;
-	while (t > 0) {
-		delayCounter = 0;
-		while (delayCounter < 380) {
-			delayCounter = delayCounter + 1;
+	while (t > 0U) {
+		delayCounter = 0U;
+		while (delayCounter < 380U) {
+			delayCounter = delayCounter + 1U;
 		}
-		t = t - 1;
+		t = t - 1U;
 	}
 }
 

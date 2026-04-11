@@ -12,7 +12,7 @@ func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
 	var wasSwap: Bool = false
 
 	var i: Nat32 = 0
-	while i < (len - 1) {
+	while i < len - 1 {
 		let left: Int32 = array[i]
 		let right: Int32 = array[i + 1]
 		if left > right {

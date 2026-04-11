@@ -5,6 +5,7 @@ target triple = "arm64-apple-macosx12.0.0"
 
 %Unit = type i1
 %Bool = type i1
+%Byte = type i8
 %Word8 = type i8
 %Word16 = type i16
 %Word32 = type i32
@@ -28,6 +29,8 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Fixed32 = type i32
+%Fixed64 = type i64
 %Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
@@ -111,8 +114,11 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'main' --
-; -- 2
+; -- print imports private 'main' --
+
+; from import "builtin"
+
+; end from import "builtin"
 
 ; from import "delay"
 declare void @delay_ms(%Nat32 %x)
@@ -123,32 +129,35 @@ declare void @delay_ms(%Nat32 %x)
 %avr_IO16 = type %Word16;
 
 ; from import "avr"
-%m328p_GPIO = type <{
+%m328p_GPIO = type {
 	%avr_IO8,
 	%avr_IO8,
 	%avr_IO8
-}>;
+};
 
 
 ; end from import "avr"
-; -- end print imports 'main' --
+; -- end print imports private 'main' --
+; -- print imports public 'main' --
+; -- end print imports public 'main' --
 ; -- strings --
-; -- endstrings --; Blink example for Arduino Nano (ATMega328p)
-; FCPU=16MHz
-; LED connected to PORTB
+; -- endstrings --
 define %Int16 @main() {
 	%1 = getelementptr %m328p_GPIO, %m328p_GPIO* null, %Int32 0, %Int32 1
-	store %avr_IO8 255, %avr_IO8* %1
+	%2 = bitcast i8 255 to %avr_IO8
+	store %avr_IO8 %2, %avr_IO8* %1
 ; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%2 = getelementptr %m328p_GPIO, %m328p_GPIO* null, %Int32 0, %Int32 2
-	store %avr_IO8 255, %avr_IO8* %2
-	call void @delay_ms(%Nat32 1000)
 	%3 = getelementptr %m328p_GPIO, %m328p_GPIO* null, %Int32 0, %Int32 2
-	store %avr_IO8 0, %avr_IO8* %3
+	%4 = bitcast i8 255 to %avr_IO8
+	store %avr_IO8 %4, %avr_IO8* %3
+	call void @delay_ms(%Nat32 1000)
+	%5 = getelementptr %m328p_GPIO, %m328p_GPIO* null, %Int32 0, %Int32 2
+	%6 = bitcast i8 0 to %avr_IO8
+	store %avr_IO8 %6, %avr_IO8* %5
 	call void @delay_ms(%Nat32 1000)
 	br label %again_1
 break_1:

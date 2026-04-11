@@ -72,19 +72,19 @@ var table10: Table = Table {
 
 
 public func main () -> Int32 {
-	table.print(&table00)
+	print(&table00)
 	printf("\n")
 
-	table.print(&table01)
+	print(&table01)
 	printf("\n")
 
-	table.print(&table02)
+	print(&table02)
 	printf("\n")
 
-	table.print(&table03)
+	print(&table03)
 	printf("\n")
 
-	table.print(&table10)
+	print(&table10)
 	printf("\n")
 
 	return 0

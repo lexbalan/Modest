@@ -10,7 +10,7 @@ public func ms(x: Nat32) -> Unit {
 		while delayCounter < 380 {
 			++delayCounter
 		}
-		t = t - 1
+		--t
 	}
 }
 

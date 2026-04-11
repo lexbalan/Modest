@@ -1210,14 +1210,20 @@ class Parser:
 
 			elif self.match("."):
 				field_id = self.parse_identifier()
+				right = [field_id]
+				while self.match("."):
+					field_id = self.parse_identifier()
+					right.append(field_id)
+
 				v = {
 					'isa': 'ast_value',
 					'kind': HLIR_VALUE_OP_ACCESS,
 					'left': v,
-					'right': field_id,
+					'path': right,
 					'anno': [],
 					'ti': TextInfo(start=v['ti'], mid=mid_ti, end=field_id['ti'])
 				}
+				#print(v)
 			elif self.match("["):
 				#
 				# ARRAY INDEXING OR SLICING

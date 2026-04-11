@@ -31,10 +31,10 @@ func cipher (ctx: *Context, data: *[]Byte, len: Nat32) -> Unit {
 	var bptr = *[]Byte nil
 	while i < len {
 		if ctx.blockOffset == unsafe Nat32 sizeof(Block) {
-			var state: State = cc.makeState(key=unsafe *Key ctx.key, counter=Word32 ctx.blockCounter, nonce=&ctx.nonce)
+			var state: State = makeState(key=unsafe *Key ctx.key, counter=Word32 ctx.blockCounter, nonce=&ctx.nonce)
 			state[13:16] = ctx.nonce[0:3]
 
-			ctx.block = cc.chacha20Block(state)
+			ctx.block = chacha20Block(state)
 			ctx.blockOffset = 0
 			bptr = unsafe *[]Byte &ctx.block
 		}
@@ -113,8 +113,8 @@ func test0 () -> Bool {
 	var key: [32]Byte = testKey
 	var counter: Word32 = 1
 	var nonce: [12]Byte = testNonce
-	var state: State = cc.makeState(unsafe *Key &key, counter, unsafe *[3]Word32 &nonce)
-	var block: Block = cc.chacha20Block(state)
+	var state: State = makeState(unsafe *Key &key, counter, unsafe *[3]Word32 &nonce)
+	var block: Block = chacha20Block(state)
 
 	let bptr: *[64]Byte = unsafe *[64]Byte &block
 

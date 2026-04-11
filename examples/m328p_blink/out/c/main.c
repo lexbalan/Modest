@@ -1,26 +1,19 @@
-// out/c/main.c
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include "delay.h"
+#include "m328p.h"
 
-#include "main.h"
-
-
-
-
-int16_t main()
-{
-	m328p_portB->dir = 0xFF;
-
+int16_t main(void) {
+	M328P_PORT_B->dir = 0xFF;
 	while (true) {
-		m328p_portB->out = 0xFF;
-		delay_ms(1000);
-
-		m328p_portB->out = 0x00;
-		delay_ms(1000);
+		M328P_PORT_B->out = 0xFF;
+		delay_ms(1000U);
+		M328P_PORT_B->out = 0x0;
+		delay_ms(1000U);
 	}
-
 	return 0;
 }
 

@@ -17,12 +17,12 @@ var state2: StateDesc = StateDesc {id = "state2", nstages = 4, handler = &routin
 func routine0 (state: ComplexState, payload: Ptr) -> ComplexState {
 	Unit payload
 	if state.stage == StageId 0 {
-		return fsm.cmdNextStage(&fsm0)
+		return cmdNextStage(&fsm0)
 	} else if state.stage == StageId 1 {
-		return fsm.cmdNextStageLimited(&fsm0, t=2000)
+		return cmdNextStageLimited(&fsm0, t=2000)
 	} else if state.stage == StageId 2 {
 	} else if state.stage == StageId 3 {
-		return fsm.cmdSwitchState(&fsm0, &state1)
+		return cmdSwitchState(&fsm0, &state1)
 	}
 	return state
 }
@@ -31,12 +31,12 @@ func routine0 (state: ComplexState, payload: Ptr) -> ComplexState {
 func routine1 (state: ComplexState, payload: Ptr) -> ComplexState {
 	Unit payload
 	if state.stage == StageId 0 {
-		return fsm.cmdNextStage(&fsm0)
+		return cmdNextStage(&fsm0)
 	} else if state.stage == StageId 1 {
-		return fsm.cmdNextStageLimited(&fsm0, t=2000)
+		return cmdNextStageLimited(&fsm0, t=2000)
 	} else if state.stage == StageId 2 {
 	} else if state.stage == StageId 3 {
-		return fsm.cmdSwitchState(&fsm0, &state2)
+		return cmdSwitchState(&fsm0, &state2)
 	}
 	return state
 }
@@ -45,12 +45,12 @@ func routine1 (state: ComplexState, payload: Ptr) -> ComplexState {
 func routine2 (state: ComplexState, payload: Ptr) -> ComplexState {
 	Unit payload
 	if state.stage == StageId 0 {
-		return fsm.cmdNextStage(&fsm0)
+		return cmdNextStage(&fsm0)
 	} else if state.stage == StageId 1 {
-		return fsm.cmdNextStageLimited(&fsm0, t=2000)
+		return cmdNextStageLimited(&fsm0, t=2000)
 	} else if state.stage == StageId 2 {
 	} else if state.stage == StageId 3 {
-		return fsm.cmdSwitchState(&fsm0, &state0)
+		return cmdSwitchState(&fsm0, &state0)
 	}
 	return state
 }
@@ -60,17 +60,17 @@ var timecnt: Nat32
 
 
 public func main () -> Int {
-	fsm.init(&fsm0, id="FSM_0", initState=&state0, payload=nil)
+	init(&fsm0, id="FSM_0", initState=&state0, payload=nil)
 
 	while true {
 		if timecnt > 55555 {
 			timecnt = 0
-			fsm.tick(&fsm0)
+			tick(&fsm0)
 		} else {
 			timecnt = timecnt + 1
 		}
 
-		fsm.task(&fsm0)
+		task(&fsm0)
 	}
 
 	return 0

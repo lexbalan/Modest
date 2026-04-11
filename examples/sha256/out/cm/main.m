@@ -47,13 +47,13 @@ func doTest (test: *SHA256_TestCase) -> Bool {
 	let msg: *[]Word8 = unsafe *[]Word8 &test.inputData
 	let msgLen: Nat32 = test.inputDataLen
 
-	sha256.hash(msg, msgLen, &test_hash)
+	hash(msg, msgLen, &test_hash)
 
 	printf("'%s'", &test.inputData)
 	printf(" -> ")
 
 	var i: Nat32 = 0
-	while i < sha256.hashSize {
+	while i < hashSize {
 		printf("%02X", test_hash[i])
 		i = i + 1
 	}

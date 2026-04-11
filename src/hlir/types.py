@@ -220,6 +220,8 @@ class Module:
 		self.defs = []
 		self.att = []
 
+	def __str__(self):
+		return "Module(\"%s\")" % self.id
 
 	def setPrefix(self, prefixStr):
 		self.prefix = prefixStr

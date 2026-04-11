@@ -1,10 +1,10 @@
-	.text
-.set __tmp_reg__, 0
-.set __zero_reg__, 1
-.set __SREG__, 63
-.set __SP_H__, 62
-.set __SP_L__, 61
+__tmp_reg__ = 0
+__zero_reg__ = 1
+__SREG__ = 63
+__SP_H__ = 62
+__SP_L__ = 61
 	.file	"avr.ll"
+	.text
 	.weak	memeq                           ; -- Begin function memeq
 	.p2align	1
 	.type	memeq,@function

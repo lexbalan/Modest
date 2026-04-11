@@ -481,7 +481,7 @@ def get_module_by_path(path):
 		imp = mod.get_import(id_str, with_private=True)
 		with_private=False
 		if imp == None:
-			error("module '%s' not found" % id_str, id.ti)
+			#error("module '%s' not found" % id_str, id.ti)
 			return None  # not found
 		mod = imp.module
 	return mod
@@ -1464,41 +1464,111 @@ def do_value_access(x):
 
 	# Ищем самый левый 'access' и смотрим если его левая часть это id который не value
 	# Если он не value значит он может быть module, а это наш случай (!)
-	module_path = []
+	#	module_path = []
+	#	left = x['left']
+	#	while left['kind'] == HLIR_VALUE_OP_ACCESS:
+	#		id = do_id(left['right'])
+	#		module_path = [id] + module_path
+	#		# слева доступ - возможно к импорту
+	#		# приходтися делать так чтобы не вводить ValueImport или ValueModule тк это бред
+	#		left = left['left']
+
+		# access to submodule?
+	#	if left['kind'] == 'id' and is_import_name(left['str']):
+	#		module_path = [do_id(left)] + module_path
+	#		mod = get_module_by_path(module_path)
+	#		if mod == None:
+	#			#error("module '%s' not found" % id_str, id.ti)
+	#			pass
+	#
+	#		if mod != None:
+	#		#	return ValueBad(x['ti'])
+	#			v = mod.value_get_public(x['right']['str'])
+	#			if v == None:
+	#				error("value '%s' not found" % x['right']['str'], x['right']['ti'])
+	#				return ValueBad(x['ti'])
+	#			#return v
+	#			nv = ValueAccessModule(v.type, module_path, do_id(x['right']), v, ti=x['ti'])
+	#			nv.stage = v.stage
+	#			return nv
+
 	left = x['left']
-	while left['kind'] == HLIR_VALUE_OP_ACCESS:
-		id = do_id(left['right'])
-		module_path = [id] + module_path
-		# слева доступ - возможно к импорту
-		# приходтися делать так чтобы не вводить ValueImport или ValueModule тк это бред
-		left = left['left']
+	path = x['path']
 
-	# access to submodule?
-	if left['kind'] == 'id' and is_import_name(left['str']):
-		module_path = [do_id(left)] + module_path
-		mod = get_module_by_path(module_path)
-		if mod == None:
-			return ValueBad(x['ti'])
-		v = mod.value_get_public(x['right']['str'])
-		if v == None:
-			error("value '%s' not found" % x['right']['str'], x['right']['ti'])
-			return ValueBad(x['ti'])
-		#return v
-		nv = ValueAccessModule(v.type, module_path, do_id(x['right']), v, ti=x['ti'])
-		nv.stage = v.stage
-		return nv
+	global cmodule
+	module = None
 
+
+
+	if left['kind'] == 'id':
+		left_val = ctx_value_get(left['str'])
+
+		# если в контексте нет такого значения, то возможно это импорт и нужно пройти по пути импорта
+		if left_val == None:
+			i = 0
+			# Сперва походим часть пути что импорты
+			# и формируем module + left + path
+			if is_import_name(left['str']):
+				#info("left is imp", left['ti'])
+				module = cmodule
+				imp = module.get_import(left['str'], with_private=True)
+
+				while imp != None:
+					module = imp.module
+					#print("FOUND MODULE", str(module))
+					impstr = path[i]
+					imp = module.get_import(impstr['str'], with_private=True) #False!
+					if imp == None:
+						break
+					i += 1
+				left = path[i]#['str']
+
+			#print("MOD = " + str(module))
+			#print("LEFT = " + str(left))
+			path = path[i+1:]
+			#print("PATH = " + str(path))
+			left_val = module.value_get_public(left['str'])
+	else:
+		left_val = do_value(left)
+
+	# идем дальше
+	# left_val = None
+	# if module != None:
+	# 	left_val = module.value_get_public(left['str'])
+	# else:
+	# 	left_val = ctx_value_get(left['str'])
+
+	if left_val == None:
+		error("left not found", left['ti'])
+		return ValueBad(x['ti'])
+
+	if len(path) == 0:
+		#print("FOUND: " + left['str'])
+		return left_val
+
+
+	for field_id in path:
+		#print("P: " + str(field_id))
+
+		left_val = acc(left_val, field_id, ti=None)  # ti ????
+
+	return left_val
+
+	1/0
 
 	#
 	# access to object!
 	#
 
-	left = do_value(x['left'])
+#	left = do_value(x['left'])
+#	if left.isValueBad():
+#		return ValueBad(x['ti'])
+#
+#	field_id = do_id(x['right'])
 
-	if left.isValueBad():
-		return ValueBad(x['ti'])
-
-	field_id = do_id(x['right'])
+def acc(left, field_id, ti):
+	#print("LEF = " + str(left))
+	#print("ACC to " + field_id['str'])
 
 	# доступ через переменную-указатель
 	via_pointer = left.type.is_pointer()
@@ -1509,14 +1579,14 @@ def do_value_access(x):
 
 	# check if is record
 	if not record_type.is_record():
-		error("expected record or pointer to record", x['left']['ti'])
+		error("expected record or pointer to record", left.ti)
 		return ValueBad(x['ti'])
 
-	field = TypeRecord.record_field_get(record_type, field_id.str)
+	field = TypeRecord.record_field_get(record_type, field_id['str'])
 
 	# if field not found
 	if field == None:
-		error("undefined field '%s'" % field_id.str, x['right']['ti'])
+		error("undefined field '%s'" % field_id['str'], field_id['ti'])
 		return ValueBad(x['ti'])
 
 	if field.type.is_bad():
@@ -1529,13 +1599,14 @@ def do_value_access(x):
 		if field.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 			error("access to private field of record", x['right']['ti'])
 
-	nv = ValueAccessRecord(field.type, left, field, ti=x['ti'])
+	nv = ValueAccessRecord(field.type, left, field, ti=ti)
 
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
 
-	if left.isValueImmediate():
-		initializer = get_item_by_id(left.asset, field.id.str)
+	if left.isValueImmediate() and not via_pointer:
+		print("??" + field_id['str'])
+		initializer = get_item_by_id(left.asset, field_id['str'])
 		Value.cp_immediate(nv, initializer.value)
 
 	return nv

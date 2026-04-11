@@ -7,7 +7,7 @@ const minNumber = 0
 const maxNumber = 10
 
 
-public func main() -> Int32 {
+public func main () -> Int32 {
 	let number = get_number(minNumber, maxNumber)
 
 	let n = Int32 5
@@ -24,7 +24,7 @@ public func main() -> Int32 {
 }
 
 
-func get_number(min: Int32, max: Int32) -> Int32 {
+func get_number (min: Int32, max: Int32) -> Int32 {
 	var number: Int32
 	number = 0
 

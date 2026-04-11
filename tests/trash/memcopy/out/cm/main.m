@@ -28,7 +28,7 @@ public func main () -> Int {
 	let len: Size = sizeof(Object)
 	printf("LEN = %zu\n", len)
 
-	mem.copy(&o2, &o1, len)
+	copy(&o2, &o1, len)
 
 	printf("firstname = '%s'\n", &o2.firstname)
 	printf("lastname = '%s'\n", &o2.lastname)

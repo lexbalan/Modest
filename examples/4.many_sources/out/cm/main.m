@@ -8,7 +8,7 @@ import "lib" as lib
 
 public func main () -> Int {
 	printf("hello from main\n")
-	lib.foo()
+	foo()
 	return 0
 }
 

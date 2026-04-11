@@ -1,5 +1,7 @@
 // avr/m328p
 
+pragma unsafe
+
 include "avr"
 
 
@@ -10,7 +12,9 @@ public type GPIO = @public @layout("packed") {
 }
 
 
-const sfrOffset = Nat16 0x20
+// должен быть public изза того что константы ниже зависят от него но зависимости не подтягиваются
+// TODO: fixit!
+public const sfrOffset = Nat16 0x20
 
 public const portB = unsafe *GPIO Word16 (sfrOffset + Nat16 0x03)
 public const portC = unsafe *GPIO Word16 (sfrOffset + Nat16 0x06)

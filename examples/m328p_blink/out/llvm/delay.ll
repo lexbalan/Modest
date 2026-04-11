@@ -5,6 +5,7 @@ target triple = "arm64-apple-macosx12.0.0"
 
 %Unit = type i1
 %Bool = type i1
+%Byte = type i8
 %Word8 = type i8
 %Word16 = type i16
 %Word32 = type i32
@@ -28,6 +29,8 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat256 = type i256
 %Float32 = type float
 %Float64 = type double
+%Fixed32 = type i32
+%Fixed64 = type i64
 %Size = type i64
 %Pointer = type i8*
 %Str8 = type [0 x %Char8]
@@ -111,12 +114,16 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports 'delay' --
-; -- 0
-; -- end print imports 'delay' --
+; -- print imports private 'delay' --
+
+; from import "builtin"
+
+; end from import "builtin"
+; -- end print imports private 'delay' --
+; -- print imports public 'delay' --
+; -- end print imports public 'delay' --
 ; -- strings --
-; -- endstrings --; delay not calibrated
-; just for example
+; -- endstrings --
 @delayCounter = internal global %Nat32 0
 define void @delay_ms(%Nat32 %x) {
 	%1 = alloca %Nat32, align 4
