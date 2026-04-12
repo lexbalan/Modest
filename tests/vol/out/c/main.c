@@ -5,7 +5,7 @@
 #include <string.h>
 //include "libc/ctypes64"
 //include "libc/stdio"
-static uint32_t x = 0U;
+static char x[3] = {'s', 's', 's'};
 
 int32_t main(void) {
 	return 0;

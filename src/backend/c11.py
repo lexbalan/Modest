@@ -165,8 +165,10 @@ def get_type_id_str(t):
 			return kisa
 
 	if hasattr(t, 'id'):
-		return get_id_prefix(t) + t.id.c
+		if t.id.c != None:
+			return get_id_prefix(t) + t.id.c
 
+	return None
 
 
 def get_id_str(x):
@@ -190,7 +192,7 @@ def get_id_str(x):
 
 
 def is_type_named(t):
-	return hasattr(t, 'id') or (hasattr(t, 'c_anon_id') and t.c_anon_id != None)
+	return (hasattr(t, 'id') and t.id.c != None) or (hasattr(t, 'c_anon_id') and t.c_anon_id != None)
 
 
 # преобразуем Modest TypePointer -> CIR TypePointer

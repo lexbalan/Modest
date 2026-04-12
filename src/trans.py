@@ -2350,7 +2350,7 @@ def def_const_common(x):
 	#	iv = value_cons_default(iv)
 
 	if t == None:
-		t = Type.reborn(iv.type)
+		t = Type.copy(iv.type)
 
 	const_value = ValueConst(t, id, init_value=iv, ti=id.ti)
 	const_value.is_initialized = is_initialized
@@ -2409,6 +2409,11 @@ def def_var_common(x):
 	global cdef
 	global global_prefix
 
+	def remove_const_modifier(t):
+		if t.hasAttribute2('const'):
+			t.annotations.pop('const')
+		return t
+
 	id = do_id(x['id'])
 	id.prefix = global_prefix
 
@@ -2445,7 +2450,8 @@ def def_var_common(x):
 		#if iv.type.is_generic():
 		#	error("variable with generic type", x['ti'])
 		iv = value_cons_default(iv)
-		t = Type.reborn(iv.type)
+		t = Type.copy(iv.type)
+		t = remove_const_modifier(t)
 
 	elif tu == False and vu == False:
 		# type ok, value ok
@@ -2469,7 +2475,8 @@ def def_var_common(x):
 	else:
 		if iv.type.is_generic():
 			iv = value_cons_default(iv)
-		t = Type.reborn(iv.type)
+		t = Type.copy(iv.type)
+		t = remove_const_modifier(t)
 
 	# Переменная может быть типа []X если она внешняя
 	is_not_extern = getAnno(x, 'extern') == None

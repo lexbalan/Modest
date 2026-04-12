@@ -1133,11 +1133,11 @@ class Type(Entity):
 		return y
 
 
-	def reborn(self):
-		nt = self.copy()
-		nt.att = []
-		nt.annotations = {}
-		return nt
+	#def reborn(self):
+	#	nt = self.copy()
+	#	nt.att = []
+	#	nt.annotations = {}
+	#	return nt
 
 
 	@staticmethod

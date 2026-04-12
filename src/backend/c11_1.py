@@ -120,6 +120,7 @@ class CType():
 
 class CTypeNamed(CType):
 	def __init__(self, id_str, specs=None):
+		assert(isinstance(id_str, str))
 		super().__init__()
 		self.id_str = id_str
 		self.specs = specs if specs != None else []
@@ -1260,7 +1261,8 @@ class CStmtDefVar(CStmt):
 		sstr += str_gcc_attributes(self.annotations)
 		if self.storage not in (None, ''):
 			sstr += self.storage + ' '
-		sstr += self.type.to_str(text=self.id_str)
+		#mass
+		sstr += str_ctype(self.type, text=self.id_str)
 		if self.init_value != None:
 			sstr += ' = %s' % str_cvalue(self.init_value)
 		return sstr + ';'

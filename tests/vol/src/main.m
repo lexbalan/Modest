@@ -5,7 +5,8 @@
 
 // У переменной x будет тип Nat32 без атрибута volatile
 // поскольку происходит reborn типа который сбрасывает все флаги и атрибуты
-var x = @volatile Nat32 0
+//const c = Nat32 0
+var x = Str8 "sss"
 
 public func main () -> Int32 {
 	return 0
