@@ -990,6 +990,7 @@ def do_cvalue_index(x, ctx):
 		ts = do_ctype(left.type)
 		vs = do_cvalue(left, ctx=ctx)
 		lx = CValueCast(ts, vs)
+
 	elif value_is_generic_immediate_const(left):
 		ts = do_ctype(left.type)
 		vs = do_cvalue(left, ctx=ctx)

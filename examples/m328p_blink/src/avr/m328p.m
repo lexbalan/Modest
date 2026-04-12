@@ -16,7 +16,7 @@ public type GPIO = @public @layout("packed") {
 // TODO: fixit!
 public const sfrOffset = Nat16 0x20
 
-public const portB = unsafe @volatile *GPIO Word16 (sfrOffset + Nat16 0x03)
-public const portC = unsafe @volatile *GPIO Word16 (sfrOffset + Nat16 0x06)
-public const portD = unsafe @volatile *GPIO Word16 (sfrOffset + Nat16 0x09)
+public const portB = unsafe * @volatile GPIO Word16 (sfrOffset + Nat16 0x03)
+public const portC = unsafe * @volatile GPIO Word16 (sfrOffset + Nat16 0x06)
+public const portD = unsafe * @volatile GPIO Word16 (sfrOffset + Nat16 0x09)
 

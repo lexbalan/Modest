@@ -12,8 +12,8 @@ struct m328p_gpio {
 	avr_IO8 out;
 };
 #define M328P_SFR_OFFSET 32
-#define M328P_PORT_B ((m328p_GPIO *)(M328P_SFR_OFFSET + 3))
-#define M328P_PORT_C ((m328p_GPIO *)(M328P_SFR_OFFSET + 6))
-#define M328P_PORT_D ((m328p_GPIO *)(M328P_SFR_OFFSET + 9))
+#define M328P_PORT_B ((volatile m328p_GPIO *)(M328P_SFR_OFFSET + 3))
+#define M328P_PORT_C ((volatile m328p_GPIO *)(M328P_SFR_OFFSET + 6))
+#define M328P_PORT_D ((volatile m328p_GPIO *)(M328P_SFR_OFFSET + 9))
 #endif
 

@@ -284,6 +284,8 @@ class Parser:
 
 
 	def check_is_type(self):
+		self.parse_comments_annotations()
+
 		if self.is_Identifier():
 			return True
 
@@ -517,14 +519,14 @@ class Parser:
 
 
 	def expr_value(self):
-		ca = self.parse_comments_annotations()
+#		ca = self.parse_comments_annotations()
 		#comments.extend(ca[0])
-		anno = ca[1]
+#		anno = ca[1]
 		#spaceline_cnt = ca[2]
 
 		x = self.expr_value_1()
 		#x['nl'] = 0
-		x['anno'] = anno
+#		x['anno'] = anno
 		return x
 
 
@@ -839,6 +841,11 @@ class Parser:
 
 
 	def is_type_before_value(self):
+		ti = self.textInfo()
+		v = self.is_type_before_value2()
+		return v
+
+	def is_type_before_value2(self):
 		if not self.is_type_expr():
 			return False
 		if self.look("{"):

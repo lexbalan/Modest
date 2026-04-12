@@ -693,6 +693,9 @@ class Type(Entity):
 			if k == 'branded':
 				nt.brand = get_brand()
 
+			if k == 'volatile':
+				nt.addAnnotation('volatile', {})
+
 			# Для C некоторые атрибуты типа массива -
 			# это атрибуты типа его элементов
 			if nt.is_array():

@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-static volatile uint32_t delayCounter = 0U;
 
 void delay_ms(uint32_t x) {
 	volatile uint32_t t = x;

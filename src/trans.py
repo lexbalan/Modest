@@ -534,6 +534,7 @@ def do_type_named(x):
 
 
 def do_type_pointer(x):
+	#info("%s" % x, x['ti'])
 	to = do_type_internal(x['to'])
 	return TypePointer(to, ti=x['ti'])
 
@@ -1549,7 +1550,6 @@ def do_value_access(x):
 
 	for field_id in path:
 		#print("P: " + str(field_id))
-
 		left_val = acc(left_val, field_id, ti=None)  # ti ????
 
 	return left_val
@@ -1595,7 +1595,6 @@ def acc(left, field_id, ti):
 		nv.is_immutable = left.is_immutable
 
 	if left.isValueImmediate() and not via_pointer:
-		print("??" + field_id['str'])
 		initializer = get_item_by_id(left.asset, field_id['str'])
 		Value.cp_immediate(nv, initializer.value)
 
@@ -2358,7 +2357,6 @@ def def_const_common(x):
 
 	const_value.stage = iv.stage
 	if iv.isValueImmediate():
-		#info("???", x['ti'])
 		Value.cp_immediate(const_value, iv)
 
 	const_value.type.addAnnotation('const', {})
@@ -2471,7 +2469,6 @@ def def_var_common(x):
 	else:
 		if iv.type.is_generic():
 			iv = value_cons_default(iv)
-
 		t = Type.reborn(iv.type)
 
 	# Переменная может быть типа []X если она внешняя
