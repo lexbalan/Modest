@@ -192,7 +192,7 @@ def get_id_str(x):
 
 
 def is_type_named(t):
-	return (hasattr(t, 'id') and t.id.c != None) or (hasattr(t, 'c_anon_id') and t.c_anon_id != None)
+	return get_id_str(t) != None
 
 
 # преобразуем Modest TypePointer -> CIR TypePointer
