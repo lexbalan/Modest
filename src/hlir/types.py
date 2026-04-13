@@ -1133,13 +1133,6 @@ class Type(Entity):
 		return y
 
 
-	#def reborn(self):
-	#	nt = self.copy()
-	#	nt.att = []
-	#	nt.annotations = {}
-	#	return nt
-
-
 	@staticmethod
 	def update(dst, src):
 		# Это даже как то работает, ок, пока сойдет
@@ -1150,7 +1143,6 @@ class Type(Entity):
 		dst.att = copy.copy(src.att)
 		dst.annotations = copy.copy(src.annotations)
 		dst.__class__ = src.__class__
-
 
 
 	def is_forbidden_any(self):

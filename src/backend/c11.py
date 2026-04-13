@@ -181,9 +181,8 @@ def get_id_str(x):
 			return id_str
 
 	if hasattr(x, 'id'):
-		if x.id != None:
-			if x.id.c != None:
-				return get_id_prefix(x) + x.id.c
+		if x.id != None and x.id.c != None:
+			return get_id_prefix(x) + x.id.c
 
 	return None
 

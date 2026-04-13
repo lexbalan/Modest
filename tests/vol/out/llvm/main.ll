@@ -113,86 +113,6 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-; from included ctypes64
-%Str = type %Str8;
-%Char = type %Char8;
-%ConstChar = type %Char;
-%SignedChar = type %Int8;
-%UnsignedChar = type %Nat8;
-%Short = type %Int16;
-%UnsignedShort = type %Nat16;
-%Int = type %Int32;
-%UnsignedInt = type %Nat32;
-%LongInt = type %Int64;
-%UnsignedLongInt = type %Nat64;
-%Long = type %Int64;
-%UnsignedLong = type %Nat64;
-%LongLong = type %Int64;
-%UnsignedLongLong = type %Nat64;
-%LongLongInt = type %Int64;
-%UnsignedLongLongInt = type %Nat64;
-%Float = type %Float64;
-%Double = type %Float64;
-%LongDouble = type %Float64;
-%SizeT = type %UnsignedLongInt;
-%SSizeT = type %LongInt;
-%IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
-%OffT = type %Int64;
-%USecondsT = type %Nat32;
-%PIDT = type %Int32;
-%UIDT = type %Nat32;
-%GIDT = type %Nat32;
-; from included stdio
-%File = type {
-};
-
-%FposT = type %Nat8;
-%CharStr = type %Str;
-%ConstCharStr = type %CharStr;
-declare %Int @fclose(i8* %f)
-declare %Int @feof(i8* %f)
-declare %Int @ferror(i8* %f)
-declare %Int @fflush(i8* %f)
-declare %Int @fgetpos(i8* %f, %FposT* %pos)
-declare i8* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, i8* %f)
-declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, i8* %f)
-declare i8* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, i8* %f)
-declare %Int @fseek(i8* %f, %LongInt %offset, %Int %whence)
-declare %Int @fsetpos(i8* %f, %FposT* %pos)
-declare %LongInt @ftell(i8* %f)
-declare %Int @remove(%ConstCharStr* %fname)
-declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
-declare void @rewind(i8* %f)
-declare void @setbuf(i8* %f, %CharStr* %buf)
-declare %Int @setvbuf(i8* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
-declare i8* @tmpfile()
-declare %CharStr* @tmpnam(%CharStr* %str)
-declare %Int @printf(%ConstCharStr* %str, ...)
-declare %Int @scanf(%ConstCharStr* %str, ...)
-declare %Int @fprintf(i8* %f, %Str* %format, ...)
-declare %Int @fscanf(i8* %f, %ConstCharStr* %format, ...)
-declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @snprintf(%CharStr* %buf, %SizeT %size, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(i8* %f, %ConstCharStr* %format, %__VA_List %args)
-declare %Int @vprintf(%ConstCharStr* %format, %__VA_List %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %__VA_List %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %__VA_List %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %__VA_List %arg)
-declare %Int @fgetc(i8* %f)
-declare %Int @fputc(%Int %char, i8* %f)
-declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
-declare %Int @fputs(%ConstCharStr* %str, i8* %f)
-declare %Int @getc(i8* %f)
-declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
-declare %Int @putc(%Int %char, i8* %f)
-declare %Int @putchar(%Int %char)
-declare %Int @puts(%ConstCharStr* %str)
-declare %Int @ungetc(%Int %char, i8* %f)
-declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports private 'main' --
 
@@ -204,6 +124,15 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports public 'main' --
 ; -- strings --
 ; -- endstrings --
+
+;include "libc/ctypes64"
+;include "libc/stdio"
+@x = internal global %Str8 [
+	%Char8 115,
+	%Char8 115,
+	%Char8 115
+]
+@y = internal global %Nat32 0
 define %Int32 @main() {
 	ret %Int32 0
 }
