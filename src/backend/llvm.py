@@ -1338,12 +1338,6 @@ def select_cast_operator(a, b):
 		if b.is_integer() or b.is_rational() or b.is_int() or b.is_nat() or b.is_char() or b.is_bool() or b.is_word():
 			signed = Type.is_signed(b)
 
-			# Это плохо тк не работает в некоторых особых ситуациях
-			# например для  i17 to i32 вернет bitcast что неверно!
-			# но пока не убираю тк непонятно чем аукнется еще
-			#aw = align_bits_up(a.width)
-			#bw = align_bits_up(b.width)
-
 			aw = a.width
 			bw = b.width
 
