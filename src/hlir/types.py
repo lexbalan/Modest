@@ -163,19 +163,13 @@ class Entity():
 	def __init__(self, ti):
 		assert((ti == None) or isinstance(ti, TextInfo))
 		self.ti = ti
-		self.att = []
+		#self.att = []
 		self.annotations = {}
 		self.parent = None
 		self.is_global_flag = False
 
-	def addAttribute(self, a):
-		if not a in self.att:
-			self.att.append(a)
 
-	def hasAttribute(self, a):
-		return a in self.att
-
-	def addAnnotation(self, annotation, params):
+	def addAnnotation(self, annotation, params={}):
 		if not annotation in self.annotations:
 			self.annotations[annotation] = params
 
@@ -184,7 +178,7 @@ class Entity():
 			return self.annotations[annotation]
 		return None
 
-	def hasAttribute2(self, a):
+	def hasAnnotation(self, a):
 		a = self.getAnnotation(a)
 		return a != None
 
@@ -1680,7 +1674,7 @@ class Value(Entity):
 
 
 	def hasAttribute(self, a):
-		return a in self.att or self.type.hasAttribute2(a)
+		return a in self.att or self.type.hasAnnotation(a)
 
 	def isLvalue(self):
 		return self.is_lvalue

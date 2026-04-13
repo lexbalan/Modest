@@ -84,10 +84,10 @@ def str_field(x):
 def str_type_record(t):
 	s = ""
 
-	#if t.hasAttribute2('packed'):
+	#if t.hasAnnotation('packed'):
 	#	s += "@layout("packed") "
 
-	is_public = t.hasAttribute2('public')
+	is_public = t.hasAnnotation('public')
 
 	s += "{"
 	indent_up()
@@ -152,7 +152,7 @@ def str_type(t):
 
 	#s = ""
 
-	#if t.hasAttribute2('branded'):
+	#if t.hasAnnotation('branded'):
 	#	s += "@branded "
 
 	# Если тип связан с идентификатором - распечатаем его
@@ -509,7 +509,7 @@ def str_value_char_create(x, ctx):
 # print Int literal
 def str_value_integer(x, ctx):
 	num = x.asset
-	as_hex = x.hasAttribute2('hexadecimal')
+	as_hex = x.hasAnnotation('hexadecimal')
 
 	nsigns = 0
 	if hasattr(x, 'nsigns'):
@@ -720,13 +720,13 @@ def needTypeAnno(x):
 
 def print_stmt_def(x, operator='const'):
 
-#	if x.hasAttribute('used'):
+#	if x.hasAnnotation('used'):
 #		out("@used\n")
 #
-#	if x.hasAttribute('unused'):
+#	if x.hasAnnotation('unused'):
 #		out("@unused\n")
 #
-#	if x.hasAttribute('extern'):
+#	if x.hasAnnotation('extern'):
 #		out("@extern\n")
 #
 #	if hasattr(x, 'section'):
@@ -750,11 +750,11 @@ def print_stmt_func(x):
 	if x.stmt == None:
 		return
 
-#	if x.hasAttribute('inlinehint'):
+#	if x.hasAnnotation('inlinehint'):
 #		out("@inlinehint\n")
-#	if x.hasAttribute('inline'):
+#	if x.hasAnnotation('inline'):
 #		out("@inline\n")
-#	if x.hasAttribute('noinline'):
+#	if x.hasAnnotation('noinline'):
 #		out("@noinline\n")
 
 	func = x.value
