@@ -115,6 +115,16 @@ def is_global_public(x):
 	return False
 
 
+
+
+# тип представляется в виде iXX машинного типа
+def is_machine_type(t):
+	if not t.is_simple():
+		return False
+	return t.kind in [HLIR_TYPE_KIND_INTEGER, HLIR_TYPE_KIND_WORD, HLIR_TYPE_KIND_INT, HLIR_TYPE_KIND_NAT, HLIR_TYPE_KIND_CHAR, HLIR_TYPE_KIND_FIXED]
+
+
+
 def get_id_str(x):
 	if not hasattr(x, 'id'):
 		return None
@@ -256,7 +266,6 @@ def llvm_value_inline_gep(result_type, value, indexes, object_type):
 
 def llvm_print_type_value(x, noundef=False):
 	assert(x['isa'] == 'll_value')
-
 	print_type(x['type'])
 	if x['is_adr']:
 		out("* ")
@@ -806,36 +815,39 @@ def print_type_enum(t):
 	out('i%d' % t.width)
 
 
-def print_type_record(t):
+def str_type_record(t):
+	sstr = ''
 	packed = t.hasAttribute2('packed')
 
 	if packed:
-		out("<")
+		sstr += "<"
 
-	out("{")
+	sstr += "{"
 	fields = t.fields
 	i = 0
 	while i < len(fields):
 		field = fields[i]
 
-		if i > 0: out(',')
+		if i > 0: sstr += ','
 		if is_global_context():
-			out(NL_INDENT)
+			sstr += NL_INDENT
 
-		print_type(field.type)
+		sstr += str_type(field.type)
 
 		i = i + 1
 
 	if is_global_context():
-		out("\n")
+		sstr += "\n"
 
-	out("}")
+	sstr += "}"
 
 	if packed:
-		out(">")
+		sstr += ">"
+
+	return sstr
 
 
-def print_type_array(t):
+def str_type_array(t):
 	sz = 0
 	if not t.is_vla():
 		array_size = t.volume
@@ -844,43 +856,50 @@ def print_type_array(t):
 				if array_size.isValueImmediate():
 					sz = array_size.asset
 
-	out("[")
-	out("%d x " % sz)
-	print_type(t.of)
-	out("]")
+	sstr = ''
+	sstr += "["
+	sstr += "%d x " % sz
+	sstr += str_type(t.of)
+	sstr += "]"
+	return sstr
 
 
 
-def print_type_pointer(t):
+def str_type_pointer(t):
 	if t.is_free_pointer():
-		out("i8*")
-	else:
-		print_type(t.to); out("*")
+		return "i8*"
+	return str_type(t.to) + "*"
 
 
 
 def print_int_type_for(width):
+	out(str_int_type_for(width))
+
+def str_int_type_for(width):
 	# Generic int can have width (for example) 6 bit, etc.
-	out("i%d" % align_bits_up(width))
+	return "i%d" % align_bits_up(width)
 
 
 # функция может получать только указатель на массив
 # если же в CM она получает массив то тут и в СИ она получает
 # указатель на него, и потом копирует его во внутренний массив
 def print_type(t):
+	tt = str_type(t)
+	assert(isinstance(tt, str))
+	out(tt)
+
+def str_type(t):
 	assert(isinstance(t, Type))
 	print_aka=True
 
 	# иногда сюда залетают дженерики например в to левое:
 	# let p = 0x12345678 to *Nat32
 	if t.is_integer():
-		print_int_type_for(t.width)
-		return
+		return str_int_type_for(t.width)
 
 	id_str = get_type_id(t)
 	if id_str != None:
-		out(id_str)
-		return
+		return id_str
 
 	if print_aka:
 		# тупой LLVM не умеет делать алиасы структур
@@ -888,19 +907,17 @@ def print_type(t):
 		# хрен обратишься... дерьмо
 		if t.is_record():
 			if hasattr(t, 'id') and t.id != None:
-				out("%" + t.id.str)
-				return
+				return "%" + t.id.str
 
 		t_id = get_type_id(t)
 		if t_id != None:
-			out(t_id)
-			return
+			return t_id
 
 
-	if t.is_func(): print_type_func(t)
-	elif t.is_record(): print_type_record(t)
-	elif t.is_pointer(): print_type_pointer(t)
-	elif t.is_array(): print_type_array(t)
+	if t.is_func(): return str_type_func(t)
+	elif t.is_record(): return str_type_record(t)
+	elif t.is_pointer(): return str_type_pointer(t)
+	elif t.is_array(): return str_type_array(t)
 	#elif t.is_enum(): print_type_enum(t)
 
 	elif t.is_int():
@@ -908,21 +925,21 @@ def print_type(t):
 
 	elif t.is_float():
 		if t.width <= 32:
-			out("float")
+			return "float"
 		else:
-			out("double")
+			return "double"
 
 	elif t.is_char():
-		print_int_type_for(t.width)
+		return str_int_type_for(t.width)
 
 	elif t.is_incompleted():
-		out('opaque')
+		return 'opaque'
 
 	elif t.is_va_list():
-		out("i8*")
+		return "i8*"
 
-	else:
-		out(str(t))
+
+	return "<<%s>>" % str(t)
 
 
 
@@ -1094,7 +1111,7 @@ def do_eval_call(v):
 		rv = ll_reg_operation('call', ftype.to)
 
 	if ftype.extra_args:
-		print_type_func(ftype)
+		out(str_type_func(ftype))
 	else:
 		if ftype.to.is_unit():
 			out("void")
@@ -1308,6 +1325,11 @@ def do_eval_access(x):
 
 # cast type a to type b
 def select_cast_operator(a, b):
+
+	if is_machine_type(a) and is_machine_type(b):
+		if align_bits_up(a.width) == align_bits_up(b.width):
+			return 'bitcast'
+
 	if a.is_integer() or a.is_int() or a.is_nat() or a.is_char() or a.is_word():
 
 		if Type.is_pointer(b):
@@ -1607,6 +1629,14 @@ def docast(v, to_type):
 		return llvm_value_inline_cast(to_type, v)
 
 	from_type = v['type']
+
+	# если это приведение по сути к одному и тому же типу, LLVM такого не терпит
+	# поэтому просто печатаем значение; Так же тут могут быть Integer c width например 29
+	# поэтому align_bits_up() обязателен!
+#	if is_machine_type(from_type) and is_machine_type(to_type):
+#		if align_bits_up(from_type.width) == align_bits_up(to_type.width):
+#			return v
+
 	opcode = select_cast_operator(from_type, to_type)
 	return llvm_cast(opcode, v, to_type)
 
@@ -2214,7 +2244,8 @@ def print_stmt(x):
 
 
 
-def print_func_params(ftype, only_types=False, with_attributes=True):
+def str_func_params(ftype, only_types=False, with_attributes=True):
+	sstr = ''
 	# here can be a pointer to function
 	if Type.is_pointer(ftype):
 		ftype = ftype.to
@@ -2224,7 +2255,7 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 
 	if need_sret(ftype):
 		# %struct.Sre* noalias sret(%struct.Sre) align 1 %0
-		print_type(to)
+		sstr += str_type(to)
 
 		"""if with_attributes:
 			out("* noalias sret(")
@@ -2235,27 +2266,28 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 			print_type(to)
 			out(")")"""
 
-		out("*")
+		sstr += "*"
 
 		if not only_types:
-			out(" %0")
+			sstr += " %0"
 
 		if len(params) > 0:
-			out(", ")
+			sstr += ", "
 
 
-	def print_param_type(param):
-		print_type(param['type'])
-		#out(' noundef')
-
-	def print_param_w_id(param, id):
-		print_type(param['type'])
-		#out(' noundef')
-		out(" %%%s" % get_id_str(param))
-
-	method = print_param_w_id
-	if only_types:
-		method = print_param_type
+#	def str_param_type(param):
+#		return str_type(param['type'])
+#
+#	def str_param_w_id(param, id):
+#		sstr = ''
+#		sstr += str_type(param['type'])
+#		#out(' noundef')
+#		sstr += " %%%s" % get_id_str(param)
+#		return sstr
+#
+#	method = print_param_w_id
+#	if only_types:
+#		method = print_param_type
 
 	i = 0
 	while i < len(params):
@@ -2263,44 +2295,53 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 		isarr = Type.is_closed_array(param.type)
 
 		if i > 0:
-			out(", ")
+			sstr += ", "
 
-		print_type(param.type)
+		sstr += str_type(param.type)
 
 		if not only_types:
 			if isarr:
-				out(" %%__%s" % get_id_str(param))
+				sstr += " %%__%s" % get_id_str(param)
 			else:
-				out(" %%%s" % get_id_str(param))
+				sstr += " %%%s" % get_id_str(param)
 
 		i = i + 1
 
 
 	if ftype.extra_args:
-		out(", ...")
+		sstr += ", ..."
+
+	return sstr
 
 
 
-def print_type_func(t):
+def str_type_func(t):
+	sstr = ''
 	if Type.is_unit(t.to) or need_sret(t):
-		out("void")
+		sstr += "void"
 	else:
-		print_type(t.to)
+		sstr += str_type(t.to)
 
-	out(" (")
-	print_func_params(t, only_types=True)
-	out(")")
+	sstr += " ("
+	sstr += str_func_params(t, only_types=True)
+	sstr += ")"
+	return sstr
 
 
 def print_func_signature(ftype, idStr):
-	if Type.is_unit(ftype.to) or need_sret(ftype):
-		out("void")
-	else:
-		print_type(ftype.to)
+	out(str_func_signature(ftype, idStr))
 
-	out(" @%s(" % idStr)
-	print_func_params(ftype)
-	out(")")
+def str_func_signature(ftype, idStr):
+	sstr = ''
+	if Type.is_unit(ftype.to) or need_sret(ftype):
+		sstr += "void"
+	else:
+		sstr += str_type(ftype.to)
+
+	sstr += " @%s(" % idStr
+	sstr += str_func_params(ftype)
+	sstr += ")"
+	return sstr
 
 
 
@@ -2481,16 +2522,19 @@ def print_def_func(x):
 def print_def_type(x):
 	xtype = x.original_type
 	out("\n%%%s = type " % get_id_str(x.type))
+	tt = None
 	if Type.is_record(xtype):
 		# не печатаем имя а печатаем саму структуру
 		# тк LLVM дает ошибку на запись вида
 		# %Struct1 = type %Struct2; Error, wtf?
-		print_type_record(xtype)
+		tt = str_type_record(xtype)
 	else:
-		print_type(xtype)
-	out(";")
+		tt = str_type(xtype)
+	tt += ";"
 	if Type.is_record(xtype):
-		out("\n")
+		tt += "\n"
+
+	out(tt)
 
 
 
