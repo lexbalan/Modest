@@ -163,24 +163,23 @@ class Entity():
 	def __init__(self, ti):
 		assert((ti == None) or isinstance(ti, TextInfo))
 		self.ti = ti
-		#self.att = []
 		self.annotations = {}
 		self.parent = None
 		self.is_global_flag = False
 
+	def hasAnnotation(self, annotation):
+		return annotation in self.annotations
 
 	def addAnnotation(self, annotation, params={}):
-		if not annotation in self.annotations:
+		if not self.hasAnnotation(annotation):
 			self.annotations[annotation] = params
 
 	def getAnnotation(self, annotation):
-		if annotation in self.annotations:
+		if self.hasAnnotation(annotation):
 			return self.annotations[annotation]
 		return None
 
-	def hasAnnotation(self, a):
-		a = self.getAnnotation(a)
-		return a != None
+
 
 	#def is_global(self):
 	#	return self.is_global_flag
