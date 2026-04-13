@@ -107,7 +107,7 @@ def get_id_prefix(x):
 	if id.prefix != None:
 		prefix = id.prefix
 
-	nodecorate = not is_global_public(x) or id.hasAnnotation('nodecorate')
+	nodecorate = not is_global_public(x) or id.hasAttribute('nodecorate')
 	if nodecorate:
 		return prefix
 
@@ -278,9 +278,9 @@ def do_ctype(t, is_param=False):
 					return CTypeArray(of=do_ctype(t.to.of), volume=t.to.volume)
 
 	specs = []
-	if t.hasAnnotation('const'):    specs.append('const')
-	if t.hasAnnotation('volatile'): specs.append('volatile')
-	if t.hasAnnotation('restrict'): specs.append('restrict')
+	if t.hasAttribute('const'):    specs.append('const')
+	if t.hasAttribute('volatile'): specs.append('volatile')
+	if t.hasAttribute('restrict'): specs.append('restrict')
 
 	if is_type_named(t): return do_ctype_named(t, specs=specs)
 	if t.is_pointer(): return do_ctype_pointer(t, specs=specs)
@@ -1104,12 +1104,12 @@ def do_cvalue_pos(x, ctx):
 
 
 def do_cvalue_const(x, ctx):
-	if x.hasAnnotation('cbyvalue'):
+	if x.hasAttribute('cbyvalue'):
 		# cbyvalue говорит о том что следует печатать значение константы (а не ее id)
 		return do_cvalue_literal_with_type(x, x.type, ctx=ctx)
 
 	id_str = get_id_str(x)
-	if x.is_global_flag and not x.id.hasAnnotation('nodecorate'):
+	if x.is_global_flag and not x.id.hasAttribute('nodecorate'):
 		id_str = camel_to_upper_snake(id_str)
 
 	cv = CValueNamed(id_str)
@@ -1494,7 +1494,7 @@ def do_cstmt_var(x):
 			civ = do_cinitializer(init_value)
 
 	storage_class = ''
-	if x.hasAnnotation('static'):
+	if x.hasAttribute('static'):
 		storage_class = 'static'
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class)
@@ -1589,12 +1589,12 @@ def do_cstmt(x):
 def do_decl_func(x):
 	func = x.value
 	storage_class = ''
-	if x.hasAnnotation('extern'):
+	if x.hasAttribute('extern'):
 		storage_class = 'extern'
-	elif (x.access_level == HLIR_ACCESS_LEVEL_PRIVATE) or x.hasAnnotation('static'):
+	elif (x.access_level == HLIR_ACCESS_LEVEL_PRIVATE) or x.hasAttribute('static'):
 		storage_class = 'static'
 
-	if x.hasAnnotation('inline'):
+	if x.hasAttribute('inline'):
 		if storage_class != '':
 			storage_class = storage_class + ' inline'
 		else:
@@ -1620,12 +1620,12 @@ def do_def_func(x):
 	#out(str_gcc_attributes(x.annotations))
 
 	storage_class = ''
-	if x.hasAnnotation('extern'):
+	if x.hasAttribute('extern'):
 		storage_class = 'extern'
-	elif (x.access_level == HLIR_ACCESS_LEVEL_PRIVATE) or x.hasAnnotation('static'):
+	elif (x.access_level == HLIR_ACCESS_LEVEL_PRIVATE) or x.hasAttribute('static'):
 		storage_class = 'static'
 
-	if x.hasAnnotation('inline'):
+	if x.hasAttribute('inline'):
 		if storage_class != '':
 			storage_class = storage_class + ' inline'
 		else:
@@ -1756,11 +1756,11 @@ def do_def_var(x, isdecl=False, is_extern=False):
 	var_value = x.value
 
 	# TODO: Почему-то атрибут 'extern' не работает, и накостылил через is_extern
-	is_extern = is_extern or x.hasAnnotation('extern')
+	is_extern = is_extern or x.hasAttribute('extern')
 
 	storage_class = ''
 	if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
-		if not (is_extern or x.hasAnnotation('nonstatic')):
+		if not (is_extern or x.hasAttribute('nonstatic')):
 			storage_class = "static"
 
 	if is_extern:
@@ -2062,7 +2062,7 @@ def do_header(module):
 		if is_private(x):
 			continue
 
-		if x.hasAnnotation('c_no_print') or x.hasAnnotation('no_print'):
+		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
 		#if x.is_stmt_directive():
@@ -2071,7 +2071,7 @@ def do_header(module):
 
 		if x.is_stmt_def_func():
 			#nnl(x.nl)
-			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAnnotation('inline'):
+			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute('inline'):
 				#out("static ")
 				xdefs.extend(do_def_func(x))
 				continue
@@ -2158,7 +2158,7 @@ def do_cfile(module):
 	xdefs.extend(do_helpers(module))
 
 	for x in defs:
-		if x.hasAnnotation('c_no_print') or x.hasAnnotation('no_print'):
+		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
 		if isinstance(x, StmtDirectiveCInclude):
@@ -2185,7 +2185,7 @@ def do_cfile(module):
 			xdefs.extend(do_def_var(x))
 
 		elif x.is_stmt_def_func():
-			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAnnotation('inline'):
+			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute('inline'):
 				continue
 			#nnl(x.nl)
 			xdefs.extend(do_deps(x.deps))

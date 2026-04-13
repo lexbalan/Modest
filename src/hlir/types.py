@@ -167,15 +167,15 @@ class Entity():
 		self.parent = None
 		self.is_global_flag = False
 
-	def hasAnnotation(self, annotation):
+	def hasAttribute(self, annotation):
 		return annotation in self.annotations
 
-	def addAnnotation(self, annotation, params={}):
-		if not self.hasAnnotation(annotation):
+	def addAttribute(self, annotation, params={}):
+		if not self.hasAttribute(annotation):
 			self.annotations[annotation] = params
 
-	def getAnnotation(self, annotation):
-		if self.hasAnnotation(annotation):
+	def getAttribute(self, annotation):
+		if self.hasAttribute(annotation):
 			return self.annotations[annotation]
 		return None
 
@@ -687,7 +687,7 @@ class Type(Entity):
 				nt.brand = get_brand()
 
 			if k == 'volatile':
-				nt.addAnnotation('volatile', {})
+				nt.addAttribute('volatile', {})
 
 			# Для C некоторые атрибуты типа массива -
 			# это атрибуты типа его элементов
@@ -695,11 +695,11 @@ class Type(Entity):
 				if k in ['const', 'volatile', 'restrict']:
 					nt.of = Type.copy(nt.of)
 					if k == 'const':
-						nt.of.addAnnotation('const', {})
+						nt.of.addAttribute('const', {})
 					if k == 'volatile':
-						nt.of.addAnnotation('volatile', {})
+						nt.of.addAttribute('volatile', {})
 					if k == 'restrict':
-						nt.of.addAnnotation('restrict', {})
+						nt.of.addAttribute('restrict', {})
 		return nt
 
 
@@ -1672,8 +1672,6 @@ class Value(Entity):
 		return l.asset == r.asset
 
 
-	def hasAttribute(self, a):
-		return a in self.att or self.type.hasAnnotation(a)
 
 	def isLvalue(self):
 		return self.is_lvalue

@@ -299,7 +299,7 @@ def xcreate_const(symtab, id_str, value, type=None, ti=None):
 	value = value_cons_implicit(type, value)
 	const_value = ValueConst(type, Id(id_str), init_value=value, ti=ti)
 	const_value.set_asset(value.asset)
-	const_value.addAnnotation('cbyvalue')
+	const_value.addAttribute('cbyvalue')
 	symtab.value_add(id_str, const_value)
 	return const_value
 
@@ -526,7 +526,7 @@ def do_type_named(x):
 		#	warning("forward references to non-struct type", x['ti'])
 		cdef.deps.append(t)
 
-	if t.hasAnnotation("deprecated"):
+	if t.hasAttribute("deprecated"):
 		warning("using a deprecated type", x['ti'])
 
 	return t
@@ -550,7 +550,7 @@ def do_type_array(x):
 		if volume.isValueRuntime():
 			if is_local_context():
 				global cfunc
-				cfunc.addAnnotation('stacksave')
+				cfunc.addAttribute('stacksave')
 			else:
 				error("non local VLA", t.size.ti)
 
@@ -1638,7 +1638,7 @@ def do_value_id(x):
 	if v.isValueBad():
 		return v
 
-	if v.hasAnnotation("deprecated"):
+	if v.hasAttribute("deprecated"):
 		warning("using a deprecated value", x['ti'])
 
 	if v.type.is_incompleted():
@@ -1738,7 +1738,7 @@ def do_value_integer(x):
 	v.nsigns = num_string_len
 
 	if base == 16:
-		v.addAnnotation('hexadecimal', {})
+		v.addAttribute('hexadecimal', {})
 
 	return v
 
@@ -2108,7 +2108,7 @@ def do_stmt_value(x):
 		return StmtBad(x['ti'])
 
 	if not v.type.is_unit():
-		if not v.type.hasAnnotation('unused'):
+		if not v.type.hasAttribute('unused'):
 			#warning("unused result of %s expression" % x['value']['kind'], v.ti)
 			pass
 
@@ -2269,7 +2269,7 @@ def def_type_common(x, nt):
 			if f.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 				is_open_record = True
 			elif f.access_level == HLIR_ACCESS_LEVEL_UNDEFINED:
-				if ty.hasAnnotation("public"):
+				if ty.hasAttribute("public"):
 					f.access_level = HLIR_ACCESS_LEVEL_PUBLIC
 					is_open_record = True
 				else:
@@ -2359,7 +2359,7 @@ def def_const_common(x):
 	if iv.isValueImmediate():
 		Value.cp_immediate(const_value, iv)
 
-	const_value.type.addAnnotation('const', {})
+	const_value.type.addAttribute('const', {})
 
 	ctx_value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 
@@ -2410,7 +2410,7 @@ def def_var_common(x):
 	global global_prefix
 
 	def remove_const_modifier(t):
-		if t.hasAnnotation('const'):
+		if t.hasAttribute('const'):
 			t.annotations.pop('const')
 		return t
 
@@ -2547,8 +2547,8 @@ def def_func(x):
 		return None
 
 	if fn.id.str == 'main':
-		fn.id.addAnnotation('nodecorate')
-		fn.id.addAnnotation('entrypoint')
+		fn.id.addAttribute('nodecorate')
+		fn.id.addAttribute('entrypoint')
 
 	if x['stmt'] == None:
 		df = def_add_annotations(fn.definition, x['anno'])
@@ -3134,7 +3134,7 @@ def def_add_annotations(x, ast_atts):
 
 		elif kind == 'cbyvalue':
 			add_att(x, "cbyvalue")
-			x.value.addAnnotation("cbyvalue")
+			x.value.addAttribute("cbyvalue")
 
 		elif kind == 'inline':
 			#print("WALDAMLWMALDWMKLMKLDWMALKMDLMALWDMLAMWLDKMALKWMDLKAMWLKDMAL")
@@ -3155,11 +3155,11 @@ def add_att(x, att):
 	lr = att.split(":")
 	if len(lr) == 1:
 		att = lr[0]
-		x.addAnnotation(att)
+		x.addAttribute(att)
 	elif len(lr) > 1:
 		x2 = getObjAttrByPath(x, lr[0])
 		if x2 != None:
-			x2.addAnnotation(lr[1])
+			x2.addAttribute(lr[1])
 
 
 # for check print/scanf params

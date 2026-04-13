@@ -138,7 +138,7 @@ def get_id_str(x):
 	if id.prefix != None:
 		id_str = id.prefix + id_str
 
-	if not x.id.hasAnnotation('nodecorate'):
+	if not x.id.hasAttribute('nodecorate'):
 		if is_global_public(x):
 			module = x.getModule()
 			if module != None:
@@ -817,7 +817,7 @@ def print_type_enum(t):
 
 def str_type_record(t):
 	sstr = ''
-	packed = t.hasAnnotation('packed')
+	packed = t.hasAttribute('packed')
 
 	if packed:
 		sstr += "<"
@@ -2348,7 +2348,7 @@ def is_private(x):
 
 #['private', 'internal', 'weak', 'external'] # etc..
 def get_linkage(x):
-	if x.hasAnnotation('extern'):
+	if x.hasAttribute('extern'):
 		return "external"
 	if is_private(x):
 		return "internal"
@@ -2410,11 +2410,11 @@ def print_def_func(x):
 		reg_get()  # get %0 reg for retval
 
 
-	if x.hasAnnotation('inlinehint'):
+	if x.hasAttribute('inlinehint'):
 		out(" inlinehint")
-	if x.hasAnnotation('inline'):
+	if x.hasAttribute('inline'):
 		out(" alwaysinline")
-	if x.hasAnnotation('noinline'):
+	if x.hasAttribute('noinline'):
 		out(" noinline")
 
 	#
@@ -2489,7 +2489,7 @@ def print_def_func(x):
 
 	# VLA требует чтобы стек был сохранен в начале работы функции
 	# и восстановлен перед возвратом из нее (see: print_stmt_return)
-	if fn.hasAnnotation('stacksave'):
+	if fn.hasAttribute('stacksave'):
 		#; stack save
 		# %3 = alloca i8*, align 8 ; stack save
 		# %7 = call i8* @llvm.stacksave()
@@ -2533,7 +2533,7 @@ def print_def_type(x):
 
 
 def print_def_var(x, as_extern=False):
-	is_extern = x.hasAnnotation('extern') or as_extern
+	is_extern = x.hasAttribute('extern') or as_extern
 
 	#mods = ['global', 'constant']
 	mod = 'global'
@@ -2551,12 +2551,12 @@ def print_def_var(x, as_extern=False):
 		else:
 			out(" zeroinitializer")
 
-	if x.hasAnnotation('section'):
-		section = x.getAnnotation('section')
+	if x.hasAttribute('section'):
+		section = x.getAttribute('section')
 		out(", section \"%s\"" % section.asset)
 
-	if x.hasAnnotation('alignment'):
-		alignment = x.getAnnotation('alignment')
+	if x.hasAttribute('alignment'):
+		alignment = x.getAttribute('alignment')
 		out(", align %d" % alignment.asset)
 
 	return
@@ -2662,7 +2662,7 @@ def een(defs, decl_only=False):
 		if x.is_stmt_directive():
 			continue
 
-		if x.hasAnnotation('no_print') or x.hasAnnotation('ll_no_print'):
+		if x.hasAttribute('no_print') or x.hasAttribute('ll_no_print'):
 			continue
 
 		if hasattr(x, 'id'):

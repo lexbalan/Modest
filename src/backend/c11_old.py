@@ -184,7 +184,7 @@ def get_id_prefix(x):
 	if id.prefix != None:
 		prefix = id.prefix
 
-	nodecorate = not is_global_public(x) or id.hasAnnotation('nodecorate')
+	nodecorate = not is_global_public(x) or id.hasAttribute('nodecorate')
 	if nodecorate:
 		return prefix
 
@@ -486,11 +486,11 @@ def do_ctype(t):
 	assert(isinstance(t, Type))
 
 	specs = []
-	if t.hasAnnotation('const'):
+	if t.hasAttribute('const'):
 		specs.append('const')
-	if t.hasAnnotation('volatile'):
+	if t.hasAttribute('volatile'):
 		specs.append('volatile')
-	if t.hasAnnotation('restrict'):
+	if t.hasAttribute('restrict'):
 		specs.append('restrict')
 
 	if is_type_named(t): return do_ctype_named(t, specs=specs)
@@ -1363,7 +1363,7 @@ def str_value_with_type(v, t, ctx=[]):
 	asset = v.asset
 
 	if t.is_integer() or t.is_int() or t.is_nat() or t.is_word():
-		as_hex = t.is_word() or v.type.is_word() or v.hasAnnotation('hexadecimal')
+		as_hex = t.is_word() or v.type.is_word() or v.hasAttribute('hexadecimal')
 		return str_value_literal_number(t, asset, as_hex=as_hex)
 	elif t.is_string(): return str_value_literal_string(v, ctx)
 	elif t.is_bool(): return str_value_literal_bool(v, ctx)
@@ -1382,12 +1382,12 @@ def str_value_with_type(v, t, ctx=[]):
 
 
 def str_value_const(x, ctx):
-	if x.hasAnnotation('cbyvalue'):
+	if x.hasAttribute('cbyvalue'):
 		# есть атрибут говорящий о том что следует печатать значение константы (а не ее id)
 		return str_value_literal(x, ctx=ctx)
 
 	id_str = get_id_str(x)
-	if x.is_global_flag and not x.id.hasAnnotation('nodecorate'):
+	if x.is_global_flag and not x.id.hasAttribute('nodecorate'):
 		return camel_to_upper_snake(id_str)
 	return id_str
 
@@ -1656,7 +1656,7 @@ def print_stmt_var(x):
 	var_value = x.value
 	init_value = x.init_value
 
-	if x.hasAnnotation('static'):
+	if x.hasAttribute('static'):
 		out("static ")
 
 	print_variable(get_id_str(var_value), var_value.type)
@@ -1957,11 +1957,11 @@ def print_func_signature(id_str, ftype, ctx=[]):
 def print_decl_func(x):
 	out(str_add_nl(print_gcc_attributes_for(x)))
 
-	if not x.hasAnnotation('extern'):
+	if not x.hasAttribute('extern'):
 		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 			out("static ")
 
-	if x.hasAnnotation('inline'):
+	if x.hasAttribute('inline'):
 		out("inline ")
 
 	ftype = x.value.type
@@ -1992,10 +1992,10 @@ def print_gcc_attributes_for(x):
 
 	atts = []
 	for att in possible_attributes:
-		if x.hasAnnotation(att):
+		if x.hasAttribute(att):
 			gcc_att_name = possible_attributes[att]
 			satt = "<attribute>"
-			anno = x.getAnnotation(att)
+			anno = x.getAttribute(att)
 			if anno == {}:
 				satt = gcc_att_name
 			else:
@@ -2031,14 +2031,14 @@ def print_def_func(x):
 	out(str_add_nl(print_gcc_attributes_for(x)))
 
 
-	if not x.hasAnnotation('extern'):
+	if not x.hasAttribute('extern'):
 		if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 			out("static ")
 
-	if x.hasAnnotation('inline') or x.hasAnnotation('inlinehint'):
+	if x.hasAttribute('inline') or x.hasAttribute('inlinehint'):
 		out("inline ")
 
-	if x.hasAnnotation('extern'):
+	if x.hasAttribute('extern'):
 		out("extern ")
 
 	ftype = func.type
@@ -2154,12 +2154,12 @@ def print_def_var(x, isdecl=False, as_extern=False):
 	out(str_add_nl(print_gcc_attributes_for(x)))
 
 	# TODO: Почему-то атрибут 'extern' не работает, и накостылил через as_extern
-	is_extern = x.hasAnnotation('extern') or as_extern
+	is_extern = x.hasAttribute('extern') or as_extern
 
 	var = x.value
 
 	if x.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
-		if not (is_extern or x.hasAnnotation('nonstatic')):
+		if not (is_extern or x.hasAttribute('nonstatic')):
 			out("static ")
 
 	if is_extern:
@@ -2358,7 +2358,7 @@ def print_header(module, outname):
 
 	# print C `#include ""` directive for included modules
 	for inc in module.included_modules:
-		if not inc.hasAnnotation('do_not_include'):
+		if not inc.hasAttribute('do_not_include'):
 			include(inc.id + '.h', local=True)
 			nl_after_incs = True
 
@@ -2379,7 +2379,7 @@ def print_header(module, outname):
 		if is_private(x):
 			continue
 
-		if x.hasAnnotation('c_no_print') or x.hasAnnotation('no_print'):
+		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
 		#if x.is_stmt_directive():
@@ -2390,7 +2390,7 @@ def print_header(module, outname):
 		if x.is_stmt_def_func():
 			#nnl(x.nl)
 			nnl(1)
-			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAnnotation('inline'):
+			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute('inline'):
 				out("static ")
 				print_def_func(x)
 				continue
@@ -2583,7 +2583,7 @@ def print_cfile(module, _outname):
 
 	# print C `#include ""` directive for included modules
 	for inc in module.included_modules:
-		if not inc.hasAnnotation('do_not_include'):
+		if not inc.hasAttribute('do_not_include'):
 			include(inc.id + '.h', local=True)
 			nl_after_incs = True
 
@@ -2626,7 +2626,7 @@ def print_cfile(module, _outname):
 			out(";")
 
 	for x in defs:
-		if x.hasAnnotation('c_no_print') or x.hasAnnotation('no_print'):
+		if x.hasAttribute('c_no_print') or x.hasAttribute('no_print'):
 			continue
 
 		if isinstance(x, StmtDirectiveCInclude):
@@ -2649,7 +2649,7 @@ def print_cfile(module, _outname):
 			print_deps(x.deps)
 			print_def_var(x)
 		elif x.is_stmt_def_func():
-			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAnnotation('inline'):
+			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute('inline'):
 				continue
 			nnl(x.nl)
 			print_deps(x.deps)
