@@ -2411,7 +2411,7 @@ def def_var_common(x):
 
 	def remove_const_modifier(t):
 		if t.hasAttribute('const'):
-			t.annotations.pop('const')
+			t.attributes.pop('const')
 		return t
 
 	id = do_id(x['id'])
@@ -3090,7 +3090,7 @@ def def_add_annotations(x, ast_atts):
 				v = do_value(arg['value'])
 				annotation[k] = v
 
-		x.annotations.update({kind: annotation})
+		x.attributes.update({kind: annotation})
 
 		# ['inline', 'used', 'unused', 'inlinehint', 'noinline', 'nonstatic']
 		if kind in ['alignment', 'section', 'inline', 'used', 'unused', 'inlinehint', 'noinline', 'nonstatic']:

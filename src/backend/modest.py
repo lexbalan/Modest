@@ -704,9 +704,9 @@ def print_stmt_type(x):
 	out("type ")
 	out(get_id_str(x))
 	out(" = ")
-	annotations = x.original_type.annotations
-	for a in annotations:
-		out(str_annotation(a, params=annotations[a]) + " ")
+	attributes = x.original_type.attributes
+	for a in attributes:
+		out(str_annotation(a, params=attributes[a]) + " ")
 	out(str_type(x.original_type))
 
 
@@ -926,8 +926,8 @@ def printTopLevelStmt(x):
 	if not x.is_stmt_directive():
 		out(str_newline(n=x.nl))
 
-	for a in x.annotations:
-		v = x.annotations[a]
+	for a in x.attributes:
+		v = x.attributes[a]
 		out(str_annotation(a, v))
 		out("\n")
 

@@ -47,8 +47,8 @@ def with_space(s):
 
 
 
-def str_gcc_attributes(annotations):
-	if annotations == None:
+def str_gcc_attributes(attributes):
+	if attributes == None:
 		return ''
 
 	# Modest attribute -> GCC attribute
@@ -69,9 +69,9 @@ def str_gcc_attributes(annotations):
 	}
 
 	atts = []
-	for anno_name in annotations:
+	for anno_name in attributes:
 		#print(":anno:" + anno_name)
-		asset = annotations[anno_name]
+		asset = attributes[anno_name]
 		if anno_name in gcc_attributes:
 			gcc_att_name = gcc_attributes[anno_name]
 
@@ -1213,38 +1213,38 @@ class CStmtValueAssign(CStmt):
 
 
 class CStmtDeclType(CStmt):
-	def __init__(self, type, annotations=None):
+	def __init__(self, type, attributes=None):
 		assert(isinstance(type, CTypeNamed))
 		super().__init__()
 		self.type = type
-		self.annotations = annotations
+		self.attributes = attributes
 
 	def __str__(self):
 		sstr = str_nl_indent(self.nl)
-		sstr += str_gcc_attributes(self.annotations)
+		sstr += str_gcc_attributes(self.attributes)
 		sstr += str_ctype(self.type) + ';'
 		return sstr
 
 
 class CStmtDefType(CStmt):
-	def __init__(self, id_str, type, annotations=None):
+	def __init__(self, id_str, type, attributes=None):
 		assert(isinstance(id_str, str))
 		assert(isinstance(type, CType))
 		super().__init__()
 		self.id_str = id_str
 		self.type = type
-		self.annotations = annotations
+		self.attributes = attributes
 
 	def __str__(self):
 		sstr = str_nl_indent(self.nl)
-		sstr += str_gcc_attributes(self.annotations)
+		sstr += str_gcc_attributes(self.attributes)
 		sstr += 'typedef %s;' % self.type.to_str(text=self.id_str)
 		return sstr
 
 
 
 class CStmtDefVar(CStmt):
-	def __init__(self, id_str, type, init_value=None, storage_class='', annotations=None):
+	def __init__(self, id_str, type, init_value=None, storage_class='', attributes=None):
 		assert(isinstance(id_str, str))
 		assert(isinstance(type, CType))
 		if init_value != None:
@@ -1254,11 +1254,11 @@ class CStmtDefVar(CStmt):
 		self.type = type
 		self.storage = storage_class
 		self.init_value = init_value
-		self.annotations = annotations
+		self.attributes = attributes
 
 	def __str__(self):
 		sstr = str_nl_indent(self.nl)
-		sstr += str_gcc_attributes(self.annotations)
+		sstr += str_gcc_attributes(self.attributes)
 		if self.storage not in (None, ''):
 			sstr += self.storage + ' '
 		#mass
@@ -1270,7 +1270,7 @@ class CStmtDefVar(CStmt):
 
 
 class CStmtDefFunc(CStmt):
-	def __init__(self, id_str, type, block, storage_class='', annotations=None):
+	def __init__(self, id_str, type, block, storage_class='', attributes=None):
 		assert(isinstance(id_str, str))
 		assert(isinstance(type, CType))
 		assert(isinstance(block, CStmtBlock))
@@ -1281,12 +1281,12 @@ class CStmtDefFunc(CStmt):
 		self.type = type
 		self.storage = storage_class
 		self.block = block
-		self.annotations = annotations
+		self.attributes = attributes
 		self.nl = 2
 
 	def __str__(self):
 		sstr = str_nl_indent(self.nl)
-		sstr += str_gcc_attributes(self.annotations)
+		sstr += str_gcc_attributes(self.attributes)
 		if self.storage not in (None, ''):
 			sstr += self.storage + ' '
 		sstr += self.type.to_str(text=self.id_str)

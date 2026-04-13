@@ -163,21 +163,26 @@ class Entity():
 	def __init__(self, ti):
 		assert((ti == None) or isinstance(ti, TextInfo))
 		self.ti = ti
-		self.annotations = {}
+		self.attributes = {}
 		self.parent = None
 		self.is_global_flag = False
 
-	def hasAttribute(self, annotation):
-		return annotation in self.annotations
 
-	def addAttribute(self, annotation, params={}):
-		if not self.hasAttribute(annotation):
-			self.annotations[annotation] = params
+	def hasAttribute(self, attribute):
+		return attribute in self.attributes
 
-	def getAttribute(self, annotation):
-		if self.hasAttribute(annotation):
-			return self.annotations[annotation]
+	def addAttribute(self, attribute, params={}):
+		if not self.hasAttribute(attribute):
+			self.attributes[attribute] = params
+
+	def getAttribute(self, attribute):
+		if self.hasAttribute(attribute):
+			return self.attributes[attribute]
 		return None
+
+	def delAttribute(self, a):
+		if self.hasAttribute(a):
+			self.attributes.pop(a)
 
 
 
@@ -225,6 +230,10 @@ class Module:
 
 	def hasAttribute(self, a):
 		return a in self.att
+
+	def delAttribute(self, a):
+		if self.hasAttribute(a):
+			self.attributes.pop(a)
 
 
 	def type_add(self, id_str, t, is_public=False):
@@ -637,7 +646,7 @@ class Type(Entity):
 		self.align = align
 		self.ops = ops
 		self.att = []
-		self.annotations = {}
+		self.attributes = {}
 		self.deps = []
 		self.ti = None
 		self.incomplete = True
@@ -663,9 +672,9 @@ class Type(Entity):
 
 		for a in atts:
 			k = a['kind']
-			nt.annotations[k] = {}
+			nt.attributes[k] = {}
 
-			# handle record layout annotations
+			# handle record layout attributes
 			if k == 'layout':
 				layout = a['args'][0]['value']['str']
 				from error import info, error
@@ -1122,7 +1131,7 @@ class Type(Entity):
 	def copy(self):
 		y = copy.copy(self)
 		y.att = copy.copy(self.att)
-		y.annotations = copy.copy(self.annotations)
+		y.attributes = copy.copy(self.attributes)
 		return y
 
 
@@ -1134,7 +1143,7 @@ class Type(Entity):
 		if hasattr(src, 'id'):
 			dst.id = copy.copy(src.id)
 		dst.att = copy.copy(src.att)
-		dst.annotations = copy.copy(src.annotations)
+		dst.attributes = copy.copy(src.attributes)
 		dst.__class__ = src.__class__
 
 

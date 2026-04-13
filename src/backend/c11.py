@@ -1520,7 +1520,7 @@ def do_cstmt_const(x):
 
 #	if type.is_integer():
 #		dt = CTypeEnum([CTypeEnumItem(get_id_str(x), do_cvalue(init_value))])
-#		dv = CStmtDefVar('', dt, storage_class='')#, annotations=x.annotations)
+#		dv = CStmtDefVar('', dt, storage_class='')#, attributes=x.attributes)
 #		return (dv,)
 
 	# print only generic constant as C macrodefinition
@@ -1601,7 +1601,7 @@ def do_decl_func(x):
 			storage_class = 'inline'
 
 	ftype = do_ctype(func.type)
-	dv = CStmtDefVar(get_id_str(func), ftype, storage_class=storage_class, annotations=x.annotations)
+	dv = CStmtDefVar(get_id_str(func), ftype, storage_class=storage_class, attributes=x.attributes)
 	return (dv,)
 	#out(str(dv))
 
@@ -1658,7 +1658,7 @@ def do_def_func(x):
 	func_undef_list = []
 
 	ftype = do_ctype(func.type)
-	dv = CStmtDefFunc(get_id_str(func), ftype, cblock, storage_class=storage_class, annotations=x.annotations)
+	dv = CStmtDefFunc(get_id_str(func), ftype, cblock, storage_class=storage_class, attributes=x.attributes)
 
 	cfunc = None
 	return (dv,)
@@ -1745,7 +1745,7 @@ def do_def_type_record(t):
 
 	dt = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
 
-	dv = CStmtDefVar('', dt, storage_class='', annotations=t.annotations)
+	dv = CStmtDefVar('', dt, storage_class='', attributes=t.attributes)
 	defs = defs + (dv,)
 	return defs
 
@@ -1770,7 +1770,7 @@ def do_def_var(x, isdecl=False, is_extern=False):
 	if not (x.init_value.isValueUndef() or is_extern):
 		civ = do_cinitializer(x.init_value)
 
-	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, annotations=x.annotations)
+	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, attributes=x.attributes)
 	return (dv,)
 
 
