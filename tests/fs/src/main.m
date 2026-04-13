@@ -7,8 +7,6 @@ import "./sys"
 
 
 public func main () -> Int32 {
-	//chdir("/")
-
 	sys.init()
 
 	let fd = sys.open("/storage/sd/hello.txt", 0)

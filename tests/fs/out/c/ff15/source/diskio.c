@@ -79,6 +79,8 @@ DRESULT disk_read (
 {
 	DRESULT res = RES_OK;//RES_PARERR;
 
+	printf("READ(%d, %d)\n", sector, count);
+
 	for (UINT i = 0; i < count; i++) {
 		__builtin_memcpy(buff, &disk[sector], sizeof(struct sector));
 		buff += sizeof(struct sector);
