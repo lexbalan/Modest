@@ -216,24 +216,27 @@ class Module:
 		self.symtab_private = symtab_private
 		self.source_abspath = None
 		self.defs = []
-		self.att = []
+		self.attributes = []
+		self.helpers = []  #
+
+
+	def hasAttribute(self, a):
+		return a in self.attributes
+
+	def addAttribute(self, a):
+		if not self.hasAttribute(a):
+			self.attributes.append(a)
+
+	def delAttribute(self, a):
+		if self.hasAttribute(a):
+			self.attributes.remove(a)
+
 
 	def __str__(self):
 		return "Module(\"%s\")" % self.id
 
 	def setPrefix(self, prefixStr):
 		self.prefix = prefixStr
-
-	def addAttribute(self, a):
-		if not a in self.att:
-			self.att.append(a)
-
-	def hasAttribute(self, a):
-		return a in self.att
-
-	def delAttribute(self, a):
-		if self.hasAttribute(a):
-			self.attributes.pop(a)
 
 
 	def type_add(self, id_str, t, is_public=False):

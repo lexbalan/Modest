@@ -79,9 +79,10 @@ cdef = None
 
 
 def cmodule_use(x):
+	#print("USE: " + str(x))
 	global cmodule
-	if not x in cmodule.att:
-		cmodule.addAttribute(x)
+	if not x in cmodule.helpers:
+		cmodule.helpers.append(x)
 
 
 
@@ -154,7 +155,7 @@ def ctx_value_get(id_str, shallow=False):
 
 
 def cmodule_feature_add(s):
-	cmodule.att.append(s)
+	cmodule.addAttribute(s)
 
 
 typeSysWord = None
@@ -1814,7 +1815,7 @@ def do_value_immediate_string(x):
 
 
 def do_value_unsafe(x):
-	if not 'unsafe' in cmodule.att:
+	if not cmodule.hasAttribute('unsafe'):
 		error("for use 'unsafe' operator required -funsafe option", x['ti'])
 
 	global unsafe_mode
@@ -2409,11 +2410,6 @@ def def_var_common(x):
 	global cdef
 	global global_prefix
 
-	def remove_const_modifier(t):
-		if t.hasAttribute('const'):
-			t.attributes.pop('const')
-		return t
-
 	id = do_id(x['id'])
 	id.prefix = global_prefix
 
@@ -2451,7 +2447,7 @@ def def_var_common(x):
 		#	error("variable with generic type", x['ti'])
 		iv = value_cons_default(iv)
 		t = Type.copy(iv.type)
-		t = remove_const_modifier(t)
+		t.delAttribute('const')
 
 	elif tu == False and vu == False:
 		# type ok, value ok
@@ -2476,7 +2472,7 @@ def def_var_common(x):
 		if iv.type.is_generic():
 			iv = value_cons_default(iv)
 		t = Type.copy(iv.type)
-		t = remove_const_modifier(t)
+		t.delAttribute('const')
 
 	# Переменная может быть типа []X если она внешняя
 	is_not_extern = getAnno(x, 'extern') == None
@@ -2936,7 +2932,7 @@ def get_access_level(x):
 		return HLIR_ACCESS_LEVEL_LOCAL
 
 	if x['access_modifier'] == HLIR_ACCESS_LEVEL_UNDEFINED:
-		if 'public_module' in cmodule.att:
+		if cmodule.hasAttribute('public_module'):
 			return HLIR_ACCESS_LEVEL_PUBLIC
 		else:
 			return HLIR_ACCESS_LEVEL_PRIVATE

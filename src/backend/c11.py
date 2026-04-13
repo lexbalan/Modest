@@ -1863,34 +1863,9 @@ def nnl(nl):
 
 
 
-#ifndef __STR_UNICODE__
-#if __has_include(<uchar.h>)
-#include <uchar.h>
-#else
-#typedef uint16_t char16_t;
-#typedef uint32_t char32_t;
-#endif
-#define __STR_UNICODE__
-#define __STR8(x)  x
-#define __STR16(x) u##x
-#define __STR32(x) U##x
-#define _STR8(x)  __STR8(x)
-#define _STR16(x) __STR16(x)
-#define _STR32(x) __STR32(x)
-#define _CHR8(x)  (__STR8(x)[0])
-#define _CHR16(x) (__STR16(x)[0])
-#define _CHR32(x) (__STR32(x)[0])
-#endif /* __STR_UNICODE__ */
-
-
-
 def do_helpers(module):
-#	for use in module.att:
-#		if use in h_helpers:
-#			newline()
-#			h_helpers[use]()
 
-	if module.hasAttribute('use_unicode'):
+	if 'use_unicode' in module.helpers:
 		pairs = [
 			(
 				"!defined(__STR_UNICODE__)",
@@ -2145,7 +2120,8 @@ def do_cfile(module):
 			xdefs.extend(include(x.c_name, local=x.is_local))
 
 
-	for use in module.att:
+	# TODO: убери это - не место в атрибутах модуля, а то по сути это уже не атрибуты, а зависимости от хелперов
+	for use in module.helpers:
 		if use in c_helpers:
 			xdefs.extend(c_helpers[use]())
 
