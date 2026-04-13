@@ -164,10 +164,6 @@ def get_type_id_str(t):
 			kisa = isa + ' ' + tag
 			return kisa
 
-	if hasattr(t, 'id'):
-		if t.id.c != None:
-			return get_id_prefix(t) + t.id.c
-
 	return None
 
 
@@ -180,7 +176,9 @@ def get_id_str(x):
 			return x.id.common
 
 	if isinstance(x, Type):
-		return get_type_id_str(x)
+		id_str = get_type_id_str(x)
+		if id_str != None:
+			return id_str
 
 	if hasattr(x, 'id'):
 		if x.id != None:

@@ -1420,13 +1420,19 @@ class TypeSimple(Type):
 
 class TypeInteger(TypeSimple):
 	def __init__(self, width=0, ti=None):
-		super().__init__(width=width, kind=HLIR_TYPE_KIND_INTEGER, id=Id("Integer"), ops=NUMBER_OPS, ti=ti)
+		integer_id = Id("Integer")
+		integer_id.c = None
+		integer_id.llvm = None
+		super().__init__(width=width, kind=HLIR_TYPE_KIND_INTEGER, id=integer_id, ops=NUMBER_OPS, ti=ti)
 		self.generic = True
 
 
 class TypeRational(TypeSimple):
 	def __init__(self, ti=None):
-		super().__init__(width=0, kind=HLIR_TYPE_KIND_INTEGER, id=Id("Rational"), ops=NUMBER_OPS, ti=ti)
+		rational_id = Id("Rational")
+		rational_id.c = None
+		rational_id.llvm = None
+		super().__init__(width=0, kind=HLIR_TYPE_KIND_INTEGER, id=rational_id, ops=NUMBER_OPS, ti=ti)
 		self.generic = True
 
 
