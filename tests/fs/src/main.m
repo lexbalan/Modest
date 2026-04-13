@@ -3,21 +3,21 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-include "./sys"
+import "./sys"
 
 
 public func main () -> Int32 {
 	//chdir("/")
 
-	init()
+	sys.init()
 
-	let fd = open("/storage/sd/hello.txt", 0)
+	let fd = sys.open("/storage/sd/hello.txt", 0)
 	if fd < 0 {
 		printf("cannot open file (error = %d)\n", fd)
 		return -1
 	}
 
-	close(fd)
+	sys.close(fd)
 
 	return 0
 }

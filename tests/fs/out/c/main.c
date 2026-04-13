@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#include <sys/stat.h>
-#include <time.h>
 #include "sys.h"
 
 int32_t main(void) {

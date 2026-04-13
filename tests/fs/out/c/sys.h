@@ -1,6 +1,8 @@
 #ifndef SYS_H
 #define SYS_H
 
+struct stat;
+
 typedef int sys_Int;
 typedef unsigned int sys_Nat;
 typedef unsigned int sys_Word;
