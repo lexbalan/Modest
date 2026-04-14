@@ -14,7 +14,8 @@ int sys_init(void);
 int sys_deinit(void);
 
 int sys_chdir(const char *path);
-int sys_open(const char *fname, int opt, ...);
+int sys_mkdir(const char *path);
+int sys_open(const char *fname, uint32_t oflag);
 int sys_stat(const char *fname, struct stat *stat);
 int sys_fstat(int fd, struct stat *stat);
 int sys_unlink(const char *fname);
@@ -23,6 +24,7 @@ int sys_read(int fd, void *buf, size_t len);
 long sys_lseek(int fd, long offset, int origin);
 long sys_tell(int fd);
 int sys_close(int fd);
+
 
 #endif /* SYS_H */
 

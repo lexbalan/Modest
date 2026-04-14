@@ -19,6 +19,7 @@
 /----------------------------------------------------------------------------*/
 
 
+#include <stdio.h> //
 #include <string.h>
 #include "ff.h"			/* Declarations of FatFs API */
 #include "diskio.h"		/* Declarations of device I/O functions */
@@ -5057,6 +5058,7 @@ FRESULT f_mkdir (
 	const TCHAR* path		/* Pointer to the directory path */
 )
 {
+	printf("f_mkdir(%s)", path);
 	FRESULT res;
 	FATFS *fs;
 	DIR dj;

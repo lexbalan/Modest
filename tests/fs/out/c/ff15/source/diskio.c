@@ -12,6 +12,9 @@
 //
 
 #include <stdio.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #if 1
 
@@ -35,15 +38,17 @@ struct sector {
 };
 struct sector disk[SECTOR_COUNT];
 
+int fd[16];
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_status (
-	BYTE pdrv		/* Physical drive nmuber to identify the drive */
+	BYTE pdrv  /* Physical drive nmuber to identify the drive */
 )
 {
+	printf("STATUS(%d)\n", pdrv);
 	DSTATUS stat = 0;//STA_NOINIT;
 
 	return stat;
@@ -60,6 +65,18 @@ DSTATUS disk_initialize (
 )
 {
 	DSTATUS stat = 0;//STA_NOINIT;
+
+	printf("INIT(%d)\n", pdrv);
+
+	if (fd[pdrv] <= 0) {
+		int f = open("./disk/0.dmg", O_RDWR);
+		if (f < 0) {
+			printf("cannot open disk file %d\n", f);
+			return STA_NOINIT;
+		}
+
+		fd[pdrv] = f;
+	}
 
 	return stat;
 }
@@ -79,10 +96,12 @@ DRESULT disk_read (
 {
 	DRESULT res = RES_OK;//RES_PARERR;
 
-	printf("READ(%d, %d)\n", sector, count);
+	printf("READ(drv=%d, sector=%d, count=%d)\n", pdrv, sector, count);
 
 	for (UINT i = 0; i < count; i++) {
-		__builtin_memcpy(buff, &disk[sector], sizeof(struct sector));
+		//__builtin_memcpy(buff, &disk[sector], sizeof(struct sector));
+		off_t new_pos = lseek(fd[pdrv], sector*sizeof(struct sector), SEEK_SET);
+		int rc = read(fd[pdrv], buff, sizeof(struct sector));
 		buff += sizeof(struct sector);
 	}
 
@@ -106,8 +125,12 @@ DRESULT disk_write (
 {
 	DRESULT res = RES_OK;//RES_PARERR;
 
+	printf("WRITE(drv=%d, sector=%d, count=%d)\n", pdrv, sector, count);
+
 	for (UINT i = 0; i < count; i++) {
-		__builtin_memcpy(&disk[sector], buff, sizeof(struct sector));
+		//__builtin_memcpy(&disk[sector], buff, sizeof(struct sector));
+		lseek(fd[pdrv], sector*sizeof(struct sector), SEEK_SET);
+		write(fd[pdrv], buff, sizeof(struct sector));
 		buff += sizeof(struct sector);
 	}
 
@@ -130,7 +153,7 @@ DRESULT disk_ioctl (
 {
 	DRESULT res = RES_OK;//RES_PARERR;
 
-	printf("call disk_ioctl (%d)\n", cmd);
+	printf("call disk_ioctl (%d, %d)\n", pdrv, cmd);
 
 	switch (cmd) {
 		case GET_SECTOR_SIZE: *((uint32_t *)buff) = SECTOR_SIZE; break;

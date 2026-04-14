@@ -14,7 +14,8 @@ public func init () -> Int
 public func deinit () -> Int
 
 public func chdir (path: *[]Char) -> Int
-public func open (path: *[]Char, opt: Int, ...) -> Int
+public func mkdir (path: *[]Char) -> Int
+public func open (path: *[]Char, oflag: Word32) -> Int
 public func stat (path: *[]Char, stat: *Stat) -> Int
 public func fstat (fd: Int, stat: *Stat) -> Int
 public func unlink (path: *[]Char) -> Int
