@@ -14,6 +14,12 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
+#define HELLO "\n *** HARSH command interpretator *** \n Alex Balan @ 2026\n\n"
+// Not works!
+//const hello: *Str8 = " \
+// *** HARSH command interpretator *** \n\
+// Alex Balan @ 2026 \n\
+//"
 #define PROMPT_MAX_LEN 32
 static char prompt[PROMPT_MAX_LEN + 1] = {'#'};
 struct tokenizer {
@@ -79,12 +85,14 @@ struct cmd_descriptor {char *id; CmdHandler *handler;};
 static int32_t cmdLs(uint16_t argc, char *argv[]);
 static int32_t cmdCd(uint16_t argc, char *argv[]);
 static int32_t cmdCreate(uint16_t argc, char *argv[]);
+static int32_t cmdLsdev(uint16_t argc, char *argv[]);
 static int32_t cmdExit(uint16_t argc, char *argv[]);
 static int32_t cmdSetPrompt(uint16_t argc, char *argv[]);
-static struct cmd_descriptor commandHandlers[5] = {
+static struct cmd_descriptor commandHandlers[6] = {
 	{.id = "ls", .handler = &cmdLs},
 	{.id = "cd", .handler = &cmdCd},
 	{.id = "create", .handler = &cmdCreate},
+	{.id = "lsdev", .handler = &cmdLsdev},
 	{.id = "exit", .handler = &cmdExit},
 	{.id = "set_prompt", .handler = &cmdSetPrompt}
 };
@@ -118,7 +126,7 @@ static int32_t execute(char *cmd, uint16_t argc, char *argv[]) {
 
 int32_t main(void) {
 	sys_init();
-	printf("HARSH :) v0.1\n");
+	printf("%s", HELLO);
 	char inbuf[1024];
 	while (true) {
 		printf("%s ", prompt);
@@ -161,8 +169,18 @@ static int32_t cmdCd(uint16_t argc, char *argv[]) {
 	return 0;
 }
 
+static int32_t cmdLsdev(uint16_t argc, char *argv[]) {
+	printf(" - uart0\n");
+	printf(" - uart1\n");
+	printf(" - uart2\n");
+	printf(" - spi0\n");
+	printf(" - spi1\n");
+	printf(" - i2c0\n");
+	printf(" - i2c1\n");
+	return 0;
+}
+
 static int32_t cmdExit(uint16_t argc, char *argv[]) {
-	printf("called cmdExit\n");
 	exit(0);
 	return 0;
 }

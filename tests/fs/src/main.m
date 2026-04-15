@@ -14,6 +14,15 @@ include "libc/string"
 import "./sys"
 
 
+const hello: *Str8 = "\n *** HARSH command interpretator *** \n Alex Balan @ 2026\n\n"
+
+// Not works!
+//const hello: *Str8 = " \
+// *** HARSH command interpretator *** \n\
+// Alex Balan @ 2026 \n\
+//"
+
+
 const promptMaxLen = 32
 var prompt = [promptMaxLen+1]Char8 "#"
 
@@ -102,6 +111,7 @@ var commandHandlers: []CmdDescriptor = [
 	{id='ls', handler=&cmdLs}
 	{id='cd', handler=&cmdCd}
 	{id='create', handler=&cmdCreate}
+	{id='lsdev', handler=&cmdLsdev}
 	{id='exit', handler=&cmdExit}
 	{id='set_prompt', handler=&cmdSetPrompt}
 ]
@@ -142,7 +152,7 @@ func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Int32 {
 public func main () -> Int32 {
 	sys.init()
 
-	printf("HARSH :) v0.1\n")
+	printf("%s", hello)
 
 	var inbuf: [1024]Char8
 
@@ -198,8 +208,18 @@ func cmdCd (argc: Nat16, argv: *[]*Str8) -> Int32 {
 	return 0
 }
 
+func cmdLsdev (argc: Nat16, argv: *[]*Str8) -> Int32 {
+	printf(" - uart0\n")
+	printf(" - uart1\n")
+	printf(" - uart2\n")
+	printf(" - spi0\n")
+	printf(" - spi1\n")
+	printf(" - i2c0\n")
+	printf(" - i2c1\n")
+	return 0
+}
+
 func cmdExit (argc: Nat16, argv: *[]*Str8) -> Int32 {
-	printf("called cmdExit\n")
 	exit(0)
 	return 0
 }
