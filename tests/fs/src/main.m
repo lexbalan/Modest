@@ -1,5 +1,20 @@
 // tests/fs/src/main.m
 
+/*
+	/cfg/
+		- файлы конфигурации
+	/cfg/env/
+		- каждая переменная среды это файл
+	/exe/
+		- командные программы
+	/app/
+		- приложения
+	/lib/
+		- разделяемые библиотеки
+	/usr/
+		- пользовательские директории
+*/
+
 pragma unsafe
 
 include "libc/ctypes64"
@@ -107,7 +122,7 @@ type CmdHandler = (argc: Nat16, argv: *[]*Str8) -> Int32
 type CmdDescriptor = {id: *Str8, handler: *CmdHandler}
 
 
-var commandHandlers: []CmdDescriptor = [
+var builtinCommandHandlers: []CmdDescriptor = [
 	{id='ls', handler=&cmdLs}
 	{id='cd', handler=&cmdCd}
 	{id='create', handler=&cmdCreate}
@@ -134,8 +149,8 @@ func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Int32 {
 	}
 
 	var i: Nat32 = 0
-	while i < lengthof(commandHandlers) {
-		let h = &commandHandlers[i]
+	while i < lengthof(builtinCommandHandlers) {
+		let h = &builtinCommandHandlers[i]
 		//if *h.id == *cmd {
 		if strcmp(h.id, cmd) == 0 {
 			// call command handler
@@ -169,7 +184,7 @@ public func main () -> Int32 {
 		}
 		tokenize(&tokenizer)
 
-		// "выполняем" команду
+		// выполняе команду
 		let cmd = tokenizer.tokens[0]
 		let argc = tokenizer.ntokens
 		let argv = &tokenizer.tokens[1:]
