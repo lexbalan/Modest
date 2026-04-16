@@ -9,11 +9,26 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <ff.h>
 #include "fcntl.h"
 #include "sys.h"
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
+/*
+	/cfg/
+		- файлы конфигурации
+	/cfg/env/
+		- каждая переменная среды это файл
+	/exe/
+		- командные программы
+	/app/
+		- приложения
+	/lib/
+		- разделяемые библиотеки
+	/usr/
+		- пользовательские директории
+*/
 #define HELLO "\n *** HARSH command interpretator *** \n Alex Balan @ 2026\n\n"
 // Not works!
 //const hello: *Str8 = " \
@@ -85,13 +100,15 @@ struct cmd_descriptor {char *id; CmdHandler *handler;};
 static int32_t cmdLs(uint16_t argc, char *argv[]);
 static int32_t cmdCd(uint16_t argc, char *argv[]);
 static int32_t cmdCreate(uint16_t argc, char *argv[]);
+static int32_t cmdDelete(uint16_t argc, char *argv[]);
 static int32_t cmdLsdev(uint16_t argc, char *argv[]);
 static int32_t cmdExit(uint16_t argc, char *argv[]);
 static int32_t cmdSetPrompt(uint16_t argc, char *argv[]);
-static struct cmd_descriptor commandHandlers[6] = {
+static struct cmd_descriptor builtinCommandHandlers[7] = {
 	{.id = "ls", .handler = &cmdLs},
 	{.id = "cd", .handler = &cmdCd},
 	{.id = "create", .handler = &cmdCreate},
+	{.id = "delete", .handler = &cmdDelete},
 	{.id = "lsdev", .handler = &cmdLsdev},
 	{.id = "exit", .handler = &cmdExit},
 	{.id = "set_prompt", .handler = &cmdSetPrompt}
@@ -113,8 +130,8 @@ static int32_t execute(char *cmd, uint16_t argc, char *argv[]) {
 		printf("]\n");
 	}
 	uint32_t i = 0U;
-	while (i < LENGTHOF(commandHandlers)) {
-		struct cmd_descriptor *const h = &commandHandlers[i];
+	while (i < LENGTHOF(builtinCommandHandlers)) {
+		struct cmd_descriptor *const h = &builtinCommandHandlers[i];
 		if (strcmp(h->id, cmd) == 0) {
 			return h->handler(argc, (char **)argv);
 		}
@@ -147,8 +164,7 @@ int32_t main(void) {
 }
 
 static int32_t cmdCreate(uint16_t argc, char *argv[]) {
-	char *filename;
-	filename = argv[0];
+	char *const filename = argv[0];
 	printf("called create '%s'\n", filename);
 	const sys_Int fd = sys_open(filename, O_CREAT | O_RDONLY);
 	if (fd < 0) {
@@ -159,8 +175,32 @@ static int32_t cmdCreate(uint16_t argc, char *argv[]) {
 	return 0;
 }
 
+static int32_t cmdDelete(uint16_t argc, char *argv[]) {
+	char *const filename = argv[0];
+	printf("called delete '%s'\n", filename);
+	const sys_Int fd = f_unlink(filename);
+	if (fd < 0) {
+		printf("cannot delete file (error = %d)\n", fd);
+		return -1;
+	}
+	return 0;
+}
+
 static int32_t cmdLs(uint16_t argc, char *argv[]) {
-	printf("called cmdLs\n");
+	DIR dir;
+	const sys_Int rc = f_opendir(&dir, "/");
+	if (rc != 0) {
+		printf("cannot open directory\n");
+		return -1;
+	}
+	FILINFO fileInfo;
+	while (f_readdir(&dir, &fileInfo) == 0) {
+		if (fileInfo.fname[0] == '\x0') {
+			break;
+		}
+		printf(" - %s\n", fileInfo.fname);
+	}
+	printf("\n");
 	return 0;
 }
 

@@ -1570,24 +1570,24 @@ def acc(left, field_id, ti):
 	# check if is record
 	if not record_type.is_record():
 		error("expected record or pointer to record", left.ti)
-		return ValueBad(x['ti'])
+		return ValueBad(ti)
 
 	field = TypeRecord.record_field_get(record_type, field_id['str'])
 
 	# if field not found
 	if field == None:
 		error("undefined field '%s'" % field_id['str'], field_id['ti'])
-		return ValueBad(x['ti'])
+		return ValueBad(ti)
 
 	if field.type.is_bad():
-		return ValueBad(x['ti'])
+		return ValueBad(ti)
 
 	# Check access permissions
 
 	# не у всех типов есть 'definition' (его нет у анонимных записей например)
 	if not is_local_entity(record_type):
 		if field.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
-			error("access to private field of record", x['right']['ti'])
+			error("access to private field of record", field.ti)#x['right']['ti'])
 
 	nv = ValueAccessRecord(field.type, left, field, ti=ti)
 

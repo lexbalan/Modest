@@ -17,6 +17,8 @@
 
 pragma unsafe
 
+pragma c_include "ff.h"
+
 include "libc/ctypes64"
 include "libc/stdio"
 include "libc/fcntl"
@@ -126,6 +128,7 @@ var builtinCommandHandlers: []CmdDescriptor = [
 	{id='ls', handler=&cmdLs}
 	{id='cd', handler=&cmdCd}
 	{id='create', handler=&cmdCreate}
+	{id='delete', handler=&cmdDelete}
 	{id='lsdev', handler=&cmdLsdev}
 	{id='exit', handler=&cmdExit}
 	{id='set_prompt', handler=&cmdSetPrompt}
@@ -199,8 +202,7 @@ public func main () -> Int32 {
 
 func cmdCreate (argc: Nat16, argv: *[]*Str8) -> Int32 {
 	// "/A/hello.txt"
-	var filename: *Str8
-	filename = argv[0]
+	let filename = argv[0]
 	printf("called create '%s'\n", filename)
 
 	let fd = sys.open(filename, c_O_CREAT | c_O_RDONLY)
@@ -213,8 +215,39 @@ func cmdCreate (argc: Nat16, argv: *[]*Str8) -> Int32 {
 	return 0
 }
 
+func cmdDelete (argc: Nat16, argv: *[]*Str8) -> Int32 {
+	let filename = argv[0]
+	printf("called delete '%s'\n", filename)
+
+	let fd = sys.delete(filename)
+	if fd < 0 {
+		printf("cannot delete file (error = %d)\n", fd)
+		return -1
+	}
+	//sys.close(fd)
+
+	return 0
+}
+
 func cmdLs (argc: Nat16, argv: *[]*Str8) -> Int32 {
-	printf("called cmdLs\n")
+	//printf("called cmdLs\n")
+	var dir: sys.Dir
+	let rc = sys.opendir(&dir, "/")
+	if rc != 0 {
+		printf("cannot open directory\n")
+		return -1
+	}
+
+	//printf("rc = %d\n", rc)
+	var fileInfo: sys.Filinfo
+	while sys.readdir(&dir, &fileInfo) == 0 {
+		if fileInfo.fname[0] == '\0' {
+			break
+		}
+		printf(" - %s\n", &fileInfo.fname)
+	}
+
+	printf("\n")
 	return 0
 }
 
