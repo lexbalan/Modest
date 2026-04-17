@@ -46,8 +46,10 @@ public func readdir (dir: *Dir, finfo: *Filinfo) -> Int
 @alias('c', 'f_unlink')
 public func delete (path: *Str8) -> Int
 
-public func chdir (path: *[]Char) -> Int
+@alias('c', 'f_mkdir')
 public func mkdir (path: *[]Char) -> Int
+
+public func chdir (path: *[]Char) -> Int
 public func open (path: *[]Char, oflag: Word32) -> Int
 public func stat (path: *[]Char, stat: *Stat) -> Int
 public func fstat (fd: Int, stat: *Stat) -> Int

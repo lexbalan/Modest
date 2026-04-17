@@ -128,6 +128,7 @@ var builtinCommandHandlers: []CmdDescriptor = [
 	{id='ls', handler=&cmdLs}
 	{id='cd', handler=&cmdCd}
 	{id='create', handler=&cmdCreate}
+	{id='mkdir', handler=&cmdMkdir}
 	{id='delete', handler=&cmdDelete}
 	{id='lsdev', handler=&cmdLsdev}
 	{id='exit', handler=&cmdExit}
@@ -224,7 +225,19 @@ func cmdDelete (argc: Nat16, argv: *[]*Str8) -> Int32 {
 		printf("cannot delete file (error = %d)\n", fd)
 		return -1
 	}
-	//sys.close(fd)
+
+	return 0
+}
+
+func cmdMkdir (argc: Nat16, argv: *[]*Str8) -> Int32 {
+	// "/A/hello.txt"
+	let dirname = argv[0]
+
+	let rc = sys.mkdir(dirname)
+	if rc < 0 {
+		printf("cannot create directory (error = %d)\n", rc)
+		return -1
+	}
 
 	return 0
 }

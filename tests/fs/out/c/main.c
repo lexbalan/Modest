@@ -100,14 +100,16 @@ struct cmd_descriptor {char *id; CmdHandler *handler;};
 static int32_t cmdLs(uint16_t argc, char *argv[]);
 static int32_t cmdCd(uint16_t argc, char *argv[]);
 static int32_t cmdCreate(uint16_t argc, char *argv[]);
+static int32_t cmdMkdir(uint16_t argc, char *argv[]);
 static int32_t cmdDelete(uint16_t argc, char *argv[]);
 static int32_t cmdLsdev(uint16_t argc, char *argv[]);
 static int32_t cmdExit(uint16_t argc, char *argv[]);
 static int32_t cmdSetPrompt(uint16_t argc, char *argv[]);
-static struct cmd_descriptor builtinCommandHandlers[7] = {
+static struct cmd_descriptor builtinCommandHandlers[8] = {
 	{.id = "ls", .handler = &cmdLs},
 	{.id = "cd", .handler = &cmdCd},
 	{.id = "create", .handler = &cmdCreate},
+	{.id = "mkdir", .handler = &cmdMkdir},
 	{.id = "delete", .handler = &cmdDelete},
 	{.id = "lsdev", .handler = &cmdLsdev},
 	{.id = "exit", .handler = &cmdExit},
@@ -181,6 +183,16 @@ static int32_t cmdDelete(uint16_t argc, char *argv[]) {
 	const sys_Int fd = f_unlink(filename);
 	if (fd < 0) {
 		printf("cannot delete file (error = %d)\n", fd);
+		return -1;
+	}
+	return 0;
+}
+
+static int32_t cmdMkdir(uint16_t argc, char *argv[]) {
+	char *const dirname = argv[0];
+	const sys_Int rc = f_mkdir(dirname);
+	if (rc < 0) {
+		printf("cannot create directory (error = %d)\n", rc);
 		return -1;
 	}
 	return 0;

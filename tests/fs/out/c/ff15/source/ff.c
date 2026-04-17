@@ -5058,7 +5058,6 @@ FRESULT f_mkdir (
 	const TCHAR* path		/* Pointer to the directory path */
 )
 {
-	printf("f_mkdir(%s)", path);
 	FRESULT res;
 	FATFS *fs;
 	DIR dj;
