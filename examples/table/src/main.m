@@ -21,7 +21,7 @@ var table_header1: []*Str8 = [
 	"#", "Header0", "Header1", "Header2"
 ]
 
-var tableData1: [][4]*Str8 = [
+var tableData1: [][]*Str8 = [
 	["0",  "Alef",   "Betha",  "Clock"]
 	["1",  "Depth",  "Emma",   "Free"]
 	["2",  "Ink",    "Julia",  "Keyword"]

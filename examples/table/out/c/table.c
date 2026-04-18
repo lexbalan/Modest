@@ -14,6 +14,7 @@ void table_print(table_Table *table) {
 	uint32_t j;
 	char *(*const data)[table->nRows][table->nCols] = (char *(*)[table->nRows][table->nCols])table->data;
 	uint32_t sz[table->nCols];
+	__builtin_bzero(&sz, sizeof(uint32_t [table->nCols]));
 	if (table->header != NULL) {
 		i = 0U;
 		while (i < table->nCols) {

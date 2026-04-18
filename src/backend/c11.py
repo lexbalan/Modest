@@ -524,6 +524,7 @@ def do_cvalue_literal_array(v, ctx):
 	return CValueArray(initializers)
 
 
+
 def do_cvalue_literal_record(v, ctx):
 	items = []
 	for kv in v.asset:
@@ -1489,10 +1490,11 @@ def do_cstmt_var(x):
 	var_value = x.value
 	init_value = x.init_value
 
+	dynamic_init = init_value.type.is_array() and (init_value.isValueRuntime() or var_value.type.is_vla())
+
 	civ = None
-	if not init_value.isValueUndef():
-		if not (init_value.type.is_array() and (init_value.isValueRuntime() or var_value.type.is_vla())):
-			civ = do_cinitializer(init_value)
+	if not dynamic_init and not init_value.isValueUndef():
+		civ = do_cinitializer(init_value)
 
 	storage_class = ''
 	if x.hasAttribute('static'):
@@ -1500,7 +1502,7 @@ def do_cstmt_var(x):
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class)
 
-	if (init_value.type.is_array() and init_value.isValueRuntime()) or init_value.type.is_func():
+	if dynamic_init:
 		return (dv, do_assign_array(var_value, init_value, x.ti))
 
 	return (dv,)
