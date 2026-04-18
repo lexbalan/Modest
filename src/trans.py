@@ -552,7 +552,7 @@ def do_type_array(x):
 				global cfunc
 				cfunc.addAttribute('stacksave')
 			else:
-				error("non local VLA", t.size.ti)
+				error("non local VLA", t.get_size().ti)
 
 	nt = TypeArray(of, volume, ti=x['ti'])
 	# [][] разрешено создавать, но они отольются в [] в backend, и чтобы снмим работать нужно привести явно к [n][m] (!)
@@ -1953,7 +1953,7 @@ def do_stmt_if(x):
 		return StmtBad(x['ti'])
 
 	if not cond.type.is_bool():
-		error("expected bool value", cond.ti)
+		error("expected value with Bool type", cond.ti)
 		return StmtBad(x['ti'])
 
 	_then = do_stmt(x['then'])
@@ -1978,7 +1978,7 @@ def do_stmt_while(x):
 		return StmtBad(x['ti'])
 
 	if not cond.type.is_bool():
-		error("expected bool value", cond.ti)
+		error("expected value with Bool type", cond.ti)
 		return StmtBad(x['ti'])
 
 	block = do_stmt(x['stmt'])
@@ -2065,12 +2065,12 @@ def do_stmt_assign(x):
 # НО ведь в коде реально right может иметь другой тип, и это приводит к пиздецу..
 # (кароче присваивание generic массива )
 #	if l.type.is_array() and r.type.is_array():
-#		if l.type.of.size != r.type.of.size:
+#		if l.type.of.get_size() != r.type.of.get_size():
 #			cmodule_use('use_lengthof')
 #			cmodule_use('use_arrcpy')
 # поэтому пока ВСЕГДА использую ARRCPY
 	if l.type.is_array() and r.type.is_array():
-		if l.type.of.size != r.type.of.size:
+		if l.type.of.get_size() != r.type.of.get_size():
 			if not r.isValueZero():
 				cmodule_use('use_lengthof')
 				cmodule_use('use_arrcpy')
@@ -2455,8 +2455,12 @@ def def_var_common(x):
 
 	elif tu == False and vu == False:
 		if t.is_open_array():
+			# приходит нормальный массив [3][3]*Str8, выходит [3][]*Str8
+			# array_cons() делает херню!
 			iv = value_cons_implicit(t, iv)
+			#warning("? " + iv.type.to_str(), x['ti'])
 			t = iv.type
+
 
 	# type & init value present
 	if t != None:
@@ -2474,6 +2478,8 @@ def def_var_common(x):
 		error("unsuitable variable type", x['id']['ti'])
 
 	var_value = ValueVar(t, id, init_value=iv, ti=id.ti)
+	#if var_value.type.is_array():
+	#	warning("Type = " + var_value.type.to_str(), x['ti'])
 	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 	ctx_value_add(id.str, var_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 	var_value.is_global_flag = True

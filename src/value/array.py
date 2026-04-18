@@ -49,7 +49,7 @@ def array_can(to, from_type, method, ti):
 
 	if from_type.is_generic():
 		# from an empty array literal `[]`
-		if from_type.size == 0 and from_type.of.is_unit():
+		if from_type.get_size() == 0 and from_type.of.is_unit():
 			return True
 
 	# Check item type
@@ -86,34 +86,39 @@ def array_can(to, from_type, method, ti):
 
 
 
+def get_last_array_in_chain(t):
+	if t.of.is_array():
+		return get_last_array_in_chain(t.of)
+	return t
+
+
 def value_array_cons(t, v, method, ti):
-	#result_type = t
-	result_type = t.copy()
-	if t.volume.isValueUndef():
-		# for case: `[]Int32 [1, 2, 3]`
-		# we try to construct array with undefined volume from array with defined volume
-		# in this case we take volume of value array
-		#info("undefined volume", t['ti'])
-		volume = None
-		if v.type.is_array():
-			volume = v.type.volume
-			result_type = TypeArray(t.of, volume=volume, ti=ti)
+	result_type = t
 
-		elif v.type.is_string():
-			from .integer import value_integer_create
-			volume = value_integer_create(v.type.length)
-			result_type = TypeArray(t.of, volume=volume, ti=ti)
+	if result_type.is_open_array():
+		if array_can(t, v.type, method, ti):
 
-		else:
-			assert(False)
+			result_type = None
+			if v.type.is_string():
+				from .integer import value_integer_create
+				volume = value_integer_create(v.type.length)
+				result_type = TypeArray(t.of, volume=volume, ti=ti)
+			else:
+				# получаем копию типа элемента массива v (копия нужна чтобы не испортить оригинальный тип v)
+				result_type = v.type.deep_copy()
+				result_type.generic = False
 
-		result_type.volume = volume
-		if t.hasAttribute('zarray'):
-			# конструируем zarray а это значит что он должен быть на 1 длиннее
-			from trans import do_value_bin_op
-			result_type.volume = do_value_bin_op(HLIR_VALUE_OP_ADD, result_type.volume, value_integer_create(1, ti=ti), ti)
+			# ищем и заменяем конечный тип в цепочке масссивов [][][]X (идем к X)
+			last = get_last_array_in_chain(result_type)
+			last.of = get_last_array_in_chain(t).of
+			#info("result_type = %s" % result_type.to_str(), ti)
 
-		result_type.size = result_type.of.size * volume.asset
+
+	# if t.hasAttribute('zarray'):
+	# 	# конструируем zarray а это значит что он должен быть на 1 длиннее
+	# 	from trans import do_value_bin_op
+	# 	result_type.volume = do_value_bin_op(HLIR_VALUE_OP_ADD, result_type.volume, value_integer_create(1, ti=ti), ti)
+
 
 	if method == 'implicit':
 		n_to = result_type.volume.asset
@@ -125,13 +130,14 @@ def value_array_cons(t, v, method, ti):
 			n_from = v.type.volume.asset
 
 		if n_from > 0 and n_from < n_to:
-			warning("implicit cons biggest array from smaller", ti)
+			pass
+			#warning("implicit cons biggest array from smaller", ti)
 
 	nv = ValueCons(result_type, t, v, method, ti=ti)
 	nv.stage = v.stage
 
 	if v.type.is_string():
-		char_type = t.of
+		char_type = result_type.of
 		items = utf32_chars_to_utfx_char_values(v.asset, char_type, ti)
 		nv.set_asset(items)
 		return nv
@@ -155,9 +161,9 @@ def value_array_cons(t, v, method, ti):
 		items = []
 		for item in v.asset:
 			from .cons import value_cons_implicit_check
-			casted_item = value_cons_implicit_check(t.of, item)
+			casted_item = value_cons_implicit_check(result_type.of, item)
 			casted_item.nl = item.nl
-			size += casted_item.type.size
+			size += casted_item.type.get_size()
 			items.append(casted_item)
 		nv.set_asset(items)
 

@@ -10,7 +10,7 @@ var table_header0: []*Str8 = [
 	"#", "Header0", "Header1"
 ]
 
-var tableData0: [][3]*Str8 = [
+var tableData0: [][]*Str8 = [
 	["0",  "Alef",   "Betha"]
 	["1",  "Clock",  "Depth"]
 	["2",  "Earth",  "Fight"]

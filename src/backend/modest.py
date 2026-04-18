@@ -172,9 +172,14 @@ def str_type(t):
 		return str_type_pointer(t)
 	elif Type.is_string(t):
 		return "String"
-	elif isinstance(t, TypeNumber):
-		return "Number"
+	elif isinstance(t, TypeInteger):
+		return "Integer"
+	elif isinstance(t, TypeRational):
+		return "Rational"
+	elif isinstance(t, TypeUndefined):
+		return "Undefined"
 	else:
+		#1/0
 		return str(t)
 
 

@@ -667,6 +667,16 @@ class Type(Entity):
 		self.brand = 0
 
 
+	def to_str(self):
+		from backend.modest import str_type
+		return str_type(self)
+
+	def get_size(self):
+		return self.size
+	
+	def get_align(self):
+		return self.align
+
 	def add_atts(self, atts):
 		if atts == []:
 			return self
@@ -1136,6 +1146,9 @@ class Type(Entity):
 		y.att = copy.copy(self.att)
 		y.attributes = copy.copy(self.attributes)
 		return y
+	
+	def deep_copy(self):
+		return copy.deepcopy(self)
 
 
 	@staticmethod
@@ -1241,9 +1254,12 @@ class Type(Entity):
 	# CAN RETURN NONE!
 	@staticmethod
 	def select_common_type(a, b, ti):
+		from error import info
+		
 
 		if Type.eq(a, b):
 			return a
+
 
 		if a.is_generic() and b.is_generic():
 			if a.is_rational() and b.is_integer():
@@ -1256,13 +1272,15 @@ class Type(Entity):
 				if a.is_record():
 					return Type.select_common_record_type(a, b, ti)
 				elif a.is_array():
-					# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
-					if a.of.is_generic():
+					# TODO: тут все плохо, нужно поправить, тк все может однажды навернуться!
+					if a.volume.asset == b.volume.asset:
+						if a.of.is_generic():
+							return b
+						if b.of.is_generic():
+							return a
+					elif a.volume.asset < b.volume.asset:
 						return b
-					if b.of.is_generic():
-						return a
 
-					# not implemented!
 					return a
 
 	#			elif a.is_rational():
@@ -1279,6 +1297,7 @@ class Type(Entity):
 						return b
 
 			elif a.is_generic() or b.is_generic():
+				
 				if a.is_string():
 					if b.is_string():
 						if a.width > b.width:
@@ -1488,8 +1507,8 @@ class TypeArray(Type):
 		item_size = 0
 		item_align = 0
 		if of != None:
-			item_size = of.size
-			item_align = of.align
+			item_size = of.get_size()
+			item_align = of.get_align()
 
 		array_size = 0
 		if volume != None and not volume.isValueUndef():
@@ -1503,7 +1522,7 @@ class TypeArray(Type):
 		self.of = of
 		self.volume = volume
 		self.size = array_size
-		self.align = of.align
+		self.align = of.get_align()
 
 	# Получить список типов от которых данный тип зависит напрямую
 	def get_dir_deps(self, deps):
@@ -1512,6 +1531,17 @@ class TypeArray(Type):
 				deps.append(self.of)
 				self.of.get_dir_deps(deps)
 		return deps
+	
+	def get_size(self):
+		if self.volume.isValueImmediate():
+			if self.volume.asset != None:  # check for ValueUndef
+				return self.of.get_size() * self.volume.asset
+		return 0
+	
+	def get_root(self):
+		if self.of.is_array():
+			return self.of.get_root()
+		return self.of
 
 
 
@@ -1524,8 +1554,8 @@ def calc_record_size_align(fields):
 		field.field_no = field_no
 		field_no = field_no + 1
 
-		field_size = field.type.size
-		field_align = field.type.align
+		field_size = field.type.get_size()
+		field_align = field.type.get_align()
 
 		# смещение поля должно быть выровнено
 		# по требуемому для него шагу выравнивания
@@ -2274,7 +2304,7 @@ class ValueSizeofType(Value):
 		self.oftype = of
 		if not of.is_vla():
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
-			self.set_asset(of.size)
+			self.set_asset(of.get_size())
 		else:
 			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
@@ -2287,7 +2317,7 @@ class ValueSizeofValue(Value):
 		self.ofvalue = value
 		if not value.type.is_vla():
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
-			self.set_asset(value.type.size)
+			self.set_asset(value.type.get_size())
 		else:
 			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
@@ -2343,7 +2373,7 @@ class ValueLengthofType(Value):
 
 class ValueAlignofType(Value):
 	def __init__(self, of, ti=None):
-		align = of.align
+		align = of.get_align()
 		from trans import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
 		self.oftype = of
@@ -2353,7 +2383,7 @@ class ValueAlignofType(Value):
 
 class ValueAlignofValue(Value):
 	def __init__(self, of, ti=None):
-		align = of.type.align
+		align = of.type.get_align()
 		from trans import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
 		self.value = of

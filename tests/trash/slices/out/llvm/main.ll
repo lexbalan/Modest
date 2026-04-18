@@ -444,7 +444,7 @@ body_3:
 	br label %again_3
 break_3:
 	%73 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str10 to [0 x i8]*))
-	%74 = alloca [10 x %Int32], align 4
+	%74 = alloca [10 x %Int32], align 1
 	%75 = insertvalue [10 x %Int32] zeroinitializer, %Int32 10, 0
 	%76 = insertvalue [10 x %Int32] %75, %Int32 20, 1
 	%77 = insertvalue [10 x %Int32] %76, %Int32 30, 2
@@ -517,7 +517,7 @@ break_4:
 	call void @array_print([0 x %Int32]* %124, %Nat32 10)
 	%125 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str19 to [0 x i8]*))
 	%126 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str20 to [0 x i8]*))
-	%127 = alloca [10 x %Int32], align 4
+	%127 = alloca [10 x %Int32], align 1
 	%128 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%129 = insertvalue [10 x %Int32] %128, %Int32 2, 2
 	%130 = insertvalue [10 x %Int32] %129, %Int32 3, 3
@@ -546,7 +546,7 @@ break_4:
 	call void @array_print([0 x %Int32]* %148, %Nat32 10)
 	%149 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str21 to [0 x i8]*))
 	%150 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str22 to [0 x i8]*))
-	%151 = alloca [5 x %Int32], align 4
+	%151 = alloca [5 x %Int32], align 1
 	%152 = insertvalue [5 x %Int32] zeroinitializer, %Int32 10, 0
 	%153 = insertvalue [5 x %Int32] %152, %Int32 20, 1
 	%154 = insertvalue [5 x %Int32] %153, %Int32 30, 2
@@ -554,7 +554,7 @@ break_4:
 	%156 = insertvalue [5 x %Int32] %155, %Int32 50, 4
 	%157 = zext i8 5 to %Nat32
 	store [5 x %Int32] %156, [5 x %Int32]* %151
-	%158 = alloca [10 x %Int32], align 4
+	%158 = alloca [10 x %Int32], align 1
 	%159 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%160 = insertvalue [10 x %Int32] %159, %Int32 2, 2
 	%161 = insertvalue [10 x %Int32] %160, %Int32 3, 3

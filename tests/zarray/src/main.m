@@ -3,6 +3,9 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
+var v: [][]Int32 = [[1, 2], [3, 4], [5, 6, 7], [8, 9, 10, 11], [12, 13]]
+
+
 var str1: []Char8 = "abc"
 
 // builtin type Str8 has 'zarray' attribute (!)

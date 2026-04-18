@@ -21,7 +21,7 @@ SIZE_WIDTH = 0
 RET_SIZE_MAX = 16
 def need_sret(func_type):
 	return func_type.to.is_closed_array()
-	#return func_type.to.size > RET_SIZE_MAX
+	#return func_type.to.get_size() > RET_SIZE_MAX
 
 
 INDENT_SYMBOL = "\t"
@@ -546,7 +546,7 @@ def llvm_gep(v, object_type, indexes, result_type, et):
 	indexes32 = []
 	for index in indexes:
 		if not Type.eq(index['type'], typeInt32):
-		#if index['type'].size != 32: #typeFreePointer.size:
+		#if index['type'].get_size() != 32: #typeFreePointer.get_size():
 			index = docast(index, typeNat32)
 		indexes32.append(index)
 
@@ -640,7 +640,7 @@ def do_assign_arrays(dst, src):
 			#out("\n\t; -- zero fill rest of array")
 
 			# `size = volume * item_size`
-			item_sz = src['type'].of.size
+			item_sz = src['type'].of.get_size()
 			item_size = llvm_value_num(typeNat32, item_sz)
 			size = llvm_eval_binary('mul', volume, item_size)
 
@@ -987,7 +987,7 @@ def do_eval_bin(x):
 						1/0
 
 			# Теперь сравниваем значения по указателям и длине (memcmp)
-			sz = llvm_value_num(typeInt64, l['type'].size)
+			sz = llvm_value_num(typeInt64, l['type'].get_size())
 
 			return llvm_memcmp(op, l, r, sz)
 
@@ -1413,7 +1413,7 @@ def cons_composite_from_composite(to_type, value, ti):
 	#
 
 	out("\n; -- cons_composite_from_composite_by_value --")
-	if to_type.size > value.type.size:
+	if to_type.get_size() > value.type.get_size():
 		#out("\n\t; extend")
 		# выделим память под новое значение
 		nv = llvm_alloca(to_type)
@@ -1497,7 +1497,7 @@ def handleVLA(t):
 		if t.is_pointer():
 			handleVLA(t.to)
 
-		runtimeSizeBytes = llvm_value_num(typeInt32, t.size)
+		runtimeSizeBytes = llvm_value_num(typeInt32, t.get_size())
 		runtimeSizeRoots = llvm_value_num(typeInt32, 1)
 		runtimeVolume = llvm_value_num(typeInt32, 1)
 
@@ -1839,12 +1839,12 @@ def _eval_sizeof_type(t):
 
 		return t.runtimeSizeBytes
 		# size = VLA_volume * sizeof(VLA_rootType)
-		rs = t.get_array_root().size
+		rs = t.get_array_root().get_size()
 		rootSize = llvm_value_num(typeInt32, rs)
 		size = llvm_eval_binary('mul', t.runtimeSizeRoots, rootSize)
 		return size
 
-	return llvm_value_num(typeInt32, t.size)
+	return llvm_value_num(typeInt32, t.get_size())
 
 
 def do_eval_sizeof_value(x):
@@ -2054,7 +2054,7 @@ def print_stmt_var(x):
 	# VLA VLA VLA
 
 
-	left = llvm_alloca(t, size=sz, alignment=t.align)
+	left = llvm_alloca(t, size=sz, alignment=t.get_align())
 	locals_add(id_str, left)
 
 	init_value = x.init_value

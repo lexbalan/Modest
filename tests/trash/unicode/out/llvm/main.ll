@@ -249,17 +249,14 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @c8 = internal global %Char8 65
 @c16 = internal global %Char16 65
 @c32 = internal global %Char32 65
-@b8 = internal global [2 x %Char8] [
-	%Char8 65,
-	%Char8 0
+@b8 = internal global [1 x %Char8] [
+	%Char8 65
 ]
-@b16 = internal global [2 x %Char16] [
-	%Char16 65,
-	%Char16 0
+@b16 = internal global [1 x %Char16] [
+	%Char16 65
 ]
-@b32 = internal global [2 x %Char32] [
-	%Char32 65,
-	%Char32 0
+@b32 = internal global [1 x %Char32] [
+	%Char32 65
 ]
 @s8 = internal global %Str8* bitcast ([2 x i8]* @str1 to [0 x i8]*)
 @s16 = internal global %Str16* bitcast ([2 x i16]* @str2 to [0 x i16]*)
@@ -267,17 +264,14 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @cc8 = internal global %Char8 65
 @cc16 = internal global %Char16 65
 @cc32 = internal global %Char32 65
-@bb8 = internal global [2 x %Char8] [
-	%Char8 65,
-	%Char8 0
+@bb8 = internal global [1 x %Char8] [
+	%Char8 65
 ]
-@bb16 = internal global [2 x %Char16] [
-	%Char16 65,
-	%Char16 0
+@bb16 = internal global [1 x %Char16] [
+	%Char16 65
 ]
-@bb32 = internal global [2 x %Char32] [
-	%Char32 65,
-	%Char32 0
+@bb32 = internal global [1 x %Char32] [
+	%Char32 65
 ]
 @ss8 = internal global %Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*)
 @ss16 = internal global %Str16* bitcast ([2 x i16]* @str5 to [0 x i16]*)

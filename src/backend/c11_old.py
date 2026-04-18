@@ -1064,7 +1064,7 @@ def str_value_cons(x, ctx):
 
 
 			elif type.is_word():
-				if from_type.size < type.size:
+				if from_type.get_size() < type.get_size():
 					nat_same_sz = type_select_nat(from_type.width)
 					return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx=ctx)
 
@@ -1848,7 +1848,7 @@ def assign_array(left, right, ti):
 	r_root = get_root_value(right)
 
 	#if Type.eq(l_root.type, r_root.type):
-	if l_root.type.of.size == r_root.type.of.size:
+	if l_root.type.of.get_size() == r_root.type.of.get_size():
 		assign_by_memcopy(left, right)
 		return
 

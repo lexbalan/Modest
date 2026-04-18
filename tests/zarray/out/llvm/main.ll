@@ -204,22 +204,52 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports public 'main' --
 ; -- strings --
 ; -- endstrings --
-@str1 = internal global /**/[3 x %Char8] [
+@v = internal global [5 x [4 x %Int32]] [
+	[4 x %Int32] [
+		%Int32 1,
+		%Int32 2,
+		%Int32 0,
+		%Int32 0
+	],
+	[4 x %Int32] [
+		%Int32 3,
+		%Int32 4,
+		%Int32 0,
+		%Int32 0
+	],
+	[4 x %Int32] [
+		%Int32 5,
+		%Int32 6,
+		%Int32 7,
+		%Int32 0
+	],
+	[4 x %Int32] [
+		%Int32 8,
+		%Int32 9,
+		%Int32 10,
+		%Int32 11
+	],
+	[4 x %Int32] [
+		%Int32 12,
+		%Int32 13,
+		%Int32 0,
+		%Int32 0
+	]
+]
+@str1 = internal global [3 x %Char8] [
 	%Char8 97,
 	%Char8 98,
 	%Char8 99
 ]
-@str2 = internal global /**/%Str8 [
+@str2 = internal global [3 x %Char8] [
 	%Char8 97,
 	%Char8 98,
-	%Char8 99,
-	%Char8 0
+	%Char8 99
 ]
-@str3 = internal global /**/[4 x %Char8] [
+@str3 = internal global [3 x %Char8] [
 	%Char8 97,
 	%Char8 98,
-	%Char8 99,
-	%Char8 0
+	%Char8 99
 ]
 define %Int32 @main() {
 	ret %Int32 0
