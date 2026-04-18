@@ -8,7 +8,7 @@ include "string"
 public type Row = []*Str8
 
 public type Table = @public {
-	header: *[]*Str8
+	header: *Row
 	data: *[]Row
 	nRows: Nat32
 	nCols: Nat32

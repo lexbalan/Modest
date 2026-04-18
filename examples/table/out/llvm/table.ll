@@ -242,7 +242,7 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- endstrings --
 %table_Row = type [0 x %Str8*];
 %table_Table = type {
-	[0 x %Str8*]*,
+	%table_Row*,
 	[0 x %table_Row]*,
 	%Nat32,
 	%Nat32,
@@ -279,8 +279,8 @@ define void @table_print(%table_Table* %table) {
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %25, i8 0, %Nat32 %24, i1 0)
 ; if_0
 	%26 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
-	%27 = load [0 x %Str8*]*, [0 x %Str8*]** %26
-	%28 = icmp ne [0 x %Str8*]* %27, null
+	%27 = load %table_Row*, %table_Row** %26
+	%28 = icmp ne %table_Row* %27, null
 	br %Bool %28 , label %then_0, label %endif_0
 then_0:
 	store %Nat32 0, %Nat32* %3
@@ -295,9 +295,9 @@ again_1:
 body_1:
 	%33 = load %Nat32, %Nat32* %3
 	%34 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
-	%35 = load [0 x %Str8*]*, [0 x %Str8*]** %34
+	%35 = load %table_Row*, %table_Row** %34
 	%36 = bitcast %Nat32 %33 to %Nat32
-	%37 = getelementptr [0 x %Str8*], [0 x %Str8*]* %35, %Int32 0, %Nat32 %36
+	%37 = getelementptr %table_Row, %table_Row* %35, %Int32 0, %Nat32 %36
 	%38 = load %Str8*, %Str8** %37
 	%39 = call %SizeT @strlen(%Str8* %38)
 	%40 = trunc %SizeT %39 to %Nat32
@@ -412,16 +412,16 @@ break_4:
 	call void @separator([0 x %Nat32]* %101, %Nat32 %103)
 ; if_3
 	%104 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
-	%105 = load [0 x %Str8*]*, [0 x %Str8*]** %104
-	%106 = icmp ne [0 x %Str8*]* %105, null
+	%105 = load %table_Row*, %table_Row** %104
+	%106 = icmp ne %table_Row* %105, null
 	br %Bool %106 , label %then_3, label %endif_3
 then_3:
 	%107 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 0
-	%108 = load [0 x %Str8*]*, [0 x %Str8*]** %107
+	%108 = load %table_Row*, %table_Row** %107
 	%109 = bitcast [0 x %Nat32]* %21 to [0 x %Nat32]*
 	%110 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%111 = load %Nat32, %Nat32* %110
-	call void @printRow([0 x %Str8*]* %108, [0 x %Nat32]* %109, %Nat32 %111)
+	call void @printRow(%table_Row* %108, [0 x %Nat32]* %109, %Nat32 %111)
 	%112 = bitcast [0 x %Nat32]* %21 to [0 x %Nat32]*
 	%113 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%114 = load %Nat32, %Nat32* %113
