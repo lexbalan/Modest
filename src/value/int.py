@@ -78,7 +78,7 @@ def value_int_cons(t, v, method, ti):
 	#info("value_integer_cons()", ti)
 	_check_width(v.type, t, method, ti)
 
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
 	if v.isValueImmediate():
 		_check_width(v.type, t, method, ti)
 		if method != 'implicit':

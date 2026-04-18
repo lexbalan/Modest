@@ -40,7 +40,7 @@ def char_can(to, from_type, method, ti):
 def value_char_cons(t, v, method, ti):
 	# String -> Char
 	# ex: var c: Char8 = "A"
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
 
 	if v.type.is_string():
 		c = '\0'

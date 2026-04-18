@@ -1613,6 +1613,7 @@ class Value(Entity):
 		self.type = type
 		self.storage_class = HLIR_VALUE_STORAGE_CLASS_REGISTER
 		self.stage = HLIR_VALUE_STAGE_RUNTIME
+		self.att = []
 		self.definition = None  # *StmtDefVar, *StmtDefConst, *StmtDefFunc
 		self.is_lvalue = False
 		self.is_immutable = False
@@ -2046,12 +2047,13 @@ def create_zero_literal(t, ti=None):
 
 
 class ValueCons(Value):
-	def __init__(self, type, value, method, ti=None):
+	def __init__(self, type, oftype, value, method, ti=None):
 		assert(isinstance(type, Type))
 		assert(isinstance(value, Value))
 		assert(method in ['implicit', 'explicit', 'unsafe', 'default', 'extra_arg'])
 		super().__init__(type=type, ti=ti)
 		self.value = value
+		self.oftype = oftype
 		self.method = method
 		self.rawMode = False
 

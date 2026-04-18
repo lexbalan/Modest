@@ -19,7 +19,7 @@ def rational_can(to, from_type, method, ti):
 
 def value_rational_cons(t, v, method, ti):
 	#info("value_rational_cons", ti)
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
 	nv.stage = v.stage
 	nv.set_asset(v.asset)
 	return nv

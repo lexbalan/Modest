@@ -69,7 +69,7 @@ def record_can(to, from_type, method, ti):
 
 def value_record_cons(t, v, method, ti):
 	#info("value_record_cons", ti)
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
 	nv.stage = v.stage
 
 	if t.is_unit():

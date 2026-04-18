@@ -49,8 +49,8 @@ public func testRecordsEq () -> Bool {
 const arr123 = [1, 2, 3]
 const arr321 = [3, 2, 1]
 
-const carr123 = [3]Int32 [1, 2, 3]
-const carr321 = [3]Int32 [3, 2, 1]
+const carr123 = []Int32 [1, 2, 3]
+const carr321 = []Int32 [3, 2, 1]
 
 var varr123: [3]Int32 = [1, 2, 3]
 var varr321: [3]Int32 = [3, 2, 1]

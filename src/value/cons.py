@@ -19,7 +19,7 @@ from util import align_bits_up
 
 
 # can be implicitly constructed value with type a from type b?
-def cons_can(to, from_type, method, ti):
+def cons_can(to, from_type, method, ti=None):
 	#info("cons can?", ti)
 	assert(isinstance(to, Type))
 	assert(isinstance(from_type, Type))
@@ -119,13 +119,25 @@ def value_cons_implicit(t, v):
 def value_cons_implicit_check(t, v):
 	#info("value_cons_implicit_check", v.ti)
 	nv = value_cons_implicit(t, v)
-	if not Type.eq(t, nv.type):
+
+	if t.is_open_array():
+		# особая ситуация когда неявно конструируем []X из [x]X (!)
+		if not cons_can(t, v.type, method='implicit'):
+			error("type error2", v.ti)
+			print("expected: ", end='')
+			Type.print(t)
+			print("\nreceived: ", end='')
+			Type.print(v.type)
+			print("\n")
+
+	elif not Type.eq(t, nv.type):
 		error("type error", v.ti)
 		print("expected: ", end='')
 		Type.print(t)
 		print("\nreceived: ", end='')
 		Type.print(v.type)
 		print("\n")
+
 	return nv
 
 
@@ -252,7 +264,7 @@ def value_cons(t, v, method, ti):
 	if method == 'explicit':
 		# Construction from __VA_List is an exceptional case
 		if v.type.is_va_list():
-			nv = ValueCons(t, v, 'explicit', ti)
+			nv = ValueCons(t, t, v, 'explicit', ti)
 			nv.stage = HLIR_VALUE_STAGE_RUNTIME
 			return nv
 

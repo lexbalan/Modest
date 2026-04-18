@@ -965,7 +965,8 @@ def do_cvalue_arg(av):
 					if av.isValueRef() and not (av.value.isValueIndex() or av.value.isValueSlice()):
 						av = av.value
 					else:
-						av = ValueCons(TypePointer(av.type.to.of), av, 'explicit', av.ti)
+						tt = TypePointer(av.type.to.of)
+						av = ValueCons(tt, tt, av, 'explicit', av.ti)
 		a = do_cvalue(av)
 
 	return a

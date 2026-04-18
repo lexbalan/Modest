@@ -33,7 +33,7 @@ def float_can(to, from_type, method, ti):
 
 def value_float_cons(t, v, method, ti):
 	assert(t.is_float())
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
 	if v.isValueImmediate():
 		nv.set_asset(v.asset)
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME

@@ -38,7 +38,7 @@ def value_fixed_cons(t, v, method, ti):
 	#info("value_fixed_cons", ti)
 	from trans import cmodule_use
 	cmodule_use('use_fixed_point')
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
 
 	if v.isValueImmediate():
 		a = v.asset

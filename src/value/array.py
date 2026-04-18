@@ -87,28 +87,36 @@ def array_can(to, from_type, method, ti):
 
 
 def value_array_cons(t, v, method, ti):
-	#info("value_array_cons", ti)
-
+	#result_type = t
+	result_type = t.copy()
 	if t.volume.isValueUndef():
 		# for case: `[]Int32 [1, 2, 3]`
 		# we try to construct array with undefined volume from array with defined volume
 		# in this case we take volume of value array
 		#info("undefined volume", t['ti'])
-		volume = -1
-		if Type.is_array(v.type):
+		volume = None
+		if v.type.is_array():
 			volume = v.type.volume
-		elif Type.is_string(v.type):
-			srtlen = v.type.length
+			result_type = TypeArray(t.of, volume=volume, ti=ti)
+
+		elif v.type.is_string():
 			from .integer import value_integer_create
-			volume = value_integer_create(srtlen)
+			volume = value_integer_create(v.type.length)
+			result_type = TypeArray(t.of, volume=volume, ti=ti)
+
 		else:
 			assert(False)
 
-		t.volume = volume
-		t.size = t.of.size * volume.asset
+		result_type.volume = volume
+		if t.hasAttribute('zarray'):
+			# конструируем zarray а это значит что он должен быть на 1 длиннее
+			from trans import do_value_bin_op
+			result_type.volume = do_value_bin_op(HLIR_VALUE_OP_ADD, result_type.volume, value_integer_create(1, ti=ti), ti)
+
+		result_type.size = result_type.of.size * volume.asset
 
 	if method == 'implicit':
-		n_to = t.volume.asset
+		n_to = result_type.volume.asset
 		n_from = 0
 		if v.type.is_string():
 			# Пока Разрешаем конструировать массив из более короткой строки
@@ -119,10 +127,10 @@ def value_array_cons(t, v, method, ti):
 		if n_from > 0 and n_from < n_to:
 			warning("implicit cons biggest array from smaller", ti)
 
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(result_type, t, v, method, ti=ti)
 	nv.stage = v.stage
 
-	if Type.is_string(v.type):
+	if v.type.is_string():
 		char_type = t.of
 		items = utf32_chars_to_utfx_char_values(v.asset, char_type, ti)
 		nv.set_asset(items)

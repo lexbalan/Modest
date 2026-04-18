@@ -357,7 +357,7 @@ again_1:
 body_1:
 ; if_0
 	%5 = bitcast [1024 x %Char8]* %1 to i8*
-	%6 = call %SSizeT @send(%Int %sockFd, i8* %5, %Size 0, %Int 0)
+	%6 = call %SSizeT @send(%Int %sockFd, i8* %5, %Size 1024, %Int 0)
 	%7 = icmp eq %SSizeT %6, -1
 	br %Bool %7 , label %then_0, label %endif_0
 then_0:

@@ -79,7 +79,7 @@ def value_nat_cons(t, v, method, ti):
 		from trans import cmodule_use
 		cmodule_use('use_abs')
 
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
 	if v.isValueImmediate():
 		if method != 'implicit':
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME

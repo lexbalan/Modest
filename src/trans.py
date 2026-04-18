@@ -1319,7 +1319,7 @@ def do_value_index(x):
 	# Can index *[]AnyNonArrayType
 	# Can't index *[][]AnyType
 	if array_type.is_array_of_open_array():
-		error("cannot index array of an open array", x['ti'])
+		error("cannot index an array of open array", x['ti'])
 		return ValueBad(x['ti'])
 
 	index = do_rvalue(x['index'])
@@ -1940,7 +1940,7 @@ def do_stmt_var(x):
 
 	for a in x['anno']:
 		if a['kind'] == 'static':
-			df.att.append('static')
+			df.addAttribute('static')
 
 	return df
 
@@ -2344,8 +2344,10 @@ def def_const_common(x):
 
 	t = None
 	if x['type'] != None:
-		t = Type.copy(do_type(x['type']))
+		t = do_type(x['type']).copy()
 		iv = value_cons_implicit_check(t, iv)
+		if t.is_open_array():
+			t = iv.type.copy()
 	#else:
 	#	iv = value_cons_default(iv)
 
@@ -2448,20 +2450,13 @@ def def_var_common(x):
 		t = Type.copy(iv.type)
 		t.delAttribute('const')
 
+	elif tu == False and vu == True:
+		iv = value_cons_implicit(t, iv)
+
 	elif tu == False and vu == False:
-		# type ok, value ok
 		if t.is_open_array():
-			if iv.type.is_string():
-				# for case:
-				# var arrayFromString: []Char8 = "abc"
-				str_length = len(iv.asset)
-				volume = value_integer_create(str_length)
-				t = TypeArray(t.of, volume, ti=x['ti'])
-			elif iv.type.is_array():
-				# for case:
-				# var a: []*Str8 = ["Ab", "aB", "AAb"]
-				volume = value_integer_create(iv.type.volume.asset)
-				t = TypeArray(t.of, volume, ti=x['ti'])
+			iv = value_cons_implicit(t, iv)
+			t = iv.type
 
 	# type & init value present
 	if t != None:

@@ -71,7 +71,7 @@ def pointer_can(to, from_type, method, ti):
 
 
 def value_pointer_cons(t, v, method, ti):
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
 
 	if v.isValueImmediate():
 		if v.type.is_string():

@@ -42,7 +42,7 @@ def word_can(to, from_type, method, ti):
 
 
 def value_word_cons(t, v, method, ti):
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
 	if v.isValueImmediate():
 		if method == 'implicit':
 			if v.type.width > t.width:

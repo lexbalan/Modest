@@ -324,15 +324,10 @@ def str_value_access_module(x, ctx):
 def str_value_cons(x, ctx):
 	value = x.value
 	from_type = value.type
-	to_type = x.type
+	to_type = x.oftype
 
 	if x.method in ['implicit', 'default']:
-		v = None
-		#try:
-		v = str_value(value)
-		#except:
-		#	print(value.type.kind)
-		return v
+		return str_value(value)
 
 	s = ""
 	if x.method == 'unsafe':

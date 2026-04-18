@@ -19,7 +19,7 @@ def integer_can(to, from_type, method, ti):
 
 def value_integer_cons(t, v, method, ti):
 	#info("value_integer_cons", ti)
-	nv = ValueCons(t, v, method, ti=ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
 	nv.stage = v.stage
 	nv.set_asset(int(v.asset))
 	return nv

@@ -11,9 +11,9 @@ var c8: Char8 = a
 var c16: Char16 = a
 var c32: Char32 = a
 
-var b8: [1]Char8 = a
-var b16: [1]Char16 = a
-var b32: [1]Char32 = a
+var b8: [1 + 1]Char8 = a
+var b16: [1 + 1]Char16 = a
+var b32: [1 + 1]Char32 = a
 
 var s8: *Str8 = a
 var s16: *Str16 = a
@@ -23,9 +23,9 @@ var cc8: Char8 = "A"
 var cc16: Char16 = "A"
 var cc32: Char32 = "A"
 
-var bb8: [1]Char8 = "A"
-var bb16: [1]Char16 = "A"
-var bb32: [1]Char32 = "A"
+var bb8: [1 + 1]Char8 = "A"
+var bb16: [1 + 1]Char16 = "A"
+var bb32: [1 + 1]Char32 = "A"
 
 var ss8: *Str8 = "A"
 var ss16: *Str16 = "A"
