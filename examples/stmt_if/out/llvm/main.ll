@@ -203,30 +203,30 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [22 x i8] [i8 105, i8 102, i8 32, i8 115, i8 116, i8 97, i8 116, i8 101, i8 109, i8 101, i8 110, i8 116, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
-@str2 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 97, i8 58, i8 32, i8 0]
-@str3 = private constant [3 x i8] [i8 37, i8 100, i8 0]
-@str4 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 98, i8 58, i8 32, i8 0]
-@str5 = private constant [3 x i8] [i8 37, i8 100, i8 0]
-@str6 = private constant [7 x i8] [i8 97, i8 32, i8 62, i8 32, i8 98, i8 10, i8 0]
-@str7 = private constant [7 x i8] [i8 97, i8 32, i8 60, i8 32, i8 98, i8 10, i8 0]
-@str8 = private constant [8 x i8] [i8 97, i8 32, i8 61, i8 61, i8 32, i8 98, i8 10, i8 0]
+@.str1 = private constant [22 x i8] [i8 105, i8 102, i8 32, i8 115, i8 116, i8 97, i8 116, i8 101, i8 109, i8 101, i8 110, i8 116, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@.str2 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 97, i8 58, i8 32, i8 0]
+@.str3 = private constant [3 x i8] [i8 37, i8 100, i8 0]
+@.str4 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 98, i8 58, i8 32, i8 0]
+@.str5 = private constant [3 x i8] [i8 37, i8 100, i8 0]
+@.str6 = private constant [7 x i8] [i8 97, i8 32, i8 62, i8 32, i8 98, i8 10, i8 0]
+@.str7 = private constant [7 x i8] [i8 97, i8 32, i8 60, i8 32, i8 98, i8 10, i8 0]
+@.str8 = private constant [8 x i8] [i8 97, i8 32, i8 61, i8 61, i8 32, i8 98, i8 10, i8 0]
 ; -- endstrings --
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str1 to [0 x i8]*))
 	%2 = alloca %Int32, align 4
 	%3 = alloca %Int32, align 4
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*))
-	%5 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*), %Int32* %2)
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str4 to [0 x i8]*))
-	%7 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str5 to [0 x i8]*), %Int32* %3)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str2 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @.str3 to [0 x i8]*), %Int32* %2)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str4 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @.str5 to [0 x i8]*), %Int32* %3)
 ; if_0
 	%8 = load %Int32, %Int32* %2
 	%9 = load %Int32, %Int32* %3
 	%10 = icmp sgt %Int32 %8, %9
 	br %Bool %10 , label %then_0, label %else_0
 then_0:
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str6 to [0 x i8]*))
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @.str6 to [0 x i8]*))
 	br label %endif_0
 else_0:
 ; if_1
@@ -235,10 +235,10 @@ else_0:
 	%14 = icmp slt %Int32 %12, %13
 	br %Bool %14 , label %then_1, label %else_1
 then_1:
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str7 to [0 x i8]*))
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @.str7 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str8 to [0 x i8]*))
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str8 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 	br label %endif_0

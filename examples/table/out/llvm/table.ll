@@ -232,13 +232,13 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; -- print imports public 'table' --
 ; -- end print imports public 'table' --
 ; -- strings --
-@str1 = private constant [2 x i8] [i8 124, i8 0]
-@str2 = private constant [4 x i8] [i8 32, i8 37, i8 115, i8 0]
-@str3 = private constant [2 x i8] [i8 32, i8 0]
-@str4 = private constant [3 x i8] [i8 124, i8 10, i8 0]
-@str5 = private constant [2 x i8] [i8 43, i8 0]
-@str6 = private constant [2 x i8] [i8 45, i8 0]
-@str7 = private constant [3 x i8] [i8 43, i8 10, i8 0]
+@.str1 = private constant [2 x i8] [i8 124, i8 0]
+@.str2 = private constant [4 x i8] [i8 32, i8 37, i8 115, i8 0]
+@.str3 = private constant [2 x i8] [i8 32, i8 0]
+@.str4 = private constant [3 x i8] [i8 124, i8 10, i8 0]
+@.str5 = private constant [2 x i8] [i8 43, i8 0]
+@.str6 = private constant [2 x i8] [i8 45, i8 0]
+@.str7 = private constant [3 x i8] [i8 43, i8 10, i8 0]
 ; -- endstrings --
 %table_Row = type [0 x %Str8*];
 %table_Table = type {
@@ -494,7 +494,7 @@ again_1:
 	%8 = icmp ult %Nat32 %7, %nCols
 	br %Bool %8 , label %body_1, label %break_1
 body_1:
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str1 to [0 x i8]*))
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str1 to [0 x i8]*))
 	%10 = load %Nat32, %Nat32* %6
 	%11 = mul %Nat32 %10, 1
 	%12 = add %Int32 0, %11
@@ -513,7 +513,7 @@ then_0:
 	%21 = load %Nat32, %Nat32* %15
 	%22 = add %Nat32 %21, 1
 	store %Nat32 %22, %Nat32* %15
-	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8* %14)
+	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @.str2 to [0 x i8]*), %Str8* %14)
 	br label %endif_0
 endif_0:
 	%24 = alloca %Nat32, align 4
@@ -531,7 +531,7 @@ again_2:
 	%32 = icmp ult %Nat32 %31, %30
 	br %Bool %32 , label %body_2, label %break_2
 body_2:
-	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
+	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str3 to [0 x i8]*))
 	%34 = load %Nat32, %Nat32* %24
 	%35 = add %Nat32 %34, 1
 	store %Nat32 %35, %Nat32* %24
@@ -542,7 +542,7 @@ break_2:
 	store %Nat32 %37, %Nat32* %6
 	br label %again_1
 break_1:
-	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str4 to [0 x i8]*))
+	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str4 to [0 x i8]*))
 	%39 = load i8*, i8** %1
 	call void @llvm.stackrestore(i8* %39)
 	ret void
@@ -558,7 +558,7 @@ again_1:
 	%3 = icmp ult %Nat32 %2, %n
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str5 to [0 x i8]*))
 	%5 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %5
 ; while_2
@@ -572,7 +572,7 @@ again_2:
 	%11 = icmp ult %Nat32 %9, %10
 	br %Bool %11 , label %body_2, label %break_2
 body_2:
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str6 to [0 x i8]*))
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str6 to [0 x i8]*))
 	%13 = load %Nat32, %Nat32* %5
 	%14 = add %Nat32 %13, 1
 	store %Nat32 %14, %Nat32* %5
@@ -583,7 +583,7 @@ break_2:
 	store %Nat32 %16, %Nat32* %1
 	br label %again_1
 break_1:
-	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str7 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str7 to [0 x i8]*))
 	ret void
 }
 

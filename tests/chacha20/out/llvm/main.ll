@@ -227,10 +227,10 @@ declare void @chacha20_makeState(%chacha20_State* %0, %chacha20_Key* %key, %Word
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 67, i8 104, i8 97, i8 67, i8 104, i8 97, i8 50, i8 48, i8 32, i8 0]
-@str2 = private constant [3 x i8] [i8 37, i8 99, i8 0]
-@str3 = private constant [6 x i8] [i8 102, i8 97, i8 105, i8 108, i8 10, i8 0]
-@str4 = private constant [9 x i8] [i8 115, i8 117, i8 99, i8 99, i8 101, i8 115, i8 115, i8 10, i8 0]
+@.str1 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 67, i8 104, i8 97, i8 67, i8 104, i8 97, i8 50, i8 48, i8 32, i8 0]
+@.str2 = private constant [3 x i8] [i8 37, i8 99, i8 0]
+@.str3 = private constant [6 x i8] [i8 102, i8 97, i8 105, i8 108, i8 10, i8 0]
+@.str4 = private constant [9 x i8] [i8 115, i8 117, i8 99, i8 99, i8 101, i8 115, i8 115, i8 10, i8 0]
 ; -- endstrings --
 %Context = type {
 	[32 x %Byte]*,
@@ -2527,7 +2527,7 @@ break_1:
 	%Char8 101
 ]
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str1 to [0 x i8]*))
 	%2 = alloca %Context, align 8
 	%3 = load [3 x %Word32], [3 x %Word32]* @testNonce2
 	%4 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %3)
@@ -2566,7 +2566,7 @@ body_1:
 	%20 = load %Int32, %Int32* %10
 	%21 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %20
 	%22 = load %Char8, %Char8* %21
-	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str2 to [0 x i8]*), %Char8 %22)
+	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str2 to [0 x i8]*), %Char8 %22)
 	%24 = load %Int32, %Int32* %10
 	%25 = add %Int32 %24, 1
 	store %Int32 %25, %Int32* %10
@@ -2577,11 +2577,11 @@ break_1:
 	%27 = xor %Bool %26, 1
 	br %Bool %27 , label %then_0, label %endif_0
 then_0:
-	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str3 to [0 x i8]*))
+	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @.str3 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str4 to [0 x i8]*))
+	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @.str4 to [0 x i8]*))
 	ret %Int 0
 }
 

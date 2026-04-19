@@ -203,9 +203,9 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [7 x i8] [i8 108, i8 105, i8 116, i8 116, i8 108, i8 101, i8 0]
-@str2 = private constant [4 x i8] [i8 98, i8 105, i8 103, i8 0]
-@str3 = private constant [11 x i8] [i8 37, i8 115, i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 10, i8 0]
+@.str1 = private constant [7 x i8] [i8 108, i8 105, i8 116, i8 116, i8 108, i8 101, i8 0]
+@.str2 = private constant [4 x i8] [i8 98, i8 105, i8 103, i8 0]
+@.str3 = private constant [11 x i8] [i8 37, i8 115, i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 10, i8 0]
 ; -- endstrings --
 define %Int @main() {
 	%1 = alloca %Word16, align 2
@@ -219,14 +219,14 @@ define %Int @main() {
 ; if_0
 	br %Bool %6 , label %then_0, label %else_0
 then_0:
-	store %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*), %Str8** %7
+	store %Str8* bitcast ([7 x i8]* @.str1 to [0 x i8]*), %Str8** %7
 	br label %endif_0
 else_0:
-	store %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8** %7
+	store %Str8* bitcast ([4 x i8]* @.str2 to [0 x i8]*), %Str8** %7
 	br label %endif_0
 endif_0:
 	%8 = load %Str8*, %Str8** %7
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), %Str8* %8)
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @.str3 to [0 x i8]*), %Str8* %8)
 	ret %Int 0
 }
 

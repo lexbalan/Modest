@@ -205,9 +205,9 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'fsm' --
 ; -- end print imports public 'fsm' --
 ; -- strings --
-@str1 = private constant [52 x i8] [i8 91, i8 37, i8 115, i8 93, i8 32, i8 102, i8 115, i8 109, i8 32, i8 116, i8 105, i8 109, i8 101, i8 111, i8 117, i8 116, i8 32, i8 40, i8 37, i8 117, i8 41, i8 32, i8 111, i8 99, i8 99, i8 117, i8 114, i8 101, i8 100, i8 44, i8 32, i8 115, i8 119, i8 105, i8 116, i8 99, i8 104, i8 95, i8 116, i8 111, i8 95, i8 115, i8 116, i8 97, i8 103, i8 101, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
-@str2 = private constant [23 x i8] [i8 91, i8 37, i8 115, i8 93, i8 32, i8 35, i8 37, i8 115, i8 95, i8 37, i8 117, i8 32, i8 45, i8 62, i8 32, i8 35, i8 37, i8 115, i8 95, i8 37, i8 117, i8 10, i8 0]
-@str3 = private constant [7 x i8] [i8 60, i8 110, i8 117, i8 108, i8 108, i8 62, i8 0]
+@.str1 = private constant [52 x i8] [i8 91, i8 37, i8 115, i8 93, i8 32, i8 102, i8 115, i8 109, i8 32, i8 116, i8 105, i8 109, i8 101, i8 111, i8 117, i8 116, i8 32, i8 40, i8 37, i8 117, i8 41, i8 32, i8 111, i8 99, i8 99, i8 117, i8 114, i8 101, i8 100, i8 44, i8 32, i8 115, i8 119, i8 105, i8 116, i8 99, i8 104, i8 95, i8 116, i8 111, i8 95, i8 115, i8 116, i8 97, i8 103, i8 101, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
+@.str2 = private constant [23 x i8] [i8 91, i8 37, i8 115, i8 93, i8 32, i8 35, i8 37, i8 115, i8 95, i8 37, i8 117, i8 32, i8 45, i8 62, i8 32, i8 35, i8 37, i8 115, i8 95, i8 37, i8 117, i8 10, i8 0]
+@.str3 = private constant [7 x i8] [i8 60, i8 110, i8 117, i8 108, i8 108, i8 62, i8 0]
 ; -- endstrings --
 %fsm_StageId = type %Word16;
 %fsm_ComplexState = type {
@@ -264,7 +264,7 @@ then_0:
 	%7 = load %Str8*, %Str8** %6
 	%8 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 2, %Int32 1
 	%9 = load %fsm_StageId, %fsm_StageId* %8
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([52 x i8]* @str1 to [0 x i8]*), %Str8* %7, %Nat32 0, %fsm_StageId %9)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([52 x i8]* @.str1 to [0 x i8]*), %Str8* %7, %Nat32 0, %fsm_StageId %9)
 	br label %endif_0
 endif_0:
 ; if_1
@@ -298,7 +298,7 @@ then_1:
 	%34 = load %Str8*, %Str8** %33
 	%35 = getelementptr %fsm_ComplexState, %fsm_ComplexState* %22, %Int32 0, %Int32 1
 	%36 = load %fsm_StageId, %fsm_StageId* %35
-	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), %Str8* %24, %Str8* %28, %fsm_StageId %30, %Str8* %34, %fsm_StageId %36)
+	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @.str2 to [0 x i8]*), %Str8* %24, %Str8* %28, %fsm_StageId %30, %Str8* %34, %fsm_StageId %36)
 	%38 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 1
 	%39 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 2
 	%40 = load %fsm_ComplexState, %fsm_ComplexState* %39
@@ -461,7 +461,7 @@ define %Str8* @fsm_getStateName(%fsm_FSM* %fsm) {
 	%3 = icmp eq %fsm_StateDesc* %2, null
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
-	ret %Str8* bitcast ([7 x i8]* @str3 to [0 x i8]*)
+	ret %Str8* bitcast ([7 x i8]* @.str3 to [0 x i8]*)
 	br label %endif_0
 endif_0:
 	%5 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1, %Int32 0

@@ -203,20 +203,20 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [18 x i8] [i8 102, i8 117, i8 110, i8 99, i8 49, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str2 = private constant [22 x i8] [i8 112, i8 114, i8 105, i8 110, i8 116, i8 95, i8 97, i8 98, i8 40, i8 97, i8 61, i8 37, i8 105, i8 44, i8 32, i8 98, i8 61, i8 37, i8 105, i8 41, i8 10, i8 0]
-@str3 = private constant [11 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 117, i8 110, i8 99, i8 10, i8 0]
-@str4 = private constant [19 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 105, i8 44, i8 32, i8 37, i8 105, i8 41, i8 32, i8 61, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str5 = private constant [20 x i8] [i8 102, i8 112, i8 116, i8 114, i8 40, i8 37, i8 105, i8 44, i8 32, i8 37, i8 105, i8 41, i8 32, i8 61, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str6 = private constant [18 x i8] [i8 102, i8 117, i8 110, i8 99, i8 48, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str1 = private constant [18 x i8] [i8 102, i8 117, i8 110, i8 99, i8 49, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str2 = private constant [22 x i8] [i8 112, i8 114, i8 105, i8 110, i8 116, i8 95, i8 97, i8 98, i8 40, i8 97, i8 61, i8 37, i8 105, i8 44, i8 32, i8 98, i8 61, i8 37, i8 105, i8 41, i8 10, i8 0]
+@.str3 = private constant [11 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 117, i8 110, i8 99, i8 10, i8 0]
+@.str4 = private constant [19 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 105, i8 44, i8 32, i8 37, i8 105, i8 41, i8 32, i8 61, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@.str5 = private constant [20 x i8] [i8 102, i8 112, i8 116, i8 114, i8 40, i8 37, i8 105, i8 44, i8 32, i8 37, i8 105, i8 41, i8 32, i8 61, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@.str6 = private constant [18 x i8] [i8 102, i8 117, i8 110, i8 99, i8 48, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 define internal void @func1() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @.str1 to [0 x i8]*))
 	ret void
 }
 
 define internal void @print_ab(%Int32 %a, %Int32 %b) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), %Int32 %a, %Int32 %b)
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str2 to [0 x i8]*), %Int32 %a, %Int32 %b)
 	ret void
 }
 
@@ -226,22 +226,22 @@ define internal %Int32 @sum(%Int32 %a, %Int32 %b) {
 }
 
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @.str3 to [0 x i8]*))
 	call void @func0()
 	call void @func1()
 	call void @print_ab(%Int32 10, %Int32 20)
 	%2 = call %Int32 @sum(%Int32 1, %Int32 2)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), %Int32 1, %Int32 2, %Int32 %2)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @.str4 to [0 x i8]*), %Int32 1, %Int32 2, %Int32 %2)
 	%4 = alloca %Int32 (%Int32, %Int32)*, align 8
 	store %Int32 (%Int32, %Int32)* @sum, %Int32 (%Int32, %Int32)** %4
 	%5 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %4
 	%6 = call %Int32 %5(%Int32 1, %Int32 2)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*), %Int32 1, %Int32 2, %Int32 %6)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str5 to [0 x i8]*), %Int32 1, %Int32 2, %Int32 %6)
 	ret %Int 0
 }
 
 define internal void @func0() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @.str6 to [0 x i8]*))
 	ret void
 }
 

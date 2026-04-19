@@ -203,8 +203,8 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [5 x i8] [i8 104, i8 105, i8 33, i8 10, i8 0]
-@str2 = private constant [20 x i8] [i8 65, i8 116, i8 116, i8 114, i8 105, i8 98, i8 117, i8 116, i8 101, i8 115, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@.str1 = private constant [5 x i8] [i8 104, i8 105, i8 33, i8 10, i8 0]
+@.str2 = private constant [20 x i8] [i8 65, i8 116, i8 116, i8 114, i8 105, i8 98, i8 117, i8 116, i8 101, i8 115, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 ; -- endstrings --
 %MyInt32 = type %Int32;
 %MyInt32_2 = type %MyInt32;
@@ -246,7 +246,7 @@ define internal %Int32 @staticInlineHintFunc(%Int32 %x) inlinehint {
 };
 
 define internal void @hello() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @.str1 to [0 x i8]*))
 	ret void
 }
 
@@ -254,7 +254,7 @@ define %Int32 @main() {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
 	call void @hello()
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str2 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str2 to [0 x i8]*))
 	ret %Int32 0
 }
 

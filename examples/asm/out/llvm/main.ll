@@ -203,11 +203,11 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [21 x i8] [i8 115, i8 117, i8 109, i8 115, i8 117, i8 98, i8 54, i8 52, i8 32, i8 115, i8 117, i8 109, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
-@str2 = private constant [21 x i8] [i8 115, i8 117, i8 109, i8 115, i8 117, i8 98, i8 54, i8 52, i8 32, i8 115, i8 117, i8 98, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
-@str3 = private constant [17 x i8] [i8 105, i8 110, i8 108, i8 105, i8 110, i8 101, i8 32, i8 97, i8 115, i8 109, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str4 = private constant [24 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
-@str5 = private constant [24 x i8] [i8 115, i8 117, i8 98, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
+@.str1 = private constant [21 x i8] [i8 115, i8 117, i8 109, i8 115, i8 117, i8 98, i8 54, i8 52, i8 32, i8 115, i8 117, i8 109, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
+@.str2 = private constant [21 x i8] [i8 115, i8 117, i8 109, i8 115, i8 117, i8 98, i8 54, i8 52, i8 32, i8 115, i8 117, i8 98, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
+@.str3 = private constant [17 x i8] [i8 105, i8 110, i8 108, i8 105, i8 110, i8 101, i8 32, i8 97, i8 115, i8 109, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str4 = private constant [24 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
+@.str5 = private constant [24 x i8] [i8 115, i8 117, i8 98, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 ; -- endstrings --
 define internal void @memoryBarrier() {
 	call void asm sideeffect "", "~{memory}" ()
@@ -239,14 +239,14 @@ define internal void @sumsub64(%Int64 %a, %Int64 %b) {
 	%5 = extractvalue {%Int64,%Int64} %3, 1
 	store %Int64 %5, %Int64* %2
 	%6 = load %Int64, %Int64* %1
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*), %Int64 %6)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str1 to [0 x i8]*), %Int64 %6)
 	%8 = load %Int64, %Int64* %2
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), %Int64 %8)
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str2 to [0 x i8]*), %Int64 %8)
 	ret void
 }
 
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str3 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @.str3 to [0 x i8]*))
 	%2 = alloca %Int64, align 8
 	store %Int64 10, %Int64* %2
 	%3 = alloca %Int64, align 8
@@ -259,10 +259,10 @@ define %Int @main() {
 	%9 = call %Int64 @sub64(%Int64 %7, %Int64 %8)
 	%10 = load %Int64, %Int64* %2
 	%11 = load %Int64, %Int64* %3
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str4 to [0 x i8]*), %Int64 %10, %Int64 %11, %Int64 %6)
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @.str4 to [0 x i8]*), %Int64 %10, %Int64 %11, %Int64 %6)
 	%13 = load %Int64, %Int64* %2
 	%14 = load %Int64, %Int64* %3
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str5 to [0 x i8]*), %Int64 %13, %Int64 %14, %Int64 %9)
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @.str5 to [0 x i8]*), %Int64 %13, %Int64 %14, %Int64 %9)
 	%16 = load %Int64, %Int64* %2
 	%17 = load %Int64, %Int64* %3
 	call void @sumsub64(%Int64 %16, %Int64 %17)

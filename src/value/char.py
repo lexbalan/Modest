@@ -44,10 +44,10 @@ def value_char_cons(t, v, method, ti):
 
 	if v.type.is_string():
 		c = '\0'
-		if len(v.asset) > 0:
+		if len(v.asset) == 1:
 			c = v.asset[0]
 		else:
-			error("expected not empty string", ti)
+			error("cannot construct %s value from String with length != 1" % t.to_str(), ti)
 		nv.set_asset(ord(c))  # char code
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv

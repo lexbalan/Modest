@@ -203,10 +203,10 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 49, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 33, i8 10, i8 0]
-@str2 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 33, i8 10, i8 0]
-@str3 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 51, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 33, i8 10, i8 0]
-@str4 = private constant [12 x i8] [i8 100, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@.str1 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 49, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 33, i8 10, i8 0]
+@.str2 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 33, i8 10, i8 0]
+@.str3 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 51, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 33, i8 10, i8 0]
+@.str4 = private constant [12 x i8] [i8 100, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 ; -- endstrings --
 define internal void @getarr10([10 x %Int32]* %0) {
 	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
@@ -286,7 +286,7 @@ define %Int32 @main() {; alloca memory for return value
 	%16 = icmp ne %Bool %15, 0
 	br %Bool %16 , label %then_0, label %endif_0
 then_0:
-	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str1 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	%18 = insertvalue [10 x i8] zeroinitializer, i8 10, 1
@@ -332,7 +332,7 @@ endif_0:
 	%54 = icmp ne %Bool %53, 0
 	br %Bool %54 , label %then_1, label %endif_1
 then_1:
-	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*))
+	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str2 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 	%56 = load [10 x %Int32], [10 x %Int32]* %1
@@ -358,7 +358,7 @@ endif_1:
 	%73 = icmp ne %Bool %72, 0
 	br %Bool %73 , label %then_2, label %endif_2
 then_2:
-	%74 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str3 to [0 x i8]*))
+	%74 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str3 to [0 x i8]*))
 	br label %endif_2
 endif_2:
 	%75 = alloca %Nat32, align 4
@@ -375,7 +375,7 @@ body_1:
 	%80 = bitcast %Nat32 %79 to %Nat32
 	%81 = getelementptr [10 x %Int32], [10 x %Int32]* %58, %Int32 0, %Nat32 %80
 	%82 = load %Int32, %Int32* %81
-	%83 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*), %Nat32 %78, %Int32 %82)
+	%83 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str4 to [0 x i8]*), %Nat32 %78, %Int32 %82)
 	%84 = load %Nat32, %Nat32* %75
 	%85 = add %Nat32 %84, 1
 	store %Nat32 %85, %Nat32* %75

@@ -238,17 +238,17 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Nat32 %msgLen, %sha256_Hash* %out
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
-@str2 = private constant [5 x i8] [i8 32, i8 45, i8 62, i8 32, i8 0]
-@str3 = private constant [5 x i8] [i8 37, i8 48, i8 50, i8 88, i8 0]
-@str4 = private constant [2 x i8] [i8 10, i8 0]
-@str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 83, i8 72, i8 65, i8 50, i8 53, i8 54, i8 10, i8 0]
-@str6 = private constant [7 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 0]
-@str7 = private constant [7 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 0]
-@str8 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 105, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str9 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
-@str10 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str11 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@.str1 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
+@.str2 = private constant [5 x i8] [i8 32, i8 45, i8 62, i8 32, i8 0]
+@.str3 = private constant [5 x i8] [i8 37, i8 48, i8 50, i8 88, i8 0]
+@.str4 = private constant [2 x i8] [i8 10, i8 0]
+@.str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 83, i8 72, i8 65, i8 50, i8 53, i8 54, i8 10, i8 0]
+@.str6 = private constant [7 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 0]
+@.str7 = private constant [7 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 0]
+@.str8 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 105, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
+@.str9 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@.str10 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str11 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 %SHA256_TestCase = type {
 	[32 x %Char8],
@@ -410,8 +410,8 @@ define internal %Bool @doTest(%SHA256_TestCase* %test) {
 	%5 = load %Nat32, %Nat32* %4
 	call void @sha256_hash([0 x %Word8]* %3, %Nat32 %5, %sha256_Hash* %1)
 	%6 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 0
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x %Char8]* %6)
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @.str1 to [0 x i8]*), [32 x %Char8]* %6)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @.str2 to [0 x i8]*))
 	%9 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %9
 ; while_1
@@ -425,13 +425,13 @@ body_1:
 	%13 = bitcast %Nat32 %12 to %Nat32
 	%14 = getelementptr %sha256_Hash, %sha256_Hash* %1, %Int32 0, %Nat32 %13
 	%15 = load %Word8, %Word8* %14
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), %Word8 %15)
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @.str3 to [0 x i8]*), %Word8 %15)
 	%17 = load %Nat32, %Nat32* %9
 	%18 = add %Nat32 %17, 1
 	store %Nat32 %18, %Nat32* %9
 	br label %again_1
 break_1:
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str4 to [0 x i8]*))
 	%20 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 2
 	%21 = bitcast %sha256_Hash* %1 to i8*
 	%22 = bitcast %sha256_Hash* %20 to i8*
@@ -441,7 +441,7 @@ break_1:
 }
 
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @.str5 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %2
 	%3 = alloca %Nat32, align 4
@@ -462,32 +462,32 @@ body_1:
 	%12 = and %Bool %11, %10
 	store %Bool %12, %Bool* %2
 	%13 = alloca %Str8*, align 8
-	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %13
+	store %Str8* bitcast ([7 x i8]* @.str6 to [0 x i8]*), %Str8** %13
 ; if_0
 	br %Bool %10 , label %then_0, label %endif_0
 then_0:
-	store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %13
+	store %Str8* bitcast ([7 x i8]* @.str7 to [0 x i8]*), %Str8** %13
 	br label %endif_0
 endif_0:
 	%14 = load %Nat32, %Nat32* %3
 	%15 = load %Str8*, %Str8** %13
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), %Nat32 %14, %Str8* %15)
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str8 to [0 x i8]*), %Nat32 %14, %Str8* %15)
 	%17 = load %Nat32, %Nat32* %3
 	%18 = add %Nat32 %17, 1
 	store %Nat32 %18, %Nat32* %3
 	br label %again_1
 break_1:
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str9 to [0 x i8]*))
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @.str9 to [0 x i8]*))
 ; if_1
 	%20 = load %Bool, %Bool* %2
 	%21 = xor %Bool %20, 1
 	br %Bool %21 , label %then_1, label %endif_1
 then_1:
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str10 to [0 x i8]*))
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str10 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_1
 endif_1:
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str11 to [0 x i8]*))
+	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str11 to [0 x i8]*))
 	ret %Int 0
 }
 

@@ -218,8 +218,8 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'list' --
 ; -- end print imports public 'list' --
 ; -- strings --
-@str1 = private constant [14 x i8] [i8 110, i8 111, i8 100, i8 101, i8 95, i8 103, i8 101, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
-@str2 = private constant [17 x i8] [i8 110, i8 111, i8 100, i8 101, i8 95, i8 105, i8 110, i8 115, i8 101, i8 114, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
+@.str1 = private constant [14 x i8] [i8 110, i8 111, i8 100, i8 101, i8 95, i8 103, i8 101, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
+@.str2 = private constant [17 x i8] [i8 110, i8 111, i8 100, i8 101, i8 95, i8 105, i8 110, i8 115, i8 101, i8 114, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 ; -- endstrings --
 %list_Node = type {
 	%list_Node*,
@@ -393,7 +393,7 @@ then_0:
 	ret %list_Node* null
 	br label %endif_0
 endif_0:
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*), %Int32 %pos)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*), %Int32 %pos)
 	%8 = alloca %list_Node*, align 8
 ; if_1
 	%9 = icmp sge %Int32 %pos, 0
@@ -481,7 +481,7 @@ then_0:
 	ret %list_Node* null
 	br label %endif_0
 endif_0:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*), %Int32 %pos)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @.str2 to [0 x i8]*), %Int32 %pos)
 	%6 = call %list_Node* @list_node_get(%list_List* %list, %Int32 %pos)
 ; if_1
 	%7 = icmp eq %list_Node* %6, null

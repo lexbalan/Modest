@@ -203,12 +203,12 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [7 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 33, i8 0]
-@str2 = private constant [7 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 0]
-@str3 = private constant [7 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 33, i32 0]
-@str4 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str5 = private constant [12 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str6 = private constant [14 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 39, i8 37, i8 99, i8 39, i8 10, i8 0]
+@.str1 = private constant [7 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 33, i8 0]
+@.str2 = private constant [7 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 0]
+@.str3 = private constant [7 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 33, i32 0]
+@.str4 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str5 = private constant [12 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str6 = private constant [14 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 39, i8 37, i8 99, i8 39, i8 10, i8 0]
 ; -- endstrings --
 @c0 = constant [10 x i8] [
 	i8 0,
@@ -254,7 +254,7 @@ declare void @perror(%ConstCharStr* %str)
 ;	var ab: [0]Int32
 ;}
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str4 to [0 x i8]*))
 	%2 = alloca [10 x %Int32], align 4
 	%3 = alloca [10 x %Int32], align 4
 	%4 = insertvalue [10 x %Int32] zeroinitializer, %Int32 10, 1
@@ -295,7 +295,7 @@ body_1:
 	%28 = bitcast %Nat32 %27 to %Nat32
 	%29 = getelementptr [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Nat32 %28
 	%30 = load %Int32, %Int32* %29
-	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str5 to [0 x i8]*), %Nat32 %26, %Int32 %30)
+	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str5 to [0 x i8]*), %Nat32 %26, %Int32 %30)
 	%32 = load %Nat32, %Nat32* %23
 	%33 = add %Nat32 %32, 1
 	store %Nat32 %33, %Nat32* %23
@@ -322,7 +322,7 @@ body_1:
 	%7 = bitcast %Nat32 %6 to %Nat32
 	%8 = getelementptr [10 x %Char32], [10 x %Char32]* %a, %Int32 0, %Nat32 %7
 	%9 = load %Char32, %Char32* %8
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), %Nat32 %5, %Char32 %9)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str6 to [0 x i8]*), %Nat32 %5, %Char32 %9)
 	%11 = load %Nat32, %Nat32* %2
 	%12 = add %Nat32 %11, 1
 	store %Nat32 %12, %Nat32* %2

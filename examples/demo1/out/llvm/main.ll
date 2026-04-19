@@ -203,13 +203,13 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [37 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 101, i8 100, i8 32, i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 40, i8 37, i8 105, i8 41, i8 32, i8 105, i8 115, i8 32, i8 108, i8 101, i8 115, i8 115, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str2 = private constant [40 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 101, i8 100, i8 32, i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 40, i8 37, i8 105, i8 41, i8 32, i8 105, i8 115, i8 32, i8 103, i8 114, i8 101, i8 97, i8 116, i8 101, i8 114, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str3 = private constant [38 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 101, i8 100, i8 32, i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 40, i8 37, i8 105, i8 41, i8 32, i8 105, i8 115, i8 32, i8 101, i8 113, i8 117, i8 97, i8 108, i8 32, i8 119, i8 105, i8 116, i8 104, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str4 = private constant [28 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 97, i8 32, i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 40, i8 37, i8 105, i8 32, i8 46, i8 46, i8 32, i8 37, i8 105, i8 41, i8 58, i8 32, i8 0]
-@str5 = private constant [3 x i8] [i8 37, i8 100, i8 0]
-@str6 = private constant [43 x i8] [i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 103, i8 114, i8 101, i8 97, i8 116, i8 101, i8 114, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 44, i8 32, i8 116, i8 114, i8 121, i8 32, i8 97, i8 103, i8 97, i8 105, i8 110, i8 10, i8 0]
-@str7 = private constant [40 x i8] [i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 108, i8 101, i8 115, i8 115, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 44, i8 32, i8 116, i8 114, i8 121, i8 32, i8 97, i8 103, i8 97, i8 105, i8 110, i8 10, i8 0]
+@.str1 = private constant [37 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 101, i8 100, i8 32, i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 40, i8 37, i8 105, i8 41, i8 32, i8 105, i8 115, i8 32, i8 108, i8 101, i8 115, i8 115, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 10, i8 0]
+@.str2 = private constant [40 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 101, i8 100, i8 32, i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 40, i8 37, i8 105, i8 41, i8 32, i8 105, i8 115, i8 32, i8 103, i8 114, i8 101, i8 97, i8 116, i8 101, i8 114, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 10, i8 0]
+@.str3 = private constant [38 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 101, i8 100, i8 32, i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 40, i8 37, i8 105, i8 41, i8 32, i8 105, i8 115, i8 32, i8 101, i8 113, i8 117, i8 97, i8 108, i8 32, i8 119, i8 105, i8 116, i8 104, i8 32, i8 37, i8 105, i8 10, i8 0]
+@.str4 = private constant [28 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 97, i8 32, i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 40, i8 37, i8 105, i8 32, i8 46, i8 46, i8 32, i8 37, i8 105, i8 41, i8 58, i8 32, i8 0]
+@.str5 = private constant [3 x i8] [i8 37, i8 100, i8 0]
+@.str6 = private constant [43 x i8] [i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 103, i8 114, i8 101, i8 97, i8 116, i8 101, i8 114, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 44, i8 32, i8 116, i8 114, i8 121, i8 32, i8 97, i8 103, i8 97, i8 105, i8 110, i8 10, i8 0]
+@.str7 = private constant [40 x i8] [i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 108, i8 101, i8 115, i8 115, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 44, i8 32, i8 116, i8 114, i8 121, i8 32, i8 97, i8 103, i8 97, i8 105, i8 110, i8 10, i8 0]
 ; -- endstrings --
 define %Int32 @main() {
 	%1 = call %Int32 @get_number(%Int32 0, %Int32 10)
@@ -217,17 +217,17 @@ define %Int32 @main() {
 	%2 = icmp slt %Int32 %1, 5
 	br %Bool %2 , label %then_0, label %else_0
 then_0:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str1 to [0 x i8]*), %Int32 %1, %Int32 5)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @.str1 to [0 x i8]*), %Int32 %1, %Int32 5)
 	br label %endif_0
 else_0:
 ; if_1
 	%4 = icmp sgt %Int32 %1, 5
 	br %Bool %4 , label %then_1, label %else_1
 then_1:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str2 to [0 x i8]*), %Int32 %1, %Int32 5)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @.str2 to [0 x i8]*), %Int32 %1, %Int32 5)
 	br label %endif_1
 else_1:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str3 to [0 x i8]*), %Int32 %1, %Int32 5)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @.str3 to [0 x i8]*), %Int32 %1, %Int32 5)
 	br label %endif_1
 endif_1:
 	br label %endif_0
@@ -243,14 +243,14 @@ define internal %Int32 @get_number(%Int32 %min, %Int32 %max) {
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str4 to [0 x i8]*), %Int32 %min, %Int32 %max)
-	%3 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str5 to [0 x i8]*), %Int32* %1)
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @.str4 to [0 x i8]*), %Int32 %min, %Int32 %max)
+	%3 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @.str5 to [0 x i8]*), %Int32* %1)
 ; if_0
 	%4 = load %Int32, %Int32* %1
 	%5 = icmp slt %Int32 %4, %min
 	br %Bool %5 , label %then_0, label %else_0
 then_0:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @str6 to [0 x i8]*), %Int32 %min)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @.str6 to [0 x i8]*), %Int32 %min)
 	br label %again_1
 	br label %endif_0
 else_0:
@@ -259,7 +259,7 @@ else_0:
 	%9 = icmp sgt %Int32 %8, %max
 	br %Bool %9 , label %then_1, label %else_1
 then_1:
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str7 to [0 x i8]*), %Int32 %max)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @.str7 to [0 x i8]*), %Int32 %max)
 	br label %again_1
 	br label %endif_1
 else_1:

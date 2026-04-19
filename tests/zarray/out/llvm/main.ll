@@ -203,7 +203,11 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@.str1 = private constant [8 x i8] [i8 117, i8 32, i8 61, i8 61, i8 32, i8 118, i8 10, i8 0]
+@.str1 = private constant [4 x i8] [i8 97, i8 98, i8 99, i8 0]
+@.str2 = private constant [4 x i8] [i8 100, i8 101, i8 102, i8 0]
+@.str3 = private constant [6 x i8] [i8 103, i8 101, i8 102, i8 104, i8 107, i8 0]
+@.str4 = private constant [2 x i8] [i8 108, i8 0]
+@.str5 = private constant [8 x i8] [i8 117, i8 32, i8 61, i8 61, i8 32, i8 118, i8 10, i8 0]
 ; -- endstrings --
 @v = internal global [5 x [4 x %Int32]] [
 	[4 x %Int32] [
@@ -269,11 +273,15 @@ declare void @perror(%ConstCharStr* %str)
 		%Int32 0
 	]
 ]
-@str1 = internal global [3 x %Char8] [
-	%Char8 97,
-	%Char8 98,
-	%Char8 99
+@s = internal global [4 x %Str8*] [
+	%Str8* bitcast ([4 x i8]* @.str1 to [0 x i8]*),
+	%Str8* bitcast ([4 x i8]* @.str2 to [0 x i8]*),
+	%Str8* bitcast ([6 x i8]* @.str3 to [0 x i8]*),
+	%Str8* bitcast ([2 x i8]* @.str4 to [0 x i8]*)
 ]
+;var s: []Char8 = ["abc", "def", "gefhk", "l"]
+
+;var str1: []Char8 = "abc"
 @str2 = internal global [3 x %Char8] [
 	%Char8 97,
 	%Char8 98,
@@ -292,7 +300,7 @@ define %Int32 @main() {
 	%4 = icmp ne %Bool %3, 0
 	br %Bool %4 , label %then_0, label %endif_0
 then_0:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str1 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str5 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	ret %Int32 0

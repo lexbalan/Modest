@@ -203,10 +203,10 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'lib' --
 ; -- end print imports public 'lib' --
 ; -- strings --
-@str1 = private constant [20 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 108, i8 105, i8 98, i8 46, i8 102, i8 111, i8 111, i8 10, i8 0]
+@.str1 = private constant [20 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 108, i8 105, i8 98, i8 46, i8 102, i8 111, i8 111, i8 10, i8 0]
 ; -- endstrings --
 define void @lib_foo() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str1 to [0 x i8]*))
 	ret void
 }
 

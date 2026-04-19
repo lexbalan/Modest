@@ -203,11 +203,11 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [22 x i8] [i8 119, i8 104, i8 105, i8 108, i8 101, i8 32, i8 115, i8 116, i8 97, i8 116, i8 101, i8 109, i8 101, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [8 x i8] [i8 97, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str1 = private constant [22 x i8] [i8 119, i8 104, i8 105, i8 108, i8 101, i8 32, i8 115, i8 116, i8 97, i8 116, i8 101, i8 109, i8 101, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str2 = private constant [8 x i8] [i8 97, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str1 to [0 x i8]*))
 	%2 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %2
 ; while_1
@@ -218,7 +218,7 @@ again_1:
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
 	%5 = load %Nat32, %Nat32* %2
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Nat32 %5)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str2 to [0 x i8]*), %Nat32 %5)
 	%7 = load %Nat32, %Nat32* %2
 	%8 = add %Nat32 %7, 1
 	store %Nat32 %8, %Nat32* %2

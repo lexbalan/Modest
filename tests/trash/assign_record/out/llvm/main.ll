@@ -203,15 +203,15 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [19 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 97, i8 115, i8 115, i8 105, i8 103, i8 110, i8 95, i8 97, i8 114, i8 114, i8 97, i8 121, i8 10, i8 0]
-@str2 = private constant [21 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 49, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str3 = private constant [21 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 49, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str4 = private constant [25 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str5 = private constant [25 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str6 = private constant [20 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 49, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str7 = private constant [20 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 49, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str8 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str9 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str1 = private constant [19 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 97, i8 115, i8 115, i8 105, i8 103, i8 110, i8 95, i8 97, i8 114, i8 114, i8 97, i8 121, i8 10, i8 0]
+@.str2 = private constant [21 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 49, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str3 = private constant [21 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 49, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str4 = private constant [25 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@.str5 = private constant [25 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str6 = private constant [20 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 49, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str7 = private constant [20 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 49, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str8 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@.str9 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 %Point = type {
 	%Int32,
@@ -224,15 +224,15 @@ declare void @perror(%ConstCharStr* %str)
 }
 @globalPoint1 = internal global %Point zeroinitializer
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @.str1 to [0 x i8]*))
 	%2 = load %Point, %Point* @globalPoint0
 	store %Point %2, %Point* @globalPoint1
 	%3 = getelementptr %Point, %Point* @globalPoint1, %Int32 0, %Int32 0
 	%4 = load %Int32, %Int32* %3
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), %Int32 %4)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str2 to [0 x i8]*), %Int32 %4)
 	%6 = getelementptr %Point, %Point* @globalPoint1, %Int32 0, %Int32 1
 	%7 = load %Int32, %Int32* %6
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), %Int32 %7)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str3 to [0 x i8]*), %Int32 %7)
 ; if_0
 	%9 = bitcast %Point* @globalPoint0 to i8*
 	%10 = bitcast %Point* @globalPoint1 to i8*
@@ -240,10 +240,10 @@ define %Int @main() {
 	%12 = icmp ne %Bool %11, 0
 	br %Bool %12 , label %then_0, label %else_0
 then_0:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str4 to [0 x i8]*))
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @.str4 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @.str5 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	%15 = alloca %Point, align 4
@@ -256,10 +256,10 @@ endif_0:
 	store %Point %19, %Point* %18
 	%20 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 0
 	%21 = load %Int32, %Int32* %20
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str6 to [0 x i8]*), %Int32 %21)
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str6 to [0 x i8]*), %Int32 %21)
 	%23 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 1
 	%24 = load %Int32, %Int32* %23
-	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), %Int32 %24)
+	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str7 to [0 x i8]*), %Int32 %24)
 ; if_1
 	%26 = bitcast %Point* %15 to i8*
 	%27 = bitcast %Point* %18 to i8*
@@ -267,10 +267,10 @@ endif_0:
 	%29 = icmp ne %Bool %28, 0
 	br %Bool %29 , label %then_1, label %else_1
 then_1:
-	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str8 to [0 x i8]*))
+	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @.str8 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str9 to [0 x i8]*))
+	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @.str9 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 	ret %Int 0

@@ -242,24 +242,24 @@ declare %Str8* @fsm_getStateName(%fsm_FSM* %fsm)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [7 x i8] [i8 115, i8 116, i8 97, i8 116, i8 101, i8 48, i8 0]
-@str2 = private constant [7 x i8] [i8 115, i8 116, i8 97, i8 116, i8 101, i8 49, i8 0]
-@str3 = private constant [7 x i8] [i8 115, i8 116, i8 97, i8 116, i8 101, i8 50, i8 0]
-@str4 = private constant [6 x i8] [i8 70, i8 83, i8 77, i8 95, i8 48, i8 0]
+@.str1 = private constant [7 x i8] [i8 115, i8 116, i8 97, i8 116, i8 101, i8 48, i8 0]
+@.str2 = private constant [7 x i8] [i8 115, i8 116, i8 97, i8 116, i8 101, i8 49, i8 0]
+@.str3 = private constant [7 x i8] [i8 115, i8 116, i8 97, i8 116, i8 101, i8 50, i8 0]
+@.str4 = private constant [6 x i8] [i8 70, i8 83, i8 77, i8 95, i8 48, i8 0]
 ; -- endstrings --
 @fsm0 = internal global %fsm_FSM zeroinitializer
 @state0 = internal global %fsm_StateDesc {
-	%Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*),
+	%Str8* bitcast ([7 x i8]* @.str1 to [0 x i8]*),
 	%Nat16 4,
 	%fsm_ComplexState (%fsm_ComplexState, i8*)* @routine0
 }
 @state1 = internal global %fsm_StateDesc {
-	%Str8* bitcast ([7 x i8]* @str2 to [0 x i8]*),
+	%Str8* bitcast ([7 x i8]* @.str2 to [0 x i8]*),
 	%Nat16 4,
 	%fsm_ComplexState (%fsm_ComplexState, i8*)* @routine1
 }
 @state2 = internal global %fsm_StateDesc {
-	%Str8* bitcast ([7 x i8]* @str3 to [0 x i8]*),
+	%Str8* bitcast ([7 x i8]* @.str3 to [0 x i8]*),
 	%Nat16 4,
 	%fsm_ComplexState (%fsm_ComplexState, i8*)* @routine2
 }
@@ -413,7 +413,7 @@ endif_0:
 @timecnt = internal global %Nat32 zeroinitializer
 define %Int @main() {
 	%1 = bitcast %fsm_StateDesc* @state0 to %fsm_StateDesc*
-	call void @fsm_init(%fsm_FSM* @fsm0, %Str8* bitcast ([6 x i8]* @str4 to [0 x i8]*), %fsm_StateDesc* %1, i8* null)
+	call void @fsm_init(%fsm_FSM* @fsm0, %Str8* bitcast ([6 x i8]* @.str4 to [0 x i8]*), %fsm_StateDesc* %1, i8* null)
 ; while_1
 	br label %again_1
 again_1:

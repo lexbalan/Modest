@@ -235,15 +235,15 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [17 x i8] [i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 32, i8 40, i8 101, i8 110, i8 99, i8 114, i8 121, i8 112, i8 116, i8 41, i8 0]
-@str2 = private constant [17 x i8] [i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 32, i8 40, i8 100, i8 101, i8 99, i8 114, i8 121, i8 112, i8 116, i8 41, i8 0]
-@str3 = private constant [7 x i8] [i8 80, i8 65, i8 83, i8 83, i8 69, i8 68, i8 0]
-@str4 = private constant [18 x i8] [i8 114, i8 117, i8 110, i8 32, i8 65, i8 69, i8 83, i8 45, i8 50, i8 53, i8 54, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str5 = private constant [14 x i8] [i8 114, i8 117, i8 110, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 100, i8 32, i8 0]
-@str6 = private constant [2 x i8] [i8 10, i8 0]
-@str7 = private constant [14 x i8] [i8 65, i8 69, i8 83, i8 45, i8 50, i8 53, i8 54, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
-@str8 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str9 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@.str1 = private constant [17 x i8] [i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 32, i8 40, i8 101, i8 110, i8 99, i8 114, i8 121, i8 112, i8 116, i8 41, i8 0]
+@.str2 = private constant [17 x i8] [i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 32, i8 40, i8 100, i8 101, i8 99, i8 114, i8 121, i8 112, i8 116, i8 41, i8 0]
+@.str3 = private constant [7 x i8] [i8 80, i8 65, i8 83, i8 83, i8 69, i8 68, i8 0]
+@.str4 = private constant [18 x i8] [i8 114, i8 117, i8 110, i8 32, i8 65, i8 69, i8 83, i8 45, i8 50, i8 53, i8 54, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str5 = private constant [14 x i8] [i8 114, i8 117, i8 110, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 100, i8 32, i8 0]
+@.str6 = private constant [2 x i8] [i8 10, i8 0]
+@.str7 = private constant [14 x i8] [i8 65, i8 69, i8 83, i8 45, i8 50, i8 53, i8 54, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@.str8 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str9 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 %TestCase = type {
 	%aes256_Key,
@@ -849,7 +849,7 @@ define internal %Bool @runTest(%TestCase* %test) {
 	%15 = icmp eq %Bool %14, 0
 	br %Bool %15 , label %then_0, label %endif_0
 then_0:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @.str1 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
@@ -863,17 +863,17 @@ endif_0:
 	%24 = icmp eq %Bool %23, 0
 	br %Bool %24 , label %then_1, label %endif_1
 then_1:
-	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*))
+	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @.str2 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:
 	%27 = call %aes256_Result @aes256_deinit(%aes256_Context* %1)
-	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str3 to [0 x i8]*))
+	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @.str3 to [0 x i8]*))
 	ret %Bool 1
 }
 
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str4 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @.str4 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %2
 	%3 = alloca %Nat8, align 1
@@ -886,7 +886,7 @@ again_1:
 	br %Bool %5 , label %body_1, label %break_1
 body_1:
 	%6 = load %Nat8, %Nat8* %3
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), %Nat8 %6)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str5 to [0 x i8]*), %Nat8 %6)
 	%8 = load %Nat8, %Nat8* %3
 	%9 = zext %Nat8 %8 to %Nat32
 	%10 = getelementptr [8 x %TestCase], [8 x %TestCase]* @tests, %Int32 0, %Nat32 %9
@@ -894,23 +894,23 @@ body_1:
 	%12 = load %Bool, %Bool* %2
 	%13 = and %Bool %12, %11
 	store %Bool %13, %Bool* %2
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str6 to [0 x i8]*))
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str6 to [0 x i8]*))
 	%15 = load %Nat8, %Nat8* %3
 	%16 = add %Nat8 %15, 1
 	store %Nat8 %16, %Nat8* %3
 	br label %again_1
 break_1:
-	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str7 to [0 x i8]*))
 ; if_0
 	%18 = load %Bool, %Bool* %2
 	%19 = xor %Bool %18, 1
 	br %Bool %19 , label %then_0, label %endif_0
 then_0:
-	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str8 to [0 x i8]*))
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str8 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str9 to [0 x i8]*))
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str9 to [0 x i8]*))
 	ret %Int 0
 }
 

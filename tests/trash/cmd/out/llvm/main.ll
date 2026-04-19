@@ -305,11 +305,11 @@ declare %Int @tolower(%Int %x)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [10 x i8] [i8 37, i8 115, i8 32, i8 40, i8 110, i8 61, i8 37, i8 100, i8 41, i8 0]
-@str2 = private constant [3 x i8] [i8 32, i8 91, i8 0]
-@str3 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
-@str4 = private constant [3 x i8] [i8 93, i8 10, i8 0]
-@str5 = private constant [12 x i8] [i8 72, i8 65, i8 82, i8 83, i8 72, i8 32, i8 118, i8 48, i8 46, i8 49, i8 10, i8 0]
+@.str1 = private constant [10 x i8] [i8 37, i8 115, i8 32, i8 40, i8 110, i8 61, i8 37, i8 100, i8 41, i8 0]
+@.str2 = private constant [3 x i8] [i8 32, i8 91, i8 0]
+@.str3 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
+@.str4 = private constant [3 x i8] [i8 93, i8 10, i8 0]
+@.str5 = private constant [12 x i8] [i8 72, i8 65, i8 82, i8 83, i8 72, i8 32, i8 118, i8 48, i8 46, i8 49, i8 10, i8 0]
 ; -- endstrings --
 @tokensBuf = internal global [4096 x %Char8] zeroinitializer
 define internal void @showPrompt() {
@@ -553,8 +553,8 @@ break_1:
 }
 
 define internal void @execute(%Str8* %cmd, %Nat16 %argc, [0 x %Str8*]* %argv) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %Str8* %cmd, %Nat16 %argc)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str2 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str1 to [0 x i8]*), %Str8* %cmd, %Nat16 %argc)
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str2 to [0 x i8]*))
 	%3 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %3
 ; while_1
@@ -573,18 +573,18 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), %Str8* %7)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @.str3 to [0 x i8]*), %Str8* %7)
 	%11 = load %Nat32, %Nat32* %3
 	%12 = add %Nat32 %11, 1
 	store %Nat32 %12, %Nat32* %3
 	br label %again_1
 break_1:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str4 to [0 x i8]*))
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str4 to [0 x i8]*))
 	ret void
 }
 
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str5 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str5 to [0 x i8]*))
 	%2 = alloca [1024 x %Char8], align 1
 ; while_1
 	br label %again_1

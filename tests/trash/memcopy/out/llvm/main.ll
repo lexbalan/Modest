@@ -210,11 +210,11 @@ declare %Bool @memory_eq(i8* %mem0, i8* %mem1, %Nat64 %len)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [14 x i8] [i8 109, i8 101, i8 109, i8 99, i8 111, i8 112, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [11 x i8] [i8 76, i8 69, i8 78, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
-@str3 = private constant [18 x i8] [i8 102, i8 105, i8 114, i8 115, i8 116, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
-@str4 = private constant [17 x i8] [i8 108, i8 97, i8 115, i8 116, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
-@str5 = private constant [10 x i8] [i8 97, i8 103, i8 101, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str1 = private constant [14 x i8] [i8 109, i8 101, i8 109, i8 99, i8 111, i8 112, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str2 = private constant [11 x i8] [i8 76, i8 69, i8 78, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
+@.str3 = private constant [18 x i8] [i8 102, i8 105, i8 114, i8 115, i8 116, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
+@.str4 = private constant [17 x i8] [i8 108, i8 97, i8 115, i8 116, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
+@.str5 = private constant [10 x i8] [i8 97, i8 103, i8 101, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 %Object = type {
 	[32 x %Char8],
@@ -223,7 +223,7 @@ declare %Bool @memory_eq(i8* %mem0, i8* %mem1, %Nat64 %len)
 };
 
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*))
 	%2 = alloca %Object, align 4
 	%3 = alloca %Object, align 4
 	%4 = insertvalue [32 x %Char8] zeroinitializer, %Char8 74, 0
@@ -237,17 +237,17 @@ define %Int @main() {
 	%12 = insertvalue %Object %8, [32 x %Char8] %11, 1
 	%13 = insertvalue %Object %12, %Int32 30, 2
 	store %Object %13, %Object* %2
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), %Size 128)
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @.str2 to [0 x i8]*), %Size 128)
 	%15 = bitcast %Object* %3 to i8*
 	%16 = bitcast %Object* %2 to i8*
 	call void @memory_copy(i8* %15, i8* %16, %Size 128)
 	%17 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 0
-	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), [32 x %Char8]* %17)
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @.str3 to [0 x i8]*), [32 x %Char8]* %17)
 	%19 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 1
-	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str4 to [0 x i8]*), [32 x %Char8]* %19)
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @.str4 to [0 x i8]*), [32 x %Char8]* %19)
 	%21 = getelementptr %Object, %Object* %3, %Int32 0, %Int32 2
 	%22 = load %Int32, %Int32* %21
-	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Int32 %22)
+	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str5 to [0 x i8]*), %Int32 %22)
 	ret %Int 0
 }
 

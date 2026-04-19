@@ -203,20 +203,20 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [4 x i8] [i8 37, i8 115, i8 10, i8 0]
-@str2 = private constant [12 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 0]
-@str3 = private constant [10 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 111, i8 107, i8 46, i8 10, i8 0]
-@str4 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 46, i8 10, i8 0]
+@.str1 = private constant [4 x i8] [i8 37, i8 115, i8 10, i8 0]
+@.str2 = private constant [12 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 0]
+@.str3 = private constant [10 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 111, i8 107, i8 46, i8 10, i8 0]
+@.str4 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 46, i8 10, i8 0]
 ; -- endstrings --;+ " " + party_corn
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), %Str8* bitcast ([12 x i8]* @str2 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @.str1 to [0 x i8]*), %Str8* bitcast ([12 x i8]* @.str2 to [0 x i8]*))
 ; if_0
 	br %Bool 1 , label %then_0, label %else_0
 then_0:
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str3 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str4 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	ret %Int 0

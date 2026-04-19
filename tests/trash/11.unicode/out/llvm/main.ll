@@ -324,14 +324,14 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [28 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 45, i8 206, i8 169, i8 32, i8 240, i8 159, i8 144, i8 128, i8 240, i8 159, i8 142, i8 137, i8 240, i8 159, i8 166, i8 132, i8 0]
-@str2 = private constant [21 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 45, i16 937, i16 32, i16 55357, i16 56320, i16 55356, i16 57225, i16 55358, i16 56708, i16 0]
-@str3 = private constant [18 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]
-@str4 = private constant [2 x i8] [i8 10, i8 0]
-@str5 = private constant [2 x i16] [i16 10, i16 0]
-@str6 = private constant [2 x i32] [i32 10, i32 0]
-@str7 = private constant [2 x i32] [i32 10, i32 0]
-@str8 = private constant [2 x i16] [i16 10, i16 0]
+@.str1 = private constant [28 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 45, i8 206, i8 169, i8 32, i8 240, i8 159, i8 144, i8 128, i8 240, i8 159, i8 142, i8 137, i8 240, i8 159, i8 166, i8 132, i8 0]
+@.str2 = private constant [21 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 45, i16 937, i16 32, i16 55357, i16 56320, i16 55356, i16 57225, i16 55358, i16 56708, i16 0]
+@.str3 = private constant [18 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]
+@.str4 = private constant [2 x i8] [i8 10, i8 0]
+@.str5 = private constant [2 x i16] [i16 10, i16 0]
+@.str6 = private constant [2 x i32] [i32 10, i32 0]
+@.str7 = private constant [2 x i32] [i32 10, i32 0]
+@.str8 = private constant [2 x i16] [i16 10, i16 0]
 ; -- endstrings --
 @ratSymbolUTF8 = internal global [5 x %Word8] [
 	%Word8 240,
@@ -406,20 +406,20 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 ]
 define %Int32 @main() {
 	%1 = alloca %Str8*, align 8
-	store %Str8* bitcast ([28 x i8]* @str1 to [0 x i8]*), %Str8** %1
+	store %Str8* bitcast ([28 x i8]* @.str1 to [0 x i8]*), %Str8** %1
 	%2 = alloca %Str16*, align 8
-	store %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), %Str16** %2
+	store %Str16* bitcast ([21 x i16]* @.str2 to [0 x i16]*), %Str16** %2
 	%3 = alloca %Str32*, align 8
-	store %Str32* bitcast ([18 x i32]* @str3 to [0 x i32]*), %Str32** %3
+	store %Str32* bitcast ([18 x i32]* @.str3 to [0 x i32]*), %Str32** %3
 	%4 = load %Str8*, %Str8** %1
 	call void @console_puts8(%Str8* %4)
-	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	call void @console_puts8(%Str8* bitcast ([2 x i8]* @.str4 to [0 x i8]*))
 	%5 = load %Str16*, %Str16** %2
 	call void @console_puts16(%Str16* %5)
-	call void @console_puts16(%Str16* bitcast ([2 x i16]* @str5 to [0 x i16]*))
+	call void @console_puts16(%Str16* bitcast ([2 x i16]* @.str5 to [0 x i16]*))
 	%6 = load %Str32*, %Str32** %3
 	call void @console_puts32(%Str32* %6)
-	call void @console_puts32(%Str32* bitcast ([2 x i32]* @str6 to [0 x i32]*))
+	call void @console_puts32(%Str32* bitcast ([2 x i32]* @.str6 to [0 x i32]*))
 	%7 = bitcast [6 x %Char8]* @arr_utf8 to %Str8*
 	call void @console_puts8(%Str8* %7)
 	%8 = bitcast [10 x %Char16]* @arr_utf16 to %Str16*
@@ -432,11 +432,11 @@ define %Int32 @main() {
 	call void @console_puts16(%Str16* %11)
 	%12 = bitcast [3 x %Word32]* @ratSymbolUTF32 to %Str32*
 	call void @console_puts32(%Str32* %12)
-	call void @console_puts32(%Str32* bitcast ([2 x i32]* @str7 to [0 x i32]*))
+	call void @console_puts32(%Str32* bitcast ([2 x i32]* @.str7 to [0 x i32]*))
 	call void @console_putchar8(%Char8 65)
 	call void @console_putchar16(%Char16 937)
 	call void @console_putchar32(%Char32 129412)
-	call void @console_puts16(%Str16* bitcast ([2 x i16]* @str8 to [0 x i16]*))
+	call void @console_puts16(%Str16* bitcast ([2 x i16]* @.str8 to [0 x i16]*))
 	ret %Int32 0
 }
 

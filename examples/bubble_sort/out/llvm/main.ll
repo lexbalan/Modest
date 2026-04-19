@@ -203,12 +203,12 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [15 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 98, i8 101, i8 102, i8 111, i8 114, i8 101, i8 58, i8 10, i8 0]
-@str2 = private constant [2 x i8] [i8 10, i8 0]
-@str3 = private constant [14 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 97, i8 102, i8 116, i8 101, i8 114, i8 58, i8 10, i8 0]
-@str4 = private constant [2 x i8] [i8 10, i8 0]
-@str5 = private constant [2 x i8] [i8 10, i8 0]
-@str6 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@.str1 = private constant [15 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 98, i8 101, i8 102, i8 111, i8 114, i8 101, i8 58, i8 10, i8 0]
+@.str2 = private constant [2 x i8] [i8 10, i8 0]
+@.str3 = private constant [14 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 97, i8 102, i8 116, i8 101, i8 114, i8 58, i8 10, i8 0]
+@.str4 = private constant [2 x i8] [i8 10, i8 0]
+@.str5 = private constant [2 x i8] [i8 10, i8 0]
+@.str6 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 ; -- endstrings --
 @testArray = internal global [23 x %Int32] [
 	%Int32 -3,
@@ -295,21 +295,21 @@ break_1:
 }
 
 define %Int32 @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str1 to [0 x i8]*))
 	%2 = bitcast [23 x %Int32]* @testArray to [0 x %Int32]*
 	call void @print_array([0 x %Int32]* %2, %Nat32 23)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str2 to [0 x i8]*))
 	%4 = bitcast [23 x %Int32]* @testArray to [0 x %Int32]*
 	call void @bubble_sort32([0 x %Int32]* %4, %Nat32 23)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str3 to [0 x i8]*))
 	%6 = bitcast [23 x %Int32]* @testArray to [0 x %Int32]*
 	call void @print_array([0 x %Int32]* %6, %Nat32 23)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str4 to [0 x i8]*))
 	ret %Int32 0
 }
 
 define internal void @print_array([0 x %Int32]* %array, %Nat32 %len) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str5 to [0 x i8]*))
 	%2 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %2
 ; while_1
@@ -324,7 +324,7 @@ body_1:
 	%7 = bitcast %Nat32 %6 to %Nat32
 	%8 = getelementptr [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Nat32 %7
 	%9 = load %Int32, %Int32* %8
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str6 to [0 x i8]*), %Nat32 %5, %Int32 %9)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @.str6 to [0 x i8]*), %Nat32 %5, %Int32 %9)
 	%11 = load %Nat32, %Nat32* %2
 	%12 = add %Nat32 %11, 1
 	store %Nat32 %12, %Nat32* %2

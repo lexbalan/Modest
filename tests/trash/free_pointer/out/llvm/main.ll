@@ -203,8 +203,8 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [12 x i8] [i8 99, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
-@str2 = private constant [12 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
+@.str1 = private constant [12 x i8] [i8 99, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
+@.str2 = private constant [12 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
 ; -- endstrings --
 define %Int32 @main() {
 	%1 = alloca %Bool, align 1
@@ -221,11 +221,11 @@ define %Int32 @main() {
 	%9 = bitcast i8* %8 to %Int64*
 	store %Int64 123456789123456789, %Int64* %9
 	%10 = load %Int64, %Int64* %3
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), %Int64 %10)
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str1 to [0 x i8]*), %Int64 %10)
 	%12 = load i8*, i8** %4
 	%13 = bitcast i8* %12 to %Int64*
 	%14 = load %Int64, %Int64* %13
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), %Int64 %14)
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str2 to [0 x i8]*), %Int64 %14)
 	ret %Int32 0
 }
 

@@ -298,16 +298,16 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
-@str1 = private constant [9 x i8] [i8 100, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str2 = private constant [9 x i8] [i8 100, i8 121, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str3 = private constant [12 x i8] [i8 102, i8 108, i8 111, i8 97, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str4 = private constant [8 x i8] [i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str5 = private constant [10 x i8] [i8 50, i8 47, i8 51, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str6 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str7 = private constant [8 x i8] [i8 107, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str8 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
-@str9 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 54, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
-@str10 = private constant [12 x i8] [i8 115, i8 108, i8 111, i8 112, i8 101, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@.str1 = private constant [9 x i8] [i8 100, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str2 = private constant [9 x i8] [i8 100, i8 121, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str3 = private constant [12 x i8] [i8 102, i8 108, i8 111, i8 97, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str4 = private constant [8 x i8] [i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str5 = private constant [10 x i8] [i8 50, i8 47, i8 51, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@.str6 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@.str7 = private constant [8 x i8] [i8 107, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@.str8 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
+@.str9 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 54, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
+@.str10 = private constant [12 x i8] [i8 115, i8 108, i8 111, i8 112, i8 101, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 ; -- endstrings --
 define internal %Float64 @squareOfCircle(%Float64 %radius) {
 	%1 = call %Double @pow(%Float64 %radius, %Double 2.0000000000000000)
@@ -329,8 +329,8 @@ define internal %Float32 @slope(%Point2D %a, %Point2D %b) {
 	%6 = extractvalue %Point2D %b, 1
 	%7 = sub %Int %5, %6
 	%8 = call %Int @abs(%Int %7)
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*), %Int %4)
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), %Int %8)
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @.str1 to [0 x i8]*), %Int %4)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @.str2 to [0 x i8]*), %Int %8)
 	%11 = sitofp %Int %8 to %Float32
 	%12 = sitofp %Int %4 to %Float32
 	%13 = fdiv %Float32 %11, %12
@@ -338,21 +338,21 @@ define internal %Float32 @slope(%Point2D %a, %Point2D %b) {
 }
 
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*))
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int32 2)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Float64 0.6666666666666666)
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str3 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str4 to [0 x i8]*), %Int32 2)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str5 to [0 x i8]*), %Float64 0.6666666666666666)
 	%4 = call %Float64 @squareOfCircle(%Float64 10.0000000000000000)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Float64 %4)
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str7 to [0 x i8]*), %Float64 0.1250000000000000)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str8 to [0 x i8]*), %Size 4)
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str9 to [0 x i8]*), %Size 8)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str6 to [0 x i8]*), %Float64 %4)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str7 to [0 x i8]*), %Float64 0.1250000000000000)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @.str8 to [0 x i8]*), %Size 4)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @.str9 to [0 x i8]*), %Size 8)
 	%9 = insertvalue %Point2D zeroinitializer, %Int 10, 0
 	%10 = insertvalue %Point2D %9, %Int 20, 1
 	%11 = insertvalue %Point2D zeroinitializer, %Int 30, 0
 	%12 = insertvalue %Point2D %11, %Int 50, 1
 	%13 = call %Float32 @slope(%Point2D %10, %Point2D %12)
 	%14 = fpext %Float32 %13 to %Float64
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str10 to [0 x i8]*), %Float64 %14)
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str10 to [0 x i8]*), %Float64 %14)
 	ret %Int 0
 }
 
