@@ -203,8 +203,41 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports public 'main' --
 ; -- end print imports public 'main' --
 ; -- strings --
+@.str1 = private constant [8 x i8] [i8 117, i8 32, i8 61, i8 61, i8 32, i8 118, i8 10, i8 0]
 ; -- endstrings --
 @v = internal global [5 x [4 x %Int32]] [
+	[4 x %Int32] [
+		%Int32 1,
+		%Int32 2,
+		%Int32 0,
+		%Int32 0
+	],
+	[4 x %Int32] [
+		%Int32 3,
+		%Int32 4,
+		%Int32 0,
+		%Int32 0
+	],
+	[4 x %Int32] [
+		%Int32 5,
+		%Int32 6,
+		%Int32 7,
+		%Int32 0
+	],
+	[4 x %Int32] [
+		%Int32 8,
+		%Int32 9,
+		%Int32 10,
+		%Int32 11
+	],
+	[4 x %Int32] [
+		%Int32 12,
+		%Int32 13,
+		%Int32 0,
+		%Int32 0
+	]
+]
+@u = internal global [5 x [4 x %Int32]] [
 	[4 x %Int32] [
 		%Int32 1,
 		%Int32 2,
@@ -252,6 +285,16 @@ declare void @perror(%ConstCharStr* %str)
 	%Char8 99
 ]
 define %Int32 @main() {
+; if_0
+	%1 = bitcast [5 x [4 x %Int32]]* @u to i8*
+	%2 = bitcast [5 x [4 x %Int32]]* @v to i8*
+	%3 = call i1 (i8*, i8*, i64) @memeq(i8* %1, i8* %2, %Int64 80)
+	%4 = icmp ne %Bool %3, 0
+	br %Bool %4 , label %then_0, label %endif_0
+then_0:
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str1 to [0 x i8]*))
+	br label %endif_0
+endif_0:
 	ret %Int32 0
 }
 

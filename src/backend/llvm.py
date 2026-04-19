@@ -2638,7 +2638,7 @@ def print_strings(strings):
 		else:
 			# it is anonymous string
 			strno = strno + 1
-			strid = 'str%d' % strno
+			strid = '.str%d' % strno
 
 		char_width = string.type.to.of.width
 
