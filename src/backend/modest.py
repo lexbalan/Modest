@@ -171,7 +171,7 @@ def str_type(t):
 	elif Type.is_pointer(t):
 		return str_type_pointer(t)
 	elif Type.is_string(t):
-		return "String"
+		return "String(length=%d)" % t.length
 	elif isinstance(t, TypeInteger):
 		return "Integer"
 	elif isinstance(t, TypeRational):

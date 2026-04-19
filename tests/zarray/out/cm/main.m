@@ -3,14 +3,13 @@ include "ctypes64"
 include "stdio"
 
 
-var v: [5][4]Int32 = [[1, 2], [3, 4], [5, 6, 7], [8, 9, 10, 11], [12, 13]]
-var u = [][]Int32 [[1, 2], [3, 4], [5, 6, 7], [8, 9, 10, 11], [12, 13]]
+var v = [[1, 2], [3, 4], [5, 6, 7], [8, 9, 10, 11], [12, 13]]
+var u: [5][4]Int32 = [][]Int32 [[1, 2], [3, 4], [5, 6, 7], [8, 9, 10, 11], [12, 13]]
 
-var s: [4]*Str8 = ["abc", "def", "gefhk", "l"]
-var s2: [4]Str8 = ["abc", "def", "gefhk", "l"]
-//var s: []Char8 = ["abc", "def", "gefhk", "l"]
+var s = ["abc", "def", "gefhk", "l"]
+var s2: [4][5]Char8 = ["abc", "def", "gefhk", "l"]// <--
 
-//var str1: []Char8 = "abc"
+var str1: [3]Char8 = "abc"
 
 // builtin type Str8 has 'zarray' attribute (!)
 var str2: [3]Char8 = "abc"

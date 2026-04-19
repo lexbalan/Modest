@@ -1255,7 +1255,16 @@ class Type(Entity):
 	@staticmethod
 	def select_common_type(a, b, ti):
 		from error import info
-		
+
+
+		# (!) must be before Type.eq() !
+		# because String == String with any length
+		if a.is_string() and b.is_string():
+			if a.length > b.length:
+				return a
+			else:
+				return b
+
 
 		if Type.eq(a, b):
 			return a
@@ -1266,6 +1275,7 @@ class Type(Entity):
 				return a
 			if b.is_rational() and a.is_integer():
 				return b
+
 
 		if a.__class__.__name__ == b.__class__.__name__:
 			if a.is_generic() and b.is_generic():

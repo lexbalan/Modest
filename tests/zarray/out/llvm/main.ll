@@ -279,9 +279,41 @@ declare void @perror(%ConstCharStr* %str)
 	%Str8* bitcast ([6 x i8]* @.str3 to [0 x i8]*),
 	%Str8* bitcast ([2 x i8]* @.str4 to [0 x i8]*)
 ]
-;var s: []Char8 = ["abc", "def", "gefhk", "l"]
-
-;var str1: []Char8 = "abc"
+@s2 = internal global [4 x [5 x %Char8]] [
+	[5 x %Char8] [
+		%Char8 97,
+		%Char8 98,
+		%Char8 99,
+		%Char8 0,
+		%Char8 0
+	],
+	[5 x %Char8] [
+		%Char8 100,
+		%Char8 101,
+		%Char8 102,
+		%Char8 0,
+		%Char8 0
+	],
+	[5 x %Char8] [
+		%Char8 103,
+		%Char8 101,
+		%Char8 102,
+		%Char8 104,
+		%Char8 107
+	],
+	[5 x %Char8] [
+		%Char8 108,
+		%Char8 0,
+		%Char8 0,
+		%Char8 0,
+		%Char8 0
+	]
+]; <--
+@str1 = internal global [3 x %Char8] [
+	%Char8 97,
+	%Char8 98,
+	%Char8 99
+]
 @str2 = internal global [3 x %Char8] [
 	%Char8 97,
 	%Char8 98,
@@ -294,13 +326,20 @@ declare void @perror(%ConstCharStr* %str)
 ]
 define %Int32 @main() {
 ; if_0
-	%1 = bitcast [5 x [4 x %Int32]]* @u to i8*
-	%2 = bitcast [5 x [4 x %Int32]]* @v to i8*
-	%3 = call i1 (i8*, i8*, i64) @memeq(i8* %1, i8* %2, %Int64 80)
-	%4 = icmp ne %Bool %3, 0
-	br %Bool %4 , label %then_0, label %endif_0
+; -- cons_composite_from_composite_by_adr --
+	%1 = bitcast [5 x [4 x %Int32]]* @v to [5 x [4 x %Int32]]*
+	%2 = load [5 x [4 x %Int32]], [5 x [4 x %Int32]]* %1
+; -- end cons_composite_from_composite_by_adr --
+	%3 = alloca [5 x [4 x %Int32]]
+	%4 = zext i8 5 to %Nat32
+	store [5 x [4 x %Int32]] %2, [5 x [4 x %Int32]]* %3
+	%5 = bitcast [5 x [4 x %Int32]]* @u to i8*
+	%6 = bitcast [5 x [4 x %Int32]]* %3 to i8*
+	%7 = call i1 (i8*, i8*, i64) @memeq(i8* %5, i8* %6, %Int64 80)
+	%8 = icmp ne %Bool %7, 0
+	br %Bool %8 , label %then_0, label %endif_0
 then_0:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str5 to [0 x i8]*))
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str5 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	ret %Int32 0

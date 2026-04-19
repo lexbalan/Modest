@@ -92,26 +92,44 @@ def get_last_array_in_chain(t):
 	return t
 
 
+
+# type   : [2][ ][ ][3]Int32
+# v.type : [2][2][2][3]Integer
+# result : [2][2][2][3]Int32
+
+
+def is_holed(t):
+	if t.is_array():
+		if t.is_open_array():
+			return True
+		return is_holed(t.of)
+	return False
+
+
+def resolve(t1, t2):
+	if t1.is_array():
+
+		if t2.is_string():
+			from .integer import value_integer_create
+			volume = value_integer_create(t2.length)
+			t2 = TypeArray(t1.of, volume=volume, ti=None)
+
+		nt = t1
+		if t1.is_open_array():
+			nt = t2.copy()
+			nt.generic = False
+		nt.of = resolve(t1.of, t2.of)
+		return nt
+	return t1
+
+
 def value_array_cons(t, v, method, ti):
 	result_type = t
 
-	if result_type.is_open_array():
-		if array_can(t, v.type, method, ti):
 
-			result_type = None
-			if v.type.is_string():
-				from .integer import value_integer_create
-				volume = value_integer_create(v.type.length)
-				result_type = TypeArray(t.of, volume=volume, ti=ti)
-			else:
-				# получаем копию типа элемента массива v (копия нужна чтобы не испортить оригинальный тип v)
-				result_type = v.type.deep_copy()
-				result_type.generic = False
-
-			# ищем и заменяем конечный тип в цепочке масссивов [][][]X (идем к X)
-			last = get_last_array_in_chain(result_type)
-			last.of = get_last_array_in_chain(t).of
-			#info("result_type = %s" % result_type.to_str(), ti)
+	if is_holed(t):
+		result_type = resolve(t, v.type)
+		#warning("holed, RT = %s" % result_type.to_str(), ti)
 
 
 	# if t.hasAttribute('zarray'):

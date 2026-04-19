@@ -9,7 +9,7 @@ var u = [][]Int32 [[1, 2], [3, 4], [5, 6, 7], [8, 9, 10, 11], [12, 13]]
 var s: []*Str8 = ["abc", "def", "gefhk", "l"]
 var s2: [4]Str8 = ["abc", "def", "gefhk", "l"]  // <--
 
-//var str1: []Char8 = "abc"
+var str1: []Char8 = "abc"
 
 // builtin type Str8 has 'zarray' attribute (!)
 var str2: Str8 = "abc"
