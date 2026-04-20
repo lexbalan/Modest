@@ -605,9 +605,7 @@ def do_type_func(x, func_id="_"):
 		if param != None:
 			params.append(param)
 
-	to = typeUnit
-	if x['to'] != None:
-		to = do_type_internal(x['to'])
+	to = do_type(x['to'])
 
 	if to.is_forbidden_retval():
 		error("forbidden retval type", to.ti)
@@ -1995,7 +1993,6 @@ def do_stmt_return(x):
 	func_ret_type = cfunc.type.to
 	ret_val_present = x['value'] != None
 
-
 	# если забыли вернуть значение
 	# или возвращаем его там, где оно не ожидется
 #	is_no_ret_func = func_ret_type.is_unit()
@@ -2338,23 +2335,27 @@ def def_const_common(x):
 	if pre_exist != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
-	iv = do_rvalue(x['init_value'])
-	is_initialized = not iv.is_value_undefined()
+#	iv = do_rvalue(x['init_value'])
+#	is_initialized = not iv.is_value_undefined()
+#
+#	t = None
+#	if x['type'] != None:
+#		t = do_type(x['type']).copy()
+#		iv = value_cons_implicit_check(t, iv)
+#		if t.is_open_array():
+#			t = iv.type.copy()
+#	#else:
+#	#	iv = value_cons_default(iv)
+#
+#	if t == None:
+#		t = Type.copy(iv.type)
 
-	t = None
-	if x['type'] != None:
-		t = do_type(x['type']).copy()
-		iv = value_cons_implicit_check(t, iv)
-		if t.is_open_array():
-			t = iv.type.copy()
-	#else:
-	#	iv = value_cons_default(iv)
 
-	if t == None:
-		t = Type.copy(iv.type)
+	t, iv = process_field_common(x)
 
+	t = t.copy()
 	const_value = ValueConst(t, id, init_value=iv, ti=id.ti)
-	const_value.is_initialized = is_initialized
+	const_value.is_initialized = not iv.is_value_undefined()
 
 	const_value.stage = iv.stage
 	if iv.isValueImmediate():
@@ -2404,6 +2405,37 @@ def def_const_global(x):
 
 
 
+def process_field_common(x, allow_cons_default=False):
+	var_type = None
+	if x['type'] != None:
+		var_type = do_type(x['type'])
+
+	init_value = do_rvalue(x['init_value'])
+
+	if var_type != None:
+		init_value = value_cons_implicit(var_type, init_value)
+		if var_type.is_holed():
+			var_type = init_value.type
+
+	else: # var_type == None:
+		if init_value.is_value_undefined():
+			# ERROR: type & value are undefined!
+			nv = ValueBad(x['ti'])
+			ctx_value_add(id.str, nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
+			return StmtBad(x['ti'])
+
+		if allow_cons_default:
+			init_value = value_cons_default(init_value)
+		var_type = Type.copy(init_value.type)
+
+	# убираем 'const' если есть
+	if var_type.hasAttribute('const'):
+		var_type = var_type.copy()
+		var_type.delAttribute('const')
+
+	return var_type, init_value
+
+
 def def_var_common(x):
 	global cdef
 	global global_prefix
@@ -2423,27 +2455,28 @@ def def_var_common(x):
 	prev_cdef = cdef
 	cdef = definition
 
-	var_type = None
-	if x['type'] != None:
-		var_type = do_type(x['type'])
-
-	init_value = do_rvalue(x['init_value'])
-
-	if var_type != None:
-		init_value = value_cons_implicit(var_type, init_value)
-		if var_type.is_holed():
-			var_type = init_value.type
-
-	else: # var_type == None:
-		if init_value.is_value_undefined():
-			# ERROR: type & value are undefined!
-			nv = ValueBad(x['ti'])
-			ctx_value_add(id.str, nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
-			return StmtBad(x['ti'])
-
-		init_value = value_cons_default(init_value)
-		var_type = Type.copy(init_value.type)
-		var_type.delAttribute('const')
+	var_type, init_value = process_field_common(x, allow_cons_default=True)
+#	var_type = None
+#	if x['type'] != None:
+#		var_type = do_type(x['type'])
+#
+#	init_value = do_rvalue(x['init_value'])
+#
+#	if var_type != None:
+#		init_value = value_cons_implicit(var_type, init_value)
+#		if var_type.is_holed():
+#			var_type = init_value.type
+#
+#	else: # var_type == None:
+#		if init_value.is_value_undefined():
+#			# ERROR: type & value are undefined!
+#			nv = ValueBad(x['ti'])
+#			ctx_value_add(id.str, nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
+#			return StmtBad(x['ti'])
+#
+#		init_value = value_cons_default(init_value)
+#		var_type = Type.copy(init_value.type)
+#		var_type.delAttribute('const')
 
 
 	# Переменная может быть типа []X если она внешняя
@@ -2503,6 +2536,7 @@ def def_func(x):
 	fn.id.prefix = global_prefix
 
 	cdef = fn.definition
+
 
 	if fn.type.is_incompleted():
 		ft = do_type_func(x['type'])

@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-int32_t main(void) {
+int main(void) {
 	return 0;
 }
 

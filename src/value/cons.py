@@ -244,7 +244,8 @@ def _select_default_type_for(t):
 
 		nt = TypeArray(item_type, t.volume, t.ti)
 		return nt
-
+	elif t.is_record():
+		return t
 
 	# corresponded type not found!
 	return None

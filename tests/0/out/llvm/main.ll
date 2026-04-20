@@ -204,8 +204,8 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports public 'main' --
 ; -- strings --
 ; -- endstrings --
-define %Int32 @main() {
-	ret %Int32 0
+define %Int @main() {
+	ret %Int 0
 }
 
 

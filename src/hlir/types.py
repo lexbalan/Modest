@@ -170,7 +170,7 @@ class Entity():
 	def hasAttribute(self, attribute):
 		return attribute in self.attributes
 
-	def addAttribute(self, attribute, params={}):
+	def addAttribute(self, attribute, params=None):
 		if not self.hasAttribute(attribute):
 			self.attributes[attribute] = params
 
@@ -217,13 +217,13 @@ class Module:
 	def hasAttribute(self, a):
 		return a in self.attributes
 
-	def addAttribute(self, a, v={}):
+	def addAttribute(self, a, v=None):
 		if not self.hasAttribute(a):
 			self.attributes[a] = v
 
 	def delAttribute(self, a):
 		if self.hasAttribute(a):
-			self.attributes.remove(a)
+			self.attributes.pop(a)
 
 
 	def __str__(self):

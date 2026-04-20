@@ -6,7 +6,7 @@
 #include <stdio.h>
 #define ARR {1, 2}
 static int32_t arr0[2] = {1, 2};
-static const int32_t arr1[2] = {1, 2};
+static int32_t arr1[2] = {1, 2};
 static char *str = "Hello!";
 // -> *[]Char8
 

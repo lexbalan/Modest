@@ -27,6 +27,7 @@ const cs2: [4]Str8 = ["abc", "def", "gefhk", "l"]
 const cstr1: []Char8 = "abc"
 const ca2 = [][]Char8 ["abc", "def"]
 
+
 // builtin type Str8 has 'zarray' attribute (!)
 const cstr2: Str8 = "abc"
 
