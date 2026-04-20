@@ -2335,37 +2335,22 @@ def def_const_common(x):
 	if pre_exist != None:
 		error("redefinition of '%s'" % id.str, id.ti)
 
-#	iv = do_rvalue(x['init_value'])
-#	is_initialized = not iv.is_value_undefined()
-#
-#	t = None
-#	if x['type'] != None:
-#		t = do_type(x['type']).copy()
-#		iv = value_cons_implicit_check(t, iv)
-#		if t.is_open_array():
-#			t = iv.type.copy()
-#	#else:
-#	#	iv = value_cons_default(iv)
-#
-#	if t == None:
-#		t = Type.copy(iv.type)
 
+	const_type, init_value = process_field_common(x)
 
-	t, iv = process_field_common(x)
+	const_type = const_type.copy()
+	const_type.addAttribute('const', {})
 
-	t = t.copy()
-	const_value = ValueConst(t, id, init_value=iv, ti=id.ti)
-	const_value.is_initialized = not iv.is_value_undefined()
+	const_value = ValueConst(const_type, id, init_value=init_value, ti=id.ti)
+	const_value.is_initialized = not init_value.is_value_undefined()
 
-	const_value.stage = iv.stage
-	if iv.isValueImmediate():
-		Value.cp_immediate(const_value, iv)
-
-	const_value.type.addAttribute('const', {})
+	const_value.stage = init_value.stage
+	if init_value.isValueImmediate():
+		Value.cp_immediate(const_value, init_value)
 
 	ctx_value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 
-	definition = StmtDefConst(id, const_value, iv, x['ti'])
+	definition = StmtDefConst(id, const_value, init_value, x['ti'])
 	definition.module = cmodule
 	definition.access_level = get_access_level(x)
 	definition.nl = x['nl']
@@ -2456,28 +2441,6 @@ def def_var_common(x):
 	cdef = definition
 
 	var_type, init_value = process_field_common(x, allow_cons_default=True)
-#	var_type = None
-#	if x['type'] != None:
-#		var_type = do_type(x['type'])
-#
-#	init_value = do_rvalue(x['init_value'])
-#
-#	if var_type != None:
-#		init_value = value_cons_implicit(var_type, init_value)
-#		if var_type.is_holed():
-#			var_type = init_value.type
-#
-#	else: # var_type == None:
-#		if init_value.is_value_undefined():
-#			# ERROR: type & value are undefined!
-#			nv = ValueBad(x['ti'])
-#			ctx_value_add(id.str, nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
-#			return StmtBad(x['ti'])
-#
-#		init_value = value_cons_default(init_value)
-#		var_type = Type.copy(init_value.type)
-#		var_type.delAttribute('const')
-
 
 	# Переменная может быть типа []X если она внешняя
 	is_not_extern = getAnno(x, 'extern') == None
