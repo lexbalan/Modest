@@ -1645,6 +1645,8 @@ def do_value_id(x):
 			return ValueBad(x['ti'])
 
 		cdef.deps.append(v_upd)
+		if cfunc != None:
+			cfunc.definition.deps.append(v_upd)
 		return v_upd
 
 #	if 'usecnt' in v:
@@ -1923,9 +1925,6 @@ def do_stmt_var(x):
 
 	if df.is_stmt_bad():
 		return df
-
-	if not df.init_value.is_value_undefined():
-		df.value.is_initialized = True
 
 	df.id.prefix = None
 	df.value.id.prefix = None
@@ -2323,43 +2322,8 @@ def def_type_global(x):
 
 
 
-# common method for global & local consts
-def def_const_common(x):
-	global cmodule
-	id = do_id(x['id'])
-
-	# check if identifier is free
-	pre_exist = ctx_value_get(id.str, shallow=True)
-	if pre_exist != None:
-		error("redefinition of '%s'" % id.str, id.ti)
-
-
-	const_type, init_value = process_field_common(x)
-	if const_type.is_forbidden_const():
-		error("unsuitable type", x['ti'])
-
-	const_type = const_type.copy()
-	const_type.addAttribute('const', {})
-
-	const_value = ValueConst(const_type, id, init_value=init_value, ti=id.ti)
-	const_value.is_initialized = not init_value.is_value_undefined()
-
-	const_value.stage = init_value.stage
-	if init_value.isValueImmediate():
-		Value.cp_immediate(const_value, init_value)
-
-	ctx_value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
-
-	definition = StmtDefConst(id, const_value, init_value, x['ti'])
-	definition.module = cmodule
-	definition.access_level = get_access_level(x)
-	definition.nl = x['nl']
-	const_value.definition = definition
-	return definition
-
-
-
 def def_const_global(x):
+	global cmodule
 	global global_prefix
 	df = def_const_common(x)
 
@@ -2421,6 +2385,61 @@ def process_field_common(x, allow_cons_default=False):
 	return var_type, init_value
 
 
+
+
+
+
+
+# common method for global & local consts
+def def_const_common(x):
+	global cmodule
+	global cdef
+	global global_prefix
+
+	id = do_id(x['id'])
+	id.prefix = global_prefix
+
+	# check if identifier is free
+	pre_exist = ctx_value_get(id.str, shallow=True)
+	if pre_exist != None:
+		error("redefinition of '%s'" % id.str, id.ti)
+
+
+	definition = StmtDefConst(id, const_value=None, init_value=None, ti=x['ti'])
+	definition.module = cmodule
+	definition.parent = cmodule
+	definition.access_level = get_access_level(x)
+	definition.nl = x['nl']
+
+	prev_cdef = cdef
+	cdef = definition
+
+	const_type, init_value = process_field_common(x)
+
+	if const_type.is_forbidden_const():
+		error("unsuitable type", x['ti'])
+
+	const_type = const_type.copy()
+	const_type.addAttribute('const', {})
+
+	const_value = ValueConst(const_type, id, init_value=init_value, ti=id.ti)
+	const_value.is_initialized = not init_value.is_value_undefined()
+	const_value.stage = init_value.stage
+	ctx_value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
+
+	if init_value.isValueImmediate():
+		Value.cp_immediate(const_value, init_value)
+
+	#definition = StmtDefConst(id, const_value, init_value, x['ti'])
+	definition.value = const_value
+	definition.init_value = init_value
+	const_value.definition = definition
+
+	cdef = prev_cdef
+	return definition
+
+
+
 def def_var_common(x):
 	global cdef
 	global global_prefix
@@ -2428,47 +2447,55 @@ def def_var_common(x):
 	id = do_id(x['id'])
 	id.prefix = global_prefix
 
-	definition = StmtDefVar(id, None, None, x['ti'])
+	# check if identifier is free
+	pre_exist = ctx_value_get(id.str, shallow=True)
+	if pre_exist != None:
+		error("redefinition of '%s'" % id.str, id.ti)
+
+
+	definition = StmtDefVar(id, var_value=None, init_value=None, ti=x['ti'])
 	definition.module = cmodule
 	definition.parent = cmodule
 	definition.access_level = get_access_level(x)
+	definition.nl = x['nl']
+
 	if definition.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 		if settings['public_vars_forbidden']:
 			error("public variables are forbidden", x['ti'])
 
-	definition.nl = x['nl']
 	prev_cdef = cdef
 	cdef = definition
-
-	# Переменная может быть типа []X если она внешняя
-	is_not_extern = getAnno(x, 'extern') == None
 
 	var_type, init_value = process_field_common(x, allow_cons_default=True)
 	if var_type.is_forbidden_var(open_array_forbidden=False):
 		error("unsuitable type", x['ti'])
 
 	var_value = ValueVar(var_type, id, init_value=init_value, ti=id.ti)
+	var_value.is_initialized = not init_value.is_value_undefined()
+	var_value.stage = HLIR_VALUE_STAGE_RUNTIME
 	ctx_value_add(id.str, var_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
-	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 	definition.value = var_value
 	definition.init_value = init_value
 	var_value.definition = definition
 
-	#var_value.parent = cmodule
-
 	cdef = prev_cdef
 	return definition
 
 
+
+
 def def_var_global(x):
+	global cmodule
 	# already defined? (check identifier)
 	already = ctx_value_get(x['id']['str'])
 	if already != None:
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
 	df = def_var_common(x)
+	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 	df.value.is_initialized = True
+	df.value.parent = cmodule
 	df = def_add_annotations(df, x['anno'])
 	return df
 
