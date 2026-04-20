@@ -16,7 +16,7 @@ var str2: [3]Char8 = "abc"
 
 var str3: [3]Char8 = "abc"
 
-
+var a2 = [][]Char8 ["abc", "def"]
 
 public func main () -> Int32 {
 	if u == v {

@@ -12,6 +12,7 @@ static char s2[4][5] = {{'a', 'b', 'c'}, {'d', 'e', 'f'}, {'g', 'e', 'f', 'h', '
 static char str1[3] = {'a', 'b', 'c'};
 static char str2[3] = {'a', 'b', 'c'};
 static char str3[3] = {'a', 'b', 'c'};
+static char a2[2][3] = {{'a', 'b', 'c'}, {'d', 'e', 'f'}};
 
 int32_t main(void) {
 	if (__builtin_memcmp(&u, &v, sizeof(int32_t [5][4])) == 0) {
