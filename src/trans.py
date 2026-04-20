@@ -2427,71 +2427,40 @@ def def_var_common(x):
 	cdef = definition
 
 	var_type = None
-	specified_type = None
-
 	if x['type'] != None:
-		specified_type = do_type(x['type'])
-		var_type = specified_type
+		var_type = do_type(x['type'])
 
-	iv = do_rvalue(x['init_value'])
+	init_value = do_rvalue(x['init_value'])
 
-	tu = var_type == None
-	vu = iv.is_value_undefined()
-
-	# error: no type, no init valuetu = type_is_incompleted(t)
-	if tu == True and vu == True:
-		# ERROR: type & value undefined
-		nv = ValueBad(x['ti'])
-		ctx_value_add(id.str, nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
-		return StmtBad(x['ti'])
-
-	elif tu == True and vu == False:
-		# type undef, value ok
-		#if iv.type.is_generic():
-		#	error("variable with generic type", x['ti'])
-		iv = value_cons_default(iv)
-		t = Type.copy(iv.type)
-		t.delAttribute('const')
-
-	elif tu == False and vu == True:
-		iv = value_cons_implicit(var_type, iv)
-
-	elif tu == False and vu == False:
-		if var_type.is_open_array():
-			# приходит нормальный массив [3][3]*Str8, выходит [3][]*Str8
-			# array_cons() делает херню!
-			iv = value_cons_implicit(var_type, iv)
-			#warning("? " + iv.type.to_str(), x['ti'])
-			var_type = iv.type
-
-
-	# type & init value present
 	if var_type != None:
-		if not iv.is_value_undefined():
-			iv = value_cons_implicit_check(var_type, iv)
-			if var_type.is_holed():
-				# переменная не может иметь holed тип - да такой сахар допустим, но его нужно превратить в конкретный тип
-				var_type = iv.type.copy()
-	else:
-		if iv.type.is_generic():
-			iv = value_cons_default(iv)
-		var_type = Type.copy(iv.type)
+		init_value = value_cons_implicit(var_type, init_value)
+		if var_type.is_holed():
+			var_type = init_value.type
+
+	else: # var_type == None:
+		if init_value.is_value_undefined():
+			# ERROR: type & value are undefined!
+			nv = ValueBad(x['ti'])
+			ctx_value_add(id.str, nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
+			return StmtBad(x['ti'])
+
+		init_value = value_cons_default(init_value)
+		var_type = Type.copy(init_value.type)
 		var_type.delAttribute('const')
+
 
 	# Переменная может быть типа []X если она внешняя
 	is_not_extern = getAnno(x, 'extern') == None
 	if var_type.is_forbidden_var(open_array_forbidden=is_not_extern):
 		error("unsuitable variable type", x['id']['ti'])
 
-	var_value = ValueVar(var_type, id, init_value=iv, ti=id.ti)
-	#if var_value.type.is_array():
-	#	warning("Type = " + var_value.type.to_str(), x['ti'])
+	var_value = ValueVar(var_type, id, init_value=init_value, ti=id.ti)
 	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 	ctx_value_add(id.str, var_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 	var_value.is_global_flag = True
 
 	definition.value = var_value
-	definition.init_value = iv
+	definition.init_value = init_value
 	var_value.definition = definition
 
 	#var_value.parent = cmodule

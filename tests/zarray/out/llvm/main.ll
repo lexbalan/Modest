@@ -324,6 +324,18 @@ declare void @perror(%ConstCharStr* %str)
 	%Char8 98,
 	%Char8 99
 ]
+@a2 = internal global [2 x [3 x %Char8]] [
+	[3 x %Char8] [
+		%Char8 97,
+		%Char8 98,
+		%Char8 99
+	],
+	[3 x %Char8] [
+		%Char8 100,
+		%Char8 101,
+		%Char8 102
+	]
+]
 define %Int32 @main() {
 ; if_0
 	%1 = bitcast [5 x [4 x %Int32]]* @u to i8*
