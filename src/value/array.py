@@ -118,6 +118,11 @@ def resolve(t1, t2):
 		if t1.is_open_array():
 			nt = t2.copy()
 			nt.generic = False
+		else:
+			pass
+			#nt = t1.copy()
+			#nt.attributes = t1.attributes
+
 		nt.of = resolve(t1.of, t2.of)
 		return nt
 	return t1

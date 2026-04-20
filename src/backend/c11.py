@@ -168,7 +168,7 @@ def get_type_id_str(t):
 
 
 def get_id_str(x):
-	if hasattr(x, 'id'):
+	if hasattr(x, 'id') and x.id != None:
 		if x.id.c_alias != None:
 			return x.id.c_alias
 

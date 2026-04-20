@@ -326,20 +326,13 @@ declare void @perror(%ConstCharStr* %str)
 ]
 define %Int32 @main() {
 ; if_0
-; -- cons_composite_from_composite_by_adr --
-	%1 = bitcast [5 x [4 x %Int32]]* @v to [5 x [4 x %Int32]]*
-	%2 = load [5 x [4 x %Int32]], [5 x [4 x %Int32]]* %1
-; -- end cons_composite_from_composite_by_adr --
-	%3 = alloca [5 x [4 x %Int32]]
-	%4 = zext i8 5 to %Nat32
-	store [5 x [4 x %Int32]] %2, [5 x [4 x %Int32]]* %3
-	%5 = bitcast [5 x [4 x %Int32]]* @u to i8*
-	%6 = bitcast [5 x [4 x %Int32]]* %3 to i8*
-	%7 = call i1 (i8*, i8*, i64) @memeq(i8* %5, i8* %6, %Int64 80)
-	%8 = icmp ne %Bool %7, 0
-	br %Bool %8 , label %then_0, label %endif_0
+	%1 = bitcast [5 x [4 x %Int32]]* @u to i8*
+	%2 = bitcast [5 x [4 x %Int32]]* @v to i8*
+	%3 = call i1 (i8*, i8*, i64) @memeq(i8* %1, i8* %2, %Int64 80)
+	%4 = icmp ne %Bool %3, 0
+	br %Bool %4 , label %then_0, label %endif_0
 then_0:
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str5 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str5 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	ret %Int32 0

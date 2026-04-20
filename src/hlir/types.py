@@ -216,16 +216,16 @@ class Module:
 		self.symtab_private = symtab_private
 		self.source_abspath = None
 		self.defs = []
-		self.attributes = []
+		self.attributes = {}
 		self.helpers = []  #
 
 
 	def hasAttribute(self, a):
 		return a in self.attributes
 
-	def addAttribute(self, a):
+	def addAttribute(self, a, v={}):
 		if not self.hasAttribute(a):
-			self.attributes.append(a)
+			self.attributes[a] = v
 
 	def delAttribute(self, a):
 		if self.hasAttribute(a):
@@ -305,7 +305,7 @@ class Field(Entity):
 		self.field_no = 0
 		self.offset = 0
 		self.access_level = access_level
-		self.att = []
+		self.attributes = {}
 		self.nl = 0
 		self.comments = []
 		self.line_comment = None
@@ -315,7 +315,7 @@ class Field(Entity):
 		if atts == []:
 			return self
 		for a in atts:
-			self.att.append(a['kind'])
+			self.addAttribute(a['kind'])
 			if a['kind'] == 'alias':
 				if len(a['args']) > 1:
 					backend_name = a['args'][0]['value']['str']
@@ -336,7 +336,7 @@ class Initializer(Entity):
 		self.id = _id
 		self.value = value
 		self.nl = nl
-		self.att = []
+		self.attributes = {}
 		# этот инициализатор описывает явно именованную сущность? (аргумент)
 		# нужно чтобы принтер знал когда стоит печатать аргумент как "key=value"
 		self.named = named
@@ -347,7 +347,7 @@ class Stmt(Entity):
 	def __init__(self, ti=None, nl=1):
 		super().__init__(ti)
 		self.deps = []
-		self.att = []
+		self.attributes = {}
 		self.comment = None
 		self.nl = nl
 
@@ -648,7 +648,6 @@ class Type(Entity):
 		self.size = size
 		self.align = align
 		self.ops = ops
-		self.att = []
 		self.attributes = {}
 		self.deps = []
 		self.ti = None
@@ -696,14 +695,14 @@ class Type(Entity):
 				#info("set layout '%s'" % layout, a['ti'])
 				nt.layout = layout
 				if layout == 'packed':
-					nt.att.append(k)
+					nt.addAttribute(k)
 
 			if k == 'fraction':
 				nt.fraction = int(a['args'][0]['value']['str'])
 
 			if k == 'zarray':
 				# zero terminated array
-				nt.att.append(k)
+				nt.addAttribute(k)
 
 			if k == 'branded':
 				nt.brand = get_brand()
@@ -1119,7 +1118,7 @@ class Type(Entity):
 		# использую для C чтобы можно было более строго проверить типы
 		# напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
 		if 'att_checking' in opt:
-			if a.att != b.att:
+			if a.attributes != b.att:
 				return False
 
 		# дженерик и не дженерик типы не равны
@@ -1143,10 +1142,9 @@ class Type(Entity):
 
 	def copy(self):
 		y = copy.copy(self)
-		y.att = copy.copy(self.att)
 		y.attributes = copy.copy(self.attributes)
 		return y
-	
+
 	def deep_copy(self):
 		return copy.deepcopy(self)
 
@@ -1158,7 +1156,6 @@ class Type(Entity):
 		dst.__dict__.update(src.__dict__)
 		if hasattr(src, 'id'):
 			dst.id = copy.copy(src.id)
-		dst.att = copy.copy(src.att)
 		dst.attributes = copy.copy(src.attributes)
 		dst.__class__ = src.__class__
 
@@ -1653,7 +1650,7 @@ class Value(Entity):
 		self.type = type
 		self.storage_class = HLIR_VALUE_STORAGE_CLASS_REGISTER
 		self.stage = HLIR_VALUE_STAGE_RUNTIME
-		self.att = []
+		self.attributes = {}
 		self.definition = None  # *StmtDefVar, *StmtDefConst, *StmtDefFunc
 		self.is_lvalue = False
 		self.is_immutable = False
@@ -1675,7 +1672,7 @@ class Value(Entity):
 			return self
 		nv = Value.copy(self)
 		for a in atts:
-			nv.att.append(a['kind'])
+			nv.addAttribute(a['kind'])
 		return nv
 
 
@@ -1920,7 +1917,7 @@ class Value(Entity):
 
 	def copy(self):
 		v = copy.copy(self)
-		v.att = copy.copy(self.att)
+		v.attributes = copy.copy(self.att)
 		return v
 
 
