@@ -165,7 +165,6 @@ class Entity():
 		self.ti = ti
 		self.attributes = {}
 		self.parent = None
-		self.is_global_flag = False
 
 
 	def hasAttribute(self, attribute):
@@ -183,11 +182,6 @@ class Entity():
 	def delAttribute(self, a):
 		if self.hasAttribute(a):
 			self.attributes.pop(a)
-
-
-
-	#def is_global(self):
-	#	return self.is_global_flag
 
 
 	# возвращает модуль в котором сущность определена (или None)
@@ -653,7 +647,6 @@ class Type(Entity):
 		self.ti = None
 		self.incomplete = True
 		self.definition = None
-		self.is_global_flag = True
 		self.uid = 0
 		self.layout = 'exact'
 		self.fraction = 0  # for Fixed types (here for faster Type.eq(!))
@@ -672,7 +665,7 @@ class Type(Entity):
 
 	def get_size(self):
 		return self.size
-	
+
 	def get_align(self):
 		return self.align
 
@@ -2188,7 +2181,7 @@ class ValueRef(Value):
 		super().__init__(type=type, ti=ti)
 		self.value = value
 
-		if value.is_global_flag:
+		if value.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			# не можно поставить 0 тк иначе значение будет трактоваться как zero
 			# и LLVM printer его не всунет в композитный тип (пропустит insertelement)

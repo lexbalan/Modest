@@ -777,7 +777,7 @@ def str_value_index(x, ctx):
 
 	left_str = ''
 
-	if left.is_global_flag and left.isValueConst(): #left.type.is_generic_array():
+	if left.is_global_flag and left.isValueConst():
 		ts = str_type(left.type)
 		vs = str_value(left, ctx=ctx)
 		left_str += '((%s)%s)' % (ts, vs)
@@ -813,7 +813,6 @@ def str_value_access(x, ctx):
 			return str_value_literal(x, ctx)
 
 	if value_is_generic_immediate_const(left):
-	#if left.is_global_flag:
 		ts = str_type(left.type)
 		vs = str_value(left, ctx=ctx)
 		sstr += '((%s)%s)' % (ts, vs)

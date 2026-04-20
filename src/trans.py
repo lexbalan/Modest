@@ -973,7 +973,7 @@ def do_value_ref(x):
 			return ValueBad(ti)
 
 	nv = ValueRef(v, ti=ti)
-	if v.is_global_flag:
+	if v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
 		nv.stage = HLIR_VALUE_STAGE_LINKTIME
 	return nv
 
@@ -1629,7 +1629,7 @@ def do_value_id(x):
 	# Если в теле функции происходит доступ к глобальной переменной
 	# значит она не "чистая"
 	if cfunc != None:
-		if v.isValueVar() and v.is_global_flag:
+		if v.isValueVar() and v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
 			cfunc.is_pure = False
 
 
@@ -1935,7 +1935,6 @@ def do_stmt_var(x):
 	df.value.id.prefix = None
 
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
-	df.value.is_global_flag = False
 	df.parent = cfunc
 
 	for a in x['anno']:
@@ -2389,8 +2388,6 @@ def def_const_global(x):
 	# rm Value#module -> tree instead
 	df.parent = cmodule
 	df.value.parent = cmodule
-
-	df.value.is_global_flag = True
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 	df.id.prefix = global_prefix
@@ -2455,9 +2452,8 @@ def def_var_common(x):
 		error("unsuitable variable type", x['id']['ti'])
 
 	var_value = ValueVar(var_type, id, init_value=init_value, ti=id.ti)
-	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 	ctx_value_add(id.str, var_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
-	var_value.is_global_flag = True
+	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 	definition.value = var_value
 	definition.init_value = init_value
@@ -2935,7 +2931,7 @@ def def_phase1(ast, is_include=False):
 					t.parent = cmodule
 
 				ctx_type_add(id['str'], t, is_public=is_public)
-				t.is_global_flag = True
+				t.is_global_type = True
 
 			elif kind == 'func':
 				# Create function value with incomplete type
@@ -2953,7 +2949,7 @@ def def_phase1(ast, is_include=False):
 				if not is_include:
 					v.parent = cmodule
 				ctx_value_add(id['str'], v, is_public=is_public)
-				v.is_global_flag = True
+				v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 
 

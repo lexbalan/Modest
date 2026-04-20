@@ -987,7 +987,7 @@ def do_cvalue_index(x, ctx):
 	lx = do_cvalue(left)
 	index = do_cvalue(x.index)
 
-	if left.is_global_flag and left.isValueConst(): #left.type.is_generic_array():
+	if left.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL and left.isValueConst(): #left.type.is_generic_array():
 		ts = do_ctype(left.type)
 		vs = do_cvalue(left, ctx=ctx)
 		lx = CValueCast(ts, vs)
@@ -1111,12 +1111,12 @@ def do_cvalue_const(x, ctx):
 		return do_cvalue_literal_with_type(x, x.type, ctx=ctx)
 
 	id_str = get_id_str(x)
-	if x.is_global_flag and not x.id.hasAttribute('nodecorate'):
+	if x.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL and not x.id.hasAttribute('nodecorate'):
 		id_str = camel_to_upper_snake(id_str)
 
 	cv = CValueNamed(id_str)
 
-#	if x.is_global_flag and x.type.is_array() and not x.type.is_generic():
+#	if x.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL and x.type.is_array() and not x.type.is_generic():
 #		cv = CValueCast(do_ctype(x.type), cv)
 
 	return cv
@@ -1134,7 +1134,7 @@ def do_cvalue_lengthof(array_value):
 		return CValueInteger(array_value.type.length)
 	if array_value.isValueImmediate():
 		return CValueInteger(array_value.type.volume.asset)
-	if array_value.isValueConst() and array_value.is_global_flag:
+	if array_value.isValueConst() and array_value.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
 		return CValueInteger(array_value.type.volume.asset)
 	elif array_value.isValueSlice():
 		return CValueInteger(array_value.type.volume.asset)
