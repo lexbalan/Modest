@@ -30,7 +30,7 @@ var tableData1: [4][4]*Str8 = [
 ]
 
 
-var table00: Table = Table {
+var table00 = Table {
 	header = nil
 	data = &tableData0
 	nRows = lengthof(tableData0)
@@ -38,7 +38,7 @@ var table00: Table = Table {
 	separate = false
 }
 
-var table01: Table = Table {
+var table01 = Table {
 	header = &table_header0
 	data = &tableData0
 	nRows = lengthof(tableData0)
@@ -46,7 +46,7 @@ var table01: Table = Table {
 	separate = false
 }
 
-var table02: Table = Table {
+var table02 = Table {
 	header = nil
 	data = &tableData0
 	nRows = lengthof(tableData0)
@@ -54,7 +54,7 @@ var table02: Table = Table {
 	separate = true
 }
 
-var table03: Table = Table {
+var table03 = Table {
 	header = &table_header0
 	data = &tableData0
 	nRows = lengthof(tableData0)
@@ -62,7 +62,7 @@ var table03: Table = Table {
 	separate = true
 }
 
-var table10: Table = Table {
+var table10 = Table {
 	header = &table_header1
 	data = &tableData1
 	nRows = lengthof(tableData1)

@@ -440,119 +440,116 @@ else_1:
 	br label %endif_1
 endif_1:
 	%29 = alloca %Point2D, align 4
-; -- cons_composite_from_composite_by_adr --
-	%30 = bitcast %Point2D* %17 to %Point2D*
-	%31 = load %Point2D, %Point2D* %30
-; -- end cons_composite_from_composite_by_adr --
-	store %Point2D %31, %Point2D* %29
-	%32 = alloca {%Nat32,%Nat32}, align 4
-	%33 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
-	%34 = insertvalue {%Nat32,%Nat32} %33, %Nat32 2, 1
-	store {%Nat32,%Nat32} %34, {%Nat32,%Nat32}* %32
+	%30 = load %Point2D, %Point2D* %17
+	store %Point2D %30, %Point2D* %29
+	%31 = alloca {%Nat32,%Nat32}, align 4
+	%32 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
+	%33 = insertvalue {%Nat32,%Nat32} %32, %Nat32 2, 1
+	store {%Nat32,%Nat32} %33, {%Nat32,%Nat32}* %31
 ; if_2
 ; -- cons_composite_from_composite_by_adr --
-	%35 = bitcast {%Nat32,%Nat32}* %32 to %Point2D*
-	%36 = load %Point2D, %Point2D* %35
+	%34 = bitcast {%Nat32,%Nat32}* %31 to %Point2D*
+	%35 = load %Point2D, %Point2D* %34
 ; -- end cons_composite_from_composite_by_adr --
-	%37 = alloca %Point2D
-	store %Point2D %36, %Point2D* %37
-	%38 = bitcast %Point2D* %29 to i8*
-	%39 = bitcast %Point2D* %37 to i8*
-	%40 = call i1 (i8*, i8*, i64) @memeq(i8* %38, i8* %39, %Int64 8)
-	%41 = icmp ne %Bool %40, 0
-	br %Bool %41 , label %then_2, label %else_2
+	%36 = alloca %Point2D
+	store %Point2D %35, %Point2D* %36
+	%37 = bitcast %Point2D* %29 to i8*
+	%38 = bitcast %Point2D* %36 to i8*
+	%39 = call i1 (i8*, i8*, i64) @memeq(i8* %37, i8* %38, %Int64 8)
+	%40 = icmp ne %Bool %39, 0
+	br %Bool %40 , label %then_2, label %else_2
 then_2:
-	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str22 to [0 x i8]*))
+	%41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str22 to [0 x i8]*))
 	br label %endif_2
 else_2:
-	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str23 to [0 x i8]*))
+	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str23 to [0 x i8]*))
 	br label %endif_2
 endif_2:
-	%44 = alloca {%Nat32,%Nat32}, align 4
-	%45 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
-	%46 = insertvalue {%Nat32,%Nat32} %45, %Nat32 2, 1
-	store {%Nat32,%Nat32} %46, {%Nat32,%Nat32}* %44
+	%43 = alloca {%Nat32,%Nat32}, align 4
+	%44 = insertvalue {%Nat32,%Nat32} zeroinitializer, %Nat32 1, 0
+	%45 = insertvalue {%Nat32,%Nat32} %44, %Nat32 2, 1
+	store {%Nat32,%Nat32} %45, {%Nat32,%Nat32}* %43
 ; if_3
 ; -- cons_composite_from_composite_by_adr --
-	%47 = bitcast {%Nat32,%Nat32}* %44 to {%Nat32,%Nat32}*
-	%48 = load {%Nat32,%Nat32}, {%Nat32,%Nat32}* %47
+	%46 = bitcast {%Nat32,%Nat32}* %43 to {%Nat32,%Nat32}*
+	%47 = load {%Nat32,%Nat32}, {%Nat32,%Nat32}* %46
 ; -- end cons_composite_from_composite_by_adr --
-	%49 = alloca {%Nat32,%Nat32}
-	store {%Nat32,%Nat32} %48, {%Nat32,%Nat32}* %49
-	%50 = bitcast {%Nat32,%Nat32}* %32 to i8*
-	%51 = bitcast {%Nat32,%Nat32}* %49 to i8*
-	%52 = call i1 (i8*, i8*, i64) @memeq(i8* %50, i8* %51, %Int64 8)
-	%53 = icmp ne %Bool %52, 0
-	br %Bool %53 , label %then_3, label %else_3
+	%48 = alloca {%Nat32,%Nat32}
+	store {%Nat32,%Nat32} %47, {%Nat32,%Nat32}* %48
+	%49 = bitcast {%Nat32,%Nat32}* %31 to i8*
+	%50 = bitcast {%Nat32,%Nat32}* %48 to i8*
+	%51 = call i1 (i8*, i8*, i64) @memeq(i8* %49, i8* %50, %Int64 8)
+	%52 = icmp ne %Bool %51, 0
+	br %Bool %52 , label %then_3, label %else_3
 then_3:
-	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str24 to [0 x i8]*))
+	%53 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str24 to [0 x i8]*))
 	br label %endif_3
 else_3:
-	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str25 to [0 x i8]*))
+	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str25 to [0 x i8]*))
 	br label %endif_3
 endif_3:
 ; if_4
 ; -- cons_composite_from_composite_by_adr --
-	%56 = bitcast {%Nat32,%Nat32}* %32 to %Point2D*
-	%57 = load %Point2D, %Point2D* %56
+	%55 = bitcast {%Nat32,%Nat32}* %31 to %Point2D*
+	%56 = load %Point2D, %Point2D* %55
 ; -- end cons_composite_from_composite_by_adr --
-	%58 = alloca %Point2D
-	store %Point2D %57, %Point2D* %58
-	%59 = bitcast %Point2D* %29 to i8*
-	%60 = bitcast %Point2D* %58 to i8*
-	%61 = call i1 (i8*, i8*, i64) @memeq(i8* %59, i8* %60, %Int64 8)
-	%62 = icmp ne %Bool %61, 0
-	br %Bool %62 , label %then_4, label %else_4
+	%57 = alloca %Point2D
+	store %Point2D %56, %Point2D* %57
+	%58 = bitcast %Point2D* %29 to i8*
+	%59 = bitcast %Point2D* %57 to i8*
+	%60 = call i1 (i8*, i8*, i64) @memeq(i8* %58, i8* %59, %Int64 8)
+	%61 = icmp ne %Bool %60, 0
+	br %Bool %61 , label %then_4, label %else_4
 then_4:
-	%63 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str26 to [0 x i8]*))
+	%62 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str26 to [0 x i8]*))
 	br label %endif_4
 else_4:
-	%64 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str27 to [0 x i8]*))
+	%63 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str27 to [0 x i8]*))
 	br label %endif_4
 endif_4:
-	%65 = insertvalue %Point2D zeroinitializer, %Nat32 100, 0
-	%66 = insertvalue %Point2D %65, %Nat32 200, 1
-	store %Point2D %66, %Point2D* %29
-	store {%Nat32,%Nat32} zeroinitializer, {%Nat32,%Nat32}* %32
+	%64 = insertvalue %Point2D zeroinitializer, %Nat32 100, 0
+	%65 = insertvalue %Point2D %64, %Nat32 200, 1
+	store %Point2D %65, %Point2D* %29
+	store {%Nat32,%Nat32} zeroinitializer, {%Nat32,%Nat32}* %31
+	%66 = alloca %Int32, align 4
+	store %Int32 10, %Int32* %66
 	%67 = alloca %Int32, align 4
-	store %Int32 10, %Int32* %67
-	%68 = alloca %Int32, align 4
-	store %Int32 20, %Int32* %68
-	%69 = load %Int32, %Int32* %67
-	%70 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 %69, 0
-	%71 = load %Int32, %Int32* %68
-	%72 = insertvalue {%Int32,%Int32} %70, %Int32 %71, 1
-	%73 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %72, {%Int32,%Int32}* %73
-	store %Int32 111, %Int32* %67
-	store %Int32 222, %Int32* %68
-	%74 = getelementptr {%Int32,%Int32}, {%Int32,%Int32}* %73, %Int32 0, %Int32 0
-	%75 = load %Int32, %Int32* %74
-	%76 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @.str28 to [0 x i8]*), %Int32 %75)
-	%77 = getelementptr {%Int32,%Int32}, {%Int32,%Int32}* %73, %Int32 0, %Int32 1
-	%78 = load %Int32, %Int32* %77
-	%79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @.str29 to [0 x i8]*), %Int32 %78)
+	store %Int32 20, %Int32* %67
+	%68 = load %Int32, %Int32* %66
+	%69 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 %68, 0
+	%70 = load %Int32, %Int32* %67
+	%71 = insertvalue {%Int32,%Int32} %69, %Int32 %70, 1
+	%72 = alloca {%Int32,%Int32}
+	store {%Int32,%Int32} %71, {%Int32,%Int32}* %72
+	store %Int32 111, %Int32* %66
+	store %Int32 222, %Int32* %67
+	%73 = getelementptr {%Int32,%Int32}, {%Int32,%Int32}* %72, %Int32 0, %Int32 0
+	%74 = load %Int32, %Int32* %73
+	%75 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @.str28 to [0 x i8]*), %Int32 %74)
+	%76 = getelementptr {%Int32,%Int32}, {%Int32,%Int32}* %72, %Int32 0, %Int32 1
+	%77 = load %Int32, %Int32* %76
+	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @.str29 to [0 x i8]*), %Int32 %77)
 ; if_5
 ; -- cons_composite_from_composite_by_adr --
-	%80 = bitcast {%Int32,%Int32}* %73 to {%Int32,%Int32}*
-	%81 = load {%Int32,%Int32}, {%Int32,%Int32}* %80
+	%79 = bitcast {%Int32,%Int32}* %72 to {%Int32,%Int32}*
+	%80 = load {%Int32,%Int32}, {%Int32,%Int32}* %79
 ; -- end cons_composite_from_composite_by_adr --
-	%82 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
-	%83 = insertvalue {%Int32,%Int32} %82, %Int32 20, 1
+	%81 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
+	%82 = insertvalue {%Int32,%Int32} %81, %Int32 20, 1
+	%83 = alloca {%Int32,%Int32}
+	store {%Int32,%Int32} %80, {%Int32,%Int32}* %83
 	%84 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %81, {%Int32,%Int32}* %84
-	%85 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %83, {%Int32,%Int32}* %85
+	store {%Int32,%Int32} %82, {%Int32,%Int32}* %84
+	%85 = bitcast {%Int32,%Int32}* %83 to i8*
 	%86 = bitcast {%Int32,%Int32}* %84 to i8*
-	%87 = bitcast {%Int32,%Int32}* %85 to i8*
-	%88 = call i1 (i8*, i8*, i64) @memeq(i8* %86, i8* %87, %Int64 8)
-	%89 = icmp ne %Bool %88, 0
-	br %Bool %89 , label %then_5, label %else_5
+	%87 = call i1 (i8*, i8*, i64) @memeq(i8* %85, i8* %86, %Int64 8)
+	%88 = icmp ne %Bool %87, 0
+	br %Bool %88 , label %then_5, label %else_5
 then_5:
-	%90 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @.str30 to [0 x i8]*))
+	%89 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @.str30 to [0 x i8]*))
 	br label %endif_5
 else_5:
-	%91 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @.str31 to [0 x i8]*))
+	%90 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @.str31 to [0 x i8]*))
 	br label %endif_5
 endif_5:
 	call void @test_records()

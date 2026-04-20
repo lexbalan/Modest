@@ -2531,57 +2531,45 @@ define %Int @main() {
 	%2 = alloca %Context, align 8
 	%3 = load [3 x %Word32], [3 x %Word32]* @testNonce2
 	%4 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %3)
-; -- cons_composite_from_composite_by_value --
-	%5 = alloca %Context
-	store %Context %4, %Context* %5
-	%6 = bitcast %Context* %5 to %Context*
-; -- end cons_composite_from_composite_by_value --
-	%7 = load %Context, %Context* %6
-	store %Context %7, %Context* %2
-	%8 = bitcast [1024 x %Char8]* @xlorem1024 to [0 x %Byte]*
-	%9 = bitcast %Context* %2 to %Context*
-	call void @cipher(%Context* %9, [0 x %Byte]* %8, %Nat32 1024)
-	%10 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %10
-	%11 = alloca %Context, align 8
-	%12 = load [3 x %Word32], [3 x %Word32]* @testNonce2
-	%13 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %12)
-; -- cons_composite_from_composite_by_value --
-	%14 = alloca %Context
-	store %Context %13, %Context* %14
-	%15 = bitcast %Context* %14 to %Context*
-; -- end cons_composite_from_composite_by_value --
-	%16 = load %Context, %Context* %15
-	store %Context %16, %Context* %11
-	%17 = bitcast %Context* %11 to %Context*
-	call void @cipher(%Context* %17, [0 x %Byte]* %8, %Nat32 1024)
-	store %Int32 0, %Int32* %10
+	store %Context %4, %Context* %2
+	%5 = bitcast [1024 x %Char8]* @xlorem1024 to [0 x %Byte]*
+	%6 = bitcast %Context* %2 to %Context*
+	call void @cipher(%Context* %6, [0 x %Byte]* %5, %Nat32 1024)
+	%7 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %7
+	%8 = alloca %Context, align 8
+	%9 = load [3 x %Word32], [3 x %Word32]* @testNonce2
+	%10 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %9)
+	store %Context %10, %Context* %8
+	%11 = bitcast %Context* %8 to %Context*
+	call void @cipher(%Context* %11, [0 x %Byte]* %5, %Nat32 1024)
+	store %Int32 0, %Int32* %7
 ; while_1
 	br label %again_1
 again_1:
-	%18 = load %Int32, %Int32* %10
-	%19 = icmp slt %Int32 %18, 1024
-	br %Bool %19 , label %body_1, label %break_1
+	%12 = load %Int32, %Int32* %7
+	%13 = icmp slt %Int32 %12, 1024
+	br %Bool %13 , label %body_1, label %break_1
 body_1:
-	%20 = load %Int32, %Int32* %10
-	%21 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %20
-	%22 = load %Char8, %Char8* %21
-	%23 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str2 to [0 x i8]*), %Char8 %22)
-	%24 = load %Int32, %Int32* %10
-	%25 = add %Int32 %24, 1
-	store %Int32 %25, %Int32* %10
+	%14 = load %Int32, %Int32* %7
+	%15 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %14
+	%16 = load %Char8, %Char8* %15
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str2 to [0 x i8]*), %Char8 %16)
+	%18 = load %Int32, %Int32* %7
+	%19 = add %Int32 %18, 1
+	store %Int32 %19, %Int32* %7
 	br label %again_1
 break_1:
 ; if_0
-	%26 = call %Bool @test0()
-	%27 = xor %Bool %26, 1
-	br %Bool %27 , label %then_0, label %endif_0
+	%20 = call %Bool @test0()
+	%21 = xor %Bool %20, 1
+	br %Bool %21 , label %then_0, label %endif_0
 then_0:
-	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @.str3 to [0 x i8]*))
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @.str3 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @.str4 to [0 x i8]*))
+	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @.str4 to [0 x i8]*))
 	ret %Int 0
 }
 

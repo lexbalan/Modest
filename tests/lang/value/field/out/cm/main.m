@@ -36,7 +36,7 @@ func writeFieldViaPointer (p: *Point) -> {} {
 
 
 func localRecord () -> Int32 {
-	var p: Point = Point {x = 10, y = 20}
+	var p = Point {x = 10, y = 20}
 	return p.y
 }
 

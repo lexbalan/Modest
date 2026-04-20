@@ -120,7 +120,7 @@ def value_cons_implicit_check(t, v):
 	#info("value_cons_implicit_check", v.ti)
 	nv = value_cons_implicit(t, v)
 
-	if t.is_open_array():
+	if t.is_holed():
 		# особая ситуация когда неявно конструируем []X из [x]X (!)
 		if not cons_can(t, v.type, method='implicit'):
 			error("type error2", v.ti)
@@ -131,7 +131,8 @@ def value_cons_implicit_check(t, v):
 			print("\n")
 
 	elif not Type.eq(t, nv.type):
-		error("type error", v.ti)
+		Type.eq(t, nv.type, debug=True)
+		error("type error1", v.ti)
 		print("expected: ", end='')
 		Type.print(t)
 		print("\nreceived: ", end='')

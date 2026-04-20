@@ -2426,13 +2426,16 @@ def def_var_common(x):
 	prev_cdef = cdef
 	cdef = definition
 
-	t = None
+	var_type = None
+	specified_type = None
+
 	if x['type'] != None:
-		t = do_type(x['type'])
+		specified_type = do_type(x['type'])
+		var_type = specified_type
 
 	iv = do_rvalue(x['init_value'])
 
-	tu = t == None
+	tu = var_type == None
 	vu = iv.is_value_undefined()
 
 	# error: no type, no init valuetu = type_is_incompleted(t)
@@ -2451,33 +2454,36 @@ def def_var_common(x):
 		t.delAttribute('const')
 
 	elif tu == False and vu == True:
-		iv = value_cons_implicit(t, iv)
+		iv = value_cons_implicit(var_type, iv)
 
 	elif tu == False and vu == False:
-		if t.is_open_array():
+		if var_type.is_open_array():
 			# приходит нормальный массив [3][3]*Str8, выходит [3][]*Str8
 			# array_cons() делает херню!
-			iv = value_cons_implicit(t, iv)
+			iv = value_cons_implicit(var_type, iv)
 			#warning("? " + iv.type.to_str(), x['ti'])
-			t = iv.type
+			var_type = iv.type
 
 
 	# type & init value present
-	if t != None:
+	if var_type != None:
 		if not iv.is_value_undefined():
-			iv = value_cons_implicit_check(t, iv)
+			iv = value_cons_implicit_check(var_type, iv)
+			if var_type.is_holed():
+				# переменная не может иметь holed тип - да такой сахар допустим, но его нужно превратить в конкретный тип
+				var_type = iv.type.copy()
 	else:
 		if iv.type.is_generic():
 			iv = value_cons_default(iv)
-		t = Type.copy(iv.type)
-		t.delAttribute('const')
+		var_type = Type.copy(iv.type)
+		var_type.delAttribute('const')
 
 	# Переменная может быть типа []X если она внешняя
 	is_not_extern = getAnno(x, 'extern') == None
-	if t.is_forbidden_var(open_array_forbidden=is_not_extern):
+	if var_type.is_forbidden_var(open_array_forbidden=is_not_extern):
 		error("unsuitable variable type", x['id']['ti'])
 
-	var_value = ValueVar(t, id, init_value=iv, ti=id.ti)
+	var_value = ValueVar(var_type, id, init_value=iv, ti=id.ti)
 	#if var_value.type.is_array():
 	#	warning("Type = " + var_value.type.to_str(), x['ti'])
 	var_value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL

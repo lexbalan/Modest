@@ -55,7 +55,7 @@ public func main () -> Int32 {
 		exit(1)
 	}
 
-	var serverAddr: SockAddrIn = SockAddrIn {
+	var serverAddr = SockAddrIn {
 		sin_family = c_AF_INET
 		sin_addr = {
 			s_addr = inAddrAny

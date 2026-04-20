@@ -9,9 +9,9 @@ import "fsm" as fsm
 var fsm0: FSM
 
 
-var state0: StateDesc = StateDesc {id = "state0", nstages = 4, handler = &routine0}
-var state1: StateDesc = StateDesc {id = "state1", nstages = 4, handler = &routine1}
-var state2: StateDesc = StateDesc {id = "state2", nstages = 4, handler = &routine2}
+var state0 = StateDesc {id = "state0", nstages = 4, handler = &routine0}
+var state1 = StateDesc {id = "state1", nstages = 4, handler = &routine1}
+var state2 = StateDesc {id = "state2", nstages = 4, handler = &routine2}
 
 
 func routine0 (state: ComplexState, payload: Ptr) -> ComplexState {

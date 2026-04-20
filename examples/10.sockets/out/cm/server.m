@@ -44,7 +44,7 @@ public func main () -> Int {
 
 	printf("[+] Server socket created\n")
 
-	var serverAddr: SockAddrIn = SockAddrIn {
+	var serverAddr = SockAddrIn {
 		sin_family = c_AF_INET
 		sin_port = port
 		sin_addr = Struct_in_addr {

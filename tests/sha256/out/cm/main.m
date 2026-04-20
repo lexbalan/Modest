@@ -17,7 +17,7 @@ type SHA256_TestCase = {
 }
 
 
-var test0: SHA256_TestCase = SHA256_TestCase {
+var test0 = SHA256_TestCase {
 	inputData = "abc"
 	inputDataLen = 3
 	expectedResult = [
@@ -28,7 +28,7 @@ var test0: SHA256_TestCase = SHA256_TestCase {
 	]
 }
 
-var test1: SHA256_TestCase = SHA256_TestCase {
+var test1 = SHA256_TestCase {
 	inputData = "Hello World!"
 	inputDataLen = 12
 	expectedResult = [

@@ -925,6 +925,16 @@ class Type(Entity):
 		return False
 
 
+	# the array chain have an open array
+	# [2][]Int32
+	def is_holed(t):
+		if t.is_array():
+			if t.is_open_array():
+				return True
+			return t.of.is_holed()
+		return False
+
+
 	def is_array_of_char(self):
 		if self.is_array():
 			return self.of.is_char()
@@ -1097,10 +1107,15 @@ class Type(Entity):
 
 
 	@staticmethod
-	def eq(a, b, opt=[]):
-		#print("eq!")
+	def eq(a, b, opt=[], debug=False):
 		assert (a != None) and isinstance(a, Type)
 		assert (b != None) and isinstance(b, Type)
+
+		if debug:
+			print("Type.EQ('%s', '%s')" % (a.to_str(), b.to_str()))
+
+		if a.is_string() and b.is_string():
+			return True
 
 		if id(a) == id(b):
 			return True
@@ -1113,6 +1128,7 @@ class Type(Entity):
 
 		if a.brand !=  b.brand:
 			return False
+
 
 		# проверять аттрибуты (volatile, const)
 		# использую для C чтобы можно было более строго проверить типы

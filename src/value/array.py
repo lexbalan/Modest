@@ -98,13 +98,6 @@ def get_last_array_in_chain(t):
 # result : [2][2][2][3]Int32
 
 
-def is_holed(t):
-	if t.is_array():
-		if t.is_open_array():
-			return True
-		return is_holed(t.of)
-	return False
-
 
 def resolve(t1, t2):
 	if t1.is_array():
@@ -120,11 +113,12 @@ def resolve(t1, t2):
 			nt.generic = False
 		else:
 			pass
-			#nt = t1.copy()
+			nt = t1.copy()
 			#nt.attributes = t1.attributes
 
 		nt.of = resolve(t1.of, t2.of)
 		return nt
+
 	return t1
 
 
@@ -132,7 +126,7 @@ def value_array_cons(t, v, method, ti):
 	result_type = t
 
 
-	if is_holed(t):
+	if t.is_holed():
 		result_type = resolve(t, v.type)
 		#warning("holed, RT = %s" % result_type.to_str(), ti)
 
@@ -157,7 +151,6 @@ def value_array_cons(t, v, method, ti):
 			#warning("implicit cons biggest array from smaller", ti)
 
 	nv = ValueCons(result_type, t, v, method, ti=ti)
-	nv.stage = v.stage
 
 	if v.type.is_string():
 		char_type = result_type.of

@@ -212,7 +212,7 @@ func final (ctx: *Context, outHash: *Hash) -> Unit {
 
 
 public func hash (msg: *[]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
-	var ctx: Context = Context {}
+	var ctx = Context {}
 	contextInit(&ctx)
 	update(&ctx, msg, msgLen)
 	final(&ctx, outHash)

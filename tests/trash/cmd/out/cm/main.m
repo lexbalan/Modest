@@ -124,7 +124,7 @@ public func main () -> Int32 {
 		fgets(&inbuf, unsafe Int sizeof inbuf, stdin)
 
 		var tokens: [64]*[]Char8 = []
-		var tokenizer: Tokenizer = Tokenizer {
+		var tokenizer = Tokenizer {
 			input = &inbuf
 			tokensBuf = &tokensBuf
 			tokens = &tokens
