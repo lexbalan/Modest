@@ -452,14 +452,12 @@ def do_field(x):
 	if id.str[0].isupper():
 		error("field id must starts with small letter", id.ti)
 
-	t = do_type(x['type'])
-	if t.is_forbidden_field():
-		error("unsuitable type", t.ti)
+	field_type, init_value = process_field_common(x)
+	if field_type.is_forbidden_field():
+		error("unsuitable type", x['ti'])
 
-	iv = do_value_immediate(x['init_value'])
-	f = Field(id, t, init_value=iv, access_level = x['access_modifier'], ti=x['ti'])
+	f = Field(id, field_type, init_value=init_value, access_level = x['access_modifier'], ti=x['ti'])
 	f.add_atts(x['anno'])
-
 	f.nl = x['nl']
 	return f
 
@@ -2337,6 +2335,8 @@ def def_const_common(x):
 
 
 	const_type, init_value = process_field_common(x)
+	if const_type.is_forbidden_const():
+		error("unsuitable type", x['ti'])
 
 	const_type = const_type.copy()
 	const_type.addAttribute('const', {})
@@ -2440,12 +2440,12 @@ def def_var_common(x):
 	prev_cdef = cdef
 	cdef = definition
 
-	var_type, init_value = process_field_common(x, allow_cons_default=True)
-
 	# Переменная может быть типа []X если она внешняя
 	is_not_extern = getAnno(x, 'extern') == None
-	if var_type.is_forbidden_var(open_array_forbidden=is_not_extern):
-		error("unsuitable variable type", x['id']['ti'])
+
+	var_type, init_value = process_field_common(x, allow_cons_default=True)
+	if var_type.is_forbidden_var(open_array_forbidden=False):
+		error("unsuitable type", x['ti'])
 
 	var_value = ValueVar(var_type, id, init_value=init_value, ti=id.ti)
 	ctx_value_add(id.str, var_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)

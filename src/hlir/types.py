@@ -1170,7 +1170,7 @@ class Type(Entity):
 
 
 	def is_forbidden_any(self):
-		if self.is_unit() or self.is_func():
+		if self.is_func():
 			return True
 
 		if self.is_array():
@@ -1198,8 +1198,6 @@ class Type(Entity):
 	def is_forbidden_param(self):
 		if self.is_forbidden_any():
 			return True
-		if self.is_open_array():
-			return True
 		return False
 
 
@@ -1224,6 +1222,19 @@ class Type(Entity):
 		if self.is_array():
 			if self.is_open_array():
 				return open_array_forbidden
+			if self.volume.isValueImmediate():
+				if self.volume.asset == 0:
+					return True
+
+		return False
+
+	def is_forbidden_const(self):
+		if self.is_forbidden_any():
+			return True
+
+		if self.is_array():
+			if self.is_open_array():
+				return True
 			if self.volume.isValueImmediate():
 				if self.volume.asset == 0:
 					return True
