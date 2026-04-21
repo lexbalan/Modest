@@ -1024,7 +1024,7 @@ def do_value_deref(x):
 
 def do_value_lengthof_value(x):
 	ti = x['ti']
-	arg = do_rvalue(x['value'])
+	arg = do_value(x['value'])
 
 	if arg.isValueBad() or arg.is_value_undefined():
 		return arg
@@ -1458,49 +1458,14 @@ def submodule_access(x):
 
 
 def do_value_access(x):
+	global cmodule
 	#info("do_value_access", x['ti'])
 
-	#
-	# access to module?
-	#
-
-	# Ищем самый левый 'access' и смотрим если его левая часть это id который не value
-	# Если он не value значит он может быть module, а это наш случай (!)
-	#	module_path = []
-	#	left = x['left']
-	#	while left['kind'] == HLIR_VALUE_OP_ACCESS:
-	#		id = do_id(left['right'])
-	#		module_path = [id] + module_path
-	#		# слева доступ - возможно к импорту
-	#		# приходтися делать так чтобы не вводить ValueImport или ValueModule тк это бред
-	#		left = left['left']
-
-		# access to submodule?
-	#	if left['kind'] == 'id' and is_import_name(left['str']):
-	#		module_path = [do_id(left)] + module_path
-	#		mod = get_module_by_path(module_path)
-	#		if mod == None:
-	#			#error("module '%s' not found" % id_str, id.ti)
-	#			pass
-	#
-	#		if mod != None:
-	#		#	return ValueBad(x['ti'])
-	#			v = mod.value_get_public(x['right']['str'])
-	#			if v == None:
-	#				error("value '%s' not found" % x['right']['str'], x['right']['ti'])
-	#				return ValueBad(x['ti'])
-	#			#return v
-	#			nv = ValueAccessModule(v.type, module_path, do_id(x['right']), v, ti=x['ti'])
-	#			nv.stage = v.stage
-	#			return nv
 
 	left = x['left']
 	path = x['path']
 
-	global cmodule
 	module = None
-
-
 
 	if left['kind'] == 'id':
 		left_val = ctx_value_get(left['str'])
@@ -1840,8 +1805,8 @@ def do_value_undefined(x):
 
 def do_rvalue(x):
 	v = do_value(x)
-#	if not v.is_initialized:
-#		warning("attempt to use an uninitialized value", x['ti'])
+	if not v.is_initialized:
+		warning("attempt to use an uninitialized value", x['ti'])
 	return v
 
 
@@ -2486,6 +2451,7 @@ def def_var_global(x):
 	df.value.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 	df.id.prefix = global_prefix
+	df.value.is_initialized = True
 
 	df = def_add_annotations(df, x['anno'])
 	return df
