@@ -153,6 +153,11 @@ def ctx_value_get(id_str, shallow=False):
 
 
 
+def id_already_used(id_str, shallow=False):
+	return ctx_value_get(id_str, shallow=shallow) != None
+
+
+
 def cmodule_feature_add(s):
 	cmodule.addAttribute(s)
 
@@ -1905,11 +1910,13 @@ def do_value(x):
 
 
 def do_stmt_const(x):
-	definition = def_const_common(x)
-	definition.parent = cfunc
-	definition.value.parent = cfunc
-	definition.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
-	return definition
+	if id_already_used(x['id']['str'], shallow=True):
+		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+	df = def_const_common(x)
+	df.parent = cfunc
+	df.value.parent = cfunc
+	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
+	return df
 
 
 
@@ -1917,8 +1924,7 @@ def do_stmt_var(x):
 	#info("do_stmt_var", x['ti'])
 	global cfunc
 
-	already = ctx_value_get(x['id']['str'], shallow=True)
-	if already != None:
+	if id_already_used(x['id']['str'], shallow=True):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
 	df = def_var_common(x)
@@ -2322,37 +2328,6 @@ def def_type_global(x):
 
 
 
-def def_const_global(x):
-	global cmodule
-	global global_prefix
-	df = def_const_common(x)
-
-	if hasattr(df.value.type, 'kind'):
-		if df.value.type.kind == HLIR_TYPE_KIND_RATIONAL:
-			info("rat", x['ti'])
-
-	#if df.value.isValueRuntime():
-	#	error("runtime!", x['ti'])
-
-	# TODO: centity -> instead cmodule/cfunc;
-	# rm Value#module -> tree instead
-	df.parent = cmodule
-	df.value.parent = cmodule
-	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
-
-	df.id.prefix = global_prefix
-
-	iv = df.init_value
-	if not iv.is_value_undefined():
-		if iv.isValueRuntime():
-			#print(iv.stage)
-			print(iv)
-			error("expected immediate value", iv.ti)
-
-	df = def_add_annotations(df, x['anno'])
-	return df
-
-
 
 def process_field_common(x, allow_cons_default=False):
 	var_type = None
@@ -2399,15 +2374,9 @@ def def_const_common(x):
 	id = do_id(x['id'])
 	id.prefix = global_prefix
 
-	# check if identifier is free
-	pre_exist = ctx_value_get(id.str, shallow=True)
-	if pre_exist != None:
-		error("redefinition of '%s'" % id.str, id.ti)
-
-
 	definition = StmtDefConst(id, const_value=None, init_value=None, ti=x['ti'])
 	definition.module = cmodule
-	definition.parent = cmodule
+	#definition.parent = cmodule
 	definition.access_level = get_access_level(x)
 	definition.nl = x['nl']
 
@@ -2445,17 +2414,9 @@ def def_var_common(x):
 	global global_prefix
 
 	id = do_id(x['id'])
-	id.prefix = global_prefix
-
-	# check if identifier is free
-	pre_exist = ctx_value_get(id.str, shallow=True)
-	if pre_exist != None:
-		error("redefinition of '%s'" % id.str, id.ti)
-
 
 	definition = StmtDefVar(id, var_value=None, init_value=None, ti=x['ti'])
 	definition.module = cmodule
-	definition.parent = cmodule
 	definition.access_level = get_access_level(x)
 	definition.nl = x['nl']
 
@@ -2485,17 +2446,47 @@ def def_var_common(x):
 
 
 
+
+# TODO: centity -> instead cmodule/cfunc;
+# rm Value#module -> tree instead
+
+def def_const_global(x):
+	global cmodule
+	global global_prefix
+
+	if id_already_used(x['id']['str']):
+		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+
+	df = def_const_common(x)
+	df.parent = cmodule
+	df.value.parent = cmodule
+	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
+	df.id.prefix = global_prefix
+
+	iv = df.init_value
+	if not iv.is_value_undefined():
+		if iv.isValueRuntime():
+			#print(iv.stage)
+			print(iv)
+			error("expected immediate value", iv.ti)
+
+	df = def_add_annotations(df, x['anno'])
+	return df
+
+
+
 def def_var_global(x):
 	global cmodule
-	# already defined? (check identifier)
-	already = ctx_value_get(x['id']['str'])
-	if already != None:
+
+	if id_already_used(x['id']['str']):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
 	df = def_var_common(x)
-	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
-	df.value.is_initialized = True
+	df.parent = cmodule
 	df.value.parent = cmodule
+	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
+	df.id.prefix = global_prefix
+
 	df = def_add_annotations(df, x['anno'])
 	return df
 

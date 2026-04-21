@@ -40,6 +40,18 @@ public func main () -> Int32 {
 	if u == v {
 		printf("u == v\n")
 	}
+
+	v = cv
+	u = cu
+	s = cs
+	s2 = cs2
+	str1 = cstr2
+	a2 = ca2
+
+	var i: Int32
+	if i > 0 {
+	}
+
 	return 0
 }
 

@@ -24,6 +24,15 @@ int32_t main(void) {
 	if (__builtin_memcmp(&u, &v, sizeof(int32_t [5][4])) == 0) {
 		printf("u == v\n");
 	}
+	__builtin_memcpy(&v, &(int32_t [5][4])CV, sizeof(int32_t [5][4]));
+	__builtin_memcpy(&u, &(int32_t [5][4])CU, sizeof(int32_t [5][4]));
+	__builtin_memcpy(&s, &(char *const [4])CS, sizeof(char *[4]));
+	__builtin_memcpy(&s2, &(char [4][5])CS2, sizeof(char [4][5]));
+	__builtin_memcpy(&str1, &(const char [3])CSTR2, sizeof(char [3]));
+	__builtin_memcpy(&a2, &(char [2][3])CA2, sizeof(char [2][3]));
+	int32_t i;
+	if (i > 0) {
+	}
 	return 0;
 }
 
