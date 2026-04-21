@@ -491,14 +491,6 @@ endif_0:
 	%16 = load [2 x [3 x %Char8]], [2 x [3 x %Char8]]* @ca2
 	%17 = zext i8 2 to %Nat32
 	store [2 x [3 x %Char8]] %16, [2 x [3 x %Char8]]* @a2
-	%18 = alloca %Int32, align 4
-; if_1
-	%19 = load %Int32, %Int32* %18
-	%20 = icmp sgt %Int32 %19, 0
-	br %Bool %20 , label %then_1, label %endif_1
-then_1:
-	br label %endif_1
-endif_1:
 	ret %Int32 0
 }
 

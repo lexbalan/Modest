@@ -9,9 +9,9 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
-#define INPUT_DATA_LENGTH 32
+#define INPUT_DATA_LEN_MAX 32
 struct sha256_test_case {
-	char inputData[INPUT_DATA_LENGTH];
+	char inputData[INPUT_DATA_LEN_MAX];
 	uint32_t inputDataLen;
 
 	sha256_Hash expectedResult;

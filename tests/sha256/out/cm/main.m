@@ -6,11 +6,11 @@ include "stdio"
 
 import "misc/sha256" as sha256
 
-const inputDataLength = 32
+const inputDataLenMax = 32
 
 
 type SHA256_TestCase = {
-	inputData: [inputDataLength]Char8
+	inputData: [inputDataLenMax]Char8
 	inputDataLen: Nat32
 
 	expectedResult: Hash

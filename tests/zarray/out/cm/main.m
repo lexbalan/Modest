@@ -48,10 +48,6 @@ public func main () -> Int32 {
 	str1 = cstr2
 	a2 = ca2
 
-	var i: Int32
-	if i > 0 {
-	}
-
 	return 0
 }
 

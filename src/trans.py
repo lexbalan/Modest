@@ -1806,7 +1806,7 @@ def do_value_undefined(x):
 def do_rvalue(x):
 	v = do_value(x)
 	if not v.is_initialized:
-		warning("attempt to use an uninitialized value", x['ti'])
+		error("attempt to use an uninitialized value", x['ti'])
 	return v
 
 
@@ -1875,6 +1875,7 @@ def do_value(x):
 
 
 def do_stmt_const(x):
+	global cfunc
 	if id_already_used(x['id']['str'], shallow=True):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	df = def_const_common(x)
@@ -1959,7 +1960,7 @@ def do_stmt_return(x):
 	global cfunc
 
 	func_ret_type = cfunc.type.to
-	ret_val_present = x['value'] != None
+	#ret_val_present = x['value'] != None
 
 	# если забыли вернуть значение
 	# или возвращаем его там, где оно не ожидется
@@ -1973,13 +1974,11 @@ def do_stmt_return(x):
 
 	# (!) in return statement retval can be None (!)
 	retval = None
-	if ret_val_present:
+	if x['value'] != None:
 		rv = do_rvalue(x['value'])
 		retval = transmission(func_ret_type, rv, rv.ti)
-
-	#if retval != None:
-	#	if not Type.eq(retval.type, func_ret_type):
-
+	elif not cfunc.type.to.is_unit():
+		error("expected return value", x['ti'])
 
 	return StmtReturn(retval, ti=x['ti'])
 

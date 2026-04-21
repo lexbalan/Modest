@@ -30,9 +30,6 @@ int32_t main(void) {
 	__builtin_memcpy(&s2, &(char [4][5])CS2, sizeof(char [4][5]));
 	__builtin_memcpy(&str1, &(const char [3])CSTR2, sizeof(char [3]));
 	__builtin_memcpy(&a2, &(char [2][3])CA2, sizeof(char [2][3]));
-	int32_t i;
-	if (i > 0) {
-	}
 	return 0;
 }
 

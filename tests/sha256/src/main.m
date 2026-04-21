@@ -11,11 +11,11 @@ import "misc/sha256"
 pragma c_include "./sha256.h"
 
 
-const inputDataLength = 32
+const inputDataLenMax = 32
 
 
 type SHA256_TestCase = {
-	inputData: [inputDataLength]Char8
+	inputData: [inputDataLenMax]Char8
 	inputDataLen: Nat32
 
 	expectedResult: sha256.Hash
