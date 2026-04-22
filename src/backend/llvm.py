@@ -2854,13 +2854,15 @@ def run(module, outname):
 		lo("declare void @llvm.va_copy(i8*, i8*)")
 		lo("declare void @llvm.va_end(i8*)")
 
+	if 'use_malloc' in module.helpers:
+		lo("declare i8* @malloc(i32)")
+
 	lo("declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
 	lo("declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)\n")
 
 	lo("declare i8* @llvm.stacksave()\n")
 	lo("declare void @llvm.stackrestore(i8*)\n")
 	lo("\n")
-
 
 	#lo("declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %len)\n")
 	out(memeq_impl)
