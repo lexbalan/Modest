@@ -1894,6 +1894,9 @@ def do_helpers(module):
 
 
 
+def do_helper_use_malloc():
+	return include("stdlib.h", local=False)
+
 def do_helper_use_abs():
 	return include("stdlib.h", local=False)
 
@@ -2000,6 +2003,7 @@ c_helpers = {
 	'use_raw_cast': do_helper_use_rawcast,
 	'use_fixed_point': do_helper_use_fixed_point,
 	'use_bigint': do_helper_use_bigint,
+	'use_malloc': do_helper_use_malloc,
 }
 
 

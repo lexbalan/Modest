@@ -989,6 +989,9 @@ def do_value_new(x):
 		error("operation new requires value with aggregate type", v.ti)
 		return ValueBad(x['ti'])
 
+	# for C backend, because C cannot do lengthof(x)
+	cmodule_use('use_malloc')
+
 	nv = ValueNew(v)
 	return nv
 
@@ -1138,9 +1141,6 @@ def do_value_call(x):
 
 
 	def do_arg(param, arg, named=False):
-		#mass
-		#if param.type.annotations != {}:
-		#info("%s" % param.type.annotations, arg.ti)
 		arg = transmission(param.type, arg, arg.ti)
 		ini = Initializer(param.id, arg, named=named, ti=arg.ti, nl=arg.nl)
 		return ini
