@@ -542,19 +542,18 @@ def do_cvalue_literal_pointer(v, ctx):
 
 
 def cvalue_literal_integer(asset, width=0, is_unsigned=False, as_hex=False):
-	req_bits = width
-	if req_bits == 0:
-		req_bits= nbits_for_num(asset, signed=not is_unsigned)
+	if width == 0:
+		width= nbits_for_num(asset, signed=not is_unsigned)
 
 	suffix = ''
-	if req_bits >= 32: #csettings['int_width']:
-		if is_unsigned: #and nn == req_bits:
+	if width >= 32: #csettings['int_width']:
+		if is_unsigned: #and nn == width:
 			suffix += "U"    # unsigned
 
-		if req_bits <= 32:   #csettings['long_width']:
+		if width <= 32:   #csettings['long_width']:
 			#sstr += "L"     # long int
 			pass
-		elif req_bits <= 64: #csettings['long_long_width']:
+		elif width <= 64: #csettings['long_long_width']:
 			suffix += "LL"   # long long int
 		else:
 			suffix += "XL"   # extra long int (not defined in C)
