@@ -282,15 +282,8 @@ define internal void @array4intInc([4 x %Int32]* %0, [4 x %Int32] %__a) {
 	%28 = load %Int32, %Int32* %27
 	%29 = add %Int32 %28, 1
 	%30 = insertvalue [4 x %Int32] %26, %Int32 %29, 3
-; -- cons_composite_from_composite_by_value --
-	%31 = alloca [4 x %Int32]
-	%32 = zext i8 4 to %Nat32
-	store [4 x %Int32] %30, [4 x %Int32]* %31
-	%33 = bitcast [4 x %Int32]* %31 to [4 x %Int32]*
-; -- end cons_composite_from_composite_by_value --
-	%34 = load [4 x %Int32], [4 x %Int32]* %33
-	%35 = zext i8 4 to %Nat32
-	store [4 x %Int32] %34, [4 x %Int32]* %0
+	%31 = zext i8 4 to %Nat32
+	store [4 x %Int32] %30, [4 x %Int32]* %0
 	ret void
 }
 

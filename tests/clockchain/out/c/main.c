@@ -48,11 +48,9 @@ static void addClock(struct clock *clock) {
 
 static void foreachClockInChain(struct clock *clockchain, void (*handler)(struct clock *self)) {
 	struct clock *c = clockchain;
-	if (c != NULL) {
-		while (c->next != NULL) {
-			handler(c);
-			c = c->next;
-		}
+	while (c != NULL) {
+		handler(c);
+		c = c->next;
 	}
 }
 

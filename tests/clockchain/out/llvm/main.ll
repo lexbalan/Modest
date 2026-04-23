@@ -307,30 +307,21 @@ endif_0:
 define internal void @foreachClockInChain(%Clock* %clockchain, void (%Clock*)* %handler) {
 	%1 = alloca %Clock*, align 8
 	store %Clock* %clockchain, %Clock** %1
-; if_0
-	%2 = load %Clock*, %Clock** %1
-	%3 = icmp ne %Clock* %2, null
-	br %Bool %3 , label %then_0, label %endif_0
-then_0:
 ; while_1
 	br label %again_1
 again_1:
-	%4 = load %Clock*, %Clock** %1
-	%5 = getelementptr %Clock, %Clock* %4, %Int32 0, %Int32 0
-	%6 = load %Clock*, %Clock** %5
-	%7 = icmp ne %Clock* %6, null
-	br %Bool %7 , label %body_1, label %break_1
+	%2 = load %Clock*, %Clock** %1
+	%3 = icmp ne %Clock* %2, null
+	br %Bool %3 , label %body_1, label %break_1
 body_1:
-	%8 = load %Clock*, %Clock** %1
-	call void %handler(%Clock* %8)
-	%9 = load %Clock*, %Clock** %1
-	%10 = getelementptr %Clock, %Clock* %9, %Int32 0, %Int32 0
-	%11 = load %Clock*, %Clock** %10
-	store %Clock* %11, %Clock** %1
+	%4 = load %Clock*, %Clock** %1
+	call void %handler(%Clock* %4)
+	%5 = load %Clock*, %Clock** %1
+	%6 = getelementptr %Clock, %Clock* %5, %Int32 0, %Int32 0
+	%7 = load %Clock*, %Clock** %6
+	store %Clock* %7, %Clock** %1
 	br label %again_1
 break_1:
-	br label %endif_0
-endif_0:
 	ret void
 }
 

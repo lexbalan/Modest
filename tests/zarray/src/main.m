@@ -48,5 +48,13 @@ public func main () -> Int32 {
 	str1 = cstr2
 	a2 = ca2
 
+	let a = 5
+	let b = 6
+	let c = 7
+	let arr = [a, b, c]
+
+	// ! parsing error (!)
+	//var arr2 = Int32[] arr
+
 	return 0
 }

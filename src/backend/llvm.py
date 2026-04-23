@@ -1412,22 +1412,24 @@ def cons_composite_from_composite(to_type, value, ti):
 	# received value in reg
 	#
 
-	out("\n; -- cons_composite_from_composite_by_value --")
-	if to_type.get_size() > value.type.get_size():
-		#out("\n\t; extend")
-		# выделим память под новое значение
-		nv = llvm_alloca(to_type)
-		# приводим указатель на слот к указателю на (меньшее) значение
-		xnv = llvm_cast("bitcast", nv, TypePointer(v['type']))
-		llvm_store(xnv, v)
-		nv['is_adr'] = True
-	else:
-		#out("\n\t; trunk")
-		y = llvm_alloca_store(v['type'], init_value=v)
-		nv = llvm_cast("bitcast", y, TypePointer(to_type))
-		nv['is_adr'] = True
-	out("\n; -- end cons_composite_from_composite_by_value --")
-	return nv
+	return v
+
+#	out("\n; -- cons_composite_from_composite_by_value --")
+#	if to_type.get_size() > value.type.get_size():
+#		#out("\n\t; extend")
+#		# выделим память под новое значение
+#		nv = llvm_alloca(to_type)
+#		# приводим указатель на слот к указателю на (меньшее) значение
+#		xnv = llvm_cast("bitcast", nv, TypePointer(v['type']))
+#		llvm_store(xnv, v)
+#		nv['is_adr'] = True
+#	else:
+#		#out("\n\t; trunk")
+#		y = llvm_alloca_store(v['type'], init_value=v)
+#		nv = llvm_cast("bitcast", y, TypePointer(to_type))
+#		nv['is_adr'] = True
+#	out("\n; -- end cons_composite_from_composite_by_value --")
+#	return nv
 
 
 

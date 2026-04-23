@@ -1257,15 +1257,8 @@ endif_2:
 	%235 = insertvalue [4 x %Int32] %233, %Int32 %234, 2
 	%236 = load %Int32, %Int32* %228
 	%237 = insertvalue [4 x %Int32] %235, %Int32 %236, 3
-; -- cons_composite_from_composite_by_value --
-	%238 = alloca [4 x %Int32]
-	%239 = zext i8 4 to %Nat32
-	store [4 x %Int32] %237, [4 x %Int32]* %238
-	%240 = bitcast [4 x %Int32]* %238 to [4 x %Int32]*
-; -- end cons_composite_from_composite_by_value --
-	%241 = load [4 x %Int32], [4 x %Int32]* %240
-	%242 = zext i8 4 to %Nat32
-	store [4 x %Int32] %241, [4 x %Int32]* %229
+	%238 = zext i8 4 to %Nat32
+	store [4 x %Int32] %237, [4 x %Int32]* %229
 	ret %Int 0
 }
 

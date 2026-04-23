@@ -49,11 +49,9 @@ func addClock (clock: *Clock) -> Unit {
 
 func foreachClockInChain (clockchain: *Clock, handler: *(self: *Clock) -> Unit) -> Unit {
 	var c: *Clock = clockchain
-	if c != nil {
-		while c.next != nil {
-			handler(c)
-			c = c.next
-		}
+	while c != nil {
+		handler(c)
+		c = c.next
 	}
 }
 

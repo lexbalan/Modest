@@ -260,16 +260,9 @@ define internal %Context @init([32 x %Byte]* %key, [3 x %Word32] %__nonce) {
 	%15 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
 	%16 = load %Word32, %Word32* %15
 	%17 = insertvalue [3 x %Word32] %14, %Word32 %16, 2
-; -- cons_composite_from_composite_by_value --
-	%18 = alloca [3 x %Word32]
-	%19 = zext i8 3 to %Nat32
-	store [3 x %Word32] %17, [3 x %Word32]* %18
-	%20 = bitcast [3 x %Word32]* %18 to [3 x %Word32]*
-; -- end cons_composite_from_composite_by_value --
-	%21 = load [3 x %Word32], [3 x %Word32]* %20
-	%22 = insertvalue %Context %2, [3 x %Word32] %21, 1
-	%23 = insertvalue %Context %22, %Nat32 64, 4
-	ret %Context %23
+	%18 = insertvalue %Context %2, [3 x %Word32] %17, 1
+	%19 = insertvalue %Context %18, %Nat32 64, 4
+	ret %Context %19
 }
 
 define internal void @cipher(%Context* %ctx, [0 x %Byte]* %data, %Nat32 %len) {

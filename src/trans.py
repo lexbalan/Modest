@@ -2309,8 +2309,8 @@ def process_field_common(x, allow_cons_default=False):
 		if init_value.is_value_undefined():
 			# ERROR: type & value are undefined!
 			nv = ValueBad(x['ti'])
-			ctx_value_add(id.str, nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
-			return StmtBad(x['ti'])
+			ctx_value_add(x['id']['str'], nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
+			return nv.type, nv
 
 		if allow_cons_default:
 			init_value = value_cons_default(init_value)

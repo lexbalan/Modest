@@ -206,15 +206,8 @@ define internal void @quarterRound([4 x %Word32]* %0, %Word32 %a, %Word32 %b, %W
 	%55 = insertvalue [4 x %Word32] %53, %Word32 %54, 2
 	%56 = load %Word32, %Word32* %5
 	%57 = insertvalue [4 x %Word32] %55, %Word32 %56, 3
-; -- cons_composite_from_composite_by_value --
-	%58 = alloca [4 x %Word32]
-	%59 = zext i8 4 to %Nat32
-	store [4 x %Word32] %57, [4 x %Word32]* %58
-	%60 = bitcast [4 x %Word32]* %58 to [4 x %Word32]*
-; -- end cons_composite_from_composite_by_value --
-	%61 = load [4 x %Word32], [4 x %Word32]* %60
-	%62 = zext i8 4 to %Nat32
-	store [4 x %Word32] %61, [4 x %Word32]* %0
+	%58 = zext i8 4 to %Nat32
+	store [4 x %Word32] %57, [4 x %Word32]* %0
 	ret void
 }
 
@@ -591,15 +584,8 @@ define void @chacha20_makeState(%chacha20_State* %0, %chacha20_Key* %key, %Word3
 	%67 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
 	%68 = load %Word32, %Word32* %67
 	%69 = insertvalue [16 x %Word32] %66, %Word32 %68, 15
-; -- cons_composite_from_composite_by_value --
-	%70 = alloca [16 x %Word32]
-	%71 = zext i8 16 to %Nat32
-	store [16 x %Word32] %69, [16 x %Word32]* %70
-	%72 = bitcast [16 x %Word32]* %70 to %chacha20_State*
-; -- end cons_composite_from_composite_by_value --
-	%73 = load %chacha20_State, %chacha20_State* %72
-	%74 = zext i8 16 to %Nat32
-	store %chacha20_State %73, %chacha20_State* %0
+	%70 = zext i8 16 to %Nat32
+	store %chacha20_State %69, %chacha20_State* %0
 	ret void
 }
 
