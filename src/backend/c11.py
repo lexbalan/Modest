@@ -540,17 +540,37 @@ def do_cvalue_literal_pointer(v, ctx):
 	1/0
 
 
+
+def cvalue_literal_integer(asset, width=0, is_unsigned=False, as_hex=False):
+	req_bits = width
+	if req_bits == 0:
+		req_bits= nbits_for_num(asset, signed=not is_unsigned)
+
+	suffix = ''
+	if req_bits >= 32: #csettings['int_width']:
+		if is_unsigned: #and nn == req_bits:
+			suffix += "U"    # unsigned
+
+		if req_bits <= 32:   #csettings['long_width']:
+			#sstr += "L"     # long int
+			pass
+		elif req_bits <= 64: #csettings['long_long_width']:
+			suffix += "LL"   # long long int
+		else:
+			suffix += "XL"   # extra long int (not defined in C)
+
+	return CValueInteger(asset, as_hex=as_hex, nsigns=0, suffix=suffix)
+
+
 # сам заботится о том чтобы литерал соответствовал типу (int/longlong)
 def do_cvalue_literal_number(t, v, ctx):
 	if t.width > 64:
-		high = CValueInteger(int(v.asset) >> 64, width=64, is_unsigned=not t.is_signed(), as_hex=True)
-		low = CValueInteger(int(v.asset) & 0xffffffffffffffff, width=64, is_unsigned=not t.is_signed(), as_hex=True)
+		high = cvalue_literal_integer(int(v.asset) >> 64, width=64, is_unsigned=not t.is_signed(), as_hex=True)
+		low = cvalue_literal_integer(int(v.asset) & 0xffffffffffffffff, width=64, is_unsigned=not t.is_signed(), as_hex=True)
 		return CValueCall(CValueNamed("BIG_INT128"), [high, low])
 
 	is_unsigned = t.is_nat() or t.is_word() or (t.is_integer() and v.asset >= 0)
-
-	cv = CValueInteger(int(v.asset), width=t.width, is_unsigned=is_unsigned, as_hex=t.is_word())
-	return cv
+	return cvalue_literal_integer(int(v.asset), width=t.width, is_unsigned=is_unsigned, as_hex=t.is_word())
 
 
 def do_cvalue_literal_with_type(v, t, ctx=[]):
@@ -1156,7 +1176,7 @@ def do_cvalue_sizeof_type(x, ctx):
 	return CValueSizeofType(do_ctype(x.oftype))
 
 def do_cvalue_lengthof_type(x, ctx):
-	return CValueInteger(x.oftype.volume.asset, is_unsigned=True)
+	return cvalue_literal_integer(x.oftype.volume.asset, is_unsigned=True)
 
 def do_cvalue_alignof_type(x, ctx):
 	if x.oftype.is_unit():

@@ -1490,10 +1490,12 @@ def do_value_access(x):
 					i += 1
 				left = path[i]#['str']
 
-			#print("MOD = " + str(module))
-			#print("LEFT = " + str(left))
 			path = path[i+1:]
-			#print("PATH = " + str(path))
+
+			if module == None:
+				error("unknown entity '%s'" % left['str'], left['ti'])
+				return ValueBad(x['ti'])
+
 			left_val = module.value_get_public(left['str'])
 	else:
 		left_val = do_value(left)

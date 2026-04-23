@@ -375,45 +375,24 @@ class CValueNamed(CValue):
 
 
 class CValueInteger(CValue):
-	def __init__(self, number, width=0, is_unsigned=True, as_hex=False):
+	def __init__(self, number, as_hex=False, nsigns=0, suffix=''):
 		super().__init__()
 		assert(isinstance(number, int))
-		assert(isinstance(is_unsigned, bool))
 		assert(isinstance(as_hex, bool))
-		self.number = number
-		self.width = width
-		if width == 0:
-			self.width = nbits_for_num(number, signed=not is_unsigned)
-		self.is_unsigned = is_unsigned
-		self.as_hex = as_hex
-		self.nsigns = 0
 		self.precedence = 15
+		self.number = number
+		self.as_hex = as_hex
+		self.nsigns = nsigns
+		self.suffix = suffix
 
 	def __str__(self):
-		num = self.number
 		sstr = ''
 		if self.as_hex:
 			fmt = "0x%%0%dX" % self.nsigns
-			sstr += (fmt % num)
+			sstr += (fmt % self.number)
 		else:
-			sstr += str(num)
-
-		req_bits=self.width
-		is_unsigned=self.is_unsigned
-
-		if req_bits >= 32: #csettings['int_width']:
-			if is_unsigned: #and nn == req_bits:
-				sstr += "U"   # unsigned
-
-			if req_bits <= 32: #csettings['long_width']:
-				#sstr += "L"   # long int
-				sstr += ""   # long int
-			elif req_bits <= 64: #csettings['long_long_width']:
-				sstr += "LL"  # long long int
-			else:
-				sstr += "XL"  # extra long int (not defined in C)
-
-		return sstr
+			sstr += str(self.number)
+		return sstr + self.suffix
 
 
 
