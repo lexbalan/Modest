@@ -15,8 +15,8 @@ Language style use PascalCase for types and camelCase for all another entities
 
 ### Base Types
 ```modest
-Integer                            // builtin type for integer literals, can be implicitly casted to IntX, NatX, WordX, FloatX
-Rational                           // builtin type for rational literals, can be implicitly casted to FloatX
+Integer                            // builtin compile-time type for integer literals, can be implicitly casted to IntX, NatX, WordX, FloatX
+Rational                           // builtin compile-time type for rational literals, can be implicitly casted to FloatX
 Unit                               // void (empty type)
 Bool                               // true, false
 Int8, Int16, Int32, Int64          // signed integers
@@ -31,8 +31,8 @@ Str8, Str16, Str32                 // aliases for: *[]Char8, *[]Char16, *[]Char3
 ```modest
 [N]Type                            // fixed array: [10]Int32
 [N][M]Type                         // multi-dimensional: [2][3]Int32
+[]Type                             // array with unknown length - it must be infered at compile time (sugar)
 *Type                              // pointer: *Int32, **Int32
-*[]Type                            // pointer to array with unspecified length: *[]Int32
 *Unit                              // generic pointer (any type)
 {field1: Type1, field2: Type2}     // anonymous record
 type Name = Type                   // type alias
