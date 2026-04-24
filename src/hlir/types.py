@@ -601,7 +601,7 @@ STRING_OPS = CONS_OP + EQ_OPS + (HLIR_VALUE_OP_ADD,)
 NUMBER_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS + BITWISE_OPS
 
 
-pointer_width = 0
+pointer_width = 32
 def init(pwidth):
 	global pointer_width
 	pointer_width = pwidth
@@ -1481,8 +1481,7 @@ class TypeRational(TypeSimple):
 
 class TypeFunc(Type):
 	def __init__(self, params, to, va_args=False, ti=None):
-		w = int(pointer_width)
-		super().__init__(width=w, ops=PTR_OPS, ti=ti)
+		super().__init__(width=0, ops=PTR_OPS, ti=ti)
 		self.incomplete = False
 		self.params = params
 		self.to = to
@@ -1632,8 +1631,7 @@ class TypeRecord(Type):
 
 class TypePointer(Type):
 	def __init__(self, to, generic=False, ti=None):
-		w = int(pointer_width)
-		super().__init__(width=w, generic=generic, ops=PTR_OPS, ti=ti)
+		super().__init__(width=int(pointer_width), generic=generic, ops=PTR_OPS, ti=ti)
 		self.incomplete = False
 		self.to = to
 

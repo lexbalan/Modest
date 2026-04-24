@@ -194,6 +194,8 @@ builtin_module = None
 
 def init():
 	#lib_path = settings['lib']
+	types.init(settings['pointer_width'])
+
 	global target_name
 	global char_width, int_width, float_width, pointer_width
 	global typeSysWord, typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr, typeSysSize

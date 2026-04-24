@@ -309,7 +309,7 @@ endif_0:
 }
 
 define %list_Node* @list_node_create() {
-	%1 = call i8* @malloc(%Size 16)
+	%1 = call i8* @malloc(%Size 32)
 	%2 = bitcast i8* %1 to %list_Node*
 ; if_0
 	%3 = icmp eq %list_Node* %2, null

@@ -4,7 +4,6 @@
 import copy
 
 from hlir import *
-from .common import *
 from error import info, warning, error, fatal
 from unicode import chars_to_utf32
 from util import str_fractional, align_bits_up
@@ -12,6 +11,8 @@ from util import str_fractional, align_bits_up
 from .c11_1 import *
 
 import re
+
+
 
 
 def camel_to_lower_snake(name: str) -> str:
@@ -42,13 +43,6 @@ cfunc = None
 POINTER_TO_ARRAY_RELAX = True
 
 
-
-def newline(n=1):
-	out(str_newline(n))
-
-
-def nl_indent(nl=1):
-	out(str_nl_indent(nl))
 
 
 def is_global_context():
@@ -1395,11 +1389,6 @@ def do_cinitializer(x, ctx=[]):
 #
 
 
-def print_value(x, ctx=[]):
-	out(str_value(x, ctx=ctx))
-
-
-
 def do_assign_array(left, right, ti):
 	# array = function()
 	if right.isValueCall():
@@ -1485,7 +1474,6 @@ def do_cstmt_return(x):
 		cretval = do_cvalue(x.value)
 	cstmt_return = CStmtReturn(cretval)
 	return cstmt_return
-	#out(cstmt_return)
 
 
 def do_cstmt_if(x):
@@ -1624,7 +1612,6 @@ def do_decl_func(x):
 	ftype = do_ctype(func.type)
 	dv = CStmtDefVar(get_id_str(func), ftype, storage_class=storage_class, attributes=x.attributes)
 	return (dv,)
-	#out(str(dv))
 
 
 def do_def_func(x):
@@ -1638,7 +1625,6 @@ def do_def_func(x):
 	global cfunc
 	cfunc = func
 
-	#out(str_gcc_attributes(x.annotations))
 
 	storage_class = ''
 	if x.hasAttribute('extern'):
@@ -1651,9 +1637,6 @@ def do_def_func(x):
 			storage_class = storage_class + ' inline'
 		else:
 			storage_class = 'inline'
-
-	#if storage_class != '':
-	#	out(storage_class + ' ')
 
 	cblock = do_cstmt_block(x.stmt)
 
@@ -1748,8 +1731,6 @@ def do_def_type(x):
 	dt = CStmtDefType(id_str, do_ctype(orig_type))
 	return (dt,)
 
-	#out('typedef ' + str_field(orig_type, id_str) + ';')
-
 
 def do_def_type_record(t):
 	id_str = get_id_str(t)
@@ -1803,7 +1784,6 @@ def do_def_const(x):
 
 	id_str = camel_to_upper_snake(get_id_str(x.value))
 	macro = CMacrodefinitionValue(id_str, do_cinitializer(x.init_value))
-	#out(str(macro))
 	module_undef_list.append(id_str)
 	return (macro,)
 
@@ -1816,10 +1796,6 @@ def include(path, local=True):
 	dv = CInclude(path, isglobal=not local)
 	return (dv,)
 
-
-
-def print_insert(x):
-	out(x['str'])
 
 
 def print_directive(x):
@@ -2069,7 +2045,6 @@ def do_header(module):
 		if x.is_stmt_def_func():
 			#nnl(x.nl)
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute('inline'):
-				#out("static ")
 				xdefs.extend(do_def_func(x))
 				continue
 			xdefs.extend(do_decl_func(x))
@@ -2205,12 +2180,22 @@ def do_cfile(module):
 
 
 
+
+
+
 def dump(filename, defs):
-	output_open(filename)
+	global file
+
+	dirname = os.path.dirname(filename)
+	if dirname != '':
+		os.makedirs(dirname, exist_ok=True)
+	file = open(filename, "w")
+
 	for d in defs:
-		out(str(d))
-	out("\n\n")
-	output_close()
+		file.write(str(d))
+
+	file.write("\n\n")
+	file.close()
 
 
 def run(module, _outname):
