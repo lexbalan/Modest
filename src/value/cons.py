@@ -140,7 +140,7 @@ def value_cons_implicit_check(t, v):
 def value_cons_explicit(t, v, ti):
 	assert(isinstance(t, Type))
 	assert(isinstance(v, Value))
-	#assert(ti['isa'] == 'ti')
+	assert(isinstance(ti, TextInfo))
 
 	if v.isValueBad() or t.is_bad():
 		return ValueBad(v.ti)
@@ -152,8 +152,9 @@ def value_cons_explicit(t, v, ti):
 
 	if Type.eq(t, from_type):
 		if not t.is_generic():
-			info("explicit cons from the same type", ti)
-			return v
+			if t.attributes == from_type.attributes:
+				info("explicit cons from the same type", ti)
+				return v
 
 	if not cons_can(t, from_type, 'explicit', ti):
 		error("cannot construct value", ti)

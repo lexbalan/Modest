@@ -5,3 +5,4 @@ a.out
 *.pyc
 */__pycache__
 .vscode
+.obsidian

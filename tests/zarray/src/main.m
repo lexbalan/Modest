@@ -2,6 +2,7 @@
 
 include "libc/ctypes64"
 include "libc/stdio"
+include "libc/stdlib"
 
 
 var v: [][]Int32 = [[1, 2], [3, 4], [5, 6, 7], [8, 9, 10, 11], [12, 13]]
@@ -54,7 +55,71 @@ public func main () -> Int32 {
 	let arr = [a, b, c]
 
 	// ! parsing error (!)
-	//var arr2 = Int32[] arr
+	var arr2 = []Int32 arr
 
-	return 0
+	printf("memoryTest = %d\n", memoryTest())
+
+	return Int32 0
 }
+
+
+func memoryTest () -> Bool {
+	let memorySize = 1024 * 1024 * 100
+	let memory = new [memorySize]Byte []//malloc(memorySize)
+	//let memory = *[memorySize]Byte malloc(memorySize)
+	let mem = * @volatile [memorySize]Byte memory
+	if mem == nil {
+		printf("cannot allocate memory\n")
+		return false
+	}
+	var pattern: Word8
+	var i: Nat8 = 0
+	let nPatterns = 12
+	while i < nPatterns {
+		var pattern: Word8 = 0x00
+		if i < 8 {
+			pattern = Word8 1 << i
+		} else if i == 8 {
+			pattern = 0x00
+		} else if i == 9 {
+			pattern = 0x55
+		} else if i == 10 {
+			pattern = 0xAA
+		} else {
+			pattern = 0xFF
+		}
+
+		printf("check pattern = 0x%02x\n", pattern)
+
+		if not testRegion(mem, memorySize, pattern) {
+			return false
+		}
+
+		++i
+	}
+
+	return true
+}
+
+
+func testRegion (mem: *[]Byte, size: Nat32, pattern: Byte) -> Bool {
+	// fill
+	var i: Nat32 = 0
+	while i < size {
+		mem[i] = pattern
+		++i
+	}
+
+	// check
+	i = 0
+	while i < size {
+		if mem[i] != pattern {
+			return false
+		}
+		++i
+	}
+
+	return true
+}
+
+

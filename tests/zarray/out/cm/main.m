@@ -48,6 +48,71 @@ public func main () -> Int32 {
 	str1 = cstr2
 	a2 = ca2
 
-	return 0
+	let a = 5
+	let b = 6
+	let c = 7
+	let arr = [a, b, c]
+	var arr2 = []Int32 arr
+
+	printf("memoryTest = %d\n", memoryTest())
+
+	return Int32 0
+}
+
+
+
+func memoryTest () -> Bool {
+	let memorySize = 1024 * 1024 * 4
+	let memory: *[memorySize]Byte = new [memorySize]Byte []
+	let mem = *[memorySize]Byte memory
+	if mem == nil {
+		printf("cannot allocate memory\n")
+		return false
+	}
+	var pattern: Word8
+	var i: Nat8 = 0
+	let nPatterns = 12
+	while i < nPatterns {
+		var pattern: Word8 = 0x00
+		if i < 8 {
+			pattern = Word8 1 << i
+		} else if i == 8 {
+			pattern = 0x00
+		} else if i == 9 {
+			pattern = 0x55
+		} else if i == 10 {
+			pattern = 0xAA
+		} else {
+			pattern = 0xFF
+		}
+
+		printf("check pattern = 0x%02x\n", pattern)
+
+		if not testRegion(mem, memorySize, pattern) {
+			return false
+		}
+
+		i = i + 1
+	}
+
+	return true
+}
+
+
+func testRegion (mem: *[]Byte, size: Nat32, pattern: Byte) -> Bool {
+	var i: Nat32 = 0
+	while i < size {
+		mem[i] = pattern
+		i = i + 1
+	}
+	i = 0
+	while i < size {
+		if mem[i] != pattern {
+			return false
+		}
+		i = i + 1
+	}
+
+	return true
 }
 

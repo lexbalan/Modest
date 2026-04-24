@@ -5,6 +5,9 @@ from .common import *
 from util import str_fractional
 
 
+SHOW_ANY_CONS = True
+
+
 def get_id_str(x):
 	if not hasattr(x, 'id'):
 		return None
@@ -331,8 +334,9 @@ def str_value_cons(x, ctx):
 	from_type = value.type
 	to_type = x.oftype
 
-	if x.method in ['implicit', 'default']:
-		return str_value(value)
+	if SHOW_ANY_CONS:
+		if x.method in ['implicit', 'default']:
+			return str_value(value)
 
 	s = ""
 	if x.method == 'unsafe':
