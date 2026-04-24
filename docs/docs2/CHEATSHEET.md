@@ -38,15 +38,18 @@ Str8, Str16, Str32                 // aliases for: *[]Char8, *[]Char16, *[]Char3
 type Name = Type                   // type alias
 type Name = {f1: T1, f2: T2}       // named record
 type Name = @branded Type          // branded type (newtype)
+() -> Unit                         // function without params & return value
+(a: Int32, b: Int32) -> Int32      // function with two params & a return value
 ```
+
+> There is no way to create field with function type, but you can create pointer to function
 
 ## Literals
 ```modest
-42, 0xFF                           // integers
+42, 0xFF                           // integers (only decimal & hexadecimal)
 3.14, 0.5                          // floats
 true, false                        // bool
-'A', '\n'                          // char
-"Hello World"                      // string (*[]Char8)
+"Hello World"                      // string literal (no dedicated char literal)
 [1, 2, 3]                          // array
 {x = 10, y = 20}                   // record
 nil                                // null pointer
@@ -79,7 +82,7 @@ var x, y, z: Int32                 // multiple
 const max = 100                    // module-level constant
 const pi: Float64 = 3.14159
 
-let local = 42                     // immutable local (in functions)
+let local = 42                     // immutable local (only in functions)
 ```
 
 ### Types
@@ -88,7 +91,8 @@ type Point = {x: Float64, y: Float64}
 type IntPtr = *Int32
 type StringPtr = *Char8
 type Meters = @branded Float64        // newtype
-type Packed = {pack a: Bool, b: Int32}
+type Packed = @packed {a: Bool, b: Int32}
+type Volatile = @volatile Word32
 ```
 
 ## Statements
@@ -137,10 +141,11 @@ return                             // for Unit
 ```
 
 ### Increment/Decrement
-```
+```modest
 ++i  // it's just statement
 --j  // only prefix form
-``
+```
+
 
 ## Operators
 
