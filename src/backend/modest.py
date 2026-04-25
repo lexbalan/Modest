@@ -90,11 +90,10 @@ cmodule = None
 
 
 
-def print_stmt_comment(x):
-	out(str_stmt_comment(x))
 
 
 def str_stmt_comment(x):
+	#return "//comment"
 	if isinstance(x, StmtCommentLine):
 		return str_stmt_comment_line(x)
 	elif isinstance(x, StmtCommentBlock):
@@ -220,11 +219,6 @@ def str_type_func(t, extra_args=False):
 
 def str_type(t):
 	assert(isinstance(t, Type))
-
-	#s = ""
-
-	#if t.hasAttribute('branded'):
-	#	s += "@branded "
 
 	# Если тип связан с идентификатором - распечатаем его
 	id_str = get_id_str(t)
@@ -754,32 +748,31 @@ def str_value(x, ctx=[], parent_expr=None):
 	#	out(")")
 
 
-def print_value(x):
-	return out(str_value(x))
-
-
 
 
 def str_annotation(a, params):
-	mass = ""
+	sstr = ""
 	if params != {}:
-		mass += '('
+		sstr += '('
 		if isinstance(params, dict):
 			pass
 		else:
-			mass += str_value(params)
-		mass += ')'
-	return "@" + a + mass
+			sstr += str_value(params)
+		sstr += ')'
+	return "@" + a + sstr
 
 
-def print_stmt_type(x):
-	out("type ")
-	out(get_id_str(x))
-	out(" = ")
+def str_stmt_type(x):
+	atts = []
 	attributes = x.original_type.attributes
 	for a in attributes:
-		out(str_annotation(a, params=attributes[a]) + " ")
-	out(str_type(x.original_type))
+		atts.append(str_annotation(a, params=attributes[a]))
+
+	if atts != []:
+		return "type %s = %s %s" % (get_id_str(x), ' '.join(atts), str_type(x.original_type))
+
+	return "type %s = %s" % (get_id_str(x), str_type(x.original_type))
+
 
 
 # принимает StmtConst / StmtVar
@@ -790,7 +783,7 @@ def needTypeAnno(x):
 	return not (x.init_value.isValueCons() and x.init_value.method == 'explicit')
 
 
-def print_stmt_def(x, operator='const'):
+def str_stmt_def(x, operator='const'):
 
 #	if x.hasAttribute('used'):
 #		out("@used\n")
@@ -807,213 +800,236 @@ def print_stmt_def(x, operator='const'):
 #	if hasattr(x, 'alignment'):
 #		out("@alignment(%d)\n" % x.alignment)
 
-	out("%s %s" % (operator, get_id_str(x)))
+	ss = []
+
+	ss.append("%s %s" % (operator, get_id_str(x)))
 
 	if needTypeAnno(x):
-		out(": ")
-		out(str_type(x.value.type))
+		ss.append(": ")
+		ss.append(str_type(x.value.type))
 
 	if not x.init_value.is_value_undefined():
-		out(" = ")
-		out(str_value(x.init_value))
+		ss.append(" = ")
+		ss.append(str_value(x.init_value))
+	return ''.join(ss)
 
 
-def print_stmt_func(x):
+def str_stmt_func(x):
 	if x.stmt == None:
 		return
 
 #	if x.hasAttribute('inlinehint'):
-#		out("@inlinehint\n")
+#		ss.append("@inlinehint\n")
 #	if x.hasAttribute('inline'):
-#		out("@inline\n")
+#		ss.append("@inline\n")
 #	if x.hasAttribute('noinline'):
-#		out("@noinline\n")
+#		ss.append("@noinline\n")
 
 	func = x.value
 	ft = func.type
-	out("func ")
-	out(get_id_str(func))
-	out(" ")
-	out(str_type_func(ft, extra_args=ft.extra_args))
-	print_stmt_block(x.stmt)
+	ss = []
+	ss.append("func ")
+	ss.append(get_id_str(func))
+	ss.append(" ")
+	ss.append(str_type_func(ft, extra_args=ft.extra_args))
+	ss.append(" ")
+	ss.append(str_stmt_block(x.stmt))
+	return ''.join(ss)
 
 
-def print_stmt_block(s):
+def str_stmt_block(s):
 	nl_end_e = 1
-	out(" {")
+	ss = []
+	ss.append("{")
 	indent_up()
 	for stmt in s.stmts:
-		print_stmt(stmt)
+		ss.append(str_stmt(stmt))
 	indent_down()
-	out(str_nl_indent(nl_end_e))
-	out("}")
+	ss.append(str_nl_indent(nl_end_e))
+	ss.append("}")
+	return ''.join(ss)
 
 
-def print_stmt_if(x):
-	out("if ")
-	print_value(x.cond)
-	print_stmt_block(x.then)
+def str_stmt_if(x):
+	ss = []
+	ss.append("if ")
+	ss.append(str_value(x.cond))
+	ss.append(" ")
+	ss.append(str_stmt_block(x.then))
 
 	e = x.els
 	if e != None:
 		if e.is_stmt_if():
-			out(" else ")
-			print_stmt_if(e)
+			ss.append(" else ")
+			ss.append(str_stmt_if(e))
 		else:
-			out(" else")
-			print_stmt_block(e)
+			ss.append(" else ")
+			ss.append(str_stmt_block(e))
+	return ''.join(ss)
 
 
-def print_stmt_while(x):
-	out("while ")
-	print_value(x.cond)
-	print_stmt_block(x.stmt)
+def str_stmt_while(x):
+	return "while %s %s" % (str_value(x.cond), str_stmt_block(x.stmt))
 
 
-def print_stmt_return(x):
-	out("return")
+def str_stmt_return(x):
+	ss = []
+	ss.append("return")
 	rv = x.value
 	if rv != None:
-		out(" ")
-		print_value(rv)
+		ss.append(" ")
+		ss.append(str_value(rv))
+	return ''.join(ss)
 
 
-def print_stmt_assign(x):
-	print_value(x.left)
-	out(" = ")
-	print_value(x.right)
+def str_stmt_assign(x):
+	return "%s = %s" % (str_value(x.left), str_value(x.right))
 
 
-def print_stmt_value(x):
-	print_value(x.value)
+def str_stmt_value(x):
+	return str_value(x.value)
 
 
-def print_stmt_break(x):
-	out("break")
+def str_stmt_break(x):
+	return "break"
 
 
-def print_stmt_again(x):
-	out("again")
-
-
-
-def print_asm_pair(pair):
-	out('[')
-	print_value(pair[0])
-	out(', ')
-	print_value(pair[1])
-	out(']')
+def str_stmt_again(x):
+	return "again"
 
 
 
-# for print_stmt_asm:
+
+
+# for str_stmt_asm:
 # prints pairs: <specifier> <value>
 def print_asm_pairs(args):
-	out('[')
+	pairs = []
 	for arg in args:
-		print_asm_pair(arg)
-	out(']')
+		pairs.append("[%s, %s]" % (str_value(arg[0]), str_value(arg[1])))
+	return '[%s]' % ', '.join(pairs)
 
 
-def print_stmt_asm(x):
-	out('__asm(')
-	out(str_strx(x.text))
+def str_stmt_asm(x):
+	ss = []
+	ss.append('__asm(')
+	ss.append(str_strx(x.text))
 
 	if len(x.outputs) > 0:
-		out(', ')
-		print_asm_pairs(x.outputs)
+		ss.append(', ')
+		ss.append(print_asm_pairs(x.outputs))
 
 	if len(x.inputs) > 0:
-		out(', ')
-		print_asm_pairs(x.inputs)
+		ss.append(', ')
+		ss.append(print_asm_pairs(x.inputs))
 
 	if len(x.clobbers) > 0:
-		out(', [')
+		ss.append(', [')
 		for c in x.clobbers:
-			print_value(c)
-		out(']')
+			ss.append(str_value(c))
+		ss.append(']')
 
-	out(")")
-	return
+	ss.append(")")
+	return ''.join(ss)
 
 
-def print_stmt(x):
+def str_stmt(x):
 	assert(isinstance(x, Stmt))
 
+	ss = []
 	if x.comment != None:
-		out(str_nl_indent(x.comment.nl))
-		print_stmt_comment(x.comment)
+		ss.append(str_nl_indent(x.comment.nl))
+		ss.append(str_stmt_comment(x.comment))
 
 	if x.nl > 0:
-		out(str_nl_indent(x.nl))
+		ss.append(str_nl_indent(x.nl))
 	else:
-		out("; ")
+		ss.append("; ")
 
-	if x.is_stmt_block(): print_stmt_block(x)
-	elif x.is_stmt_value_expr(): print_stmt_value(x)
-	elif x.is_stmt_assign(): print_stmt_assign(x)
-	elif x.is_stmt_return(): print_stmt_return(x)
-	elif x.is_stmt_if(): print_stmt_if(x)
-	elif x.is_stmt_while(): print_stmt_while(x)
-	elif x.is_stmt_def_var(): print_stmt_def(x, operator='var')
-	elif x.is_stmt_def_const(): print_stmt_def(x, operator='let')
-	elif x.is_stmt_break(): print_stmt_break(x)
-	elif x.is_stmt_again(): print_stmt_again(x)
-	elif x.is_stmt_comment(): print_stmt_comment(x)
-	elif x.is_stmt_asm(): print_stmt_asm(x)
-	elif x.is_stmt_def_type(): print_stmt_type(x)
-	else: lo("<stmt %s>" % str(x))
+	ss.append(str_stmt2(x))
+	return ''.join(ss)
+
+def str_stmt2(x):
+	if x.is_stmt_block(): return str_stmt_block(x)
+	elif x.is_stmt_value_expr(): return str_stmt_value(x)
+	elif x.is_stmt_assign(): return str_stmt_assign(x)
+	elif x.is_stmt_return(): return str_stmt_return(x)
+	elif x.is_stmt_if(): return str_stmt_if(x)
+	elif x.is_stmt_while(): return str_stmt_while(x)
+	elif x.is_stmt_def_var(): return str_stmt_def(x, operator='var')
+	elif x.is_stmt_def_const(): return str_stmt_def(x, operator='let')
+	elif x.is_stmt_break(): return str_stmt_break(x)
+	elif x.is_stmt_again(): return str_stmt_again(x)
+	elif x.is_stmt_comment(): return str_stmt_comment(x)
+	elif x.is_stmt_asm(): return str_stmt_asm(x)
+	elif x.is_stmt_def_type(): return str_stmt_type(x)
+
+	return "<stmt %s>" % str(x)
 
 
 
 def print_import(x):
+	ss = []
 	if not x.include:
-		out("import \"%s\"" % x.impline)
+		ss.append("import \"%s\"" % x.impline)
 		if x.name != None:
-			out(" as %s" % x.name)
+			ss.append(" as %s" % x.name)
 	else:
-		out("include \"%s\"" % x.impline)
+		ss.append("include \"%s\"" % x.impline)
+	return ''.join(ss)
 
 
 
 def print_directive(x):
 	if isinstance(x, StmtDirectiveInsert):
-		out('\npragma insert "%s"' % x.text)
+		return '\npragma insert "%s"' % x.text
+	elif isinstance(x, StmtDirectiveCInclude):
+		#return '\npragma c_include "%s"' % x.c_name
+		return ""
 
+	return "\n// directive: %s" % str(x)
 	#if x.is_stmt_import():
 	#	m = m.module
-	#	out('import "%s"' % m.)
+	#	ss.append('import "%s"' % m.)
 	#if isinstance(x, StmtDirectiveCInclude):
-	#	out("@c_include \"%s\"" % x.c_name)
+	#	ss.append("@c_include \"%s\"" % x.c_name)
 
 
 
-def printTopLevelStmt(x):
+def str_top_level_stmt2(x):
 	assert(isinstance(x, Stmt))
 
+	ss = []
 	if x.comment != None:
-		out(str_newline(n=x.comment.nl))
-		print_stmt_comment(x.comment)
+		ss.append(str_newline(n=x.comment.nl))
+		ss.append(str_stmt_comment(x.comment))
 
 	if not x.is_stmt_directive():
-		out(str_newline(n=x.nl))
+		ss.append(str_newline(n=x.nl))
 
 	for a in x.attributes:
 		v = x.attributes[a]
-		out(str_annotation(a, v))
-		out("\n")
+		ss.append(str_annotation(a, v))
+		ss.append("\n")
 
 	if isinstance(x, StmtDef):
 		if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
-			out("public ")
+			ss.append("public ")
 
-	if x.is_stmt_def_var(): print_stmt_def(x, operator='var')
-	elif x.is_stmt_def_const(): print_stmt_def(x, operator='const')
-	elif x.is_stmt_def_func(): print_stmt_func(x)
-	elif x.is_stmt_def_type(): print_stmt_type(x)
-	elif x.is_stmt_comment(): print_stmt_comment(x)
-	elif x.is_stmt_import(): print_import(x)
-	elif x.is_stmt_directive(): print_directive(x)
+	ss.append(str_top_level_stmt(x))
+	str(ss)
+	return ''.join(ss)
+
+
+def str_top_level_stmt(x):
+	if x.is_stmt_def_var(): return str_stmt_def(x, operator='var')
+	elif x.is_stmt_def_const(): return str_stmt_def(x, operator='const')
+	elif x.is_stmt_def_func(): return str_stmt_func(x)
+	elif x.is_stmt_def_type(): return str_stmt_type(x)
+	elif x.is_stmt_comment(): return str_stmt_comment(x)
+	elif x.is_stmt_import(): return print_import(x)
+	elif x.is_stmt_directive(): return print_directive(x)
+	return "<unknown stmt>"
 
 
 
@@ -1022,27 +1038,36 @@ def init(settings):
 
 
 
-def run(module, outname):
+def run(module, fname):
 	global cmodule
 	cmodule = module
-	output_open(outname + '.m')
+
+	ss = []
 
 	for x in module.imports_private:
 		stmt_import = module.imports_private[x]
-		out('private import "%s"\n' % (stmt_import.impline))
+		ss.append('private import "%s"\n' % (stmt_import.impline))
 
 	for x in module.imports_public:
 		stmt_import = module.imports_public[x]
-		out('import "%s"\n' % (stmt_import.impline))
+		ss.append('import "%s"\n' % (stmt_import.impline))
 
 	for x in module.included_modules:
-		out('include "%s"\n' % (str(x.id)))
+		ss.append('include "%s"\n' % (str(x.id)))
 
 	for x in module.defs:
-		printTopLevelStmt(x)
+		ss.append(str_top_level_stmt2(x))
 
-	out("\n\n")
-	output_close()
+	dirname = os.path.dirname(fname)
+	if dirname != '':
+		os.makedirs(dirname, exist_ok=True)
+	file = open(fname+'.m', "w")
+
+	for s in ss:
+		file.write(s)
+	file.write("\n\n")
+
+	file.close()
 
 
 
