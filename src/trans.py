@@ -2776,6 +2776,7 @@ def translate(abspath, is_include=False):
 def process_module(idStr, sourcename, ast, is_include):
 	global cmodule, global_prefix
 	prev_module = cmodule
+	prev_global_prefix = global_prefix
 
 	symtab_public = root_symtab.branch()
 	symtab_private = Symtab()
@@ -2826,6 +2827,7 @@ def process_module(idStr, sourcename, ast, is_include):
 	cmodule = prev_module
 	context = prev_context
 
+	global_prefix = prev_global_prefix
 	return m
 
 
