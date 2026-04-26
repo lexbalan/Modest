@@ -23,7 +23,7 @@ func writeFile (sockFd: Int) -> Bool {
 	}
 
 	while true {
-		let n: SSizeT = recv(sockFd, &buffer, bufSize, 0)
+		let n: @unused  SSizeT = recv(sockFd, &buffer, bufSize, 0)
 		if n <= 0 {
 			break
 		}

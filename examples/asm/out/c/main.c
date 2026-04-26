@@ -6,23 +6,23 @@
 #include <stdio.h>
 
 __attribute__((used))
-static void memoryBarrier(void) {
+static void main_memoryBarrier(void) {
 	__asm__ volatile ("" ::: "memory");
 }
 
-static int64_t sum64(int64_t a, int64_t b) {
+static int64_t main_sum64(int64_t a, int64_t b) {
 	int64_t sum;
 	__asm__ volatile ("add %0, %1, %2" : "=r" (sum) : "r" (a), "r" (b) : "cc");
 	return sum;
 }
 
-static int64_t sub64(int64_t a, int64_t b) {
+static int64_t main_sub64(int64_t a, int64_t b) {
 	int64_t sub;
 	__asm__ volatile ("sub %0, %1, %2" : "=r" (sub) : "r" (a), "r" (b) : "cc");
 	return sub;
 }
 
-static void sumsub64(int64_t a, int64_t b) {
+static void main_sumsub64(int64_t a, int64_t b) {
 	int64_t sum;
 	int64_t sub;
 	__asm__ volatile ("add %0, %2, %3\n\
@@ -36,11 +36,11 @@ int main(void) {
 	printf("inline asm test\n");
 	int64_t a = 10LL;
 	int64_t b = 20LL;
-	const int64_t sum = sum64(a, b);
-	const int64_t sub = sub64(a, b);
-	printf("sum(%lld, %lld) = %lld\n", a, b, sum);
-	printf("sub(%lld, %lld) = %lld\n", a, b, sub);
-	sumsub64(a, b);
+	const int64_t main_sum = main_sum64(a, b);
+	const int64_t main_sub = main_sub64(a, b);
+	printf("sum(%lld, %lld) = %lld\n", a, b, main_sum);
+	printf("sub(%lld, %lld) = %lld\n", a, b, main_sub);
+	main_sumsub64(a, b);
 	return 0;
 }
 

@@ -248,7 +248,7 @@ declare %Int @system([0 x %ConstChar]* %string)
 @.str28 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 @.str29 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define internal %Bool @testShift8() {
+define internal %Bool @main_testShift8() {
 	%1 = alloca %Word8, align 1
 	store %Word8 128, %Word8* %1
 ; if_0
@@ -298,7 +298,7 @@ endif_3:
 	ret %Bool 1
 }
 
-define internal %Bool @testShift16() {
+define internal %Bool @main_testShift16() {
 	%1 = alloca %Word16, align 2
 	store %Word16 32768, %Word16* %1
 ; if_0
@@ -348,7 +348,7 @@ endif_3:
 	ret %Bool 1
 }
 
-define internal %Bool @testShift32() {
+define internal %Bool @main_testShift32() {
 	%1 = alloca %Word32, align 4
 	store %Word32 2147483648, %Word32* %1
 ; if_0
@@ -398,7 +398,7 @@ endif_3:
 	ret %Bool 1
 }
 
-define internal %Bool @testShift64() {
+define internal %Bool @main_testShift64() {
 	%1 = alloca %Word64, align 8
 	store %Word64 9223372036854775808, %Word64* %1
 ; if_0
@@ -448,7 +448,7 @@ endif_3:
 	ret %Bool 1
 }
 
-define internal %Bool @testShift128() {
+define internal %Bool @main_testShift128() {
 	%1 = alloca %Word128, align 16
 	store %Word128 170141183460469231731687303715884105728, %Word128* %1
 ; if_0
@@ -502,23 +502,23 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str26 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %2
-	%3 = call %Bool @testShift8()
+	%3 = call %Bool @main_testShift8()
 	%4 = load %Bool, %Bool* %2
 	%5 = and %Bool %3, %4
 	store %Bool %5, %Bool* %2
-	%6 = call %Bool @testShift16()
+	%6 = call %Bool @main_testShift16()
 	%7 = load %Bool, %Bool* %2
 	%8 = and %Bool %6, %7
 	store %Bool %8, %Bool* %2
-	%9 = call %Bool @testShift32()
+	%9 = call %Bool @main_testShift32()
 	%10 = load %Bool, %Bool* %2
 	%11 = and %Bool %9, %10
 	store %Bool %11, %Bool* %2
-	%12 = call %Bool @testShift64()
+	%12 = call %Bool @main_testShift64()
 	%13 = load %Bool, %Bool* %2
 	%14 = and %Bool %12, %13
 	store %Bool %14, %Bool* %2
-	%15 = call %Bool @testShift128()
+	%15 = call %Bool @main_testShift128()
 	%16 = load %Bool, %Bool* %2
 	%17 = and %Bool %15, %16
 	store %Bool %17, %Bool* %2

@@ -201,10 +201,10 @@ declare void @perror(%ConstCharStr* %str)
 ; end from import "builtin"
 
 ; from import "lib"
-%loo_Nothing = type {
+%lib_Nothing = type {
 };
 
-declare void @loo_foo(%Nat32 %x)
+declare void @lib_foo(%Nat32 %x)
 
 ; end from import "lib"
 ; -- end print imports private 'main' --
@@ -213,7 +213,7 @@ declare void @loo_foo(%Nat32 %x)
 ; -- strings --
 ; -- endstrings --
 define %Int @main() {
-	call void @loo_foo(%Nat32 4)
+	call void @lib_foo(%Nat32 4)
 	ret %Int 0
 }
 

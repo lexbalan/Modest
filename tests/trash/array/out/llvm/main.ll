@@ -210,7 +210,7 @@ declare void @perror(%ConstCharStr* %str)
 @.str5 = private constant [12 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @.str6 = private constant [14 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 39, i8 37, i8 99, i8 39, i8 10, i8 0]
 ; -- endstrings --
-@c0 = constant [10 x i8] [
+@main_c0 = constant [10 x i8] [
 	i8 0,
 	i8 1,
 	i8 2,
@@ -222,8 +222,8 @@ declare void @perror(%ConstCharStr* %str)
 	i8 8,
 	i8 9
 ]
-@arr0 = internal global [10 x %Int32] zeroinitializer
-@arr1 = internal global [10 x %Int32] [
+@main_arr0 = internal global [10 x %Int32] zeroinitializer
+@main_arr1 = internal global [10 x %Int32] [
 	%Int32 0,
 	%Int32 1,
 	%Int32 2,
@@ -235,7 +235,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 8,
 	%Int32 9
 ]
-@arr2 = internal global [10 x %Char32] [
+@main_arr2 = internal global [10 x %Char32] [
 	%Char32 72,
 	%Char32 101,
 	%Char32 108,
@@ -269,15 +269,15 @@ define %Int @main() {
 	%13 = zext i8 10 to %Nat32
 	store [10 x %Int32] %12, [10 x %Int32]* %3
 	%14 = alloca [10 x %Char32], align 4
-	%15 = load [10 x %Char32], [10 x %Char32]* @arr2
+	%15 = load [10 x %Char32], [10 x %Char32]* @main_arr2
 	%16 = zext i8 10 to %Nat32
 	store [10 x %Char32] %15, [10 x %Char32]* %14
 	%17 = load [10 x %Char32], [10 x %Char32]* %14
-	call void @printArrayOf10Char32([10 x %Char32] %17)
-	%18 = load [10 x %Int32], [10 x %Int32]* @arr1
+	call void @main_printArrayOf10Char32([10 x %Char32] %17)
+	%18 = load [10 x %Int32], [10 x %Int32]* @main_arr1
 	%19 = load [10 x %Int32], [10 x %Int32]* %3; alloca memory for return value
 	%20 = alloca [10 x %Int32]
-	call void @sum10IntArrays([10 x %Int32]* %20, [10 x %Int32] %18, [10 x %Int32] %19)
+	call void @main_sum10IntArrays([10 x %Int32]* %20, [10 x %Int32] %18, [10 x %Int32] %19)
 	%21 = load [10 x %Int32], [10 x %Int32]* %20
 	%22 = zext i8 10 to %Nat32
 	store [10 x %Int32] %21, [10 x %Int32]* %2
@@ -304,7 +304,7 @@ break_1:
 	ret %Int 0
 }
 
-define internal void @printArrayOf10Char32([10 x %Char32] %__a) {
+define internal void @main_printArrayOf10Char32([10 x %Char32] %__a) {
 	%a = alloca [10 x %Char32]
 	%1 = zext i8 10 to %Nat32
 	store [10 x %Char32] %__a, [10 x %Char32]* %a
@@ -331,7 +331,7 @@ break_1:
 	ret void
 }
 
-define internal void @sum10IntArrays([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %Int32] %__b) {
+define internal void @main_sum10IntArrays([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %Int32] %__b) {
 	%a = alloca [10 x %Int32]
 	%2 = zext i8 10 to %Nat32
 	store [10 x %Int32] %__a, [10 x %Int32]* %a

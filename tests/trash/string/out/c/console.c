@@ -46,17 +46,17 @@ void console_putchar_utf16(char16_t c) {
 	char16_t cc[2];
 	__builtin_memcpy(&cc, &(char16_t [2]){c, u'\x0'}, sizeof(char16_t [2]));
 	char32_t char32;
-	const uint8_t n = utf_utf16_to_utf32(cc, &char32);
+	const uint8_t console_n = utf_utf16_to_utf32(cc, &char32);
 	console_putchar_utf32(char32);
 }
 
 void console_putchar_utf32(char32_t c) {
 	char decoded_buf[4];
-	const int32_t n = (int32_t)utf_utf32_to_utf8(c, decoded_buf);
+	const int32_t console_n = (int32_t)utf_utf32_to_utf8(c, decoded_buf);
 	int32_t i = 0;
-	while (i < n) {
-		const char c = decoded_buf[i];
-		console_putchar_utf8(c);
+	while (i < console_n) {
+		const char console_c = decoded_buf[i];
+		console_putchar_utf8(console_c);
 		i = i + 1;
 	}
 }
@@ -67,11 +67,11 @@ void console_putchar_utf32(char32_t c) {
 void console_puts8(char *s) {
 	uint32_t i = 0U;
 	while (true) {
-		const char c = s[i];
-		if (c == '\x0') {
+		const char console_c = s[i];
+		if (console_c == '\x0') {
 			break;
 		}
-		console_putchar_utf8(c);
+		console_putchar_utf8(console_c);
 		i = i + 1U;
 	}
 }
@@ -79,28 +79,28 @@ void console_puts8(char *s) {
 void console_puts16(char16_t *s) {
 	uint32_t i = 0U;
 	while (true) {
-		const char16_t cc16 = s[i];
-		if (cc16 == u'\x0') {
+		const char16_t console_cc16 = s[i];
+		if (console_cc16 == u'\x0') {
 			break;
 		}
 		char32_t char32;
-		const uint8_t n = utf_utf16_to_utf32((char16_t *)&s[i], &char32);
-		if (n == 0) {
+		const uint8_t console_n = utf_utf16_to_utf32((char16_t *)&s[i], &char32);
+		if (console_n == 0) {
 			break;
 		}
 		console_putchar_utf32(char32);
-		i = i + (uint32_t)n;
+		i = i + (uint32_t)console_n;
 	}
 }
 
 void console_puts32(char32_t *s) {
 	uint32_t i = 0U;
 	while (true) {
-		const char32_t c = s[i];
-		if (c == U'\x0') {
+		const char32_t console_c = s[i];
+		if (console_c == U'\x0') {
 			break;
 		}
-		console_putchar_utf32(c);
+		console_putchar_utf32(console_c);
 		i = i + 1U;
 	}
 }
@@ -116,14 +116,14 @@ int32_t console_vsprint(char *buf, char *form, va_list va);
 
 int32_t console_vfprint(int32_t fd, char *form, va_list va) {
 	char strbuf[256];
-	const int32_t n = console_vsprint(strbuf, form, va);
-	strbuf[n] = '\x0';
-	write(fd, strbuf, (size_t)abs(n));
-	return n;
+	const int32_t console_n = console_vsprint(strbuf, form, va);
+	strbuf[console_n] = '\x0';
+	write(fd, strbuf, (size_t)abs(console_n));
+	return console_n;
 }
-static int32_t sprint_dec_int32(char *buf, int32_t x);
-static int32_t sprint_dec_n32(char *buf, uint32_t x);
-static int32_t sprint_hex_nat32(char *buf, uint32_t x);
+static int32_t console_sprint_dec_int32(char *buf, int32_t x);
+static int32_t console_sprint_dec_n32(char *buf, uint32_t x);
+static int32_t console_sprint_hex_nat32(char *buf, uint32_t x);
 
 int32_t console_vsprint(char *buf, char *form, va_list va) {
 	uint32_t i = 0U;
@@ -158,52 +158,52 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 			continue;
 		}
 		i = i + 2U;
-		char *const sptr = (char *)&buf[j];
+		char *const console_sptr = (char *)&buf[j];
 		if (c == 'i' || c == 'd') {
-			const int32_t x = va_arg(va, int32_t);
-			const int32_t n = sprint_dec_int32(sptr, x);
-			j = j + n;
+			const int32_t console_x = va_arg(va, int32_t);
+			const int32_t console_n = console_sprint_dec_int32(console_sptr, console_x);
+			j = j + console_n;
 		} else if (c == 'n') {
-			const uint32_t x = va_arg(va, uint32_t);
-			const int32_t n = sprint_dec_n32(sptr, x);
-			j = j + n;
+			const uint32_t console_x = va_arg(va, uint32_t);
+			const int32_t console_n = console_sprint_dec_n32(console_sptr, console_x);
+			j = j + console_n;
 		} else if (c == 'x' || c == 'p') {
-			const uint32_t x = va_arg(va, uint32_t);
-			const int32_t n = sprint_hex_nat32(sptr, x);
-			j = j + n;
+			const uint32_t console_x = va_arg(va, uint32_t);
+			const int32_t console_n = console_sprint_hex_nat32(console_sptr, console_x);
+			j = j + console_n;
 		} else if (c == 's') {
-			char *const s = va_arg(va, char *);
-			strcpy(sptr, s);
-			j = j + (int32_t)strlen(s);
+			char *const console_s = va_arg(va, char *);
+			strcpy(console_sptr, console_s);
+			j = j + (int32_t)strlen(console_s);
 		} else if (c == 'c') {
-			const char32_t c = va_arg(va, char32_t);
-			const uint8_t n = utf_utf32_to_utf8(c, (char *)sptr);
-			j = j + (int32_t)n;
+			const char32_t console_c = va_arg(va, char32_t);
+			const uint8_t console_n = utf_utf32_to_utf8(console_c, (char *)console_sptr);
+			j = j + (int32_t)console_n;
 		}
 	}
 	return j;
 }
 
 __attribute__((always_inline))
-static inline char n_to_dec_sym(uint8_t n) {
+static inline char console_n_to_dec_sym(uint8_t n) {
 	return (char)((uint8_t)'0' + n);
 }
 
-static char n_to_hex_sym(uint8_t n) {
+static char console_n_to_hex_sym(uint8_t n) {
 	if (n < 10) {
-		return n_to_dec_sym(n);
+		return console_n_to_dec_sym(n);
 	}
 	return (char)((uint8_t)'A' + n - 10);
 }
 
-static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
+static int32_t console_sprint_hex_nat32(char *buf, uint32_t x) {
 	char tmpbuf[8];
 	uint32_t d = x;
 	uint32_t i = 0U;
 	while (true) {
-		const uint32_t n = d % 16U;
+		const uint32_t console_n = d % 16U;
 		d = d / 16U;
-		tmpbuf[i] = n_to_hex_sym((uint8_t)n);
+		tmpbuf[i] = console_n_to_hex_sym((uint8_t)console_n);
 		i = i + 1U;
 		if (d == 0U) {
 			break;
@@ -219,25 +219,25 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
 	return j;
 }
 
-static int32_t sprint_dec_int32(char *buf, int32_t x) {
+static int32_t console_sprint_dec_int32(char *buf, int32_t x) {
 	char tmpbuf[11];
 	int32_t d = x;
-	const bool neg = d < 0;
-	if (neg) {
+	const bool console_neg = d < 0;
+	if (console_neg) {
 		d = -d;
 	}
 	uint32_t i = 0U;
 	while (true) {
-		const int32_t n = d % 10;
+		const int32_t console_n = d % 10;
 		d = d / 10;
-		tmpbuf[i] = n_to_dec_sym((uint8_t)abs(n));
+		tmpbuf[i] = console_n_to_dec_sym((uint8_t)abs(console_n));
 		i = i + 1U;
 		if (d == 0) {
 			break;
 		}
 	}
 	int32_t j = 0;
-	if (neg) {
+	if (console_neg) {
 		buf[0] = '-';
 		j = j + 1;
 	}
@@ -250,14 +250,14 @@ static int32_t sprint_dec_int32(char *buf, int32_t x) {
 	return j;
 }
 
-static int32_t sprint_dec_n32(char *buf, uint32_t x) {
+static int32_t console_sprint_dec_n32(char *buf, uint32_t x) {
 	char tmpbuf[11];
 	uint32_t d = x;
 	uint32_t i = 0U;
 	while (true) {
-		const uint32_t n = d % 10U;
+		const uint32_t console_n = d % 10U;
 		d = d / 10U;
-		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
+		tmpbuf[i] = console_n_to_dec_sym((uint8_t)console_n);
 		i = i + 1U;
 		if (d == 0U) {
 			break;

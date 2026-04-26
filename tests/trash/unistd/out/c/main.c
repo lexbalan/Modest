@@ -14,20 +14,20 @@
 
 int main(void) {
 	printf("unistd test\n");
-	const pid_t pid = getpid();
-	printf("pid = %d\n", pid);
-	const long hid = gethostid();
-	printf("hostid = %ld\n", hid);
+	const pid_t main_pid = getpid();
+	printf("pid = %d\n", main_pid);
+	const long main_hid = gethostid();
+	printf("hostid = %ld\n", main_hid);
 	char cterm[128];
 	ctermid(cterm);
 	printf("ctermid = %s\n", cterm);
 	char cwd[128];
 	getcwd(cwd, (size_t)LENGTHOF(cwd));
 	printf("cwd = %s\n", cwd);
-	char *const tty = ttyname(0);
-	printf("ttyname = %s\n", tty);
-	char *const s = getenv("PATH");
-	printf("PATH = %s\n", s);
+	char *const main_tty = ttyname(0);
+	printf("ttyname = %s\n", main_tty);
+	char *const main_s = getenv("PATH");
+	printf("PATH = %s\n", main_s);
 	while (true) {
 		printf("- hi\n");
 		sleep(1U);

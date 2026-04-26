@@ -262,7 +262,7 @@ declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
 @.str12 = private constant [34 x i8] [i8 91, i8 43, i8 93, i8 32, i8 68, i8 97, i8 116, i8 97, i8 32, i8 119, i8 114, i8 105, i8 116, i8 116, i8 101, i8 110, i8 32, i8 105, i8 110, i8 32, i8 116, i8 104, i8 101, i8 32, i8 116, i8 101, i8 120, i8 116, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0]
 @.str13 = private constant [22 x i8] [i8 91, i8 45, i8 93, i8 32, i8 67, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0]
 ; -- endstrings --
-define internal %Bool @writeFile(%Int %sockFd) {
+define internal %Bool @server_writeFile(%Int %sockFd) {
 	%1 = alloca [1024 x %Char8], align 1
 	%2 = call i8* @fopen(%ConstCharStr* bitcast ([10 x i8]* @.str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @.str2 to [0 x i8]*))
 ; if_0
@@ -348,7 +348,7 @@ endif_2:
 	%23 = bitcast %SockAddrIn* %22 to i8*
 	%24 = bitcast i8* %23 to %SockAddr*
 	%25 = call %Int @accept(%Int %1, %SockAddr* %24, %SocklenT* %21)
-	%26 = call %Bool @writeFile(%Int %25)
+	%26 = call %Bool @server_writeFile(%Int %25)
 ; if_3
 	br %Bool %26 , label %then_3, label %else_3
 then_3:

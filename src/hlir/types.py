@@ -676,7 +676,7 @@ class Type(Entity):
 			return self
 
 		nt = Type.copy(self)
-		#nt.definition = None #!
+		nt.definition = None #!
 
 		for a in atts:
 			k = a['kind']

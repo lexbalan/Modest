@@ -7,7 +7,7 @@ include "unistd"
 //include "lightfood/print"
 //pragma c_include "./print.h"
 
-func my_printf (format: *Str8, ...) -> SSizeT {
+func my_printf (format: *Str8, ...) -> @unused SSizeT {
 	var va: va_list
 	var va2: va_list
 
@@ -17,7 +17,7 @@ func my_printf (format: *Str8, ...) -> SSizeT {
 
 	let strMaxLen = 127 + 1
 	var buf: [strMaxLen]Char8
-	let n: Int = vsnprintf(&buf, SizeT strMaxLen, format, va2)
+	let n: @unused  Int = vsnprintf(&buf, SizeT strMaxLen, format, va2)
 
 	__va_end(va2)
 

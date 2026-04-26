@@ -301,7 +301,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; -- endstrings --
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str1 to [0 x i8]*))
-	%2 = call %Bool @test_generic_integer()
+	%2 = call %Bool @main_test_generic_integer()
 ; if_0
 	br %Bool %2 , label %then_0, label %else_0
 then_0:
@@ -311,7 +311,7 @@ else_0:
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @.str3 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	%5 = call %Bool @test_generic_float()
+	%5 = call %Bool @main_test_generic_float()
 ; if_1
 	br %Bool %5 , label %then_1, label %else_1
 then_1:
@@ -321,7 +321,7 @@ else_1:
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @.str5 to [0 x i8]*))
 	br label %endif_1
 endif_1:
-	%8 = call %Bool @test_generic_char()
+	%8 = call %Bool @main_test_generic_char()
 ; if_2
 	br %Bool %8 , label %then_2, label %else_2
 then_2:
@@ -331,7 +331,7 @@ else_2:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @.str7 to [0 x i8]*))
 	br label %endif_2
 endif_2:
-	%11 = call %Bool @test_generic_array()
+	%11 = call %Bool @main_test_generic_array()
 ; if_3
 	br %Bool %11 , label %then_3, label %else_3
 then_3:
@@ -341,7 +341,7 @@ else_3:
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @.str9 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-	%14 = call %Bool @test_generic_record()
+	%14 = call %Bool @main_test_generic_record()
 ; if_4
 	br %Bool %14 , label %then_4, label %else_4
 then_4:
@@ -354,7 +354,7 @@ endif_4:
 	ret %Int 0
 }
 
-define internal %Bool @test_generic_integer() {
+define internal %Bool @main_test_generic_integer() {
 	%1 = alloca %Int32, align 4
 	store %Int32 1, %Int32* %1
 	%2 = alloca %Nat64, align 8
@@ -377,7 +377,7 @@ define internal %Bool @test_generic_integer() {
 	ret %Bool 1
 }
 
-define internal %Bool @test_generic_float() {
+define internal %Bool @main_test_generic_float() {
 	%1 = alloca %Float32, align 4
 	store %Float32 3.1415927410125732, %Float32* %1
 	%2 = alloca %Float64, align 8
@@ -387,7 +387,7 @@ define internal %Bool @test_generic_float() {
 	ret %Bool 1
 }
 
-define internal %Bool @test_generic_char() {
+define internal %Bool @main_test_generic_char() {
 	%1 = alloca %Char8, align 1
 	store %Char8 65, %Char8* %1
 	%2 = alloca %Char16, align 2
@@ -399,7 +399,7 @@ define internal %Bool @test_generic_char() {
 	ret %Bool 1
 }
 
-define internal %Bool @test_generic_array() {
+define internal %Bool @main_test_generic_array() {
 	%1 = insertvalue [4 x i8] zeroinitializer, i8 1, 1
 	%2 = insertvalue [4 x i8] %1, i8 2, 2
 	%3 = insertvalue [4 x i8] %2, i8 3, 3
@@ -487,30 +487,30 @@ endif_3:
 	ret %Bool 1
 }
 
-%Point2D = type {
+%main_Point2D = type {
 	%Int32,
 	%Int32
 };
 
-%Point3D = type {
+%main_Point3D = type {
 	%Int32,
 	%Int32,
 	%Int32
 };
 
-define internal %Bool @test_generic_record() {
+define internal %Bool @main_test_generic_record() {
 	%1 = insertvalue {i8,i8} zeroinitializer, i8 10, 0
 	%2 = insertvalue {i8,i8} %1, i8 20, 1
 	%3 = alloca {i8,i8}
 	store {i8,i8} %2, {i8,i8}* %3
-	%4 = alloca %Point2D, align 4
-	%5 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
-	%6 = insertvalue %Point2D %5, %Int32 20, 1
-	store %Point2D %6, %Point2D* %4
-	%7 = alloca %Point3D, align 4
-	%8 = insertvalue %Point3D zeroinitializer, %Int32 10, 0
-	%9 = insertvalue %Point3D %8, %Int32 20, 1
-	store %Point3D %9, %Point3D* %7
+	%4 = alloca %main_Point2D, align 4
+	%5 = insertvalue %main_Point2D zeroinitializer, %Int32 10, 0
+	%6 = insertvalue %main_Point2D %5, %Int32 20, 1
+	store %main_Point2D %6, %main_Point2D* %4
+	%7 = alloca %main_Point3D, align 4
+	%8 = insertvalue %main_Point3D zeroinitializer, %Int32 10, 0
+	%9 = insertvalue %main_Point3D %8, %Int32 20, 1
+	store %main_Point3D %9, %main_Point3D* %7
 	ret %Bool 1
 }
 

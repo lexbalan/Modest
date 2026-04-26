@@ -5,12 +5,12 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#define TABLE_SIZE 256
-static uint32_t table[TABLE_SIZE];
+#define CRC32_TABLE_SIZE 256
+static uint32_t crc32_table[CRC32_TABLE_SIZE];
 
 void crc32_init(void) {
 	uint32_t i = 0U;
-	while (i < TABLE_SIZE) {
+	while (i < CRC32_TABLE_SIZE) {
 		uint32_t crc = i;
 		uint32_t j = 0U;
 		while (j < 8U) {
@@ -21,7 +21,7 @@ void crc32_init(void) {
 			}
 			j = j + 1U;
 		}
-		table[i] = crc;
+		crc32_table[i] = crc;
 		i = i + 1U;
 	}
 }
@@ -30,10 +30,10 @@ uint32_t crc32_run(uint8_t buf[], uint32_t len) {
 	uint32_t crc = 0xFFFFFFFFU;
 	uint32_t i = 0U;
 	while (i < len) {
-		const uint32_t x = (uint32_t)buf[i];
-		const uint32_t y = crc ^ (x & 0xFFU);
-		const uint8_t yy = (uint8_t)y;
-		crc = table[yy] ^ crc >> 8;
+		const uint32_t crc32_x = (uint32_t)buf[i];
+		const uint32_t crc32_y = crc ^ (crc32_x & 0xFFU);
+		const uint8_t crc32_yy = (uint8_t)crc32_y;
+		crc = crc32_table[crc32_yy] ^ crc >> 8;
 		i = i + 1U;
 	}
 	return crc ^ 0xFFFFFFFFU;

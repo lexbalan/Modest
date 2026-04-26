@@ -7,48 +7,48 @@
 #include <stdio.h>
 #include "queueWord8.h"
 #include "ringWord8.h"
-static struct queue_word8_queue_word8 bq0;
-static struct ring_word8_ring_word8 br0;
-static int32_t ii;
+static struct queue_word8_queue_word8 main_bq0;
+static struct ring_word8_ring_word8 main_br0;
+static int32_t main_ii;
 
-static void fill(uint32_t n) {
+static void main_fill(uint32_t n) {
 	uint32_t i = 0U;
 	while (i < n) {
-		if (queueWord8_isFull(&bq0)) {
+		if (queueWord8_isFull(&main_bq0)) {
 			printf("<queue is full>\n");
 			break;
 		}
-		printf("bq.put(%d)\n", ii);
-		queueWord8_put(&bq0, (uint8_t)ii);
+		printf("bq.put(%d)\n", main_ii);
+		queueWord8_put(&main_bq0, (uint8_t)main_ii);
 		i = i + 1U;
-		ii = ii + 1;
+		main_ii = main_ii + 1;
 	}
 }
 
-static void fetch(uint32_t n) {
+static void main_fetch(uint32_t n) {
 	uint32_t i = 0U;
 	while (i < n) {
-		if (queueWord8_isEmpty(&bq0)) {
+		if (queueWord8_isEmpty(&main_bq0)) {
 			printf("<queue is empty>\n");
 			break;
 		}
 		uint8_t x;
-		const bool res = queueWord8_get(&bq0, &x);
+		const bool main_res = queueWord8_get(&main_bq0, &x);
 		printf("bq.get = %d\n", (int)x);
 		i = i + 1U;
 	}
 }
-#define QSIZE 10
-static uint8_t qbuf[QSIZE];
+#define MAIN_QSIZE 10
+static uint8_t main_qbuf[MAIN_QSIZE];
 
 int main(void) {
-	queueWord8_init(&bq0, (uint8_t *)&qbuf, QSIZE);
-	fill(3U);
-	fetch(7U);
-	fill(12U);
-	fetch(7U);
-	fill(3U);
-	fetch(7U);
+	queueWord8_init(&main_bq0, (uint8_t *)&main_qbuf, MAIN_QSIZE);
+	main_fill(3U);
+	main_fetch(7U);
+	main_fill(12U);
+	main_fetch(7U);
+	main_fill(3U);
+	main_fetch(7U);
 	return 0;
 }
 

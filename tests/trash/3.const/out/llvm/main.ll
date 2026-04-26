@@ -211,17 +211,17 @@ declare void @perror(%ConstCharStr* %str)
 @.str6 = private constant [17 x i8] [i8 105, i8 110, i8 116, i8 51, i8 50, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @.str7 = private constant [19 x i8] [i8 115, i8 116, i8 114, i8 105, i8 110, i8 103, i8 56, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 ; -- endstrings --
-%Point = type {
+%main_Point = type {
 	%Nat32,
 	%Nat32
 };
 
-%X = type {
-	%Point,
-	[2 x %Point]
+%main_X = type {
+	%main_Point,
+	[2 x %main_Point]
 };
 
-@ps = constant [3 x {
+@main_ps = constant [3 x {
 	i8,
 	i8
 }] [
@@ -247,87 +247,87 @@ declare void @perror(%ConstCharStr* %str)
 		i8 2
 	}
 ]
-@points = constant [3 x %Point] [
-	%Point {
+@main_points = constant [3 x %main_Point] [
+	%main_Point {
 		%Nat32 0,
 		%Nat32 0
 	},
-	%Point {
+	%main_Point {
 		%Nat32 1,
 		%Nat32 1
 	},
-	%Point {
+	%main_Point {
 		%Nat32 2,
 		%Nat32 2
 	}
 ]
-@zeroPoints = constant [3 x %Point] [
-	%Point {
+@main_zeroPoints = constant [3 x %main_Point] [
+	%main_Point {
 		%Nat32 1,
 		%Nat32 1
 	},
-	%Point {
+	%main_Point {
 		%Nat32 1,
 		%Nat32 1
 	},
-	%Point {
+	%main_Point {
 		%Nat32 1,
 		%Nat32 1
 	}
 ]
-@x = internal global %X {
-	%Point {
+@main_x = internal global %main_X {
+	%main_Point {
 		%Nat32 10,
 		%Nat32 20
 	},
-	[2 x %Point] [
-		%Point {
+	[2 x %main_Point] [
+		%main_Point {
 			%Nat32 20,
 			%Nat32 30
 		},
-		%Point {
+		%main_Point {
 			%Nat32 20,
 			%Nat32 30
 		}
 	]
 }
-@points2 = internal global [3 x %Point] [
-	%Point {
+@main_points2 = internal global [3 x %main_Point] [
+	%main_Point {
 		%Nat32 0,
 		%Nat32 0
 	},
-	%Point {
+	%main_Point {
 		%Nat32 1,
 		%Nat32 1
 	},
-	%Point {
+	%main_Point {
 		%Nat32 2,
 		%Nat32 2
 	}
 ]
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str4 to [0 x i8]*))
-	%2 = alloca %X, align 4
-	%3 = insertvalue %Point zeroinitializer, %Nat32 10, 0
-	%4 = insertvalue %Point %3, %Nat32 20, 1
-	%5 = insertvalue %X zeroinitializer, %Point %4, 0
-	%6 = insertvalue %Point zeroinitializer, %Nat32 20, 0
-	%7 = insertvalue %Point %6, %Nat32 30, 1
-	%8 = insertvalue %Point zeroinitializer, %Nat32 20, 0
-	%9 = insertvalue %Point %8, %Nat32 30, 1
-	%10 = insertvalue [2 x %Point] zeroinitializer, %Point %9, 0
-	%11 = insertvalue %X %5, [2 x %Point] %10, 1
-	store %X %11, %X* %2
-	%12 = alloca [3 x %Point], align 4
-	%13 = load [3 x %Point], [3 x %Point]* @points
+	%2 = alloca %main_X, align 4
+	%3 = insertvalue %main_Point zeroinitializer, %Nat32 10, 0
+	%4 = insertvalue %main_Point %3, %Nat32 20, 1
+	%5 = insertvalue %main_X zeroinitializer, %main_Point %4, 0
+	%6 = insertvalue %main_Point zeroinitializer, %Nat32 20, 0
+	%7 = insertvalue %main_Point %6, %Nat32 30, 1
+	%8 = insertvalue %main_Point zeroinitializer, %Nat32 20, 0
+	%9 = insertvalue %main_Point %8, %Nat32 30, 1
+	%10 = insertvalue [2 x %main_Point] zeroinitializer, %main_Point %9, 0
+	%11 = insertvalue %main_X %5, [2 x %main_Point] %10, 1
+	store %main_X %11, %main_X* %2
+	%12 = alloca [3 x %main_Point], align 4
+	%13 = load [3 x %main_Point], [3 x %main_Point]* @main_points
 	%14 = zext i8 3 to %Nat32
-	store [3 x %Point] %13, [3 x %Point]* %12
-	%15 = alloca %Point
-	store %Point zeroinitializer, %Point* %15
-	%16 = insertvalue %Point zeroinitializer, %Nat32 1, 0
-	%17 = insertvalue %Point %16, %Nat32 1, 1
-	%18 = alloca %Point
-	store %Point %17, %Point* %18
+	store [3 x %main_Point] %13, [3 x %main_Point]* %12
+	%15 = alloca %main_Point
+	store %main_Point zeroinitializer, %main_Point* %15
+	%16 = insertvalue %main_Point zeroinitializer, %Nat32 1, 0
+	%17 = insertvalue %main_Point %16, %Nat32 1, 1
+	%18 = alloca %main_Point
+	store %main_Point %17, %main_Point* %18
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str5 to [0 x i8]*), %Int32 42)
 	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @.str6 to [0 x i8]*), %Int32 42)
 	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @.str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @.str1 to [0 x i8]*))

@@ -291,32 +291,32 @@ endif_5:
 	ret %Bool 1
 }
 
-@arr123 = constant [3 x i8] [
+@main_arr123 = constant [3 x i8] [
 	i8 1,
 	i8 2,
 	i8 3
 ]
-@arr321 = constant [3 x i8] [
+@main_arr321 = constant [3 x i8] [
 	i8 3,
 	i8 2,
 	i8 1
 ]
-@carr123 = constant [3 x %Int32] [
+@main_carr123 = constant [3 x %Int32] [
 	%Int32 1,
 	%Int32 2,
 	%Int32 3
 ]
-@carr321 = constant [3 x %Int32] [
+@main_carr321 = constant [3 x %Int32] [
 	%Int32 3,
 	%Int32 2,
 	%Int32 1
 ]
-@varr123 = internal global [3 x %Int32] [
+@main_varr123 = internal global [3 x %Int32] [
 	%Int32 1,
 	%Int32 2,
 	%Int32 3
 ]
-@varr321 = internal global [3 x %Int32] [
+@main_varr321 = internal global [3 x %Int32] [
 	%Int32 3,
 	%Int32 2,
 	%Int32 1
@@ -365,8 +365,8 @@ then_5:
 	br label %endif_5
 endif_5:
 ; if_6
-	%13 = bitcast [3 x %Int32]* @varr123 to i8*
-	%14 = bitcast [3 x %Int32]* @varr123 to i8*
+	%13 = bitcast [3 x %Int32]* @main_varr123 to i8*
+	%14 = bitcast [3 x %Int32]* @main_varr123 to i8*
 	%15 = call i1 (i8*, i8*, i64) @memeq(i8* %13, i8* %14, %Int64 12)
 	%16 = icmp eq %Bool %15, 0
 	br %Bool %16 , label %then_6, label %endif_6
@@ -376,8 +376,8 @@ then_6:
 	br label %endif_6
 endif_6:
 ; if_7
-	%19 = bitcast [3 x %Int32]* @varr321 to i8*
-	%20 = bitcast [3 x %Int32]* @varr321 to i8*
+	%19 = bitcast [3 x %Int32]* @main_varr321 to i8*
+	%20 = bitcast [3 x %Int32]* @main_varr321 to i8*
 	%21 = call i1 (i8*, i8*, i64) @memeq(i8* %19, i8* %20, %Int64 12)
 	%22 = icmp eq %Bool %21, 0
 	br %Bool %22 , label %then_7, label %endif_7
@@ -393,7 +393,7 @@ endif_7:
 	%28 = alloca [3 x %Int32]
 	%29 = zext i8 3 to %Nat32
 	store [3 x %Int32] %27, [3 x %Int32]* %28
-	%30 = bitcast [3 x %Int32]* @varr123 to i8*
+	%30 = bitcast [3 x %Int32]* @main_varr123 to i8*
 	%31 = bitcast [3 x %Int32]* %28 to i8*
 	%32 = call i1 (i8*, i8*, i64) @memeq(i8* %30, i8* %31, %Int64 12)
 	%33 = icmp eq %Bool %32, 0
@@ -404,8 +404,8 @@ then_8:
 	br label %endif_8
 endif_8:
 ; if_9
-	%36 = bitcast [3 x %Int32]* @varr123 to i8*
-	%37 = bitcast [3 x %Int32]* @carr123 to i8*
+	%36 = bitcast [3 x %Int32]* @main_varr123 to i8*
+	%37 = bitcast [3 x %Int32]* @main_carr123 to i8*
 	%38 = call i1 (i8*, i8*, i64) @memeq(i8* %36, i8* %37, %Int64 12)
 	%39 = icmp eq %Bool %38, 0
 	br %Bool %39 , label %then_9, label %endif_9
@@ -421,7 +421,7 @@ endif_9:
 	%45 = alloca [3 x %Int32]
 	%46 = zext i8 3 to %Nat32
 	store [3 x %Int32] %44, [3 x %Int32]* %45
-	%47 = bitcast [3 x %Int32]* @varr321 to i8*
+	%47 = bitcast [3 x %Int32]* @main_varr321 to i8*
 	%48 = bitcast [3 x %Int32]* %45 to i8*
 	%49 = call i1 (i8*, i8*, i64) @memeq(i8* %47, i8* %48, %Int64 12)
 	%50 = icmp eq %Bool %49, 0
@@ -432,8 +432,8 @@ then_10:
 	br label %endif_10
 endif_10:
 ; if_11
-	%53 = bitcast [3 x %Int32]* @varr321 to i8*
-	%54 = bitcast [3 x %Int32]* @carr321 to i8*
+	%53 = bitcast [3 x %Int32]* @main_varr321 to i8*
+	%54 = bitcast [3 x %Int32]* @main_carr321 to i8*
 	%55 = call i1 (i8*, i8*, i64) @memeq(i8* %53, i8* %54, %Int64 12)
 	%56 = icmp eq %Bool %55, 0
 	br %Bool %56 , label %then_11, label %endif_11

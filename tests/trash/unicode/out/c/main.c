@@ -17,70 +17,70 @@ typedef uint32_t char32_t;
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
 #endif
-#define A "A"
-static char c8 = A[0];
-static char16_t c16 = A[0];
-static char32_t c32 = A[0];
-static char b8[1] = {'A'};
-static char16_t b16[1] = {u'A'};
-static char32_t b32[1] = {U'A'};
-static char *s8 = A;
-static char16_t *s16 = _STR16(A);
-static char32_t *s32 = _STR32(A);
-static char cc8 = 'A';
-static char16_t cc16 = u'A';
-static char32_t cc32 = U'A';
-static char bb8[1] = {'A'};
-static char16_t bb16[1] = {u'A'};
-static char32_t bb32[1] = {U'A'};
-static char *ss8 = "A";
-static char16_t *ss16 = u"A";
-static char32_t *ss32 = U"A";
-static void putc8(char c);
-static void putc16(char16_t c);
-static void putc32(char32_t c);
-static void puts8(char *s);
-static void puts16(char16_t *s);
-static void puts32(char32_t *s);
+#define MAIN_A "A"
+static char main_c8 = MAIN_A[0];
+static char16_t main_c16 = MAIN_A[0];
+static char32_t main_c32 = MAIN_A[0];
+static char main_b8[1] = {'A'};
+static char16_t main_b16[1] = {u'A'};
+static char32_t main_b32[1] = {U'A'};
+static char *main_s8 = MAIN_A;
+static char16_t *main_s16 = _STR16(MAIN_A);
+static char32_t *main_s32 = _STR32(MAIN_A);
+static char main_cc8 = 'A';
+static char16_t main_cc16 = u'A';
+static char32_t main_cc32 = U'A';
+static char main_bb8[1] = {'A'};
+static char16_t main_bb16[1] = {u'A'};
+static char32_t main_bb32[1] = {U'A'};
+static char *main_ss8 = "A";
+static char16_t *main_ss16 = u"A";
+static char32_t *main_ss32 = U"A";
+static void main_putc8(char c);
+static void main_putc16(char16_t c);
+static void main_putc32(char32_t c);
+static void main_puts8(char *s);
+static void main_puts16(char16_t *s);
+static void main_puts32(char32_t *s);
 
 int32_t main(void) {
 	printf("test unicode\n");
-	putc8(A[0]);
-	putc16(A[0]);
-	putc32(A[0]);
-	puts8(A);
-	puts16(_STR16(A));
-	puts32(_STR32(A));
-	putc8('A');
-	putc16(u'A');
-	putc32(U'A');
-	puts8("A");
-	puts16(u"A");
-	puts32(U"A");
+	main_putc8(MAIN_A[0]);
+	main_putc16(MAIN_A[0]);
+	main_putc32(MAIN_A[0]);
+	main_puts8(MAIN_A);
+	main_puts16(_STR16(MAIN_A));
+	main_puts32(_STR32(MAIN_A));
+	main_putc8('A');
+	main_putc16(u'A');
+	main_putc32(U'A');
+	main_puts8("A");
+	main_puts16(u"A");
+	main_puts32(U"A");
 	return 0;
 }
 
-static void putc8(char c) {
+static void main_putc8(char c) {
 	(void)c;
 }
 
-static void putc16(char16_t c) {
+static void main_putc16(char16_t c) {
 	(void)c;
 }
 
-static void putc32(char32_t c) {
+static void main_putc32(char32_t c) {
 	(void)c;
 }
 
-static void puts8(char *s) {
+static void main_puts8(char *s) {
 	(void)s;
 }
 
-static void puts16(char16_t *s) {
+static void main_puts16(char16_t *s) {
 	(void)s;
 }
 
-static void puts32(char32_t *s) {
+static void main_puts32(char32_t *s) {
 	(void)s;
 }
 

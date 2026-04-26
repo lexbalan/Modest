@@ -209,11 +209,11 @@ declare void @perror(%ConstCharStr* %str)
 @.str4 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @.str5 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 50, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define internal %Int32 @func1(%Int32 %x) {
+define internal %Int32 @main_func1(%Int32 %x) {
 	ret %Int32 %x
 }
 
-define internal %Int32 @func2(%Int32 %a, %Int32 %b) {
+define internal %Int32 @main_func2(%Int32 %a, %Int32 %b) {
 	%1 = add %Int32 %a, %b
 	ret %Int32 %1
 }
@@ -223,16 +223,16 @@ define internal %Int32 @func2(%Int32 %a, %Int32 %b) {
 ;func func3 (a: Int32 = 10, b: Int32) -> Int32 {
 ;	return a + b
 ;}
-define internal %Bool @test1() {
-	%1 = call %Int32 @func1(%Int32 10)
+define internal %Bool @main_test1() {
+	%1 = call %Int32 @main_func1(%Int32 10)
 	%2 = icmp eq %Int32 %1, 10
-	%3 = call %Int32 @func1(%Int32 10)
+	%3 = call %Int32 @main_func1(%Int32 10)
 	%4 = icmp eq %Int32 %3, 10
-	%5 = call %Int32 @func1(%Int32 10)
+	%5 = call %Int32 @main_func1(%Int32 10)
 	%6 = icmp eq %Int32 %5, 10
-	%7 = call %Int32 @func1(%Int32 20)
+	%7 = call %Int32 @main_func1(%Int32 20)
 	%8 = icmp eq %Int32 %7, 20
-	%9 = call %Int32 @func1(%Int32 20)
+	%9 = call %Int32 @main_func1(%Int32 20)
 	%10 = icmp eq %Int32 %9, 20
 	%11 = and %Bool %8, %10
 	%12 = and %Bool %6, %11
@@ -241,20 +241,20 @@ define internal %Bool @test1() {
 	ret %Bool %14
 }
 
-define internal %Bool @test2() {
-	%1 = call %Int32 @func2(%Int32 10, %Int32 20)
+define internal %Bool @main_test2() {
+	%1 = call %Int32 @main_func2(%Int32 10, %Int32 20)
 	%2 = icmp eq %Int32 %1, 30
-	%3 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%3 = call %Int32 @main_func2(%Int32 10, %Int32 20)
 	%4 = icmp eq %Int32 %3, 30
-	%5 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%5 = call %Int32 @main_func2(%Int32 10, %Int32 20)
 	%6 = icmp eq %Int32 %5, 30
-	%7 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%7 = call %Int32 @main_func2(%Int32 10, %Int32 20)
 	%8 = icmp eq %Int32 %7, 30
-	%9 = call %Int32 @func2(%Int32 10, %Int32 20)
+	%9 = call %Int32 @main_func2(%Int32 10, %Int32 20)
 	%10 = icmp eq %Int32 %9, 30
-	%11 = call %Int32 @func2(%Int32 20, %Int32 10)
+	%11 = call %Int32 @main_func2(%Int32 20, %Int32 10)
 	%12 = icmp eq %Int32 %11, 30
-	%13 = call %Int32 @func2(%Int32 20, %Int32 10)
+	%13 = call %Int32 @main_func2(%Int32 20, %Int32 10)
 	%14 = icmp eq %Int32 %13, 30
 	%15 = and %Bool %12, %14
 	%16 = and %Bool %10, %15
@@ -267,7 +267,7 @@ define internal %Bool @test2() {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @.str1 to [0 x i8]*))
-	%2 = call %Bool @test1()
+	%2 = call %Bool @main_test1()
 ; if_0
 	br %Bool %2 , label %then_0, label %else_0
 then_0:
@@ -277,7 +277,7 @@ else_0:
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str3 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	%5 = call %Bool @test2()
+	%5 = call %Bool @main_test2()
 ; if_1
 	br %Bool %5 , label %then_1, label %else_1
 then_1:

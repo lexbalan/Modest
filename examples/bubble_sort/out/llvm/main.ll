@@ -210,7 +210,7 @@ declare void @perror(%ConstCharStr* %str)
 @.str5 = private constant [2 x i8] [i8 10, i8 0]
 @.str6 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 ; -- endstrings --
-@testArray = internal global [23 x %Int32] [
+@main_testArray = internal global [23 x %Int32] [
 	%Int32 -3,
 	%Int32 -5,
 	%Int32 2,
@@ -235,7 +235,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 -6,
 	%Int32 -9
 ]
-define internal %Bool @bubble_sort32_iter([0 x %Int32]* %array, %Nat32 %len) {
+define internal %Bool @main_bubble_sort32_iter([0 x %Int32]* %array, %Nat32 %len) {
 	%1 = alloca %Bool, align 1
 	store %Bool 0, %Bool* %1
 	%2 = alloca %Nat32, align 4
@@ -282,11 +282,11 @@ break_1:
 	ret %Bool %25
 }
 
-define internal void @bubble_sort32([0 x %Int32]* %array, %Nat32 %len) {
+define internal void @main_bubble_sort32([0 x %Int32]* %array, %Nat32 %len) {
 ; while_1
 	br label %again_1
 again_1:
-	%1 = call %Bool @bubble_sort32_iter([0 x %Int32]* %array, %Nat32 %len)
+	%1 = call %Bool @main_bubble_sort32_iter([0 x %Int32]* %array, %Nat32 %len)
 	br %Bool %1 , label %body_1, label %break_1
 body_1:
 	br label %again_1
@@ -296,19 +296,19 @@ break_1:
 
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str1 to [0 x i8]*))
-	%2 = bitcast [23 x %Int32]* @testArray to [0 x %Int32]*
-	call void @print_array([0 x %Int32]* %2, %Nat32 23)
+	%2 = bitcast [23 x %Int32]* @main_testArray to [0 x %Int32]*
+	call void @main_print_array([0 x %Int32]* %2, %Nat32 23)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str2 to [0 x i8]*))
-	%4 = bitcast [23 x %Int32]* @testArray to [0 x %Int32]*
-	call void @bubble_sort32([0 x %Int32]* %4, %Nat32 23)
+	%4 = bitcast [23 x %Int32]* @main_testArray to [0 x %Int32]*
+	call void @main_bubble_sort32([0 x %Int32]* %4, %Nat32 23)
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str3 to [0 x i8]*))
-	%6 = bitcast [23 x %Int32]* @testArray to [0 x %Int32]*
-	call void @print_array([0 x %Int32]* %6, %Nat32 23)
+	%6 = bitcast [23 x %Int32]* @main_testArray to [0 x %Int32]*
+	call void @main_print_array([0 x %Int32]* %6, %Nat32 23)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str4 to [0 x i8]*))
 	ret %Int32 0
 }
 
-define internal void @print_array([0 x %Int32]* %array, %Nat32 %len) {
+define internal void @main_print_array([0 x %Int32]* %array, %Nat32 %len) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str5 to [0 x i8]*))
 	%2 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %2

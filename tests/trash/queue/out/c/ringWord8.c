@@ -28,8 +28,8 @@ bool ringWord8_isEmpty(struct ring_word8_ring_word8 *q) {
 }
 
 bool ringWord8_put(struct ring_word8_ring_word8 *q, uint8_t b) {
-	const uint32_t p = queue_getPutPosition(&q->queue);
-	(*q->data)[p] = b;
+	const uint32_t ringWord8_p = queue_getPutPosition(&q->queue);
+	(*q->data)[ringWord8_p] = b;
 	return true;
 }
 
@@ -37,8 +37,8 @@ bool ringWord8_get(struct ring_word8_ring_word8 *q, uint8_t *b) {
 	if (queue_isEmpty(&q->queue)) {
 		return false;
 	}
-	const uint32_t g = queue_getGetPosition(&q->queue);
-	*b = (*q->data)[g];
+	const uint32_t ringWord8_g = queue_getGetPosition(&q->queue);
+	*b = (*q->data)[ringWord8_g];
 	return true;
 }
 

@@ -4,46 +4,46 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#define FILENAME "file.bin"
-struct chunk {
+#define MAIN_FILENAME "file.bin"
+struct main_chunk {
 	char id[100];
 	char data[1024];
 };
 
-static void writeExample(void) {
+static void main_writeExample(void) {
 	printf("run writeExample()\n");
-	FILE *const fp = fopen(FILENAME, "wb");
-	if (fp == NULL) {
-		printf("error: cannot create file '%s'", FILENAME);
+	FILE *const main_fp = fopen(MAIN_FILENAME, "wb");
+	if (main_fp == NULL) {
+		printf("error: cannot create file '%s'", MAIN_FILENAME);
 		return;
 	}
-	struct chunk chunk = (struct chunk){
+	struct main_chunk chunk = (struct main_chunk){
 		.id = {'i', 'd'},
 		.data = {'d', 'a', 't', 'a'}
 	};
-	fwrite((void *)&chunk, sizeof(struct chunk), 1ULL, fp);
-	fclose(fp);
+	fwrite((void *)&chunk, sizeof(struct main_chunk), 1ULL, main_fp);
+	fclose(main_fp);
 }
 
-static void readExample(void) {
+static void main_readExample(void) {
 	printf("run readExample()\n");
-	FILE *const fp = fopen(FILENAME, "rb");
-	if (fp == NULL) {
-		printf("error: cannot open file '%s'", FILENAME);
+	FILE *const main_fp = fopen(MAIN_FILENAME, "rb");
+	if (main_fp == NULL) {
+		printf("error: cannot open file '%s'", MAIN_FILENAME);
 		return;
 	}
-	struct chunk chunk;
-	fread((void *)&chunk, sizeof(struct chunk), 1ULL, fp);
-	printf("file \"%s\" contains:\n", FILENAME);
+	struct main_chunk chunk;
+	fread((void *)&chunk, sizeof(struct main_chunk), 1ULL, main_fp);
+	printf("file \"%s\" contains:\n", MAIN_FILENAME);
 	printf("chunk.id: \"%s\"\n", chunk.id);
 	printf("chunk.data: \"%s\"\n", chunk.data);
-	fclose(fp);
+	fclose(main_fp);
 }
 
 int main(void) {
 	printf("binary file example\n");
-	writeExample();
-	readExample();
+	main_writeExample();
+	main_readExample();
 	return 0;
 }
 

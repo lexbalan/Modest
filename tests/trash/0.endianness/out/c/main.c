@@ -7,9 +7,9 @@
 
 int main(void) {
 	uint16_t check = 0x1;
-	const bool is_le = *(uint8_t *)&check == 0x1;
+	const bool main_is_le = *(uint8_t *)&check == 0x1;
 	char *kind;
-	if (is_le) {
+	if (main_is_le) {
 		kind = "little";
 	} else {
 		kind = "big";

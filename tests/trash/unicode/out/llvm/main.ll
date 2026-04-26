@@ -246,74 +246,74 @@ declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 @.str12 = private constant [2 x i16] [i16 65, i16 0]
 @.str13 = private constant [2 x i32] [i32 65, i32 0]
 ; -- endstrings --
-@c8 = internal global %Char8 65
-@c16 = internal global %Char16 65
-@c32 = internal global %Char32 65
-@b8 = internal global [1 x %Char8] [
+@main_c8 = internal global %Char8 65
+@main_c16 = internal global %Char16 65
+@main_c32 = internal global %Char32 65
+@main_b8 = internal global [1 x %Char8] [
 	%Char8 65
 ]
-@b16 = internal global [1 x %Char16] [
+@main_b16 = internal global [1 x %Char16] [
 	%Char16 65
 ]
-@b32 = internal global [1 x %Char32] [
+@main_b32 = internal global [1 x %Char32] [
 	%Char32 65
 ]
-@s8 = internal global %Str8* bitcast ([2 x i8]* @.str1 to [0 x i8]*)
-@s16 = internal global %Str16* bitcast ([2 x i16]* @.str2 to [0 x i16]*)
-@s32 = internal global %Str32* bitcast ([2 x i32]* @.str3 to [0 x i32]*)
-@cc8 = internal global %Char8 65
-@cc16 = internal global %Char16 65
-@cc32 = internal global %Char32 65
-@bb8 = internal global [1 x %Char8] [
+@main_s8 = internal global %Str8* bitcast ([2 x i8]* @.str1 to [0 x i8]*)
+@main_s16 = internal global %Str16* bitcast ([2 x i16]* @.str2 to [0 x i16]*)
+@main_s32 = internal global %Str32* bitcast ([2 x i32]* @.str3 to [0 x i32]*)
+@main_cc8 = internal global %Char8 65
+@main_cc16 = internal global %Char16 65
+@main_cc32 = internal global %Char32 65
+@main_bb8 = internal global [1 x %Char8] [
 	%Char8 65
 ]
-@bb16 = internal global [1 x %Char16] [
+@main_bb16 = internal global [1 x %Char16] [
 	%Char16 65
 ]
-@bb32 = internal global [1 x %Char32] [
+@main_bb32 = internal global [1 x %Char32] [
 	%Char32 65
 ]
-@ss8 = internal global %Str8* bitcast ([2 x i8]* @.str4 to [0 x i8]*)
-@ss16 = internal global %Str16* bitcast ([2 x i16]* @.str5 to [0 x i16]*)
-@ss32 = internal global %Str32* bitcast ([2 x i32]* @.str6 to [0 x i32]*)
+@main_ss8 = internal global %Str8* bitcast ([2 x i8]* @.str4 to [0 x i8]*)
+@main_ss16 = internal global %Str16* bitcast ([2 x i16]* @.str5 to [0 x i16]*)
+@main_ss32 = internal global %Str32* bitcast ([2 x i32]* @.str6 to [0 x i32]*)
 define %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str7 to [0 x i8]*))
-	call void @putc8(%Char8 65)
-	call void @putc16(%Char16 65)
-	call void @putc32(%Char32 65)
-	call void @puts8(%Str8* bitcast ([2 x i8]* @.str8 to [0 x i8]*))
-	call void @puts16(%Str16* bitcast ([2 x i16]* @.str9 to [0 x i16]*))
-	call void @puts32(%Str32* bitcast ([2 x i32]* @.str10 to [0 x i32]*))
-	call void @putc8(%Char8 65)
-	call void @putc16(%Char16 65)
-	call void @putc32(%Char32 65)
-	call void @puts8(%Str8* bitcast ([2 x i8]* @.str11 to [0 x i8]*))
-	call void @puts16(%Str16* bitcast ([2 x i16]* @.str12 to [0 x i16]*))
-	call void @puts32(%Str32* bitcast ([2 x i32]* @.str13 to [0 x i32]*))
+	call void @main_putc8(%Char8 65)
+	call void @main_putc16(%Char16 65)
+	call void @main_putc32(%Char32 65)
+	call void @main_puts8(%Str8* bitcast ([2 x i8]* @.str8 to [0 x i8]*))
+	call void @main_puts16(%Str16* bitcast ([2 x i16]* @.str9 to [0 x i16]*))
+	call void @main_puts32(%Str32* bitcast ([2 x i32]* @.str10 to [0 x i32]*))
+	call void @main_putc8(%Char8 65)
+	call void @main_putc16(%Char16 65)
+	call void @main_putc32(%Char32 65)
+	call void @main_puts8(%Str8* bitcast ([2 x i8]* @.str11 to [0 x i8]*))
+	call void @main_puts16(%Str16* bitcast ([2 x i16]* @.str12 to [0 x i16]*))
+	call void @main_puts32(%Str32* bitcast ([2 x i32]* @.str13 to [0 x i32]*))
 	ret %Int32 0
 }
 
-define internal void @putc8(%Char8 %c) {
+define internal void @main_putc8(%Char8 %c) {
 	ret void
 }
 
-define internal void @putc16(%Char16 %c) {
+define internal void @main_putc16(%Char16 %c) {
 	ret void
 }
 
-define internal void @putc32(%Char32 %c) {
+define internal void @main_putc32(%Char32 %c) {
 	ret void
 }
 
-define internal void @puts8(%Str8* %s) {
+define internal void @main_puts8(%Str8* %s) {
 	ret void
 }
 
-define internal void @puts16(%Str16* %s) {
+define internal void @main_puts16(%Str16* %s) {
 	ret void
 }
 
-define internal void @puts32(%Str32* %s) {
+define internal void @main_puts32(%Str32* %s) {
 	ret void
 }
 

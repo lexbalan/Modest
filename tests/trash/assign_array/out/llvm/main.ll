@@ -211,7 +211,7 @@ declare void @perror(%ConstCharStr* %str)
 @.str6 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @.str7 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-@globalArray0 = internal global [10 x %Int32] [
+@main_globalArray0 = internal global [10 x %Int32] [
 	%Int32 0,
 	%Int32 1,
 	%Int32 2,
@@ -223,12 +223,12 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 8,
 	%Int32 9
 ]
-@globalArray1 = internal global [10 x %Int32] zeroinitializer
+@main_globalArray1 = internal global [10 x %Int32] zeroinitializer
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @.str1 to [0 x i8]*))
-	%2 = load [10 x %Int32], [10 x %Int32]* @globalArray0
+	%2 = load [10 x %Int32], [10 x %Int32]* @main_globalArray0
 	%3 = zext i8 10 to %Nat32
-	store [10 x %Int32] %2, [10 x %Int32]* @globalArray1
+	store [10 x %Int32] %2, [10 x %Int32]* @main_globalArray1
 	%4 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %4
 ; while_1
@@ -239,7 +239,7 @@ again_1:
 	br %Bool %6 , label %body_1, label %break_1
 body_1:
 	%7 = load %Int32, %Int32* %4
-	%8 = getelementptr [10 x %Int32], [10 x %Int32]* @globalArray1, %Int32 0, %Int32 %7
+	%8 = getelementptr [10 x %Int32], [10 x %Int32]* @main_globalArray1, %Int32 0, %Int32 %7
 	%9 = load %Int32, %Int32* %8
 	%10 = load %Int32, %Int32* %4
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @.str2 to [0 x i8]*), %Int32 %10, %Int32 %9)
@@ -249,8 +249,8 @@ body_1:
 	br label %again_1
 break_1:
 ; if_0
-	%14 = bitcast [10 x %Int32]* @globalArray0 to i8*
-	%15 = bitcast [10 x %Int32]* @globalArray1 to i8*
+	%14 = bitcast [10 x %Int32]* @main_globalArray0 to i8*
+	%15 = bitcast [10 x %Int32]* @main_globalArray1 to i8*
 	%16 = call i1 (i8*, i8*, i64) @memeq(i8* %14, i8* %15, %Int64 40)
 	%17 = icmp ne %Bool %16, 0
 	br %Bool %17 , label %then_0, label %else_0

@@ -247,30 +247,30 @@ declare %Str8* @fsm_getStateName(%fsm_FSM* %fsm)
 @.str3 = private constant [7 x i8] [i8 115, i8 116, i8 97, i8 116, i8 101, i8 50, i8 0]
 @.str4 = private constant [6 x i8] [i8 70, i8 83, i8 77, i8 95, i8 48, i8 0]
 ; -- endstrings --
-@fsm0 = internal global %fsm_FSM zeroinitializer
-@state0 = internal global %fsm_StateDesc {
+@main_fsm0 = internal global %fsm_FSM zeroinitializer
+@main_state0 = internal global %fsm_StateDesc {
 	%Str8* bitcast ([7 x i8]* @.str1 to [0 x i8]*),
 	%Nat16 4,
-	%fsm_ComplexState (%fsm_ComplexState, i8*)* @routine0
+	%fsm_ComplexState (%fsm_ComplexState, i8*)* @main_routine0
 }
-@state1 = internal global %fsm_StateDesc {
+@main_state1 = internal global %fsm_StateDesc {
 	%Str8* bitcast ([7 x i8]* @.str2 to [0 x i8]*),
 	%Nat16 4,
-	%fsm_ComplexState (%fsm_ComplexState, i8*)* @routine1
+	%fsm_ComplexState (%fsm_ComplexState, i8*)* @main_routine1
 }
-@state2 = internal global %fsm_StateDesc {
+@main_state2 = internal global %fsm_StateDesc {
 	%Str8* bitcast ([7 x i8]* @.str3 to [0 x i8]*),
 	%Nat16 4,
-	%fsm_ComplexState (%fsm_ComplexState, i8*)* @routine2
+	%fsm_ComplexState (%fsm_ComplexState, i8*)* @main_routine2
 }
-define internal %fsm_ComplexState @routine0(%fsm_ComplexState %state, i8* %payload) {
+define internal %fsm_ComplexState @main_routine0(%fsm_ComplexState %state, i8* %payload) {
 ; if_0
 	%1 = extractvalue %fsm_ComplexState %state, 1
 	%2 = zext i8 0 to %fsm_StageId
 	%3 = icmp eq %fsm_StageId %1, %2
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	%4 = call %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* @fsm0)
+	%4 = call %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* @main_fsm0)
 	ret %fsm_ComplexState %4
 	br label %endif_0
 else_0:
@@ -280,7 +280,7 @@ else_0:
 	%8 = icmp eq %fsm_StageId %6, %7
 	br %Bool %8 , label %then_1, label %else_1
 then_1:
-	%9 = call %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* @fsm0, %Nat32 2000)
+	%9 = call %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* @main_fsm0, %Nat32 2000)
 	ret %fsm_ComplexState %9
 	br label %endif_1
 else_1:
@@ -298,8 +298,8 @@ else_2:
 	%16 = icmp eq %fsm_StageId %14, %15
 	br %Bool %16 , label %then_3, label %endif_3
 then_3:
-	%17 = bitcast %fsm_StateDesc* @state1 to %fsm_StateDesc*
-	%18 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @fsm0, %fsm_StateDesc* %17)
+	%17 = bitcast %fsm_StateDesc* @main_state1 to %fsm_StateDesc*
+	%18 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @main_fsm0, %fsm_StateDesc* %17)
 	ret %fsm_ComplexState %18
 	br label %endif_3
 endif_3:
@@ -312,14 +312,14 @@ endif_0:
 	ret %fsm_ComplexState %state
 }
 
-define internal %fsm_ComplexState @routine1(%fsm_ComplexState %state, i8* %payload) {
+define internal %fsm_ComplexState @main_routine1(%fsm_ComplexState %state, i8* %payload) {
 ; if_0
 	%1 = extractvalue %fsm_ComplexState %state, 1
 	%2 = zext i8 0 to %fsm_StageId
 	%3 = icmp eq %fsm_StageId %1, %2
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	%4 = call %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* @fsm0)
+	%4 = call %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* @main_fsm0)
 	ret %fsm_ComplexState %4
 	br label %endif_0
 else_0:
@@ -329,7 +329,7 @@ else_0:
 	%8 = icmp eq %fsm_StageId %6, %7
 	br %Bool %8 , label %then_1, label %else_1
 then_1:
-	%9 = call %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* @fsm0, %Nat32 2000)
+	%9 = call %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* @main_fsm0, %Nat32 2000)
 	ret %fsm_ComplexState %9
 	br label %endif_1
 else_1:
@@ -347,8 +347,8 @@ else_2:
 	%16 = icmp eq %fsm_StageId %14, %15
 	br %Bool %16 , label %then_3, label %endif_3
 then_3:
-	%17 = bitcast %fsm_StateDesc* @state2 to %fsm_StateDesc*
-	%18 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @fsm0, %fsm_StateDesc* %17)
+	%17 = bitcast %fsm_StateDesc* @main_state2 to %fsm_StateDesc*
+	%18 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @main_fsm0, %fsm_StateDesc* %17)
 	ret %fsm_ComplexState %18
 	br label %endif_3
 endif_3:
@@ -361,14 +361,14 @@ endif_0:
 	ret %fsm_ComplexState %state
 }
 
-define internal %fsm_ComplexState @routine2(%fsm_ComplexState %state, i8* %payload) {
+define internal %fsm_ComplexState @main_routine2(%fsm_ComplexState %state, i8* %payload) {
 ; if_0
 	%1 = extractvalue %fsm_ComplexState %state, 1
 	%2 = zext i8 0 to %fsm_StageId
 	%3 = icmp eq %fsm_StageId %1, %2
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	%4 = call %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* @fsm0)
+	%4 = call %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* @main_fsm0)
 	ret %fsm_ComplexState %4
 	br label %endif_0
 else_0:
@@ -378,7 +378,7 @@ else_0:
 	%8 = icmp eq %fsm_StageId %6, %7
 	br %Bool %8 , label %then_1, label %else_1
 then_1:
-	%9 = call %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* @fsm0, %Nat32 2000)
+	%9 = call %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* @main_fsm0, %Nat32 2000)
 	ret %fsm_ComplexState %9
 	br label %endif_1
 else_1:
@@ -396,8 +396,8 @@ else_2:
 	%16 = icmp eq %fsm_StageId %14, %15
 	br %Bool %16 , label %then_3, label %endif_3
 then_3:
-	%17 = bitcast %fsm_StateDesc* @state0 to %fsm_StateDesc*
-	%18 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @fsm0, %fsm_StateDesc* %17)
+	%17 = bitcast %fsm_StateDesc* @main_state0 to %fsm_StateDesc*
+	%18 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @main_fsm0, %fsm_StateDesc* %17)
 	ret %fsm_ComplexState %18
 	br label %endif_3
 endif_3:
@@ -410,30 +410,30 @@ endif_0:
 	ret %fsm_ComplexState %state
 }
 
-@timecnt = internal global %Nat32 zeroinitializer
+@main_timecnt = internal global %Nat32 zeroinitializer
 define %Int @main() {
-	%1 = bitcast %fsm_StateDesc* @state0 to %fsm_StateDesc*
-	call void @fsm_init(%fsm_FSM* @fsm0, %Str8* bitcast ([6 x i8]* @.str4 to [0 x i8]*), %fsm_StateDesc* %1, i8* null)
+	%1 = bitcast %fsm_StateDesc* @main_state0 to %fsm_StateDesc*
+	call void @fsm_init(%fsm_FSM* @main_fsm0, %Str8* bitcast ([6 x i8]* @.str4 to [0 x i8]*), %fsm_StateDesc* %1, i8* null)
 ; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 ; if_0
-	%2 = load %Nat32, %Nat32* @timecnt
+	%2 = load %Nat32, %Nat32* @main_timecnt
 	%3 = icmp ugt %Nat32 %2, 55555
 	br %Bool %3 , label %then_0, label %else_0
 then_0:
-	store %Nat32 0, %Nat32* @timecnt
-	call void @fsm_tick(%fsm_FSM* @fsm0)
+	store %Nat32 0, %Nat32* @main_timecnt
+	call void @fsm_tick(%fsm_FSM* @main_fsm0)
 	br label %endif_0
 else_0:
-	%4 = load %Nat32, %Nat32* @timecnt
+	%4 = load %Nat32, %Nat32* @main_timecnt
 	%5 = add %Nat32 %4, 1
-	store %Nat32 %5, %Nat32* @timecnt
+	store %Nat32 %5, %Nat32* @main_timecnt
 	br label %endif_0
 endif_0:
-	call void @fsm_task(%fsm_FSM* @fsm0)
+	call void @fsm_task(%fsm_FSM* @main_fsm0)
 	br label %again_1
 break_1:
 	ret %Int 0

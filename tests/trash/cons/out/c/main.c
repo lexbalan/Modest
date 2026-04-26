@@ -7,10 +7,10 @@
 
 int main(void) {
 	printf("test cons operation\n");
-	const uint8_t a = 255;
-	const uint32_t b = (uint32_t)a;
-	printf("a = %u\n", a);
-	printf("b = %u\n", b);
+	const uint8_t main_a = 255;
+	const uint32_t main_b = (uint32_t)main_a;
+	printf("a = %u\n", main_a);
+	printf("b = %u\n", main_b);
 	return 0;
 }
 

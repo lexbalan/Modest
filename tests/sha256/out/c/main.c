@@ -9,14 +9,14 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
-#define INPUT_DATA_LEN_MAX 32
-struct sha256_test_case {
-	char inputData[INPUT_DATA_LEN_MAX];
+#define MAIN_INPUT_DATA_LEN_MAX 32
+struct main_sha256_test_case {
+	char inputData[MAIN_INPUT_DATA_LEN_MAX];
 	uint32_t inputDataLen;
 
 	sha256_Hash expectedResult;
 };
-static struct sha256_test_case test0 = (struct sha256_test_case){
+static struct main_sha256_test_case main_test0 = (struct main_sha256_test_case){
 	.inputData = "abc",
 	.inputDataLen = 3,
 	.expectedResult = {
@@ -26,7 +26,7 @@ static struct sha256_test_case test0 = (struct sha256_test_case){
 		180, 16, 255, 97, 242, 0, 21, 173
 	}
 };
-static struct sha256_test_case test1 = (struct sha256_test_case){
+static struct main_sha256_test_case main_test1 = (struct main_sha256_test_case){
 	.inputData = "Hello World!",
 	.inputDataLen = 12,
 	.expectedResult = {
@@ -36,13 +36,13 @@ static struct sha256_test_case test1 = (struct sha256_test_case){
 		74, 221, 210, 0, 18, 109, 144, 105
 	}
 };
-#define TESTS {&test0, &test1}
+#define MAIN_TESTS {&main_test0, &main_test1}
 
-static bool doTest(struct sha256_test_case *test) {
+static bool main_doTest(struct main_sha256_test_case *test) {
 	sha256_Hash test_hash;
-	uint8_t (*const msg)[] = (uint8_t (*)[])test->inputData;
-	const uint32_t msgLen = test->inputDataLen;
-	sha256_hash((uint8_t *)msg, msgLen, test_hash);
+	uint8_t (*const main_msg)[] = (uint8_t (*)[])test->inputData;
+	const uint32_t main_msgLen = test->inputDataLen;
+	sha256_hash((uint8_t *)main_msg, main_msgLen, test_hash);
 	printf("'%s'", test->inputData);
 	printf(" -> ");
 	uint32_t i = 0U;
@@ -59,11 +59,11 @@ int main(void) {
 	bool success = true;
 	uint32_t i = 0U;
 	while (i < 2) {
-		struct sha256_test_case *const test = ((struct sha256_test_case *const [2])TESTS)[i];
-		const bool rc = doTest(test);
-		success = success && rc;
+		struct main_sha256_test_case *const main_test = ((struct main_sha256_test_case *const [2])MAIN_TESTS)[i];
+		const bool main_rc = main_doTest(main_test);
+		success = success && main_rc;
 		char *res = "failed";
-		if (rc) {
+		if (main_rc) {
 			res = "passed";
 		}
 		printf("test #%i: %s\n", i, res);

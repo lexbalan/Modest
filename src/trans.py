@@ -2504,6 +2504,7 @@ def def_func(x):
 		return None
 
 	if fn.id.str == 'main':
+		fn.id.prefix = None
 		fn.id.addAttribute('nodecorate')
 		fn.id.addAttribute('entrypoint')
 
@@ -2797,7 +2798,7 @@ def translate(abspath, is_include=False):
 
 
 def process_module(idStr, sourcename, ast, is_include):
-	global cmodule
+	global cmodule, global_prefix
 	prev_module = cmodule
 
 	symtab_public = root_symtab.branch()
@@ -2811,6 +2812,8 @@ def process_module(idStr, sourcename, ast, is_include):
 	}
 
 	cmodule = Module(idStr, ast, symtab_public, symtab_private, sourcename)
+
+	
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=None, include=False)
 	cmodule.imports_private["builtin"] = import_builtin
@@ -2837,6 +2840,9 @@ def process_module(idStr, sourcename, ast, is_include):
 		#	y.parent = cmodule
 
 		i += 1
+
+	if not cmodule.hasAttribute('nodecorate'):
+		global_prefix = idStr + '_'
 
 	def_phase1(ast, is_include=is_include)
 	def_phase2(ast, is_include=is_include)

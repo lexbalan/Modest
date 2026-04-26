@@ -232,7 +232,7 @@ declare void @chacha20_makeState(%chacha20_State* %0, %chacha20_Key* %key, %Word
 @.str3 = private constant [6 x i8] [i8 102, i8 97, i8 105, i8 108, i8 10, i8 0]
 @.str4 = private constant [9 x i8] [i8 115, i8 117, i8 99, i8 99, i8 101, i8 115, i8 115, i8 10, i8 0]
 ; -- endstrings --
-%Context = type {
+%main_Context = type {
 	[32 x %Byte]*,
 	[3 x %Word32],
 	%Nat32,
@@ -240,11 +240,11 @@ declare void @chacha20_makeState(%chacha20_State* %0, %chacha20_Key* %key, %Word
 	%Nat32
 };
 
-define internal %Context @init([32 x %Byte]* %key, [3 x %Word32] %__nonce) {
+define internal %main_Context @main_init([32 x %Byte]* %key, [3 x %Word32] %__nonce) {
 	%nonce = alloca [3 x %Word32]
 	%1 = zext i8 3 to %Nat32
 	store [3 x %Word32] %__nonce, [3 x %Word32]* %nonce
-	%2 = insertvalue %Context zeroinitializer, [32 x %Byte]* %key, 0
+	%2 = insertvalue %main_Context zeroinitializer, [32 x %Byte]* %key, 0
 	%3 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 0
 	%4 = load %Word32, %Word32* %3
 	%5 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
@@ -260,12 +260,12 @@ define internal %Context @init([32 x %Byte]* %key, [3 x %Word32] %__nonce) {
 	%15 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
 	%16 = load %Word32, %Word32* %15
 	%17 = insertvalue [3 x %Word32] %14, %Word32 %16, 2
-	%18 = insertvalue %Context %2, [3 x %Word32] %17, 1
-	%19 = insertvalue %Context %18, %Nat32 64, 4
-	ret %Context %19
+	%18 = insertvalue %main_Context %2, [3 x %Word32] %17, 1
+	%19 = insertvalue %main_Context %18, %Nat32 64, 4
+	ret %main_Context %19
 }
 
-define internal void @cipher(%Context* %ctx, [0 x %Byte]* %data, %Nat32 %len) {
+define internal void @main_cipher(%main_Context* %ctx, [0 x %Byte]* %data, %Nat32 %len) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
 	%2 = alloca [0 x %Byte]*, align 8
@@ -278,19 +278,19 @@ again_1:
 	br %Bool %4 , label %body_1, label %break_1
 body_1:
 ; if_0
-	%5 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
+	%5 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 4
 	%6 = load %Nat32, %Nat32* %5
 	%7 = icmp eq %Nat32 %6, 64
 	br %Bool %7 , label %then_0, label %endif_0
 then_0:
 	%8 = alloca %chacha20_State, align 4
-	%9 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%9 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 0
 	%10 = load [32 x %Byte]*, [32 x %Byte]** %9
 	%11 = bitcast [32 x %Byte]* %10 to %chacha20_Key*
-	%12 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%12 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 2
 	%13 = load %Nat32, %Nat32* %12
 	%14 = bitcast %Nat32 %13 to %Word32
-	%15 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1; alloca memory for return value
+	%15 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 1; alloca memory for return value
 	%16 = alloca %chacha20_State
 	call void @chacha20_makeState(%chacha20_State* %16, %chacha20_Key* %11, %Word32 %14, [3 x %Word32]* %15)
 	%17 = load %chacha20_State, %chacha20_State* %16
@@ -299,23 +299,23 @@ then_0:
 	%19 = zext i8 13 to %Nat32
 	%20 = getelementptr %chacha20_State, %chacha20_State* %8, %Int32 0, %Nat32 %19
 	%21 = bitcast %Word32* %20 to [3 x %Word32]*
-	%22 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%22 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 1
 	%23 = zext i8 0 to %Nat32
 	%24 = getelementptr [3 x %Word32], [3 x %Word32]* %22, %Int32 0, %Nat32 %23
 	%25 = bitcast %Word32* %24 to [3 x %Word32]*
 	%26 = load [3 x %Word32], [3 x %Word32]* %25
 	%27 = zext i8 3 to %Nat32
 	store [3 x %Word32] %26, [3 x %Word32]* %21
-	%28 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%28 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 3
 	%29 = load %chacha20_State, %chacha20_State* %8; alloca memory for return value
 	%30 = alloca %chacha20_Block
 	call void @chacha20_chacha20Block(%chacha20_Block* %30, %chacha20_State %29)
 	%31 = load %chacha20_Block, %chacha20_Block* %30
 	%32 = zext i8 16 to %Nat32
 	store %chacha20_Block %31, %chacha20_Block* %28
-	%33 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
+	%33 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 4
 	store %Nat32 0, %Nat32* %33
-	%34 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%34 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 3
 	%35 = bitcast %chacha20_Block* %34 to [0 x %Byte]*
 	store [0 x %Byte]* %35, [0 x %Byte]** %2
 	br label %endif_0
@@ -326,7 +326,7 @@ endif_0:
 	%39 = load %Nat32, %Nat32* %1
 	%40 = bitcast %Nat32 %39 to %Nat32
 	%41 = getelementptr [0 x %Byte], [0 x %Byte]* %data, %Int32 0, %Nat32 %40
-	%42 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
+	%42 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 4
 	%43 = load %Nat32, %Nat32* %42
 	%44 = load [0 x %Byte]*, [0 x %Byte]** %2
 	%45 = bitcast %Nat32 %43 to %Nat32
@@ -335,8 +335,8 @@ endif_0:
 	%48 = load %Byte, %Byte* %46
 	%49 = xor %Byte %47, %48
 	store %Byte %49, %Byte* %38
-	%50 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
-	%51 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
+	%50 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 4
+	%51 = getelementptr %main_Context, %main_Context* %ctx, %Int32 0, %Int32 4
 	%52 = load %Nat32, %Nat32* %51
 	%53 = add %Nat32 %52, 1
 	store %Nat32 %53, %Nat32* %50
@@ -348,7 +348,7 @@ break_1:
 	ret void
 }
 
-@testKey = internal global [32 x %Byte] [
+@main_testKey = internal global [32 x %Byte] [
 	%Byte 0,
 	%Byte 1,
 	%Byte 2,
@@ -382,7 +382,7 @@ break_1:
 	%Byte 30,
 	%Byte 31
 ]
-@testNonce = internal global [12 x %Byte] [
+@main_testNonce = internal global [12 x %Byte] [
 	%Byte 0,
 	%Byte 0,
 	%Byte 0,
@@ -396,12 +396,12 @@ break_1:
 	%Byte 0,
 	%Byte 0
 ]
-@testNonce2 = internal global [3 x %Word32] [
+@main_testNonce2 = internal global [3 x %Word32] [
 	%Word32 9,
 	%Word32 74,
 	%Word32 0
 ]
-@testResult = constant [64 x %Byte] [
+@main_testResult = constant [64 x %Byte] [
 	%Byte 16,
 	%Byte 241,
 	%Byte 231,
@@ -467,7 +467,7 @@ break_1:
 	%Byte 60,
 	%Byte 78
 ]
-@lorem1024 = constant [1024 x %Char8] [
+@main_lorem1024 = constant [1024 x %Char8] [
 	%Char8 76,
 	%Char8 111,
 	%Char8 114,
@@ -1493,7 +1493,7 @@ break_1:
 	%Char8 118,
 	%Char8 101
 ]
-@xlorem1024 = internal global [1024 x %Char8] [
+@main_xlorem1024 = internal global [1024 x %Char8] [
 	%Char8 76,
 	%Char8 111,
 	%Char8 114,
@@ -2521,21 +2521,21 @@ break_1:
 ]
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str1 to [0 x i8]*))
-	%2 = alloca %Context, align 8
-	%3 = load [3 x %Word32], [3 x %Word32]* @testNonce2
-	%4 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %3)
-	store %Context %4, %Context* %2
-	%5 = bitcast [1024 x %Char8]* @xlorem1024 to [0 x %Byte]*
-	%6 = bitcast %Context* %2 to %Context*
-	call void @cipher(%Context* %6, [0 x %Byte]* %5, %Nat32 1024)
+	%2 = alloca %main_Context, align 8
+	%3 = load [3 x %Word32], [3 x %Word32]* @main_testNonce2
+	%4 = call %main_Context @main_init([32 x %Byte]* @main_testKey, [3 x %Word32] %3)
+	store %main_Context %4, %main_Context* %2
+	%5 = bitcast [1024 x %Char8]* @main_xlorem1024 to [0 x %Byte]*
+	%6 = bitcast %main_Context* %2 to %main_Context*
+	call void @main_cipher(%main_Context* %6, [0 x %Byte]* %5, %Nat32 1024)
 	%7 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %7
-	%8 = alloca %Context, align 8
-	%9 = load [3 x %Word32], [3 x %Word32]* @testNonce2
-	%10 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %9)
-	store %Context %10, %Context* %8
-	%11 = bitcast %Context* %8 to %Context*
-	call void @cipher(%Context* %11, [0 x %Byte]* %5, %Nat32 1024)
+	%8 = alloca %main_Context, align 8
+	%9 = load [3 x %Word32], [3 x %Word32]* @main_testNonce2
+	%10 = call %main_Context @main_init([32 x %Byte]* @main_testKey, [3 x %Word32] %9)
+	store %main_Context %10, %main_Context* %8
+	%11 = bitcast %main_Context* %8 to %main_Context*
+	call void @main_cipher(%main_Context* %11, [0 x %Byte]* %5, %Nat32 1024)
 	store %Int32 0, %Int32* %7
 ; while_1
 	br label %again_1
@@ -2545,7 +2545,7 @@ again_1:
 	br %Bool %13 , label %body_1, label %break_1
 body_1:
 	%14 = load %Int32, %Int32* %7
-	%15 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %14
+	%15 = getelementptr [1024 x %Char8], [1024 x %Char8]* @main_xlorem1024, %Int32 0, %Int32 %14
 	%16 = load %Char8, %Char8* %15
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str2 to [0 x i8]*), %Char8 %16)
 	%18 = load %Int32, %Int32* %7
@@ -2554,7 +2554,7 @@ body_1:
 	br label %again_1
 break_1:
 ; if_0
-	%20 = call %Bool @test0()
+	%20 = call %Bool @main_test0()
 	%21 = xor %Bool %20, 1
 	br %Bool %21 , label %then_0, label %endif_0
 then_0:
@@ -2566,16 +2566,16 @@ endif_0:
 	ret %Int 0
 }
 
-define internal %Bool @test0() {
+define internal %Bool @main_test0() {
 	%1 = alloca [32 x %Byte], align 1
-	%2 = load [32 x %Byte], [32 x %Byte]* @testKey
+	%2 = load [32 x %Byte], [32 x %Byte]* @main_testKey
 	%3 = zext i8 32 to %Nat32
 	store [32 x %Byte] %2, [32 x %Byte]* %1
 	%4 = alloca %Word32, align 4
 	%5 = zext i8 1 to %Word32
 	store %Word32 %5, %Word32* %4
 	%6 = alloca [12 x %Byte], align 1
-	%7 = load [12 x %Byte], [12 x %Byte]* @testNonce
+	%7 = load [12 x %Byte], [12 x %Byte]* @main_testNonce
 	%8 = zext i8 12 to %Nat32
 	store [12 x %Byte] %7, [12 x %Byte]* %6
 	%9 = alloca %chacha20_State, align 4
@@ -2596,7 +2596,7 @@ define internal %Bool @test0() {
 	store %chacha20_Block %19, %chacha20_Block* %16
 	%21 = bitcast %chacha20_Block* %16 to [64 x %Byte]*
 	%22 = bitcast [64 x %Byte]* %21 to i8*
-	%23 = bitcast [64 x %Byte]* @testResult to i8*
+	%23 = bitcast [64 x %Byte]* @main_testResult to i8*
 	%24 = call i1 (i8*, i8*, i64) @memeq(i8* %22, i8* %23, %Int64 64)
 	%25 = icmp ne %Bool %24, 0
 	ret %Bool %25

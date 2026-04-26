@@ -5,13 +5,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#define UNIT {0}
+#define MAIN_UNIT {0}
 
 __attribute__((used))
-static void unitFunc(void) {
-	#define unit {0}
+static void main_unitFunc(void) {
+	#define main_unit {0}
 	return;
-	#undef unit
+	#undef main_unit
 }
 
 int32_t main(void) {

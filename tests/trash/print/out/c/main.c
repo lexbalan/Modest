@@ -20,22 +20,22 @@ typedef uint32_t char32_t;
 
 int main(void) {
 	console_print("test console print\n");
-	const char32_t c = U'🐀';
-	char *const s = "Hi!";
-	const int32_t i = (int32_t)-1;
-	const uint32_t n = 123U;
-	const uint32_t x = 305419903U;
+	const char32_t main_c = U'🐀';
+	char *const main_s = "Hi!";
+	const int32_t main_i = (int32_t)-1;
+	const uint32_t main_n = 123U;
+	const uint32_t main_x = 305419903U;
 	console_print("\\\n");
 	console_print("@\n");
 	console_print("#AA#\n");
 	console_print("🎉A\n");
 	console_print("Это строка записанная кириллицей.\n");
 	console_print("{{c}}\n");
-	console_print("c = \"{c}\"\n", c);
-	console_print("s = \"{s}\"\n", s);
-	console_print("i = {i}\n", i);
-	console_print("n = {n}\n", n);
-	console_print("x = 0x{x}\n", x);
+	console_print("c = \"{c}\"\n", main_c);
+	console_print("s = \"{s}\"\n", main_s);
+	console_print("i = {i}\n", main_i);
+	console_print("n = {n}\n", main_n);
+	console_print("x = 0x{x}\n", main_x);
 	return 0;
 }
 

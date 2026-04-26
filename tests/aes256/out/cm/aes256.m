@@ -335,7 +335,7 @@ func expandDecKey (k: *Key, rc: *Byte) -> {} {
 }
 
 
-public func init (ctx: *Context, key: *Key) -> Result {
+public func init (ctx: *Context, key: *Key) -> @branded @unused Result {
 	if ctx == nil or key == nil {
 		return resultError
 	}
@@ -354,7 +354,7 @@ public func init (ctx: *Context, key: *Key) -> Result {
 }
 
 
-public func encrypt_ecb (ctx: *Context, block: *Block) -> Result {
+public func encrypt_ecb (ctx: *Context, block: *Block) -> @branded @unused Result {
 	if ctx == nil or block == nil {
 		return resultError
 	}
@@ -385,7 +385,7 @@ public func encrypt_ecb (ctx: *Context, block: *Block) -> Result {
 }
 
 
-public func decrypt_ecb (ctx: *Context, block: *Block) -> Result {
+public func decrypt_ecb (ctx: *Context, block: *Block) -> @branded @unused Result {
 	if ctx == nil or block == nil {
 		return resultError
 	}
@@ -416,7 +416,7 @@ public func decrypt_ecb (ctx: *Context, block: *Block) -> Result {
 }
 
 
-public func deinit (ctx: *Context) -> Result {
+public func deinit (ctx: *Context) -> @branded @unused Result {
 	if ctx == nil {
 		return resultError
 	}

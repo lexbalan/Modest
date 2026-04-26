@@ -84,6 +84,7 @@ def is_global_public(x):
 		if x.definition != None:
 			if x.definition.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 				return True
+	#warning("no glob prefix", x.ti)
 	return False
 
 
@@ -99,24 +100,25 @@ def get_id_prefix(x):
 	id = x.id
 
 	if id.prefix != None:
+		return id.prefix
 		prefix = id.prefix
+	return ''
 
-	nodecorate = not is_global_public(x) or id.hasAttribute('nodecorate')
-	if nodecorate:
-		#if hasattr(x, 'definition'):
-			#return '/*%s*/' % str(x.definition) + prefix
-		return prefix
-
-	module = x.getModule()
-	#if module == None:
-	if module != None:
-		#warning("module == None", x.ti)
-		if not module.hasAttribute('nodecorate'):
-			#if x.access_level != HLIR_ACCESS_LEVEL_PRIVATE:
-			return "%s_%s" % (module.prefix, prefix)
-
-	return prefix
-
+#	nodecorate = not is_global_public(x) or id.hasAttribute('nodecorate')
+#	if nodecorate:
+#		#if hasattr(x, 'definition'):
+#			#return '/*%s*/' % str(x.definition) + prefix
+#		return '/*%s*/' % str(is_global_public(x)) + prefix
+#
+#	module = x.getModule()
+#	#if module == None:
+#	if module != None:
+#		#warning("module == None", x.ti)
+#		if not module.hasAttribute('nodecorate'):
+#			#if x.access_level != HLIR_ACCESS_LEVEL_PRIVATE:
+#			return "%s_%s" % (module.prefix, prefix)
+#
+#	return prefix
 
 
 def get_record_tag(x):

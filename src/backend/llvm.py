@@ -199,12 +199,12 @@ def get_id_str(x):
 	if id.prefix != None:
 		id_str = id.prefix + id_str
 
-	if not x.id.hasAttribute('nodecorate'):
-		if is_global_public(x):
-			module = x.getModule()
-			if module != None:
-				if not module.hasAttribute('nodecorate'):
-					id_str = "%s_%s" % (module.prefix, id_str)
+#	if not x.id.hasAttribute('nodecorate'):
+#		if is_global_public(x):
+#			module = x.getModule()
+#			if module != None:
+#				if not module.hasAttribute('nodecorate'):
+#					id_str = "%s_%s" % (module.prefix, id_str)
 
 	return id_str
 

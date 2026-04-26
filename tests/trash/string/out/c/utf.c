@@ -18,50 +18,50 @@ typedef uint32_t char32_t;
 #endif
 
 uint8_t utf_utf32_to_utf8(char32_t c, char *buf) {
-	const uint32_t x = (uint32_t)c;
-	if (x <= 127U) {
-		buf[0] = (char)x;
+	const uint32_t utf_x = (uint32_t)c;
+	if (utf_x <= 127U) {
+		buf[0] = (char)utf_x;
 		return 1;
-	} else if (x <= 2047U) {
-		const uint32_t c0 = x >> 6 & 0x1FU;
-		const uint32_t c1 = x >> 0 & 0x3FU;
-		buf[0] = (char)(0xC0U | c0);
-		buf[1] = (char)(0x80U | c1);
+	} else if (utf_x <= 2047U) {
+		const uint32_t utf_c0 = utf_x >> 6 & 0x1FU;
+		const uint32_t utf_c1 = utf_x >> 0 & 0x3FU;
+		buf[0] = (char)(0xC0U | utf_c0);
+		buf[1] = (char)(0x80U | utf_c1);
 		return 2;
-	} else if (x <= 65535U) {
-		const uint32_t c0 = x >> 12 & 0xFU;
-		const uint32_t c1 = x >> 6 & 0x3FU;
-		const uint32_t c2 = x >> 0 & 0x3FU;
-		buf[0] = (char)(0xE0U | c0);
-		buf[1] = (char)(0x80U | c1);
-		buf[2] = (char)(0x80U | c2);
+	} else if (utf_x <= 65535U) {
+		const uint32_t utf_c0 = utf_x >> 12 & 0xFU;
+		const uint32_t utf_c1 = utf_x >> 6 & 0x3FU;
+		const uint32_t utf_c2 = utf_x >> 0 & 0x3FU;
+		buf[0] = (char)(0xE0U | utf_c0);
+		buf[1] = (char)(0x80U | utf_c1);
+		buf[2] = (char)(0x80U | utf_c2);
 		return 3;
-	} else if (x <= 1114111U) {
-		const uint32_t c0 = x >> 18 & 0x7U;
-		const uint32_t c1 = x >> 12 & 0x3FU;
-		const uint32_t c2 = x >> 6 & 0x3FU;
-		const uint32_t c3 = x >> 0 & 0x3FU;
-		buf[0] = (char)(0xF0U | c0);
-		buf[1] = (char)(0x80U | c1);
-		buf[2] = (char)(0x80U | c2);
-		buf[3] = (char)(0x80U | c3);
+	} else if (utf_x <= 1114111U) {
+		const uint32_t utf_c0 = utf_x >> 18 & 0x7U;
+		const uint32_t utf_c1 = utf_x >> 12 & 0x3FU;
+		const uint32_t utf_c2 = utf_x >> 6 & 0x3FU;
+		const uint32_t utf_c3 = utf_x >> 0 & 0x3FU;
+		buf[0] = (char)(0xF0U | utf_c0);
+		buf[1] = (char)(0x80U | utf_c1);
+		buf[2] = (char)(0x80U | utf_c2);
+		buf[3] = (char)(0x80U | utf_c3);
 		return 4;
 	}
 	return 0;
 }
 
 uint8_t utf_utf16_to_utf32(char16_t *c, char32_t *result) {
-	const uint32_t leading = (uint32_t)c[0];
-	if (leading < 55296U || leading > 57343U) {
-		*result = (char32_t)leading;
+	const uint32_t utf_leading = (uint32_t)c[0];
+	if (utf_leading < 55296U || utf_leading > 57343U) {
+		*result = (char32_t)utf_leading;
 		return 1;
-	} else if (leading >= 56320U) {
+	} else if (utf_leading >= 56320U) {
 	} else {
-		uint32_t code = (leading & 0x3FFU) << 10;
-		const uint32_t trailing = (uint32_t)c[1];
-		if (trailing < 56320U || trailing > 57343U) {
+		uint32_t code = (utf_leading & 0x3FFU) << 10;
+		const uint32_t utf_trailing = (uint32_t)c[1];
+		if (utf_trailing < 56320U || utf_trailing > 57343U) {
 		} else {
-			code = code | (trailing & 0x3FFU);
+			code = code | (utf_trailing & 0x3FFU);
 			*result = (char32_t)(code + 65536U);
 			return 2;
 		}

@@ -230,7 +230,7 @@ declare %Int @system([0 x %ConstChar]* %string)
 @.str10 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 @.str11 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define internal %Bool @test1() {
+define internal %Bool @main_test1() {
 ; if_0
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
@@ -281,7 +281,7 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str8 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %2
-	%3 = call %Bool @test1()
+	%3 = call %Bool @main_test1()
 	store %Bool %3, %Bool* %2
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @.str9 to [0 x i8]*))
 ; if_0

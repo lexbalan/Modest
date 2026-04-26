@@ -8,41 +8,41 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
-#define FILENAME "file.txt"
+#define MAIN_FILENAME "file.txt"
 
-static void write_example(void) {
+static void main_write_example(void) {
 	printf("run write_example\n");
-	FILE *const fp = fopen(FILENAME, "w");
-	if (fp == NULL) {
-		printf("error: cannot create file '%s'", FILENAME);
+	FILE *const main_fp = fopen(MAIN_FILENAME, "w");
+	if (main_fp == NULL) {
+		printf("error: cannot create file '%s'", MAIN_FILENAME);
 		return;
 	}
-	fprintf(fp, "some text.\n");
-	fclose(fp);
+	fprintf(main_fp, "some text.\n");
+	fclose(main_fp);
 }
 
-static void read_example(void) {
+static void main_read_example(void) {
 	printf("run read_example\n");
-	FILE *const fp = fopen(FILENAME, "r");
-	if (fp == NULL) {
-		printf("error: cannot open file '%s'", FILENAME);
+	FILE *const main_fp = fopen(MAIN_FILENAME, "r");
+	if (main_fp == NULL) {
+		printf("error: cannot open file '%s'", MAIN_FILENAME);
 		return;
 	}
-	printf("file '%s' contains: ", FILENAME);
+	printf("file '%s' contains: ", MAIN_FILENAME);
 	while (true) {
-		const int ch = fgetc(fp);
-		if (ch == EOF) {
+		const int main_ch = fgetc(main_fp);
+		if (main_ch == EOF) {
 			break;
 		}
-		putchar(ch);
+		putchar(main_ch);
 	}
-	fclose(fp);
+	fclose(main_fp);
 }
 
 int main(void) {
 	printf("text_file example\n");
-	write_example();
-	read_example();
+	main_write_example();
+	main_read_example();
 	return 0;
 }
 

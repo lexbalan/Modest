@@ -264,7 +264,7 @@ declare %list_Node* @list_append(%list_List* %list, i8* %data)
 @.str13 = private constant [15 x i8] [i8 108, i8 105, i8 115, i8 116, i8 40, i8 37, i8 105, i8 41, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @.str14 = private constant [43 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 ; -- endstrings --
-define internal void @nat32_list_insert(%list_List* %lst, %Nat32 %x) {
+define internal void @main_nat32_list_insert(%list_List* %lst, %Nat32 %x) {
 	%1 = call i8* @malloc(%Size 4)
 	%2 = bitcast i8* %1 to %Nat32*
 	store %Nat32 %x, %Nat32* %2
@@ -273,7 +273,7 @@ define internal void @nat32_list_insert(%list_List* %lst, %Nat32 %x) {
 	ret void
 }
 
-define internal void @list_print_forward(%list_List* %lst) {
+define internal void @main_list_print_forward(%list_List* %lst) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str1 to [0 x i8]*))
 	%2 = alloca %list_Node*, align 8
 	%3 = call %list_Node* @list_first_node_get(%list_List* %lst)
@@ -298,7 +298,7 @@ break_1:
 	ret void
 }
 
-define internal void @list_print_backward(%list_List* %lst) {
+define internal void @main_list_print_backward(%list_List* %lst) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str3 to [0 x i8]*))
 	%2 = alloca %list_Node*, align 8
 	%3 = call %list_Node* @list_last_node_get(%list_List* %lst)
@@ -334,21 +334,21 @@ then_0:
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	call void @nat32_list_insert(%list_List* %2, %Nat32 0)
-	call void @nat32_list_insert(%list_List* %2, %Nat32 10)
-	call void @nat32_list_insert(%list_List* %2, %Nat32 20)
-	call void @nat32_list_insert(%list_List* %2, %Nat32 30)
-	call void @nat32_list_insert(%list_List* %2, %Nat32 40)
-	call void @nat32_list_insert(%list_List* %2, %Nat32 50)
-	call void @nat32_list_insert(%list_List* %2, %Nat32 60)
-	call void @nat32_list_insert(%list_List* %2, %Nat32 70)
-	call void @nat32_list_insert(%list_List* %2, %Nat32 80)
-	call void @nat32_list_insert(%list_List* %2, %Nat32 90)
-	call void @nat32_list_insert(%list_List* %2, %Nat32 100)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 0)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 10)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 20)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 30)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 40)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 50)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 60)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 70)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 80)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 90)
+	call void @main_nat32_list_insert(%list_List* %2, %Nat32 100)
 	%6 = call %Nat32 @list_size_get(%list_List* %2)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str7 to [0 x i8]*), %Nat32 %6)
-	call void @list_print_forward(%list_List* %2)
-	call void @list_print_backward(%list_List* %2)
+	call void @main_list_print_forward(%list_List* %2)
+	call void @main_list_print_backward(%list_List* %2)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @.str8 to [0 x i8]*))
 	%9 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %9
@@ -422,7 +422,7 @@ break_2:
 	store %Nat32 1234, %Nat32* %47
 	%48 = bitcast %Nat32* %47 to i8*
 	%49 = call %list_Node* @list_insert(%list_List* %2, %Int32 4, i8* %48)
-	call void @list_print_forward(%list_List* %2)
+	call void @main_list_print_forward(%list_List* %2)
 	ret %Int 0
 }
 

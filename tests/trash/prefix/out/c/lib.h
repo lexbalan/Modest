@@ -5,9 +5,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-struct loo_nothing {uint8_t __placeholder;};
-#define LOO_BAR 4
-extern int32_t loo_spam;
-void loo_foo(uint32_t x);
+struct lib_nothing {uint8_t __placeholder;};
+#define LIB_BAR 4
+extern int32_t lib_spam;
+void lib_foo(uint32_t x);
 #endif
 

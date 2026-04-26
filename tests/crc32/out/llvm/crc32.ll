@@ -204,7 +204,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports public 'crc32' --
 ; -- strings --
 ; -- endstrings --
-@table = internal global [256 x %Word32] zeroinitializer
+@crc32_table = internal global [256 x %Word32] zeroinitializer
 define void @crc32_init() {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
@@ -257,7 +257,7 @@ endif_0:
 break_2:
 	%25 = load %Nat32, %Nat32* %1
 	%26 = bitcast %Nat32 %25 to %Nat32
-	%27 = getelementptr [256 x %Word32], [256 x %Word32]* @table, %Int32 0, %Nat32 %26
+	%27 = getelementptr [256 x %Word32], [256 x %Word32]* @crc32_table, %Int32 0, %Nat32 %26
 	%28 = load %Word32, %Word32* %4
 	store %Word32 %28, %Word32* %27
 	%29 = load %Nat32, %Nat32* %1
@@ -292,7 +292,7 @@ body_1:
 	%14 = xor %Word32 %13, %12
 	%15 = trunc %Word32 %14 to %Nat8
 	%16 = zext %Nat8 %15 to %Nat32
-	%17 = getelementptr [256 x %Word32], [256 x %Word32]* @table, %Int32 0, %Nat32 %16
+	%17 = getelementptr [256 x %Word32], [256 x %Word32]* @crc32_table, %Int32 0, %Nat32 %16
 	%18 = load %Word32, %Word32* %1
 	%19 = zext i8 8 to %Word32
 	%20 = lshr %Word32 %18, %19

@@ -205,11 +205,11 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 @.str1 = private constant [9 x i8] [i8 102, i8 111, i8 111, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 ; -- endstrings --
-%loo_Nothing = type {
+%lib_Nothing = type {
 };
 
-@loo_spam = global %Int32 4
-define void @loo_foo(%Nat32 %x) {
+@lib_spam = global %Int32 4
+define void @lib_foo(%Nat32 %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @.str1 to [0 x i8]*), %Nat32 %x)
 	ret void
 }

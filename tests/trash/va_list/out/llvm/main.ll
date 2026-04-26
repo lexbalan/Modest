@@ -300,7 +300,7 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
 ;include "lightfood/print"
 ;pragma c_include "./print.h"
-define internal %SSizeT @my_printf(%Str8* %format, ...) {
+define internal %SSizeT @main_my_printf(%Str8* %format, ...) {
 	%1 = alloca %__VA_List, align 1
 	%2 = alloca %__VA_List, align 1
 	%3 = bitcast %__VA_List* %2 to i8*
@@ -324,13 +324,13 @@ define %Int @main() {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 10, %Nat32* %1
 	%2 = load %Nat32, %Nat32* %1
-	%3 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([19 x i8]* @.str1 to [0 x i8]*), %Nat32 %2)
-	%4 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([4 x i8]* @.str3 to [0 x i8]*))
-	%5 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([10 x i8]* @.str4 to [0 x i8]*), %Char8 36)
-	%6 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([10 x i8]* @.str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @.str2 to [0 x i8]*))
-	%7 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([8 x i8]* @.str6 to [0 x i8]*), %Int32 -1)
-	%8 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([8 x i8]* @.str7 to [0 x i8]*), %Nat32 123)
-	%9 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([10 x i8]* @.str8 to [0 x i8]*), %Nat32 305419903)
+	%3 = call %SSizeT (%Str8*, ...) @main_my_printf(%Str8* bitcast ([19 x i8]* @.str1 to [0 x i8]*), %Nat32 %2)
+	%4 = call %SSizeT (%Str8*, ...) @main_my_printf(%Str8* bitcast ([4 x i8]* @.str3 to [0 x i8]*))
+	%5 = call %SSizeT (%Str8*, ...) @main_my_printf(%Str8* bitcast ([10 x i8]* @.str4 to [0 x i8]*), %Char8 36)
+	%6 = call %SSizeT (%Str8*, ...) @main_my_printf(%Str8* bitcast ([10 x i8]* @.str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @.str2 to [0 x i8]*))
+	%7 = call %SSizeT (%Str8*, ...) @main_my_printf(%Str8* bitcast ([8 x i8]* @.str6 to [0 x i8]*), %Int32 -1)
+	%8 = call %SSizeT (%Str8*, ...) @main_my_printf(%Str8* bitcast ([8 x i8]* @.str7 to [0 x i8]*), %Nat32 123)
+	%9 = call %SSizeT (%Str8*, ...) @main_my_printf(%Str8* bitcast ([10 x i8]* @.str8 to [0 x i8]*), %Nat32 305419903)
 	ret %Int 0
 }
 

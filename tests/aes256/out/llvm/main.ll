@@ -245,14 +245,14 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 @.str8 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 @.str9 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-%TestCase = type {
+%main_TestCase = type {
 	%aes256_Key,
 	%aes256_Block,
 	%aes256_Block
 };
 
-@tests = internal global [8 x %TestCase] [
-	%TestCase {
+@main_tests = internal global [8 x %main_TestCase] [
+	%main_TestCase {
 		%aes256_Key [
 			%Byte 0,
 			%Byte 1,
@@ -324,7 +324,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 			%Byte 137
 		]
 	},
-	%TestCase {
+	%main_TestCase {
 		%aes256_Key [
 			%Byte 96,
 			%Byte 61,
@@ -396,7 +396,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 			%Byte 248
 		]
 	},
-	%TestCase {
+	%main_TestCase {
 		%aes256_Key [
 			%Byte 96,
 			%Byte 61,
@@ -468,7 +468,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 			%Byte 112
 		]
 	},
-	%TestCase {
+	%main_TestCase {
 		%aes256_Key [
 			%Byte 96,
 			%Byte 61,
@@ -540,7 +540,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 			%Byte 29
 		]
 	},
-	%TestCase {
+	%main_TestCase {
 		%aes256_Key [
 			%Byte 96,
 			%Byte 61,
@@ -612,7 +612,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 			%Byte 199
 		]
 	},
-	%TestCase {
+	%main_TestCase {
 		%aes256_Key [
 			%Byte 196,
 			%Byte 123,
@@ -684,7 +684,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 			%Byte 95
 		]
 	},
-	%TestCase {
+	%main_TestCase {
 		%aes256_Key [
 			%Byte 252,
 			%Byte 160,
@@ -756,7 +756,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 			%Byte 32
 		]
 	},
-	%TestCase {
+	%main_TestCase {
 		%aes256_Key [
 			%Byte 248,
 			%Byte 0,
@@ -829,20 +829,20 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 		]
 	}
 ]
-define internal %Bool @runTest(%TestCase* %test) {
+define internal %Bool @main_runTest(%main_TestCase* %test) {
 	%1 = alloca %aes256_Context, align 1
-	%2 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 0
+	%2 = getelementptr %main_TestCase, %main_TestCase* %test, %Int32 0, %Int32 0
 	%3 = call %aes256_Result @aes256_init(%aes256_Context* %1, %aes256_Key* %2)
 	%4 = alloca %aes256_Block, align 1
-	%5 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
+	%5 = getelementptr %main_TestCase, %main_TestCase* %test, %Int32 0, %Int32 1
 	%6 = load %aes256_Block, %aes256_Block* %5
 	%7 = zext i8 16 to %Nat32
 	store %aes256_Block %6, %aes256_Block* %4
-	%8 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
+	%8 = getelementptr %main_TestCase, %main_TestCase* %test, %Int32 0, %Int32 1
 	%9 = call %aes256_Result @aes256_encrypt_ecb(%aes256_Context* %1, %aes256_Block* %8)
 ; if_0
-	%10 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
-	%11 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 2
+	%10 = getelementptr %main_TestCase, %main_TestCase* %test, %Int32 0, %Int32 1
+	%11 = getelementptr %main_TestCase, %main_TestCase* %test, %Int32 0, %Int32 2
 	%12 = bitcast %aes256_Block* %10 to i8*
 	%13 = bitcast %aes256_Block* %11 to i8*
 	%14 = call i1 (i8*, i8*, i64) @memeq(i8* %12, i8* %13, %Int64 16)
@@ -853,10 +853,10 @@ then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%18 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
+	%18 = getelementptr %main_TestCase, %main_TestCase* %test, %Int32 0, %Int32 1
 	%19 = call %aes256_Result @aes256_decrypt_ecb(%aes256_Context* %1, %aes256_Block* %18)
 ; if_1
-	%20 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 1
+	%20 = getelementptr %main_TestCase, %main_TestCase* %test, %Int32 0, %Int32 1
 	%21 = bitcast %aes256_Block* %20 to i8*
 	%22 = bitcast %aes256_Block* %4 to i8*
 	%23 = call i1 (i8*, i8*, i64) @memeq(i8* %21, i8* %22, %Int64 16)
@@ -889,8 +889,8 @@ body_1:
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str5 to [0 x i8]*), %Nat8 %6)
 	%8 = load %Nat8, %Nat8* %3
 	%9 = zext %Nat8 %8 to %Nat32
-	%10 = getelementptr [8 x %TestCase], [8 x %TestCase]* @tests, %Int32 0, %Nat32 %9
-	%11 = call %Bool @runTest(%TestCase* %10)
+	%10 = getelementptr [8 x %main_TestCase], [8 x %main_TestCase]* @main_tests, %Int32 0, %Nat32 %9
+	%11 = call %Bool @main_runTest(%main_TestCase* %10)
 	%12 = load %Bool, %Bool* %2
 	%13 = and %Bool %12, %11
 	store %Bool %13, %Bool* %2

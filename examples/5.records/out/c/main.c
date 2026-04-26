@@ -6,21 +6,21 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-struct point {
+struct main_point {
 	float x;
 	float y;
 };
-struct line {
-	struct point a;
-	struct point b;
+struct main_line {
+	struct main_point a;
+	struct main_point b;
 };
-static struct line line = (struct line){
+static struct main_line main_line = (struct main_line){
 	.a = {.x = 0, .y = 0},
 	.b = {.x = 1.0, .y = 1.0}
 };
 
 __attribute__((always_inline))
-static inline float max(float a, float b) {
+static inline float main_max(float a, float b) {
 	if (a > b) {
 		return a;
 	}
@@ -28,36 +28,36 @@ static inline float max(float a, float b) {
 }
 
 __attribute__((always_inline))
-static inline float min(float a, float b) {
+static inline float main_min(float a, float b) {
 	if (a < b) {
 		return a;
 	}
 	return b;
 }
 
-static float distance(struct point a, struct point b) {
-	const float dx = max(a.x, b.x) - min(a.x, b.x);
-	const float dy = max(a.y, b.y) - min(a.y, b.y);
-	const double dx2 = pow(dx, 2);
-	const double dy2 = pow(dy, 2);
-	return sqrt(dx2 + dy2);
+static float main_distance(struct main_point a, struct main_point b) {
+	const float main_dx = main_max(a.x, b.x) - main_min(a.x, b.x);
+	const float main_dy = main_max(a.y, b.y) - main_min(a.y, b.y);
+	const double main_dx2 = pow(main_dx, 2);
+	const double main_dy2 = pow(main_dy, 2);
+	return sqrt(main_dx2 + main_dy2);
 }
 
-static float lineLength(struct line line) {
-	return distance(line.a, line.b);
+static float main_lineLength(struct main_line line) {
+	return main_distance(line.a, line.b);
 }
 
-static void ptr_example(void) {
-	struct point *const ptr_p = (struct point *)malloc(sizeof(struct point));
-	ptr_p->x = 10;
-	ptr_p->y = 20;
-	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
+static void main_ptr_example(void) {
+	struct main_point *const main_ptr_p = (struct main_point *)malloc(sizeof(struct main_point));
+	main_ptr_p->x = 10;
+	main_ptr_p->y = 20;
+	printf("point(%f, %f)\n", main_ptr_p->x, main_ptr_p->y);
 }
 
 int main(void) {
-	const float len = lineLength(line);
-	printf("line length = %f\n", len);
-	ptr_example();
+	const float main_len = main_lineLength(main_line);
+	printf("line length = %f\n", main_len);
+	main_ptr_example();
 	return 0;
 }
 

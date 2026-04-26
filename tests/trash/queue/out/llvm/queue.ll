@@ -174,7 +174,7 @@ define %Nat32 @queue_getPutPosition(%queue_Queue* %q) {
 	%5 = load %Nat32, %Nat32* %4
 	%6 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 2
 	%7 = load %Nat32, %Nat32* %6
-	%8 = call %Nat32 @next(%Nat32 %5, %Nat32 %7)
+	%8 = call %Nat32 @queue_next(%Nat32 %5, %Nat32 %7)
 	store %Nat32 %8, %Nat32* %3
 ; if_0
 	%9 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
@@ -202,7 +202,7 @@ define %Nat32 @queue_getGetPosition(%queue_Queue* %q) {
 	%5 = load %Nat32, %Nat32* %4
 	%6 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 3
 	%7 = load %Nat32, %Nat32* %6
-	%8 = call %Nat32 @next(%Nat32 %5, %Nat32 %7)
+	%8 = call %Nat32 @queue_next(%Nat32 %5, %Nat32 %7)
 	store %Nat32 %8, %Nat32* %3
 ; if_0
 	%9 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
@@ -220,7 +220,7 @@ endif_0:
 	ret %Nat32 %2
 }
 
-define internal %Nat32 @next(%Nat32 %capacity, %Nat32 %x) {
+define internal %Nat32 @queue_next(%Nat32 %capacity, %Nat32 %x) {
 ; if_0
 	%1 = sub %Nat32 %capacity, 1
 	%2 = icmp ult %Nat32 %x, %1

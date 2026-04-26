@@ -333,47 +333,47 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 @.str7 = private constant [2 x i32] [i32 10, i32 0]
 @.str8 = private constant [2 x i16] [i16 10, i16 0]
 ; -- endstrings --
-@ratSymbolUTF8 = internal global [5 x %Word8] [
+@main_ratSymbolUTF8 = internal global [5 x %Word8] [
 	%Word8 240,
 	%Word8 159,
 	%Word8 144,
 	%Word8 128,
 	%Word8 0
 ]
-@ratSymbolUTF16 = internal global [3 x %Word16] [
+@main_ratSymbolUTF16 = internal global [3 x %Word16] [
 	%Word16 55357,
 	%Word16 56320,
 	%Word16 0
 ]
-@ratSymbolUTF32 = internal global [3 x %Word32] [
+@main_ratSymbolUTF32 = internal global [3 x %Word32] [
 	%Word32 128000,
 	%Word32 0,
 	%Word32 0
 ]
-@ratSymbolUTF322 = internal global [3 x %Word32] [
+@main_ratSymbolUTF322 = internal global [3 x %Word32] [
 	%Word32 0,
 	%Word32 0,
 	%Word32 0
 ]
-@arr_partycorn = constant [4 x %Char8] [
+@main_arr_partycorn = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 142,
 	%Char8 137
 ]
-@arr_unicorn = constant [4 x %Char8] [
+@main_arr_unicorn = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 166,
 	%Char8 132
 ]
-@arr_rat = constant [4 x %Char8] [
+@main_arr_rat = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 144,
 	%Char8 128
 ]
-@arr_utf8 = internal global [6 x %Char8] [
+@main_arr_utf8 = internal global [6 x %Char8] [
 	%Char8 72,
 	%Char8 105,
 	%Char8 33,
@@ -381,7 +381,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 	%Char8 0,
 	%Char8 0
 ]
-@arr_utf16 = internal global [10 x %Char16] [
+@main_arr_utf16 = internal global [10 x %Char16] [
 	%Char16 72,
 	%Char16 101,
 	%Char16 108,
@@ -393,7 +393,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 	%Char16 10,
 	%Char16 0
 ]
-@arr_utf32 = internal global [9 x %Char32] [
+@main_arr_utf32 = internal global [9 x %Char32] [
 	%Char32 72,
 	%Char32 101,
 	%Char32 108,
@@ -420,17 +420,17 @@ define %Int32 @main() {
 	%6 = load %Str32*, %Str32** %3
 	call void @console_puts32(%Str32* %6)
 	call void @console_puts32(%Str32* bitcast ([2 x i32]* @.str6 to [0 x i32]*))
-	%7 = bitcast [6 x %Char8]* @arr_utf8 to %Str8*
+	%7 = bitcast [6 x %Char8]* @main_arr_utf8 to %Str8*
 	call void @console_puts8(%Str8* %7)
-	%8 = bitcast [10 x %Char16]* @arr_utf16 to %Str16*
+	%8 = bitcast [10 x %Char16]* @main_arr_utf16 to %Str16*
 	call void @console_puts16(%Str16* %8)
-	%9 = bitcast [9 x %Char32]* @arr_utf32 to %Str32*
+	%9 = bitcast [9 x %Char32]* @main_arr_utf32 to %Str32*
 	call void @console_puts32(%Str32* %9)
-	%10 = bitcast [5 x %Word8]* @ratSymbolUTF8 to %Str8*
+	%10 = bitcast [5 x %Word8]* @main_ratSymbolUTF8 to %Str8*
 	call void @console_puts8(%Str8* %10)
-	%11 = bitcast [3 x %Word16]* @ratSymbolUTF16 to %Str16*
+	%11 = bitcast [3 x %Word16]* @main_ratSymbolUTF16 to %Str16*
 	call void @console_puts16(%Str16* %11)
-	%12 = bitcast [3 x %Word32]* @ratSymbolUTF32 to %Str32*
+	%12 = bitcast [3 x %Word32]* @main_ratSymbolUTF32 to %Str32*
 	call void @console_puts32(%Str32* %12)
 	call void @console_puts32(%Str32* bitcast ([2 x i32]* @.str7 to [0 x i32]*))
 	call void @console_putchar8(%Char8 65)
