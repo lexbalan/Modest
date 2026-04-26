@@ -42,7 +42,7 @@ func test2 () -> Bool {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("test default parameters\n")
 

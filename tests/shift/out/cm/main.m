@@ -164,7 +164,7 @@ func testShift128 () -> Bool {
 
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("test shift\n")
 

@@ -108,7 +108,7 @@ func test_by_pointer () -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	test_by_value()
 	test_by_pointer()

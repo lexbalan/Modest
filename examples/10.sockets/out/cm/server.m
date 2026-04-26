@@ -35,7 +35,7 @@ func writeFile (sockFd: Int) -> Bool {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	let sockFd: Int = socket(c_AF_INET, c_SOCK_STREAM, 0)
 	if sockFd < 0 {

@@ -20,7 +20,7 @@ func sum (a: Int32, b: Int32) -> Int32 {
 
 
 // define function main
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("test func\n")
 	func0()

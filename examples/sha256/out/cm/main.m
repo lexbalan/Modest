@@ -64,7 +64,7 @@ func doTest (test: *SHA256_TestCase) -> Bool {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("test SHA256\n")
 

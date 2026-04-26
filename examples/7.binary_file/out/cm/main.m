@@ -53,7 +53,7 @@ func readExample () -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("binary file example\n")
 	writeExample()

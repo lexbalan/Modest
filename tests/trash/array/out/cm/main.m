@@ -22,7 +22,7 @@ var arr2 = [10]Char32 c1
 //}
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("array test\n")
 

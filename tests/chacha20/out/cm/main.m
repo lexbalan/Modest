@@ -82,7 +82,7 @@ const lorem1024 = [1024]Char8 "Lorem ipsum dolor sit amet, consectetuer adipisci
 var xlorem1024: [1024]Char8 = lorem1024
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("test ChaCha20 ")
 	var ctx: Context = init(&testKey, testNonce2)

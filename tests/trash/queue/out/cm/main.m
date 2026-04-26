@@ -51,7 +51,7 @@ const qsize = 10
 var qbuf: [qsize]Word8
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	init(&bq0, &qbuf, qsize)
 

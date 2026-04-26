@@ -9,7 +9,7 @@ func named_args_test (a: Int32, b: Int32, c: Int32) -> Int32 {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("test named_args\n")
 

@@ -5,7 +5,7 @@ include "stdio"
 
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("bool check\nm")
 

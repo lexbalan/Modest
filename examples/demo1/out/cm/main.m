@@ -7,7 +7,7 @@ const minNumber = 0
 const maxNumber = 10
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int32 {
 	let number: Int32 = get_number(minNumber, maxNumber)
 

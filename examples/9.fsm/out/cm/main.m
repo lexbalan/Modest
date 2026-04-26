@@ -59,7 +59,7 @@ func routine2 (state: ComplexState, payload: Ptr) -> ComplexState {
 var timecnt: Nat32
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	init(&fsm0, id="FSM_0", initState=&state0, payload=nil)
 

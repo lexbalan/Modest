@@ -186,7 +186,7 @@ func test_arrays () -> Unit {
 
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 
 	test()

@@ -114,7 +114,7 @@ func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int32 {
 	printf("HARSH v0.1\n")
 

@@ -5,7 +5,7 @@ include "stdio"
 import "lib" as lib
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	foo(bar)
 	Unit spam

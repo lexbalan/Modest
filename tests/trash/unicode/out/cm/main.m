@@ -32,7 +32,7 @@ var ss16: *Str16 = "A"
 var ss32: *Str32 = "A"
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int32 {
 	printf("test unicode\n")
 

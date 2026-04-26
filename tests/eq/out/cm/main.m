@@ -124,7 +124,7 @@ public func testArraysEq () -> Bool {
 
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int32 {
 	printf("test eq\n")
 

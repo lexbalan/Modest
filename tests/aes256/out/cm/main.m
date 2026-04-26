@@ -110,7 +110,7 @@ func runTest (test: *TestCase) -> Bool {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int32 {
 	printf("run AES-256 test\n")
 

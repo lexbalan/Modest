@@ -21,7 +21,7 @@ func arraysAdd (a: [10]Int32, b: [10]Int32) -> [10]Int32 {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int32 {
 	let a: [10]Int32 = getarr10()
 

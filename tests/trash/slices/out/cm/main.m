@@ -27,7 +27,7 @@ func checkParamsIo () -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("test slices\n")
 

@@ -48,7 +48,7 @@ func handleRequest (clientSocket: Int32) -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int32 {
 	let serverSocket: Int = socket(c_AF_INET, c_SOCK_STREAM, 0)
 	if serverSocket < 0 {

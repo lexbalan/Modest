@@ -10,7 +10,7 @@ var arr1: [2]Int32 = arr
 var str: *[]Char8 = "Hello!"// -> *[]Char8
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	var x: Int32 = 127
 	var y: Int32 = x + 1

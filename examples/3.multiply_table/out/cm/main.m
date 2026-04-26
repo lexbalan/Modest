@@ -14,7 +14,7 @@ func mtab (n: Nat32) -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	let n = 2 * 2
 	printf("multiply table for %d\n", Int32 n)

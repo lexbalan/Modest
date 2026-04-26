@@ -4,7 +4,7 @@ include "stdio"
 
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("while statement test\n")
 

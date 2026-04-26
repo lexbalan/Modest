@@ -13,7 +13,7 @@ type Object = {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("memcopy test\n")
 

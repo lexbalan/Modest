@@ -25,7 +25,7 @@ func my_printf (format: *Str8, ...) -> @unused SSizeT {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	var k: Nat32 = 10
 	my_printf("My Printf Test %u\n", k)

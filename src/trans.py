@@ -2209,7 +2209,6 @@ def do_id(x):
 def def_type_common(x, nt):
 	global cmodule
 	global cdef
-	global global_prefix
 
 	id = do_id(x['id'])
 	definition = StmtDefType(id, nt, None, x['ti'])

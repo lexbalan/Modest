@@ -768,7 +768,7 @@ def str_annotation(a, params):
 		return ''
 
 	sstr = ""
-	if params != {}:
+	if not params in [None, {}, []]:
 		sstr += '('
 		if isinstance(params, dict):
 			pass

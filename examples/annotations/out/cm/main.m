@@ -110,7 +110,7 @@ func hello () -> Unit {
 
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int32 {
 	var staticCounter: Nat32 = 0
 

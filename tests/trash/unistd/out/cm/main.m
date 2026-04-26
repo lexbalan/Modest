@@ -7,7 +7,7 @@ include "stdlib"
 // getenv
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("unistd test\n")
 

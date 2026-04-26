@@ -4,7 +4,7 @@ include "stdio"
 
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int32 {
 	var a: Bool
 	var b: Int32

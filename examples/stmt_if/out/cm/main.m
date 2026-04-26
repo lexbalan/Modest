@@ -4,7 +4,7 @@ include "stdio"
 
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("if statement example\n")
 

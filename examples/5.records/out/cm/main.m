@@ -66,7 +66,7 @@ func ptr_example () -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	let len: Float = lineLength(line)
 	printf("line length = %f\n", len)

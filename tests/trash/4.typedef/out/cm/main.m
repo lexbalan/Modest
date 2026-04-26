@@ -5,7 +5,7 @@ include "stdio"
 
 type NewInt32 = Int32
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("test typedef\n")
 

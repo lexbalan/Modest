@@ -39,7 +39,7 @@ func list_print_backward (lst: *List) -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("linked list example\n")
 

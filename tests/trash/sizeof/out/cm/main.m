@@ -61,7 +61,7 @@ type X = {
 
 var x: X
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("test cast operation\n")
 

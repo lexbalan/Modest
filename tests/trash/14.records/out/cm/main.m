@@ -89,7 +89,7 @@ func test_records () -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("records test\n")
 	let ver = version

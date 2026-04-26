@@ -5,7 +5,7 @@ include "math"
 
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("generic types test\n")
 

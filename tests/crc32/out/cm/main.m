@@ -41,7 +41,7 @@ func runTest (test: *Test) -> Bool {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("test CRC32\n")
 	init()

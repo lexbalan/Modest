@@ -22,7 +22,7 @@ var ptr_to_string16: *[]Char16 = str16_example
 var ptr_to_string32: *[]Char32 = str32_example
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	putchar_utf8("A")
 	printf("\n")

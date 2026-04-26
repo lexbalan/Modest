@@ -71,7 +71,7 @@ var table10 = Table {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int32 {
 	print(&table00)
 	printf("\n")

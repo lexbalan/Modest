@@ -36,7 +36,7 @@ func sumsub64 (a: Int64, b: Int64) -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("inline asm test\n")
 

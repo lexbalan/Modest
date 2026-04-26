@@ -45,7 +45,7 @@ func read_example () -> Unit {
 }
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("text_file example\n")
 	write_example()

@@ -3,7 +3,7 @@ include "ctypes64"
 include "stdio"
 
 
-@nonstatic()
+@nonstatic
 func main () -> Int {
 	printf("Hello World!\n")
 	return 0
