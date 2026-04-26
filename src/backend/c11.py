@@ -139,25 +139,6 @@ def get_type_id_str(t):
 		if t.id.common != None:
 			return t.id.common
 
-#	if t.is_integer():
-#		if t.width == 0:
-#			if t.is_unsigned():
-#				return 'unsigned int'
-#			return 'int'
-#		elif t.width > 64:
-#			s = '__int%d_t' % align_bits_up(t.width)
-#			if t.is_unsigned():
-#				s = 'unsigned ' + s
-#			return s
-#
-#		s = 'int%d_t' % align_bits_up(t.width)
-#		if t.is_unsigned():
-#			s = 'u' + s
-#		return s
-
-	if t.is_rational():
-		return "double"
-
 	if isinstance(t, TypeRecord):
 		if t.is_open_access:
 			if hasattr(t, 'id'):
@@ -169,8 +150,8 @@ def get_type_id_str(t):
 			kisa = isa + ' ' + tag
 			return kisa
 
-	if hasattr(t, 'id'):
-		if t.id != None and t.id.c != None:
+	if hasattr(t, 'id') and t.id != None:
+		if t.id.c != None:
 			return get_id_prefix(t) + t.id.c
 
 	return None
