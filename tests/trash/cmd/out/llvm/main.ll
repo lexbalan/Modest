@@ -311,8 +311,8 @@ declare %Int @tolower(%Int %x)
 @.str4 = private constant [3 x i8] [i8 93, i8 10, i8 0]
 @.str5 = private constant [12 x i8] [i8 72, i8 65, i8 82, i8 83, i8 72, i8 32, i8 118, i8 48, i8 46, i8 49, i8 10, i8 0]
 ; -- endstrings --
-@main_tokensBuf = internal global [4096 x %Char8] zeroinitializer
-define internal void @main_showPrompt() {
+@tokensBuf = internal global [4096 x %Char8] zeroinitializer
+define internal void @showPrompt() {
 	%1 = alloca [32 x %Char8], align 1
 	%2 = insertvalue [32 x %Char8] zeroinitializer, %Char8 35, 0
 	%3 = insertvalue [32 x %Char8] %2, %Char8 32, 1
@@ -323,14 +323,14 @@ define internal void @main_showPrompt() {
 	ret void
 }
 
-define internal %Int @main_char8ToInt(%Char8 %c) alwaysinline {
+define internal %Int @char8ToInt(%Char8 %c) alwaysinline {
 	%1 = bitcast %Char8 %c to %Word8
 	%2 = zext %Word8 %1 to %Word32
 	%3 = bitcast %Word32 %2 to %Int
 	ret %Int %3
 }
 
-%main_Tokenizer = type {
+%Tokenizer = type {
 	[0 x %Char8]*,
 	%Nat32,
 	%Nat16,
@@ -339,18 +339,18 @@ define internal %Int @main_char8ToInt(%Char8 %c) alwaysinline {
 	[0 x [0 x %Char8]*]*
 };
 
-define internal %Bool @main_is_blank(%Char8 %c) {
+define internal %Bool @is_blank(%Char8 %c) {
 	%1 = icmp eq %Char8 %c, 32
 	%2 = icmp eq %Char8 %c, 10
 	%3 = or %Bool %1, %2
 	ret %Bool %3
 }
 
-define internal %Nat16 @main_gettok(%main_Tokenizer* %t, [0 x %Char8]* %output, %Nat16 %lim) {
+define internal %Nat16 @gettok(%Tokenizer* %t, [0 x %Char8]* %output, %Nat16 %lim) {
 	%1 = alloca %Char8, align 1
-	%2 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 1
+	%2 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
 	%3 = load %Nat32, %Nat32* %2
-	%4 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 0
+	%4 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 0
 	%5 = load [0 x %Char8]*, [0 x %Char8]** %4
 	%6 = bitcast %Nat32 %3 to %Nat32
 	%7 = getelementptr [0 x %Char8], [0 x %Char8]* %5, %Int32 0, %Nat32 %6
@@ -361,9 +361,9 @@ define internal %Nat16 @main_gettok(%main_Tokenizer* %t, [0 x %Char8]* %output, 
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%9 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 1
+	%9 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
 	%10 = load %Nat32, %Nat32* %9
-	%11 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 0
+	%11 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 0
 	%12 = load [0 x %Char8]*, [0 x %Char8]** %11
 	%13 = bitcast %Nat32 %10 to %Nat32
 	%14 = getelementptr [0 x %Char8], [0 x %Char8]* %12, %Int32 0, %Nat32 %13
@@ -380,8 +380,8 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%22 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 1
-	%23 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 1
+	%22 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
+	%23 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
 	%24 = load %Nat32, %Nat32* %23
 	%25 = add %Nat32 %24, 1
 	store %Nat32 %25, %Nat32* %22
@@ -400,9 +400,9 @@ then_1:
 endif_1:
 	%32 = alloca %Nat16, align 2
 	store %Nat16 0, %Nat16* %32
-	%33 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 1
+	%33 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
 	%34 = load %Nat32, %Nat32* %33
-	%35 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 0
+	%35 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 0
 	%36 = load [0 x %Char8]*, [0 x %Char8]** %35
 	%37 = bitcast %Nat32 %34 to %Nat32
 	%38 = getelementptr [0 x %Char8], [0 x %Char8]* %36, %Int32 0, %Nat32 %37
@@ -410,7 +410,7 @@ endif_1:
 	store %Char8 %39, %Char8* %1
 ; if_2
 	%40 = load %Char8, %Char8* %1
-	%41 = call %Bool @main_is_blank(%Char8 %40)
+	%41 = call %Bool @is_blank(%Char8 %40)
 	%42 = xor %Bool %41, 1
 	br %Bool %42 , label %then_2, label %else_2
 then_2:
@@ -418,7 +418,7 @@ then_2:
 	br label %again_2
 again_2:
 	%43 = load %Char8, %Char8* %1
-	%44 = call %Bool @main_is_blank(%Char8 %43)
+	%44 = call %Bool @is_blank(%Char8 %43)
 	%45 = xor %Bool %44, 1
 	br %Bool %45 , label %body_2, label %break_2
 body_2:
@@ -427,17 +427,17 @@ body_2:
 	%48 = getelementptr [0 x %Char8], [0 x %Char8]* %output, %Int32 0, %Nat32 %47
 	%49 = load %Char8, %Char8* %1
 	store %Char8 %49, %Char8* %48
-	%50 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 1
-	%51 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 1
+	%50 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
+	%51 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
 	%52 = load %Nat32, %Nat32* %51
 	%53 = add %Nat32 %52, 1
 	store %Nat32 %53, %Nat32* %50
 	%54 = load %Nat16, %Nat16* %32
 	%55 = add %Nat16 %54, 1
 	store %Nat16 %55, %Nat16* %32
-	%56 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 1
+	%56 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
 	%57 = load %Nat32, %Nat32* %56
-	%58 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 0
+	%58 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 0
 	%59 = load [0 x %Char8]*, [0 x %Char8]** %58
 	%60 = bitcast %Nat32 %57 to %Nat32
 	%61 = getelementptr [0 x %Char8], [0 x %Char8]* %59, %Int32 0, %Nat32 %60
@@ -456,8 +456,8 @@ else_2:
 	%68 = getelementptr [0 x %Char8], [0 x %Char8]* %output, %Int32 0, %Nat32 %67
 	%69 = load %Char8, %Char8* %1
 	store %Char8 %69, %Char8* %68
-	%70 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 1
-	%71 = getelementptr %main_Tokenizer, %main_Tokenizer* %t, %Int32 0, %Int32 1
+	%70 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
+	%71 = getelementptr %Tokenizer, %Tokenizer* %t, %Int32 0, %Int32 1
 	%72 = load %Nat32, %Nat32* %71
 	%73 = add %Nat32 %72, 1
 	store %Nat32 %73, %Nat32* %70
@@ -470,7 +470,7 @@ endif_2:
 	ret %Nat16 %76
 }
 
-define internal void @main_tokenize(%main_Tokenizer* %tokenizer) {
+define internal void @tokenize(%Tokenizer* %tokenizer) {
 ; while_1
 	br label %again_1
 again_1:
@@ -478,15 +478,15 @@ again_1:
 body_1:
 	%1 = alloca [128 x %Char8], align 1
 	%2 = alloca %Char8*, align 8
-	%3 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 2
+	%3 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 2
 	%4 = load %Nat16, %Nat16* %3
-	%5 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 4
+	%5 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 4
 	%6 = load [0 x %Char8]*, [0 x %Char8]** %5
 	%7 = zext %Nat16 %4 to %Nat32
 	%8 = getelementptr [0 x %Char8], [0 x %Char8]* %6, %Int32 0, %Nat32 %7
 	store %Char8* %8, %Char8** %2
 	%9 = bitcast [128 x %Char8]* %1 to [0 x %Char8]*
-	%10 = call %Nat16 @main_gettok(%main_Tokenizer* %tokenizer, [0 x %Char8]* %9, %Nat16 128)
+	%10 = call %Nat16 @gettok(%Tokenizer* %tokenizer, [0 x %Char8]* %9, %Nat16 128)
 ; if_0
 	%11 = icmp eq %Nat16 %10, 0
 	br %Bool %11 , label %then_0, label %endif_0
@@ -494,9 +494,9 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%13 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 4
+	%13 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 4
 	%14 = load [0 x %Char8]*, [0 x %Char8]** %13
-	%15 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 2
+	%15 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 2
 	%16 = load %Nat16, %Nat16* %15
 	%17 = zext %Nat16 %16 to %Nat32
 	%18 = getelementptr [0 x %Char8], [0 x %Char8]* %14, %Int32 0, %Nat32 %17
@@ -513,36 +513,36 @@ endif_0:
 	%27 = sub %Nat16 %10, 0
 	%28 = zext %Nat16 %27 to %Nat32
 	store [0 x %Char8] %26, [0 x %Char8]* %22
-	%29 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 2
-	%30 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 2
+	%29 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 2
+	%30 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 2
 	%31 = load %Nat16, %Nat16* %30
 	%32 = add %Nat16 %31, %10
 	store %Nat16 %32, %Nat16* %29
-	%33 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 2
+	%33 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 2
 	%34 = load %Nat16, %Nat16* %33
 	%35 = zext %Nat16 %34 to %Nat32
 	%36 = getelementptr [0 x %Char8], [0 x %Char8]* %19, %Int32 0, %Nat32 %35
 	store %Char8 0, %Char8* %36
-	%37 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 2
-	%38 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 2
+	%37 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 2
+	%38 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 2
 	%39 = load %Nat16, %Nat16* %38
 	%40 = add %Nat16 %39, 1
 	store %Nat16 %40, %Nat16* %37
-	%41 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 3
+	%41 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 3
 	%42 = load %Nat16, %Nat16* %41
-	%43 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 5
+	%43 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 5
 	%44 = load [0 x [0 x %Char8]*]*, [0 x [0 x %Char8]*]** %43
 	%45 = zext %Nat16 %42 to %Nat32
 	%46 = getelementptr [0 x [0 x %Char8]*], [0 x [0 x %Char8]*]* %44, %Int32 0, %Nat32 %45
 	store [0 x %Char8]* %19, [0 x %Char8]** %46
-	%47 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 3
-	%48 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 3
+	%47 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 3
+	%48 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 3
 	%49 = load %Nat16, %Nat16* %48
 	%50 = add %Nat16 %49, 1
 	store %Nat16 %50, %Nat16* %47
-	%51 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 3
+	%51 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 3
 	%52 = load %Nat16, %Nat16* %51
-	%53 = getelementptr %main_Tokenizer, %main_Tokenizer* %tokenizer, %Int32 0, %Int32 5
+	%53 = getelementptr %Tokenizer, %Tokenizer* %tokenizer, %Int32 0, %Int32 5
 	%54 = load [0 x [0 x %Char8]*]*, [0 x [0 x %Char8]*]** %53
 	%55 = zext %Nat16 %52 to %Nat32
 	%56 = getelementptr [0 x [0 x %Char8]*], [0 x [0 x %Char8]*]* %54, %Int32 0, %Nat32 %55
@@ -552,7 +552,7 @@ break_1:
 	ret void
 }
 
-define internal void @main_execute(%Str8* %cmd, %Nat16 %argc, [0 x %Str8*]* %argv) {
+define internal void @execute(%Str8* %cmd, %Nat16 %argc, [0 x %Str8*]* %argv) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str1 to [0 x i8]*), %Str8* %cmd, %Nat16 %argc)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str2 to [0 x i8]*))
 	%3 = alloca %Nat32, align 4
@@ -591,7 +591,7 @@ define %Int32 @main() {
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	call void @main_showPrompt()
+	call void @showPrompt()
 	%3 = bitcast [1024 x %Char8]* %2 to %CharStr*
 	%4 = call %CharStr* @fgets(%CharStr* %3, %Int 1024, i8* null)
 	%5 = alloca [64 x [0 x %Char8]*], align 8
@@ -599,22 +599,22 @@ body_1:
 	%7 = mul %Nat32 %6, 8
 	%8 = bitcast [64 x [0 x %Char8]*]* %5 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %8, i8 0, %Nat32 %7, i1 0)
-	%9 = alloca %main_Tokenizer, align 8
+	%9 = alloca %Tokenizer, align 8
 	%10 = bitcast [1024 x %Char8]* %2 to [0 x %Char8]*
-	%11 = insertvalue %main_Tokenizer zeroinitializer, [0 x %Char8]* %10, 0
-	%12 = bitcast [4096 x %Char8]* @main_tokensBuf to [0 x %Char8]*
-	%13 = insertvalue %main_Tokenizer %11, [0 x %Char8]* %12, 4
+	%11 = insertvalue %Tokenizer zeroinitializer, [0 x %Char8]* %10, 0
+	%12 = bitcast [4096 x %Char8]* @tokensBuf to [0 x %Char8]*
+	%13 = insertvalue %Tokenizer %11, [0 x %Char8]* %12, 4
 	%14 = bitcast [64 x [0 x %Char8]*]* %5 to [0 x [0 x %Char8]*]*
-	%15 = insertvalue %main_Tokenizer %13, [0 x [0 x %Char8]*]* %14, 5
-	store %main_Tokenizer %15, %main_Tokenizer* %9
-	%16 = bitcast %main_Tokenizer* %9 to %main_Tokenizer*
-	call void @main_tokenize(%main_Tokenizer* %16)
-	%17 = getelementptr %main_Tokenizer, %main_Tokenizer* %9, %Int32 0, %Int32 5
+	%15 = insertvalue %Tokenizer %13, [0 x [0 x %Char8]*]* %14, 5
+	store %Tokenizer %15, %Tokenizer* %9
+	%16 = bitcast %Tokenizer* %9 to %Tokenizer*
+	call void @tokenize(%Tokenizer* %16)
+	%17 = getelementptr %Tokenizer, %Tokenizer* %9, %Int32 0, %Int32 5
 	%18 = load [0 x [0 x %Char8]*]*, [0 x [0 x %Char8]*]** %17
 	%19 = getelementptr [0 x [0 x %Char8]*], [0 x [0 x %Char8]*]* %18, %Int32 0, %Int32 0
 	%20 = load [0 x %Char8]*, [0 x %Char8]** %19
 	%21 = alloca %Nat16, align 2
-	%22 = getelementptr %main_Tokenizer, %main_Tokenizer* %9, %Int32 0, %Int32 3
+	%22 = getelementptr %Tokenizer, %Tokenizer* %9, %Int32 0, %Int32 3
 	%23 = load %Nat16, %Nat16* %22
 	store %Nat16 %23, %Nat16* %21
 ; if_0
@@ -627,14 +627,14 @@ then_0:
 	store %Nat16 %27, %Nat16* %21
 	br label %endif_0
 endif_0:
-	%28 = getelementptr %main_Tokenizer, %main_Tokenizer* %9, %Int32 0, %Int32 5
+	%28 = getelementptr %Tokenizer, %Tokenizer* %9, %Int32 0, %Int32 5
 	%29 = load [0 x [0 x %Char8]*]*, [0 x [0 x %Char8]*]** %28
 	%30 = zext i8 1 to %Nat32
 	%31 = getelementptr [0 x [0 x %Char8]*], [0 x [0 x %Char8]*]* %29, %Int32 0, %Nat32 %30
 ;
 	%32 = bitcast [0 x %Char8]** %31 to [0 x [0 x %Char8]*]*
 	%33 = load %Nat16, %Nat16* %21
-	call void @main_execute([0 x %Char8]* %20, %Nat16 %33, [0 x [0 x %Char8]*]* %32)
+	call void @execute([0 x %Char8]* %20, %Nat16 %33, [0 x [0 x %Char8]*]* %32)
 	br label %again_1
 break_1:
 	ret %Int32 0

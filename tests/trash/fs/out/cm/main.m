@@ -55,7 +55,7 @@ func bread (inode: *Inode, nblock: Nat32, block: *Block) -> Int {
 
 var super: Super
 
-public func main () -> Int {
+func main () -> Int {
 	dread(0, unsafe *Block &super)
 	super.root = 1
 

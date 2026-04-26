@@ -62,7 +62,7 @@ func routine2 (state: fsm.ComplexState, payload: Ptr) -> fsm.ComplexState {
 var timecnt: Nat32
 
 
-public func main () -> Int {
+func main () -> Int {
 	fsm.init(&fsm0, id="FSM_0", initState=&state0, payload=nil)
 
 	while true {

@@ -5,23 +5,23 @@
 #include <stdbool.h>
 #include <string.h>
 
-static uint32_t chacha20_rotl32(uint32_t x, uint32_t n) {
+static uint32_t rotl32(uint32_t x, uint32_t n) {
 	return x << n | x >> (32U - n);
 }
 
-static void chacha20_quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t __out[4]) {
+static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t __out[4]) {
 	uint32_t a0 = a;
 	uint32_t b0 = b;
 	uint32_t c0 = c;
 	uint32_t d0 = d;
 	a0 = a0 + b0;
-	d0 = chacha20_rotl32(d0 ^ a0, 16U);
+	d0 = rotl32(d0 ^ a0, 16U);
 	c0 = c0 + d0;
-	b0 = chacha20_rotl32(b0 ^ c0, 12U);
+	b0 = rotl32(b0 ^ c0, 12U);
 	a0 = a0 + b0;
-	d0 = chacha20_rotl32(d0 ^ a0, 8U);
+	d0 = rotl32(d0 ^ a0, 8U);
 	c0 = c0 + d0;
-	b0 = chacha20_rotl32(b0 ^ c0, 7U);
+	b0 = rotl32(b0 ^ c0, 7U);
 	__builtin_memcpy(__out, &(uint32_t [4]){a0, b0, c0, d0}, sizeof(uint32_t [4]));
 }
 
@@ -33,42 +33,42 @@ void chacha20_chacha20Block(uint32_t _state[16], uint32_t __out[16]) {
 	int32_t i = 0;
 	while (i < 10) {
 		uint32_t r[4];
-		chacha20_quarterRound(x[0], x[4], x[8], x[12], r);
+		quarterRound(x[0], x[4], x[8], x[12], r);
 		x[0] = r[0];
 		x[4] = r[1];
 		x[8] = r[2];
 		x[12] = r[3];
-		chacha20_quarterRound(x[1], x[5], x[9], x[13], r);
+		quarterRound(x[1], x[5], x[9], x[13], r);
 		x[1] = r[0];
 		x[5] = r[1];
 		x[9] = r[2];
 		x[13] = r[3];
-		chacha20_quarterRound(x[2], x[6], x[10], x[14], r);
+		quarterRound(x[2], x[6], x[10], x[14], r);
 		x[2] = r[0];
 		x[6] = r[1];
 		x[10] = r[2];
 		x[14] = r[3];
-		chacha20_quarterRound(x[3], x[7], x[11], x[15], r);
+		quarterRound(x[3], x[7], x[11], x[15], r);
 		x[3] = r[0];
 		x[7] = r[1];
 		x[11] = r[2];
 		x[15] = r[3];
-		chacha20_quarterRound(x[0], x[5], x[10], x[15], r);
+		quarterRound(x[0], x[5], x[10], x[15], r);
 		x[0] = r[0];
 		x[5] = r[1];
 		x[10] = r[2];
 		x[15] = r[3];
-		chacha20_quarterRound(x[1], x[6], x[11], x[12], r);
+		quarterRound(x[1], x[6], x[11], x[12], r);
 		x[1] = r[0];
 		x[6] = r[1];
 		x[11] = r[2];
 		x[12] = r[3];
-		chacha20_quarterRound(x[2], x[7], x[8], x[13], r);
+		quarterRound(x[2], x[7], x[8], x[13], r);
 		x[2] = r[0];
 		x[7] = r[1];
 		x[8] = r[2];
 		x[13] = r[3];
-		chacha20_quarterRound(x[3], x[4], x[9], x[14], r);
+		quarterRound(x[3], x[4], x[9], x[14], r);
 		x[3] = r[0];
 		x[4] = r[1];
 		x[9] = r[2];

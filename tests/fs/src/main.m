@@ -168,7 +168,7 @@ func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Int32 {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	sys.init()
 
 	printf("%s", hello)
@@ -296,7 +296,7 @@ func cmdSetPrompt (argc: Nat16, argv: *[]*Str8) -> Int32 {
 
 
 /*
-public func main () -> Int32 {
+func main () -> Int32 {
 	var buf1: [32]Char8
 	var buf2: [32]Char8
 

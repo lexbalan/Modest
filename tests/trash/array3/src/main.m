@@ -170,7 +170,7 @@ func checkLocal3DArray() {
 	}
 }
 
-public func main() -> Int32 {
+func main() -> Int32 {
 	test0()
 	test1(&a, size_m, size_n, size_p)
 	test2(&b, size_m, size_n, size_p)

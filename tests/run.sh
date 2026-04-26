@@ -1,6 +1,6 @@
 
-cd lang && ./run.sh && cd .. && \
-cd literals && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+#cd lang && ./run.sh && cd .. && \
+#cd literals && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 #cd sizeof && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd shift && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd eq && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \

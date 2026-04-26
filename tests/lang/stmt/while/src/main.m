@@ -42,7 +42,7 @@ func nestedWhile () -> Int32 {
 	return sum
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = sum(10)
 	var b = countDown(5)
 	var c = factorial(5)

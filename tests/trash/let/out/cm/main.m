@@ -4,7 +4,8 @@ include "stdio"
 
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	let x = 127
 	let y = x + 1
 

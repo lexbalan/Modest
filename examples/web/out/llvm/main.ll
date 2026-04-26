@@ -362,7 +362,7 @@ declare %Word16 @htons(%Word16 %x)
 @.str8 = private constant [32 x i8] [i8 83, i8 101, i8 114, i8 118, i8 101, i8 114, i8 32, i8 108, i8 105, i8 115, i8 116, i8 101, i8 110, i8 105, i8 110, i8 103, i8 32, i8 111, i8 110, i8 32, i8 112, i8 111, i8 114, i8 116, i8 32, i8 37, i8 100, i8 46, i8 46, i8 46, i8 10, i8 0]
 @.str9 = private constant [25 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 97, i8 99, i8 99, i8 101, i8 112, i8 116, i8 32, i8 99, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 105, i8 111, i8 110, i8 0]
 ; -- endstrings --
-@main_pageCounter = internal global %Nat32 zeroinitializer
+@pageCounter = internal global %Nat32 zeroinitializer
 
 
 ;@extern
@@ -370,7 +370,7 @@ declare %Word16 @htons(%Word16 %x)
 ;func htons(x: Word16) -> Word16 {
 ;	return (x << 8) | (x >> 8)
 ;}
-define internal void @main_handleRequest(%Int32 %clientSocket) {
+define internal void @handleRequest(%Int32 %clientSocket) {
 	%1 = alloca [1024 x %Word8], align 1
 	%2 = bitcast [1024 x %Word8]* %1 to i8*
 	%3 = call %SSizeT @read(%Int32 %clientSocket, i8* %2, %SizeT 1023)
@@ -391,7 +391,7 @@ endif_0:
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str3 to [0 x i8]*), %Str8* %10)
 	%12 = alloca [1024 x %Char8], align 1
 	%13 = bitcast [1024 x %Char8]* %12 to %CharStr*
-	%14 = load %Nat32, %Nat32* @main_pageCounter
+	%14 = load %Nat32, %Nat32* @pageCounter
 	%15 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %13, %ConstCharStr* bitcast ([56 x i8]* @.str4 to [0 x i8]*), %Str8* bitcast ([64 x i8]* @.str1 to [0 x i8]*), %Nat32 %14)
 	%16 = bitcast [1024 x %Char8]* %12 to i8*
 	%17 = bitcast [1024 x %Char8]* %12 to [0 x %ConstChar]*
@@ -463,10 +463,10 @@ then_3:
 	br label %again_1
 	br label %endif_3
 endif_3:
-	call void @main_handleRequest(%Int %23)
-	%26 = load %Nat32, %Nat32* @main_pageCounter
+	call void @handleRequest(%Int %23)
+	%26 = load %Nat32, %Nat32* @pageCounter
 	%27 = add %Nat32 %26, 1
-	store %Nat32 %27, %Nat32* @main_pageCounter
+	store %Nat32 %27, %Nat32* @pageCounter
 	br label %again_1
 break_1:
 	%28 = call %Int @close(%Int %1)

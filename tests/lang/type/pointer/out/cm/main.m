@@ -26,7 +26,8 @@ func doublePtr (pp: **Int32) -> Int32 {
 	return **pp
 }
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	var a: Int32 = 1
 	var b: Int32 = 2
 	swap(&a, &b)

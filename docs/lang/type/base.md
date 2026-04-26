@@ -83,7 +83,7 @@ Word8, Word16, Word32, Word64, Word128
 ```
 Word type is unsigned integer type that allows bitwise operations.
 ```zig
-public func main () -> Int32 {
+func main () -> Int32 {
 	var byte: Word8
 
 	// GenericInteger will be implicit casted to Word8
@@ -104,7 +104,7 @@ Int8, Int16, Int32, Int64, Int128
 ```
 
 ```zig
-public func main () -> Unit {
+func main () -> Unit {
 	var a, b: Int32
 
 	a = -1
@@ -129,7 +129,7 @@ Nat8, Nat16, Nat32, Nat64, Nat128
 ```
 
 ```zig
-public func main () -> Unit {
+func main () -> Unit {
 	var a, b: Nat32
 
 	a = Nat32 -1
@@ -159,7 +159,7 @@ Float32, Float64
 import "libc/stdio"
 import "libc/math"
 
-public func main () -> Unit {
+func main () -> Unit {
 	var pi: Float64
 
 	pi = M_PI
@@ -319,7 +319,7 @@ printf("p.y = %f\n", p.y)
 
 import "libc/stdio"
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a: Bool
 	var b: Int32
 	var c: Int64

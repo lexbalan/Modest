@@ -226,7 +226,7 @@ declare void @perror(%ConstCharStr* %str)
 @.str21 = private constant [46 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 @.str22 = private constant [19 x i8] [i8 99, i8 111, i8 112, i8 121, i8 32, i8 115, i8 108, i8 105, i8 99, i8 101, i8 32, i8 98, i8 121, i8 32, i8 118, i8 97, i8 114, i8 10, i8 0]
 ; -- endstrings --
-define internal void @main_array_print([0 x %Int32]* %pa, %Nat32 %len) {
+define internal void @array_print([0 x %Int32]* %pa, %Nat32 %len) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
 ; while_1
@@ -250,7 +250,7 @@ break_1:
 	ret void
 }
 
-define internal void @main_array4intInc([4 x %Int32]* %0, [4 x %Int32] %__a) {
+define internal void @array4intInc([4 x %Int32]* %0, [4 x %Int32] %__a) {
 	%a = alloca [4 x %Int32]
 	%2 = zext i8 4 to %Nat32
 	store [4 x %Int32] %__a, [4 x %Int32]* %a
@@ -287,7 +287,7 @@ define internal void @main_array4intInc([4 x %Int32]* %0, [4 x %Int32] %__a) {
 	ret void
 }
 
-define internal void @main_checkParamsIo() {
+define internal void @checkParamsIo() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str2 to [0 x i8]*))
 	%2 = alloca [8 x %Int32], align 4
 	%3 = insertvalue [8 x %Int32] zeroinitializer, %Int32 1, 1
@@ -307,7 +307,7 @@ define internal void @main_checkParamsIo() {
 	%16 = bitcast %Int32* %15 to [4 x %Int32]*
 	%17 = load [4 x %Int32], [4 x %Int32]* %16; alloca memory for return value
 	%18 = alloca [4 x %Int32]
-	call void @main_array4intInc([4 x %Int32]* %18, [4 x %Int32] %17)
+	call void @array4intInc([4 x %Int32]* %18, [4 x %Int32] %17)
 	%19 = load [4 x %Int32], [4 x %Int32]* %18
 	%20 = zext i8 4 to %Nat32
 	store [4 x %Int32] %19, [4 x %Int32]* %13
@@ -319,18 +319,18 @@ define internal void @main_checkParamsIo() {
 	%26 = bitcast %Int32* %25 to [4 x %Int32]*
 	%27 = load [4 x %Int32], [4 x %Int32]* %26; alloca memory for return value
 	%28 = alloca [4 x %Int32]
-	call void @main_array4intInc([4 x %Int32]* %28, [4 x %Int32] %27)
+	call void @array4intInc([4 x %Int32]* %28, [4 x %Int32] %27)
 	%29 = load [4 x %Int32], [4 x %Int32]* %28
 	%30 = zext i8 4 to %Nat32
 	store [4 x %Int32] %29, [4 x %Int32]* %23
 	%31 = bitcast [8 x %Int32]* %2 to [0 x %Int32]*
-	call void @main_array_print([0 x %Int32]* %31, %Nat32 8)
+	call void @array_print([0 x %Int32]* %31, %Nat32 8)
 	ret void
 }
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @.str3 to [0 x i8]*))
-	call void @main_checkParamsIo()
+	call void @checkParamsIo()
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @.str4 to [0 x i8]*))
 	%3 = alloca [10 x %Int32], align 4
 	%4 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
@@ -483,12 +483,12 @@ break_4:
 	%106 = getelementptr [10 x %Int32], [10 x %Int32]* %74, %Int32 0, %Nat32 %105
 	%107 = bitcast %Int32* %106 to [6 x %Int32]*
 	%108 = bitcast [6 x %Int32]* %107 to [0 x %Int32]*
-	call void @main_array_print([0 x %Int32]* %108, %Nat32 6)
+	call void @array_print([0 x %Int32]* %108, %Nat32 6)
 	%109 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @.str14 to [0 x i8]*))
 	%110 = getelementptr [6 x %Int32], [6 x %Int32]* %107, %Int32 0, %Int32 0
 	store %Int32 123, %Int32* %110
 	%111 = bitcast [6 x %Int32]* %107 to [0 x %Int32]*
-	call void @main_array_print([0 x %Int32]* %111, %Nat32 6)
+	call void @array_print([0 x %Int32]* %111, %Nat32 6)
 	%112 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @.str15 to [0 x i8]*))
 	%113 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @.str16 to [0 x i8]*))
 	%114 = alloca [0 x %Int32]*, align 8
@@ -496,7 +496,7 @@ break_4:
 	store [0 x %Int32]* %115, [0 x %Int32]** %114
 	%116 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str17 to [0 x i8]*))
 	%117 = load [0 x %Int32]*, [0 x %Int32]** %114
-	call void @main_array_print([0 x %Int32]* %117, %Nat32 10)
+	call void @array_print([0 x %Int32]* %117, %Nat32 10)
 	%118 = alloca %Int32, align 4
 	store %Int32 1, %Int32* %118
 	%119 = load [0 x %Int32]*, [0 x %Int32]** %114
@@ -507,7 +507,7 @@ break_4:
 	store [0 x %Int32]* %122, [0 x %Int32]** %114
 	%123 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @.str18 to [0 x i8]*))
 	%124 = load [0 x %Int32]*, [0 x %Int32]** %114
-	call void @main_array_print([0 x %Int32]* %124, %Nat32 10)
+	call void @array_print([0 x %Int32]* %124, %Nat32 10)
 	%125 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @.str19 to [0 x i8]*))
 	%126 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @.str20 to [0 x i8]*))
 	%127 = alloca [10 x %Int32], align 1
@@ -536,7 +536,7 @@ break_4:
 	%147 = bitcast [0 x %Int32]* %142 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %147, i8 0, %Int32 %146, i1 0)
 	%148 = bitcast [10 x %Int32]* %127 to [0 x %Int32]*
-	call void @main_array_print([0 x %Int32]* %148, %Nat32 10)
+	call void @array_print([0 x %Int32]* %148, %Nat32 10)
 	%149 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @.str21 to [0 x i8]*))
 	%150 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @.str22 to [0 x i8]*))
 	%151 = alloca [5 x %Int32], align 1
@@ -570,7 +570,7 @@ break_4:
 	%177 = zext i8 5 to %Nat32
 	store [5 x %Int32] %176, [5 x %Int32]* %171
 	%178 = bitcast [10 x %Int32]* %158 to [0 x %Int32]*
-	call void @main_array_print([0 x %Int32]* %178, %Nat32 10)
+	call void @array_print([0 x %Int32]* %178, %Nat32 10)
 	ret %Int 0
 }
 

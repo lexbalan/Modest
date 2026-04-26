@@ -4,7 +4,7 @@ include "stdio"
 pragma insert "#define CDECL"
 pragma insert "CDECL"
 
-public func main () -> Int {
+func main () -> Int {
 	printf("sizeof(Char) = %zu\n", sizeof(Char))
 	printf("sizeof(Short) = %zu\n", sizeof(Short))
 	printf("sizeof(Int) = %zu\n", sizeof(Int))

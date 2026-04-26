@@ -5,7 +5,8 @@ include "stdio"
 
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	var check: Word16 = 0x0001
 	let is_le: Bool = *(unsafe *Word8 &check) == 1
 

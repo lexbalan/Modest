@@ -53,7 +53,7 @@ func quadruple (x: Int32) -> Int32 {
 }
 
 // public function
-public func main () -> Int32 {
+func main () -> Int32 {
 	nop()
 	var x = one()
 	x = add(1, 2)

@@ -35,7 +35,7 @@ func bubble_sort32 (array: *[]Int32, len: Nat32) -> {} {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	printf("array before:\n")
 	print_array(&testArray, lengthof(testArray))
 	printf("\n")

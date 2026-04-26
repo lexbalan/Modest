@@ -41,7 +41,7 @@ var data2: [][]Str8 = [
 ]
 
 
-public func main() -> Int32 {
+func main() -> Int32 {
 	printf("lengthof(a0) = %lu\n", lengthof(a0))
 	printf("sizeof(a0) = %lu\n", sizeof(a0))
 

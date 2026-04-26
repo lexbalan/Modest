@@ -6,7 +6,7 @@ import "fixed64" as fixed
 
 
 
-public func main () -> Int {
+func main () -> Int {
 	//printf("%s-endian\n", kind)
 	let a: Fixed64 = fixed.fromInt32(-10)
 	let b: Fixed64 = fixed.fromInt32(3)

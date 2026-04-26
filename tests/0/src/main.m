@@ -4,6 +4,6 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-public func main () -> Int {
+func main () -> Int {
 	return 0
 }

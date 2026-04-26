@@ -40,7 +40,8 @@ func print_bytes (buf: *[]Word8, len: Nat32) -> Unit {
 }
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("test ^ encrypting\n")
 
 	let tmsg: *[]Word8 = unsafe *[]Word8 &test_msg

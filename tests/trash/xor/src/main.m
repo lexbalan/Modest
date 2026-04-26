@@ -42,7 +42,7 @@ func print_bytes (buf: *[]Word8, len: Nat32) -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("test ^ encrypting\n")
 
 	let tmsg = unsafe *[]Word8 &test_msg

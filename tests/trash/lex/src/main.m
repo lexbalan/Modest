@@ -102,7 +102,7 @@ func gettok (lex: *Lexer) -> Bool {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("text_file example\n")
 
 	var lexer: Lexer

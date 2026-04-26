@@ -37,7 +37,7 @@ const four = two * 2
 ```swift
 const message = "Hello World!\n"
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	printf("%s\n", message)
 	return 0
 }

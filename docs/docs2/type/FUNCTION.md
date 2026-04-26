@@ -43,7 +43,7 @@ func add (a: Int32, b: Int32) -> Int32 {
     return a + b
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
     var op: *(Int32, Int32) -> Int32 = &add
     var result = op(5, 3)  // calls add(5, 3)
     printf("Result: %d\n", result)
@@ -66,7 +66,7 @@ func multiply (a: Int32, b: Int32) -> Int32 {
     return a * b
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
     var result = apply_operation(4, 5, &multiply)
     printf("Result: %d\n", result)  // prints: Result: 20
     return 0

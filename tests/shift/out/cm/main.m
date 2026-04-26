@@ -164,7 +164,8 @@ func testShift128 () -> Bool {
 
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("test shift\n")
 
 	var result: Bool = true

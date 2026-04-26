@@ -15,7 +15,8 @@ func unitFunc () -> {} {
 }
 
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	printf("test Unit\n")
 
 	var rc: Bool

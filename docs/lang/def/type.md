@@ -14,7 +14,7 @@ type <#identifier#> = <#type_expression#>
 ```zig
 type MyInt = Int32
 
-public func main () -> Int {
+func main () -> Int {
 	var x: MyInt
 	x = 10
 	printf("x = %d\n", x)

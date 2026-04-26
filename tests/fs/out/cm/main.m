@@ -124,7 +124,7 @@ func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Int32 {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	init()
 
 	printf("HARSH :) v0.1\n")

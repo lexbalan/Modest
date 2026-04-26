@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-struct sha256_context {
+struct context {
 	uint8_t data[64];
 	uint32_t datalen;
 	uint64_t bitlen;
@@ -16,48 +16,48 @@ struct sha256_context {
 //}
 
 __attribute__((always_inline))
-static inline uint32_t sha256_rotright(uint32_t a, uint32_t b) {
+static inline uint32_t rotright(uint32_t a, uint32_t b) {
 	return a >> b | a << (32U - b);
 }
 
 __attribute__((always_inline))
-static inline uint32_t sha256_ch(uint32_t x, uint32_t y, uint32_t z) {
+static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (~x & z);
 }
 
 __attribute__((always_inline))
-static inline uint32_t sha256_maj(uint32_t x, uint32_t y, uint32_t z) {
+static inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (x & z) ^ (y & z);
 }
 
 __attribute__((always_inline))
-static inline uint32_t sha256_ep0(uint32_t x) {
-	return sha256_rotright(x, 2U) ^ sha256_rotright(x, 13U) ^ sha256_rotright(x, 22U);
+static inline uint32_t ep0(uint32_t x) {
+	return rotright(x, 2U) ^ rotright(x, 13U) ^ rotright(x, 22U);
 }
 
 __attribute__((always_inline))
-static inline uint32_t sha256_ep1(uint32_t x) {
-	return sha256_rotright(x, 6U) ^ sha256_rotright(x, 11U) ^ sha256_rotright(x, 25U);
+static inline uint32_t ep1(uint32_t x) {
+	return rotright(x, 6U) ^ rotright(x, 11U) ^ rotright(x, 25U);
 }
 
 __attribute__((always_inline))
-static inline uint32_t sha256_sig0(uint32_t x) {
-	return sha256_rotright(x, 7U) ^ sha256_rotright(x, 18U) ^ x >> 3;
+static inline uint32_t sig0(uint32_t x) {
+	return rotright(x, 7U) ^ rotright(x, 18U) ^ x >> 3;
 }
 
 __attribute__((always_inline))
-static inline uint32_t sha256_sig1(uint32_t x) {
-	return sha256_rotright(x, 17U) ^ sha256_rotright(x, 19U) ^ x >> 10;
+static inline uint32_t sig1(uint32_t x) {
+	return rotright(x, 17U) ^ rotright(x, 19U) ^ x >> 10;
 }
-#define SHA256_INITAL_STATE { \
+#define INITAL_STATE { \
 	1779033703U, 3144134277U, 1013904242U, 2773480762U, \
 	1359893119U, 2600822924U, 528734635U, 1541459225U \
 }
 
-static void sha256_contextInit(struct sha256_context *ctx) {
-	__builtin_memcpy(&ctx->state, &(const int32_t [8])SHA256_INITAL_STATE, sizeof(uint32_t [8]));
+static void contextInit(struct context *ctx) {
+	__builtin_memcpy(&ctx->state, &(const int32_t [8])INITAL_STATE, sizeof(uint32_t [8]));
 }
-#define SHA256_K { \
+#define K { \
 	0x428A2F98U, 0x71374491U, 0xB5C0FBCFU, 0xE9B5DBA5U, \
 	0x3956C25BU, 0x59F111F1U, 0x923F82A4U, 0xAB1C5ED5U, \
 	0xD807AA98U, 0x12835B01U, 0x243185BEU, 0x550C7DC3U, \
@@ -76,7 +76,7 @@ static void sha256_contextInit(struct sha256_context *ctx) {
 	0x90BEFFFAU, 0xA4506CEBU, 0xBEF9A3F7U, 0xC67178F2U \
 }
 
-static void sha256_transform(struct sha256_context *ctx, uint8_t data[]) {
+static void transform(struct context *ctx, uint8_t data[]) {
 	uint32_t m[64] = {0};
 	uint32_t i = 0U;
 	uint32_t j = 0U;
@@ -87,15 +87,15 @@ static void sha256_transform(struct sha256_context *ctx, uint8_t data[]) {
 		i = i + 1U;
 	}
 	while (i < 64U) {
-		m[i] = sha256_sig1(m[i - 2U]) + m[i - 7U] + sha256_sig0(m[i - 15U]) + m[i - 16U];
+		m[i] = sig1(m[i - 2U]) + m[i - 7U] + sig0(m[i - 15U]) + m[i - 16U];
 		i = i + 1U;
 	}
 	uint32_t x[8];
 	__builtin_memcpy(&x, &ctx->state, sizeof(uint32_t [8]));
 	i = 0U;
 	while (i < 64U) {
-		const uint32_t t1 = x[7] + sha256_ep1(x[4]) + sha256_ch(x[4], x[5], x[6]) + ((const uint32_t [64])SHA256_K)[i] + m[i];
-		const uint32_t t2 = sha256_ep0(x[0]) + sha256_maj(x[0], x[1], x[2]);
+		const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + ((const uint32_t [64])K)[i] + m[i];
+		const uint32_t t2 = ep0(x[0]) + maj(x[0], x[1], x[2]);
 		x[7] = x[6];
 		x[6] = x[5];
 		x[5] = x[4];
@@ -113,13 +113,13 @@ static void sha256_transform(struct sha256_context *ctx, uint8_t data[]) {
 	}
 }
 
-static void sha256_update(struct sha256_context *ctx, uint8_t msg[], uint32_t msgLen) {
+static void update(struct context *ctx, uint8_t msg[], uint32_t msgLen) {
 	uint32_t i = 0U;
 	while (i < msgLen) {
 		ctx->data[ctx->datalen] = msg[i];
 		ctx->datalen = ctx->datalen + 1U;
 		if (ctx->datalen == 64U) {
-			sha256_transform(ctx, (uint8_t *)&ctx->data);
+			transform(ctx, (uint8_t *)&ctx->data);
 			ctx->bitlen = ctx->bitlen + 512ULL;
 			ctx->datalen = 0U;
 		}
@@ -127,7 +127,7 @@ static void sha256_update(struct sha256_context *ctx, uint8_t msg[], uint32_t ms
 	}
 }
 
-static void sha256_final(struct sha256_context *ctx, uint8_t outHash[SHA256_HASH_SIZE]) {
+static void final(struct context *ctx, uint8_t outHash[SHA256_HASH_SIZE]) {
 	uint32_t i = ctx->datalen;
 	uint32_t n = 64U;
 	if (ctx->datalen < 56U) {
@@ -137,7 +137,7 @@ static void sha256_final(struct sha256_context *ctx, uint8_t outHash[SHA256_HASH
 	i = i + 1U;
 	memset(&ctx->data[i], 0, (size_t)(n - i));
 	if (ctx->datalen >= 56U) {
-		sha256_transform(ctx, (uint8_t *)&ctx->data);
+		transform(ctx, (uint8_t *)&ctx->data);
 		memset(&ctx->data, 0, 56ULL);
 	}
 	ctx->bitlen = ctx->bitlen + (uint64_t)ctx->datalen * 8ULL;
@@ -149,7 +149,7 @@ static void sha256_final(struct sha256_context *ctx, uint8_t outHash[SHA256_HASH
 	ctx->data[58] = (uint8_t)(ctx->bitlen >> 40);
 	ctx->data[57] = (uint8_t)(ctx->bitlen >> 48);
 	ctx->data[56] = (uint8_t)(ctx->bitlen >> 56);
-	sha256_transform(ctx, (uint8_t *)&ctx->data);
+	transform(ctx, (uint8_t *)&ctx->data);
 	i = 0U;
 	while (i < 4U) {
 		const uint32_t sh = 24U - i * 8U;
@@ -166,9 +166,9 @@ static void sha256_final(struct sha256_context *ctx, uint8_t outHash[SHA256_HASH
 }
 
 void sha256_hash(uint8_t msg[], uint32_t msgLen, uint8_t outHash[SHA256_HASH_SIZE]) {
-	struct sha256_context ctx = (struct sha256_context){0};
-	sha256_contextInit(&ctx);
-	sha256_update(&ctx, (uint8_t *)msg, msgLen);
-	sha256_final(&ctx, (uint8_t *)outHash);
+	struct context ctx = (struct context){0};
+	contextInit(&ctx);
+	update(&ctx, (uint8_t *)msg, msgLen);
+	final(&ctx, (uint8_t *)outHash);
 }
 

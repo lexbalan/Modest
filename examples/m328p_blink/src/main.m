@@ -6,7 +6,7 @@ import "avr/delay" as delay
 import "avr/m328p" as avr
 
 
-public func main () -> Int16 {
+func main () -> Int16 {
 	//let p = avr.portB
 	avr.portB.dir = 0xff
 

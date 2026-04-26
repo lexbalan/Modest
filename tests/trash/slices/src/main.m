@@ -27,7 +27,7 @@ func checkParamsIo () -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("test slices\n")
 
 	checkParamsIo()

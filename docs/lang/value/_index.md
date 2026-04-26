@@ -18,7 +18,7 @@ const arrayLength = 5
 var array: [arrayLength]Int32 = [1, 2, 3, 4, 5]
 
 
-public func main () -> Int {
+func main () -> Int {
 	var i: Nat32 = 0
 	while i < arrayLength {
 		// index array
@@ -43,7 +43,7 @@ var ptr_to_array: *[]Nat32
 // or variant with type inference:
 // var ptr_to_array = &array
 
-public func main () -> Int {
+func main () -> Int {
 	ptr_to_array = &array
 
 	var i: Nat32 = 0

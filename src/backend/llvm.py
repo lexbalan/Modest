@@ -2414,7 +2414,8 @@ def get_linkage(x):
 	if x.hasAttribute('extern'):
 		return "external"
 	if is_private(x):
-		return "internal"
+		if not x.hasAttribute('nonstatic'):
+			return "internal"
 	return ""
 
 

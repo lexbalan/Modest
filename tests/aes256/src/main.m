@@ -130,7 +130,7 @@ func runTest (test: *TestCase) -> Bool {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	printf("run AES-256 test\n")
 
 	var success = true

@@ -123,7 +123,7 @@ func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	printf("HARSH v0.1\n")
 
 	var inbuf: [1024]Char8

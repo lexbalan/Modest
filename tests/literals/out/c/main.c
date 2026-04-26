@@ -12,11 +12,11 @@ __attribute__((unused)) static inline __int128 abs128(__int128 x) {return x < 0 
 
 
 static bool test1(void) {
-	if ((int64_t)4294967295U + (int64_t)1 != 4294967296LL) {
+	if ((int64_t)4294967295U + (int64_t)1 != 4294967296ULL) {
 		printf("error: 0xffffffff + 1 != 0x100000000\n");
 		return false;
 	}
-	if ((int64_t)4294967295U * (int64_t)2 != 8589934590LL) {
+	if ((int64_t)4294967295U * (int64_t)2 != 8589934590ULL) {
 		printf("error: 0xffffffff * 2 != 0x1fffffffe\n");
 		return false;
 	}
@@ -24,17 +24,17 @@ static bool test1(void) {
 		printf("error: 0xffffffff * 2 != 0xffffffff + 0xffffffff\n");
 		return false;
 	}
-	if ((__int128_t)18446744073709551615ULL + (__int128_t)1 != BIG_INT128(0x1LL, 0x0LL)) {
+	if ((int128_t)18446744073709551615ULL + (int128_t)1 != BIG_INT128(0x1ULL, 0x0ULL)) {
 		printf("error: 0xffffffffffffffff + 1 != 0x10000000000000000\n");
 		return false;
 	}
 	#define x32 4294967295U
-	if ((int64_t)x32 + (int64_t)1 != 4294967296LL) {
+	if ((int64_t)x32 + (int64_t)1 != 4294967296ULL) {
 		printf("error: x32 + 1 != 0x100000000\n");
 		return false;
 	}
 	#define x64 18446744073709551615ULL
-	if ((__int128_t)x64 + (__int128_t)1 != BIG_INT128(0x1LL, 0x0LL)) {
+	if ((int128_t)x64 + (int128_t)1 != BIG_INT128(0x1ULL, 0x0ULL)) {
 		printf("error: x64 + 1 != 0x10000000000000000\n");
 		return false;
 	}
@@ -46,12 +46,10 @@ static bool test1(void) {
 
 int main(void) {
 	printf("test literals\n");
-	bool result;
-	bool success = true;
+	bool result = true;
 	result = test1();
-	success = success && result;
 	printf("test ");
-	if (!success) {
+	if (!result) {
 		printf("failed\n");
 		return EXIT_FAILURE;
 	}

@@ -207,7 +207,7 @@ declare void @perror(%ConstCharStr* %str)
 @.str2 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @.str3 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define internal %Int32 @main_named_args_test(%Int32 %a, %Int32 %b, %Int32 %c) {
+define internal %Int32 @named_args_test(%Int32 %a, %Int32 %b, %Int32 %c) {
 	%1 = sub %Int32 %a, %b
 	%2 = mul %Int32 %1, %c
 	ret %Int32 %2
@@ -215,7 +215,7 @@ define internal %Int32 @main_named_args_test(%Int32 %a, %Int32 %b, %Int32 %c) {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @.str1 to [0 x i8]*))
-	%2 = call %Int32 @main_named_args_test(%Int32 25, %Int32 15, %Int32 3)
+	%2 = call %Int32 @named_args_test(%Int32 25, %Int32 15, %Int32 3)
 ; if_0
 	%3 = icmp eq %Int32 30, %2
 	br %Bool %3 , label %then_0, label %else_0

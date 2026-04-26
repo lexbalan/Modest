@@ -40,7 +40,7 @@ func testNested () -> Int32 {
 	return 0
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = abs(-5)
 	var b = clamp(15, 0, 10)
 	var c = sign(-3)

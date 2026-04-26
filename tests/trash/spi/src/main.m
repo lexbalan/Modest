@@ -64,7 +64,7 @@ func port_write (x: Word8) -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	let x = spi_exchange(0x1D, cpol=0, hperiod=1)
 	printf("x = 0x%02x\n", x)
 	return 0

@@ -37,7 +37,7 @@ if <# condition1 #> {
 import "libc/stdio"
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("if statement example\n")
 
 	var a: Int32

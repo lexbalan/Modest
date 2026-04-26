@@ -8,7 +8,7 @@ include "libc/string"
 import "type"
 import "value"
 
-public func main() -> Int32 {
+func main() -> Int32 {
 	var t: *Type
 	var v: *Value
 

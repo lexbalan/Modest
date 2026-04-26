@@ -59,7 +59,7 @@ func testArrayLiterals () -> Unit {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	testIntLiterals()
 	testFloatLiterals()
 	testBoolLiterals()

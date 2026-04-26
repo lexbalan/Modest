@@ -43,7 +43,8 @@ func nestedWhile () -> Int32 {
 	return sum
 }
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	var a: Int32 = sum(10)
 	var b: Int32 = countDown(5)
 	var c: Int32 = factorial(5)

@@ -46,7 +46,7 @@ const x = 1.5
 const xx = (x / 333333) * 333333
 const y = Integer x
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var c: Context
 	var x: ZX
 	var z: ZZ

@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("while statement test\n")
 
 	var a: Nat32 = 0

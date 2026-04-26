@@ -70,7 +70,7 @@ var table10 = table.Table {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	table.print(&table00)
 	printf("\n")
 

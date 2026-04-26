@@ -40,7 +40,7 @@ func testLetMultiple () -> Int32 {
 	return d
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = testLetInt()
 	var b = testLetFloat()
 	var c = testLetBool()

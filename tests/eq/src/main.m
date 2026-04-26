@@ -124,7 +124,7 @@ public func testArraysEq () -> Bool {
 
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	printf("test eq\n")
 
 	var result = true

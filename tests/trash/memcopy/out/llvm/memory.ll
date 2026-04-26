@@ -124,15 +124,15 @@ break_2:
 ; -- end print imports public 'memory' --
 ; -- strings --
 ; -- endstrings --;
-%memory_Word = type %Word64;
-%memory_Nat = type %Nat64;
+%Word = type %Word64;
+%Nat = type %Nat64;
 ;$elseif (systemWidth == 32)
 ;type Word Word32
 ;type Nat Nat32
 ;$endif
 define void @memory_zero(i8* %mem, %Nat64 %len) {
-	%1 = ptrtoint i8* %mem to %memory_Nat
-	%2 = urem %memory_Nat %1, 8
+	%1 = ptrtoint i8* %mem to %Nat
+	%2 = urem %Nat %1, 8
 	%3 = bitcast i8* %mem to [0 x %Word8]*
 	%4 = alloca %Nat64, align 8
 	store %Nat64 0, %Nat64* %4
@@ -158,7 +158,7 @@ break_1:
 	%15 = load %Nat64, %Nat64* %4
 	%16 = trunc %Nat64 %15 to %Nat32
 	%17 = getelementptr [0 x %Word8], [0 x %Word8]* %3, %Int32 0, %Nat32 %16
-	%18 = bitcast %Word8* %17 to [0 x %memory_Word]*
+	%18 = bitcast %Word8* %17 to [0 x %Word]*
 	store %Nat64 0, %Nat64* %4
 ; while_2
 	br label %again_2
@@ -169,9 +169,9 @@ again_2:
 body_2:
 	%21 = load %Nat64, %Nat64* %4
 	%22 = trunc %Nat64 %21 to %Nat32
-	%23 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %18, %Int32 0, %Nat32 %22
-	%24 = zext i8 0 to %memory_Word
-	store %memory_Word %24, %memory_Word* %23
+	%23 = getelementptr [0 x %Word], [0 x %Word]* %18, %Int32 0, %Nat32 %22
+	%24 = zext i8 0 to %Word
+	store %Word %24, %Word* %23
 	%25 = load %Nat64, %Nat64* %4
 	%26 = add %Nat64 %25, 1
 	store %Nat64 %26, %Nat64* %4
@@ -181,8 +181,8 @@ break_2:
 	%28 = urem %Nat64 %27, 8
 	%29 = load %Nat64, %Nat64* %4
 	%30 = trunc %Nat64 %29 to %Nat32
-	%31 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %18, %Int32 0, %Nat32 %30
-	%32 = bitcast %memory_Word* %31 to [0 x %Word8]*
+	%31 = getelementptr [0 x %Word], [0 x %Word]* %18, %Int32 0, %Nat32 %30
+	%32 = bitcast %Word* %31 to [0 x %Word8]*
 	store %Nat64 0, %Nat64* %4
 ; while_3
 	br label %again_3
@@ -206,8 +206,8 @@ break_3:
 
 define void @memory_copy(i8* %dst, i8* %src, %Nat64 %len) {
 	%1 = udiv %Nat64 %len, 8
-	%2 = bitcast i8* %src to [0 x %memory_Word]*
-	%3 = bitcast i8* %dst to [0 x %memory_Word]*
+	%2 = bitcast i8* %src to [0 x %Word]*
+	%3 = bitcast i8* %dst to [0 x %Word]*
 	%4 = alloca %Nat64, align 8
 	store %Nat64 0, %Nat64* %4
 ; while_1
@@ -219,12 +219,12 @@ again_1:
 body_1:
 	%7 = load %Nat64, %Nat64* %4
 	%8 = trunc %Nat64 %7 to %Nat32
-	%9 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %3, %Int32 0, %Nat32 %8
+	%9 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Nat32 %8
 	%10 = load %Nat64, %Nat64* %4
 	%11 = trunc %Nat64 %10 to %Nat32
-	%12 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %2, %Int32 0, %Nat32 %11
-	%13 = load %memory_Word, %memory_Word* %12
-	store %memory_Word %13, %memory_Word* %9
+	%12 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Nat32 %11
+	%13 = load %Word, %Word* %12
+	store %Word %13, %Word* %9
 	%14 = load %Nat64, %Nat64* %4
 	%15 = add %Nat64 %14, 1
 	store %Nat64 %15, %Nat64* %4
@@ -233,12 +233,12 @@ break_1:
 	%16 = urem %Nat64 %len, 8
 	%17 = load %Nat64, %Nat64* %4
 	%18 = trunc %Nat64 %17 to %Nat32
-	%19 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %2, %Int32 0, %Nat32 %18
-	%20 = bitcast %memory_Word* %19 to [0 x %Word8]*
+	%19 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Nat32 %18
+	%20 = bitcast %Word* %19 to [0 x %Word8]*
 	%21 = load %Nat64, %Nat64* %4
 	%22 = trunc %Nat64 %21 to %Nat32
-	%23 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %3, %Int32 0, %Nat32 %22
-	%24 = bitcast %memory_Word* %23 to [0 x %Word8]*
+	%23 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Nat32 %22
+	%24 = bitcast %Word* %23 to [0 x %Word8]*
 	store %Nat64 0, %Nat64* %4
 ; while_2
 	br label %again_2
@@ -265,8 +265,8 @@ break_2:
 
 define %Bool @memory_eq(i8* %mem0, i8* %mem1, %Nat64 %len) {
 	%1 = udiv %Nat64 %len, 8
-	%2 = bitcast i8* %mem0 to [0 x %memory_Word]*
-	%3 = bitcast i8* %mem1 to [0 x %memory_Word]*
+	%2 = bitcast i8* %mem0 to [0 x %Word]*
+	%3 = bitcast i8* %mem1 to [0 x %Word]*
 	%4 = alloca %Nat64, align 8
 	store %Nat64 0, %Nat64* %4
 ; while_1
@@ -279,13 +279,13 @@ body_1:
 ; if_0
 	%7 = load %Nat64, %Nat64* %4
 	%8 = trunc %Nat64 %7 to %Nat32
-	%9 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %2, %Int32 0, %Nat32 %8
+	%9 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Nat32 %8
 	%10 = load %Nat64, %Nat64* %4
 	%11 = trunc %Nat64 %10 to %Nat32
-	%12 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %3, %Int32 0, %Nat32 %11
-	%13 = load %memory_Word, %memory_Word* %9
-	%14 = load %memory_Word, %memory_Word* %12
-	%15 = icmp ne %memory_Word %13, %14
+	%12 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Nat32 %11
+	%13 = load %Word, %Word* %9
+	%14 = load %Word, %Word* %12
+	%15 = icmp ne %Word %13, %14
 	br %Bool %15 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
@@ -299,12 +299,12 @@ break_1:
 	%19 = urem %Nat64 %len, 8
 	%20 = load %Nat64, %Nat64* %4
 	%21 = trunc %Nat64 %20 to %Nat32
-	%22 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %2, %Int32 0, %Nat32 %21
-	%23 = bitcast %memory_Word* %22 to [0 x %Word8]*
+	%22 = getelementptr [0 x %Word], [0 x %Word]* %2, %Int32 0, %Nat32 %21
+	%23 = bitcast %Word* %22 to [0 x %Word8]*
 	%24 = load %Nat64, %Nat64* %4
 	%25 = trunc %Nat64 %24 to %Nat32
-	%26 = getelementptr [0 x %memory_Word], [0 x %memory_Word]* %3, %Int32 0, %Nat32 %25
-	%27 = bitcast %memory_Word* %26 to [0 x %Word8]*
+	%26 = getelementptr [0 x %Word], [0 x %Word]* %3, %Int32 0, %Nat32 %25
+	%27 = bitcast %Word* %26 to [0 x %Word8]*
 	store %Nat64 0, %Nat64* %4
 ; while_2
 	br label %again_2

@@ -28,7 +28,8 @@ func readMagic (h: *PackedHeader) -> Nat8 {
 	return h.magic
 }
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	var h: PackedHeader = makeHeader(171, 2, 128)
 	var m: Nat8 = readMagic(&h)
 	var d: PackedData = {flags = 1, id = 42, value = 1000}

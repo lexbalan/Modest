@@ -10,7 +10,7 @@
 //include "lightfood/print"
 //pragma c_include "./print.h"
 
-static ssize_t main_my_printf(char *format, ...) {
+static ssize_t my_printf(char *format, ...) {
 	va_list va;
 	va_list va2;
 	va_copy(va2, va);
@@ -25,18 +25,18 @@ static ssize_t main_my_printf(char *format, ...) {
 
 int main(void) {
 	uint32_t k = 10U;
-	main_my_printf("My Printf Test %u\n", k);
+	my_printf("My Printf Test %u\n", k);
 	const char c = '$';
 	char *const s = "Hi!";
 	const int32_t i = (int32_t)-1;
 	const uint32_t n = 123U;
 	const uint32_t x = 305419903U;
-	main_my_printf("\x0\x0\n");
-	main_my_printf("c = '%c'\n", c);
-	main_my_printf("s = \"%s\"\n", s);
-	main_my_printf("i = %i\n", i);
-	main_my_printf("n = %i\n", n);
-	main_my_printf("x = 0x%x\n", x);
+	my_printf("\x0\x0\n");
+	my_printf("c = '%c'\n", c);
+	my_printf("s = \"%s\"\n", s);
+	my_printf("i = %i\n", i);
+	my_printf("n = %i\n", n);
+	my_printf("x = 0x%x\n", x);
 	return 0;
 }
 

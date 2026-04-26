@@ -8,7 +8,7 @@
 var x = Str8 "sss"
 var y = @volatile Nat32 0
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	return 0
 }
 

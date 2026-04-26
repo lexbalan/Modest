@@ -7,13 +7,13 @@
 #include <stdio.h>
 #include "list.h"
 
-static void main_nat32_list_insert(struct list_list *lst, uint32_t x) {
+static void nat32_list_insert(struct list_list *lst, uint32_t x) {
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
 	list_append(lst, p_nat32);
 }
 
-static void main_list_print_forward(struct list_list *lst) {
+static void list_print_forward(struct list_list *lst) {
 	printf("list_print_forward:\n");
 	struct list_node *pn = list_first_node_get(lst);
 	while (pn != NULL) {
@@ -23,7 +23,7 @@ static void main_list_print_forward(struct list_list *lst) {
 	}
 }
 
-static void main_list_print_backward(struct list_list *lst) {
+static void list_print_backward(struct list_list *lst) {
 	printf("list_print_backward:\n");
 	struct list_node *pn = list_last_node_get(lst);
 	while (pn != NULL) {
@@ -40,21 +40,21 @@ int main(void) {
 		printf("error: cannot create list");
 		return 1;
 	}
-	main_nat32_list_insert(list0, 0U);
-	main_nat32_list_insert(list0, 10U);
-	main_nat32_list_insert(list0, 20U);
-	main_nat32_list_insert(list0, 30U);
-	main_nat32_list_insert(list0, 40U);
-	main_nat32_list_insert(list0, 50U);
-	main_nat32_list_insert(list0, 60U);
-	main_nat32_list_insert(list0, 70U);
-	main_nat32_list_insert(list0, 80U);
-	main_nat32_list_insert(list0, 90U);
-	main_nat32_list_insert(list0, 100U);
+	nat32_list_insert(list0, 0U);
+	nat32_list_insert(list0, 10U);
+	nat32_list_insert(list0, 20U);
+	nat32_list_insert(list0, 30U);
+	nat32_list_insert(list0, 40U);
+	nat32_list_insert(list0, 50U);
+	nat32_list_insert(list0, 60U);
+	nat32_list_insert(list0, 70U);
+	nat32_list_insert(list0, 80U);
+	nat32_list_insert(list0, 90U);
+	nat32_list_insert(list0, 100U);
 	const uint32_t list_size = list_size_get(list0);
 	printf("linked list size: %u\n", list_size);
-	main_list_print_forward(list0);
-	main_list_print_backward(list0);
+	list_print_forward(list0);
+	list_print_backward(list0);
 	printf("\nlist.node_get(list, n) test\n");
 	int32_t i = 0;
 	while (i >= -12) {
@@ -85,7 +85,7 @@ int main(void) {
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = 1234U;
 	list_insert(list0, 4, p_nat32);
-	main_list_print_forward(list0);
+	list_print_forward(list0);
 	return 0;
 }
 

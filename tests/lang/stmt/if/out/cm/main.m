@@ -41,7 +41,8 @@ func testNested () -> Int32 {
 	return 0
 }
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	var a: Int32 = abs(-5)
 	var b: Int32 = clamp(15, 0, 10)
 	var c: Int32 = sign(-3)

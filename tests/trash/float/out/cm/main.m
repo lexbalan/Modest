@@ -29,7 +29,8 @@ func slope (a: Point2D, b: Point2D) -> Float32 {
 }
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("float test\n")
 
 	printf("2 = %d\n", Int32 2)

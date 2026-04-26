@@ -4,7 +4,7 @@ include "stdio"
 
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("builtin.compiler.name = %s\n", *Str8 name)
 	let ver = version
 	printf("builtin.compiler.version.major = %u\n", ver.major)

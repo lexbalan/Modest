@@ -16,63 +16,63 @@ typedef uint32_t char32_t;
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
 #endif
-struct main_point {
+struct point {
 	uint32_t x;
 	uint32_t y;
 };
-struct main_mixed1 {
+struct mixed1 {
 	char c;
 	int32_t i;
 	double f;
 };
-struct main_mixed2 {
+struct mixed2 {
 	int32_t i;
 	char c;
 	double f;
 	char c2[3];
-	struct main_mixed1 m;
+	struct mixed1 m;
 };
-struct main_mixed3 {
+struct mixed3 {
 	char c;
 	int32_t i;
 	double f;
 	char c2[9];
 };
-struct main_mixed4 {
-	struct main_mixed2 s;
+struct mixed4 {
+	struct mixed2 s;
 	char c;
 	int32_t i;
 	double f;
 	char c2[9];
 	int16_t i2;
-	struct main_point p[3];
-	struct main_mixed3 s2;
+	struct point p[3];
+	struct mixed3 s2;
 };
-static char main_c;
-static int32_t main_i;
-static double main_f;
-static int16_t main_i2;
-static struct main_point main_p[3];
-static bool main_g;
-struct main_x {
+static char c;
+static int32_t i;
+static double f;
+static int16_t i2;
+static struct point p[3];
+static bool g;
+struct x {
 	char c;
 	int32_t i;
 	double f;
 	int16_t i2;
-	struct main_point p[3];
+	struct point p[3];
 	bool g;
 };
-static struct main_x main_x;
+static struct x x;
 
 int main(void) {
 	printf("test cast operation\n");
-	const uint64_t start_adr = (uint64_t)&main_c;
-	printf("off(c) = %llu\n", (uint64_t)&main_c - start_adr);
-	printf("off(i) = %llu\n", (uint64_t)&main_i - start_adr);
-	printf("off(f) = %llu\n", (uint64_t)&main_f - start_adr);
-	printf("off(i2) = %llu\n", (uint64_t)&main_i2 - start_adr);
-	printf("off(p) = %llu\n", (uint64_t)&main_p - start_adr);
-	printf("off(g) = %llu\n", (uint64_t)&main_g - start_adr);
+	const uint64_t start_adr = (uint64_t)&c;
+	printf("off(c) = %llu\n", (uint64_t)&c - start_adr);
+	printf("off(i) = %llu\n", (uint64_t)&i - start_adr);
+	printf("off(f) = %llu\n", (uint64_t)&f - start_adr);
+	printf("off(i2) = %llu\n", (uint64_t)&i2 - start_adr);
+	printf("off(p) = %llu\n", (uint64_t)&p - start_adr);
+	printf("off(g) = %llu\n", (uint64_t)&g - start_adr);
 	printf("sizeof(Unit) = %zu\n", (size_t)0);
 	printf("alignof(Unit) = %zu\n", (size_t)1);
 	printf("sizeof(Bool) = %zu\n", sizeof(bool));
@@ -107,17 +107,17 @@ int main(void) {
 	printf("alignof(*Str8) = %zu\n", __alignof(char *));
 	printf("sizeof([10]Int32) = %zu\n", sizeof(int32_t [10]));
 	printf("alignof([10]Int32) = %zu\n", __alignof(int32_t [10]));
-	printf("> alignof([3]Point) = %zu\n", __alignof(struct main_point [3]));
-	printf("sizeof(Point) = %zu\n", sizeof(struct main_point));
-	printf("alignof(Point) = %zu\n", __alignof(struct main_point));
-	printf("sizeof(Mixed1) = %zu\n", sizeof(struct main_mixed1));
-	printf("alignof(Mixed1) = %zu\n", __alignof(struct main_mixed1));
-	printf("sizeof(Mixed2) = %zu\n", sizeof(struct main_mixed2));
-	printf("alignof(Mixed2) = %zu\n", __alignof(struct main_mixed2));
-	printf("sizeof(Mixed3) = %zu\n", sizeof(struct main_mixed3));
-	printf("alignof(Mixed3) = %zu\n", __alignof(struct main_mixed3));
-	printf("sizeof(Mixed4) = %zu\n", sizeof(struct main_mixed4));
-	printf("alignof(Mixed4) = %zu\n", __alignof(struct main_mixed4));
+	printf("> alignof([3]Point) = %zu\n", __alignof(struct point [3]));
+	printf("sizeof(Point) = %zu\n", sizeof(struct point));
+	printf("alignof(Point) = %zu\n", __alignof(struct point));
+	printf("sizeof(Mixed1) = %zu\n", sizeof(struct mixed1));
+	printf("alignof(Mixed1) = %zu\n", __alignof(struct mixed1));
+	printf("sizeof(Mixed2) = %zu\n", sizeof(struct mixed2));
+	printf("alignof(Mixed2) = %zu\n", __alignof(struct mixed2));
+	printf("sizeof(Mixed3) = %zu\n", sizeof(struct mixed3));
+	printf("alignof(Mixed3) = %zu\n", __alignof(struct mixed3));
+	printf("sizeof(Mixed4) = %zu\n", sizeof(struct mixed4));
+	printf("alignof(Mixed4) = %zu\n", __alignof(struct mixed4));
 	return 0;
 }
 

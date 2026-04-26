@@ -208,7 +208,7 @@ declare void @perror(%ConstCharStr* %str)
 @.str3 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 51, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 33, i8 10, i8 0]
 @.str4 = private constant [12 x i8] [i8 100, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 ; -- endstrings --
-define internal void @main_getarr10([10 x %Int32]* %0) {
+define internal void @getarr10([10 x %Int32]* %0) {
 	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%3 = insertvalue [10 x %Int32] %2, %Int32 2, 2
 	%4 = insertvalue [10 x %Int32] %3, %Int32 3, 3
@@ -223,7 +223,7 @@ define internal void @main_getarr10([10 x %Int32]* %0) {
 	ret void
 }
 
-define internal void @main_arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %Int32] %__b) {
+define internal void @arraysAdd([10 x %Int32]* %0, [10 x %Int32] %__a, [10 x %Int32] %__b) {
 	%a = alloca [10 x %Int32]
 	%2 = zext i8 10 to %Nat32
 	store [10 x %Int32] %__a, [10 x %Int32]* %a
@@ -266,7 +266,7 @@ break_1:
 
 define %Int32 @main() {; alloca memory for return value
 	%1 = alloca [10 x %Int32]
-	call void @main_getarr10([10 x %Int32]* %1)
+	call void @getarr10([10 x %Int32]* %1)
 ; if_0
 	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
 	%3 = insertvalue [10 x %Int32] %2, %Int32 2, 2
@@ -312,7 +312,7 @@ endif_0:
 	%37 = insertvalue [10 x %Int32] %36, %Int32 80, 8
 	%38 = insertvalue [10 x %Int32] %37, %Int32 90, 9; alloca memory for return value
 	%39 = alloca [10 x %Int32]
-	call void @main_arraysAdd([10 x %Int32]* %39, [10 x %Int32] %29, [10 x %Int32] %38)
+	call void @arraysAdd([10 x %Int32]* %39, [10 x %Int32] %29, [10 x %Int32] %38)
 ; if_1
 	%40 = insertvalue [10 x %Int32] zeroinitializer, %Int32 11, 1
 	%41 = insertvalue [10 x %Int32] %40, %Int32 22, 2
@@ -338,7 +338,7 @@ endif_1:
 	%56 = load [10 x %Int32], [10 x %Int32]* %1
 	%57 = load [10 x %Int32], [10 x %Int32]* %1; alloca memory for return value
 	%58 = alloca [10 x %Int32]
-	call void @main_arraysAdd([10 x %Int32]* %58, [10 x %Int32] %56, [10 x %Int32] %57)
+	call void @arraysAdd([10 x %Int32]* %58, [10 x %Int32] %56, [10 x %Int32] %57)
 ; if_2
 	%59 = insertvalue [10 x %Int32] zeroinitializer, %Int32 2, 1
 	%60 = insertvalue [10 x %Int32] %59, %Int32 4, 2

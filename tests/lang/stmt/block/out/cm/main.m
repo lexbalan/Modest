@@ -36,7 +36,8 @@ func testWhileScope () -> Int32 {
 	return sum
 }
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	var a: Int32 = testIfScope()
 	var b: Int32 = testNestedIfScope()
 	var c: Int32 = testWhileScope()

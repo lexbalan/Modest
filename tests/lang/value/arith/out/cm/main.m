@@ -52,7 +52,7 @@ func testFloatArith () -> Float64 {
 	return a + b * c
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a: Int32 = testAdd()
 	var b: Int32 = testSub()
 	var c: Int32 = testMul()

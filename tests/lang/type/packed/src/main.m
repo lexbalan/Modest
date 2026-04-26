@@ -27,7 +27,7 @@ func readMagic (h: *PackedHeader) -> Nat8 {
 	return h.magic
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var h = makeHeader(171, 2, 128)
 	var m = readMagic(&h)
 	var d: PackedData = {flags = 1, id = 42, value = 1000}

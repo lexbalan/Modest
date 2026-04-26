@@ -5,7 +5,7 @@ include "libc/stdio"
 include "libc/math"
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("generic types test\n")
 
 	let t1 = test_generic_integer()

@@ -27,7 +27,7 @@ var p0: Point = {
 //]
 
 
-public func main () -> Int {
+func main () -> Int {
 	return 0
 }
 

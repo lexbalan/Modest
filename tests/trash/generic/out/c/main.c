@@ -27,39 +27,39 @@ typedef uint32_t char32_t;
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
 #endif
-static bool main_test_generic_integer(void);
-static bool main_test_generic_float(void);
-static bool main_test_generic_char(void);
-static bool main_test_generic_array(void);
-static bool main_test_generic_record(void);
+static bool test_generic_integer(void);
+static bool test_generic_float(void);
+static bool test_generic_char(void);
+static bool test_generic_array(void);
+static bool test_generic_record(void);
 
 int main(void) {
 	printf("generic types test\n");
-	const bool t1 = main_test_generic_integer();
+	const bool t1 = test_generic_integer();
 	if (t1) {
 		printf("test_generic_integer passed\n");
 	} else {
 		printf("test_generic_integer failed\n");
 	}
-	const bool t2 = main_test_generic_float();
+	const bool t2 = test_generic_float();
 	if (t2) {
 		printf("test_generic_float passed\n");
 	} else {
 		printf("test_generic_float failed\n");
 	}
-	const bool t3 = main_test_generic_char();
+	const bool t3 = test_generic_char();
 	if (t3) {
 		printf("test_generic_char passed\n");
 	} else {
 		printf("test_generic_char failed\n");
 	}
-	const bool t4 = main_test_generic_array();
+	const bool t4 = test_generic_array();
 	if (t4) {
 		printf("test_generic_array passed\n");
 	} else {
 		printf("test_generic_array failed\n");
 	}
-	const bool t5 = main_test_generic_record();
+	const bool t5 = test_generic_record();
 	if (t5) {
 		printf("test_generic_record passed\n");
 	} else {
@@ -68,7 +68,7 @@ int main(void) {
 	return 0;
 }
 
-static bool main_test_generic_integer(void) {
+static bool test_generic_integer(void) {
 	#define one 1
 	#define two (1 + one)
 	int32_t a = one;
@@ -85,7 +85,7 @@ static bool main_test_generic_integer(void) {
 	#undef two
 }
 
-static bool main_test_generic_float(void) {
+static bool test_generic_float(void) {
 	#define pi 3.1415926535897932384626433832795028841971693993751058209749445923
 	float f = pi;
 	double g = pi;
@@ -94,7 +94,7 @@ static bool main_test_generic_float(void) {
 	#undef pi
 }
 
-static bool main_test_generic_char(void) {
+static bool test_generic_char(void) {
 	#define a "A"
 	char b = a[0];
 	char16_t c = a[0];
@@ -104,7 +104,7 @@ static bool main_test_generic_char(void) {
 	#undef a
 }
 
-static bool main_test_generic_array(void) {
+static bool test_generic_array(void) {
 	#define a {0, 1, 2, 3}
 	uint32_t i = 0U;
 	if (__builtin_memcmp(&(const int8_t [4])a, &(int8_t [4]){0, 1, 2, 3}, sizeof(const int8_t [4])) != 0) {
@@ -131,23 +131,23 @@ static bool main_test_generic_array(void) {
 	return true;
 	#undef a
 }
-struct main_point2_d {
+struct point2_d {
 	int32_t x;
 	int32_t y;
 };
-struct main_point3_d {
+struct point3_d {
 	int32_t x;
 	int32_t y;
 	int32_t z;
 };
 
-static bool main_test_generic_record(void) {
+static bool test_generic_record(void) {
 	#define p {.x = 10, .y = 20}
-	struct main_point2_d point_2d;
-	point_2d = (struct main_point2_d)p;
+	struct point2_d point_2d;
+	point_2d = (struct point2_d)p;
 	(void)point_2d;
-	struct main_point3_d point_3d;
-	point_3d = (struct main_point3_d){.x = 10, .y = 20};
+	struct point3_d point_3d;
+	point_3d = (struct point3_d){.x = 10, .y = 20};
 	(void)point_3d;
 	return true;
 	#undef p

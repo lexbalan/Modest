@@ -63,7 +63,7 @@ type X = {
 
 var x: X
 
-public func main () -> Int {
+func main () -> Int {
 	printf("test cast operation\n")
 
 	let start_adr = unsafe Nat64 &c

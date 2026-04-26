@@ -42,7 +42,7 @@ func returnFromWhile () -> Int32 {
 	return -1
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = returnInt()
 	var b = returnBool()
 	var c = returnFloat()

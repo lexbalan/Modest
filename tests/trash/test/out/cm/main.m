@@ -48,7 +48,7 @@ var f: Int32
 
 var p: *Int32
 
-public func main() -> Int32 {
+func main() -> Int32 {
 	print3DArray(&a, 2, 2, 3)
 
 	foo(1, 2)

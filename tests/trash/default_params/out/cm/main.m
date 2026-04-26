@@ -42,7 +42,8 @@ func test2 () -> Bool {
 }
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("test default parameters\n")
 
 	let test1_passed: Bool = test1()

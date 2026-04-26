@@ -22,7 +22,7 @@ type Point = {
 	y: Int32
 }
 
-public func main () -> Unit {
+func main () -> Unit {
 	var p: Point
 
 	// we can initialize record with 'literal record value'

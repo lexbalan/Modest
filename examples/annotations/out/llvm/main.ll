@@ -206,46 +206,46 @@ declare void @perror(%ConstCharStr* %str)
 @.str1 = private constant [5 x i8] [i8 104, i8 105, i8 33, i8 10, i8 0]
 @.str2 = private constant [20 x i8] [i8 65, i8 116, i8 116, i8 114, i8 105, i8 98, i8 117, i8 116, i8 101, i8 115, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 ; -- endstrings --
-%main_MyInt32 = type %Int32;
-%main_MyInt32_2 = type %main_MyInt32;
-%main_MyInt32_3 = type %main_MyInt32;
-@main_vvb = internal global %Int32 1
-%main_ProtocolHeader = type {
+%MyInt32 = type %Int32;
+%MyInt32_2 = type %MyInt32;
+%MyInt32_3 = type %MyInt32;
+@vvb = internal global %Int32 1
+%ProtocolHeader = type {
 	%Word16,
 	%Nat16
 };
 
-@main_name1 = internal global %Bool zeroinitializer
-@main_name11 = internal global %Bool zeroinitializer
-@main_ext = external global %Int32
-@main_ext_arr = external global [0 x %Int32]
-@main_x = internal global %Word32 zeroinitializer, section "__DATA, .xdata", align 8
-@main_s = internal global %Nat16 zeroinitializer
-@main_u = internal global %Word64 zeroinitializer
-@main_u2 = internal global %Word64 zeroinitializer
-@main_rp = internal global %Word32* zeroinitializer
-@main_vb = internal global [32 x %Bool] zeroinitializer
-define internal %Int32 @main_staticInlineFunc(%Int32 %x) alwaysinline {
+@name1 = internal global %Bool zeroinitializer
+@name11 = internal global %Bool zeroinitializer
+@ext = external global %Int32
+@ext_arr = external global [0 x %Int32]
+@x = internal global %Word32 zeroinitializer, section "__DATA, .xdata", align 8
+@s = global %Nat16 zeroinitializer
+@u = internal global %Word64 zeroinitializer
+@u2 = internal global %Word64 zeroinitializer
+@rp = internal global %Word32* zeroinitializer
+@vb = internal global [32 x %Bool] zeroinitializer
+define internal %Int32 @staticInlineFunc(%Int32 %x) alwaysinline {
 	%1 = add %Int32 %x, 1
 	ret %Int32 %1
 }
 
-define internal %Int32 @main_staticNoinlineFunc(%Int32 %x) noinline {
+define internal %Int32 @staticNoinlineFunc(%Int32 %x) noinline {
 	%1 = add %Int32 %x, 1
 	ret %Int32 %1
 }
 
-define internal %Int32 @main_staticInlineHintFunc(%Int32 %x) inlinehint {
+define internal %Int32 @staticInlineHintFunc(%Int32 %x) inlinehint {
 	%1 = add %Int32 %x, 1
 	ret %Int32 %1
 }
 
-%main_Point2D = type {
+%Point2D = type {
 	%Float64,
 	%Float64
 };
 
-define internal void @main_hello() {
+define internal void @hello() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @.str1 to [0 x i8]*))
 	ret void
 }
@@ -253,7 +253,7 @@ define internal void @main_hello() {
 define %Int32 @main() {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
-	call void @main_hello()
+	call void @hello()
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str2 to [0 x i8]*))
 	ret %Int32 0
 }

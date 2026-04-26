@@ -223,7 +223,8 @@ var wrap0 = Wrap {
 
 var awrap: [2]*Wrap = [&wrap0, &wrap0]
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	xy({x = 10, y = 20})
 
 	printf("test1 (eq): ")

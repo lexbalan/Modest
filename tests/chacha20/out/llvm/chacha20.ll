@@ -127,7 +127,7 @@ break_2:
 %chacha20_Key = type [8 x %Word32];
 %chacha20_State = type [16 x %Word32];
 %chacha20_Block = type [16 x %Word32];
-define internal %Word32 @chacha20_rotl32(%Word32 %x, %Nat32 %n) {
+define internal %Word32 @rotl32(%Word32 %x, %Nat32 %n) {
 	%1 = bitcast %Nat32 %n to %Word32
 	%2 = shl %Word32 %x, %1
 	%3 = sub %Nat32 32, %n
@@ -137,7 +137,7 @@ define internal %Word32 @chacha20_rotl32(%Word32 %x, %Nat32 %n) {
 	ret %Word32 %6
 }
 
-define internal void @chacha20_quarterRound([4 x %Word32]* %0, %Word32 %a, %Word32 %b, %Word32 %c, %Word32 %d) {
+define internal void @quarterRound([4 x %Word32]* %0, %Word32 %a, %Word32 %b, %Word32 %c, %Word32 %d) {
 	%2 = alloca %Word32, align 4
 	store %Word32 %a, %Word32* %2
 	%3 = alloca %Word32, align 4
@@ -156,7 +156,7 @@ define internal void @chacha20_quarterRound([4 x %Word32]* %0, %Word32 %a, %Word
 	%12 = load %Word32, %Word32* %5
 	%13 = load %Word32, %Word32* %2
 	%14 = xor %Word32 %12, %13
-	%15 = call %Word32 @chacha20_rotl32(%Word32 %14, %Nat32 16)
+	%15 = call %Word32 @rotl32(%Word32 %14, %Nat32 16)
 	store %Word32 %15, %Word32* %5
 	%16 = load %Word32, %Word32* %4
 	%17 = bitcast %Word32 %16 to %Nat32
@@ -168,7 +168,7 @@ define internal void @chacha20_quarterRound([4 x %Word32]* %0, %Word32 %a, %Word
 	%22 = load %Word32, %Word32* %3
 	%23 = load %Word32, %Word32* %4
 	%24 = xor %Word32 %22, %23
-	%25 = call %Word32 @chacha20_rotl32(%Word32 %24, %Nat32 12)
+	%25 = call %Word32 @rotl32(%Word32 %24, %Nat32 12)
 	store %Word32 %25, %Word32* %3
 	%26 = load %Word32, %Word32* %2
 	%27 = bitcast %Word32 %26 to %Nat32
@@ -180,7 +180,7 @@ define internal void @chacha20_quarterRound([4 x %Word32]* %0, %Word32 %a, %Word
 	%32 = load %Word32, %Word32* %5
 	%33 = load %Word32, %Word32* %2
 	%34 = xor %Word32 %32, %33
-	%35 = call %Word32 @chacha20_rotl32(%Word32 %34, %Nat32 8)
+	%35 = call %Word32 @rotl32(%Word32 %34, %Nat32 8)
 	store %Word32 %35, %Word32* %5
 	%36 = load %Word32, %Word32* %4
 	%37 = bitcast %Word32 %36 to %Nat32
@@ -192,7 +192,7 @@ define internal void @chacha20_quarterRound([4 x %Word32]* %0, %Word32 %a, %Word
 	%42 = load %Word32, %Word32* %3
 	%43 = load %Word32, %Word32* %4
 	%44 = xor %Word32 %42, %43
-	%45 = call %Word32 @chacha20_rotl32(%Word32 %44, %Nat32 7)
+	%45 = call %Word32 @rotl32(%Word32 %44, %Nat32 7)
 	store %Word32 %45, %Word32* %3
 	%46 = load %Word32, %Word32* %2
 	%47 = load %Word32, %Word32* %3
@@ -238,7 +238,7 @@ body_1:
 	%16 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 12
 	%17 = load %Word32, %Word32* %16; alloca memory for return value
 	%18 = alloca [4 x %Word32]
-	call void @chacha20_quarterRound([4 x %Word32]* %18, %Word32 %11, %Word32 %13, %Word32 %15, %Word32 %17)
+	call void @quarterRound([4 x %Word32]* %18, %Word32 %11, %Word32 %13, %Word32 %15, %Word32 %17)
 	%19 = load [4 x %Word32], [4 x %Word32]* %18
 	%20 = zext i8 4 to %Nat32
 	store [4 x %Word32] %19, [4 x %Word32]* %9
@@ -267,7 +267,7 @@ body_1:
 	%39 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 13
 	%40 = load %Word32, %Word32* %39; alloca memory for return value
 	%41 = alloca [4 x %Word32]
-	call void @chacha20_quarterRound([4 x %Word32]* %41, %Word32 %34, %Word32 %36, %Word32 %38, %Word32 %40)
+	call void @quarterRound([4 x %Word32]* %41, %Word32 %34, %Word32 %36, %Word32 %38, %Word32 %40)
 	%42 = load [4 x %Word32], [4 x %Word32]* %41
 	%43 = zext i8 4 to %Nat32
 	store [4 x %Word32] %42, [4 x %Word32]* %9
@@ -296,7 +296,7 @@ body_1:
 	%62 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 14
 	%63 = load %Word32, %Word32* %62; alloca memory for return value
 	%64 = alloca [4 x %Word32]
-	call void @chacha20_quarterRound([4 x %Word32]* %64, %Word32 %57, %Word32 %59, %Word32 %61, %Word32 %63)
+	call void @quarterRound([4 x %Word32]* %64, %Word32 %57, %Word32 %59, %Word32 %61, %Word32 %63)
 	%65 = load [4 x %Word32], [4 x %Word32]* %64
 	%66 = zext i8 4 to %Nat32
 	store [4 x %Word32] %65, [4 x %Word32]* %9
@@ -325,7 +325,7 @@ body_1:
 	%85 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 15
 	%86 = load %Word32, %Word32* %85; alloca memory for return value
 	%87 = alloca [4 x %Word32]
-	call void @chacha20_quarterRound([4 x %Word32]* %87, %Word32 %80, %Word32 %82, %Word32 %84, %Word32 %86)
+	call void @quarterRound([4 x %Word32]* %87, %Word32 %80, %Word32 %82, %Word32 %84, %Word32 %86)
 	%88 = load [4 x %Word32], [4 x %Word32]* %87
 	%89 = zext i8 4 to %Nat32
 	store [4 x %Word32] %88, [4 x %Word32]* %9
@@ -354,7 +354,7 @@ body_1:
 	%108 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 15
 	%109 = load %Word32, %Word32* %108; alloca memory for return value
 	%110 = alloca [4 x %Word32]
-	call void @chacha20_quarterRound([4 x %Word32]* %110, %Word32 %103, %Word32 %105, %Word32 %107, %Word32 %109)
+	call void @quarterRound([4 x %Word32]* %110, %Word32 %103, %Word32 %105, %Word32 %107, %Word32 %109)
 	%111 = load [4 x %Word32], [4 x %Word32]* %110
 	%112 = zext i8 4 to %Nat32
 	store [4 x %Word32] %111, [4 x %Word32]* %9
@@ -383,7 +383,7 @@ body_1:
 	%131 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 12
 	%132 = load %Word32, %Word32* %131; alloca memory for return value
 	%133 = alloca [4 x %Word32]
-	call void @chacha20_quarterRound([4 x %Word32]* %133, %Word32 %126, %Word32 %128, %Word32 %130, %Word32 %132)
+	call void @quarterRound([4 x %Word32]* %133, %Word32 %126, %Word32 %128, %Word32 %130, %Word32 %132)
 	%134 = load [4 x %Word32], [4 x %Word32]* %133
 	%135 = zext i8 4 to %Nat32
 	store [4 x %Word32] %134, [4 x %Word32]* %9
@@ -412,7 +412,7 @@ body_1:
 	%154 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 13
 	%155 = load %Word32, %Word32* %154; alloca memory for return value
 	%156 = alloca [4 x %Word32]
-	call void @chacha20_quarterRound([4 x %Word32]* %156, %Word32 %149, %Word32 %151, %Word32 %153, %Word32 %155)
+	call void @quarterRound([4 x %Word32]* %156, %Word32 %149, %Word32 %151, %Word32 %153, %Word32 %155)
 	%157 = load [4 x %Word32], [4 x %Word32]* %156
 	%158 = zext i8 4 to %Nat32
 	store [4 x %Word32] %157, [4 x %Word32]* %9
@@ -441,7 +441,7 @@ body_1:
 	%177 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 14
 	%178 = load %Word32, %Word32* %177; alloca memory for return value
 	%179 = alloca [4 x %Word32]
-	call void @chacha20_quarterRound([4 x %Word32]* %179, %Word32 %172, %Word32 %174, %Word32 %176, %Word32 %178)
+	call void @quarterRound([4 x %Word32]* %179, %Word32 %172, %Word32 %174, %Word32 %176, %Word32 %178)
 	%180 = load [4 x %Word32], [4 x %Word32]* %179
 	%181 = zext i8 4 to %Nat32
 	store [4 x %Word32] %180, [4 x %Word32]* %9

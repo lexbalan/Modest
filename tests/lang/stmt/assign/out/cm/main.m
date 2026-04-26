@@ -58,7 +58,8 @@ func testGlobalAssign () -> Unit {
 }
 
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	testSimple()
 	testExpandedCompound()
 	testIncDec()

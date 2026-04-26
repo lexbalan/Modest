@@ -256,78 +256,78 @@ declare void @perror(%ConstCharStr* %str)
 @.str51 = private constant [22 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 77, i8 105, i8 120, i8 101, i8 100, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
 @.str52 = private constant [23 x i8] [i8 97, i8 108, i8 105, i8 103, i8 110, i8 111, i8 102, i8 40, i8 77, i8 105, i8 120, i8 101, i8 100, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
 ; -- endstrings --
-%main_Point = type {
+%Point = type {
 	%Nat32,
 	%Nat32
 };
 
-%main_Mixed1 = type {
+%Mixed1 = type {
 	%Char8,
 	%Int32,
 	%Float64
 };
 
-%main_Mixed2 = type {
+%Mixed2 = type {
 	%Int32,
 	%Char8,
 	%Float64,
 	[3 x %Char8],
-	%main_Mixed1
+	%Mixed1
 };
 
-%main_Mixed3 = type {
+%Mixed3 = type {
 	%Char8,
 	%Int32,
 	%Float64,
 	[9 x %Char8]
 };
 
-%main_Mixed4 = type {
-	%main_Mixed2,
+%Mixed4 = type {
+	%Mixed2,
 	%Char8,
 	%Int32,
 	%Float64,
 	[9 x %Char8],
 	%Int16,
-	[3 x %main_Point],
-	%main_Mixed3
+	[3 x %Point],
+	%Mixed3
 };
 
-@main_c = internal global %Char8 zeroinitializer
-@main_i = internal global %Int32 zeroinitializer
-@main_f = internal global %Float64 zeroinitializer
-@main_i2 = internal global %Int16 zeroinitializer
-@main_p = internal global [3 x %main_Point] zeroinitializer
-@main_g = internal global %Bool zeroinitializer
-%main_X = type {
+@c = internal global %Char8 zeroinitializer
+@i = internal global %Int32 zeroinitializer
+@f = internal global %Float64 zeroinitializer
+@i2 = internal global %Int16 zeroinitializer
+@p = internal global [3 x %Point] zeroinitializer
+@g = internal global %Bool zeroinitializer
+%X = type {
 	%Char8,
 	%Int32,
 	%Float64,
 	%Int16,
-	[3 x %main_Point],
+	[3 x %Point],
 	%Bool
 };
 
-@main_x = internal global %main_X zeroinitializer
+@x = internal global %X zeroinitializer
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str1 to [0 x i8]*))
-	%2 = ptrtoint %Char8* @main_c to %Nat64
-	%3 = ptrtoint %Char8* @main_c to %Nat64
+	%2 = ptrtoint %Char8* @c to %Nat64
+	%3 = ptrtoint %Char8* @c to %Nat64
 	%4 = sub %Nat64 %3, %2
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str2 to [0 x i8]*), %Nat64 %4)
-	%6 = ptrtoint %Int32* @main_i to %Nat64
+	%6 = ptrtoint %Int32* @i to %Nat64
 	%7 = sub %Nat64 %6, %2
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str3 to [0 x i8]*), %Nat64 %7)
-	%9 = ptrtoint %Float64* @main_f to %Nat64
+	%9 = ptrtoint %Float64* @f to %Nat64
 	%10 = sub %Nat64 %9, %2
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str4 to [0 x i8]*), %Nat64 %10)
-	%12 = ptrtoint %Int16* @main_i2 to %Nat64
+	%12 = ptrtoint %Int16* @i2 to %Nat64
 	%13 = sub %Nat64 %12, %2
 	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @.str5 to [0 x i8]*), %Nat64 %13)
-	%15 = ptrtoint [3 x %main_Point]* @main_p to %Nat64
+	%15 = ptrtoint [3 x %Point]* @p to %Nat64
 	%16 = sub %Nat64 %15, %2
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str6 to [0 x i8]*), %Nat64 %16)
-	%18 = ptrtoint %Bool* @main_g to %Nat64
+	%18 = ptrtoint %Bool* @g to %Nat64
 	%19 = sub %Nat64 %18, %2
 	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str7 to [0 x i8]*), %Nat64 %19)
 	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str8 to [0 x i8]*), %Size 0)

@@ -15,7 +15,7 @@ func unitFunc () -> {} {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	printf("test Unit\n")
 
 	var rc: Bool

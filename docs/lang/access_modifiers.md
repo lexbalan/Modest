@@ -20,7 +20,7 @@ func secretFunc () -> Unit {
 ```
 public const moduleName = "Main"
 
-public func main () -> Unit {
+func main () -> Unit {
 	// do something
 }
 ```

@@ -51,7 +51,7 @@ func thread1 (param: Ptr) -> Ptr {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("Hello threads!\n")
 
 	var rc: Int32

@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "memory.h"
-struct main_object {
+struct object {
 	char firstname[32];
 	char lastname[32];
 	int32_t age;
@@ -13,14 +13,14 @@ struct main_object {
 
 int main(void) {
 	printf("memcopy test\n");
-	struct main_object o1;
-	struct main_object o2;
-	o1 = (struct main_object){
+	struct object o1;
+	struct object o2;
+	o1 = (struct object){
 		.firstname = "John",
 		.lastname = "Doe",
 		.age = 30
 	};
-	const size_t len = sizeof(struct main_object);
+	const size_t len = sizeof(struct object);
 	printf("LEN = %zu\n", len);
 	memory_copy((void *)&o2, (void *)&o1, len);
 	printf("firstname = '%s'\n", o2.firstname);

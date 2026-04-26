@@ -37,7 +37,7 @@ func testLengthof () -> Int32 {
 	return lengthof(arr)
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = testSizeof()
 	var b = testAlignof()
 	var c = testOffsetof()

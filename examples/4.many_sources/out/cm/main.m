@@ -6,7 +6,8 @@ include "stdio"
 import "lib" as lib
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("hello from main\n")
 	foo()
 	return 0

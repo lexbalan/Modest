@@ -10,7 +10,7 @@ var arr1: []Int32 = arr
 var str = "Hello!"   // -> *[]Char8
 
 
-public func main () -> Int {
+func main () -> Int {
 	var x: Int32 = 127
 	var y = x + 1
 

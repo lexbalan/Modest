@@ -52,7 +52,7 @@ A Simple example that asks the user to enter a number from 0 to 9, and if it is 
 ```swift
 import "libc/stdio"
 
-public func main () -> Int32 {
+func main () -> Int32 {
 
 	// variable definition statement
 	var number: Int32

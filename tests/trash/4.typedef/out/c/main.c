@@ -4,11 +4,11 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-typedef int32_t main_NewInt32;
+typedef int32_t NewInt32;
 
 int main(void) {
 	printf("test typedef\n");
-	main_NewInt32 newInt32;
+	NewInt32 newInt32;
 	newInt32 = 0;
 	(void)newInt32;
 	return 0;

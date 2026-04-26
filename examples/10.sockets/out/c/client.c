@@ -11,18 +11,18 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
-#define CLIENT_FILENAME "file.txt"
-#define CLIENT_IP_ADDRESS "127.0.0.1"
-#define CLIENT_PORT 8080
-#define CLIENT_BUF_SIZE 1024
+#define FILENAME "file.txt"
+#define IP_ADDRESS "127.0.0.1"
+#define PORT 8080
+#define BUF_SIZE 1024
 
-static bool client_sendFile(FILE *fp, int sockFd) {
-	char data[CLIENT_BUF_SIZE];
+static bool sendFile(FILE *fp, int sockFd) {
+	char data[BUF_SIZE];
 	while (fgets(data, LENGTHOF(data), fp) != NULL) {
 		if (send(sockFd, data, sizeof data, 0) == -1) {
 			return false;
 		}
-		__builtin_bzero(&data, sizeof(char [CLIENT_BUF_SIZE]));
+		__builtin_bzero(&data, sizeof(char [BUF_SIZE]));
 	}
 	return true;
 }
@@ -36,9 +36,9 @@ int main(void) {
 	printf("[+] Server socket created\n");
 	struct sockaddr_in server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
-		.sin_port = CLIENT_PORT,
+		.sin_port = PORT,
 		.sin_addr = {
-			.s_addr = inet_addr(CLIENT_IP_ADDRESS)
+			.s_addr = inet_addr(IP_ADDRESS)
 		}
 	};
 	struct sockaddr *const sockaddr = (struct sockaddr *)(void *)&server_addr;
@@ -48,12 +48,12 @@ int main(void) {
 		exit(1);
 	}
 	printf("[+] Connected to server\n");
-	FILE *const fp = fopen(CLIENT_FILENAME, "r");
+	FILE *const fp = fopen(FILENAME, "r");
 	if (fp == NULL) {
 		perror("[-] Error in reading file");
 		exit(1);
 	}
-	const bool suc = client_sendFile(fp, sockFd);
+	const bool suc = sendFile(fp, sockFd);
 	if (suc) {
 		printf("[+] File data send successfully\n");
 	} else {

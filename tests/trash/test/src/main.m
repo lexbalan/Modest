@@ -44,7 +44,7 @@ func foo (x: Int32, y: Int32 = 50) -> Unit {
 var f: @volatile Int32
 var p: *Int32
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	print3DArray(&a, 2, 2, 3)
 
 	foo(1, 2)

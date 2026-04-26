@@ -11,7 +11,7 @@ public type Rec1 {
 	p: *Rec0
 }
 var ss: [10]Char8 = "abcdefghkj"
-public func main() -> Int32 {
+func main() -> Int32 {
 	let c = Char32 "#"
 	print("%c", c)
 

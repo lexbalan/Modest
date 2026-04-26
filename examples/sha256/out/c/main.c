@@ -8,14 +8,14 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
-#define MAIN_INPUT_DATA_LENGTH 32
-struct main_sha256_test_case {
-	char inputData[MAIN_INPUT_DATA_LENGTH];
+#define INPUT_DATA_LENGTH 32
+struct sha256_test_case {
+	char inputData[INPUT_DATA_LENGTH];
 	uint32_t inputDataLen;
 
 	sha256_Hash expectedResult;
 };
-static struct main_sha256_test_case main_test0 = (struct main_sha256_test_case){
+static struct sha256_test_case test0 = (struct sha256_test_case){
 	.inputData = "abc",
 	.inputDataLen = 3,
 	.expectedResult = {
@@ -25,7 +25,7 @@ static struct main_sha256_test_case main_test0 = (struct main_sha256_test_case){
 		180, 16, 255, 97, 242, 0, 21, 173
 	}
 };
-static struct main_sha256_test_case main_test1 = (struct main_sha256_test_case){
+static struct sha256_test_case test1 = (struct sha256_test_case){
 	.inputData = "Hello World!",
 	.inputDataLen = 12,
 	.expectedResult = {
@@ -35,9 +35,9 @@ static struct main_sha256_test_case main_test1 = (struct main_sha256_test_case){
 		74, 221, 210, 0, 18, 109, 144, 105
 	}
 };
-#define MAIN_TESTS {&main_test0, &main_test1}
+#define TESTS {&test0, &test1}
 
-static bool main_doTest(struct main_sha256_test_case *test) {
+static bool doTest(struct sha256_test_case *test) {
 	sha256_Hash test_hash;
 	uint8_t (*const msg)[] = (uint8_t (*)[])test->inputData;
 	const uint32_t msgLen = test->inputDataLen;
@@ -57,8 +57,8 @@ int main(void) {
 	printf("test SHA256\n");
 	uint32_t i = 0U;
 	while (i < 2) {
-		struct main_sha256_test_case *const test = ((struct main_sha256_test_case *const [2])MAIN_TESTS)[i];
-		const bool testResult = main_doTest(test);
+		struct sha256_test_case *const test = ((struct sha256_test_case *const [2])TESTS)[i];
+		const bool testResult = doTest(test);
 		char *res = "failed";
 		if (testResult) {
 			res = "passed";

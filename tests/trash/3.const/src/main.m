@@ -44,7 +44,7 @@ var points2 = points
 
 
 // define function main
-public func main () -> Int {
+func main () -> Int {
 	printf("test const\n")
 
 	var y: X = {

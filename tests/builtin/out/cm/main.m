@@ -6,7 +6,7 @@ include "stdlib"
 
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("test builtin\n")
 
 	var w: Word32

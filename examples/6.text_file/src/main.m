@@ -47,7 +47,7 @@ func read_example () -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("text_file example\n")
 	write_example()
 	read_example()

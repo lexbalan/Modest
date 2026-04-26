@@ -39,7 +39,7 @@ func compareFloat (a: Float64, b: Float64) -> Bool {
 	return a < b
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a: Bool = testEq()
 	var b: Bool = testNeq()
 	var c: Bool = testLt()

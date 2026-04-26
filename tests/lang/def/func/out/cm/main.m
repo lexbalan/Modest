@@ -54,7 +54,8 @@ func quadruple (x: Int32) -> Int32 {
 }
 
 // public function
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	nop()
 	var x: Int32 = one()
 	x = add(1, 2)

@@ -64,7 +64,7 @@ type Number = Int32
 const minNumber = Number 0
 const maxNumber = Number 10
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	let number = get_number(minNumber, maxNumber)
 
 	let n = Number 5

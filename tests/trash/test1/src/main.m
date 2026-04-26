@@ -224,7 +224,7 @@ func argtest (a: Int32, b: Int32=0) -> Int32 {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	//ab_test()
 
 	argtest(1)

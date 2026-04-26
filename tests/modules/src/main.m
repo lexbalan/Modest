@@ -7,7 +7,7 @@ public import "./lib/lib"
 pragma c_include "./lib/lib.h"
 
 
-public func main () -> Int {
+func main () -> Int {
 	var librarian: lib.Librarian
 	var mod1: lib.mod1.Mod
 	var mod2: lib.mod2.Mod

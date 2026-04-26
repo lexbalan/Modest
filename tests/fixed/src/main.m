@@ -80,7 +80,7 @@ func testFixed32Static () -> Bool {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	printf("test fixed\n")
 
 	let success = testFixed32Static()

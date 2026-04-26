@@ -28,12 +28,12 @@
 //   5.2 Получить размер массива (в байтах)
 //
 //   6.1 Создать VLA массив
-#define MAIN_CONSTANT_ARRAY ({1, 2, 3, 4, 5} + {6, 7, 8, 9, 10})
-static int32_t main_globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-static char main_arrayFromString[3] = {'a', 'b', 'c'};
+#define CONSTANT_ARRAY ({1, 2, 3, 4, 5} + {6, 7, 8, 9, 10})
+static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+static char arrayFromString[3] = {'a', 'b', 'c'};
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
-static void main_f0(char *_x, char *__out) {
+static void f0(char *_x, char *__out) {
 	char x[20];
 	__builtin_memcpy(x, _x, sizeof(char [20]));
 	char local_copy_of_x[20];
@@ -56,10 +56,10 @@ static void main_f0(char *_x, char *__out) {
 	res[13] = '\x0';
 	__builtin_memcpy(__out, &res, sizeof(char [30]));
 }
-#define MAIN_START_SEQUENCE {170, 85, 2}
-#define MAIN_STOP_SEQUENCE {22}
+#define START_SEQUENCE {170, 85, 2}
+#define STOP_SEQUENCE {22}
 
-static void main_test(void) {
+static void test(void) {
 	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
 	uint32_t i = 0U;
 	while (i < LENGTHOF(yy)) {
@@ -68,7 +68,7 @@ static void main_test(void) {
 		i = i + 1U;
 	}
 }
-static int32_t main_a0[2][2][5] = {
+static int32_t a0[2][2][5] = {
 	{
 		{0, 1, 2, 3, 4},
 		{5, 6, 7, 8, 9}
@@ -78,12 +78,12 @@ static int32_t main_a0[2][2][5] = {
 		{15, 16, 17, 18, 19}
 	}
 };
-static int32_t main_a1[5] = {0, 1, 2, 3, 4};
-static int32_t main_a2[5] = {5, 6, 7, 8, 9};
-static int32_t (*main_a3[2])[5] = {&main_a1, &main_a2};
-static int32_t (*(*main_a4[2])[2])[5] = {&main_a3, &main_a3};
-static int32_t (*(*(*main_p0)[2])[2])[5] = &main_a4;
-static int32_t main_a10[10][10] = {
+static int32_t a1[5] = {0, 1, 2, 3, 4};
+static int32_t a2[5] = {5, 6, 7, 8, 9};
+static int32_t (*a3[2])[5] = {&a1, &a2};
+static int32_t (*(*a4[2])[2])[5] = {&a3, &a3};
+static int32_t (*(*(*p0)[2])[2])[5] = &a4;
+static int32_t a10[10][10] = {
 	{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
 	{11, 12, 13, 14, 15, 16, 17, 18, 19, 20},
 	{21, 22, 23, 24, 25, 26, 27, 28, 29, 30},
@@ -96,7 +96,7 @@ static int32_t main_a10[10][10] = {
 	{91, 92, 93, 94, 95, 96, 97, 98, 99, 100}
 };
 
-static void main_test_arrays(void) {
+static void test_arrays(void) {
 	int32_t i;
 	int32_t j;
 	int32_t k;
@@ -104,7 +104,7 @@ static void main_test_arrays(void) {
 	while (i < 10) {
 		j = 0;
 		while (j < 10) {
-			main_a10[i][j] = main_a10[i][j] * 2;
+			a10[i][j] = a10[i][j] * 2;
 			j = j + 1;
 		}
 		i = i + 1;
@@ -113,7 +113,7 @@ static void main_test_arrays(void) {
 	while (i < 10) {
 		j = 0;
 		while (j < 10) {
-			printf("a10[%d][%d] = %d\n", i, j, main_a10[i][j]);
+			printf("a10[%d][%d] = %d\n", i, j, a10[i][j]);
 			j = j + 1;
 		}
 		i = i + 1;
@@ -124,7 +124,7 @@ static void main_test_arrays(void) {
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, main_a0[i][j][k]);
+				printf("a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -135,7 +135,7 @@ static void main_test_arrays(void) {
 	while (i < 2) {
 		j = 0;
 		while (j < 5) {
-			printf("a3[%d][%d] = %d\n", i, j, (*main_a3[i])[j]);
+			printf("a3[%d][%d] = %d\n", i, j, (*a3[i])[j]);
 			j = j + 1;
 		}
 		i = i + 1;
@@ -146,7 +146,7 @@ static void main_test_arrays(void) {
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, (*(*main_a4[i])[j])[k]);
+				printf("a3[%d][%d][%d] = %d\n", i, j, k, (*(*a4[i])[j])[k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -159,7 +159,7 @@ static void main_test_arrays(void) {
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("p0[%d][%d][%d] = %d\n", i, j, k, (*(*(*main_p0)[i])[j])[k]);
+				printf("p0[%d][%d][%d] = %d\n", i, j, k, (*(*(*p0)[i])[j])[k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -169,13 +169,13 @@ static void main_test_arrays(void) {
 }
 
 int main(void) {
-	main_test();
+	test();
 	char em[30];
-	main_f0("Hello World!", em);
+	f0("Hello World!", em);
 	printf("em = %s\n", em);
 	uint32_t i = 0U;
 	while (i < 10U) {
-		const int32_t a = main_globalArray[i];
+		const int32_t a = globalArray[i];
 		printf("globalArray[%i] = %i\n", i, a);
 		i = i + 1U;
 	}
@@ -189,7 +189,7 @@ int main(void) {
 	}
 	printf("------------------------------------\n");
 	int32_t (*globalArrayPtr)[];
-	globalArrayPtr = &main_globalArray;
+	globalArrayPtr = &globalArray;
 	i = 0U;
 	while (i < 3U) {
 		const int32_t a = (*globalArrayPtr)[i];
@@ -246,11 +246,11 @@ int main(void) {
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
-	__builtin_memcpy(&main_globalArray, &init_array, sizeof(int32_t [10]));
-	printf("globalArray[%i] = %i\n", 0, main_globalArray[0]);
-	printf("globalArray[%i] = %i\n", 1, main_globalArray[1]);
-	printf("globalArray[%i] = %i\n", 2, main_globalArray[2]);
-	__builtin_bzero(&main_globalArray, sizeof(int32_t [10]));
+	__builtin_memcpy(&globalArray, &init_array, sizeof(int32_t [10]));
+	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
+	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
+	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
+	__builtin_bzero(&globalArray, sizeof(int32_t [10]));
 	int32_t ax = 10;
 	int32_t bx = 20;
 	int32_t cx = 30;
@@ -269,7 +269,7 @@ int main(void) {
 	} else {
 		printf("test failed\n");
 	}
-	main_test_arrays();
+	test_arrays();
 	int32_t va = 5;
 	int32_t vb = 7;
 	int32_t varr[4];

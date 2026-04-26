@@ -4,7 +4,8 @@ include "ctypes64"
 
 import "lightfood/console" as console
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	print("test console print\n")
 
 	let c = Char32 "🐀"

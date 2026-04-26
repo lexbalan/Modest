@@ -1621,8 +1621,9 @@ def do_def_func(x):
 	storage_class = ''
 	if x.hasAttribute('extern'):
 		storage_class = 'extern'
-	elif (x.access_level == HLIR_ACCESS_LEVEL_PRIVATE) or x.hasAttribute('static'):
-		storage_class = 'static'
+	elif not x.hasAttribute('nonstatic'):
+		if (x.access_level == HLIR_ACCESS_LEVEL_PRIVATE) or x.hasAttribute('static'):
+			storage_class = 'static'
 
 	if x.hasAttribute('inline'):
 		if storage_class != '':

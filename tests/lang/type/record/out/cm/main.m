@@ -83,7 +83,8 @@ func testUnion () -> Bool {
 }
 
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	var p: Point = makePoint(3, 4)
 	var d: Int32 = distance(origin, p)
 	modifyPoint(&p)

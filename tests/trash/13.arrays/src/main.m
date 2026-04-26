@@ -195,7 +195,7 @@ func test_arrays () -> Unit {
 
 
 
-public func main () -> Int {
+func main () -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	test()

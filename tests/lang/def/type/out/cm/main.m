@@ -40,7 +40,8 @@ type Callback = (a: Int32) -> Int32
 type Predicate = (x: Int32) -> Bool
 type Action = () -> {}
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	return 0
 }
 

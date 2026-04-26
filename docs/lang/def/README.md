@@ -47,7 +47,7 @@ func sum64 (a: Int64, b: Int64) -> Int64 {
 	return a + b
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	show_greeting(greetingText)
 
 	let a = 10

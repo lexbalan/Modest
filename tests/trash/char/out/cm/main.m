@@ -10,7 +10,8 @@ const utf32Char = "🐀"
 
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("test/char\n")
 
 	var ch08: Char8

@@ -387,7 +387,7 @@ func cc (input: *Str, output: *Str) -> Unit {
 
 
 
-public func main () -> Int {
+func main () -> Int {
 	cc("main.x", "out.s")
 
 	return Int Word8(errcnt > 0)

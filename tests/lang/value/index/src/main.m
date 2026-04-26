@@ -32,7 +32,7 @@ func multiDim () -> Int32 {
 	return m[1][2]
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = readIndex()
 	writeIndex()
 	var b = indexWithVar()

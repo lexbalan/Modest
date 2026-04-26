@@ -35,7 +35,7 @@ func testFloatWiden () -> Float64 {
 	return Float64 x
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = testIntToFloat()
 	var b = testFloatToInt()
 	var c = testWidenInt()

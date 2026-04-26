@@ -7,7 +7,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-public func main () -> Int {
+func main () -> Int {
 
 	// builtin.compiler
 	printf("builtin.compiler.name = %s\n", *Str8 builtin.compiler.name)

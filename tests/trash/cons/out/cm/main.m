@@ -4,7 +4,8 @@ include "stdio"
 
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("test cons operation\n")
 
 

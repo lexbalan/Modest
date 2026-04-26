@@ -5,7 +5,8 @@ include "stdio"
 
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("bool check\nm")
 
 	var x: Nat8

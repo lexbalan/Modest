@@ -14,7 +14,7 @@ public func print(form: *Str8, ...) -> Unit {
 }
 
 
-public func main() -> Int32 {
+func main() -> Int32 {
 	let c = Char32 "#"
 	print("%c", c)
 	return 0

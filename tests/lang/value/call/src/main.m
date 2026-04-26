@@ -30,7 +30,7 @@ func withExprArgs () -> Int32 {
 	return add(1 + 2, 3 * 4)
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = identity(42)
 	var b = add(1, 2)
 	var c = add3(1, 2, 3)

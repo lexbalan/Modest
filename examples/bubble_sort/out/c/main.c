@@ -7,9 +7,9 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
-static int32_t main_testArray[23] = {-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9};
+static int32_t testArray[23] = {-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9};
 
-static bool main_bubble_sort32_iter(int32_t array[], uint32_t len) {
+static bool bubble_sort32_iter(int32_t array[], uint32_t len) {
 	bool wasSwap = false;
 	uint32_t i = 0U;
 	while (i < len - 1U) {
@@ -25,24 +25,24 @@ static bool main_bubble_sort32_iter(int32_t array[], uint32_t len) {
 	return wasSwap;
 }
 
-static void main_bubble_sort32(int32_t array[], uint32_t len) {
-	while (main_bubble_sort32_iter((int32_t *)array, len)) {
+static void bubble_sort32(int32_t array[], uint32_t len) {
+	while (bubble_sort32_iter((int32_t *)array, len)) {
 	}
 }
-static void main_print_array(int32_t array[], uint32_t len);
+static void print_array(int32_t array[], uint32_t len);
 
 int32_t main(void) {
 	printf("array before:\n");
-	main_print_array((int32_t *)&main_testArray, LENGTHOF(main_testArray));
+	print_array((int32_t *)&testArray, LENGTHOF(testArray));
 	printf("\n");
-	main_bubble_sort32((int32_t *)&main_testArray, LENGTHOF(main_testArray));
+	bubble_sort32((int32_t *)&testArray, LENGTHOF(testArray));
 	printf("array after:\n");
-	main_print_array((int32_t *)&main_testArray, LENGTHOF(main_testArray));
+	print_array((int32_t *)&testArray, LENGTHOF(testArray));
 	printf("\n");
 	return 0;
 }
 
-static void main_print_array(int32_t array[], uint32_t len) {
+static void print_array(int32_t array[], uint32_t len) {
 	printf("\n");
 	uint32_t i = 0U;
 	while (i < len) {

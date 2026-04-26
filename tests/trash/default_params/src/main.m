@@ -42,7 +42,7 @@ func test2 () -> Bool {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("test default parameters\n")
 
 	//func2(b=10, 10)  // error: positional argument follows keyword argument

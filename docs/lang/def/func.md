@@ -31,7 +31,7 @@ func test_sum () -> Unit {
 	}
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	test_sum()
 	return 0
 }

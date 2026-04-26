@@ -231,14 +231,14 @@ declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
 @.str5 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 @.str6 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-%main_Test = type {
+%Test = type {
 	[128 x %Byte],
 	%Nat32,
 	%Word32
 };
 
-@main_tests = internal global [3 x %main_Test] [
-	%main_Test {
+@tests = internal global [3 x %Test] [
+	%Test {
 		[128 x %Byte] [
 			%Byte 49,
 			%Byte 50,
@@ -372,7 +372,7 @@ declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
 		%Nat32 9,
 		%Word32 3421780262
 	},
-	%main_Test {
+	%Test {
 		[128 x %Byte] [
 			%Byte 84,
 			%Byte 104,
@@ -506,7 +506,7 @@ declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
 		%Nat32 43,
 		%Word32 1095738169
 	},
-	%main_Test {
+	%Test {
 		[128 x %Byte] [
 			%Byte 84,
 			%Byte 101,
@@ -641,13 +641,13 @@ declare %Word32 @crc32_run([0 x %Word8]* %buf, %Nat32 %len)
 		%Word32 210206561
 	}
 ]
-define internal %Bool @main_runTest(%main_Test* %test) {
-	%1 = getelementptr %main_Test, %main_Test* %test, %Int32 0, %Int32 0
+define internal %Bool @runTest(%Test* %test) {
+	%1 = getelementptr %Test, %Test* %test, %Int32 0, %Int32 0
 	%2 = bitcast [128 x %Byte]* %1 to [0 x %Byte]*
-	%3 = getelementptr %main_Test, %main_Test* %test, %Int32 0, %Int32 1
+	%3 = getelementptr %Test, %Test* %test, %Int32 0, %Int32 1
 	%4 = load %Nat32, %Nat32* %3
 	%5 = call %Word32 @crc32_run([0 x %Byte]* %2, %Nat32 %4)
-	%6 = getelementptr %main_Test, %main_Test* %test, %Int32 0, %Int32 2
+	%6 = getelementptr %Test, %Test* %test, %Int32 0, %Int32 2
 	%7 = load %Word32, %Word32* %6
 	%8 = icmp eq %Word32 %5, %7
 	ret %Bool %8
@@ -670,8 +670,8 @@ body_1:
 ; if_0
 	%6 = load %Nat32, %Nat32* %3
 	%7 = bitcast %Nat32 %6 to %Nat32
-	%8 = getelementptr [3 x %main_Test], [3 x %main_Test]* @main_tests, %Int32 0, %Nat32 %7
-	%9 = call %Bool @main_runTest(%main_Test* %8)
+	%8 = getelementptr [3 x %Test], [3 x %Test]* @tests, %Int32 0, %Nat32 %7
+	%9 = call %Bool @runTest(%Test* %8)
 	%10 = xor %Bool %9, 1
 	br %Bool %10 , label %then_0, label %else_0
 then_0:

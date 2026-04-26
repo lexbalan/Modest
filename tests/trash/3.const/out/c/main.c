@@ -16,52 +16,52 @@ typedef uint32_t char32_t;
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
 #endif
-#define MAIN_GENERIC_INT_CONST 42
-#define MAIN_INT32_CONST ((int32_t)MAIN_GENERIC_INT_CONST)
-#define MAIN_GENERIC_STRING_CONST "Hello!"
-#define MAIN_STRING8_CONST MAIN_GENERIC_STRING_CONST
-#define MAIN_STRING16_CONST (_STR16(MAIN_GENERIC_STRING_CONST))
-#define MAIN_STRING32_CONST (_STR32(MAIN_GENERIC_STRING_CONST))
-struct main_point {
+#define GENERIC_INT_CONST 42
+#define INT32_CONST ((int32_t)GENERIC_INT_CONST)
+#define GENERIC_STRING_CONST "Hello!"
+#define STRING8_CONST GENERIC_STRING_CONST
+#define STRING16_CONST (_STR16(GENERIC_STRING_CONST))
+#define STRING32_CONST (_STR32(GENERIC_STRING_CONST))
+struct point {
 	uint32_t x;
 	uint32_t y;
 };
-struct main_x {
-	struct main_point p;
-	struct main_point a[2];
+struct x {
+	struct point p;
+	struct point a[2];
 };
-#define MAIN_PS { \
+#define PS { \
 	{.x = 0, .y = 0}, \
 	{.x = 1, .y = 1}, \
 	{.x = 2, .y = 2} \
 }
-#define MAIN_POINTS { \
-	(struct main_point){.x = 0, .y = 0}, \
-	(struct main_point){.x = 1, .y = 1}, \
-	(struct main_point){.x = 2, .y = 2} \
+#define POINTS { \
+	(struct point){.x = 0, .y = 0}, \
+	(struct point){.x = 1, .y = 1}, \
+	(struct point){.x = 2, .y = 2} \
 }
-#define MAIN_POINT_ZERO ((struct main_point){.x = 1, .y = 1})
-#define MAIN_ZERO_POINTS {MAIN_POINT_ZERO, MAIN_POINT_ZERO, MAIN_POINT_ZERO}
-static struct main_x main_x = (struct main_x){
-	.p = (struct main_point){.x = 10, .y = 20},
-	.a = {(struct main_point){.x = 20, .y = 30}, (struct main_point){.x = 20, .y = 30}}
+#define POINT_ZERO ((struct point){.x = 1, .y = 1})
+#define ZERO_POINTS {POINT_ZERO, POINT_ZERO, POINT_ZERO}
+static struct x x = (struct x){
+	.p = (struct point){.x = 10, .y = 20},
+	.a = {(struct point){.x = 20, .y = 30}, (struct point){.x = 20, .y = 30}}
 };
 __attribute__((used))
-static struct main_point main_points2[3] = MAIN_POINTS;
+static struct point points2[3] = POINTS;
 
 int main(void) {
 	printf("test const\n");
-	struct main_x y = (struct main_x){
-		.p = (struct main_point){.x = 10, .y = 20},
-		.a = {(struct main_point){.x = 20, .y = 30}}
+	struct x y = (struct x){
+		.p = (struct point){.x = 10, .y = 20},
+		.a = {(struct point){.x = 20, .y = 30}}
 	};
-	struct main_point points3[3] = MAIN_POINTS;
-	const struct main_point pp = ((const struct main_point [3])MAIN_POINTS)[0];
-	const struct main_point ppp = ((const struct main_point [3])MAIN_ZERO_POINTS)[0];
-	const uint32_t z = MAIN_POINT_ZERO.x;
-	printf("genericIntConst = %d\n", (int32_t)MAIN_GENERIC_INT_CONST);
-	printf("int32Const = %d\n", MAIN_INT32_CONST);
-	printf("string8Const = %s\n", MAIN_STRING8_CONST);
+	struct point points3[3] = POINTS;
+	const struct point pp = ((const struct point [3])POINTS)[0];
+	const struct point ppp = ((const struct point [3])ZERO_POINTS)[0];
+	const uint32_t z = POINT_ZERO.x;
+	printf("genericIntConst = %d\n", (int32_t)GENERIC_INT_CONST);
+	printf("int32Const = %d\n", INT32_CONST);
+	printf("string8Const = %s\n", STRING8_CONST);
 	return 0;
 }
 

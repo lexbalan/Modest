@@ -8,7 +8,7 @@ const defaultPrompt =  "# "
 var prompt: [32]Char8 = [32]Char8 defaultPrompt
 
 
-public func main() -> Int32 {
+func main() -> Int32 {
 	var buffer: [32]Char8
 	let s = *Str8 &buffer
 

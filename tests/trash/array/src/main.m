@@ -22,7 +22,7 @@ var arr2: [10]Char32 = [10]Char32 c1
 //}
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("array test\n")
 
 	var lar0: [10]Int32

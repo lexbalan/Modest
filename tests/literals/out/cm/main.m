@@ -46,7 +46,8 @@ func test1 () -> Bool {
 }
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("test literals\n")
 
 	var result: Bool = true

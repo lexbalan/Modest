@@ -43,7 +43,8 @@ func returnFromWhile () -> Int32 {
 	return -1
 }
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	var a: Int32 = returnInt()
 	var b: Bool = returnBool()
 	var c: Float64 = returnFloat()

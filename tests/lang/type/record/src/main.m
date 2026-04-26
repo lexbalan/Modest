@@ -80,7 +80,7 @@ func testUnion () -> Bool {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var p = makePoint(3, 4)
 	var d = distance(origin, p)
 	modifyPoint(&p)

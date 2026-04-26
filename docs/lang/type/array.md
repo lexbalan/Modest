@@ -17,7 +17,7 @@
 
 var a: [3]Int32
 
-public func main () -> Unit {
+func main () -> Unit {
 	a[0] = 0
 	a[1] = 10
 	a[2] = 100

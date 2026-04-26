@@ -70,7 +70,8 @@ func lineLength (line: Line) -> Float {
 }
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	let lines_0_len: Float = lineLength(lines[0])
 	let lines_1_len: Float = lineLength(lines[1])
 	let lines_2_len: Float = lineLength(lines[2])

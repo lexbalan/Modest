@@ -36,7 +36,7 @@ func print2DArray(pa: *[][]*Str8, m: Int32, n: Int32) -> Unit {
 }
 
 
-public func main() -> Int32 {
+func main() -> Int32 {
 	f2(&data, 5, 4)
 
 	stdio.printf("sizeof(data) = %lu\n", sizeof data)

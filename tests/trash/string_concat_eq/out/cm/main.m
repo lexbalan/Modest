@@ -13,7 +13,8 @@ const greeting = hello + " " + world//+ " " + party_corn
 const test = "test"
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("%s\n", *Str8 greeting)
 
 	if test == "test" {

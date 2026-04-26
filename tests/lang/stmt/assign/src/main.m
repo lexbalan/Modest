@@ -57,7 +57,7 @@ func testGlobalAssign () -> Unit {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	testSimple()
 	testExpandedCompound()
 	testIncDec()

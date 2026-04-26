@@ -31,7 +31,7 @@ func testNested () -> Bool {
 	return not (a and b) or c
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = testAnd()
 	var b = testOr()
 	var c = testNot()

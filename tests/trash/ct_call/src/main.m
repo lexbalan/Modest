@@ -20,7 +20,7 @@ const a = arr()
 
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("compile time call implementation test\n")
 	return 0
 }

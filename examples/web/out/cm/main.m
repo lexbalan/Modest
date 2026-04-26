@@ -48,7 +48,8 @@ func handleRequest (clientSocket: Int32) -> Unit {
 }
 
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	let serverSocket: Int = socket(c_AF_INET, c_SOCK_STREAM, 0)
 	if serverSocket < 0 {
 		perror("cannot create socket")

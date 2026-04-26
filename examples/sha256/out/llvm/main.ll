@@ -232,13 +232,13 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Nat32 %msgLen, %sha256_Hash* %out
 @.str7 = private constant [7 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 0]
 @.str8 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 105, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
 ; -- endstrings --
-%main_SHA256_TestCase = type {
+%SHA256_TestCase = type {
 	[32 x %Char8],
 	%Nat32,
 	%sha256_Hash
 };
 
-@main_test0 = internal global %main_SHA256_TestCase {
+@test0 = internal global %SHA256_TestCase {
 	[32 x %Char8] [
 		%Char8 97,
 		%Char8 98,
@@ -309,7 +309,7 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Nat32 %msgLen, %sha256_Hash* %out
 		%Word8 173
 	]
 }
-@main_test1 = internal global %main_SHA256_TestCase {
+@test1 = internal global %SHA256_TestCase {
 	[32 x %Char8] [
 		%Char8 72,
 		%Char8 101,
@@ -380,18 +380,18 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Nat32 %msgLen, %sha256_Hash* %out
 		%Word8 105
 	]
 }
-@main_tests = constant [2 x %main_SHA256_TestCase*] [
-	%main_SHA256_TestCase* @main_test0,
-	%main_SHA256_TestCase* @main_test1
+@tests = constant [2 x %SHA256_TestCase*] [
+	%SHA256_TestCase* @test0,
+	%SHA256_TestCase* @test1
 ]
-define internal %Bool @main_doTest(%main_SHA256_TestCase* %test) {
+define internal %Bool @doTest(%SHA256_TestCase* %test) {
 	%1 = alloca %sha256_Hash, align 1
-	%2 = getelementptr %main_SHA256_TestCase, %main_SHA256_TestCase* %test, %Int32 0, %Int32 0
+	%2 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 0
 	%3 = bitcast [32 x %Char8]* %2 to [0 x %Word8]*
-	%4 = getelementptr %main_SHA256_TestCase, %main_SHA256_TestCase* %test, %Int32 0, %Int32 1
+	%4 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 1
 	%5 = load %Nat32, %Nat32* %4
 	call void @sha256_hash([0 x %Word8]* %3, %Nat32 %5, %sha256_Hash* %1)
-	%6 = getelementptr %main_SHA256_TestCase, %main_SHA256_TestCase* %test, %Int32 0, %Int32 0
+	%6 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 0
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @.str1 to [0 x i8]*), [32 x %Char8]* %6)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @.str2 to [0 x i8]*))
 	%9 = alloca %Nat32, align 4
@@ -414,7 +414,7 @@ body_1:
 	br label %again_1
 break_1:
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str4 to [0 x i8]*))
-	%20 = getelementptr %main_SHA256_TestCase, %main_SHA256_TestCase* %test, %Int32 0, %Int32 2
+	%20 = getelementptr %SHA256_TestCase, %SHA256_TestCase* %test, %Int32 0, %Int32 2
 	%21 = bitcast %sha256_Hash* %1 to i8*
 	%22 = bitcast %sha256_Hash* %20 to i8*
 	%23 = call i1 (i8*, i8*, i64) @memeq(i8* %21, i8* %22, %Int64 32)
@@ -435,9 +435,9 @@ again_1:
 body_1:
 	%5 = load %Nat32, %Nat32* %2
 	%6 = bitcast %Nat32 %5 to %Nat32
-	%7 = getelementptr [2 x %main_SHA256_TestCase*], [2 x %main_SHA256_TestCase*]* @main_tests, %Int32 0, %Nat32 %6
-	%8 = load %main_SHA256_TestCase*, %main_SHA256_TestCase** %7
-	%9 = call %Bool @main_doTest(%main_SHA256_TestCase* %8)
+	%7 = getelementptr [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @tests, %Int32 0, %Nat32 %6
+	%8 = load %SHA256_TestCase*, %SHA256_TestCase** %7
+	%9 = call %Bool @doTest(%SHA256_TestCase* %8)
 	%10 = alloca %Str8*, align 8
 	store %Str8* bitcast ([7 x i8]* @.str6 to [0 x i8]*), %Str8** %10
 ; if_0

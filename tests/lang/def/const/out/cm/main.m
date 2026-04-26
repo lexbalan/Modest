@@ -43,7 +43,8 @@ const flags = [true, false, true]
 // unit constant
 const unit = {}
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	return 0
 }
 

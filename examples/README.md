@@ -8,7 +8,7 @@
 include "libc/stdio"
 
 
-public func main () -> Int {
+func main () -> Int {
     printf("Hello World!\n")
     return 0
 }
@@ -34,7 +34,7 @@ func mtab (n: Nat32) -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
     let n = 2 * 2
     printf("multiply table for %d\n", n)
     mtab(n)
@@ -115,7 +115,7 @@ func ptr_example () -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
     // by value
     let len = lineLength(line)
     printf("line length = %f\n", len)
@@ -179,7 +179,7 @@ func read_example () -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
     printf("text_file example\n")
     write_example()
     read_example()

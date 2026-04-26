@@ -4,12 +4,12 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#define MAIN_HELLO "Hello"
-#define MAIN_WORLD "World!"
-#define MAIN_HELLO_WORLD "Hello World!"
+#define HELLO "Hello"
+#define WORLD "World!"
+#define HELLO_WORLD "Hello World!"
 
 int main(void) {
-	printf("%s\n", MAIN_HELLO_WORLD);
+	printf("%s\n", HELLO_WORLD);
 	return 0;
 }
 

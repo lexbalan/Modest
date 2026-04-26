@@ -210,7 +210,7 @@ declare void @perror(%ConstCharStr* %str)
 @.str5 = private constant [26 x i8] [i8 97, i8 102, i8 116, i8 101, i8 114, i8 32, i8 101, i8 110, i8 99, i8 114, i8 121, i8 112, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 95, i8 109, i8 115, i8 103, i8 58, i8 32, i8 10, i8 0]
 @.str6 = private constant [26 x i8] [i8 97, i8 102, i8 116, i8 101, i8 114, i8 32, i8 100, i8 101, i8 99, i8 114, i8 121, i8 112, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 95, i8 109, i8 115, i8 103, i8 58, i8 32, i8 10, i8 0]
 ; -- endstrings --
-define internal void @main_xor_encrypter([0 x %Word8]* %buf, %Nat32 %buflen, [0 x %Word8]* %key, %Nat32 %keylen) {
+define internal void @xor_encrypter([0 x %Word8]* %buf, %Nat32 %buflen, [0 x %Word8]* %key, %Nat32 %keylen) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
 	%2 = alloca %Nat32, align 4
@@ -260,7 +260,7 @@ break_1:
 
 ;xor_encrypt = xor_encrypter
 ;xor_decrypt = xor_encrypter
-@main_test_msg = internal global [13 x %Char8] [
+@test_msg = internal global [13 x %Char8] [
 	%Char8 72,
 	%Char8 101,
 	%Char8 108,
@@ -275,13 +275,13 @@ break_1:
 	%Char8 33,
 	%Char8 0
 ]
-@main_test_key = internal global [4 x %Char8] [
+@test_key = internal global [4 x %Char8] [
 	%Char8 97,
 	%Char8 98,
 	%Char8 99,
 	%Char8 0
 ]
-define internal void @main_print_bytes([0 x %Word8]* %buf, %Nat32 %len) {
+define internal void @print_bytes([0 x %Word8]* %buf, %Nat32 %len) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
 ; while_1
@@ -307,16 +307,16 @@ break_1:
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @.str3 to [0 x i8]*))
-	%2 = bitcast [13 x %Char8]* @main_test_msg to [0 x %Word8]*
-	%3 = bitcast [4 x %Char8]* @main_test_key to [0 x %Word8]*
+	%2 = bitcast [13 x %Char8]* @test_msg to [0 x %Word8]*
+	%3 = bitcast [4 x %Char8]* @test_key to [0 x %Word8]*
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @.str4 to [0 x i8]*))
-	call void @main_print_bytes([0 x %Word8]* %2, %Nat32 12)
-	call void @main_xor_encrypter([0 x %Word8]* %2, %Nat32 12, [0 x %Word8]* %3, %Nat32 3)
+	call void @print_bytes([0 x %Word8]* %2, %Nat32 12)
+	call void @xor_encrypter([0 x %Word8]* %2, %Nat32 12, [0 x %Word8]* %3, %Nat32 3)
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @.str5 to [0 x i8]*))
-	call void @main_print_bytes([0 x %Word8]* %2, %Nat32 12)
-	call void @main_xor_encrypter([0 x %Word8]* %2, %Nat32 12, [0 x %Word8]* %3, %Nat32 3)
+	call void @print_bytes([0 x %Word8]* %2, %Nat32 12)
+	call void @xor_encrypter([0 x %Word8]* %2, %Nat32 12, [0 x %Word8]* %3, %Nat32 3)
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @.str6 to [0 x i8]*))
-	call void @main_print_bytes([0 x %Word8]* %2, %Nat32 12)
+	call void @print_bytes([0 x %Word8]* %2, %Nat32 12)
 	ret %Int 0
 }
 

@@ -4,20 +4,20 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-static int32_t main_globalArray0[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-static int32_t main_globalArray1[10] = {0};
+static int32_t globalArray0[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+static int32_t globalArray1[10] = {0};
 
 int main(void) {
 	printf("test assign_array\n");
-	__builtin_memcpy(&main_globalArray1, &main_globalArray0, sizeof(int32_t [10]));
+	__builtin_memcpy(&globalArray1, &globalArray0, sizeof(int32_t [10]));
 	int32_t i;
 	i = 0;
 	while (i < 10) {
-		const int32_t v = main_globalArray1[i];
+		const int32_t v = globalArray1[i];
 		printf("globalArray1[%d] = %d\n", i, v);
 		i = i + 1;
 	}
-	if (__builtin_memcmp(&main_globalArray0, &main_globalArray1, sizeof(int32_t [10])) == 0) {
+	if (__builtin_memcmp(&globalArray0, &globalArray1, sizeof(int32_t [10])) == 0) {
 		printf("globalArray test passed\n");
 	} else {
 		printf("globalArray test failed\n");

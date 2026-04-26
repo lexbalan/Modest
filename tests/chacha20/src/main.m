@@ -90,7 +90,7 @@ const lorem1024 = [1024]Char8 "Lorem ipsum dolor sit amet, consectetuer adipisci
 var xlorem1024 = lorem1024
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("test ChaCha20 ")
 	//printf("%s\n", *Str8 hello_world)
 	//var data = []Byte [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]

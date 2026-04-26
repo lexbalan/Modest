@@ -174,7 +174,7 @@ func testShift128 () -> Bool {
 
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("test shift\n")
 
 	var result = true

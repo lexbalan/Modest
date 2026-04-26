@@ -38,7 +38,8 @@ var x1: Int32 = 0
 var x2: Int32 = 1
 var x3: Int32 = 2
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	return 0
 }
 

@@ -223,14 +223,14 @@ declare void @perror(%ConstCharStr* %str)
 @.str3 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 @.str4 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define internal void @main_unitFunc() {
+define internal void @unitFunc() {
 	%1 = alloca {}
 	store {} zeroinitializer, {}* %1
 	ret void
 	ret void
 }
 
-define %Int32 @main() {
+define internal %Int32 @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @.str1 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
 	%3 = alloca %Bool, align 1

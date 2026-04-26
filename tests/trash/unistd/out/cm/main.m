@@ -7,7 +7,8 @@ include "stdlib"
 // getenv
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("unistd test\n")
 
 	let pid: PIDT = getpid()

@@ -89,7 +89,7 @@ sizeof([10]Int32)          // total size in bytes
 ```modest
 import "libc/stdio"
 
-public func main () -> Int32 {
+func main () -> Int32 {
     var arr: [5]Int32 = [10, 20, 30, 40, 50]
     
     var i: Int32 = 0
@@ -117,7 +117,7 @@ func print_array (data: *[]Int32, length: Nat32) -> Unit {
     printf("\n")
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
     var arr: []Int32 = [1, 2, 3, 4, 5]
     print_array(&arr, lengthof(arr))
     return 0
@@ -129,7 +129,7 @@ public func main () -> Int32 {
 ```modest
 import "libc/stdio"
 
-public func main () -> Int32 {
+func main () -> Int32 {
     var matrix: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
     
     var i: Int32 = 0
@@ -154,7 +154,7 @@ import "libc/stdio"
 
 var strings: []*Str8 = ["Hello", "World", "Modest"]
 
-public func main () -> Int32 {
+func main () -> Int32 {
     var i: Int32 = 0
     while i < 3 {
         printf("%s\n", strings[i])
@@ -177,7 +177,7 @@ func fill_array (arr: *[]Byte, size: Nat32, pattern: Byte) -> Unit {
     }
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
     let size = 1024
     let memory = new [size]Byte []
     
@@ -195,7 +195,7 @@ Strings in Modest are arrays of characters:
 ```modest
 import "libc/stdio"
 
-public func main () -> Int32 {
+func main () -> Int32 {
     var str: []Char8 = "Hello"
     var c: Char8 = str[0]  // 'H'
     

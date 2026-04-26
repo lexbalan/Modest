@@ -9,7 +9,7 @@
 #### Examples
 
 ```swift
-public func main () -> Int32 {
+func main () -> Int32 {
 	// usually we discard printf return value
 	// because we need only side its effect (print line to stdout)
 	printf("Hi there!\n")

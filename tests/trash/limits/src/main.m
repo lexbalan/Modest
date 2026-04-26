@@ -245,7 +245,7 @@ func testNat64Static () -> Bool {
 	return true
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
     printf("numeric boundary tests\n")
 	printf("nat8MaxPlusOne = %llu\n", Nat64 nat8MaxPlusOne)
 	printf("nat8MinMinusOne = %llu\n", Nat64 nat8MinMinusOne)

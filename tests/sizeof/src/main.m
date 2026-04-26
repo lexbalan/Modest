@@ -339,7 +339,7 @@ func testPointer () -> Bool {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("test sizeof\n")
 
 	var result = true

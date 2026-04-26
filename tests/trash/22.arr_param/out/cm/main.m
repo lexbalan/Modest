@@ -21,7 +21,8 @@ func arraysAdd (a: [10]Int32, b: [10]Int32) -> [10]Int32 {
 }
 
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	let a: [10]Int32 = getarr10()
 
 	if a == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] {

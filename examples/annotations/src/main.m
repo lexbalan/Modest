@@ -95,7 +95,7 @@ func hello () -> Unit {
 
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	@static
 	var staticCounter: Nat32 = 0
 

@@ -4,7 +4,7 @@ include "stdio"
 
 
 
-public func main () -> Int {
+func main () -> Int {
 	return 0
 }
 

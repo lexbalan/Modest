@@ -27,7 +27,7 @@ func parseFile (filename: *Str) -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	parseFile("example.s")
 
 	return 0

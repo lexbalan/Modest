@@ -8,7 +8,7 @@ func my_func () -> @unused Int {
 	return 0
 }
 
-public func main () -> Unit {
+func main () -> Unit {
 	// Here we ignore my_func return value,
 	// but there is no warning,
 	// because my_func return type declared with attribute "unused"

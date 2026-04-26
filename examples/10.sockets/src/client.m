@@ -30,7 +30,7 @@ func sendFile (fp: *File, sockFd: Int) -> Bool {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	let sockFd = socket(c_AF_INET, c_SOCK_STREAM, 0)
 	if sockFd < 0 {
 		perror("[-] Error in socket")

@@ -35,7 +35,7 @@ func testWhileScope () -> Int32 {
 	return sum
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = testIfScope()
 	var b = testNestedIfScope()
 	var c = testWhileScope()

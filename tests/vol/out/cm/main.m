@@ -9,7 +9,7 @@ private import "builtin"
 var x = Str8 "sss"
 var y = Nat32 0
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	return 0
 }
 

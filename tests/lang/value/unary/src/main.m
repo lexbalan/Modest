@@ -36,7 +36,7 @@ func testNotBool () -> Bool {
 	return not x
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = testNeg()
 	var b = testIncrement()
 	var c = testDecrement()

@@ -41,7 +41,7 @@ func runTest (test: *Test) -> Bool {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("test CRC32\n")
 
 	// (!)

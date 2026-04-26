@@ -6,7 +6,7 @@ import "lightfood/console"
 pragma c_include "./console.h"
 
 
-public func main () -> Int {
+func main () -> Int {
 	console.print("test console print\n")
 
 	let c = Char32 "🐀"

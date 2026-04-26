@@ -7,25 +7,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
-#define SERVER_FILENAME "file2.txt"
-#define SERVER_IP_ADDRESS "127.0.0.1"
-#define SERVER_PORT 8080
-#define SERVER_BUF_SIZE 1024
+#define FILENAME "file2.txt"
+#define IP_ADDRESS "127.0.0.1"
+#define PORT 8080
+#define BUF_SIZE 1024
 
-static bool server_writeFile(int sockFd) {
-	char buffer[SERVER_BUF_SIZE];
-	FILE *const fp = fopen(SERVER_FILENAME, "w");
+static bool writeFile(int sockFd) {
+	char buffer[BUF_SIZE];
+	FILE *const fp = fopen(FILENAME, "w");
 	if (fp == NULL) {
 		perror("[-] Error in creating file");
 		return false;
 	}
 	while (true) {
-		const ssize_t n = recv(sockFd, buffer, SERVER_BUF_SIZE, 0);
+		const ssize_t n = recv(sockFd, buffer, BUF_SIZE, 0);
 		if (n <= 0LL) {
 			break;
 		}
 		fprintf(fp, "%s", buffer);
-		__builtin_bzero(&buffer, sizeof(char [SERVER_BUF_SIZE]));
+		__builtin_bzero(&buffer, sizeof(char [BUF_SIZE]));
 	}
 	return true;
 }
@@ -39,9 +39,9 @@ int main(void) {
 	printf("[+] Server socket created\n");
 	struct sockaddr_in serverAddr = (struct sockaddr_in){
 		.sin_family = AF_INET,
-		.sin_port = SERVER_PORT,
+		.sin_port = PORT,
 		.sin_addr = (struct in_addr){
-			.s_addr = inet_addr(SERVER_IP_ADDRESS)
+			.s_addr = inet_addr(IP_ADDRESS)
 		}
 	};
 	struct sockaddr *const sockAddr = (struct sockaddr *)(void *)&serverAddr;
@@ -61,7 +61,7 @@ int main(void) {
 	struct sockaddr_in newAddr;
 	struct sockaddr *const sa = (struct sockaddr *)(void *)&newAddr;
 	const int newSock = accept(sockFd, sa, &addrSize);
-	const bool suc = server_writeFile(newSock);
+	const bool suc = writeFile(newSock);
 	if (suc) {
 		printf("[+] Data written in the text file");
 	} else {

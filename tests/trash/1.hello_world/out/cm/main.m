@@ -10,7 +10,8 @@ const world = "World!"
 const hello_world = "Hello World!"
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("%s\n", *Str8 hello_world)
 	return 0
 }

@@ -55,7 +55,7 @@ func readExample () -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("binary file example\n")
 	writeExample()
 	readExample()

@@ -52,7 +52,7 @@ const cc1: Nat32
 
 //var ax: [cc1]Int32
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	printf("Hello World!\n")
 
 	var p0: Point

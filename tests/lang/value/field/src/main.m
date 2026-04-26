@@ -40,7 +40,7 @@ func localRecord () -> Int32 {
 }
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a = readField()
 	writeField()
 	var b = nestedField()

@@ -26,7 +26,7 @@ var points: []Point = [
 ]
 
 
-public func main () -> Int {
+func main () -> Int {
 	let p0 = Point {x=10, y=10}
 	let p1 = new Point {x=10, y=10}
 	return 0

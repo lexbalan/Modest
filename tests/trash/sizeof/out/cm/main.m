@@ -61,7 +61,8 @@ type X = {
 
 var x: X
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("test cast operation\n")
 
 	let start_adr: Nat64 = unsafe Nat64 &c

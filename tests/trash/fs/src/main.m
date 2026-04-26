@@ -58,7 +58,7 @@ func bread (inode: *Inode, nblock: Nat32, block: *Block) -> Int {
 
 var super: Super
 
-public func main () -> Int {
+func main () -> Int {
 	var inode: Inode
 	inodeRead(1, &inode)
 

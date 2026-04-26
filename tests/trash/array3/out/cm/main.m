@@ -124,7 +124,7 @@ func test2(pa: *[][]*[]Int32, m: Int32, n: Int32, p: Int32) -> Unit {
 }
 
 
-public func main() -> Int32 {
+func main() -> Int32 {
 	test0()
 	test1(&a, m, n, p)
 	test2(&b, m, n, p)

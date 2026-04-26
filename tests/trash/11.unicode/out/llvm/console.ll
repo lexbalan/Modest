@@ -617,7 +617,7 @@ endif_4:
 	br %Bool %64 , label %then_5, label %else_5
 then_5:
 	%65 = va_arg %__VA_List* %1, %Int32
-	%66 = call %Int32 @console_sprint_dec_int32([0 x %Char8]* %59, %Int32 %65)
+	%66 = call %Int32 @sprint_dec_int32([0 x %Char8]* %59, %Int32 %65)
 	%67 = load %Int32, %Int32* %3
 	%68 = add %Int32 %67, %66
 	store %Int32 %68, %Int32* %3
@@ -629,7 +629,7 @@ else_5:
 	br %Bool %70 , label %then_6, label %else_6
 then_6:
 	%71 = va_arg %__VA_List* %1, %Nat32
-	%72 = call %Int32 @console_sprint_dec_n32([0 x %Char8]* %59, %Nat32 %71)
+	%72 = call %Int32 @sprint_dec_n32([0 x %Char8]* %59, %Nat32 %71)
 	%73 = load %Int32, %Int32* %3
 	%74 = add %Int32 %73, %72
 	store %Int32 %74, %Int32* %3
@@ -644,7 +644,7 @@ else_6:
 	br %Bool %79 , label %then_7, label %else_7
 then_7:
 	%80 = va_arg %__VA_List* %1, %Nat32
-	%81 = call %Int32 @console_sprint_hex_nat32([0 x %Char8]* %59, %Nat32 %80)
+	%81 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %59, %Nat32 %80)
 	%82 = load %Int32, %Int32* %3
 	%83 = add %Int32 %82, %81
 	store %Int32 %83, %Int32* %3
@@ -692,19 +692,19 @@ break_1:
 	ret %Int32 %100
 }
 
-define internal %Char8 @console_n_to_dec_sym(%Nat8 %n) alwaysinline {
+define internal %Char8 @n_to_dec_sym(%Nat8 %n) alwaysinline {
 	%1 = add %Nat8 48, %n
 	%2 = bitcast %Nat8 %1 to %Word8
 	%3 = bitcast %Word8 %2 to %Char8
 	ret %Char8 %3
 }
 
-define internal %Char8 @console_n_to_hex_sym(%Nat8 %n) {
+define internal %Char8 @n_to_hex_sym(%Nat8 %n) {
 ; if_0
 	%1 = icmp ult %Nat8 %n, 10
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	%2 = call %Char8 @console_n_to_dec_sym(%Nat8 %n)
+	%2 = call %Char8 @n_to_dec_sym(%Nat8 %n)
 	ret %Char8 %2
 	br label %endif_0
 endif_0:
@@ -715,7 +715,7 @@ endif_0:
 	ret %Char8 %7
 }
 
-define internal %Int32 @console_sprint_hex_nat32([0 x %Char8]* %buf, %Nat32 %x) {
+define internal %Int32 @sprint_hex_nat32([0 x %Char8]* %buf, %Nat32 %x) {
 	%1 = alloca [8 x %Char8], align 1
 	%2 = alloca %Nat32, align 4
 	store %Nat32 %x, %Nat32* %2
@@ -735,7 +735,7 @@ body_1:
 	%9 = bitcast %Nat32 %8 to %Nat32
 	%10 = getelementptr [8 x %Char8], [8 x %Char8]* %1, %Int32 0, %Nat32 %9
 	%11 = trunc %Nat32 %5 to %Nat8
-	%12 = call %Char8 @console_n_to_hex_sym(%Nat8 %11)
+	%12 = call %Char8 @n_to_hex_sym(%Nat8 %11)
 	store %Char8 %12, %Char8* %10
 	%13 = load %Nat32, %Nat32* %3
 	%14 = add %Nat32 %13, 1
@@ -781,7 +781,7 @@ break_2:
 	ret %Int32 %33
 }
 
-define internal %Int32 @console_sprint_dec_int32([0 x %Char8]* %buf, %Int32 %x) {
+define internal %Int32 @sprint_dec_int32([0 x %Char8]* %buf, %Int32 %x) {
 	%1 = alloca [11 x %Char8], align 1
 	%2 = alloca %Int32, align 4
 	store %Int32 %x, %Int32* %2
@@ -811,7 +811,7 @@ body_1:
 	%13 = bitcast %Nat32 %12 to %Nat32
 	%14 = getelementptr [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Nat32 %13
 	%15 = trunc %Int32 %9 to %Nat8
-	%16 = call %Char8 @console_n_to_dec_sym(%Nat8 %15)
+	%16 = call %Char8 @n_to_dec_sym(%Nat8 %15)
 	store %Char8 %16, %Char8* %14
 	%17 = load %Nat32, %Nat32* %7
 	%18 = add %Nat32 %17, 1
@@ -867,7 +867,7 @@ break_2:
 	ret %Int32 %40
 }
 
-define internal %Int32 @console_sprint_dec_n32([0 x %Char8]* %buf, %Nat32 %x) {
+define internal %Int32 @sprint_dec_n32([0 x %Char8]* %buf, %Nat32 %x) {
 	%1 = alloca [11 x %Char8], align 1
 	%2 = alloca %Nat32, align 4
 	store %Nat32 %x, %Nat32* %2
@@ -887,7 +887,7 @@ body_1:
 	%9 = bitcast %Nat32 %8 to %Nat32
 	%10 = getelementptr [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Nat32 %9
 	%11 = trunc %Nat32 %5 to %Nat8
-	%12 = call %Char8 @console_n_to_dec_sym(%Nat8 %11)
+	%12 = call %Char8 @n_to_dec_sym(%Nat8 %11)
 	store %Char8 %12, %Char8* %10
 	%13 = load %Nat32, %Nat32* %3
 	%14 = add %Nat32 %13, 1

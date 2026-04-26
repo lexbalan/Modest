@@ -66,7 +66,7 @@ func farr (x: [3]Int32) -> [3]Int32 {
 	return [x[0] + 1, x[1] + 2, x[2] + 3]
 }
 
-public func main () -> Int {
+func main () -> Int {
 	type LocalInt = Int32
 
 	let p: *Point = new Point {x = 10, y = 10}

@@ -63,7 +63,7 @@ func add (a: Int32, b: Int32) -> Int32 {
     return a + b
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
     return 0
 }
 
@@ -202,7 +202,7 @@ Point {x = 1, y = 2}
 
 ```modest
 func foo () -> Unit { }            // private (default)
-public func main () -> Int32 { }   // public
+func main () -> Int32 { }   // public
 ```
 
 ## Examples
@@ -211,7 +211,7 @@ public func main () -> Int32 { }   // public
 ```modest
 import "libc/stdio"
 
-public func main () -> Int32 {
+func main () -> Int32 {
     printf("Hello World!\n")
     return 0
 }

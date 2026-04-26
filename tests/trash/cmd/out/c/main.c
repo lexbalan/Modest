@@ -9,19 +9,19 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
-#define MAIN_PROMPT "# "
-static char main_tokensBuf[4 * 1024];
+#define PROMPT "# "
+static char tokensBuf[4 * 1024];
 
-static void main_showPrompt(void) {
+static void showPrompt(void) {
 	char _prompt[32] = {'#', ' '};
 	write(0, _prompt, (size_t)2);
 }
 
 __attribute__((unused, always_inline))
-static inline int main_char8ToInt(char c) {
+static inline int char8ToInt(char c) {
 	return (uint32_t)(uint8_t)c;
 }
-struct main_tokenizer {
+struct tokenizer {
 	char *input;
 	uint32_t position;
 	uint16_t tokensBufPos;
@@ -31,11 +31,11 @@ struct main_tokenizer {
 	char *(*tokens)[];
 };
 
-static bool main_is_blank(char c) {
+static bool is_blank(char c) {
 	return c == ' ' || c == '\n';
 }
 
-static uint16_t main_gettok(struct main_tokenizer *t, char *output, uint16_t lim) {
+static uint16_t gettok(struct tokenizer *t, char *output, uint16_t lim) {
 	(void)lim;
 	char c = t->input[t->position];
 	while (true) {
@@ -50,8 +50,8 @@ static uint16_t main_gettok(struct main_tokenizer *t, char *output, uint16_t lim
 	}
 	uint16_t outpos = 0;
 	c = t->input[t->position];
-	if (!main_is_blank(c)) {
-		while (!main_is_blank(c)) {
+	if (!is_blank(c)) {
+		while (!is_blank(c)) {
 			output[outpos] = c;
 			t->position = t->position + 1U;
 			outpos = outpos + 1;
@@ -66,12 +66,12 @@ static uint16_t main_gettok(struct main_tokenizer *t, char *output, uint16_t lim
 	return outpos;
 }
 
-static void main_tokenize(struct main_tokenizer *tokenizer) {
+static void tokenize(struct tokenizer *tokenizer) {
 	while (true) {
 		const uint16_t max_toklen = 128;
 		char token[max_toklen];
 		char *p = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		const uint16_t toklen = main_gettok(tokenizer, token, max_toklen);
+		const uint16_t toklen = gettok(tokenizer, token, max_toklen);
 		if (toklen == 0) {
 			break;
 		}
@@ -86,7 +86,7 @@ static void main_tokenize(struct main_tokenizer *tokenizer) {
 	}
 }
 
-static void main_execute(char *cmd, uint16_t argc, char *argv[]) {
+static void execute(char *cmd, uint16_t argc, char *argv[]) {
 	printf("%s (n=%d)", cmd, argc);
 	printf(" [");
 	uint32_t i = 0U;
@@ -105,22 +105,22 @@ int32_t main(void) {
 	printf("HARSH v0.1\n");
 	char inbuf[1024];
 	while (true) {
-		main_showPrompt();
+		showPrompt();
 		fgets(inbuf, (int)sizeof inbuf, stdin);
 		char *tokens[64] = {0};
-		struct main_tokenizer tokenizer = (struct main_tokenizer){
+		struct tokenizer tokenizer = (struct tokenizer){
 			.input = inbuf,
-			.tokensBuf = main_tokensBuf,
+			.tokensBuf = tokensBuf,
 			.tokens = &tokens
 		};
-		main_tokenize(&tokenizer);
+		tokenize(&tokenizer);
 		char *const cmd = (*tokenizer.tokens)[0];
 		uint16_t argc = tokenizer.tokensPos;
 		if (argc > 0) {
 			argc = argc - 1;
 		}
 		char *(*const argv)[] = (char *(*)[])&(*tokenizer.tokens)[1];
-		main_execute(cmd, argc, (char **)argv);
+		execute(cmd, argc, (char **)argv);
 	}
 	return 0;
 }

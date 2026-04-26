@@ -41,7 +41,8 @@ func testLetMultiple () -> Int32 {
 	return d
 }
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	var a: Int32 = testLetInt()
 	var b: Float64 = testLetFloat()
 	var c: Bool = testLetBool()

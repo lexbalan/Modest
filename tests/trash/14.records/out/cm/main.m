@@ -89,7 +89,8 @@ func test_records () -> Unit {
 }
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("records test\n")
 	let ver = version
 	if ver == {major = 0, minor = 7, patch = 100} {

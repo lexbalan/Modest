@@ -13,7 +13,8 @@ var globalPoint0: Point = {x = 10, y = 20}
 var globalPoint1: Point = {}
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("test assign_array\n")
 
 	globalPoint1 = globalPoint0

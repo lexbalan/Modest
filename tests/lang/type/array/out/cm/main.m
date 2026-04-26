@@ -36,7 +36,8 @@ func testMultidim () -> Int32 {
 	return m[1][2]
 }
 
-public func main () -> Int32 {
+@nonstatic()
+func main () -> Int32 {
 	var v: Vec3
 	v[0] = 1.0
 	v[1] = 2.0

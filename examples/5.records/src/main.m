@@ -66,7 +66,7 @@ func ptr_example () -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	// by value
 	let len = lineLength(line)
 	printf("line length = %f\n", len)

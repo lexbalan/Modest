@@ -64,7 +64,7 @@ func taskClockchain (clockchain: *Clock) -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	//var clocks = [new Clock {}, new Clock {}, new Clock {}]  // <<-- not works!
 
 	var clocks: [3]*Clock

@@ -45,7 +45,8 @@ var points2: [3]Point = points
 
 
 // define function main
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("test const\n")
 
 	var y: X = {

@@ -5,7 +5,7 @@ include "stdio"
 
 import "./lib/lib" as lib
 
-public func main () -> Int {
+func main () -> Int {
 	var librarian: Librarian
 	var mod1: Mod
 	var mod2: Mod

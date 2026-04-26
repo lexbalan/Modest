@@ -24,7 +24,7 @@ func processTemp (t: Temperature) -> Float64 {
 	return Float64 t
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var u = getUserId()
 	var g = getGroupId()
 	var raw = processUser(u)

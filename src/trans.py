@@ -2296,7 +2296,7 @@ def def_type_global(x):
 		error("type redefinition", x['ti'])
 		return None
 	df = def_type_common(x, nt)
-	df.id.prefix = global_prefix
+	#df.id.prefix = global_prefix
 	df = def_add_annotations(df, x['anno'])
 	return df
 
@@ -2433,7 +2433,7 @@ def def_const_global(x):
 	df.parent = cmodule
 	df.value.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
-	df.id.prefix = global_prefix
+	#df.id.prefix = global_prefix
 
 	iv = df.init_value
 	if not iv.is_value_undefined():
@@ -2457,7 +2457,7 @@ def def_var_global(x):
 	df.parent = cmodule
 	df.value.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
-	df.id.prefix = global_prefix
+	#df.id.prefix = global_prefix
 	df.value.is_initialized = True
 
 	df = def_add_annotations(df, x['anno'])
@@ -2487,7 +2487,7 @@ def def_func(x):
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
 	fn = ctx_value_get(x['id']['str'])
-	fn.id.prefix = global_prefix
+	#fn.id.prefix = global_prefix
 
 	cdef = fn.definition
 
@@ -2502,7 +2502,8 @@ def def_func(x):
 		return None
 
 	if fn.id.str == 'main':
-		fn.id.prefix = None
+		#fn.id.prefix = None
+		cdef.addAttribute('nonstatic')
 		fn.id.addAttribute('nodecorate')
 		fn.id.addAttribute('entrypoint')
 
@@ -2948,6 +2949,7 @@ def def_phase1(ast, is_include=False):
 
 
 def def_phase2(ast, is_include=False):
+	global global_prefix
 	# Идем по всем элементам с самого начала и определяем их.
 	# Если элемент использует undefined - заносим его в список зависимостей эл-та
 	for x in ast:
@@ -2970,6 +2972,9 @@ def def_phase2(ast, is_include=False):
 				df = def_var_global(x)
 
 			if df != None:
+				if get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC:
+					df.id.prefix = global_prefix
+
 				if 'comment' in x and x['comment'] != None:
 					df.comment = do_stmt_comment(x['comment'])
 

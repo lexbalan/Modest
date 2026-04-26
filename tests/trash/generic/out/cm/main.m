@@ -5,7 +5,8 @@ include "math"
 
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("generic types test\n")
 
 	let t1: Bool = test_generic_integer()

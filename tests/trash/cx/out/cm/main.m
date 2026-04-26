@@ -307,7 +307,7 @@ func emit_ret () -> Unit {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	//parseAsm("example.s")
 	cc("main2.x")
 

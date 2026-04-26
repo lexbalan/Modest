@@ -16,7 +16,7 @@ func low_128 (x: Word128) -> Word64 {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 
 	let big1 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 	let big2 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF

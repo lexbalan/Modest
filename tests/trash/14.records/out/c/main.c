@@ -7,65 +7,65 @@
 #define RAWCAST(type_dst, type_src, value) (((union { type_src src; type_dst dst; }){ .src = (value) }).dst)
 struct __anonymous_struct_6 {uint32_t x; uint32_t y;};
 struct __anonymous_struct_7 {uint32_t x; uint32_t y;};
-struct main_point2_d {
+struct point2_d {
 	uint32_t x;
 	uint32_t y;
 };
-struct main_point3_d {
+struct point3_d {
 	uint32_t x;
 	uint32_t y;
 	uint32_t z;
 };
-#define MAIN_XX {.x = 1, .y = 2}
-#define MAIN_YY ((struct main_point2_d){.x = 1, .y = 2})
-typedef struct main_point main_Point;
-struct main_point {
+#define XX {.x = 1, .y = 2}
+#define YY ((struct point2_d){.x = 1, .y = 2})
+typedef struct point Point;
+struct point {
 	int32_t x;
 	int32_t y;
 };
-typedef struct main_line main_Line;
-struct main_line {
-	main_Point a;
-	main_Point b;
+typedef struct line Line;
+struct line {
+	Point a;
+	Point b;
 };
-static main_Line main_line = (main_Line){
+static Line line = (Line){
 	.a = {.x = 10, .y = 11},
 	.b = {.x = 12, .y = 13}
 };
-static main_Line main_lines[3] = {
-	(main_Line){
+static Line lines[3] = {
+	(Line){
 		.a = {.x = 1, .y = 2},
 		.b = {.x = 3, .y = 4}
 	},
-	(main_Line){
+	(Line){
 		.a = {.x = 5, .y = 6},
 		.b = {.x = 7, .y = 8}
 	},
-	(main_Line){
+	(Line){
 		.a = {.x = 9, .y = 10},
 		.b = {.x = 11, .y = 12}
 	}
 };
-static main_Line *main_pLines[3] = {&main_lines[0], &main_lines[1], &main_lines[2]};
-struct main_structx {
-	main_Line *x;
+static Line *pLines[3] = {&lines[0], &lines[1], &lines[2]};
+struct structx {
+	Line *x;
 };
-static struct main_structx main_s = (struct main_structx){.x = &main_lines[0]};
+static struct structx s = (struct structx){.x = &lines[0]};
 
-static void main_test_records(void) {
-	printf("line.a.x = %d\n", main_line.a.x);
-	printf("line.a.y = %d\n", main_line.a.y);
-	printf("line.b.x = %d\n", main_line.b.x);
-	printf("line.b.y = %d\n", main_line.b.y);
-	printf("pLines[0].a.x = %d\n", main_pLines[0]->a.x);
-	printf("pLines[0].a.y = %d\n", main_pLines[0]->a.y);
-	printf("pLines[0].b.x = %d\n", main_pLines[0]->b.x);
-	printf("pLines[0].b.y = %d\n", main_pLines[0]->b.y);
-	printf("s.x.a.x = %d\n", main_s.x->a.x);
-	printf("s.x.a.y = %d\n", main_s.x->a.y);
-	printf("s.x.b.x = %d\n", main_s.x->b.x);
-	printf("s.x.b.y = %d\n", main_s.x->b.y);
-	const struct main_structx x = main_s;
+static void test_records(void) {
+	printf("line.a.x = %d\n", line.a.x);
+	printf("line.a.y = %d\n", line.a.y);
+	printf("line.b.x = %d\n", line.b.x);
+	printf("line.b.y = %d\n", line.b.y);
+	printf("pLines[0].a.x = %d\n", pLines[0]->a.x);
+	printf("pLines[0].a.y = %d\n", pLines[0]->a.y);
+	printf("pLines[0].b.x = %d\n", pLines[0]->b.x);
+	printf("pLines[0].b.y = %d\n", pLines[0]->b.y);
+	printf("s.x.a.x = %d\n", s.x->a.x);
+	printf("s.x.a.y = %d\n", s.x->a.y);
+	printf("s.x.b.x = %d\n", s.x->b.x);
+	printf("s.x.b.y = %d\n", s.x->b.y);
+	const struct structx x = s;
 	printf("x.x.a.x = %d\n", x.x->a.x);
 	printf("x.x.a.y = %d\n", x.x->a.y);
 	printf("x.x.b.x = %d\n", x.x->b.x);
@@ -80,16 +80,16 @@ int main(void) {
 	} else {
 		printf("version not 0.7\n");
 	}
-	struct main_point2_d p2d0 = (struct main_point2_d){.x = 1, .y = 2};
-	struct main_point2_d p2d1 = (struct main_point2_d){.x = 10, .y = 20};
-	if (__builtin_memcmp(&p2d0, &p2d1, sizeof(struct main_point2_d)) == 0) {
+	struct point2_d p2d0 = (struct point2_d){.x = 1, .y = 2};
+	struct point2_d p2d1 = (struct point2_d){.x = 10, .y = 20};
+	if (__builtin_memcmp(&p2d0, &p2d1, sizeof(struct point2_d)) == 0) {
 		printf("p2d0 == p2d1\n");
 	} else {
 		printf("p2d0 != p2d1\n");
 	}
-	struct main_point2_d p2d2 = p2d0;
-	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6)MAIN_XX;
-	if (__builtin_memcmp(&p2d2, &RAWCAST(struct main_point2_d, struct __anonymous_struct_6, p2d3), sizeof(struct main_point2_d)) == 0) {
+	struct point2_d p2d2 = p2d0;
+	struct __anonymous_struct_6 p2d3 = (struct __anonymous_struct_6)XX;
+	if (__builtin_memcmp(&p2d2, &RAWCAST(struct point2_d, struct __anonymous_struct_6, p2d3), sizeof(struct point2_d)) == 0) {
 		printf("p2d2 == p2d3\n");
 	} else {
 		printf("p2d2 != p2d3\n");
@@ -100,14 +100,14 @@ int main(void) {
 	} else {
 		printf("p2d3 != p2d4\n");
 	}
-	struct main_point2_d *const pr2 = &p2d2;
+	struct point2_d *const pr2 = &p2d2;
 	struct __anonymous_struct_6 *const pr3 = &p2d3;
-	if (__builtin_memcmp(pr2, &RAWCAST(struct main_point2_d, struct __anonymous_struct_6, *pr3), sizeof(struct main_point2_d)) == 0) {
+	if (__builtin_memcmp(pr2, &RAWCAST(struct point2_d, struct __anonymous_struct_6, *pr3), sizeof(struct point2_d)) == 0) {
 		printf("*pr2 == *pr3\n");
 	} else {
 		printf("*pr2 != *pr3\n");
 	}
-	*pr2 = (struct main_point2_d){.x = 100, .y = 200};
+	*pr2 = (struct point2_d){.x = 100, .y = 200};
 	*pr3 = (struct __anonymous_struct_6){0};
 	int32_t ax = 10;
 	int32_t bx = 20;
@@ -121,7 +121,7 @@ int main(void) {
 	} else {
 		printf("test failed\n");
 	}
-	main_test_records();
+	test_records();
 	return 0;
 }
 

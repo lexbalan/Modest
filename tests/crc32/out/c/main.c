@@ -9,31 +9,31 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
-#define MAIN_DATA_BUFFER_LENGTH 128
-struct main_test {
-	uint8_t data[MAIN_DATA_BUFFER_LENGTH];
+#define DATA_BUFFER_LENGTH 128
+struct test {
+	uint8_t data[DATA_BUFFER_LENGTH];
 	uint32_t len;
 	uint32_t hash;
 };
-static struct main_test main_tests[3] = {
-	(struct main_test){
+static struct test tests[3] = {
+	(struct test){
 		.data = {'1', '2', '3', '4', '5', '6', '7', '8', '9'},
 		.len = 9,
 		.hash = 3421780262U
 	},
-	(struct main_test){
+	(struct test){
 		.data = {'T', 'h', 'e', ' ', 'q', 'u', 'i', 'c', 'k', ' ', 'b', 'r', 'o', 'w', 'n', ' ', 'f', 'o', 'x', ' ', 'j', 'u', 'm', 'p', 's', ' ', 'o', 'v', 'e', 'r', ' ', 't', 'h', 'e', ' ', 'l', 'a', 'z', 'y', ' ', 'd', 'o', 'g'},
 		.len = 43,
 		.hash = 1095738169U
 	},
-	(struct main_test){
+	(struct test){
 		.data = {'T', 'e', 's', 't', ' ', 'v', 'e', 'c', 't', 'o', 'r', ' ', 'f', 'r', 'o', 'm', ' ', 'f', 'e', 'b', 'o', 'o', 't', 'i', '.', 'c', 'o', 'm'},
 		.len = 28,
 		.hash = 210206561U
 	}
 };
 
-static bool main_runTest(struct main_test *test) {
+static bool runTest(struct test *test) {
 	const uint32_t crc = crc32_run((uint8_t *)(uint8_t (*)[])&test->data, test->len);
 	return crc == test->hash;
 }
@@ -43,8 +43,8 @@ int main(void) {
 	crc32_init();
 	bool success = true;
 	uint32_t i = 0U;
-	while (i < LENGTHOF(main_tests)) {
-		if (!main_runTest(&main_tests[i])) {
+	while (i < LENGTHOF(tests)) {
+		if (!runTest(&tests[i])) {
 			printf("test #%d failed\n", i);
 			success = false;
 		} else {

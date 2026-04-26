@@ -8,7 +8,7 @@ include "libc/stat"
 const filename = "Makefile"
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("stat(\"%s\"):\n", *Str8 filename)
 
 	var fileStat: Stat

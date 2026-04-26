@@ -36,7 +36,7 @@ const cstr2: [3]Char8 = "abc"
 var str3: [3]Char8 = "abc"
 
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	if u == v {
 		printf("u == v\n")
 	}

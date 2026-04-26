@@ -46,7 +46,7 @@ func test1 () -> Bool {
 }
 
 
-public func main () -> Int {
+func main () -> Int {
 	printf("test literals\n")
 
 	var result = true

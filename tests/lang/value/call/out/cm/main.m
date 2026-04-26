@@ -31,7 +31,7 @@ func withExprArgs () -> Int32 {
 	return add(1 + 2, 3 * 4)
 }
 
-public func main () -> Int32 {
+func main () -> Int32 {
 	var a: Int32 = identity(42)
 	var b: Int32 = add(1, 2)
 	var c: Int32 = add3(1, 2, 3)

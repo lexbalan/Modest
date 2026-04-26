@@ -13,7 +13,8 @@ type Object = {
 }
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("memcopy test\n")
 
 	var o1: Object

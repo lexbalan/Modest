@@ -8,27 +8,27 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
-#define MAIN_FILENAME "file.txt"
+#define FILENAME "file.txt"
 
-static void main_write_example(void) {
+static void write_example(void) {
 	printf("run write_example\n");
-	FILE *const fp = fopen(MAIN_FILENAME, "w");
+	FILE *const fp = fopen(FILENAME, "w");
 	if (fp == NULL) {
-		printf("error: cannot create file '%s'", MAIN_FILENAME);
+		printf("error: cannot create file '%s'", FILENAME);
 		return;
 	}
 	fprintf(fp, "some text.\n");
 	fclose(fp);
 }
 
-static void main_read_example(void) {
+static void read_example(void) {
 	printf("run read_example\n");
-	FILE *const fp = fopen(MAIN_FILENAME, "r");
+	FILE *const fp = fopen(FILENAME, "r");
 	if (fp == NULL) {
-		printf("error: cannot open file '%s'", MAIN_FILENAME);
+		printf("error: cannot open file '%s'", FILENAME);
 		return;
 	}
-	printf("file '%s' contains: ", MAIN_FILENAME);
+	printf("file '%s' contains: ", FILENAME);
 	while (true) {
 		const int ch = fgetc(fp);
 		if (ch == EOF) {
@@ -41,8 +41,8 @@ static void main_read_example(void) {
 
 int main(void) {
 	printf("text_file example\n");
-	main_write_example();
-	main_read_example();
+	write_example();
+	read_example();
 	return 0;
 }
 

@@ -21,7 +21,8 @@ var glb_a0: [10]Int32 = []
 var glb_a1 = [10]Int32 [64, 53, 42]
 
 
-public func main () -> Int {
+@nonstatic()
+func main () -> Int {
 	printf("test assignation\n")
 	glb_i0 = glb_i1
 	printf("glb_i0 = %i\n", glb_i0)
