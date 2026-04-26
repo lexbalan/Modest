@@ -12,31 +12,31 @@
 
 static void main_write_example(void) {
 	printf("run write_example\n");
-	FILE *const main_fp = fopen(MAIN_FILENAME, "w");
-	if (main_fp == NULL) {
+	FILE *const fp = fopen(MAIN_FILENAME, "w");
+	if (fp == NULL) {
 		printf("error: cannot create file '%s'", MAIN_FILENAME);
 		return;
 	}
-	fprintf(main_fp, "some text.\n");
-	fclose(main_fp);
+	fprintf(fp, "some text.\n");
+	fclose(fp);
 }
 
 static void main_read_example(void) {
 	printf("run read_example\n");
-	FILE *const main_fp = fopen(MAIN_FILENAME, "r");
-	if (main_fp == NULL) {
+	FILE *const fp = fopen(MAIN_FILENAME, "r");
+	if (fp == NULL) {
 		printf("error: cannot open file '%s'", MAIN_FILENAME);
 		return;
 	}
 	printf("file '%s' contains: ", MAIN_FILENAME);
 	while (true) {
-		const int main_ch = fgetc(main_fp);
-		if (main_ch == EOF) {
+		const int ch = fgetc(fp);
+		if (ch == EOF) {
 			break;
 		}
-		putchar(main_ch);
+		putchar(ch);
 	}
-	fclose(main_fp);
+	fclose(fp);
 }
 
 int main(void) {

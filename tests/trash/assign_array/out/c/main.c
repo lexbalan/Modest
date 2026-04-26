@@ -13,8 +13,8 @@ int main(void) {
 	int32_t i;
 	i = 0;
 	while (i < 10) {
-		const int32_t main_v = main_globalArray1[i];
-		printf("globalArray1[%d] = %d\n", i, main_v);
+		const int32_t v = main_globalArray1[i];
+		printf("globalArray1[%d] = %d\n", i, v);
 		i = i + 1;
 	}
 	if (__builtin_memcmp(&main_globalArray0, &main_globalArray1, sizeof(int32_t [10])) == 0) {
@@ -27,8 +27,8 @@ int main(void) {
 	__builtin_memcpy(&localArray1, &localArray0, sizeof(int32_t [10]));
 	i = 0;
 	while (i < 10) {
-		const int32_t main_v = localArray1[i];
-		printf("localArray1[%d] = %d\n", i, main_v);
+		const int32_t v = localArray1[i];
+		printf("localArray1[%d] = %d\n", i, v);
 		i = i + 1;
 	}
 	if (__builtin_memcmp(&localArray0, &localArray1, sizeof(int32_t [10])) == 0) {

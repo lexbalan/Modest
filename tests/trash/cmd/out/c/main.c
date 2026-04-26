@@ -68,19 +68,19 @@ static uint16_t main_gettok(struct main_tokenizer *t, char *output, uint16_t lim
 
 static void main_tokenize(struct main_tokenizer *tokenizer) {
 	while (true) {
-		const uint16_t main_max_toklen = 128;
-		char token[main_max_toklen];
+		const uint16_t max_toklen = 128;
+		char token[max_toklen];
 		char *p = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		const uint16_t main_toklen = main_gettok(tokenizer, token, main_max_toklen);
-		if (main_toklen == 0) {
+		const uint16_t toklen = main_gettok(tokenizer, token, max_toklen);
+		if (toklen == 0) {
 			break;
 		}
-		char *const main_pbuf = (char *)&tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		__builtin_memcpy((char (*)[main_toklen - 0])&main_pbuf[0], (char (*)[main_toklen - 0])&token[0], sizeof(char [main_toklen - 0]));
-		tokenizer->tokensBufPos = tokenizer->tokensBufPos + main_toklen;
-		main_pbuf[tokenizer->tokensBufPos] = '\x0';
+		char *const pbuf = (char *)&tokenizer->tokensBuf[tokenizer->tokensBufPos];
+		__builtin_memcpy((char (*)[toklen - 0])&pbuf[0], (char (*)[toklen - 0])&token[0], sizeof(char [toklen - 0]));
+		tokenizer->tokensBufPos = tokenizer->tokensBufPos + toklen;
+		pbuf[tokenizer->tokensBufPos] = '\x0';
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + 1;
-		(*tokenizer->tokens)[tokenizer->tokensPos] = main_pbuf;
+		(*tokenizer->tokens)[tokenizer->tokensPos] = pbuf;
 		tokenizer->tokensPos = tokenizer->tokensPos + 1;
 		(*tokenizer->tokens)[tokenizer->tokensPos] = NULL;
 	}
@@ -91,11 +91,11 @@ static void main_execute(char *cmd, uint16_t argc, char *argv[]) {
 	printf(" [");
 	uint32_t i = 0U;
 	while (true) {
-		char *const main_ptok = argv[i];
-		if (main_ptok == NULL) {
+		char *const ptok = argv[i];
+		if (ptok == NULL) {
 			break;
 		}
-		printf("'%s'", main_ptok);
+		printf("'%s'", ptok);
 		i = i + 1U;
 	}
 	printf("]\n");
@@ -114,13 +114,13 @@ int32_t main(void) {
 			.tokens = &tokens
 		};
 		main_tokenize(&tokenizer);
-		char *const main_cmd = (*tokenizer.tokens)[0];
+		char *const cmd = (*tokenizer.tokens)[0];
 		uint16_t argc = tokenizer.tokensPos;
 		if (argc > 0) {
 			argc = argc - 1;
 		}
-		char *(*const main_argv)[] = (char *(*)[])&(*tokenizer.tokens)[1];
-		main_execute(main_cmd, argc, (char **)main_argv);
+		char *(*const argv)[] = (char *(*)[])&(*tokenizer.tokens)[1];
+		main_execute(cmd, argc, (char **)argv);
 	}
 	return 0;
 }

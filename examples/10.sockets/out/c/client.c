@@ -28,8 +28,8 @@ static bool client_sendFile(FILE *fp, int sockFd) {
 }
 
 int main(void) {
-	const int client_sockFd = socket(AF_INET, SOCK_STREAM, 0);
-	if (client_sockFd < 0) {
+	const int sockFd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockFd < 0) {
 		perror("[-] Error in socket");
 		exit(1);
 	}
@@ -41,25 +41,25 @@ int main(void) {
 			.s_addr = inet_addr(CLIENT_IP_ADDRESS)
 		}
 	};
-	struct sockaddr *const client_sockaddr = (struct sockaddr *)(void *)&server_addr;
-	int e = connect(client_sockFd, client_sockaddr, (socklen_t)sizeof(struct sockaddr_in));
+	struct sockaddr *const sockaddr = (struct sockaddr *)(void *)&server_addr;
+	int e = connect(sockFd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Connecting");
 		exit(1);
 	}
 	printf("[+] Connected to server\n");
-	FILE *const client_fp = fopen(CLIENT_FILENAME, "r");
-	if (client_fp == NULL) {
+	FILE *const fp = fopen(CLIENT_FILENAME, "r");
+	if (fp == NULL) {
 		perror("[-] Error in reading file");
 		exit(1);
 	}
-	const bool client_suc = client_sendFile(client_fp, client_sockFd);
-	if (client_suc) {
+	const bool suc = client_sendFile(fp, sockFd);
+	if (suc) {
 		printf("[+] File data send successfully\n");
 	} else {
 		perror("[-] Error in sendung data");
 	}
-	close(client_sockFd);
+	close(sockFd);
 	printf("[+] Disconnected from the server\n");
 	return 0;
 }

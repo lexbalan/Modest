@@ -23,15 +23,15 @@ int main(void) {
 	main_func0();
 	main_func1();
 	main_print_ab(10, 20);
-	const int32_t main_arg_a = 1;
-	const int32_t main_arg_b = 2;
-	const int32_t main_sum_result = main_sum(main_arg_a, main_arg_b);
-	printf("sum(%i, %i) == %i\n", main_arg_a, main_arg_b, main_sum_result);
+	const int32_t arg_a = 1;
+	const int32_t arg_b = 2;
+	const int32_t sum_result = main_sum(arg_a, arg_b);
+	printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result);
 	int32_t (*fptr)(int32_t a, int32_t b) = &main_sum;
-	const int32_t main_arg_a2 = 1;
-	const int32_t main_arg_b2 = 2;
-	const int32_t main_fptr_result = fptr(main_arg_a2, main_arg_b2);
-	printf("fptr(%i, %i) == %i\n", main_arg_a2, main_arg_b2, main_fptr_result);
+	const int32_t arg_a2 = 1;
+	const int32_t arg_b2 = 2;
+	const int32_t fptr_result = fptr(arg_a2, arg_b2);
+	printf("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result);
 	return 0;
 }
 

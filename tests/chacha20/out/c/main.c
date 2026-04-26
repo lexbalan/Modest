@@ -75,11 +75,11 @@ static bool main_test0(void);
 int main(void) {
 	printf("test ChaCha20 ");
 	struct main_context ctx = main_init(main_testKey, main_testNonce2);
-	uint8_t (*const main_dptr)[] = (uint8_t (*)[])main_xlorem1024;
-	main_cipher(&ctx, (uint8_t *)main_dptr, 1024U);
+	uint8_t (*const dptr)[] = (uint8_t (*)[])main_xlorem1024;
+	main_cipher(&ctx, (uint8_t *)dptr, 1024U);
 	int32_t i = 0;
 	struct main_context ctx2 = main_init(main_testKey, main_testNonce2);
-	main_cipher(&ctx2, (uint8_t *)main_dptr, 1024U);
+	main_cipher(&ctx2, (uint8_t *)dptr, 1024U);
 	i = 0;
 	while (i < 1024) {
 		printf("%c", main_xlorem1024[i]);
@@ -103,7 +103,7 @@ static bool main_test0(void) {
 	chacha20_makeState((uint32_t *)(chacha20_Key *)&key, counter, (uint32_t *)(uint32_t (*)[3])&nonce, state);
 	chacha20_Block block;
 	chacha20_chacha20Block(state, block);
-	uint8_t (*const main_bptr)[64] = (uint8_t (*)[64])&block;
-	return __builtin_memcmp(main_bptr, &(const uint8_t [64])MAIN_TEST_RESULT, sizeof(uint8_t [64])) == 0;
+	uint8_t (*const bptr)[64] = (uint8_t (*)[64])&block;
+	return __builtin_memcmp(bptr, &(const uint8_t [64])MAIN_TEST_RESULT, sizeof(uint8_t [64])) == 0;
 }
 

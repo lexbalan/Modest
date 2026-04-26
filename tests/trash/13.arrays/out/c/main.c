@@ -63,8 +63,8 @@ static void main_test(void) {
 	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
 	uint32_t i = 0U;
 	while (i < LENGTHOF(yy)) {
-		const uint8_t main_y = yy[i];
-		printf("yy[%i] = %u\n", i, (uint32_t)main_y);
+		const uint8_t y = yy[i];
+		printf("yy[%i] = %u\n", i, (uint32_t)y);
 		i = i + 1U;
 	}
 }
@@ -175,16 +175,16 @@ int main(void) {
 	printf("em = %s\n", em);
 	uint32_t i = 0U;
 	while (i < 10U) {
-		const int32_t main_a = main_globalArray[i];
-		printf("globalArray[%i] = %i\n", i, main_a);
+		const int32_t a = main_globalArray[i];
+		printf("globalArray[%i] = %i\n", i, a);
 		i = i + 1U;
 	}
 	printf("------------------------------------\n");
 	int32_t localArray[3] = {4, 5, 6};
 	i = 0U;
 	while (i < 3U) {
-		const int32_t main_a = localArray[i];
-		printf("localArray[%i] = %i\n", i, main_a);
+		const int32_t a = localArray[i];
+		printf("localArray[%i] = %i\n", i, a);
 		i = i + 1U;
 	}
 	printf("------------------------------------\n");
@@ -192,8 +192,8 @@ int main(void) {
 	globalArrayPtr = &main_globalArray;
 	i = 0U;
 	while (i < 3U) {
-		const int32_t main_a = (*globalArrayPtr)[i];
-		printf("globalArrayPtr[%i] = %i\n", i, main_a);
+		const int32_t a = (*globalArrayPtr)[i];
+		printf("globalArrayPtr[%i] = %i\n", i, a);
 		i = i + 1U;
 	}
 	printf("------------------------------------\n");
@@ -201,8 +201,8 @@ int main(void) {
 	localArrayPtr = &localArray;
 	i = 0U;
 	while (i < 3U) {
-		const int32_t main_a = (*localArrayPtr)[i];
-		printf("localArrayPtr[%i] = %i\n", i, main_a);
+		const int32_t a = (*localArrayPtr)[i];
+		printf("localArrayPtr[%i] = %i\n", i, a);
 		i = i + 1U;
 	}
 	int32_t a[3] = {1, 2, 3};
@@ -229,9 +229,9 @@ int main(void) {
 	printf("d[3] = %i\n", d[3]);
 	printf("d[4] = %i\n", d[4]);
 	printf("d[5] = %i\n", d[5]);
-	int32_t (*const main_pa)[3] = &a;
-	int32_t (*const main_pb)[3] = &b;
-	if (__builtin_memcmp(main_pa, main_pb, sizeof(int32_t [3])) == 0) {
+	int32_t (*const pa)[3] = &a;
+	int32_t (*const pb)[3] = &b;
+	if (__builtin_memcmp(pa, pb, sizeof(int32_t [3])) == 0) {
 		printf("*pa == *pb\n");
 	} else {
 		printf("*pa != *pb\n");
@@ -239,14 +239,14 @@ int main(void) {
 	int int100 = 100;
 	int int200 = 200;
 	int int300 = 300;
-	int main_init_array[3];
-	__builtin_memcpy(&main_init_array, &(int [3]){int100, int200, int300}, sizeof(const int [3]));
+	int init_array[3];
+	__builtin_memcpy(&init_array, &(int [3]){int100, int200, int300}, sizeof(const int [3]));
 	int32_t e[4];
-	__builtin_memcpy(&e, &main_init_array, sizeof(int32_t [4]));
+	__builtin_memcpy(&e, &init_array, sizeof(int32_t [4]));
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
-	__builtin_memcpy(&main_globalArray, &main_init_array, sizeof(int32_t [10]));
+	__builtin_memcpy(&main_globalArray, &init_array, sizeof(int32_t [10]));
 	printf("globalArray[%i] = %i\n", 0, main_globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, main_globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, main_globalArray[2]);
@@ -254,17 +254,17 @@ int main(void) {
 	int32_t ax = 10;
 	int32_t bx = 20;
 	int32_t cx = 30;
-	const int32_t main_dx = 40;
-	int32_t main_y[4];
-	__builtin_memcpy(&main_y, &(int32_t [4]){ax, bx, cx, main_dx}, sizeof(const int32_t [4]));
+	const int32_t dx = 40;
+	int32_t y[4];
+	__builtin_memcpy(&y, &(int32_t [4]){ax, bx, cx, dx}, sizeof(const int32_t [4]));
 	ax = 111;
 	bx = 222;
 	cx = 333;
-	printf("y[%i] = %i (must be 10)\n", 0, main_y[0]);
-	printf("y[%i] = %i (must be 20)\n", 1, main_y[1]);
-	printf("y[%i] = %i (must be 30)\n", 2, main_y[2]);
-	printf("y[%i] = %i (must be 40)\n", 3, main_y[3]);
-	if (__builtin_memcmp(&main_y, &(const int32_t [4]){10, 20, 30, 40}, sizeof(const int32_t [4])) == 0) {
+	printf("y[%i] = %i (must be 10)\n", 0, y[0]);
+	printf("y[%i] = %i (must be 20)\n", 1, y[1]);
+	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
+	printf("y[%i] = %i (must be 40)\n", 3, y[3]);
+	if (__builtin_memcmp(&y, &(const int32_t [4]){10, 20, 30, 40}, sizeof(const int32_t [4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

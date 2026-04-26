@@ -33,7 +33,7 @@ static void main_fetch(uint32_t n) {
 			break;
 		}
 		uint8_t x;
-		const bool main_res = queueWord8_get(&main_bq0, &x);
+		const bool res = queueWord8_get(&main_bq0, &x);
 		printf("bq.get = %d\n", (int)x);
 		i = i + 1U;
 	}

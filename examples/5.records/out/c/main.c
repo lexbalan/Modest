@@ -36,11 +36,11 @@ static inline float main_min(float a, float b) {
 }
 
 static float main_distance(struct main_point a, struct main_point b) {
-	const float main_dx = main_max(a.x, b.x) - main_min(a.x, b.x);
-	const float main_dy = main_max(a.y, b.y) - main_min(a.y, b.y);
-	const double main_dx2 = pow(main_dx, 2);
-	const double main_dy2 = pow(main_dy, 2);
-	return sqrt(main_dx2 + main_dy2);
+	const float dx = main_max(a.x, b.x) - main_min(a.x, b.x);
+	const float dy = main_max(a.y, b.y) - main_min(a.y, b.y);
+	const double dx2 = pow(dx, 2);
+	const double dy2 = pow(dy, 2);
+	return sqrt(dx2 + dy2);
 }
 
 static float main_lineLength(struct main_line line) {
@@ -48,15 +48,15 @@ static float main_lineLength(struct main_line line) {
 }
 
 static void main_ptr_example(void) {
-	struct main_point *const main_ptr_p = (struct main_point *)malloc(sizeof(struct main_point));
-	main_ptr_p->x = 10;
-	main_ptr_p->y = 20;
-	printf("point(%f, %f)\n", main_ptr_p->x, main_ptr_p->y);
+	struct main_point *const ptr_p = (struct main_point *)malloc(sizeof(struct main_point));
+	ptr_p->x = 10;
+	ptr_p->y = 20;
+	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }
 
 int main(void) {
-	const float main_len = main_lineLength(main_line);
-	printf("line length = %f\n", main_len);
+	const float len = main_lineLength(main_line);
+	printf("line length = %f\n", len);
 	main_ptr_example();
 	return 0;
 }

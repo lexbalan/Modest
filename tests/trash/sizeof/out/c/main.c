@@ -66,13 +66,13 @@ static struct main_x main_x;
 
 int main(void) {
 	printf("test cast operation\n");
-	const uint64_t main_start_adr = (uint64_t)&main_c;
-	printf("off(c) = %llu\n", (uint64_t)&main_c - main_start_adr);
-	printf("off(i) = %llu\n", (uint64_t)&main_i - main_start_adr);
-	printf("off(f) = %llu\n", (uint64_t)&main_f - main_start_adr);
-	printf("off(i2) = %llu\n", (uint64_t)&main_i2 - main_start_adr);
-	printf("off(p) = %llu\n", (uint64_t)&main_p - main_start_adr);
-	printf("off(g) = %llu\n", (uint64_t)&main_g - main_start_adr);
+	const uint64_t start_adr = (uint64_t)&main_c;
+	printf("off(c) = %llu\n", (uint64_t)&main_c - start_adr);
+	printf("off(i) = %llu\n", (uint64_t)&main_i - start_adr);
+	printf("off(f) = %llu\n", (uint64_t)&main_f - start_adr);
+	printf("off(i2) = %llu\n", (uint64_t)&main_i2 - start_adr);
+	printf("off(p) = %llu\n", (uint64_t)&main_p - start_adr);
+	printf("off(g) = %llu\n", (uint64_t)&main_g - start_adr);
 	printf("sizeof(Unit) = %zu\n", (size_t)0);
 	printf("alignof(Unit) = %zu\n", (size_t)1);
 	printf("sizeof(Bool) = %zu\n", sizeof(bool));

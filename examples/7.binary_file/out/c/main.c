@@ -12,8 +12,8 @@ struct main_chunk {
 
 static void main_writeExample(void) {
 	printf("run writeExample()\n");
-	FILE *const main_fp = fopen(MAIN_FILENAME, "wb");
-	if (main_fp == NULL) {
+	FILE *const fp = fopen(MAIN_FILENAME, "wb");
+	if (fp == NULL) {
 		printf("error: cannot create file '%s'", MAIN_FILENAME);
 		return;
 	}
@@ -21,23 +21,23 @@ static void main_writeExample(void) {
 		.id = {'i', 'd'},
 		.data = {'d', 'a', 't', 'a'}
 	};
-	fwrite((void *)&chunk, sizeof(struct main_chunk), 1ULL, main_fp);
-	fclose(main_fp);
+	fwrite((void *)&chunk, sizeof(struct main_chunk), 1ULL, fp);
+	fclose(fp);
 }
 
 static void main_readExample(void) {
 	printf("run readExample()\n");
-	FILE *const main_fp = fopen(MAIN_FILENAME, "rb");
-	if (main_fp == NULL) {
+	FILE *const fp = fopen(MAIN_FILENAME, "rb");
+	if (fp == NULL) {
 		printf("error: cannot open file '%s'", MAIN_FILENAME);
 		return;
 	}
 	struct main_chunk chunk;
-	fread((void *)&chunk, sizeof(struct main_chunk), 1ULL, main_fp);
+	fread((void *)&chunk, sizeof(struct main_chunk), 1ULL, fp);
 	printf("file \"%s\" contains:\n", MAIN_FILENAME);
 	printf("chunk.id: \"%s\"\n", chunk.id);
 	printf("chunk.data: \"%s\"\n", chunk.data);
-	fclose(main_fp);
+	fclose(fp);
 }
 
 int main(void) {

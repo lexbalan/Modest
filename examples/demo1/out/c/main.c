@@ -9,14 +9,14 @@
 static int32_t main_get_number(int32_t min, int32_t max);
 
 int32_t main(void) {
-	const int32_t main_number = main_get_number(MAIN_MIN_NUMBER, MAIN_MAX_NUMBER);
-	const int32_t main_n = 5;
-	if (main_number < main_n) {
-		printf("entered number (%i) is less than %i\n", main_number, main_n);
-	} else if (main_number > main_n) {
-		printf("entered number (%i) is greater than %i\n", main_number, main_n);
+	const int32_t number = main_get_number(MAIN_MIN_NUMBER, MAIN_MAX_NUMBER);
+	const int32_t n = 5;
+	if (number < n) {
+		printf("entered number (%i) is less than %i\n", number, n);
+	} else if (number > n) {
+		printf("entered number (%i) is greater than %i\n", number, n);
 	} else {
-		printf("entered number (%i) is equal with %i\n", main_number, main_n);
+		printf("entered number (%i) is equal with %i\n", number, n);
 	}
 	return 0;
 }

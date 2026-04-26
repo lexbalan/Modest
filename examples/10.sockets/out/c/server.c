@@ -14,25 +14,25 @@
 
 static bool server_writeFile(int sockFd) {
 	char buffer[SERVER_BUF_SIZE];
-	FILE *const server_fp = fopen(SERVER_FILENAME, "w");
-	if (server_fp == NULL) {
+	FILE *const fp = fopen(SERVER_FILENAME, "w");
+	if (fp == NULL) {
 		perror("[-] Error in creating file");
 		return false;
 	}
 	while (true) {
-		const ssize_t server_n = recv(sockFd, buffer, SERVER_BUF_SIZE, 0);
-		if (server_n <= 0LL) {
+		const ssize_t n = recv(sockFd, buffer, SERVER_BUF_SIZE, 0);
+		if (n <= 0LL) {
 			break;
 		}
-		fprintf(server_fp, "%s", buffer);
+		fprintf(fp, "%s", buffer);
 		__builtin_bzero(&buffer, sizeof(char [SERVER_BUF_SIZE]));
 	}
 	return true;
 }
 
 int main(void) {
-	const int server_sockFd = socket(AF_INET, SOCK_STREAM, 0);
-	if (server_sockFd < 0) {
+	const int sockFd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockFd < 0) {
 		perror("[-] Error in socket");
 		exit(1);
 	}
@@ -44,14 +44,14 @@ int main(void) {
 			.s_addr = inet_addr(SERVER_IP_ADDRESS)
 		}
 	};
-	struct sockaddr *const server_sockAddr = (struct sockaddr *)(void *)&serverAddr;
-	int e = bind(server_sockFd, server_sockAddr, (socklen_t)sizeof(struct sockaddr_in));
+	struct sockaddr *const sockAddr = (struct sockaddr *)(void *)&serverAddr;
+	int e = bind(sockFd, sockAddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Binding");
 		exit(1);
 	}
 	printf("[+] Binding Successfull\n");
-	e = listen(server_sockFd, 10);
+	e = listen(sockFd, 10);
 	if (e != 0) {
 		perror("[-] Error in Binding");
 		exit(1);
@@ -59,10 +59,10 @@ int main(void) {
 	printf("[+] Listening...\n");
 	socklen_t addrSize = (socklen_t)sizeof(struct sockaddr_in);
 	struct sockaddr_in newAddr;
-	struct sockaddr *const server_sa = (struct sockaddr *)(void *)&newAddr;
-	const int server_newSock = accept(server_sockFd, server_sa, &addrSize);
-	const bool server_suc = server_writeFile(server_newSock);
-	if (server_suc) {
+	struct sockaddr *const sa = (struct sockaddr *)(void *)&newAddr;
+	const int newSock = accept(sockFd, sa, &addrSize);
+	const bool suc = server_writeFile(newSock);
+	if (suc) {
 		printf("[+] Data written in the text file");
 	} else {
 		perror("[-] Cannot write file");

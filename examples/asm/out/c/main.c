@@ -36,10 +36,10 @@ int main(void) {
 	printf("inline asm test\n");
 	int64_t a = 10LL;
 	int64_t b = 20LL;
-	const int64_t main_sum = main_sum64(a, b);
-	const int64_t main_sub = main_sub64(a, b);
-	printf("sum(%lld, %lld) = %lld\n", a, b, main_sum);
-	printf("sub(%lld, %lld) = %lld\n", a, b, main_sub);
+	const int64_t sum = main_sum64(a, b);
+	const int64_t sub = main_sub64(a, b);
+	printf("sum(%lld, %lld) = %lld\n", a, b, sum);
+	printf("sub(%lld, %lld) = %lld\n", a, b, sub);
 	main_sumsub64(a, b);
 	return 0;
 }

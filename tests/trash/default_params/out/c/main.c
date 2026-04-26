@@ -17,35 +17,35 @@ static int32_t main_func2(int32_t a, int32_t b) {
 //}
 
 static bool main_test1(void) {
-	const bool main_c0 = main_func1(10) == 10;
-	const bool main_c1 = main_func1(10) == 10;
-	const bool main_c2 = main_func1(10) == 10;
-	const bool main_c3 = main_func1(20) == 20;
-	const bool main_c4 = main_func1(20) == 20;
-	return main_c0 && main_c1 && main_c2 && main_c3 && main_c4;
+	const bool c0 = main_func1(10) == 10;
+	const bool c1 = main_func1(10) == 10;
+	const bool c2 = main_func1(10) == 10;
+	const bool c3 = main_func1(20) == 20;
+	const bool c4 = main_func1(20) == 20;
+	return c0 && c1 && c2 && c3 && c4;
 }
 
 static bool main_test2(void) {
-	const bool main_c0 = main_func2(10, 20) == 30;
-	const bool main_c1 = main_func2(10, 20) == 30;
-	const bool main_c2 = main_func2(10, 20) == 30;
-	const bool main_c3 = main_func2(10, 20) == 30;
-	const bool main_c4 = main_func2(10, 20) == 30;
-	const bool main_c5 = main_func2(20, 10) == 30;
-	const bool main_c6 = main_func2(20, 10) == 30;
-	return main_c0 && main_c1 && main_c2 && main_c3 && main_c4 && main_c5 && main_c6;
+	const bool c0 = main_func2(10, 20) == 30;
+	const bool c1 = main_func2(10, 20) == 30;
+	const bool c2 = main_func2(10, 20) == 30;
+	const bool c3 = main_func2(10, 20) == 30;
+	const bool c4 = main_func2(10, 20) == 30;
+	const bool c5 = main_func2(20, 10) == 30;
+	const bool c6 = main_func2(20, 10) == 30;
+	return c0 && c1 && c2 && c3 && c4 && c5 && c6;
 }
 
 int main(void) {
 	printf("test default parameters\n");
-	const bool main_test1_passed = main_test1();
-	if (main_test1_passed) {
+	const bool test1_passed = main_test1();
+	if (test1_passed) {
 		printf("test1 passed\n");
 	} else {
 		printf("test1 failed\n");
 	}
-	const bool main_test2_passed = main_test2();
-	if (main_test2_passed) {
+	const bool test2_passed = main_test2();
+	if (test2_passed) {
 		printf("test2 passed\n");
 	} else {
 		printf("test2 failed\n");

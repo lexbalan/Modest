@@ -31,8 +31,8 @@ bool queueWord8_put(struct queue_word8_queue_word8 *q, uint8_t b) {
 	if (queue_isFull(&q->queue)) {
 		return false;
 	}
-	const uint32_t queueWord8_p = queue_getPutPosition(&q->queue);
-	(*q->data)[queueWord8_p] = b;
+	const uint32_t p = queue_getPutPosition(&q->queue);
+	(*q->data)[p] = b;
 	return true;
 }
 
@@ -40,8 +40,8 @@ bool queueWord8_get(struct queue_word8_queue_word8 *q, uint8_t *b) {
 	if (queue_isEmpty(&q->queue)) {
 		return false;
 	}
-	const uint32_t queueWord8_g = queue_getGetPosition(&q->queue);
-	*b = (*q->data)[queueWord8_g];
+	const uint32_t g = queue_getGetPosition(&q->queue);
+	*b = (*q->data)[g];
 	return true;
 }
 
@@ -61,8 +61,8 @@ uint32_t queueWord8_read(struct queue_word8_queue_word8 *q, uint8_t data[], uint
 uint32_t queueWord8_write(struct queue_word8_queue_word8 *q, uint8_t data[], uint32_t len) {
 	uint32_t n = 0U;
 	while (n < len) {
-		const uint8_t queueWord8_x = data[n];
-		if (!queueWord8_put(q, queueWord8_x)) {
+		const uint8_t x = data[n];
+		if (!queueWord8_put(q, x)) {
 			break;
 		}
 		n = n + 1U;
@@ -71,7 +71,7 @@ uint32_t queueWord8_write(struct queue_word8_queue_word8 *q, uint8_t data[], uin
 }
 
 void queueWord8_clear(struct queue_word8_queue_word8 *q) {
-	uint8_t (*const queueWord8_pdata)[queue_capacity(&q->queue)] = (uint8_t (*)[queue_capacity(&q->queue)])q->data;
-	__builtin_bzero(queueWord8_pdata, sizeof(uint8_t [queue_capacity(&q->queue)]));
+	uint8_t (*const pdata)[queue_capacity(&q->queue)] = (uint8_t (*)[queue_capacity(&q->queue)])q->data;
+	__builtin_bzero(pdata, sizeof(uint8_t [queue_capacity(&q->queue)]));
 }
 

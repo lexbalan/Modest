@@ -2215,8 +2215,6 @@ def def_type_common(x, nt):
 	global global_prefix
 
 	id = do_id(x['id'])
-	id.prefix = global_prefix
-
 	definition = StmtDefType(id, nt, None, x['ti'])
 	definition.module = cmodule
 	definition.parent = cmodule
@@ -2290,6 +2288,7 @@ def def_type_common(x, nt):
 
 
 def def_type_global(x):
+	global global_prefix
 	# глобальный тип уже был задекларирован при первом проходе,
 	# теперь доопределяем его
 	nt = ctx_type_get(x['id']['str'])
@@ -2297,6 +2296,7 @@ def def_type_global(x):
 		error("type redefinition", x['ti'])
 		return None
 	df = def_type_common(x, nt)
+	df.id.prefix = global_prefix
 	df = def_add_annotations(df, x['anno'])
 	return df
 
@@ -2346,8 +2346,6 @@ def def_const_common(x):
 	global global_prefix
 
 	id = do_id(x['id'])
-	id.prefix = global_prefix
-
 	definition = StmtDefConst(id, const_value=None, init_value=None, ti=x['ti'])
 	definition.module = cmodule
 	#definition.parent = cmodule

@@ -211,10 +211,10 @@ int32_t main(void) {
 		}
 		i = i + 1U;
 	}
-	const int32_t main__add = main_farr[0](5, 7);
-	printf("farr[0](5, 7) = %d\n", main__add);
-	const int32_t main__sub = main_farr[1](5, 7);
-	printf("farr[1](5, 7) = %d\n", main__sub);
+	const int32_t _add = main_farr[0](5, 7);
+	printf("farr[0](5, 7) = %d\n", _add);
+	const int32_t _sub = main_farr[1](5, 7);
+	printf("farr[1](5, 7) = %d\n", _sub);
 	i = 0U;
 	while (i < 10U) {
 		main_hiarr[i]("LOL");

@@ -34,8 +34,8 @@ static struct main_test main_tests[3] = {
 };
 
 static bool main_runTest(struct main_test *test) {
-	const uint32_t main_crc = crc32_run((uint8_t *)(uint8_t (*)[])&test->data, test->len);
-	return main_crc == test->hash;
+	const uint32_t crc = crc32_run((uint8_t *)(uint8_t (*)[])&test->data, test->len);
+	return crc == test->hash;
 }
 
 int main(void) {

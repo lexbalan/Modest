@@ -40,9 +40,9 @@ static struct main_sha256_test_case main_test1 = (struct main_sha256_test_case){
 
 static bool main_doTest(struct main_sha256_test_case *test) {
 	sha256_Hash test_hash;
-	uint8_t (*const main_msg)[] = (uint8_t (*)[])test->inputData;
-	const uint32_t main_msgLen = test->inputDataLen;
-	sha256_hash((uint8_t *)main_msg, main_msgLen, test_hash);
+	uint8_t (*const msg)[] = (uint8_t (*)[])test->inputData;
+	const uint32_t msgLen = test->inputDataLen;
+	sha256_hash((uint8_t *)msg, msgLen, test_hash);
 	printf("'%s'", test->inputData);
 	printf(" -> ");
 	uint32_t i = 0U;
@@ -59,11 +59,11 @@ int main(void) {
 	bool success = true;
 	uint32_t i = 0U;
 	while (i < 2) {
-		struct main_sha256_test_case *const main_test = ((struct main_sha256_test_case *const [2])MAIN_TESTS)[i];
-		const bool main_rc = main_doTest(main_test);
-		success = success && main_rc;
+		struct main_sha256_test_case *const test = ((struct main_sha256_test_case *const [2])MAIN_TESTS)[i];
+		const bool rc = main_doTest(test);
+		success = success && rc;
 		char *res = "failed";
-		if (main_rc) {
+		if (rc) {
 			res = "passed";
 		}
 		printf("test #%i: %s\n", i, res);

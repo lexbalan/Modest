@@ -56,9 +56,9 @@ int main(void) {
 		.a = {(struct main_point){.x = 20, .y = 30}}
 	};
 	struct main_point points3[3] = MAIN_POINTS;
-	const struct main_point main_pp = ((const struct main_point [3])MAIN_POINTS)[0];
-	const struct main_point main_ppp = ((const struct main_point [3])MAIN_ZERO_POINTS)[0];
-	const uint32_t main_z = MAIN_POINT_ZERO.x;
+	const struct main_point pp = ((const struct main_point [3])MAIN_POINTS)[0];
+	const struct main_point ppp = ((const struct main_point [3])MAIN_ZERO_POINTS)[0];
+	const uint32_t z = MAIN_POINT_ZERO.x;
 	printf("genericIntConst = %d\n", (int32_t)MAIN_GENERIC_INT_CONST);
 	printf("int32Const = %d\n", MAIN_INT32_CONST);
 	printf("string8Const = %s\n", MAIN_STRING8_CONST);

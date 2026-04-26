@@ -8,8 +8,8 @@
 int main(void) {
 	printf("while statement test\n");
 	uint32_t a = 0U;
-	const uint32_t main_b = 10U;
-	while (a < main_b) {
+	const uint32_t b = 10U;
+	while (a < b) {
 		printf("a = %d\n", a);
 		a = a + 1U;
 	}

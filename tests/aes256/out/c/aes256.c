@@ -10,11 +10,11 @@
 // thx: https://github.com/ilvn/aes256/tree/main
 
 static uint8_t aes256_rj_xtime(uint8_t x) {
-	const uint8_t aes256_y = 0xFF & x << 1;
+	const uint8_t y = 0xFF & x << 1;
 	if ((x & 0x80) != 0x0) {
-		return aes256_y ^ 0x1B;
+		return y ^ 0x1B;
 	}
-	return aes256_y;
+	return y;
 }
 #define AES256_SBOX { \
 	0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, \
@@ -122,9 +122,9 @@ static void aes256_addRoundKey(uint8_t block[16], uint8_t k[16]) {
 static void aes256_addRoundKeyCpy(uint8_t block[16], uint8_t key[32], uint8_t cpk[32]) {
 	uint8_t i = 0;
 	while (i < 16) {
-		const uint8_t aes256_yy = key[i];
-		cpk[i] = aes256_yy;
-		block[i] = block[i] ^ aes256_yy;
+		const uint8_t yy = key[i];
+		cpk[i] = yy;
+		block[i] = block[i] ^ yy;
 		cpk[16 + i] = key[16 + i];
 		i = i + 1;
 	}

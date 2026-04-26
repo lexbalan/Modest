@@ -81,8 +81,8 @@ static void sha256_transform(struct sha256_context *ctx, uint8_t data[]) {
 	uint32_t i = 0U;
 	uint32_t j = 0U;
 	while (i < 16U) {
-		const uint32_t sha256_x = (uint32_t)data[j + 0U] << 24 | (uint32_t)data[j + 1U] << 16 | (uint32_t)data[j + 2U] << 8 | (uint32_t)data[j + 3U] << 0;
-		m[i] = sha256_x;
+		const uint32_t x = (uint32_t)data[j + 0U] << 24 | (uint32_t)data[j + 1U] << 16 | (uint32_t)data[j + 2U] << 8 | (uint32_t)data[j + 3U] << 0;
+		m[i] = x;
 		j = j + 4U;
 		i = i + 1U;
 	}
@@ -94,16 +94,16 @@ static void sha256_transform(struct sha256_context *ctx, uint8_t data[]) {
 	__builtin_memcpy(&x, &ctx->state, sizeof(uint32_t [8]));
 	i = 0U;
 	while (i < 64U) {
-		const uint32_t sha256_t1 = x[7] + sha256_ep1(x[4]) + sha256_ch(x[4], x[5], x[6]) + ((const uint32_t [64])SHA256_K)[i] + m[i];
-		const uint32_t sha256_t2 = sha256_ep0(x[0]) + sha256_maj(x[0], x[1], x[2]);
+		const uint32_t t1 = x[7] + sha256_ep1(x[4]) + sha256_ch(x[4], x[5], x[6]) + ((const uint32_t [64])SHA256_K)[i] + m[i];
+		const uint32_t t2 = sha256_ep0(x[0]) + sha256_maj(x[0], x[1], x[2]);
 		x[7] = x[6];
 		x[6] = x[5];
 		x[5] = x[4];
-		x[4] = x[3] + sha256_t1;
+		x[4] = x[3] + t1;
 		x[3] = x[2];
 		x[2] = x[1];
 		x[1] = x[0];
-		x[0] = sha256_t1 + sha256_t2;
+		x[0] = t1 + t2;
 		i = i + 1U;
 	}
 	i = 0U;
@@ -152,15 +152,15 @@ static void sha256_final(struct sha256_context *ctx, uint8_t outHash[SHA256_HASH
 	sha256_transform(ctx, (uint8_t *)&ctx->data);
 	i = 0U;
 	while (i < 4U) {
-		const uint32_t sha256_sh = 24U - i * 8U;
-		outHash[i + 0U] = ctx->state[0] >> sha256_sh;
-		outHash[i + 4U] = ctx->state[1] >> sha256_sh;
-		outHash[i + 8U] = ctx->state[2] >> sha256_sh;
-		outHash[i + 12U] = ctx->state[3] >> sha256_sh;
-		outHash[i + 16U] = ctx->state[4] >> sha256_sh;
-		outHash[i + 20U] = ctx->state[5] >> sha256_sh;
-		outHash[i + 24U] = ctx->state[6] >> sha256_sh;
-		outHash[i + 28U] = ctx->state[7] >> sha256_sh;
+		const uint32_t sh = 24U - i * 8U;
+		outHash[i + 0U] = ctx->state[0] >> sh;
+		outHash[i + 4U] = ctx->state[1] >> sh;
+		outHash[i + 8U] = ctx->state[2] >> sh;
+		outHash[i + 12U] = ctx->state[3] >> sh;
+		outHash[i + 16U] = ctx->state[4] >> sh;
+		outHash[i + 20U] = ctx->state[5] >> sh;
+		outHash[i + 24U] = ctx->state[6] >> sh;
+		outHash[i + 28U] = ctx->state[7] >> sh;
 		i = i + 1U;
 	}
 }

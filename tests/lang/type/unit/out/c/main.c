@@ -9,9 +9,9 @@
 
 __attribute__((used))
 static void main_unitFunc(void) {
-	#define main_unit {0}
+	#define unit {0}
 	return;
-	#undef main_unit
+	#undef unit
 }
 
 int32_t main(void) {

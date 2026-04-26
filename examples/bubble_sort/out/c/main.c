@@ -13,11 +13,11 @@ static bool main_bubble_sort32_iter(int32_t array[], uint32_t len) {
 	bool wasSwap = false;
 	uint32_t i = 0U;
 	while (i < len - 1U) {
-		const int32_t main_left = array[i];
-		const int32_t main_right = array[i + 1U];
-		if (main_left > main_right) {
-			array[i] = main_right;
-			array[i + 1U] = main_left;
+		const int32_t left = array[i];
+		const int32_t right = array[i + 1U];
+		if (left > right) {
+			array[i] = right;
+			array[i + 1U] = left;
 			wasSwap = true;
 		}
 		i = i + 1U;

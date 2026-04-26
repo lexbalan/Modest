@@ -41,11 +41,11 @@ struct main_wrapped_array {
 #define MAIN_WA ((struct main_wrapped_array){0})
 
 static float main_distance(struct main_point a, struct main_point b) {
-	const double main_dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
-	const double main_dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
-	const double main_dx2 = pow(main_dx, 2);
-	const double main_dy2 = pow(main_dy, 2);
-	return sqrt(main_dx2 + main_dy2);
+	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
+	const double dy = minmax_max_float64(a.y, b.y) - minmax_min_float64(a.y, b.y);
+	const double dx2 = pow(dx, 2);
+	const double dy2 = pow(dy, 2);
+	return sqrt(dx2 + dy2);
 }
 
 static float main_lineLength(struct main_line line) {
@@ -53,14 +53,14 @@ static float main_lineLength(struct main_line line) {
 }
 
 int main(void) {
-	const float main_lines_0_len = main_lineLength(((const struct main_line [4])MAIN_LINES)[0]);
-	const float main_lines_1_len = main_lineLength(((const struct main_line [4])MAIN_LINES)[1]);
-	const float main_lines_2_len = main_lineLength(((const struct main_line [4])MAIN_LINES)[2]);
-	const float main_lines_3_len = main_lineLength(((const struct main_line [4])MAIN_LINES)[3]);
-	printf("lines_0_len = %f\n", main_lines_0_len);
-	printf("lines_1_len = %f\n", main_lines_1_len);
-	printf("lines_2_len = %f\n", main_lines_2_len);
-	printf("lines_3_len = %f\n", main_lines_3_len);
+	const float lines_0_len = main_lineLength(((const struct main_line [4])MAIN_LINES)[0]);
+	const float lines_1_len = main_lineLength(((const struct main_line [4])MAIN_LINES)[1]);
+	const float lines_2_len = main_lineLength(((const struct main_line [4])MAIN_LINES)[2]);
+	const float lines_3_len = main_lineLength(((const struct main_line [4])MAIN_LINES)[3]);
+	printf("lines_0_len = %f\n", lines_0_len);
+	printf("lines_1_len = %f\n", lines_1_len);
+	printf("lines_2_len = %f\n", lines_2_len);
+	printf("lines_3_len = %f\n", lines_3_len);
 	return 0;
 }
 

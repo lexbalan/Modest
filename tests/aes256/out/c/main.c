@@ -108,8 +108,8 @@ int32_t main(void) {
 	uint8_t i = 0;
 	while (i < LENGTHOF(main_tests)) {
 		printf("run test #%d ", i);
-		const bool main_rc = main_runTest(&main_tests[i]);
-		success = success && main_rc;
+		const bool rc = main_runTest(&main_tests[i]);
+		success = success && rc;
 		printf("\n");
 		i = i + 1;
 	}

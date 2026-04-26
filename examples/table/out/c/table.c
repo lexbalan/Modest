@@ -12,15 +12,15 @@ static void table_printRow(char *raw_row[], uint32_t sz[], uint32_t nCols);
 void table_print(table_Table *table) {
 	uint32_t i;
 	uint32_t j;
-	char *(*const table_data)[table->nRows][table->nCols] = (char *(*)[table->nRows][table->nCols])table->data;
+	char *(*const data)[table->nRows][table->nCols] = (char *(*)[table->nRows][table->nCols])table->data;
 	uint32_t sz[table->nCols];
 	__builtin_bzero(&sz, sizeof(uint32_t [table->nCols]));
 	if (table->header != NULL) {
 		i = 0U;
 		while (i < table->nCols) {
-			const uint32_t table_len = (uint32_t)strlen((*table->header)[i]);
-			if (table_len > sz[i]) {
-				sz[i] = table_len;
+			const uint32_t len = (uint32_t)strlen((*table->header)[i]);
+			if (len > sz[i]) {
+				sz[i] = len;
 			}
 			i = i + 1U;
 		}
@@ -29,9 +29,9 @@ void table_print(table_Table *table) {
 	while (i < table->nRows) {
 		j = 0U;
 		while (j < table->nCols) {
-			const uint32_t table_len = (uint32_t)strlen((*table_data)[i][j]);
-			if (table_len > sz[j]) {
-				sz[j] = table_len;
+			const uint32_t len = (uint32_t)strlen((*data)[i][j]);
+			if (len > sz[j]) {
+				sz[j] = len;
 			}
 			j = j + 1U;
 		}
@@ -49,7 +49,7 @@ void table_print(table_Table *table) {
 	}
 	i = 0U;
 	while (i < table->nRows) {
-		table_printRow((char **)&(*table_data)[i], (uint32_t *)&sz, table->nCols);
+		table_printRow((char **)&(*data)[i], (uint32_t *)&sz, table->nCols);
 		if (table->separate && i < table->nRows - 1U) {
 			table_separator((uint32_t *)&sz, table->nCols);
 		}
@@ -59,15 +59,15 @@ void table_print(table_Table *table) {
 }
 
 static void table_printRow(char *raw_row[], uint32_t sz[], uint32_t nCols) {
-	char *(*const table_row)[nCols] = (char *(*)[nCols])raw_row;
+	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
 	uint32_t j = 0U;
 	while (j < nCols) {
 		printf("|");
-		char *const table_s = (*table_row)[j];
-		uint32_t len = (uint32_t)strlen(table_s);
-		if (table_s[0] != '\x0') {
+		char *const s = (*row)[j];
+		uint32_t len = (uint32_t)strlen(s);
+		if (s[0] != '\x0') {
 			len = len + 1U;
-			printf(" %s", table_s);
+			printf(" %s", s);
 		}
 		uint32_t k = 0U;
 		while (k < sz[j] - len) {

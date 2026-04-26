@@ -20,9 +20,9 @@ int main(void) {
 		.lastname = "Doe",
 		.age = 30
 	};
-	const size_t main_len = sizeof(struct main_object);
-	printf("LEN = %zu\n", main_len);
-	memory_copy((void *)&o2, (void *)&o1, main_len);
+	const size_t len = sizeof(struct main_object);
+	printf("LEN = %zu\n", len);
+	memory_copy((void *)&o2, (void *)&o1, len);
 	printf("firstname = '%s'\n", o2.firstname);
 	printf("lastname = '%s'\n", o2.lastname);
 	printf("age = %d\n", o2.age);

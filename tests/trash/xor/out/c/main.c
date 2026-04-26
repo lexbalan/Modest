@@ -36,16 +36,16 @@ static void main_print_bytes(uint8_t buf[], uint32_t len) {
 
 int main(void) {
 	printf("test ^ encrypting\n");
-	uint8_t (*const main_tmsg)[] = (uint8_t (*)[])main_test_msg;
-	uint8_t (*const main_tkey)[] = (uint8_t (*)[])main_test_key;
+	uint8_t (*const tmsg)[] = (uint8_t (*)[])main_test_msg;
+	uint8_t (*const tkey)[] = (uint8_t (*)[])main_test_key;
 	printf("before encrypt test_msg: \n");
-	main_print_bytes((uint8_t *)main_tmsg, MAIN_MSG_LENGTH);
-	main_xor_encrypter((uint8_t *)main_tmsg, MAIN_MSG_LENGTH, (uint8_t *)main_tkey, MAIN_KEY_LENGTH);
+	main_print_bytes((uint8_t *)tmsg, MAIN_MSG_LENGTH);
+	main_xor_encrypter((uint8_t *)tmsg, MAIN_MSG_LENGTH, (uint8_t *)tkey, MAIN_KEY_LENGTH);
 	printf("after encrypt test_msg: \n");
-	main_print_bytes((uint8_t *)main_tmsg, MAIN_MSG_LENGTH);
-	main_xor_encrypter((uint8_t *)main_tmsg, MAIN_MSG_LENGTH, (uint8_t *)main_tkey, MAIN_KEY_LENGTH);
+	main_print_bytes((uint8_t *)tmsg, MAIN_MSG_LENGTH);
+	main_xor_encrypter((uint8_t *)tmsg, MAIN_MSG_LENGTH, (uint8_t *)tkey, MAIN_KEY_LENGTH);
 	printf("after decrypt test_msg: \n");
-	main_print_bytes((uint8_t *)main_tmsg, MAIN_MSG_LENGTH);
+	main_print_bytes((uint8_t *)tmsg, MAIN_MSG_LENGTH);
 	return 0;
 }
 
