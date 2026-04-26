@@ -20,8 +20,6 @@ def out(s):
 	f.write(str(s))
 
 
-
-
 def indent_up():
 	global indent_level
 	indent_level = indent_level + 1

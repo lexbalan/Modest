@@ -2288,7 +2288,6 @@ def def_type_common(x, nt):
 
 
 def def_type_global(x):
-	global global_prefix
 	# глобальный тип уже был задекларирован при первом проходе,
 	# теперь доопределяем его
 	nt = ctx_type_get(x['id']['str'])
@@ -2296,7 +2295,6 @@ def def_type_global(x):
 		error("type redefinition", x['ti'])
 		return None
 	df = def_type_common(x, nt)
-	#df.id.prefix = global_prefix
 	df = def_add_annotations(df, x['anno'])
 	return df
 
@@ -2343,7 +2341,6 @@ def process_field_common(x, allow_cons_default=False):
 def def_const_common(x):
 	global cmodule
 	global cdef
-	global global_prefix
 
 	id = do_id(x['id'])
 	definition = StmtDefConst(id, const_value=None, init_value=None, ti=x['ti'])
@@ -2383,7 +2380,6 @@ def def_const_common(x):
 
 def def_var_common(x):
 	global cdef
-	global global_prefix
 
 	id = do_id(x['id'])
 
@@ -2424,7 +2420,6 @@ def def_var_common(x):
 
 def def_const_global(x):
 	global cmodule
-	global global_prefix
 
 	if id_already_used(x['id']['str']):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
@@ -2433,7 +2428,6 @@ def def_const_global(x):
 	df.parent = cmodule
 	df.value.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
-	#df.id.prefix = global_prefix
 
 	iv = df.init_value
 	if not iv.is_value_undefined():
@@ -2457,7 +2451,6 @@ def def_var_global(x):
 	df.parent = cmodule
 	df.value.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
-	#df.id.prefix = global_prefix
 	df.value.is_initialized = True
 
 	df = def_add_annotations(df, x['anno'])
@@ -2482,12 +2475,10 @@ def def_func(x):
 	global cdef
 	global cfunc
 	global cmodule
-	global global_prefix
 
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
 	fn = ctx_value_get(x['id']['str'])
-	#fn.id.prefix = global_prefix
 
 	cdef = fn.definition
 
@@ -2717,7 +2708,6 @@ def do_import(x):
 
 def do_directive(x):
 	global cmodule
-	global global_prefix
 
 	y = None
 	if x['kind'] == 'pragma':
@@ -2743,15 +2733,6 @@ def do_directive(x):
 		elif s0 == 'prefix':
 			prefix = args[1]
 			cmodule.setPrefix(prefix)
-		elif s0 == 'append_prefix':
-			prefix = args[1]
-			#print('append_prefix = %s' % prefix)
-			global_prefix = prefix
-			pass
-		elif s0 == 'remove_prefix':
-			prefix = args[1]
-			#print('remove_prefix = %s' % prefix)
-			global_prefix = global_prefix.removesuffix(prefix)
 
 	elif x['kind'] == 'module':
 		print("MODULE('%s')" % x['line']['str'])
@@ -2811,8 +2792,6 @@ def process_module(idStr, sourcename, ast, is_include):
 	}
 
 	cmodule = Module(idStr, ast, symtab_public, symtab_private, sourcename)
-
-	
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=None, include=False)
 	cmodule.imports_private["builtin"] = import_builtin
