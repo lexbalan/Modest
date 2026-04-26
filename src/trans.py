@@ -2357,7 +2357,7 @@ def def_const_common(x):
 	const_type.addAttribute('const', {})
 
 	const_value = ValueConst(const_type, id, init_value=init_value, ti=id.ti)
-	const_value.is_initialized = not init_value.is_value_undefined()
+	const_value.is_initialized = True#not init_value.is_value_undefined()
 	const_value.stage = init_value.stage
 	ctx_value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 
