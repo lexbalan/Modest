@@ -95,7 +95,7 @@ int main(void) {
 		printf("p2d2 != p2d3\n");
 	}
 	struct __anonymous_struct_7 p2d4 = (struct __anonymous_struct_7){.x = 1, .y = 2};
-	if (__builtin_memcmp(&p2d3, &RAWCAST(struct __anonymous_struct_6, struct __anonymous_struct_7, p2d4), sizeof(struct __anonymous_struct_6)) == 0) {
+	if (__builtin_memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_6)) == 0) {
 		printf("p2d3 == p2d4\n");
 	} else {
 		printf("p2d3 != p2d4\n");

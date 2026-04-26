@@ -103,10 +103,14 @@ def get_id_prefix(x):
 
 	nodecorate = not is_global_public(x) or id.hasAttribute('nodecorate')
 	if nodecorate:
+		#if hasattr(x, 'definition'):
+			#return '/*%s*/' % str(x.definition) + prefix
 		return prefix
 
 	module = x.getModule()
+	#if module == None:
 	if module != None:
+		#warning("module == None", x.ti)
 		if not module.hasAttribute('nodecorate'):
 			#if x.access_level != HLIR_ACCESS_LEVEL_PRIVATE:
 			return "%s_%s" % (module.prefix, prefix)
@@ -128,21 +132,28 @@ def get_record_tag(x):
 
 
 def get_type_id_str(t):
-	if t.is_integer():
-		if t.width == 0:
-			if t.is_unsigned():
-				return 'unsigned int'
-			return 'int'
-		elif t.width > 64:
-			s = '__int%d_t' % align_bits_up(t.width)
-			if t.is_unsigned():
-				s = 'unsigned ' + s
-			return s
+	if hasattr(t, 'id') and t.id != None:
+		if t.id.c_alias != None:
+			return t.id.c_alias
 
-		s = 'int%d_t' % align_bits_up(t.width)
-		if t.is_unsigned():
-			s = 'u' + s
-		return s
+		if t.id.common != None:
+			return t.id.common
+
+#	if t.is_integer():
+#		if t.width == 0:
+#			if t.is_unsigned():
+#				return 'unsigned int'
+#			return 'int'
+#		elif t.width > 64:
+#			s = '__int%d_t' % align_bits_up(t.width)
+#			if t.is_unsigned():
+#				s = 'unsigned ' + s
+#			return s
+#
+#		s = 'int%d_t' % align_bits_up(t.width)
+#		if t.is_unsigned():
+#			s = 'u' + s
+#		return s
 
 	if t.is_rational():
 		return "double"
@@ -158,6 +169,10 @@ def get_type_id_str(t):
 			kisa = isa + ' ' + tag
 			return kisa
 
+	if hasattr(t, 'id'):
+		if t.id != None and t.id.c != None:
+			return get_id_prefix(t) + t.id.c
+
 	return None
 
 
@@ -169,13 +184,7 @@ def get_id_str(x):
 		if x.id.common != None:
 			return x.id.common
 
-	if isinstance(x, Type):
-		id_str = get_type_id_str(x)
-		if id_str != None:
-			return id_str
-
-	if hasattr(x, 'id'):
-		if x.id != None and x.id.c != None:
+		if x.id.c != None:
 			return get_id_prefix(x) + x.id.c
 
 	return None
@@ -183,7 +192,7 @@ def get_id_str(x):
 
 
 def is_type_named(t):
-	return get_id_str(t) != None
+	return get_type_id_str(t) != None
 
 
 # преобразуем Modest TypePointer -> CIR TypePointer
@@ -255,7 +264,7 @@ def do_ctype_struct(t, tag='', specs=[]):
 
 
 def do_ctype_named(t, specs):
-	id_str = get_id_str(t)
+	id_str = get_type_id_str(t)
 	return CTypeNamed(id_str, specs=specs)
 
 

@@ -629,18 +629,20 @@ def do_type_internal(x):
 	elif k == 'record': t = do_type_record(x)
 	else: t = bad_type(x['ti'])
 	t.ti = x['ti']
-	tt = t.add_atts(x['anno'])
+
+	if x['anno'] != []:
+		t = t.copy_with_atts(x['anno'])
 
 	if k == 'record' and not t.is_unit():
 		# кароч прикол такой:
 		# тк t.add_atts вызывается здесь и создает НОВЫЙ тип то в таблице cmodule.anon_recs
 		# оказывается оригинальная структура, а при поиске для удаления ее оттуда ищется новая (обернутая)
 		# поэтому этот костыль тут а не в do_type_record где ему казалось бы - место
-		anon_tag = '__anonymous_struct_%d' % tt.uid
-		tt.c_anon_id = anon_tag
-		cmodule.anon_recs.append(tt)
+		anon_tag = '__anonymous_struct_%d' % t.uid
+		t.c_anon_id = anon_tag
+		cmodule.anon_recs.append(t)
 
-	return tt
+	return t
 
 
 def do_type(x):
@@ -2264,6 +2266,7 @@ def def_type_common(x, nt):
 
 	nt.definition = definition
 	nt.parent = cmodule  # добавляем заново тк очистили его выше!
+	nt.module = cmodule
 	nt.ti_def = id.ti
 	nt.is_open_record = is_open_record
 	nt.is_open_access = is_open_record or hasattr(ty, 'id')
@@ -2279,8 +2282,11 @@ def def_type_common(x, nt):
 		if dep.is_incompleted():
 			error("is_incompleted", dep.ti)
 
+	assert(nt.definition != None)
 	cdef = prev_cdef
 	return definition
+
+
 
 
 def def_type_global(x):

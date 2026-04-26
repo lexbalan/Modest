@@ -186,6 +186,8 @@ class Entity():
 
 	# возвращает модуль в котором сущность определена (или None)
 	def getModule(self):
+		if hasattr(self, 'module'):
+			return self.module
 		if hasattr(self, 'definition'):
 			definition = self.definition
 			if hasattr(definition, 'module'):
@@ -669,11 +671,12 @@ class Type(Entity):
 	def get_align(self):
 		return self.align
 
-	def add_atts(self, atts):
+	def copy_with_atts(self, atts):
 		if atts == []:
 			return self
 
 		nt = Type.copy(self)
+		#nt.definition = None #!
 
 		for a in atts:
 			k = a['kind']
@@ -1466,6 +1469,12 @@ class TypeInteger(TypeSimple):
 		integer_id = Id("Integer")
 		integer_id.c = None
 		integer_id.llvm = None
+
+		if width > 0:
+			integer_id.c_alias = 'int%d_t' % align_bits_up(width)
+		else:
+			integer_id.c_alias = 'int'
+
 		super().__init__(width=width, kind=HLIR_TYPE_KIND_INTEGER, id=integer_id, ops=NUMBER_OPS, ti=ti)
 		self.generic = True
 

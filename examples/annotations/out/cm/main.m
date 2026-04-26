@@ -15,12 +15,12 @@ const myOne = MyInt32 1
 
 // These refined MyInt32 types are compatible with MyInt32
 // but not compatible with anything else (e.g. between them)
-type MyInt32_2 = @branded MyInt32
-type MyInt32_3 = @branded MyInt32
+type MyInt32_2 = MyInt32
+type MyInt32_3 = MyInt32
 
 
-const cvb = Int32 0
-var vvb = Int32 1
+const cvb = @volatile Int32 0
+var vvb = @volatile Int32 1
 
 
 type ProtocolHeader = @layout {
@@ -29,7 +29,7 @@ type ProtocolHeader = @layout {
 }
 
 
-@alias("name2")
+@alias()
 var name1: Bool
 
 
@@ -46,8 +46,8 @@ var ext_arr: []Int32
 
 
 
-@alignment(8)
-@section("__DATA, .xdata")
+@alignment()
+@section()
 var x: Word32
 
 
@@ -69,8 +69,8 @@ var u2: Word64
 public const const0 = 0
 
 
-var rp: *Word32
-var vb: [32]Bool
+var rp: @restrict *Word32
+var vb: @volatile [32]@volatile Bool
 
 
 

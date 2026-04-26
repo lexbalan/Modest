@@ -218,6 +218,19 @@ def str_type_func(t, extra_args=False):
 
 
 def str_type(t):
+	if t.definition == None:
+		atts = []
+		attributes = t.attributes
+		for a in attributes:
+			atts.append(str_annotation(a, params=attributes[a]))
+		aa = ' '.join(atts)
+		if aa != '':
+			return  aa + ' ' + str_type2(t)
+
+	return str_type2(t)
+
+
+def str_type2(t):
 	assert(isinstance(t, Type))
 
 	# Если тип связан с идентификатором - распечатаем его
@@ -751,36 +764,27 @@ def str_value(x, ctx=[], parent_expr=None):
 
 
 def str_annotation(a, params):
+	if a in ['const', 'zarray']:
+		return ''
+
 	sstr = ""
 	if params != {}:
 		sstr += '('
 		if isinstance(params, dict):
 			pass
 		else:
-			sstr += str_value(params)
+			pass
+			#sstr += str_value(params)
 		sstr += ')'
 	return "@" + a + sstr
 
 
 def str_stmt_type(x):
-	atts = []
-	attributes = x.original_type.attributes
-	for a in attributes:
-		atts.append(str_annotation(a, params=attributes[a]))
-
-	if atts != []:
-		return "type %s = %s %s" % (get_id_str(x), ' '.join(atts), str_type(x.original_type))
+	#if atts != []:
+	#	return "type %s = %s %s" % (get_id_str(x), ' '.join(atts), str_type(x.original_type))
 
 	return "type %s = %s" % (get_id_str(x), str_type(x.original_type))
 
-
-
-# принимает StmtConst / StmtVar
-# возвращает true если в нем нужно явно аннотировать тип
-def needTypeAnno(x):
-	if x.value.type.is_generic():
-		return False
-	return not (x.init_value.isValueCons() and x.init_value.method == 'explicit')
 
 
 def str_stmt_def(x, operator='const'):
@@ -804,9 +808,10 @@ def str_stmt_def(x, operator='const'):
 
 	ss.append("%s %s" % (operator, get_id_str(x)))
 
-	if needTypeAnno(x):
-		ss.append(": ")
-		ss.append(str_type(x.value.type))
+	if not x.value.type.is_generic():
+		if not (x.init_value.isValueCons() and x.init_value.method == 'explicit'):
+			ss.append(": ")
+			ss.append(str_type(x.value.type))
 
 	if not x.init_value.is_value_undefined():
 		ss.append(" = ")

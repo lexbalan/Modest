@@ -210,11 +210,11 @@ func shiftRowsInv (block: *Block) -> {} {
 
 
 func mixColumns (block: *Block) -> {} {
-	var a: Word8
-	var b: Word8
-	var c: Word8
-	var d: Word8
-	var e: Word8
+	var a: @register Word8
+	var b: @register Word8
+	var c: @register Word8
+	var d: @register Word8
+	var e: @register Word8
 
 	var i: Nat8 = 0
 	while i < lengthof(Block) {
@@ -233,14 +233,14 @@ func mixColumns (block: *Block) -> {} {
 
 
 func mixColumnsInv (block: *Block) -> {} {
-	var a: Word8
-	var b: Word8
-	var c: Word8
-	var d: Word8
-	var e: Word8
-	var x: Word8
-	var y: Word8
-	var z: Word8
+	var a: @register Word8
+	var b: @register Word8
+	var c: @register Word8
+	var d: @register Word8
+	var e: @register Word8
+	var x: @register Word8
+	var y: @register Word8
+	var z: @register Word8
 
 	var i: Nat8 = 0
 	while i < lengthof(Block) {

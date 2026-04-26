@@ -114,16 +114,16 @@ public func print (form: *Str8, ...) -> Unit {
 
 
 
-public func vfprint (fd: Int32, form: *Str8, va: va_list) -> Int32 {
+public func vfprint (fd: Int32, form: *Str8, va: va_list) -> @unused Int32 {
 	var strbuf: [256]Char8
-	let n: Int32 = vsprint(&strbuf, form, va)
+	let n: @unused  Int32 = vsprint(&strbuf, form, va)
 	strbuf[n] = "\x0"
 	write(fd, &strbuf, SizeT n)
 	return n
 }
 
 
-public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> Int32 {
+public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> @unused Int32 {
 	var i: Nat32 = 0
 	var j: Int32 = 0
 

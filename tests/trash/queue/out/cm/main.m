@@ -40,7 +40,7 @@ func fetch (n: Nat32) -> Unit {
 		}
 
 		var x: Word8
-		let res: Bool = get(&bq0, &x)
+		let res: @unused  Bool = get(&bq0, &x)
 		printf("bq.get = %d\n", Int x)
 		i = i + 1
 	}

@@ -37,7 +37,7 @@ public func isEmpty (q: *RingWord8) -> Bool {
 }
 
 
-public func put (q: *RingWord8, b: Word8) -> Bool {
+public func put (q: *RingWord8, b: Word8) -> @unused Bool {
 
 	let p: Nat32 = getPutPosition(&q.queue)
 	q.data[p] = b
@@ -46,7 +46,7 @@ public func put (q: *RingWord8, b: Word8) -> Bool {
 }
 
 
-public func get (q: *RingWord8, b: *Word8) -> Bool {
+public func get (q: *RingWord8, b: *Word8) -> @unused Bool {
 	if isEmpty(&q.queue) {
 		return false
 	}

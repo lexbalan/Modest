@@ -108,7 +108,7 @@ bool_id.llvm = 'Bool'
 typeBool = TypeSimple(8, HLIR_TYPE_KIND_BOOL, bool_id, BOOL_OPS)
 
 # generic built-in types
-typeInteger = TypeInteger()
+typeInteger = type_integer_create()
 typeRational = TypeRational()
 
 typeWord8 = type_word_create(width=8)
