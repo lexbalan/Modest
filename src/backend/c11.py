@@ -95,36 +95,11 @@ def need_ptr_to_item_instead_of_ptr_to_array(t):
 
 
 
-def get_id_prefix(x):
-	prefix = ''
-	id = x.id
-
-	if id.prefix != None:
-		return id.prefix
-		prefix = id.prefix
-	return ''
-
-#	nodecorate = not is_global_public(x) or id.hasAttribute('nodecorate')
-#	if nodecorate:
-#		#if hasattr(x, 'definition'):
-#			#return '/*%s*/' % str(x.definition) + prefix
-#		return '/*%s*/' % str(is_global_public(x)) + prefix
-#
-#	module = x.getModule()
-#	#if module == None:
-#	if module != None:
-#		#warning("module == None", x.ti)
-#		if not module.hasAttribute('nodecorate'):
-#			#if x.access_level != HLIR_ACCESS_LEVEL_PRIVATE:
-#			return "%s_%s" % (module.prefix, prefix)
-#
-#	return prefix
-
 
 def get_record_tag(x):
 	if hasattr(x, 'id'):
 		if hasattr(x.id, 'c') and x.id.c != None:
-			id_str = get_id_prefix(x) + x.id.c
+			id_str = x.id.prefix + x.id.c
 			return camel_to_lower_snake(id_str)
 
 	if hasattr(x, 'c_anon_id'):
@@ -144,7 +119,7 @@ def get_type_id_str(t):
 	if isinstance(t, TypeRecord):
 		if t.is_open_access:
 			if hasattr(t, 'id'):
-				return get_id_prefix(t) + t.id.c
+				return t.id.prefix + t.id.c
 
 		tag = get_record_tag(t)
 		if tag != None:
@@ -154,7 +129,7 @@ def get_type_id_str(t):
 
 	if hasattr(t, 'id') and t.id != None:
 		if t.id.c != None:
-			return get_id_prefix(t) + t.id.c
+			return t.id.prefix + t.id.c
 
 	return None
 
@@ -168,7 +143,7 @@ def get_id_str(x):
 			return x.id.common
 
 		if x.id.c != None:
-			return get_id_prefix(x) + x.id.c
+			return x.id.prefix + x.id.c
 
 	return None
 

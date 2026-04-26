@@ -187,27 +187,9 @@ def is_machine_type(t):
 
 
 def get_id_str(x):
-	if not hasattr(x, 'id'):
-		return None
-
-	id = x.id
-	if id == None:
-		return None
-
-	id_str = id.llvm
-
-	if id.prefix != None:
-		id_str = id.prefix + id_str
-
-#	if not x.id.hasAttribute('nodecorate'):
-#		if is_global_public(x):
-#			module = x.getModule()
-#			if module != None:
-#				if not module.hasAttribute('nodecorate'):
-#					id_str = "%s_%s" % (module.prefix, id_str)
-
-	return id_str
-
+	if hasattr(x, 'id') and x.id != None:
+		return x.id.prefix + x.id.llvm
+	return None
 
 
 def get_type_id(t):

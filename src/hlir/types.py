@@ -274,7 +274,7 @@ class Module:
 class Id(Entity):
 	def __init__(self, id_str, ti=None):
 		super().__init__(ti)
-		self.prefix = None
+		self.prefix = ''
 
 		self.str = id_str
 

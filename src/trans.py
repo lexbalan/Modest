@@ -55,7 +55,7 @@ from util import nbits_for_num, nbytes_for_bits
 
 
 
-global_prefix = None
+global_prefix = ''
 
 # current file directory
 env_current_file_dir = ""
@@ -1903,9 +1903,6 @@ def do_stmt_var(x):
 
 	if df.is_stmt_bad():
 		return df
-
-	df.id.prefix = None
-	df.value.id.prefix = None
 
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
 	df.parent = cfunc
