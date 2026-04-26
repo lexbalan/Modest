@@ -1,6 +1,6 @@
 // dirent.m
 
-pragma module_nodecorate
+pragma prefix ""
 
 @alias("c", "DIR")
 public type Dir = {}

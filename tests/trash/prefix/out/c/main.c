@@ -7,8 +7,8 @@
 #include "lib.h"
 
 int main(void) {
-	lib_foo(LIB_BAR);
-	(void)lib_spam;
+	loofoo(LOOBAR);
+	(void)loospam;
 	return 0;
 }
 

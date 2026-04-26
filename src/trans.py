@@ -2704,6 +2704,7 @@ def do_import(x):
 
 def do_directive(x):
 	global cmodule
+	global global_prefix
 
 	y = None
 	if x['kind'] == 'pragma':
@@ -2711,8 +2712,6 @@ def do_directive(x):
 		s0 = args[0]
 		if s0 == 'do_not_include':
 			cmodule.addAttribute('do_not_include')
-		elif s0 == 'module_nodecorate':
-			cmodule.addAttribute('nodecorate')
 		elif s0 == 'c_include':
 			y = StmtDirectiveCInclude(args[1])
 		elif s0 == 'c_no_print':
@@ -2728,7 +2727,8 @@ def do_directive(x):
 			y = StmtDirectiveInsert(args[1], x['ti'])
 		elif s0 == 'prefix':
 			prefix = args[1]
-			cmodule.setPrefix(prefix)
+			#cmodule.setPrefix(prefix)
+			global_prefix = prefix
 
 	elif x['kind'] == 'module':
 		print("MODULE('%s')" % x['line']['str'])
@@ -2777,6 +2777,7 @@ def process_module(idStr, sourcename, ast, is_include):
 	global cmodule, global_prefix
 	prev_module = cmodule
 	prev_global_prefix = global_prefix
+	global_prefix = idStr + '_'
 
 	symtab_public = root_symtab.branch()
 	symtab_private = Symtab()
@@ -2815,9 +2816,6 @@ def process_module(idStr, sourcename, ast, is_include):
 		#	y.parent = cmodule
 
 		i += 1
-
-	if not cmodule.hasAttribute('nodecorate'):
-		global_prefix = idStr + '_'
 
 	def_phase1(ast, is_include=is_include)
 	def_phase2(ast, is_include=is_include)

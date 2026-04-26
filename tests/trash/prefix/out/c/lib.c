@@ -5,9 +5,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-int32_t lib_spam = 4;
+int32_t loospam = 4;
 
-void lib_foo(uint32_t x) {
+void loofoo(uint32_t x) {
 	printf("foo(%d)\n", x);
 }
 

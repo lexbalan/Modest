@@ -2335,7 +2335,7 @@ def print_header(module, outname):
 
 	#guardsymbol = outname.split("/")[-1]
 	#guardsymbol = guardsymbol[:-2].upper() + '_H'
-	guardsymbol = camel_to_upper_snake(module.prefix) + '_H'
+	guardsymbol = camel_to_upper_snake(module.id) + '_H'
 	newline()
 	out("#ifndef %s\n" % guardsymbol)
 	out("#define %s\n" % guardsymbol)

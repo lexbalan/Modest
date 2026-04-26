@@ -2,7 +2,7 @@
  * libc/errno.m
  */
 
-//pragma module_nodecorate
+//pragma prefix ""
 
 
 import "errno_abi"

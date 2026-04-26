@@ -1974,7 +1974,7 @@ def do_header(module):
 
 	xdefs = []
 
-	guardsymbol = camel_to_upper_snake(module.prefix) + '_H'
+	guardsymbol = camel_to_upper_snake(module.id) + '_H'
 	xdefs.append(CMacrodefinition(guardsymbol, None))
 
 	if defs != []:

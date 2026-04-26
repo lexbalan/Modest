@@ -1,7 +1,7 @@
 // libc/stdio.m
 
 pragma do_not_include
-pragma module_nodecorate
+pragma prefix ""
 pragma c_include "stdio.h"
 
 include "libc/ctypes64"

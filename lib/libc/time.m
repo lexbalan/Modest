@@ -1,7 +1,7 @@
 // libc/time.m
 
 pragma do_not_include
-pragma module_nodecorate
+pragma prefix ""
 pragma c_include "time.h"
 
 include "libc/ctypes64"

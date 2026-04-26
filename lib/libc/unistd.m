@@ -2,7 +2,7 @@
 // thx: https://pubs.opengroup.org/onlinepubs/7908799/xsh/unistd.h.html
 
 pragma do_not_include
-pragma module_nodecorate
+pragma prefix ""
 pragma c_include "unistd.h"
 
 

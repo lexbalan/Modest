@@ -1,6 +1,6 @@
 // libc/fcntl.m
 
-pragma module_nodecorate
+pragma prefix ""
 
 include "libc/ctypes"
 include "libc/stat"

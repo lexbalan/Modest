@@ -202,7 +202,7 @@ class Module:
 		self.id = idStr
 		self.sourcename = sourcename
 		self.ast = ast
-		self.prefix = idStr
+		#self.prefix = idStr
 		self.strings = []   # for LLVM backend
 		self.anon_recs = [] # anonymous records for C backend
 		self.imports_public = {}   # '<import_id>' => {'isa': 'module'}
@@ -231,8 +231,8 @@ class Module:
 	def __str__(self):
 		return "Module(\"%s\")" % self.id
 
-	def setPrefix(self, prefixStr):
-		self.prefix = prefixStr
+	#def setPrefix(self, prefixStr):
+	#	self.prefix = prefixStr
 
 
 	def type_add(self, id_str, t, is_public=False):

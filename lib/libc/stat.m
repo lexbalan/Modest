@@ -1,7 +1,7 @@
 // libc/stat.m
 
 pragma do_not_include
-pragma module_nodecorate
+pragma prefix ""
 pragma c_include "sys/stat.h"
 
 include "libc/ctypes64"

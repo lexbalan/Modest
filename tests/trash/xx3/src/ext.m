@@ -1,6 +1,6 @@
 
 pragma do_not_include
-pragma module_nodecorate
+pragma prefix ""
 
 
 @alias("c", "DIR")
