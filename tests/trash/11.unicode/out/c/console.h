@@ -1,11 +1,11 @@
 
 #if !defined(CONSOLE_H)
 #define CONSOLE_H
-#include "./utf.h"
-#include "./console.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include "./utf.h"
+#include "./console.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>

@@ -2730,12 +2730,12 @@ def do_directive(x):
 			#info("set prefix %s" % prefix, x['ti'])
 			global_prefix = prefix
 
-	elif x['kind'] == 'module':
-		print("MODULE('%s')" % x['line']['str'])
-	elif x['kind'] == 'import':
-		y = do_import(x)
-	elif x['kind'] == 'include':
-		y = do_import(x)
+#	elif x['kind'] == 'module':
+#		print("MODULE('%s')" % x['line']['str'])
+#	elif x['kind'] == 'import':
+#		y = do_import(x)
+#	elif x['kind'] == 'include':
+#		y = do_import(x)
 
 	return y
 
@@ -2801,7 +2801,15 @@ def process_module(idStr, sourcename, ast, is_include):
 		isa = x['isa']
 		y = None
 		if isa == 'ast_directive':
-			y = do_directive(x)
+			y = None
+			if x['kind'] == 'module':
+				print("MODULE('%s')" % x['line']['str'])
+			elif x['kind'] == 'import':
+				y = do_import(x)
+			elif x['kind'] == 'include':
+				y = do_import(x)
+
+			#y = do_directive(x)
 			if y != None:
 				cmodule.defs.append(y)
 				y.parent = cmodule
@@ -2961,6 +2969,11 @@ def def_phase2(ast, is_include=False):
 		elif isa == 'ast_comment':
 			comment = do_stmt_comment(x)
 			cmodule.defs.append(comment)
+
+		elif isa == 'ast_directive':
+			y = do_directive(x)
+			if y != None:
+				cmodule.defs.append(y)
 
 	return
 
