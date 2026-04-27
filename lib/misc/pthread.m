@@ -70,7 +70,7 @@ public const pthreadPrioInherit = nil
 public const pthreadPrioProtect = nil
 
 
-pragma append_prefix "pthread_"
+pragma prefix "pthread_"
 
 public func atfork (prepare: *() -> Unit, parent: *() -> Unit, child: *() -> Unit) -> Int
 public func attr_destroy (a: *PThreadAttrT) -> Int

@@ -23,7 +23,7 @@ def value_string_concat(l, r, ti):
 	max_char_width = max(l.type.width, r.type.width)
 	#type_result = type_string_create(max_char_width, len(asset), ti)
 	type_result = type_string_create(max_char_width, len(asset), ti)
-	nv = ValueBin(type_result, HLIR_VALUE_OP_ADD, l, r, ti=ti)
+	nv = ValueBin(type_result, HLIR_VALUE_OP_STRCAT, l, r, ti=ti)
 	nv.set_asset(asset)
 	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 	return nv

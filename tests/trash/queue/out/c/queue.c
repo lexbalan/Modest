@@ -25,6 +25,7 @@ bool queue_isEmpty(struct queue_queue *q) {
 bool queue_isFull(struct queue_queue *q) {
 	return q->size == q->capacity;
 }
+
 static uint32_t next(uint32_t capacity, uint32_t x);
 
 uint32_t queue_getPutPosition(struct queue_queue *q) {

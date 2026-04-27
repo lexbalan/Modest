@@ -36,6 +36,7 @@ static char32_t bb32[1] = {U'A'};
 static char *ss8 = "A";
 static char16_t *ss16 = u"A";
 static char32_t *ss32 = U"A";
+
 static void putc8(char c);
 static void putc16(char16_t c);
 static void putc32(char32_t c);

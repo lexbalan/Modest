@@ -266,38 +266,9 @@ def str_field(t, id_str, ctx=[]):
 
 
 
-bin_ops = {
-	HLIR_VALUE_OP_BITWISE_OR: '|',
-	HLIR_VALUE_OP_BITWISE_XOR: '^',
-	HLIR_VALUE_OP_BITWISE_AND: '&',
-	HLIR_VALUE_OP_SHL: '<<',
-	HLIR_VALUE_OP_SHR: '>>',
-	HLIR_VALUE_OP_EQ: '==',
-	HLIR_VALUE_OP_NE: '!=',
-	HLIR_VALUE_OP_LT: '<',
-	HLIR_VALUE_OP_GT: '>',
-	HLIR_VALUE_OP_LE: '<=',
-	HLIR_VALUE_OP_GE: '>=',
-	HLIR_VALUE_OP_ADD: '+',
-	HLIR_VALUE_OP_SUB: '-',
-	HLIR_VALUE_OP_MUL: '*',
-	HLIR_VALUE_OP_DIV: '/',
-	HLIR_VALUE_OP_REM: '%',
-	HLIR_VALUE_OP_LOGIC_AND: '&&',
-	HLIR_VALUE_OP_LOGIC_OR: '||'
-}
-
-
 def needd(x):
 	rv = get_root_value(x)
 	return (x.type.is_int() or x.type.is_nat()) and (x.type.width < 32) and rv.isValueBin()
-
-
-
-
-
-
-
 
 
 
@@ -564,6 +535,10 @@ def do_cvalue_cons_array(x, ctx):
 	from_type = value.type
 
 	if from_type.is_generic_array() or from_type.is_string():
+
+		if from_type.is_string() and value.isValueBin() and value.op == HLIR_VALUE_OP_STRCAT:
+			return do_cvalue(x.value)
+
 		# C не позволяет приводить литерал массива к типу массива в инициализаторах(!)
 		# Вот все можно приводить, все ок, а массив - нет.
 		if 'initializer_context' in ctx:
@@ -672,10 +647,7 @@ def do_cvalue_cons2(x, ctx):
 		return cv
 	if type.is_branded(): return do_cvalue_cast(x.type, x.value, ctx)
 	if type.is_char(): return do_cvalue_cons_char(x, ctx)
-	if type.is_pointer():
-		cv = do_cvalue_cons_pointer(x, ctx)
-		#cv.mark = 'CP'
-		return cv
+	if type.is_pointer(): return do_cvalue_cons_pointer(x, ctx)
 	if type.is_int(): return do_cvalue_cons_int(x, ctx)
 	if type.is_nat(): return do_cvalue_cons_nat(x, ctx)
 	if type.is_word(): return do_cvalue_cons_word(x, ctx)
@@ -884,6 +856,11 @@ def do_cvalue_cons_pointer(x, ctx):
 
 	elif type.is_pointer_to_array():
 		if type.is_pointer_to_array_of_char() and value.type.is_string():
+
+			if value.type.is_string():
+				if value.isValueBin() and value.op == HLIR_VALUE_OP_STRCAT:
+					return do_cvalue(x.value, ctx=ctx)
+
 			if not value.isValueConst():
 				cv = do_cvalue_literal_string(value.asset, width=type.to.of.width)
 			elif type.to.of.width > 8:
@@ -1306,8 +1283,6 @@ def do_cvalue(x, ctx=[]):
 def do_cvalue_bin(x, ctx):
 	left = do_cvalue(x.left)
 	right = do_cvalue(x.right)
-	op = bin_ops[x.op]
-
 
 	if not x.type.is_string():
 		if x.left.type.width < x.type.width:
@@ -1316,11 +1291,7 @@ def do_cvalue_bin(x, ctx):
 		if x.right.type.width < x.type.width:
 			right = CValueCast(do_ctype(x.type), right)
 
-
-	if x.op == HLIR_VALUE_OP_ADD:
-		if x.left.type.is_string():
-			return CValueCat(left, right)
-		return CValueAdd(left, right)
+	if x.op == HLIR_VALUE_OP_ADD: return CValueAdd(left, right)
 	if x.op == HLIR_VALUE_OP_SUB: return CValueSub(left, right)
 	if x.op == HLIR_VALUE_OP_MUL: return CValueMul(left, right)
 	if x.op == HLIR_VALUE_OP_DIV: return CValueDiv(left, right)
@@ -1338,6 +1309,8 @@ def do_cvalue_bin(x, ctx):
 	if x.op == HLIR_VALUE_OP_BITWISE_AND: return CValueAndBitwise(left, right)
 	if x.op == HLIR_VALUE_OP_LOGIC_OR: return CValueOrLogical(left, right)
 	if x.op == HLIR_VALUE_OP_LOGIC_AND: return CValueAndLogical(left, right)
+	if x.op == HLIR_VALUE_OP_STRCAT: return CValueCat(left, right)
+	assert(False)
 
 
 
@@ -2128,10 +2101,9 @@ def do_cfile(module):
 		elif x.is_stmt_def_func():
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute('inline'):
 				continue
-			#nnl(x.nl)
-			xdefs.extend(do_deps(x.deps))
-			#if x.deps != []:
-			#	newline()
+			if x.deps != []:
+				xdefs.append(CInsert("\n"))
+				xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_func(x))
 		elif x.is_stmt_comment():
 			xdefs.extend(do_stmt_comment(x))

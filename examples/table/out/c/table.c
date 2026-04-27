@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 static void separator(uint32_t sz[], uint32_t n);
 static void printRow(char *raw_row[], uint32_t sz[], uint32_t nCols);
 

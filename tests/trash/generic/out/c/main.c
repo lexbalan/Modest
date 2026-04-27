@@ -27,6 +27,7 @@ typedef uint32_t char32_t;
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
 #endif
+
 static bool test_generic_integer(void);
 static bool test_generic_float(void);
 static bool test_generic_char(void);

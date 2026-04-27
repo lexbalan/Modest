@@ -1130,7 +1130,7 @@ class CValueCat(CValue):
 	def __str__(self):
 		lx = str_cvalue(self.left, ext_precedence=self.precedence)
 		rx = str_cvalue(self.right, ext_precedence=self.precedence)
-		return '%s %s' % (lx, rx)
+		return lx + ' ' + rx
 
 
 

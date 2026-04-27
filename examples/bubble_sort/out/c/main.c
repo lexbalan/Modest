@@ -29,6 +29,7 @@ static void bubble_sort32(int32_t array[], uint32_t len) {
 	while (bubble_sort32_iter((int32_t *)array, len)) {
 	}
 }
+
 static void print_array(int32_t array[], uint32_t len);
 
 int32_t main(void) {

@@ -2727,7 +2727,7 @@ def do_directive(x):
 			y = StmtDirectiveInsert(args[1], x['ti'])
 		elif s0 == 'prefix':
 			prefix = args[1]
-			#cmodule.setPrefix(prefix)
+			#info("set prefix %s" % prefix, x['ti'])
 			global_prefix = prefix
 
 	elif x['kind'] == 'module':

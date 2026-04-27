@@ -32,6 +32,7 @@ static char32_t arr2[10] = {U'H', U'e', U'l', U'l', U'o', U'!'};
 //	var aa: []Int32
 //	var ab: [0]Int32
 //}
+
 static void printArrayOf10Char32(char32_t *_a);
 static void sum10IntArrays(int32_t _a[10], int32_t _b[10], int32_t __out[10]);
 
