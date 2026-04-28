@@ -98,7 +98,6 @@ def cmodule_strings_add(v):
 
 
 
-
 def context_push():
 	global context
 	context = {
@@ -113,7 +112,6 @@ def context_pop():
 		'public': context['public'].parent_get(),
 		'private': context['private'].parent_get()
 	}
-
 
 
 def ctx_type_add(id_str, t, is_public):
@@ -745,39 +743,31 @@ def do_value_bin_op(op, l, r, ti):
 		elif l.type.is_string() and r.type.is_string():
 			return value_string_concat(l, r, ti)
 
-	# Check type is valid for the operation
-
-	if not l.type.supports(op):
-		error("unsuitable value type for '%s' operation" % op, l.ti)
-		return ValueBad(ti)
-
-	if not r.type.supports(op):
-		error("unsuitable value type for '%s' operation" % op, r.ti)
-		return ValueBad(ti)
-
-
-
 	#
 	# Now and further types must be equal (!)
 	#
 
 	t = Type.select_common_type(l.type, r.type, ti)
 	if t == None:
-		error("different types in operation", ti)
-		print("left type  = ", end='')
-		Type.print(l.type)
-		print()
-		print("right type = ", end='')
-		Type.print(r.type)
-		print()
+		error("different types '%s' & '%s' in operation" % (l.type.to_str(), r.type.to_str()), ti)
 		return ValueBad(ti)
-
 
 	l = value_cons_implicit(t, l)
 	r = value_cons_implicit(t, r)
 
 	if l.isValueBad() or r.isValueBad():
 		return ValueBad(ti)
+
+
+	# Check if arguments are valid for the operation
+	if not l.type.supports(op):
+		error("unsuitable value type '%s' for '%s' operation" % (l.type.to_str(), op), l.ti)
+		return ValueBad(ti)
+
+	if not r.type.supports(op):
+		error("unsuitable value type '%s' for '%s' operation" % (r.type.to_str(), op), r.ti)
+		return ValueBad(ti)
+
 
 	if not Type.eq(l.type, r.type, []):
 		error("different types in binary operation", ti)

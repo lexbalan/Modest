@@ -32,8 +32,6 @@ const ca2 = [][]Char8 ["abc", "def"]
 // builtin type Str8 has 'zarray' attribute (!)
 const cstr2: Str8 = "abc"
 
-
-
 var str3: @zarray []Char8 = "abc"
 
 

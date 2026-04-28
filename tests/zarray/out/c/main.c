@@ -19,7 +19,10 @@ static char str2[3] = {'a', 'b', 'c'};
 #define CSTR1 {'a', 'b', 'c'}
 #define CA2 {{'a', 'b', 'c'}, {'d', 'e', 'f'}}
 #define CSTR2 {'a', 'b', 'c'}
+#define YYY 0
+#define XXX (YYY || 1)
 static char str3[3] = {'a', 'b', 'c'};
+
 static bool memoryTest(void);
 
 int32_t main(void) {
@@ -44,6 +47,7 @@ int32_t main(void) {
 	#undef c
 	#undef arr
 }
+
 static bool testRegion(uint8_t mem[], uint32_t size, uint8_t pattern);
 
 static bool memoryTest(void) {

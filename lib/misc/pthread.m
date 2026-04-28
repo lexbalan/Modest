@@ -1,7 +1,7 @@
 
 pragma do_not_include
-pragma prefix ""
 pragma c_include "pthread.h"
+pragma prefix ""
 
 include "libc/ctypes64"
 
