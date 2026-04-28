@@ -409,11 +409,21 @@ class Parser:
 				'ti': ti
 			}
 		else:
+			# error: function type return type not specified
+			error("expected -> return type", ti)
+			to = {
+				'isa': 'ast_type',
+				'kind': 'named',
+				'id': {'isa': 'ast_id', 'kind': 'id', 'str': 'Unit', 'ti': ti},
+				'anno': [],
+				'ti': ti,
+			}
+
 			return {
 				'isa': 'ast_type',
 				'kind': 'func',
 				'params': fields,
-				'to': None,
+				'to': to,
 				'arghack': arghack,
 				'size': 0,
 				'align': 0,

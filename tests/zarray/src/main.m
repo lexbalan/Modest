@@ -35,6 +35,17 @@ const cstr2: Str8 = "abc"
 var str3: @zarray []Char8 = "abc"
 
 
+type Success = @branded Bool
+const success = Success true
+const failure = Success false
+
+
+//func im () {}
+
+func suc () -> Success {
+	return success
+}
+
 func main () -> Int32 {
 	if u == v {
 		printf("u == v\n")
