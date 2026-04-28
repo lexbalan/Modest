@@ -19,13 +19,14 @@ from util import align_bits_up
 
 
 # can be implicitly constructed value with type a from type b?
-def cons_can(to, from_type, method, ti=None):
+def cons_can(to, from_type, method, ti):
 	#info("cons can?", ti)
 	assert(isinstance(to, Type))
 	assert(isinstance(from_type, Type))
 
 	if to.brand != from_type.brand:
 		if method == 'implicit':
+			info("FALSE", ti)
 			return False
 
 #		if not from_type.is_generic():
@@ -58,7 +59,7 @@ def cons_can(to, from_type, method, ti=None):
 	elif to.is_char(): checker = char_can
 	elif to.is_bad(): checker = bad_can
 	else:
-		print (to.is_pointer())
+		print(to.is_pointer())
 		info(str(to), to.ti)
 		assert(False)
 
@@ -77,6 +78,7 @@ def value_cons_implicit(t, v):
 	#info("value_cons_implicit", ti)
 	assert(isinstance(t, Type))
 	assert(isinstance(v, Value))
+	#assert(isinstance(ti, TextInfo))
 
 	if v.isValueUndef():
 		return ValueUndef(t, ti=ti)
@@ -122,7 +124,7 @@ def value_cons_implicit_check(t, v):
 
 	if t.is_holed():
 		# особая ситуация когда неявно конструируем []X из [x]X (!)
-		if not cons_can(t, v.type, method='implicit'):
+		if not cons_can(t, v.type, method='implicit', ti=v.ti):
 			error("type error2", v.ti)
 			print("expected: ", end='')
 			Type.print(t)
@@ -157,11 +159,7 @@ def value_cons_explicit(t, v, ti):
 				return v
 
 	if not cons_can(t, from_type, 'explicit', ti):
-		error("cannot construct value", ti)
-		Type.print(t)
-		print(" from ", end='')
-		Type.print(from_type)
-		print()
+		error("cannot construct '%s' from '%s' value" % (t.to_str(), from_type.to_str()), ti)
 		return ValueBad(v.ti)
 
 	return value_cons(t, v, 'explicit', ti)

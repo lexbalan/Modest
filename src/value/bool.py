@@ -8,11 +8,15 @@ def value_bool_create(val, ti=None):
 
 
 def bool_can(to, from_type, method, ti):
-	return False
+	#info("bool_can", ti)
+	return from_type.is_bool()
 
 
 def value_bool_cons(t, v, method, ti):
-	return ValueBad(ti)
+	#info("value_bool_cons", ti)
+	nv = ValueCons(t, t, v, method, ti=ti)
+	nv.set_asset(v.asset)
+	return nv
 
 
 

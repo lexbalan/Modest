@@ -19,13 +19,19 @@ static char str2[3] = {'a', 'b', 'c'};
 #define CSTR1 {'a', 'b', 'c'}
 #define CA2 {{'a', 'b', 'c'}, {'d', 'e', 'f'}}
 #define CSTR2 {'a', 'b', 'c'}
-#define YYY 0
-#define XXX (YYY || 1)
 static char str3[3] = {'a', 'b', 'c'};
+typedef bool Success;
+#define SUCCESS ((Success)true)
+#define FAILURE ((Success)false)
+
+static Success suc(void) {
+	return SUCCESS;
+}
 
 static bool memoryTest(void);
 
 int32_t main(void) {
+	const Success success = suc();
 	if (__builtin_memcmp(&u, &v, sizeof(int32_t [5][4])) == 0) {
 		printf("u == v\n");
 	}

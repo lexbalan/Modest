@@ -40,13 +40,15 @@ const success = Success true
 const failure = Success false
 
 
-//func im () {}
 
 func suc () -> Success {
 	return success
 }
 
+
 func main () -> Int32 {
+	let success = suc()
+
 	if u == v {
 		printf("u == v\n")
 	}
