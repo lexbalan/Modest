@@ -26,7 +26,7 @@ def cons_can(to, from_type, method, ti):
 
 	if to.brand != from_type.brand:
 		if method == 'implicit':
-			info("FALSE", ti)
+			#info("FALSE", ti)
 			return False
 
 #		if not from_type.is_generic():
