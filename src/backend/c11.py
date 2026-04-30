@@ -473,7 +473,7 @@ def do_cvalue_literal_pointer(v, ctx):
 
 
 
-def cvalue_literal_integer(asset, width=0, is_unsigned=False, as_hex=False, ctx=None):
+def cvalue_literal_integer(asset, width=0, is_unsigned=False, as_hex=False, nsigns=0, ctx=None):
 
 	#width = max(width, nbits_for_num(asset, signed=not is_unsigned))
 	width = nbits_for_num(asset, signed=not is_unsigned)
@@ -483,14 +483,14 @@ def cvalue_literal_integer(asset, width=0, is_unsigned=False, as_hex=False, ctx=
 		if is_unsigned and width >= 32:
 			suffix += "U"    # unsigned
 
-		if width == 64:   #csettings['long_width']:
+		if width == 64:   #csettings['long_long_width']:
 			suffix += "LL"   # long long int
-		elif width >= 32: #csettings['long_long_width']:
+		elif width >= 32: #csettings['long_width']:
 			suffix += "L"   # long long int
 		else:
 			suffix += "XL"   # extra long int (not defined in C)
 
-	return CValueInteger(asset, as_hex=as_hex, nsigns=0, suffix=suffix)
+	return CValueInteger(asset, as_hex=as_hex, nsigns=nsigns, suffix=suffix)
 
 
 
@@ -505,8 +505,8 @@ def do_cvalue_literal_number(t, v, ctx):
 
 	is_unsigned = t.is_nat() or t.is_word() or (t.is_integer() and v.asset >= 0)
 	as_hex = v.hasAttribute('hexadecimal') or t.is_word()
-	cv = cvalue_literal_integer(int(v.asset), width=t.width, is_unsigned=is_unsigned, as_hex=as_hex, ctx=ctx)
-	#cv.mark = '$' + t.to_str()
+	cv = cvalue_literal_integer(int(v.asset), width=t.width, is_unsigned=is_unsigned, as_hex=as_hex, nsigns=v.nsigns, ctx=ctx)
+	#cv.mark = '$%s' + str()
 	return cv
 
 

@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 int main(void) {
-	uint16_t check = 0x1;
+	uint16_t check = 0x0001;
 	const bool is_le = *(uint8_t *)&check == 1;
 	char *kind;
 	if (is_le) {

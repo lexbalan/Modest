@@ -29,7 +29,7 @@ static struct test tests[3] = {
 	(struct test){
 		.data = {'T', 'e', 's', 't', ' ', 'v', 'e', 'c', 't', 'o', 'r', ' ', 'f', 'r', 'o', 'm', ' ', 'f', 'e', 'b', 'o', 'o', 't', 'i', '.', 'c', 'o', 'm'},
 		.len = 28,
-		.hash = 0xC877F61
+		.hash = 0x0C877F61
 	}
 };
 

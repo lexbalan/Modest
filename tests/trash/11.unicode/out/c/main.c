@@ -19,10 +19,10 @@ typedef uint32_t char32_t;
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
 #endif
-static uint8_t ratSymbolUTF8[5] = {0xF0, 0x9F, 0x90, 0x80, 0x0};
-static uint16_t ratSymbolUTF16[3] = {0xD83D, 0xDC00, 0x0};
-static uint32_t ratSymbolUTF32[3] = {0x1F400, 0x0, 0x0};
-static uint32_t ratSymbolUTF322[3] = {0x0, 0x0, 0x0};
+static uint8_t ratSymbolUTF8[5] = {0xF0, 0x9F, 0x90, 0x80, 0x00};
+static uint16_t ratSymbolUTF16[3] = {0xD83D, 0xDC00, 0x0000};
+static uint32_t ratSymbolUTF32[3] = {0x0001F400, 0x00000000, 0x00000000};
+static uint32_t ratSymbolUTF322[3] = {0x00000000, 0x00000000, 0x00000000};
 #define ARR_PARTYCORN {'🎉'}
 #define ARR_UNICORN {'🦄'}
 #define ARR_RAT {'🐀'}
