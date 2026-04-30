@@ -202,23 +202,23 @@ int32_t main(void) {
 	} else {
 		printf("ne\n");
 	}
-	uint32_t i = 0U;
-	while (i < 3U) {
-		uint32_t j = 0U;
-		while (j < 3U) {
+	uint32_t i = 0;
+	while (i < 3) {
+		uint32_t j = 0;
+		while (j < 3) {
 			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j]);
-			j = j + 1U;
+			j = j + 1;
 		}
-		i = i + 1U;
+		i = i + 1;
 	}
 	const int32_t _add = farr[0](5, 7);
 	printf("farr[0](5, 7) = %d\n", _add);
 	const int32_t _sub = farr[1](5, 7);
 	printf("farr[1](5, 7) = %d\n", _sub);
-	i = 0U;
-	while (i < 10U) {
+	i = 0;
+	while (i < 10) {
 		hiarr[i]("LOL");
-		i = i + 1U;
+		i = i + 1;
 	}
 	awrap[0]->fhi("World");
 	return 0;

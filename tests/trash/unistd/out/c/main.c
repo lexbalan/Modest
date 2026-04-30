@@ -30,7 +30,7 @@ int main(void) {
 	printf("PATH = %s\n", s);
 	while (true) {
 		printf("- hi\n");
-		sleep(1U);
+		sleep(1);
 	}
 	return 0;
 }

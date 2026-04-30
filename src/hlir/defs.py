@@ -218,3 +218,16 @@ def type_integer_for(num, ti=None):
 
 
 
+
+_xti = TokenInfo(
+	source = '<builtin>',
+	fpos = 0,
+	line = 0,
+	lpos = 0,
+	spaces = 0,
+	tabs = 0,
+	length = 0
+)
+builtin_ti = TextInfo(start=_xti, mid=_xti, end=_xti)
+
+

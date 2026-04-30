@@ -13,7 +13,7 @@
 #define PORT 8080
 #define RECEIVE_BUFFER_SIZE 1024
 #define SEND_BUFFER_SIZE 1024
-#define HTTP_HEADER "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n"
+#define HTTP_HEADER ((char *)"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n")
 static uint32_t pageCounter;
 //@extern
 //@c_no_print
@@ -23,13 +23,13 @@ static uint32_t pageCounter;
 
 static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[RECEIVE_BUFFER_SIZE];
-	const ssize_t bytesReceived = read(clientSocket, &buffer, LENGTHOF(buffer) - 1);
-	if (bytesReceived < 0LL) {
+	const ssize_t bytesReceived = read(clientSocket, &buffer, (size_t)(LENGTHOF(buffer) - 1));
+	if (bytesReceived < 0) {
 		perror("cannot read socket");
 		close(clientSocket);
 		return;
 	}
-	buffer[bytesReceived] = 0x0;
+	buffer[bytesReceived] = 0;
 	printf("Received request:\n%s\n", (char *)&buffer);
 	char response[SEND_BUFFER_SIZE];
 	sprintf(response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", HTTP_HEADER, pageCounter);
@@ -48,7 +48,7 @@ int32_t main(void) {
 		.sin_addr = {
 			.s_addr = INADDR_ANY
 		},
-		.sin_port = htons((uint16_t)PORT)
+		.sin_port = htons(PORT)
 	};
 	struct sockaddr *const socadr = (struct sockaddr *)&serverAddr;
 	int rc = bind(serverSocket, socadr, (socklen_t)sizeof serverAddr);
@@ -74,7 +74,7 @@ int32_t main(void) {
 			continue;
 		}
 		handleRequest(clientSocket);
-		pageCounter = pageCounter + 1U;
+		pageCounter = pageCounter + 1;
 	}
 	close(serverSocket);
 	return 0;

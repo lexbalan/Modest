@@ -165,11 +165,8 @@ class CType():
 		self.mark = None
 		pass
 
-	def to_str(self, text):
+	def to_str(self, text=''):
 		return "<type> " + text
-
-	def __str__(self):
-		return self.to_str(text='')
 
 
 class CTypeNamed(CType):
@@ -180,12 +177,13 @@ class CTypeNamed(CType):
 		self.specs = specs if specs != None else []
 		self.precedence = 0
 
-	def to_str(self, text):
+	def to_str(self, text='', with_qualifiers=True):
 		# "const int a"
-		return str_specs(self.specs) + self.id_str + with_space(text)
-
-	def __str__(self):
-		return self.to_str(text='')
+		sstr = ''
+		if with_qualifiers:
+			# for: const, volatile, restrict
+			sstr += str_specs(self.specs)
+		return sstr + self.id_str + with_space(text)
 
 
 class CTypePointer(CType):
@@ -195,15 +193,15 @@ class CTypePointer(CType):
 		self.specs = specs if specs != None else []
 		self.precedence = 1
 
-	def to_str(self, text):
+	def to_str(self, text='', with_qualifiers=True):
 		# "*volatile p"
-		text = '*%s' % str_specs(self.specs) + text
-		text = wrap_if(text, self.to.precedence > self.precedence)
-		text = str_ctype(self.to, text)
-		return text
-
-	def __str__(self):
-		return self.to_str(text='')
+		sstr = '*'
+		if with_qualifiers:
+			sstr += str_specs(self.specs)
+		sstr += text
+		sstr = wrap_if(sstr, self.to.precedence > self.precedence)
+		sstr = str_ctype(self.to, sstr)
+		return sstr
 
 
 class CTypeArray(CType):
@@ -215,7 +213,7 @@ class CTypeArray(CType):
 		self.specs = specs if specs != None else []
 		self.precedence = 2
 
-	def to_str(self, text):
+	def to_str(self, text='', with_qualifiers=True):
 		text = text + '['
 		if self.volume != None and not self.volume.isValueUndef():
 			from .c11 import do_cvalue
@@ -224,9 +222,6 @@ class CTypeArray(CType):
 		text = wrap_if(text, self.of.precedence > self.precedence)
 		text = str_ctype(self.of, text)
 		return text
-
-	def __str__(self):
-		return self.to_str(text='')
 
 
 class CTypeFunc(CType):
@@ -238,7 +233,7 @@ class CTypeFunc(CType):
 		self.specs = specs if specs != None else []
 		self.precedence = 3
 
-	def to_str(self, text):
+	def to_str(self, text='', with_qualifiers=True):
 		params_text = ''
 		i = 0
 		params = self.params
@@ -261,9 +256,6 @@ class CTypeFunc(CType):
 		text = str_ctype(self.to, text)
 		return text
 
-	def __str__(self):
-		return self.to_str(text='')
-
 
 class CTypeStruct(CType):
 	def __init__(self, fields, tag, specs=None):
@@ -273,7 +265,7 @@ class CTypeStruct(CType):
 		self.specs = specs if specs != None else []
 		self.precedence = 0
 
-	def to_str(self, text):
+	def to_str(self, text='', with_qualifiers=True):
 		nl_end = 0
 		sstr = '%s' % (self.tag)
 		if styleguide['LINE_BREAK_BEFORE_STRUCT_BRACE']:
@@ -304,9 +296,6 @@ class CTypeStruct(CType):
 		sstr += str_nl_indent(nl_end) + '}' + with_space(text)
 		return sstr
 
-	def __str__(self):
-		return self.to_str(text='')
-
 
 
 class CTypeEnumItem():
@@ -332,7 +321,7 @@ class CTypeEnum(CType):
 		self.specs = specs if specs != None else []
 		self.precedence = 0
 
-	def to_str(self, text):
+	def to_str(self, text='', with_qualifiers=True):
 		nl_end = 0
 		sstr = 'enum %s' % (self.tag)
 		if styleguide['LINE_BREAK_BEFORE_STRUCT_BRACE']:
@@ -362,17 +351,15 @@ class CTypeEnum(CType):
 		sstr += str_nl_indent(nl_end) + '}' + with_space(text)
 		return sstr
 
-	def __str__(self):
-		return self.to_str(text='')
 
 
 
-def str_ctype(t, text=''):
+def str_ctype(t, text='', with_qualifiers=True):
 	assert(t != None)
 	assert(text != None)
 	#assert(isinstance(t, dict))
 
-	sstr = t.to_str(text)
+	sstr = t.to_str(text, with_qualifiers=with_qualifiers)
 	if t.mark:
 		sstr = '/*%s*/' % t.mark + sstr
 	return sstr
@@ -656,7 +643,7 @@ class CValueCast(CValue):
 
 	def __str__(self):
 		vstr = str_cvalue(self.value, ext_precedence=self.precedence)
-		return '(%s)%s' % (str_ctype(self.type), vstr)
+		return '(%s)%s' % (str_ctype(self.type, with_qualifiers=False), vstr)
 
 
 class CValueRef(CValue):

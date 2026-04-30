@@ -6,7 +6,7 @@
 #include <string.h>
 
 static uint32_t rotl32(uint32_t x, uint32_t n) {
-	return x << n | x >> (32U - n);
+	return x << n | x >> (32 - n);
 }
 
 static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t __out[4]) {
@@ -15,13 +15,13 @@ static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_
 	uint32_t c0 = c;
 	uint32_t d0 = d;
 	a0 = a0 + b0;
-	d0 = rotl32(d0 ^ a0, 16U);
+	d0 = rotl32(d0 ^ a0, 16);
 	c0 = c0 + d0;
-	b0 = rotl32(b0 ^ c0, 12U);
+	b0 = rotl32(b0 ^ c0, 12);
 	a0 = a0 + b0;
-	d0 = rotl32(d0 ^ a0, 8U);
+	d0 = rotl32(d0 ^ a0, 8);
 	c0 = c0 + d0;
-	b0 = rotl32(b0 ^ c0, 7U);
+	b0 = rotl32(b0 ^ c0, 7);
 	__builtin_memcpy(__out, &(uint32_t [4]){a0, b0, c0, d0}, sizeof(uint32_t [4]));
 }
 
@@ -76,10 +76,10 @@ void chacha20_chacha20Block(uint32_t _state[16], uint32_t __out[16]) {
 		i = i + 1;
 	}
 	uint32_t out[16];
-	uint32_t j = 0U;
-	while (j < 16U) {
+	uint32_t j = 0;
+	while (j < 16) {
 		out[j] = x[j] + state[j];
-		j = j + 1U;
+		j = j + 1;
 	}
 	__builtin_memcpy(__out, &out, sizeof(uint32_t [16]));
 }
@@ -96,7 +96,7 @@ void chacha20_chacha20Block(uint32_t _state[16], uint32_t __out[16]) {
 
 void chacha20_makeState(uint32_t key[8], uint32_t counter, uint32_t nonce[3], uint32_t __out[16]) {
 	__builtin_memcpy(__out, &(chacha20_State){
-		0x61707865U, 0x3320646EU, 0x79622D32U, 0x6B206574U,
+		0x61707865, 0x3320646E, 0x79622D32, 0x6B206574,
 		key[0], key[1], key[2], key[3],
 		key[4], key[5], key[6], key[7],
 		counter, nonce[0], nonce[1], nonce[2]

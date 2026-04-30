@@ -251,7 +251,7 @@ def str_type2(t):
 	elif Type.is_string(t):
 		return "String(length=%d)" % t.length
 	elif isinstance(t, TypeInteger):
-		return "Integer"
+		return "Integer(%d)" % t.width
 	elif isinstance(t, TypeRational):
 		return "Rational"
 	elif isinstance(t, TypeUndefined):

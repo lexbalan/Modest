@@ -11,7 +11,7 @@
 
 static uint8_t rj_xtime(uint8_t x) {
 	const uint8_t y = 0xFF & x << 1;
-	if ((x & 0x80) != 0x0) {
+	if ((x & 0x80) != 0) {
 		return y ^ 0x1B;
 	}
 	return y;
@@ -271,8 +271,8 @@ static void expandDecKey(uint8_t k[32], uint8_t *rc) {
 		k[i + 3] = k[i + 3] ^ k[i - 1];
 		i = i - 4;
 	}
-	uint8_t y = 0x0;
-	if ((*rc & 0x1) != 0x0) {
+	uint8_t y = 0;
+	if ((*rc & 1) != 0) {
 		y = 0x8D;
 	}
 	*rc = *rc >> 1 ^ y;
@@ -288,7 +288,7 @@ aes256_Result aes256_init(aes256_Context *ctx, uint8_t key[32]) {
 	}
 	__builtin_memcpy(&ctx->deckey, key, sizeof(aes256_Key));
 	__builtin_memcpy(&ctx->enckey, key, sizeof(aes256_Key));
-	uint8_t rcon = 0x1;
+	uint8_t rcon = 1;
 	uint8_t i = 0;
 	while (i < 7) {
 		expandEncKey(ctx->deckey, &rcon);
@@ -301,7 +301,7 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
 	if (ctx == NULL || block == NULL) {
 		return AES256_RESULT_ERROR;
 	}
-	uint8_t rcon = 0x1;
+	uint8_t rcon = 1;
 	addRoundKeyCpy((uint8_t *)block, ctx->enckey, ctx->key);
 	uint8_t i = 0;
 	while (i < 13) {
@@ -309,7 +309,7 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
 		subBytes((uint8_t *)block);
 		shiftRows((uint8_t *)block);
 		mixColumns((uint8_t *)block);
-		if ((i & 0x1) == 0x1) {
+		if ((i & 1) == 1) {
 			addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[32 - 16])&ctx->key[16]);
 		} else {
 			expandEncKey(ctx->key, &rcon);
@@ -333,7 +333,7 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
 	uint8_t rcon = 0x80;
 	uint8_t i = 13;
 	while (i > 0) {
-		if ((i & 0x1) == 0x1) {
+		if ((i & 1) == 1) {
 			expandDecKey(ctx->key, &rcon);
 			addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[32 - 16])&ctx->key[16]);
 		} else {

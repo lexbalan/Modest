@@ -12,6 +12,9 @@ def value_string_create(string, ti=None):
 		n = nbits_for_num(cc)
 		max_char_width = max(max_char_width, n)
 
+	if ti == None:
+		ti = builtin_ti
+
 	#string_type = type_string_create(max_char_width, len(string), ti)
 	string_type = type_string_create(max_char_width, len(string), ti)
 	return ValueLiteral(string_type, string, ti)

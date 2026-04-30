@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#define FILENAME "file.bin"
+#define FILENAME ((char *)"file.bin")
 struct chunk {
 	char id[100];
 	char data[1024];
@@ -21,7 +21,7 @@ static void writeExample(void) {
 		.id = {'i', 'd'},
 		.data = {'d', 'a', 't', 'a'}
 	};
-	fwrite((void *)&chunk, sizeof(struct chunk), 1ULL, fp);
+	fwrite((void *)&chunk, sizeof(struct chunk), 1, fp);
 	fclose(fp);
 }
 
@@ -33,7 +33,7 @@ static void readExample(void) {
 		return;
 	}
 	struct chunk chunk;
-	fread((void *)&chunk, sizeof(struct chunk), 1ULL, fp);
+	fread((void *)&chunk, sizeof(struct chunk), 1, fp);
 	printf("file \"%s\" contains:\n", FILENAME);
 	printf("chunk.id: \"%s\"\n", chunk.id);
 	printf("chunk.data: \"%s\"\n", chunk.data);

@@ -41,12 +41,57 @@ const failure = Success false
 
 
 
+const cx_1 = 1
+const cx_2 = 0xffffffff
+const cx_3 = 0x3fffffff
+
+const cw32: Word32 = 1
+const cw64: Word64 = 1
+
+const cw32_2 = Word32 1
+const cw64_2 = Word64 1
+
+const cn32: Nat32 = 1
+const cn64: Nat64 = 1
+
+const cn32_2 = Nat32 1
+const cn64_2 = Nat64 1
+
+const ci32_2 = Int32 1
+const ci64_2 = Int64 1
+
+
+var ik: Nat32 = 1
+
+func suffixText () -> Int32 {
+	if cw64 << 63 != 0x8000000000000000 {
+		return 1
+	}
+
+	if cx_1 << 63 != 0x8000000000000000 {
+		return 2
+	}
+
+	if 1 << 63 != 0x8000000000000000 {
+		return 3
+	}
+
+	if 1 << 31 != 0x80000000 {
+		return 4
+	}
+
+	return 0
+}
+
 func suc () -> Success {
 	return success
 }
 
 
 func main () -> Int32 {
+
+	printf("suffixText() == %d\n", suffixText())
+
 	let success = suc()
 
 	if u == v {

@@ -1466,7 +1466,7 @@ class TypeSimple(Type):
 
 class TypeInteger(TypeSimple):
 	def __init__(self, width=0, ti=None):
-		integer_id = Id("Integer")
+		integer_id = Id(None)
 		integer_id.c = None
 		integer_id.llvm = None
 
@@ -2025,7 +2025,7 @@ class ValueUndef(Value):
 
 
 class ValueLiteral(Value):
-	def __init__(self, type, asset, ti=None):
+	def __init__(self, type, asset, ti):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.set_asset(asset)

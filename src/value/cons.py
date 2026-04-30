@@ -23,10 +23,10 @@ def cons_can(to, from_type, method, ti):
 	#info("cons can?", ti)
 	assert(isinstance(to, Type))
 	assert(isinstance(from_type, Type))
+	assert(isinstance(ti, TextInfo))
 
 	if to.brand != from_type.brand:
 		if method == 'implicit':
-			info("FALSE", ti)
 			return False
 
 #		if not from_type.is_generic():

@@ -21,10 +21,10 @@ typedef uint32_t char32_t;
 #endif
 #define C0 {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 #define C1 "Hello!"
-#define C2 "Hello!"
-#define C3 u"Hello!"
-#define C4 U"Hello!"
-#define C5 32
+#define C2 ((char *)"Hello!")
+#define C3 ((char16_t *)u"Hello!")
+#define C4 ((char32_t *)U"Hello!")
+#define C5 ((int32_t)32)
 static int32_t arr0[10];
 static int32_t arr1[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 static char32_t arr2[10] = {U'H', U'e', U'l', U'l', U'o', U'!'};
@@ -44,10 +44,10 @@ int main(void) {
 	__builtin_memcpy(&lar2, &arr2, sizeof(char32_t [10]));
 	printArrayOf10Char32(lar2);
 	sum10IntArrays(arr1, lar1, lar0);
-	uint32_t i = 0U;
-	while (i < 10U) {
+	uint32_t i = 0;
+	while (i < 10) {
 		printf("a[%d] = %d\n", i, lar0[i]);
-		i = i + 1U;
+		i = i + 1;
 	}
 	return 0;
 }
@@ -55,10 +55,10 @@ int main(void) {
 static void printArrayOf10Char32(char32_t *_a) {
 	char32_t a[10];
 	__builtin_memcpy(a, _a, sizeof(char32_t [10]));
-	uint32_t i = 0U;
+	uint32_t i = 0;
 	while (i < LENGTHOF(a)) {
 		printf("a[%d] = '%c'\n", i, a[i]);
-		i = i + 1U;
+		i = i + 1;
 	}
 }
 
@@ -68,10 +68,10 @@ static void sum10IntArrays(int32_t _a[10], int32_t _b[10], int32_t __out[10]) {
 	int32_t a[10];
 	__builtin_memcpy(a, _a, sizeof(int32_t [10]));
 	int32_t result[10];
-	uint32_t i = 0U;
-	while (i < 10U) {
+	uint32_t i = 0;
+	while (i < 10) {
 		result[i] = a[i] + b[i];
-		i = i + 1U;
+		i = i + 1;
 	}
 	__builtin_memcpy(__out, &result, sizeof(int32_t [10]));
 }

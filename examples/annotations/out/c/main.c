@@ -9,7 +9,7 @@ typedef int32_t MyInt32;
 #define MY_ONE ((MyInt32)1)
 typedef MyInt32 MyInt32_2;
 typedef MyInt32 MyInt32_3;
-#define CVB 0
+#define CVB ((int32_t)0)
 static volatile int32_t vvb = 1;
 struct protocol_header {
 	uint16_t start;
@@ -52,7 +52,7 @@ static void hello(void) {
 }
 
 int32_t main(void) {
-	static uint32_t staticCounter = 0U;
+	static uint32_t staticCounter = 0;
 	hello();
 	printf("Attributes example\n");
 	(void)staticInlineFunc(0);

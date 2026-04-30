@@ -56,16 +56,16 @@ static void f0(char *_x, char *__out) {
 	res[13] = '\x0';
 	__builtin_memcpy(__out, &res, sizeof(char [30]));
 }
-#define START_SEQUENCE {170, 85, 2}
-#define STOP_SEQUENCE {22}
+#define START_SEQUENCE {0xAA, 0x55, 0x2}
+#define STOP_SEQUENCE {0x16}
 
 static void test(void) {
 	uint8_t yy[6] = {0xAA, 0x55, 0x2, 0x0, 0x0, 0x16};
-	uint32_t i = 0U;
+	uint32_t i = 0;
 	while (i < LENGTHOF(yy)) {
 		const uint8_t y = yy[i];
 		printf("yy[%i] = %u\n", i, (uint32_t)y);
-		i = i + 1U;
+		i = i + 1;
 	}
 }
 static int32_t a0[2][2][5] = {
@@ -173,37 +173,37 @@ int main(void) {
 	char em[30];
 	f0("Hello World!", em);
 	printf("em = %s\n", em);
-	uint32_t i = 0U;
-	while (i < 10U) {
+	uint32_t i = 0;
+	while (i < 10) {
 		const int32_t a = globalArray[i];
 		printf("globalArray[%i] = %i\n", i, a);
-		i = i + 1U;
+		i = i + 1;
 	}
 	printf("------------------------------------\n");
 	int32_t localArray[3] = {4, 5, 6};
-	i = 0U;
-	while (i < 3U) {
+	i = 0;
+	while (i < 3) {
 		const int32_t a = localArray[i];
 		printf("localArray[%i] = %i\n", i, a);
-		i = i + 1U;
+		i = i + 1;
 	}
 	printf("------------------------------------\n");
 	int32_t (*globalArrayPtr)[];
 	globalArrayPtr = &globalArray;
-	i = 0U;
-	while (i < 3U) {
+	i = 0;
+	while (i < 3) {
 		const int32_t a = (*globalArrayPtr)[i];
 		printf("globalArrayPtr[%i] = %i\n", i, a);
-		i = i + 1U;
+		i = i + 1;
 	}
 	printf("------------------------------------\n");
 	int32_t (*localArrayPtr)[];
 	localArrayPtr = &localArray;
-	i = 0U;
-	while (i < 3U) {
+	i = 0;
+	while (i < 3) {
 		const int32_t a = (*localArrayPtr)[i];
 		printf("localArrayPtr[%i] = %i\n", i, a);
-		i = i + 1U;
+		i = i + 1;
 	}
 	int32_t a[3] = {1, 2, 3};
 	printf("a[0] = %i\n", a[0]);

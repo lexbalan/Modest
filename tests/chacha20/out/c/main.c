@@ -26,7 +26,7 @@ static struct context init(uint8_t key[32], uint32_t _nonce[3]) {
 }
 
 static void cipher(struct context *ctx, uint8_t data[], uint32_t len) {
-	uint32_t i = 0U;
+	uint32_t i = 0;
 	uint8_t (*bptr)[] = NULL;
 	while (i < len) {
 		if (ctx->blockOffset == (uint32_t)sizeof(chacha20_Block)) {
@@ -34,12 +34,12 @@ static void cipher(struct context *ctx, uint8_t data[], uint32_t len) {
 			chacha20_makeState((uint32_t *)(chacha20_Key *)ctx->key, ctx->blockCounter, ctx->nonce, state);
 			__builtin_memcpy((uint32_t (*)[16 - 13])&state[13], (uint32_t (*)[3 - 0])&ctx->nonce[0], sizeof(uint32_t [16 - 13]));
 			chacha20_chacha20Block(state, ctx->block);
-			ctx->blockOffset = 0U;
+			ctx->blockOffset = 0;
 			bptr = (uint8_t (*)[])&ctx->block;
 		}
 		data[i] = data[i] ^ (*bptr)[ctx->blockOffset];
-		ctx->blockOffset = ctx->blockOffset + 1U;
-		i = i + 1U;
+		ctx->blockOffset = ctx->blockOffset + 1;
+		i = i + 1;
 	}
 }
 static uint8_t testKey[32] = {
@@ -54,9 +54,9 @@ static uint8_t testNonce[12] = {
 	0x0, 0x0, 0x0, 0x0
 };
 static uint32_t testNonce2[3] = {
-	0x9U,
-	0x4AU,
-	0x0U
+	0x9,
+	0x4A,
+	0x0
 };
 #define TEST_RESULT { \
 	0x10, 0xF1, 0xE7, 0xE4, 0xD1, 0x3B, 0x59, 0x15, \
@@ -77,10 +77,10 @@ int main(void) {
 	printf("test ChaCha20 ");
 	struct context ctx = init(testKey, testNonce2);
 	uint8_t (*const dptr)[] = (uint8_t (*)[])xlorem1024;
-	cipher(&ctx, (uint8_t *)dptr, 1024U);
+	cipher(&ctx, (uint8_t *)dptr, 1024);
 	int32_t i = 0;
 	struct context ctx2 = init(testKey, testNonce2);
-	cipher(&ctx2, (uint8_t *)dptr, 1024U);
+	cipher(&ctx2, (uint8_t *)dptr, 1024);
 	i = 0;
 	while (i < 1024) {
 		printf("%c", xlorem1024[i]);
@@ -97,7 +97,7 @@ int main(void) {
 static bool test0(void) {
 	uint8_t key[32];
 	__builtin_memcpy(&key, &testKey, sizeof(uint8_t [32]));
-	uint32_t counter = 0x1U;
+	uint32_t counter = 1;
 	uint8_t nonce[12];
 	__builtin_memcpy(&nonce, &testNonce, sizeof(uint8_t [12]));
 	chacha20_State state;

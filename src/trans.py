@@ -180,7 +180,9 @@ float_width = 0
 pointer_width = 0
 
 
-def valueZeroNumber(ti=None):
+
+
+def valueZeroNumber(ti):
 	gt = type_integer_create(ti=ti)
 	return ValueLiteral(gt, asset=0, ti=ti)
 
@@ -261,9 +263,9 @@ def init():
 
 
 	global valueTrue, valueFalse, valueNil
-	valueNil = ValueLiteral(typeNil, 0)
-	valueTrue = value_bool_create(1)
-	valueFalse = value_bool_create(0)
+	valueNil = ValueLiteral(typeNil, 0, ti=builtin_ti)
+	valueTrue = value_bool_create(1, ti=builtin_ti)
+	valueFalse = value_bool_create(0, ti=builtin_ti)
 
 	root_symtab.value_add('nil', valueNil)
 	root_symtab.value_add('true', valueTrue)
@@ -297,10 +299,12 @@ def init():
 
 
 
-
 def xcreate_const(symtab, id_str, value, type=None, ti=None):
 	if type == None:
 		type = value.type
+	if ti == None:
+		ti = builtin_ti
+	assert(value.ti != None)
 	value = value_cons_implicit(type, value)
 	const_value = ValueConst(type, Id(id_str), init_value=value, ti=ti)
 	const_value.set_asset(value.asset)
@@ -324,13 +328,13 @@ def create_builtin_module():
 	target_symtab = Symtab()
 	target_module = Module("target", ast=None, symtab_public=target_symtab, symtab_private=Symtab(), sourcename="__target_source__")
 
-	import_target = StmtImport(impline="builtin/target", name="builtin", module=target_module, ti=None, include=False)
+	import_target = StmtImport(impline="builtin/target", name="builtin", module=target_module, ti=builtin_ti, include=False)
 	builtin_module.imports_public["target"] = import_target
 
 	compiler_symtab = Symtab()
 	compiler_module = Module("compiler", ast=None, symtab_public=compiler_symtab, symtab_private=Symtab(), sourcename="__compiler_source__")
 
-	import_compiler = StmtImport(impline="builtin/compiler", name="builtin", module=compiler_module, ti=None, include=False)
+	import_compiler = StmtImport(impline="builtin/compiler", name="builtin", module=compiler_module, ti=builtin_ti, include=False)
 	builtin_module.imports_public["compiler"] = import_compiler
 
 
@@ -342,16 +346,16 @@ def create_builtin_module():
 	compilerNameConst = xcreate_const(compiler_symtab, "name", value_string_create("m2"))
 
 	# compiler version
-	compilerVersionMajor = ValueLiteral(typeNat32, 0)
-	compilerVersionMinor = ValueLiteral(typeNat32, 7)
-	compilerVersionPatch = ValueLiteral(typeNat32, 100)
+	compilerVersionMajor = ValueLiteral(typeNat32, 0, ti=builtin_ti)
+	compilerVersionMinor = ValueLiteral(typeNat32, 7, ti=builtin_ti)
+	compilerVersionPatch = ValueLiteral(typeNat32, 100, ti=builtin_ti)
 
 	compiler_version_initializers = [
 		Initializer(Id('major'), compilerVersionMajor),
 		Initializer(Id('minor'), compilerVersionMinor),
 		Initializer(Id('patch'), compilerVersionPatch),
 	]
-	compilerVersionRecord = value_record_create(compiler_version_initializers, ti=None)
+	compilerVersionRecord = value_record_create(compiler_version_initializers, ti=builtin_ti)
 
 	compilerVersionConst = xcreate_const(compiler_symtab, "version", compilerVersionRecord)
 
@@ -360,8 +364,8 @@ def create_builtin_module():
 #		Initializer(Id('name'), compilerName),
 #		Initializer(Id('version'), compilerVersion),
 #	]
-#	compiler_iv = value_record_create(compiler_initializers, ti=None)
-#	const_compiler = ValueConst(compiler_iv.type, Id("__compiler"), init_value=compiler_iv, ti=None)
+#	compiler_iv = value_record_create(compiler_initializers, ti=builtin_ti)
+#	const_compiler = ValueConst(compiler_iv.type, Id("__compiler"), init_value=compiler_iv, ti=builtin_ti)
 #	const_compiler.set_asset(compiler_iv.asset)
 #	const_compiler.stage = HLIR_VALUE_STAGE_COMPILETIME
 #	builtin_symtab.value_add('compiler', const_compiler)
@@ -372,7 +376,7 @@ def create_builtin_module():
 
 	targetNameConst = xcreate_const(target_symtab, "name", value_string_create("mac"))
 
-	typeArch = type_string_create(32, 0, ti=None)
+	typeArch = type_string_create(32, 0, ti=builtin_ti)
 	typeArch.brand = get_brand()
 
 	archX86 = xcreate_const(target_symtab, "archX86", value_string_create("x86"), type=typeArch)
@@ -382,14 +386,14 @@ def create_builtin_module():
 	archRiscv32 = xcreate_const(target_symtab, "archRiscv32", value_string_create("riscv32"), type=typeArch)
 	archRiscv64 = xcreate_const(target_symtab, "archRiscv64", value_string_create("riscv64"), type=typeArch)
 
-	typeOs = type_string_create(32, 0, ti=None)
+	typeOs = type_string_create(32, 0, ti=builtin_ti)
 	typeOs.brand = get_brand()
 	osLinux = xcreate_const(target_symtab, "osLinux", value_string_create("linux"), type=typeOs)
 	osWindows = xcreate_const(target_symtab, "osWindows", value_string_create("windows"), type=typeOs)
 	osMacos = xcreate_const(target_symtab, "osMacos", value_string_create("darwin"), type=typeOs)
 	osNoos = xcreate_const(target_symtab, "osNoos", value_string_create("noos"), type=typeOs)
 
-	typeAbi = type_string_create(32, 0, ti=None)
+	typeAbi = type_string_create(32, 0, ti=builtin_ti)
 	typeAbi.brand = get_brand()
 	abiSysV = xcreate_const(target_symtab, "abiSysV", value_string_create("sysv"), type=typeAbi)
 	abiWin32 = xcreate_const(target_symtab, "abiWin32", value_string_create("win32"), type=typeAbi)
@@ -397,7 +401,7 @@ def create_builtin_module():
 	abiEabi = xcreate_const(target_symtab, "abiEabi", value_string_create("eabi"), type=typeAbi)
 	abiUnknown = xcreate_const(target_symtab, "abiUnknown", value_string_create("unknown_abi"), type=typeAbi)
 
-	typeEndian = type_string_create(32, 0, ti=None)
+	typeEndian = type_string_create(32, 0, ti=builtin_ti)
 	typeEndian.brand = get_brand()
 	endianBig = xcreate_const(target_symtab, "endianBig", value_string_create("big-endian"), type=typeEndian)
 	endianLittle = xcreate_const(target_symtab, "endianLittle", value_string_create("little-endian"), type=typeEndian)
@@ -405,24 +409,24 @@ def create_builtin_module():
 	target_arch = xcreate_const(target_symtab, "arch", archAarch64, type=typeArch)
 	target_os = xcreate_const(target_symtab, "os", osMacos, type=typeOs)
 	target_abi = xcreate_const(target_symtab, "abi", abiSysV, type=typeAbi)
-	target_char_width = xcreate_const(target_symtab, "charWidth", ValueLiteral(typeInteger, char_width))
-	target_int_width = xcreate_const(target_symtab, "intWidth", ValueLiteral(typeInteger, int_width))
-	target_int_width = xcreate_const(target_symtab, "floatWidth", ValueLiteral(typeInteger, float_width))
-	target_int_width = xcreate_const(target_symtab, "pointerWidth", ValueLiteral(typeInteger, pointer_width))
+	target_char_width = xcreate_const(target_symtab, "charWidth", ValueLiteral(typeInteger, char_width, ti=builtin_ti))
+	target_int_width = xcreate_const(target_symtab, "intWidth", ValueLiteral(typeInteger, int_width, ti=builtin_ti))
+	target_int_width = xcreate_const(target_symtab, "floatWidth", ValueLiteral(typeInteger, float_width, ti=builtin_ti))
+	target_int_width = xcreate_const(target_symtab, "pointerWidth", ValueLiteral(typeInteger, pointer_width, ti=builtin_ti))
 
 
 	mw = type_word_create(width=32)
-	mw.definition = StmtDefType("Word", mw, None, ti=None)
+	mw.definition = StmtDefType("Word", mw, None, ti=builtin_ti)
 	target_symtab.type_add('Word', mw)
 	builtin_symtab.type_add('Word', mw)
 
 	mi = type_int_create(width=32)
-	mi.definition = StmtDefType("Int", mi, None, ti=None)
+	mi.definition = StmtDefType("Int", mi, None, ti=builtin_ti)
 	target_symtab.type_add('Int', mi)
 	builtin_symtab.type_add('Int', mi)
 
 	mn = type_nat_create(width=32)
-	mn.definition = StmtDefType("Nat", mn, None, ti=None)
+	mn.definition = StmtDefType("Nat", mn, None, ti=builtin_ti)
 	target_symtab.type_add('Nat', mn)
 	builtin_symtab.type_add('Nat', mn)
 
@@ -438,8 +442,8 @@ def create_builtin_module():
 #		Initializer(Id('floatWidth'), ValueLiteral(typeInteger, float_width)),
 #		Initializer(Id('pointerWidth'), ValueLiteral(typeInteger, pointer_width))
 #	]
-#	target_iv = value_record_create(target_initializers, ti=None)
-#	const_target = ValueConst(target_iv.type, Id("__target"), init_value=target_iv, ti=None)
+#	target_iv = value_record_create(target_initializers, ti=builtin_ti)
+#	const_target = ValueConst(target_iv.type, Id("__target"), init_value=target_iv, ti=builtin_ti)
 #	const_target.set_asset(target_iv.asset)
 #	const_target.stage = HLIR_VALUE_STAGE_COMPILETIME
 #
@@ -699,6 +703,11 @@ def do_value_shift(x):
 			need_width = nbits_for_num(asset, signed=False)
 			type = type_word_create(width=need_width, ti=x['ti'])
 			type.generic = True
+			#if type.width > l.type.width:
+
+		#if left.type.width < type.width:
+		#	left = value_cons_explicit(type, left, left.ti)
+
 
 		nv = ValueShl(type, left, right, ti=x['ti'])
 
@@ -768,28 +777,12 @@ def do_value_bin_op(op, l, r, ti):
 		error("unsuitable value type '%s' for '%s' operation" % (r.type.to_str(), op), r.ti)
 		return ValueBad(ti)
 
-
 	if not Type.eq(l.type, r.type, []):
-		error("different types in binary operation", ti)
-		# print: @@ <left_type> & <right_type> @@
-		print(color_code(CYAN), end='')
-		print('@@ ', end='')
-		Type.print(l.type)
-		print(" & ", end='')
-		Type.print(r.type)
-		print(' @@', end='')
-		print(color_code(ENDC), end='')
-		print("\n")
+		error("cannot implicitly cons to common type '%s' & '%s'" % (l.type.to_str(), r.type.to_str()), ti)
 		return ValueBad(ti)
-
-	#if Type.eq(t, typeBool):
-	#	if op == HLIR_VALUE_OP_OR: op = HLIR_VALUE_OP_LOGIC_OR
-	#	elif op == HLIR_VALUE_OP_AND: op = HLIR_VALUE_OP_LOGIC_AND
 
 	if op in EQ_OPS or op in RELATIONAL_OPS:
 		t = typeBool
-
-
 
 	asset = None
 	stage = HLIR_VALUE_STAGE_RUNTIME
@@ -1373,7 +1366,7 @@ def do_value_slice(x):
 		if index_from.isValueBad():
 			return ValueBad(ti)
 	else:
-		index_from = valueZeroNumber()
+		index_from = valueZeroNumber(x['ti'])
 
 	if x['index_to'] != None:
 		index_to = do_rvalue(x['index_to'])
@@ -2781,7 +2774,7 @@ def process_module(idStr, sourcename, ast, is_include):
 
 	cmodule = Module(idStr, ast, symtab_public, symtab_private, sourcename)
 
-	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=None, include=False)
+	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=builtin_ti, include=False)
 	cmodule.imports_private["builtin"] = import_builtin
 
 	# 0. do imports & directives

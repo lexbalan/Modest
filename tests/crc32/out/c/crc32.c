@@ -9,33 +9,33 @@
 static uint32_t table[TABLE_SIZE];
 
 void crc32_init(void) {
-	uint32_t i = 0U;
+	uint32_t i = 0;
 	while (i < TABLE_SIZE) {
 		uint32_t crc = i;
-		uint32_t j = 0U;
-		while (j < 8U) {
-			if ((crc & 0x1U) != 0x0U) {
-				crc = crc >> 1 ^ 0xEDB88320U;
+		uint32_t j = 0;
+		while (j < 8) {
+			if ((crc & 1) != 0) {
+				crc = crc >> 1 ^ 0xEDB88320UL;
 			} else {
 				crc = crc >> 1;
 			}
-			j = j + 1U;
+			j = j + 1;
 		}
 		table[i] = crc;
-		i = i + 1U;
+		i = i + 1;
 	}
 }
 
 uint32_t crc32_run(uint8_t buf[], uint32_t len) {
-	uint32_t crc = 0xFFFFFFFFU;
-	uint32_t i = 0U;
+	uint32_t crc = 0xFFFFFFFFUL;
+	uint32_t i = 0;
 	while (i < len) {
 		const uint32_t x = (uint32_t)buf[i];
-		const uint32_t y = crc ^ (x & 0xFFU);
+		const uint32_t y = crc ^ (x & 0xFF);
 		const uint8_t yy = (uint8_t)y;
 		crc = table[yy] ^ crc >> 8;
-		i = i + 1U;
+		i = i + 1;
 	}
-	return crc ^ 0xFFFFFFFFU;
+	return crc ^ 0xFFFFFFFFUL;
 }
 
