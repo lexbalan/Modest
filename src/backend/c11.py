@@ -1760,6 +1760,9 @@ def do_def_const(x):
 	#	if x.value.type.is_aggregate():
 	#		return do_def_var(x)
 
+	if x.hasAttribute('extern'):
+  		return (CInsert(""),)
+
 	id_str = camel_to_upper_snake(get_id_str(x.value))
 	iv = do_cinitializer(x.init_value, ctx=[])
 
