@@ -97,7 +97,7 @@ int main(void) {
 static bool test0(void) {
 	uint8_t key[32];
 	__builtin_memcpy(&key, &testKey, sizeof(uint8_t [32]));
-	uint32_t counter = 1;
+	uint32_t counter = 0x1;
 	uint8_t nonce[12];
 	__builtin_memcpy(&nonce, &testNonce, sizeof(uint8_t [12]));
 	chacha20_State state;

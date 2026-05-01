@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#define FILENAME ((char *)"file.bin")
+#define FILENAME "file.bin"
 struct chunk {
 	char id[100];
 	char data[1024];

@@ -73,7 +73,7 @@ static bool test_generic_integer(void) {
 	#define one 1
 	#define two (1 + one)
 	int32_t a = one;
-	uint64_t b = (uint64_t)one;
+	uint64_t b = one;
 	float f = one;
 	double g = one;
 	uint8_t x = one;

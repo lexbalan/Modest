@@ -27,9 +27,9 @@ static uint32_t ratSymbolUTF322[3] = {0x00000000, 0x00000000, 0x00000000};
 #define ARR_UNICORN {'🦄'}
 #define ARR_RAT {'🐀'}
 #define GENERIC_STRING_CONST "S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define STRING8_CONST ((char *)GENERIC_STRING_CONST)
-#define STRING16_CONST ((char16_t *)_STR16(GENERIC_STRING_CONST))
-#define STRING32_CONST ((char32_t *)_STR32(GENERIC_STRING_CONST))
+#define STRING8_CONST GENERIC_STRING_CONST
+#define STRING16_CONST (_STR16(GENERIC_STRING_CONST))
+#define STRING32_CONST (_STR32(GENERIC_STRING_CONST))
 __attribute__((used))
 static char arr_utf8[5 + 1] = {'H', 'i', '!', '\n'};
 __attribute__((used))

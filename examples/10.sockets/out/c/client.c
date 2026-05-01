@@ -19,7 +19,7 @@
 static bool sendFile(FILE *fp, int sockFd) {
 	char data[BUF_SIZE];
 	while (fgets(data, LENGTHOF(data), fp) != NULL) {
-		if (send(sockFd, data, sizeof data, 0) == (ssize_t)-1) {
+		if (send(sockFd, data, sizeof data, 0) == -1) {
 			return false;
 		}
 		__builtin_bzero(&data, sizeof(char [BUF_SIZE]));

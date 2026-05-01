@@ -21,10 +21,10 @@ typedef uint32_t char32_t;
 #endif
 #define C0 {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 #define C1 "Hello!"
-#define C2 ((char *)"Hello!")
-#define C3 ((char16_t *)u"Hello!")
-#define C4 ((char32_t *)U"Hello!")
-#define C5 ((int32_t)32)
+#define C2 "Hello!"
+#define C3 u"Hello!"
+#define C4 U"Hello!"
+#define C5 32
 static int32_t arr0[10];
 static int32_t arr1[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 static char32_t arr2[10] = {U'H', U'e', U'l', U'l', U'o', U'!'};

@@ -9,7 +9,7 @@ typedef int32_t MyInt32;
 #define MY_ONE ((MyInt32)1)
 typedef MyInt32 MyInt32_2;
 typedef MyInt32 MyInt32_3;
-#define CVB ((int32_t)0)
+#define CVB 0
 static volatile int32_t vvb = 1;
 struct protocol_header {
 	uint16_t start;

@@ -63,6 +63,10 @@ const ci64_2 = Int64 1
 
 var ik: Nat32 = 1
 
+const cd = cw32 | 1
+const cd2 = cw32
+
+
 func suffixText () -> Int32 {
 	if cw64 << 63 != 0x8000000000000000 {
 		return 1

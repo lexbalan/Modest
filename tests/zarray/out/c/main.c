@@ -24,12 +24,12 @@ typedef bool Success;
 #define SUCCESS ((Success)true)
 #define FAILURE ((Success)false)
 #define CX_1 1
-#define CX_2 4294967295UL
-#define CX_3 1073741823
-#define CW32 ((uint32_t)1)
+#define CX_2 0xFFFFFFFFUL
+#define CX_3 0x3FFFFFFF
+#define CW32 ((uint32_t)0x1)
 #define CW64 ((uint64_t)0x1)
-#define CW32_2 ((uint32_t)0x1)
-#define CW64_2 ((uint64_t)0x1)
+#define CW32_2 ((uint32_t)1)
+#define CW64_2 ((uint64_t)1)
 #define CN32 ((uint32_t)1)
 #define CN64 ((uint64_t)1)
 #define CN32_2 ((uint32_t)1)
@@ -37,6 +37,8 @@ typedef bool Success;
 #define CI32_2 ((int32_t)1)
 #define CI64_2 ((int64_t)1)
 static uint32_t ik = 1;
+#define CD (CW32 | 0x1)
+#define CD2 CW32
 
 static int32_t suffixText(void) {
 	if (CW64 << 63 != 0x8000000000000000ULL) {
@@ -48,7 +50,7 @@ static int32_t suffixText(void) {
 	if ((uint64_t)1 << 63 != 0x8000000000000000ULL) {
 		return 3;
 	}
-	if ((uint32_t)1 << 31 != 2147483648UL) {
+	if ((uint32_t)1 << 31 != 0x80000000UL) {
 		return 4;
 	}
 	return 0;
@@ -78,7 +80,7 @@ int32_t main(void) {
 	#define arr {a, b, c}
 	int32_t arr2[3] = {a, b, c};
 	printf("memoryTest = %d\n", memoryTest());
-	return 0;
+	return (int32_t)0;
 	#undef a
 	#undef b
 	#undef c
@@ -99,17 +101,17 @@ static bool memoryTest(void) {
 	uint8_t i = 0;
 	#define nPatterns 12
 	while (i < nPatterns) {
-		uint8_t pattern = 0;
+		uint8_t pattern = 0x00;
 		if (i < 8) {
-			pattern = 0x1 << i;
+			pattern = (uint8_t)1 << i;
 		} else if (i == 8) {
-			pattern = 0;
+			pattern = 0x00;
 		} else if (i == 9) {
-			pattern = 85;
+			pattern = 0x55;
 		} else if (i == 10) {
-			pattern = 170;
+			pattern = 0xAA;
 		} else {
-			pattern = 255;
+			pattern = 0xFF;
 		}
 		printf("check pattern = 0x%02x\n", pattern);
 		if (!testRegion((uint8_t *)mem, memorySize, pattern)) {

@@ -737,12 +737,11 @@ def do_cvalue_cons_word(x, ctx):
 	#	return cv
 
 	if x.method in ['implicit', 'default']:
-		if type.width <= 32:
-			cv = do_cvalue(value, ctx=ctx)
-			return cv
-
-	if value.isValueLiteral():
-		return do_cvalue_literal_number(type, value, ctx)
+		if value.isValueLiteral():
+			return do_cvalue_literal_number(type, value, ctx)
+		#if type.width <= 32:
+		cv = do_cvalue(value, ctx=ctx)
+		return cv
 
 
 	if from_type.is_int():
@@ -758,6 +757,9 @@ def do_cvalue_cons_word(x, ctx):
 #		cv = do_cvalue_literal_with_type(value, type, ctx=ctx)
 #		cv = CValueCast(do_ctype(type), cv)
 #		return cv
+
+	if value.isValueLiteral() and type.width <= 32:
+		return do_cvalue_literal_number(type, value, ctx)
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
@@ -780,13 +782,14 @@ def do_cvalue_cons_int(x, ctx):
 		return cv
 
 	if x.method in ['implicit', 'default']:
-		if type.width <= 32:
-			cv = do_cvalue(value, ctx=ctx)
-			return cv
+		if value.isValueLiteral():
+			return do_cvalue_literal_number(type, value, ctx)
+		#if type.width <= 32:
+		cv = do_cvalue(value, ctx=ctx)
+		return cv
 
-	if value.isValueLiteral():
+	if value.isValueLiteral() and type.width <= 32:
 		return do_cvalue_literal_number(type, value, ctx)
-
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
@@ -826,13 +829,14 @@ def do_cvalue_cons_nat(x, ctx):
 
 
 	if x.method in ['implicit', 'default']:
-		if type.width <= 32:
-			cv = do_cvalue(value, ctx=ctx)
-			return cv
+		if value.isValueLiteral():
+			return do_cvalue_literal_number(type, value, ctx)
+		#if type.width <= 32:
+		cv = do_cvalue(value, ctx=ctx)
+		return cv
 
-	if value.isValueLiteral():
+	if value.isValueLiteral() and type.width <= 32:
 		return do_cvalue_literal_number(type, value, ctx)
-
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
@@ -1751,6 +1755,7 @@ def do_def_var(x, isdecl=False, is_extern=False):
 
 
 def do_def_const(x):
+	# mass
 	#if x.value.type.is_concretic():
 	#	if x.value.type.is_aggregate():
 	#		return do_def_var(x)
@@ -1758,9 +1763,13 @@ def do_def_const(x):
 	id_str = camel_to_upper_snake(get_id_str(x.value))
 	iv = do_cinitializer(x.init_value, ctx=[])
 
-	if not isinstance(iv, CValueCast):
-		if not x.init_value.type.is_generic() and not x.init_value.type.is_array():
+	if x.init_value.isValueCons() and x.init_value.method != 'explicit':
+		if x.init_value.value.type.is_generic() and not x.init_value.type.is_array():
 			iv = CValueCast(do_ctype(x.value.type), iv)
+
+#	if not isinstance(iv, CValueCast):
+#		if not x.init_value.type.is_generic() and not x.init_value.type.is_array():
+#			iv = CValueCast(do_ctype(x.value.type), iv)
 
 	#iv.mark = str(x.init_value)
 	macro = CMacrodefinitionValue(id_str, iv)

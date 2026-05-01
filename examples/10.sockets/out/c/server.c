@@ -20,7 +20,7 @@ static bool writeFile(int sockFd) {
 		return false;
 	}
 	while (true) {
-		const ssize_t n = recv(sockFd, buffer, (size_t)BUF_SIZE, 0);
+		const ssize_t n = recv(sockFd, buffer, BUF_SIZE, 0);
 		if (n <= 0) {
 			break;
 		}
