@@ -77,9 +77,9 @@ static bool test_generic_integer(void) {
 	float f = one;
 	double g = one;
 	uint8_t x = one;
-	char c = (char)one;
-	char16_t d = (char16_t)one;
-	char32_t e = (char32_t)one;
+	char c = one;
+	char16_t d = one;
+	char32_t e = one;
 	bool k = one != 0;
 	return true;
 	#undef one

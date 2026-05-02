@@ -18,7 +18,7 @@ void memory_zero(void *mem, uint64_t len) {
 	const Nat z = (Nat)mem % MEMORY_ALIGNMENT;
 	uint8_t (*const memptr)[] = (uint8_t (*)[])mem;
 	uint8_t (*const dst_byte0)[] = memptr;
-	uint64_t i = (uint64_t)0;
+	uint64_t i = 0;
 	while (i < z) {
 		(*dst_byte0)[i] = 0x0;
 		i = i + 1;
@@ -43,7 +43,7 @@ void memory_copy(void *dst, void *src, uint64_t len) {
 	const uint64_t len_words = len / sizeof(Word);
 	Word (*const src_w)[] = (Word (*)[])src;
 	Word (*const dst_w)[] = (Word (*)[])dst;
-	uint64_t i = (uint64_t)0;
+	uint64_t i = 0;
 	while (i < len_words) {
 		(*dst_w)[i] = (*src_w)[i];
 		i = i + 1;
@@ -62,7 +62,7 @@ bool memory_eq(void *mem0, void *mem1, uint64_t len) {
 	const uint64_t len_words = len / sizeof(Word);
 	Word (*const mem0_w)[] = (Word (*)[])mem0;
 	Word (*const mem1_w)[] = (Word (*)[])mem1;
-	uint64_t i = (uint64_t)0;
+	uint64_t i = 0;
 	while (i < len_words) {
 		if ((*mem0_w)[i] != (*mem1_w)[i]) {
 			return false;

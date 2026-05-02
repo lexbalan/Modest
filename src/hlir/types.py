@@ -1108,6 +1108,9 @@ class Type(Entity):
 		assert (a != None) and isinstance(a, Type)
 		assert (b != None) and isinstance(b, Type)
 
+		if a.brand != b.brand:
+			return False
+
 		if debug:
 			print("Type.EQ('%s', '%s')" % (a.to_str(), b.to_str()))
 
@@ -1123,7 +1126,7 @@ class Type(Entity):
 		if a.__class__.__name__ != b.__class__.__name__:
 			return False
 
-		if a.brand !=  b.brand:
+		if a.brand != b.brand:
 			return False
 
 

@@ -28,7 +28,7 @@
 //   5.2 Получить размер массива (в байтах)
 //
 //   6.1 Создать VLA массив
-#define CONSTANT_ARRAY ({1, 2, 3, 4, 5} + {6, 7, 8, 9, 10})
+#define CONSTANT_ARRAY {1, 2, 3, 4, 5} {6, 7, 8, 9, 10}
 static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 static char arrayFromString[3] = {'a', 'b', 'c'};
 //var arrayOfChars = [Char8 "a", 'b', 'c']
@@ -247,9 +247,9 @@ int main(void) {
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 	__builtin_memcpy(&globalArray, &init_array, sizeof(int32_t [10]));
-	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
-	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
-	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
+	printf("globalArray[%i] = %i\n", (int32_t)0, globalArray[0]);
+	printf("globalArray[%i] = %i\n", (int32_t)1, globalArray[1]);
+	printf("globalArray[%i] = %i\n", (int32_t)2, globalArray[2]);
 	__builtin_bzero(&globalArray, sizeof(int32_t [10]));
 	int32_t ax = 10;
 	int32_t bx = 20;
@@ -260,10 +260,10 @@ int main(void) {
 	ax = 111;
 	bx = 222;
 	cx = 333;
-	printf("y[%i] = %i (must be 10)\n", 0, y[0]);
-	printf("y[%i] = %i (must be 20)\n", 1, y[1]);
-	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
-	printf("y[%i] = %i (must be 40)\n", 3, y[3]);
+	printf("y[%i] = %i (must be 10)\n", (int32_t)0, y[0]);
+	printf("y[%i] = %i (must be 20)\n", (int32_t)1, y[1]);
+	printf("y[%i] = %i (must be 30)\n", (int32_t)2, y[2]);
+	printf("y[%i] = %i (must be 40)\n", (int32_t)3, y[3]);
 	if (__builtin_memcmp(&y, &(const int32_t [4]){10, 20, 30, 40}, sizeof(const int32_t [4])) == 0) {
 		printf("test passed\n");
 	} else {

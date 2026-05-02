@@ -450,7 +450,7 @@ def do_cvalue_literal_array(v, ctx):
 	items = v.asset
 	initializers = []
 	for item in items:
-		ini = do_cinitializer(item, ctx=ctx)
+		ini = do_cinitializer(item.type, item, ctx=ctx)
 		ini.nl = item.nl
 		initializers.append(ini)
 	return CValueArray(initializers)
@@ -461,7 +461,7 @@ def do_cvalue_literal_record(v, ctx):
 	items = []
 	for kv in v.asset:
 		if not kv.value.isValueUndef():
-			items.append(KV(get_id_str(kv), do_cinitializer(kv.value, ctx=ctx), kv.nl))
+			items.append(KV(get_id_str(kv), do_cinitializer(kv.value.type, kv.value, ctx=ctx), kv.nl))
 	return CValueStruct(items)
 
 
@@ -758,8 +758,10 @@ def do_cvalue_cons_word(x, ctx):
 #		cv = CValueCast(do_ctype(type), cv)
 #		return cv
 
-	if value.isValueLiteral() and type.width <= 32:
-		return do_cvalue_literal_number(type, value, ctx)
+	# mass
+	#if value.isValueLiteral() and type.width <= 32:
+	#	cv = do_cvalue_literal_number(type, value, ctx)
+	#	return cv
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
@@ -788,8 +790,9 @@ def do_cvalue_cons_int(x, ctx):
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
-	if value.isValueLiteral() and type.width <= 32:
-		return do_cvalue_literal_number(type, value, ctx)
+	# mass
+	#if value.isValueLiteral() and type.width <= 32:
+	#	return do_cvalue_literal_number(type, value, ctx)
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
@@ -835,8 +838,9 @@ def do_cvalue_cons_nat(x, ctx):
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
-	if value.isValueLiteral() and type.width <= 32:
-		return do_cvalue_literal_number(type, value, ctx)
+	# mass
+	#if value.isValueLiteral() and type.width <= 32:
+	#	return do_cvalue_literal_number(type, value, ctx)
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
@@ -1345,14 +1349,22 @@ def do_cvalue_bin(x, ctx):
 	if x.op == HLIR_VALUE_OP_LOGIC_OR: return CValueOrLogical(left, right)
 	if x.op == HLIR_VALUE_OP_LOGIC_AND: return CValueAndLogical(left, right)
 	if x.op == HLIR_VALUE_OP_STRCAT: return CValueCat(left, right)
+	if x.op == HLIR_VALUE_OP_ARRCAT: return CValueCat(left, right)
 	assert(False)
 
 
 
 
+def do_cinitializer(type, value, ctx):
+	if value.isValueCons():
+		v = value.value
+		to = value.type
+		if Type.eq(to, value.type):
+			if to.brand == v.type.brand:
+				if v.type.is_integer():
+					value = value.value
 
-def do_cinitializer(x, ctx):
-	cv = do_cvalue(x, ctx=ctx+['initializer_context'])
+	cv = do_cvalue(value, ctx=ctx+['initializer_context'])
 	return cv
 
 
@@ -1473,9 +1485,15 @@ def do_cstmt_var(x):
 
 	dynamic_init = init_value.type.is_array() and (init_value.isValueRuntime() or var_value.type.is_vla())
 
+	# mass
+#	if not dynamic_init:
+#		if init_value.isValueCons():
+#			if not (init_value.type.is_array() or init_value.type.is_string()):
+#				init_value = init_value.value
+
 	civ = None
 	if not dynamic_init and not init_value.isValueUndef():
-		civ = do_cinitializer(init_value, ctx=[])
+		civ = do_cinitializer(var_value.type, init_value, ctx=[])
 
 	storage_class = ''
 	if x.hasAttribute('static'):
@@ -1513,13 +1531,17 @@ def do_cstmt_const(x):
 		global func_undef_list
 		func_undef_list.append(id_str)
 		# если точный тип константы неизвестен - печатаем ее как макро
-		iv = do_cinitializer(init_value, ctx=[])
+		iv = do_cinitializer(type, init_value, ctx=[])
 		macro = CMacrodefinitionValue(id_str, iv)
 		return macro
 
+	# mass
+	#if init_value.isValueCons():
+	#	init_value = init_value.value
+
 	civ = None
 	if not (init_value.type.is_array() and init_value.isValueRuntime()):
-		civ = do_cvalue(init_value)
+		civ = do_cinitializer(type, init_value, ctx=[])
 
 	t = do_ctype(type)
 	if type.is_array() and not init_value.isValueImmediate():
@@ -1747,7 +1769,7 @@ def do_def_var(x, isdecl=False, is_extern=False):
 
 	civ = None
 	if not (x.init_value.isValueUndef() or is_extern):
-		civ = do_cinitializer(x.init_value, ctx=[])
+		civ = do_cinitializer(var_value.type, x.init_value, ctx=[])
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, attributes=x.attributes)
 	return (dv,)
@@ -1764,7 +1786,7 @@ def do_def_const(x):
   		return (CInsert(""),)
 
 	id_str = camel_to_upper_snake(get_id_str(x.value))
-	iv = do_cinitializer(x.init_value, ctx=[])
+	iv = do_cinitializer(x.value.type, x.init_value, ctx=[])
 
 	if x.init_value.isValueCons() and x.init_value.method != 'explicit':
 		if x.init_value.value.type.is_generic() and not x.init_value.type.is_array():

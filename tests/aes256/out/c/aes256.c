@@ -271,7 +271,7 @@ static void expandDecKey(uint8_t k[32], uint8_t *rc) {
 		k[i + 3] = k[i + 3] ^ k[i - 1];
 		i = i - 4;
 	}
-	uint8_t y = 0x0;
+	uint8_t y = 0;
 	if ((*rc & 0x1) != 0x0) {
 		y = 0x8D;
 	}
@@ -288,7 +288,7 @@ aes256_Result aes256_init(aes256_Context *ctx, uint8_t key[32]) {
 	}
 	__builtin_memcpy(&ctx->deckey, key, sizeof(aes256_Key));
 	__builtin_memcpy(&ctx->enckey, key, sizeof(aes256_Key));
-	uint8_t rcon = 0x1;
+	uint8_t rcon = 1;
 	uint8_t i = 0;
 	while (i < 7) {
 		expandEncKey(ctx->deckey, &rcon);
@@ -301,7 +301,7 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
 	if (ctx == NULL || block == NULL) {
 		return AES256_RESULT_ERROR;
 	}
-	uint8_t rcon = 0x1;
+	uint8_t rcon = 1;
 	addRoundKeyCpy((uint8_t *)block, ctx->enckey, ctx->key);
 	uint8_t i = 0;
 	while (i < 13) {
