@@ -39,6 +39,8 @@ typedef bool Success;
 static uint32_t ik = 1;
 #define CD (CW32 | 0x1)
 #define CD2 CW32
+#define CONST7 ((uint32_t)0x0000FFFF)
+#define CONST8 ((uint32_t)0x0000FFFF)
 
 static int32_t suffixText(void) {
 	if (CW64 << 63 != 0x8000000000000000ULL) {

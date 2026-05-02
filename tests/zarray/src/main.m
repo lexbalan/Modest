@@ -66,6 +66,9 @@ var ik: Nat32 = 1
 const cd = cw32 | 1
 const cd2 = cw32
 
+const const7 = Word32 0x0000ffff
+const const8 = Nat32 0x0000ffff
+
 
 func suffixText () -> Int32 {
 	if cw64 << 63 != 0x8000000000000000 {

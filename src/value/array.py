@@ -202,7 +202,7 @@ def value_array_concat(l, r, ti):
 	type_result = TypeArray(item_type, volume=str_array_volume, ti=ti)
 	type_result.generic = True  # FIXIT!
 
-	nv = ValueBin(type_result, HLIR_VALUE_OP_ADD, l, r, ti=ti)
+	nv = ValueBin(type_result, HLIR_VALUE_OP_ARRCAT, l, r, ti=ti)
 	nv.set_asset(items)
 	nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 	return nv

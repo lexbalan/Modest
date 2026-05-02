@@ -4,9 +4,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
-#define ARR {1, 2}
-static int32_t arr0[2] = {1, 2};
-static int32_t arr1[2] = {1, 2};
+#define ARR {(int32_t)1, (int32_t)2}
+static int32_t arr0[2] = {(int32_t)1, (int32_t)2};
+static int32_t arr1[2] = {(int32_t)1, (int32_t)2};
 static char *str = "Hello!";
 // -> *[]Char8
 

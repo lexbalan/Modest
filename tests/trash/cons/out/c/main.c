@@ -7,7 +7,7 @@
 
 int main(void) {
 	printf("test cons operation\n");
-	const uint8_t a = 0xFF;
+	const uint8_t a = (uint8_t)0xFF;
 	const uint32_t b = (uint32_t)a;
 	printf("a = %u\n", a);
 	printf("b = %u\n", b);
