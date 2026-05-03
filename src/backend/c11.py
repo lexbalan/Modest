@@ -752,17 +752,6 @@ def do_cvalue_cons_word(x, ctx):
 			cv = CValueCast(do_ctype(type), cv)
 			return cv
 
-#	if value.isValueLiteral():
-#		#cv = do_cvalue_cast(type, value, ctx=ctx)
-#		cv = do_cvalue_literal_with_type(value, type, ctx=ctx)
-#		cv = CValueCast(do_ctype(type), cv)
-#		return cv
-
-	# mass
-	#if value.isValueLiteral() and type.width <= 32:
-	#	cv = do_cvalue_literal_number(type, value, ctx)
-	#	return cv
-
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
 
@@ -771,13 +760,6 @@ def do_cvalue_cons_int(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
-
-
-#	if value.isValueImmediate() and value.isValueLiteral():
-#		if from_type.is_integer():
-#			cv = do_cvalue_literal_number(type, value, ctx)
-#			cv = CValueCast(do_ctype(type), cv)
-#			return cv
 
 	if from_type.is_word() and type.width == from_type.width:
 		cv = do_cvalue(value, ctx=ctx)
@@ -790,10 +772,6 @@ def do_cvalue_cons_int(x, ctx):
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
-	# mass
-	#if value.isValueLiteral() and type.width <= 32:
-	#	return do_cvalue_literal_number(type, value, ctx)
-
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
 
@@ -802,12 +780,6 @@ def do_cvalue_cons_nat(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
-
-#	if value.isValueImmediate() and value.isValueLiteral():
-#		if from_type.is_integer():
-#			cv = do_cvalue_literal_number(type, value, ctx)
-#			cv = CValueCast(do_ctype(type), cv)
-#			return cv
 
 	if from_type.is_word() and type.width == from_type.width:
 		cv = do_cvalue(value, ctx=ctx)
@@ -837,10 +809,6 @@ def do_cvalue_cons_nat(x, ctx):
 		#if type.width <= 32:
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
-
-	# mass
-	#if value.isValueLiteral() and type.width <= 32:
-	#	return do_cvalue_literal_number(type, value, ctx)
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
@@ -1485,12 +1453,6 @@ def do_cstmt_var(x):
 
 	dynamic_init = init_value.type.is_array() and (init_value.isValueRuntime() or var_value.type.is_vla())
 
-	# mass
-#	if not dynamic_init:
-#		if init_value.isValueCons():
-#			if not (init_value.type.is_array() or init_value.type.is_string()):
-#				init_value = init_value.value
-
 	civ = None
 	if not dynamic_init and not init_value.isValueUndef():
 		civ = do_cinitializer(var_value.type, init_value, ctx=[])
@@ -1534,10 +1496,6 @@ def do_cstmt_const(x):
 		iv = do_cinitializer(type, init_value, ctx=[])
 		macro = CMacrodefinitionValue(id_str, iv)
 		return macro
-
-	# mass
-	#if init_value.isValueCons():
-	#	init_value = init_value.value
 
 	civ = None
 	if not (init_value.type.is_array() and init_value.isValueRuntime()):
@@ -1777,11 +1735,6 @@ def do_def_var(x, isdecl=False, is_extern=False):
 
 
 def do_def_const(x):
-	# mass
-	#if x.value.type.is_concretic():
-	#	if x.value.type.is_aggregate():
-	#		return do_def_var(x)
-
 	if x.hasAttribute('extern'):
   		return (CInsert(""),)
 
