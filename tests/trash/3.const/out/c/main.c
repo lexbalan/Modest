@@ -36,9 +36,9 @@ struct x {
 	{.x = 2, .y = 2} \
 }
 #define POINTS { \
-	(struct point){.x = 0, .y = 0}, \
-	(struct point){.x = 1, .y = 1}, \
-	(struct point){.x = 2, .y = 2} \
+	{.x = 0, .y = 0}, \
+	{.x = 1, .y = 1}, \
+	{.x = 2, .y = 2} \
 }
 #define POINT_ZERO ((struct point){.x = 1, .y = 1})
 #define ZERO_POINTS {POINT_ZERO, POINT_ZERO, POINT_ZERO}

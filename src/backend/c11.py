@@ -395,23 +395,6 @@ def str_value_literal_bool(v, ctx):
 
 
 
-
-
-
-
-
-#
-#def str_initializer(v):
-#	# В C выражение значения и выражение-инициализатор - это разные вещи!
-#	# В выражениях-инициализаторах C нельзя приводить массивы
-#	# А все остальное (например структуры) - можно:
-#	# .arr = (uint8_t [3]){1, 2, 3}  // error
-#	# .arr = {1, 2, 3}               // ok
-#	# .arr = (struct point){.x=1, .y=2, .z=3}  // ok
-#	return str_value(v, ctx=['initializer_context'])
-#
-
-
 def str_value(x, ctx=[]):
 	cv = do_cvalue(x, ctx)
 	if not cv:
@@ -547,26 +530,6 @@ def do_cvalue_cons_array(x, ctx):
 		if from_type.is_string() and value.isValueBin() and value.op == HLIR_VALUE_OP_STRCAT:
 			return do_cvalue(x.value)
 
-		# C не позволяет приводить литерал массива к типу массива в инициализаторах(!)
-		# Вот все можно приводить, все ок, а массив - нет.
-		if 'initializer_context' in ctx:
-			if from_type.is_string():
-				width = 0
-				if to_type.is_concretic():
-					width = to_type.of.width
-				#cv = do_cvalue_literal_string(x.value.asset, width)
-				items = x.value.asset
-				cvalues = []
-				for char in items:
-					cv = CValueChar(char, width=width)
-					cv.nl = 0
-					cvalues.append(cv)
-				cv = CValueArray(cvalues)
-				return cv
-
-			if x.asset:
-				cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
-				return cv
 
 		if from_type.is_string():
 			width = 0
@@ -801,7 +764,6 @@ def do_cvalue_cons_nat(x, ctx):
 
 		ctype = do_ctype(type)
 		return CValueCast(ctype, acall)
-
 
 	if x.method in ['implicit', 'default']:
 		if value.isValueLiteral():
@@ -1332,7 +1294,28 @@ def do_cinitializer(type, value, ctx):
 				if v.type.is_integer():
 					value = value.value
 
-	cv = do_cvalue(value, ctx=ctx+['initializer_context'])
+		# C не позволяет приводить литерал массива к типу массива в инициализаторах(!)
+		# Вот все можно приводить, все ок, а массив - нет.
+		if to.is_array():
+			if v.type.is_string():
+				width = 0
+				if to.is_concretic():
+					width = to.of.width
+				#cv = do_cvalue_literal_string(x.value.asset, width)
+				items = v.asset
+				cvalues = []
+				for char in items:
+					cv = CValueChar(char, width=width)
+					cv.nl = 0
+					cvalues.append(cv)
+				cv = CValueArray(cvalues)
+				return cv
+
+			elif v.asset:
+				cv = do_cvalue_literal_with_type(v, to, ctx=ctx)
+				return cv
+
+	cv = do_cvalue(value, ctx=ctx)
 	return cv
 
 
