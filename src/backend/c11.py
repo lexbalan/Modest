@@ -1301,14 +1301,12 @@ def do_cinitializer(type, value, ctx):
 				width = 0
 				if to.is_concretic():
 					width = to.of.width
-				#cv = do_cvalue_literal_string(x.value.asset, width)
-				items = v.asset
-				cvalues = []
-				for char in items:
+				cv_chars = []
+				for char in v.asset:
 					cv = CValueChar(char, width=width)
 					cv.nl = 0
-					cvalues.append(cv)
-				cv = CValueArray(cvalues)
+					cv_chars.append(cv)
+				cv = CValueArray(cv_chars)
 				return cv
 
 			elif v.asset:
