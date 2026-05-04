@@ -2303,6 +2303,9 @@ def process_field_common(x, allow_cons_default=False):
 			init_value = value_cons_default(init_value)
 		var_type = Type.copy(init_value.type)
 
+	if not Type.eq(var_type, init_value.type):
+		error("type mismatch %s & %s" % (var_type.to_str(), init_value.type.to_str()), x['ti'])
+
 	# убираем 'const' если есть
 	if var_type.hasAttribute('const'):
 		var_type = var_type.copy()
