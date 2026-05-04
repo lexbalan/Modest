@@ -2163,6 +2163,7 @@ def run(module, _outname):
 
 	cc = do_cfile(module)
 	dump(_outname + '.c', cc)
+	#dump(_outname, cc)
 
 
 
