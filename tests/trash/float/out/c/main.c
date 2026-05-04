@@ -26,7 +26,7 @@ static float slope(struct point2_d a, struct point2_d b) {
 
 int main(void) {
 	printf("float test\n");
-	printf("2 = %d\n", 2);
+	printf("2 = %d\n", (int32_t)2);
 	printf("2/3 = %f\n", (double)(2.0 / 3));
 	#define r 10
 	const double s = squareOfCircle(r);

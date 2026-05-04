@@ -23,6 +23,40 @@ static char str3[3] = {'a', 'b', 'c'};
 typedef bool Success;
 #define SUCCESS ((Success)true)
 #define FAILURE ((Success)false)
+#define CX_1 1
+#define CX_2 0xFFFFFFFFUL
+#define CX_3 0x3FFFFFFF
+#define CW32 ((uint32_t)0x1)
+#define CW64 ((uint64_t)0x1)
+#define CW32_2 ((uint32_t)1)
+#define CW64_2 ((uint64_t)1)
+#define CN32 ((uint32_t)1)
+#define CN64 ((uint64_t)1)
+#define CN32_2 ((uint32_t)1)
+#define CN64_2 ((uint64_t)1)
+#define CI32_2 ((int32_t)1)
+#define CI64_2 ((int64_t)1)
+static uint32_t ik = 1;
+#define CD (CW32 | 0x1)
+#define CD2 CW32
+#define CONST7 ((uint32_t)0x0000FFFF)
+#define CONST8 ((uint32_t)0x0000FFFF)
+
+static int32_t suffixText(void) {
+	if (CW64 << 63 != 0x8000000000000000ULL) {
+		return 1;
+	}
+	if ((uint64_t)CX_1 << 63 != 0x8000000000000000ULL) {
+		return 2;
+	}
+	if ((uint64_t)1 << 63 != 0x8000000000000000ULL) {
+		return 3;
+	}
+	if ((uint32_t)1 << 31 != 0x80000000UL) {
+		return 4;
+	}
+	return 0;
+}
 
 static Success suc(void) {
 	return SUCCESS;
@@ -31,6 +65,7 @@ static Success suc(void) {
 static bool memoryTest(void);
 
 int32_t main(void) {
+	printf("suffixText() == %d\n", suffixText());
 	const Success success = suc();
 	if (__builtin_memcmp(&u, &v, sizeof(int32_t [5][4])) == 0) {
 		printf("u == v\n");
@@ -47,7 +82,7 @@ int32_t main(void) {
 	#define arr {a, b, c}
 	int32_t arr2[3] = {a, b, c};
 	printf("memoryTest = %d\n", memoryTest());
-	return 0;
+	return (int32_t)0;
 	#undef a
 	#undef b
 	#undef c
@@ -68,11 +103,11 @@ static bool memoryTest(void) {
 	uint8_t i = 0;
 	#define nPatterns 12
 	while (i < nPatterns) {
-		uint8_t pattern = 0x0;
+		uint8_t pattern = 0x00;
 		if (i < 8) {
-			pattern = 0x1 << i;
+			pattern = (uint8_t)1 << i;
 		} else if (i == 8) {
-			pattern = 0x0;
+			pattern = 0x00;
 		} else if (i == 9) {
 			pattern = 0x55;
 		} else if (i == 10) {
@@ -92,17 +127,17 @@ static bool memoryTest(void) {
 }
 
 static bool testRegion(uint8_t mem[], uint32_t size, uint8_t pattern) {
-	uint32_t i = 0U;
+	uint32_t i = 0;
 	while (i < size) {
 		mem[i] = pattern;
-		i = i + 1U;
+		i = i + 1;
 	}
-	i = 0U;
+	i = 0;
 	while (i < size) {
 		if (mem[i] != pattern) {
 			return false;
 		}
-		i = i + 1U;
+		i = i + 1;
 	}
 	return true;
 }

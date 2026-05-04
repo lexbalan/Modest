@@ -76,10 +76,10 @@ static bool test_generic_integer(void) {
 	uint64_t b = one;
 	float f = one;
 	double g = one;
-	uint8_t x = (uint8_t)one;
-	char c = (char)one;
-	char16_t d = (char16_t)one;
-	char32_t e = (char32_t)one;
+	uint8_t x = one;
+	char c = one;
+	char16_t d = one;
+	char32_t e = one;
 	bool k = one != 0;
 	return true;
 	#undef one
@@ -107,7 +107,7 @@ static bool test_generic_char(void) {
 
 static bool test_generic_array(void) {
 	#define a {0, 1, 2, 3}
-	uint32_t i = 0U;
+	uint32_t i = 0;
 	if (__builtin_memcmp(&(const int8_t [4])a, &(int8_t [4]){0, 1, 2, 3}, sizeof(const int8_t [4])) != 0) {
 		printf("error: a != [0, 1, 2, 3]\n");
 		return false;

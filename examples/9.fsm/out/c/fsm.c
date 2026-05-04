@@ -12,7 +12,7 @@ void fsm_init(struct fsm_fsm *self, char *id, struct fsm_state_desc *initState, 
 	self->state = (fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
 	self->next_state = (fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
 	self->payload = payload;
-	self->timer = 0U;
+	self->timer = 0;
 	self->timer_expired = false;
 }
 
@@ -22,7 +22,7 @@ void fsm_task(struct fsm_fsm *self) {
 	if (self->timer_expired) {
 		self->timer_expired = false;
 		self->next_state = fsm_cmdNextStage(self);
-		const uint32_t top = 0U;
+		const uint32_t top = 0;
 		printf("[%s] fsm timeout (%u) occured, switch_to_stage(%d)\n", self->id, top, self->next_state.stage);
 	}
 	if (__builtin_memcmp(&self->next_state, &self->state, sizeof(fsm_ComplexState)) != 0) {
@@ -36,22 +36,22 @@ void fsm_task(struct fsm_fsm *self) {
 }
 
 void fsm_tick(struct fsm_fsm *self) {
-	if (self->timer > 0U) {
-		self->timer = self->timer - 1U;
-		if (self->timer == 0U) {
+	if (self->timer > 0) {
+		self->timer = self->timer - 1;
+		if (self->timer == 0) {
 			self->timer_expired = true;
 		}
 	}
 }
 
 fsm_ComplexState fsm_cmdSwitchState(struct fsm_fsm *self, struct fsm_state_desc *state) {
-	self->timer = 0U;
+	self->timer = 0;
 	self->timer_expired = false;
 	return (fsm_ComplexState){.state = state, .stage = (fsm_StageId)0};
 }
 
 fsm_ComplexState fsm_cmdSwitchStage(struct fsm_fsm *self, uint16_t stage) {
-	self->timer = 0U;
+	self->timer = 0;
 	self->timer_expired = false;
 	fsm_ComplexState newState = self->state;
 	newState.stage = stage;
@@ -59,7 +59,7 @@ fsm_ComplexState fsm_cmdSwitchStage(struct fsm_fsm *self, uint16_t stage) {
 }
 
 fsm_ComplexState fsm_cmdNextStage(struct fsm_fsm *self) {
-	self->timer = 0U;
+	self->timer = 0;
 	self->timer_expired = false;
 	const fsm_ComplexState state = self->state;
 	const uint16_t nextStageIndex = state.stage + 1;

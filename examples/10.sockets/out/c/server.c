@@ -21,7 +21,7 @@ static bool writeFile(int sockFd) {
 	}
 	while (true) {
 		const ssize_t n = recv(sockFd, buffer, BUF_SIZE, 0);
-		if (n <= 0LL) {
+		if (n <= 0) {
 			break;
 		}
 		fprintf(fp, "%s", buffer);

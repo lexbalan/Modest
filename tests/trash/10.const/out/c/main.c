@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "./minmax.h"
-#define CARR ({0, 10, 15} + {20, 25, 30})
+#define CARR {0, 10, 15} {20, 25, 30}
 struct point {
 	double x;
 	double y;

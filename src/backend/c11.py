@@ -252,12 +252,12 @@ def do_ctype(t, is_param=False):
 
 
 # Переводим представление о типе в Modest в представление о типе C backend
-def str_type(t, ctx=[]):
-	return str(do_ctype(t))
+def str_type(t, ctx=None):
+	return do_ctype(t).to_str()
 
 
 def str_type_record(t, tag='', ctx=[]):
-	return str(do_ctype_struct(t, tag=tag))
+	return do_ctype_struct(t, tag=tag).to_str()
 
 
 def str_field(t, id_str, ctx=[]):
@@ -395,23 +395,6 @@ def str_value_literal_bool(v, ctx):
 
 
 
-
-
-
-
-
-#
-#def str_initializer(v):
-#	# В C выражение значения и выражение-инициализатор - это разные вещи!
-#	# В выражениях-инициализаторах C нельзя приводить массивы
-#	# А все остальное (например структуры) - можно:
-#	# .arr = (uint8_t [3]){1, 2, 3}  // error
-#	# .arr = {1, 2, 3}               // ok
-#	# .arr = (struct point){.x=1, .y=2, .z=3}  // ok
-#	return str_value(v, ctx=['initializer_context'])
-#
-
-
 def str_value(x, ctx=[]):
 	cv = do_cvalue(x, ctx)
 	if not cv:
@@ -450,7 +433,7 @@ def do_cvalue_literal_array(v, ctx):
 	items = v.asset
 	initializers = []
 	for item in items:
-		ini = do_cinitializer(item, ctx=ctx)
+		ini = do_cinitializer(item.type, item, ctx=ctx)
 		ini.nl = item.nl
 		initializers.append(ini)
 	return CValueArray(initializers)
@@ -461,7 +444,7 @@ def do_cvalue_literal_record(v, ctx):
 	items = []
 	for kv in v.asset:
 		if not kv.value.isValueUndef():
-			items.append(KV(get_id_str(kv), do_cinitializer(kv.value), kv.nl))
+			items.append(KV(get_id_str(kv), do_cinitializer(kv.value.type, kv.value, ctx=ctx), kv.nl))
 	return CValueStruct(items)
 
 
@@ -473,38 +456,46 @@ def do_cvalue_literal_pointer(v, ctx):
 
 
 
-def cvalue_literal_integer(asset, width=0, is_unsigned=False, as_hex=False):
-	if width == 0:
-		width= nbits_for_num(asset, signed=not is_unsigned)
+def cvalue_literal_integer(asset, width=0, is_unsigned=False, as_hex=False, nsigns=0, ctx=None):
+
+	#width = max(width, nbits_for_num(asset, signed=not is_unsigned))
+	width = nbits_for_num(asset, signed=not is_unsigned)
 
 	suffix = ''
 	if width >= 32: #csettings['int_width']:
-		if is_unsigned: #and nn == width:
+		if is_unsigned and width >= 32:
 			suffix += "U"    # unsigned
 
-		if width <= 32:   #csettings['long_width']:
-			#sstr += "L"     # long int
-			pass
-		elif width <= 64: #csettings['long_long_width']:
+		if width == 64:   #csettings['long_long_width']:
 			suffix += "LL"   # long long int
+		elif width >= 32: #csettings['long_width']:
+			suffix += "L"   # long long int
 		else:
 			suffix += "XL"   # extra long int (not defined in C)
 
-	return CValueInteger(asset, as_hex=as_hex, nsigns=0, suffix=suffix)
+	return CValueInteger(asset, as_hex=as_hex, nsigns=nsigns, suffix=suffix)
+
 
 
 # сам заботится о том чтобы литерал соответствовал типу (int/longlong)
 def do_cvalue_literal_number(t, v, ctx):
+	#if not (t.is_generic()):
+	#	info("??", v.ti)
 	if t.width > 64:
-		high = cvalue_literal_integer(int(v.asset) >> 64, width=64, is_unsigned=not t.is_signed(), as_hex=True)
-		low = cvalue_literal_integer(int(v.asset) & 0xffffffffffffffff, width=64, is_unsigned=not t.is_signed(), as_hex=True)
+		high = cvalue_literal_integer(int(v.asset) >> 64, width=64, is_unsigned=not t.is_signed(), as_hex=True, ctx=ctx)
+		low = cvalue_literal_integer(int(v.asset) & 0xffffffffffffffff, width=64, is_unsigned=not t.is_signed(), as_hex=True, ctx=ctx)
 		return CValueCall(CValueNamed("BIG_INT128"), [high, low])
 
 	is_unsigned = t.is_nat() or t.is_word() or (t.is_integer() and v.asset >= 0)
-	return cvalue_literal_integer(int(v.asset), width=t.width, is_unsigned=is_unsigned, as_hex=t.is_word())
+	as_hex = v.hasAttribute('hexadecimal') or t.is_word()
+	cv = cvalue_literal_integer(int(v.asset), width=t.width, is_unsigned=is_unsigned, as_hex=as_hex, nsigns=v.nsigns, ctx=ctx)
+	#cv.mark = '$%s' + str()
+	return cv
 
 
-def do_cvalue_literal_with_type(v, t, ctx=[]):
+
+
+def do_cvalue_literal_with_type(v, t, ctx):
 	asset = v.asset
 
 	if t.is_integer() or t.is_int() or t.is_nat() or t.is_word():
@@ -539,26 +530,6 @@ def do_cvalue_cons_array(x, ctx):
 		if from_type.is_string() and value.isValueBin() and value.op == HLIR_VALUE_OP_STRCAT:
 			return do_cvalue(x.value)
 
-		# C не позволяет приводить литерал массива к типу массива в инициализаторах(!)
-		# Вот все можно приводить, все ок, а массив - нет.
-		if 'initializer_context' in ctx:
-			if from_type.is_string():
-				width = 0
-				if to_type.is_concretic():
-					width = to_type.of.width
-				#cv = do_cvalue_literal_string(x.value.asset, width)
-				items = x.value.asset
-				cvalues = []
-				for char in items:
-					cv = CValueChar(char, width=width)
-					cv.nl = 0
-					cvalues.append(cv)
-				cv = CValueArray(cvalues)
-				return cv
-
-			if x.asset:
-				cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
-				return cv
 
 		if from_type.is_string():
 			width = 0
@@ -715,19 +686,26 @@ def do_cvalue_cons_word(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	#if value.isValueImmediate() and value.isValueLiteral():
-	#	if from_type.is_integer():
-	#		return do_cvalue_literal_number(type, value, ctx)
 
-	if value.isValueImmediate() and value.isValueLiteral():
-		#if from_type.is_nat() and type.width == from_type.width:
-		cv = do_cvalue_literal_with_type(value, type, ctx=ctx)
+#	if from_type.is_generic():
+#		if value.isValueImmediate():
+#			if value.isValueLiteral():
+#				cv = do_cvalue_literal_number(type, value, ctx)
+#				cv = CValueCast(do_ctype(type), cv)
+#				return cv
+
+	#if value.isValueImmediate() and value.isValueLiteral():
+	#	#if from_type.is_nat() and type.width == from_type.width:
+	#	cv = do_cvalue_literal_with_type(value, type, ctx=ctx)
+	#	return cv
+
+	if x.method in ['implicit', 'default']:
+		if value.isValueLiteral():
+			return do_cvalue_literal_number(type, value, ctx)
+		#if type.width <= 32:
+		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
-#	if x.method in ['implicit', 'default']:
-#		if from_type.width <= 32:
-#			cv = do_cvalue(value, ctx=ctx)
-#			return cv
 
 	if from_type.is_int():
 		if from_type.width < type.width:
@@ -736,12 +714,6 @@ def do_cvalue_cons_word(x, ctx):
 			cv = CValueCast(nat_same_sz, cv)
 			cv = CValueCast(do_ctype(type), cv)
 			return cv
-
-#	if value.isValueLiteral():
-#		#cv = do_cvalue_cast(type, value, ctx=ctx)
-#		cv = do_cvalue_literal_with_type(value, type, ctx=ctx)
-#		cv = CValueCast(do_ctype(type), cv)
-#		return cv
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
@@ -752,19 +724,16 @@ def do_cvalue_cons_int(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	if value.isValueImmediate() and value.isValueLiteral():
-		if from_type.is_integer():
-			return do_cvalue_literal_number(type, value, ctx)
-
 	if from_type.is_word() and type.width == from_type.width:
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
 	if x.method in ['implicit', 'default']:
-		if from_type.width <= 32:
-			cv = do_cvalue(value, ctx=ctx)
-			return cv
-
+		if value.isValueLiteral():
+			return do_cvalue_literal_number(type, value, ctx)
+		#if type.width <= 32:
+		cv = do_cvalue(value, ctx=ctx)
+		return cv
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
@@ -774,11 +743,6 @@ def do_cvalue_cons_nat(x, ctx):
 	type = x.type
 	value = x.value
 	from_type = value.type
-
-	if value.isValueImmediate() and value.isValueLiteral():
-		if from_type.is_integer():
-			cv = do_cvalue_literal_number(type, value, ctx)
-			return cv
 
 	if from_type.is_word() and type.width == from_type.width:
 		cv = do_cvalue(value, ctx=ctx)
@@ -802,9 +766,11 @@ def do_cvalue_cons_nat(x, ctx):
 		return CValueCast(ctype, acall)
 
 	if x.method in ['implicit', 'default']:
-		if from_type.width <= 32:
-			cv = do_cvalue(value, ctx=ctx)
-			return cv
+		if value.isValueLiteral():
+			return do_cvalue_literal_number(type, value, ctx)
+		#if type.width <= 32:
+		cv = do_cvalue(value, ctx=ctx)
+		return cv
 
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
@@ -995,8 +961,11 @@ def do_cvalue_access(x, ctx):
 
 def do_cvalue_shl(x, ctx):
 	left = do_cvalue(x.left)
+	#left.mark = '~~~' + str(left.__class__)
 
-	if x.type.width > 32 and x.left.type.width < x.type.width:
+	#if x.type.width > 32:
+	#if x.left.type.width < x.type.width:
+	if x.left.type.is_generic():
 		left = CValueCast(do_ctype(x.type), left)
 
 	right = do_cvalue(x.right)
@@ -1113,7 +1082,7 @@ def do_cvalue_sizeof_type(x, ctx):
 	return CValueSizeofType(do_ctype(x.oftype))
 
 def do_cvalue_lengthof_type(x, ctx):
-	return cvalue_literal_integer(x.oftype.volume.asset, is_unsigned=True)
+	return cvalue_literal_integer(x.oftype.volume.asset, is_unsigned=True, ctx=ctx)
 
 def do_cvalue_alignof_type(x, ctx):
 	if x.oftype.is_unit():
@@ -1310,14 +1279,41 @@ def do_cvalue_bin(x, ctx):
 	if x.op == HLIR_VALUE_OP_LOGIC_OR: return CValueOrLogical(left, right)
 	if x.op == HLIR_VALUE_OP_LOGIC_AND: return CValueAndLogical(left, right)
 	if x.op == HLIR_VALUE_OP_STRCAT: return CValueCat(left, right)
+	if x.op == HLIR_VALUE_OP_ARRCAT: return CValueCat(left, right)
 	assert(False)
 
 
 
 
+def do_cinitializer(type, value, ctx):
+	if value.isValueCons():
+		v = value.value
+		to = value.type
+		if Type.eq(to, value.type):
+			if to.brand == v.type.brand:
+				if v.type.is_integer():
+					value = value.value
 
-def do_cinitializer(x, ctx=[]):
-	cv = do_cvalue(x, ctx=ctx+['initializer_context'])
+		# C не позволяет приводить литерал массива к типу массива в инициализаторах(!)
+		# Вот все можно приводить, все ок, а массив - нет.
+		if to.is_array():
+			if v.type.is_string():
+				width = 0
+				if to.is_concretic():
+					width = to.of.width
+				cv_chars = []
+				for char in v.asset:
+					cv = CValueChar(char, width=width)
+					cv.nl = 0
+					cv_chars.append(cv)
+				cv = CValueArray(cv_chars)
+				return cv
+
+			elif v.asset:
+				cv = do_cvalue_literal_with_type(v, to, ctx=ctx)
+				return cv
+
+	cv = do_cvalue(value, ctx=ctx)
 	return cv
 
 
@@ -1440,7 +1436,7 @@ def do_cstmt_var(x):
 
 	civ = None
 	if not dynamic_init and not init_value.isValueUndef():
-		civ = do_cinitializer(init_value)
+		civ = do_cinitializer(var_value.type, init_value, ctx=[])
 
 	storage_class = ''
 	if x.hasAttribute('static'):
@@ -1478,12 +1474,13 @@ def do_cstmt_const(x):
 		global func_undef_list
 		func_undef_list.append(id_str)
 		# если точный тип константы неизвестен - печатаем ее как макро
-		macro = CMacrodefinitionValue(id_str, do_cinitializer(init_value))
+		iv = do_cinitializer(type, init_value, ctx=[])
+		macro = CMacrodefinitionValue(id_str, iv)
 		return macro
 
 	civ = None
 	if not (init_value.type.is_array() and init_value.isValueRuntime()):
-		civ = do_cvalue(init_value)
+		civ = do_cinitializer(type, init_value, ctx=[])
 
 	t = do_ctype(type)
 	if type.is_array() and not init_value.isValueImmediate():
@@ -1711,7 +1708,7 @@ def do_def_var(x, isdecl=False, is_extern=False):
 
 	civ = None
 	if not (x.init_value.isValueUndef() or is_extern):
-		civ = do_cinitializer(x.init_value)
+		civ = do_cinitializer(var_value.type, x.init_value, ctx=[])
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, attributes=x.attributes)
 	return (dv,)
@@ -1719,12 +1716,22 @@ def do_def_var(x, isdecl=False, is_extern=False):
 
 
 def do_def_const(x):
-	#if x.value.type.is_concretic():
-	#	if x.value.type.is_aggregate():
-	#		return do_def_var(x)
+	if x.hasAttribute('extern'):
+  		return (CInsert(""),)
 
 	id_str = camel_to_upper_snake(get_id_str(x.value))
-	macro = CMacrodefinitionValue(id_str, do_cinitializer(x.init_value))
+	iv = do_cinitializer(x.value.type, x.init_value, ctx=[])
+
+	if x.init_value.isValueCons() and x.init_value.method != 'explicit':
+		if x.init_value.value.type.is_generic() and not x.init_value.type.is_array():
+			iv = CValueCast(do_ctype(x.value.type), iv)
+
+#	if not isinstance(iv, CValueCast):
+#		if not x.init_value.type.is_generic() and not x.init_value.type.is_array():
+#			iv = CValueCast(do_ctype(x.value.type), iv)
+
+	#iv.mark = str(x.init_value)
+	macro = CMacrodefinitionValue(id_str, iv)
 	module_undef_list.append(id_str)
 	return (macro,)
 
@@ -2156,6 +2163,7 @@ def run(module, _outname):
 
 	cc = do_cfile(module)
 	dump(_outname + '.c', cc)
+	#dump(_outname, cc)
 
 
 

@@ -17,79 +17,79 @@ void table_print(table_Table *table) {
 	uint32_t sz[table->nCols];
 	__builtin_bzero(&sz, sizeof(uint32_t [table->nCols]));
 	if (table->header != NULL) {
-		i = 0U;
+		i = 0;
 		while (i < table->nCols) {
 			const uint32_t len = (uint32_t)strlen((*table->header)[i]);
 			if (len > sz[i]) {
 				sz[i] = len;
 			}
-			i = i + 1U;
+			i = i + 1;
 		}
 	}
-	i = 0U;
+	i = 0;
 	while (i < table->nRows) {
-		j = 0U;
+		j = 0;
 		while (j < table->nCols) {
 			const uint32_t len = (uint32_t)strlen((*data)[i][j]);
 			if (len > sz[j]) {
 				sz[j] = len;
 			}
-			j = j + 1U;
+			j = j + 1;
 		}
-		i = i + 1U;
+		i = i + 1;
 	}
-	i = 0U;
+	i = 0;
 	while (i < table->nCols) {
-		sz[i] = sz[i] + 2U;
-		i = i + 1U;
+		sz[i] = sz[i] + 2;
+		i = i + 1;
 	}
 	separator((uint32_t *)&sz, table->nCols);
 	if (table->header != NULL) {
 		printRow((char **)table->header, (uint32_t *)&sz, table->nCols);
 		separator((uint32_t *)&sz, table->nCols);
 	}
-	i = 0U;
+	i = 0;
 	while (i < table->nRows) {
 		printRow((char **)&(*data)[i], (uint32_t *)&sz, table->nCols);
-		if (table->separate && i < table->nRows - 1U) {
+		if (table->separate && i < table->nRows - 1) {
 			separator((uint32_t *)&sz, table->nCols);
 		}
-		i = i + 1U;
+		i = i + 1;
 	}
 	separator((uint32_t *)&sz, table->nCols);
 }
 
 static void printRow(char *raw_row[], uint32_t sz[], uint32_t nCols) {
 	char *(*const row)[nCols] = (char *(*)[nCols])raw_row;
-	uint32_t j = 0U;
+	uint32_t j = 0;
 	while (j < nCols) {
 		printf("|");
 		char *const s = (*row)[j];
 		uint32_t len = (uint32_t)strlen(s);
 		if (s[0] != '\x0') {
-			len = len + 1U;
+			len = len + 1;
 			printf(" %s", s);
 		}
-		uint32_t k = 0U;
+		uint32_t k = 0;
 		while (k < sz[j] - len) {
 			printf(" ");
-			k = k + 1U;
+			k = k + 1;
 		}
-		j = j + 1U;
+		j = j + 1;
 	}
 	printf("|\n");
 }
 
 static void separator(uint32_t sz[], uint32_t n) {
-	uint32_t i = 0U;
+	uint32_t i = 0;
 	while (i < n) {
 		printf("+");
-		uint32_t j = 0U;
+		uint32_t j = 0;
 		while (j < sz[i]) {
 			printf("-");
-			j = j + 1U;
+			j = j + 1;
 		}
-		i = i + 1U;
+		i = i + 1;
 	}
 	printf("+\n");
 }

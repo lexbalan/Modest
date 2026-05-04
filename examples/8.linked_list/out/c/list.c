@@ -18,7 +18,7 @@ struct list_list *list_create(void) {
 
 uint32_t list_size_get(struct list_list *list) {
 	if (list == NULL) {
-		return 0U;
+		return 0;
 	}
 	return list->size;
 }
@@ -43,7 +43,7 @@ struct list_node *list_node_first(struct list_list *list, struct list_node *new_
 	}
 	list->head = new_node;
 	list->tail = new_node;
-	list->size = list->size + 1U;
+	list->size = list->size + 1;
 	return new_node;
 }
 
@@ -88,7 +88,7 @@ void list_node_insert_right(struct list_node *left, struct list_node *new_right)
 }
 
 struct list_node *list_node_get(struct list_list *list, int32_t pos) {
-	if (list == NULL || list->size == 0U) {
+	if (list == NULL || list->size == 0) {
 		return NULL;
 	}
 	printf("node_get(%d)\n", pos);
@@ -99,21 +99,21 @@ struct list_node *list_node_get(struct list_list *list, int32_t pos) {
 		if (n > list->size) {
 			return NULL;
 		}
-		uint32_t i = 0U;
+		uint32_t i = 0;
 		while (i < n) {
 			node = node->next;
-			i = i + 1U;
+			i = i + 1;
 		}
 	} else {
 		node = list->tail;
-		const uint32_t n = (uint32_t)abs(-pos) - 1U;
+		const uint32_t n = (uint32_t)abs(-pos) - 1;
 		if (n > list->size) {
 			return NULL;
 		}
-		uint32_t i = 0U;
+		uint32_t i = 0;
 		while (i < n) {
 			node = node->prev;
-			i = i + 1U;
+			i = i + 1;
 		}
 	}
 	return node;
@@ -133,7 +133,7 @@ struct list_node *list_node_insert(struct list_list *list, int32_t pos, struct l
 		return NULL;
 	}
 	list_node_insert_right(nod, new_node);
-	list->size = list->size + 1U;
+	list->size = list->size + 1;
 	return new_node;
 }
 
@@ -147,7 +147,7 @@ struct list_node *list_node_append(struct list_list *list, struct list_node *new
 		list_node_insert_right(list->tail, new_node);
 	}
 	list->tail = new_node;
-	list->size = list->size + 1U;
+	list->size = list->size + 1;
 	return new_node;
 }
 

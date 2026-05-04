@@ -15,10 +15,10 @@ static void arraysAdd(int32_t _a[10], int32_t _b[10], int32_t __out[10]) {
 	int32_t a[10];
 	__builtin_memcpy(a, _a, sizeof(int32_t [10]));
 	int32_t c[10];
-	uint32_t i = 0U;
-	while (i < 10U) {
+	uint32_t i = 0;
+	while (i < 10) {
 		c[i] = a[i] + b[i];
-		i = i + 1U;
+		i = i + 1;
 	}
 	__builtin_memcpy(__out, &c, sizeof(int32_t [10]));
 }
@@ -40,10 +40,10 @@ int32_t main(void) {
 	if (__builtin_memcmp(&d, &(const int32_t [10]){0, 2, 4, 6, 8, 10, 12, 14, 16, 18}, sizeof(const int32_t [10])) == 0) {
 		printf("test3 passed!\n");
 	}
-	uint32_t i = 0U;
-	while (i < 10U) {
+	uint32_t i = 0;
+	while (i < 10) {
 		printf("d[%i] = %i\n", i, d[i]);
-		i = i + 1U;
+		i = i + 1;
 	}
 	return 0;
 	#undef b

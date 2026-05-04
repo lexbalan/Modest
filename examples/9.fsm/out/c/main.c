@@ -18,7 +18,7 @@ static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 	if (state.stage == (fsm_StageId)0) {
 		return fsm_cmdNextStage(&fsm0);
 	} else if (state.stage == (fsm_StageId)1) {
-		return fsm_cmdNextStageLimited(&fsm0, 2000U);
+		return fsm_cmdNextStageLimited(&fsm0, 2000);
 	} else if (state.stage == (fsm_StageId)2) {
 	} else if (state.stage == (fsm_StageId)3) {
 		return fsm_cmdSwitchState(&fsm0, &state1);
@@ -31,7 +31,7 @@ static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
 	if (state.stage == (fsm_StageId)0) {
 		return fsm_cmdNextStage(&fsm0);
 	} else if (state.stage == (fsm_StageId)1) {
-		return fsm_cmdNextStageLimited(&fsm0, 2000U);
+		return fsm_cmdNextStageLimited(&fsm0, 2000);
 	} else if (state.stage == (fsm_StageId)2) {
 	} else if (state.stage == (fsm_StageId)3) {
 		return fsm_cmdSwitchState(&fsm0, &state2);
@@ -44,7 +44,7 @@ static fsm_ComplexState routine2(fsm_ComplexState state, void *payload) {
 	if (state.stage == (fsm_StageId)0) {
 		return fsm_cmdNextStage(&fsm0);
 	} else if (state.stage == (fsm_StageId)1) {
-		return fsm_cmdNextStageLimited(&fsm0, 2000U);
+		return fsm_cmdNextStageLimited(&fsm0, 2000);
 	} else if (state.stage == (fsm_StageId)2) {
 	} else if (state.stage == (fsm_StageId)3) {
 		return fsm_cmdSwitchState(&fsm0, &state0);
@@ -56,11 +56,11 @@ static uint32_t timecnt;
 int main(void) {
 	fsm_init(&fsm0, "FSM_0", &state0, NULL);
 	while (true) {
-		if (timecnt > 55555U) {
-			timecnt = 0U;
+		if (timecnt > 55555) {
+			timecnt = 0;
 			fsm_tick(&fsm0);
 		} else {
-			timecnt = timecnt + 1U;
+			timecnt = timecnt + 1;
 		}
 		fsm_task(&fsm0);
 	}

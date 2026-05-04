@@ -46,26 +46,26 @@ bool queueWord8_get(struct queue_word8_queue_word8 *q, uint8_t *b) {
 }
 
 uint32_t queueWord8_read(struct queue_word8_queue_word8 *q, uint8_t data[], uint32_t len) {
-	uint32_t n = 0U;
+	uint32_t n = 0;
 	while (n < len) {
 		uint8_t x;
 		if (!queueWord8_get(q, &x)) {
 			break;
 		}
 		data[n] = x;
-		n = n + 1U;
+		n = n + 1;
 	}
 	return n;
 }
 
 uint32_t queueWord8_write(struct queue_word8_queue_word8 *q, uint8_t data[], uint32_t len) {
-	uint32_t n = 0U;
+	uint32_t n = 0;
 	while (n < len) {
 		const uint8_t x = data[n];
 		if (!queueWord8_put(q, x)) {
 			break;
 		}
-		n = n + 1U;
+		n = n + 1;
 	}
 	return n;
 }

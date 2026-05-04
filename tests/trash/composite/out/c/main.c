@@ -109,8 +109,8 @@ struct rgb24 {
 	uint8_t blue;
 };
 static struct rgb24 rgb0[2] = {
-	(struct rgb24){.red = 200, .green = 0, .blue = 0},
-	(struct rgb24){.red = 200, .green = 0, .blue = 0}
+	{.red = 200, .green = 0, .blue = 0},
+	{.red = 200, .green = 0, .blue = 0}
 };
 struct animation_point {
 	struct rgb24 color;
@@ -125,25 +125,25 @@ static struct animation_point ap = (struct animation_point){
 	.time = 3000
 };
 static struct animation_point animation0_points[5] = {
-	(struct animation_point){.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
-	(struct animation_point){.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
-	(struct animation_point){.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
-	(struct animation_point){.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
-	(struct animation_point){.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
+	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	{.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
+	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 static struct animation_point animation1_points[5] = {
-	(struct animation_point){.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
-	(struct animation_point){.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
-	(struct animation_point){.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
-	(struct animation_point){.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
-	(struct animation_point){.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
+	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	{.color = {.red = 254, .green = 254, .blue = 0}, .time = 20},
+	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 static struct animation_point animation2_points[5] = {
-	(struct animation_point){.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
-	(struct animation_point){.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
-	(struct animation_point){.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
-	(struct animation_point){.color = {.red = 255, .green = 254, .blue = 0}, .time = 20},
-	(struct animation_point){.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
+	{.color = {.red = 200, .green = 0, .blue = 0}, .time = 3},
+	{.color = {.red = 0, .green = 200, .blue = 0}, .time = 30},
+	{.color = {.red = 100, .green = 100, .blue = 0}, .time = 300},
+	{.color = {.red = 255, .green = 254, .blue = 0}, .time = 20},
+	{.color = {.red = 0, .green = 0, .blue = 255}, .time = 3000}
 };
 
 static void xy(struct __anonymous_struct_3 x) {
@@ -202,23 +202,23 @@ int32_t main(void) {
 	} else {
 		printf("ne\n");
 	}
-	uint32_t i = 0U;
-	while (i < 3U) {
-		uint32_t j = 0U;
-		while (j < 3U) {
+	uint32_t i = 0;
+	while (i < 3) {
+		uint32_t j = 0;
+		while (j < 3) {
 			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j]);
-			j = j + 1U;
+			j = j + 1;
 		}
-		i = i + 1U;
+		i = i + 1;
 	}
 	const int32_t _add = farr[0](5, 7);
 	printf("farr[0](5, 7) = %d\n", _add);
 	const int32_t _sub = farr[1](5, 7);
 	printf("farr[1](5, 7) = %d\n", _sub);
-	i = 0U;
-	while (i < 10U) {
+	i = 0;
+	while (i < 10) {
 		hiarr[i]("LOL");
-		i = i + 1U;
+		i = i + 1;
 	}
 	awrap[0]->fhi("World");
 	return 0;

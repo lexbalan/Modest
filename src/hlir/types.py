@@ -146,6 +146,7 @@ HLIR_VALUE_OP_VA_ARG = 44
 HLIR_VALUE_OP_VA_COPY = 45
 HLIR_VALUE_OP_VA_END = 46
 HLIR_VALUE_OP_STRCAT = 50
+HLIR_VALUE_OP_ARRCAT = 51
 
 
 
@@ -1107,6 +1108,9 @@ class Type(Entity):
 		assert (a != None) and isinstance(a, Type)
 		assert (b != None) and isinstance(b, Type)
 
+		if a.brand != b.brand:
+			return False
+
 		if debug:
 			print("Type.EQ('%s', '%s')" % (a.to_str(), b.to_str()))
 
@@ -1122,7 +1126,7 @@ class Type(Entity):
 		if a.__class__.__name__ != b.__class__.__name__:
 			return False
 
-		if a.brand !=  b.brand:
+		if a.brand != b.brand:
 			return False
 
 
@@ -1466,7 +1470,7 @@ class TypeSimple(Type):
 
 class TypeInteger(TypeSimple):
 	def __init__(self, width=0, ti=None):
-		integer_id = Id("Integer")
+		integer_id = Id(None)
 		integer_id.c = None
 		integer_id.llvm = None
 
@@ -2025,7 +2029,7 @@ class ValueUndef(Value):
 
 
 class ValueLiteral(Value):
-	def __init__(self, type, asset, ti=None):
+	def __init__(self, type, asset, ti):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
 		self.set_asset(asset)

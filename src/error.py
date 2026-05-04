@@ -107,7 +107,7 @@ def str_common_message(mg, color, s, ti):
 
 	estr = colorize(pre, BOLD) + colorize(mg, color) + s + '\n'
 
-	if mti != None:
+	if mti != None and lti.source != '<builtin>':
 		margin = "%d |" % lti.line
 		line = read_line(lti.source, lti.lpos)
 		line = line.replace('\t', ' ' * TABSTOP)

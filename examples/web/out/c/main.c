@@ -24,7 +24,7 @@ static uint32_t pageCounter;
 static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[RECEIVE_BUFFER_SIZE];
 	const ssize_t bytesReceived = read(clientSocket, &buffer, LENGTHOF(buffer) - 1);
-	if (bytesReceived < 0LL) {
+	if (bytesReceived < 0) {
 		perror("cannot read socket");
 		close(clientSocket);
 		return;
@@ -48,7 +48,7 @@ int32_t main(void) {
 		.sin_addr = {
 			.s_addr = INADDR_ANY
 		},
-		.sin_port = htons((uint16_t)PORT)
+		.sin_port = htons(PORT)
 	};
 	struct sockaddr *const socadr = (struct sockaddr *)&serverAddr;
 	int rc = bind(serverSocket, socadr, (socklen_t)sizeof serverAddr);
@@ -74,7 +74,7 @@ int32_t main(void) {
 			continue;
 		}
 		handleRequest(clientSocket);
-		pageCounter = pageCounter + 1U;
+		pageCounter = pageCounter + 1;
 	}
 	close(serverSocket);
 	return 0;

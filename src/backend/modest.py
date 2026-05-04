@@ -251,7 +251,7 @@ def str_type2(t):
 	elif Type.is_string(t):
 		return "String(length=%d)" % t.length
 	elif isinstance(t, TypeInteger):
-		return "Integer"
+		return "Integer(%d)" % t.width
 	elif isinstance(t, TypeRational):
 		return "Rational"
 	elif isinstance(t, TypeUndefined):
@@ -280,7 +280,8 @@ bin_ops = {
 	HLIR_VALUE_OP_BITWISE_OR: '|',
 	HLIR_VALUE_OP_BITWISE_XOR: '^',
 	HLIR_VALUE_OP_BITWISE_AND: '&',
-	HLIR_VALUE_OP_STRCAT: '+'
+	HLIR_VALUE_OP_STRCAT: '+',
+	HLIR_VALUE_OP_ARRCAT: '+'
 }
 
 
