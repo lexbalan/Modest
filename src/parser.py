@@ -1716,12 +1716,14 @@ class Parser:
 
 
 	def stmt_asm(self):
+		ti_start = self.tokenInfo()
 		v = self.expr_value()
 		return {
 			'isa': 'ast_stmt',
 			'kind': 'asm',
 			'args': v['args'],
 			'anno': [],
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=v['ti'].end),
 		}
 
 

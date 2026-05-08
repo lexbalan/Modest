@@ -247,6 +247,7 @@ define internal void @sumsub64(%Int64 %a, %Int64 %b) {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @.str3 to [0 x i8]*))
+	call void asm sideeffect "nop", "" ()
 	%2 = alloca %Int64, align 8
 	store %Int64 10, %Int64* %2
 	%3 = alloca %Int64, align 8

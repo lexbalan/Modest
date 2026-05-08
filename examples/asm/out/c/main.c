@@ -34,6 +34,7 @@ sub %1, %2, %3\n\
 
 int main(void) {
 	printf("inline asm test\n");
+	__asm__ volatile ("nop" :::);
 	int64_t a = 10;
 	int64_t b = 20;
 	const int64_t sum = sum64(a, b);

@@ -2095,36 +2095,37 @@ def do_stmt_asm(x):
 	# )
 	#
 	xargs = x['args']
+	ti = x['ti']
 
 	asm_text = do_rvalue(xargs[0]['value'])
 
-	xoutputs = xargs[1]['value']
-	xinputs = xargs[2]['value']
-	xclobbers = xargs[3]['value']
-
 	outputs = []
-	for x in xoutputs['items']:
-		items = x['value']['items']
-		spec = do_rvalue(items[0]['value'])
-		val = do_value(items[1]['value'])
-		val.is_initialized = True
-		pair = (spec, val)
-		outputs.append(pair)
-
 	inputs = []
-	for x in xinputs['items']:
-		items = x['value']['items']
-		spec = do_rvalue(items[0]['value'])
-		val = do_rvalue(items[1]['value'])
-		pair = (spec, val)
-		inputs.append(pair)
-
 	clobbers = []
-	for x in xclobbers['items']:
-		spec = do_rvalue(x['value'])
-		clobbers.append(spec)
 
-	return StmtAsm(asm_text, outputs, inputs, clobbers, x['ti'])
+	if len(xargs) > 1:
+		for c in xargs[1]['value']['items']:
+			items = c['value']['items']
+			spec = do_rvalue(items[0]['value'])
+			val = do_value(items[1]['value'])
+			val.is_initialized = True
+			pair = (spec, val)
+			outputs.append(pair)
+
+	if len(xargs) > 2:
+		for c in xargs[2]['value']['items']:
+			items = c['value']['items']
+			spec = do_rvalue(items[0]['value'])
+			val = do_rvalue(items[1]['value'])
+			pair = (spec, val)
+			inputs.append(pair)
+
+	if len(xargs) > 3:
+		for c in xargs[3]['value']['items']:
+			spec = do_rvalue(c['value'])
+			clobbers.append(spec)
+
+	return StmtAsm(asm_text, outputs, inputs, clobbers, ti)
 
 
 
