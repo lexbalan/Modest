@@ -2689,33 +2689,9 @@ def do_import(x):
 
 
 
-def do_directive(x):
-	global cmodule
-	global global_prefix
-
-	y = None
+def do_directive(x) -> StmtDirective | None:
 	if x['kind'] == 'pragma':
-		args = x['args']
-		s0 = args[0]
-		if s0 == 'do_not_include':
-			cmodule.addAttribute('do_not_include')
-		elif s0 == 'c_include':
-			y = StmtDirectiveCInclude(args[1])
-		elif s0 == 'c_no_print':
-			cmodule.addAttribute('c_no_print')
-		elif s0 == 'feature':
-			cmodule_feature_add(args[0])
-		elif s0 == 'unsafe':
-			cmodule_feature_add('unsafe')
-		elif s0 == 'public_module':
-			cmodule_feature_add('public_module')
-		elif s0 == 'insert':
-			print("-INSERT " + args[1])
-			y = StmtDirectiveInsert(args[1], x['ti'])
-		elif s0 == 'prefix':
-			prefix = args[1]
-			#info("set prefix %s" % prefix, x['ti'])
-			global_prefix = prefix
+		return do_directive_pragma(x)
 
 #	elif x['kind'] == 'module':
 #		print("MODULE('%s')" % x['line']['str'])
@@ -2724,8 +2700,40 @@ def do_directive(x):
 #	elif x['kind'] == 'include':
 #		y = do_import(x)
 
-	return y
+	return None
 
+
+def do_directive_pragma(x) -> StmtDirective | None:
+	global cmodule
+	global global_prefix
+
+	id = x['id']['str']
+	args = x['args']
+
+	y = None
+	if id == 'do_not_include':
+		cmodule.addAttribute('do_not_include')
+	elif id == 'c_include':
+		y = StmtDirectiveCInclude(args[0]['str'], x['ti'])
+	elif id == 'c_no_print':
+		cmodule.addAttribute('c_no_print')
+	elif id == 'feature':
+		cmodule_feature_add(args[0])
+	elif id == 'unsafe':
+		cmodule_feature_add('unsafe')
+	elif id == 'public_module':
+		cmodule_feature_add('public_module')
+	elif id == 'insert':
+		print("-INSERT " + args[0]['str'])
+		y = StmtDirectiveInsert(args[0], x['ti'])
+	elif id == 'prefix':
+		if args[0]['kind'] != 'string':
+			error("expected string literal", args[0]['ti'])
+			return None
+		prefix = args[0]['str']
+		global_prefix = prefix
+
+	return y
 
 
 def translate(abspath, is_include=False):

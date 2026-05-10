@@ -2164,16 +2164,20 @@ class Parser:
 
 	def parse_pragma(self):
 		ti = self.textInfo()
-		x = self.gettok()
+		x = self.gettok()  # 'pragma'
+		id = self.parse_identifier() # pragma 'name'
 
 		args = []
 		while not self.match("\n"):
-			a = self.gettok()
+			a = self.expr_value()
 			args.append(a)
+			if not self.match(","):
+				break
 
 		dir = {
 			'isa': 'ast_directive',
 			'kind': x,
+			'id': id,
 			'args': args,
 			'ti': ti
 		}

@@ -11,11 +11,11 @@ static uint32_t global_counter;
 
 static void *thread0(void *param) {
 	printf("Hello from thread 0\n");
-	while (global_counter < 32U) {
+	while (global_counter < 32) {
 		pthread_mutex_lock(&mutex);
-		global_counter = global_counter + 1U;
+		global_counter = global_counter + 1;
 		pthread_mutex_unlock(&mutex);
-		usleep(500000U);
+		usleep(500000);
 	}
 	pthread_exit(NULL);
 	return NULL;
@@ -23,9 +23,9 @@ static void *thread0(void *param) {
 
 static void *thread1(void *param) {
 	printf("Hello from thread 1\n");
-	uint32_t global_counter_value = 0U;
-	uint32_t global_counter_prev = 0U;
-	while (global_counter_value < 32U) {
+	uint32_t global_counter_value = 0;
+	uint32_t global_counter_prev = 0;
+	while (global_counter_value < 32) {
 		pthread_mutex_lock(&mutex);
 		global_counter_value = global_counter;
 		pthread_mutex_unlock(&mutex);
