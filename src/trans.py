@@ -1796,6 +1796,7 @@ def do_rvalue(x):
 	v = do_value(x)
 	if not v.is_initialized:
 		error("attempt to use an uninitialized value", x['ti'])
+		
 	return v
 
 
@@ -2465,7 +2466,6 @@ def def_func(x):
 
 	cdef = fn.definition
 
-
 	if fn.type.is_incompleted():
 		ft = do_type_func(x['type'])
 		fn.change_type(ft)
@@ -2718,13 +2718,13 @@ def do_directive_pragma(x) -> StmtDirective | None:
 	elif id == 'c_no_print':
 		cmodule.addAttribute('c_no_print')
 	elif id == 'feature':
-		cmodule_feature_add(args[0])
+		cmodule.addAttribute(args[0])
 	elif id == 'unsafe':
-		cmodule_feature_add('unsafe')
+		cmodule.addAttribute('unsafe')
 	elif id == 'public_module':
-		cmodule_feature_add('public_module')
+		cmodule.addAttribute('public_module')
 	elif id == 'insert':
-		print("-INSERT " + args[0]['str'])
+		#print("-INSERT " + args[0]['str'])
 		y = StmtDirectiveInsert(args[0], x['ti'])
 	elif id == 'prefix':
 		if args[0]['kind'] != 'string':
@@ -2872,6 +2872,7 @@ def value_update_incompleted_type(module, v, idStr):
 
 
 def get_access_level(x):
+	global cmodule
 	if is_local_context():
 		return HLIR_ACCESS_LEVEL_LOCAL
 
@@ -2923,6 +2924,12 @@ def def_phase1(ast, is_include=False):
 					v.parent = cmodule
 				ctx_value_add(id['str'], v, is_public=is_public)
 				v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
+		if isa == 'ast_directive':
+			if x['kind'] == 'module':
+				print("MODULE('%s')" % x['line']['str'])
+			elif x['kind'] == 'pragma':
+				do_directive_pragma(x)
+
 
 
 
