@@ -6,7 +6,6 @@ include "libc/stdio"
 
 @used
 func memoryBarrier () -> Unit {
-	//__asm("", [[], [], ["memory"]])
 	__asm("", [], [], ["memory"])
 }
 

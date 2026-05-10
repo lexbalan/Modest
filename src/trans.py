@@ -2724,7 +2724,6 @@ def do_directive_pragma(x) -> StmtDirective | None:
 	elif id == 'public_module':
 		cmodule.addAttribute('public_module')
 	elif id == 'insert':
-		#print("-INSERT " + args[0]['str'])
 		y = StmtDirectiveInsert(args[0], x['ti'])
 	elif id == 'prefix':
 		if args[0]['kind'] != 'string':
@@ -2732,6 +2731,8 @@ def do_directive_pragma(x) -> StmtDirective | None:
 			return None
 		prefix = args[0]['str']
 		global_prefix = prefix
+	else:
+		error("unknown pragma '%s'" % id, x['ti'])
 
 	return y
 

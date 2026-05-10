@@ -17,13 +17,12 @@ type StructTimespec = {}
 @alias("c", "struct sched_param")
 type StructSchedParam = {}
 
-
-//typedef struct	pthread			*pthread_t;
 @alias("c", "struct pthread")
 public type PThread = {}
 
 @alias("c", "pthread_t")
 public type PThreadT = Ptr
+
 @alias("c", "pthread_mutex_t")
 public type PThreadMutexT = Ptr
 
@@ -95,12 +94,12 @@ public func cond_init (c: *PThreadCondT, ca: *PThreadCondAttrT) -> Int
 public func cond_signal (c: *PThreadCondT) -> Int
 public func cond_timedwait (c: *PThreadCondT, m: *PThreadMutexT, ts: *StructTimespec) -> Int
 public func cond_wait (c: *PThreadCondT, m: *PThreadMutexT) -> Int
-public func create (p: *PThreadT, a: *PThreadAttrT, t: *(param: Ptr) -> Ptr, p: Ptr) -> Int
+public func create (p: *PThreadT, a: *PThreadAttrT, t: *(param: Ptr) -> Ptr, xp: Ptr) -> Int
 public func detach (t: PThreadT) -> Int
 public func equal (t0: PThreadT, t1: PThreadT) -> Int
 public func exit (p: Ptr) -> Unit
 public func getspecific (k: PThreadKeyT) -> Ptr
-public func join (p: PThreadT, p: *Ptr) -> Int
+public func join (p: PThreadT, xp: *Ptr) -> Int
 public func key_create (k: *PThreadKeyT, f: *(p: Ptr) -> Unit) -> Int
 public func key_delete (k: PThreadKeyT) -> Int
 public func kill (p: PThreadT, i: Int) -> Int
@@ -140,11 +139,11 @@ public func yield () -> Unit
 public func mutexattr_getprioceiling (ma: *PThreadMutexAttrT, i: *Int) -> Int
 public func mutexattr_setprioceiling (ma: *PThreadMutexAttrT, i: Int) -> Int
 public func mutex_getprioceiling (m: *PThreadMutexT, i: *Int) -> Int
-public func mutex_setprioceiling (m: *PThreadMutexT, i: Int, i: *Int) -> Int
+public func mutex_setprioceiling (m: *PThreadMutexT, i: Int, pi: *Int) -> Int
 public func mutexattr_getprotocol (ma: *PThreadMutexAttrT, i: *Int) -> Int
 public func mutexattr_setprotocol (ma: *PThreadMutexAttrT, i: Int) -> Int
-public func condattr_getclock (ca: *PThreadCondAttrT, c: *ClockIdT) -> Int
-public func condattr_setclock (ca: *PThreadCondAttrT, cid: ClockIdT) -> Int
+//public func condattr_getclock (ca: *PThreadCondAttrT, c: *ClockIdT) -> Int
+//public func condattr_setclock (ca: *PThreadCondAttrT, cid: ClockIdT) -> Int
 public func attr_getinheritsched (a: *PThreadAttrT, i: *Int) -> Int
 public func attr_getschedparam (a: *PThreadAttrT, s: *StructSchedParam) -> Int
 public func attr_getschedpolicy (a: *PThreadAttrT, i: *Int) -> Int
@@ -157,7 +156,7 @@ public func getschedparam (p: PThreadT, i: *Int, s: *StructSchedParam) -> Int
 public func setschedparam (p: PThreadT, i: Int, s: *StructSchedParam) -> Int
 public func getconcurrency () -> Int
 public func setconcurrency (c: Int) -> Int
-public func barrier_init (b: *PThreadBarrierT, ba: *PThreadBarrierAttrT, n: Nat) -> Int
+//public func barrier_init (b: *PThreadBarrierT, ba: *PThreadBarrierAttrT, n: Nat) -> Int
 public func barrier_destroy (b: *PThreadBarrierT) -> Int
 public func barrier_wait (b: *PThreadBarrierT) -> Int
 public func barrierattr_init (ba: *PThreadBarrierAttrT) -> Int
@@ -169,8 +168,5 @@ public func spin_destroy (s: *PThreadSpinlockT) -> Int
 public func spin_trylock (s: *PThreadSpinlockT) -> Int
 public func spin_lock (s: *PThreadSpinlockT) -> Int
 public func spin_unlock (s: *PThreadSpinlockT) -> Int
-public func getcpuclockid (p: PThreadT, c: *ClockIdT) -> Int
-
-pragma remove_prefix "pthread_"
-
+//public func getcpuclockid (p: PThreadT, c: *ClockIdT) -> Int
 
