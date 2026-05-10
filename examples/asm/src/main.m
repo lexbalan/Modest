@@ -6,7 +6,6 @@ include "libc/stdio"
 
 @used
 func memoryBarrier () -> Unit {
-	//__asm("", [[], [], ["memory"]])
 	__asm("", [], [], ["memory"])
 }
 
@@ -43,6 +42,8 @@ func sumsub64 (a: Int64, b: Int64) -> Unit {
 
 func main () -> Int {
 	printf("inline asm test\n")
+
+	__asm("nop")
 
 	var a: Int64 = 10
 	var b: Int64 = 20

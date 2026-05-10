@@ -1796,6 +1796,7 @@ def do_rvalue(x):
 	v = do_value(x)
 	if not v.is_initialized:
 		error("attempt to use an uninitialized value", x['ti'])
+		
 	return v
 
 
@@ -2095,36 +2096,37 @@ def do_stmt_asm(x):
 	# )
 	#
 	xargs = x['args']
+	ti = x['ti']
 
 	asm_text = do_rvalue(xargs[0]['value'])
 
-	xoutputs = xargs[1]['value']
-	xinputs = xargs[2]['value']
-	xclobbers = xargs[3]['value']
-
 	outputs = []
-	for x in xoutputs['items']:
-		items = x['value']['items']
-		spec = do_rvalue(items[0]['value'])
-		val = do_value(items[1]['value'])
-		val.is_initialized = True
-		pair = (spec, val)
-		outputs.append(pair)
-
 	inputs = []
-	for x in xinputs['items']:
-		items = x['value']['items']
-		spec = do_rvalue(items[0]['value'])
-		val = do_rvalue(items[1]['value'])
-		pair = (spec, val)
-		inputs.append(pair)
-
 	clobbers = []
-	for x in xclobbers['items']:
-		spec = do_rvalue(x['value'])
-		clobbers.append(spec)
 
-	return StmtAsm(asm_text, outputs, inputs, clobbers, x['ti'])
+	if len(xargs) > 1:
+		for c in xargs[1]['value']['items']:
+			items = c['value']['items']
+			spec = do_rvalue(items[0]['value'])
+			val = do_value(items[1]['value'])
+			val.is_initialized = True
+			pair = (spec, val)
+			outputs.append(pair)
+
+	if len(xargs) > 2:
+		for c in xargs[2]['value']['items']:
+			items = c['value']['items']
+			spec = do_rvalue(items[0]['value'])
+			val = do_rvalue(items[1]['value'])
+			pair = (spec, val)
+			inputs.append(pair)
+
+	if len(xargs) > 3:
+		for c in xargs[3]['value']['items']:
+			spec = do_rvalue(c['value'])
+			clobbers.append(spec)
+
+	return StmtAsm(asm_text, outputs, inputs, clobbers, ti)
 
 
 
@@ -2464,7 +2466,6 @@ def def_func(x):
 
 	cdef = fn.definition
 
-
 	if fn.type.is_incompleted():
 		ft = do_type_func(x['type'])
 		fn.change_type(ft)
@@ -2688,33 +2689,9 @@ def do_import(x):
 
 
 
-def do_directive(x):
-	global cmodule
-	global global_prefix
-
-	y = None
+def do_directive(x) -> StmtDirective | None:
 	if x['kind'] == 'pragma':
-		args = x['args']
-		s0 = args[0]
-		if s0 == 'do_not_include':
-			cmodule.addAttribute('do_not_include')
-		elif s0 == 'c_include':
-			y = StmtDirectiveCInclude(args[1])
-		elif s0 == 'c_no_print':
-			cmodule.addAttribute('c_no_print')
-		elif s0 == 'feature':
-			cmodule_feature_add(args[0])
-		elif s0 == 'unsafe':
-			cmodule_feature_add('unsafe')
-		elif s0 == 'public_module':
-			cmodule_feature_add('public_module')
-		elif s0 == 'insert':
-			print("-INSERT " + args[1])
-			y = StmtDirectiveInsert(args[1], x['ti'])
-		elif s0 == 'prefix':
-			prefix = args[1]
-			#info("set prefix %s" % prefix, x['ti'])
-			global_prefix = prefix
+		return do_directive_pragma(x)
 
 #	elif x['kind'] == 'module':
 #		print("MODULE('%s')" % x['line']['str'])
@@ -2723,8 +2700,41 @@ def do_directive(x):
 #	elif x['kind'] == 'include':
 #		y = do_import(x)
 
-	return y
+	return None
 
+
+def do_directive_pragma(x) -> StmtDirective | None:
+	global cmodule
+	global global_prefix
+
+	id = x['id']['str']
+	args = x['args']
+
+	y = None
+	if id == 'do_not_include':
+		cmodule.addAttribute('do_not_include')
+	elif id == 'c_include':
+		y = StmtDirectiveCInclude(args[0]['str'], x['ti'])
+	elif id == 'c_no_print':
+		cmodule.addAttribute('c_no_print')
+	elif id == 'feature':
+		cmodule.addAttribute(args[0])
+	elif id == 'unsafe':
+		cmodule.addAttribute('unsafe')
+	elif id == 'public_module':
+		cmodule.addAttribute('public_module')
+	elif id == 'insert':
+		y = StmtDirectiveInsert(args[0], x['ti'])
+	elif id == 'prefix':
+		if args[0]['kind'] != 'string':
+			error("expected string literal", args[0]['ti'])
+			return None
+		prefix = args[0]['str']
+		global_prefix = prefix
+	else:
+		error("unknown pragma '%s'" % id, x['ti'])
+
+	return y
 
 
 def translate(abspath, is_include=False):
@@ -2863,6 +2873,7 @@ def value_update_incompleted_type(module, v, idStr):
 
 
 def get_access_level(x):
+	global cmodule
 	if is_local_context():
 		return HLIR_ACCESS_LEVEL_LOCAL
 
@@ -2914,6 +2925,12 @@ def def_phase1(ast, is_include=False):
 					v.parent = cmodule
 				ctx_value_add(id['str'], v, is_public=is_public)
 				v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
+		if isa == 'ast_directive':
+			if x['kind'] == 'module':
+				print("MODULE('%s')" % x['line']['str'])
+			elif x['kind'] == 'pragma':
+				do_directive_pragma(x)
+
 
 
 

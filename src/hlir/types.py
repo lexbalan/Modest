@@ -1979,15 +1979,8 @@ class Value(Entity):
 	@staticmethod
 	def print(x, msg="value_print:"):
 		assert(isinstance(x, Value))
-
-		# can be 'ti_def', but no 'ti'!
-		#if 'ti' in x:
 		from error import info
 		info(msg, x.ti)
-		#if 'def_ti' in x:
-		#	info(msg, x['def_ti'])
-
-		#print("isa: " + str(x['isa']))
 		print("kind: " + str(x.__class__.__name__))
 		print("type: ", end="");
 		Type.print(x.type); print()
@@ -2001,13 +1994,6 @@ class Value(Entity):
 				print("items_len = %d" % len(x.asset))
 				print("items[0] = ")
 				print(x.asset[0])
-
-		"""print("additional fields:")
-
-		for prop in x:
-			if not prop in ['isa', 'kind', 'type', 'att', 'ti', 'immediate', 'immutable']:
-				print(" - %s" % prop)"""
-
 		print()
 
 

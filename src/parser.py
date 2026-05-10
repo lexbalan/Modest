@@ -1716,12 +1716,14 @@ class Parser:
 
 
 	def stmt_asm(self):
+		ti_start = self.tokenInfo()
 		v = self.expr_value()
 		return {
 			'isa': 'ast_stmt',
 			'kind': 'asm',
 			'args': v['args'],
 			'anno': [],
+			'ti': TextInfo(start=ti_start, mid=ti_start, end=v['ti'].end),
 		}
 
 
@@ -2162,16 +2164,20 @@ class Parser:
 
 	def parse_pragma(self):
 		ti = self.textInfo()
-		x = self.gettok()
+		x = self.gettok()  # 'pragma'
+		id = self.parse_identifier() # pragma 'name'
 
 		args = []
 		while not self.match("\n"):
-			a = self.gettok()
+			a = self.expr_value()
 			args.append(a)
+			if not self.match(","):
+				break
 
 		dir = {
 			'isa': 'ast_directive',
 			'kind': x,
+			'id': id,
 			'args': args,
 			'ti': ti
 		}

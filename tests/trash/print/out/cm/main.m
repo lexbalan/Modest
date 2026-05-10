@@ -4,6 +4,7 @@ include "ctypes64"
 
 import "lightfood/console" as console
 
+
 @nonstatic
 func main () -> Int {
 	print("test console print\n")

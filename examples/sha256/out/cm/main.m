@@ -5,6 +5,7 @@ include "stdio"
 
 import "misc/sha256" as sha256
 
+
 const inputDataLength = 32
 
 
