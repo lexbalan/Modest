@@ -1629,9 +1629,6 @@ class TypeRecord(Type):
 		return get_item_by_id(t.fields, id)
 
 
-
-
-
 	# Получить список типов от которых данный тип зависит напрямую
 	def get_dir_deps(self, deps):
 		for f in self.fields:
@@ -2276,7 +2273,7 @@ class ValueAccessModule(Value):
 	def __init__(self, type, imp, id, value, ti=None):
 		super().__init__(type=type, ti=ti)
 		assert(isinstance(type, Type))
-		assert(isinstance(imp, list))
+		assert(isinstance(imp, StmtImport))
 		assert(isinstance(id, Id))
 		assert(isinstance(value, Value))
 		self.imp = imp

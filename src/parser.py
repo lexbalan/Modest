@@ -1207,7 +1207,7 @@ class Parser:
 
 
 	def expr_value_11(self):
-		# CALL
+		# CALL, ACCESS, INDEX, SLICE
 		v = self.expr_value_term()
 		while True:
 			mid_ti = self.textInfo()
@@ -1227,20 +1227,15 @@ class Parser:
 
 			elif self.match("."):
 				field_id = self.parse_identifier()
-				right = [field_id]
-				while self.match("."):
-					field_id = self.parse_identifier()
-					right.append(field_id)
-
 				v = {
 					'isa': 'ast_value',
 					'kind': HLIR_VALUE_OP_ACCESS,
 					'left': v,
-					'path': right,
+					'right': field_id,
 					'anno': [],
 					'ti': TextInfo(start=v['ti'], mid=mid_ti, end=field_id['ti'])
 				}
-				#print(v)
+
 			elif self.match("["):
 				#
 				# ARRAY INDEXING OR SLICING

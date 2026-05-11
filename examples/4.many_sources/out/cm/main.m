@@ -9,7 +9,7 @@ import "lib" as lib
 @nonstatic
 func main () -> Int {
 	printf("hello from main\n")
-	foo()
+	lib.foo()
 	return 0
 }
 

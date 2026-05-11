@@ -36,7 +36,7 @@ var tests: [3]Test = [
 
 
 func runTest (test: *Test) -> Bool {
-	let crc: Word32 = run(*[]Byte &test.data, test.len)
+	let crc: Word32 = crc32.run(*[]Byte &test.data, test.len)
 	return crc == test.hash
 }
 
@@ -44,7 +44,7 @@ func runTest (test: *Test) -> Bool {
 @nonstatic
 func main () -> Int {
 	printf("test CRC32\n")
-	init()
+	crc32.init()
 
 	var success: Bool = true
 
