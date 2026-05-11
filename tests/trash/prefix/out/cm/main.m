@@ -7,8 +7,8 @@ import "lib" as lib
 
 @nonstatic
 func main () -> Int {
-	foo(bar)
-	Unit spam
+	lib.foo(lib.bar)
+	Unit lib.spam
 	return 0
 }
 

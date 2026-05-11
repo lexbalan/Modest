@@ -399,11 +399,7 @@ def str_value_access(x, ctx):
 
 
 def str_value_access_module(x, ctx):
-	sstr = ""
-	for p in x.imp:
-		sstr += p.str + '.'
-	return "%s%s" % (sstr, x.id.str)
-
+	return "%s.%s" % (x.imp_id.str, x.id.str)
 
 
 def str_value_cons(x, ctx):

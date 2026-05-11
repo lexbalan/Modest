@@ -1412,102 +1412,27 @@ def do_value_slice(x):
 
 
 
-def is_import_name(id_str):
-	return id_str in cmodule.imports_private or id_str in cmodule.imports_public
-
-
-def submodule_access(x):
-	global cmodule
-
-	mname = x['left']['str']
-	iname = x['right']['str']
-	ti = x['ti']
-
-	imp = cmodule.imports_public[mname]
-	submodule = imp.module
-
-	v = submodule.value_get_public(iname)
-	if v == None:
-		v = submodule.value_get_private(iname)
-		if v == None:
-			error("access to undeclared value", x['ti'])
-		else:
-			error("attempt to access to private value", ti)
-		return ValueBad(x['ti'])
-
-	if v.type.is_incompleted():
-		v = value_update_incompleted_type(submodule, v, iname)
-
-	nv = ValueAccessModule(v.type, x['left'], x['right'], v, ti=x['ti'])
-	nv.stage = v.stage
-	return nv
-
+def is_import_name(module, id_str):
+	return id_str in module.imports_private or id_str in module.imports_public
 
 
 def do_value_access(x):
 	global cmodule
 	#info("do_value_access", x['ti'])
-
-
 	left = x['left']
-	path = x['path']
+	if left['kind'] == 'id' and ctx_value_get(left['str']) == None and is_import_name(cmodule, left['str']):
+		# it is import
+		imp = cmodule.get_import(left['str'], with_private=True)
+		xv = imp.module.value_get_public(x['right']['str'])
+		if xv == None:
+			error("unk value `%s`" % (x['right']['str']), x['ti'])
+			return ValueBad(x['right']['ti'])
+		nv = ValueAccessModule(xv.type, do_id(x['left']), do_id(x['right']), xv, ti=x['ti'])
+		return nv
 
-	module = None
-
-	if left['kind'] == 'id':
-		left_val = ctx_value_get(left['str'])
-
-		# если в контексте нет такого значения, то возможно это импорт и нужно пройти по пути импорта
-		if left_val == None:
-			i = 0
-			# Сперва походим часть пути что импорты
-			# и формируем module + left + path
-			if is_import_name(left['str']):
-				#info("left is imp", left['ti'])
-				module = cmodule
-				imp = module.get_import(left['str'], with_private=True)
-
-				while imp != None:
-					module = imp.module
-					#print("FOUND MODULE", str(module))
-					impstr = path[i]
-					imp = module.get_import(impstr['str'], with_private=True) #False!
-					if imp == None:
-						break
-					i += 1
-				left = path[i]#['str']
-
-			path = path[i+1:]
-
-			if module == None:
-				error("unknown entity '%s'" % left['str'], left['ti'])
-				return ValueBad(x['ti'])
-
-			left_val = module.value_get_public(left['str'])
-	else:
-		left_val = do_value(left)
-
-	# идем дальше
-	# left_val = None
-	# if module != None:
-	# 	left_val = module.value_get_public(left['str'])
-	# else:
-	# 	left_val = ctx_value_get(left['str'])
-
-	if left_val == None:
-		error("left not found", left['ti'])
-		return ValueBad(x['ti'])
-
-	if len(path) == 0:
-		#print("FOUND: " + left['str'])
-		return left_val
-
-
-	for field_id in path:
-		#print("P: " + str(field_id))
-		left_val = acc(left_val, field_id, ti=None)  # ti ????
-
-	return left_val
+	left = do_value(x['left'])
+	nv = acc(left, x['right'], ti=x['ti'])
+	return nv
 
 
 
@@ -1853,6 +1778,10 @@ def do_value(x):
 	elif k == HLIR_VALUE_OP_DEFINED_VALUE: v = do_value_defined_value(x)
 	elif k == 'undefined': v = do_value_undefined(x)
 	elif k == 'bad': v = do_value_bad(x)
+
+	if v == None:
+		error("unknown value kind '%s'" % k, x['ti'])
+		return ValueBad(x['ti'])
 
 	assert(v != None)
 	v.ti = x['ti']
