@@ -392,14 +392,11 @@ def str_value_slice(x, ctx):
 
 
 def str_value_access(x, ctx):
-	s = str_value(x.left, parent_expr=x)
-	s += "."
-	s += get_id_str(x.field)
-	return s
+	return "%s.%s" % (str_value(x.left, parent_expr=x), get_id_str(x.field))
 
 
 def str_value_access_module(x, ctx):
-	return "%s.%s" % (x.imp_id.str, x.id.str)
+	return "%s.%s" % (x.imp.name, x.id.str)
 
 
 def str_value_cons(x, ctx):

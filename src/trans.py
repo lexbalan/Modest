@@ -1421,13 +1421,13 @@ def do_value_access(x):
 	#info("do_value_access", x['ti'])
 	left = x['left']
 	if left['kind'] == 'id' and ctx_value_get(left['str']) == None and is_import_name(cmodule, left['str']):
-		# it is import
+		# left is id of import
 		imp = cmodule.get_import(left['str'], with_private=True)
 		xv = imp.module.value_get_public(x['right']['str'])
 		if xv == None:
 			error("unk value `%s`" % (x['right']['str']), x['ti'])
 			return ValueBad(x['right']['ti'])
-		nv = ValueAccessModule(xv.type, do_id(x['left']), do_id(x['right']), xv, ti=x['ti'])
+		nv = ValueAccessModule(xv.type, imp, do_id(x['right']), xv, ti=x['ti'])
 		return nv
 
 	left = do_value(x['left'])
@@ -1437,8 +1437,6 @@ def do_value_access(x):
 
 
 def acc(left, field_id, ti):
-	#print("LEF = " + str(left))
-	#print("ACC to " + field_id['str'])
 
 	# доступ через переменную-указатель
 	via_pointer = left.type.is_pointer()

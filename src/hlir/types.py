@@ -2270,13 +2270,13 @@ class ValueAccessRecord(Value):
 
 
 class ValueAccessModule(Value):
-	def __init__(self, type, imp_id, id, value, ti=None):
+	def __init__(self, type, imp, id, value, ti=None):
 		super().__init__(type=type, ti=ti)
 		assert(isinstance(type, Type))
-		assert(isinstance(imp_id, Id))
+		assert(isinstance(imp, StmtImport))
 		assert(isinstance(id, Id))
 		assert(isinstance(value, Value))
-		self.imp_id = imp_id
+		self.imp = imp
 		self.id = id
 		self.value = value
 		self.stage = value.stage
