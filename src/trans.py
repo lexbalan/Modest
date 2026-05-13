@@ -1425,7 +1425,11 @@ def do_value_access(x):
 		imp = cmodule.get_import(left['str'], with_private=True)
 		xv = imp.module.value_get_public(x['right']['str'])
 		if xv == None:
-			error("unk value `%s`" % (x['right']['str']), x['ti'])
+			xv = imp.module.value_get_private(x['right']['str'])
+			if xv == None:
+				error("unk value `%s.%s`" % (left['str'], x['right']['str']), x['ti'])
+			else:
+				error("access to private value `%s.%s`" % (left['str'], x['right']['str']), x['ti'])
 			return ValueBad(x['right']['ti'])
 		nv = ValueAccessModule(xv.type, imp, do_id(x['right']), xv, ti=x['ti'])
 		return nv
