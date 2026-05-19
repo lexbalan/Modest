@@ -2679,13 +2679,11 @@ def process_module(idStr, sourcename, ast, is_include):
 	global csymtab, cmodule, global_prefix
 
 	prev_symtab = csymtab
-
 	prev_module = cmodule
 	prev_global_prefix = global_prefix
+
 	global_prefix = idStr + '_'
-
 	csymtab = Symtab(parent=root_symtab)
-
 	cmodule = Module(idStr, ast, csymtab, sourcename)
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=builtin_ti, include=False)
@@ -2730,8 +2728,8 @@ def process_module(idStr, sourcename, ast, is_include):
 
 	cmodule = prev_module
 	csymtab = prev_symtab
-
 	global_prefix = prev_global_prefix
+
 	return m
 
 
