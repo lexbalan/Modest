@@ -1974,7 +1974,8 @@ def do_header(module):
 				s = x.cinclude
 			else:
 				s = os.path.basename(x.impline + '.h')
-			xdefs.extend(include(s, local=True))
+			if s != "":
+				xdefs.extend(include(s, local=True))
 
 	xdefs.extend(include("stddef.h", local=False))
 	xdefs.extend(include("stdint.h", local=False))
@@ -2066,7 +2067,8 @@ def do_cfile(module):
 				s = x.cinclude
 			else:
 				s = os.path.basename(x.impline + '.h')
-			xdefs.extend(include(s, local=True))
+			if s != "":
+				xdefs.extend(include(s, local=True))
 
 	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude):
