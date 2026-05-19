@@ -8,10 +8,10 @@ class Symtab:
 		self.types = {}
 		self.values = {}
 
-	def type_add(self, id, t):
+	def type_add(self, id, t, is_public=False):
 		self.types[id] = t
 
-	def value_add(self, id, v):
+	def value_add(self, id, v, is_public=False):
 		self.values[id] = v
 
 	# Вообще этот метод всегда возвращает поверхностную копию типа
@@ -32,10 +32,6 @@ class Symtab:
 		elif not shallow and self.parent != None:
 			return self.parent.value_get(id)
 		return None
-
-	# creates new symtab where #parent links to this symtab
-	def branch(self):
-		return Symtab(parent=self)
 
 	# extend this symtab with types & values from another symtab
 	def merge(self, symtab):

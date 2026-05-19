@@ -71,7 +71,7 @@ modules = {}
 cmodule = None  # Current module
 cfunc = None	# current function
 
-symtab = None  # current symtab (symtab)
+csymtab = None  # current symtab (symtab)
 cdef = None
 
 
@@ -98,42 +98,18 @@ def cmodule_strings_add(v):
 
 
 
-def symtab_push():
-	global symtab
-	symtab = symtab.branch()
-
-
-def symtab_pop():
-	global symtab
-	symtab = symtab.parent_get()
-
-
-def ctx_type_add(id_str, t, is_public):
-	global symtab
-	symtab.type_add(id_str, t)
-
 
 def ctx_type_get(id_str):
-	global symtab
+	global csymtab
 	if id_str in ['Char16', 'Char32', 'Str16', 'Str32']:
 		# включаем в модуле поддержку unicode
 		cmodule_use('use_unicode')
-	return symtab.type_get(id_str)
-
-
-def ctx_value_add(id_str, v, is_public):
-	global symtab
-	symtab.value_add(id_str, v)
-
-
-def ctx_value_get(id_str, shallow=False):
-	global symtab
-	return symtab.value_get(id_str, shallow=shallow)
+	return csymtab.type_get(id_str)
 
 
 
 def id_already_used(id_str, shallow=False):
-	return ctx_value_get(id_str, shallow=shallow) != None
+	return csymtab.value_get(id_str, shallow=shallow) != None
 
 
 
@@ -1063,7 +1039,7 @@ def do_value_defined_type(x):
 
 
 def do_value_defined_value(x):
-	v = ctx_value_get(x['value']['id'].str)
+	v = csymtab.value_get(x['value']['id'].str)
 	return v != None
 
 
@@ -1242,7 +1218,10 @@ def do_value_call(x):
 
 def ct_call(fn, args, ti):
 	warning("compile time call not implemented, will returned zero value!", ti)
-	symtab_push()
+	global csymtab
+
+	csymtab = Symtab(parent=csymtab)
+
 	#create_params(fn)
 	# 1. Формируем параметры в контексте (!)
 	params = fn.type.params
@@ -1253,7 +1232,7 @@ def ct_call(fn, args, ti):
 		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
 		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
 		param_value.set_asset(args[i].value.asset)  # (!)
-		ctx_value_add(param.id.str, param_value, is_public=False)
+		csymtab.value_add(param.id.str, param_value, is_public=False)
 		i += 1
 
 	# 2. Теперь обрабатываем блок функции
@@ -1262,7 +1241,7 @@ def ct_call(fn, args, ti):
 		if stmt.is_stmt_return():
 			print(stmt.value)
 
-	symtab_pop()
+	csymtab = csymtab.parent_get()
 
 
 def do_value_index(x):
@@ -1401,7 +1380,7 @@ def do_value_access(x):
 	global cmodule
 	#info("do_value_access", x['ti'])
 	left = x['left']
-	if left['kind'] == 'id' and ctx_value_get(left['str']) == None and is_import_name(cmodule, left['str']):
+	if left['kind'] == 'id' and csymtab.value_get(left['str']) == None and is_import_name(cmodule, left['str']):
 		# left is id of import
 		imp = cmodule.get_import(left['str'], with_private=True)
 		xv = imp.module.value_get_public(x['right']['str'])
@@ -1478,15 +1457,17 @@ def do_value_cons(x):
 
 
 def do_value_id(x):
+	global csymtab
+
 	id_str = x['str']
-	v = ctx_value_get(id_str)
+	v = csymtab.value_get(id_str)
 
 	if v == None:
 		error("undefined value '%s'" % id_str, x['ti'])
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально (wrong!)
 		v = ValueBad(x['ti'])
-		ctx_value_add(id_str, v, is_public=False)
+		csymtab.value_add(id_str, v, is_public=False)
 		return v
 
 	# Если в теле функции происходит доступ к глобальной переменной
@@ -1883,10 +1864,12 @@ def do_stmt_return(x):
 
 
 def do_stmt_type(x):
+	global csymtab
 	nt = Type(x['ti'])
 	df = def_type_common(x, nt)
 	df.id.llvm = cfunc.id.str + '.' + df.id.str
-	ctx_type_add(df.id.str, nt, is_public=False)
+	csymtab.type_add(df.id.str, nt, is_public=False)
+
 	cfunc.typedefs.append(df)
 	return df
 
@@ -2081,7 +2064,9 @@ def do_stmt(x):
 
 
 def do_stmt_block(x, parent=None):
-	symtab_push()
+	global csymtab
+
+	csymtab = Symtab(parent=csymtab)
 
 	block = StmtBlock([], ti=x['ti'])
 	block.parent = parent
@@ -2093,7 +2078,7 @@ def do_stmt_block(x, parent=None):
 			s.parent = block
 			block.stmts.append(s)
 
-	symtab_pop()
+	csymtab = csymtab.parent_get()
 
 	return block
 
@@ -2195,6 +2180,8 @@ def def_type_global(x):
 
 
 def process_field_common(x, allow_cons_default=False):
+	global csymtab
+
 	var_type = None
 	if x['type'] != None:
 		var_type = do_type(x['type'])
@@ -2210,7 +2197,7 @@ def process_field_common(x, allow_cons_default=False):
 		if init_value.is_value_undefined():
 			# ERROR: type & value are undefined!
 			nv = ValueBad(x['ti'])
-			ctx_value_add(x['id']['str'], nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
+			csymtab.value_add(x['id']['str'], nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 			return nv.type, nv
 
 		if allow_cons_default:
@@ -2237,6 +2224,7 @@ def process_field_common(x, allow_cons_default=False):
 def def_const_common(x):
 	global cmodule
 	global cdef
+	global csymtab
 
 	id = do_id(x['id'])
 	definition = StmtDefConst(id, const_value=None, init_value=None, ti=x['ti'])
@@ -2259,7 +2247,7 @@ def def_const_common(x):
 	const_value = ValueConst(const_type, id, init_value=init_value, ti=id.ti)
 	const_value.is_initialized = True#not init_value.is_value_undefined()
 	const_value.stage = init_value.stage
-	ctx_value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
+	csymtab.value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 
 	if init_value.isValueImmediate():
 		Value.cp_immediate(const_value, init_value)
@@ -2275,7 +2263,7 @@ def def_const_common(x):
 
 
 def def_var_common(x):
-	global cdef
+	global csymtab, cdef
 
 	id = do_id(x['id'])
 
@@ -2298,7 +2286,7 @@ def def_var_common(x):
 	var_value = ValueVar(var_type, id, init_value=init_value, ti=id.ti)
 	var_value.is_initialized = not init_value.is_value_undefined()
 	var_value.stage = HLIR_VALUE_STAGE_RUNTIME
-	ctx_value_add(id.str, var_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
+	csymtab.value_add(id.str, var_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 
 	definition.value = var_value
 	definition.init_value = init_value
@@ -2355,6 +2343,8 @@ def def_var_global(x):
 
 
 def create_params(fn):
+	global csymtab
+
 	params = fn.type.params
 
 	i = 0
@@ -2363,7 +2353,7 @@ def create_params(fn):
 		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
 		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
 		#param_value.stage = HLIR_VALUE_STAGE_RUNTIME
-		ctx_value_add(param.id.str, param_value, is_public=False)
+		csymtab.value_add(param.id.str, param_value, is_public=False)
 		i += 1
 
 
@@ -2371,10 +2361,11 @@ def def_func(x):
 	global cdef
 	global cfunc
 	global cmodule
+	global csymtab
 
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
-	fn = ctx_value_get(x['id']['str'])
+	fn = csymtab.value_get(x['id']['str'])
 
 	cdef = fn.definition
 
@@ -2400,7 +2391,7 @@ def def_func(x):
 	# not above (!)
 	fn.is_pure = fn.type.is_pure_func()
 
-	symtab_push()  # create params symtab
+	csymtab = Symtab(parent=csymtab)  # create params csymtab
 
 	prev_cfunc = cfunc
 	cfunc = fn
@@ -2432,7 +2423,8 @@ def def_func(x):
 
 	fn.definition.stmt = stmt
 
-	symtab_pop()  # remove params symtab
+	csymtab = csymtab.parent_get()  # remove params symtab
+
 	cfunc = prev_cfunc
 	cdef = None
 
@@ -2684,17 +2676,17 @@ def translate(abspath, is_include=False):
 
 
 def process_module(idStr, sourcename, ast, is_include):
-	global symtab, cmodule, global_prefix
+	global csymtab, cmodule, global_prefix
 
-	prev_symtab = symtab
+	prev_symtab = csymtab
 
 	prev_module = cmodule
 	prev_global_prefix = global_prefix
 	global_prefix = idStr + '_'
 
-	symtab = root_symtab.branch()
+	csymtab = Symtab(parent=root_symtab)
 
-	cmodule = Module(idStr, ast, symtab, sourcename)
+	cmodule = Module(idStr, ast, csymtab, sourcename)
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=builtin_ti, include=False)
 	cmodule.imports_private["builtin"] = import_builtin
@@ -2740,7 +2732,7 @@ def process_module(idStr, sourcename, ast, is_include):
 	m = cmodule
 
 	cmodule = prev_module
-	symtab = prev_symtab
+	csymtab = prev_symtab
 
 	global_prefix = prev_global_prefix
 	return m
@@ -2757,7 +2749,7 @@ def type_update_incompleted(module, t, idStr):
 		if x['id']['str'] != idStr:
 			continue
 
-		#v = ctx_value_get(idStr)
+		#v = csymtab.value_get(idStr)
 		print("- UPDATED!")
 		tx = do_type(x['type'])
 		Type.update(t, tx)
@@ -2777,7 +2769,7 @@ def value_update_incompleted_type(module, v, idStr):
 		if x['id']['str'] != idStr:
 			continue
 
-		#v = ctx_value_get(idStr)
+		#v = csymtab.value_get(idStr)
 		t = do_type(x['type'])
 		Type.update(v.type, t)
 
@@ -2800,7 +2792,7 @@ def get_access_level(x):
 
 
 def def_phase1(ast, is_include=False):
-	global cmodule
+	global csymtab, cmodule
 
 	# 1. Проходим по всем типам, создаем их undefined "прототипы".
 	# 2. Проходим по всем функциям, создаем их undefined "прототипы".
@@ -2818,13 +2810,14 @@ def def_phase1(ast, is_include=False):
 				if not is_include:
 					t.parent = cmodule
 
-				ctx_type_add(id['str'], t, is_public=is_public)
+				csymtab.type_add(id['str'], t, is_public=is_public)
+
 				t.is_global_type = True
 
 			elif kind == 'func':
 				#mass
 				if id_already_used(x['id']['str'], shallow=True):
-					exist = ctx_value_get(x['id']['str'])
+					exist = csymtab.value_get(x['id']['str'])
 					error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 					info("previous definition was here (%s)" % ti.start.source, exist.ti)
 
@@ -2843,7 +2836,7 @@ def def_phase1(ast, is_include=False):
 
 				if not is_include:
 					v.parent = cmodule
-				ctx_value_add(id['str'], v, is_public=is_public)
+				csymtab.value_add(id['str'], v, is_public=is_public)
 				v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 		if isa == 'ast_directive':
