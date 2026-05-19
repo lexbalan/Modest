@@ -2756,8 +2756,8 @@ def process_module(idStr, sourcename, ast, is_include):
 		i += 1
 
 
-	symtab_public = symtab_public.branch()
-	symtab_private = symtab_private.branch()
+	#symtab_public = symtab_public.branch()
+	#symtab_private = symtab_private.branch()
 
 	def_phase1(ast, is_include=is_include)
 	def_phase2(ast, is_include=is_include)
