@@ -2609,6 +2609,14 @@ def do_import(x):
 	else:
 		1/0
 
+	annotations = x['anno']
+	for annotation in annotations:
+		if annotation['kind'] == 'cinclude':
+			a0 = annotation['args'][0] # get KV first arg
+			cinclude = a0['value']['str']
+			y.cinclude = cinclude
+			#info("?? `%s`" % cinclude, x['ti'])
+
 	return y
 
 

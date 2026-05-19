@@ -3,12 +3,16 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
+@cinclude("./lib/lib.h")
 import "./lib/lib"
+@cinclude("./lib/mod1.h")
 import "./lib/mod1"
+@cinclude("./lib/mod2.h")
 import "./lib/mod2"
-pragma c_include "./lib/lib.h"
-pragma c_include "./lib/mod1.h"
-pragma c_include "./lib/mod2.h"
+
+//pragma c_include "./lib/lib.h"
+//pragma c_include "./lib/mod1.h"
+//pragma c_include "./lib/mod2.h"
 
 
 

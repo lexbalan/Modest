@@ -1969,7 +1969,11 @@ def do_header(module):
 
 	for x in defs:
 		if x.is_stmt_import() and not x.module.hasAttribute('do_not_include'):
-			s = os.path.basename(x.impline) + '.h'
+			s = ""
+			if hasattr(x, 'cinclude'):
+				s = x.cinclude
+			else:
+				s = os.path.basename(x.impline + '.h')
 			xdefs.extend(include(s, local=True))
 
 	xdefs.extend(include("stddef.h", local=False))
@@ -2057,8 +2061,12 @@ def do_cfile(module):
 
 	for x in defs:
 		if x.is_stmt_import() and not x.module.hasAttribute('do_not_include'):
-			s = os.path.basename(x.impline)
-			xdefs.extend(include(s + '.h', local=True))
+			s = ""
+			if hasattr(x, 'cinclude'):
+				s = x.cinclude
+			else:
+				s = os.path.basename(x.impline + '.h')
+			xdefs.extend(include(s, local=True))
 
 	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude):

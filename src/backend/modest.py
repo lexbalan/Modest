@@ -984,7 +984,6 @@ def print_directive(x):
 	if isinstance(x, StmtDirectiveInsert):
 		return '\npragma insert "%s"' % x.text
 	elif isinstance(x, StmtDirectiveCInclude):
-		#return '\npragma c_include "%s"' % x.c_name
 		return ""
 
 	return "\n// directive: %s" % str(x)

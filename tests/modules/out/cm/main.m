@@ -9,6 +9,10 @@ import "./lib/lib" as lib
 import "./lib/mod1" as mod1
 import "./lib/mod2" as mod2
 
+//pragma c_include "./lib/lib.h"
+//pragma c_include "./lib/mod1.h"
+//pragma c_include "./lib/mod2.h"
+
 
 
 @nonstatic

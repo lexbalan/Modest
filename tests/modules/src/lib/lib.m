@@ -1,5 +1,5 @@
 
-pragma do_not_include
+//pragma do_not_include
 
 import "./mod1"
 import "./mod2"

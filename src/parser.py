@@ -1964,6 +1964,7 @@ class Parser:
 			'is_include': False,
 			'as': _as,
 			'args': [],
+			'anno': [],
 			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_end)
 		}
 

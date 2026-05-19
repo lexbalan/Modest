@@ -7,8 +7,9 @@
 #include "./lib/lib.h"
 #include "./lib/mod1.h"
 #include "./lib/mod2.h"
-#include "mod1.h"
-#include "mod2.h"
+//pragma c_include "./lib/lib.h"
+//pragma c_include "./lib/mod1.h"
+//pragma c_include "./lib/mod2.h"
 
 int main(void) {
 	struct lib_librarian librarian;

@@ -234,6 +234,10 @@ declare void @lib_printf(%Str8* %s, ...)
 @.str4 = private constant [5 x i8] [i8 109, i8 111, i8 100, i8 50, i8 0]
 @.str5 = private constant [3 x i8] [i8 63, i8 63, i8 0]
 ; -- endstrings --
+
+;pragma c_include "./lib/lib.h"
+;pragma c_include "./lib/mod1.h"
+;pragma c_include "./lib/mod2.h"
 define %Int @main() {
 	%1 = alloca %lib_Librarian, align 8
 	%2 = alloca %mod1_Mod, align 8
