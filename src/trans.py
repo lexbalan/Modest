@@ -71,7 +71,7 @@ modules = {}
 cmodule = None  # Current module
 cfunc = None	# current function
 
-context = None  # current context (symtab)
+symtab = None  # current symtab (symtab)
 cdef = None
 
 
@@ -98,56 +98,37 @@ def cmodule_strings_add(v):
 
 
 
-def context_push():
-	global context
-	context = {
-		'public': context['public'].branch(),
-		'private': context['private'].branch()
-	}
+def symtab_push():
+	global symtab
+	symtab = symtab.branch()
 
 
-def context_pop():
-	global context
-	context = {
-		'public': context['public'].parent_get(),
-		'private': context['private'].parent_get()
-	}
+def symtab_pop():
+	global symtab
+	symtab = symtab.parent_get()
 
 
 def ctx_type_add(id_str, t, is_public):
-	global context
-	if is_public:
-		context['public'].type_add(id_str, t)
-	else:
-		context['private'].type_add(id_str, t)
+	global symtab
+	symtab.type_add(id_str, t)
 
 
 def ctx_type_get(id_str):
-	global context
+	global symtab
 	if id_str in ['Char16', 'Char32', 'Str16', 'Str32']:
 		# включаем в модуле поддержку unicode
 		cmodule_use('use_unicode')
-
-	t = context['private'].type_get(id_str)
-	if t != None:
-		return t
-	return context['public'].type_get(id_str)
+	return symtab.type_get(id_str)
 
 
 def ctx_value_add(id_str, v, is_public):
-	global context
-	if is_public:
-		context['public'].value_add(id_str, v)
-	else:
-		context['private'].value_add(id_str, v)
+	global symtab
+	symtab.value_add(id_str, v)
 
 
 def ctx_value_get(id_str, shallow=False):
-	global context
-	v = context['private'].value_get(id_str, shallow=shallow)
-	if v != None:
-		return v
-	return context['public'].value_get(id_str, shallow=shallow)
+	global symtab
+	return symtab.value_get(id_str, shallow=shallow)
 
 
 
@@ -323,16 +304,16 @@ def create_builtin_module():
 	# (used in index, extra agrs & generic numeric var definitions)
 
 	builtin_symtab = Symtab()
-	builtin_module = Module("builtin", ast=None, symtab_public=builtin_symtab, symtab_private=Symtab(), sourcename="__builtin_source__")
+	builtin_module = Module("builtin", ast=None, symtab=builtin_symtab, sourcename="__builtin_source__")
 
 	target_symtab = Symtab()
-	target_module = Module("target", ast=None, symtab_public=target_symtab, symtab_private=Symtab(), sourcename="__target_source__")
+	target_module = Module("target", ast=None, symtab=target_symtab, sourcename="__target_source__")
 
 	import_target = StmtImport(impline="builtin/target", name="builtin", module=target_module, ti=builtin_ti, include=False)
 	builtin_module.imports_public["target"] = import_target
 
 	compiler_symtab = Symtab()
-	compiler_module = Module("compiler", ast=None, symtab_public=compiler_symtab, symtab_private=Symtab(), sourcename="__compiler_source__")
+	compiler_module = Module("compiler", ast=None, symtab=compiler_symtab, sourcename="__compiler_source__")
 
 	import_compiler = StmtImport(impline="builtin/compiler", name="builtin", module=compiler_module, ti=builtin_ti, include=False)
 	builtin_module.imports_public["compiler"] = import_compiler
@@ -1261,7 +1242,7 @@ def do_value_call(x):
 
 def ct_call(fn, args, ti):
 	warning("compile time call not implemented, will returned zero value!", ti)
-	context_push()
+	symtab_push()
 	#create_params(fn)
 	# 1. Формируем параметры в контексте (!)
 	params = fn.type.params
@@ -1281,7 +1262,7 @@ def ct_call(fn, args, ti):
 		if stmt.is_stmt_return():
 			print(stmt.value)
 
-	context_pop()
+	symtab_pop()
 
 
 def do_value_index(x):
@@ -2100,7 +2081,7 @@ def do_stmt(x):
 
 
 def do_stmt_block(x, parent=None):
-	context_push()
+	symtab_push()
 
 	block = StmtBlock([], ti=x['ti'])
 	block.parent = parent
@@ -2112,7 +2093,7 @@ def do_stmt_block(x, parent=None):
 			s.parent = block
 			block.stmts.append(s)
 
-	context_pop()
+	symtab_pop()
 
 	return block
 
@@ -2419,7 +2400,7 @@ def def_func(x):
 	# not above (!)
 	fn.is_pure = fn.type.is_pure_func()
 
-	context_push()  # create params context
+	symtab_push()  # create params symtab
 
 	prev_cfunc = cfunc
 	cfunc = fn
@@ -2451,7 +2432,7 @@ def def_func(x):
 
 	fn.definition.stmt = stmt
 
-	context_pop()  # remove params context
+	symtab_pop()  # remove params symtab
 	cfunc = prev_cfunc
 	cdef = None
 
@@ -2585,11 +2566,12 @@ def do_import(x):
 		# и забираем все определения (исключая дубликаты!)
 
 		# public include
-		cmodule.symtab_public.extend(m.symtab_public)
+		# TODO: public extend
+		cmodule.symtab.extend(m.symtab)
 
-		#global context
+		#global symtab
 		#print(">>> include '%s' as '%s'" % (impline, _as))
-		#context['public'].extend(m.symtab_public)
+		#symtab['public'].extend(m.symtab_public)
 
 		# копируем все c_include из импортированного модуля себе
 		# это костыль, но пока так
@@ -2702,24 +2684,17 @@ def translate(abspath, is_include=False):
 
 
 def process_module(idStr, sourcename, ast, is_include):
-	global cmodule, global_prefix
-	global symtab_public, symtab_private
+	global symtab, cmodule, global_prefix
+
+	prev_symtab = symtab
 
 	prev_module = cmodule
 	prev_global_prefix = global_prefix
 	global_prefix = idStr + '_'
 
-	symtab_public = root_symtab.branch()
-	symtab_private = Symtab()
+	symtab = root_symtab.branch()
 
-	global context
-	prev_context = context
-	context = {
-		'public': symtab_public,
-		'private': symtab_private
-	}
-
-	cmodule = Module(idStr, ast, symtab_public, symtab_private, sourcename)
+	cmodule = Module(idStr, ast, symtab, sourcename)
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=builtin_ti, include=False)
 	cmodule.imports_private["builtin"] = import_builtin
@@ -2765,7 +2740,7 @@ def process_module(idStr, sourcename, ast, is_include):
 	m = cmodule
 
 	cmodule = prev_module
-	context = prev_context
+	symtab = prev_symtab
 
 	global_prefix = prev_global_prefix
 	return m

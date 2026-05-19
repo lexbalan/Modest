@@ -200,7 +200,7 @@ class Entity():
 
 
 class Module:
-	def __init__(self, idStr, ast, symtab_public, symtab_private, sourcename):
+	def __init__(self, idStr, ast, symtab, sourcename):
 		self.id = idStr
 		self.sourcename = sourcename
 		self.ast = ast
@@ -210,8 +210,7 @@ class Module:
 		self.imports_public = {}   # '<import_id>' => {'isa': 'module'}
 		self.imports_private = {}   # '<import_id>' => {'isa': 'module'}
 		self.included_modules = []
-		self.symtab_public = symtab_public
-		self.symtab_private = symtab_private
+		self.symtab = symtab
 		self.source_abspath = None
 		self.defs = []
 		self.attributes = {}
@@ -233,14 +232,11 @@ class Module:
 	def __str__(self):
 		return "Module(\"%s\")" % self.id
 
-	#def setPrefix(self, prefixStr):
-	#	self.prefix = prefixStr
-
 
 	def type_add(self, id_str, t, is_public=False):
 		#print('module_type_add (%s, isPublic=%d)' % (id_str, is_public))
 		if is_public:
-			self.symtab_public.type_add(id_str, t)
+			self.symtab.type_add(id_str, t)
 		else:
 			self.symtab_private.type_add(id_str, t)
 
@@ -248,19 +244,19 @@ class Module:
 	def value_add(self, id_str, v, is_public=False):
 		#print('module_value_add (%s, isPublic=%d)' % (id_str, is_public))
 		if is_public:
-			self.symtab_public.value_add(id_str, v)
+			self.symtab.value_add(id_str, v)
 		else:
 			self.symtab_private.value_add(id_str, v)
 
 
 	def value_get_public(self, id_str):
-		return self.symtab_public.value_get(id_str)
+		return self.symtab.value_get(id_str)
 
 	def value_get_private(self, id_str):
 		return self.symtab_private.value_get(id_str)
 
 	def type_get_public(self, id_str):
-		return self.symtab_public.type_get(id_str)
+		return self.symtab.type_get(id_str)
 
 	def type_get_private(self, id_str):
 		return self.symtab_private.type_get(id_str)
