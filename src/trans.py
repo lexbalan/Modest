@@ -98,15 +98,6 @@ def cmodule_strings_add(v):
 
 
 
-def ctx_type_get(id_str):
-	global csymtab
-	if id_str in ['Char16', 'Char32', 'Str16', 'Str32']:
-		# включаем в модуле поддержку unicode
-		cmodule_use('use_unicode')
-	return csymtab.type_get(id_str)
-
-
-
 def id_already_used(id_str, shallow=False):
 	global csymtab
 	return csymtab.value_get(id_str, shallow=shallow) != None
@@ -452,7 +443,7 @@ def get_module_by_path(path):
 
 
 def do_type_named(x):
-	global cmodule
+	global cmodule, csymtab
 	id = x['id']
 	id_str = id['str']
 
@@ -477,7 +468,11 @@ def do_type_named(x):
 		if t.is_incompleted():
 			t = type_update_incompleted(module, t, id_str)
 	else:
-		t = ctx_type_get(id_str)
+		global csymtab
+		if id_str in ['Char16', 'Char32', 'Str16', 'Str32']:
+			# включаем в модуле поддержку unicode
+			cmodule_use('use_unicode')
+		return csymtab.type_get(id_str)
 
 	if t == None:
 		error("undefined type", x['ti'])
@@ -1034,7 +1029,7 @@ def do_value_va_copy(x):
 
 
 def do_value_defined_type(x):
-	t = ctx_type_get(x['type']['id'].str)
+	t = csymtab.type_get(x['type']['id'].str)
 	return t != None
 
 
@@ -2173,7 +2168,7 @@ def def_type_common(x, nt):
 def def_type_global(x):
 	# глобальный тип уже был задекларирован при первом проходе,
 	# теперь доопределяем его
-	nt = ctx_type_get(x['id']['str'])
+	nt = csymtab.type_get(x['id']['str'])
 	if not nt.is_incompleted():
 		error("type redefinition", x['ti'])
 		return None
