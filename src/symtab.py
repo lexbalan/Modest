@@ -30,8 +30,11 @@ class Symtab:
 			t = self.types[id]
 
 		elif not shallow and self.parent != None:
+		#	print(">> looking for type '%s' in parent symtab" % id)
 			t = self.parent.type_get(id)
 
+		#if t != None:
+		#	print("FOUND type '%s' in symtab" % id)
 		return t
 
 

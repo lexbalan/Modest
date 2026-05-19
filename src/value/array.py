@@ -18,7 +18,7 @@ def value_array_create(items, ti):
 			item_type = Type.select_common_type(item_type, item.type, item.ti)
 			if item_type == None or item_type.is_bad():
 				error("value with unsuitable type", item.ti)
-				return ValueBad({'ti': ti})
+				return ValueBad(ti)
 			if item.isValueRuntime():
 				stage = HLIR_VALUE_STAGE_RUNTIME
 			if item.isValueLinktime() and stage == HLIR_VALUE_STAGE_COMPILETIME:

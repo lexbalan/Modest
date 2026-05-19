@@ -1,16 +1,24 @@
 private import "builtin"
-import "./lib/lib"
+private import "./lib/lib"
+private import "./lib/mod1"
+private import "./lib/mod2"
 include "ctypes64"
 include "stdio"
 
 import "./lib/lib" as lib
+import "./lib/mod1" as mod1
+import "./lib/mod2" as mod2
 
+
+
+@nonstatic
 func main () -> Int {
 	var librarian: Librarian
-	var mod1: Mod
-	var mod2: Mod
-	printf("lib.mod1.modName = '%s'\n", lib.mod1.modName)
-	printf("lib.mod2.modName = '%s'\n", lib.mod2.modName)
+	var m1: Mod
+	var m2: Mod
+	printf("mod1.modName = '%s'\n", *Str8 mod1.modName)
+	printf("mod2.modName = '%s'\n", *Str8 mod2.modName)
+	lib.printf("??")
 	return 0
 }
 

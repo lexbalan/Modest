@@ -2426,18 +2426,6 @@ def def_func(x):
 
 	create_params(fn)
 
-#	params = fn.type.params
-#
-#
-#	i = 0
-#	while i < len(params):
-#		param = params[i]
-#		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
-#		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
-#		#param_value.stage = HLIR_VALUE_STAGE_RUNTIME
-#		ctx_value_add(param.id.str, param_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
-#		i += 1
-
 	# for C backend, for #include <stdarg.h>
 	if fn.type.extra_args:
 		cmodule_use('use_va_arg')
@@ -2558,11 +2546,12 @@ def do_import(x):
 		ii -= 1
 	if err:
 		error("recursive import detected", x['ti'])
+		print(colorize(cmodule.id, BOLD))
 		j = pos
 		while j < len(import_stack):
-			print("    " * (j-pos) + "`-> %s (from '%s')" % (import_stack[j][2], import_stack[j][1]))
+			print("    " * (j-pos) + "`-> %s (from '%s')" % (colorize(import_stack[j][2], BOLD), import_stack[j][1]))
 			j += 1
-		fatal("recursive import '%s'" % abspath)
+		fatal("recursive import detected '%s'" % abspath)
 	import_stack.append(kk)
 
 
@@ -2597,6 +2586,10 @@ def do_import(x):
 
 		# public include
 		cmodule.symtab_public.extend(m.symtab_public)
+
+		#global context
+		#print(">>> include '%s' as '%s'" % (impline, _as))
+		#context['public'].extend(m.symtab_public)
 
 		# копируем все c_include из импортированного модуля себе
 		# это костыль, но пока так
@@ -2752,6 +2745,10 @@ def process_module(idStr, sourcename, ast, is_include):
 
 		i += 1
 
+	#mass
+	#symtab_public = symtab_public.branch()
+	#context_push()
+
 	def_phase1(ast, is_include=is_include)
 	def_phase2(ast, is_include=is_include)
 
@@ -2840,9 +2837,16 @@ def def_phase1(ast, is_include=False):
 				t.is_global_type = True
 
 			elif kind == 'func':
+				#mass
+				if id_already_used(x['id']['str'], shallow=True):
+					exist = ctx_value_get(x['id']['str'])
+					error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+					info("previous definition was here (%s)" % ti.start.source, exist.ti)
+
 				# Create function value with incomplete type
 				t = Type(x['ti'])  # Incomplete type (!)
 				v = ValueFunc(t, do_id(x['id']), x['ti'])
+
 
 				definition = StmtDefFunc(v.id, v, None, x['ti'])
 				definition.id = v.id
@@ -2856,6 +2860,7 @@ def def_phase1(ast, is_include=False):
 					v.parent = cmodule
 				ctx_value_add(id['str'], v, is_public=is_public)
 				v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
+
 		if isa == 'ast_directive':
 			if x['kind'] == 'module':
 				print("MODULE('%s')" % x['line']['str'])

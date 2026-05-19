@@ -9,5 +9,6 @@
 struct lib_librarian {
 	char *name;
 };
+void lib_printf(char *s, ...);
 #endif
 

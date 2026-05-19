@@ -5,13 +5,18 @@
 #include <string.h>
 #include <stdio.h>
 #include "./lib/lib.h"
+#include "./lib/mod1.h"
+#include "./lib/mod2.h"
+#include "mod1.h"
+#include "mod2.h"
 
 int main(void) {
 	struct lib_librarian librarian;
-	struct mod1_mod mod1;
-	struct mod2_mod mod2;
-	printf("lib.mod1.modName = '%s'\n", MOD1_MOD_NAME);
-	printf("lib.mod2.modName = '%s'\n", MOD2_MOD_NAME);
+	struct mod1_mod m1;
+	struct mod2_mod m2;
+	printf("mod1.modName = '%s'\n", "mod1");
+	printf("mod2.modName = '%s'\n", "mod2");
+	lib_printf("??");
 	return 0;
 }
 

@@ -133,7 +133,7 @@ def value_cons_implicit_check(t, v):
 			print("\n")
 
 	elif not Type.eq(t, nv.type):
-		error("cannot implicitly construct %s from %s\n" % (t.to_str(), v.type.to_str()), v.ti)
+		error("cannot implicitly construct `%s` from `%s`\n" % (t.to_str(), v.type.to_str()), v.ti)
 
 	return nv
 
