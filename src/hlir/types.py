@@ -1266,6 +1266,9 @@ class Type(Entity):
 
 			fieldId = fieldA.id
 			fieldType = Type.select_common_type(fieldA.type, fieldB.type, ti)
+			if fieldType == None:
+				return TypeBad(ti=ti)
+
 			newField = Field(fieldId, fieldType, init_value=ValueUndef(fieldType), ti=fieldId.ti)
 			fields.append(newField)
 
@@ -1331,7 +1334,7 @@ class Type(Entity):
 						return b
 
 			elif a.is_generic() or b.is_generic():
-				
+
 				if a.is_string():
 					if b.is_string():
 						if a.width > b.width:
@@ -1436,7 +1439,12 @@ class Type(Entity):
 					return a
 
 		print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))
+
+		from error import error
+		error("cannot select common type (`%s` & `%s`)" % (fieldA.type.to_str(), fieldB.type.to_str()), ti)
 		return None
+
+
 
 	@staticmethod
 	def print(t, print_aka=True):
