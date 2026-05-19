@@ -2703,6 +2703,8 @@ def translate(abspath, is_include=False):
 
 def process_module(idStr, sourcename, ast, is_include):
 	global cmodule, global_prefix
+	global symtab_public, symtab_private
+
 	prev_module = cmodule
 	prev_global_prefix = global_prefix
 	global_prefix = idStr + '_'
@@ -2753,9 +2755,9 @@ def process_module(idStr, sourcename, ast, is_include):
 
 		i += 1
 
-	#mass
-	#symtab_public = symtab_public.branch()
-	#context_push()
+
+	symtab_public = symtab_public.branch()
+	symtab_private = symtab_private.branch()
 
 	def_phase1(ast, is_include=is_include)
 	def_phase2(ast, is_include=is_include)
