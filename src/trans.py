@@ -69,10 +69,10 @@ modules = {}
 
 
 cmodule = None  # Current module
-cfunc = None	# current function
-
 csymtab = None  # current symtab (symtab)
 cdef = None
+cfunc = None	# current function
+
 
 
 
@@ -98,7 +98,6 @@ def cmodule_strings_add(v):
 
 
 
-
 def ctx_type_get(id_str):
 	global csymtab
 	if id_str in ['Char16', 'Char32', 'Str16', 'Str32']:
@@ -109,6 +108,7 @@ def ctx_type_get(id_str):
 
 
 def id_already_used(id_str, shallow=False):
+	global csymtab
 	return csymtab.value_get(id_str, shallow=shallow) != None
 
 
@@ -1039,6 +1039,7 @@ def do_value_defined_type(x):
 
 
 def do_value_defined_value(x):
+	global csymtab
 	v = csymtab.value_get(x['value']['id'].str)
 	return v != None
 
@@ -1217,8 +1218,9 @@ def do_value_call(x):
 
 
 def ct_call(fn, args, ti):
-	warning("compile time call not implemented, will returned zero value!", ti)
 	global csymtab
+
+	warning("compile time call not implemented, will returned zero value!", ti)
 
 	csymtab = Symtab(parent=csymtab)
 
@@ -1378,6 +1380,8 @@ def is_import_name(module, id_str):
 
 def do_value_access(x):
 	global cmodule
+	global csymtab
+
 	#info("do_value_access", x['ti'])
 	left = x['left']
 	if left['kind'] == 'id' and csymtab.value_get(left['str']) == None and is_import_name(cmodule, left['str']):
@@ -1865,6 +1869,7 @@ def do_stmt_return(x):
 
 def do_stmt_type(x):
 	global csymtab
+
 	nt = Type(x['ti'])
 	df = def_type_common(x, nt)
 	df.id.llvm = cfunc.id.str + '.' + df.id.str
@@ -2722,9 +2727,6 @@ def process_module(idStr, sourcename, ast, is_include):
 
 		i += 1
 
-
-	#symtab_public = symtab_public.branch()
-	#symtab_private = symtab_private.branch()
 
 	def_phase1(ast, is_include=is_include)
 	def_phase2(ast, is_include=is_include)
