@@ -61,12 +61,15 @@ global_prefix = ''
 env_current_file_dir = ""
 
 
-csymtab = None  # symtab with base types & values
-
 # All already translate imported modules
 # path => module
 modules = {}
 
+# этот модуль по умолчанию импортирован в любой другой
+# он позволяет получить данные о компиляторе, окружении и целевой платформе
+builtin_module = None
+
+builtinSymtab = None
 
 cmodule = None  # Current module
 csymtab = None  # current symtab (symtab)
@@ -127,20 +130,6 @@ int_width = 0
 float_width = 0
 pointer_width = 0
 
-
-
-
-def valueZeroNumber(ti):
-	gt = type_integer_create(ti=ti)
-	return ValueLiteral(gt, asset=0, ti=ti)
-
-
-# этот модуль по умолчанию импортирован в любой другой
-# он позволяет получить данные о компиляторе, окружении и целевой платформе
-builtin_module = None
-
-
-builtinSymtab = None
 
 def init():
 	#lib_path = settings['lib']
@@ -1323,7 +1312,7 @@ def do_value_slice(x):
 		if index_from.isValueBad():
 			return ValueBad(ti)
 	else:
-		index_from = valueZeroNumber(x['ti'])
+		index_from = value_integer_create(0, ti=x['ti'])
 
 	if x['index_to'] != None:
 		index_to = do_rvalue(x['index_to'])
@@ -1938,8 +1927,8 @@ def do_stmt_incdec(x, op=HLIR_VALUE_OP_ADD):
 		error("expected value with integer type", v.ti)
 		return StmtBad(x['ti'])
 
-	one = ValueLiteral(v.type, 1, ti=x['ti'])
-	nv = ValueBin(v.type, op, v, one, ti=x['ti'])
+	one = value_integer_create(1, ti=x['ti'])
+	nv = do_value_bin_op(op, v, one, x['ti'])
 	return StmtAssign(v, nv, ti=x['ti'])
 
 
