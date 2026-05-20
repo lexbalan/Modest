@@ -33,17 +33,8 @@ class Symtab:
 			return self.parent.value_get(id)
 		return None
 
-	# extend this symtab with types & values from another symtab
-	def merge(self, symtab):
-		self.types.update(symtab.types)
-		self.values.update(symtab.values)
-
 	def parent_get(self):
 		return self.parent
-
-	def extend(self, symtab):
-		self.types.update(symtab.types)
-		self.values.update(symtab.values)
 
 	# печатает только указанную таблицу символов
 	def show_table(table):

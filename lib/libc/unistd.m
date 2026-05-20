@@ -12,12 +12,12 @@ include "libc/ctypes64"
 //@extern("C)
 //var environ: *[]*Char
 
-@alias("c", "SEEK_SET")
-public const c_SEEK_SET = 0
-@alias("c", "SEEK_CUR")
-public const c_SEEK_CUR = 1
-@alias("c", "SEEK_END")
-public const c_SEEK_END = 2
+//@alias("c", "SEEK_SET")
+//public const c_SEEK_SET = 0
+//@alias("c", "SEEK_CUR")
+//public const c_SEEK_CUR = 1
+//@alias("c", "SEEK_END")
+//public const c_SEEK_END = 2
 
 @alias("c", "STDIN_FILENO")
 public const c_STDIN_FILENO = 0

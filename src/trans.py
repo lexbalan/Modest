@@ -61,7 +61,7 @@ global_prefix = ''
 env_current_file_dir = ""
 
 
-root_symtab = None  # symtab with base types & values
+csymtab = None  # symtab with base types & values
 
 # All already translate imported modules
 # path => module
@@ -153,61 +153,61 @@ def init():
 	# decimal operation precision
 	decimal.getcontext().prec = settings['precision']
 
-	global root_symtab
+	global csymtab
 	# init main context
-	root_symtab = Symtab()
+	csymtab = Symtab()
 
-	root_symtab.type_add('Unit', typeUnit)
-	root_symtab.type_add('Bool', typeBool)
+	csymtab.type_add('Unit', typeUnit)
+	csymtab.type_add('Bool', typeBool)
 
-	root_symtab.type_add('Integer', typeInteger)
-	root_symtab.type_add('Rational', typeRational)
+	csymtab.type_add('Integer', typeInteger)
+	csymtab.type_add('Rational', typeRational)
 
-	root_symtab.type_add('Byte', typeByte)
+	csymtab.type_add('Byte', typeByte)
 
-	root_symtab.type_add('Word8', typeWord8)
-	root_symtab.type_add('Word16', typeWord16)
-	root_symtab.type_add('Word32', typeWord32)
-	root_symtab.type_add('Word64', typeWord64)
-	root_symtab.type_add('Word128', typeWord128)
-	#root_symtab.type_add('Word256', typeWord256)
+	csymtab.type_add('Word8', typeWord8)
+	csymtab.type_add('Word16', typeWord16)
+	csymtab.type_add('Word32', typeWord32)
+	csymtab.type_add('Word64', typeWord64)
+	csymtab.type_add('Word128', typeWord128)
+	#csymtab.type_add('Word256', typeWord256)
 
-	root_symtab.type_add('Int8', typeInt8)
-	root_symtab.type_add('Int16', typeInt16)
-	root_symtab.type_add('Int32', typeInt32)
-	root_symtab.type_add('Int64', typeInt64)
-	root_symtab.type_add('Int128', typeInt128)
-	#root_symtab.type_add('Int256', typeInt256)
+	csymtab.type_add('Int8', typeInt8)
+	csymtab.type_add('Int16', typeInt16)
+	csymtab.type_add('Int32', typeInt32)
+	csymtab.type_add('Int64', typeInt64)
+	csymtab.type_add('Int128', typeInt128)
+	#csymtab.type_add('Int256', typeInt256)
 
-	root_symtab.type_add('Nat8', typeNat8)
-	root_symtab.type_add('Nat16', typeNat16)
-	root_symtab.type_add('Nat32', typeNat32)
-	root_symtab.type_add('Nat64', typeNat64)
-	root_symtab.type_add('Nat128', typeNat128)
-	#root_symtab.type_add('Nat256', typeNat256)
+	csymtab.type_add('Nat8', typeNat8)
+	csymtab.type_add('Nat16', typeNat16)
+	csymtab.type_add('Nat32', typeNat32)
+	csymtab.type_add('Nat64', typeNat64)
+	csymtab.type_add('Nat128', typeNat128)
+	#csymtab.type_add('Nat256', typeNat256)
 
-	#root_symtab.type_add('Float16', typeFloat16)
-	root_symtab.type_add('Float32', typeFloat32)
-	root_symtab.type_add('Float64', typeFloat64)
+	#csymtab.type_add('Float16', typeFloat16)
+	csymtab.type_add('Float32', typeFloat32)
+	csymtab.type_add('Float64', typeFloat64)
 
-	root_symtab.type_add('Fixed32', typeFixed32)
-	root_symtab.type_add('Fixed64', typeFixed64)
+	csymtab.type_add('Fixed32', typeFixed32)
+	csymtab.type_add('Fixed64', typeFixed64)
 
-	#root_symtab.type_add('Decimal32', typeDecimal32)
-	#root_symtab.type_add('Decimal64', typeDecimal64)
-	#root_symtab.type_add('Decimal128', typeDecimal128)
+	#csymtab.type_add('Decimal32', typeDecimal32)
+	#csymtab.type_add('Decimal64', typeDecimal64)
+	#csymtab.type_add('Decimal128', typeDecimal128)
 
-	root_symtab.type_add('Char8', typeChar8)
-	root_symtab.type_add('Char16', typeChar16)
-	root_symtab.type_add('Char32', typeChar32)
+	csymtab.type_add('Char8', typeChar8)
+	csymtab.type_add('Char16', typeChar16)
+	csymtab.type_add('Char32', typeChar32)
 
-	root_symtab.type_add('Str8', typeStr8)
-	root_symtab.type_add('Str16', typeStr16)
-	root_symtab.type_add('Str32', typeStr32)
+	csymtab.type_add('Str8', typeStr8)
+	csymtab.type_add('Str16', typeStr16)
+	csymtab.type_add('Str32', typeStr32)
 
-	root_symtab.type_add('Ptr', typeFreePointer)
+	csymtab.type_add('Ptr', typeFreePointer)
 
-	root_symtab.type_add('__VA_List', type__VA_List)
+	csymtab.type_add('__VA_List', type__VA_List)
 
 
 	global valueTrue, valueFalse, valueNil
@@ -215,9 +215,9 @@ def init():
 	valueTrue = value_bool_create(1, ti=builtin_ti)
 	valueFalse = value_bool_create(0, ti=builtin_ti)
 
-	root_symtab.value_add('nil', valueNil)
-	root_symtab.value_add('true', valueTrue)
-	root_symtab.value_add('false', valueFalse)
+	csymtab.value_add('nil', valueNil)
+	csymtab.value_add('true', valueTrue)
+	csymtab.value_add('false', valueFalse)
 
 	word_width = int(settings['word_width'])
 	char_width = int(settings['char_width'])
@@ -235,7 +235,7 @@ def init():
 	typeSysSize.id = Id('Size')
 	typeSysSize.id.c = 'size_t'
 
-	root_symtab.type_add('Size', typeSysSize)
+	csymtab.type_add('Size', typeSysSize)
 
 	undefinedVolume = ValueUndef(typeSysNat, ti=None)
 	typeSysStr = TypePointer(TypeArray(typeSysChar, undefinedVolume))
@@ -2550,16 +2550,16 @@ def do_import(x):
 
 	if is_include_form:
 		# INCLUDE
-		# забираем публичные символы
-		# и забираем все определения (исключая дубликаты!)
+		# забираем публичные символы себе
+		# и забираем все определения
 
-		# public include
-		# TODO: public extend
-		cmodule.symtab.extend(m.symtab)
+		for id_str, t in m.symtab.types.items():
+			if t.definition != None and t.definition.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
+				csymtab.type_add(id_str, t, is_public=False)
 
-		#global symtab
-		#print(">>> include '%s' as '%s'" % (impline, _as))
-		#symtab['public'].extend(m.symtab_public)
+		for id_str, v in m.symtab.values.items():
+			if v.definition != None and v.definition.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
+				csymtab.value_add(id_str, v, is_public=False)
 
 		# копируем все c_include из импортированного модуля себе
 		# это костыль, но пока так
@@ -2679,7 +2679,7 @@ def process_module(idStr, sourcename, ast, is_include):
 	prev_global_prefix = global_prefix
 
 	global_prefix = idStr + '_'
-	csymtab = Symtab(parent=root_symtab)
+	csymtab = Symtab(parent=csymtab)
 	cmodule = Module(idStr, ast, csymtab, sourcename)
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=builtin_ti, include=False)
