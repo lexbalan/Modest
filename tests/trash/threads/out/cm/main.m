@@ -4,6 +4,9 @@ include "ctypes64"
 include "stdio"
 include "unistd"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/unistd"
 import "misc/pthread" as pthread
 
 

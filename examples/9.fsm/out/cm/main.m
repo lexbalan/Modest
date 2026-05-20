@@ -3,6 +3,8 @@ private import "fsm"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 import "fsm" as fsm
 
 

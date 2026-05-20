@@ -3,6 +3,8 @@ private import "lightfood/console"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 import "lightfood/console" as console
 
 

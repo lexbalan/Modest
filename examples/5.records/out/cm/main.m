@@ -4,6 +4,10 @@ include "math"
 include "stdlib"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/math"
+include "libc/stdlib"
+include "libc/stdio"
 
 
 type Point = {

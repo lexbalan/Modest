@@ -4,6 +4,9 @@ include "ctypes64"
 include "stdio"
 include "stdlib"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
 import "misc/crc32" as crc32
 
 

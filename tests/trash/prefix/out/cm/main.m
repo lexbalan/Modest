@@ -2,6 +2,7 @@ private import "builtin"
 private import "lib"
 include "stdio"
 
+include "libc/stdio"
 import "lib" as lib
 
 

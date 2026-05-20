@@ -2,6 +2,8 @@ private import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func array_print (pa: *[]Int32, len: Nat32) -> Unit {

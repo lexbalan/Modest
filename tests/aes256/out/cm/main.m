@@ -3,6 +3,8 @@ private import "misc/aes256"
 include "stdlib"
 include "stdio"
 
+include "libc/stdlib"
+include "libc/stdio"
 import "misc/aes256" as aes
 
 

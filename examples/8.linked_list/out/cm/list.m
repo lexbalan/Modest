@@ -3,6 +3,9 @@ include "ctypes64"
 include "stdlib"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdlib"
+include "libc/stdio"
 
 
 public type Node = @branded {

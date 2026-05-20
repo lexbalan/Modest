@@ -1,6 +1,7 @@
 private import "builtin"
 include "stdio"
 
+include "libc/stdio"
 
 // Test for composite types
 

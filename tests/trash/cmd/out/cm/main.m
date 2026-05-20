@@ -3,6 +3,9 @@ include "stdio"
 include "unistd"
 include "ctype"
 
+include "libc/stdio"
+include "libc/unistd"
+include "libc/ctype"
 
 
 const prompt = "# "

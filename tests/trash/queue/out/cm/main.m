@@ -5,6 +5,9 @@ include "ctypes64"
 include "math"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/math"
+include "libc/stdio"
 import "./queueWord8" as bq
 import "./ringWord8" as br
 

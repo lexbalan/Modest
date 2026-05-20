@@ -1,6 +1,7 @@
 private import "builtin"
 include "stdio"
 
+include "libc/stdio"
 
 
 const minNumber = 0

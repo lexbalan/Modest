@@ -6,6 +6,12 @@ include "unistd"
 include "socket"
 include "inet"
 
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/string"
+include "libc/unistd"
+include "libc/socket"
+include "libc/arpa/inet"
 
 
 const port = 8080

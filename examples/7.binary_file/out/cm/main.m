@@ -3,6 +3,9 @@ include "ctypes64"
 include "string"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/string"
+include "libc/stdio"
 
 
 const filename = *Str8 "file.bin"

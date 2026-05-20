@@ -1968,7 +1968,7 @@ def do_header(module):
 			xdefs.extend(include(inc.id + '.h', local=True))
 
 	for x in defs:
-		if x.is_stmt_import() and not x.module.hasAttribute('do_not_include'):
+		if x.is_stmt_import() and x.module != None and not x.module.hasAttribute('do_not_include'):
 			s = ""
 			if hasattr(x, 'cinclude'):
 				s = x.cinclude
@@ -2061,7 +2061,7 @@ def do_cfile(module):
 			xdefs.extend(include(inc.id + '.h', local=True))
 
 	for x in defs:
-		if x.is_stmt_import() and not x.module.hasAttribute('do_not_include'):
+		if x.is_stmt_import() and x.module != None and not x.module.hasAttribute('do_not_include'):
 			s = ""
 			if hasattr(x, 'cinclude'):
 				s = x.cinclude

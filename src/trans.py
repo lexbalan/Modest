@@ -2568,7 +2568,7 @@ def do_import(x):
 				cmodule.defs.append(d)
 
 		cmodule.included_modules.append(m)
-		return
+		return StmtImport(impline, name=None, module=None, ti=x['ti'], include=True)
 
 	y = StmtImport(impline, _as, module=m, ti=x['ti'], include=False)
 

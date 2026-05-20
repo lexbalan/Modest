@@ -2,6 +2,8 @@ private import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func named_args_test (a: Int32, b: Int32, c: Int32) -> Int32 {

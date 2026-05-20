@@ -3,6 +3,9 @@ include "ctypes64"
 include "stdio"
 include "math"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/math"
 
 
 @nonstatic

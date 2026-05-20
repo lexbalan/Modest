@@ -4,6 +4,10 @@ include "stdlib"
 include "stdio"
 include "limits"
 
+include "libc/ctypes64"
+include "libc/stdlib"
+include "libc/stdio"
+include "limits"
 
 
 

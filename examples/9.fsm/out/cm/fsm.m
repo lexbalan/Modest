@@ -2,6 +2,8 @@ private import "builtin"
 include "assert"
 include "stdio"
 
+include "libc/assert"
+include "libc/stdio"
 
 
 public type StageId = @branded Word16

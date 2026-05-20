@@ -2,6 +2,8 @@ private import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func xor_encrypter (buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -> Unit {

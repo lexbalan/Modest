@@ -2,6 +2,7 @@ private import "builtin"
 private import "lightfood/console"
 include "ctypes64"
 
+include "libc/ctypes64"
 import "lightfood/console" as console
 
 

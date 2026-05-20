@@ -3,6 +3,8 @@ private import "misc/sha256"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 import "misc/sha256" as sha256
 
 

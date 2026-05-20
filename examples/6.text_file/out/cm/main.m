@@ -1,6 +1,7 @@
 private import "builtin"
 include "libc"
 
+include "libc/libc"
 
 
 const filename = *Str8 "file.txt"

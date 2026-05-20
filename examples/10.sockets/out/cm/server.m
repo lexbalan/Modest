@@ -4,6 +4,10 @@ include "stdio"
 include "stdlib"
 include "socket"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/socket"
 
 
 const filename = "file2.txt"

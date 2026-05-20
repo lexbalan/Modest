@@ -2,6 +2,8 @@ private import "builtin"
 include "ctypes64"
 include "string"
 
+include "libc/ctypes64"
+include "libc/string"
 
 
 public const hashSize = 32

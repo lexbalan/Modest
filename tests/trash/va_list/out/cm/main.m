@@ -3,6 +3,9 @@ include "ctypes64"
 include "stdio"
 include "unistd"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/unistd"
 
 //include "lightfood/print"
 //pragma c_include "./print.h"

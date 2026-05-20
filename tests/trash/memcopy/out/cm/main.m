@@ -3,6 +3,8 @@ private import "lightfood/memory"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 import "lightfood/memory" as mem
 
 

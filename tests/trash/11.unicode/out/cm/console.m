@@ -5,6 +5,10 @@ include "unistd"
 include "stdio"
 include "string"
 
+include "libc/ctypes64"
+include "libc/unistd"
+include "libc/stdio"
+include "libc/string"
 import "misc/utf" as utf
 
 

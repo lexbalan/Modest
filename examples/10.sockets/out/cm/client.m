@@ -5,6 +5,11 @@ include "stdlib"
 include "unistd"
 include "socket"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/unistd"
+include "libc/socket"
 
 
 const filename = "file.txt"

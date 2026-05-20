@@ -4,6 +4,9 @@ include "ctypes64"
 include "stdlib"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdlib"
+include "libc/stdio"
 import "list" as list
 
 
