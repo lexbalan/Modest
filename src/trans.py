@@ -273,16 +273,16 @@ def create_builtin_module():
 	# (used in index, extra agrs & generic numeric var definitions)
 
 	builtin_symtab = Symtab()
-	builtin_module = Module("builtin", ast=None, symtab=builtin_symtab, sourcename="__builtin_source__")
+	builtin_module = Module("builtin", ast=None, symtab=builtin_symtab, defs=[], sourcename="__builtin_source__")
 
 	target_symtab = Symtab()
-	target_module = Module("target", ast=None, symtab=target_symtab, sourcename="__target_source__")
+	target_module = Module("target", ast=None, symtab=target_symtab, defs=[], sourcename="__target_source__")
 
 	import_target = StmtImport(impline="builtin/target", name="builtin", module=target_module, ti=builtin_ti, include=False)
 	builtin_module.imports_public["target"] = import_target
 
 	compiler_symtab = Symtab()
-	compiler_module = Module("compiler", ast=None, symtab=compiler_symtab, sourcename="__compiler_source__")
+	compiler_module = Module("compiler", ast=None, symtab=compiler_symtab, defs=[], sourcename="__compiler_source__")
 
 	import_compiler = StmtImport(impline="builtin/compiler", name="builtin", module=compiler_module, ti=builtin_ti, include=False)
 	builtin_module.imports_public["compiler"] = import_compiler
@@ -2682,7 +2682,7 @@ def process_module(idStr, sourcename, ast, is_include):
 
 	global_prefix = idStr + '_'
 	csymtab = Symtab(parent=builtinSymtab)
-	cmodule = Module(idStr, ast, csymtab, sourcename)
+	cmodule = Module(id_str=idStr, ast=ast, symtab=csymtab, defs=[], sourcename=sourcename)
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=builtin_ti, include=False)
 	cmodule.imports_private["builtin"] = import_builtin

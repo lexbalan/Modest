@@ -200,8 +200,8 @@ class Entity():
 
 
 class Module:
-	def __init__(self, idStr, ast, symtab, sourcename):
-		self.id = idStr
+	def __init__(self, id_str, ast, symtab, defs, sourcename):
+		self.id = id_str
 		self.sourcename = sourcename
 		self.ast = ast
 		#self.prefix = idStr
@@ -212,7 +212,7 @@ class Module:
 		self.included_modules = []
 		self.symtab = symtab
 		self.source_abspath = None
-		self.defs = []
+		self.defs = defs
 		self.attributes = {}
 		self.helpers = []  #
 
