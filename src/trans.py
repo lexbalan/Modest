@@ -140,6 +140,8 @@ def valueZeroNumber(ti):
 builtin_module = None
 
 
+builtinSymtab = None
+
 def init():
 	#lib_path = settings['lib']
 	types.init(settings['pointer_width'])
@@ -153,61 +155,61 @@ def init():
 	# decimal operation precision
 	decimal.getcontext().prec = settings['precision']
 
-	global csymtab
+	global builtinSymtab
 	# init main context
-	csymtab = Symtab()
+	builtinSymtab = Symtab()
 
-	csymtab.type_add('Unit', typeUnit)
-	csymtab.type_add('Bool', typeBool)
+	builtinSymtab.type_add('Unit', typeUnit)
+	builtinSymtab.type_add('Bool', typeBool)
 
-	csymtab.type_add('Integer', typeInteger)
-	csymtab.type_add('Rational', typeRational)
+	builtinSymtab.type_add('Integer', typeInteger)
+	builtinSymtab.type_add('Rational', typeRational)
 
-	csymtab.type_add('Byte', typeByte)
+	builtinSymtab.type_add('Byte', typeByte)
 
-	csymtab.type_add('Word8', typeWord8)
-	csymtab.type_add('Word16', typeWord16)
-	csymtab.type_add('Word32', typeWord32)
-	csymtab.type_add('Word64', typeWord64)
-	csymtab.type_add('Word128', typeWord128)
-	#csymtab.type_add('Word256', typeWord256)
+	builtinSymtab.type_add('Word8', typeWord8)
+	builtinSymtab.type_add('Word16', typeWord16)
+	builtinSymtab.type_add('Word32', typeWord32)
+	builtinSymtab.type_add('Word64', typeWord64)
+	builtinSymtab.type_add('Word128', typeWord128)
+	#builtinSymtab.type_add('Word256', typeWord256)
 
-	csymtab.type_add('Int8', typeInt8)
-	csymtab.type_add('Int16', typeInt16)
-	csymtab.type_add('Int32', typeInt32)
-	csymtab.type_add('Int64', typeInt64)
-	csymtab.type_add('Int128', typeInt128)
-	#csymtab.type_add('Int256', typeInt256)
+	builtinSymtab.type_add('Int8', typeInt8)
+	builtinSymtab.type_add('Int16', typeInt16)
+	builtinSymtab.type_add('Int32', typeInt32)
+	builtinSymtab.type_add('Int64', typeInt64)
+	builtinSymtab.type_add('Int128', typeInt128)
+	#builtinSymtab.type_add('Int256', typeInt256)
 
-	csymtab.type_add('Nat8', typeNat8)
-	csymtab.type_add('Nat16', typeNat16)
-	csymtab.type_add('Nat32', typeNat32)
-	csymtab.type_add('Nat64', typeNat64)
-	csymtab.type_add('Nat128', typeNat128)
-	#csymtab.type_add('Nat256', typeNat256)
+	builtinSymtab.type_add('Nat8', typeNat8)
+	builtinSymtab.type_add('Nat16', typeNat16)
+	builtinSymtab.type_add('Nat32', typeNat32)
+	builtinSymtab.type_add('Nat64', typeNat64)
+	builtinSymtab.type_add('Nat128', typeNat128)
+	#builtinSymtab.type_add('Nat256', typeNat256)
 
-	#csymtab.type_add('Float16', typeFloat16)
-	csymtab.type_add('Float32', typeFloat32)
-	csymtab.type_add('Float64', typeFloat64)
+	#builtinSymtab.type_add('Float16', typeFloat16)
+	builtinSymtab.type_add('Float32', typeFloat32)
+	builtinSymtab.type_add('Float64', typeFloat64)
 
-	csymtab.type_add('Fixed32', typeFixed32)
-	csymtab.type_add('Fixed64', typeFixed64)
+	builtinSymtab.type_add('Fixed32', typeFixed32)
+	builtinSymtab.type_add('Fixed64', typeFixed64)
 
-	#csymtab.type_add('Decimal32', typeDecimal32)
-	#csymtab.type_add('Decimal64', typeDecimal64)
-	#csymtab.type_add('Decimal128', typeDecimal128)
+	#builtinSymtab.type_add('Decimal32', typeDecimal32)
+	#builtinSymtab.type_add('Decimal64', typeDecimal64)
+	#builtinSymtab.type_add('Decimal128', typeDecimal128)
 
-	csymtab.type_add('Char8', typeChar8)
-	csymtab.type_add('Char16', typeChar16)
-	csymtab.type_add('Char32', typeChar32)
+	builtinSymtab.type_add('Char8', typeChar8)
+	builtinSymtab.type_add('Char16', typeChar16)
+	builtinSymtab.type_add('Char32', typeChar32)
 
-	csymtab.type_add('Str8', typeStr8)
-	csymtab.type_add('Str16', typeStr16)
-	csymtab.type_add('Str32', typeStr32)
+	builtinSymtab.type_add('Str8', typeStr8)
+	builtinSymtab.type_add('Str16', typeStr16)
+	builtinSymtab.type_add('Str32', typeStr32)
 
-	csymtab.type_add('Ptr', typeFreePointer)
+	builtinSymtab.type_add('Ptr', typeFreePointer)
 
-	csymtab.type_add('__VA_List', type__VA_List)
+	builtinSymtab.type_add('__VA_List', type__VA_List)
 
 
 	global valueTrue, valueFalse, valueNil
@@ -215,9 +217,9 @@ def init():
 	valueTrue = value_bool_create(1, ti=builtin_ti)
 	valueFalse = value_bool_create(0, ti=builtin_ti)
 
-	csymtab.value_add('nil', valueNil)
-	csymtab.value_add('true', valueTrue)
-	csymtab.value_add('false', valueFalse)
+	builtinSymtab.value_add('nil', valueNil)
+	builtinSymtab.value_add('true', valueTrue)
+	builtinSymtab.value_add('false', valueFalse)
 
 	word_width = int(settings['word_width'])
 	char_width = int(settings['char_width'])
@@ -235,7 +237,7 @@ def init():
 	typeSysSize.id = Id('Size')
 	typeSysSize.id.c = 'size_t'
 
-	csymtab.type_add('Size', typeSysSize)
+	builtinSymtab.type_add('Size', typeSysSize)
 
 	undefinedVolume = ValueUndef(typeSysNat, ti=None)
 	typeSysStr = TypePointer(TypeArray(typeSysChar, undefinedVolume))
@@ -2679,7 +2681,7 @@ def process_module(idStr, sourcename, ast, is_include):
 	prev_global_prefix = global_prefix
 
 	global_prefix = idStr + '_'
-	csymtab = Symtab(parent=csymtab)
+	csymtab = Symtab(parent=builtinSymtab)
 	cmodule = Module(idStr, ast, csymtab, sourcename)
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=builtin_ti, include=False)
