@@ -20,6 +20,7 @@ func main () -> Int {
 	var librarian: lib.Librarian
 	var m1: lib.mod1.Mod
 	var m2: lib.mod2.Mod
+	//var libb = lib.privateConst
 	printf("mod1.modName = '%s'\n", *Str8 mod1.modName)
 	printf("mod2.modName = '%s'\n", *Str8 mod2.modName)
 	lib.printf("??")

@@ -4,6 +4,8 @@
 import "./mod1"
 import "./mod2"
 
+const privateConst = false
+
 public type Librarian = {
 	name: *Str8
 }

@@ -455,15 +455,13 @@ def do_type_named(x):
 			error("unknown namespace", x['ti'])
 			return TypeBad(x['ti'])
 
-		t = module.type_get_public(id_str)
+		t = module.type_get(id_str)
 
 		if t == None:
-			t = module.type_get_private(id_str)
-			if t != None:
-				error("access to private type", x['ti'])
-			else:
-				error("undefined type2", x['ti'])
+			error("undefined type2", x['ti'])
 			return TypeBad(x['ti'])
+		elif t.definition.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
+			error("access to private type", x['ti'])
 
 		if t.is_incompleted():
 			t = type_update_incompleted(module, t, id_str)
@@ -1382,13 +1380,11 @@ def do_value_access(x):
 	if left['kind'] == 'id' and csymtab.value_get(left['str']) == None and is_import_name(cmodule, left['str']):
 		# left is id of import
 		imp = cmodule.get_import(left['str'], with_private=True)
-		xv = imp.module.value_get_public(x['right']['str'])
+		xv = imp.module.value_get(x['right']['str'])
 		if xv == None:
-			xv = imp.module.value_get_private(x['right']['str'])
-			if xv == None:
-				error("unk value `%s.%s`" % (left['str'], x['right']['str']), x['ti'])
-			else:
-				error("access to private value `%s.%s`" % (left['str'], x['right']['str']), x['ti'])
+			error("unknown value", x['ti'])
+		elif xv.definition.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
+			error("access to private value `%s.%s`" % (left['str'], x['right']['str']), x['ti'])
 			return ValueBad(x['right']['ti'])
 		nv = ValueAccessModule(xv.type, imp, do_id(x['right']), xv, ti=x['ti'])
 		return nv

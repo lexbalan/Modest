@@ -249,17 +249,11 @@ class Module:
 			self.symtab_private.value_add(id_str, v)
 
 
-	def value_get_public(self, id_str):
+	def value_get(self, id_str):
 		return self.symtab.value_get(id_str)
 
-	def value_get_private(self, id_str):
-		return self.symtab_private.value_get(id_str)
-
-	def type_get_public(self, id_str):
+	def type_get(self, id_str):
 		return self.symtab.type_get(id_str)
-
-	def type_get_private(self, id_str):
-		return self.symtab_private.type_get(id_str)
 
 	def get_import(self, id_str, with_private=False):
 		imp = self.imports_public.get(id_str)
