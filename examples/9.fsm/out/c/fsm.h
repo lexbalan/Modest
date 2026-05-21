@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 typedef uint16_t fsm_StageId;
+struct fsm_state_desc;
 typedef struct fsm_complex_state fsm_ComplexState;
 struct fsm_complex_state {
 	struct fsm_state_desc *state;

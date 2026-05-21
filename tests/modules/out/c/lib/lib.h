@@ -6,8 +6,10 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+#define LIB_LENN 10
 struct lib_librarian {
 	char *name;
+	char name2[LIB_LENN];
 };
 void lib_printf(char *s, ...);
 #endif

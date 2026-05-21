@@ -461,17 +461,14 @@ def do_type_named(x):
 		if id_str in ['Char16', 'Char32', 'Str16', 'Str32']:
 			# включаем в модуле поддержку unicode
 			cmodule_use('use_unicode')
-		return csymtab.type_get(id_str)
+		t = csymtab.type_get(id_str)
 
 	if t == None:
 		error("undefined type", x['ti'])
 		return TypeBad(x['ti'])
 
-
 	# если дело происходит не в определении типа и пришел undefined тип
-	if t.is_incompleted():
-		#if not cdef.is_stmt_def_type():
-		#	warning("forward references to non-struct type", x['ti'])
+	if cdef != None and t.is_incompleted():
 		cdef.deps.append(t)
 
 	if t.hasAttribute("deprecated"):
@@ -484,7 +481,8 @@ def do_type_named(x):
 def do_type_pointer(x):
 	#info("%s" % x, x['ti'])
 	to = do_type_internal(x['to'])
-	return TypePointer(to, ti=x['ti'])
+	nt = TypePointer(to, ti=x['ti'])
+	return nt
 
 
 def do_type_array(x):
@@ -503,6 +501,7 @@ def do_type_array(x):
 				error("non local VLA", t.get_size().ti)
 
 	nt = TypeArray(of, volume, ti=x['ti'])
+
 	# [][] разрешено создавать, но они отольются в [] в backend, и чтобы снмим работать нужно привести явно к [n][m] (!)
 	#if nt.is_open_array() and of.is_open_array():
 	#	error("open arrays of open arrays are forbidden", of.ti)
@@ -1913,7 +1912,7 @@ def do_stmt_assign(x):
 
 
 
-def do_stmt_incdec(x, op=HLIR_VALUE_OP_ADD):
+def do_stmt_incdec(x, op):
 	v = do_value(x['value'])
 
 	if v.isValueBad():
@@ -2086,8 +2085,6 @@ def def_type_common(x, nt):
 	definition.access_level = get_access_level(x)
 	definition.nl = x['nl']
 
-#	info("%s" % get_access_level(x), x['ti'])
-
 	prev_cdef = cdef
 	cdef = definition
 
@@ -2120,9 +2117,7 @@ def def_type_common(x, nt):
 
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое
-	deps = nt.deps
 	Type.update(nt, ty)
-	nt.deps = deps
 	nt.id = id
 
 	#info("?%d?" % hasattr(ty, 'id'), x['ti'])
@@ -2147,6 +2142,7 @@ def def_type_common(x, nt):
 
 	assert(nt.definition != None)
 	cdef = prev_cdef
+
 	return definition
 
 

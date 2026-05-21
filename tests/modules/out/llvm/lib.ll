@@ -141,11 +141,20 @@ break_2:
 ; -- strings --
 ; -- endstrings --
 %lib_Librarian = type {
-	%Str8*
+	%Str8*,
+	[10 x %Char8]
 };
 
 define void @lib_printf(%Str8* %s, ...) {
 	ret void
 }
+
+%X = type {
+	%Y*
+};
+
+%Y = type {
+	%Int32
+};
 
 

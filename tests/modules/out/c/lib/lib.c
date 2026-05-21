@@ -11,4 +11,14 @@
 
 void lib_printf(char *s, ...) {
 }
+struct y;
+typedef struct y Y;
+typedef struct x X;
+struct x {
+	Y *y;
+};
+typedef struct y Y;
+struct y {
+	int32_t x;
+};
 

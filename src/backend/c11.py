@@ -30,6 +30,7 @@ intWidth = 32
 
 # идетнифиаторы декларированных (или определенных) сущностей
 declared = []
+defined = []
 
 
 func_undef_list = []
@@ -1552,8 +1553,6 @@ def do_decl_func(x):
 
 
 def do_def_func(x):
-	global declared
-
 	if x.stmt == None:
 		return do_decl_func(x)
 
@@ -1761,33 +1760,33 @@ def is_private(x):
 
 
 def do_deps(deps):
-	global declared
-
 	xdeps = []
-
-	# печатаем декларации для типов от которых зависит этот тип
 	for dep in deps:
-		id_str = get_id_str(dep)
-		if not id_str in declared:
-			declared.append(id_str)
-
-			if isinstance(dep, Value):
-				xx = do_decl_func(dep.definition)
-				xdeps.extend(xx)
-
-			elif isinstance(dep, TypeRecord):
-				xx = do_decl_type_record(dep.definition)
-				xdeps.extend(xx)
-
+		xdeps.extend(do_dep(dep))
 	return xdeps
+
+
+
+def do_dep(dep):
+	if dep in declared:
+		return []
+
+	if isinstance(dep, ValueFunc):
+		declared.append(dep)
+		return do_decl_func(dep.definition)
+
+	if isinstance(dep, TypeRecord):
+		declared.append(dep)
+		if dep.definition == None:
+			info("NONE/?", dep.ti)
+		return do_decl_type_record(dep.definition)
+
+	return []
+
 
 
 def do_decl_type_record(x):
 	t = x.type
-	return do_decl_type_record2(t)
-
-
-def do_decl_type_record2(t):
 	tag = get_record_tag(t)
 	isa = 'struct' if not t.layout == 'union' else 'union'
 	kisa = isa + ' ' + tag

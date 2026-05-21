@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+struct list_node;
 struct list_node {
 	struct list_node *next;
 	struct list_node *prev;

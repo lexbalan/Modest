@@ -636,7 +636,6 @@ class Type(Entity):
 		self.align = align
 		self.ops = ops
 		self.attributes = {}
-		self.deps = []
 		self.ti = None
 		self.incomplete = True
 		self.definition = None
@@ -1561,6 +1560,7 @@ class TypeArray(Type):
 		self.size = array_size
 		self.align = of.get_align()
 
+
 	# Получить список типов от которых данный тип зависит напрямую
 	def get_dir_deps(self, deps):
 		if self.of.is_composite2():
@@ -1568,13 +1568,15 @@ class TypeArray(Type):
 				deps.append(self.of)
 				self.of.get_dir_deps(deps)
 		return deps
-	
+
+
 	def get_size(self):
 		if self.volume.isValueImmediate():
 			if self.volume.asset != None:  # check for ValueUndef
 				return self.of.get_size() * self.volume.asset
 		return 0
-	
+
+
 	def get_root(self):
 		if self.of.is_array():
 			return self.of.get_root()

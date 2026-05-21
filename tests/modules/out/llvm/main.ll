@@ -218,7 +218,8 @@ declare void @perror(%ConstCharStr* %str)
 
 ; from import "lib"
 %lib_Librarian = type {
-	%Str8*
+	%Str8*,
+	[10 x %Char8]
 };
 
 declare void @lib_printf(%Str8* %s, ...)

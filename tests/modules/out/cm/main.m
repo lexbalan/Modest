@@ -5,6 +5,8 @@ private import "./lib/mod2"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 import "./lib/lib" as lib
 import "./lib/mod1" as mod1
 import "./lib/mod2" as mod2
