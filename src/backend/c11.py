@@ -1529,6 +1529,7 @@ def do_cstmt(x):
 	elif x.is_stmt_comment(): return do_stmt_comment(x)
 	elif x.is_stmt_asm(): return do_stmt_asm(x)
 	elif x.is_stmt_def_type(): return do_def_type(x)
+	elif x.is_stmt_def_func(): return CInsert("") #do_def_func(x)
 	1/0
 
 
@@ -1553,14 +1554,20 @@ def do_decl_func(x):
 
 
 def do_def_func(x):
+	global cfunc
+
 	if x.stmt == None:
 		return do_decl_func(x)
 
 	func = x.value
 
-	global cfunc
+	old_cfunc = cfunc
 	cfunc = func
 
+	xdefs = []
+
+	for df in func.funcs:
+		xdefs.extend(do_def_func(df))
 
 	storage_class = ''
 	if x.hasAttribute('extern'):
@@ -1601,8 +1608,10 @@ def do_def_func(x):
 	ftype = do_ctype(func.type)
 	dv = CStmtDefFunc(get_id_str(func), ftype, cblock, storage_class=storage_class, attributes=x.attributes)
 
-	cfunc = None
-	return (dv,)
+	cfunc = old_cfunc
+
+	xdefs.append(dv)
+	return xdefs
 
 
 ######## -----------

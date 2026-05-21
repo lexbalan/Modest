@@ -2277,7 +2277,8 @@ def print_stmt(x):
 	elif x.is_stmt_again(): print_stmt_again(x)
 	elif x.is_stmt_comment(): print_comment(x)
 	elif x.is_stmt_asm(): print_stmt_asm(x)
-	elif x.is_stmt_def_type(): pass #print_def_type(x)
+	elif x.is_stmt_def_type(): pass
+	elif x.is_stmt_def_func(): pass
 	else: lo("<stmt %s>" % str(x))
 
 
@@ -2428,6 +2429,9 @@ def print_def_func(x):
 	# print local typedefs
 	for typedef in fn.typedefs:
 		print_def_type(typedef)
+
+	for funcdef in fn.funcs:
+		print_def_func(funcdef)
 
 	fctx = {
 		'func': fn,  # cfunc

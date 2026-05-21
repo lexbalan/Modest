@@ -1860,6 +1860,13 @@ def do_stmt_type(x):
 	return df
 
 
+def do_stmt_func(x):
+	#global csymtab
+	df = def_func(x)
+	cfunc.funcs.append(df)
+	return df
+
+
 def do_stmt_again(x):
 	return StmtAgain(x['ti'])
 
@@ -2028,6 +2035,7 @@ def do_stmt(x):
 	elif k == 'inc': s = do_stmt_incdec(x, HLIR_VALUE_OP_ADD)
 	elif k == 'dec': s = do_stmt_incdec(x, HLIR_VALUE_OP_SUB)
 	elif k == 'type': s = do_stmt_type(x)
+	elif k == 'func': s = do_stmt_func(x)
 	elif k == 'comment-line':
 		print("------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 		s = do_stmt_comment_line(x)
@@ -2345,6 +2353,10 @@ def def_func(x):
 	global cfunc
 	global cmodule
 	global csymtab
+
+	if is_local_context():
+		# this is a nested function
+		deccl_func(x)
 
 	# значение функции уже существует, (возможно - undefined)
 	# тк мы ранее сделали проход
@@ -2769,6 +2781,36 @@ def get_access_level(x):
 
 
 
+
+def deccl_func(x, is_include=False):
+	if id_already_used(x['id']['str'], shallow=True):
+		exist = csymtab.value_get(x['id']['str'])
+		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+		info("previous definition was here (%s)" % ti.start.source, exist.ti)
+
+	# Create function value with incomplete type
+	t = Type(x['ti'])  # Incomplete type (!)
+	v = ValueFunc(t, do_id(x['id']), x['ti'])
+
+	definition = StmtDefFunc(v.id, v, None, x['ti'])
+	definition.id = v.id
+	definition.parent = cmodule
+	definition.module = cmodule
+	definition.access_level = get_access_level(x)
+	definition.nl = x['nl']
+	v.definition = definition
+
+	if not is_include:
+		v.parent = cmodule
+
+	is_public = get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC
+	csymtab.value_add(x['id']['str'], v, is_public=is_public)
+	v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
+
+	return definition
+
+
+
 def def_phase1(ast, is_include=False):
 	global csymtab, cmodule
 
@@ -2793,29 +2835,8 @@ def def_phase1(ast, is_include=False):
 				t.is_global_type = True
 
 			elif kind == 'func':
-				#mass
-				if id_already_used(x['id']['str'], shallow=True):
-					exist = csymtab.value_get(x['id']['str'])
-					error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
-					info("previous definition was here (%s)" % ti.start.source, exist.ti)
+				deccl_func(x, is_include)
 
-				# Create function value with incomplete type
-				t = Type(x['ti'])  # Incomplete type (!)
-				v = ValueFunc(t, do_id(x['id']), x['ti'])
-
-
-				definition = StmtDefFunc(v.id, v, None, x['ti'])
-				definition.id = v.id
-				definition.parent = cmodule
-				definition.module = cmodule
-				definition.access_level = get_access_level(x)
-				definition.nl = x['nl']
-				v.definition = definition
-
-				if not is_include:
-					v.parent = cmodule
-				csymtab.value_add(id['str'], v, is_public=is_public)
-				v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 		if isa == 'ast_directive':
 			if x['kind'] == 'module':

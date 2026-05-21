@@ -2148,6 +2148,7 @@ class ValueFunc(Value):
 		self.is_runtime = False
 		self.usecnt = 0
 		self.typedefs = []
+		self.funcs = []
 
 
 

@@ -1836,6 +1836,8 @@ class Parser:
 				s = self.stmt_inc()
 			elif self.look('--'):
 				s = self.stmt_dec()
+			elif self.look('func'):
+				s = self.parse_def_func()
 			elif self.look('__asm'):
 				s = self.stmt_asm()
 			elif self.match(';'):

@@ -963,6 +963,7 @@ def str_stmt2(x):
 	elif x.is_stmt_comment(): return str_stmt_comment(x)
 	elif x.is_stmt_asm(): return str_stmt_asm(x)
 	elif x.is_stmt_def_type(): return str_stmt_type(x)
+	elif x.is_stmt_def_func(): return str_stmt_func(x)
 
 	return "<stmt %s>" % str(x)
 
