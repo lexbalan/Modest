@@ -1,4 +1,4 @@
-private import "builtin"
+import "builtin"
 include "libc"
 
 include "libc/libc"

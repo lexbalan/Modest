@@ -1,5 +1,5 @@
-private import "builtin"
-private import "misc/utf"
+import "builtin"
+import "misc/utf"
 include "ctypes64"
 include "unistd"
 include "stdio"

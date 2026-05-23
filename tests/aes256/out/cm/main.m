@@ -1,5 +1,5 @@
-private import "builtin"
-private import "misc/aes256"
+import "builtin"
+import "misc/aes256"
 include "stdlib"
 include "stdio"
 

@@ -1,5 +1,5 @@
-private import "builtin"
-private import "misc/sha256"
+import "builtin"
+import "misc/sha256"
 include "ctypes64"
 include "stdlib"
 include "stdio"

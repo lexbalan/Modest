@@ -1,5 +1,5 @@
-private import "builtin"
-private import "misc/pthread"
+import "builtin"
+import "misc/pthread"
 include "ctypes64"
 include "stdio"
 include "unistd"

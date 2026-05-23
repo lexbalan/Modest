@@ -1044,12 +1044,8 @@ def run(module, fname):
 
 	ss = []
 
-	for x in module.imports_private:
-		stmt_import = module.imports_private[x]
-		ss.append('private import "%s"\n' % (stmt_import.impline))
-
-	for x in module.imports_public:
-		stmt_import = module.imports_public[x]
+	for x in module.imports:
+		stmt_import = module.imports[x]
 		ss.append('import "%s"\n' % (stmt_import.impline))
 
 	for x in module.included_modules:

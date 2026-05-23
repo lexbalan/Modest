@@ -1,5 +1,5 @@
-private import "builtin"
-private import "list"
+import "builtin"
+import "list"
 include "ctypes64"
 include "stdlib"
 include "stdio"

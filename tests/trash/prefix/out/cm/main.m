@@ -1,5 +1,5 @@
-private import "builtin"
-private import "lib"
+import "builtin"
+import "lib"
 include "stdio"
 
 include "libc/stdio"

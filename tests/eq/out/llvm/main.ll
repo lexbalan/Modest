@@ -210,14 +210,12 @@ declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; from included limits
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [18 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 32, i8 33, i8 61, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 48, i8 10, i8 0]
 @.str2 = private constant [18 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 49, i8 32, i8 33, i8 61, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 49, i8 10, i8 0]

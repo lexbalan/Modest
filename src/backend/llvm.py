@@ -2791,8 +2791,7 @@ def print_imports(imports):
 		already_imported.append(imp.name)
 
 		print_included(imp)
-		print_imports(imp.module.imports_public)
-		print_imports(imp.module.imports_private)
+		print_imports(imp.module.imports)
 
 		out("\n\n; from import \"%s\"" % imp.name)
 
@@ -2828,13 +2827,9 @@ def print_module(m):
 	print_included(m)
 	out("\n; -- end print includes --")
 
-	out("\n; -- print imports private '%s' --" % m.id)
-	print_imports(m.imports_private)
-	out("\n; -- end print imports private '%s' --" % m.id)
-
-	out("\n; -- print imports public '%s' --" % m.id)
-	print_imports(m.imports_public)
-	out("\n; -- end print imports public '%s' --" % m.id)
+	out("\n; -- print imports '%s' --" % m.id)
+	print_imports(m.imports)
+	out("\n; -- end print imports '%s' --" % m.id)
 
 	# печатаем декларации
 	# из экспортируемой части импортированных модулей

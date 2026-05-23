@@ -114,14 +114,12 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports private 'aes256' --
+; -- print imports 'aes256' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'aes256' --
-; -- print imports public 'aes256' --
-; -- end print imports public 'aes256' --
+; -- end print imports 'aes256' --
 ; -- strings --
 ; -- endstrings --
 

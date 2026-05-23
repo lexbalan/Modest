@@ -1,5 +1,5 @@
-private import "builtin"
-private import "fsm"
+import "builtin"
+import "fsm"
 include "ctypes64"
 include "stdio"
 

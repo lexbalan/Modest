@@ -1,4 +1,4 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "string"
 include "stdio"

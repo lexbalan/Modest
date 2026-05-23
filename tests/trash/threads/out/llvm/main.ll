@@ -279,7 +279,7 @@ declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
@@ -399,9 +399,7 @@ declare %Int @pthread_spin_lock(%PThreadSpinlockT* %s)
 declare %Int @pthread_spin_unlock(%PThreadSpinlockT* %s)
 
 ; end from import "pthread"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [21 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 116, i8 104, i8 114, i8 101, i8 97, i8 100, i8 32, i8 48, i8 10, i8 0]
 @.str2 = private constant [21 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 116, i8 104, i8 114, i8 101, i8 97, i8 100, i8 32, i8 49, i8 10, i8 0]

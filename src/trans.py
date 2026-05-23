@@ -268,13 +268,13 @@ def create_builtin_module():
 	target_module = Module("target", ast=None, symtab=target_symtab, defs=[], sourcename="__target_source__")
 
 	import_target = StmtImport(impline="builtin/target", name="builtin", module=target_module, ti=builtin_ti, include=False)
-	builtin_module.imports_public["target"] = import_target
+	builtin_module.imports["target"] = import_target
 
 	compiler_symtab = Symtab()
 	compiler_module = Module("compiler", ast=None, symtab=compiler_symtab, defs=[], sourcename="__compiler_source__")
 
 	import_compiler = StmtImport(impline="builtin/compiler", name="builtin", module=compiler_module, ti=builtin_ti, include=False)
-	builtin_module.imports_public["compiler"] = import_compiler
+	builtin_module.imports["compiler"] = import_compiler
 
 
 	#
@@ -1358,7 +1358,7 @@ def do_value_slice(x):
 
 
 def is_import_name(module, id_str):
-	return id_str in module.imports_private or id_str in module.imports_public
+	return id_str in module.imports
 
 
 def do_value_access(x):
@@ -2572,9 +2572,9 @@ def do_import(x):
 	y = StmtImport(impline, _as, module=m, ti=x['ti'], include=False)
 
 	if access_level == 'private':
-		cmodule.imports_private[_as] = y
+		cmodule.imports[_as] = y
 	elif access_level == 'public':
-		cmodule.imports_public[_as] = y
+		cmodule.imports[_as] = y
 	else:
 		1/0
 
@@ -2682,7 +2682,7 @@ def process_module(idStr, sourcename, ast, is_include):
 	cmodule = Module(id_str=idStr, ast=ast, symtab=csymtab, defs=[], sourcename=sourcename)
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=builtin_ti, include=False)
-	cmodule.imports_private["builtin"] = import_builtin
+	cmodule.imports["builtin"] = import_builtin
 
 	# 0. do imports & directives
 	i = 0

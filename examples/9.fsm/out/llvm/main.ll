@@ -194,7 +194,7 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
@@ -238,9 +238,7 @@ declare %fsm_StageId @fsm_getStage(%fsm_FSM %fsm)
 declare %Str8* @fsm_getStateName(%fsm_FSM* %fsm)
 
 ; end from import "fsm"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [7 x i8] [i8 115, i8 116, i8 97, i8 116, i8 101, i8 48, i8 0]
 @.str2 = private constant [7 x i8] [i8 115, i8 116, i8 97, i8 116, i8 101, i8 49, i8 0]

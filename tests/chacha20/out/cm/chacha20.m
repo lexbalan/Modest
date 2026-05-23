@@ -1,4 +1,4 @@
-private import "builtin"
+import "builtin"
 
 
 public type Key = [8]Word32

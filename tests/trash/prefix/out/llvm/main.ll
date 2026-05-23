@@ -194,7 +194,7 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
@@ -207,9 +207,7 @@ declare void @perror(%ConstCharStr* %str)
 declare void @loofoo(%Nat32 %x)
 
 ; end from import "lib"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 ; -- endstrings --
 define %Int @main() {

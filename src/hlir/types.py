@@ -207,8 +207,7 @@ class Module:
 		#self.prefix = idStr
 		self.strings = []   # for LLVM backend
 		self.anon_recs = [] # anonymous records for C backend
-		self.imports_public = {}   # '<import_id>' => {'isa': 'module'}
-		self.imports_private = {}   # '<import_id>' => {'isa': 'module'}
+		self.imports = {}   # '<import_id>' => {'isa': 'module'}
 		self.included_modules = []
 		self.symtab = symtab
 		self.source_abspath = None
@@ -256,9 +255,9 @@ class Module:
 		return self.symtab.type_get(id_str)
 
 	def get_import(self, id_str, with_private=False):
-		imp = self.imports_public.get(id_str)
+		imp = self.imports.get(id_str)
 		if imp == None and with_private:
-			imp = self.imports_private.get(id_str)
+			imp = self.imports.get(id_str)
 		return imp
 
 

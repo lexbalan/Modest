@@ -1,5 +1,5 @@
-private import "builtin"
-private import "misc/minmax"
+import "builtin"
+import "misc/minmax"
 include "ctypes64"
 include "stdio"
 include "math"
