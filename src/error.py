@@ -82,9 +82,8 @@ def highlight(ti, color, offset):
 
 
 def markline(line, begin, end):
-	#return line[0:begin] + colorize(line[begin:end], ITALIC) + line[end:]
-	#return line[0:begin] + '\033[3;4m' + line[begin:end] + color_code(ENDC) + line[end:]
-	return line[0:begin] + '\033[1;3m' + line[begin:end] + color_code(ENDC) + line[end:]
+	return line[0:begin] + '\033[4;3m' + line[begin:end] + color_code(ENDC) + line[end:]   # UNDERLINE
+	#return line[0:begin] + '\033[1;3m' + line[begin:end] + color_code(ENDC) + line[end:]  # BOLD
 
 
 

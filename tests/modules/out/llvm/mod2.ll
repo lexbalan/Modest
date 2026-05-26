@@ -114,14 +114,12 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports private 'mod2' --
+; -- print imports 'mod2' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'mod2' --
-; -- print imports public 'mod2' --
-; -- end print imports public 'mod2' --
+; -- end print imports 'mod2' --
 ; -- strings --
 ; -- endstrings --
 %mod2_Mod = type {

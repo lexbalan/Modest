@@ -23,19 +23,16 @@ typedef uint32_t char32_t;
 #define _STR32(x) __STR32(x)
 #endif
 
-void console_putchar_utf8(char c);
 
 void console_putchar8(char c) {
 	console_putchar_utf8(c);
 }
 
-void console_putchar_utf16(char16_t c);
 
 void console_putchar16(char16_t c) {
 	console_putchar_utf16(c);
 }
 
-void console_putchar_utf32(char32_t c);
 
 void console_putchar32(char32_t c) {
 	console_putchar_utf32(c);
@@ -108,7 +105,6 @@ void console_puts32(char32_t *s) {
 	}
 }
 
-int32_t console_vfprint(int32_t fd, char *form, va_list va);
 
 void console_print(char *form, ...) {
 	va_list va;
@@ -117,7 +113,6 @@ void console_print(char *form, ...) {
 	va_end(va);
 }
 
-int32_t console_vsprint(char *buf, char *form, va_list va);
 
 int32_t console_vfprint(int32_t fd, char *form, va_list va) {
 	char strbuf[256];

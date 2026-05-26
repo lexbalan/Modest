@@ -6,6 +6,8 @@
 #include <stdio.h>
 
 void local(void) {
+	int32_t x;
+	x = 1;
 	printf("hello from 'local' func!\n");
 }
 

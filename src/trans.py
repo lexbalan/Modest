@@ -498,9 +498,15 @@ def do_type_array(x):
 				global cfunc
 				cfunc.addAttribute('stacksave')
 			else:
-				error("non local VLA", t.get_size().ti)
+				error("non local VLA are forbidden", x['ti'])
 
 	nt = TypeArray(of, volume, ti=x['ti'])
+
+	if isinstance(cdef, StmtDefType):
+		if volume.isValueConst():
+			info("type depended from a constant", volume.ti)
+			cdef.deps.append(volume)
+
 
 	# [][] разрешено создавать, но они отольются в [] в backend, и чтобы снмим работать нужно привести явно к [n][m] (!)
 	#if nt.is_open_array() and of.is_open_array():
@@ -1861,8 +1867,11 @@ def do_stmt_type(x):
 
 
 def do_stmt_func(x):
-	#global csymtab
+	global csymtab
+	symtab_before = csymtab
+	csymtab = cmodule.symtab
 	df = def_func(x)
+	csymtab = symtab_before
 	cfunc.funcs.append(df)
 	return df
 
@@ -2786,7 +2795,7 @@ def deccl_func(x, is_include=False):
 	if id_already_used(x['id']['str'], shallow=True):
 		exist = csymtab.value_get(x['id']['str'])
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
-		info("previous definition was here (%s)" % ti.start.source, exist.ti)
+		info("previous definition was here", exist.ti)
 
 	# Create function value with incomplete type
 	t = Type(x['ti'])  # Incomplete type (!)

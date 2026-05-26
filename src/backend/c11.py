@@ -1535,6 +1535,9 @@ def do_cstmt(x):
 
 
 def do_decl_func(x):
+	if x in declared:
+		return []
+
 	func = x.value
 	storage_class = ''
 	if x.hasAttribute('extern'):
@@ -1550,11 +1553,16 @@ def do_decl_func(x):
 
 	ftype = do_ctype(func.type)
 	dv = CStmtDefVar(get_id_str(func), ftype, storage_class=storage_class, attributes=x.attributes)
+	declared.append(x)
 	return (dv,)
 
 
 def do_def_func(x):
 	global cfunc
+	global defined
+
+	if x in defined:
+		return []
 
 	if x.stmt == None:
 		return do_decl_func(x)
@@ -1611,6 +1619,7 @@ def do_def_func(x):
 	cfunc = old_cfunc
 
 	xdefs.append(dv)
+	defined.append(x)
 	return xdefs
 
 
@@ -1665,7 +1674,11 @@ def do_def_func(x):
 
 
 def do_def_type(x):
-	global declared
+	global defined
+
+	if x in defined:
+		return []
+
 	do_deps(x.deps)
 
 	id_str = get_id_str(x.type)
@@ -1675,6 +1688,7 @@ def do_def_type(x):
 		return do_def_type_record(x.type)
 
 	dt = CStmtDefType(id_str, do_ctype(orig_type))
+	defined.append(x)
 	return (dt,)
 
 
@@ -1701,6 +1715,11 @@ def do_def_type_record(t):
 
 
 def do_def_var(x, isdecl=False, is_extern=False):
+	global defined
+
+	if x in defined:
+		return []
+
 	var_value = x.value
 
 	# TODO: Почему-то атрибут 'extern' не работает, и накостылил через is_extern
@@ -1719,11 +1738,17 @@ def do_def_var(x, isdecl=False, is_extern=False):
 		civ = do_cinitializer(var_value.type, x.init_value, ctx=[])
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, attributes=x.attributes)
+	defined.append(x)
 	return (dv,)
 
 
 
 def do_def_const(x):
+	global defined
+
+	if x in defined:
+		return []
+
 	if x.hasAttribute('extern'):
   		return (CInsert(""),)
 
@@ -1741,6 +1766,7 @@ def do_def_const(x):
 	#iv.mark = str(x.init_value)
 	macro = CMacrodefinitionValue(id_str, iv)
 	module_undef_list.append(id_str)
+	defined.append(x)
 	return (macro,)
 
 
@@ -1777,17 +1803,15 @@ def do_deps(deps):
 
 
 def do_dep(dep):
-	if dep in declared:
-		return []
+	global defined, declared
+
+	if isinstance(dep, ValueConst):
+		return do_def_const(dep.definition)
 
 	if isinstance(dep, ValueFunc):
-		declared.append(dep)
 		return do_decl_func(dep.definition)
 
 	if isinstance(dep, TypeRecord):
-		declared.append(dep)
-		if dep.definition == None:
-			info("NONE/?", dep.ti)
 		return do_decl_type_record(dep.definition)
 
 	return []
@@ -1795,11 +1819,15 @@ def do_dep(dep):
 
 
 def do_decl_type_record(x):
+	if x in declared:
+		return []
+
 	t = x.type
 	tag = get_record_tag(t)
 	isa = 'struct' if not t.layout == 'union' else 'union'
 	kisa = isa + ' ' + tag
 	dt = CStmtDeclType(CTypeNamed(kisa))
+	declared.append(x)
 	if t.is_open_record:
 		df = CStmtDefType(get_id_str(t), CTypeNamed(kisa))
 		return (dt, df)
@@ -1980,6 +2008,7 @@ def do_header(module):
 			s = ""
 			if hasattr(x, 'cinclude'):
 				s = x.cinclude
+				#print(">> HAS cinclude %s" % s)
 			else:
 				s = os.path.basename(x.impline + '.h')
 			if s != "":
@@ -2073,6 +2102,7 @@ def do_cfile(module):
 			s = ""
 			if hasattr(x, 'cinclude'):
 				s = x.cinclude
+				#print(">> HAS cinclude %s" % s)
 			else:
 				s = os.path.basename(x.impline + '.h')
 			if s != "":

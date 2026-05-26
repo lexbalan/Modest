@@ -1,7 +1,7 @@
-private import "builtin"
-private import "./lib/lib"
-private import "./lib/mod1"
-private import "./lib/mod2"
+import "builtin"
+import "./lib/lib"
+import "./lib/mod1"
+import "./lib/mod2"
 include "ctypes64"
 include "stdio"
 
@@ -25,6 +25,10 @@ func main () -> Int {
 	printf("mod1.modName = '%s'\n", *Str8 mod1.modName)
 	printf("mod2.modName = '%s'\n", *Str8 mod2.modName)
 	lib.printf("??")
+
+	let a: Int32 = 33000
+	var b: Int16 = unsafe Int16 a
+
 	return 0
 }
 

@@ -1,6 +1,6 @@
-private import "builtin"
-private import "./mod1"
-private import "./mod2"
+import "builtin"
+import "./mod1"
+import "./mod2"
 
 import "./mod1" as mod1
 import "./mod2" as mod2
@@ -8,6 +8,7 @@ import "./mod2" as mod2
 const privateConst: Bool = false
 
 const lenn = 10
+
 
 public type Librarian = {
 	name: *Str8

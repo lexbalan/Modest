@@ -16,7 +16,6 @@ void fsm_init(struct fsm_fsm *self, char *id, struct fsm_state_desc *initState, 
 	self->timer_expired = false;
 }
 
-fsm_ComplexState fsm_cmdNextStage(struct fsm_fsm *self);
 
 void fsm_task(struct fsm_fsm *self) {
 	if (self->timer_expired) {

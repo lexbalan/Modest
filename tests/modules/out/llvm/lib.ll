@@ -114,7 +114,7 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports private 'lib' --
+; -- print imports 'lib' --
 
 ; from import "builtin"
 
@@ -135,9 +135,7 @@ break_2:
 
 
 ; end from import "mod2"
-; -- end print imports private 'lib' --
-; -- print imports public 'lib' --
-; -- end print imports public 'lib' --
+; -- end print imports 'lib' --
 ; -- strings --
 ; -- endstrings --
 %lib_Librarian = type {

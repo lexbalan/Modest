@@ -205,7 +205,9 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 %main.MyInt = type %Int;
 define void @local() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @.str1 to [0 x i8]*))
+	%1 = alloca %Int32, align 4
+	store %Int32 1, %Int32* %1
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @.str1 to [0 x i8]*))
 	ret void
 }
 

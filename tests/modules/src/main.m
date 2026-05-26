@@ -1,5 +1,7 @@
 // tests/1.hello_world/src/main.m
 
+pragma unsafe
+
 include "libc/ctypes64"
 include "libc/stdio"
 
@@ -24,6 +26,14 @@ func main () -> Int {
 	printf("mod1.modName = '%s'\n", *Str8 mod1.modName)
 	printf("mod2.modName = '%s'\n", *Str8 mod2.modName)
 	lib.printf("??")
+
+//	let a: Int32 = 33000
+//	var b: Int16 = unsafe Int16 a
+//	printf("b = %d\n", b)
+//
+//	b = 33000
+//	printf("b = %d\n", b)
+
 	return 0
 }
 

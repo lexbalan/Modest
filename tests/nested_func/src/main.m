@@ -9,6 +9,8 @@ func main () -> Int {
 	type MyInt = Int
 
 	func local () -> Unit {
+		var x: Int32
+		x = 1
 		printf("hello from 'local' func!\n")
 	}
 

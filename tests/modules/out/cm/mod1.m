@@ -1,4 +1,4 @@
-private import "builtin"
+import "builtin"
 
 public const modName = "mod1"
 

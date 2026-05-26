@@ -6,7 +6,8 @@ import "./mod2"
 
 const privateConst = false
 
-public const lenn = 10
+const lenn = 10
+
 
 public type Librarian = {
 	name: *Str8

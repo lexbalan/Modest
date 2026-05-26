@@ -194,7 +194,7 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
@@ -225,9 +225,7 @@ declare void @perror(%ConstCharStr* %str)
 declare void @lib_printf(%Str8* %s, ...)
 
 ; end from import "lib"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [21 x i8] [i8 109, i8 111, i8 100, i8 49, i8 46, i8 109, i8 111, i8 100, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
 @.str2 = private constant [5 x i8] [i8 109, i8 111, i8 100, i8 49, i8 0]
@@ -246,6 +244,8 @@ define %Int @main() {
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str1 to [0 x i8]*), %Str8* bitcast ([5 x i8]* @.str2 to [0 x i8]*))
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str3 to [0 x i8]*), %Str8* bitcast ([5 x i8]* @.str4 to [0 x i8]*))
 	call void (%Str8*, ...) @lib_printf(%Str8* bitcast ([3 x i8]* @.str5 to [0 x i8]*))
+	%6 = alloca %Int16, align 2
+	store %Int16 -32536, %Int16* %6
 	ret %Int 0
 }
 
