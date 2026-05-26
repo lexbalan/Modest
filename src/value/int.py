@@ -80,22 +80,11 @@ def value_int_cons(t, v, method, ti):
 
 	nv = ValueCons(t, t, v, method, ti=ti)
 	if v.isValueImmediate():
-		_check_width(v.type, t, method, ti)
-		if method != 'implicit':
-			if v.asset != None:  # asset can be None in case of undefined value (!)
-				##################### ???????? !!!!!! Float, Generic float, need better cast!!!!
-				nv.set_asset(int(v.asset))  # here can be float
-			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-			return nv
-		width = t.width
-
-		need_width = nbits_for_num(v.asset, signed=t.is_signed())
-
-		#info("(%d %d %d)" % (v.asset, need_width, width), ti)
-		if need_width > width:
+		a = int(v.asset)
+		nv.set_asset(a)
+		if nv.asset < a:
 			error("integer overflow", ti)
 
-		nv.set_asset(v.asset)
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
 
