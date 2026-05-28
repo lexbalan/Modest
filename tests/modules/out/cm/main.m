@@ -24,11 +24,7 @@ func main () -> Int {
 	var m2: Mod
 	printf("mod1.modName = '%s'\n", *Str8 mod1.modName)
 	printf("mod2.modName = '%s'\n", *Str8 mod2.modName)
-	lib.printf("??")
-
-	let a: Int32 = 33000
-	var b: Int16 = unsafe Int16 a
-
+	lib.printf("hi!\n")
 	return 0
 }
 

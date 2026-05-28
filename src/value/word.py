@@ -34,9 +34,9 @@ def word_can(to, from_type, method, ti):
 	c8 = from_type.is_fixed()
 
 	if c0 or c1 or c2 or c3 or c4 or c5 or c6 or c7 or c8:
-		if method == 'unsafe':
+		if from_type.width <= to.width:
 			return True
-		return from_type.width <= to.width
+		return method == 'unsafe'
 
 	return False
 

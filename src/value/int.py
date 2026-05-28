@@ -4,39 +4,6 @@ from error import info, warning, error
 from util import nbits_for_num, int_zext
 
 
-warning_cast_data_loss = True
-
-
-def _check_width(from_type, t, method, ti):
-	rv = True
-
-	if Type.is_float(from_type):
-		return True
-
-	if from_type.width > t.width:
-		#info("%s" % method, ti)
-		if method != 'unsafe':
-			error("value cons with potential data loss", ti)
-			rv = False
-
-		elif warning_cast_data_loss:
-			from trans import is_unsafe_mode
-			if not (is_unsafe_mode() or 'unsafe-downcast' in features):
-				warning("value cons with potential data loss", ti)
-
-	if not rv:
-		print("attempt to construct ", end='')
-		Type.print(t)
-		print(" from ", end='')
-		Type.print(from_type)
-		print()
-
-	return rv
-
-
-
-
-
 
 def int_can(to, from_type, method, ti):
 	if Type.is_integer(from_type):
@@ -76,15 +43,22 @@ def int_can(to, from_type, method, ti):
 
 def value_int_cons(t, v, method, ti):
 	#info("value_integer_cons()", ti)
-	_check_width(v.type, t, method, ti)
+
+	from_width = v.type.width
+	to_width = t.width
+
+	if Type.is_float(v.type) and v.isValueImmediate():
+		from_width = nbits_for_num(int(v.value))
+
+	if method != 'unsafe':
+		if from_width > to_width:
+			error("integer overflow", ti)
+			info("attempt to construct `%s` from `%s`" % (t.to_str(), v.type.to_str()), ti)
 
 	nv = ValueCons(t, t, v, method, ti=ti)
 	if v.isValueImmediate():
 		a = int(v.asset)
 		nv.set_asset(a)
-		if nv.asset < a:
-			error("integer overflow", ti)
-
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
 

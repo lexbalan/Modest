@@ -17,7 +17,7 @@ int main(void) {
 	struct mod2_mod m2;
 	printf("mod1.modName = '%s'\n", "mod1");
 	printf("mod2.modName = '%s'\n", "mod2");
-	lib_printf("??");
+	lib_printf("hi!\n");
 	return 0;
 }
 

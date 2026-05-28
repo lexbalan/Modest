@@ -1710,7 +1710,6 @@ class Value(Entity):
 			try:
 				if t.is_int():
 					a = pack_int(int(a), width=t.width, signed=True)
-					from error import info
 				elif t.is_nat() or t.is_word():
 					a = pack_int(int(a), width=t.width, signed=False)
 				elif t.is_float():

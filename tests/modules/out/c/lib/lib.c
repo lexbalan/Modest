@@ -8,7 +8,6 @@
 #include "mod2.h"
 #include <stdarg.h>
 #define PRIVATE_CONST false
-#define LENN 10
 
 void lib_printf(char *s, ...) {
 }

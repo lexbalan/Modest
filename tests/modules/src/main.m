@@ -25,15 +25,7 @@ func main () -> Int {
 	//var libb = lib.privateConst
 	printf("mod1.modName = '%s'\n", *Str8 mod1.modName)
 	printf("mod2.modName = '%s'\n", *Str8 mod2.modName)
-	lib.printf("??")
-
-//	let a: Int32 = 33000
-//	var b: Int16 = unsafe Int16 a
-//	printf("b = %d\n", b)
-//
-//	b = 33000
-//	printf("b = %d\n", b)
-
+	lib.printf("hi!\n")
 	return 0
 }
 
