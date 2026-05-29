@@ -16,6 +16,7 @@
 #define PORT 8080
 #define BUF_SIZE 1024
 
+
 static bool sendFile(FILE *fp, int sockFd) {
 	char data[BUF_SIZE];
 	while (fgets(data, LENGTHOF(data), fp) != NULL) {

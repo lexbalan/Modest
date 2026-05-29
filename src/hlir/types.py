@@ -1943,6 +1943,10 @@ class Value(Entity):
 		return isinstance(self, ValueAccessModule)
 
 
+	def isValueGlobal(self):
+		return self.parent == None
+
+
 	def copy(self):
 		v = copy.copy(self)
 		v.attributes = copy.copy(self.att)

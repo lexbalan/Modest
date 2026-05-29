@@ -9,6 +9,7 @@
 #endif
 // thx: https://github.com/ilvn/aes256/tree/main
 
+
 static uint8_t rj_xtime(uint8_t x) {
 	const uint8_t y = 0xFF & x << 1;
 	if ((x & 0x80) != 0x0) {
@@ -85,15 +86,18 @@ static uint8_t rj_xtime(uint8_t x) {
 	0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D \
 }
 
+
 __attribute__((always_inline))
 static inline uint8_t rj_sbox(uint8_t x) {
 	return ((const uint8_t [256])SBOX)[x];
 }
 
+
 __attribute__((always_inline))
 static inline uint8_t rj_sboxInv(uint8_t x) {
 	return ((const uint8_t [256])SBOXINV)[x];
 }
+
 
 static void subBytes(uint8_t block[16]) {
 	uint8_t i = 0;
@@ -103,6 +107,7 @@ static void subBytes(uint8_t block[16]) {
 	}
 }
 
+
 static void subBytesInv(uint8_t block[16]) {
 	uint8_t i = 0;
 	while (i < 16) {
@@ -111,6 +116,7 @@ static void subBytesInv(uint8_t block[16]) {
 	}
 }
 
+
 static void addRoundKey(uint8_t block[16], uint8_t k[16]) {
 	uint8_t i = 0;
 	while (i < 16) {
@@ -118,6 +124,7 @@ static void addRoundKey(uint8_t block[16], uint8_t k[16]) {
 		i = i + 1;
 	}
 }
+
 
 static void addRoundKeyCpy(uint8_t block[16], uint8_t key[32], uint8_t cpk[32]) {
 	uint8_t i = 0;
@@ -129,6 +136,7 @@ static void addRoundKeyCpy(uint8_t block[16], uint8_t key[32], uint8_t cpk[32]) 
 		i = i + 1;
 	}
 }
+
 
 static void shiftRows(uint8_t block[16]) {
 	uint8_t i;
@@ -151,6 +159,7 @@ static void shiftRows(uint8_t block[16]) {
 	block[6] = j;
 }
 
+
 static void shiftRowsInv(uint8_t block[16]) {
 	uint8_t i;
 	uint8_t j;
@@ -172,6 +181,7 @@ static void shiftRowsInv(uint8_t block[16]) {
 	block[14] = j;
 }
 
+
 static void mixColumns(uint8_t block[16]) {
 	uint8_t a;
 	uint8_t b;
@@ -192,6 +202,7 @@ static void mixColumns(uint8_t block[16]) {
 		i = i + 4;
 	}
 }
+
 
 static void mixColumnsInv(uint8_t block[16]) {
 	uint8_t a;
@@ -219,6 +230,7 @@ static void mixColumnsInv(uint8_t block[16]) {
 		i = i + 4;
 	}
 }
+
 
 static void expandEncKey(uint8_t k[32], uint8_t *rc) {
 	uint8_t i;
@@ -248,6 +260,7 @@ static void expandEncKey(uint8_t k[32], uint8_t *rc) {
 		i = i + 4;
 	}
 }
+
 
 static void expandDecKey(uint8_t k[32], uint8_t *rc) {
 	uint8_t i;
@@ -282,6 +295,7 @@ static void expandDecKey(uint8_t k[32], uint8_t *rc) {
 	k[3] = k[3] ^ rj_sbox(k[28]);
 }
 
+
 aes256_Result aes256_init(aes256_Context *ctx, uint8_t key[32]) {
 	if (ctx == NULL || key == NULL) {
 		return AES256_RESULT_ERROR;
@@ -296,6 +310,7 @@ aes256_Result aes256_init(aes256_Context *ctx, uint8_t key[32]) {
 	}
 	return AES256_RESULT_SUCCESS;
 }
+
 
 aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
 	if (ctx == NULL || block == NULL) {
@@ -323,6 +338,7 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
 	return AES256_RESULT_SUCCESS;
 }
 
+
 aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
 	if (ctx == NULL || block == NULL) {
 		return AES256_RESULT_ERROR;
@@ -347,6 +363,7 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
 	addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[16 - 0])&ctx->key[0]);
 	return AES256_RESULT_SUCCESS;
 }
+
 
 aes256_Result aes256_deinit(aes256_Context *ctx) {
 	if (ctx == NULL) {

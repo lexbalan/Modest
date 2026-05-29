@@ -52,6 +52,7 @@ int main(void) {
 	return 0;
 }
 
+
 static void printArrayOf10Char32(char32_t *_a) {
 	char32_t a[10];
 	__builtin_memcpy(a, _a, sizeof(char32_t [10]));
@@ -61,6 +62,7 @@ static void printArrayOf10Char32(char32_t *_a) {
 		i = i + 1;
 	}
 }
+
 
 static void sum10IntArrays(int32_t _a[10], int32_t _b[10], int32_t __out[10]) {
 	int32_t b[10];

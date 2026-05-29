@@ -21,6 +21,7 @@ static uint32_t pageCounter;
 //	return (x << 8) | (x >> 8)
 //}
 
+
 static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[RECEIVE_BUFFER_SIZE];
 	const ssize_t bytesReceived = read(clientSocket, &buffer, LENGTHOF(buffer) - 1);

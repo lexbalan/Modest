@@ -5,9 +5,11 @@
 #include <string.h>
 #include <stdio.h>
 
+
 static int32_t func1(int32_t x) {
 	return x;
 }
+
 
 static int32_t func2(int32_t a, int32_t b) {
 	return a + b;

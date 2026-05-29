@@ -13,6 +13,7 @@ static struct fsm_state_desc state1 = (struct fsm_state_desc){.id = "state1", .n
 static fsm_ComplexState routine2(fsm_ComplexState state, void *payload);
 static struct fsm_state_desc state2 = (struct fsm_state_desc){.id = "state2", .nstages = 4, .handler = &routine2};
 
+
 static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 	(void)payload;
 	if (state.stage == (fsm_StageId)0) {
@@ -26,6 +27,7 @@ static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 	return state;
 }
 
+
 static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
 	(void)payload;
 	if (state.stage == (fsm_StageId)0) {
@@ -38,6 +40,7 @@ static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
 	}
 	return state;
 }
+
 
 static fsm_ComplexState routine2(fsm_ComplexState state, void *payload) {
 	(void)payload;

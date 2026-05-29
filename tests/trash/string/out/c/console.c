@@ -38,6 +38,7 @@ void console_putchar32(char32_t c) {
 	console_putchar_utf32(c);
 }
 
+
 void console_putchar_utf8(char c) {
 	putchar((uint32_t)c);
 }
@@ -185,10 +186,12 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 	return j;
 }
 
+
 __attribute__((always_inline))
 static inline char n_to_dec_sym(uint8_t n) {
 	return (char)((uint8_t)'0' + n);
 }
+
 
 static char n_to_hex_sym(uint8_t n) {
 	if (n < 10) {
@@ -196,6 +199,7 @@ static char n_to_hex_sym(uint8_t n) {
 	}
 	return (char)((uint8_t)'A' + n - 10);
 }
+
 
 static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
 	char tmpbuf[8];
@@ -219,6 +223,7 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
 	buf[j] = '\x0';
 	return j;
 }
+
 
 static int32_t sprint_dec_int32(char *buf, int32_t x) {
 	char tmpbuf[11];
@@ -250,6 +255,7 @@ static int32_t sprint_dec_int32(char *buf, int32_t x) {
 	buf[j] = '\x0';
 	return j;
 }
+
 
 static int32_t sprint_dec_n32(char *buf, uint32_t x) {
 	char tmpbuf[11];

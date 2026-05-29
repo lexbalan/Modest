@@ -29,15 +29,18 @@ static uint64_t u2;
 static uint32_t *restrict rp;
 static volatile bool vb[32];
 
+
 __attribute__((always_inline))
 static inline int32_t staticInlineFunc(int32_t x) {
 	return x + 1;
 }
 
+
 __attribute__((noinline))
 static int32_t staticNoinlineFunc(int32_t x) {
 	return x + 1;
 }
+
 
 static int32_t staticInlineHintFunc(int32_t x) {
 	return x + 1;

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "list.h"
 
+
 static void nat32_list_insert(struct list_list *lst, uint32_t x) {
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;

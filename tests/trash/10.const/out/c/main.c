@@ -48,6 +48,7 @@ static float distance(struct point a, struct point b) {
 	return sqrt(dx2 + dy2);
 }
 
+
 static float lineLength(struct line line) {
 	return distance(line.a, line.b);
 }

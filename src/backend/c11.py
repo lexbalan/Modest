@@ -1714,11 +1714,18 @@ def do_def_type_record(t):
 
 
 
-def do_def_var(x, isdecl=False, is_extern=False):
+def do_def_var(x, isdecl=False):
 	global defined
 
-	if x in defined:
-		return []
+	is_extern = isdecl
+
+	if isdecl:
+		if x in declared:
+			return []
+	else:
+		if x in defined:
+			return []
+
 
 	var_value = x.value
 
@@ -1738,7 +1745,12 @@ def do_def_var(x, isdecl=False, is_extern=False):
 		civ = do_cinitializer(var_value.type, x.init_value, ctx=[])
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, attributes=x.attributes)
-	defined.append(x)
+
+	if isdecl:
+		declared.append(x)
+	else:
+		defined.append(x)
+
 	return (dv,)
 
 
@@ -1805,14 +1817,15 @@ def do_deps(deps):
 def do_dep(dep):
 	global defined, declared
 
-	if isinstance(dep, ValueConst):
-		return do_def_const(dep.definition)
+	if dep.definition != None:
+		if isinstance(dep, ValueConst):
+			return do_def_const(dep.definition)
 
-	if isinstance(dep, ValueFunc):
-		return do_decl_func(dep.definition)
+		if isinstance(dep, ValueFunc):
+			return do_decl_func(dep.definition)
 
-	if isinstance(dep, TypeRecord):
-		return do_decl_type_record(dep.definition)
+		if isinstance(dep, TypeRecord):
+			return do_decl_type_record(dep.definition)
 
 	return []
 
@@ -2040,7 +2053,7 @@ def do_header(module):
 			xdefs.extend(do_decl_func(x))
 		elif x.is_stmt_def_var():
 			#nnl(x.nl)
-			xdefs.extend(do_def_var(x, is_extern=True))
+			xdefs.extend(do_def_var(x, isdecl=True))
 		elif x.is_stmt_def_type():
 			#nnl(x.nl)
 			xdefs.extend(do_deps(x.deps))
@@ -2111,6 +2124,15 @@ def do_cfile(module):
 	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude):
 			xdefs.extend(include(x.c_name, local=x.is_local))
+
+
+	# закидываем в defined все StmtDefXXX из импортируемых модулей (!)
+	global defined
+	for m in module.included_modules:
+		#for d in m.defs:
+		#	if not (isinstance(d, StmtImport) or isinstance(d, StmtDirectiveCInclude)):
+		#		defined.append(d)
+		defined.extend(m.defs)
 
 
 	# TODO: убери это - не место в атрибутах модуля, а то по сути это уже не атрибуты, а зависимости от хелперов

@@ -26,6 +26,7 @@ void crc32_init(void) {
 	}
 }
 
+
 uint32_t crc32_run(uint8_t buf[], uint32_t len) {
 	uint32_t crc = 0xFFFFFFFFUL;
 	uint32_t i = 0;

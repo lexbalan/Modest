@@ -16,6 +16,7 @@
 	} while (0)
 #include <stdlib.h>
 
+
 static void array_print(int32_t pa[], uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
@@ -23,6 +24,7 @@ static void array_print(int32_t pa[], uint32_t len) {
 		i = i + 1;
 	}
 }
+
 
 static void array4intInc(int32_t _a[4], int32_t __out[4]) {
 	int32_t a[4];

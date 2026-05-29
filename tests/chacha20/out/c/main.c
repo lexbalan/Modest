@@ -14,6 +14,7 @@ struct context {
 	uint32_t blockOffset;
 };
 
+
 static struct context init(uint8_t key[32], uint32_t _nonce[3]) {
 	uint32_t nonce[3];
 	__builtin_memcpy(nonce, _nonce, sizeof(uint32_t [3]));
@@ -24,6 +25,7 @@ static struct context init(uint8_t key[32], uint32_t _nonce[3]) {
 		.blockOffset = (uint32_t)sizeof(chacha20_Block)
 	};
 }
+
 
 static void cipher(struct context *ctx, uint8_t data[], uint32_t len) {
 	uint32_t i = 0;

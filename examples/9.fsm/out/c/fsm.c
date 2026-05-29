@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <stdio.h>
 
+
 void fsm_init(struct fsm_fsm *self, char *id, struct fsm_state_desc *initState, void *payload) {
 	self->id = id;
 	self->state = (fsm_ComplexState){.state = initState, .stage = (fsm_StageId)0};
@@ -34,6 +35,7 @@ void fsm_task(struct fsm_fsm *self) {
 	self->next_state = handler(self->state, self->payload);
 }
 
+
 void fsm_tick(struct fsm_fsm *self) {
 	if (self->timer > 0) {
 		self->timer = self->timer - 1;
@@ -43,11 +45,13 @@ void fsm_tick(struct fsm_fsm *self) {
 	}
 }
 
+
 fsm_ComplexState fsm_cmdSwitchState(struct fsm_fsm *self, struct fsm_state_desc *state) {
 	self->timer = 0;
 	self->timer_expired = false;
 	return (fsm_ComplexState){.state = state, .stage = (fsm_StageId)0};
 }
+
 
 fsm_ComplexState fsm_cmdSwitchStage(struct fsm_fsm *self, uint16_t stage) {
 	self->timer = 0;
@@ -56,6 +60,7 @@ fsm_ComplexState fsm_cmdSwitchStage(struct fsm_fsm *self, uint16_t stage) {
 	newState.stage = stage;
 	return newState;
 }
+
 
 fsm_ComplexState fsm_cmdNextStage(struct fsm_fsm *self) {
 	self->timer = 0;
@@ -67,6 +72,7 @@ fsm_ComplexState fsm_cmdNextStage(struct fsm_fsm *self) {
 	return newState;
 }
 
+
 fsm_ComplexState fsm_cmdNextStageLimited(struct fsm_fsm *self, uint32_t t) {
 	self->timer = t;
 	const fsm_ComplexState state = self->state;
@@ -76,17 +82,21 @@ fsm_ComplexState fsm_cmdNextStageLimited(struct fsm_fsm *self, uint32_t t) {
 	return newState;
 }
 
+
 fsm_ComplexState fsm_getComplexState(struct fsm_fsm fsm) {
 	return fsm.state;
 }
+
 
 struct fsm_state_desc *fsm_getState(struct fsm_fsm fsm) {
 	return fsm.state.state;
 }
 
+
 fsm_StageId fsm_getStage(struct fsm_fsm fsm) {
 	return fsm.state.stage;
 }
+
 
 char *fsm_getStateName(struct fsm_fsm *fsm) {
 	if (fsm->state.state == NULL) {

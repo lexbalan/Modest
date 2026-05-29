@@ -33,6 +33,7 @@ static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 static char arrayFromString[3] = {'a', 'b', 'c'};
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
+
 static void f0(char *_x, char *__out) {
 	char x[20];
 	__builtin_memcpy(x, _x, sizeof(char [20]));

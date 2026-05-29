@@ -5,22 +5,27 @@
 #include <stdbool.h>
 #include <string.h>
 
+
 void queue_init(struct queue_queue *q, uint32_t capacity) {
 	*q = (struct queue_queue){0};
 	q->capacity = capacity;
 }
 
+
 uint32_t queue_capacity(struct queue_queue *q) {
 	return q->capacity;
 }
+
 
 uint32_t queue_size(struct queue_queue *q) {
 	return q->size;
 }
 
+
 bool queue_isEmpty(struct queue_queue *q) {
 	return q->size == 0;
 }
+
 
 bool queue_isFull(struct queue_queue *q) {
 	return q->size == q->capacity;
@@ -37,6 +42,7 @@ uint32_t queue_getPutPosition(struct queue_queue *q) {
 	return pos;
 }
 
+
 uint32_t queue_getGetPosition(struct queue_queue *q) {
 	const uint32_t pos = q->g;
 	q->g = next(q->capacity, q->g);
@@ -45,6 +51,7 @@ uint32_t queue_getGetPosition(struct queue_queue *q) {
 	}
 	return pos;
 }
+
 
 static uint32_t next(uint32_t capacity, uint32_t x) {
 	if (x < capacity - 1) {

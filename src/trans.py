@@ -502,12 +502,6 @@ def do_type_array(x):
 
 	nt = TypeArray(of, volume, ti=x['ti'])
 
-	if isinstance(cdef, StmtDefType):
-		if volume.isValueConst():
-			info("type depended from a constant", volume.ti)
-			cdef.deps.append(volume)
-
-
 	# [][] разрешено создавать, но они отольются в [] в backend, и чтобы снмим работать нужно привести явно к [n][m] (!)
 	#if nt.is_open_array() and of.is_open_array():
 	#	error("open arrays of open arrays are forbidden", of.ti)
@@ -1447,7 +1441,7 @@ def do_value_cons(x):
 
 
 
-def do_value_id(x):
+def do_value_named(x):
 	global csymtab
 
 	id_str = x['str']
@@ -1455,7 +1449,8 @@ def do_value_id(x):
 
 	if v == None:
 		error("undefined value '%s'" % id_str, x['ti'])
-		# чтобы не генерил ошибки дальше
+		# ERROR:
+		# Но чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально (wrong!)
 		v = ValueBad(x['ti'])
 		csymtab.value_add(id_str, v, is_public=False)
@@ -1490,6 +1485,9 @@ def do_value_id(x):
 
 #	if 'usecnt' in v:
 #		v['usecnt'] = v['usecnt'] + 1
+
+	if v.isValueConst() and v.isValueGlobal():
+		cdef.deps.append(v)
 
 	return v
 
@@ -1696,7 +1694,7 @@ def do_value(x):
 	v = None
 
 	k = x['kind']
-	if k == 'id': v = do_value_id(x)
+	if k == 'id': v = do_value_named(x)
 	elif k == 'number': v = do_value_number(x)
 	elif k == 'string': v = do_value_string(x)
 	elif k == 'record': v = do_value_record(x)
@@ -2122,6 +2120,7 @@ def def_type_common(x, nt):
 					f.access_level = HLIR_ACCESS_LEVEL_PRIVATE
 
 	if ty.is_bad():
+		cdef = prev_cdef
 		return None
 
 	definition.original_type = ty
@@ -2158,6 +2157,7 @@ def def_type_common(x, nt):
 			error("is_incompleted", dep.ti)
 
 	assert(nt.definition != None)
+
 	cdef = prev_cdef
 
 	return definition
@@ -2358,10 +2358,7 @@ def create_params(fn):
 
 
 def def_func(x):
-	global cdef
-	global cfunc
-	global cmodule
-	global csymtab
+	global cmodule, cdef, cfunc, csymtab
 
 	if is_local_context():
 		# this is a nested function
@@ -2371,15 +2368,18 @@ def def_func(x):
 	# тк мы ранее сделали проход
 	fn = csymtab.value_get(x['id']['str'])
 
+	prev_cdef = cdef
 	cdef = fn.definition
 
 	if fn.type.is_incompleted():
 		ft = do_type_func(x['type'])
 		fn.change_type(ft)
 		if fn.type.is_incompleted():
+			cdef = prev_cdef
 			return None
 
 	if fn.type.is_bad():
+		cdef = prev_cdef
 		return None
 
 	if fn.id.str == 'main':
@@ -2390,6 +2390,7 @@ def def_func(x):
 
 	if x['stmt'] == None:
 		df = def_add_annotations(fn.definition, x['anno'])
+		cdef = prev_cdef
 		return df
 
 	# not above (!)
@@ -2430,7 +2431,7 @@ def def_func(x):
 	csymtab = csymtab.parent_get()  # remove params symtab
 
 	cfunc = prev_cfunc
-	cdef = None
+	cdef = prev_cdef
 
 #	if fn.is_pure:
 #		info("pure function", x['ti'])

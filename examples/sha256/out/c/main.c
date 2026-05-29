@@ -37,6 +37,7 @@ static struct sha256_test_case test1 = (struct sha256_test_case){
 };
 #define TESTS {&test0, &test1}
 
+
 static bool doTest(struct sha256_test_case *test) {
 	sha256_Hash test_hash;
 	uint8_t (*const msg)[] = (uint8_t (*)[])test->inputData;

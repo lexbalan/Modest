@@ -15,35 +15,42 @@ struct context {
 //	return (a << b) | (a >> (32 - b))
 //}
 
+
 __attribute__((always_inline))
 static inline uint32_t rotright(uint32_t a, uint32_t b) {
 	return a >> b | a << (32 - b);
 }
+
 
 __attribute__((always_inline))
 static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (~x & z);
 }
 
+
 __attribute__((always_inline))
 static inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (x & z) ^ (y & z);
 }
+
 
 __attribute__((always_inline))
 static inline uint32_t ep0(uint32_t x) {
 	return rotright(x, 2) ^ rotright(x, 13) ^ rotright(x, 22);
 }
 
+
 __attribute__((always_inline))
 static inline uint32_t ep1(uint32_t x) {
 	return rotright(x, 6) ^ rotright(x, 11) ^ rotright(x, 25);
 }
 
+
 __attribute__((always_inline))
 static inline uint32_t sig0(uint32_t x) {
 	return rotright(x, 7) ^ rotright(x, 18) ^ x >> 3;
 }
+
 
 __attribute__((always_inline))
 static inline uint32_t sig1(uint32_t x) {
@@ -53,6 +60,7 @@ static inline uint32_t sig1(uint32_t x) {
 	0x6A09E667, 0xBB67AE85UL, 0x3C6EF372, 0xA54FF53AUL, \
 	0x510E527F, 0x9B05688CUL, 0x1F83D9AB, 0x5BE0CD19 \
 }
+
 
 static void contextInit(struct context *ctx) {
 	__builtin_memcpy(&ctx->state, &(const int32_t [8])INITAL_STATE, sizeof(uint32_t [8]));
@@ -75,6 +83,7 @@ static void contextInit(struct context *ctx) {
 	0x748F82EE, 0x78A5636F, 0x84C87814UL, 0x8CC70208UL, \
 	0x90BEFFFAUL, 0xA4506CEBUL, 0xBEF9A3F7UL, 0xC67178F2UL \
 }
+
 
 static void transform(struct context *ctx, uint8_t data[]) {
 	uint32_t m[64] = {0};
@@ -113,6 +122,7 @@ static void transform(struct context *ctx, uint8_t data[]) {
 	}
 }
 
+
 static void update(struct context *ctx, uint8_t msg[], uint32_t msgLen) {
 	uint32_t i = 0;
 	while (i < msgLen) {
@@ -126,6 +136,7 @@ static void update(struct context *ctx, uint8_t msg[], uint32_t msgLen) {
 		i = i + 1;
 	}
 }
+
 
 static void final(struct context *ctx, uint8_t outHash[SHA256_HASH_SIZE]) {
 	uint32_t i = ctx->datalen;
@@ -164,6 +175,7 @@ static void final(struct context *ctx, uint8_t outHash[SHA256_HASH_SIZE]) {
 		i = i + 1;
 	}
 }
+
 
 void sha256_hash(uint8_t msg[], uint32_t msgLen, uint8_t outHash[SHA256_HASH_SIZE]) {
 	struct context ctx = (struct context){0};
