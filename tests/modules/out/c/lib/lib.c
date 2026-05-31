@@ -8,9 +8,6 @@
 #include "mod2.h"
 #include <stdarg.h>
 #define PRIVATE_CONST false
-
-void lib_printf(char *s, ...) {
-}
 struct y;
 typedef struct y Y;
 typedef struct x X;
@@ -21,4 +18,7 @@ typedef struct y Y;
 struct y {
 	int32_t x;
 };
+
+void lib_printf(char *s, ...) {
+}
 

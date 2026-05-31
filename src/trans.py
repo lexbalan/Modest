@@ -1674,7 +1674,6 @@ def do_rvalue(x):
 	v = do_value(x)
 	if not v.is_initialized:
 		error("attempt to use an uninitialized value", x['ti'])
-		
 	return v
 
 

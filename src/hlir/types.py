@@ -229,7 +229,7 @@ class Module:
 
 
 	def __str__(self):
-		return "Module(\"%s\")" % self.id
+		return "`Module(\"%s\")`" % self.id
 
 
 	def type_add(self, id_str, t, is_public=False):
@@ -1944,7 +1944,8 @@ class Value(Entity):
 
 
 	def isValueGlobal(self):
-		return self.parent == None
+		parent = self.parent
+		return isinstance(parent, Module) or parent is None
 
 
 	def copy(self):

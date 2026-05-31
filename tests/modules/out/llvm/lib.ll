@@ -138,6 +138,14 @@ break_2:
 ; -- end print imports 'lib' --
 ; -- strings --
 ; -- endstrings --
+%X = type {
+	%Y*
+};
+
+%Y = type {
+	%Int32
+};
+
 %lib_Librarian = type {
 	%Str8*,
 	[10 x %Char8]
@@ -146,13 +154,5 @@ break_2:
 define void @lib_printf(%Str8* %s, ...) {
 	ret void
 }
-
-%X = type {
-	%Y*
-};
-
-%Y = type {
-	%Int32
-};
 
 

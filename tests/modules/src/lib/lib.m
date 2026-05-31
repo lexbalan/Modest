@@ -6,17 +6,8 @@ import "./mod2"
 
 const privateConst = false
 
+
 const lenn = 10
-
-
-public type Librarian = {
-	name: *Str8
-	name2: [lenn]Char8
-}
-
-public func printf (s: *Str8, ...) -> Unit {
-	//
-}
 
 
 type X = {
@@ -25,4 +16,14 @@ type X = {
 
 type Y = {
 	public x: Int32
+}
+
+
+public type Librarian = @public {
+	name: *Str8
+	name2: [lenn]Char8
+}
+
+public func printf (s: *Str8, ...) -> Unit {
+	//
 }

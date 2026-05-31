@@ -12,7 +12,7 @@
 //pragma c_include "./lib/mod2.h"
 
 int main(void) {
-	struct lib_librarian librarian;
+	lib_Librarian librarian;
 	struct mod1_mod m1;
 	struct mod2_mod m2;
 	printf("mod1.modName = '%s'\n", "mod1");
