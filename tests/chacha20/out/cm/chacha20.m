@@ -1,10 +1,10 @@
 import "builtin"
 
 
+
 public type Key = [8]Word32
 public type State = [16]Word32
 public type Block = [16]Word32
-
 
 
 func rotl32 (x: Word32, n: Nat32) -> Word32 {

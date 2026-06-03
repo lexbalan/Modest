@@ -17,7 +17,6 @@ import "./lib/mod2"
 //pragma c_include "./lib/mod2.h"
 
 
-
 func main () -> Int {
 	var librarian: lib.Librarian
 	var m1: lib.mod1.Mod

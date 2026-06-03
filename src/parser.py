@@ -2276,6 +2276,10 @@ class Parser:
 
 			if x != None:
 				if not isinstance(x, list):
+					if x['isa'] == 'ast_directive' and x['kind'] != 'include':
+						if access_modifier != 'undefined':
+							error("%s cannot have any access level modifier" % x['kind'], x['ti'])
+
 					x['comment'] = self.comment
 					x['nl'] = spaceline_cnt
 					x['access_modifier'] = access_modifier

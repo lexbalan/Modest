@@ -54,6 +54,7 @@ static bool doTest(struct sha256_test_case *test) {
 	return __builtin_memcmp(&test_hash, &test->expectedResult, sizeof(sha256_Hash)) == 0;
 }
 
+
 int main(void) {
 	printf("test SHA256\n");
 	uint32_t i = 0;

@@ -1373,6 +1373,7 @@ def do_value_access(x):
 		xv = imp.module.value_get(x['right']['str'])
 		if xv == None:
 			error("unknown value", x['ti'])
+			return ValueBad(x['right']['ti'])
 		elif xv.definition.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 			error("access to private value `%s.%s`" % (left['str'], x['right']['str']), x['ti'])
 			return ValueBad(x['right']['ti'])
@@ -2244,7 +2245,7 @@ def def_const_common(x):
 	const_type.addAttribute('const', {})
 
 	const_value = ValueConst(const_type, id, init_value=init_value, ti=id.ti)
-	const_value.is_initialized = True#not init_value.is_value_undefined()
+	const_value.is_initialized = True  #not init_value.is_value_undefined()
 	const_value.stage = init_value.stage
 	csymtab.value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 
@@ -2486,9 +2487,6 @@ def do_import(x):
 	global modules
 	global cmodule
 
-	access_level = get_access_level(x)
-	#print(access_level)
-
 	import_expr = do_value_immediate_string(x['expr'])
 
 	if import_expr.isValueBad():
@@ -2580,12 +2578,7 @@ def do_import(x):
 
 	y = StmtImport(impline, _as, module=m, ti=x['ti'], include=False)
 
-	if access_level == 'private':
-		cmodule.imports[_as] = y
-	elif access_level == 'public':
-		cmodule.imports[_as] = y
-	else:
-		1/0
+	cmodule.imports[_as] = y
 
 	annotations = x['anno']
 	for annotation in annotations:

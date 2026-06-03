@@ -49,6 +49,7 @@ static struct x x = (struct x){
 __attribute__((used))
 static struct point points2[3] = POINTS;
 
+
 int main(void) {
 	printf("test const\n");
 	struct x y = (struct x){

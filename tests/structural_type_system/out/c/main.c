@@ -61,6 +61,7 @@ static struct type1 a = (struct type1){.x = 1};
 static struct type2 b = (struct type2){.x = 2};
 static Type3 c = (Type3){.x = 3};
 
+
 static void test_by_value(void) {
 	f1_val((struct type1){.x = 0});
 	f2_val((struct type2){.x = 0});

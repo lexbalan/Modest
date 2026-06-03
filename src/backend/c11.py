@@ -7,6 +7,7 @@ from hlir import *
 from error import info, warning, error, fatal
 from unicode import chars_to_utf32
 from util import str_fractional, align_bits_up
+from common import features
 
 from .c11_1 import *
 
@@ -1515,6 +1516,15 @@ def do_stmt_asm(x):
 
 
 
+def do_stmt_comment(x):
+	if isinstance(x, StmtCommentLine):
+		return (CStmtCommentLine(x.lines),)
+	elif isinstance(x, StmtCommentBlock):
+		return (CStmtCommentBlock(x.text),)
+	return ()
+
+
+
 def do_cstmt(x):
 	if x.is_stmt_block(): return do_cstmt_block(x)
 	elif x.is_stmt_value_expr(): return do_cstmt_value_expr(x)
@@ -2069,22 +2079,23 @@ def do_header(module):
 	return (dv,)
 
 
+def was_defined(x):
+	global defined
+	if not x in defined:
+		defined.append(x)
 
-
-def do_stmt_comment(x):
-	if isinstance(x, StmtCommentLine):
-		return (CStmtCommentLine(x.lines),)
-	elif isinstance(x, StmtCommentBlock):
-		return (CStmtCommentBlock(x.text),)
-	return ()
-
+def extt(module):
+	for m in module.included_modules:
+		extt(m)
+	for d in module.defs:
+		was_defined(d)
 
 
 
 def do_cfile(module):
 	defs = module.defs
 
-	global already_included
+	global already_included, defined
 	already_included = []
 
 	xdefs = []
@@ -2127,12 +2138,8 @@ def do_cfile(module):
 
 
 	# закидываем в defined все StmtDefXXX из импортируемых модулей (!)
-	global defined
 	for m in module.included_modules:
-		#for d in m.defs:
-		#	if not (isinstance(d, StmtImport) or isinstance(d, StmtDirectiveCInclude)):
-		#		defined.append(d)
-		defined.extend(m.defs)
+		extt(m)
 
 
 	# TODO: убери это - не место в атрибутах модуля, а то по сути это уже не атрибуты, а зависимости от хелперов
@@ -2227,13 +2234,16 @@ def run(module, _outname):
 		hname = os.path.basename(_outname)
 		hpath = inc_dir + '/' + hname
 
-	if module.id != 'main':
-		hh = do_header(module)
-		dump(hpath + '.h', hh)
 
-	cc = do_cfile(module)
-	dump(_outname + '.c', cc)
-	#dump(_outname, cc)
+	if not 'no-h-file' in features:
+		if module.id != 'main':
+			hh = do_header(module)
+			dump(hpath + '.h', hh)
+
+	if not 'no-c-file' in features:
+		cc = do_cfile(module)
+		dump(_outname + '.c', cc)
+
 
 
 

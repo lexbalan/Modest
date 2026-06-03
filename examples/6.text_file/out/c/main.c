@@ -8,7 +8,12 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
+//include "libc/ctypes64"
+//include "libc/stdio"
+// не ищет в public include
+//public include "libc/stdio"
 #define FILENAME "file.txt"
+
 
 static void write_example(void) {
 	printf("run write_example\n");
@@ -20,6 +25,7 @@ static void write_example(void) {
 	fprintf(fp, "some text.\n");
 	fclose(fp);
 }
+
 
 static void read_example(void) {
 	printf("run read_example\n");

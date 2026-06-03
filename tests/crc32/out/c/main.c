@@ -39,6 +39,7 @@ static bool runTest(struct test *test) {
 	return crc == test->hash;
 }
 
+
 int main(void) {
 	printf("test CRC32\n");
 	crc32_init();

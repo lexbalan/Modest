@@ -12,6 +12,7 @@
 #define PROMPT "# "
 static char tokensBuf[4 * 1024];
 
+
 static void showPrompt(void) {
 	char _prompt[32] = {'#', ' '};
 	write(0, _prompt, (size_t)2);
@@ -105,6 +106,7 @@ static void execute(char *cmd, uint16_t argc, char *argv[]) {
 	}
 	printf("]\n");
 }
+
 
 int32_t main(void) {
 	printf("HARSH v0.1\n");

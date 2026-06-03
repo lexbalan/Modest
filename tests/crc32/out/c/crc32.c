@@ -8,6 +8,7 @@
 #define TABLE_SIZE 256
 static uint32_t table[TABLE_SIZE];
 
+
 void crc32_init(void) {
 	uint32_t i = 0;
 	while (i < TABLE_SIZE) {

@@ -16,7 +16,6 @@ import "./lib/mod2" as mod2
 //pragma c_include "./lib/mod2.h"
 
 
-
 @nonstatic
 func main () -> Int {
 	var librarian: Librarian

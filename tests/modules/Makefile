@@ -28,7 +28,7 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 $(SRC)/main.m
+	mcc -o $(CPREFIX)/main -fno-c-file -mbackend=c11 $(SRC)/main.m
 	mcc -o $(CPREFIX)/lib/lib -mbackend=c11 $(SRC)/lib/lib.m
 	mcc -o $(CPREFIX)/lib/mod1 -mbackend=c11 $(SRC)/lib/mod1.m
 	mcc -o $(CPREFIX)/lib/mod2 -mbackend=c11 $(SRC)/lib/mod2.m

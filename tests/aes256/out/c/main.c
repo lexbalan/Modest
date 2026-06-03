@@ -103,6 +103,7 @@ static bool runTest(struct test_case *test) {
 	return true;
 }
 
+
 int32_t main(void) {
 	printf("run AES-256 test\n");
 	bool success = true;

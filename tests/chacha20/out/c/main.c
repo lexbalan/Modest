@@ -96,6 +96,7 @@ int main(void) {
 	return EXIT_SUCCESS;
 }
 
+
 static bool test0(void) {
 	uint8_t key[32];
 	__builtin_memcpy(&key, &testKey, sizeof(uint8_t [32]));

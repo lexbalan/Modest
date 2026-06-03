@@ -20,6 +20,7 @@ typedef uint32_t char32_t;
 #define UTF16_CHAR "Я"
 #define UTF32_CHAR "🐀"
 
+
 int main(void) {
 	printf("test/char\n");
 	char ch08;

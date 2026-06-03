@@ -10,6 +10,7 @@
 #define POINT1 {.x = 1, .y = 0}
 #define POINT12 {.x = 1, .y = 1}
 
+
 bool main_testRecordsEq(void) {
 	if (__builtin_memcmp(&(struct {int8_t x; int8_t y;})POINT0, &(struct {int8_t x; int8_t y;})POINT0, sizeof(struct {int8_t x; int8_t y;})) != 0) {
 		printf("point0 != point0\n");
@@ -44,6 +45,7 @@ bool main_testRecordsEq(void) {
 #define CARR321 {3, 2, 1}
 static int32_t varr123[3] = {1, 2, 3};
 static int32_t varr321[3] = {3, 2, 1};
+
 
 bool main_testArraysEq(void) {
 	if (__builtin_memcmp(&(const int8_t [3])ARR123, &(const int8_t [3])ARR123, sizeof(const int8_t [3])) != 0) {
@@ -97,6 +99,7 @@ bool main_testArraysEq(void) {
 	printf("passed: array eq test\n");
 	return true;
 }
+
 
 int32_t main(void) {
 	printf("test eq\n");

@@ -3,6 +3,11 @@ include "libc"
 
 include "libc/libc"
 
+//include "libc/ctypes64"
+//include "libc/stdio"
+// не ищет в public include
+//public include "libc/stdio"
+
 
 const filename = *Str8 "file.txt"
 

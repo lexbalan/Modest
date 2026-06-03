@@ -36,6 +36,7 @@ static void print_bytes(uint8_t buf[], uint32_t len) {
 	printf("\n");
 }
 
+
 int main(void) {
 	printf("test ^ encrypting\n");
 	uint8_t (*const tmsg)[] = (uint8_t (*)[])test_msg;

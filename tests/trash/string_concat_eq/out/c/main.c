@@ -11,6 +11,7 @@
 //+ " " + party_corn
 #define TEST "test"
 
+
 int main(void) {
 	printf("%s\n", GREETING);
 	if (__builtin_strcmp((char *)&TEST, (char *)&"test") == 0) {
