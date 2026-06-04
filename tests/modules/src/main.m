@@ -18,13 +18,15 @@ import "./lib/mod2"
 
 
 func main () -> Int {
+	lib.printf("hi!\n")
+
 	var librarian: lib.Librarian
-	var m1: lib.mod1.Mod
-	var m2: lib.mod2.Mod
-	//var libb = lib.privateConst
+	var m1: mod1.Mod
+	var m2: mod2.Mod
+
 	printf("mod1.modName = '%s'\n", *Str8 mod1.modName)
 	printf("mod2.modName = '%s'\n", *Str8 mod2.modName)
-	lib.printf("hi!\n")
+
 	return 0
 }
 

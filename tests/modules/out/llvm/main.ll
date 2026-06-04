@@ -227,23 +227,23 @@ declare void @lib_printf(%Str8* %s, ...)
 ; end from import "lib"
 ; -- end print imports 'main' --
 ; -- strings --
-@.str1 = private constant [21 x i8] [i8 109, i8 111, i8 100, i8 49, i8 46, i8 109, i8 111, i8 100, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
-@.str2 = private constant [5 x i8] [i8 109, i8 111, i8 100, i8 49, i8 0]
-@.str3 = private constant [21 x i8] [i8 109, i8 111, i8 100, i8 50, i8 46, i8 109, i8 111, i8 100, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
-@.str4 = private constant [5 x i8] [i8 109, i8 111, i8 100, i8 50, i8 0]
-@.str5 = private constant [5 x i8] [i8 104, i8 105, i8 33, i8 10, i8 0]
+@.str1 = private constant [5 x i8] [i8 104, i8 105, i8 33, i8 10, i8 0]
+@.str2 = private constant [21 x i8] [i8 109, i8 111, i8 100, i8 49, i8 46, i8 109, i8 111, i8 100, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
+@.str3 = private constant [5 x i8] [i8 109, i8 111, i8 100, i8 49, i8 0]
+@.str4 = private constant [21 x i8] [i8 109, i8 111, i8 100, i8 50, i8 46, i8 109, i8 111, i8 100, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
+@.str5 = private constant [5 x i8] [i8 109, i8 111, i8 100, i8 50, i8 0]
 ; -- endstrings --
 
 ;pragma c_include "./lib/lib.h"
 ;pragma c_include "./lib/mod1.h"
 ;pragma c_include "./lib/mod2.h"
 define %Int @main() {
+	call void (%Str8*, ...) @lib_printf(%Str8* bitcast ([5 x i8]* @.str1 to [0 x i8]*))
 	%1 = alloca %lib_Librarian, align 8
 	%2 = alloca %mod1_Mod, align 8
 	%3 = alloca %mod2_Mod, align 8
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str1 to [0 x i8]*), %Str8* bitcast ([5 x i8]* @.str2 to [0 x i8]*))
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str3 to [0 x i8]*), %Str8* bitcast ([5 x i8]* @.str4 to [0 x i8]*))
-	call void (%Str8*, ...) @lib_printf(%Str8* bitcast ([5 x i8]* @.str5 to [0 x i8]*))
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str2 to [0 x i8]*), %Str8* bitcast ([5 x i8]* @.str3 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str4 to [0 x i8]*), %Str8* bitcast ([5 x i8]* @.str5 to [0 x i8]*))
 	ret %Int 0
 }
 

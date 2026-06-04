@@ -18,12 +18,15 @@ import "./lib/mod2" as mod2
 
 @nonstatic
 func main () -> Int {
+	lib.printf("hi!\n")
+
 	var librarian: Librarian
 	var m1: Mod
 	var m2: Mod
+
 	printf("mod1.modName = '%s'\n", *Str8 mod1.modName)
 	printf("mod2.modName = '%s'\n", *Str8 mod2.modName)
-	lib.printf("hi!\n")
+
 	return 0
 }
 

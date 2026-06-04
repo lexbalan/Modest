@@ -414,23 +414,25 @@ def do_field(x):
 # Do Type
 #
 
-
-def get_module_by_path(path):
-	global cmodule
-	mod = cmodule
-	with_private=True
-	for id in path:
-		if isinstance(id, Id):
-			id_str = id.str
-		else:
-			id_str = id['str']
-		imp = mod.get_import(id_str, with_private=True)
-		with_private=False
-		if imp == None:
-			#error("module '%s' not found" % id_str, id.ti)
-			return None  # not found
-		mod = imp.module
-	return mod
+# Использовался для сквозного доступа по вложенным импортам
+# но я принял решения запретить сквозной импорт тк это создает много проблем
+# Если что то нужно - импортируй явно
+#def get_module_by_path(path):
+#	global cmodule
+#	mod = cmodule
+#	with_private=True
+#	for id in path:
+#		if isinstance(id, Id):
+#			id_str = id.str
+#		else:
+#			id_str = id['str']
+#		imp = mod.get_import(id_str, with_private=True)
+#		with_private=False
+#		if imp == None:
+#			#error("module '%s' not found" % id_str, id.ti)
+#			return None  # not found
+#		mod = imp.module
+#	return mod
 
 
 def do_type_named(x):
@@ -440,7 +442,13 @@ def do_type_named(x):
 
 	t = None
 	if 'module_path' in x:
-		module = get_module_by_path(x['module_path'])
+		if len(x['module_path']) > 1:
+			error("via import is forbidden", x['ti'])
+			return TypeBad(x['ti'])
+
+		left_id_str = x['module_path'][0]['str']
+		imp = cmodule.get_import(left_id_str, with_private=True)
+		module = imp.module #get_module_by_path(x['module_path'])
 
 		if module == None:
 			error("unknown namespace", x['ti'])
