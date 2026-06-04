@@ -87,10 +87,10 @@ int main(void) {
 	#define aa 2
 	#define bb 8
 	int32_t *const p = (int32_t *)&s[aa];
-	array_print((int32_t *)p, 6);
+	array_print((int32_t *)p, bb - aa);
 	printf("--------------------------------------------\n");
 	p[0] = 123;
-	array_print((int32_t *)p, 6);
+	array_print((int32_t *)p, bb - aa);
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
 	int32_t *pw = (int32_t *)s;

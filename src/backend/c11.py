@@ -1064,16 +1064,19 @@ def do_cvalue_lengthof(array_value):
 	if array_value.type.is_string():
 		return CValueInteger(array_value.type.length)
 	if array_value.isValueImmediate():
-		return CValueInteger(array_value.type.volume.asset)
+		#return CValueInteger(array_value.type.volume.asset)
+		return do_cvalue(array_value.type.volume)
 	if array_value.isValueConst() and array_value.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
-		return CValueInteger(array_value.type.volume.asset)
+		#return CValueInteger(array_value.type.volume.asset)
+		return do_cvalue(array_value.type.volume)
 	elif array_value.isValueSlice():
-		return CValueInteger(array_value.type.volume.asset)
+		return do_cvalue(array_value.type.volume)
+		#return CValueInteger(array_value.type.volume.asset)
 
 	lengthof_arg = do_cvalue(array_value)
 	if ARRAY_AS_POINTER:
 		if array_value.isValueDeref():
-			return CValueInteger(array_value.type.volume.asset)
+			return do_cvalue(array_value.type.volume)
 
 	return CValueCall(CValueNamed("LENGTHOF"), [lengthof_arg])
 
