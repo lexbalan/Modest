@@ -461,9 +461,11 @@ def do_type_named(x):
 			return TypeBad(x['ti'])
 		elif t.definition.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 			error("access to private type", x['ti'])
+			return TypeBad(x['ti'])
 
 		if t.is_incompleted():
 			t = type_update_incompleted(module, t, id_str)
+
 	else:
 		global csymtab
 		if id_str in ['Char16', 'Char32', 'Str16', 'Str32']:

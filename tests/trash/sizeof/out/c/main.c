@@ -71,7 +71,7 @@ int main(void) {
 	printf("off(i) = %llu\n", (uint64_t)&i - start_adr);
 	printf("off(f) = %llu\n", (uint64_t)&f - start_adr);
 	printf("off(i2) = %llu\n", (uint64_t)&i2 - start_adr);
-	printf("off(p) = %llu\n", (uint64_t)&p - start_adr);
+	printf("off(p) = %llu\n", (uint64_t)p - start_adr);
 	printf("off(g) = %llu\n", (uint64_t)&g - start_adr);
 	printf("sizeof(Unit) = %zu\n", (size_t)0);
 	printf("alignof(Unit) = %zu\n", (size_t)1);

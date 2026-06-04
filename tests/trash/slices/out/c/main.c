@@ -17,7 +17,7 @@
 #include <stdlib.h>
 
 
-static void array_print(int32_t pa[], uint32_t len) {
+static void array_print(int32_t *pa, uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
 		printf("a[%d] = %d\n", i, pa[i]);
@@ -26,7 +26,7 @@ static void array_print(int32_t pa[], uint32_t len) {
 }
 
 
-static void array4intInc(int32_t _a[4], int32_t __out[4]) {
+static void array4intInc(int32_t *_a, int32_t *__out) {
 	int32_t a[4];
 	__builtin_memcpy(a, _a, sizeof(int32_t [4]));
 	__builtin_memcpy(__out, &(int32_t [4]){a[0] + 1, a[1] + 1, a[2] + 1, a[3] + 1}, sizeof(int32_t [4]));
@@ -37,7 +37,7 @@ static void checkParamsIo(void) {
 	int32_t a[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 	array4intInc((int32_t *)(int32_t (*)[4 - 0])&a[0], (int32_t *)(int32_t (*)[4 - 0])&a[0]);
 	array4intInc((int32_t *)(int32_t (*)[8 - 4])&a[4], (int32_t *)(int32_t (*)[8 - 4])&a[4]);
-	array_print((int32_t *)&a, 8);
+	array_print((int32_t *)a, 8);
 }
 
 int main(void) {
@@ -53,9 +53,9 @@ int main(void) {
 		i = i + 1;
 	}
 	printf("--------------------------------------------\n");
-	int32_t (*const pa)[10] = &a;
+	int32_t *const pa = a;
 	int32_t s2[8 - 5];
-	__builtin_memcpy(&s2, (int32_t (*)[8 - 5])&(*pa)[5], sizeof(const int32_t [8 - 5]));
+	__builtin_memcpy(&s2, (int32_t (*)[8 - 5])&pa[5], sizeof(const int32_t [8 - 5]));
 	i = 0;
 	while (i < LENGTHOF(s2)) {
 		printf("s2[%d] = %d\n", i, s2[i]);
@@ -86,18 +86,18 @@ int main(void) {
 	printf("test pointer to slice\n");
 	#define aa 2
 	#define bb 8
-	int32_t (*const p)[bb - aa] = (int32_t (*)[bb - aa])&s[aa];
-	array_print((int32_t *)p, LENGTHOF(*p));
+	int32_t *const p = (int32_t *)&s[aa];
+	array_print((int32_t *)p, 6);
 	printf("--------------------------------------------\n");
-	(*p)[0] = 123;
-	array_print((int32_t *)p, LENGTHOF(*p));
+	p[0] = 123;
+	array_print((int32_t *)p, 6);
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
-	int32_t (*pw)[] = (int32_t (*)[])&s;
+	int32_t *pw = (int32_t *)s;
 	printf("before\n");
 	array_print((int32_t *)pw, 10);
 	int32_t ind = 1;
-	pw = (int32_t (*)[])&(*pw)[ind];
+	pw = (int32_t *)&pw[ind];
 	printf("after\n");
 	array_print((int32_t *)pw, 10);
 	printf("--------------------------------------------\n");
@@ -106,7 +106,7 @@ int main(void) {
 	int32_t k = 4;
 	int32_t j = 7;
 	__builtin_bzero((int32_t (*)[j - k])&ss[k], sizeof(int32_t [j - k]));
-	array_print((int32_t *)&ss, 10);
+	array_print((int32_t *)ss, 10);
 	printf("--------------------------------------------\n");
 	printf("copy slice by var\n");
 	int32_t src[5] = {10, 20, 30, 40, 50};
@@ -114,7 +114,7 @@ int main(void) {
 	#define i1 3
 	#define j1 8
 	ARRCPY((int32_t (*)[j1 - i1])&dst[i1], ((&(int8_t [5]){11, 22, 33, 44, 55})), j1 - i1);
-	array_print((int32_t *)&dst, 10);
+	array_print((int32_t *)dst, 10);
 	return 0;
 	#undef ax
 	#undef bx

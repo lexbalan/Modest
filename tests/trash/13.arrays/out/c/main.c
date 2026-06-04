@@ -81,9 +81,9 @@ static int32_t a0[2][2][5] = {
 };
 static int32_t a1[5] = {0, 1, 2, 3, 4};
 static int32_t a2[5] = {5, 6, 7, 8, 9};
-static int32_t (*a3[2])[5] = {&a1, &a2};
-static int32_t (*(*a4[2])[2])[5] = {&a3, &a3};
-static int32_t (*(*(*p0)[2])[2])[5] = &a4;
+static int32_t *a3[2] = {a1, a2};
+static int32_t **a4[2] = {a3, a3};
+static int32_t ***p0 = a4;
 static int32_t a10[10][10] = {
 	{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
 	{11, 12, 13, 14, 15, 16, 17, 18, 19, 20},
@@ -136,7 +136,7 @@ static void test_arrays(void) {
 	while (i < 2) {
 		j = 0;
 		while (j < 5) {
-			printf("a3[%d][%d] = %d\n", i, j, (*a3[i])[j]);
+			printf("a3[%d][%d] = %d\n", i, j, a3[i][j]);
 			j = j + 1;
 		}
 		i = i + 1;
@@ -147,7 +147,7 @@ static void test_arrays(void) {
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, (*(*a4[i])[j])[k]);
+				printf("a3[%d][%d][%d] = %d\n", i, j, k, a4[i][j][k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -160,7 +160,7 @@ static void test_arrays(void) {
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("p0[%d][%d][%d] = %d\n", i, j, k, (*(*(*p0)[i])[j])[k]);
+				printf("p0[%d][%d][%d] = %d\n", i, j, k, p0[i][j][k]);
 				k = k + 1;
 			}
 			j = j + 1;
@@ -189,20 +189,20 @@ int main(void) {
 		i = i + 1;
 	}
 	printf("------------------------------------\n");
-	int32_t (*globalArrayPtr)[];
-	globalArrayPtr = &globalArray;
+	int32_t *globalArrayPtr;
+	globalArrayPtr = globalArray;
 	i = 0;
 	while (i < 3) {
-		const int32_t a = (*globalArrayPtr)[i];
+		const int32_t a = globalArrayPtr[i];
 		printf("globalArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
 	printf("------------------------------------\n");
-	int32_t (*localArrayPtr)[];
-	localArrayPtr = &localArray;
+	int32_t *localArrayPtr;
+	localArrayPtr = localArray;
 	i = 0;
 	while (i < 3) {
-		const int32_t a = (*localArrayPtr)[i];
+		const int32_t a = localArrayPtr[i];
 		printf("localArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
@@ -230,8 +230,8 @@ int main(void) {
 	printf("d[3] = %i\n", d[3]);
 	printf("d[4] = %i\n", d[4]);
 	printf("d[5] = %i\n", d[5]);
-	int32_t (*const pa)[3] = &a;
-	int32_t (*const pb)[3] = &b;
+	int32_t *const pa = a;
+	int32_t *const pb = b;
 	if (__builtin_memcmp(pa, pb, sizeof(int32_t [3])) == 0) {
 		printf("*pa == *pb\n");
 	} else {

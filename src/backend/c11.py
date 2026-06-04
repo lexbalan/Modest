@@ -14,6 +14,7 @@ from .c11_1 import *
 import re
 
 
+ARRAY_AS_POINTER = True
 
 
 def camel_to_lower_snake(name: str) -> str:
@@ -93,6 +94,8 @@ def is_global_public(x):
 # Печатаем указатель на массив как указатель на его элемент
 # ТОЛЬКО когда это указатель на строку!
 def need_ptr_to_item_instead_of_ptr_to_array(t):
+	if ARRAY_AS_POINTER:
+		return t.is_array()
 	return t.is_array_of_char()
 
 
@@ -1066,7 +1069,13 @@ def do_cvalue_lengthof(array_value):
 		return CValueInteger(array_value.type.volume.asset)
 	elif array_value.isValueSlice():
 		return CValueInteger(array_value.type.volume.asset)
-	return CValueCall(CValueNamed("LENGTHOF"), [do_cvalue(array_value)])
+
+	lengthof_arg = do_cvalue(array_value)
+	if ARRAY_AS_POINTER:
+		if array_value.isValueDeref():
+			return CValueInteger(array_value.type.volume.asset)
+
+	return CValueCall(CValueNamed("LENGTHOF"), [lengthof_arg])
 
 
 def do_cvalue_lengthof_value(x, ctx):

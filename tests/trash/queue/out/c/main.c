@@ -45,7 +45,7 @@ static uint8_t qbuf[QSIZE];
 
 
 int main(void) {
-	queueWord8_init(&bq0, (uint8_t *)&qbuf, QSIZE);
+	queueWord8_init(&bq0, (uint8_t *)qbuf, QSIZE);
 	fill(3);
 	fetch(7);
 	fill(12);
