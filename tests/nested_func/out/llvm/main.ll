@@ -212,6 +212,8 @@ define void @local() {
 }
 
 define %Int @main() {
+	%1 = alloca %main.MyInt, align 4
+	store %main.MyInt 0, %main.MyInt* %1
 	call void @local()
 	ret %Int 0
 }
