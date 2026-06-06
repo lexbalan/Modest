@@ -1928,7 +1928,7 @@ def do_stmt_assign(x):
 		if l.type.of.get_size() != r.type.of.get_size():
 			if not r.isValueZero():
 				cmodule_use('use_lengthof')
-				cmodule_use('use_arrcpy')
+				#cmodule_use('use_arrcpy')
 
 
 	r = transmission(l.type, r, x['ti'])

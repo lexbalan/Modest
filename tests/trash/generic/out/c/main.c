@@ -8,13 +8,6 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
-#define ARRCPY(dst, src, len) \
-	do { \
-		uint32_t _len = (uint32_t)(len); \
-		for (uint32_t _i = 0; _i < _len; _i++) { \
-			(*(dst))[_i] = (*(src))[_i]; \
-		} \
-	} while (0)
 #if !defined(__STR_UNICODE__)
 #define __STR_UNICODE__
 typedef uint8_t char8_t;
@@ -113,13 +106,13 @@ static bool test_generic_array(void) {
 		return false;
 	}
 	int32_t b[4];
-	ARRCPY(&b, ((&(const int8_t [4])a)), LENGTHOF(b));
+	__builtin_memcpy(&b, ((&(const int8_t [4])a)), LENGTHOF(b));
 	if (__builtin_memcmp(&b, &(int32_t [4]){0, 1, 2, 3}, sizeof(int32_t [4])) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
 	int64_t c[4];
-	ARRCPY(&c, ((&(const int8_t [4])a)), LENGTHOF(c));
+	__builtin_memcpy(&c, ((&(const int8_t [4])a)), LENGTHOF(c));
 	if (__builtin_memcmp(&c, &(int64_t [4]){0, 1, 2, 3}, sizeof(int64_t [4])) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;

@@ -27,18 +27,18 @@ static int32_t *f3(void) {
 	return NULL;
 }
 
-static void f4(int32_t x, int32_t *__out) {
+static void f4(int32_t x, int32_t __out[10]) {
 	__builtin_memcpy(__out, &(int32_t [10]){1, 2, 3}, sizeof(int32_t [10]));
 }
 
 
-static void f5(int32_t *_a, int32_t *__out) {
+static void f5(int32_t _a[32], int32_t __out[32]) {
 	int32_t a[32];
 	__builtin_memcpy(a, _a, sizeof(int32_t [32]));
 	__builtin_memcpy(__out, &a, sizeof(int32_t [32]));
 }
 
-static int32_t *f6(int32_t *a) {
+static int32_t (*f6(int32_t a[32]))[32] {
 	return NULL;
 }
 
@@ -59,54 +59,54 @@ static void (**f10(void (**f)(void)))(void) {
 	return f;
 }
 
-static void (**f11(int32_t *(**f)(int32_t a, int32_t *b)))(void) {
+static void (**f11(int32_t (*(**f)(int32_t a, int32_t *b))[10]))(void) {
 	return NULL;
 }
 
-static void (**f12(int32_t *(**f)(int32_t *a, int32_t **b)))(void) {
+static void (**f12(int32_t (*(**f)(int32_t a[32], int32_t (**b)[64]))[10]))(void) {
 	return NULL;
 }
 
-static void (**f13(int32_t *(**f)(int32_t **a, int32_t ***b)))(void) {
+static void (**f13(int32_t (*(**f)(int32_t *a[32], int32_t *(**b)[64]))[10]))(void) {
 	return NULL;
 }
 static void (*pf0)(void) = &f0;
 static int32_t (*pf1)(int32_t x) = &f1;
 static int32_t (*pf2)(int32_t a, int32_t b) = &f2;
 static int32_t *(*pf3)(void) = &f3;
-static void (*pf4)(int32_t x, int32_t *__out) = &f4;
-static void (*pf5)(int32_t *_a, int32_t *__out) = &f5;
-static int32_t *(*pf6)(int32_t *a) = &f6;
+static void (*pf4)(int32_t x, int32_t __out[10]) = &f4;
+static void (*pf5)(int32_t _a[32], int32_t __out[32]) = &f5;
+static int32_t (*(*pf6)(int32_t a[32]))[32] = &f6;
 static void (*pf7)(void (*f)(void)) = &f7;
 static void (*(*pf8)(void (*f)(void)))(void) = &f8;
 static void (**(*pf9)(void (*f)(void)))(void) = &f9;
 static void (**(*pf10)(void (**f)(void)))(void) = &f10;
-static void (**(*pf11)(int32_t *(**f)(int32_t a, int32_t *b)))(void) = &f11;
-static void (**(*pf12)(int32_t *(**f)(int32_t *a, int32_t **b)))(void) = &f12;
-static void (**(*pf13)(int32_t *(**f)(int32_t **a, int32_t ***b)))(void) = &f13;
+static void (**(*pf11)(int32_t (*(**f)(int32_t a, int32_t *b))[10]))(void) = &f11;
+static void (**(*pf12)(int32_t (*(**f)(int32_t a[32], int32_t (**b)[64]))[10]))(void) = &f12;
+static void (**(*pf13)(int32_t (*(**f)(int32_t *a[32], int32_t *(**b)[64]))[10]))(void) = &f13;
 static int32_t a0[5] = {0, 1, 2, 3, 4};
 static int32_t *a1[5] = {&a0[0], &a0[1], &a0[2], &a0[3], &a0[4]};
 static int32_t **a2[5] = {&a1[0], &a1[1], &a1[2], &a1[3], &a1[4]};
 static void (*a3[5])(void) = {&f0};
 static int a4[2][5] = {{0, 1, 2, 3, 4}, {5, 6, 7, 8, 9}};
-static int *a5[2] = {&a4[0], &a4[1]};
+static int (*a5[2])[5] = {&a4[0], &a4[1]};
 // Проблема в том что мой getelementptr не умеет в цепь-молнию
 // а здесь без нее никак... придется взяться за это и сделать наконец
 //var a6: [2][5]*Int = [
 //	[&a4[0][0], &a4[0][1], &a4[0][2], &a4[0][3], &a4[0][4]]
 //	[&a4[1][0], &a4[1][1], &a4[1][2], &a4[1][3], &a4[1][4]]
 //]
-static int *a7[2][5] = {
-	{a0, a0, a0, a0, a0},
-	{a0, a0, a0, a0, a0}
+static int (*a7[2][5])[5] = {
+	{&a0, &a0, &a0, &a0, &a0},
+	{&a0, &a0, &a0, &a0, &a0}
 };
-static int *(*a8[2][5])[5] = {
-	{a7, a7, a7, a7, a7},
-	{a7, a7, a7, a7, a7}
+static int (*(*a8[2][5])[2][5])[5] = {
+	{&a7, &a7, &a7, &a7, &a7},
+	{&a7, &a7, &a7, &a7, &a7}
 };
-static int (***a9[5])(int a);
-static int32_t *p2 = a0;
-static int32_t **p3 = &p2;
+static int (*(*(*a9[5])[10])[2])(int a);
+static int32_t (*p2)[5] = &a0;
+static int32_t (**p3)[5] = &p2;
 struct rgb24 {
 	uint8_t red;
 	uint8_t green;

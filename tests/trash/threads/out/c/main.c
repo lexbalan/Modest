@@ -49,6 +49,7 @@ int main(void) {
 	void *rc1;
 	rc = pthread_join(pthread0, &rc0);
 	rc = pthread_join(pthread1, &rc1);
+	(void)rc;
 	pthread_exit(NULL);
 	return 0;
 }

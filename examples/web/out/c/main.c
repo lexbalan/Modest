@@ -24,14 +24,14 @@ static uint32_t pageCounter;
 
 static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[RECEIVE_BUFFER_SIZE];
-	const ssize_t bytesReceived = read(clientSocket, buffer, LENGTHOF(buffer) - 1);
+	const ssize_t bytesReceived = read(clientSocket, &buffer, LENGTHOF(buffer) - 1);
 	if (bytesReceived < 0) {
 		perror("cannot read socket");
 		close(clientSocket);
 		return;
 	}
 	buffer[bytesReceived] = 0x0;
-	printf("Received request:\n%s\n", (char *)buffer);
+	printf("Received request:\n%s\n", (char *)&buffer);
 	char response[SEND_BUFFER_SIZE];
 	sprintf(response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", HTTP_HEADER, pageCounter);
 	write(clientSocket, response, strlen(response));

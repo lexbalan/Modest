@@ -50,9 +50,9 @@ int32_t main(void) {
 	console_puts8(arr_utf8);
 	console_puts16(arr_utf16);
 	console_puts32(arr_utf32);
-	console_puts8((char *)ratSymbolUTF8);
-	console_puts16((char16_t *)ratSymbolUTF16);
-	console_puts32((char32_t *)ratSymbolUTF32);
+	console_puts8((char *)&ratSymbolUTF8);
+	console_puts16((char16_t *)&ratSymbolUTF16);
+	console_puts32((char32_t *)&ratSymbolUTF32);
 	console_puts32(U"\n");
 	console_putchar8('A');
 	console_putchar16(u'Ω');

@@ -70,6 +70,8 @@ func main () -> Int {
 	rc = pthread.join(pthread0, &rc0)
 	rc = pthread.join(pthread1, &rc1)
 
+	Unit rc
+
 	pthread.exit(nil)
 
 	return 0

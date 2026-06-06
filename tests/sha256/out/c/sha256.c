@@ -85,7 +85,7 @@ static void contextInit(struct context *ctx) {
 }
 
 
-static void transform(struct context *ctx, uint8_t *data) {
+static void transform(struct context *ctx, uint8_t data[]) {
 	uint32_t m[64] = {0};
 	uint32_t i = 0;
 	uint32_t j = 0;
@@ -123,13 +123,13 @@ static void transform(struct context *ctx, uint8_t *data) {
 }
 
 
-static void update(struct context *ctx, uint8_t *msg, uint32_t msgLen) {
+static void update(struct context *ctx, uint8_t msg[], uint32_t msgLen) {
 	uint32_t i = 0;
 	while (i < msgLen) {
 		ctx->data[ctx->datalen] = msg[i];
 		ctx->datalen = ctx->datalen + 1;
 		if (ctx->datalen == 64) {
-			transform(ctx, (uint8_t *)ctx->data);
+			transform(ctx, (uint8_t *)&ctx->data);
 			ctx->bitlen = ctx->bitlen + 512;
 			ctx->datalen = 0;
 		}
@@ -138,7 +138,7 @@ static void update(struct context *ctx, uint8_t *msg, uint32_t msgLen) {
 }
 
 
-static void final(struct context *ctx, uint8_t *outHash) {
+static void final(struct context *ctx, uint8_t outHash[SHA256_HASH_SIZE]) {
 	uint32_t i = ctx->datalen;
 	uint32_t n = 64;
 	if (ctx->datalen < 56) {
@@ -148,8 +148,8 @@ static void final(struct context *ctx, uint8_t *outHash) {
 	i = i + 1;
 	memset(&ctx->data[i], 0, (size_t)(n - i));
 	if (ctx->datalen >= 56) {
-		transform(ctx, (uint8_t *)ctx->data);
-		memset(ctx->data, 0, 56);
+		transform(ctx, (uint8_t *)&ctx->data);
+		memset(&ctx->data, 0, 56);
 	}
 	ctx->bitlen = ctx->bitlen + (uint64_t)ctx->datalen * 8;
 	ctx->data[63] = (uint8_t)(ctx->bitlen >> 0);
@@ -160,7 +160,7 @@ static void final(struct context *ctx, uint8_t *outHash) {
 	ctx->data[58] = (uint8_t)(ctx->bitlen >> 40);
 	ctx->data[57] = (uint8_t)(ctx->bitlen >> 48);
 	ctx->data[56] = (uint8_t)(ctx->bitlen >> 56);
-	transform(ctx, (uint8_t *)ctx->data);
+	transform(ctx, (uint8_t *)&ctx->data);
 	i = 0;
 	while (i < 4) {
 		const uint32_t sh = 24 - i * 8;
@@ -177,7 +177,7 @@ static void final(struct context *ctx, uint8_t *outHash) {
 }
 
 
-void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash) {
+void sha256_hash(uint8_t msg[], uint32_t msgLen, uint8_t outHash[SHA256_HASH_SIZE]) {
 	struct context ctx = (struct context){0};
 	contextInit(&ctx);
 	update(&ctx, (uint8_t *)msg, msgLen);

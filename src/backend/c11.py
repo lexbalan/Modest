@@ -14,7 +14,7 @@ from .c11_1 import *
 import re
 
 
-ARRAY_AS_POINTER = True
+ARRAY_AS_POINTER = False
 
 
 def camel_to_lower_snake(name: str) -> str:
@@ -95,7 +95,7 @@ def is_global_public(x):
 # ТОЛЬКО когда это указатель на строку!
 def need_ptr_to_item_instead_of_ptr_to_array(t):
 	if ARRAY_AS_POINTER:
-		return t.is_array()
+		return t.is_array()# and not t.is_array_of_array()
 	return t.is_array_of_char()
 
 
@@ -888,14 +888,15 @@ def do_cvalue_arg(av):
 		# тк функции си не умеют получать массивы по значению
 		a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
 	else:
-		if av.type.is_pointer_to_array():
-			if POINTER_TO_ARRAY_RELAX:
-				if not av.type.to.is_array_of_char():
-					if av.isValueRef() and not (av.value.isValueIndex() or av.value.isValueSlice()):
-						av = av.value
-					else:
-						tt = TypePointer(av.type.to.of)
-						av = ValueCons(tt, tt, av, 'explicit', av.ti)
+		if not ARRAY_AS_POINTER:
+			if av.type.is_pointer_to_array():
+				if POINTER_TO_ARRAY_RELAX:
+					if not av.type.to.is_array_of_char():
+						if av.isValueRef() and not (av.value.isValueIndex() or av.value.isValueSlice()):
+							av = av.value
+						else:
+							tt = TypePointer(av.type.to.of)
+							av = ValueCons(tt, tt, av, 'explicit', av.ti)
 		a = do_cvalue(av)
 
 	return a
@@ -993,6 +994,11 @@ def do_cvalue_ref(x, ctx):
 	value = x.value
 	cv = do_cvalue(value, ctx=ctx)
 
+	if ARRAY_AS_POINTER:
+		if x.type.is_pointer_to_array() and value.type.is_array():
+			if not (value.isValueIndex() or value.isValueSlice()):
+				return cv
+
 	if need_ptr_to_item_instead_of_ptr_to_array(x.type.to):
 		if not (value.isValueIndex() or value.isValueSlice()):
 			#return CValueRef(cv)
@@ -1001,10 +1007,11 @@ def do_cvalue_ref(x, ctx):
 
 	cv = CValueRef(cv)
 
-	if value.isValueSlice():
-		# "ref to slice" in C is just pointer to array item,
-		# therefore we need cast it to pointer to result array
-		cv = CValueCast(do_ctype(x.type), cv)
+	if not ARRAY_AS_POINTER:
+		if value.isValueSlice():
+			# "ref to slice" in C is just pointer to array item,
+			# therefore we need cast it to pointer to result array
+			cv = CValueCast(do_ctype(x.type), cv)
 
 	return cv
 
@@ -1064,14 +1071,11 @@ def do_cvalue_lengthof(array_value):
 	if array_value.type.is_string():
 		return CValueInteger(array_value.type.length)
 	if array_value.isValueImmediate():
-		#return CValueInteger(array_value.type.volume.asset)
 		return do_cvalue(array_value.type.volume)
 	if array_value.isValueConst() and array_value.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
-		#return CValueInteger(array_value.type.volume.asset)
 		return do_cvalue(array_value.type.volume)
 	elif array_value.isValueSlice():
 		return do_cvalue(array_value.type.volume)
-		#return CValueInteger(array_value.type.volume.asset)
 
 	lengthof_arg = do_cvalue(array_value)
 	if ARRAY_AS_POINTER:
@@ -1370,7 +1374,8 @@ def do_assign_array(left, right, ti):
 		slen = do_cvalue_lengthof(left)
 	else:
 		slen = do_cvalue(left.type.volume)
-	return CStmtValueExpr(CValueCall(CValueNamed("ARRCPY"), [cleft, CValueSubexpr(cright), slen]))
+	#return CStmtValueExpr(CValueCall(CValueNamed("ARRCPY"), [cleft, CValueSubexpr(cright), slen]))
+	return CStmtValueExpr(cvalue_memcpy(cleft, CValueSubexpr(cright), slen))
 
 
 
@@ -1496,10 +1501,10 @@ def do_cstmt_const(x):
 	if not (init_value.type.is_array() and init_value.isValueRuntime()):
 		civ = do_cinitializer(type, init_value, ctx=[])
 
-	t = do_ctype(type)
+	ct = do_ctype(type)
 	if type.is_array() and not init_value.isValueImmediate():
-		t.specs.remove('const')
-	dv = CStmtDefVar(get_id_str(x), t, init_value=civ, storage_class=None)
+		ct.specs.remove('const')
+	dv = CStmtDefVar(get_id_str(x), ct, init_value=civ, storage_class=None)
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
@@ -1943,6 +1948,7 @@ def do_helper_use_bigint():
 	return (CInsert(sstr),)
 
 
+# not used, __builtin_memcpy() instead now
 def do_helper_use_arrcpy():
 	sstr = ''
 	sstr += ("\n#define ARRCPY(dst, src, len) \\")
@@ -2329,11 +2335,12 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 	cv = CValueRef(cv)
 
 	# Если взяли адрес у array item - нужно привести его к *[]
-	if x.isValueSlice():
-		cv = CValueCast(CTypePointer(do_ctype(x.type)), cv)
+	if not ARRAY_AS_POINTER:
+		if x.isValueSlice():
+			cv = CValueCast(CTypePointer(do_ctype(x.type)), cv)
 
-	if parr_relax and x.type.is_array():
-		cv = CValueCast(CTypePointer(do_ctype(x.type.of)), cv)
+		if parr_relax and x.type.is_array():
+			cv = CValueCast(CTypePointer(do_ctype(x.type.of)), cv)
 
 	return cv
 
