@@ -2956,6 +2956,44 @@ def setObjAttrByPath(x, path, value):
 
 
 
+def def_add_annotation_alias(x, a):
+	# 1. @alias("alias")
+	# 2. @alias("llvm", "llvm_alias")
+	args = a['args']
+	if len(args) == 2:
+		backend = args[0]['value']['str']
+		identifier = args[1]['value']['str']
+
+		if backend == 'c':
+			x.id.c_alias = identifier
+		elif backend == 'llvm':
+			x.id.llvm_alias = identifier
+
+	elif len(args) == 1:
+		identifier = args[0]['value']['str']
+		x.id.common = identifier
+
+	add_att(x, 'id:nodecorate')
+
+
+def def_add_annotation_extern(x, a):
+	# 1. @extern()
+	# 2. @extern("C")
+	# 3. @extern("C", "alias")
+	add_att(x, "extern")
+	args = a['args']
+	if len(args) == 1:
+		abi = args[0]['value']['str']
+		if abi == 'C':
+			add_att(x, 'id:nodecorate')
+	elif len(args) == 2:
+		abi = args[0]['value']['str']
+		alias = args[1]['value']['str']
+		if abi == 'C':
+			add_att(x, 'id:nodecorate')
+			x.id.c_alias = alias
+
+
 def def_add_annotations(x, ast_atts):
 	for a in ast_atts:
 		kind = a['kind']
@@ -2978,33 +3016,11 @@ def def_add_annotations(x, ast_atts):
 		if kind in ['alignment', 'section', 'inline', 'used', 'unused', 'inlinehint', 'noinline', 'nonstatic']:
 			pass
 		elif kind == 'alias':
-			# 1. @alias("alias")
-			# 2. @alias("llvm", "llvm_alias")
-			args = a['args']
-			if len(args) == 2:
-				backend = args[0]['value']['str']
-				identifier = args[1]['value']['str']
-
-				if backend == 'c':
-					x.id.c_alias = identifier
-				elif backend == 'llvm':
-					x.id.llvm_alias = identifier
-
-			elif len(args) == 1:
-				identifier = args[0]['value']['str']
-				x.id.common = identifier
-
-			add_att(x, 'id:nodecorate')
+			def_add_annotation_alias(x, a)
 
 		elif kind == 'extern':
-			# 1. @extern()
-			# 2. @extern("C")
-			add_att(x, "extern")
-			args = a['args']
-			if len(args) > 0:
-				arg = args[0]['value']['str']
-				if arg == 'C':
-					add_att(x, 'id:nodecorate')
+			def_add_annotation_extern(x, a)
+
 		elif kind == 'nodecorate':
 			add_att(x, 'id:nodecorate')
 
