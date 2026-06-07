@@ -996,7 +996,7 @@ def do_cvalue_ref(x, ctx):
 
 	if ARRAY_AS_POINTER:
 		if x.type.is_pointer_to_array() and value.type.is_array():
-			if not (value.isValueIndex() or value.isValueSlice()):
+			if not value.isValueSlice():
 				return cv
 
 	if need_ptr_to_item_instead_of_ptr_to_array(x.type.to):
@@ -2330,6 +2330,8 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 		root = get_root_value(x)
 		if root.isValueVar() or (root.isValueConst() and not const_as_macro(root)) or root.isValueArray() or root.isValueAccessRecord():
 			return do_cvalue(root)
+		if ARRAY_AS_POINTER and root.isValueConst() and const_as_macro(root):
+			return do_cvalue_mem(x)
 
 	cv = do_cvalue_mem(x)
 	cv = CValueRef(cv)
