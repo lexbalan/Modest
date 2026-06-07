@@ -2980,18 +2980,22 @@ def def_add_annotation_extern(x, a):
 	# 1. @extern()
 	# 2. @extern("C")
 	# 3. @extern("C", "alias")
+
 	add_att(x, "extern")
 	args = a['args']
+	add_att(x, 'id:nodecorate')
+
 	if len(args) == 1:
 		abi = args[0]['value']['str']
-		if abi == 'C':
-			add_att(x, 'id:nodecorate')
+		#if abi == 'C':
+		#	add_att(x, 'id:nodecorate')
+
 	elif len(args) == 2:
 		abi = args[0]['value']['str']
 		alias = args[1]['value']['str']
-		if abi == 'C':
-			add_att(x, 'id:nodecorate')
-			x.id.c_alias = alias
+		#if abi == 'C':
+		#	add_att(x, 'id:nodecorate')
+		x.id.c_alias = alias
 
 
 def def_add_annotations(x, ast_atts):
