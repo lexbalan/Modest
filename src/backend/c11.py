@@ -14,7 +14,7 @@ from .c11_1 import *
 import re
 
 
-ARRAY_AS_POINTER = False
+ARRAY_AS_POINTER = True
 
 
 def camel_to_lower_snake(name: str) -> str:

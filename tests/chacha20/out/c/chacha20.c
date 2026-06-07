@@ -10,7 +10,7 @@ static uint32_t rotl32(uint32_t x, uint32_t n) {
 	return x << n | x >> (32 - n);
 }
 
-static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t __out[4]) {
+static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t *__out) {
 	uint32_t a0 = a;
 	uint32_t b0 = b;
 	uint32_t c0 = c;
@@ -27,7 +27,7 @@ static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_
 }
 
 
-void chacha20_chacha20Block(uint32_t _state[16], uint32_t __out[16]) {
+void chacha20_chacha20Block(uint32_t *_state, uint32_t *__out) {
 	chacha20_State state;
 	__builtin_memcpy(state, _state, sizeof(chacha20_State));
 	chacha20_State x;
@@ -97,7 +97,7 @@ void chacha20_chacha20Block(uint32_t _state[16], uint32_t __out[16]) {
 // Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
 
 
-void chacha20_makeState(uint32_t key[8], uint32_t counter, uint32_t nonce[3], uint32_t __out[16]) {
+void chacha20_makeState(uint32_t *key, uint32_t counter, uint32_t *nonce, uint32_t *__out) {
 	__builtin_memcpy(__out, &(chacha20_State){
 		0x61707865, 0x3320646E, 0x79622D32, 0x6B206574,
 		key[0], key[1], key[2], key[3],

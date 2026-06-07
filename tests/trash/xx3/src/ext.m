@@ -3,7 +3,7 @@ pragma do_not_include
 pragma prefix ""
 
 
-@alias("c", "DIR")
+@extern("C", "DIR")
 public type Dir = {}
 
 

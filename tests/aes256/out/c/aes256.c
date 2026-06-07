@@ -99,7 +99,7 @@ static inline uint8_t rj_sboxInv(uint8_t x) {
 }
 
 
-static void subBytes(uint8_t block[16]) {
+static void subBytes(uint8_t *block) {
 	uint8_t i = 0;
 	while (i < 16) {
 		block[i] = rj_sbox(block[i]);
@@ -108,7 +108,7 @@ static void subBytes(uint8_t block[16]) {
 }
 
 
-static void subBytesInv(uint8_t block[16]) {
+static void subBytesInv(uint8_t *block) {
 	uint8_t i = 0;
 	while (i < 16) {
 		block[i] = rj_sboxInv(block[i]);
@@ -117,7 +117,7 @@ static void subBytesInv(uint8_t block[16]) {
 }
 
 
-static void addRoundKey(uint8_t block[16], uint8_t k[16]) {
+static void addRoundKey(uint8_t *block, uint8_t *k) {
 	uint8_t i = 0;
 	while (i < 16) {
 		block[i] = block[i] ^ k[i];
@@ -126,7 +126,7 @@ static void addRoundKey(uint8_t block[16], uint8_t k[16]) {
 }
 
 
-static void addRoundKeyCpy(uint8_t block[16], uint8_t key[32], uint8_t cpk[32]) {
+static void addRoundKeyCpy(uint8_t *block, uint8_t *key, uint8_t *cpk) {
 	uint8_t i = 0;
 	while (i < 16) {
 		const uint8_t yy = key[i];
@@ -138,7 +138,7 @@ static void addRoundKeyCpy(uint8_t block[16], uint8_t key[32], uint8_t cpk[32]) 
 }
 
 
-static void shiftRows(uint8_t block[16]) {
+static void shiftRows(uint8_t *block) {
 	uint8_t i;
 	uint8_t j;
 	i = block[1];
@@ -160,7 +160,7 @@ static void shiftRows(uint8_t block[16]) {
 }
 
 
-static void shiftRowsInv(uint8_t block[16]) {
+static void shiftRowsInv(uint8_t *block) {
 	uint8_t i;
 	uint8_t j;
 	i = block[1];
@@ -182,7 +182,7 @@ static void shiftRowsInv(uint8_t block[16]) {
 }
 
 
-static void mixColumns(uint8_t block[16]) {
+static void mixColumns(uint8_t *block) {
 	uint8_t a;
 	uint8_t b;
 	uint8_t c;
@@ -204,7 +204,7 @@ static void mixColumns(uint8_t block[16]) {
 }
 
 
-static void mixColumnsInv(uint8_t block[16]) {
+static void mixColumnsInv(uint8_t *block) {
 	uint8_t a;
 	uint8_t b;
 	uint8_t c;
@@ -232,7 +232,7 @@ static void mixColumnsInv(uint8_t block[16]) {
 }
 
 
-static void expandEncKey(uint8_t k[32], uint8_t *rc) {
+static void expandEncKey(uint8_t *k, uint8_t *rc) {
 	uint8_t i;
 	k[0] = k[0] ^ rj_sbox(k[29]) ^ *rc;
 	k[1] = k[1] ^ rj_sbox(k[30]);
@@ -262,7 +262,7 @@ static void expandEncKey(uint8_t k[32], uint8_t *rc) {
 }
 
 
-static void expandDecKey(uint8_t k[32], uint8_t *rc) {
+static void expandDecKey(uint8_t *k, uint8_t *rc) {
 	uint8_t i;
 	i = 28;
 	while (i > 16) {
@@ -296,7 +296,7 @@ static void expandDecKey(uint8_t k[32], uint8_t *rc) {
 }
 
 
-aes256_Result aes256_init(aes256_Context *ctx, uint8_t key[32]) {
+aes256_Result aes256_init(aes256_Context *ctx, uint8_t *key) {
 	if (ctx == NULL || key == NULL) {
 		return AES256_RESULT_ERROR;
 	}
@@ -312,55 +312,55 @@ aes256_Result aes256_init(aes256_Context *ctx, uint8_t key[32]) {
 }
 
 
-aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
+aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, uint8_t *block) {
 	if (ctx == NULL || block == NULL) {
 		return AES256_RESULT_ERROR;
 	}
 	uint8_t rcon = 1;
-	addRoundKeyCpy((uint8_t *)block, ctx->enckey, ctx->key);
+	addRoundKeyCpy(block, ctx->enckey, ctx->key);
 	uint8_t i = 0;
 	while (i < 13) {
 		i = i + 1;
-		subBytes((uint8_t *)block);
-		shiftRows((uint8_t *)block);
-		mixColumns((uint8_t *)block);
+		subBytes(block);
+		shiftRows(block);
+		mixColumns(block);
 		if ((i & 0x1) == 0x1) {
-			addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[32 - 16])&ctx->key[16]);
+			addRoundKey(block, &ctx->key[16]);
 		} else {
 			expandEncKey(ctx->key, &rcon);
-			addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[16 - 0])&ctx->key[0]);
+			addRoundKey(block, &ctx->key[0]);
 		}
 	}
-	subBytes((uint8_t *)block);
-	shiftRows((uint8_t *)block);
+	subBytes(block);
+	shiftRows(block);
 	expandEncKey(ctx->key, &rcon);
-	addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[16 - 0])&ctx->key[0]);
+	addRoundKey(block, &ctx->key[0]);
 	return AES256_RESULT_SUCCESS;
 }
 
 
-aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, uint8_t block[16]) {
+aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, uint8_t *block) {
 	if (ctx == NULL || block == NULL) {
 		return AES256_RESULT_ERROR;
 	}
-	addRoundKeyCpy((uint8_t *)block, ctx->deckey, ctx->key);
-	shiftRowsInv((uint8_t *)block);
-	subBytesInv((uint8_t *)block);
+	addRoundKeyCpy(block, ctx->deckey, ctx->key);
+	shiftRowsInv(block);
+	subBytesInv(block);
 	uint8_t rcon = 0x80;
 	uint8_t i = 13;
 	while (i > 0) {
 		if ((i & 0x1) == 0x1) {
 			expandDecKey(ctx->key, &rcon);
-			addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[32 - 16])&ctx->key[16]);
+			addRoundKey(block, &ctx->key[16]);
 		} else {
-			addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[16 - 0])&ctx->key[0]);
+			addRoundKey(block, &ctx->key[0]);
 		}
-		mixColumnsInv((uint8_t *)block);
-		shiftRowsInv((uint8_t *)block);
-		subBytesInv((uint8_t *)block);
+		mixColumnsInv(block);
+		shiftRowsInv(block);
+		subBytesInv(block);
 		i = i - 1;
 	}
-	addRoundKey((uint8_t *)block, (uint8_t *)(uint8_t (*)[16 - 0])&ctx->key[0]);
+	addRoundKey(block, &ctx->key[0]);
 	return AES256_RESULT_SUCCESS;
 }
 

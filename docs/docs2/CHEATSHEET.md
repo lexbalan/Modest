@@ -266,10 +266,10 @@ Unit value                         // discard a value (suppress warnings)
 ```modest
 @inline                            // suggest inlining to backend
 @extern                            // external symbol (C linkage)
-@alias("c_name")                   // maps to a different C symbol name
+@extern("C", "symbol_name")        // maps to a different C symbol name
 @c_include("header.h")             // emit #include in C output
 @branded                           // newtype wrapper (nominal typing)
-@packed                            // packed struct (no padding)
+@layout("packed")                  // packed struct (no padding)
 @volatile                          // volatile memory
 ```
 
@@ -280,7 +280,7 @@ func min (a: Int32, b: Int32) -> Int32 {
     return b
 }
 
-@extern @alias("malloc")
+@extern("C", "malloc")
 func my_alloc (size: Nat64) -> *Unit
 
 @c_include("sys/types.h")

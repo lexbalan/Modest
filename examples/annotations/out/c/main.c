@@ -5,8 +5,6 @@
 #include <string.h>
 #include <stdio.h>
 typedef int32_t MyInt32;
-#define MY_ZERO ((MyInt32)0)
-#define MY_ONE ((MyInt32)1)
 typedef MyInt32 MyInt32_2;
 typedef MyInt32 MyInt32_3;
 #define CVB 0
@@ -15,8 +13,8 @@ struct protocol_header {
 	uint16_t start;
 	uint16_t len;
 };
-static bool name2;
-static bool name22;
+extern bool name2;
+extern bool name22;
 extern int32_t ext;
 extern int32_t ext_arr[];
 __attribute__((aligned(8), section("__DATA, .xdata")))

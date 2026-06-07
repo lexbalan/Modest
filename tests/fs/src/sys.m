@@ -9,7 +9,7 @@ public type Nat = Nat32
 public type Long = Int64
 public type Size = Long
 
-@alias('c', 'DIR')
+@extern('C', 'DIR')
 public type Dir = {x: Nat32}
 
 
@@ -23,7 +23,7 @@ public type Dir = {x: Nat32}
 //#else
 //	TCHAR	fname[12 + 1];	/* File name */
 //#endif
-@alias('c', 'FILINFO')
+@extern('C', 'FILINFO')
 public type Filinfo = @public {
 	fsize: Nat32
 	fdate: Word32
@@ -36,17 +36,17 @@ public func init () -> Int
 public func deinit () -> Int
 
 //FRESULT f_opendir (DIR* dp, const TCHAR* path);						/* Open a directory */
-@alias('c', 'f_opendir')
+@extern('C', 'f_opendir')
 public func opendir (dir: *Dir, path: *Str8) -> Int
 //FRESULT f_readdir (DIR* dp, FILINFO* fno);							/* Read a directory item */
-@alias('c', 'f_readdir')
+@extern('C', 'f_readdir')
 public func readdir (dir: *Dir, finfo: *Filinfo) -> Int
 
 //FRESULT f_unlink (const TCHAR* path);
-@alias('c', 'f_unlink')
+@extern('C', 'f_unlink')
 public func delete (path: *Str8) -> Int
 
-@alias('c', 'f_mkdir')
+@extern('C', 'f_mkdir')
 public func mkdir (path: *[]Char) -> Int
 
 public func chdir (path: *[]Char) -> Int

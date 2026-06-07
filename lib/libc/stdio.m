@@ -7,34 +7,34 @@ pragma c_include "stdio.h"
 include "libc/ctypes64"
 
 
-@alias("c", "FILE")
+@extern("C", "FILE")
 public type File = {}
 
-@alias("c", "fpos_t")
+@extern("C", "fpos_t")
 public type FposT = Nat8
 
-@alias("c", "char *")
+@extern("C", "char *")
 public type CharStr = Str
 
-@alias("c", "const char *")
+@extern("C", "const char *")
 public type ConstCharStr = CharStr
 
-@alias("c", "stdin")
+@extern("C", "stdin")
 @extern public const stdin: *File = nil
-@alias("c", "stdout")
+@extern("C", "stdout")
 @extern public const stdout: *File = nil
-@alias("c", "stderr")
+@extern("C", "stderr")
 @extern public const stderr: *File = nil
 
 
-@alias("c", "EOF")
+@extern("C", "EOF")
 public const c_EOF = -1
 
-@alias("c", "SEEK_SET")
+@extern("C", "SEEK_SET")
 public const c_SEEK_SET = 0
-@alias("c", "SEEK_CUR")
+@extern("C", "SEEK_CUR")
 public const c_SEEK_CUR = 1
-@alias("c", "SEEK_END")
+@extern("C", "SEEK_END")
 public const c_SEEK_END = 2
 
 

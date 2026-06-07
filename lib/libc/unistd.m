@@ -12,38 +12,38 @@ include "libc/ctypes64"
 //@extern("C)
 //var environ: *[]*Char
 
-//@alias("c", "SEEK_SET")
+//@extern("C", "SEEK_SET")
 //public const c_SEEK_SET = 0
-//@alias("c", "SEEK_CUR")
+//@extern("C", "SEEK_CUR")
 //public const c_SEEK_CUR = 1
-//@alias("c", "SEEK_END")
+//@extern("C", "SEEK_END")
 //public const c_SEEK_END = 2
 
-@alias("c", "STDIN_FILENO")
+@extern("C", "STDIN_FILENO")
 public const c_STDIN_FILENO = 0
-@alias("c", "STDOUT_FILENO")
+@extern("C", "STDOUT_FILENO")
 public const c_STDOUT_FILENO = 1
-@alias("c", "STDERR_FILENO")
+@extern("C", "STDERR_FILENO")
 public const c_STDERR_FILENO = 2
 
 
 // lockf function - record locking on files
-@alias("c", "F_ULOCK")
+@extern("C", "F_ULOCK")
 public const c_F_ULOCK = 0  // unlock locked sections
-@alias("c", "F_LOCK")
+@extern("C", "F_LOCK")
 public const c_F_LOCK = 1   // lock a section for exclusive use
-@alias("c", "F_TLOCK")
+@extern("C", "F_TLOCK")
 public const c_F_TLOCK = 2  // test and lock a section for exclusive use
-@alias("c", "F_TEST")
+@extern("C", "F_TEST")
 public const c_F_TEST = 3
 
-@alias("c", "F_OK")
+@extern("C", "F_OK")
 public const c_F_OK = 0  // Test for existence of file
-@alias("c", "R_OK")
+@extern("C", "R_OK")
 public const c_R_OK = 4  // Test for read permission
-@alias("c", "W_OK")
+@extern("C", "W_OK")
 public const c_W_OK = 2  // Test for write permission
-@alias("c", "X_OK")
+@extern("C", "X_OK")
 public const c_X_OK = 1  // Test for execute (search) permission
 
 

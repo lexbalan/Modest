@@ -3019,6 +3019,7 @@ def def_add_annotations(x, ast_atts):
 		# ['inline', 'used', 'unused', 'inlinehint', 'noinline', 'nonstatic']
 		if kind in ['alignment', 'section', 'inline', 'used', 'unused', 'inlinehint', 'noinline', 'nonstatic']:
 			pass
+
 		elif kind == 'alias':
 			def_add_annotation_alias(x, a)
 

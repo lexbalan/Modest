@@ -160,7 +160,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 			continue;
 		}
 		i = i + 2;
-		char *const sptr = (char *)&buf[j];
+		char *const sptr = &buf[j];
 		if (c == 'i' || c == 'd') {
 			const int32_t x = va_arg(va, int32_t);
 			const int32_t n = sprint_dec_int32(sptr, x);

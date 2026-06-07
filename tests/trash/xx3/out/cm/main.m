@@ -18,7 +18,7 @@ type X = {
 var p: *Context
 
 
-@alias()
+@extern
 type Context = @public {
 	x: Int32 = 32
 	y: Int32 = 32

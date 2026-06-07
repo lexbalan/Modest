@@ -6,25 +6,25 @@ include "libc/ctypes"
 include "libc/stat"
 
 // open-only flags
-@alias("c", "O_RDONLY")
+@extern("C", "O_RDONLY")
 public const c_O_RDONLY = Word32 0x00000000    // open for reading only
-@alias("c", "O_WRONLY")
+@extern("C", "O_WRONLY")
 public const c_O_WRONLY = Word32 0x00000001    // open for writing only
-@alias("c", "O_RDWR")
+@extern("C", "O_RDWR")
 public const c_O_RDWR = Word32 0x00000002      // open for reading and writing
-@alias("c", "O_ACCMODE")
+@extern("C", "O_ACCMODE")
 public const c_O_ACCMODE = Word32 0x00000003   // mask for above modes
 
-@alias("c", "O_NONBLOCK")
+@extern("C", "O_NONBLOCK")
 public const c_O_NONBLOCK = Word32 0x00000004  // no delay
-@alias("c", "O_APPEND")
+@extern("C", "O_APPEND")
 public const c_O_APPEND = Word32 0x00000008    // set append mode
 
-@alias("c", "O_CREAT")
+@extern("C", "O_CREAT")
 public const c_O_CREAT = Word32 0x00000200     // create if nonexistent
-@alias("c", "O_TRUNC")
+@extern("C", "O_TRUNC")
 public const c_O_TRUNC = Word32 0x00000400     // truncate to zero length
-@alias("c", "O_EXCL")
+@extern("C", "O_EXCL")
 public const c_O_EXCL = Word32 0x00000800      // error if already exists
 
 
@@ -33,53 +33,53 @@ public const c_O_EXCL = Word32 0x00000800      // error if already exists
  */
 
 // command values
-@alias("c", "F_DUPFD")
+@extern("C", "F_DUPFD")
 public const c_F_DUPFD = 0           // duplicate file descriptor
-@alias("c", "F_GETFD")
+@extern("C", "F_GETFD")
 public const c_F_GETFD = 1           // get file descriptor flags
-@alias("c", "F_SETFD")
+@extern("C", "F_SETFD")
 public const c_F_SETFD = 2           // set file descriptor flags
-@alias("c", "F_GETFL")
+@extern("C", "F_GETFL")
 public const c_F_GETFL = 3           // get file status flags
-@alias("c", "F_SETFL")
+@extern("C", "F_SETFL")
 public const c_F_SETFL = 4           // set file status flags
-@alias("c", "F_GETOWN")
+@extern("C", "F_GETOWN")
 public const c_F_GETOWN = 5          // get SIGIO/SIGURG proc/pgrp
-@alias("c", "F_SETOWN")
+@extern("C", "F_SETOWN")
 public const c_F_SETOWN = 6          // set SIGIO/SIGURG proc/pgrp
-@alias("c", "F_GETLK")
+@extern("C", "F_GETLK")
 public const c_F_GETLK = 7           // get record locking information
-@alias("c", "F_SETLK")
+@extern("C", "F_SETLK")
 public const c_F_SETLK = 8           // set record locking information
-@alias("c", "F_SETLKW")
+@extern("C", "F_SETLKW")
 public const c_F_SETLKW = 9          // f_SETLK, wait if blocked
-@alias("c", "F_CLOSEM")
+@extern("C", "F_CLOSEM")
 public const c_F_CLOSEM = 10         // close all fds >= to the one given
-@alias("c", "F_MAXFD")
+@extern("C", "F_MAXFD")
 public const c_F_MAXFD = 11          // return the max open fd
-@alias("c", "F_DUPFD_CLOEXEC")
+@extern("C", "F_DUPFD_CLOEXEC")
 public const c_F_DUPFD_CLOEXEC = 12  // close on exec duplicated fd
-@alias("c", "F_GETNOSIGPIPE")
+@extern("C", "F_GETNOSIGPIPE")
 public const c_F_GETNOSIGPIPE = 13   // get SIGPIPE disposition
-@alias("c", "F_SETNOSIGPIPE")
+@extern("C", "F_SETNOSIGPIPE")
 public const c_F_SETNOSIGPIPE = 14   // set SIGPIPE disposition
-@alias("c", "F_GETPATH")
+@extern("C", "F_GETPATH")
 public const c_F_GETPATH = 15        // get pathname associated with fd
-@alias("c", "F_ADD_SEALS")
+@extern("C", "F_ADD_SEALS")
 public const c_F_ADD_SEALS = 16      // set seals
-@alias("c", "F_GET_SEALS")
+@extern("C", "F_GET_SEALS")
 public const c_F_GET_SEALS = 17      // get seals
 
 // file descriptor flags (f_GETFD, f_SETFD)
-@alias("c", "FD_CLOEXEC")
+@extern("C", "FD_CLOEXEC")
 public const c_FD_CLOEXEC = 1        // close-on-exec flag
 
 // record locking flags (F_GETLK, F_SETLK, F_SETLKW)
-@alias("c", "F_RDLCK")
+@extern("C", "F_RDLCK")
 public const c_F_RDLCK = 1  // shared or read lock
-@alias("c", "F_UNLCK")
+@extern("C", "F_UNLCK")
 public const c_F_UNLCK = 2  // unlock
-@alias("c", "F_WRLCK")
+@extern("C", "F_WRLCK")
 public const c_F_WRLCK = 3  // exclusive or write lock
 
 

@@ -8,10 +8,10 @@ include "libc/stdio"
 
 type MyInt32 = @branded Int32
 
-@alias()
+@extern()
 const myZero = MyInt32 0
 
-@alias()
+@extern()
 const myOne = MyInt32 1
 
 
@@ -31,11 +31,11 @@ type ProtocolHeader = @layout {
 }
 
 
-@alias()
+@extern()
 var name1: Bool
 
 
-@alias()
+@extern()
 var name11: Bool
 
 

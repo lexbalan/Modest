@@ -20,7 +20,7 @@ public type BlkCntT = Nat64
 public type DarwinIno64T = Nat64
 
 //
-//@alias("c", "struct stat")
+//@extern("C", "struct stat")
 //type Stat {
 //	st_dev: DevT			/* номер устройства */
 //	st_ino: InoT			/* inode */
@@ -40,7 +40,7 @@ public type DarwinIno64T = Nat64
 
 public type DarwinTimeT = Nat64
 
-@alias("c", "struct timespec")
+@extern("C", "struct timespec")
 public type Timespec = @public {
 	tv_sec: DarwinTimeT
 	tv_nsec: Long
@@ -49,7 +49,7 @@ public type Timespec = @public {
 
 /* for MACOS see: /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys */
 
-@alias("c", "struct stat")
+@extern("C", "struct stat")
 public type Stat = @public {
 	st_dev: DevT             // [XSI] ID of device containing file
 	st_mode: ModeT           // [XSI] Mode of file (see below)
@@ -134,49 +134,49 @@ public const c_S_ISVTX = 0x0200   // (0001000) save swapped text even after use
 
 
 /* is directory */
-@alias("c", "S_ISDIR")
+@extern("C", "S_ISDIR")
 public func c_S_ISDIR (m: ModeT) -> Bool {
 	return m & c_S_IFMT == c_S_IFDIR
 }
 
 /* is char special */
-@alias("c", "S_ISCHR")
+@extern("C", "S_ISCHR")
 public func c_S_ISCHR (m: ModeT) -> Bool {
 	return m & c_S_IFMT == c_S_IFCHR
 }
 
 /* is block special */
-@alias("c", "S_ISBLK")
+@extern("C", "S_ISBLK")
 public func c_S_ISBLK (m: ModeT) -> Bool {
 	return m & c_S_IFMT == c_S_IFBLK
 }
 
 /* is regular file */
-@alias("c", "S_ISREG")
+@extern("C", "S_ISREG")
 public func c_S_ISREG (m: ModeT) -> Bool {
 	return m & c_S_IFMT == c_S_IFREG
 }
 
 /* is fifo or socket */
-@alias("c", "S_ISFIFO")
+@extern("C", "S_ISFIFO")
 public func c_S_ISFIFO (m: ModeT) -> Bool {
 	return m & c_S_IFMT == c_S_IFIFO
 }
 
 /* is symbolic link */
-@alias("c", "S_ISLNK")
+@extern("C", "S_ISLNK")
 public func c_S_ISLNK (m: ModeT) -> Bool {
 	return m & c_S_IFMT == c_S_IFLNK
 }
 
 /* is socket */
-@alias("c", "S_ISSOCK")
+@extern("C", "S_ISSOCK")
 public func c_S_ISSOCK (m: ModeT) -> Bool {
 	return m & c_S_IFMT == c_S_IFSOCK
 }
 
 /* is whiteout */
-@alias("c", "S_ISWHT")
+@extern("C", "S_ISWHT")
 public func c_S_ISWHT (m: ModeT) -> Bool {
 	return m & c_S_IFMT == c_S_IFWHT
 }

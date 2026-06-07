@@ -30,7 +30,7 @@ struct tokenizer {
 	uint16_t tokensPos;
 
 	char *tokensBuf;
-	char *(*tokens)[];
+	char **tokens;
 };
 
 
@@ -80,19 +80,19 @@ static void tokenize(struct tokenizer *tokenizer) {
 		if (toklen == 0) {
 			break;
 		}
-		char *const pbuf = (char *)&tokenizer->tokensBuf[tokenizer->tokensBufPos];
-		__builtin_memcpy((char (*)[toklen - 0])&pbuf[0], (char (*)[toklen - 0])&token[0], sizeof(char [toklen - 0]));
+		char *const pbuf = &tokenizer->tokensBuf[tokenizer->tokensBufPos];
+		__builtin_memcpy(&pbuf[0], &token[0], sizeof(char [toklen - 0]));
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + toklen;
 		pbuf[tokenizer->tokensBufPos] = '\x0';
 		tokenizer->tokensBufPos = tokenizer->tokensBufPos + 1;
-		(*tokenizer->tokens)[tokenizer->tokensPos] = pbuf;
+		tokenizer->tokens[tokenizer->tokensPos] = pbuf;
 		tokenizer->tokensPos = tokenizer->tokensPos + 1;
-		(*tokenizer->tokens)[tokenizer->tokensPos] = NULL;
+		tokenizer->tokens[tokenizer->tokensPos] = NULL;
 	}
 }
 
 
-static void execute(char *cmd, uint16_t argc, char *argv[]) {
+static void execute(char *cmd, uint16_t argc, char **argv) {
 	printf("%s (n=%d)", cmd, argc);
 	printf(" [");
 	uint32_t i = 0;
@@ -118,16 +118,16 @@ int32_t main(void) {
 		struct tokenizer tokenizer = (struct tokenizer){
 			.input = inbuf,
 			.tokensBuf = tokensBuf,
-			.tokens = &tokens
+			.tokens = tokens
 		};
 		tokenize(&tokenizer);
-		char *const cmd = (*tokenizer.tokens)[0];
+		char *const cmd = tokenizer.tokens[0];
 		uint16_t argc = tokenizer.tokensPos;
 		if (argc > 0) {
 			argc = argc - 1;
 		}
-		char *(*const argv)[] = (char *(*)[])&(*tokenizer.tokens)[1];
-		execute(cmd, argc, (char **)argv);
+		char **const argv = &tokenizer.tokens[1];
+		execute(cmd, argc, argv);
 	}
 	return 0;
 }

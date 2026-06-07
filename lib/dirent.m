@@ -2,18 +2,18 @@
 
 pragma prefix ""
 
-@alias("c", "DIR")
+@extern("C", "DIR")
 public type Dir = {}
 
-@alias("c", "int")
+@extern("C", "int")
 type Int = Int32
-@alias("c", "ino_t")
+@extern("C", "ino_t")
 type InoT = Nat32
-@alias("c", "off_t")
+@extern("C", "off_t")
 type OffT = Nat32
 
 
-@alias("c", "struct dirent")
+@extern("C", "struct dirent")
 public type Dirent = @public {
 	d_ino: InoT         /* inode number */
 	d_off: OffT         /* offset to the next dirent */
@@ -24,23 +24,23 @@ public type Dirent = @public {
 
 
 /* File types for `d_type'.  */
-@alias("c", "DT_UNKNOWN")
+@extern("C", "DT_UNKNOWN")
 public const dt_UNKNOWN = 0
-@alias("c", "DT_FIFO")
+@extern("C", "DT_FIFO")
 public const dt_FIFO = 1
-@alias("c", "DT_CHR")
+@extern("C", "DT_CHR")
 public const dt_CHR = 2
-@alias("c", "DT_DIR")
+@extern("C", "DT_DIR")
 public const dt_DIR = 4
-@alias("c", "DT_BLK")
+@extern("C", "DT_BLK")
 public const dt_BLK = 6
-@alias("c", "DT_REG")
+@extern("C", "DT_REG")
 public const dt_REG = 8
-@alias("c", "DT_LNK")
+@extern("C", "DT_LNK")
 public const dt_LNK = 10
-@alias("c", "DT_SOCK")
+@extern("C", "DT_SOCK")
 public const dt_SOCK = 12
-@alias("c", "DT_WHT")
+@extern("C", "DT_WHT")
 public const dt_WHT = 14
 
 
