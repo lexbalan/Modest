@@ -66,8 +66,6 @@ var u: Word64
 var u2: Word64
 
 
-
-@nodecorate
 public const const0 = 0
 
 

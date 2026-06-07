@@ -1049,8 +1049,9 @@ def do_cvalue_const(x, ctx):
 		return do_cvalue_literal_with_type(x, x.type, ctx=ctx)
 
 	id_str = get_id_str(x)
-	if x.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL and not x.id.hasAttribute('nodecorate'):
-		id_str = camel_to_upper_snake(id_str)
+	if x.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL: #and not x.id.hasAttribute('nodecorate'):
+		if x.id.c_alias == None:
+			id_str = camel_to_upper_snake(id_str)
 
 	cv = CValueNamed(id_str)
 
@@ -1062,8 +1063,6 @@ def do_cvalue_const(x, ctx):
 
 def do_cvalue_access_module(x, ctx):
 	return do_cvalue(x.value, ctx)
-
-
 
 
 

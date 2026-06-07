@@ -2395,7 +2395,7 @@ def def_func(x):
 	if fn.id.str == 'main':
 		#fn.id.prefix = None
 		cdef.addAttribute('nonstatic')
-		fn.id.addAttribute('nodecorate')
+		#fn.id.addAttribute('nodecorate')
 		fn.id.addAttribute('entrypoint')
 
 	if x['stmt'] == None:
@@ -2973,7 +2973,7 @@ def def_add_annotation_alias(x, a):
 		identifier = args[0]['value']['str']
 		x.id.common = identifier
 
-	add_att(x, 'id:nodecorate')
+	#add_att(x, 'id:nodecorate')
 
 
 def def_add_annotation_extern(x, a):
@@ -2983,7 +2983,7 @@ def def_add_annotation_extern(x, a):
 
 	add_att(x, "extern")
 	args = a['args']
-	add_att(x, 'id:nodecorate')
+	#add_att(x, 'id:nodecorate')
 
 	if len(args) == 1:
 		abi = args[0]['value']['str']
@@ -3026,8 +3026,8 @@ def def_add_annotations(x, ast_atts):
 		elif kind == 'extern':
 			def_add_annotation_extern(x, a)
 
-		elif kind == 'nodecorate':
-			add_att(x, 'id:nodecorate')
+		#elif kind == 'nodecorate':
+		#	add_att(x, 'id:nodecorate')
 
 		elif kind == 'c_no_print':
 			add_att(x, "c_no_print")
