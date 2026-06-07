@@ -1050,7 +1050,7 @@ def do_cvalue_const(x, ctx):
 
 	id_str = get_id_str(x)
 	if x.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL: #and not x.id.hasAttribute('nodecorate'):
-		if x.id.c_alias == None:
+		if x.id.c_alias == None and x.id.common == None:
 			id_str = camel_to_upper_snake(id_str)
 
 	cv = CValueNamed(id_str)
