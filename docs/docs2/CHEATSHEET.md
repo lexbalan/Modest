@@ -82,6 +82,11 @@ nil                                // null pointer
 
 ## Definitions
 
+> **Access modifiers:** `public` and `private` can be applied to any definition.
+> If omitted, the **default** access is used: at module level, default = `private`.
+> For named record fields, the default can be changed with the `@public { ... }` attribute on the record — fields listed inside the block become public.
+> Anonymous record fields are `public` by default.
+
 ### Functions
 ```modest
 func add (a: Int32, b: Int32) -> Int32 {
@@ -386,6 +391,20 @@ var handler: Handler = &on_event
 handler(nil)
 ```
 
+### Enum Idiom
+
+Modest has no built-in enum type. The idiomatic pattern is a branded integer type plus module-level constants:
+
+```modest
+type Color = @brand Nat8
+const colorRed   = Color 0
+const colorGreen = Color 1
+const colorBlue  = Color 2
+```
+
+The `@brand` annotation makes `Color` nominally distinct from `Nat8` — you cannot mix them accidentally.
+Use `Nat8` for up to 256 variants, or `Nat16`/`Nat32` for larger enumerations.
+
 ### Multi-source Module
 ```modest
 // main.m
@@ -405,6 +424,36 @@ func greet () -> Unit {
     printf("hello from utils\n")
 }
 ```
+
+
+## Name Mapping (Modest → C / LLVM IR)
+
+By default, symbol names are emitted as-is. Module imports add a prefix for public symbols.
+
+| Situation | Modest | C / LLVM IR |
+|---|---|---|
+| Private symbol | `myFunc` | `myFunc` |
+| Public symbol in module `utils` | `pub myFunc` | `utils_myFunc` |
+| `include`d symbol | used directly | original name, no prefix |
+| `@extern` | `myFunc` | `myFunc` (no module prefix) |
+| `@extern("C", "malloc")` | `myAlloc` | `malloc` |
+| `@alias("myAlias")` | `myFunc` | `myAlias` (C and LLVM) |
+| `@alias("c", "myAlias")` | `myFunc` | `myAlias` (C only) |
+| `@alias("llvm", "myAlias")` | `myFunc` | `myAlias` (LLVM only) |
+
+```modest
+// module: utils
+
+public func greet () -> Unit { ... }   // emitted as: utils_greet
+private func helper () -> Unit { ... } // emitted as: helper  (private, no prefix)
+
+@extern("C", "printf")
+public func myPrint (s: Str8) -> Unit  // emitted as: printf
+```
+
+> `public` marks a symbol as public (visible to importers). The module name becomes a prefix in the output.
+> `private` (default) keeps the symbol local — no module prefix is added.
+> `@extern` suppresses the module prefix — the symbol links directly to an external name.
 
 
 ## Key Differences from C
