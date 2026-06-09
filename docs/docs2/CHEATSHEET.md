@@ -36,7 +36,7 @@ These are sometimes called **generic** types internally.
 |--------------------|---------------------------|---------------------------------|
 | `Integer`          | `0`, `42`, `0xFF`         | IntX, NatX, WordX, Float, Char  |
 | `Rational`         | `3.14`, `0.5`             | FloatX                          |
-| `GenericChar`      | `"A"[0]`                  | CharX                           |
+| `String`           | `"hello"`, `'hello'`      | CharX, StrX (= `*[]CharX`)      |
 | `GenericArray`     | `[1, 2, 3]`               | same-size array of matching type|
 | `GenericRecord`    | `{x=1, y=2}`              | record with same fields         |
 
@@ -69,16 +69,17 @@ type Name = @branded Type          // branded type (newtype pattern)
 
 
 ## Literals
-```modest
-42, 0xFF                           // integers (decimal and hexadecimal)
-3.14, 0.5                          // floats
-true, false                        // bool
-"Hello World"                      // string literal
-'Hello World'                      // string literal (no dedicated char literal)
-[1, 2, 3]                          // array literal
-{x = 10, y = 20}                   // record literal
-nil                                // null pointer
-```
+
+| Literal | Type | Notes |
+|---------|------|-------|
+| `42`, `0xFF` | `Integer` | compile-time; converts to IntX, NatX, WordX, FloatX, CharX |
+| `3.14`, `0.5` | `Rational` | compile-time; converts to FloatX |
+| `true`, `false` | `Bool` | | non-generic; just Bool
+| `"Hello World"` | `String` | compile-time; converts to CharX or StrX (`*[]CharX`) |
+| `'Hello World'` | `String` | same; no char literal — use value construction: `Char8 'A'` |
+| `[1, 2, 3]` | `GenericArray` | compile-time; converts to same-size typed array |
+| `{x = 10, y = 20}` | `GenericRecord` | compile-time; converts to matching record type |
+| `nil` | `*Unit` | null pointer |
 
 ## Definitions
 
@@ -116,6 +117,8 @@ let local = 42                     // immutable binding — only inside function
 ```
 
 > `let` is only allowed inside function bodies. For module-level values use `var` or `const`.
+
+> `var` requires a concrete (non-generic) type — either declared explicitly or inferred from a non-generic initializer. `const` and `let` retain the compile-time generic type of their initializer.
 
 ### Types
 ```modest
@@ -290,6 +293,35 @@ func my_alloc (size: Nat64) -> *Unit
 
 @c_include("sys/types.h")
 type MyHandle = Int32
+```
+
+
+## Code Style
+
+- Between semantically distinct top-level blocks (includes, type definitions, constants) — **one empty line**
+- Between function definitions — **two empty lines**
+- Inline comments (to the right of a line of code) are separated from the code by **two spaces**
+
+```modest
+include "libc/ctypes64"
+include "libc/stdio"
+
+type Point = {x: Float64, y: Float64}
+
+const maxSize = 100
+
+
+func init (p: *Point) -> Unit {
+    p.x = 0.0  // set x to origin
+    p.y = 0.0  // set y to origin
+}
+
+
+func distance (a: Point, b: Point) -> Float64 {
+    let dx = a.x - b.x  // x delta
+    let dy = a.y - b.y  // y delta
+    return sqrt(dx*dx + dy*dy)
+}
 ```
 
 
