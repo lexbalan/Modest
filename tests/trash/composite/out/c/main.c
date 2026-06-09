@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 struct __anonymous_struct_3 {int32_t x; int32_t y;};
 // Test for composite types

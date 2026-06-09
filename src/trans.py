@@ -448,6 +448,10 @@ def do_type_named(x):
 
 		left_id_str = x['module_path'][0]['str']
 		imp = cmodule.get_import(left_id_str, with_private=True)
+		if imp == None:
+			error("module '%s' not found" % left_id_str, x['ti'])
+			return TypeBad(x['ti'])
+
 		module = imp.module #get_module_by_path(x['module_path'])
 
 		if module == None:

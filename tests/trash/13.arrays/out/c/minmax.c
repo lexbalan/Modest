@@ -3,7 +3,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 
 
 int32_t minmax_minInt32(int32_t a, int32_t b) {

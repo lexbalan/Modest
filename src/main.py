@@ -69,7 +69,7 @@ def main():
 
 	outname = args.output
 	if outname == None:
-		outname = root_name
+		outname = "out"
 
 	include_dir = args.include
 	if args.include == None:

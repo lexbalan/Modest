@@ -3,7 +3,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #if !defined(__STR_UNICODE__)
 #define __STR_UNICODE__
 typedef uint8_t char8_t;

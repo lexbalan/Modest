@@ -2123,7 +2123,7 @@ def do_cfile(module):
 	xdefs.extend(include("stddef.h", local=False))
 	xdefs.extend(include("stdint.h", local=False))
 	xdefs.extend(include("stdbool.h", local=False))
-	xdefs.extend(include("string.h", local=False))
+	#xdefs.extend(include("string.h", local=False))
 
 	for x in defs:
 		if isinstance(x, StmtDirectiveCInclude) and (not x.is_local and x.c_name in STD_HEADERS):

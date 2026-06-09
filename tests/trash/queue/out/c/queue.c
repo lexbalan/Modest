@@ -3,7 +3,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 
 
 void queue_init(struct queue_queue *q, uint32_t capacity) {

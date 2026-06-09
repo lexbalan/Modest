@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <math.h>
 #include <stdio.h>
 #include "queueWord8.h"

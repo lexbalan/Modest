@@ -3,7 +3,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 
 
 static uint32_t rotl32(uint32_t x, uint32_t n) {
