@@ -271,23 +271,65 @@ Unit value                         // discard a value (suppress warnings)
 
 ## Annotations
 
+### Inlining
 ```modest
 @inline                            // suggest inlining to backend
+@inlinehint                        // weak inline hint (weaker than @inline)
+@noinline                          // forbid inlining
+```
+
+### Linkage & C interop
+```modest
 @extern                            // external symbol (C linkage)
 @extern("C", "symbol_name")        // maps to a different C symbol name
 @c_include("header.h")             // emit #include in C output
+@cbyvalue                          // pass record by value in C ABI (not by pointer)
+```
+
+### Symbol lifetime & diagnostics
+```modest
+@used                              // keep symbol even if unreferenced (prevent dead-code elimination)
+@unused                            // suppress unused-symbol warning
+@deprecated                        // mark symbol as deprecated
+```
+
+### Type layout & memory
+```modest
 @branded                           // newtype wrapper (nominal typing)
 @layout("packed")                  // packed struct (no padding)
+@layout("union")                   // union-style record (all fields at offset 0)
 @volatile                          // volatile memory
 @alignment(N)                      // set alignment to N bytes (C: __attribute__((aligned(N))), LLVM: align N)
 @section("segment, section")       // place symbol in a specific linker section
 ```
 
+### Access control
+```modest
+@public { field1, field2 }         // make listed fields of a named record public by default
+```
+
+### Unstable / internal
+> These annotations exist in the compiler but are not stable and may change or be removed.
+
+```modest
+@nonstatic                         // suppress static linkage on a definition (C backend internal)
+@c_no_print                        // suppress C output for this module (pragma-level, internal)
+@zarray                            // zero-terminated array marker (internal)
+@fraction(N)                       // fixed-point fractional bits (experimental)
+```
+
+### Examples
 ```modest
 @inline
 func min (a: Int32, b: Int32) -> Int32 {
     if a < b { return a }
     return b
+}
+
+@noinline
+func expensive (x: Int32) -> Int32 {
+    // ...
+    return x
 }
 
 @extern("C", "malloc")
@@ -296,11 +338,27 @@ func my_alloc (size: Nat64) -> *Unit
 @c_include("sys/types.h")
 type MyHandle = Int32
 
+@used
+var table: [256]Word8              // kept even if never referenced
+
+@deprecated
+func old_api () -> Unit
+
 @alignment(8)
 var aligned_buf: [64]Word8
 
 @section("__DATA, .xdata")
 var xdata: [16]Word8
+
+type Vec2 = @public {
+    x: Float32
+    y: Float32
+}
+
+type Color = @layout("union") {
+    rgba: Word32
+    r: Word8
+}
 ```
 
 
