@@ -105,7 +105,7 @@ func no_return () -> Unit {
 
 ### Variables & Constants
 ```modest
-var x: Int32                       // global is zero-initialized, local - undefined
+var x: Int32                       // zero-initialized: scalar → 0, record/array → all fields/elements zero
 var x: Int32 = 10                  // with initial value
 var x = 10                         // type inferred from value
 var x, y, z: Int32                 // multiple vars of same type
@@ -258,7 +258,9 @@ func(args)                         // call
 
 ## Value Construction
 
-Explicit type construction (not a cast — creates a new value):
+Explicit type construction — not a cast. Takes a value of type A and produces a new value of type B.
+Syntax: `TargetType sourceValue`
+
 ```modest
 Int32 10                           // integer literal → Int32
 Float64 3.14                       // rational literal → Float64
@@ -268,6 +270,30 @@ Point {x = 1, y = 2}               // record construction
 [4]Int32 [1, 2, 3]                 // explicit array (fills remaining with 0)
 Unit value                         // discard a value (suppress warnings)
 ```
+
+### Construction rules
+
+> **Safe** — no special flag required.
+> **Unsafe** — requires `-funsafe` compiler flag and `unsafe { }` block at the call site.
+> Width notation: `Y≤X` means source width is narrower or equal; `Y>X` means wider.
+
+| Target | Safe sources | Unsafe sources | Comment |
+|---|---|---|---|
+| `IntX` | `Integer`, `IntY`(Y≤X), `NatY`(Y≤X), `WordY`(Y≤X), `FloatY`, `Rational` | `IntY`(Y>X), `NatY`(Y>X), `WordY`(Y>X), `*T` | `FloatY→IntX` truncates fraction; compile-time overflow = error; `*T` only if pointer width ≤ X |
+| `NatX` | `Integer`, `NatY`(Y≤X), `WordY`(Y≤X), `IntY`(Y≤X), `FloatY`, `Rational` | `NatY`(Y>X), `WordY`(Y>X), `IntY`(Y>X), `*T` | `IntY→NatX` applies `abs()`; `FloatY→NatX` truncates fraction |
+| `WordX` | `Integer`, `WordY`(Y≤X), `IntY`(Y≤X), `NatY`(Y≤X), `CharY`(Y≤X), `Bool` | `WordY`(Y>X), `IntY`(Y>X), `NatY`(Y>X), `FloatY`, `*T` | signed→Word zero-extends (not sign-extends); `FloatY→WordX` reinterprets bits |
+| `FloatX` | `Integer`, `Rational`, `IntY`, `NatY`, `FloatY`, `Fixed` | `WordY` | `WordY→FloatX` reinterprets bits |
+| `*T` | `nil`, `*[N]T→*[]T`, `*Unit`, `String→*[]CharX`, `*[]T→*[N]T` | `*U`, `WordY`, `IntY` | `*[]T→*[N]T` safe only if element types match; otherwise full reinterpret = unsafe |
+| `CharX` | `Integer`(≤X), `WordY`(Y≤X), `String`(len=1) | any numeric | `String→CharX` compile-time only; string must be exactly 1 character |
+| `Bool` | `Bool` | — | no construction from other types; use `==` / `!=` to produce Bool |
+| `[N]T` | `GenericArray` (len≤N) | — | missing elements are zero-filled |
+| `RecordT` | `GenericRecord` | — | field names and types must match |
+| `Unit` | any | — | discards the value; suppresses unused-value warning |
+
+> **Non-obvious behaviors to keep in mind:**
+> - `IntY → NatX` applies `abs()` — this is a semantic conversion, not a bitwise reinterpretation.
+> - `signed → WordX` zero-extends, **not** sign-extends. `Int32 -1` → `Word64` gives `0x00000000FFFFFFFF`, not `0xFFFFFFFFFFFFFFFF`.
+> - `FloatY → WordX` and `WordY → FloatX` always **reinterpret bits** (like `memcpy`), never do numeric conversion.
 
 ## Annotations
 
