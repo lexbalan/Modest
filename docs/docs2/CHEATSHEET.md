@@ -279,6 +279,8 @@ Unit value                         // discard a value (suppress warnings)
 @branded                           // newtype wrapper (nominal typing)
 @layout("packed")                  // packed struct (no padding)
 @volatile                          // volatile memory
+@alignment(N)                      // set alignment to N bytes (C: __attribute__((aligned(N))), LLVM: align N)
+@section("segment, section")       // place symbol in a specific linker section
 ```
 
 ```modest
@@ -293,6 +295,12 @@ func my_alloc (size: Nat64) -> *Unit
 
 @c_include("sys/types.h")
 type MyHandle = Int32
+
+@alignment(8)
+var aligned_buf: [64]Word8
+
+@section("__DATA, .xdata")
+var xdata: [16]Word8
 ```
 
 
