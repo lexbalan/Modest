@@ -19,12 +19,17 @@ Integer                            // compile-time type for integer literals —
 Rational                           // compile-time type for rational literals — implicitly cast to FloatX
 Unit                               // void (empty type)
 Bool                               // true, false
-Int8, Int16, Int32, Int64          // signed integers
-Nat8, Nat16, Nat32, Nat64          // unsigned integers
-Word8, Word16, Word32, Word64      // bitwise integers
+Int8, Int16, Int32, Int64, Int128  // signed integers
+Nat8, Nat16, Nat32, Nat64, Nat128  // unsigned integers
+Word8, Word16, Word32, Word64, Word128  // bitwise integers
 Char8, Char16, Char32              // characters
 Float32, Float64                   // floating point
-Str8, Str16, Str32                 // aliases for: *[]Char8, *[]Char16, *[]Char32
+Fixed32, Fixed64                   // fixed-point (experimental, see @fraction)
+Str8, Str16, Str32                 // aliases for: []Char8, []Char16, []Char32 (string values are passed as *Str8)
+Int, Nat, Word                     // target-width integer aliases (builtin)
+Byte                               // builtin byte type
+Size                               // target size type (like size_t)
+Ptr                                // alias for *Unit (untyped pointer)
 ```
 
 ### Compile-time (Generic) Types
@@ -84,9 +89,12 @@ type Name = @branded Type          // branded type (newtype pattern)
 ## Definitions
 
 > **Access modifiers:** `public` and `private` can be applied to any definition.
-> If omitted, the **default** access is used: at module level, default = `private`.
-> For named record fields, the default can be changed with the `@public { ... }` attribute on the record — fields listed inside the block become public.
-> Anonymous record fields are `public` by default.
+> If omitted, the entity gets the internal **default** access, which resolves by context:
+> - module-level definitions: default → `private` (or `public` if the module has `pragma public_module`)
+> - named record fields: default → `private`; with the `@public` attribute on the record, default → `public`
+> - anonymous record fields: default → `public`
+>
+> Privacy is enforced only across modules — inside the defining module, `private` fields are freely accessible.
 
 ### Functions
 ```modest
@@ -281,7 +289,7 @@ Unit value                         // discard a value (suppress warnings)
 |---|---|---|---|
 | `IntX` | `Integer`, `IntY`(Y≤X), `NatY`(Y≤X), `WordY`(Y≤X), `FloatY`, `Rational` | `IntY`(Y>X), `NatY`(Y>X), `WordY`(Y>X), `*T` | `FloatY→IntX` truncates fraction; compile-time overflow = error; `*T` only if pointer width ≤ X |
 | `NatX` | `Integer`, `NatY`(Y≤X), `WordY`(Y≤X), `IntY`(Y≤X), `FloatY`, `Rational` | `NatY`(Y>X), `WordY`(Y>X), `IntY`(Y>X), `*T` | `IntY→NatX` applies `abs()`; `FloatY→NatX` truncates fraction |
-| `WordX` | `Integer`, `WordY`(Y≤X), `IntY`(Y≤X), `NatY`(Y≤X), `CharY`(Y≤X), `Bool` | `WordY`(Y>X), `IntY`(Y>X), `NatY`(Y>X), `FloatY`, `*T` | signed→Word zero-extends (not sign-extends); `FloatY→WordX` reinterprets bits |
+| `WordX` | `Integer`, `WordY`(Y≤X), `IntY`(Y≤X), `NatY`(Y≤X), `CharY`(Y≤X), `FloatY`(Y≤X), `Bool` | `WordY`(Y>X), `IntY`(Y>X), `NatY`(Y>X), `FloatY`(Y>X), `*T` | signed→Word zero-extends (not sign-extends); `FloatY→WordX` reinterprets bits |
 | `FloatX` | `Integer`, `Rational`, `IntY`, `NatY`, `FloatY`, `Fixed` | `WordY` | `WordY→FloatX` reinterprets bits |
 | `*T` | `nil`, `*[N]T→*[]T`, `*Unit`, `String→*[]CharX`, `*[]T→*[N]T` | `*U`, `WordY`, `IntY` | `*[]T→*[N]T` safe only if element types match; otherwise full reinterpret = unsafe |
 | `CharX` | `Integer`(≤X), `WordY`(Y≤X), `String`(len=1) | any numeric | `String→CharX` compile-time only; string must be exactly 1 character |
@@ -308,9 +316,11 @@ Unit value                         // discard a value (suppress warnings)
 ```modest
 @extern                            // external symbol (C linkage)
 @extern("C", "symbol_name")        // maps to a different C symbol name
-@c_include("header.h")             // emit #include in C output
 @cbyvalue                          // pass record by value in C ABI (not by pointer)
 ```
+
+> To emit `#include` in C output use the **pragma** (module-level), not an annotation:
+> `pragma c_include "header.h"`
 
 ### Symbol lifetime & diagnostics
 ```modest
@@ -324,7 +334,10 @@ Unit value                         // discard a value (suppress warnings)
 @branded                           // newtype wrapper (nominal typing)
 @layout("packed")                  // packed struct (no padding)
 @layout("union")                   // union-style record (all fields at offset 0)
+@layout("exact")                   // exact layout (no reordering/padding changes)
 @volatile                          // volatile memory
+@const                             // const qualifier
+@restrict                          // restrict qualifier (pointers/arrays)
 @alignment(N)                      // set alignment to N bytes (C: __attribute__((aligned(N))), LLVM: align N)
 @section("segment, section")       // place symbol in a specific linker section
 ```
@@ -360,9 +373,6 @@ func expensive (x: Int32) -> Int32 {
 
 @extern("C", "malloc")
 func my_alloc (size: Nat64) -> *Unit
-
-@c_include("sys/types.h")
-type MyHandle = Int32
 
 @used
 var table: [256]Word8              // kept even if never referenced
@@ -520,13 +530,13 @@ handler(nil)
 Modest has no built-in enum type. The idiomatic pattern is a branded integer type plus module-level constants:
 
 ```modest
-type Color = @brand Nat8
+type Color = @branded Nat8
 const colorRed   = Color 0
 const colorGreen = Color 1
 const colorBlue  = Color 2
 ```
 
-The `@brand` annotation makes `Color` nominally distinct from `Nat8` — you cannot mix them accidentally.
+The `@branded` annotation makes `Color` nominally distinct from `Nat8` — you cannot mix them accidentally.
 Use `Nat8` for up to 256 variants, or `Nat16`/`Nat32` for larger enumerations.
 
 ### Multi-source Module
@@ -557,7 +567,7 @@ By default, symbol names are emitted as-is. Module imports add a prefix for publ
 | Situation | Modest | C / LLVM IR |
 |---|---|---|
 | Private symbol | `myFunc` | `myFunc` |
-| Public symbol in module `utils` | `pub myFunc` | `utils_myFunc` |
+| Public symbol in module `utils` | `public myFunc` | `utils_myFunc` |
 | `include`d symbol | used directly | original name, no prefix |
 | `@extern` | `myFunc` | `myFunc` (no module prefix) |
 | `@extern("C", "malloc")` | `myAlloc` | `malloc` |
@@ -602,7 +612,7 @@ public func myPrint (s: Str8) -> Unit  // emitted as: printf
 ```bash
 mcc -o main -mbackend=c11 main.m       # translate to C (main.c)
 mcc -o main -mbackend=llvm main.m      # translate to LLVM IR (main.ll)
-mcc -o main -mbackend=modest main.m    # translate to Modest IR (main.cm)
+mcc -o main -mbackend=modest main.m    # re-emit Modest source (main.m, pretty-printed)
 
 mcc -o main -mbackend=c11 -fparanoid main.m   # warnings as errors
 mcc -o main -mbackend=c11 -funsafe main.m     # enable unsafe pointer ops
