@@ -1779,7 +1779,7 @@ def do_stmt_var(x):
 	if id_already_used(x['id']['str'], shallow=True):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
-	df = def_var_common(x)
+	df = def_var_common(x, is_local=True)
 
 	if df.is_stmt_bad():
 		return df
@@ -2193,7 +2193,7 @@ def def_type_global(x):
 
 
 
-def process_field_common(x, allow_cons_default=False):
+def process_field_common(x, allow_cons_default=False, default_instead_of_undef=False):
 	global csymtab
 
 	var_type = None
@@ -2201,6 +2201,11 @@ def process_field_common(x, allow_cons_default=False):
 		var_type = do_type(x['type'])
 
 	init_value = do_rvalue(x['init_value'])
+
+	#if init_value.is_value_undefined():
+	#	if default_instead_of_undef:
+	#		# если значение не указано, то берем дефолтное для типа
+	#		init_value = ValueDefault(var_type, ti=x['ti'])
 
 	if var_type != None:
 		init_value = value_cons_implicit(var_type, init_value)
@@ -2250,7 +2255,7 @@ def def_const_common(x):
 	prev_cdef = cdef
 	cdef = definition
 
-	const_type, init_value = process_field_common(x)
+	const_type, init_value = process_field_common(x, default_instead_of_undef=True)
 
 	if const_type.is_forbidden_const():
 		error("unsuitable type", x['ti'])
@@ -2276,7 +2281,7 @@ def def_const_common(x):
 
 
 
-def def_var_common(x):
+def def_var_common(x, is_local=False):
 	global csymtab, cdef
 
 	id = do_id(x['id'])
@@ -2293,7 +2298,8 @@ def def_var_common(x):
 	prev_cdef = cdef
 	cdef = definition
 
-	var_type, init_value = process_field_common(x, allow_cons_default=True)
+	var_type, init_value = process_field_common(x, allow_cons_default=True, default_instead_of_undef=is_local)
+
 	if var_type.is_forbidden_var(open_array_forbidden=False):
 		error("unsuitable type", x['ti'])
 

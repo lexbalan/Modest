@@ -12,7 +12,6 @@ def value_char_create(char_code, _type=None, ti=None):
 		char_width = nbits_for_num(char_code)
 		_type = type.type_char(char_width, ti=ti)
 		_type.generic = True
-
 	return ValueLiteral(_type, char_code, ti)
 
 
@@ -53,6 +52,8 @@ def value_char_cons(t, v, method, ti):
 		return nv
 
 	if v.isValueImmediate():
+		if isinstance(v.asset, str):
+			error("cannot construct %s value from String" % t.to_str(), ti)
 		nv.set_asset(v.asset)
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv

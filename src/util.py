@@ -154,7 +154,10 @@ def fractional_to_decimal(f):
 	#print(f.__class__)
 	#print(f.numerator)
 	#print(f.denominator)
-	assert(isinstance(f, Fraction) or isinstance(f, int))
+	import numpy
+	if isinstance(f, numpy.float64):
+		return Decimal(str(f))
+	assert(isinstance(f, Fraction) or isinstance(f, int) or isinstance(f, numpy.float64))
 	return Decimal(f.numerator) / Decimal(f.denominator)
 
 

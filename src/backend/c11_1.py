@@ -456,7 +456,6 @@ class CValueString(CValue):
 		return '%s"%s"' % (string_literal_prefix(self.width), self.string)
 
 
-
 def code_to_char(cc):
 	if cc < 0x20:
 		if cc == 0x07: return "\\a"	# bell
@@ -478,19 +477,17 @@ def code_to_char(cc):
 	elif cc != 0:
 		return chr(cc)
 
+
 class CValueChar(CValue):
-	def __init__(self, char, width=8):
-		assert(isinstance(char, str))
+	def __init__(self, cc, width=8):
+		assert(isinstance(cc, int))
 		super().__init__()
-		self.char = char
+		self.char_code = cc
 		self.width = width
 		self.precedence = 15
 
 	def __str__(self):
-		if len(self.char) > 1:
-			print(self.char)
-			exit(1)
-		return "%s'%s'" % (string_literal_prefix(self.width), code_to_char(ord(self.char)))
+		return "%s'%s'" % (string_literal_prefix(self.width), code_to_char(self.char_code))
 
 
 

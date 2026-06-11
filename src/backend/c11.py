@@ -397,9 +397,6 @@ def str_value_literal_bool(v, ctx):
 
 
 
-
-
-
 def str_value(x, ctx=[]):
 	cv = do_cvalue(x, ctx)
 	if not cv:
@@ -428,10 +425,7 @@ def do_cvalue_literal_rational(v, ctx):
 
 
 def do_cvalue_literal_char(t, v, ctx):
-	#cc = ord(v.asset[0])
-	#sstr = code_to_char(cc)
-	#print("?? " + sstr)
-	return CValueChar(v.asset[0], width=t.width)
+	return CValueChar(v.asset, width=t.width)
 
 
 def do_cvalue_literal_array(v, ctx):
@@ -788,7 +782,7 @@ def do_cvalue_cons_char(x, ctx):
 	if value.type.is_string():
 		cv = None
 		if value.isValueLiteral():
-			cv = do_cvalue_literal_char(type, value, ctx)
+			cv = do_cvalue_literal_char(type, x, ctx)
 		else:
 			cv = CValueIndex(do_cvalue(value), CValueInteger(0))
 		return cv
@@ -1208,6 +1202,29 @@ def do_cvalue_new(x, ctx):
 	return CValueCast(do_ctype(x.type), cvalue_memcpy(cvalue_malloc(sizeof), xvalue, sizeof))
 
 
+
+def do_cvalue_default(x, ctx):
+	if x.type.is_integer() or x.type.is_int() or x.type.is_nat() or x.type.is_word():
+		return cvalue_literal_integer(0, width=x.type.width, is_unsigned=not x.type.is_signed(), ctx=ctx)
+	elif x.type.is_bool():
+		return CValueNamed(csettings['false_literal'])
+	elif x.type.is_char():
+		return CValueChar(0, width=x.type.width)
+	elif x.type.is_string():
+		return do_cvalue_literal_string("", width=x.type.width)
+	elif x.type.is_rational() or x.type.is_float():
+		return CValueNamed("0.0")
+	elif x.type.is_array():
+		return do_cvalue_literal_array(ValueLiteral(x.type, [], ti=None), ctx)
+	elif x.type.is_record():
+		return do_cvalue_literal_record(ValueLiteral(x.type, [], ti=None), ctx)
+	elif x.type.is_pointer():
+		return CValueNamed("NULL")
+	else:
+		error("default value not implemented for type %s" % str(x.type), x.ti)
+		1/0
+
+
 #
 #def str_value_offsetof(x, ctx):
 #	sstr = "__offsetof("
@@ -1252,6 +1269,7 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueVaEnd(): return do_cvalue_va_end(x, ctx)
 	elif x.isValueVaCopy(): return do_cvalue_va_copy(x, ctx)
 	elif x.isValueNew(): return do_cvalue_new(x, ctx)
+	elif x.isValueDefault(): return do_cvalue_default(x, ctx)
 	elif x.isValueUndef(): 1/0
 	elif x.isValueBad():
 		error("value bad in C backend", x.ti)
@@ -1320,7 +1338,7 @@ def do_cinitializer(type, value, ctx):
 					width = to.of.width
 				cv_chars = []
 				for char in v.asset:
-					cv = CValueChar(char, width=width)
+					cv = CValueChar(ord(char), width=width)
 					cv.nl = 0
 					cv_chars.append(cv)
 				cv = CValueArray(cv_chars)
@@ -1453,7 +1471,7 @@ def do_cstmt_var(x):
 	dynamic_init = init_value.type.is_array() and (init_value.isValueRuntime() or var_value.type.is_vla())
 
 	civ = None
-	if not dynamic_init and not init_value.isValueUndef():
+	if not dynamic_init and not init_value.isValueUndef() and not init_value.type.is_va_list():
 		civ = do_cinitializer(var_value.type, init_value, ctx=[])
 
 	storage_class = ''
@@ -1767,7 +1785,7 @@ def do_def_var(x, isdecl=False):
 		storage_class = "extern"
 
 	civ = None
-	if not (x.init_value.isValueUndef() or is_extern):
+	if not (x.init_value.isValueUndef() or x.init_value.isValueDefault() or is_extern):
 		civ = do_cinitializer(var_value.type, x.init_value, ctx=[])
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), init_value=civ, storage_class=storage_class, attributes=x.attributes)

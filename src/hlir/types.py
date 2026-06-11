@@ -762,7 +762,7 @@ class Type(Entity):
 
 
 	def is_string(self):
-		return isinstance(self, TypeSimple) and self.kind == HLIR_TYPE_KIND_STRING
+		return isinstance(self, TypeString)
 
 
 	def is_record(self):
@@ -1429,9 +1429,16 @@ class Type(Entity):
 		print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))
 
 		from error import error
-		error("cannot select common type (`%s` & `%s`)" % (fieldA.type.to_str(), fieldB.type.to_str()), ti)
+		error("cannot select common type (`%s` & `%s`)" % (a.to_str(), b.to_str()), ti)
 		return None
 
+
+	def create_zero_literal(self, ti=None):
+		return ValueLiteral(self, asset=0, ti=ti)
+
+
+	def get_default_value(self, ti=None):
+		return self.create_zero_literal(ti)
 
 
 	@staticmethod
@@ -1462,6 +1469,29 @@ class TypeSimple(Type):
 		self.kind = kind
 		self.incomplete = False
 		self.id = id
+
+
+class TypeString(TypeSimple):
+	def __init__(self, width=0, length=0, ti=None):
+		string_id = Id(None)
+		string_id.c = None
+		string_id.llvm = None
+
+		if width > 0:
+			string_id.c_alias = 'char%d_t' % align_bits_up(width)
+		else:
+			string_id.c_alias = 'char'
+
+		super().__init__(width=width, kind=HLIR_TYPE_KIND_STRING, id=string_id, ops=STRING_OPS, ti=ti)
+		self.length = length
+		self.generic = True
+
+	def create_zero_literal(self, ti=None):
+		return ValueLiteral(self, items=[], ti=ti)
+
+	def get_default_value(self, ti=None):
+		return self.create_zero_literal(ti)
+
 
 
 class TypeInteger(TypeSimple):
@@ -1581,6 +1611,12 @@ class TypeArray(Type):
 			return self.of.get_root()
 		return self.of
 
+	def create_zero_literal(self, ti=None):
+		return ValueArray(self, items=[], ti=ti)
+
+	def get_default_value(self, ti=None):
+		return self.create_zero_literal(ti)
+
 
 
 def calc_record_size_align(fields):
@@ -1637,6 +1673,13 @@ class TypeRecord(Type):
 					f.type.get_dir_deps(deps)
 		return deps
 
+	def create_zero_literal(self, ti=None):
+		return ValueRecord(self, initializers=[], ti=ti)
+	
+	def get_default_value(self, ti=None):
+		return self.create_zero_literal(ti)
+
+
 
 class TypePointer(Type):
 	def __init__(self, to, generic=False, ti=None):
@@ -1653,7 +1696,8 @@ class TypeVaList(Type):
 		self.id.c = 'va_list'
 		self.id.llvm = '__VA_List'
 
-
+	def get_default_value(self, ti=None):
+		return ValueUndef(self)
 
 
 HLIR_VALUE_STORAGE_CLASS_UNKNOWN = 'HLIR_VALUE_STORAGE_CLASS_UNKNOWN'
@@ -1768,8 +1812,8 @@ class Value(Entity):
 	# stub создал тк ValueUndefined теряется по цепочке после cons, etc. но они все по сути undefined
 	# это poison проблема, которую нужно переосмыслить, может вообще убрать ValueUndef и ввести яд
 	def is_value_undefined(self):
-		if self.isValueImmediate() and self.asset == None:
-			return True
+		#if self.isValueImmediate() and self.asset == None:
+		#	return True
 		if self.isValueUndef():
 			return True
 		if self.type.is_undefined():
@@ -1788,6 +1832,9 @@ class Value(Entity):
 
 	def isValueUndef(self):
 		return isinstance(self, ValueUndef)
+
+	def isValueDefault(self):
+		return isinstance(self, ValueDefault)
 
 	def isValueLiteral(self):
 		return isinstance(self, ValueLiteral)
@@ -2014,6 +2061,14 @@ class ValueUndef(Value):
 		super().__init__(type=type, ti=ti)
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.asset = None
+
+
+class ValueDefault(Value):
+	def __init__(self, type, ti=None):
+		assert(isinstance(type, Type))
+		super().__init__(type=type, ti=ti)
+		self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.asset = '<default>'
 
 
 class ValueLiteral(Value):
