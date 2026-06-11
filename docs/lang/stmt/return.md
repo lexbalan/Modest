@@ -1,35 +1,35 @@
-# Return statement
+# Return Statement
 
-*Return statement* breaks function execution and returns value (in case when function type declares non-*Unit* return type).
+Stops execution of the current function and returns a value.
 
-#### Common view
+## Form
 
-Return statement with *return value*
 ```
-return <# return_value #>
-```
-
-Return statement without *return value*
-```
-return
+return <#value_expression#>    // function returns non-Unit
+return                          // function returns Unit
 ```
 
-#### Examples
+## Semantics
 
-```swift
+- The value is implicitly [constructed](../value/cons.md) to the
+  function's return type.
+- In a `Unit` function, `return` takes no value and may be omitted at the
+  end of the body.
+- A non-`Unit` function should return a value on every path; a missing
+  `return` at the end of the body is a compiler warning
+  (`expected return operator at end`).
+
+## Examples
+
+```modest
 func mid (a: Int32, b: Int32) -> Int32 {
-	// in this case return statement stops function execution
-	// and returns result of evaluation return value expression
 	return (a + b) / 2
 }
-```
 
-```swift
-func do_nothing () -> Unit {
-	// in this case return statement cannot returns some value,
-	// (because function defined as function to Unit)
-	// but it also stops function execution
-	return
+func log (enabled: Bool, msg: *Str8) -> Unit {
+	if not enabled {
+		return            // early exit
+	}
+	printf("%s\n", msg)
 }
-
 ```

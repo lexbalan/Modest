@@ -113,7 +113,7 @@ func no_return () -> Unit {
 
 ### Variables & Constants
 ```modest
-var x: Int32                       // zero-initialized: scalar → 0, record/array → all fields/elements zero
+var x: Int32                       // global: zero-initialized; local: indeterminate (assign before use!)
 var x: Int32 = 10                  // with initial value
 var x = 10                         // type inferred from value
 var x, y, z: Int32                 // multiple vars of same type
@@ -126,7 +126,7 @@ let local = 42                     // immutable binding — only inside function
 
 > `let` is only allowed inside function bodies. For module-level values use `var` or `const`.
 
-> `var` requires a concrete (non-generic) type — either declared explicitly or inferred from a non-generic initializer. `const` and `let` retain the compile-time generic type of their initializer.
+> `var` always gets a concrete type: declared explicitly, inferred from the initializer, or — for generic literals (`var i = 0`) — the target default type (Integer → Int, Rational → Float). `const` and `let` retain the compile-time generic type of their initializer.
 
 ### Types
 ```modest
@@ -207,14 +207,6 @@ ptr.field = 5                     // auto-deref field write
 ```modest
 return value
 return                             // for Unit functions
-```
-
-### Block
-```modest
-{
-    var local: Int32 = 10
-    // scoped to this block
-}
 ```
 
 ### Increment/Decrement

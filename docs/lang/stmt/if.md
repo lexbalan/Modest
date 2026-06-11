@@ -1,62 +1,45 @@
-# If statement
+# If Statement
 
-#### Common form
+Executes one of its branches depending on a `Bool` condition.
+
+## Form
 
 ```
-if <# condition #> {
-	// do something if condition is true
+if <#condition#> {
+	<#statements#>
 }
-```
 
-```
-if <# condition #> {
-	// do something if condition is true
+if <#condition#> {
+	...
 } else {
-	// do something if condition is false
+	...
 }
-```
 
-```
-if <# condition1 #> {
-	// do something if condition1 is true
-} else if <# condition2 #> {
-	// do something if condition1 is false and condition2 is true
-
-  ...
-
+if <#condition1#> {
+	...
+} else if <#condition2#> {
+	...
 } else {
-	// do something if all conditions above are false
+	...
 }
 ```
 
-#### Examples
+## Semantics
 
-```swift
-// see: examples/stmt_if/src/main.m
+- The condition is an expression of type `Bool`; there is no implicit
+  conversion from numbers or pointers — write `x != 0`, `p != nil`.
+- Parentheses around the condition are not required.
+- Braces are mandatory for every branch.
+- `else if` chains may be arbitrarily long; the final `else` is optional.
 
-import "libc/stdio"
+## Example
 
-
-func main () -> Int {
-	printf("if statement example\n")
-
-	var a: Int32
-	var b: Int32
-
-	printf("enter a: ")
-	scanf("%d", &a)
-	printf("enter b: ")
-	scanf("%d", &b)
-
-	if a > b {
-		printf("a > b\n")
-	} else if a < b {
-		printf("a < b\n")
-	} else {
-		printf("a == b\n")
-	}
-
-	return 0
+```modest
+if a > b {
+	printf("a > b\n")
+} else if a < b {
+	printf("a < b\n")
+} else {
+	printf("a == b\n")
 }
-
 ```

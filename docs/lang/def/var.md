@@ -1,111 +1,45 @@
 # Variable Definition
 
-Variable definition creates new *variable* instance.
+Creates mutable storage bound to an [identifier](../identifier.md).
 
-### Common forms
-1. Variable definition without *default value*. It will be initialized with [***zero***](../value/README.md#Zero-value) value.
-```
-var <#identifier#> : <#type_expression#>
-```
+## Form
 
-2. Variable definition without explicit type specification, with *default value* (**it must have *Non-Generic type***). Type of variable will be the same as *default value* type.
 ```
-var <#identifier#> = <#default_value_expression#>
+var <#identifier#>: <#type_expression#>                              // no initializer
+var <#identifier#> = <#value_expression#>                            // inferred type
+var <#identifier#>: <#type_expression#> = <#value_expression#>       // both
+var <#id1#>, <#id2#>, ... : <#type_expression#>                      // several variables of one type
 ```
 
-3. Variable definition with explicit type specification and *default value*. *Default value* will be implicit casted to type of variable definition.
-```
-var <#identifier#> : <#type_expression#> = <#default_value_expression#>
-```
+## Semantics
 
+- With both type and initializer, the initializer is implicitly
+  [constructed](../value/cons.md) to the declared type.
+- With an initializer only, the variable takes the initializer's type. If the
+  initializer is a generic literal, the *default* concrete type is selected:
+  `Integer` → target `Int`, `Rational` → target `Float`, string → target
+  `Str` (configurable per target, see `cfg/*.toml`).
+- **Initialization.** A *global* variable without an initializer is
+  zero-initialized (static storage). A *local* variable without an
+  initializer holds an indeterminate value — assign before use.
+- A global initializer must be a compile-time expression. Local initializers
+  may be arbitrary runtime values.
+- `public` global variables may be disabled by target configuration
+  (`public_vars_forbidden`); prefer accessor functions in libraries.
 
-## Global variables
+## Examples
 
-Variable definition outside function body creates new *local variable* instance.
-
-##### Global variables example
-```swift
-var x: Int16
-var y = Int32 10
+```modest
+var x: Int16                   // global: zero-initialized
+var y = 10                     // Integer literal -> target Int
 var z: Int32 = 20
-
-func main () -> Int32 {
-	printf("x = %hd\n", x)
-	printf("y = %d\n", y)
-	printf("z = %d\n", z)
-
-	return 0
-}
-```
-*Result:*
->`x = 0`<br/>
->`y = 10`<br/>
->`z = 20`<br/>
-
-
-```swift
-
-var counter: Int
-
-func count () -> Unit {
-	++counter
-}
+var r, g, b: Nat8              // three variables of one type
 
 func main () -> Int {
-	printf("before counter = %i\n", counter)
+	var local: Int32           // indeterminate value!
+	local = 5                  // must assign before use
 
-	// call function count for ten times
-	var i: Nat32 = 0
-	while i < 10 {
-		count()
-		++i
-	}
-
-	printf("after counter = %i\n", counter)
-
+	printf("%hd %d %d %d\n", x, y, z, local)
 	return 0
 }
 ```
-
-
-## Local variables
-
-Variable definition inside function body creates new *local variable* instance.
-
-
-##### Global variables example
-
-```swift
-func mid (a: Int32, b: Int32) -> Int32 {
-	var result: Int32
-	result = a + b
-	result = result / 2
-	return result
-}
-```
-
-```swift
-func main () -> Int32 {
-	var x: Int16
-	var y = Int32 10
-	var z: Int32 = 10
-
-	// We need to initialize x with some value
-	// because local variable without default value
-	// will contains 'garbage' value from memory
-	// (some kind of 'random' value)
-	x = 5
-
-	printf("x = %hd\n", x)
-	printf("y = %d\n", y)
-	printf("z = %d\n", z)
-
-	return 0
-}
-```
-*Result:*
-> `x = 5`<br/>
-> `y = 10`<br/>
-> `z = 20`<br/>
-
-
