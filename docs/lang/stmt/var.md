@@ -12,8 +12,11 @@ var <#id1#>, <#id2#>, ... : <#type_expression#>
 
 ## Local specifics
 
-- A local variable without an initializer holds an **indeterminate**
-  value — assign before use (globals, by contrast, are zero-initialized).
+- A local variable without an initializer must be assigned before first
+  use — reading it is a compile-time error
+  (`attempt to use an uninitialized value`). Globals, by contrast, are
+  zero-initialized. Explicit zeroing: `= 0`, `= []` (arrays), `= {}`
+  (records).
 - The initializer may be any runtime expression.
 - The variable is visible from its definition to the end of the enclosing
   block.
@@ -24,7 +27,7 @@ var <#id1#>, <#id2#>, ... : <#type_expression#>
 func main () -> Int {
 	var flag: Bool = false
 	var counter: Int32 = 0
-	var x, y: Float64           // indeterminate until assigned
+	var x, y: Float64           // unusable until assigned
 
 	x = 1.0
 	y = 2.0

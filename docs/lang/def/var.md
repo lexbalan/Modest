@@ -21,7 +21,10 @@ var <#id1#>, <#id2#>, ... : <#type_expression#>                      // several 
   `Str` (configurable per target, see `cfg/*.toml`).
 - **Initialization.** A *global* variable without an initializer is
   zero-initialized (static storage). A *local* variable without an
-  initializer holds an indeterminate value — assign before use.
+  initializer must be assigned before first use — reading it is a
+  compile-time error (`attempt to use an uninitialized value`). To
+  zero-initialize explicitly, use `= 0`, `= []` (arrays), `= {}`
+  (records).
 - A global initializer must be a compile-time expression. Local initializers
   may be arbitrary runtime values.
 - `public` global variables may be disabled by target configuration
@@ -36,8 +39,8 @@ var z: Int32 = 20
 var r, g, b: Nat8              // three variables of one type
 
 func main () -> Int {
-	var local: Int32           // indeterminate value!
-	local = 5                  // must assign before use
+	var local: Int32           // reading it now would be a compile error
+	local = 5                  // assigned before use: ok
 
 	printf("%hd %d %d %d\n", x, y, z, local)
 	return 0

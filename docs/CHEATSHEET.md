@@ -113,7 +113,7 @@ func no_return () -> Unit {
 
 ### Variables & Constants
 ```modest
-var x: Int32                       // global: zero-initialized; local: indeterminate (assign before use!)
+var x: Int32                       // global: zero-init; local: must assign before use (compile error otherwise)
 var x: Int32 = 10                  // with initial value
 var x = 10                         // type inferred from value
 var x, y, z: Int32                 // multiple vars of same type

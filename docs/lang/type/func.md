@@ -1,31 +1,48 @@
-# Function type
+# Function Type
 
-## Function type expression
+The type of a function: its parameter list and return type.
 
-#### Common form
+## Form
+
 ```
-( <#field_list#>] ) -> <#type_expression#>
+(<#parameters#>) -> <#return_type#>      // function type
+*(<#parameters#>) -> <#return_type#>     // pointer to function
 ```
 
-
-```swift
-// type 'function without params and without return value'
+```modest
 () -> Unit
-
-// type 'function with two Int32 params (a, b) and Int32 return value'
 (a: Int32, b: Int32) -> Int32
+*(payload: Ptr) -> Unit                  // pointer to function
 ```
 
-#### Examples
+## Semantics
 
-```swift
-func sum32 (a: Int32, b: Int32) -> Int32 {
-	return a + b
+- A variable, parameter or record field cannot have a function type —
+  only a *pointer to function*.
+- `&f` yields a pointer to function `f`; the pointer is called with the
+  ordinary call syntax.
+- Parameter names are part of the notation but not of compatibility;
+  default values and `...` are allowed as in
+  [function definitions](../def/func.md).
+
+## Examples
+
+```modest
+type Handler = *(payload: Ptr) -> Unit
+
+func on_event (payload: Ptr) -> Unit {
+	printf("event!\n")
 }
 
-func main () -> Int32 {
-	let x = sum32 (1, 2)
-	printf("sum32 (1, 2) = %d\n", x)
+var handler: Handler = &on_event
+
+func main () -> Int {
+	handler(nil)              // call through pointer
 	return 0
 }
 ```
+
+## See also
+
+- [Function definition](../def/func.md)
+- [Call](../value/call.md)

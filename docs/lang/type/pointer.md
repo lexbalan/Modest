@@ -1,78 +1,65 @@
-# Pointer type
+# Pointer Type
 
-## Pointer type expression
+A *pointer* holds the address of a value of a known type.
 
-#### Common form
+## Form
+
 ```
-	* <#type_expression#>
-```
-
-
-#### Examples
-
-```swift
-	*Int32	  // pointer to Int32
-	**Int32   // pointer to pointer to Int32
-	***Int32  // pointer to pointer to pointer to Int32
-	...
+*<#type_expression#>
 ```
 
-```swift
-func main () -> Int32 {
-	var a: Int32
-	var p: *Int32
-	a = 0
-	p = &a
-	*p = 10
-	printf("a = %d\n", a) // result: a = 10
+```modest
+*Int32        // pointer to Int32
+**Int32       // pointer to pointer
+*[]Char8      // pointer to open char array (string)
+Ptr           // built-in alias for *Unit (free pointer)
+```
 
-	return 0
+## Semantics
+
+- `&x` takes an address, `*p` dereferences (see
+  [unary](../value/unary.md)). `nil` is the null pointer.
+- **Auto-dereference:** pointers to records and arrays are dereferenced
+  automatically on field access and indexing — `p.field`, `p[i]`;
+  explicit `(*p)` is unnecessary.
+- **No pointer arithmetic** — for any pointer type. Address computations
+  are expressed by indexing: take `&a[i]` to point at an element, or
+  reinterpret the pointer as a byte array first:
+
+  ```modest
+  let bytes = unsafe *[]Word8 p     // view memory as bytes
+  let q = &bytes[4]                 // "p + 4"
+  ```
+
+- **Free pointer** `*Unit` (alias `Ptr`) accepts the address of a value
+  of any type, but cannot be dereferenced or indexed. Construct a typed
+  pointer from it first: `*Int64 freePtr` (safe), e.g. when receiving
+  `Ptr` payloads in callbacks.
+- Constructing one typed pointer from another of a different pointee
+  type is a reinterpretation and requires `unsafe`
+  (see [construction rules](../value/cons.md)).
+- Pointer ↔ integer conversions are `unsafe`: `unsafe Nat64 p` for the
+  address value.
+
+## Examples
+
+```modest
+var a: Int32 = 0
+var p: *Int32 = &a
+*p = 10                       // a == 10
+
+type Node = {next: *Node, data: Int32}
+var n: Node = {next = nil, data = 1}
+var pn: *Node = &n
+pn.data = 2                   // auto-deref, no (*pn).data
+
+func handler (payload: Ptr) -> Unit {
+	let ctx = *Node payload   // typed view of a free pointer
+	printf("%d\n", ctx.data)
 }
 ```
 
+## See also
 
-## Free pointer
-
-*Pointer to Unit* (aka *Free pointer type*) can points to value of **any type**.
-```swift
-// see: test/free_pointer/src/main.m
-
-import "libc/stdio"
-
-func main () -> Int32 {
-	var a: Bool
-	var b: Int32
-	var c: Int64
-
-	//
-	var freePointer: *Unit
-
-	// free pointer can points to value of any type
-	freePointer = &a  // it's ok (just for demonstration)
-	freePointer = &b  // it's also ok
-	freePointer = &c  // after all it will be points to value c (with type Int64)
-
-	// you can't do dereference operation with Free pointer
-	// (because runtime doesn't have any idea about value type it pointee),
-	// but you can construct another (non Free) pointer from it
-	// and use it as usualy
-	*(*Int64 freePointer) = 123456789123456789
-
-	printf("c = 0x%llX\n", c)
-
-	// Let's create new pointer to *Int64 from freePointer
-	let px = *Int64 freePointer
-
-	// And will use it...
-	let x = *px
-
-	// for pointer mechanics checking
-	printf("x = 0x%llX\n", x)
-
-	return 0
-}
-```
-> Result: `c = 0x123456789ABCDEF` `x = 0x123456789ABCDEF`
-
-
-
+- [Unary operations](../value/unary.md) — `&`, `*`
+- [Function pointers](./func.md)
