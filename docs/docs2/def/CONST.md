@@ -1,3 +1,0 @@
-# Constant Definitions
-
-TODO

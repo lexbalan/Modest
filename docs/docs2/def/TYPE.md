@@ -1,3 +1,0 @@
-# Type Definitions
-
-TODO

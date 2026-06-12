@@ -1,39 +1,7 @@
-# Modest Compiler — Project Structure
+# Project Structure
 
-## Overview
-
-Modest is a compiled language that transpiles to **C11** or **LLVM IR** via a Python-based compiler.
-
-**Pipeline**: `source.m` → Lexer → Parser → HLIR → Backend (C11 / LLVM IR) → clang/gcc
-
-```
-Source Code (.m)
-       │
-       ▼
-   ┌────────┐
-   │ Lexer  │  lexer.py — tokenization
-   └───┬────┘
-       ▼
-   ┌────────┐
-   │ Parser │  parser.py — syntax analysis, AST (Python dicts)
-   └───┬────┘
-       ▼
-   ┌────────────┐
-   │ Translator │  trans.py — semantic analysis, type checking, HLIR generation
-   └───┬────────┘
-       │  ┌──────────┐  ┌──────────┐
-       ├──│ Symtab   │  │ common   │  symtab.py, common.py
-       │  └──────────┘  └──────────┘
-       ▼
-   ┌──────────┐
-   │ Backends │
-   ├──────────┤
-   │ C11      │  backend/c11.py + backend/c11_1.py  → .c
-   │ LLVM IR  │  backend/llvm.py                    → .ll
-   │ Modest   │  backend/modest.py                  → .m (pretty printer)
-   └──────────┘
-```
-
+Directory and file map of the repository. How the compiler *works* is
+described in [README.md](./README.md).
 
 ## Top-Level Files
 
@@ -45,7 +13,7 @@ Source Code (.m)
 | `requirements.txt` | Python dependencies |
 | `configure.sh` | Configuration script |
 | `install.sh` | Installation script |
-| `check.sh` | Verification script |
+| `check.sh` | Runs the test suite and builds all examples |
 
 
 ## `src/` — Compiler Source
@@ -164,88 +132,33 @@ Key settings: target name/machine, endianness, ABI, word/pointer/integer/float/c
 | `termios.m` | Terminal I/O control |
 | `utf.m` | UTF encoding utilities |
 
-### Standalone Modules
-
-| File | Purpose |
-|------|---------|
-| `std.m` | Standard module aggregator |
-| `limits.m` | System limits |
-| `dirent.m` | Directory entries |
-
 
 ## `examples/` — Example Programs
 
-| Directory | Description |
-|-----------|-------------|
-| `1.hello_world/` | Basic "Hello, World!" |
-| `3.multiply_table/` | Multiplication table |
-| `4.many_sources/` | Multi-file project |
-| `5.records/` | Record/struct usage |
-| `6.text_file/` | Text file I/O |
-| `7.binary_file/` | Binary file operations |
-| `8.linked_list/` | Linked list data structure |
-| `9.fsm/` | Finite state machine |
-| `10.sockets/` | Network socket programming |
-| `annotations/` | Compiler annotations |
-| `asm/` | Inline assembly |
-| `bubble_sort/` | Sorting algorithm |
-| `demo1/` | General demo |
-| `m328p_blink/` | AVR microcontroller (ATmega328P) LED blink |
-| `sha256/` | SHA-256 hashing |
-| `stmt_if/` | Conditional statements |
-| `stmt_while/` | Loop statements |
-| `table/` | Table structures |
-| `web/` | Web operations |
-
-Each example contains: `src/` (source), `out/` (generated output), `Makefile`.
+From `1.hello_world` to network sockets (`10.sockets`), inline assembly
+(`asm`), AVR microcontroller blink (`m328p_blink`) and SHA-256. Each
+example contains `src/`, `out/` (generated output) and a `Makefile`.
+See [examples/README.md](../../examples/README.md).
 
 
 ## `tests/` — Test Suite
 
-| Directory | Purpose |
-|-----------|---------|
-| `hello_world/` | Basic compilation smoke test |
-| `lang/` | Language feature tests |
-| `arr/` | Array operations |
-| `builtin/` | Built-in operations (sizeof, alignof, …) |
-| `eq/` | Equality and comparison |
-| `fixed/` | Fixed-point arithmetic |
-| `fs/` | File system operations |
-| `literals/` | Literal parsing |
-| `modules/` | Module import/include |
-| `nested_func/` | Nested function definitions |
-| `shift/` | Bitwise shift operations |
-| `sizeof/` | sizeof / alignof / offsetof |
-| `test_record/` | Record types |
-| `vol/` | VLA and volume tests |
-| `zarray/` | Zero-terminated arrays (Str8/16/32) |
-| `structural_type_system/` | Structural typing validation |
-| `limits/` | System limits / boundary tests |
-| `aes256/` | AES-256 encryption tests |
-| `chacha20/` | ChaCha20 cipher tests |
-| `crc32/` | CRC32 checksum tests |
-| `sha256/` | SHA-256 hashing tests |
-
-Each test contains: `src/main.m`, `Makefile`, `out/{c,cm,llvm}/`.
+Each test is a directory with `src/main.m`, a `Makefile` (`make test`)
+and `out/{c,cm,llvm}/`. The active set is listed in `tests/run.sh`;
+crypto tests (`sha256`, `aes256`, `chacha20`, `crc32`) verify end-to-end
+semantics against known vectors.
 
 
-## Error Codes
+## Error Categories
 
-Errors are categorized by compiler phase:
-- **0xx** — OS & environment errors
-- **1xx** — Lexer errors
-- **2xx** — Parser errors
-- **3xx** — Translation errors
-- **4xx** — Backend errors
+The first digit of an error code identifies the compiler phase:
+**0** OS & environment, **1** lexer, **2** parser, **3** translation,
+**4** backend.
 
 
-## Build & Environment
+## Environment
 
 | Variable | Purpose |
 |----------|---------|
 | `MODEST_DIR` | Compiler root directory |
 | `MODEST_LIB` | Library search path |
-
-**CLI**: `mcc -i <input> -o <output> --config=<cfg.toml> -funsafe`
-
-**Backends**: selected via config `backend = "llvm"` or `backend = "c11"`

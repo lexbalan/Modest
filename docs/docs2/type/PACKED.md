@@ -1,3 +1,0 @@
-# Packed Record Types
-
-TODO

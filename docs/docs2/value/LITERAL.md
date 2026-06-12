@@ -1,3 +1,0 @@
-# Literal Values
-
-TODO
