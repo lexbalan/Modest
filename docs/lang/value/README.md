@@ -37,6 +37,14 @@ From loosest to tightest binding:
 | 13 | postfix: call `()`, index `[]`, slice `[:]`, access `.` |
 | 14 | literals, names, `(...)` |
 
+Binding examples (lower level = binds tighter):
+
+```modest
+w & mask == 0            // (w & mask) == 0   — bitwise tighter than ==
+a == 1 and b == 2        // (a == 1) and (b == 2)
+x + 1 < y << 2           // (x + 1) < (y << 2)
+```
+
 ## Value categories
 
 - **Immediate** — known at compile time: literals, `const`, and any
