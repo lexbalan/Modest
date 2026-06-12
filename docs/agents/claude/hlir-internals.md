@@ -73,8 +73,8 @@ t.is_unit()         t.is_record()       t.is_array()
 t.is_pointer()      t.is_func()         t.is_string()
 t.is_generic()      t.is_branded()
 
-t.is_open_array()   # []Type  (volume is ValueUndef)
-t.is_closed_array() # [N]Type (volume is known)
+t.is_unsized_array()   # []Type  (volume is ValueUndef)
+t.is_sized_array() # [N]Type (volume is known)
 t.is_free_pointer() # *Unit
 t.is_pointer_to_record()
 t.is_pointer_to_array()

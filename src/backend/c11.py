@@ -168,7 +168,7 @@ def do_ctype_pointer(t, specs=[]):
 	# Но Modest это позволяет (!) НО при этом нельзя индексировать по такому указателю
 	# Для работы нужно его сперва привести к типу *[n][m]...([k]) и тогда уже можно индексировать
 	# Реализуется это в си через void * - (это лучший вариант)
-	if to.is_open_array_of_open_array():
+	if to.is_unsized_array_of_unsized_array():
 		return CTypePointer(to=CTypeNamed("void"), specs=specs)
 
 	if need_ptr_to_item_instead_of_ptr_to_array(to):
@@ -1432,7 +1432,7 @@ def do_cstmt_assign(x):
 def do_cstmt_return(x):
 	global cfunc
 
-	if cfunc.type.to.is_closed_array():
+	if cfunc.type.to.is_sized_array():
 		return CStmtValueExpr(
 			cvalue_memcpy(
 				CValueNamed("__out"),
@@ -1638,7 +1638,7 @@ def do_def_func(x):
 
 	#create local copy for array parameters
 	for param in func.type.params:
-		if param.type.is_closed_array():
+		if param.type.is_sized_array():
 			paramId = get_id_str(param)
 			dv = CStmtDefVar(paramId, do_ctype(param.type))
 			mx = CStmtValueExpr(
@@ -1681,7 +1681,7 @@ def do_def_func(x):
 
 	# for any array parameter print local holder value
 	for param in func.type.params:
-		if param.type.is_closed_array():
+		if param.type.is_sized_array():
 			nl_indent(1)
 			paramId = get_id_str(param)
 			print_variable(paramId, param.type)

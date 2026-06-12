@@ -84,7 +84,7 @@ int main(void) {
 	p[0] = 123;
 	array_print(p, bb - aa);
 	printf("--------------------------------------------\n");
-	printf("slice of pointer to open array\n");
+	printf("slice of pointer to unsized array\n");
 	int32_t *pw = (int32_t *)s;
 	printf("before\n");
 	array_print(pw, 10);

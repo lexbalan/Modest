@@ -81,7 +81,7 @@ SIZE_WIDTH = 0
 # когда первым параметром идет указатель на возвращаемое значение (ABI)
 RET_SIZE_MAX = 16
 def need_sret(func_type):
-	return func_type.to.is_closed_array()
+	return func_type.to.is_sized_array()
 	#return func_type.to.get_size() > RET_SIZE_MAX
 
 
@@ -1536,14 +1536,14 @@ def handleVLA(t):
 		handleVLA(t.of)
 		# Get VLA size
 		# размер массива = его объем * объем его элемента
-		if t.is_closed_array():
+		if t.is_sized_array():
 			#out("\n\t; -- HANDLE VLA --")
 			volume = do_reval(t.volume)
 			runtimeVolume = volume
 			runtimeSizeRoots = llvm_eval_binary('mul', volume, t.of.runtimeSizeRoots)
 			#out("\n\t; -- END HANDLE VLA --")
 		else:
-			# Если это open_array
+			# Если это unsized_array
 			runtimeSizeRoots = llvm_value_num(typeInt32, 1)
 			runtimeVolume = llvm_value_num(typeInt32, 1)
 
@@ -1617,7 +1617,7 @@ def do_eval_cons(x):
 			if id(type.to) == id(from_type.to):
 				return do_reval(value)
 
-			if type.to.is_closed_array():
+			if type.to.is_sized_array():
 				if from_type.to.is_array():
 					return do_eval_cons_pointer_to_array(x)
 
@@ -2152,7 +2152,7 @@ def print_stmt_const(x):
 	# для let-массивов выделяем память (alloca)
 	# поскольку их могут индексировать переменной
 	# а массив-значение в "регистре" невозможно индексировать переменной
-	if Type.is_closed_array(t) or Type.is_record(t):
+	if Type.is_sized_array(t) or Type.is_record(t):
 		v = llvm_alloca_store(t, id_str=None, init_value=v)
 
 	locals_add(id_str, v)
@@ -2345,7 +2345,7 @@ def str_func_params(ftype, only_types=False, with_attributes=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		isarr = Type.is_closed_array(param.type)
+		isarr = Type.is_sized_array(param.type)
 
 		if i > 0:
 			sstr += ", "
@@ -2494,7 +2494,7 @@ def print_def_func(x):
 
 		localObject = llvm_value_reg(param_id, param.type)
 
-		if Type.is_closed_array(param.type):
+		if Type.is_sized_array(param.type):
 			localObject['is_adr'] = True
 
 		locals_add(param_id, localObject)
@@ -2509,7 +2509,7 @@ def print_def_func(x):
 	# for any array parameter print local holder value
 	for param in params:
 		ptype = param.type
-		if Type.is_closed_array(ptype):
+		if Type.is_sized_array(ptype):
 			paramId = get_id_str(param)
 
 			reg = '__' + param.id.str

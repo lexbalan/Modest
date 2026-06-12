@@ -427,7 +427,7 @@ def do_ctype_pointer(t, specs=[]):
 	# В си нельзя создать указатель на массив вида *[][]
 	# Но Modest это позволяет (!) НО при этом нельзя индексировать по такому указателю
 	# Для работы нужно его сперва привести к типу *[n][m]...([k]) и тогда уже можно индексировать
-	while to.is_open_array_of_open_array():
+	while to.is_unsized_array_of_unsized_array():
 		to = to.of
 
 	return CTypePointer(to=do_ctype(to), specs=specs)
@@ -925,7 +925,7 @@ def cstr(value, sz):
 # Дополнительная чисто сишная надстройка:
 # если у нас тут указатель на массив - приводим к указателю на его элемент
 def incast(type, value, ctx=[]):
-#	if value.type.is_pointer_to_closed_array():
+#	if value.type.is_pointer_to_sized_array():
 #		# Это аргумент с типом указатель на массив
 #		# приведем его по месту к указателю на элемент этого массива
 #		# тк C живет по своим правилам и выкидывает warning чаще там где не надо
@@ -1104,7 +1104,7 @@ def print_literal_array_items(items, item_type):
 			if i > 0:
 				sstr += " "
 
-		if a.type.is_closed_array():
+		if a.type.is_sized_array():
 			sstr += '{' + print_literal_array_items(a.asset, item_type.of) + '}'
 		else:
 			sstr += str_value(a)
@@ -1678,7 +1678,7 @@ def print_stmt_var(x):
 
 	out(" = ")
 	out(str_initializer(init_value))
-	#if init_value.type.is_closed_array():
+	#if init_value.type.is_sized_array():
 	#	out(str_initializer(init_value))
 	#else:
 	#	print_value(init_value)
@@ -1935,7 +1935,7 @@ def print_stmt_block(s):
 
 # Функция возвращает массив по значению?
 def isSretFunc(ftype):
-	return ftype.to.is_closed_array()
+	return ftype.to.is_sized_array()
 
 
 def print_func_return_type(ftype):
@@ -2063,7 +2063,7 @@ def print_def_func(x):
 
 	# for any array parameter print local holder value
 	for param in ftype.params:
-		if param.type.is_closed_array():
+		if param.type.is_sized_array():
 			nl_indent(1)
 			paramId = get_id_str(param)
 			print_variable(paramId, param.type)

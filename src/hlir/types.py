@@ -898,23 +898,23 @@ class Type(Entity):
 		return False
 
 
-	def is_closed_array(self):
+	def is_sized_array(self):
 		if self.is_array():
 			return not self.volume.isValueUndef()
 		return False
 
 
-	def is_open_array(self):
+	def is_unsized_array(self):
 		if self.is_array():
 			return self.volume.isValueUndef()
 		return False
 
 
-	# the array chain have an open array
+	# the array chain have an unsized array
 	# [2][]Int32
 	def is_holed(t):
 		if t.is_array():
-			if t.is_open_array():
+			if t.is_unsized_array():
 				return True
 			return t.of.is_holed()
 		return False
@@ -933,16 +933,16 @@ class Type(Entity):
 
 
 	# [10][]Int32, [][]Int32, [][][]Int64, etc..
-	def is_array_of_open_array(self):
+	def is_array_of_unsized_array(self):
 		if self.is_array():
-			return self.of.is_open_array()
+			return self.of.is_unsized_array()
 		return False
 
 
 	# [][]Int32, [][][]Int64, etc..
-	def is_open_array_of_open_array(self):
-		if self.is_open_array():
-			return self.of.is_open_array()
+	def is_unsized_array_of_unsized_array(self):
+		if self.is_unsized_array():
+			return self.of.is_unsized_array()
 		return False
 
 
@@ -996,15 +996,15 @@ class Type(Entity):
 		return False
 
 
-	def is_pointer_to_open_array(self):
+	def is_pointer_to_unsized_array(self):
 		if self.is_pointer():
-			return self.to.is_open_array()
+			return self.to.is_unsized_array()
 		return False
 
 
-	def is_pointer_to_closed_array(self):
+	def is_pointer_to_sized_array(self):
 		if self.is_pointer():
-			return self.to.is_closed_array()
+			return self.to.is_sized_array()
 		return False
 
 
@@ -1180,12 +1180,12 @@ class Type(Entity):
 
 
 	# cannot create field with type
-	def is_forbidden_field(self, open_array_forbidden=True):
+	def is_forbidden_field(self, unsized_array_forbidden=True):
 		if self.is_forbidden_any():
 			return True
 
-		if self.is_open_array():
-			return open_array_forbidden
+		if self.is_unsized_array():
+			return unsized_array_forbidden
 
 		return False
 
@@ -1202,7 +1202,7 @@ class Type(Entity):
 		if self.is_array():
 			if self.of.is_forbidden_any():
 				return True
-			if self.is_open_array():
+			if self.is_unsized_array():
 				return True
 			if self.volume.isValueImmediate():
 				if self.volume.asset == 0:
@@ -1210,13 +1210,13 @@ class Type(Entity):
 		return False
 
 
-	def is_forbidden_var(self, open_array_forbidden=True):
+	def is_forbidden_var(self, unsized_array_forbidden=True):
 		if self.is_forbidden_any():
 			return True
 
 		if self.is_array():
-			if self.is_open_array():
-				return open_array_forbidden
+			if self.is_unsized_array():
+				return unsized_array_forbidden
 			if self.volume.isValueImmediate():
 				if self.volume.asset == 0:
 					return True
@@ -1228,7 +1228,7 @@ class Type(Entity):
 			return True
 
 		if self.is_array():
-			if self.is_open_array():
+			if self.is_unsized_array():
 				return True
 			if self.volume.isValueImmediate():
 				if self.volume.asset == 0:

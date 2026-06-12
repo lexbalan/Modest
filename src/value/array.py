@@ -108,7 +108,7 @@ def resolve(t1, t2):
 			t2 = TypeArray(t1.of, volume=volume, ti=None)
 
 		nt = t1
-		if t1.is_open_array():
+		if t1.is_unsized_array():
 			nt = t2.copy()
 			nt.generic = False
 		else:

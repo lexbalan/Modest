@@ -517,8 +517,8 @@ def do_type_array(x):
 	nt = TypeArray(of, volume, ti=x['ti'])
 
 	# [][] разрешено создавать, но они отольются в [] в backend, и чтобы снмим работать нужно привести явно к [n][m] (!)
-	#if nt.is_open_array() and of.is_open_array():
-	#	error("open arrays of open arrays are forbidden", of.ti)
+	#if nt.is_unsized_array() and of.is_unsized_array():
+	#	error("unsized arrays of unsized arrays are forbidden", of.ti)
 	return nt
 
 
@@ -951,13 +951,13 @@ def do_value_deref(x):
 	# you can't deref:
 	#   - pointer to Unit
 	#   - pointer to function
-	#   - pointer to open array
+	#   - pointer to unsized array
 	to = vtype.to
 	is_func_ptr = to.is_func()
 	is_free_ptr = to.is_free_pointer()
-	is_open_array_ptr = to.is_open_array()
+	is_unsized_array_ptr = to.is_unsized_array()
 	is_vla = to.is_vla()
-	if is_func_ptr or is_free_ptr or is_open_array_ptr:# or is_vla:
+	if is_func_ptr or is_free_ptr or is_unsized_array_ptr:# or is_vla:
 		error("cannot dereference the pointer", v.ti)
 
 	nv = ValueDeref(v, ti=x['ti'])
@@ -1265,8 +1265,8 @@ def do_value_index(x):
 
 	# Can index *[]AnyNonArrayType
 	# Can't index *[][]AnyType
-	if array_type.is_array_of_open_array():
-		error("cannot index an array of open array", x['ti'])
+	if array_type.is_array_of_unsized_array():
+		error("cannot index an array of unsized array", x['ti'])
 		return ValueBad(x['ti'])
 
 	index = do_rvalue(x['index'])
@@ -1346,8 +1346,8 @@ def do_value_slice(x):
 
 	# Can slice *[]AnyNonArrayType
 	# Can't slice *[][]AnyType
-	if array_type.is_array_of_open_array():
-		error("cannot slice array of an open array", x['ti'])
+	if array_type.is_array_of_unsized_array():
+		error("cannot slice array of an unsized array", x['ti'])
 		return ValueBad(x['ti'])
 
 
@@ -2300,7 +2300,7 @@ def def_var_common(x, is_local=False):
 
 	var_type, init_value = process_field_common(x, allow_cons_default=True, default_instead_of_undef=is_local)
 
-	if var_type.is_forbidden_var(open_array_forbidden=False):
+	if var_type.is_forbidden_var(unsized_array_forbidden=False):
 		error("unsuitable type", x['ti'])
 
 	var_value = ValueVar(var_type, id, init_value=init_value, ti=id.ti)

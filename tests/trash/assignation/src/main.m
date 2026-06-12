@@ -81,7 +81,7 @@ func main () -> Int {
 	printf("loc_r0.y = %i\n", loc_r0.y)
 
 
-	// error: closed arrays of closed arrays are denied
+	// error: sized arrays of sized arrays are denied
 	/*let dim1 = 15
 	let dim2 = 16
 

@@ -98,7 +98,7 @@ func main () -> Int {
 	array_print(p, lengthof(*p))
 
 	printf("--------------------------------------------\n")
-	printf("slice of pointer to open array\n")
+	printf("slice of pointer to unsized array\n")
 
 	var pw = *[]Int32 &s
 

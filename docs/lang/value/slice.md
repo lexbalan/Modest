@@ -19,7 +19,7 @@ Selects a contiguous sub-array `[from, to)`.
 - A slice can be an assignment target: `a[1:4] = [3]Int32 [1, 2, 3]`
   copies elements into the range.
 - An unsized array of unsized arrays cannot be sliced
-  (compiler message: `cannot slice array of an open array`).
+  (compiler message: `cannot slice array of an unsized array`).
 
 ## Examples
 

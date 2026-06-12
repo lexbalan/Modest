@@ -5,7 +5,7 @@ from .char import utf32_chars_to_utfx_char_values
 
 
 def array_can2(a, b):
-	if a.is_open_array() and b.is_closed_array():
+	if a.is_unsized_array() and b.is_sized_array():
 		return array_can2(a.of, b.of)
 	elif a.is_pointer() and b.is_pointer():
 		return array_can2(a.to, b.to)
@@ -39,7 +39,7 @@ def pointer_can(to, from_type, method, ti):
 			return True  # cons FreePointer from *X
 
 		# cons *[]X from *[n]X +
-		if to.to.is_open_array() and from_type.to.is_closed_array():
+		if to.to.is_unsized_array() and from_type.to.is_sized_array():
 			return array_can2(to.to, from_type.to)
 
 
@@ -52,7 +52,7 @@ def pointer_can(to, from_type, method, ti):
 
 	# cons *[n]X from *[]X
 	if to.is_pointer() and from_type.is_pointer():
-		if to.to.is_closed_array() and from_type.to.is_open_array():
+		if to.to.is_sized_array() and from_type.to.is_unsized_array():
 			return array_can2(from_type.to, to.to)
 			#return True
 

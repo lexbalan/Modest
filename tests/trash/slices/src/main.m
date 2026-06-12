@@ -103,7 +103,7 @@ func main () -> Int {
 	array_print(p, lengthof(*p))
 
 	printf("--------------------------------------------\n")
-	printf("slice of pointer to open array\n")
+	printf("slice of pointer to unsized array\n")
 
 	// за каким то хером это работает, то что мне сейчас нужно
 	// но тут еще куча работы впереди
