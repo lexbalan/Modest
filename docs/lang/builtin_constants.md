@@ -1,28 +1,48 @@
-# Built-in constants
+# Built-in Constants
 
-```zig
-// tests/builtin_constants/src/main.m
+Every module implicitly imports the `builtin` namespace with information
+about the compiler and the target platform.
 
-include "libc/ctypes64"
-include "libc/stdio"
+> **Status:** resolution of `builtin.*` is currently broken on the dev
+> branch — see `docs/BUGS.md` (#5). The reference below describes the
+> intended interface (`tests/builtin`).
 
+## Reference
 
-func main () -> Int {
+```modest
+// compiler
+builtin.compiler.name                 // *Str
+builtin.compiler.version.major        // Nat32
+builtin.compiler.version.minor        // Nat32
+builtin.compiler.version.patch        // Nat32
 
-	// builtin.compiler
-	printf("builtin.compiler.name = %s\n", *Str8 builtin.compiler.name)
-	let ver = builtin.compiler.version
-	printf("builtin.compiler.version.major = %u\n", ver.major)
-	printf("builtin.compiler.version.minor = %u\n", ver.minor)
+// target: widths (configured by cfg/*.toml)
+builtin.target.pointerWidth           // bits
+builtin.target.charWidth
+builtin.target.intWidth
+builtin.target.floatWidth
 
-	// builtin.target
-	printf("builtin.target.name = %s\n", *Str builtin.target.name)
-	printf("builtin.target.pointerWidth = %u\n", builtin.target.pointerWidth)
-	printf("builtin.target.charWidth = %u\n", builtin.target.charWidth)
-	printf("builtin.target.intWidth = %u\n", builtin.target.intWidth)
-	printf("builtin.target.floatWidth = %u\n", builtin.target.floatWidth)
+// target: identity (branded string constants for comparison)
+builtin.target.name
+builtin.target.arch       // compare with: archX86, archX86_64, archArm,
+                          //   archAarch64, archRiscv32, archRiscv64
+builtin.target.os         // osLinux, osMacos, ...
+builtin.target.abi        // abiSysV, abiEabi, ...
+builtin.target.endian     // endianLittle, endianBig
 
-	return 0
+// target-width type aliases
+builtin.target.Word, builtin.target.Int, builtin.target.Nat
+```
+
+The unqualified aliases `Int`, `Nat`, `Word`, `Size` are also available
+directly (see [base types](./type/base.md)).
+
+## Example
+
+```modest
+if builtin.target.endian == builtin.target.endianLittle {
+	printf("little-endian\n")
 }
 
+var w: builtin.target.Word            // target word width
 ```

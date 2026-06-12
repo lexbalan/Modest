@@ -1,136 +1,52 @@
-# Compiler Directives
+# Pragmas
 
-> OBSOLETE
+A *pragma* is a module-level directive: it configures translation of the
+current module. Pragmas take effect from their position to the end of
+the file.
 
-## Conditional Compilation
-
-*Conditional compilation* directives allows to activate/deactivate top level code dependently of some conditions. This conditions must be immediate value expressions with Bool type.
-
-### Common form
+## Form
 
 ```
-$if (<# value_expression #>)
-	// code activated
-	// when value_expression is true
-$endif
+pragma <#name#> [<#arguments#>]
 ```
 
-```
-$if (<# value_expression #>)
-	// code activated
-	// when value_expression is true
-$else
-	// code activated
-	// when value_expression is false
-$endif
-```
+## Reference
 
-```
-$if (<# value_expression_1 #>)
-	// code activated
-	// when value_expression_1 is true
-$elseif (<# value_expression_2 #>)
-	// code activated
-	// when value_expression_1 is false
-	// and value_expression_2 is true
-$endif
-```
+| Pragma | Effect |
+| :-- | :-- |
+| `pragma unsafe` | allow `unsafe` constructions in this module |
+| `pragma public_module` | default access of definitions becomes `public` |
+| `pragma prefix "p"` | output-symbol prefix for this module (empty string disables) |
+| `pragma c_include "h.h"` | emit `#include "h.h"` in C output |
+| `pragma do_not_include` | importers do not `#include` this module's header |
+| `pragma c_no_print` | omit this module's definitions from C output |
+| `pragma insert <#text#>` | insert text into output verbatim |
 
-```
-$if (<# value_expression_1 #>)
-	// code activated
-	// when value_expression_1 is true
-$elseif (<# value_expression_2 #>)
-	// code activated
-	// when value_expression_1 is false
-	// and value_expression_2 is true
-...
-$elseif (<# value_expression_n #>)
-	// code activated
-	// when all value_expressions before are false
-	// and value_expression_n is true
-$else
-	// code activated
-	// when all value_expressions are false
-$endif
-```
+## Examples
 
-### Examples
-
-```swift
-let systemWidth = 64
-
-$if (systemWidth == 32)
-import "./system32"
-$elseif (systemWidth == 64)
-import "./system64"
-$elseif (systemWidth == 128)
-import "./system128"
-$else
-@error("system not supported")
-$endif
-
-
-// using built-in 'function' __defined(id: String) -> Bool
-$if (not __defined("version"))
-let version = "0.1"
-$endif
-```
-
-
-## Compiler messages
-
-```swift
-@info("this is an info message")
-```
-```swift
-@warning("this is a warning message")
-```
-```swift
-@error("this is an error message")
-```
-
-
-## Undef
-
-```swift
-var x: Int32
-
-$if (__defined("x"))
-@undef("x")
-var x: Nat32
-$endif
-```
-
-
-## Attributes & Properties
-
-```swift
-var byteFromUart: @volatile Word8
-```
-
-```swift
-@extern("C", "int")
-type Int Int32
-```
-
-
-## Pragmas
-
-```swift
-// this pragma makes compiler to
-// not print include directive (only for C backend) for this file
+```modest
+// C binding module: no prefix, no own output
+pragma prefix ""
 pragma do_not_include
+
+@extern("C")
+public func write (fd: Int, buf: Ptr, n: Size) -> Size
 ```
 
-## Compiler Feature
-Directive *feature* enables compiler feature for curent source file (analog of *-f* compiler option)
-```swift
-@feature("unsafe")
-@feature("unsafe-downcast")
-@feature("unsafe-int-to-ptr")
-@feature("unsafe-ptr-to-int")
-...
+```modest
+pragma unsafe
+pragma c_include "./sha256.h"
+
+let bytes = unsafe *[]Word8 data
 ```
 
+## `$`-directives
 
+Tokens of the form `$name` are reserved for compiler directives
+(conditional compilation, `$if` / `$else`); this mechanism is currently
+**not implemented** — the historical design is kept in `docs/TODO.md`.
+
+## See also
+
+- [Annotations](./attribute.md) — per-definition metadata
+- [Import](./import.md)

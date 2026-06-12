@@ -1,109 +1,54 @@
-# Modest language
+# Modest Language Reference
 
-- [Comments](./comments.md)
-- [Access Modifiers](./access_modifiers.md)
-- [Identifiers](./identifier.md)
-<!--- [Fields](./fields.md)-->
-- [Import](./import.md)
-- [Definitions](./def/README.md)
-  * [Type](./def/type.md)
-  * [Constant](./def/let.md)
-  * [Variable](./def/var.md)
-  * [Function](./def/func.md)
-
-- [Types](./type/README.md)
-  * [Generic](./type/generic.md)
-  * [Base](./type/base.md)
-  * [Array](./type/array.md)
-  * [Record](./type/record.md)
-  * [Function](./type/func.md)
-  * [Pointer](./type/pointer.md)
-
-- [Values](./value/README.md)
-  * [Literal](./value/literal.md)
-  * [Cons](./value/cons.md)
-  * [Binary](./value/binary.md)
-  * [Unary](./value/unary.md)
-  * [Call](./value/call.md)
-  * [Access](./value/access.md)
-  * [Index](./value/_index.md)
-  * [Slice](./value/slice.md)
-  * [Sizeof](./value/sizeof.md)
-
-- [Statements](./stmt/README.md)
-  * [Var](./stmt/var.md)
-  * [Let](./stmt/let.md)
-  * [If](./stmt/if.md)
-  * [While](./stmt/while.md)
-  * [Return](./stmt/return.md)
-  * [Value evaluation](./stmt/eval.md)
-  * [Variable assignation](./stmt/assign.md)
-  * [Block statement](./stmt/block.md)
-  * [Asm statement](./stmt/asm_inline.md)
-
-### Misc
-  * [Directives](./directive.md)
-  * [Attributes](./attribute.md)
-  * [Builtin constants](./builtin_constants.md)
-  * [Variadic functions](./va_arg.md)
-
-
-### Keywords
-[`import`](./import.md), [`type`](./def/type.md), [`let`](./def/let.md), [`var`](./def/var.md), [`func`](./def/func.md), [`if`](./stmt/if.md), [`while`](./stmt/while.md), [`break`](./stmt/while.md#break), [`again`](./stmt/while.md#again), [`return`](./stmt/return.md)
-
-
-### Example
-
-```swift
-// fast language example
-
-import "libc/stdio"
-
-type Number = Int32
-
-const minNumber = Number 0
-const maxNumber = Number 10
-
-func main () -> Int32 {
-	let number = get_number(minNumber, maxNumber)
-
-	let n = Number 5
-
-	if number < n {
-		printf("entered number (%i) is less than %i\n", number, n)
-	} else if number > n {
-		printf("entered number (%i) is greater than %i\n", number, n)
-	} else {
-		printf("entered number (%i) is equal with %i\n", number, n)
-	}
-
-	return 0
-}
-
-
-func get_number (min: Number, max: Number) -> Number {
-	var number: Number
-	number = 0
-
-	while true {
-		printf("enter a number (%i .. %i): ", min, max)
-		scanf("%d", &number)
-
-		if number < min {
-			printf("number must be greater than %i, try again\n", min)
-			again
-		} else if number > max {
-			printf("number must be less than %i, try again\n", max)
-			again
-		} else {
-			break
-		}
-	}
-
-	return number
-}
+The reference mirrors the structure of the language. One page — one
+construct: Form, Semantics, Examples.
 
 ```
+language
+├── lexical
+│   ├── comments        // and /* */ .................. comments.md
+│   ├── identifiers     Type / value naming .......... identifier.md
+│   └── fields          name: Type ................... fields.md
+│
+├── module
+│   ├── import, include namespaces, C bindings ....... import.md
+│   ├── pragmas         unsafe, prefix, c_include .... directive.md
+│   ├── access          public / private / default ... access_modifiers.md
+│   └── builtin         builtin.target.*, compiler ... builtin_constants.md
+│
+├── def                 const, var, func, type ....... def/
+├── stmt                if, while, break/again, let,
+│                       assign, return, asm .......... stmt/
+├── type                base, generic, array, record,
+│                       pointer, function, branded ... type/
+├── value               literals, construction,
+│                       operators, call, index ....... value/
+│
+├── annotations         @inline, @layout, @extern .... attribute.md
+└── variadic            __VA_List, __va_start ........ va_arg.md
+```
 
+## Quick example
 
+```modest
+include "libc/stdio"
 
+type Celsius = @branded Float64
+
+const boiling = Celsius 100.0
+
+func describe (t: Celsius) -> Unit {
+	if t >= boiling {
+		printf("steam\n")
+	} else {
+		printf("liquid or ice\n")
+	}
+}
+
+func main () -> Int {
+	describe(Celsius 36.6)
+	return 0
+}
+```
+
+For a one-page overview see the [cheatsheet](../CHEATSHEET.md).

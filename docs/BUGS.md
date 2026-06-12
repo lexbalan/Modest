@@ -58,3 +58,16 @@ At module level the "holed" type is completed from the initializer; the
 same definition inside a function body fails to parse. Inconsistency —
 parser statement path (`stmt_var` / type-vs-value disambiguation).
 Or is locals-must-be-concrete intended? (question for Alex)
+
+## 5. `builtin.*` namespace does not resolve (regression)
+
+```modest
+var w: builtin.target.Word        // error: unknown value
+let v = builtin.compiler.version  // error: unknown value
+```
+
+The wiring exists (`create_builtin_module`, auto-import at
+`src/trans.py:2707`), but any `builtin.x` access fails with
+`unknown value`. The repo's own `tests/builtin` fails with 10 errors —
+it is not listed in `tests/run.sh`, so the regression went unnoticed.
+Affects everything documented in `docs/lang/builtin_constants.md`.

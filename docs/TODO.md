@@ -26,3 +26,23 @@ Status: the `@zarray` annotation is recognized by the compiler
 (`hlir/types.py`), but the built-in `Str*` types do not carry it yet;
 zero-termination currently comes from the C backend emitting C string
 literals. To be implemented.
+
+## Conditional compilation (`$`-directives)
+
+Historical design, currently not implemented (the lexer tokenizes
+`$name`, the parser rejects it at top level):
+
+```
+$if (<#immediate Bool#>)
+	...
+$elseif (<#immediate Bool#>)
+	...
+$else
+	...
+$endif
+```
+
+Companions from the same design: `__defined("id")`, `@undef("id")`,
+compiler messages `@info` / `@warning` / `@error`, `@feature("unsafe")`.
+Removed from `docs/lang/directive.md` (which now documents pragmas)
+until reimplemented.
