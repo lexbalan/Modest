@@ -18,8 +18,8 @@ Selects a contiguous sub-array `[from, to)`.
 - Works on arrays and pointers to arrays (auto-deref).
 - A slice can be an assignment target: `a[1:4] = [3]Int32 [1, 2, 3]`
   copies elements into the range.
-- An open array of open arrays cannot be sliced
-  (`cannot slice array of an open array`).
+- An unsized array of unsized arrays cannot be sliced
+  (compiler message: `cannot slice array of an open array`).
 
 ## Examples
 

@@ -44,7 +44,7 @@ of the declared `Int32` element type, and the length `4 - 1` is bytes,
 not elements (should be `(4 - 1) * sizeof(int32_t)`). Generated C also
 fails to compile (`cc` rejects it). Slice codegen in `src/backend/c11.py`.
 
-## 4. Open-array variable with initializer: parse error at local scope
+## 4. Unsized-array variable with initializer: parse error at local scope
 
 ```modest
 var s: []Char8 = "abc"     // OK at module level -> char s[3]

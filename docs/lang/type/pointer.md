@@ -11,7 +11,7 @@ A *pointer* holds the address of a value of a known type.
 ```modest
 *Int32        // pointer to Int32
 **Int32       // pointer to pointer
-*[]Char8      // pointer to open char array (string)
+*[]Char8      // pointer to unsized char array (string)
 Ptr           // built-in alias for *Unit (free pointer)
 ```
 

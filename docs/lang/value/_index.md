@@ -22,7 +22,7 @@ read, assignment target, or address-of (`&a[i]`).
 - Multi-dimensional arrays index step by step: `m[i][j]`.
 - Indexing a string yields a char: `s[0]`; indexing a string literal
   yields a generic char (`"A"[0]`).
-- A pointer to a *nested* open array (`*[][]T`) cannot be indexed
+- A pointer to a *nested* unsized array (`*[][]T`) cannot be indexed
   directly — construct a concrete view first.
 
 ## Examples
