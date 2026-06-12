@@ -1,7 +1,8 @@
 # Array Type
 
 An *array* is a fixed-length, contiguous sequence of elements of one
-type, indexed from zero.
+type, indexed from zero. An array is an ordinary value type — unlike C,
+there is **no array decay**.
 
 ## Form
 
@@ -27,8 +28,11 @@ type, indexed from zero.
   pointed-to type of slices and strings.
 - A pointer to array auto-derefs on indexing: with `p: *[10]Int32`,
   write `p[3]`, not `(*p)[3]` (see [pointer](./pointer.md)).
-- Array parameters and assignments copy **by value**.
-  Pass `*[N]T` / `*[]T` to share storage instead of copying.
+- **By value, everywhere**: arrays are passed to functions, returned
+  from functions and assigned by value — the whole content is copied,
+  the size is part of the type. An array never silently turns into a
+  pointer. To share storage instead of copying, pass `*[N]T` / `*[]T`
+  explicitly.
 - Generic array literals convert implicitly at equal length; explicit
   construction to a longer array zero-fills the tail; `= []` zero-fills
   entirely (see [generic](./generic.md)).
@@ -38,7 +42,8 @@ type, indexed from zero.
 String types are built-in aliases for open char arrays:
 
 ```modest
-type Str8  = []Char8     // built-in
+// built-in definitions
+type Str8  = []Char8
 type Str16 = []Char16
 type Str32 = []Char32
 ```
@@ -52,31 +57,30 @@ handled through a pointer:
 ```modest
 var s: *Str8 = "Hello World!\n"
 printf(s)
-let c = s[0]              // 'H'
+let c = s[0]              // Char8 'H'
 ```
 
 ## Examples
 
 ```modest
-func sum (v: *[]Int32, n: Nat32) -> Int32 {   // by reference
+func sum (v: *[]Int32, n: Nat32) -> Int32 {   // explicit by-reference
 	var s: Int32 = 0
 	var k: Nat32 = 0
 	while k < n { s = s + v[k]; ++k }
 	return s
 }
 
+func makeTriple (x: Int32) -> [3]Int32 {      // returned by value
+	var r: [3]Int32 = [x, x + 1, x + 2]
+	return r
+}
+
 func main () -> Int {
 	var a: [5]Int32 = [1, 2, 3, 4, 5]
 	a[0] = 10
+	printf("sum = %d\n", sum(&a, lengthof(a)))
 
-	var i: Nat32 = 0
-	while i < lengthof(a) {
-		printf("%d\n", a[i])
-		++i
-	}
-
-	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
-	printf("%d\n", m[1][2])           // 6
+	var t: [3]Int32 = makeTriple(10)  // t = [10, 11, 12]
 
 	var b: [5]Int32 = []              // zero-filled
 	b = a                             // copy by value
@@ -98,21 +102,27 @@ static int32_t sum(int32_t *v, uint32_t n) {
 	return s;
 }
 
+static void makeTriple(int32_t x, int32_t *__out) {
+	int32_t r[3];
+	__builtin_memcpy(&r, &(int32_t [3]){x, x + 1, x + 2}, sizeof(int32_t [3]));
+	__builtin_memcpy(__out, &r, sizeof(int32_t [3]));
+}
+
 int main(void) {
 	int32_t a[5] = {1, 2, 3, 4, 5};
 	a[0] = 10;
-	uint32_t i = 0;
-	while (i < LENGTHOF(a)) {
-		printf("%d\n", a[i]);
-		i = i + 1;
-	}
-	int32_t m[2][3] = {{1, 2, 3}, {4, 5, 6}};
-	printf("%d\n", m[1][2]);
+	printf("sum = %d\n", sum(a, LENGTHOF(a)));
+	int32_t t[3];
+	makeTriple(10, t);
 	int32_t b[5] = {0};
 	__builtin_memcpy(&b, &a, sizeof(int32_t [5]));
 	return 0;
 }
 ```
+
+Note how the *value semantics* survives the translation: array return
+becomes an out-parameter + `memcpy`, assignment becomes `memcpy` — the
+copying is real, only expressed in C terms.
 
 </details>
 

@@ -591,6 +591,7 @@ public func myPrint (s: Str8) -> Unit  // emitted as: printf
 | Struct           | `struct Point { int x; int y; }` | `type Point = {x: Int32, y: Int32}`     |
 | Field via ptr    | `ptr->field`                   | `ptr.field` (auto-deref)                  |
 | Arrays           | `int arr[10]`                  | `var arr: [10]Int32`                      |
+| Array semantics  | decays to pointer              | ordinary value type: passed, returned, assigned **by value** (no decay) |
 | Return type      | `int func()`                   | `func name () -> Int32`                   |
 | Void             | `void func()`                  | `func name () -> Unit`                    |
 | Logical ops      | `&&`, `\|\|`, `!`              | `and`, `or`, `not`                        |
