@@ -62,6 +62,34 @@ valuable guarantee for embedded targets.
 (Related but rejected for now: RVO-style lowering of array returns to
 write directly into `__out` — deliberately left to the C optimizer.)
 
+## Settings hierarchy: config → CLI → pragma
+
+Idea (2026-06-12): one settings model with three layers, closest to the
+code wins (same shadowing rule as name scoping):
+
+1. `cfg/*.toml` — target/project knowledge, lives in the repo;
+2. CLI flags (`-m`, `-f`) — knowledge of this particular build (CI,
+   debugging); already override config;
+3. module-level pragmas — the module author's knowledge, travels with
+   the code; already exists ad hoc (`pragma unsafe`, `pragma prefix`).
+
+Design constraints to resolve **before** implementing:
+
+- **Whitelist.** Only locally-scoped settings are pragma-overridable
+  (warning thresholds, unsafe, prefix, output style). Globally-coherent
+  settings (type widths, arch/ABI/endianness, backend) must not vary
+  per module — differing `intWidth` between modules breaks ABI at the
+  module boundary.
+- **Tighten-only for safety keys.** A pragma must not weaken what the
+  CLI demanded (CI runs `-f paranoid`; a module must not opt out).
+  Precedent: Rust `allow`/`warn`/`deny` are overridable, `forbid` is
+  final. One rule suffices: inner layers may only increase strictness
+  of safety-class keys (or: config/CLI may mark a key `final`).
+- **Provenance.** With three layers, diagnostics need "who set this
+  value": store the origin (`cfg/avr.toml:12` / CLI / `pragma at
+  main.m:3`) next to the value, show it in `-v` and in warning texts.
+  Analogue: `git config --show-origin`.
+
 ## Conditional compilation (`$`-directives)
 
 Historical design, currently not implemented (the lexer tokenizes
