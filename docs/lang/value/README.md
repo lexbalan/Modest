@@ -1,85 +1,48 @@
 # Values
 
-### Zero value
-Zero value means 0 for any Integer type, empty array value and empty record value.
+A *value expression* computes a value. Expressions are built from
+literals, names and the operations below.
 
 ```
-	0, [], {}
+values
+├── literal     42, 3.14, "abc", [1,2], {x=1}, true, nil ... literal.md
+├── cons        TargetType value — construction ............ cons.md
+├── binary      + - * / % == < and or & | ^ << >> .......... binary.md
+├── unary       not ~ - + & * new .......................... unary.md
+├── access      record.field ............................... access.md
+├── index       arr[i] ..................................... _index.md
+├── slice       arr[i:j] ................................... slice.md
+├── call        f(args) .................................... call.md
+└── sizeof      sizeof / alignof / lengthof / offsetof ..... sizeof.md
 ```
 
-Any [global variable](../def/var.md), defined without *default value*, after creation will contains a *zero value*.
+## Operator precedence
 
+From loosest to tightest binding:
 
-### [Literal values](./literal.md)
-* [Integer value expression](./literal.md#Integer-literals)
-* [String value expression](./literal.md#String-literals)
-* [Array value expression](./literal.md#Array-literals)
-* [Record value expression](./literal.md#Record-literals)
+| Level | Operators |
+| :-: | :--- |
+| 1 | `or` |
+| 2 | `and` |
+| 3 | `==` `!=` |
+| 4 | `\|` |
+| 5 | `^` |
+| 6 | `&` |
+| 7 | `<` `>` `<=` `>=` |
+| 8 | `<<` `>>` |
+| 9 | `+` `-` |
+| 10 | `*` `/` `%` |
+| 11 | construction (`Type value`) |
+| 12 | unary: `*` `&` `not` `~` `+` `-` |
+| 13 | postfix: call `()`, index `[]`, slice `[:]`, access `.` |
+| 14 | literals, names, `(...)` |
 
+## Value categories
 
-### Immediate values
-*Immediate value* - is an value known in compile time. It can be a complex expression, but there is one rule: all values in this expression must be also **immediate**.
-
-
-##### Example
-```golang
-// all these values are immediate
-let x = 2  // 2
-let y = 6  // 6
-let z = (x * y) / (x + y)  // 1
-let w = z < 10  // true
-```
-
-
-### Immutable values
-*Immutable value* - value that cannot be changed in runtime. 
-It is values *immediate values*, values created by `const` & `let` definitions, *parameters* of functions.
-It is impossible to get pointer (ref operation) to immutable values.
-
-
-### Binary & Unary operations
-
-| Operation Kind | Operation| Valid Argument Types | Result type | Comment |
-| :------------: | :--------| :------------------: | :---------: | :-----: |
-|Equality|Eq, NE|Bool, Word8, Char, Integer, Float, Array, Record, Pointer | Bool |-|
-|Comparison|LT, GT, LE, GE|Integer, Float|Bool|-|
-|Arithmetical|Add, Sub, Mul, Div, Rem, Neg|Integer, Float | ***type***(*left*) |-|
-|Logical and Bitwise|And, Or, Xor, Not|Bool, Word8, Integer | ***type***(*left*) |-|
-|Shift|ShL, ShR|Integer (& Word8 only as left argument) | ***type***(*left*) |-|
-
-* [Binary value expression](./binary.md)
-* [Unary value expression](./unary.md)
-
-
-
-### Special operations
-* [Call value expression](./call.md)
-* [Index value expression](./_index.md)
-* [Slice value expression](./slice.md)
-* [Access value expression](./access.md)
-* [Cast value expression](./cast.md)
-* [Sizeof value expression](./sizeof.md)
-
-
-
-
-Operation precedence
-
-| Precedence | Operations | Examples |
-| :----------: | :----------: | :------: |
-| 1  | `or` | `a or b` |
-| 2  | `xor` | `a xor b` |
-| 3  | `and` | `a and b` |
-| 4  | `==`, `!=` | `a == b`, `a != b` |
-| 5  | `<`, `>`, `<=`, `>=` | `a < b`, `a > b`, `a <= b`, `a >= b` |
-| 6  | `<<`, `>>` | `a << b`, `a >> b` |
-| 7  | `+`, `-` | `a + b`, `a - b` |
-| 8  | `*`, `/`, `%` | `a * b`, `a / b`, `a % b` |
-| 9 | *cons* | `Int 5` |
-| 10 | *ref*, *deref*, `not`, `+`, `-` | `&a`, `*b`, `not c`, `+d`, `-e` |
-| 11 | *call*, *index*, *access* | `init()`, `arr[0]`, `user.name` |
-| 12 | *subexpr*, *literal* | `(2 + 2)`, `a` |
-
-
-
-
+- **Immediate** — known at compile time: literals, `const`, and any
+  expression over immediate operands (folded by the compiler).
+- **Immutable** — not assignable: immediates, `let` bindings, function
+  parameters. Taking the address of an immutable value is an error
+  (`expected mutable value or function`).
+- **Zero value** — `0` / `[]` / `{}`; globals without an initializer
+  hold the zero value of their type.

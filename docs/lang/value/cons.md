@@ -1,139 +1,73 @@
+# Value Construction
 
-# *Cons* value expression
+Modest has no type casts. A value of one type is obtained from another by
+*construction*: the target type applied to a source value produces a new
+value. Construction is *implicit* (at assignment, initialization, call,
+return), *explicit* (written in code) or *unsafe* (explicit, requires the
+`unsafe` keyword and the `-f unsafe` feature).
 
+## Form
 
-## Explicit value construction
-*Explicit value construction* operation creates new value based on another.
-
-### Common form
 ```
-<#type#> <#value_expression#>
-```
-
-
-```swift
-// fast example
-// construct values from literal values with generic-type
-const i = Int32 1234
-const n = Nat16 0xFFFF
-const f = Float64 0.1234
-const c = Char32 "A"
-const r = Point {x=0, y=0}
-const a = [2]Point [{x=0, y=0}, {x=1, y=1}]
-const p = *Point nil
+<#type#> <#value_expression#>            // explicit
+unsafe <#type#> <#value_expression#>     // unsafe
 ```
 
-
-
-```swift
-// example: explicit cons integer values
-
-var i: Int32
-var j: Int64
-
-i = Int32 j
-j = Int64 i
-var k = Nat128 i
+```modest
+Int32 x
+Float64 (a + b)
+*Point nil
+unsafe Nat64 p           // pointer address as integer
 ```
 
+## Semantics
 
-```swift
-// example: explicit cons array from incomplete array
+Per-target rules (`X`, `Y` — widths; verified against the compiler):
 
-var a: [10]Int32
-// you can't implicitly cons [10]Int from [3]Int
-// but you can do it explicitly (extra items will be filled with zeros)
-a = [10]Int32 [1, 2, 3]
+| Target | Implicit | Explicit | Unsafe only |
+| :-- | :-- | :-- | :-- |
+| `IntX` | `Integer`, `IntY` Y≤X | + `NatY`, `WordY` Y≤X; `FloatY`; `Rational` | wider sources; `*T` |
+| `NatX` | `Integer`, `NatY` Y≤X | + `IntY`, `WordY` Y≤X; `FloatY` (`IntY` applies `abs`) | wider sources; `*T` |
+| `WordX` | `Integer`, `WordY` Y≤X | + `IntY`, `NatY`, `CharY`, `FloatY` Y≤X; `Bool` | wider sources; `*T` |
+| `FloatX` | `Rational`, `Integer`, `FloatY` | + `IntY`, `NatY`, `Fixed` | `WordY` (bit reinterpret) |
+| `CharX` | length-1 `String`; generic char | + `Integer`, `WordY` Y≤X | any numeric |
+| `Bool` | `Bool` | — (use `x != 0`) | — |
+| `*T` | `nil`; `*[N]T`→`*[]T`; `String`→`*[]CharX` | `*Unit`→`*T`, `*T`→`*Unit` | `*U` (other pointee); integer sources |
+| `[N]T` | generic array, same length | generic array, shorter (zero-fills tail) | — |
+| record | generic record, same fields | generic record, missing fields zero-fill | — |
+| `Unit` | — | any (discards the value) | — |
+| `@branded T` | nothing implicit | parent `T` and back | — |
+
+Key behaviors:
+
+- Compile-time overflow is an error: `Nat8 256` does not compile.
+- `IntY → NatX` applies `abs()` — a numeric conversion, not bit
+  reinterpretation.
+- signed → `WordX` zero-extends, **not** sign-extends.
+- `FloatY ↔ WordX` reinterprets bits (like `memcpy`), never converts
+  numerically.
+- `FloatY → IntX/NatX` truncates the fraction.
+- Operands of binary operations are **not** promoted implicitly —
+  construct explicitly to a common type first
+  (see [binary](./binary.md)).
+
+## Examples
+
+```modest
+var i: Int32 = 5
+var f: Float64 = Float64 i        // numeric conversion
+var w: Word32 = Word32 i          // zero-extending reinterpret
+var b: Bool = i != 0              // no Bool construction
+
+var a: [10]Int32 = [10]Int32 [1, 2, 3]   // tail zero-filled
+var p: Point3D = Point3D {x = 1}         // y, z zero-filled
+
+pragma unsafe                      // module opts into unsafe
+let addr = unsafe Nat64 &i         // pointer -> address
+let q = unsafe *Float32 &i         // reinterpret pointee
 ```
 
-```swift
-// example: explicit cons record from incomplete record
+## See also
 
-type Point3D {x: Int32, y: Int32, z: Int32}
-
-var r: Point3D
-// you can't implicitly cons {x: Int32, y: Int32, z: Int32} 
-// from {x: GenericInteger} but you can do it explicitly
-// (all rest fields will be filled with zeros)
-r = Point3D {x=10}
-```
-
-
-
-
-| Cons Value Type | Allowable argument type | Action | Comment |
-| ---- | ---------------------------------- | --- | --- |
-| **Unit** | *Any* | Annihilation of argument value | Can be constructed from any type. Used for warning suppression |
-| **Bool** | **Word8**, **Int**Y, **Nat**Y | returns ***true*** if argument != 0, else - ***false*** | |
-| **Word8** | **Bool**, **Int**Y, **Nat**Y | Word8 representation of argument lower byte | Requires *unsafe* feature for warning suppression |
-| **Char**X | **Int**Y, **Nat**Y | Creating character value with the same code as argument | Compiler error if Y != X |
-| **Int**X | **Bool**, **Word8**, **Nat**Y, **Float**Z | - | Compiler warning if Y > X |
-| **Nat**X | **Bool**, **Word8**, **Int**Y, **Float**Z | - | Compiler warning if Y > X |
-| **Float**X | **Int**Y, **Nat**Y, **Float**Y | - | - |
-| ***Record*** | | | - |
-| ***Array*** | | | - |
-| ***Pointer*** | | | - |
-
-
-
-
-## Implicit value construction
-
-### Implicit value construction from *generic*-type value
-
-Value can be implicitly constructed from another value with *generic* type
-
-| **Generic type** | **Can be implicitly cast to** |
-| :--------------: | :---------------------: |
-| Generic Integer  | Word8, Char, Integer, Float |
-| Generic Float	| Float |
-| Generic Char	 | Char |
-| Generic Array	| Array, Pointer to Array |
-| Generic Record   | Record, Pointer to Record |
-
-
-```swift
-// example: cons Int from GenericInteger
-
-var i: Int32
-
-// implicit cons Int32 value '1' from literal value with GenericInteger type
-i = 1
-```
-
-
-```swift
-// example: cons Array from GenericArray
-
-var a: [3]Int32
-
-// implicit cons [3]Int32 array value from Generic[3]GenericInteger literal
-a = [1, 2, 3]
-```
-
-
-```swift
-// example: cons Record from GenericRecord
-
-var r: {x: Int32, y: Int32}
-
-// implicit cons value with type {x: Int32, y: Int32}
-// from literal record value {x=0, y=0}
-// with type GenericRecord {x: Int32, y: Int32}
-r = {x = 0, y = 0}
-```
-
-### Implicit cast 'pointer to sized array' -> 'pointer to unsized array'
-
-
-```swift
-// example: cons pointer to unsized array from Pointer to sized array
-
-var a: *[5]Int32
-var pa: *[]Int32
-
-// implicit cons value with type *[]Int32
-// from value with type *[3]Int32
-pa = &a
-```
-
+- [Generic types](../type/generic.md) — what converts implicitly
+- [Branded types](../type/branded.md)

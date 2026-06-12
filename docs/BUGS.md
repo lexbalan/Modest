@@ -43,3 +43,18 @@ Wrong on two counts: the RHS literal is emitted as `int8_t[3]` regardless
 of the declared `Int32` element type, and the length `4 - 1` is bytes,
 not elements (should be `(4 - 1) * sizeof(int32_t)`). Generated C also
 fails to compile (`cc` rejects it). Slice codegen in `src/backend/c11.py`.
+
+## 4. Open-array variable with initializer: parse error at local scope
+
+```modest
+var s: []Char8 = "abc"     // OK at module level -> char s[3]
+func main () -> Int {
+	var t: []Char8 = "abc"   // error: expected ']' token
+	return 0
+}
+```
+
+At module level the "holed" type is completed from the initializer; the
+same definition inside a function body fails to parse. Inconsistency —
+parser statement path (`stmt_var` / type-vs-value disambiguation).
+Or is locals-must-be-concrete intended? (question for Alex)
