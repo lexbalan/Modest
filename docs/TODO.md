@@ -27,22 +27,37 @@ Status: the `@zarray` annotation is recognized by the compiler
 zero-termination currently comes from the C backend emitting C string
 literals. To be implemented.
 
-## Warning: large array copied by value
+## Stack budget diagnostics
 
-Arrays are ordinary value types (passed / returned / assigned by
-value — no decay). On small embedded targets a silent copy of a large
-array is a stack hazard. Idea (2026-06-12): emit a warning when an
-array larger than a threshold is passed or returned by value:
+Idea (2026-06-12): per-target limits in `cfg/*.toml`, each producing a
+warning when exceeded (error under `-f paranoid`). Three separate
+limits — they answer different questions and have different fixes:
 
+```toml
+byvalue_copy_warn  = 64    # 1. implicit copy at a call boundary
+stack_object_warn  = 128   # 2. single local object size
+frame_warn         = 256   # 3. estimated locals total per function
 ```
-warning: array of 4096 bytes passed by value (threshold 256);
-         consider *[N]T
-```
 
-- threshold configurable per target in `cfg/*.toml`
-  (e.g. `byvalue_copy_warn = 256`; embedded configs set it low);
-- suppressible per call/definition, e.g. with `@unused`-style
-  annotation or an explicit construction.
+1. **By-value copy** (param / return / assignment of a large value) —
+   "you are copying needlessly"; fix: pass `*[N]T` / `*[]T`.
+
+   ```
+   warning: array of 4096 bytes passed by value (threshold 64);
+            consider *[N]T
+   ```
+
+2. **Stack object** — "you are spending the budget"; a large local may
+   be intentional but must be visible; fix: move to a global / pool.
+
+3. **Frame size** — sum of locals per function. Honest *lower-bound
+   estimate* only: actual layout, spills and alignment are decided by
+   the C compiler, and VLAs are unbounded at compile time (warn on VLA
+   presence separately?). Embedded analogue: GCC `-fstack-usage`.
+
+Future extension: frame estimates + call graph + recursion ban =
+statically provable max stack depth for the whole program — a rare and
+valuable guarantee for embedded targets.
 
 (Related but rejected for now: RVO-style lowering of array returns to
 write directly into `__out` — deliberately left to the C optimizer.)
