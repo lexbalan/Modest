@@ -70,6 +70,16 @@ func sum (v: *[]Int32, n: Nat32) -> Int32 {   // explicit by-reference
 	return s
 }
 
+func maxOf (v: [5]Int32) -> Int32 {           // parameter by value
+	var m: Int32 = v[0]
+	var k: Nat32 = 1
+	while k < lengthof(v) {
+		if v[k] > m { m = v[k] }
+		++k
+	}
+	return m
+}
+
 func makeTriple (x: Int32) -> [3]Int32 {      // returned by value
 	var r: [3]Int32 = [x, x + 1, x + 2]
 	return r
@@ -79,6 +89,7 @@ func main () -> Int {
 	var a: [5]Int32 = [1, 2, 3, 4, 5]
 	a[0] = 10
 	printf("sum = %d\n", sum(&a, lengthof(a)))
+	printf("max = %d\n", maxOf(a))    // a copied into the parameter
 
 	var t: [3]Int32 = makeTriple(10)  // t = [10, 11, 12]
 
@@ -102,6 +113,20 @@ static int32_t sum(int32_t *v, uint32_t n) {
 	return s;
 }
 
+static int32_t maxOf(int32_t *_v) {
+	int32_t v[5];
+	__builtin_memcpy(v, _v, sizeof(int32_t [5]));
+	int32_t m = v[0];
+	uint32_t k = 1;
+	while (k < LENGTHOF(v)) {
+		if (v[k] > m) {
+			m = v[k];
+		}
+		k = k + 1;
+	}
+	return m;
+}
+
 static void makeTriple(int32_t x, int32_t *__out) {
 	int32_t r[3];
 	__builtin_memcpy(&r, &(int32_t [3]){x, x + 1, x + 2}, sizeof(int32_t [3]));
@@ -112,6 +137,7 @@ int main(void) {
 	int32_t a[5] = {1, 2, 3, 4, 5};
 	a[0] = 10;
 	printf("sum = %d\n", sum(a, LENGTHOF(a)));
+	printf("max = %d\n", maxOf(a));
 	int32_t t[3];
 	makeTriple(10, t);
 	int32_t b[5] = {0};
@@ -120,7 +146,8 @@ int main(void) {
 }
 ```
 
-Note how the *value semantics* survives the translation: array return
+Note how the *value semantics* survives the translation: a by-value
+parameter becomes a pointer + a local copy (`maxOf`), array return
 becomes an out-parameter + `memcpy`, assignment becomes `memcpy` — the
 copying is real, only expressed in C terms.
 
