@@ -24,9 +24,9 @@
 - `&` applies to mutable values (variables, fields, elements) and
   functions. Immutable values — `let` bindings, parameters,
   constants — have no address (`expected mutable value or function`).
-- `*p` reads or (as an lvalue) writes the pointed-to value. Records and
-  arrays behind pointers are accessed without explicit `*` — see
-  [pointer](../type/pointer.md).
+- `*p` designates the pointed-to value (a place): readable, assignable
+  (`*p = 10`). Records and arrays behind pointers are accessed without
+  explicit `*` — see [pointer](../type/pointer.md).
 - `new` is parsed as a unary operator but is experimental — do not use.
 
 ## Examples
