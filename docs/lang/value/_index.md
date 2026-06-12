@@ -1,6 +1,8 @@
 # Index
 
-Selects an element of an array by position.
+Designates an element of an array by position. The expression denotes
+the element itself — a *place*; the context decides what happens to it:
+read, assignment target, or address-of (`&a[i]`).
 
 ## Form
 
@@ -12,7 +14,9 @@ Selects an element of an array by position.
 ## Semantics
 
 - Indices start at zero; the index is an integer expression.
-- Works as an rvalue and as an lvalue (`a[i] = v`).
+- Usable as an rvalue, as an lvalue (`a[i] = v`), and as the operand of
+  `&` — `&a[i]` is a pointer to the element (the standard way to point
+  into an array, see [pointer](../type/pointer.md)).
 - Through a pointer to array the indexing dereferences automatically:
   with `p: *[]Int32`, write `p[i]`.
 - Multi-dimensional arrays index step by step: `m[i][j]`.
