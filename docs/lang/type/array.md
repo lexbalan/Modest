@@ -58,25 +58,63 @@ let c = s[0]              // 'H'
 ## Examples
 
 ```modest
-var a: [5]Int32 = [1, 2, 3, 4, 5]
-a[0] = 10
-
-var i: Nat32 = 0
-while i < lengthof(a) {
-	printf("%d\n", a[i])
-	++i
-}
-
-var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
-printf("%d\n", m[1][2])             // 6
-
 func sum (v: *[]Int32, n: Nat32) -> Int32 {   // by reference
 	var s: Int32 = 0
 	var k: Nat32 = 0
 	while k < n { s = s + v[k]; ++k }
 	return s
 }
+
+func main () -> Int {
+	var a: [5]Int32 = [1, 2, 3, 4, 5]
+	a[0] = 10
+
+	var i: Nat32 = 0
+	while i < lengthof(a) {
+		printf("%d\n", a[i])
+		++i
+	}
+
+	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
+	printf("%d\n", m[1][2])           // 6
+
+	var b: [5]Int32 = []              // zero-filled
+	b = a                             // copy by value
+	return 0
+}
 ```
+
+<details>
+<summary>C output (c11 backend)</summary>
+
+```c
+static int32_t sum(int32_t *v, uint32_t n) {
+	int32_t s = 0;
+	uint32_t k = 0;
+	while (k < n) {
+		s = s + v[k];
+		k = k + 1;
+	}
+	return s;
+}
+
+int main(void) {
+	int32_t a[5] = {1, 2, 3, 4, 5};
+	a[0] = 10;
+	uint32_t i = 0;
+	while (i < LENGTHOF(a)) {
+		printf("%d\n", a[i]);
+		i = i + 1;
+	}
+	int32_t m[2][3] = {{1, 2, 3}, {4, 5, 6}};
+	printf("%d\n", m[1][2]);
+	int32_t b[5] = {0};
+	__builtin_memcpy(&b, &a, sizeof(int32_t [5]));
+	return 0;
+}
+```
+
+</details>
 
 ## See also
 

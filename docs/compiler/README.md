@@ -12,10 +12,11 @@ compiler
 ```
 
 Related:
+- [Language reference](../lang/README.md)
 
 - [HLIR internals](../agents/claude/hlir-internals.md) — all
   `Type*` / `Value*` / `Stmt*` classes with fields
 - [Task-oriented index](../agents/claude/context.md) — where to look
   for each task type
 - [Known bugs](../BUGS.md) · [Design TODO](../TODO.md)
-- [Language reference](../lang/README.md)
+
