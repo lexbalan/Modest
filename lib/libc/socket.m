@@ -50,11 +50,11 @@ public type SockAddrIn = @public {
 
 
 @extern("C", "SOL_SOCKET")
-public const c_SOL_SOCKET = 1   // for setsockopt
+public const solSocket = 1   // for setsockopt
 
 
 @extern("C", "SO_REUSEADDR")
-public const c_SO_REUSEADDR = 2
+public const soReuseaddr = 2
 
 
 // from "sys/socket.h"
@@ -69,15 +69,15 @@ public func setsockopt (
 
 
 @extern("C", "SOCK_STREAM")
-public const c_SOCK_STREAM = 1  // stream socket
+public const sockStream = 1  // stream socket
 @extern("C", "SOCK_DGRAM")
-public const c_SOCK_DGRAM = 2   // datagram socket
+public const sockDgram = 2   // datagram socket
 @extern("C", "SOCK_RAW")
-public const c_SOCK_RAW = 3     // raw-protocol interface
+public const sockRaw = 3     // raw-protocol interface
 @extern("C", "SOCK_RDM")
-public const c_SOCK_RDM = 4     // reliably-delivered message
+public const sockRdm = 4     // reliably-delivered message
 @extern("C", "SOCK_SEQPACKET")
-public const c_SOCK_SEQPACKET = 5  // sequenced packet stream
+public const sockSeqpacket = 5  // sequenced packet stream
 //#ifdef _KERNEL
 //const SOCK_TYPE_MASK = 0x000F	// mask that covers the above
 //#endif
@@ -86,51 +86,51 @@ public const c_SOCK_SEQPACKET = 5  // sequenced packet stream
 /*
  * Address families.
  */
-public const c_AF_UNSPEC = 0       // unspecified
-public const c_AF_UNIX = 1         // local to host
-public const c_AF_LOCAL = c_AF_UNIX  // draft POSIX compatibility
+public const afUnspec = 0       // unspecified
+public const afUnix = 1         // local to host
+public const afLocal = afUnix   // draft POSIX compatibility
 
 @extern("C", "AF_INET")
-public const c_AF_INET = 2         // internetwork: UDP, TCP, etc.
+public const afInet = 2         // internetwork: UDP, TCP, etc.
 
-public const c_AF_IMPLINK = 3      // arpanet imp addresses
-public const c_AF_PUP = 4          // pup protocols: e.g. BSP
-public const c_AF_CHAOS = 5        // mit CHAOS protocols
-public const c_AF_NS = 6           // XEROX NS protocols
-public const c_AF_ISO = 7          // ISO protocols
-public const c_AF_OSI = c_AF_ISO   // OSI protocols
-public const c_AF_ECMA = 8         // european computer manufacturers
-public const c_AF_DATAKIT = 9      // datakit protocols
-public const c_AF_CCITT = 10       // CCITT protocols, X.25 etc
-public const c_AF_SNA = 11         // IBM SNA
-public const c_AF_DECnet = 12      // DECnet
-public const c_AF_DLI = 13         // DEC Direct data link interface
-public const c_AF_LAT = 14         // LAT
-public const c_AF_HYLINK = 15      // NSC Hyperchannel
-public const c_AF_APPLETALK = 16   // Apple Talk
-public const c_AF_ROUTE = 17       // Internal Routing Protocol
-public const c_AF_LINK = 18        // Link layer interface
-public const pseudo_AF_XTP = 19    // eXpress Transfer Protocol (no AF)
-public const c_AF_COIP = 20        // connection-oriented IP, aka ST II
-public const c_AF_CNT = 21         // Computer Network Technology
-public const pseudo_AF_RTIP = 22   // Help Identify RTIP packets
-public const c_AF_IPX = 23         // Novell Internet Protocol
-public const c_AF_INET6 = 24       // IPv6
-public const pseudo_AF_PIP = 25    // Help Identify PIP packets
-public const c_AF_ISDN = 26        // Integrated Services Digital Network*/
-public const c_AF_E164 = c_AF_ISDN // CCITT E.164 recommendation
-public const c_AF_NATM = 27        // native ATM access
-public const c_AF_ENCAP = 28       //
-public const c_AF_SIP = 29         // Simple Internet Protocol
-public const c_AF_KEY = 30
+public const afImplink = 3      // arpanet imp addresses
+public const afPup = 4          // pup protocols: e.g. BSP
+public const afChaos = 5        // mit CHAOS protocols
+public const afNs = 6           // XEROX NS protocols
+public const afIso = 7          // ISO protocols
+public const afOsi = afIso      // OSI protocols
+public const afEcma = 8         // european computer manufacturers
+public const afDatakit = 9      // datakit protocols
+public const afCcitt = 10       // CCITT protocols, X.25 etc
+public const afSna = 11         // IBM SNA
+public const afDecnet = 12      // DECnet
+public const afDli = 13         // DEC Direct data link interface
+public const afLat = 14         // LAT
+public const afHylink = 15      // NSC Hyperchannel
+public const afAppletalk = 16   // Apple Talk
+public const afRoute = 17       // Internal Routing Protocol
+public const afLink = 18        // Link layer interface
+public const pseudoAfXtp = 19   // eXpress Transfer Protocol (no AF)
+public const afCoip = 20        // connection-oriented IP, aka ST II
+public const afCnt = 21         // Computer Network Technology
+public const pseudoAfRtip = 22  // Help Identify RTIP packets
+public const afIpx = 23         // Novell Internet Protocol
+public const afInet6 = 24       // IPv6
+public const pseudoAfPip = 25   // Help Identify PIP packets
+public const afIsdn = 26        // Integrated Services Digital Network*/
+public const afE164 = afIsdn    // CCITT E.164 recommendation
+public const afNatm = 27        // native ATM access
+public const afEncap = 28       //
+public const afSip = 29         // Simple Internet Protocol
+public const afKey = 30
 // Used by BPF to not rewrite headers
 // in interface output routine
-public const pseudo_AF_HDRCMPLT = 31
-public const c_AF_BLUETOOTH = 32    // Bluetooth
-public const c_AF_MPLS = 33         // MPLS
-public const pseudo_AF_PFLOW = 34   // pflow
-public const pseudo_AF_PIPEX = 35   // PIPEX
-public const c_AF_MAX = 36
+public const pseudoAfHdrcmplt = 31
+public const afBluetooth = 32     // Bluetooth
+public const afMpls = 33          // MPLS
+public const pseudoAfPflow = 34   // pflow
+public const pseudoAfPipex = 35   // PIPEX
+public const afMax = 36
 
 
 public func inet_addr (cp: *[]ConstChar) -> InAddrT

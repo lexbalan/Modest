@@ -17,7 +17,7 @@ func parseFile (filename: *Str) -> Unit {
 	printf("file '%s' contains: ", filename)
 	while true {
 		let ch: Int = fgetc(fp)
-		if ch == c_EOF {
+		if ch == eof {
 			break
 		}
 		putchar(ch)

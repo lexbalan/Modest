@@ -13,11 +13,11 @@ include "libc/ctypes64"
 //var environ: *[]*Char
 
 //@extern("C", "SEEK_SET")
-//public const c_SEEK_SET = 0
+//public const seekSet = 0
 //@extern("C", "SEEK_CUR")
-//public const c_SEEK_CUR = 1
+//public const seekCur = 1
 //@extern("C", "SEEK_END")
-//public const c_SEEK_END = 2
+//public const seekEnd = 2
 
 @extern("C", "STDIN_FILENO")
 public const c_STDIN_FILENO = 0
@@ -348,9 +348,9 @@ public func encrypt (block: *[64]Char, edflag: Int) -> Unit
 public func execl (path: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
 public func execle (path: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
 public func execlp (file: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
-public func execv (path: *[]ConstChar, argv: *[]ConstChar) -> Int
-public func execve (path: *[]ConstChar, argv: *[]ConstChar, envp: *[]ConstChar) -> Int
-public func execvp (file: *[]ConstChar, argv: *[]ConstChar) -> Int
+public func execv (path: *[]ConstChar, argv: *[]*[]ConstChar) -> Int
+public func execve (path: *[]ConstChar, argv: *[]*[]ConstChar, envp: *[]ConstChar) -> Int
+public func execvp (file: *[]ConstChar, argv: *[]*[]ConstChar) -> Int
 
 // _exit - terminate a process
 public func _exit (status: Int) -> Unit

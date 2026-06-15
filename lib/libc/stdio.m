@@ -28,14 +28,14 @@ public type ConstCharStr = CharStr
 
 
 @extern("C", "EOF")
-public const c_EOF = -1
+public const eof = -1
 
 @extern("C", "SEEK_SET")
-public const c_SEEK_SET = 0
+public const seekSet = 0
 @extern("C", "SEEK_CUR")
-public const c_SEEK_CUR = 1
+public const seekCur = 1
 @extern("C", "SEEK_END")
-public const c_SEEK_END = 2
+public const seekEnd = 2
 
 
 public func fclose (f: *File) -> @unused Int
@@ -84,7 +84,7 @@ public func fputs (str: *ConstCharStr, f: *File) -> @unused Int
 
 public func getc (f: *File) -> Int
 public func getchar () -> Int
-public func gets (str: *CharStr) -> *CharStr
+//public func gets (str: *CharStr) -> *CharStr  // removed from C11 standard, unsafe, use fgets(str, size, stdin) instead
 public func putc (char: Int, f: *File) -> @unused Int
 public func putchar (char: Int) -> @unused Int
 public func puts (str: *ConstCharStr) -> @unused Int

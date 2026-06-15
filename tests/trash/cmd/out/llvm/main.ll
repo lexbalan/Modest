@@ -137,7 +137,7 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -187,7 +187,6 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
@@ -211,9 +210,9 @@ declare void @encrypt([64 x %Char]* %block, %Int %edflag)
 declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
-declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
-declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
-declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
+declare %Int @execv([0 x %ConstChar]* %path, [0 x [0 x %ConstChar]*]* %argv)
+declare %Int @execve([0 x %ConstChar]* %path, [0 x [0 x %ConstChar]*]* %argv, [0 x %ConstChar]* %envp)
+declare %Int @execvp([0 x %ConstChar]* %file, [0 x [0 x %ConstChar]*]* %argv)
 declare void @_exit(%Int %status)
 declare %Int @fchown(%Int %fildes, %UIDT %owner, %GIDT %group)
 declare %Int @fchdir(%Int %fildes)
@@ -279,22 +278,22 @@ declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; from included ctype
-declare %Bool @isascii(%Int %x)
-declare %Bool @iscntrl(%Int %x)
-declare %Bool @isblank(%Int %x)
-declare %Bool @isdigit(%Int %x)
-declare %Bool @isxdigit(%Int %x)
-declare %Bool @isalpha(%Int %x)
-declare %Bool @isalnum(%Int %x)
-declare %Bool @isgraph(%Int %x)
-declare %Bool @isprint(%Int %x)
-declare %Bool @ispunct(%Int %x)
-declare %Bool @isspace(%Int %x)
-declare %Bool @isupper(%Int %x)
-declare %Bool @islower(%Int %x)
-declare %Int @toascii(%Int %x)
-declare %Int @toupper(%Int %x)
-declare %Int @tolower(%Int %x)
+declare %Bool @ctype_isascii(%Int %x)
+declare %Bool @ctype_iscntrl(%Int %x)
+declare %Bool @ctype_isblank(%Int %x)
+declare %Bool @ctype_isdigit(%Int %x)
+declare %Bool @ctype_isxdigit(%Int %x)
+declare %Bool @ctype_isalpha(%Int %x)
+declare %Bool @ctype_isalnum(%Int %x)
+declare %Bool @ctype_isgraph(%Int %x)
+declare %Bool @ctype_isprint(%Int %x)
+declare %Bool @ctype_ispunct(%Int %x)
+declare %Bool @ctype_isspace(%Int %x)
+declare %Bool @ctype_isupper(%Int %x)
+declare %Bool @ctype_islower(%Int %x)
+declare %Int @ctype_toascii(%Int %x)
+declare %Int @ctype_toupper(%Int %x)
+declare %Int @ctype_tolower(%Int %x)
 ; -- end print includes --
 ; -- print imports 'main' --
 

@@ -80,7 +80,7 @@ public type SSizeT = LongInt
 public type IntPtrT = Nat64
 
 @extern("C", "ptrdiff_t")
-public type PtrDiffT = Ptr
+public type PtrDiffT = Int64
 
 @extern("C", "off_t")
 public type OffT = Int64

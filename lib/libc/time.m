@@ -9,7 +9,7 @@ include "libc/ctypes64"
 
 /* time in seconds since 1970 */
 @extern("C", "time_t")
-public type TimeT = Int32
+public type TimeT = Nat64
 
 @extern("C", "clock_t")
 public type ClockT = UnsignedLong

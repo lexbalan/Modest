@@ -56,11 +56,11 @@ public type UnsignedLongLong = Nat64
 public type LongLongInt = Int64
 
 @extern("C", "unsigned long long int")
-public type UnsignedLongLongInt Nat64
+public type UnsignedLongLongInt = Nat64
 
 
 @extern("C", "float")
-public type Float = Float64
+public type Float = Float32
 
 @extern("C", "double")
 public type Double = Float64
@@ -80,7 +80,7 @@ public type SSizeT = LongInt
 public type IntPtrT = Nat32
 
 @extern("C", "ptrdiff_t")
-public type PtrDiffT = Ptr
+public type PtrDiffT = Int32
 
 @extern("C", "off_t")
 public type OffT = Int32

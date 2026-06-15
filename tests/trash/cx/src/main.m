@@ -112,7 +112,7 @@ func isdigit (x: Char8) -> Bool {
 
 func nexch () -> Unit {
 	let c = fgetc(fsrc)
-	if c == c_EOF {
+	if c == eof {
 		eof = true
 	}
 	ch = unsafe Char8 c
