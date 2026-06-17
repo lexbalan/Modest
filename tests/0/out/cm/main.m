@@ -5,7 +5,6 @@ include "stdio"
 include "libc/ctypes64"
 include "libc/stdio"
 
-
 @nonstatic
 func main () -> Int {
 	return 0

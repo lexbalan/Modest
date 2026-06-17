@@ -116,4 +116,3 @@ public func fminl (a: LongDouble, b: LongDouble) -> LongDouble
 
 public func fmal (a: LongDouble, b: LongDouble, c: LongDouble) -> LongDouble
 
-

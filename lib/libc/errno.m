@@ -8,170 +8,95 @@
 import "errno_abi"
 
 
-public func get () -> Int32 {
-    return *errno_abi.__errno_location()
-}
-
-public func set (value: Int32) -> Unit {
-    *errno_abi.__errno_location() = value
-}
-
+public func get () -> Int32 { return *errno_abi.__errno_location() }
+public func set (value: Int32) -> Unit { *errno_abi.__errno_location() = value }
 
 /*
  * Error codes
  */
-@extern("C", "EPERM")
-public const ePerm = 1     // Operation not permitted
-@extern("C", "ENOENT")
-public const eNoent = 2    // No such file or directory
-@extern("C", "ESRCH")
-public const eSrch = 3     // No such process
-@extern("C", "EINTR")
-public const eIntr = 4     // Interrupted system call
-@extern("C", "EIO")
-public const eIo = 5       // Input/output error
-@extern("C", "ENXIO")
-public const eNxio = 6     // Device not configured
-@extern("C", "E2BIG")
-public const e2Big = 7     // Argument list too long
-@extern("C", "ENOEXEC")
-public const eNoexec = 8   // Exec format error
-@extern("C", "EBADF")
-public const eBadf = 9     // Bad file descriptor
-@extern("C", "ECHILD")
-public const eChild = 10   // No child processes
-@extern("C", "EDEADLK")
-public const eDeadlk = 11  // Resource deadlock avoided (11 was EAGAIN)
-@extern("C", "ENOMEM")
-public const eNomem = 12   // Cannot allocate memory
-@extern("C", "EACCES")
-public const eAccess = 13   // Permission denied
-@extern("C", "EFAULT")
-public const eFault = 14   // Bad address
-@extern("C", "ENOTBLK")
-public const eNotblk = 15  // Block device required
-@extern("C", "EBUSY")
-public const eBusy = 16    // Device / Resource busy
-@extern("C", "EEXIST")
-public const eExist = 17   // File exists
-@extern("C", "EXDEV")
-public const eXdev = 18    // Cross-device link
-@extern("C", "ENODEV")
-public const eNodev = 19   // Operation not supported by device
-@extern("C", "ENOTDIR")
-public const eNotdir = 20  // Not a directory
-@extern("C", "EISDIR")
-public const eIsdir = 21   // Is a directory
-@extern("C", "EINVAL")
-public const eInval = 22   // Invalid argument
-@extern("C", "ENFILE")
-public const eNfile = 23   // Too many open files in system
-@extern("C", "EMFILE")
-public const eMfile = 24   // Too many open files
-@extern("C", "ENOTTY")
-public const eNotty = 25   // Inappropriate ioctl for device
-@extern("C", "ETXTBSY")
-public const eTxtbsy = 26  // Text file busy
-@extern("C", "EFBIG")
-public const eFbig = 27    // File too large
-@extern("C", "ENOSPC")
-public const eNospc = 28   // No space left on device
-@extern("C", "ESPIPE")
-public const eSpipe = 29   // Illegal seek
-@extern("C", "EROFS")
-public const eRofs = 30    // Read-only file system
-@extern("C", "EMLINK")
-public const eMlink = 31   // Too many links
-@extern("C", "EPIPE")
-public const ePipe = 32    // Broken pipe
-@extern("C", "EDOM")
-public const eDom = 33     // Numerical argument out of domain
-@extern("C", "ERANGE")
-public const eRange = 34   // Result too large
+@extern("C", "EPERM") public const ePerm = 1     // Operation not permitted
+@extern("C", "ENOENT") public const eNoent = 2    // No such file or directory
+@extern("C", "ESRCH") public const eSrch = 3     // No such process
+@extern("C", "EINTR") public const eIntr = 4     // Interrupted system call
+@extern("C", "EIO") public const eIo = 5       // Input/output error
+@extern("C", "ENXIO") public const eNxio = 6     // Device not configured
+@extern("C", "E2BIG") public const e2Big = 7     // Argument list too long
+@extern("C", "ENOEXEC") public const eNoexec = 8   // Exec format error
+@extern("C", "EBADF") public const eBadf = 9     // Bad file descriptor
+@extern("C", "ECHILD") public const eChild = 10   // No child processes
+@extern("C", "EDEADLK") public const eDeadlk = 11  // Resource deadlock avoided (11 was EAGAIN)
+@extern("C", "ENOMEM") public const eNomem = 12   // Cannot allocate memory
+@extern("C", "EACCES") public const eAccess = 13   // Permission denied
+@extern("C", "EFAULT") public const eFault = 14   // Bad address
+@extern("C", "ENOTBLK") public const eNotblk = 15  // Block device required
+@extern("C", "EBUSY") public const eBusy = 16    // Device / Resource busy
+@extern("C", "EEXIST") public const eExist = 17   // File exists
+@extern("C", "EXDEV") public const eXdev = 18    // Cross-device link
+@extern("C", "ENODEV") public const eNodev = 19   // Operation not supported by device
+@extern("C", "ENOTDIR") public const eNotdir = 20  // Not a directory
+@extern("C", "EISDIR") public const eIsdir = 21   // Is a directory
+@extern("C", "EINVAL") public const eInval = 22   // Invalid argument
+@extern("C", "ENFILE") public const eNfile = 23   // Too many open files in system
+@extern("C", "EMFILE") public const eMfile = 24   // Too many open files
+@extern("C", "ENOTTY") public const eNotty = 25   // Inappropriate ioctl for device
+@extern("C", "ETXTBSY") public const eTxtbsy = 26  // Text file busy
+@extern("C", "EFBIG") public const eFbig = 27    // File too large
+@extern("C", "ENOSPC") public const eNospc = 28   // No space left on device
+@extern("C", "ESPIPE") public const eSpipe = 29   // Illegal seek
+@extern("C", "EROFS") public const eRofs = 30    // Read-only file system
+@extern("C", "EMLINK") public const eMlink = 31   // Too many links
+@extern("C", "EPIPE") public const ePipe = 32    // Broken pipe
+@extern("C", "EDOM") public const eDom = 33     // Numerical argument out of domain
+@extern("C", "ERANGE") public const eRange = 34   // Result too large
 
 /* non-blocking and interrupt i/o */
-@extern("C", "EAGAIN")
-public const eAgain = 35           // Resource temporarily unavailable
-@extern("C", "EWOULDBLOCK")
-public const eWouldblock = eAgain  // Operation would block
-@extern("C", "EINPROGRESS")
-public const eInprogress = 36      // Operation now in progress
-@extern("C", "EALREADY")
-public const eAlready = 37         // Operation already in progress
+@extern("C", "EAGAIN") public const eAgain = 35           // Resource temporarily unavailable
+@extern("C", "EWOULDBLOCK") public const eWouldblock = eAgain  // Operation would block
+@extern("C", "EINPROGRESS") public const eInprogress = 36      // Operation now in progress
+@extern("C", "EALREADY") public const eAlready = 37         // Operation already in progress
 
 /* ipc/network software -- argument errors */
-@extern("C", "ENOTSOCK")
-public const eNotsock = 38         // Socket operation on non-socket
-@extern("C", "EDESTADDRREQ")
-public const eDestaddrreq = 39     // Destination address required
-@extern("C", "EMSGSIZE")
-public const eMsgsize = 40         // Message too long
-@extern("C", "EPROTOTYPE")
-public const ePrototype = 41       // Protocol wrong type for socket
-@extern("C", "ENOPROTOOPT")
-public const eNoprotoopt = 42      // Protocol not available
-@extern("C", "EPROTONOSUPPORT")
-public const eProtonosupport = 43  // Protocol not supported
-@extern("C", "ESOCKTNOSUPPORT")
-public const eSocktnosupport = 44  // Socket type not supported
-@extern("C", "ENOTSUP")
-public const eNotsup = 45          // Operation not supported
-@extern("C", "EPFNOSUPPORT")
-public const ePfnosupport = 46     // Protocol family not supported
-@extern("C", "EAFNOSUPPORT")
-public const eAfnosupport = 47     // Address family not supported by protocol family
-@extern("C", "EADDRINUSE")
-public const eAddrinuse = 48       // Address already in use
-@extern("C", "EADDRNOTAVAIL")
-public const eAddrnotavail = 49    // Can't assign requested address
+@extern("C", "ENOTSOCK") public const eNotsock = 38         // Socket operation on non-socket
+@extern("C", "EDESTADDRREQ") public const eDestaddrreq = 39     // Destination address required
+@extern("C", "EMSGSIZE") public const eMsgsize = 40         // Message too long
+@extern("C", "EPROTOTYPE") public const ePrototype = 41       // Protocol wrong type for socket
+@extern("C", "ENOPROTOOPT") public const eNoprotoopt = 42      // Protocol not available
+@extern("C", "EPROTONOSUPPORT") public const eProtonosupport = 43  // Protocol not supported
+@extern("C", "ESOCKTNOSUPPORT") public const eSocktnosupport = 44  // Socket type not supported
+@extern("C", "ENOTSUP") public const eNotsup = 45          // Operation not supported
+@extern("C", "EPFNOSUPPORT") public const ePfnosupport = 46     // Protocol family not supported
+@extern("C", "EAFNOSUPPORT") public const eAfnosupport = 47     // Address family not supported by protocol family
+@extern("C", "EADDRINUSE") public const eAddrinuse = 48       // Address already in use
+@extern("C", "EADDRNOTAVAIL") public const eAddrnotavail = 49    // Can't assign requested address
 
 /* ipc/network software -- operational errors */
-@extern("C", "ENETDOWN")
-public const eNetdown = 50         // Network is down
-@extern("C", "ENETUNREACH")
-public const eNetunreach = 51      // Network is unreachable
-@extern("C", "ENETRESET")
-public const eNetreset = 52        // Network dropped connection on reset
-@extern("C", "ECONNABORTED")
-public const eConnaborted = 53     // Software caused connection abort
-@extern("C", "ECONNRESET")
-public const eConnreset = 54       // Connection reset by peer
-@extern("C", "ENOBUFS")
-public const eNobufs = 55          // No buffer space available
-@extern("C", "EISCONN")
-public const eIsconn = 56          // Socket is already connected
-@extern("C", "ENOTCONN")
-public const eNotconn = 57         // Socket is not connected
-@extern("C", "ESHUTDOWN")
-public const eShutdown = 58        // Can't send after socket shutdown
-@extern("C", "ETOOMANYREFS")
-public const eToomanyrefs = 59     // Too many references: can't splice
-@extern("C", "ETIMEDOUT")
-public const eTimedout = 60        // Operation timed out
-@extern("C", "ECONNREFUSED")
-public const eConnrefused = 61     // Connection refused
-@extern("C", "ELOOP")
-public const eLoop = 62            // Too many levels of symbolic links
-@extern("C", "ENAMETOOLONG")
-public const eNametoolong = 63     // File name too long
+@extern("C", "ENETDOWN") public const eNetdown = 50         // Network is down
+@extern("C", "ENETUNREACH") public const eNetunreach = 51      // Network is unreachable
+@extern("C", "ENETRESET") public const eNetreset = 52        // Network dropped connection on reset
+@extern("C", "ECONNABORTED") public const eConnaborted = 53     // Software caused connection abort
+@extern("C", "ECONNRESET") public const eConnreset = 54       // Connection reset by peer
+@extern("C", "ENOBUFS") public const eNobufs = 55          // No buffer space available
+@extern("C", "EISCONN") public const eIsconn = 56          // Socket is already connected
+@extern("C", "ENOTCONN") public const eNotconn = 57         // Socket is not connected
+@extern("C", "ESHUTDOWN") public const eShutdown = 58        // Can't send after socket shutdown
+@extern("C", "ETOOMANYREFS") public const eToomanyrefs = 59     // Too many references: can't splice
+@extern("C", "ETIMEDOUT") public const eTimedout = 60        // Operation timed out
+@extern("C", "ECONNREFUSED") public const eConnrefused = 61     // Connection refused
+@extern("C", "ELOOP") public const eLoop = 62            // Too many levels of symbolic links
+@extern("C", "ENAMETOOLONG") public const eNametoolong = 63     // File name too long
 
 /* should be rearranged */
-@extern("C", "EHOSTDOWN")
-public const eHostdown = 64        // Host is down
-@extern("C", "EHOSTUNREACH")
-public const eHostunreach = 65     // No route to host
-@extern("C", "ENOTEMPTY")
-public const eNotempty = 66        // Directory not empty
+@extern("C", "EHOSTDOWN") public const eHostdown = 64        // Host is down
+@extern("C", "EHOSTUNREACH") public const eHostunreach = 65     // No route to host
+@extern("C", "ENOTEMPTY") public const eNotempty = 66        // Directory not empty
 
 /* quotas & mush */
 //public const eProclim = 67  // Too many processes
 //public const eUsers = 68    // Too many users
-@extern("C", "EDQUOT")
-public const eDquot = 69           // Disc quota exceeded
+@extern("C", "EDQUOT") public const eDquot = 69           // Disc quota exceeded
 
 /* Network File System */
-@extern("C", "ESTALE")
-public const eStale = 70           // Stale NFS file handle
+@extern("C", "ESTALE") public const eStale = 70           // Stale NFS file handle
 //public const eRemote = 71  // Too many levels of remote in path
 //public const eBadrpc = 72  // RPC struct is bad
 //public const eRpcmismatch = 73   // RPC version wrong
@@ -179,10 +104,8 @@ public const eStale = 70           // Stale NFS file handle
 //public const eProgmismatch = 75  // Program version wrong
 //public const eProcunavail = 76   // Bad procedure for program
 
-@extern("C", "ENOLCK")
-public const eNolck = 77           // No locks available
-@extern("C", "ENOSYS")
-public const eNosys = 78           // Function not implemented
+@extern("C", "ENOLCK") public const eNolck = 77           // No locks available
+@extern("C", "ENOSYS") public const eNosys = 78           // Function not implemented
 
 //public const eFtype = 79     // Inappropriate file type or format
 //public const eAuth = 80      // Authentication error
@@ -192,8 +115,7 @@ public const eNosys = 78           // Function not implemented
 //public const ePwroff = 82  // Device power is off
 //public const eDeverr = 83  // Device error, e.g. paper out
 
-@extern("C", "EOVERFLOW")
-public const eOverflow = 84        // Value too large to be stored in data type
+@extern("C", "EOVERFLOW") public const eOverflow = 84        // Value too large to be stored in data type
 
 /* Program loading errors */
 //public const eBadexec = 85    // Bad executable
@@ -201,42 +123,26 @@ public const eOverflow = 84        // Value too large to be stored in data type
 //public const eShlibvers = 87  // Shared library version mismatch
 //public const eBadmacho = 88   // Malformed Macho file
 
-@extern("C", "ECANCELED")
-public const eCanceled = 89        // Operation canceled
+@extern("C", "ECANCELED") public const eCanceled = 89        // Operation canceled
 
-@extern("C", "EIDRM")
-public const eIdrm = 90            // Identifier removed
-@extern("C", "ENOMSG")
-public const eNomsg = 91           // No message of desired type
-@extern("C", "EILSEQ")
-public const eIlseq = 92           // Illegal byte sequence
+@extern("C", "EIDRM") public const eIdrm = 90            // Identifier removed
+@extern("C", "ENOMSG") public const eNomsg = 91           // No message of desired type
+@extern("C", "EILSEQ") public const eIlseq = 92           // Illegal byte sequence
 
 //public const eNoattr = 93  // Attribute not found
 
-@extern("C", "EBADMSG")
-public const eBadmsg = 94          // Bad message
-@extern("C", "EMULTIHOP")
-public const eMultihop = 95        // Reserved
-@extern("C", "ENODATA")
-public const eNodata = 96          // No message available on STREAM
-@extern("C", "ENOLINK")
-public const eNolink = 97          // Reserved
-@extern("C", "ENOSR")
-public const eNosr = 98            // No STREAM resources
-@extern("C", "ENOSTR")
-public const eNostr = 99           // Not a STREAM
-@extern("C", "EPROTO")
-public const eProto = 100          // Protocol error
-@extern("C", "ETIME")
-public const eTime = 101           // STREAM ioctl timeout
-@extern("C", "EOPNOTSUPP")
-public const eOpnotsupp = 102      // Operation not supported on socket
-@extern("C", "ENOPOLICY")
-public const eNopolicy = 103       // No such policy registered
+@extern("C", "EBADMSG") public const eBadmsg = 94          // Bad message
+@extern("C", "EMULTIHOP") public const eMultihop = 95        // Reserved
+@extern("C", "ENODATA") public const eNodata = 96          // No message available on STREAM
+@extern("C", "ENOLINK") public const eNolink = 97          // Reserved
+@extern("C", "ENOSR") public const eNosr = 98            // No STREAM resources
+@extern("C", "ENOSTR") public const eNostr = 99           // Not a STREAM
+@extern("C", "EPROTO") public const eProto = 100          // Protocol error
+@extern("C", "ETIME") public const eTime = 101           // STREAM ioctl timeout
+@extern("C", "EOPNOTSUPP") public const eOpnotsupp = 102      // Operation not supported on socket
+@extern("C", "ENOPOLICY") public const eNopolicy = 103       // No such policy registered
 
 /* pseudo-errors returned inside kernel to modify return to process */
-@extern("C", "ERESTART")
-public const eRestart = -1         // restart syscall
-@extern("C", "EJUSTRETURN")
-public const eJustreturn = -2      // don't modify regs, just return
+@extern("C", "ERESTART") public const eRestart = -1         // restart syscall
+@extern("C", "EJUSTRETURN") public const eJustreturn = -2      // don't modify regs, just return
 

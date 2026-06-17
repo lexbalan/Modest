@@ -1801,6 +1801,12 @@ class Value(Entity):
 	def isValueImmediate(self):
 		return self.stage == HLIR_VALUE_STAGE_COMPILETIME
 
+	def isValueImmutable(self):
+		# ONLY lvalue CAN be an immutable value,
+		# BUT if immutable flag is set, it is immutable value anyway
+		#return (not self.isLvalue()) or self.is_immutable
+		return (not self.isLvalue()) or self.is_immutable or self.hasAttribute('immutable')
+
 	def isValueLinktime(self):
 		return self.stage == HLIR_VALUE_STAGE_LINKTIME
 
@@ -1821,11 +1827,6 @@ class Value(Entity):
 		return False
 
 
-
-	def isValueImmutable(self):
-		# ONLY lvalue CAN be an immutable value,
-		# BUT if immutable flag is set, it is immutable value anyway
-		return (not self.isLvalue()) or self.is_immutable
 
 	def isValueBad(self):
 		return isinstance(self, ValueBad)

@@ -895,6 +895,15 @@ def do_value_pos(x):
 	return nv
 
 
+def is_good_value_for_ref(v):
+	if v.isValueAccessModule():
+		return is_good_value_for_ref(v.value)
+
+	if v.isValueVar() or v.isValueFunc() or v.isValueAccessRecord() or v.isValueIndex() or v.isValueSlice() or v.isValueDeref():
+		return True
+
+	return False
+
 def do_value_ref(x):
 	v = do_value(x['value'])
 
@@ -909,7 +918,7 @@ def do_value_ref(x):
 	op = x['kind']
 	vtype = v.type
 
-	if v.isValueImmutable():
+	if not is_good_value_for_ref(v):
 		if not vtype.is_func() or vtype.is_incompleted():
 			error("expected mutable value or function", v.ti)
 			return ValueBad(ti)
@@ -3047,6 +3056,10 @@ def def_add_annotations(x, ast_atts):
 			#print("WALDAMLWMALDWMKLMKLDWMALKMDLMALWDMLAMWLDKMALKWMDLKAMWLKDMAL")
 			#add_att(x, "inline")
 			pass
+		
+		elif kind == 'immutable':
+			add_att(x, "immutable")
+			x.value.addAttribute("immutable")
 
 		else:
 			warning("unsupported annotation", a['ti'])
