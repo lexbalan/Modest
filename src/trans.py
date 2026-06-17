@@ -3053,10 +3053,9 @@ def def_add_annotations(x, ast_atts):
 			x.value.addAttribute("cbyvalue")
 
 		elif kind == 'inline':
-			#print("WALDAMLWMALDWMKLMKLDWMALKMDLMALWDMLAMWLDKMALKWMDLKAMWLKDMAL")
 			#add_att(x, "inline")
 			pass
-		
+
 		elif kind == 'immutable':
 			add_att(x, "immutable")
 			x.value.addAttribute("immutable")
