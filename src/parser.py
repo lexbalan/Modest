@@ -513,6 +513,20 @@ class Parser:
 			}
 
 		t['anno'] = annotations
+
+		# or-type has the lowest priority: `*Int or Error` -> `(*Int) or Error`
+		or_ti = self.textInfo()
+		if self.match("or"):
+			r = self.expr_type()
+			t = {
+				'isa': 'ast_type',
+				'kind': 'or',
+				'left': t,
+				'right': r,
+				'anno': [],
+				'ti': TextInfo(start=t['ti'], mid=or_ti, end=r['ti'])
+			}
+
 		return t
 
 	#

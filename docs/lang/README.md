@@ -6,7 +6,7 @@ construct: Form, Semantics, Examples.
 ```
 language
 ├── lexical
-│   ├── comments        // and /* */ .................. comments.md
+│   ├── comments        // and /* */ ................. comments.md
 │   ├── identifiers     Type / value naming .......... identifier.md
 │   └── fields          name: Type ................... fields.md
 │
