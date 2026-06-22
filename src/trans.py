@@ -1376,7 +1376,7 @@ def do_value_slice(x):
 	# а для слайса [a:b] это (b - a)
 	slice_volume = do_value_bin_op(HLIR_VALUE_OP_SUB, index_to, index_from, x['ti'])
 
-	if not (slice_volume.is_value_undefined() or slice_volume.is_value_undefined()):
+	if not slice_volume.is_value_undefined():
 		if slice_volume.isValueImmediate():
 			if slice_volume.asset < 0:
 				error("wrong slice direction", x['ti'])
@@ -2082,9 +2082,7 @@ def do_stmt(x):
 	elif k == 'dec': s = do_stmt_incdec(x, HLIR_VALUE_OP_SUB)
 	elif k == 'type': s = do_stmt_type(x)
 	elif k == 'func': s = do_stmt_func(x)
-	elif k == 'comment-line':
-		print("------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-		s = do_stmt_comment_line(x)
+	elif k == 'comment-line': s = do_stmt_comment_line(x)
 	elif k == 'comment-block': s = do_stmt_comment_block(x)
 	elif k == 'asm': s = do_stmt_asm(x)
 	else: s = StmtBad(x['ti'])
@@ -2852,7 +2850,7 @@ def deccl_func(x, is_include=False):
 
 	is_public = get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC
 	csymtab.value_add(x['id']['str'], v, is_public=is_public)
-	v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
+	v.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 	return definition
 

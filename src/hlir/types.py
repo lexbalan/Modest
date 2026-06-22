@@ -234,18 +234,12 @@ class Module:
 
 	def type_add(self, id_str, t, is_public=False):
 		#print('module_type_add (%s, isPublic=%d)' % (id_str, is_public))
-		if is_public:
-			self.symtab.type_add(id_str, t)
-		else:
-			self.symtab_private.type_add(id_str, t)
+		self.symtab.type_add(id_str, t)
 
 
 	def value_add(self, id_str, v, is_public=False):
 		#print('module_value_add (%s, isPublic=%d)' % (id_str, is_public))
-		if is_public:
-			self.symtab.value_add(id_str, v)
-		else:
-			self.symtab_private.value_add(id_str, v)
+		self.symtab.value_add(id_str, v)
 
 
 	def value_get(self, id_str):
