@@ -1973,9 +1973,15 @@ def do_stmt_incdec(x, op):
 		error("expected value with integer type", v.ti)
 		return StmtBad(x['ti'])
 
-	one = value_integer_create(1, ti=x['ti'])
-	nv = do_value_bin_op(op, v, one, x['ti'])
-	return StmtAssign(v, nv, ti=x['ti'])
+	#one = value_integer_create(1, ti=x['ti'])
+	#nv = do_value_bin_op(op, v, one, x['ti'])
+	#stmt = StmtAssign(v, nv, ti=x['ti'])
+
+	if op == HLIR_VALUE_OP_ADD:
+		return StmtIncrement(v, x['ti'])
+	if op == HLIR_VALUE_OP_SUB:
+		return StmtDecrement(v, x['ti'])
+
 
 
 

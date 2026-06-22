@@ -76,7 +76,7 @@ int32_t main(void) {
 			continue;
 		}
 		handleRequest(clientSocket);
-		pageCounter = pageCounter + 1;
+		++pageCounter;
 	}
 	close(serverSocket);
 	return 0;

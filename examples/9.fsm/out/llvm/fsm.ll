@@ -324,18 +324,17 @@ define void @fsm_tick(%fsm_FSM* %self) {
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
 	%4 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 4
-	%5 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 4
-	%6 = load %Nat32, %Nat32* %5
-	%7 = sub %Nat32 %6, 1
-	store %Nat32 %7, %Nat32* %4
+	%5 = load %Nat32, %Nat32* %4
+	%6 = sub %Nat32 %5, 1
+	store %Nat32 %6, %Nat32* %4
 ; if_1
-	%8 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 4
-	%9 = load %Nat32, %Nat32* %8
-	%10 = icmp eq %Nat32 %9, 0
-	br %Bool %10 , label %then_1, label %endif_1
+	%7 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 4
+	%8 = load %Nat32, %Nat32* %7
+	%9 = icmp eq %Nat32 %8, 0
+	br %Bool %9 , label %then_1, label %endif_1
 then_1:
-	%11 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 5
-	store %Bool 1, %Bool* %11
+	%10 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 5
+	store %Bool 1, %Bool* %10
 	br label %endif_1
 endif_1:
 	br label %endif_0

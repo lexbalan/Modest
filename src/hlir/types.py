@@ -389,6 +389,12 @@ class Stmt(Entity):
 	def is_stmt_import(self):
 		return isinstance(self, StmtImport)
 
+	def is_stmt_increment(self):
+		return isinstance(self, StmtIncrement)
+
+	def is_stmt_decrement(self):
+		return isinstance(self, StmtDecrement)
+
 
 
 
@@ -494,6 +500,17 @@ class StmtAssign(Stmt):
 		self.left = left
 		self.right = right
 
+
+class StmtIncrement(Stmt):
+	def __init__(self, value, ti=None, nl=1):
+		super().__init__(ti, nl)
+		self.value = value
+
+
+class StmtDecrement(Stmt):
+	def __init__(self, value, ti=None, nl=1):
+		super().__init__(ti, nl)
+		self.value = value
 
 
 class StmtIf(Stmt):

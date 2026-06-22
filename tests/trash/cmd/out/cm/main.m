@@ -53,7 +53,7 @@ func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 		if c != " " and c != "\t" {
 			break
 		}
-		t.position = t.position + 1
+		++t.position
 	}
 	if c == "\n" or c == "\x0" {
 		return 0
@@ -64,15 +64,15 @@ func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 	if not is_blank(c) {
 		while not is_blank(c) {
 			output[outpos] = c
-			t.position = t.position + 1
-			outpos = outpos + 1
+			++t.position
+			++outpos
 			c = t.input[t.position]
 		}
 		output[outpos] = "\x0"
 	} else {
 		output[outpos] = c
-		t.position = t.position + 1
-		outpos = outpos + 1
+		++t.position
+		++outpos
 	}
 
 	return outpos
@@ -93,9 +93,9 @@ func tokenize (tokenizer: *Tokenizer) -> Unit {
 		pbuf[0:toklen] = token[0:toklen]
 		tokenizer.tokensBufPos = tokenizer.tokensBufPos + toklen
 		pbuf[tokenizer.tokensBufPos] = "\x0"
-		tokenizer.tokensBufPos = tokenizer.tokensBufPos + 1
+		++tokenizer.tokensBufPos
 		tokenizer.tokens[tokenizer.tokensPos] = pbuf
-		tokenizer.tokensPos = tokenizer.tokensPos + 1
+		++tokenizer.tokensPos
 		tokenizer.tokens[tokenizer.tokensPos] = nil
 	}
 }
@@ -111,7 +111,7 @@ func execute (cmd: *Str8, argc: Nat16, argv: *[]*Str8) -> Unit {
 			break
 		}
 		printf("'%s'", ptok)
-		i = i + 1
+		++i
 	}
 	printf("]\n")
 }
@@ -137,7 +137,7 @@ func main () -> Int32 {
 		let cmd: *[]Char8 = tokenizer.tokens[0]
 		var argc: Nat16 = tokenizer.tokensPos
 		if argc > 0 {
-			argc = argc - 1
+			--argc
 		}
 		let argv: *[]*[]Char8 = &tokenizer.tokens[1:]
 		execute(cmd, argc, argv)

@@ -94,7 +94,7 @@ func main () -> Int32 {
 			again
 		}
 		handleRequest(clientSocket)
-		pageCounter = pageCounter + 1
+		++pageCounter
 	}
 
 	close(serverSocket)

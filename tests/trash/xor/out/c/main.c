@@ -11,11 +11,11 @@ static void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t 
 	while (i < buflen) {
 		buf[i] = buf[i] ^ key[j];
 		if (j < keylen - 1) {
-			j = j + 1;
+			++j;
 		} else {
 			j = 0;
 		}
-		i = i + 1;
+		++i;
 	}
 }
 //xor_encrypt = xor_encrypter
@@ -30,7 +30,7 @@ static void print_bytes(uint8_t *buf, uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
 		printf("0x%02X ", buf[i]);
-		i = i + 1;
+		++i;
 	}
 	printf("\n");
 }

@@ -12,7 +12,7 @@ static void *thread0(void *param) {
 	printf("Hello from thread 0\n");
 	while (global_counter < 32) {
 		pthread_mutex_lock(&mutex);
-		global_counter = global_counter + 1;
+		++global_counter;
 		pthread_mutex_unlock(&mutex);
 		usleep(500000);
 	}

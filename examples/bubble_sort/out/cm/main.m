@@ -22,7 +22,7 @@ func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
 			array[i + 1] = left
 			wasSwap = true
 		}
-		i = i + 1
+		++i
 	}
 
 	return wasSwap
@@ -55,7 +55,7 @@ func print_array (array: *[]Int32, len: Nat32) -> Unit {
 	var i: Nat32 = 0
 	while i < len {
 		printf("array[%i] = %i\n", i, array[i])
-		i = i + 1
+		++i
 	}
 }
 

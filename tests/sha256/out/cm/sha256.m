@@ -116,12 +116,12 @@ func transform (ctx: *Context, data: *[]Word8) -> Unit {
 
 		m[i] = x
 		j = j + 4
-		i = i + 1
+		++i
 	}
 
 	while i < 64 {
 		m[i] = Word32 (Nat32 sig1(m[i - 2]) + Nat32 m[i - 7] + Nat32 sig0(m[i - 15]) + Nat32 m[i - 16])
-		i = i + 1
+		++i
 	}
 
 	var x: [8]Word32 = ctx.state
@@ -140,13 +140,13 @@ func transform (ctx: *Context, data: *[]Word8) -> Unit {
 		x[1] = x[0]
 		x[0] = Word32 (t1 + t2)
 
-		i = i + 1
+		++i
 	}
 
 	i = 0
 	while i < 8 {
 		ctx.state[i] = Word32 (Nat32 ctx.state[i] + Nat32 x[i])
-		i = i + 1
+		++i
 	}
 }
 
@@ -161,7 +161,7 @@ func update (ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
 			ctx.bitlen = ctx.bitlen + 512
 			ctx.datalen = 0
 		}
-		i = i + 1
+		++i
 	}
 }
 
@@ -176,7 +176,7 @@ func final (ctx: *Context, outHash: *Hash) -> Unit {
 
 	ctx.data[i] = 0x80
 
-	i = i + 1
+	++i
 
 	memset(&ctx.data[i], 0, SizeT (n - i))
 
@@ -208,7 +208,7 @@ func final (ctx: *Context, outHash: *Hash) -> Unit {
 		outHash[i + 20] = unsafe Word8 (ctx.state[5] >> sh)
 		outHash[i + 24] = unsafe Word8 (ctx.state[6] >> sh)
 		outHash[i + 28] = unsafe Word8 (ctx.state[7] >> sh)
-		i = i + 1
+		++i
 	}
 }
 

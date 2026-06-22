@@ -70,7 +70,7 @@ func main () -> Int {
 			timecnt = 0
 			fsm.tick(&fsm0)
 		} else {
-			timecnt = timecnt + 1
+			++timecnt
 		}
 
 		fsm.task(&fsm0)

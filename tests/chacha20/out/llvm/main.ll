@@ -333,13 +333,12 @@ endif_0:
 	%49 = xor %Byte %47, %48
 	store %Byte %49, %Byte* %38
 	%50 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
-	%51 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
-	%52 = load %Nat32, %Nat32* %51
-	%53 = add %Nat32 %52, 1
-	store %Nat32 %53, %Nat32* %50
-	%54 = load %Nat32, %Nat32* %1
-	%55 = add %Nat32 %54, 1
-	store %Nat32 %55, %Nat32* %1
+	%51 = load %Nat32, %Nat32* %50
+	%52 = add %Nat32 %51, 1
+	store %Nat32 %52, %Nat32* %50
+	%53 = load %Nat32, %Nat32* %1
+	%54 = add %Nat32 %53, 1
+	store %Nat32 %54, %Nat32* %1
 	br label %again_1
 break_1:
 	ret void

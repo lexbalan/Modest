@@ -66,7 +66,7 @@ public func task (self: *FSM) -> Unit {
 
 public func tick (self: *FSM) -> Unit {
 	if self.timer > 0 {
-		self.timer = self.timer - 1
+		--self.timer
 		if self.timer == 0 {
 			self.timer_expired = true
 		}

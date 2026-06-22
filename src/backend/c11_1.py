@@ -684,7 +684,7 @@ class CValueDec(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		return '--%s%s' % (str_cvalue(self.value, ext_precedence=self.precedence))
+		return '--%s' % str_cvalue(self.value, ext_precedence=self.precedence)
 
 
 class CValuePositive(CValue):
@@ -1227,6 +1227,25 @@ class CStmtValueAssign(CStmt):
 		sstr = str_nl_indent(self.nl)
 		return sstr + "%s = %s;" % (str_cvalue(self.lvalue), str_cvalue(self.rvalue))
 
+
+class CStmtInc(CStmt):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		super().__init__()
+		self.value = value
+
+	def __str__(self):
+		return str_nl_indent(self.nl) + "++%s;" % str_cvalue(self.value)
+
+
+class CStmtDec(CStmt):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		super().__init__()
+		self.value = value
+
+	def __str__(self):
+		return str_nl_indent(self.nl) + "--%s;" % str_cvalue(self.value)
 
 
 class CStmtDeclType(CStmt):

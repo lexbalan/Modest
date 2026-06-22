@@ -2302,9 +2302,23 @@ def print_stmt(x):
 	elif x.is_stmt_asm(): print_stmt_asm(x)
 	elif x.is_stmt_def_type(): pass
 	elif x.is_stmt_def_func(): pass
+	elif x.is_stmt_increment(): return print_stmt_increment(x)
+	elif x.is_stmt_decrement(): return print_stmt_decrement(x)
 	else: lo("<stmt %s>" % str(x))
 
 
+
+def print_stmt_increment(x):
+	v = do_eval(x.value)
+	one = llvm_value_num(v['type'], 1)
+	rv = llvm_eval_binary('add', llvm_dold(v), one)
+	llvm_store(v, rv)
+
+def print_stmt_decrement(x):
+	v = do_eval(x.value)
+	one = llvm_value_num(v['type'], 1)
+	rv = llvm_eval_binary('sub', llvm_dold(v), one)
+	llvm_store(v, rv)
 
 
 def str_func_params(ftype, only_types=False, with_attributes=True):

@@ -44,8 +44,8 @@ func cipher (ctx: *Context, data: *[]Byte, len: Nat32) -> Unit {
 
 		data[i] = data[i] ^ bptr[ctx.blockOffset]
 
-		ctx.blockOffset = ctx.blockOffset + 1
-		i = i + 1
+		++ctx.blockOffset
+		++i
 	}
 }
 
@@ -100,7 +100,7 @@ func main () -> Int {
 	i = 0
 	while i < 1024 {
 		printf("%c", xlorem1024[i])
-		i = i + 1
+		++i
 	}
 
 	if not test0() {

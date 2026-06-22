@@ -46,7 +46,7 @@ struct list_node *list_node_first(struct list_list *list, struct list_node *new_
 	}
 	list->head = new_node;
 	list->tail = new_node;
-	list->size = list->size + 1;
+	++list->size;
 	return new_node;
 }
 
@@ -110,7 +110,7 @@ struct list_node *list_node_get(struct list_list *list, int32_t pos) {
 		uint32_t i = 0;
 		while (i < n) {
 			node = node->next;
-			i = i + 1;
+			++i;
 		}
 	} else {
 		node = list->tail;
@@ -121,7 +121,7 @@ struct list_node *list_node_get(struct list_list *list, int32_t pos) {
 		uint32_t i = 0;
 		while (i < n) {
 			node = node->prev;
-			i = i + 1;
+			++i;
 		}
 	}
 	return node;
@@ -142,7 +142,7 @@ struct list_node *list_node_insert(struct list_list *list, int32_t pos, struct l
 		return NULL;
 	}
 	list_node_insert_right(nod, new_node);
-	list->size = list->size + 1;
+	++list->size;
 	return new_node;
 }
 
@@ -157,7 +157,7 @@ struct list_node *list_node_append(struct list_list *list, struct list_node *new
 		list_node_insert_right(list->tail, new_node);
 	}
 	list->tail = new_node;
-	list->size = list->size + 1;
+	++list->size;
 	return new_node;
 }
 

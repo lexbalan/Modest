@@ -71,7 +71,7 @@ public func node_first (list: *List, new_node: *Node) -> *Node {
 	list.head = new_node
 	list.tail = new_node
 
-	list.size = list.size + 1
+	++list.size
 
 	return new_node
 }
@@ -154,7 +154,7 @@ public func node_get (list: *List, pos: Int32) -> *Node {
 		var i = Nat32 0
 		while i < n {
 			node = node.next
-			i = i + 1
+			++i
 		}
 	} else {
 		node = list.tail
@@ -167,7 +167,7 @@ public func node_get (list: *List, pos: Int32) -> *Node {
 		var i = Nat32 0
 		while i < n {
 			node = node.prev
-			i = i + 1
+			++i
 		}
 	}
 
@@ -196,7 +196,7 @@ public func node_insert (list: *List, pos: Int32, new_node: *Node) -> *Node {
 	}
 
 	node_insert_right(nod, new_node)
-	list.size = list.size + 1
+	++list.size
 
 	return new_node
 }
@@ -216,7 +216,7 @@ public func node_append (list: *List, new_node: *Node) -> *Node {
 
 	list.tail = new_node
 
-	list.size = list.size + 1
+	++list.size
 
 	return new_node
 }

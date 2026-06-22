@@ -59,7 +59,7 @@ func main () -> Int {
 		} else {
 			printf("test #%d passed\n", i)
 		}
-		i = i + 1
+		++i
 	}
 
 	printf("test ")

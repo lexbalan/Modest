@@ -21,7 +21,7 @@ func thread0 (param: Ptr) -> Ptr {
 
 	while global_counter < 32 {
 		pthread.mutex_lock(&mutex)
-		global_counter = global_counter + 1
+		++global_counter
 		pthread.mutex_unlock(&mutex)
 
 		usleep(500000)

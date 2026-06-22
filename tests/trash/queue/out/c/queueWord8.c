@@ -60,7 +60,7 @@ uint32_t queueWord8_read(struct queue_word8_queue_word8 *q, uint8_t *data, uint3
 			break;
 		}
 		data[n] = x;
-		n = n + 1;
+		++n;
 	}
 	return n;
 }
@@ -73,7 +73,7 @@ uint32_t queueWord8_write(struct queue_word8_queue_word8 *q, uint8_t *data, uint
 		if (!queueWord8_put(q, x)) {
 			break;
 		}
-		n = n + 1;
+		++n;
 	}
 	return n;
 }

@@ -14,7 +14,7 @@ int main(void) {
 	while (i < 10) {
 		const int32_t v = globalArray1[i];
 		printf("globalArray1[%d] = %d\n", i, v);
-		i = i + 1;
+		++i;
 	}
 	if (__builtin_memcmp(&globalArray0, &globalArray1, sizeof(int32_t [10])) == 0) {
 		printf("globalArray test passed\n");
@@ -28,7 +28,7 @@ int main(void) {
 	while (i < 10) {
 		const int32_t v = localArray1[i];
 		printf("localArray1[%d] = %d\n", i, v);
-		i = i + 1;
+		++i;
 	}
 	if (__builtin_memcmp(&localArray0, &localArray1, sizeof(int32_t [10])) == 0) {
 		printf("localArray test passed\n");

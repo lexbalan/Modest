@@ -93,11 +93,11 @@ static void transform(struct context *ctx, uint8_t *data) {
 		const uint32_t x = (uint32_t)data[j + 0] << 24 | (uint32_t)data[j + 1] << 16 | (uint32_t)data[j + 2] << 8 | (uint32_t)data[j + 3] << 0;
 		m[i] = x;
 		j = j + 4;
-		i = i + 1;
+		++i;
 	}
 	while (i < 64) {
 		m[i] = sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16];
-		i = i + 1;
+		++i;
 	}
 	uint32_t x[8];
 	__builtin_memcpy(&x, &ctx->state, sizeof(uint32_t [8]));
@@ -113,12 +113,12 @@ static void transform(struct context *ctx, uint8_t *data) {
 		x[2] = x[1];
 		x[1] = x[0];
 		x[0] = t1 + t2;
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 8) {
 		ctx->state[i] = ctx->state[i] + x[i];
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -133,7 +133,7 @@ static void update(struct context *ctx, uint8_t *msg, uint32_t msgLen) {
 			ctx->bitlen = ctx->bitlen + 512;
 			ctx->datalen = 0;
 		}
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -145,7 +145,7 @@ static void final(struct context *ctx, uint8_t *outHash) {
 		n = 56;
 	}
 	ctx->data[i] = 0x80;
-	i = i + 1;
+	++i;
 	memset(&ctx->data[i], 0, (size_t)(n - i));
 	if (ctx->datalen >= 56) {
 		transform(ctx, ctx->data);
@@ -172,7 +172,7 @@ static void final(struct context *ctx, uint8_t *outHash) {
 		outHash[i + 20] = ctx->state[5] >> sh;
 		outHash[i + 24] = ctx->state[6] >> sh;
 		outHash[i + 28] = ctx->state[7] >> sh;
-		i = i + 1;
+		++i;
 	}
 }
 

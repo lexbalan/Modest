@@ -102,7 +102,7 @@ static void subBytes(uint8_t *block) {
 	uint8_t i = 0;
 	while (i < 16) {
 		block[i] = rj_sbox(block[i]);
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -111,7 +111,7 @@ static void subBytesInv(uint8_t *block) {
 	uint8_t i = 0;
 	while (i < 16) {
 		block[i] = rj_sboxInv(block[i]);
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -120,7 +120,7 @@ static void addRoundKey(uint8_t *block, uint8_t *k) {
 	uint8_t i = 0;
 	while (i < 16) {
 		block[i] = block[i] ^ k[i];
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -132,7 +132,7 @@ static void addRoundKeyCpy(uint8_t *block, uint8_t *key, uint8_t *cpk) {
 		cpk[i] = yy;
 		block[i] = block[i] ^ yy;
 		cpk[16 + i] = key[16 + i];
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -305,7 +305,7 @@ aes256_Result aes256_init(aes256_Context *ctx, uint8_t *key) {
 	uint8_t i = 0;
 	while (i < 7) {
 		expandEncKey(ctx->deckey, &rcon);
-		i = i + 1;
+		++i;
 	}
 	return AES256_RESULT_SUCCESS;
 }
@@ -319,7 +319,7 @@ aes256_Result aes256_encrypt_ecb(aes256_Context *ctx, uint8_t *block) {
 	addRoundKeyCpy(block, ctx->enckey, ctx->key);
 	uint8_t i = 0;
 	while (i < 13) {
-		i = i + 1;
+		++i;
 		subBytes(block);
 		shiftRows(block);
 		mixColumns(block);
@@ -357,7 +357,7 @@ aes256_Result aes256_decrypt_ecb(aes256_Context *ctx, uint8_t *block) {
 		mixColumnsInv(block);
 		shiftRowsInv(block);
 		subBytesInv(block);
-		i = i - 1;
+		--i;
 	}
 	addRoundKey(block, &ctx->key[0]);
 	return AES256_RESULT_SUCCESS;

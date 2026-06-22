@@ -65,7 +65,7 @@ static void test(void) {
 	while (i < LENGTHOF(yy)) {
 		const uint8_t y = yy[i];
 		printf("yy[%i] = %u\n", i, (uint32_t)y);
-		i = i + 1;
+		++i;
 	}
 }
 static int32_t a0[2][2][5] = {
@@ -105,18 +105,18 @@ static void test_arrays(void) {
 		j = 0;
 		while (j < 10) {
 			a10[i][j] = a10[i][j] * 2;
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 10) {
 		j = 0;
 		while (j < 10) {
 			printf("a10[%d][%d] = %d\n", i, j, a10[i][j]);
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 2) {
@@ -125,20 +125,20 @@ static void test_arrays(void) {
 			k = 0;
 			while (k < 5) {
 				printf("a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k]);
-				k = k + 1;
+				++k;
 			}
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 2) {
 		j = 0;
 		while (j < 5) {
 			printf("a3[%d][%d] = %d\n", i, j, a3[i][j]);
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 2) {
@@ -147,11 +147,11 @@ static void test_arrays(void) {
 			k = 0;
 			while (k < 5) {
 				printf("a3[%d][%d][%d] = %d\n", i, j, k, a4[i][j][k]);
-				k = k + 1;
+				++k;
 			}
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 2) {
@@ -160,11 +160,11 @@ static void test_arrays(void) {
 			k = 0;
 			while (k < 5) {
 				printf("p0[%d][%d][%d] = %d\n", i, j, k, p0[i][j][k]);
-				k = k + 1;
+				++k;
 			}
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 }
 

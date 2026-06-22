@@ -903,7 +903,12 @@ def str_stmt_again(x):
 	return "again"
 
 
+def str_stmt_increment(x):
+	return "++%s" % str_value(x.value)
 
+
+def str_stmt_decrement(x):
+	return "--%s" % str_value(x.value)
 
 
 # for str_stmt_asm:
@@ -969,6 +974,8 @@ def str_stmt2(x):
 	elif x.is_stmt_asm(): return str_stmt_asm(x)
 	elif x.is_stmt_def_type(): return str_stmt_type(x)
 	elif x.is_stmt_def_func(): return str_stmt_func(x)
+	elif x.is_stmt_increment(): return str_stmt_increment(x)
+	elif x.is_stmt_decrement(): return str_stmt_decrement(x)
 
 	return "<stmt %s>" % str(x)
 

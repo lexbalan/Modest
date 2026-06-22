@@ -13,7 +13,7 @@ static void array_print(int32_t *pa, uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
 		printf("a[%d] = %d\n", i, pa[i]);
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -42,7 +42,7 @@ int main(void) {
 	uint32_t i = 0;
 	while (i < LENGTHOF(s1)) {
 		printf("s1[%d] = %d\n", i, s1[i]);
-		i = i + 1;
+		++i;
 	}
 	printf("--------------------------------------------\n");
 	int32_t *const pa = a;
@@ -51,7 +51,7 @@ int main(void) {
 	i = 0;
 	while (i < LENGTHOF(s2)) {
 		printf("s2[%d] = %d\n", i, s2[i]);
-		i = i + 1;
+		++i;
 	}
 	printf("--------------------------------------------\n");
 	int32_t vs1[2 - 1];
@@ -64,7 +64,7 @@ int main(void) {
 	i = 0;
 	while (i < LENGTHOF(a)) {
 		printf("a[%d] = %d\n", i, a[i]);
-		i = i + 1;
+		++i;
 	}
 	printf("--------------------------------------------\n");
 	int32_t s[10] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
@@ -72,7 +72,7 @@ int main(void) {
 	i = 0;
 	while (i < LENGTHOF(s)) {
 		printf("s[%d] = %d\n", i, (uint32_t)abs(s[i]));
-		i = i + 1;
+		++i;
 	}
 	printf("--------------------------------------------\n");
 	printf("test pointer to slice\n");

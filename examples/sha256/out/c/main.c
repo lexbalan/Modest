@@ -47,7 +47,7 @@ static bool doTest(struct sha256_test_case *test) {
 	uint32_t i = 0;
 	while (i < SHA256_HASH_SIZE) {
 		printf("%02X", test_hash[i]);
-		i = i + 1;
+		++i;
 	}
 	printf("\n");
 	return __builtin_memcmp(&test_hash, &test->expectedResult, sizeof(sha256_Hash)) == 0;
@@ -65,7 +65,7 @@ int main(void) {
 			res = "passed";
 		}
 		printf("test #%i: %s\n", i, res);
-		i = i + 1;
+		++i;
 	}
 	return 0;
 }

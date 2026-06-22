@@ -74,13 +74,13 @@ void chacha20_chacha20Block(uint32_t *_state, uint32_t *__out) {
 		x[4] = r[1];
 		x[9] = r[2];
 		x[14] = r[3];
-		i = i + 1;
+		++i;
 	}
 	uint32_t out[16];
 	uint32_t j = 0;
 	while (j < 16) {
 		out[j] = x[j] + state[j];
-		j = j + 1;
+		++j;
 	}
 	__builtin_memcpy(__out, &out, sizeof(uint32_t [16]));
 }

@@ -46,7 +46,7 @@ int main(void) {
 	uint32_t i = 0;
 	while (i < 10) {
 		printf("a[%d] = %d\n", i, lar0[i]);
-		i = i + 1;
+		++i;
 	}
 	return 0;
 }
@@ -58,7 +58,7 @@ static void printArrayOf10Char32(char32_t *_a) {
 	uint32_t i = 0;
 	while (i < LENGTHOF(a)) {
 		printf("a[%d] = '%c'\n", i, a[i]);
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -72,7 +72,7 @@ static void sum10IntArrays(int32_t *_a, int32_t *_b, int32_t *__out) {
 	uint32_t i = 0;
 	while (i < 10) {
 		result[i] = a[i] + b[i];
-		i = i + 1;
+		++i;
 	}
 	__builtin_memcpy(__out, &result, sizeof(int32_t [10]));
 }

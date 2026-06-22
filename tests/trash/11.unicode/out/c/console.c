@@ -58,7 +58,7 @@ void console_putchar_utf32(char32_t c) {
 	while (i < n) {
 		const char c = decoded_buf[i];
 		console_putchar_utf8(c);
-		i = i + 1;
+		++i;
 	}
 }
 //
@@ -73,7 +73,7 @@ void console_puts8(char *s) {
 			break;
 		}
 		console_putchar_utf8(c);
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -102,7 +102,7 @@ void console_puts32(char32_t *s) {
 			break;
 		}
 		console_putchar_utf32(c);
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -137,26 +137,26 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 		}
 		if (c != '{') {
 			if (c == '}') {
-				i = i + 1;
+				++i;
 				c = form[i];
 				if (c == '}') {
 					buf[j] = c;
-					j = j + 1;
-					i = i + 1;
+					++j;
+					++i;
 				}
 				continue;
 			}
 			buf[j] = c;
-			j = j + 1;
-			i = i + 1;
+			++j;
+			++i;
 			continue;
 		}
-		i = i + 1;
+		++i;
 		c = form[i];
 		if (c == '{') {
 			buf[j] = '{';
-			j = j + 1;
-			i = i + 1;
+			++j;
+			++i;
 			continue;
 		}
 		i = i + 2;
@@ -209,16 +209,16 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
 		const uint32_t n = d % 16;
 		d = d / 16;
 		tmpbuf[i] = n_to_hex_sym((uint8_t)n);
-		i = i + 1;
+		++i;
 		if (d == 0) {
 			break;
 		}
 	}
 	int32_t j = 0;
 	while (i > 0) {
-		i = i - 1;
+		--i;
 		buf[j] = tmpbuf[i];
-		j = j + 1;
+		++j;
 	}
 	buf[j] = '\x0';
 	return j;
@@ -237,7 +237,7 @@ static int32_t sprint_dec_int32(char *buf, int32_t x) {
 		const int32_t n = d % 10;
 		d = d / 10;
 		tmpbuf[i] = n_to_dec_sym((uint8_t)abs(n));
-		i = i + 1;
+		++i;
 		if (d == 0) {
 			break;
 		}
@@ -245,12 +245,12 @@ static int32_t sprint_dec_int32(char *buf, int32_t x) {
 	int32_t j = 0;
 	if (neg) {
 		buf[0] = '-';
-		j = j + 1;
+		++j;
 	}
 	while (i > 0) {
-		i = i - 1;
+		--i;
 		buf[j] = tmpbuf[i];
-		j = j + 1;
+		++j;
 	}
 	buf[j] = '\x0';
 	return j;
@@ -265,16 +265,16 @@ static int32_t sprint_dec_n32(char *buf, uint32_t x) {
 		const uint32_t n = d % 10;
 		d = d / 10;
 		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
-		i = i + 1;
+		++i;
 		if (d == 0) {
 			break;
 		}
 	}
 	int32_t j = 0;
 	while (i > 0) {
-		i = i - 1;
+		--i;
 		buf[j] = tmpbuf[i];
-		j = j + 1;
+		++j;
 	}
 	buf[j] = '\x0';
 	return j;

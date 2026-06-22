@@ -112,7 +112,7 @@ int32_t main(void) {
 		const bool rc = runTest(&tests[i]);
 		success = success && rc;
 		printf("\n");
-		i = i + 1;
+		++i;
 	}
 	printf("AES-256 test ");
 	if (!success) {

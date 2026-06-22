@@ -124,7 +124,7 @@ func main () -> Int32 {
 		let rc: Bool = runTest(&tests[i])
 		success = success and rc
 		printf("\n")
-		i = i + 1
+		++i
 	}
 
 	printf("AES-256 test ")

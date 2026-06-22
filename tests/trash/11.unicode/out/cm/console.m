@@ -50,7 +50,7 @@ public func putchar_utf32 (c: Char32) -> Unit {
 	while i < n {
 		let c: Char8 = decoded_buf[i]
 		putchar_utf8(c)
-		i = i + 1
+		++i
 	}
 }
 
@@ -68,7 +68,7 @@ public func puts8 (s: *Str8) -> Unit {
 			break
 		}
 		putchar_utf8(c)
-		i = i + 1
+		++i
 	}
 }
 
@@ -103,7 +103,7 @@ public func puts32 (s: *Str32) -> Unit {
 			break
 		}
 		putchar_utf32(c)
-		i = i + 1
+		++i
 	}
 }
 
@@ -141,29 +141,29 @@ public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> @unused Int32 {
 		if c != "{" {
 
 			if c == "}" {
-				i = i + 1
+				++i
 				c = form[i]
 				if c == "}" {
 					buf[j] = c
-					j = j + 1
-					i = i + 1
+					++j
+					++i
 				}
 				again
 			}
 
 			buf[j] = c
-			j = j + 1
-			i = i + 1
+			++j
+			++i
 			again
 		}
 
-		i = i + 1
+		++i
 		c = form[i]
 
 		if c == "{" {
 			buf[j] = "{"
-			j = j + 1
-			i = i + 1
+			++j
+			++i
 			again
 		}
 
@@ -223,7 +223,7 @@ func sprint_hex_nat32 (buf: *[]Char8, x: Nat32) -> Int32 {
 		d = d / 16
 
 		tmpbuf[i] = n_to_hex_sym(unsafe Nat8 n)
-		i = i + 1
+		++i
 
 		if d == 0 {
 			break
@@ -231,9 +231,9 @@ func sprint_hex_nat32 (buf: *[]Char8, x: Nat32) -> Int32 {
 	}
 	var j: Int32 = 0
 	while i > 0 {
-		i = i - 1
+		--i
 		buf[j] = tmpbuf[i]
-		j = j + 1
+		++j
 	}
 
 	buf[j] = "\x0"
@@ -256,7 +256,7 @@ func sprint_dec_int32 (buf: *[]Char8, x: Int32) -> Int32 {
 		let n: Int32 = d % 10
 		d = d / 10
 		tmpbuf[i] = n_to_dec_sym(unsafe Nat8 n)
-		i = i + 1
+		++i
 
 		if d == 0 {
 			break
@@ -267,13 +267,13 @@ func sprint_dec_int32 (buf: *[]Char8, x: Int32) -> Int32 {
 
 	if neg {
 		buf[0] = "-"
-		j = j + 1
+		++j
 	}
 
 	while i > 0 {
-		i = i - 1
+		--i
 		buf[j] = tmpbuf[i]
-		j = j + 1
+		++j
 	}
 
 	buf[j] = "\x0"
@@ -291,7 +291,7 @@ func sprint_dec_n32 (buf: *[]Char8, x: Nat32) -> Int32 {
 		let n: Nat32 = d % 10
 		d = d / 10
 		tmpbuf[i] = n_to_dec_sym(unsafe Nat8 n)
-		i = i + 1
+		++i
 
 		if d == 0 {
 			break
@@ -300,9 +300,9 @@ func sprint_dec_n32 (buf: *[]Char8, x: Nat32) -> Int32 {
 
 	var j: Int32 = 0
 	while i > 0 {
-		i = i - 1
+		--i
 		buf[j] = tmpbuf[i]
-		j = j + 1
+		++j
 	}
 
 	buf[j] = "\x0"

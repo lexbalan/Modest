@@ -1584,8 +1584,16 @@ def do_cstmt(x):
 	elif x.is_stmt_asm(): return do_stmt_asm(x)
 	elif x.is_stmt_def_type(): return do_def_type(x)
 	elif x.is_stmt_def_func(): return CInsert("") #do_def_func(x)
+	elif x.is_stmt_increment(): return do_cstmt_increment(x)
+	elif x.is_stmt_decrement(): return do_cstmt_decrement(x)
 	1/0
 
+
+def do_cstmt_increment(x):
+	return CStmtInc(do_cvalue(x.value))
+
+def do_cstmt_decrement(x):
+	return CStmtDec(do_cvalue(x.value))
 
 
 def do_decl_func(x):

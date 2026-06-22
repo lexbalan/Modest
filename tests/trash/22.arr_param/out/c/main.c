@@ -18,7 +18,7 @@ static void arraysAdd(int32_t *_a, int32_t *_b, int32_t *__out) {
 	uint32_t i = 0;
 	while (i < 10) {
 		c[i] = a[i] + b[i];
-		i = i + 1;
+		++i;
 	}
 	__builtin_memcpy(__out, &c, sizeof(int32_t [10]));
 }
@@ -43,7 +43,7 @@ int32_t main(void) {
 	uint32_t i = 0;
 	while (i < 10) {
 		printf("d[%i] = %i\n", i, d[i]);
-		i = i + 1;
+		++i;
 	}
 	return 0;
 	#undef b

@@ -298,10 +298,9 @@ endif_0:
 	%6 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
 	store %list_Node* %new_node, %list_Node** %6
 	%7 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%8 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%9 = load %Nat32, %Nat32* %8
-	%10 = add %Nat32 %9, 1
-	store %Nat32 %10, %Nat32* %7
+	%8 = load %Nat32, %Nat32* %7
+	%9 = add %Nat32 %8, 1
+	store %Nat32 %9, %Nat32* %7
 	ret %list_Node* %new_node
 }
 
@@ -497,10 +496,9 @@ then_2:
 endif_2:
 	call void @list_node_insert_right(%list_Node* %9, %list_Node* %new_node)
 	%12 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%13 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%14 = load %Nat32, %Nat32* %13
-	%15 = add %Nat32 %14, 1
-	store %Nat32 %15, %Nat32* %12
+	%13 = load %Nat32, %Nat32* %12
+	%14 = add %Nat32 %13, 1
+	store %Nat32 %14, %Nat32* %12
 	ret %list_Node* %new_node
 }
 
@@ -532,10 +530,9 @@ endif_1:
 	%11 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
 	store %list_Node* %new_node, %list_Node** %11
 	%12 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%13 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%14 = load %Nat32, %Nat32* %13
-	%15 = add %Nat32 %14, 1
-	store %Nat32 %15, %Nat32* %12
+	%13 = load %Nat32, %Nat32* %12
+	%14 = add %Nat32 %13, 1
+	store %Nat32 %14, %Nat32* %12
 	ret %list_Node* %new_node
 }
 

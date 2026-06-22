@@ -22,7 +22,7 @@ func main () -> Int {
 	while i < 10 {
 		let v: Int32 = globalArray1[i]
 		printf("globalArray1[%d] = %d\n", i, v)
-		i = i + 1
+		++i
 	}
 
 	if globalArray0 == globalArray1 {
@@ -41,7 +41,7 @@ func main () -> Int {
 	while i < 10 {
 		let v: Int32 = localArray1[i]
 		printf("localArray1[%d] = %d\n", i, v)
-		i = i + 1
+		++i
 	}
 
 	if localArray0 == localArray1 {

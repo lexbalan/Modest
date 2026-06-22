@@ -20,7 +20,7 @@ static bool bubble_sort32_iter(int32_t *array, uint32_t len) {
 			array[i + 1] = left;
 			wasSwap = true;
 		}
-		i = i + 1;
+		++i;
 	}
 	return wasSwap;
 }
@@ -50,7 +50,7 @@ static void print_array(int32_t *array, uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
 		printf("array[%i] = %i\n", i, array[i]);
-		i = i + 1;
+		++i;
 	}
 }
 

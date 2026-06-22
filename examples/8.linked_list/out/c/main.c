@@ -61,12 +61,12 @@ int main(void) {
 		struct list_node *const node = list_node_get(list0, i);
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
-			i = i - 1;
+			--i;
 			continue;
 		}
 		uint32_t *const px = (uint32_t *)list_node_data_get(node);
 		printf("list(%i) = %i\n", i, *px);
-		i = i - 1;
+		--i;
 	}
 	printf("-----------------------------------------\n");
 	i = 0;
@@ -74,12 +74,12 @@ int main(void) {
 		struct list_node *const node = list_node_get(list0, i);
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
-			i = i + 1;
+			++i;
 			continue;
 		}
 		uint32_t *const px = (uint32_t *)list_node_data_get(node);
 		printf("list(%i) = %i\n", i, *px);
-		i = i + 1;
+		++i;
 	}
 	printf("-----------------------------------------\n");
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));

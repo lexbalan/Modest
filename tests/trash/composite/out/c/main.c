@@ -214,9 +214,9 @@ int32_t main(void) {
 		uint32_t j = 0;
 		while (j < 3) {
 			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j]);
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	const int32_t _add = farr[0](5, 7);
 	printf("farr[0](5, 7) = %d\n", _add);
@@ -225,7 +225,7 @@ int32_t main(void) {
 	i = 0;
 	while (i < 10) {
 		hiarr[i]("LOL");
-		i = i + 1;
+		++i;
 	}
 	awrap[0]->fhi("World");
 	return 0;

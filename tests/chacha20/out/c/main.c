@@ -39,8 +39,8 @@ static void cipher(struct context *ctx, uint8_t *data, uint32_t len) {
 			bptr = (uint8_t *)ctx->block;
 		}
 		data[i] = data[i] ^ bptr[ctx->blockOffset];
-		ctx->blockOffset = ctx->blockOffset + 1;
-		i = i + 1;
+		++ctx->blockOffset;
+		++i;
 	}
 }
 static uint8_t testKey[32] = {
@@ -85,7 +85,7 @@ int main(void) {
 	i = 0;
 	while (i < 1024) {
 		printf("%c", xlorem1024[i]);
-		i = i + 1;
+		++i;
 	}
 	if (!test0()) {
 		printf("fail\n");
