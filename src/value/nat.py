@@ -7,23 +7,23 @@ from util import nbits_for_num
 
 
 def nat_can(to, from_type, method, ti):
-	if from_type.is_integer():
+	if from_type.is_type_integer():
 		return True
 #		return from_type.width <= to.width
 
 	if method == 'implicit':
 		return False
 
-	#if Type.is_float(from_type):
+	#if Type.is_type_float(from_type):
 	#	return True
 
 	# explicit or unsafe cons method
-	c0 = Type.is_integer(from_type)
-	c1 = Type.is_nat(from_type)
-	c2 = Type.is_word(from_type)
-	c3 = Type.is_int(from_type)
-	c4 = Type.is_float(from_type)
-	c5 = Type.is_rational(from_type)
+	c0 = Type.is_type_integer(from_type)
+	c1 = Type.is_type_nat(from_type)
+	c2 = Type.is_type_word(from_type)
+	c3 = Type.is_type_int(from_type)
+	c4 = Type.is_type_float(from_type)
+	c5 = Type.is_type_rational(from_type)
 
 	if c0 or c1 or c2 or c3 or c4 or c5:
 		if method == 'unsafe':
@@ -34,7 +34,7 @@ def nat_can(to, from_type, method, ti):
 	if method != 'unsafe':
 		return False
 
-	if Type.is_pointer(from_type):
+	if Type.is_type_pointer(from_type):
 		from common import settings
 		return to.width >= int(settings['pointer_width'])
 
@@ -48,7 +48,7 @@ def value_nat_cons(t, v, method, ti):
 	from_width = v.type.width
 	to_width = t.width
 
-	if Type.is_float(v.type) and v.isValueImmediate():
+	if Type.is_type_float(v.type) and v.isValueImmediate():
 		from_width = nbits_for_num(int(v.value))
 
 	if method != 'unsafe':

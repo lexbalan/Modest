@@ -517,7 +517,7 @@ def do_type_array(x):
 	nt = TypeArray(of, volume, ti=x['ti'])
 
 	# [][] разрешено создавать, но они отольются в [] в backend, и чтобы снмим работать нужно привести явно к [n][m] (!)
-	#if nt.is_unsized_array() and of.is_unsized_array():
+	#if nt.is_type_unsized_array() and of.is_type_unsized_array():
 	#	error("unsized arrays of unsized arrays are forbidden", of.ti)
 	return nt
 
@@ -599,7 +599,7 @@ def do_type_internal(x):
 	if x['anno'] != []:
 		t = t.copy_with_atts(x['anno'])
 
-	if k == 'record' and not t.is_unit():
+	if k == 'record' and not t.is_type_unit():
 		# кароч прикол такой:
 		# тк t.add_atts вызывается здесь и создает НОВЫЙ тип то в таблице cmodule.anon_recs
 		# оказывается оригинальная структура, а при поиске для удаления ее оттуда ищется новая (обернутая)
@@ -619,12 +619,12 @@ def do_type(x):
 #	if t.is_incompleted():
 #		error("using of an incompleted type", t.ti)
 
-	if t.is_record():
+	if t.is_type_record():
 		for f in t.fields:
 			if f.type.is_incompleted():
 				error("using of an incompleted type", f.type.ti)
 
-	if t.is_array():
+	if t.is_type_array():
 		if t.of.is_incompleted():
 			error("using of an incompleted type", t.of.ti)
 
@@ -637,7 +637,7 @@ def do_value_shift(x):
 	right = do_rvalue(x['right'])
 
 	# Слева может быть только word или integer !
-	if not (left.type.is_word() or left.type.is_integer()):
+	if not (left.type.is_type_word() or left.type.is_type_integer()):
 		error("expected word value", x['left']['ti'])
 		return ValueBad(x['ti'])
 
@@ -711,9 +711,9 @@ def do_value_bin_op(op, l, r, ti):
 
 	# Ops with different types
 	if op == HLIR_VALUE_OP_ADD:
-		if l.type.is_array() and r.type.is_array():
+		if l.type.is_type_array() and r.type.is_type_array():
 			return value_array_concat(l, r, ti)
-		elif l.type.is_string() and r.type.is_string():
+		elif l.type.is_type_string() and r.type.is_type_string():
 			return value_string_concat(l, r, ti)
 
 	#
@@ -759,7 +759,7 @@ def do_value_bin_op(op, l, r, ti):
 
 		need_width = nbits_for_num(asset, signed=t.is_signed())
 
-		if t.is_integer():
+		if t.is_type_integer():
 			t = type_integer_create(width=need_width, ti=ti)
 		else:
 			if need_width > t.width or (not t.is_signed() and asset < 0):
@@ -795,7 +795,7 @@ def do_bin_immediate(op, l, r, ti):
 		HLIR_VALUE_OP_REM: lambda a, b: a % b,
 	}
 
-	if (op == HLIR_VALUE_OP_DIV) and l.type.is_rational() and (r.asset == 0):
+	if (op == HLIR_VALUE_OP_DIV) and l.type.is_type_rational() and (r.asset == 0):
 		error("division by zero", ti)
 		return ValueBad(ti)
 
@@ -825,7 +825,7 @@ def do_value_not(x):
 #		return ValueBad(x['ti'])
 
 	op = HLIR_VALUE_OP_BITWISE_NOT
-	if vtype.is_bool():
+	if vtype.is_type_bool():
 		op = HLIR_VALUE_OP_LOGIC_NOT
 
 	nv = ValueNot(vtype, v, ti=x['ti'])
@@ -834,7 +834,7 @@ def do_value_not(x):
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		if v.asset != None:  # for ValueUndef
 			# because: ~(1) = -1 (not 0) !
-			if v.type.is_bool():
+			if v.type.is_type_bool():
 				nv.set_asset(not v.asset)
 			else:
 				nv.set_asset(~v.asset)
@@ -929,7 +929,7 @@ def do_value_ref(x):
 	vtype = v.type
 
 	if not is_good_value_for_ref(v):
-		if not vtype.is_func() or vtype.is_incompleted():
+		if not vtype.is_type_func() or vtype.is_incompleted():
 			error("expected mutable value or function", v.ti)
 			return ValueBad(ti)
 
@@ -945,7 +945,7 @@ def do_value_new(x):
 	if v.isValueBad() or v.is_value_undefined():
 		return ValueBad(x['ti'])
 
-	if not v.type.is_aggregate():
+	if not v.type.is_aggregate_type():
 		error("operation new requires value with aggregate type", v.ti)
 		return ValueBad(x['ti'])
 
@@ -963,7 +963,7 @@ def do_value_deref(x):
 		return v
 
 	vtype = v.type
-	if not vtype.is_pointer():
+	if not vtype.is_type_pointer():
 		error("expected pointer value", v.ti)
 		return ValueBad(x['ti'])
 
@@ -972,11 +972,11 @@ def do_value_deref(x):
 	#   - pointer to function
 	#   - pointer to unsized array
 	to = vtype.to
-	is_func_ptr = to.is_func()
+	is_type_func_ptr = to.is_type_func()
 	is_free_ptr = to.is_free_pointer()
-	is_unsized_array_ptr = to.is_unsized_array()
+	is_type_unsized_array_ptr = to.is_type_unsized_array()
 	is_vla = to.is_vla()
-	if is_func_ptr or is_free_ptr or is_unsized_array_ptr:# or is_vla:
+	if is_type_func_ptr or is_free_ptr or is_type_unsized_array_ptr:# or is_vla:
 		error("cannot dereference the pointer", v.ti)
 
 	nv = ValueDeref(v, ti=x['ti'])
@@ -992,7 +992,7 @@ def do_value_lengthof_value(x):
 	if arg.isValueBad() or arg.is_value_undefined():
 		return arg
 
-	if not (arg.type.is_array() or arg.type.is_string()):
+	if not (arg.type.is_type_array() or arg.type.is_type_string()):
 		error("expected value with array type", x['value']['ti'])
 		return ValueBad(ti)
 
@@ -1009,7 +1009,7 @@ def do_value_lengthof_type(x):
 	if t.is_bad(): #or arg.is_value_undefined():
 		return ValueBad(ti)
 
-	if not t.is_array():
+	if not t.is_type_array():
 		error("expected array type", x['type']['ti'])
 		return ValueBad(ti)
 
@@ -1083,10 +1083,10 @@ def do_value_call(x):
 	ftype = fn.type
 
 	# pointer to function?
-	if ftype.is_pointer():
+	if ftype.is_type_pointer():
 		ftype = ftype.to
 
-	if not ftype.is_func():
+	if not ftype.is_type_func():
 		error("expected function or pointer to function", x['ti'])
 		return ValueBad(x['ti'])
 
@@ -1218,9 +1218,9 @@ def do_value_call(x):
 		if fn.is_pure and args_is_ct:
 			ct_call(fn, sorted_args, x['ti'])
 			# Для композитных пока не делаем! Чет в принтере ломается
-			if not nv.type.is_unit():
+			if not nv.type.is_type_unit():
 				nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-				if nv.type.is_aggregate():
+				if nv.type.is_aggregate_type():
 					nv.set_asset([])
 				else:
 					nv.set_asset(0)
@@ -1272,19 +1272,19 @@ def do_value_index(x):
 		return ValueUndef(Type(x['ti']), x['ti'])
 
 	left_type = left.type
-	via_pointer = left_type.is_pointer()
+	via_pointer = left_type.is_type_pointer()
 
 	array_type = left_type
 	if via_pointer:
 		array_type = left_type.to
 
-	if not array_type.is_array():
+	if not array_type.is_type_array():
 		error("expected array or pointer to array", left.ti)
 		return ValueBad(x['ti'])
 
 	# Can index *[]AnyNonArrayType
 	# Can't index *[][]AnyType
-	if array_type.is_array_of_unsized_array():
+	if array_type.is_type_array_of_unsized_array():
 		error("cannot index an array of unsized array", x['ti'])
 		return ValueBad(x['ti'])
 
@@ -1297,7 +1297,7 @@ def do_value_index(x):
 	if index.type.is_bad():
 		return ValueBad(x['ti'])
 
-	if not (index.type.is_int() or index.type.is_nat() or index.type.is_integer()):
+	if not (index.type.is_type_int() or index.type.is_type_nat() or index.type.is_type_integer()):
 		error("expected integral value", index.ti)
 		return ValueBad(x['ti'])
 
@@ -1306,7 +1306,7 @@ def do_value_index(x):
 
 	nv = ValueIndex(array_type.of, left, index, ti=x['ti'])
 
-	if not left.type.is_pointer():
+	if not left.type.is_type_pointer():
 		nv.is_immutable = left.is_immutable
 		array_type = left.type
 
@@ -1353,19 +1353,19 @@ def do_value_slice(x):
 	else:
 		index_to = ValueUndef(type_integer_create(ti=x['ti']))
 
-	via_pointer = left.type.is_pointer()
+	via_pointer = left.type.is_type_pointer()
 	array_type = left.type
 	if via_pointer:
 		array_type = left.type.to
 
-	if not array_type.is_array():
+	if not array_type.is_type_array():
 		error("expected array or pointer to array", left.ti)
 		return ValueBad(x['ti'])
 
 
 	# Can slice *[]AnyNonArrayType
 	# Can't slice *[][]AnyType
-	if array_type.is_array_of_unsized_array():
+	if array_type.is_type_array_of_unsized_array():
 		error("cannot slice array of an unsized array", x['ti'])
 		return ValueBad(x['ti'])
 
@@ -1384,7 +1384,7 @@ def do_value_slice(x):
 
 	type = TypeArray(array_type.of, slice_volume, generic=False, ti=x['ti'])
 	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
-	if not left.type.is_pointer():
+	if not left.type.is_type_pointer():
 		nv.is_immutable = left.is_immutable
 	return nv
 
@@ -1422,14 +1422,14 @@ def do_value_access(x):
 def acc(left, field_id, ti):
 
 	# доступ через переменную-указатель
-	via_pointer = left.type.is_pointer()
+	via_pointer = left.type.is_type_pointer()
 
 	record_type = left.type
 	if via_pointer:
 		record_type = left.type.to
 
 	# check if is record
-	if not record_type.is_record():
+	if not record_type.is_type_record():
 		error("expected record or pointer to record", left.ti)
 		return ValueBad(ti)
 
@@ -1452,7 +1452,7 @@ def acc(left, field_id, ti):
 
 	nv = ValueAccessRecord(field.type, left, field, ti=ti)
 
-	if not left.type.is_pointer():
+	if not left.type.is_type_pointer():
 		nv.is_immutable = left.is_immutable
 
 	if left.isValueImmediate() and not via_pointer:
@@ -1661,7 +1661,7 @@ def do_value_immediate(x, allow_ptr_to_str=False):
 
 	if not v.isValueImmediate():
 		if allow_ptr_to_str:
-			if v.type.is_pointer_to_str():
+			if v.type.is_type_pointer_to_str():
 				return v
 		error("expected immediate value2", x['ti'])
 		return ValueBad(x['ti'])
@@ -1675,7 +1675,7 @@ def do_value_immediate_string(x):
 	if v.isValueBad():
 		return v
 
-	if not v.type.is_string():
+	if not v.type.is_type_string():
 		error("expected string value", x['ti'])
 
 	return v
@@ -1820,7 +1820,7 @@ def do_stmt_if(x):
 	if cond.isValueBad():
 		return StmtBad(x['ti'])
 
-	if not cond.type.is_bool():
+	if not cond.type.is_type_bool():
 		error("expected value with Bool type", cond.ti)
 		return StmtBad(x['ti'])
 
@@ -1845,7 +1845,7 @@ def do_stmt_while(x):
 	if cond.isValueBad():
 		return StmtBad(x['ti'])
 
-	if not cond.type.is_bool():
+	if not cond.type.is_type_bool():
 		error("expected value with Bool type", cond.ti)
 		return StmtBad(x['ti'])
 
@@ -1866,7 +1866,7 @@ def do_stmt_return(x):
 
 	# если забыли вернуть значение
 	# или возвращаем его там, где оно не ожидется
-#	is_no_ret_func = func_ret_type.is_unit()
+#	is_no_ret_func = func_ret_type.is_type_unit()
 #	if ret_val_present == is_no_ret_func:
 #		if ret_val_present:
 #			error("unexpected return value", x['value']['ti'])
@@ -1879,7 +1879,7 @@ def do_stmt_return(x):
 	if x['value'] != None:
 		rv = do_rvalue(x['value'])
 		retval = transmission(func_ret_type, rv, rv.ti)
-	elif not cfunc.type.to.is_unit():
+	elif not cfunc.type.to.is_type_unit():
 		error("expected return value", x['ti'])
 
 	return StmtReturn(retval, ti=x['ti'])
@@ -1942,12 +1942,12 @@ def do_stmt_assign(x):
 # и как следствие right имеет тип левого (из ValueLiteral он превращается в ValueCons)
 # НО ведь в коде реально right может иметь другой тип, и это приводит к пиздецу..
 # (кароче присваивание generic массива )
-#	if l.type.is_array() and r.type.is_array():
+#	if l.type.is_type_array() and r.type.is_type_array():
 #		if l.type.of.get_size() != r.type.of.get_size():
 #			cmodule_use('use_lengthof')
 #			cmodule_use('use_arrcpy')
 # поэтому пока ВСЕГДА использую ARRCPY
-	if l.type.is_array() and r.type.is_array():
+	if l.type.is_type_array() and r.type.is_type_array():
 		if l.type.of.get_size() != r.type.of.get_size():
 			if not r.isValueZero():
 				cmodule_use('use_lengthof')
@@ -1969,7 +1969,7 @@ def do_stmt_incdec(x, op):
 		error("expected mutable value", v.ti)
 		return StmtBad(x['ti'])
 
-	if not (v.type.is_int() or v.type.is_nat()):
+	if not (v.type.is_type_int() or v.type.is_type_nat()):
 		error("expected value with integer type", v.ti)
 		return StmtBad(x['ti'])
 
@@ -1985,7 +1985,7 @@ def do_stmt_value(x):
 	if v.isValueBad():
 		return StmtBad(x['ti'])
 
-	if not v.type.is_unit():
+	if not v.type.is_type_unit():
 		if not v.type.hasAttribute('unused'):
 			#warning("unused result of %s expression" % x['value']['kind'], v.ti)
 			pass
@@ -2139,7 +2139,7 @@ def def_type_common(x, nt):
 	ty = do_type(x['type'])
 
 	is_open_record = False
-	if ty.is_record():
+	if ty.is_type_record():
 		# 'default' -> 'private' &
 		# 'default' -> 'public' for @public record
 		for f in ty.fields:
@@ -2457,7 +2457,7 @@ def def_func(x):
 		check_block(stmt)
 
 		# check if return present
-		if not fn.type.to.is_unit():
+		if not fn.type.to.is_type_unit():
 			stmts = stmt.stmts
 			if len(stmts) == 0:
 				warning("expected return operator at end", stmt.ti)
@@ -3126,7 +3126,7 @@ def add_att(x, att):
 #		spec = specs[i]
 #
 #		if expected_pointers:
-#			if not arg_type.is_pointer():
+#			if not arg_type.is_type_pointer():
 #				warning("expected pointer", arg.ti)
 #				i += 1
 #				continue
@@ -3135,37 +3135,37 @@ def add_att(x, att):
 #
 #
 #		if spec in ['i', 'd']:
-#			if arg_type.is_int():
+#			if arg_type.is_type_int():
 #				if arg_type.is_unsigned():
 #					warning("expected signed integer value", arg.ti)
 #			else:
 #				warning("expected integer value2", arg.ti)
 #
 #		elif spec == 'x':
-#			if not arg_type.is_int():
+#			if not arg_type.is_type_int():
 #				warning("expected integer value3", arg.ti)
 #
 #		elif spec == 'u':
-#			if arg_type.is_int():
+#			if arg_type.is_type_int():
 #				if arg_type.is_signed():
 #					warning("expected unsigned integer value", arg.ti)
 #			else:
 #				warning("expected integer value4", arg.ti)
 #
 #		elif spec == 's':
-#			if not arg_type.is_pointer_to_str():
+#			if not arg_type.is_type_pointer_to_str():
 #				warning("expected pointer to string", arg.ti)
 #
 #		elif spec == 'f':
-#			if not arg_type.is_float():
+#			if not arg_type.is_type_float():
 #				warning("expected float value", arg.ti)
 #
 #		elif spec == 'c':
-#			if not arg_type.is_char():
+#			if not arg_type.is_type_char():
 #				warning("expected char value", arg.ti)
 #
 #		elif spec == 'p':
-#			if not arg_type.is_pointer():
+#			if not arg_type.is_type_pointer():
 #				warning("expected pointer value", arg.ti)
 #
 #		i += 1

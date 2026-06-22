@@ -155,7 +155,7 @@ class Parser:
 	def is_Identifier(self):
 		return self.ctok_class() == 'Id'
 
-	def is_string(self):
+	def is_type_string(self):
 		return self.ctok_class() == 'str'
 
 	def is_operator(self):
@@ -1556,7 +1556,7 @@ class Parser:
 				'ti': ti_start
 			}
 
-		elif self.is_string():
+		elif self.is_type_string():
 			ti = self.tokenInfo()
 			s = self.gettok()
 			return self.parse_value_string(s, ti_start)

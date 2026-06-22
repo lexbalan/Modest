@@ -6,6 +6,10 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
+// 1. OR тип это ОТДЕЛЬНЫЙ ТИП
+// 2. Он конструируется неявно только из значений с non-generic типом
+
+
 type Error = @branded Nat32
 const errorNone = Error 0
 const errorSome = Error 1

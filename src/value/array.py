@@ -38,10 +38,10 @@ def value_array_create(items, ti):
 # TODO: see select_common_type!
 def array_can(to, from_type, method, ti):
 	# String -> []CharX
-	if from_type.is_string():
-		return to.of.is_char() or to.of.is_word()
+	if from_type.is_type_string():
+		return to.of.is_type_char() or to.of.is_type_word()
 
-	if not from_type.is_array():
+	if not from_type.is_type_array():
 		return False
 
 	if not from_type.is_generic():
@@ -49,7 +49,7 @@ def array_can(to, from_type, method, ti):
 
 	if from_type.is_generic():
 		# from an empty array literal `[]`
-		if from_type.get_size() == 0 and from_type.of.is_unit():
+		if from_type.get_size() == 0 and from_type.of.is_type_unit():
 			return True
 
 	# Check item type
@@ -87,7 +87,7 @@ def array_can(to, from_type, method, ti):
 
 
 def get_last_array_in_chain(t):
-	if t.of.is_array():
+	if t.of.is_type_array():
 		return get_last_array_in_chain(t.of)
 	return t
 
@@ -100,15 +100,15 @@ def get_last_array_in_chain(t):
 
 
 def resolve(t1, t2):
-	if t1.is_array():
+	if t1.is_type_array():
 
-		if t2.is_string():
+		if t2.is_type_string():
 			from .integer import value_integer_create
 			volume = value_integer_create(t2.length)
 			t2 = TypeArray(t1.of, volume=volume, ti=None)
 
 		nt = t1
-		if t1.is_unsized_array():
+		if t1.is_type_unsized_array():
 			nt = t2.copy()
 			nt.generic = False
 		else:
@@ -140,7 +140,7 @@ def value_array_cons(t, v, method, ti):
 	if method == 'implicit':
 		n_to = result_type.volume.asset
 		n_from = 0
-		if v.type.is_string():
+		if v.type.is_type_string():
 			# Пока Разрешаем конструировать массив из более короткой строки
 			n_from = n_to #v.type.length
 		else:
@@ -152,7 +152,7 @@ def value_array_cons(t, v, method, ti):
 
 	nv = ValueCons(result_type, t, v, method, ti=ti)
 
-	if v.type.is_string():
+	if v.type.is_type_string():
 		char_type = result_type.of
 		items = utf32_chars_to_utfx_char_values(v.asset, char_type, ti)
 		nv.set_asset(items)

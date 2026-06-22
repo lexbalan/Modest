@@ -247,12 +247,12 @@ def str_type2(t):
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
-	if Type.is_func(t): return str_type_func(t)
-	elif Type.is_array(t): return str_type_array(t)
-	elif Type.is_record(t): return str_type_record(t)
-	elif Type.is_pointer(t): return str_type_pointer(t)
-	elif Type.is_type_or(t): return str_type_or(t)
-	elif Type.is_string(t): return "String(length=%d)" % t.length
+	if Type.is_type_func(t): return str_type_func(t)
+	elif Type.is_type_array(t): return str_type_array(t)
+	elif Type.is_type_record(t): return str_type_record(t)
+	elif Type.is_type_pointer(t): return str_type_pointer(t)
+	elif Type.is_type_variant(t): return str_type_or(t)
+	elif Type.is_type_string(t): return "String(length=%d)" % t.length
 	elif isinstance(t, TypeInteger): return "Integer(%d)" % t.width
 	elif isinstance(t, TypeRational): return "Rational"
 	elif isinstance(t, TypeUndefined): return "Undefined"
@@ -435,7 +435,7 @@ def is_zero_tail(values, i, n):
 def str_value_array(v, ctx):
 
 	if v.isValueImmediate():
-		if Type.is_array_of_char(v.type):
+		if Type.is_type_array_of_char(v.type):
 			return str_value_str(v, ctx=[])
 
 	s = ""
@@ -635,23 +635,23 @@ def str_value_string(x, ctx):
 
 def str_value_literal(x, ctx):
 	t = x.type
-	if Type.is_integer(t):
+	if Type.is_type_integer(t):
 		return str_value_integer(x, ctx)
-	elif Type.is_rational(t):
+	elif Type.is_type_rational(t):
 		return str_value_rational(x, ctx)
-	elif Type.is_string(t):
+	elif Type.is_type_string(t):
 		return str_value_string(x, ctx)
-	elif Type.is_int(t) or Type.is_nat(t):
+	elif Type.is_type_int(t) or Type.is_type_nat(t):
 		return str_value_integer(x, ctx)
-	elif Type.is_record(t):
+	elif Type.is_type_record(t):
 		return str_value_record(x, ctx)
-	elif Type.is_pointer(t):
+	elif Type.is_type_pointer(t):
 		return str_value_ptr(x, ctx)
-	elif Type.is_bool(t):
+	elif Type.is_type_bool(t):
 		return str_value_bool_create(x, ctx)
-	elif Type.is_char(t):
+	elif Type.is_type_char(t):
 		return str_value_char_create(x, ctx)
-	elif Type.is_word(t):
+	elif Type.is_type_word(t):
 		return str_value_integer(x, ctx)
 	return "<str_value_literal:%s>" % str(x)
 

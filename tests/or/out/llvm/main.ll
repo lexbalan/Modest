@@ -218,7 +218,3 @@ else_0:
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @.str2 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	ret i8 cast (%Int 0 to i8)
-}
-
-

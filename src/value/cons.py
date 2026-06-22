@@ -38,7 +38,7 @@ def cons_can(to, from_type, method, ti):
 		return True
 
 	if method == 'explicit':
-		if from_type.is_va_list():
+		if from_type.is_type_va_list():
 			return True
 
 		from trans import is_unsafe_mode
@@ -46,22 +46,22 @@ def cons_can(to, from_type, method, ti):
 			method = 'unsafe'
 
 	checker = None
-	if to.is_integer(): checker = integer_can
-	elif to.is_rational(): checker = rational_can
-	elif to.is_int(): checker = int_can
-	elif to.is_nat(): checker = nat_can
-	elif to.is_bool(): checker = bool_can
-	elif to.is_word(): checker = word_can
-	elif to.is_record(): checker = record_can
-	elif to.is_pointer(): checker = pointer_can
-	elif to.is_array(): checker = array_can
-	elif to.is_float(): checker = float_can
-	elif to.is_fixed(): checker = fixed_can
-	elif to.is_char(): checker = char_can
-	elif to.is_type_or(): checker = or_can
+	if to.is_type_integer(): checker = integer_can
+	elif to.is_type_rational(): checker = rational_can
+	elif to.is_type_int(): checker = int_can
+	elif to.is_type_nat(): checker = nat_can
+	elif to.is_type_bool(): checker = bool_can
+	elif to.is_type_word(): checker = word_can
+	elif to.is_type_record(): checker = record_can
+	elif to.is_type_pointer(): checker = pointer_can
+	elif to.is_type_array(): checker = array_can
+	elif to.is_type_float(): checker = float_can
+	elif to.is_type_fixed(): checker = fixed_can
+	elif to.is_type_char(): checker = char_can
+	elif to.is_type_variant(): checker = or_can
 	elif to.is_bad(): checker = bad_can
 	else:
-		print(to.is_pointer())
+		print(to.is_type_pointer())
 		info(str(to), to.ti)
 		assert(False)
 
@@ -101,7 +101,7 @@ def value_cons_implicit(t, v):
 	# (!) потому что в C номинальные типы, а у нас - структурные
 
 	# for structural type system support
-	if t.is_record() and from_type.is_record():
+	if t.is_type_record() and from_type.is_type_record():
 		# Конструируем запись из записи
 		# если типы записей разные или если оба типа - Generic (!)
 		if id(t) != id(from_type) or (t.is_generic() and from_type.is_generic()):
@@ -110,7 +110,7 @@ def value_cons_implicit(t, v):
 			return value_record_cons(t, v, 'implicit', ti=ti)
 
 	# for structural type system support
-	if t.is_pointer_to_record() and from_type.is_pointer_to_record():
+	if t.is_type_pointer_to_record() and from_type.is_type_pointer_to_record():
 		if id(t.to) != id(from_type.to):
 			# Если это указатели на разные структуры (номинативно!) то генерим cons операцию
 			# для C и LLVM это важно (их не волнует то что структура может быть одинакова)
@@ -205,28 +205,28 @@ def _select_default_type_for(t):
 	if not t.is_generic():
 		return None
 
-	if t.is_integer():
+	if t.is_type_integer():
 		t = typeSysInt
 		if t.is_unsigned():
 			t = typeSysNat
 		return t
 
-	elif t.is_string():
+	elif t.is_type_string():
 		return typeSysStr
 
-	elif t.is_float():
+	elif t.is_type_float():
 		return typeSysFloat
 
-	elif t.is_char():
+	elif t.is_type_char():
 		return typeSysChar
 
-	elif t.is_word():
+	elif t.is_type_word():
 		return typeSysWord
 
-	elif t.is_rational():
+	elif t.is_type_rational():
 		return typeSysFloat
 
-	elif t.is_array():
+	elif t.is_type_array():
 		item_type = t.of
 		if item_type.is_generic():
 			# выбираем тип для generic-элемента
@@ -239,7 +239,7 @@ def _select_default_type_for(t):
 
 		nt = TypeArray(item_type, t.volume, t.ti)
 		return nt
-	elif t.is_record():
+	elif t.is_type_record():
 		return t
 
 	# corresponded type not found!
@@ -260,7 +260,7 @@ def value_cons(t, v, method, ti):
 
 	if method == 'explicit':
 		# Construction from __VA_List is an exceptional case
-		if v.type.is_va_list():
+		if v.type.is_type_va_list():
 			nv = ValueCons(t, t, v, 'explicit', ti)
 			nv.stage = HLIR_VALUE_STAGE_RUNTIME
 			return nv
@@ -270,19 +270,19 @@ def value_cons(t, v, method, ti):
 			method = 'unsafe'
 
 	constructor = None
-	if t.is_integer(): constructor = value_integer_cons
-	elif t.is_rational(): constructor = value_rational_cons
-	elif t.is_int(): constructor = value_int_cons
-	elif t.is_nat(): constructor = value_nat_cons
-	elif t.is_array(): constructor = value_array_cons
-	elif t.is_record(): constructor = value_record_cons
-	elif t.is_char(): constructor = value_char_cons
-	elif t.is_word(): constructor = value_word_cons
-	elif t.is_bool(): constructor = value_bool_cons
-	elif t.is_pointer(): constructor = value_pointer_cons
-	elif t.is_fixed(): constructor = value_fixed_cons
-	elif t.is_float(): constructor = value_float_cons
-	elif t.is_type_or(): constructor = value_or_cons
+	if t.is_type_integer(): constructor = value_integer_cons
+	elif t.is_type_rational(): constructor = value_rational_cons
+	elif t.is_type_int(): constructor = value_int_cons
+	elif t.is_type_nat(): constructor = value_nat_cons
+	elif t.is_type_array(): constructor = value_array_cons
+	elif t.is_type_record(): constructor = value_record_cons
+	elif t.is_type_char(): constructor = value_char_cons
+	elif t.is_type_word(): constructor = value_word_cons
+	elif t.is_type_bool(): constructor = value_bool_cons
+	elif t.is_type_pointer(): constructor = value_pointer_cons
+	elif t.is_type_fixed(): constructor = value_fixed_cons
+	elif t.is_type_float(): constructor = value_float_cons
+	elif t.is_type_variant(): constructor = value_or_cons
 	elif t.is_bad(): constructor = value_bad_cons
 	else:
 		assert False, "unknown type kind '%s'" % t['kind']
