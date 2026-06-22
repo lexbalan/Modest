@@ -862,7 +862,7 @@ class Type(Entity):
 		return isinstance(self, TypePointer)
 
 	def is_type_variant(self):
-		return isinstance(self, TypeOr)
+		return isinstance(self, TypeVariant)
 
 	def is_type_va_list(self):
 		return isinstance(self, TypeVaList)
@@ -1702,7 +1702,7 @@ class TypeVaList(Type):
 		return ValueUndef(self)
 
 
-class TypeOr(Type):
+class TypeVariant(Type):
 	def __init__(self, variants, generic=False, ti=None):
 		super().__init__(width=int(pointer_width), generic=generic, ops=PTR_OPS, ti=ti)
 		self.incomplete = False

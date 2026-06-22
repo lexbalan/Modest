@@ -144,7 +144,7 @@ def str_type_pointer(t):
 	return "*" + str_type(t.to)
 
 
-def str_type_or(t):
+def str_type_variant(t):
 	xs = []
 	for variant in t.variants:
 		xs.append(str_type(variant))
@@ -251,7 +251,7 @@ def str_type2(t):
 	elif Type.is_type_array(t): return str_type_array(t)
 	elif Type.is_type_record(t): return str_type_record(t)
 	elif Type.is_type_pointer(t): return str_type_pointer(t)
-	elif Type.is_type_variant(t): return str_type_or(t)
+	elif Type.is_type_variant(t): return str_type_variant(t)
 	elif Type.is_type_string(t): return "String(length=%d)" % t.length
 	elif isinstance(t, TypeInteger): return "Integer(%d)" % t.width
 	elif isinstance(t, TypeRational): return "Rational"

@@ -926,7 +926,7 @@ def str_type_pointer(t):
 	return str_type(t.to) + "*"
 
 
-def str_type_or(t):
+def str_type_variant(t):
 	return "i8"
 
 
@@ -976,7 +976,7 @@ def str_type(t):
 	elif t.is_type_record(): return str_type_record(t)
 	elif t.is_type_pointer(): return str_type_pointer(t)
 	elif t.is_type_array(): return str_type_array(t)
-	elif t.is_type_variant(): return str_type_or(t)
+	elif t.is_type_variant(): return str_type_variant(t)
 	#elif t.is_enum(): print_type_enum(t)
 
 	elif t.is_type_int():

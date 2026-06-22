@@ -208,13 +208,4 @@ declare void @perror(%ConstCharStr* %str)
 ; 1. OR тип это ОТДЕЛЬНЫЙ ТИП
 ; 2. Он конструируется неявно только из значений с non-generic типом
 %Error = type %Nat32;
-define i8 @main() {
-; if_0
-	br %Bool 0 , label %then_0, label %else_0
-then_0:
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str1 to [0 x i8]*))
-	br label %endif_0
-else_0:
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @.str2 to [0 x i8]*))
-	br label %endif_0
-endif_0:
+define internal i8 @foo() {

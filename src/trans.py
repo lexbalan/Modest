@@ -557,12 +557,12 @@ def do_type_record(x):
 
 
 
-def do_type_or(x):
+def do_type_variant(x):
 	info("type or", x['ti'])
 	#1/0
 	l = do_type(x['left'])
 	r = do_type(x['right'])
-	return TypeOr(variants=[l, r], ti=x['ti'])
+	return TypeVariant(variants=[l, r], ti=x['ti'])
 
 
 
@@ -592,7 +592,7 @@ def do_type_internal(x):
 	elif k == 'pointer': t = do_type_pointer(x)
 	elif k == 'array': t = do_type_array(x)
 	elif k == 'record': t = do_type_record(x)
-	elif k == 'or': t = do_type_or(x)
+	elif k == 'or': t = do_type_variant(x)
 	else: t = bad_type(x['ti'])
 	t.ti = x['ti']
 
