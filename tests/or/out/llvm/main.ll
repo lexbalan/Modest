@@ -200,9 +200,25 @@ declare void @perror(%ConstCharStr* %str)
 ; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
+@.str1 = private constant [10 x i8] [i8 78, i8 111, i8 32, i8 101, i8 114, i8 114, i8 111, i8 114, i8 10, i8 0]
+@.str2 = private constant [16 x i8] [i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 111, i8 99, i8 99, i8 117, i8 114, i8 114, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-define %Int @main() {
-	ret %Int 0
+
+
+; 1. OR тип это ОТДЕЛЬНЫЙ ТИП
+; 2. Он конструируется неявно только из значений с non-generic типом
+%Error = type %Nat32;
+define i8 @main() {
+; if_0
+	br %Bool 0 , label %then_0, label %else_0
+then_0:
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str1 to [0 x i8]*))
+	br label %endif_0
+else_0:
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @.str2 to [0 x i8]*))
+	br label %endif_0
+endif_0:
+	ret i8 cast (%Int 0 to i8)
 }
 
 

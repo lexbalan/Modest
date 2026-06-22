@@ -3,9 +3,15 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
+
+// 1. OR тип это ОТДЕЛЬНЫЙ ТИП
+// 2. Он конструируется неявно только из значений с non-generic типом
+
+
 type Error = @branded Nat32
 const errorNone = Error 0
 const errorSome = Error 1
+
 
 func main () -> Int or Error {
 	let x = errorSome
@@ -14,5 +20,5 @@ func main () -> Int or Error {
 	} else {
 		printf("Error occurred\n")
 	}
-	return 0
+	return Int 0
 }

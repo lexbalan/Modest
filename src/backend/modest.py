@@ -144,6 +144,13 @@ def str_type_pointer(t):
 	return "*" + str_type(t.to)
 
 
+def str_type_or(t):
+	xs = []
+	for variant in t.variants:
+		xs.append(str_type(variant))
+	return " or ".join(xs)
+
+
 def str_field(x):
 	s = get_id_str(x) + ": " + str_type(x.type)
 	if not x.init_value.is_value_undefined():
@@ -240,22 +247,15 @@ def str_type2(t):
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
-	if Type.is_func(t):
-		return str_type_func(t)
-	elif Type.is_array(t):
-		return str_type_array(t)
-	elif Type.is_record(t):
-		return str_type_record(t)
-	elif Type.is_pointer(t):
-		return str_type_pointer(t)
-	elif Type.is_string(t):
-		return "String(length=%d)" % t.length
-	elif isinstance(t, TypeInteger):
-		return "Integer(%d)" % t.width
-	elif isinstance(t, TypeRational):
-		return "Rational"
-	elif isinstance(t, TypeUndefined):
-		return "Undefined"
+	if Type.is_func(t): return str_type_func(t)
+	elif Type.is_array(t): return str_type_array(t)
+	elif Type.is_record(t): return str_type_record(t)
+	elif Type.is_pointer(t): return str_type_pointer(t)
+	elif Type.is_type_or(t): return str_type_or(t)
+	elif Type.is_string(t): return "String(length=%d)" % t.length
+	elif isinstance(t, TypeInteger): return "Integer(%d)" % t.width
+	elif isinstance(t, TypeRational): return "Rational"
+	elif isinstance(t, TypeUndefined): return "Undefined"
 	else:
 		#1/0
 		return str(t)

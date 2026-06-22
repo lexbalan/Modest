@@ -231,6 +231,9 @@ def do_ctype_named(t, specs):
 	return CTypeNamed(id_str, specs=specs)
 
 
+def do_ctype_or(t, specs):
+	return CTypeNamed("/*Type Variant*/", specs=specs)
+
 
 # преобразуем Modest Type -> CIR Type
 def do_ctype(t, is_param=False):
@@ -253,6 +256,7 @@ def do_ctype(t, is_param=False):
 	if t.is_func(): return do_ctype_func(t, specs=specs)
 	if t.is_array(): return do_ctype_array(t, specs=specs)
 	if t.is_record(): return do_ctype_struct(t, specs=specs)
+	if t.is_type_or(): return do_ctype_or(t, specs=specs)
 	return None
 
 
@@ -261,8 +265,8 @@ def str_type(t, ctx=None):
 	return do_ctype(t).to_str()
 
 
-def str_type_record(t, tag='', ctx=[]):
-	return do_ctype_struct(t, tag=tag).to_str()
+#def str_type_record(t, tag='', ctx=[]):
+#	return do_ctype_struct(t, tag=tag).to_str()
 
 
 def str_field(t, id_str, ctx=[]):
@@ -621,6 +625,7 @@ def do_cvalue_cons2(x, ctx):
 	if type.is_int(): return do_cvalue_cons_int(x, ctx)
 	if type.is_nat(): return do_cvalue_cons_nat(x, ctx)
 	if type.is_word(): return do_cvalue_cons_word(x, ctx)
+	if type.is_type_or(): return do_cvalue_cons_or(x, ctx)
 
 
 	if x.method in ['implicit', 'default']:
@@ -869,6 +874,10 @@ def do_cvalue_cast(type, value, ctx, raw_cast=False):
 	cv = CValueCast(ctype, cvalue)
 	return cv
 
+
+
+def do_cvalue_cons_or(t, ctx):
+	return CValueNamed("/*cons value or*/")
 
 
 def do_cvalue_call(x, ctx):
@@ -2114,10 +2123,12 @@ def do_header(module):
 	return (dv,)
 
 
+
 def was_defined(x):
 	global defined
 	if not x in defined:
 		defined.append(x)
+
 
 def extt(module):
 	for m in module.included_modules:

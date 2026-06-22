@@ -13,6 +13,7 @@ from .fixed import fixed_can, value_fixed_cons
 from .record import record_can, value_record_cons
 from .array import array_can, value_array_cons
 from .pointer import pointer_can, value_pointer_cons
+from ._or import or_can, value_or_cons
 from .bad import bad_can, value_bad_cons
 
 from util import align_bits_up
@@ -57,6 +58,7 @@ def cons_can(to, from_type, method, ti):
 	elif to.is_float(): checker = float_can
 	elif to.is_fixed(): checker = fixed_can
 	elif to.is_char(): checker = char_can
+	elif to.is_type_or(): checker = or_can
 	elif to.is_bad(): checker = bad_can
 	else:
 		print(to.is_pointer())
@@ -280,6 +282,7 @@ def value_cons(t, v, method, ti):
 	elif t.is_pointer(): constructor = value_pointer_cons
 	elif t.is_fixed(): constructor = value_fixed_cons
 	elif t.is_float(): constructor = value_float_cons
+	elif t.is_type_or(): constructor = value_or_cons
 	elif t.is_bad(): constructor = value_bad_cons
 	else:
 		assert False, "unknown type kind '%s'" % t['kind']

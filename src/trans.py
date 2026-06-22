@@ -559,7 +559,11 @@ def do_type_record(x):
 
 def do_type_or(x):
 	info("type or", x['ti'])
-	1/0
+	#1/0
+	l = do_type(x['left'])
+	r = do_type(x['right'])
+	return TypeOr(variants=[l, r], ti=x['ti'])
+
 
 
 def do_type_func(x, func_id="_"):

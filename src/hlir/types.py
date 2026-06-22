@@ -861,6 +861,8 @@ class Type(Entity):
 	def is_pointer(self):
 		return isinstance(self, TypePointer)
 
+	def is_type_or(self):
+		return isinstance(self, TypeOr)
 
 	def is_va_list(self):
 		return isinstance(self, TypeVaList)
@@ -1675,7 +1677,7 @@ class TypeRecord(Type):
 
 	def create_zero_literal(self, ti=None):
 		return ValueRecord(self, initializers=[], ti=ti)
-	
+
 	def get_default_value(self, ti=None):
 		return self.create_zero_literal(ti)
 
@@ -1698,6 +1700,22 @@ class TypeVaList(Type):
 
 	def get_default_value(self, ti=None):
 		return ValueUndef(self)
+
+
+class TypeOr(Type):
+	def __init__(self, variants, generic=False, ti=None):
+		super().__init__(width=int(pointer_width), generic=generic, ops=PTR_OPS, ti=ti)
+		self.incomplete = False
+		self.variants = variants
+
+
+	def getVariantId(self, t):
+		i = 0
+		for variant in self.variants:
+			if Type.eq(t, variant):
+				return i
+			i += 1
+		return None
 
 
 HLIR_VALUE_STORAGE_CLASS_UNKNOWN = 'HLIR_VALUE_STORAGE_CLASS_UNKNOWN'
