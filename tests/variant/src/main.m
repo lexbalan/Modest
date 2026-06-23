@@ -1,4 +1,4 @@
-// tests/or/src/main.m
+// tests/variant/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"
@@ -28,3 +28,4 @@ func main () -> Int {
 	}
 	return 0
 }
+
