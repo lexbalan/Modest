@@ -231,7 +231,7 @@ def do_ctype_named(t, specs):
 	return CTypeNamed(id_str, specs=specs)
 
 
-def do_ctype_or(t, specs):
+def do_ctype_variant(t, specs):
 	return CTypeNamed("/*Type Variant*/", specs=specs)
 
 
@@ -256,7 +256,7 @@ def do_ctype(t, is_param=False):
 	if t.is_type_func(): return do_ctype_func(t, specs=specs)
 	if t.is_type_array(): return do_ctype_array(t, specs=specs)
 	if t.is_type_record(): return do_ctype_struct(t, specs=specs)
-	if t.is_type_variant(): return do_ctype_or(t, specs=specs)
+	if t.is_type_variant(): return do_ctype_variant(t, specs=specs)
 	return None
 
 
@@ -625,7 +625,7 @@ def do_cvalue_cons2(x, ctx):
 	if type.is_type_int(): return do_cvalue_cons_int(x, ctx)
 	if type.is_type_nat(): return do_cvalue_cons_nat(x, ctx)
 	if type.is_type_word(): return do_cvalue_cons_word(x, ctx)
-	if type.is_type_variant(): return do_cvalue_cons_or(x, ctx)
+	if type.is_type_variant(): return do_cvalue_cons_variant(x, ctx)
 
 
 	if x.method in ['implicit', 'default']:
@@ -876,7 +876,7 @@ def do_cvalue_cast(type, value, ctx, raw_cast=False):
 
 
 
-def do_cvalue_cons_or(t, ctx):
+def do_cvalue_cons_variant(t, ctx):
 	# mass
 	return CValueNamed("/*cons value or*/")
 
