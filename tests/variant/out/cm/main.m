@@ -18,17 +18,13 @@ const errorSome = Error 1
 
 func foo () -> Int or Error {
 	return Int 0
+	return errorNone
 }
 
 
 @nonstatic
 func main () -> Int {
-	let x: Error = errorSome
-	if x == errorNone {
-		printf("No error\n")
-	} else {
-		printf("Error occurred\n")
-	}
+	var x: Int or Error = foo()
 	return 0
 }
 

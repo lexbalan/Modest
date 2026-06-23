@@ -21,12 +21,13 @@ func foo () -> Int or Error {
 
 
 func main () -> Int {
-	let x = errorSome
-	if x == errorNone {
-		printf("No error\n")
-	} else {
-		printf("Error occurred\n")
-	}
+	var x = foo()
+//	let x = errorSome
+//	if x == errorNone {
+//		printf("No error\n")
+//	} else {
+//		printf("Error occurred\n")
+//	}
 	return 0
 }
 

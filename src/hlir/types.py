@@ -1105,6 +1105,15 @@ class Type(Entity):
 		return Type.eq_fields(a.fields, b.fields, opt)
 
 
+	def eq_variant(a, b, opt):
+		if len(a.variants) != len(b.variants):
+			return False
+		for a, b in zip(a.variants, b.variants):
+			if not Type.eq(a, b):
+				return False
+		return True
+
+
 	@staticmethod
 	def eq(a, b, opt=[], debug=False):
 		assert (a != None) and isinstance(a, Type)
@@ -1152,6 +1161,7 @@ class Type(Entity):
 		elif a.is_type_record(): return Type.eq_record(a, b, opt)
 		elif a.is_type_array(): return Type.eq_array(a, b, opt)
 		elif a.is_type_pointer(): return Type.eq_pointer(a, b, opt)
+		elif a.is_type_variant(): return Type.eq_variant(a, b, opt)
 		elif a.is_type_string(): return True
 		elif a.is_type_va_list(): return True
 		else: assert(False)

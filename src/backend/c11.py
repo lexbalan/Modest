@@ -236,6 +236,14 @@ def do_ctype_variant(t, specs):
 
 
 def do_def_type_variant(t):
+	result = []
+
+	# Emit full definitions of named sub-types before the variant struct.
+	# Union members require complete types in C, so a forward declaration is not enough.
+	for vtype in t.variants:
+		if vtype.definition is not None:
+			result.extend(do_def_type(vtype.definition))
+
 	union_fields = []
 	for i, vtype in enumerate(t.variants):
 		union_fields.append(CField(id_str='_%d' % i, type=do_ctype(vtype), specs=[], nl=1))
@@ -246,8 +254,8 @@ def do_def_type_variant(t):
 		CField(id_str='value', type=union_type, specs=[], nl=1),
 	]
 	struct_type = CTypeStruct(outer_fields, specs=[], tag='struct ' + t.c_anon_id)
-	dv = CStmtDefVar('', struct_type, storage_class='', attributes={})
-	return (dv,)
+	result.append(CStmtDefVar('', struct_type, storage_class='', attributes={}))
+	return result
 
 
 # преобразуем Modest Type -> CIR Type
@@ -898,7 +906,8 @@ def do_cvalue_cons_variant(x, ctx):
 	tag = x.type.getVariantId(x.value.type)
 	items.append(KV('tag', CValueInteger(tag, as_hex=True), nl=x.nl))
 	items.append(KV('value._%d' % tag, do_cvalue(x.value, ctx=ctx), nl=x.nl))
-	return CValueStruct(items)
+	variant_struct_literal = CValueStruct(items)
+	return CValueCast(do_ctype(x.type), variant_struct_literal)
 
 
 def do_cvalue_call(x, ctx):
@@ -1767,7 +1776,9 @@ def do_def_type(x):
 	orig_type = x.original_type
 
 	if orig_type.is_type_record() and not is_type_named(orig_type):
-		return do_def_type_record(x.type)
+		result = do_def_type_record(x.type)
+		defined.append(x)
+		return result
 
 	dt = CStmtDefType(id_str, do_ctype(orig_type))
 	defined.append(x)
