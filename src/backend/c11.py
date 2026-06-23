@@ -232,7 +232,22 @@ def do_ctype_named(t, specs):
 
 
 def do_ctype_variant(t, specs):
-	return CTypeNamed("/*Type Variant*/", specs=specs)
+	return CTypeNamed('struct ' + t.c_anon_id, specs=specs)
+
+
+def do_def_type_variant(t):
+	union_fields = []
+	for i, vtype in enumerate(t.variants):
+		union_fields.append(CField(id_str='_%d' % i, type=do_ctype(vtype), specs=[], nl=1))
+	union_type = CTypeStruct(union_fields, specs=[], tag='union')
+
+	outer_fields = [
+		CField(id_str='tag', type=CTypeNamed('uint8_t'), specs=[], nl=1),
+		CField(id_str='value', type=union_type, specs=[], nl=1),
+	]
+	struct_type = CTypeStruct(outer_fields, specs=[], tag='struct ' + t.c_anon_id)
+	dv = CStmtDefVar('', struct_type, storage_class='', attributes={})
+	return (dv,)
 
 
 # преобразуем Modest Type -> CIR Type
@@ -2212,6 +2227,10 @@ def do_cfile(module):
 		#out("\n\n/* anonymous records */")
 		for t in module.anon_recs:
 			xdefs.extend(do_def_type_record(t))
+
+	if len(module.anon_vars) > 0:
+		for t in module.anon_vars:
+			xdefs.extend(do_def_type_variant(t))
 
 	xdefs.extend(do_helpers(module))
 

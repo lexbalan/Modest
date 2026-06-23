@@ -207,6 +207,7 @@ class Module:
 		#self.prefix = idStr
 		self.strings = []   # for LLVM backend
 		self.anon_recs = [] # anonymous records for C backend
+		self.anon_vars = [] # anonymous variant types for C backend
 		self.imports = {}   # '<import_id>' => {'isa': 'module'}
 		self.included_modules = []
 		self.symtab = symtab
@@ -1718,6 +1719,8 @@ class TypeVariant(Type):
 		super().__init__(width=int(pointer_width), generic=generic, ops=PTR_OPS, ti=ti)
 		self.incomplete = False
 		self.variants = variants
+		self.uid = None
+		self.c_anon_id = None
 
 
 	def getVariantId(self, t):

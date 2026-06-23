@@ -525,6 +525,7 @@ def do_type_array(x):
 # Нужен для анонимных структур
 # и чтобы отличать копии типа структура от реально другой структуры (C)
 rec_uid = 0
+var_uid = 0
 def do_type_record(x):
 	global rec_uid
 	fields = []
@@ -559,9 +560,14 @@ def do_type_record(x):
 
 def do_type_variant(x):
 	#info("variant type", x['ti'])
+	global var_uid
+	uid = var_uid
+	var_uid += 1
 	l = do_type(x['left'])
 	r = do_type(x['right'])
-	return TypeVariant(variants=[l, r], ti=x['ti'])
+	t = TypeVariant(variants=[l, r], ti=x['ti'])
+	t.uid = uid
+	return t
 
 
 
@@ -606,6 +612,11 @@ def do_type_internal(x):
 		anon_tag = '__anonymous_struct_%d' % t.uid
 		t.c_anon_id = anon_tag
 		cmodule.anon_recs.append(t)
+
+	if k == 'or':
+		anon_tag = '__anonymous_variant_%d' % t.uid
+		t.c_anon_id = anon_tag
+		cmodule.anon_vars.append(t)
 
 	return t
 
@@ -2165,6 +2176,8 @@ def def_type_common(x, nt):
 	# он уже не анонимный
 	if ty in cmodule.anon_recs:
 		cmodule.anon_recs.remove(ty)
+	if ty in cmodule.anon_vars:
+		cmodule.anon_vars.remove(ty)
 	ty.c_anon_id = None
 
 	# Замещаем внутренности undefined типа на тип справа
