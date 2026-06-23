@@ -876,9 +876,14 @@ def do_cvalue_cast(type, value, ctx, raw_cast=False):
 
 
 
-def do_cvalue_cons_variant(t, ctx):
+def do_cvalue_cons_variant(x, ctx):
 	# mass
-	return CValueNamed("/*cons value or*/")
+	# Возвращаем литерал структуры с полем __tag = 0 и полем __value = value
+	items = []
+	tag = x.type.getVariantId(x.value.type)
+	items.append(KV('tag', CValueInteger(tag, as_hex=True), nl=x.nl))
+	items.append(KV('value._%d' % tag, do_cvalue(x.value, ctx=ctx), nl=x.nl))
+	return CValueStruct(items)
 
 
 def do_cvalue_call(x, ctx):

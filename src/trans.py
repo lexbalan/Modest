@@ -558,8 +558,7 @@ def do_type_record(x):
 
 
 def do_type_variant(x):
-	info("type or", x['ti'])
-	#1/0
+	#info("variant type", x['ti'])
 	l = do_type(x['left'])
 	r = do_type(x['right'])
 	return TypeVariant(variants=[l, r], ti=x['ti'])

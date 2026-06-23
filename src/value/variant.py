@@ -8,8 +8,9 @@ def value_variant_create(val, ti=None):
 
 
 def variant_can(to, from_type, method, ti):
-	info("variant_can", ti)
-	return to.getVariantId(from_type) != None
+	can = to.getVariantId(from_type) != None
+	info("variant_can ? %d" % can, ti)
+	return can
 
 
 def value_variant_cons(t, v, method, ti):

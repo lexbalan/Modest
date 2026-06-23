@@ -10,8 +10,10 @@ typedef uint32_t Error;
 #define ERROR_NONE ((Error)0)
 #define ERROR_SOME ((Error)1)
 
+
 static /*Type Variant*/ foo(void) {
-	return /*cons value or*/;
+	return {.tag = 0x0, .value._0 = (int)0};
+	return {.tag = 0x1, .value._1 = ERROR_NONE};
 }
 
 

@@ -16,6 +16,7 @@ const errorSome = Error 1
 
 func foo () -> Int or Error {
 	return Int 0
+	return errorNone
 }
 
 
