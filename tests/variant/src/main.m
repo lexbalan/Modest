@@ -22,6 +22,17 @@ func foo () -> Int or Error {
 
 func main () -> Int {
 	var x = foo()
+
+//	when x is {
+//		Error => {
+//			//
+//		}
+//
+//		Int => {
+//			//
+//		}
+//	}
+
 //	let x = errorSome
 //	if x == errorNone {
 //		printf("No error\n")

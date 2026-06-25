@@ -200,8 +200,6 @@ declare void @perror(%ConstCharStr* %str)
 ; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
-@.str1 = private constant [10 x i8] [i8 78, i8 111, i8 32, i8 101, i8 114, i8 114, i8 111, i8 114, i8 10, i8 0]
-@.str2 = private constant [16 x i8] [i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 111, i8 99, i8 99, i8 117, i8 114, i8 114, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 
