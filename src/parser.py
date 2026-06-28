@@ -432,7 +432,7 @@ class Parser:
 		#return r
 
 
-	def expr_type(self):
+	def _parse_type_atom(self):
 		start_ti = self.textInfo()
 
 		if not self.is_type_expr():
@@ -513,18 +513,29 @@ class Parser:
 			}
 
 		t['anno'] = annotations
+		return t
+
+
+	def expr_type(self):
+		t = self._parse_type_atom()
+		if t is None:
+			return None
 
 		# or-type has the lowest priority: `*Int or Error` -> `(*Int) or Error`
 		or_ti = self.textInfo()
 		if self.match("or"):
-			r = self.expr_type()
+			variants = [t]
+			while True:
+				r = self._parse_type_atom()
+				variants.append(r)
+				if not self.match("or"):
+					break
 			t = {
 				'isa': 'ast_type',
-				'kind': 'or',
-				'left': t,
-				'right': r,
+				'kind': 'variant',
+				'variants': variants,
 				'anno': [],
-				'ti': TextInfo(start=t['ti'], mid=or_ti, end=r['ti'])
+				'ti': TextInfo(start=variants[0]['ti'], mid=or_ti, end=variants[-1]['ti'])
 			}
 
 		return t

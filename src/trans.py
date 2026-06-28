@@ -563,9 +563,8 @@ def do_type_variant(x):
 	global var_uid
 	uid = var_uid
 	var_uid += 1
-	l = do_type(x['left'])
-	r = do_type(x['right'])
-	t = TypeVariant(variants=[l, r], ti=x['ti'])
+	variants = [do_type(v) for v in x['variants']]
+	t = TypeVariant(variants=variants, ti=x['ti'])
 	t.uid = uid
 	return t
 
@@ -597,7 +596,7 @@ def do_type_internal(x):
 	elif k == 'pointer': t = do_type_pointer(x)
 	elif k == 'array': t = do_type_array(x)
 	elif k == 'record': t = do_type_record(x)
-	elif k == 'or': t = do_type_variant(x)
+	elif k == 'variant': t = do_type_variant(x)
 	else: t = bad_type(x['ti'])
 	t.ti = x['ti']
 
@@ -613,7 +612,7 @@ def do_type_internal(x):
 		t.c_anon_id = anon_tag
 		cmodule.anon_recs.append(t)
 
-	if k == 'or':
+	if k == 'variant':
 		anon_tag = '__anonymous_variant_%d' % t.uid
 		t.c_anon_id = anon_tag
 		cmodule.anon_vars.append(t)

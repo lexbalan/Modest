@@ -14,7 +14,8 @@ types
 ├── record      {a: T1, b: T2} ............................ record.md
 ├── pointer     *T, Ptr (free pointer), nil ............... pointer.md
 ├── function    (a: T1) -> T2, pointer to function ........ func.md
-└── branded     @branded T — nominal wrapper .............. branded.md
+├── branded     @branded T — nominal wrapper .............. branded.md
+└── variant     A or B — discriminated union [experimental] variant.md
 ```
 
 Named types are created with a [type definition](../def/type.md).
