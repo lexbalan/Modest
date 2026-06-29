@@ -2,6 +2,7 @@
 
 pragma do_not_include
 pragma c_include "ctype.h"
+pragma prefix ""
 
 include "ctypes64"
 

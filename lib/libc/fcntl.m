@@ -28,7 +28,6 @@ include "libc/stat"
 @extern("C", "F_SETFD") public const fSetfd = 2           // set file descriptor flags
 @extern("C", "F_GETFL") public const fGetfl = 3           // get file status flags
 @extern("C", "F_SETFL") public const fSetfl = 4           // set file status flags
-@extern("C", "F_SETFL") public const fSetfl = 4           // set file status flags
 @extern("C", "F_GETOWN") public const fGetown = 5         // get SIGIO/SIGURG proc/pgrp
 @extern("C", "F_SETOWN") public const fSetown = 6         // set SIGIO/SIGURG proc/pgrp
 @extern("C", "F_GETLK") public const fGetlk = 7           // get record locking information
