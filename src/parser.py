@@ -3,7 +3,6 @@
 #####################################################################
 
 import os
-import re
 
 from hlir import *
 from error import error, warning, info
@@ -167,13 +166,7 @@ class Parser:
 
 	def parse_identifier(self):
 		ti = self.textInfo()
-#		if not self.is_identifier():
-#			self.skip1()
-#			error("expected identifier", ti)
-#			return None
 		s = self.gettok()
-		if not re.fullmatch(r'[A-Za-z0-9_]+', s):
-			error("bad identifier", ti)
 		return {'isa': 'ast_id', 'kind': 'id', 'str': s, 'ti': ti} #Id(s, ti=ti) ####
 
 
@@ -881,6 +874,11 @@ class Parser:
 		return v
 
 	def is_type_before_value2(self):
+		c = self.ctok_class()
+		if c == 'num' or c == 'str':
+			return False
+		if c == 'id' and self.nextok() != '.':
+			return False
 		if not self.is_type_expr():
 			return False
 		if self.look("{"):
