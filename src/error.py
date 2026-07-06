@@ -45,17 +45,15 @@ TABSTOP = 4
 
 
 
+# offset - позиция в символах (как lexer.pos), не в байтах,
+# поэтому читаем декодированный текст, а не f.seek()
 def read_line(file, offset):
-	f = open(file, 'r')
-	f.seek(offset)
-	s = ''
-	while True:
-		c = f.read(1)
-		if c == '\n' or c == None:
-			break
-		s += c
-	f.close()
-	return s
+	with open(file, 'r') as f:
+		text = f.read()
+	end = text.find('\n', offset)
+	if end == -1:
+		end = len(text)
+	return text[offset:end]
 
 
 

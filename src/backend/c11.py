@@ -2075,17 +2075,18 @@ def do_helper_use_fixed_point():
 
 h_helpers = {
 	'use_bigint': do_helper_use_bigint,
+	'use_va_arg': do_helper_use_va_arg,
 }
 
 c_helpers = {
 	'use_abs': do_helper_use_stdlib,
 	'use_lengthof': do_helper_use_lengthof,
 	'use_arrcpy': do_helper_use_arrcpy,
-	'use_va_arg': do_helper_use_va_arg,
 	'use_raw_cast': do_helper_use_rawcast,
 	'use_fixed_point': do_helper_use_fixed_point,
 	'use_bigint': do_helper_use_bigint,
 	'use_malloc': do_helper_use_stdlib,
+	'use_va_arg': do_helper_use_va_arg,
 }
 
 
@@ -2125,6 +2126,11 @@ def do_header(module):
 	xdefs.extend(include("stdint.h", local=False))
 	xdefs.extend(include("stdbool.h", local=False))
 	xdefs.extend(do_helpers(module))
+
+	# TODO: убери это - не место в атрибутах модуля, а то по сути это уже не атрибуты, а зависимости от хелперов
+	for use in module.helpers:
+		if use in h_helpers:
+			xdefs.extend(h_helpers[use]())
 
 	#xdefs.append(CInsert("\n"))
 

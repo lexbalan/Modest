@@ -13,7 +13,7 @@
 | Arithmetic | `+` `-` `*` `/` `%` | IntX, NatX, FloatX (`%`: integers only) | operand type |
 | Logical | `and` `or` | Bool | `Bool` |
 | Bitwise | `&` `\|` `^` | WordX | operand type |
-| Shift | `<<` `>>` | left: WordX; right: any integer | left type |
+| Shift | `<<` `>>` | left: WordX; right: unsigned integer (NatX, WordX, literal) | left type |
 
 ## Semantics
 

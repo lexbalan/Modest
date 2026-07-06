@@ -652,7 +652,7 @@ def do_value_shift(x):
 
 	if left.type.is_generic():
 		if not right.type.is_generic():
-			error("expected non-generic value", left.ti)
+			error("expected non-generic value", x['left']['ti'])
 			return ValueBad(x['ti'])
 
 

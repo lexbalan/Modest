@@ -238,6 +238,21 @@ a or b
 not a
 ```
 
+### Bitwise — Word* types only
+```modest
+w & m, w | m, w ^ m                // and, or, xor — both operands WordX
+~w                                 // bitwise not
+w << n, w >> n                     // shifts: left WordX; right unsigned (NatX/WordX/literal)
+```
+
+> Bit manipulation is only defined for `Word*` types — this is a deliberate split:
+> - `Int*` / `Nat*` support arithmetic and ordering, but **no bitwise ops**
+> - `Word*` support bitwise ops and `==`/`!=`, but **no arithmetic and no ordering** (`<`, `>`, ...)
+>
+> To mix, convert explicitly via value construction: `Word32 i`, `Int32 w`.
+> There is no `xor` keyword — exclusive-or is `^` (`and`/`or` are Bool-only).
+> A signed shift count is a compile error (`expected natural value`).
+
 ### Unary / Special
 ```modest
 &x                                 // address of
@@ -604,6 +619,7 @@ public func myPrint (s: Str8) -> Unit  // emitted as: printf
 | Return type      | `int func()`                   | `func name () -> Int32`                   |
 | Void             | `void func()`                  | `func name () -> Unit`                    |
 | Logical ops      | `&&`, `\|\|`, `!`              | `and`, `or`, `not`                        |
+| Bitwise ops      | any integer type               | only `Word*` types (`&` `\|` `^` `~` `<<` `>>`) |
 | Continue         | `continue`                     | `again`                                   |
 | Type system      | implicit/weak                  | strict, explicit                          |
 | Namespaces       | none                           | `import "mod"` → `mod.name`               |
