@@ -8,6 +8,7 @@ include "libc/stdio"
 
 @nonstatic
 func main () -> Int {
+	printf("Hello Modest 🐁!\n")
 	return 0
 }
 

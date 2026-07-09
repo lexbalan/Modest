@@ -1,6 +1,6 @@
 
 from error import error, info
-from hlir import TokenInfo
+from hlir import TokenInfo, TextInfo
 
 
 EOF = ''
@@ -8,6 +8,13 @@ EOF = ''
 
 def isIdChar(x):
 	return x.isalpha() or x.isdigit() or x == '_'
+
+
+# ASCII-Latin identifier chars — the only ones actually allowed in identifiers.
+# isIdChar stays Unicode-aware so a whole word is still lexed as ONE token;
+# validity is checked separately (doId) so we can report and keep going.
+def isAsciiLatinIdChar(x):
+	return ('a' <= x <= 'z') or ('A' <= x <= 'Z') or ('0' <= x <= '9') or x == '_'
 
 
 # Ave Python!
@@ -182,6 +189,9 @@ class CmLexer(Lexer):
 
 
 	def doId(self):
+		start = self.getTextPosition()
+		line_start = self.line_fpos
+
 		c = self.peep()
 
 		if not (c.isalpha() or c == '_'):
@@ -192,6 +202,21 @@ class CmLexer(Lexer):
 			s = s + str(self.getc())
 			c = self.peep()
 
+		# Identifiers may only contain ASCII-Latin letters, digits and '_'.
+		# The word is already lexed as one token; if it holds any exotic
+		# character we report it once and let the (whole) identifier flow on.
+		if not all(isAsciiLatinIdChar(x) for x in s):
+			ti = TokenInfo(
+				source = self.filename,
+				fpos = start['pos'],
+				line = start['line'],
+				lpos = line_start,
+				spaces = start['nspaces'],
+				tabs = start['ntabs'],
+				length = self.pos - start['pos']
+			)
+			error("identifier '%s' contains non-ASCII characters" % s,
+				TextInfo(start=ti, mid=ti, end=ti))
 
 		isa = 'id'
 		for c in s:

@@ -5,5 +5,8 @@ include "libc/stdio"
 
 
 func main () -> Int {
+	// ⚠️ Unicode symbols allowed only in comments & string literals
+	printf("Hello Modest 🐁!\n")
 	return 0
 }
+
