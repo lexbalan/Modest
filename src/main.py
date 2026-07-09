@@ -5,7 +5,7 @@ import importlib
 import tomllib
 
 import error
-import trans
+import semantic
 from common import settings, features
 
 
@@ -92,8 +92,8 @@ def do_file(src_name, outname, settings):
 #	src_abspath = os.path.abspath(src_name)
 #	src_dirname = os.path.dirname(src_abspath)
 
-	trans.init()
-	module = trans.translate(src_name)
+	semantic.init()
+	module = semantic.translate(src_name)
 
 	if error.get_errcnt() > 0 or module == None:
 		exit(1)

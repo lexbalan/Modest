@@ -25,7 +25,7 @@ described in [README.md](./README.md).
 | `main.py` | Entry point: CLI argument parsing, config loading, build orchestration |
 | `lexer.py` | Tokenization: source code → tokens with position info |
 | `parser.py` | Syntax analysis: tokens → AST (nested Python dicts) |
-| `trans.py` | Translation: AST → HLIR (semantic analysis, type-checked IR) |
+| `semantic.py` | Translation: AST → HLIR (semantic analysis, type-checked IR) |
 | `symtab.py` | Symbol table: tracks types and values in scopes |
 | `common.py` | Global `settings` dict and `features` list (populated from config) |
 | `error.py` | Error reporting: `error()`, `warning()`, `info()`, `fatal()` with colored output |

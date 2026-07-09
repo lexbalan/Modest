@@ -25,7 +25,7 @@ Produces an AST of plain Python dicts: `{'isa': 'ast_value', 'kind':
 type-vs-value ambiguity (`Int32 x` is construction) is resolved by
 lookahead (`is_type_before_value`).
 
-## 3. Translator — `src/trans.py`
+## 3. Translator — `src/semantic.py`
 
 The semantic core: AST → HLIR (typed, classed objects from
 `src/hlir/`). Per module it runs **two passes**:
@@ -66,12 +66,12 @@ pipeline.
 | Task | Start at |
 | :-- | :-- |
 | new syntax | `parser.py` (+ statement dispatch in `stmt_block`) |
-| new operator semantics | `trans.py` `do_value_bin_op` + `value/*.py` |
+| new operator semantics | `semantic.py` `do_value_bin_op` + `value/*.py` |
 | conversion rules | `value/cons.py` and the target type's `value/*.py` |
-| new annotation | `trans.py` `def_add_annotations` + backend handling |
-| new pragma | `trans.py` `do_directive_pragma` |
+| new annotation | `semantic.py` `def_add_annotations` + backend handling |
+| new pragma | `semantic.py` `do_directive_pragma` |
 | C output details | `backend/c11.py` |
-| new builtin type | `hlir/defs.py` + registration in `trans.py` `init` |
+| new builtin type | `hlir/defs.py` + registration in `semantic.py` `init` |
 
 A task-oriented index lives in
 [../agents/claude/context.md](../agents/claude/context.md).

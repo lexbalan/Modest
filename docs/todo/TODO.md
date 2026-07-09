@@ -1,5 +1,30 @@
 # Design TODO
 
+## Comment pass-through to output
+
+Design intent (Alex, 2026-07-08): the `c11` and `modest` backends should
+carry source comments into the output text; the `llvm` backend is not
+required to.
+
+Status: currently comments are dropped by `c11` entirely, and `modest`
+preserves only module-level `//` comments. `docs/lang/comments.md`
+documents the current behavior. To be fixed.
+
+## Identifier-class errors: parser → trans
+
+Observation (2026-07-08): the lexical id/Id split produces poor
+diagnostics at definition sites — `var Xx: Int32` fails with
+`unexpected token 'newline'`, and `type myInt = ...` parses silently
+but the name is unusable in type position.
+
+Direction: keep the lexical split itself (it is load-bearing — `Id`
+starting a type expression is what disambiguates construction
+`Int32 x` from a call/value without semantic lookahead), but let the
+parser accept either class at *definition-name* position and report the
+mismatch in trans (or at parse time) with a clear message:
+`type name must start with an uppercase letter` /
+`value name must start with a lowercase letter`.
+
 ## Zero-terminated strings via `@zarray`
 
 Design intent (Alex, 2026-06-11):

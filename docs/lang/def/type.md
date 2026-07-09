@@ -45,7 +45,7 @@ type Buffer = [256]Word8
 type Point = {x: Int64, y: Int64}
 
 type Color = @layout("union") {
-	rgba: Word32
-	r: Word8
+	code: Word32
+	rgba: {r: Nat8, g: Nat8, b: Nat8, a: Nat8}
 }
 ```

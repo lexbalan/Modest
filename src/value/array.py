@@ -133,7 +133,7 @@ def value_array_cons(t, v, method, ti):
 
 	# if t.hasAttribute('zarray'):
 	# 	# конструируем zarray а это значит что он должен быть на 1 длиннее
-	# 	from trans import do_value_bin_op
+	# 	from semantic import do_value_bin_op
 	# 	result_type.volume = do_value_bin_op(HLIR_VALUE_OP_ADD, result_type.volume, value_integer_create(1, ti=ti), ti)
 
 

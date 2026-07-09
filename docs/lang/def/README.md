@@ -2,12 +2,12 @@
 
 A *definition* binds an identifier to an entity. There are four kinds:
 
-| Kind | Keyword | Creates |
-|------|---------|---------|
-| [Type](./type.md) | `type` | type alias / named type |
-| [Constant](./const.md) | `const` | compile-time value |
-| [Variable](./var.md) | `var` | mutable storage |
-| [Function](./func.md) | `func` | function |
+| Definition | Form | Page |
+| :-- | :-- | :-- |
+| Type — alias / named type | `type Name = T` | [type](./type.md) |
+| Constant — compile-time value | `const name = v` | [const](./const.md) |
+| Variable — mutable storage | `var name: T = v` | [var](./var.md) |
+| Function | `func name (params) -> T { }` | [func](./func.md) |
 
 Every module-level definition may carry an access modifier (`public` /
 `private`, see [access modifiers](../access_modifiers.md)) and

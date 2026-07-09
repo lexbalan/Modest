@@ -81,7 +81,7 @@ def value_pointer_cons(t, v, method, ti):
 			#nv.addAttribute3('zarray')
 
 			# регистрируем строку в модуле
-			from trans import cmodule_strings_add
+			from semantic import cmodule_strings_add
 			cmodule_strings_add(nv)
 
 			return nv

@@ -7,6 +7,7 @@ Quick reference for writing Modest code.
 > Type identifiers always start with a capital letter.
 > Variables, constants and function identifiers use camelCase.
 > Language style: PascalCase for types, camelCase for everything else.
+> Identifiers are ASCII only; Unicode is allowed in comments and string literals.
 
 > Instead of type cast there is a value construction operation: `Int32 5`, `[4]Int32 [1, 2, 3, 4]`, etc.
 
@@ -303,7 +304,7 @@ Unit value                         // discard a value (suppress warnings)
 | `CharX` | `Integer`(≤X), `WordY`(Y≤X), `String`(len=1) | any numeric | `String→CharX` compile-time only; string must be exactly 1 character |
 | `Bool` | `Bool` | — | no construction from other types; use `==` / `!=` to produce Bool |
 | `[N]T` | `GenericArray` (len≤N) | — | missing elements are zero-filled |
-| `RecordT` | `GenericRecord` | — | field names and types must match |
+| `RecordT` | `GenericRecord` | — | omitted fields take their default: the type's default value (`0`/`false`/`nil`/...) or the field's explicit `= value` |
 | `Unit` | any | — | discards the value; suppresses unused-value warning |
 
 > **Non-obvious behaviors to keep in mind:**

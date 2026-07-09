@@ -2426,7 +2426,7 @@ class ValueNew(Value):
 
 class ValueSizeofType(Value):
 	def __init__(self, of, ti=None):
-		from trans import typeSysSize
+		from semantic import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
 		self.oftype = of
 		if not of.is_vla():
@@ -2439,7 +2439,7 @@ class ValueSizeofType(Value):
 
 class ValueSizeofValue(Value):
 	def __init__(self, value, ti=None):
-		from trans import typeSysSize
+		from semantic import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
 		self.ofvalue = value
 		if not value.type.is_vla():
@@ -2456,7 +2456,7 @@ class ValueLengthofValue(Value):
 		type = None
 		if value.type.is_vla():
 			# is a VLA
-			from trans import typeSysInt
+			from semantic import typeSysInt
 			type = typeSysInt
 		else:
 			from .defs import type_integer_for
@@ -2480,7 +2480,7 @@ class ValueLengthofType(Value):
 		type = None
 		if t.is_vla():
 			# is a VLA
-			from trans import typeSysInt
+			from semantic import typeSysInt
 			type = typeSysInt
 		else:
 			from .defs import type_integer_for
@@ -2501,7 +2501,7 @@ class ValueLengthofType(Value):
 class ValueAlignofType(Value):
 	def __init__(self, of, ti=None):
 		align = of.get_align()
-		from trans import typeSysSize
+		from semantic import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
 		self.oftype = of
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
@@ -2511,7 +2511,7 @@ class ValueAlignofType(Value):
 class ValueAlignofValue(Value):
 	def __init__(self, of, ti=None):
 		align = of.type.get_align()
-		from trans import typeSysSize
+		from semantic import typeSysSize
 		super().__init__(type=typeSysSize, ti=ti)
 		self.value = of
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME

@@ -24,8 +24,11 @@ type Point = {            // newline-separated form
   record nominal.
 - A record value is constructed from a record literal:
   `Point {x = 1, y = 2}` (explicit) or `p = {x = 1, y = 2}` (implicit
-  when the target type is known). Extra fields of the target are
-  zero-filled on explicit construction; `{}` zero-fills everything.
+  when the target type is known). Fields omitted by the literal take
+  their default value — the default value of the field's type
+  (`false` / `0` / `nil` / `{}` / `[]`), unless overridden in the field
+  declaration (`x: Float64 = 1.5`, see [fields](../fields.md));
+  `{}` fills everything this way.
 - Field access: `p.x`. Through a pointer the access auto-derefs:
   `pp.x` where `pp: *Point` (see [pointer](./pointer.md)).
 - Records are assigned and passed **by value**; use `*Point` to share.
@@ -57,7 +60,7 @@ p.x = 3.0
 
 type Color = @layout("union") {
 	rgba: Word32
-	r: Word8
+	components: {r: Nat8, g: Nat8, b: Nat8, a: Nat8}
 }
 
 type Header = @layout("packed") {

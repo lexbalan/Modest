@@ -3,30 +3,39 @@
 The reference mirrors the structure of the language. One page — one
 construct: Form, Semantics, Examples.
 
-```
-language
-├── lexical
-│   ├── comments        // and /* */ ................. comments.md
-│   ├── identifiers     Type / value naming .......... identifier.md
-│   └── fields          name: Type ................... fields.md
-│
-├── module
-│   ├── import, include namespaces, C bindings ....... import.md
-│   ├── pragmas         unsafe, prefix, c_include .... directive.md
-│   ├── access          public / private / default ... access_modifiers.md
-│   └── builtin         builtin.target.*, compiler ... builtin_constants.md
-│
-├── def                 const, var, func, type ....... def/
-├── stmt                if, while, break/again, let,
-│                       assign, return, asm .......... stmt/
-├── type                base, generic, array, record,
-│                       pointer, function, branded ... type/
-├── value               literals, construction,
-│                       operators, call, index ....... value/
-│
-├── annotations         @inline, @layout, @extern .... attribute.md
-└── variadic            __VA_List, __va_start ........ va_arg.md
-```
+### Lexical
+
+| Construct | Form | Page |
+| :-- | :-- | :-- |
+| Comments | `//`, `/* */` | [comments](./comments.md) |
+| Identifiers | `Type` / `value` naming | [identifier](./identifier.md) |
+| Literals | `42`, `3.14`, `"abc"`, `true`, `nil` | [value/literal](./value/literal.md) |
+
+### Module
+
+| Construct | Form | Page |
+| :-- | :-- | :-- |
+| Imports | `import`, `include` — namespaces, C bindings | [import](./import.md) |
+| Pragmas | `pragma unsafe`, `prefix`, `c_include` | [directive](./directive.md) |
+| Access | `public` / `private` / default | [access_modifiers](./access_modifiers.md) |
+| Builtin constants | `builtin.target.*`, compiler info | [builtin_constants](./builtin_constants.md) |
+
+### Core
+
+| Section     | Contents                                                     | Page                        |
+| :---------- | :----------------------------------------------------------- | :-------------------------- |
+| Fields      | `name: Type` — building block of defs, params, records       | [fields](./fields.md)       |
+| Definitions | `const`, `var`, `func`, `type`                               | [def/](./def/README.md)     |
+| Statements  | `if`, `while`, `break`/`again`, `let`, assign, `return`, asm | [stmt/](./stmt/README.md)   |
+| Types       | base, generic, array, record, pointer, function, branded     | [type/](./type/README.md)   |
+| Values      | literals, construction, operators, call, index               | [value/](./value/README.md) |
+
+### Misc
+
+| Construct | Form | Page |
+| :-- | :-- | :-- |
+| Annotations | `@inline`, `@layout`, `@extern`, ... | [attribute](./attribute.md) |
+| Variadic functions | `__VA_List`, `__va_start` | [va_arg](./va_arg.md) |
 
 ## Quick example
 

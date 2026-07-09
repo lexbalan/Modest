@@ -1,48 +1,26 @@
-
 # Compiler usage
 
-##### Example:
-```shell
-# For translation main.cm to main.c, just type
-mcc -omain -mbackend=c11 main.cm
+```sh
+export MODEST_DIR=/path/to/Modest      # compiler root
+export MODEST_LIB=$MODEST_DIR/lib      # library search path
+
+mcc -o main -mbackend=c11 main.m       # → main.c + main.h
+mcc -o main -mbackend=llvm main.m      # → main.ll
+mcc -o main -mbackend=modest main.m    # → main.m (pretty-printed)
 ```
 
-## Compiler flags
+## Flags
 
-#### Output flag
-Use `-o<output_file_name>` option for set output file name (without file extension)
+| Flag | Meaning |
+| :-- | :-- |
+| `-o <path>` | output base name (extension is added by the backend) |
+| `-mbackend=c11\|llvm\|modest` | backend selection (any `-m<key>=<value>` overrides a config key) |
+| `-funsafe` | enable [unsafe constructions](./lang/value/cons.md): pointer ↔ pointer, integer → pointer |
+| `-fparanoid` | warnings become errors |
+| `--config=<file.toml>` | target config, applied over `cfg/default.toml` |
 
-*Usage example:*
-```shell
-mcc -o main main.cm
-```
+The compiler emits source; producing a binary is the build system's job —
+run `cc`/`clang` on the output.
 
-#### Feature flags
-Use `-f<feature_name>` flag for enable some compiler options
-
-***-funsafe*** - Enables *unsafe* mode when:
-  * You can cast pointer to another pointer
-  * You can do *pointer arithmetics* (only with [*FreePointer*](./type/pointer.md#Free-pointer) type value)
-
-***-fparanoid*** - Every warning becomes error
-
-
-*Usage example:*
-```shell
-mcc -o main -fparanoid main.cm	   # warnings as errors
-mcc -o io -fparanoid -funsafe io.cm  # warnings as errors + unsafe mode
-```
-
-#### Modifier flags
-
-Use `-m<varname>=<value>` option to change compiler settings
-
-***-fbackend=<backend_name>*** - backend switching
-
-*Usage example:*
-```shell
-mcc -o main -mbackend=c11  main.cm     # use C backend for translation to main.c
-mcc -o main -mbackend=modest  main.cm    # use Modest backend for translation to main.cm
-mcc -o main -mbackend=llvm  main.cm  # use LLVM backend for translation to main.ll
-```
-
+Full reference (config layering, `-L`, `-i`, testing):
+[compiler/usage.md](./compiler/usage.md).

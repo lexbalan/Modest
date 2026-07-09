@@ -1,14 +1,38 @@
 # Comments
 
-Comments are intended for the programmer, and do not affect the compilation and execution of the program. Depending on the selected backend, they can be transferred to the output text (this works for C & Modest backend).
+Comments are for the reader — they do not affect compilation.
 
-### Multi-line comment
-```swift
-/* This is a
-   multiline comment */
+## Form
+
+```
+// <#text — to end of line#>
+/* <#any text#> */
 ```
 
-### Single-line comment
-```swift
-// This is a single-line comment
+## Semantics
+
+- `//` extends to the end of the line; the newline itself still
+  terminates the statement.
+- `/* ... */` may span several lines. Block comments do **not** nest —
+  the first `*/` closes the comment.
+- Comments are not carried into the output. Exception: the `modest`
+  pretty-printer backend preserves module-level `//` comments.
+  (Planned: full pass-through for the `c11` and `modest` backends —
+  see [TODO](../todo/TODO.md).)
+- Unicode is allowed in comments (and string literals) — but not in
+  [identifiers](./identifier.md).
+
+## Examples
+
+```modest
+// about main
+func main () -> Int {
+	/* block
+	   comment */
+	return 0  // inline comment — two spaces before //
+}
 ```
+
+## See also
+
+- [Code style](../CHEATSHEET.md#code-style)

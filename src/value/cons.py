@@ -44,7 +44,7 @@ def cons_can(to, from_type, method, ti):
 		if from_type.is_type_va_list():
 			return True
 
-		from trans import is_unsafe_mode
+		from semantic import is_unsafe_mode
 		if is_unsafe_mode():
 			method = 'unsafe'
 
@@ -202,7 +202,7 @@ def value_cons_default(v):
 
 
 def _select_default_type_for(t):
-	from trans import typeSysWord, typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
+	from semantic import typeSysWord, typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
 	# ONLY FOR GENERICS
 	if not t.is_generic():
@@ -268,7 +268,7 @@ def value_cons(t, v, method, ti):
 			nv.stage = HLIR_VALUE_STAGE_RUNTIME
 			return nv
 
-		from trans import is_unsafe_mode
+		from semantic import is_unsafe_mode
 		if is_unsafe_mode():
 			method = 'unsafe'
 

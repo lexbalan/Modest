@@ -67,7 +67,35 @@ let v = builtin.compiler.version  // error: unknown value
 ```
 
 The wiring exists (`create_builtin_module`, auto-import at
-`src/trans.py:2707`), but any `builtin.x` access fails with
+`src/semantic.py:2707`), but any `builtin.x` access fails with
 `unknown value`. The repo's own `tests/builtin` fails with 10 errors —
 it is not listed in `tests/run.sh`, so the regression went unnoticed.
 Affects everything documented in `docs/lang/builtin_constants.md`.
+
+## 6. Lexer accepts non-ASCII identifiers
+
+```modest
+var счётчик: Int32 = 0    // compiles, emitted into C as-is
+```
+
+By design (Alex, 2026-07-08) identifiers are ASCII Latin only; Unicode
+is allowed only in comments and string literals. The lexer uses Python
+`str.isalpha()` (`src/lexer.py`: `doId`, `isIdChar`), which accepts any
+Unicode letter and passes it through to the output — works with clang,
+not guaranteed elsewhere. Fix: restrict `doId` / `isIdChar` to
+`[A-Za-z0-9_]`.
+
+## 7. `__va_copy` result is unusable
+
+```modest
+var va, va2: __VA_List
+__va_start(va, format)
+__va_copy(va2, va)
+vprintf(format, va2)      // error: attempt to use an uninitialized value
+```
+
+`do_value_va_copy` (`src/semantic.py:1053`) does not mark the destination
+list as initialized — unlike `do_value_va_start`, which sets
+`is_initialized = True` on its list. Copying works, but any subsequent
+read of the copy is rejected, which defeats the purpose. Fix: set
+`va_list0.is_initialized = True` in `do_value_va_copy`.

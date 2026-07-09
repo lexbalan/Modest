@@ -57,7 +57,7 @@ def value_nat_cons(t, v, method, ti):
 			info("attempt to construct `%s` from `%s`" % (t.to_str(), v.type.to_str()), ti)
 
 	if v.type.is_signed():
-		from trans import cmodule_use
+		from semantic import cmodule_use
 		cmodule_use('use_abs')
 
 	nv = ValueCons(t, t, v, method, ti=ti)

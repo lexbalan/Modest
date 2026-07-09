@@ -3,18 +3,17 @@
 A *value expression* computes a value. Expressions are built from
 literals, names and the operations below.
 
-```
-values
-├── literal     42, 3.14, "abc", [1,2], {x=1}, true, nil ... literal.md
-├── cons        TargetType value — construction ............ cons.md
-├── binary      + - * / % == < and or & | ^ << >> .......... binary.md
-├── unary       not ~ - + & * new .......................... unary.md
-├── access      record.field ............................... access.md
-├── index       arr[i] ..................................... _index.md
-├── slice       arr[i:j] ................................... slice.md
-├── call        f(args) .................................... call.md
-└── sizeof      sizeof / alignof / lengthof / offsetof ..... sizeof.md
-```
+| Expression | Form | Page |
+| :-- | :-- | :-- |
+| Literal | `42`, `3.14`, `"abc"`, `[1, 2]`, `{x = 1}`, `true`, `nil` | [literal](./literal.md) |
+| Construction | `TargetType value` | [cons](./cons.md) |
+| Binary | `+ - * / %`, `== != < <= > >=`, `and or`, `& \| ^ << >>` | [binary](./binary.md) |
+| Unary | `not ~ - + & *`; `new` *(experimental)* | [unary](./unary.md) |
+| Access | `record.field` | [access](./access.md) |
+| Index | `arr[i]` | [index](./_index.md) |
+| Slice | `arr[i:j]` | [slice](./slice.md) |
+| Call | `f(args)` | [call](./call.md) |
+| Size queries | `sizeof` / `alignof` / `lengthof` / `offsetof` | [sizeof](./sizeof.md) |
 
 ## Operator precedence
 
@@ -52,5 +51,7 @@ x + 1 < y << 2           // (x + 1) < (y << 2)
 - **Immutable** — not assignable: immediates, `let` bindings, function
   parameters. Taking the address of an immutable value is an error
   (`expected mutable value or function`).
-- **Zero value** — `0` / `[]` / `{}`; globals without an initializer
-  hold the zero value of their type.
+- **Default value** — every type has one: `false` / `0` / `nil` /
+  `{}` / `[]`. Globals without an initializer hold the default value of
+  their type; record fields may override theirs
+  (see [fields](../fields.md)).

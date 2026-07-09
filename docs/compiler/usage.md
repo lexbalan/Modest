@@ -40,4 +40,4 @@ Tests are directories with `src/main.m` and a `Makefile` (`make test`).
 The crypto tests (`sha256`, `aes256`, `chacha20`, `crc32`) double as
 end-to-end semantic checks against known vectors. Known compiler bugs
 are tracked in [../BUGS.md](../BUGS.md), design plans in
-[../TODO.md](../TODO.md).
+[../todo/TODO.md](../todo/TODO.md).

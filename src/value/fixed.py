@@ -7,7 +7,7 @@ from error import info, warning, error
 
 def value_fixed_create(val, ti=None):
 	#info("value_fixed_create", ti)
-	from trans import cmodule_use
+	from semantic import cmodule_use
 	cmodule_use('use_fixed_point')
 
 	flt_width = int(settings['fixed_width'])
@@ -36,7 +36,7 @@ def fixed_can(to, from_type, method, ti):
 
 def value_fixed_cons(t, v, method, ti):
 	#info("value_fixed_cons", ti)
-	from trans import cmodule_use
+	from semantic import cmodule_use
 	cmodule_use('use_fixed_point')
 	nv = ValueCons(t, t, v, method, ti=ti)
 
