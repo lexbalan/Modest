@@ -283,6 +283,10 @@ class Parser:
 			return True
 
 		elif self.is_identifier():
+			# `record { ... }` — record type with explicit keyword
+			if self.ctok() == 'record' and self.nextok() == '{':
+				return True
+
 			# parse type expressions like 'builtin.machine.Word'
 			while self.is_identifier():
 				self.skip1() # skip ident
@@ -292,8 +296,7 @@ class Parser:
 				if self.is_Identifier():
 					return True
 
-			token = self.gettok()
-			return token in ['record']
+			return False
 
 		elif self.is_operator():
 			token = self.gettok()
@@ -1270,7 +1273,8 @@ class Parser:
 
 				if self.match(":"):
 					is_slicing = True
-					j = self.expr_value()
+					if not self.look("]"):
+						j = self.expr_value()
 				else:
 					i = self.expr_value()
 					if self.match(":"):
@@ -1279,8 +1283,6 @@ class Parser:
 							j = self.expr_value()
 				end_ti = self.textInfo()
 				self.need("]")
-
-				assert not (i == None and j == None)
 
 				if is_slicing:
 					v = {
@@ -1606,12 +1608,12 @@ class Parser:
 	def stmt_let(self):
 		ti_start = self.tokenInfo()
 		self.match("let")
-		x = self.parse_stmt_field()[0]
-		x['isa'] = 'ast_stmt'
-		x['kind'] = 'const'
-		x['ti'] = TextInfo(start=ti_start, mid=x['ti'].mid, end=x['ti'].end)
-		x['ti'].start = ti_start
-		return x
+		xx = self.parse_stmt_field()
+		for x in xx:
+			x['isa'] = 'ast_stmt'
+			x['kind'] = 'const'
+			x['ti'].start = ti_start
+		return xx
 
 
 	def stmt_var(self):
@@ -2076,11 +2078,12 @@ class Parser:
 	def parse_def_const(self):
 		ti_start = self.tokenInfo()
 		self.match("const")
-		x = self.parse_stmt_field()[0]
-		x['isa'] = 'ast_definition'
-		x['kind'] = 'const'
-		x['ti'].start = ti_start
-		return x
+		xx = self.parse_stmt_field()
+		for x in xx:
+			x['isa'] = 'ast_definition'
+			x['kind'] = 'const'
+			x['ti'].start = ti_start
+		return xx
 
 
 	def parse_def_var(self):

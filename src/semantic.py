@@ -1359,8 +1359,6 @@ def do_value_slice(x):
 		index_to = do_rvalue(x['index_to'])
 		if index_to.isValueBad():
 			return ValueBad(ti)
-	else:
-		index_to = ValueUndef(type_integer_create(ti=x['ti']))
 
 	via_pointer = left.type.is_type_pointer()
 	array_type = left.type
@@ -1377,6 +1375,14 @@ def do_value_slice(x):
 	if array_type.is_type_array_of_unsized_array():
 		error("cannot slice array of an unsized array", x['ti'])
 		return ValueBad(x['ti'])
+
+
+	# открытая правая граница ([i:], [:]) — это длина массива (если она известна)
+	if index_to == None:
+		if array_type.volume != None and not array_type.volume.isValueUndef():
+			index_to = array_type.volume
+		else:
+			index_to = ValueUndef(type_integer_create(ti=x['ti']))
 
 
 	# получаем размер слайса
@@ -1899,6 +1905,8 @@ def do_stmt_type(x):
 
 	nt = Type(x['ti'])
 	df = def_type_common(x, nt)
+	if df == None:
+		return StmtBad(x['ti'])
 	df.id.llvm = cfunc.id.str + '.' + df.id.str
 	csymtab.type_add(df.id.str, nt, is_public=False)
 
@@ -2139,6 +2147,10 @@ def def_type_common(x, nt):
 	global cmodule
 	global cdef
 
+	if x['type'] == None:
+		error("expected type expr", x['ti'])
+		return None
+
 	id = do_id(x['id'])
 	definition = StmtDefType(id, nt, None, x['ti'])
 	definition.module = cmodule
@@ -2221,6 +2233,8 @@ def def_type_global(x):
 		error("type redefinition", x['ti'])
 		return None
 	df = def_type_common(x, nt)
+	if df == None:
+		return None
 	df = def_add_annotations(df, x['anno'])
 	return df
 
