@@ -1,0 +1,50 @@
+<!-- Syntax highlighting for ```modest code blocks (highlight.js + custom grammar) -->
+<style>
+  .language-modest .hljs-comment  { color: #57606a; }
+  .language-modest .hljs-keyword  { color: #cf222e; }
+  .language-modest .hljs-literal  { color: #0550ae; }
+  .language-modest .hljs-number   { color: #0550ae; }
+  .language-modest .hljs-string   { color: #0a3069; }
+  .language-modest .hljs-type     { color: #953800; }
+  .language-modest .hljs-built_in { color: #8250df; }
+  .language-modest .hljs-meta     { color: #116329; }
+  .language-modest .hljs-title.function_ { color: #8250df; }
+</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof hljs === 'undefined') return;
+
+    hljs.registerLanguage('modest', function (hljs) {
+      return {
+        name: 'Modest',
+        keywords: {
+          keyword:
+            'func var let const type record if else while break again return ' +
+            'import include pragma public private unsafe module new as and or not __asm',
+          literal: 'true false nil',
+          built_in:
+            'sizeof alignof lengthof offsetof ' +
+            '__defined __va_arg __va_copy __va_end __va_start'
+        },
+        contains: [
+          hljs.C_LINE_COMMENT_MODE,
+          hljs.C_BLOCK_COMMENT_MODE,
+          { scope: 'string', begin: '"', end: '"', contains: [hljs.BACKSLASH_ESCAPE] },
+          { scope: 'string', begin: "'", end: "'", contains: [hljs.BACKSLASH_ESCAPE] },
+          { scope: 'number', begin: /\b(0[xX][0-9a-fA-F_]+|0[bB][01_]+|\d[\d_]*(\.\d[\d_]*)?([eE][+-]?\d+)?)\b/ },
+          { scope: 'meta', begin: /@[a-z_][A-Za-z0-9_]*/ },
+          { begin: [/\bfunc\s+/, /[a-z_][A-Za-z0-9_]*/], beginScope: { 2: 'title.function' } },
+          { scope: 'type', begin: /\b[A-Z][A-Za-z0-9_]*/ }
+        ]
+      };
+    });
+
+    // Rouge does not know Modest, so ```modest blocks come out as plain text
+    // wrapped in <div class="language-modest"> — highlight them client-side.
+    document.querySelectorAll('div.language-modest pre code').forEach(function (el) {
+      el.classList.add('language-modest');
+      hljs.highlightElement(el);
+    });
+  });
+</script>
