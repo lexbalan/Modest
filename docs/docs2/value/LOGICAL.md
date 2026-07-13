@@ -1,3 +1,0 @@
-# Logical Operations
-
-TODO

@@ -456,7 +456,6 @@ class CValueString(CValue):
 		return '%s"%s"' % (string_literal_prefix(self.width), self.string)
 
 
-
 def code_to_char(cc):
 	if cc < 0x20:
 		if cc == 0x07: return "\\a"	# bell
@@ -478,19 +477,17 @@ def code_to_char(cc):
 	elif cc != 0:
 		return chr(cc)
 
+
 class CValueChar(CValue):
-	def __init__(self, char, width=8):
-		assert(isinstance(char, str))
+	def __init__(self, cc, width=8):
+		assert(isinstance(cc, int))
 		super().__init__()
-		self.char = char
+		self.char_code = cc
 		self.width = width
 		self.precedence = 15
 
 	def __str__(self):
-		if len(self.char) > 1:
-			print(self.char)
-			exit(1)
-		return "%s'%s'" % (string_literal_prefix(self.width), code_to_char(ord(self.char)))
+		return "%s'%s'" % (string_literal_prefix(self.width), code_to_char(self.char_code))
 
 
 
@@ -687,7 +684,7 @@ class CValueDec(CValue):
 		self.precedence = 13
 
 	def __str__(self):
-		return '--%s%s' % (str_cvalue(self.value, ext_precedence=self.precedence))
+		return '--%s' % str_cvalue(self.value, ext_precedence=self.precedence)
 
 
 class CValuePositive(CValue):
@@ -1230,6 +1227,25 @@ class CStmtValueAssign(CStmt):
 		sstr = str_nl_indent(self.nl)
 		return sstr + "%s = %s;" % (str_cvalue(self.lvalue), str_cvalue(self.rvalue))
 
+
+class CStmtInc(CStmt):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		super().__init__()
+		self.value = value
+
+	def __str__(self):
+		return str_nl_indent(self.nl) + "++%s;" % str_cvalue(self.value)
+
+
+class CStmtDec(CStmt):
+	def __init__(self, value):
+		assert(isinstance(value, CValue))
+		super().__init__()
+		self.value = value
+
+	def __str__(self):
+		return str_nl_indent(self.nl) + "--%s;" % str_cvalue(self.value)
 
 
 class CStmtDeclType(CStmt):

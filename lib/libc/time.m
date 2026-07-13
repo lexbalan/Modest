@@ -8,14 +8,14 @@ include "libc/ctypes64"
 
 
 /* time in seconds since 1970 */
-@alias("c", "time_t")
-public type TimeT = Int32
+@extern("C", "time_t")
+public type TimeT = Nat64
 
-@alias("c", "clock_t")
+@extern("C", "clock_t")
 public type ClockT = UnsignedLong
 
 
-@alias("c", "struct tm")
+@extern("C", "struct tm")
 public type StructTM = @public {
 	tm_sec: Int	   // Seconds [0-60]
 	tm_min: Int	   // Minutes [0-59]

@@ -7,35 +7,35 @@ pragma c_include "stdio.h"
 include "libc/ctypes64"
 
 
-@alias("c", "FILE")
+@extern("C", "FILE")
 public type File = {}
 
-@alias("c", "fpos_t")
+@extern("C", "fpos_t")
 public type FposT = Nat8
 
-@alias("c", "char *")
+@extern("C", "char *")
 public type CharStr = Str
 
-@alias("c", "const char *")
+@extern("C", "const char *")
 public type ConstCharStr = CharStr
 
-@alias("c", "stdin")
+@extern("C", "stdin")
 @extern public const stdin: *File = nil
-@alias("c", "stdout")
+@extern("C", "stdout")
 @extern public const stdout: *File = nil
-@alias("c", "stderr")
+@extern("C", "stderr")
 @extern public const stderr: *File = nil
 
 
-@alias("c", "EOF")
-public const c_EOF = -1
+@extern("C", "EOF")
+public const eof = -1
 
-@alias("c", "SEEK_SET")
-public const c_SEEK_SET = 0
-@alias("c", "SEEK_CUR")
-public const c_SEEK_CUR = 1
-@alias("c", "SEEK_END")
-public const c_SEEK_END = 2
+@extern("C", "SEEK_SET")
+public const seekSet = 0
+@extern("C", "SEEK_CUR")
+public const seekCur = 1
+@extern("C", "SEEK_END")
+public const seekEnd = 2
 
 
 public func fclose (f: *File) -> @unused Int
@@ -84,7 +84,7 @@ public func fputs (str: *ConstCharStr, f: *File) -> @unused Int
 
 public func getc (f: *File) -> Int
 public func getchar () -> Int
-public func gets (str: *CharStr) -> *CharStr
+//public func gets (str: *CharStr) -> *CharStr  // removed from C11 standard, unsafe, use fgets(str, size, stdin) instead
 public func putc (char: Int, f: *File) -> @unused Int
 public func putchar (char: Int) -> @unused Int
 public func puts (str: *ConstCharStr) -> @unused Int

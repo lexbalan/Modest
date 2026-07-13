@@ -137,7 +137,7 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -202,14 +202,13 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
@@ -231,9 +230,7 @@ declare %aes256_Result @aes256_decrypt_ecb(%aes256_Context* %ctx, %aes256_Block*
 declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 
 ; end from import "aes"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [17 x i8] [i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 32, i8 40, i8 101, i8 110, i8 99, i8 114, i8 121, i8 112, i8 116, i8 41, i8 0]
 @.str2 = private constant [17 x i8] [i8 70, i8 65, i8 73, i8 76, i8 69, i8 68, i8 32, i8 40, i8 100, i8 101, i8 99, i8 114, i8 121, i8 112, i8 116, i8 41, i8 0]

@@ -1,9 +1,13 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdlib"
 include "stdio"
 include "limits"
 
+include "libc/ctypes64"
+include "libc/stdlib"
+include "libc/stdio"
+include "limits"
 
 
 

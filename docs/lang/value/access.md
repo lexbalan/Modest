@@ -1,89 +1,44 @@
+# Field Access
 
-# *Access* value expression
+Designates a field of a record. The expression denotes the field
+itself — a *place*, not a copy of its value; what happens to it is
+decided by the context: read, assignment target, or address-of
+(`&pt.x`).
 
+## Form
 
-### Common form
 ```
-<#record_value#> . <#field_identifier#>
-<#pointer_to_record_value#> . <#field_identifier#>
-```
-
-### Examples
-
-#### Access by value
-
-```zig
-import "libc/stdio"
-
-type Point = {
-	x: Int32
-	y: Int32
-}
-
-func main() -> Int32 {
-	// create local instance of Point
-	var point: Point
-
-	// assign values to record fields
-	// ('access operation' (by value) as lvalue)
-	point.x = 10
-	point.y = 20
-
-	// read record fields
-	// ('access operation' (by value) as rvalue)
-	let x = point.x
-	let y = point.y
-
-	// print x & y for checking
-	printf("x = %i\n", x)
-	printf("y = %i\n", y)
-
-	return 0
-}
+<#record_value#>.<#field#>
+<#pointer_to_record#>.<#field#>      // auto-deref
 ```
 
-> Result: `x = 10` `y = 20`
+## Semantics
 
-#### Access by pointer to value
+- Usable as an rvalue (read), as an lvalue (assignment target), and as
+  the operand of `&` — `&pt.x` is a pointer to the field. A field of a
+  mutable record is mutable.
+- Through a pointer the access dereferences automatically: `p.x`, never
+  `(*p).x`.
+- Access to a `private` field of a record type defined in *another*
+  module is an error; inside the defining module all fields are
+  accessible (see [access modifiers](../access_modifiers.md)).
+- Field offset within the record: `offsetof(Type.field)`
+  (see [sizeof](./sizeof.md)).
 
-```zig
-import "libc/stdio"
+## Examples
 
-type Point = {
-	x: Int32
-	y: Int32
-}
+```modest
+type Point = {x: Int32, y: Int32}
 
-var point: Point
+var pt: Point = {x = 1, y = 2}
+pt.x = 10                     // assignment target
+let sum = pt.x + pt.y         // read
+var px: *Int32 = &pt.x        // address of the field
 
-// create var pointer to Point
-var ptr_to_point: *Point
-
-
-func main() -> Int32 {
-	// assign pointer to var point to ptr_to_point
-	ptr_to_point = &point
-
-	// or variant with type inference:
-	// var ptr_to_point = &point
-
-	// assign values to record fields
-	// ('access operation' (by pointer) as lvalue)
-	ptr_to_point.x = 10
-	ptr_to_point.y = 20
-
-	// read record fields
-	// ('access operation' (by pointer) as rvalue)
-	let x = ptr_to_point.x
-	let y = ptr_to_point.y
-
-	// print x & y for checking
-	printf("x = %i\n", x)
-	printf("y = %i\n", y)
-
-	return 0
-}
+var pp: *Point = &pt
+pp.y = 20                     // auto-deref
 ```
 
-> Result: `x = 10` `y = 20`
+## See also
 
+- [Record type](../type/record.md), [Index](./_index.md)

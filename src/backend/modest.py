@@ -144,6 +144,13 @@ def str_type_pointer(t):
 	return "*" + str_type(t.to)
 
 
+def str_type_variant(t):
+	xs = []
+	for variant in t.variants:
+		xs.append(str_type(variant))
+	return " or ".join(xs)
+
+
 def str_field(x):
 	s = get_id_str(x) + ": " + str_type(x.type)
 	if not x.init_value.is_value_undefined():
@@ -240,22 +247,15 @@ def str_type2(t):
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
-	if Type.is_func(t):
-		return str_type_func(t)
-	elif Type.is_array(t):
-		return str_type_array(t)
-	elif Type.is_record(t):
-		return str_type_record(t)
-	elif Type.is_pointer(t):
-		return str_type_pointer(t)
-	elif Type.is_string(t):
-		return "String(length=%d)" % t.length
-	elif isinstance(t, TypeInteger):
-		return "Integer(%d)" % t.width
-	elif isinstance(t, TypeRational):
-		return "Rational"
-	elif isinstance(t, TypeUndefined):
-		return "Undefined"
+	if Type.is_type_func(t): return str_type_func(t)
+	elif Type.is_type_array(t): return str_type_array(t)
+	elif Type.is_type_record(t): return str_type_record(t)
+	elif Type.is_type_pointer(t): return str_type_pointer(t)
+	elif Type.is_type_variant(t): return str_type_variant(t)
+	elif Type.is_type_string(t): return "String(length=%d)" % t.length
+	elif isinstance(t, TypeInteger): return "Integer(%d)" % t.width
+	elif isinstance(t, TypeRational): return "Rational"
+	elif isinstance(t, TypeUndefined): return "Undefined"
 	else:
 		#1/0
 		return str(t)
@@ -435,7 +435,7 @@ def is_zero_tail(values, i, n):
 def str_value_array(v, ctx):
 
 	if v.isValueImmediate():
-		if Type.is_array_of_char(v.type):
+		if Type.is_type_array_of_char(v.type):
 			return str_value_str(v, ctx=[])
 
 	s = ""
@@ -635,23 +635,23 @@ def str_value_string(x, ctx):
 
 def str_value_literal(x, ctx):
 	t = x.type
-	if Type.is_integer(t):
+	if Type.is_type_integer(t):
 		return str_value_integer(x, ctx)
-	elif Type.is_rational(t):
+	elif Type.is_type_rational(t):
 		return str_value_rational(x, ctx)
-	elif Type.is_string(t):
+	elif Type.is_type_string(t):
 		return str_value_string(x, ctx)
-	elif Type.is_int(t) or Type.is_nat(t):
+	elif Type.is_type_int(t) or Type.is_type_nat(t):
 		return str_value_integer(x, ctx)
-	elif Type.is_record(t):
+	elif Type.is_type_record(t):
 		return str_value_record(x, ctx)
-	elif Type.is_pointer(t):
+	elif Type.is_type_pointer(t):
 		return str_value_ptr(x, ctx)
-	elif Type.is_bool(t):
+	elif Type.is_type_bool(t):
 		return str_value_bool_create(x, ctx)
-	elif Type.is_char(t):
+	elif Type.is_type_char(t):
 		return str_value_char_create(x, ctx)
-	elif Type.is_word(t):
+	elif Type.is_type_word(t):
 		return str_value_integer(x, ctx)
 	return "<str_value_literal:%s>" % str(x)
 
@@ -709,6 +709,10 @@ def str_value_va_copy(x, ctx):
 	return s
 
 
+def str_value_default(x, ctx):
+	return "default(" + str_type(x.type) + ")"
+
+
 def str_value_subexpr(x, ctx):
 	return "(" + str_value(x.value) + ")"
 
@@ -749,6 +753,7 @@ def str_value(x, ctx=[], parent_expr=None):
 	elif x.isValueVaStart(): return str_value_va_start(x, ctx)
 	elif x.isValueVaEnd(): return str_value_va_end(x, ctx)
 	elif x.isValueVaCopy(): return str_value_va_copy(x, ctx)
+	elif x.isValueDefault(): return str_value_default(x, ctx)
 	elif x.is_value_undefined(): return "<undef>"
 	else: return "%s" % str(x.__class__)
 
@@ -808,7 +813,7 @@ def str_stmt_def(x, operator='const'):
 			ss.append(": ")
 			ss.append(str_type(x.value.type))
 
-	if not x.init_value.is_value_undefined():
+	if not (x.init_value.is_value_undefined() or x.init_value.isValueDefault()):
 		ss.append(" = ")
 		ss.append(str_value(x.init_value))
 	return ''.join(ss)
@@ -898,7 +903,12 @@ def str_stmt_again(x):
 	return "again"
 
 
+def str_stmt_increment(x):
+	return "++%s" % str_value(x.value)
 
+
+def str_stmt_decrement(x):
+	return "--%s" % str_value(x.value)
 
 
 # for str_stmt_asm:
@@ -963,6 +973,9 @@ def str_stmt2(x):
 	elif x.is_stmt_comment(): return str_stmt_comment(x)
 	elif x.is_stmt_asm(): return str_stmt_asm(x)
 	elif x.is_stmt_def_type(): return str_stmt_type(x)
+	elif x.is_stmt_def_func(): return str_stmt_func(x)
+	elif x.is_stmt_increment(): return str_stmt_increment(x)
+	elif x.is_stmt_decrement(): return str_stmt_decrement(x)
 
 	return "<stmt %s>" % str(x)
 
@@ -984,7 +997,6 @@ def print_directive(x):
 	if isinstance(x, StmtDirectiveInsert):
 		return '\npragma insert "%s"' % x.text
 	elif isinstance(x, StmtDirectiveCInclude):
-		#return '\npragma c_include "%s"' % x.c_name
 		return ""
 
 	return "\n// directive: %s" % str(x)
@@ -1044,12 +1056,8 @@ def run(module, fname):
 
 	ss = []
 
-	for x in module.imports_private:
-		stmt_import = module.imports_private[x]
-		ss.append('private import "%s"\n' % (stmt_import.impline))
-
-	for x in module.imports_public:
-		stmt_import = module.imports_public[x]
+	for x in module.imports:
+		stmt_import = module.imports[x]
 		ss.append('import "%s"\n' % (stmt_import.impline))
 
 	for x in module.included_modules:

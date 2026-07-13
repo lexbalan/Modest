@@ -1,7 +1,9 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 const arr = [Int32 1, Int32 2]
 

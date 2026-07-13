@@ -137,7 +137,7 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -187,7 +187,6 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
@@ -209,7 +208,7 @@ declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
@@ -223,9 +222,7 @@ declare void @chacha20_chacha20Block(%chacha20_Block* %0, %chacha20_State %__sta
 declare void @chacha20_makeState(%chacha20_State* %0, %chacha20_Key* %key, %Word32 %counter, [3 x %Word32]* %nonce)
 
 ; end from import "cc"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 67, i8 104, i8 97, i8 67, i8 104, i8 97, i8 50, i8 48, i8 32, i8 0]
 @.str2 = private constant [3 x i8] [i8 37, i8 99, i8 0]
@@ -336,13 +333,12 @@ endif_0:
 	%49 = xor %Byte %47, %48
 	store %Byte %49, %Byte* %38
 	%50 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
-	%51 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 4
-	%52 = load %Nat32, %Nat32* %51
-	%53 = add %Nat32 %52, 1
-	store %Nat32 %53, %Nat32* %50
-	%54 = load %Nat32, %Nat32* %1
-	%55 = add %Nat32 %54, 1
-	store %Nat32 %55, %Nat32* %1
+	%51 = load %Nat32, %Nat32* %50
+	%52 = add %Nat32 %51, 1
+	store %Nat32 %52, %Nat32* %50
+	%53 = load %Nat32, %Nat32* %1
+	%54 = add %Nat32 %53, 1
+	store %Nat32 %54, %Nat32* %1
 	br label %again_1
 break_1:
 	ret void

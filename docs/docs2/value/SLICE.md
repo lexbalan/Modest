@@ -1,3 +1,0 @@
-# Slice Operations
-
-TODO

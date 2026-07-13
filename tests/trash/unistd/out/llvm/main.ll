@@ -137,7 +137,7 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -187,14 +187,13 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; from included time
-%TimeT = type %Int32;
+%TimeT = type %Nat64;
 %ClockT = type %UnsignedLong;
 %StructTM = type {
 	%Int,
@@ -239,9 +238,9 @@ declare void @encrypt([64 x %Char]* %block, %Int %edflag)
 declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
-declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
-declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
-declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
+declare %Int @execv([0 x %ConstChar]* %path, [0 x [0 x %ConstChar]*]* %argv)
+declare %Int @execve([0 x %ConstChar]* %path, [0 x [0 x %ConstChar]*]* %argv, [0 x %ConstChar]* %envp)
+declare %Int @execvp([0 x %ConstChar]* %file, [0 x [0 x %ConstChar]*]* %argv)
 declare void @_exit(%Int %status)
 declare %Int @fchown(%Int %fildes, %UIDT %owner, %GIDT %group)
 declare %Int @fchdir(%Int %fildes)
@@ -322,14 +321,12 @@ declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [13 x i8] [i8 117, i8 110, i8 105, i8 115, i8 116, i8 100, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @.str2 = private constant [10 x i8] [i8 112, i8 105, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]

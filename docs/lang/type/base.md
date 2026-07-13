@@ -1,361 +1,64 @@
-# Base types
+# Base Types
 
-| Type	 | Size (in bytes) | Classes | Description |
-| :------: | :-: | ------- | --- |
-| `Unit`   | `0` | `-` | `Empty type (void in C)` |
-| `Bool`   | `1` | `equ, logical` | `8-bit` |
-| `Word8`  | `1` | `equ, logical` | `8-bit word` |
-| `Word16` | `2` | `equ, logical` | `16-bit word` |
-| `Word32` | `4` | `equ, logical` | `32-bit word` |
-| `Word64` | `8` | `equ, logical` | `64-bit word` |
-| `Word128` | `16` | `equ, logical` | `128-bit word` |
-| `Int8`   | `1` | `equ, ord, math, rem` | `signed integer 8-bit` |
-| `Int16`  | `2` | `equ, ord, math, rem` | `signed integer 16-bit` |
-| `Int32`  | `4` | `equ, ord, math, rem` | `signed integer 32-bit` |
-| `Int64`  | `8` | `equ, ord, math, rem` | `signed integer 64-bit` |
-| `Int128` | `16` | `equ, ord, math, rem` | `signed integer 128-bit` |
-| `Nat8`   | `1` | `equ, ord, math, rem` | `unsigned integer 8-bit` |
-| `Nat16`  | `2` | `equ, ord, math, rem` | `unsigned integer 16-bit` |
-| `Nat32`  | `4` | `equ, ord, math, rem` | `unsigned integer 32-bit` |
-| `Nat64`  | `8` | `equ, ord, math, rem` | `unsigned integer 64-bit` |
-| `Nat128` | `16` | `equ, ord, math, rem` | `unsigned integer 128-bit` |
-| `Char8`  | `1` | `equ` | `for 8-bit character` |
-| `Char16` | `2` | `equ` | `for 16-bit character` |
-| `Char32` | `4` | `equ` | `for 32-bit character` |
-| `Float32` | `4` | `equ, ord, math` | `floating point 32-bit` |
-| `Float64` | `8` | `equ, ord, math` | `floating point 64-bit` |
+Primitive built-in types.
 
+## Form
 
-> Alignment of any base type is equal to his size, **exclude the *Unit* type (alignof(Unit) = 1)**.
+| Type | Size (bytes) | Operations | Description |
+| :--- | :-: | :--- | :--- |
+| `Unit` | 0 | — | empty type (`void` in C) |
+| `Bool` | 1 | equ, logic | `true` / `false` |
+| `Word8/16/32/64/128` | 1–16 | equ, bitwise | bit words |
+| `Int8/16/32/64/128` | 1–16 | equ, ord, math, rem | signed integers |
+| `Nat8/16/32/64/128` | 1–16 | equ, ord, math, rem | unsigned integers |
+| `Char8/16/32` | 1–4 | equ | characters (UTF-8/16/32 code units) |
+| `Float32/64` | 4–8 | equ, ord, math | IEEE 754 |
+| `Fixed32/64` | 4–8 | equ, ord, math | fixed-point (experimental) |
 
+Operation classes:
 
-#### Operation classes
+| Class | Operations |
+| :--- | :--- |
+| equ | `==` `!=` |
+| ord | `<` `>` `<=` `>=` |
+| logic | `and` `or` `not` (Bool only) |
+| bitwise | `&` `\|` `^` `~` `<<` `>>` (Word only) |
+| math | `+` `-` `*` `/`, unary `-` |
+| rem | `%` |
 
+Target-width aliases (resolved from target config): `Int`, `Nat`, `Word`,
+`Size`; `Byte` is an alias for `Word8`.
 
-| Op Class  | Operations | Comment |
-| :---: | -------- | ------ |
-| `equ` | `==, !=` | equivalence operations |
-| `ord` | `<, >, <=, >=` | order operations |
-| `log` | `or, and, xor, not` | logical operations |
-| `math` | `+, -, *, /` | mathmatical operations |
-| `rem` | `%` | remainder of integer division operation |
+## Semantics
 
+- Alignment of every base type equals its size, except `alignof(Unit) = 1`.
+- The classes are strict: there is no arithmetic on `Word` (bit
+  manipulation only), no bitwise operations on `Int`/`Nat`, no ordering
+  on `Char`. Convert explicitly via [construction](../value/cons.md)
+  when an operation is needed.
+- There is no `xor` keyword; `^` is the (Word-only) exclusive-or.
+- `Unit` marks the absence of a value: function with no return value,
+  explicit discard (`Unit x`), and the free pointer `*Unit`
+  (see [pointer](./pointer.md)).
+- `Fixed32`/`Fixed64` carry a binary point set by `@fraction(N)`
+  (default 16 for `Fixed32`).
 
+## Examples
 
+```modest
+var flag: Bool = true
+var mask: Word8 = 0x0F | 0x40      // bitwise on Word
+var count: Nat32 = 0               // arithmetic on Nat
+var ratio: Float64 = 1.5
 
-### Unit type
-*Unit* type is an analog of `void` type in C language.
-It used to indicate that function have no return value
-```swift
-func no_return_func () -> Unit {
-	// this function returns nothing
-}
+count = count + 1
+mask = mask << 2
+
+var fx: Fixed32 = 3.14             // 16.16 fixed-point
+var fx12: @fraction(12) Fixed32    // 20.12 fixed-point
 ```
 
-Also, you can construct *Unit* value from not used function parameter to prevent *warning(unused value)* compiler message:
-```swift
-func just (not_used_param: Int32) -> Unit {
-	Unit not_used_param
-}
-```
+## See also
 
-Unit type obtain another sense in context of *Pointer to Unit*. This type also
-called as [*FreePointer*](#Free-pointer-type).
-
-
-### Bool type
-
-```zig
-var b: Bool
-
-b = false
-
-while not b {
-	b = check_condition()
-}
-
-```
-
-
-### Word type
-```zig
-Word8, Word16, Word32, Word64, Word128
-```
-Word type is unsigned integer type that allows bitwise operations.
-```zig
-func main () -> Int32 {
-	var byte: Word8
-
-	// GenericInteger will be implicit casted to Word8
-	byte = 42
-
-	printf("byte = %i", Nat32 byte)
-
-	return 0
-}
-```
-
-
-### Integer type
-
-#### Signed integer type
-```zig
-Int8, Int16, Int32, Int64, Int128
-```
-
-```zig
-func main () -> Unit {
-	var a, b: Int32
-
-	a = -1
-	b = 1
-
-	if a < b {
-		printf("a < b\n")
-	} else if a > b {
-		printf("a > b\n")
-	} else {
-		printf("a == b\n")
-	}
-}
-```
-*Result:*
-> `a < b`
-
-
-#### Unsigned integer type
-```zig
-Nat8, Nat16, Nat32, Nat64, Nat128
-```
-
-```zig
-func main () -> Unit {
-	var a, b: Nat32
-
-	a = Nat32 -1
-	b = 1
-
-	if a < b {
-		printf("a < b\n")
-	} else if a > b {
-		printf("a > b\n")
-	} else {
-		printf("a == b\n")
-	}
-}
-```
-> Result: `a > b`
-
-
-
-### Float type
-
-Float types
-```zig
-Float32, Float64
-```
-
-```zig
-import "libc/stdio"
-import "libc/math"
-
-func main () -> Unit {
-	var pi: Float64
-
-	pi = M_PI
-
-	printf("pi = %lf\n", pi)
-}
-
-```
-*Result:*
-> `pi = 3.14....`
-
-### Char type
-
-> Classes: *equ*
-
-There is three char types
-```zig
-Char8, Char16, Char32
-```
-
-*Usage example:*
-
-```zig
-var a: Char8
-var b: Char8
-
-a = "a"[0]
-b = "b"[0]
-
-if a == b {
-	printf("'a' == 'b'\n")
-} else {
-	printf("'a' != 'b'\n")
-}
-```
-*Result:*
-> `'a' != 'b'`
-
-
-
-### Array type
-There is *defined* arrays:
-```zig
-[10]Int32  // array with ten Int32 elements
-[16]Char8  // array with sixteen Char8 elements
-...
-```
-And *undefined* arrays:
-```zig
-[]Int32  // array with unknown amount of Int32 elements
-[]Char8  // array with unknown amount of Char8 elements
-...
-```
-You can't create variable of undefined array, but you can create pointer to it
-```zig
-// creating two variables with type
-var a: *[]Int32  // pointer to undefined array of Int32
-var s: *[]Char8  // pointer to undefined array of Char8
-...
-```
-
-*Usage example:*
-```zig
-
-var a: [5]Int32
-
-var i: Int32
-
-// fill array in cycle
-i = 0
-while i < 5 {
-	a[i] = i * 10
-	i = i + 1
-}
-
-// print array in cycle
-i = 0
-while i < 5 {
-	printf("a[%d] = %d\n", i, a[i])
-	i = i + 1
-}
-
-```
-
-*Result:*
-> `a[0] = 0`<br/>
-> `a[1] = 10`<br/>
-> `a[2] = 20`<br/>
-> `a[3] = 30`<br/>
-> `a[4] = 40`<br/>
-
-
-
-Function parameter cannot be an array. But it can be a pointer to array.
-
-
-
-#### String type
-String types are builtin aliases for `[]Char8`, `[]Char16`, `[]Char32`
-String literal is an alternative form of Char array recording.
-```zig
-// (!) implicit defined built-in types
-type Str8 = []Char8
-type Str16 = []Char16
-type Str32 = []Char32
-```
-
-*Usage example:*
-```zig
-var s: *Str8
-
-s = "Hello World!\n"
-
-printf(s)
-```
-*Result:*
-> `Hello World!`
-
-
-
-### Record type
-Record type is a composite type, that can contain inside values of any *another* type.
-```zig
-{x: Float64, y: Float64}
-```
-
-*Usage example:*
-```zig
-// it is good idea to use type definition statement
-// for bind identifier to record type
-type Point = {
-	x: Float64
-	y: Float64
-}
-
-var p: Point
-
-p = {x=1, y=2}
-
-printf("p.x = %f\n", p.x)
-printf("p.y = %f\n", p.y)
-```
-
-*Result:*
-> `p.x = 1.0`<br/>
-> `p.y = 2.0`<br/>
-
-
-
-### Pointer type
-
-
-#### Free pointer type
-*Pointer to Unit* (aka *Free pointer type*) can points to value of **any type**.
-```swift
-// see: test/free_pointer/src/main.m
-
-import "libc/stdio"
-
-func main () -> Int32 {
-	var a: Bool
-	var b: Int32
-	var c: Int64
-
-	//
-	var freePointer: *Unit
-
-	// free pointer can points to value of any type
-	freePointer = &a  // it's ok (just for demonstration)
-	freePointer = &b  // it's also ok
-	freePointer = &c  // after all it will be points to value c (with type Int64)
-
-	// you can't do dereference operation with Free pointer
-	// (because runtime doesn't have any idea about value type it pointee),
-	// but you can construct another (non Free) pointer from it
-	// and use it as usualy
-	*(*Int64 freePointer) = 123456789123456789
-
-	printf("c = 0x%llX\n", c)
-
-	// Let's create new pointer to *Int64 from freePointer
-	let px = *Int64 freePointer
-
-	// And will use it...
-	let x = *px
-
-	// for pointer mechanics checking
-	printf("x = 0x%llX\n", x)
-
-	return 0
-}
-```
-*Result:*
-> `c = 0x123456789ABCDEF`<br/>
-> `x = 0x123456789ABCDEF`<br/>
-
-
-
-
+- [Generic types](./generic.md) — the compile-time types of literals
+- [Value construction](../value/cons.md) — converting between base types

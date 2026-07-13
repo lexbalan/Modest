@@ -1,8 +1,11 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 include "stdlib"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
 
 func testShift8 () -> Bool {
 	var x: Word8

@@ -1,8 +1,11 @@
-private import "builtin"
+import "builtin"
 include "stdio"
 include "stdlib"
 include "string"
 
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/string"
 
 
 const a = "A"

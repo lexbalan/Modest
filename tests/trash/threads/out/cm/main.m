@@ -1,9 +1,12 @@
-private import "builtin"
-private import "misc/pthread"
+import "builtin"
+import "misc/pthread"
 include "ctypes64"
 include "stdio"
 include "unistd"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/unistd"
 import "misc/pthread" as pthread
 
 
@@ -18,7 +21,7 @@ func thread0 (param: Ptr) -> Ptr {
 
 	while global_counter < 32 {
 		pthread.mutex_lock(&mutex)
-		global_counter = global_counter + 1
+		++global_counter
 		pthread.mutex_unlock(&mutex)
 
 		usleep(500000)
@@ -66,6 +69,8 @@ func main () -> Int {
 	var rc1
 	rc = pthread.join(pthread0, &rc0)
 	rc = pthread.join(pthread1, &rc1)
+
+	Unit rc
 
 	pthread.exit(nil)
 

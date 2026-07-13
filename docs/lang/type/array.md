@@ -1,41 +1,161 @@
-# Array type
+# Array Type
 
-## Array type expression
+An *array* is a fixed-length, contiguous sequence of elements of one
+type, indexed from zero. An array is an ordinary value type — unlike C,
+there is **no array decay**.
 
-#### Common view
+## Form
 
 ```
-	[ <#immediate_value_expression#> ] <#type_expression#>
+[<#length#>]<#element_type#>     // fixed array; length is a compile-time constant
+[]<#element_type#>               // unsized array: length not part of the type
 ```
 
-> There's no way to create array of array but you can create array of pointers to arrays
+```modest
+[10]Int32         // ten Int32
+[2][3]Int32       // 2 x 3 matrix (array of arrays)
+[]Char8           // unsized array of bytes/chars
+*[]Int32          // pointer to unsized array
+```
 
+## Semantics
 
-#### Examples
+- Indexing: `a[i]`; slicing: `a[i:j]` (see [slice](../value/slice.md));
+  element count: `lengthof(a)`.
+- Multi-dimensional arrays are arrays of arrays: `m[1][2]`.
+- An *unsized* array `[]T` carries no length in its type (C calls this
+  an *incomplete array type*), so a variable of such type cannot be
+  created — unsized arrays live behind pointers (`*[]T`) and as the
+  pointed-to type of slices and strings. The opposite — `[N]T` — is a
+  *sized* array.
+- A pointer to array auto-derefs on indexing: with `p: *[10]Int32`,
+  write `p[3]`, not `(*p)[3]` (see [pointer](./pointer.md)).
+- **By value, everywhere**: arrays are passed to functions, returned
+  from functions and assigned by value — the whole content is copied,
+  the size is part of the type. An array never silently turns into a
+  pointer. To share storage instead of copying, pass `*[N]T` / `*[]T`
+  explicitly.
+- Generic array literals convert implicitly at equal length; explicit
+  construction to a longer array zero-fills the tail; `= []` zero-fills
+  entirely (see [generic](./generic.md)).
 
-```zig
+## Strings
 
-var a: [3]Int32
+String types are built-in aliases for unsized char arrays:
 
-func main () -> Unit {
-	a[0] = 0
-	a[1] = 10
-	a[2] = 100
+```modest
+// built-in definitions
+type Str8  = []Char8
+type Str16 = []Char16
+type Str32 = []Char32
+```
 
-	printf("a[0] = %d\n", a[0])
-	printf("a[1] = %d\n", a[1])
-	printf("a[2] = %d\n", a[2])
+A string literal is a `[N]CharX` array value containing exactly the
+characters written. Zero-termination is a property of the string *types*
+(`@zarray`, see `docs/TODO.md`), appended when a string value is
+constructed — not part of the literal itself. A string is normally
+handled through a pointer:
+
+```modest
+var s: *Str8 = "Hello World!\n"
+printf(s)
+let c = s[0]              // Char8 'H'
+```
+
+## Examples
+
+```modest
+func sum (v: *[]Int32, n: Nat32) -> Int32 {   // explicit by-reference
+	var s: Int32 = 0
+	var k: Nat32 = 0
+	while k < n { s = s + v[k]; ++k }
+	return s
+}
+
+func maxOf (v: [5]Int32) -> Int32 {           // parameter by value
+	var m: Int32 = v[0]
+	var k: Nat32 = 1
+	while k < lengthof(v) {
+		if v[k] > m { m = v[k] }
+		++k
+	}
+	return m
+}
+
+func makeTriple (x: Int32) -> [3]Int32 {      // returned by value
+	var r: [3]Int32 = [x, x + 1, x + 2]
+	return r
+}
+
+func main () -> Int {
+	var a: [5]Int32 = [1, 2, 3, 4, 5]
+	a[0] = 10
+	printf("sum = %d\n", sum(&a, lengthof(a)))
+	printf("max = %d\n", maxOf(a))    // a copied into the parameter
+
+	var t: [3]Int32 = makeTriple(10)  // t = [10, 11, 12]
+
+	var b: [5]Int32 = []              // zero-filled
+	b = a                             // copy by value
+	return 0
 }
 ```
 
+<details>
+<summary>C output (c11 backend)</summary>
 
-##### Open array type
+```c
+static int32_t sum(int32_t *v, uint32_t n) {
+	int32_t s = 0;
+	uint32_t k = 0;
+	while (k < n) {
+		s = s + v[k];
+		k = k + 1;
+	}
+	return s;
+}
 
-```
-	[ ] <#type_expression#>
+static int32_t maxOf(int32_t *_v) {
+	int32_t v[5];
+	__builtin_memcpy(v, _v, sizeof(int32_t [5]));
+	int32_t m = v[0];
+	uint32_t k = 1;
+	while (k < LENGTHOF(v)) {
+		if (v[k] > m) {
+			m = v[k];
+		}
+		k = k + 1;
+	}
+	return m;
+}
+
+static void makeTriple(int32_t x, int32_t *__out) {
+	int32_t r[3];
+	__builtin_memcpy(&r, &(int32_t [3]){x, x + 1, x + 2}, sizeof(int32_t [3]));
+	__builtin_memcpy(__out, &r, sizeof(int32_t [3]));
+}
+
+int main(void) {
+	int32_t a[5] = {1, 2, 3, 4, 5};
+	a[0] = 10;
+	printf("sum = %d\n", sum(a, LENGTHOF(a)));
+	printf("max = %d\n", maxOf(a));
+	int32_t t[3];
+	makeTriple(10, t);
+	int32_t b[5] = {0};
+	__builtin_memcpy(&b, &a, sizeof(int32_t [5]));
+	return 0;
+}
 ```
 
+Note how the *value semantics* survives the translation: a by-value
+parameter becomes a pointer + a local copy (`maxOf`), array return
+becomes an out-parameter + `memcpy`, assignment becomes `memcpy` — the
+copying is real, only expressed in C terms.
 
-```
-	*[][]...([])T разрешен для создания но не для index/slice (!) нужно приводить явно
-```
+</details>
+
+## See also
+
+- [Slice](../value/slice.md), [Index](../value/access.md)
+- [sizeof / lengthof](../value/sizeof.md)

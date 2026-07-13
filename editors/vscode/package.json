@@ -1,0 +1,47 @@
+{
+	"name": "modest-lang",
+	"displayName": "Modest Language",
+	"description": "Syntax highlighting for the Modest programming language",
+	"version": "0.1.0",
+	"publisher": "lexbalan",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/lexbalan/Modest.git"
+	},
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"keywords": [
+		"modest",
+		"embedded",
+		"systems",
+		"syntax",
+		"highlighting"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "modest",
+				"aliases": [
+					"Modest",
+					"modest"
+				],
+				"extensions": [
+					".m"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "modest",
+				"scopeName": "source.modest",
+				"path": "./syntaxes/modest.tmLanguage.json"
+			}
+		]
+	}
+}

@@ -5,9 +5,9 @@ include "libc/stdio"
 
 
 type MyInt32 = @branded Int32
-@alias("c", "MY_ZERO")
+@extern("C", "MY_ZERO")
 const myZero = MyInt32 0
-@alias("c", "MY_ONE")
+@extern("C", "MY_ONE")
 const myOne = MyInt32 1
 
 
@@ -26,10 +26,10 @@ type ProtocolHeader = @layout("packed") {
 	len: Nat16
 }
 
-@alias("name2")
+@extern("C", "name2")
 var name1: Bool
 
-@alias("c", "name22")
+@extern("C", "name22")
 var name11: Bool
 
 @extern
@@ -53,7 +53,6 @@ var u: Word64
 var u2: Word64
 
 
-@nodecorate
 public const const0 = 0
 
 

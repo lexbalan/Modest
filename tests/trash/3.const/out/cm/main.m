@@ -1,7 +1,9 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 const genericIntConst = 42
 const int32Const = Int32 genericIntConst

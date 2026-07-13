@@ -3,7 +3,6 @@
 #####################################################################
 
 import os
-import re
 
 from hlir import *
 from error import error, warning, info
@@ -155,7 +154,7 @@ class Parser:
 	def is_Identifier(self):
 		return self.ctok_class() == 'Id'
 
-	def is_string(self):
+	def is_type_string(self):
 		return self.ctok_class() == 'str'
 
 	def is_operator(self):
@@ -167,13 +166,7 @@ class Parser:
 
 	def parse_identifier(self):
 		ti = self.textInfo()
-#		if not self.is_identifier():
-#			self.skip1()
-#			error("expected identifier", ti)
-#			return None
 		s = self.gettok()
-		if not re.fullmatch(r'[A-Za-z0-9_]+', s):
-			error("bad identifier", ti)
 		return {'isa': 'ast_id', 'kind': 'id', 'str': s, 'ti': ti} #Id(s, ti=ti) ####
 
 
@@ -290,6 +283,10 @@ class Parser:
 			return True
 
 		elif self.is_identifier():
+			# `record { ... }` — record type with explicit keyword
+			if self.ctok() == 'record' and self.nextok() == '{':
+				return True
+
 			# parse type expressions like 'builtin.machine.Word'
 			while self.is_identifier():
 				self.skip1() # skip ident
@@ -299,8 +296,7 @@ class Parser:
 				if self.is_Identifier():
 					return True
 
-			token = self.gettok()
-			return token in ['record']
+			return False
 
 		elif self.is_operator():
 			token = self.gettok()
@@ -432,7 +428,7 @@ class Parser:
 		#return r
 
 
-	def expr_type(self):
+	def _parse_type_atom(self):
 		start_ti = self.textInfo()
 
 		if not self.is_type_expr():
@@ -513,6 +509,31 @@ class Parser:
 			}
 
 		t['anno'] = annotations
+		return t
+
+
+	def expr_type(self):
+		t = self._parse_type_atom()
+		if t is None:
+			return None
+
+		# or-type has the lowest priority: `*Int or Error` -> `(*Int) or Error`
+		or_ti = self.textInfo()
+		if self.match("or"):
+			variants = [t]
+			while True:
+				r = self._parse_type_atom()
+				variants.append(r)
+				if not self.match("or"):
+					break
+			t = {
+				'isa': 'ast_type',
+				'kind': 'variant',
+				'variants': variants,
+				'anno': [],
+				'ti': TextInfo(start=variants[0]['ti'], mid=or_ti, end=variants[-1]['ti'])
+			}
+
 		return t
 
 	#
@@ -856,6 +877,11 @@ class Parser:
 		return v
 
 	def is_type_before_value2(self):
+		c = self.ctok_class()
+		if c == 'num' or c == 'str':
+			return False
+		if c == 'id' and self.nextok() != '.':
+			return False
 		if not self.is_type_expr():
 			return False
 		if self.look("{"):
@@ -1247,7 +1273,8 @@ class Parser:
 
 				if self.match(":"):
 					is_slicing = True
-					j = self.expr_value()
+					if not self.look("]"):
+						j = self.expr_value()
 				else:
 					i = self.expr_value()
 					if self.match(":"):
@@ -1256,8 +1283,6 @@ class Parser:
 							j = self.expr_value()
 				end_ti = self.textInfo()
 				self.need("]")
-
-				assert not (i == None and j == None)
 
 				if is_slicing:
 					v = {
@@ -1542,7 +1567,7 @@ class Parser:
 				'ti': ti_start
 			}
 
-		elif self.is_string():
+		elif self.is_type_string():
 			ti = self.tokenInfo()
 			s = self.gettok()
 			return self.parse_value_string(s, ti_start)
@@ -1583,12 +1608,12 @@ class Parser:
 	def stmt_let(self):
 		ti_start = self.tokenInfo()
 		self.match("let")
-		x = self.parse_stmt_field()[0]
-		x['isa'] = 'ast_stmt'
-		x['kind'] = 'const'
-		x['ti'] = TextInfo(start=ti_start, mid=x['ti'].mid, end=x['ti'].end)
-		x['ti'].start = ti_start
-		return x
+		xx = self.parse_stmt_field()
+		for x in xx:
+			x['isa'] = 'ast_stmt'
+			x['kind'] = 'const'
+			x['ti'].start = ti_start
+		return xx
 
 
 	def stmt_var(self):
@@ -1836,6 +1861,8 @@ class Parser:
 				s = self.stmt_inc()
 			elif self.look('--'):
 				s = self.stmt_dec()
+			elif self.look('func'):
+				s = self.parse_def_func()
 			elif self.look('__asm'):
 				s = self.stmt_asm()
 			elif self.match(';'):
@@ -1964,6 +1991,7 @@ class Parser:
 			'is_include': False,
 			'as': _as,
 			'args': [],
+			'anno': [],
 			'ti': TextInfo(start=ti_start, mid=ti_start, end=ti_end)
 		}
 
@@ -2050,11 +2078,12 @@ class Parser:
 	def parse_def_const(self):
 		ti_start = self.tokenInfo()
 		self.match("const")
-		x = self.parse_stmt_field()[0]
-		x['isa'] = 'ast_definition'
-		x['kind'] = 'const'
-		x['ti'].start = ti_start
-		return x
+		xx = self.parse_stmt_field()
+		for x in xx:
+			x['isa'] = 'ast_definition'
+			x['kind'] = 'const'
+			x['ti'].start = ti_start
+		return xx
 
 
 	def parse_def_var(self):
@@ -2273,6 +2302,10 @@ class Parser:
 
 			if x != None:
 				if not isinstance(x, list):
+					if x['isa'] == 'ast_directive' and x['kind'] != 'include':
+						if access_modifier != 'undefined':
+							error("%s cannot have any access level modifier" % x['kind'], x['ti'])
+
 					x['comment'] = self.comment
 					x['nl'] = spaceline_cnt
 					x['access_modifier'] = access_modifier

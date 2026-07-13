@@ -1,9 +1,12 @@
-private import "builtin"
-private import "list"
+import "builtin"
+import "list"
 include "ctypes64"
 include "stdlib"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdlib"
+include "libc/stdio"
 import "list" as list
 
 
@@ -73,13 +76,13 @@ func main () -> Int {
 
 		if node == nil {
 			printf("node %i not exist\n", i)
-			i = i - 1
+			--i
 			again
 		}
 
 		let px = *Nat32 list.node_data_get(node)
 		printf("list(%i) = %i\n", i, *px)
-		i = i - 1
+		--i
 	}
 
 	printf("-----------------------------------------\n")
@@ -90,13 +93,13 @@ func main () -> Int {
 
 		if node == nil {
 			printf("node %i not exist\n", i)
-			i = i + 1
+			++i
 			again
 		}
 
 		let px = *Nat32 list.node_data_get(node)
 		printf("list(%i) = %i\n", i, *px)
-		i = i + 1
+		++i
 	}
 
 	printf("-----------------------------------------\n")

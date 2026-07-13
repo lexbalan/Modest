@@ -1,4 +1,4 @@
-private import "builtin"
+import "builtin"
 //
 
 const systemWidth = 64
@@ -25,7 +25,7 @@ public func zero (mem: Ptr, len: Nat64) -> Unit {
 	var i = Nat64 0
 	while i < z {
 		dst_byte0[i] = 0
-		i = i + 1
+		++i
 	}
 
 	let len_words: Nat64 = (len - z) / sizeof(Word)
@@ -34,7 +34,7 @@ public func zero (mem: Ptr, len: Nat64) -> Unit {
 	i = 0
 	while i < len_words {
 		dst_word[i] = 0
-		i = i + 1
+		++i
 	}
 
 	let len_bytes: Nat64 = (len - z) % sizeof(Word)
@@ -43,7 +43,7 @@ public func zero (mem: Ptr, len: Nat64) -> Unit {
 	i = 0
 	while i < len_bytes {
 		dst_byte1[i] = 0
-		i = i + 1
+		++i
 	}
 }
 
@@ -56,7 +56,7 @@ public func copy (dst: Ptr, src: Ptr, len: Nat64) -> Unit {
 	var i = Nat64 0
 	while i < len_words {
 		dst_w[i] = src_w[i]
-		i = i + 1
+		++i
 	}
 
 	let len_bytes: Nat64 = len % sizeof(Word)
@@ -66,7 +66,7 @@ public func copy (dst: Ptr, src: Ptr, len: Nat64) -> Unit {
 	i = 0
 	while i < len_bytes {
 		dst_b[i] = src_b[i]
-		i = i + 1
+		++i
 	}
 }
 
@@ -81,7 +81,7 @@ public func eq (mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 		if mem0_w[i] != mem1_w[i] {
 			return false
 		}
-		i = i + 1
+		++i
 	}
 
 	let len_bytes: Nat64 = len % sizeof(Word)
@@ -93,7 +93,7 @@ public func eq (mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 		if mem0_b[i] != mem1_b[i] {
 			return false
 		}
-		i = i + 1
+		++i
 	}
 
 	return true

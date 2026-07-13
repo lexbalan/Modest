@@ -1,8 +1,10 @@
-private import "builtin"
-private import "misc/aes256"
+import "builtin"
+import "misc/aes256"
 include "stdlib"
 include "stdio"
 
+include "libc/stdlib"
+include "libc/stdio"
 import "misc/aes256" as aes
 
 
@@ -122,7 +124,7 @@ func main () -> Int32 {
 		let rc: Bool = runTest(&tests[i])
 		success = success and rc
 		printf("\n")
-		i = i + 1
+		++i
 	}
 
 	printf("AES-256 test ")

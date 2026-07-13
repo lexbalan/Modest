@@ -137,7 +137,7 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -187,7 +187,6 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
@@ -223,7 +222,7 @@ declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n
 declare [0 x %Char]* @strerror(%Int %error)
 declare %SizeT @strcspn(%Str8* %str1, %Str8* %str2)
 ; from included time
-%TimeT = type %Int32;
+%TimeT = type %Nat64;
 %ClockT = type %UnsignedLong;
 %StructTM = type {
 	%Int,
@@ -268,9 +267,9 @@ declare void @encrypt([64 x %Char]* %block, %Int %edflag)
 declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
-declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
-declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
-declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
+declare %Int @execv([0 x %ConstChar]* %path, [0 x [0 x %ConstChar]*]* %argv)
+declare %Int @execve([0 x %ConstChar]* %path, [0 x [0 x %ConstChar]*]* %argv, [0 x %ConstChar]* %envp)
+declare %Int @execvp([0 x %ConstChar]* %file, [0 x [0 x %ConstChar]*]* %argv)
 declare void @_exit(%Int %status)
 declare %Int @fchown(%Int %fildes, %UIDT %owner, %GIDT %group)
 declare %Int @fchdir(%Int %fildes)
@@ -417,14 +416,12 @@ declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; from included libc
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0]
 @.str2 = private constant [19 x i8] [i8 114, i8 117, i8 110, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
@@ -437,6 +434,11 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @.str9 = private constant [21 x i8] [i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 32, i8 99, i8 111, i8 110, i8 116, i8 97, i8 105, i8 110, i8 115, i8 58, i8 32, i8 0]
 @.str10 = private constant [19 x i8] [i8 116, i8 101, i8 120, i8 116, i8 95, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 ; -- endstrings --
+
+;include "libc/ctypes64"
+;include "libc/stdio"
+; не ищет в public include
+;public include "libc/stdio"
 define internal void @write_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @.str2 to [0 x i8]*))
 	%2 = call i8* @fopen(%Str8* bitcast ([9 x i8]* @.str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @.str3 to [0 x i8]*))

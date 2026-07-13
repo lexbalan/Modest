@@ -1,7 +1,9 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func xor_encrypter (buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -> Unit {
@@ -11,12 +13,12 @@ func xor_encrypter (buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) 
 		buf[i] = buf[i] ^ key[j]
 
 		if j < (keylen - 1) {
-			j = j + 1
+			++j
 		} else {
 			j = 0
 		}
 
-		i = i + 1
+		++i
 	}
 }
 
@@ -34,7 +36,7 @@ func print_bytes (buf: *[]Word8, len: Nat32) -> Unit {
 	var i = Nat32 0
 	while i < len {
 		printf("0x%02X ", buf[i])
-		i = i + 1
+		++i
 	}
 	printf("\n")
 }

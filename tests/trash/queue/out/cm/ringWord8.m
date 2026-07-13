@@ -1,5 +1,5 @@
-private import "builtin"
-private import "queue"
+import "builtin"
+import "queue"
 
 import "queue" as queue
 

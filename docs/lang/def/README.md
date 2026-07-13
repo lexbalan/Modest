@@ -1,61 +1,31 @@
-# Top Level Definitions
+# Definitions
 
-*Top level definition* create a global entity (*type alias*, *constant*, *variable* or *function*). You can learn more about top-level definitions by clicking on the link below.
+A *definition* binds an identifier to an entity. There are four kinds:
 
-  * [Type definition](./type.md)
-  * [Constant definition](./const.md)
-  * [Variable definition](./var.md)
-  * [Function definition](./func.md)
+| Definition | Form | Page |
+| :-- | :-- | :-- |
+| Type — alias / named type | `type Name = T` | [type](./type.md) |
+| Constant — compile-time value | `const name = v` | [const](./const.md) |
+| Variable — mutable storage | `var name: T = v` | [var](./var.md) |
+| Function | `func name (params) -> T { }` | [func](./func.md) |
 
+Every module-level definition may carry an access modifier (`public` /
+`private`, see [access modifiers](../access_modifiers.md)) and
+[annotations](../attribute.md). Redefinition of an identifier within one
+scope is an error.
 
-## Fast Examples
+All module-level names are declared before definitions are processed, so a
+definition may refer to entities defined later in the file — no forward
+declarations are needed.
 
-#### [Type Definition](./type.md)
-```swift
-type AxisType = Int64
-type MyArray = [10]Int32
-type MyPoint2D = {x: AxisType, y: AxisType}
-type MyPoint3D = {
-	x: AxisType
-	y: AxisType
-	z: AxisType
+```modest
+type Point = {x: Int32, y: Int32}
+
+const origin = Point {x = 0, y = 0}
+
+var current: Point
+
+func reset () -> Unit {
+	current = origin
 }
 ```
-
-#### [Constant Definition](./const.md)
-```golang
-const one = 1
-const two = one + 1
-const greetingText = "Hello!"
-```
-
-#### [Variable Definition](./var.md)
-```swift
-var myCounter: MyInt
-var pointerToMyCounter: *MyInt = &myCounter
-var myPoint2D: Point2D = {x = 0, y = 0}
-var pointerToMyPoint3D: *Point3D
-```
-
-#### [Function Definition](./func.md)
-```swift
-func show_greeting (text: *Str8) -> Unit {
-	printf("%s\n", text)
-}
-
-func sum64 (a: Int64, b: Int64) -> Int64 {
-	return a + b
-}
-
-func main () -> Int32 {
-	show_greeting(greetingText)
-
-	let a = 10
-	let b = 20
-	let s = sum64(a, b)
-	printf("sum64(%i, %i) -> %i\n", a, b, s)
-
-	return 0
-}
-```
-

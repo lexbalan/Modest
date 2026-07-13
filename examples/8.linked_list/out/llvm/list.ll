@@ -137,7 +137,7 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -202,21 +202,18 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports private 'list' --
+; -- print imports 'list' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'list' --
-; -- print imports public 'list' --
-; -- end print imports public 'list' --
+; -- end print imports 'list' --
 ; -- strings --
 @.str1 = private constant [14 x i8] [i8 110, i8 111, i8 100, i8 101, i8 95, i8 103, i8 101, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 @.str2 = private constant [17 x i8] [i8 110, i8 111, i8 100, i8 101, i8 95, i8 105, i8 110, i8 115, i8 101, i8 114, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
@@ -301,10 +298,9 @@ endif_0:
 	%6 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
 	store %list_Node* %new_node, %list_Node** %6
 	%7 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%8 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%9 = load %Nat32, %Nat32* %8
-	%10 = add %Nat32 %9, 1
-	store %Nat32 %10, %Nat32* %7
+	%8 = load %Nat32, %Nat32* %7
+	%9 = add %Nat32 %8, 1
+	store %Nat32 %9, %Nat32* %7
 	ret %list_Node* %new_node
 }
 
@@ -500,10 +496,9 @@ then_2:
 endif_2:
 	call void @list_node_insert_right(%list_Node* %9, %list_Node* %new_node)
 	%12 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%13 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%14 = load %Nat32, %Nat32* %13
-	%15 = add %Nat32 %14, 1
-	store %Nat32 %15, %Nat32* %12
+	%13 = load %Nat32, %Nat32* %12
+	%14 = add %Nat32 %13, 1
+	store %Nat32 %14, %Nat32* %12
 	ret %list_Node* %new_node
 }
 
@@ -535,10 +530,9 @@ endif_1:
 	%11 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 1
 	store %list_Node* %new_node, %list_Node** %11
 	%12 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%13 = getelementptr %list_List, %list_List* %list, %Int32 0, %Int32 2
-	%14 = load %Nat32, %Nat32* %13
-	%15 = add %Nat32 %14, 1
-	store %Nat32 %15, %Nat32* %12
+	%13 = load %Nat32, %Nat32* %12
+	%14 = add %Nat32 %13, 1
+	store %Nat32 %14, %Nat32* %12
 	ret %list_Node* %new_node
 }
 

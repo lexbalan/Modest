@@ -8,36 +8,33 @@ pragma c_include "arpa/inet.h"
 include "libc/ctypes64"
 
 
-
-@alias("c", "in_addr_t")
+@extern("C", "in_addr_t")
 public type InAddrT = Nat32
 
-
-@alias("c", "INADDR_ANY")
+@extern("C", "INADDR_ANY")
 public const inAddrAny = 0
 
-
-@alias("c", "in_port_t")
+@extern("C", "in_port_t")
 public type InPortT = Nat16
 
-@alias("c", "socklen_t")
+@extern("C", "socklen_t")
 public type SocklenT = Nat32
 
 
-@alias("c", "struct sockaddr")
+@extern("C", "struct sockaddr")
 public type SockAddr = @public {
 	sa_family: UnsignedShort  // address family
 	sa_data: [14]Char8        // up to 14 bytes of direct address
 }
 
 
-@alias("c", "struct in_addr")
+@extern("C", "struct in_addr")
 public type Struct_in_addr = @public {
 	s_addr: InAddrT
 }
 
 
-@alias("c", "struct sockaddr_in")
+@extern("C", "struct sockaddr_in")
 public type SockAddrIn = @public {
 // $if APPLE
 	sin_len: Nat8
@@ -52,12 +49,12 @@ public type SockAddrIn = @public {
 
 
 
-@alias("c", "SOL_SOCKET")
-public const c_SOL_SOCKET = 1   // for setsockopt
+@extern("C", "SOL_SOCKET")
+public const solSocket = 1   // for setsockopt
 
 
-@alias("c", "SO_REUSEADDR")
-public const c_SO_REUSEADDR = 2
+@extern("C", "SO_REUSEADDR")
+public const soReuseaddr = 2
 
 
 // from "sys/socket.h"
@@ -71,16 +68,11 @@ public func setsockopt (
 
 
 
-@alias("c", "SOCK_STREAM")
-public const c_SOCK_STREAM = 1  // stream socket
-@alias("c", "SOCK_DGRAM")
-public const c_SOCK_DGRAM = 2   // datagram socket
-@alias("c", "SOCK_RAW")
-public const c_SOCK_RAW = 3     // raw-protocol interface
-@alias("c", "SOCK_RDM")
-public const c_SOCK_RDM = 4     // reliably-delivered message
-@alias("c", "SOCK_SEQPACKET")
-public const c_SOCK_SEQPACKET = 5  // sequenced packet stream
+@extern("C", "SOCK_STREAM") public const sockStream = 1  // stream socket
+@extern("C", "SOCK_DGRAM") public const sockDgram = 2   // datagram socket
+@extern("C", "SOCK_RAW") public const sockRaw = 3     // raw-protocol interface
+@extern("C", "SOCK_RDM") public const sockRdm = 4     // reliably-delivered message
+@extern("C", "SOCK_SEQPACKET") public const sockSeqpacket = 5  // sequenced packet stream
 //#ifdef _KERNEL
 //const SOCK_TYPE_MASK = 0x000F	// mask that covers the above
 //#endif
@@ -89,51 +81,50 @@ public const c_SOCK_SEQPACKET = 5  // sequenced packet stream
 /*
  * Address families.
  */
-public const c_AF_UNSPEC = 0       // unspecified
-public const c_AF_UNIX = 1         // local to host
-public const c_AF_LOCAL = c_AF_UNIX  // draft POSIX compatibility
+@extern("C", "AF_UNSPEC") public const afUnspec = 0       // unspecified
+@extern("C", "AF_UNIX") public const afUnix = 1         // local to host
+@extern("C", "AF_LOCAL") public const afLocal = afUnix   // draft POSIX compatibility
 
-@alias("c", "AF_INET")
-public const c_AF_INET = 2         // internetwork: UDP, TCP, etc.
+@extern("C", "AF_INET") public const afInet = 2         // internetwork: UDP, TCP, etc.
 
-public const c_AF_IMPLINK = 3      // arpanet imp addresses
-public const c_AF_PUP = 4          // pup protocols: e.g. BSP
-public const c_AF_CHAOS = 5        // mit CHAOS protocols
-public const c_AF_NS = 6           // XEROX NS protocols
-public const c_AF_ISO = 7          // ISO protocols
-public const c_AF_OSI = c_AF_ISO     // OSI protocols
-public const c_AF_ECMA = 8         // european computer manufacturers
-public const c_AF_DATAKIT = 9      // datakit protocols
-public const c_AF_CCITT = 10       // CCITT protocols, X.25 etc
-public const c_AF_SNA = 11         // IBM SNA
-public const c_AF_DECnet = 12      // DECnet
-public const c_AF_DLI = 13         // DEC Direct data link interface
-public const c_AF_LAT = 14         // LAT
-public const c_AF_HYLINK = 15      // NSC Hyperchannel
-public const c_AF_APPLETALK = 16   // Apple Talk
-public const c_AF_ROUTE = 17       // Internal Routing Protocol
-public const c_AF_LINK = 18        // Link layer interface
-public const pseudo_AF_XTP = 19  // eXpress Transfer Protocol (no AF)
-public const c_AF_COIP = 20        // connection-oriented IP, aka ST II
-public const c_AF_CNT = 21         // Computer Network Technology
-public const pseudo_AF_RTIP = 22 // Help Identify RTIP packets
-public const c_AF_IPX = 23         // Novell Internet Protocol
-public const c_AF_INET6 = 24       // IPv6
-public const pseudo_AF_PIP = 25  // Help Identify PIP packets
-public const c_AF_ISDN = 26        // Integrated Services Digital Network*/
-public const c_AF_E164 = c_AF_ISDN   // CCITT E.164 recommendation
-public const c_AF_NATM = 27        // native ATM access
-public const c_AF_ENCAP = 28       //
-public const c_AF_SIP = 29         // Simple Internet Protocol
-public const c_AF_KEY = 30
+@extern("C", "AF_IMPLINK") public const afImplink = 3      // arpanet imp addresses
+@extern("C", "AF_PUP") public const afPup = 4          // pup protocols: e.g. BSP
+@extern("C", "AF_CHAOS") public const afChaos = 5        // mit CHAOS protocols
+@extern("C", "AF_NS") public const afNs = 6           // XEROX NS protocols
+@extern("C", "AF_ISO") public const afIso = 7          // ISO protocols
+@extern("C", "AF_OSI") public const afOsi = afIso      // OSI protocols
+@extern("C", "AF_ECMA") public const afEcma = 8         // european computer manufacturers
+@extern("C", "AF_DATKIT") public const afDatakit = 9      // datakit protocols
+@extern("C", "AF_CCITT") public const afCcitt = 10       // CCITT protocols, X.25 etc
+@extern("C", "AF_SNA") public const afSna = 11         // IBM SNA
+@extern("C", "AF_DECNET") public const afDecnet = 12      // DECnet
+@extern("C", "AF_DLI") public const afDli = 13         // DEC Direct data link interface
+@extern("C", "AF_LAT") public const afLat = 14         // LAT
+@extern("C", "AF_HYLINK") public const afHylink = 15      // NSC Hyperchannel
+@extern("C", "AF_APPLETALK") public const afAppletalk = 16   // Apple Talk
+@extern("C", "AF_ROUTE") public const afRoute = 17       // Internal Routing Protocol
+@extern("C", "AF_LINK") public const afLink = 18        // Link layer interface
+@extern("C", "AF_XTP") public const pseudoAfXtp = 19   // eXpress Transfer Protocol (no AF)
+@extern("C", "AF_COIP") public const afCoip = 20        // connection-oriented IP, aka ST II
+@extern("C", "AF_CNT") public const afCnt = 21         // Computer Network Technology
+@extern("C", "AF_RTIP") public const pseudoAfRtip = 22  // Help Identify RTIP packets
+@extern("C", "AF_IPX") public const afIpx = 23         // Novell Internet Protocol
+@extern("C", "AF_INET6") public const afInet6 = 24       // IPv6
+@extern("C", "AF_PIP") public const pseudoAfPip = 25   // Help Identify PIP packets
+@extern("C", "AF_ISDN") public const afIsdn = 26        // Integrated Services Digital Network*/
+@extern("C", "AF_E164") public const afE164 = afIsdn    // CCITT E.164 recommendation
+@extern("C", "AF_NATM") public const afNatm = 27        // native ATM access
+@extern("C", "AF_ENCAP") public const afEncap = 28       //
+@extern("C", "AF_SIP") public const afSip = 29         // Simple Internet Protocol
+@extern("C", "AF_KEY") public const afKey = 30
 // Used by BPF to not rewrite headers
 // in interface output routine
-public const pseudo_AF_HDRCMPLT = 31
-public const c_AF_BLUETOOTH = 32      // Bluetooth
-public const c_AF_MPLS = 33           // MPLS
-public const pseudo_AF_PFLOW = 34   // pflow
-public const pseudo_AF_PIPEX = 35   // PIPEX
-public const c_AF_MAX = 36
+@extern("C", "AF_HDRCMPLT") public const pseudoAfHdrcmplt = 31
+@extern("C", "AF_BLUETOOTH") public const afBluetooth = 32     // Bluetooth
+@extern("C", "AF_MPLS") public const afMpls = 33          // MPLS
+@extern("C", "AF_PFLOW") public const pseudoAfPflow = 34   // pflow
+@extern("C", "AF_PIPEX") public const pseudoAfPipex = 35   // PIPEX
+@extern("C", "AF_MAX") public const afMax = 36
 
 
 public func inet_addr (cp: *[]ConstChar) -> InAddrT

@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #define ARR {1, 2}
 static int32_t arr0[2] = {1, 2};

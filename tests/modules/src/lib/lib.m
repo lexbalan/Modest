@@ -1,9 +1,30 @@
 
-pragma do_not_include
+//pragma do_not_include
 
-public import "./mod1"
-public import "./mod2"
+import "./mod1"
+import "./mod2"
 
-public type Librarian = {
+
+const privateConst = false
+
+
+const lenn = 10
+
+
+type X = {
+	public y: *Y
+}
+
+type Y = {
+	public x: Int32
+}
+
+
+public type Librarian = @public {
 	name: *Str8
+	name2: [lenn]Char8
+}
+
+public func printf (s: *Str8, ...) -> Unit {
+	//
 }

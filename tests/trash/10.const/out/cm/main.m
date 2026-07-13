@@ -1,9 +1,12 @@
-private import "builtin"
-private import "misc/minmax"
+import "builtin"
+import "misc/minmax"
 include "ctypes64"
 include "stdio"
 include "math"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/math"
 import "misc/minmax" as minmax
 
 

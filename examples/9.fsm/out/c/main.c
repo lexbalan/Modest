@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #include "fsm.h"
 static struct fsm_fsm fsm0;
@@ -12,6 +11,7 @@ static fsm_ComplexState routine1(fsm_ComplexState state, void *payload);
 static struct fsm_state_desc state1 = (struct fsm_state_desc){.id = "state1", .nstages = 4, .handler = &routine1};
 static fsm_ComplexState routine2(fsm_ComplexState state, void *payload);
 static struct fsm_state_desc state2 = (struct fsm_state_desc){.id = "state2", .nstages = 4, .handler = &routine2};
+
 
 static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 	(void)payload;
@@ -26,6 +26,7 @@ static fsm_ComplexState routine0(fsm_ComplexState state, void *payload) {
 	return state;
 }
 
+
 static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
 	(void)payload;
 	if (state.stage == (fsm_StageId)0) {
@@ -38,6 +39,7 @@ static fsm_ComplexState routine1(fsm_ComplexState state, void *payload) {
 	}
 	return state;
 }
+
 
 static fsm_ComplexState routine2(fsm_ComplexState state, void *payload) {
 	(void)payload;
@@ -60,7 +62,7 @@ int main(void) {
 			timecnt = 0;
 			fsm_tick(&fsm0);
 		} else {
-			timecnt = timecnt + 1;
+			++timecnt;
 		}
 		fsm_task(&fsm0);
 	}

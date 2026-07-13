@@ -1,9 +1,13 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 include "stdlib"
 include "math"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/math"
 
 
 const mathPi = 3.141592653589793238462643383279502884

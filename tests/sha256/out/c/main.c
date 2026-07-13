@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "./sha256.h"
@@ -38,21 +37,23 @@ static struct sha256_test_case test1 = (struct sha256_test_case){
 };
 #define TESTS {&test0, &test1}
 
+
 static bool doTest(struct sha256_test_case *test) {
 	sha256_Hash test_hash;
-	uint8_t (*const msg)[] = (uint8_t (*)[])test->inputData;
+	uint8_t *const msg = (uint8_t *)test->inputData;
 	const uint32_t msgLen = test->inputDataLen;
-	sha256_hash((uint8_t *)msg, msgLen, test_hash);
+	sha256_hash(msg, msgLen, test_hash);
 	printf("'%s'", test->inputData);
 	printf(" -> ");
 	uint32_t i = 0;
 	while (i < SHA256_HASH_SIZE) {
 		printf("%02X", test_hash[i]);
-		i = i + 1;
+		++i;
 	}
 	printf("\n");
 	return __builtin_memcmp(&test_hash, &test->expectedResult, sizeof(sha256_Hash)) == 0;
 }
+
 
 int main(void) {
 	printf("test SHA256\n");
@@ -67,7 +68,7 @@ int main(void) {
 			res = "passed";
 		}
 		printf("test #%i: %s\n", i, res);
-		i = i + 1;
+		++i;
 	}
 	printf("test ");
 	if (!success) {

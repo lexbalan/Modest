@@ -2,8 +2,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
+
 
 static void mtab(uint32_t n) {
 	uint32_t m = 1;

@@ -14,7 +14,7 @@ def value_integer_create(num, ti=None):
 
 
 def integer_can(to, from_type, method, ti):
-	return from_type.is_integer() or from_type.is_rational()
+	return from_type.is_type_integer() or from_type.is_type_rational()
 
 
 def value_integer_cons(t, v, method, ti):

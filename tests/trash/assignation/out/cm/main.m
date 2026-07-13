@@ -1,7 +1,9 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 // Simply record for records assignation test

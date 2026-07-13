@@ -137,14 +137,14 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
 %UIDT = type %Nat32;
 %GIDT = type %Nat32;
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
@@ -167,9 +167,9 @@ declare void @encrypt([64 x %Char]* %block, %Int %edflag)
 declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
-declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
-declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
-declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
+declare %Int @execv([0 x %ConstChar]* %path, [0 x [0 x %ConstChar]*]* %argv)
+declare %Int @execve([0 x %ConstChar]* %path, [0 x [0 x %ConstChar]*]* %argv, [0 x %ConstChar]* %envp)
+declare %Int @execvp([0 x %ConstChar]* %file, [0 x [0 x %ConstChar]*]* %argv)
 declare void @_exit(%Int %status)
 declare %Int @fchown(%Int %fildes, %UIDT %owner, %GIDT %group)
 declare %Int @fchdir(%Int %fildes)
@@ -278,7 +278,6 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
@@ -320,9 +319,7 @@ declare %Int32 @console_vfprint(%Int32 %fd, %Str8* %form, %__VA_List %va)
 declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va)
 
 ; end from import "console"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [20 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 111, i8 108, i8 101, i8 32, i8 112, i8 114, i8 105, i8 110, i8 116, i8 10, i8 0]
 @.str2 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]

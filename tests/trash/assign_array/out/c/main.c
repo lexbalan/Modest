@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 static int32_t globalArray0[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 static int32_t globalArray1[10] = {0};
@@ -15,7 +14,7 @@ int main(void) {
 	while (i < 10) {
 		const int32_t v = globalArray1[i];
 		printf("globalArray1[%d] = %d\n", i, v);
-		i = i + 1;
+		++i;
 	}
 	if (__builtin_memcmp(&globalArray0, &globalArray1, sizeof(int32_t [10])) == 0) {
 		printf("globalArray test passed\n");
@@ -29,7 +28,7 @@ int main(void) {
 	while (i < 10) {
 		const int32_t v = localArray1[i];
 		printf("localArray1[%d] = %d\n", i, v);
-		i = i + 1;
+		++i;
 	}
 	if (__builtin_memcmp(&localArray0, &localArray1, sizeof(int32_t [10])) == 0) {
 		printf("localArray test passed\n");

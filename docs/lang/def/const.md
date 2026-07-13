@@ -1,60 +1,37 @@
 # Constant Definition
 
-Constant definition bounds an [*identifier*](../identifier.md) with an [*immediate value*](../value/README.md) (*value aliasing*).
+Binds an [identifier](../identifier.md) to a compile-time value. A constant
+occupies no storage; its value is substituted at each use site.
 
-### Common form
+## Form
 
-#### Global const
 ```
-// for global const
-const <#identifier#> = <#immediate_value_expression#>
-// or:
-const <#identifier#>: <#type_expression#> = <#immediate_value_expression#>
+const <#identifier#> = <#value_expression#>
+const <#identifier#>: <#type_expression#> = <#value_expression#>
 ```
 
-#### Local const
+## Semantics
+
+- The initializer must be evaluable at compile time. A runtime value is an
+  error: `expected immediate value`.
+- Without a type annotation the constant keeps the *generic* type of its
+  initializer (`Integer`, `Rational`, `String`, ...) and adapts to the
+  required concrete type at each use site (see
+  [generic types](../type/generic.md)).
+- With a type annotation the value is implicitly
+  [constructed](../value/cons.md) to that type at the definition.
+- Constants may be defined at module level and inside functions.
+- For immutable *runtime* bindings inside functions use
+  [`let`](../stmt/let.md).
+
+## Examples
+
+```modest
+const one = 1                  // generic Integer
+const two = one + 1            // constant expressions fold
+const pi: Float64 = 3.14159    // concrete type
+const message = "Hello!\n"
+
+const a: Int8 = one              // Integer adapts to Int8
+const b: Nat64 = one             // ... and to Nat64
 ```
-let <#identifier#> = <#value_expression#>
-// or:
-let <#identifier#>: <#type_expression#> = <#value_expression#>
-```
-
-
-## Global constant definition
-
-Global constant definition bounds an [*identifier*](../identifier.md) with an [*immediate value*](../value/README.md).
-
-
-#### Examples
-
-```swift
-const one = 1
-const two = one + 1
-const three = one + two
-const four = two * 2
-```
-
-```swift
-const message = "Hello World!\n"
-
-func main () -> Int32 {
-	printf("%s\n", message)
-	return 0
-}
-```
-
-
-## Local constant definition
-
-Local constant definition bounds an [*identifier*](../identifier.md) with an value.
-
-#### Examples
-
-```swift
-func mid (a: Int32, b: Int32) -> Int32 {
-	let sum = a + b
-	let result: Int32 = sum / 2
-	return result
-}
-```
-

@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -13,7 +12,7 @@ static void *thread0(void *param) {
 	printf("Hello from thread 0\n");
 	while (global_counter < 32) {
 		pthread_mutex_lock(&mutex);
-		global_counter = global_counter + 1;
+		++global_counter;
 		pthread_mutex_unlock(&mutex);
 		usleep(500000);
 	}
@@ -49,6 +48,7 @@ int main(void) {
 	void *rc1;
 	rc = pthread_join(pthread0, &rc0);
 	rc = pthread_join(pthread1, &rc1);
+	(void)rc;
 	pthread_exit(NULL);
 	return 0;
 }

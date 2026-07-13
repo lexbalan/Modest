@@ -1,14 +1,16 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func array_print (pa: *[]Int32, len: Nat32) -> Unit {
 	var i: Nat32 = 0
 	while i < len {
 		printf("a[%d] = %d\n", i, pa[i])
-		i = i + 1
+		++i
 	}
 }
 
@@ -40,7 +42,7 @@ func main () -> Int {
 	var i: Nat32 = 0
 	while i < lengthof(s1) {
 		printf("s1[%d] = %d\n", i, s1[i])
-		i = i + 1
+		++i
 	}
 
 	printf("--------------------------------------------\n")
@@ -50,7 +52,7 @@ func main () -> Int {
 	i = 0
 	while i < lengthof(s2) {
 		printf("s2[%d] = %d\n", i, s2[i])
-		i = i + 1
+		++i
 	}
 
 	printf("--------------------------------------------\n")
@@ -65,7 +67,7 @@ func main () -> Int {
 	i = 0
 	while i < lengthof(a) {
 		printf("a[%d] = %d\n", i, a[i])
-		i = i + 1
+		++i
 	}
 
 	printf("--------------------------------------------\n")
@@ -77,7 +79,7 @@ func main () -> Int {
 	i = 0
 	while i < lengthof(s) {
 		printf("s[%d] = %d\n", i, Nat32 s[i])
-		i = i + 1
+		++i
 	}
 
 	printf("--------------------------------------------\n")
@@ -96,7 +98,7 @@ func main () -> Int {
 	array_print(p, lengthof(*p))
 
 	printf("--------------------------------------------\n")
-	printf("slice of pointer to open array\n")
+	printf("slice of pointer to unsized array\n")
 
 	var pw = *[]Int32 &s
 

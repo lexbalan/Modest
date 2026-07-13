@@ -21,8 +21,8 @@ public type Table = @public {
 
 
 // we cannot receive VLA by value,
-// but we can receive pointer to open array
-// and after construct pointer to closed array with required dimensions
+// but we can receive pointer to unsized array
+// and after construct pointer to sized array with required dimensions
 public func print (table: *Table) -> Unit {
 	var i, j: Nat32
 

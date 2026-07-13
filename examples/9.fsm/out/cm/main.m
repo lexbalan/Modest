@@ -1,8 +1,10 @@
-private import "builtin"
-private import "fsm"
+import "builtin"
+import "fsm"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 import "fsm" as fsm
 
 
@@ -68,7 +70,7 @@ func main () -> Int {
 			timecnt = 0
 			fsm.tick(&fsm0)
 		} else {
-			timecnt = timecnt + 1
+			++timecnt
 		}
 
 		fsm.task(&fsm0)

@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "aes256.h"
@@ -82,6 +81,7 @@ static struct test_case tests[8] = {
 	}
 };
 
+
 static bool runTest(struct test_case *test) {
 	aes256_Context ctx;
 	aes256_init(&ctx, test->key);
@@ -102,6 +102,7 @@ static bool runTest(struct test_case *test) {
 	return true;
 }
 
+
 int32_t main(void) {
 	printf("run AES-256 test\n");
 	bool success = true;
@@ -111,7 +112,7 @@ int32_t main(void) {
 		const bool rc = runTest(&tests[i]);
 		success = success && rc;
 		printf("\n");
-		i = i + 1;
+		++i;
 	}
 	printf("AES-256 test ");
 	if (!success) {

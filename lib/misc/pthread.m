@@ -8,64 +8,64 @@ include "libc/ctypes64"
 
 type Nat = Nat64
 
-@alias("c", "clockid_t")
+@extern("C", "clockid_t")
 type ClockIdT = Int
 
-@alias("c", "struct timespec")
+@extern("C", "struct timespec")
 type StructTimespec = {}
 
-@alias("c", "struct sched_param")
+@extern("C", "struct sched_param")
 type StructSchedParam = {}
 
-@alias("c", "struct pthread")
+@extern("C", "struct pthread")
 public type PThread = {}
 
-@alias("c", "pthread_t")
+@extern("C", "pthread_t")
 public type PThreadT = Ptr
 
-@alias("c", "pthread_mutex_t")
+@extern("C", "pthread_mutex_t")
 public type PThreadMutexT = Ptr
 
 
-@alias("c", "struct pthread_attr")
+@extern("C", "struct pthread_attr")
 public type PThreadAttr = Ptr
-@alias("c", "pthread_attr_t")
+@extern("C", "pthread_attr_t")
 public type PThreadAttrT = Ptr
-@alias("c", "pthread_mutexattr_t")
+@extern("C", "pthread_mutexattr_t")
 public type PThreadMutexAttrT = Ptr
-@alias("c", "pthread_cond_t")
+@extern("C", "pthread_cond_t")
 public type PThreadCondT = Ptr
-@alias("c", "pthread_condattr_t")
+@extern("C", "pthread_condattr_t")
 public type PThreadCondAttrT = Ptr
-@alias("c", "pthread_key_t")
+@extern("C", "pthread_key_t")
 public type PThreadKeyT = Int
-@alias("c", "pthread_once_t")
+@extern("C", "pthread_once_t")
 public type PThreadOnceT = Ptr
-@alias("c", "pthread_rwlock_t")
+@extern("C", "pthread_rwlock_t")
 public type PThreadRWLockT = Ptr
-@alias("c", "pthread_rwlockattr_t")
+@extern("C", "pthread_rwlockattr_t")
 public type PThreadRWLockAttrT = Ptr
-@alias("c", "pthread_barrier_t")
+@extern("C", "pthread_barrier_t")
 public type PThreadBarrierT = Ptr
-@alias("c", "pthread_barrierattr_t")
+@extern("C", "pthread_barrierattr_t")
 public type PThreadBarrierAttrT = Ptr
-@alias("c", "pthread_spinlock_t")
+@extern("C", "pthread_spinlock_t")
 public type PThreadSpinlockT = Ptr
 
 
 
-@alias("c", "PTHREAD_MUTEX_INITIALIZER")
+@extern("C", "PTHREAD_MUTEX_INITIALIZER")
 public const mutexInitializer = nil
-@alias("c", "PTHREAD_COND_INITIALIZER")
+@extern("C", "PTHREAD_COND_INITIALIZER")
 public const condInitializer = nil
-@alias("c", "PTHREAD_RWLOCK_INITIALIZER")
+@extern("C", "PTHREAD_RWLOCK_INITIALIZER")
 public const rwlockInitializer = nil
 
-@alias("c", "PTHREAD_PRIO_NONE")
+@extern("C", "PTHREAD_PRIO_NONE")
 public const pthreadPrioNone = nil
-@alias("c", "PTHREAD_PRIO_INHERIT")
+@extern("C", "PTHREAD_PRIO_INHERIT")
 public const pthreadPrioInherit = nil
-@alias("c", "PTHREAD_PRIO_PROTECT")
+@extern("C", "PTHREAD_PRIO_PROTECT")
 public const pthreadPrioProtect = nil
 
 

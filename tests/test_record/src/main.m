@@ -7,10 +7,15 @@ include "libc/stdio"
 
 
 type MyInt = Int32
+
+@used
+var myInt: MyInt
+
+
 type Point = {
-	@alias("c", "xx")
+	@extern("C", "xx")
 	x: Word64
-	@alias("c", "yy")
+	@extern("C", "yy")
 	y: Word64
 }
 

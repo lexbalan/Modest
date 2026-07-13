@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #include <math.h>
 #if !defined(LENGTHOF)
@@ -33,6 +32,7 @@ static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 static char arrayFromString[3] = {'a', 'b', 'c'};
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
+
 static void f0(char *_x, char *__out) {
 	char x[20];
 	__builtin_memcpy(x, _x, sizeof(char [20]));
@@ -40,12 +40,12 @@ static void f0(char *_x, char *__out) {
 	__builtin_memcpy(&local_copy_of_x, &x, sizeof(char [20]));
 	printf("f0(\"%s\")\n", local_copy_of_x);
 	char mic[6];
-	__builtin_memcpy(&mic, (char (*)[6 - 0])&x[0], sizeof(char [6]));
+	__builtin_memcpy(&mic, &x[0], sizeof(char [6]));
 	mic[5] = '\x0';
 	printf("f0 mic = \"%s\"\n", mic);
 	char res[30];
-	__builtin_memcpy((char (*)[20 - 0])&res[0], &x, sizeof(char [20 - 0]));
-	__builtin_bzero((char (*)[30 - 20])&res[20], sizeof(char [30 - 20]));
+	__builtin_memcpy(&res[0], &x, sizeof(char [20 - 0]));
+	__builtin_bzero(&res[20], sizeof(char [30 - 20]));
 	res[6] = 'M';
 	res[7] = 'o';
 	res[8] = 'd';
@@ -65,7 +65,7 @@ static void test(void) {
 	while (i < LENGTHOF(yy)) {
 		const uint8_t y = yy[i];
 		printf("yy[%i] = %u\n", i, (uint32_t)y);
-		i = i + 1;
+		++i;
 	}
 }
 static int32_t a0[2][2][5] = {
@@ -80,9 +80,9 @@ static int32_t a0[2][2][5] = {
 };
 static int32_t a1[5] = {0, 1, 2, 3, 4};
 static int32_t a2[5] = {5, 6, 7, 8, 9};
-static int32_t (*a3[2])[5] = {&a1, &a2};
-static int32_t (*(*a4[2])[2])[5] = {&a3, &a3};
-static int32_t (*(*(*p0)[2])[2])[5] = &a4;
+static int32_t *a3[2] = {a1, a2};
+static int32_t **a4[2] = {a3, a3};
+static int32_t ***p0 = a4;
 static int32_t a10[10][10] = {
 	{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
 	{11, 12, 13, 14, 15, 16, 17, 18, 19, 20},
@@ -105,18 +105,18 @@ static void test_arrays(void) {
 		j = 0;
 		while (j < 10) {
 			a10[i][j] = a10[i][j] * 2;
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 10) {
 		j = 0;
 		while (j < 10) {
 			printf("a10[%d][%d] = %d\n", i, j, a10[i][j]);
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 2) {
@@ -125,20 +125,20 @@ static void test_arrays(void) {
 			k = 0;
 			while (k < 5) {
 				printf("a3[%d][%d][%d] = %d\n", i, j, k, a0[i][j][k]);
-				k = k + 1;
+				++k;
 			}
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 2) {
 		j = 0;
 		while (j < 5) {
-			printf("a3[%d][%d] = %d\n", i, j, (*a3[i])[j]);
-			j = j + 1;
+			printf("a3[%d][%d] = %d\n", i, j, a3[i][j]);
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 2) {
@@ -146,12 +146,12 @@ static void test_arrays(void) {
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("a3[%d][%d][%d] = %d\n", i, j, k, (*(*a4[i])[j])[k]);
-				k = k + 1;
+				printf("a3[%d][%d][%d] = %d\n", i, j, k, a4[i][j][k]);
+				++k;
 			}
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 	i = 0;
 	while (i < 2) {
@@ -159,12 +159,12 @@ static void test_arrays(void) {
 		while (j < 2) {
 			k = 0;
 			while (k < 5) {
-				printf("p0[%d][%d][%d] = %d\n", i, j, k, (*(*(*p0)[i])[j])[k]);
-				k = k + 1;
+				printf("p0[%d][%d][%d] = %d\n", i, j, k, p0[i][j][k]);
+				++k;
 			}
-			j = j + 1;
+			++j;
 		}
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -188,20 +188,20 @@ int main(void) {
 		i = i + 1;
 	}
 	printf("------------------------------------\n");
-	int32_t (*globalArrayPtr)[];
-	globalArrayPtr = &globalArray;
+	int32_t *globalArrayPtr;
+	globalArrayPtr = globalArray;
 	i = 0;
 	while (i < 3) {
-		const int32_t a = (*globalArrayPtr)[i];
+		const int32_t a = globalArrayPtr[i];
 		printf("globalArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
 	printf("------------------------------------\n");
-	int32_t (*localArrayPtr)[];
-	localArrayPtr = &localArray;
+	int32_t *localArrayPtr;
+	localArrayPtr = localArray;
 	i = 0;
 	while (i < 3) {
-		const int32_t a = (*localArrayPtr)[i];
+		const int32_t a = localArrayPtr[i];
 		printf("localArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
@@ -221,16 +221,16 @@ int main(void) {
 	}
 	int32_t c[3] = {10, 20, 30};
 	int32_t d[6];
-	__builtin_memcpy((int32_t (*)[3 - 0])&d[0], &c, sizeof(int32_t [3 - 0]));
-	__builtin_bzero((int32_t (*)[6 - 3])&d[3], sizeof(int32_t [6 - 3]));
+	__builtin_memcpy(&d[0], &c, sizeof(int32_t [3 - 0]));
+	__builtin_bzero(&d[3], sizeof(int32_t [6 - 3]));
 	printf("d[0] = %i\n", d[0]);
 	printf("d[1] = %i\n", d[1]);
 	printf("d[2] = %i\n", d[2]);
 	printf("d[3] = %i\n", d[3]);
 	printf("d[4] = %i\n", d[4]);
 	printf("d[5] = %i\n", d[5]);
-	int32_t (*const pa)[3] = &a;
-	int32_t (*const pb)[3] = &b;
+	int32_t *const pa = a;
+	int32_t *const pb = b;
 	if (__builtin_memcmp(pa, pb, sizeof(int32_t [3])) == 0) {
 		printf("*pa == *pb\n");
 	} else {

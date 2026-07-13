@@ -3,9 +3,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 #include "./utf.h"
 #include "./console.h"
 #include <stdarg.h>
@@ -23,23 +23,21 @@ typedef uint32_t char32_t;
 #define _STR32(x) __STR32(x)
 #endif
 
-void console_putchar_utf8(char c);
 
 void console_putchar8(char c) {
 	console_putchar_utf8(c);
 }
 
-void console_putchar_utf16(char16_t c);
 
 void console_putchar16(char16_t c) {
 	console_putchar_utf16(c);
 }
 
-void console_putchar_utf32(char32_t c);
 
 void console_putchar32(char32_t c) {
 	console_putchar_utf32(c);
 }
+
 
 void console_putchar_utf8(char c) {
 	putchar((uint32_t)c);
@@ -60,7 +58,7 @@ void console_putchar_utf32(char32_t c) {
 	while (i < n) {
 		const char c = decoded_buf[i];
 		console_putchar_utf8(c);
-		i = i + 1;
+		++i;
 	}
 }
 //
@@ -75,7 +73,7 @@ void console_puts8(char *s) {
 			break;
 		}
 		console_putchar_utf8(c);
-		i = i + 1;
+		++i;
 	}
 }
 
@@ -104,11 +102,10 @@ void console_puts32(char32_t *s) {
 			break;
 		}
 		console_putchar_utf32(c);
-		i = i + 1;
+		++i;
 	}
 }
 
-int32_t console_vfprint(int32_t fd, char *form, va_list va);
 
 void console_print(char *form, ...) {
 	va_list va;
@@ -117,7 +114,6 @@ void console_print(char *form, ...) {
 	va_end(va);
 }
 
-int32_t console_vsprint(char *buf, char *form, va_list va);
 
 int32_t console_vfprint(int32_t fd, char *form, va_list va) {
 	char strbuf[256];
@@ -141,30 +137,30 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 		}
 		if (c != '{') {
 			if (c == '}') {
-				i = i + 1;
+				++i;
 				c = form[i];
 				if (c == '}') {
 					buf[j] = c;
-					j = j + 1;
-					i = i + 1;
+					++j;
+					++i;
 				}
 				continue;
 			}
 			buf[j] = c;
-			j = j + 1;
-			i = i + 1;
+			++j;
+			++i;
 			continue;
 		}
-		i = i + 1;
+		++i;
 		c = form[i];
 		if (c == '{') {
 			buf[j] = '{';
-			j = j + 1;
-			i = i + 1;
+			++j;
+			++i;
 			continue;
 		}
 		i = i + 2;
-		char *const sptr = (char *)&buf[j];
+		char *const sptr = &buf[j];
 		if (c == 'i' || c == 'd') {
 			const int32_t x = va_arg(va, int32_t);
 			const int32_t n = sprint_dec_int32(sptr, x);
@@ -190,10 +186,12 @@ int32_t console_vsprint(char *buf, char *form, va_list va) {
 	return j;
 }
 
+
 __attribute__((always_inline))
 static inline char n_to_dec_sym(uint8_t n) {
 	return (char)((uint8_t)'0' + n);
 }
+
 
 static char n_to_hex_sym(uint8_t n) {
 	if (n < 10) {
@@ -201,6 +199,7 @@ static char n_to_hex_sym(uint8_t n) {
 	}
 	return (char)((uint8_t)'A' + n - 10);
 }
+
 
 static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
 	char tmpbuf[8];
@@ -210,20 +209,21 @@ static int32_t sprint_hex_nat32(char *buf, uint32_t x) {
 		const uint32_t n = d % 16;
 		d = d / 16;
 		tmpbuf[i] = n_to_hex_sym((uint8_t)n);
-		i = i + 1;
+		++i;
 		if (d == 0) {
 			break;
 		}
 	}
 	int32_t j = 0;
 	while (i > 0) {
-		i = i - 1;
+		--i;
 		buf[j] = tmpbuf[i];
-		j = j + 1;
+		++j;
 	}
 	buf[j] = '\x0';
 	return j;
 }
+
 
 static int32_t sprint_dec_int32(char *buf, int32_t x) {
 	char tmpbuf[11];
@@ -237,7 +237,7 @@ static int32_t sprint_dec_int32(char *buf, int32_t x) {
 		const int32_t n = d % 10;
 		d = d / 10;
 		tmpbuf[i] = n_to_dec_sym((uint8_t)abs(n));
-		i = i + 1;
+		++i;
 		if (d == 0) {
 			break;
 		}
@@ -245,16 +245,17 @@ static int32_t sprint_dec_int32(char *buf, int32_t x) {
 	int32_t j = 0;
 	if (neg) {
 		buf[0] = '-';
-		j = j + 1;
+		++j;
 	}
 	while (i > 0) {
-		i = i - 1;
+		--i;
 		buf[j] = tmpbuf[i];
-		j = j + 1;
+		++j;
 	}
 	buf[j] = '\x0';
 	return j;
 }
+
 
 static int32_t sprint_dec_n32(char *buf, uint32_t x) {
 	char tmpbuf[11];
@@ -264,16 +265,16 @@ static int32_t sprint_dec_n32(char *buf, uint32_t x) {
 		const uint32_t n = d % 10;
 		d = d / 10;
 		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
-		i = i + 1;
+		++i;
 		if (d == 0) {
 			break;
 		}
 	}
 	int32_t j = 0;
 	while (i > 0) {
-		i = i - 1;
+		--i;
 		buf[j] = tmpbuf[i];
-		j = j + 1;
+		++j;
 	}
 	buf[j] = '\x0';
 	return j;

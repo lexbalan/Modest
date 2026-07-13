@@ -1,4 +1,4 @@
-private import "builtin"
+import "builtin"
 
 
 public type Queue = {
@@ -40,7 +40,7 @@ public func getPutPosition (q: *Queue) -> Nat32 {
 	let pos: Nat32 = q.p
 	q.p = next(q.capacity, q.p)
 	if q.size < q.capacity {
-		q.size = q.size + 1
+		++q.size
 	}
 	return pos
 }
@@ -51,7 +51,7 @@ public func getGetPosition (q: *Queue) -> Nat32 {
 	let pos: Nat32 = q.g
 	q.g = next(q.capacity, q.g)
 	if q.size > 0 {
-		q.size = q.size - 1
+		--q.size
 	}
 	return pos
 }

@@ -21,6 +21,7 @@ typedef uint32_t char32_t;
 #define _STR16(x) __STR16(x)
 #define _STR32(x) __STR32(x)
 #endif
+#include <stdarg.h>
 void console_putchar8(char c);
 void console_putchar16(char16_t c);
 void console_putchar32(char32_t c);

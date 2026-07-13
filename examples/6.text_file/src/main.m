@@ -2,7 +2,10 @@
 
 //include "libc/ctypes64"
 //include "libc/stdio"
+// не ищет в public include
+
 include "libc/libc"
+//public include "libc/stdio"
 
 
 const filename = *Str8 "file.txt"
@@ -37,7 +40,7 @@ func read_example () -> Unit {
 	printf("file '%s' contains: ", filename)
 	while true {
 		let ch = fgetc(fp)
-		if ch == c_EOF {
+		if ch == eof {
 			break
 		}
 		putchar(ch)

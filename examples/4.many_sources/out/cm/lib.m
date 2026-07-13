@@ -1,6 +1,7 @@
-private import "builtin"
+import "builtin"
 include "stdio"
 
+include "libc/stdio"
 
 
 public func foo () -> Unit {

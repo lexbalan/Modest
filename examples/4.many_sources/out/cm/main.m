@@ -1,8 +1,10 @@
-private import "builtin"
-private import "lib"
+import "builtin"
+import "lib"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 import "lib" as lib
 
 

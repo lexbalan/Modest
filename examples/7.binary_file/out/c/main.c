@@ -10,6 +10,7 @@ struct chunk {
 	char data[1024];
 };
 
+
 static void writeExample(void) {
 	printf("run writeExample()\n");
 	FILE *const fp = fopen(FILENAME, "wb");
@@ -24,6 +25,7 @@ static void writeExample(void) {
 	fwrite((void *)&chunk, sizeof(struct chunk), 1, fp);
 	fclose(fp);
 }
+
 
 static void readExample(void) {
 	printf("run readExample()\n");

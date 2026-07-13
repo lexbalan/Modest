@@ -1,8 +1,11 @@
-private import "builtin"
+import "builtin"
 include "stdio"
 include "stdlib"
 include "string"
 
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/string"
 
 
 public type Row = []*Str8
@@ -17,8 +20,8 @@ public type Table = @public {
 
 
 // we cannot receive VLA by value,
-// but we can receive pointer to open array
-// and after construct pointer to closed array with required dimensions
+// but we can receive pointer to unsized array
+// and after construct pointer to sized array with required dimensions
 public func print (table: *Table) -> Unit {
 	var i: Nat32
 	var j: Nat32
@@ -32,7 +35,7 @@ public func print (table: *Table) -> Unit {
 			if len > sz[i] {
 				sz[i] = len
 			}
-			i = i + 1
+			++i
 		}
 	}
 
@@ -44,15 +47,15 @@ public func print (table: *Table) -> Unit {
 			if len > sz[j] {
 				sz[j] = len
 			}
-			j = j + 1
+			++j
 		}
-		i = i + 1
+		++i
 	}
 
 	i = 0
 	while i < table.nCols {
 		sz[i] = sz[i] + 2
-		i = i + 1
+		++i
 	}
 	separator(&sz, table.nCols)
 
@@ -69,7 +72,7 @@ public func print (table: *Table) -> Unit {
 			separator(&sz, table.nCols)
 		}
 
-		i = i + 1
+		++i
 	}
 	separator(&sz, table.nCols)
 }
@@ -90,9 +93,9 @@ func printRow (raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 		var k = Nat32 0
 		while k < (sz[j] - len) {
 			printf(" ")
-			k = k + 1
+			++k
 		}
-		j = j + 1
+		++j
 	}
 	printf("|\n")
 }
@@ -108,9 +111,9 @@ func separator (sz: *[]Nat32, n: Nat32) -> Unit {
 		var j = Nat32 0
 		while j < sz[i] {
 			printf("-")
-			j = j + 1
+			++j
 		}
-		i = i + 1
+		++i
 	}
 	printf("+\n")
 }

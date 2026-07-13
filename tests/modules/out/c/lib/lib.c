@@ -6,4 +6,19 @@
 #include <string.h>
 #include "mod1.h"
 #include "mod2.h"
+#include <stdarg.h>
+#define PRIVATE_CONST false
+struct y;
+typedef struct y Y;
+typedef struct x X;
+struct x {
+	Y *y;
+};
+typedef struct y Y;
+struct y {
+	int32_t x;
+};
+
+void lib_printf(char *s, ...) {
+}
 

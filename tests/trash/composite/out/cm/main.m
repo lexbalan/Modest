@@ -1,6 +1,7 @@
-private import "builtin"
+import "builtin"
 include "stdio"
 
+include "libc/stdio"
 
 // Test for composite types
 
@@ -246,9 +247,9 @@ func main () -> Int32 {
 		var j: Nat32 = 0
 		while j < 3 {
 			printf("arrr[%d][%d] = %d\n", i, j, arrr[i][j])
-			j = j + 1
+			++j
 		}
-		i = i + 1
+		++i
 	}
 
 	let _add: Int32 = farr[0](5, 7)
@@ -259,7 +260,7 @@ func main () -> Int32 {
 	i = 0
 	while i < 10 {
 		hiarr[i]("LOL")
-		i = i + 1
+		++i
 	}
 
 	awrap[0].fhi("World")

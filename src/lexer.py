@@ -1,6 +1,6 @@
 
 from error import error, info
-from hlir import TokenInfo
+from hlir import TokenInfo, TextInfo
 
 
 EOF = ''
@@ -8,6 +8,13 @@ EOF = ''
 
 def isIdChar(x):
 	return x.isalpha() or x.isdigit() or x == '_'
+
+
+# ASCII-Latin identifier chars — the only ones actually allowed in identifiers.
+# isIdChar stays Unicode-aware so a whole word is still lexed as ONE token;
+# validity is checked separately (doId) so we can report and keep going.
+def isAsciiLatinIdChar(x):
+	return ('a' <= x <= 'z') or ('A' <= x <= 'Z') or ('0' <= x <= '9') or x == '_'
 
 
 # Ave Python!
@@ -27,11 +34,13 @@ class Lexer:
 
 	def run(self, filename):
 		self.filename = filename
-		self.line_fpos = 0  # position in file when line starts
+		self.line_fpos = 0
 		self.space_pos = 0
 		self.tab_pos = 0
 		self.line = 1
-		self.f = open(filename, "r")
+		with open(filename, "r") as f:
+			self.text = f.read()
+		self.pos = 0
 
 		tokens = []
 		while True:
@@ -56,8 +65,6 @@ class Lexer:
 				if result != None:
 					# There is a token
 					# # token = ('<token_class>', <token_data>, <ti>)
-					endp = self.f.tell()
-
 					ti = TokenInfo(
 						source = self.filename,
 						fpos = tokenStartPosition['pos'],
@@ -65,7 +72,7 @@ class Lexer:
 						lpos = line_start_position,
 						spaces = tokenStartPosition['nspaces'],
 						tabs = tokenStartPosition['ntabs'],
-						length = endp - tokenStartPosition['pos']
+						length = self.pos - tokenStartPosition['pos']
 					)
 					token = result + (ti,)
 					tokens.append(token)
@@ -76,16 +83,19 @@ class Lexer:
 
 	# считать очередной символ
 	def getc(self):
-		x = self.f.read(1)
+		if self.pos >= len(self.text):
+			return EOF
+		x = self.text[self.pos]
+		self.pos += 1
 		if x == '\n':
-			self.line_fpos = self.f.tell()
+			self.line_fpos = self.pos
 			self.space_pos = 0
 			self.tab_pos = 0
-			self.line = self.line + 1
+			self.line += 1
 		elif x == '\t':
-			self.tab_pos = self.tab_pos + 1
+			self.tab_pos += 1
 		else:
-			self.space_pos = self.space_pos + 1
+			self.space_pos += 1
 		return x
 
 
@@ -104,7 +114,7 @@ class Lexer:
 	def getTextPosition(self):
 		return {
 			'isa': 'text_position',
-			'pos': self.f.tell(),
+			'pos': self.pos,
 			'line': self.line,
 			'nspaces': self.space_pos,
 			'ntabs': self.tab_pos
@@ -112,7 +122,7 @@ class Lexer:
 
 	# установить позицию в файле (возврат на позицию)
 	def setTextPosition(self, pos):
-		self.f.seek(pos['pos'], 0)
+		self.pos = pos['pos']
 		self.line = pos['line']
 		self.space_pos = pos['nspaces']
 		self.tab_pos = pos['ntabs']
@@ -120,10 +130,7 @@ class Lexer:
 
 	# посмотреть n символов вперед
 	def peep(self, n=1):
-		fpos = self.f.tell()
-		c = self.f.read(n)
-		self.f.seek(fpos, 0)
-		return c
+		return self.text[self.pos:self.pos + n]
 
 
 	def skip(self):
@@ -182,6 +189,9 @@ class CmLexer(Lexer):
 
 
 	def doId(self):
+		start = self.getTextPosition()
+		line_start = self.line_fpos
+
 		c = self.peep()
 
 		if not (c.isalpha() or c == '_'):
@@ -192,6 +202,21 @@ class CmLexer(Lexer):
 			s = s + str(self.getc())
 			c = self.peep()
 
+		# Identifiers may only contain ASCII-Latin letters, digits and '_'.
+		# The word is already lexed as one token; if it holds any exotic
+		# character we report it once and let the (whole) identifier flow on.
+		if not all(isAsciiLatinIdChar(x) for x in s):
+			ti = TokenInfo(
+				source = self.filename,
+				fpos = start['pos'],
+				line = start['line'],
+				lpos = line_start,
+				spaces = start['nspaces'],
+				tabs = start['ntabs'],
+				length = self.pos - start['pos']
+			)
+			error("identifier '%s' contains non-ASCII characters" % s,
+				TextInfo(start=ti, mid=ti, end=ti))
 
 		isa = 'id'
 		for c in s:

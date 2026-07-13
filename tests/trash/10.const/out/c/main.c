@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #include <math.h>
 #include "./minmax.h"
@@ -47,6 +46,7 @@ static float distance(struct point a, struct point b) {
 	const double dy2 = pow(dy, 2);
 	return sqrt(dx2 + dy2);
 }
+
 
 static float lineLength(struct line line) {
 	return distance(line.a, line.b);

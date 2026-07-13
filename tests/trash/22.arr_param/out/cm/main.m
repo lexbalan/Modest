@@ -1,6 +1,7 @@
-private import "builtin"
+import "builtin"
 include "stdio"
 
+include "libc/stdio"
 
 
 // returns array by value
@@ -15,7 +16,7 @@ func arraysAdd (a: [10]Int32, b: [10]Int32) -> [10]Int32 {
 	var i: Nat32 = 0
 	while i < 10 {
 		c[i] = a[i] + b[i]
-		i = i + 1
+		++i
 	}
 	return c
 }
@@ -46,7 +47,7 @@ func main () -> Int32 {
 	var i: Nat32 = 0
 	while i < 10 {
 		printf("d[%i] = %i\n", i, d[i])
-		i = i + 1
+		++i
 	}
 
 	return 0

@@ -3,10 +3,10 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #define TABLE_SIZE 256
 static uint32_t table[TABLE_SIZE];
+
 
 void crc32_init(void) {
 	uint32_t i = 0;
@@ -19,14 +19,15 @@ void crc32_init(void) {
 			} else {
 				crc = crc >> 1;
 			}
-			j = j + 1;
+			++j;
 		}
 		table[i] = crc;
-		i = i + 1;
+		++i;
 	}
 }
 
-uint32_t crc32_run(uint8_t buf[], uint32_t len) {
+
+uint32_t crc32_run(uint8_t *buf, uint32_t len) {
 	uint32_t crc = 0xFFFFFFFFUL;
 	uint32_t i = 0;
 	while (i < len) {
@@ -34,7 +35,7 @@ uint32_t crc32_run(uint8_t buf[], uint32_t len) {
 		const uint32_t y = crc ^ (x & 0xFF);
 		const uint8_t yy = (uint8_t)y;
 		crc = table[yy] ^ crc >> 8;
-		i = i + 1;
+		++i;
 	}
 	return crc ^ 0xFFFFFFFFUL;
 }

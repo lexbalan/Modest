@@ -1,7 +1,9 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 var globalArray0: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -20,7 +22,7 @@ func main () -> Int {
 	while i < 10 {
 		let v: Int32 = globalArray1[i]
 		printf("globalArray1[%d] = %d\n", i, v)
-		i = i + 1
+		++i
 	}
 
 	if globalArray0 == globalArray1 {
@@ -39,7 +41,7 @@ func main () -> Int {
 	while i < 10 {
 		let v: Int32 = localArray1[i]
 		printf("localArray1[%d] = %d\n", i, v)
-		i = i + 1
+		++i
 	}
 
 	if localArray0 == localArray1 {

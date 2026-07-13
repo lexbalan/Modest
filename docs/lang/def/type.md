@@ -1,45 +1,51 @@
-
 # Type Definition
 
-Type definition bounds an [*identifier*](../identifier.md) with a [*type*](../type/README.md) (*type aliasing*).
+Binds an [identifier](../identifier.md) to a [type](../type/README.md).
 
-#### Common form
+## Form
+
 ```
 type <#identifier#> = <#type_expression#>
 ```
 
+## Semantics
 
-#### Examples
+- The type system is *structural*: a defined name is an alias, fully
+  compatible with its right-hand side and with any structurally equal type.
+  To obtain a nominal (incompatible) type, add
+  [`@branded`](../type/generic.md):
 
-```zig
+  ```modest
+  type Meters = @branded Float64   // not mixable with plain Float64
+  ```
+
+- Recursive types need no forward declaration — all module-level type names
+  are visible before definitions are processed:
+
+  ```modest
+  type Node = {
+  	next: *Node
+  	data: Ptr
+  }
+  ```
+
+- Type definitions are allowed inside function bodies; the name is then
+  local to the body.
+- Layout and qualifiers are controlled with annotations on the right-hand
+  side: `@layout("packed" | "union" | "exact")`, `@alignment(N)`,
+  `@volatile`, `@const` (see [annotations](../attribute.md)).
+
+## Examples
+
+```modest
 type MyInt = Int32
+type CStr = *Char8
+type Buffer = [256]Word8
 
-func main () -> Int {
-	var x: MyInt
-	x = 10
-	printf("x = %d\n", x)
-	return 0
+type Point = {x: Int64, y: Int64}
+
+type Color = @layout("union") {
+	code: Word32
+	rgba: {r: Nat8, g: Nat8, b: Nat8, a: Nat8}
 }
 ```
-
-
-### Type declaration
-*Type declaration* creates new *undefined type* and bounds it with an *identifier*. This type can be defined after. You can create pointer to
-undefined type, but cannot create field with such type.
-```
-type <#identifier#>
-```
-
-#### Examples
-
-```zig
-// type declared, but not defined!
-type MyRecord
-
-type MyRecord = {
-	self: *MyRecord
-}
-```
-
-
-

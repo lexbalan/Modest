@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #if !defined(__STR_UNICODE__)
 #define __STR_UNICODE__
@@ -48,6 +47,7 @@ static struct x x = (struct x){
 };
 __attribute__((used))
 static struct point points2[3] = POINTS;
+
 
 int main(void) {
 	printf("test const\n");

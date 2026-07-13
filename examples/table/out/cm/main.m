@@ -1,9 +1,12 @@
-private import "builtin"
-private import "table"
+import "builtin"
+import "table"
 include "stdio"
 include "stdlib"
 include "string"
 
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/string"
 import "table" as table
 
 

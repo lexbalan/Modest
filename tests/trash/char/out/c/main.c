@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #if !defined(__STR_UNICODE__)
 #define __STR_UNICODE__
@@ -19,6 +18,7 @@ typedef uint32_t char32_t;
 #define UTF8_CHAR "s"
 #define UTF16_CHAR "Я"
 #define UTF32_CHAR "🐀"
+
 
 int main(void) {
 	printf("test/char\n");

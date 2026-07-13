@@ -2,9 +2,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "table.h"
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
@@ -28,35 +28,35 @@ static char *tableData1[4][4] = {
 };
 static table_Table table00 = (table_Table){
 	.header = NULL,
-	.data = &tableData0,
+	.data = tableData0,
 	.nRows = LENGTHOF(tableData0),
 	.nCols = LENGTHOF(tableData0[0]),
 	.separate = false
 };
 static table_Table table01 = (table_Table){
-	.header = &table_header0,
-	.data = &tableData0,
+	.header = table_header0,
+	.data = tableData0,
 	.nRows = LENGTHOF(tableData0),
 	.nCols = LENGTHOF(tableData0[0]),
 	.separate = false
 };
 static table_Table table02 = (table_Table){
 	.header = NULL,
-	.data = &tableData0,
+	.data = tableData0,
 	.nRows = LENGTHOF(tableData0),
 	.nCols = LENGTHOF(tableData0[0]),
 	.separate = true
 };
 static table_Table table03 = (table_Table){
-	.header = &table_header0,
-	.data = &tableData0,
+	.header = table_header0,
+	.data = tableData0,
 	.nRows = LENGTHOF(tableData0),
 	.nCols = LENGTHOF(tableData0[0]),
 	.separate = true
 };
 static table_Table table10 = (table_Table){
-	.header = &table_header1,
-	.data = &tableData1,
+	.header = table_header1,
+	.data = tableData1,
 	.nRows = LENGTHOF(tableData1),
 	.nCols = LENGTHOF(tableData1[0]),
 	.separate = true

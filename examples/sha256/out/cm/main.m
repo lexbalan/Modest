@@ -1,8 +1,10 @@
-private import "builtin"
-private import "misc/sha256"
+import "builtin"
+import "misc/sha256"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 import "misc/sha256" as sha256
 
 
@@ -56,7 +58,7 @@ func doTest (test: *SHA256_TestCase) -> Bool {
 	var i: Nat32 = 0
 	while i < sha256.hashSize {
 		printf("%02X", test_hash[i])
-		i = i + 1
+		++i
 	}
 
 	printf("\n")
@@ -81,7 +83,7 @@ func main () -> Int {
 
 		printf("test #%i: %s\n", i, res)
 
-		i = i + 1
+		++i
 	}
 
 	return 0

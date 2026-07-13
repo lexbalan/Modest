@@ -3,7 +3,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -15,6 +14,7 @@
 #define IP_ADDRESS "127.0.0.1"
 #define PORT 8080
 #define BUF_SIZE 1024
+
 
 static bool sendFile(FILE *fp, int sockFd) {
 	char data[BUF_SIZE];

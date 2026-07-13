@@ -2,13 +2,13 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdarg.h>
 #include <stdlib.h>
 //include "lightfood/print"
 //pragma c_include "./print.h"
+
 
 static ssize_t my_printf(char *format, ...) {
 	va_list va;

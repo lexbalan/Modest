@@ -1,10 +1,10 @@
-private import "builtin"
+import "builtin"
+
 
 
 public type Key = [8]Word32
 public type State = [16]Word32
 public type Block = [16]Word32
-
 
 
 func rotl32 (x: Word32, n: Nat32) -> Word32 {
@@ -88,13 +88,13 @@ public func chacha20Block (state: State) -> Block {
 		x[09] = r[02]
 		x[14] = r[03]
 
-		i = i + 1
+		++i
 	}
 	var out: [16]Word32
 	var j: Nat32 = 0
 	while j < 16 {
 		out[j] = Word32 (Nat32 x[j] + Nat32 state[j])
-		j = j + 1
+		++j
 	}
 
 	return out

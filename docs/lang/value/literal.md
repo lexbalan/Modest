@@ -1,169 +1,52 @@
-# Literal values
+# Literals
 
-## Brief
+A literal denotes a value directly. Most literals have a
+[generic type](../type/generic.md) that adapts to the required concrete
+type at the use site.
 
+## Form
 
-| Literal Value Kind | Examples | Type |
-| :----------: | :------: | :--: |
-| Boolean Literal | `false, true` | Bool |
-| Integer Literal | `0, 1, 0xF` | GenericInteger |
-| Rational Literal | `0.5, 3.14, .125` | GenericFloat |
-| String Literal | `"Hello!"` | GenericString |
-| Array Literal | `[1, 2, 3]` | GenericArray |
-| Record Literal | `{x=10, y=20}` | GenericRecord |
-| Nil Literal | `nil` | Nil |
+| Literal | Examples | Type |
+| :--- | :--- | :--- |
+| Boolean | `true`, `false` | `Bool` |
+| Integer | `0`, `42`, `0x2A`, `1_000_000` | `Integer` (generic) |
+| Rational | `0.5`, `3.14` | `Rational` (generic) |
+| String | `"abc"`, `'abc'` | `String` (generic) |
+| Array | `[1, 2, 3]`, `[]` | generic array |
+| Record | `{x = 10, y = 20}`, `{}` | generic record |
+| Nil | `nil` | null pointer, any pointer type |
 
-> Generic type can be implicit casted to value with [corresponded](./cast.md#Implicit-type-casting) non-generic type. 
+## Semantics
 
+- Integer: decimal or hexadecimal (`0x...`); `_` may separate digit
+  groups; a leading `0` is still decimal — there are no octal literals.
+- Rational: requires digits on both sides of the dot (`0.5`, not `.5`).
+- String: double or single quotes are equivalent; `\` escapes the next
+  character (`\n`, `\"`, `\\`). The value is a `[N]CharX` array
+  containing exactly the characters written (see
+  [array](../type/array.md)). Indexing a string literal yields a generic
+  char: `"A"[0]`.
+- Strings (and comments) may contain any Unicode text — the only places
+  it is allowed; [identifiers](../identifier.md) are ASCII.
+- A char value is a length-1 string converted to `CharX` — implicitly
+  (`var c: Char8 = "A"`) or explicitly (`Char8 "A"`).
+- `[]` / `{}` fill any array/record they are assigned to with default
+  values (see [fields](../fields.md)).
+- Constant expressions over literals fold at compile time and stay
+  generic: `2 + 2` is still a generic `Integer`.
 
+## Examples
 
-## Integer literals
-Integer literals have type [**GenericInteger**](./types.md#)
-```swift
-0, 1, 2, ...
+```modest
+var x: Nat32 = 0x2A          // 42
+var f: Float64 = 3.14
+var s: *Str8 = "Hello!\n"    // string handled through pointer
+var c: Char8 = "A"
+var a: [3]Int32 = [1, 2, 3]
+var p: *Int32 = nil
+const big = 1_000_000
 ```
 
-```zig
-123   // decimal number
-042   // decimal number (there's not octal literals)
-0x2A  // hexadecimal number
-```
+## See also
 
-You can cast it to any non-generic type (Int8, Int16, Int32, Nat8, etc.)
-
-```swift
-var a: Int8
-a = 42
-var b: Int16
-b = 42
-var c: Int32
-c = 42
-
-var e: Nat8
-e = 256 // error (Nat8 = {0 .. 255})
-```
-
-#### Exmples
-
-```zig
-func main () -> Int32 {
-	var x: Nat32
-	x = 123
-	printf("x = %i\n", x)
-
-	var y: Nat32
-	y = 042
-	printf("y = %i\n", y)
-
-	var z: Nat32
-	z = 0x2A  // 0x2A == 42
-	printf("z = %i\n", z)
-
-	return 0
-}
-```
-
-> Result:
-`x = 123`
-`y = 42`
-`z = 42`
-
-
-
-## Float literals
-Float literals have type **GenericFloat**
-```swift
-0.25, 1.5, 3.14, etc.
-```
-
-
-## Bool literals
-Bool literals have type **Bool**
-```swift
-true, false
-```
-
-
-## Array literals
-```swift
-// Array of five GenericInt values
-[1, 2, 3, 4, 5]
-
-// Array of tree Int32 values
-[Int32 1, Int32 2, Int32 3]
-```
-
-
-### String literals
-
-```zig
-"Hello World!"
-```
-
-
-#### Exmples
-
-Creating three variables with type *Array of Char* from string literal
-
-```zig
-const literalString = "I am a string literal"
-
-var str_array8: []Char8 = literalString
-var str_array16: []Char16 = literalString
-var str_array32: []Char32 = literalString
-
-var char8: Char8 = "A"
-var char16: Char16 = "A"
-var char32: Char32 = "A"
-```
-
-Creating three variables with type *Pointer to Array of Char* from string literal
-
-```zig
-const literalString = "I am a string literal"
-
-var ptr_to_str8: *[]Char8 = literalString
-var ptr_to_str16: *[]Char16 = literalString
-var ptr_to_str32: *[]Char32 = literalString
-```
-
-Or (the same):
-
-```zig
-const literalString = "I am a string literal"
-
-var ptr_to_str8: *Str8 = literalString
-var ptr_to_str16: *Str16 = literalString
-var ptr_to_str32: *Str32 = literalString
-```
-
-```zig
-import "libc/stdio"
-
-func main () -> Int32 {
-	// creating local variable with type *[]Char8 (aka *Str8)
-	var string: *Str8
-
-	// implicit cast string literal
-	// (GenericArray of GenericChar) to *Str8
-	string = "Hello World!"
-
-	// print string via printf
-	printf("string = \"%s\"\n", string)
-
-	return 0
-}
-
-```
-> Result: `s = "Hello World!"`
-
-
-
-## Record literals
-```swift
-// Record with two fields
-// 'x' with type GenericInt and value 10
-// 'y' with type GenericInt and value 20
-{x = 10, y = 20}
-```
-
+- [Generic types](../type/generic.md), [Construction](./cons.md)

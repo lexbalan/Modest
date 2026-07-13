@@ -1,5 +1,5 @@
-private import "builtin"
-private import "queue"
+import "builtin"
+import "queue"
 
 import "queue" as queue
 
@@ -70,7 +70,7 @@ public func read (q: *QueueWord8, data: *[]Word8, len: Nat32) -> Nat32 {
 			break
 		}
 		data[n] = x
-		n = n + 1
+		++n
 	}
 	return n
 }
@@ -83,7 +83,7 @@ public func write (q: *QueueWord8, data: *[]Word8, len: Nat32) -> Nat32 {
 		if not put(q, x) {
 			break
 		}
-		n = n + 1
+		++n
 	}
 	return n
 }

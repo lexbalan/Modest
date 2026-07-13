@@ -12,7 +12,6 @@ def value_char_create(char_code, _type=None, ti=None):
 		char_width = nbits_for_num(char_code)
 		_type = type.type_char(char_width, ti=ti)
 		_type.generic = True
-
 	return ValueLiteral(_type, char_code, ti)
 
 
@@ -21,15 +20,15 @@ def char_can(to, from_type, method, ti):
 	if method == 'unsafe':
 		return True
 
-	if from_type.is_string():
+	if from_type.is_type_string():
 		return from_type.width <= to.width #and from_type.length == 1
 
 	if method == 'implicit':
 		return False
 
-	c0 = from_type.is_char()
-	c1 = from_type.is_integer()
-	c2 = from_type.is_word()
+	c0 = from_type.is_type_char()
+	c1 = from_type.is_type_integer()
+	c2 = from_type.is_type_word()
 
 	if c0 or c1 or c2:
 		return from_type.width <= to.width
@@ -42,7 +41,7 @@ def value_char_cons(t, v, method, ti):
 	# ex: var c: Char8 = "A"
 	nv = ValueCons(t, t, v, method, ti=ti)
 
-	if v.type.is_string():
+	if v.type.is_type_string():
 		c = '\0'
 		if len(v.asset) == 1:
 			c = v.asset[0]
@@ -53,6 +52,8 @@ def value_char_cons(t, v, method, ti):
 		return nv
 
 	if v.isValueImmediate():
+		if isinstance(v.asset, str):
+			error("cannot construct %s value from String" % t.to_str(), ti)
 		nv.set_asset(v.asset)
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv

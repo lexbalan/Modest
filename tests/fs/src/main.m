@@ -319,7 +319,7 @@ func main () -> Int32 {
 	sys.write(fd, unsafe *[]Byte &buf1, 32)
 
 	// read file
-	sys.lseek(fd, 0, c_SEEK_SET)
+	sys.lseek(fd, 0, seekSet)
 	sys.read(fd, unsafe *[]Byte &buf2, 32)
 
 	printf("buf2 = \"%s\"\n", &buf2)

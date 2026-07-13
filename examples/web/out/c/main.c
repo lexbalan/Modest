@@ -2,9 +2,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #if !defined(LENGTHOF)
@@ -21,21 +21,23 @@ static uint32_t pageCounter;
 //	return (x << 8) | (x >> 8)
 //}
 
+
 static void handleRequest(int32_t clientSocket) {
 	uint8_t buffer[RECEIVE_BUFFER_SIZE];
-	const ssize_t bytesReceived = read(clientSocket, &buffer, LENGTHOF(buffer) - 1);
+	const ssize_t bytesReceived = read(clientSocket, buffer, LENGTHOF(buffer) - 1);
 	if (bytesReceived < 0) {
 		perror("cannot read socket");
 		close(clientSocket);
 		return;
 	}
 	buffer[bytesReceived] = 0x0;
-	printf("Received request:\n%s\n", (char *)&buffer);
+	printf("Received request:\n%s\n", (char *)buffer);
 	char response[SEND_BUFFER_SIZE];
 	sprintf(response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", HTTP_HEADER, pageCounter);
 	write(clientSocket, response, strlen(response));
 	close(clientSocket);
 }
+
 
 int32_t main(void) {
 	const int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -74,7 +76,7 @@ int32_t main(void) {
 			continue;
 		}
 		handleRequest(clientSocket);
-		pageCounter = pageCounter + 1;
+		++pageCounter;
 	}
 	close(serverSocket);
 	return 0;

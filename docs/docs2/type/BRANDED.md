@@ -1,3 +1,0 @@
-# Branded Types
-
-TODO

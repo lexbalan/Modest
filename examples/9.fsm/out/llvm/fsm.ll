@@ -139,7 +139,7 @@ declare void @assert(%Bool %cond)
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -189,21 +189,18 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports private 'fsm' --
+; -- print imports 'fsm' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'fsm' --
-; -- print imports public 'fsm' --
-; -- end print imports public 'fsm' --
+; -- end print imports 'fsm' --
 ; -- strings --
 @.str1 = private constant [52 x i8] [i8 91, i8 37, i8 115, i8 93, i8 32, i8 102, i8 115, i8 109, i8 32, i8 116, i8 105, i8 109, i8 101, i8 111, i8 117, i8 116, i8 32, i8 40, i8 37, i8 117, i8 41, i8 32, i8 111, i8 99, i8 99, i8 117, i8 114, i8 101, i8 100, i8 44, i8 32, i8 115, i8 119, i8 105, i8 116, i8 99, i8 104, i8 95, i8 116, i8 111, i8 95, i8 115, i8 116, i8 97, i8 103, i8 101, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 @.str2 = private constant [23 x i8] [i8 91, i8 37, i8 115, i8 93, i8 32, i8 35, i8 37, i8 115, i8 95, i8 37, i8 117, i8 32, i8 45, i8 62, i8 32, i8 35, i8 37, i8 115, i8 95, i8 37, i8 117, i8 10, i8 0]
@@ -327,18 +324,17 @@ define void @fsm_tick(%fsm_FSM* %self) {
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
 	%4 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 4
-	%5 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 4
-	%6 = load %Nat32, %Nat32* %5
-	%7 = sub %Nat32 %6, 1
-	store %Nat32 %7, %Nat32* %4
+	%5 = load %Nat32, %Nat32* %4
+	%6 = sub %Nat32 %5, 1
+	store %Nat32 %6, %Nat32* %4
 ; if_1
-	%8 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 4
-	%9 = load %Nat32, %Nat32* %8
-	%10 = icmp eq %Nat32 %9, 0
-	br %Bool %10 , label %then_1, label %endif_1
+	%7 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 4
+	%8 = load %Nat32, %Nat32* %7
+	%9 = icmp eq %Nat32 %8, 0
+	br %Bool %9 , label %then_1, label %endif_1
 then_1:
-	%11 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 5
-	store %Bool 1, %Bool* %11
+	%10 = getelementptr %fsm_FSM, %fsm_FSM* %self, %Int32 0, %Int32 5
+	store %Bool 1, %Bool* %10
 	br label %endif_1
 endif_1:
 	br label %endif_0

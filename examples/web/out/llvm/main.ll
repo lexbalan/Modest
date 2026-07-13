@@ -137,7 +137,7 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -187,7 +187,6 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
@@ -240,9 +239,9 @@ declare void @encrypt([64 x %Char]* %block, %Int %edflag)
 declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
-declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
-declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
-declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
+declare %Int @execv([0 x %ConstChar]* %path, [0 x [0 x %ConstChar]*]* %argv)
+declare %Int @execve([0 x %ConstChar]* %path, [0 x [0 x %ConstChar]*]* %argv, [0 x %ConstChar]* %envp)
+declare %Int @execvp([0 x %ConstChar]* %file, [0 x [0 x %ConstChar]*]* %argv)
 declare void @_exit(%Int %status)
 declare %Int @fchown(%Int %fildes, %UIDT %owner, %GIDT %group)
 declare %Int @fchdir(%Int %fildes)
@@ -343,14 +342,12 @@ declare %Word32 @ntohl(%Word32 %net32)
 declare %Word16 @ntohs(%Word16 %net16)
 declare %Word16 @htons(%Word16 %x)
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [64 x i8] [i8 72, i8 84, i8 84, i8 80, i8 47, i8 49, i8 46, i8 49, i8 32, i8 50, i8 48, i8 48, i8 32, i8 79, i8 75, i8 13, i8 10, i8 67, i8 111, i8 110, i8 116, i8 101, i8 110, i8 116, i8 45, i8 84, i8 121, i8 112, i8 101, i8 58, i8 32, i8 116, i8 101, i8 120, i8 116, i8 47, i8 104, i8 116, i8 109, i8 108, i8 13, i8 10, i8 67, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 105, i8 111, i8 110, i8 58, i8 32, i8 99, i8 108, i8 111, i8 115, i8 101, i8 13, i8 10, i8 13, i8 10, i8 0]
 @.str2 = private constant [19 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 114, i8 101, i8 97, i8 100, i8 32, i8 115, i8 111, i8 99, i8 107, i8 101, i8 116, i8 0]

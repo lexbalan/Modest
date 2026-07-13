@@ -1,15 +1,17 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 type MyInt32 = @branded Int32
 
-@alias()
+@extern()
 const myZero = MyInt32 0
 
-@alias()
+@extern()
 const myOne = MyInt32 1
 
 
@@ -29,11 +31,11 @@ type ProtocolHeader = @layout {
 }
 
 
-@alias()
+@extern()
 var name1: Bool
 
 
-@alias()
+@extern()
 var name11: Bool
 
 
@@ -64,8 +66,6 @@ var u: Word64
 var u2: Word64
 
 
-
-@nodecorate
 public const const0 = 0
 
 

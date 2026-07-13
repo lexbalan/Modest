@@ -114,14 +114,12 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports private 'queue' --
+; -- print imports 'queue' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'queue' --
-; -- print imports public 'queue' --
-; -- end print imports public 'queue' --
+; -- end print imports 'queue' --
 ; -- strings --
 ; -- endstrings --
 %queue_Queue = type {
@@ -185,10 +183,9 @@ define %Nat32 @queue_getPutPosition(%queue_Queue* %q) {
 	br %Bool %13 , label %then_0, label %endif_0
 then_0:
 	%14 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
-	%15 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
-	%16 = load %Nat32, %Nat32* %15
-	%17 = add %Nat32 %16, 1
-	store %Nat32 %17, %Nat32* %14
+	%15 = load %Nat32, %Nat32* %14
+	%16 = add %Nat32 %15, 1
+	store %Nat32 %16, %Nat32* %14
 	br label %endif_0
 endif_0:
 	ret %Nat32 %2
@@ -211,10 +208,9 @@ define %Nat32 @queue_getGetPosition(%queue_Queue* %q) {
 	br %Bool %11 , label %then_0, label %endif_0
 then_0:
 	%12 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
-	%13 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
-	%14 = load %Nat32, %Nat32* %13
-	%15 = sub %Nat32 %14, 1
-	store %Nat32 %15, %Nat32* %12
+	%13 = load %Nat32, %Nat32* %12
+	%14 = sub %Nat32 %13, 1
+	store %Nat32 %14, %Nat32* %12
 	br label %endif_0
 endif_0:
 	ret %Nat32 %2

@@ -137,7 +137,7 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -187,7 +187,6 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
@@ -239,14 +238,12 @@ declare %SSizeT @send(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
 declare %SSizeT @recv(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
 declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
 ; -- end print includes --
-; -- print imports private 'server' --
+; -- print imports 'server' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'server' --
-; -- print imports public 'server' --
-; -- end print imports public 'server' --
+; -- end print imports 'server' --
 ; -- strings --
 @.str1 = private constant [10 x i8] [i8 102, i8 105, i8 108, i8 101, i8 50, i8 46, i8 116, i8 120, i8 116, i8 0]
 @.str2 = private constant [2 x i8] [i8 119, i8 0]

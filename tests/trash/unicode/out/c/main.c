@@ -2,9 +2,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #if !defined(__STR_UNICODE__)
 #define __STR_UNICODE__
 typedef uint8_t char8_t;
@@ -61,25 +61,31 @@ int32_t main(void) {
 	return 0;
 }
 
+
 static void putc8(char c) {
 	(void)c;
 }
+
 
 static void putc16(char16_t c) {
 	(void)c;
 }
 
+
 static void putc32(char32_t c) {
 	(void)c;
 }
+
 
 static void puts8(char *s) {
 	(void)s;
 }
 
+
 static void puts16(char16_t *s) {
 	(void)s;
 }
+
 
 static void puts32(char32_t *s) {
 	(void)s;

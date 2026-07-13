@@ -2,16 +2,17 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 
 static void func1(void) {
 	printf("func1 was called\n");
 }
 
+
 static void print_ab(int32_t a, int32_t b) {
 	printf("print_ab(a=%i, b=%i)\n", a, b);
 }
+
 
 static int32_t sum(int32_t a, int32_t b) {
 	return a + b;

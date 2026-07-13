@@ -42,10 +42,10 @@ def value_record_create(initializers, ti):
 
 
 def record_can(to, from_type, method, ti):
-	if to.is_unit():
-		return (from_type.is_unit()) or method != 'implicit'
+	if to.is_type_unit():
+		return (from_type.is_type_unit()) or method != 'implicit'
 
-	if not from_type.is_record():
+	if not from_type.is_type_record():
 		return False
 
 	# Record can be constructed only from generic record
@@ -71,7 +71,7 @@ def value_record_cons(t, v, method, ti):
 	#info("value_record_cons", ti)
 	nv = ValueCons(t, t, v, method, ti=ti)
 
-	if t.is_unit():
+	if t.is_type_unit():
 		nv.asset = []
 		stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
@@ -79,7 +79,7 @@ def value_record_cons(t, v, method, ti):
 	if not v.type.is_generic(): #and not v.isValueImmediate():
 		if t.uid != v.type.uid:
 			# Если это реально разные типы-записи то да нужен будет raw cast (по крайней мере в C)
-			from trans import cmodule_use
+			from semantic import cmodule_use
 			cmodule_use('use_raw_cast')
 
 	# литерал записи всегда имеет тип Generic(Array)

@@ -1,7 +1,9 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 const c0 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -36,7 +38,7 @@ func main () -> Int {
 	var i = Nat32 0
 	while i < 10 {
 		printf("a[%d] = %d\n", i, lar0[i])
-		i = i + 1
+		++i
 	}
 
 	return 0
@@ -47,7 +49,7 @@ func printArrayOf10Char32 (a: [10]Char32) -> Unit {
 	var i = Nat32 0
 	while i < lengthof(a) {
 		printf("a[%d] = '%c'\n", i, a[i])
-		i = i + 1
+		++i
 	}
 }
 
@@ -57,7 +59,7 @@ func sum10IntArrays (a: [10]Int32, b: [10]Int32) -> [10]Int32 {
 	var i = Nat32 0
 	while i < 10 {
 		result[i] = a[i] + b[i]
-		i = i + 1
+		++i
 	}
 	return result
 }

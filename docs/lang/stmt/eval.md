@@ -1,23 +1,26 @@
-# Value evaluation statement
+# Value Evaluation Statement
 
-#### Common form
+Evaluates an expression for its side effects; the result is discarded.
+
+## Form
 
 ```
-<# value_expression #>
+<#value_expression#>
 ```
 
-#### Examples
+## Semantics
 
-```swift
-func main () -> Int32 {
-	// usually we discard printf return value
-	// because we need only side its effect (print line to stdout)
-	printf("Hi there!\n")
+- The usual case is a function call whose result is not needed.
+- Discarding a value may produce an unused-value warning; discard
+  explicitly by constructing `Unit` from it (see
+  [value construction](../value/cons.md)).
 
-	// you can eval value expression without result saving
-	// it is senseless (and will cause compiler warning), but you can
-	2 + 2
+## Examples
 
-	return 0
+```modest
+printf("Hi there!\n")     // result of printf discarded
+
+func handler (payload: Ptr) -> Unit {
+	Unit payload          // explicitly discard unused parameter
 }
 ```

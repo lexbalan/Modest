@@ -1,10 +1,15 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 include "stdlib"
 include "unistd"
 include "socket"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/unistd"
+include "libc/socket"
 
 
 const filename = "file.txt"
@@ -30,7 +35,7 @@ func sendFile (fp: Ptr, sockFd: Int) -> Bool {
 
 @nonstatic
 func main () -> Int {
-	let sockFd: Int = socket(c_AF_INET, c_SOCK_STREAM, 0)
+	let sockFd: Int = socket(afInet, sockStream, 0)
 	if sockFd < 0 {
 		perror("[-] Error in socket")
 		exit(1)
@@ -39,7 +44,7 @@ func main () -> Int {
 	printf("[+] Server socket created\n")
 
 	var server_addr = SockAddrIn {
-		sin_family = c_AF_INET
+		sin_family = afInet
 		sin_port = port
 		sin_addr = {
 			s_addr = inet_addr(ipAddress)

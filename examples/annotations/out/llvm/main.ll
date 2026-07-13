@@ -137,7 +137,7 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -187,21 +187,18 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [5 x i8] [i8 104, i8 105, i8 33, i8 10, i8 0]
 @.str2 = private constant [20 x i8] [i8 65, i8 116, i8 116, i8 114, i8 105, i8 98, i8 117, i8 116, i8 101, i8 115, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
@@ -215,8 +212,8 @@ declare void @perror(%ConstCharStr* %str)
 	%Nat16
 };
 
-@name1 = internal global %Bool zeroinitializer
-@name11 = internal global %Bool zeroinitializer
+@name1 = external global %Bool
+@name11 = external global %Bool
 @ext = external global %Int32
 @ext_arr = external global [0 x %Int32]
 @x = internal global %Word32 zeroinitializer, section "__DATA, .xdata", align 8

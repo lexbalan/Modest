@@ -1,58 +1,50 @@
+# Unary Operations
 
-# Unary Value Expressions
+## Form
 
-
-#### Common form
 ```
-<#operator#> <#argument_value_expression#>
-```
-
-#### Brief
-
-| Operation | Code Example | Valid types | Result type | Comment |
-| :-------: | :----------: | :---------: | :---------: | :-----: |
-| [*Not*](#Not) | `not arg` | Bool, Word8, Integer | ***type***(*arg*) | |
-| [*Neg*](#Neg) | `-arg` | Integer, Float | ***type***(*arg*) | |
-| [*Ref*](#Ref) | `&arg` | *Any* | Pointer to ***type***(*arg*)| |
-| [*Deref*](#Deref) | `*arg` | Pointer | ***type***(*arg*)#to | |
-
-
-
-### Not
-
-**Logical form** *(Requires Bool argument)*
-Returns ***true*** when *argument* is ***false***, otherwise returns ***false***.
-
-**Bitwise form** *(Requires Integer or Bool argument)*
-
-> Valid argument type: [*Bool*](../types.md#Bool-type), [*Word8*](../types.md#Word8-type), [*Integer*](../types.md#Integer-type)
-
-```zig
-	not x
+<#operator#> <#value_expression#>
 ```
 
-### Neg
-Returns ***true*** when *left* is **not equal** to the *right*, otherwise returns ***false***.
+| Operator | Operand | Result | Meaning |
+| :-- | :-- | :-- | :-- |
+| `not` | Bool | Bool | logical negation |
+| `not`, `~` | WordX | operand type | bitwise inversion |
+| `-` | IntX, FloatX | operand type | arithmetic negation |
+| `+` | numeric | operand type | no-op |
+| `&` | mutable value or function | pointer | address-of |
+| `*` | pointer | pointee | dereference |
 
-> Valid argument type: [*Integer*](../types.md#Integer-type), [*Float*](../types.md#Float-type)
+## Semantics
 
-```zig
-	-x
+- `-` requires a *signed* type: negating a `Nat` is an error
+  (`expected value with signed type`).
+- On `Word` operands `not` and `~` are the same bitwise inversion;
+  on `Bool` only `not` is valid.
+- `&` applies to mutable values (variables, fields, elements) and
+  functions. Immutable values — `let` bindings, parameters,
+  constants — have no address (`expected mutable value or function`).
+- `*p` designates the pointed-to value (a place): readable, assignable
+  (`*p = 10`). Records and arrays behind pointers are accessed without
+  explicit `*` — see [pointer](../type/pointer.md).
+- `new` is parsed as a unary operator but is experimental — do not use.
+
+## Examples
+
+```modest
+var flag: Bool = false
+flag = not flag
+
+var mask: Word8 = 0x0F
+mask = ~mask                  // 0xF0
+
+var x: Int32 = 5
+let neg = -x
+
+var p: *Int32 = &x
+*p = 10                       // x == 10
 ```
 
-### Ref
-Returns pointer to ***type***(*argument*)
+## See also
 
-```zig
-	&x
-```
-
-### Deref
-Returns the value pointed to by the argument
-
-> Valid argument type: [*Pointer*](../types.md#Pointer-type)
-
-```zig
-	*x
-```
-
+- [Pointer type](../type/pointer.md), [Binary operations](./binary.md)

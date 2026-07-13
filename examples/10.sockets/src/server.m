@@ -38,7 +38,7 @@ func writeFile (sockFd: Int) -> Bool {
 
 
 func main () -> Int {
-	let sockFd = socket(c_AF_INET, c_SOCK_STREAM, 0)
+	let sockFd = socket(afInet, sockStream, 0)
 	if sockFd < 0 {
 		perror("[-] Error in socket")
 		exit(1)
@@ -47,7 +47,7 @@ func main () -> Int {
 	printf("[+] Server socket created\n")
 
 	var serverAddr = SockAddrIn {
-		sin_family = c_AF_INET
+		sin_family = afInet
 		sin_port = port
 		sin_addr = Struct_in_addr {
 			s_addr = inet_addr(ipAddress)

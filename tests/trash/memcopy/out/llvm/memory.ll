@@ -114,14 +114,12 @@ break_2:
 
 ; -- print includes --
 ; -- end print includes --
-; -- print imports private 'memory' --
+; -- print imports 'memory' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'memory' --
-; -- print imports public 'memory' --
-; -- end print imports public 'memory' --
+; -- end print imports 'memory' --
 ; -- strings --
 ; -- endstrings --;
 %Word = type %Word64;

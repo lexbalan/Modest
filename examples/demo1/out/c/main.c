@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #define MIN_NUMBER 0
 #define MAX_NUMBER 10
@@ -21,6 +20,7 @@ int32_t main(void) {
 	}
 	return 0;
 }
+
 
 static int32_t get_number(int32_t min, int32_t max) {
 	int32_t number;

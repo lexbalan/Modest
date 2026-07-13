@@ -1,7 +1,9 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 var testArray: [23]Int32 = [-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9]
@@ -20,7 +22,7 @@ func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
 			array[i + 1] = left
 			wasSwap = true
 		}
-		i = i + 1
+		++i
 	}
 
 	return wasSwap
@@ -53,7 +55,7 @@ func print_array (array: *[]Int32, len: Nat32) -> Unit {
 	var i: Nat32 = 0
 	while i < len {
 		printf("array[%i] = %i\n", i, array[i])
-		i = i + 1
+		++i
 	}
 }
 

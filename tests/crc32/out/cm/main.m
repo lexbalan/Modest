@@ -1,9 +1,12 @@
-private import "builtin"
-private import "misc/crc32"
+import "builtin"
+import "misc/crc32"
 include "ctypes64"
 include "stdio"
 include "stdlib"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
 import "misc/crc32" as crc32
 
 
@@ -56,7 +59,7 @@ func main () -> Int {
 		} else {
 			printf("test #%d passed\n", i)
 		}
-		i = i + 1
+		++i
 	}
 
 	printf("test ")

@@ -1,19 +1,48 @@
-# Import
+# Import & Include
 
-During the import process, the compiler first looks for the module in the current directory, then in the directories specified in the compiler parameters, and only then in the directory whose path is specified in the MODEST_LIB environment variable.
+Bring another module's public definitions into the current module —
+under a namespace (`import`) or directly (`include`).
 
-## Import directive
-
-
-### Common form
+## Form
 
 ```
-import <# string_value_expression #>
+import <#"path"#> [as <#identifier#>]
+include <#"path"#>
 ```
+
+## Semantics
+
+- `import "m"` — public definitions of `m` are accessed as `m.name`;
+  `as x` renames the namespace to `x`.
+- `include "m"` — public definitions enter the current namespace and
+  are used unqualified. Idiomatic for C bindings (`libc/*`).
+- Path resolution (`.m` appended automatically):
+  1. paths starting with `./` or `../` — relative to the importing file;
+  2. otherwise, the importing file's directory;
+  3. otherwise, the library directory (`MODEST_LIB` / `-L`).
+- A module is translated once; repeated imports reuse it. Recursive
+  imports are an error (`recursive import detected`).
+- In output, public symbols of an imported module get its name as a
+  prefix (`utils_f`); `include`d modules keep original names
+  (see [access modifiers](./access_modifiers.md)).
 
 ## Examples
 
-```golang
-import "libc/stdio"
-import "myapp"
+```modest
+include "libc/stdio"          // printf, unqualified
+import "misc/sha256"          // namespace sha256
+import "./engine" as eng      // relative path, renamed
+
+func main () -> Int {
+	var h: sha256.Hash
+	sha256.hash(data, len, &h)
+	eng.start()
+	printf("done\n")
+	return 0
+}
 ```
+
+## See also
+
+- [Pragmas](./directive.md) — `pragma prefix`, `pragma do_not_include`
+- [Access modifiers](./access_modifiers.md)

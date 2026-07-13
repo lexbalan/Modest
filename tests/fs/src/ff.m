@@ -12,9 +12,9 @@ public type LBA_t = Nat
 public type Word = Word32
 public type DWord = Word64
 
-@alias("c", "FIL")
+@extern("C", "FIL")
 public type Fil = {}
-@alias("c", "DIR")
+@extern("C", "DIR")
 public type Dir = @public {}
 public type FilInfo = @public {}
 public type FATFS = @public {}

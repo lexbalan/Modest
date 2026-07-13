@@ -17,9 +17,7 @@ include "libc/stdio"
 
 const tableSize = 256
 
-
 var table: [tableSize]Word32
-
 
 // initialize table
 public func init () -> Unit {
