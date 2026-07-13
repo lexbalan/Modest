@@ -13,7 +13,7 @@ You can contact me by telegram: t.me/@alexbalan.
 
 
 
-[Language documentation](https://lexbalan.github.io/Modest/lang/)
+[Language documentation](./docs/lang/README.md)
 
 [Installation](https://lexbalan.github.io/Modest/INSTALL.html)
 
