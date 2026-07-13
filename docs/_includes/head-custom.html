@@ -41,8 +41,8 @@
     });
 
     // Rouge does not know Modest, so ```modest blocks come out as plain text
-    // wrapped in <div class="language-modest"> — highlight them client-side.
-    document.querySelectorAll('div.language-modest pre code').forEach(function (el) {
+    // as <pre><code class="language-modest"> (no Rouge wrapper) — highlight client-side.
+    document.querySelectorAll('pre code.language-modest, div.language-modest pre code').forEach(function (el) {
       el.classList.add('language-modest');
       hljs.highlightElement(el);
     });
