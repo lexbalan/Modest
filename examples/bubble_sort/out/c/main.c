@@ -8,7 +8,6 @@
 #endif
 static int32_t testArray[23] = {-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9};
 
-
 static bool bubble_sort32_iter(int32_t *array, uint32_t len) {
 	bool wasSwap = false;
 	uint32_t i = 0;
@@ -24,7 +23,6 @@ static bool bubble_sort32_iter(int32_t *array, uint32_t len) {
 	}
 	return wasSwap;
 }
-
 
 static void bubble_sort32(int32_t *array, uint32_t len) {
 	while (bubble_sort32_iter(array, len)) {
@@ -43,7 +41,6 @@ int32_t main(void) {
 	printf("\n");
 	return 0;
 }
-
 
 static void print_array(int32_t *array, uint32_t len) {
 	printf("\n");

@@ -73,7 +73,7 @@ builtinSymtab = None
 
 cmodule = None  # Current module
 csymtab = None  # current symtab (symtab)
-cdef = None
+cdef = None     # current definition
 cfunc = None	# current function
 
 
@@ -1800,7 +1800,6 @@ def do_stmt_let(x):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	df = def_const_common(x)
 	df.parent = cfunc
-	df.value.parent = cfunc
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
 	return df
 
@@ -2090,7 +2089,7 @@ def do_stmt(x):
 	k = x['kind']
 	if k == 'value': s = do_stmt_value(x)
 	elif k == 'assign': s = do_stmt_assign(x)
-	elif k == 'let': s = do_stmt_const(x)
+	elif k == 'let': s = do_stmt_let(x)
 	elif k == 'var': s = do_stmt_var(x)
 	elif k == 'block': s = do_stmt_block(x)
 	elif k == 'if': s = do_stmt_if(x)
@@ -2382,7 +2381,6 @@ def def_const_global(x):
 
 	df = def_const_common(x)
 	df.parent = cmodule
-	df.value.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 	iv = df.init_value
@@ -2405,7 +2403,6 @@ def def_var_global(x):
 
 	df = def_var_common(x)
 	df.parent = cmodule
-	df.value.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 	df.value.is_initialized = True
 
@@ -2873,9 +2870,6 @@ def deccl_func(x, is_include=False):
 	definition.access_level = get_access_level(x)
 	definition.nl = x['nl']
 	v.definition = definition
-
-	if not is_include:
-		v.parent = cmodule
 
 	is_public = get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC
 	csymtab.value_add(x['id']['str'], v, is_public=is_public)

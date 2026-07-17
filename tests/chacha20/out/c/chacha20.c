@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 static uint32_t rotl32(uint32_t x, uint32_t n) {
 	return x << n | x >> (32 - n);
 }
@@ -24,7 +23,6 @@ static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_
 	b0 = rotl32(b0 ^ c0, 7);
 	__builtin_memcpy(__out, &(uint32_t [4]){a0, b0, c0, d0}, sizeof(uint32_t [4]));
 }
-
 
 void chacha20_chacha20Block(uint32_t *_state, uint32_t *__out) {
 	chacha20_State state;
@@ -94,7 +92,6 @@ void chacha20_chacha20Block(uint32_t *_state, uint32_t *__out) {
 // Чтобы расшифровать файл, тебе понадобятся твой секретный ключ (который в голове или в сейфе) и этот Nonce
 // (который прикреплен к файлу).
 // Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
-
 
 void chacha20_makeState(uint32_t *key, uint32_t counter, uint32_t *nonce, uint32_t *__out) {
 	__builtin_memcpy(__out, &(chacha20_State){

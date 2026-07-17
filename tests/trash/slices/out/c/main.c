@@ -8,7 +8,6 @@
 #endif
 #include <stdlib.h>
 
-
 static void array_print(int32_t *pa, uint32_t len) {
 	uint32_t i = 0;
 	while (i < len) {
@@ -16,7 +15,6 @@ static void array_print(int32_t *pa, uint32_t len) {
 		++i;
 	}
 }
-
 
 static void array4intInc(int32_t *_a, int32_t *__out) {
 	int32_t a[4];

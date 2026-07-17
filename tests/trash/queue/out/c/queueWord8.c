@@ -5,32 +5,26 @@
 #include <stdbool.h>
 #include "queue.h"
 
-
 void queueWord8_init(struct queue_word8_queue_word8 *q, uint8_t *buf, uint32_t capacity) {
 	queue_init(&q->queue, capacity);
 	q->data = buf;
 }
 
-
 uint32_t queueWord8_capacity(struct queue_word8_queue_word8 *q) {
 	return queue_capacity(&q->queue);
 }
-
 
 uint32_t queueWord8_size(struct queue_word8_queue_word8 *q) {
 	return queue_size(&q->queue);
 }
 
-
 bool queueWord8_isFull(struct queue_word8_queue_word8 *q) {
 	return queue_isFull(&q->queue);
 }
 
-
 bool queueWord8_isEmpty(struct queue_word8_queue_word8 *q) {
 	return queue_isEmpty(&q->queue);
 }
-
 
 bool queueWord8_put(struct queue_word8_queue_word8 *q, uint8_t b) {
 	if (queue_isFull(&q->queue)) {
@@ -41,7 +35,6 @@ bool queueWord8_put(struct queue_word8_queue_word8 *q, uint8_t b) {
 	return true;
 }
 
-
 bool queueWord8_get(struct queue_word8_queue_word8 *q, uint8_t *b) {
 	if (queue_isEmpty(&q->queue)) {
 		return false;
@@ -50,7 +43,6 @@ bool queueWord8_get(struct queue_word8_queue_word8 *q, uint8_t *b) {
 	*b = q->data[g];
 	return true;
 }
-
 
 uint32_t queueWord8_read(struct queue_word8_queue_word8 *q, uint8_t *data, uint32_t len) {
 	uint32_t n = 0;
@@ -64,7 +56,6 @@ uint32_t queueWord8_read(struct queue_word8_queue_word8 *q, uint8_t *data, uint3
 	}
 	return n;
 }
-
 
 uint32_t queueWord8_write(struct queue_word8_queue_word8 *q, uint8_t *data, uint32_t len) {
 	uint32_t n = 0;

@@ -17,7 +17,6 @@ static void showPrompt(void) {
 	write(0, _prompt, (size_t)2);
 }
 
-
 __attribute__((unused, always_inline))
 static inline int char8ToInt(char c) {
 	return (uint32_t)(uint8_t)c;
@@ -32,11 +31,9 @@ struct tokenizer {
 	char **tokens;
 };
 
-
 static bool is_blank(char c) {
 	return c == ' ' || c == '\n';
 }
-
 
 static uint16_t gettok(struct tokenizer *t, char *output, uint16_t lim) {
 	(void)lim;
@@ -69,7 +66,6 @@ static uint16_t gettok(struct tokenizer *t, char *output, uint16_t lim) {
 	return outpos;
 }
 
-
 static void tokenize(struct tokenizer *tokenizer) {
 	while (true) {
 		const uint16_t max_toklen = 128;
@@ -89,7 +85,6 @@ static void tokenize(struct tokenizer *tokenizer) {
 		tokenizer->tokens[tokenizer->tokensPos] = NULL;
 	}
 }
-
 
 static void execute(char *cmd, uint16_t argc, char **argv) {
 	printf("%s (n=%d)", cmd, argc);

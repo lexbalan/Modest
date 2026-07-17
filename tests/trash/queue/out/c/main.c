@@ -10,7 +10,6 @@ static struct queue_word8_queue_word8 bq0;
 static struct ring_word8_ring_word8 br0;
 static int32_t ii;
 
-
 static void fill(uint32_t n) {
 	uint32_t i = 0;
 	while (i < n) {
@@ -24,7 +23,6 @@ static void fill(uint32_t n) {
 		++ii;
 	}
 }
-
 
 static void fetch(uint32_t n) {
 	uint32_t i = 0;

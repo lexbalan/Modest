@@ -18,7 +18,6 @@ static struct line line = (struct line){
 	.b = {.x = 1.0, .y = 1.0}
 };
 
-
 __attribute__((always_inline))
 static inline float max(float a, float b) {
 	if (a > b) {
@@ -26,7 +25,6 @@ static inline float max(float a, float b) {
 	}
 	return b;
 }
-
 
 __attribute__((always_inline))
 static inline float min(float a, float b) {
@@ -43,7 +41,6 @@ static float distance(struct point a, struct point b) {
 	const double dy2 = pow(dy, 2);
 	return sqrt(dx2 + dy2);
 }
-
 
 static float lineLength(struct line line) {
 	return distance(line.a, line.b);
