@@ -885,12 +885,9 @@ break_1:
 define void @sha256_hash([0 x %Word8]* %msg, %Nat32 %msgLen, %sha256_Hash* %outHash) {
 	%1 = alloca %Context, align 8
 	store %Context zeroinitializer, %Context* %1
-	%2 = bitcast %Context* %1 to %Context*
-	call void @contextInit(%Context* %2)
-	%3 = bitcast %Context* %1 to %Context*
-	call void @update(%Context* %3, [0 x %Word8]* %msg, %Nat32 %msgLen)
-	%4 = bitcast %Context* %1 to %Context*
-	call void @final(%Context* %4, %sha256_Hash* %outHash)
+	call void @contextInit(%Context* %1)
+	call void @update(%Context* %1, [0 x %Word8]* %msg, %Nat32 %msgLen)
+	call void @final(%Context* %1, %sha256_Hash* %outHash)
 	ret void
 }
 

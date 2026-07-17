@@ -304,50 +304,44 @@ define internal void @test_by_value() {
 	%3 = load %Type2, %Type2* %2
 ; -- end cons_composite_from_composite_by_adr --
 	call void @f2_val(%Type2 %3)
+	%4 = load %Type1, %Type1* @a
+	call void @f3_val(%Type1 %4)
 ; -- cons_composite_from_composite_by_adr --
-	%4 = bitcast %Type1* @a to %Type3*
-	%5 = load %Type3, %Type3* %4
+	%5 = bitcast %Type1* @a to {%Int32}*
+	%6 = load {%Int32}, {%Int32}* %5
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f3_val(%Type3 %5)
+	call void @f4_val({%Int32} %6)
 ; -- cons_composite_from_composite_by_adr --
-	%6 = bitcast %Type1* @a to {%Int32}*
-	%7 = load {%Int32}, {%Int32}* %6
+	%7 = bitcast %Type2* @b to %Type1*
+	%8 = load %Type1, %Type1* %7
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f4_val({%Int32} %7)
+	call void @f1_val(%Type1 %8)
+	%9 = load %Type2, %Type2* @b
+	call void @f2_val(%Type2 %9)
 ; -- cons_composite_from_composite_by_adr --
-	%8 = bitcast %Type2* @b to %Type1*
-	%9 = load %Type1, %Type1* %8
+	%10 = bitcast %Type2* @b to %Type3*
+	%11 = load %Type3, %Type3* %10
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f1_val(%Type1 %9)
-	%10 = load %Type2, %Type2* @b
-	call void @f2_val(%Type2 %10)
+	call void @f3_val(%Type3 %11)
 ; -- cons_composite_from_composite_by_adr --
-	%11 = bitcast %Type2* @b to %Type3*
-	%12 = load %Type3, %Type3* %11
+	%12 = bitcast %Type2* @b to {%Int32}*
+	%13 = load {%Int32}, {%Int32}* %12
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f3_val(%Type3 %12)
+	call void @f4_val({%Int32} %13)
+	%14 = load %Type3, %Type3* @c
+	call void @f1_val(%Type3 %14)
 ; -- cons_composite_from_composite_by_adr --
-	%13 = bitcast %Type2* @b to {%Int32}*
-	%14 = load {%Int32}, {%Int32}* %13
+	%15 = bitcast %Type3* @c to %Type2*
+	%16 = load %Type2, %Type2* %15
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f4_val({%Int32} %14)
+	call void @f2_val(%Type2 %16)
+	%17 = load %Type3, %Type3* @c
+	call void @f3_val(%Type3 %17)
 ; -- cons_composite_from_composite_by_adr --
-	%15 = bitcast %Type3* @c to %Type1*
-	%16 = load %Type1, %Type1* %15
+	%18 = bitcast %Type3* @c to {%Int32}*
+	%19 = load {%Int32}, {%Int32}* %18
 ; -- end cons_composite_from_composite_by_adr --
-	call void @f1_val(%Type1 %16)
-; -- cons_composite_from_composite_by_adr --
-	%17 = bitcast %Type3* @c to %Type2*
-	%18 = load %Type2, %Type2* %17
-; -- end cons_composite_from_composite_by_adr --
-	call void @f2_val(%Type2 %18)
-	%19 = load %Type3, %Type3* @c
-	call void @f3_val(%Type3 %19)
-; -- cons_composite_from_composite_by_adr --
-	%20 = bitcast %Type3* @c to {%Int32}*
-	%21 = load {%Int32}, {%Int32}* %20
-; -- end cons_composite_from_composite_by_adr --
-	call void @f4_val({%Int32} %21)
+	call void @f4_val({%Int32} %19)
 	ret void
 }
 
@@ -355,24 +349,22 @@ define internal void @test_by_pointer() {
 	call void @f1_ptr(%Type1* @a)
 	%1 = bitcast %Type1* @a to %Type2*
 	call void @f2_ptr(%Type2* %1)
-	%2 = bitcast %Type1* @a to %Type3*
-	call void @f3_ptr(%Type3* %2)
-	%3 = bitcast %Type1* @a to {%Int32}*
-	call void @f4_ptr({%Int32}* %3)
-	%4 = bitcast %Type2* @b to %Type1*
-	call void @f1_ptr(%Type1* %4)
+	call void @f3_ptr(%Type1* @a)
+	%2 = bitcast %Type1* @a to {%Int32}*
+	call void @f4_ptr({%Int32}* %2)
+	%3 = bitcast %Type2* @b to %Type1*
+	call void @f1_ptr(%Type1* %3)
 	call void @f2_ptr(%Type2* @b)
-	%5 = bitcast %Type2* @b to %Type3*
-	call void @f3_ptr(%Type3* %5)
-	%6 = bitcast %Type2* @b to {%Int32}*
-	call void @f4_ptr({%Int32}* %6)
-	%7 = bitcast %Type3* @c to %Type1*
-	call void @f1_ptr(%Type1* %7)
-	%8 = bitcast %Type3* @c to %Type2*
-	call void @f2_ptr(%Type2* %8)
+	%4 = bitcast %Type2* @b to %Type3*
+	call void @f3_ptr(%Type3* %4)
+	%5 = bitcast %Type2* @b to {%Int32}*
+	call void @f4_ptr({%Int32}* %5)
+	call void @f1_ptr(%Type3* @c)
+	%6 = bitcast %Type3* @c to %Type2*
+	call void @f2_ptr(%Type2* %6)
 	call void @f3_ptr(%Type3* @c)
-	%9 = bitcast %Type3* @c to {%Int32}*
-	call void @f4_ptr({%Int32}* %9)
+	%7 = bitcast %Type3* @c to {%Int32}*
+	call void @f4_ptr({%Int32}* %7)
 	ret void
 }
 

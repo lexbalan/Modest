@@ -363,11 +363,8 @@ define %fsm_ComplexState @fsm_cmdSwitchStage(%fsm_FSM* %self, %Word16 %stage) {
 	%6 = getelementptr %fsm_ComplexState, %fsm_ComplexState* %3, %Int32 0, %Int32 1
 	%7 = bitcast %Word16 %stage to %fsm_StageId
 	store %fsm_StageId %7, %fsm_StageId* %6
-; -- cons_composite_from_composite_by_adr --
-	%8 = bitcast %fsm_ComplexState* %3 to %fsm_ComplexState*
-	%9 = load %fsm_ComplexState, %fsm_ComplexState* %8
-; -- end cons_composite_from_composite_by_adr --
-	ret %fsm_ComplexState %9
+	%8 = load %fsm_ComplexState, %fsm_ComplexState* %3
+	ret %fsm_ComplexState %8
 }
 
 define %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* %self) {
@@ -389,11 +386,8 @@ define %fsm_ComplexState @fsm_cmdNextStage(%fsm_FSM* %self) {
 	%12 = getelementptr %fsm_ComplexState, %fsm_ComplexState* %10, %Int32 0, %Int32 1
 	%13 = bitcast %Nat16 %9 to %fsm_StageId
 	store %fsm_StageId %13, %fsm_StageId* %12
-; -- cons_composite_from_composite_by_adr --
-	%14 = bitcast %fsm_ComplexState* %10 to %fsm_ComplexState*
-	%15 = load %fsm_ComplexState, %fsm_ComplexState* %14
-; -- end cons_composite_from_composite_by_adr --
-	ret %fsm_ComplexState %15
+	%14 = load %fsm_ComplexState, %fsm_ComplexState* %10
+	ret %fsm_ComplexState %14
 }
 
 define %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* %self, %Nat32 %t) {
@@ -413,11 +407,8 @@ define %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* %self, %Nat32 %t) {
 	%11 = getelementptr %fsm_ComplexState, %fsm_ComplexState* %9, %Int32 0, %Int32 1
 	%12 = bitcast %Nat16 %8 to %fsm_StageId
 	store %fsm_StageId %12, %fsm_StageId* %11
-; -- cons_composite_from_composite_by_adr --
-	%13 = bitcast %fsm_ComplexState* %9 to %fsm_ComplexState*
-	%14 = load %fsm_ComplexState, %fsm_ComplexState* %13
-; -- end cons_composite_from_composite_by_adr --
-	ret %fsm_ComplexState %14
+	%13 = load %fsm_ComplexState, %fsm_ComplexState* %9
+	ret %fsm_ComplexState %13
 }
 
 define %fsm_ComplexState @fsm_getComplexState(%fsm_FSM %fsm) {
