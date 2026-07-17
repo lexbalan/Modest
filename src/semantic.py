@@ -1794,7 +1794,7 @@ def do_value(x):
 #
 
 
-def do_stmt_const(x):
+def do_stmt_let(x):
 	global cfunc
 	if id_already_used(x['id']['str'], shallow=True):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
@@ -1827,6 +1827,9 @@ def do_stmt_var(x):
 
 	return df
 
+
+def do_stmt_const(x):
+	return do_stmt_let(x)
 
 
 def do_stmt_if(x):
@@ -2087,20 +2090,21 @@ def do_stmt(x):
 	k = x['kind']
 	if k == 'value': s = do_stmt_value(x)
 	elif k == 'assign': s = do_stmt_assign(x)
-	elif k == 'const': s = do_stmt_const(x)
+	elif k == 'let': s = do_stmt_const(x)
 	elif k == 'var': s = do_stmt_var(x)
 	elif k == 'block': s = do_stmt_block(x)
 	elif k == 'if': s = do_stmt_if(x)
 	elif k == 'while': s = do_stmt_while(x)
 	elif k == 'return': s = do_stmt_return(x)
+	elif k == 'comment-line': s = do_stmt_comment_line(x)
+	elif k == 'comment-block': s = do_stmt_comment_block(x)
 	elif k == 'again': s = do_stmt_again(x)
 	elif k == 'break': s = do_stmt_break(x)
 	elif k == 'inc': s = do_stmt_incdec(x, HLIR_VALUE_OP_ADD)
 	elif k == 'dec': s = do_stmt_incdec(x, HLIR_VALUE_OP_SUB)
 	elif k == 'type': s = do_stmt_type(x)
 	elif k == 'func': s = do_stmt_func(x)
-	elif k == 'comment-line': s = do_stmt_comment_line(x)
-	elif k == 'comment-block': s = do_stmt_comment_block(x)
+	elif k == 'const': s = do_stmt_const(x)
 	elif k == 'asm': s = do_stmt_asm(x)
 	else: s = StmtBad(x['ti'])
 

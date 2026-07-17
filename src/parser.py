@@ -45,10 +45,10 @@ class Parser:
 			self.ctoken = self.ctoken + 1
 
 	def skip(self, token):
-		return self.match(token)
+		self.skip1()
 
 	def skipn(self, token):
-		while self.skip(token):
+		while self.match(token):
 			pass
 
 
@@ -225,11 +225,11 @@ class Parser:
 					break
 			if self.look("}"):
 				end_ti = self.tokenInfo()
-				self.match("}")
+				self.skip("}")
 				break
 
 			access_modifier = self.parse_access_modifier()
-			f = self.stmt_var()
+			f = self.parse_stmt_field()
 			for ff in f:
 				ff['access_modifier'] = access_modifier
 
@@ -384,7 +384,7 @@ class Parser:
 		fields = []
 		while not self.match(")"):
 			if self.is_identifier():
-				f = self.stmt_var()
+				f = self.parse_stmt_field()
 				if isinstance(f, list):
 					fields.extend(f)
 				else:
@@ -999,7 +999,7 @@ class Parser:
 
 		elif self.match("sizeof"):
 			mid_ti = self.textInfo()
-			self.match("(")
+			self.skip("(")
 			rv = None
 			if self.is_type_expr():
 				t = self.expr_type()
@@ -1024,7 +1024,7 @@ class Parser:
 
 		elif self.match("alignof"):
 			mid_ti = self.textInfo()
-			self.match("(")
+			self.skip("(")
 			rv = None
 			if self.is_type_expr():
 				t = self.expr_type()
@@ -1049,7 +1049,7 @@ class Parser:
 
 		elif self.match("offsetof"):
 			mid_ti = self.textInfo()
-			self.match("(")
+			self.skip("(")
 			t = self.expr_type()
 			self.need('.')
 			f = self.parse_identifier()
@@ -1092,7 +1092,7 @@ class Parser:
 
 		elif self.match("__va_start"):
 			mid_ti = self.textInfo()
-			self.match("(")
+			self.skip("(")
 			v0 = self.expr_value()
 			self.need(",")
 			v1 = self.expr_value()
@@ -1108,7 +1108,7 @@ class Parser:
 
 		elif self.match("__va_copy"):
 			mid_ti = self.textInfo()
-			self.match("(")
+			self.skip("(")
 			v0 = self.expr_value()
 			self.need(",")
 			v1 = self.expr_value()
@@ -1155,7 +1155,7 @@ class Parser:
 
 		elif self.match("__defined"):
 			mid_ti = self.textInfo()
-			self.match("(")
+			self.skip("(")
 			rv = None
 			if self.is_type_expr():
 				t = self.expr_type()
@@ -1209,7 +1209,7 @@ class Parser:
 			arg_id = None
 			if self.look("="):
 				mid_ti = self.textInfo()
-				self.match("=")
+				self.skip("=")
 				if arg_value['kind'] != 'id':
 					error("expected identifier", arg_value['ti'])
 
@@ -1240,7 +1240,7 @@ class Parser:
 			if self.match("("):
 				args = self.parse_args()
 				end_ti = self.textInfo()
-				self.match(")")
+				self.skip(")")
 				v = {
 					'isa': 'ast_value',
 					'kind': HLIR_VALUE_OP_CALL,
@@ -1341,7 +1341,7 @@ class Parser:
 
 			if self.look("]"):
 				ti_end = self.tokenInfo()
-				self.match("]")
+				self.skip("]")
 				break
 
 			item_value = self.expr_value()
@@ -1362,7 +1362,7 @@ class Parser:
 
 			if self.look("]"):
 				ti_end = self.tokenInfo()
-				self.match("]")
+				self.skip("]")
 				break
 
 		return {
@@ -1392,7 +1392,7 @@ class Parser:
 
 			if self.look("}"):
 				ti_end = self.textInfo()
-				self.match("}")
+				self.skip("}")
 				break
 
 			item_ti = self.textInfo()
@@ -1414,7 +1414,7 @@ class Parser:
 
 			if self.look("}"):
 				ti_end = self.textInfo()
-				self.match("}")
+				self.skip("}")
 				break
 
 		ti = TextInfo(start=ti_start, mid=ti_start, end=ti_end)
@@ -1607,7 +1607,18 @@ class Parser:
 
 	def stmt_let(self):
 		ti_start = self.tokenInfo()
-		self.match("let")
+		self.skip("let")
+		xx = self.parse_stmt_field()
+		for x in xx:
+			x['isa'] = 'ast_stmt'
+			x['kind'] = 'let'
+			x['ti'].start = ti_start
+		return xx
+
+
+	def stmt_const(self):
+		ti_start = self.tokenInfo()
+		self.skip("const")
 		xx = self.parse_stmt_field()
 		for x in xx:
 			x['isa'] = 'ast_stmt'
@@ -1618,7 +1629,7 @@ class Parser:
 
 	def stmt_var(self):
 		ti_start = self.tokenInfo()
-		self.match("var")
+		self.skip("var")
 		xx = self.parse_stmt_field()
 		for x in xx:
 			x['isa'] = 'ast_stmt'
@@ -1627,16 +1638,17 @@ class Parser:
 		return xx
 
 
-	def stmt_if(self):
-		ti_start = self.tokenInfo()
-		self.match("if")
+	def stmt_if(self, ti_start=None):
+		if ti_start == None:
+			ti_start = self.tokenInfo()
+			self.skip("if")
 		c = self.expr_value()
 		t = self.stmt_block()
 		e = None
 		if self.match('else'):
 			ti = self.textInfo()
 			if self.match('if'):
-				e = self.stmt_if()
+				e = self.stmt_if(self.tokenInfo())
 			else:
 				e = self.stmt_block()
 			e['ti'] = ti
@@ -1654,7 +1666,7 @@ class Parser:
 
 	def stmt_while(self):
 		ti_start = self.tokenInfo()
-		self.match("while")
+		self.skip("while")
 		cond = self.expr_value()
 		stmt = self.stmt_block()
 		return {
@@ -1671,7 +1683,7 @@ class Parser:
 	def stmt_return(self):
 		ti_start = self.tokenInfo()
 		ti_end = ti_start
-		self.match("return")
+		self.skip("return")
 
 		v = None
 		if not (self.look_nl() or self.look(";") or self.look("}")):
@@ -1689,7 +1701,7 @@ class Parser:
 
 	def stmt_again(self):
 		ti = self.tokenInfo()
-		self.match("again")
+		self.skip("again")
 		return {
 			'isa': 'ast_stmt',
 			'kind': 'again',
@@ -1700,7 +1712,7 @@ class Parser:
 
 	def stmt_break(self):
 		ti = self.tokenInfo()
-		self.match("break")
+		self.skip("break")
 		return {
 			'isa': 'ast_stmt',
 			'kind': 'break',
@@ -1711,7 +1723,7 @@ class Parser:
 
 	def stmt_inc(self):
 		ti_start = self.tokenInfo()
-		self.match("++")
+		self.skip("++")
 		v = self.expr_value()
 		return {
 			'isa': 'ast_stmt',
@@ -1724,7 +1736,7 @@ class Parser:
 
 	def stmt_dec(self):
 		ti_start = self.tokenInfo()
-		self.match("--")
+		self.skip("--")
 		v = self.expr_value()
 		return {
 			'isa': 'ast_stmt',
@@ -1857,6 +1869,8 @@ class Parser:
 				s = self.stmt_break()
 			elif self.look('type'):
 				s = self.parse_def_type()
+			elif self.look('const'):
+				s = self.stmt_const()
 			elif self.look('++'):
 				s = self.stmt_inc()
 			elif self.look('--'):
@@ -1958,7 +1972,7 @@ class Parser:
 
 	def parse_include(self):
 		ti_start = self.textInfo()
-		self.match("include")
+		self.skip("include")
 		import_expr = self.expr_value()
 		ti_end = import_expr['ti'].end
 
@@ -1975,7 +1989,7 @@ class Parser:
 
 	def parse_import(self, include=False):
 		ti_start = self.textInfo()
-		self.match("import")
+		self.skip("import")
 		import_expr = self.expr_value()
 		ti_end = import_expr['ti'].end
 
@@ -1999,7 +2013,7 @@ class Parser:
 
 	def parse_def_func(self):
 		ti_start = self.textInfo()
-		self.match("func")
+		self.skip("func")
 		id = self.parse_identifier()
 		ftyp = self.expr_type()
 
@@ -2042,7 +2056,7 @@ class Parser:
 		t = None
 		if self.look(":"):
 			ti_mid = self.textInfo()
-			self.match(":")
+			self.skip(":")
 			t = self.expr_type()
 			ti_end = t['ti'].end
 		else:
@@ -2077,7 +2091,7 @@ class Parser:
 
 	def parse_def_const(self):
 		ti_start = self.tokenInfo()
-		self.match("const")
+		self.skip("const")
 		xx = self.parse_stmt_field()
 		for x in xx:
 			x['isa'] = 'ast_definition'
@@ -2088,7 +2102,7 @@ class Parser:
 
 	def parse_def_var(self):
 		ti_start = self.tokenInfo()
-		self.match("var")
+		self.skip("var")
 		xx = self.parse_stmt_field()
 		for x in xx:
 			x['isa'] = 'ast_definition'
@@ -2099,7 +2113,7 @@ class Parser:
 
 	def parse_def_type(self):
 		ti = self.textInfo()
-		self.match("type")
+		self.skip("type")
 		id = self.parse_identifier()
 
 		if self.is_comment():
