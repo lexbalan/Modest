@@ -987,6 +987,7 @@ def do_value_deref(x):
 	is_vla = to.is_vla()
 	if is_type_func_ptr or is_free_ptr or is_type_unsized_array_ptr:# or is_vla:
 		error("cannot dereference the pointer", v.ti)
+		return ValueBad(x['ti'])
 
 	nv = ValueDeref(v, ti=x['ti'])
 	return nv
