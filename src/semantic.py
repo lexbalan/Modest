@@ -2900,8 +2900,8 @@ def def_phase1(ast, is_include=False):
 
 			if kind == 'type':
 				t = Type(x['ti'])  # Incomplete type (!)
-				if not is_include:
-					t.parent = cmodule
+				#if not is_include:
+				t.parent = cmodule
 
 				csymtab.type_add(id['str'], t, is_public=is_public)
 
@@ -2950,8 +2950,8 @@ def def_phase2(ast, is_include=False):
 				if 'comment' in x and x['comment'] != None:
 					df.comment = do_stmt_comment(x['comment'])
 
-				if not is_include:
-					df.parent = cmodule
+				#if not is_include:
+				df.parent = cmodule
 
 				cmodule.defs.append(df)
 

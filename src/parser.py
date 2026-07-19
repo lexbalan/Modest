@@ -69,7 +69,7 @@ class Parser:
 
 	# вернет ТОКЕН отстоящий на n от текущей позиции (или Null если там ничего нет)
 	def get_ntok(self, n):
-		if self.ctoken + n > len(self.tokens):
+		if self.ctoken + n >= len(self.tokens):
 			return None
 		return self.tokens[self.ctoken + n]
 
@@ -2149,7 +2149,7 @@ class Parser:
 		lines = [x]
 		#pos = self.getpos()
 		# Связываем все идущие под ряд линейные комментарии в один
-		while True:
+		while not self.is_end():
 			pos = self.getpos()
 			if self.match("\n"):
 				if self.token_class_is('comment-line'):

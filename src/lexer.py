@@ -41,15 +41,18 @@ class Lexer:
 		with open(filename, "r") as f:
 			self.text = f.read()
 		self.pos = 0
+		self.start = None
 
 		tokens = []
 		while True:
 			if self.peep() == EOF:
 				return tokens
 
+			self.start = self.getTextPosition()
+
 			# save current lexer position in the source
 			tokenStartPosition = self.getTextPosition()
-			line_start_position = self.line_fpos
+			self.line_start_position = self.line_fpos
 
 			for rule in self.lexicalRules:
 				result = rule()
@@ -69,7 +72,7 @@ class Lexer:
 						source = self.filename,
 						fpos = tokenStartPosition['pos'],
 						line = tokenStartPosition['line'],
-						lpos = line_start_position,
+						lpos = self.line_start_position,
 						spaces = tokenStartPosition['nspaces'],
 						tabs = tokenStartPosition['ntabs'],
 						length = self.pos - tokenStartPosition['pos']
@@ -189,9 +192,6 @@ class CmLexer(Lexer):
 
 
 	def doId(self):
-		start = self.getTextPosition()
-		line_start = self.line_fpos
-
 		c = self.peep()
 
 		if not (c.isalpha() or c == '_'):
@@ -206,17 +206,8 @@ class CmLexer(Lexer):
 		# The word is already lexed as one token; if it holds any exotic
 		# character we report it once and let the (whole) identifier flow on.
 		if not all(isAsciiLatinIdChar(x) for x in s):
-			ti = TokenInfo(
-				source = self.filename,
-				fpos = start['pos'],
-				line = start['line'],
-				lpos = line_start,
-				spaces = start['nspaces'],
-				tabs = start['ntabs'],
-				length = self.pos - start['pos']
-			)
-			error("identifier '%s' contains non-ASCII characters" % s,
-				TextInfo(start=ti, mid=ti, end=ti))
+			ti = self.getLastTokenInfo()
+			error("identifier '%s' contains non-ASCII characters" % s, TextInfo(start=ti, mid=ti, end=ti))
 
 		isa = 'id'
 		for c in s:
@@ -329,6 +320,11 @@ class CmLexer(Lexer):
 			elif c == quote:
 				break  # endstring
 
+			elif c == EOF:
+				ti = self.getLastTokenInfo()
+				error("unexpected EOF in a string literal", TextInfo(start=ti, mid=ti, end=ti))
+				break
+
 			s.append(c)
 
 		ss = ''.join(s)
@@ -406,7 +402,7 @@ class CmLexer(Lexer):
 		while True:
 			# we dont need to eat NL because it will be used by lexer (!)
 			c = self.peep()
-			if c == '\n':
+			if c == '\n' or c == EOF:
 				break
 			commtext += c
 
@@ -428,6 +424,12 @@ class CmLexer(Lexer):
 				if self.peep() == "/":
 					self.skip()  # '/'
 					break
+
+			if c == EOF:
+				ti = self.getLastTokenInfo()
+				error("unexpected EOF in a block comment", TextInfo(start=ti, mid=ti, end=ti))
+				break
+
 			text = text + c
 
 		return ('comment-block', text)
@@ -436,5 +438,19 @@ class CmLexer(Lexer):
 	def doBadSymbol(self):
 		c = self.getc()
 		return ('badsym', c)
+
+
+
+	def getLastTokenInfo(self):
+		return TokenInfo(
+			source = self.filename,
+			fpos = self.start['pos'],
+			line = self.start['line'],
+			lpos = self.line_start_position,
+			spaces = self.start['nspaces'],
+			tabs = self.start['ntabs'],
+			length = self.pos - self.start['pos']
+		)
+
 
 
