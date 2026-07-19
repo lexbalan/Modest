@@ -1634,11 +1634,15 @@ def do_value_rational(x):
 
 def do_value_sizeof_type(x):
 	t = do_type(x['type'])
+	if t.is_type_func():
+		error("sizeof(<#type_function#>) are forbidden", t.ti)
 	return ValueSizeofType(t, ti=x['ti'])
 
 
 def do_value_sizeof_value(x):
 	v = do_value(x['value'])
+	if v.type.is_type_func():
+		error("sizeof(<#value_function#>) are forbidden", v.ti)
 	return ValueSizeofValue(v, ti=x['ti'])
 
 
