@@ -8,7 +8,6 @@
 #endif
 // thx: https://github.com/ilvn/aes256/tree/main
 
-
 static uint8_t rj_xtime(uint8_t x) {
 	const uint8_t y = 0xFF & x << 1;
 	if ((x & 0x80) != 0x0) {
@@ -97,7 +96,6 @@ static inline uint8_t rj_sboxInv(uint8_t x) {
 	return ((const uint8_t [256])SBOXINV)[x];
 }
 
-
 static void subBytes(uint8_t *block) {
 	uint8_t i = 0;
 	while (i < 16) {
@@ -105,7 +103,6 @@ static void subBytes(uint8_t *block) {
 		++i;
 	}
 }
-
 
 static void subBytesInv(uint8_t *block) {
 	uint8_t i = 0;
@@ -115,7 +112,6 @@ static void subBytesInv(uint8_t *block) {
 	}
 }
 
-
 static void addRoundKey(uint8_t *block, uint8_t *k) {
 	uint8_t i = 0;
 	while (i < 16) {
@@ -123,7 +119,6 @@ static void addRoundKey(uint8_t *block, uint8_t *k) {
 		++i;
 	}
 }
-
 
 static void addRoundKeyCpy(uint8_t *block, uint8_t *key, uint8_t *cpk) {
 	uint8_t i = 0;
@@ -135,7 +130,6 @@ static void addRoundKeyCpy(uint8_t *block, uint8_t *key, uint8_t *cpk) {
 		++i;
 	}
 }
-
 
 static void shiftRows(uint8_t *block) {
 	uint8_t i;
@@ -158,7 +152,6 @@ static void shiftRows(uint8_t *block) {
 	block[6] = j;
 }
 
-
 static void shiftRowsInv(uint8_t *block) {
 	uint8_t i;
 	uint8_t j;
@@ -180,7 +173,6 @@ static void shiftRowsInv(uint8_t *block) {
 	block[14] = j;
 }
 
-
 static void mixColumns(uint8_t *block) {
 	uint8_t a;
 	uint8_t b;
@@ -201,7 +193,6 @@ static void mixColumns(uint8_t *block) {
 		i = i + 4;
 	}
 }
-
 
 static void mixColumnsInv(uint8_t *block) {
 	uint8_t a;
@@ -229,7 +220,6 @@ static void mixColumnsInv(uint8_t *block) {
 		i = i + 4;
 	}
 }
-
 
 static void expandEncKey(uint8_t *k, uint8_t *rc) {
 	uint8_t i;
@@ -259,7 +249,6 @@ static void expandEncKey(uint8_t *k, uint8_t *rc) {
 		i = i + 4;
 	}
 }
-
 
 static void expandDecKey(uint8_t *k, uint8_t *rc) {
 	uint8_t i;

@@ -16,42 +16,34 @@ typedef struct type1 Type3;
 #define ZERO {.x = 0}
 // Check by value
 
-
 static void f1_val(struct type1 x) {
 	printf("f1 x.x = %d\n", x.x);
 }
-
 
 static void f2_val(struct type2 x) {
 	printf("f2 x.x = %d\n", x.x);
 }
 
-
 static void f3_val(Type3 x) {
 	printf("f3 x.x = %d\n", x.x);
 }
-
 
 static void f4_val(struct __anonymous_struct_3 x) {
 	printf("f4 x.x = %d\n", x.x);
 }
 // Check by pointer
 
-
 static void f1_ptr(struct type1 *x) {
 	printf("f1p x.x = %d\n", x->x);
 }
-
 
 static void f2_ptr(struct type2 *x) {
 	printf("f2p x.x = %d\n", x->x);
 }
 
-
 static void f3_ptr(Type3 *x) {
 	printf("f3p x.x = %d\n", x->x);
 }
-
 
 static void f4_ptr(struct __anonymous_struct_4 *x) {
 	printf("f4p x.x = %d\n", x->x);
@@ -87,13 +79,13 @@ static void test_by_value(void) {
 static void test_by_pointer(void) {
 	f1_ptr(&a);
 	f2_ptr((struct type2 *)&a);
-	f3_ptr((Type3 *)&a);
+	f3_ptr(&a);
 	f4_ptr((struct __anonymous_struct_4 *)&a);
 	f1_ptr((struct type1 *)&b);
 	f2_ptr(&b);
 	f3_ptr((Type3 *)&b);
 	f4_ptr((struct __anonymous_struct_4 *)&b);
-	f1_ptr((struct type1 *)&c);
+	f1_ptr(&c);
 	f2_ptr((struct type2 *)&c);
 	f3_ptr(&c);
 	f4_ptr((struct __anonymous_struct_4 *)&c);

@@ -12,11 +12,9 @@ static void f0(void) {
 	return;
 }
 
-
 static int32_t f1(int32_t x) {
 	return x;
 }
-
 
 static int32_t f2(int32_t a, int32_t b) {
 	return a + b;
@@ -29,7 +27,6 @@ static int32_t *f3(void) {
 static void f4(int32_t x, int32_t *__out) {
 	__builtin_memcpy(__out, &(int32_t [10]){1, 2, 3}, sizeof(int32_t [10]));
 }
-
 
 static void f5(int32_t *_a, int32_t *__out) {
 	int32_t a[32];
@@ -52,7 +49,6 @@ static void (*f8(void (*f)(void)))(void) {
 static void (**f9(void (*f)(void)))(void) {
 	return NULL;
 }
-
 
 static void (**f10(void (**f)(void)))(void) {
 	return f;
@@ -158,11 +154,9 @@ static int32_t arrr[3][3] = {
 };
 static void (*arry[3][3])(void);
 
-
 static int32_t add(int32_t a, int32_t b) {
 	return a + b;
 }
-
 
 static int32_t sub(int32_t a, int32_t b) {
 	return a - b;
@@ -172,12 +166,10 @@ static int32_t (*farr[2])(int32_t a, int32_t b) = {
 };
 typedef void He(void);
 
-
 __attribute__((used))
 static void he(He *x) {
 	(void)x;
 }
-
 
 static void hi(char *x) {
 	printf("Hi %s!\n", x);

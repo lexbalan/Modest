@@ -32,7 +32,6 @@ static struct test tests[3] = {
 	}
 };
 
-
 static bool runTest(struct test *test) {
 	const uint32_t crc = crc32_run((uint8_t *)test->data, test->len);
 	return crc == test->hash;

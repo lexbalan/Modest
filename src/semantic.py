@@ -73,7 +73,7 @@ builtinSymtab = None
 
 cmodule = None  # Current module
 csymtab = None  # current symtab (symtab)
-cdef = None
+cdef = None     # current definition
 cfunc = None	# current function
 
 
@@ -987,6 +987,7 @@ def do_value_deref(x):
 	is_vla = to.is_vla()
 	if is_type_func_ptr or is_free_ptr or is_type_unsized_array_ptr:# or is_vla:
 		error("cannot dereference the pointer", v.ti)
+		return ValueBad(x['ti'])
 
 	nv = ValueDeref(v, ti=x['ti'])
 	return nv
@@ -1634,11 +1635,15 @@ def do_value_rational(x):
 
 def do_value_sizeof_type(x):
 	t = do_type(x['type'])
+	if t.is_type_func():
+		error("sizeof(<#type_function#>) are forbidden", t.ti)
 	return ValueSizeofType(t, ti=x['ti'])
 
 
 def do_value_sizeof_value(x):
 	v = do_value(x['value'])
+	if v.type.is_type_func():
+		error("sizeof(<#value_function#>) are forbidden", v.ti)
 	return ValueSizeofValue(v, ti=x['ti'])
 
 
@@ -1794,13 +1799,12 @@ def do_value(x):
 #
 
 
-def do_stmt_const(x):
+def do_stmt_let(x):
 	global cfunc
 	if id_already_used(x['id']['str'], shallow=True):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	df = def_const_common(x)
 	df.parent = cfunc
-	df.value.parent = cfunc
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
 	return df
 
@@ -1827,6 +1831,9 @@ def do_stmt_var(x):
 
 	return df
 
+
+def do_stmt_const(x):
+	return do_stmt_let(x)
 
 
 def do_stmt_if(x):
@@ -2087,20 +2094,21 @@ def do_stmt(x):
 	k = x['kind']
 	if k == 'value': s = do_stmt_value(x)
 	elif k == 'assign': s = do_stmt_assign(x)
-	elif k == 'const': s = do_stmt_const(x)
+	elif k == 'let': s = do_stmt_let(x)
 	elif k == 'var': s = do_stmt_var(x)
 	elif k == 'block': s = do_stmt_block(x)
 	elif k == 'if': s = do_stmt_if(x)
 	elif k == 'while': s = do_stmt_while(x)
 	elif k == 'return': s = do_stmt_return(x)
+	elif k == 'comment-line': s = do_stmt_comment_line(x)
+	elif k == 'comment-block': s = do_stmt_comment_block(x)
 	elif k == 'again': s = do_stmt_again(x)
 	elif k == 'break': s = do_stmt_break(x)
 	elif k == 'inc': s = do_stmt_incdec(x, HLIR_VALUE_OP_ADD)
 	elif k == 'dec': s = do_stmt_incdec(x, HLIR_VALUE_OP_SUB)
 	elif k == 'type': s = do_stmt_type(x)
 	elif k == 'func': s = do_stmt_func(x)
-	elif k == 'comment-line': s = do_stmt_comment_line(x)
-	elif k == 'comment-block': s = do_stmt_comment_block(x)
+	elif k == 'const': s = do_stmt_const(x)
 	elif k == 'asm': s = do_stmt_asm(x)
 	else: s = StmtBad(x['ti'])
 
@@ -2378,7 +2386,6 @@ def def_const_global(x):
 
 	df = def_const_common(x)
 	df.parent = cmodule
-	df.value.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 	iv = df.init_value
@@ -2401,7 +2408,6 @@ def def_var_global(x):
 
 	df = def_var_common(x)
 	df.parent = cmodule
-	df.value.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 	df.value.is_initialized = True
 
@@ -2607,7 +2613,7 @@ def do_import(x):
 	is_include_form = x['is_include']
 
 	if m == None:
-		m = translate(abspath, is_include=is_include_form)
+		m = translate(abspath)
 		modules[abspath] = m
 
 		mid = impline.split("/")[-1]
@@ -2708,7 +2714,7 @@ def do_directive_pragma(x) -> StmtDirective | None:
 	return y
 
 
-def translate(abspath, is_include=False):
+def translate(abspath):
 	log("\"%s\":" % abspath)
 	log_push()
 	assert(abspath != None)
@@ -2727,7 +2733,7 @@ def translate(abspath, is_include=False):
 	m = None
 	if ast != None:
 		idStr = abspath.split('/')[-1][:-2]
-		m = process_module(idStr, abspath, ast, is_include=is_include)
+		m = process_module(idStr, abspath, ast)
 		#m.prefix = m.id
 		m.source_abspath = abspath
 
@@ -2740,7 +2746,7 @@ def translate(abspath, is_include=False):
 
 
 
-def process_module(idStr, sourcename, ast, is_include):
+def process_module(idStr, sourcename, ast):
 	global csymtab, cmodule, global_prefix
 
 	prev_symtab = csymtab
@@ -2786,8 +2792,8 @@ def process_module(idStr, sourcename, ast, is_include):
 		i += 1
 
 
-	def_phase1(ast, is_include=is_include)
-	def_phase2(ast, is_include=is_include)
+	def_phase1(ast)
+	def_phase2(ast)
 
 	m = cmodule
 
@@ -2852,7 +2858,7 @@ def get_access_level(x):
 
 
 
-def deccl_func(x, is_include=False):
+def deccl_func(x):
 	if id_already_used(x['id']['str'], shallow=True):
 		exist = csymtab.value_get(x['id']['str'])
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
@@ -2870,9 +2876,6 @@ def deccl_func(x, is_include=False):
 	definition.nl = x['nl']
 	v.definition = definition
 
-	if not is_include:
-		v.parent = cmodule
-
 	is_public = get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC
 	csymtab.value_add(x['id']['str'], v, is_public=is_public)
 	v.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
@@ -2881,7 +2884,7 @@ def deccl_func(x, is_include=False):
 
 
 
-def def_phase1(ast, is_include=False):
+def def_phase1(ast):
 	global csymtab, cmodule
 
 	# 1. Проходим по всем типам, создаем их undefined "прототипы".
@@ -2897,15 +2900,14 @@ def def_phase1(ast, is_include=False):
 
 			if kind == 'type':
 				t = Type(x['ti'])  # Incomplete type (!)
-				if not is_include:
-					t.parent = cmodule
+				t.parent = cmodule
 
 				csymtab.type_add(id['str'], t, is_public=is_public)
 
 				t.is_global_type = True
 
 			elif kind == 'func':
-				deccl_func(x, is_include)
+				deccl_func(x)
 
 
 		if isa == 'ast_directive':
@@ -2917,7 +2919,7 @@ def def_phase1(ast, is_include=False):
 
 
 
-def def_phase2(ast, is_include=False):
+def def_phase2(ast):
 	global global_prefix
 	# Идем по всем элементам с самого начала и определяем их.
 	# Если элемент использует undefined - заносим его в список зависимостей эл-та
@@ -2947,8 +2949,7 @@ def def_phase2(ast, is_include=False):
 				if 'comment' in x and x['comment'] != None:
 					df.comment = do_stmt_comment(x['comment'])
 
-				if not is_include:
-					df.parent = cmodule
+				df.parent = cmodule
 
 				cmodule.defs.append(df)
 

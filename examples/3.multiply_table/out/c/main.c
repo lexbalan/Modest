@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-
 static void mtab(uint32_t n) {
 	uint32_t m = 1;
 	while (m < 10) {

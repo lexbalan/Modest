@@ -7,3 +7,4 @@ include "libc/stdio"
 func main () -> Int {
 	return 0
 }
+

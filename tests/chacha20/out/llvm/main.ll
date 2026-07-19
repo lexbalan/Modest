@@ -2522,43 +2522,41 @@ define %Int @main() {
 	%4 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %3)
 	store %Context %4, %Context* %2
 	%5 = bitcast [1024 x %Char8]* @xlorem1024 to [0 x %Byte]*
-	%6 = bitcast %Context* %2 to %Context*
-	call void @cipher(%Context* %6, [0 x %Byte]* %5, %Nat32 1024)
-	%7 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %7
-	%8 = alloca %Context, align 8
-	%9 = load [3 x %Word32], [3 x %Word32]* @testNonce2
-	%10 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %9)
-	store %Context %10, %Context* %8
-	%11 = bitcast %Context* %8 to %Context*
-	call void @cipher(%Context* %11, [0 x %Byte]* %5, %Nat32 1024)
-	store %Int32 0, %Int32* %7
+	call void @cipher(%Context* %2, [0 x %Byte]* %5, %Nat32 1024)
+	%6 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %6
+	%7 = alloca %Context, align 8
+	%8 = load [3 x %Word32], [3 x %Word32]* @testNonce2
+	%9 = call %Context @init([32 x %Byte]* @testKey, [3 x %Word32] %8)
+	store %Context %9, %Context* %7
+	call void @cipher(%Context* %7, [0 x %Byte]* %5, %Nat32 1024)
+	store %Int32 0, %Int32* %6
 ; while_1
 	br label %again_1
 again_1:
-	%12 = load %Int32, %Int32* %7
-	%13 = icmp slt %Int32 %12, 1024
-	br %Bool %13 , label %body_1, label %break_1
+	%10 = load %Int32, %Int32* %6
+	%11 = icmp slt %Int32 %10, 1024
+	br %Bool %11 , label %body_1, label %break_1
 body_1:
-	%14 = load %Int32, %Int32* %7
-	%15 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %14
-	%16 = load %Char8, %Char8* %15
-	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str2 to [0 x i8]*), %Char8 %16)
-	%18 = load %Int32, %Int32* %7
-	%19 = add %Int32 %18, 1
-	store %Int32 %19, %Int32* %7
+	%12 = load %Int32, %Int32* %6
+	%13 = getelementptr [1024 x %Char8], [1024 x %Char8]* @xlorem1024, %Int32 0, %Int32 %12
+	%14 = load %Char8, %Char8* %13
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @.str2 to [0 x i8]*), %Char8 %14)
+	%16 = load %Int32, %Int32* %6
+	%17 = add %Int32 %16, 1
+	store %Int32 %17, %Int32* %6
 	br label %again_1
 break_1:
 ; if_0
-	%20 = call %Bool @test0()
-	%21 = xor %Bool %20, 1
-	br %Bool %21 , label %then_0, label %endif_0
+	%18 = call %Bool @test0()
+	%19 = xor %Bool %18, 1
+	br %Bool %19 , label %then_0, label %endif_0
 then_0:
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @.str3 to [0 x i8]*))
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @.str3 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @.str4 to [0 x i8]*))
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @.str4 to [0 x i8]*))
 	ret %Int 0
 }
 

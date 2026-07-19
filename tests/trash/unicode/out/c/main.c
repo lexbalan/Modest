@@ -61,31 +61,25 @@ int32_t main(void) {
 	return 0;
 }
 
-
 static void putc8(char c) {
 	(void)c;
 }
-
 
 static void putc16(char16_t c) {
 	(void)c;
 }
 
-
 static void putc32(char32_t c) {
 	(void)c;
 }
-
 
 static void puts8(char *s) {
 	(void)s;
 }
 
-
 static void puts16(char16_t *s) {
 	(void)s;
 }
-
 
 static void puts32(char32_t *s) {
 	(void)s;

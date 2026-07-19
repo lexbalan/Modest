@@ -295,9 +295,8 @@ else_2:
 	%16 = icmp eq %fsm_StageId %14, %15
 	br %Bool %16 , label %then_3, label %endif_3
 then_3:
-	%17 = bitcast %fsm_StateDesc* @state1 to %fsm_StateDesc*
-	%18 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @fsm0, %fsm_StateDesc* %17)
-	ret %fsm_ComplexState %18
+	%17 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @fsm0, %fsm_StateDesc* @state1)
+	ret %fsm_ComplexState %17
 	br label %endif_3
 endif_3:
 	br label %endif_2
@@ -344,9 +343,8 @@ else_2:
 	%16 = icmp eq %fsm_StageId %14, %15
 	br %Bool %16 , label %then_3, label %endif_3
 then_3:
-	%17 = bitcast %fsm_StateDesc* @state2 to %fsm_StateDesc*
-	%18 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @fsm0, %fsm_StateDesc* %17)
-	ret %fsm_ComplexState %18
+	%17 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @fsm0, %fsm_StateDesc* @state2)
+	ret %fsm_ComplexState %17
 	br label %endif_3
 endif_3:
 	br label %endif_2
@@ -393,9 +391,8 @@ else_2:
 	%16 = icmp eq %fsm_StageId %14, %15
 	br %Bool %16 , label %then_3, label %endif_3
 then_3:
-	%17 = bitcast %fsm_StateDesc* @state0 to %fsm_StateDesc*
-	%18 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @fsm0, %fsm_StateDesc* %17)
-	ret %fsm_ComplexState %18
+	%17 = call %fsm_ComplexState @fsm_cmdSwitchState(%fsm_FSM* @fsm0, %fsm_StateDesc* @state0)
+	ret %fsm_ComplexState %17
 	br label %endif_3
 endif_3:
 	br label %endif_2
@@ -409,25 +406,24 @@ endif_0:
 
 @timecnt = internal global %Nat32 zeroinitializer
 define %Int @main() {
-	%1 = bitcast %fsm_StateDesc* @state0 to %fsm_StateDesc*
-	call void @fsm_init(%fsm_FSM* @fsm0, %Str8* bitcast ([6 x i8]* @.str4 to [0 x i8]*), %fsm_StateDesc* %1, i8* null)
+	call void @fsm_init(%fsm_FSM* @fsm0, %Str8* bitcast ([6 x i8]* @.str4 to [0 x i8]*), %fsm_StateDesc* @state0, i8* null)
 ; while_1
 	br label %again_1
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 ; if_0
-	%2 = load %Nat32, %Nat32* @timecnt
-	%3 = icmp ugt %Nat32 %2, 55555
-	br %Bool %3 , label %then_0, label %else_0
+	%1 = load %Nat32, %Nat32* @timecnt
+	%2 = icmp ugt %Nat32 %1, 55555
+	br %Bool %2 , label %then_0, label %else_0
 then_0:
 	store %Nat32 0, %Nat32* @timecnt
 	call void @fsm_tick(%fsm_FSM* @fsm0)
 	br label %endif_0
 else_0:
-	%4 = load %Nat32, %Nat32* @timecnt
-	%5 = add %Nat32 %4, 1
-	store %Nat32 %5, %Nat32* @timecnt
+	%3 = load %Nat32, %Nat32* @timecnt
+	%4 = add %Nat32 %3, 1
+	store %Nat32 %4, %Nat32* @timecnt
 	br label %endif_0
 endif_0:
 	call void @fsm_task(%fsm_FSM* @fsm0)

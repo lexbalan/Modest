@@ -48,7 +48,6 @@ func handleRequest (clientSocket: Int32) -> Unit {
 	sprintf(&response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>"
 		httpHeader, pageCounter
 	)
-
 	write(clientSocket, &response, strlen(&response))
 	close(clientSocket)
 }

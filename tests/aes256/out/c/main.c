@@ -81,7 +81,6 @@ static struct test_case tests[8] = {
 	}
 };
 
-
 static bool runTest(struct test_case *test) {
 	aes256_Context ctx;
 	aes256_init(&ctx, test->key);

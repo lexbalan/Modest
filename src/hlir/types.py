@@ -166,7 +166,6 @@ class Entity():
 		assert((ti == None) or isinstance(ti, TextInfo))
 		self.ti = ti
 		self.attributes = {}
-		self.parent = None
 
 
 	def hasAttribute(self, attribute):
@@ -2034,8 +2033,7 @@ class Value(Entity):
 
 
 	def isValueGlobal(self):
-		parent = self.parent
-		return isinstance(parent, Module) or parent is None
+		return self.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 
 	def copy(self):

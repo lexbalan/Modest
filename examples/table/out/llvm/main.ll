@@ -371,21 +371,16 @@ declare void @table_print(%table_Table* %table)
 	%Bool 1
 }
 define %Int32 @main() {
-	%1 = bitcast %table_Table* @table00 to %table_Table*
-	call void @table_print(%table_Table* %1)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str33 to [0 x i8]*))
-	%3 = bitcast %table_Table* @table01 to %table_Table*
-	call void @table_print(%table_Table* %3)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str34 to [0 x i8]*))
-	%5 = bitcast %table_Table* @table02 to %table_Table*
-	call void @table_print(%table_Table* %5)
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str35 to [0 x i8]*))
-	%7 = bitcast %table_Table* @table03 to %table_Table*
-	call void @table_print(%table_Table* %7)
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str36 to [0 x i8]*))
-	%9 = bitcast %table_Table* @table10 to %table_Table*
-	call void @table_print(%table_Table* %9)
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str37 to [0 x i8]*))
+	call void @table_print(%table_Table* @table00)
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str33 to [0 x i8]*))
+	call void @table_print(%table_Table* @table01)
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str34 to [0 x i8]*))
+	call void @table_print(%table_Table* @table02)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str35 to [0 x i8]*))
+	call void @table_print(%table_Table* @table03)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str36 to [0 x i8]*))
+	call void @table_print(%table_Table* @table10)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str37 to [0 x i8]*))
 	ret %Int32 0
 }
 

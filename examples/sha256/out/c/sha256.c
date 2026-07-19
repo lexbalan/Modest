@@ -15,42 +15,35 @@ struct context {
 //	return (a << b) | (a >> (32 - b))
 //}
 
-
 __attribute__((always_inline))
 static inline uint32_t rotright(uint32_t a, uint32_t b) {
 	return a >> b | a << (32 - b);
 }
-
 
 __attribute__((always_inline))
 static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (~x & z);
 }
 
-
 __attribute__((always_inline))
 static inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z) {
 	return (x & y) ^ (x & z) ^ (y & z);
 }
-
 
 __attribute__((always_inline))
 static inline uint32_t ep0(uint32_t x) {
 	return rotright(x, 2) ^ rotright(x, 13) ^ rotright(x, 22);
 }
 
-
 __attribute__((always_inline))
 static inline uint32_t ep1(uint32_t x) {
 	return rotright(x, 6) ^ rotright(x, 11) ^ rotright(x, 25);
 }
 
-
 __attribute__((always_inline))
 static inline uint32_t sig0(uint32_t x) {
 	return rotright(x, 7) ^ rotright(x, 18) ^ x >> 3;
 }
-
 
 __attribute__((always_inline))
 static inline uint32_t sig1(uint32_t x) {
@@ -83,7 +76,6 @@ static void contextInit(struct context *ctx) {
 	0x748F82EE, 0x78A5636F, 0x84C87814UL, 0x8CC70208UL, \
 	0x90BEFFFAUL, 0xA4506CEBUL, 0xBEF9A3F7UL, 0xC67178F2UL \
 }
-
 
 static void transform(struct context *ctx, uint8_t *data) {
 	uint32_t m[64] = {0};
@@ -122,7 +114,6 @@ static void transform(struct context *ctx, uint8_t *data) {
 	}
 }
 
-
 static void update(struct context *ctx, uint8_t *msg, uint32_t msgLen) {
 	uint32_t i = 0;
 	while (i < msgLen) {
@@ -136,7 +127,6 @@ static void update(struct context *ctx, uint8_t *msg, uint32_t msgLen) {
 		++i;
 	}
 }
-
 
 static void final(struct context *ctx, uint8_t *outHash) {
 	uint32_t i = ctx->datalen;
@@ -175,7 +165,6 @@ static void final(struct context *ctx, uint8_t *outHash) {
 		++i;
 	}
 }
-
 
 void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash) {
 	struct context ctx = (struct context){0};
