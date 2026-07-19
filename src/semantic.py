@@ -2613,7 +2613,7 @@ def do_import(x):
 	is_include_form = x['is_include']
 
 	if m == None:
-		m = translate(abspath, is_include=is_include_form)
+		m = translate(abspath)
 		modules[abspath] = m
 
 		mid = impline.split("/")[-1]
@@ -2714,7 +2714,7 @@ def do_directive_pragma(x) -> StmtDirective | None:
 	return y
 
 
-def translate(abspath, is_include=False):
+def translate(abspath):
 	log("\"%s\":" % abspath)
 	log_push()
 	assert(abspath != None)
@@ -2733,7 +2733,7 @@ def translate(abspath, is_include=False):
 	m = None
 	if ast != None:
 		idStr = abspath.split('/')[-1][:-2]
-		m = process_module(idStr, abspath, ast, is_include=is_include)
+		m = process_module(idStr, abspath, ast)
 		#m.prefix = m.id
 		m.source_abspath = abspath
 
@@ -2746,7 +2746,7 @@ def translate(abspath, is_include=False):
 
 
 
-def process_module(idStr, sourcename, ast, is_include):
+def process_module(idStr, sourcename, ast):
 	global csymtab, cmodule, global_prefix
 
 	prev_symtab = csymtab
@@ -2792,8 +2792,8 @@ def process_module(idStr, sourcename, ast, is_include):
 		i += 1
 
 
-	def_phase1(ast, is_include=is_include)
-	def_phase2(ast, is_include=is_include)
+	def_phase1(ast)
+	def_phase2(ast)
 
 	m = cmodule
 
@@ -2858,7 +2858,7 @@ def get_access_level(x):
 
 
 
-def deccl_func(x, is_include=False):
+def deccl_func(x):
 	if id_already_used(x['id']['str'], shallow=True):
 		exist = csymtab.value_get(x['id']['str'])
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
@@ -2884,7 +2884,7 @@ def deccl_func(x, is_include=False):
 
 
 
-def def_phase1(ast, is_include=False):
+def def_phase1(ast):
 	global csymtab, cmodule
 
 	# 1. Проходим по всем типам, создаем их undefined "прототипы".
@@ -2900,7 +2900,6 @@ def def_phase1(ast, is_include=False):
 
 			if kind == 'type':
 				t = Type(x['ti'])  # Incomplete type (!)
-				#if not is_include:
 				t.parent = cmodule
 
 				csymtab.type_add(id['str'], t, is_public=is_public)
@@ -2908,7 +2907,7 @@ def def_phase1(ast, is_include=False):
 				t.is_global_type = True
 
 			elif kind == 'func':
-				deccl_func(x, is_include)
+				deccl_func(x)
 
 
 		if isa == 'ast_directive':
@@ -2920,7 +2919,7 @@ def def_phase1(ast, is_include=False):
 
 
 
-def def_phase2(ast, is_include=False):
+def def_phase2(ast):
 	global global_prefix
 	# Идем по всем элементам с самого начала и определяем их.
 	# Если элемент использует undefined - заносим его в список зависимостей эл-та
@@ -2950,7 +2949,6 @@ def def_phase2(ast, is_include=False):
 				if 'comment' in x and x['comment'] != None:
 					df.comment = do_stmt_comment(x['comment'])
 
-				#if not is_include:
 				df.parent = cmodule
 
 				cmodule.defs.append(df)
