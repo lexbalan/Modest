@@ -103,7 +103,7 @@ func printRow (raw_row: *[]*Str8, sz: *[]Nat32, nCols: Nat32) -> Unit {
 		printf("|")
 		let s = row[j]
 		var len = unsafe Nat32 strlen(s)
-		if s[0] != "\0" {
+		if s[0] != "\x00" {
 			len = len + 1
 			printf(" %s", s)
 		}

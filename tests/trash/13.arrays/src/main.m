@@ -44,7 +44,7 @@ func f0(x: [20]Char8) -> [30]Char8 {
 
 	// truncate array
 	var mic: [6]Char8 = x[0:6]
-	mic[5] = '\x0'
+	mic[5] = '\x00'
 
 	printf("f0 mic = \"%s\"\n", &mic)
 
@@ -60,7 +60,7 @@ func f0(x: [20]Char8) -> [30]Char8 {
 	res[10] = 's'
 	res[11] = 't'
 	res[12] = '!'
-	res[13] = '\0'
+	res[13] = '\x00'
 	return res
 }
 

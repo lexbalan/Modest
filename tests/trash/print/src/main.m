@@ -16,9 +16,9 @@ func main () -> Int {
 	let x = Nat32 0x1234567F
 
 	console.print("\\\n")           // "\\" = "\"
-	console.print("\64\n")          // "\64" = "@"
+	console.print("\x40\n")         // "\x40" = "@"
 	console.print("\x23AA\x23\n")   // "\x23AA\x23" = "#AA#"
-	console.print("\u0001F389A\n")  // "\u0001F389A" = "🎉A"
+	console.print("\u{1F389}A\n")   // "\u{1F389}A" = "🎉A"
 
 	console.print("Это строка записанная кириллицей.\n")
 

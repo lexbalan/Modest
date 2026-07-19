@@ -117,7 +117,7 @@ func next () -> Unit {
 		tokenType = tokenTypeEof
 	}
 
-	token[n] = '\0'
+	token[n] = '\x00'
 	tokenLen = n
 }
 

@@ -15,8 +15,8 @@ func main() -> Int32 {
 	while true {
 		printf("%s", *Str8 &prompt)
 		fgets(&buffer, sizeof(buffer), stdin)
-		// convert first '\n' -> '\0'
-		buffer[strcspn(s, "\n")] = '\0'
+		// convert first '\n' -> '\x00'
+		buffer[strcspn(s, "\n")] = '\x00'
 
 		if *s == 'exit' {
 			break

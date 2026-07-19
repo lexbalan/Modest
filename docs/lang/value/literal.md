@@ -22,10 +22,18 @@ type at the use site.
   groups; a leading `0` is still decimal — there are no octal literals.
 - Rational: requires digits on both sides of the dot (`0.5`, not `.5`).
 - String: double or single quotes are equivalent; `\` escapes the next
-  character (`\n`, `\"`, `\\`). The value is a `[N]CharX` array
-  containing exactly the characters written (see
-  [array](../type/array.md)). Indexing a string literal yields a generic
-  char: `"A"[0]`.
+  character. The value is a `[N]CharX` array containing exactly the
+  characters written (see [array](../type/array.md)). Indexing a string
+  literal yields a generic char: `"A"[0]`.
+- Escapes: `\n`, `\t`, `\r`, `\a`, `\b`, `\f`, `\v`, `\"`, `\'`, `\\` denote
+  single control/quote characters; `\xHH` consumes exactly two hex
+  digits and denotes one byte (`\x0` is an error — pad to two; a third
+  digit is just the next character, so `\x410` is `"A"` followed by
+  `"0"`); and `\u{H...H}` denotes a Unicode code point from one to six
+  hex digits (must be ≤ `10FFFF`), encoded as UTF-8 (`\u{41}` = `"A"`,
+  `\u{1F389}` = 🎉). There is no bare decimal byte escape (`\NNN`) — it
+  read a greedy run of digits with no fixed width, so `\6` followed by a
+  literal `5` was indistinguishable from `\65`; use `\xHH` instead.
 - Strings (and comments) may contain any Unicode text — the only places
   it is allowed; [identifiers](../identifier.md) are ASCII.
 - A char value is a length-1 string converted to `CharX` — implicitly
@@ -41,6 +49,7 @@ type at the use site.
 var x: Nat32 = 0x2A          // 42
 var f: Float64 = 3.14
 var s: *Str8 = "Hello!\n"    // string handled through pointer
+var e: *Str8 = "\x48\x69\u{21}"  // "Hi!"
 var c: Char8 = "A"
 var a: [3]Int32 = [1, 2, 3]
 var p: *Int32 = nil

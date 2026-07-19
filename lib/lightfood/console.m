@@ -34,7 +34,7 @@ public func putchar_utf8 (c: Char8) -> Unit {
 
 
 public func putchar_utf16 (c: Char16) -> Unit {
-	var cc: [2]Char16 = [c, Char16 '\0']
+	var cc: [2]Char16 = [c, Char16 '\x00']
 	var char32: Char32
 	let n = utf.utf16_to_utf32(&cc, &char32)
 	putchar_utf32(char32)
@@ -63,7 +63,7 @@ public func puts8 (s: *Str8) -> Unit {
 	var i: Nat32 = 0
 	while true {
 		let c = s[i]
-		if c == '\0' {
+		if c == '\x00' {
 			break
 		}
 		putchar_utf8(c)
@@ -79,7 +79,7 @@ public func puts16 (s: *Str16) -> Unit {
 		// тк в строке может быть суррогатная пара UTF_16 символов
 
 		let cc16 = s[i]
-		if cc16 == '\0' {
+		if cc16 == '\x00' {
 			break
 		}
 
@@ -100,7 +100,7 @@ public func puts32 (s: *Str32) -> Unit {
 	var i: Nat32 = 0
 	while true {
 		let c = s[i]
-		if c == '\0' {
+		if c == '\x00' {
 			break
 		}
 		putchar_utf32(c)
@@ -122,7 +122,7 @@ public func print (form: *Str8, ...) -> Unit {
 public func vfprint (fd: Int32, form: *Str8, va: __VA_List) -> @unused Int32 {
 	var strbuf: [256]Char8
 	let n = vsprint(&strbuf, form, va)
-	strbuf[n] = '\x0'
+	strbuf[n] = '\x00'
 	write(fd, &strbuf, SizeT n)
 	return n
 }
@@ -135,7 +135,7 @@ public func vsprint (buf: *[]Char8, form: *Str8, va: __VA_List) -> @unused Int32
 	while true {
 		var c = form[i]
 
-		if c == "\0" {
+		if c == "\x00" {
 			break
 		}
 
@@ -260,7 +260,7 @@ func sprint_hex_nat32 (buf: *[]Char8, x: Nat32) -> Int32 {
 		++j
 	}
 
-	buf[j] = "\0"
+	buf[j] = "\x00"
 
 	return j
 }
@@ -300,7 +300,7 @@ func sprint_dec_int32 (buf: *[]Char8, x: Int32) -> Int32 {
 		++j
 	}
 
-	buf[j] = "\0"
+	buf[j] = "\x00"
 
 	return j
 }
@@ -329,7 +329,7 @@ func sprint_dec_n32 (buf: *[]Char8, x: Nat32) -> Int32 {
 		++j
 	}
 
-	buf[j] = "\0"
+	buf[j] = "\x00"
 
 	return j
 }
