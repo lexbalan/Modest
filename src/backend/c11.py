@@ -43,6 +43,7 @@ module_undef_list = []
 cfunc = None
 
 
+# print pointer to array as a pointer to array item (C array decay)
 POINTER_TO_ARRAY_RELAX = True
 
 
