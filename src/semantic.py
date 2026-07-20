@@ -405,6 +405,9 @@ def do_field(x):
 	if field_type.is_forbidden_field():
 		error("unsuitable type", x['ti'])
 
+	if init_value.isValueUndef():
+		init_value = field_type.get_default_value(ti=id.ti)
+
 	f = Field(id, field_type, init_value=init_value, access_level = x['access_modifier'], ti=x['ti'])
 	f.add_atts(x['anno'])
 	f.nl = x['nl']
