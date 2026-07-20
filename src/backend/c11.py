@@ -1863,7 +1863,8 @@ def do_def_const(x):
 
 	if x.init_value.isValueCons() and x.init_value.method != 'explicit':
 		if x.init_value.value.type.is_generic() and not x.init_value.type.is_type_array():
-			iv = CValueCast(do_ctype(x.value.type), iv)
+			if not isinstance(iv, CValueCast):
+				iv = CValueCast(do_ctype(x.value.type), iv)
 
 #	if not isinstance(iv, CValueCast):
 #		if not x.init_value.type.is_generic() and not x.init_value.type.is_type_array():
