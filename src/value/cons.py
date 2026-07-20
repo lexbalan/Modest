@@ -1,20 +1,20 @@
 
 from hlir import *
 from error import info, warning, error
-from .bool import bool_can, value_bool_cons
-from .integer import integer_can, value_integer_cons
-from .rational import rational_can, value_rational_cons
-from .word import word_can, value_word_cons
-from .char import char_can, value_char_cons
-from .int import int_can, value_int_cons
-from .nat import nat_can, value_nat_cons
-from .float import float_can, value_float_cons
-from .fixed import fixed_can, value_fixed_cons
-from .record import record_can, value_record_cons
-from .array import array_can, value_array_cons
-from .pointer import pointer_can, value_pointer_cons
-from .variant import variant_can, value_variant_cons
-from .bad import bad_can, value_bad_cons
+from .bool import value_bool_can, value_bool_cons
+from .integer import value_integer_can, value_integer_cons
+from .rational import value_rational_can, value_rational_cons
+from .word import value_word_can, value_word_cons
+from .char import value_char_can, value_char_cons
+from .int import value_int_can, value_int_cons
+from .nat import value_nat_can, value_nat_cons
+from .float import value_float_can, value_float_cons
+from .fixed import value_fixed_can, value_fixed_cons
+from .record import value_record_can, value_record_cons
+from .array import value_array_can, value_array_cons
+from .pointer import value_pointer_can, value_pointer_cons
+from .variant import value_variant_can, value_variant_cons
+from .bad import value_bad_can, value_bad_cons
 
 from util import align_bits_up
 
@@ -49,20 +49,20 @@ def cons_can(to, from_type, method, ti):
 			method = 'unsafe'
 
 	checker = None
-	if to.is_type_integer(): checker = integer_can
-	elif to.is_type_rational(): checker = rational_can
-	elif to.is_type_int(): checker = int_can
-	elif to.is_type_nat(): checker = nat_can
-	elif to.is_type_bool(): checker = bool_can
-	elif to.is_type_word(): checker = word_can
-	elif to.is_type_record(): checker = record_can
-	elif to.is_type_pointer(): checker = pointer_can
-	elif to.is_type_array(): checker = array_can
-	elif to.is_type_float(): checker = float_can
-	elif to.is_type_fixed(): checker = fixed_can
-	elif to.is_type_char(): checker = char_can
-	elif to.is_type_variant(): checker = variant_can
-	elif to.is_bad(): checker = bad_can
+	if to.is_type_integer(): checker = value_integer_can
+	elif to.is_type_rational(): checker = value_rational_can
+	elif to.is_type_int(): checker = value_int_can
+	elif to.is_type_nat(): checker = value_nat_can
+	elif to.is_type_bool(): checker = value_bool_can
+	elif to.is_type_word(): checker = value_word_can
+	elif to.is_type_record(): checker = value_record_can
+	elif to.is_type_pointer(): checker = value_pointer_can
+	elif to.is_type_array(): checker = value_array_can
+	elif to.is_type_float(): checker = value_float_can
+	elif to.is_type_fixed(): checker = value_fixed_can
+	elif to.is_type_char(): checker = value_char_can
+	elif to.is_type_variant(): checker = value_variant_can
+	elif to.is_bad(): checker = value_bad_can
 	else:
 		print(to.is_type_pointer())
 		info(str(to), to.ti)

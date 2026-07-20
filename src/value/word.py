@@ -13,7 +13,7 @@ def value_word_create(num, ti=None):
 	return v
 
 
-def word_can(to, from_type, method, ti):
+def value_word_can(to, from_type, method, ti):
 	if from_type.is_type_integer():
 		return from_type.width <= to.width
 

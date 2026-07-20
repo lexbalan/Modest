@@ -6,7 +6,7 @@ from util import nbits_for_num
 
 
 
-def nat_can(to, from_type, method, ti):
+def value_nat_can(to, from_type, method, ti):
 	if from_type.is_type_integer():
 		return True
 #		return from_type.width <= to.width

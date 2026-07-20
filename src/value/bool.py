@@ -7,7 +7,7 @@ def value_bool_create(val, ti=None):
 	return ValueLiteral(typeBool, val, ti)
 
 
-def bool_can(to, from_type, method, ti):
+def value_bool_can(to, from_type, method, ti):
 	#info("bool_can", ti)
 	return from_type.is_type_bool()
 

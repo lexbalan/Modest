@@ -13,7 +13,7 @@ def array_can2(a, b):
 	return Type.eq(a, b)
 
 
-def pointer_can(to, from_type, method, ti):
+def value_pointer_can(to, from_type, method, ti):
 	assert(to.is_type_pointer())
 
 	# implicit region

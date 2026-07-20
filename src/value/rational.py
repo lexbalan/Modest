@@ -13,7 +13,7 @@ def value_rational_create(x, ti=None):
 	return v
 
 
-def rational_can(to, from_type, method, ti):
+def value_rational_can(to, from_type, method, ti):
 	return from_type.is_type_integer() or from_type.is_type_rational()
 
 

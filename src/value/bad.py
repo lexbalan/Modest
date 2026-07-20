@@ -3,7 +3,7 @@ from hlir import *
 from error import error
 
 
-def bad_can(to, from_type, method, ti):
+def value_bad_can(to, from_type, method, ti):
 	return True
 
 

@@ -41,7 +41,7 @@ def value_record_create(initializers, ti):
 
 
 
-def record_can(to, from_type, method, ti):
+def value_record_can(to, from_type, method, ti):
 	if to.is_type_unit():
 		return (from_type.is_type_unit()) or method != 'implicit'
 

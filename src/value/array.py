@@ -36,7 +36,7 @@ def value_array_create(items, ti):
 
 
 # TODO: see select_common_type!
-def array_can(to, from_type, method, ti):
+def value_array_can(to, from_type, method, ti):
 	# String -> []CharX
 	if from_type.is_type_string():
 		return to.of.is_type_char() or to.of.is_type_word()
