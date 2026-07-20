@@ -252,6 +252,7 @@ class Module:
 		imp = self.imports.get(id_str)
 		if imp == None and with_private:
 			imp = self.imports.get(id_str)
+		imp.usecnt += 1
 		return imp
 
 
@@ -429,6 +430,7 @@ class StmtImport(Stmt):
 		self.include = include
 		self.module = module
 		self.name = name
+		self.usecnt = 0
 
 
 
