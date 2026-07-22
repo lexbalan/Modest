@@ -12,6 +12,8 @@ include "libc/stdlib"
 
 type Point = {x: Int32, y: Int32}
 type Point3D = {x: Int32, y: Int32, z: Int32}
+type Rect = {topLeft: Point, bottomRight: Point}
+type Poly3 = {verts: [3]Point, count: Int32}
 
 type Color = @branded Nat8
 const colorRed   = Color 0
@@ -210,6 +212,151 @@ public func testRecordConst () -> Bool {
 
 
 
+// records nest: a generic record field adapts recursively to the
+// concrete field type, including recursive zero-fill on omitted fields
+const rectConst = {topLeft = {x = 0, y = 0}, bottomRight = {x = 10, y = 20}}
+const rectPartial = {topLeft = {x = 1, y = 1}}
+const rectZero: Rect = {}
+
+public func testNestedRecordConst () -> Bool {
+	var r: Rect = rectConst
+	if r.topLeft.x != 0 or r.topLeft.y != 0 or r.bottomRight.x != 10 or r.bottomRight.y != 20 {
+		printf("error: rectConst mismatch\n")
+		return false
+	}
+
+	var rp: Rect = rectPartial
+	if rp.topLeft.x != 1 or rp.topLeft.y != 1 {
+		printf("error: rectPartial.topLeft mismatch\n")
+		return false
+	}
+	if rp.bottomRight.x != 0 or rp.bottomRight.y != 0 {
+		printf("error: rectPartial.bottomRight not zero-filled\n")
+		return false
+	}
+
+	// KNOWN BUG: accessing a nested field directly on the immediate constant
+	// (`rectZero.topLeft.x`, no intermediate var) crashes the compiler
+	// (AttributeError: 'NoneType' object has no attribute 'value',
+	// semantic.py acc():1480) — the recursive zero-fill of `{}` only
+	// records a flat asset for the outer record, so get_item_by_id() can't
+	// resolve a field inside an already-folded nested field. Routing
+	// through a var (as below) takes the runtime access path and avoids it.
+	var rz: Rect = rectZero
+	if rz.topLeft.x != 0 or rz.topLeft.y != 0 or rz.bottomRight.x != 0 or rz.bottomRight.y != 0 {
+		printf("error: rectZero not all zero\n")
+		return false
+	}
+
+	printf("passed: nested record const test\n")
+	return true
+}
+
+
+
+// arrays nest too: a generic array of generic arrays adapts to a fixed
+// matrix type, with whole missing rows zero-filled
+const matrix = [[1, 2, 3], [4, 5, 6]]
+
+public func testNestedArrayConst () -> Bool {
+	var m: [2][3]Int32 = matrix
+	if m[0][0] != 1 or m[0][2] != 3 or m[1][0] != 4 or m[1][2] != 6 {
+		printf("error: matrix mismatch\n")
+		return false
+	}
+
+	var wider: [3][3]Int32 = [3][3]Int32 matrix
+	if wider[0] != [1, 2, 3] or wider[1] != [4, 5, 6] {
+		printf("error: wider head mismatch\n")
+		return false
+	}
+	// KNOWN BUG: comparing an array value against an all-zero array literal
+	// (`wider[2] != [0, 0, 0]`) crashes the LLVM backend — the zero literal
+	// lowers straight to a `zeroinitializer` constant, and the equality
+	// codegen bitcasts it to i8* for memcmp without ever storing it to an
+	// addressable alloca first ("invalid cast opcode for cast from
+	// '[3 x i32]' to 'ptr'"). Elementwise comparison avoids the codegen
+	// path entirely.
+	if wider[2][0] != 0 or wider[2][1] != 0 or wider[2][2] != 0 {
+		printf("error: wider extra row not zero-filled\n")
+		return false
+	}
+
+	var mz: [2][3]Int32 = []
+	if mz[0][0] != 0 or mz[0][1] != 0 or mz[0][2] != 0 {
+		printf("error: mz row 0 not all zero\n")
+		return false
+	}
+	if mz[1][0] != 0 or mz[1][1] != 0 or mz[1][2] != 0 {
+		printf("error: mz row 1 not all zero\n")
+		return false
+	}
+
+	printf("passed: nested array const test\n")
+	return true
+}
+
+
+
+// an array of records: each element adapts independently, including
+// zero-filled record elements in the tail of a longer array
+const points = [{x = 1, y = 1}, {x = 2, y = 2}, {x = 3, y = 3}]
+
+public func testArrayOfRecordsConst () -> Bool {
+	var arr: [3]Point = points
+	if arr[0].x != 1 or arr[0].y != 1 or arr[2].x != 3 or arr[2].y != 3 {
+		printf("error: points mismatch\n")
+		return false
+	}
+
+	var longer: [5]Point = [5]Point points
+	if longer[2].x != 3 or longer[2].y != 3 {
+		printf("error: longer head mismatch\n")
+		return false
+	}
+	if longer[3].x != 0 or longer[3].y != 0 or longer[4].x != 0 or longer[4].y != 0 {
+		printf("error: longer tail records not zero-filled\n")
+		return false
+	}
+
+	printf("passed: array of records const test\n")
+	return true
+}
+
+
+
+// a record with an array field: the field adapts as a nested array,
+// zero-filled (element by element) when the whole field is omitted
+const triangle = {verts = [{x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}], count = 3}
+const polyPartial = {count = 1}
+
+public func testRecordWithArrayFieldConst () -> Bool {
+	var poly: Poly3 = triangle
+	if poly.count != 3 {
+		printf("error: triangle.count mismatch\n")
+		return false
+	}
+	if poly.verts[0].x != 0 or poly.verts[1].x != 1 or poly.verts[2].y != 1 {
+		printf("error: triangle.verts mismatch\n")
+		return false
+	}
+
+	var polyP: Poly3 = polyPartial
+	if polyP.count != 1 {
+		printf("error: polyPartial.count mismatch\n")
+		return false
+	}
+	if polyP.verts[0].x != 0 or polyP.verts[1].y != 0 or polyP.verts[2].x != 0 {
+		printf("error: polyPartial.verts not zero-filled\n")
+		return false
+	}
+
+	printf("passed: record with array field const test\n")
+	return true
+}
+
+
+
 // a typed const with an empty literal zero-fills the whole value
 const zeroArr: [4]Int32 = []
 const zeroPoint: Point = {}
@@ -292,6 +439,10 @@ func main () -> Int {
 	result = testStringAndCharConst() and result
 	result = testArrayConst() and result
 	result = testRecordConst() and result
+	result = testNestedRecordConst() and result
+	result = testNestedArrayConst() and result
+	result = testArrayOfRecordsConst() and result
+	result = testRecordWithArrayFieldConst() and result
 	result = testEmptyLiteralConst() and result
 	result = testBrandedEnumConst() and result
 	result = testLocalConst() and result

@@ -9,6 +9,8 @@
 #endif
 struct point {int32_t x; int32_t y;};
 struct point3_d {int32_t x; int32_t y; int32_t z;};
+struct rect {struct point topLeft; struct point bottomRight;};
+struct poly3 {struct point verts[3]; int32_t count;};
 typedef uint8_t Color;
 #define COLOR_RED ((Color)0)
 #define COLOR_GREEN ((Color)1)
@@ -156,8 +158,7 @@ bool main_testRecordConst(void) {
 		printf("error: p.x/p.y mismatch\n");
 		return false;
 	}
-	struct point3_d p3 = (struct point3_d){.x = 1, .y = 2,
-		.z = 0};
+	struct point3_d p3 = (struct point3_d){.x = 1, .y = 2};
 	if (p3.x != 1 || p3.y != 2) {
 		printf("error: p3.x/p3.y mismatch\n");
 		return false;
@@ -169,11 +170,109 @@ bool main_testRecordConst(void) {
 	printf("passed: record const test\n");
 	return true;
 }
+#define RECT_CONST {.topLeft = {.x = 0, .y = 0}, .bottomRight = {.x = 10, .y = 20}}
+#define RECT_PARTIAL {.topLeft = {.x = 1, .y = 1}}
+#define RECT_ZERO ((struct rect){0})
+
+bool main_testNestedRecordConst(void) {
+	struct rect r = (struct rect)RECT_CONST;
+	if (r.topLeft.x != 0 || r.topLeft.y != 0 || r.bottomRight.x != 10 || r.bottomRight.y != 20) {
+		printf("error: rectConst mismatch\n");
+		return false;
+	}
+	struct rect rp = (struct rect){.topLeft = {.x = 1, .y = 1}};
+	if (rp.topLeft.x != 1 || rp.topLeft.y != 1) {
+		printf("error: rectPartial.topLeft mismatch\n");
+		return false;
+	}
+	if (rp.bottomRight.x != 0 || rp.bottomRight.y != 0) {
+		printf("error: rectPartial.bottomRight not zero-filled\n");
+		return false;
+	}
+	struct rect rz = RECT_ZERO;
+	if (rz.topLeft.x != 0 || rz.topLeft.y != 0 || rz.bottomRight.x != 0 || rz.bottomRight.y != 0) {
+		printf("error: rectZero not all zero\n");
+		return false;
+	}
+	printf("passed: nested record const test\n");
+	return true;
+}
+#define MATRIX {{1, 2, 3}, {4, 5, 6}}
+
+bool main_testNestedArrayConst(void) {
+	int32_t m[2][3] = {{1, 2, 3}, {4, 5, 6}};
+	if (m[0][0] != 1 || m[0][2] != 3 || m[1][0] != 4 || m[1][2] != 6) {
+		printf("error: matrix mismatch\n");
+		return false;
+	}
+	int32_t wider[3][3] = {{1, 2, 3}, {4, 5, 6}};
+	if (__builtin_memcmp(&wider[0], &(int32_t [3]){1, 2, 3}, sizeof(int32_t [3])) != 0 || __builtin_memcmp(&wider[1], &(int32_t [3]){4, 5, 6}, sizeof(int32_t [3])) != 0) {
+		printf("error: wider head mismatch\n");
+		return false;
+	}
+	if (wider[2][0] != 0 || wider[2][1] != 0 || wider[2][2] != 0) {
+		printf("error: wider extra row not zero-filled\n");
+		return false;
+	}
+	int32_t mz[2][3] = {0};
+	if (mz[0][0] != 0 || mz[0][1] != 0 || mz[0][2] != 0) {
+		printf("error: mz row 0 not all zero\n");
+		return false;
+	}
+	if (mz[1][0] != 0 || mz[1][1] != 0 || mz[1][2] != 0) {
+		printf("error: mz row 1 not all zero\n");
+		return false;
+	}
+	printf("passed: nested array const test\n");
+	return true;
+}
+#define POINTS {{.x = 1, .y = 1}, {.x = 2, .y = 2}, {.x = 3, .y = 3}}
+
+bool main_testArrayOfRecordsConst(void) {
+	struct point arr[3] = {{.x = 1, .y = 1}, {.x = 2, .y = 2}, {.x = 3, .y = 3}};
+	if (arr[0].x != 1 || arr[0].y != 1 || arr[2].x != 3 || arr[2].y != 3) {
+		printf("error: points mismatch\n");
+		return false;
+	}
+	struct point longer[5] = {{.x = 1, .y = 1}, {.x = 2, .y = 2}, {.x = 3, .y = 3}};
+	if (longer[2].x != 3 || longer[2].y != 3) {
+		printf("error: longer head mismatch\n");
+		return false;
+	}
+	if (longer[3].x != 0 || longer[3].y != 0 || longer[4].x != 0 || longer[4].y != 0) {
+		printf("error: longer tail records not zero-filled\n");
+		return false;
+	}
+	printf("passed: array of records const test\n");
+	return true;
+}
+#define TRIANGLE {.verts = {{.x = 0, .y = 0}, {.x = 1, .y = 0}, {.x = 0, .y = 1}}, .count = 3}
+#define POLY_PARTIAL {.count = 1}
+
+bool main_testRecordWithArrayFieldConst(void) {
+	struct poly3 poly = (struct poly3)TRIANGLE;
+	if (poly.count != 3) {
+		printf("error: triangle.count mismatch\n");
+		return false;
+	}
+	if (poly.verts[0].x != 0 || poly.verts[1].x != 1 || poly.verts[2].y != 1) {
+		printf("error: triangle.verts mismatch\n");
+		return false;
+	}
+	struct poly3 polyP = (struct poly3){.count = 1};
+	if (polyP.count != 1) {
+		printf("error: polyPartial.count mismatch\n");
+		return false;
+	}
+	if (polyP.verts[0].x != 0 || polyP.verts[1].y != 0 || polyP.verts[2].x != 0) {
+		printf("error: polyPartial.verts not zero-filled\n");
+		return false;
+	}
+	printf("passed: record with array field const test\n");
+	return true;
+}
 #define ZERO_ARR {0}
-#define ZERO_POINT ((struct point){ \
-	.x = 0, \
-	.y = 0 \
-})
+#define ZERO_POINT ((struct point){0})
 
 
 bool main_testEmptyLiteralConst(void) {
@@ -238,6 +337,10 @@ int main(void) {
 	result = main_testStringAndCharConst() && result;
 	result = main_testArrayConst() && result;
 	result = main_testRecordConst() && result;
+	result = main_testNestedRecordConst() && result;
+	result = main_testNestedArrayConst() && result;
+	result = main_testArrayOfRecordsConst() && result;
+	result = main_testRecordWithArrayFieldConst() && result;
 	result = main_testEmptyLiteralConst() && result;
 	result = main_testBrandedEnumConst() && result;
 	result = main_testLocalConst() && result;

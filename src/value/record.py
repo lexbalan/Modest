@@ -98,6 +98,8 @@ def value_record_cons(t, v, method, ti):
 				nl = explicit_initializer.nl
 			elif field.init_value != None:
 				iv = field.init_value
+				if iv.isValueUndef():
+					iv = create_zero_literal(field.type, ti=ti)
 			else:
 				iv = create_zero_literal(field.type, ti=ti)
 

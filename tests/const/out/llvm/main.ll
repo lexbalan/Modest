@@ -246,21 +246,41 @@ declare %Int @system([0 x %ConstChar]* %string)
 @.str29 = private constant [27 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 112, i8 51, i8 46, i8 120, i8 47, i8 112, i8 51, i8 46, i8 121, i8 32, i8 109, i8 105, i8 115, i8 109, i8 97, i8 116, i8 99, i8 104, i8 10, i8 0]
 @.str30 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 112, i8 51, i8 46, i8 122, i8 32, i8 110, i8 111, i8 116, i8 32, i8 122, i8 101, i8 114, i8 111, i8 45, i8 102, i8 105, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
 @.str31 = private constant [27 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 114, i8 101, i8 99, i8 111, i8 114, i8 100, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@.str32 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 122, i8 101, i8 114, i8 111, i8 65, i8 114, i8 114, i8 32, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 32, i8 122, i8 101, i8 114, i8 111, i8 10, i8 0]
-@.str33 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 122, i8 101, i8 114, i8 111, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 32, i8 122, i8 101, i8 114, i8 111, i8 10, i8 0]
-@.str34 = private constant [34 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 101, i8 109, i8 112, i8 116, i8 121, i8 32, i8 108, i8 105, i8 116, i8 101, i8 114, i8 97, i8 108, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@.str35 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 82, i8 101, i8 100, i8 32, i8 61, i8 61, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 71, i8 114, i8 101, i8 101, i8 110, i8 10, i8 0]
-@.str36 = private constant [32 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 71, i8 114, i8 101, i8 101, i8 110, i8 32, i8 61, i8 61, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 66, i8 108, i8 117, i8 101, i8 10, i8 0]
-@.str37 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 82, i8 101, i8 100, i8 32, i8 33, i8 61, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 82, i8 101, i8 100, i8 10, i8 0]
-@.str38 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 78, i8 97, i8 116, i8 56, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 71, i8 114, i8 101, i8 101, i8 110, i8 32, i8 33, i8 61, i8 32, i8 49, i8 10, i8 0]
-@.str39 = private constant [33 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 98, i8 114, i8 97, i8 110, i8 100, i8 101, i8 100, i8 32, i8 101, i8 110, i8 117, i8 109, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@.str40 = private constant [22 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 108, i8 111, i8 99, i8 97, i8 108, i8 84, i8 119, i8 111, i8 32, i8 33, i8 61, i8 32, i8 50, i8 10, i8 0]
-@.str41 = private constant [23 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 97, i8 115, i8 70, i8 108, i8 111, i8 97, i8 116, i8 32, i8 33, i8 61, i8 32, i8 49, i8 46, i8 48, i8 10, i8 0]
-@.str42 = private constant [26 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 108, i8 111, i8 99, i8 97, i8 108, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@.str43 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 10, i8 0]
-@.str44 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
-@.str45 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-@.str46 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@.str32 = private constant [27 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 114, i8 101, i8 99, i8 116, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 109, i8 105, i8 115, i8 109, i8 97, i8 116, i8 99, i8 104, i8 10, i8 0]
+@.str33 = private constant [37 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 114, i8 101, i8 99, i8 116, i8 80, i8 97, i8 114, i8 116, i8 105, i8 97, i8 108, i8 46, i8 116, i8 111, i8 112, i8 76, i8 101, i8 102, i8 116, i8 32, i8 109, i8 105, i8 115, i8 109, i8 97, i8 116, i8 99, i8 104, i8 10, i8 0]
+@.str34 = private constant [48 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 114, i8 101, i8 99, i8 116, i8 80, i8 97, i8 114, i8 116, i8 105, i8 97, i8 108, i8 46, i8 98, i8 111, i8 116, i8 116, i8 111, i8 109, i8 82, i8 105, i8 103, i8 104, i8 116, i8 32, i8 110, i8 111, i8 116, i8 32, i8 122, i8 101, i8 114, i8 111, i8 45, i8 102, i8 105, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str35 = private constant [30 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 114, i8 101, i8 99, i8 116, i8 90, i8 101, i8 114, i8 111, i8 32, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 32, i8 122, i8 101, i8 114, i8 111, i8 10, i8 0]
+@.str36 = private constant [34 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 110, i8 101, i8 115, i8 116, i8 101, i8 100, i8 32, i8 114, i8 101, i8 99, i8 111, i8 114, i8 100, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str37 = private constant [24 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 109, i8 97, i8 116, i8 114, i8 105, i8 120, i8 32, i8 109, i8 105, i8 115, i8 109, i8 97, i8 116, i8 99, i8 104, i8 10, i8 0]
+@.str38 = private constant [28 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 119, i8 105, i8 100, i8 101, i8 114, i8 32, i8 104, i8 101, i8 97, i8 100, i8 32, i8 109, i8 105, i8 115, i8 109, i8 97, i8 116, i8 99, i8 104, i8 10, i8 0]
+@.str39 = private constant [40 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 119, i8 105, i8 100, i8 101, i8 114, i8 32, i8 101, i8 120, i8 116, i8 114, i8 97, i8 32, i8 114, i8 111, i8 119, i8 32, i8 110, i8 111, i8 116, i8 32, i8 122, i8 101, i8 114, i8 111, i8 45, i8 102, i8 105, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str40 = private constant [30 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 109, i8 122, i8 32, i8 114, i8 111, i8 119, i8 32, i8 48, i8 32, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 32, i8 122, i8 101, i8 114, i8 111, i8 10, i8 0]
+@.str41 = private constant [30 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 109, i8 122, i8 32, i8 114, i8 111, i8 119, i8 32, i8 49, i8 32, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 32, i8 122, i8 101, i8 114, i8 111, i8 10, i8 0]
+@.str42 = private constant [33 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 110, i8 101, i8 115, i8 116, i8 101, i8 100, i8 32, i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str43 = private constant [24 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 115, i8 32, i8 109, i8 105, i8 115, i8 109, i8 97, i8 116, i8 99, i8 104, i8 10, i8 0]
+@.str44 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 108, i8 111, i8 110, i8 103, i8 101, i8 114, i8 32, i8 104, i8 101, i8 97, i8 100, i8 32, i8 109, i8 105, i8 115, i8 109, i8 97, i8 116, i8 99, i8 104, i8 10, i8 0]
+@.str45 = private constant [44 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 108, i8 111, i8 110, i8 103, i8 101, i8 114, i8 32, i8 116, i8 97, i8 105, i8 108, i8 32, i8 114, i8 101, i8 99, i8 111, i8 114, i8 100, i8 115, i8 32, i8 110, i8 111, i8 116, i8 32, i8 122, i8 101, i8 114, i8 111, i8 45, i8 102, i8 105, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str46 = private constant [37 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 111, i8 102, i8 32, i8 114, i8 101, i8 99, i8 111, i8 114, i8 100, i8 115, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str47 = private constant [32 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 116, i8 114, i8 105, i8 97, i8 110, i8 103, i8 108, i8 101, i8 46, i8 99, i8 111, i8 117, i8 110, i8 116, i8 32, i8 109, i8 105, i8 115, i8 109, i8 97, i8 116, i8 99, i8 104, i8 10, i8 0]
+@.str48 = private constant [32 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 116, i8 114, i8 105, i8 97, i8 110, i8 103, i8 108, i8 101, i8 46, i8 118, i8 101, i8 114, i8 116, i8 115, i8 32, i8 109, i8 105, i8 115, i8 109, i8 97, i8 116, i8 99, i8 104, i8 10, i8 0]
+@.str49 = private constant [35 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 112, i8 111, i8 108, i8 121, i8 80, i8 97, i8 114, i8 116, i8 105, i8 97, i8 108, i8 46, i8 99, i8 111, i8 117, i8 110, i8 116, i8 32, i8 109, i8 105, i8 115, i8 109, i8 97, i8 116, i8 99, i8 104, i8 10, i8 0]
+@.str50 = private constant [42 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 112, i8 111, i8 108, i8 121, i8 80, i8 97, i8 114, i8 116, i8 105, i8 97, i8 108, i8 46, i8 118, i8 101, i8 114, i8 116, i8 115, i8 32, i8 110, i8 111, i8 116, i8 32, i8 122, i8 101, i8 114, i8 111, i8 45, i8 102, i8 105, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str51 = private constant [44 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 114, i8 101, i8 99, i8 111, i8 114, i8 100, i8 32, i8 119, i8 105, i8 116, i8 104, i8 32, i8 97, i8 114, i8 114, i8 97, i8 121, i8 32, i8 102, i8 105, i8 101, i8 108, i8 100, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str52 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 122, i8 101, i8 114, i8 111, i8 65, i8 114, i8 114, i8 32, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 32, i8 122, i8 101, i8 114, i8 111, i8 10, i8 0]
+@.str53 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 122, i8 101, i8 114, i8 111, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 110, i8 111, i8 116, i8 32, i8 97, i8 108, i8 108, i8 32, i8 122, i8 101, i8 114, i8 111, i8 10, i8 0]
+@.str54 = private constant [34 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 101, i8 109, i8 112, i8 116, i8 121, i8 32, i8 108, i8 105, i8 116, i8 101, i8 114, i8 97, i8 108, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str55 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 82, i8 101, i8 100, i8 32, i8 61, i8 61, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 71, i8 114, i8 101, i8 101, i8 110, i8 10, i8 0]
+@.str56 = private constant [32 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 71, i8 114, i8 101, i8 101, i8 110, i8 32, i8 61, i8 61, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 66, i8 108, i8 117, i8 101, i8 10, i8 0]
+@.str57 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 82, i8 101, i8 100, i8 32, i8 33, i8 61, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 82, i8 101, i8 100, i8 10, i8 0]
+@.str58 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 78, i8 97, i8 116, i8 56, i8 32, i8 99, i8 111, i8 108, i8 111, i8 114, i8 71, i8 114, i8 101, i8 101, i8 110, i8 32, i8 33, i8 61, i8 32, i8 49, i8 10, i8 0]
+@.str59 = private constant [33 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 98, i8 114, i8 97, i8 110, i8 100, i8 101, i8 100, i8 32, i8 101, i8 110, i8 117, i8 109, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str60 = private constant [22 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 108, i8 111, i8 99, i8 97, i8 108, i8 84, i8 119, i8 111, i8 32, i8 33, i8 61, i8 32, i8 50, i8 10, i8 0]
+@.str61 = private constant [23 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 97, i8 115, i8 70, i8 108, i8 111, i8 97, i8 116, i8 32, i8 33, i8 61, i8 32, i8 49, i8 46, i8 48, i8 10, i8 0]
+@.str62 = private constant [26 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 58, i8 32, i8 108, i8 111, i8 99, i8 97, i8 108, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@.str63 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 10, i8 0]
+@.str64 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 0]
+@.str65 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str66 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 %Point = type {
 	%Int32,
@@ -270,6 +290,16 @@ declare %Int @system([0 x %ConstChar]* %string)
 %Point3D = type {
 	%Int32,
 	%Int32,
+	%Int32
+};
+
+%Rect = type {
+	%Point,
+	%Point
+};
+
+%Poly3 = type {
+	[3 x %Point],
 	%Int32
 };
 
@@ -587,23 +617,495 @@ endif_2:
 	ret %Bool 1
 }
 
+define %Bool @main_testNestedRecordConst() {
+	%1 = alloca %Rect, align 4
+	%2 = insertvalue %Point zeroinitializer, %Int32 10, 0
+	%3 = insertvalue %Point %2, %Int32 20, 1
+	%4 = insertvalue %Rect zeroinitializer, %Point %3, 1
+	store %Rect %4, %Rect* %1
+; if_0
+	%5 = getelementptr %Rect, %Rect* %1, %Int32 0, %Int32 0, %Int32 0
+	%6 = load %Int32, %Int32* %5
+	%7 = icmp ne %Int32 %6, 0
+	%8 = getelementptr %Rect, %Rect* %1, %Int32 0, %Int32 0, %Int32 1
+	%9 = load %Int32, %Int32* %8
+	%10 = icmp ne %Int32 %9, 0
+	%11 = getelementptr %Rect, %Rect* %1, %Int32 0, %Int32 1, %Int32 0
+	%12 = load %Int32, %Int32* %11
+	%13 = icmp ne %Int32 %12, 10
+	%14 = getelementptr %Rect, %Rect* %1, %Int32 0, %Int32 1, %Int32 1
+	%15 = load %Int32, %Int32* %14
+	%16 = icmp ne %Int32 %15, 20
+	%17 = or %Bool %13, %16
+	%18 = or %Bool %10, %17
+	%19 = or %Bool %7, %18
+	br %Bool %19 , label %then_0, label %endif_0
+then_0:
+	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @.str32 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_0
+endif_0:
+	%22 = alloca %Rect, align 4
+	%23 = insertvalue %Point zeroinitializer, %Int32 1, 0
+	%24 = insertvalue %Point %23, %Int32 1, 1
+	%25 = insertvalue %Rect zeroinitializer, %Point %24, 0
+	store %Rect %25, %Rect* %22
+; if_1
+	%26 = getelementptr %Rect, %Rect* %22, %Int32 0, %Int32 0, %Int32 0
+	%27 = load %Int32, %Int32* %26
+	%28 = icmp ne %Int32 %27, 1
+	%29 = getelementptr %Rect, %Rect* %22, %Int32 0, %Int32 0, %Int32 1
+	%30 = load %Int32, %Int32* %29
+	%31 = icmp ne %Int32 %30, 1
+	%32 = or %Bool %28, %31
+	br %Bool %32 , label %then_1, label %endif_1
+then_1:
+	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @.str33 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_1
+endif_1:
+; if_2
+	%35 = getelementptr %Rect, %Rect* %22, %Int32 0, %Int32 1, %Int32 0
+	%36 = load %Int32, %Int32* %35
+	%37 = icmp ne %Int32 %36, 0
+	%38 = getelementptr %Rect, %Rect* %22, %Int32 0, %Int32 1, %Int32 1
+	%39 = load %Int32, %Int32* %38
+	%40 = icmp ne %Int32 %39, 0
+	%41 = or %Bool %37, %40
+	br %Bool %41 , label %then_2, label %endif_2
+then_2:
+	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([48 x i8]* @.str34 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_2
+endif_2:
+	%44 = alloca %Rect, align 4
+	store %Rect zeroinitializer, %Rect* %44
+; if_3
+	%45 = getelementptr %Rect, %Rect* %44, %Int32 0, %Int32 0, %Int32 0
+	%46 = load %Int32, %Int32* %45
+	%47 = icmp ne %Int32 %46, 0
+	%48 = getelementptr %Rect, %Rect* %44, %Int32 0, %Int32 0, %Int32 1
+	%49 = load %Int32, %Int32* %48
+	%50 = icmp ne %Int32 %49, 0
+	%51 = getelementptr %Rect, %Rect* %44, %Int32 0, %Int32 1, %Int32 0
+	%52 = load %Int32, %Int32* %51
+	%53 = icmp ne %Int32 %52, 0
+	%54 = getelementptr %Rect, %Rect* %44, %Int32 0, %Int32 1, %Int32 1
+	%55 = load %Int32, %Int32* %54
+	%56 = icmp ne %Int32 %55, 0
+	%57 = or %Bool %53, %56
+	%58 = or %Bool %50, %57
+	%59 = or %Bool %47, %58
+	br %Bool %59 , label %then_3, label %endif_3
+then_3:
+	%60 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @.str35 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_3
+endif_3:
+	%62 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @.str36 to [0 x i8]*))
+	ret %Bool 1
+}
+
+@matrix = constant [2 x [3 x i8]] [
+	[3 x i8] [
+		i8 1,
+		i8 2,
+		i8 3
+	],
+	[3 x i8] [
+		i8 4,
+		i8 5,
+		i8 6
+	]
+]
+define %Bool @main_testNestedArrayConst() {
+	%1 = alloca [2 x [3 x %Int32]], align 4
+	%2 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
+	%3 = insertvalue [3 x %Int32] %2, %Int32 2, 1
+	%4 = insertvalue [3 x %Int32] %3, %Int32 3, 2
+	%5 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
+	%6 = insertvalue [3 x %Int32] %5, %Int32 5, 1
+	%7 = insertvalue [3 x %Int32] %6, %Int32 6, 2
+	%8 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
+	%9 = insertvalue [3 x %Int32] %8, %Int32 2, 1
+	%10 = insertvalue [3 x %Int32] %9, %Int32 3, 2
+	%11 = insertvalue [2 x [3 x %Int32]] zeroinitializer, [3 x %Int32] %10, 0
+	%12 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
+	%13 = insertvalue [3 x %Int32] %12, %Int32 5, 1
+	%14 = insertvalue [3 x %Int32] %13, %Int32 6, 2
+	%15 = insertvalue [2 x [3 x %Int32]] %11, [3 x %Int32] %14, 1
+	%16 = zext i8 2 to %Nat32
+	store [2 x [3 x %Int32]] %15, [2 x [3 x %Int32]]* %1
+; if_0
+	%17 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %1, %Int32 0, %Int32 0, %Int32 0
+	%18 = load %Int32, %Int32* %17
+	%19 = icmp ne %Int32 %18, 1
+	%20 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %1, %Int32 0, %Int32 0, %Int32 2
+	%21 = load %Int32, %Int32* %20
+	%22 = icmp ne %Int32 %21, 3
+	%23 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %1, %Int32 0, %Int32 1, %Int32 0
+	%24 = load %Int32, %Int32* %23
+	%25 = icmp ne %Int32 %24, 4
+	%26 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %1, %Int32 0, %Int32 1, %Int32 2
+	%27 = load %Int32, %Int32* %26
+	%28 = icmp ne %Int32 %27, 6
+	%29 = or %Bool %25, %28
+	%30 = or %Bool %22, %29
+	%31 = or %Bool %19, %30
+	br %Bool %31 , label %then_0, label %endif_0
+then_0:
+	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @.str37 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_0
+endif_0:
+	%34 = alloca [3 x [3 x %Int32]], align 4
+	%35 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
+	%36 = insertvalue [3 x %Int32] %35, %Int32 2, 1
+	%37 = insertvalue [3 x %Int32] %36, %Int32 3, 2
+	%38 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
+	%39 = insertvalue [3 x %Int32] %38, %Int32 5, 1
+	%40 = insertvalue [3 x %Int32] %39, %Int32 6, 2
+	%41 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
+	%42 = insertvalue [3 x %Int32] %41, %Int32 2, 1
+	%43 = insertvalue [3 x %Int32] %42, %Int32 3, 2
+	%44 = insertvalue [3 x [3 x %Int32]] zeroinitializer, [3 x %Int32] %43, 0
+	%45 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
+	%46 = insertvalue [3 x %Int32] %45, %Int32 5, 1
+	%47 = insertvalue [3 x %Int32] %46, %Int32 6, 2
+	%48 = insertvalue [3 x [3 x %Int32]] %44, [3 x %Int32] %47, 1
+	%49 = zext i8 3 to %Nat32
+	store [3 x [3 x %Int32]] %48, [3 x [3 x %Int32]]* %34
+; if_1
+	%50 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* %34, %Int32 0, %Int32 0
+	%51 = insertvalue [3 x %Int32] zeroinitializer, %Int32 1, 0
+	%52 = insertvalue [3 x %Int32] %51, %Int32 2, 1
+	%53 = insertvalue [3 x %Int32] %52, %Int32 3, 2
+	%54 = alloca [3 x %Int32]
+	%55 = zext i8 3 to %Nat32
+	store [3 x %Int32] %53, [3 x %Int32]* %54
+	%56 = bitcast [3 x %Int32]* %50 to i8*
+	%57 = bitcast [3 x %Int32]* %54 to i8*
+	%58 = call i1 (i8*, i8*, i64) @memeq(i8* %56, i8* %57, %Int64 12)
+	%59 = icmp eq %Bool %58, 0
+	%60 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* %34, %Int32 0, %Int32 1
+	%61 = insertvalue [3 x %Int32] zeroinitializer, %Int32 4, 0
+	%62 = insertvalue [3 x %Int32] %61, %Int32 5, 1
+	%63 = insertvalue [3 x %Int32] %62, %Int32 6, 2
+	%64 = alloca [3 x %Int32]
+	%65 = zext i8 3 to %Nat32
+	store [3 x %Int32] %63, [3 x %Int32]* %64
+	%66 = bitcast [3 x %Int32]* %60 to i8*
+	%67 = bitcast [3 x %Int32]* %64 to i8*
+	%68 = call i1 (i8*, i8*, i64) @memeq(i8* %66, i8* %67, %Int64 12)
+	%69 = icmp eq %Bool %68, 0
+	%70 = or %Bool %59, %69
+	br %Bool %70 , label %then_1, label %endif_1
+then_1:
+	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @.str38 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_1
+endif_1:
+; if_2
+	%73 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* %34, %Int32 0, %Int32 2, %Int32 0
+	%74 = load %Int32, %Int32* %73
+	%75 = icmp ne %Int32 %74, 0
+	%76 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* %34, %Int32 0, %Int32 2, %Int32 1
+	%77 = load %Int32, %Int32* %76
+	%78 = icmp ne %Int32 %77, 0
+	%79 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* %34, %Int32 0, %Int32 2, %Int32 2
+	%80 = load %Int32, %Int32* %79
+	%81 = icmp ne %Int32 %80, 0
+	%82 = or %Bool %78, %81
+	%83 = or %Bool %75, %82
+	br %Bool %83 , label %then_2, label %endif_2
+then_2:
+	%84 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @.str39 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_2
+endif_2:
+	%86 = alloca [2 x [3 x %Int32]], align 4
+	%87 = zext i8 2 to %Nat32
+	%88 = mul %Nat32 %87, 12
+	%89 = bitcast [2 x [3 x %Int32]]* %86 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %89, i8 0, %Nat32 %88, i1 0)
+; if_3
+	%90 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 0, %Int32 0
+	%91 = load %Int32, %Int32* %90
+	%92 = icmp ne %Int32 %91, 0
+	%93 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 0, %Int32 1
+	%94 = load %Int32, %Int32* %93
+	%95 = icmp ne %Int32 %94, 0
+	%96 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 0, %Int32 2
+	%97 = load %Int32, %Int32* %96
+	%98 = icmp ne %Int32 %97, 0
+	%99 = or %Bool %95, %98
+	%100 = or %Bool %92, %99
+	br %Bool %100 , label %then_3, label %endif_3
+then_3:
+	%101 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @.str40 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_3
+endif_3:
+; if_4
+	%103 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 1, %Int32 0
+	%104 = load %Int32, %Int32* %103
+	%105 = icmp ne %Int32 %104, 0
+	%106 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 1, %Int32 1
+	%107 = load %Int32, %Int32* %106
+	%108 = icmp ne %Int32 %107, 0
+	%109 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 1, %Int32 2
+	%110 = load %Int32, %Int32* %109
+	%111 = icmp ne %Int32 %110, 0
+	%112 = or %Bool %108, %111
+	%113 = or %Bool %105, %112
+	br %Bool %113 , label %then_4, label %endif_4
+then_4:
+	%114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @.str41 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_4
+endif_4:
+	%116 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @.str42 to [0 x i8]*))
+	ret %Bool 1
+}
+
+@points = constant [3 x {
+	i8,
+	i8
+}] [
+	{
+	i8,
+	i8
+} {
+		i8 1,
+		i8 1
+	},
+	{
+	i8,
+	i8
+} {
+		i8 2,
+		i8 2
+	},
+	{
+	i8,
+	i8
+} {
+		i8 3,
+		i8 3
+	}
+]
+define %Bool @main_testArrayOfRecordsConst() {
+	%1 = alloca [3 x %Point], align 4
+	%2 = insertvalue %Point zeroinitializer, %Int32 1, 0
+	%3 = insertvalue %Point %2, %Int32 1, 1
+	%4 = insertvalue %Point zeroinitializer, %Int32 2, 0
+	%5 = insertvalue %Point %4, %Int32 2, 1
+	%6 = insertvalue %Point zeroinitializer, %Int32 3, 0
+	%7 = insertvalue %Point %6, %Int32 3, 1
+	%8 = insertvalue %Point zeroinitializer, %Int32 1, 0
+	%9 = insertvalue %Point %8, %Int32 1, 1
+	%10 = insertvalue [3 x %Point] zeroinitializer, %Point %9, 0
+	%11 = insertvalue %Point zeroinitializer, %Int32 2, 0
+	%12 = insertvalue %Point %11, %Int32 2, 1
+	%13 = insertvalue [3 x %Point] %10, %Point %12, 1
+	%14 = insertvalue %Point zeroinitializer, %Int32 3, 0
+	%15 = insertvalue %Point %14, %Int32 3, 1
+	%16 = insertvalue [3 x %Point] %13, %Point %15, 2
+	%17 = zext i8 3 to %Nat32
+	store [3 x %Point] %16, [3 x %Point]* %1
+; if_0
+	%18 = getelementptr [3 x %Point], [3 x %Point]* %1, %Int32 0, %Int32 0
+	%19 = getelementptr %Point, %Point* %18, %Int32 0, %Int32 0
+	%20 = load %Int32, %Int32* %19
+	%21 = icmp ne %Int32 %20, 1
+	%22 = getelementptr [3 x %Point], [3 x %Point]* %1, %Int32 0, %Int32 0
+	%23 = getelementptr %Point, %Point* %22, %Int32 0, %Int32 1
+	%24 = load %Int32, %Int32* %23
+	%25 = icmp ne %Int32 %24, 1
+	%26 = getelementptr [3 x %Point], [3 x %Point]* %1, %Int32 0, %Int32 2
+	%27 = getelementptr %Point, %Point* %26, %Int32 0, %Int32 0
+	%28 = load %Int32, %Int32* %27
+	%29 = icmp ne %Int32 %28, 3
+	%30 = getelementptr [3 x %Point], [3 x %Point]* %1, %Int32 0, %Int32 2
+	%31 = getelementptr %Point, %Point* %30, %Int32 0, %Int32 1
+	%32 = load %Int32, %Int32* %31
+	%33 = icmp ne %Int32 %32, 3
+	%34 = or %Bool %29, %33
+	%35 = or %Bool %25, %34
+	%36 = or %Bool %21, %35
+	br %Bool %36 , label %then_0, label %endif_0
+then_0:
+	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @.str43 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_0
+endif_0:
+	%39 = alloca [5 x %Point], align 4
+	%40 = insertvalue %Point zeroinitializer, %Int32 1, 0
+	%41 = insertvalue %Point %40, %Int32 1, 1
+	%42 = insertvalue %Point zeroinitializer, %Int32 2, 0
+	%43 = insertvalue %Point %42, %Int32 2, 1
+	%44 = insertvalue %Point zeroinitializer, %Int32 3, 0
+	%45 = insertvalue %Point %44, %Int32 3, 1
+	%46 = insertvalue %Point zeroinitializer, %Int32 1, 0
+	%47 = insertvalue %Point %46, %Int32 1, 1
+	%48 = insertvalue [5 x %Point] zeroinitializer, %Point %47, 0
+	%49 = insertvalue %Point zeroinitializer, %Int32 2, 0
+	%50 = insertvalue %Point %49, %Int32 2, 1
+	%51 = insertvalue [5 x %Point] %48, %Point %50, 1
+	%52 = insertvalue %Point zeroinitializer, %Int32 3, 0
+	%53 = insertvalue %Point %52, %Int32 3, 1
+	%54 = insertvalue [5 x %Point] %51, %Point %53, 2
+	%55 = zext i8 5 to %Nat32
+	store [5 x %Point] %54, [5 x %Point]* %39
+; if_1
+	%56 = getelementptr [5 x %Point], [5 x %Point]* %39, %Int32 0, %Int32 2
+	%57 = getelementptr %Point, %Point* %56, %Int32 0, %Int32 0
+	%58 = load %Int32, %Int32* %57
+	%59 = icmp ne %Int32 %58, 3
+	%60 = getelementptr [5 x %Point], [5 x %Point]* %39, %Int32 0, %Int32 2
+	%61 = getelementptr %Point, %Point* %60, %Int32 0, %Int32 1
+	%62 = load %Int32, %Int32* %61
+	%63 = icmp ne %Int32 %62, 3
+	%64 = or %Bool %59, %63
+	br %Bool %64 , label %then_1, label %endif_1
+then_1:
+	%65 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @.str44 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_1
+endif_1:
+; if_2
+	%67 = getelementptr [5 x %Point], [5 x %Point]* %39, %Int32 0, %Int32 3
+	%68 = getelementptr %Point, %Point* %67, %Int32 0, %Int32 0
+	%69 = load %Int32, %Int32* %68
+	%70 = icmp ne %Int32 %69, 0
+	%71 = getelementptr [5 x %Point], [5 x %Point]* %39, %Int32 0, %Int32 3
+	%72 = getelementptr %Point, %Point* %71, %Int32 0, %Int32 1
+	%73 = load %Int32, %Int32* %72
+	%74 = icmp ne %Int32 %73, 0
+	%75 = getelementptr [5 x %Point], [5 x %Point]* %39, %Int32 0, %Int32 4
+	%76 = getelementptr %Point, %Point* %75, %Int32 0, %Int32 0
+	%77 = load %Int32, %Int32* %76
+	%78 = icmp ne %Int32 %77, 0
+	%79 = getelementptr [5 x %Point], [5 x %Point]* %39, %Int32 0, %Int32 4
+	%80 = getelementptr %Point, %Point* %79, %Int32 0, %Int32 1
+	%81 = load %Int32, %Int32* %80
+	%82 = icmp ne %Int32 %81, 0
+	%83 = or %Bool %78, %82
+	%84 = or %Bool %74, %83
+	%85 = or %Bool %70, %84
+	br %Bool %85 , label %then_2, label %endif_2
+then_2:
+	%86 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([44 x i8]* @.str45 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_2
+endif_2:
+	%88 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @.str46 to [0 x i8]*))
+	ret %Bool 1
+}
+
+define %Bool @main_testRecordWithArrayFieldConst() {
+	%1 = alloca %Poly3, align 4
+	%2 = insertvalue %Point zeroinitializer, %Int32 1, 0
+	%3 = insertvalue %Point zeroinitializer, %Int32 1, 1
+	%4 = insertvalue %Point zeroinitializer, %Int32 1, 0
+	%5 = insertvalue [3 x %Point] zeroinitializer, %Point %4, 1
+	%6 = insertvalue %Point zeroinitializer, %Int32 1, 1
+	%7 = insertvalue [3 x %Point] %5, %Point %6, 2
+	%8 = insertvalue %Poly3 zeroinitializer, [3 x %Point] %7, 0
+	%9 = insertvalue %Poly3 %8, %Int32 3, 1
+	store %Poly3 %9, %Poly3* %1
+; if_0
+	%10 = getelementptr %Poly3, %Poly3* %1, %Int32 0, %Int32 1
+	%11 = load %Int32, %Int32* %10
+	%12 = icmp ne %Int32 %11, 3
+	br %Bool %12 , label %then_0, label %endif_0
+then_0:
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @.str47 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_0
+endif_0:
+; if_1
+	%15 = getelementptr %Poly3, %Poly3* %1, %Int32 0, %Int32 0
+	%16 = getelementptr [3 x %Point], [3 x %Point]* %15, %Int32 0, %Int32 0
+	%17 = getelementptr %Point, %Point* %16, %Int32 0, %Int32 0
+	%18 = load %Int32, %Int32* %17
+	%19 = icmp ne %Int32 %18, 0
+	%20 = getelementptr %Poly3, %Poly3* %1, %Int32 0, %Int32 0
+	%21 = getelementptr [3 x %Point], [3 x %Point]* %20, %Int32 0, %Int32 1
+	%22 = getelementptr %Point, %Point* %21, %Int32 0, %Int32 0
+	%23 = load %Int32, %Int32* %22
+	%24 = icmp ne %Int32 %23, 1
+	%25 = getelementptr %Poly3, %Poly3* %1, %Int32 0, %Int32 0
+	%26 = getelementptr [3 x %Point], [3 x %Point]* %25, %Int32 0, %Int32 2
+	%27 = getelementptr %Point, %Point* %26, %Int32 0, %Int32 1
+	%28 = load %Int32, %Int32* %27
+	%29 = icmp ne %Int32 %28, 1
+	%30 = or %Bool %24, %29
+	%31 = or %Bool %19, %30
+	br %Bool %31 , label %then_1, label %endif_1
+then_1:
+	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @.str48 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_1
+endif_1:
+	%34 = alloca %Poly3, align 4
+	%35 = insertvalue %Poly3 zeroinitializer, %Int32 1, 1
+	store %Poly3 %35, %Poly3* %34
+; if_2
+	%36 = getelementptr %Poly3, %Poly3* %34, %Int32 0, %Int32 1
+	%37 = load %Int32, %Int32* %36
+	%38 = icmp ne %Int32 %37, 1
+	br %Bool %38 , label %then_2, label %endif_2
+then_2:
+	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @.str49 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_2
+endif_2:
+; if_3
+	%41 = getelementptr %Poly3, %Poly3* %34, %Int32 0, %Int32 0
+	%42 = getelementptr [3 x %Point], [3 x %Point]* %41, %Int32 0, %Int32 0
+	%43 = getelementptr %Point, %Point* %42, %Int32 0, %Int32 0
+	%44 = load %Int32, %Int32* %43
+	%45 = icmp ne %Int32 %44, 0
+	%46 = getelementptr %Poly3, %Poly3* %34, %Int32 0, %Int32 0
+	%47 = getelementptr [3 x %Point], [3 x %Point]* %46, %Int32 0, %Int32 1
+	%48 = getelementptr %Point, %Point* %47, %Int32 0, %Int32 1
+	%49 = load %Int32, %Int32* %48
+	%50 = icmp ne %Int32 %49, 0
+	%51 = getelementptr %Poly3, %Poly3* %34, %Int32 0, %Int32 0
+	%52 = getelementptr [3 x %Point], [3 x %Point]* %51, %Int32 0, %Int32 2
+	%53 = getelementptr %Point, %Point* %52, %Int32 0, %Int32 0
+	%54 = load %Int32, %Int32* %53
+	%55 = icmp ne %Int32 %54, 0
+	%56 = or %Bool %50, %55
+	%57 = or %Bool %45, %56
+	br %Bool %57 , label %then_3, label %endif_3
+then_3:
+	%58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([42 x i8]* @.str50 to [0 x i8]*))
+	ret %Bool 0
+	br label %endif_3
+endif_3:
+	%60 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([44 x i8]* @.str51 to [0 x i8]*))
+	ret %Bool 1
+}
+
 @zeroArr = constant [4 x %Int32] zeroinitializer
 define %Bool @main_testEmptyLiteralConst() {
 ; if_0
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @.str32 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @.str52 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
 ; if_1
 	br %Bool 0 , label %then_1, label %endif_1
 then_1:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @.str33 to [0 x i8]*))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @.str53 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @.str34 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @.str54 to [0 x i8]*))
 	ret %Bool 1
 }
 
@@ -611,32 +1113,32 @@ define %Bool @main_testBrandedEnumConst() {
 ; if_0
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @.str35 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @.str55 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
 ; if_1
 	br %Bool 0 , label %then_1, label %endif_1
 then_1:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @.str36 to [0 x i8]*))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @.str56 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:
 ; if_2
 	br %Bool 0 , label %then_2, label %endif_2
 then_2:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @.str37 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @.str57 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_2
 endif_2:
 ; if_3
 	br %Bool 0 , label %then_3, label %endif_3
 then_3:
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @.str38 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @.str58 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_3
 endif_3:
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @.str39 to [0 x i8]*))
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @.str59 to [0 x i8]*))
 	ret %Bool 1
 }
 
@@ -644,7 +1146,7 @@ define %Bool @main_testLocalConst() {
 ; if_0
 	br %Bool 0 , label %then_0, label %endif_0
 then_0:
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str40 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str60 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_0
 endif_0:
@@ -655,16 +1157,16 @@ endif_0:
 	%5 = fcmp one %Float64 %4, 1.0000000000000000
 	br %Bool %5 , label %then_1, label %endif_1
 then_1:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @.str41 to [0 x i8]*))
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @.str61 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_1
 endif_1:
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @.str42 to [0 x i8]*))
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @.str62 to [0 x i8]*))
 	ret %Bool 1
 }
 
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str43 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str63 to [0 x i8]*))
 	%2 = alloca %Bool, align 1
 	store %Bool 1, %Bool* %2
 	%3 = call %Bool @main_testGenericAdaptation()
@@ -691,29 +1193,45 @@ define %Int @main() {
 	%19 = load %Bool, %Bool* %2
 	%20 = and %Bool %18, %19
 	store %Bool %20, %Bool* %2
-	%21 = call %Bool @main_testEmptyLiteralConst()
+	%21 = call %Bool @main_testNestedRecordConst()
 	%22 = load %Bool, %Bool* %2
 	%23 = and %Bool %21, %22
 	store %Bool %23, %Bool* %2
-	%24 = call %Bool @main_testBrandedEnumConst()
+	%24 = call %Bool @main_testNestedArrayConst()
 	%25 = load %Bool, %Bool* %2
 	%26 = and %Bool %24, %25
 	store %Bool %26, %Bool* %2
-	%27 = call %Bool @main_testLocalConst()
+	%27 = call %Bool @main_testArrayOfRecordsConst()
 	%28 = load %Bool, %Bool* %2
 	%29 = and %Bool %27, %28
 	store %Bool %29, %Bool* %2
-	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @.str44 to [0 x i8]*))
-; if_0
+	%30 = call %Bool @main_testRecordWithArrayFieldConst()
 	%31 = load %Bool, %Bool* %2
-	%32 = xor %Bool %31, 1
-	br %Bool %32 , label %then_0, label %endif_0
+	%32 = and %Bool %30, %31
+	store %Bool %32, %Bool* %2
+	%33 = call %Bool @main_testEmptyLiteralConst()
+	%34 = load %Bool, %Bool* %2
+	%35 = and %Bool %33, %34
+	store %Bool %35, %Bool* %2
+	%36 = call %Bool @main_testBrandedEnumConst()
+	%37 = load %Bool, %Bool* %2
+	%38 = and %Bool %36, %37
+	store %Bool %38, %Bool* %2
+	%39 = call %Bool @main_testLocalConst()
+	%40 = load %Bool, %Bool* %2
+	%41 = and %Bool %39, %40
+	store %Bool %41, %Bool* %2
+	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @.str64 to [0 x i8]*))
+; if_0
+	%43 = load %Bool, %Bool* %2
+	%44 = xor %Bool %43, 1
+	br %Bool %44 , label %then_0, label %endif_0
 then_0:
-	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str45 to [0 x i8]*))
+	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str65 to [0 x i8]*))
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	%35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str46 to [0 x i8]*))
+	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str66 to [0 x i8]*))
 	ret %Int 0
 }
 

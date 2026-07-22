@@ -471,8 +471,11 @@ def do_cvalue_literal_record(v, ctx):
 	items = []
 	for kv in v.asset:
 		if not kv.value.isValueUndef():
-			items.append(KV(get_id_str(kv), do_cinitializer(kv.value.type, kv.value, ctx=ctx), kv.nl))
-	return CValueStruct(items)
+			inititlizer = do_cinitializer(kv.value.type, kv.value, ctx=ctx)
+			items.append(KV(get_id_str(kv), inititlizer, kv.nl))
+
+	nv = CValueStruct(items)
+	return nv
 
 
 
@@ -584,6 +587,15 @@ def do_cvalue_cons_array(x, ctx):
 
 
 
+
+def initializer_already_here(items, initializer_id):
+	for item in items:
+		if item.key == initializer_id:
+			return True
+	return False
+
+
+
 def do_cvalue_cons_record(x, ctx):
 	to_type = x.type
 	value = x.value
@@ -604,9 +616,9 @@ def do_cvalue_cons_record(x, ctx):
 			# это одна и та же структура и приведение не требуется
 			cv = do_cvalue(value, ctx=ctx)
 			return cv
+
 		# C cannot just cast struct to struct (!)
-		#return str_cast(to_type, value, raw_cast=True, ctx=ctx)
-		cv = do_cvalue_cast(to_type, x.value, ctx, raw_cast=True)
+		cv = do_cvalue_cast_raw(to_type, x.value, ctx)
 		return cv
 
 	tt = do_ctype(to_type)
@@ -615,7 +627,20 @@ def do_cvalue_cons_record(x, ctx):
 		if not initializers_are_equal(x.asset, value.asset):
 			# Если у нас в ValueCons asset отличается от asset в ValueCons#value
 			# То печатаем литерал структуры из нашего asset
-			cv = CValueCast(tt, do_cvalue_literal_record(x, ctx=ctx))
+			record = do_cvalue_literal_record(x.value, ctx=ctx)
+
+			# add extra non-zero items (!)
+			for kv in x.asset:
+				if not kv.value.isValueUndef():
+					if kv.value.isValueZero():
+						continue
+					if initializer_already_here(record.items, get_id_str(kv)):
+						continue
+
+					inititlizer = do_cinitializer(kv.value.type, kv.value, ctx=ctx)
+					record.items.append(KV(get_id_str(kv), inititlizer, kv.nl))
+
+			cv = CValueCast(tt, record)
 			return cv
 
 	cv = do_cvalue(value, ctx=ctx)
@@ -876,27 +901,28 @@ def do_cvalue_cons_pointer(x, ctx):
 	return cv
 
 
-
-def do_cvalue_cast(type, value, ctx, raw_cast=False):
+def do_cvalue_cast(type, value, ctx):
 	if is_type_named(type):
 		if get_id_str(type) == get_id_str(value.type):
 			cv = do_cvalue(value, ctx=ctx)
 			return cv
 
-	if raw_cast:
-		return CValueCall(
-			CValueNamed("RAWCAST"),
-			[
-				CValueNamed(str_type(type)),
-				CValueNamed(str_type(value.type)),
-				do_cvalue(value, ctx=ctx)
-			]
-		)
-
 	ctype = do_ctype(type)
 	cvalue = do_cvalue(value, ctx=ctx)
 	cv = CValueCast(ctype, cvalue)
 	return cv
+
+
+
+def do_cvalue_cast_raw(type, value, ctx):
+	return CValueCall(
+		CValueNamed("RAWCAST"),
+		[
+			CValueNamed(str_type(type)),
+			CValueNamed(str_type(value.type)),
+			do_cvalue(value, ctx=ctx)
+		]
+	)
 
 
 
