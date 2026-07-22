@@ -174,6 +174,7 @@ bool main_testRecordConst(void) {
 #define RECT_PARTIAL {.topLeft = {.x = 1, .y = 1}}
 #define RECT_ZERO ((struct rect){0})
 
+
 bool main_testNestedRecordConst(void) {
 	struct rect r = (struct rect)RECT_CONST;
 	if (r.topLeft.x != 0 || r.topLeft.y != 0 || r.bottomRight.x != 10 || r.bottomRight.y != 20) {
@@ -189,8 +190,7 @@ bool main_testNestedRecordConst(void) {
 		printf("error: rectPartial.bottomRight not zero-filled\n");
 		return false;
 	}
-	struct rect rz = RECT_ZERO;
-	if (rz.topLeft.x != 0 || rz.topLeft.y != 0 || rz.bottomRight.x != 0 || rz.bottomRight.y != 0) {
+	if (RECT_ZERO.topLeft.x != 0 || RECT_ZERO.topLeft.y != 0 || RECT_ZERO.bottomRight.x != 0 || RECT_ZERO.bottomRight.y != 0) {
 		printf("error: rectZero not all zero\n");
 		return false;
 	}
@@ -273,6 +273,8 @@ bool main_testRecordWithArrayFieldConst(void) {
 }
 #define ZERO_ARR {0}
 #define ZERO_POINT ((struct point){0})
+#define ZERO_POINTS {0}
+#define ZERO_MATRIX {0}
 
 
 bool main_testEmptyLiteralConst(void) {
@@ -282,6 +284,14 @@ bool main_testEmptyLiteralConst(void) {
 	}
 	if (ZERO_POINT.x != 0 || ZERO_POINT.y != 0) {
 		printf("error: zeroPoint not all zero\n");
+		return false;
+	}
+	if (((int32_t [2][3])ZERO_MATRIX)[0][0] != 0 || ((int32_t [2][3])ZERO_MATRIX)[0][2] != 0 || ((int32_t [2][3])ZERO_MATRIX)[1][0] != 0 || ((int32_t [2][3])ZERO_MATRIX)[1][2] != 0) {
+		printf("error: zeroMatrix not all zero\n");
+		return false;
+	}
+	if (((const struct point [3])ZERO_POINTS)[0].x != 0 || ((const struct point [3])ZERO_POINTS)[0].y != 0 || ((const struct point [3])ZERO_POINTS)[1].x != 0 || ((const struct point [3])ZERO_POINTS)[1].y != 0 || ((const struct point [3])ZERO_POINTS)[2].x != 0 || ((const struct point [3])ZERO_POINTS)[2].y != 0) {
+		printf("error: zeroPoints not all zero\n");
 		return false;
 	}
 	printf("passed: empty literal const test\n");

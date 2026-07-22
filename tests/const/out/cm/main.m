@@ -233,8 +233,7 @@ public func testNestedRecordConst () -> Bool {
 		printf("error: rectPartial.bottomRight not zero-filled\n")
 		return false
 	}
-	var rz: Rect = rectZero
-	if rz.topLeft.x != 0 or rz.topLeft.y != 0 or rz.bottomRight.x != 0 or rz.bottomRight.y != 0 {
+	if rectZero.topLeft.x != 0 or rectZero.topLeft.y != 0 or rectZero.bottomRight.x != 0 or rectZero.bottomRight.y != 0 {
 		printf("error: rectZero not all zero\n")
 		return false
 	}
@@ -344,6 +343,8 @@ public func testRecordWithArrayFieldConst () -> Bool {
 // a typed const with an empty literal zero-fills the whole value
 const zeroArr: [4]Int32 = []
 const zeroPoint: Point = {}
+const zeroPoints: [3]Point = []
+const zeroMatrix: [2][3]Int32 = []
 
 public func testEmptyLiteralConst () -> Bool {
 	if zeroArr[0] != 0 or zeroArr[1] != 0 or zeroArr[2] != 0 or zeroArr[3] != 0 {
@@ -352,6 +353,14 @@ public func testEmptyLiteralConst () -> Bool {
 	}
 	if zeroPoint.x != 0 or zeroPoint.y != 0 {
 		printf("error: zeroPoint not all zero\n")
+		return false
+	}
+	if zeroMatrix[0][0] != 0 or zeroMatrix[0][2] != 0 or zeroMatrix[1][0] != 0 or zeroMatrix[1][2] != 0 {
+		printf("error: zeroMatrix not all zero\n")
+		return false
+	}
+	if zeroPoints[0].x != 0 or zeroPoints[0].y != 0 or zeroPoints[1].x != 0 or zeroPoints[1].y != 0 or zeroPoints[2].x != 0 or zeroPoints[2].y != 0 {
+		printf("error: zeroPoints not all zero\n")
 		return false
 	}
 

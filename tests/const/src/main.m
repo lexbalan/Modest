@@ -235,15 +235,9 @@ public func testNestedRecordConst () -> Bool {
 		return false
 	}
 
-	// KNOWN BUG: accessing a nested field directly on the immediate constant
-	// (`rectZero.topLeft.x`, no intermediate var) crashes the compiler
-	// (AttributeError: 'NoneType' object has no attribute 'value',
-	// semantic.py acc():1480) — the recursive zero-fill of `{}` only
-	// records a flat asset for the outer record, so get_item_by_id() can't
-	// resolve a field inside an already-folded nested field. Routing
-	// through a var (as below) takes the runtime access path and avoids it.
-	var rz: Rect = rectZero
-	if rz.topLeft.x != 0 or rz.topLeft.y != 0 or rz.bottomRight.x != 0 or rz.bottomRight.y != 0 {
+	// a doubly-nested field also zero-fills correctly and can be read
+	// directly off the immediate constant, no intermediate var needed
+	if rectZero.topLeft.x != 0 or rectZero.topLeft.y != 0 or rectZero.bottomRight.x != 0 or rectZero.bottomRight.y != 0 {
 		printf("error: rectZero not all zero\n")
 		return false
 	}
@@ -360,19 +354,33 @@ public func testRecordWithArrayFieldConst () -> Bool {
 // a typed const with an empty literal zero-fills the whole value
 const zeroArr: [4]Int32 = []
 const zeroPoint: Point = {}
+const zeroPoints: [3]Point = []
+const zeroMatrix: [2][3]Int32 = []
 
 public func testEmptyLiteralConst () -> Bool {
+	// scalar array from []: element access works directly on the const
 	if zeroArr[0] != 0 or zeroArr[1] != 0 or zeroArr[2] != 0 or zeroArr[3] != 0 {
 		printf("error: zeroArr not all zero\n")
 		return false
 	}
-	// KNOWN BUG: comparing a field of a {}-constructed const record crashes
-	// the compiler (TypeError: '<' not supported between NoneType and int,
-	// semantic.py do_value_bin_op:775) — the folded .asset of a record
-	// field access isn't propagated, so the EQ_OPS overflow check trips on
-	// asset == None instead of raising a clean diagnostic.
+
+	// record from {}: field access works directly on the const
 	if zeroPoint.x != 0 or zeroPoint.y != 0 {
 		printf("error: zeroPoint not all zero\n")
+		return false
+	}
+
+	// nested array (matrix) from []: index-then-index also works directly
+	// on the const — no record field lookup is involved
+	if zeroMatrix[0][0] != 0 or zeroMatrix[0][2] != 0 or zeroMatrix[1][0] != 0 or zeroMatrix[1][2] != 0 {
+		printf("error: zeroMatrix not all zero\n")
+		return false
+	}
+
+	// array of records from []: index-then-field-access also works directly
+	// on the const
+	if zeroPoints[0].x != 0 or zeroPoints[0].y != 0 or zeroPoints[1].x != 0 or zeroPoints[1].y != 0 or zeroPoints[2].x != 0 or zeroPoints[2].y != 0 {
+		printf("error: zeroPoints not all zero\n")
 		return false
 	}
 

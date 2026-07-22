@@ -2193,9 +2193,15 @@ class ValueRecord(Value):
 def create_zero_literal(t, ti=None):
 	if t.is_aggregate_type():
 		if t.is_type_array():
-			return ValueArray(t, items=[], ti=ti)
+			from value.array import value_array_cons
+			empty_array = ValueArray(t, items=[], ti=ti)
+			return value_array_cons(t, empty_array, 'implicit', ti)
+
 		if t.is_type_record():
-			return ValueRecord(t, initializers=[], ti=ti)
+			from value.record import value_record_cons
+			empty_record = ValueRecord(t, initializers=[], ti=ti)
+			return value_record_cons(t, empty_record, 'implicit', ti)
+
 	return ValueLiteral(t, asset=0, ti=ti)
 
 

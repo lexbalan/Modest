@@ -125,11 +125,9 @@ def resolve(t1, t2):
 def value_array_cons(t, v, method, ti):
 	result_type = t
 
-
 	if t.is_holed():
 		result_type = resolve(t, v.type)
 		#warning("holed, RT = %s" % result_type.to_str(), ti)
-
 
 	# if t.hasAttribute('zarray'):
 	# 	# конструируем zarray а это значит что он должен быть на 1 длиннее
@@ -174,13 +172,24 @@ def value_array_cons(t, v, method, ti):
 
 	size = 0
 	if v.isValueImmediate():
+
 		items = []
+
 		for item in v.asset:
 			from .cons import value_cons_implicit_check
 			casted_item = value_cons_implicit_check(result_type.of, item)
 			casted_item.nl = item.nl
 			size += casted_item.type.get_size()
 			items.append(casted_item)
+
+		if t.is_type_sized_array() and not t.is_vla():
+			# add zero-tail for rest of sized array
+			i = len(items)
+			while i < t.volume.asset:
+				zero_value = create_zero_literal(t.of, ti=ti)
+				items.append(zero_value)
+				i += 1
+
 		nv.set_asset(items)
 
 	nv.type.size = size
