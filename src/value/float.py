@@ -14,7 +14,7 @@ def value_float_create(val, ti=None):
 
 
 
-def float_can(to, from_type, method, ti):
+def value_float_can(to, from_type, method, ti):
 	if from_type.is_generic():
 		return from_type.is_type_int() or from_type.is_type_float() or from_type.is_type_integer() or from_type.is_type_rational()
 

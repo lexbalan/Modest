@@ -176,9 +176,8 @@ hexdigit ::= digit | 'a'..'f' | 'A'..'F'
 value_literal_string ::= ('"' string_char* '"') | ("'" string_char* "'")
 string_char  ::= escaped_char | <any char except the enclosing quote or '\'>
 escaped_char ::= '\'  ( '"' | "'" | '\' | 'n' | 't' | 'r' | 'a' | 'b' | 'v' | 'f'
-                       | digit+             (* decimal code *)
-                       | 'x' hexdigit{1,2}   (* \xN | \xNN *)
-                       | 'u' hexdigit{1,8}   (* \uN..N — Unicode codepoint → UTF-8 *)
+                       | 'x' hexdigit hexdigit        (* \xHH — one byte *)
+                       | 'u' '{' hexdigit{1,6} '}'     (* \u{H..H} — Unicode codepoint ≤ 10FFFF → UTF-8 *)
                        )
 
 value_literal_array  ::= '[' (value_expr (lsep value_expr)*)? NL* ']'

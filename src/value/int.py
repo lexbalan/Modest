@@ -5,7 +5,7 @@ from util import nbits_for_num, int_zext
 
 
 
-def int_can(to, from_type, method, ti):
+def value_int_can(to, from_type, method, ti):
 	if Type.is_type_integer(from_type):
 		return from_type.width <= to.width
 

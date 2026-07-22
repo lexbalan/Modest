@@ -7,7 +7,7 @@ def value_variant_create(val, ti=None):
 	return ValueLiteral(typeBool, val, ti)
 
 
-def variant_can(to, from_type, method, ti):
+def value_variant_can(to, from_type, method, ti):
 	can = to.getVariantId(from_type) != None
 	#info("variant_can ? %d" % can, ti)
 	return can

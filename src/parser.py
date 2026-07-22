@@ -1453,7 +1453,7 @@ class Parser:
 						i += 1
 						continue
 
-					# '\xCODE' ?
+					# '\xHH' | '\u{HHHHHH}' ?
 					is_hex = sym == 'x'
 					is_unicode = sym == 'u'
 
@@ -1464,37 +1464,47 @@ class Parser:
 
 					code = 0
 
-					# case \012345678
-					if sym.isdigit():
+					# case \xHH (exactly 2 hex digits)
+					if is_hex:
 						cod = ""
-						while i < len(s):
-							sym = s[i]
-							if not sym.isdigit():
-								break
-							cod = cod + sym
-							i += 1
-
-						i = i - 1
-						code = int(cod, 10) & 0xFF
-
-					# case \xXX | \uXXXXXXXX
-					elif is_hex or is_unicode:
-						cod = ""
-						i += 1 # skip 'x' | 'u' prefix
-						while i < len(s):
+						i += 1  # skip 'x' prefix
+						while i < len(s) and len(cod) < 2:
 							sym = s[i]
 							if not isxdigit(sym):
 								break
 							cod = cod + sym
 							i += 1
-							if is_hex:
-								if len(cod) == 2:
-									break
-							else:
-								if len(cod) == 8:
-									break
+						if len(cod) != 2:
+							error("expected exactly 2 hex digits after \\x", ti)
+							cod = "00"
 						i -= 1
 						code = int(cod, 16)
+
+					# case \u{HHHHHH} (1-6 hex digits, braces required)
+					elif is_unicode:
+						i += 1  # skip 'u' prefix
+						if i >= len(s) or s[i] != '{':
+							error("expected '{' after \\u", ti)
+							code = 0
+						else:
+							i += 1  # skip '{'
+							cod = ""
+							while i < len(s) and isxdigit(s[i]) and len(cod) < 6:
+								cod = cod + s[i]
+								i += 1
+							if cod == "" or i >= len(s) or s[i] != '}':
+								error("expected \\u{H...H} with 1-6 hex digits", ti)
+								code = 0
+								if i < len(s) and s[i] == '}':
+									pass  # consumed by the i += 1 below
+								else:
+									i -= 1  # compensate for the trailing i += 1 below
+							else:
+								code = int(cod, 16)
+								if code > 0x10FFFF:
+									error("\\u{%s} is outside the Unicode range (max 10FFFF)" % cod, ti)
+									code = 0
+								# i stays on '}', consumed by the i += 1 below
 
 					elif sym == 'n': code = ord("\n")   # LF
 					elif sym == '"': code = ord("\"")   # QUOTE2

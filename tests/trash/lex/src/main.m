@@ -97,7 +97,7 @@ func gettok (lex: *Lexer) -> Bool {
 		}
 	}
 
-	lex.token[lex.toklen] = '\0'
+	lex.token[lex.toklen] = '\x00'
 	return true
 }
 

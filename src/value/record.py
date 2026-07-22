@@ -41,7 +41,7 @@ def value_record_create(initializers, ti):
 
 
 
-def record_can(to, from_type, method, ti):
+def value_record_can(to, from_type, method, ti):
 	if to.is_type_unit():
 		return (from_type.is_type_unit()) or method != 'implicit'
 
@@ -98,6 +98,8 @@ def value_record_cons(t, v, method, ti):
 				nl = explicit_initializer.nl
 			elif field.init_value != None:
 				iv = field.init_value
+				if iv.isValueUndef():
+					iv = create_zero_literal(field.type, ti=ti)
 			else:
 				iv = create_zero_literal(field.type, ti=ti)
 

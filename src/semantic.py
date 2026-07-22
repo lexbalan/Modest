@@ -77,6 +77,7 @@ cdef = None     # current definition
 cfunc = None	# current function
 
 
+import_stack = []
 
 
 
@@ -1809,6 +1810,9 @@ def do_stmt_let(x):
 	return df
 
 
+def do_stmt_const(x):
+	return do_stmt_let(x)
+
 
 def do_stmt_var(x):
 	#info("do_stmt_var", x['ti'])
@@ -1831,9 +1835,6 @@ def do_stmt_var(x):
 
 	return df
 
-
-def do_stmt_const(x):
-	return do_stmt_let(x)
 
 
 def do_stmt_if(x):
@@ -2554,9 +2555,6 @@ def check_stmt(stmt):
 
 
 
-
-import_stack = []
-
 def do_import(x):
 	global modules
 	global cmodule
@@ -2758,6 +2756,7 @@ def process_module(idStr, sourcename, ast):
 	cmodule = Module(id_str=idStr, ast=ast, symtab=csymtab, defs=[], sourcename=sourcename)
 
 	import_builtin = StmtImport(impline="builtin", name="builtin", module=builtin_module, ti=builtin_ti, include=False)
+	import_builtin.usecnt = 1
 	cmodule.imports["builtin"] = import_builtin
 
 	# 0. do imports & directives
@@ -2800,6 +2799,11 @@ def process_module(idStr, sourcename, ast):
 	cmodule = prev_module
 	csymtab = prev_symtab
 	global_prefix = prev_global_prefix
+
+	for k in m.imports:
+		imp = m.imports[k]
+		if imp.usecnt == 0:
+			warning("unised import", imp.ti)
 
 	return m
 

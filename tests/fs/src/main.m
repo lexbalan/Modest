@@ -70,7 +70,7 @@ func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 	}
 
 	// check if not EOS
-	if c == '\n' or c == '\0' {
+	if c == '\n' or c == '\x00' {
 		return 0
 	}
 
@@ -85,7 +85,7 @@ func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 			++outpos
 			c = t.input[t.position]
 		}
-		output[outpos] = '\0'
+		output[outpos] = '\x00'
 	} else {
 		output[outpos] = c
 		++t.position
@@ -111,7 +111,7 @@ func tokenize (tokenizer: *Tokenizer) -> Unit {
 		//let token = new token[:toklen] // z?
 		var tok = *[toklen+1]Char8 malloc(SizeT toklen+1)
 		*tok = token[:toklen]
-		tok[toklen] = '\0'
+		tok[toklen] = '\x00'
 		//printf("TOKEN = '%s'\n", tok)
 		tokenizer.tokens[tokenizer.ntokens] = tok
 		++tokenizer.ntokens
@@ -254,7 +254,7 @@ func cmdLs (argc: Nat16, argv: *[]*Str8) -> Int32 {
 	//printf("rc = %d\n", rc)
 	var fileInfo: sys.Filinfo
 	while sys.readdir(&dir, &fileInfo) == 0 {
-		if fileInfo.fname[0] == '\0' {
+		if fileInfo.fname[0] == '\x00' {
 			break
 		}
 		printf(" - %s\n", &fileInfo.fname)

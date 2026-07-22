@@ -121,7 +121,7 @@ public func sprintDateTime (s: *[]Char8) -> @unused Int32 {
 	let x0 = sprintDate(&s[0:])
 	s[x0] = delimiter
 	let x1 = sprintTime(&s[x0+1:])
-	s[x0 + 1 + x1] = '\0'
+	s[x0 + 1 + x1] = '\x00'
 	return x0 + 1 + x1
 }
 

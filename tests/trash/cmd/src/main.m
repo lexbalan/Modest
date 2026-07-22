@@ -55,7 +55,7 @@ func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 	}
 
 	// check if not EOS
-	if c == '\n' or c == '\0' {
+	if c == '\n' or c == '\x00' {
 		return 0
 	}
 
@@ -71,7 +71,7 @@ func gettok (t: *Tokenizer, output: *[]Char8, lim: Nat16) -> Nat16 {
 			++outpos
 			c = t.input[t.position]
 		}
-		output[outpos] = '\0'
+		output[outpos] = '\x00'
 	} else {
 		output[outpos] = c
 		++t.position
@@ -97,7 +97,7 @@ func tokenize (tokenizer: *Tokenizer) -> Unit {
 		let pbuf = &tokenizer.tokensBuf[tokenizer.tokensBufPos:]
 		pbuf[:toklen] = token[:toklen]
 		tokenizer.tokensBufPos = tokenizer.tokensBufPos+toklen
-		pbuf[tokenizer.tokensBufPos] = '\0'
+		pbuf[tokenizer.tokensBufPos] = '\x00'
 		++tokenizer.tokensBufPos
 		// save pointer to token
 		tokenizer.tokens[tokenizer.tokensPos] = pbuf
