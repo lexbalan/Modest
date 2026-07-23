@@ -6,8 +6,12 @@ from error import info, warning, error
 
 # получает на вход список инициализаторов
 # конструирует и возвращает GenericRecord value
-def value_record_create(initializers, ti):
+def value_record_create(t, initializers, ti):
 	#info("value_record_create()", ti)
+
+	if t != None:
+		empty_record = ValueRecord(t, initializers=initializers, ti=ti)
+		return value_record_cons(t, empty_record, 'implicit', ti)
 
 	stage = HLIR_VALUE_STAGE_COMPILETIME
 
@@ -99,9 +103,9 @@ def value_record_cons(t, v, method, ti):
 			elif field.init_value != None:
 				iv = field.init_value
 				if iv.isValueUndef():
-					iv = create_zero_literal(field.type, ti=ti)
+					iv = create_default_value(field.type, ti=ti)
 			else:
-				iv = create_zero_literal(field.type, ti=ti)
+				iv = create_default_value(field.type, ti=ti)
 
 			from .cons import value_cons_implicit_check
 			iv = value_cons_implicit_check(field.type, iv)

@@ -264,18 +264,16 @@ public func testNestedArrayConst () -> Bool {
 		printf("error: wider head mismatch\n")
 		return false
 	}
-	// KNOWN BUG: comparing an array value against an all-zero array literal
-	// (`wider[2] != [0, 0, 0]`) crashes the LLVM backend — the zero literal
-	// lowers straight to a `zeroinitializer` constant, and the equality
-	// codegen bitcasts it to i8* for memcmp without ever storing it to an
-	// addressable alloca first ("invalid cast opcode for cast from
-	// '[3 x i32]' to 'ptr'"). Elementwise comparison avoids the codegen
-	// path entirely.
-	if wider[2][0] != 0 or wider[2][1] != 0 or wider[2][2] != 0 {
+	if wider[2] != [0, 0, 0] {
 		printf("error: wider extra row not zero-filled\n")
 		return false
 	}
+	if wider != [[1, 2, 3], [4, 5, 6], [0, 0, 0]] {
+		printf("error: wider != [[1,2,3],[4,5,6],[0,0,0]]\n")
+		return false
+	}
 
+	let empty: [2][3]Int32 = []
 	var mz: [2][3]Int32 = []
 	if mz[0][0] != 0 or mz[0][1] != 0 or mz[0][2] != 0 {
 		printf("error: mz row 0 not all zero\n")
@@ -283,6 +281,14 @@ public func testNestedArrayConst () -> Bool {
 	}
 	if mz[1][0] != 0 or mz[1][1] != 0 or mz[1][2] != 0 {
 		printf("error: mz row 1 not all zero\n")
+		return false
+	}
+	if mz != [[0, 0, 0], [0, 0, 0]] {
+		printf("error: mz != [[0,0,0],[0,0,0]]\n")
+		return false
+	}
+	if mz != empty {
+		printf("error: mz != empty\n")
 		return false
 	}
 

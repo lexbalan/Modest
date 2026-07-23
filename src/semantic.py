@@ -47,7 +47,7 @@ def is_local_context():
 	return cfunc != None
 
 
-from value.cons import value_cons_implicit, value_cons_implicit_check, value_cons_explicit, value_cons_default, value_cons_extra_arg
+from value.cons import value_cons_implicit, value_cons_implicit_check, value_cons_explicit, value_cons_default
 
 
 from symtab import Symtab
@@ -295,7 +295,7 @@ def create_builtin_module():
 		Initializer(Id('minor'), compilerVersionMinor),
 		Initializer(Id('patch'), compilerVersionPatch),
 	]
-	compilerVersionRecord = value_record_create(compiler_version_initializers, ti=builtin_ti)
+	compilerVersionRecord = value_record_create(t=None, initializers=compiler_version_initializers, ti=builtin_ti)
 
 	compilerVersionConst = xcreate_const(compiler_symtab, "version", compilerVersionRecord)
 
@@ -1212,7 +1212,7 @@ def do_value_call(x):
 		if not arg.isValueBad():
 			if arg.type.is_generic():
 				warning("extra argument with generic type", a['ti'])
-			arg = value_cons_extra_arg(arg)
+			arg = value_cons_default(arg)
 
 			if arg.isValueRuntime():
 				imm_args = False
@@ -1331,7 +1331,7 @@ def do_value_index(x):
 			if index_imm < len(left.asset):
 				item = left.asset[index_imm]
 			else:
-				item = create_zero_literal(array_type.of)
+				item = create_default_value(array_type.of)
 
 			Value.cp_immediate(nv, item)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
@@ -1566,7 +1566,7 @@ def do_value_array(x):
 			item_value = do_rvalue(item['value'])
 			item_value.nl = item['nl']
 			items.append(item_value)
-	v = value_array_create(items, ti=x['ti'])
+	v = value_array_create(t=None, items=items, ti=x['ti'])
 	return v
 
 
@@ -1590,7 +1590,7 @@ def do_value_record(x):
 			)
 			initializers.append(p)
 
-	v = value_record_create(initializers, ti=x['ti'])
+	v = value_record_create(t=None, initializers=initializers, ti=x['ti'])
 	return v
 
 

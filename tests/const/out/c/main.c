@@ -210,10 +210,15 @@ bool main_testNestedArrayConst(void) {
 		printf("error: wider head mismatch\n");
 		return false;
 	}
-	if (wider[2][0] != 0 || wider[2][1] != 0 || wider[2][2] != 0) {
+	if (__builtin_memcmp(&wider[2], &(int32_t [3]){0, 0, 0}, sizeof(int32_t [3])) != 0) {
 		printf("error: wider extra row not zero-filled\n");
 		return false;
 	}
+	if (__builtin_memcmp(&wider, &(int32_t [3][3]){{1, 2, 3}, {4, 5, 6}, {0, 0, 0}}, sizeof(int32_t [3][3])) != 0) {
+		printf("error: wider != [[1,2,3],[4,5,6],[0,0,0]]\n");
+		return false;
+	}
+	int32_t empty[2][3] = {0};
 	int32_t mz[2][3] = {0};
 	if (mz[0][0] != 0 || mz[0][1] != 0 || mz[0][2] != 0) {
 		printf("error: mz row 0 not all zero\n");
@@ -221,6 +226,14 @@ bool main_testNestedArrayConst(void) {
 	}
 	if (mz[1][0] != 0 || mz[1][1] != 0 || mz[1][2] != 0) {
 		printf("error: mz row 1 not all zero\n");
+		return false;
+	}
+	if (__builtin_memcmp(&mz, &(int32_t [2][3]){{0, 0, 0}, {0, 0, 0}}, sizeof(int32_t [2][3])) != 0) {
+		printf("error: mz != [[0,0,0],[0,0,0]]\n");
+		return false;
+	}
+	if (__builtin_memcmp(&mz, &empty, sizeof(int32_t [2][3])) != 0) {
+		printf("error: mz != empty\n");
 		return false;
 	}
 	printf("passed: nested array const test\n");

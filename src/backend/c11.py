@@ -2,14 +2,15 @@
 # но индексируешь переменной (в цикле например)
 
 import copy
+import os
 
 from hlir import *
 from error import info, warning, error, fatal
 from unicode import chars_to_utf32
-from util import str_fractional, align_bits_up
+from util import str_fractional, align_bits_up, nbits_for_num
 from common import features
 
-from .c11_1 import *
+from .cir import *
 
 import re
 
@@ -205,11 +206,19 @@ def do_ctype_func(t, specs=[]):
 	return CTypeFunc(to=to, params=params, specs=specs, extra_args=t.extra_args)
 
 
+# CIR TypeArray хранит volume уже как CValue (или None) — приведение HLIR-значения
+# к CIR откладывать до печати незачем и не нужно самому CIR
+def do_ctype_array_volume(volume):
+	if volume == None or volume.isValueUndef():
+		return None
+	return do_cvalue(volume)
+
+
 # преобразуем Modest TypeArray -> CIR TypeArray
 def do_ctype_array(t, specs=[]):
 	# сливаем *[][] в *[]
 	# такой укзаатель на массив массивов можно будет использовать только после приведения к *[n][m] (!)
-	return CTypeArray(of=do_ctype(t.of), volume=t.volume, specs=specs)
+	return CTypeArray(of=do_ctype(t.of), volume=do_ctype_array_volume(t.volume), specs=specs)
 
 
 
@@ -268,7 +277,7 @@ def do_ctype(t, is_param=False):
 			# Только для параметров функции!
 			if t.is_type_pointer_to_array():
 				if not need_ptr_to_item_instead_of_ptr_to_array(t.to):
-					return CTypeArray(of=do_ctype(t.to.of), volume=t.to.volume)
+					return CTypeArray(of=do_ctype(t.to.of), volume=do_ctype_array_volume(t.to.volume))
 
 	specs = []
 	if t.hasAttribute('const'):    specs.append('const')
@@ -2340,7 +2349,7 @@ def dump(filename, defs):
 	file = open(filename, "w")
 
 	for d in defs:
-		file.write(str(d))
+		file.write(str_cdef(d))
 
 	file.write("\n\n")
 	file.close()

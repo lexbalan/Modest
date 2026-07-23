@@ -2190,19 +2190,17 @@ class ValueRecord(Value):
 
 
 
-def create_zero_literal(t, ti=None):
-	if t.is_aggregate_type():
-		if t.is_type_array():
-			from value.array import value_array_cons
-			empty_array = ValueArray(t, items=[], ti=ti)
-			return value_array_cons(t, empty_array, 'implicit', ti)
+def create_default_value(t, ti=None):
+	if t.is_type_array():
+		from value.array import value_array_create
+		return value_array_create(t, items=[], ti=ti)
 
-		if t.is_type_record():
-			from value.record import value_record_cons
-			empty_record = ValueRecord(t, initializers=[], ti=ti)
-			return value_record_cons(t, empty_record, 'implicit', ti)
+	if t.is_type_record():
+		from value.record import value_record_create
+		return value_record_create(t, initializers=[], ti=ti)
 
 	return ValueLiteral(t, asset=0, ti=ti)
+
 
 
 

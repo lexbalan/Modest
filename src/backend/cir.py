@@ -1,23 +1,10 @@
 
-from util import nbits_for_num
-
-
-
-import os
-
-
-
 nl_symbol = "\n"
 indent_symbol = "\t"
 
 indent_level = 0
 
 
-
-
-def out(s):
-	global f
-	f.write(str(s))
 
 
 def indent_up():
@@ -80,6 +67,20 @@ styles = {
 # default style is legacy
 styleguide = legacy_style
 
+
+def render(node, style='legacy', indent='\t', newline='\n'):
+	global indent_level, styleguide, nl_symbol, indent_symbol
+
+	saved = (indent_level, styleguide, nl_symbol, indent_symbol)
+	indent_level = 0
+	styleguide = styles[style]
+	nl_symbol = newline
+	indent_symbol = indent
+
+	try:
+		return str(node)
+	finally:
+		indent_level, styleguide, nl_symbol, indent_symbol = saved
 
 
 def wrap_if(x, cond):
@@ -215,9 +216,8 @@ class CTypeArray(CType):
 
 	def to_str(self, text='', with_qualifiers=True):
 		text = text + '['
-		if self.volume != None and not self.volume.isValueUndef():
-			from .c11 import do_cvalue
-			text += str_cvalue(do_cvalue(self.volume))
+		if self.volume != None:
+			text += str_cvalue(self.volume)
 		text += ']'
 		text = wrap_if(text, self.of.precedence > self.precedence)
 		text = str_ctype(self.of, text)
@@ -1138,6 +1138,8 @@ def str_cstmt(x):
 	#	print_comment(x.comment)
 	#sstr += str_nl_indent(x.nl)
 	sstr += str(x)
+	if x.mark != None:
+		sstr = '/*%s*/' % x.mark + sstr
 	return sstr
 
 
@@ -1525,6 +1527,7 @@ class CMacroUndef():
 		self.nl = 1  #!!! (because it is not CStmt...)
 		super().__init__()
 		self.text = text
+		self.mark = None
 
 	def __str__(self):
 		sstr = str_nl_indent(self.nl)
@@ -1550,9 +1553,8 @@ class CInclude():
 
 
 def str_cdef(x):
-	if x.mark:
-		out('/*%s*/' % x.mark)
-	return str(x)
+	prefix = '/*%s*/' % x.mark if x.mark else ''
+	return prefix + str(x)
 
 
 # pairs = ("macro text", [<defs>])

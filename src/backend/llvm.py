@@ -420,7 +420,7 @@ def llvm_print_value_array(x):
 		if i < n:
 			item = items[i]
 		else:
-			item = do_eval(create_zero_literal(x['type'].of))
+			item = do_eval(create_default_value(x['type'].of))
 
 		if i > 0: out(",\n")
 		indent()
@@ -1031,19 +1031,16 @@ def do_eval_bin(x):
 			# Для этого нам НУЖНЫ НЕ САМИ ЗНАЧЕНИЯ а их АДРЕСА (adr | pointer)
 			# Поэтому мы не здесь не вызываем для них llvm_dold
 
-			# НО если левое или правое уже находится в регистре (само) -
+			# НО если левое или правое ещё не является адресом (само
+			# значение, литерал, zeroinitializer и т.п.) -
 			# выделим под него память на стеке, сохраним его туда,
 			# и будем использовать указатель на эту память
 
 			if not l['is_adr']:
-				if l['kind'] == 'reg':
-					l = llvm_alloca_store(l['type'], id_str=None, init_value=l)
+				l = llvm_alloca_store(l['type'], id_str=None, init_value=l)
 
 			if not r['is_adr']:
-				if r['kind'] == 'reg':
-					r = llvm_alloca_store(r['type'], id_str=None, init_value=r)
-					if r == None:
-						1/0
+				r = llvm_alloca_store(r['type'], id_str=None, init_value=r)
 
 			# Теперь сравниваем значения по указателям и длине (memcmp)
 			sz = llvm_value_num(typeInt64, l['type'].get_size())
