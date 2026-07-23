@@ -2157,57 +2157,6 @@ class ValueArray(Value):
 
 		return True
 
-	# TODO: see select_common_type!
-	def can(to, from_type, method, ti):
-		# String -> []CharX
-		if from_type.is_type_string():
-			return to.of.is_type_char() or to.of.is_type_word()
-
-		if not from_type.is_type_array():
-			return False
-
-		if not from_type.is_generic():
-			return False
-
-		if from_type.is_generic():
-			# from an empty array literal `[]`
-			if from_type.get_size() == 0 and from_type.of.is_type_unit():
-				return True
-
-		# Check item type
-		# проверяем может ли тип элемента из v
-		# быть приведен к типу элемента t
-		# (это обязательное требование к типу v)
-		ct = Type.select_common_type(to.of, from_type.of, ti)
-
-		if ct == None:
-			return False
-
-		if not Type.eq(to.of, ct):
-			return False
-
-		if from_type.is_generic():
-			# GenericArray -> Array
-			if to.volume.isValueUndef():
-				return True
-
-			if not to.volume.isValueImmediate():
-				return True
-
-			# Check array length
-			n_from = from_type.volume.asset
-			n_to = to.volume.asset
-
-			# (нельзя неявно построить меньший массив из большего)
-			return n_from <= n_to
-
-		if method == 'implicit':
-			return False
-
-		return True
-
-
-
 
 
 class ValueRecord(Value):
