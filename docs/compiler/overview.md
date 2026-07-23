@@ -54,7 +54,7 @@ Each backend walks HLIR modules and prints output:
 
 | Backend | Output | Notes |
 | :-- | :-- | :-- |
-| `c11.py` (+ `c11_1.py`) | `.c` + `.h` | primary backend; readable C11 |
+| `c11.py` (+ `cir.py`) | `.c` + `.h` | primary backend; readable C11 |
 | `llvm.py` | `.ll` | LLVM IR, compiled with clang |
 | `modest.py` | `.m` | pretty-printer (self-output) |
 

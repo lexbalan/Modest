@@ -44,8 +44,8 @@ described in [README.md](./README.md).
 
 | File | Purpose |
 |------|---------|
-| `c11.py` | C11 backend: HLIR → C11 source code (imports helpers from `c11_1.py`) |
-| `c11_1.py` | C11 backend helpers (split out from `c11.py`) |
+| `c11.py` | C11 backend: HLIR → C11 source (lowering; builds the `cir.py` tree) |
+| `cir.py` | C intermediate representation: dependency-free C AST + printer (`CType*`/`CValue*`/`CStmt*` → C11 text) |
 | `llvm.py` | LLVM IR backend: HLIR → LLVM intermediate representation |
 | `modest.py` | Modest backend: HLIR → Modest source code (pretty printer / self-hosted output) |
 
