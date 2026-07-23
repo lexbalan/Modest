@@ -264,6 +264,10 @@ public func testNestedArrayConst () -> Bool {
 		printf("error: wider extra row not zero-filled\n")
 		return false
 	}
+	if wider != [[1, 2, 3], [4, 5, 6]] {
+		printf("error: wider != [[1,2,3],[4,5,6],[0,0,0]]\n")
+		return false
+	}
 
 	var mz: [2][3]Int32 = []
 	if mz[0][0] != 0 or mz[0][1] != 0 or mz[0][2] != 0 {

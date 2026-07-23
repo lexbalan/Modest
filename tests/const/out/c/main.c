@@ -214,6 +214,10 @@ bool main_testNestedArrayConst(void) {
 		printf("error: wider extra row not zero-filled\n");
 		return false;
 	}
+	if (__builtin_memcmp(&wider, &(int32_t [3][3]){{1, 2, 3}, {4, 5, 6}, {0, 0, 0}}, sizeof(int32_t [3][3])) != 0) {
+		printf("error: wider != [[1,2,3],[4,5,6],[0,0,0]]\n");
+		return false;
+	}
 	int32_t mz[2][3] = {0};
 	if (mz[0][0] != 0 || mz[0][1] != 0 || mz[0][2] != 0) {
 		printf("error: mz row 0 not all zero\n");
