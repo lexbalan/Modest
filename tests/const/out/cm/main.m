@@ -269,6 +269,7 @@ public func testNestedArrayConst () -> Bool {
 		return false
 	}
 
+	let empty: [2][3]Int32 = []
 	var mz: [2][3]Int32 = []
 	if mz[0][0] != 0 or mz[0][1] != 0 or mz[0][2] != 0 {
 		printf("error: mz row 0 not all zero\n")
@@ -280,6 +281,10 @@ public func testNestedArrayConst () -> Bool {
 	}
 	if mz != [] {
 		printf("error: mz != [[0,0,0],[0,0,0]]\n")
+		return false
+	}
+	if mz != empty {
+		printf("error: mz != empty\n")
 		return false
 	}
 
