@@ -3,17 +3,15 @@ from hlir import *
 from error import info, warning, error
 
 
-def value_record_create(t, initializers, ti):
-	if t == None:
-		return value_record_createx(initializers, ti)
-	empty_record = ValueRecord(t, initializers=initializers, ti=ti)
-	return value_record_cons(t, empty_record, 'implicit', ti)
-
 
 # получает на вход список инициализаторов
 # конструирует и возвращает GenericRecord value
-def value_record_createx(initializers, ti):
+def value_record_create(t, initializers, ti):
 	#info("value_record_create()", ti)
+
+	if t != None:
+		empty_record = ValueRecord(t, initializers=initializers, ti=ti)
+		return value_record_cons(t, empty_record, 'implicit', ti)
 
 	stage = HLIR_VALUE_STAGE_COMPILETIME
 

@@ -11,7 +11,7 @@ from .nat import value_nat_can, value_nat_cons
 from .float import value_float_can, value_float_cons
 from .fixed import value_fixed_can, value_fixed_cons
 from .record import value_record_can, value_record_cons
-from .array import value_array_can, value_array_cons
+from .array import value_array_cons
 from .pointer import value_pointer_can, value_pointer_cons
 from .variant import value_variant_can, value_variant_cons
 from .bad import value_bad_can, value_bad_cons
@@ -57,7 +57,7 @@ def cons_can(to, from_type, method, ti):
 	elif to.is_type_word(): checker = value_word_can
 	elif to.is_type_record(): checker = value_record_can
 	elif to.is_type_pointer(): checker = value_pointer_can
-	elif to.is_type_array(): checker = value_array_can
+	elif to.is_type_array(): checker = ValueArray.can
 	elif to.is_type_float(): checker = value_float_can
 	elif to.is_type_fixed(): checker = value_fixed_can
 	elif to.is_type_char(): checker = value_char_can
