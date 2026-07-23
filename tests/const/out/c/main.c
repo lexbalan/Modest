@@ -227,6 +227,10 @@ bool main_testNestedArrayConst(void) {
 		printf("error: mz row 1 not all zero\n");
 		return false;
 	}
+	if (__builtin_memcmp(&mz, &(int32_t [2][3]){{0, 0, 0}, {0, 0, 0}}, sizeof(int32_t [2][3])) != 0) {
+		printf("error: mz != [[0,0,0],[0,0,0]]\n");
+		return false;
+	}
 	printf("passed: nested array const test\n");
 	return true;
 }

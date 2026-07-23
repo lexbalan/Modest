@@ -282,6 +282,10 @@ public func testNestedArrayConst () -> Bool {
 		printf("error: mz row 1 not all zero\n")
 		return false
 	}
+	if mz != [[0, 0, 0], [0, 0, 0]] {
+		printf("error: mz != [[0,0,0],[0,0,0]]\n")
+		return false
+	}
 
 	printf("passed: nested array const test\n")
 	return true
