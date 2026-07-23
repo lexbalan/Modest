@@ -2,6 +2,7 @@
 # но индексируешь переменной (в цикле например)
 
 import copy
+import os
 
 from hlir import *
 from error import info, warning, error, fatal

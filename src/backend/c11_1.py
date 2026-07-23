@@ -1,8 +1,4 @@
 
-import os
-
-
-
 nl_symbol = "\n"
 indent_symbol = "\t"
 
