@@ -47,7 +47,7 @@ def is_local_context():
 	return cfunc != None
 
 
-from value.cons import value_cons_implicit, value_cons_implicit_check, value_cons_explicit, value_cons_default, value_cons_extra_arg
+from value.cons import value_cons_implicit, value_cons_implicit_check, value_cons_explicit, value_cons_default
 
 
 from symtab import Symtab
@@ -1212,7 +1212,7 @@ def do_value_call(x):
 		if not arg.isValueBad():
 			if arg.type.is_generic():
 				warning("extra argument with generic type", a['ti'])
-			arg = value_cons_extra_arg(arg)
+			arg = value_cons_default(arg)
 
 			if arg.isValueRuntime():
 				imm_args = False
