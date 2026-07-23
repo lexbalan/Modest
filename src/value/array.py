@@ -5,6 +5,11 @@ from .char import utf32_chars_to_utfx_char_values
 
 
 
+def value_array_create2(t, items, ti):
+	empty_array = ValueArray(t, items=items, ti=ti)
+	return value_array_cons(t, empty_array, 'implicit', ti)
+
+
 def value_array_create(items, ti):
 	#info("value_array_create()", ti)
 
@@ -186,8 +191,8 @@ def value_array_cons(t, v, method, ti):
 			# add zero-tail for rest of sized array
 			i = len(items)
 			while i < t.volume.asset:
-				zero_value = create_zero_literal(t.of, ti=ti)
-				items.append(zero_value)
+				default_value = create_default_value(t.of, ti=ti)
+				items.append(default_value)
 				i += 1
 
 		nv.set_asset(items)

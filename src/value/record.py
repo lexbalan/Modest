@@ -3,6 +3,11 @@ from hlir import *
 from error import info, warning, error
 
 
+def value_record_create2(t, initializers, ti):
+	from value.record import value_record_cons
+	empty_record = ValueRecord(t, initializers=initializers, ti=ti)
+	return value_record_cons(t, empty_record, 'implicit', ti)
+
 
 # получает на вход список инициализаторов
 # конструирует и возвращает GenericRecord value
@@ -99,9 +104,9 @@ def value_record_cons(t, v, method, ti):
 			elif field.init_value != None:
 				iv = field.init_value
 				if iv.isValueUndef():
-					iv = create_zero_literal(field.type, ti=ti)
+					iv = create_default_value(field.type, ti=ti)
 			else:
-				iv = create_zero_literal(field.type, ti=ti)
+				iv = create_default_value(field.type, ti=ti)
 
 			from .cons import value_cons_implicit_check
 			iv = value_cons_implicit_check(field.type, iv)

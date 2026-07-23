@@ -420,7 +420,7 @@ def llvm_print_value_array(x):
 		if i < n:
 			item = items[i]
 		else:
-			item = do_eval(create_zero_literal(x['type'].of))
+			item = do_eval(create_default_value(x['type'].of))
 
 		if i > 0: out(",\n")
 		indent()
