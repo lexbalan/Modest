@@ -210,7 +210,7 @@ bool main_testNestedArrayConst(void) {
 		printf("error: wider head mismatch\n");
 		return false;
 	}
-	if (wider[2][0] != 0 || wider[2][1] != 0 || wider[2][2] != 0) {
+	if (__builtin_memcmp(&wider[2], &(int32_t [3]){0, 0, 0}, sizeof(int32_t [3])) != 0) {
 		printf("error: wider extra row not zero-filled\n");
 		return false;
 	}

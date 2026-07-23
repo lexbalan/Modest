@@ -791,65 +791,64 @@ then_1:
 	br label %endif_1
 endif_1:
 ; if_2
-	%73 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* %34, %Int32 0, %Int32 2, %Int32 0
-	%74 = load %Int32, %Int32* %73
-	%75 = icmp ne %Int32 %74, 0
-	%76 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* %34, %Int32 0, %Int32 2, %Int32 1
-	%77 = load %Int32, %Int32* %76
-	%78 = icmp ne %Int32 %77, 0
-	%79 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* %34, %Int32 0, %Int32 2, %Int32 2
-	%80 = load %Int32, %Int32* %79
-	%81 = icmp ne %Int32 %80, 0
-	%82 = or %Bool %78, %81
-	%83 = or %Bool %75, %82
-	br %Bool %83 , label %then_2, label %endif_2
+	%73 = getelementptr [3 x [3 x %Int32]], [3 x [3 x %Int32]]* %34, %Int32 0, %Int32 2
+	%74 = alloca [3 x %Int32]
+	%75 = zext i8 3 to %Nat32
+	%76 = mul %Nat32 %75, 4
+	%77 = bitcast [3 x %Int32]* %74 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %77, i8 0, %Nat32 %76, i1 0)
+	%78 = bitcast [3 x %Int32]* %73 to i8*
+	%79 = bitcast [3 x %Int32]* %74 to i8*
+	%80 = call i1 (i8*, i8*, i64) @memeq(i8* %78, i8* %79, %Int64 12)
+	%81 = icmp eq %Bool %80, 0
+	br %Bool %81 , label %then_2, label %endif_2
 then_2:
-	%84 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @.str39 to [0 x i8]*))
+	%82 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @.str39 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_2
 endif_2:
-	%86 = alloca [2 x [3 x %Int32]], align 4
-	%87 = zext i8 2 to %Nat32
-	%88 = mul %Nat32 %87, 12
-	%89 = bitcast [2 x [3 x %Int32]]* %86 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %89, i8 0, %Nat32 %88, i1 0)
+	%84 = alloca [2 x [3 x %Int32]], align 4
+	%85 = zext i8 2 to %Nat32
+	%86 = mul %Nat32 %85, 12
+	%87 = bitcast [2 x [3 x %Int32]]* %84 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %87, i8 0, %Nat32 %86, i1 0)
 ; if_3
-	%90 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 0, %Int32 0
-	%91 = load %Int32, %Int32* %90
-	%92 = icmp ne %Int32 %91, 0
-	%93 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 0, %Int32 1
-	%94 = load %Int32, %Int32* %93
-	%95 = icmp ne %Int32 %94, 0
-	%96 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 0, %Int32 2
-	%97 = load %Int32, %Int32* %96
-	%98 = icmp ne %Int32 %97, 0
-	%99 = or %Bool %95, %98
-	%100 = or %Bool %92, %99
-	br %Bool %100 , label %then_3, label %endif_3
+	%88 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %84, %Int32 0, %Int32 0, %Int32 0
+	%89 = load %Int32, %Int32* %88
+	%90 = icmp ne %Int32 %89, 0
+	%91 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %84, %Int32 0, %Int32 0, %Int32 1
+	%92 = load %Int32, %Int32* %91
+	%93 = icmp ne %Int32 %92, 0
+	%94 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %84, %Int32 0, %Int32 0, %Int32 2
+	%95 = load %Int32, %Int32* %94
+	%96 = icmp ne %Int32 %95, 0
+	%97 = or %Bool %93, %96
+	%98 = or %Bool %90, %97
+	br %Bool %98 , label %then_3, label %endif_3
 then_3:
-	%101 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @.str40 to [0 x i8]*))
+	%99 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @.str40 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_3
 endif_3:
 ; if_4
-	%103 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 1, %Int32 0
-	%104 = load %Int32, %Int32* %103
-	%105 = icmp ne %Int32 %104, 0
-	%106 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 1, %Int32 1
-	%107 = load %Int32, %Int32* %106
-	%108 = icmp ne %Int32 %107, 0
-	%109 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %86, %Int32 0, %Int32 1, %Int32 2
-	%110 = load %Int32, %Int32* %109
-	%111 = icmp ne %Int32 %110, 0
-	%112 = or %Bool %108, %111
-	%113 = or %Bool %105, %112
-	br %Bool %113 , label %then_4, label %endif_4
+	%101 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %84, %Int32 0, %Int32 1, %Int32 0
+	%102 = load %Int32, %Int32* %101
+	%103 = icmp ne %Int32 %102, 0
+	%104 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %84, %Int32 0, %Int32 1, %Int32 1
+	%105 = load %Int32, %Int32* %104
+	%106 = icmp ne %Int32 %105, 0
+	%107 = getelementptr [2 x [3 x %Int32]], [2 x [3 x %Int32]]* %84, %Int32 0, %Int32 1, %Int32 2
+	%108 = load %Int32, %Int32* %107
+	%109 = icmp ne %Int32 %108, 0
+	%110 = or %Bool %106, %109
+	%111 = or %Bool %103, %110
+	br %Bool %111 , label %then_4, label %endif_4
 then_4:
-	%114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @.str41 to [0 x i8]*))
+	%112 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([30 x i8]* @.str41 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_4
 endif_4:
-	%116 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @.str42 to [0 x i8]*))
+	%114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @.str42 to [0 x i8]*))
 	ret %Bool 1
 }
 

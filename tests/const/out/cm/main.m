@@ -260,7 +260,7 @@ public func testNestedArrayConst () -> Bool {
 		printf("error: wider head mismatch\n")
 		return false
 	}
-	if wider[2][0] != 0 or wider[2][1] != 0 or wider[2][2] != 0 {
+	if wider[2] != [] {
 		printf("error: wider extra row not zero-filled\n")
 		return false
 	}
