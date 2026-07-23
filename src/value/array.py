@@ -5,12 +5,15 @@ from .char import utf32_chars_to_utfx_char_values
 
 
 
-def value_array_create2(t, items, ti):
+def value_array_create(t, items, ti):
+	if t == None:
+		return value_array_createx(items, ti)
+
 	empty_array = ValueArray(t, items=items, ti=ti)
 	return value_array_cons(t, empty_array, 'implicit', ti)
 
 
-def value_array_create(items, ti):
+def value_array_createx(items, ti):
 	#info("value_array_create()", ti)
 
 	length = len(items)

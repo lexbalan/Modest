@@ -295,7 +295,7 @@ def create_builtin_module():
 		Initializer(Id('minor'), compilerVersionMinor),
 		Initializer(Id('patch'), compilerVersionPatch),
 	]
-	compilerVersionRecord = value_record_create(compiler_version_initializers, ti=builtin_ti)
+	compilerVersionRecord = value_record_create(t=None, initializers=compiler_version_initializers, ti=builtin_ti)
 
 	compilerVersionConst = xcreate_const(compiler_symtab, "version", compilerVersionRecord)
 
@@ -1566,7 +1566,7 @@ def do_value_array(x):
 			item_value = do_rvalue(item['value'])
 			item_value.nl = item['nl']
 			items.append(item_value)
-	v = value_array_create(items, ti=x['ti'])
+	v = value_array_create(t=None, items=items, ti=x['ti'])
 	return v
 
 
@@ -1590,7 +1590,7 @@ def do_value_record(x):
 			)
 			initializers.append(p)
 
-	v = value_record_create(initializers, ti=x['ti'])
+	v = value_record_create(t=None, initializers=initializers, ti=x['ti'])
 	return v
 
 
