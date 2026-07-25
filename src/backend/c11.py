@@ -10,7 +10,7 @@ from unicode import chars_to_utf32
 from util import str_fractional, align_bits_up, nbits_for_num
 from common import features
 
-from .cir import *
+from cshape import *
 
 import re
 
