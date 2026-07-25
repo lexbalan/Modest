@@ -1,2 +1,2 @@
 numpy
-cshape>=0.1.0
+cshape>=0.2.1
