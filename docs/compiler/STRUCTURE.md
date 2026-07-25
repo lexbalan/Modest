@@ -44,12 +44,18 @@ described in [README.md](./README.md).
 
 | File | Purpose |
 |------|---------|
-| `c11.py` | C11 backend: HLIR → C11 source (lowering; builds the `cir.py` tree) |
-| `cir.py` | C intermediate representation: dependency-free C AST + printer (`CType*`/`CValue*`/`CStmt*` → C11 text) |
+| `c11.py` | C11 backend: HLIR → C11 source (lowering; builds a tree from the external `cshape` package) |
 | `llvm.py` | LLVM IR backend: HLIR → LLVM intermediate representation |
 | `modest.py` | Modest backend: HLIR → Modest source code (pretty printer / self-hosted output) |
 
 > `c11_old.py` and `c11_old_backend_test.py` are legacy files, not used in the current pipeline.
+
+`c11.py` builds C source via [`cshape`](https://pypi.org/project/cshape/) —
+a standalone, dependency-free C AST + printer (`CType*`/`CValue*`/`CStmt*`
+→ C11 text) split out of this repo so it can be reused outside Modest.
+Published on PyPI (see `requirements.txt`); source lives at
+`/Users/alexbalan/p/cshape`, installed editable in this project's venv for
+active co-development.
 
 ### `src/value/` — Compile-Time Value Operations
 
