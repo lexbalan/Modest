@@ -18,6 +18,22 @@ typedef uint8_t Color;
 #define COLOR_RED ((Color)0)
 #define COLOR_GREEN ((Color)1)
 #define COLOR_BLUE ((Color)2)
+
+bool main_testUntypedLiteralConst(void) {
+	int32_t z = ZERO;
+	if (z != 0) {
+		printf("error: zero != 0\n");
+		return false;
+	}
+	int32_t arr[3] = EMPTY_ARRAY;
+	if (arr[0] != 0 || arr[1] != 0 || arr[2] != 0) {
+		printf("error: emptyArray not all zero\n");
+		return false;
+	}
+	struct point pt = (struct point){0};
+	printf("passed: untyped literal const test\n");
+	return true;
+}
 #define ANSWER 42
 
 bool main_testGenericAdaptation(void) {
@@ -358,6 +374,7 @@ bool main_testLocalConst(void) {
 int main(void) {
 	printf("test const\n");
 	bool result = true;
+	result = main_testUntypedLiteralConst() && result;
 	result = main_testGenericAdaptation() && result;
 	result = main_testConstFolding() && result;
 	result = main_testTypedConst() && result;
