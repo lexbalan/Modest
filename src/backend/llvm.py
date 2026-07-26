@@ -997,6 +997,10 @@ def str_type(t):
 	elif t.is_type_va_list():
 		return "i8*"
 
+	elif t.is_type_undefined():
+		# placeholder element type of an empty array literal `[]`
+		# never actually instantiated (zero elements), so any zero-size type is safe
+		return "{}"
 
 	return "<<%s>>" % str(t)
 

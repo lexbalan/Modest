@@ -766,6 +766,10 @@ class Type(Entity):
 		return isinstance(self, TypeRecord) and (len(self.fields) == 0)
 
 
+	def is_type_undefined(self):
+		return isinstance(self, TypeUndefined)
+
+
 	def is_type_unit(self):
 		return self.is_empty_record()
 
@@ -932,6 +936,12 @@ class Type(Entity):
 			if t.is_type_unsized_array():
 				return True
 			return t.of.is_holed()
+		return False
+	
+
+	def is_type_empty_array(self):
+		if self.is_type_array():
+			return self.volume.isValueImmediate() and self.volume.asset == 0
 		return False
 
 
@@ -1193,20 +1203,12 @@ class Type(Entity):
 		if self.is_type_func():
 			return True
 
-		if self.is_type_array():
-			if self.of.is_forbidden_any():
-				return True
-
-			if self.volume.isValueImmediate():
-				if self.volume.asset == 0:
-					return True
-
 		return False
 
 
 	# cannot create field with type
 	def is_forbidden_field(self, unsized_array_forbidden=True):
-		if self.is_forbidden_any():
+		if self.is_type_func():
 			return True
 
 		if self.is_type_unsized_array():
@@ -1216,7 +1218,7 @@ class Type(Entity):
 
 
 	def is_forbidden_param(self):
-		if self.is_forbidden_any():
+		if self.is_type_func():
 			return True
 		return False
 
@@ -1236,10 +1238,12 @@ class Type(Entity):
 
 
 	def is_forbidden_var(self, unsized_array_forbidden=True):
-		if self.is_forbidden_any():
+		if self.is_type_func():
 			return True
 
 		if self.is_type_array():
+			if self.of.is_forbidden_any():
+				return True
 			if self.is_type_unsized_array():
 				return unsized_array_forbidden
 			if self.volume.isValueImmediate():
@@ -1249,15 +1253,12 @@ class Type(Entity):
 		return False
 
 	def is_forbidden_const(self):
-		if self.is_forbidden_any():
+		if self.is_type_func():
 			return True
 
 		if self.is_type_array():
 			if self.is_type_unsized_array():
 				return True
-			if self.volume.isValueImmediate():
-				if self.volume.asset == 0:
-					return True
 
 		return False
 
@@ -1450,6 +1451,12 @@ class Type(Entity):
 			if a.is_type_int() or a.is_type_nat() or a.is_type_word() or a.is_type_float() or a.is_type_fixed():
 				if b.is_type_integer() or b.is_type_rational():
 					return a
+
+		if a.is_type_undefined() or b.is_type_undefined():
+			if a.is_type_undefined():
+				return b
+			if b.is_type_undefined():
+				return a
 
 		print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))
 

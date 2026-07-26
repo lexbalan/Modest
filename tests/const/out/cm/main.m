@@ -7,7 +7,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 include "libc/stdlib"
 
-
+const empty = []
 
 type Point = {x: Int32, y: Int32}
 type Point3D = {x: Int32, y: Int32, z: Int32}
@@ -18,7 +18,6 @@ type Color = @branded Nat8
 const colorRed = Color 0
 const colorGreen = Color 1
 const colorBlue = Color 2
-
 
 
 // an untyped const keeps the generic type of its initializer and adapts
@@ -269,7 +268,7 @@ public func testNestedArrayConst () -> Bool {
 		return false
 	}
 
-	let empty: [2][3]Int32 = []
+	let empty = []
 	var mz: [2][3]Int32 = []
 	if mz[0][0] != 0 or mz[0][1] != 0 or mz[0][2] != 0 {
 		printf("error: mz row 0 not all zero\n")

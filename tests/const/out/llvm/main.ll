@@ -287,6 +287,7 @@ declare %Int @system([0 x %ConstChar]* %string)
 @.str70 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 @.str71 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
+@empty = constant [0 x {}] zeroinitializer
 %Point = type {
 	%Int32,
 	%Int32
@@ -838,10 +839,10 @@ then_3:
 	ret %Bool 0
 	br label %endif_3
 endif_3:
-	%106 = alloca [2 x [3 x %Int32]]
-	%107 = zext i8 2 to %Nat32
-	%108 = mul %Nat32 %107, 12
-	%109 = bitcast [2 x [3 x %Int32]]* %106 to i8*
+	%106 = alloca [0 x {}]
+	%107 = zext i8 0 to %Nat32
+	%108 = mul %Nat32 %107, 0
+	%109 = bitcast [0 x {}]* %106 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %109, i8 0, %Nat32 %108, i1 0)
 	%110 = alloca [2 x [3 x %Int32]], align 4
 	%111 = zext i8 2 to %Nat32
@@ -901,17 +902,22 @@ then_6:
 	br label %endif_6
 endif_6:
 ; if_7
-	%150 = bitcast [2 x [3 x %Int32]]* %110 to i8*
-	%151 = bitcast [2 x [3 x %Int32]]* %106 to i8*
-	%152 = call i1 (i8*, i8*, i64) @memeq(i8* %150, i8* %151, %Int64 24)
-	%153 = icmp eq %Bool %152, 0
-	br %Bool %153 , label %then_7, label %endif_7
+	%150 = alloca [2 x [3 x %Int32]]
+	%151 = zext i8 2 to %Nat32
+	%152 = mul %Nat32 %151, 12
+	%153 = bitcast [2 x [3 x %Int32]]* %150 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %153, i8 0, %Nat32 %152, i1 0)
+	%154 = bitcast [2 x [3 x %Int32]]* %110 to i8*
+	%155 = bitcast [2 x [3 x %Int32]]* %150 to i8*
+	%156 = call i1 (i8*, i8*, i64) @memeq(i8* %154, i8* %155, %Int64 24)
+	%157 = icmp eq %Bool %156, 0
+	br %Bool %157 , label %then_7, label %endif_7
 then_7:
-	%154 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str44 to [0 x i8]*))
+	%158 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str44 to [0 x i8]*))
 	ret %Bool 0
 	br label %endif_7
 endif_7:
-	%156 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @.str45 to [0 x i8]*))
+	%160 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @.str45 to [0 x i8]*))
 	ret %Bool 1
 }
 
