@@ -7,7 +7,9 @@
 #if !defined(LENGTHOF)
 #define LENGTHOF(x) (sizeof(x) / sizeof((x)[0]))
 #endif
-#define EMPTY {0}
+#define ZERO 0
+#define EMPTY_ARRAY {0}
+#define EMPTY_RECORD {0}
 struct point {int32_t x; int32_t y;};
 struct point3_d {int32_t x; int32_t y; int32_t z;};
 struct rect {struct point topLeft; struct point bottomRight;};

@@ -7,7 +7,9 @@ include "libc/ctypes64"
 include "libc/stdio"
 include "libc/stdlib"
 
-const empty = []
+const zero = 0
+const emptyArray = []
+const emptyRecord = {}
 
 type Point = {x: Int32, y: Int32}
 type Point3D = {x: Int32, y: Int32, z: Int32}

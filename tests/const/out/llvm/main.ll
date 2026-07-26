@@ -287,7 +287,7 @@ declare %Int @system([0 x %ConstChar]* %string)
 @.str70 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 @.str71 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
-@empty = constant [0 x {}] zeroinitializer
+@emptyArray = constant [0 x {}] zeroinitializer
 %Point = type {
 	%Int32,
 	%Int32
