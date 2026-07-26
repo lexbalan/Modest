@@ -9,6 +9,11 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
+// the bare untyped literals `0`, `[]` and `{}` each keep a generic type
+// and adapt to whatever concrete type each use site needs
+const zero = 0
+const emptyArray = []
+const emptyRecord = {}
 
 type Point = {x: Int32, y: Int32}
 type Point3D = {x: Int32, y: Int32, z: Int32}
@@ -21,6 +26,28 @@ const colorGreen = Color 1
 const colorBlue  = Color 2
 
 
+public func testUntypedLiteralConst () -> Bool {
+	var z: Int32 = zero
+	if z != 0 {
+		printf("error: zero != 0\n")
+		return false
+	}
+
+	var arr: [3]Int32 = emptyArray
+	if arr[0] != 0 or arr[1] != 0 or arr[2] != 0 {
+		printf("error: emptyArray not all zero\n")
+		return false
+	}
+
+	var pt: Point = emptyRecord
+	// if pt.x != 0 or pt.y != 0 {
+	// 	printf("error: emptyRecord not all zero\n")
+	// 	return false
+	// }
+
+	printf("passed: untyped literal const test\n")
+	return true
+}
 
 // an untyped const keeps the generic type of its initializer and adapts
 // to whatever concrete type each use site needs
@@ -273,7 +300,7 @@ public func testNestedArrayConst () -> Bool {
 		return false
 	}
 
-	let empty: [2][3]Int32 = []
+	let empty = []
 	var mz: [2][3]Int32 = []
 	if mz[0][0] != 0 or mz[0][1] != 0 or mz[0][2] != 0 {
 		printf("error: mz row 0 not all zero\n")
@@ -447,6 +474,7 @@ func main () -> Int {
 	printf("test const\n")
 
 	var result = true
+	result = testUntypedLiteralConst() and result
 	result = testGenericAdaptation() and result
 	result = testConstFolding() and result
 	result = testTypedConst() and result

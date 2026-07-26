@@ -2937,25 +2937,22 @@ def def_phase2(ast):
 
 		if isa == 'ast_definition':
 			df = None
-			if kind == 'type':
-				df = def_type_global(x)
-			elif kind == 'const':
-				df = def_const_global(x)
-			elif kind == 'func':
-				df = def_func(x)
-			elif kind == 'var':
-				df = def_var_global(x)
+			if kind == 'type': df = def_type_global(x)
+			elif kind == 'const': df = def_const_global(x)
+			elif kind == 'func': df = def_func(x)
+			elif kind == 'var': df = def_var_global(x)
 
-			if df != None:
-				if get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC:
-					df.id.prefix = global_prefix
+			assert(df != None)
 
-				if 'comment' in x and x['comment'] != None:
-					df.comment = do_stmt_comment(x['comment'])
+			if get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC:
+				df.id.prefix = global_prefix
 
-				df.parent = cmodule
+			if 'comment' in x and x['comment'] != None:
+				df.comment = do_stmt_comment(x['comment'])
 
-				cmodule.defs.append(df)
+			df.parent = cmodule
+
+			cmodule.defs.append(df)
 
 		elif isa == 'ast_comment':
 			comment = do_stmt_comment(x)

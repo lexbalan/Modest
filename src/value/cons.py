@@ -64,7 +64,10 @@ def cons_can(to, from_type, method, ti):
 	elif to.is_type_variant(): checker = value_variant_can
 	elif to.is_bad(): checker = value_bad_can
 	else:
-		print(to.is_type_pointer())
+		if to.is_incompleted():
+			error("cannot construct value of incompleted type", ti)
+			return False
+
 		info(str(to), to.ti)
 		assert(False)
 

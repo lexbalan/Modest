@@ -4,6 +4,19 @@ from error import info, warning, error
 from .char import utf32_chars_to_utfx_char_values
 
 
+# def select_common_type(values, ti):
+# 	if len(values) == 0:
+# 		return typeUnit
+
+# 	item_type = values[0].type
+# 	for item in values:
+# 		item_type = Type.select_common_type(item_type, item.type, ti)
+# 		if item_type == None or item_type.is_bad():
+# 			error("value with unsuitable type", item.ti)
+# 			return ValueBad(ti)
+
+# 	return item_type
+
 
 def value_array_create(t, items, ti):
 	#info("value_array_create()", ti)
@@ -13,8 +26,9 @@ def value_array_create(t, items, ti):
 		return value_array_cons(t, empty_array, 'implicit', ti)
 
 	length = len(items)
-	item_type = typeUnit
+	item_type = None
 	stage = HLIR_VALUE_STAGE_COMPILETIME
+
 	if length > 0:
 		# Получаем наиболее подходящий общий тип элементов массива
 		item_type = items[0].type
@@ -27,6 +41,9 @@ def value_array_create(t, items, ti):
 				stage = HLIR_VALUE_STAGE_RUNTIME
 			if item.isValueLinktime() and stage == HLIR_VALUE_STAGE_COMPILETIME:
 				stage = HLIR_VALUE_STAGE_LINKTIME
+	else:
+		# If the array is empty, we cannot determine the type of its elements, so we use TypeUndefined as a placeholder.
+		item_type = TypeUndefined(ti)
 
 	items = implicit_cons_list(items, item_type)
 
@@ -51,10 +68,8 @@ def value_array_can(to, from_type, method, ti):
 	if not from_type.is_generic():
 		return False
 
-	if from_type.is_generic():
-		# from an empty array literal `[]`
-		if from_type.get_size() == 0 and from_type.of.is_type_unit():
-			return True
+	if from_type.is_type_empty_array():
+		return True
 
 	# Check item type
 	# проверяем может ли тип элемента из v
