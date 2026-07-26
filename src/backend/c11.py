@@ -3,16 +3,15 @@
 
 import copy
 import os
+import re
 
 from hlir import *
 from error import info, warning, error, fatal
 from unicode import chars_to_utf32
 from util import str_fractional, align_bits_up, nbits_for_num
 from common import features
-
 from cshape import *
 
-import re
 
 
 ARRAY_AS_POINTER = True
@@ -1427,13 +1426,9 @@ def do_cinitializer(type, value, ctx):
 	return cv
 
 
-
-
-
 #
 # Stmt
 #
-
 
 def do_assign_array(left, right, ti):
 	# array = function()
@@ -1750,56 +1745,6 @@ def do_def_func(x):
 	return xdefs
 
 
-######## -----------
-"""
-	out(str_field(func.type, get_id_str(func)))
-
-	if x.stmt == None:
-		cfunc = None
-		out(";")
-		return
-
-	out("{")
-	indent_up()
-
-	# for any array parameter print local holder value
-	for param in func.type.params:
-		if param.type.is_type_sized_array():
-			nl_indent(1)
-			paramId = get_id_str(param)
-			print_variable(paramId, param.type)
-			out(";")
-			nl_indent(1)
-			out("memcpy(%s, %s" % (paramId, '_' + paramId))
-			out(", sizeof(")
-			out(str_type(param.type))
-			out("));")
-
-	stmts = x.stmt.stmts
-	for stmt in stmts:
-		#print_stmt(stmt)
-		out(str_cstmt(do_cstmt(stmt)))
-
-	indent_down()
-
-	global func_undef_list
-	if len(func_undef_list) > 0:
-		newline()
-		for id_str in func_undef_list:
-			undef(id_str)
-
-	func_undef_list = []
-	out("\n}\n")
-
-	if not func.id.str in declared:
-		declared.append(func.id.str)
-
-	cfunc = None
-"""
-
-
-
-
 def do_def_type(x):
 	global defined
 
@@ -1841,8 +1786,6 @@ def do_def_type_record(t):
 	return defs
 
 
-
-
 def do_def_var(x, isdecl=False):
 	global defined
 
@@ -1881,7 +1824,6 @@ def do_def_var(x, isdecl=False):
 		defined.append(x)
 
 	return (dv,)
-
 
 
 def do_def_const(x):
@@ -1975,16 +1917,6 @@ def do_decl_type_record(x):
 		df = CStmtDefType(get_id_str(t), CTypeIdentifier(kisa))
 		return (dt, df)
 	return (dt,)
-
-
-
-def nnl(nl):
-	if nl == 1:
-		newline(1)
-	elif nl >= 2:
-		newline(2)
-
-
 
 
 def do_helpers(module):
@@ -2183,20 +2115,16 @@ def do_header(module):
 		#		continue
 
 		if x.is_stmt_def_func():
-			#nnl(x.nl)
 			if x.access_level == HLIR_ACCESS_LEVEL_PUBLIC and x.hasAttribute('inline'):
 				xdefs.extend(do_def_func(x))
 				continue
 			xdefs.extend(do_decl_func(x))
 		elif x.is_stmt_def_var():
-			#nnl(x.nl)
 			xdefs.extend(do_def_var(x, isdecl=True))
 		elif x.is_stmt_def_type():
-			#nnl(x.nl)
 			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_type(x))
 		elif x.is_stmt_def_const():
-			#nnl(x.nl)
 			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_const(x))
 		elif x.is_stmt_comment():
@@ -2301,17 +2229,14 @@ def do_cfile(module):
 			pass
 
 		if x.is_stmt_def_const() and is_private(x):
-			#nnl(x.nl)
 			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_const(x))
 
 		elif x.is_stmt_def_type() and is_private(x):
-			#nnl(x.nl)
 			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_type(x))
 
 		elif x.is_stmt_def_var():
-			#nnl(x.nl)
 			xdefs.extend(do_deps(x.deps))
 			xdefs.extend(do_def_var(x))
 
@@ -2324,9 +2249,6 @@ def do_cfile(module):
 			xdefs.extend(do_def_func(x))
 		elif x.is_stmt_comment():
 			xdefs.extend(do_stmt_comment(x))
-			#nnl(x.nl)
-			#if x.nl == 0:
-			#	out("  ")
 			#print_comment(x)
 			pass
 		elif x.is_stmt_directive():
@@ -2336,21 +2258,14 @@ def do_cfile(module):
 	return xdefs
 
 
-
-
-
-
 def dump(filename, defs):
 	global file
-
 	dirname = os.path.dirname(filename)
 	if dirname != '':
 		os.makedirs(dirname, exist_ok=True)
 	file = open(filename, "w")
-
 	for d in defs:
-		file.write(str_cdef(d))
-
+		file.write(render(d, style='legacy'))
 	file.write("\n\n")
 	file.close()
 
