@@ -13,18 +13,6 @@ mcc -o out -mbackend=c11 main.m
 absolute path to `-o`. Path resolution in `src/main.py` (`include_dir` /
 `outname` handling) + `src/backend/c11.py:2276`.
 
-## 2. ICE on `let` without initializer
-
-```modest
-func main () -> Int {
-	let x: Int32        // ZeroDivisionError in backend
-	return 0
-}
-```
-
-Crashes with `ZeroDivisionError` from the `1/0` placeholder at
-`src/backend/c11.py:1273` (`elif x.isValueUndef(): 1/0`). Should be a
-normal frontend error: `let` requires an initializer.
 
 ## 3. Slice assignment: wrong element type and byte count in C output
 

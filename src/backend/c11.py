@@ -1344,9 +1344,12 @@ def do_cvalue(x, ctx=[]):
 	elif x.isValueVaCopy(): return do_cvalue_va_copy(x, ctx)
 	elif x.isValueNew(): return do_cvalue_new(x, ctx)
 	elif x.isValueDefault(): return do_cvalue_default(x, ctx)
-	elif x.isValueUndef(): 1/0
+	elif x.isValueUndef():
+		error("value undef in C backend", x.ti)
+		exit(1)
 	elif x.isValueBad():
 		error("value bad in C backend", x.ti)
+		exit(1)
 
 	print(x)
 	assert(False)
@@ -1463,7 +1466,6 @@ def do_assign_array(left, right, ti):
 		slen = do_cvalue(left.type.volume)
 	#return CStmtExpr(CValueCall(CValueIdentifier("ARRCPY"), [cleft, CValueParen(cright), slen]))
 	return CStmtExpr(cvalue_memcpy(cleft, CValueParen(cright), slen))
-
 
 
 
@@ -1944,9 +1946,6 @@ def do_helpers(module):
 	return []
 
 
-
-
-
 def do_helper_use_stdlib():
 	return include("stdlib.h", local=False)
 
@@ -2134,7 +2133,6 @@ def do_header(module):
 	return (dv,)
 
 
-
 def was_defined(x):
 	global defined
 	if not x in defined:
@@ -2316,7 +2314,6 @@ def cons_vla_from_literal_array(x):
 
 
 
-
 # получает Value, возаращает такой CValue у которого можно взять ref (!)
 def do_cvalue_mem(x):
 	cv = do_cvalue(x)
@@ -2393,7 +2390,6 @@ def assign_by_memcopy(left, right):
 			CValueSizeofType(do_ctype(left.type))
 		)
 	)
-
 
 
 

@@ -1804,7 +1804,15 @@ def do_stmt_let(x):
 	global cfunc
 	if id_already_used(x['id']['str'], shallow=True):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+
 	df = def_const_common(x)
+
+	if df.is_stmt_bad():
+		return df
+
+	#if df.init_value.is_value_undefined():
+	#	error("undefined constant initializer value", x['ti'])
+
 	df.parent = cfunc
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
 	return df
@@ -2314,6 +2322,9 @@ def def_const_common(x):
 
 	const_type, init_value = process_field_common(x, default_instead_of_undef=True)
 
+	if init_value.isValueBad():
+		return StmtBad(x['ti'])
+
 	if const_type.is_forbidden_const():
 		error("unsuitable type", x['ti'])
 
@@ -2386,6 +2397,10 @@ def def_const_global(x):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
 	df = def_const_common(x)
+
+	if df.is_stmt_bad():
+		return df
+
 	df.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
