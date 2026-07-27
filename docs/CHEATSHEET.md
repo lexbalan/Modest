@@ -110,6 +110,13 @@ func main () -> Int {
 func no_return () -> Unit {
     printf("hello\n")
 }
+
+// EXPERIMENTAL: signature borrowed from a named function type, params come
+// from the type; can't mix with inline (params) -> Return on the same def
+type FailHandler = (code: Int32) -> Unit
+func onDiskFail: FailHandler {
+    printf("disk failed with code %d\n", code)
+}
 ```
 
 ### Variables & Constants

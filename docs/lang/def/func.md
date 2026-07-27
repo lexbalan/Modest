@@ -48,6 +48,41 @@ func main () -> Int {
 }
 ```
 
+## Experimental: signature from a named function type
+
+```
+func <#identifier#>: <#FuncType#> {
+	<#statements#>
+}
+```
+
+Instead of spelling out `(params) -> Return`, the parameter list and return
+type can be borrowed from a predeclared [function type](../type/func.md).
+Parameter names come from the type, so they don't need to be repeated at
+every definition that shares the same shape:
+
+```modest
+type FailHandler = (code: Int32) -> Unit
+
+func onDiskFail: FailHandler {
+	printf("disk failed with code %d\n", code)
+}
+
+func onNetworkFail: FailHandler {
+	printf("network failed with code %d\n", code)
+}
+```
+
+`<#FuncType#>` must resolve to a function type — not a pointer to one.
+The colon form and the inline `(params) -> Return` form cannot be mixed on
+the same definition.
+
+This syntax is experimental: useful for a handful of definitions that
+repeat the exact same callback shape, but at the cost of hiding the
+parameter list at the definition site — a reader must look up the type to
+see what's being passed in. Prefer the inline form unless several
+definitions genuinely share one signature.
+
 ## Notes
 
 - The program entry point is `func main () -> Int`.

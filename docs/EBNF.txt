@@ -42,7 +42,10 @@ def ::= annotation* [access_modifier] (def_type | def_const | def_var | def_func
 def_type  ::= 'type' Id '=' type_expr
 def_const ::= 'const' field_decl
 def_var   ::= 'var'   field_decl (',' field_decl)*
-def_func  ::= 'func'  id type_func_expr [block]    (* body optional = forward decl *)
+def_func  ::= 'func'  id (type_func_expr | ':' type_expr) [block]
+              (* body optional = forward decl *)
+              (* ': type_expr' is EXPERIMENTAL: signature borrowed from a
+                 named function type; type_expr must resolve to a function type *)
 
 field_decl ::= id [':' type_expr] ['=' value_expr]
 

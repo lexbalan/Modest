@@ -2463,15 +2463,25 @@ def def_func(x):
 	cdef = fn.definition
 
 	if fn.type.is_incompleted():
-		ft = do_type_func(x['type'])
+		xt = x['type']
+		if xt['kind'] == 'func':
+			ft = do_type_func(xt)
+		else:
+			# experimental: `func name: FuncType { ... }` — signature borrowed
+			# from a named function type instead of spelled out inline
+			ft = do_type(xt)
+			if not ft.is_bad() and not ft.is_type_func():
+				error("expected a function type", xt['ti'])
+				ft = TypeBad(xt['ti'])
 		fn.change_type(ft)
 		if fn.type.is_incompleted():
 			cdef = prev_cdef
 			return None
 
 	if fn.type.is_bad():
+		df = def_add_annotations(fn.definition, x['anno'])
 		cdef = prev_cdef
-		return None
+		return df
 
 	if fn.id.str == 'main':
 		#fn.id.prefix = None

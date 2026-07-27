@@ -1737,7 +1737,9 @@ def do_def_func(x):
 		cblock.stmts.append(CMacroUndef(id_str))
 	func_undef_list = []
 
-	ftype = do_ctype(func.type)
+	# a function definition always needs the parameter list spelled out,
+	# even if func.type is a named alias (e.g. `func handler: FailHandler { ... }`)
+	ftype = do_ctype_func(func.type)
 	dv = CStmtDefFunc(get_id_str(func), ftype, cblock, storage_class=storage_class, attributes=x.attributes)
 
 	cfunc = old_cfunc
