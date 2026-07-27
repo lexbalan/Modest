@@ -1056,6 +1056,7 @@ def do_value_va_copy(x):
 	args = x['values']
 	va_list0 = do_value(args[0])
 	va_list1 = do_value(args[1])
+	va_list0.is_initialized = True
 	nv = ValueVaCopy(typeUnit, va_list0, va_list1, x['ti'])
 	return nv
 
