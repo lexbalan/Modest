@@ -2794,7 +2794,8 @@ def process_module(idStr, sourcename, ast):
 		if isa == 'ast_directive':
 			y = None
 			if x['kind'] == 'module':
-				print("MODULE('%s')" % x['line']['str'])
+				#print("MODULE('%s')" % x['line']['str'])
+				pass
 			elif x['kind'] == 'import':
 				y = do_import(x)
 			elif x['kind'] == 'include':
