@@ -13,5 +13,6 @@ cd sha256 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd aes256 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd nested_func && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd func_named_type && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+cd slice && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd trash && ./run.sh
 #cd limits && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \

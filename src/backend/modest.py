@@ -205,7 +205,7 @@ def str_type_record(t):
 	return s
 
 
-def str_type_func(t, extra_args=False):
+def str_type_func(t):
 	s = '('
 	fields = t.params
 	i = 0
@@ -216,7 +216,7 @@ def str_type_func(t, extra_args=False):
 		s += str_field(fields[i])
 		i = i + 1
 
-	if extra_args:
+	if t.extra_args:
 		s += ", ..."
 
 	s += ') -> '

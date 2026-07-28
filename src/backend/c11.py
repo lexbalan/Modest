@@ -1443,10 +1443,6 @@ def do_assign_array(left, right, ti):
 	if rv.isValueZero():
 		return do_memzero(left)
 
-	if right.isValueCons():
-		# Если справа приведенный к левому массив (более короткий? Generic)
-		right = get_root_value(right)
-
 	l_root = get_root_value(left)
 	r_root = get_root_value(right)
 
@@ -1454,7 +1450,11 @@ def do_assign_array(left, right, ti):
 	if r_root.type.is_type_string():
 		return assign_by_memcopy(left, right)
 
-	if l_root.type.of.get_size() == r_root.type.of.get_size():
+	# сравниваем размер элемента с типом right как он есть (в т.ч. под
+	# явным приведением, напр. `[3]Int32 [1, 2, 3]`) - а не с типом
+	# необёрнутого литерала (r_root), у которого может быть другой,
+	# по умолчанию выведенный тип элемента
+	if l_root.type.of.get_size() == right.type.of.get_size():
 		return assign_by_memcopy(left, right)
 
 	cleft = do_cvalue_as_ptr(left)
@@ -2280,7 +2280,7 @@ def run(module, _outname):
 	if 'include_dir' in csettings:
 		inc_dir = csettings['include_dir']
 		hname = os.path.basename(_outname)
-		hpath = inc_dir + '/' + hname
+		hpath = os.path.join(inc_dir, hname)
 
 
 	if not 'no-h-file' in features:

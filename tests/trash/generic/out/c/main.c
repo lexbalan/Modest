@@ -105,13 +105,13 @@ static bool test_generic_array(void) {
 		return false;
 	}
 	int32_t b[4];
-	__builtin_memcpy(&b, ((&(const int8_t [4])a)), LENGTHOF(b));
+	__builtin_memcpy(&b, &(int32_t [4])a, sizeof(int32_t [4]));
 	if (__builtin_memcmp(&b, &(int32_t [4]){0, 1, 2, 3}, sizeof(int32_t [4])) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
 	int64_t c[4];
-	__builtin_memcpy(&c, ((&(const int8_t [4])a)), LENGTHOF(c));
+	__builtin_memcpy(&c, &(int64_t [4])a, sizeof(int64_t [4]));
 	if (__builtin_memcmp(&c, &(int64_t [4]){0, 1, 2, 3}, sizeof(int64_t [4])) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;
