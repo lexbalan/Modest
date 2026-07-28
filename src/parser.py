@@ -2025,7 +2025,15 @@ class Parser:
 		ti_start = self.textInfo()
 		self.skip("func")
 		id = self.parse_identifier()
-		ftyp = self.expr_type()
+
+		if self.look(":"):
+			# experimental: signature borrowed from a named function type
+			self.skip(":")
+			ftyp = self.expr_type()
+		else:
+			if not self.look("("):
+				error("expected '(' token", self.textInfo())
+			ftyp = self.expr_type()
 
 		if self.is_comment():
 			self.skip1()

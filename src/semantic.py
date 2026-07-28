@@ -1056,6 +1056,7 @@ def do_value_va_copy(x):
 	args = x['values']
 	va_list0 = do_value(args[0])
 	va_list1 = do_value(args[1])
+	va_list0.is_initialized = True
 	nv = ValueVaCopy(typeUnit, va_list0, va_list1, x['ti'])
 	return nv
 
@@ -1804,7 +1805,15 @@ def do_stmt_let(x):
 	global cfunc
 	if id_already_used(x['id']['str'], shallow=True):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+
 	df = def_const_common(x)
+
+	if df.is_stmt_bad():
+		return df
+
+	#if df.init_value.is_value_undefined():
+	#	error("undefined constant initializer value", x['ti'])
+
 	df.parent = cfunc
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
 	return df
@@ -2314,6 +2323,9 @@ def def_const_common(x):
 
 	const_type, init_value = process_field_common(x, default_instead_of_undef=True)
 
+	if init_value.isValueBad():
+		return StmtBad(x['ti'])
+
 	if const_type.is_forbidden_const():
 		error("unsuitable type", x['ti'])
 
@@ -2386,6 +2398,10 @@ def def_const_global(x):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
 	df = def_const_common(x)
+
+	if df.is_stmt_bad():
+		return df
+
 	df.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
@@ -2447,15 +2463,25 @@ def def_func(x):
 	cdef = fn.definition
 
 	if fn.type.is_incompleted():
-		ft = do_type_func(x['type'])
+		xt = x['type']
+		if xt['kind'] == 'func':
+			ft = do_type_func(xt)
+		else:
+			# experimental: `func name: FuncType { ... }` — signature borrowed
+			# from a named function type instead of spelled out inline
+			ft = do_type(xt)
+			if not ft.is_bad() and not ft.is_type_func():
+				error("expected a function type", xt['ti'])
+				ft = TypeBad(xt['ti'])
 		fn.change_type(ft)
 		if fn.type.is_incompleted():
 			cdef = prev_cdef
 			return None
 
 	if fn.type.is_bad():
+		df = def_add_annotations(fn.definition, x['anno'])
 		cdef = prev_cdef
-		return None
+		return df
 
 	if fn.id.str == 'main':
 		#fn.id.prefix = None

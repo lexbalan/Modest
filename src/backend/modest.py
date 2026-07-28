@@ -835,8 +835,11 @@ def str_stmt_func(x):
 	ss = []
 	ss.append("func ")
 	ss.append(get_id_str(func))
-	ss.append(" ")
-	ss.append(str_type_func(ft, extra_args=ft.extra_args))
+	if hasattr(ft, 'id'):
+		ss.append(": ")
+	else:
+		ss.append(" ")
+	ss.append(str_type(ft))
 	ss.append(" ")
 	ss.append(str_stmt_block(x.stmt))
 	return ''.join(ss)
