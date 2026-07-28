@@ -2,17 +2,6 @@
 
 Found 2026-06-11 while verifying documentation against the compiler.
 
-## 1. Relative output path resolves to filesystem root
-
-```sh
-mcc -o out -mbackend=c11 main.m
-# OSError: [Errno 30] Read-only file system: '/out.h'
-```
-
-`mcc -o <relative>` tries to write `/<name>.h`. Workaround: pass an
-absolute path to `-o`. Path resolution in `src/main.py` (`include_dir` /
-`outname` handling) + `src/backend/c11.py:2276`.
-
 ## 5. `builtin.*` namespace does not resolve (regression)
 
 ```modest
@@ -39,3 +28,4 @@ straight from the slice's `volume` expression with no zero-length case;
 see `do_ctype_array_volume` in `src/backend/c11.py:210`. Reproduced by
 `testEmptySlice` in `tests/slice/src/main.m` (passes, but only because
 `-pedantic` warnings aren't treated as errors).
+

@@ -2280,7 +2280,7 @@ def run(module, _outname):
 	if 'include_dir' in csettings:
 		inc_dir = csettings['include_dir']
 		hname = os.path.basename(_outname)
-		hpath = inc_dir + '/' + hname
+		hpath = os.path.join(inc_dir, hname)
 
 
 	if not 'no-h-file' in features:
