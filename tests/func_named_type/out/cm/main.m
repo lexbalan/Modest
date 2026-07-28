@@ -7,11 +7,11 @@ include "libc/stdio"
 
 type FailHandler = (code: Int32) -> Unit
 
-func onDiskFail (code: Int32) -> Unit {
+func onDiskFail: FailHandler {
 	printf("disk failed with code %d\n", code)
 }
 
-func onNetworkFail (code: Int32) -> Unit {
+func onNetworkFail: FailHandler {
 	printf("network failed with code %d\n", code)
 }
 
