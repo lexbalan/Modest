@@ -58,7 +58,7 @@ int main(void) {
 	__builtin_memcpy(&vs2, &s2, sizeof(int32_t [8 - 5]));
 	#define ax 2
 	#define bx 6
-	__builtin_memcpy(&a[ax], ((&(int8_t [4]){10, 20, 30, 40})), bx - ax);
+	__builtin_memcpy(&a[ax], &(int32_t [bx - ax]){10, 20, 30, 40}, sizeof(int32_t [bx - ax]));
 	i = 0;
 	while (i < LENGTHOF(a)) {
 		printf("a[%d] = %d\n", i, a[i]);
@@ -103,7 +103,7 @@ int main(void) {
 	int32_t dst[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 	#define i1 3
 	#define j1 8
-	__builtin_memcpy(&dst[i1], ((&(int8_t [5]){11, 22, 33, 44, 55})), j1 - i1);
+	__builtin_memcpy(&dst[i1], &(int32_t [j1 - i1]){11, 22, 33, 44, 55}, sizeof(int32_t [j1 - i1]));
 	array_print(dst, 10);
 	return 0;
 	#undef ax

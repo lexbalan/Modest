@@ -56,7 +56,7 @@ static inline uint32_t sig1(uint32_t x) {
 
 
 static void contextInit(struct context *ctx) {
-	__builtin_memcpy(&ctx->state, &(const int32_t [8])INITAL_STATE, sizeof(uint32_t [8]));
+	__builtin_memcpy(&ctx->state, &(uint32_t [8])INITAL_STATE, sizeof(uint32_t [8]));
 }
 #define K { \
 	0x428A2F98, 0x71374491, 0xB5C0FBCFUL, 0xE9B5DBA5UL, \

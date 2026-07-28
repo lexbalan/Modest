@@ -13,24 +13,6 @@ mcc -o out -mbackend=c11 main.m
 absolute path to `-o`. Path resolution in `src/main.py` (`include_dir` /
 `outname` handling) + `src/backend/c11.py:2276`.
 
-## 3. Slice assignment: wrong element type and byte count in C output
-
-```modest
-var arr: [5]Int32 = [9, 9, 9, 9, 9]
-arr[1:4] = [3]Int32 [1, 2, 3]
-```
-
-Generates:
-
-```c
-__builtin_memcpy(&arr[1], ((&(int8_t [3]){1, 2, 3})), 4 - 1);
-```
-
-Wrong on two counts: the RHS literal is emitted as `int8_t[3]` regardless
-of the declared `Int32` element type, and the length `4 - 1` is bytes,
-not elements (should be `(4 - 1) * sizeof(int32_t)`). Generated C also
-fails to compile (`cc` rejects it). Slice codegen in `src/backend/c11.py`.
-
 ## 5. `builtin.*` namespace does not resolve (regression)
 
 ```modest
@@ -44,3 +26,16 @@ The wiring exists (`create_builtin_module`, auto-import at
 it is not listed in `tests/run.sh`, so the regression went unnoticed.
 Affects everything documented in `docs/lang/builtin_constants.md`.
 
+## 6. Empty slice assignment target emits a C zero-length array
+
+```modest
+var a: [5]Int32 = [10, 20, 30, 40, 50]
+let s = a[2:2]
+```
+
+Generates `int32_t s[2 - 2];`, which clang only accepts as a GNU
+extension (`-Wzero-length-array` under `-pedantic`). Array size comes
+straight from the slice's `volume` expression with no zero-length case;
+see `do_ctype_array_volume` in `src/backend/c11.py:210`. Reproduced by
+`testEmptySlice` in `tests/slice/src/main.m` (passes, but only because
+`-pedantic` warnings aren't treated as errors).
