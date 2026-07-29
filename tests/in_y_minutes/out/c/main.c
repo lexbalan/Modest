@@ -22,13 +22,11 @@ struct point {
 	double y;
 };
 typedef double Meters;
-// newtype: distinct from Float64, not just an alias
 typedef uint8_t Color;
 #define COLOR_RED ((Color)0)
 #define COLOR_GREEN ((Color)1)
 #define COLOR_BLUE ((Color)2)
 typedef void Action(void);
-// function type
 // --- Functions ----------------------------------------------------------------
 
 __attribute__((always_inline))
