@@ -1,0 +1,132 @@
+import "builtin"
+include "ctypes64"
+include "stdio"
+include "math"
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/math"
+
+// This is a line comment. There are no block comments.// sqrt
+
+// `include` pastes a module's names directly into scope — used for C
+// bindings and library modules. `import "mymodule"` instead requires a
+// `mymodule.` prefix on every name it brings in (see docs/lang).
+
+
+// --- Types ------------------------------------------------------------------
+//
+// PascalCase for types, camelCase for everything else. Base types: Bool,
+// IntX/NatX/WordX (8/16/32/64/128 — signed/unsigned/bitwise), CharX (8/16/32),
+// FloatX (32/64), Str8/Str16/Str32 (= []CharX), Int/Nat/Word (target width).
+
+type Point = {// named record
+	x: Float64
+	y: Float64
+}
+
+type Meters = @branded Float64// newtype: distinct from Float64, not just an alias
+
+type Color = @branded Nat8// enum idiom — Modest has no `enum` keyword
+const colorRed = Color 0
+const colorGreen = Color 1
+const colorBlue = Color 2
+
+type Action = () -> Unit// function type
+
+
+// --- Functions ----------------------------------------------------------------
+
+
+@inline
+func distance (a: Point, b: Point) -> Float64 {
+	let dx: Float64 = a.x - b.x
+	let dy: Float64 = a.y - b.y
+	return sqrt(dx * dx + dy * dy)
+}
+
+
+func sum (n: Int32) -> Int32 {
+	var total: Int32 = 0
+	var i: Int32 = 0
+	while i < n {
+		total = total + i
+		++i
+	}
+	return total
+}
+
+
+func announce: Action {
+	printf("modest says hi\n")
+}
+
+
+@nonstatic
+func main () -> Int {
+	let n = 42
+	let pi = 3.14159
+	var i32: Int32 = n
+	var f64: Float64 = pi
+	var counter: Int32 = 10
+	counter = 20
+	let fixed = 30; var locked: Int32 = 40
+	var w: Word64 = Word64 1 << 63
+	var asInt = Int64 w
+	printf("w = %llx -> asInt = %lld\n", w, asInt)
+
+	var height = Meters 1.8
+	printf("height = %f\n", Float64 height)
+	let greeting: *Str8 = "Hello, Modest!"
+	let initial: Char8 = "M"
+	printf("%s (starts with %c)\n", greeting, initial)
+	var arr: [5]Int32 = [1, 2, 3, 4, 5]
+	var slice: [3 - 1]Int32 = arr[1:3]
+	var i: Nat32 = 0
+	while i < lengthof(arr) {
+		printf("%d ", arr[i])
+		++i
+	}
+	printf("\n")
+	let origin = Point {x = .0, y = .0}
+	let corner = Point {x = 3.0, y = 4.0}
+	printf("distance = %f\n", distance(origin, corner))
+
+	var p: Point = corner
+	var pp: *Point = &p
+	pp.x = 99.0
+	printf("p.x = %f\n", p.x)
+	var c: Color = colorGreen
+	if c == colorGreen {
+		printf("color is green\n")
+	}
+	var u: Word32 = 0x0F
+	var v: Word32 = 0x33
+	printf("u | v = %x\n", u | v)
+	var k: Int32 = 0
+	while k < 5 {
+		++k
+		if k == 3 {
+			again
+		}
+		printf("k = %d\n", k)
+	}
+	var j: Int32 = 0
+	while 1 > 0 {
+		if j == 2 {
+			break
+		}
+		printf("j = %d\n", j)
+		++j
+	}
+	if i32 > 0 and not (counter < 0) {
+		printf("logic works\n")
+	}
+	var cb: *Action = &announce
+	cb()
+	printf("sizeof(Point) = %lu\n", sizeof(Point))
+	printf("sum(0..5) = %d\n", sum(5))
+
+	return 0
+}
+

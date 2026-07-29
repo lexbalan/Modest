@@ -22,3 +22,4 @@ func main () -> Int {
 	onNetworkFail(2)
 	return 0
 }
+
