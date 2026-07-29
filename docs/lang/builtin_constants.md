@@ -7,6 +7,16 @@ about the compiler and the target platform.
 > branch — see `docs/BUGS.md` (#5). The reference below describes the
 > intended interface (`tests/builtin`).
 
+## Top-level constants
+
+A few constants are bound directly at module scope, not under the
+`builtin.` namespace, so they are unaffected by the resolution bug above:
+
+```modest
+true, false          // Bool
+nil                  // untyped null pointer
+```
+
 ## Reference
 
 ```modest
@@ -21,6 +31,7 @@ builtin.target.pointerWidth           // bits
 builtin.target.charWidth
 builtin.target.intWidth
 builtin.target.floatWidth
+builtin.target.rationalPrecision      // decimal digits — see below
 
 // target: identity (branded string constants for comparison)
 builtin.target.name
@@ -37,6 +48,17 @@ builtin.target.Word, builtin.target.Int, builtin.target.Nat
 The unqualified aliases `Int`, `Nat`, `Word`, `Size` are also available
 directly (see [base types](./type/base.md)).
 
+`builtin.target.rationalPrecision` (`Integer`, 256 by default) mirrors
+`precision` in `cfg/*.toml`: the number of significant decimal digits
+the **C backend** writes out when it renders a `Rational`/`Float`
+constant literal as text. It does not affect `Rational` arithmetic
+itself (already exact via an arbitrary-precision fraction), and it has
+no effect on the LLVM backend, which always rounds such literals to
+`Float64`. Nor does it carry through a compound expression (`3.14 +
+0.5`) — see
+[Rational precision](./type/generic.md#rational-precision) for the full
+picture and caveats.
+
 ## Example
 
 ```modest
@@ -45,4 +67,6 @@ if builtin.target.endian == builtin.target.endianLittle {
 }
 
 var w: builtin.target.Word            // target word width
+
+printf("rational precision: %d digits\n", Int32 builtin.target.rationalPrecision)
 ```

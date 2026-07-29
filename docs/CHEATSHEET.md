@@ -55,6 +55,15 @@ let pi = 3.14          // type is Rational
 var g: Float32 = pi    // Rational implicitly cast to Float32
 ```
 
+> `Rational` is backed by an exact arbitrary-precision fraction, not a
+> float — a literal can carry more digits than any `FloatX` holds. The
+> builtin constant `builtin.target.rationalPrecision` (Integer, 256 by
+> default, mirrors `precision` in `cfg/*.toml`) is how many significant
+> decimal digits the C backend keeps when it writes such a literal out
+> as text (currently unreachable, like the rest of `builtin.*` — see
+> `docs/BUGS.md` #5) — see
+> [docs/lang/type/generic.md#rational-precision](lang/type/generic.md#rational-precision).
+
 ### Composite Types
 ```modest
 [N]Type                            // fixed array: [10]Int32
