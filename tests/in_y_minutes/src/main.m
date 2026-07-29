@@ -1,227 +1,155 @@
-// tests/1.hello_world/src/main.m
+// tests/in_y_minutes/src/main.m
+//
+// Modest in Y minutes — a fast tour of the language.
+// Full reference: docs/CHEATSHEET.md
 
-include "libc/ctypes64"
-include "libc/stdio"
-include "libc/string"
+// This is a line comment. There are no block comments.
+
+include "libc/ctypes64"  // Int32, Nat32, Float64, ... — type aliases
+include "libc/stdio"     // printf
+include "libc/math"      // sqrt
+
+// `include` pastes a module's names directly into scope — used for C
+// bindings and library modules. `import "mymodule"` instead requires a
+// `mymodule.` prefix on every name it brings in (see docs/lang).
 
 
-type MyInt = Int32
-type Point = {
-	@extern("C", "xx")
-	x: Word64
-	@extern("C", "yy")
-	y: Word64
+// --- Types ------------------------------------------------------------------
+//
+// PascalCase for types, camelCase for everything else. Base types: Bool,
+// IntX/NatX/WordX (8/16/32/64/128 — signed/unsigned/bitwise), CharX (8/16/32),
+// FloatX (32/64), Str8/Str16/Str32 (= []CharX), Int/Nat/Word (target width).
+
+type Point = {                  // named record
+	x: Float64
+	y: Float64
 }
 
-var points: []Point = [
-	{x=00, y=10}
-	{x=10, y=20}
-	{
-		x=30
-		y=40
+type Meters = @branded Float64  // newtype: distinct from Float64, not just an alias
+
+type Color = @branded Nat8      // enum idiom — Modest has no `enum` keyword
+const colorRed   = Color 0
+const colorGreen = Color 1
+const colorBlue  = Color 2
+
+type Callback = *() -> Unit     // pointer-to-function type
+
+
+// --- Functions ----------------------------------------------------------------
+
+@inline
+func distance (a: Point, b: Point) -> Float64 {
+	let dx = a.x - b.x
+	let dy = a.y - b.y
+	return sqrt(dx*dx + dy*dy)
+}
+
+
+func sum (n: Int32) -> Int32 {
+	var total: Int32 = 0
+	var i: Int32 = 0
+	while i < n {
+		total = total + i
+		++i
 	}
-]
-
-var arrays: [][]Int32 = [
-	[00, 01, 02, 03]
-	[04, 05, 06, 07]
-	[08, 09, 10, 11]
-	[
-		12,
-		13,
-		14,
-		15
-	]
-]
-
-type OpenPoint = @public {
-	x: Word64
-	y: Word64
-}
-
-type ListHeader = @public {
-	next: *ListHeader
-	prev: *ListHeader
-}
-
-func foo (a: Int32, b: Int64) -> {} {
-	var lh: ListHeader
-	lh.next.next
-	return {}
+	return total
 }
 
 
-type String8 = @public @branded {
-	length: Nat64
-	cstr: *[]Char8
-}
-
-func createString8 (cstr: *[]Char8) -> String8 {
-	return String8 {
-		length = strlen(cstr)
-		cstr = cstr
-	}
+func announce () -> Unit {
+	printf("modest says hi\n")
 }
 
 
-const c = 15
+func main () -> Int {
+	// literals carry a compile-time type, resolved at the use site
+	let n = 42       // Integer  -> converts to IntX / NatX / WordX / FloatX / CharX
+	let pi = 3.14159  // Rational -> converts to FloatX
+	var i32: Int32 = n
+	var f64: Float64 = pi
 
-//var a: Int32 = 5
-var k: [3]Word32 = [1, 2, 3]
+	// var / let / const
+	var counter = 10                    // var: concrete type (Integer -> default Int here)
+	counter = 20                        // mutable
+	let fixed = 30                      // let: immutable, function-local only
+	@immutable var locked: Int32 = 40   // var, frozen after init
 
-var p0: Point = {
-	x = 1
- 	y = 2
-}
-
-
-func farr (x: [3]Int32) -> [3]Int32 {
-	return [x[0] + 1, x[1] + 2, x[2] + 3]
-}
-
-func main (argc: Int, argv: *[]*[]Char8) -> Int {
-	type LocalInt = Int32
-
-	let p = new Point {x=10, y=10}
-	printf("p.x = %llu\n", p.x)
-	printf("p.y = %llu\n", p.y)
-
-	// constants
-
-	let c00 = 10
-
-	let xc1: Char8 = "A"
-	let xc2: Char16 = "A"
-	let xc3: Char32 = "A"
-
-	let xcs1: []Char8 = "A"
-	let xcs2: []Char16 = "A"
-	let xcs3: []Char32 = "A"
-
-	let xs1: *Str8 = "A"
-	let xs2: *Str16 = "A"
-	let xs3: *Str32 = "A"
-
-	// vars
-	var v00 = LocalInt 10
-
-	var c1: Char8 = "B"
-	var c2: Char16 = "B"
-	var c3: Char32 = "B"
-
-	var cs1: []Char8 = "B"
-	var cs2: []Char16 = "B"
-	var cs3: []Char32 = "B"
-
-	var s1: *Str8 = "B"
-	var s2: *Str16 = "B"
-	var s3: *Str32 = "B"
-
+	// value construction — Modest has no casts, only explicit construction
 	var w: Word64 = Word64 1 << 63
-	printf("w = %llx\n", w)
+	var asInt: Int64 = Int64 w          // WordX -> IntX, same width, safe
+	printf("w = %llx -> asInt = %lld\n", w, asInt)
 
-	var x1: Int16 = -1
-	var x2 = Word32 x1
-	printf("x2 = %x\n", x2)
-	if x2 != 0x0000ffff {
-		//error
+	var height = Meters 1.8
+	printf("height = %f\n", Float64 height)
+
+	// strings & characters
+	let greeting: *Str8 = "Hello, Modest!"
+	let initial: Char8 = "M"
+	printf("%s (starts with %c)\n", greeting, initial)
+
+	// arrays & slices — arrays are value types: passed/returned/assigned by value
+	var arr: [5]Int32 = [1, 2, 3, 4, 5]
+	var slice = arr[1:3]  // sub-array [2, 3]
+	var i: Nat32 = 0
+	while i < lengthof(arr) {
+		printf("%d ", arr[i])
+		++i
+	}
+	printf("\n")
+
+	// records & pointers
+	let origin = Point {x = 0.0, y = 0.0}
+	let corner = Point {x = 3.0, y = 4.0}
+	printf("distance = %f\n", distance(origin, corner))
+
+	var p = corner
+	var pp = &p
+	pp.x = 99.0  // auto-deref field write through pointer
+	printf("p.x = %f\n", p.x)
+
+	// enum idiom
+	var c = colorGreen
+	if c == colorGreen {
+		printf("color is green\n")
 	}
 
-	var arr = [3]Int32 [1, 2, 3]
-	var arr2 = arr // !
-	let arr4 = arr // !
-	var arr3: [3]Int32
-	arr2 = farr(arr)
-	arr2 = []
-	arr2 = arr
+	// bitwise ops — Word* types only; Int*/Nat* have no bitwise ops
+	var u: Word32 = 0x0f
+	var v: Word32 = 0x33
+	printf("u | v = %x\n", u | v)
 
-	let rec0 = {x=0, y=0}
-	var rec1 = Point rec0
-	var rec2 : Point
-	rec2 = {}
-	rec2 = rec1
-
-	lengthof(arr)
-
-	printf("Hello World!\n")
-
-	var a: Int32 = 0
-	var b: Int64 = 1
-	a + 2
-	a - 2
-	a * 2
-	a / 2
-	a % 2
-	foo(1, 2)
-	foo(a + 1, b - c)
-
-	let kk = 1 + 2 - 3 * 4
-	let pp = 3.1415
-
-	{} a
-	var j = Nat32 a
-	var k = Nat64 b
-
-	a * a + a
-
-	sizeof(a)
-	sizeof(Nat32)
-
-	arr[1]
-	var p0 = Point {}
-	p0.x
-	p0.y
-	if a < 1 and b > 12 or c <= 5 and not (1 < 0) {
-		var u: Word32 = 10
-		var v: Word32 = 20
-		u | v & u & ~v | v
-		(u | v & u) != (~v | v)
-		u << 10; v >> 20;
-		let pa = &a
-		*pa
-		(Int64 a + b)
-		+a
-		-a
-		++a
-		--a
+	// while / again (= continue)
+	var k = 0
+	while k < 5 {
+		++k
+		if k == 3 {
+			again  // skip the print for k == 3
+		}
+		printf("k = %d\n", k)
 	}
 
+	// while / break
+	var j = 0
 	while 1 > 0 {
-		let u = 129
-		break
+		if j == 2 {
+			break
+		}
+		printf("j = %d\n", j)
+		++j
 	}
 
-	if 1 < 2 {
-
-	} else if 2 > 3 {
-
-	} else {
-
+	// logical ops: and / or / not (no &&, ||, !)
+	if i32 > 0 and not (counter < 0) {
+		printf("logic works\n")
 	}
 
-	true or false
+	// function pointers
+	var cb: Callback = &announce
+	cb()
 
-	let pi = 3.1415
-
-	var f: Float32
-	f = pi
+	// sizeof / lengthof
+	printf("sizeof(Point) = %lu\n", sizeof(Point))
+	printf("sum(0..5) = %d\n", sum(5))
 
 	return 0
 }
-
-
-//func sum64 (a: Int64, b: Int64) -> Int64 {
-//	var sum: Int64
-//	__asm("add %0, %1, %2", [["=r", sum]], [["r", a]["r", b]], ["cc"])
-//	return sum
-//}
-
-public func print (form: *Str8, ...) -> Unit {
-	var va: __VA_List
-	var va2: __VA_List
-	__va_start(va, form)
-	__va_copy(va2, va)
-	//vfprint(c_STDOUT_FILENO, form, va)
-	__va_end(va)
-}
-
