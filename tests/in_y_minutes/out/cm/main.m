@@ -32,7 +32,7 @@ const colorRed = Color 0
 const colorGreen = Color 1
 const colorBlue = Color 2
 
-type Callback = *() -> Unit// pointer-to-function type
+type Action = () -> Unit// function type
 
 
 // --- Functions ----------------------------------------------------------------
@@ -57,7 +57,7 @@ func sum (n: Int32) -> Int32 {
 }
 
 
-func announce () -> Unit {
+func announce: Action {
 	printf("modest says hi\n")
 }
 
@@ -122,7 +122,7 @@ func main () -> Int {
 	if i32 > 0 and not (counter < 0) {
 		printf("logic works\n")
 	}
-	var cb: Callback = &announce
+	var cb: *Action = &announce
 	cb()
 	printf("sizeof(Point) = %lu\n", sizeof(Point))
 	printf("sum(0..5) = %d\n", sum(5))

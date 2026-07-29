@@ -317,7 +317,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 
 %Meters = type %Float64;; newtype: distinct from Float64, not just an alias
 %Color = type %Nat8;
-%Callback = type void ()*;; pointer-to-function type
+%Action = type void ();; function type
 
 
 ; --- Functions ----------------------------------------------------------------
@@ -524,9 +524,9 @@ then_3:
 	%93 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @.str14 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-	%94 = alloca %Callback, align 8
-	store void ()* @announce, %Callback* %94
-	%95 = load %Callback, %Callback* %94
+	%94 = alloca %Action*, align 8
+	store %Action* @announce, %Action** %94
+	%95 = load %Action*, %Action** %94
 	call void %95()
 	%96 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @.str15 to [0 x i8]*), %Size 16)
 	%97 = call %Int32 @sum(%Int32 5)

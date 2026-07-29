@@ -27,8 +27,8 @@ typedef uint8_t Color;
 #define COLOR_RED ((Color)0)
 #define COLOR_GREEN ((Color)1)
 #define COLOR_BLUE ((Color)2)
-typedef void (*Callback)(void);
-// pointer-to-function type
+typedef void Action(void);
+// function type
 // --- Functions ----------------------------------------------------------------
 
 __attribute__((always_inline))
@@ -112,7 +112,7 @@ int main(void) {
 	if (i32 > 0 && !(counter < 0)) {
 		printf("logic works\n");
 	}
-	Callback cb = &announce;
+	Action *cb = &announce;
 	cb();
 	printf("sizeof(Point) = %lu\n", sizeof(struct point));
 	printf("sum(0..5) = %d\n", sum(5));

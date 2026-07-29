@@ -32,7 +32,7 @@ const colorRed   = Color 0
 const colorGreen = Color 1
 const colorBlue  = Color 2
 
-type Callback = *() -> Unit     // pointer-to-function type
+type Action = () -> Unit        // function type
 
 
 // --- Functions ----------------------------------------------------------------
@@ -56,7 +56,7 @@ func sum (n: Int32) -> Int32 {
 }
 
 
-func announce () -> Unit {
+func announce: Action {
 	printf("modest says hi\n")
 }
 
@@ -144,7 +144,7 @@ func main () -> Int {
 	}
 
 	// function pointers
-	var cb: Callback = &announce
+	var cb: *Action = &announce
 	cb()
 
 	// sizeof / lengthof
