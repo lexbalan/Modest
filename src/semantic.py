@@ -3000,7 +3000,7 @@ def get_import_abspath(s, ext='.m'):
 
 	local_name = fname
 	if env_current_file_dir != "":
-		local_name = env_current_file_dir + '/' + fname
+		local_name = os.path.join(env_current_file_dir, fname)
 
 	full_name = ''
 
@@ -3010,7 +3010,7 @@ def get_import_abspath(s, ext='.m'):
 	elif os.path.exists(local_name):
 		full_name = local_name
 	else:
-		full_name = settings['lib'] + '/' + fname
+		full_name = os.path.join(settings['lib'], fname)
 
 	if not os.path.exists(full_name):
 		return None

@@ -1,12 +1,15 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
+include "string"
 
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/string"
 
 
 type MyInt = Int32
 type Point = {
-	pad: Nat32
 
 	x: Word64
 
@@ -51,6 +54,19 @@ func foo (a: Int32, b: Int64) -> {} {
 }
 
 
+type String8 = @public @branded {
+	length: Nat64
+	cstr: *[]Char8
+}
+
+func createString8 (cstr: *[]Char8) -> String8 {
+	return String8 {
+		length = strlen(cstr)
+		cstr = cstr
+	}
+}
+
+
 const c = 15
 
 //var a: Int32 = 5
@@ -66,12 +82,13 @@ func farr (x: [3]Int32) -> [3]Int32 {
 	return [x[0] + 1, x[1] + 2, x[2] + 3]
 }
 
-func main () -> Int {
+@nonstatic
+func main (argc: Int, argv: *[]*[]Char8) -> Int {
 	type LocalInt = Int32
 
 	let p: *Point = new Point {x = 10, y = 10}
-	printf("p.x = %d\n", p.x)
-	printf("p.y = %d\n", p.y)
+	printf("p.x = %llu\n", p.x)
+	printf("p.y = %llu\n", p.y)
 
 	let c00 = 10
 
@@ -86,7 +103,7 @@ func main () -> Int {
 	let xs1: *Str8 = "A"
 	let xs2: *Str16 = "A"
 	let xs3: *Str32 = "A"
-	var v00 = Int32 10
+	var v00 = LocalInt 10
 
 	var c1: Char8 = "B"
 	var c2: Char16 = "B"
@@ -105,7 +122,7 @@ func main () -> Int {
 
 	var x1: Int16 = -1
 	var x2 = Word32 x1
-	printf("x2 = %llx\n", x2)
+	printf("x2 = %x\n", x2)
 	if x2 != 0x0000FFFF {
 	}
 
@@ -118,7 +135,7 @@ func main () -> Int {
 	arr2 = arr
 
 	let rec0 = {x = 0, y = 0}
-	var rec1: Point = Point rec0
+	var rec1 = Point rec0
 	var rec2: Point
 	rec2 = {}
 	rec2 = rec1
@@ -127,8 +144,8 @@ func main () -> Int {
 
 	printf("Hello World!\n")
 
-	var a: Int32
-	var b: Int64
+	var a: Int32 = 0
+	var b: Int64 = 1
 	a + 2
 	a - 2
 	a * 2
@@ -141,28 +158,31 @@ func main () -> Int {
 	let pp = 3.1415
 
 	{} a
-	Nat32 a
-	Nat64 b
+	var j = Nat32 a
+	var k = Nat64 b
+
+	a * a + a
 
 	sizeof a
 	sizeof(Nat32)
 
 	arr[1]
-	var p0: Point = Point {}
+	var p0 = Point {}
 	p0.x
 	p0.y
 	if a < 1 and b > 12 or c <= 5 and not (1 < 0) {
-		var u: Word32
-		var v: Word32
-		u or v and u xor not v
+		var u: Word32 = 10
+		var v: Word32 = 20
+		u | v & u & not v | v
+		(u | v & u) != (not v | v)
 		u << 10; v >> 20
 		let pa: *Int32 = &a
 		*pa
 		(Int64 a + b)
 		+a
 		-a
-		a = a + 1
-		a = a - 1
+		++a
+		--a
 	}
 
 	while 1 > 0 {

@@ -46,7 +46,7 @@ def main():
 
 	fdg = args.config
 	if fdg != None:
-		apply_config(cwd + '/' + fdg)
+		apply_config(os.path.join(cwd, fdg))
 
 	libb = args.lib
 	if libb != None:
