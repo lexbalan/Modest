@@ -912,7 +912,7 @@ def do_value_pos(x):
 		if isinstance(v.asset, int):
 			nt = type_integer_for(v.asset, ti=v.ti)
 		else:
-			nt = type_rational_create(v.asset, ti=v.ti)
+			nt = type_rational_create(ti=v.ti)
 		nv.change_type(nt)
 
 	return nv

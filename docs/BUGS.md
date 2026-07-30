@@ -107,3 +107,45 @@ printf("%f\n", y)   // prints 3.000000, expected ~3.142857
   or otherwise guarantee the emitted C expression reproduces the value
   the compiler already computed.
 
+## 11. Implicit `Rational` → `Float32` construction of a `const` reference emits no cast
+
+```modest
+const pi = 3.14159
+
+var f32: Float32 = pi
+if f32 != pi {
+	printf("mismatch\n")   // prints — should never fire
+}
+```
+
+- A module-level `const` is emitted as a bare, untyped C macro:
+  `#define PI 3.14159`. `var f32: Float32 = pi` correctly rounds it to
+  `float` at the definition site, but `f32 != pi` re-expands the same
+  macro with **no cast**: `if (f32 != PI)`. In C, an unsuffixed decimal
+  literal is always `double`, and comparing `float != double` promotes
+  the `float` back to `double` — so the comparison actually happens
+  between the *unrounded* double `3.14159` and `f32` widened back to
+  double, not between two `Float32` values.
+- Concretely: `float` nearest to `3.14159`, widened back to `double`, is
+  `3.14159011840820312500`; the plain `double` literal `3.14159` is
+  `3.14158999999999988262`. Different values, so `!=` is (wrongly) true.
+- Cause: `do_cvalue_cons2` (`src/backend/c11.py:688-699`) skips emitting
+  a cast whenever the source type is generic —
+  `if not (from_type.is_generic() or is_the_same_in_c(type, value.type)): ...cast...`
+  (`c11.py:693`). That shortcut is correct for `Integer` (an unsuffixed
+  C integer literal already behaves like the target width at any
+  concrete use site) but wrong for `Rational` → `Float32`/`Fixed32`:
+  C's literal typing has no notion of "narrower than double", so
+  skipping the cast silently reintroduces `double` precision.
+  Writing the construction explicitly (`Float32 pi`) does produce a
+  `(float)` cast and fixes the comparison — the implicit path is the
+  one that's broken.
+- Related to #10 (C backend not preserving a Modest-level typing
+  decision into the emitted C), but a different code path: this one is
+  about implicit construction of a `const` reference, not about
+  re-emitting a folded binary expression.
+- Expected: implicit `Rational`/`Integer` → narrower-than-`double`
+  float construction should still emit a cast (or print the literal
+  with an `f` suffix) whenever the target width is less than the
+  representation C would otherwise give the bare literal.
+
