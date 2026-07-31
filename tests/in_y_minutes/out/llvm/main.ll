@@ -315,9 +315,9 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 	%Float64
 };
 
-%Meters = type %Float64;; newtype: distinct from Float64, not just an alias
+%Meters = type %Float64;
 %Color = type %Nat8;
-%Action = type void ();; function type
+%Action = type void ();
 
 
 ; --- Functions ----------------------------------------------------------------

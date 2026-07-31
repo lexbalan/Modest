@@ -18,7 +18,7 @@ construct: Form, Semantics, Examples.
 | Imports | `import`, `include` — namespaces, C bindings | [import](./import.md) |
 | Pragmas | `pragma unsafe`, `prefix`, `c_include` | [directive](./directive.md) |
 | Access | `public` / `private` / default | [access_modifiers](./access_modifiers.md) |
-| Builtin constants | `builtin.target.*`, compiler info | [builtin_constants](./builtin_constants.md) |
+| Builtin constants | `builtin.target.*` (incl. `rationalPrecision`), compiler info | [builtin_constants](./builtin_constants.md) |
 
 ### Core
 

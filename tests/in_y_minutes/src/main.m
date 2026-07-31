@@ -20,19 +20,26 @@ include "libc/math"      // sqrt
 // IntX/NatX/WordX (8/16/32/64/128 — signed/unsigned/bitwise), CharX (8/16/32),
 // FloatX (32/64), Str8/Str16/Str32 (= []CharX), Int/Nat/Word (target width).
 
-type Point = {                  // named record
+// directive type binds a new name to an existing type,
+// but does not create a distinct type. For distinct types, use `@branded` annotation (newtype idiom).
+type Point = {
 	x: Float64
 	y: Float64
 }
 
-type Meters = @branded Float64  // newtype: distinct from Float64, not just an alias
+// newtype: distinct from Float64, not just an alias
+type Meters = @branded Float64
 
-type Color = @branded Nat8      // enum idiom — Modest has no `enum` keyword
+// enum idiom — Modest has no `enum` keyword
+type Color = @branded Nat8
 const colorRed   = Color 0
 const colorGreen = Color 1
 const colorBlue  = Color 2
 
-type Action = () -> Unit        // function type
+// function type
+// You cannot create a variable of a function type directly,
+// but you can create a pointer to a function type.
+type Action = () -> Unit
 
 
 // --- Functions ----------------------------------------------------------------

@@ -5,6 +5,7 @@
 cd shift && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd eq && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd const && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+cd rational && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd var && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd structural_type_system && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd crc32 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \

@@ -353,6 +353,7 @@ def create_builtin_module():
 	target_int_width = xcreate_const(target_symtab, "intWidth", ValueLiteral(typeInteger, int_width, ti=builtin_ti))
 	target_int_width = xcreate_const(target_symtab, "floatWidth", ValueLiteral(typeInteger, float_width, ti=builtin_ti))
 	target_int_width = xcreate_const(target_symtab, "pointerWidth", ValueLiteral(typeInteger, pointer_width, ti=builtin_ti))
+	target_rational_precision = xcreate_const(target_symtab, "rationalPrecision", ValueLiteral(typeInteger, int(settings['precision']), ti=builtin_ti))
 
 
 	mw = type_word_create(width=32)
@@ -771,6 +772,8 @@ def do_value_bin_op(op, l, r, ti):
 
 		if t.is_type_integer():
 			t = type_integer_create(width=need_width, ti=ti)
+		elif t.is_type_rational():
+			pass  # Rational is arbitrary precision (Fraction), no fixed width to overflow
 		else:
 			if need_width > t.width or (not t.is_signed() and asset < 0):
 				error("integer overflow", ti)
@@ -909,7 +912,7 @@ def do_value_pos(x):
 		if isinstance(v.asset, int):
 			nt = type_integer_for(v.asset, ti=v.ti)
 		else:
-			nt = type_rational_create(v.asset, ti=v.ti)
+			nt = type_rational_create(ti=v.ti)
 		nv.change_type(nt)
 
 	return nv
