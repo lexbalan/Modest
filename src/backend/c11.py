@@ -166,7 +166,7 @@ def do_ctype_pointer(t, specs=[]):
 	# IMPORTANT:
 	# *[][]...([])T -> *[]T
 	# В си нельзя создать указатель на массив вида *[][]
-	# Но Modest это позволяет (!) НО при этом нельзя индексировать по такому указателю
+	# Но Modest это позволяет ⚠️ НО при этом нельзя индексировать по такому указателю
 	# Для работы нужно его сперва привести к типу *[n][m]...([k]) и тогда уже можно индексировать
 	# Реализуется это в си через void * - (это лучший вариант)
 	if to.is_type_unsized_array_of_unsized_array():
@@ -216,7 +216,7 @@ def do_ctype_array_volume(volume):
 # преобразуем Modest TypeArray -> CIR TypeArray
 def do_ctype_array(t, specs=[]):
 	# сливаем *[][] в *[]
-	# такой укзаатель на массив массивов можно будет использовать только после приведения к *[n][m] (!)
+	# такой укзаатель на массив массивов можно будет использовать только после приведения к *[n][m] ⚠️
 	return CTypeArray(item_type=do_ctype(t.of), size=do_ctype_array_volume(t.volume), specifiers=specs)
 
 
@@ -464,14 +464,18 @@ def do_cvalue_literal_char(t, v, ctx):
 	return CValueChar(v.asset, width=t.width)
 
 
-def do_cvalue_literal_array(v, ctx):
-	items = v.asset
+
+def array_literal_from_items(items, ctx):
 	initializers = []
 	for item in items:
 		ini = do_cinitializer(item.type, item, ctx=ctx)
 		ini.nl = item.nl
 		initializers.append(ini)
 	return CValueArray(initializers)
+
+
+def do_cvalue_literal_array(v, ctx):
+	return array_literal_from_items(v.asset, ctx=ctx)
 
 
 
@@ -625,7 +629,7 @@ def do_cvalue_cons_record(x, ctx):
 			cv = do_cvalue(value, ctx=ctx)
 			return cv
 
-		# C cannot just cast struct to struct (!)
+		# C cannot just cast struct to struct ⚠️
 		cv = do_cvalue_cast_raw(to_type, x.value, ctx)
 		return cv
 
@@ -637,7 +641,7 @@ def do_cvalue_cons_record(x, ctx):
 			# То печатаем литерал структуры из нашего asset
 			record = do_cvalue_literal_record(x.value, ctx=ctx)
 
-			# add extra non-zero items (!)
+			# add extra non-zero items ⚠️
 			for kv in x.asset:
 				if not kv.value.isValueUndef():
 					if kv.value.isValueZero():
@@ -695,6 +699,11 @@ def do_cvalue_cons2(x, ctx):
 				cv = do_cvalue_cast(type, value, ctx=ctx)
 				return cv
 
+		if type.is_type_float() and type.width != 64:
+			# ⚠️ Необходимо привести, тк в C литералы с плавающей точкой по умолчанию double
+			cv = do_cvalue_cast(type, value, ctx=ctx)
+			return cv
+
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
@@ -703,7 +712,7 @@ def do_cvalue_cons2(x, ctx):
 #		return cv
 
 
-	# (!) WARNING (!)
+	# ⚠️ WARNING:
 	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
 	# - in Cm Int32(-1) -> Word64 => 0x00000000ffffffff
 	# - in Cm Int32(-1) -> Nat64 => 1
@@ -952,7 +961,7 @@ def do_cvalue_call(x, ctx):
 
 def do_cvalue_arg(av):
 	if av.type.is_type_array() and not av.type.is_type_array_of_char():
-		# Если в функцию передается массив по значению - передаем указатель на него (!)
+		# Если в функцию передается массив по значению - передаем указатель на него ⚠️
 		# тк функции си не умеют получать массивы по значению
 		a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
 	else:
@@ -1391,10 +1400,9 @@ def do_cvalue_bin(x, ctx):
 	if x.op == HLIR_VALUE_OP_LOGIC_OR: return CValueLogicalOr(left, right)
 	if x.op == HLIR_VALUE_OP_LOGIC_AND: return CValueLogicalAnd(left, right)
 	if x.op == HLIR_VALUE_OP_STRCAT: return CValueStringConcat(left, right)
-	if x.op == HLIR_VALUE_OP_ARRCAT: return CValueStringConcat(left, right)
+	if x.op == HLIR_VALUE_OP_ARRCAT: return array_literal_from_items(x.asset, ctx=ctx)
+
 	assert(False)
-
-
 
 
 def do_cinitializer(type, value, ctx):
@@ -1406,10 +1414,12 @@ def do_cinitializer(type, value, ctx):
 				if v.type.is_type_integer():
 					value = value.value
 
-		# C не позволяет приводить литерал массива к типу массива в инициализаторах(!)
+		# ⚠️ C не позволяет приводить литерал массива к типу массива в инициализаторах
 		# Вот все можно приводить, все ок, а массив - нет.
 		if to.is_type_array():
-			if v.type.is_type_string():
+			if v.isValueArray():
+				return do_cvalue_literal_with_type(v, to, ctx=ctx)
+			elif v.type.is_type_string():
 				width = 0
 				if to.is_concretic():
 					width = to.of.width
@@ -1421,9 +1431,9 @@ def do_cinitializer(type, value, ctx):
 				cv = CValueArray(cv_chars)
 				return cv
 
-			elif v.asset:
-				cv = do_cvalue_literal_with_type(v, to, ctx=ctx)
-				return cv
+		if to.is_type_float():
+			if v.type.is_generic():
+				return do_cvalue(v, ctx=ctx)
 
 	cv = do_cvalue(value, ctx=ctx)
 	return cv
@@ -2194,7 +2204,7 @@ def do_cfile(module):
 			xdefs.extend(include(x.c_name, local=x.is_local))
 
 
-	# закидываем в defined все StmtDefXXX из импортируемых модулей (!)
+	# закидываем в defined все StmtDefXXX из импортируемых модулей ⚠️
 	for m in module.included_modules:
 		extt(m)
 
@@ -2316,7 +2326,7 @@ def cons_vla_from_literal_array(x):
 
 
 
-# получает Value, возаращает такой CValue у которого можно взять ref (!)
+# получает Value, возаращает такой CValue у которого можно взять ref ⚠️
 def do_cvalue_mem(x):
 	cv = do_cvalue(x)
 

@@ -49,7 +49,7 @@ const diff = 5.5 - 1.25// 4.25
 const prod = 1.5 * 2.0// 3.0
 const quot = 7.0 / 4.0// 1.75
 const negated = -sum// -3.75
-const just = +1.5
+const just = +1.5// 1.5 (unary + is a no-op, but still a constant expression)
 
 public func testConstFolding () -> Bool {
 	if sum != 3.75 {

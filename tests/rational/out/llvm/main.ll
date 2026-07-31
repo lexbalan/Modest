@@ -270,7 +270,7 @@ endif_1:
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @.str3 to [0 x i8]*))
 	ret %Bool 1
 }
-
+; 1.5 (unary + is a no-op, but still a constant expression)
 define %Bool @main_testConstFolding() {
 ; if_0
 	br %Bool 0 , label %then_0, label %endif_0

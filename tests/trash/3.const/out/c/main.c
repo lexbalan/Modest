@@ -34,11 +34,7 @@ struct x {
 	{.x = 1, .y = 1}, \
 	{.x = 2, .y = 2} \
 }
-#define POINTS { \
-	{.x = 0, .y = 0}, \
-	{.x = 1, .y = 1}, \
-	{.x = 2, .y = 2} \
-}
+#define POINTS PS
 #define POINT_ZERO ((struct point){.x = 1, .y = 1})
 #define ZERO_POINTS {POINT_ZERO, POINT_ZERO, POINT_ZERO}
 static struct x x = (struct x){

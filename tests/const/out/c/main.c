@@ -152,12 +152,12 @@ bool main_testStringAndCharConst(void) {
 #define NUMS {1, 2, 3}
 
 bool main_testArrayConst(void) {
-	int32_t same[3] = {1, 2, 3};
+	int32_t same[3] = NUMS;
 	if (__builtin_memcmp(&same, &(int32_t [3]){1, 2, 3}, sizeof(int32_t [3])) != 0) {
 		printf("error: same != [1, 2, 3]\n");
 		return false;
 	}
-	int32_t longer[5] = {1, 2, 3};
+	int32_t longer[5] = NUMS;
 	if (longer[0] != 1 || longer[1] != 2 || longer[2] != 3) {
 		printf("error: longer head mismatch\n");
 		return false;
@@ -219,12 +219,12 @@ bool main_testNestedRecordConst(void) {
 #define MATRIX {{1, 2, 3}, {4, 5, 6}}
 
 bool main_testNestedArrayConst(void) {
-	int32_t m[2][3] = {{1, 2, 3}, {4, 5, 6}};
+	int32_t m[2][3] = MATRIX;
 	if (m[0][0] != 1 || m[0][2] != 3 || m[1][0] != 4 || m[1][2] != 6) {
 		printf("error: matrix mismatch\n");
 		return false;
 	}
-	int32_t wider[3][3] = {{1, 2, 3}, {4, 5, 6}};
+	int32_t wider[3][3] = MATRIX;
 	if (__builtin_memcmp(&wider[0], &(int32_t [3]){1, 2, 3}, sizeof(int32_t [3])) != 0 || __builtin_memcmp(&wider[1], &(int32_t [3]){4, 5, 6}, sizeof(int32_t [3])) != 0) {
 		printf("error: wider head mismatch\n");
 		return false;
@@ -262,12 +262,12 @@ bool main_testNestedArrayConst(void) {
 #define POINTS {{.x = 1, .y = 1}, {.x = 2, .y = 2}, {.x = 3, .y = 3}}
 
 bool main_testArrayOfRecordsConst(void) {
-	struct point arr[3] = {{.x = 1, .y = 1}, {.x = 2, .y = 2}, {.x = 3, .y = 3}};
+	struct point arr[3] = POINTS;
 	if (arr[0].x != 1 || arr[0].y != 1 || arr[2].x != 3 || arr[2].y != 3) {
 		printf("error: points mismatch\n");
 		return false;
 	}
-	struct point longer[5] = {{.x = 1, .y = 1}, {.x = 2, .y = 2}, {.x = 3, .y = 3}};
+	struct point longer[5] = POINTS;
 	if (longer[2].x != 3 || longer[2].y != 3) {
 		printf("error: longer head mismatch\n");
 		return false;
