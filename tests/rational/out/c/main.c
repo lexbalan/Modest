@@ -14,7 +14,7 @@
 bool main_testGenericAdaptation(void) {
 	float asFloat32 = HALF;
 	double asFloat64 = HALF;
-	if (asFloat32 != HALF) {
+	if (asFloat32 != (float)HALF) {
 		printf("error: asFloat32 != 0.5\n");
 		return false;
 	}
@@ -31,6 +31,7 @@ bool main_testGenericAdaptation(void) {
 #define QUOT (7.0 / 4.0)
 #define NEGATED (-SUM)
 #define JUST (+1.5)
+// 1.5 (unary + is a no-op, but still a constant expression)
 
 
 bool main_testConstFolding(void) {

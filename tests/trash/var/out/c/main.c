@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 #define ARR {1, 2}
-static int32_t arr0[2] = {1, 2};
-static int32_t arr1[2] = {1, 2};
+static int32_t arr0[2] = ARR;
+static int32_t arr1[2] = ARR;
 static char *str = "Hello!";
 // -> *[]Char8
 

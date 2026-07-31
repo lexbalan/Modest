@@ -25,7 +25,7 @@ typedef uint32_t char32_t;
 #define C4 U"Hello!"
 #define C5 32
 static int32_t arr0[10];
-static int32_t arr1[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+static int32_t arr1[10] = C0;
 static char32_t arr2[10] = {U'H', U'e', U'l', U'l', U'o', U'!'};
 //func f0 (x: []Int32) -> []Int32 {
 //	var aa: []Int32

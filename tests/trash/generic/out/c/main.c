@@ -116,7 +116,7 @@ static bool test_generic_array(void) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;
 	}
-	int32_t d[10] = {0, 1, 2, 3};
+	int32_t d[10] = a;
 	if (__builtin_memcmp(&d, &(int32_t [10]){0, 1, 2, 3, 0, 0, 0, 0, 0, 0}, sizeof(int32_t [10])) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
 		return false;
