@@ -46,13 +46,13 @@ public func testGenericAdaptation () -> Bool {
 // stay exact: no float rounding happens between the literals and the
 // folded result
 const sum = 1.5 + 2.25             // 3.75 — magnitude >= 1 (BUGS.md #10-adjacent
-                                    // overflow regression: this used to be a
-                                    // compile-time "integer overflow" error)
+                                   // overflow regression: this used to be a
+                                   // compile-time "integer overflow" error)
 const diff = 5.5 - 1.25            // 4.25
 const prod = 1.5 * 2.0             // 3.0
 const quot = 7.0 / 4.0             // 1.75
 const negated = -sum               // -3.75
-const just = +1.5
+const just = +1.5                  // 1.5 (unary + is a no-op, but still a constant expression)
 
 public func testConstFolding () -> Bool {
 	if sum != 3.75 {
@@ -78,7 +78,7 @@ public func testConstFolding () -> Bool {
 
 	// folding chains: intermediate consts feed further folds and still
 	// land on an exact result
-	const chained = (half + quarter) + eighth
+	let chained = (half + quarter) + eighth
 	if chained != 0.875 {
 		printf("error: chained != 0.875\n")
 		return false
@@ -165,8 +165,8 @@ public func testFloatComparison () -> Bool {
 // const is also allowed inside a function body, same as for Integer
 // (see tests/const)
 public func testLocalRationalConst () -> Bool {
-	const localHalf = 0.5
-	const localSum = localHalf + 0.25
+	let localHalf = 0.5
+	let localSum = localHalf + 0.25
 
 	if localSum != 0.75 {
 		printf("error: localSum != 0.75\n")
