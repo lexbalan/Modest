@@ -80,6 +80,7 @@ class Lexer:
 					token = result + (ti,)
 					tokens.append(token)
 				break
+
 		tokens.append((None, ''))
 		return None
 

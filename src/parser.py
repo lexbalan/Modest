@@ -887,11 +887,12 @@ class Parser:
 		if self.look("{"):
 			if self.nextok() == "}":
 				# Встретили в выражении значения {} и не понимаем это тип {} или значение {} ?
-				# считаем что если дальше None | NL | ';' - то это литерал пустой записи
+				# считаем что если дальше None | NL | ';' | ',' | ')' | ']' | '}' - то это литерал пустой записи
+				# (эти токены не могут быть началом следующего значения, так что "тип перед значением" тут невозможен)
 				nex = self.get_ntok(2)
 				if nex == None:
 					return False
-				if (nex[0] == 'nl') or (nex[1] == ';'):
+				if (nex[0] == 'nl') or (nex[1] in (';', ',', ')', ']', '}')):
 					return False
 		return True
 
@@ -2362,7 +2363,7 @@ class Parser:
 
 	def restore(self, stoppers):
 		while not self.ctok() in stoppers:
-			if self.ctok() == '':
+			if self.is_end():
 				return
 			self.skip1()
 
