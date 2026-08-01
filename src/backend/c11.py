@@ -1431,8 +1431,8 @@ def do_cinitializer(type, value, ctx):
 				cv = CValueArray(cv_chars)
 				return cv
 
-		if to.is_type_float():
-			if v.type.is_generic():
+		if v.type.is_generic():
+			if to.is_type_float() and v.type.is_type_rational():
 				return do_cvalue(v, ctx=ctx)
 
 	cv = do_cvalue(value, ctx=ctx)
