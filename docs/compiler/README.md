@@ -8,6 +8,7 @@ to C11, LLVM IR, or back to Modest.
 | [usage](./usage.md) | invocation, flags, config, testing |
 | [overview](./overview.md) | pipeline: lexer → parser → translator → backends; where to make a change |
 | [structure](./STRUCTURE.md) | directory & file map of the repo |
+| [modules](./modules.md) | module responsibilities, layers, dependency graph, state ownership |
 
 Related:
 - [Language reference](../lang/README.md)
