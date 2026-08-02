@@ -77,13 +77,13 @@ def int_zext(x, width_from, width_to):
 
 
 
-def str_always_float(s):
-	if not '.' in s:
-		return s + '.0'
-	return s
 
 
 def str_fractional(x):
+	def str_always_float(s):
+		if not '.' in s:
+			return s + '.0'
+		return s
 	return str_always_float(decimal_to_str(fractional_to_decimal(x)))
 
 
