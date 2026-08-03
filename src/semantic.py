@@ -2975,6 +2975,8 @@ def def_phase2(ast):
 			elif kind == 'var': df = def_var_global(x)
 
 			assert(df != None)
+			if df.is_stmt_bad():
+				continue
 
 			if get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC:
 				df.id.prefix = global_prefix
