@@ -2401,7 +2401,6 @@ def def_const_global(x):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
 	df = def_const_common(x)
-
 	if df.is_stmt_bad():
 		return df
 
@@ -2427,6 +2426,9 @@ def def_var_global(x):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
 	df = def_var_common(x)
+	if df.is_stmt_bad():
+		return df
+
 	df.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 	df.value.is_initialized = True

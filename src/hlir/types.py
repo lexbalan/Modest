@@ -398,7 +398,7 @@ class StmtBad(Stmt):
 	def __init__(self, ti=None, nl=1):
 		super().__init__(ti)
 
-	def is_bad(self):
+	def is_stmt_bad(self):
 		return True
 
 
