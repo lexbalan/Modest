@@ -39,13 +39,19 @@ func_undef_list = []
 module_undef_list = []
 
 
-
+csettings = {}
 cfunc = None
 
 
 # print pointer to array as a pointer to array item (C array decay)
 POINTER_TO_ARRAY_RELAX = True
 
+
+
+
+def init(settings):
+	global csettings
+	csettings = settings
 
 
 
@@ -58,29 +64,13 @@ def is_local_context():
 	return not is_global_context()
 
 
-
-csettings = {}
-def init(settings):
-	global styleguide, csettings
-	csettings = settings
-
-#	stylename = settings['output_style']
-#	if stylename != None:
-#		if stylename in styles:
-#			styleguide = styles[stylename]
-
-
-
-
 def value_is_type_generic_immediate(v):
 	return v.isValueImmediate() and v.type.is_generic()
 
 
 # такое значение определено как макрос
-def value_is_type_generic_immediate_const(v):
-	return v.isValueConst() and v.isValueImmediate() and v.type.is_generic()
-
-
+def value_is_generic_immediate_const(v):
+	return v.isValueConst() and value_is_type_generic_immediate(v)
 
 
 def is_global_public(x):
@@ -998,7 +988,7 @@ def do_cvalue_index(x, ctx):
 		vs = do_cvalue(left, ctx=ctx)
 		lx = CValueCast(ts, vs)
 
-	elif value_is_type_generic_immediate_const(left):
+	elif value_is_generic_immediate_const(left):
 		ts = do_ctype(left.type)
 		vs = do_cvalue(left, ctx=ctx)
 		lx = CValueCast(ts, vs)
@@ -1026,12 +1016,12 @@ def do_cvalue_access(x, ctx):
 
 	# если имеем дело c константной записью (глоб константа)
 	# и результат операции доступа - константа которая уже тут
-	if not left.isValueConst():
-		if value_is_type_generic_immediate(left):
-			return do_cvalue_literal_with_type(x, x.type, ctx)
+	#if not left.isValueConst():
+	if value_is_generic_immediate_const(left):
+		return do_cvalue_literal_with_type(x, x.type, ctx)
 
 	lx = do_cvalue(left, ctx=ctx)
-	if value_is_type_generic_immediate_const(left):
+	if value_is_generic_immediate_const(left):
 		lx = CValueCast(do_ctype(left.type), lx)
 
 	field_id_str = get_id_str(x.field)

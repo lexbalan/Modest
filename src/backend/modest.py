@@ -256,9 +256,7 @@ def str_type2(t):
 	elif isinstance(t, TypeInteger): return "Integer(%d)" % t.width
 	elif isinstance(t, TypeRational): return "Rational"
 	elif isinstance(t, TypeUndefined): return "Undefined"
-	else:
-		#1/0
-		return str(t)
+	return str(t)
 
 
 bin_ops = {
