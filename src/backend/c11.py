@@ -1017,8 +1017,8 @@ def do_cvalue_access(x, ctx):
 	# если имеем дело c константной записью (глоб константа)
 	# и результат операции доступа - константа которая уже тут
 	#if not left.isValueConst():
-	if value_is_generic_immediate_const(left):
-		return do_cvalue_literal_with_type(x, x.type, ctx)
+	#if value_is_generic_immediate_const(left):
+	#	return do_cvalue_literal_with_type(x, x.type, ctx)
 
 	lx = do_cvalue(left, ctx=ctx)
 	if value_is_generic_immediate_const(left):
