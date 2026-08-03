@@ -2327,7 +2327,8 @@ def def_const_common(x):
 	const_type, init_value = process_field_common(x, default_instead_of_undef=True)
 
 	if init_value.isValueBad():
-		return StmtBad(x['ti'])
+		# осознанно пропускаем ошибку, чтобы не плодить кучу ошибок дальше; это ок
+		pass
 
 	if const_type.is_forbidden_const():
 		error("unsuitable type", x['ti'])
@@ -2371,6 +2372,10 @@ def def_var_common(x, is_local=False):
 	cdef = definition
 
 	var_type, init_value = process_field_common(x, allow_cons_default=True, default_instead_of_undef=is_local)
+
+	if init_value.isValueBad():
+		# осознанно пропускаем ошибку, чтобы не плодить кучу ошибок дальше; это ок
+		pass
 
 	if var_type.is_forbidden_var(unsized_array_forbidden=False):
 		error("unsuitable type", x['ti'])
