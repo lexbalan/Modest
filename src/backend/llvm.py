@@ -1091,7 +1091,7 @@ def do_eval_shr(x):
 	r = do_reval(x.right)
 	r = docast(r, l['type'])
 
-	opcode = 'ashr' if Type.is_signed(l['type']) else 'lshr'
+	opcode = 'ashr' if l['type'].is_signed() else 'lshr'
 	return llvm_eval_binary(opcode, l, r, x)
 
 
@@ -1392,11 +1392,11 @@ def select_cast_operator(a, b):
 
 	if a.is_integer() or a.is_int() or a.is_nat() or a.is_char() or a.is_word():
 
-		if Type.is_pointer(b):
+		if b.is_pointer():
 			return 'bitcast'
 
 		if b.is_integer() or b.is_rational() or b.is_int() or b.is_nat() or b.is_char() or b.is_bool() or b.is_word():
-			signed = Type.is_signed(b)
+			signed = b.is_signed()
 
 			aw = a.width
 			bw = b.width
@@ -1410,25 +1410,25 @@ def select_cast_operator(a, b):
 			else:
 				return 'bitcast'
 
-		elif Type.is_pointer(b):
+		elif b.is_pointer():
 			return 'inttoptr'
 
-		elif Type.is_float(b):
-			return 'sitofp' if Type.is_signed(a) else 'uitofp'
+		elif b.is_float():
+			return 'sitofp' if a.is_signed() else 'uitofp'
 
-	elif Type.is_pointer(a):
-		if Type.is_pointer(b):
+	elif a.is_pointer():
+		if b.is_pointer():
 			return 'bitcast'
-		elif Type.is_int(b) or Type.is_nat(b) or Type.is_word(b):
+		elif b.is_int() or b.is_nat() or b.is_word():
 			return 'ptrtoint'
 
-	elif Type.is_float(a):
+	elif a.is_float():
 		# Float -> Integer
-		if Type.is_int(b) or Type.is_nat(b):
-			return 'fptosi' if Type.is_signed(b) else 'fptoui'
+		if b.is_int() or b.is_nat():
+			return 'fptosi' if b.is_signed() else 'fptoui'
 
 		# Float -> Float
-		elif Type.is_float(b):
+		elif b.is_float():
 			if a.width < b.width:
 				return 'fpext'
 			elif a.width > b.width:
@@ -1447,7 +1447,7 @@ def select_cast_operator(a, b):
 
 def is_adr_or_ptr(x):
 	assert(x['isa'] == 'll_value')
-	return x['is_adr'] or Type.is_pointer(x['type'])
+	return x['is_adr'] or x['type'].is_pointer()
 
 
 def cons_composite_from_composite(to_type, value, ti):
@@ -1513,7 +1513,7 @@ def eval_cons_record(x):
 
 def eval_cons_array(x):
 	if x.is_immediate():
-		if Type.is_vla(x.type):
+		if x.type.is_vla():
 			return do_eval_literal(x.value)
 		return do_eval_literal(x)
 
@@ -2163,7 +2163,7 @@ def print_stmt_const(x):
 	# для let-массивов выделяем память (alloca)
 	# поскольку их могут индексировать переменной
 	# а массив-значение в "регистре" невозможно индексировать переменной
-	if Type.is_sized_array(t) or Type.is_record(t):
+	if t.is_sized_array() or t.is_record():
 		v = llvm_alloca_store(t, id_str=None, init_value=v)
 
 	locals_add(id_str, v)
@@ -2325,7 +2325,7 @@ def print_stmt_decrement(x):
 def str_func_params(ftype, only_types=False, with_attributes=True):
 	sstr = ''
 	# here can be a pointer to function
-	if Type.is_pointer(ftype):
+	if ftype.is_pointer():
 		ftype = ftype.to
 
 	params = ftype.params
@@ -2370,7 +2370,7 @@ def str_func_params(ftype, only_types=False, with_attributes=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		isarr = Type.is_sized_array(param.type)
+		isarr = param.type.is_sized_array()
 
 		if i > 0:
 			sstr += ", "
@@ -2395,7 +2395,7 @@ def str_func_params(ftype, only_types=False, with_attributes=True):
 
 def str_type_func(t):
 	sstr = ''
-	if Type.is_unit(t.to) or need_sret(t):
+	if t.to.is_unit() or need_sret(t):
 		sstr += "void"
 	else:
 		sstr += str_type(t.to)
@@ -2411,7 +2411,7 @@ def print_func_signature(ftype, idStr):
 
 def str_func_signature(ftype, idStr):
 	sstr = ''
-	if Type.is_unit(ftype.to) or need_sret(ftype):
+	if ftype.to.is_unit() or need_sret(ftype):
 		sstr += "void"
 	else:
 		sstr += str_type(ftype.to)
@@ -2513,13 +2513,13 @@ def print_def_func(x):
 	for param in params:
 		param_id = get_id_str(param)
 
-		if Type.is_va_list(param.type):
+		if param.type.is_va_list():
 			# see: p216
 			continue
 
 		localObject = llvm_value_reg(param_id, param.type)
 
-		if Type.is_sized_array(param.type):
+		if param.type.is_sized_array():
 			localObject['is_adr'] = True
 
 		locals_add(param_id, localObject)
@@ -2534,7 +2534,7 @@ def print_def_func(x):
 	# for any array parameter print local holder value
 	for param in params:
 		ptype = param.type
-		if Type.is_sized_array(ptype):
+		if ptype.is_sized_array():
 			paramId = get_id_str(param)
 
 			reg = '__' + param.id.str
@@ -2550,7 +2550,7 @@ def print_def_func(x):
 
 	if len(params) > 0:
 		last_param = params[-1]
-		if Type.is_va_list(last_param.type):
+		if last_param.type.is_va_list():
 			# :p216
 			# В LLVM va_arg принимает параметром указатель на укзаатель на __VA_List!
 			# Но тк мы получаем просто указатель на va_list,
@@ -2605,7 +2605,7 @@ def print_def_type(x):
 	xtype = x.original_type
 	out("\n%%%s = type " % get_id_str(x.type))
 	tt = None
-	if Type.is_record(xtype):
+	if xtype.is_record():
 		# не печатаем имя а печатаем саму структуру
 		# тк LLVM дает ошибку на запись вида
 		# %Struct1 = type %Struct2; Error, wtf?
@@ -2613,7 +2613,7 @@ def print_def_type(x):
 	else:
 		tt = str_type(xtype)
 	tt += ";"
-	if Type.is_record(xtype):
+	if xtype.is_record():
 		tt += "\n"
 
 	out(tt)
@@ -2657,7 +2657,7 @@ def print_def_const(x, as_extern=False):
 	# В LLVM мы не печатаем константы, но массивы - вынуждены
 	# тк доступ к ним может идти в рантайме по индексу;
 	# НО! В константной записи может быть массив! (хз как быть пока)
-	if Type.is_array(init_value.type):
+	if init_value.type.is_array():
 		out("\n@%s = constant " % get_id_str(x.value))
 		llvm_print_type_value(do_eval(init_value))
 
@@ -2961,19 +2961,19 @@ REL_OPS = [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE, HLIR_VALUE_OP_LT, HLIR_VALUE_OP_G
 def get_bin_opcode(op, t):
 	# ["icmp slt", "icmp ult", x]
 	def select_bin_opcode_su(sop, uop, t):
-		if Type.is_unsigned(t):
+		if t.is_unsigned():
 			return uop
 		return sop
 
 	# ["sdiv", "udiv", "fdiv", x]
 	def select_bin_opcode_f(op, fop, t):
-		if Type.is_float(t):
+		if t.is_float():
 			return fop
 		return op
 
 	# ["sdiv", "udiv", "fdiv", x]
 	def select_bin_opcode_suf(sop, uop, fop, t):
-		if Type.is_float(t):
+		if t.is_float():
 			return fop
 		return select_bin_opcode_su(sop, uop, t)
 

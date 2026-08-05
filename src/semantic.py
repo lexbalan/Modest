@@ -2859,7 +2859,7 @@ def type_update_incompleted(module, t, idStr):
 		#v = csymtab.value_get(idStr)
 		print("- UPDATED!")
 		tx = do_type(x['type'])
-		Type.update(t, tx)
+		t.update(tx)
 
 		return tx
 
@@ -2878,7 +2878,7 @@ def value_update_incompleted_type(module, v, idStr):
 
 		#v = csymtab.value_get(idStr)
 		t = do_type(x['type'])
-		Type.update(v.type, t)
+		v.type.update(t)
 
 		return v
 

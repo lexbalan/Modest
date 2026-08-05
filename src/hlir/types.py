@@ -677,7 +677,7 @@ class Type(Entity):
 		if atts == []:
 			return self
 
-		nt = Type.copy(self)
+		nt = self.copy()
 		nt.definition = None #!
 
 		for a in atts:
@@ -712,7 +712,7 @@ class Type(Entity):
 			# это атрибуты типа его элементов
 			if nt.is_array():
 				if k in ['const', 'volatile', 'restrict']:
-					nt.of = Type.copy(nt.of)
+					nt.of = nt.of.copy()
 					if k == 'const':
 						nt.of.addAttribute('const', {})
 					if k == 'volatile':
@@ -822,6 +822,12 @@ class Type(Entity):
 	def is_integer(self):
 		return isinstance(self, TypeInteger)
 
+
+	def is_integral(self):
+		return self.is_integer() or self.is_int() or self.is_nat()
+
+	def is_fractional(self):
+		return self.is_rational() or self.is_float()
 
 	def is_rational(self):
 		return isinstance(self, TypeRational)
@@ -1188,15 +1194,14 @@ class Type(Entity):
 		return copy.deepcopy(self)
 
 
-	@staticmethod
-	def update(dst, src):
+	def update(self, src):
 		# Это даже как то работает, ок, пока сойдет
-		dst.__dict__.clear()
-		dst.__dict__.update(src.__dict__)
+		self.__dict__.clear()
+		self.__dict__.update(src.__dict__)
 		if hasattr(src, 'id'):
-			dst.id = copy.copy(src.id)
-		dst.attributes = copy.copy(src.attributes)
-		dst.__class__ = src.__class__
+			self.id = copy.copy(src.id)
+		self.attributes = copy.copy(src.attributes)
+		self.__class__ = src.__class__
 
 
 	def is_forbidden_any(self):
