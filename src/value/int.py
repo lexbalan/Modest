@@ -6,7 +6,7 @@ from util import nbits_for_num, int_zext
 
 
 def value_int_can(to, from_type, method, ti):
-	if Type.is_integer(from_type):
+	if from_type.is_integer():
 		return from_type.width <= to.width
 
 	if method == 'implicit':
@@ -14,16 +14,16 @@ def value_int_can(to, from_type, method, ti):
 
 	# explicit or unsafe cons method
 
-	if Type.is_float(from_type):
+	if from_type.is_float():
 		return True
 
-	c0 = Type.is_integer(from_type)
-	c1 = Type.is_int(from_type)
-	c2 = Type.is_nat(from_type)
-	c3 = Type.is_word(from_type)
-	c4 = Type.is_float(from_type)
-	c5 = Type.is_fixed(from_type)
-	c6 = Type.is_rational(from_type)
+	c0 = from_type.is_integer()
+	c1 = from_type.is_int()
+	c2 = from_type.is_nat()
+	c3 = from_type.is_word()
+	c4 = from_type.is_float()
+	c5 = from_type.is_fixed()
+	c6 = from_type.is_rational()
 
 	if c0 or c1 or c2 or c3 or c4 or c5 or c6:
 		if method == 'unsafe':
@@ -33,7 +33,7 @@ def value_int_can(to, from_type, method, ti):
 	if method != 'unsafe':
 		return False
 
-	if Type.is_pointer(from_type):
+	if from_type.is_pointer():
 		from common import settings
 		return to.width >= int(settings['pointer_width'])
 
@@ -47,7 +47,7 @@ def value_int_cons(t, v, method, ti):
 	from_width = v.type.width
 	to_width = t.width
 
-	if Type.is_float(v.type) and v.is_immediate():
+	if v.is_immediate() and v.type.is_float():
 		from_width = nbits_for_num(int(v.value))
 
 	if method != 'unsafe':

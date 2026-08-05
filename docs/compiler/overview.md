@@ -23,7 +23,7 @@ Produces an AST of plain Python dicts: `{'isa': 'ast_value', 'kind':
 'add', ...}`. Operator precedence is encoded in the call chain
 `expr_value_1` (loosest, `or`) … `expr_value_11` (postfix). The
 type-vs-value ambiguity (`Int32 x` is construction) is resolved by
-lookahead (`is_before_value`).
+lookahead (`is_type_before_value`).
 
 ## 3. Translator — `src/semantic.py`
 

@@ -139,7 +139,7 @@ def str_type_array(t):
 
 
 def str_type_pointer(t):
-	if Type.is_free_pointer(t):
+	if t.is_free_pointer():
 		return "Ptr"
 	return "*" + str_type(t.to)
 
@@ -247,15 +247,15 @@ def str_type2(t):
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
-	if Type.is_func(t): return str_type_func(t)
-	elif Type.is_array(t): return str_type_array(t)
-	elif Type.is_record(t): return str_type_record(t)
-	elif Type.is_pointer(t): return str_type_pointer(t)
-	elif Type.is_variant(t): return str_type_variant(t)
-	elif Type.is_string(t): return "String(length=%d)" % t.length
-	elif isinstance(t, TypeInteger): return "Integer(%d)" % t.width
-	elif isinstance(t, TypeRational): return "Rational"
-	elif isinstance(t, TypeUndefined): return "Undefined"
+	if t.is_func(): return str_type_func(t)
+	elif t.is_array(): return str_type_array(t)
+	elif t.is_record(): return str_type_record(t)
+	elif t.is_pointer(): return str_type_pointer(t)
+	elif t.is_variant(): return str_type_variant(t)
+	elif t.is_string(): return "String(length=%d)" % t.length
+	elif t.is_integer(): return "Integer(%d)" % t.width
+	elif t.is_rational(): return "Rational"
+	elif t.is_undefined(): return "Undefined"
 	return str(t)
 
 
@@ -433,7 +433,7 @@ def is_zero_tail(values, i, n):
 def str_value_array(v, ctx):
 
 	if v.is_immediate():
-		if Type.is_array_of_char(v.type):
+		if v.type.is_array_of_char():
 			return str_value_str(v, ctx=[])
 
 	s = ""
@@ -579,7 +579,7 @@ def str_value_char_create(x, ctx):
 
 
 # print Int literal
-def str_value_integer(x, ctx):
+def str_value_integral(x, ctx):
 	num = x.asset
 	as_hex = x.hasAttribute('hexadecimal')
 
@@ -598,7 +598,7 @@ def str_value_integer(x, ctx):
 
 
 
-def str_value_rational(v, ctx):
+def str_value_fractional(v, ctx):
 	return str_fractional(v.asset)
 
 
@@ -633,24 +633,14 @@ def str_value_string(x, ctx):
 
 def str_value_literal(x, ctx):
 	t = x.type
-	if Type.is_integer(t):
-		return str_value_integer(x, ctx)
-	elif Type.is_rational(t):
-		return str_value_rational(x, ctx)
-	elif Type.is_string(t):
-		return str_value_string(x, ctx)
-	elif Type.is_int(t) or Type.is_nat(t):
-		return str_value_integer(x, ctx)
-	elif Type.is_record(t):
-		return str_value_record(x, ctx)
-	elif Type.is_pointer(t):
-		return str_value_ptr(x, ctx)
-	elif Type.is_bool(t):
-		return str_value_bool_create(x, ctx)
-	elif Type.is_char(t):
-		return str_value_char_create(x, ctx)
-	elif Type.is_word(t):
-		return str_value_integer(x, ctx)
+	if t.is_integral(): return str_value_integral(x, ctx)
+	elif t.is_fractional(): return str_value_fractional(x, ctx)
+	elif t.is_string(): return str_value_string(x, ctx)
+	elif t.is_record(): return str_value_record(x, ctx)
+	elif t.is_pointer(): return str_value_ptr(x, ctx)
+	elif t.is_bool(): return str_value_bool_create(x, ctx)
+	elif t.is_char(): return str_value_char_create(x, ctx)
+	elif t.is_word(): return str_value_integral(x, ctx)
 	return "<str_value_literal:%s>" % str(x)
 
 
