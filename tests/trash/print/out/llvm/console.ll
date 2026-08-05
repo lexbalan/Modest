@@ -614,65 +614,69 @@ endif_4:
 	br %Bool %64 , label %then_5, label %else_5
 then_5:
 	%65 = va_arg %__VA_List* %1, %Int32
-	%66 = call %Int32 @sprint_dec_int32([0 x %Char8]* %59, %Int32 %65)
-	%67 = load %Int32, %Int32* %3
-	%68 = add %Int32 %67, %66
-	store %Int32 %68, %Int32* %3
+	%66 = bitcast [0 x %Char8]* %59 to [0 x %Char8]*
+	%67 = call %Int32 @sprint_dec_int32([0 x %Char8]* %66, %Int32 %65)
+	%68 = load %Int32, %Int32* %3
+	%69 = add %Int32 %68, %67
+	store %Int32 %69, %Int32* %3
 	br label %endif_5
 else_5:
 ; if_6
-	%69 = load %Char8, %Char8* %4
-	%70 = icmp eq %Char8 %69, 110
-	br %Bool %70 , label %then_6, label %else_6
+	%70 = load %Char8, %Char8* %4
+	%71 = icmp eq %Char8 %70, 110
+	br %Bool %71 , label %then_6, label %else_6
 then_6:
-	%71 = va_arg %__VA_List* %1, %Nat32
-	%72 = call %Int32 @sprint_dec_n32([0 x %Char8]* %59, %Nat32 %71)
-	%73 = load %Int32, %Int32* %3
-	%74 = add %Int32 %73, %72
-	store %Int32 %74, %Int32* %3
+	%72 = va_arg %__VA_List* %1, %Nat32
+	%73 = bitcast [0 x %Char8]* %59 to [0 x %Char8]*
+	%74 = call %Int32 @sprint_dec_n32([0 x %Char8]* %73, %Nat32 %72)
+	%75 = load %Int32, %Int32* %3
+	%76 = add %Int32 %75, %74
+	store %Int32 %76, %Int32* %3
 	br label %endif_6
 else_6:
 ; if_7
-	%75 = load %Char8, %Char8* %4
-	%76 = icmp eq %Char8 %75, 120
 	%77 = load %Char8, %Char8* %4
-	%78 = icmp eq %Char8 %77, 112
-	%79 = or %Bool %76, %78
-	br %Bool %79 , label %then_7, label %else_7
+	%78 = icmp eq %Char8 %77, 120
+	%79 = load %Char8, %Char8* %4
+	%80 = icmp eq %Char8 %79, 112
+	%81 = or %Bool %78, %80
+	br %Bool %81 , label %then_7, label %else_7
 then_7:
-	%80 = va_arg %__VA_List* %1, %Nat32
-	%81 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %59, %Nat32 %80)
-	%82 = load %Int32, %Int32* %3
-	%83 = add %Int32 %82, %81
-	store %Int32 %83, %Int32* %3
+	%82 = va_arg %__VA_List* %1, %Nat32
+	%83 = bitcast [0 x %Char8]* %59 to [0 x %Char8]*
+	%84 = call %Int32 @sprint_hex_nat32([0 x %Char8]* %83, %Nat32 %82)
+	%85 = load %Int32, %Int32* %3
+	%86 = add %Int32 %85, %84
+	store %Int32 %86, %Int32* %3
 	br label %endif_7
 else_7:
 ; if_8
-	%84 = load %Char8, %Char8* %4
-	%85 = icmp eq %Char8 %84, 115
-	br %Bool %85 , label %then_8, label %else_8
+	%87 = load %Char8, %Char8* %4
+	%88 = icmp eq %Char8 %87, 115
+	br %Bool %88 , label %then_8, label %else_8
 then_8:
-	%86 = va_arg %__VA_List* %1, %Str8*
-	%87 = call [0 x %Char]* @strcpy([0 x %Char8]* %59, %Str8* %86)
-	%88 = call %SizeT @strlen(%Str8* %86)
-	%89 = trunc %SizeT %88 to %Int32
-	%90 = load %Int32, %Int32* %3
-	%91 = add %Int32 %90, %89
-	store %Int32 %91, %Int32* %3
+	%89 = va_arg %__VA_List* %1, %Str8*
+	%90 = bitcast [0 x %Char8]* %59 to [0 x %Char]*
+	%91 = call [0 x %Char]* @strcpy([0 x %Char]* %90, %Str8* %89)
+	%92 = call %SizeT @strlen(%Str8* %89)
+	%93 = trunc %SizeT %92 to %Int32
+	%94 = load %Int32, %Int32* %3
+	%95 = add %Int32 %94, %93
+	store %Int32 %95, %Int32* %3
 	br label %endif_8
 else_8:
 ; if_9
-	%92 = load %Char8, %Char8* %4
-	%93 = icmp eq %Char8 %92, 99
-	br %Bool %93 , label %then_9, label %endif_9
+	%96 = load %Char8, %Char8* %4
+	%97 = icmp eq %Char8 %96, 99
+	br %Bool %97 , label %then_9, label %endif_9
 then_9:
-	%94 = va_arg %__VA_List* %1, %Char32
-	%95 = bitcast [0 x %Char8]* %59 to [4 x %Char8]*
-	%96 = call %Nat8 @utf_utf32_to_utf8(%Char32 %94, [4 x %Char8]* %95)
-	%97 = sext %Nat8 %96 to %Int32
-	%98 = load %Int32, %Int32* %3
-	%99 = add %Int32 %98, %97
-	store %Int32 %99, %Int32* %3
+	%98 = va_arg %__VA_List* %1, %Char32
+	%99 = bitcast [0 x %Char8]* %59 to [4 x %Char8]*
+	%100 = call %Nat8 @utf_utf32_to_utf8(%Char32 %98, [4 x %Char8]* %99)
+	%101 = sext %Nat8 %100 to %Int32
+	%102 = load %Int32, %Int32* %3
+	%103 = add %Int32 %102, %101
+	store %Int32 %103, %Int32* %3
 	br label %endif_9
 endif_9:
 	br label %endif_8
@@ -685,8 +689,8 @@ endif_6:
 endif_5:
 	br label %again_1
 break_1:
-	%100 = load %Int32, %Int32* %3
-	ret %Int32 %100
+	%104 = load %Int32, %Int32* %3
+	ret %Int32 %104
 }
 
 define internal %Char8 @n_to_dec_sym(%Nat8 %n) alwaysinline {

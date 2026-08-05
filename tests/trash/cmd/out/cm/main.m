@@ -89,7 +89,7 @@ func tokenize (tokenizer: *Tokenizer) -> Unit {
 		if toklen == 0 {
 			break
 		}
-		let pbuf: *[]Char8 = &tokenizer.tokensBuf[tokenizer.tokensBufPos:]
+		let pbuf: *[<class 'hlir.types.ValueBad'>]Char8 = &tokenizer.tokensBuf[tokenizer.tokensBufPos:]
 		pbuf[0:toklen] = token[0:toklen]
 		tokenizer.tokensBufPos = tokenizer.tokensBufPos + toklen
 		pbuf[tokenizer.tokensBufPos] = "\x0"
@@ -139,7 +139,7 @@ func main () -> Int32 {
 		if argc > 0 {
 			--argc
 		}
-		let argv: *[]*[]Char8 = &tokenizer.tokens[1:]
+		let argv: *[<class 'hlir.types.ValueBad'>]*[]Char8 = &tokenizer.tokens[1:]
 		execute(cmd, argc, argv)
 	}
 

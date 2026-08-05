@@ -34,7 +34,7 @@ def value_record_create(t, initializers, ti):
 			stage = HLIR_VALUE_STAGE_LINKTIME
 
 		# создаем поле для типа generic record
-		field = Field(field_id, field_type, init_value=ValueUndef(field_type), ti=field_ti)
+		field = Field(field_id, field_type, init_value=ValueUndefined(field_type), ti=field_ti)
 		type_fields.append(field)
 
 	record_type = TypeRecord(type_fields, ti)
@@ -102,7 +102,7 @@ def value_record_cons(t, v, method, ti):
 				nl = explicit_initializer.nl
 			elif field.init_value != None:
 				iv = field.init_value
-				if iv.is_undef():
+				if iv.is_undefined():
 					iv = create_default_value(field.type, ti=ti)
 			else:
 				iv = create_default_value(field.type, ti=ti)

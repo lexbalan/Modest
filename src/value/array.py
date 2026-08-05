@@ -13,7 +13,7 @@ from .char import utf32_chars_to_utfx_char_values
 # 		item_type = Type.select_common_type(item_type, item.type, ti)
 # 		if item_type == None or item_type.is_bad():
 # 			error("value with unsuitable type", item.ti)
-# 			return ValueBad(ti)
+# 			return ValueBad(ti=ti)
 
 # 	return item_type
 
@@ -36,7 +36,7 @@ def value_array_create(t, items, ti):
 			item_type = Type.select_common_type(item_type, item.type, item.ti)
 			if item_type == None or item_type.is_bad():
 				error("value with unsuitable type", item.ti)
-				return ValueBad(ti)
+				return ValueBad(ti=ti)
 			if item.is_runtime():
 				stage = HLIR_VALUE_STAGE_RUNTIME
 			if item.is_linktime() and stage == HLIR_VALUE_STAGE_COMPILETIME:
@@ -85,7 +85,7 @@ def value_array_can(to, from_type, method, ti):
 
 	if from_type.is_generic():
 		# GenericArray -> Array
-		if to.volume.is_undef():
+		if to.volume.is_undefined():
 			return True
 
 		if not to.volume.is_immediate():

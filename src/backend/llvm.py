@@ -797,7 +797,7 @@ def llvm_memcmp(op, p0, p1, size):
 	zero = llvm_value_num(typeBool, 0)
 	op = 'ne' if op == HLIR_VALUE_OP_EQ else 'eq'
 
-	vvv = ValueUndef(typeBool)
+	vvv = ValueUndefined(typeBool)
 	rv2 = llvm_eval_binary('icmp %s' % op, rv, zero, vvv)
 
 	return rv2
@@ -906,7 +906,7 @@ def str_type_array(t):
 	sz = 0
 	if not t.is_vla():
 		array_size = t.volume
-		if not array_size.is_value_undefined():
+		if not array_size.is_undefined():
 			if not array_size.type.is_incompleted():
 				if array_size.is_immediate():
 					sz = array_size.asset
@@ -1766,7 +1766,7 @@ def do_eval_record(v):
 	if is_global_context():
 		items = []
 		for initializer in v.asset:
-			if not initializer.value.is_value_undefined():
+			if not initializer.value.is_undefined():
 				iv = do_reval(initializer.value)
 				items.append({'id': initializer.id, 'value': iv})
 		return llvm_value_record(items, rec_type)
@@ -1779,7 +1779,7 @@ def do_eval_record(v):
 	for initializer in v.asset:
 		# нет смысла засовывать в структуру по значению нулевые элементы
 		# тк она порождается из zeroinitializer и по умолчанию заполнена нулями
-		if not (initializer.value.is_zero() or initializer.value.is_value_undefined()):
+		if not (initializer.value.is_zero() or initializer.value.is_undefined()):
 			iv = do_reval(initializer.value)
 			field = TypeRecord.record_field_get(rec_type, get_id_str(initializer))
 			xv = insertvalue(xv, iv, field.field_no)
@@ -1929,7 +1929,7 @@ def do_eval(x):
 
 	y = None
 	if x.is_default(): y = llvm_value_default(x)
-	elif x.is_value_undefined(): y = llvm_value_undef(x)
+	elif x.is_undefined(): y = llvm_value_undef(x)
 	elif x.is_literal(): y = do_eval_literal(x)
 	elif x.is_array(): y = do_eval_array(x)
 	elif x.is_record(): y = do_eval_record(x)
@@ -2127,7 +2127,7 @@ def print_stmt_var(x):
 	locals_add(id_str, left)
 
 	init_value = x.init_value
-	if not init_value.is_value_undefined():
+	if not init_value.is_undefined():
 		iv = do_reval(init_value)
 		llvm_store(left, iv)
 
@@ -2257,7 +2257,7 @@ def print_stmt_asm(x):
 		for o in outs:
 			field_type = o['type']
 			id = Id('<noname>')
-			f = Field(id, field_type, init_value=ValueUndef(field_type), ti=x.ti)
+			f = Field(id, field_type, init_value=ValueUndefined(field_type), ti=x.ti)
 			fields.append(f)
 
 		rt = TypeRecord(fields)
@@ -2633,7 +2633,7 @@ def print_def_var(x, as_extern=False):
 	print_type(var.type)
 
 	if not is_extern:
-		if not x.init_value.is_value_undefined():
+		if not x.init_value.is_undefined():
 			out(" ")
 			llvm_print_value(do_eval(x.init_value))
 		else:

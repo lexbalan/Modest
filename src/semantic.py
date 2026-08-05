@@ -229,7 +229,7 @@ def init():
 
 	builtinSymtab.type_add('Size', typeSysSize)
 
-	undefinedVolume = ValueUndef(typeSysNat, ti=None)
+	undefinedVolume = ValueUndefined(typeSysNat, ti=None)
 	typeSysStr = TypePointer(TypeArray(typeSysChar, undefinedVolume))
 
 	target_name = str(settings['target_name'])
@@ -508,7 +508,7 @@ def do_type_array(x):
 	if volume.is_bad():
 		return TypeArray(of, volume, ti=x['ti'])
 
-	if not volume.is_value_undefined():
+	if not volume.is_undefined():
 		if volume.is_runtime():
 			if is_local_context():
 				global cfunc
@@ -650,17 +650,17 @@ def do_value_shift(x):
 	# Слева может быть только word или integer !
 	if not (left.type.is_word() or left.type.is_integer()):
 		error("expected word value", x['left']['ti'])
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	if left.type.is_generic():
 		if not right.type.is_generic():
 			error("expected non-generic value", x['left']['ti'])
-			return ValueBad(x['ti'])
+			return ValueBad(ti=x['ti'])
 
 
 	if right.type.is_signed():
 		error("expected natural value", x['right']['ti'])
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	nv = None
 	asset = None
@@ -714,49 +714,51 @@ def do_value_bin(x):
 
 def do_value_bin_op(op, l, r, ti):
 	if l.is_bad() or r.is_bad():
-		return ValueBad(ti)
-
-	if l.is_value_undefined() or r.is_value_undefined():
-		t = Type.select_common_type(l.type, r.type, ti)
-		return ValueUndef(l.type)
+		return ValueBad(ti=ti)
 
 	# Ops with different types
 	if op == HLIR_VALUE_OP_ADD:
 		if l.type.is_array() and r.type.is_array():
 			return value_array_concat(l, r, ti)
-		elif l.type.is_string() and r.type.is_string():
+		if l.type.is_string() and r.type.is_string():
 			return value_string_concat(l, r, ti)
+
+
+	t = Type.select_common_type(l.type, r.type, ti)
+	if t == None:
+		error("different types '%s' & '%s' in operation" % (l.type.to_str(), r.type.to_str()), ti)
+		return ValueBad(ti=ti)
+
+
+	if l.is_undefined() or r.is_undefined():
+		return ValueBad(type=t, ti=ti)
 
 	#
 	# Now and further types must be equal (!)
 	#
 
-	t = Type.select_common_type(l.type, r.type, ti)
-	if t == None:
-		error("different types '%s' & '%s' in operation" % (l.type.to_str(), r.type.to_str()), ti)
-		return ValueBad(ti)
+	#t = Type.select_common_type(l.type, r.type, ti)
 
 	l = value_cons_implicit(t, l)
 	r = value_cons_implicit(t, r)
 
 	if l.is_bad() or r.is_bad():
-		return ValueBad(ti)
-
+		return ValueBad(type=t, ti=ti)
 
 	# Check if arguments are valid for the operation
 	if not l.type.supports(op):
 		error("unsuitable value type '%s' for '%s' operation" % (l.type.to_str(), op), l.ti)
-		return ValueBad(ti)
+		return ValueBad(type=t, ti=ti)
 
 	if not r.type.supports(op):
 		error("unsuitable value type '%s' for '%s' operation" % (r.type.to_str(), op), r.ti)
-		return ValueBad(ti)
+		return ValueBad(type=t, ti=ti)
 
 	if not Type.eq(l.type, r.type, []):
 		error("cannot implicitly cons to common type '%s' & '%s'" % (l.type.to_str(), r.type.to_str()), ti)
-		return ValueBad(ti)
+		return ValueBad(type=t, ti=ti)
 
-	if op in EQ_OPS or op in RELATIONAL_OPS:
+	if (op in EQ_OPS) or (op in RELATIONAL_OPS):
 		t = typeBool
 
 	asset = None
@@ -765,7 +767,7 @@ def do_value_bin_op(op, l, r, ti):
 	# and append field .asset to bin_value
 	if l.is_immediate() and r.is_immediate():
 		stage = HLIR_VALUE_STAGE_COMPILETIME
-		if l.asset != None and r.asset != None:  # protection from ValueUndef
+		if l.asset != None and r.asset != None:  # protection from ValueUndefined
 			asset = do_bin_immediate(op, l, r, ti)
 
 		need_width = nbits_for_num(asset, signed=t.is_signed())
@@ -810,7 +812,7 @@ def do_bin_immediate(op, l, r, ti):
 
 	if (op == HLIR_VALUE_OP_DIV) and l.type.is_rational() and (r.asset == 0):
 		error("division by zero", ti)
-		return ValueBad(ti)
+		return ValueBad(ti=ti)
 
 	asset = None
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
@@ -827,7 +829,7 @@ def do_bin_immediate(op, l, r, ti):
 def do_value_not(x):
 	v = do_rvalue(x['value'])
 
-	if v.is_bad() or v.is_value_undefined():
+	if v.is_bad() or v.is_undefined():
 		return v
 
 	vtype = v.type
@@ -835,7 +837,7 @@ def do_value_not(x):
 # TODO: раздели операцию на logic&bitwise
 #	if not vtype.supports(HLIR_VALUE_OP_NOT):
 #		error("unsuitable type", v.ti)
-#		return ValueBad(x['ti'])
+#		return ValueBad(ti=x['ti'])
 
 	op = HLIR_VALUE_OP_BITWISE_NOT
 	if vtype.is_bool():
@@ -845,7 +847,7 @@ def do_value_not(x):
 
 	if v.is_immediate():
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-		if v.asset != None:  # for ValueUndef
+		if v.asset != None:  # for ValueUndefined
 			# because: ~(1) = -1 (not 0) !
 			if v.type.is_bool():
 				nv.set_asset(not v.asset)
@@ -860,7 +862,7 @@ def do_value_not(x):
 def do_value_neg(x):
 	v = do_rvalue(x['value'])
 
-	if v.is_bad() or v.is_value_undefined():
+	if v.is_bad() or v.is_undefined():
 		return v
 
 	vtype = v.type
@@ -877,7 +879,7 @@ def do_value_neg(x):
 
 	if v.is_immediate():
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-		if v.asset != None:  # for ValueUndef
+		if v.asset != None:  # for ValueUndefined
 			nv.set_asset(-v.asset)
 
 		if nv.type.is_generic():
@@ -893,7 +895,7 @@ def do_value_neg(x):
 def do_value_pos(x):
 	v = do_rvalue(x['value'])
 
-	if v.is_bad() or v.is_value_undefined():
+	if v.is_bad() or v.is_undefined():
 		return v
 
 	vtype = v.type
@@ -905,7 +907,7 @@ def do_value_pos(x):
 
 	if v.is_immediate():
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-		if v.asset != None:  # for ValueUndef
+		if v.asset != None:  # for ValueUndefined
 			nv.set_asset(+v.asset)
 
 	if nv.type.is_generic():
@@ -934,7 +936,7 @@ def do_value_ref(x):
 	# что конечно неверно, но пока так. Однажды нужно придумать как проверить судьбу этого указателя.
 	v.is_initialized = True
 
-	if v.is_bad() or v.is_value_undefined():
+	if v.is_bad() or v.is_undefined():
 		return v
 
 	ti = x['ti']
@@ -944,7 +946,7 @@ def do_value_ref(x):
 	if not is_good_value_for_ref(v):
 		if not vtype.is_func() or vtype.is_incompleted():
 			error("expected mutable value or function", v.ti)
-			return ValueBad(ti)
+			return ValueBad(ti=ti)
 
 	nv = ValueRef(v, ti=ti)
 	if v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
@@ -955,12 +957,12 @@ def do_value_ref(x):
 def do_value_new(x):
 	v = do_value(x['value'])
 
-	if v.is_bad() or v.is_value_undefined():
-		return ValueBad(x['ti'])
+	if v.is_bad() or v.is_undefined():
+		return ValueBad(ti=x['ti'])
 
 	if not v.type.is_aggregate_type():
 		error("operation new requires value with aggregate type", v.ti)
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	# for C backend, because C cannot do lengthof(x)
 	cmodule_use('use_malloc')
@@ -972,13 +974,13 @@ def do_value_new(x):
 def do_value_deref(x):
 	v = do_rvalue(x['value'])
 
-	if v.is_bad() or v.is_value_undefined():
+	if v.is_bad() or v.is_undefined():
 		return v
 
 	vtype = v.type
 	if not vtype.is_pointer():
 		error("expected pointer value", v.ti)
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	# you can't deref:
 	#   - pointer to Unit
@@ -991,7 +993,7 @@ def do_value_deref(x):
 	is_vla = to.is_vla()
 	if is_func_ptr or is_free_ptr or is_unsized_array_ptr:# or is_vla:
 		error("cannot dereference the pointer", v.ti)
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	nv = ValueDeref(v, ti=x['ti'])
 	return nv
@@ -1003,12 +1005,12 @@ def do_value_lengthof_value(x):
 	ti = x['ti']
 	arg = do_value(x['value'])
 
-	if arg.is_bad() or arg.is_value_undefined():
+	if arg.is_bad() or arg.is_undefined():
 		return arg
 
 	if not (arg.type.is_array() or arg.type.is_string()):
 		error("expected value with array type", x['value']['ti'])
-		return ValueBad(ti)
+		return ValueBad(ti=ti)
 
 	# for C backend, because C cannot do lengthof(x)
 	cmodule_use('use_lengthof')
@@ -1020,12 +1022,12 @@ def do_value_lengthof_type(x):
 	ti = x['ti']
 	t = do_type(x['type'])
 
-	if t.is_bad(): #or arg.is_value_undefined():
-		return ValueBad(ti)
+	if t.is_bad(): #or arg.is_undefined():
+		return ValueBad(ti=ti)
 
 	if not t.is_array():
 		error("expected array type", x['type']['ti'])
-		return ValueBad(ti)
+		return ValueBad(ti=ti)
 
 	# for C backend, because C cannot do lengthof(x)
 	cmodule_use('use_lengthof')
@@ -1088,12 +1090,12 @@ def transmission(to_type, value, ti):
 def do_value_call(x):
 	fn = do_rvalue(x['left'])
 
-	if fn.is_bad() or fn.is_value_undefined():
+	if fn.is_bad() or fn.is_undefined():
 		return fn
 
 	if fn.is_bad():
 		#error("undefined value", fn.ti)
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	ftype = fn.type
 
@@ -1103,7 +1105,7 @@ def do_value_call(x):
 
 	if not ftype.is_func():
 		error("expected function or pointer to function", x['ti'])
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	params = ftype.params
 
@@ -1113,7 +1115,7 @@ def do_value_call(x):
 	if nargs > npars:
 		if not ftype.extra_args:
 			error("too many arguments", x['ti'])
-			return ValueBad(x['ti'])
+			return ValueBad(ti=x['ti'])
 
 
 	def do_arg(param, arg, named=False):
@@ -1187,7 +1189,7 @@ def do_value_call(x):
 			if vx.stage != HLIR_VALUE_STAGE_COMPILETIME:
 				args_is_ct = False
 		else:
-			if vx.is_value_undefined():
+			if vx.is_undefined():
 				error("unspecified parameter '%s'" % p_id_str, x['ti'])
 		arg = do_arg(param, vx, named=True)
 		sorted_args.append(arg)
@@ -1196,7 +1198,7 @@ def do_value_call(x):
 
 	if len(sorted_args) < npars:
 		error("not enough arguments", x['ti'])
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	#
 	# process extra args
@@ -1262,7 +1264,7 @@ def ct_call(fn, args, ti):
 	while i < len(params):
 		#arg = args[i]
 		param = params[i]
-		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
+		param_value = ValueConst(param.type, param.id, init_value=ValueUndefined(param.type), ti=param.ti)
 		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
 		param_value.set_asset(args[i].value.asset)  # (!)
 		csymtab.value_add(param.id.str, param_value, is_public=False)
@@ -1281,10 +1283,10 @@ def do_value_index(x):
 	left = do_value(x['left'])
 
 	if left.is_bad():
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
-	if left.is_value_undefined():
-		return ValueUndef(Type(x['ti']), x['ti'])
+	if left.is_undefined():
+		return ValueUndefined(Type(x['ti']), x['ti'])
 
 	left_type = left.type
 	via_pointer = left_type.is_pointer()
@@ -1295,13 +1297,13 @@ def do_value_index(x):
 
 	if not array_type.is_array():
 		error("expected array or pointer to array", left.ti)
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	# Can index *[]AnyNonArrayType
 	# Can't index *[][]AnyType
 	if array_type.is_array_of_unsized_array():
 		error("cannot index an array of unsized array", x['ti'])
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	index = do_rvalue(x['index'])
 
@@ -1310,11 +1312,11 @@ def do_value_index(x):
 
 	#if index.is_bad():
 	if index.type.is_bad():
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	if not (index.type.is_int() or index.type.is_nat() or index.type.is_integer()):
 		error("expected integral value", index.ti)
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	if index.type.is_generic():
 		index = value_cons_implicit_check(typeSysInt, index)
@@ -1330,7 +1332,7 @@ def do_value_index(x):
 
 			if index_imm >= array_type.volume.asset:
 				error("array index out of bounds", x['ti'])
-				return ValueBad(x['ti'])
+				return ValueBad(ti=x['ti'])
 
 			if index_imm < len(left.asset):
 				item = left.asset[index_imm]
@@ -1349,7 +1351,7 @@ def do_value_slice(x):
 
 	left = do_value(x['left'])
 	if left.is_bad():
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	index_from = None
 	index_to = None
@@ -1357,14 +1359,14 @@ def do_value_slice(x):
 	if x['index_from'] != None:
 		index_from = do_rvalue(x['index_from'])
 		if index_from.is_bad():
-			return ValueBad(ti)
+			return ValueBad(ti=ti)
 	else:
 		index_from = value_integer_create(0, ti=x['ti'])
 
 	if x['index_to'] != None:
 		index_to = do_rvalue(x['index_to'])
 		if index_to.is_bad():
-			return ValueBad(ti)
+			return ValueBad(ti=ti)
 
 	via_pointer = left.type.is_pointer()
 	array_type = left.type
@@ -1373,22 +1375,22 @@ def do_value_slice(x):
 
 	if not array_type.is_array():
 		error("expected array or pointer to array", left.ti)
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 
 	# Can slice *[]AnyNonArrayType
 	# Can't slice *[][]AnyType
 	if array_type.is_array_of_unsized_array():
 		error("cannot slice array of an unsized array", x['ti'])
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 
 	# открытая правая граница ([i:], [:]) — это длина массива (если она известна)
 	if index_to == None:
-		if array_type.volume != None and not array_type.volume.is_undef():
+		if array_type.volume != None and not array_type.volume.is_undefined():
 			index_to = array_type.volume
 		else:
-			index_to = ValueUndef(type_integer_create(ti=x['ti']))
+			index_to = ValueUndefined(type_integer_create(ti=x['ti']))
 
 
 	# получаем размер слайса
@@ -1397,11 +1399,11 @@ def do_value_slice(x):
 	# а для слайса [a:b] это (b - a)
 	slice_volume = do_value_bin_op(HLIR_VALUE_OP_SUB, index_to, index_from, x['ti'])
 
-	if not slice_volume.is_value_undefined():
+	if not slice_volume.is_undefined():
 		if slice_volume.is_immediate():
 			if slice_volume.asset < 0:
 				error("wrong slice direction", x['ti'])
-				return ValueBad(x['ti'])
+				return ValueBad(ti=x['ti'])
 
 	type = TypeArray(array_type.of, slice_volume, generic=False, ti=x['ti'])
 	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
@@ -1427,10 +1429,10 @@ def do_value_access(x):
 		xv = imp.module.value_get(x['right']['str'])
 		if xv == None:
 			error("unknown value", x['ti'])
-			return ValueBad(x['right']['ti'])
+			return ValueBad(ti=x['right']['ti'])
 		elif xv.definition.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
 			error("access to private value `%s.%s`" % (left['str'], x['right']['str']), x['ti'])
-			return ValueBad(x['right']['ti'])
+			return ValueBad(ti=x['right']['ti'])
 		nv = ValueAccessModule(xv.type, imp, do_id(x['right']), xv, ti=x['ti'])
 		return nv
 
@@ -1452,17 +1454,17 @@ def acc(left, field_id, ti):
 	# check if is record
 	if not record_type.is_record():
 		error("expected record or pointer to record", left.ti)
-		return ValueBad(ti)
+		return ValueBad(ti=ti)
 
 	field = TypeRecord.record_field_get(record_type, field_id['str'])
 
 	# if field not found
 	if field == None:
 		error("undefined field '%s'" % field_id['str'], field_id['ti'])
-		return ValueBad(ti)
+		return ValueBad(ti=ti)
 
 	if field.type.is_bad():
-		return ValueBad(ti)
+		return ValueBad(ti=ti)
 
 	# Check access permissions
 
@@ -1486,11 +1488,11 @@ def acc(left, field_id, ti):
 def do_value_cons(x):
 	v = do_rvalue(x['value'])
 	if v.is_bad():
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	t = do_type(x['type'])
 	if t.is_bad():
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	return value_cons_explicit(t, v, x['ti'])
 
@@ -1507,7 +1509,7 @@ def do_value_named(x):
 		# ERROR:
 		# Но чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально (wrong!)
-		v = ValueBad(x['ti'])
+		v = ValueBad(ti=x['ti'])
 		csymtab.value_add(id_str, v, is_public=False)
 		return v
 
@@ -1531,7 +1533,7 @@ def do_value_named(x):
 
 		if v_upd == None:
 			error("use of incomplete value", x['ti'])
-			return ValueBad(x['ti'])
+			return ValueBad(ti=x['ti'])
 
 		cdef.deps.append(v_upd)
 		if cfunc != None:
@@ -1689,7 +1691,7 @@ def do_value_immediate(x, allow_ptr_to_str=False):
 			if v.type.is_pointer_to_str():
 				return v
 		error("expected immediate value2", x['ti'])
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	return v
 
@@ -1720,13 +1722,13 @@ def do_value_unsafe(x):
 
 
 def do_value_bad(x):
-	return ValueBad(x['ti'])
+	return ValueBad(ti=x['ti'])
 
 
 def do_value_undefined(x):
 	#t = TypeBad(x['ti'])
 	t = TypeUndefined(x['ti'])
-	return ValueUndef(t, x['ti'])
+	return ValueUndefined(t, x['ti'])
 
 
 def do_rvalue(x):
@@ -1739,7 +1741,7 @@ def do_rvalue(x):
 def do_value_subexpr(x):
 	v = do_value(x['value'])
 	if v.is_bad():
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 	nv = ValueSubexpr(v, ti=x['ti'])
 	Value.cp_immediate(nv, v)
 	return nv
@@ -1792,7 +1794,7 @@ def do_value(x):
 
 	if v == None:
 		error("unknown value kind '%s'" % k, x['ti'])
-		return ValueBad(x['ti'])
+		return ValueBad(ti=x['ti'])
 
 	assert(v != None)
 	v.ti = x['ti']
@@ -1814,7 +1816,7 @@ def do_stmt_let(x):
 	if df.is_stmt_bad():
 		return df
 
-	#if df.init_value.is_value_undefined():
+	#if df.init_value.is_undefined():
 	#	error("undefined constant initializer value", x['ti'])
 
 	df.parent = cfunc
@@ -2263,13 +2265,14 @@ def def_type_global(x):
 def process_field_common(x, allow_cons_default=False, default_instead_of_undef=False):
 	global csymtab
 
+
 	var_type = None
 	if x['type'] != None:
 		var_type = do_type(x['type'])
 
 	init_value = do_rvalue(x['init_value'])
 
-	#if init_value.is_value_undefined():
+	#if init_value.is_undefined():
 	#	if default_instead_of_undef:
 	#		# если значение не указано, то берем дефолтное для типа
 	#		init_value = ValueDefault(var_type, ti=x['ti'])
@@ -2280,9 +2283,9 @@ def process_field_common(x, allow_cons_default=False, default_instead_of_undef=F
 			var_type = init_value.type
 
 	else: # var_type == None:
-		if init_value.is_value_undefined():
+		if init_value.is_undefined():
 			# ERROR: type & value are undefined!
-			nv = ValueBad(x['ti'])
+			nv = ValueBad(ti=x['ti'])
 			csymtab.value_add(x['id']['str'], nv, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 			return nv.type, nv
 
@@ -2331,7 +2334,7 @@ def def_const_common(x):
 	const_type.addAttribute('const', {})
 
 	const_value = ValueConst(const_type, id, init_value=init_value, ti=id.ti)
-	const_value.is_initialized = True  #not init_value.is_value_undefined()
+	const_value.is_initialized = True  #not init_value.is_undefined()
 	const_value.stage = init_value.stage
 	csymtab.value_add(id.str, const_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 
@@ -2375,7 +2378,7 @@ def def_var_common(x, is_local=False):
 		error("unsuitable type", x['ti'])
 
 	var_value = ValueVar(var_type, id, init_value=init_value, ti=id.ti)
-	var_value.is_initialized = not init_value.is_value_undefined()
+	var_value.is_initialized = not init_value.is_undefined()
 	var_value.stage = HLIR_VALUE_STAGE_RUNTIME
 	csymtab.value_add(id.str, var_value, is_public=get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC)
 
@@ -2407,7 +2410,7 @@ def def_const_global(x):
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 	iv = df.init_value
-	if not iv.is_value_undefined():
+	if not iv.is_undefined():
 		if iv.is_runtime():
 			#print(iv.stage)
 			print(iv)
@@ -2445,7 +2448,7 @@ def create_params(fn):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		param_value = ValueConst(param.type, param.id, init_value=ValueUndef(param.type), ti=param.ti)
+		param_value = ValueConst(param.type, param.id, init_value=ValueUndefined(param.type), ti=param.ti)
 		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
 		#param_value.stage = HLIR_VALUE_STAGE_RUNTIME
 		csymtab.value_add(param.id.str, param_value, is_public=False)

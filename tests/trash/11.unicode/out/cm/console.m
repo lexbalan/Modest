@@ -169,7 +169,7 @@ public func vsprint (buf: *[]Char8, form: *Str8, va: va_list) -> @unused Int32 {
 
 		i = i + 2
 
-		let sptr: *[]Char8 = &buf[j:]
+		let sptr: *[<class 'hlir.types.ValueBad'>]Char8 = &buf[j:]
 
 		if c == "i" or c == "d" {
 			let x: Int32 = __va_arg(va, Int32)

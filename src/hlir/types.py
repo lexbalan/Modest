@@ -837,7 +837,7 @@ class Type(Entity):
 	def is_vla(self):
 		if not self.is_array():
 			return False
-		if self.volume.is_undef():
+		if self.volume.is_undefined():
 			return False
 		return self.volume.is_runtime()
 
@@ -920,13 +920,13 @@ class Type(Entity):
 
 	def is_sized_array(self):
 		if self.is_array():
-			return not self.volume.is_undef()
+			return not self.volume.is_undefined()
 		return False
 
 
 	def is_unsized_array(self):
 		if self.is_array():
-			return self.volume.is_undef()
+			return self.volume.is_undefined()
 		return False
 
 
@@ -1070,8 +1070,8 @@ class Type(Entity):
 
 	@staticmethod
 	def eq_array(a, b, opt):
-		if a.volume.is_undef() or b.volume.is_undef():
-			if a.volume.is_undef() and b.volume.is_undef():
+		if a.volume.is_undefined() or b.volume.is_undefined():
+			if a.volume.is_undefined() and b.volume.is_undefined():
 				return Type.eq(a.of, b.of, opt)
 			return False
 
@@ -1283,7 +1283,7 @@ class Type(Entity):
 			if fieldType == None:
 				return TypeBad(ti=ti)
 
-			newField = Field(fieldId, fieldType, init_value=ValueUndef(fieldType), ti=fieldId.ti)
+			newField = Field(fieldId, fieldType, init_value=ValueUndefined(fieldType), ti=fieldId.ti)
 			fields.append(newField)
 
 		newRecord = TypeRecord(fields, ti=a.ti)
@@ -1296,6 +1296,9 @@ class Type(Entity):
 	@staticmethod
 	def select_common_type(a, b, ti):
 		from error import info
+
+		if a.is_bad(): return b
+		if b.is_bad(): return a
 
 
 		# (!) must be before Type.eq() !
@@ -1420,12 +1423,6 @@ class Type(Entity):
 				return b
 
 			if b.is_unit():
-				return a
-
-			if a.is_bad():
-				return b
-
-			if b.is_bad():
 				return a
 
 			if a.is_float():
@@ -1608,9 +1605,9 @@ class TypeArray(Type):
 			item_align = of.get_align()
 
 		array_size = 0
-		if volume != None and not volume.is_undef():
+		if volume != None and not volume.is_undefined():
 			if volume.is_immediate():
-				if volume.asset != None:  # check for ValueUndef
+				if volume.asset != None:  # check for ValueUndefined
 					array_size = item_size * volume.asset
 
 		super().__init__(generic=generic, ops=ARR_OPS, ti=ti)
@@ -1633,7 +1630,7 @@ class TypeArray(Type):
 
 	def get_size(self):
 		if self.volume.is_immediate():
-			if self.volume.asset != None:  # check for ValueUndef
+			if self.volume.asset != None:  # check for ValueUndefined
 				return self.of.get_size() * self.volume.asset
 		return 0
 
@@ -1729,7 +1726,7 @@ class TypeVaList(Type):
 		self.id.llvm = '__VA_List'
 
 	def get_default_value(self, ti=None):
-		return ValueUndef(self)
+		return ValueUndefined(self)
 
 
 class TypeVariant(Type):
@@ -1863,26 +1860,11 @@ class Value(Entity):
 	def is_runtime(self):
 		return self.stage == HLIR_VALUE_STAGE_RUNTIME
 
-
-
-	# stub создал тк ValueUndefined теряется по цепочке после cons, etc. но они все по сути undefined
-	# это poison проблема, которую нужно переосмыслить, может вообще убрать ValueUndef и ввести яд
-	def is_value_undefined(self):
-		#if self.is_immediate() and self.asset == None:
-		#	return True
-		if self.is_undef():
-			return True
-		if self.type.is_undefined():
-			return True
-		return False
-
-
-
 	def is_bad(self):
 		return isinstance(self, ValueBad)
 
-	def is_undef(self):
-		return isinstance(self, ValueUndef)
+	def is_undefined(self):
+		return isinstance(self, ValueUndefined)
 
 	def is_default(self):
 		return isinstance(self, ValueDefault)
@@ -2083,7 +2065,7 @@ class Value(Entity):
 		print("kind: " + str(x.__class__.__name__))
 		print("type: ", end="");
 		Type.print(x.type); print()
-		print("att: " + str(x.att))
+		print("att: " + str(x.attributes))
 
 		print('stage = ' + str(x.stage))
 		print('immutable = ' + str(x.immutable))
@@ -2097,15 +2079,16 @@ class Value(Entity):
 
 
 
-
 class ValueBad(Value):
-	def __init__(self, ti=None):
-		super().__init__(type=TypeBad(ti), ti=ti)
+	def __init__(self, type=None, ti=None):
+		if type == None:
+			type=TypeBad(ti)
+		super().__init__(type=type, ti=ti)
 		self.id = Id('<value_bad>')
-		self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.stage = HLIR_VALUE_STAGE_UNKNOWN  #! unknown compile stage is important for bad value!
 
 
-class ValueUndef(Value):
+class ValueUndefined(Value):
 	def __init__(self, type, ti=None):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
@@ -2534,7 +2517,7 @@ class ValueOffsetof(Value):
 		field = TypeRecord.record_field_get(record, field_id.str)
 		if field == None:
 			error("undefined field '%s'" % field_id['str'], field_id.ti)
-			return ValueBad({'ti': ti})
+			return ValueBad(ti=ti)
 
 		offset = field.offset
 		from .defs import type_integer_for

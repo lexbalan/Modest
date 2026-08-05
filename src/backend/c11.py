@@ -198,7 +198,7 @@ def do_ctype_func(t, specs=[]):
 # CIR TypeArray хранит volume уже как CValue (или None) — приведение HLIR-значения
 # к CIR откладывать до печати незачем и не нужно самому CIR
 def do_ctype_array_volume(volume):
-	if volume == None or volume.is_undef():
+	if volume == None or volume.is_undefined():
 		return None
 	return do_cvalue(volume)
 
@@ -472,7 +472,7 @@ def do_cvalue_literal_array(v, ctx):
 def do_cvalue_literal_record(v, ctx):
 	items = []
 	for kv in v.asset:
-		if not kv.value.is_undef():
+		if not kv.value.is_undefined():
 			inititlizer = do_cinitializer(kv.value.type, kv.value, ctx=ctx)
 			items.append(KV(get_id_str(kv), inititlizer, kv.nl))
 
@@ -633,7 +633,7 @@ def do_cvalue_cons_record(x, ctx):
 
 			# add extra non-zero items ⚠️
 			for kv in x.asset:
-				if not kv.value.is_undef():
+				if not kv.value.is_undefined():
 					if kv.value.is_zero():
 						continue
 					if initializer_already_here(record.items, get_id_str(kv)):
@@ -1343,7 +1343,7 @@ def do_cvalue(x, ctx=[]):
 	elif x.is_va_copy(): return do_cvalue_va_copy(x, ctx)
 	elif x.is_new(): return do_cvalue_new(x, ctx)
 	elif x.is_default(): return do_cvalue_default(x, ctx)
-	elif x.is_undef():
+	elif x.is_undefined():
 		error("value undef in C backend", x.ti)
 		exit(1)
 	elif x.is_bad():
@@ -1543,7 +1543,7 @@ def do_cstmt_var(x):
 	dynamic_init = init_value.type.is_array() and (init_value.is_runtime() or var_value.type.is_vla())
 
 	civ = None
-	if not dynamic_init and not init_value.is_undef() and not init_value.type.is_va_list():
+	if not dynamic_init and not init_value.is_undefined() and not init_value.type.is_va_list():
 		civ = do_cinitializer(var_value.type, init_value, ctx=[])
 
 	storage_class = ''
@@ -1817,7 +1817,7 @@ def do_def_var(x, isdecl=False):
 		storage_class = "extern"
 
 	civ = None
-	if not (x.init_value.is_undef() or x.init_value.is_default() or is_extern):
+	if not (x.init_value.is_undefined() or x.init_value.is_default() or is_extern):
 		civ = do_cinitializer(var_value.type, x.init_value, ctx=[])
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), initializer=civ, storage_class=storage_class, attributes=x.attributes)

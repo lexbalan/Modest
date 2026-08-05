@@ -131,7 +131,7 @@ def str_TypeInt(t):
 def str_type_array(t):
 	s = ""
 	s += "["
-	if not t.volume.is_value_undefined():
+	if not t.volume.is_undefined():
 		s += str_value(t.volume)
 	s += "]"
 	s += str_type(t.of)
@@ -153,7 +153,7 @@ def str_type_variant(t):
 
 def str_field(x):
 	s = get_id_str(x) + ": " + str_type(x.type)
-	if not x.init_value.is_value_undefined():
+	if not x.init_value.is_undefined():
 		s += " = " + str_value(x.init_value)
 	return s
 
@@ -383,7 +383,7 @@ def str_value_slice(x, ctx):
 	s += "["
 	s += str_value(x.index_from)
 	s += ":"
-	if not x.index_to.is_value_undefined():
+	if not x.index_to.is_undefined():
 		s += str_value(x.index_to)
 	s += "]"
 	return s
@@ -742,7 +742,7 @@ def str_value(x, ctx=[], parent_expr=None):
 	elif x.is_va_end(): return str_value_va_end(x, ctx)
 	elif x.is_va_copy(): return str_value_va_copy(x, ctx)
 	elif x.is_default(): return str_value_default(x, ctx)
-	elif x.is_value_undefined(): return "<undef>"
+	elif x.is_undefined(): return "<undef>"
 	else: return "%s" % str(x.__class__)
 
 	#if need_wrap:
@@ -801,7 +801,7 @@ def str_stmt_def(x, operator='const'):
 			ss.append(": ")
 			ss.append(str_type(x.value.type))
 
-	if not (x.init_value.is_value_undefined() or x.init_value.is_default()):
+	if not (x.init_value.is_undefined() or x.init_value.is_default()):
 		ss.append(" = ")
 		ss.append(str_value(x.init_value))
 	return ''.join(ss)

@@ -88,12 +88,12 @@ def value_cons_implicit(t, v):
 	assert(isinstance(v, Value))
 	#assert(isinstance(ti, TextInfo))
 
-	if v.is_undef():
-		return ValueUndef(t, ti=ti)
+	if v.is_undefined():
+		return ValueUndefined(t, ti=ti)
 
 
 	if v.is_bad() or t.is_bad():
-		return ValueBad(ti)
+		return ValueBad(ti=ti)
 
 	#if t.annotations != {}:
 	#	print(t.annotations)
@@ -156,12 +156,12 @@ def value_cons_explicit(t, v, ti):
 	assert(isinstance(ti, TextInfo))
 
 	if v.is_bad() or t.is_bad():
-		return ValueBad(v.ti)
+		return ValueBad(ti=v.ti)
 
 	from_type = v.type
 
 	if from_type.is_bad():
-		return ValueBad(v.ti)
+		return ValueBad(ti=v.ti)
 
 	if Type.eq(t, from_type):
 		if not t.is_generic():
@@ -171,7 +171,7 @@ def value_cons_explicit(t, v, ti):
 
 	if not cons_can(t, from_type, 'explicit', ti):
 		error("cannot construct '%s' from '%s' value" % (t.to_str(), from_type.to_str()), ti)
-		return ValueBad(v.ti)
+		return ValueBad(ti=v.ti)
 
 	return value_cons(t, v, 'explicit', ti)
 

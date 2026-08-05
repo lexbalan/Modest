@@ -373,7 +373,7 @@ class Parser:
 	def is_type_expr(self):
 		return self.check(self.check_is_type)
 
-	def is_value_expr(self):
+	def is_expr(self):
 		return not self.is_type_expr()
 
 	def parse_type_func(self):
@@ -467,7 +467,7 @@ class Parser:
 		elif self.match("["):
 			size = None
 			if self.match("]"):
-				size = self.expr_ValueUndef(start_ti)
+				size = self.expr_ValueUndefined(start_ti)
 			else:
 				size = self.expr_value()
 				self.need("]")
@@ -540,7 +540,7 @@ class Parser:
 	# Parse Value
 	#
 
-	def expr_ValueUndef(self, ti):
+	def expr_ValueUndefined(self, ti):
 		return {
 			'isa': 'ast_value',
 			'kind': 'undefined',
@@ -2089,7 +2089,7 @@ class Parser:
 			init_value = self.expr_value()
 			ti_end = init_value['ti'].end
 		else:
-			init_value = self.expr_ValueUndef(ti_mid)
+			init_value = self.expr_ValueUndefined(ti_mid)
 
 		res = []
 		for id in ids:

@@ -5,16 +5,10 @@ from .types import *
 
 def type_integer_create(width=0, ti=None):
 	return TypeInteger(width, ti)
-	#nt = TypeSimple(width, id=Id("Integer"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_INTEGER, ti=ti)
-	#nt.generic = True
-	#return nt
 
 
 def type_rational_create(ti=None):
 	return TypeRational(ti=ti)
-#	nt = TypeSimple(width=0, id=Id("Rational"), ops=NUMBER_OPS, kind=HLIR_TYPE_KIND_RATIONAL, ti=ti)
-#	nt.generic = True
-#	return nt
 
 
 def type_string_create(char_width, length, ti=None):
@@ -105,7 +99,7 @@ typeBool = TypeSimple(8, HLIR_TYPE_KIND_BOOL, bool_id, BOOL_OPS)
 
 # generic built-in types
 typeInteger = type_integer_create()
-typeRational = TypeRational()
+typeRational = type_rational_create()
 
 typeWord8 = type_word_create(width=8)
 typeWord16 = type_word_create(width=16)
@@ -150,7 +144,7 @@ typeFreePointer.generic = True
 # не нужно делать decl тк нет собственного имени у этого типа
 
 typeSysNat = typeNat64
-undefinedVolume = ValueUndef(typeSysNat, ti=None)
+undefinedVolume = ValueUndefined(typeSysNat, ti=None)
 typeStr8 = TypeArray(typeChar8, undefinedVolume, ti=None)
 typeStr8.id = Id('Str8')
 typeStr8.id.c = None

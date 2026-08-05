@@ -8,6 +8,6 @@ def value_bad_can(to, from_type, method, ti):
 
 
 def value_bad_cons(t, v, method, ti):
-	return ValueBad(ti)
+	return ValueBad(type=t, ti=ti)
 
 
