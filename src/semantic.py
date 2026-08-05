@@ -2260,8 +2260,6 @@ def def_type_global(x):
 	return df
 
 
-
-
 def process_field_common(x, allow_cons_default=False, default_instead_of_undef=False):
 	global csymtab
 
@@ -2301,10 +2299,6 @@ def process_field_common(x, allow_cons_default=False, default_instead_of_undef=F
 		var_type.delAttribute('const')
 
 	return var_type, init_value
-
-
-
-
 
 
 

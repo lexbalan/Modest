@@ -757,11 +757,6 @@ class Type(Entity):
 		return self.brand != 0
 
 
-	# (!) not worked now, because TypeUndefined not used
-	def is_undefined(self):
-		return isinstance(self, TypeUndefined)
-
-
 	def is_empty_record(self):
 		return isinstance(self, TypeRecord) and (len(self.fields) == 0)
 
