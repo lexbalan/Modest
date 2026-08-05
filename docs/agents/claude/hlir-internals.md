@@ -67,18 +67,18 @@ typeByte          # alias for typeWord8
 ### Key Type methods
 
 ```python
-t.is_type_int()          t.is_type_nat()          t.is_type_word()
-t.is_type_float()        t.is_type_char()         t.is_type_bool()
-t.is_type_unit()         t.is_type_record()       t.is_type_array()
-t.is_type_pointer()      t.is_type_func()         t.is_type_string()
+t.is_int()          t.is_nat()          t.is_word()
+t.is_float()        t.is_char()         t.is_bool()
+t.is_unit()         t.is_record()       t.is_array()
+t.is_pointer()      t.is_func()         t.is_string()
 t.is_generic()      t.is_branded()
 
-t.is_type_unsized_array()   # []Type  (volume is ValueUndef)
-t.is_type_sized_array() # [N]Type (volume is known)
+t.is_unsized_array()   # []Type  (volume is ValueUndef)
+t.is_sized_array() # [N]Type (volume is known)
 t.is_free_pointer() # *Unit
-t.is_type_pointer_to_record()
-t.is_type_pointer_to_array()
-t.is_type_pointer_to_func()
+t.is_pointer_to_record()
+t.is_pointer_to_array()
+t.is_pointer_to_func()
 
 Type.eq(a, b)                      # structural equality, brand-aware
 Type.select_common_type(a, b, ti)  # for binary ops, array literals, etc.

@@ -27,10 +27,10 @@ def value_record_create(t, initializers, ti):
 
 		# если хотя бы один элемент - не immediate
 		# -> весь литерал записи - не immediate
-		if init_value.isValueRuntime():
+		if init_value.is_runtime():
 			stage = HLIR_VALUE_STAGE_RUNTIME
 
-		if init_value.isValueLinktime() and stage == HLIR_VALUE_STAGE_COMPILETIME:
+		if init_value.is_linktime() and stage == HLIR_VALUE_STAGE_COMPILETIME:
 			stage = HLIR_VALUE_STAGE_LINKTIME
 
 		# создаем поле для типа generic record
@@ -46,10 +46,10 @@ def value_record_create(t, initializers, ti):
 
 
 def value_record_can(to, from_type, method, ti):
-	if to.is_type_unit():
-		return (from_type.is_type_unit()) or method != 'implicit'
+	if to.is_unit():
+		return (from_type.is_unit()) or method != 'implicit'
 
-	if not from_type.is_type_record():
+	if not from_type.is_record():
 		return False
 
 	# Record can be constructed only from generic record
@@ -75,12 +75,12 @@ def value_record_cons(t, v, method, ti):
 	#info("value_record_cons", ti)
 	nv = ValueCons(t, t, v, method, ti=ti)
 
-	if t.is_type_unit():
+	if t.is_unit():
 		nv.asset = []
 		stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
 
-	if not v.type.is_generic(): #and not v.isValueImmediate():
+	if not v.type.is_generic(): #and not v.is_immediate():
 		if t.uid != v.type.uid:
 			# Если это реально разные типы-записи то да нужен будет raw cast (по крайней мере в C)
 			from semantic import cmodule_use
@@ -102,7 +102,7 @@ def value_record_cons(t, v, method, ti):
 				nl = explicit_initializer.nl
 			elif field.init_value != None:
 				iv = field.init_value
-				if iv.isValueUndef():
+				if iv.is_undef():
 					iv = create_default_value(field.type, ti=ti)
 			else:
 				iv = create_default_value(field.type, ti=ti)

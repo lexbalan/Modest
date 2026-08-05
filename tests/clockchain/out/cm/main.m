@@ -1,7 +1,9 @@
-private import "builtin"
+import "builtin"
 include "ctypes64"
 include "stdio"
 
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 type CallbackData = {}
@@ -20,7 +22,7 @@ var clockchain: *Clock
 
 func tickClock (self: *Clock) -> Unit {
 	if self.counter > 0 {
-		self.counter = self.counter - 1
+		--self.counter
 		self.expired = self.counter == 0
 	}
 }
@@ -64,13 +66,13 @@ func taskClockchain (clockchain: *Clock) -> Unit {
 }
 
 
+@nonstatic
 func main () -> Int {
-
-	var clocks: [3]*Clock
-
-	clocks[0] = new Clock {}
-	clocks[1] = new Clock {}
-	clocks[2] = new Clock {}
+	var clocks: [3]*Clock = [
+		new Clock {}
+		new Clock {}
+		new Clock {}
+	]
 
 	addClock(clocks[0])
 	addClock(clocks[1])
@@ -84,7 +86,7 @@ func main () -> Int {
 			taskClockchain(clockchain)
 		}
 
-		i = i - 1
+		--i
 	}
 
 	return 0

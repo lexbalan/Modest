@@ -138,7 +138,7 @@ break_2:
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntPtrT = type %Nat64;
-%PtrDiffT = type i8*;
+%PtrDiffT = type %Int64;
 %OffT = type %Int64;
 %USecondsT = type %Nat32;
 %PIDT = type %Int32;
@@ -188,21 +188,18 @@ declare %CharStr* @fgets(%CharStr* %str, %Int %n, i8* %f)
 declare %Int @fputs(%ConstCharStr* %str, i8* %f)
 declare %Int @getc(i8* %f)
 declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
 declare %Int @putc(%Int %char, i8* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, i8* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
-; -- print imports private 'main' --
+; -- print imports 'main' --
 
 ; from import "builtin"
 
 ; end from import "builtin"
-; -- end print imports private 'main' --
-; -- print imports public 'main' --
-; -- end print imports public 'main' --
+; -- end print imports 'main' --
 ; -- strings --
 ; -- endstrings --
 %CallbackData = type {
@@ -226,15 +223,14 @@ define internal void @tickClock(%Clock* %self) {
 	br %Bool %3 , label %then_0, label %endif_0
 then_0:
 	%4 = getelementptr %Clock, %Clock* %self, %Int32 0, %Int32 1
-	%5 = getelementptr %Clock, %Clock* %self, %Int32 0, %Int32 1
-	%6 = load %Nat32, %Nat32* %5
-	%7 = sub %Nat32 %6, 1
-	store %Nat32 %7, %Nat32* %4
-	%8 = getelementptr %Clock, %Clock* %self, %Int32 0, %Int32 2
-	%9 = getelementptr %Clock, %Clock* %self, %Int32 0, %Int32 1
-	%10 = load %Nat32, %Nat32* %9
-	%11 = icmp eq %Nat32 %10, 0
-	store %Bool %11, %Bool* %8
+	%5 = load %Nat32, %Nat32* %4
+	%6 = sub %Nat32 %5, 1
+	store %Nat32 %6, %Nat32* %4
+	%7 = getelementptr %Clock, %Clock* %self, %Int32 0, %Int32 2
+	%8 = getelementptr %Clock, %Clock* %self, %Int32 0, %Int32 1
+	%9 = load %Nat32, %Nat32* %8
+	%10 = icmp eq %Nat32 %9, 0
+	store %Bool %10, %Bool* %7
 	br label %endif_0
 endif_0:
 	ret void
@@ -337,51 +333,56 @@ define internal void @taskClockchain(%Clock* %clockchain) {
 
 define %Int @main() {
 	%1 = alloca [3 x %Clock*], align 8
-	%2 = getelementptr [3 x %Clock*], [3 x %Clock*]* %1, %Int32 0, %Int32 0
+	%2 = call %Clock* @malloc(%Int32 32)
+	store %Clock zeroinitializer, %Clock* %2
 	%3 = call %Clock* @malloc(%Int32 32)
 	store %Clock zeroinitializer, %Clock* %3
-	store %Clock* %3, %Clock** %2
-	%4 = getelementptr [3 x %Clock*], [3 x %Clock*]* %1, %Int32 0, %Int32 1
+	%4 = call %Clock* @malloc(%Int32 32)
+	store %Clock zeroinitializer, %Clock* %4
 	%5 = call %Clock* @malloc(%Int32 32)
 	store %Clock zeroinitializer, %Clock* %5
-	store %Clock* %5, %Clock** %4
-	%6 = getelementptr [3 x %Clock*], [3 x %Clock*]* %1, %Int32 0, %Int32 2
+	%6 = insertvalue [3 x %Clock*] zeroinitializer, %Clock* %5, 0
 	%7 = call %Clock* @malloc(%Int32 32)
 	store %Clock zeroinitializer, %Clock* %7
-	store %Clock* %7, %Clock** %6
-	%8 = getelementptr [3 x %Clock*], [3 x %Clock*]* %1, %Int32 0, %Int32 0
-	%9 = load %Clock*, %Clock** %8
-	call void @addClock(%Clock* %9)
-	%10 = getelementptr [3 x %Clock*], [3 x %Clock*]* %1, %Int32 0, %Int32 1
-	%11 = load %Clock*, %Clock** %10
-	call void @addClock(%Clock* %11)
-	%12 = getelementptr [3 x %Clock*], [3 x %Clock*]* %1, %Int32 0, %Int32 2
+	%8 = insertvalue [3 x %Clock*] %6, %Clock* %7, 1
+	%9 = call %Clock* @malloc(%Int32 32)
+	store %Clock zeroinitializer, %Clock* %9
+	%10 = insertvalue [3 x %Clock*] %8, %Clock* %9, 2
+	%11 = zext i8 3 to %Nat32
+	store [3 x %Clock*] %10, [3 x %Clock*]* %1
+	%12 = getelementptr [3 x %Clock*], [3 x %Clock*]* %1, %Int32 0, %Int32 0
 	%13 = load %Clock*, %Clock** %12
 	call void @addClock(%Clock* %13)
-	%14 = alloca %Nat32, align 4
-	store %Nat32 10000, %Nat32* %14
+	%14 = getelementptr [3 x %Clock*], [3 x %Clock*]* %1, %Int32 0, %Int32 1
+	%15 = load %Clock*, %Clock** %14
+	call void @addClock(%Clock* %15)
+	%16 = getelementptr [3 x %Clock*], [3 x %Clock*]* %1, %Int32 0, %Int32 2
+	%17 = load %Clock*, %Clock** %16
+	call void @addClock(%Clock* %17)
+	%18 = alloca %Nat32, align 4
+	store %Nat32 10000, %Nat32* %18
 ; while_1
 	br label %again_1
 again_1:
-	%15 = load %Nat32, %Nat32* %14
-	%16 = icmp ugt %Nat32 %15, 0
-	br %Bool %16 , label %body_1, label %break_1
+	%19 = load %Nat32, %Nat32* %18
+	%20 = icmp ugt %Nat32 %19, 0
+	br %Bool %20 , label %body_1, label %break_1
 body_1:
-	%17 = load %Clock*, %Clock** @clockchain
-	call void @tickClockchain(%Clock* %17)
-; if_0
-	%18 = load %Nat32, %Nat32* %14
-	%19 = urem %Nat32 %18, 10
-	%20 = icmp eq %Nat32 %19, 0
-	br %Bool %20 , label %then_0, label %endif_0
-then_0:
 	%21 = load %Clock*, %Clock** @clockchain
-	call void @taskClockchain(%Clock* %21)
+	call void @tickClockchain(%Clock* %21)
+; if_0
+	%22 = load %Nat32, %Nat32* %18
+	%23 = urem %Nat32 %22, 10
+	%24 = icmp eq %Nat32 %23, 0
+	br %Bool %24 , label %then_0, label %endif_0
+then_0:
+	%25 = load %Clock*, %Clock** @clockchain
+	call void @taskClockchain(%Clock* %25)
 	br label %endif_0
 endif_0:
-	%22 = load %Nat32, %Nat32* %14
-	%23 = sub %Nat32 %22, 1
-	store %Nat32 %23, %Nat32* %14
+	%26 = load %Nat32, %Nat32* %18
+	%27 = sub %Nat32 %26, 1
+	store %Nat32 %27, %Nat32* %18
 	br label %again_1
 break_1:
 	ret %Int 0

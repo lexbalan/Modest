@@ -39,13 +39,19 @@ func_undef_list = []
 module_undef_list = []
 
 
-
+csettings = {}
 cfunc = None
 
 
 # print pointer to array as a pointer to array item (C array decay)
 POINTER_TO_ARRAY_RELAX = True
 
+
+
+
+def init(settings):
+	global csettings
+	csettings = settings
 
 
 
@@ -58,29 +64,13 @@ def is_local_context():
 	return not is_global_context()
 
 
-
-csettings = {}
-def init(settings):
-	global styleguide, csettings
-	csettings = settings
-
-#	stylename = settings['output_style']
-#	if stylename != None:
-#		if stylename in styles:
-#			styleguide = styles[stylename]
-
-
-
-
-def value_is_type_generic_immediate(v):
-	return v.isValueImmediate() and v.type.is_generic()
+def value_is_generic_immediate(v):
+	return v.is_immediate() and v.type.is_generic()
 
 
 # такое значение определено как макрос
-def value_is_type_generic_immediate_const(v):
-	return v.isValueConst() and v.isValueImmediate() and v.type.is_generic()
-
-
+def value_is_generic_immediate_const(v):
+	return v.is_const() and value_is_generic_immediate(v)
 
 
 def is_global_public(x):
@@ -96,8 +86,8 @@ def is_global_public(x):
 # ТОЛЬКО когда это указатель на строку!
 def need_ptr_to_item_instead_of_ptr_to_array(t):
 	if ARRAY_AS_POINTER:
-		return t.is_type_array()# and not t.is_type_array_of_array()
-	return t.is_type_array_of_char()
+		return t.is_array()# and not t.is_array_of_array()
+	return t.is_array_of_char()
 
 
 
@@ -155,7 +145,7 @@ def get_id_str(x):
 
 
 
-def is_type_named(t):
+def is_named(t):
 	return get_type_id_str(t) != None
 
 
@@ -169,7 +159,7 @@ def do_ctype_pointer(t, specs=[]):
 	# Но Modest это позволяет ⚠️ НО при этом нельзя индексировать по такому указателю
 	# Для работы нужно его сперва привести к типу *[n][m]...([k]) и тогда уже можно индексировать
 	# Реализуется это в си через void * - (это лучший вариант)
-	if to.is_type_unsized_array_of_unsized_array():
+	if to.is_unsized_array_of_unsized_array():
 		return CTypePointer(to=CTypeIdentifier("void"), specifiers=specs)
 
 	if need_ptr_to_item_instead_of_ptr_to_array(to):
@@ -184,15 +174,15 @@ def do_ctype_func(t, specs=[]):
 	for p in t.params:
 		id_str = get_id_str(p)
 		arg_ctype=do_ctype(p.type, is_param=True)
-		if p.type.is_type_array():
+		if p.type.is_array():
 			id_str = '_' + id_str
 			arg_ctype = do_ctype(TypePointer(p.type), is_param=True)
 			#arg_ctype.to.of.specs = ['const']
 		params.append(CField(id=id_str, type=arg_ctype, specifiers=[]))
 
 
-	if not t.to.is_type_array():
-		if t.to.is_type_unit():
+	if not t.to.is_array():
+		if t.to.is_unit():
 			to=CTypeIdentifier('void')
 		else:
 			to=do_ctype(t.to)
@@ -208,7 +198,7 @@ def do_ctype_func(t, specs=[]):
 # CIR TypeArray хранит volume уже как CValue (или None) — приведение HLIR-значения
 # к CIR откладывать до печати незачем и не нужно самому CIR
 def do_ctype_array_volume(volume):
-	if volume == None or volume.isValueUndef():
+	if volume == None or volume.is_undef():
 		return None
 	return do_cvalue(volume)
 
@@ -274,7 +264,7 @@ def do_ctype(t, is_param=False):
 	if POINTER_TO_ARRAY_RELAX:
 		if is_param:
 			# Только для параметров функции!
-			if t.is_type_pointer_to_array():
+			if t.is_pointer_to_array():
 				if not need_ptr_to_item_instead_of_ptr_to_array(t.to):
 					return CTypeArray(item_type=do_ctype(t.to.of), size=do_ctype_array_volume(t.to.volume))
 
@@ -283,12 +273,12 @@ def do_ctype(t, is_param=False):
 	if t.hasAttribute('volatile'): specs.append('volatile')
 	if t.hasAttribute('restrict'): specs.append('restrict')
 
-	if is_type_named(t): return do_ctype_named(t, specs=specs)
-	if t.is_type_pointer(): return do_ctype_pointer(t, specs=specs)
-	if t.is_type_func(): return do_ctype_func(t, specs=specs)
-	if t.is_type_array(): return do_ctype_array(t, specs=specs)
-	if t.is_type_record(): return do_ctype_struct(t, specs=specs)
-	if t.is_type_variant(): return do_ctype_variant(t, specs=specs)
+	if is_named(t): return do_ctype_named(t, specs=specs)
+	if t.is_pointer(): return do_ctype_pointer(t, specs=specs)
+	if t.is_func(): return do_ctype_func(t, specs=specs)
+	if t.is_array(): return do_ctype_array(t, specs=specs)
+	if t.is_record(): return do_ctype_struct(t, specs=specs)
+	if t.is_variant(): return do_ctype_variant(t, specs=specs)
 	return None
 
 
@@ -309,7 +299,7 @@ def str_field(t, id_str, ctx=[]):
 
 def needd(x):
 	rv = get_root_value(x)
-	return (x.type.is_type_int() or x.type.is_type_nat()) and (x.type.width < 32) and rv.isValueBin()
+	return (x.type.is_int() or x.type.is_nat()) and (x.type.width < 32) and rv.is_bin()
 
 
 
@@ -349,8 +339,8 @@ def initializers_are_equal(a, b):
 
 
 def is_the_same_in_c(t0, t1):
-	if t0.is_type_pointer_to_array() and t1.is_type_pointer_to_array():
-		if t0.to.is_type_array_of_char() and t1.to.is_type_array_of_char():
+	if t0.is_pointer_to_array() and t1.is_pointer_to_array():
+		if t0.to.is_array_of_char() and t1.to.is_array_of_char():
 			#info("the same?", t0.ti)
 			return True
 		if Type.eq(t0.to.of, t1.to.of):
@@ -374,7 +364,7 @@ def is_zero_tail(values, i, n):
 	# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
 	while i < n:
 		v = values[i]
-		if not v.isValueZero():
+		if not v.is_zero():
 			return False
 		i = i + 1
 	return True
@@ -482,7 +472,7 @@ def do_cvalue_literal_array(v, ctx):
 def do_cvalue_literal_record(v, ctx):
 	items = []
 	for kv in v.asset:
-		if not kv.value.isValueUndef():
+		if not kv.value.is_undef():
 			inititlizer = do_cinitializer(kv.value.type, kv.value, ctx=ctx)
 			items.append(KV(get_id_str(kv), inititlizer, kv.nl))
 
@@ -528,8 +518,8 @@ def do_cvalue_literal_number(t, v, ctx):
 		low = cvalue_literal_integer(int(v.asset) & 0xffffffffffffffff, width=64, is_unsigned=not t.is_signed(), as_hex=True, ctx=ctx)
 		return CValueCall(CValueIdentifier("BIG_INT128"), [high, low])
 
-	is_unsigned = t.is_type_nat() or t.is_type_word() or (t.is_type_integer() and v.asset >= 0)
-	as_hex = v.hasAttribute('hexadecimal') or t.is_type_word()
+	is_unsigned = t.is_nat() or t.is_word() or (t.is_integer() and v.asset >= 0)
+	as_hex = v.hasAttribute('hexadecimal') or t.is_word()
 	cv = cvalue_literal_integer(int(v.asset), width=t.width, is_unsigned=is_unsigned, as_hex=as_hex, nsigns=v.nsigns, ctx=ctx)
 	#cv.mark = '$%s' + str()
 	return cv
@@ -540,20 +530,20 @@ def do_cvalue_literal_number(t, v, ctx):
 def do_cvalue_literal_with_type(v, t, ctx):
 	asset = v.asset
 
-	if t.is_type_integer() or t.is_type_int() or t.is_type_nat() or t.is_type_word():
+	if t.is_integer() or t.is_int() or t.is_nat() or t.is_word():
 		return do_cvalue_literal_number(t, v, ctx)
 
-	elif t.is_type_string():
+	elif t.is_string():
 		return do_cvalue_literal_string(v.asset, width=0)#v.type.width)
 
-	elif t.is_type_bool(): return do_cvalue_literal_bool(v, ctx)
-	elif t.is_type_rational(): return do_cvalue_literal_rational(v, ctx)
-	elif t.is_type_float(): return do_cvalue_literal_rational(v, ctx)
-	elif t.is_type_char(): return do_cvalue_literal_char(t, v, ctx)
-	elif t.is_type_array(): return do_cvalue_literal_array(v, ctx)
-	elif t.is_type_record(): return do_cvalue_literal_record(v, ctx)
-	elif t.is_type_pointer(): return do_cvalue_literal_pointer(v, ctx)
-	#elif t.is_type_fixed(): return str_value_fixed(t, v, ctx)
+	elif t.is_bool(): return do_cvalue_literal_bool(v, ctx)
+	elif t.is_rational(): return do_cvalue_literal_rational(v, ctx)
+	elif t.is_float(): return do_cvalue_literal_rational(v, ctx)
+	elif t.is_char(): return do_cvalue_literal_char(t, v, ctx)
+	elif t.is_array(): return do_cvalue_literal_array(v, ctx)
+	elif t.is_record(): return do_cvalue_literal_record(v, ctx)
+	elif t.is_pointer(): return do_cvalue_literal_pointer(v, ctx)
+	#elif t.is_fixed(): return str_value_fixed(t, v, ctx)
 	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
 
 	print(t)
@@ -567,13 +557,13 @@ def do_cvalue_cons_array(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	if from_type.is_type_generic_array() or from_type.is_type_string():
+	if from_type.is_generic_array() or from_type.is_string():
 
-		if from_type.is_type_string() and value.isValueBin() and value.op == HLIR_VALUE_OP_STRCAT:
+		if from_type.is_string() and value.is_bin() and value.op == HLIR_VALUE_OP_STRCAT:
 			return do_cvalue(x.value)
 
 
-		if from_type.is_type_string():
+		if from_type.is_string():
 			width = 0
 			if to_type.is_concretic():
 				width = to_type.of.width
@@ -584,14 +574,14 @@ def do_cvalue_cons_array(x, ctx):
 
 	# for:
 	#    var x: [10]Word8 = "0123456789"
-	# if from_type.is_type_string():
+	# if from_type.is_string():
 	# 	width = 0
 	# 	if type.is_concretic():
 	#  		width = type.to.of.width
 	# 	return do_cvalue_literal_string(value, width=width)
 
 #	cv = None
-#	if x.isValueLiteral():
+#	if x.is_literal():
 #		cv = do_cvalue_literal_with_type(x, to_type, ctx=ctx)
 #	else:
 	cv = do_cvalue_cast(to_type, x.value, ctx)
@@ -613,17 +603,17 @@ def do_cvalue_cons_record(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	if to_type.is_type_unit():
+	if to_type.is_unit():
 		cv = CValueCast(CTypeIdentifier("void"), do_cvalue(value))
 		return cv
 
-	if to_type.is_type_generic_record() and from_type.is_type_generic_record():
+	if to_type.is_generic_record() and from_type.is_generic_record():
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
 	# RecordA -> RecordB
-	#if to_type.is_type_record():
-	if from_type.is_type_record() and from_type.is_concretic():
+	#if to_type.is_record():
+	if from_type.is_record() and from_type.is_concretic():
 		if to_type.uid == from_type.uid:
 			# это одна и та же структура и приведение не требуется
 			cv = do_cvalue(value, ctx=ctx)
@@ -635,7 +625,7 @@ def do_cvalue_cons_record(x, ctx):
 
 	tt = do_ctype(to_type)
 
-	if x.value.isValueImmediate():
+	if x.value.is_immediate():
 		if not initializers_are_equal(x.asset, value.asset):
 			# Если у нас в ValueCons asset отличается от asset в ValueCons#value
 			# То печатаем литерал структуры из нашего asset
@@ -643,8 +633,8 @@ def do_cvalue_cons_record(x, ctx):
 
 			# add extra non-zero items ⚠️
 			for kv in x.asset:
-				if not kv.value.isValueUndef():
-					if kv.value.isValueZero():
+				if not kv.value.is_undef():
+					if kv.value.is_zero():
 						continue
 					if initializer_already_here(record.items, get_id_str(kv)):
 						continue
@@ -672,34 +662,34 @@ def do_cvalue_cons2(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	if type.is_type_array():
+	if type.is_array():
 		cv = do_cvalue_cons_array(x, ctx)
 		#cv.mark = 'CA'
 		return cv
-	if type.is_type_record():
+	if type.is_record():
 		cv = do_cvalue_cons_record(x, ctx)
 		#cv.mark = 'CR'
 		return cv
 	if type.is_branded(): return do_cvalue_cast(x.type, x.value, ctx)
-	if type.is_type_char(): return do_cvalue_cons_char(x, ctx)
-	if type.is_type_pointer(): return do_cvalue_cons_pointer(x, ctx)
-	if type.is_type_int(): return do_cvalue_cons_int(x, ctx)
-	if type.is_type_nat(): return do_cvalue_cons_nat(x, ctx)
-	if type.is_type_word(): return do_cvalue_cons_word(x, ctx)
-	if type.is_type_variant(): return do_cvalue_cons_variant(x, ctx)
+	if type.is_char(): return do_cvalue_cons_char(x, ctx)
+	if type.is_pointer(): return do_cvalue_cons_pointer(x, ctx)
+	if type.is_int(): return do_cvalue_cons_int(x, ctx)
+	if type.is_nat(): return do_cvalue_cons_nat(x, ctx)
+	if type.is_word(): return do_cvalue_cons_word(x, ctx)
+	if type.is_variant(): return do_cvalue_cons_variant(x, ctx)
 
 
 	if x.method in ['implicit', 'default']:
 		#sstr = str_value(value)
 
 		if not Type.eq(type, value.type):
-			#if not (value.isValueLiteral() or is_the_same_in_c(type, value.type)):
+			#if not (value.is_literal() or is_the_same_in_c(type, value.type)):
 			if not (from_type.is_generic() or is_the_same_in_c(type, value.type)):
 				#sstr = "(" + str_type(type) + ")" + sstr
 				cv = do_cvalue_cast(type, value, ctx=ctx)
 				return cv
 
-		if type.is_type_float() and type.width != 64:
+		if type.is_float() and type.width != 64:
 			# ⚠️ Необходимо привести, тк в C литералы с плавающей точкой по умолчанию double
 			cv = do_cvalue_cast(type, value, ctx=ctx)
 			return cv
@@ -707,7 +697,7 @@ def do_cvalue_cons2(x, ctx):
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
-#	if value.isValueLiteral():
+#	if value.is_literal():
 #		cv = do_cvalue(value, ctx=ctx)
 #		return cv
 
@@ -717,11 +707,11 @@ def do_cvalue_cons2(x, ctx):
 	# - in Cm Int32(-1) -> Word64 => 0x00000000ffffffff
 	# - in Cm Int32(-1) -> Nat64 => 1
 	# required: (uint64_t)((uint32)int32_value)
-	#if type.is_type_int():
+	#if type.is_int():
 	"""
-	if from_type.is_type_int() or from_type.is_type_integer():
+	if from_type.is_int() or from_type.is_integer():
 		if from_type.is_signed():
-			if type.is_type_nat():
+			if type.is_nat():
 				arg = do_cvalue(value, ctx=ctx)
 
 				acall = None
@@ -738,7 +728,7 @@ def do_cvalue_cons2(x, ctx):
 				ctype = do_ctype(type)
 				return CValueCast(ctype, acall)
 
-			elif type.is_type_word():
+			elif type.is_word():
 				if from_type.get_size() < type.get_size():
 					nat_same_sz = type_select_nat(from_type.width)
 					#return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx=ctx)
@@ -758,26 +748,26 @@ def do_cvalue_cons_word(x, ctx):
 
 
 #	if from_type.is_generic():
-#		if value.isValueImmediate():
-#			if value.isValueLiteral():
+#		if value.is_immediate():
+#			if value.is_literal():
 #				cv = do_cvalue_literal_number(type, value, ctx)
 #				cv = CValueCast(do_ctype(type), cv)
 #				return cv
 
-	#if value.isValueImmediate() and value.isValueLiteral():
-	#	#if from_type.is_type_nat() and type.width == from_type.width:
+	#if value.is_immediate() and value.is_literal():
+	#	#if from_type.is_nat() and type.width == from_type.width:
 	#	cv = do_cvalue_literal_with_type(value, type, ctx=ctx)
 	#	return cv
 
 	if x.method in ['implicit', 'default']:
-		if value.isValueLiteral():
+		if value.is_literal():
 			return do_cvalue_literal_number(type, value, ctx)
 		#if type.width <= 32:
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
 
-	if from_type.is_type_int():
+	if from_type.is_int():
 		if from_type.width < type.width:
 			cv = do_cvalue(value, ctx=ctx)
 			nat_same_sz = do_ctype(type_select_nat(from_type.width))
@@ -794,12 +784,12 @@ def do_cvalue_cons_int(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	if from_type.is_type_word() and type.width == from_type.width:
+	if from_type.is_word() and type.width == from_type.width:
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
 	if x.method in ['implicit', 'default']:
-		if value.isValueLiteral():
+		if value.is_literal():
 			return do_cvalue_literal_number(type, value, ctx)
 		#if type.width <= 32:
 		cv = do_cvalue(value, ctx=ctx)
@@ -814,11 +804,11 @@ def do_cvalue_cons_nat(x, ctx):
 	value = x.value
 	from_type = value.type
 
-	if from_type.is_type_word() and type.width == from_type.width:
+	if from_type.is_word() and type.width == from_type.width:
 		cv = do_cvalue(value, ctx=ctx)
 		return cv
 
-	if from_type.is_type_int():
+	if from_type.is_int():
 		arg = do_cvalue(value, ctx=ctx)
 
 		acall = None
@@ -836,7 +826,7 @@ def do_cvalue_cons_nat(x, ctx):
 		return CValueCast(ctype, acall)
 
 	if x.method in ['implicit', 'default']:
-		if value.isValueLiteral():
+		if value.is_literal():
 			return do_cvalue_literal_number(type, value, ctx)
 		#if type.width <= 32:
 		cv = do_cvalue(value, ctx=ctx)
@@ -850,9 +840,9 @@ def do_cvalue_cons_nat(x, ctx):
 def do_cvalue_cons_char(x, ctx):
 	type = x.type
 	value = x.value
-	if value.type.is_type_string():
+	if value.type.is_string():
 		cv = None
-		if value.isValueLiteral():
+		if value.is_literal():
 			cv = do_cvalue_literal_char(type, x, ctx)
 		else:
 			cv = CValueIndex(do_cvalue(value), CValueInteger(0))
@@ -884,20 +874,20 @@ def do_cvalue_cons_pointer(x, ctx):
 	# у нас типы структурные, а в си - номинальные
 	# поэтому даже если структуры одинаковы, но имена разные
 	# - их нужно жестко приводить
-	if type.is_type_pointer_to_record() and value.type.is_type_pointer_to_record():
+	if type.is_pointer_to_record() and value.type.is_pointer_to_record():
 		if value.type.to.definition != type.to.definition:
 			#return str_cast(type, value, ctx=ctx)
 			cv = do_cvalue_cast(type, value, ctx)
 			return cv
 
-	elif type.is_type_pointer_to_array():
-		if type.is_type_pointer_to_array_of_char() and value.type.is_type_string():
+	elif type.is_pointer_to_array():
+		if type.is_pointer_to_array_of_char() and value.type.is_string():
 
-			if value.type.is_type_string():
-				if value.isValueBin() and value.op == HLIR_VALUE_OP_STRCAT:
+			if value.type.is_string():
+				if value.is_bin() and value.op == HLIR_VALUE_OP_STRCAT:
 					return do_cvalue(x.value, ctx=ctx)
 
-			if not value.isValueConst():
+			if not value.is_const():
 				cv = do_cvalue_literal_string(value.asset, width=type.to.of.width)
 			elif type.to.of.width > 8:
 				cv = CValueCall(CValueIdentifier("_STR%d" % type.to.of.width), [do_cvalue(value)])
@@ -919,7 +909,7 @@ def do_cvalue_cons_pointer(x, ctx):
 
 
 def do_cvalue_cast(type, value, ctx):
-	if is_type_named(type):
+	if is_named(type):
 		if get_id_str(type) == get_id_str(value.type):
 			cv = do_cvalue(value, ctx=ctx)
 			return cv
@@ -960,16 +950,16 @@ def do_cvalue_call(x, ctx):
 
 
 def do_cvalue_arg(av):
-	if av.type.is_type_array() and not av.type.is_type_array_of_char():
+	if av.type.is_array() and not av.type.is_array_of_char():
 		# Если в функцию передается массив по значению - передаем указатель на него ⚠️
 		# тк функции си не умеют получать массивы по значению
 		a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
 	else:
 		if not ARRAY_AS_POINTER:
-			if av.type.is_type_pointer_to_array():
+			if av.type.is_pointer_to_array():
 				if POINTER_TO_ARRAY_RELAX:
-					if not av.type.to.is_type_array_of_char():
-						if av.isValueRef() and not (av.value.isValueIndex() or av.value.isValueSlice()):
+					if not av.type.to.is_array_of_char():
+						if av.is_ref() and not (av.value.is_index() or av.value.is_slice()):
 							av = av.value
 						else:
 							tt = TypePointer(av.type.to.of)
@@ -993,20 +983,20 @@ def do_cvalue_index(x, ctx):
 	lx = do_cvalue(left)
 	index = do_cvalue(x.index)
 
-	if left.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL and left.isValueConst(): #left.type.is_type_generic_array():
+	if left.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL and left.is_const(): #left.type.is_generic_array():
 		ts = do_ctype(left.type)
 		vs = do_cvalue(left, ctx=ctx)
 		lx = CValueCast(ts, vs)
 
-	elif value_is_type_generic_immediate_const(left):
+	elif value_is_generic_immediate_const(left):
 		ts = do_ctype(left.type)
 		vs = do_cvalue(left, ctx=ctx)
 		lx = CValueCast(ts, vs)
 
-	if left.type.is_type_pointer_to_array():
+	if left.type.is_pointer_to_array():
 		if POINTER_TO_ARRAY_RELAX:
 			if left.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM:
-				if left.type.is_type_pointer_to_array():
+				if left.type.is_pointer_to_array():
 					return CValueIndex(lx, index)
 
 		if not need_ptr_to_item_instead_of_ptr_to_array(left.type.to):
@@ -1026,16 +1016,16 @@ def do_cvalue_access(x, ctx):
 
 	# если имеем дело c константной записью (глоб константа)
 	# и результат операции доступа - константа которая уже тут
-	if not left.isValueConst():
-		if value_is_type_generic_immediate(left):
-			return do_cvalue_literal_with_type(x, x.type, ctx)
+	#if not left.is_const():
+	#if value_is_generic_immediate_const(left):
+	#	return do_cvalue_literal_with_type(x, x.type, ctx)
 
 	lx = do_cvalue(left, ctx=ctx)
-	if value_is_type_generic_immediate_const(left):
+	if value_is_generic_immediate_const(left):
 		lx = CValueCast(do_ctype(left.type), lx)
 
 	field_id_str = get_id_str(x.field)
-	if left.type.is_type_pointer():
+	if left.type.is_pointer():
 		return CValuePtrFieldAccess(lx, field_id_str)
 
 	return CValueFieldAccess(lx, field_id_str)
@@ -1072,12 +1062,12 @@ def do_cvalue_ref(x, ctx):
 	cv = do_cvalue(value, ctx=ctx)
 
 	if ARRAY_AS_POINTER:
-		if x.type.is_type_pointer_to_array() and value.type.is_type_array():
-			if not value.isValueSlice():
+		if x.type.is_pointer_to_array() and value.type.is_array():
+			if not value.is_slice():
 				return cv
 
 	if need_ptr_to_item_instead_of_ptr_to_array(x.type.to):
-		if not (value.isValueIndex() or value.isValueSlice()):
+		if not (value.is_index() or value.is_slice()):
 			#return CValueReference(cv)
 			# просто печатаем массив чаров как есть тк он автоматом decay to pointer
 			return cv
@@ -1085,7 +1075,7 @@ def do_cvalue_ref(x, ctx):
 	cv = CValueReference(cv)
 
 	if not ARRAY_AS_POINTER:
-		if value.isValueSlice():
+		if value.is_slice():
 			# "ref to slice" in C is just pointer to array item,
 			# therefore we need cast it to pointer to result array
 			cv = CValueCast(do_ctype(x.type), cv)
@@ -1105,7 +1095,7 @@ def do_cvalue_subexpr(x, ctx):
 
 def do_cvalue_not(x, ctx):
 	v = do_cvalue(x.value)
-	if x.value.type.is_type_bool():
+	if x.value.type.is_bool():
 		return CValueLogicalNot(v)
 	return CValueBitwiseNot(v)
 
@@ -1132,7 +1122,7 @@ def do_cvalue_const(x, ctx):
 
 	cv = CValueIdentifier(id_str)
 
-#	if x.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL and x.type.is_type_array() and not x.type.is_generic():
+#	if x.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL and x.type.is_array() and not x.type.is_generic():
 #		cv = CValueCast(do_ctype(x.type), cv)
 
 	return cv
@@ -1144,18 +1134,18 @@ def do_cvalue_access_module(x, ctx):
 
 
 def do_cvalue_lengthof(array_value):
-	if array_value.type.is_type_string():
+	if array_value.type.is_string():
 		return CValueInteger(array_value.type.length)
-	if array_value.isValueImmediate():
+	if array_value.is_immediate():
 		return do_cvalue(array_value.type.volume)
-	if array_value.isValueConst() and array_value.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
+	if array_value.is_const() and array_value.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
 		return do_cvalue(array_value.type.volume)
-	elif array_value.isValueSlice():
+	elif array_value.is_slice():
 		return do_cvalue(array_value.type.volume)
 
 	lengthof_arg = do_cvalue(array_value)
 	if ARRAY_AS_POINTER:
-		if array_value.isValueDeref():
+		if array_value.is_deref():
 			return do_cvalue(array_value.type.volume)
 
 	return CValueCall(CValueIdentifier("LENGTHOF"), [lengthof_arg])
@@ -1171,7 +1161,7 @@ def do_cvalue_sizeof_value(x, ctx):
 	return CValueSizeofValue(do_cvalue(x.ofvalue))
 
 def do_cvalue_sizeof_type(x, ctx):
-	if x.oftype.is_type_unit():
+	if x.oftype.is_unit():
 		return CValueCast(CTypeIdentifier("size_t"), CValueInteger(0))
 	return CValueSizeofType(do_ctype(x.oftype))
 
@@ -1179,7 +1169,7 @@ def do_cvalue_lengthof_type(x, ctx):
 	return cvalue_literal_integer(x.oftype.volume.asset, is_unsigned=True, ctx=ctx)
 
 def do_cvalue_alignof_type(x, ctx):
-	if x.oftype.is_type_unit():
+	if x.oftype.is_unit():
 		return CValueCast(CTypeIdentifier("size_t"), CValueInteger(1))
 	return CValueCall(CValueIdentifier("__alignof"), [CValueIdentifier(str_type(x.oftype))])
 
@@ -1211,7 +1201,7 @@ def do_cvalue_eq(x, logic, ctx):
 	left = x.left
 	right = x.right
 
-	#if x.isValueImmediate():
+	#if x.is_immediate():
 	#	return str_value_literal_bool2(x.asset)
 
 	lx = None
@@ -1225,7 +1215,7 @@ def do_cvalue_eq(x, logic, ctx):
 		rx = CValueInteger(0)
 
 	#elif left.type.is_str() and right.type.is_str():
-	elif left.type.is_str() or left.type.is_type_string():
+	elif left.type.is_str() or left.type.is_string():
 		# сравниваем строки (Str8, Str16, Str32)
 		ctype_pointer_to_chars = CTypePointer(CTypeIdentifier("char"))
 		ctype_pointer_to_chars.specifiers = ['const']
@@ -1287,21 +1277,21 @@ def do_cvalue_new(x, ctx):
 
 
 def do_cvalue_default(x, ctx):
-	if x.type.is_type_integer() or x.type.is_type_int() or x.type.is_type_nat() or x.type.is_type_word():
+	if x.type.is_integer() or x.type.is_int() or x.type.is_nat() or x.type.is_word():
 		return cvalue_literal_integer(0, width=x.type.width, is_unsigned=not x.type.is_signed(), ctx=ctx)
-	elif x.type.is_type_bool():
+	elif x.type.is_bool():
 		return CValueIdentifier(csettings['false_literal'])
-	elif x.type.is_type_char():
+	elif x.type.is_char():
 		return CValueChar(0, width=x.type.width)
-	elif x.type.is_type_string():
+	elif x.type.is_string():
 		return do_cvalue_literal_string("", width=x.type.width)
-	elif x.type.is_type_rational() or x.type.is_type_float():
+	elif x.type.is_rational() or x.type.is_float():
 		return CValueIdentifier("0.0")
-	elif x.type.is_type_array():
+	elif x.type.is_array():
 		return do_cvalue_literal_array(ValueLiteral(x.type, [], ti=None), ctx)
-	elif x.type.is_type_record():
+	elif x.type.is_record():
 		return do_cvalue_literal_record(ValueLiteral(x.type, [], ti=None), ctx)
-	elif x.type.is_type_pointer():
+	elif x.type.is_pointer():
 		return CValueIdentifier("NULL")
 	else:
 		error("default value not implemented for type %s" % str(x.type), x.ti)
@@ -1320,51 +1310,51 @@ def do_cvalue_default(x, ctx):
 
 
 def do_cvalue(x, ctx=[]):
-	if x.isValueCons(): return do_cvalue_cons(x, ctx)
-	elif x.isValueLiteral(): return do_cvalue_literal_with_type(x, x.type, ctx)
-	elif x.isValueConst(): return do_cvalue_const(x, ctx)
-	elif x.isValueVar(): return CValueIdentifier(get_id_str(x))
-	elif x.isValueFunc(): return CValueIdentifier(get_id_str(x))
-	elif x.isValueBin(): return do_cvalue_bin(x, ctx)
-	elif x.isValueCall(): return do_cvalue_call(x, ctx)
-	elif x.isValueAccessRecord(): return do_cvalue_access(x, ctx)
-	elif x.isValueArray(): return do_cvalue_literal_array(x, ctx)
-	elif x.isValueRecord(): return do_cvalue_literal_record(x, ctx)
-	elif x.isValueIndex(): return do_cvalue_index(x, ctx)
-	elif x.isValueShl(): return do_cvalue_shl(x, ctx)
-	elif x.isValueShr(): return do_cvalue_shr(x, ctx)
-	elif x.isValueRef(): return do_cvalue_ref(x, ctx)
-	elif x.isValueDeref(): return do_cvalue_deref(x, ctx)
-	elif x.isValueSubexpr(): return do_cvalue_subexpr(x, ctx)
-	elif x.isValueNot(): return do_cvalue_not(x, ctx)
-	elif x.isValueNeg(): return do_cvalue_neg(x, ctx)
-	elif x.isValuePos(): return do_cvalue_pos(x, ctx)
-	elif x.isValueSlice(): return do_cvalue_slice(x, ctx)
-	elif x.isValueAccessModule(): return do_cvalue_access_module(x, ctx)
-	elif x.isValueLengthofValue(): return do_cvalue_lengthof_value(x, ctx)
-	elif x.isValueSizeofType(): return do_cvalue_sizeof_type(x, ctx)
-	elif x.isValueSizeofValue(): return do_cvalue_sizeof_value(x, ctx)
-	elif x.isValueLengthofType(): return do_cvalue_lengthof_type(x, ctx)
-	elif x.isValueAlignofType(): return do_cvalue_alignof_type(x, ctx)
-	elif x.isValueAlignofValue(): return do_cvalue_alignof_value(x, ctx)
-	elif x.isValueVaArg(): return do_cvalue_va_arg(x, ctx)
-	elif x.isValueVaStart(): return do_cvalue_va_start(x, ctx)
-	elif x.isValueVaEnd(): return do_cvalue_va_end(x, ctx)
-	elif x.isValueVaCopy(): return do_cvalue_va_copy(x, ctx)
-	elif x.isValueNew(): return do_cvalue_new(x, ctx)
-	elif x.isValueDefault(): return do_cvalue_default(x, ctx)
-	elif x.isValueUndef():
+	if x.is_cons(): return do_cvalue_cons(x, ctx)
+	elif x.is_literal(): return do_cvalue_literal_with_type(x, x.type, ctx)
+	elif x.is_const(): return do_cvalue_const(x, ctx)
+	elif x.is_var(): return CValueIdentifier(get_id_str(x))
+	elif x.is_func(): return CValueIdentifier(get_id_str(x))
+	elif x.is_bin(): return do_cvalue_bin(x, ctx)
+	elif x.is_call(): return do_cvalue_call(x, ctx)
+	elif x.is_access_record(): return do_cvalue_access(x, ctx)
+	elif x.is_array(): return do_cvalue_literal_array(x, ctx)
+	elif x.is_record(): return do_cvalue_literal_record(x, ctx)
+	elif x.is_index(): return do_cvalue_index(x, ctx)
+	elif x.is_shl(): return do_cvalue_shl(x, ctx)
+	elif x.is_shr(): return do_cvalue_shr(x, ctx)
+	elif x.is_ref(): return do_cvalue_ref(x, ctx)
+	elif x.is_deref(): return do_cvalue_deref(x, ctx)
+	elif x.is_subexpr(): return do_cvalue_subexpr(x, ctx)
+	elif x.is_not(): return do_cvalue_not(x, ctx)
+	elif x.is_neg(): return do_cvalue_neg(x, ctx)
+	elif x.is_pos(): return do_cvalue_pos(x, ctx)
+	elif x.is_slice(): return do_cvalue_slice(x, ctx)
+	elif x.is_access_module(): return do_cvalue_access_module(x, ctx)
+	elif x.is_lengthof_value(): return do_cvalue_lengthof_value(x, ctx)
+	elif x.is_sizeof_type(): return do_cvalue_sizeof_type(x, ctx)
+	elif x.is_sizeof_value(): return do_cvalue_sizeof_value(x, ctx)
+	elif x.is_lengthof_type(): return do_cvalue_lengthof_type(x, ctx)
+	elif x.is_alignof_type(): return do_cvalue_alignof_type(x, ctx)
+	elif x.is_alignof_value(): return do_cvalue_alignof_value(x, ctx)
+	elif x.is_va_arg(): return do_cvalue_va_arg(x, ctx)
+	elif x.is_va_start(): return do_cvalue_va_start(x, ctx)
+	elif x.is_va_end(): return do_cvalue_va_end(x, ctx)
+	elif x.is_va_copy(): return do_cvalue_va_copy(x, ctx)
+	elif x.is_new(): return do_cvalue_new(x, ctx)
+	elif x.is_default(): return do_cvalue_default(x, ctx)
+	elif x.is_undef():
 		error("value undef in C backend", x.ti)
 		exit(1)
-	elif x.isValueBad():
+	elif x.is_bad():
 		error("value bad in C backend", x.ti)
 		exit(1)
 
 	print(x)
 	assert(False)
 
-#	elif x.isValueNew(): sstr += str_value_new(x, ctx)
-#	elif x.isValueOffsetof(): sstr += str_value_offsetof(x, ctx)
+#	elif x.is_new(): sstr += str_value_new(x, ctx)
+#	elif x.is_offsetof(): sstr += str_value_offsetof(x, ctx)
 #	else: sstr += str(x)
 
 	return None
@@ -1374,7 +1364,7 @@ def do_cvalue_bin(x, ctx):
 	left = do_cvalue(x.left)
 	right = do_cvalue(x.right)
 
-	if not x.type.is_type_string():
+	if not x.type.is_string():
 		if x.left.type.width < x.type.width:
 			left = CValueCast(do_ctype(x.type), left)
 
@@ -1406,20 +1396,20 @@ def do_cvalue_bin(x, ctx):
 
 
 def do_cinitializer(type, value, ctx):
-	if value.isValueCons():
+	if value.is_cons():
 		v = value.value
 		to = value.type
 		if Type.eq(to, value.type):
 			if to.brand == v.type.brand:
-				if v.type.is_type_integer():
+				if v.type.is_integer():
 					value = value.value
 
 		# ⚠️ C не позволяет приводить литерал массива к типу массива в инициализаторах
 		# Вот все можно приводить, все ок, а массив - нет.
-		if to.is_type_array():
-			if v.isValueArray():
+		if to.is_array():
+			if v.is_array():
 				return do_cvalue_literal_with_type(v, to, ctx=ctx)
-			elif v.type.is_type_string():
+			elif v.type.is_string():
 				width = 0
 				if to.is_concretic():
 					width = to.of.width
@@ -1431,8 +1421,8 @@ def do_cinitializer(type, value, ctx):
 				cv = CValueArray(cv_chars)
 				return cv
 
-		if to.is_type_float():
-			if v.type.is_generic():
+		if v.type.is_generic():
+			if to.is_float() and v.type.is_rational():
 				return do_cvalue(v, ctx=ctx)
 
 	cv = do_cvalue(value, ctx=ctx)
@@ -1445,19 +1435,19 @@ def do_cinitializer(type, value, ctx):
 
 def do_assign_array(left, right, ti):
 	# array = function()
-	if right.isValueCall():
+	if right.is_call():
 		rv = Initializer(Id("sret"), left)
 		return CStmtExpr(doo_call(right.func, right.args + [rv], ctx=[]))
 
 	rv = get_root_value(right)
-	if rv.isValueZero():
+	if rv.is_zero():
 		return do_memzero(left)
 
 	l_root = get_root_value(left)
 	r_root = get_root_value(right)
 
 	#if Type.eq(l_root.type, r_root.type):
-	if r_root.type.is_type_string():
+	if r_root.type.is_string():
 		return assign_by_memcopy(left, right)
 
 	# сравниваем размер элемента с типом right как он есть (в т.ч. под
@@ -1470,7 +1460,7 @@ def do_assign_array(left, right, ti):
 	cleft = do_cvalue_as_ptr(left)
 	cright = do_cvalue_as_ptr(right)
 	slen = None
-	if left.isValueVar() or left.isValueConst():
+	if left.is_var() or left.is_const():
 		slen = do_cvalue_lengthof(left)
 	else:
 		slen = do_cvalue(left.type.volume)
@@ -1498,12 +1488,12 @@ def do_cstmt_assign(x):
 	left = x.left
 	right = x.right
 
-	if left.type.is_type_array():
+	if left.type.is_array():
 		return do_assign_array(left, right, x.ti)
 
-	if right.isValueCons():
-		if not right.value.isValueLiteral():
-			if right.type.is_type_int() or right.type.is_type_nat() or right.type.is_type_word():
+	if right.is_cons():
+		if not right.value.is_literal():
+			if right.type.is_int() or right.type.is_nat() or right.type.is_word():
 				if right.value.type.width <= 32:
 					right = right.value
 
@@ -1514,7 +1504,7 @@ def do_cstmt_assign(x):
 def do_cstmt_return(x):
 	global cfunc
 
-	if cfunc.type.to.is_type_sized_array():
+	if cfunc.type.to.is_sized_array():
 		return CStmtExpr(
 			cvalue_memcpy(
 				CValueIdentifier("__out"),
@@ -1524,7 +1514,7 @@ def do_cstmt_return(x):
 		)
 
 	cretval = None
-	if x.value != None and not x.value.type.is_type_unit():
+	if x.value != None and not x.value.type.is_unit():
 		cretval = do_cvalue(x.value)
 	cstmt_return = CStmtReturn(cretval)
 	return cstmt_return
@@ -1550,10 +1540,10 @@ def do_cstmt_var(x):
 	var_value = x.value
 	init_value = x.init_value
 
-	dynamic_init = init_value.type.is_type_array() and (init_value.isValueRuntime() or var_value.type.is_vla())
+	dynamic_init = init_value.type.is_array() and (init_value.is_runtime() or var_value.type.is_vla())
 
 	civ = None
-	if not dynamic_init and not init_value.isValueUndef() and not init_value.type.is_type_va_list():
+	if not dynamic_init and not init_value.is_undef() and not init_value.type.is_va_list():
 		civ = do_cinitializer(var_value.type, init_value, ctx=[])
 
 	storage_class = ''
@@ -1572,7 +1562,7 @@ def const_as_macro(v):
 	if v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
 		return True
 	if v.storage_class == HLIR_VALUE_STORAGE_CLASS_LOCAL:
-		return value_is_type_generic_immediate(v)
+		return value_is_generic_immediate(v)
 	return False
 
 
@@ -1581,7 +1571,7 @@ def do_cstmt_const(x):
 	type = const_value.type
 	init_value = x.init_value
 
-#	if type.is_type_integer():
+#	if type.is_integer():
 #		dt = CTypeEnum([CEnumItem(get_id_str(x), do_cvalue(init_value))])
 #		dv = CStmtDefVar('', dt, storage_class='')#, attributes=x.attributes)
 #		return (dv,)
@@ -1597,17 +1587,17 @@ def do_cstmt_const(x):
 		return macro
 
 	civ = None
-	if not (init_value.type.is_type_array() and init_value.isValueRuntime()):
+	if not (init_value.type.is_array() and init_value.is_runtime()):
 		civ = do_cinitializer(type, init_value, ctx=[])
 
 	ct = do_ctype(type)
-	if type.is_type_array() and not init_value.isValueImmediate():
+	if type.is_array() and not init_value.is_immediate():
 		ct.specifiers.remove('const')
 	dv = CStmtDefVar(get_id_str(x), ct, initializer=civ, storage_class=None)
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
-	if init_value.type.is_type_array() and init_value.isValueRuntime():
+	if init_value.type.is_array() and init_value.is_runtime():
 		return (dv, do_assign_array(const_value, init_value, x.ti))
 
 	return dv
@@ -1728,7 +1718,7 @@ def do_def_func(x):
 
 	#create local copy for array parameters
 	for param in func.type.params:
-		if param.type.is_type_sized_array():
+		if param.type.is_sized_array():
 			paramId = get_id_str(param)
 			dv = CStmtDefVar(paramId, do_ctype(param.type))
 			mx = CStmtExpr(
@@ -1770,7 +1760,7 @@ def do_def_type(x):
 	id_str = get_id_str(x.type)
 	orig_type = x.original_type
 
-	if orig_type.is_type_record() and not is_type_named(orig_type):
+	if orig_type.is_record() and not is_named(orig_type):
 		result = do_def_type_record(x.type)
 		defined.append(x)
 		return result
@@ -1827,7 +1817,7 @@ def do_def_var(x, isdecl=False):
 		storage_class = "extern"
 
 	civ = None
-	if not (x.init_value.isValueUndef() or x.init_value.isValueDefault() or is_extern):
+	if not (x.init_value.is_undef() or x.init_value.is_default() or is_extern):
 		civ = do_cinitializer(var_value.type, x.init_value, ctx=[])
 
 	dv = CStmtDefVar(get_id_str(var_value), do_ctype(var_value.type), initializer=civ, storage_class=storage_class, attributes=x.attributes)
@@ -1852,13 +1842,13 @@ def do_def_const(x):
 	id_str = camel_to_upper_snake(get_id_str(x.value))
 	iv = do_cinitializer(x.value.type, x.init_value, ctx=[])
 
-	if x.init_value.isValueCons() and x.init_value.method != 'explicit':
-		if x.init_value.value.type.is_generic() and not x.init_value.type.is_type_array():
+	if x.init_value.is_cons() and x.init_value.method != 'explicit':
+		if x.init_value.value.type.is_generic() and not x.init_value.type.is_array():
 			if not isinstance(iv, CValueCast):
 				iv = CValueCast(do_ctype(x.value.type), iv)
 
 #	if not isinstance(iv, CValueCast):
-#		if not x.init_value.type.is_generic() and not x.init_value.type.is_type_array():
+#		if not x.init_value.type.is_generic() and not x.init_value.type.is_array():
 #			iv = CValueCast(do_ctype(x.value.type), iv)
 
 	#iv.mark = str(x.init_value)
@@ -2308,19 +2298,19 @@ def run(module, _outname):
 # возвращает корневое значение из цепочки ValueCons & ValueSubexpr
 # Костыль конечно, но пока C backend не разделен на два слоя, это хоть как то помогает
 def get_root_value(x):
-	if x.isValueCons():
+	if x.is_cons():
 		return get_root_value(x.value)
-	if x.isValueSubexpr():
+	if x.is_subexpr():
 		return get_root_value(x.value)
 	return x
 
 
 
 def cons_vla_from_literal_array(x):
-	if x.isValueCons():
+	if x.is_cons():
 		if x.type.is_vla():
 			#return x['value']['kind'] in ['literal', HLIR_VALUE_OP_ADD]
-			if x.isValueBin():
+			if x.is_bin():
 				return x.op in ['literal', HLIR_VALUE_OP_ADD]
 	return False
 
@@ -2330,14 +2320,14 @@ def cons_vla_from_literal_array(x):
 def do_cvalue_mem(x):
 	cv = do_cvalue(x)
 
-	if x.type.is_type_string():
+	if x.type.is_string():
 		return cv
 
-	if x.isValueArray() or (x.isValueCons() and x.value.isValueArray()):
+	if x.is_array() or (x.is_cons() and x.value.is_array()):
 		cv = CValueCast(do_ctype(x.type), cv)
 		return cv
 
-	if x.isValueRuntime():
+	if x.is_runtime():
 		return cv
 
 	if not x.type.is_aggregate_type():
@@ -2349,9 +2339,9 @@ def do_cvalue_mem(x):
 		cv = CValueCast(do_ctype(x.type), cv)
 		return cv
 
-	if x.type.is_type_array():
+	if x.type.is_array():
 		root = get_root_value(x)
-		if root.isValueConst() and const_as_macro(root):
+		if root.is_const() and const_as_macro(root):
 			ts = do_ctype(x.type)
 			cv = CValueCast(ts, cv)
 			return cv
@@ -2361,15 +2351,15 @@ def do_cvalue_mem(x):
 
 
 def do_cvalue_as_ptr(x, parr_relax=False):
-	if x.isValueDeref():
+	if x.is_deref():
 		# Если это взятие адреса - просто вернем значение
 		return do_cvalue(x.value)
 
-	if parr_relax and x.type.is_type_array():
+	if parr_relax and x.type.is_array():
 		root = get_root_value(x)
-		if root.isValueVar() or (root.isValueConst() and not const_as_macro(root)) or root.isValueArray() or root.isValueAccessRecord():
+		if root.is_var() or (root.is_const() and not const_as_macro(root)) or root.is_array() or root.is_access_record():
 			return do_cvalue(root)
-		if ARRAY_AS_POINTER and root.isValueConst() and const_as_macro(root):
+		if ARRAY_AS_POINTER and root.is_const() and const_as_macro(root):
 			return do_cvalue_mem(x)
 
 	cv = do_cvalue_mem(x)
@@ -2377,10 +2367,10 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 
 	# Если взяли адрес у array item - нужно привести его к *[]
 	if not ARRAY_AS_POINTER:
-		if x.isValueSlice():
+		if x.is_slice():
 			cv = CValueCast(CTypePointer(do_ctype(x.type)), cv)
 
-		if parr_relax and x.type.is_type_array():
+		if parr_relax and x.type.is_array():
 			cv = CValueCast(CTypePointer(do_ctype(x.type.of)), cv)
 
 	return cv
@@ -2392,7 +2382,7 @@ def do_memzero(value):
 
 def assign_by_memcopy(left, right):
 	# TODO: improve it
-	if get_root_value(right).isValueZero():
+	if get_root_value(right).is_zero():
 		return do_memzero(left)
 
 	return CStmtExpr(

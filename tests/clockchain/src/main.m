@@ -5,8 +5,9 @@ include "libc/stdio"
 
 
 type CallbackData = {}
-type ClockCallback = (clock: *Clock) -> Unit
+type ClockCallback = (clock: *Clock, data: *CallbackData) -> Unit
 type Clock = {
+	identifier: *Str8
 	next: *Clock
 	counter: Nat32
 	expired: Bool
@@ -28,9 +29,9 @@ func tickClock (self: *Clock) -> Unit {
 func taskClock (self: *Clock) -> Unit {
 	if self.expired {
 		if self.callback != nil {
-			self.callback(self)
+			self.callback(self, self.callbackData)
 		}
-		self.expired = self.counter == 0
+		self.expired = false
 	}
 }
 
@@ -64,14 +65,17 @@ func taskClockchain (clockchain: *Clock) -> Unit {
 }
 
 
+func clockCallback: ClockCallback {
+	printf("Clock %s expired.\n", clock.identifier)
+}
+
+
 func main () -> Int {
-	//var clocks = [new Clock {}, new Clock {}, new Clock {}]  // <<-- not works!
-
-	var clocks: [3]*Clock
-
-	clocks[0] = new Clock {}
-	clocks[1] = new Clock {}
-	clocks[2] = new Clock {}
+	var clocks = [
+		new Clock {identifier="clock1", counter=100, callback=&clockCallback}
+		new Clock {identifier="clock2", counter=200, callback=&clockCallback}
+		new Clock {identifier="clock3", counter=500, callback=&clockCallback}
+	]
 
 	addClock(clocks[0])
 	addClock(clocks[1])

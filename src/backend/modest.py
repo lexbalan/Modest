@@ -247,18 +247,16 @@ def str_type2(t):
 
 	# Если у типа нет связанного идентификатора
 	# распечатаем полное выражение типа
-	if Type.is_type_func(t): return str_type_func(t)
-	elif Type.is_type_array(t): return str_type_array(t)
-	elif Type.is_type_record(t): return str_type_record(t)
-	elif Type.is_type_pointer(t): return str_type_pointer(t)
-	elif Type.is_type_variant(t): return str_type_variant(t)
-	elif Type.is_type_string(t): return "String(length=%d)" % t.length
+	if Type.is_func(t): return str_type_func(t)
+	elif Type.is_array(t): return str_type_array(t)
+	elif Type.is_record(t): return str_type_record(t)
+	elif Type.is_pointer(t): return str_type_pointer(t)
+	elif Type.is_variant(t): return str_type_variant(t)
+	elif Type.is_string(t): return "String(length=%d)" % t.length
 	elif isinstance(t, TypeInteger): return "Integer(%d)" % t.width
 	elif isinstance(t, TypeRational): return "Rational"
 	elif isinstance(t, TypeUndefined): return "Undefined"
-	else:
-		#1/0
-		return str(t)
+	return str(t)
 
 
 bin_ops = {
@@ -425,7 +423,7 @@ def is_zero_tail(values, i, n):
 	# ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
 	while i < n:
 		v = values[i]
-		if not v.isValueZero():
+		if not v.is_zero():
 			return False
 		i = i + 1
 	return True
@@ -434,8 +432,8 @@ def is_zero_tail(values, i, n):
 # print Array literal
 def str_value_array(v, ctx):
 
-	if v.isValueImmediate():
-		if Type.is_type_array_of_char(v.type):
+	if v.is_immediate():
+		if Type.is_array_of_char(v.type):
 			return str_value_str(v, ctx=[])
 
 	s = ""
@@ -447,7 +445,7 @@ def str_value_array(v, ctx):
 	while i < n:
 		a = values[i]
 
-		if a.isValueZero():
+		if a.is_zero():
 			if is_zero_tail(values, i, n):
 				break
 
@@ -635,23 +633,23 @@ def str_value_string(x, ctx):
 
 def str_value_literal(x, ctx):
 	t = x.type
-	if Type.is_type_integer(t):
+	if Type.is_integer(t):
 		return str_value_integer(x, ctx)
-	elif Type.is_type_rational(t):
+	elif Type.is_rational(t):
 		return str_value_rational(x, ctx)
-	elif Type.is_type_string(t):
+	elif Type.is_string(t):
 		return str_value_string(x, ctx)
-	elif Type.is_type_int(t) or Type.is_type_nat(t):
+	elif Type.is_int(t) or Type.is_nat(t):
 		return str_value_integer(x, ctx)
-	elif Type.is_type_record(t):
+	elif Type.is_record(t):
 		return str_value_record(x, ctx)
-	elif Type.is_type_pointer(t):
+	elif Type.is_pointer(t):
 		return str_value_ptr(x, ctx)
-	elif Type.is_type_bool(t):
+	elif Type.is_bool(t):
 		return str_value_bool_create(x, ctx)
-	elif Type.is_type_char(t):
+	elif Type.is_char(t):
 		return str_value_char_create(x, ctx)
-	elif Type.is_type_word(t):
+	elif Type.is_word(t):
 		return str_value_integer(x, ctx)
 	return "<str_value_literal:%s>" % str(x)
 
@@ -720,40 +718,40 @@ def str_value_subexpr(x, ctx):
 def str_value(x, ctx=[], parent_expr=None):
 	assert(isinstance(x, Value))
 
-	if x.isValueLiteral(): return str_value_literal(x, ctx)
-	elif x.isValueArray(): return str_value_array(x, ctx)
-	elif x.isValueRecord(): return str_value_record(x, ctx)
-	elif x.isValueBin(): return str_value_bin(x, ctx)
-	elif x.isValueShl(): return str_value_shl(x, ctx)
-	elif x.isValueShr(): return str_value_shr(x, ctx)
-	elif x.isValueRef(): return str_value_ref(x, ctx)
-	elif x.isValueDeref(): return str_value_deref(x, ctx)
-	elif x.isValueConst(): return str_value_by_id(x, ctx)
-	elif x.isValueFunc(): return str_value_by_id(x, ctx)
-	elif x.isValueVar(): return str_value_by_id(x, ctx)
-	elif x.isValueCons(): return str_value_cons(x, ctx)
-	elif x.isValueCall(): return str_value_call(x, ctx)
-	elif x.isValueIndex(): return str_value_index(x, ctx)
-	elif x.isValueAccessModule(): return str_value_access_module(x, ctx)
-	elif x.isValueAccessRecord(): return str_value_access(x, ctx)
-	elif x.isValueSlice(): return str_value_slice(x, ctx)
-	elif x.isValueSubexpr(): return str_value_subexpr(x, ctx)
-	elif x.isValueNot(): return str_value_not(x, ctx)
-	elif x.isValueNeg(): return str_value_neg(x, ctx)
-	elif x.isValuePos(): return str_value_pos(x, ctx)
-	elif x.isValueNew(): return str_value_new(x, ctx)
-	elif x.isValueSizeofValue(): return str_value_sizeof_value(x, ctx)
-	elif x.isValueSizeofType(): return str_value_sizeof_type(x, ctx)
-	elif x.isValueAlignofType(): return str_value_alignof_type(x, ctx)
-	elif x.isValueAlignofValue(): return str_value_alignof_value(x, ctx)
-	elif x.isValueOffsetof(): return str_value_offsetof(x, ctx)
-	elif x.isValueLengthofValue(): return str_value_lengthof_value(x, ctx)
-	elif x.isValueLengthofType(): return str_value_lengthof_type(x, ctx)
-	elif x.isValueVaArg(): return str_value_va_arg(x, ctx)
-	elif x.isValueVaStart(): return str_value_va_start(x, ctx)
-	elif x.isValueVaEnd(): return str_value_va_end(x, ctx)
-	elif x.isValueVaCopy(): return str_value_va_copy(x, ctx)
-	elif x.isValueDefault(): return str_value_default(x, ctx)
+	if x.is_literal(): return str_value_literal(x, ctx)
+	elif x.is_array(): return str_value_array(x, ctx)
+	elif x.is_record(): return str_value_record(x, ctx)
+	elif x.is_bin(): return str_value_bin(x, ctx)
+	elif x.is_shl(): return str_value_shl(x, ctx)
+	elif x.is_shr(): return str_value_shr(x, ctx)
+	elif x.is_ref(): return str_value_ref(x, ctx)
+	elif x.is_deref(): return str_value_deref(x, ctx)
+	elif x.is_const(): return str_value_by_id(x, ctx)
+	elif x.is_func(): return str_value_by_id(x, ctx)
+	elif x.is_var(): return str_value_by_id(x, ctx)
+	elif x.is_cons(): return str_value_cons(x, ctx)
+	elif x.is_call(): return str_value_call(x, ctx)
+	elif x.is_index(): return str_value_index(x, ctx)
+	elif x.is_access_module(): return str_value_access_module(x, ctx)
+	elif x.is_access_record(): return str_value_access(x, ctx)
+	elif x.is_slice(): return str_value_slice(x, ctx)
+	elif x.is_subexpr(): return str_value_subexpr(x, ctx)
+	elif x.is_not(): return str_value_not(x, ctx)
+	elif x.is_neg(): return str_value_neg(x, ctx)
+	elif x.is_pos(): return str_value_pos(x, ctx)
+	elif x.is_new(): return str_value_new(x, ctx)
+	elif x.is_sizeof_value(): return str_value_sizeof_value(x, ctx)
+	elif x.is_sizeof_type(): return str_value_sizeof_type(x, ctx)
+	elif x.is_alignof_type(): return str_value_alignof_type(x, ctx)
+	elif x.is_alignof_value(): return str_value_alignof_value(x, ctx)
+	elif x.is_offsetof(): return str_value_offsetof(x, ctx)
+	elif x.is_lengthof_value(): return str_value_lengthof_value(x, ctx)
+	elif x.is_lengthof_type(): return str_value_lengthof_type(x, ctx)
+	elif x.is_va_arg(): return str_value_va_arg(x, ctx)
+	elif x.is_va_start(): return str_value_va_start(x, ctx)
+	elif x.is_va_end(): return str_value_va_end(x, ctx)
+	elif x.is_va_copy(): return str_value_va_copy(x, ctx)
+	elif x.is_default(): return str_value_default(x, ctx)
 	elif x.is_value_undefined(): return "<undef>"
 	else: return "%s" % str(x.__class__)
 
@@ -809,11 +807,11 @@ def str_stmt_def(x, operator='const'):
 	ss.append("%s %s" % (operator, get_id_str(x)))
 
 	if not x.value.type.is_generic():
-		if not (x.init_value.isValueCons() and x.init_value.method == 'explicit'):
+		if not (x.init_value.is_cons() and x.init_value.method == 'explicit'):
 			ss.append(": ")
 			ss.append(str_type(x.value.type))
 
-	if not (x.init_value.is_value_undefined() or x.init_value.isValueDefault()):
+	if not (x.init_value.is_value_undefined() or x.init_value.is_default()):
 		ss.append(" = ")
 		ss.append(str_value(x.init_value))
 	return ''.join(ss)

@@ -14,7 +14,7 @@ def value_rational_create(x, ti=None):
 
 
 def value_rational_can(to, from_type, method, ti):
-	return from_type.is_type_integer() or from_type.is_type_rational()
+	return from_type.is_integer() or from_type.is_rational()
 
 
 def value_rational_cons(t, v, method, ti):

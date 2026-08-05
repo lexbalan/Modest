@@ -2,13 +2,13 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 struct callback_data {uint8_t __placeholder;};
 struct clock;
-typedef void ClockCallback(struct clock *clock);
+typedef void ClockCallback(struct clock *clock, struct callback_data *data);
 struct clock {
+	char *identifier;
 	struct clock *next;
 	uint32_t counter;
 	bool expired;
@@ -18,18 +18,18 @@ struct clock {
 static struct clock *clockchain;
 
 static void tickClock(struct clock *self) {
-	if (self->counter > 0U) {
-		self->counter = self->counter - 1U;
-		self->expired = self->counter == 0U;
+	if (self->counter > 0) {
+		--self->counter;
+		self->expired = self->counter == 0;
 	}
 }
 
 static void taskClock(struct clock *self) {
 	if (self->expired) {
 		if (self->callback != NULL) {
-			self->callback(self);
+			self->callback(self, self->callbackData);
 		}
-		self->expired = self->counter == 0U;
+		self->expired = false;
 	}
 }
 
@@ -62,21 +62,27 @@ static void taskClockchain(struct clock *clockchain) {
 	foreachClockInChain(clockchain, &taskClock);
 }
 
+static void clockCallback(struct clock *clock, struct callback_data *data) {
+	printf("Clock %s expired.\n", clock->identifier);
+}
+
 int main(void) {
 	struct clock *clocks[3];
-	clocks[0] = (struct clock *)__builtin_memcpy(malloc(sizeof(struct clock)), &(struct clock){0}, sizeof(struct clock));
-	clocks[1] = (struct clock *)__builtin_memcpy(malloc(sizeof(struct clock)), &(struct clock){0}, sizeof(struct clock));
-	clocks[2] = (struct clock *)__builtin_memcpy(malloc(sizeof(struct clock)), &(struct clock){0}, sizeof(struct clock));
+	__builtin_memcpy(&clocks, &(struct clock *[3]){
+		(struct clock *)__builtin_memcpy(malloc(sizeof(struct clock)), &(struct clock){.identifier = "clock1", .counter = 100, .callback = &clockCallback}, sizeof(struct clock)),
+		(struct clock *)__builtin_memcpy(malloc(sizeof(struct clock)), &(struct clock){.identifier = "clock2", .counter = 200, .callback = &clockCallback}, sizeof(struct clock)),
+		(struct clock *)__builtin_memcpy(malloc(sizeof(struct clock)), &(struct clock){.identifier = "clock3", .counter = 500, .callback = &clockCallback}, sizeof(struct clock))
+	}, sizeof(struct clock *[3]));
 	addClock(clocks[0]);
 	addClock(clocks[1]);
 	addClock(clocks[2]);
-	uint32_t i = 10000U;
-	while (i > 0U) {
+	uint32_t i = 10000;
+	while (i > 0) {
 		tickClockchain(clockchain);
-		if (i % 10U == 0U) {
+		if (i % 10 == 0) {
 			taskClockchain(clockchain);
 		}
-		i = i - 1U;
+		--i;
 	}
 	return 0;
 }
