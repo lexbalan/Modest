@@ -710,7 +710,7 @@ class Type(Entity):
 
 			# Для C некоторые атрибуты типа массива -
 			# это атрибуты типа его элементов
-			if nt.is_type_array():
+			if nt.is_array():
 				if k in ['const', 'volatile', 'restrict']:
 					nt.of = Type.copy(nt.of)
 					if k == 'const':
@@ -766,270 +766,270 @@ class Type(Entity):
 		return isinstance(self, TypeRecord) and (len(self.fields) == 0)
 
 
-	def is_type_undefined(self):
+	def is_undefined(self):
 		return isinstance(self, TypeUndefined)
 
 
-	def is_type_unit(self):
+	def is_unit(self):
 		return self.is_empty_record()
 
 
-	def is_type_bool(self):
+	def is_bool(self):
 		return self.kind == HLIR_TYPE_KIND_BOOL
 
 
-	def is_type_string(self):
+	def is_string(self):
 		return isinstance(self, TypeString)
 
 
-	def is_type_record(self):
+	def is_record(self):
 		return isinstance(self, TypeRecord)
 
 
-	def is_type_array(self):
+	def is_array(self):
 		return isinstance(self, TypeArray)
 
 
-	def is_type_word(self):
+	def is_word(self):
 		return self.kind == HLIR_TYPE_KIND_WORD
 
 
-	def is_type_int(self):
+	def is_int(self):
 		return self.kind == HLIR_TYPE_KIND_INT
 
 
-	def is_type_nat(self):
+	def is_nat(self):
 		return self.kind == HLIR_TYPE_KIND_NAT
 
 
-	def is_type_float(self):
+	def is_float(self):
 		return self.kind == HLIR_TYPE_KIND_FLOAT
 
 
-	def is_type_fixed(self):
+	def is_fixed(self):
 		return self.kind == HLIR_TYPE_KIND_FIXED
 
 
-	def is_type_char(self):
+	def is_char(self):
 		return self.kind == HLIR_TYPE_KIND_CHAR
 
 
 	# numeric type supports arithmetical operations
 	def is_numeric_type(self):
-		return self.is_type_int() or self.is_type_integer() or self.is_type_rational() or self.is_type_float()
+		return self.is_int() or self.is_integer() or self.is_rational() or self.is_float()
 
 
-	def is_type_integer(self):
+	def is_integer(self):
 		return isinstance(self, TypeInteger)
 
 
-	def is_type_rational(self):
+	def is_rational(self):
 		return isinstance(self, TypeRational)
 
 
-	def is_type_func(self):
+	def is_func(self):
 		return isinstance(self, TypeFunc)
 
 
 	# (this) type is VLA - variable langth array
 	# [n]Int32 -> True, [][n]Int32 -> False
 	def is_vla(self):
-		if not self.is_type_array():
+		if not self.is_array():
 			return False
-		if self.volume.isValueUndef():
+		if self.volume.is_undef():
 			return False
-		return self.volume.isValueRuntime()
+		return self.volume.is_runtime()
 
 
 	# *[10]*[3]*[n] -> True
 	def contains_vla(self):
 		if self.is_vla():
 			return True
-		elif self.is_type_array():
+		elif self.is_array():
 			return self.of.contains_vla()
-		elif self.is_type_pointer():
+		elif self.is_pointer():
 			return self.to.contains_vla()
 		return False
 
 
 
 	def is_scalar_type(t):
-		return t.is_type_word() or t.is_type_int() or t.is_type_nat() or t.is_type_char() or t.is_type_integer() or t.is_type_rational()
+		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_integer() or t.is_rational()
 
 
 	def is_aggregate_type(self):
-		return self.is_type_array() or self.is_type_record()
+		return self.is_array() or self.is_record()
 
 
 	def is_composite_type(self):
-		return self.is_type_array() or self.is_type_record() or self.is_type_func() or self.is_type_pointer()
+		return self.is_array() or self.is_record() or self.is_func() or self.is_pointer()
 
 
 	def is_composite_type2(self):
 		return self.is_aggregate_type()
-		#return not (self.is_simple_type() or self.is_type_pointer())
-		#return self.is_type_array() or self.is_type_record() or self.is_type_func()
+		#return not (self.is_simple_type() or self.is_pointer())
+		#return self.is_array() or self.is_record() or self.is_func()
 
 
 	def is_simple_type(self):
 		return isinstance(self, TypeSimple)
 
 
-	def is_type_pointer(self):
+	def is_pointer(self):
 		return isinstance(self, TypePointer)
 
-	def is_type_variant(self):
+	def is_variant(self):
 		return isinstance(self, TypeVariant)
 
-	def is_type_va_list(self):
+	def is_va_list(self):
 		return isinstance(self, TypeVaList)
 
 
-	def is_type_generic_int(self):
-		return self.is_type_int() and self.is_generic()
+	def is_generic_int(self):
+		return self.is_int() and self.is_generic()
 
 
-	def is_type_generic_nat(self):
-		return self.is_type_nat() and self.is_generic()
+	def is_generic_nat(self):
+		return self.is_nat() and self.is_generic()
 
 
-	def is_type_generic_word(self):
-		return self.is_type_word() and self.is_generic()
+	def is_generic_word(self):
+		return self.is_word() and self.is_generic()
 
 
-	def is_type_generic_char(self):
-		return self.is_type_char() and self.is_generic()
+	def is_generic_char(self):
+		return self.is_char() and self.is_generic()
 
 
-	def is_type_generic_record(self):
-		return self.is_type_record() and self.is_generic()
+	def is_generic_record(self):
+		return self.is_record() and self.is_generic()
 
 
-	def is_type_generic_array(self):
-		return self.is_type_array() and self.is_generic()
+	def is_generic_array(self):
+		return self.is_array() and self.is_generic()
 
 
-	def is_type_generic_array_of_char(self):
-		if self.is_type_generic_array():
+	def is_generic_array_of_char(self):
+		if self.is_generic_array():
 			if t.of != None: # in case of empty array field #of can be None
-				return self.of.is_type_char()
+				return self.of.is_char()
 
 		return False
 
 
-	def is_type_sized_array(self):
-		if self.is_type_array():
-			return not self.volume.isValueUndef()
+	def is_sized_array(self):
+		if self.is_array():
+			return not self.volume.is_undef()
 		return False
 
 
-	def is_type_unsized_array(self):
-		if self.is_type_array():
-			return self.volume.isValueUndef()
+	def is_unsized_array(self):
+		if self.is_array():
+			return self.volume.is_undef()
 		return False
 
 
 	# the array chain have an unsized array
 	# [2][]Int32
 	def is_holed(t):
-		if t.is_type_array():
-			if t.is_type_unsized_array():
+		if t.is_array():
+			if t.is_unsized_array():
 				return True
 			return t.of.is_holed()
 		return False
 	
 
-	def is_type_empty_array(self):
-		if self.is_type_array():
-			return self.volume.isValueImmediate() and self.volume.asset == 0
+	def is_empty_array(self):
+		if self.is_array():
+			return self.volume.is_immediate() and self.volume.asset == 0
 		return False
 
 
-	def is_type_array_of_char(self):
-		if self.is_type_array():
-			return self.of.is_type_char()
+	def is_array_of_char(self):
+		if self.is_array():
+			return self.of.is_char()
 		return False
 
 
-	def is_type_array_of_array(self):
-		if self.is_type_array():
-			return self.of.is_type_array()
+	def is_array_of_array(self):
+		if self.is_array():
+			return self.of.is_array()
 		return False
 
 
 	# [10][]Int32, [][]Int32, [][][]Int64, etc..
-	def is_type_array_of_unsized_array(self):
-		if self.is_type_array():
-			return self.of.is_type_unsized_array()
+	def is_array_of_unsized_array(self):
+		if self.is_array():
+			return self.of.is_unsized_array()
 		return False
 
 
 	# [][]Int32, [][][]Int64, etc..
-	def is_type_unsized_array_of_unsized_array(self):
-		if self.is_type_unsized_array():
-			return self.of.is_type_unsized_array()
+	def is_unsized_array_of_unsized_array(self):
+		if self.is_unsized_array():
+			return self.of.is_unsized_array()
 		return False
 
 
-	def is_type_generic_pointer(self):
+	def is_generic_pointer(self):
 		if self.is_generic():
-			return self.is_type_pointer()
+			return self.is_pointer()
 		return False
 
 
 	def is_free_pointer(self):
-		if self.is_type_pointer():
-			return self.to.is_type_unit()
+		if self.is_pointer():
+			return self.to.is_unit()
 		return False
 
 
-	def is_type_pointer_to_record(self):
-		if self.is_type_pointer():
-			return self.to.is_type_record()
+	def is_pointer_to_record(self):
+		if self.is_pointer():
+			return self.to.is_record()
 		return False
 
 
-	def is_type_pointer_to_array(self):
-		if self.is_type_pointer():
-			return self.to.is_type_array()
+	def is_pointer_to_array(self):
+		if self.is_pointer():
+			return self.to.is_array()
 		return False
 
 
-	def is_type_pointer_to_array_of_char(self):
-		if self.is_type_pointer_to_array():
-			return self.to.of.is_type_char()
+	def is_pointer_to_array_of_char(self):
+		if self.is_pointer_to_array():
+			return self.to.of.is_char()
 		return False
 
 
 	# array of char not always is Str (!) see zarray att
-	def is_type_pointer_to_str(self):
-		if self.is_type_pointer():
-			return self.to.is_type_array_of_char()
+	def is_pointer_to_str(self):
+		if self.is_pointer():
+			return self.to.is_array_of_char()
 		return False
 
 
 	# Str8, Str16, Str32
 	def is_str(self):
-		if self.is_type_array_of_char():
+		if self.is_array_of_char():
 			return 'zarray' in self.att
 		return False
 
 
-	def is_type_pointer_to_func(self):
-		if self.is_type_pointer():
-			return self.to.is_type_func()
+	def is_pointer_to_func(self):
+		if self.is_pointer():
+			return self.to.is_func()
 		return False
 
 
-	def is_type_pointer_to_unsized_array(self):
-		if self.is_type_pointer():
-			return self.to.is_type_unsized_array()
+	def is_pointer_to_unsized_array(self):
+		if self.is_pointer():
+			return self.to.is_unsized_array()
 		return False
 
 
-	def is_type_pointer_to_sized_array(self):
-		if self.is_type_pointer():
-			return self.to.is_type_sized_array()
+	def is_pointer_to_sized_array(self):
+		if self.is_pointer():
+			return self.to.is_sized_array()
 		return False
 
 
@@ -1044,7 +1044,7 @@ class Type(Entity):
 	# returns root type of any array
 	# ex: *[n][m][10]Int32  -> Int32
 	def get_array_root(self):
-		if self.is_type_array():
+		if self.is_array():
 			return self.of.get_array_root()
 		return self
 
@@ -1069,14 +1069,14 @@ class Type(Entity):
 
 	@staticmethod
 	def eq_array(a, b, opt):
-		if a.volume.isValueUndef() or b.volume.isValueUndef():
-			if a.volume.isValueUndef() and b.volume.isValueUndef():
+		if a.volume.is_undef() or b.volume.is_undef():
+			if a.volume.is_undef() and b.volume.is_undef():
 				return Type.eq(a.of, b.of, opt)
 			return False
 
 		# a.volume & b.volume defined
 
-		if a.volume.isValueImmediate() and b.volume.isValueImmediate():
+		if a.volume.is_immediate() and b.volume.is_immediate():
 			if a.volume.asset != b.volume.asset:
 				return False
 
@@ -1136,7 +1136,7 @@ class Type(Entity):
 		if debug:
 			print("Type.EQ('%s', '%s')" % (a.to_str(), b.to_str()))
 
-		if a.is_type_string() and b.is_type_string():
+		if a.is_string() and b.is_string():
 			return True
 
 		if id(a) == id(b):
@@ -1168,13 +1168,13 @@ class Type(Entity):
 
 		# usual checking
 		if a.is_simple_type(): return Type.eq_simple(a, b, opt)
-		elif a.is_type_func(): return Type.eq_func(a, b, opt)
-		elif a.is_type_record(): return Type.eq_record(a, b, opt)
-		elif a.is_type_array(): return Type.eq_array(a, b, opt)
-		elif a.is_type_pointer(): return Type.eq_pointer(a, b, opt)
-		elif a.is_type_variant(): return Type.eq_variant(a, b, opt)
-		elif a.is_type_string(): return True
-		elif a.is_type_va_list(): return True
+		elif a.is_func(): return Type.eq_func(a, b, opt)
+		elif a.is_record(): return Type.eq_record(a, b, opt)
+		elif a.is_array(): return Type.eq_array(a, b, opt)
+		elif a.is_pointer(): return Type.eq_pointer(a, b, opt)
+		elif a.is_variant(): return Type.eq_variant(a, b, opt)
+		elif a.is_string(): return True
+		elif a.is_va_list(): return True
 		else: assert(False)
 		return False
 
@@ -1200,7 +1200,7 @@ class Type(Entity):
 
 
 	def is_forbidden_any(self):
-		if self.is_type_func():
+		if self.is_func():
 			return True
 
 		return False
@@ -1208,56 +1208,56 @@ class Type(Entity):
 
 	# cannot create field with type
 	def is_forbidden_field(self, unsized_array_forbidden=True):
-		if self.is_type_func():
+		if self.is_func():
 			return True
 
-		if self.is_type_unsized_array():
+		if self.is_unsized_array():
 			return unsized_array_forbidden
 
 		return False
 
 
 	def is_forbidden_param(self):
-		if self.is_type_func():
+		if self.is_func():
 			return True
 		return False
 
 
 	def is_forbidden_retval(self):
-		if self.is_type_func():
+		if self.is_func():
 			return True
-		if self.is_type_array():
+		if self.is_array():
 			if self.of.is_forbidden_any():
 				return True
-			if self.is_type_unsized_array():
+			if self.is_unsized_array():
 				return True
-			if self.volume.isValueImmediate():
+			if self.volume.is_immediate():
 				if self.volume.asset == 0:
 					return True
 		return False
 
 
 	def is_forbidden_var(self, unsized_array_forbidden=True):
-		if self.is_type_func():
+		if self.is_func():
 			return True
 
-		if self.is_type_array():
+		if self.is_array():
 			if self.of.is_forbidden_any():
 				return True
-			if self.is_type_unsized_array():
+			if self.is_unsized_array():
 				return unsized_array_forbidden
-			if self.volume.isValueImmediate():
+			if self.volume.is_immediate():
 				if self.volume.asset == 0:
 					return True
 
 		return False
 
 	def is_forbidden_const(self):
-		if self.is_type_func():
+		if self.is_func():
 			return True
 
-		if self.is_type_array():
-			if self.is_type_unsized_array():
+		if self.is_array():
+			if self.is_unsized_array():
 				return True
 
 		return False
@@ -1300,7 +1300,7 @@ class Type(Entity):
 
 		# (!) must be before Type.eq() !
 		# because String == String with any length
-		if a.is_type_string() and b.is_type_string():
+		if a.is_string() and b.is_string():
 			if a.length > b.length:
 				return a
 			else:
@@ -1312,17 +1312,17 @@ class Type(Entity):
 
 
 		if a.is_generic() and b.is_generic():
-			if a.is_type_rational() and b.is_type_integer():
+			if a.is_rational() and b.is_integer():
 				return a
-			if b.is_type_rational() and a.is_type_integer():
+			if b.is_rational() and a.is_integer():
 				return b
 
 
 		if a.__class__.__name__ == b.__class__.__name__:
 			if a.is_generic() and b.is_generic():
-				if a.is_type_record():
+				if a.is_record():
 					return Type.select_common_record_type(a, b, ti)
-				elif a.is_type_array():
+				elif a.is_array():
 					# TODO: тут все плохо, нужно поправить, тк все может однажды навернуться!
 					if a.volume.asset == b.volume.asset:
 						if a.of.is_generic():
@@ -1334,11 +1334,11 @@ class Type(Entity):
 
 					return a
 
-	#			elif a.is_type_rational():
-	#				if b.is_type_integer():
+	#			elif a.is_rational():
+	#				if b.is_integer():
 	#					return a
-	#			elif b.is_type_rational():
-	#				if a.is_type_integer():
+	#			elif b.is_rational():
+	#				if a.is_integer():
 	#					return b
 
 				else:
@@ -1349,18 +1349,18 @@ class Type(Entity):
 
 			elif a.is_generic() or b.is_generic():
 
-				if a.is_type_string():
-					if b.is_type_string():
+				if a.is_string():
+					if b.is_string():
 						if a.width > b.width:
 							return a
 						else:
 							return b
 
-				if a.is_type_rational():
-					if b.is_type_integer():
+				if a.is_rational():
+					if b.is_integer():
 						return a
-				if b.is_type_rational():
-					if a.is_type_integer():
+				if b.is_rational():
+					if a.is_integer():
 						return b
 
 				if a.is_generic():
@@ -1378,48 +1378,48 @@ class Type(Entity):
 			# но есть и исключения
 
 			# c == "A"
-			if a.is_type_char():
-				if b.is_type_string():
+			if a.is_char():
+				if b.is_string():
 					return a
 
 			# "A" == c
-			if b.is_type_char():
-				if a.is_type_string():
+			if b.is_char():
+				if a.is_string():
 					return b
 
-			if a.is_type_word():
-				if b.generic and (b.is_type_int() or b.is_type_nat()):
+			if a.is_word():
+				if b.generic and (b.is_int() or b.is_nat()):
 					return a
 
 
-			if b.is_type_word():
-				if a.generic and (a.is_type_int() or a.is_type_nat()):
+			if b.is_word():
+				if a.generic and (a.is_int() or a.is_nat()):
 					return b
 
 			# array && string | string && array
-			if a.is_type_array():
-				if b.is_type_string():
+			if a.is_array():
+				if b.is_string():
 					return a
 
-			if b.is_type_array():
-				if a.is_type_string():
+			if b.is_array():
+				if a.is_string():
 					return b
 
 
 			# array && string | string && array
-			if a.is_type_pointer():
-				if b.is_type_string():
+			if a.is_pointer():
+				if b.is_string():
 					return a
 
-			if b.is_type_pointer():
-				if a.is_type_string():
+			if b.is_pointer():
+				if a.is_string():
 					return b
 
 
-			if a.is_type_unit():
+			if a.is_unit():
 				return b
 
-			if b.is_type_unit():
+			if b.is_unit():
 				return a
 
 			if a.is_bad():
@@ -1428,34 +1428,34 @@ class Type(Entity):
 			if b.is_bad():
 				return a
 
-			if a.is_type_float():
-				if b.is_type_int() or b.is_type_nat():
+			if a.is_float():
+				if b.is_int() or b.is_nat():
 					return a
 
-			if b.is_type_float():
-				if a.is_type_int() or a.is_type_nat():
+			if b.is_float():
+				if a.is_int() or a.is_nat():
 					return b
 
-			if a.is_type_fixed():
-				if b.is_type_int() or b.is_type_nat():
+			if a.is_fixed():
+				if b.is_int() or b.is_nat():
 					return a
 
-			if b.is_type_fixed():
-				if a.is_type_int() or a.is_type_nat():
+			if b.is_fixed():
+				if a.is_int() or a.is_nat():
 					return b
 
-			if a.is_type_integer() or a.is_type_rational():
-				if b.is_type_int() or b.is_type_nat() or b.is_type_word() or b.is_type_float() or b.is_type_fixed():
+			if a.is_integer() or a.is_rational():
+				if b.is_int() or b.is_nat() or b.is_word() or b.is_float() or b.is_fixed():
 					return b
 
-			if a.is_type_int() or a.is_type_nat() or a.is_type_word() or a.is_type_float() or a.is_type_fixed():
-				if b.is_type_integer() or b.is_type_rational():
+			if a.is_int() or a.is_nat() or a.is_word() or a.is_float() or a.is_fixed():
+				if b.is_integer() or b.is_rational():
 					return a
 
-		if a.is_type_undefined() or b.is_type_undefined():
-			if a.is_type_undefined():
+		if a.is_undefined() or b.is_undefined():
+			if a.is_undefined():
 				return b
-			if b.is_type_undefined():
+			if b.is_undefined():
 				return a
 
 		print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))
@@ -1588,10 +1588,10 @@ class TypeFunc(Type):
 
 	# Чистый тип функции не принимает и не возвращает указатели
 	def is_pure_func(t):
-		if t.to.is_type_pointer():
+		if t.to.is_pointer():
 			return False
 		for param in t.params:
-			if param.type.is_type_pointer():
+			if param.type.is_pointer():
 				return False
 		return True
 
@@ -1608,8 +1608,8 @@ class TypeArray(Type):
 			item_align = of.get_align()
 
 		array_size = 0
-		if volume != None and not volume.isValueUndef():
-			if volume.isValueImmediate():
+		if volume != None and not volume.is_undef():
+			if volume.is_immediate():
 				if volume.asset != None:  # check for ValueUndef
 					array_size = item_size * volume.asset
 
@@ -1632,14 +1632,14 @@ class TypeArray(Type):
 
 
 	def get_size(self):
-		if self.volume.isValueImmediate():
+		if self.volume.is_immediate():
 			if self.volume.asset != None:  # check for ValueUndef
 				return self.of.get_size() * self.volume.asset
 		return 0
 
 
 	def get_root(self):
-		if self.of.is_type_array():
+		if self.of.is_array():
 			return self.of.get_root()
 		return self.of
 
@@ -1774,7 +1774,7 @@ class Value(Entity):
 		self.attributes = {}
 		self.definition = None  # *StmtDefVar, *StmtDefConst, *StmtDefFunc
 		self.is_lvalue = False
-		self.is_immutable = False
+		self.immutable = False
 		self.is_pure = False
 		self.is_initialized = True
 
@@ -1802,11 +1802,11 @@ class Value(Entity):
 		t = self.type
 		if not t.is_generic():
 			try:
-				if t.is_type_int():
+				if t.is_int():
 					a = pack_int(int(a), width=t.width, signed=True)
-				elif t.is_type_nat() or t.is_type_word():
+				elif t.is_nat() or t.is_word():
 					a = pack_int(int(a), width=t.width, signed=False)
-				elif t.is_type_float():
+				elif t.is_float():
 					# numpy капец как замедляет компиляцию своей долгой загрузкой
 					# но он пока лучший в плвне создания floatXX
 					if t.width == 32:
@@ -1827,7 +1827,7 @@ class Value(Entity):
 		if _from.asset != None:
 			to.set_asset(_from.asset)
 
-		to.is_immutable = _from.is_immutable
+		to.immutable = _from.immutable
 		to.stage = _from.stage
 		return
 
@@ -1837,9 +1837,9 @@ class Value(Entity):
 		#info("value_eq", ti)
 		assert(isinstance(l, Value))
 		assert(isinstance(r, Value))
-		if l.type.is_type_array():
+		if l.type.is_array():
 			return ValueArray.eq(l, r, ti)
-		if l.type.is_type_record():
+		if l.type.is_record():
 			return ValueRecord.eq(l, r, ti)
 		return l.asset == r.asset
 
@@ -1848,19 +1848,19 @@ class Value(Entity):
 	def isLvalue(self):
 		return self.is_lvalue
 
-	def isValueImmediate(self):
+	def is_immediate(self):
 		return self.stage == HLIR_VALUE_STAGE_COMPILETIME
 
-	def isValueImmutable(self):
+	def is_immutable(self):
 		# ONLY lvalue CAN be an immutable value,
 		# BUT if immutable flag is set, it is immutable value anyway
 		#return (not self.isLvalue()) or self.is_immutable
-		return (not self.isLvalue()) or self.is_immutable or self.hasAttribute('immutable')
+		return (not self.isLvalue()) or self.immutable or self.hasAttribute('immutable')
 
-	def isValueLinktime(self):
+	def is_linktime(self):
 		return self.stage == HLIR_VALUE_STAGE_LINKTIME
 
-	def isValueRuntime(self):
+	def is_runtime(self):
 		return self.stage == HLIR_VALUE_STAGE_RUNTIME
 
 
@@ -1868,9 +1868,9 @@ class Value(Entity):
 	# stub создал тк ValueUndefined теряется по цепочке после cons, etc. но они все по сути undefined
 	# это poison проблема, которую нужно переосмыслить, может вообще убрать ValueUndef и ввести яд
 	def is_value_undefined(self):
-		#if self.isValueImmediate() and self.asset == None:
+		#if self.is_immediate() and self.asset == None:
 		#	return True
-		if self.isValueUndef():
+		if self.is_undef():
 			return True
 		if self.type.is_undefined():
 			return True
@@ -1878,170 +1878,170 @@ class Value(Entity):
 
 
 
-	def isValueBad(self):
+	def is_bad(self):
 		return isinstance(self, ValueBad)
 
-	def isValueUndef(self):
+	def is_undef(self):
 		return isinstance(self, ValueUndef)
 
-	def isValueDefault(self):
+	def is_default(self):
 		return isinstance(self, ValueDefault)
 
-	def isValueLiteral(self):
+	def is_literal(self):
 		return isinstance(self, ValueLiteral)
 
-	def isValueArray(self):
+	def is_array(self):
 		return isinstance(self, ValueArray)
 
-	def isValueRecord(self):
+	def is_record(self):
 		return isinstance(self, ValueRecord)
 
-	def isValueConst(self):
+	def is_const(self):
 		return isinstance(self, ValueConst)
 
-	def isValueVar(self):
+	def is_var(self):
 		return isinstance(self, ValueVar)
 
-	def isValueFunc(self):
+	def is_func(self):
 		return isinstance(self, ValueFunc)
 
-	def isValueSubexpr(self):
+	def is_subexpr(self):
 		return isinstance(self, ValueSubexpr)
 
-	def isValueNew(self):
+	def is_new(self):
 		return isinstance(self, ValueNew)
 
-	def isValueVaArg(self):
+	def is_va_arg(self):
 		return isinstance(self, ValueVaArg)
 
-	def isValueVaStart(self):
+	def is_va_start(self):
 		return isinstance(self, ValueVaStart)
 
-	def isValueVaEnd(self):
+	def is_va_end(self):
 		return isinstance(self, ValueVaEnd)
 
-	def isValueVaCopy(self):
+	def is_va_copy(self):
 		return isinstance(self, ValueVaCopy)
 
-	def isValueBin(self):
+	def is_bin(self):
 		return isinstance(self, ValueBin)
 
-	def isValueLogicOr(self):
+	def is_logic_or(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_LOGIC_OR
 
-	def isValueLogicAnd(self):
+	def is_logic_and(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_LOGIC_AND
 
-	def isValueLogicXor(self):
+	def is_logic_xor(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_LOGIC_XOR
 
-	def isValueLogicNot(self):
-		return isinstance(self, ValueNot) and self.value.type.is_type_bool()
+	def is_logic_not(self):
+		return isinstance(self, ValueNot) and self.value.type.is_bool()
 
-	def isValueOr(self):
+	def is_logic_or(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_OR
 
-	def isValueAnd(self):
+	def is_and(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_AND
 
-	def isValueXor(self):
+	def is_xor(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_XOR
 
-	def isValueNot(self):
-		return isinstance(self, ValueNot) #and not self.value.type.is_type_bool()
+	def is_not(self):
+		return isinstance(self, ValueNot) #and not self.value.type.is_bool()
 
-	def isValueAdd(self):
+	def is_add(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_ADD
 
-	def isValueSub(self):
+	def is_sub(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_SUB
 
-	def isValueMul(self):
+	def is_mul(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_MUL
 
-	def isValueDiv(self):
+	def is_div(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_DIV
 
-	def isValueRem(self):
+	def is_rem(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_REM
 
-	def isValueNeg(self):
+	def is_neg(self):
 		return isinstance(self, ValueNeg)
 
-	def isValuePos(self):
+	def is_pos(self):
 		return isinstance(self, ValuePos)
 
-	def isValueShl(self):
+	def is_shl(self):
 		return isinstance(self, ValueShl)
 
-	def isValueShr(self):
+	def is_shr(self):
 		return isinstance(self, ValueShr)
 
-	def isValueLt(self):
+	def is_lt(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_LT
 
-	def isValueGt(self):
+	def is_gt(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_GT
 
-	def isValueLe(self):
+	def is_le(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_LE
 
-	def isValueGe(self):
+	def is_ge(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_GE
 
-	def isValueEq(self):
+	def is_eq(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_EQ
 
-	def isValueNe(self):
+	def is_ne(self):
 		return self.isBin() and self.op == HLIR_VALUE_OP_NE
 
-	def isValueCons(self):
+	def is_cons(self):
 		return isinstance(self, ValueCons)
 
-	def isValueCall(self):
+	def is_call(self):
 		return isinstance(self, ValueCall)
 
-	def isValueRef(self):
+	def is_ref(self):
 		return isinstance(self, ValueRef)
 
-	def isValueDeref(self):
+	def is_deref(self):
 		return isinstance(self, ValueDeref)
 
-	def isValueIndex(self):
+	def is_index(self):
 		return isinstance(self, ValueIndex)
 
-	def isValueSlice(self):
+	def is_slice(self):
 		return isinstance(self, ValueSlice)
 
-	def isValueAccessRecord(self):
+	def is_access_record(self):
 		return isinstance(self, ValueAccessRecord)
 
-	def isValueSizeofType(self):
+	def is_sizeof_type(self):
 		return isinstance(self, ValueSizeofType)
 
-	def isValueSizeofValue(self):
+	def is_sizeof_value(self):
 		return isinstance(self, ValueSizeofValue)
 
-	def isValueAlignofType(self):
+	def is_alignof_type(self):
 		return isinstance(self, ValueAlignofType)
 
-	def isValueAlignofValue(self):
+	def is_alignof_value(self):
 		return isinstance(self, ValueAlignofValue)
 
-	def isValueOffsetof(self):
+	def is_offsetof(self):
 		return isinstance(self, ValueOffsetof)
 
-	def isValueLengthofValue(self):
+	def is_lengthof_value(self):
 		return isinstance(self, ValueLengthofValue)
 
-	def isValueLengthofType(self):
+	def is_lengthof_type(self):
 		return isinstance(self, ValueLengthofType)
 
-	def isValueAccessModule(self):
+	def is_access_module(self):
 		return isinstance(self, ValueAccessModule)
 
 
-	def isValueGlobal(self):
+	def is_global(self):
 		return self.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
 
 
@@ -2052,23 +2052,23 @@ class Value(Entity):
 
 
 	# Only for immediate value (!)
-	def isValueZero(self):
-		if self.isValueRuntime():
+	def is_zero(self):
+		if self.is_runtime():
 			return False
 
-		if self.isValueLiteral():
+		if self.is_literal():
 			return self.asset == 0 or self.asset == []
 
-		if self.type.is_type_array():
+		if self.type.is_array():
 			if self.asset != None:
 				for item in self.asset:
-					if not item.isValueZero():
+					if not item.is_zero():
 						return False
 			return True
 
-		if self.type.is_type_record():
+		if self.type.is_record():
 			for initializer in self.asset:
-				if not initializer.value.isValueZero():
+				if not initializer.value.is_zero():
 					return False
 			return True
 
@@ -2086,9 +2086,9 @@ class Value(Entity):
 		print("att: " + str(x.att))
 
 		print('stage = ' + str(x.stage))
-		print('immutable = ' + str(x.is_immutable))
+		print('immutable = ' + str(x.immutable))
 
-		if x.isValueImmediate():
+		if x.is_immediate():
 			if x.asset != None:
 				print("items_len = %d" % len(x.asset))
 				print("items[0] = ")
@@ -2147,12 +2147,12 @@ class ValueArray(Value):
 		#from error import info
 		#info("value_array_eq", ti)
 
-		if not (l.isValueImmediate() and r.isValueImmediate()):
+		if not (l.is_immediate() and r.is_immediate()):
 			return False
 
 		lvolume = l.type.volume
 		rvolume = r.type.volume
-		if not (lvolume.isValueImmediate() and rvolume.isValueImmediate()):
+		if not (lvolume.is_immediate() and rvolume.is_immediate()):
 			return False
 
 		if lvolume.asset != rvolume.asset:
@@ -2183,7 +2183,7 @@ class ValueRecord(Value):
 		#from error import info
 		#info("value_record_eq()", ti)
 
-		if not (l.isValueImmediate() and r.isValueImmediate()):
+		if not (l.is_immediate() and r.is_immediate()):
 			return False
 
 		if len(l.asset) != len(r.asset):
@@ -2198,11 +2198,11 @@ class ValueRecord(Value):
 
 
 def create_default_value(t, ti=None):
-	if t.is_type_array():
+	if t.is_array():
 		from value.array import value_array_create
 		return value_array_create(t, items=[], ti=ti)
 
-	if t.is_type_record():
+	if t.is_record():
 		from value.record import value_record_create
 		return value_record_create(t, initializers=[], ti=ti)
 
@@ -2472,9 +2472,9 @@ class ValueLengthofValue(Value):
 		else:
 			from .defs import type_integer_for
 			length = 0
-			if value.type.is_type_array():
+			if value.type.is_array():
 				length = value.type.volume.asset
-			elif value.type.is_type_string():
+			elif value.type.is_string():
 				length = len(value.asset)
 			type = type_integer_for(length, ti=ti)
 		super().__init__(type=type, ti=ti)
@@ -2496,9 +2496,9 @@ class ValueLengthofType(Value):
 		else:
 			from .defs import type_integer_for
 			length = 0
-			if t.is_type_array():
+			if t.is_array():
 				length = t.volume.asset
-			elif t.is_type_string():
+			elif t.is_string():
 				length = len(value.asset)
 			type = type_integer_for(length, ti=ti)
 		super().__init__(type=type, ti=ti)

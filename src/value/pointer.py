@@ -5,32 +5,32 @@ from .char import utf32_chars_to_utfx_char_values
 
 
 def array_can2(a, b):
-	if a.is_type_unsized_array() and b.is_type_sized_array():
+	if a.is_unsized_array() and b.is_sized_array():
 		return array_can2(a.of, b.of)
-	elif a.is_type_pointer() and b.is_type_pointer():
+	elif a.is_pointer() and b.is_pointer():
 		return array_can2(a.to, b.to)
 
 	return Type.eq(a, b)
 
 
 def value_pointer_can(to, from_type, method, ti):
-	assert(to.is_type_pointer())
+	assert(to.is_pointer())
 
 	# implicit region
 
 	if method == 'unsafe':
-		if from_type.is_type_pointer() or from_type.is_type_int() or from_type.is_type_integer():
+		if from_type.is_pointer() or from_type.is_int() or from_type.is_integer():
 			# UNSAFE: cons ANY pointer from ANY pointer or integer
 			return True
 
 	# String -> *[]CharX
-	if from_type.is_type_string():
+	if from_type.is_string():
 		# (!) or to.is_free_pointer()
 		# нельзя приводить строковой литерал к Ptr
 		# тк в таком случае мы не знаем какой у нас будет тип символа
-		return to.is_type_pointer_to_str()
+		return to.is_pointer_to_str()
 
-	if from_type.is_type_pointer():
+	if from_type.is_pointer():
 		# implicit cons pointer from another pointer
 		if from_type.is_generic():
 			return True  # cons *X from Nil
@@ -39,7 +39,7 @@ def value_pointer_can(to, from_type, method, ti):
 			return True  # cons FreePointer from *X
 
 		# cons *[]X from *[n]X +
-		if to.to.is_type_unsized_array() and from_type.to.is_type_sized_array():
+		if to.to.is_unsized_array() and from_type.to.is_sized_array():
 			return array_can2(to.to, from_type.to)
 
 
@@ -51,8 +51,8 @@ def value_pointer_can(to, from_type, method, ti):
 		return True  # cons *X from FreePointer
 
 	# cons *[n]X from *[]X
-	if to.is_type_pointer() and from_type.is_type_pointer():
-		if to.to.is_type_sized_array() and from_type.to.is_type_unsized_array():
+	if to.is_pointer() and from_type.is_pointer():
+		if to.to.is_sized_array() and from_type.to.is_unsized_array():
 			return array_can2(from_type.to, to.to)
 			#return True
 
@@ -61,10 +61,10 @@ def value_pointer_can(to, from_type, method, ti):
 
 	# unsafe region
 
-	if from_type.is_type_pointer():
+	if from_type.is_pointer():
 		return True  # Ptr -> Ptr
 
-	if from_type.is_type_word():
+	if from_type.is_word():
 		return True  # Word -> Ptr
 
 	return False
@@ -73,8 +73,8 @@ def value_pointer_can(to, from_type, method, ti):
 def value_pointer_cons(t, v, method, ti):
 	nv = ValueCons(t, t, v, method, ti=ti)
 
-	if v.isValueImmediate():
-		if v.type.is_type_string():
+	if v.is_immediate():
+		if v.type.is_string():
 			nv.stage = HLIR_VALUE_STAGE_LINKTIME
 			char_type = t.to.of
 			nv.strdata = utf32_chars_to_utfx_char_values(v.asset, char_type, ti)

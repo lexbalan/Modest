@@ -9,7 +9,7 @@ def value_bool_create(val, ti=None):
 
 def value_bool_can(to, from_type, method, ti):
 	#info("bool_can", ti)
-	return from_type.is_type_bool()
+	return from_type.is_bool()
 
 
 def value_bool_cons(t, v, method, ti):

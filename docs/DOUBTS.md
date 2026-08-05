@@ -11,7 +11,7 @@ like the wrong shape and might be worth a redesign discussion.
 (`src/semantic.py:1322,1406,1474`). But `@immutable` itself is wired up as
 just another entry in the generic `attributes` dict
 (`src/semantic.py:3127-3129`, `add_att(x, "immutable")` +
-`x.value.addAttribute("immutable")`), and `isValueImmutable()`
+`x.value.addAttribute("immutable")`), and `is_immutable()`
 (`src/hlir/types.py:1858`) has to OR the two together:
 
 ```python

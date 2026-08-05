@@ -14,24 +14,24 @@ def value_word_create(num, ti=None):
 
 
 def value_word_can(to, from_type, method, ti):
-	if from_type.is_type_integer():
+	if from_type.is_integer():
 		return from_type.width <= to.width
 
-	if from_type.is_type_generic_word():
+	if from_type.is_generic_word():
 		return from_type.width <= to.width
 
 	if method == 'implicit':
 		return False
 
-	c0 = from_type.is_type_integer()
-	c1 = from_type.is_type_word()
-	c2 = from_type.is_type_int()
-	c3 = from_type.is_type_char()
-	c4 = from_type.is_type_bool()
-	c5 = from_type.is_type_pointer()
-	c6 = from_type.is_type_float()
-	c7 = from_type.is_type_nat()
-	c8 = from_type.is_type_fixed()
+	c0 = from_type.is_integer()
+	c1 = from_type.is_word()
+	c2 = from_type.is_int()
+	c3 = from_type.is_char()
+	c4 = from_type.is_bool()
+	c5 = from_type.is_pointer()
+	c6 = from_type.is_float()
+	c7 = from_type.is_nat()
+	c8 = from_type.is_fixed()
 
 	if c0 or c1 or c2 or c3 or c4 or c5 or c6 or c7 or c8:
 		if from_type.width <= to.width:
@@ -43,7 +43,7 @@ def value_word_can(to, from_type, method, ti):
 
 def value_word_cons(t, v, method, ti):
 	nv = ValueCons(t, t, v, method, ti=ti)
-	if v.isValueImmediate():
+	if v.is_immediate():
 		if method == 'implicit':
 			if v.type.width > t.width:
 				error("word overflow", ti)
@@ -55,7 +55,7 @@ def value_word_cons(t, v, method, ti):
 		return nv
 
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
-	nv.rawMode = v.type.is_type_float()
+	nv.rawMode = v.type.is_float()
 	return nv
 
 

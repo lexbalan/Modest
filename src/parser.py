@@ -154,7 +154,7 @@ class Parser:
 	def is_Identifier(self):
 		return self.ctok_class() == 'Id'
 
-	def is_type_string(self):
+	def is_string(self):
 		return self.ctok_class() == 'str'
 
 	def is_operator(self):
@@ -302,7 +302,7 @@ class Parser:
 			token = self.gettok()
 			if token == '*':
 				# maybe it is pointer? (or it's 'deref' operation)
-				return self.is_type_expr()
+				return self.is_expr()
 
 			elif token == '[':
 				# maybe it is array?
@@ -315,14 +315,14 @@ class Parser:
 						cc -= 1
 					else:
 						self.skip1()
-				rc = self.is_type_expr()
+				rc = self.is_expr()
 				return rc
 
 			elif token == '(':
 				self.skip_tokens_class(['nl'])
 				#print("ok")
 				# is ` ( <#type_expr#> ) ` ?
-				if self.is_type_expr():
+				if self.is_expr():
 					return self.match(')')
 
 				if self.match(")"):
@@ -370,11 +370,11 @@ class Parser:
 		return result
 
 
-	def is_type_expr(self):
+	def is_expr(self):
 		return self.check(self.check_is_type)
 
 	def is_value_expr(self):
-		return not self.is_type_expr()
+		return not self.is_expr()
 
 	def parse_type_func(self):
 		ti = self.textInfo()
@@ -431,7 +431,7 @@ class Parser:
 	def _parse_type_atom(self):
 		start_ti = self.textInfo()
 
-		if not self.is_type_expr():
+		if not self.is_expr():
 			error("expected type expr", start_ti)
 			return None
 
@@ -871,18 +871,18 @@ class Parser:
 		return v
 
 
-	def is_type_before_value(self):
+	def is_before_value(self):
 		ti = self.textInfo()
-		v = self.is_type_before_value2()
+		v = self.is_before_value2()
 		return v
 
-	def is_type_before_value2(self):
+	def is_before_value2(self):
 		c = self.ctok_class()
 		if c == 'num' or c == 'str':
 			return False
 		if c == 'id' and self.nextok() != '.':
 			return False
-		if not self.is_type_expr():
+		if not self.is_expr():
 			return False
 		if self.look("{"):
 			if self.nextok() == "}":
@@ -898,7 +898,7 @@ class Parser:
 
 	# cons
 	def expr_value_9(self):
-		if self.is_type_before_value():
+		if self.is_before_value():
 			ti = self.textInfo()
 			t = self.expr_type()
 			v = self.expr_value_9()
@@ -1002,7 +1002,7 @@ class Parser:
 			mid_ti = self.textInfo()
 			self.skip("(")
 			rv = None
-			if self.is_type_expr():
+			if self.is_expr():
 				t = self.expr_type()
 				rv = {
 					'isa': 'ast_value',
@@ -1027,7 +1027,7 @@ class Parser:
 			mid_ti = self.textInfo()
 			self.skip("(")
 			rv = None
-			if self.is_type_expr():
+			if self.is_expr():
 				t = self.expr_type()
 				rv = {
 					'isa': 'ast_value',
@@ -1068,7 +1068,7 @@ class Parser:
 		elif self.match("lengthof"):
 			mid_ti = self.textInfo()
 			self.need("(")
-			if self.is_type_expr():
+			if self.is_expr():
 				t = self.expr_type()
 				end_ti = self.tokenInfo()
 				self.need(")")
@@ -1158,7 +1158,7 @@ class Parser:
 			mid_ti = self.textInfo()
 			self.skip("(")
 			rv = None
-			if self.is_type_expr():
+			if self.is_expr():
 				t = self.expr_type()
 				rv = {
 					'isa': 'ast_value',
@@ -1578,7 +1578,7 @@ class Parser:
 				'ti': ti_start
 			}
 
-		elif self.is_type_string():
+		elif self.is_string():
 			ti = self.tokenInfo()
 			s = self.gettok()
 			return self.parse_value_string(s, ti_start)

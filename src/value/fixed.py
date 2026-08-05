@@ -19,17 +19,17 @@ def value_fixed_create(val, ti=None):
 
 def value_fixed_can(to, from_type, method, ti):
 	if from_type.is_generic():
-		return from_type.is_type_int() or from_type.is_type_fixed() or from_type.is_type_integer() or from_type.is_type_rational()
+		return from_type.is_int() or from_type.is_fixed() or from_type.is_integer() or from_type.is_rational()
 
 	if method == 'implicit':
 		return False
 
-	c0 = from_type.is_type_rational()
-	c1 = from_type.is_type_integer()
-	c2 = from_type.is_type_int()
-	c3 = from_type.is_type_nat()
-	c4 = from_type.is_type_fixed()
-	c5 = from_type.is_type_word() and (method == 'unsafe')
+	c0 = from_type.is_rational()
+	c1 = from_type.is_integer()
+	c2 = from_type.is_int()
+	c3 = from_type.is_nat()
+	c4 = from_type.is_fixed()
+	c5 = from_type.is_word() and (method == 'unsafe')
 	return c0 or c1 or c2 or c3 or c4 or c5
 
 
@@ -40,7 +40,7 @@ def value_fixed_cons(t, v, method, ti):
 	cmodule_use('use_fixed_point')
 	nv = ValueCons(t, t, v, method, ti=ti)
 
-	if v.isValueImmediate():
+	if v.is_immediate():
 		a = v.asset
 		# TODO
 		#a = 1
