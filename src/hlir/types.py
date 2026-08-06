@@ -858,7 +858,7 @@ class Type(Entity):
 		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_integer() or t.is_rational()
 
 
-	def is_aggregate_type(self):
+	def is_aggregate(self):
 		return self.is_array() or self.is_record()
 
 
@@ -867,7 +867,7 @@ class Type(Entity):
 
 
 	def is_composite_type2(self):
-		return self.is_aggregate_type()
+		return self.is_aggregate()
 		#return not (self.is_simple_type() or self.is_pointer())
 		#return self.is_array() or self.is_record() or self.is_func()
 

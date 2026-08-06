@@ -760,6 +760,8 @@ def do_value_bin_op(op, l, r, ti):
 		return ValueBad(type=t, ti=ti)
 
 	if (op in EQ_OPS) or (op in RELATIONAL_OPS):
+		if t.is_aggregate():
+			cmodule_use('use_memcmp')
 		t = typeBool
 
 
@@ -972,7 +974,7 @@ def do_value_new(x):
 	if v.is_bad() or v.is_undefined():
 		return ValueBad(ti=x['ti'])
 
-	if not v.type.is_aggregate_type():
+	if not v.type.is_aggregate():
 		error("operation new requires value with aggregate type", v.ti)
 		return ValueBad(ti=x['ti'])
 
@@ -1256,7 +1258,7 @@ def do_value_call(x):
 #			# Для композитных пока не делаем! Чет в принтере ломается
 #			if not nv.type.is_unit():
 #				nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-#				if nv.type.is_aggregate_type():
+#				if nv.type.is_aggregate():
 #					nv.set_asset([])
 #				else:
 #					nv.set_asset(0)

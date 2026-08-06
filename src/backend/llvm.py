@@ -528,7 +528,7 @@ def llvm_print_value_inline_getelemantptr(x):
 
 
 def llvm_print_ValueZero(x):
-	if x['type'].is_aggregate_type():
+	if x['type'].is_aggregate():
 		out("zeroinitializer")
 	elif x['type'].is_pointer():
 		out("null")
@@ -780,7 +780,7 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
 
 
 # получает два указателя, и размер
-# LLVM не имеет интиринсика memcmp поэтому используем стандартный...
+# LLVM не имеет интиринсика memcmp поэтому используем свою реализацию
 # @param op = [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]
 def llvm_memcmp(op, p0, p1, size):
 	_p0 = llvm_cast('bitcast', p0, typeFreePointer)
@@ -1020,7 +1020,7 @@ def do_eval_bin(x):
 	l = do_eval(x.left)
 	r = do_eval(x.right)
 
-	if x.left.type.is_aggregate_type():
+	if x.left.type.is_aggregate():
 		if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
 			# Composite objects comparison
 			# (eq/ne between composite types)
@@ -2937,6 +2937,8 @@ def run(module, outname):
 	lo("%Str32 = type [0 x %Char32]")
 	lo("%__VA_List = type i8*")
 
+	print(module.helpers)
+
 	if module.hasAttribute('use_va_arg'):
 		lo("declare void @llvm.va_start(i8*)")
 		lo("declare void @llvm.va_copy(i8*, i8*)")
@@ -2953,7 +2955,8 @@ def run(module, outname):
 	lo("\n")
 
 	#lo("declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %len)\n")
-	out(memeq_impl)
+	if 'use_memcmp' in module.helpers:
+		out(memeq_impl)
 
 	print_module(module)
 	output_close()

@@ -1206,7 +1206,7 @@ def do_cvalue_eq(x, logic, ctx):
 
 	lx = None
 	rx = None
-	if left.type.is_aggregate_type():
+	if left.type.is_aggregate():
 		# сравниваем массивы / записи
 		a = do_cvalue_as_ptr(left)
 		b = do_cvalue_as_ptr(right)
@@ -2330,7 +2330,7 @@ def do_cvalue_mem(x):
 	if x.is_runtime():
 		return cv
 
-	if not x.type.is_aggregate_type():
+	if not x.type.is_aggregate():
 		error("attempt to load non aggregate", x.ti)
 		print(x)
 		exit(1)
