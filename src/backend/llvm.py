@@ -1718,26 +1718,32 @@ def do_eval_string(x):
 	1/0
 
 
+
 def do_eval_array(v):
+	if is_global_context():
+		return do_eval_array_global(v)
+	return do_eval_array_local(v)
+
+
+
+def do_eval_array_global(v):
+	#print("LWD<LAW<DLA<WLD<AWL<DLAW<DLWD")
 	# сперва вычисляем все элементы массива в регистры
 	# (кроме констант, они едут до последнего)
 	items = []
-	for item in v.asset:
-		iv = do_reval(item)
-		items.append(iv)
+	if not v.is_zero():
+		for item in v.asset:
+			iv = do_reval(item)
+			items.append(iv)
 
-	# global?
-	# глобальный массив распечатает print_value как литерал
-	if is_global_context():
-		return llvm_value_array(items, v.type)
+	return llvm_value_array(items, v.type)
 
-	#
-	# local context
-	#
 
+
+def do_eval_array_local(v):
 	# если мы локальны то создадим иммутабельную структуру
-	# с массивом (insertvalue)
-	#%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
+	# с массивом (insertvalue):
+	# %5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
 	xv = llvm_value_array([], v.type)
 
 	# набиваем массив
@@ -1952,7 +1958,6 @@ def do_eval(x):
 	elif x.is_neg(): y = do_eval_neg(x)
 	elif x.is_pos(): y = do_eval_pos(x)
 	elif x.is_new(): y = do_eval_new(x)
-	elif x.is_zero(): y = do_eval_literal(x)
 	elif x.is_sizeof_value(): y = do_eval_sizeof_value(x)
 	elif x.is_sizeof_type(): y = do_eval_sizeof_type(x)
 	elif x.is_lengthof_value(): y = do_eval_lengthof_value(x)

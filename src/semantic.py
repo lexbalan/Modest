@@ -678,13 +678,11 @@ def do_value_shift(x):
 			need_width = nbits_for_num(asset, signed=False)
 			type = type_word_create(width=need_width, ti=x['ti'])
 			type.generic = True
-			#if type.width > l.type.width:
-
-		#if left.type.width < type.width:
-		#	left = value_cons_explicit(type, left, left.ti)
-
 
 		nv = ValueShl(type, left, right, ti=x['ti'])
+		nv.set_asset(asset)
+		nv.stage = stage
+		return nv
 
 
 	else: #if op == HLIR_VALUE_OP_SHR:
@@ -700,9 +698,13 @@ def do_value_shift(x):
 
 		nv = ValueShr(type, left, right, ti=x['ti'])
 
-	nv.set_asset(asset)
-	nv.stage = stage
-	return nv
+		nv.set_asset(asset)
+		nv.stage = stage
+		return nv
+
+	assert(False)
+	return None
+
 
 
 def do_value_bin(x):
@@ -714,14 +716,19 @@ def do_value_bin(x):
 
 def do_value_bin_op(op, l, r, ti):
 	if l.is_bad() or r.is_bad():
-		return ValueBad(ti=ti)
+		t = Type.select_common_type(l.type, r.type, ti)
+		return ValueBad(type=t, ti=ti)
 
 	# Ops with different types
 	if op == HLIR_VALUE_OP_ADD:
 		if l.type.is_array() and r.type.is_array():
+			error("cannot concat arrays", ti)
 			return value_array_concat(l, r, ti)
 		if l.type.is_string() and r.type.is_string():
 			return value_string_concat(l, r, ti)
+
+
+	# Now and further types must be equal (!)
 
 
 	t = Type.select_common_type(l.type, r.type, ti)
@@ -732,12 +739,6 @@ def do_value_bin_op(op, l, r, ti):
 
 	if l.is_undefined() or r.is_undefined():
 		return ValueBad(type=t, ti=ti)
-
-	#
-	# Now and further types must be equal (!)
-	#
-
-	#t = Type.select_common_type(l.type, r.type, ti)
 
 	l = value_cons_implicit(t, l)
 	r = value_cons_implicit(t, r)
@@ -761,38 +762,42 @@ def do_value_bin_op(op, l, r, ti):
 	if (op in EQ_OPS) or (op in RELATIONAL_OPS):
 		t = typeBool
 
+
 	asset = None
 	stage = HLIR_VALUE_STAGE_RUNTIME
 	# if left & right are immediate, we can fold const
 	# and append field .asset to bin_value
-	if l.is_immediate() and r.is_immediate():
-		stage = HLIR_VALUE_STAGE_COMPILETIME
-		if l.asset != None and r.asset != None:  # protection from ValueUndefined
-			asset = do_bin_immediate(op, l, r, ti)
 
-		need_width = nbits_for_num(asset, signed=t.is_signed())
+	if r.is_immediate():
+		# firstly check division by zero
+		if op in [HLIR_VALUE_OP_DIV, HLIR_VALUE_OP_REM] and r.asset == 0:
+			error("division by zero", ti)
+			return ValueBad(type=t, ti=ti)
 
-		if t.is_integer():
-			t = type_integer_create(width=need_width, ti=ti)
-		elif t.is_rational():
-			pass  # Rational is arbitrary precision (Fraction), no fixed width to overflow
-		else:
-			if need_width > t.width or (not t.is_signed() and asset < 0):
-				error("integer overflow", ti)
+		if l.is_immediate():
+			stage = HLIR_VALUE_STAGE_COMPILETIME
+			if l.asset != None and r.asset != None:  # protection from ValueUndefined
+				asset = do_bin_immediate(op, l, r, ti)
+
+			need_width = nbits_for_num(asset, signed=t.is_signed())
+
+			if t.is_integer():
+				t = type_integer_create(width=need_width, ti=ti)
+			elif t.is_rational():
+				pass  # Rational is arbitrary precision (Fraction), no fixed width to overflow
+			else:
+				if need_width > t.width or (not t.is_signed() and asset < 0):
+					error("integer overflow", ti)
 
 
 	nv = ValueBin(t, op, l, r, ti=ti)
 	nv.set_asset(asset)
 	nv.stage = stage
-
 	return nv
 
 
-def do_bin_immediate(op, l, r, ti):
-	if op == HLIR_VALUE_OP_DIV and r.asset == 0:
-		error("division by zero", ti)
-		return 0
 
+def do_bin_immediate(op, l, r, ti):
 	ops = {
 		HLIR_VALUE_OP_LOGIC_OR: lambda a, b: a or b,
 		HLIR_VALUE_OP_LOGIC_AND: lambda a, b: a and b,
@@ -845,6 +850,7 @@ def do_value_not(x):
 
 	nv = ValueNot(vtype, v, ti=x['ti'])
 
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if v.is_immediate():
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		if v.asset != None:  # for ValueUndefined
@@ -853,7 +859,6 @@ def do_value_not(x):
 				nv.set_asset(not v.asset)
 			else:
 				nv.set_asset(~v.asset)
-
 
 	return nv
 
@@ -877,6 +882,7 @@ def do_value_neg(x):
 
 	nv = ValueNeg(vtype, v, ti=x['ti'])
 
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if v.is_immediate():
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		if v.asset != None:  # for ValueUndefined
@@ -888,6 +894,7 @@ def do_value_neg(x):
 			else:
 				nt = type_rational_create(ti=v.ti)
 			nv.change_type(nt)
+		return nv
 
 	return nv
 
@@ -905,6 +912,7 @@ def do_value_pos(x):
 
 	nv = ValuePos(vtype, v, ti=x['ti'])
 
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if v.is_immediate():
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		if v.asset != None:  # for ValueUndefined
@@ -929,6 +937,7 @@ def is_good_value_for_ref(v):
 
 	return False
 
+
 def do_value_ref(x):
 	v = do_value(x['value'])
 
@@ -949,8 +958,11 @@ def do_value_ref(x):
 			return ValueBad(ti=ti)
 
 	nv = ValueRef(v, ti=ti)
+
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
 		nv.stage = HLIR_VALUE_STAGE_LINKTIME
+
 	return nv
 
 
@@ -968,6 +980,7 @@ def do_value_new(x):
 	cmodule_use('use_malloc')
 
 	nv = ValueNew(v)
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -996,6 +1009,7 @@ def do_value_deref(x):
 		return ValueBad(ti=x['ti'])
 
 	nv = ValueDeref(v, ti=x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -1041,6 +1055,7 @@ def do_value_va_start(x):
 	va_list.is_initialized = True
 	last_param = do_rvalue(args[1])
 	nv = ValueVaStart(typeUnit, va_list, last_param, x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -1048,12 +1063,14 @@ def do_value_va_arg(x):
 	va_list = do_value(x['va_list'])
 	type = do_type(x['type'])
 	nv = ValueVaArg(type, va_list, x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
 def do_value_va_end(x):
 	va_list = do_value(x['value'])
 	nv = ValueVaEnd(typeUnit, va_list, x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -1063,6 +1080,7 @@ def do_value_va_copy(x):
 	va_list1 = do_value(args[1])
 	va_list0.is_initialized = True
 	nv = ValueVaCopy(typeUnit, va_list0, va_list1, x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	return nv
 
 
@@ -1230,17 +1248,18 @@ def do_value_call(x):
 
 
 	nv = ValueCall(ftype.to, fn, sorted_args, ti=x['ti'])
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 
-	if False:
-		if fn.is_pure and args_is_ct:
-			ct_call(fn, sorted_args, x['ti'])
-			# Для композитных пока не делаем! Чет в принтере ломается
-			if not nv.type.is_unit():
-				nv.stage = HLIR_VALUE_STAGE_COMPILETIME
-				if nv.type.is_aggregate_type():
-					nv.set_asset([])
-				else:
-					nv.set_asset(0)
+#	if False:
+#		if fn.is_pure and args_is_ct:
+#			ct_call(fn, sorted_args, x['ti'])
+#			# Для композитных пока не делаем! Чет в принтере ломается
+#			if not nv.type.is_unit():
+#				nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+#				if nv.type.is_aggregate_type():
+#					nv.set_asset([])
+#				else:
+#					nv.set_asset(0)
 
 
 	# (!) Вызов функцией нечистой функции делает ее так же нечистой (!)
@@ -1323,6 +1342,7 @@ def do_value_index(x):
 
 	nv = ValueIndex(array_type.of, left, index, ti=x['ti'])
 
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
 		array_type = left.type
@@ -1355,6 +1375,8 @@ def do_value_slice(x):
 
 	index_from = None
 	index_to = None
+
+	stage = HLIR_VALUE_STAGE_RUNTIME
 
 	if x['index_from'] != None:
 		index_from = do_rvalue(x['index_from'])
@@ -1409,6 +1431,7 @@ def do_value_slice(x):
 	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
+	nv.stage = stage
 	return nv
 
 
@@ -1438,6 +1461,12 @@ def do_value_access(x):
 
 	left = do_value(x['left'])
 	nv = acc(left, x['right'], ti=x['ti'])
+
+	if left.stage == HLIR_VALUE_STAGE_RUNTIME:
+		nv.stage = HLIR_VALUE_STAGE_RUNTIME
+	else:
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+
 	return nv
 
 
@@ -1478,9 +1507,11 @@ def acc(left, field_id, ti):
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
 
+	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if left.is_immediate() and not via_pointer:
 		initializer = get_item_by_id(left.asset, field_id['str'])
 		Value.cp_immediate(nv, initializer.value)
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 
 	return nv
 
@@ -1743,6 +1774,7 @@ def do_value_subexpr(x):
 	if v.is_bad():
 		return ValueBad(ti=x['ti'])
 	nv = ValueSubexpr(v, ti=x['ti'])
+	nv.stage = v.stage
 	Value.cp_immediate(nv, v)
 	return nv
 
@@ -2323,6 +2355,9 @@ def def_const_common(x):
 
 	const_type, init_value = process_field_common(x, default_instead_of_undef=True)
 
+	if init_value.type.is_bad():
+		info("bsd", x['ti'])
+
 	if init_value.is_bad():
 		# осознанно пропускаем ошибку, чтобы не плодить кучу ошибок дальше; это ок
 		pass
@@ -2450,7 +2485,7 @@ def create_params(fn):
 		param = params[i]
 		param_value = ValueConst(param.type, param.id, init_value=ValueUndefined(param.type), ti=param.ti)
 		param_value.storage_class = HLIR_VALUE_STORAGE_CLASS_PARAM
-		#param_value.stage = HLIR_VALUE_STAGE_RUNTIME
+		param_value.stage = HLIR_VALUE_STAGE_RUNTIME
 		csymtab.value_add(param.id.str, param_value, is_public=False)
 		i += 1
 
@@ -2691,7 +2726,6 @@ def do_import(x):
 			a0 = annotation['args'][0] # get KV first arg
 			cinclude = a0['value']['str']
 			y.cinclude = cinclude
-			#info("?? `%s`" % cinclude, x['ti'])
 
 	return y
 

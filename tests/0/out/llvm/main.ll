@@ -201,6 +201,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports 'main' --
 ; -- strings --
 ; -- endstrings --
+@a = internal global [10 x %Int32] zeroinitializer
 define %Int @main() {
 	ret %Int 0
 }

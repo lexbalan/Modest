@@ -10,7 +10,7 @@ include "libc/math"
 import "misc/minmax" as minmax
 
 
-const carr = [0, 10, 15] + [20, 25, 30]
+const carr = [0, 10, 15, 20, 25, 30]
 
 
 type Point = {

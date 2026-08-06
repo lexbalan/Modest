@@ -258,31 +258,23 @@ define internal %Word32 @sig1(%Word32 %x) alwaysinline {
 define internal void @contextInit(%Context* %ctx) {
 	%1 = getelementptr %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%2 = bitcast i32 1779033703 to %Word32
-	%3 = bitcast i32 3144134277 to %Word32
-	%4 = bitcast i32 1013904242 to %Word32
-	%5 = bitcast i32 2773480762 to %Word32
-	%6 = bitcast i32 1359893119 to %Word32
-	%7 = bitcast i32 2600822924 to %Word32
-	%8 = bitcast i32 528734635 to %Word32
-	%9 = bitcast i32 1541459225 to %Word32
-	%10 = bitcast i32 1779033703 to %Word32
-	%11 = insertvalue [8 x %Word32] zeroinitializer, %Word32 %10, 0
-	%12 = bitcast i32 3144134277 to %Word32
-	%13 = insertvalue [8 x %Word32] %11, %Word32 %12, 1
-	%14 = bitcast i32 1013904242 to %Word32
-	%15 = insertvalue [8 x %Word32] %13, %Word32 %14, 2
-	%16 = bitcast i32 2773480762 to %Word32
-	%17 = insertvalue [8 x %Word32] %15, %Word32 %16, 3
-	%18 = bitcast i32 1359893119 to %Word32
-	%19 = insertvalue [8 x %Word32] %17, %Word32 %18, 4
-	%20 = bitcast i32 2600822924 to %Word32
-	%21 = insertvalue [8 x %Word32] %19, %Word32 %20, 5
-	%22 = bitcast i32 528734635 to %Word32
-	%23 = insertvalue [8 x %Word32] %21, %Word32 %22, 6
-	%24 = bitcast i32 1541459225 to %Word32
-	%25 = insertvalue [8 x %Word32] %23, %Word32 %24, 7
-	%26 = zext i8 8 to %Nat32
-	store [8 x %Word32] %25, [8 x %Word32]* %1
+	%3 = insertvalue [8 x %Word32] zeroinitializer, %Word32 %2, 0
+	%4 = bitcast i32 3144134277 to %Word32
+	%5 = insertvalue [8 x %Word32] %3, %Word32 %4, 1
+	%6 = bitcast i32 1013904242 to %Word32
+	%7 = insertvalue [8 x %Word32] %5, %Word32 %6, 2
+	%8 = bitcast i32 2773480762 to %Word32
+	%9 = insertvalue [8 x %Word32] %7, %Word32 %8, 3
+	%10 = bitcast i32 1359893119 to %Word32
+	%11 = insertvalue [8 x %Word32] %9, %Word32 %10, 4
+	%12 = bitcast i32 2600822924 to %Word32
+	%13 = insertvalue [8 x %Word32] %11, %Word32 %12, 5
+	%14 = bitcast i32 528734635 to %Word32
+	%15 = insertvalue [8 x %Word32] %13, %Word32 %14, 6
+	%16 = bitcast i32 1541459225 to %Word32
+	%17 = insertvalue [8 x %Word32] %15, %Word32 %16, 7
+	%18 = zext i8 8 to %Nat32
+	store [8 x %Word32] %17, [8 x %Word32]* %1
 	ret void
 }
 

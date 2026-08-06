@@ -193,19 +193,15 @@ define internal void @quarterRound([4 x %Word32]* %0, %Word32 %a, %Word32 %b, %W
 	%45 = call %Word32 @rotl32(%Word32 %44, %Nat32 7)
 	store %Word32 %45, %Word32* %3
 	%46 = load %Word32, %Word32* %2
-	%47 = load %Word32, %Word32* %3
-	%48 = load %Word32, %Word32* %4
-	%49 = load %Word32, %Word32* %5
-	%50 = load %Word32, %Word32* %2
-	%51 = insertvalue [4 x %Word32] zeroinitializer, %Word32 %50, 0
-	%52 = load %Word32, %Word32* %3
-	%53 = insertvalue [4 x %Word32] %51, %Word32 %52, 1
-	%54 = load %Word32, %Word32* %4
-	%55 = insertvalue [4 x %Word32] %53, %Word32 %54, 2
-	%56 = load %Word32, %Word32* %5
-	%57 = insertvalue [4 x %Word32] %55, %Word32 %56, 3
-	%58 = zext i8 4 to %Nat32
-	store [4 x %Word32] %57, [4 x %Word32]* %0
+	%47 = insertvalue [4 x %Word32] zeroinitializer, %Word32 %46, 0
+	%48 = load %Word32, %Word32* %3
+	%49 = insertvalue [4 x %Word32] %47, %Word32 %48, 1
+	%50 = load %Word32, %Word32* %4
+	%51 = insertvalue [4 x %Word32] %49, %Word32 %50, 2
+	%52 = load %Word32, %Word32* %5
+	%53 = insertvalue [4 x %Word32] %51, %Word32 %52, 3
+	%54 = zext i8 4 to %Nat32
+	store [4 x %Word32] %53, [4 x %Word32]* %0
 	ret void
 }
 
@@ -515,75 +511,49 @@ break_2:
 ; Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
 define void @chacha20_makeState(%chacha20_State* %0, %chacha20_Key* %key, %Word32 %counter, [3 x %Word32]* %nonce) {
 	%2 = bitcast i32 1634760805 to %Word32
-	%3 = bitcast i32 857760878 to %Word32
-	%4 = bitcast i32 2036477234 to %Word32
-	%5 = bitcast i32 1797285236 to %Word32
-	%6 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 0
-	%7 = load %Word32, %Word32* %6
-	%8 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 1
-	%9 = load %Word32, %Word32* %8
-	%10 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 2
+	%3 = insertvalue [16 x %Word32] zeroinitializer, %Word32 %2, 0
+	%4 = bitcast i32 857760878 to %Word32
+	%5 = insertvalue [16 x %Word32] %3, %Word32 %4, 1
+	%6 = bitcast i32 2036477234 to %Word32
+	%7 = insertvalue [16 x %Word32] %5, %Word32 %6, 2
+	%8 = bitcast i32 1797285236 to %Word32
+	%9 = insertvalue [16 x %Word32] %7, %Word32 %8, 3
+	%10 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 0
 	%11 = load %Word32, %Word32* %10
-	%12 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 3
-	%13 = load %Word32, %Word32* %12
-	%14 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 4
-	%15 = load %Word32, %Word32* %14
-	%16 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 5
+	%12 = insertvalue [16 x %Word32] %9, %Word32 %11, 4
+	%13 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 1
+	%14 = load %Word32, %Word32* %13
+	%15 = insertvalue [16 x %Word32] %12, %Word32 %14, 5
+	%16 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 2
 	%17 = load %Word32, %Word32* %16
-	%18 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 6
-	%19 = load %Word32, %Word32* %18
-	%20 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 7
-	%21 = load %Word32, %Word32* %20
-	%22 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 0
+	%18 = insertvalue [16 x %Word32] %15, %Word32 %17, 6
+	%19 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 3
+	%20 = load %Word32, %Word32* %19
+	%21 = insertvalue [16 x %Word32] %18, %Word32 %20, 7
+	%22 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 4
 	%23 = load %Word32, %Word32* %22
-	%24 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
-	%25 = load %Word32, %Word32* %24
-	%26 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
-	%27 = load %Word32, %Word32* %26
-	%28 = bitcast i32 1634760805 to %Word32
-	%29 = insertvalue [16 x %Word32] zeroinitializer, %Word32 %28, 0
-	%30 = bitcast i32 857760878 to %Word32
-	%31 = insertvalue [16 x %Word32] %29, %Word32 %30, 1
-	%32 = bitcast i32 2036477234 to %Word32
-	%33 = insertvalue [16 x %Word32] %31, %Word32 %32, 2
-	%34 = bitcast i32 1797285236 to %Word32
-	%35 = insertvalue [16 x %Word32] %33, %Word32 %34, 3
-	%36 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 0
-	%37 = load %Word32, %Word32* %36
-	%38 = insertvalue [16 x %Word32] %35, %Word32 %37, 4
-	%39 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 1
-	%40 = load %Word32, %Word32* %39
-	%41 = insertvalue [16 x %Word32] %38, %Word32 %40, 5
-	%42 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 2
-	%43 = load %Word32, %Word32* %42
-	%44 = insertvalue [16 x %Word32] %41, %Word32 %43, 6
-	%45 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 3
-	%46 = load %Word32, %Word32* %45
-	%47 = insertvalue [16 x %Word32] %44, %Word32 %46, 7
-	%48 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 4
-	%49 = load %Word32, %Word32* %48
-	%50 = insertvalue [16 x %Word32] %47, %Word32 %49, 8
-	%51 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 5
-	%52 = load %Word32, %Word32* %51
-	%53 = insertvalue [16 x %Word32] %50, %Word32 %52, 9
-	%54 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 6
-	%55 = load %Word32, %Word32* %54
-	%56 = insertvalue [16 x %Word32] %53, %Word32 %55, 10
-	%57 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 7
-	%58 = load %Word32, %Word32* %57
-	%59 = insertvalue [16 x %Word32] %56, %Word32 %58, 11
-	%60 = insertvalue [16 x %Word32] %59, %Word32 %counter, 12
-	%61 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 0
-	%62 = load %Word32, %Word32* %61
-	%63 = insertvalue [16 x %Word32] %60, %Word32 %62, 13
-	%64 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
-	%65 = load %Word32, %Word32* %64
-	%66 = insertvalue [16 x %Word32] %63, %Word32 %65, 14
-	%67 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
-	%68 = load %Word32, %Word32* %67
-	%69 = insertvalue [16 x %Word32] %66, %Word32 %68, 15
-	%70 = zext i8 16 to %Nat32
-	store %chacha20_State %69, %chacha20_State* %0
+	%24 = insertvalue [16 x %Word32] %21, %Word32 %23, 8
+	%25 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 5
+	%26 = load %Word32, %Word32* %25
+	%27 = insertvalue [16 x %Word32] %24, %Word32 %26, 9
+	%28 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 6
+	%29 = load %Word32, %Word32* %28
+	%30 = insertvalue [16 x %Word32] %27, %Word32 %29, 10
+	%31 = getelementptr %chacha20_Key, %chacha20_Key* %key, %Int32 0, %Int32 7
+	%32 = load %Word32, %Word32* %31
+	%33 = insertvalue [16 x %Word32] %30, %Word32 %32, 11
+	%34 = insertvalue [16 x %Word32] %33, %Word32 %counter, 12
+	%35 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 0
+	%36 = load %Word32, %Word32* %35
+	%37 = insertvalue [16 x %Word32] %34, %Word32 %36, 13
+	%38 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
+	%39 = load %Word32, %Word32* %38
+	%40 = insertvalue [16 x %Word32] %37, %Word32 %39, 14
+	%41 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
+	%42 = load %Word32, %Word32* %41
+	%43 = insertvalue [16 x %Word32] %40, %Word32 %42, 15
+	%44 = zext i8 16 to %Nat32
+	store %chacha20_State %43, %chacha20_State* %0
 	ret void
 }
 

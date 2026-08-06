@@ -31,7 +31,7 @@ include "libc/math"
 
 
 
-const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
+const constantArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 var globalArray: [10]Int32 = constantArray
 
@@ -69,7 +69,7 @@ const stopSequence = [0x16]
 
 
 func test () -> Unit {
-	var yy: [6]Word8 = startSequence + [] + stopSequence
+	var yy: [6]Word8 = [0xAA, 0x55, 0x02, 0x00, 0x00, 0x16]
 	var i: Nat32 = 0
 	while i < lengthof(yy) {
 		let y: Word8 = yy[i]

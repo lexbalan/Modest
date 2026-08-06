@@ -1767,7 +1767,7 @@ class Value(Entity):
 		self.id = None
 		self.type = type
 		self.storage_class = HLIR_VALUE_STORAGE_CLASS_REGISTER
-		self.stage = HLIR_VALUE_STAGE_RUNTIME
+		self.stage = HLIR_VALUE_STAGE_UNKNOWN
 		self.attributes = {}
 		self.definition = None  # *StmtDefVar, *StmtDefConst, *StmtDefFunc
 		self.is_lvalue = False
@@ -2092,7 +2092,7 @@ class ValueUndefined(Value):
 	def __init__(self, type, ti=None):
 		assert(isinstance(type, Type))
 		super().__init__(type=type, ti=ti)
-		self.stage = HLIR_VALUE_STAGE_COMPILETIME
+		self.stage = HLIR_VALUE_STAGE_UNKNOWN  #! unknown compile stage is important for undefined value!
 		self.asset = None
 
 

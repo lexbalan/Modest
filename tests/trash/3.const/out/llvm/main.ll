@@ -310,24 +310,22 @@ define %Int @main() {
 	%5 = insertvalue %X zeroinitializer, %Point %4, 0
 	%6 = insertvalue %Point zeroinitializer, %Nat32 20, 0
 	%7 = insertvalue %Point %6, %Nat32 30, 1
-	%8 = insertvalue %Point zeroinitializer, %Nat32 20, 0
-	%9 = insertvalue %Point %8, %Nat32 30, 1
-	%10 = insertvalue [2 x %Point] zeroinitializer, %Point %9, 0
-	%11 = insertvalue %X %5, [2 x %Point] %10, 1
-	store %X %11, %X* %2
-	%12 = alloca [3 x %Point], align 4
-	%13 = load [3 x %Point], [3 x %Point]* @points
-	%14 = zext i8 3 to %Nat32
-	store [3 x %Point] %13, [3 x %Point]* %12
-	%15 = alloca %Point
-	store %Point zeroinitializer, %Point* %15
-	%16 = insertvalue %Point zeroinitializer, %Nat32 1, 0
-	%17 = insertvalue %Point %16, %Nat32 1, 1
-	%18 = alloca %Point
-	store %Point %17, %Point* %18
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str5 to [0 x i8]*), %Int32 42)
-	%20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @.str6 to [0 x i8]*), %Int32 42)
-	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @.str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @.str1 to [0 x i8]*))
+	%8 = insertvalue [2 x %Point] zeroinitializer, %Point %7, 0
+	%9 = insertvalue %X %5, [2 x %Point] %8, 1
+	store %X %9, %X* %2
+	%10 = alloca [3 x %Point], align 4
+	%11 = load [3 x %Point], [3 x %Point]* @points
+	%12 = zext i8 3 to %Nat32
+	store [3 x %Point] %11, [3 x %Point]* %10
+	%13 = alloca %Point
+	store %Point zeroinitializer, %Point* %13
+	%14 = insertvalue %Point zeroinitializer, %Nat32 1, 0
+	%15 = insertvalue %Point %14, %Nat32 1, 1
+	%16 = alloca %Point
+	store %Point %15, %Point* %16
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str5 to [0 x i8]*), %Int32 42)
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @.str6 to [0 x i8]*), %Int32 42)
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @.str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @.str1 to [0 x i8]*))
 	ret %Int 0
 }
 

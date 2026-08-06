@@ -244,22 +244,16 @@ define internal %Context @init([32 x %Byte]* %key, [3 x %Word32] %__nonce) {
 	%2 = insertvalue %Context zeroinitializer, [32 x %Byte]* %key, 0
 	%3 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 0
 	%4 = load %Word32, %Word32* %3
-	%5 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
-	%6 = load %Word32, %Word32* %5
-	%7 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
-	%8 = load %Word32, %Word32* %7
-	%9 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 0
+	%5 = insertvalue [3 x %Word32] zeroinitializer, %Word32 %4, 0
+	%6 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
+	%7 = load %Word32, %Word32* %6
+	%8 = insertvalue [3 x %Word32] %5, %Word32 %7, 1
+	%9 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
 	%10 = load %Word32, %Word32* %9
-	%11 = insertvalue [3 x %Word32] zeroinitializer, %Word32 %10, 0
-	%12 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 1
-	%13 = load %Word32, %Word32* %12
-	%14 = insertvalue [3 x %Word32] %11, %Word32 %13, 1
-	%15 = getelementptr [3 x %Word32], [3 x %Word32]* %nonce, %Int32 0, %Int32 2
-	%16 = load %Word32, %Word32* %15
-	%17 = insertvalue [3 x %Word32] %14, %Word32 %16, 2
-	%18 = insertvalue %Context %2, [3 x %Word32] %17, 1
-	%19 = insertvalue %Context %18, %Nat32 64, 4
-	ret %Context %19
+	%11 = insertvalue [3 x %Word32] %8, %Word32 %10, 2
+	%12 = insertvalue %Context %2, [3 x %Word32] %11, 1
+	%13 = insertvalue %Context %12, %Nat32 64, 4
+	ret %Context %13
 }
 
 define internal void @cipher(%Context* %ctx, [0 x %Byte]* %data, %Nat32 %len) {

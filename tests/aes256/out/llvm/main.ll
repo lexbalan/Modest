@@ -644,24 +644,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 			%Byte 197,
 			%Byte 88
 		],
-		%aes256_Block [
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0
-		],
+		%aes256_Block zeroinitializer,
 		%aes256_Block [
 			%Byte 70,
 			%Byte 242,
@@ -716,24 +699,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 			%Byte 246,
 			%Byte 142
 		],
-		%aes256_Block [
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0
-		],
+		%aes256_Block zeroinitializer,
 		%aes256_Block [
 			%Byte 23,
 			%Byte 154,
@@ -788,24 +754,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 			%Byte 0,
 			%Byte 0
 		],
-		%aes256_Block [
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0,
-			%Byte 0
-		],
+		%aes256_Block zeroinitializer,
 		%aes256_Block [
 			%Byte 156,
 			%Byte 244,

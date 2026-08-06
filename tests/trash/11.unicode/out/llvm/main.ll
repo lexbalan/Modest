@@ -347,11 +347,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, %__VA_List %va
 	%Word32 0,
 	%Word32 0
 ]
-@ratSymbolUTF322 = internal global [3 x %Word32] [
-	%Word32 0,
-	%Word32 0,
-	%Word32 0
-]
+@ratSymbolUTF322 = internal global [3 x %Word32] zeroinitializer
 @arr_partycorn = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,

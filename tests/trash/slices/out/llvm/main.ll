@@ -254,33 +254,21 @@ define internal void @array4intInc([4 x %Int32]* %0, [4 x %Int32] %__a) {
 	%3 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 0
 	%4 = load %Int32, %Int32* %3
 	%5 = add %Int32 %4, 1
-	%6 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 1
-	%7 = load %Int32, %Int32* %6
-	%8 = add %Int32 %7, 1
-	%9 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 2
-	%10 = load %Int32, %Int32* %9
-	%11 = add %Int32 %10, 1
-	%12 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 3
-	%13 = load %Int32, %Int32* %12
-	%14 = add %Int32 %13, 1
-	%15 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 0
+	%6 = insertvalue [4 x %Int32] zeroinitializer, %Int32 %5, 0
+	%7 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 1
+	%8 = load %Int32, %Int32* %7
+	%9 = add %Int32 %8, 1
+	%10 = insertvalue [4 x %Int32] %6, %Int32 %9, 1
+	%11 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 2
+	%12 = load %Int32, %Int32* %11
+	%13 = add %Int32 %12, 1
+	%14 = insertvalue [4 x %Int32] %10, %Int32 %13, 2
+	%15 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 3
 	%16 = load %Int32, %Int32* %15
 	%17 = add %Int32 %16, 1
-	%18 = insertvalue [4 x %Int32] zeroinitializer, %Int32 %17, 0
-	%19 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 1
-	%20 = load %Int32, %Int32* %19
-	%21 = add %Int32 %20, 1
-	%22 = insertvalue [4 x %Int32] %18, %Int32 %21, 1
-	%23 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 2
-	%24 = load %Int32, %Int32* %23
-	%25 = add %Int32 %24, 1
-	%26 = insertvalue [4 x %Int32] %22, %Int32 %25, 2
-	%27 = getelementptr [4 x %Int32], [4 x %Int32]* %a, %Int32 0, %Int32 3
-	%28 = load %Int32, %Int32* %27
-	%29 = add %Int32 %28, 1
-	%30 = insertvalue [4 x %Int32] %26, %Int32 %29, 3
-	%31 = zext i8 4 to %Nat32
-	store [4 x %Int32] %30, [4 x %Int32]* %0
+	%18 = insertvalue [4 x %Int32] %14, %Int32 %17, 3
+	%19 = zext i8 4 to %Nat32
+	store [4 x %Int32] %18, [4 x %Int32]* %0
 	ret void
 }
 
