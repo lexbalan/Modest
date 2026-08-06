@@ -2937,8 +2937,6 @@ def run(module, outname):
 	lo("%Str32 = type [0 x %Char32]")
 	lo("%__VA_List = type i8*")
 
-	print(module.helpers)
-
 	if module.hasAttribute('use_va_arg'):
 		lo("declare void @llvm.va_start(i8*)")
 		lo("declare void @llvm.va_copy(i8*, i8*)")
