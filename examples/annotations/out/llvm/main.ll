@@ -187,6 +187,9 @@ define %Int32 @main() {
 	store %Nat32 0, %Nat32* %1
 	call void @hello()
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @.str2 to [0 x i8]*))
+	%3 = call %Int32 @staticInlineFunc(%Int32 0)
+	%4 = call %Int32 @staticNoinlineFunc(%Int32 0)
+	%5 = call %Int32 @staticInlineHintFunc(%Int32 0)
 	ret %Int32 0
 }
 

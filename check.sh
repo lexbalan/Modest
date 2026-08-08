@@ -1,3 +1,3 @@
 
-cd ./tests && ./run.sh && cd ../examples && ./build_all.sh && cd ..
+cd ./tests && python3 run.py && cd ../examples && ./build_all.sh && cd ..
 
