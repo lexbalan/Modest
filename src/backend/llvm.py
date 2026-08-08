@@ -1493,13 +1493,15 @@ def cons_composite_from_composite(to_type, value, ti):
 
 
 
-
-
-
 def eval_cons_record(x):
 	value = x.value
 	from_type = value.type
 	to_type = x.type
+
+	# Now Unit = empty record
+	if to_type.is_empty_record():
+		do_eval(value)
+		return llvm_value_zero(to_type)
 
 	if x.asset != None:
 		return do_eval_literal(x)
@@ -1601,7 +1603,6 @@ def do_eval_cons(x):
 			v = do_reval(value)
 			return docast(v, type)
 
-
 	if type.is_scalar_type():
 		if from_type.is_integer() or from_type.is_rational():
 			if type.width == from_type.width:
@@ -1612,13 +1613,11 @@ def do_eval_cons(x):
 	if id(value.type) == id(type):
 		return do_reval(value)
 
-
 	if from_type.is_va_list():
 		# приведение объекта типа va_list в CM особенное
 		# оно дает доступ к следующему элементу списка
 		rv = do_eval(value)
 		return llvm_va_arg(rv, type)
-
 
 	if type.is_pointer():
 		if from_type.is_pointer():
@@ -1653,6 +1652,9 @@ def do_eval_cons(x):
 			return do_eval_literal(x)
 
 	elif type.is_unit():
+		# Now Unit = empty record, see eval_cons_record;
+		# this branch is never reached.
+		do_eval(value)
 		return llvm_value_zero(type)
 
 	elif type.is_variant():

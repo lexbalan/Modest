@@ -24,6 +24,42 @@ decides which — lexically, before parsing.
   appear in a type expression (`expected type expr`).
 - Style: *PascalCase* for types, *camelCase* for values.
 
+## Names reserved by the C backend
+
+Symbol names are emitted into C as they are written (see
+[Name Mapping](../CHEATSHEET.md#name-mapping-modest--c--llvm-ir)), so a
+value identifier that happens to be a **C keyword** produces C that does
+not compile:
+
+```modest
+func double (n: Int32) -> Int32 {     // -> int32_t double(int32_t n)
+	return n * 2
+}
+```
+
+```
+error: cannot combine with previous 'type-name' declaration specifier
+```
+
+This is the price of readable, one-to-one C output — the backend does not
+mangle or escape names, so what you write is what appears in the header
+your C code includes. Avoid `double`, `float`, `switch`, `case`,
+`default`, `union`, `struct`, `enum`, `register`, `signed`, `unsigned`,
+`volatile`, `restrict`, `static`, `extern`, `goto`, `typedef`, `sizeof`
+and the rest of the C keyword set as value identifiers. Reserved C
+namespaces are worth avoiding for the same reason: a leading underscore at
+file scope (`_tmp`) and anything starting with `str`/`mem` may collide
+with the C standard library.
+
+Only **value** identifiers are exposed to this: C keywords are all
+lowercase, and a Modest type identifier must start with a capital letter,
+so `type Union = ...` or `type Double = ...` is safe.
+
+The **LLVM backend is unaffected** — identifiers there are sigil-prefixed
+(`@double`, `%x`) and cannot collide with anything. A program that only
+targets LLVM IR can use these names freely, at the cost of no longer
+building with `-mbackend=c11`.
+
 ## Examples
 
 ```modest

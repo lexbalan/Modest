@@ -28,7 +28,7 @@ parser = Parser()
 def is_local_entity(x):
 	global cmodule
 	if hasattr(x, 'definition') and x.definition != None:
-		return x.definition.parent == cmodule
+		return x.definition.module == cmodule
 	return True
 
 
@@ -1502,7 +1502,7 @@ def acc(left, field_id, ti):
 	# не у всех типов есть 'definition' (его нет у анонимных записей например)
 	if not is_local_entity(record_type):
 		if field.access_level == HLIR_ACCESS_LEVEL_PRIVATE:
-			error("access to private field of record", field.ti)#x['right']['ti'])
+			error("access to private field of record", ti)
 
 	nv = ValueAccessRecord(field.type, left, field, ti=ti)
 
@@ -2228,7 +2228,7 @@ def def_type_common(x, nt):
 			if f.access_level == HLIR_ACCESS_LEVEL_PUBLIC:
 				is_open_record = True
 			elif f.access_level == HLIR_ACCESS_LEVEL_UNDEFINED:
-				if ty.hasAttribute("public"):
+				if ty.hasAttribute("public"): #or is_local_context():
 					f.access_level = HLIR_ACCESS_LEVEL_PUBLIC
 					is_open_record = True
 				else:

@@ -60,20 +60,6 @@ type Broken = {
   identifiers without consuming anything.
 - Expected: `error: expected '}'` (unexpected end of file) and exit.
 
-## 9. Fields of function-local record types are inaccessible (needs triage)
-
-```modest
-func main () -> Int32 {
-	type L = { a: Int32 }
-	var v: L
-	v.a = 7        // error: access to private field of record
-	return v.a
-}
-```
-
-The same record defined at module level works fine. Possibly the
-access-level check ties the local definition to the wrong scope.
-
 ## 10. C backend re-emits binary expressions as source text, discarding the compile-time fold
 
 ```modest
@@ -161,4 +147,58 @@ prints `f32 = 3.141593`, which is correct.
   default argument promotion rules (`float` → `double`; integer types
   narrower than `int` → `int`) before emitting the call.
 - Low priority for now — noted for later, not scheduled.
+
+## 13. LLVM backend emits invalid IR when every `if` branch returns
+
+```modest
+func sign (a: Int32) -> Int32 {
+	if a > 0 {
+		return 1
+	} else {
+		return 0
+	}
+}
+```
+
+clang refuses the output: `error: expected instruction opcode`.
+
+```llvm
+then_0:
+	ret %Int32 1
+	br label %endif_0     ; instruction after a terminator
+else_0:
+	ret %Int32 0
+	br label %endif_0
+endif_0:
+}                         ; block with no terminator at all
+```
+
+- Cause: `print_stmt_if` (`src/backend/llvm.py:2024-2049`) emits
+  `llvm_jump(endif_label)` after each branch and `llvm_label(endif_label)`
+  at the end, both unconditionally — with no notion of whether the block
+  it is closing already terminated. When a branch ends in `ret`, the
+  jump lands after a terminator; when *every* branch does, the merge
+  block is left empty and the function ends on a bare label.
+- Expected: skip the jump when the branch already terminated, and skip
+  the merge label entirely when it would be unreachable.
+- Affects any `if`/`else` (including `else if` chains) whose branches all
+  return — an ordinary way to write a small function, so this is easy to
+  hit. Reproduced by `tests/lang/stmt/if.m`, marked `EXPECTED-FAIL(llvm)`.
+
+## 15. C backend's `#include` of its own header ignores `-o`
+
+```sh
+mcc -o out/prog -mbackend=c11 main.m
+# writes out/prog.c and out/prog.h, but out/prog.c contains:
+#include "main.h"        # does not exist -> clang: file not found
+```
+
+- Cause: the include line is built from the module id (`include(module.id
+  + '.h')`, `src/backend/c11.py:2161`), which is the *source* base name,
+  while the header file is written as `os.path.basename(_outname) + '.h'`
+  (`src/backend/c11.py:2282`) — the *output* prefix. The two agree only
+  when `-o` happens to end in the same base name as the source.
+- Expected: both should come from the same name.
+- Went unnoticed because every existing invocation follows the
+  `-o <dir>/main main.m` shape, where the two coincide.
 

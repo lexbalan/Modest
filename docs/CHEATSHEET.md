@@ -622,6 +622,12 @@ public func myPrint (s: Str8) -> Unit  // emitted as: printf
 > `private` (default) keeps the symbol local — no module prefix is added.
 > `@extern` suppresses the module prefix — the symbol links directly to an external name.
 
+> Because names are emitted as-is, a value identifier that is a **C keyword**
+> (`double`, `switch`, `union`, `register`, ...) produces C that does not
+> compile — the C backend does no mangling. Type identifiers are safe (C
+> keywords are all lowercase); the LLVM backend is unaffected. See
+> [identifiers](lang/identifier.md#names-reserved-by-the-c-backend).
+
 
 ## Key Differences from C
 
