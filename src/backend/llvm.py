@@ -420,7 +420,7 @@ def llvm_print_value_array(x):
 		if i < n:
 			item = items[i]
 		else:
-			item = do_eval(create_default_value(x['type'].of))
+			item = do_eval(create_default_value(x['type'].of, ti=x['ti']))
 
 		if i > 0: out(",\n")
 		indent()
@@ -2596,15 +2596,12 @@ def print_def_func(x):
 
 	def return_default_value():
 		from hlir.types import create_default_value
-		print_stmt_return(StmtReturn(create_default_value(ftype.to)))
+		print_stmt_return(StmtReturn(create_default_value(ftype.to, ti=x.ti), ti=x.ti))
 
-	#if x.stmt[]
-	if Type.eq(ftype.to, typeUnit):
-		#print_stmt_return(StmtReturn(None))
-		return_default_value()
-	elif len(x.stmt.stmts) > 0 and not x.stmt.stmts[-1].is_stmt_return():
-		return_default_value()
-	elif len(x.stmt.stmts) == 0:
+	if len(x.stmt.stmts) > 0:
+		if not x.stmt.stmts[-1].is_stmt_return():
+			return_default_value()
+	else:
 		return_default_value()
 
 	indent_down()

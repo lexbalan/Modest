@@ -2180,7 +2180,10 @@ class ValueRecord(Value):
 
 
 
-def create_default_value(t, ti=None):
+def create_default_value(t, ti):
+	assert(isinstance(t, Type))
+	assert(ti != None)
+
 	if t.is_array():
 		from value.array import value_array_create
 		return value_array_create(t, items=[], ti=ti)

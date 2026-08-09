@@ -89,7 +89,7 @@ A test for a bug that is not fixed yet stays in the suite, marked:
 
 ```modest
 // EXPECTED-FAIL: BUGS.md#5 builtin.* does not resolve
-// EXPECTED-FAIL(llvm): BUGS.md#13 invalid IR when every if branch returns
+// EXPECTED-FAIL(llvm): BUGS.md#12 no default argument promotion for variadics
 ```
 
 It is then expected to fail, and reported as `XFAIL` without failing the

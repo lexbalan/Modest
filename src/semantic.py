@@ -1359,7 +1359,7 @@ def do_value_index(x):
 			if index_imm < len(left.asset):
 				item = left.asset[index_imm]
 			else:
-				item = create_default_value(array_type.of)
+				item = create_default_value(array_type.of, ti=x['ti'])
 
 			Value.cp_immediate(nv, item)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME

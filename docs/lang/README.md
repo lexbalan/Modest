@@ -61,3 +61,6 @@ func main () -> Int {
 ```
 
 For a one-page overview see the [cheatsheet](../CHEATSHEET.md).
+
+Design decisions the language has not made yet are collected in
+[open questions](./OPENQUESTIONS.md).

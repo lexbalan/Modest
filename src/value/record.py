@@ -103,9 +103,9 @@ def value_record_cons(t, v, method, ti):
 			elif field.init_value != None:
 				iv = field.init_value
 				if iv.is_undefined():
-					iv = create_default_value(field.type, ti=ti)
+					iv = create_default_value(field.type, ti)
 			else:
-				iv = create_default_value(field.type, ti=ti)
+				iv = create_default_value(field.type, ti)
 
 			from .cons import value_cons_implicit_check
 			iv = value_cons_implicit_check(field.type, iv)

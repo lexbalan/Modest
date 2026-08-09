@@ -128,6 +128,21 @@ func onDiskFail: FailHandler {
 }
 ```
 
+> **Parameters are immutable.** A parameter cannot be assigned to, and
+> neither can anything inside it — the argument arrives as a value the
+> callee may read but not edit. Copy it into a local `var` to modify.
+>
+> ```modest
+> func f (n: Int32, p: Point, a: [2]Int32) -> Int32 {
+>     n = 1        // error: expected lvalue
+>     p.x = 1      // error: expected mutable value
+>     a[0] = 1     // error: expected mutable value
+>     var m = n    // this is how you get something writable
+>     m = 1
+>     return m
+> }
+> ```
+
 ### Variables & Constants
 ```modest
 var x: Int32                       // global: zero-init; local: must assign before use (compile error otherwise)
@@ -220,6 +235,10 @@ arr[1:4] = [1, 2, 3]              // slice assignment
 ptr.field = 5                     // auto-deref field write
 *ptr = 100                        // dereference write
 ```
+
+> Not assignable: `let` bindings, `const`, and function parameters
+> (see [Functions](#functions)). There are no compound assignments
+> (`+=`, `-=`, ...) — write `x = x + 1`, or `++x` / `--x`.
 
 ### Return
 ```modest

@@ -148,43 +148,6 @@ prints `f32 = 3.141593`, which is correct.
   narrower than `int` → `int`) before emitting the call.
 - Low priority for now — noted for later, not scheduled.
 
-## 13. LLVM backend emits invalid IR when every `if` branch returns
-
-```modest
-func sign (a: Int32) -> Int32 {
-	if a > 0 {
-		return 1
-	} else {
-		return 0
-	}
-}
-```
-
-clang refuses the output: `error: expected instruction opcode`.
-
-```llvm
-then_0:
-	ret %Int32 1
-	br label %endif_0     ; instruction after a terminator
-else_0:
-	ret %Int32 0
-	br label %endif_0
-endif_0:
-}                         ; block with no terminator at all
-```
-
-- Cause: `print_stmt_if` (`src/backend/llvm.py:2024-2049`) emits
-  `llvm_jump(endif_label)` after each branch and `llvm_label(endif_label)`
-  at the end, both unconditionally — with no notion of whether the block
-  it is closing already terminated. When a branch ends in `ret`, the
-  jump lands after a terminator; when *every* branch does, the merge
-  block is left empty and the function ends on a bare label.
-- Expected: skip the jump when the branch already terminated, and skip
-  the merge label entirely when it would be unreachable.
-- Affects any `if`/`else` (including `else if` chains) whose branches all
-  return — an ordinary way to write a small function, so this is easy to
-  hit. Reproduced by `tests/lang/stmt/if.m`, marked `EXPECTED-FAIL(llvm)`.
-
 ## 15. C backend's `#include` of its own header ignores `-o`
 
 ```sh
@@ -201,4 +164,119 @@ mcc -o out/prog -mbackend=c11 main.m
 - Expected: both should come from the same name.
 - Went unnoticed because every existing invocation follows the
   `-o <dir>/main main.m` shape, where the two coincide.
+
+## 16. Backends disagree about a function that falls off its end
+
+```modest
+func maybe (a: Int32) -> Int32 {
+	if a > 0 {
+		return 111
+	}
+}                       // warning: expected return operator at end
+
+printf("%d\n", maybe(0))
+```
+
+```
+c11:  -1910964223       // whatever was in the register
+llvm: 0
+```
+
+- The same program, compiled two ways, produces two different answers.
+  Only a warning stands between the author and this, so it survives an
+  ordinary build.
+- Cause: the two backends fill the gap differently. `print_def_func`
+  (`src/backend/llvm.py`) appends `ret <default value>` when the body
+  does not end in a `return`, which is what keeps the emitted IR valid;
+  the C backend appends nothing and lets the function run off its end,
+  which is undefined behaviour in C. Neither is wrong on its own — they
+  simply were never made to agree.
+- Expected: one answer, whichever it is. Two ways to get there:
+  - reject the program in the frontend — promote `expected return
+    operator at end` from a warning to an error, so no backend ever sees
+    a function with a missing `return`. This fits a language that
+    otherwise refuses to guess (no implicit conversions, no implicit
+    `Bool`), and it costs nothing at runtime;
+  - or define the fallback in the language and make the C backend emit
+    the same default value the LLVM backend does.
+- The first is the smaller change and closes the divergence for good;
+  the second makes falling off the end a legal, defined thing to write,
+  which is a language decision, not a backend one.
+- Not reproduced by the test suite yet: a test would have to assert one
+  of the two behaviours, and which one is the open question — tracked in
+  [`lang/OPENQUESTIONS.md`](./lang/OPENQUESTIONS.md) #1.
+
+## 17. LLVM backend cannot index an array field of a by-value record parameter
+
+```modest
+type Boxed = {
+	tag: Int32
+	data: [3]Int32
+}
+
+func fromParameter (b: Boxed) -> Int32 {
+	return b.data[0]
+}
+```
+
+clang refuses the output: `error: base of getelementptr must be a pointer`.
+
+```llvm
+define internal %Int32 @f(%Boxed %b) {
+	%1 = extractvalue %Boxed %b, 1              ; the array, as a value
+	%2 = getelementptr [3 x %Int32], [3 x %Int32] %1, %Int32 0, %Int32 0
+	...                                          ; gep needs a pointer
+```
+
+- Cause: a record parameter arrives as an SSA value, with no address, so
+  the field is reached with `extractvalue`. That yields the array
+  *by value*, and the index expression then applies `getelementptr` to it
+  as though it were addressable.
+- Scope is exactly the addressless case — verified:
+
+  | record read from | llvm | c11 |
+  | :-- | :-- | :-- |
+  | by-value parameter | **invalid IR** | ok |
+  | global | ok | ok |
+  | local | ok | ok |
+
+  Globals and locals have an address, so the field is reached with `gep`
+  on the record and the array stays addressable.
+- Expected: spill the parameter to an `alloca` before indexing into it —
+  the backend already does exactly this for a plain array parameter
+  (`store [3 x %Int32] %__a, [3 x %Int32]* %a`), just not for an array
+  reached through a record field.
+- Reproduced by `tests/lang/value/call_record_array.m`, marked
+  `EXPECTED-FAIL(llvm)`. Fold that file back into `call.m` when fixed.
+
+## 18. `@cbyvalue` on a type definition crashes the compiler
+
+```modest
+@cbyvalue
+type ByValue = {
+	a: Int32
+}
+```
+
+```
+AttributeError: 'StmtDefType' object has no attribute 'value'
+```
+
+- A Python traceback reaches the user instead of a diagnostic; the
+  compiler does not get as far as reporting anything.
+- Cause: `def_add_annotations` (`src/semantic.py:3166`) handles the
+  annotation with `x.value.addAttribute("cbyvalue")`, but `x` here is a
+  `StmtDefType`, which has no `.value` — only value definitions (`var`,
+  `const`) do.
+- Verified placements: `const`, `var` and `func` all accept `@cbyvalue`
+  without complaint; only `type` crashes.
+- Expected: whatever the annotation is supposed to mean on a type — apply
+  it, or reject it with `annotation not applicable here`. Crashing is not
+  one of the options.
+- Worth settling at the same time: `docs/lang/attribute.md` describes
+  `@cbyvalue` as "pass record by value in the C ABI", which reads like it
+  belongs on a record type, while the implementation only ever consults
+  it on a value (`src/backend/c11.py:1114`, where it means "print the
+  constant's value rather than its identifier"). The documentation and
+  the code describe two different features.
 
