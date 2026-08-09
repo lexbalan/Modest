@@ -85,6 +85,22 @@ def need_sret(func_type):
 	#return func_type.to.get_size() > RET_SIZE_MAX
 
 
+# Composite parameters arrive as values, so they have no address — but
+# reaching a field or an element goes through a pointer (see 'ass'/'ass2').
+# Such a parameter is spilled into a local holder on entry, and the holder
+# is what the body works with; the incoming value is named '__<id>'.
+#
+# Three places must agree on this, or the emitted IR contradicts itself:
+# str_func_params() names the incoming value, and print_def_func() both
+# marks the parameter as an address in the locals table and allocates the
+# holder.
+def param_needs_holder(t):
+	if t.is_sized_array():
+		return True
+	# Unit is an empty record: nothing to spill, nothing to index into.
+	return t.is_record() and not t.is_empty_record()
+
+
 INDENT_SYMBOL = "\t"
 
 NL_INDENT = "\n%s" % INDENT_SYMBOL
@@ -2377,7 +2393,7 @@ def str_func_params(ftype, only_types=False, with_attributes=True):
 	i = 0
 	while i < len(params):
 		param = params[i]
-		isarr = param.type.is_sized_array()
+		has_holder = param_needs_holder(param.type)
 
 		if i > 0:
 			sstr += ", "
@@ -2385,7 +2401,7 @@ def str_func_params(ftype, only_types=False, with_attributes=True):
 		sstr += str_type(param.type)
 
 		if not only_types:
-			if isarr:
+			if has_holder:
 				sstr += " %%__%s" % get_id_str(param)
 			else:
 				sstr += " %%%s" % get_id_str(param)
@@ -2526,7 +2542,9 @@ def print_def_func(x):
 
 		localObject = llvm_value_reg(param_id, param.type)
 
-		if param.type.is_sized_array():
+		# The body sees the holder allocated below, which is an address —
+		# not the incoming value.
+		if param_needs_holder(param.type):
 			localObject['is_adr'] = True
 
 		locals_add(param_id, localObject)
@@ -2538,21 +2556,21 @@ def print_def_func(x):
 	out(" {")
 	indent_up()
 
-	# for any array parameter print local holder value
+	# for any composite parameter print local holder value
 	for param in params:
 		ptype = param.type
-		if ptype.is_sized_array():
+		if param_needs_holder(ptype):
 			paramId = get_id_str(param)
 
 			reg = '__' + param.id.str
 			loadedParam = llvm_value_reg(reg, ptype)
 
 
-			# Выделяем память под массив
+			# Выделяем память под значение
 			pholder = llvm_alloca(ptype, id_str=paramId)
-			# сохраняем переданный по указателю массив в выделенный выше "регистр"
-			# теперь это локальная копия "типа" переданного по значению массива
-			# и далее работать будем только с ней
+			# сохраняем переданное по значению составное значение в выделенный
+			# выше "регистр" - теперь это локальная копия, и далее работать
+			# будем только с ней (у нее, в отличие от параметра, есть адрес)
 			llvm_store(pholder, loadedParam)
 
 	if len(params) > 0:

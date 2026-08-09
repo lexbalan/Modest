@@ -206,49 +206,6 @@ llvm: 0
   of the two behaviours, and which one is the open question — tracked in
   [`lang/OPENQUESTIONS.md`](./lang/OPENQUESTIONS.md) #1.
 
-## 17. LLVM backend cannot index an array field of a by-value record parameter
-
-```modest
-type Boxed = {
-	tag: Int32
-	data: [3]Int32
-}
-
-func fromParameter (b: Boxed) -> Int32 {
-	return b.data[0]
-}
-```
-
-clang refuses the output: `error: base of getelementptr must be a pointer`.
-
-```llvm
-define internal %Int32 @f(%Boxed %b) {
-	%1 = extractvalue %Boxed %b, 1              ; the array, as a value
-	%2 = getelementptr [3 x %Int32], [3 x %Int32] %1, %Int32 0, %Int32 0
-	...                                          ; gep needs a pointer
-```
-
-- Cause: a record parameter arrives as an SSA value, with no address, so
-  the field is reached with `extractvalue`. That yields the array
-  *by value*, and the index expression then applies `getelementptr` to it
-  as though it were addressable.
-- Scope is exactly the addressless case — verified:
-
-  | record read from | llvm | c11 |
-  | :-- | :-- | :-- |
-  | by-value parameter | **invalid IR** | ok |
-  | global | ok | ok |
-  | local | ok | ok |
-
-  Globals and locals have an address, so the field is reached with `gep`
-  on the record and the array stays addressable.
-- Expected: spill the parameter to an `alloca` before indexing into it —
-  the backend already does exactly this for a plain array parameter
-  (`store [3 x %Int32] %__a, [3 x %Int32]* %a`), just not for an array
-  reached through a record field.
-- Reproduced by `tests/lang/value/call_record_array.m`, marked
-  `EXPECTED-FAIL(llvm)`. Fold that file back into `call.m` when fixed.
-
 ## 18. `@cbyvalue` on a type definition crashes the compiler
 
 ```modest

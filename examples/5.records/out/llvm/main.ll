@@ -275,33 +275,49 @@ endif_0:
 	ret %Float %b
 }
 
-define internal %Float @distance(%Point %a, %Point %b) {
-	%1 = extractvalue %Point %a, 0
-	%2 = extractvalue %Point %b, 0
-	%3 = call %Float @max(%Float %1, %Float %2)
-	%4 = extractvalue %Point %a, 0
-	%5 = extractvalue %Point %b, 0
-	%6 = call %Float @min(%Float %4, %Float %5)
-	%7 = fsub %Float %3, %6
-	%8 = extractvalue %Point %a, 1
-	%9 = extractvalue %Point %b, 1
-	%10 = call %Float @max(%Float %8, %Float %9)
-	%11 = extractvalue %Point %a, 1
-	%12 = extractvalue %Point %b, 1
-	%13 = call %Float @min(%Float %11, %Float %12)
-	%14 = fsub %Float %10, %13
-	%15 = call %Double @pow(%Float %7, %Double 2.0000000000000000)
-	%16 = call %Double @pow(%Float %14, %Double 2.0000000000000000)
-	%17 = fadd %Double %15, %16
-	%18 = call %Double @sqrt(%Double %17)
-	ret %Double %18
+define internal %Float @distance(%Point %__a, %Point %__b) {
+	%a = alloca %Point
+	store %Point %__a, %Point* %a
+	%b = alloca %Point
+	store %Point %__b, %Point* %b
+	%1 = getelementptr %Point, %Point* %a, %Int32 0, %Int32 0
+	%2 = load %Float, %Float* %1
+	%3 = getelementptr %Point, %Point* %b, %Int32 0, %Int32 0
+	%4 = load %Float, %Float* %3
+	%5 = call %Float @max(%Float %2, %Float %4)
+	%6 = getelementptr %Point, %Point* %a, %Int32 0, %Int32 0
+	%7 = load %Float, %Float* %6
+	%8 = getelementptr %Point, %Point* %b, %Int32 0, %Int32 0
+	%9 = load %Float, %Float* %8
+	%10 = call %Float @min(%Float %7, %Float %9)
+	%11 = fsub %Float %5, %10
+	%12 = getelementptr %Point, %Point* %a, %Int32 0, %Int32 1
+	%13 = load %Float, %Float* %12
+	%14 = getelementptr %Point, %Point* %b, %Int32 0, %Int32 1
+	%15 = load %Float, %Float* %14
+	%16 = call %Float @max(%Float %13, %Float %15)
+	%17 = getelementptr %Point, %Point* %a, %Int32 0, %Int32 1
+	%18 = load %Float, %Float* %17
+	%19 = getelementptr %Point, %Point* %b, %Int32 0, %Int32 1
+	%20 = load %Float, %Float* %19
+	%21 = call %Float @min(%Float %18, %Float %20)
+	%22 = fsub %Float %16, %21
+	%23 = call %Double @pow(%Float %11, %Double 2.0000000000000000)
+	%24 = call %Double @pow(%Float %22, %Double 2.0000000000000000)
+	%25 = fadd %Double %23, %24
+	%26 = call %Double @sqrt(%Double %25)
+	ret %Double %26
 }
 
-define internal %Float @lineLength(%Line %line) {
-	%1 = extractvalue %Line %line, 0
-	%2 = extractvalue %Line %line, 1
-	%3 = call %Float @distance(%Point %1, %Point %2)
-	ret %Float %3
+define internal %Float @lineLength(%Line %__line) {
+	%line = alloca %Line
+	store %Line %__line, %Line* %line
+	%1 = getelementptr %Line, %Line* %line, %Int32 0, %Int32 0
+	%2 = load %Point, %Point* %1
+	%3 = getelementptr %Line, %Line* %line, %Int32 0, %Int32 1
+	%4 = load %Point, %Point* %3
+	%5 = call %Float @distance(%Point %2, %Point %4)
+	ret %Float %5
 }
 
 define internal void @ptr_example() {

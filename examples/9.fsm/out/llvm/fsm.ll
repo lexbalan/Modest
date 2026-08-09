@@ -411,19 +411,28 @@ define %fsm_ComplexState @fsm_cmdNextStageLimited(%fsm_FSM* %self, %Nat32 %t) {
 	ret %fsm_ComplexState %13
 }
 
-define %fsm_ComplexState @fsm_getComplexState(%fsm_FSM %fsm) {
-	%1 = extractvalue %fsm_FSM %fsm, 1
-	ret %fsm_ComplexState %1
+define %fsm_ComplexState @fsm_getComplexState(%fsm_FSM %__fsm) {
+	%fsm = alloca %fsm_FSM
+	store %fsm_FSM %__fsm, %fsm_FSM* %fsm
+	%1 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
+	%2 = load %fsm_ComplexState, %fsm_ComplexState* %1
+	ret %fsm_ComplexState %2
 }
 
-define %fsm_StateDesc* @fsm_getState(%fsm_FSM %fsm) {
-	%1 = extractvalue %fsm_FSM %fsm, 1, 0
-	ret %fsm_StateDesc* %1
+define %fsm_StateDesc* @fsm_getState(%fsm_FSM %__fsm) {
+	%fsm = alloca %fsm_FSM
+	store %fsm_FSM %__fsm, %fsm_FSM* %fsm
+	%1 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1, %Int32 0
+	%2 = load %fsm_StateDesc*, %fsm_StateDesc** %1
+	ret %fsm_StateDesc* %2
 }
 
-define %fsm_StageId @fsm_getStage(%fsm_FSM %fsm) {
-	%1 = extractvalue %fsm_FSM %fsm, 1, 1
-	ret %fsm_StageId %1
+define %fsm_StageId @fsm_getStage(%fsm_FSM %__fsm) {
+	%fsm = alloca %fsm_FSM
+	store %fsm_FSM %__fsm, %fsm_FSM* %fsm
+	%1 = getelementptr %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1, %Int32 1
+	%2 = load %fsm_StageId, %fsm_StageId* %1
+	ret %fsm_StageId %2
 }
 
 define %Str8* @fsm_getStateName(%fsm_FSM* %fsm) {

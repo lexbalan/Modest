@@ -10,6 +10,7 @@
 // EXPECT-OUT: passed: record argument
 // EXPECT-OUT: passed: array argument
 // EXPECT-OUT: passed: composite arguments
+// EXPECT-OUT: passed: nested composite arguments
 // EXPECT-OUT: passed: laid out arguments
 // EXPECT-OUT: passed: call
 //
@@ -260,6 +261,70 @@ func testCompositeArguments () -> Bool {
 }
 
 
+type Boxed = {
+	tag: Int32
+	data: [3]Int32
+}
+
+
+var globalBox: Boxed
+
+
+// An array reached through a record that arrives by value: the parameter
+// has no address of its own, so the backend has to give it one before it
+// can index into the field.
+func sumFromParameter (b: Boxed) -> Int32 {
+	return b.tag + b.data[0] + b.data[1] + b.data[2]
+}
+
+
+func sumFromGlobal () -> Int32 {
+	return globalBox.tag + globalBox.data[0]
+}
+
+
+func sumFromLocal () -> Int32 {
+	var local = Boxed {tag = 1, data = [10, 20, 30]}
+	return local.tag + local.data[0]
+}
+
+
+func elementAt (b: Boxed, i: Int32) -> Int32 {
+	return b.data[i]
+}
+
+
+func testNestedCompositeArguments () -> Bool {
+	let b = Boxed {tag = 1, data = [10, 20, 30]}
+
+	if sumFromParameter(b) != 61 {
+		printf("sumFromParameter(b) = %d, expected 61\n", sumFromParameter(b))
+		return false
+	}
+
+	// A runtime index, which cannot be served by extracting a constant field.
+	var i: Int32 = 2
+	if elementAt(b, i) != 30 {
+		printf("elementAt(b, 2) = %d, expected 30\n", elementAt(b, i))
+		return false
+	}
+
+	// The same record reached from places that do have an address.
+	globalBox = Boxed {tag = 1, data = [10, 20, 30]}
+	if sumFromGlobal() != 11 {
+		printf("sumFromGlobal() = %d, expected 11\n", sumFromGlobal())
+		return false
+	}
+	if sumFromLocal() != 11 {
+		printf("sumFromLocal() = %d, expected 11\n", sumFromLocal())
+		return false
+	}
+
+	printf("passed: nested composite arguments\n")
+	return true
+}
+
+
 func takePacked (p: Packed) -> Int32 {
 	return p.value
 }
@@ -302,6 +367,7 @@ func main () -> Int {
 	result = testRecordArgument() and result
 	result = testArrayArgument() and result
 	result = testCompositeArguments() and result
+	result = testNestedCompositeArguments() and result
 	result = testLaidOutArguments() and result
 
 	if not result {

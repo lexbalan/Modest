@@ -134,3 +134,39 @@ Companions from the same design: `__defined("id")`, `@undef("id")`,
 compiler messages `@info` / `@warning` / `@error`, `@feature("unsafe")`.
 Removed from `docs/lang/directive.md` (which now documents pragmas)
 until reimplemented.
+
+## LLVM backend: merge `ass` and `ass2`
+
+Cleanup noted 2026-08-09, while fixing an invalid-IR bug in the LLVM
+backend (former `BUGS.md` #17).
+
+`src/backend/llvm.py` has two near-identical helpers that turn a value
+plus indexes into an address:
+
+| helper | called from | for |
+| :-- | :-- | :-- |
+| `ass` | `do_eval_index` | array element |
+| `ass2` | `do_eval_access` | record field |
+
+They differ in only two ways: `ass2` checks `by_value(left)` and falls
+back to `extractvalue` for an operand that has no address, while `ass`
+assumes a pointer unconditionally; and `ass` prepends the leading zero
+index itself where `ass2` does it in the pointer branch. `ass` also
+carries the VLA special case, which `ass2` has no need for.
+
+That asymmetry was the bug: `b.data[0]` on a by-value record parameter
+went through `ass2` (correctly producing a register value), then through
+`ass` (which emitted `getelementptr` on a non-pointer). The fix gave
+composite parameters an address on entry — see `param_needs_holder` — so
+`ass` now always gets what it assumes. The duplication remains.
+
+Direction: one helper. `do_eval_slice` contains a *third* copy of the
+same by-value check (with a nice `expected immediate index value`
+diagnostic for the runtime-index case), so there are three places
+encoding one rule. Worth folding together — the class of bug this
+produces is silent invalid output, not a compile error.
+
+Also worth revisiting at the same time: `param_needs_holder` must be
+consulted in three places (parameter naming, the locals table, the
+holder `alloca`) and the emitted IR contradicts itself if they disagree
+— that coupling would be better expressed once.
