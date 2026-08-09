@@ -2594,8 +2594,18 @@ def print_def_func(x):
 
 	print_stmt_block(x.stmt)
 
+	def return_default_value():
+		from hlir.types import create_default_value
+		print_stmt_return(StmtReturn(create_default_value(ftype.to)))
+
+	#if x.stmt[]
 	if Type.eq(ftype.to, typeUnit):
-		print_stmt_return(StmtReturn(None))
+		#print_stmt_return(StmtReturn(None))
+		return_default_value()
+	elif len(x.stmt.stmts) > 0 and not x.stmt.stmts[-1].is_stmt_return():
+		return_default_value()
+	elif len(x.stmt.stmts) == 0:
+		return_default_value()
 
 	indent_down()
 	lo("}\n")

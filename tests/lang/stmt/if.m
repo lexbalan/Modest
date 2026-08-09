@@ -5,7 +5,6 @@
 // EXPECT-OUT: passed: if without else
 // EXPECT-OUT: passed: explicit conditions
 // EXPECT-OUT: passed: if
-// EXPECTED-FAIL(llvm): BUGS.md#13 invalid IR when every `if` branch returns
 //
 // Covers the `if` statement: else-if chains, the optional final `else`,
 // and the rule that a condition is Bool — numbers and pointers never
